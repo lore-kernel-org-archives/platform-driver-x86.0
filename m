@@ -2,158 +2,247 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CC2C77B78
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Apr 2023 18:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C84C7618E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Apr 2023 19:02:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233416AbjDZSup (ORCPT
+        id S233622AbjDZTC1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 26 Apr 2023 14:50:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59442 "EHLO
+        Wed, 26 Apr 2023 15:02:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234043AbjDZSuo (ORCPT
+        with ESMTP id S238579AbjDZTCZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 Apr 2023 14:50:44 -0400
-Received: from mx0b-00256a01.pphosted.com (mx0a-00256a01.pphosted.com [148.163.150.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DDBA7EF7
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Apr 2023 11:50:39 -0700 (PDT)
-Received: from pps.filterd (m0094546.ppops.net [127.0.0.1])
-        by mx0b-00256a01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33QHePZN012416
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Apr 2023 14:50:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nyu.edu; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=20180315;
- bh=tz6yrnf+dTN5LZdbLmwKWiSYYpiy3j5Ue6bS4NbkEBg=;
- b=hYKHC94D2uj85bsIJ0MlNmhNPcIr3/LoYiawSIm8QzYIc5NMYxolKV9LoYk/PBm6o55T
- FQQq8hC/OrJAabGkiyQSSBAVuzItA/sogNwYOvAwNjVQBg4CKMc2sY39quEgGppM9vQN
- jl/vtfk0oLIFJt6DULmUQwMp/H2kRiEI2CPwYWx6tQo/nfdINQKB8RqKpP2zdr/FzQeE
- sp88rKGxhD5v9a0AumrDut17mnJouMvw6HR0ml1MTLjBHo4tGyx3bEuGRRij8y3ycaZT
- Ypf1qzCeqF2dIuF9wzJeJgV15/EX5HMVrWyBKN/gZdfJ4gl7gC/AbwYKrJa7Nj8MlpiS gg== 
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        by mx0b-00256a01.pphosted.com (PPS) with ESMTPS id 3q62b5empr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Apr 2023 14:50:39 -0400
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-3ef44f554b1so49077931cf.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Apr 2023 11:50:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682535038; x=1685127038;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tz6yrnf+dTN5LZdbLmwKWiSYYpiy3j5Ue6bS4NbkEBg=;
-        b=WlPVthMI/8OU1HDsRolZ2or7Sq77LyLFC6klLE0Ac5LkIbnV01pRx/KvEIRkhZHu4C
-         dKFiN2fOXlVUemHXTGWneGtFCopPn2yWZaLbE+5XDQIj3W+GfwLRPqvMP/MSp67G9BKv
-         mdrqOvJCJ0+FaiFAQubUTtsmgbDsGzWxszTYVYIlabQf+62ZOrQ5oG5puFx09cMde7m3
-         KUTRuzYQj9jH/qUqSRmUkXDiYXKr2E2LUhgisDnSIHEH6Hw0rfUVdPt+1XmL/oh2Wr/2
-         08+bC0OnhZX0J+2d2X95e8Lt19riEldFtO+iztWE2rjOa2qhXyMfItXmcPu3t+f1r4EO
-         hZfg==
-X-Gm-Message-State: AAQBX9dAs/3HpMEjZ4gFXbGnjx19mIWp9NwBHfsjifnizUt298dCnjbb
-        yRYTDufYTP9wzSUoA0QxJQVOuczZGuLwnhq8iUYf2Pfsg0Ja59qFSHVW2SgdTySyscoLaATMfgo
-        VKFLtIT9HYB+PkIAcKUknQ189sGyecRAU
-X-Received: by 2002:ac8:5f87:0:b0:3e3:7e6f:423c with SMTP id j7-20020ac85f87000000b003e37e6f423cmr35438902qta.34.1682535038288;
-        Wed, 26 Apr 2023 11:50:38 -0700 (PDT)
-X-Google-Smtp-Source: AKy350ZAbNMSNv3vXSvimA1YFuF+ofgEQxxujSpwrw7k8sY4TA3t9c1ebic7COYrEyM7LyyyAXqHaA==
-X-Received: by 2002:ac8:5f87:0:b0:3e3:7e6f:423c with SMTP id j7-20020ac85f87000000b003e37e6f423cmr35438881qta.34.1682535038039;
-        Wed, 26 Apr 2023 11:50:38 -0700 (PDT)
-Received: from enviable.nyu.edu (216-165-95-156.natpool.nyu.edu. [216.165.95.156])
-        by smtp.gmail.com with ESMTPSA id 206-20020a3705d7000000b007469b5bc2c4sm5373476qkf.13.2023.04.26.11.50.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Apr 2023 11:50:37 -0700 (PDT)
-From:   Jonathan Singer <jes965@nyu.edu>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <Mario.Limonciello@amd.com>,
+        Wed, 26 Apr 2023 15:02:25 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2048.outbound.protection.outlook.com [40.107.94.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A88483E7;
+        Wed, 26 Apr 2023 12:02:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f2vgJCh8LAAZ8AM98UaHOw1QlK2dlK20xfWihCbIPMb+dgQQePb6nka2umrWZAVIG3aw8/mQPdyc3ZTBlpoS5YzO+FiBKy8wk1hxk/CYsSDPGNKFQjEOGSeZRTWuZAzzrxhbCoSmMF/fFPDXMdyTTzaWZ0OPbF8NoiVHtKiGYbMjGex8NCNq4mo2K62tRFzBLttDz/rI4q4I1YDsD7TagdOncLn3RlAw2DLYbK34wy4keyiZvMlTDJYp8EN23CpdJZy8CreZg/sRbtA4V25yL2miQ2hjFX4lyXITx5dSb0uBIX/MXK9b1RANiknS51753sU5t5iphdekhXFmruQDMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XdPOE9eG+Fo4RkN/1ZdLHNJBvN+dLzZxafaffh8/7rk=;
+ b=HbPgXfA2oqFt2UXjdjs9XYq5qZ5ojgLs4nxekKW1rNGfc6JtCvHJEpKhvVGlFVnL+8qtThctZMzJzE20oH+Q7IjgYhstjHuJVvT4MOCxoC/w/xHi+a7RYgvVqQXxmAdOIg6d2rPaVMKF2zIMvAseIi1XHAyDdSrTAcnt3UzkD73f5qdLnW4KZwa9LLNF3kXSDGS9TaptUm1qgIS+85D/1G1ycGCrMJxtxXM2Y4mJWz+UJQXp7Nb5PGt1T787I0pKtmWLComNTHHgrX6C3ho0TuGv8+Ea4DCU+JHtscR1PWc9s4o6C0ldjtBYWRbTAiXcLGinNPitoIvOdWk1df2kfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XdPOE9eG+Fo4RkN/1ZdLHNJBvN+dLzZxafaffh8/7rk=;
+ b=B1zmdbFHzgEfur3AnXENHmI2xhtdBx+QpTgVqvoHyFrwsQiFnbrEzCz949thctb1U3rMzVOEeKZMRaPbK+wIq7/zftBwjvYN2gUxbgvdOw+yVoIv/D+RolgpBgLRKXDi4y8lKFZNhQqh0UP41O5wAGM/dk/MKqlslPPpAql04m4=
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by DM6PR12MB5005.namprd12.prod.outlook.com (2603:10b6:5:1be::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.21; Wed, 26 Apr
+ 2023 19:02:21 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::3f45:358e:abba:24f5]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::3f45:358e:abba:24f5%3]) with mapi id 15.20.6340.021; Wed, 26 Apr 2023
+ 19:02:21 +0000
+From:   "Limonciello, Mario" <Mario.Limonciello@amd.com>
+To:     Jonathan Singer <jes965@nyu.edu>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>
-Cc:     Jorge Lopez <jorge.lopez2@hp.com>,
+CC:     Jorge Lopez <jorge.lopez2@hp.com>,
         Rishit Bansal <rishitbansal0@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jonathan Singer <jes965@nyu.edu>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v3 2/2] platform/x86: hp-wmi: Add HP Envy special key support
-Date:   Wed, 26 Apr 2023 14:48:54 -0400
-Message-Id: <20230426184852.2100-2-jes965@nyu.edu>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230426184852.2100-1-jes965@nyu.edu>
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: RE: [PATCH v3 1/2] platform/x86: hp-wmi: Add HP WMI camera switch
+Thread-Topic: [PATCH v3 1/2] platform/x86: hp-wmi: Add HP WMI camera switch
+Thread-Index: AQHZeG/08X7EDR9JD0uGfRALEFMkoa898k+w
+Date:   Wed, 26 Apr 2023 19:02:21 +0000
+Message-ID: <MN0PR12MB6101510EDF6D0904E602A3F9E2659@MN0PR12MB6101.namprd12.prod.outlook.com>
 References: <20230426184852.2100-1-jes965@nyu.edu>
+In-Reply-To: <20230426184852.2100-1-jes965@nyu.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2023-04-26T19:02:20Z;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=1a87c4b6-70e1-44f9-b0ec-fe3e02a30ed8;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2023-04-26T19:02:20Z
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid: 4b98c472-f5a7-46d3-88e0-1832ab49e7b8
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR12MB6101:EE_|DM6PR12MB5005:EE_
+x-ms-office365-filtering-correlation-id: fa9f144e-4a5d-49ae-d64f-08db4688c3d5
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6Ezi6XIVLRIgEP3KUft2VeVMsayGIcy+/12lhW7wZs0qEXH9HDKEXgwoojE1lrqqzH+dq7X8CSkr/IdLuKjY/o5sfDSTn6APTnhwIj4OF93SHqacWsORBD1dgOyRiK0fA2Kd4/FrfaAXNqf2+sz3QCljzrzk6DdU/ZHEv9+rfD5mO1aQcmpvszNa3QJDPGD33JUGjY+hFvoUDYGlgdRm+TC1yljM8Q8oKFXovu3qEUMOJPmeCr0yujtAPQqQUk+lQEyRr86QfFi9f1in8EQcFiHfgJBdfVYaNSoOMtHvqL4yl5EIYlS0ukhbnopWN/J8RCmu+eObrch/A2HSXo54/ZaFrJxJ5S1uEfJbG4SQhds1MaVHUHJ7hgNith684zmgfzZnglcZbMjj+6O/rUW62NkxJEAtwDS6bJQ4Lp0po7uIiPYXBYpo2v/KaIfbiqF5KSCD1qB/9zCfHYLNJezBVuEFEeu0rnPqPgMerpep/GvI8/0NDzRXtDRho4sFrJR51fijCPKe4uXRgt+KW/aU0Wd0nvRsuzMEFcmr1GofbXQOLgDVq6zBu9OqoTzYs+YMUI7myafcyoneXDnhW1Kd3CS0KwfuwUWXwsA0aLitdYeK7Lqy3QfI2eK6/B/ZnjME
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(366004)(136003)(39860400002)(346002)(376002)(451199021)(122000001)(71200400001)(186003)(478600001)(7696005)(110136005)(54906003)(26005)(6506007)(9686003)(316002)(41300700001)(8936002)(8676002)(86362001)(4326008)(64756008)(5660300002)(66556008)(52536014)(66946007)(33656002)(66446008)(66476007)(76116006)(2906002)(38100700002)(38070700005)(55016003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?YaDTaqthpm52M6NSs1CDYHNHUFZgaEp5oes7cw1CzfQu3nFYnYjWenrsbmx0?=
+ =?us-ascii?Q?JRPyusRdHxGkjlWqgrJ/9GUvGQMlJTCgNoKweOBRErpgi/pj7gCw09QdYy0m?=
+ =?us-ascii?Q?ww5UMWVMUKFAIKlpp9vPTVEzkSO03KthjmqEI6nKYIQIBniXIFoAc6sl9w96?=
+ =?us-ascii?Q?hLMDU0DFvM3vSI8hWt8v2ylSzWTvbvYXqlsaW6aGlUwHdT/wDaiC91p7/dL9?=
+ =?us-ascii?Q?dzW0yQ0zJ/ESLfbQ5ESg5bda2N4HC7nN6lw3Pk04iSxPG8/0OYJMbb+/e5T/?=
+ =?us-ascii?Q?XSeumDSe3yrIXglCC4bS661X28BUoFFDOq64IJKokblUTq+kj/wjbEoDDyR4?=
+ =?us-ascii?Q?1WezpaI6GQGvkLVR0yBV/mv+fZLC6PjZRa+jk0HhxZiyGSpPbSwibBvYUUWh?=
+ =?us-ascii?Q?EW/2ZkkiK9v9RFNmes4TpDXKEOdrwgG9vS2CTW9JVpowlxE9fBvMP3blLp4q?=
+ =?us-ascii?Q?xfIyiXSZgMC3x7bF96EiV0dNH+aXeDqa54iXMbFXqPKvcC42F+hqqZ5+udHl?=
+ =?us-ascii?Q?Xd9GS4/1vAE4F9NyXp5XFVrsJdfXuqOIZ8jbY5bUm1c3K8X6vHuaoLPjkPhD?=
+ =?us-ascii?Q?G8kl38gqcAO3RytDV+yQiY96hIkPUmFsBveq/aUTa58S5fRDD2uFcK7N6lL9?=
+ =?us-ascii?Q?8XIsitqtSiDu96yHu3NvF0glZ1yD+25yJ4eyq5NNMugIgzNJJ9upOrCiej77?=
+ =?us-ascii?Q?I9F3uZHG+zkYA25PVRG6zb4BIOhgDXLqw9UIaM2lD17gZSN5a+pFfDeCl4dp?=
+ =?us-ascii?Q?gIJJ7+iQBhTZ1z8byz2VeFuqcSzwiKWruyoO4KDGVnXmtIlt+6cP6OL7ab73?=
+ =?us-ascii?Q?uZZVjeqzMIZhQ0T3e81dd13u5L6Dlz+Vc3GmcvZAhMhBDJtCNugoTD02lPgT?=
+ =?us-ascii?Q?XOPl73A79MuSjVAPY0+C8h5o8bLUKQChSRiIR0qUkdzPCUaZAjKs4xGLpChL?=
+ =?us-ascii?Q?f+LA+GIPvnEWwVdvn0R0Ek3BzGGl1h2nuL41ts98uUWSGw75tiUYeYOel9vu?=
+ =?us-ascii?Q?5C8RtBelHq1gfIwS1VebIv13w1g5RiZ93A+VPDqejsn0TA+JNnlzDQj614C+?=
+ =?us-ascii?Q?7w/JFUullJ3E8dBcuDjAUqpqc4261p3vzE3EoZZBhej9xhCDErKNy6t42kbV?=
+ =?us-ascii?Q?bjfZygW0tsXKbV95+RTvKYMAFSOJdWHXkxBdWEAg11CwOA9HwhTGyjSZcj7O?=
+ =?us-ascii?Q?VZazqD3oDjYBYEUCEzXZwsvwN6QhGYHcxK8iAwP7X8XW48dQs0wFhmf9nAh4?=
+ =?us-ascii?Q?PrHr13X2abRqN/2yMMS0k0lHnrRnvkzYWecSsjkwhU5m7OB7LLAEhHoZSljJ?=
+ =?us-ascii?Q?0Rcb+CeIyKLlUT7AfI1hkazBMUl1kWgaUE6TC8RNa6zBP0cw6NJiZm23ZDaz?=
+ =?us-ascii?Q?UVXgTLu2MeUKtKcXIaHlDjQoGiFHjxrbCMfLRser5qHj9DTxKRwtzMmkLEyp?=
+ =?us-ascii?Q?3qAqT+U7xYsAczDzHC7LBqBkUf81PYIx5YxTnj5dGIjpPyc+mWjZlUZbwurP?=
+ =?us-ascii?Q?qDmpwVuPGZ7wCPQHJx145Oe+Hh8qQpPUiNkFe1Mh1KsiBV7SnGuwPZhBNWS/?=
+ =?us-ascii?Q?X8n1HMUXBk6ifRVfeiw=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: Leqh5kfXYwIlsjl9oVZ0E12mFSMHhQlT
-X-Proofpoint-ORIG-GUID: Leqh5kfXYwIlsjl9oVZ0E12mFSMHhQlT
-X-Orig-IP: 209.85.160.200
-X-Proofpoint-Spam-Details: rule=outbound_bp_notspam policy=outbound_bp score=0 phishscore=0 mlxscore=0
- adultscore=0 lowpriorityscore=0 spamscore=0 suspectscore=0
- priorityscore=1501 clxscore=1015 mlxlogscore=999 bulkscore=0
- malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2303200000 definitions=main-2304260167
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa9f144e-4a5d-49ae-d64f-08db4688c3d5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2023 19:02:21.7577
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BgAkeikfS/3Q9uADCOdfqOckzvo9XX/t/LCCrsGDUt8W24BQQ6OuH9VjBtbInpFvL9SpGnAqxjwN3dztajZkAA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB5005
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Previously, some support for certain keys on the HP keyboard has been
-added already in commit 3ee5447b2048 ("platform/x86: hp-wmi: Handle Omen
-Key event"), however this as tested did not allow even the fn+esc key on
-my HP Envy which uses the same keycode on my HP Envy x360 laptop to work
---the keycode rather than being passed in as a separate int from WMI, was
-being passed in as the event_data for the HPWMI_OMEN_KEY event.
+[Public]
 
-This patch, as tested was able to properly get the keycode for fn+esc,
-and for fn+f12 which is supposed to be a programmable key according to
-HP's keyboard diagram and is thus mapped to KEY_PROG2. The fn+f8 key
-combination (mute microphone) was a standard HPWMI_BEZEL_BUTTON key,
-however it did not previously have an entry in the sparse keymap. This
-patch preserves the original HPWMI_OMEN_KEY behavior for laptops that
-use it by only taking the keycode from the event_data only when the
-event_data is nonzero.
-
-Signed-off-by: Jonathan Singer <jes965@nyu.edu>
+> Previously, when the camera toggle switch was hit, the hp-wmi driver
+> would report an invalid event code. By adding a case for that in the
+> event handling switch statement we can eliminate that error code and
+> enable a framework for potential further kernel handling of that key.
+> This change was tested on my HP Envy x360 15-ey0023dx laptop, but it
+> would likely work for any HP laptop with a camera toggle button. Now
+> we emit an SW_CAMERA_LENS_COVER event, on a device that gets created
+> on the first such event so as to not report incorrectly the state of
+> the camera shutter before we can know its state.
+>=20
+> Signed-off-by: Jonathan Singer <jes965@nyu.edu>
 Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
----
-V2 changes: Removed confusing comment
-
- drivers/platform/x86/hp/hp-wmi.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 18d40270aa0d..2749433b713f 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -212,6 +212,7 @@ struct bios_rfkill2_state {
- static const struct key_entry hp_wmi_keymap[] = {
- 	{ KE_KEY, 0x02,    { KEY_BRIGHTNESSUP } },
- 	{ KE_KEY, 0x03,    { KEY_BRIGHTNESSDOWN } },
-+	{ KE_KEY, 0x270,   { KEY_MICMUTE } },
- 	{ KE_KEY, 0x20e6,  { KEY_PROG1 } },
- 	{ KE_KEY, 0x20e8,  { KEY_MEDIA } },
- 	{ KE_KEY, 0x2142,  { KEY_MEDIA } },
-@@ -222,6 +223,7 @@ static const struct key_entry hp_wmi_keymap[] = {
- 	{ KE_IGNORE, 0x121a4, }, /* Win Lock Off */
- 	{ KE_KEY, 0x21a5,  { KEY_PROG2 } }, /* HP Omen Key */
- 	{ KE_KEY, 0x21a7,  { KEY_FN_ESC } },
-+	{ KE_KEY, 0x21a8,  { KEY_PROG2 } }, /* HP Envy x360 programmable key */
- 	{ KE_KEY, 0x21a9,  { KEY_TOUCHPAD_OFF } },
- 	{ KE_KEY, 0x121a9, { KEY_TOUCHPAD_ON } },
- 	{ KE_KEY, 0x231b,  { KEY_HELP } },
-@@ -844,11 +846,20 @@ static void hp_wmi_notify(u32 value, void *context)
- 	case HPWMI_SMART_ADAPTER:
- 		break;
- 	case HPWMI_BEZEL_BUTTON:
--	case HPWMI_OMEN_KEY:
- 		key_code = hp_wmi_read_int(HPWMI_HOTKEY_QUERY);
- 		if (key_code < 0)
- 			break;
- 
-+		if (!sparse_keymap_report_event(hp_wmi_input_dev,
-+						key_code, 1, true))
-+			pr_info("Unknown key code - 0x%x\n", key_code);
-+		break;
-+	case HPWMI_OMEN_KEY:
-+		if (event_data) /* Only should be true for HP Omen */
-+			key_code = event_data;
-+		else
-+			key_code = hp_wmi_read_int(HPWMI_HOTKEY_QUERY);
-+
- 		if (!sparse_keymap_report_event(hp_wmi_input_dev,
- 						key_code, 1, true))
- 			pr_info("Unknown key code - 0x%x\n", key_code);
--- 
-2.40.0
-
+> ---
+> V2 changes: Added SW_CAMERA_LENS_COVER switch event
+> V3 changes: removed input dev sync, changed pr_info to pr_err/pr_warn
+>=20
+>  drivers/platform/x86/hp/hp-wmi.c | 46
+> ++++++++++++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c
+> b/drivers/platform/x86/hp/hp-wmi.c
+> index 873f59c3e280..18d40270aa0d 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -90,6 +90,7 @@ enum hp_wmi_event_ids {
+>  	HPWMI_PEAKSHIFT_PERIOD		=3D 0x0F,
+>  	HPWMI_BATTERY_CHARGE_PERIOD	=3D 0x10,
+>  	HPWMI_SANITIZATION_MODE		=3D 0x17,
+> +	HPWMI_CAMERA_TOGGLE		=3D 0x1A,
+>  	HPWMI_OMEN_KEY			=3D 0x1D,
+>  	HPWMI_SMART_EXPERIENCE_APP	=3D 0x21,
+>  };
+> @@ -228,6 +229,7 @@ static const struct key_entry hp_wmi_keymap[] =3D {
+>  };
+>=20
+>  static struct input_dev *hp_wmi_input_dev;
+> +static struct input_dev *camera_shutter_input_dev;
+>  static struct platform_device *hp_wmi_platform_dev;
+>  static struct platform_profile_handler platform_profile_handler;
+>  static bool platform_profile_support;
+> @@ -739,6 +741,33 @@ static ssize_t postcode_store(struct device *dev,
+> struct device_attribute *attr,
+>  	return count;
+>  }
+>=20
+> +static int camera_shutter_input_setup(void)
+> +{
+> +	int err;
+> +
+> +	camera_shutter_input_dev =3D input_allocate_device();
+> +	if (!camera_shutter_input_dev)
+> +		return -ENOMEM;
+> +
+> +	camera_shutter_input_dev->name =3D "HP WMI camera shutter";
+> +	camera_shutter_input_dev->phys =3D "wmi/input1";
+> +	camera_shutter_input_dev->id.bustype =3D BUS_HOST;
+> +
+> +	__set_bit(EV_SW, camera_shutter_input_dev->evbit);
+> +	__set_bit(SW_CAMERA_LENS_COVER, camera_shutter_input_dev-
+> >swbit);
+> +
+> +	err =3D input_register_device(camera_shutter_input_dev);
+> +	if (err)
+> +		goto err_free_dev;
+> +
+> +	return 0;
+> +
+> + err_free_dev:
+> +	input_free_device(camera_shutter_input_dev);
+> +	camera_shutter_input_dev =3D NULL;
+> +	return err;
+> +}
+> +
+>  static DEVICE_ATTR_RO(display);
+>  static DEVICE_ATTR_RO(hddtemp);
+>  static DEVICE_ATTR_RW(als);
+> @@ -866,6 +895,20 @@ static void hp_wmi_notify(u32 value, void *context)
+>  		break;
+>  	case HPWMI_SANITIZATION_MODE:
+>  		break;
+> +	case HPWMI_CAMERA_TOGGLE:
+> +		if (!camera_shutter_input_dev)
+> +			if (camera_shutter_input_setup()) {
+> +				pr_err("Failed to setup camera shutter input
+> device\n");
+> +				break;
+> +			}
+> +		if (event_data =3D=3D 0xff)
+> +			input_report_switch(camera_shutter_input_dev,
+> SW_CAMERA_LENS_COVER, 1);
+> +		else if (event_data =3D=3D 0xfe)
+> +			input_report_switch(camera_shutter_input_dev,
+> SW_CAMERA_LENS_COVER, 0);
+> +		else
+> +			pr_warn("Unknown camera shutter state - 0x%x\n",
+> event_data);
+> +		input_sync(camera_shutter_input_dev);
+> +		break;
+>  	case HPWMI_SMART_EXPERIENCE_APP:
+>  		break;
+>  	default:
+> @@ -1564,6 +1607,9 @@ static void __exit hp_wmi_exit(void)
+>  	if (wmi_has_guid(HPWMI_EVENT_GUID))
+>  		hp_wmi_input_destroy();
+>=20
+> +	if (camera_shutter_input_dev)
+> +		input_unregister_device(camera_shutter_input_dev);
+> +
+>  	if (hp_wmi_platform_dev) {
+>  		platform_device_unregister(hp_wmi_platform_dev);
+>  		platform_driver_unregister(&hp_wmi_driver);
+> --
+> 2.40.0
