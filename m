@@ -2,144 +2,263 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06881C77B7E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Apr 2023 19:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27939C7618E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Apr 2023 19:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235015AbjDZTf6 (ORCPT
+        id S234830AbjDZT7L (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 26 Apr 2023 15:35:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60156 "EHLO
+        Wed, 26 Apr 2023 15:59:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234139AbjDZTf5 (ORCPT
+        with ESMTP id S233709AbjDZT7K (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 Apr 2023 15:35:57 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEB72114;
-        Wed, 26 Apr 2023 12:35:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1682537734; i=w_armin@gmx.de;
-        bh=XUyH3MfpE05wPAy94z/OMdVQELABtgu+fF1W2bG9JFE=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=TejFsH/6s5qsgGmRxhUaCTudQowayTMcrbFkJX8pL0zm0cpTuVu5O6Kn5I9FZdX8W
-         4MgewEr3Wf46200+6QAAZ7+1CvSRcVBu9Z5PPnHpmGga8glEgvirsR3yoCMVtnt/Rq
-         6VBZkN2IKWJfy1Irfh1vSQON9dxvKOsZUWwVF0cZT/lkSqruQyL+t5f4D1SEkBZq1+
-         VKrlKFSF7DoRulTcVCmNyK39atzxkWTxkcBVMLQ4mGTuHpUpQJ1qPGqjWjuw6ReNKa
-         m1v5J4h+gO4IvsVja0qDhPCYmPA9FrsE5I9pxh5qzkj9PQrbaZgL2P0iajDBceWdwc
-         WVnr/FXfqbGNQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.14] ([141.30.226.119]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MKsj7-1pYhRL1mRB-00LEfw; Wed, 26
- Apr 2023 21:35:34 +0200
-Subject: Re: [PATCH v3] hwmon: add HP WMI Sensors driver
-To:     James Seo <james@equiv.tech>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230424100459.41672-1-james@equiv.tech>
- <cd81a7d6-4b81-f074-1f28-6d1b5300b937@gmx.de> <ZEkkLggFLCGlvq8f@equiv.tech>
-From:   Armin Wolf <W_Armin@gmx.de>
-Message-ID: <30339393-0ba2-9788-6ad8-98c89afc6994@gmx.de>
-Date:   Wed, 26 Apr 2023 21:35:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Wed, 26 Apr 2023 15:59:10 -0400
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CBD5D2;
+        Wed, 26 Apr 2023 12:59:09 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id A8CD73200935;
+        Wed, 26 Apr 2023 15:59:07 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 26 Apr 2023 15:59:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to; s=fm3; t=1682539147; x=1682625547; bh=+dM23Sbs2y
+        Ywhw7ZQN+S1+KilA+WqOVJpT49zdDKWHk=; b=YNDWsyZ/Hw8roX6n/sADtUMRsV
+        7bOz4+7t2k29yB3lHczJzK4PmHvYlHot1eZO9PeU0JsItDfVINkozr/kiGjMU2IE
+        sOyNg9LKvYgYdonmJw6k8x9u2Yqm1FAt67o6+jFwx6ycgPp2LW5zkPFjP9nDGbtW
+        VAiSgNAObFF21GdHhmJSdbxJl1am4QrQ31pVKKu9Wu9ZGSjHXFagV/PXDmbBUcpT
+        usDtPpAGsWJt+mOGFIL+9QX4PRrPiv0LO3bjX06eBkg+1EZVxeSnAhUrHsEjnkV8
+        jJv7S87otJvveFC2yPgEOa0iYkD1n2d7aOpHpMpWvvftX610ISjVC1sMVdcQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1682539147; x=1682625547; bh=+dM23Sbs2yYwh
+        w7ZQN+S1+KilA+WqOVJpT49zdDKWHk=; b=Xkj3o6g5TYSLEM92tuOJXKICLKuNI
+        gglmM1y4Z5D5jm7ye6esp4yXTkS9YxvraFrCw864n9ByUZ7QvzOLew5+2N7Z2Gtq
+        rJHB4L7ouMqFkraS41Hyjagg0Iutuvcu7iIqRNDxuZIJPwRLZ7QlHbBazYjMaq5h
+        WBMK3FcXawYMksgwrUgyDzNswObOb1ewnTp+8OFMObigMO42SwJ1IT+Wqr6V0IBK
+        5nNPXhm7oxkSyyzZShE7fQMT16QYFeNGYBoA7hDUlWyoW9kthwFEhPV9bzB1QzFe
+        RH+PHfRndcfvwAQEJYWvIH6I7w1qBeIV7Jw/BVDZsPJKpf6r7JsTpiyZg==
+X-ME-Sender: <xms:iYJJZFe5POSvo8MZkS6OCJsAIXGoYqXrdo1XnrbxY3451fm7_FcA2g>
+    <xme:iYJJZDMwiVKg_6CYxDjiFf7y2LnYaRui_5wIs24EaXJvV3ZHobQ536m-AibFM5hlH
+    S1z2S17BrEjP62yy1c>
+X-ME-Received: <xmr:iYJJZOivGwaNHoJpEJDef92DSFNgIgvK96gwcSnvzXy4KUwjzzCjScZLrr7Vn5KATSBDPKmYaueLslYKpFJrb6y-7YBe-UZWhxZ99iTHlBgT>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedugedgudeggecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetnhhishhs
+    vgcutehsthhivghruceorghnihhsshgvsegrshhtihgvrhdrvghuqeenucggtffrrghtth
+    gvrhhnpedtfffhleekhefhheeftedthfejgfffvddtleehffdtjefftdehkeetfeefieel
+    keenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnh
+    hishhsvgesrghsthhivghrrdgvuh
+X-ME-Proxy: <xmx:iYJJZO_Blxj3AF6jFUL_oUR3wZQcVSOBfwUhpy8ltE1tt9YSYaCmIA>
+    <xmx:iYJJZBsRchc3S77ZAjEhlFD__h-UraUy3WrO6DdWpZUZ99FeC8GLSA>
+    <xmx:iYJJZNEmuiYM4bNKvVb2zIPvPOjzYvvni1gAG8V1QlL8dO13Gyj9Wg>
+    <xmx:i4JJZBH9mrVn-7jz-P1zIY-MPK8vaZ2Cet6rtJAhzmjfc74l7w3N1g>
+Feedback-ID: iccec46d4:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 26 Apr 2023 15:59:03 -0400 (EDT)
+From:   Anisse Astier <anisse@astier.eu>
+To:     linux-efi@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Jeremy Kerr <jk@ozlabs.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Anisse Astier <anisse@astier.eu>,
+        Anisse Astier <an.astier@criteo.com>
+Subject: [PATCH] efivarfs: expose used and total size
+Date:   Wed, 26 Apr 2023 21:58:53 +0200
+Message-Id: <20230426195853.633233-1-anisse@astier.eu>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <ZEkkLggFLCGlvq8f@equiv.tech>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:JICnlOZNxItB8HUgNhCGxiBjBIfr4pYanULL+MdXEvBHoz27QIr
- ASWWzKRP+r1wLi8W6l5YmQDwM6nczVZac4VvqajxEt7ywl/+7aX3CZ71v3u6SDSqSfNwQzm
- jDZvzrqErUg3VJHpaa9/KE/r5SyRO3fDaU9FP7vuUhhP8AOkW8uzwFgzYZ1Wp1TRObbP5Dj
- 9MRSKtTGWlBvFVNbQAM5g==
-UI-OutboundReport: notjunk:1;M01:P0:pR37t2XA8UM=;Cr1AtwwTuiNUxuE9z126nonbvxT
- lJYSojLUODYDt/x7H09x34tjf1+yuWlmNrqMJYKuqiECHRj/g6IkCpNzYhmIhil5p5nULX6RI
- bi1t9BLuPAThPC5KEbRcxqo6Ez/Y7xKFSRmc5V00mObjzYIH7Uy9bl3/3+bcBVzrmXbVGRMIb
- YSc/XezvG+K529+0tXhvrvvUzaixidYBOGrReIuidBtv8aWX/1PiyNYaHJMNFbyIzUcCHqXMk
- 62LQIbLoTiRtsiatsJ5s5mwSWl4Vb5Hi3O87931ANXHBCIckG0j9HmJZssB5nrsHbLApZ7U8t
- BtYANDpPsFns+pGQwNYcqoEXf6Tjks4NunE82kTfOfvU/BiEJkXsQuxCM+n38uO8GNnzcwZOZ
- tE9uvASScl2UX7T0UXsDuVNXOFpcvUkHLkCzQaNwmRKd0kFh2T7UTx8+znH4qm9go3npIvy7r
- 0wC/Oron4FL6tRNz3QhBSRZONUeXpQhVrsY2MHjxpOFsXE+zfnwywQOFa0z662W5hOlSEoubQ
- QkkpsFtFRcaDPxXD61i09kfKyrwhv3MPCAjdxL1+CA/TIJ4IIvaIRhiEMP0hUjNRcAljWdowX
- H6X4gv+cKqABED9NR5DMo1LoPaPcAT4hqXxtlZo4B1XlTbUH/N2thnVoTEntd5JtJw7L1s2FX
- SM3u9GaCvTxOaTX/DMNIS3ALg/FUPY5PlwDqH4EU9LHI96Gk3lrSveL2KjhVt/XDvSqdEiv4F
- lxfADIquxlXa1QKaguMJlM6Lx8YQJ0yoqw7xh8eIWBMoqexJ3sz0xyOpPYvspBmPLulg8HFnQ
- 2OMC40K3GkXOgrjdRJ7takVowXOi02ebWBhib7XFLxWKG4/O7FuGFW2HfwYMEt3GWfCh0Ysai
- BgG/zIhv/79xZjs1QJF9ipfozhgzcs9rN0a/IEuRs9geK11Au+lrzrw4GKzE6/+2t2IXD1vD4
- TAz54nwGT62SkQJ+PUIzRXaxoHI=
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 26.04.23 um 15:16 schrieb James Seo:
+From: Anisse Astier <an.astier@criteo.com>
 
-> On Mon, Apr 24, 2023 at 11:13:36PM +0200, Armin Wolf wrote:
->> Am 24.04.23 um 12:05 schrieb James Seo:
->>
->>> +	for (i = 0; i < HP_WMI_MAX_INSTANCES; i++, pevents++) {
->> Hi,
->>
->> the WMI driver core already knows how many instances of a given WMI object are available.
->> Unfortunately, this information is currently unavailable to drivers. Would it be convenient
->> for you to access this information? I could try to implement such a function if needed.
->>
->>> +	for (i = 0; i < HP_WMI_MAX_INSTANCES; i++, info++) {
->> Same as above.
->>
-> Hello,
->
-> Having the WMI object instance count wouldn't make much difference to
-> me for now. The driver has to iterate through all instances during
-> init anyway. If I were forced to accommodate 50+ sensors, I'd rewrite
-> some things and I think I'd want such a function then, but I picked
-> the current arbitrary limit of 32 because even that seems unlikely.
->
-> So, maybe don't worry about it unless you want to. Or am I missing
-> something?
->
-Hi,
+When writing variables, one might get errors with no other message on
+why it fails.
 
-i already have a experimental patch available which adds such a function.
-If you could test this patch to see if it works, then i could submit it upstream
-where other drivers could profit from being able to know the number of
-WMI object instances.
+Being able to see how much is used by EFI variables helps analyzing such
+issues.
 
-Your driver could also profit from such a function, as it could optimize the amount
-of memory allocated to store WMI object data. The current instance discovery algorithm
-(using a for-loop and break on error) also has a potential issue: when a single WMI call
-fails for some reason (ACPI error, ...), all following WMI instances are being ignored.
+Since this is not a conventionnal filesystem, block size is
+intentionnally set to 1 instead of PAGE_SIZE.
 
-I will post a RFC patch implementing such a function and CC you and a couple of people
-who might be interested. If you want to test this function, then you can use this patch.
-If you find out that the function does not work for you, then you can just continue with
-your current approach.
+x86 quirks of reserved size are taken into account and available and
+free size can be different, further helping debugging space issues.
 
-Armin Wolf
+Signed-off-by: Anisse Astier <an.astier@criteo.com>
+---
+Notes:
+Patch isn't split per subsystem intentionally, for better understanding
+of intent; split could be trivial in a later version.
 
->>> +	err = wmi_install_notify_handler(HP_WMI_EVENT_GUID,
->>> +					 hp_wmi_notify, state);
->> As a side note: the GUID-based interface for accessing WMI devices is deprecated.
->> It has known problems handling WMI devices sharing GUIDs and/or notification IDs. However,
->> the modern bus-based WMI interface (currently) does not support such aggregate devices well,
->> so i think using wmi_install_notify_handler() is still the best thing you can currently do.
->>
-> Interesting. Of course I had no idea. Though, for some strange
-> reason, it does look like some documentation to that effect has
-> emerged on the topic since the last time I checked ;)
->
->>> +	if (err) {
->>> +		dev_info(dev, "Failed to subscribe to WMI event\n");
->>> +		return false;
->>> +	}
->>> +
->>> +	err = devm_add_action(dev, hp_wmi_devm_notify_remove, NULL);
->>> +	if (err) {
->>> +		wmi_remove_notify_handler(HP_WMI_EVENT_GUID);
->>> +		return false;
->>> +	}
->> Maybe use devm_add_action_or_reset() here?
-> Will do.
->
-> Thanks for reviewing/writing.
->
-> James
+I'm not sure whether statfs(2) should return an error if the efi request
+fails; I think it could be ignored with maybe a WARN_ONCE; which would
+be close to the current behaviour.
+
+Regards,
+
+Anisse
+
+---
+ arch/x86/platform/efi/quirks.c |  8 ++++++++
+ drivers/firmware/efi/efi.c     |  1 +
+ drivers/firmware/efi/vars.c    | 12 ++++++++++++
+ fs/efivarfs/super.c            | 26 +++++++++++++++++++++++++-
+ include/linux/efi.h            | 10 ++++++++++
+ 5 files changed, 56 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index b0b848d6933a..587fa51230e2 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -114,6 +114,14 @@ void efi_delete_dummy_variable(void)
+ 				     EFI_VARIABLE_RUNTIME_ACCESS, 0, NULL);
+ }
+ 
++u64 efi_reserved_space(void)
++{
++	if (efi_no_storage_paranoia)
++		return 0;
++	return EFI_MIN_RESERVE;
++}
++EXPORT_SYMBOL_GPL(efi_reserved_space);
++
+ /*
+  * In the nonblocking case we do not attempt to perform garbage
+  * collection if we do not have enough free space. Rather, we do the
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index abeff7dc0b58..d0dfa007bffc 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -211,6 +211,7 @@ static int generic_ops_register(void)
+ 	generic_ops.get_variable = efi.get_variable;
+ 	generic_ops.get_next_variable = efi.get_next_variable;
+ 	generic_ops.query_variable_store = efi_query_variable_store;
++	generic_ops.query_variable_info = efi.query_variable_info;
+ 
+ 	if (efi_rt_services_supported(EFI_RT_SUPPORTED_SET_VARIABLE)) {
+ 		generic_ops.set_variable = efi.set_variable;
+diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
+index bd75b87f5fc1..c5382d5c3073 100644
+--- a/drivers/firmware/efi/vars.c
++++ b/drivers/firmware/efi/vars.c
+@@ -245,3 +245,15 @@ efi_status_t efivar_set_variable(efi_char16_t *name, efi_guid_t *vendor,
+ 	return status;
+ }
+ EXPORT_SYMBOL_NS_GPL(efivar_set_variable, EFIVAR);
++
++efi_status_t efivar_query_variable_info(u32 attr,
++					u64 *storage_space,
++					u64 *remaining_space,
++					u64 *max_variable_size)
++{
++	if (!__efivars->ops->query_variable_info)
++		return EFI_UNSUPPORTED;
++	return __efivars->ops->query_variable_info(attr, storage_space,
++			remaining_space, max_variable_size);
++}
++EXPORT_SYMBOL_NS_GPL(efivar_query_variable_info, EFIVAR);
+diff --git a/fs/efivarfs/super.c b/fs/efivarfs/super.c
+index 482d612b716b..064bfc0243c9 100644
+--- a/fs/efivarfs/super.c
++++ b/fs/efivarfs/super.c
+@@ -13,6 +13,7 @@
+ #include <linux/ucs2_string.h>
+ #include <linux/slab.h>
+ #include <linux/magic.h>
++#include <linux/statfs.h>
+ 
+ #include "internal.h"
+ 
+@@ -23,8 +24,31 @@ static void efivarfs_evict_inode(struct inode *inode)
+ 	clear_inode(inode);
+ }
+ 
++static int efivarfs_statfs(struct dentry *dentry, struct kstatfs *buf)
++{
++	u64 storage_space, remaining_space, max_variable_size;
++	efi_status_t status;
++	const u32 attr = (EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS |
++	 EFI_VARIABLE_RUNTIME_ACCESS);
++
++	buf->f_type = dentry->d_sb->s_magic;
++	buf->f_bsize = 1;
++	buf->f_namelen = NAME_MAX;
++
++	status = efivar_query_variable_info(attr, &storage_space, &remaining_space,
++					    &max_variable_size);
++	if (status != EFI_SUCCESS)
++		return efi_status_to_err(status);
++	buf->f_blocks = storage_space;
++	buf->f_bfree = remaining_space;
++	if (remaining_space > efi_reserved_space())
++		buf->f_bavail = remaining_space - efi_reserved_space();
++	else
++		buf->f_bavail = 0;
++	return 0;
++}
+ static const struct super_operations efivarfs_ops = {
+-	.statfs = simple_statfs,
++	.statfs = efivarfs_statfs,
+ 	.drop_inode = generic_delete_inode,
+ 	.evict_inode = efivarfs_evict_inode,
+ };
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 7aa62c92185f..d2b686191870 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -703,6 +703,7 @@ static inline void efi_enter_virtual_mode (void) {}
+ extern efi_status_t efi_query_variable_store(u32 attributes,
+ 					     unsigned long size,
+ 					     bool nonblocking);
++extern u64 efi_reserved_space(void);
+ #else
+ 
+ static inline efi_status_t efi_query_variable_store(u32 attributes,
+@@ -711,6 +712,10 @@ static inline efi_status_t efi_query_variable_store(u32 attributes,
+ {
+ 	return EFI_SUCCESS;
+ }
++static inline u64 efi_reserved_space(void)
++{
++	return 0;
++}
+ #endif
+ extern void __iomem *efi_lookup_mapped_addr(u64 phys_addr);
+ 
+@@ -1042,6 +1047,7 @@ struct efivar_operations {
+ 	efi_set_variable_t *set_variable;
+ 	efi_set_variable_t *set_variable_nonblocking;
+ 	efi_query_variable_store_t *query_variable_store;
++	efi_query_variable_info_t *query_variable_info;
+ };
+ 
+ struct efivars {
+@@ -1087,6 +1093,10 @@ efi_status_t efivar_set_variable_locked(efi_char16_t *name, efi_guid_t *vendor,
+ efi_status_t efivar_set_variable(efi_char16_t *name, efi_guid_t *vendor,
+ 				 u32 attr, unsigned long data_size, void *data);
+ 
++efi_status_t efivar_query_variable_info(u32 attr, u64 *storage_space,
++					u64 *remaining_space,
++					u64 *max_variable_size);
++
+ #if IS_ENABLED(CONFIG_EFI_CAPSULE_LOADER)
+ extern bool efi_capsule_pending(int *reset_type);
+ 
+-- 
+2.34.1
+
