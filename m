@@ -2,237 +2,226 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30291C77B73
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Apr 2023 13:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80729C77B61
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Apr 2023 16:27:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243511AbjD0NNU (ORCPT
+        id S239857AbjD0Q1I (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 27 Apr 2023 09:13:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36046 "EHLO
+        Thu, 27 Apr 2023 12:27:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243367AbjD0NNT (ORCPT
+        with ESMTP id S233236AbjD0Q1I (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 Apr 2023 09:13:19 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F5140C4
-        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Apr 2023 06:13:17 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-957dbae98b4so1032255466b.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Apr 2023 06:13:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1682601195; x=1685193195;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ymSyk174Q/aRoWNbYUHHG8erPdr3iK0BpQYJmy801k=;
-        b=HIgpg5N7XJjzbxz+z7IgxgVQ5128JI4dtyixvRnwGndbaq5YVIPtJHd+DaOorca26k
-         cr99XyR833joae9EIrXDFvGYDfgdx97lSuMToDnUqFhu9JA7SVMQJHER3oDi1Rp3QEOF
-         mLPJ2w5t3aMH0JrLeMU3g1mTm+pQghwAf7n/nH6OPPuRRH8u1MJicYy4tnsZoD/6nenc
-         EeThR0OHBw47zlfBPnB+cq15TJ0QLrtuGCvLMwLcZZYUg6DqV/RYw9pkk1E3rpyPuXst
-         ayDxj8TjQBJExMKsUnsMDqZQTfzm6bZlQ6b/oOXxuNOUqTuU/9i+0PZUQfGkDAoFnKXE
-         v4wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682601195; x=1685193195;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9ymSyk174Q/aRoWNbYUHHG8erPdr3iK0BpQYJmy801k=;
-        b=XYb5itJUqJq72ePtRS4efiSoWJFHkdRlaU0lRLNucEIQ4rHbQoPhyeqTC0xTIgsy4O
-         Ln9R8aeZcvCW8ViTzJS8HUpqVCt0rA6QuNNxGYgDhf4QKfG3obGNGgI+bj+dAh4/9BIR
-         bTghIu9e4jiwEr+jFTqqZsQeebO3J5gFfoL/AFggOyEfZTgnsiNYwpFgfo3+Dr752nla
-         Z59IZ92QoiU6Uxy09bhORNx+HHdrBtyX5nUlBHAETnuO8UCktcSbi9dbv4sHgKMXX8nq
-         LSMnWbalv+zZ/nL2gUDsDjK5WsdjOq96/EJMniAgwMyDm/B81rjybJq1zctcaaglU0qD
-         H0Xw==
-X-Gm-Message-State: AC+VfDybIs3a48lb4UehTRO8aVpWzESy9guK09DUX/rPDdnidVEuFpu3
-        CYoy3uNa5+nqVDbd+RjwFZRiRg==
-X-Google-Smtp-Source: ACHHUZ4WhZAaEZw48L4mS8JWz5hV+DtJHTNQLlKB9/bS0XJh3GNfgim97pYJpFirPWLxY6K5pRGJaA==
-X-Received: by 2002:a17:907:7da9:b0:94b:cd7c:59f4 with SMTP id oz41-20020a1709077da900b0094bcd7c59f4mr1742934ejc.16.1682601195517;
-        Thu, 27 Apr 2023 06:13:15 -0700 (PDT)
-Received: from localhost (cst2-173-16.cust.vodafone.cz. [31.30.173.16])
-        by smtp.gmail.com with ESMTPSA id t25-20020a17090616d900b009534603453dsm9503863ejd.131.2023.04.27.06.13.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Apr 2023 06:13:14 -0700 (PDT)
-Date:   Thu, 27 Apr 2023 15:13:13 +0200
-From:   Andrew Jones <ajones@ventanamicro.com>
-To:     Sunil V L <sunilvl@ventanamicro.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-acpi@vger.kernel.org, linux-crypto@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, llvm@lists.linux.dev,
-        corbet@lwn.net, Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, lenb@kernel.org, daniel.lezcano@linaro.org,
-        tglx@linutronix.de, qianweili@huawei.com, wangzhou1@hisilicon.com,
-        herbert@gondor.apana.org.au, Marc Zyngier <maz@kernel.org>,
-        luzmaximilian@gmail.com, hdegoede@redhat.com, markgross@kernel.org,
-        nathan@kernel.org, ndesaulniers@google.com, trix@redhat.com,
-        rafael@kernel.org, davem@davemloft.net, rafael.j.wysocki@intel.com
-Subject: Re: [PATCH V4 08/23] RISC-V: ACPI: Cache and retrieve the RINTC
- structure
-Message-ID: <q7bug5j62ceniiif5joz5i73g7lbyebawbokcang4ctit4i634@e5bd6zqozbau>
-References: <20230404182037.863533-9-sunilvl@ventanamicro.com>
- <mhng-fd6c3622-ce6c-4895-8dc9-7dbaa2ab14f4@palmer-ri-x1c9a>
- <ZEo+6rwM+c6DvlMM@sunil-laptop>
- <qqukqrc45zqyjh5bwpjpuiweogwtapuw7qqjjpubjwvteum6ig@esjfwqdivhpa>
- <ZEpUCD+eq/NL7LXJ@sunil-laptop>
+        Thu, 27 Apr 2023 12:27:08 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F83B187;
+        Thu, 27 Apr 2023 09:27:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1682612791; i=w_armin@gmx.de;
+        bh=+1f6qLR2Zj5oazs/gvAaitNiZ4FVbaZBODlc7qum8cQ=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=UedrkshOS6iWVzJpQb3+MNK4UuzsxEeyofjdbnCCRTBWJNN2wdx2eW2qJbT0F8kzU
+         b2KYm9GnYPoVPIX5Bu096eFm53rVwZD8yP2e4RSOSrrBf2W/27E6W74oF60814qBiP
+         36jilC+YZQ9q9hohL6A9U9MPxkQS1uRn6dAAh0E6+e+mCESVHVgc9vLVdobOPV8Z/E
+         S28xbuFwlPik5GqKMU1ShBgDC2O5PKfpf7nZeWL8YsrSBAadXqIb4ivn3tCk2YaVXs
+         i9FLPKdxnfg7EjEejyS1z6Mdmbc7ll/ub4szYh9G9MW1bixJcUL0o5We1VEtUaeDdc
+         pgsGiOp3eQ6Dw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MD9XF-1q16zW0qQ5-0097vV; Thu, 27
+ Apr 2023 18:26:31 +0200
+Subject: Re: [RFC v2 1/2] platform/x86: wmi: Allow retrieving the number of
+ WMI object instances
+To:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org
+Cc:     Mario.Limonciello@amd.com, prasanth.ksr@dell.com,
+        jorgealtxwork@gmail.com, james@equiv.tech,
+        Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230426212848.108562-1-W_Armin@gmx.de>
+ <20230426212848.108562-2-W_Armin@gmx.de>
+ <339c6ba5-6d60-8271-1b5d-6c4165801187@redhat.com>
+From:   Armin Wolf <W_Armin@gmx.de>
+Message-ID: <4db0e619-7f18-3f6b-9fb3-769f95233a72@gmx.de>
+Date:   Thu, 27 Apr 2023 18:26:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZEpUCD+eq/NL7LXJ@sunil-laptop>
+In-Reply-To: <339c6ba5-6d60-8271-1b5d-6c4165801187@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:ktEPUv9WL2iRyTIsTuXn7do3XeljJWvsHzY2nwiRY4N8rK8i/4K
+ 5eSpC7nbP8ggvbuEAt2gL9O+6HoHevg6zb1hrwZ5BK0vYOZT2uxrZt3s+jxYe4qgbynGNyY
+ nkZLJqFAOM4sqsPK8D/1mqtq8MZPp/p0lwfiM58jOrC/PlP9SftwyCUyRb1wIjBMFHt2h8W
+ GCMC/EfIJ8DMhRBfpbWUQ==
+UI-OutboundReport: notjunk:1;M01:P0:i2L+AHv1eN8=;ZtumYekCO9qsx13dapsN/FGcVd4
+ 5O2dA87x0FfjkqEvPm3Dcl+v7RL4GM/QCI5qHU+OObx+Fj988NR4gtrSkFbsalgSu/GQ8IVZR
+ aD6vCgBDtUB9VWhYV//VEBICtncYYR47j6vLr5Zwi5aWuIw3+bXBlJF5marp1qgOa2b6CCIe0
+ dRPLmcI/suUgjD0RpZN5Snr2jWgoQjLPTtQb5wGlEyXngNimM1Kton2gB1Zdb20uAKECQcwRa
+ 6qqJ9vUmnMC6i78iio8PLgLb1A0D5EeGPFQVq4rm8coh1pAmBo5HETI9vPSzu631tncpbpgI1
+ GU29Zjf+qCrF1j/OBHXghtcbCUzT6VZteXernHGP41PHQ3Cc+ePGXBzev4Is1okqNMRKbJalk
+ Pu1eZdodufjqUYVLsAvOxvFuuod9k8qW7n4UfTm7YARm9kSCS1qloTH890lTgpUxL7ovWvVrZ
+ nFOzi+gvwPpcYtWZnGaoeE1dPxw02EVJq6KCapPtmnA0fLuqMKu+X3OGECxKbx/KjRCvW3zsq
+ r8Mk3ggz5Fk4rL+9Fr//UyTBl4xNhTrqssr1cfxv/L3I54nAxQNG9Lt0AS1KQqufWYztq1vHn
+ l9zy00x3qP4Idi3jxslL1z5me1PbO+cs6P9ZlgQsuxQY/nCkZjRmL7ZlBSDOn9oKz5/UYelD3
+ xAhSNyMcQJtbDRQMPgGpHQ9hxwhu3cTO05ap7qQjXZtDlkvxeTRSS1guBVVoxXgvWTJUr5lq8
+ qwlYtU0iiWAbjBy7RCEeS2so2QFtP3MDAwyPsoAwwLUK8VkGxkZpYiHdTYabgZg7/VwN+Atoc
+ bGXl67HiLagtYjrcjH0rJDaRk8U8OqPsFjHTTCc5wMLX1OYAQbbTsBlnqBMnqH48qqt8ZmNTm
+ vRhVUWQ0TOApO1rsTW1JUZxVxAZCWhDtSMwmT+0BG8xT4enUPRXAZSwUHpzZum5TLkmDU85c7
+ QrGy8t0DV08uRemhFseapwPflPs=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Apr 27, 2023 at 04:22:56PM +0530, Sunil V L wrote:
-> On Thu, Apr 27, 2023 at 12:25:42PM +0200, Andrew Jones wrote:
-> > On Thu, Apr 27, 2023 at 02:52:50PM +0530, Sunil V L wrote:
-> > > Hi Palmer,
-> > > 
-> > > On Wed, Apr 26, 2023 at 11:45:00AM -0700, Palmer Dabbelt wrote:
-> > > > On Tue, 04 Apr 2023 11:20:22 PDT (-0700), sunilvl@ventanamicro.com wrote:
-> > > > > RINTC structures in the MADT provide mapping between the hartid
-> > > > > and the CPU. This is required many times even at run time like
-> > > > > cpuinfo. So, instead of parsing the ACPI table every time, cache
-> > > > > the RINTC structures and provide a function to get the correct
-> > > > > RINTC structure for a given cpu.
-> > > > > 
-> > > > > Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
-> > > > > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > ---
-> > > > >  arch/riscv/include/asm/acpi.h |  2 ++
-> > > > >  arch/riscv/kernel/acpi.c      | 60 +++++++++++++++++++++++++++++++++++
-> > > > >  2 files changed, 62 insertions(+)
-> > > > > 
-> > > > > diff --git a/arch/riscv/include/asm/acpi.h b/arch/riscv/include/asm/acpi.h
-> > > > > index 9be52b6ffae1..1606dce8992e 100644
-> > > > > --- a/arch/riscv/include/asm/acpi.h
-> > > > > +++ b/arch/riscv/include/asm/acpi.h
-> > > > > @@ -59,6 +59,8 @@ static inline bool acpi_has_cpu_in_madt(void)
-> > > > > 
-> > > > >  static inline void arch_fix_phys_package_id(int num, u32 slot) { }
-> > > > > 
-> > > > > +struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu);
-> > > > > +u32 get_acpi_id_for_cpu(int cpu);
-> > > > >  #endif /* CONFIG_ACPI */
-> > > > > 
-> > > > >  #endif /*_ASM_ACPI_H*/
-> > > > > diff --git a/arch/riscv/kernel/acpi.c b/arch/riscv/kernel/acpi.c
-> > > > > index 81d448c41714..40ab55309c70 100644
-> > > > > --- a/arch/riscv/kernel/acpi.c
-> > > > > +++ b/arch/riscv/kernel/acpi.c
-> > > > > @@ -24,6 +24,66 @@ EXPORT_SYMBOL(acpi_disabled);
-> > > > >  int acpi_pci_disabled = 1;	/* skip ACPI PCI scan and IRQ initialization */
-> > > > >  EXPORT_SYMBOL(acpi_pci_disabled);
-> > > > > 
-> > > > > +static struct acpi_madt_rintc cpu_madt_rintc[NR_CPUS];
-> > > > > +
-> > > > > +static int acpi_parse_madt_rintc(union acpi_subtable_headers *header, const unsigned long end)
-> > > > > +{
-> > > > > +	struct acpi_madt_rintc *rintc = (struct acpi_madt_rintc *)header;
-> > > > > +	int cpuid;
-> > > > > +
-> > > > > +	if (!(rintc->flags & ACPI_MADT_ENABLED))
-> > > > > +		return 0;
-> > > > > +
-> > > > > +	cpuid = riscv_hartid_to_cpuid(rintc->hart_id);
-> > > > 
-> > > > Unless I'm missing something, this races with CPUs coming online.  Maybe
-> > > > that's a rare enough case we don't care, but I think we'd also just have
-> > > > simpler logic if we fixed it...
-> > > > 
-> > > This depend only on cpuid_to_hartid_map filled up. I wish I could
-> > > initialize this RINTC mapping in setup_smp() itself like ARM64. But in
-> > > RISC-V, this file smpboot.c gets built only when CONFIG_SMP is enabled.
-> > > Hence, we need to initialize this array outside of setup_smp().
-> > > 
-> > > I can update the code to initialize this from setup_arch() immediately
-> > > after setup_smp() if ACPI is enabled. That should avoid the global
-> > > variable check also. Let me know if you prefer this.
-> > > 
-> > > > > +	/*
-> > > > > +	 * When CONFIG_SMP is disabled, mapping won't be created for
-> > > > > +	 * all cpus.
-> > > > > +	 * CPUs more than NR_CPUS, will be ignored.
-> > > > > +	 */
-> > > > > +	if (cpuid >= 0 && cpuid < NR_CPUS)
-> > > > > +		cpu_madt_rintc[cpuid] = *rintc;
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static int acpi_init_rintc_array(void)
-> > > > > +{
-> > > > > +	if (acpi_table_parse_madt(ACPI_MADT_TYPE_RINTC, acpi_parse_madt_rintc, 0) > 0)
-> > > > > +		return 0;
-> > > > > +
-> > > > > +	return -ENODEV;
-> > > > > +}
-> > > > > +
-> > > > > +/*
-> > > > > + * Instead of parsing (and freeing) the ACPI table, cache
-> > > > > + * the RINTC structures since they are frequently used
-> > > > > + * like in  cpuinfo.
-> > > > > + */
-> > > > > +struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu)
-> > > > > +{
-> > > > > +	static bool rintc_init_done;
-> > > > 
-> > > > ... basically just get rid of this global variable, and instead have a
-> > > > 
-> > > >    if (!&cpu_madt_rintc[cpu])
-> > > >        ... parse ...
-> > > >    return &cpu_madt_rintc[cpu];
-> > > > 
-> > > > that'd probably let us get rid of a handful of these helpers too, as now
-> > > > it's just a call to the parsing bits.
-> > > > 
-> > > I am afraid this (!&cpu_madt_rintc[cpu]) check won't work since we are
-> > > not caching the RINTC pointers but actual contents itself. So, the
-> > > address is always valid. However, as per Drew's earlier feedback I am
-> > > going to reduce one helper. I am planning to send the next version of
-> > > this patch once 6.4 rc1 is available since the ACPICA patches are merged
-> > > now.
-> > > 
-> > > > > +
-> > > > > +	if (!rintc_init_done) {
-> > > > > +		if (acpi_init_rintc_array()) {
-> > > > > +			pr_err("No valid RINTC entries exist\n");
-> > > > > +			return NULL;
-> > > > > +		}
-> > > > > +
-> > > > > +		rintc_init_done = true;
-> > > > > +	}
-> > > > > +
-> > > > > +	return &cpu_madt_rintc[cpu];
-> > > > > +}
-> > > > > +
-> > > > > +u32 get_acpi_id_for_cpu(int cpu)
-> > > > > +{
-> > > > > +	struct acpi_madt_rintc *rintc = acpi_cpu_get_madt_rintc(cpu);
-> > > > > +
-> > > > > +	BUG_ON(!rintc);
-> > > > 
-> > > > We should have some better error reporting here.  It looks like all the
-> > > > callerss of get_acpi_id_for_cpu() are tolerant of a nonsense ID being
-> > > > returned, so maybe we just pr_warn() something users can understand and then
-> > > > return -1 or something?
-> > > > 
-> > > 
-> > > RINTC is mandatory for ACPI systems. Also, all 32bit values are valid
-> > > for UID. So, there is no bogus value we can return. 
-> > > 
-> > > Actually, I just realized this check is redundant. It will never be NULL
-> > > since it is a static array. So, we can just get rid of the BUG.
-> > 
-> > It can be NULL on the first call of acpi_cpu_get_madt_rintc(), which is
-> > a good time to BUG if there's isn't an RINTC.
-> > 
-> Sorry, I mean if we change the initialization to get called from
-> setup_arch, then we can get rid of this check along with global variable
-> check, correct?
+Am 27.04.23 um 11:43 schrieb Hans de Goede:
 
-Sounds good to me, but now I think we're pushing the question of whether
-to BUG or not on a missing RINTC to that new init function, because
-otherwise we'll still end up in get_acpi_id_for_cpu() eventually with
-or without a valid rintc from which we get the uid (and the uid has no
-specified bogus value).
+> Hi Armin,
+>
+> Thank you for your work on this.
+>
+> On 4/26/23 23:28, Armin Wolf wrote:
+>> Currently, the WMI driver core knows how many instances of a given
+>> WMI object exist, but WMI drivers cannot access this information.
+>> At the same time, some current and upcoming WMI drivers want to
+>> have access to this information. Add wmi_instance_count() and
+>> wmidev_instance_count() to allow WMI drivers to get the number of
+>> WMI object instances.
+>>
+>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>> ---
+>>   drivers/platform/x86/wmi.c | 40 ++++++++++++++++++++++++++++++++++++++
+>>   include/linux/acpi.h       |  2 ++
+>>   include/linux/wmi.h        |  2 ++
+>>   3 files changed, 44 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+>> index c226dd4163a1..7c1a904dec5f 100644
+>> --- a/drivers/platform/x86/wmi.c
+>> +++ b/drivers/platform/x86/wmi.c
+>> @@ -263,6 +263,46 @@ int set_required_buffer_size(struct wmi_device *wdev, u64 length)
+>>   }
+>>   EXPORT_SYMBOL_GPL(set_required_buffer_size);
+>>
+>> +/**
+>> + * wmi_instance_count - Get number of WMI object instances
+>> + * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+>> + * @instance_count: variable to hold the instance count
+>> + *
+>> + * Get the number of WMI object instances.
+>> + *
+>> + * Returns: acpi_status signaling success or error.
+>> + */
+>> +acpi_status wmi_instance_count(const char *guid_string, u8 *instance_count)
+>> +{
+>> +	struct wmi_block *wblock;
+>> +	acpi_status status;
+>> +
+>> +	status = find_guid(guid_string, &wblock);
+>> +	if (ACPI_FAILURE(status))
+>> +		return status;
+>> +
+>> +	*instance_count = wmidev_instance_count(&wblock->dev);
+>> +
+>> +	return AE_OK;
+>> +}
+>> +EXPORT_SYMBOL_GPL(wmi_instance_count);
+> I would prefer this to have a normal kernel function prototype
+> which returns -errno rather then returning an acpi_status. E.g. :
+>
+> /**
+>   * wmi_instance_count - Get number of WMI object instances
+>   * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+>   *
+>   * Get the number of WMI object instances.
+>   *
+>   * Returns: The number of WMI object instances, 0 if the GUID is not found.
+>   */
+> int wmi_instance_count(const char *guid_string)
+> {
+> 	struct wmi_block *wblock;
+> 	acpi_status status;
+>
+> 	status = find_guid(guid_string, &wblock);
+> 	if (ACPI_FAILURE(status))
+> 		return 0;
+>
+> 	return wmidev_instance_count(&wblock->dev);
+> }
+> EXPORT_SYMBOL_GPL(wmi_instance_count);
+>
+> This will also allow this to completely replace
+> the get_instance_count() function in dell-wmi-sysman.
+>
+> Note I have just gone with always returning 0 here
+> on error. I guess you could look at the status and
+> return 0 for not-found and -errno for other errors
+> but I don't think any callers will care for the difference,
+> so just always returning 0 seems easier for callers to
+> deal with.
+>
+> As always this is just a suggestion, let me know if
+> you think this is a bad idea.
+>
+> Regards,
+>
+> Hans
+>
+I like this idea. Returning a negative errno on error would allow drivers to
+distinguish between "WMI object not found" and "zero instances found", which
+might be useful for some drivers.
 
-Thanks,
-drew
+Maybe a function for converting ACPI errors to POSIX errors already exists,
+otherwise i will just write one myself.
+
+Armin Wolf
+
+>
+>> +
+>> +/**
+>> + * wmidev_instance_count - Get number of WMI object instances
+>> + * @wdev: A wmi bus device from a driver
+>> + *
+>> + * Get the number of WMI object instances.
+>> + *
+>> + * Returns: Number of WMI object instances.
+>> + */
+>> +u8 wmidev_instance_count(struct wmi_device *wdev)
+>> +{
+>> +	struct wmi_block *wblock = container_of(wdev, struct wmi_block, dev);
+>> +
+>> +	return wblock->gblock.instance_count;
+>> +}
+>> +EXPORT_SYMBOL_GPL(wmidev_instance_count);
+>> +
+>>   /**
+>>    * wmi_evaluate_method - Evaluate a WMI method (deprecated)
+>>    * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+>> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+>> index efff750f326d..ab2a4b23e7a3 100644
+>> --- a/include/linux/acpi.h
+>> +++ b/include/linux/acpi.h
+>> @@ -412,6 +412,8 @@ extern bool acpi_is_pnp_device(struct acpi_device *);
+>>
+>>   typedef void (*wmi_notify_handler) (u32 value, void *context);
+>>
+>> +acpi_status wmi_instance_count(const char *guid, u8 *instance_count);
+>> +
+>>   extern acpi_status wmi_evaluate_method(const char *guid, u8 instance,
+>>   					u32 method_id,
+>>   					const struct acpi_buffer *in,
+>> diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+>> index c1a3bd4e4838..763bd382cf2d 100644
+>> --- a/include/linux/wmi.h
+>> +++ b/include/linux/wmi.h
+>> @@ -35,6 +35,8 @@ extern acpi_status wmidev_evaluate_method(struct wmi_device *wdev,
+>>   extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
+>>   					     u8 instance);
+>>
+>> +u8 wmidev_instance_count(struct wmi_device *wdev);
+>> +
+>>   extern int set_required_buffer_size(struct wmi_device *wdev, u64 length);
+>>
+>>   /**
+>> --
+>> 2.30.2
+>>
