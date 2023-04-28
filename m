@@ -2,155 +2,228 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F66C77B61
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 28 Apr 2023 15:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B63FC77B60
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 28 Apr 2023 15:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230215AbjD1Ph3 (ORCPT
+        id S229864AbjD1Pl2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 28 Apr 2023 11:37:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52254 "EHLO
+        Fri, 28 Apr 2023 11:41:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229851AbjD1Ph2 (ORCPT
+        with ESMTP id S229526AbjD1Pl2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Apr 2023 11:37:28 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C66355AD;
-        Fri, 28 Apr 2023 08:36:53 -0700 (PDT)
-Date:   Fri, 28 Apr 2023 17:36:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-        t=1682696178; bh=7jLiEj7+Pv2h4RAIi3yfMfMbNX9AW+A1ZOdwGlDD00k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U/0pCfV8PHvTtLuVAuSw4fiWwMZVPBpaRzGM+KJ15OUjgA0TR7DT1JzjyR9vDYLU4
-         aDgJ6y0jMJJGsiGBxzIwgFl8BwER6MLaxqsC8EAIrrk15CK6c/J0zWLUoI3wM6JwQM
-         4QupQhQ/0wLFTCKV6NXcueD+nDQuIPl9S/PrXFOs=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
+        Fri, 28 Apr 2023 11:41:28 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74BC8AF;
+        Fri, 28 Apr 2023 08:41:26 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-2a8b3ecf59fso102120091fa.0;
+        Fri, 28 Apr 2023 08:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682696485; x=1685288485;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F3VErSpuylynLkUN12PRxQCfO6PMorntvr8IR8nKdKs=;
+        b=HWFLccrjCbosVhL492Rzg7+eCBgG1hmOYNBDPDvB4pR/gZphAA17xyiHXpibj9TjS3
+         WhfsFfgScx47o8L0R6WgRlAkQDlnKaLkdT9a/8gRd1Xtv3leglFWOC/kUXJ783fDwESP
+         fI5n5qvDvIdjLXXDqZ8ffTx/9CdDX8+KuVPuSoWniiFHP4V3UF7EaaLG/oucj0RhTPAf
+         sU5x+TioT3GmpJkwWlkK6GmFWltYh5rtN3T05JaPRpmvAYYfRoq7MgD6RJQONopN9ehP
+         OspOC6TOga2Kno8p7Q/SY0c5HsJH0vBcgH+/HXnIU4ssPCdsKroxvireAmmWU9Pe9IWr
+         nHAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682696485; x=1685288485;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F3VErSpuylynLkUN12PRxQCfO6PMorntvr8IR8nKdKs=;
+        b=KTnEHW5F6/SxQQCWTQuP5XVA3fG4f3qYF3+vcRb9VILRVr7qkWSGPVy8tqXws5ZRt4
+         g624IFi2YmsztZJw1RbBL8jjpJAApoGzhO3jDFo7eFRlxWo6Cx2tJ8z9RYi/w3jkmeAK
+         m4Fn2+1P5GLIGDwYXLqDYaewB2zXm8Mj8sbLNx0kYYiH4gT0yR9uR1ASDcSbfH/7Njgw
+         AMkICEzg51ptpaVQ0IU2PdtXqfbTZkG7WRKoP6FkZcgC0UZ+XmZdeVWnt7nomMpkn+zr
+         Q3l7hwqy07D/ardaCgi+b03ZgmtC8JrwzmvloaeQzXz7koZ+zWk743NICPcVr48E2201
+         fBZQ==
+X-Gm-Message-State: AC+VfDxwFkI1xpNODu3/05dNzQZrXZs43vrWB10/qh5WmP5tM2GMe42M
+        LppxiK4Kg/qd9MB8gWNoL18PsQVN9ElNVK2/X6t9xfUkdII=
+X-Google-Smtp-Source: ACHHUZ7leFNSSwEfc5SpQhgZnvITeGYbELfytlPnEAiACkYibO/seWLHZy8TYF5RdZmKXJ2U4pmwk5CKtSRc/5fwlbk=
+X-Received: by 2002:a2e:9248:0:b0:2a7:b1de:3ff7 with SMTP id
+ v8-20020a2e9248000000b002a7b1de3ff7mr1636260ljg.16.1682696484571; Fri, 28 Apr
+ 2023 08:41:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-13-jorge.lopez2@hp.com>
+ <cf54c6f4-d177-4904-82ee-9d33566fb920@t-8ch.de> <CAOOmCE8rpA=XvWBxcyRVu_gOHie3qN0E15Rs9bLfhb6tPZ7tyg@mail.gmail.com>
+ <479b18e3-a35b-45c7-8c8a-cd30af646977@t-8ch.de> <CAOOmCE87dV6pnnU7r8Ycf0XcVERpRFRZeK6=y+nC+_Fc1EuJMg@mail.gmail.com>
+ <7bdac640-cf61-429f-acd0-f8aa40b41e73@t-8ch.de>
+In-Reply-To: <7bdac640-cf61-429f-acd0-f8aa40b41e73@t-8ch.de>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Fri, 28 Apr 2023 10:40:59 -0500
+Message-ID: <CAOOmCE9pWqqN1zNAfdaWFL_cZvSfiEpQjETVeECR0BAw9-sVDQ@mail.gmail.com>
+Subject: Re: [PATCH v11 12/14] HP BIOSCFG driver - surestart-attributes
+To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
 Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 08/14] HP BIOSCFG driver - bioscfg-h
-Message-ID: <462b5d12-0430-4fbe-8c26-7b6126556ec8@t-8ch.de>
-References: <20230420165454.9517-1-jorge.lopez2@hp.com>
- <20230420165454.9517-9-jorge.lopez2@hp.com>
- <ca74121b-bb78-4093-8625-13359c324c28@t-8ch.de>
- <CAOOmCE_MpCBFOHd6QtzD5ufcwEz_FhJvqevj68pVeY_JS+V=Rg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOOmCE_MpCBFOHd6QtzD5ufcwEz_FhJvqevj68pVeY_JS+V=Rg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2023-04-28 10:24:40-0500, Jorge Lopez wrote:
-> On Sun, Apr 23, 2023 at 7:01 AM Thomas Weißschuh <thomas@t-8ch.de> wrote:
+On Fri, Apr 28, 2023 at 10:21=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t-8c=
+h.de> wrote:
+>
+> On 2023-04-28 09:58:01-0500, Jorge Lopez wrote:
+> > On Fri, Apr 28, 2023 at 1:03=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t=
+-8ch.de> wrote:
+> > >
+> > > On 2023-04-27 17:17:57-0500, Jorge Lopez wrote:
+> > > > On Sun, Apr 23, 2023 at 7:16=E2=80=AFAM Thomas Wei=C3=9Fschuh <thom=
+as@t-8ch.de> wrote:
+> > > > >
+> > > > > On 2023-04-20 11:54:52-0500, Jorge Lopez wrote:
+> > > > > >  .../x86/hp/hp-bioscfg/surestart-attributes.c  | 130 ++++++++++=
+++++++++
+> > > > > >  1 file changed, 130 insertions(+)
+> > > > > >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/surestar=
+t-attributes.c
+> > > > > >
+> > > > > > diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-attri=
+butes.c b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+> > > > > > new file mode 100644
+>
+> <snip>
+>
+> > > > > Instead of not returning any data, why not show as many results a=
+s
+> > > > > possible?
+> > > > >
+> > > >
+> > > > if count * LOG_ENTRY_SIZE > PAGE_SIZE then I prefer to return an er=
+ror.
+> > > > if the count is correct but a failure occurs while reading individu=
+al
+> > > > audit logs then we will return a partial list of all audit logs
+> > > > This changes will be included in Version 12
+> > >
+> > > What prevents the firmware from having more log entries?
+> > > Wouldn't these audit log entries not accumulate for each logged
+> > > operation over the lifetime of the device / boot?
+> > >
+> > > This would make the interface unusable as soon as there are more
+> > > entries.
 > >
-> > On 2023-04-20 11:54:48-0500, Jorge Lopez wrote:
-> > > ---
-> > >  drivers/platform/x86/hp/hp-bioscfg/bioscfg.h | 613 +++++++++++++++++++
-> > >  1 file changed, 613 insertions(+)
-> > >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
-
-<snip>
-
-> > > +/* global structure used by multiple WMI interfaces */
-> > > +extern struct bioscfg_priv bioscfg_drv;
-> > > +
-> > > +enum hp_wmi_data_type {
-> > > +     HPWMI_STRING_TYPE               = 0x00,
-> > > +     HPWMI_INTEGER_TYPE              = 0x01,
-> > > +     HPWMI_ENUMERATION_TYPE          = 0x02,
-> > > +     HPWMI_ORDERED_LIST_TYPE         = 0x03,
-> > > +     HPWMI_PASSWORD_TYPE             = 0x04,
-> > > +     HPWMI_SECURE_PLATFORM_TYPE      = 0x05,
-> > > +     HPWMI_SURE_START_TYPE           = 0x06
-> > > +};
+> > BIOS stores a max number of audit logs appropriate to the current
+> > audit log size.The first audit logs are kept in a FIFO queue by BIOS
+> > so when the queue is full and a new audit log arrives, then the  first
+> > audit log will be deleted.
+>
+> How does it determine "appropriate"?
+> This would also be great in a comment.
+>
+> If the BIOS is just using FIFO the driver could return the first
+> LOG_MAX_ENTRIES entries.
+> This would avoid trusting the firmware for a reasonable definition of
+> "appropriate".
+>
+> > >
+> > > > > > +
+> > > > > > +     if (ret < 0)
+> > > > > > +             return ret;
+> > >
+> > > And this should first validate ret and then count.
 > >
-> > Unused.
-> 
-> Both hp_wmi_data_type and hp_wmi_data_elements are used
-> for instance  HP_WMI_STRING_TYPE
-> 
-> bioscfg.c:338: case HPWMI_STRING_TYPE:
-> bioscfg.c:626: case HPWMI_STRING_TYPE:
-> bioscfg.c:722: case HPWMI_STRING_TYPE:
-> bioscfg.c:798: case HPWMI_STRING_TYPE:
-> bioscfg.c:906: ret = hp_init_bios_attributes(HPWMI_STRING_TYPE,
-> HP_WMI_BIOS_STRING_GUID);
-> bioscfg.h:247: HPWMI_STRING_TYPE
-
-Indeed. I think I just searched for "hp_wmi_data_type".
-
-The proper enum hp_wmi_data_type type should be used instead of
-"int attr_type".
-
-<snip>
-
-> > > +
-> > > +enum hp_wmi_elements_count {
-> > > +     STRING_ELEM_CNT         = 12,
-> > > +     INTEGER_ELEM_CNT        = 13,
-> > > +     ENUM_ELEM_CNT           = 13,
-> > > +     ORDERED_ELEM_CNT        = 12,
-> > > +     PASSWORD_ELEM_CNT       = 15
-> > > +};
+> > Done!
 > >
-> > To make it clearer where these values come from you could put them into
-> > the enum hp_wmi_data_elements.
+> > >
+> > > > > > +
+> > > > > > +     /*
+> > > > > > +      * We are guaranteed the buffer is 4KB so today all the e=
+vent
+> > > > > > +      * logs will fit
+> > > > > > +      */
+> > > > > > +
+> > > > > > +     for (i =3D 0; ((i < count) & (ret >=3D 0)); i++) {
+> > > > >
+> > > > > &&
+> > > > >
+> > > > > Better yet, pull the condition ret >=3D 0 into the body, as an el=
+se-branch
+> > > > > for the existing check.
+> > > > >
+> > > >
+> > > > Done!
+> > > >
+> > > > > > +             *buf =3D (i + 1);
+> > > > >
+> > > > > Isn't this directly overwritten by the query below?
+> > > >
+> > > > buf input value indicates the audit log to be read hence the reason
+> > > > why it is overwritten.
+> > > > This is an expected behavior.
+> > >
+> > > So this is read by the HPWMI_SURESTART_GET_LOG method in the firmware=
+?
+> > >
+> > > Make sense but need a comment.
 > >
-> > ...
-> >         ORD_LIST_ELEMENTS = 11,
-> >         ORD_LIST_ELEM_CNT = 12,
-> > ...
-> 
-> Done!  changes provided across all files affected.
-> 
+> > Done!
 > >
-> > But replacing the loop logic would remove the need for these enums
-> > completely.
-> >
-> 
-> _CNT values are necessary when elements are read from a buffer (
-> populate_string_elements_from_buffer).
-> _CNT values are not needed when elements are read from a package
-> (populate_string_package_data)
+> > >
+> > > > >
+> > > > > > +             ret =3D hp_wmi_perform_query(HPWMI_SURESTART_GET_=
+LOG,
+> > > > > > +                                        HPWMI_SURESTART,
+> > > > > > +                                        buf, 1, 128);
+> > > > > > +             if (ret >=3D 0)
+> > > > > > +                     buf +=3D LOG_ENTRY_SIZE;
+> > > > >
+> > > > > So 128 bytes are read but only the first 16 bytes are preserved?
+> > > > >
+> > > > > The documentation says that each entry has 128 bytes in the file.
+> > > > > And that they are separated by ";", which is not implemented.
+> > > >
+> > > > The statement will be removed from documentation  (separated by ";"=
+)
+> > > > audit log size is 16 bytes.
+> > > > >
+> > > > > Can the audit-log not contain all-zero bytes?
+> > > > > If it does this would need to be a bin_attribute.
+> > > >
+> > > > Bytes 16-127 are ignored and not used at this time.  If the audit l=
+og
+> > > > changes, then the driver will need to change to accommodate the new
+> > > > audit log size.
+> > >
+> > > buf is not guaranteed to have 128 bytes left for this data.
+> > >
+> > > For example if this is entry number 253 we are at offset 253 * 16 =3D=
+ 4048
+> > > in the sysfs buffer. Now hw_wmi_perform_query may try to write to 404=
+8 +
+> > > 127 =3D 4175 which is out of bounds for the buf of size 4096.
+> > >
+> > > Writing first to a stack buffer would be better,
+> > > or pass outsize =3D LOG_ENTRY_SIZE.
+> > >
+> > BIOS currently stores 16 bytes for each audit log although the WMI
+> > query reads 128 bytes.  The 128 bytes size is set to provide support
+> > in future BIOS for audit log sizes >=3D 16 and < 128 bytes.
+>
+> And if an old driver is running on a new BIOS then this would write out
+> of bounds.
+> Or if the BIOS is buggy.
+>
+> If the current driver can only handle 16 byte sized log entries then the
+> this should be used in the call to HPWMI_SURESTART_GET_LOG.
 
-Hm, I don't see why populate_string_elements_from_buffer() would need
-the _CNT define.
+BIOS WMI specification indicates that the HPWMI_SURESTART_GET_LOG call
+expects a 128 byte size output buffer regardless of the actual audit
+log size currently supported.
 
-(In another review mail I wrote down how I would expect it to look
-without the loop)
+Return Values:
+Byte 0-15: a requested Audit Log entry (Each Audit log is 16 bytes)
+Byte 16-127: Unused
+>
+> Storing it in a 128 byte stackvariable would also sidestep the issue.
 
-<snip>
-
-> > > +
-> > > +#define ATTRIBUTE_PROPERTY_STORE(curr_val, type)                     \
-> > > +     static ssize_t curr_val##_store(struct kobject *kobj,           \
-> > > +                                     struct kobj_attribute *attr,    \
-> > > +                                     const char *buf, size_t count)  \
-> > > +     {                                                               \
-> > > +             char *p = NULL;                                         \
-> > > +             char *attr_value = NULL;                                \
-> > > +             int i;                                                  \
-> > > +             int ret = -EIO;                                         \
-> > > +                                                                     \
-> > > +             attr_value = kstrdup(buf, GFP_KERNEL);                  \
-> > > +             if (!attr_value)                                        \
-> > > +                     return -ENOMEM;                                 \
-> > > +                                                                     \
-> > > +             p = memchr(attr_value, '\n', count);                    \
-> > > +             if (p != NULL)                                          \
-> > > +                     *p = '\0';                                      \
-> >
-> > This can also truncate the string if there is data after the newline.
-> 
-> This is a expected behavior as described by Hans in a later email
-
-I'm fine with stripping a trailing newline.
-
-But this truncates the string at the first newline.
-
-"foo\nbar" -> "foo"
-"\nfoo" -> ""
-
-<snip>
+The driver hardcodes the audit log size to 16 bytes.  If the new BIOS
+provides an audit log that is larger than 16 bytes, then the logs
+provided to the user application by the old driver will be truncated.
