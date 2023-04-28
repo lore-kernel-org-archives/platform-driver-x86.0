@@ -2,63 +2,62 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB56C77B60
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 28 Apr 2023 16:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55602C77B60
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 28 Apr 2023 16:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229470AbjD1QN3 (ORCPT
+        id S1344351AbjD1QTd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 28 Apr 2023 12:13:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43508 "EHLO
+        Fri, 28 Apr 2023 12:19:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbjD1QN2 (ORCPT
+        with ESMTP id S229843AbjD1QTc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Apr 2023 12:13:28 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 389972D61;
-        Fri, 28 Apr 2023 09:13:27 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4efe8991bafso104962e87.0;
-        Fri, 28 Apr 2023 09:13:27 -0700 (PDT)
+        Fri, 28 Apr 2023 12:19:32 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861B2103;
+        Fri, 28 Apr 2023 09:19:31 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2a8b3ecf59fso102592021fa.0;
+        Fri, 28 Apr 2023 09:19:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682698405; x=1685290405;
+        d=gmail.com; s=20221208; t=1682698770; x=1685290770;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h6HpevGuSeKVYRWiHzaC5C3PvoQ9zXlfTGqpoJB0Fpo=;
-        b=QFnSbPBqc8rULLiYh43yU6s3POFfVoXpcuFaDGA4dotETjtDC3qnydjfG2NycpeCAg
-         SOTAvfpRdoD7zDCuwHd2L4qmHQ1cYxiqG/pHlkDKk2i1WFNdlgnY178CGUwUYLwRo3FB
-         PJpMgwhw799Jvffz/Wl6eYqkW+i0G76n2zRQWHIltS+QWMlv1L3IfDHT52hEHHWTOuMf
-         kNZag1PGG/nd4Pa8fCvuE9lXlc9X3AmjV9ME/Ue2Hw417Uh60c2cFvxG3Sh3JZ8kMQxa
-         NvpR8PvEz5xGer+rVAFAg0a+u5VGxqodtiux9tIfAGUYDD4WPZUit6hdJmPJBwJTBSdX
-         s3Tw==
+        bh=zbYtNDNd7fInWlCfzLh9+4U1ztvtKyyC6684B51v+E0=;
+        b=nURJRNftdcjd1VJaEvq1ins9kvKw/pT8QmehI8qmoRYyQJaLPLTZnLzCFjlDgRgBIG
+         nBWFVY2JKEAPd0gLaX3fLA2Yj5uhcDj46WeKsxqUY4OaVRzqiAQUcPBQr1aKB+K5i4c6
+         x3TUEWyO25HR+CNXHvup07Kc/NXjOyuIYaxe2cjKOxLfIpYVwPz+sOvaLhtE1GoDOAaN
+         1vzlPu0h79Eu4NWmJ0bAp0L5IsBnuwqFV423MjWalLXrfq0G6Gskb9J93gtBflUcHux7
+         A8Be2ubvo1MlQINWA/1xP/sinY4WZW5cT5Kb3LhTYwb01lyjU5Gz0sn31Agr01VSPIH0
+         mGaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682698405; x=1685290405;
+        d=1e100.net; s=20221208; t=1682698770; x=1685290770;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h6HpevGuSeKVYRWiHzaC5C3PvoQ9zXlfTGqpoJB0Fpo=;
-        b=USYHsHkXkK5OQYtenbbat8+w5ROC2IPtb53WAQUr9RHFndzNTzrexj0tLuzATb9Op5
-         iny0ORe9+Git5d2S66rR9cxWkDa9aZS87a+MgbJRU6kQ1OGCcsveMi9xZAim1tWO4k90
-         vCdvwXfRNBnQhW8ai4pno4W6FU7BvQ0mUKlVm/tlse8jLMLybykG2k2e639VeUi/IiqS
-         1vB1kWWo366ZjN+ho4VTuTQMOoAjH51wfYO8U54w3tCgO07su+2bG6I7ZuxWX9w7ZTEC
-         D8hhy8ngODDXo2xybTz71K5LGNXq9yBaLdvwpeqUTbWpVQIE62gK+DCyn54JIfGC9aGS
-         J04Q==
-X-Gm-Message-State: AC+VfDzHwlmtLeMcJd70KQrRfamwcJryL8Y0NLCp6hG+PkqVhaHa2RjR
-        ZX3DZtC/FaE8cZgyIo9nEzQZVeSY4f09DOrZ41c=
-X-Google-Smtp-Source: ACHHUZ76w8Yi9LRDcm13mL6+0ksU3T5OdE3rL55wTmJe4rUXdCTQqtagEYTArGsVpVo5afeYTlHKVved1YzxBmMI7WA=
-X-Received: by 2002:ac2:5549:0:b0:4ed:b818:48ae with SMTP id
- l9-20020ac25549000000b004edb81848aemr1577073lfk.21.1682698405140; Fri, 28 Apr
- 2023 09:13:25 -0700 (PDT)
+        bh=zbYtNDNd7fInWlCfzLh9+4U1ztvtKyyC6684B51v+E0=;
+        b=hMx3j7sItvEdC6j/Cpt7YPL8xZCTpMEp+es/uIfn7EouvrQCGOvH/Z11EFBWu39zmO
+         Edcp6zGk+zki+qsYIdFDGJBOhp9zZfcmgTr7GWAPQ9xACPr/gPq5h3EII9Tzy0/tv6nK
+         GwcLHLl6Wv1ZK7aUXFYQW8U+c85A+KM2KGBySsI+/lN3cdSb2nBSnflUd3xTcR7ORzx4
+         KxXQ/Qld5n/HttkcVvpGnCB2DbKcP0irocHX5Lg2sicqhrX0pOO7/bLQoXi8pqi/e+QR
+         D5zFzoa6ofO1G+bIrNY4sGyfZu88Dws9iTplCcvCthxSq8DSDxX9QJG7fzGoyCPBz6Kg
+         sASw==
+X-Gm-Message-State: AC+VfDzQoHhLCWr/xK1BSzGRrUiJJqoOLUndPgiQ//k4WYdOhqH9Tky/
+        TkmiFs5B3itsNIjV9l8/KanTKtu2lzi7cktYW4E=
+X-Google-Smtp-Source: ACHHUZ6DubOHX0qskMIgfgi4eLbKcDnTZZHs5OKRqefkrhhPg46vGzwlM2nIv+0kTo9CXo6e/IyKiig9HdLTiZ6S3qo=
+X-Received: by 2002:a2e:9995:0:b0:2ab:bd1:93da with SMTP id
+ w21-20020a2e9995000000b002ab0bd193damr1969451lji.10.1682698769664; Fri, 28
+ Apr 2023 09:19:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-13-jorge.lopez2@hp.com>
- <cf54c6f4-d177-4904-82ee-9d33566fb920@t-8ch.de> <CAOOmCE8rpA=XvWBxcyRVu_gOHie3qN0E15Rs9bLfhb6tPZ7tyg@mail.gmail.com>
- <479b18e3-a35b-45c7-8c8a-cd30af646977@t-8ch.de> <CAOOmCE87dV6pnnU7r8Ycf0XcVERpRFRZeK6=y+nC+_Fc1EuJMg@mail.gmail.com>
- <7bdac640-cf61-429f-acd0-f8aa40b41e73@t-8ch.de> <CAOOmCE9pWqqN1zNAfdaWFL_cZvSfiEpQjETVeECR0BAw9-sVDQ@mail.gmail.com>
- <52554657-2902-454b-b2af-ed632dd2f081@t-8ch.de>
-In-Reply-To: <52554657-2902-454b-b2af-ed632dd2f081@t-8ch.de>
+References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-9-jorge.lopez2@hp.com>
+ <ca74121b-bb78-4093-8625-13359c324c28@t-8ch.de> <CAOOmCE_MpCBFOHd6QtzD5ufcwEz_FhJvqevj68pVeY_JS+V=Rg@mail.gmail.com>
+ <462b5d12-0430-4fbe-8c26-7b6126556ec8@t-8ch.de> <CAOOmCE8iBfeuodTO7C=0EUOkqv16008h7vsZO2hhBZPuLoLECw@mail.gmail.com>
+ <152fb7c0-1075-4718-bca1-c2083c425788@t-8ch.de>
+In-Reply-To: <152fb7c0-1075-4718-bca1-c2083c425788@t-8ch.de>
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Fri, 28 Apr 2023 11:12:59 -0500
-Message-ID: <CAOOmCE_jDOf4qE4kZJkW-TSP-_pvo54q9o3pKpaSM+UnjWGCjQ@mail.gmail.com>
-Subject: Re: [PATCH v11 12/14] HP BIOSCFG driver - surestart-attributes
+Date:   Fri, 28 Apr 2023 11:19:04 -0500
+Message-ID: <CAOOmCE-KK3AYmjaDO=qV7WzpsgeZ6d7U1Ep9a9=dcu9CEmohLQ@mail.gmail.com>
+Subject: Re: [PATCH v11 08/14] HP BIOSCFG driver - bioscfg-h
 To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
 Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -68,195 +67,89 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Apr 28, 2023 at 11:06=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t-8c=
+On Fri, Apr 28, 2023 at 11:09=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t-8c=
 h.de> wrote:
 >
-> On 2023-04-28 10:40:59-0500, Jorge Lopez wrote:
-> > On Fri, Apr 28, 2023 at 10:21=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@=
+> On 2023-04-28 11:03:56-0500, Jorge Lopez wrote:
+> > On Fri, Apr 28, 2023 at 10:36=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@=
 t-8ch.de> wrote:
 > > >
-> > > On 2023-04-28 09:58:01-0500, Jorge Lopez wrote:
-> > > > On Fri, Apr 28, 2023 at 1:03=E2=80=AFAM Thomas Wei=C3=9Fschuh <thom=
+> > > On 2023-04-28 10:24:40-0500, Jorge Lopez wrote:
+> > > > On Sun, Apr 23, 2023 at 7:01=E2=80=AFAM Thomas Wei=C3=9Fschuh <thom=
 as@t-8ch.de> wrote:
 > > > > >
-> > > > > On 2023-04-27 17:17:57-0500, Jorge Lopez wrote:
-> > > > > > On Sun, Apr 23, 2023 at 7:16=E2=80=AFAM Thomas Wei=C3=9Fschuh <=
-thomas@t-8ch.de> wrote:
-> > > > > > >
-> > > > > > > On 2023-04-20 11:54:52-0500, Jorge Lopez wrote:
-> > > > > > > >  .../x86/hp/hp-bioscfg/surestart-attributes.c  | 130 ++++++=
-++++++++++++
-> > > > > > > >  1 file changed, 130 insertions(+)
-> > > > > > > >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/sure=
-start-attributes.c
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-a=
-ttributes.c b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-> > > > > > > > new file mode 100644
-> > >
-> > > <snip>
-> > >
-> > > > > > > Instead of not returning any data, why not show as many resul=
-ts as
-> > > > > > > possible?
-> > > > > > >
-> > > > > >
-> > > > > > if count * LOG_ENTRY_SIZE > PAGE_SIZE then I prefer to return a=
-n error.
-> > > > > > if the count is correct but a failure occurs while reading indi=
-vidual
-> > > > > > audit logs then we will return a partial list of all audit logs
-> > > > > > This changes will be included in Version 12
-> > > > >
-> > > > > What prevents the firmware from having more log entries?
-> > > > > Wouldn't these audit log entries not accumulate for each logged
-> > > > > operation over the lifetime of the device / boot?
-> > > > >
-> > > > > This would make the interface unusable as soon as there are more
-> > > > > entries.
-> > > >
-> > > > BIOS stores a max number of audit logs appropriate to the current
-> > > > audit log size.The first audit logs are kept in a FIFO queue by BIO=
-S
-> > > > so when the queue is full and a new audit log arrives, then the  fi=
-rst
-> > > > audit log will be deleted.
-> > >
-> > > How does it determine "appropriate"?
-> > > This would also be great in a comment.
-> > >
-> > > If the BIOS is just using FIFO the driver could return the first
-> > > LOG_MAX_ENTRIES entries.
-> > > This would avoid trusting the firmware for a reasonable definition of
-> > > "appropriate".
-> > >
-> > > > >
-> > > > > > > > +
-> > > > > > > > +     if (ret < 0)
-> > > > > > > > +             return ret;
-> > > > >
-> > > > > And this should first validate ret and then count.
-> > > >
-> > > > Done!
-> > > >
-> > > > >
-> > > > > > > > +
-> > > > > > > > +     /*
-> > > > > > > > +      * We are guaranteed the buffer is 4KB so today all t=
-he event
-> > > > > > > > +      * logs will fit
-> > > > > > > > +      */
-> > > > > > > > +
-> > > > > > > > +     for (i =3D 0; ((i < count) & (ret >=3D 0)); i++) {
-> > > > > > >
-> > > > > > > &&
-> > > > > > >
-> > > > > > > Better yet, pull the condition ret >=3D 0 into the body, as a=
-n else-branch
-> > > > > > > for the existing check.
-> > > > > > >
-> > > > > >
-> > > > > > Done!
-> > > > > >
-> > > > > > > > +             *buf =3D (i + 1);
-> > > > > > >
-> > > > > > > Isn't this directly overwritten by the query below?
-> > > > > >
-> > > > > > buf input value indicates the audit log to be read hence the re=
-ason
-> > > > > > why it is overwritten.
-> > > > > > This is an expected behavior.
-> > > > >
-> > > > > So this is read by the HPWMI_SURESTART_GET_LOG method in the firm=
-ware?
-> > > > >
-> > > > > Make sense but need a comment.
-> > > >
-> > > > Done!
-> > > >
-> > > > >
-> > > > > > >
-> > > > > > > > +             ret =3D hp_wmi_perform_query(HPWMI_SURESTART_=
-GET_LOG,
-> > > > > > > > +                                        HPWMI_SURESTART,
-> > > > > > > > +                                        buf, 1, 128);
-> > > > > > > > +             if (ret >=3D 0)
-> > > > > > > > +                     buf +=3D LOG_ENTRY_SIZE;
-> > > > > > >
-> > > > > > > So 128 bytes are read but only the first 16 bytes are preserv=
-ed?
-> > > > > > >
-> > > > > > > The documentation says that each entry has 128 bytes in the f=
-ile.
-> > > > > > > And that they are separated by ";", which is not implemented.
-> > > > > >
-> > > > > > The statement will be removed from documentation  (separated by=
- ";")
-> > > > > > audit log size is 16 bytes.
-> > > > > > >
-> > > > > > > Can the audit-log not contain all-zero bytes?
-> > > > > > > If it does this would need to be a bin_attribute.
-> > > > > >
-> > > > > > Bytes 16-127 are ignored and not used at this time.  If the aud=
-it log
-> > > > > > changes, then the driver will need to change to accommodate the=
- new
-> > > > > > audit log size.
-> > > > >
-> > > > > buf is not guaranteed to have 128 bytes left for this data.
-> > > > >
-> > > > > For example if this is entry number 253 we are at offset 253 * 16=
- =3D 4048
-> > > > > in the sysfs buffer. Now hw_wmi_perform_query may try to write to=
- 4048 +
-> > > > > 127 =3D 4175 which is out of bounds for the buf of size 4096.
-> > > > >
-> > > > > Writing first to a stack buffer would be better,
-> > > > > or pass outsize =3D LOG_ENTRY_SIZE.
-> > > > >
-> > > > BIOS currently stores 16 bytes for each audit log although the WMI
-> > > > query reads 128 bytes.  The 128 bytes size is set to provide suppor=
-t
-> > > > in future BIOS for audit log sizes >=3D 16 and < 128 bytes.
-> > >
-> > > And if an old driver is running on a new BIOS then this would write o=
-ut
-> > > of bounds.
-> > > Or if the BIOS is buggy.
-> > >
-> > > If the current driver can only handle 16 byte sized log entries then =
-the
-> > > this should be used in the call to HPWMI_SURESTART_GET_LOG.
-> >
-> > BIOS WMI specification indicates that the HPWMI_SURESTART_GET_LOG call
-> > expects a 128 byte size output buffer regardless of the actual audit
-> > log size currently supported.
-> >
-> > Return Values:
-> > Byte 0-15: a requested Audit Log entry (Each Audit log is 16 bytes)
-> > Byte 16-127: Unused
-> > >
-> > > Storing it in a 128 byte stackvariable would also sidestep the issue.
-> >
-> > The driver hardcodes the audit log size to 16 bytes.  If the new BIOS
-> > provides an audit log that is larger than 16 bytes, then the logs
-> > provided to the user application by the old driver will be truncated.
+> > > > > On 2023-04-20 11:54:48-0500, Jorge Lopez wrote:
+> > > > > > ---
+> > > > > >  drivers/platform/x86/hp/hp-bioscfg/bioscfg.h | 613 +++++++++++=
+++++++++
+> > > > > >  1 file changed, 613 insertions(+)
+> > > > > >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.=
+h
 >
-> HPWMI_SURESTART_GET_LOG is directly passed a pointer into "buf" which
-> comes from sysfs core and is one page, 4096 bytes large.
-> It is told to write 128 bytes into it at a given offset.
+> <snip>
 >
-> In the loop if i =3D=3D 253 then this offset will be LOG_ENTRY_SIZE * 253=
- =3D 4048.
+> > > > > > +#define ATTRIBUTE_PROPERTY_STORE(curr_val, type)              =
+       \
+> > > > > > +     static ssize_t curr_val##_store(struct kobject *kobj,    =
+       \
+> > > > > > +                                     struct kobj_attribute *at=
+tr,    \
+> > > > > > +                                     const char *buf, size_t c=
+ount)  \
+> > > > > > +     {                                                        =
+       \
+> > > > > > +             char *p =3D NULL;                                =
+         \
+> > > > > > +             char *attr_value =3D NULL;                       =
+         \
+> > > > > > +             int i;                                           =
+       \
+> > > > > > +             int ret =3D -EIO;                                =
+         \
+> > > > > > +                                                              =
+       \
+> > > > > > +             attr_value =3D kstrdup(buf, GFP_KERNEL);         =
+         \
+> > > > > > +             if (!attr_value)                                 =
+       \
+> > > > > > +                     return -ENOMEM;                          =
+       \
+> > > > > > +                                                              =
+       \
+> > > > > > +             p =3D memchr(attr_value, '\n', count);           =
+         \
+> > > > > > +             if (p !=3D NULL)                                 =
+         \
+> > > > > > +                     *p =3D '\0';                             =
+         \
+> > > > >
+> > > > > This can also truncate the string if there is data after the newl=
+ine.
+> > > >
+> > > > This is a expected behavior as described by Hans in a later email
+> > >
+> > > I'm fine with stripping a trailing newline.
+> > >
+> > > But this truncates the string at the first newline.
+> > >
+> > > "foo\nbar" -> "foo"
+> > > "\nfoo" -> ""
+> > >
+> > All inputs expected by this driver and respectively by BIOS are a
+> > single line.  For this reason, '\n' will cause the string to be
+> > truncated.
+> > I propose reporting a warning message indicating that the data entered
+> > has a '\n' character and will be truncated in addition to failing the
+> > operation with -EINVAL
 >
-> So on a new BIOS the driver may write 128 bytes at offset 4048.
-> This goes up to 4175 which is larger than the 4096 buffer.
+> EINVAL sounds good, but a warning is overkill IMO.
 >
-> (See also the calculation in the previous mail)
+> Whoever put in the garbage value will see the error.
 >
-> Just use a 128 byte stack buffer and copy 16 bytes of it to the output
-> buffer.
-> (After having validated that the BIOS actually returned 16 bytes)
+> Stripping a trailing newline still seems fine though.
 
-Thank you for the clarification.
-Done!
+So. should the driver return an -EINVAL error or truncate the line,
+report a warning message, and allow it to proceed.?
+Please advice
+
+> This would be a very good candidate for a helper function.
