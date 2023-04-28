@@ -2,184 +2,84 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B15AC77B60
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 28 Apr 2023 06:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6108C77B61
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 28 Apr 2023 09:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229794AbjD1GED (ORCPT
+        id S1345490AbjD1Jxq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 28 Apr 2023 02:04:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60574 "EHLO
+        Fri, 28 Apr 2023 05:53:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229512AbjD1GEC (ORCPT
+        with ESMTP id S1345782AbjD1JxY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Apr 2023 02:04:02 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82DCE2689;
-        Thu, 27 Apr 2023 23:03:59 -0700 (PDT)
-Date:   Fri, 28 Apr 2023 08:03:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-        t=1682661836; bh=9Lg6IUGjZgJaTrtUJOs/dW6AatMFh0yFMB4mzaohHWY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DrziE8tag3Hdcer/9g1N1DTMpG1X3ET7uGNIELbwWWESfARzWLLmlotqgJhBhBW48
-         gycco6BdLEFqQm1MLlZiq/WgeXRW4XuHY1be8//oLoKkSno2WSbzjFI1aZUQhRyXOh
-         QC+UEp2JwhGz8VG8kXWwXgMloTe/4UoEodoUs9+Y=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 12/14] HP BIOSCFG driver - surestart-attributes
-Message-ID: <479b18e3-a35b-45c7-8c8a-cd30af646977@t-8ch.de>
-References: <20230420165454.9517-1-jorge.lopez2@hp.com>
- <20230420165454.9517-13-jorge.lopez2@hp.com>
- <cf54c6f4-d177-4904-82ee-9d33566fb920@t-8ch.de>
- <CAOOmCE8rpA=XvWBxcyRVu_gOHie3qN0E15Rs9bLfhb6tPZ7tyg@mail.gmail.com>
+        Fri, 28 Apr 2023 05:53:24 -0400
+Received: from out0-219.mail.aliyun.com (out0-219.mail.aliyun.com [140.205.0.219])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC24959F9;
+        Fri, 28 Apr 2023 02:53:02 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047198;MF=houwenlong.hwl@antgroup.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---.STCEPV9_1682675548;
+Received: from localhost(mailfrom:houwenlong.hwl@antgroup.com fp:SMTPD_---.STCEPV9_1682675548)
+          by smtp.aliyun-inc.com;
+          Fri, 28 Apr 2023 17:52:29 +0800
+From:   "Hou Wenlong" <houwenlong.hwl@antgroup.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Thomas Garnier" <thgarnie@chromium.org>,
+        "Lai Jiangshan" <jiangshan.ljs@antgroup.com>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Hou Wenlong" <houwenlong.hwl@antgroup.com>,
+        "Juergen Gross" <jgross@suse.com>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
+        "Darren Hart" <dvhart@infradead.org>,
+        "Andy Shevchenko" <andy@infradead.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "Dave Hansen" <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, <xen-devel@lists.xenproject.org>,
+        <platform-driver-x86@vger.kernel.org>
+Subject: [PATCH RFC 15/43] x86/PVH: Use fixed_percpu_data to set up GS base
+Date:   Fri, 28 Apr 2023 17:50:55 +0800
+Message-Id: <4fdb800ce6f1a2315918cb02eec3efbec1032cb8.1682673543.git.houwenlong.hwl@antgroup.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <cover.1682673542.git.houwenlong.hwl@antgroup.com>
+References: <cover.1682673542.git.houwenlong.hwl@antgroup.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOOmCE8rpA=XvWBxcyRVu_gOHie3qN0E15Rs9bLfhb6tPZ7tyg@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2023-04-27 17:17:57-0500, Jorge Lopez wrote:
-> On Sun, Apr 23, 2023 at 7:16 AM Thomas Weißschuh <thomas@t-8ch.de> wrote:
-> >
-> > On 2023-04-20 11:54:52-0500, Jorge Lopez wrote:
-> > >  .../x86/hp/hp-bioscfg/surestart-attributes.c  | 130 ++++++++++++++++++
-> > >  1 file changed, 130 insertions(+)
-> > >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-> > >
-> > > diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-> > > new file mode 100644
-> > > index 000000000000..72952758ffe3
-> > > --- /dev/null
-> > > +++ b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-> > > @@ -0,0 +1,130 @@
+startup_64() and startup_xen() both use fixed_percpu_data to set up GS
+base. So for consitency, use it too in PVH entry.
 
-<snip>
+Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
+Cc: Thomas Garnier <thgarnie@chromium.org>
+Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+Cc: Kees Cook <keescook@chromium.org>
+---
+ arch/x86/platform/pvh/head.S | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> > > +
-> > > +/*
-> > > + * audit_log_entries_show() - Return all entries found in log file
-> > > + */
-> > > +static ssize_t audit_log_entries_show(struct kobject *kobj,
-> > > +                                   struct kobj_attribute *attr, char *buf)
-> > > +{
-> > > +     int ret;
-> > > +     int i;
-> > > +     u32 count = 0;
-> > > +
-> > > +     // Get the number of event logs
-> > > +     ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG_COUNT,
-> > > +                                HPWMI_SURESTART,
-> > > +                                &count, 1, sizeof(count));
-> > > +
-> > > +     /*
-> > > +      * The show() api will not work if the audit logs ever go
-> > > +      *  beyond 4KB
-> > > +      */
-> > > +     if (count * LOG_ENTRY_SIZE > PAGE_SIZE)
-> > > +             return -EFAULT;
-> >
-> > The error code seems not to match.
-> >
-> 
-> Changing error to -EINVAL
+diff --git a/arch/x86/platform/pvh/head.S b/arch/x86/platform/pvh/head.S
+index c4365a05ab83..b093996b7e19 100644
+--- a/arch/x86/platform/pvh/head.S
++++ b/arch/x86/platform/pvh/head.S
+@@ -96,7 +96,7 @@ SYM_CODE_START_LOCAL(pvh_start_xen)
+ 1:
+ 	/* Set base address in stack canary descriptor. */
+ 	mov $MSR_GS_BASE,%ecx
+-	mov $_pa(canary), %eax
++	mov $_pa(INIT_PER_CPU_VAR(fixed_percpu_data)), %eax
+ 	xor %edx, %edx
+ 	wrmsr
+ 
+@@ -156,8 +156,6 @@ SYM_DATA_START_LOCAL(gdt_start)
+ SYM_DATA_END_LABEL(gdt_start, SYM_L_LOCAL, gdt_end)
+ 
+ 	.balign 16
+-SYM_DATA_LOCAL(canary, .fill 48, 1, 0)
+-
+ SYM_DATA_START_LOCAL(early_stack)
+ 	.fill BOOT_STACK_SIZE, 1, 0
+ SYM_DATA_END_LABEL(early_stack, SYM_L_LOCAL, early_stack_end)
+-- 
+2.31.1
 
--EIO seems better.
-
-The problem is not due to some value a user passed but an unhandled from
-the hardware.
-
-> 
-> > Instead of not returning any data, why not show as many results as
-> > possible?
-> >
-> 
-> if count * LOG_ENTRY_SIZE > PAGE_SIZE then I prefer to return an error.
-> if the count is correct but a failure occurs while reading individual
-> audit logs then we will return a partial list of all audit logs
-> This changes will be included in Version 12
-
-What prevents the firmware from having more log entries?
-Wouldn't these audit log entries not accumulate for each logged
-operation over the lifetime of the device / boot?
-
-This would make the interface unusable as soon as there are more
-entries.
-
-> > > +
-> > > +     if (ret < 0)
-> > > +             return ret;
-
-And this should first validate ret and then count.
-
-> > > +
-> > > +     /*
-> > > +      * We are guaranteed the buffer is 4KB so today all the event
-> > > +      * logs will fit
-> > > +      */
-> > > +
-> > > +     for (i = 0; ((i < count) & (ret >= 0)); i++) {
-> >
-> > &&
-> >
-> > Better yet, pull the condition ret >= 0 into the body, as an else-branch
-> > for the existing check.
-> >
-> 
-> Done!
-> 
-> > > +             *buf = (i + 1);
-> >
-> > Isn't this directly overwritten by the query below?
-> 
-> buf input value indicates the audit log to be read hence the reason
-> why it is overwritten.
-> This is an expected behavior.
-
-So this is read by the HPWMI_SURESTART_GET_LOG method in the firmware?
-
-Make sense but needs a comment.
-
-> >
-> > > +             ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG,
-> > > +                                        HPWMI_SURESTART,
-> > > +                                        buf, 1, 128);
-> > > +             if (ret >= 0)
-> > > +                     buf += LOG_ENTRY_SIZE;
-> >
-> > So 128 bytes are read but only the first 16 bytes are preserved?
-> >
-> > The documentation says that each entry has 128 bytes in the file.
-> > And that they are separated by ";", which is not implemented.
-> 
-> The statement will be removed from documentation  (separated by ";")
-> audit log size is 16 bytes.
-> >
-> > Can the audit-log not contain all-zero bytes?
-> > If it does this would need to be a bin_attribute.
-> 
-> Bytes 16-127 are ignored and not used at this time.  If the audit log
-> changes, then the driver will need to change to accommodate the new
-> audit log size.
-
-buf is not guaranteed to have 128 bytes left for this data.
-
-For example if this is entry number 253 we are at offset 253 * 16 = 4048
-in the sysfs buffer. Now hw_wmi_perform_query may try to write to 4048 +
-127 = 4175 which is out of bounds for the buf of size 4096.
-
-Writing first to a stack buffer would be better,
-or pass outsize = LOG_ENTRY_SIZE.
-
-> The audit log file cannot contain all zero bytes.
-
-I doublechecked this and zero bytes seem to also be fine in normal text
-attributes.
-
-> > > +   return (count * LOG_ENTRY_SIZE);
-
-If one of the calls to hp_wmi_perform_query() fails this return value is wrong,
-it does not reflect the amount of actually written data.
