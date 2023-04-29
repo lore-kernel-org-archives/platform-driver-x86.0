@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325D1C77B60
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 29 Apr 2023 18:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDB4C7EE29
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 29 Apr 2023 18:17:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229791AbjD2SRk (ORCPT
+        id S230009AbjD2SRm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 29 Apr 2023 14:17:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
+        Sat, 29 Apr 2023 14:17:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229790AbjD2SRk (ORCPT
+        with ESMTP id S229996AbjD2SRl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 29 Apr 2023 14:17:40 -0400
+        Sat, 29 Apr 2023 14:17:41 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D6172128
-        for <platform-driver-x86@vger.kernel.org>; Sat, 29 Apr 2023 11:16:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082631715
+        for <platform-driver-x86@vger.kernel.org>; Sat, 29 Apr 2023 11:16:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682792209;
+        s=mimecast20190719; t=1682792211;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hQupVWC3H7K4qahqTSNOhREQCoyFYgYcmQJHKGlQ8d4=;
-        b=CbIdQ/d9jnqLgpL38VWyHK1HGu1Eb0yHoi2N0wL/ClP0ItBD5LGJExotHG37pRBFS4k+3t
-        u570Lz5PBc4SsUXlUjdqpRZWMBRN4wRX9Ad8QRGvjRbhTqM/PRUrUVgKadB3We7kQc+JRV
-        nYzxpn7hgsMwKJgNKsLoEXoM/Db8HXI=
+        bh=V2r9YP9+6XCB8LrHi10le5UmITSB/dJ3lI7NCVm0ako=;
+        b=Z/RLjruIEZe6nPoO7DBtKYH5pFH33WQWpuPH2puBQc1dqbrYXhhs/37U18xO95MlK642zT
+        1f/fy6/3EMa/LjckYPHNkMW82MpGyOrfgKptQo4F0dGyk//17BUCYsD0OFcl+mMoi7RhYh
+        wsUj2rpix5S8GPnUaL+h1Fn2RJ/Hgew=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-323-Wolqp1ajNEaSKR9gSlu7YQ-1; Sat, 29 Apr 2023 14:16:43 -0400
-X-MC-Unique: Wolqp1ajNEaSKR9gSlu7YQ-1
+ us-mta-275-jnNDI76OM0CCs_1faG29ZA-1; Sat, 29 Apr 2023 14:16:48 -0400
+X-MC-Unique: jnNDI76OM0CCs_1faG29ZA-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4AD1D185A78B;
-        Sat, 29 Apr 2023 18:16:43 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3AB50811E7B;
+        Sat, 29 Apr 2023 18:16:47 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D6DB2027043;
-        Sat, 29 Apr 2023 18:16:42 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 22F2E2027043;
+        Sat, 29 Apr 2023 18:16:46 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
@@ -48,9 +48,9 @@ To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Yauhen Kharuzhy <jekhor@gmail.com>,
         platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: [PATCH 13/19] platform/x86: lenovo-yogabook: Add a yogabook_toggle_digitizer_mode() helper function
-Date:   Sat, 29 Apr 2023 20:15:45 +0200
-Message-Id: <20230429181551.98201-14-hdegoede@redhat.com>
+Subject: [PATCH 16/19] platform/x86: lenovo-yogabook: Add YB_KBD_BL_MAX define
+Date:   Sat, 29 Apr 2023 20:15:48 +0200
+Message-Id: <20230429181551.98201-17-hdegoede@redhat.com>
 In-Reply-To: <20230429181551.98201-1-hdegoede@redhat.com>
 References: <20230429181551.98201-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -60,46 +60,55 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add a yogabook_toggle_digitizer_mode() helper function.
-
-This is a preparation patch for making lenovo-yogabook-wmi also work
-on the Android version of the Yoga Book 1 which does not have a WMI
-interface to deal with toggling the keyboard half between
-touch-keyboard and wacom-digitizer mode.
+Add a define for the max brightness level instead of hardcoding
+this to 255 in multiple places.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/lenovo-yogabook-wmi.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/platform/x86/lenovo-yogabook-wmi.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/lenovo-yogabook-wmi.c b/drivers/platform/x86/lenovo-yogabook-wmi.c
-index efdb20bfe8f5..bbe4f2fb6fe9 100644
+index cc280ec80b8c..0c5475127ac2 100644
 --- a/drivers/platform/x86/lenovo-yogabook-wmi.c
 +++ b/drivers/platform/x86/lenovo-yogabook-wmi.c
-@@ -128,10 +128,8 @@ static void yogabook_wmi_work(struct work_struct *work)
- 	}
- }
+@@ -13,7 +13,8 @@
  
--static void yogabook_wmi_notify(struct wmi_device *wdev, union acpi_object *dummy)
-+static void yogabook_toggle_digitizer_mode(struct yogabook_wmi *data)
- {
--	struct yogabook_wmi *data = dev_get_drvdata(&wdev->dev);
--
- 	if (test_bit(YB_SUSPENDED, &data->flags))
- 		return;
+ #define YB_MBTN_EVENT_GUID	"243FEC1D-1963-41C1-8100-06A9D82A94B4"
  
-@@ -147,6 +145,11 @@ static void yogabook_wmi_notify(struct wmi_device *wdev, union acpi_object *dumm
- 	schedule_work(&data->work);
- }
+-#define YB_KBD_BL_DEFAULT 128
++#define YB_KBD_BL_DEFAULT	128
++#define YB_KBD_BL_MAX		255
  
-+static void yogabook_wmi_notify(struct wmi_device *wdev, union acpi_object *dummy)
-+{
-+	yogabook_toggle_digitizer_mode(dev_get_drvdata(&wdev->dev));
-+}
-+
- static irqreturn_t yogabook_backside_hall_irq(int irq, void *_data)
- {
- 	struct yogabook_wmi *data = _data;
+ /* flags */
+ enum {
+@@ -140,7 +141,7 @@ static int kbd_brightness_set(struct led_classdev *cdev,
+ 	struct yogabook_data *data =
+ 		container_of(cdev, struct yogabook_data, kbd_bl_led);
+ 
+-	if ((value < 0) || (value > 255))
++	if ((value < 0) || (value > YB_KBD_BL_MAX))
+ 		return -EINVAL;
+ 
+ 	data->brightness = value;
+@@ -221,7 +222,7 @@ static int yogabook_probe(struct device *dev, struct yogabook_data *data,
+ 	data->kbd_bl_led.name = kbd_bl_led_name;
+ 	data->kbd_bl_led.brightness_set_blocking = kbd_brightness_set;
+ 	data->kbd_bl_led.brightness_get = kbd_brightness_get;
+-	data->kbd_bl_led.max_brightness = 255;
++	data->kbd_bl_led.max_brightness = YB_KBD_BL_MAX;
+ 
+ 	r = devm_led_classdev_register(dev, &data->kbd_bl_led);
+ 	if (r < 0) {
+@@ -301,7 +302,7 @@ static int yogabook_wmi_set_kbd_backlight(struct yogabook_data *data, u8 level)
+ 	input.pointer = &param;
+ 
+ 	param.type = ACPI_TYPE_INTEGER;
+-	param.integer.value = 255 - level;
++	param.integer.value = YB_KBD_BL_MAX - level;
+ 
+ 	status = acpi_evaluate_object(acpi_device_handle(data->kbd_adev), "KBLC",
+ 				      &input, &output);
 -- 
 2.39.2
 
