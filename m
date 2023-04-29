@@ -2,126 +2,143 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA50C77B60
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 29 Apr 2023 18:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344DEC77B7C
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 29 Apr 2023 22:55:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229996AbjD2SRr (ORCPT
+        id S230474AbjD2Wzo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 29 Apr 2023 14:17:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45996 "EHLO
+        Sat, 29 Apr 2023 18:55:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230216AbjD2SRp (ORCPT
+        with ESMTP id S230353AbjD2Wzn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 29 Apr 2023 14:17:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E66B1213A
-        for <platform-driver-x86@vger.kernel.org>; Sat, 29 Apr 2023 11:16:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682792215;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FJiw9NzT9K0INdo4+f0MqL/Z4a7dmUaUvTLN8FJpYSU=;
-        b=iru0VxQYZBCMzZfqyKpwlA6XJmkzq9DRmJ65SDk8NJftc3bbooTfs9m83kTx1bw8/i2VtP
-        om6KplbCxxxLEWJH7g9ULLT8XGe6cU/GeYduaUpmrKAFgx33gWjnHWP6I4H6Kgb2dqU4b0
-        mtvmJcqwEgy9N0v4xbEKXnh4NDIOpDE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-246-fEGHXIdbMOKiWGxiaboBGg-1; Sat, 29 Apr 2023 14:16:51 -0400
-X-MC-Unique: fEGHXIdbMOKiWGxiaboBGg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 36A9485A588;
-        Sat, 29 Apr 2023 18:16:51 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 19AF72027043;
-        Sat, 29 Apr 2023 18:16:49 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: [PATCH 19/19] platform/x86: lenovo-yogabook: Rename lenovo-yogabook-wmi to lenovo-yogabook
-Date:   Sat, 29 Apr 2023 20:15:51 +0200
-Message-Id: <20230429181551.98201-20-hdegoede@redhat.com>
-In-Reply-To: <20230429181551.98201-1-hdegoede@redhat.com>
-References: <20230429181551.98201-1-hdegoede@redhat.com>
+        Sat, 29 Apr 2023 18:55:43 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4C7ADE;
+        Sat, 29 Apr 2023 15:55:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1682808930; i=w_armin@gmx.de;
+        bh=OPVah3fGgiFDxtemCf8HhtgjxqFM4GudTMA58n/qrqg=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=n3pyPON8ToRzN9zU24IWOAsIgtuJmV9Y+1AVeTsBmx2htwdYmJ70zx9H5ooOltxAv
+         f03FPekgMENIepTWIXeLlVtbuP6PjkjbxvZwzW6pOFOLU31AiAtdWoVPCrWriDikIC
+         uegD7pnPGotauBVOvEBhccFlNwFCxyeyWxa0MGUuctSbKHYg+YQpesHNlPeYf1LA42
+         id7O23vFPl9USeMdm6RsK17sSzVDRGl4IIIKNMwfP9vNUWH10vBvFrw0fyoNpiLc/l
+         QSktCg5mAbaPbOCjM8l8wFuahI0MOhnWdBJFYybzHoorQCjKD90j8Hg/Kw3lH2wDaz
+         2CyPICCHcJuDg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MWASY-1pmuF93rqc-00Xe6z; Sun, 30 Apr 2023 00:55:30 +0200
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     corbet@lwn.net, platform-driver-x86@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] platform/x86: dell-ddv: Update ABI documentation
+Date:   Sun, 30 Apr 2023 00:55:25 +0200
+Message-Id: <20230429225525.10507-2-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230429225525.10507-1-W_Armin@gmx.de>
+References: <20230429225525.10507-1-W_Armin@gmx.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:IkdI6Yin7g1agGdxzczipPFzmKmyhclawkTmmmdxepL/Nk4/4en
+ r1S9+rKZCaPsBnlV7swakSdQqV3UZBADEDERilt3SbTESYvt9nbYzyGrldUj7mw/916dBAw
+ BM4PaQBFNmS4U4qLDe7RFNzxLxkaLi6br421uBmyKojcRC0/nfiVoH3LBBCbGLgeFnvArbC
+ MP0lRUqZ75rocy0x4tesQ==
+UI-OutboundReport: notjunk:1;M01:P0:NucOP6JeLGo=;nx8EOk6dhE4hbOh9HTCkmd26eET
+ ii6KQePZj2OY2lgMmMAhxqu1OoQ95BtJ9g13SbtuN3LIrXceFzPo9+MS8YS6WiFczXFbOGVRP
+ dFElhL7ABv4PAbiBltN1n9blWYrOI9xWoo4nU9Oqpx59dpT5WlaAI0KcYoiiwll66ZKYTlSeE
+ 90IzXf3mNC3EjFAmI6wysYlW1dNchLuEeKQ9DJHUGERCDo/zfipYK3XS2Og7J10B0gMLCJL8m
+ mTdZ7f6jJItnAL2IikDkGtNKLEGhgLx2Xd33cSkIHmmsl1WJJegVWUpDjba6j8EFh4qNUjt6W
+ l0mR/HgozVIPjCIZUG+7cDZwpKqh2Ktpee0fBEhA9jsvVSXmPQmAJOuprofvgEkNWdTb2AiPW
+ EQdW5LWBInijaVCEQLrz3bVqLpuIjzOgrdu/wCHbmClxRcMJ0expoHR8sA10fNCUqu+JUFaqW
+ ag91cr97EEz5xMZqWAPmGyzs1Owp07lZ4S9zFRa2Suu0/kHN0L6bZ6egkAcpX2q16kVxx3IPu
+ tONtWRYK6AIOx+vhQXeZ5AwrnWHtxK1LN0Xg/OEoP5SrmzHHPslaY1ifFwR/WyQs/nM7DJy4U
+ T/N6X2YHqnOZrF8t/iqozrTLjOwFv4lROAz1e3V8yN33nmS+5ix+l+/NqfdNeNPL7lDFhu0B5
+ DOI8o4fnarMXZqaoc84uRrSM80ZNEYPNfEPwWOAKQqZYNByyCKQsW5p1y4pbudz8MNUjfONgG
+ 4nbqR0dun9ptkcTSPMHTRUGN38/se5wWSSUltOPrhFsLj2fucSVtMm059Ilqm0v3CBKVnL+Ds
+ RJfoYq8ISam3ZNUfCtgawR3MTyeja2cDB+oMRvaqUWjMp2bD2L1iXQlF/h1P4+BN9IW6S9R45
+ LMEFH4HGG4w3SZqdq64hUwjkDHCPkVK6k3cQWEQVOj3N551jK0EpCFvST/bpKTIXaDac0Kj1V
+ CZuoZyK+V9+uYndyoYeqxQdXDjc=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The lenovo-yogabook-wmi.c code now consists of both a platform and a WMI
-driver and it does not use WMI at all when used on the Android model.
+Synchronize the ABI documentation with the driver documentation
+and direct users to the latter in case they are interested in
+more detailed information.
 
-Rename the module from lenovo-yogabook-wmi to lenovo-yogabook to
-reflect this.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ .../ABI/testing/debugfs-dell-wmi-ddv          | 29 ++++++++++++++-----
+ .../ABI/testing/sysfs-platform-dell-wmi-ddv   |  4 ++-
+ 2 files changed, 24 insertions(+), 9 deletions(-)
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/Kconfig                                | 6 +++---
- drivers/platform/x86/Makefile                               | 2 +-
- .../x86/{lenovo-yogabook-wmi.c => lenovo-yogabook.c}        | 0
- 3 files changed, 4 insertions(+), 4 deletions(-)
- rename drivers/platform/x86/{lenovo-yogabook-wmi.c => lenovo-yogabook.c} (100%)
+diff --git a/Documentation/ABI/testing/debugfs-dell-wmi-ddv b/Documentatio=
+n/ABI/testing/debugfs-dell-wmi-ddv
+index fbcc5d6f7388..81cfc788be15 100644
+=2D-- a/Documentation/ABI/testing/debugfs-dell-wmi-ddv
++++ b/Documentation/ABI/testing/debugfs-dell-wmi-ddv
+@@ -3,19 +3,32 @@ Date:		September 2022
+ KernelVersion:	6.1
+ Contact:	Armin Wolf <W_Armin@gmx.de>
+ Description:
+-		This file contains the contents of the fan sensor information buffer,
+-		which contains fan sensor entries and a terminating character (0xFF).
++		This file contains the contents of the fan sensor information
++		buffer, which contains fan sensor entries and a terminating
++		character (0xFF).
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 22052031c719..2039e3246e1b 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -121,8 +121,8 @@ config GIGABYTE_WMI
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called gigabyte-wmi.
- 
--config YOGABOOK_WMI
--	tristate "Lenovo Yoga Book tablet WMI key driver"
-+config YOGABOOK
-+	tristate "Lenovo Yoga Book tablet key driver"
- 	depends on ACPI_WMI
- 	depends on INPUT
- 	select LEDS_CLASS
-@@ -132,7 +132,7 @@ config YOGABOOK_WMI
- 	  control on the Lenovo Yoga Book tablets.
- 
- 	  To compile this driver as a module, choose M here: the module will
--	  be called lenovo-yogabook-wmi.
-+	  be called lenovo-yogabook.
- 
- config ACERHDF
- 	tristate "Acer Aspire One temperature and fan driver"
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 2cafe51ec4d8..52dfdf574ac2 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -14,7 +14,6 @@ obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
- obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
- obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
- obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
--obj-$(CONFIG_YOGABOOK_WMI)		+= lenovo-yogabook-wmi.o
- 
- # Acer
- obj-$(CONFIG_ACERHDF)		+= acerhdf.o
-@@ -66,6 +65,7 @@ obj-$(CONFIG_LENOVO_YMC)	+= lenovo-ymc.o
- obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
- obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
- obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
-+obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
- 
- # Intel
- obj-y				+= intel/
-diff --git a/drivers/platform/x86/lenovo-yogabook-wmi.c b/drivers/platform/x86/lenovo-yogabook.c
-similarity index 100%
-rename from drivers/platform/x86/lenovo-yogabook-wmi.c
-rename to drivers/platform/x86/lenovo-yogabook.c
--- 
-2.39.2
+-		Each fan sensor entry consists of three bytes with an unknown meaning,
+-		interested people may use this file for reverse-engineering.
++		Each fan sensor entry contains:
++
++		- fan type (single byte)
++		- fan speed in RPM (two bytes, little endian)
++
++		See Documentation/wmi/devices/dell-wmi-ddv.rst for details.
+
+ What:		/sys/kernel/debug/dell-wmi-ddv-<wmi_device_name>/thermal_sensor_in=
+formation
+ Date:		September 2022
+ KernelVersion:	6.1
+ Contact:	Armin Wolf <W_Armin@gmx.de>
+ Description:
+-		This file contains the contents of the thermal sensor information buffe=
+r,
+-		which contains thermal sensor entries and a terminating character (0xFF=
+).
++		This file contains the contents of the thermal sensor information
++		buffer, which contains thermal sensor entries and a terminating
++		character (0xFF).
++
++		Each thermal sensor entry contains:
++
++		- thermal type (single byte)
++		- current temperature (single byte)
++		- min. temperature (single byte)
++		- max. temperature (single byte)
++		- unknown field (single byte)
+
+-		Each thermal sensor entry consists of five bytes with an unknown meanin=
+g,
+-		interested people may use this file for reverse-engineering.
++		See Documentation/wmi/devices/dell-wmi-ddv.rst for details.
+diff --git a/Documentation/ABI/testing/sysfs-platform-dell-wmi-ddv b/Docum=
+entation/ABI/testing/sysfs-platform-dell-wmi-ddv
+index 1d97ad615c66..a9d39d9e8865 100644
+=2D-- a/Documentation/ABI/testing/sysfs-platform-dell-wmi-ddv
++++ b/Documentation/ABI/testing/sysfs-platform-dell-wmi-ddv
+@@ -3,5 +3,7 @@ Date:		September 2022
+ KernelVersion:	6.1
+ Contact:	Armin Wolf <W_Armin@gmx.de>
+ Description:
+-		Reports the Dell ePPID (electronic Dell Piece Part Identification)
++		Reports the Dell ePPID (electronic Piece Part Identification)
+ 		of the ACPI battery.
++
++		See Documentation/wmi/devices/dell-wmi-ddv.rst for details.
+=2D-
+2.30.2
 
