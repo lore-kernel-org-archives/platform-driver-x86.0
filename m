@@ -2,90 +2,110 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57B7C7EE25
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60DEC77B7F
 	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Apr 2023 20:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232081AbjD3UcX (ORCPT
+        id S232085AbjD3UcY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 30 Apr 2023 16:32:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58788 "EHLO
+        Sun, 30 Apr 2023 16:32:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232086AbjD3UcV (ORCPT
+        with ESMTP id S232076AbjD3UcW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 30 Apr 2023 16:32:21 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1966AE76;
-        Sun, 30 Apr 2023 13:32:17 -0700 (PDT)
+        Sun, 30 Apr 2023 16:32:22 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89870E65;
+        Sun, 30 Apr 2023 13:32:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1682886717; i=w_armin@gmx.de;
-        bh=1iVtXdw2HihhlcV6imnqHABioEJXOGklEJ+NVAHrz0k=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=NT5mEF2NNSh5y6UPC4T+ULzfufgyhcHwYM092pNQ/6ahrlmSfpm8sUBOvu7q4tOXd
-         0zHzaeu2CuFvSP4VT/BwpdTLpdcdxX/nhWoeOTb7rJJTZ0K24CnYzm0od8xW7FRkfF
-         UNsGV3OBnk6t9Ot4drNNhUrjlyx6ALYRN/Sqmlu72aIfrJ3yJyd2mlbYDRqNMQ08BT
-         UHkySnW4tyez3GlbgUgHLCqx8G1DizeDMz4LwL1/GpvwckvRDJzHDmSnTmV3P5BYOy
-         DOo8SBfaFQMBPdIVbeMHAaVvZPH00A/7QAHxe5y/S4cLRREWd160gReQK0pejJ+Xj+
-         Z5YHKRM1v+1IA==
+        t=1682886721; i=w_armin@gmx.de;
+        bh=EDo2jyGRTWwJyIb6T+IdrYD2Dz8qhCqNBIDZC2iaYVA=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=U33PiAca2JeFTgN/u/vb5rZINcXOpDlaWODV6mwUxBp3Bghm46CUkJIzz549t68Zc
+         2X4LxGE1841PwxFs7/Audbqa7Lre8/PQUQ6REiY5R92TgrqSV7rj6CQmV75BFh21k0
+         6rXWpcPItLQF1mKwsM39WbVZgTZ+Gm/fbrylVPQzSaqFesUrQEHDINURcqWBrAlHEE
+         c+FJPtf4PZICB7LnmnD+Wh9FvFkPZpgDUxnNpV5Hq0n2mP7hjp8TQuOIVFky3g/XQu
+         xMEeMEJ13fb+3uu2BS4WVIAaYSRKA2njj3WaXYpjpUZd/Yw+89EJoRE+q7VSaqN6Vx
+         X+HoyxqQBn29A==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MBDnI-1pyDdy3jdW-00CkSa; Sun, 30 Apr 2023 22:31:57 +0200
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1Mr9Bu-1qdr0x0mnO-00oEk4; Sun, 30 Apr 2023 22:32:01 +0200
 From:   Armin Wolf <W_Armin@gmx.de>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     Mario.Limonciello@amd.com, prasanth.ksr@dell.com,
         jorgealtxwork@gmail.com, james@equiv.tech,
         Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] platform/x86: Allow retrieving the number of WMI object instances
-Date:   Sun, 30 Apr 2023 22:31:51 +0200
-Message-Id: <20230430203153.5587-1-W_Armin@gmx.de>
+Subject: [PATCH 2/2] platform/x86: dell-sysman: Improve instance detection
+Date:   Sun, 30 Apr 2023 22:31:53 +0200
+Message-Id: <20230430203153.5587-3-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230430203153.5587-1-W_Armin@gmx.de>
+References: <20230430203153.5587-1-W_Armin@gmx.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:eRB9SbYAP0wd8FO6N+p+W1r2ZcZ4JPe/LaFtJzAwQT9lk+52BLx
- ezBvqm97qHlaYrZYygJEkxFvrxkdHKJc4wDR1i3Wsg9s4TqDguvGHrXC0thnafJX+EArGjR
- wsegqIxMj51JcQO78s36v0J3ruglE3TEGKr+Llbr7cc04sC5hNRTpAxcSlmZWiZ47KQKklw
- EJzJrbE4hktdioiXHnDKg==
-UI-OutboundReport: notjunk:1;M01:P0:OWnQfJaufvI=;x98zCkXRJnkV2arj2waP2wFW6K3
- XkC29Rr2/pUUWK3yPhx49gxmAw3Y4xRLhogsP2ZoKfUcqHLhp6UHioRsyS4jjT9F0qzgSxbeo
- brP2Su/08XbO5Sv07gMIYWBNEP0SvQ4Im0ZoStcSUZe1HEsx+6WoJTSXjpHP0yNO1naeTOJhp
- WacIOwkfKT6p1Wa4rNUDP6FC2M8/lNdg8Va3+vS+CpXdVu3E8xkyL8uH5XBZWjq4OHy2H5zNK
- WGHAuleYuR+YdBtkRWdoKt+G8V6zxk+o8/VBvOA3Zh/jqvndo46ta4lQwHDIggLOtmGmGLLap
- QejpBQZFSfVk4jalJXrM5FtTmkAykHzEt1XKqVwAnd7zuCT9uOwGk+es6hCDwFop8Il8ME9Rd
- 6rh1ldPB6pJcESeFNhko/Yj/7+ta2RrXALVlclsuILpMz/aG/bZH1d6M67gBFMbusdTxzmf0e
- hqytjPjFrg/kUxBKDviL07wMiIYmQ/3TPHtDMLhVS+Crx8NIoGREm/4wnH+2Q4OVW6xxVz5ZR
- 7zt/LF3uDaUh9XgRUzn8g6gT6ikRNcMRr0AnMMJOQjB5w29fSZJcbPX722NAqjh+0pBNES16d
- USWs+uWA9kvTdL70ba61xQ0do3mP8RSL13kYjEaFHBo5VYDoJI81w7ECdKcCOaNcYfYacwf8A
- 7PVpIsa/LobrE4U8zEHHK9LAege2j3pPUKb+EsYwJq6ivXNAVI07usJlUipb09SHmNuMjxM9m
- 2WzeqAf4Iyen5/L3YWA6mZ6CGuGzaPAazi8JF9zdiUUDW1f/Zvc/ygoy54OHWfq/WgcP/Dx5c
- NAXq1n12Ftyjxlh9/BzhX/QVWrsSUrTFVZgq1mpCFrmNd6yX64GnlcBlIQge7ri9qAKfbECDQ
- JNZYFp1E6iQnIfenzGzvX3BzI01y/bON/hOYyw/2BWvKcxxKsN0iE6lV3VDg1l3+eEgLnWPkR
- BGrpQA/yDCn0GcUDDclUUlgrErg=
+X-Provags-ID: V03:K1:xDqp28RbQ9gdl4+mJCz5HykoBlx+oHBru64jsoI2K989qzfUX6u
+ TVZuwVGgu8V9Gf/2OJFqfm2qenYVplNYJHsk99o/1JwE/ghBU+7YcaU66GkD426iwau1sVV
+ xZJX425K1HlmbMlj8c0kmhWWYRC44ETCQ6XjlhR6olzCjgx9U2cOmYZkbUmx3FOrXE9sSzm
+ hJ2LO4ypu0goV/vIzCjxA==
+UI-OutboundReport: notjunk:1;M01:P0:flWVw255Rho=;ocnIOdG05yZ4JIgUC1FC1PPaiIi
+ yDNshtyeph1fXo3vCfA1VO0BLLlsypYWdYgrYPlNUtR+x3kl1dIiU2zgCy3WFjJk2vBW355o7
+ /lD4ZMrOIl/Tj9N5w538Un06g375fk89Wsi23i02zDCaJ02EdChe87OzSVPFr1ER9D4+bmgc1
+ oUV3HTTSHTEuJwrmBKUCTyyZ7hmAtehRqOtLJG/1nE8OeqblpUdRiczM52utVK+GSgVkaeqMX
+ Kyy52k+6sChGjldbztS2t80DYCfPrNbDzSAX9F6k5PaPWO3ThXQF3CRKZ2aAPm45oZRe78nfq
+ 2mriSfVm2RnkQrAo284DsBN7Q+BIu8swgPPqpBT2CDTk+0uQBrMS0ZqIuGJP42h3Mh4+hp5hb
+ vR5BkdVVySZZh/C8g8JiEZRKhFK+K2xJkFqKeCCoBByKUx+GzJxZ940zkrhFuUWejepgj3VGI
+ JNWEvM0bpDAneMfSWEAALmEwszjcOECUgC/7MjnnA3OSJ0HGhi+3gsZnIYYoi9Cde/TlDVNN9
+ YxBPRCcBVXbONRIbuCxyyw0Mxknz+RR4P3JA2hvKblW0hR1nbiFmTy/aCO0i92nT1Kq0DN5K3
+ 8MPr2oQ72C3szHUf06bVFIfxDHP3xsogJSIQ3DvxfBvRXokwLNpMrWU5YJ7z2peWuohsuwhKK
+ IuePyb3bAo1Ae2sT6dGiJlL7nawfoZ2Y3aMPpRJ8frjQDRWJfPk0LsJEytBmV8KKJvsXbQ3Fb
+ ZqF31h/lpERyNzlBgbAq9gP511Iw0cw14+NBeT+k/cXqbZtrEsbw0cf6OWfbl91Lbf0+5A+z2
+ zovcX9pO4pjxhaY8gkrA4HtcvhDF5gSis/F8BN28Y3GHPoGh0y/C+pjeibs0hfomBRSI1SE/6
+ gFqENXFT5Atcp9u34n/duA0FlhEHoMV0N3XbqRE/bAR1zlC7fCgR2kMbygYNseaVuBgWJzQcO
+ hF6HZp/uwoR+6jGLzgFnQsTt3MM=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This patch series allows WMI drivers to retrieve the number of
-WMI object instances. This functionality benefits several current
-and upcoming WMI drivers, the dell-wmi-sysman driver is converted
-to use this new API as an example.
+The WMI driver core already knows how many WMI object instances
+are available, use this information instead of probing the WMI object
+manually.
 
-The changes are compile-tested only, the change to the dell-wmi-sysman
-driver also needs to be tested on real hardware.
+Compile-tested only.
 
-Changes since RFC v2:
-- modify wmi_instance_count() to return an integer
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-Armin Wolf (2):
-  platform/x86: wmi: Allow retrieving the number of WMI object instances
-  platform/x86: dell-sysman: Improve instance detection
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/=
+platform/x86/dell/dell-wmi-sysman/sysman.c
+index 0285b47d99d1..b68dd11cb892 100644
+=2D-- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+@@ -303,16 +303,13 @@ union acpi_object *get_wmiobj_pointer(int instance_i=
+d, const char *guid_string)
+  */
+ int get_instance_count(const char *guid_string)
+ {
+-	union acpi_object *wmi_obj =3D NULL;
+-	int i =3D 0;
++	int ret;
 
- .../x86/dell/dell-wmi-sysman/sysman.c         | 13 +++---
- drivers/platform/x86/wmi.c                    | 41 +++++++++++++++++++
- include/linux/acpi.h                          |  2 +
- include/linux/wmi.h                           |  2 +
- 4 files changed, 50 insertions(+), 8 deletions(-)
+-	do {
+-		kfree(wmi_obj);
+-		wmi_obj =3D get_wmiobj_pointer(i, guid_string);
+-		i++;
+-	} while (wmi_obj);
++	ret =3D wmi_instance_count(guid_string);
++	if (ret < 0)
++		return 0;
 
+-	return (i-1);
++	return ret;
+ }
+
+ /**
 =2D-
 2.30.2
 
