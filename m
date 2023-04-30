@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D33C7EE26
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Apr 2023 16:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8333CC7EE21
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Apr 2023 16:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230317AbjD3Q7v (ORCPT
+        id S231132AbjD3Q74 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 30 Apr 2023 12:59:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37398 "EHLO
+        Sun, 30 Apr 2023 12:59:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230525AbjD3Q7u (ORCPT
+        with ESMTP id S230483AbjD3Q74 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 30 Apr 2023 12:59:50 -0400
+        Sun, 30 Apr 2023 12:59:56 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 361D92706
-        for <platform-driver-x86@vger.kernel.org>; Sun, 30 Apr 2023 09:58:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D1F2D73
+        for <platform-driver-x86@vger.kernel.org>; Sun, 30 Apr 2023 09:58:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682873908;
+        s=mimecast20190719; t=1682873911;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1auKSye34shTdwIrsT6sISE6jxpc0xAhF7vTm5kv+RI=;
-        b=bTB4P2xJUXYiq5cRA0184SwqWYO2UKWfUFR0h30HsQZhwl6KZ1TXwHVEkY6NfirTp3wNRv
-        SdSFyHmkTOhnuSDk3URubCSpcgFXbLracZvYdQ0lcpAmHa7GZOzXdEoG844H8+r103Pr+U
-        vUS+GCE5AmZmPwvYOfGmEjixgYp8ar0=
+        bh=Fc0o4FmfepKkzUDJlnn+iIoOvetPn6yXTjCkGtCtkSw=;
+        b=U2TR6VK6RZaZTIoFt9w5AI4f297FTykrNA+1nkaL0W/Od0ko4+UQj7O+hbuLf7LBP26nMP
+        L4nUJ7279Ynw9jU6FN821jJF4sLV0khXJUO3qUof4s4X2wUQEcSBJMmRwIrfVGpqsUcIG/
+        /n38KLYDyQHoGEhvTef5/fb4LjX9BW4=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-111-JeYXrbPnPv2qjUJOc7IH6w-1; Sun, 30 Apr 2023 12:58:22 -0400
-X-MC-Unique: JeYXrbPnPv2qjUJOc7IH6w-1
+ us-mta-91-JRhLCf32NKqz_sDd3ckFkQ-1; Sun, 30 Apr 2023 12:58:28 -0400
+X-MC-Unique: JRhLCf32NKqz_sDd3ckFkQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6A2678828C2;
-        Sun, 30 Apr 2023 16:58:22 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B0A8C8828C1;
+        Sun, 30 Apr 2023 16:58:27 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4FDFB2166B26;
-        Sun, 30 Apr 2023 16:58:21 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 94EA02166B26;
+        Sun, 30 Apr 2023 16:58:26 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
@@ -48,9 +48,9 @@ To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Yauhen Kharuzhy <jekhor@gmail.com>,
         platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: [PATCH v2 04/19] platform/x86: lenovo-yogabook: Set default keyboard backligh brightness on probe()
-Date:   Sun, 30 Apr 2023 18:57:52 +0200
-Message-Id: <20230430165807.472798-5-hdegoede@redhat.com>
+Subject: [PATCH v2 08/19] platform/x86: lenovo-yogabook: Add dev local variable to probe()
+Date:   Sun, 30 Apr 2023 18:57:56 +0200
+Message-Id: <20230430165807.472798-9-hdegoede@redhat.com>
 In-Reply-To: <20230430165807.472798-1-hdegoede@redhat.com>
 References: <20230430165807.472798-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -60,29 +60,110 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Set default keyboard backlight brightness on probe(), this fixes
-the backlight being off after a rmmod + modprobe.
+Add a "struct device *dev" local variable to probe().
 
-Fixes: c0549b72d99d ("platform/x86: lenovo-yogabook-wmi: Add driver for Lenovo Yoga Book")
+This is a preparation patch for making lenovo-yogabook-wmi also work
+on the Android version of the Yoga Book 1 which does not have a WMI
+interface to deal with toggling the keyboard half between
+touch-keyboard and wacom-digitizer mode.
+
+While at it also move the dev_set_drvdata() call to the end of probe().
+
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/lenovo-yogabook-wmi.c | 3 +++
- 1 file changed, 3 insertions(+)
+Changes in v2:
+- Move the dev_set_drvdata() call to the end of probe()
+---
+ drivers/platform/x86/lenovo-yogabook-wmi.c | 24 +++++++++++-----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/platform/x86/lenovo-yogabook-wmi.c b/drivers/platform/x86/lenovo-yogabook-wmi.c
-index 5948ffa74acd..d57fcc838851 100644
+index 1bbdc48aef5b..4f2624eba210 100644
 --- a/drivers/platform/x86/lenovo-yogabook-wmi.c
 +++ b/drivers/platform/x86/lenovo-yogabook-wmi.c
-@@ -295,6 +295,9 @@ static int yogabook_wmi_probe(struct wmi_device *wdev, const void *context)
+@@ -226,16 +226,15 @@ static struct gpiod_lookup_table yogabook_wmi_gpios = {
+ 
+ static int yogabook_wmi_probe(struct wmi_device *wdev, const void *context)
+ {
++	struct device *dev = &wdev->dev;
+ 	struct yogabook_wmi *data;
+ 	int r;
+ 
+-	data = devm_kzalloc(&wdev->dev, sizeof(struct yogabook_wmi), GFP_KERNEL);
++	data = devm_kzalloc(dev, sizeof(struct yogabook_wmi), GFP_KERNEL);
+ 	if (data == NULL)
+ 		return -ENOMEM;
+ 
+-	dev_set_drvdata(&wdev->dev, data);
+-
+-	data->dev = &wdev->dev;
++	data->dev = dev;
+ 	data->brightness = YB_KBD_BL_DEFAULT;
+ 	set_bit(YB_KBD_IS_ON, &data->flags);
+ 	set_bit(YB_DIGITIZER_IS_ON, &data->flags);
+@@ -243,13 +242,13 @@ static int yogabook_wmi_probe(struct wmi_device *wdev, const void *context)
+ 
+ 	data->kbd_adev = acpi_dev_get_first_match_dev("GDIX1001", NULL, -1);
+ 	if (!data->kbd_adev) {
+-		dev_err(&wdev->dev, "Cannot find the touchpad device in ACPI tables\n");
++		dev_err(dev, "Cannot find the touchpad device in ACPI tables\n");
+ 		return -ENODEV;
+ 	}
+ 
+ 	data->dig_adev = acpi_dev_get_first_match_dev("WCOM0019", NULL, -1);
+ 	if (!data->dig_adev) {
+-		dev_err(&wdev->dev, "Cannot find the digitizer device in ACPI tables\n");
++		dev_err(dev, "Cannot find the digitizer device in ACPI tables\n");
+ 		r = -ENODEV;
+ 		goto error_put_devs;
+ 	}
+@@ -267,18 +266,18 @@ static int yogabook_wmi_probe(struct wmi_device *wdev, const void *context)
+ 	}
+ 
+ 	gpiod_add_lookup_table(&yogabook_wmi_gpios);
+-	data->backside_hall_gpio = devm_gpiod_get(&wdev->dev, "backside_hall_sw", GPIOD_IN);
++	data->backside_hall_gpio = devm_gpiod_get(dev, "backside_hall_sw", GPIOD_IN);
+ 	gpiod_remove_lookup_table(&yogabook_wmi_gpios);
+ 
+ 	if (IS_ERR(data->backside_hall_gpio)) {
+ 		r = PTR_ERR(data->backside_hall_gpio);
+-		dev_err_probe(&wdev->dev, r, "Getting backside_hall_sw GPIO\n");
++		dev_err_probe(dev, r, "Getting backside_hall_sw GPIO\n");
+ 		goto error_put_devs;
+ 	}
+ 
+ 	r = gpiod_to_irq(data->backside_hall_gpio);
+ 	if (r < 0) {
+-		dev_err_probe(&wdev->dev, r, "Getting backside_hall_sw IRQ\n");
++		dev_err_probe(dev, r, "Getting backside_hall_sw IRQ\n");
+ 		goto error_put_devs;
  	}
  	data->backside_hall_irq = r;
- 
-+	/* Set default brightness before enabling the IRQ */
-+	yogabook_wmi_set_kbd_backlight(data->wdev, YB_KBD_BL_DEFAULT);
-+
- 	r = request_irq(data->backside_hall_irq, yogabook_backside_hall_irq,
+@@ -290,7 +289,7 @@ static int yogabook_wmi_probe(struct wmi_device *wdev, const void *context)
  			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
  			"backside_hall_sw", data);
+ 	if (r) {
+-		dev_err_probe(&wdev->dev, r, "Requesting backside_hall_sw IRQ\n");
++		dev_err_probe(dev, r, "Requesting backside_hall_sw IRQ\n");
+ 		goto error_put_devs;
+ 	}
+ 
+@@ -301,12 +300,13 @@ static int yogabook_wmi_probe(struct wmi_device *wdev, const void *context)
+ 	data->kbd_bl_led.brightness_get = kbd_brightness_get;
+ 	data->kbd_bl_led.max_brightness = 255;
+ 
+-	r = devm_led_classdev_register(&wdev->dev, &data->kbd_bl_led);
++	r = devm_led_classdev_register(dev, &data->kbd_bl_led);
+ 	if (r < 0) {
+-		dev_err_probe(&wdev->dev, r, "Registering backlight LED device\n");
++		dev_err_probe(dev, r, "Registering backlight LED device\n");
+ 		goto error_free_irq;
+ 	}
+ 
++	dev_set_drvdata(dev, data);
+ 	return 0;
+ 
+ error_free_irq:
 -- 
 2.39.2
 
