@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A24C7EE23
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 015F9C7EE29
 	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Apr 2023 17:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229636AbjD3RAh (ORCPT
+        id S231246AbjD3RAi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 30 Apr 2023 13:00:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37474 "EHLO
+        Sun, 30 Apr 2023 13:00:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231153AbjD3RAg (ORCPT
+        with ESMTP id S231126AbjD3RAg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Sun, 30 Apr 2023 13:00:36 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDE6B3595
-        for <platform-driver-x86@vger.kernel.org>; Sun, 30 Apr 2023 09:58:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1127730D8
+        for <platform-driver-x86@vger.kernel.org>; Sun, 30 Apr 2023 09:58:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682873917;
+        s=mimecast20190719; t=1682873912;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hPUodKH8f+H/JW+lPIMV3CIdr4U3egsnh7kn3ioo34Q=;
-        b=KAr6x/R4aBU5xgXyoGi08lN1WT38CbCajAyoOziebHqkgTyu57NLgKpiQBuA9YuhxkM29L
-        bUnvcZEcAWa9r5jXpQ8z0jGC1uimrEyMGkdQIaKzBqodFAA/CdMaVZYqHx+ZlDzaNmGz0V
-        ZdiPvzbw8E4iyoRn5Mq3ftBQokc/9+k=
+        bh=7ZA6DXgyTXvwIadThlqTV1A5YcEulIvzodUVYHO63jc=;
+        b=TsvJTfTiNTacjiqM8CuhtYCm/ZwQfHfFEH1qVG0mZi2NxD41kAZbvqSH8BI82+7yZ1FH4x
+        CkiX6WgWUkX1QGx/dqrtFwm0qdJ3EvAG9PLiInosYK64W1mS9powUxctW6CL5mfJ57+7TS
+        GP62nHtih54NV9nvRt3TuxrqvGQwZG4=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-590-Aniwy0goP_Or2D1SQIUjVw-1; Sun, 30 Apr 2023 12:58:20 -0400
-X-MC-Unique: Aniwy0goP_Or2D1SQIUjVw-1
+ us-mta-672-c9vZKObjPoahPew8O9R_Zw-1; Sun, 30 Apr 2023 12:58:29 -0400
+X-MC-Unique: c9vZKObjPoahPew8O9R_Zw-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C575B185A79C;
-        Sun, 30 Apr 2023 16:58:19 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0B223811E7B;
+        Sun, 30 Apr 2023 16:58:29 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AADB72166B26;
-        Sun, 30 Apr 2023 16:58:18 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E35202166B26;
+        Sun, 30 Apr 2023 16:58:27 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
@@ -48,9 +48,9 @@ To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Yauhen Kharuzhy <jekhor@gmail.com>,
         platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: [PATCH v2 02/19] platform/x86: lenovo-yogabook: Fix work race on remove()
-Date:   Sun, 30 Apr 2023 18:57:50 +0200
-Message-Id: <20230430165807.472798-3-hdegoede@redhat.com>
+Subject: [PATCH v2 09/19] platform/x86: lenovo-yogabook: Use PMIC LED driver for pen icon LED control
+Date:   Sun, 30 Apr 2023 18:57:57 +0200
+Message-Id: <20230430165807.472798-10-hdegoede@redhat.com>
 In-Reply-To: <20230430165807.472798-1-hdegoede@redhat.com>
 References: <20230430165807.472798-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -60,88 +60,160 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-When yogabook_wmi_remove() runs yogabook_wmi_work might still be running
-and using the devices which yogabook_wmi_remove() puts.
+Use the (new) PMIC LED driver for pen icon LED control instead of using
+custom WMI calls for this.
 
-To avoid this move to explicitly cancelling the work rather then using
-devm_work_autocancel().
+This will also work on the Android version of the Lenovo Yoga Book 1,
+where there is no WMI interface for this.
 
-This requires also making the yogabook_backside_hall_irq handler non
-devm managed, so that it cannot re-queue the work while
-yogabook_wmi_remove() runs.
+The dev_id of the lookup is set using dev_name() so that it will also
+work for both the Windows YB1 WMI-device as well as the Android YB1
+platform-device. While at it also move the gpio_lookup to using dev_name()
+for the dev_id.
 
-Fixes: c0549b72d99d ("platform/x86: lenovo-yogabook-wmi: Add driver for Lenovo Yoga Book")
+Note this also removes the need to turn of the LED during suspend since
+the PMIC LED driver now already does that.
+
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v2:
-- Drop no longer used include <linux/devm-helpers.h>
----
- drivers/platform/x86/lenovo-yogabook-wmi.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/platform/x86/lenovo-yogabook-wmi.c | 63 ++++++++--------------
+ 1 file changed, 21 insertions(+), 42 deletions(-)
 
 diff --git a/drivers/platform/x86/lenovo-yogabook-wmi.c b/drivers/platform/x86/lenovo-yogabook-wmi.c
-index 5f4bd1eec38a..3a6de4ab74a4 100644
+index 4f2624eba210..68057150f465 100644
 --- a/drivers/platform/x86/lenovo-yogabook-wmi.c
 +++ b/drivers/platform/x86/lenovo-yogabook-wmi.c
-@@ -2,7 +2,6 @@
- /* WMI driver for Lenovo Yoga Book YB1-X90* / -X91* tablets */
+@@ -11,11 +11,6 @@
+ #include <linux/workqueue.h>
  
- #include <linux/acpi.h>
--#include <linux/devm-helpers.h>
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/machine.h>
- #include <linux/interrupt.h>
-@@ -248,10 +247,7 @@ static int yogabook_wmi_probe(struct wmi_device *wdev, const void *context)
- 	data->brightness = YB_KBD_BL_DEFAULT;
- 	set_bit(YB_KBD_IS_ON, &data->flags);
- 	set_bit(YB_DIGITIZER_IS_ON, &data->flags);
+ #define YB_MBTN_EVENT_GUID	"243FEC1D-1963-41C1-8100-06A9D82A94B4"
+-#define YB_MBTN_METHOD_GUID	"742B0CA1-0B20-404B-9CAA-AEFCABF30CE0"
 -
--	r = devm_work_autocancel(&wdev->dev, &data->work, yogabook_wmi_work);
--	if (r)
--		return r;
-+	INIT_WORK(&data->work, yogabook_wmi_work);
+-#define YB_PAD_ENABLE	1
+-#define YB_PAD_DISABLE	2
+-#define YB_LIGHTUP_BTN	3
  
- 	data->kbd_adev = acpi_dev_get_first_match_dev("GDIX1001", NULL, -1);
- 	if (!data->kbd_adev) {
-@@ -299,10 +295,9 @@ static int yogabook_wmi_probe(struct wmi_device *wdev, const void *context)
+ #define YB_KBD_BL_DEFAULT 128
+ 
+@@ -34,6 +29,7 @@ struct yogabook_wmi {
+ 	struct acpi_device *dig_adev;
+ 	struct device *kbd_dev;
+ 	struct device *dig_dev;
++	struct led_classdev *pen_led;
+ 	struct gpio_desc *backside_hall_gpio;
+ 	int backside_hall_irq;
+ 	struct work_struct work;
+@@ -42,31 +38,6 @@ struct yogabook_wmi {
+ 	uint8_t brightness;
+ };
+ 
+-static int yogabook_wmi_do_action(struct yogabook_wmi *data, int action)
+-{
+-	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+-	struct acpi_buffer input;
+-	acpi_status status;
+-	u32 dummy_arg = 0;
+-
+-	dev_dbg(data->dev, "Do action: %d\n", action);
+-
+-	input.pointer = &dummy_arg;
+-	input.length = sizeof(dummy_arg);
+-
+-	status = wmi_evaluate_method(YB_MBTN_METHOD_GUID, 0, action, &input,
+-				     &output);
+-	if (ACPI_FAILURE(status)) {
+-		dev_err(data->dev, "Calling WMI method failure: 0x%x\n",
+-			status);
+-		return status;
+-	}
+-
+-	kfree(output.pointer);
+-
+-	return 0;
+-}
+-
+ /*
+  * To control keyboard backlight, call the method KBLC() of the TCS1 ACPI
+  * device (Goodix touchpad acts as virtual sensor keyboard).
+@@ -134,7 +105,7 @@ static void yogabook_wmi_work(struct work_struct *work)
  	}
- 	data->backside_hall_irq = r;
  
--	r = devm_request_irq(&wdev->dev, data->backside_hall_irq,
--			     yogabook_backside_hall_irq,
--			     IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
--			     "backside_hall_sw", data);
-+	r = request_irq(data->backside_hall_irq, yogabook_backside_hall_irq,
-+			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-+			"backside_hall_sw", data);
- 	if (r) {
- 		dev_err_probe(&wdev->dev, r, "Requesting backside_hall_sw IRQ\n");
- 		goto error_put_devs;
-@@ -318,11 +313,14 @@ static int yogabook_wmi_probe(struct wmi_device *wdev, const void *context)
- 	r = devm_led_classdev_register(&wdev->dev, &data->kbd_bl_led);
- 	if (r < 0) {
- 		dev_err_probe(&wdev->dev, r, "Registering backlight LED device\n");
--		goto error_put_devs;
-+		goto error_free_irq;
+ 	if (!digitizer_on && test_bit(YB_DIGITIZER_IS_ON, &data->flags)) {
+-		yogabook_wmi_do_action(data, YB_PAD_DISABLE);
++		led_set_brightness(data->pen_led, LED_OFF);
+ 		device_release_driver(data->dig_dev);
+ 		clear_bit(YB_DIGITIZER_IS_ON, &data->flags);
  	}
+@@ -153,7 +124,7 @@ static void yogabook_wmi_work(struct work_struct *work)
+ 		if (r)
+ 			dev_warn(data->dev, "Reprobe of digitizer failed: %d\n", r);
  
- 	return 0;
+-		yogabook_wmi_do_action(data, YB_PAD_ENABLE);
++		led_set_brightness(data->pen_led, LED_FULL);
+ 		set_bit(YB_DIGITIZER_IS_ON, &data->flags);
+ 	}
+ }
+@@ -217,13 +188,17 @@ static int kbd_brightness_set(struct led_classdev *cdev,
+ }
  
-+error_free_irq:
-+	free_irq(data->backside_hall_irq, data);
-+	cancel_work_sync(&data->work);
- error_put_devs:
- 	put_device(data->dig_dev);
- 	put_device(data->kbd_dev);
-@@ -335,6 +333,8 @@ static void yogabook_wmi_remove(struct wmi_device *wdev)
+ static struct gpiod_lookup_table yogabook_wmi_gpios = {
+-	.dev_id		= "243FEC1D-1963-41C1-8100-06A9D82A94B4",
+-	.table		= {
++	.table = {
+ 		GPIO_LOOKUP("INT33FF:02", 18, "backside_hall_sw", GPIO_ACTIVE_LOW),
+ 		{}
+ 	},
+ };
+ 
++static struct led_lookup_data yogabook_pen_led = {
++	.provider = "platform::indicator",
++	.con_id = "pen-icon-led",
++};
++
+ static int yogabook_wmi_probe(struct wmi_device *wdev, const void *context)
  {
- 	struct yogabook_wmi *data = dev_get_drvdata(&wdev->dev);
+ 	struct device *dev = &wdev->dev;
+@@ -265,6 +240,18 @@ static int yogabook_wmi_probe(struct wmi_device *wdev, const void *context)
+ 		goto error_put_devs;
+ 	}
  
-+	free_irq(data->backside_hall_irq, data);
-+	cancel_work_sync(&data->work);
- 	put_device(data->dig_dev);
- 	put_device(data->kbd_dev);
- 	acpi_dev_put(data->dig_adev);
++	yogabook_pen_led.dev_id = dev_name(dev);
++	led_add_lookup(&yogabook_pen_led);
++	data->pen_led = devm_led_get(dev, "pen-icon-led");
++	led_remove_lookup(&yogabook_pen_led);
++
++	if (IS_ERR(data->pen_led)) {
++		r = PTR_ERR(data->pen_led);
++		dev_err_probe(dev, r, "Getting pen icon LED\n");
++		goto error_put_devs;
++	}
++
++	yogabook_wmi_gpios.dev_id = dev_name(dev);
+ 	gpiod_add_lookup_table(&yogabook_wmi_gpios);
+ 	data->backside_hall_gpio = devm_gpiod_get(dev, "backside_hall_sw", GPIOD_IN);
+ 	gpiod_remove_lookup_table(&yogabook_wmi_gpios);
+@@ -350,11 +337,6 @@ static int yogabook_suspend(struct device *dev)
+ 	set_bit(YB_SUSPENDED, &data->flags);
+ 
+ 	flush_work(&data->work);
+-
+-	/* Turn off the pen button at sleep */
+-	if (test_bit(YB_DIGITIZER_IS_ON, &data->flags))
+-		yogabook_wmi_do_action(data, YB_PAD_DISABLE);
+-
+ 	return 0;
+ }
+ 
+@@ -368,9 +350,6 @@ static int yogabook_resume(struct device *dev)
+ 		yogabook_wmi_set_kbd_backlight(data, data->brightness);
+ 	}
+ 
+-	if (test_bit(YB_DIGITIZER_IS_ON, &data->flags))
+-		yogabook_wmi_do_action(data, YB_PAD_ENABLE);
+-
+ 	clear_bit(YB_SUSPENDED, &data->flags);
+ 
+ 	/* Check for YB_TABLET_MODE changes made during suspend */
 -- 
 2.39.2
 
