@@ -2,110 +2,203 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60DEC77B7F
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Apr 2023 20:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075FDC77B73
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Apr 2023 20:42:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232085AbjD3UcY (ORCPT
+        id S231229AbjD3UmT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 30 Apr 2023 16:32:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58794 "EHLO
+        Sun, 30 Apr 2023 16:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232076AbjD3UcW (ORCPT
+        with ESMTP id S232048AbjD3UmR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 30 Apr 2023 16:32:22 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89870E65;
-        Sun, 30 Apr 2023 13:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1682886721; i=w_armin@gmx.de;
-        bh=EDo2jyGRTWwJyIb6T+IdrYD2Dz8qhCqNBIDZC2iaYVA=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=U33PiAca2JeFTgN/u/vb5rZINcXOpDlaWODV6mwUxBp3Bghm46CUkJIzz549t68Zc
-         2X4LxGE1841PwxFs7/Audbqa7Lre8/PQUQ6REiY5R92TgrqSV7rj6CQmV75BFh21k0
-         6rXWpcPItLQF1mKwsM39WbVZgTZ+Gm/fbrylVPQzSaqFesUrQEHDINURcqWBrAlHEE
-         c+FJPtf4PZICB7LnmnD+Wh9FvFkPZpgDUxnNpV5Hq0n2mP7hjp8TQuOIVFky3g/XQu
-         xMEeMEJ13fb+3uu2BS4WVIAaYSRKA2njj3WaXYpjpUZd/Yw+89EJoRE+q7VSaqN6Vx
-         X+HoyxqQBn29A==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1Mr9Bu-1qdr0x0mnO-00oEk4; Sun, 30 Apr 2023 22:32:01 +0200
-From:   Armin Wolf <W_Armin@gmx.de>
-To:     hdegoede@redhat.com, markgross@kernel.org
+        Sun, 30 Apr 2023 16:42:17 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78FAEE66
+        for <platform-driver-x86@vger.kernel.org>; Sun, 30 Apr 2023 13:41:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1682887285;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Jm9wm20c4+vg4eeBRzLsjBHPVILbi462q10zNdjRsHg=;
+        b=QrZ9PUykm6wWSeFZSXNR0Fb48SZLD2vybrNA110Uv52aIFpyh9gOnTQOw+zXhvfdqqy5uy
+        E07G4EuA32+W7eE5GrtvjT8thw6TeNd9htDnHSHwdaB/+SETQXxcNGouJdZD25JSm5JnVB
+        eEBIj60/hyGbuOM4z4XvSg9dmu8nkWM=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-302-CgMRHWMXPO29xeNTE_26Xw-1; Sun, 30 Apr 2023 16:41:19 -0400
+X-MC-Unique: CgMRHWMXPO29xeNTE_26Xw-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-50512c6e3e5so2156404a12.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 30 Apr 2023 13:41:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682887278; x=1685479278;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jm9wm20c4+vg4eeBRzLsjBHPVILbi462q10zNdjRsHg=;
+        b=jIdD985KBKLRv+X5eZiCJFEQ514mBxbIXXta7sfnKZXHN7o2Ma+6GAGAvG7CVuh6Td
+         RnerehzwiBhGnTCaKt7R8VY/8rSe56li0ItH61SS9D3MocZXIWkKvBPBuJpYZwufnb5O
+         Wiw2lQh2QR/N9lOQ+LZhWqW1bCh661L3UVJs71W6XrGt06xj2AaujtOTL2rPTuNGnuDY
+         KQKewU/kx6cb+JXLFpCXp4bXqbZqsF9Kp8KXx99yCFl+QLFlCcBFlfoKEKWgt6FzVtlT
+         Y1SOddAgCb/HNyXzUSxt+vu/pNhqttZXIlGdhSLbaI5cBqTwR56J42LLg7ISenqltsVL
+         F7ug==
+X-Gm-Message-State: AC+VfDwwiMDw8Xt5L9oIy4bVImTJLjU3y0BZHmXHxS+mVLX/uTrHCfy8
+        od0HdK3X+kEAuFF9U2Hn4iQ9jRBvtg1U176mjoCuQC4FbGPRb7cZHiwPzF1I8KuI/Pv6hdBhQ7h
+        PnZ7TmWi3EP1kBusgTt2A4FwYhu1lxU6vkw==
+X-Received: by 2002:aa7:d807:0:b0:506:bcd6:b125 with SMTP id v7-20020aa7d807000000b00506bcd6b125mr4105119edq.40.1682887277996;
+        Sun, 30 Apr 2023 13:41:17 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ6HdEo0cBgvKHBFX+OMxAOGTk6ZGG5j9urckzcCVEYFpWtbXokDKvZImQUR1URICYmrqnrcIg==
+X-Received: by 2002:aa7:d807:0:b0:506:bcd6:b125 with SMTP id v7-20020aa7d807000000b00506bcd6b125mr4105113edq.40.1682887277738;
+        Sun, 30 Apr 2023 13:41:17 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id bc28-20020a056402205c00b00506c3c0d393sm11642877edb.78.2023.04.30.13.41.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Apr 2023 13:41:16 -0700 (PDT)
+Message-ID: <756215f5-d99c-b172-13f6-1a15e026bf65@redhat.com>
+Date:   Sun, 30 Apr 2023 22:41:16 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH 1/2] platform/x86: wmi: Allow retrieving the number of WMI
+ object instances
+To:     Armin Wolf <W_Armin@gmx.de>, markgross@kernel.org
 Cc:     Mario.Limonciello@amd.com, prasanth.ksr@dell.com,
         jorgealtxwork@gmail.com, james@equiv.tech,
         Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86: dell-sysman: Improve instance detection
-Date:   Sun, 30 Apr 2023 22:31:53 +0200
-Message-Id: <20230430203153.5587-3-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230430203153.5587-1-W_Armin@gmx.de>
 References: <20230430203153.5587-1-W_Armin@gmx.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:xDqp28RbQ9gdl4+mJCz5HykoBlx+oHBru64jsoI2K989qzfUX6u
- TVZuwVGgu8V9Gf/2OJFqfm2qenYVplNYJHsk99o/1JwE/ghBU+7YcaU66GkD426iwau1sVV
- xZJX425K1HlmbMlj8c0kmhWWYRC44ETCQ6XjlhR6olzCjgx9U2cOmYZkbUmx3FOrXE9sSzm
- hJ2LO4ypu0goV/vIzCjxA==
-UI-OutboundReport: notjunk:1;M01:P0:flWVw255Rho=;ocnIOdG05yZ4JIgUC1FC1PPaiIi
- yDNshtyeph1fXo3vCfA1VO0BLLlsypYWdYgrYPlNUtR+x3kl1dIiU2zgCy3WFjJk2vBW355o7
- /lD4ZMrOIl/Tj9N5w538Un06g375fk89Wsi23i02zDCaJ02EdChe87OzSVPFr1ER9D4+bmgc1
- oUV3HTTSHTEuJwrmBKUCTyyZ7hmAtehRqOtLJG/1nE8OeqblpUdRiczM52utVK+GSgVkaeqMX
- Kyy52k+6sChGjldbztS2t80DYCfPrNbDzSAX9F6k5PaPWO3ThXQF3CRKZ2aAPm45oZRe78nfq
- 2mriSfVm2RnkQrAo284DsBN7Q+BIu8swgPPqpBT2CDTk+0uQBrMS0ZqIuGJP42h3Mh4+hp5hb
- vR5BkdVVySZZh/C8g8JiEZRKhFK+K2xJkFqKeCCoBByKUx+GzJxZ940zkrhFuUWejepgj3VGI
- JNWEvM0bpDAneMfSWEAALmEwszjcOECUgC/7MjnnA3OSJ0HGhi+3gsZnIYYoi9Cde/TlDVNN9
- YxBPRCcBVXbONRIbuCxyyw0Mxknz+RR4P3JA2hvKblW0hR1nbiFmTy/aCO0i92nT1Kq0DN5K3
- 8MPr2oQ72C3szHUf06bVFIfxDHP3xsogJSIQ3DvxfBvRXokwLNpMrWU5YJ7z2peWuohsuwhKK
- IuePyb3bAo1Ae2sT6dGiJlL7nawfoZ2Y3aMPpRJ8frjQDRWJfPk0LsJEytBmV8KKJvsXbQ3Fb
- ZqF31h/lpERyNzlBgbAq9gP511Iw0cw14+NBeT+k/cXqbZtrEsbw0cf6OWfbl91Lbf0+5A+z2
- zovcX9pO4pjxhaY8gkrA4HtcvhDF5gSis/F8BN28Y3GHPoGh0y/C+pjeibs0hfomBRSI1SE/6
- gFqENXFT5Atcp9u34n/duA0FlhEHoMV0N3XbqRE/bAR1zlC7fCgR2kMbygYNseaVuBgWJzQcO
- hF6HZp/uwoR+6jGLzgFnQsTt3MM=
+ <20230430203153.5587-2-W_Armin@gmx.de>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230430203153.5587-2-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The WMI driver core already knows how many WMI object instances
-are available, use this information instead of probing the WMI object
-manually.
+Hi Armin,
 
-Compile-tested only.
+On 4/30/23 22:31, Armin Wolf wrote:
+> Currently, the WMI driver core knows how many instances of a given
+> WMI object exist, but WMI drivers cannot access this information.
+> At the same time, some current and upcoming WMI drivers want to
+> have access to this information. Add wmi_instance_count() and
+> wmidev_instance_count() to allow WMI drivers to get the number of
+> WMI object instances.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+Thank you for your work on this.
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/=
-platform/x86/dell/dell-wmi-sysman/sysman.c
-index 0285b47d99d1..b68dd11cb892 100644
-=2D-- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-@@ -303,16 +303,13 @@ union acpi_object *get_wmiobj_pointer(int instance_i=
-d, const char *guid_string)
-  */
- int get_instance_count(const char *guid_string)
- {
--	union acpi_object *wmi_obj =3D NULL;
--	int i =3D 0;
-+	int ret;
+> ---
+>  drivers/platform/x86/wmi.c | 41 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/acpi.h       |  2 ++
+>  include/linux/wmi.h        |  2 ++
+>  3 files changed, 45 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index c226dd4163a1..5b95d7aa5c2f 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -263,6 +263,47 @@ int set_required_buffer_size(struct wmi_device *wdev, u64 length)
+>  }
+>  EXPORT_SYMBOL_GPL(set_required_buffer_size);
+> 
+> +/**
+> + * wmi_instance_count - Get number of WMI object instances
+> + * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+> + *
+> + * Get the number of WMI object instances.
+> + *
+> + * Returns: Number of WMI object instances or negative error code.
+> + */
+> +int wmi_instance_count(const char *guid_string)
+> +{
+> +	struct wmi_block *wblock;
+> +	acpi_status status;
+> +
+> +	status = find_guid(guid_string, &wblock);
+> +	if (ACPI_FAILURE(status)) {
+> +		if (status == AE_BAD_PARAMETER)
+> +			return -EINVAL;
+> +
+> +		return -ENODEV;
 
--	do {
--		kfree(wmi_obj);
--		wmi_obj =3D get_wmiobj_pointer(i, guid_string);
--		i++;
--	} while (wmi_obj);
-+	ret =3D wmi_instance_count(guid_string);
-+	if (ret < 0)
-+		return 0;
+Maybe just return 0 here ?
 
--	return (i-1);
-+	return ret;
- }
+The GUID not existing at all does not seem like
+an error to me, but rather a case of there
+being 0 instances.
 
- /**
-=2D-
-2.30.2
+This will also allow patch 2/2 to completely
+drop the get_instance_count() function and
+replace its callers with direct calls to
+wmi_instance_count() as the code is known
+to always pass a valid GUID, so it won't hit
+the -EINVAL path.
+
+Regards,
+
+Hans
+
+
+
+> +	}
+> +
+> +	return wmidev_instance_count(&wblock->dev);
+> +}
+> +EXPORT_SYMBOL_GPL(wmi_instance_count);
+> +
+> +/**
+> + * wmidev_instance_count - Get number of WMI object instances
+> + * @wdev: A wmi bus device from a driver
+> + *
+> + * Get the number of WMI object instances.
+> + *
+> + * Returns: Number of WMI object instances.
+> + */
+> +u8 wmidev_instance_count(struct wmi_device *wdev)
+> +{
+> +	struct wmi_block *wblock = container_of(wdev, struct wmi_block, dev);
+> +
+> +	return wblock->gblock.instance_count;
+> +}
+> +EXPORT_SYMBOL_GPL(wmidev_instance_count);
+> +
+>  /**
+>   * wmi_evaluate_method - Evaluate a WMI method (deprecated)
+>   * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index efff750f326d..e52bf2742eaf 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -412,6 +412,8 @@ extern bool acpi_is_pnp_device(struct acpi_device *);
+> 
+>  typedef void (*wmi_notify_handler) (u32 value, void *context);
+> 
+> +int wmi_instance_count(const char *guid);
+> +
+>  extern acpi_status wmi_evaluate_method(const char *guid, u8 instance,
+>  					u32 method_id,
+>  					const struct acpi_buffer *in,
+> diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+> index c1a3bd4e4838..763bd382cf2d 100644
+> --- a/include/linux/wmi.h
+> +++ b/include/linux/wmi.h
+> @@ -35,6 +35,8 @@ extern acpi_status wmidev_evaluate_method(struct wmi_device *wdev,
+>  extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
+>  					     u8 instance);
+> 
+> +u8 wmidev_instance_count(struct wmi_device *wdev);
+> +
+>  extern int set_required_buffer_size(struct wmi_device *wdev, u64 length);
+> 
+>  /**
+> --
+> 2.30.2
+> 
 
