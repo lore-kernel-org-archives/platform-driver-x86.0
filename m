@@ -2,163 +2,167 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8386CC7EE24
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Apr 2023 17:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1C4C77B73
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Apr 2023 20:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230525AbjD3RBY (ORCPT
+        id S232080AbjD3UcV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 30 Apr 2023 13:01:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37574 "EHLO
+        Sun, 30 Apr 2023 16:32:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229998AbjD3RBY (ORCPT
+        with ESMTP id S229663AbjD3UcU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 30 Apr 2023 13:01:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA1E3A86
-        for <platform-driver-x86@vger.kernel.org>; Sun, 30 Apr 2023 09:58:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682873928;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CM1fKYx1KiYBHGTxfG6gfnt6X+KPTwf3j2MNI0Aw5ts=;
-        b=RZDQyPFCpL5hjxk9U1jYqWsPuKfVyTEA6TAK0KVrqVXjOfrO1VZycTE6z2g5DHplGnH/IY
-        gn49I2QUWqxKSX0vWt/Uea+rjleaw0woPN9UwQwllLV21sjaSy3FigwNJ2A7f1wMY4Csjj
-        FkK63qdGy7MaFph+rnTcW0NAOQ9vB1Y=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-601-Gr8aawj3Nea0H_xbH-INxg-1; Sun, 30 Apr 2023 12:58:42 -0400
-X-MC-Unique: Gr8aawj3Nea0H_xbH-INxg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D86EF3C0ED4B;
-        Sun, 30 Apr 2023 16:58:41 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B9D902166B26;
-        Sun, 30 Apr 2023 16:58:39 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: [PATCH v2 18/19] platform/x86: lenovo-yogabook: Add keyboard backlight control to platform driver
-Date:   Sun, 30 Apr 2023 18:58:06 +0200
-Message-Id: <20230430165807.472798-19-hdegoede@redhat.com>
-In-Reply-To: <20230430165807.472798-1-hdegoede@redhat.com>
-References: <20230430165807.472798-1-hdegoede@redhat.com>
+        Sun, 30 Apr 2023 16:32:20 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFE38E66;
+        Sun, 30 Apr 2023 13:32:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1682886718; i=w_armin@gmx.de;
+        bh=l+0GCKeRezQc9Ws6Rvy4yCiDFaJROwJiUsltiicCshI=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=Ot5VIA3e51ahXhG/JA7GtZHVBY4qL03lZjHt2kUKH8LOYHMGVuJXZnt7FYVhQ8cA9
+         HGPxPxv+l5VcptOBp7j/jM3zP1Cs6RMyefD9cqEEQ8NqOmdcS/ZxiS3Di0EMbJScIj
+         GXDnJ+BCMRcn83JMBgy1tZ2ZWVUpmf5oG+Na7DkdUo48wcSOGST6DLYjaCGbk2ZAeO
+         0yFGc6fv7CpJUb89K49mH4jm7TUQmBgJcfA87zKTLYP6DK2XslI5wcNTsGgnsV54/d
+         kPl9y0unZO1hy5pmoj5CAdBHnwkiw9nGJfbW1eIVrMRpfXW6NhRO2mAa+C0Vzyg11H
+         O5IKua3mbo/oQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from esprimo-mx.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MK3Rs-1pXia02pZO-00LSM3; Sun, 30 Apr 2023 22:31:58 +0200
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     Mario.Limonciello@amd.com, prasanth.ksr@dell.com,
+        jorgealtxwork@gmail.com, james@equiv.tech,
+        Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] platform/x86: wmi: Allow retrieving the number of WMI object instances
+Date:   Sun, 30 Apr 2023 22:31:52 +0200
+Message-Id: <20230430203153.5587-2-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230430203153.5587-1-W_Armin@gmx.de>
+References: <20230430203153.5587-1-W_Armin@gmx.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:AwcIKrVVrreL86dR0hx2hTjHbeTrBLyyjSg2gzhh4/7Vo+rpogQ
+ JyRxm+Bq/vfXVZy2ljyT2FKofSxdFZnct1XtTgmCcgs7YAgCzcKM5C7jJe/n4LEbha79YwG
+ 79wOUIhC1BiMTizVZyTkmFHt9WZ0Eo/jVOFOLamwQ71SM2vsTU1V3GZN7xq9YKwXeZm+Ugn
+ oD7xoB0/gCmjS5fPPsZmQ==
+UI-OutboundReport: notjunk:1;M01:P0:/l2yjb/EBL4=;qJ0RQ6tlfkJXHORn0kU6joV4cSa
+ QSNT1CbNDCZOnlgSoeffOg+Vu3ZChits8cV8YuDryTclZfqVoT2VMN32Pt7c6vK3a1FJ604PY
+ W7b6YNTCUWB6rOAThK1LNkQYvxZBWfLZkAR9Xg3ReVbwYISBUSswk5OEsK+j5LCHLL71aE2/s
+ NQMF22OtP96xQ9YEBA8ylSM/ZUGISGWW0Eu/q9UDOeSQKuXrAQDUE8h6GsDFfrbgfarSqGAXc
+ 7tavvI0n0IUxFY4XBNE+fBV4K/Hcf/+MA0e6Ew40oZKheuDyBy2CPA2/MLYrRhsqZqTvRT3nI
+ H3ik6sifOkZmv6P5S6sFhIlqWNUqg3EIB+m7lXWb0iWnHBDC1U7z+WOgm6VDLDHQvOaqgnXLU
+ 7RxuUMboJ55X0BKqZU9aMtDanQU+dTwg41yAMfH4JOglAxZ35QwLil2gjTkQ12BpAaDvcxnDw
+ QaHcKP4p1M9Zzjzdi5id38Kt8C+HeZiWCpvVSrDhMgpKLoiMJnvne/FVoWmHl7SB9/9WKTwRK
+ kKhm82mG5/2R+q9fN7Ib548sB0cFR5Rp0r4Lf3owBxUlY0nlwN5PwJLAQybsDQOXY1CrUGj6E
+ pIOt7QOwOOiw97nfm7ka2l8N99MUA3smOMBTWk/KQgKbaVssSYflC/HwX4aF0TH987fYAN4Sh
+ g5gQ95qcchD0Uz74HlH0akY4GAERlPMQID0L6kW7VNTeabQuUbnvQNWDvwoKdlICAZyqFskAo
+ KLl3dB6mgvIGAWfmpra70oUomyRnVadk+1lzWUoHBkx9t2vk1QVaSOAgZcqPPVlJyaaqIN1as
+ FVspd9wduL842uQd1zrISx3hTOlv9pGtj/Fgh4IrmvjG0/HfN0sFH/8QCX814E+kgub79rDjZ
+ swHNnBzkeGABk2S0DVYC1JbEHH7HWAHr3NS+xHrzn26E/Ph+iNDFdAwFG3jBmQ7e8M82syGy4
+ hDwy9LcYmSA2BKTjOgnP0/vtsSg=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On the Android yb1-x90f/l models there is not ACPI method to control
-the keyboard backlight brightness. Instead the second PWM controller
-is exposed directly to the OS there.
+Currently, the WMI driver core knows how many instances of a given
+WMI object exist, but WMI drivers cannot access this information.
+At the same time, some current and upcoming WMI drivers want to
+have access to this information. Add wmi_instance_count() and
+wmidev_instance_count() to allow WMI drivers to get the number of
+WMI object instances.
 
-Add support for controlling keyboard backlight brightness on the Android
-model by using the PWM subsystem to directly control the PWM.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/wmi.c | 41 ++++++++++++++++++++++++++++++++++++++
+ include/linux/acpi.h       |  2 ++
+ include/linux/wmi.h        |  2 ++
+ 3 files changed, 45 insertions(+)
 
-The Android model also requires explicitly turning the backlight off
-on suspend, which on the Windows model was done automatically.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Use YB_KBD_BL_PWM_PERIOD define in yogabook_pdev_pwm_lookup[]
-- Turn off keyboard backlight on suspend
----
- drivers/platform/x86/lenovo-yogabook-wmi.c | 31 +++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/lenovo-yogabook-wmi.c b/drivers/platform/x86/lenovo-yogabook-wmi.c
-index 0183b75a47e8..b49109d91ec3 100644
---- a/drivers/platform/x86/lenovo-yogabook-wmi.c
-+++ b/drivers/platform/x86/lenovo-yogabook-wmi.c
-@@ -19,6 +19,7 @@
- #include <linux/leds.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/pwm.h>
- #include <linux/wmi.h>
- #include <linux/workqueue.h>
- 
-@@ -26,6 +27,7 @@
- 
- #define YB_KBD_BL_DEFAULT	128
- #define YB_KBD_BL_MAX		255
-+#define YB_KBD_BL_PWM_PERIOD	13333
- 
- #define YB_PDEV_NAME		"yogabook-touch-kbd-digitizer-switch"
- 
-@@ -48,6 +50,7 @@ struct yogabook_data {
- 	struct gpio_desc *pen_touch_event;
- 	struct gpio_desc *kbd_bl_led_enable;
- 	struct gpio_desc *backside_hall_gpio;
-+	struct pwm_device *kbd_bl_pwm;
- 	int (*set_kbd_backlight)(struct yogabook_data *data, uint8_t level);
- 	int pen_touch_irq;
- 	int backside_hall_irq;
-@@ -267,8 +270,11 @@ static int yogabook_suspend(struct device *dev)
- 	struct yogabook_data *data = dev_get_drvdata(dev);
- 
- 	set_bit(YB_SUSPENDED, &data->flags);
--
- 	flush_work(&data->work);
-+
-+	if (test_bit(YB_KBD_IS_ON, &data->flags))
-+		data->set_kbd_backlight(data, 0);
-+
- 	return 0;
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index c226dd4163a1..5b95d7aa5c2f 100644
+=2D-- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -263,6 +263,47 @@ int set_required_buffer_size(struct wmi_device *wdev,=
+ u64 length)
  }
- 
-@@ -424,8 +430,21 @@ static struct gpiod_lookup_table yogabook_pdev_gpios = {
- 	},
- };
- 
-+static struct pwm_lookup yogabook_pdev_pwm_lookup[] = {
-+	PWM_LOOKUP_WITH_MODULE("80862289:00", 0, YB_PDEV_NAME, "kbd_bl_pwm",
-+			       YB_KBD_BL_PWM_PERIOD, PWM_POLARITY_NORMAL,
-+			       "pwm-lpss-platform"),
-+};
+ EXPORT_SYMBOL_GPL(set_required_buffer_size);
+
++/**
++ * wmi_instance_count - Get number of WMI object instances
++ * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417=
+f2f49ba
++ *
++ * Get the number of WMI object instances.
++ *
++ * Returns: Number of WMI object instances or negative error code.
++ */
++int wmi_instance_count(const char *guid_string)
++{
++	struct wmi_block *wblock;
++	acpi_status status;
 +
- static int yogabook_pdev_set_kbd_backlight(struct yogabook_data *data, u8 level)
- {
-+	struct pwm_state state = {
-+		.period = YB_KBD_BL_PWM_PERIOD,
-+		.duty_cycle = YB_KBD_BL_PWM_PERIOD * level / YB_KBD_BL_MAX,
-+		.enabled = level,
-+	};
++	status =3D find_guid(guid_string, &wblock);
++	if (ACPI_FAILURE(status)) {
++		if (status =3D=3D AE_BAD_PARAMETER)
++			return -EINVAL;
 +
-+	pwm_apply_state(data->kbd_bl_pwm, &state);
- 	gpiod_set_value(data->kbd_bl_led_enable, level ? 1 : 0);
- 	return 0;
- }
-@@ -475,6 +494,16 @@ static int yogabook_pdev_probe(struct platform_device *pdev)
- 		goto error_put_devs;
- 	}
- 
-+	pwm_add_table(yogabook_pdev_pwm_lookup, ARRAY_SIZE(yogabook_pdev_pwm_lookup));
-+	data->kbd_bl_pwm = devm_pwm_get(dev, "kbd_bl_pwm");
-+	pwm_remove_table(yogabook_pdev_pwm_lookup, ARRAY_SIZE(yogabook_pdev_pwm_lookup));
-+
-+	if (IS_ERR(data->kbd_bl_pwm)) {
-+		r = dev_err_probe(dev, PTR_ERR(data->kbd_bl_pwm),
-+				  "Getting keyboard backlight PWM\n");
-+		goto error_put_devs;
++		return -ENODEV;
 +	}
 +
- 	r = gpiod_to_irq(data->pen_touch_event);
- 	if (r < 0) {
- 		dev_err_probe(dev, r, "Getting pen_touch_event IRQ\n");
--- 
-2.39.2
++	return wmidev_instance_count(&wblock->dev);
++}
++EXPORT_SYMBOL_GPL(wmi_instance_count);
++
++/**
++ * wmidev_instance_count - Get number of WMI object instances
++ * @wdev: A wmi bus device from a driver
++ *
++ * Get the number of WMI object instances.
++ *
++ * Returns: Number of WMI object instances.
++ */
++u8 wmidev_instance_count(struct wmi_device *wdev)
++{
++	struct wmi_block *wblock =3D container_of(wdev, struct wmi_block, dev);
++
++	return wblock->gblock.instance_count;
++}
++EXPORT_SYMBOL_GPL(wmidev_instance_count);
++
+ /**
+  * wmi_evaluate_method - Evaluate a WMI method (deprecated)
+  * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417=
+f2f49ba
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index efff750f326d..e52bf2742eaf 100644
+=2D-- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -412,6 +412,8 @@ extern bool acpi_is_pnp_device(struct acpi_device *);
+
+ typedef void (*wmi_notify_handler) (u32 value, void *context);
+
++int wmi_instance_count(const char *guid);
++
+ extern acpi_status wmi_evaluate_method(const char *guid, u8 instance,
+ 					u32 method_id,
+ 					const struct acpi_buffer *in,
+diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+index c1a3bd4e4838..763bd382cf2d 100644
+=2D-- a/include/linux/wmi.h
++++ b/include/linux/wmi.h
+@@ -35,6 +35,8 @@ extern acpi_status wmidev_evaluate_method(struct wmi_dev=
+ice *wdev,
+ extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
+ 					     u8 instance);
+
++u8 wmidev_instance_count(struct wmi_device *wdev);
++
+ extern int set_required_buffer_size(struct wmi_device *wdev, u64 length);
+
+ /**
+=2D-
+2.30.2
 
