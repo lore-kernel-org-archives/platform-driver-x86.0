@@ -2,47 +2,46 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44FBC7EE23
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 May 2023 02:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE80DC77B7F
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 May 2023 03:06:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232303AbjEAC6h (ORCPT
+        id S233194AbjEADGP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 30 Apr 2023 22:58:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49082 "EHLO
+        Sun, 30 Apr 2023 23:06:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232221AbjEAC61 (ORCPT
+        with ESMTP id S232448AbjEADED (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 30 Apr 2023 22:58:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B8A21BC7;
-        Sun, 30 Apr 2023 19:57:57 -0700 (PDT)
+        Sun, 30 Apr 2023 23:04:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4031A2716;
+        Sun, 30 Apr 2023 20:01:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F348760FC6;
-        Mon,  1 May 2023 02:57:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FAFFC4339B;
-        Mon,  1 May 2023 02:57:55 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 881D56171B;
+        Mon,  1 May 2023 02:59:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35E01C433D2;
+        Mon,  1 May 2023 02:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682909876;
-        bh=epKsAZ6DSYzK4rCW0R5nLL2mxBdnP+pZABR+ucWo7ew=;
+        s=k20201202; t=1682909982;
+        bh=UBsBkhAPZ9nSOpcSBYNwAdW4r95T9kwn6DQOckGw4UI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RIxpH1puc01MWXjGKrSoZo2rhvUiX6ZiWOgTmHJ5JwnvNplqzk6kbjdsk9I9NAgWX
-         Z+fapg24Tz0DNyd6AfNRp5wwwGt+3aTB2oiBtpE2qePmEIa5eJ8h08MDwgbySOxHpI
-         Q/x7C/DQlMZaHunBtLL6WAC5Vsa38uI+aqhNfY1+oDIKxas4R9qmSnGLE1TYO2rhJ4
-         uEr4Hzs6OLLWhHU1JGXdkJbdalT3XSKb6JFCF8gKS2xItItBDrFPB/bhSuvi4JxaPb
-         zwKEOMj/zpmzHyjOXXgHktZ27/ZksiFO3LlLYoWIhBlKjRcQUfKnARFvcI00P/JxN7
-         dxvyzQs6DaZaw==
+        b=B/W6ZGO8XhwE+syk3tIk/zl8RgIxTIQyBVlLWSX5eGmlLu0BRE9BHWA2rZ03QJzsJ
+         eQ4iTqS291f1VbzWENHc3r4eOoBJgmsr4CC7+F/lce64Rb24rhgWSYTih/LWdouYTE
+         Z9VcwF33HpH8FfIZZqGwDGTgiY2Y3ysW+IX+vRS9GnbO9w5QUHsDzY9hJ+VmQe2413
+         3SMGRO69oN17QRo4iul9mX7kGSuXRUtfwrOa/oiiA6Z7RraPNNcU8P9dfdrfY8xc/I
+         ROso8Lri3Q6pmUTjqBisKF4j9YpnYdDeJxmG8NB8HhoI0q6Iq5Rn7GNuATs5F9TGUt
+         SlCPe1fO18EXA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
+Cc:     Feng Jiang <jiangfeng@kylinos.cn>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.3 17/44] platform/x86/intel: vsec: Explicitly enable capabilities
-Date:   Sun, 30 Apr 2023 22:56:05 -0400
-Message-Id: <20230501025632.3253067-17-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, Shyam-sundar.S-k@amd.com,
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.3 43/44] platform/x86/amd: pmc: Fix memory leak in amd_pmc_stb_debugfs_open_v2()
+Date:   Sun, 30 Apr 2023 22:56:31 -0400
+Message-Id: <20230501025632.3253067-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230501025632.3253067-1-sashal@kernel.org>
 References: <20230501025632.3253067-1-sashal@kernel.org>
@@ -54,194 +53,35 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: "David E. Box" <david.e.box@linux.intel.com>
+From: Feng Jiang <jiangfeng@kylinos.cn>
 
-[ Upstream commit 3f95ecf2a3e4db09e58d307932037e8f1210d6e7 ]
+[ Upstream commit f6e7ac4c35a28aef0be93b32c533ae678ad0b9e7 ]
 
-Discovered Intel VSEC/DVSEC capabilities are enabled by default and only
-get disabled by quirk. Instead, remove such quirks and only enable support
-for capabilities that have been explicitly added to a new capabilities
-field. While here, also reorder the device info structures alphabetically.
+Function amd_pmc_stb_debugfs_open_v2() may be called when the STB
+debug mechanism enabled.
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Link: https://lore.kernel.org/r/20230316224628.2855884-1-david.e.box@linux.intel.com
+When amd_pmc_send_cmd() fails, the 'buf' needs to be released.
+
+Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
+Link: https://lore.kernel.org/r/20230412093734.1126410-1-jiangfeng@kylinos.cn
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel/vsec.c | 69 ++++++++++++++-----------------
- drivers/platform/x86/intel/vsec.h |  9 +++-
- 2 files changed, 38 insertions(+), 40 deletions(-)
+ drivers/platform/x86/amd/pmc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index 2311c16cb975d..91be391bba3f7 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -67,14 +67,6 @@ enum intel_vsec_id {
- 	VSEC_ID_TPMI		= 66,
- };
- 
--static enum intel_vsec_id intel_vsec_allow_list[] = {
--	VSEC_ID_TELEMETRY,
--	VSEC_ID_WATCHER,
--	VSEC_ID_CRASHLOG,
--	VSEC_ID_SDSI,
--	VSEC_ID_TPMI,
--};
--
- static const char *intel_vsec_name(enum intel_vsec_id id)
- {
- 	switch (id) {
-@@ -98,26 +90,19 @@ static const char *intel_vsec_name(enum intel_vsec_id id)
+diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
+index 2edaae04a6912..91d04e710486e 100644
+--- a/drivers/platform/x86/amd/pmc.c
++++ b/drivers/platform/x86/amd/pmc.c
+@@ -268,6 +268,7 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
+ 	dev->msg_port = 0;
+ 	if (ret) {
+ 		dev_err(dev->dev, "error: S2D_NUM_SAMPLES not supported : %d\n", ret);
++		kfree(buf);
+ 		return ret;
  	}
- }
- 
--static bool intel_vsec_allowed(u16 id)
--{
--	int i;
--
--	for (i = 0; i < ARRAY_SIZE(intel_vsec_allow_list); i++)
--		if (intel_vsec_allow_list[i] == id)
--			return true;
--
--	return false;
--}
--
--static bool intel_vsec_disabled(u16 id, unsigned long quirks)
-+static bool intel_vsec_supported(u16 id, unsigned long caps)
- {
- 	switch (id) {
-+	case VSEC_ID_TELEMETRY:
-+		return !!(caps & VSEC_CAP_TELEMETRY);
- 	case VSEC_ID_WATCHER:
--		return !!(quirks & VSEC_QUIRK_NO_WATCHER);
--
-+		return !!(caps & VSEC_CAP_WATCHER);
- 	case VSEC_ID_CRASHLOG:
--		return !!(quirks & VSEC_QUIRK_NO_CRASHLOG);
--
-+		return !!(caps & VSEC_CAP_CRASHLOG);
-+	case VSEC_ID_SDSI:
-+		return !!(caps & VSEC_CAP_SDSI);
-+	case VSEC_ID_TPMI:
-+		return !!(caps & VSEC_CAP_TPMI);
- 	default:
- 		return false;
- 	}
-@@ -206,7 +191,7 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
- 	unsigned long quirks = info->quirks;
- 	int i;
- 
--	if (!intel_vsec_allowed(header->id) || intel_vsec_disabled(header->id, quirks))
-+	if (!intel_vsec_supported(header->id, info->caps))
- 		return -EINVAL;
- 
- 	if (!header->num_entries) {
-@@ -261,14 +246,14 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
- static bool intel_vsec_walk_header(struct pci_dev *pdev,
- 				   struct intel_vsec_platform_info *info)
- {
--	struct intel_vsec_header **header = info->capabilities;
-+	struct intel_vsec_header **header = info->headers;
- 	bool have_devices = false;
- 	int ret;
- 
- 	for ( ; *header; header++) {
- 		ret = intel_vsec_add_dev(pdev, *header, info);
- 		if (ret)
--			dev_info(&pdev->dev, "Could not add device for DVSEC id %d\n",
-+			dev_info(&pdev->dev, "Could not add device for VSEC id %d\n",
- 				 (*header)->id);
- 		else
- 			have_devices = true;
-@@ -403,14 +388,8 @@ static int intel_vsec_pci_probe(struct pci_dev *pdev, const struct pci_device_id
- 	return 0;
- }
- 
--/* TGL info */
--static const struct intel_vsec_platform_info tgl_info = {
--	.quirks = VSEC_QUIRK_NO_WATCHER | VSEC_QUIRK_NO_CRASHLOG |
--		  VSEC_QUIRK_TABLE_SHIFT | VSEC_QUIRK_EARLY_HW,
--};
--
- /* DG1 info */
--static struct intel_vsec_header dg1_telemetry = {
-+static struct intel_vsec_header dg1_header = {
- 	.length = 0x10,
- 	.id = 2,
- 	.num_entries = 1,
-@@ -419,19 +398,31 @@ static struct intel_vsec_header dg1_telemetry = {
- 	.offset = 0x466000,
- };
- 
--static struct intel_vsec_header *dg1_capabilities[] = {
--	&dg1_telemetry,
-+static struct intel_vsec_header *dg1_headers[] = {
-+	&dg1_header,
- 	NULL
- };
- 
- static const struct intel_vsec_platform_info dg1_info = {
--	.capabilities = dg1_capabilities,
-+	.caps = VSEC_CAP_TELEMETRY,
-+	.headers = dg1_headers,
- 	.quirks = VSEC_QUIRK_NO_DVSEC | VSEC_QUIRK_EARLY_HW,
- };
- 
- /* MTL info */
- static const struct intel_vsec_platform_info mtl_info = {
--	.quirks = VSEC_QUIRK_NO_WATCHER | VSEC_QUIRK_NO_CRASHLOG,
-+	.caps = VSEC_CAP_TELEMETRY,
-+};
-+
-+/* OOBMSM info */
-+static const struct intel_vsec_platform_info oobmsm_info = {
-+	.caps = VSEC_CAP_TELEMETRY | VSEC_CAP_SDSI | VSEC_CAP_TPMI,
-+};
-+
-+/* TGL info */
-+static const struct intel_vsec_platform_info tgl_info = {
-+	.caps = VSEC_CAP_TELEMETRY,
-+	.quirks = VSEC_QUIRK_TABLE_SHIFT | VSEC_QUIRK_EARLY_HW,
- };
- 
- #define PCI_DEVICE_ID_INTEL_VSEC_ADL		0x467d
-@@ -446,7 +437,7 @@ static const struct pci_device_id intel_vsec_pci_ids[] = {
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_DG1, &dg1_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_MTL_M, &mtl_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_MTL_S, &mtl_info) },
--	{ PCI_DEVICE_DATA(INTEL, VSEC_OOBMSM, &(struct intel_vsec_platform_info) {}) },
-+	{ PCI_DEVICE_DATA(INTEL, VSEC_OOBMSM, &oobmsm_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_RPL, &tgl_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_TGL, &tgl_info) },
- 	{ }
-diff --git a/drivers/platform/x86/intel/vsec.h b/drivers/platform/x86/intel/vsec.h
-index ae8fe92c5595b..0fd042c171ba0 100644
---- a/drivers/platform/x86/intel/vsec.h
-+++ b/drivers/platform/x86/intel/vsec.h
-@@ -5,6 +5,12 @@
- #include <linux/auxiliary_bus.h>
- #include <linux/bits.h>
- 
-+#define VSEC_CAP_TELEMETRY	BIT(0)
-+#define VSEC_CAP_WATCHER	BIT(1)
-+#define VSEC_CAP_CRASHLOG	BIT(2)
-+#define VSEC_CAP_SDSI		BIT(3)
-+#define VSEC_CAP_TPMI		BIT(4)
-+
- struct pci_dev;
- struct resource;
- 
-@@ -27,7 +33,8 @@ enum intel_vsec_quirks {
- 
- /* Platform specific data */
- struct intel_vsec_platform_info {
--	struct intel_vsec_header **capabilities;
-+	struct intel_vsec_header **headers;
-+	unsigned long caps;
- 	unsigned long quirks;
- };
  
 -- 
 2.39.2
