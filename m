@@ -2,185 +2,146 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA34C77B73
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 May 2023 13:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3A0C77B7C
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 May 2023 01:28:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232249AbjEAN7Z (ORCPT
+        id S232966AbjEBB22 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 1 May 2023 09:59:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35724 "EHLO
+        Mon, 1 May 2023 21:28:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232193AbjEAN7Y (ORCPT
+        with ESMTP id S232363AbjEBB21 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 1 May 2023 09:59:24 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 457F910C3
-        for <platform-driver-x86@vger.kernel.org>; Mon,  1 May 2023 06:59:15 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-3f173af665fso14179045e9.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 01 May 2023 06:59:15 -0700 (PDT)
+        Mon, 1 May 2023 21:28:27 -0400
+Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C717D212E
+        for <platform-driver-x86@vger.kernel.org>; Mon,  1 May 2023 18:28:25 -0700 (PDT)
+Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-18f4a6d2822so19739093fac.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 01 May 2023 18:28:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682949553; x=1685541553;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GT/4/s8s/MXZrVQKz5nsFO6s4oGGm/JF9yEnisYWo6s=;
-        b=Dd3FYtdCPlmqoK99A9wkD+73Po3Q/BmKkg1CRmS3RIxymSMxRS8b7hfy9KaKHgVse+
-         pAKpzOwz45aKczgFNMTs0GHx9y+XZctApYByPeWOae6EUuGdgt4t9VMFZqjV0fyc22BT
-         XsCUlcBmZTzVIZmbYJNk0/dsHk/BeKj+Vp32Br2O6doiGJlnXulFFlHTjkupearlmbvx
-         ePvNaCOasUvN71KAxcWqAVAoJn7Ey764b4UKX19rzfgZHRLbdJVkVZiWIs+kMG7QjovT
-         mCDmYl4Dt4IzBuDli92BLGtGF0BhT0idbAYod4Y9f6a65pxigaWx7Kpb8N7i+nEYuNcR
-         daAw==
+        d=ventanamicro.com; s=google; t=1682990905; x=1685582905;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7mVH6+bWUcuKUF/qKwIgPR0gD6lIVpcYINT4JISpC94=;
+        b=P9fppIss2OxfjULIXvdy+dUX9w7PEVRop13j86caNUW0bBs6C3/wQSOOYO3cSMJtjc
+         ihPHtbEIVh4by3RpqOVqh6TeH5TRE4WC6Co4o4k3dMbyB0lgaMEEGof1fwKOkTEK1glf
+         AuFI2se8mKywLPekgTqxP320UZ0MMV0U29UiLdWUptUQubbBRYA1uinapXGRIR2IvQiD
+         7lNS1CY5aalCpYBAShhxplpZZSpD2DKbUWgbHpZEn8cVN9e8x5T4y2vxao2EkDWbh7pS
+         G4QZTcE6knoEB0E870EGK119fD4LHTea7plc+p6aDdf+8XHQSeTfxb3VXfJShGGoXlmp
+         iT3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682949553; x=1685541553;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GT/4/s8s/MXZrVQKz5nsFO6s4oGGm/JF9yEnisYWo6s=;
-        b=Mnr/booGqGlC2npHtvLIUETS7/N3huQsyXFdkqQaLb+VpySKBa8/MYhh6B8XTSqL7c
-         4rpjpqbswGCeAlTUR+DSsg3Tbg8fn4S80I6HFWE0tYa2klqZNS5rak7LgBrqwLhMZAKH
-         5fUj2pqpFQDT7SX19oomQ2WIxo7Rd5QxS1lSH3bxDvGvsBQiAaMjtu8nbHahmuEzB5CH
-         WdrBx4pwxeVRnRA36my0nPkBPkU+Wdb3PvP32CJPOT10YCotKMIwR0EzSu1WCZ5Fz4m1
-         Jf2jNABl6M9SxdAH3gEChoKa4eFeybGHTvswFF7EExJHAVDIO5ZNeZv5z/o9ZkXfUVN6
-         xGbA==
-X-Gm-Message-State: AC+VfDzsRIKCMtA7QeZSUy14l9mHo2XeK3PGW2LKYieo3ENIVQwuSqlT
-        15rCbmIMjadGVFbJyzpVKR2SH28Jmdzt25q4Wb4=
-X-Google-Smtp-Source: ACHHUZ7w5kTncG2t3T7HM5FjdQW07gepiykr+O/xW0I6K5dhW4rkewtZZtWQEljyrICogFlmhXPseZtzVpY9H+2ai10=
-X-Received: by 2002:adf:e649:0:b0:306:2830:224f with SMTP id
- b9-20020adfe649000000b003062830224fmr3651672wrn.23.1682949553517; Mon, 01 May
- 2023 06:59:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <Y+JbBiMJw+VLo2Nr@mail.gmail.com> <CAD2FfiGLH87H6CVbHimXUfz7ESUKwO8k1ABCgKU9L2SnfGanTA@mail.gmail.com>
- <PH0PR84MB1953825BC90B268904C6C7E5A8D89@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
- <CAD2FfiFUEMupUBoWj2hq9ep=R0Sk-xgBscXqMPefAipvoCg8eg@mail.gmail.com>
- <Y+QXXXX1u33Eyf4E@mail.gmail.com> <CAD2FfiEj87WiByKMXrLP7zrj-_gNrNKTh6v6naCxapbVBDcEGw@mail.gmail.com>
- <PH0PR84MB195313DBC8EF15354C260D5DA8679@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
- <PH0PR84MB1953774AE5A9A238928E1CEAA8649@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
- <CAKErNvo7x+ONMuAnbmiCfydbOkyx6JEcVKw05sjAXs4U=i13dQ@mail.gmail.com> <PH0PR84MB195361F00A2ADD103FECAF57A86A9@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
-In-Reply-To: <PH0PR84MB195361F00A2ADD103FECAF57A86A9@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
-From:   Maxim Mikityanskiy <maxtram95@gmail.com>
-Date:   Mon, 1 May 2023 16:58:47 +0300
-Message-ID: <CAKErNvorEaf8DUy0MBYpahZe5ppBz7DW+t8wgdy9y=Hjc8pJ6w@mail.gmail.com>
-Subject: Re: Firmware upgrade broke SW_TABLET_MODE on HP Dragonfly G2
-To:     "Lopez, Jorge A (Security)" <jorge.lopez2@hp.com>
-Cc:     Richard Hughes <hughsient@gmail.com>,
-        Alex Hung <alexhung@gmail.com>,
+        d=1e100.net; s=20221208; t=1682990905; x=1685582905;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7mVH6+bWUcuKUF/qKwIgPR0gD6lIVpcYINT4JISpC94=;
+        b=QX9VS8mfTqAkHGoGBoLph+X5GdluvWjtFaADRe3Dr7MUkAcQgqkc8kuIvnZaOZu9sZ
+         9Cns+tsUKA/o0t9EH61s4IZXLlxL99R2RYQiljBXa5yBPoFDhM93QAVd7x9jrf7aUWtD
+         p16VY32d1E5xetK9REb6FAoAHZVZ7KPsancTueoFYpdT8Ybn+4zrNcxJQOXN4YeUVdzc
+         pncRpWhKdVSAQpk+pA2oITt+EGtTHV8uBrlD/JOGpfyjov3kMdPi1Wt36JX0p2P2Rce4
+         J5GnwbQiNsDa9roLoZ50t6VZ4rjqSw1fcdJfeLuTOa11MY9977MFUpT1JJuykT5mwzfb
+         aLoA==
+X-Gm-Message-State: AC+VfDz5MpJjDCZ1As8hegsuuvJMDSutaDOnLtoOfTjzq/RjDvvQpvmr
+        ysNYzCDYoiaPjshPBsVfxoD/8g==
+X-Google-Smtp-Source: ACHHUZ6GSw2x3VDmZQX5TJwpmEs67OpnyMp9mprjr4us96mcsrPP3CnY/k1sZeNeHVZjlquWpmBpGQ==
+X-Received: by 2002:a05:6808:8f1:b0:38e:467f:fee3 with SMTP id d17-20020a05680808f100b0038e467ffee3mr6754306oic.29.1682990904854;
+        Mon, 01 May 2023 18:28:24 -0700 (PDT)
+Received: from sunil-laptop ([2409:4071:6e87:a073:45c:9455:55ad:4703])
+        by smtp.gmail.com with ESMTPSA id p203-20020acaf1d4000000b0038cabfcb3ccsm12099517oih.15.2023.05.01.18.28.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 May 2023 18:28:24 -0700 (PDT)
+Date:   Tue, 2 May 2023 06:58:07 +0530
+From:   Sunil V L <sunilvl@ventanamicro.com>
+To:     Conor Dooley <conor@kernel.org>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        llvm@lists.linux.dev, Jonathan Corbet <corbet@lwn.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Weili Qian <qianweili@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Marc Zyngier <maz@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>,
-        Rishit Bansal <rishitbansal0@gmail.com>,
-        Enver Balalic <balalic.enver@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andrew Jones <ajones@ventanamicro.com>
+Subject: Re: [PATCH V4 13/23] RISC-V: cpufeature: Add ACPI support in
+ riscv_fill_hwcap()
+Message-ID: <ZFBnJ/7TWTBpPZm0@sunil-laptop>
+References: <20230404182037.863533-1-sunilvl@ventanamicro.com>
+ <20230404182037.863533-14-sunilvl@ventanamicro.com>
+ <20230429-voucher-tutor-715fd4f6c24e@spud>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230429-voucher-tutor-715fd4f6c24e@spud>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 27 Apr 2023 at 22:26, Lopez, Jorge A (Security)
-<jorge.lopez2@hp.com> wrote:
->
-> Hi Maxim,
->
->
-> From: Maxim Mikityanskiy <maxtram95@gmail.com>
-> Sent: Thursday, April 27, 2023 11:37 AM
-> To: Lopez, Jorge A (Security) <jorge.lopez2@hp.com>
-> Cc: Richard Hughes <hughsient@gmail.com>; Alex Hung <alexhung@gmail.com>;=
- Hans de Goede <hdegoede@redhat.com>; Mark Gross <markgross@kernel.org>; pl=
-atform-driver-x86@vger.kernel.org; Kai-Heng Feng <kai.heng.feng@canonical.c=
-om>; Mario Limonciello <mario.limonciello@amd.com>; Barnab=C3=A1s P=C5=91cz=
-e <pobrn@protonmail.com>; Rishit Bansal <rishitbansal0@gmail.com>; Enver Ba=
-lalic <balalic.enver@gmail.com>
-> Subject: Re: Firmware upgrade broke SW_TABLET_MODE on HP Dragonfly G2
->
-> CAUTION: External Email
-> On Tue, 25 Apr 2023 at 18:05, Lopez, Jorge A (Security)
-> <mailto:jorge.lopez2@hp.com> wrote:
-> > >
-> > > Hi Richard,
-> > >
-> > > I reached out to BIOS team and here is their response. Let me know if=
- additional information is needed.
->
-> > > Hi Jorge!
->
-> > Thanks a lot for getting a response from the BIOS team.
->
-> You are welcome.  Sorry it took so long to get a response.
->
-> > > >> HP Elite Dragonfly Max/Dragonfly G2 Notebook PC T90 System Update =
-is in 'Embargo State', so it is not officially released.
-> > > >> Customer should wait until the version below is finalized and move=
-d to Stable state.
->
-> > This clearly doesn't match what I see on LVFS:
->
-> > https://fwupd.org/lvfs/devices/com.hp.laptop.system.T90.firmware
->
-> > 01.11.00 and 01.12.00 are both marked as stable here, and fwupd
-> > suggests these versions for an upgrade. What do they mean when they
-> > say it's not officially released and not in the stable state?
->
-> The firmware which state is stable is under a generic name 'HP Commercial=
- Laptop T90 Family System Update'.   This BIOS is not specific to your syst=
-em.   This is the reason why the name convention is changing and eliminate =
-confusion.
->
-> The BIOS specific to your notebook is found under ' HP Elite Dragonfly Ma=
-x/Dragonfly G2 Notebook PC T90 System Update' which status is 'embargo-hp-w=
-s'.  BIOS in 'embargo' state are not declared as stable or released.   The =
-LVFS documentation describes the firmware state flow as Private -> Embargo =
--> Testing -> Stable
-
-Thanks for the explanation of the renaming process!
-
-There seems to be a miscommunication between me and the firmware team,
-though. Sure, if they are planning a rename, and if the next version
-will be released under a new name, I'll test it. In the meanwhile,
-they are releasing updates under the old name, the last two have a
-regression, and the versions on LVFS under the old name match the
-firmware upgrade packages for Windows (which makes me think there is
-only one firmware branch, and renaming is not a complete replacement
-with a whole different firmware =E2=80=94 please correct me if I'm wrong):
-
-https://support.hp.com/ph-en/drivers/selfservice/hp-elite-dragonfly-g2-note=
-book-pc/34514046
-
-I'm running the firmware which is officially released (under the old
-name), marked as stable, and even had an upgrade to 01.12.00 after I
-reported the bug on 01.11.00. Why do they say I need to wait for the
-rename to happen first? Or do they mean that the next version fixes my
-bug, and it will be released under the new name?
-
-I'm just concerned that due to some miscommunication the firmware team
-doesn't treat me seriously, because they think I'm running some
-unofficial firmware, while I'm running the only available at the
-moment official and stable firmware, whose versions also match Windows
-upgrade packages. I'm afraid to waste time, which might make fixing
-the bug harder, and also might make testing impossible, if a new
-firmware version won't allow downgrade to 01.09.01.
-
-Could you communicate that for me please? If they fixed the bug, and I
-only need to wait for a new release, which will be under a new name,
-I'll wait patiently. If they didn't even treat my request seriously
-because they thought I'm on some beta or unofficial firmware, I'd like
-to make things clear.
-
-Thanks,
-Max
-
->
->
-> > > >> HP Elite Dragonfly Max/Dragonfly G2 Notebook PC T90 System Update
-> > >
-> > > >> BTW, the name on LVFS will be changed per customer request in CQ2 =
-refresh. Customers want to have product names included in the name. The las=
-t columns in tables are the name to be displayed on LVFS from CQ2 refresh. =
-See attached JPEG for upcoming LVFS name changes in CQ2 refresh.
->
-> > That's a great change, having the laptop name explicitly will be much c=
-learer.
->
+On Sat, Apr 29, 2023 at 11:31:20AM +0100, Conor Dooley wrote:
+> Hey Sunil,
+> 
+> On Tue, Apr 04, 2023 at 11:50:27PM +0530, Sunil V L wrote:
+> 
+> > @@ -103,14 +109,36 @@ void __init riscv_fill_hwcap(void)
+> >  
+> >  	bitmap_zero(riscv_isa, RISCV_ISA_EXT_MAX);
+> >  
+> > -	for_each_of_cpu_node(node) {
+> > +	if (!acpi_disabled) {
+> > +		status = acpi_get_table(ACPI_SIG_RHCT, 0, &rhct);
+> > +		if (ACPI_FAILURE(status))
+> > +			return;
+> > +	}
+> > +
+> > +	for_each_possible_cpu(cpu) {
+> >  		unsigned long this_hwcap = 0;
+> >  		DECLARE_BITMAP(this_isa, RISCV_ISA_EXT_MAX);
+> >  		const char *temp;
+> >  
+> > -		if (of_property_read_string(node, "riscv,isa", &isa)) {
+> > -			pr_warn("Unable to find \"riscv,isa\" devicetree entry\n");
+> > -			continue;
+> > +		if (acpi_disabled) {
+> > +			node = of_cpu_device_node_get(cpu);
+> > +			if (node) {
+> > +				rc = of_property_read_string(node, "riscv,isa", &isa);
+> > +				of_node_put(node);
+> > +				if (rc) {
+> > +					pr_warn("Unable to find \"riscv,isa\" devicetree entry\n");
+> > +					continue;
+> > +				}
+> > +			} else {
+> > +				pr_warn("Unable to find cpu node\n");
+> > +				continue;
+> 
+> I was poking at this the last few days and went back to look at the ACPI
+> code again. Is there a reason we don't do early-return here? IOW:
+> 
+> 	node = of_cpu_device_node_get(cpu);
+> 	if (!node) {
+> 		pr_warn()
+> 		continue;
+> 	}
+> 
+> 	rc = of_property_read_string(node, "riscv,isa", &isa);
+> 	of_node_put(node);
+> 	if (rc) {
+> 		pr_warn();
+> 		continue;
+> 	}
+> 
+This looks better. Will update when I send the next revision of the
+series. Thank you!, Conor.
