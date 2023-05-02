@@ -2,261 +2,219 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF710C77B78
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 May 2023 21:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B799C77B75
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 May 2023 21:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229604AbjEBVOP (ORCPT
+        id S229481AbjEBVaJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 May 2023 17:14:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52934 "EHLO
+        Tue, 2 May 2023 17:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbjEBVOO (ORCPT
+        with ESMTP id S229507AbjEBVaI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 May 2023 17:14:14 -0400
+        Tue, 2 May 2023 17:30:08 -0400
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED6E210EA;
-        Tue,  2 May 2023 14:14:09 -0700 (PDT)
-Date:   Tue, 2 May 2023 23:14:07 +0200
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76D0C10FE;
+        Tue,  2 May 2023 14:30:07 -0700 (PDT)
+Date:   Tue, 2 May 2023 23:30:05 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-        t=1683062048; bh=e07JQPbrzErLVZNtCZRsd72YMBOeDKOjG5kkaPnDxHQ=;
+        t=1683063005; bh=w+kKsFePE+hV8C+y/o423iW0bUDfnkSuaBi7WrMOCcs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XhI0e1KyFlV8tv2ZcCxD2xFZO0C2LhOKZ9WCqkyaa63PM3v0izkqQjZBtcBWgR5ur
-         zW07mFrAN+GUb3t2zLEEOSTeWn6WsiB2rWDU2pmvyAN0vhjij/OzaDGqBhzdvp2jNm
-         pGbmqQSR2FKgONmrRnkO427GC1KA6ykXuM7QHA7k=
+        b=E5C35WoemlRgOkEGL5gZQN7AOg7lsqikBAcdQVKTuhlyu9/No5vo7cafSR56b1wZ4
+         8k57+n5vlvzFNwFy9Itgz9WSGb954pJaqZAn7vZDBPf6ARgRlInqVlWgjvY9C4lZj4
+         YUj79KkRnD5Rf/b4aEX4fcGLI89qRDe/n1bnRVg4=
 From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
 To:     Jorge Lopez <jorgealtxwork@gmail.com>
 Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 03/14] HP BIOSCFG driver - bioscfg
-Message-ID: <e85d71dd-3836-4b06-80d8-199c59383eff@t-8ch.de>
+Subject: Re: [PATCH v11 04/14] HP BIOSCFG driver - int-attributes
+Message-ID: <efafedc0-e9d3-4060-a174-dc4f33f77246@t-8ch.de>
 References: <20230420165454.9517-1-jorge.lopez2@hp.com>
- <20230420165454.9517-4-jorge.lopez2@hp.com>
- <05785df6-28e3-4de2-bdef-5acdfac1f558@t-8ch.de>
- <CAOOmCE97GmqAxhk-_2f0gpOC7VZ=k-retewj7aTRP78ud1HKrQ@mail.gmail.com>
+ <20230420165454.9517-5-jorge.lopez2@hp.com>
+ <26f0a80e-d3f8-4d6c-83ff-d756abed7b6b@t-8ch.de>
+ <CAOOmCE8+Kgkm4uscYEei1+9xHiN=wd2oNtEiLeneDS+zppuYcg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOOmCE97GmqAxhk-_2f0gpOC7VZ=k-retewj7aTRP78ud1HKrQ@mail.gmail.com>
+In-Reply-To: <CAOOmCE8+Kgkm4uscYEei1+9xHiN=wd2oNtEiLeneDS+zppuYcg@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2023-05-02 14:52:14-0500, Jorge Lopez wrote:
-> On Sat, Apr 22, 2023 at 5:16 PM <thomas@t-8ch.de> wrote:
-> >
-> > On 2023-04-20 11:54:43-0500, Jorge Lopez wrote:
+Hi Jorge,
+
+thanks for incorporating my feedback, I'm curious for the next revision!
+
+The review comments are very terse but that is only to bring across
+their points better. Your effort is appreciated.
+
+On 2023-05-02 15:56:22-0500, Jorge Lopez wrote:
+
+<snip>
+
+> > On 2023-04-20 11:54:44-0500, Jorge Lopez wrote:
 > > > ---
-> > >  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 961 +++++++++++++++++++
-> > >  1 file changed, 961 insertions(+)
-> > >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> > > Based on the latest platform-drivers-x86.git/for-next
+> > > ---
+> > >  .../x86/hp/hp-bioscfg/int-attributes.c        | 474 ++++++++++++++++++
+> > >  1 file changed, 474 insertions(+)
+> > >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
 > > >
-> > > diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> > > diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
 > > > new file mode 100644
-> > > index 000000000000..4b0d4f56e65f
+> > > index 000000000000..d8ee39dac3f9
 > > > --- /dev/null
-> > > +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> > > +++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
 
 <snip>
 
-> > > +     int retval = 0;
-> > > +     u8 *attr_name;
+> > > +int populate_integer_elements_from_package(union acpi_object *integer_obj,
+> > > +                                        int integer_obj_count,
+> > > +                                        int instance_id)
+> > > +{
+> > > +     char *str_value = NULL;
+> > > +     int value_len;
+> > > +     int ret = 0;
+> > > +     u32 size = 0;
+> > > +     u32 int_value;
+> > > +     int elem = 0;
+> > > +     int reqs;
+> > > +     int eloc;
+> > > +
+> > > +     if (!integer_obj)
+> > > +             return -EINVAL;
+> > > +
+> > > +     strscpy(bioscfg_drv.integer_data[instance_id].common.display_name_language_code,
+> > > +             LANG_CODE_STR,
+> > > +             sizeof(bioscfg_drv.integer_data[instance_id].common.display_name_language_code));
+> > > +
+> > > +     for (elem = 1, eloc = 1; elem < integer_obj_count; elem++, eloc++) {
+> > > +
+> > > +             /* ONLY look at the first INTEGER_ELEM_CNT elements */
 > >
-> > const char *
-> 
-> Cannot define  attr_name as 'const char *'.  attr_name value is set
-> within the function
+> > Why?
+> The information provided in element 0 from the package is ignored as
+> directed by the BIOS team.
+> Similar action is taken when reading the information from ACPI Buffer
+> (populate_integer_elements_from_buffer())
 
-Then use "char *". This is pointing to a NULL-terminated string,
-not a number or binary data.
+This should be mentioned somewhere.
 
-This is also the type used by the functions this value is passed to.
+But my question was more why to we only look at INTEGER_ELEM_CNT?
+It is clear to me now, but this is very convulted. See below.
 
 <snip>
 
-> > > +                     retval = kobject_init_and_add(attr_name_kobj, &attr_name_ktype,
-> > > +                                                   NULL, "%s", str_value);
+> >
 > > > +
-> > > +                     if (retval) {
-> > > +                             kobject_put(attr_name_kobj);
-> >
-> > The kobj was not created, why does it need the kobj_put() ?
-> As indicated by kobject_init_and_add ...
-> 
->  * This function combines the call to kobject_init() and kobject_add().
->  *
->  * If this function returns an error, kobject_put() must be called to
->  * properly clean up the memory associated with the object.  This is the
->  * same type of error handling after a call to kobject_add() and kobject
->  * lifetime rules are the same here.
-
-I stand corrected, thanks!
-
-> >
-> > > +                             goto err_attr_init;
-> > > +                     }
+> > > +int populate_integer_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
+> > > +                                       int instance_id)
+> > > +{
+> > > +     char *dst = NULL;
+> > > +     int elem;
+> > > +     int reqs;
+> > > +     int integer;
+> > > +     int size = 0;
+> > > +     int ret;
+> > > +     int dst_size = *buffer_size / sizeof(u16);
 > > > +
-> > > +                     /* enumerate all of these attributes */
-> > > +                     switch (attr_type) {
-> > > +                     case HPWMI_STRING_TYPE:
-> > > +                             retval = populate_string_package_data(elements,
-> > > +                                                                   instance_id,
-> > > +                                                                   attr_name_kobj);
-> > > +                             break;
-> > > +                     case HPWMI_INTEGER_TYPE:
-> > > +                             retval = populate_integer_package_data(elements,
-> > > +                                                                    instance_id,
-> > > +                                                                    attr_name_kobj);
-> > > +                             break;
-> > > +                     case HPWMI_ENUMERATION_TYPE:
-> > > +                             retval = populate_enumeration_package_data(elements,
-> > > +                                                                        instance_id,
-> > > +                                                                        attr_name_kobj);
-> > > +                             break;
-> > > +                     case HPWMI_ORDERED_LIST_TYPE:
-> > > +                             retval = populate_ordered_list_package_data(elements,
-> > > +                                                                         instance_id,
-> > > +                                                                         attr_name_kobj);
-> > > +                             break;
-> > > +                     case HPWMI_PASSWORD_TYPE:
-> > > +                             retval = populate_password_package_data(elements,
-> > > +                                                                     instance_id,
-> > > +                                                                     attr_name_kobj);
-> > > +                             break;
-> > > +                     default:
-> > > +                             break;
-> >
-> > This default does nothing.
-> >
-> > > +                     }
+> > > +     dst = kcalloc(dst_size, sizeof(char), GFP_KERNEL);
+> > > +     if (!dst)
+> > > +             return -ENOMEM;
 > > > +
-> > > +                     kfree(str_value);
-> >
-> > Why is str_value only freed down here? It has not been used for half a
-> > screen of code.
-> 
-> Added early in the development process and failed to clean up here.
-> >
+> > > +     elem = 0;
+> > > +     strscpy(bioscfg_drv.integer_data[instance_id].common.display_name_language_code,
+> > > +             LANG_CODE_STR,
+> > > +             sizeof(bioscfg_drv.integer_data[instance_id].common.display_name_language_code));
+> > > +
+> > > +     for (elem = 1; elem < 3; elem++) {
+> > > +
+> > > +             ret = get_string_from_buffer(&buffer_ptr, buffer_size, dst, dst_size);
+> > > +             if (ret < 0)
+> > > +                     continue;
+> > > +
+> > > +             switch (elem) {
+> > > +             case VALUE:
+> > > +                     ret = kstrtoint(dst, 10, &integer);
+> > > +                     if (ret)
+> > > +                             continue;
+> > > +
+> > > +                     bioscfg_drv.integer_data[instance_id].current_value = integer;
+> > > +                     break;
+> > > +             case PATH:
+> > > +                     strscpy(bioscfg_drv.integer_data[instance_id].common.path, dst,
+> > > +                             sizeof(bioscfg_drv.integer_data[instance_id].common.path));
+> > > +                     break;
+> > > +             default:
+> > > +                     pr_warn("Invalid element: %d found in Integer attribute or data may be malformed\n", elem);
+> > > +                     break;
 > > > +             }
+> > > +     }
+> > > +
+> > > +     for (elem = 3; elem < INTEGER_ELEM_CNT; elem++) {
 > >
-> > else
+> > This loop pattern seems weird to me.
+> > It is not obvious that the values are read in the order of the switch()
+> > branches from the buffer.
 > >
-> > > +
-> > > +             if (obj->type == ACPI_TYPE_BUFFER) {
-> > > +
-> > > +                     buffer_size = obj->buffer.length;
-> > > +                     buffer_ptr = obj->buffer.pointer;
-> > > +
-> > > +                     retval = get_string_from_buffer(&buffer_ptr, &buffer_size, str, MAX_BUFF);
-> > > +                     if (retval < 0)
-> > > +                             goto err_attr_init;
-> > > +
-> > > +                     if (attr_type == HPWMI_PASSWORD_TYPE || attr_type == HPWMI_SECURE_PLATFORM_TYPE)
-> > > +                             tmp_set = bioscfg_drv.authentication_dir_kset;
-> > > +                     else
-> > > +                             tmp_set = bioscfg_drv.main_dir_kset;
-> >
-> > There is a bunch of common logic duplicated in both the buffer and
-> > package branches.
 > 
-> Older BIOS reports the ACPI data as objects of type ACPI_TYPE_PACKAGE
-> and the associated data is reported as elements.
-> Newer BIOS reports the ACPI data as objects of type ACPI_TYPE_BUFFER.
->  (actypes.h   union acpi_object)
-> The code follows a common logic although the data is acquired
-> differently according to the ACPI object type
+> The order in which the data is read from the buffer is set by BIOS.
+
+This I understand.
+
+> The switch statement was used to enforce the reading order of the
+> elements and provide additional clarity
+
+This is not clear from the code alone. One also needs to know the
+concrete values of the enums.
+
+> > Something more obvious would be:
 > >
-> > > +
-> > > +                     if (kset_find_obj(tmp_set, str)) {
-> > > +                             pr_warn("Duplicate attribute name found - %s\n", str);
+> > instance.common.is_readonly = read_int_from_buf(&buffer_ptr);
+> > instance.common.display_in_ui = read_int_from_buf(&buffer_ptr);
+> > instance.common.requires_physical_presence = read_int_from_buf(&buffer_ptr);
+
+The proposed pattern above, just regular function calls, are also
+executed in the correct order, the order in which they are written.
+
+For a reader it is clear that the order is important and part of the
+ABI of the BIOS.
+
+> > This would make it clear that these are fields read in order from the
+> > buffer. Without having to also look at the numeric values of the
+> > defines.
 > >
-> > Also mention that it is being ignored.
+> > Furthermore it would make the code shorter and errorhandling would be
+> > clearer and the API similar to the netlink APIs.
 > >
-> > > +                             goto nextobj;
-> > > +                     }
-> > > +
-> > > +                     /* build attribute */
-> > > +                     attr_name_kobj = kzalloc(sizeof(*attr_name_kobj), GFP_KERNEL);
-> > > +                     if (!attr_name_kobj) {
-> > > +                             retval = -ENOMEM;
-> > > +                             goto err_attr_init;
-> > > +                     }
-> > > +
-> > > +                     attr_name_kobj->kset = tmp_set;
-> > > +
-> > > +                     temp_str = str;
-> > > +                     if (attr_type == HPWMI_SECURE_PLATFORM_TYPE)
-> > > +                             temp_str = "SPM";
-> > > +
-> > > +                     retval = kobject_init_and_add(attr_name_kobj,
-> > > +                                                   &attr_name_ktype, NULL, "%s",
-> > > +                                                   temp_str);
-> > > +                     if (retval) {
-> > > +                             kobject_put(attr_name_kobj);
-> > > +                             goto err_attr_init;
-> > > +                     }
-> > > +
-> > > +                     /* enumerate all of these attributes */
-> > > +                     switch (attr_type) {
-> > > +                     case HPWMI_STRING_TYPE:
-> > > +                             retval = populate_string_buffer_data(buffer_ptr,
-> > > +                                                                  &buffer_size,
-> > > +                                                                  instance_id,
-> > > +                                                                  attr_name_kobj);
-> > > +                             break;
-> > > +                     case HPWMI_INTEGER_TYPE:
-> > > +                             retval = populate_integer_buffer_data(buffer_ptr,
-> > > +                                                                   &buffer_size,
-> > > +                                                                   instance_id,
-> > > +                                                                   attr_name_kobj);
-> > > +                             break;
-> > > +                     case HPWMI_ENUMERATION_TYPE:
-> > > +                             retval = populate_enumeration_buffer_data(buffer_ptr,
-> > > +                                                                       &buffer_size,
-> > > +                                                                       instance_id,
-> > > +                                                                       attr_name_kobj);
-> > > +                             break;
-> > > +                     case HPWMI_ORDERED_LIST_TYPE:
-> > > +                             retval = populate_ordered_list_buffer_data(buffer_ptr,
-> > > +                                                                        &buffer_size,
-> > > +                                                                        instance_id,
-> > > +                                                                        attr_name_kobj);
-> > > +                             break;
-> > > +                     case HPWMI_PASSWORD_TYPE:
-> > > +                             retval = populate_password_buffer_data(buffer_ptr,
-> > > +                                                                    &buffer_size,
-> > > +                                                                    instance_id,
-> > > +                                                                    attr_name_kobj);
-> > > +                             break;
-> > > +                     default:
-> > > +                             break;
-> > > +                     }
-> > > +             }
+> > Or maybe with error reporting:
 > >
-> > What if it's neither a package nor a buffer?
+> > ret = read_int_from_buf(&buffer_ptr, &instance.common.is_readonly);
+> > if (ret)
+> >     ...
 > 
-> we return an error if it is neither a package nor a buffer.
+> Instance.common.is_readonly is only evaluated when the user attempt to
+> update an attribute current value
+
+is_readonly was only an example on how to more nicely read the data from
+the buffer. It applies to all values of all attribute types.
+
+> > ret = read_int_from_buf(&buffer_ptr, &instance.common.display_in_ui);
+> > if (ret)
+> >     ...
 > 
-> if (obj->type != ACPI_TYPE_PACKAGE && obj->type != ACPI_TYPE_BUFFER) {
->        pr_err("Error: Expected ACPI-package or buffer type, got:
-> %d\n",  obj->type);
->        retval = -EIO;
->        goto err_attr_init;
-> }
+> Instance.common.display_in_ui has no specific use at this time.
+> 
+> The code was made shorter and easier to understand by replacing the
+> long statements with
+> 
+> struct integer_data *integer_data = &bioscfg_drv.integer_data[instance_id];
+> ...
+> integer_data->common.is_readonly = integer;
+> 
+> Same approach was taken for all attribute files.
 
-Indeed, thanks.
+Thanks!
 
-This could be pulled together into:
-
-if (package)
-	...
-else if (buffer)
-	...
-else
-	report error
-
-Note:
-
-The "Error: " prefix is unnecessary. It's already logged as pr_err().
-
-<snip>
+Please do try to use the "plain functioncall" pattern as outlined above.
+I think it can make the code much shorter and idiomatic.
