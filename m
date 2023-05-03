@@ -2,148 +2,124 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B54C77B75
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 May 2023 21:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA04DC77B75
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 May 2023 21:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229449AbjECVQm (ORCPT
+        id S229632AbjECVW2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 3 May 2023 17:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38830 "EHLO
+        Wed, 3 May 2023 17:22:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjECVQl (ORCPT
+        with ESMTP id S229449AbjECVW1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 May 2023 17:16:41 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D4CE7DBB;
-        Wed,  3 May 2023 14:16:40 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2a8dd1489b0so56940781fa.3;
-        Wed, 03 May 2023 14:16:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683148598; x=1685740598;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bfneWEBGkEit9hjisZDYzsO4oPwvETd0SmOvJNo/zgs=;
-        b=ZIUX7ziomSh5SuyJ8ylhsXuK28PWeB6sETtlLIzwri9cHe0VxLKS0CwcScTj9fTWrS
-         n+s+qH6/v7QSUAoclqpB0FI5phrE2kHftIC9/M58e16jvReNhHlicvY48Y3d65a7qReC
-         2H0GmUT9eUl2JZbptgEVLpO8nNlZwRHRFPn7+VbAXmcLATku549HzUTTkjM+KxP9mkN7
-         GiStmvvxSCeo3E6MBWk9sB5JGH99bY4eB4n4IYRZjbJndFRjn+rQmHr+NQoNA2JkY9YQ
-         GbYR2Q08aQ6xwRI16jaDA/b2jubWBvmhSv/p424784edH1IrcZ/EEL5zhAeEyufx2q8h
-         i5xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683148598; x=1685740598;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bfneWEBGkEit9hjisZDYzsO4oPwvETd0SmOvJNo/zgs=;
-        b=OX8lt3q18M/ZVtGSbjpufMQ8ydbVlm+j+pDNeVZx49OihlHX3PYenu4Rx3Z6MngFyI
-         KGTL2nqxpR1PxUOhgndr5+Ii2cStpQdg4ns/fJrv+Z0OOitVhtoaduflk1A00euLEtcI
-         scBf7+tKEbnJ5ptfsqMqK/zkxUUFTe7Av0KuNPk/Tfi8jacOwZUs/sEoClgUl/NykKtj
-         jGjhayUrh1Jws48uWyz0Yh3UihhmHzfAY+5rRbz9/HiQMDjJGqKBZ+OU4hDoT+UfaK7a
-         e7GGaaAk8Qn8QGBwkwrTNcyvF+m8Erv9X6VXpHFSSgOBaU/FX5aXPUBgXBlyJgo3pWRs
-         GTjQ==
-X-Gm-Message-State: AC+VfDxC43/Nmo3sapD8e997XOFx2iQOVEi+a3xlPLednOFCI6e/wMHT
-        gR/BcFSoy0BOX/jWhGgv/H8oMsC2cIP3uY4vRWk=
-X-Google-Smtp-Source: ACHHUZ617dPFTK3e1k76g4ZAzwftiztvJZrL/cafUdsxDThReLl+6IGX3gYbtkOpfEi+1Vyo8Ya46prU6MhUTeySqoY=
-X-Received: by 2002:a2e:9cd7:0:b0:2ac:70fa:fb7b with SMTP id
- g23-20020a2e9cd7000000b002ac70fafb7bmr400396ljj.18.1683148598141; Wed, 03 May
- 2023 14:16:38 -0700 (PDT)
+        Wed, 3 May 2023 17:22:27 -0400
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 980756A61;
+        Wed,  3 May 2023 14:22:26 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1EEFA5C01C1;
+        Wed,  3 May 2023 17:22:24 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 03 May 2023 17:22:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+        :cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm1; t=
+        1683148944; x=1683235344; bh=vkO0ztCMvjXTnReErYaR/lu+lP84Bh14IHf
+        bhLWpzJM=; b=wX2hu0Y20uP/wj/9ULiM3v7p0X14AfSbO7e8mM1u9q0G2Z4RusS
+        xyT5EC9KwqUemVe/Tfh4S+K73HrpLSCXtW+dZgJ16FuH2zLXRj5Tnl6Z4cFhZpZ4
+        8UH0hjKLpP02oJVl9Qk8dLYEDZOUfCvMX+Mi5tG+MtUbB0qEnubuGC2JnXCIRrZw
+        j0J7zy8Y5Py1SoUQvemAOWRB+Ol6/bZagxFftUhLwjz8b73a5vK43ff8bqNPzhhj
+        873Z/2Hu0IV9FWhY/ZOnWqf5mjRcLrdJOmFJmcJ5Oyr5Afv2yT6bgwY1IuPZrAhz
+        BRQcyGYg1IQbwctCmUUguyDgkyh2A33yYLQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+        1683148944; x=1683235344; bh=vkO0ztCMvjXTnReErYaR/lu+lP84Bh14IHf
+        bhLWpzJM=; b=AC5Yr/wogC98ll8sPwixWfPXgPff/DxWgC1ecpR7RI9+e6gXs3f
+        uIGE9Bs0Y0PlZK7fWR5OCN7BUv+szI/39lONnSKvKKSU1zsbFu3S5cIfZupJlB1y
+        o+/JALbVMxPr3dYylHH3iXxvPkLZ6oT+sQMUnALdKAQhoJG9vJ/tOR6HyZmCWE/A
+        oA/kUqT37THLkxg84oj1U+QH/u0OLVTPlEqFBxp+lPKkHY1ZbtA62yWjKnItRrd/
+        uFW+8gLqYnk79uOX/j5fd9tlvEQfRBhta4hZ61Vjh2ew6CRWOHofChEB1yRLDJfp
+        ufAosD0fwDLK+qwrHGVkF2VQ5Gjv/46RNCQ==
+X-ME-Sender: <xms:j9BSZMSDaAn047tSY_wQF2IGRryGXgLoJwHFtNaEmtsNCWktGf6UEw>
+    <xme:j9BSZJxOiKBlsWksJfLA_d9tGC_ytKgn1IRtAtzTqVKr6fz0Qo3v3_v5cxUqisSxf
+    YGmtIkvsjzGea6LLrs>
+X-ME-Received: <xmr:j9BSZJ342YfhhneNX3YE5jzVVEekCOWJekY3cRkE23GZ5xKdTzcZXAFdERKEhWPH588pqw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedvkedgudehjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhuffvvefkjghfofggtgfgse
+    htqhertdertdhsnecuhfhrohhmpefnuhhkvgculfhonhgvshcuoehluhhkvgeslhhjohhn
+    vghsrdguvghvqeenucggtffrrghtthgvrhhnpeffleejheffgfduveeihffhkeelheeuve
+    dugfdtvddtvdeffedukeevteekuedugfenucffohhmrghinheprghsuhhsrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvse
+    hljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:j9BSZABVy0jxiW47OcAJ2dop3_yG54EFYK3wjpv5IrgDGSO_eS4tDA>
+    <xmx:j9BSZFj1NEUN7U1qT7o8xIwy5f5mEAcQfYjPAFraG_xEyT15azFADw>
+    <xmx:j9BSZMoiAAq2YtPM8PSK7MX4sFTPHoMDG7PFV63GfAic2qCNC9GV3g>
+    <xmx:kNBSZAVizhTiFQWae9qkCb5qOUrwZLg1YbU9h8HVpcD2iYOx6ntXxQ>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 3 May 2023 17:22:16 -0400 (EDT)
+Date:   Thu, 04 May 2023 09:22:03 +1200
+From:   Luke Jones <luke@ljones.dev>
+Subject: Re: [PATCH] platform/x86: asus-wmi: add support for ASUS screenpad
+To:     =?iso-8859-2?q?Barnab=E1s_P=F5cze?= <pobrn@protonmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, hdegoede@redhat.com,
+        corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com,
+        linux@roeck-us.net
+Message-Id: <R0Q3UR.1AXX7YQ75CIN1@ljones.dev>
+In-Reply-To: <_BfjSVwlhmByGevAd1Yo_jhipUa3r6y5HHSi34xdeaYqelyPe1PRnOEru21Yw76x0spJwAAs3jr0MJ0f_jUc8QY75Q1J1ovT5QPvm0p2WhY=@protonmail.com>
+References: <20230503040207.257406-1-luke@ljones.dev>
+        <_BfjSVwlhmByGevAd1Yo_jhipUa3r6y5HHSi34xdeaYqelyPe1PRnOEru21Yw76x0spJwAAs3jr0MJ0f_jUc8QY75Q1J1ovT5QPvm0p2WhY=@protonmail.com>
+X-Mailer: geary/43.0
 MIME-Version: 1.0
-References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-11-jorge.lopez2@hp.com>
- <740fec33-7dd5-401f-b5fb-aaf2201f1d1f@t-8ch.de>
-In-Reply-To: <740fec33-7dd5-401f-b5fb-aaf2201f1d1f@t-8ch.de>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Wed, 3 May 2023 16:16:11 -0500
-Message-ID: <CAOOmCE_p4=Lf6ngneiVRHMuhmwTizU8WoAL5otnr4Jrzm1o+=Q@mail.gmail.com>
-Subject: Re: [PATCH v11 10/14] HP BIOSCFG driver - passwdattr-interface
-To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Apr 23, 2023 at 7:58=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t-8ch=
-.de> wrote:
->
-> On 2023-04-20 11:54:50-0500, Jorge Lopez wrote:
-> > ---
-> >  .../x86/hp/hp-bioscfg/passwdattr-interface.c  | 51 +++++++++++++++++++
-> >  1 file changed, 51 insertions(+)
-> >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdattr-inter=
-face.c
-> >
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdattr-interface.c =
-b/drivers/platform/x86/hp/hp-bioscfg/passwdattr-interface.c
-> > new file mode 100644
-> > index 000000000000..02fc766eb3cf
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/hp/hp-bioscfg/passwdattr-interface.c
-> > @@ -0,0 +1,51 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Functions corresponding to SET password methods under
-> > + * HP_WMI_SET_BIOS_SETTING_GUID for use with hp-bioscfg driver.
-> > + *
-> > + * Copyright (c) 2022 Hewlett-Packard Inc.
-> > + */
-> > +
-> > +#include <linux/wmi.h>
-> > +#include "bioscfg.h"
-> > +
-> > +static int bios_attr_pass_interface_probe(struct wmi_device *wdev,
-> > +                                       const void *context)
-> > +{
-> > +     mutex_lock(&bioscfg_drv.mutex);
-> > +     bioscfg_drv.password_attr_wdev =3D wdev;
->
-> This wdev is never used. It seems this full subdriver can be dropped.
-> Or the one UUID-based callsite using the same UUID can use the driver.
 
-I will remove the subdriver.
 
->
-> > +     mutex_unlock(&bioscfg_drv.mutex);
-> > +     return 0;
-> > +}
-> > +
-> > +static void bios_attr_pass_interface_remove(struct wmi_device *wdev)
-> > +{
-> > +     mutex_lock(&bioscfg_drv.mutex);
-> > +     bioscfg_drv.password_attr_wdev =3D NULL;
-> > +     mutex_unlock(&bioscfg_drv.mutex);
-> > +}
-> > +
-> > +static const struct wmi_device_id bios_attr_pass_interface_id_table[] =
-=3D {
-> > +     { .guid_string =3D HP_WMI_SET_BIOS_SETTING_GUID },
-> > +     { },
->
-> No comma after end-of-array marker.
->
-> > +};
-> > +static struct wmi_driver bios_attr_pass_interface_driver =3D {
-> > +     .driver =3D {
-> > +             .name =3D DRIVER_NAME"-password"
-> > +     },
-> > +     .probe =3D bios_attr_pass_interface_probe,
-> > +     .remove =3D bios_attr_pass_interface_remove,
-> > +     .id_table =3D bios_attr_pass_interface_id_table,
-> > +};
-> > +
-> > +int init_bios_attr_pass_interface(void)
-> > +{
-> > +     return wmi_driver_register(&bios_attr_pass_interface_driver);
-> > +}
-> > +
-> > +void exit_bios_attr_pass_interface(void)
-> > +{
-> > +     wmi_driver_unregister(&bios_attr_pass_interface_driver);
-> > +}
-> > +
-> > +MODULE_DEVICE_TABLE(wmi, bios_attr_pass_interface_id_table);
-> > --
-> > 2.34.1
-> >
+On Wed, May 3 2023 at 17:46:53 +0000, Barnab=E1s P=F5cze=20
+<pobrn@protonmail.com> wrote:
+> Hi
+>=20
+>=20
+> 2023. m=E1jus 3., szerda 6:02 keltez=E9ssel, Luke D. Jones=20
+> <luke@ljones.dev> =EDrta:
+>=20
+>>  Add support for the WMI methods used to turn off and adjust the
+>>  brightness of the secondary "screenpad" device found on some=20
+>> high-end
+>>  ASUS laptops like the GX650P series and others.
+>=20
+> Is it this one: https://www.asus.com/content/rog-screenpad-plus/ ?
+> Or is the "plus" version something different?
+>=20
+> If it's a "proper" screen, wouldn't it be better to add support for it
+> in the respective subsystems? E.g. why not register a backlight=20
+> device?
+
+I think it is similar yes, likely the same thing.
+
+Adding as a proper backlight is what I wanted to do but at first blush=20
+I wasn't sure.
+
+Looking at include/linux/backlight.h + some examples it looks clear=20
+now. I'll try to
+work up a revised patch and get it tested by the folks with the actual=20
+laptop.
+
+My only possible issue would be how to handle the on/off part?
+
+Cheers,
+Luke.
+
+
+
