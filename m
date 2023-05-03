@@ -2,90 +2,132 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C70C77B78
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 May 2023 20:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40795C77B78
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 May 2023 21:08:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229918AbjECUKi (ORCPT
+        id S229609AbjECVIg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 3 May 2023 16:10:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42856 "EHLO
+        Wed, 3 May 2023 17:08:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229768AbjECUKh (ORCPT
+        with ESMTP id S229625AbjECVIe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 May 2023 16:10:37 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A0B420B;
-        Wed,  3 May 2023 13:10:36 -0700 (PDT)
-Date:   Wed, 3 May 2023 22:10:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-        t=1683144633; bh=sG7jgizKAtfeEAfcw9DHzY1yRc+hKz8BfkNK3ux4v9U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Mu1eIq/33V22794xaBoXgdBDO98QgFUR8zfUwwtLuaf9E6UbEGt1UDdzJ8j8CQB+T
-         ZOt9SzRTSudqlp55a666gpiVdVacgqrPG7cjr4xWX9PUixNaYZWjpugIDeXQeDM5JD
-         wjCE7I5dL7uerB1KznLLVjU+SZMLKi4+NL4subLU=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
+        Wed, 3 May 2023 17:08:34 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 833A97DB0;
+        Wed,  3 May 2023 14:08:33 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-4eff50911bfso6727646e87.2;
+        Wed, 03 May 2023 14:08:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683148112; x=1685740112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fEb3kPuS3fJNVGD00ZNK/EnPxaOujueiJ87hFJ+k1JM=;
+        b=MHqvka/h+NlBABApiwQ11HEu7plNCUftelH0gYdJ8ykGNJwVj9c1uJ0GSReafYwmTX
+         SmG3DRPJwU1yrz4SI0/yTU6SyfZvr0XKFie1IL2X7oVL6oWPWZBfw+qtxLUscFPggIJW
+         StASkuLxLrJKy/y/ItTFaIFKNaIAK9quKoIs/Nr3AxZLRcnRxwEjZyzCwAmrUkSdK3ZQ
+         0RYXTck6zA/VT0jzGoCAeheA1A23MstYNO2A0kglR1yZaw98d2HWtYs1j0DRQA6pHmG0
+         M2cKEbz93tLMvNdFAY/OvGxMnzdWEq2Q4crNkee6e9GZcV3R1d3VVz96IUH4hNYlnoGW
+         xYkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683148112; x=1685740112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fEb3kPuS3fJNVGD00ZNK/EnPxaOujueiJ87hFJ+k1JM=;
+        b=Fabk1/QyY4WOK5/rSna8Fb7XypzNnA7BFbz1ar/Kf/+Zw86x5lTV7qDrKKnMIZhZ58
+         P2k9x4A1J+wIg6zNOEsKiUDTGBs5tPl26hCIYje2G86XzKHu+un1ByFcgKS874V2t/ZE
+         0n9NPL6bxbajsV9ll4Fz+kd/t2CII83yRFi0EZGb5In44hKgQ3sIy7ixl4YZRec9IkrA
+         wB2AUqZr140QHkxflv+5+g5mLSu5dGxMIh44m8vVXNwX1u/FUtj0u0Z8Mb4ZaRBn+bV1
+         Vb06CGHD+loA1vSBX8imNsPGAuBjK9o5ESryoYl3jvSsE5rXiRvia64L4+E7VOxDiyGv
+         a0UQ==
+X-Gm-Message-State: AC+VfDy+nv2Cch/4SiPQcoHtJvqHlXl6+EYBBR4Kn13+7S1AbPMQqkCr
+        17YCTLWV6CfTXijor17lWs9WN64wDTv4iXV0lhc=
+X-Google-Smtp-Source: ACHHUZ4G8ko8KSjb2QpoIDv1sFAUHGQ+36fR0OsCBklVM8JehgtQsJEiZl3kPsx9UJ6pQADSwEl/a0SBXjZgmZy4HWQ=
+X-Received: by 2002:ac2:4215:0:b0:4ef:f4ef:a1cc with SMTP id
+ y21-20020ac24215000000b004eff4efa1ccmr1236718lfh.14.1683148111688; Wed, 03
+ May 2023 14:08:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-10-jorge.lopez2@hp.com>
+ <951adb9c-dd5c-4c40-a786-2025ebe1650f@t-8ch.de> <CAOOmCE-dVzSrjWDx=tcXP-f+4NuN-U_-sc_QaLRt1qjtjaVVGw@mail.gmail.com>
+ <bb7ca13b-bef2-459a-aa11-bfbae1ee81bd@t-8ch.de>
+In-Reply-To: <bb7ca13b-bef2-459a-aa11-bfbae1ee81bd@t-8ch.de>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Wed, 3 May 2023 16:08:04 -0500
+Message-ID: <CAOOmCE9VXRFXQN0dt4tgxtHhObhOML7vzaXWqNTR=RydaiyEYA@mail.gmail.com>
+Subject: Re: [PATCH v11 09/14] HP BIOSCFG driver - enum-attributes
+To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
 Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 09/14] HP BIOSCFG driver - enum-attributes
-Message-ID: <bb7ca13b-bef2-459a-aa11-bfbae1ee81bd@t-8ch.de>
-References: <20230420165454.9517-1-jorge.lopez2@hp.com>
- <20230420165454.9517-10-jorge.lopez2@hp.com>
- <951adb9c-dd5c-4c40-a786-2025ebe1650f@t-8ch.de>
- <CAOOmCE-dVzSrjWDx=tcXP-f+4NuN-U_-sc_QaLRt1qjtjaVVGw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOOmCE-dVzSrjWDx=tcXP-f+4NuN-U_-sc_QaLRt1qjtjaVVGw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2023-05-03 14:42:37-0500, Jorge Lopez wrote:
-> On Sun, Apr 23, 2023 at 7:55 AM Thomas Weißschuh <thomas@t-8ch.de> wrote:
-> >
-> > On 2023-04-20 11:54:49-0500, Jorge Lopez wrote:
-> > >  .../x86/hp/hp-bioscfg/enum-attributes.c       | 543 ++++++++++++++++++
-> > >  1 file changed, 543 insertions(+)
-> > >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+On Wed, May 3, 2023 at 3:10=E2=80=AFPM Thomas Wei=C3=9Fschuh <thomas@t-8ch.=
+de> wrote:
+>
+> On 2023-05-03 14:42:37-0500, Jorge Lopez wrote:
+> > On Sun, Apr 23, 2023 at 7:55=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t=
+-8ch.de> wrote:
 > > >
-> > > diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-
-<snip>
-
-> > > +/*
-> > > + * validate_enumeration_input() -
-> > > + * Validate input of current_value against possible values
-> > > + *
-> > > + * @instance_id: The instance on which input is validated
-> > > + * @buf: Input value
-> > > + */
-> > > +static int validate_enumeration_input(int instance_id, const char *buf)
-> > > +{
-> > > +     int ret = 0;
-> > > +     int found = 0;
-> > > +     int i;
-> > > +     int possible_values;
-> > > +
-> > > +     /* Is it a read only attribute */
-> > > +     if (bioscfg_drv.enumeration_data[instance_id].common.is_readonly)
-> > > +             return -EIO;
-> > > +
-> > > +     possible_values = bioscfg_drv.enumeration_data[instance_id].possible_values_size;
-> > > +     for (i = 0; i < possible_values && !found; i++)
-> > > +             if (!strcasecmp(bioscfg_drv.enumeration_data[instance_id].possible_values[i], buf))
+> > > On 2023-04-20 11:54:49-0500, Jorge Lopez wrote:
+> > > >  .../x86/hp/hp-bioscfg/enum-attributes.c       | 543 ++++++++++++++=
+++++
+> > > >  1 file changed, 543 insertions(+)
+> > > >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attribu=
+tes.c
+> > > >
+> > > > diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b=
+/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+>
+> <snip>
+>
+> > > > +/*
+> > > > + * validate_enumeration_input() -
+> > > > + * Validate input of current_value against possible values
+> > > > + *
+> > > > + * @instance_id: The instance on which input is validated
+> > > > + * @buf: Input value
+> > > > + */
+> > > > +static int validate_enumeration_input(int instance_id, const char =
+*buf)
+> > > > +{
+> > > > +     int ret =3D 0;
+> > > > +     int found =3D 0;
+> > > > +     int i;
+> > > > +     int possible_values;
+> > > > +
+> > > > +     /* Is it a read only attribute */
+> > > > +     if (bioscfg_drv.enumeration_data[instance_id].common.is_reado=
+nly)
+> > > > +             return -EIO;
+> > > > +
+> > > > +     possible_values =3D bioscfg_drv.enumeration_data[instance_id]=
+.possible_values_size;
+> > > > +     for (i =3D 0; i < possible_values && !found; i++)
+> > > > +             if (!strcasecmp(bioscfg_drv.enumeration_data[instance=
+_id].possible_values[i], buf))
+> > >
+> > > Is this also intentionally case-insensitive?
 > >
-> > Is this also intentionally case-insensitive?
-> 
-> Yes
+> > Yes
+>
+> Why? It is surprising.
+>
+> The behavior differs from sysfs_match_string() and friends.
+> Thinking about it, this function should be able to use
+> __sysfs_match_string().
+>
+sysfs_match_string will compare the current value against all possible
+values in the array.
+I will use the recommended sysfs call.  I will need to do some testing
+since the documentation is not explicitly of what comparison it does.
 
-Why? It is surprising.
+> (Same for the ordered list type)
 
-The behavior differs from sysfs_match_string() and friends.
-Thinking about it, this function should be able to use
-__sysfs_match_string().
-
-(Same for the ordered list type)
-
-<snip>
+Will do.
+>
+> <snip>
