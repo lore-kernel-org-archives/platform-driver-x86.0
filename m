@@ -2,61 +2,61 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D7AC77B78
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 May 2023 19:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854C4C77B75
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 May 2023 19:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229693AbjECTfR (ORCPT
+        id S229636AbjECTnO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 3 May 2023 15:35:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53710 "EHLO
+        Wed, 3 May 2023 15:43:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjECTfQ (ORCPT
+        with ESMTP id S229554AbjECTnN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 May 2023 15:35:16 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6197ECE;
-        Wed,  3 May 2023 12:35:14 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2aa39ce5d26so58371251fa.1;
-        Wed, 03 May 2023 12:35:14 -0700 (PDT)
+        Wed, 3 May 2023 15:43:13 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62C807AAD;
+        Wed,  3 May 2023 12:43:06 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-4f00c33c3d6so7044652e87.2;
+        Wed, 03 May 2023 12:43:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683142511; x=1685734511;
+        d=gmail.com; s=20221208; t=1683142984; x=1685734984;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KVTjOoPTajzLs5EnFTk42rqCIkKzKzAO7FsfEwv4OOc=;
-        b=MZ8pp3tVeiAB3HTgQ8xIHx8s9Y2jIFNkhjHcCGa0VokGGvzD+3pfVWkrJ63aJuifCz
-         QG5LXkYbrba3ntxfnDaCXsdbNnMeMR+RU9GkTlrfq4OSoWp1I06cqHcspkJIHkEjEUBk
-         +4JYm5p3vFzbi/20XW0WmLx4pc0/P3EXmUhmAVtdxVog/bSK9skpMWefL10t31G14D9a
-         JQtfiRl9PzhMQWsU2XQ/KF+s9jkapOJSVtJt/yBlnmARXoGXPkYxH8utoRogag0pt9Ar
-         0l1H8f3Z2zYlpybmdikwCMrDtkn52ckWce1XzrwUlFRmyRoqM8q60z9/yH71ihVwOJsx
-         RE+w==
+        bh=kAFsdkuWO9UgRn1XWK4rWMo4+aWqxozWG317Kv1fPQI=;
+        b=PDq5ODkIpFKfUY1aEuhCfzBRSE13qs5fZSAzLX6XZoXQB+61NiNekUMrnbcs37F/nV
+         DfGdEFAtJYIbPSOQeqPaj2OuwBL3dFQjBj3Cv4zzELKOwliYMrldoJMKQgVY0t7SRWcv
+         BCNFCvDtHfqn6Y3kGfDmyQKZ6Wa+TnKjpk1ivsyiO+1v4e3MvvW92HtWBuYKk1qLMYpE
+         l405olgX87z0j4GYNoCdTBSfb/a4H4dIA0ZpGhRTxTffVlOGOUHu+beS/JqsF/voTgrs
+         nzbNCq0qdov1EPsL5xy5OBYjDWosBD96V+XuIw3M19nV0DlIiyTumFxgOJx/4V76jbSX
+         vlLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683142511; x=1685734511;
+        d=1e100.net; s=20221208; t=1683142984; x=1685734984;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KVTjOoPTajzLs5EnFTk42rqCIkKzKzAO7FsfEwv4OOc=;
-        b=hzoZZIMSyhPr7KD9xrAr0pvplQdu/v7Il2vpLxJYXmJmLXhUxJBocG1d5V1KN45TuV
-         p0E9bRQXiU2ZbtUcH7jqLTBqcJWmEuH9ANQBdCrbhLipio6iSluzkUpJ00FebsSRc8Qf
-         Ag8cfzyUApJDAu74DhoByrQCMqfK68LZmQFBQ+uwAw2WQ56RN1FNZ9aU0DxD9GEMXMSV
-         0AdGO/mE937gssvGUMLxQh2mT+B7yE3deWtAl7NFo9NSWGQpL0WqpbrYlNjA18WAFI+l
-         0Q3Epabaf4EK/AK5kMrurTjCvw7zEhiFLuFEkTdZkgAfSO4cX3xKsC3V3mhYYsemQOao
-         UF+w==
-X-Gm-Message-State: AC+VfDxhrdhe/zeylhaI/9AvY5qmZfQ7QWKMz6C6gLND4Qunu1ACVaz0
-        aTMULIvww7T82Afv4JpMg9v/fCo3vePFB37/FTuXgSd8
-X-Google-Smtp-Source: ACHHUZ79EpZQpBLtqnetYk4qtoVHX+AS/YXuCZE48AKFM909eTVh5w2sXI83OJktw8AJ8Dxva27SkwTlWr0aGsCY/Sc=
-X-Received: by 2002:a2e:808a:0:b0:2a7:6807:2cf8 with SMTP id
- i10-20020a2e808a000000b002a768072cf8mr294667ljg.35.1683142510506; Wed, 03 May
- 2023 12:35:10 -0700 (PDT)
+        bh=kAFsdkuWO9UgRn1XWK4rWMo4+aWqxozWG317Kv1fPQI=;
+        b=hYn2GwDPWEC0w3N2lq4x8e3zj+vmKjicidvlURDutWIWd/BDayQAdkfqlHNhiYb/If
+         yjJ0VqjLu7LvR0u1FuiU899Uh+TIOZjMb38NfkRGW80utx0GvG/V4XA2JTg5+gyQJwuY
+         oQua10Tmw6j0ttO3Bcp8inWaIPHreF/1hc0gEJbGQnIlnLQQOmYuWhYpOUYIBrMmvpDr
+         vh+560hd868wRccnsBkf3nhPlE+bvnbxq2aesUjsPmlHpWjMAhemRUz2o41/KkZsk8vi
+         L5iM1sThj1C79aSYQkl8/TtohyUlUeH7VhO5XzgARd31KGqkevaBTkh7vcbcXxcH1bqI
+         hZXg==
+X-Gm-Message-State: AC+VfDxuEJU/9jWHKsOl8m2PBcVdOggEQpLO2ZkdqgsNqs867EBU5wqE
+        5QbHtJEkapwsiyCpgI3hneX2oz7IBOZOos6Sm15Ri1EA
+X-Google-Smtp-Source: ACHHUZ4gIRs9gBo1LjXdVV3q4tcb1osFnczRFcpQ7grVogYdoVSKuvGWsK6yPmJvwUjCH1hNHcnAhtATOCSBxm3UYIQ=
+X-Received: by 2002:a05:6512:6f:b0:4ee:d562:573e with SMTP id
+ i15-20020a056512006f00b004eed562573emr1565840lfo.22.1683142984319; Wed, 03
+ May 2023 12:43:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-12-jorge.lopez2@hp.com>
- <7364268c-cbff-42a3-a79a-069eef31899e@t-8ch.de>
-In-Reply-To: <7364268c-cbff-42a3-a79a-069eef31899e@t-8ch.de>
+References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-10-jorge.lopez2@hp.com>
+ <951adb9c-dd5c-4c40-a786-2025ebe1650f@t-8ch.de>
+In-Reply-To: <951adb9c-dd5c-4c40-a786-2025ebe1650f@t-8ch.de>
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Wed, 3 May 2023 14:34:43 -0500
-Message-ID: <CAOOmCE-jP8Romsx+wYrRjOHj_VNh3m+JR4fnd1T0gjJm+n145Q@mail.gmail.com>
-Subject: Re: [PATCH v11 11/14] HP BIOSCFG driver - spmobj-attributes
-To:     thomas@t-8ch.de
+Date:   Wed, 3 May 2023 14:42:37 -0500
+Message-ID: <CAOOmCE-dVzSrjWDx=tcXP-f+4NuN-U_-sc_QaLRt1qjtjaVVGw@mail.gmail.com>
+Subject: Re: [PATCH v11 09/14] HP BIOSCFG driver - enum-attributes
+To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
 Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -65,248 +65,121 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Apr 23, 2023 at 4:24=E2=80=AFAM <thomas@t-8ch.de> wrote:
+On Sun, Apr 23, 2023 at 7:55=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t-8ch=
+.de> wrote:
 >
-> On 2023-04-20 11:54:51-0500, Jorge Lopez wrote:
-> >  .../x86/hp/hp-bioscfg/spmobj-attributes.c     | 405 ++++++++++++++++++
-> >  1 file changed, 405 insertions(+)
-> >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/spmobj-attribute=
-s.c
+> On 2023-04-20 11:54:49-0500, Jorge Lopez wrote:
+> >  .../x86/hp/hp-bioscfg/enum-attributes.c       | 543 ++++++++++++++++++
+> >  1 file changed, 543 insertions(+)
+> >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.=
+c
 > >
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c b/d=
-rivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
+> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/dri=
+vers/platform/x86/hp/hp-bioscfg/enum-attributes.c
 > > new file mode 100644
-> > index 000000000000..78228f44c39b
+> > index 000000000000..20defa92da6f
 > > --- /dev/null
-> > +++ b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
-> > @@ -0,0 +1,405 @@
+> > +++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+> > @@ -0,0 +1,543 @@
 > > +// SPDX-License-Identifier: GPL-2.0
 > > +/*
-> > + * Functions corresponding to secure platform management object type
-> > + * attributes under BIOS PASSWORD for use with hp-bioscfg driver
+> > + * Functions corresponding to enumeration type attributes under
+> > + * BIOS Enumeration GUID for use with hp-bioscfg driver.
 > > + *
 > > + *  Copyright (c) 2022 HP Development Company, L.P.
 > > + */
 > > +
 > > +#include "bioscfg.h"
 > > +
+> > +GET_INSTANCE_ID(enumeration);
 > > +
-> > +static const char * const spm_state_types[] =3D {
-> > +     "not provisioned",
-> > +     "provisioned",
-> > +     "provisioning in progress"
-> > +};
-> > +
-> > +static const char * const spm_mechanism_types[] =3D {
-> > +     "not provision",
->
-> "not provisioned" as above?
-
-Good catch.  Done!
->
-> > +     "signing-key",
-> > +     "endorsement-key"
->
-> Trailing commas please.
->
-Done!
-> > +};
-> > +
-> > +
-> > +int check_spm_is_enabled(void)
+> > +static ssize_t current_value_show(struct kobject *kobj, struct kobj_at=
+tribute *attr, char *buf)
 > > +{
-> > +     /* do we need to check the admin password is also configured */
-> > +     return bioscfg_drv.spm_data.is_enabled;
+> > +     int instance_id =3D get_enumeration_instance_id(kobj);
+> > +
+> > +     if (instance_id < 0)
+> > +             return -EIO;
+> > +
+> > +     return sysfs_emit(buf, "%s\n",
+> > +                      bioscfg_drv.enumeration_data[instance_id].curren=
+t_value);
 > > +}
 > > +
 > > +/*
-> > + * calculate_security_buffer() - determines size of security buffer
-> > + * for authentication scheme
+> > + * validate_enumeration_input() -
+> > + * Validate input of current_value against possible values
 > > + *
-> > + * @authentication: the authentication content
-> > + *
-> > + * Currently only supported type is Admin password
+> > + * @instance_id: The instance on which input is validated
+> > + * @buf: Input value
 > > + */
-> > +size_t calculate_security_buffer(const char *authentication)
+> > +static int validate_enumeration_input(int instance_id, const char *buf=
+)
 > > +{
-> > +     int size;
+> > +     int ret =3D 0;
+> > +     int found =3D 0;
+> > +     int i;
+> > +     int possible_values;
 > > +
-> > +     if (authentication !=3D NULL && strlen(authentication) > 0) {
+> > +     /* Is it a read only attribute */
+> > +     if (bioscfg_drv.enumeration_data[instance_id].common.is_readonly)
+> > +             return -EIO;
 > > +
-> > +             size =3D (sizeof(u16) + (strlen(authentication) * sizeof(=
-u16)));
-> > +             if (strncmp(authentication, BEAM_PREFIX, strlen(BEAM_PREF=
-IX)) !=3D 0)
+> > +     possible_values =3D bioscfg_drv.enumeration_data[instance_id].pos=
+sible_values_size;
+> > +     for (i =3D 0; i < possible_values && !found; i++)
+> > +             if (!strcasecmp(bioscfg_drv.enumeration_data[instance_id]=
+.possible_values[i], buf))
 >
-> strstarts()
+> Is this also intentionally case-insensitive?
 
-Done!
->
-> > +                     size +=3D (strlen(UTF_PREFIX) * sizeof(u16));
->
-> No need for braces.
+Yes
 
-Done!
 >
+> > +                     found =3D 1;
 > > +
-> > +             return size;
+> > +     if (!found) {
+> > +             ret =3D -EINVAL;
+> > +             goto exit_enum_input;
 > > +     }
 > > +
-> > +     size  =3D sizeof(u16) * 2;
-> > +     return size;
-> > +}
+> > +     /*
+> > +      * set pending reboot flag depending on
+> > +      * "RequiresPhysicalPresence" value
+> > +      */
+> > +     if (bioscfg_drv.enumeration_data[instance_id].common.requires_phy=
+sical_presence)
+> > +             bioscfg_drv.pending_reboot =3D true;
 > > +
-> > +/*
-> > + * populate_security_buffer() - builds a security buffer for
-> > + * authentication scheme
-> > + *
-> > + * @buffer: the buffer to populate
-> > + * @authentication: the authentication content
-> > + *
-> > + * Currently only supported type is PLAIN TEXT
-> > + */
-> > +void populate_security_buffer(u16 *buffer, const char *authentication)
-> > +{
-> > +     u16 *auth =3D buffer;
-> > +     char *strprefix =3D NULL;
-> > +
-> > +     if (strncmp(authentication, BEAM_PREFIX, strlen(BEAM_PREFIX)) =3D=
-=3D 0) {
->
-> strstarts()
-
-Done!
->
-> > +             /*
-> > +              * BEAM_PREFIX is append to buffer when a signature
-> > +              * is provided and Sure Admin is enabled in BIOS
-> > +              */
-> > +             // BEAM_PREFIX found, convert part to unicode
-> > +             auth =3D ascii_to_utf16_unicode(auth, authentication);
-> > +     } else {
-> > +             /*
-> > +              * UTF-16 prefix is append to the * buffer when a BIOS
-> > +              * admin password is configured in BIOS
-> > +              */
-> > +
-> > +             // append UTF_PREFIX to part and then convert it to unico=
-de
-> > +             strprefix =3D kasprintf(GFP_KERNEL, "%s%s", UTF_PREFIX,
-> > +                                   authentication);
-> > +             if (!strprefix)
-> > +                     goto out_buffer;
-> > +
-> > +             auth =3D ascii_to_utf16_unicode(auth, strprefix);
-> > +     }
-> > +out_buffer:
-> > +
-> > +     kfree(strprefix);
-> > +}
-> > +
-> > +ssize_t update_spm_state(void)
-> > +{
-> > +     int ret;
-> > +     struct secureplatform_provisioning_data *data =3D NULL;
->
-> This can be allocated on the stack.
-
-Done!
->
-> > +
-> > +     data =3D kmalloc(sizeof(struct secureplatform_provisioning_data),
-> > +                    GFP_KERNEL);
-> > +     if (!data) {
-> > +             ret =3D -ENOMEM;
-> > +             goto state_exit;
-> > +     }
-> > +
-> > +     ret =3D hp_wmi_perform_query(HPWMI_SECUREPLATFORM_GET_STATE,
-> > +                                HPWMI_SECUREPLATFORM, data, 0,
-> > +                                sizeof(*data));
-> > +     if (ret < 0)
-> > +             goto state_exit;
-> > +
-> > +     bioscfg_drv.spm_data.mechanism =3D data->state;
-> > +     if (bioscfg_drv.spm_data.mechanism)
-> > +             bioscfg_drv.spm_data.is_enabled =3D 1;
-> > +
-> > +state_exit:
-> > +     kfree(data);
-> > +
+> > +exit_enum_input:
 > > +     return ret;
 > > +}
 > > +
-> > +ssize_t statusbin(struct kobject *kobj,
-> > +               struct kobj_attribute *attr, char *buf)
->
-> This can be static.
-
-Done!
->
-> If it is known that a struct secureplatform_provisioning_data is to be
-> passed, then the type can reflect that.
-
-Done!
->
+> > +static void update_enumeration_value(int instance_id, char *attr_value=
+)
 > > +{
-> > +     int ret =3D hp_wmi_perform_query(HPWMI_SECUREPLATFORM_GET_STATE,
-> > +                                    HPWMI_SECUREPLATFORM, buf, 0,
-> > +                                    sizeof(struct secureplatform_provi=
-sioning_data));
-> > +
-> > +     return ret ? -ENODEV : sizeof(struct secureplatform_provisioning_=
-data);
->
-> Why not return "ret" on error?
-
-Good point. Done!
->
+> > +     strscpy(bioscfg_drv.enumeration_data[instance_id].current_value,
+> > +             attr_value,
+> > +             sizeof(bioscfg_drv.enumeration_data[instance_id].current_=
+value));
 > > +}
 > > +
-> > +/*
-> > + * status_show - Reads SPM status
-> > + */
-> > +ssize_t status_show(struct kobject *kobj, struct kobj_attribute
-> > +                 *attr, char *buf)
-> > +{
-> > +     int ret, i;
-> > +     struct secureplatform_provisioning_data *data =3D NULL;
+> > +ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name_language_code, enumerati=
+on);
+> > +static struct kobj_attribute enumeration_display_langcode =3D
+> > +             __ATTR_RO(display_name_language_code);
+> > +
+> > +ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, enumeration);
+> > +static struct kobj_attribute  enumeration_display_name =3D
+> > +             __ATTR_RO(display_name);
+> > +
+> > +ATTRIBUTE_PROPERTY_STORE(current_value, enumeration);
+> > +static struct kobj_attribute enumeration_current_val =3D
+> > +     __ATTR_RW_MODE(current_value, 0644);
 >
-> Can also be on-stack.
+> 0644 is the default for __ATTR_RW(), use that instead.
 
 Done!
 >
-<snip>
-> > +static struct kobj_attribute password_spm_key_mechanism =3D __ATTR_RO(=
-key_mechanism);
-> > +
-> > +static ssize_t sk_store(struct kobject *kobj,
-> > +                     struct kobj_attribute *attr,
-> > +                     const char *buf, size_t count)
-> > +{
-> > +     int ret;
-> > +     int length;
-> > +
-> > +     length =3D count;
-> > +     if (buf[length-1] =3D=3D '\n')
-> > +             length--;
-> > +
-> > +     /* allocate space and copy current signing key */
-> > +     bioscfg_drv.spm_data.signing_key =3D kmalloc(length, GFP_KERNEL);
-> > +     if (!bioscfg_drv.spm_data.signing_key) {
-> > +             ret =3D -ENOMEM;
-> > +             goto exit_sk;
-> > +     }
-> > +
-> > +     memcpy(bioscfg_drv.spm_data.signing_key, buf, length);
-> > +     bioscfg_drv.spm_data.signing_key[length] =3D '\0';
->
-> Is this supposed to handle zero-bytes in the input?
-> If yes: Did you test this with zero bytes, I don't think the normal
-> attribute APIs handle this.
-> If no: Why not use strscpy?
->
-
-Done!
 
 <snip>
