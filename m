@@ -2,124 +2,258 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA04DC77B75
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 May 2023 21:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD53C77B78
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 May 2023 10:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbjECVW2 (ORCPT
+        id S229932AbjEDKcE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 3 May 2023 17:22:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40686 "EHLO
+        Thu, 4 May 2023 06:32:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjECVW1 (ORCPT
+        with ESMTP id S229757AbjEDKcD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 May 2023 17:22:27 -0400
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 980756A61;
-        Wed,  3 May 2023 14:22:26 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 1EEFA5C01C1;
-        Wed,  3 May 2023 17:22:24 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 03 May 2023 17:22:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm1; t=
-        1683148944; x=1683235344; bh=vkO0ztCMvjXTnReErYaR/lu+lP84Bh14IHf
-        bhLWpzJM=; b=wX2hu0Y20uP/wj/9ULiM3v7p0X14AfSbO7e8mM1u9q0G2Z4RusS
-        xyT5EC9KwqUemVe/Tfh4S+K73HrpLSCXtW+dZgJ16FuH2zLXRj5Tnl6Z4cFhZpZ4
-        8UH0hjKLpP02oJVl9Qk8dLYEDZOUfCvMX+Mi5tG+MtUbB0qEnubuGC2JnXCIRrZw
-        j0J7zy8Y5Py1SoUQvemAOWRB+Ol6/bZagxFftUhLwjz8b73a5vK43ff8bqNPzhhj
-        873Z/2Hu0IV9FWhY/ZOnWqf5mjRcLrdJOmFJmcJ5Oyr5Afv2yT6bgwY1IuPZrAhz
-        BRQcyGYg1IQbwctCmUUguyDgkyh2A33yYLQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-        1683148944; x=1683235344; bh=vkO0ztCMvjXTnReErYaR/lu+lP84Bh14IHf
-        bhLWpzJM=; b=AC5Yr/wogC98ll8sPwixWfPXgPff/DxWgC1ecpR7RI9+e6gXs3f
-        uIGE9Bs0Y0PlZK7fWR5OCN7BUv+szI/39lONnSKvKKSU1zsbFu3S5cIfZupJlB1y
-        o+/JALbVMxPr3dYylHH3iXxvPkLZ6oT+sQMUnALdKAQhoJG9vJ/tOR6HyZmCWE/A
-        oA/kUqT37THLkxg84oj1U+QH/u0OLVTPlEqFBxp+lPKkHY1ZbtA62yWjKnItRrd/
-        uFW+8gLqYnk79uOX/j5fd9tlvEQfRBhta4hZ61Vjh2ew6CRWOHofChEB1yRLDJfp
-        ufAosD0fwDLK+qwrHGVkF2VQ5Gjv/46RNCQ==
-X-ME-Sender: <xms:j9BSZMSDaAn047tSY_wQF2IGRryGXgLoJwHFtNaEmtsNCWktGf6UEw>
-    <xme:j9BSZJxOiKBlsWksJfLA_d9tGC_ytKgn1IRtAtzTqVKr6fz0Qo3v3_v5cxUqisSxf
-    YGmtIkvsjzGea6LLrs>
-X-ME-Received: <xmr:j9BSZJ342YfhhneNX3YE5jzVVEekCOWJekY3cRkE23GZ5xKdTzcZXAFdERKEhWPH588pqw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedvkedgudehjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhuffvvefkjghfofggtgfgse
-    htqhertdertdhsnecuhfhrohhmpefnuhhkvgculfhonhgvshcuoehluhhkvgeslhhjohhn
-    vghsrdguvghvqeenucggtffrrghtthgvrhhnpeffleejheffgfduveeihffhkeelheeuve
-    dugfdtvddtvdeffedukeevteekuedugfenucffohhmrghinheprghsuhhsrdgtohhmnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvse
-    hljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:j9BSZABVy0jxiW47OcAJ2dop3_yG54EFYK3wjpv5IrgDGSO_eS4tDA>
-    <xmx:j9BSZFj1NEUN7U1qT7o8xIwy5f5mEAcQfYjPAFraG_xEyT15azFADw>
-    <xmx:j9BSZMoiAAq2YtPM8PSK7MX4sFTPHoMDG7PFV63GfAic2qCNC9GV3g>
-    <xmx:kNBSZAVizhTiFQWae9qkCb5qOUrwZLg1YbU9h8HVpcD2iYOx6ntXxQ>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 3 May 2023 17:22:16 -0400 (EDT)
-Date:   Thu, 04 May 2023 09:22:03 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH] platform/x86: asus-wmi: add support for ASUS screenpad
-To:     =?iso-8859-2?q?Barnab=E1s_P=F5cze?= <pobrn@protonmail.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, hdegoede@redhat.com,
-        corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com,
-        linux@roeck-us.net
-Message-Id: <R0Q3UR.1AXX7YQ75CIN1@ljones.dev>
-In-Reply-To: <_BfjSVwlhmByGevAd1Yo_jhipUa3r6y5HHSi34xdeaYqelyPe1PRnOEru21Yw76x0spJwAAs3jr0MJ0f_jUc8QY75Q1J1ovT5QPvm0p2WhY=@protonmail.com>
-References: <20230503040207.257406-1-luke@ljones.dev>
-        <_BfjSVwlhmByGevAd1Yo_jhipUa3r6y5HHSi34xdeaYqelyPe1PRnOEru21Yw76x0spJwAAs3jr0MJ0f_jUc8QY75Q1J1ovT5QPvm0p2WhY=@protonmail.com>
-X-Mailer: geary/43.0
+        Thu, 4 May 2023 06:32:03 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E666A4684;
+        Thu,  4 May 2023 03:32:01 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 7EE3A209F6;
+        Thu,  4 May 2023 10:32:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1683196320; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SysVoVEKW+NX4qyVGu/niFlwGn5aiW8M5/2sd3Frq6w=;
+        b=juSzgQlFlUDuBImH9ZJN/4cvnNQiKW1CsIfyP7OnP0w5p0L5JLGR4eMvuerD53YtoDxppF
+        iCPh2YubO9R5cvjksS70oKLJ4ICxj2GC8yaeouEoRVXZdyQ6AV7PLoLgCnqQ5JJ9R9/XXD
+        TURNTorKdCr0S6/Vh9F0rphyrPDr8dI=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7C1EE133F7;
+        Thu,  4 May 2023 10:31:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id sf/UHJ+JU2ShewAAMHmgww
+        (envelope-from <jgross@suse.com>); Thu, 04 May 2023 10:31:59 +0000
+Message-ID: <edd4b974-08de-0769-0dba-f945ed06f222@suse.com>
+Date:   Thu, 4 May 2023 12:31:59 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH RFC 16/43] x86-64: Use per-cpu stack canary if supported
+ by compiler
+Content-Language: en-US
+To:     Hou Wenlong <houwenlong.hwl@antgroup.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Thomas Garnier <thgarnie@chromium.org>,
+        Lai Jiangshan <jiangshan.ljs@antgroup.com>,
+        Kees Cook <keescook@chromium.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Mike Rapoport (IBM)" <rppt@kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Guo Ren <guoren@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        xen-devel@lists.xenproject.org,
+        platform-driver-x86@vger.kernel.org, llvm@lists.linux.dev
+References: <cover.1682673542.git.houwenlong.hwl@antgroup.com>
+ <7cee0c83225ffd8cf8fd0065bea9348f6db3b12a.1682673543.git.houwenlong.hwl@antgroup.com>
+From:   Juergen Gross <jgross@suse.com>
+In-Reply-To: <7cee0c83225ffd8cf8fd0065bea9348f6db3b12a.1682673543.git.houwenlong.hwl@antgroup.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------dy9uFmhcjqIP2UV6JYsq3Ms5"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------dy9uFmhcjqIP2UV6JYsq3Ms5
+Content-Type: multipart/mixed; boundary="------------ov0MDEHsfp47A5JSPZkJ0II7";
+ protected-headers="v1"
+From: Juergen Gross <jgross@suse.com>
+To: Hou Wenlong <houwenlong.hwl@antgroup.com>, linux-kernel@vger.kernel.org
+Cc: Thomas Garnier <thgarnie@chromium.org>,
+ Lai Jiangshan <jiangshan.ljs@antgroup.com>, Kees Cook
+ <keescook@chromium.org>, Brian Gerst <brgerst@gmail.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Kim Phillips <kim.phillips@amd.com>, David Woodhouse <dwmw@amazon.co.uk>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, xen-devel@lists.xenproject.org,
+ platform-driver-x86@vger.kernel.org, llvm@lists.linux.dev
+Message-ID: <edd4b974-08de-0769-0dba-f945ed06f222@suse.com>
+Subject: Re: [PATCH RFC 16/43] x86-64: Use per-cpu stack canary if supported
+ by compiler
+References: <cover.1682673542.git.houwenlong.hwl@antgroup.com>
+ <7cee0c83225ffd8cf8fd0065bea9348f6db3b12a.1682673543.git.houwenlong.hwl@antgroup.com>
+In-Reply-To: <7cee0c83225ffd8cf8fd0065bea9348f6db3b12a.1682673543.git.houwenlong.hwl@antgroup.com>
 
+--------------ov0MDEHsfp47A5JSPZkJ0II7
+Content-Type: multipart/mixed; boundary="------------AE0inQaMWfJGKdJPNCVK0Np8"
 
-On Wed, May 3 2023 at 17:46:53 +0000, Barnab=E1s P=F5cze=20
-<pobrn@protonmail.com> wrote:
-> Hi
->=20
->=20
-> 2023. m=E1jus 3., szerda 6:02 keltez=E9ssel, Luke D. Jones=20
-> <luke@ljones.dev> =EDrta:
->=20
->>  Add support for the WMI methods used to turn off and adjust the
->>  brightness of the secondary "screenpad" device found on some=20
->> high-end
->>  ASUS laptops like the GX650P series and others.
->=20
-> Is it this one: https://www.asus.com/content/rog-screenpad-plus/ ?
-> Or is the "plus" version something different?
->=20
-> If it's a "proper" screen, wouldn't it be better to add support for it
-> in the respective subsystems? E.g. why not register a backlight=20
-> device?
+--------------AE0inQaMWfJGKdJPNCVK0Np8
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-I think it is similar yes, likely the same thing.
+T24gMjguMDQuMjMgMTE6NTAsIEhvdSBXZW5sb25nIHdyb3RlOg0KPiBGcm9tOiBCcmlhbiBH
+ZXJzdCA8YnJnZXJzdEBnbWFpbC5jb20+DQo+IA0KPiBGcm9tOiBCcmlhbiBHZXJzdCA8YnJn
+ZXJzdEBnbWFpbC5jb20+DQo+IA0KPiBJZiB0aGUgY29tcGlsZXIgc3VwcG9ydHMgaXQsIHVz
+ZSBhIHN0YW5kYXJkIHBlci1jcHUgdmFyaWFibGUgZm9yIHRoZQ0KPiBzdGFjayBwcm90ZWN0
+b3IgaW5zdGVhZCBvZiB0aGUgb2xkIGZpeGVkIGxvY2F0aW9uLiAgS2VlcCB0aGUgZml4ZWQN
+Cj4gbG9jYXRpb24gY29kZSBmb3IgY29tcGF0aWJpbGl0eSB3aXRoIG9sZGVyIGNvbXBpbGVy
+cy4NCj4gDQo+IFtIb3UgV2VubG9uZzogRGlzYWJsZSBpdCBvbiBDbGFuZywgYWRhcHQgbmV3
+IGNvZGUgY2hhbmdlIGFuZCBhZGFwdA0KPiBtaXNzaW5nIEdTIHNldCB1cCBwYXRoIGluIHB2
+aF9zdGFydF94ZW4oKV0NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEJyaWFuIEdlcnN0IDxicmdl
+cnN0QGdtYWlsLmNvbT4NCj4gQ28tZGV2ZWxvcGVkLWJ5OiBIb3UgV2VubG9uZyA8aG91d2Vu
+bG9uZy5od2xAYW50Z3JvdXAuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBIb3UgV2VubG9uZyA8
+aG91d2VubG9uZy5od2xAYW50Z3JvdXAuY29tPg0KPiBDYzogVGhvbWFzIEdhcm5pZXIgPHRo
+Z2FybmllQGNocm9taXVtLm9yZz4NCj4gQ2M6IExhaSBKaWFuZ3NoYW4gPGppYW5nc2hhbi5s
+anNAYW50Z3JvdXAuY29tPg0KPiBDYzogS2VlcyBDb29rIDxrZWVzY29va0BjaHJvbWl1bS5v
+cmc+DQo+IC0tLQ0KPiAgIGFyY2gveDg2L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAg
+fCAxMiArKysrKysrKysrKysNCj4gICBhcmNoL3g4Ni9NYWtlZmlsZSAgICAgICAgICAgICAg
+ICAgICAgIHwgMjEgKysrKysrKysrKysrKystLS0tLS0tDQo+ICAgYXJjaC94ODYvZW50cnkv
+ZW50cnlfNjQuUyAgICAgICAgICAgICB8ICA2ICsrKysrLQ0KPiAgIGFyY2gveDg2L2luY2x1
+ZGUvYXNtL3Byb2Nlc3Nvci5oICAgICAgfCAxNyArKysrKysrKysrKystLS0tLQ0KPiAgIGFy
+Y2gveDg2L2luY2x1ZGUvYXNtL3N0YWNrcHJvdGVjdG9yLmggfCAxNiArKysrKysrLS0tLS0t
+LS0tDQo+ICAgYXJjaC94ODYva2VybmVsL2FzbS1vZmZzZXRzXzY0LmMgICAgICB8ICAyICst
+DQo+ICAgYXJjaC94ODYva2VybmVsL2NwdS9jb21tb24uYyAgICAgICAgICB8IDE1ICsrKysr
+KystLS0tLS0tLQ0KPiAgIGFyY2gveDg2L2tlcm5lbC9oZWFkXzY0LlMgICAgICAgICAgICAg
+fCAxNiArKysrKysrKysrLS0tLS0tDQo+ICAgYXJjaC94ODYva2VybmVsL3ZtbGludXgubGRz
+LlMgICAgICAgICB8ICA0ICsrKy0NCj4gICBhcmNoL3g4Ni9wbGF0Zm9ybS9wdmgvaGVhZC5T
+ICAgICAgICAgIHwgIDggKysrKysrKysNCj4gICBhcmNoL3g4Ni94ZW4veGVuLWhlYWQuUyAg
+ICAgICAgICAgICAgIHwgMTQgKysrKysrKysrLS0tLS0NCj4gICAxMSBmaWxlcyBjaGFuZ2Vk
+LCA4OCBpbnNlcnRpb25zKCspLCA0MyBkZWxldGlvbnMoLSkNCj4gDQoNCi4uLg0KDQo+IGRp
+ZmYgLS1naXQgYS9hcmNoL3g4Ni94ZW4veGVuLWhlYWQuUyBiL2FyY2gveDg2L3hlbi94ZW4t
+aGVhZC5TDQo+IGluZGV4IDY0M2QwMjkwMGZiYi4uMDllYWY1OWU4MDY2IDEwMDY0NA0KPiAt
+LS0gYS9hcmNoL3g4Ni94ZW4veGVuLWhlYWQuUw0KPiArKysgYi9hcmNoL3g4Ni94ZW4veGVu
+LWhlYWQuUw0KPiBAQCAtNTEsMTUgKzUxLDE5IEBAIFNZTV9DT0RFX1NUQVJUKHN0YXJ0dXBf
+eGVuKQ0KPiAgIA0KPiAgIAlsZWFxCShfX2VuZF9pbml0X3Rhc2sgLSBQVFJFR1NfU0laRSko
+JXJpcCksICVyc3ANCj4gICANCj4gLQkvKiBTZXQgdXAgJWdzLg0KPiAtCSAqDQo+IC0JICog
+VGhlIGJhc2Ugb2YgJWdzIGFsd2F5cyBwb2ludHMgdG8gZml4ZWRfcGVyY3B1X2RhdGEuICBJ
+ZiB0aGUNCj4gLQkgKiBzdGFjayBwcm90ZWN0b3IgY2FuYXJ5IGlzIGVuYWJsZWQsIGl0IGlz
+IGxvY2F0ZWQgYXQgJWdzOjQwLg0KPiArCS8qDQo+ICsJICogU2V0IHVwIEdTIGJhc2UuDQo+
+ICAgCSAqIE5vdGUgdGhhdCwgb24gU01QLCB0aGUgYm9vdCBjcHUgdXNlcyBpbml0IGRhdGEg
+c2VjdGlvbiB1bnRpbA0KPiAgIAkgKiB0aGUgcGVyIGNwdSBhcmVhcyBhcmUgc2V0IHVwLg0K
+PiAgIAkgKi8NCj4gICAJbW92bAkkTVNSX0dTX0JBU0UsJWVjeA0KPiAtCW1vdnEJJElOSVRf
+UEVSX0NQVV9WQVIoZml4ZWRfcGVyY3B1X2RhdGEpLCVyYXgNCj4gKyNpZiBkZWZpbmVkKENP
+TkZJR19TVEFDS1BST1RFQ1RPUl9GSVhFRCkNCj4gKwlsZWFxCUlOSVRfUEVSX0NQVV9WQVIo
+Zml4ZWRfcGVyY3B1X2RhdGEpKCVyaXApLCAlcmR4DQo+ICsjZWxpZiBkZWZpbmVkKENPTkZJ
+R19TTVApDQo+ICsJbW92YWJzCSRfX3Blcl9jcHVfbG9hZCwgJXJkeA0KDQpTaG91bGRuJ3Qg
+YWJvdmUgMiB0YXJnZXRzIGJlICVyYXg/DQoNCj4gKyNlbHNlDQo+ICsJeG9ybAklZWF4LCAl
+ZWF4DQo+ICsjZW5kaWYNCj4gICAJY2RxDQo+ICAgCXdybXNyDQo+ICAgDQoNCg0KSnVlcmdl
+bg0K
+--------------AE0inQaMWfJGKdJPNCVK0Np8
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-Adding as a proper backlight is what I wanted to do but at first blush=20
-I wasn't sure.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-Looking at include/linux/backlight.h + some examples it looks clear=20
-now. I'll try to
-work up a revised patch and get it tested by the folks with the actual=20
-laptop.
+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
+jR/i1DG86lem3iBDXzXsZDn8R38=3D
+=3D2wuH
+-----END PGP PUBLIC KEY BLOCK-----
 
-My only possible issue would be how to handle the on/off part?
+--------------AE0inQaMWfJGKdJPNCVK0Np8--
 
-Cheers,
-Luke.
+--------------ov0MDEHsfp47A5JSPZkJ0II7--
 
+--------------dy9uFmhcjqIP2UV6JYsq3Ms5
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
 
+-----BEGIN PGP SIGNATURE-----
 
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmRTiZ8FAwAAAAAACgkQsN6d1ii/Ey/C
+/Qf7BVOcd5ra8zfx6EPiAv74I4RpWlIuL3rn0B5v6bOo0FFa4n4zj9VOvcYOUGlraDWF3O8GumNw
+Cb2IMVqEVZErE9qRr7deURIsoKwrXg8XsZZjyjfJHu8zKP0vbrA0de6Vd5j4KtUt9Zbex5+iSI6o
+znSFEHTx2lXV8YGE6XnBxHulxsAoSOpevs72mkXEZvqkplnfYYm1wbXEdHz1Kv7YDAzhn8sDHmIc
+kXp/CLT/2dmoEhI/S5jdbBan7ywy6EL+49FsfPxbNoHu4grjSjXTW000ltfEWEQL8ZA3GPAsM3PX
+xoMnuhBcTopWMqDtZyEsrsTuG79jnYi0WXwT9+wWmQ==
+=o9bz
+-----END PGP SIGNATURE-----
+
+--------------dy9uFmhcjqIP2UV6JYsq3Ms5--
