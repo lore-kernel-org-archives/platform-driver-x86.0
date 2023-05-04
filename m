@@ -2,173 +2,147 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4D6C77B78
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 May 2023 13:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FCFC77B7C
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 May 2023 15:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230265AbjEDNqM (ORCPT
+        id S229778AbjEDPwT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 4 May 2023 09:46:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37102 "EHLO
+        Thu, 4 May 2023 11:52:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231203AbjEDNqK (ORCPT
+        with ESMTP id S230039AbjEDPwS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 May 2023 09:46:10 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1FBC83C9;
-        Thu,  4 May 2023 06:45:59 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-4f139de8cefso9305213e87.0;
-        Thu, 04 May 2023 06:45:59 -0700 (PDT)
+        Thu, 4 May 2023 11:52:18 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 418D555BD;
+        Thu,  4 May 2023 08:52:17 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2ac836f4447so630051fa.2;
+        Thu, 04 May 2023 08:52:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683207958; x=1685799958;
+        d=gmail.com; s=20221208; t=1683215535; x=1685807535;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Euvwf4w+PF7dcGdqI4XhoSfNb4B+m4UWdOdTdv+MuqM=;
-        b=KrKTHJFZ+LghXyg6cVbPfp31a4auBIA65987yHRH3IzsTDFwozej6/PXVlVXLPiXLz
-         wUfdOFtudeZQIZ99glYbXNFhFaNQf6rFzeXdWXYjuFdn7iVxDpgGvji0zK+Z7aBtKMuN
-         lvt3DkM5YEMG8mF+1Vpvk218aE9oS00ixNnUkKjQjEna/tfZ/xjGC8Z3Pho56QpIGedM
-         i4ASMeJA3h9xPZS3bZLyM37MW+eyiYC5Swm2H4VacsKDlZWXUWeCfNpq6qtfuysMerm/
-         bUP5ll7WRyv/Z0yQyHdStS3CZ2SGq+Jr5FPbmJgff+GHeDLGccIuiKT04gmDfDblrJF5
-         equg==
+        bh=pLRcDLRAKnDzeIxGxA0njvlNmReV4kRXrEuPLmqEYZI=;
+        b=H+6L9g1IK+A9XQ+DvbT+81La8CqSwH6EDwYVI1DZ9ZXWhpb2CSuDTMHuJOlBrt6FV8
+         hIfXwo/DIVd9+N/Nlqb5xm6pW/nZXJTydbGubo1ejG3KU4r4NJE503wIiV2WQt1Xu1B1
+         y4GV9AuZxJ3/4XSDxtA5AunaTutnV51CR01mmFXyUEPdMeKJOKubV3bqdgyqhZ8THN9f
+         tHcGsVgENAXG691NY5raLtfn3s19ufCjUOIKRCBLAhFjxRbI4FiBmG3ib1Z02rkErKPC
+         ACnL4tpNrSAf5G3MAqSaqN+l1qQI1j6ViHRlfjC3ur8dlpAQioaHl2Cd+oUtKRIWDjNu
+         kaDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683207958; x=1685799958;
+        d=1e100.net; s=20221208; t=1683215535; x=1685807535;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Euvwf4w+PF7dcGdqI4XhoSfNb4B+m4UWdOdTdv+MuqM=;
-        b=WBtH9CZct+iRfPeidj183I+mDsO/LAAtvUFq8r9WQraIxicKYPIUprpTRPDwIHboNX
-         j7u9ml2A3fJAYXJRxCEUD5d6BW/PXNtWaXiRGw+65Ks2aI+1z34tCXaP39j3Gh8Sb9Tp
-         qCm19yhxe6K3HXeMSrQ20mHgwzYeCwVoTBBlbva2DFVbRQePhrNoX0H+NDCeJIgVdB1A
-         crta2fMVptgfhbPehTW0w2jDzQxjdCtdqc6dHXtXQVe70uZKWNWUVmVJl/566Zxd5vXk
-         vijfHQBXXfmgv1z4gjqjyvccTiHZiwvRaMMPtyf+YIw3B1y5nuCzSeKbnXoVb9svDo5g
-         5Vcw==
-X-Gm-Message-State: AC+VfDyoDXHnPg3YPQ6Ouwt9DWb7kDgHpoyaa/2wEtVgPNz1h0LIsDJb
-        62/dp3NQNzzMy0N8QPsSHuY/fLxYbeMH4AauYp4=
-X-Google-Smtp-Source: ACHHUZ4MDMoaiOp+0PQmwK/1IfdL7SymXUJ+Ul3aNoMrbyho03TdaRJXiJ/fQRyHg166g6col/TDj2eCt6PCIDH6btU=
-X-Received: by 2002:a05:6512:224f:b0:4ec:36d6:1517 with SMTP id
- i15-20020a056512224f00b004ec36d61517mr1202176lfu.2.1683207957592; Thu, 04 May
- 2023 06:45:57 -0700 (PDT)
+        bh=pLRcDLRAKnDzeIxGxA0njvlNmReV4kRXrEuPLmqEYZI=;
+        b=Zf5IejV8yPKku/a5DTUVlAlp40UX7WFVofkFKQ9X5WzMPlzX+RsVZaGTiH6KqkLm7W
+         XtEVXl8+T0oQv70M1I62WAxYzu6Xb/x/tQ45lmkDsP3i3vfnN7nv+qKbCBtASQCJl9Uw
+         DVoPG5uM1sf8WuianWtYL7z8GYF2NSZWxPHGHBAvkHEs7C1nORLezhn84Pj5ijbTDZw4
+         bEPD7kVCAtpD0oo2zExvf0GImnk2J/Qa1pPoVeL7AFNGM14brJl2EYeVeAXch77uHgwx
+         4hL4BksUib9b1toSnypTXJmG2VMZx8y8+ht4ng2pKka2phH3FDBv9q90ttutUNln+cZ+
+         PmvQ==
+X-Gm-Message-State: AC+VfDx/9dWge9Kqkh5Loo/XXW4/2wDMW60bEkqRdLjgovI+iSl2tI7n
+        8f7N3MS8d5Ob6pcy574YVu8F08+xVmp2+5KEHcdbAqOcH+w=
+X-Google-Smtp-Source: ACHHUZ67OzVk754Ba+mAKQP4iIMO0pH1FrHC48B3tZd0EVMwEXEBzmo1s0rm2A+ZJkCsbdDqUtPk4I3wSKmhkMu1x64=
+X-Received: by 2002:a2e:3518:0:b0:2ac:80cd:6c0d with SMTP id
+ z24-20020a2e3518000000b002ac80cd6c0dmr606495ljz.19.1683215535386; Thu, 04 May
+ 2023 08:52:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230420165454.9517-14-jorge.lopez2@hp.com> <202305041942.Cc0sqwxY-lkp@intel.com>
-In-Reply-To: <202305041942.Cc0sqwxY-lkp@intel.com>
+References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-10-jorge.lopez2@hp.com>
+ <951adb9c-dd5c-4c40-a786-2025ebe1650f@t-8ch.de> <CAOOmCE-dVzSrjWDx=tcXP-f+4NuN-U_-sc_QaLRt1qjtjaVVGw@mail.gmail.com>
+ <bb7ca13b-bef2-459a-aa11-bfbae1ee81bd@t-8ch.de>
+In-Reply-To: <bb7ca13b-bef2-459a-aa11-bfbae1ee81bd@t-8ch.de>
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Thu, 4 May 2023 08:45:30 -0500
-Message-ID: <CAOOmCE-rsvHd8rNqNqyAvZi6orMbMzR-DcpHyEUPq8dt-sZ_Pw@mail.gmail.com>
-Subject: Re: [PATCH v11 13/14] HP BIOSCFG driver - Makefile
-To:     kernel test robot <lkp@intel.com>
+Date:   Thu, 4 May 2023 10:51:48 -0500
+Message-ID: <CAOOmCE8RQ5x2+eGSEZwBkoj1oQzY=VCrZf8vaWnY9+QT_P+tcg@mail.gmail.com>
+Subject: Re: [PATCH v11 09/14] HP BIOSCFG driver - enum-attributes
+To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
 Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
-        oe-kbuild-all@lists.linux.dev
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
+On Wed, May 3, 2023 at 3:10=E2=80=AFPM Thomas Wei=C3=9Fschuh <thomas@t-8ch.=
+de> wrote:
+>
+> On 2023-05-03 14:42:37-0500, Jorge Lopez wrote:
+> > On Sun, Apr 23, 2023 at 7:55=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t=
+-8ch.de> wrote:
+> > >
+> > > On 2023-04-20 11:54:49-0500, Jorge Lopez wrote:
+> > > >  .../x86/hp/hp-bioscfg/enum-attributes.c       | 543 ++++++++++++++=
+++++
+> > > >  1 file changed, 543 insertions(+)
+> > > >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attribu=
+tes.c
+> > > >
+> > > > diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b=
+/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+>
+> <snip>
+>
+> > > > +/*
+> > > > + * validate_enumeration_input() -
+> > > > + * Validate input of current_value against possible values
+> > > > + *
+> > > > + * @instance_id: The instance on which input is validated
+> > > > + * @buf: Input value
+> > > > + */
+> > > > +static int validate_enumeration_input(int instance_id, const char =
+*buf)
+> > > > +{
+> > > > +     int ret =3D 0;
+> > > > +     int found =3D 0;
+> > > > +     int i;
+> > > > +     int possible_values;
+> > > > +
+> > > > +     /* Is it a read only attribute */
+> > > > +     if (bioscfg_drv.enumeration_data[instance_id].common.is_reado=
+nly)
+> > > > +             return -EIO;
+> > > > +
+> > > > +     possible_values =3D bioscfg_drv.enumeration_data[instance_id]=
+.possible_values_size;
+> > > > +     for (i =3D 0; i < possible_values && !found; i++)
+> > > > +             if (!strcasecmp(bioscfg_drv.enumeration_data[instance=
+_id].possible_values[i], buf))
+> > >
+> > > Is this also intentionally case-insensitive?
+> >
+> > Yes
+>
+> Why? It is surprising.
+>
+> The behavior differs from sysfs_match_string() and friends.
+> Thinking about it, this function should be able to use
+> __sysfs_match_string().
+>
+> (Same for the ordered list type)
+>
 
-A quick note letting you know that the failures are reported when
-trying to compile HP-BIOSCFG driver and it is including compile
-sources from a DELL driver.   No DELL portions of driver are and will
-be included in HP-BIOSCFG driver.
+I will not be able to use  sysfs_match_string() for the conditions on
+how the possible values are read and allocated by hp-bioscfg driver.
 
-ld: drivers/platform/x86/hp/hp-bioscfg/bioscfg.o: in function
-`get_wmiobj_pointer':
->> bioscfg.c:(.text+0x750): multiple definition of `get_wmiobj_pointer'; dr=
-ivers/platform/x86/dell/dell-wmi-sysman/sysman.o:sysman.c:(.text+0x830): fi=
-rst defined here
+1. sysfs_match_string() expects the array to be defined as  const char
+* const  array.  This definition is possible if the values are
+statically assigned but not when the values are dynamically allocated.
 
-Additionally,  functions init_bios_attr_pass_interface() and
-exit_bios_attr_pass_interface() were renamed and the new definition
-will be included in patch v13  for HP-BIOSCFG driver.
+const char * const possible_values[] =3D {
+         [VALUE1] =3D "Enable",
+         [VALUE2] =3D "Disable",
+};
+...
+ret =3D sysfs_match_string(possible_values, buf);
 
-Regards,
+2. sysfs_match_string() returns error EINVAL if the string case does
+not match.   sysfs_match_string() string comparison is case sensitive.
 
-Jorge
+3. BIOS rejects data if the data is not case sensitive nor matches
+either one of the reported possible values.
 
-On Thu, May 4, 2023 at 6:59=E2=80=AFAM kernel test robot <lkp@intel.com> wr=
-ote:
->
-> Hi Jorge,
->
-> kernel test robot noticed the following build errors:
->
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v6.3 next-20230428]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Jorge-Lopez/HP-BIO=
-SCFG-driver-Documentation/20230421-012956
-> base:   linus/master
-> patch link:    https://lore.kernel.org/r/20230420165454.9517-14-jorge.lop=
-ez2%40hp.com
-> patch subject: [PATCH v11 13/14] HP BIOSCFG driver  - Makefile
-> config: i386-allyesconfig (https://download.01.org/0day-ci/archive/202305=
-04/202305041942.Cc0sqwxY-lkp@intel.com/config)
-> compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-> reproduce (this is a W=3D1 build):
->         # https://github.com/intel-lab-lkp/linux/commit/55e860a942040b0d0=
-f1b58362dc4885b1a8acaf2
->         git remote add linux-review https://github.com/intel-lab-lkp/linu=
-x
->         git fetch --no-tags linux-review Jorge-Lopez/HP-BIOSCFG-driver-Do=
-cumentation/20230421-012956
->         git checkout 55e860a942040b0d0f1b58362dc4885b1a8acaf2
->         # save the config file
->         mkdir build_dir && cp config build_dir/.config
->         make W=3D1 O=3Dbuild_dir ARCH=3Di386 olddefconfig
->         make W=3D1 O=3Dbuild_dir ARCH=3Di386 SHELL=3D/bin/bash
->
-> If you fix the issue, kindly add following tag where applicable
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Link: https://lore.kernel.org/oe-kbuild-all/202305041942.Cc0sqwxY-lkp@i=
-ntel.com/
->
-> All errors (new ones prefixed by >>):
->
->    ld: drivers/platform/x86/hp/hp-bioscfg/bioscfg.o: in function `get_wmi=
-obj_pointer':
-> >> bioscfg.c:(.text+0x750): multiple definition of `get_wmiobj_pointer'; =
-drivers/platform/x86/dell/dell-wmi-sysman/sysman.o:sysman.c:(.text+0x830): =
-first defined here
->    ld: drivers/platform/x86/hp/hp-bioscfg/bioscfg.o: in function `get_ins=
-tance_count':
-> >> bioscfg.c:(.text+0x7ac): multiple definition of `get_instance_count'; =
-drivers/platform/x86/dell/dell-wmi-sysman/sysman.o:sysman.c:(.text+0x88c): =
-first defined here
->    ld: drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.o: in functi=
-on `init_bios_attr_set_interface':
-> >> biosattr-interface.c:(.text+0x4dc): multiple definition of `init_bios_=
-attr_set_interface'; drivers/platform/x86/dell/dell-wmi-sysman/biosattr-int=
-erface.o:biosattr-interface.c:(.text+0x33c): first defined here
->    ld: drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.o: in functi=
-on `exit_bios_attr_set_interface':
-> >> biosattr-interface.c:(.text+0x4f8): multiple definition of `exit_bios_=
-attr_set_interface'; drivers/platform/x86/dell/dell-wmi-sysman/biosattr-int=
-erface.o:biosattr-interface.c:(.text+0x358): first defined here
->    ld: drivers/platform/x86/hp/hp-bioscfg/passwdattr-interface.o: in func=
-tion `init_bios_attr_pass_interface':
-> >> passwdattr-interface.c:(.text+0x68): multiple definition of `init_bios=
-_attr_pass_interface'; drivers/platform/x86/dell/dell-wmi-sysman/passwordat=
-tr-interface.o:passwordattr-interface.c:(.text+0x338): first defined here
->    ld: drivers/platform/x86/hp/hp-bioscfg/passwdattr-interface.o: in func=
-tion `exit_bios_attr_pass_interface':
-> >> passwdattr-interface.c:(.text+0x84): multiple definition of `exit_bios=
-_attr_pass_interface'; drivers/platform/x86/dell/dell-wmi-sysman/passwordat=
-tr-interface.o:passwordattr-interface.c:(.text+0x354): first defined here
->    ld: drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.o: in functio=
-n `calculate_security_buffer':
-> >> spmobj-attributes.c:(.text+0x4c4): multiple definition of `calculate_s=
-ecurity_buffer'; drivers/platform/x86/dell/dell-wmi-sysman/sysman.o:sysman.=
-c:(.text+0x714): first defined here
->    ld: drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.o: in functio=
-n `populate_security_buffer':
-> >> spmobj-attributes.c:(.text+0x524): multiple definition of `populate_se=
-curity_buffer'; drivers/platform/x86/dell/dell-wmi-sysman/sysman.o:sysman.c=
-:(.text+0x744): first defined here
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests
+
+> <snip>
