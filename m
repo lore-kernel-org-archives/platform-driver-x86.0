@@ -2,147 +2,193 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FCFC77B7C
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 May 2023 15:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84972C77B78
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 May 2023 16:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbjEDPwT (ORCPT
+        id S229660AbjEDQxX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 4 May 2023 11:52:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60958 "EHLO
+        Thu, 4 May 2023 12:53:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230039AbjEDPwS (ORCPT
+        with ESMTP id S229958AbjEDQxW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 May 2023 11:52:18 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 418D555BD;
-        Thu,  4 May 2023 08:52:17 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2ac836f4447so630051fa.2;
-        Thu, 04 May 2023 08:52:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683215535; x=1685807535;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pLRcDLRAKnDzeIxGxA0njvlNmReV4kRXrEuPLmqEYZI=;
-        b=H+6L9g1IK+A9XQ+DvbT+81La8CqSwH6EDwYVI1DZ9ZXWhpb2CSuDTMHuJOlBrt6FV8
-         hIfXwo/DIVd9+N/Nlqb5xm6pW/nZXJTydbGubo1ejG3KU4r4NJE503wIiV2WQt1Xu1B1
-         y4GV9AuZxJ3/4XSDxtA5AunaTutnV51CR01mmFXyUEPdMeKJOKubV3bqdgyqhZ8THN9f
-         tHcGsVgENAXG691NY5raLtfn3s19ufCjUOIKRCBLAhFjxRbI4FiBmG3ib1Z02rkErKPC
-         ACnL4tpNrSAf5G3MAqSaqN+l1qQI1j6ViHRlfjC3ur8dlpAQioaHl2Cd+oUtKRIWDjNu
-         kaDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683215535; x=1685807535;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pLRcDLRAKnDzeIxGxA0njvlNmReV4kRXrEuPLmqEYZI=;
-        b=Zf5IejV8yPKku/a5DTUVlAlp40UX7WFVofkFKQ9X5WzMPlzX+RsVZaGTiH6KqkLm7W
-         XtEVXl8+T0oQv70M1I62WAxYzu6Xb/x/tQ45lmkDsP3i3vfnN7nv+qKbCBtASQCJl9Uw
-         DVoPG5uM1sf8WuianWtYL7z8GYF2NSZWxPHGHBAvkHEs7C1nORLezhn84Pj5ijbTDZw4
-         bEPD7kVCAtpD0oo2zExvf0GImnk2J/Qa1pPoVeL7AFNGM14brJl2EYeVeAXch77uHgwx
-         4hL4BksUib9b1toSnypTXJmG2VMZx8y8+ht4ng2pKka2phH3FDBv9q90ttutUNln+cZ+
-         PmvQ==
-X-Gm-Message-State: AC+VfDx/9dWge9Kqkh5Loo/XXW4/2wDMW60bEkqRdLjgovI+iSl2tI7n
-        8f7N3MS8d5Ob6pcy574YVu8F08+xVmp2+5KEHcdbAqOcH+w=
-X-Google-Smtp-Source: ACHHUZ67OzVk754Ba+mAKQP4iIMO0pH1FrHC48B3tZd0EVMwEXEBzmo1s0rm2A+ZJkCsbdDqUtPk4I3wSKmhkMu1x64=
-X-Received: by 2002:a2e:3518:0:b0:2ac:80cd:6c0d with SMTP id
- z24-20020a2e3518000000b002ac80cd6c0dmr606495ljz.19.1683215535386; Thu, 04 May
- 2023 08:52:15 -0700 (PDT)
+        Thu, 4 May 2023 12:53:22 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C34F3A95
+        for <platform-driver-x86@vger.kernel.org>; Thu,  4 May 2023 09:53:19 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pucCc-0003fH-0B; Thu, 04 May 2023 18:53:10 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pucCa-0016YD-VE; Thu, 04 May 2023 18:53:08 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pucCZ-001Hie-LD; Thu, 04 May 2023 18:53:07 +0200
+Date:   Thu, 4 May 2023 18:53:07 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Yauhen Kharuzhy <jekhor@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v2 18/19] platform/x86: lenovo-yogabook: Add keyboard
+ backlight control to platform driver
+Message-ID: <20230504165307.tydqlk6sml7sp5qe@pengutronix.de>
+References: <20230430165807.472798-1-hdegoede@redhat.com>
+ <20230430165807.472798-19-hdegoede@redhat.com>
 MIME-Version: 1.0
-References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-10-jorge.lopez2@hp.com>
- <951adb9c-dd5c-4c40-a786-2025ebe1650f@t-8ch.de> <CAOOmCE-dVzSrjWDx=tcXP-f+4NuN-U_-sc_QaLRt1qjtjaVVGw@mail.gmail.com>
- <bb7ca13b-bef2-459a-aa11-bfbae1ee81bd@t-8ch.de>
-In-Reply-To: <bb7ca13b-bef2-459a-aa11-bfbae1ee81bd@t-8ch.de>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Thu, 4 May 2023 10:51:48 -0500
-Message-ID: <CAOOmCE8RQ5x2+eGSEZwBkoj1oQzY=VCrZf8vaWnY9+QT_P+tcg@mail.gmail.com>
-Subject: Re: [PATCH v11 09/14] HP BIOSCFG driver - enum-attributes
-To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="koyzklwvdvr2xotu"
+Content-Disposition: inline
+In-Reply-To: <20230430165807.472798-19-hdegoede@redhat.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, May 3, 2023 at 3:10=E2=80=AFPM Thomas Wei=C3=9Fschuh <thomas@t-8ch.=
-de> wrote:
->
-> On 2023-05-03 14:42:37-0500, Jorge Lopez wrote:
-> > On Sun, Apr 23, 2023 at 7:55=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t=
--8ch.de> wrote:
-> > >
-> > > On 2023-04-20 11:54:49-0500, Jorge Lopez wrote:
-> > > >  .../x86/hp/hp-bioscfg/enum-attributes.c       | 543 ++++++++++++++=
-++++
-> > > >  1 file changed, 543 insertions(+)
-> > > >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attribu=
-tes.c
-> > > >
-> > > > diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b=
-/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
->
-> <snip>
->
-> > > > +/*
-> > > > + * validate_enumeration_input() -
-> > > > + * Validate input of current_value against possible values
-> > > > + *
-> > > > + * @instance_id: The instance on which input is validated
-> > > > + * @buf: Input value
-> > > > + */
-> > > > +static int validate_enumeration_input(int instance_id, const char =
-*buf)
-> > > > +{
-> > > > +     int ret =3D 0;
-> > > > +     int found =3D 0;
-> > > > +     int i;
-> > > > +     int possible_values;
-> > > > +
-> > > > +     /* Is it a read only attribute */
-> > > > +     if (bioscfg_drv.enumeration_data[instance_id].common.is_reado=
-nly)
-> > > > +             return -EIO;
-> > > > +
-> > > > +     possible_values =3D bioscfg_drv.enumeration_data[instance_id]=
-.possible_values_size;
-> > > > +     for (i =3D 0; i < possible_values && !found; i++)
-> > > > +             if (!strcasecmp(bioscfg_drv.enumeration_data[instance=
-_id].possible_values[i], buf))
-> > >
-> > > Is this also intentionally case-insensitive?
-> >
-> > Yes
->
-> Why? It is surprising.
->
-> The behavior differs from sysfs_match_string() and friends.
-> Thinking about it, this function should be able to use
-> __sysfs_match_string().
->
-> (Same for the ordered list type)
->
 
-I will not be able to use  sysfs_match_string() for the conditions on
-how the possible values are read and allocated by hp-bioscfg driver.
+--koyzklwvdvr2xotu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-1. sysfs_match_string() expects the array to be defined as  const char
-* const  array.  This definition is possible if the values are
-statically assigned but not when the values are dynamically allocated.
+Hello,
 
-const char * const possible_values[] =3D {
-         [VALUE1] =3D "Enable",
-         [VALUE2] =3D "Disable",
-};
-...
-ret =3D sysfs_match_string(possible_values, buf);
+On Sun, Apr 30, 2023 at 06:58:06PM +0200, Hans de Goede wrote:
+> On the Android yb1-x90f/l models there is not ACPI method to control
+> the keyboard backlight brightness. Instead the second PWM controller
+> is exposed directly to the OS there.
+>=20
+> Add support for controlling keyboard backlight brightness on the Android
+> model by using the PWM subsystem to directly control the PWM.
+>=20
+> The Android model also requires explicitly turning the backlight off
+> on suspend, which on the Windows model was done automatically.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> - Use YB_KBD_BL_PWM_PERIOD define in yogabook_pdev_pwm_lookup[]
+> - Turn off keyboard backlight on suspend
+> ---
+>  drivers/platform/x86/lenovo-yogabook-wmi.c | 31 +++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/lenovo-yogabook-wmi.c b/drivers/platfor=
+m/x86/lenovo-yogabook-wmi.c
+> index 0183b75a47e8..b49109d91ec3 100644
+> --- a/drivers/platform/x86/lenovo-yogabook-wmi.c
+> +++ b/drivers/platform/x86/lenovo-yogabook-wmi.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/leds.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+>  #include <linux/wmi.h>
+>  #include <linux/workqueue.h>
+> =20
+> @@ -26,6 +27,7 @@
+> =20
+>  #define YB_KBD_BL_DEFAULT	128
+>  #define YB_KBD_BL_MAX		255
+> +#define YB_KBD_BL_PWM_PERIOD	13333
+> =20
+>  #define YB_PDEV_NAME		"yogabook-touch-kbd-digitizer-switch"
+> =20
+> @@ -48,6 +50,7 @@ struct yogabook_data {
+>  	struct gpio_desc *pen_touch_event;
+>  	struct gpio_desc *kbd_bl_led_enable;
+>  	struct gpio_desc *backside_hall_gpio;
+> +	struct pwm_device *kbd_bl_pwm;
+>  	int (*set_kbd_backlight)(struct yogabook_data *data, uint8_t level);
+>  	int pen_touch_irq;
+>  	int backside_hall_irq;
+> @@ -267,8 +270,11 @@ static int yogabook_suspend(struct device *dev)
+>  	struct yogabook_data *data =3D dev_get_drvdata(dev);
+> =20
+>  	set_bit(YB_SUSPENDED, &data->flags);
+> -
+>  	flush_work(&data->work);
+> +
+> +	if (test_bit(YB_KBD_IS_ON, &data->flags))
+> +		data->set_kbd_backlight(data, 0);
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -424,8 +430,21 @@ static struct gpiod_lookup_table yogabook_pdev_gpios=
+ =3D {
+>  	},
+>  };
+> =20
+> +static struct pwm_lookup yogabook_pdev_pwm_lookup[] =3D {
+> +	PWM_LOOKUP_WITH_MODULE("80862289:00", 0, YB_PDEV_NAME, "kbd_bl_pwm",
+> +			       YB_KBD_BL_PWM_PERIOD, PWM_POLARITY_NORMAL,
+> +			       "pwm-lpss-platform"),
+> +};
+> +
+>  static int yogabook_pdev_set_kbd_backlight(struct yogabook_data *data, u=
+8 level)
+>  {
+> +	struct pwm_state state =3D {
+> +		.period =3D YB_KBD_BL_PWM_PERIOD,
+> +		.duty_cycle =3D YB_KBD_BL_PWM_PERIOD * level / YB_KBD_BL_MAX,
+> +		.enabled =3D level,
+> +	};
+> +
+> +	pwm_apply_state(data->kbd_bl_pwm, &state);
+>  	gpiod_set_value(data->kbd_bl_led_enable, level ? 1 : 0);
+>  	return 0;
+>  }
+> @@ -475,6 +494,16 @@ static int yogabook_pdev_probe(struct platform_devic=
+e *pdev)
+>  		goto error_put_devs;
+>  	}
+> =20
+> +	pwm_add_table(yogabook_pdev_pwm_lookup, ARRAY_SIZE(yogabook_pdev_pwm_lo=
+okup));
+> +	data->kbd_bl_pwm =3D devm_pwm_get(dev, "kbd_bl_pwm");
+> +	pwm_remove_table(yogabook_pdev_pwm_lookup, ARRAY_SIZE(yogabook_pdev_pwm=
+_lookup));
 
-2. sysfs_match_string() returns error EINVAL if the string case does
-not match.   sysfs_match_string() string comparison is case sensitive.
+Keeping the table added just long enough to call devm_pwm_get() looks
+very creative to me. Why don't you keep the table around while the
+device is available? Also note that a given table must only ever be
+added once using pwm_add_table(). If there happen to be two yogabook
+devices and .probe() is called a second time, the list of tables might
+be corrupted.
 
-3. BIOS rejects data if the data is not case sensitive nor matches
-either one of the reported possible values.
+I don't know much about x86, but I think the table belongs to where this
+"80862289:00" device is created.
 
+Best regards
+Uwe
 
-> <snip>
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--koyzklwvdvr2xotu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmRT4vIACgkQj4D7WH0S
+/k7bZAgAiyi0yYTFappMtV6MAA2/DIQHhqqYCSOoRR1CxaNzm0bYwJqNrPJ2qgti
+ZnTHtVFFU8ittZfVhQMfKIChLP+l0X9eACZ4hQszuwr8fn4xUPECJ8gJig9GzVVR
+NRzihRJC54uiFqsZemhywDp5xVn5A70n/pEbhJhIuPlXMKN288I3wB6Dq2JOPJGk
+xwu6sOGDmZrAkA930sA+rH4CR+42zGMeG96YusEt+G7HdqorePitq/cAg0uDoy6j
+NQQIf6LZvGlwpF3fLeFydDgSnsXLax5GNKOOckIleIL0PGcU+7R4pq/vzqRTbGZl
+9vD5BfMgVJcGA5/KEUPo+DfrFUvEOw==
+=D3HY
+-----END PGP SIGNATURE-----
+
+--koyzklwvdvr2xotu--
