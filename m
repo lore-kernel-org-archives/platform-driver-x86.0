@@ -2,62 +2,62 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D1EC77B7F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 May 2023 22:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9D3C7EE2C
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 May 2023 22:01:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231178AbjEEWBl (ORCPT
+        id S233139AbjEEWBo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 5 May 2023 18:01:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58056 "EHLO
+        Fri, 5 May 2023 18:01:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231760AbjEEWBQ (ORCPT
+        with ESMTP id S231911AbjEEWBU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 5 May 2023 18:01:16 -0400
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C50B5B84;
-        Fri,  5 May 2023 15:00:57 -0700 (PDT)
-Received: by mail-ot1-x32e.google.com with SMTP id 46e09a7af769-6a5e2289965so1589436a34.3;
-        Fri, 05 May 2023 15:00:57 -0700 (PDT)
+        Fri, 5 May 2023 18:01:20 -0400
+Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF900525F;
+        Fri,  5 May 2023 15:00:59 -0700 (PDT)
+Received: by mail-ot1-x335.google.com with SMTP id 46e09a7af769-6a5da18f7f5so1805797a34.1;
+        Fri, 05 May 2023 15:00:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683324057; x=1685916057;
+        d=gmail.com; s=20221208; t=1683324059; x=1685916059;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=urZIMwrXCkmP5r84qg47guHXIJuyCJNmVkD/ave2oAw=;
-        b=dCU2zA0d/IzW+dv814g34dw7hiQiwb9mYqatwSWCfQ3XbM3UhxGJC+ifljxeu7WxOR
-         XvRS3FiH/b1Ml3cndW8CsDiZROPZEw22d99r0kcknZNX+Bv75PBBfLnR4XLu5cUZyHja
-         adM3HoQcIdS57KU9hsml6zcYP1wplDyv7NE7AHOC+gtOXKVkEodpimxbrJhnLOLtyihy
-         hCJ3eMYbWxo9YIoSiKGZ18w3htonevlY3fqCqLhQRc9nxKjoK+ROZfX1LCXBYHryeXWW
-         U3FLCzOGl1aajaFLEOWmXiIm7VsiMBm83HEzM73JYeXpl3coEAXxIDDwmT1+bcwUDZ1Z
-         yehw==
+        bh=/z1RoGOR9FCsk5XaBmstaZhJPYgbAC3+O0t1H89vz2Y=;
+        b=WqVd1PdyMD7Ky6aQwU/tgnQGpx4k6oeHTBjrddFWZ87C92DPJ6CgIqnUq30tmEpCeY
+         DX0YL2Qs6qXEO+SB8JXUQDPulHCiHNnzcaAs/rITI6ubAn4H4uLup8RMwYRI3FDaxVhC
+         3ItUhtn1qIVrfrQI4BAWrdr3MCawDfGq2AAcraqiU27zuDH3LwtGLrn3/nLUQ5bPqb5R
+         roMlJgBOpcrSWOiv73vJgrULeF8T5L6tNuEltm/h6FU+eHVkVR4JgUD9C/1mpMPa9bgz
+         QQ8EOjcTWM+TyhnRJHR/O71ghZgAk2uPkKMXPC6RVFekmLQ3pNbsrrGVdUdaT5YoUOY1
+         PuRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683324057; x=1685916057;
+        d=1e100.net; s=20221208; t=1683324059; x=1685916059;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=urZIMwrXCkmP5r84qg47guHXIJuyCJNmVkD/ave2oAw=;
-        b=a6xvM7huiW5DmsvZL7IR4CCqhHvQI4MrXb+yOqpa0QyExZNjQMeboGJWf4aVqclFEs
-         cIIRINGVfgtCGNe7Rg0j4fzp2Q0cfVRPjFnqVqeDeZCqNGN0tYogjfphDLCfBsinwOk7
-         cL+6o/HFhiuPp5S11/FFB7gBzC8Bknjw99FUsraDO0BAKcPBWGEpD+I8DmwoyvJPBidG
-         QTEXCCyz3VHkLipFPCIE1vNNWv3dfld3xMEzfhoRa1VZC6JDgoppayulYW4iHdRKEU58
-         OzOyfsjobjqiND0qrs/4Bi8Mw7fOfGouytgsa3QwlaaM7wfTW7k1CsZ0fYHrEva7ZDRD
-         k0+g==
-X-Gm-Message-State: AC+VfDy5UCyUintv24djHq9QQH1c2D/ythqzisSpMDjF4UjCce9at4EP
-        rSvHDk40e7t6/7cNtnltHYfr7X7+Qa4=
-X-Google-Smtp-Source: ACHHUZ4mta0fX/JhzKavKvz1iTzq2Uj6f0rbcKx3CEXNk75YRXCrzEsKXhHdvw+rJ5PxvEbop9QTkw==
-X-Received: by 2002:a05:6830:1db5:b0:6a6:7dc:131 with SMTP id z21-20020a0568301db500b006a607dc0131mr1152977oti.19.1683324056790;
-        Fri, 05 May 2023 15:00:56 -0700 (PDT)
+        bh=/z1RoGOR9FCsk5XaBmstaZhJPYgbAC3+O0t1H89vz2Y=;
+        b=aNkb08FuiIZXzrGKccru7CNJTEev/B0TWoIgLIC5TYbOB6gkn8F9qKj8fNW9TPH8PW
+         iSe2JzXhUKqp8OVi+O88a49ry14mASN8kfXtPZQFQBCoAxw7F5jtIcuiKdshwNVDdocV
+         Aol7phL2EUhXDGm8v/4rApve7wnv7VRjzCDuymnv9P2aGL0KxRrJ+rsn3xP2HCxbyjsN
+         1F3tVzGC+fgIPOrG4rVtVIC5zAgSpKJnZm7fODnep/oLH1xDoVsk4dkMIeMFu2LuWI3N
+         x/SrNf2Gew0n76RVgzEEaCR7v41CJNFmTknGW/0eCYDzS4T7NjgerWJr+6XXG8ezLt0H
+         RTgQ==
+X-Gm-Message-State: AC+VfDz37eYt4VvBcLFPtTLkRNZ/4t6vjjZmXjbVv2J/Ho2HGDqhHsrU
+        kX7zzTDnGo0km7xqgxkE3aBY5CQcMs4=
+X-Google-Smtp-Source: ACHHUZ5Vib3zpE7bdacxpML6/mHMxy5eC8tNtXFiAmHVZ1LrTAuEQVHHQKxeBteibmcHNukCfDwlXw==
+X-Received: by 2002:a9d:7653:0:b0:6a6:3d0f:ae41 with SMTP id o19-20020a9d7653000000b006a63d0fae41mr1541641otl.0.1683324059547;
+        Fri, 05 May 2023 15:00:59 -0700 (PDT)
 Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:90cc:2e0a:7522:8ecc])
-        by smtp.gmail.com with ESMTPSA id w15-20020a056830060f00b006a61bef7968sm1359547oti.53.2023.05.05.15.00.55
+        by smtp.gmail.com with ESMTPSA id w15-20020a056830060f00b006a61bef7968sm1359547oti.53.2023.05.05.15.00.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 May 2023 15:00:56 -0700 (PDT)
+        Fri, 05 May 2023 15:00:59 -0700 (PDT)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de
-Subject: [PATCH v12 09/13] HP BIOSCFG driver  - enum-attributes
-Date:   Fri,  5 May 2023 17:00:39 -0500
-Message-Id: <20230505220043.39036-10-jorge.lopez2@hp.com>
+Subject: [PATCH v12 11/13] HP BIOSCFG driver  - surestart-attributes
+Date:   Fri,  5 May 2023 17:00:41 -0500
+Message-Id: <20230505220043.39036-12-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230505220043.39036-1-jorge.lopez2@hp.com>
 References: <20230505220043.39036-1-jorge.lopez2@hp.com>
@@ -111,497 +111,148 @@ Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 ---
 Based on the latest platform-drivers-x86.git/for-next
 ---
- .../x86/hp/hp-bioscfg/enum-attributes.c       | 482 ++++++++++++++++++
- 1 file changed, 482 insertions(+)
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+ .../x86/hp/hp-bioscfg/surestart-attributes.c  | 133 ++++++++++++++++++
+ 1 file changed, 133 insertions(+)
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
 new file mode 100644
-index 000000000000..d83b092ba7d8
+index 000000000000..b627c324f6a6
 --- /dev/null
-+++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-@@ -0,0 +1,482 @@
++++ b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+@@ -0,0 +1,133 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Functions corresponding to enumeration type attributes under
-+ * BIOS Enumeration GUID for use with hp-bioscfg driver.
++ * Functions corresponding to sure start object type attributes under
++ * BIOS for use with hp-bioscfg driver
 + *
 + *  Copyright (c) 2022 HP Development Company, L.P.
 + */
 +
 +#include "bioscfg.h"
++#include <linux/types.h>
 +
-+GET_INSTANCE_ID(enumeration);
++/* Maximum number of log entries supported when log entry size is 16
++ * bytes.  This value is calculated by dividing 4096 (page size) by
++ * log entry size.
++ */
++#define LOG_MAX_ENTRIES		254
 +
-+static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
++/*
++ * Current Log entry size.  This value size will change in the
++ * future. The driver reads a total of 128 bytes for each log entry
++ * provided by BIOS but only the first 16 bytes are used/read.
++ */
++#define LOG_ENTRY_SIZE		16
++
++/*
++ * audit_log_entry_count_show - Reports the number of
++ *				existing audit log entries available
++ *				to be read
++ */
++static ssize_t audit_log_entry_count_show(struct kobject *kobj,
++					  struct kobj_attribute *attr, char *buf)
 +{
-+	int instance_id = get_enumeration_instance_id(kobj);
++	int ret;
++	u32 count = 0;
 +
-+	if (instance_id < 0)
-+		return -EIO;
++	ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG_COUNT,
++				   HPWMI_SURESTART,
++				   &count, 1, sizeof(count));
 +
-+	return sysfs_emit(buf, "%s\n",
-+			 bioscfg_drv.enumeration_data[instance_id].current_value);
++	if (ret < 0)
++		return ret;
++
++	return sysfs_emit(buf, "%d,%d,%d\n", count, LOG_ENTRY_SIZE,
++			  LOG_MAX_ENTRIES);
 +}
 +
-+/**
-+ * validate_enumeration_input() -
-+ * Validate input of current_value against possible values
-+ *
-+ * @instance_id: The instance on which input is validated
-+ * @buf: Input value
++/*
++ * audit_log_entries_show() - Return all entries found in log file
 + */
-+static int validate_enumeration_input(int instance_id, const char *buf)
++static ssize_t audit_log_entries_show(struct kobject *kobj,
++				      struct kobj_attribute *attr, char *buf)
 +{
++	int ret;
 +	int i;
-+	int found = 0;
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
++	u32 count = 0;
++	u8 audit_log_buffer[128];
 +
-+	/* Is it a read only attribute */
-+	if (enum_data->common.is_readonly)
-+		return -EIO;
++	// Get the number of event logs
++	ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG_COUNT,
++				   HPWMI_SURESTART,
++				   &count, 1, sizeof(count));
 +
-+	for (i = 0; i < enum_data->possible_values_size && !found; i++)
-+		if (!strcasecmp(enum_data->possible_values[i], buf))
-+			found = 1;
-+
-+	if (!found)
-+		return -EINVAL;
++	if (ret < 0)
++		return ret;
 +
 +	/*
-+	 * set pending reboot flag depending on
-+	 * "RequiresPhysicalPresence" value
++	 * The show() api will not work if the audit logs ever go
++	 *  beyond 4KB
 +	 */
-+	if (enum_data->common.requires_physical_presence)
-+		set_reboot_and_signal_event();
++	if (count * LOG_ENTRY_SIZE > PAGE_SIZE)
++		return -EIO;
 +
-+	return 0;
++	/*
++	 * We are guaranteed the buffer is 4KB so today all the event
++	 * logs will fit
++	 */
++	for (i = 0; i < count; i++) {
++		audit_log_buffer[0] = (i + 1);
++
++		/*
++		 * read audit log entry at a time. 'buf' input value
++		 * provides  the audit log entry to be read.  On
++		 * input, Byte 0 = Audit Log entry number from
++		 * beginning (1..254)
++		 * Entry number 1 is the newest entry whereas the
++		 * highest entry number (number of entries) is the
++		 * oldest entry.
++		 */
++		ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG,
++					   HPWMI_SURESTART,
++					   audit_log_buffer, 1, 128);
++
++		if (ret >= 0 && (LOG_ENTRY_SIZE * i) < PAGE_SIZE) {
++			memcpy(buf, audit_log_buffer, LOG_ENTRY_SIZE);
++			buf += LOG_ENTRY_SIZE;
++		} else {
++			/*
++			 * Encountered a failure while reading
++			 * individual logs. Only a partial list of
++			 * audit log will be returned.
++			 */
++			count = i + 1;
++			break;
++		}
++	}
++
++	return count * LOG_ENTRY_SIZE;
 +}
 +
-+static void update_enumeration_value(int instance_id, char *attr_value)
-+{
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
++static struct kobj_attribute sure_start_audit_log_entry_count = __ATTR_RO(audit_log_entry_count);
++static struct kobj_attribute sure_start_audit_log_entries = __ATTR_RO(audit_log_entries);
 +
-+	strscpy(enum_data->current_value,
-+		attr_value,
-+		sizeof(enum_data->current_value));
-+}
-+
-+ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name_language_code, enumeration);
-+static struct kobj_attribute enumeration_display_langcode =
-+		__ATTR_RO(display_name_language_code);
-+
-+ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, enumeration);
-+static struct kobj_attribute  enumeration_display_name =
-+		__ATTR_RO(display_name);
-+
-+ATTRIBUTE_PROPERTY_STORE(current_value, enumeration);
-+static struct kobj_attribute enumeration_current_val =
-+		__ATTR_RW(current_value);
-+
-+ATTRIBUTE_VALUES_PROPERTY_SHOW(possible_values, enumeration, SEMICOLON_SEP);
-+static struct kobj_attribute  enumeration_poss_val =
-+		__ATTR_RO(possible_values);
-+
-+static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			 char *buf)
-+{
-+	return sysfs_emit(buf, "enumeration\n");
-+}
-+
-+static struct kobj_attribute enumeration_type =
-+		__ATTR_RO(type);
-+
-+static struct attribute *enumeration_attrs[] = {
-+	&enumeration_display_langcode.attr,
-+	&enumeration_display_name.attr,
-+	&enumeration_current_val.attr,
-+	&enumeration_poss_val.attr,
-+	&enumeration_type.attr,
++static struct attribute *sure_start_attrs[] = {
++	&sure_start_audit_log_entry_count.attr,
++	&sure_start_audit_log_entries.attr,
 +	NULL,
 +};
 +
-+static const struct attribute_group enumeration_attr_group = {
-+	.attrs = enumeration_attrs,
++static const struct attribute_group sure_start_attr_group = {
++	.attrs = sure_start_attrs,
 +};
 +
-+int alloc_enumeration_data(void)
++void exit_sure_start_attributes(void)
 +{
-+	bioscfg_drv.enumeration_instances_count =
-+		get_instance_count(HP_WMI_BIOS_ENUMERATION_GUID);
-+
-+	bioscfg_drv.enumeration_data = kcalloc(bioscfg_drv.enumeration_instances_count,
-+					       sizeof(struct enumeration_data), GFP_KERNEL);
-+	if (!bioscfg_drv.enumeration_data) {
-+		bioscfg_drv.enumeration_instances_count = 0;
-+		return -ENOMEM;
-+	}
-+	return 0;
++	sysfs_remove_group(bioscfg_drv.sure_start_attr_kobj,
++			   &sure_start_attr_group);
 +}
 +
-+/* Expected Values types associated with each element */
-+static const acpi_object_type expected_enum_types[] = {
-+	[NAME] = ACPI_TYPE_STRING,
-+	[VALUE] = ACPI_TYPE_STRING,
-+	[PATH] = ACPI_TYPE_STRING,
-+	[IS_READONLY] = ACPI_TYPE_INTEGER,
-+	[DISPLAY_IN_UI] = ACPI_TYPE_INTEGER,
-+	[REQUIRES_PHYSICAL_PRESENCE] = ACPI_TYPE_INTEGER,
-+	[SEQUENCE] = ACPI_TYPE_INTEGER,
-+	[PREREQUISITES_SIZE] = ACPI_TYPE_INTEGER,
-+	[PREREQUISITES] = ACPI_TYPE_STRING,
-+	[SECURITY_LEVEL] = ACPI_TYPE_INTEGER,
-+	[ENUM_CURRENT_VALUE] = ACPI_TYPE_STRING,
-+	[ENUM_SIZE] = ACPI_TYPE_INTEGER,
-+	[ENUM_POSSIBLE_VALUES] = ACPI_TYPE_STRING,
-+};
-+
-+/**
-+ * populate_enumeration_package_data() -
-+ * Populate all properties of an instance under enumeration attribute
-+ *
-+ * @enum_obj: ACPI object with enumeration data
-+ * @instance_id: The instance to enumerate
-+ * @attr_name_kobj: The parent kernel object
-+ */
-+int populate_enumeration_package_data(union acpi_object *enum_obj,
-+				      int instance_id,
-+				      struct kobject *attr_name_kobj)
++int populate_sure_start_data(struct kobject *attr_name_kobj)
 +{
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-+
-+	enum_data->attr_name_kobj = attr_name_kobj;
-+
-+	populate_enumeration_elements_from_package(enum_obj,
-+						   enum_obj->package.count,
-+						   instance_id);
-+	update_attribute_permissions(enum_data->common.is_readonly,
-+				     &enumeration_current_val);
-+	/*
-+	 * Several attributes have names such "MONDAY".  Friendly
-+	 * user nane is generated to make the name more descriptive
-+	 */
-+	friendly_user_name_update(enum_data->common.path,
-+				  attr_name_kobj->name,
-+				  enum_data->common.display_name,
-+				  sizeof(enum_data->common.display_name));
-+	return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
-+}
-+
-+int populate_enumeration_elements_from_package(union acpi_object *enum_obj,
-+					       int enum_obj_count,
-+					       int instance_id)
-+{
-+	char *str_value = NULL;
-+	int value_len;
-+	u32 size = 0;
-+	u32 int_value;
-+	int elem = 0;
-+	int reqs;
-+	int pos_values;
-+	int ret;
-+	int eloc;
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-+
-+	strscpy(enum_data->common.display_name_language_code,
-+		LANG_CODE_STR,
-+		sizeof(enum_data->common.display_name_language_code));
-+
-+	for (elem = 1, eloc = 1; elem < enum_obj_count; elem++, eloc++) {
-+		/* ONLY look at the first ENUM_ELEM_CNT elements */
-+		if (eloc == ENUM_ELEM_CNT)
-+			goto exit_enumeration_package;
-+
-+		switch (enum_obj[elem].type) {
-+		case ACPI_TYPE_STRING:
-+
-+			if (PREREQUISITES != elem && ENUM_POSSIBLE_VALUES != elem) {
-+				ret = convert_hexstr_to_str(enum_obj[elem].string.pointer,
-+							    enum_obj[elem].string.length,
-+							    &str_value, &value_len);
-+				if (ret)
-+					return -EINVAL;
-+			}
-+			break;
-+		case ACPI_TYPE_INTEGER:
-+			int_value = (u32)enum_obj[elem].integer.value;
-+			break;
-+		default:
-+			pr_warn("Unsupported object type [%d]\n", enum_obj[elem].type);
-+			continue;
-+		}
-+
-+		/* Check that both expected and read object type match */
-+		if (expected_enum_types[eloc] != enum_obj[elem].type) {
-+			pr_err("Error expected type %d for elem  %d, but got type %d instead\n",
-+			       expected_enum_types[eloc], elem, enum_obj[elem].type);
-+			return -EIO;
-+		}
-+
-+		/* Assign appropriate element value to corresponding field */
-+		switch (eloc) {
-+		case NAME:
-+		case VALUE:
-+			break;
-+		case PATH:
-+			strscpy(enum_data->common.path, str_value,
-+				sizeof(enum_data->common.path));
-+			break;
-+		case IS_READONLY:
-+			enum_data->common.is_readonly = int_value;
-+			break;
-+		case DISPLAY_IN_UI:
-+			enum_data->common.display_in_ui = int_value;
-+			break;
-+		case REQUIRES_PHYSICAL_PRESENCE:
-+			enum_data->common.requires_physical_presence = int_value;
-+			break;
-+		case SEQUENCE:
-+			enum_data->common.sequence = int_value;
-+			break;
-+		case PREREQUISITES_SIZE:
-+			enum_data->common.prerequisites_size = int_value;
-+			if (int_value > MAX_PREREQUISITES_SIZE)
-+				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-+
-+			/*
-+			 * This HACK is needed to keep the expected
-+			 * element list pointing to the right obj[elem].type
-+			 * when the size is zero.  PREREQUISITES
-+			 * object is omitted by BIOS when the size is
-+			 * zero.
-+			 */
-+			if (int_value == 0)
-+				eloc++;
-+			break;
-+
-+		case PREREQUISITES:
-+
-+			size = enum_data->common.prerequisites_size;
-+
-+			for (reqs = 0; reqs < size && reqs < MAX_PREREQUISITES_SIZE; reqs++) {
-+				if (elem >= enum_obj_count) {
-+					pr_err("Error enum-objects package is too small\n");
-+					return -EINVAL;
-+				}
-+
-+				ret = convert_hexstr_to_str(enum_obj[elem + reqs].string.pointer,
-+							    enum_obj[elem + reqs].string.length,
-+							    &str_value, &value_len);
-+
-+				if (ret)
-+					return -EINVAL;
-+
-+				strscpy(enum_data->common.prerequisites[reqs],
-+					str_value,
-+					sizeof(enum_data->common.prerequisites[reqs]));
-+
-+				kfree(str_value);
-+			}
-+			break;
-+
-+		case SECURITY_LEVEL:
-+			enum_data->common.security_level = int_value;
-+			break;
-+
-+		case ENUM_CURRENT_VALUE:
-+			strscpy(enum_data->current_value,
-+				str_value, sizeof(enum_data->current_value));
-+			break;
-+		case ENUM_SIZE:
-+			enum_data->possible_values_size = int_value;
-+			if (int_value > MAX_VALUES_SIZE)
-+				pr_warn("Possible number values size value exceeded the maximum number of elements supported or data may be malformed\n");
-+
-+			/*
-+			 * This HACK is needed to keep the expected
-+			 * element list pointing to the right obj[elem].type
-+			 * when the size is zero.  POSSIBLE_VALUES
-+			 * object is omitted by BIOS when the size is zero.
-+			 */
-+			if (int_value == 0)
-+				eloc++;
-+			break;
-+
-+		case ENUM_POSSIBLE_VALUES:
-+			size = enum_data->possible_values_size;
-+
-+			for (pos_values = 0; pos_values < size && pos_values < MAX_VALUES_SIZE;
-+			     pos_values++) {
-+				if (elem >= enum_obj_count) {
-+					pr_err("Error enum-objects package is too small\n");
-+					return -EINVAL;
-+				}
-+
-+				ret = convert_hexstr_to_str(enum_obj[elem + pos_values].string.pointer,
-+							    enum_obj[elem  + pos_values].string.length,
-+							    &str_value, &value_len);
-+
-+				if (ret)
-+					return -EINVAL;
-+
-+				/*
-+				 * ignore strings when possible values size
-+				 * is greater than  MAX_VALUES_SIZE
-+				 */
-+				if (size < MAX_VALUES_SIZE)
-+					strscpy(enum_data->possible_values[pos_values],
-+						str_value,
-+						sizeof(enum_data->possible_values[pos_values]));
-+
-+				kfree(str_value);
-+			}
-+			break;
-+		default:
-+			pr_warn("Invalid element: %d found in Enumeration attribute or data may be malformed\n", elem);
-+			break;
-+		}
-+
-+		kfree(str_value);
-+	}
-+
-+exit_enumeration_package:
-+	kfree(str_value);
-+	return 0;
-+}
-+
-+/**
-+ * populate_enumeration_buffer_data() -
-+ * Populate all properties of an instance under enumeration attribute
-+ *
-+ * @buffer_ptr: Buffer pointer
-+ * @buffer_size: Buffer size
-+ * @instance_id: The instance to enumerate
-+ * @attr_name_kobj: The parent kernel object
-+ */
-+int populate_enumeration_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
-+				     int instance_id,
-+				     struct kobject *attr_name_kobj)
-+{
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-+
-+	enum_data->attr_name_kobj = attr_name_kobj;
-+
-+	/* Populate enumeration elements */
-+	populate_enumeration_elements_from_buffer(buffer_ptr, buffer_size,
-+						  instance_id);
-+
-+	update_attribute_permissions(enum_data->common.is_readonly,
-+				     &enumeration_current_val);
-+	/*
-+	 * Several attributes have names such "MONDAY". A Friendlier
-+	 * user nane is generated to make the name more descriptive
-+	 */
-+	friendly_user_name_update(enum_data->common.path,
-+				  attr_name_kobj->name,
-+				  enum_data->common.display_name,
-+				  sizeof(enum_data->common.display_name));
-+
-+	return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
-+}
-+
-+int populate_enumeration_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
-+					      int instance_id)
-+{
-+	int reqs;
-+	int values;
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-+
-+	strscpy(enum_data->common.display_name_language_code,
-+		LANG_CODE_STR,
-+		sizeof(enum_data->common.display_name_language_code));
-+
-+	// VALUE:
-+	get_string_from_buffer(&buffer_ptr, buffer_size, enum_data->current_value,
-+			       sizeof(enum_data->current_value));
-+
-+	// PATH:
-+	get_string_from_buffer(&buffer_ptr, buffer_size, enum_data->common.path,
-+			       sizeof(enum_data->common.path));
-+
-+	// IS_READONLY:
-+	get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				&enum_data->common.is_readonly);
-+
-+	//DISPLAY_IN_UI:
-+	get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				&enum_data->common.display_in_ui);
-+
-+	// REQUIRES_PHYSICAL_PRESENCE:
-+	get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				&enum_data->common.requires_physical_presence);
-+
-+	// SEQUENCE:
-+	get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				&enum_data->common.sequence);
-+
-+	// PREREQUISITES_SIZE:
-+	get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				&enum_data->common.prerequisites_size);
-+
-+	if (enum_data->common.prerequisites_size > MAX_PREREQUISITES_SIZE) {
-+		/* Report a message and limit prerequisite size to maximum value */
-+		pr_warn("Enum Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-+		enum_data->common.prerequisites_size = MAX_PREREQUISITES_SIZE;
-+	}
-+
-+	// PREREQUISITES:
-+	for (reqs = 0; reqs < enum_data->common.prerequisites_size && reqs < MAX_PREREQUISITES_SIZE;
-+	     reqs++)
-+		get_string_from_buffer(&buffer_ptr, buffer_size,
-+				       enum_data->common.prerequisites[reqs],
-+				       sizeof(enum_data->common.prerequisites[reqs]));
-+
-+	// SECURITY_LEVEL:
-+	get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				&enum_data->common.security_level);
-+
-+	// ENUM_CURRENT_VALUE:
-+	get_string_from_buffer(&buffer_ptr, buffer_size,
-+			       enum_data->current_value,
-+			       sizeof(enum_data->current_value));
-+	// ENUM_SIZE:
-+	get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				&enum_data->possible_values_size);
-+
-+	if (enum_data->possible_values_size > MAX_VALUES_SIZE) {
-+		/* Report a message and limit possible values size to maximum value */
-+		pr_warn("Enum Possible size value exceeded the maximum number of elements supported or data may be malformed\n");
-+		enum_data->possible_values_size = MAX_VALUES_SIZE;
-+	}
-+
-+	// ENUM_POSSIBLE_VALUES:
-+
-+	for (values = 0; values < enum_data->possible_values_size && values < MAX_VALUES_SIZE;
-+	     values++)
-+		get_string_from_buffer(&buffer_ptr, buffer_size,
-+				       enum_data->possible_values[values],
-+				       sizeof(enum_data->possible_values[values]));
-+
-+	return 0;
-+}
-+
-+/**
-+ * exit_enumeration_attributes() - Clear all attribute data
-+ *
-+ * Clears all data allocated for this group of attributes
-+ */
-+void exit_enumeration_attributes(void)
-+{
-+	int instance_id;
-+
-+	for (instance_id = 0; instance_id < bioscfg_drv.enumeration_instances_count;
-+	     instance_id++) {
-+		struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-+		struct kobject *attr_name_kobj = enum_data->attr_name_kobj;
-+
-+		if (attr_name_kobj)
-+			sysfs_remove_group(attr_name_kobj, &enumeration_attr_group);
-+	}
-+	bioscfg_drv.enumeration_instances_count = 0;
-+
-+	kfree(bioscfg_drv.enumeration_data);
-+	bioscfg_drv.enumeration_data = NULL;
++	bioscfg_drv.sure_start_attr_kobj = attr_name_kobj;
++	return sysfs_create_group(attr_name_kobj, &sure_start_attr_group);
 +}
 -- 
 2.34.1
