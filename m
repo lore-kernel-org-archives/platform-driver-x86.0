@@ -2,337 +2,260 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1ECC77B7C
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 May 2023 16:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE62C77B75
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 May 2023 21:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232012AbjEEQK1 (ORCPT
+        id S231698AbjEEU76 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 5 May 2023 12:10:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50590 "EHLO
+        Fri, 5 May 2023 16:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231686AbjEEQK0 (ORCPT
+        with ESMTP id S230519AbjEEU74 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 5 May 2023 12:10:26 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27311160BE;
-        Fri,  5 May 2023 09:10:25 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4eed764a10cso2225219e87.0;
-        Fri, 05 May 2023 09:10:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683303023; x=1685895023;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qCjX0Riy4zGPWlUJCeRML4FO6fkq25n/S5dUH2dm4fY=;
-        b=nPjqm5o8dwvwp1BrQZdIAqTt7Fu/ec86GA00HEbfQE0QDPDo9Yq82Sk1JKEcCRSYH7
-         Wun3+syQYpG4OSK3LfmzKZm9UX6QTCMYv85Pq5IheQAmxgJNDGf08bK5vA8CnWO2Gm+O
-         Nif062Uy16LqERrzopD+FfEKosBzgMm50tvcaQN9r5agjlnbrq+0raTPda+waOan/ZXW
-         HuOnmeqCxuk1fAIKFv5KR3EeZArBgIeUHaoUvjbZHlP4DAMLvsuGiVaP3VVU1pPvyI6b
-         ceESlT43GrFVw/K3usKBN18Hy4n0fyXUdn8Wa9qjnc7IG7TfW4/3Y5FXmORsluEp5jaQ
-         jUWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683303023; x=1685895023;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qCjX0Riy4zGPWlUJCeRML4FO6fkq25n/S5dUH2dm4fY=;
-        b=J+VN4lF2DvN8Bbb+mi0fQhST2TYpfa8QiwXzRYyETzjCtBz/tM/BKTUkYE9qOOVG+n
-         /3oWMBSPe97EAAQUjsftjyGVuWMceN8MQYyh8RhOqLh+PlJzefuZ+1hSbCysc7yvGCpL
-         VCfhroQZhnp89AmFFVDaT8EwEUcb58IoFPrmqtbakic9nQ606ZeWgRLpS1C1xOW4N3Dp
-         AsiwEYyYVUbEstYLBcB65EQqKM31ZSIiHQn9BCf54ahEleDe+l0iUm8yZhpF3xaN2QHm
-         bXny6rE7QT8WUKQzs1T8IpSD6C5wTscexeOce5oZYPbspZ5dw6lbEdMfDfiCXKm3xZyI
-         Iesw==
-X-Gm-Message-State: AC+VfDz7EBFhEIFti3kpyehDmsu00nlFTknPvcIUF0tmmExJ+BdylRx8
-        jss7quzK7/Ymjk4FncWhXfz6JTCzXB12xbqI3G4/pIbQz5c=
-X-Google-Smtp-Source: ACHHUZ6gxzjLFFe2m1SnSUo932Kw1S9KtBsXDn4XGxhrT6IUm+tv5lYn/Bi1/+aJrLF3YfHZwmh6V/P8O1oGm+eRrFs=
-X-Received: by 2002:ac2:446a:0:b0:4de:6973:82aa with SMTP id
- y10-20020ac2446a000000b004de697382aamr680782lfl.68.1683303023094; Fri, 05 May
- 2023 09:10:23 -0700 (PDT)
+        Fri, 5 May 2023 16:59:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 771D65254
+        for <platform-driver-x86@vger.kernel.org>; Fri,  5 May 2023 13:59:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683320354;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=lMUuRid/JO1nnlAiQd9ru36hciCnUvJqzgP/dFcQGd8=;
+        b=OMAI6vTxu28sdC0K5Qrj245BGwhNi5QBOv41gLGbbj/Xdp+f3xL77cihtys8ehV7BSPbFN
+        kkMayIC+DEMytQzEQ+YCYkx53deAc6NVtfugKNHKTEfJtRK+X0xzcqvjc7Wq/P3TuXSbFc
+        M8VHE5S/1F3dS3ClEFE0nE7X72OmTs0=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-557-i6ZMHiXANNK1PsZJVKYgSQ-1; Fri, 05 May 2023 16:59:11 -0400
+X-MC-Unique: i6ZMHiXANNK1PsZJVKYgSQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BD8D43804514;
+        Fri,  5 May 2023 20:59:10 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.14])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 18BF01410F23;
+        Fri,  5 May 2023 20:59:09 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 1/2] platform/x86: x86-android-tablets: Add support for more then 1 gpio_key
+Date:   Fri,  5 May 2023 22:59:00 +0200
+Message-Id: <20230505205901.42649-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-6-jorge.lopez2@hp.com>
- <24fb56f9-49c6-432d-8c2f-17df7f7e37b2@t-8ch.de>
-In-Reply-To: <24fb56f9-49c6-432d-8c2f-17df7f7e37b2@t-8ch.de>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Fri, 5 May 2023 11:09:55 -0500
-Message-ID: <CAOOmCE-HR205R2vjyZedDocZLwvMdk7B1w7w9HgdXaypTrBK+A@mail.gmail.com>
-Subject: Re: [PATCH v11 05/14] HP BIOSCFG driver - ordered-attributes
-To:     thomas@t-8ch.de
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Apr 23, 2023 at 1:55=E2=80=AFAM <thomas@t-8ch.de> wrote:
->
-> On 2023-04-20 11:54:45-0500, Jorge Lopez wrote:
-> >  .../x86/hp/hp-bioscfg/ordered-attributes.c    | 563 ++++++++++++++++++
-> >  1 file changed, 563 insertions(+)
-> >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/ordered-attribut=
-es.c
-> >
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c b/=
-drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c
-> > new file mode 100644
-> > index 000000000000..5e5d540f728d
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c
-> > @@ -0,0 +1,563 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Functions corresponding to ordered list type attributes under
-> > + * BIOS ORDERED LIST GUID for use with hp-bioscfg driver.
-> > + *
-> > + *  Copyright (c) 2022 HP Development Company, L.P.
-> > + */
-> > +
-> > +#include "bioscfg.h"
-> > +
-> > +GET_INSTANCE_ID(ordered_list);
-> > +
-> > +static ssize_t current_value_show(struct kobject *kobj, struct kobj_at=
-tribute *attr, char *buf)
-> > +{
-> > +
-> > +     int instance_id =3D get_ordered_list_instance_id(kobj);
-> > +
-> > +     if (instance_id < 0)
-> > +             return -EIO;
-> > +
-> > +     return sysfs_emit(buf, "%s\n",
-> > +                      bioscfg_drv.ordered_list_data[instance_id].curre=
-nt_value);
-> > +}
-> > +
-> > +/*
-> > + * validate_ordered_list_value -
-> > + * Validate input of current_value against possible values
->
-> Does the firmware not also validate this?
->
-> If so it may be easier to just let it do so and remove the validations
-> from the driver.
+Modify the gpio_keys support in x86_android_tablet_init() for
+tablets which have more then 1 key/button which needs to be handled
+by the gpio_keys driver.
 
-Yes.  the firmware validates the data.
-Will remove the validation
->
-> > + *
-> > + * @instance_id: The instance on which input is validated
-> > + * @buf: Input value
-> > + */
-> > +static int validate_ordered_list_values(int instance_id, const char *b=
-uf)
-> > +{
-> > +     int ret =3D 0;
-> > +     int found =3D 0;
-> > +     char *new_values =3D NULL;
-> > +     char *value;
-> > +     int elem;
-> > +     int elem_found =3D 0;
-> > +
-> > +     /* Is it a read only attribute */
-> > +     if (bioscfg_drv.ordered_list_data[instance_id].common.is_readonly=
-)
-> > +             return -EIO;
-> > +
-> > +     new_values =3D kstrdup(buf, GFP_KERNEL);
-> > +
-> > +     /*
-> > +      * Changes to ordered list values require checking that new
-> > +      * values are found in the list of elements.
-> > +      */
-> > +     elem_found =3D 0;
-> > +     while (elem_found < bioscfg_drv.ordered_list_data[instance_id].el=
-ements_size) {
-> > +
-> > +             value =3D strsep(&new_values, ",");
->
-> The docs say the separator is semicolon.
+This requires copying over the struct gpio_keys_button from
+the x86_gpio_button struct array to a new gpio_keys_button struct array,
+as an added benefit this allows marking the per model x86_gpio_button
+arrays __initconst so that they all can be freed after module init().
 
-BIOS reports the current value using ',' as separator instead of ";".
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ .../platform/x86/x86-android-tablets/asus.c   |  4 ++-
+ .../platform/x86/x86-android-tablets/core.c   | 33 ++++++++++++-------
+ .../platform/x86/x86-android-tablets/lenovo.c |  6 ++--
+ .../platform/x86/x86-android-tablets/other.c  |  6 ++--
+ .../x86-android-tablets/x86-android-tablets.h |  3 +-
+ 5 files changed, 35 insertions(+), 17 deletions(-)
 
-./hp-bioscfg/attributes/UEFI Boot Order/current_value
-HDD:M.2:3,HDD:USB:1(Disabled),HDD:M.2:4,HDD:M.2:1,HDD:M.2:2,NETWORK
-IPV4:EMBEDDED:1,NETWORK IPV6:EMBEDDED:1,NETWORK
-IPV4:EXPANSION:1,NETWORK IPV6:EXPANSION:1
+diff --git a/drivers/platform/x86/x86-android-tablets/asus.c b/drivers/platform/x86/x86-android-tablets/asus.c
+index 2aca91678219..f9c4083be86d 100644
+--- a/drivers/platform/x86/x86-android-tablets/asus.c
++++ b/drivers/platform/x86/x86-android-tablets/asus.c
+@@ -24,7 +24,7 @@ static struct gpiod_lookup_table int3496_gpo2_pin22_gpios = {
+ 	},
+ };
+ 
+-static struct x86_gpio_button asus_me176c_tf103c_lid = {
++static const struct x86_gpio_button asus_me176c_tf103c_lid __initconst = {
+ 	.button = {
+ 		.code = SW_LID,
+ 		.active_low = true,
+@@ -175,6 +175,7 @@ const struct x86_dev_info asus_me176c_info __initconst = {
+ 	.serdev_info = asus_me176c_serdevs,
+ 	.serdev_count = ARRAY_SIZE(asus_me176c_serdevs),
+ 	.gpio_button = &asus_me176c_tf103c_lid,
++	.gpio_button_count = 1,
+ 	.gpiod_lookup_tables = asus_me176c_gpios,
+ 	.bat_swnode = &generic_lipo_hv_4v35_battery_node,
+ 	.modules = bq24190_modules,
+@@ -317,6 +318,7 @@ const struct x86_dev_info asus_tf103c_info __initconst = {
+ 	.pdev_info = int3496_pdevs,
+ 	.pdev_count = 1,
+ 	.gpio_button = &asus_me176c_tf103c_lid,
++	.gpio_button_count = 1,
+ 	.gpiod_lookup_tables = asus_tf103c_gpios,
+ 	.bat_swnode = &asus_tf103c_battery_node,
+ 	.modules = bq24190_modules,
+diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
+index 245167674aa2..0c7142f4eccc 100644
+--- a/drivers/platform/x86/x86-android-tablets/core.c
++++ b/drivers/platform/x86/x86-android-tablets/core.c
+@@ -124,6 +124,7 @@ static int serdev_count;
+ static struct i2c_client **i2c_clients;
+ static struct platform_device **pdevs;
+ static struct serdev_device **serdevs;
++static struct gpio_keys_button *buttons;
+ static struct gpiod_lookup_table * const *gpiod_lookup_tables;
+ static const struct software_node *bat_swnode;
+ static void (*exit_handler)(void);
+@@ -238,6 +239,7 @@ static void x86_android_tablet_cleanup(void)
+ 		platform_device_unregister(pdevs[i]);
+ 
+ 	kfree(pdevs);
++	kfree(buttons);
+ 
+ 	for (i = 0; i < i2c_client_count; i++)
+ 		i2c_unregister_device(i2c_clients[i]);
+@@ -353,22 +355,31 @@ static __init int x86_android_tablet_init(void)
+ 		}
+ 	}
+ 
+-	if (dev_info->gpio_button) {
+-		struct gpio_keys_platform_data pdata = {
+-			.buttons = &dev_info->gpio_button->button,
+-			.nbuttons = 1,
+-		};
++	if (dev_info->gpio_button_count) {
++		struct gpio_keys_platform_data pdata = { };
+ 		struct gpio_desc *gpiod;
+ 
+-		/* Get GPIO for the gpio-button */
+-		ret = x86_android_tablet_get_gpiod(dev_info->gpio_button->chip,
+-						   dev_info->gpio_button->pin, &gpiod);
+-		if (ret < 0) {
++		buttons = kcalloc(dev_info->gpio_button_count, sizeof(*buttons), GFP_KERNEL);
++		if (!buttons) {
+ 			x86_android_tablet_cleanup();
+-			return ret;
++			return -ENOMEM;
++		}
++
++		for (i = 0; i < dev_info->gpio_button_count; i++) {
++			buttons[i] = dev_info->gpio_button[i].button;
++			/* Get GPIO for the gpio-button */
++			ret = x86_android_tablet_get_gpiod(dev_info->gpio_button[i].chip,
++							   dev_info->gpio_button[i].pin, &gpiod);
++			if (ret < 0) {
++				x86_android_tablet_cleanup();
++				return ret;
++			}
++
++			buttons[i].gpio = desc_to_gpio(gpiod);
+ 		}
+ 
+-		dev_info->gpio_button->button.gpio = desc_to_gpio(gpiod);
++		pdata.buttons = buttons;
++		pdata.nbuttons = dev_info->gpio_button_count;
+ 
+ 		pdevs[pdev_count] = platform_device_register_data(NULL, "gpio-keys",
+ 								  PLATFORM_DEVID_AUTO,
+diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
+index 50031e902a2c..26a4ef670ad7 100644
+--- a/drivers/platform/x86/x86-android-tablets/lenovo.c
++++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
+@@ -160,7 +160,7 @@ static const struct x86_serdev_info lenovo_yb1_x90_serdevs[] __initconst = {
+ 	},
+ };
+ 
+-static struct x86_gpio_button lenovo_yb1_x90_lid = {
++static const struct x86_gpio_button lenovo_yb1_x90_lid __initconst = {
+ 	.button = {
+ 		.code = SW_LID,
+ 		.active_low = true,
+@@ -232,6 +232,7 @@ const struct x86_dev_info lenovo_yogabook_x90_info __initconst = {
+ 	.serdev_info = lenovo_yb1_x90_serdevs,
+ 	.serdev_count = ARRAY_SIZE(lenovo_yb1_x90_serdevs),
+ 	.gpio_button = &lenovo_yb1_x90_lid,
++	.gpio_button_count = 1,
+ 	.gpiod_lookup_tables = lenovo_yb1_x90_gpios,
+ 	.init = lenovo_yb1_x90_init,
+ };
+@@ -268,7 +269,7 @@ static const struct software_node lenovo_yoga_tab2_830_1050_bq24190_node = {
+ 	.properties = lenovo_yoga_tab2_830_1050_bq24190_props,
+ };
+ 
+-static struct x86_gpio_button lenovo_yoga_tab2_830_1050_lid = {
++static const struct x86_gpio_button lenovo_yoga_tab2_830_1050_lid __initconst = {
+ 	.button = {
+ 		.code = SW_LID,
+ 		.active_low = true,
+@@ -394,6 +395,7 @@ const struct x86_dev_info lenovo_yoga_tab2_830_1050_info __initconst = {
+ 	.pdev_info = int3496_pdevs,
+ 	.pdev_count = 1,
+ 	.gpio_button = &lenovo_yoga_tab2_830_1050_lid,
++	.gpio_button_count = 1,
+ 	.gpiod_lookup_tables = lenovo_yoga_tab2_830_1050_gpios,
+ 	.bat_swnode = &generic_lipo_hv_4v35_battery_node,
+ 	.modules = bq24190_modules,
+diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
+index 3754d2453cdb..4d54c89e6ca2 100644
+--- a/drivers/platform/x86/x86-android-tablets/other.c
++++ b/drivers/platform/x86/x86-android-tablets/other.c
+@@ -94,7 +94,7 @@ const struct x86_dev_info acer_b1_750_info __initconst = {
+  * which is not described in the ACPI tables in anyway.
+  * Use the x86-android-tablets infra to create a gpio-button device for this.
+  */
+-static struct x86_gpio_button advantech_mica_071_button = {
++static const struct x86_gpio_button advantech_mica_071_button __initconst = {
+ 	.button = {
+ 		.code = KEY_PROG1,
+ 		.active_low = true,
+@@ -109,6 +109,7 @@ static struct x86_gpio_button advantech_mica_071_button = {
+ 
+ const struct x86_dev_info advantech_mica_071_info __initconst = {
+ 	.gpio_button = &advantech_mica_071_button,
++	.gpio_button_count = 1,
+ };
+ 
+ /*
+@@ -449,7 +450,7 @@ const struct x86_dev_info nextbook_ares8a_info __initconst = {
+  * This button has a WMI interface, but that is broken. Instead of trying to
+  * use the broken WMI interface, instantiate a gpio_keys device for this.
+  */
+-static struct x86_gpio_button peaq_c1010_button = {
++static const struct x86_gpio_button peaq_c1010_button __initconst = {
+ 	.button = {
+ 		.code = KEY_SOUND,
+ 		.active_low = true,
+@@ -464,6 +465,7 @@ static struct x86_gpio_button peaq_c1010_button = {
+ 
+ const struct x86_dev_info peaq_c1010_info __initconst = {
+ 	.gpio_button = &peaq_c1010_button,
++	.gpio_button_count = 1,
+ 	/*
+ 	 * Move the ACPI event handler used by the broken WMI interface out of
+ 	 * the way. This is the only event handler on INT33FC:00.
+diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+index 8e9f7238015c..8f04a052eada 100644
+--- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
++++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+@@ -73,10 +73,11 @@ struct x86_dev_info {
+ 	const struct x86_i2c_client_info *i2c_client_info;
+ 	const struct platform_device_info *pdev_info;
+ 	const struct x86_serdev_info *serdev_info;
+-	struct x86_gpio_button *gpio_button;
++	const struct x86_gpio_button *gpio_button;
+ 	int i2c_client_count;
+ 	int pdev_count;
+ 	int serdev_count;
++	int gpio_button_count;
+ 	int (*init)(void);
+ 	void (*exit)(void);
+ };
+-- 
+2.40.1
 
-To avoid having to convert from "," to ";" and vice versa, I will
-update the documentation to reflect the use of  "'," commas as the
-separator
-
->
-> > +             if (value !=3D NULL) {
-> > +                     if (!*value)
-> > +                             continue;
-> > +                     elem_found++;
-> > +             }
-> > +
-> > +             found =3D 0;
-> > +             for (elem =3D 0; elem < bioscfg_drv.ordered_list_data[ins=
-tance_id].elements_size; elem++) {
-> > +                     if (!strcasecmp(bioscfg_drv.ordered_list_data[ins=
-tance_id].elements[elem], value)) {
->
-> It's surprising that this is case-insensitive.
-
-As validated in earlier reviews,  BIOS rejects strings that do not
-match the internal values.
-
->
-> > +                             found =3D 1;
-> > +                             break;
-> > +                     }
-> > +             }
-> > +
-> > +
-> > +             if (!found) {
-> > +                     ret =3D -EINVAL;
-> > +                     goto out_list_value;
-> > +             }
-> > +     }
-> > +
-> > +     if (elem_found =3D=3D bioscfg_drv.ordered_list_data[instance_id].=
-elements_size) {
-> > +             pr_warn("Number of new values is not equal to number of o=
-rdered list elements (%d)\n",
-> > +                     bioscfg_drv.ordered_list_data[instance_id].elemen=
-ts_size);
-> > +             ret =3D -EINVAL;
-> > +             goto out_list_value;
-> > +     }
-> > +
-> > +out_list_value:
-> > +     kfree(new_values);
-> > +     return ret;
-> > +}
->
-> This algorithm does not seem to validate that different values are
-> provided.
->
-> So if "possible_values" is "foo,bar,baz" this function would accept
-> "foo,foo,foo".
->
-
-BIOS will reject strings such as "foo,foo,foo" when the current value
-is "foo,bar,baz".   It is ok to provide a string which items are
-ordered differently.  i.e. "baz,bar,foo"
-validate_ordered_list_values() function will be removed as indicated earlie=
-r.
-
-> > +
-> > +/*
-> > + * validate_ordered_input() -
-> > + * Validate input of current_value against possible values
-> > + *
-> > + * @instance_id: The instance on which input is validated
-> > + * @buf: Input value
-> > + */
-> > +static int validate_ordered_list_input(int instance_id, const char *bu=
-f)
-> > +{
-> > +     int ret =3D 0;
-> > +
-> > +     ret =3D validate_ordered_list_values(instance_id, buf);
-> > +     if (ret < 0)
-> > +             return -EINVAL;
-> > +
-> > +     /*
-> > +      * set pending reboot flag depending on
-> > +      * "RequiresPhysicalPresence" value
-> > +      */
-> > +     if (bioscfg_drv.ordered_list_data[instance_id].common.requires_ph=
-ysical_presence)
-> > +             bioscfg_drv.pending_reboot =3D true;
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static void update_ordered_list_value(int instance_id, char *attr_valu=
-e)
-> > +{
-> > +     strscpy(bioscfg_drv.ordered_list_data[instance_id].current_value,
-> > +             attr_value,
-> > +             sizeof(bioscfg_drv.ordered_list_data[instance_id].current=
-_value));
-> > +}
-> > +
-> > +ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name_language_code, ordered_l=
-ist);
-> > +static struct kobj_attribute ordered_list_display_langcode =3D
-> > +     __ATTR_RO(display_name_language_code);
-> > +
-> > +ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, ordered_list);
-> > +static struct kobj_attribute ordered_list_display_name =3D
-> > +     __ATTR_RO(display_name);
-> > +
-> > +ATTRIBUTE_PROPERTY_STORE(current_value, ordered_list);
-> > +static struct kobj_attribute ordered_list_current_val =3D
-> > +     __ATTR_RW_MODE(current_value, 0644);
-> > +
-> > +
-> > +ATTRIBUTE_N_COMMON_PROPERTY_SHOW(prerequisites_size, ordered_list);
-> > +static struct kobj_attribute  ordered_list_prerequisites_size_val =3D
-> > +     __ATTR_RO(prerequisites_size);
-> > +
-> > +ATTRIBUTE_V_COMMON_PROPERTY_SHOW(prerequisites, ordered_list);
-> > +static struct kobj_attribute  ordered_list_prerequisites_val =3D
-> > +     __ATTR_RO(prerequisites);
-> > +
-> > +ATTRIBUTE_N_PROPERTY_SHOW(elements_size, ordered_list);
-> > +static struct kobj_attribute  ordered_list_elements_size_val =3D
-> > +     __ATTR_RO(elements_size);
->
-> "size" and "length" attributes are fairly useless to userspace.
-> They can't be trusted to provide information about another attribute as
-> the information can be out of date when the other attribute is read.
->
-
-Prerequisites, prerequisites_size and elements_size will be removed
-
-> > +
-> > +ATTRIBUTE_VALUES_PROPERTY_SHOW(elements, ordered_list);
-> > +static struct kobj_attribute  ordered_list_elements_val =3D
-> > +     __ATTR_RO(elements);
-> > +
-
-<snip>
-
-> > +
-> > +
-> > +int populate_ordered_list_elements_from_package(union acpi_object *ord=
-er_obj,
-> > +                                             int order_obj_count,
-> > +                                             int instance_id)
-> > +{
-> > +     char *str_value =3D NULL;
-> > +     int value_len;
-> > +     int ret =3D 0;
-> > +     u32 size =3D 0;
-> > +     u32 int_value;
-> > +     int elem =3D 0;
-> > +     int reqs;
-> > +     int eloc;
-> > +     char *tmpstr =3D NULL;
-> > +     char *part_tmp =3D NULL;
-> > +     int tmp_len =3D 0;
-> > +     char *part =3D NULL;
-> > +
-> > +     if (!order_obj)
-> > +             return -EINVAL;
-> > +
-> > +     strscpy(bioscfg_drv.ordered_list_data[instance_id].common.display=
-_name_language_code,
-> > +             LANG_CODE_STR,
-> > +             sizeof(bioscfg_drv.ordered_list_data[instance_id].common.=
-display_name_language_code));
->
-> This seems to be the same for every type. Can it not be moved into
-> common code?
-
-Each instance requires to report 'display_name_language_code' hence it
-cannot be moved to a common code.
->
-
-<snip>
