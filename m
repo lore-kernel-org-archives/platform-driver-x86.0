@@ -2,135 +2,324 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555BCC77B7C
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 May 2023 22:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949B4C77B7C
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 May 2023 23:44:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233539AbjEEWC2 (ORCPT
+        id S232989AbjEEXoQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 5 May 2023 18:02:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58072 "EHLO
+        Fri, 5 May 2023 19:44:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232541AbjEEWBl (ORCPT
+        with ESMTP id S232809AbjEEXoL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 5 May 2023 18:01:41 -0400
-Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0C1D6A55;
-        Fri,  5 May 2023 15:01:02 -0700 (PDT)
-Received: by mail-ot1-x32b.google.com with SMTP id 46e09a7af769-6a5f765d595so1473687a34.0;
-        Fri, 05 May 2023 15:01:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683324062; x=1685916062;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gpWRid5cmCr0SjsRhGTnuvLDk1kP0ktA07Mc2yuVwzg=;
-        b=cva9g2Xu+/d4NTUnciZerQb1yQy7aWUHBFv3uzCixXhk9tswLjCS8lBHo+vOn9qhKK
-         y2QMOXFNtxY8rKHGXrnxxsTTJIzl5BD8Y97D+NHJkb2ZtRsGfDkqVoPe5C3phMLRLigJ
-         SXaZuieXfZ0xJkwa4DjvcW7m3tq81SM2cI8xSG6tWle7dwrCe3HJ9D2dTOvEjXwsSBds
-         An3FrCo2Ei7e/QGRwROVMB/ITOhkkC4QMI3W5n7FJaK6MnWHrj7kFWd0VPn2q66P9qU+
-         s3lt2+wKNl7OqK7ob7rS65LmELTlzvTpPzeIC1WC8UlkdTHCYRgI26SWzM5eWX2eFFz0
-         6h9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683324062; x=1685916062;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gpWRid5cmCr0SjsRhGTnuvLDk1kP0ktA07Mc2yuVwzg=;
-        b=V7+pAM1LPqOkQ77TKRWvkMGE31OrmDLfc10A9ZYP4ZQB/SEIjCaBD7WnxvEMFnBxbX
-         mLu5tQvR54ve7P2sgeUkbV698jnq8UtkWgMdqM8gT1B45ClI0l01HZbqF2fg/CGJIiQ2
-         8bJjZPqECVBmt6S0c/wHilwkIbkZ0urka+3q9R51t6SuiUKLx7kPlkNaQ/bASqerNLiC
-         Lr+9XxYwhHq23QfctOhz/xd/u00i6GY33Lvo/477NGRQWebooR1NmI7JKsA1XnqF/WsJ
-         B/opTUq1yg/AJzNwOWT+bH4HkIwqyxeKPGGCbrFf0IRs80yig4T5xog54mVdNZDWBCLK
-         UscA==
-X-Gm-Message-State: AC+VfDxj/SbM6SwFUrWpHUscRgQPs5VIVfCYMQ8vdVUK/ldo0fzMydOW
-        rA5sT9oOIZ0/xRLVw+d061+Pj+TxTW4=
-X-Google-Smtp-Source: ACHHUZ50O3hP1H6lDP3RdVnLHRaQ5RCU0NtARl+hE39Jg7gb9De+ur+misidhOui9Eet6qM6wqDLxQ==
-X-Received: by 2002:a9d:75c8:0:b0:6a8:b659:d46e with SMTP id c8-20020a9d75c8000000b006a8b659d46emr1516959otl.8.1683324061904;
-        Fri, 05 May 2023 15:01:01 -0700 (PDT)
-Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:90cc:2e0a:7522:8ecc])
-        by smtp.gmail.com with ESMTPSA id w15-20020a056830060f00b006a61bef7968sm1359547oti.53.2023.05.05.15.01.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 May 2023 15:01:01 -0700 (PDT)
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
-To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas@t-8ch.de
-Subject: [PATCH v12 13/13] HP BIOSCFG driver  - MAINTAINERS
-Date:   Fri,  5 May 2023 17:00:43 -0500
-Message-Id: <20230505220043.39036-14-jorge.lopez2@hp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230505220043.39036-1-jorge.lopez2@hp.com>
-References: <20230505220043.39036-1-jorge.lopez2@hp.com>
+        Fri, 5 May 2023 19:44:11 -0400
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E1215FD9;
+        Fri,  5 May 2023 16:44:10 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 4790E3200902;
+        Fri,  5 May 2023 19:44:07 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Fri, 05 May 2023 19:44:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+        :cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
+        1683330246; x=1683416646; bh=QVWXBD2Fd0owCC2E21JKVCAc6/oxO1RMzJ1
+        hi6j097A=; b=g0sCpNOJJ2SeKbwPaGa9iFbSPwkHb4U9v7V19u1dgfyWzbwBbSs
+        p11KRe6ONWg+TQSTm6anqLcE4ddfWa4lM3vt+NAe8MKON5y9jzRzPVY4soyt9Yg0
+        kn4kD+AelHGZqlyKTJl7W01eFSYsR1iFHdDjswaEqt9lyfv0nYtifgnahqfe7cy1
+        okG/3Do8J1NTti6AT7wsBuZb1sZzWQrKSqEY9LgKbLEhqj9M7flmFimE1aFOK/Gs
+        oIprF6gUJlSgG4ND67OZLpyoMTEm78EvY7Cpa4hA5LrtcaIq0ubZvlTbQc7TCZnh
+        AmUOR+qnVZEgQ4B/eEP+d0vGIVA3vNTJVkQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+        1683330246; x=1683416646; bh=QVWXBD2Fd0owCC2E21JKVCAc6/oxO1RMzJ1
+        hi6j097A=; b=j1VGHKcYCsLcH9nhJHFzN14isuKsBdPk8MWGfSIJPgm740uNoyC
+        upVhrK2+fs83ME1nTXX4/8W8y//att/TgqaI22fTCndEEL2xsR7Qu8jdwVWtJ2az
+        5b8Bxe8S8Tu3Ia/i8XhGjwDBrWkUymgni+XybxGHQvr21RMKUvd4ItJohTp5HrH4
+        LYk1iplDS7XM1pL8SOrWyfD7D822xrvDVUah0ZO77LftH1jpkrN28bGpCdHlN1pw
+        72Rrp93XRRM5Owr8DXCJ8MvknDLdBXmnLtR/Xy6yBRyIYQV+eCBtjOTSadsdfP/n
+        v/FeqH1+tK8fhOjSPc2N9mVoQoBnfmYZc/A==
+X-ME-Sender: <xms:xpRVZOdvtrG28emvJHzjmS9I_08QC033Ich745bW6334nGvZK-qTXQ>
+    <xme:xpRVZINLIVaoB_tyeaG4WplH0FSuBfnHP172gZPGyWnE7W2cA1RKL6qSQxJ3sYW6X
+    apDsh6oFFIcNLnH3MQ>
+X-ME-Received: <xmr:xpRVZPgwKcTsGNocheOffy2csw4N7JfYpNYX9u2JToGElcwNljr50Cyi7XZb6Mo29HV8yQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeeffedgvdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhuffvvefkjghfofggtgfgsehtqhertdertddunecuhfhrohhmpefnuhhk
+    vgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrh
+    hnpeetteeigefhteffhfevgfffueejffevteffueekhfevjeethefhgfekffevjeehheen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvg
+    eslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:xpRVZL8VDAFgU-pppGeT_XfAk9shZczMkeWKDWiRDgqVc5d_YTRfzQ>
+    <xmx:xpRVZKugBjix4i8MdhH_CZzMPVsS4oXznGJHIeBN6C-i4Qam9G-5ug>
+    <xmx:xpRVZCGntrfqnGOF5pxAAW2SMa1HmVt5pVTsTUGTcDfxtDWCmvbhnw>
+    <xmx:xpRVZOicS4wWsd5rz2YrPQbeTT8gjReDr-xrzcLzOp-8ahEkDIHtSw>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 5 May 2023 19:43:58 -0400 (EDT)
+Date:   Sat, 06 May 2023 11:43:41 +1200
+From:   Luke Jones <luke@ljones.dev>
+Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: add support for ASUS
+ screenpad
+To:     Ilpo =?iso-8859-1?q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, hdegoede@redhat.com,
+        corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com,
+        linux@roeck-us.net
+Message-Id: <TWL7UR.KE812U8BYMG8@ljones.dev>
+In-Reply-To: <9f77e8fd-38fe-818f-2fee-ca3bf4243576@linux.intel.com>
+References: <20230505043013.2622603-1-luke@ljones.dev>
+        <20230505043013.2622603-2-luke@ljones.dev>
+        <9f77e8fd-38fe-818f-2fee-ca3bf4243576@linux.intel.com>
+X-Mailer: geary/43.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-HP BIOS Configuration driver purpose is to provide a driver supporting
-the latest sysfs class firmware attributes framework allowing the user
-to change BIOS settings and security solutions on HP Inc.’s commercial
-notebooks.
 
-Many features of HP Commercial notebooks can be managed using Windows
-Management Instrumentation (WMI). WMI is an implementation of Web-Based
-Enterprise Management (WBEM) that provides a standards-based interface
-for changing and monitoring system settings. HP BIOSCFG driver provides
-a native Linux solution and the exposed features facilitates the
-migration to Linux environments.
 
-The Linux security features to be provided in hp-bioscfg driver enables
-managing the BIOS settings and security solutions via sysfs, a virtual
-filesystem that can be used by user-mode applications. The new
-documentation cover HP-specific firmware sysfs attributes such Secure
-Platform Management and Sure Start. Each section provides security
-feature description and identifies sysfs directories and files exposed
-by the driver.
+On Fri, May 5 2023 at 16:08:16 +0300, Ilpo J=E4rvinen=20
+<ilpo.jarvinen@linux.intel.com> wrote:
+> On Fri, 5 May 2023, Luke D. Jones wrote:
+>=20
+>>  Add support for the WMI methods used to turn off and adjust the
+>>  brightness of the secondary "screenpad" device found on some=20
+>> high-end
+>>  ASUS laptops like the GX650P series and others.
+>>=20
+>>  These methods are utilised in a new backlight device named:
+>>  - asus_screenpad
+>>=20
+>>  Signed-off-by: Luke D. Jones <luke@ljones.dev>
+>>  ---
+>>   .../ABI/testing/sysfs-platform-asus-wmi       |   2 +-
+>>   drivers/platform/x86/asus-wmi.c               | 132=20
+>> ++++++++++++++++++
+>>   drivers/platform/x86/asus-wmi.h               |   1 +
+>>   include/linux/platform_data/x86/asus-wmi.h    |   4 +
+>>   4 files changed, 138 insertions(+), 1 deletion(-)
+>>=20
+>>  diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi=20
+>> b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+>>  index a77a004a1baa..df9817c6233a 100644
+>>  --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
+>>  +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+>>  @@ -97,4 +97,4 @@ Contact:	"Luke Jones" <luke@ljones.dev>
+>>   Description:
+>>   		Enable an LCD response-time boost to reduce or remove ghosting:
+>>   			* 0 - Disable,
+>>  -			* 1 - Enable
+>>  +			* 1 - Enable
+>>  \ No newline at end of file
+>=20
+> Spurious change?
 
-Many HP Commercial notebooks include a feature called Secure Platform
-Management (SPM), which replaces older password-based BIOS settings
-management with public key cryptography. PC secure product management
-begins when a target system is provisioned with cryptographic keys
-that are used to ensure the integrity of communications between system
-management utilities and the BIOS.
+Indeed it is. Not sure how that occurred.
 
-HP Commercial notebooks have several BIOS settings that control its
-behaviour and capabilities, many of which are related to security.
-To prevent unauthorized changes to these settings, the system can
-be configured to use a cryptographic signature-based authorization
-string that the BIOS will use to verify authorization to modify the
-setting.
+>=20
+>>  diff --git a/drivers/platform/x86/asus-wmi.c=20
+>> b/drivers/platform/x86/asus-wmi.c
+>>  index 1038dfdcdd32..0528eef02ef7 100644
+>>  --- a/drivers/platform/x86/asus-wmi.c
+>>  +++ b/drivers/platform/x86/asus-wmi.c
+>>  @@ -200,6 +200,7 @@ struct asus_wmi {
+>>=20
+>>   	struct input_dev *inputdev;
+>>   	struct backlight_device *backlight_device;
+>>  +	struct backlight_device *screenpad_backlight_device;
+>>   	struct platform_device *platform_device;
+>>=20
+>>   	struct led_classdev wlan_led;
+>>  @@ -3208,6 +3209,129 @@ static int is_display_toggle(int code)
+>>   	return 0;
+>>   }
+>>=20
+>>  +/* Screenpad backlight */
+>>  +
+>>  +static int read_screenpad_backlight_power(struct asus_wmi *asus)
+>>  +{
+>>  +	int ret =3D asus_wmi_get_devstate_simple(asus,=20
+>> ASUS_WMI_DEVID_SCREENPAD_POWER);
+>=20
+> Please move this to own line because now you have the extra newline
+> in between the call and error handling.
 
-Linux Security components are under development and not published yet.
-The only linux component is the driver (hp bioscfg) at this time.
-Other published security components are under Windows.
+I don't understand what you mean sorry. Remove the new line or:
+int ret;
+ret =3D asus_wmi_get_devstate_simple(asus,=20
+ASUS_WMI_DEVID_SCREENPAD_POWER);
 
-Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+>=20
+>>  +
+>>  +	if (ret < 0)
+>>  +		return ret;
+>>  +	/* 1 =3D=3D powered */
+>>  +	return ret ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
+>>  +}
+>>  +
+>>  +static int read_screenpad_brightness(struct backlight_device *bd)
+>>  +{
+>>  +	struct asus_wmi *asus =3D bl_get_data(bd);
+>>  +	u32 retval;
+>>  +	int err;
+>>  +
+>>  +	err =3D read_screenpad_backlight_power(asus);
+>>  +	if (err < 0)
+>>  +		return err;
+>>  +	/* The device brightness can only be read if powered, so return=20
+>> stored */
+>>  +	if (err =3D=3D FB_BLANK_POWERDOWN)
+>>  +		return asus->driver->screenpad_brightness;
+>>  +
+>>  +	err =3D asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT,=20
+>> &retval);
+>>  +	if (err < 0)
+>>  +		return err;
+>>  +
+>>  +	return retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
+>>  +}
+>>  +
+>>  +static int update_screenpad_bl_status(struct backlight_device *bd)
+>>  +{
+>>  +	struct asus_wmi *asus =3D bl_get_data(bd);
+>>  +	int power, err =3D 0;
+>>  +	u32 ctrl_param;
+>>  +
+>>  +	power =3D read_screenpad_backlight_power(asus);
+>>  +	if (power =3D=3D -ENODEV)
+>>  +		return err;
+>=20
+> Just return 0. Or is there perhaps something wrong/missing here?
 
----
-Based on the latest platform-drivers-x86.git/for-next
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+I thought the correct thing was to return any possible error state=20
+(here, anything less than 0 would be an error, right?)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0c9011f5fc17..7d1f261af539 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9367,6 +9367,12 @@ S:	Obsolete
- W:	http://w1.fi/hostap-driver.html
- F:	drivers/net/wireless/intersil/hostap/
- 
-+HP BIOSCFG DRIVER
-+M:	Jorge Lopez <jorge.lopez2@hp.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/hp/hp-bioscfg/
-+
- HP COMPAQ TC1100 TABLET WMI EXTRAS DRIVER
- L:	platform-driver-x86@vger.kernel.org
- S:	Orphan
--- 
-2.34.1
+>=20
+>>  +	else if (power < 0)
+>>  +		return power;
+>>  +
+>>  +	if (bd->props.power !=3D power) {
+>>  +		if (power !=3D FB_BLANK_UNBLANK) {
+>>  +			/* Only brightness can power it back on */
+>=20
+> Only brightness > 0 can power the screen back on
+>=20
+>>  +			ctrl_param =3D asus->driver->screenpad_brightness;
+>=20
+> max(1, asus->driver->screenpad_brightness);
+>=20
+> Don't forget to add the #include for it.
+
+Oh, that's handy! Thank you.
+
+>=20
+>>  +			/* Min 1 or the screen won't turn on */
+>>  +			if (ctrl_param =3D=3D 0)
+>>  +				ctrl_param =3D 1;
+>=20
+> Drop this.
+
+Thanks to minmax.
+
+>=20
+>>  +			err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT,
+>>  +							ctrl_param, NULL);
+>=20
+> Align param.
+
+Done.
+
+>=20
+>>  +		} else {
+>>  +			/* Ensure brightness is stored to turn back on with */
+>>  +			asus->driver->screenpad_brightness =3D bd->props.brightness;
+>>  +			err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0,=20
+>> NULL);
+>>  +		}
+>>  +	} else if (power =3D=3D FB_BLANK_UNBLANK) {
+>>  +		/* Only set brightness if powered on or we get invalid/unsync=20
+>> state */
+>>  +		ctrl_param =3D bd->props.brightness;
+>>  +		err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT,=20
+>> ctrl_param, NULL);
+>=20
+> Why not store the brightness if powered off?
+
+That's me being literal and short sighted. I've now moved:
+```
+/* Ensure brightness is stored to turn back on with */
+asus->driver->screenpad_brightness =3D bd->props.brightness;
+```
+to below the conditional blocks.
+
+>=20
+>>  +	}
+>>  +
+>>  +	return err;
+>>  +}
+>>  +
+>>  +static const struct backlight_ops asus_screenpad_bl_ops =3D {
+>>  +	.get_brightness =3D read_screenpad_brightness,
+>>  +	.update_status =3D update_screenpad_bl_status,
+>>  +	.options =3D BL_CORE_SUSPENDRESUME,
+>>  +};
+>>  +
+>>  +static int asus_screenpad_init(struct asus_wmi *asus)
+>>  +{
+>>  +	struct backlight_device *bd;
+>>  +	struct backlight_properties props;
+>>  +	int power, brightness;
+>>  +
+>>  +	power =3D read_screenpad_backlight_power(asus);
+>>  +	if (power =3D=3D -ENODEV)
+>>  +		power =3D FB_BLANK_UNBLANK;
+>>  +	else if (power < 0)
+>>  +		return power;
+>>  +
+>>  +	memset(&props, 0, sizeof(struct backlight_properties));
+>>  +	props.type =3D BACKLIGHT_RAW; /* ensure this bd is last to be=20
+>> picked */
+>>  +	props.max_brightness =3D 255;
+>>  +	bd =3D backlight_device_register("asus_screenpad",
+>>  +				       &asus->platform_device->dev, asus,
+>>  +				       &asus_screenpad_bl_ops, &props);
+>>  +	if (IS_ERR(bd)) {
+>>  +		pr_err("Could not register backlight device\n");
+>>  +		return PTR_ERR(bd);
+>>  +	}
+>>  +
+>>  +	asus->screenpad_backlight_device =3D bd;
+>>  +
+>>  +	brightness =3D read_screenpad_brightness(bd);
+>>  +	if (brightness < 0)
+>>  +		return brightness;
+>>  +	/*
+>>  +	 * Counter an odd behaviour where default is set to < 13 if it=20
+>> was 0 on boot.
+>>  +	 * 60 is subjective, but accepted as a good compromise to retain=20
+>> visibility.
+>>  +	 */
+>>  +	else if (brightness < 60)
+>=20
+> Since the other branch returns, else is unnecessary.
+
+Good catch, thank you.
+
+I'll submit V3 after we clarify the two points above that I'm confused=20
+by :)
+
+Thank you for taking the time to review.
+
+>=20
+
 
