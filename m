@@ -2,63 +2,61 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 068D1C77B7F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 May 2023 14:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1ECC77B7C
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 May 2023 16:10:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232406AbjEEOah (ORCPT
+        id S232012AbjEEQK1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 5 May 2023 10:30:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58828 "EHLO
+        Fri, 5 May 2023 12:10:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231967AbjEEOag (ORCPT
+        with ESMTP id S231686AbjEEQK0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 5 May 2023 10:30:36 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F8E30D4;
-        Fri,  5 May 2023 07:30:34 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2ac88d9edf3so8479761fa.0;
-        Fri, 05 May 2023 07:30:34 -0700 (PDT)
+        Fri, 5 May 2023 12:10:26 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27311160BE;
+        Fri,  5 May 2023 09:10:25 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4eed764a10cso2225219e87.0;
+        Fri, 05 May 2023 09:10:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683297033; x=1685889033;
+        d=gmail.com; s=20221208; t=1683303023; x=1685895023;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WVsbfG6h5RFW9xhQDAlrHWw+7sMdH/ZPJc2Cm59Pckc=;
-        b=mom/jjJ3h0UjJsgHdE9Cwhwex7MpgircxA49E6Zbz5fJ7PBfIbBnkFDyH1/6AdtHcJ
-         0yNBoa9lT9xIeh2hCQPX6JcT+88bg+60uXIj8sSai1zzpGJFy3Hbe0cU3exWSkh85/v+
-         CTKKZWrhKCVs3ehmBI9CGxHnoRxZr9nhof22RKQZgp6f/mrMcc+eciZyki+RXJvMN9Y7
-         Oyc6IjehFR9NJx0yeMcMl1v9HYbcHKIXEUgLM4Cc7Q8YIgERWmGwLrscMZlWlzgnYRHf
-         ZDpVVLAYd/8FnzAstzzxru4fOyCxb6dgsq/8a0peao+420bQ25UOsmEwVpVwXrRzp6v2
-         XFSg==
+        bh=qCjX0Riy4zGPWlUJCeRML4FO6fkq25n/S5dUH2dm4fY=;
+        b=nPjqm5o8dwvwp1BrQZdIAqTt7Fu/ec86GA00HEbfQE0QDPDo9Yq82Sk1JKEcCRSYH7
+         Wun3+syQYpG4OSK3LfmzKZm9UX6QTCMYv85Pq5IheQAmxgJNDGf08bK5vA8CnWO2Gm+O
+         Nif062Uy16LqERrzopD+FfEKosBzgMm50tvcaQN9r5agjlnbrq+0raTPda+waOan/ZXW
+         HuOnmeqCxuk1fAIKFv5KR3EeZArBgIeUHaoUvjbZHlP4DAMLvsuGiVaP3VVU1pPvyI6b
+         ceESlT43GrFVw/K3usKBN18Hy4n0fyXUdn8Wa9qjnc7IG7TfW4/3Y5FXmORsluEp5jaQ
+         jUWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683297033; x=1685889033;
+        d=1e100.net; s=20221208; t=1683303023; x=1685895023;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WVsbfG6h5RFW9xhQDAlrHWw+7sMdH/ZPJc2Cm59Pckc=;
-        b=L+Ze2K5KJTtZlbHAiB/cuh7jf7yJRArh3gNMFQij4+F/ggT+QdI8U8smQ7ystrzDkO
-         6R/bEIscs/E9TngCyatvrYixTn1XU8dqMQjhNPlg4tlG78MmA7AgO+jwuq/RYqBJq/Bh
-         x1bt1R9jVab306+nATN2DN/We22e62bgB5iV3iWVNdJCIroBL4IrF7gA0xfKBAFajF6F
-         dlvRFfiwQJXsrOOp5G+s0latKdmWp3xZ23fj0BggcsowF5Q+JrWv31PGssUzx9pmO4Bo
-         aX2+4SmcTjDGguTqo9KLhrf6md63Bi4Qe/HKz1ui2mGJwyFg327pzY/XEYKHfmP1PgjE
-         lSKA==
-X-Gm-Message-State: AC+VfDwGXz1zMM1GPUeJn6pJ8hNhTxY8velZP7siNjgmiWfHSmmEBGbR
-        9Wx2XimGjlS0ef6uhR5/61nZMZx9R1gG33xtkMZxFiJkN34=
-X-Google-Smtp-Source: ACHHUZ53AFxTYUnGZDzJDAwKFWkAd6Xlt8OfUVAevZt2sE+FcHSPgzgXk7+2Vm2AZxYCAR6evLbcE54YY1tMUB5nlZc=
-X-Received: by 2002:a19:a40f:0:b0:4f1:4051:d77b with SMTP id
- q15-20020a19a40f000000b004f14051d77bmr640392lfc.60.1683297032785; Fri, 05 May
- 2023 07:30:32 -0700 (PDT)
+        bh=qCjX0Riy4zGPWlUJCeRML4FO6fkq25n/S5dUH2dm4fY=;
+        b=J+VN4lF2DvN8Bbb+mi0fQhST2TYpfa8QiwXzRYyETzjCtBz/tM/BKTUkYE9qOOVG+n
+         /3oWMBSPe97EAAQUjsftjyGVuWMceN8MQYyh8RhOqLh+PlJzefuZ+1hSbCysc7yvGCpL
+         VCfhroQZhnp89AmFFVDaT8EwEUcb58IoFPrmqtbakic9nQ606ZeWgRLpS1C1xOW4N3Dp
+         AsiwEYyYVUbEstYLBcB65EQqKM31ZSIiHQn9BCf54ahEleDe+l0iUm8yZhpF3xaN2QHm
+         bXny6rE7QT8WUKQzs1T8IpSD6C5wTscexeOce5oZYPbspZ5dw6lbEdMfDfiCXKm3xZyI
+         Iesw==
+X-Gm-Message-State: AC+VfDz7EBFhEIFti3kpyehDmsu00nlFTknPvcIUF0tmmExJ+BdylRx8
+        jss7quzK7/Ymjk4FncWhXfz6JTCzXB12xbqI3G4/pIbQz5c=
+X-Google-Smtp-Source: ACHHUZ6gxzjLFFe2m1SnSUo932Kw1S9KtBsXDn4XGxhrT6IUm+tv5lYn/Bi1/+aJrLF3YfHZwmh6V/P8O1oGm+eRrFs=
+X-Received: by 2002:ac2:446a:0:b0:4de:6973:82aa with SMTP id
+ y10-20020ac2446a000000b004de697382aamr680782lfl.68.1683303023094; Fri, 05 May
+ 2023 09:10:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-7-jorge.lopez2@hp.com>
- <016a9a6a-cff1-444d-b96a-63eded1ac58a@t-8ch.de> <CAOOmCE9USvpih7E6cq7sKiMmGJa_FV74g36kb6EZMSrkg5BnLg@mail.gmail.com>
- <9bbf8cb3-6333-4742-b32a-c7e9118bc618@t-8ch.de> <CAOOmCE-S-GpcmG9c6eB1hz6o3hudX8hWY9jmZ-cUwivHzijsPw@mail.gmail.com>
- <1f80c7a9-cc88-4c30-9797-e20e3cb4859c@t-8ch.de>
-In-Reply-To: <1f80c7a9-cc88-4c30-9797-e20e3cb4859c@t-8ch.de>
+References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-6-jorge.lopez2@hp.com>
+ <24fb56f9-49c6-432d-8c2f-17df7f7e37b2@t-8ch.de>
+In-Reply-To: <24fb56f9-49c6-432d-8c2f-17df7f7e37b2@t-8ch.de>
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Fri, 5 May 2023 09:30:05 -0500
-Message-ID: <CAOOmCE-Yj1zEx4MY2gzS5QO=fZh17GvZKDUKZLX05on1sy0srg@mail.gmail.com>
-Subject: Re: [PATCH v11 06/14] HP BIOSCFG driver - passwdobj-attributes
-To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Date:   Fri, 5 May 2023 11:09:55 -0500
+Message-ID: <CAOOmCE-HR205R2vjyZedDocZLwvMdk7B1w7w9HgdXaypTrBK+A@mail.gmail.com>
+Subject: Re: [PATCH v11 05/14] HP BIOSCFG driver - ordered-attributes
+To:     thomas@t-8ch.de
 Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -67,276 +65,274 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, May 4, 2023 at 5:21=E2=80=AFPM Thomas Wei=C3=9Fschuh <thomas@t-8ch.=
-de> wrote:
+On Sun, Apr 23, 2023 at 1:55=E2=80=AFAM <thomas@t-8ch.de> wrote:
 >
-> On 2023-05-04 16:34:06-0500, Jorge Lopez wrote:
-> > On Thu, May 4, 2023 at 3:59=E2=80=AFPM Thomas Wei=C3=9Fschuh <thomas@t-=
-8ch.de> wrote:
-> > >
-> > > On 2023-05-04 15:29:21-0500, Jorge Lopez wrote:
-> > > > On Sun, Apr 23, 2023 at 4:07=E2=80=AFAM <thomas@t-8ch.de> wrote:
-> > > > >
-> > > > > On 2023-04-20 11:54:46-0500, Jorge Lopez wrote:
-> > > > > > ---
-> > > > > >  .../x86/hp/hp-bioscfg/passwdobj-attributes.c  | 669 ++++++++++=
-++++++++
-> > > > > >  1 file changed, 669 insertions(+)
-> > > > > >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdob=
-j-attributes.c
->
-> <snip>
->
-> > > > > > +
-> > > > > > +     id =3D get_password_instance_id(kobj);
-> > > > > > +
-> > > > > > +     if (id >=3D 0)
-> > > > > > +             ret =3D validate_password_input(id, buf_cp);
-> > > > > > +
-> > > > > > +     if (!ret) {
-> > > > > > +             strscpy(bioscfg_drv.password_data[id].current_pas=
-sword,
-> > > > > > +                     buf_cp,
-> > > > > > +                     sizeof(bioscfg_drv.password_data[id].curr=
-ent_password));
-> > > > > > +             /*
-> > > > > > +              * set pending reboot flag depending on
-> > > > > > +              * "RequiresPhysicalPresence" value
-> > > > > > +              */
-> > > > > > +             if (bioscfg_drv.password_data[id].common.requires=
-_physical_presence)
-> > > > > > +                     bioscfg_drv.pending_reboot =3D true;
-> > > > >
-> > > > > Just setting this to true does not emit the necessary KOBJ_CHANGE=
- event
-> > > > > on the class dev kobj which is necessary for userspace to be able=
- to
-> > > > > react.
-> > > >
-> > > > This feature was added outside of the original design specification=
- to
-> > > > be used at a later time.
-> > > > Changes to the value to true does not emit a KOBJ_CHANGE event.
-> > >
-> > > This contradicts the documentation:
-> > >
-> > >         A read-only attribute reads 1 if a reboot is necessary to app=
-ly
-> > >         pending BIOS attribute changes. Also, an uevent_KOBJ_CHANGE i=
-s
-> > >         generated when it changes to 1.
-> > >
-> > > This will confuse userspace, there are generic userspace applications
-> > > waiting for those events.
-> > > If there is a reason for not emitting them it should be good and
-> > > documented.
-> > >
-> > > Also according to the docs the authentication attributes should
-> > > KOBJ_CHANGE events. I think this also affects this driver and should =
-be
-> > > implemented.
-> > >
+> On 2023-04-20 11:54:45-0500, Jorge Lopez wrote:
+> >  .../x86/hp/hp-bioscfg/ordered-attributes.c    | 563 ++++++++++++++++++
+> >  1 file changed, 563 insertions(+)
+> >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/ordered-attribut=
+es.c
 > >
-> > HP-BIOSCFG initially is not intended for the use of fwupd tool nor was
-> > it tested.
-> > This does not mean the driver will interface with fwupd and other
-> > tools in the future.
+> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c b/=
+drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c
+> > new file mode 100644
+> > index 000000000000..5e5d540f728d
+> > --- /dev/null
+> > +++ b/drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c
+> > @@ -0,0 +1,563 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Functions corresponding to ordered list type attributes under
+> > + * BIOS ORDERED LIST GUID for use with hp-bioscfg driver.
+> > + *
+> > + *  Copyright (c) 2022 HP Development Company, L.P.
+> > + */
+> > +
+> > +#include "bioscfg.h"
+> > +
+> > +GET_INSTANCE_ID(ordered_list);
+> > +
+> > +static ssize_t current_value_show(struct kobject *kobj, struct kobj_at=
+tribute *attr, char *buf)
+> > +{
+> > +
+> > +     int instance_id =3D get_ordered_list_instance_id(kobj);
+> > +
+> > +     if (instance_id < 0)
+> > +             return -EIO;
+> > +
+> > +     return sysfs_emit(buf, "%s\n",
+> > +                      bioscfg_drv.ordered_list_data[instance_id].curre=
+nt_value);
+> > +}
+> > +
+> > +/*
+> > + * validate_ordered_list_value -
+> > + * Validate input of current_value against possible values
 >
-> There are probably more tools than fwupd using this ABI.
+> Does the firmware not also validate this?
 >
-> The driver is implementing a well-known ABI and users of this ABI expect
-> it to work as documented.
+> If so it may be easier to just let it do so and remove the validations
+> from the driver.
+
+Yes.  the firmware validates the data.
+Will remove the validation
 >
-> Emitting these events seems straigtforward and simple.
+> > + *
+> > + * @instance_id: The instance on which input is validated
+> > + * @buf: Input value
+> > + */
+> > +static int validate_ordered_list_values(int instance_id, const char *b=
+uf)
+> > +{
+> > +     int ret =3D 0;
+> > +     int found =3D 0;
+> > +     char *new_values =3D NULL;
+> > +     char *value;
+> > +     int elem;
+> > +     int elem_found =3D 0;
+> > +
+> > +     /* Is it a read only attribute */
+> > +     if (bioscfg_drv.ordered_list_data[instance_id].common.is_readonly=
+)
+> > +             return -EIO;
+> > +
+> > +     new_values =3D kstrdup(buf, GFP_KERNEL);
+> > +
+> > +     /*
+> > +      * Changes to ordered list values require checking that new
+> > +      * values are found in the list of elements.
+> > +      */
+> > +     elem_found =3D 0;
+> > +     while (elem_found < bioscfg_drv.ordered_list_data[instance_id].el=
+ements_size) {
+> > +
+> > +             value =3D strsep(&new_values, ",");
 >
-> Maybe Hans can give more guidance on it.
+> The docs say the separator is semicolon.
+
+BIOS reports the current value using ',' as separator instead of ";".
+
+./hp-bioscfg/attributes/UEFI Boot Order/current_value
+HDD:M.2:3,HDD:USB:1(Disabled),HDD:M.2:4,HDD:M.2:1,HDD:M.2:2,NETWORK
+IPV4:EMBEDDED:1,NETWORK IPV6:EMBEDDED:1,NETWORK
+IPV4:EXPANSION:1,NETWORK IPV6:EXPANSION:1
+
+To avoid having to convert from "," to ";" and vice versa, I will
+update the documentation to reflect the use of  "'," commas as the
+separator
+
+>
+> > +             if (value !=3D NULL) {
+> > +                     if (!*value)
+> > +                             continue;
+> > +                     elem_found++;
+> > +             }
+> > +
+> > +             found =3D 0;
+> > +             for (elem =3D 0; elem < bioscfg_drv.ordered_list_data[ins=
+tance_id].elements_size; elem++) {
+> > +                     if (!strcasecmp(bioscfg_drv.ordered_list_data[ins=
+tance_id].elements[elem], value)) {
+>
+> It's surprising that this is case-insensitive.
+
+As validated in earlier reviews,  BIOS rejects strings that do not
+match the internal values.
+
+>
+> > +                             found =3D 1;
+> > +                             break;
+> > +                     }
+> > +             }
+> > +
+> > +
+> > +             if (!found) {
+> > +                     ret =3D -EINVAL;
+> > +                     goto out_list_value;
+> > +             }
+> > +     }
+> > +
+> > +     if (elem_found =3D=3D bioscfg_drv.ordered_list_data[instance_id].=
+elements_size) {
+> > +             pr_warn("Number of new values is not equal to number of o=
+rdered list elements (%d)\n",
+> > +                     bioscfg_drv.ordered_list_data[instance_id].elemen=
+ts_size);
+> > +             ret =3D -EINVAL;
+> > +             goto out_list_value;
+> > +     }
+> > +
+> > +out_list_value:
+> > +     kfree(new_values);
+> > +     return ret;
+> > +}
+>
+> This algorithm does not seem to validate that different values are
+> provided.
+>
+> So if "possible_values" is "foo,bar,baz" this function would accept
+> "foo,foo,foo".
 >
 
-Let me see how I can implement it by following the sample of other drivers.
-I will reachout to Hans as my last resource.
+BIOS will reject strings such as "foo,foo,foo" when the current value
+is "foo,bar,baz".   It is ok to provide a string which items are
+ordered differently.  i.e. "baz,bar,foo"
+validate_ordered_list_values() function will be removed as indicated earlie=
+r.
 
-Done!
-> > > > >
-> > > > > > +     }
-> > > > > > +
-> > > > > > +exit_password:
-> > > > > > +     kfree(buf_cp);
-> > > > > > +     return ret ? ret : count;
-> > > > > > +}
-> > > > > > +static struct kobj_attribute password_current_password =3D __A=
-TTR_WO(current_password);
-> > > > > > +
-> > > > > > +static ssize_t new_password_store(struct kobject *kobj,
-> > > > > > +                               struct kobj_attribute *attr,
-> > > > > > +                               const char *buf, size_t count)
-> > > > > > +{
-> > > > > > +     char *p, *buf_cp =3D NULL;
-> > > > > > +     int id =3D 0;
-> > > > > > +     int ret =3D -EIO;
-> > > > > > +
-> > > > > > +     buf_cp =3D kstrdup(buf, GFP_KERNEL);
-> > > > > > +     if (!buf_cp) {
-> > > > > > +             ret =3D -ENOMEM;
-> > > > > > +             goto exit_password;
-> > > > > > +     }
-> > > > > > +
-> > > > > > +     p =3D memchr(buf_cp, '\n', count);
-> > > > > > +
-> > > > > > +     if (p !=3D NULL)
-> > > > > > +             *p =3D '\0';
-> > > > >
-> > > > > Same as above.
-> > > >
-> > > > This is an expected behavior.  If the user enters '\n' as part of t=
-he
-> > > > password, the buffer data will be truncated since only one line per
-> > > > sysfs file is permitted.
-> > >
-> > > If a user accidentally presses enter before entering a password this
-> > > may set the password to the empty string; surprising.
-> > >
-> > > This should really use the helper.
-> >
-> > Done!  enforce_single_line_input() function is used.
-> > >
-> > > > >
-> > <snip>
-> > > > > > +
-> > > > > > +ATTRIBUTE_V_COMMON_PROPERTY_SHOW(prerequisites, password);
-> > > > > > +static struct kobj_attribute  password_prerequisites_val =3D
-> > > > > > +             __ATTR_RO(prerequisites);
-> > > > > > +
-> > > > > > +ATTRIBUTE_N_PROPERTY_SHOW(encodings_size, password);
-> > > > > > +static struct kobj_attribute  password_encodings_size_val =3D
-> > > > > > +             __ATTR_RO(encodings_size);
-> > > > >
-> > > > > As before, these size attribute are fairly pointless for userspac=
-e as
-> > > > > they can't be relied on.
-> > > >
-> > > > I will remove the attribute from being reported in sysfs but they w=
-ill
-> > > > be kept as part of the driver internal data
-> > > >
-> > > > >
-> > > > > > +
-> > > > > > +ATTRIBUTE_VALUES_PROPERTY_SHOW(encodings, password);
-> > > > > > +static struct kobj_attribute  password_encodings_val =3D
-> > > > > > +             __ATTR_RO(encodings);
-> > > > > > +
-> > > > > > +
-> > > > > > +static struct attribute *password_attrs[] =3D {
-> > > > > > +     &password_is_password_set.attr,
-> > > > > > +     &password_min_password_length.attr,
-> > > > > > +     &password_max_password_length.attr,
-> > > > > > +     &password_current_password.attr,
-> > > > > > +     &password_new_password.attr,
-> > > > > > +     &password_role.attr,
-> > > > > > +     &password_mechanism.attr,
-> > > > > > +     &password_type.attr,
-> > > > > > +     &password_display_name.attr,
-> > > > > > +     &password_display_langcode.attr,
-> > > > > > +     &password_prerequisites_size_val.attr,
-> > > > > > +     &password_prerequisites_val.attr,
-> > > > > > +     &password_encodings_val.attr,
-> > > > > > +     &password_encodings_size_val.attr,
-> > > > > > +     NULL
-> > > > > > +};
-> > > > >
-> > > > > Many of these attributes are not documented.
-> > > >
-> > > > Those attributes are documented under authentication section, lines=
- 150-329
-> > > >
-> > > > What: /sys/class/firmware-attributes/*/authentication/
-> > > > Date: February 2021
-> > > > KernelVersion: 5.11
-> > > > Contact: Divya Bharathi <Divya.Bharathi@Dell.com>,
-> > > > Prasanth KSR <prasanth.ksr@dell.com>
-> > > > Dell.Client.Kernel@dell.com
-> > > > Description:
-> > > > Devices support various authentication mechanisms which can be expo=
-sed
-> > > > as a separate configuration object.
-> > >
-> > > If I read that correctly the authentication attributes are not "norma=
-l"
-> > > attributes.
-> > > So they don't need "type", "display_name", "display_langcode".
-> > >
-> >
-> > Type, display_name, and display_langcode are required and default setti=
-ngs.
-> > See documentation lines 15-52
-> >
-> > type:
-> >     A file that can be read to obtain the type of attribute.
-> >     This attribute is mandatory.
-> >
-> > display_name:
-> > A file that can be read to obtain a user friendly
-> > description of the at <attr>
-> >
-> > display_name_language_code:
-> > A file that can be read to obtain
-> > the IETF language tag corresponding to the
-> > "display_name" of the <attr>
+> > +
+> > +/*
+> > + * validate_ordered_input() -
+> > + * Validate input of current_value against possible values
+> > + *
+> > + * @instance_id: The instance on which input is validated
+> > + * @buf: Input value
+> > + */
+> > +static int validate_ordered_list_input(int instance_id, const char *bu=
+f)
+> > +{
+> > +     int ret =3D 0;
+> > +
+> > +     ret =3D validate_ordered_list_values(instance_id, buf);
+> > +     if (ret < 0)
+> > +             return -EINVAL;
+> > +
+> > +     /*
+> > +      * set pending reboot flag depending on
+> > +      * "RequiresPhysicalPresence" value
+> > +      */
+> > +     if (bioscfg_drv.ordered_list_data[instance_id].common.requires_ph=
+ysical_presence)
+> > +             bioscfg_drv.pending_reboot =3D true;
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static void update_ordered_list_value(int instance_id, char *attr_valu=
+e)
+> > +{
+> > +     strscpy(bioscfg_drv.ordered_list_data[instance_id].current_value,
+> > +             attr_value,
+> > +             sizeof(bioscfg_drv.ordered_list_data[instance_id].current=
+_value));
+> > +}
+> > +
+> > +ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name_language_code, ordered_l=
+ist);
+> > +static struct kobj_attribute ordered_list_display_langcode =3D
+> > +     __ATTR_RO(display_name_language_code);
+> > +
+> > +ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, ordered_list);
+> > +static struct kobj_attribute ordered_list_display_name =3D
+> > +     __ATTR_RO(display_name);
+> > +
+> > +ATTRIBUTE_PROPERTY_STORE(current_value, ordered_list);
+> > +static struct kobj_attribute ordered_list_current_val =3D
+> > +     __ATTR_RW_MODE(current_value, 0644);
+> > +
+> > +
+> > +ATTRIBUTE_N_COMMON_PROPERTY_SHOW(prerequisites_size, ordered_list);
+> > +static struct kobj_attribute  ordered_list_prerequisites_size_val =3D
+> > +     __ATTR_RO(prerequisites_size);
+> > +
+> > +ATTRIBUTE_V_COMMON_PROPERTY_SHOW(prerequisites, ordered_list);
+> > +static struct kobj_attribute  ordered_list_prerequisites_val =3D
+> > +     __ATTR_RO(prerequisites);
+> > +
+> > +ATTRIBUTE_N_PROPERTY_SHOW(elements_size, ordered_list);
+> > +static struct kobj_attribute  ordered_list_elements_size_val =3D
+> > +     __ATTR_RO(elements_size);
 >
-> They are required for
+> "size" and "length" attributes are fairly useless to userspace.
+> They can't be trusted to provide information about another attribute as
+> the information can be out of date when the other attribute is read.
 >
-> /sys/class/firmware-attributes/*/attributes/*/
->
-> but here we implement
->
-> /sys/class/firmware-attributes/*/authentication/*/
->
-> which is a different ABI.
->
-> >
-> > > Do they need prerequisites?
-> >
-> > Prerequisites is optional and not documented.  I will remove it from
-> > the list of items reported within sysfs
-> > >
-> > > >
 
-Fair enough.  I will remove "type", "display_name" and "display_langcode".
-The same three entries will be removed from spmobj-attributes (SPM)
-which belong to authentication attributes.
+Prerequisites, prerequisites_size and elements_size will be removed
 
-> > > >
-> > > > >
-> > > > > > +
-> > > > > > +static const struct attribute_group bios_password_attr_group =
-=3D {
-> > > > > > +     .attrs =3D password_attrs
-> > > > > > +};
-> > > > > > +
-> > > > > > +static const struct attribute_group system_password_attr_group=
- =3D {
-> > > > > > +     .attrs =3D password_attrs
-> > > > > > +};
-> > > > >
-> > > > > These groups are the same, are both needed?
-> > > >
-> > > > Yes.  They will show under  'Setup Password' and 'Power-on password=
-'
-> > >
-> > > These are identical constant structures. It should be possible to hav=
-e
-> > > only one and use it for both usecases.
-> > >
-> >
-> > Both 'Setup Password' and 'Power-on password' need to coexist hence
-> > the reason for keeping them separate.
-> > Both attributes share the same helper routines.  Unifying  both
-> > passwords into a single structure adds unnecessary complexity.
->
-> They are already sharing the "password_attrs" array and all the
-> attributes listed in it.
->
-> It seems they could also share the attribute_group which does not really
-> contain any data.
+> > +
+> > +ATTRIBUTE_VALUES_PROPERTY_SHOW(elements, ordered_list);
+> > +static struct kobj_attribute  ordered_list_elements_val =3D
+> > +     __ATTR_RO(elements);
+> > +
 
-Ah.  That makes sense.  Thank you for the clarification.
-Done!
+<snip>
+
+> > +
+> > +
+> > +int populate_ordered_list_elements_from_package(union acpi_object *ord=
+er_obj,
+> > +                                             int order_obj_count,
+> > +                                             int instance_id)
+> > +{
+> > +     char *str_value =3D NULL;
+> > +     int value_len;
+> > +     int ret =3D 0;
+> > +     u32 size =3D 0;
+> > +     u32 int_value;
+> > +     int elem =3D 0;
+> > +     int reqs;
+> > +     int eloc;
+> > +     char *tmpstr =3D NULL;
+> > +     char *part_tmp =3D NULL;
+> > +     int tmp_len =3D 0;
+> > +     char *part =3D NULL;
+> > +
+> > +     if (!order_obj)
+> > +             return -EINVAL;
+> > +
+> > +     strscpy(bioscfg_drv.ordered_list_data[instance_id].common.display=
+_name_language_code,
+> > +             LANG_CODE_STR,
+> > +             sizeof(bioscfg_drv.ordered_list_data[instance_id].common.=
+display_name_language_code));
+>
+> This seems to be the same for every type. Can it not be moved into
+> common code?
+
+Each instance requires to report 'display_name_language_code' hence it
+cannot be moved to a common code.
+>
+
+<snip>
