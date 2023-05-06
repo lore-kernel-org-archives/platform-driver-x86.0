@@ -2,103 +2,89 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D135BC77B73
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 May 2023 06:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD5BC77B73
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 May 2023 07:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbjEFG55 (ORCPT
+        id S229460AbjEFHFX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 6 May 2023 02:57:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54268 "EHLO
+        Sat, 6 May 2023 03:05:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbjEFG54 (ORCPT
+        with ESMTP id S230000AbjEFHFW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 6 May 2023 02:57:56 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C47CAD14;
-        Fri,  5 May 2023 23:57:52 -0700 (PDT)
-Date:   Sat, 6 May 2023 08:57:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-        t=1683356270; bh=qfP1uGBATJXPyIAjGfTIHMkkkfcGfotoiwlxjMWok9Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oT9Ok1fy263u636kVgx+NMETMgaV0aRO9Fehf8aNE2NrvWrEdJ/Swye8PFE4puwtH
-         LGqI+7lywvW+bBPlbQUJ3yRsOKHNzvP40hEnI0Ch5rRwOaqur63qu8lJTMscsX/8Dr
-         drFX75pJ0md5WNadAemfyry0Nt/wTv9QvbW70DBs=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 00/13] HP BIOSCFG driver
-Message-ID: <b87d1a4c-9624-4df8-98ba-f2560b7df18b@t-8ch.de>
-References: <20230505220043.39036-1-jorge.lopez2@hp.com>
+        Sat, 6 May 2023 03:05:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 170291154B
+        for <platform-driver-x86@vger.kernel.org>; Sat,  6 May 2023 00:05:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A310961831
+        for <platform-driver-x86@vger.kernel.org>; Sat,  6 May 2023 07:05:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0D108C433AC
+        for <platform-driver-x86@vger.kernel.org>; Sat,  6 May 2023 07:05:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683356721;
+        bh=tZIOkp8rEB0T0Xo6icAVGHSwHVgF8y06pH2+tXNcCoE=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=odw8fP9aoS25PER3ftHVPxmCYFEkzPiU1fRyjG3J7bty1foLmEk362VV6R/rx7sQU
+         CIDRZpi6FTN9BKE7MFp1catHktQCkhLKQSKBuN+ePQgpf7L0u+yDf+sa8zgcbMQ/tK
+         5lUIQZidXyG5vsaueWFryiZe9mPSbf6DnBbXLzsVSWbf9dWSxHOEdFrJYilq6/806u
+         TQteFac3Ocp6xMjMFkk7+i6YwjQzY9sbGeYcLTNcknhgfzQh7s5DmTA958lowkp3vL
+         2BYkvK/ZqHDGxieW7zQjd2fxr5YG446yqpvH7TTrVYtOwrlSTswKsDpB7RUjn39IQr
+         cSNKD9dNquDDA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id F1D9CC43144; Sat,  6 May 2023 07:05:20 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Sat, 06 May 2023 07:05:18 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: pauk.denis@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-204807-215701-wUQMeZigIJ@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230505220043.39036-1-jorge.lopez2@hp.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2023-05-05 17:00:30-0500, Jorge Lopez wrote:
-<snip>
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-> Jorge Lopez (13):
->   HP BIOSCFG driver - Documentation
->   HP BIOSCFG driver  - biosattr-interface
->   HP BIOSCFG driver  - bioscfg
->   HP BIOSCFG driver  - int-attributes
->   HP BIOSCFG driver  - ordered-attributes
->   HP BIOSCFG driver  - passwdobj-attributes
->   HP BIOSCFG driver  - string-attributes
->   HP BIOSCFG driver  - bioscfg-h
->   HP BIOSCFG driver  - enum-attributes
->   HP BIOSCFG driver  - spmobj-attributes
->   HP BIOSCFG driver  - surestart-attributes
->   HP BIOSCFG driver  - Makefile
->   HP BIOSCFG driver  - MAINTAINERS
+Denis Pauk (pauk.denis@gmail.com) changed:
 
-These could be reordered a bit to be easier to read.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #304087|0                           |1
+        is obsolete|                            |
 
-* Documentation
-* bioscfg-h
-* bioscfg
-* biosattr-interface
-* *-attributes
-* Makefile
-* MAINTAINERS
+--- Comment #327 from Denis Pauk (pauk.denis@gmail.com) ---
+Created attachment 304223
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D304223&action=3Dedit
+Asus WMI for nct6775 v6.3 base (2023.05.06)
 
-Also currently the subject spacing is currently inconsistent.
-Something like "hp-bioscfg: foo" would be more in line with the rest of
-the kernel.
+Rebased over v6.3, List of supported boards are same as previous.
 
-> 
->  .../testing/sysfs-class-firmware-attributes   | 117 ++-
->  MAINTAINERS                                   |   6 +
->  drivers/platform/x86/hp/Kconfig               |  16 +
->  drivers/platform/x86/hp/Makefile              |   1 +
->  drivers/platform/x86/hp/hp-bioscfg/Makefile   |  12 +
->  .../x86/hp/hp-bioscfg/biosattr-interface.c    | 319 ++++++
->  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  | 982 ++++++++++++++++++
->  drivers/platform/x86/hp/hp-bioscfg/bioscfg.h  | 523 ++++++++++
->  .../x86/hp/hp-bioscfg/enum-attributes.c       | 482 +++++++++
->  .../x86/hp/hp-bioscfg/int-attributes.c        | 448 ++++++++
->  .../x86/hp/hp-bioscfg/ordered-attributes.c    | 443 ++++++++
->  .../x86/hp/hp-bioscfg/passwdobj-attributes.c  | 584 +++++++++++
->  .../x86/hp/hp-bioscfg/spmobj-attributes.c     | 381 +++++++
->  .../x86/hp/hp-bioscfg/string-attributes.c     | 415 ++++++++
->  .../x86/hp/hp-bioscfg/surestart-attributes.c  | 133 +++
->  15 files changed, 4860 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/Makefile
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-> 
-> --
-> 2.34.1
-> 
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
