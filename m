@@ -2,206 +2,282 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A79AC77B73
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 May 2023 11:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABF7C77B73
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 May 2023 13:24:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231949AbjEFLxE (ORCPT
+        id S231956AbjEFNYv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 6 May 2023 07:53:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33594 "EHLO
+        Sat, 6 May 2023 09:24:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231678AbjEFLxD (ORCPT
+        with ESMTP id S232305AbjEFNYu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 6 May 2023 07:53:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861928A6C
-        for <platform-driver-x86@vger.kernel.org>; Sat,  6 May 2023 04:52:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683373934;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=d9HYJ21X01Eu+hi6xs2fwuX9W4E4k8z5R0PudPWWgj0=;
-        b=XXU2lWLQXnbDrJylYG2gOcpNTGPB7N8mluddCf/vLBnwG6QR3k0N/ssOxDpdXhagpw8csx
-        fQaIK62lBr6b1WA0KdiGyGxs+m+hUVNsltQeG2TCMeTYjE9tr8/+IRU2PPrbGBJdd3WW1T
-        FWm8KSdq608MwEDaAVJM4cp9+LChhzo=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-400-ct6U6BRlPX6SNOMj_2n3ww-1; Sat, 06 May 2023 07:52:13 -0400
-X-MC-Unique: ct6U6BRlPX6SNOMj_2n3ww-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-965b73d8b7eso256878666b.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 06 May 2023 04:52:13 -0700 (PDT)
+        Sat, 6 May 2023 09:24:50 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64AA71F4A0;
+        Sat,  6 May 2023 06:24:48 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-64115eef620so25220327b3a.1;
+        Sat, 06 May 2023 06:24:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683379488; x=1685971488;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bzQea2xgn/v16lMnD0LvD9GpMFuQwgvd8JYDxvdrbZo=;
+        b=Pja+trRgveMSupDRVFdCElqZZcNkrLTb3BCk8zfB92mApSQg3DSgM7kXZJAyEbOExr
+         THSUzFWjATswFxOiOhlfl60L3dkWhmmeXgSJ9kWMJUjTQl7BScPfryKqq4zzsQHsYTOo
+         TScspa0N5KriVHQ1ye/N+BTk5+TO5CnkT3cAAYCupqR+ySwDIFyMynZZ+JtyYjWMuw1k
+         Y1gRXGUmue3I2oS87sHyLUggLCCmFC9b3mm7hAC5vBJIOeKJNQ+O8zd0YG0BHZAtSMR5
+         fTcxeFYk9BGqxvY3ui2TYmKDIgdGmeP/YD/QrgonTcQd9MO0u8diDbYA5SQFTNVfCS0g
+         S9Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683373932; x=1685965932;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1683379488; x=1685971488;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id:sender
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d9HYJ21X01Eu+hi6xs2fwuX9W4E4k8z5R0PudPWWgj0=;
-        b=AEHwkPOQ28FKF9SAzbuKAUGHvG96u8soWVzjCA8jJOoov4ygMAF+XIbS3GdkJ42DlN
-         hI+T3L1EaFgvmLoaaeX4vgwxmDfQNAt+QAXtwjxLBqfmPIOwCmMRZpWYYhy0X4jCUnjX
-         Oyu4MlJ5XeZ9DePBkTKyOUKxJjTcE3+OB7j+iFw3Vqz2b9r/mQZGBh87yPdVb9UmTpVg
-         3fMkb0a9lDM5qJK6er9IlJIooG7qVL421aNJpFIeI395p6CEu+DqrtZZ7/bkPTbJX9nu
-         X3JHRpm0G3feIjCFLpyqCZIsHZDsfHKCRb8IG7q7/fQG4GxUv9R6TNFXeokAHFxh4qp0
-         Ssyg==
-X-Gm-Message-State: AC+VfDw/1OAieIYRHctycksA9TqcyuRxr7iS630Qo0vqZgkHUbgHszUR
-        wpJ1a1hPN43b8gDavWeQlFCAVOl49wM4lb/O4wZeJTxuGgNofGuwoiapN4OqDQ9455Z71XC/A0t
-        Fx32Zmzc5ysHQQCJG8sMr6WyXqf0BVnLaslu5lL+r1Q==
-X-Received: by 2002:a17:907:7e91:b0:94f:967d:e4f with SMTP id qb17-20020a1709077e9100b0094f967d0e4fmr4207850ejc.39.1683373932056;
-        Sat, 06 May 2023 04:52:12 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5EqdCSAFLRdaZFoDK9jX3YTYbb6j8tTgXmxZqtWYWcFs4n/b0DcHlCQm9mo7gv6JvjMEmOQw==
-X-Received: by 2002:a17:907:7e91:b0:94f:967d:e4f with SMTP id qb17-20020a1709077e9100b0094f967d0e4fmr4207837ejc.39.1683373931757;
-        Sat, 06 May 2023 04:52:11 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id q16-20020a1709060e5000b009662c57b4ffsm136695eji.96.2023.05.06.04.52.10
+        bh=bzQea2xgn/v16lMnD0LvD9GpMFuQwgvd8JYDxvdrbZo=;
+        b=Mkka2oCoe2Hc8ZPRwyQdG50htU5Bgm3gYt+imA1ilowJf75YKH7nFbmj0W1yBgNGM/
+         /GQ/LXQTqFHbPXcjovK78a1qwj0Sh9GqGqB8zlf1PU7Qxo/pKXjm2ZnyFJKZWSNPOKwJ
+         6NUuhaO4xd0p8EdDUW8lcPi3CIGqIAxBItu52E9Vhc8Rw5XKzfZ32IyfSAlF7WAPt8oD
+         NDmj2NQ51lOkE23ESWRQX/n79Mu9FGPWVCM/NlIPhjg5phcBQT4FFUOMkB2Rad5xvfGq
+         AfTA7+IQNusUIRL+aR2pwIm4Nio8maEY+RO4/w77YJqik6yxtbfmSpqUBaoDMEAUAeFd
+         SJsQ==
+X-Gm-Message-State: AC+VfDyryGxAYwiWts4PQyyZi9qV5pyo4PAUkxx1Mb+HRzpakfgoJuZy
+        lSc2n1t4RgmxIog5Qk9tAq0=
+X-Google-Smtp-Source: ACHHUZ6EaRUMazeeuyPN5gtYU0mooud7SfaREq1rV4u5qDvcZffAtJdxlaRZtD1Tn5I6hiQAexP3wA==
+X-Received: by 2002:a17:902:f804:b0:1a6:d9a6:a9b4 with SMTP id ix4-20020a170902f80400b001a6d9a6a9b4mr5224307plb.3.1683379487593;
+        Sat, 06 May 2023 06:24:47 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v10-20020a170902b7ca00b001a674fb0dd8sm3551298plz.247.2023.05.06.06.24.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 May 2023 04:52:11 -0700 (PDT)
-Message-ID: <4be2cc57-59b9-24e2-fd10-f2af175ff518@redhat.com>
-Date:   Sat, 6 May 2023 13:52:10 +0200
+        Sat, 06 May 2023 06:24:47 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <ac31cb07-22c3-7461-b1d0-670f15355e20@roeck-us.net>
+Date:   Sat, 6 May 2023 06:24:45 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH v2 0/1] platform/x86: asus-wmi: add support for ASUS
- screenpad
-Content-Language: en-US, nl
-To:     "Luke D. Jones" <luke@ljones.dev>,
-        platform-driver-x86@vger.kernel.org,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, acpi4asus-user@lists.sourceforge.net,
-        corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com,
-        linux@roeck-us.net
+Content-Language: en-US
+To:     Luke Jones <luke@ljones.dev>
+Cc:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, hdegoede@redhat.com,
+        corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com
 References: <20230505043013.2622603-1-luke@ljones.dev>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230505043013.2622603-1-luke@ljones.dev>
-Content-Type: text/plain; charset=UTF-8
+ <20230505043013.2622603-2-luke@ljones.dev>
+ <9f77e8fd-38fe-818f-2fee-ca3bf4243576@linux.intel.com>
+ <TWL7UR.KE812U8BYMG8@ljones.dev>
+ <f1f8ff7a-6f23-e284-b494-7df2f0dce1a4@roeck-us.net>
+ <M8X7UR.MPEZYPQ0PU4F1@ljones.dev>
+ <17fb02ff-e2d8-9c0b-3de6-670c82fee997@roeck-us.net>
+ <QB98UR.2KNZGZXO8NF12@ljones.dev>
+From:   Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: add support for ASUS
+ screenpad
+In-Reply-To: <QB98UR.2KNZGZXO8NF12@ljones.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Luke,
-
-On 5/5/23 06:30, Luke D. Jones wrote:
-> Adds support for the screenpad(-plus) found on a few ASUS laptops that have a main 16:9 or 16:10 screen and a shorter screen below the main but above the keyboard.
-> The support consists of:
-> - On off control
-> - Setting brightness from 0-255
+On 5/6/23 01:09, Luke Jones wrote:
 > 
-> There are some small quirks with this device when considering only the raw WMI methods:
-> 1. The Off method can only switch the device off
-> 2. Changing the brightness turns the device back on
-> 3. To turn the device back on the brightness must be > 1
-> 4. When the device is off the brightness can't be changed (so it is stored by the driver if device is off).
-> 5. Booting with a value of 0 brightness (retained by bios) means the bios will set a value of > 0, < 15 which is far too dim and was unexpected by testers. The compromise was to set the brightness to 60 which is a usable brightness if the module init brightness was under 15.
-> 6. When the device is off it is "unplugged"
 > 
-> All of the above points are addressed within the patch to create a good user experience and keep within user expectations.
+> On Fri, May 5 2023 at 21:43:44 -0700, Guenter Roeck <linux@roeck-us.net> wrote:
+>> On 5/5/23 20:48, Luke Jones wrote:
+>>>
+>>>
+>>> On Fri, May 5 2023 at 18:30:36 -0700, Guenter Roeck <linux@roeck-us.net> wrote:
+>>>> On 5/5/23 16:43, Luke Jones wrote:
+>>>>>
+>>>>>
+>>>>> On Fri, May 5 2023 at 16:08:16 +0300, Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
+>>>>>> On Fri, 5 May 2023, Luke D. Jones wrote:
+>>>>>>
+>>>>>>>  Add support for the WMI methods used to turn off and adjust the
+>>>>>>>  brightness of the secondary "screenpad" device found on some high-end
+>>>>>>>  ASUS laptops like the GX650P series and others.
+>>>>>>>
+>>>>>>>  These methods are utilised in a new backlight device named:
+>>>>>>>  - asus_screenpad
+>>>>>>>
+>>>>>>>  Signed-off-by: Luke D. Jones <luke@ljones.dev>
+>>>>>>>  ---
+>>>>>>>   .../ABI/testing/sysfs-platform-asus-wmi       |   2 +-
+>>>>>>>   drivers/platform/x86/asus-wmi.c               | 132 ++++++++++++++++++
+>>>>>>>   drivers/platform/x86/asus-wmi.h               |   1 +
+>>>>>>>   include/linux/platform_data/x86/asus-wmi.h    |   4 +
+>>>>>>>   4 files changed, 138 insertions(+), 1 deletion(-)
+>>>>>>>
+>>>>>>>  diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+>>>>>>>  index a77a004a1baa..df9817c6233a 100644
+>>>>>>>  --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
+>>>>>>>  +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+>>>>>>>  @@ -97,4 +97,4 @@ Contact:    "Luke Jones" <luke@ljones.dev>
+>>>>>>>   Description:
+>>>>>>>           Enable an LCD response-time boost to reduce or remove ghosting:
+>>>>>>>               * 0 - Disable,
+>>>>>>>  -            * 1 - Enable
+>>>>>>>  +            * 1 - Enable
+>>>>>>>  \ No newline at end of file
+>>>>>>
+>>>>>> Spurious change?
+>>>>>
+>>>>> Indeed it is. Not sure how that occurred.
+>>>>>
+>>>>>>
+>>>>>>>  diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+>>>>>>>  index 1038dfdcdd32..0528eef02ef7 100644
+>>>>>>>  --- a/drivers/platform/x86/asus-wmi.c
+>>>>>>>  +++ b/drivers/platform/x86/asus-wmi.c
+>>>>>>>  @@ -200,6 +200,7 @@ struct asus_wmi {
+>>>>>>>
+>>>>>>>       struct input_dev *inputdev;
+>>>>>>>       struct backlight_device *backlight_device;
+>>>>>>>  +    struct backlight_device *screenpad_backlight_device;
+>>>>>>>       struct platform_device *platform_device;
+>>>>>>>
+>>>>>>>       struct led_classdev wlan_led;
+>>>>>>>  @@ -3208,6 +3209,129 @@ static int is_display_toggle(int code)
+>>>>>>>       return 0;
+>>>>>>>   }
+>>>>>>>
+>>>>>>>  +/* Screenpad backlight */
+>>>>>>>  +
+>>>>>>>  +static int read_screenpad_backlight_power(struct asus_wmi *asus)
+>>>>>>>  +{
+>>>>>>>  +    int ret = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_SCREENPAD_POWER);
+>>>>>>
+>>>>>> Please move this to own line because now you have the extra newline
+>>>>>> in between the call and error handling.
+>>>>>
+>>>>> I don't understand what you mean sorry. Remove the new line or:
+>>>>> int ret;
+>>>>> ret = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_SCREENPAD_POWER);
+>>>>>
+>>>>>>
+>>>>>>>  +
+>>>>>>>  +    if (ret < 0)
+>>>>>>>  +        return ret;
+>>>>>>>  +    /* 1 == powered */
+>>>>>>>  +    return ret ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
+>>>>>>>  +}
+>>>>>>>  +
+>>>>>>>  +static int read_screenpad_brightness(struct backlight_device *bd)
+>>>>>>>  +{
+>>>>>>>  +    struct asus_wmi *asus = bl_get_data(bd);
+>>>>>>>  +    u32 retval;
+>>>>>>>  +    int err;
+>>>>>>>  +
+>>>>>>>  +    err = read_screenpad_backlight_power(asus);
+>>>>>>>  +    if (err < 0)
+>>>>>>>  +        return err;
+>>>>>>>  +    /* The device brightness can only be read if powered, so return stored */
+>>>>>>>  +    if (err == FB_BLANK_POWERDOWN)
+>>>>>>>  +        return asus->driver->screenpad_brightness;
+>>>>>>>  +
+>>>>>>>  +    err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT, &retval);
+>>>>>>>  +    if (err < 0)
+>>>>>>>  +        return err;
+>>>>>>>  +
+>>>>>>>  +    return retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
+>>>>>>>  +}
+>>>>>>>  +
+>>>>>>>  +static int update_screenpad_bl_status(struct backlight_device *bd)
+>>>>>>>  +{
+>>>>>>>  +    struct asus_wmi *asus = bl_get_data(bd);
+>>>>>>>  +    int power, err = 0;
+>>>>>>>  +    u32 ctrl_param;
+>>>>>>>  +
+>>>>>>>  +    power = read_screenpad_backlight_power(asus);
+>>>>>>>  +    if (power == -ENODEV)
+>>>>>>>  +        return err;
+>>>>>>
+>>>>>> Just return 0. Or is there perhaps something wrong/missing here?
+>>>>>
+>>>>> I thought the correct thing was to return any possible error state (here, anything less than 0 would be an error, right?)
+>>>>>
+>>>>
+>>>> Well, yes, but you are not returning an error. You are returning 'err'
+>>>> which is 0 at this point. So, at the very least, this code is (very)
+>>>> misleading since it suggests that it would return some error
+>>>> (as saved in the 'err' variable) when it doesn't.
+>>>>
+>>>> Guenter
+>>>>
+>>>
+>>> Oh! Right I see it now, I'm sorry, I just kept skipping over it somehow.
+>>>
+>>> So I should change to:
+>>>      power = read_screenpad_backlight_power(asus);
+>>>      if (power < 0)
+>>>          return power;
+>>>
+>>> Is that acceptable?
+>>>
+>>
+>> That depends on what the code is supposed to do. Right now it is
+>> "If read_screenpad_backlight_power() returns -ENODEV, stop and return
+>> no error (let the rest of the code continue). If it returns another error,
+>> return it".
+>> Changing the code as suggested above changes the semantics to
+>> "If read_screenpad_backlight_power() returns an error, always return it".
+>>
+>> Looking at the patch, I don't have a definite answer.
+>> asus_screenpad_init() happily registers the backlight if
+>> read_screenpad_backlight_power() returns -ENODEV. One could argue that
+>> the other functions should thus handle that situation gracefully as well,
+>> but read_screenpad_brightness() does return -ENODEV in that situation.
+>> I think you should decide how you want to handle that case and handle
+>> it consistently across all functions.
+>>
+>> Either case, there is another problem in asus_screenpad_init():
+>> If read_screenpad_brightness() fails, the function returns an error,
+>> but does not unregister the backlight device.
+>>
+>> Guenter
+>>
 > 
-> Changelog:
-> - V2
->   - Complete refactor to use as a backlight device
+> 
+> Thanks mate. I was working on this between my workload and getting a few users to test. My first priority was to get the thing working for them and as such I didn't put much thought in to errors and consistency.
+> 
+> I think since `asus_screenpad_init()` is not called unless the brightness WMI method exists, then it and the other functions should return all errors if the power WMI method fails at all since the device functionality is compromised. If there is a hardware change in this aspect we could revisit it then.
+> 
+That would suggest that asus_screenpad_init() should also abort on all errors
+and not assign a power of 'FB_BLANK_UNBLANK' if it is unreadable.
 
-Thank you on your work for this.
+>  > Either case, there is another problem in asus_screenpad_init():
+>  > If read_screenpad_brightness() fails, the function returns an error,
+>  > but does not unregister the backlight device.
+> 
+> I wasn't entirely sure how to handle this. Mostly I followed what the existing backlight code was doing, I've now added a `goto fail_screenpad;` with:
+> fail_screenpad:
+>      if (asus->screenpad_backlight_device)
+>          asus_screenpad_exit(asus);
+> 
+> really I'm relying on others to guide me with this - I know I've got a fair few patches in these days but they've been mostly simple things except for TUF RGB, and I've had to learn a bunch of stuff as I go.
+> 
+> I'll await your response before I send in a V3.
+> 
 
-Unfortunately I did not get a chance to react to the v1 posting and
-the remarks to switch to using /sys/class/backlight there before you
-posted this v2.
+Personally I'd first try to use devm_backlight_device_register().
+As for error handling, the code would normally be something like
 
-Technically the remark to use /sys/class/backlight for this is
-completely correct. But due to the way how userspace uses
-/sys/class/backlight this is a problematic.
+fail_screenpad:
+	backlight_device_unregister(asus->screenpad_backlight_device);
 
-Userspace basically always assumes there is only 1 LCD panel
-and it then looks at /sys/class/backlight and picks 1
-/sys/class/backlight entry and uses that for the brightness
-slider in the desktop-environment UI / system-menu as well
-as to handle brightness up/down keyboard hotkey presses.
+or better
 
-In the (recent) past the kernel used to register e.g.
-both /sys/class/backlight/acpi_video0 and
-/sys/class/backlight/intel_backlight
+fail_screenpad:
+	backlight_device_unregister(bd);
 
-For ACPI resp. direct hw control of the LCD panel backlight
-(so both control the same backlight, sometimes both work
-sometimes only 1 works).
+I don't know why you would want to check if asus->screenpad_backlight
+is NULL because the code would never be called with it being NULL.
 
-Userspace uses the backlight-type to determine which backlight
-class to use, using (for GNOME, but I believe everywhere) the
-following preference order:
+Note that I don't see why
+	asus->screenpad_backlight_device = NULL;
+in asus_screenpad_exit() would be necessary.
 
-1. First look for "firmware" type backlight devices (like acpi_video0)
-2. Then try "platform" type backlight devices
-3. Last try "raw" type backlight devices
-
-And to make things work the kernel has been hiding the "acpi_video0"
-entry in cases where it is known that we need the "raw" aka native
-type backlight.
-
-Luke you seem to already be partly aware of this, because the patch
-now has this:
-
-	props.type = BACKLIGHT_RAW; /* ensure this bd is last to be picked */
-
-but almost all modern laptops exclusively use the raw/native type
-for backlight control of the main LCD panel.
-
-So now we end up with 2 "raw" type backlight devices and if
-e.g. gnome-settings-daemon picks the right one now sort of
-is left to luck.
-
-Well that is not entirely true, at least gnome-settings-daemon
-prefers raw backlight devices where the parent has an "enabled"
-sysfs attribute (it expects the parent to be a drm_connector
-object) and where that enabled attribute reads as "enabled".
-
-This is done for hybrid-gfx laptops where there already may
-be 2 raw backlight-class devices, 1 for each GPU but only
-1 of the 2 drm_connectors going to the main LCD panel should
-actually show as enabled.
-
-So typing all this out I guess we could go ahead with using
-the backlight class for this after all, but this relies
-on userspace preferring raw backlight-class devices
-with a drm_connector-object parent which show as being
-enabled.
-
-Any userspace code which does not do the parent has
-an enabled attr reading "enabled" or a similar check
-will end up picking a random backlight class device
-as control for the main panel brightness which will not
-always end well. So this all is a bit fragile ...
-
-And I'm not sure what is the best thing to do here.
-
-Barnabás, Ilpo, Guenter, any comments on this ?
-
-Regards,
-
-Hans
-
-
-p.s.
-
-Note I'm working on allowing brightness control for
-multiple screens in a sane way, see:
-
-https://lore.kernel.org/dri-devel/b61d3eeb-6213-afac-2e70-7b9791c86d2e@redhat.com/
-
-The last few kernel-cycles I have landed a refactor/cleanup
-of the existing backlight code so that we only ever
-register 1 /sys/class/backlight entry for the main LCD
-panel, instead of having e.g. both acpi_video0 + intel_backlight
-and relying on userspace preferring acpi_video0 in that case.
-
-And when I can find time for it I plan to implement
-the API in the linked RFC, which allows properly
-dealing with all this.
-
-Luke, question how does the second/exta panel look
-from an outputting video to it pov ?  Does it show
-up as an extra screen connected to a drm_connector
-on one of the GPUs. IOW can it be used with standard
-kernel-modesetting APIs ?
+Guenter
 
