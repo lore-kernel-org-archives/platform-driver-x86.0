@@ -2,193 +2,206 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 524DEC77B75
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 May 2023 11:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A79AC77B73
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 May 2023 11:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231956AbjEFLlW (ORCPT
+        id S231949AbjEFLxE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 6 May 2023 07:41:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57558 "EHLO
+        Sat, 6 May 2023 07:53:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231450AbjEFLlV (ORCPT
+        with ESMTP id S231678AbjEFLxD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 6 May 2023 07:41:21 -0400
-Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE658A53
-        for <platform-driver-x86@vger.kernel.org>; Sat,  6 May 2023 04:41:20 -0700 (PDT)
-Received: by mail-qv1-xf2c.google.com with SMTP id 6a1803df08f44-61b5b4df8baso23519286d6.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 06 May 2023 04:41:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683373279; x=1685965279;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XyEKePZDBGEn/WtsE6t3vs5F//I0eroqrsCJjRMf4Vo=;
-        b=r/pQAwgXb4ewrRgLJN+gkLWyZZckxOcNZ5sNYp5tl8V6xQgSzD08mX+MGQChho79MF
-         7lSdeE/BKzgxtPnCOyX7LfY4A2qoTFVQetJk2y5ndf7LVkKMSuBL9hZ6LvqJNSDFrEVt
-         m9uf0tj050n28e6JrSSZZzCmEN7KKcaQijbYaxkzDUlU7+cRbeFLElE1JeK0qqvvVEhw
-         aYJEwCFPWMnXKPmwRe+mqgF1aU8Z/1vqyHU8sUdGR8tsvV7c+4EhyAsyZKp18rpKKG9N
-         dbu63TDLZr+7aHT2nNzUBKmJGqtoB3qVMVvU1hmOiKpQ58ESdoko1JEc7DVAtTNsbJCC
-         7FKQ==
+        Sat, 6 May 2023 07:53:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861928A6C
+        for <platform-driver-x86@vger.kernel.org>; Sat,  6 May 2023 04:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683373934;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=d9HYJ21X01Eu+hi6xs2fwuX9W4E4k8z5R0PudPWWgj0=;
+        b=XXU2lWLQXnbDrJylYG2gOcpNTGPB7N8mluddCf/vLBnwG6QR3k0N/ssOxDpdXhagpw8csx
+        fQaIK62lBr6b1WA0KdiGyGxs+m+hUVNsltQeG2TCMeTYjE9tr8/+IRU2PPrbGBJdd3WW1T
+        FWm8KSdq608MwEDaAVJM4cp9+LChhzo=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-400-ct6U6BRlPX6SNOMj_2n3ww-1; Sat, 06 May 2023 07:52:13 -0400
+X-MC-Unique: ct6U6BRlPX6SNOMj_2n3ww-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-965b73d8b7eso256878666b.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 06 May 2023 04:52:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683373279; x=1685965279;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XyEKePZDBGEn/WtsE6t3vs5F//I0eroqrsCJjRMf4Vo=;
-        b=h31/SreYcdgi2vdMhV/Hr8Q4cVSJoxOFAL+8DNzKzj5Aidx0KdqT5dlxWCx+utI+ns
-         wWkiMIC5M5YNaCnPCxG3/xstC7ifhu31tvoD52MzCyjVdt/fcXbv4Cec/7NKsuuv8M3J
-         DyJw5FV2lCRVYSvcijGb/2vi7mCcw4Z3/f4WT20Dxpwep66skih0XNLCa92mWZK16KVJ
-         CnB0v26P71RyizJIWXKfXd1CZUgRhjw9QK0CMXpcZM8PMaDptPont+5A+XP8N/5+C8rq
-         AKk4fcsyNJbeajHkglIH37hDhv+jliB6MIObIJCjJW2GH4+fmzg5/vG5ivFdaN07InKI
-         Em9A==
-X-Gm-Message-State: AC+VfDyTQ1PBFWT3jYK1M5st2M5F9yjXOIBYJ8RUdN9u1g+og6nPzQGq
-        tonrlUMvt67AUaW+ZlGgA+uh89Gn7ypdPwBMX3E=
-X-Google-Smtp-Source: ACHHUZ4QcAmIbgbSBHgC3BISVefoGojJIG8ECEXbmoFQVo7cWHXlYyyHW840j+vHQXnzqRqdcSgaJ5Akf/TBaQPU5lQ=
-X-Received: by 2002:a05:6214:1c42:b0:616:516e:f3ea with SMTP id
- if2-20020a0562141c4200b00616516ef3eamr6958357qvb.51.1683373279074; Sat, 06
- May 2023 04:41:19 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683373932; x=1685965932;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=d9HYJ21X01Eu+hi6xs2fwuX9W4E4k8z5R0PudPWWgj0=;
+        b=AEHwkPOQ28FKF9SAzbuKAUGHvG96u8soWVzjCA8jJOoov4ygMAF+XIbS3GdkJ42DlN
+         hI+T3L1EaFgvmLoaaeX4vgwxmDfQNAt+QAXtwjxLBqfmPIOwCmMRZpWYYhy0X4jCUnjX
+         Oyu4MlJ5XeZ9DePBkTKyOUKxJjTcE3+OB7j+iFw3Vqz2b9r/mQZGBh87yPdVb9UmTpVg
+         3fMkb0a9lDM5qJK6er9IlJIooG7qVL421aNJpFIeI395p6CEu+DqrtZZ7/bkPTbJX9nu
+         X3JHRpm0G3feIjCFLpyqCZIsHZDsfHKCRb8IG7q7/fQG4GxUv9R6TNFXeokAHFxh4qp0
+         Ssyg==
+X-Gm-Message-State: AC+VfDw/1OAieIYRHctycksA9TqcyuRxr7iS630Qo0vqZgkHUbgHszUR
+        wpJ1a1hPN43b8gDavWeQlFCAVOl49wM4lb/O4wZeJTxuGgNofGuwoiapN4OqDQ9455Z71XC/A0t
+        Fx32Zmzc5ysHQQCJG8sMr6WyXqf0BVnLaslu5lL+r1Q==
+X-Received: by 2002:a17:907:7e91:b0:94f:967d:e4f with SMTP id qb17-20020a1709077e9100b0094f967d0e4fmr4207850ejc.39.1683373932056;
+        Sat, 06 May 2023 04:52:12 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5EqdCSAFLRdaZFoDK9jX3YTYbb6j8tTgXmxZqtWYWcFs4n/b0DcHlCQm9mo7gv6JvjMEmOQw==
+X-Received: by 2002:a17:907:7e91:b0:94f:967d:e4f with SMTP id qb17-20020a1709077e9100b0094f967d0e4fmr4207837ejc.39.1683373931757;
+        Sat, 06 May 2023 04:52:11 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id q16-20020a1709060e5000b009662c57b4ffsm136695eji.96.2023.05.06.04.52.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 06 May 2023 04:52:11 -0700 (PDT)
+Message-ID: <4be2cc57-59b9-24e2-fd10-f2af175ff518@redhat.com>
+Date:   Sat, 6 May 2023 13:52:10 +0200
 MIME-Version: 1.0
-References: <20230505205901.42649-1-hdegoede@redhat.com> <20230505205901.42649-2-hdegoede@redhat.com>
-In-Reply-To: <20230505205901.42649-2-hdegoede@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 6 May 2023 14:40:43 +0300
-Message-ID: <CAHp75VfFMDA=ABLhopY+2Eofm4rdJch-f-ZxVRz6OOa7U=NWJw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] platform/x86: x86-android-tablets: Add support for
- extra buttons on Cyberbook T116
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2 0/1] platform/x86: asus-wmi: add support for ASUS
+ screenpad
+Content-Language: en-US, nl
+To:     "Luke D. Jones" <luke@ljones.dev>,
+        platform-driver-x86@vger.kernel.org,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, acpi4asus-user@lists.sourceforge.net,
+        corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com,
+        linux@roeck-us.net
+References: <20230505043013.2622603-1-luke@ljones.dev>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230505043013.2622603-1-luke@ljones.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, May 5, 2023 at 11:59=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
- wrote:
->
-> The Cyberbook T116 rugged tablet comes in both Windows and Android versio=
-ns
-> and even on the Android version the DSDT is mostly sane. This tablet has
-> 2 extra general purpose buttons in the row with the power + volume-button=
-s,
-> labeled P and F.
->
-> Use the x86-android-tablets infra to create a gpio-button device for thes=
-e
-> 2 extra buttons.
+Hi Luke,
 
-For both
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On 5/5/23 06:30, Luke D. Jones wrote:
+> Adds support for the screenpad(-plus) found on a few ASUS laptops that have a main 16:9 or 16:10 screen and a shorter screen below the main but above the keyboard.
+> The support consists of:
+> - On off control
+> - Setting brightness from 0-255
+> 
+> There are some small quirks with this device when considering only the raw WMI methods:
+> 1. The Off method can only switch the device off
+> 2. Changing the brightness turns the device back on
+> 3. To turn the device back on the brightness must be > 1
+> 4. When the device is off the brightness can't be changed (so it is stored by the driver if device is off).
+> 5. Booting with a value of 0 brightness (retained by bios) means the bios will set a value of > 0, < 15 which is far too dim and was unexpected by testers. The compromise was to set the brightness to 60 which is a usable brightness if the module init brightness was under 15.
+> 6. When the device is off it is "unplugged"
+> 
+> All of the above points are addressed within the patch to create a good user experience and keep within user expectations.
+> 
+> Changelog:
+> - V2
+>   - Complete refactor to use as a backlight device
 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  .../platform/x86/x86-android-tablets/dmi.c    | 11 ++++++
->  .../platform/x86/x86-android-tablets/other.c  | 39 +++++++++++++++++++
->  .../x86-android-tablets/x86-android-tablets.h |  1 +
->  3 files changed, 51 insertions(+)
->
-> diff --git a/drivers/platform/x86/x86-android-tablets/dmi.c b/drivers/pla=
-tform/x86/x86-android-tablets/dmi.c
-> index 07acf0978325..2bda152b4a11 100644
-> --- a/drivers/platform/x86/x86-android-tablets/dmi.c
-> +++ b/drivers/platform/x86/x86-android-tablets/dmi.c
-> @@ -58,6 +58,17 @@ const struct dmi_system_id x86_android_tablet_ids[] __=
-initconst =3D {
->                 },
->                 .driver_data =3D (void *)&chuwi_hi8_info,
->         },
-> +       {
-> +               /* Cyberbook T116 Android version */
-> +               .matches =3D {
-> +                       DMI_MATCH(DMI_BOARD_VENDOR, "Default string"),
-> +                       DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-> +                       /* Above strings are much too generic, also match=
- on SKU + BIOS date */
-> +                       DMI_MATCH(DMI_PRODUCT_SKU, "20170531"),
-> +                       DMI_MATCH(DMI_BIOS_DATE, "07/12/2017"),
-> +               },
-> +               .driver_data =3D (void *)&cyberbook_t116_info,
-> +       },
->         {
->                 /* CZC P10T */
->                 .ident =3D "CZC ODEON TPC-10 (\"P10T\")",
-> diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/p=
-latform/x86/x86-android-tablets/other.c
-> index 4d54c89e6ca2..e79549c6aae1 100644
-> --- a/drivers/platform/x86/x86-android-tablets/other.c
-> +++ b/drivers/platform/x86/x86-android-tablets/other.c
-> @@ -197,6 +197,45 @@ const struct x86_dev_info chuwi_hi8_info __initconst=
- =3D {
->         .init =3D chuwi_hi8_init,
->  };
->
-> +/*
-> + * Cyberbook T116 Android version
-> + * This comes in both Windows and Android versions and even on Android
-> + * the DSDT is mostly sane. This tablet has 2 extra general purpose butt=
-ons
-> + * in the button row with the power + volume-buttons labeled P and F.
-> + * Use the x86-android-tablets infra to create a gpio-button device for =
-these.
-> + */
-> +static const struct x86_gpio_button cyberbook_t116_buttons[] __initconst=
- =3D {
-> +       {
-> +               .button =3D {
-> +                       .code =3D KEY_PROG1,
-> +                       .active_low =3D true,
-> +                       .desc =3D "prog1_key",
-> +                       .type =3D EV_KEY,
-> +                       .wakeup =3D false,
-> +                       .debounce_interval =3D 50,
-> +               },
-> +               .chip =3D "INT33FF:00",
-> +               .pin =3D 30,
-> +       },
-> +       {
-> +               .button =3D {
-> +                       .code =3D KEY_PROG2,
-> +                       .active_low =3D true,
-> +                       .desc =3D "prog2_key",
-> +                       .type =3D EV_KEY,
-> +                       .wakeup =3D false,
-> +                       .debounce_interval =3D 50,
-> +               },
-> +               .chip =3D "INT33FF:03",
-> +               .pin =3D 48,
-> +       },
-> +};
-> +
-> +const struct x86_dev_info cyberbook_t116_info __initconst =3D {
-> +       .gpio_button =3D cyberbook_t116_buttons,
-> +       .gpio_button_count =3D ARRAY_SIZE(cyberbook_t116_buttons),
-> +};
-> +
->  #define CZC_EC_EXTRA_PORT      0x68
->  #define CZC_EC_ANDROID_KEYS    0x63
->
-> diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets=
-.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-> index 8f04a052eada..e46e1128acc8 100644
-> --- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-> +++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-> @@ -94,6 +94,7 @@ extern const struct x86_dev_info advantech_mica_071_inf=
-o;
->  extern const struct x86_dev_info asus_me176c_info;
->  extern const struct x86_dev_info asus_tf103c_info;
->  extern const struct x86_dev_info chuwi_hi8_info;
-> +extern const struct x86_dev_info cyberbook_t116_info;
->  extern const struct x86_dev_info czc_p10t;
->  extern const struct x86_dev_info lenovo_yogabook_x90_info;
->  extern const struct x86_dev_info lenovo_yogabook_x91_info;
-> --
-> 2.40.1
->
+Thank you on your work for this.
+
+Unfortunately I did not get a chance to react to the v1 posting and
+the remarks to switch to using /sys/class/backlight there before you
+posted this v2.
+
+Technically the remark to use /sys/class/backlight for this is
+completely correct. But due to the way how userspace uses
+/sys/class/backlight this is a problematic.
+
+Userspace basically always assumes there is only 1 LCD panel
+and it then looks at /sys/class/backlight and picks 1
+/sys/class/backlight entry and uses that for the brightness
+slider in the desktop-environment UI / system-menu as well
+as to handle brightness up/down keyboard hotkey presses.
+
+In the (recent) past the kernel used to register e.g.
+both /sys/class/backlight/acpi_video0 and
+/sys/class/backlight/intel_backlight
+
+For ACPI resp. direct hw control of the LCD panel backlight
+(so both control the same backlight, sometimes both work
+sometimes only 1 works).
+
+Userspace uses the backlight-type to determine which backlight
+class to use, using (for GNOME, but I believe everywhere) the
+following preference order:
+
+1. First look for "firmware" type backlight devices (like acpi_video0)
+2. Then try "platform" type backlight devices
+3. Last try "raw" type backlight devices
+
+And to make things work the kernel has been hiding the "acpi_video0"
+entry in cases where it is known that we need the "raw" aka native
+type backlight.
+
+Luke you seem to already be partly aware of this, because the patch
+now has this:
+
+	props.type = BACKLIGHT_RAW; /* ensure this bd is last to be picked */
+
+but almost all modern laptops exclusively use the raw/native type
+for backlight control of the main LCD panel.
+
+So now we end up with 2 "raw" type backlight devices and if
+e.g. gnome-settings-daemon picks the right one now sort of
+is left to luck.
+
+Well that is not entirely true, at least gnome-settings-daemon
+prefers raw backlight devices where the parent has an "enabled"
+sysfs attribute (it expects the parent to be a drm_connector
+object) and where that enabled attribute reads as "enabled".
+
+This is done for hybrid-gfx laptops where there already may
+be 2 raw backlight-class devices, 1 for each GPU but only
+1 of the 2 drm_connectors going to the main LCD panel should
+actually show as enabled.
+
+So typing all this out I guess we could go ahead with using
+the backlight class for this after all, but this relies
+on userspace preferring raw backlight-class devices
+with a drm_connector-object parent which show as being
+enabled.
+
+Any userspace code which does not do the parent has
+an enabled attr reading "enabled" or a similar check
+will end up picking a random backlight class device
+as control for the main panel brightness which will not
+always end well. So this all is a bit fragile ...
+
+And I'm not sure what is the best thing to do here.
+
+Barnabás, Ilpo, Guenter, any comments on this ?
+
+Regards,
+
+Hans
 
 
---=20
-With Best Regards,
-Andy Shevchenko
+p.s.
+
+Note I'm working on allowing brightness control for
+multiple screens in a sane way, see:
+
+https://lore.kernel.org/dri-devel/b61d3eeb-6213-afac-2e70-7b9791c86d2e@redhat.com/
+
+The last few kernel-cycles I have landed a refactor/cleanup
+of the existing backlight code so that we only ever
+register 1 /sys/class/backlight entry for the main LCD
+panel, instead of having e.g. both acpi_video0 + intel_backlight
+and relying on userspace preferring acpi_video0 in that case.
+
+And when I can find time for it I plan to implement
+the API in the linked RFC, which allows properly
+dealing with all this.
+
+Luke, question how does the second/exta panel look
+from an outputting video to it pov ?  Does it show
+up as an extra screen connected to a drm_connector
+on one of the GPUs. IOW can it be used with standard
+kernel-modesetting APIs ?
+
