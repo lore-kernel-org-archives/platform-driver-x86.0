@@ -2,143 +2,193 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDFCC77B75
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 May 2023 11:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524DEC77B75
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 May 2023 11:41:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231190AbjEFL0t (ORCPT
+        id S231956AbjEFLlW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 6 May 2023 07:26:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53318 "EHLO
+        Sat, 6 May 2023 07:41:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229872AbjEFL0s (ORCPT
+        with ESMTP id S231450AbjEFLlV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 6 May 2023 07:26:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C26F8A56
-        for <platform-driver-x86@vger.kernel.org>; Sat,  6 May 2023 04:26:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683372367;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gUcUVRlRH6PyFTG3mB3fIiakfk06mGOT19vfGJUDy5w=;
-        b=QQPvaMgAWRKc3fKZ6BQhaNVZy1qTlPp309nKJMO31AmeeGZ3LEhLZz6VtAVbd0VvSJkLJu
-        B961M1mZt/gK/im85QTsoXiJvvPUyetHqNNrtlqYdvHxJLEJqt5Rk6VbAwXg+dqyKD8i4o
-        THsuyzLW3QIOXvuF19Q0LTnPcUdNfUg=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-672-H5lk42qXMg2Ec0UMlWY-qA-1; Sat, 06 May 2023 07:26:05 -0400
-X-MC-Unique: H5lk42qXMg2Ec0UMlWY-qA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9662960d1e4so10806066b.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 06 May 2023 04:26:05 -0700 (PDT)
+        Sat, 6 May 2023 07:41:21 -0400
+Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE658A53
+        for <platform-driver-x86@vger.kernel.org>; Sat,  6 May 2023 04:41:20 -0700 (PDT)
+Received: by mail-qv1-xf2c.google.com with SMTP id 6a1803df08f44-61b5b4df8baso23519286d6.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 06 May 2023 04:41:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683373279; x=1685965279;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XyEKePZDBGEn/WtsE6t3vs5F//I0eroqrsCJjRMf4Vo=;
+        b=r/pQAwgXb4ewrRgLJN+gkLWyZZckxOcNZ5sNYp5tl8V6xQgSzD08mX+MGQChho79MF
+         7lSdeE/BKzgxtPnCOyX7LfY4A2qoTFVQetJk2y5ndf7LVkKMSuBL9hZ6LvqJNSDFrEVt
+         m9uf0tj050n28e6JrSSZZzCmEN7KKcaQijbYaxkzDUlU7+cRbeFLElE1JeK0qqvvVEhw
+         aYJEwCFPWMnXKPmwRe+mqgF1aU8Z/1vqyHU8sUdGR8tsvV7c+4EhyAsyZKp18rpKKG9N
+         dbu63TDLZr+7aHT2nNzUBKmJGqtoB3qVMVvU1hmOiKpQ58ESdoko1JEc7DVAtTNsbJCC
+         7FKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683372364; x=1685964364;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gUcUVRlRH6PyFTG3mB3fIiakfk06mGOT19vfGJUDy5w=;
-        b=keiRAXt/TcpnKsWGoLsRaujaPzBWXyDavettbVTFAoUuSiVA62LwT0Nxtz8dHQkTVC
-         QzimJQiwwUlHT47RG//dnc9kmCpsEYlrB/1TrfRHKSLJ+GHPqCyPkLgHaGL0hwgPoggp
-         7hqb+vPDkk8iea86aKPfJ3oswfSyjZxtE2V8lNZOxDUoydTLukTCb5lmE3xj1Er0hsu8
-         UNuvgKC5maGAVcP6vNspuPhxXOr693cezncBWRJlSgZI3npthy/VHPxQtf6jEsGP3lv6
-         nyOUUMN2ElK4KUgMnfDgUfqffsLpaMJ3P5MvZh/lNEXT2h+X3o65XUQopQw/nDbcwf/+
-         ftRg==
-X-Gm-Message-State: AC+VfDwZeEeVnaP93W1m0JJjQi/RbRDPy+klCzcwuoraqWtQQlRPW9Jh
-        WKCtmoZmLPQUGXoAplgUFLKstnJ9eS40eDob9U1LoM3gPz7PVtUt/iAP0HW3njyrPfrn5oAY2+v
-        AHXM/pKjPOHZy6bVzLY8FLoBFPvRqu7lNyw==
-X-Received: by 2002:a17:907:1c85:b0:92b:6b6d:2daf with SMTP id nb5-20020a1709071c8500b0092b6b6d2dafmr3850932ejc.77.1683372364538;
-        Sat, 06 May 2023 04:26:04 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7JcRbKIXVw+F4IF/Wn7eZgU785K940V++/yjd6HAjt0oWhsOsDW4IxAiCxc9jZZsSxpSvrPg==
-X-Received: by 2002:a17:907:1c85:b0:92b:6b6d:2daf with SMTP id nb5-20020a1709071c8500b0092b6b6d2dafmr3850925ejc.77.1683372364261;
-        Sat, 06 May 2023 04:26:04 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id hy19-20020a1709068a7300b00961277a426dsm2167879ejc.205.2023.05.06.04.26.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 May 2023 04:26:03 -0700 (PDT)
-Message-ID: <b61d7ca2-a1db-05a1-fee5-b68e0e94b99f@redhat.com>
-Date:   Sat, 6 May 2023 13:26:02 +0200
+        d=1e100.net; s=20221208; t=1683373279; x=1685965279;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XyEKePZDBGEn/WtsE6t3vs5F//I0eroqrsCJjRMf4Vo=;
+        b=h31/SreYcdgi2vdMhV/Hr8Q4cVSJoxOFAL+8DNzKzj5Aidx0KdqT5dlxWCx+utI+ns
+         wWkiMIC5M5YNaCnPCxG3/xstC7ifhu31tvoD52MzCyjVdt/fcXbv4Cec/7NKsuuv8M3J
+         DyJw5FV2lCRVYSvcijGb/2vi7mCcw4Z3/f4WT20Dxpwep66skih0XNLCa92mWZK16KVJ
+         CnB0v26P71RyizJIWXKfXd1CZUgRhjw9QK0CMXpcZM8PMaDptPont+5A+XP8N/5+C8rq
+         AKk4fcsyNJbeajHkglIH37hDhv+jliB6MIObIJCjJW2GH4+fmzg5/vG5ivFdaN07InKI
+         Em9A==
+X-Gm-Message-State: AC+VfDyTQ1PBFWT3jYK1M5st2M5F9yjXOIBYJ8RUdN9u1g+og6nPzQGq
+        tonrlUMvt67AUaW+ZlGgA+uh89Gn7ypdPwBMX3E=
+X-Google-Smtp-Source: ACHHUZ4QcAmIbgbSBHgC3BISVefoGojJIG8ECEXbmoFQVo7cWHXlYyyHW840j+vHQXnzqRqdcSgaJ5Akf/TBaQPU5lQ=
+X-Received: by 2002:a05:6214:1c42:b0:616:516e:f3ea with SMTP id
+ if2-20020a0562141c4200b00616516ef3eamr6958357qvb.51.1683373279074; Sat, 06
+ May 2023 04:41:19 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2 18/19] platform/x86: lenovo-yogabook: Add keyboard
- backlight control to platform driver
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+References: <20230505205901.42649-1-hdegoede@redhat.com> <20230505205901.42649-2-hdegoede@redhat.com>
+In-Reply-To: <20230505205901.42649-2-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 6 May 2023 14:40:43 +0300
+Message-ID: <CAHp75VfFMDA=ABLhopY+2Eofm4rdJch-f-ZxVRz6OOa7U=NWJw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] platform/x86: x86-android-tablets: Add support for
+ extra buttons on Cyberbook T116
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20230430165807.472798-1-hdegoede@redhat.com>
- <20230430165807.472798-19-hdegoede@redhat.com>
- <20230504165307.tydqlk6sml7sp5qe@pengutronix.de>
- <CAHp75VdgFFk=q-=ZDiKwV02Tin19ZSmSS=fhwgRrE6v48s-u0w@mail.gmail.com>
- <20230505092111.qknupa2vooi7mqwl@pengutronix.de>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230505092111.qknupa2vooi7mqwl@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Uwe, Andy,
+On Fri, May 5, 2023 at 11:59=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+>
+> The Cyberbook T116 rugged tablet comes in both Windows and Android versio=
+ns
+> and even on the Android version the DSDT is mostly sane. This tablet has
+> 2 extra general purpose buttons in the row with the power + volume-button=
+s,
+> labeled P and F.
+>
+> Use the x86-android-tablets infra to create a gpio-button device for thes=
+e
+> 2 extra buttons.
 
-On 5/5/23 11:21, Uwe Kleine-König wrote:
-> On Fri, May 05, 2023 at 12:07:02PM +0300, Andy Shevchenko wrote:
->> On Thu, May 4, 2023 at 7:53 PM Uwe Kleine-König
->> <u.kleine-koenig@pengutronix.de> wrote:
->>> On Sun, Apr 30, 2023 at 06:58:06PM +0200, Hans de Goede wrote:
->>
->> ...
->>
->>> I don't know much about x86, but I think the table belongs to where this
->>> "80862289:00" device is created.
->>
->> Just for your information, it's in drivers/acpi/acpi_lpss.c.
-> 
-> Compared to drivers/platform/x86/lenovo-yogabook-wmi.c this file is
-> never compiled as a module and so patch #1 would become unnecessary.
-> 
-> That file also already has a pwm_lookup table.
+For both
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Right, the Cherry Trail SoCs in question have 2 PWM controllers
-the first controller is pretty much always used to control
-the brightness of the LCD screen. So we have a fixed pwm_lookup
-table for it there using the SoC's builtin display controller's
-device_name() as consumer-device-name.
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  .../platform/x86/x86-android-tablets/dmi.c    | 11 ++++++
+>  .../platform/x86/x86-android-tablets/other.c  | 39 +++++++++++++++++++
+>  .../x86-android-tablets/x86-android-tablets.h |  1 +
+>  3 files changed, 51 insertions(+)
+>
+> diff --git a/drivers/platform/x86/x86-android-tablets/dmi.c b/drivers/pla=
+tform/x86/x86-android-tablets/dmi.c
+> index 07acf0978325..2bda152b4a11 100644
+> --- a/drivers/platform/x86/x86-android-tablets/dmi.c
+> +++ b/drivers/platform/x86/x86-android-tablets/dmi.c
+> @@ -58,6 +58,17 @@ const struct dmi_system_id x86_android_tablet_ids[] __=
+initconst =3D {
+>                 },
+>                 .driver_data =3D (void *)&chuwi_hi8_info,
+>         },
+> +       {
+> +               /* Cyberbook T116 Android version */
+> +               .matches =3D {
+> +                       DMI_MATCH(DMI_BOARD_VENDOR, "Default string"),
+> +                       DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
+> +                       /* Above strings are much too generic, also match=
+ on SKU + BIOS date */
+> +                       DMI_MATCH(DMI_PRODUCT_SKU, "20170531"),
+> +                       DMI_MATCH(DMI_BIOS_DATE, "07/12/2017"),
+> +               },
+> +               .driver_data =3D (void *)&cyberbook_t116_info,
+> +       },
+>         {
+>                 /* CZC P10T */
+>                 .ident =3D "CZC ODEON TPC-10 (\"P10T\")",
+> diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/p=
+latform/x86/x86-android-tablets/other.c
+> index 4d54c89e6ca2..e79549c6aae1 100644
+> --- a/drivers/platform/x86/x86-android-tablets/other.c
+> +++ b/drivers/platform/x86/x86-android-tablets/other.c
+> @@ -197,6 +197,45 @@ const struct x86_dev_info chuwi_hi8_info __initconst=
+ =3D {
+>         .init =3D chuwi_hi8_init,
+>  };
+>
+> +/*
+> + * Cyberbook T116 Android version
+> + * This comes in both Windows and Android versions and even on Android
+> + * the DSDT is mostly sane. This tablet has 2 extra general purpose butt=
+ons
+> + * in the button row with the power + volume-buttons labeled P and F.
+> + * Use the x86-android-tablets infra to create a gpio-button device for =
+these.
+> + */
+> +static const struct x86_gpio_button cyberbook_t116_buttons[] __initconst=
+ =3D {
+> +       {
+> +               .button =3D {
+> +                       .code =3D KEY_PROG1,
+> +                       .active_low =3D true,
+> +                       .desc =3D "prog1_key",
+> +                       .type =3D EV_KEY,
+> +                       .wakeup =3D false,
+> +                       .debounce_interval =3D 50,
+> +               },
+> +               .chip =3D "INT33FF:00",
+> +               .pin =3D 30,
+> +       },
+> +       {
+> +               .button =3D {
+> +                       .code =3D KEY_PROG2,
+> +                       .active_low =3D true,
+> +                       .desc =3D "prog2_key",
+> +                       .type =3D EV_KEY,
+> +                       .wakeup =3D false,
+> +                       .debounce_interval =3D 50,
+> +               },
+> +               .chip =3D "INT33FF:03",
+> +               .pin =3D 48,
+> +       },
+> +};
+> +
+> +const struct x86_dev_info cyberbook_t116_info __initconst =3D {
+> +       .gpio_button =3D cyberbook_t116_buttons,
+> +       .gpio_button_count =3D ARRAY_SIZE(cyberbook_t116_buttons),
+> +};
+> +
+>  #define CZC_EC_EXTRA_PORT      0x68
+>  #define CZC_EC_ANDROID_KEYS    0x63
+>
+> diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets=
+.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+> index 8f04a052eada..e46e1128acc8 100644
+> --- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+> +++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+> @@ -94,6 +94,7 @@ extern const struct x86_dev_info advantech_mica_071_inf=
+o;
+>  extern const struct x86_dev_info asus_me176c_info;
+>  extern const struct x86_dev_info asus_tf103c_info;
+>  extern const struct x86_dev_info chuwi_hi8_info;
+> +extern const struct x86_dev_info cyberbook_t116_info;
+>  extern const struct x86_dev_info czc_p10t;
+>  extern const struct x86_dev_info lenovo_yogabook_x90_info;
+>  extern const struct x86_dev_info lenovo_yogabook_x91_info;
+> --
+> 2.40.1
+>
 
-The second PWM controller however is different it is mostly unused
-I'm aware of 2 cases where it is used and in both cases it is used
-to control the brightness of a backlight for fixed (etched into the
-glass) touch controls.
 
-The problem is that in these cases there will be 2 totally different
-consumer devices. Looking at the lookup tabel checks in pwm_get()
-I see that it is possible to add a lookup which matches only by
-dev_id. So I could use this here and this would then also be in
-place for when I get around to writing a driver for the second
-case (that I'm ware of) which needs access to the second PWM controller.
-
-So this then just leaves the question of what to name the con-id,
-since we won't be specifying a consumer-device-name I think it is
-best to keep the con_id quite generic, e.g.:
-
-"pwm_soc_lpss_2"
-
-to match with the existing:
-
-"pwm_soc_backlight"
-
-for the first PWM controller.
-
-Uwe, Andy, is using a pwm_lookup with only a con_id match on
-"pwm_soc_lpss_2" ok with you ?
-
-Regards,
-Hans
-
-
+--=20
+With Best Regards,
+Andy Shevchenko
