@@ -2,282 +2,404 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABF7C77B73
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 May 2023 13:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6A8C7EE24
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  7 May 2023 15:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231956AbjEFNYv (ORCPT
+        id S231787AbjEGPkq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 6 May 2023 09:24:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48482 "EHLO
+        Sun, 7 May 2023 11:40:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232305AbjEFNYu (ORCPT
+        with ESMTP id S230348AbjEGPkp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 6 May 2023 09:24:50 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64AA71F4A0;
-        Sat,  6 May 2023 06:24:48 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-64115eef620so25220327b3a.1;
-        Sat, 06 May 2023 06:24:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683379488; x=1685971488;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bzQea2xgn/v16lMnD0LvD9GpMFuQwgvd8JYDxvdrbZo=;
-        b=Pja+trRgveMSupDRVFdCElqZZcNkrLTb3BCk8zfB92mApSQg3DSgM7kXZJAyEbOExr
-         THSUzFWjATswFxOiOhlfl60L3dkWhmmeXgSJ9kWMJUjTQl7BScPfryKqq4zzsQHsYTOo
-         TScspa0N5KriVHQ1ye/N+BTk5+TO5CnkT3cAAYCupqR+ySwDIFyMynZZ+JtyYjWMuw1k
-         Y1gRXGUmue3I2oS87sHyLUggLCCmFC9b3mm7hAC5vBJIOeKJNQ+O8zd0YG0BHZAtSMR5
-         fTcxeFYk9BGqxvY3ui2TYmKDIgdGmeP/YD/QrgonTcQd9MO0u8diDbYA5SQFTNVfCS0g
-         S9Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683379488; x=1685971488;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bzQea2xgn/v16lMnD0LvD9GpMFuQwgvd8JYDxvdrbZo=;
-        b=Mkka2oCoe2Hc8ZPRwyQdG50htU5Bgm3gYt+imA1ilowJf75YKH7nFbmj0W1yBgNGM/
-         /GQ/LXQTqFHbPXcjovK78a1qwj0Sh9GqGqB8zlf1PU7Qxo/pKXjm2ZnyFJKZWSNPOKwJ
-         6NUuhaO4xd0p8EdDUW8lcPi3CIGqIAxBItu52E9Vhc8Rw5XKzfZ32IyfSAlF7WAPt8oD
-         NDmj2NQ51lOkE23ESWRQX/n79Mu9FGPWVCM/NlIPhjg5phcBQT4FFUOMkB2Rad5xvfGq
-         AfTA7+IQNusUIRL+aR2pwIm4Nio8maEY+RO4/w77YJqik6yxtbfmSpqUBaoDMEAUAeFd
-         SJsQ==
-X-Gm-Message-State: AC+VfDyryGxAYwiWts4PQyyZi9qV5pyo4PAUkxx1Mb+HRzpakfgoJuZy
-        lSc2n1t4RgmxIog5Qk9tAq0=
-X-Google-Smtp-Source: ACHHUZ6EaRUMazeeuyPN5gtYU0mooud7SfaREq1rV4u5qDvcZffAtJdxlaRZtD1Tn5I6hiQAexP3wA==
-X-Received: by 2002:a17:902:f804:b0:1a6:d9a6:a9b4 with SMTP id ix4-20020a170902f80400b001a6d9a6a9b4mr5224307plb.3.1683379487593;
-        Sat, 06 May 2023 06:24:47 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v10-20020a170902b7ca00b001a674fb0dd8sm3551298plz.247.2023.05.06.06.24.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 May 2023 06:24:47 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <ac31cb07-22c3-7461-b1d0-670f15355e20@roeck-us.net>
-Date:   Sat, 6 May 2023 06:24:45 -0700
+        Sun, 7 May 2023 11:40:45 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 009CD100EA;
+        Sun,  7 May 2023 08:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1683474029; i=w_armin@gmx.de;
+        bh=EwdOwjJ55NwLoW9mWM8F1boYqxl4BhZ04Anu8oclTb0=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
+        b=lv782cMyhqd+FDeEANYsqjYCA3Mo32rkCJdrORjAAzvaG/MNVKFKi7Nka6R/mZrsF
+         7pSeni67gv9l4P6NIP3wGOei3YsxBToyWEQwxd+HFYQvOSNQWyYAhXLFxhnwUSaBRU
+         UuoNveRyEpMmRQMkgtyX/ogsxL9f4W3A97/8Bj8aWRKVW0wh5+I6DY52hAFyKgwGro
+         vZ6U51tahECYmyysk/0fHb0XYe98c5CzYaKAV5SqTyfh4PiSTlGM32TwIDGS+IO/u2
+         7WZbnvRFxcfpFqIz/8z2LR+Icew9DKyrMAyYNlZWwtbWoYuOXqZMTlr6QCch8ru+jU
+         fJ/g8cATmhRmQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MDQeU-1q2rUZ1JzS-00AUoo; Sun, 07
+ May 2023 17:40:29 +0200
+Subject: Re: [PATCH 1/2] platform/x86: dell-ddv: Add documentation
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     corbet@lwn.net, platform-driver-x86@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230429225525.10507-1-W_Armin@gmx.de>
+Message-ID: <61dc570b-b9e5-3ba4-bc3f-b0ea61891efc@gmx.de>
+Date:   Sun, 7 May 2023 17:40:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
+In-Reply-To: <20230429225525.10507-1-W_Armin@gmx.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-To:     Luke Jones <luke@ljones.dev>
-Cc:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, hdegoede@redhat.com,
-        corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com
-References: <20230505043013.2622603-1-luke@ljones.dev>
- <20230505043013.2622603-2-luke@ljones.dev>
- <9f77e8fd-38fe-818f-2fee-ca3bf4243576@linux.intel.com>
- <TWL7UR.KE812U8BYMG8@ljones.dev>
- <f1f8ff7a-6f23-e284-b494-7df2f0dce1a4@roeck-us.net>
- <M8X7UR.MPEZYPQ0PU4F1@ljones.dev>
- <17fb02ff-e2d8-9c0b-3de6-670c82fee997@roeck-us.net>
- <QB98UR.2KNZGZXO8NF12@ljones.dev>
-From:   Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: add support for ASUS
- screenpad
-In-Reply-To: <QB98UR.2KNZGZXO8NF12@ljones.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:sBHhj3CJaqSzkO92p9sRu40tUS8aLNIZJyhPkXUbB7de5yPfuSd
+ ud5Y0XcIj6wmCk5NsLxvlDTgpTJN2TVp9pybfvX/gFalt4uCeRHysYkvaqsD05mCAEDU6pn
+ 85le5IjOMUVixt/TWEEsndntAbVthLLbkzJ9IW5xbeBJd8UpWPxSvf0s53NyPyD2jaU6fb7
+ cU5W1ANpfvEmWxJaiprbQ==
+UI-OutboundReport: notjunk:1;M01:P0:hv9cVqyc6fo=;lYwDMg6YolFbMbuaf+O1JVBerXA
+ 3WRQG1QXKgjSjRTUpdB7w4+b8CdHFYS66J7WS1Z5UQt+NQkCtHBYRIbv+Yn/6wI8g9EBXAYp8
+ aOrINzKwnEvY0Wv8mw0hplc8OJU1Q5+QSPmm7iHEKNgC+GEOiw3/yoErrpil0mu3UqjYwenOq
+ z6V1DQSVr8EACQZC0u2ajQja2CX8Urlb8xnSKNGDrO2mLM3AvpppIQNNVlLaFSRpdTBsz0KTy
+ yaG+IRjuK97CtI7vV/CbrGdERubzJ2p626fzHVun3IJ0+J/xeChn+Egr3yzZE75/jWcBQaktJ
+ b5OBwaK2kuFnu9rdOcbCNyuS3pf2OAFJzDIpDOS60w9d3ce30V+FswTflPmaCbuSvY+W2KwRf
+ PuZDjA5B+++k+yCNblzp8wvm7L/agCtFe0uHNnaytKwtwBJulhri8uUPttedqLCj7FzAvR4Sw
+ xQYkcg8KIPOOBhI60vJaxe8r5Vool35GEqvdWm7Ja0XPzP/BC0EJ2Qpd2FUz/iNWdtRoOe0tm
+ BGQEpnQIhnTHLVptkLJidUAaF58t4BzCG3iWA8sRQODSFAkH8wtYthl2yLhBkSN1C3vYQQS2s
+ bQuZOJ8opmude7E7SfR8I/aSOgxeYYzpe10L5TY6XDLvyzWQmtZgT5KOp442Um2/1F91Ef8T9
+ Iz+n1CMdpXIheBTNB7GuaKVVX5uZk4mnu2HvcVfuetJyWMF4tseRhjJEFuIaQt93IMesVySGQ
+ 5s9U3ShwGEUu35cbfYJfCKSrVzYOrGAjar6U37+CeBJ4dJkXd99JTQK5LdVbtf+KKcFYVWJ1g
+ 0SbiR/6bkWLeX0xltGemfyThsUkFrD/lPDrAvguVdPULlGLxX59ZI4dn7L9bDfyI3E+g/T3EA
+ WDqdp5B/Q/KKfV3zh9HA8zY6cgPsZrGu+cC5i5z4po2k5JLBN6Llaor5omGco/X0iRtuit6Cs
+ dPFI4IxHiVXI3kM/lnMkoARZZDc=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 5/6/23 01:09, Luke Jones wrote:
-> 
-> 
-> On Fri, May 5 2023 at 21:43:44 -0700, Guenter Roeck <linux@roeck-us.net> wrote:
->> On 5/5/23 20:48, Luke Jones wrote:
->>>
->>>
->>> On Fri, May 5 2023 at 18:30:36 -0700, Guenter Roeck <linux@roeck-us.net> wrote:
->>>> On 5/5/23 16:43, Luke Jones wrote:
->>>>>
->>>>>
->>>>> On Fri, May 5 2023 at 16:08:16 +0300, Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
->>>>>> On Fri, 5 May 2023, Luke D. Jones wrote:
->>>>>>
->>>>>>>  Add support for the WMI methods used to turn off and adjust the
->>>>>>>  brightness of the secondary "screenpad" device found on some high-end
->>>>>>>  ASUS laptops like the GX650P series and others.
->>>>>>>
->>>>>>>  These methods are utilised in a new backlight device named:
->>>>>>>  - asus_screenpad
->>>>>>>
->>>>>>>  Signed-off-by: Luke D. Jones <luke@ljones.dev>
->>>>>>>  ---
->>>>>>>   .../ABI/testing/sysfs-platform-asus-wmi       |   2 +-
->>>>>>>   drivers/platform/x86/asus-wmi.c               | 132 ++++++++++++++++++
->>>>>>>   drivers/platform/x86/asus-wmi.h               |   1 +
->>>>>>>   include/linux/platform_data/x86/asus-wmi.h    |   4 +
->>>>>>>   4 files changed, 138 insertions(+), 1 deletion(-)
->>>>>>>
->>>>>>>  diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
->>>>>>>  index a77a004a1baa..df9817c6233a 100644
->>>>>>>  --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
->>>>>>>  +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
->>>>>>>  @@ -97,4 +97,4 @@ Contact:    "Luke Jones" <luke@ljones.dev>
->>>>>>>   Description:
->>>>>>>           Enable an LCD response-time boost to reduce or remove ghosting:
->>>>>>>               * 0 - Disable,
->>>>>>>  -            * 1 - Enable
->>>>>>>  +            * 1 - Enable
->>>>>>>  \ No newline at end of file
->>>>>>
->>>>>> Spurious change?
->>>>>
->>>>> Indeed it is. Not sure how that occurred.
->>>>>
->>>>>>
->>>>>>>  diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
->>>>>>>  index 1038dfdcdd32..0528eef02ef7 100644
->>>>>>>  --- a/drivers/platform/x86/asus-wmi.c
->>>>>>>  +++ b/drivers/platform/x86/asus-wmi.c
->>>>>>>  @@ -200,6 +200,7 @@ struct asus_wmi {
->>>>>>>
->>>>>>>       struct input_dev *inputdev;
->>>>>>>       struct backlight_device *backlight_device;
->>>>>>>  +    struct backlight_device *screenpad_backlight_device;
->>>>>>>       struct platform_device *platform_device;
->>>>>>>
->>>>>>>       struct led_classdev wlan_led;
->>>>>>>  @@ -3208,6 +3209,129 @@ static int is_display_toggle(int code)
->>>>>>>       return 0;
->>>>>>>   }
->>>>>>>
->>>>>>>  +/* Screenpad backlight */
->>>>>>>  +
->>>>>>>  +static int read_screenpad_backlight_power(struct asus_wmi *asus)
->>>>>>>  +{
->>>>>>>  +    int ret = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_SCREENPAD_POWER);
->>>>>>
->>>>>> Please move this to own line because now you have the extra newline
->>>>>> in between the call and error handling.
->>>>>
->>>>> I don't understand what you mean sorry. Remove the new line or:
->>>>> int ret;
->>>>> ret = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_SCREENPAD_POWER);
->>>>>
->>>>>>
->>>>>>>  +
->>>>>>>  +    if (ret < 0)
->>>>>>>  +        return ret;
->>>>>>>  +    /* 1 == powered */
->>>>>>>  +    return ret ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
->>>>>>>  +}
->>>>>>>  +
->>>>>>>  +static int read_screenpad_brightness(struct backlight_device *bd)
->>>>>>>  +{
->>>>>>>  +    struct asus_wmi *asus = bl_get_data(bd);
->>>>>>>  +    u32 retval;
->>>>>>>  +    int err;
->>>>>>>  +
->>>>>>>  +    err = read_screenpad_backlight_power(asus);
->>>>>>>  +    if (err < 0)
->>>>>>>  +        return err;
->>>>>>>  +    /* The device brightness can only be read if powered, so return stored */
->>>>>>>  +    if (err == FB_BLANK_POWERDOWN)
->>>>>>>  +        return asus->driver->screenpad_brightness;
->>>>>>>  +
->>>>>>>  +    err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT, &retval);
->>>>>>>  +    if (err < 0)
->>>>>>>  +        return err;
->>>>>>>  +
->>>>>>>  +    return retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
->>>>>>>  +}
->>>>>>>  +
->>>>>>>  +static int update_screenpad_bl_status(struct backlight_device *bd)
->>>>>>>  +{
->>>>>>>  +    struct asus_wmi *asus = bl_get_data(bd);
->>>>>>>  +    int power, err = 0;
->>>>>>>  +    u32 ctrl_param;
->>>>>>>  +
->>>>>>>  +    power = read_screenpad_backlight_power(asus);
->>>>>>>  +    if (power == -ENODEV)
->>>>>>>  +        return err;
->>>>>>
->>>>>> Just return 0. Or is there perhaps something wrong/missing here?
->>>>>
->>>>> I thought the correct thing was to return any possible error state (here, anything less than 0 would be an error, right?)
->>>>>
->>>>
->>>> Well, yes, but you are not returning an error. You are returning 'err'
->>>> which is 0 at this point. So, at the very least, this code is (very)
->>>> misleading since it suggests that it would return some error
->>>> (as saved in the 'err' variable) when it doesn't.
->>>>
->>>> Guenter
->>>>
->>>
->>> Oh! Right I see it now, I'm sorry, I just kept skipping over it somehow.
->>>
->>> So I should change to:
->>>      power = read_screenpad_backlight_power(asus);
->>>      if (power < 0)
->>>          return power;
->>>
->>> Is that acceptable?
->>>
->>
->> That depends on what the code is supposed to do. Right now it is
->> "If read_screenpad_backlight_power() returns -ENODEV, stop and return
->> no error (let the rest of the code continue). If it returns another error,
->> return it".
->> Changing the code as suggested above changes the semantics to
->> "If read_screenpad_backlight_power() returns an error, always return it".
->>
->> Looking at the patch, I don't have a definite answer.
->> asus_screenpad_init() happily registers the backlight if
->> read_screenpad_backlight_power() returns -ENODEV. One could argue that
->> the other functions should thus handle that situation gracefully as well,
->> but read_screenpad_brightness() does return -ENODEV in that situation.
->> I think you should decide how you want to handle that case and handle
->> it consistently across all functions.
->>
->> Either case, there is another problem in asus_screenpad_init():
->> If read_screenpad_brightness() fails, the function returns an error,
->> but does not unregister the backlight device.
->>
->> Guenter
->>
-> 
-> 
-> Thanks mate. I was working on this between my workload and getting a few users to test. My first priority was to get the thing working for them and as such I didn't put much thought in to errors and consistency.
-> 
-> I think since `asus_screenpad_init()` is not called unless the brightness WMI method exists, then it and the other functions should return all errors if the power WMI method fails at all since the device functionality is compromised. If there is a hardware change in this aspect we could revisit it then.
-> 
-That would suggest that asus_screenpad_init() should also abort on all errors
-and not assign a power of 'FB_BLANK_UNBLANK' if it is unreadable.
+Am 30.04.23 um 00:55 schrieb Armin Wolf:
 
->  > Either case, there is another problem in asus_screenpad_init():
->  > If read_screenpad_brightness() fails, the function returns an error,
->  > but does not unregister the backlight device.
-> 
-> I wasn't entirely sure how to handle this. Mostly I followed what the existing backlight code was doing, I've now added a `goto fail_screenpad;` with:
-> fail_screenpad:
->      if (asus->screenpad_backlight_device)
->          asus_screenpad_exit(asus);
-> 
-> really I'm relying on others to guide me with this - I know I've got a fair few patches in these days but they've been mostly simple things except for TUF RGB, and I've had to learn a bunch of stuff as I go.
-> 
-> I'll await your response before I send in a V3.
-> 
+> The WMI interface used by the dell-wmi-ddv driver contains
+> many methods which are currently unused, making it difficult
+> to document these inside the drivers source code.
+> Create the necessary documentation based on current knowledge
+> so that all details of the WMI interface are written down for
+> later use.
+>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>   Documentation/wmi/devices/dell-wmi-ddv.rst | 294 +++++++++++++++++++++
+>   MAINTAINERS                                |   1 +
+>   2 files changed, 295 insertions(+)
+>   create mode 100644 Documentation/wmi/devices/dell-wmi-ddv.rst
+>
+> diff --git a/Documentation/wmi/devices/dell-wmi-ddv.rst b/Documentation/wmi/devices/dell-wmi-ddv.rst
+> new file mode 100644
+> index 000000000000..3fc6ee3e9f9b
+> --- /dev/null
+> +++ b/Documentation/wmi/devices/dell-wmi-ddv.rst
+> @@ -0,0 +1,294 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +============================================
+> +Dell DDV WMI interface driver (dell-wmi-ddv)
+> +============================================
+> +
+> +Introduction
+> +============
+> +
+> +Many Dell notebooks made after ~2020 support a WMI-based interface for
+> +retrieving various system data like battery temperature, ePPID, diagostic data
+> +and fan/thermal sensor data.
+> +
+> +This interface is likely used by the `Dell Data Vault` software on Windows,
+> +so it was called `DDV`. Currently the ``dell-wmi-ddv`` driver supports
+> +version 2 and 3 of the interface, with support for new interface versions
+> +easily added.
+> +
+> +.. warning:: The interface is regarded as internal by Dell, so no vendor
+> +             documentation is available. All knowledge was thus obtained by
+> +             trial-and-error, please keep that in mind.
+> +
+> +Dell ePPID (electronic Piece Part Identification)
+> +=================================================
+> +
+> +The Dell ePPID is used to uniquely identify components in Dell machines,
+> +including batteries. It has a form similar to `CC-PPPPPP-MMMMM-YMD-SSSS-FFF`
+> +and contains the following information:
+> +
+> +* Country code of origin (CC).
+> +* Part number with the first character being a filling number (PPPPPP).
+> +* Manufacture Identification (MMMMM).
+> +* Manufacturing Year/Month/Date (YMD) in base 36, with Y being the last digit
+> +  of the year.
+> +* Manufacture Sequence Number (SSSS).
+> +* Optional Firmware Version/Revision (FFF).
+> +
+> +The `eppidtool <https://pypi.org/project/eppidtool>`_ python utility can be used
+> +to decode and display this information.
+> +
+> +All information regarding the Dell ePPID was gathered using Dell support
+> +documentation and `this website <https://telcontar.net/KBK/Dell/date_codes>`_.
+> +
+> +WMI interface description
+> +=========================
+> +
+> +The WMI interface description can be decoded from the embedded binary MOF (bmof)
+> +data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
+> +
+> +::
+> +
+> + [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("WMI Function"), guid("{8A42EA14-4F2A-FD45-6422-0087F7A7E608}")]
+> + class DDVWmiMethodFunction {
+> +   [key, read] string InstanceName;
+> +   [read] boolean Active;
+> +
+> +   [WmiMethodId(1), Implemented, read, write, Description("Return Battery Design Capacity.")] void BatteryDesignCapacity([in] uint32 arg2, [out] uint32 argr);
+> +   [WmiMethodId(2), Implemented, read, write, Description("Return Battery Full Charge Capacity.")] void BatteryFullChargeCapacity([in] uint32 arg2, [out] uint32 argr);
+> +   [WmiMethodId(3), Implemented, read, write, Description("Return Battery Manufacture Name.")] void BatteryManufactureName([in] uint32 arg2, [out] string argr);
+> +   [WmiMethodId(4), Implemented, read, write, Description("Return Battery Manufacture Date.")] void BatteryManufactureDate([in] uint32 arg2, [out] uint32 argr);
+> +   [WmiMethodId(5), Implemented, read, write, Description("Return Battery Serial Number.")] void BatterySerialNumber([in] uint32 arg2, [out] uint32 argr);
+> +   [WmiMethodId(6), Implemented, read, write, Description("Return Battery Chemistry Value.")] void BatteryChemistryValue([in] uint32 arg2, [out] string argr);
+> +   [WmiMethodId(7), Implemented, read, write, Description("Return Battery Temperature.")] void BatteryTemperature([in] uint32 arg2, [out] uint32 argr);
+> +   [WmiMethodId(8), Implemented, read, write, Description("Return Battery Current.")] void BatteryCurrent([in] uint32 arg2, [out] uint32 argr);
+> +   [WmiMethodId(9), Implemented, read, write, Description("Return Battery Voltage.")] void BatteryVoltage([in] uint32 arg2, [out] uint32 argr);
+> +   [WmiMethodId(10), Implemented, read, write, Description("Return Battery Manufacture Access(MA code).")] void BatteryManufactureAceess([in] uint32 arg2, [out] uint32 argr);
+> +   [WmiMethodId(11), Implemented, read, write, Description("Return Battery Relative State-Of-Charge.")] void BatteryRelativeStateOfCharge([in] uint32 arg2, [out] uint32 argr);
+> +   [WmiMethodId(12), Implemented, read, write, Description("Return Battery Cycle Count")] void BatteryCycleCount([in] uint32 arg2, [out] uint32 argr);
+> +   [WmiMethodId(13), Implemented, read, write, Description("Return Battery ePPID")] void BatteryePPID([in] uint32 arg2, [out] string argr);
+> +   [WmiMethodId(14), Implemented, read, write, Description("Return Battery Raw Analytics Start")] void BatteryeRawAnalyticsStart([in] uint32 arg2, [out] uint32 argr);
+> +   [WmiMethodId(15), Implemented, read, write, Description("Return Battery Raw Analytics")] void BatteryeRawAnalytics([in] uint32 arg2, [out] uint32 RawSize, [out, WmiSizeIs("RawSize") : ToInstance] uint8 RawData[]);
+> +   [WmiMethodId(16), Implemented, read, write, Description("Return Battery Design Voltage.")] void BatteryDesignVoltage([in] uint32 arg2, [out] uint32 argr);
+> +   [WmiMethodId(17), Implemented, read, write, Description("Return Battery Raw Analytics A Block")] void BatteryeRawAnalyticsABlock([in] uint32 arg2, [out] uint32 RawSize, [out, WmiSizeIs("RawSize") : ToInstance] uint8 RawData[]);
+> +   [WmiMethodId(18), Implemented, read, write, Description("Return Version.")] void ReturnVersion([in] uint32 arg2, [out] uint32 argr);
+> +   [WmiMethodId(32), Implemented, read, write, Description("Return Fan Sensor Information")] void FanSensorInformation([in] uint32 arg2, [out] uint32 RawSize, [out, WmiSizeIs("RawSize") : ToInstance] uint8 RawData[]);
+> +   [WmiMethodId(34), Implemented, read, write, Description("Return Thermal Sensor Information")] void ThermalSensorInformation([in] uint32 arg2, [out] uint32 RawSize, [out, WmiSizeIs("RawSize") : ToInstance] uint8 RawData[]);
+> + };
+> +
+> +Each WMI method takes an ACPI buffer containing a 32-bit index as input argument,
+> +with the first 8 bit being used to specify the battery when using battery-related
+> +WMI methods. Other WMI methods may ignore this argument or interpret it
+> +differently. The WMI method output format varies:
+> +
+> +* if the function has only a single output, then an ACPI object
+> +  of the corresponding type is returned
+> +* if the function has multiple outputs, when an ACPI package
+> +  containing the outputs in the same order is returned
+> +
+> +The format of the output should be thoroughly checked, since many methods can
+> +return malformed data in case of an error.
+> +
+> +The data format of many battery-related methods seems to be based on the
+> +`Smart Battery Data Specification`, so unknown battery-related methods are
+> +likely to follow this standard in some way.
+> +
+> +WMI method GetBatteryDesignCapacity()
+> +-------------------------------------
+> +
+> +Returns the design capacity of the battery in mAh as an u16.
+> +
+> +WMI method BatteryFullCharge()
+> +------------------------------
+> +
+> +Returns the full charge capacity of the battery in mAh as an u16.
+> +
+> +WMI method BatteryManufactureName()
+> +-----------------------------------
+> +
+> +Returns the manufacture name of the battery as an ASCII string.
+> +
+> +WMI method BatteryManufactureDate()
+> +-----------------------------------
+> +
+> +Returns the manufacture date of the battery as an u16.
+> +The date is encoded in the following manner:
+> +
+> +- bits 0 to 4 contain the manufacture day.
+> +- bits 5 to 8 contain the manufacture month.
+> +- bits 9 to 15 contain the manufacture year biased by 1980.
+> +
+> +.. note::
+> +   The data format needs to be verified on more machines.
+> +
+> +WMI method BatterySerialNumber()
+> +--------------------------------
+> +
+> +Returns the serial number of the battery as an u16.
+> +
+> +WMI method BatteryChemistryValue()
+> +----------------------------------
+> +
+> +Returns the chemistry of the battery as an ASCII string.
+> +Known values are:
+> +
+> +- "Li-I" for Li-Ion
+> +
+> +WMI method BatteryTemperature()
+> +-------------------------------
+> +
+> +Returns the temperature of the battery in tenth degree kelvin as an u16.
+> +
+> +WMI method BatteryCurrent()
+> +---------------------------
+> +
+> +Returns the current flow of the battery in mA as an s16.
+> +Negative values indicate discharging.
+> +
+> +WMI method BatteryVoltage()
+> +---------------------------
+> +
+> +Returns the voltage flow of the battery in mV as an u16.
+> +
+> +WMI method BatteryManufactureAccess()
+> +-------------------------------------
+> +
+> +Returns a manufacture-defined value as an u16.
+> +
+> +WMI method BatteryRelativeStateOfCharge()
+> +-----------------------------------------
+> +
+> +Returns the capacity of the battery in percent as an u16.
+> +
+> +WMI method BatteryCycleCount()
+> +------------------------------
+> +
+> +Returns the cycle count of the battery as an u16.
+> +
+> +WMI method BatteryePPID()
+> +-------------------------
+> +
+> +Returns the ePPID of the battery as an ASCII string.
+> +
+> +WMI method BatteryeRawAnalyticsStart()
+> +--------------------------------------
+> +
+> +Performs an analysis of the battery and returns a status code:
+> +
+> +- ``0x0``: Success
+> +- ``0x1``: Interface not supported
+> +- ``0xfffffffe``: Error/Timeout
+> +
+> +.. note::
+> +   The meaning of this method is still largely unknown.
+> +
+> +WMI method BatteryeRawAnalytics()
+> +---------------------------------
+> +
+> +Returns a buffer usually containg 12 blocks of analytics data.
+> +Those blocks contain:
+> +- block number starting with 0 (u8)
+> +- 31 bytes of unknown data
+> +
+> +.. note::
+> +   The meaning of this method is still largely unknown.
+> +
+> +WMI method BatteryDesignVoltage()
+> +---------------------------------
+> +
+> +Returns the design voltage of the battery in mV as an u16.
+> +
+> +WMI method BatteryeRawAnalyticsABlock()
+> +---------------------------------------
+> +
+> +Returns a single block of analytics data, with the second byte
+> +of the index being used for selecting the block number.
+> +
+> +*Supported since WMI interface version 3!*
+> +
+> +.. note::
+> +   The meaning of this method is still largely unknown.
+> +
+> +WMI method ReturnVersion()
+> +--------------------------
+> +
+> +Returns the WMI interface version as an u32.
+> +
+> +WMI method FanSensorInformation()
+> +---------------------------------
+> +
+> +Returns a buffer containg fan sensor entries, terminated
+> +with a single ``0xff``.
+> +Those entries contain:
+> +
+> +- fan type (u8)
+> +- fan speed in RPM (little endian u16)
+> +
+> +WMI method ThermalSensorInformation()
+> +-------------------------------------
+> +
+> +Returns a buffer containing thermal sensor entries, terminated
+> +with a single ``0xff``.
+> +Those entries contain:
+> +
+> +- thermal type (u8)
+> +- current temperature (s8)
+> +- min. temperature (s8)
+> +- max. temperature (s8)
+> +- unknown field (u8)
+> +
+> +.. note::
+> +   Find out what the meaning of the last byte is.
+> +
+> +ACPI battery matching algorithm
+> +===============================
+> +
+> +The algorithm used to match ACPI batteries to indices is based on information
+> +which was found inside the logging messages of the OEM software.
+> +
+> +Basically for each new ACPI battery, the serial numbers of the batteries behind
+> +indices 1 till 3 are compared with the serial number of the ACPI battery.
+> +Since the serial number of the ACPI battery can either be encoded as a normal
+> +integer or as a hexadecimal value, both cases need to be checked. The first
+> +index with a matching serial number is then selected.
+> +
+> +A serial number of 0 indicates that the corresponding index is not associated
+> +with an actual battery, or that the associated battery is not present.
+> +
+> +Some machines like the Dell Inspiron 3505 only support a single battery and thus
+> +ignore the battery index. Because of this the driver depends on the ACPI battery
+> +hook mechanism to discover batteries.
+> +
+> +.. note::
+> +   The ACPI battery matching algorithm currently used inside the driver is
+> +   outdated and does not match the algorithm described above. The reasons for
+> +   this are differences in the handling of the ToHexString() ACPI opcode between
+> +   Linux and Windows, which distorts the serial number of ACPI batteries on many
+> +   machines. Until this issue is resolved, the driver cannot use the above
+> +   algorithm.
+> +
+> +Reverse-Engineering the DDV WMI interface
+> +=========================================
+> +
+> +1. Find a supported Dell notebook, usually made after ~2020.
+> +2. Dump the ACPI tables and search for the WMI device (usually called "ADDV").
+> +3. Decode the corresponding bmof data and look at the ASL code.
+> +4. Try to deduce the meaning of a certain WMI method by comparing the control
+> +   flow with other ACPI methods (_BIX or _BIF for battery related methods
+> +   for example).
+> +5. Use the built-in UEFI diagostics to view sensor types/values for fan/thermal
+> +   related methods (sometimes overwriting static ACPI data fields can be used
+> +   to test different sensor type values, since on some machines this data is
+> +   not reinitialized upon a warm reset).
+> +
+> +Alternatively:
+> +
+> +1. Load the ``dell-wmi-ddv`` driver, use the ``force`` module param
+> +   if necessary.
+> +2. Use the debugfs interface to access the raw fan/thermal sensor buffer data.
+> +3. Compare the data with the built-in UEFI diagnostics.
+> +
+> +In case the DDV WMI interface version available on your Dell notebook is not
+> +supported or you are seeing unknown fan/thermal sensors, please submit a
+> +bugreport on `bugzilla <https://bugzilla.kernel.org>`_ so they can be added
+> +to the ``dell-wmi-ddv`` driver.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4d5b1f6d77f6..66e4eabaf972 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5804,6 +5804,7 @@ M:	Armin Wolf <W_Armin@gmx.de>
+>   S:	Maintained
+>   F:	Documentation/ABI/testing/debugfs-dell-wmi-ddv
+>   F:	Documentation/ABI/testing/sysfs-platform-dell-wmi-ddv
+> +F:	Documentation/wmi/devices/dell-wmi-ddv.rst
+>   F:	drivers/platform/x86/dell/dell-wmi-ddv.c
+>
+>   DELL WMI SYSMAN DRIVER
+> --
+> 2.30.2
+>
+Any thoughts on this series?
 
-Personally I'd first try to use devm_backlight_device_register().
-As for error handling, the code would normally be something like
-
-fail_screenpad:
-	backlight_device_unregister(asus->screenpad_backlight_device);
-
-or better
-
-fail_screenpad:
-	backlight_device_unregister(bd);
-
-I don't know why you would want to check if asus->screenpad_backlight
-is NULL because the code would never be called with it being NULL.
-
-Note that I don't see why
-	asus->screenpad_backlight_device = NULL;
-in asus_screenpad_exit() would be necessary.
-
-Guenter
+Armin Wolf
 
