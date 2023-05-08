@@ -2,281 +2,314 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551E8C77B75
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 May 2023 21:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0835C77B75
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 May 2023 21:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233043AbjEHV0W (ORCPT
+        id S229492AbjEHVdo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 May 2023 17:26:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37580 "EHLO
+        Mon, 8 May 2023 17:33:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229832AbjEHV0V (ORCPT
+        with ESMTP id S229486AbjEHVdn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 May 2023 17:26:21 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63337D87;
-        Mon,  8 May 2023 14:25:45 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-2ac87e7806aso43326501fa.3;
-        Mon, 08 May 2023 14:25:45 -0700 (PDT)
+        Mon, 8 May 2023 17:33:43 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 011E8CC;
+        Mon,  8 May 2023 14:33:41 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4efe8991b8aso5888515e87.0;
+        Mon, 08 May 2023 14:33:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683581139; x=1686173139;
+        d=gmail.com; s=20221208; t=1683581620; x=1686173620;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yh86qVTwZ6VGC+iFBj5h0VPqRoZ1lDKWlx5pY2sNDCE=;
-        b=BfN+bx4YB2m2ui+hvbkR4KkQv30l09RYbtI+n1c7LCbmCUXzLrPYAJJ9bkJgcs82fJ
-         FLkWNJFOcRN6SgfsVfZl4Q7Iv6I+cIlBHy0EuKr4tI+1kb1Nqa/QcTGGHY6td0guv5jx
-         bH2/FQBFTEHGIU1SDKUYNPr5I06TjX8e+9zLUFapr0iWDWwVrlZWLWyvqLIAewAvR++M
-         YhwFIf91CwCmUAzyBTp3LQTw4cUZO6tyPqbqHqmW3UkpdwMLVKYy0C7KxXkCVOxP8cQb
-         i9/cPu1S4vsEEuvbrQYXBHXFfr58QC0vBg3YKK07sdILwl0xNwJFKSiYwDIpD1EFin2B
-         Hv+Q==
+        bh=R1GfXJHhG9rxAIllTXMhE+4vrB4CYS1nK41A3WKrJsk=;
+        b=V2EhU1kLdxuwOO7YxOtgI3IYjNT6g5lJJBwCdbdrXf56DYg2BIgC5nnvgSaRcMvt+H
+         TEkP6qqXmPyk5li7rr708UsxWAJWvj67LYwph9D2J+KHcCg0EPPe7t69c/5D5rL57lii
+         aVxXvL+j3m4DVyqsDfj9QACmjlQ+QSjdq0oHQXusvt7gMR5eGitzSkEsL6Yv3xnDNV4l
+         nhvexHXqwnzDIhKQhWROA5cPZwDLtgiIMJ/63bbxHKvfxf+swBcWb9IZa8eSWIF67CvZ
+         WuSmNYa3+UXPNBjej/14sufr2piQHtGgKp9NGItfK4xQ2CGycrDGJ5u0tL8wK9hIRmmr
+         Imxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683581139; x=1686173139;
+        d=1e100.net; s=20221208; t=1683581620; x=1686173620;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yh86qVTwZ6VGC+iFBj5h0VPqRoZ1lDKWlx5pY2sNDCE=;
-        b=fwiJqc8xUoWQmGosDfwiS+C2lb3AQpv24bL/CdwmeJm3I/sGV8eaIKdBuiZ/6FSFXW
-         ZWUJThGEAUF/VrGr0+RHVcMBBeH+GGXaawvfkO6f0tO28Erx9ccXmfGi+183JfD2+nIb
-         Dcya/jflvwDwIsU/2VkqUAUf9D1DxFuuRgSk+Xl3EJqUfDkSUzE6DwJuJbmoWhs8app9
-         EiBgkQa1EZAYQ8Bzg/8oPGbapA5UYX7kThTr51Vsh69mL4vXdEBSC8gpAPxCCPGfPolP
-         0zK7MFbb3TAtBMfmd6ohMYXJlnXnstcESPQa7k9pN7FdOLcNcLNngA3oj9bUyU2tQxRj
-         njDw==
-X-Gm-Message-State: AC+VfDxOVK7s1GkxuLgPA3hEYm4An7+Qy3y/EGX1iytS9qhiKocCJz/8
-        HRS3nRvIRpdEFKjxnMyDrI64JWhAXx5nm4DVcUrutYom
-X-Google-Smtp-Source: ACHHUZ5KxmpJ7ZJZ9Obz6IVg4xb43IJE5gNfiWk2ikv6m1PVNfqFd9g0LRKdnKJMArOFIsNjO4kC6TLDTqVDoNH+MjI=
-X-Received: by 2002:a2e:7a13:0:b0:2a6:1682:3a1e with SMTP id
- v19-20020a2e7a13000000b002a616823a1emr122647ljc.31.1683581139546; Mon, 08 May
- 2023 14:25:39 -0700 (PDT)
+        bh=R1GfXJHhG9rxAIllTXMhE+4vrB4CYS1nK41A3WKrJsk=;
+        b=BNo5pBI0gX9gXasrcPHDSynTb6FmRDN92gUbqOcoL3U6LSBTujr3abtoGI7D1OY7Qh
+         +Zz9xbNlQZCrb33s3u66lfbQDHgZt6EIiaMxkmk6dHikKbqtLatsBrtKqACAyWtFXy21
+         lMD2lPj017KWM/iqjrB1xLu6gcwGp1GQsNOVZi1eG5Jo3SO1FKjQiOZbIik/9575V4T7
+         28JZkG7M21Ch5HvgcLvJ8/8m+A55EuGRLRNAb6dADcwpVn0RZUcipgR/rRThndNkx6XA
+         RKzjsFfRWE6G/Zt27BdTgSJI3WbmukkUKJNhb4h4FxhFP3w1xLKoyf8zVeEmn09r4l+c
+         nCZw==
+X-Gm-Message-State: AC+VfDwEgjW/+bT2MzmRKPN2ZN0bSn7lEvdztHFEiwDTx+P5aDYYoUbQ
+        mf+LbB+DL6oHlKHJON35klnds4bcBp4t0a0iI52UXZPzYas=
+X-Google-Smtp-Source: ACHHUZ6yw4dE7uoYvgVOuHp/RPNBFj4HXWlzMPxiIUbgU+b5lfVNDpHD+BZg4icdvMLkduYrQ9dED8+f9c3heSCXMGo=
+X-Received: by 2002:ac2:5105:0:b0:4b5:61e8:8934 with SMTP id
+ q5-20020ac25105000000b004b561e88934mr106355lfb.64.1683581620066; Mon, 08 May
+ 2023 14:33:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230420165454.9517-1-jorge.lopez2@hp.com> <20230420165454.9517-6-jorge.lopez2@hp.com>
- <24fb56f9-49c6-432d-8c2f-17df7f7e37b2@t-8ch.de> <CAOOmCE-HR205R2vjyZedDocZLwvMdk7B1w7w9HgdXaypTrBK+A@mail.gmail.com>
- <34539db1-98a4-4696-934b-af04d74720cc@t-8ch.de> <CAOOmCE_9fmLKgum9hYxPpa_BrX0FyFFz_dRUX8sNm9T2EUABMg@mail.gmail.com>
- <daf6a6e0-69cd-48a6-b61b-c893324323ff@t-8ch.de> <CAOOmCE-FNUUh+tZLPdJW+y5m0JKufWXiJ8M-7WFEiveNi4rRAg@mail.gmail.com>
- <5662fa47-1156-459b-af86-31351d69cc3f@t-8ch.de>
-In-Reply-To: <5662fa47-1156-459b-af86-31351d69cc3f@t-8ch.de>
+References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-5-jorge.lopez2@hp.com>
+ <51607d2d-2d74-7dd4-e266-cf3ec0235e7a@linux.intel.com>
+In-Reply-To: <51607d2d-2d74-7dd4-e266-cf3ec0235e7a@linux.intel.com>
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Mon, 8 May 2023 16:25:11 -0500
-Message-ID: <CAOOmCE8gByOYcoAwC=ZkXwk54jqYyWNkhDnvjgxEnV1YdYo-KQ@mail.gmail.com>
-Subject: Re: [PATCH v11 05/14] HP BIOSCFG driver - ordered-attributes
-To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Date:   Mon, 8 May 2023 16:33:11 -0500
+Message-ID: <CAOOmCE-7sAPYcPM393Zsj=eR96fJv8Ectm8FoEJdxwPPAwEVVw@mail.gmail.com>
+Subject: Re: [PATCH v12 04/13] HP BIOSCFG driver - int-attributes
+To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        linux-kernel@vger.kernel.org, thomas@t-8ch.de
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, May 8, 2023 at 3:50=E2=80=AFPM Thomas Wei=C3=9Fschuh <thomas@t-8ch.=
-de> wrote:
+On Mon, May 8, 2023 at 9:45=E2=80=AFAM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
 >
-> On 2023-05-08 08:56:55-0500, Jorge Lopez wrote:
-> > On Sat, May 6, 2023 at 12:51=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t=
--8ch.de> wrote:
-> > >
-> > > On 2023-05-05 16:57:59-0500, Jorge Lopez wrote:
-> > > > On Fri, May 5, 2023 at 4:11=E2=80=AFPM Thomas Wei=C3=9Fschuh <thoma=
-s@t-8ch.de> wrote:
-> > > > >
-> > > > > On 2023-05-05 11:09:55-0500, Jorge Lopez wrote:
-> > > > > > On Sun, Apr 23, 2023 at 1:55=E2=80=AFAM <thomas@t-8ch.de> wrote=
-:
-> > > > > > >
-> > > > > > > On 2023-04-20 11:54:45-0500, Jorge Lopez wrote:
-> > > > > > > >  .../x86/hp/hp-bioscfg/ordered-attributes.c    | 563 ++++++=
-++++++++++++
-> > > > > > > >  1 file changed, 563 insertions(+)
-> > > > > > > >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/orde=
-red-attributes.c
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/platform/x86/hp/hp-bioscfg/ordered-att=
-ributes.c b/drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c
-> > > > > > > > new file mode 100644
-> > > > > > > > index 000000000000..5e5d540f728d
-> > > > > > > > --- /dev/null
-> >
-> > <snip>
-> >
-> > > > > > > > +     elem_found =3D 0;
-> > > > > > > > +     while (elem_found < bioscfg_drv.ordered_list_data[ins=
-tance_id].elements_size) {
-> > > > > > > > +
-> > > > > > > > +             value =3D strsep(&new_values, ",");
-> > > > > > >
-> > > > > > > The docs say the separator is semicolon.
-> > > > > >
-> > > > > > BIOS reports the current value using ',' as separator instead o=
-f ";".
-> > > > > >
-> > > > > > ./hp-bioscfg/attributes/UEFI Boot Order/current_value
-> > > > > > HDD:M.2:3,HDD:USB:1(Disabled),HDD:M.2:4,HDD:M.2:1,HDD:M.2:2,NET=
-WORK
-> > > > > > IPV4:EMBEDDED:1,NETWORK IPV6:EMBEDDED:1,NETWORK
-> > > > > > IPV4:EXPANSION:1,NETWORK IPV6:EXPANSION:1
-> > > > > >
-> > > > > > To avoid having to convert from "," to ";" and vice versa, I wi=
-ll
-> > > > > > update the documentation to reflect the use of  "'," commas as =
-the
-> > > > > > separator
-> > > > >
-> > > > > The enum data format uses ";". Therefore it makes sense to also s=
-tick to
-> > > > > ";".
-> > > > > The implementation detail of the BIOS using ',' should not matter=
- to
-> > > > > users.
-> > > >
-> > > > The use of ',' does matter because BIOS expects the updated string =
-to
-> > > > use commas as separators
-> > > > current_value is reported by BIOS using commas.  Any changes to the
-> > > > order of items in that string needs to use commas.
-> > > >
-> > > > The difference with enum is the fact the user needs to  enter only =
-one
-> > > > value out of those possible values available and no separators are
-> > > > needed.
-> > > > For ordered attributes...
-> > > >
-> > > > when the current value  is "foo,bar,baz".   the user provides a str=
-ing
-> > > > which items are ordered differently.  i.e. "baz,bar,foo"
-> > > > if the new string is using semicolon instead of comma for the
-> > > > separator, BIOS will reject the data.
-> > >
-> > > Of course the BIOS expects the format with comma.
-> > >
-> > > But the users of this API should not have to care about implementatio=
-n
-> > > details like that.
-> > > They want a consistent API. As the ordered-list type is fairly genera=
-l
-> > > it may be promoted to be a general attribute type later.
-> > >
-> > > If this happens the API can't be changed as that would break users of
-> > > hp-bioscfg. So either there would be two APIs for the ordered-list, o=
-ne
-> > > for hp-bioscfg and one for all other drivers, or different attribute
-> > > types would use different kinds of separators.
-> > >
-> > > Was there an issue with the previous replacement logic?
-> >
-> > No issue. I was anticipating a potential problem/confusion and created
-> > a solution.  Customers will start using this driver when it becomes
-> > part of the upstream code.
-> > Users primarily will use Powershell scripts to interact with the
-> > driver.  The use of powershell will require the user to have the
-> > knowledge and convert ';' semicolon to ',' commas prior to submitting
-> > the request to the driver.  AFIK, the boot order is one of those
-> > attributes that is not configured often by the user.  Just my opinion.
+> On Fri, 5 May 2023, Jorge Lopez wrote:
 >
-> If this conversion is done by the driver why would the users have to
-> care?
+> > HP BIOS Configuration driver purpose is to provide a driver supporting
+> > the latest sysfs class firmware attributes framework allowing the user
+> > to change BIOS settings and security solutions on HP Inc.=E2=80=99s com=
+mercial
+> > notebooks.
+> >
+> > Many features of HP Commercial notebooks can be managed using Windows
+> > Management Instrumentation (WMI). WMI is an implementation of Web-Based
+> > Enterprise Management (WBEM) that provides a standards-based interface
+> > for changing and monitoring system settings. HP BIOSCFG driver provides
+> > a native Linux solution and the exposed features facilitates the
+> > migration to Linux environments.
+> >
+> > The Linux security features to be provided in hp-bioscfg driver enables
+> > managing the BIOS settings and security solutions via sysfs, a virtual
+> > filesystem that can be used by user-mode applications. The new
+> > documentation cover HP-specific firmware sysfs attributes such Secure
+> > Platform Management and Sure Start. Each section provides security
+> > feature description and identifies sysfs directories and files exposed
+> > by the driver.
+> >
+> > Many HP Commercial notebooks include a feature called Secure Platform
+> > Management (SPM), which replaces older password-based BIOS settings
+> > management with public key cryptography. PC secure product management
+> > begins when a target system is provisioned with cryptographic keys
+> > that are used to ensure the integrity of communications between system
+> > management utilities and the BIOS.
+> >
+> > HP Commercial notebooks have several BIOS settings that control its
+> > behaviour and capabilities, many of which are related to security.
+> > To prevent unauthorized changes to these settings, the system can
+> > be configured to use a cryptographic signature-based authorization
+> > string that the BIOS will use to verify authorization to modify the
+> > setting.
+> >
+> > Linux Security components are under development and not published yet.
+> > The only linux component is the driver (hp bioscfg) at this time.
+> > Other published security components are under Windows.
+> >
+> > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+> >
+> > ---
+> > Based on the latest platform-drivers-x86.git/for-next
+> > ---
+> >  .../x86/hp/hp-bioscfg/int-attributes.c        | 448 ++++++++++++++++++
+> >  1 file changed, 448 insertions(+)
+> >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> >
+> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/driv=
+ers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> > new file mode 100644
+> > index 000000000000..1395043d5c9f
+> > --- /dev/null
+> > +++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> > @@ -0,0 +1,448 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Functions corresponding to integer type attributes under
+> > + * BIOS Enumeration GUID for use with hp-bioscfg driver.
+> > + *
+> > + *  Copyright (c) 2022 Hewlett-Packard Inc.
+> > + */
+> > +
+> > +#include "bioscfg.h"
+> > +
+> > +GET_INSTANCE_ID(integer);
+> > +
+> > +static ssize_t current_value_show(struct kobject *kobj, struct kobj_at=
+tribute *attr, char *buf)
+> > +{
+> > +<snip>
 
-The driver currently does not do any conversion hence the reason for
-my concerns.
-I will reinstate the conversion which was removed in an earlier review.
->
-> > >
-> > > The whole point of device drivers is to translate general kernel APIs
-> > > into whatever a specific device needs, switching around ',' and ';'
-> > > seems not so bad.
-> >
-> > So, are you saying, it is ok for the driver to convert  ';' semicolon
-> > to ',' commas prior to submitting a request  to change any attribute
-> > of type 'ordered-list' or when reading current value ?
-> > If that is correct, then we can change the documentation back to use
-> > ';' semicolons.
-> > Please confirm.
->
-> A device drivers task it to translate from the domain of the kernel and
-> its unified APIs to whatever a specific device needs.
->
-> If we agree that it is more consistent to use semicolons for class
-> firmware-attribute APIs then the driver would make sure that userspace
-> always sees semicolons while the ACPI calls always use commas.
->
-> This means translating semicolon->comma when writing to and
-> comma->semicolon when reading from ACPI.
-> Userspace should not be exposed to the implementation details but just
-> the consistent and documented kernel API.
->
-> > > > > > > > +             if (value !=3D NULL) {
-> > > > > > > > +                     if (!*value)
-> > > > > > > > +                             continue;
-> > > > > > > > +                     elem_found++;
-> > > > > > > > +             }
-> > > > > > > > +
-> > > > > > > > +             found =3D 0;
-> > > > > > > > +             for (elem =3D 0; elem < bioscfg_drv.ordered_l=
-ist_data[instance_id].elements_size; elem++) {
-> > > > > > > > +                     if (!strcasecmp(bioscfg_drv.ordered_l=
-ist_data[instance_id].elements[elem], value)) {
-> > > > > > >
-> > > > > > > It's surprising that this is case-insensitive.
-> > > > > >
-> > > > > > As validated in earlier reviews,  BIOS rejects strings that do =
-not
-> > > > > > match the internal values.
-> > > > > >
-> >
-> > <snip>
-> >
-> > > > > > > > +
-> > > > > > > > +     strscpy(bioscfg_drv.ordered_list_data[instance_id].co=
-mmon.display_name_language_code,
-> > > > > > > > +             LANG_CODE_STR,
-> > > > > > > > +             sizeof(bioscfg_drv.ordered_list_data[instance=
-_id].common.display_name_language_code));
-> > > > > > >
-> > > > > > > This seems to be the same for every type. Can it not be moved=
- into
-> > > > > > > common code?
-> > > > > >
-> > > > > > Each instance requires to report 'display_name_language_code' h=
-ence it
-> > > > > > cannot be moved to a common code.
-> > > > >
-> > > > > Can it every be different from LANG_CODE_STR?
-> > > >
-> > > > Yes.   The string currently is LANG_CODE_STR (en_US.UTF-8)  but it
-> > > > will change as the BIOS provides additional translations at a later
-> > > > time.
-> > > > This is a future enhancement for the driver.
-> > >
-> > > Is this planned for the near future?
-> > > And/Or already implemented in the BIOS?
-> > >
-> > > If there are no concrete plans to implement this soon, in my opinion,
-> > > it would be better to only introduce this code when it does something
-> > > useful.
-> >
-> > There are no concrete plans yet for the driver.  BIOS provides
-> > translations for strings (F10) UI but the attributes are reported in
-> > English regardless of the language configured.
-> > firmware-attributes requires 'display_name_language_code' to be
-> > reported.  At this time, the driver can provide a common helper to
-> > assign the LANG_CODE_STR to the corresponding attribute.
->
-> Yes please.
->
-> Create an attribute in bioscfg.c that can be used in all the other
-> attribute_groups.
 
-Will do!
+> > +int alloc_integer_data(void)
+> > +{
+> > +     bioscfg_drv.integer_instances_count =3D get_instance_count(HP_WMI=
+_BIOS_INTEGER_GUID);
+> > +     bioscfg_drv.integer_data =3D kcalloc(bioscfg_drv.integer_instance=
+s_count,
+> > +                                        sizeof(struct integer_data), G=
+FP_KERNEL);
 >
-> > > > > If not instead of having one kobj_attribute diplay_langcode for e=
-ach
-> > > > > string/enum/integer/etc you could have one kobj_attribute defined=
- in
-> > > > > bioscfg.c and then added to each string_attrs, enum_attrs...
-> > > > >
-> > > > > The _show() callback for this attribute would just return the con=
-stant
-> > > > > string.
-> > > > >
-> > > > > This removes the need for many attribute definition, members in t=
-he data
-> > > > > struct, initialization of these member...
+> It would be better to use sizeof(*...) format.
+
+I cannot use sizeof(*...) at this time, because it is allocating
+bioscfg_drv.integer_instances_count number of  integer_data
+structures.
+>
+> > +
+> > +     if (!bioscfg_drv.integer_data) {
+> > +             bioscfg_drv.integer_instances_count =3D 0;
+> > +             return -ENOMEM;
+> > +     }
+> > +     return 0;
+> > +}
+
+<snip>
+
+> > +int populate_integer_elements_from_package(union acpi_object *integer_=
+obj,
+> > +                                        int integer_obj_count,
+> > +                                        int instance_id)
+> > +{
+> > +     char *str_value =3D NULL;
+> > +     int value_len;
+> > +     int ret;
+> > +     u32 int_value;
+> > +     int elem;
+> > +     int reqs;
+> > +     int eloc;
+> > +     struct integer_data *integer_data =3D &bioscfg_drv.integer_data[i=
+nstance_id];
+> > +
+> > +     if (!integer_obj)
+> > +             return -EINVAL;
+> > +
+> > +     strscpy(integer_data->common.display_name_language_code,
+> > +             LANG_CODE_STR,
+> > +             sizeof(integer_data->common.display_name_language_code));
+> > +
+> > +     for (elem =3D 1, eloc =3D 1; elem < integer_obj_count; elem++, el=
+oc++) {
+> > +             /* ONLY look at the first INTEGER_ELEM_CNT elements */
+> > +             if (eloc =3D=3D INT_ELEM_CNT)
+> > +                     goto exit_integer_package;
+> > +
+> > +             switch (integer_obj[elem].type) {
+> > +             case ACPI_TYPE_STRING:
+> > +
+>
+> Extra newline.
+
+Done!
+>
+> > +                     if (elem !=3D PREREQUISITES) {
+> > +                             ret =3D convert_hexstr_to_str(integer_obj=
+[elem].string.pointer,
+> > +                                                         integer_obj[e=
+lem].string.length,
+> > +                                                         &str_value, &=
+value_len);
+> > +                             if (ret)
+> > +                                     continue;
+> > +                     }
+> > +                     break;
+> > +             case ACPI_TYPE_INTEGER:
+> > +                     int_value =3D (u32)integer_obj[elem].integer.valu=
+e;
+> > +                     break;
+> > +             default:
+> > +                     pr_warn("Unsupported object type [%d]\n", integer=
+_obj[elem].type);
+> > +                     continue;
+> > +             }
+> > +             /* Check that both expected and read object type match */
+
+<snip>
+
+> > +     if (integer_data->common.prerequisites_size > MAX_PREREQUISITES_S=
+IZE) {
+> > +             /* Report a message and limit prerequisite size to maximu=
+m value */
+> > +             pr_warn("Integer Prerequisites size value exceeded the ma=
+ximum number of elements supported or data may be malformed\n");
+> > +             integer_data->common.prerequisites_size =3D MAX_PREREQUIS=
+ITES_SIZE;
+> > +     }
+> > +
+> > +     // PREREQUISITES:
+> > +     for (reqs =3D 0;
+> > +          reqs < integer_data->common.prerequisites_size && reqs < MAX=
+_PREREQUISITES_SIZE;
+>
+> Why is the second check necessary, didn't you just above force it
+> prerequisites_size to never be larger than that???
+>
+> After removing it, put the whole for () for a single line.
+
+I will remove the second check and put the whole () in a single line.
+I will apply the same changes to all affected files.
+
+>
+> > +          reqs++)
+> > +             get_string_from_buffer(&buffer_ptr, buffer_size,
+> > +                                    integer_data->common.prerequisites=
+[reqs],
+> > +                                    sizeof(integer_data->common.prereq=
+uisites[reqs]));
+> > +
+> > +     // SECURITY_LEVEL:
+> > +     get_integer_from_buffer(&buffer_ptr, buffer_size,
+> > +                             &integer_data->common.security_level);
+> > +
+> > +     // INT_LOWER_BOUND:
+> > +     get_integer_from_buffer(&buffer_ptr, buffer_size,
+> > +                             &integer_data->lower_bound);
+> > +
+> > +     // INT_UPPER_BOUND:
+> > +     get_integer_from_buffer(&buffer_ptr, buffer_size,
+> > +                             &integer_data->upper_bound);
+> > +
+> > +     // INT_SCALAR_INCREMENT:
+> > +     get_integer_from_buffer(&buffer_ptr, buffer_size,
+> > +                             &integer_data->scalar_increment);
+> > +
+> > +     kfree(dst);
+> > +     return 0;
+> > +}
+> > +
+> > +/*
+> > + * exit_integer_attributes() - Clear all attribute data
+> > + *
+> > + * Clears all data allocated for this group of attributes
+> > + */
+> > +void exit_integer_attributes(void)
+> > +{
+> > +     int instance_id;
+> > +
+> > +     for (instance_id =3D 0; instance_id < bioscfg_drv.integer_instanc=
+es_count;
+> > +          instance_id++) {
+> > +             struct kobject *attr_name_kobj =3D
+> > +                     bioscfg_drv.integer_data[instance_id].attr_name_k=
+obj;
+>
+> You could consider shorter variable name for instance_id. IMHO, it add
+> very little value in the long form over i or id.
+>
+> > +
+> > +             if (attr_name_kobj)
+> > +                     sysfs_remove_group(attr_name_kobj, &integer_attr_=
+group);
+> > +     }
+> > +     bioscfg_drv.integer_instances_count =3D 0;
+> > +
+> > +     kfree(bioscfg_drv.integer_data);
+> > +     bioscfg_drv.integer_data =3D NULL;
+> > +}
+> >
+>
+> --
+>  i.
+<snip>
