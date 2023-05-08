@@ -2,160 +2,221 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B4BC77B7F
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 May 2023 08:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6255C77B75
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 May 2023 11:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231784AbjEHIWM (ORCPT
+        id S234065AbjEHLxA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 May 2023 04:22:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45552 "EHLO
+        Mon, 8 May 2023 07:53:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233831AbjEHIVg (ORCPT
+        with ESMTP id S234070AbjEHLw4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 May 2023 04:21:36 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACC291FAA0;
-        Mon,  8 May 2023 01:21:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683534075; x=1715070075;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=u8U6CpU+Uixx4b0Yc9a9cuI2RB9dOyCILQo/ufHu6C8=;
-  b=Opj9L37u6PB8pm2Um1CR7FqbitSVXooCBj421PHAEtLVyRz8Y99wPde3
-   lw50uw/oainX1ey1er+lTRMRlidAC5j8NJL2WNlAH1MjEtlIYx08Fq3dk
-   mhcWkdLTvNLM58qG+/P/IxeV0ateYlyn8YA0R7cNXJ2Q6IimVuzQ99qaj
-   SXMMYq5UlI564do58o3wi7LZa/ujOSz4j1Szth5bQ9mLkhSZtpw/oGdqg
-   2svmvpJ5l5UXpb4UO9d7fzJ7ZRwQzbbLBHnmZXqbC83/NiCZCOKesRpe5
-   dFRIMpoWFFqBnZjt80pcOkSov1GeyLaqVid+6TZf1tUE3woXi2mSWTVl7
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10703"; a="348416217"
-X-IronPort-AV: E=Sophos;i="5.99,258,1677571200"; 
-   d="scan'208";a="348416217"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 01:21:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10703"; a="944762598"
-X-IronPort-AV: E=Sophos;i="5.99,258,1677571200"; 
-   d="scan'208";a="944762598"
-Received: from cciobanu-mobl1.ger.corp.intel.com ([10.249.37.159])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 01:21:12 -0700
-Date:   Mon, 8 May 2023 11:21:10 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Luke Jones <luke@ljones.dev>
-cc:     platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        acpi4asus-user@lists.sourceforge.net, hdegoede@redhat.com,
-        corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com,
-        linux@roeck-us.net
-Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: add support for ASUS
- screenpad
-In-Reply-To: <TWL7UR.KE812U8BYMG8@ljones.dev>
-Message-ID: <39570a-d3a-13b9-f2d-e75b3d60c6c4@linux.intel.com>
-References: <20230505043013.2622603-1-luke@ljones.dev> <20230505043013.2622603-2-luke@ljones.dev> <9f77e8fd-38fe-818f-2fee-ca3bf4243576@linux.intel.com> <TWL7UR.KE812U8BYMG8@ljones.dev>
+        Mon, 8 May 2023 07:52:56 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9B731737
+        for <platform-driver-x86@vger.kernel.org>; Mon,  8 May 2023 04:52:54 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1aaf21bb42bso30294805ad.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 08 May 2023 04:52:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1683546774; x=1686138774;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z2Y6V/YituSxYMT9MKT/kC3H8mpZSafPKSyryqKuDM4=;
+        b=V3nYn5EL0y1Ojcml3lwOj2QjAW7B9L25T1oC99mYgTjiDU2F/e+SV1rumPYxsFvn2i
+         pykgj+wvD0+FHHjlsCQDBaOKA/tQl1oXAlZaWzQjUQc4HrLq+aSkMaeYaOkdPHSmsgOy
+         QMG6QPBWu11XcTx7k8V/3DL7eBvxuysW3cQCTPGbF/cp4feril8E6yJTmY1uewsrnQVK
+         ZG0ZXSIdWYPZ7oUD0gZEsgMESfvwsSstF6miQxya+tzM4IdKnFpNNc5aNxAsPLAYJNXF
+         WkOhoua8NR0VbgYL7CBx4w5ctn9OMlE/2UnkywoGlNQajIqLkzv6w5I/A/h4gRPRmE75
+         9Slg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683546774; x=1686138774;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z2Y6V/YituSxYMT9MKT/kC3H8mpZSafPKSyryqKuDM4=;
+        b=SmdAVXT0Ev2C17Bo1/AhWZmOhFufEv2ZAIPnZYhUsnIqk1vSimHXVZ3HWXhbTiqYjU
+         VBbJFykJZf8EZXeXMS9+tOf5rg0r3tUP0anheZ6B10pIJc4wupfOBVY41YFaf3nUnBkA
+         O65+sWIESVrzWs8BDbepqPZ40dGzAeGfBy9NtxdjSBtL6fqMr3JQh4LCykmaRuN6Mx5u
+         aQ5Hz3BBJVjgoOklIgmaHk0zk7G5nQGqE+rbKEMjBCk/UvziKg5f+2KhdAEFHUasKR8u
+         g5uaJEUNqU4iLMT7dVCJERXSxJ6amn8Qx7cG28hmyR35gmDP+o1w3VKwep6ZKxuWaMxN
+         B8Ag==
+X-Gm-Message-State: AC+VfDw/JpVm9CujI5gMAHb1Ek6bpuAps1F/tflaS8mx4itY11R+tLUf
+        8z1AQ/So6eZGt6Oy+su6YfCSKQ==
+X-Google-Smtp-Source: ACHHUZ4prNAdICwAaSQsV2rt6Xb7oE8D3s56s6rB058xABbz/MUOwr8u2I6R4O2V7x9xTDq54l7HqA==
+X-Received: by 2002:a17:902:c947:b0:1ab:2659:b533 with SMTP id i7-20020a170902c94700b001ab2659b533mr12659351pla.3.1683546774038;
+        Mon, 08 May 2023 04:52:54 -0700 (PDT)
+Received: from sunil-laptop.. ([106.51.189.144])
+        by smtp.gmail.com with ESMTPSA id w9-20020a170902904900b001aaed524541sm7015149plz.227.2023.05.08.04.52.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 May 2023 04:52:53 -0700 (PDT)
+From:   Sunil V L <sunilvl@ventanamicro.com>
+To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        llvm@lists.linux.dev
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Weili Qian <qianweili@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Sunil V L <sunilvl@ventanamicro.com>
+Subject: [PATCH V5 00/21] Add basic ACPI support for RISC-V
+Date:   Mon,  8 May 2023 17:22:16 +0530
+Message-Id: <20230508115237.216337-1-sunilvl@ventanamicro.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-487321179-1683533721=:1790"
-Content-ID: <5dca5e23-df7d-2774-ed31-47f8441772@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+This patch series enables the basic ACPI infrastructure for RISC-V.
+Supporting external interrupt controllers is in progress and hence it is
+tested using poll based HVC SBI console and RAM disk.
 
---8323329-487321179-1683533721=:1790
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <e862af48-2873-40a0-439c-ebca6f841dcc@linux.intel.com>
+The first patch in this series is one of the patch from Jisheng's
+series [1] which is not merged yet. This patch is required to support
+ACPI since efi_init() which gets called before sbi_init() can enable
+static branches and hits a panic.
 
-On Sat, 6 May 2023, Luke Jones wrote:
-> On Fri, May 5 2023 at 16:08:16 +0300, Ilpo Järvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
-> > On Fri, 5 May 2023, Luke D. Jones wrote:
-> > 
-> > >  Add support for the WMI methods used to turn off and adjust the
-> > >  brightness of the secondary "screenpad" device found on some high-end
-> > >  ASUS laptops like the GX650P series and others.
-> > > 
-> > >  These methods are utilised in a new backlight device named:
-> > >  - asus_screenpad
-> > > 
-> > >  Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> > >  ---
+Below are two ECRs approved by ASWG.
+RINTC - https://drive.google.com/file/d/1R6k4MshhN3WTT-hwqAquu5nX6xSEqK2l/view
+RHCT - https://drive.google.com/file/d/1nP3nFiH4jkPMp6COOxP6123DCZKR-tia/view
 
-> > >  @@ -3208,6 +3209,129 @@ static int is_display_toggle(int code)
-> > >   	return 0;
-> > >   }
-> > > 
-> > >  +/* Screenpad backlight */
-> > >  +
-> > >  +static int read_screenpad_backlight_power(struct asus_wmi *asus)
-> > >  +{
-> > >  +	int ret = asus_wmi_get_devstate_simple(asus,
-> > > ASUS_WMI_DEVID_SCREENPAD_POWER);
-> > 
-> > Please move this to own line because now you have the extra newline
-> > in between the call and error handling.
-> 
-> I don't understand what you mean sorry. Remove the new line or:
-> int ret;
-> ret = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_SCREENPAD_POWER);
 
-Don't do:
+Changes since V4:
+	1) Rebased with 6.4-rc1 which has ACPICA patches now.
+	2) Split cpufeature.c patch into two by adding patch 2/7 from Conor's series [2]
+	3) Updated caching RINTC logic to avoid global.
+	4) Added driver patches to enable allmodconfig build at the start of the series.
+	5) Updated tags
 
-int func()
-{
-	int ret = func();
+Changes since V3:
+	1) Added two more driver patches to workaround allmodconfig build failure.
+	2) Separated removal of riscv_of_processor_hartid() to a different patch.
+	3) Addressed Conor's feedback.
+	4) Rebased to v6.3-rc5 and added latest tags
 
-	if (ret < 0)
-		return ret;
-	...
-}
+Changes since V2:
+	1) Dropped ACPI_PROCESSOR patch.
+	2) Added new patch to print debug info of RISC-V INTC in MADT
+	3) Addressed other comments from Drew.
+	4) Rebased and updated tags
 
-But do:
+Changes since V1:
+	1) Dropped PCI changes and instead added dummy interfaces just to enable
+	   building ACPI core when CONFIG_PCI is enabled. Actual PCI changes will
+	   be added in future along with external interrupt controller support
+	   in ACPI.
+	2) Squashed couple of patches so that new code added gets built in each
+	   commit.
+	3) Fixed the missing wake_cpu code in timer refactor patch as pointed by
+	   Conor
+	4) Fixed an issue with SMP disabled.
+	5) Addressed other comments from Conor.
+	6) Updated documentation patch as per feedback from Sanjaya.
+	7) Fixed W=1 and checkpatch --strict issues.
+	8) Added ACK/RB tags
 
-int func()
-{
-	int ret;
+[1] https://lore.kernel.org/all/20220821140918.3613-1-jszhang@kernel.org/
+[2] http://lists.infradead.org/pipermail/linux-riscv/2023-May/031239.html
 
-	ret = func();
-	if (ret < 0)
-		return ret;
-	...
-}
+These changes are available at
+https://github.com/vlsunil/linux/commits/acpi_b1_us_review_v5
 
-This keeps the error handling next to the actual call following the usual 
-error handling pattern (natural logic grouping). The added clarity is well 
-worth the one extra line required.
+Testing:
+1) Build latest Qemu 
 
-> > >  +static int update_screenpad_bl_status(struct backlight_device *bd)
-> > >  +{
-> > >  +	struct asus_wmi *asus = bl_get_data(bd);
-> > >  +	int power, err = 0;
-> > >  +	u32 ctrl_param;
-> > >  +
-> > >  +	power = read_screenpad_backlight_power(asus);
-> > >  +	if (power == -ENODEV)
-> > >  +		return err;
-> > 
-> > Just return 0. Or is there perhaps something wrong/missing here?
-> 
-> I thought the correct thing was to return any possible error state (here,
-> anything less than 0 would be an error, right?)
+2) Build EDK2 as per instructions in
+https://github.com/vlsunil/riscv-uefi-edk2-docs/wiki/RISC-V-Qemu-Virt-support
 
-I think this was covered already but here what I meant, use either:
-	return 0;
-because err is always 0 at that point, or:
-	return power;
-Depending on which is correct, I wasn't sure because you had this after 
-it:
+3) Build Linux after enabling SBI HVC and SBI earlycon
+CONFIG_RISCV_SBI_V01=y
+CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
+CONFIG_HVC_RISCV_SBI=y
 
-> > >  +	else if (power < 0)
-> > >  +		return power;
+4) Build buildroot.
 
-...So I thought you might really intentionally wanted to return 0 there.
+Run with below command.
+qemu-system-riscv64   -nographic \
+-drive file=Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT.fd,if=pflash,format=raw,unit=1 \
+-machine virt -smp 16 -m 2G \
+-kernel arch/riscv/boot/Image \
+-initrd buildroot/output/images/rootfs.cpio \
+-append "root=/dev/ram ro console=hvc0 earlycon=sbi"
 
+Jisheng Zhang (1):
+  riscv: move sbi_init() earlier before jump_label_init()
+
+Sunil V L (20):
+  platform/surface: Disable for RISC-V
+  crypto: hisilicon/qm: Fix to enable build with RISC-V clang
+  ACPI: tables: Print RINTC information when MADT is parsed
+  ACPI: OSL: Make should_use_kmap() 0 for RISC-V
+  RISC-V: Add support to build the ACPI core
+  ACPI: processor_core: RISC-V: Enable mapping processor to the hartid
+  RISC-V: ACPI: Cache and retrieve the RINTC structure
+  drivers/acpi: RISC-V: Add RHCT related code
+  RISC-V: smpboot: Create wrapper setup_smp()
+  RISC-V: smpboot: Add ACPI support in setup_smp()
+  RISC-V: only iterate over possible CPUs in ISA string parser
+  RISC-V: cpufeature: Add ACPI support in riscv_fill_hwcap()
+  RISC-V: cpu: Enable cpuinfo for ACPI systems
+  irqchip/riscv-intc: Add ACPI support
+  clocksource/timer-riscv: Refactor riscv_timer_init_dt()
+  clocksource/timer-riscv: Add ACPI support
+  RISC-V: time.c: Add ACPI support for time_init()
+  RISC-V: Add ACPI initialization in setup_arch()
+  RISC-V: Enable ACPI in defconfig
+  MAINTAINERS: Add entry for drivers/acpi/riscv
+
+ .../admin-guide/kernel-parameters.txt         |   8 +-
+ MAINTAINERS                                   |   8 +
+ arch/riscv/Kconfig                            |   5 +
+ arch/riscv/configs/defconfig                  |   1 +
+ arch/riscv/include/asm/acenv.h                |  11 +
+ arch/riscv/include/asm/acpi.h                 |  84 ++++++
+ arch/riscv/include/asm/cpu.h                  |   8 +
+ arch/riscv/kernel/Makefile                    |   1 +
+ arch/riscv/kernel/acpi.c                      | 250 ++++++++++++++++++
+ arch/riscv/kernel/cpu.c                       |  30 ++-
+ arch/riscv/kernel/cpufeature.c                |  42 ++-
+ arch/riscv/kernel/setup.c                     |  11 +-
+ arch/riscv/kernel/smpboot.c                   |  77 +++++-
+ arch/riscv/kernel/time.c                      |  25 +-
+ drivers/acpi/Makefile                         |   2 +
+ drivers/acpi/osl.c                            |   2 +-
+ drivers/acpi/processor_core.c                 |  29 ++
+ drivers/acpi/riscv/Makefile                   |   2 +
+ drivers/acpi/riscv/rhct.c                     |  83 ++++++
+ drivers/acpi/tables.c                         |  10 +
+ drivers/clocksource/timer-riscv.c             |  92 ++++---
+ drivers/crypto/hisilicon/qm.c                 |  13 +-
+ drivers/irqchip/irq-riscv-intc.c              |  70 +++--
+ drivers/platform/surface/aggregator/Kconfig   |   2 +-
+ 24 files changed, 774 insertions(+), 92 deletions(-)
+ create mode 100644 arch/riscv/include/asm/acenv.h
+ create mode 100644 arch/riscv/include/asm/acpi.h
+ create mode 100644 arch/riscv/include/asm/cpu.h
+ create mode 100644 arch/riscv/kernel/acpi.c
+ create mode 100644 drivers/acpi/riscv/Makefile
+ create mode 100644 drivers/acpi/riscv/rhct.c
 
 -- 
- i.
---8323329-487321179-1683533721=:1790--
+2.34.1
+
