@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E22C77B7C
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 May 2023 13:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34940C77B7C
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 May 2023 13:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234919AbjEINst (ORCPT
+        id S235622AbjEIN50 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 May 2023 09:48:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38472 "EHLO
+        Tue, 9 May 2023 09:57:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234641AbjEINso (ORCPT
+        with ESMTP id S234641AbjEIN5Z (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2023 09:48:44 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F6F33AB4;
-        Tue,  9 May 2023 06:48:42 -0700 (PDT)
+        Tue, 9 May 2023 09:57:25 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EFB12693;
+        Tue,  9 May 2023 06:57:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683640122; x=1715176122;
+  t=1683640644; x=1715176644;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=nVKMQ8gQmNncq+0dtpcMhnoKycmecWZYJBjjqNw0ZBo=;
-  b=kJUEMN0zWWlQ+JzNWus8TZDZGZCA0+nEItpycl8xCshWZgnZxH32dtFh
-   T6wJEGK4U/kly5KBPm0qEORRT4t8m+nNV5lpC+wwTtOZ/mS126I2ntqBR
-   Hf4a4GDD8mz0vy1ZdHoVPtbKEce4nFBimmNZrYIHTBfW1R6fjRvr4YRZF
-   EX99EktlgWVVQLVxDYMUzoCanGCZ9LLGreaNVlplmkgr3nCVeepOQBbb1
-   vPDEIVCfAbpDcVvjqBjMn4txrqC2xW/wTQdOd0bTxvUqvHH/VUSx1pQqA
-   VcE62zD+OV0sv1FuUAbjzt6RPLHDF4pAaZvVqIjb55u5LChnocBbu0clU
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="348762223"
+  bh=UVy64Pk+hgKwBjp3S6QK5h+QalJxWGgJ9Y6DVov4oOw=;
+  b=nkchgBe/fT2flOjASp7cx2hQ9ylyn1DdHfePUhbK3Ip6uGK0GNSdWYCQ
+   9VDBwCuKTUzp/6VwB0lYvVzvnrcSXQWD0DMUfMGquITo5NEHBc6nUbrYq
+   Stn/7yfVo1PKHVHCPpe3ww8RA4OWdfbLhWYaLcud2wXhODv6b43cwlFPZ
+   b++swLEfKajoBsUeXUflJm0v5QIcK94ZSs1q1pnZA9lYLwrytpUU28K9w
+   HbpD+/vY59Df3VPp52c9dvrdriUkhc7yGT8oS/nJ1KwtkBoweM6A+uUCQ
+   QPnVEVSlllzF7+7m/FpoSkvs8ynoGTNjnbFx3WslfwQRZwQaJpojipWsk
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="436248177"
 X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
-   d="scan'208";a="348762223"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 06:48:39 -0700
+   d="scan'208";a="436248177"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 06:57:21 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="729517674"
+X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="1028823776"
 X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
-   d="scan'208";a="729517674"
+   d="scan'208";a="1028823776"
 Received: from mbrdon-mobl.ger.corp.intel.com ([10.251.219.121])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 06:48:32 -0700
-Date:   Tue, 9 May 2023 16:48:30 +0300 (EEST)
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 06:57:20 -0700
+Date:   Tue, 9 May 2023 16:57:17 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Jorge Lopez <jorgealtxwork@gmail.com>
 cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de
-Subject: Re: [PATCH v12 10/13] HP BIOSCFG driver  - spmobj-attributes
-In-Reply-To: <20230505220043.39036-11-jorge.lopez2@hp.com>
-Message-ID: <4537f210-4a7a-3c11-ecbb-ed4762a1f598@linux.intel.com>
-References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-11-jorge.lopez2@hp.com>
+Subject: Re: [PATCH v12 11/13] HP BIOSCFG driver  - surestart-attributes
+In-Reply-To: <20230505220043.39036-12-jorge.lopez2@hp.com>
+Message-ID: <ef445e78-5751-bd8f-44ce-d9beaebaac6@linux.intel.com>
+References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-12-jorge.lopez2@hp.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1976581923-1683640114=:2036"
+Content-Type: multipart/mixed; boundary="8323329-1677896569-1683640641=:2036"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -58,7 +58,7 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-1976581923-1683640114=:2036
+--8323329-1677896569-1683640641=:2036
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
 
@@ -107,477 +107,179 @@ On Fri, 5 May 2023, Jorge Lopez wrote:
 > ---
 > Based on the latest platform-drivers-x86.git/for-next
 > ---
->  .../x86/hp/hp-bioscfg/spmobj-attributes.c     | 381 ++++++++++++++++++
->  1 file changed, 381 insertions(+)
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
+>  .../x86/hp/hp-bioscfg/surestart-attributes.c  | 133 ++++++++++++++++++
+>  1 file changed, 133 insertions(+)
+>  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
 > 
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
 > new file mode 100644
-> index 000000000000..f08f7aae9423
+> index 000000000000..b627c324f6a6
 > --- /dev/null
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
-> @@ -0,0 +1,381 @@
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+> @@ -0,0 +1,133 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * Functions corresponding to secure platform management object type
-> + * attributes under BIOS PASSWORD for use with hp-bioscfg driver
+> + * Functions corresponding to sure start object type attributes under
+> + * BIOS for use with hp-bioscfg driver
 > + *
 > + *  Copyright (c) 2022 HP Development Company, L.P.
 > + */
 > +
 > +#include "bioscfg.h"
+> +#include <linux/types.h>
 > +
-> +static const char * const spm_state_types[] = {
-> +	"not provisioned",
-> +	"provisioned",
-> +	"provisioning in progress",
-> +};
-> +
-> +static const char * const spm_mechanism_types[] = {
-> +	"not provisioned",
-> +	"signing-key",
-> +	"endorsement-key",
-> +};
-> +
-> +struct secureplatform_provisioning_data {
-> +	u8 state;
-> +	u8 version[2];
-> +	u8 reserved1;
-> +	u32 features;
-> +	u32 nonce;
-> +	u8 reserved2[28];
-> +	u8 sk_mod[MAX_KEY_MOD];
-> +	u8 kek_mod[MAX_KEY_MOD];
-> +};
-> +
-> +int check_spm_is_enabled(void)
-> +{
-> +	/* do we need to check the admin password is also configured */
-> +	return bioscfg_drv.spm_data.is_enabled;
-> +}
-> +
-> +/**
-> + * calculate_security_buffer() - determines size of security buffer
-> + * for authentication scheme
-> + *
-> + * @authentication: the authentication content
-> + *
-> + * Currently only supported type is Admin password
+> +/* Maximum number of log entries supported when log entry size is 16
+> + * bytes.  This value is calculated by dividing 4096 (page size) by
+> + * log entry size.
 > + */
-> +size_t calculate_security_buffer(const char *authentication)
-> +{
-> +	int size;
-
-Why not size_t?
-
+> +#define LOG_MAX_ENTRIES		254
 > +
-> +	if (authentication && strlen(authentication) > 0) {
-> +		size = sizeof(u16) + (strlen(authentication) * sizeof(u16));
-
-Extra parenthesis.
-
-> +		if (!strstarts(authentication, BEAM_PREFIX))
-> +			size += strlen(UTF_PREFIX) * sizeof(u16);
-> +
-> +		return size;
-> +	}
-> +
-> +	size  = sizeof(u16) * 2;
-
-Extra space
-
-> +	return size;
-
-I'd do it this way though:
-
-	size_t size, authlen;
-
-	if (!authentication)
-		return sizeof(u16) * 2;
-
-	authlen = strlen(authentication);
-	if (!authlen)
-		return sizeof(u16) * 2;
-
-	size = sizeof(u16) + authlen * sizeof(u16);
-	...
-
-
-> +}
-> +
-> +/**
-> + * populate_security_buffer() - builds a security buffer for
-> + * authentication scheme
-> + *
-> + * @buffer: the buffer to populate
-> + * @authentication: the authentication content
-> + *
-> + * Currently only supported type is PLAIN TEXT
+> +/*
+> + * Current Log entry size.  This value size will change in the
+> + * future. The driver reads a total of 128 bytes for each log entry
+> + * provided by BIOS but only the first 16 bytes are used/read.
 > + */
-> +int populate_security_buffer(u16 *buffer, const char *authentication)
-> +{
-> +	u16 *auth = buffer;
-> +	u16 *retbuffer;
-> +	char *strprefix = NULL;
-> +	int ret = 0;
+> +#define LOG_ENTRY_SIZE		16
 > +
-> +	if (strstarts(authentication, BEAM_PREFIX)) {
-> +		/*
-> +		 * BEAM_PREFIX is append to buffer when a signature
-> +		 * is provided and Sure Admin is enabled in BIOS
-> +		 */
-> +		// BEAM_PREFIX found, convert part to unicode
-> +		retbuffer = hp_ascii_to_utf16_unicode(auth, authentication);
-> +		if (!retbuffer) {
-> +			ret = -EINVAL;
-> +			goto out_buffer;
-
-return -EINVAL directly.
-
-> +		}
-> +		auth = retbuffer;
-> +
-> +	} else {
-> +		/*
-> +		 * UTF-16 prefix is append to the * buffer when a BIOS
-
-What is "the * buffer" ?
-
-> +		 * admin password is configured in BIOS
-> +		 */
-> +
-> +		// append UTF_PREFIX to part and then convert it to unicode
-
-Use /* */ comments consistently.
-
-> +		strprefix = kasprintf(GFP_KERNEL, "%s%s", UTF_PREFIX,
-> +				      authentication);
-> +		if (!strprefix)
-> +			goto out_buffer;
-
-Shouldn't you return an error code here? Also, strprefix is NULL so you 
-can do return -ENOMEM directly.
-
-> +
-> +		retbuffer = hp_ascii_to_utf16_unicode(auth, strprefix);
-
-If you move kfree(strprefix) here, the flow is more obvious.
-
-> +		if (!retbuffer) {
-> +			ret = -EINVAL;
-> +			goto out_buffer;
-> +		}
-> +		auth = retbuffer;
-> +	}
-> +
-> +out_buffer:
-> +	kfree(strprefix);
-> +	return ret;
-> +}
-> +
-> +static ssize_t update_spm_state(void)
+> +/*
+> + * audit_log_entry_count_show - Reports the number of
+> + *				existing audit log entries available
+> + *				to be read
+> + */
+> +static ssize_t audit_log_entry_count_show(struct kobject *kobj,
+> +					  struct kobj_attribute *attr, char *buf)
 > +{
 > +	int ret;
-> +	struct secureplatform_provisioning_data data;
+> +	u32 count = 0;
 > +
-> +	ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_GET_STATE,
-> +				   HPWMI_SECUREPLATFORM, &data, 0,
-> +				   sizeof(data));
+> +	ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG_COUNT,
+> +				   HPWMI_SURESTART,
+> +				   &count, 1, sizeof(count));
+> +
+
+Extra newline.
+
 > +	if (ret < 0)
-> +		goto state_exit;
-
-return ret; directly.
-
+> +		return ret;
 > +
-> +	bioscfg_drv.spm_data.mechanism = data.state;
-> +	if (bioscfg_drv.spm_data.mechanism)
-> +		bioscfg_drv.spm_data.is_enabled = 1;
-> +
-> +state_exit:
-> +	return ret;
+> +	return sysfs_emit(buf, "%d,%d,%d\n", count, LOG_ENTRY_SIZE,
+> +			  LOG_MAX_ENTRIES);
 
-return 0;
-
-> +}
-> +
-> +static ssize_t statusbin(struct kobject *kobj,
-> +			 struct kobj_attribute *attr,
-> +			 struct secureplatform_provisioning_data *buf)
-> +{
-> +	int ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_GET_STATE,
-> +				       HPWMI_SECUREPLATFORM, buf, 0,
-> +				       sizeof(struct secureplatform_provisioning_data));
-> +
-> +	return ret < 0 ? ret : sizeof(struct secureplatform_provisioning_data);
-
-Split to:
-
-	int ret;
-
-	ret = hp_...();
-	if (ret < 0)
-		return ret;
-
-	return sizeof(...);
+Why 3 values instead of 1?
 
 > +}
 > +
 > +/*
-> + * status_show - Reads SPM status
+> + * audit_log_entries_show() - Return all entries found in log file
 > + */
-> +static ssize_t status_show(struct kobject *kobj, struct kobj_attribute
-> +		    *attr, char *buf)
+> +static ssize_t audit_log_entries_show(struct kobject *kobj,
+> +				      struct kobj_attribute *attr, char *buf)
 > +{
-> +	int ret, i;
-> +	struct secureplatform_provisioning_data data;
+> +	int ret;
+> +	int i;
+> +	u32 count = 0;
+> +	u8 audit_log_buffer[128];
 > +
-> +	ret = statusbin(kobj, attr, &data);
+> +	// Get the number of event logs
+> +	ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG_COUNT,
+> +				   HPWMI_SURESTART,
+> +				   &count, 1, sizeof(count));
+> +
+
+Extra newline.
+
 > +	if (ret < 0)
-> +		goto status_exit;
-
-Can you calculate strnlen() from buf at this point, or is the result 
-garbage? Should you return ret instead here?
-
-> +
-> +	sysfs_emit(buf, "%s{\n", buf);
-> +	sysfs_emit(buf, "%s\t\"State\": \"%s\",\n", buf,
-> +		   spm_state_types[data.state]);
-> +	sysfs_emit(buf, "%s\t\"Version\": \"%d.%d\",\n", buf, data.version[0],
-> +		   data.version[1]);
+> +		return ret;
 > +
 > +	/*
-> +	 * state == 0 means secure platform management
-> +	 * feature is not configured in BIOS.
+> +	 * The show() api will not work if the audit logs ever go
+> +	 *  beyond 4KB
+
+Extra space.
+
 > +	 */
-> +	if (data.state == 0)
-> +		goto status_exit;
+> +	if (count * LOG_ENTRY_SIZE > PAGE_SIZE)
+> +		return -EIO;
 > +
-> +	sysfs_emit(buf, "%s\t\"Nonce\": %d,\n", buf, data.nonce);
-> +	sysfs_emit(buf, "%s\t\"FeaturesInUse\": %d,\n", buf, data.features);
-> +	sysfs_emit(buf, "%s\t\"EndorsementKeyMod\": \"", buf);
-> +
-> +	for (i = 255; i >= 0; i--)
-> +		sysfs_emit(buf, "%s %u", buf, data.kek_mod[i]);
-> +
-> +	sysfs_emit(buf, "%s \",\n", buf);
-> +	sysfs_emit(buf, "%s\t\"SigningKeyMod\": \"", buf);
-> +
-> +	for (i = 255; i >= 0; i--)
-> +		sysfs_emit(buf, "%s %u", buf, data.sk_mod[i]);
-> +
-> +	/* Return buf contents */
-> +
-> +	sysfs_emit(buf, "%s \"\n", buf);
-> +	sysfs_emit(buf, "%s}\n", buf);
-> +
-> +status_exit:
-> +	return strnlen(buf, PAGE_SIZE);
-> +}
+> +	/*
+> +	 * We are guaranteed the buffer is 4KB so today all the event
+> +	 * logs will fit
+> +	 */
+> +	for (i = 0; i < count; i++) {
+> +		audit_log_buffer[0] = (i + 1);
 
-Emit buf into buf? There's sysfs_emit_at(), however,
+Extra parenthesis.
 
-while I'm far from sysfs formatting expert, this feels something that 
-tries to expose more than one thing over same sysfs file. Shouldn't they 
-be each in their own files?
+> +
+> +		/*
+> +		 * read audit log entry at a time. 'buf' input value
+> +		 * provides  the audit log entry to be read.  On
 
-> +static struct kobj_attribute password_spm_status = __ATTR_RO(status);
-> +
-> +ATTRIBUTE_SPM_N_PROPERTY_SHOW(is_enabled, spm);
-> +static struct kobj_attribute password_spm_is_key_enabled = __ATTR_RO(is_enabled);
-> +
-> +static ssize_t key_mechanism_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +				  char *buf)
-> +{
-> +	return sysfs_emit(buf, "%s\n",
-> +			  spm_mechanism_types[bioscfg_drv.spm_data.mechanism]);
-> +}
-> +
-> +static struct kobj_attribute password_spm_key_mechanism = __ATTR_RO(key_mechanism);
-> +
-> +static ssize_t sk_store(struct kobject *kobj,
-> +			struct kobj_attribute *attr,
-> +			const char *buf, size_t count)
-> +{
-> +	int ret;
-> +	int length;
-> +
-> +	length = count;
-> +	if (buf[length - 1] == '\n')
-> +		length--;
-> +
-> +	/* allocate space and copy current signing key */
-> +	bioscfg_drv.spm_data.signing_key = kmalloc(length, GFP_KERNEL);
-> +	if (!bioscfg_drv.spm_data.signing_key) {
-> +		ret = -ENOMEM;
-> +		goto exit_sk;
-> +	}
-> +
-> +	strscpy(bioscfg_drv.spm_data.signing_key, buf, length);
-> +	bioscfg_drv.spm_data.signing_key[length] = '\0';
-> +
-> +	/* submit signing key payload */
-> +	ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_SET_SK,
-> +				   HPWMI_SECUREPLATFORM,
-> +				   (void *)bioscfg_drv.spm_data.signing_key,
-> +				   length, 0);
-> +
-> +	if (!ret) {
-> +		bioscfg_drv.spm_data.mechanism = SIGNING_KEY;
-> +		set_reboot_and_signal_event();
-> +	}
-> +
-> +exit_sk:
-> +	kfree(bioscfg_drv.spm_data.signing_key);
-> +	bioscfg_drv.spm_data.signing_key = NULL;
-> +
-> +	return ret ? ret : count;
-> +}
-> +
-> +static struct kobj_attribute password_spm_signing_key = __ATTR_WO(sk);
-> +
-> +static ssize_t kek_store(struct kobject *kobj,
-> +			 struct kobj_attribute *attr,
-> +			 const char *buf, size_t count)
-> +{
-> +	int ret;
-> +	int length;
-> +
-> +	length = count;
-> +	if (buf[length - 1] == '\n')
-> +		length--;
-> +
-> +	/* allocate space and copy current signing key */
-> +	bioscfg_drv.spm_data.endorsement_key = kmalloc(length, GFP_KERNEL);
-> +	if (!bioscfg_drv.spm_data.endorsement_key) {
-> +		ret = -ENOMEM;
-> +		goto exit_kek;
+Extra spaces.
 
-Return directly.
+> +		 * input, Byte 0 = Audit Log entry number from
+> +		 * beginning (1..254)
+> +		 * Entry number 1 is the newest entry whereas the
+> +		 * highest entry number (number of entries) is the
+> +		 * oldest entry.
+> +		 */
+> +		ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG,
+> +					   HPWMI_SURESTART,
+> +					   audit_log_buffer, 1, 128);
+> +
+> +		if (ret >= 0 && (LOG_ENTRY_SIZE * i) < PAGE_SIZE) {
+
+Can the second condition ever fail?
+
+> +			memcpy(buf, audit_log_buffer, LOG_ENTRY_SIZE);
+> +			buf += LOG_ENTRY_SIZE;
+> +		} else {
+> +			/*
+> +			 * Encountered a failure while reading
+> +			 * individual logs. Only a partial list of
+> +			 * audit log will be returned.
+> +			 */
+> +			count = i + 1;
+> +			break;
+> +		}
+
+Reverse order, do error handling with break first.
+
+Why not return i * LOG_ENTRY_SIZE directly (or at the end), no need to 
+tweak count?
 
 > +	}
 > +
-> +	memcpy(bioscfg_drv.spm_data.endorsement_key, buf, length);
-> +	bioscfg_drv.spm_data.endorsement_key[length] = '\0';
-> +
-> +	ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_SET_KEK,
-> +				   HPWMI_SECUREPLATFORM,
-> +				   (void *)bioscfg_drv.spm_data.endorsement_key,
-
-In general, casting to void * (and back) is not required.
-
-> +				   count, 0);
-> +
-> +	if (!ret) {
-> +		bioscfg_drv.spm_data.mechanism = ENDORSEMENT_KEY;
-> +		set_reboot_and_signal_event();
-> +	}
-> +
-> +exit_kek:
-> +	kfree(bioscfg_drv.spm_data.endorsement_key);
-> +	bioscfg_drv.spm_data.endorsement_key = NULL;
-> +
-> +	return ret ? ret : count;
+> +	return count * LOG_ENTRY_SIZE;
 > +}
 > +
-> +static struct kobj_attribute password_spm_endorsement_key = __ATTR_WO(kek);
+> +static struct kobj_attribute sure_start_audit_log_entry_count = __ATTR_RO(audit_log_entry_count);
+> +static struct kobj_attribute sure_start_audit_log_entries = __ATTR_RO(audit_log_entries);
 > +
-> +static ssize_t role_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +			 char *buf)
-> +{
-> +	return sysfs_emit(buf, "%s\n", BIOS_SPM);
-> +}
-> +
-> +static struct kobj_attribute password_spm_role = __ATTR_RO(role);
-> +
-> +static ssize_t auth_token_store(struct kobject *kobj,
-> +				struct kobj_attribute *attr,
-> +				const char *buf, size_t count)
-> +{
-> +	int ret = 0;
-> +	int length;
-> +
-> +	length = count;
-> +	if (buf[length - 1] == '\n')
-> +		length--;
-> +
-> +	/* allocate space and copy current auth token */
-> +	bioscfg_drv.spm_data.auth_token = kmalloc(count, GFP_KERNEL);
-> +	if (!bioscfg_drv.spm_data.auth_token) {
-> +		ret = -ENOMEM;
-> +		goto exit_token;
-
-Return directly.
-
-> +	}
-> +
-> +	memcpy(bioscfg_drv.spm_data.auth_token, buf, count);
-> +	bioscfg_drv.spm_data.auth_token[length] = '\0';
-> +	return count;
-> +
-> +exit_token:
-> +	kfree(bioscfg_drv.spm_data.auth_token);
-> +	bioscfg_drv.spm_data.auth_token = NULL;
-> +
-> +	return ret;
-> +}
-> +
-> +static struct kobj_attribute password_spm_auth_token = __ATTR_WO(auth_token);
-> +
-> +static struct attribute *secure_platform_attrs[] = {
-> +	&password_spm_is_key_enabled.attr,
-> +	&password_spm_signing_key.attr,
-> +	&password_spm_endorsement_key.attr,
-> +	&password_spm_key_mechanism.attr,
-> +	&password_spm_status.attr,
-> +	&password_spm_role.attr,
-> +	&password_spm_auth_token.attr,
+> +static struct attribute *sure_start_attrs[] = {
+> +	&sure_start_audit_log_entry_count.attr,
+> +	&sure_start_audit_log_entries.attr,
 > +	NULL,
 > +};
 > +
-> +static const struct attribute_group secure_platform_attr_group = {
-> +	.attrs = secure_platform_attrs,
+> +static const struct attribute_group sure_start_attr_group = {
+> +	.attrs = sure_start_attrs,
 > +};
 > +
-> +void exit_secure_platform_attributes(void)
+> +void exit_sure_start_attributes(void)
 > +{
-> +	/* remove secure platform sysfs entry and free key data*/
-> +
-> +	kfree(bioscfg_drv.spm_data.endorsement_key);
-> +	bioscfg_drv.spm_data.endorsement_key = NULL;
-> +
-> +	kfree(bioscfg_drv.spm_data.signing_key);
-> +	bioscfg_drv.spm_data.signing_key = NULL;
-> +
-> +	kfree(bioscfg_drv.spm_data.auth_token);
-> +	bioscfg_drv.spm_data.auth_token = NULL;
-> +
-> +	if (bioscfg_drv.spm_data.attr_name_kobj)
-> +		sysfs_remove_group(bioscfg_drv.spm_data.attr_name_kobj,
-> +				   &secure_platform_attr_group);
+> +	sysfs_remove_group(bioscfg_drv.sure_start_attr_kobj,
+> +			   &sure_start_attr_group);
 > +}
 > +
-> +int populate_secure_platform_data(struct kobject *attr_name_kobj)
+> +int populate_sure_start_data(struct kobject *attr_name_kobj)
 > +{
-> +	/* Populate data for Secure Platform Management */
-> +	bioscfg_drv.spm_data.attr_name_kobj = attr_name_kobj;
-> +
-> +	strscpy(bioscfg_drv.spm_data.attribute_name, SPM_STR,
-> +		sizeof(bioscfg_drv.spm_data.attribute_name));
-> +
-> +	bioscfg_drv.spm_data.is_enabled = 0;
-> +	bioscfg_drv.spm_data.mechanism = 0;
-> +	bioscfg_drv.pending_reboot = false;
-> +	update_spm_state();
-> +
-> +	bioscfg_drv.spm_data.endorsement_key = NULL;
-> +	bioscfg_drv.spm_data.signing_key = NULL;
-> +	bioscfg_drv.spm_data.auth_token = NULL;
-> +
-> +	return sysfs_create_group(attr_name_kobj, &secure_platform_attr_group);
+> +	bioscfg_drv.sure_start_attr_kobj = attr_name_kobj;
+> +	return sysfs_create_group(attr_name_kobj, &sure_start_attr_group);
 > +}
 > 
 
 -- 
  i.
 
---8323329-1976581923-1683640114=:2036--
+--8323329-1677896569-1683640641=:2036--
