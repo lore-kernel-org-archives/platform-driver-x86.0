@@ -2,198 +2,166 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51A7C77B75
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 May 2023 09:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47623C7EE22
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 May 2023 09:36:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbjEIJfi (ORCPT
+        id S232747AbjEIJfz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 May 2023 05:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53536 "EHLO
+        Tue, 9 May 2023 05:35:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235216AbjEIJfc (ORCPT
+        with ESMTP id S234039AbjEIJfy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2023 05:35:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1187559D
-        for <platform-driver-x86@vger.kernel.org>; Tue,  9 May 2023 02:33:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683624797;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3DqN4EpHaajx4zOoEtXzxcBzD7rKTtkuAzpk2BLcTfs=;
-        b=GmNZ005giBFuwRHRmv7iaCnwwImfeTLT7iYM/wkImjfOoZhpaMYDIbDfrF73oNuKF3hp/U
-        gpovSWHtEKJ2oAoV3w8CMBf3w4QQhQ8pkvXhlUIfXItShkz5/B5FNQGrsJlCeoAbCRdeJE
-        ICz+DnAAOtJfrNvEkfJdbDPO3VvGaEo=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-547-FyIa5-74Pkmln3cGcbV2Zg-1; Tue, 09 May 2023 05:33:15 -0400
-X-MC-Unique: FyIa5-74Pkmln3cGcbV2Zg-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-965e5cfca7cso513129566b.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 09 May 2023 02:33:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683624794; x=1686216794;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3DqN4EpHaajx4zOoEtXzxcBzD7rKTtkuAzpk2BLcTfs=;
-        b=OVf9T70fGAZ5lHFxH09Yd8A8ZR/bCDMqoO9a8vutJkQx7qbLOYA35kfASKterXBBnc
-         8WMNBTJLKr404XUEhbODgsVlFWzo14Wioju2NKuk0ch0o1Dgrj4q9aesEC3VrXc+Uuj8
-         Sb4Se/ESBxEIb2eENfdR1fAMFv2iHWA0uvyEALEyQ5AAk4RtkoAVPbNjnRfN3HtUIHgA
-         W5SdjFDAHZnrmjZ2bWiqFBolIqdjBAqTNE+qX38058HGbwfQL8yBvli1TEYrMLeSKmn5
-         OEzbh//HY5CTbQG8uJKR0Wvf77jMq8PML4eyKwWAQCBw239StasCDmy1065AeATM1BwE
-         oljg==
-X-Gm-Message-State: AC+VfDzkQ4HBzZdZfDH219LFHIiFv5WwIklYaf7X4TVxNcWwNQAf0siU
-        Fxx6/iRGDWy15vUMUHjqsugsizrCR8Q7rIo4bCqVgf3r6rUzAm+xyoK1ECXlp0O9k83U1TlAdp+
-        8FFjdaai+fEfbUolhWCK1J6fA1T8dFa3Eig==
-X-Received: by 2002:a17:907:628c:b0:94f:2a13:4e01 with SMTP id nd12-20020a170907628c00b0094f2a134e01mr10892135ejc.74.1683624794281;
-        Tue, 09 May 2023 02:33:14 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4bR1mc9kftbZTEF4Vk1yebET7PxZAiiRHPHkiGAih8siZMbXeZXy0M2M+VVl0uKLo1PM/hlg==
-X-Received: by 2002:a17:907:628c:b0:94f:2a13:4e01 with SMTP id nd12-20020a170907628c00b0094f2a134e01mr10892116ejc.74.1683624793937;
-        Tue, 09 May 2023 02:33:13 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id jz14-20020a17090775ee00b00969cbd5718asm893811ejc.48.2023.05.09.02.33.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 May 2023 02:33:13 -0700 (PDT)
-Message-ID: <73f63b9c-d9c6-6abc-da2f-cc82ff93c58a@redhat.com>
-Date:   Tue, 9 May 2023 11:33:12 +0200
+        Tue, 9 May 2023 05:35:54 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2058.outbound.protection.outlook.com [40.107.243.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 044C5E6;
+        Tue,  9 May 2023 02:35:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l4Tk0A9oja34ziDEsAaVPUSUlbCZZj75qmR+mMME7VuG+oSEQE0YU9nf6fSSdEM1sWDkmCvTXiF2hpzLZQsocL16vPPEbvNGuExGuHhSUw+xVDQjv982EjVutcdhYVEWrG9zNyXnguAAHl/36TC+HwlW5mXSHCZlyV6d+iYB4KFfG3nenv98/cQudT7ez+eG7X4SP2u/WRBSYoxjAVXwDaOLNec5cXyh9hx9KmdHBSiP8oByeZLii+TdLSY771v8QGUFBKlO80+8mAfu5V1RdaRHVN14WZC0Zbg+0YOrjyPToUTHPts3qgNdqigWmmYPBsic6E7QH3cTwnR9sRMiSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kGez5DNflNuIoqf6VeiFcRtCwkgxIKFmbuW4EomqtC4=;
+ b=jJ9P9SC5qXa9VJlLcJkF+W7AeHsd6bsweVsvKkSzD8zTvk4uLhkkPBJ2vSKftQisiYqAHzolpzo/p89Ybeo+Ky4QAAuh/fFrMVb5kZ8e75bDA9DAodkrsQe/OfY9/Tpyj5KlI6Gi2+7/fRWSooQ2lUy7CfVEuyleqO6/ozFh7rPrTaxrr7sQWsig8rPrg9/WDSi9ukIDGOc0D5BDij05J0atJmB93ytvWSsbcxwa5Eo1YuOry5YtkgtwJQiNy5nrLbDrERuSKNCrczyvNp9M4WN4/4LRVu3m3I94b1KdQYX6LpGg1L2tdmA1oIpyL7XijQTZIg2Svj9QLE6TWL7dNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kGez5DNflNuIoqf6VeiFcRtCwkgxIKFmbuW4EomqtC4=;
+ b=c+rCSk3QkfypKGHV8An0FY72wrCDp9yvCkfvG7VvReqLTyoRA89RtD5efqvLUpNiAzXCuRetln1qZvjuc9bD72mFGU9OdW7K0jsKkqL00+9RReE5OtkwB8Yl3e/2rtZ/MbzsSAnxN1OTarRij0BJpM3W9cIYY8maypYexsq5yIHhmXKlQKLLKTcnRO21TP6Ib8uTv8bisr7zTHnMnzMcIItMX12e+7Kb7RkDCWO1f+kMUPAbyI0cNFmrw0tkSe3qzNOSITBvX50TKGiPKJxS1FV7LopVwWQwOf+Z+YNcVDaTwGK3KT3uHnociJ2W3gPc4444gbLFHI2ioYRNaXSucw==
+Received: from BN9PR12MB5381.namprd12.prod.outlook.com (2603:10b6:408:102::24)
+ by DS0PR12MB8198.namprd12.prod.outlook.com (2603:10b6:8:f2::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.32; Tue, 9 May
+ 2023 09:35:51 +0000
+Received: from BN9PR12MB5381.namprd12.prod.outlook.com
+ ([fe80::affc:9f98:eb16:ab5e]) by BN9PR12MB5381.namprd12.prod.outlook.com
+ ([fe80::affc:9f98:eb16:ab5e%3]) with mapi id 15.20.6363.033; Tue, 9 May 2023
+ 09:35:51 +0000
+From:   Vadim Pasternak <vadimp@nvidia.com>
+To:     Liming Sun <limings@nvidia.com>,
+        David Thompson <davthompson@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+CC:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 1/1] platform/mellanox: fix potential race in
+ mlxbf-tmfifo driver
+Thread-Topic: [PATCH v1 1/1] platform/mellanox: fix potential race in
+ mlxbf-tmfifo driver
+Thread-Index: AQHZeErCeevS3HVKBU67hl1SlQVFQ69RwnYA
+Date:   Tue, 9 May 2023 09:35:51 +0000
+Message-ID: <BN9PR12MB5381316B1E76612838BBB762AF769@BN9PR12MB5381.namprd12.prod.outlook.com>
+References: <b98c0ab61d644ba38fa9b3fd1607b138b0dd820b.1682518748.git.limings@nvidia.com>
+In-Reply-To: <b98c0ab61d644ba38fa9b3fd1607b138b0dd820b.1682518748.git.limings@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR12MB5381:EE_|DS0PR12MB8198:EE_
+x-ms-office365-filtering-correlation-id: f4b4ae67-0f95-4be3-c6fc-08db5070c724
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jbDyit01vtp/3t4I+49OKtf6EJ08vXcU2lHZHKCMt25viM3XLDdwQtHwip4/+DDsOyBoKD8rYLtHr/HtBv2g2xilZ5jEt67EeuWno6Tq5X3h3c171+P9Hb0R1MLaT71q6IH3nDNDJ7EZ+f4Kjx6FTgS4qXfG5AQDGWafiq+paTveyGPidlNc5jA+52QDAzA9tWNjuwPYysPrANn3n/LW/oMsrLZf12GpRIwmEEdYruwGUkevlzh1FWAtrxZZEnhWJEwXya9gsyePFPn1ct/U8mziwzeMpVOry1FsmEAUn2tYgZ81XwDBjyo9VlWVlTd7V7DGcmAzGH8iCTUsEWo25fDE3i7IAzeODNGN1r4eAEKuJzpKOXxVV77+NemwLu0IEWhhQnWb/xIN4gg/iD8/HFMJRoT95Dhxsi48V5tuJZHqgPWAoAjwhYl2OxsdqfRnloi0EVhyH26m5ji7lW8QHIRPBq6zvYWlSKmYr9ML9tkC9fd4b+ojHxRacNXkv9JOAE5Z8Rbt75pyHAykQGRVBpJalUtksl7quxT2LDMJeV0qeaHsuo+KOx1Xqec3tVPcXtHnsN08a0FVJ0d31bnysnFa+ZeV2y7eed7I+av6mP+xWhSQievvLZwg4k7WCUV3
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5381.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(366004)(396003)(376002)(136003)(39860400002)(451199021)(122000001)(2906002)(5660300002)(55016003)(33656002)(52536014)(4326008)(316002)(41300700001)(8936002)(8676002)(71200400001)(66556008)(66476007)(64756008)(66446008)(76116006)(66946007)(54906003)(110136005)(478600001)(86362001)(9686003)(83380400001)(38100700002)(7696005)(6506007)(53546011)(186003)(38070700005)(26005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?aUF1WWhOaFdUbTM3bGUzcXd3bXdUYmdacUhDMXNGUXVZNDBLY01NNFowaG5q?=
+ =?utf-8?B?djkvdEJ4a3laUzBMSTJycUdkSUJZdW14bGliREVQK1RKS3JuR1g5ZWlORXA3?=
+ =?utf-8?B?NTRsdU9nZkk0MTFVdmF5RnQ1Tis5TGZ0YmcydHp3cmxBNjlpaXZiZWtuMzc3?=
+ =?utf-8?B?dXhqRkZLZzljczFUWGc0WmdwVnRsbjdnWmJkUHNCekFLQzVYdnB6d1FrVjBB?=
+ =?utf-8?B?MnNjQWF5ajc5MTV0bDZCeHJweXlQZENvNEtRRURwVGRQUmlEbFJUdnFEN2lo?=
+ =?utf-8?B?NEs5VUNIQkEyaVZiVTZiSEREUmxtRmhENStOVlZUODVFSXpTaGdKdnRhSkQ2?=
+ =?utf-8?B?V1ZLWXMxUE5JOHQrM0laK2MxNlFaSWQ1MjU5QU9WekFaSGM3Qm1lYTdQQmhH?=
+ =?utf-8?B?TVdwTmJzT21KQVQ5eVlic2JPSEZZb3FnZW5WaGlZZy9TUGh5TEp0Tm85NFY4?=
+ =?utf-8?B?UkdFV1hYRFpoZWhoVmJKQURsNVpjMjNDWFVHaW1xc0xMOU93dGwwbjdSaCtQ?=
+ =?utf-8?B?akphNnVhZWR0MEpwTlNiVTh2SzV3RVZjdlIxdHpnOU8vUjl2ZW9RYTFnenpz?=
+ =?utf-8?B?cU5vT1Z2Qm1RYVlaMklwcFRTeDhuL2FST3BNUG5YSHlGKzYweHdVeGlEOXlQ?=
+ =?utf-8?B?RHFWVHQ5cGlHbnhzN0U1bklqRVp4N2pjMXZMNW5ZeWxVK2I5K0R0TmIvc01J?=
+ =?utf-8?B?R3puc3kzeVVnTGxyNXhDcC9iL1ltT2ZnaFB5amlVeTdhem1kTCtUV1p2L3Rx?=
+ =?utf-8?B?ZlgwMUtJMVV0cERNMW5ZQ1FLQjJRZUFCMWZFajZGeThiZGJyY0wvZklBMDZ1?=
+ =?utf-8?B?UzB0ZVpYeGR5L1BBMm1jcVNnNUNwYVJ3SkdCMVQydFU0RXZPU2kzcUZJWFhq?=
+ =?utf-8?B?ZnJ2WWdnNDFvWnVKV3NmUlBlRngxQUw1c1djTEZGOUwwM3N6WTJUdk9IZUtZ?=
+ =?utf-8?B?TDZFbGp6L0s4aHloUFBMd2d4MktROGdIWDhzeTVITkpUbmhTU1IrbURvYmlH?=
+ =?utf-8?B?RU00a0FaUW9LSnhyc3YzRW95UEFoVE5YT1VFbzdCS0pUUzJ4cXh4OGgreFpP?=
+ =?utf-8?B?dWMwdnlLeDR6a09LcjY0Zno3NXFxVVlaS1VHY2loS0FVcXg0ZXYrUDhlbWhk?=
+ =?utf-8?B?Y0hPUjVUcWQxUGk2akVCZGtXajgwMWQ0eERsc3R3Q1BHdXFhQ2Fmb2dNVmdK?=
+ =?utf-8?B?Q2Z3OFRkK2pSSlVpczN5UkVUcWFkb3p0S1ZhaFZ2OXd5aTNJSHpQNzdzUDBE?=
+ =?utf-8?B?S25WY3RTQTFtaTJ1L1NMRFdEZ1J2YmZZVVMydnljSjBzWEp6b1lMR1JaN1Rp?=
+ =?utf-8?B?Z1JJQnVDUmZYUXZRN21PM2RiRHNXajF3YUNBNE5PQ0xmSjFFOUlPbXE4RTJa?=
+ =?utf-8?B?TEZEOE9xa2ErNlZCYXZ0MkU0U0lqTU9QZ1UwaTh5eEN1ak0rcWtVeTBPellk?=
+ =?utf-8?B?Z0NPTktTNEZPaVRGbDBBUlNBK0w4QVoyQ3NCb3FUVUlnUTNoWGFyOGh1QTJp?=
+ =?utf-8?B?c0xvbys3UUdHY3N3WWZCMkNORTZZWnJlWmdLNVRpL3pjd0FMSkNOVXNwcDRR?=
+ =?utf-8?B?WHZPZ09hZHloVHRkZ0thQzNqQ2dac2pqOTAzQmwyZTVMRjdiQjErbk9ueHB4?=
+ =?utf-8?B?ZmRoN0xKQXA2QUg3SDhESTJFUm45UkJIVlZOVitBMlAvTTRBdGlSWHpqdllJ?=
+ =?utf-8?B?bkdBSm5KQkh3bU9IUXQwN1lsWUtJQVRPbW5KeFlNRm01bWEzMnlkQkFNUjkv?=
+ =?utf-8?B?U2VzckNDdG9sNGJzWWoxT1I5WmVXU3ZSY3UrZmVyd2prajhqaVNXb3o5M29w?=
+ =?utf-8?B?bEh1VEpTTnE1eFVlMlBFU2V6aUg4dTFxM0p3VUgyYi95NlNSb3JyNWorUUgx?=
+ =?utf-8?B?a2Irdzh4bzNzUkUxRnJ5NUdqbG1kYkxFdzNKcTRUMm1ra1RzekVINy8zbVNs?=
+ =?utf-8?B?ZUVjUFdmK01CNFVUYmZQUWYzSlU3N2UxM3NONnk5dnNqeS9MMzk5d3JIMEdZ?=
+ =?utf-8?B?ckh4VnREa1RMTThpaWxVa1F5ZFkwL0FZOUM3ckFVbm9UU2hMbndpMUVCT2xR?=
+ =?utf-8?B?SVF0bzZsQjlRNkZGYm9VdzVxcWN5VW1hSkNQM3FDWE9nY2RGTkozZlE2eG9o?=
+ =?utf-8?Q?Kv4VmxEw4tBCRF8loEqmjYJZ0?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 1/2] platform/x86: x86-android-tablets: Add support for
- more then 1 gpio_key
-Content-Language: en-US, nl
-To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-References: <20230505205901.42649-1-hdegoede@redhat.com>
- <aa70c911-d4b4-bdd8-66fa-9bcd4e8edcb7@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <aa70c911-d4b4-bdd8-66fa-9bcd4e8edcb7@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5381.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4b4ae67-0f95-4be3-c6fc-08db5070c724
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2023 09:35:51.0683
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JGaAjzVHY9S5ToZ4iPU1fdYTDCbwJ+yslox7+kj8ne+lvq+GCkb7XNFmSLKO54PxXy+yHZa7bj/PZfC8/B59PA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8198
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 5/8/23 09:38, Ilpo Järvinen wrote:
-> On Fri, 5 May 2023, Hans de Goede wrote:
-> 
->> Modify the gpio_keys support in x86_android_tablet_init() for
->> tablets which have more then 1 key/button which needs to be handled
->> by the gpio_keys driver.
->>
->> This requires copying over the struct gpio_keys_button from
->> the x86_gpio_button struct array to a new gpio_keys_button struct array,
->> as an added benefit this allows marking the per model x86_gpio_button
->> arrays __initconst so that they all can be freed after module init().
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>  .../platform/x86/x86-android-tablets/asus.c   |  4 ++-
->>  .../platform/x86/x86-android-tablets/core.c   | 33 ++++++++++++-------
->>  .../platform/x86/x86-android-tablets/lenovo.c |  6 ++--
->>  .../platform/x86/x86-android-tablets/other.c  |  6 ++--
->>  .../x86-android-tablets/x86-android-tablets.h |  3 +-
->>  5 files changed, 35 insertions(+), 17 deletions(-)
->>
->> diff --git a/drivers/platform/x86/x86-android-tablets/asus.c b/drivers/platform/x86/x86-android-tablets/asus.c
->> index 2aca91678219..f9c4083be86d 100644
->> --- a/drivers/platform/x86/x86-android-tablets/asus.c
->> +++ b/drivers/platform/x86/x86-android-tablets/asus.c
->> @@ -24,7 +24,7 @@ static struct gpiod_lookup_table int3496_gpo2_pin22_gpios = {
->>  	},
->>  };
->>  
->> -static struct x86_gpio_button asus_me176c_tf103c_lid = {
->> +static const struct x86_gpio_button asus_me176c_tf103c_lid __initconst = {
->>  	.button = {
->>  		.code = SW_LID,
->>  		.active_low = true,
->> @@ -175,6 +175,7 @@ const struct x86_dev_info asus_me176c_info __initconst = {
->>  	.serdev_info = asus_me176c_serdevs,
->>  	.serdev_count = ARRAY_SIZE(asus_me176c_serdevs),
->>  	.gpio_button = &asus_me176c_tf103c_lid,
->> +	.gpio_button_count = 1,
->>  	.gpiod_lookup_tables = asus_me176c_gpios,
->>  	.bat_swnode = &generic_lipo_hv_4v35_battery_node,
->>  	.modules = bq24190_modules,
->> @@ -317,6 +318,7 @@ const struct x86_dev_info asus_tf103c_info __initconst = {
->>  	.pdev_info = int3496_pdevs,
->>  	.pdev_count = 1,
->>  	.gpio_button = &asus_me176c_tf103c_lid,
->> +	.gpio_button_count = 1,
->>  	.gpiod_lookup_tables = asus_tf103c_gpios,
->>  	.bat_swnode = &asus_tf103c_battery_node,
->>  	.modules = bq24190_modules,
->> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
->> index 245167674aa2..0c7142f4eccc 100644
->> --- a/drivers/platform/x86/x86-android-tablets/core.c
->> +++ b/drivers/platform/x86/x86-android-tablets/core.c
->> @@ -124,6 +124,7 @@ static int serdev_count;
->>  static struct i2c_client **i2c_clients;
->>  static struct platform_device **pdevs;
->>  static struct serdev_device **serdevs;
->> +static struct gpio_keys_button *buttons;
->>  static struct gpiod_lookup_table * const *gpiod_lookup_tables;
->>  static const struct software_node *bat_swnode;
->>  static void (*exit_handler)(void);
->> @@ -238,6 +239,7 @@ static void x86_android_tablet_cleanup(void)
->>  		platform_device_unregister(pdevs[i]);
->>  
->>  	kfree(pdevs);
->> +	kfree(buttons);
->>  
->>  	for (i = 0; i < i2c_client_count; i++)
->>  		i2c_unregister_device(i2c_clients[i]);
->> @@ -353,22 +355,31 @@ static __init int x86_android_tablet_init(void)
->>  		}
->>  	}
->>  
->> -	if (dev_info->gpio_button) {
->> -		struct gpio_keys_platform_data pdata = {
->> -			.buttons = &dev_info->gpio_button->button,
->> -			.nbuttons = 1,
->> -		};
->> +	if (dev_info->gpio_button_count) {
->> +		struct gpio_keys_platform_data pdata = { };
->>  		struct gpio_desc *gpiod;
->>  
->> -		/* Get GPIO for the gpio-button */
->> -		ret = x86_android_tablet_get_gpiod(dev_info->gpio_button->chip,
->> -						   dev_info->gpio_button->pin, &gpiod);
->> -		if (ret < 0) {
->> +		buttons = kcalloc(dev_info->gpio_button_count, sizeof(*buttons), GFP_KERNEL);
->> +		if (!buttons) {
->>  			x86_android_tablet_cleanup();
->> -			return ret;
->> +			return -ENOMEM;
->> +		}
->> +
->> +		for (i = 0; i < dev_info->gpio_button_count; i++) {
->> +			buttons[i] = dev_info->gpio_button[i].button;
->> +			/* Get GPIO for the gpio-button */
->> +			ret = x86_android_tablet_get_gpiod(dev_info->gpio_button[i].chip,
->> +							   dev_info->gpio_button[i].pin, &gpiod);
-> 
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-
-Thank you.
-
-> With the note that the comment seems to just spell out what the code does 
-> so it feels useless.
-
-That is a valid note. I've dropped the comment while merging this.
-
-I've added this series to my review-hans (soon to be for-next) branch now.
-
-Regards,
-
-Hans
-
-
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGltaW5nIFN1biA8bGlt
+aW5nc0BudmlkaWEuY29tPg0KPiBTZW50OiBXZWRuZXNkYXksIDI2IEFwcmlsIDIwMjMgMTc6MjQN
+Cj4gVG86IFZhZGltIFBhc3Rlcm5hayA8dmFkaW1wQG52aWRpYS5jb20+OyBEYXZpZCBUaG9tcHNv
+bg0KPiA8ZGF2dGhvbXBzb25AbnZpZGlhLmNvbT47IEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJl
+ZGhhdC5jb20+Ow0KPiBNYXJrIEdyb3NzIDxtYXJrZ3Jvc3NAa2VybmVsLm9yZz4NCj4gQ2M6IExp
+bWluZyBTdW4gPGxpbWluZ3NAbnZpZGlhLmNvbT47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5r
+ZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFtQ
+QVRDSCB2MSAxLzFdIHBsYXRmb3JtL21lbGxhbm94OiBmaXggcG90ZW50aWFsIHJhY2UgaW4gbWx4
+YmYtdG1maWZvDQo+IGRyaXZlcg0KPiANCj4gVGhpcyBjb21taXQgYWRkcyBtZW1vcnkgYmFycmll
+ciBmb3IgdGhlICd2cScgdXBkYXRlIGluIGZ1bmN0aW9uDQo+IG1seGJmX3RtZmlmb192aXJ0aW9f
+ZmluZF92cXMoKSB0byBhdm9pZCBwb3RlbnRpYWwgcmFjZSBkdWUgdG8gb3V0LW9mLW9yZGVyDQo+
+IG1lbW9yeSB3cml0ZS4gSXQgYWxzbyBhZGRzIGJhcnJpZXIgZm9yIHRoZSAnaXNfcmVhZHknDQo+
+IGZsYWcgdG8gbWFrZSBzdXJlIHRoZSBpbml0aWFsaXphdGlvbnMgYXJlIHZpc2libGUgYmVmb3Jl
+IHRoaXMgZmxhZyBpcyBjaGVja2VkLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogTGltaW5nIFN1biA8
+bGltaW5nc0BudmlkaWEuY29tPg0KDQpSZXZpZXdlZC1ieTogVmFkaW0gUGFzdGVybmFrIDx2YWRp
+bXBAbnZpZGlhLmNvbT4NCg0KPiAtLS0NCj4gIGRyaXZlcnMvcGxhdGZvcm0vbWVsbGFub3gvbWx4
+YmYtdG1maWZvLmMgfCAxMSArKysrKysrKystLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0
+aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRm
+b3JtL21lbGxhbm94L21seGJmLXRtZmlmby5jDQo+IGIvZHJpdmVycy9wbGF0Zm9ybS9tZWxsYW5v
+eC9tbHhiZi10bWZpZm8uYw0KPiBpbmRleCA5MWEwNzdjMzViOGIuLmE3OTMxOGU5MGExMyAxMDA2
+NDQNCj4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS9tZWxsYW5veC9tbHhiZi10bWZpZm8uYw0KPiAr
+KysgYi9kcml2ZXJzL3BsYXRmb3JtL21lbGxhbm94L21seGJmLXRtZmlmby5jDQo+IEBAIC03ODQs
+NyArNzg0LDcgQEAgc3RhdGljIHZvaWQgbWx4YmZfdG1maWZvX3J4dHgoc3RydWN0DQo+IG1seGJm
+X3RtZmlmb192cmluZyAqdnJpbmcsIGJvb2wgaXNfcngpDQo+ICAJZmlmbyA9IHZyaW5nLT5maWZv
+Ow0KPiANCj4gIAkvKiBSZXR1cm4gaWYgdmRldiBpcyBub3QgcmVhZHkuICovDQo+IC0JaWYgKCFm
+aWZvLT52ZGV2W2RldmlkXSkNCj4gKwlpZiAoIWZpZm8gfHwgIWZpZm8tPnZkZXZbZGV2aWRdKQ0K
+PiAgCQlyZXR1cm47DQo+IA0KPiAgCS8qIFJldHVybiBpZiBhbm90aGVyIHZyaW5nIGlzIHJ1bm5p
+bmcuICovIEBAIC05ODAsOSArOTgwLDEzIEBADQo+IHN0YXRpYyBpbnQgbWx4YmZfdG1maWZvX3Zp
+cnRpb19maW5kX3ZxcyhzdHJ1Y3QgdmlydGlvX2RldmljZSAqdmRldiwNCj4gDQo+ICAJCXZxLT5u
+dW1fbWF4ID0gdnJpbmctPm51bTsNCj4gDQo+ICsJCXZxLT5wcml2ID0gdnJpbmc7DQo+ICsNCj4g
+KwkJLyogTWFrZSB2cSB1cGRhdGUgdmlzaWJsZSBiZWZvcmUgdXNpbmcgaXQuICovDQo+ICsJCXZp
+cnRpb19tYihmYWxzZSk7DQo+ICsNCj4gIAkJdnFzW2ldID0gdnE7DQo+ICAJCXZyaW5nLT52cSA9
+IHZxOw0KPiAtCQl2cS0+cHJpdiA9IHZyaW5nOw0KPiAgCX0NCj4gDQo+ICAJcmV0dXJuIDA7DQo+
+IEBAIC0xMzAyLDYgKzEzMDYsOSBAQCBzdGF0aWMgaW50IG1seGJmX3RtZmlmb19wcm9iZShzdHJ1
+Y3QNCj4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiANCj4gIAltb2RfdGltZXIoJmZpZm8tPnRp
+bWVyLCBqaWZmaWVzICsgTUxYQkZfVE1GSUZPX1RJTUVSX0lOVEVSVkFMKTsNCj4gDQo+ICsJLyog
+TWFrZSBhbGwgdXBkYXRlcyB2aXNpYmxlIGJlZm9yZSBzZXR0aW5nIHRoZSAnaXNfcmVhZHknIGZs
+YWcuICovDQo+ICsJdmlydGlvX21iKGZhbHNlKTsNCj4gKw0KPiAgCWZpZm8tPmlzX3JlYWR5ID0g
+dHJ1ZTsNCj4gIAlyZXR1cm4gMDsNCj4gDQo+IC0tDQo+IDIuMzAuMQ0KDQo=
