@@ -2,197 +2,136 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE5BC7EE22
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 May 2023 10:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16F9C77B7C
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 May 2023 10:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235208AbjEIKLd (ORCPT
+        id S235275AbjEIKZR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 May 2023 06:11:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48478 "EHLO
+        Tue, 9 May 2023 06:25:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235186AbjEIKLV (ORCPT
+        with ESMTP id S235251AbjEIKZJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2023 06:11:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83ED02D65
-        for <platform-driver-x86@vger.kernel.org>; Tue,  9 May 2023 03:10:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683627032;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=L9rbMiOw27xxoY1ruazr+6p4Yi/4A32mw5gbRIKxDHE=;
-        b=MkJueJZ1Y1IVknr9Wi1JLoNA/b1gfWhYBCIZBaHf1N92EXaFnKY9G9okfSN3P6cpfIpPrK
-        x5VP+Tfs2qTdiW4bC05n3kRqocdwx8y5tucgicu+irOY71B1n8bsFyWrbnm6dIrlZ6p5oy
-        sIPf89n33WZ0fSC0x2v9Q3+EQ7GU1Hs=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-138-cTqSQseQOOu1ZyWpMBnGfg-1; Tue, 09 May 2023 06:10:31 -0400
-X-MC-Unique: cTqSQseQOOu1ZyWpMBnGfg-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-50c064801a3so6714845a12.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 09 May 2023 03:10:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683627030; x=1686219030;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L9rbMiOw27xxoY1ruazr+6p4Yi/4A32mw5gbRIKxDHE=;
-        b=X0dxb56qhqLO+vpxYAcTyzmXB0IA0fTpt4+pwiZdDS6NtiC4zXI/FTSLBbiyFlR59s
-         /tcRXvxbkrUS6fyPzQqmmTWEErjB1JMrePLwKYfdX3H7x7LyeEBT7CugkJlWySc5udVU
-         8ClY4BG709Yw18d4zlHJA6T7CE6N89IhQWZyC48Q5N9aiLad9CgpA9U2xyXsIP5zhahB
-         YPdLpyllbfEk+Kvp6kP7OogDnTooyImgqwdy0Brefq2U+ftgp4q0D1op91d+PdAaWbOF
-         2rGqMHGTFaeSv2OHhhY6aw490PAXBFhG81SNSFTZEjOdo9SqfUT35ZAz5XJyo3RsWUrb
-         jw9A==
-X-Gm-Message-State: AC+VfDxhExV9B9d40HvrPiQc12AoPP0ULXsvbjHzvv9JwzggbPbctRn3
-        F+TFXIzwzT3ISkF4zOGJVaVWZ+tu/jSOaWb/Nsjq9LeI8UeYRpBPGUJ4SM+zNny9l1Vr5jUw730
-        FxLFmx5GY7Rw0KGeGiQDyUJzSUml0ftGRSQ==
-X-Received: by 2002:a17:907:1687:b0:958:cc8:bd55 with SMTP id hc7-20020a170907168700b009580cc8bd55mr13432897ejc.0.1683627030412;
-        Tue, 09 May 2023 03:10:30 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6L5H0XaMCop48Y9qCUt32YMQTdXO+CiALaQzO0nKyF70CRxQga8SxiF1NWf9ZOzT2uoVWyzw==
-X-Received: by 2002:a17:907:1687:b0:958:cc8:bd55 with SMTP id hc7-20020a170907168700b009580cc8bd55mr13432869ejc.0.1683627030030;
-        Tue, 09 May 2023 03:10:30 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id v3-20020aa7d803000000b0050d83a39e6fsm600303edq.4.2023.05.09.03.10.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 May 2023 03:10:29 -0700 (PDT)
-Message-ID: <5ae4e14f-bac3-3107-160e-c0856b0abdeb@redhat.com>
-Date:   Tue, 9 May 2023 12:10:28 +0200
+        Tue, 9 May 2023 06:25:09 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC06D875;
+        Tue,  9 May 2023 03:24:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683627892; x=1715163892;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=0o2bVtjt2zCtsSa0VS6xp4L/71+buNa9+sz40AhrWz4=;
+  b=nVPnIWWu8pq8aoWNELzzPWy58kaG958Tan5Df3lTTuGnC7w6lRP82iHp
+   OsiD7lUae2dsu5NjMSUlXaD6WXKjAlxM8TGTx198n7cJw2QdVrxtrQHhz
+   JfDkXKZLwbPvgKJ1faoalZWj4QJRYzJ/19aHrCSersmqUV+kKdHhtkXYY
+   wMlNES9+taDYhd97dD5fH+WS8LrF390NxaBD5QThpk7k8+3SaH6h5h2CR
+   Yl3Mji6BsJsxzPwIxPJRSg3bh1CCX/N7A9+B7AO//WWxuhmW0U6n9qQF7
+   H8OUcv3rHRq20vRjt+xbRhKC7Z1UbC4FyaQFCa0LYE724nQpq2P1mIl7H
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="329512840"
+X-IronPort-AV: E=Sophos;i="5.99,261,1677571200"; 
+   d="scan'208";a="329512840"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 03:24:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="676415954"
+X-IronPort-AV: E=Sophos;i="5.99,261,1677571200"; 
+   d="scan'208";a="676415954"
+Received: from mbrdon-mobl.ger.corp.intel.com ([10.251.219.121])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 03:24:49 -0700
+Date:   Tue, 9 May 2023 13:24:47 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Jorge Lopez <jorgealtxwork@gmail.com>
+cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, thomas@t-8ch.de
+Subject: Re: [PATCH v12 04/13] HP BIOSCFG driver - int-attributes
+In-Reply-To: <CAOOmCE-7sAPYcPM393Zsj=eR96fJv8Ectm8FoEJdxwPPAwEVVw@mail.gmail.com>
+Message-ID: <acac7018-99ad-c195-d361-f536a96aa5@linux.intel.com>
+References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-5-jorge.lopez2@hp.com> <51607d2d-2d74-7dd4-e266-cf3ec0235e7a@linux.intel.com> <CAOOmCE-7sAPYcPM393Zsj=eR96fJv8Ectm8FoEJdxwPPAwEVVw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2] platform/x86: gigabyte-wmi: remove allowlist
-Content-Language: en-US, nl
-To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
-        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas@weissschuh.net>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230325-gigabyte-wmi-unrestrict-v2-1-0a54bc8e70d2@weissschuh.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230325-gigabyte-wmi-unrestrict-v2-1-0a54bc8e70d2@weissschuh.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323329-748359660-1683627890=:2036"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 5/7/23 22:45, Thomas Weißschuh wrote:
-> Having to maintain a per-system allowlist is burdensome and confusing
-> for users, drop it.
+--8323329-748359660-1683627890=:2036
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+
+On Mon, 8 May 2023, Jorge Lopez wrote:
+
+> On Mon, May 8, 2023 at 9:45 AM Ilpo Järvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+> >
+> > On Fri, 5 May 2023, Jorge Lopez wrote:
+> >
+> > > HP BIOS Configuration driver purpose is to provide a driver supporting
+> > > the latest sysfs class firmware attributes framework allowing the user
+> > > to change BIOS settings and security solutions on HP Inc.’s commercial
+> > > notebooks.
+> > >
+> > > Many features of HP Commercial notebooks can be managed using Windows
+> > > Management Instrumentation (WMI). WMI is an implementation of Web-Based
+> > > Enterprise Management (WBEM) that provides a standards-based interface
+> > > for changing and monitoring system settings. HP BIOSCFG driver provides
+> > > a native Linux solution and the exposed features facilitates the
+> > > migration to Linux environments.
+> > >
+> > > The Linux security features to be provided in hp-bioscfg driver enables
+> > > managing the BIOS settings and security solutions via sysfs, a virtual
+> > > filesystem that can be used by user-mode applications. The new
+> > > documentation cover HP-specific firmware sysfs attributes such Secure
+> > > Platform Management and Sure Start. Each section provides security
+> > > feature description and identifies sysfs directories and files exposed
+> > > by the driver.
+> > >
+> > > Many HP Commercial notebooks include a feature called Secure Platform
+> > > Management (SPM), which replaces older password-based BIOS settings
+> > > management with public key cryptography. PC secure product management
+> > > begins when a target system is provisioned with cryptographic keys
+> > > that are used to ensure the integrity of communications between system
+> > > management utilities and the BIOS.
+> > >
+> > > HP Commercial notebooks have several BIOS settings that control its
+> > > behaviour and capabilities, many of which are related to security.
+> > > To prevent unauthorized changes to these settings, the system can
+> > > be configured to use a cryptographic signature-based authorization
+> > > string that the BIOS will use to verify authorization to modify the
+> > > setting.
+> > >
+> > > Linux Security components are under development and not published yet.
+> > > The only linux component is the driver (hp bioscfg) at this time.
+> > > Other published security components are under Windows.
+> > >
+> > > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+> > >
+> > > ---
+> > > Based on the latest platform-drivers-x86.git/for-next
+> > > ---
+
+> > > +int alloc_integer_data(void)
+> > > +{
+> > > +     bioscfg_drv.integer_instances_count = get_instance_count(HP_WMI_BIOS_INTEGER_GUID);
+> > > +     bioscfg_drv.integer_data = kcalloc(bioscfg_drv.integer_instances_count,
+> > > +                                        sizeof(struct integer_data), GFP_KERNEL);
+> >
+> > It would be better to use sizeof(*...) format.
 > 
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> I cannot use sizeof(*...) at this time, because it is allocating
+> bioscfg_drv.integer_instances_count number of  integer_data
+> structures.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
+Isn't bioscfg_drv.integer_data is a pointer to a single struct 
+integer_data? Why cannot you do sizeof(*bioscfg_drv.integer_data)?? It is 
+perfectly legal C construct for getting the size of the struct the 
+pointer points to.
 
 
+-- 
+ i.
 
-> ---
-> Changes in v2:
-> - Rebase on 6.4-rc1
-> - Remove RFC status
-> - Drop #include <linux/dmi.h>
-> - Link to v1: https://lore.kernel.org/r/20230325-gigabyte-wmi-unrestrict-v1-1-23771309a4d3@weissschuh.net
-> ---
-> 
-> As discussed in v1 this is based on 6.4-rc1.
-> ---
->  drivers/platform/x86/gigabyte-wmi.c | 44 -------------------------------------
->  1 file changed, 44 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-> index 2a426040f749..8aa665e866b8 100644
-> --- a/drivers/platform/x86/gigabyte-wmi.c
-> +++ b/drivers/platform/x86/gigabyte-wmi.c
-> @@ -5,7 +5,6 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
->  #include <linux/acpi.h>
-> -#include <linux/dmi.h>
->  #include <linux/hwmon.h>
->  #include <linux/module.h>
->  #include <linux/wmi.h>
-> @@ -13,10 +12,6 @@
->  #define GIGABYTE_WMI_GUID	"DEADBEEF-2001-0000-00A0-C90629100000"
->  #define NUM_TEMPERATURE_SENSORS	6
->  
-> -static bool force_load;
-> -module_param(force_load, bool, 0444);
-> -MODULE_PARM_DESC(force_load, "Force loading on unknown platform");
-> -
->  static u8 usable_sensors_mask;
->  
->  enum gigabyte_wmi_commandtype {
-> @@ -133,49 +128,10 @@ static u8 gigabyte_wmi_detect_sensor_usability(struct wmi_device *wdev)
->  	return r;
->  }
->  
-> -#define DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME(name) \
-> -	{ .matches = { \
-> -		DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."), \
-> -		DMI_EXACT_MATCH(DMI_BOARD_NAME, name), \
-> -	}}
-> -
-> -static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("A320M-S2H V2-CF"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H-CF"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M DS3H WIFI-CF"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M S2H V2"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE AX V2"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE V2"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 GAMING X V2"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550I AORUS PRO AX"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M AORUS PRO-P"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M DS3H"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B650 AORUS ELITE AX"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660 GAMING X DDR4"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B660I AORUS PRO DDR4"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z390 I AORUS PRO WIFI-CF"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z490 AORUS ELITE AC"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 AORUS ELITE"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 AORUS ELITE WIFI"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 GAMING X"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 I AORUS PRO WIFI"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 UD"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570S AORUS ELITE"),
-> -	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z690M AORUS ELITE AX DDR4"),
-> -	{ }
-> -};
-> -
->  static int gigabyte_wmi_probe(struct wmi_device *wdev, const void *context)
->  {
->  	struct device *hwmon_dev;
->  
-> -	if (!dmi_check_system(gigabyte_wmi_known_working_platforms)) {
-> -		if (!force_load)
-> -			return -ENODEV;
-> -		dev_warn(&wdev->dev, "Forcing load on unknown platform");
-> -	}
-> -
->  	usable_sensors_mask = gigabyte_wmi_detect_sensor_usability(wdev);
->  	if (!usable_sensors_mask) {
->  		dev_info(&wdev->dev, "No temperature sensors usable");
-> 
-> ---
-> base-commit: ac9a78681b921877518763ba0e89202254349d1b
-> change-id: 20230325-gigabyte-wmi-unrestrict-7244320c1996
-> 
-> Best regards,
-
+--8323329-748359660-1683627890=:2036--
