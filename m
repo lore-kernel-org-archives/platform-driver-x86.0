@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA59C77B75
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 May 2023 13:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E22C77B7C
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 May 2023 13:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235480AbjEINS7 (ORCPT
+        id S234919AbjEINst (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 May 2023 09:18:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47568 "EHLO
+        Tue, 9 May 2023 09:48:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235481AbjEINSr (ORCPT
+        with ESMTP id S234641AbjEINso (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2023 09:18:47 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75E9C212E;
-        Tue,  9 May 2023 06:18:37 -0700 (PDT)
+        Tue, 9 May 2023 09:48:44 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F6F33AB4;
+        Tue,  9 May 2023 06:48:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683638316; x=1715174316;
+  t=1683640122; x=1715176122;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=NkKhGt/ayZbe0yUDQi+K3T+waVsf/5SScFSwxMq6+ng=;
-  b=hIkV/L8Sxp+IcVHGYi8d/IpG0LCNNoMO4f2N+Bi/xutzbjY3dAbOVMXn
-   NqpueX2qTNGJ5729UKLWLsJuMJ6j9KB/7/qNwIGGWKoylLCTjnnNIDJ9Z
-   oJJILxjwjyOeU1ufLDyOU6c7jaiIvJ2wWKXLr2luCtOFFIx9qezxUGmga
-   IPmwCC9AC/zd0vqkkFBK/TVH9SRVSHctl1AoA28J6cCbWpCgPgvSXFB0H
-   3Ow3gRI9gI/UqUElKu8YIJNj2a2pltY6eB3QVe28PIwue7qE8NnUaqSrK
-   YoXvcNtBeVEyuNUwpUOfLqk6pVK2ggR0vl9y4WJI+528rNhte4o4AiHUS
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="352985710"
+  bh=nVKMQ8gQmNncq+0dtpcMhnoKycmecWZYJBjjqNw0ZBo=;
+  b=kJUEMN0zWWlQ+JzNWus8TZDZGZCA0+nEItpycl8xCshWZgnZxH32dtFh
+   T6wJEGK4U/kly5KBPm0qEORRT4t8m+nNV5lpC+wwTtOZ/mS126I2ntqBR
+   Hf4a4GDD8mz0vy1ZdHoVPtbKEce4nFBimmNZrYIHTBfW1R6fjRvr4YRZF
+   EX99EktlgWVVQLVxDYMUzoCanGCZ9LLGreaNVlplmkgr3nCVeepOQBbb1
+   vPDEIVCfAbpDcVvjqBjMn4txrqC2xW/wTQdOd0bTxvUqvHH/VUSx1pQqA
+   VcE62zD+OV0sv1FuUAbjzt6RPLHDF4pAaZvVqIjb55u5LChnocBbu0clU
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="348762223"
 X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
-   d="scan'208";a="352985710"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 06:18:35 -0700
+   d="scan'208";a="348762223"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 06:48:39 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="768494932"
+X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="729517674"
 X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
-   d="scan'208";a="768494932"
+   d="scan'208";a="729517674"
 Received: from mbrdon-mobl.ger.corp.intel.com ([10.251.219.121])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 06:18:34 -0700
-Date:   Tue, 9 May 2023 16:18:32 +0300 (EEST)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 06:48:32 -0700
+Date:   Tue, 9 May 2023 16:48:30 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Jorge Lopez <jorgealtxwork@gmail.com>
 cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de
-Subject: Re: [PATCH v12 07/13] HP BIOSCFG driver  - string-attributes
-In-Reply-To: <20230505220043.39036-8-jorge.lopez2@hp.com>
-Message-ID: <882cc771-7fdb-5ba6-b4ae-36e7d3ad920@linux.intel.com>
-References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-8-jorge.lopez2@hp.com>
+Subject: Re: [PATCH v12 10/13] HP BIOSCFG driver  - spmobj-attributes
+In-Reply-To: <20230505220043.39036-11-jorge.lopez2@hp.com>
+Message-ID: <4537f210-4a7a-3c11-ecbb-ed4762a1f598@linux.intel.com>
+References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-11-jorge.lopez2@hp.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1117001491-1683638316=:2036"
+Content-Type: multipart/mixed; boundary="8323329-1976581923-1683640114=:2036"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -58,7 +58,7 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-1117001491-1683638316=:2036
+--8323329-1976581923-1683640114=:2036
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
 
@@ -107,442 +107,477 @@ On Fri, 5 May 2023, Jorge Lopez wrote:
 > ---
 > Based on the latest platform-drivers-x86.git/for-next
 > ---
->  .../x86/hp/hp-bioscfg/string-attributes.c     | 415 ++++++++++++++++++
->  1 file changed, 415 insertions(+)
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+>  .../x86/hp/hp-bioscfg/spmobj-attributes.c     | 381 ++++++++++++++++++
+>  1 file changed, 381 insertions(+)
+>  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
 > 
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
 > new file mode 100644
-> index 000000000000..d74ecc973703
+> index 000000000000..f08f7aae9423
 > --- /dev/null
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-> @@ -0,0 +1,415 @@
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
+> @@ -0,0 +1,381 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * Functions corresponding to string type attributes under
-> + * HP_WMI_BIOS_STRING_GUID for use with hp-bioscfg driver.
+> + * Functions corresponding to secure platform management object type
+> + * attributes under BIOS PASSWORD for use with hp-bioscfg driver
 > + *
-> + * Copyright (c) 2022 HP Development Company, L.P.
+> + *  Copyright (c) 2022 HP Development Company, L.P.
 > + */
 > +
 > +#include "bioscfg.h"
 > +
-> +#define WMI_STRING_TYPE "HPBIOS_BIOSString"
+> +static const char * const spm_state_types[] = {
+> +	"not provisioned",
+> +	"provisioned",
+> +	"provisioning in progress",
+> +};
 > +
-> +GET_INSTANCE_ID(string);
+> +static const char * const spm_mechanism_types[] = {
+> +	"not provisioned",
+> +	"signing-key",
+> +	"endorsement-key",
+> +};
 > +
-> +static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+> +struct secureplatform_provisioning_data {
+> +	u8 state;
+> +	u8 version[2];
+> +	u8 reserved1;
+> +	u32 features;
+> +	u32 nonce;
+> +	u8 reserved2[28];
+> +	u8 sk_mod[MAX_KEY_MOD];
+> +	u8 kek_mod[MAX_KEY_MOD];
+> +};
+> +
+> +int check_spm_is_enabled(void)
 > +{
-> +	int instance_id = get_string_instance_id(kobj);
+> +	/* do we need to check the admin password is also configured */
+> +	return bioscfg_drv.spm_data.is_enabled;
+> +}
 > +
-> +	if (instance_id < 0)
-> +		return -EIO;
+> +/**
+> + * calculate_security_buffer() - determines size of security buffer
+> + * for authentication scheme
+> + *
+> + * @authentication: the authentication content
+> + *
+> + * Currently only supported type is Admin password
+> + */
+> +size_t calculate_security_buffer(const char *authentication)
+> +{
+> +	int size;
+
+Why not size_t?
+
 > +
-> +	return  sysfs_emit(buf, "%s\n",
-> +			 bioscfg_drv.string_data[instance_id].current_value);
+> +	if (authentication && strlen(authentication) > 0) {
+> +		size = sizeof(u16) + (strlen(authentication) * sizeof(u16));
+
+Extra parenthesis.
+
+> +		if (!strstarts(authentication, BEAM_PREFIX))
+> +			size += strlen(UTF_PREFIX) * sizeof(u16);
+> +
+> +		return size;
+> +	}
+> +
+> +	size  = sizeof(u16) * 2;
+
+Extra space
+
+> +	return size;
+
+I'd do it this way though:
+
+	size_t size, authlen;
+
+	if (!authentication)
+		return sizeof(u16) * 2;
+
+	authlen = strlen(authentication);
+	if (!authlen)
+		return sizeof(u16) * 2;
+
+	size = sizeof(u16) + authlen * sizeof(u16);
+	...
+
+
+> +}
+> +
+> +/**
+> + * populate_security_buffer() - builds a security buffer for
+> + * authentication scheme
+> + *
+> + * @buffer: the buffer to populate
+> + * @authentication: the authentication content
+> + *
+> + * Currently only supported type is PLAIN TEXT
+> + */
+> +int populate_security_buffer(u16 *buffer, const char *authentication)
+> +{
+> +	u16 *auth = buffer;
+> +	u16 *retbuffer;
+> +	char *strprefix = NULL;
+> +	int ret = 0;
+> +
+> +	if (strstarts(authentication, BEAM_PREFIX)) {
+> +		/*
+> +		 * BEAM_PREFIX is append to buffer when a signature
+> +		 * is provided and Sure Admin is enabled in BIOS
+> +		 */
+> +		// BEAM_PREFIX found, convert part to unicode
+> +		retbuffer = hp_ascii_to_utf16_unicode(auth, authentication);
+> +		if (!retbuffer) {
+> +			ret = -EINVAL;
+> +			goto out_buffer;
+
+return -EINVAL directly.
+
+> +		}
+> +		auth = retbuffer;
+> +
+> +	} else {
+> +		/*
+> +		 * UTF-16 prefix is append to the * buffer when a BIOS
+
+What is "the * buffer" ?
+
+> +		 * admin password is configured in BIOS
+> +		 */
+> +
+> +		// append UTF_PREFIX to part and then convert it to unicode
+
+Use /* */ comments consistently.
+
+> +		strprefix = kasprintf(GFP_KERNEL, "%s%s", UTF_PREFIX,
+> +				      authentication);
+> +		if (!strprefix)
+> +			goto out_buffer;
+
+Shouldn't you return an error code here? Also, strprefix is NULL so you 
+can do return -ENOMEM directly.
+
+> +
+> +		retbuffer = hp_ascii_to_utf16_unicode(auth, strprefix);
+
+If you move kfree(strprefix) here, the flow is more obvious.
+
+> +		if (!retbuffer) {
+> +			ret = -EINVAL;
+> +			goto out_buffer;
+> +		}
+> +		auth = retbuffer;
+> +	}
+> +
+> +out_buffer:
+> +	kfree(strprefix);
+> +	return ret;
+> +}
+> +
+> +static ssize_t update_spm_state(void)
+> +{
+> +	int ret;
+> +	struct secureplatform_provisioning_data data;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_GET_STATE,
+> +				   HPWMI_SECUREPLATFORM, &data, 0,
+> +				   sizeof(data));
+> +	if (ret < 0)
+> +		goto state_exit;
+
+return ret; directly.
+
+> +
+> +	bioscfg_drv.spm_data.mechanism = data.state;
+> +	if (bioscfg_drv.spm_data.mechanism)
+> +		bioscfg_drv.spm_data.is_enabled = 1;
+> +
+> +state_exit:
+> +	return ret;
+
+return 0;
+
+> +}
+> +
+> +static ssize_t statusbin(struct kobject *kobj,
+> +			 struct kobj_attribute *attr,
+> +			 struct secureplatform_provisioning_data *buf)
+> +{
+> +	int ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_GET_STATE,
+> +				       HPWMI_SECUREPLATFORM, buf, 0,
+> +				       sizeof(struct secureplatform_provisioning_data));
+> +
+> +	return ret < 0 ? ret : sizeof(struct secureplatform_provisioning_data);
+
+Split to:
+
+	int ret;
+
+	ret = hp_...();
+	if (ret < 0)
+		return ret;
+
+	return sizeof(...);
+
 > +}
 > +
 > +/*
-> + * validate_string_input() -
-> + * Validate input of current_value against min and max lengths
-> + *
-> + * @instance_id: The instance on which input is validated
-> + * @buf: Input value
+> + * status_show - Reads SPM status
 > + */
-> +static int validate_string_input(int instance_id, const char *buf)
+> +static ssize_t status_show(struct kobject *kobj, struct kobj_attribute
+> +		    *attr, char *buf)
 > +{
-> +	int in_len = strlen(buf);
-> +	struct string_data *string_data = &bioscfg_drv.string_data[instance_id];
+> +	int ret, i;
+> +	struct secureplatform_provisioning_data data;
 > +
-> +	/* BIOS treats it as a read only attribute */
-> +	if (string_data->common.is_readonly)
-> +		return -EIO;
+> +	ret = statusbin(kobj, attr, &data);
+> +	if (ret < 0)
+> +		goto status_exit;
+
+Can you calculate strnlen() from buf at this point, or is the result 
+garbage? Should you return ret instead here?
+
 > +
-> +	if (in_len < string_data->min_length ||
-> +	    in_len > string_data->max_length)
-> +		return -ERANGE;
+> +	sysfs_emit(buf, "%s{\n", buf);
+> +	sysfs_emit(buf, "%s\t\"State\": \"%s\",\n", buf,
+> +		   spm_state_types[data.state]);
+> +	sysfs_emit(buf, "%s\t\"Version\": \"%d.%d\",\n", buf, data.version[0],
+> +		   data.version[1]);
 > +
 > +	/*
-> +	 * set pending reboot flag depending on
-> +	 * "RequiresPhysicalPresence" value
+> +	 * state == 0 means secure platform management
+> +	 * feature is not configured in BIOS.
 > +	 */
-> +	if (string_data->common.requires_physical_presence)
-> +		set_reboot_and_signal_event();
-> +	return 0;
-> +}
+> +	if (data.state == 0)
+> +		goto status_exit;
 > +
-> +static void update_string_value(int instance_id, char *attr_value)
+> +	sysfs_emit(buf, "%s\t\"Nonce\": %d,\n", buf, data.nonce);
+> +	sysfs_emit(buf, "%s\t\"FeaturesInUse\": %d,\n", buf, data.features);
+> +	sysfs_emit(buf, "%s\t\"EndorsementKeyMod\": \"", buf);
+> +
+> +	for (i = 255; i >= 0; i--)
+> +		sysfs_emit(buf, "%s %u", buf, data.kek_mod[i]);
+> +
+> +	sysfs_emit(buf, "%s \",\n", buf);
+> +	sysfs_emit(buf, "%s\t\"SigningKeyMod\": \"", buf);
+> +
+> +	for (i = 255; i >= 0; i--)
+> +		sysfs_emit(buf, "%s %u", buf, data.sk_mod[i]);
+> +
+> +	/* Return buf contents */
+> +
+> +	sysfs_emit(buf, "%s \"\n", buf);
+> +	sysfs_emit(buf, "%s}\n", buf);
+> +
+> +status_exit:
+> +	return strnlen(buf, PAGE_SIZE);
+> +}
+
+Emit buf into buf? There's sysfs_emit_at(), however,
+
+while I'm far from sysfs formatting expert, this feels something that 
+tries to expose more than one thing over same sysfs file. Shouldn't they 
+be each in their own files?
+
+> +static struct kobj_attribute password_spm_status = __ATTR_RO(status);
+> +
+> +ATTRIBUTE_SPM_N_PROPERTY_SHOW(is_enabled, spm);
+> +static struct kobj_attribute password_spm_is_key_enabled = __ATTR_RO(is_enabled);
+> +
+> +static ssize_t key_mechanism_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +				  char *buf)
 > +{
-> +	struct string_data *string_data = &bioscfg_drv.string_data[instance_id];
-> +
-> +	/* Write settings to BIOS */
-> +	strscpy(string_data->current_value,
-> +		attr_value,
-> +		sizeof(string_data->current_value));
-
-Use less lines.
-
+> +	return sysfs_emit(buf, "%s\n",
+> +			  spm_mechanism_types[bioscfg_drv.spm_data.mechanism]);
 > +}
 > +
-> +ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name_language_code, string);
-> +static struct kobj_attribute string_display_langcode =
-> +	__ATTR_RO(display_name_language_code);
+> +static struct kobj_attribute password_spm_key_mechanism = __ATTR_RO(key_mechanism);
 > +
-> +ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, string);
-> +static struct kobj_attribute string_display_name =
-> +	__ATTR_RO(display_name);
+> +static ssize_t sk_store(struct kobject *kobj,
+> +			struct kobj_attribute *attr,
+> +			const char *buf, size_t count)
+> +{
+> +	int ret;
+> +	int length;
 > +
-> +ATTRIBUTE_PROPERTY_STORE(current_value, string);
-> +static struct kobj_attribute string_current_val =
-> +	__ATTR_RW_MODE(current_value, 0644);
+> +	length = count;
+> +	if (buf[length - 1] == '\n')
+> +		length--;
 > +
-> +ATTRIBUTE_N_PROPERTY_SHOW(min_length, string);
-> +static struct kobj_attribute string_min_length =
-> +	__ATTR_RO(min_length);
+> +	/* allocate space and copy current signing key */
+> +	bioscfg_drv.spm_data.signing_key = kmalloc(length, GFP_KERNEL);
+> +	if (!bioscfg_drv.spm_data.signing_key) {
+> +		ret = -ENOMEM;
+> +		goto exit_sk;
+> +	}
 > +
-> +ATTRIBUTE_N_PROPERTY_SHOW(max_length, string);
-> +static struct kobj_attribute string_max_length =
-> +	__ATTR_RO(max_length);
+> +	strscpy(bioscfg_drv.spm_data.signing_key, buf, length);
+> +	bioscfg_drv.spm_data.signing_key[length] = '\0';
 > +
-> +static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +	/* submit signing key payload */
+> +	ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_SET_SK,
+> +				   HPWMI_SECUREPLATFORM,
+> +				   (void *)bioscfg_drv.spm_data.signing_key,
+> +				   length, 0);
+> +
+> +	if (!ret) {
+> +		bioscfg_drv.spm_data.mechanism = SIGNING_KEY;
+> +		set_reboot_and_signal_event();
+> +	}
+> +
+> +exit_sk:
+> +	kfree(bioscfg_drv.spm_data.signing_key);
+> +	bioscfg_drv.spm_data.signing_key = NULL;
+> +
+> +	return ret ? ret : count;
+> +}
+> +
+> +static struct kobj_attribute password_spm_signing_key = __ATTR_WO(sk);
+> +
+> +static ssize_t kek_store(struct kobject *kobj,
+> +			 struct kobj_attribute *attr,
+> +			 const char *buf, size_t count)
+> +{
+> +	int ret;
+> +	int length;
+> +
+> +	length = count;
+> +	if (buf[length - 1] == '\n')
+> +		length--;
+> +
+> +	/* allocate space and copy current signing key */
+> +	bioscfg_drv.spm_data.endorsement_key = kmalloc(length, GFP_KERNEL);
+> +	if (!bioscfg_drv.spm_data.endorsement_key) {
+> +		ret = -ENOMEM;
+> +		goto exit_kek;
+
+Return directly.
+
+> +	}
+> +
+> +	memcpy(bioscfg_drv.spm_data.endorsement_key, buf, length);
+> +	bioscfg_drv.spm_data.endorsement_key[length] = '\0';
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_SET_KEK,
+> +				   HPWMI_SECUREPLATFORM,
+> +				   (void *)bioscfg_drv.spm_data.endorsement_key,
+
+In general, casting to void * (and back) is not required.
+
+> +				   count, 0);
+> +
+> +	if (!ret) {
+> +		bioscfg_drv.spm_data.mechanism = ENDORSEMENT_KEY;
+> +		set_reboot_and_signal_event();
+> +	}
+> +
+> +exit_kek:
+> +	kfree(bioscfg_drv.spm_data.endorsement_key);
+> +	bioscfg_drv.spm_data.endorsement_key = NULL;
+> +
+> +	return ret ? ret : count;
+> +}
+> +
+> +static struct kobj_attribute password_spm_endorsement_key = __ATTR_WO(kek);
+> +
+> +static ssize_t role_show(struct kobject *kobj, struct kobj_attribute *attr,
 > +			 char *buf)
 > +{
-> +	return sysfs_emit(buf, "string\n");
+> +	return sysfs_emit(buf, "%s\n", BIOS_SPM);
 > +}
 > +
-> +static struct kobj_attribute string_type =
-> +	__ATTR_RO(type);
+> +static struct kobj_attribute password_spm_role = __ATTR_RO(role);
 > +
-> +static struct attribute *string_attrs[] = {
-> +	&string_display_langcode.attr,
-> +	&string_display_name.attr,
-> +	&string_current_val.attr,
-> +	&string_min_length.attr,
-> +	&string_max_length.attr,
-> +	&string_type.attr,
+> +static ssize_t auth_token_store(struct kobject *kobj,
+> +				struct kobj_attribute *attr,
+> +				const char *buf, size_t count)
+> +{
+> +	int ret = 0;
+> +	int length;
+> +
+> +	length = count;
+> +	if (buf[length - 1] == '\n')
+> +		length--;
+> +
+> +	/* allocate space and copy current auth token */
+> +	bioscfg_drv.spm_data.auth_token = kmalloc(count, GFP_KERNEL);
+> +	if (!bioscfg_drv.spm_data.auth_token) {
+> +		ret = -ENOMEM;
+> +		goto exit_token;
+
+Return directly.
+
+> +	}
+> +
+> +	memcpy(bioscfg_drv.spm_data.auth_token, buf, count);
+> +	bioscfg_drv.spm_data.auth_token[length] = '\0';
+> +	return count;
+> +
+> +exit_token:
+> +	kfree(bioscfg_drv.spm_data.auth_token);
+> +	bioscfg_drv.spm_data.auth_token = NULL;
+> +
+> +	return ret;
+> +}
+> +
+> +static struct kobj_attribute password_spm_auth_token = __ATTR_WO(auth_token);
+> +
+> +static struct attribute *secure_platform_attrs[] = {
+> +	&password_spm_is_key_enabled.attr,
+> +	&password_spm_signing_key.attr,
+> +	&password_spm_endorsement_key.attr,
+> +	&password_spm_key_mechanism.attr,
+> +	&password_spm_status.attr,
+> +	&password_spm_role.attr,
+> +	&password_spm_auth_token.attr,
 > +	NULL,
 > +};
 > +
-> +static const struct attribute_group string_attr_group = {
-> +	.attrs = string_attrs,
+> +static const struct attribute_group secure_platform_attr_group = {
+> +	.attrs = secure_platform_attrs,
 > +};
 > +
-> +int alloc_string_data(void)
+> +void exit_secure_platform_attributes(void)
 > +{
-> +	bioscfg_drv.string_instances_count = get_instance_count(HP_WMI_BIOS_STRING_GUID);
-> +	bioscfg_drv.string_data = kcalloc(bioscfg_drv.string_instances_count,
-> +					  sizeof(struct string_data), GFP_KERNEL);
-
-sizeof(*bioscfg_drv.string_data) ?
-
-> +	if (!bioscfg_drv.string_data) {
-> +		bioscfg_drv.string_instances_count = 0;
-> +		return -ENOMEM;
-> +	}
-> +	return 0;
+> +	/* remove secure platform sysfs entry and free key data*/
+> +
+> +	kfree(bioscfg_drv.spm_data.endorsement_key);
+> +	bioscfg_drv.spm_data.endorsement_key = NULL;
+> +
+> +	kfree(bioscfg_drv.spm_data.signing_key);
+> +	bioscfg_drv.spm_data.signing_key = NULL;
+> +
+> +	kfree(bioscfg_drv.spm_data.auth_token);
+> +	bioscfg_drv.spm_data.auth_token = NULL;
+> +
+> +	if (bioscfg_drv.spm_data.attr_name_kobj)
+> +		sysfs_remove_group(bioscfg_drv.spm_data.attr_name_kobj,
+> +				   &secure_platform_attr_group);
 > +}
 > +
-> +/* Expected Values types associated with each element */
-> +static const acpi_object_type expected_string_types[] = {
-> +	[NAME] = ACPI_TYPE_STRING,
-> +	[VALUE] = ACPI_TYPE_STRING,
-> +	[PATH] = ACPI_TYPE_STRING,
-> +	[IS_READONLY] = ACPI_TYPE_INTEGER,
-> +	[DISPLAY_IN_UI] = ACPI_TYPE_INTEGER,
-> +	[REQUIRES_PHYSICAL_PRESENCE] = ACPI_TYPE_INTEGER,
-> +	[SEQUENCE] = ACPI_TYPE_INTEGER,
-> +	[PREREQUISITES_SIZE] = ACPI_TYPE_INTEGER,
-> +	[PREREQUISITES] = ACPI_TYPE_STRING,
-> +	[SECURITY_LEVEL] = ACPI_TYPE_INTEGER,
-> +	[STR_MIN_LENGTH] = ACPI_TYPE_INTEGER,
-> +	[STR_MAX_LENGTH] = ACPI_TYPE_INTEGER,
-> +};
-> +
-> +/*
-> + * populate_string_package_data() -
-> + * Populate all properties of an instance under string attribute
-> + *
-> + * @string_obj: ACPI object with string data
-> + * @instance_id: The instance to enumerate
-> + * @attr_name_kobj: The parent kernel object
-> + */
-> +int populate_string_package_data(union acpi_object *string_obj,
-> +				 int instance_id,
-> +				 struct kobject *attr_name_kobj)
+> +int populate_secure_platform_data(struct kobject *attr_name_kobj)
 > +{
-> +	struct string_data *string_data = &bioscfg_drv.string_data[instance_id];
+> +	/* Populate data for Secure Platform Management */
+> +	bioscfg_drv.spm_data.attr_name_kobj = attr_name_kobj;
 > +
-> +	string_data->attr_name_kobj = attr_name_kobj;
+> +	strscpy(bioscfg_drv.spm_data.attribute_name, SPM_STR,
+> +		sizeof(bioscfg_drv.spm_data.attribute_name));
 > +
-> +	populate_string_elements_from_package(string_obj,
-> +					      string_obj->package.count,
-> +					      instance_id);
+> +	bioscfg_drv.spm_data.is_enabled = 0;
+> +	bioscfg_drv.spm_data.mechanism = 0;
+> +	bioscfg_drv.pending_reboot = false;
+> +	update_spm_state();
 > +
-> +	update_attribute_permissions(string_data->common.is_readonly,
-> +				     &string_current_val);
-> +	friendly_user_name_update(string_data->common.path,
-> +				  attr_name_kobj->name,
-> +				  string_data->common.display_name,
-> +				  sizeof(string_data->common.display_name));
-> +	return sysfs_create_group(attr_name_kobj, &string_attr_group);
-> +}
+> +	bioscfg_drv.spm_data.endorsement_key = NULL;
+> +	bioscfg_drv.spm_data.signing_key = NULL;
+> +	bioscfg_drv.spm_data.auth_token = NULL;
 > +
-> +int populate_string_elements_from_package(union acpi_object *string_obj,
-> +					  int string_obj_count,
-> +					  int instance_id)
-> +{
-> +	char *str_value = NULL;
-> +	int value_len;
-> +	int ret = 0;
-> +	u32 int_value;
-> +	int elem;
-> +	int reqs;
-> +	int eloc;
-> +	struct string_data *string_data = &bioscfg_drv.string_data[instance_id];
-> +
-> +	if (!string_obj)
-> +		return -EINVAL;
-> +
-> +	strscpy(string_data->common.display_name_language_code,
-> +		LANG_CODE_STR,
-> +		sizeof(string_data->common.display_name_language_code));
-> +
-> +	for (elem = 1, eloc = 1; elem < string_obj_count; elem++, eloc++) {
-> +		/* ONLY look at the first STRING_ELEM_CNT elements */
-> +		if (eloc == STR_ELEM_CNT)
-> +			goto exit_string_package;
-> +
-> +		switch (string_obj[elem].type) {
-> +		case ACPI_TYPE_STRING:
-> +
-> +			if (elem != PREREQUISITES) {
-> +				ret = convert_hexstr_to_str(string_obj[elem].string.pointer,
-> +							    string_obj[elem].string.length,
-> +							    &str_value, &value_len);
-> +
-> +				if (ret)
-> +					continue;
-> +			}
-> +			break;
-> +		case ACPI_TYPE_INTEGER:
-> +			int_value = (u32)string_obj[elem].integer.value;
-> +			break;
-> +		default:
-> +			pr_warn("Unsupported object type [%d]\n", string_obj[elem].type);
-> +			continue;
-> +		}
-> +
-> +		/* Check that both expected and read object type match */
-> +		if (expected_string_types[eloc] != string_obj[elem].type) {
-> +			pr_err("Error expected type %d for elem  %d, but got type %d instead\n",
-> +			       expected_string_types[eloc], elem, string_obj[elem].type);
-> +			return -EIO;
-> +		}
-> +
-> +		/* Assign appropriate element value to corresponding field*/
-> +		switch (eloc) {
-> +		case VALUE:
-> +			strscpy(string_data->current_value,
-> +				str_value, sizeof(string_data->current_value));
-> +			break;
-> +		case PATH:
-> +			strscpy(string_data->common.path, str_value,
-> +				sizeof(string_data->common.path));
-> +			break;
-> +		case IS_READONLY:
-> +			string_data->common.is_readonly = int_value;
-> +			break;
-> +		case DISPLAY_IN_UI:
-> +			string_data->common.display_in_ui = int_value;
-> +			break;
-> +		case REQUIRES_PHYSICAL_PRESENCE:
-> +			string_data->common.requires_physical_presence = int_value;
-> +			break;
-> +		case SEQUENCE:
-> +			string_data->common.sequence = int_value;
-> +			break;
-> +		case PREREQUISITES_SIZE:
-> +			if (string_data->common.prerequisites_size > MAX_PREREQUISITES_SIZE)
-> +				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-> +			/*
-> +			 * This HACK is needed to keep the expected
-> +			 * element list pointing to the right obj[elem].type
-> +			 * when the size is zero.  PREREQUISITES
-> +			 * object is omitted by BIOS when the size is
-> +			 * zero.
-> +			 */
-> +			if (string_data->common.prerequisites_size == 0)
-> +				eloc++;
-> +			break;
-> +		case PREREQUISITES:
-> +			for (reqs = 0;
-> +			     reqs < string_data->common.prerequisites_size && reqs < MAX_PREREQUISITES_SIZE;
-> +			     reqs++) {
-> +				if (elem >= string_obj_count) {
-> +					pr_err("Error elem-objects package is too small\n");
-> +					return -EINVAL;
-> +				}
-> +
-> +				ret = convert_hexstr_to_str(string_obj[elem + reqs].string.pointer,
-> +							    string_obj[elem + reqs].string.length,
-> +							    &str_value, &value_len);
-> +
-> +				if (ret)
-> +					continue;
-> +
-> +				strscpy(string_data->common.prerequisites[reqs],
-> +					str_value,
-> +					sizeof(string_data->common.prerequisites[reqs]));
-> +				kfree(str_value);
-> +			}
-> +			break;
-> +
-> +		case SECURITY_LEVEL:
-> +			string_data->common.security_level = int_value;
-> +			break;
-> +		case STR_MIN_LENGTH:
-> +			string_data->min_length = int_value;
-> +			break;
-> +		case STR_MAX_LENGTH:
-> +			string_data->max_length = int_value;
-> +			break;
-> +		default:
-> +			pr_warn("Invalid element: %d found in String attribute or data may be malformed\n", elem);
-> +			break;
-> +		}
-> +
-> +		kfree(str_value);
-> +	}
-> +
-> +exit_string_package:
-> +	kfree(str_value);
-> +	return 0;
-> +}
-> +
-> +/*
-> + * populate_string_data() -
-> + * Populate all properties of an instance under string attribute
-> + *
-> + * @buffer_ptr: Buffer pointer
-> + * @buffer_size: Buffer size
-> + * @instance_id: The instance to enumerate
-> + * @attr_name_kobj: The parent kernel object
-> + */
-> +int populate_string_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
-> +				int instance_id,
-> +				struct kobject *attr_name_kobj)
-> +{
-> +	struct string_data *string_data = &bioscfg_drv.string_data[instance_id];
-> +
-> +	string_data->attr_name_kobj = attr_name_kobj;
-> +
-> +	populate_string_elements_from_buffer(buffer_ptr, buffer_size,
-> +					     instance_id);
-> +
-> +	update_attribute_permissions(string_data->common.is_readonly,
-> +				     &string_current_val);
-> +	friendly_user_name_update(string_data->common.path,
-> +				  attr_name_kobj->name,
-> +				  string_data->common.display_name,
-> +				  sizeof(string_data->common.display_name));
-> +
-> +	return sysfs_create_group(attr_name_kobj, &string_attr_group);
-> +}
-> +
-> +int populate_string_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
-> +					 int instance_id)
-> +{
-> +	int reqs;
-> +	struct string_data *string_data = &bioscfg_drv.string_data[instance_id];
-> +
-> +	strscpy(string_data->common.display_name_language_code,
-> +		LANG_CODE_STR,
-> +		sizeof(string_data->common.display_name_language_code));
-> +
-> +	// VALUE:
-> +	get_string_from_buffer(&buffer_ptr, buffer_size, string_data->current_value,
-> +			       sizeof(string_data->current_value));
-> +
-> +	// PATH:
-> +	get_string_from_buffer(&buffer_ptr, buffer_size, string_data->common.path,
-> +			       sizeof(string_data->common.path));
-> +
-> +	// IS_READONLY:
-> +	get_integer_from_buffer(&buffer_ptr, buffer_size,
-> +				&string_data->common.is_readonly);
-> +
-> +	//DISPLAY_IN_UI:
-> +	get_integer_from_buffer(&buffer_ptr, buffer_size,
-> +				&string_data->common.display_in_ui);
-> +
-> +	// REQUIRES_PHYSICAL_PRESENCE:
-> +	get_integer_from_buffer(&buffer_ptr, buffer_size,
-> +				&string_data->common.requires_physical_presence);
-> +
-> +	// SEQUENCE:
-> +	get_integer_from_buffer(&buffer_ptr, buffer_size,
-> +				&string_data->common.sequence);
-> +
-> +	// PREREQUISITES_SIZE:
-> +	get_integer_from_buffer(&buffer_ptr, buffer_size,
-> +				&string_data->common.prerequisites_size);
-> +
-> +	if (string_data->common.prerequisites_size > MAX_PREREQUISITES_SIZE) {
-> +		/* Report a message and limit prerequisite size to maximum value */
-> +		pr_warn("String Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-> +		string_data->common.prerequisites_size = MAX_PREREQUISITES_SIZE;
-> +	}
-> +
-> +	// PREREQUISITES:
-> +	for (reqs = 0;
-> +	     reqs < string_data->common.prerequisites_size && reqs < MAX_PREREQUISITES_SIZE;
-> +	     reqs++)
-> +		get_string_from_buffer(&buffer_ptr, buffer_size,
-> +				       string_data->common.prerequisites[reqs],
-> +				       sizeof(string_data->common.prerequisites[reqs]));
-> +
-> +	// SECURITY_LEVEL:
-> +	get_integer_from_buffer(&buffer_ptr, buffer_size,
-> +				&string_data->common.security_level);
-> +
-> +	// STR_MIN_LENGTH:
-> +	get_integer_from_buffer(&buffer_ptr, buffer_size,
-> +				&string_data->min_length);
-> +
-> +	// STR_MAX_LENGTH:
-> +	get_integer_from_buffer(&buffer_ptr, buffer_size,
-> +				&string_data->max_length);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * exit_string_attributes() - Clear all attribute data
-> + *
-> + * Clears all data allocated for this group of attributes
-> + */
-> +void exit_string_attributes(void)
-> +{
-> +	int instance_id;
-> +
-> +	for (instance_id = 0; instance_id < bioscfg_drv.string_instances_count;
-> +	     instance_id++) {
-> +		struct kobject *attr_name_kobj =
-> +			bioscfg_drv.string_data[instance_id].attr_name_kobj;
-> +
-> +		if (attr_name_kobj)
-> +			sysfs_remove_group(attr_name_kobj, &string_attr_group);
-> +	}
-> +	bioscfg_drv.string_instances_count = 0;
-> +
-> +	kfree(bioscfg_drv.string_data);
-> +	bioscfg_drv.string_data = NULL;
+> +	return sysfs_create_group(attr_name_kobj, &secure_platform_attr_group);
 > +}
 > 
-
-+ all copy-pasted issues.
 
 -- 
  i.
 
---8323329-1117001491-1683638316=:2036--
+--8323329-1976581923-1683640114=:2036--
