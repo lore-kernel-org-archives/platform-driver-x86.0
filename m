@@ -2,136 +2,136 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16F9C77B7C
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 May 2023 10:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F1BC77B7C
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 May 2023 10:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235275AbjEIKZR (ORCPT
+        id S235199AbjEIKeX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 May 2023 06:25:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56950 "EHLO
+        Tue, 9 May 2023 06:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235251AbjEIKZJ (ORCPT
+        with ESMTP id S235353AbjEIKeK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2023 06:25:09 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC06D875;
-        Tue,  9 May 2023 03:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683627892; x=1715163892;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=0o2bVtjt2zCtsSa0VS6xp4L/71+buNa9+sz40AhrWz4=;
-  b=nVPnIWWu8pq8aoWNELzzPWy58kaG958Tan5Df3lTTuGnC7w6lRP82iHp
-   OsiD7lUae2dsu5NjMSUlXaD6WXKjAlxM8TGTx198n7cJw2QdVrxtrQHhz
-   JfDkXKZLwbPvgKJ1faoalZWj4QJRYzJ/19aHrCSersmqUV+kKdHhtkXYY
-   wMlNES9+taDYhd97dD5fH+WS8LrF390NxaBD5QThpk7k8+3SaH6h5h2CR
-   Yl3Mji6BsJsxzPwIxPJRSg3bh1CCX/N7A9+B7AO//WWxuhmW0U6n9qQF7
-   H8OUcv3rHRq20vRjt+xbRhKC7Z1UbC4FyaQFCa0LYE724nQpq2P1mIl7H
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="329512840"
-X-IronPort-AV: E=Sophos;i="5.99,261,1677571200"; 
-   d="scan'208";a="329512840"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 03:24:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="676415954"
-X-IronPort-AV: E=Sophos;i="5.99,261,1677571200"; 
-   d="scan'208";a="676415954"
-Received: from mbrdon-mobl.ger.corp.intel.com ([10.251.219.121])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 03:24:49 -0700
-Date:   Tue, 9 May 2023 13:24:47 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
-cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, thomas@t-8ch.de
-Subject: Re: [PATCH v12 04/13] HP BIOSCFG driver - int-attributes
-In-Reply-To: <CAOOmCE-7sAPYcPM393Zsj=eR96fJv8Ectm8FoEJdxwPPAwEVVw@mail.gmail.com>
-Message-ID: <acac7018-99ad-c195-d361-f536a96aa5@linux.intel.com>
-References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-5-jorge.lopez2@hp.com> <51607d2d-2d74-7dd4-e266-cf3ec0235e7a@linux.intel.com> <CAOOmCE-7sAPYcPM393Zsj=eR96fJv8Ectm8FoEJdxwPPAwEVVw@mail.gmail.com>
+        Tue, 9 May 2023 06:34:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF96010A15
+        for <platform-driver-x86@vger.kernel.org>; Tue,  9 May 2023 03:33:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683628383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rY0wAhFO0QvQXSIMKQo3/4SZywWKrbnd3LDq+RJ6btQ=;
+        b=OiYv/rkhhOV+MA9a57cyIijO1vCpytl9dI1mFQgucXuBmylCdyqPKnZFuZvqge9bmItugD
+        wjSZWZw24ZIaW3ApRlc8ff+23bgvQ0SUCPeddSTzEtzgo9dUAQOQDSS4at87kx5ddilwKp
+        h+wGT1AjOiUPTQJH7p3FxVVeltGkcEA=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-597-UD0lW88LPmy4cBfQ7IbG0g-1; Tue, 09 May 2023 06:33:01 -0400
+X-MC-Unique: UD0lW88LPmy4cBfQ7IbG0g-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-94a355cf318so657289766b.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 09 May 2023 03:33:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683628381; x=1686220381;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rY0wAhFO0QvQXSIMKQo3/4SZywWKrbnd3LDq+RJ6btQ=;
+        b=EFNQu/zzJxs0OCBgQvkKYhQOFmlELSrq6F2F3oMRtv2mrb43Kcz0rQA2ThRxwaIqVL
+         OD8vHDNMjdiig2zq5ud94bvTM5mfA3Zz9fSGNujmtvJJsmQ0plYD0snFbvPNPYuuUGcI
+         euw6xMCI3yH9dEIul+UNsUZNEixGs3/RrUpj/nnVQX3sl/yCJbdvUjcSBpRMYVacRNpC
+         8iyqdnoa63Dknk95dQ7JqzzMOwHbv0TvbGdQGBKTV27dn74ToHzj8Z97PMn7Cb2AmkIb
+         jNHvcZqYEwErrT1xVLgKwXtGs8aNw/nXW72F8M7BqxqmLl0dRIvO289V5pfRNyRWS4/c
+         uk1g==
+X-Gm-Message-State: AC+VfDwY3mNLtjFUvsf/jYWrxusXO2jaqQJ6WtIMGzLrhch+dNbuLgsy
+        HSne0lQDqjFnFaNwdeJnvFlgyemi1/K4YXAwTiQIH4eMASM7TtKgD6p3xPp/8tw+wt5F1jjd036
+        k03ucOaiCJXmw4TurtI4nzK/T9zVuQVbhjg==
+X-Received: by 2002:a17:907:a4d:b0:95e:de94:5bea with SMTP id be13-20020a1709070a4d00b0095ede945beamr11586525ejc.56.1683628380814;
+        Tue, 09 May 2023 03:33:00 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5ZAQ9eCkaXMHHXerfZzIta4y0/T8ovCZ82gEgyXT6wc8rMWJpmUYK9BAFnT0SZXGRYHhkx1g==
+X-Received: by 2002:a17:907:a4d:b0:95e:de94:5bea with SMTP id be13-20020a1709070a4d00b0095ede945beamr11586508ejc.56.1683628380502;
+        Tue, 09 May 2023 03:33:00 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id v20-20020a170906b01400b0096165b2703asm1153586ejy.110.2023.05.09.03.32.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 May 2023 03:33:00 -0700 (PDT)
+Message-ID: <a36a760f-6f64-190f-f94b-d30b82b3382e@redhat.com>
+Date:   Tue, 9 May 2023 12:32:59 +0200
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-748359660-1683627890=:2036"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2 10/19] platform/x86: lenovo-yogabook: Split probe()
+ into generic and WMI specific parts
+Content-Language: en-US, nl
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Yauhen Kharuzhy <jekhor@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20230430165807.472798-1-hdegoede@redhat.com>
+ <20230430165807.472798-11-hdegoede@redhat.com>
+ <CAHp75VejjvfjLSsePfhRetEiWTE7ve=uZR87V9MZLET9KG6C1g@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAHp75VejjvfjLSsePfhRetEiWTE7ve=uZR87V9MZLET9KG6C1g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323329-748359660-1683627890=:2036
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-On Mon, 8 May 2023, Jorge Lopez wrote:
-
-> On Mon, May 8, 2023 at 9:45 AM Ilpo Järvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
-> >
-> > On Fri, 5 May 2023, Jorge Lopez wrote:
-> >
-> > > HP BIOS Configuration driver purpose is to provide a driver supporting
-> > > the latest sysfs class firmware attributes framework allowing the user
-> > > to change BIOS settings and security solutions on HP Inc.’s commercial
-> > > notebooks.
-> > >
-> > > Many features of HP Commercial notebooks can be managed using Windows
-> > > Management Instrumentation (WMI). WMI is an implementation of Web-Based
-> > > Enterprise Management (WBEM) that provides a standards-based interface
-> > > for changing and monitoring system settings. HP BIOSCFG driver provides
-> > > a native Linux solution and the exposed features facilitates the
-> > > migration to Linux environments.
-> > >
-> > > The Linux security features to be provided in hp-bioscfg driver enables
-> > > managing the BIOS settings and security solutions via sysfs, a virtual
-> > > filesystem that can be used by user-mode applications. The new
-> > > documentation cover HP-specific firmware sysfs attributes such Secure
-> > > Platform Management and Sure Start. Each section provides security
-> > > feature description and identifies sysfs directories and files exposed
-> > > by the driver.
-> > >
-> > > Many HP Commercial notebooks include a feature called Secure Platform
-> > > Management (SPM), which replaces older password-based BIOS settings
-> > > management with public key cryptography. PC secure product management
-> > > begins when a target system is provisioned with cryptographic keys
-> > > that are used to ensure the integrity of communications between system
-> > > management utilities and the BIOS.
-> > >
-> > > HP Commercial notebooks have several BIOS settings that control its
-> > > behaviour and capabilities, many of which are related to security.
-> > > To prevent unauthorized changes to these settings, the system can
-> > > be configured to use a cryptographic signature-based authorization
-> > > string that the BIOS will use to verify authorization to modify the
-> > > setting.
-> > >
-> > > Linux Security components are under development and not published yet.
-> > > The only linux component is the driver (hp bioscfg) at this time.
-> > > Other published security components are under Windows.
-> > >
-> > > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
-> > >
-> > > ---
-> > > Based on the latest platform-drivers-x86.git/for-next
-> > > ---
-
-> > > +int alloc_integer_data(void)
-> > > +{
-> > > +     bioscfg_drv.integer_instances_count = get_instance_count(HP_WMI_BIOS_INTEGER_GUID);
-> > > +     bioscfg_drv.integer_data = kcalloc(bioscfg_drv.integer_instances_count,
-> > > +                                        sizeof(struct integer_data), GFP_KERNEL);
-> >
-> > It would be better to use sizeof(*...) format.
+On 5/1/23 11:53, Andy Shevchenko wrote:
+> On Sun, Apr 30, 2023 at 7:58 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Split probe() and remove() into generic and WMI specific parts.
+>>
+>> This is a preparation patch for making lenovo-yogabook-wmi also work
+>> on the Android version of the Yoga Book 1 which does not have a WMI
+>> interface to deal with toggling the keyboard half between
+>> touch-keyboard and wacom-digitizer mode.
 > 
-> I cannot use sizeof(*...) at this time, because it is allocating
-> bioscfg_drv.integer_instances_count number of  integer_data
-> structures.
+> ...
+> 
+>> Changes in v2:
+>> - Use "return dev_err_probe(...);" in several places to simplify
+>>   error-exits in the new yogabook_probe() function
+> 
+> I'm not sure you have changed previous patches where it makes sense to
+> use dev_err_probe().
 
-Isn't bioscfg_drv.integer_data is a pointer to a single struct 
-integer_data? Why cannot you do sizeof(*bioscfg_drv.integer_data)?? It is 
-perfectly legal C construct for getting the size of the struct the 
-pointer points to.
+Actually the 2 cases you point out below are the 2 last regular dev_err()
+calls in the probe() path of the driver.
+
+> Neither it's done (in full) here (in case you
+> wanted to split replacement to a separate change). See below.
+> 
+> ...
+> 
+>> +       data->kbd_adev = acpi_dev_get_first_match_dev("GDIX1001", NULL, -1);
+>> +       if (!data->kbd_adev) {
+>> +               dev_err(dev, "Cannot find the touchpad device in ACPI tables\n");
+>> +               return -ENODEV;
+> 
+> Here...
+> 
+>> +       }
+>> +
+>> +       data->dig_adev = acpi_dev_get_first_match_dev("WCOM0019", NULL, -1);
+>> +       if (!data->dig_adev) {
+>> +               dev_err(dev, "Cannot find the digitizer device in ACPI tables\n");
+>> +               r = -ENODEV;
+> 
+> ...and here.
+
+Ack I've fixed these both up while merging this series.
+
+Regards,
+
+Hans
 
 
--- 
- i.
-
---8323329-748359660-1683627890=:2036--
