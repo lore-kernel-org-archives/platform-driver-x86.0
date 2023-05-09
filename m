@@ -2,165 +2,242 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCB4C77B75
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 May 2023 14:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2441C7EE2D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 May 2023 17:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235376AbjEIOMo (ORCPT
+        id S229543AbjEIRuT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 May 2023 10:12:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54224 "EHLO
+        Tue, 9 May 2023 13:50:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235137AbjEIOMo (ORCPT
+        with ESMTP id S234364AbjEIRuS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 May 2023 10:12:44 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7273430EC
-        for <platform-driver-x86@vger.kernel.org>; Tue,  9 May 2023 07:12:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683641562; x=1715177562;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=SAL5co0fWXg47QhNXKqVi62/8DFAp6SaFVOF6K+It/I=;
-  b=M4GTGyJ+av3tzyQW57jq6ExKqoyMIOlEYFgUh7SvGpP0Zow1EROphVJe
-   s6iuP4KBIvKaA9DaX452+iDcelG/KfsPWqZVM4799Tq0jZ1zvhD+LXjcc
-   K5r35PA7Z2kxy9NPln1nccbflLdGX2dwej0YrgOvpwjHK/GldW8pZHOBy
-   D1k0o0unw/DVNujywXVO+ln871cKvmj4VPXh5q/57lwrv8SmsirpHec+s
-   SOQGKIAI36pMHLgpN/mUen2z7qab3IGfThyZ6sR4CSrZfyiPAqK9kGuIj
-   ehw4OC5aD9wlZAUOQ5R445u4URqKDUlziOv6l8OEwYwA5YNrbMB8x8qVa
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="413207138"
-X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
-   d="scan'208";a="413207138"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 07:12:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="676475326"
-X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
-   d="scan'208";a="676475326"
-Received: from mbrdon-mobl.ger.corp.intel.com ([10.251.219.121])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 07:12:39 -0700
-Date:   Tue, 9 May 2023 17:12:37 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc:     hdegoede@redhat.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
-        mario.limonciello@amd.com
-Subject: Re: [PATCH v3 2/2] platform/x86/amd/pmf: Add PMF debug facilities
-In-Reply-To: <20230509140657.27479-2-Shyam-sundar.S-k@amd.com>
-Message-ID: <54c09046-e89-2da8-c17-3a7124766ded@linux.intel.com>
-References: <20230509140657.27479-1-Shyam-sundar.S-k@amd.com> <20230509140657.27479-2-Shyam-sundar.S-k@amd.com>
+        Tue, 9 May 2023 13:50:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C74FF3C3A;
+        Tue,  9 May 2023 10:50:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5671E62B20;
+        Tue,  9 May 2023 17:50:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C601C433EF;
+        Tue,  9 May 2023 17:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683654615;
+        bh=rVSz+Tb3H1/HHESESFxVFjW2CxxTsz7vH2xOqzNlQXc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SWUmzHG8xFjWpRkUn7jxvkUG21EZyVRmvIHAfaVcDHRGM9jMRutvis8vhLLUy4O6s
+         TNfr8CkW+0xFnginSyEkOvFBFvpfOmfhA5nD3ARTrQ70JeNf4ZdFCI5HaO0KOLYccW
+         vQdtgGdmg/tQ5H63l/yZA/IRiWefyI99JD7UG/jkDkK98gs8oeXFAAGuZ3x/WUQl08
+         dJVCQI52RgYMOfw8/KVYJ1KtUhhMWuPE0OU99QGXVBQFCtLEJXKyVpOEh03tYK0nnO
+         JOdA+2jhGLcjwX9OUN+wPeWnGy/ROl2o4urTxQBEOvfJ3/SX8Fmf+xvybwL/5Cz17z
+         qRmXV8na65m5w==
+Date:   Tue, 9 May 2023 18:50:07 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Sunil V L <sunilvl@ventanamicro.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        llvm@lists.linux.dev, Jonathan Corbet <corbet@lwn.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Weili Qian <qianweili@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH V5 08/21] RISC-V: ACPI: Cache and retrieve the RINTC
+ structure
+Message-ID: <20230509-atlantic-writing-3ceea38e050e@spud>
+References: <20230508115237.216337-1-sunilvl@ventanamicro.com>
+ <20230508115237.216337-9-sunilvl@ventanamicro.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="VyG74+KZvewY8TZ5"
+Content-Disposition: inline
+In-Reply-To: <20230508115237.216337-9-sunilvl@ventanamicro.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 9 May 2023, Shyam Sundar S K wrote:
 
-> At times, when the mode transitions fail to happen, the current
-> driver does not give enough debug information on why the transition
-> failed or the default preset values did not load. Having an on-demand
-> logs guarded by CONFIG would be helpful in such cases.
-> 
-> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+--VyG74+KZvewY8TZ5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hey Sunil,
+
+On Mon, May 08, 2023 at 05:22:24PM +0530, Sunil V L wrote:
+> RINTC structures in the MADT provide mapping between the hartid
+> and the CPU. This is required many times even at run time like
+> cpuinfo. So, instead of parsing the ACPI table every time, cache
+> the RINTC structures and provide a function to get the correct
+> RINTC structure for a given cpu.
+>=20
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+=46rom this patch until "RISC-V: Add ACPI initialization in
+setup_arch()" (which is 19/21), the series fails to build.
+
+allmodconfig, clang-16:
+=2E./arch/riscv/include/asm/acpi.h:22:23: error: unknown type name 'acpi_ph=
+ysical_address'; did you mean 'efi_physical_addr_t'?
+=2E./arch/riscv/include/asm/acpi.h:22:51: error: unknown type name 'acpi_si=
+ze'
+
+rv32_defconfig, clang-16:
+arch/riscv/kernel/setup.c:297:7: error: use of undeclared identifier 'acpi_=
+disabled'; did you mean '__cpu_disable'?
+arch/riscv/kernel/setup.c:297:7: warning: address of function '__cpu_disabl=
+e' will always evaluate to 'true' [-Wpointer-bool-conversion]
+
+I ballsed up a toolchain upgrade to gcc-13, so the whole series is
+showing build issues on patchwork for the gcc configurations:
+https://patchwork.kernel.org/project/linux-riscv/list/?series=3D745787
+
+However, I suspect that the same patches that fail for clang-16 will
+fail for gcc-13 too, once I have fixed that!
+
+Cheers,
+Conor.
+
 > ---
-> v3:
->  - Based on review-hans branch
->  - Address Ilpo's review remarks
->  - use the right format specifiers while printing the data
-> 
-> v2:
->  - Based on review-hans branch
->  - Drop extra CONFIG item based on feedback from Hans
-> 
->  drivers/platform/x86/amd/pmf/auto-mode.c | 23 +++++++++++++++++++++++
->  drivers/platform/x86/amd/pmf/cnqf.c      | 19 +++++++++++++++++++
->  2 files changed, 42 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/auto-mode.c b/drivers/platform/x86/amd/pmf/auto-mode.c
-> index 64425201d353..cb2fb4df39e9 100644
-> --- a/drivers/platform/x86/amd/pmf/auto-mode.c
-> +++ b/drivers/platform/x86/amd/pmf/auto-mode.c
-> @@ -179,11 +179,34 @@ void amd_pmf_trans_automode(struct amd_pmf_dev *dev, int socket_power, ktime_t t
->  			config_store.transition[i].applied = false;
->  			update = true;
->  		}
+>  arch/riscv/include/asm/acpi.h | 10 ++++++++
+>  arch/riscv/kernel/acpi.c      | 45 +++++++++++++++++++++++++++++++++++
+>  arch/riscv/kernel/setup.c     |  4 ++++
+>  3 files changed, 59 insertions(+)
+>=20
+> diff --git a/arch/riscv/include/asm/acpi.h b/arch/riscv/include/asm/acpi.h
+> index 9be52b6ffae1..6519529c8bdf 100644
+> --- a/arch/riscv/include/asm/acpi.h
+> +++ b/arch/riscv/include/asm/acpi.h
+> @@ -59,6 +59,16 @@ static inline bool acpi_has_cpu_in_madt(void)
+> =20
+>  static inline void arch_fix_phys_package_id(int num, u32 slot) { }
+> =20
+> +void acpi_init_rintc_map(void);
+> +struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu);
+> +u32 get_acpi_id_for_cpu(int cpu);
+> +#else
+> +static inline void acpi_init_rintc_map(void) { }
+> +static inline struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu)
+> +{
+> +	return NULL;
+> +}
 > +
-> +#ifdef CONFIG_AMD_PMF_DEBUG
-> +		dev_dbg(dev->dev, "[AUTO MODE] average_power : %d mW mode: %s\n", avg_power,
-> +			state_as_str(config_store.current_mode));
+>  #endif /* CONFIG_ACPI */
+> =20
+>  #endif /*_ASM_ACPI_H*/
+> diff --git a/arch/riscv/kernel/acpi.c b/arch/riscv/kernel/acpi.c
+> index 81d448c41714..89e142611c84 100644
+> --- a/arch/riscv/kernel/acpi.c
+> +++ b/arch/riscv/kernel/acpi.c
+> @@ -24,6 +24,51 @@ EXPORT_SYMBOL(acpi_disabled);
+>  int acpi_pci_disabled =3D 1;	/* skip ACPI PCI scan and IRQ initializatio=
+n */
+>  EXPORT_SYMBOL(acpi_pci_disabled);
+> =20
+> +static struct acpi_madt_rintc cpu_madt_rintc[NR_CPUS];
 > +
-> +		dev_dbg(dev->dev, "[AUTO MODE] time: %lld ms timer: %u ms tc: %u ms\n",
-> +			time_elapsed_ms, config_store.transition[i].timer,
-> +			config_store.transition[i].time_constant);
+> +static int acpi_parse_madt_rintc(union acpi_subtable_headers *header, co=
+nst unsigned long end)
+> +{
+> +	struct acpi_madt_rintc *rintc =3D (struct acpi_madt_rintc *)header;
+> +	int cpuid;
 > +
-> +		dev_dbg(dev->dev, "[AUTO MODE] shiftup: %u pt: %u mW pf: %u mW pd: %u mW\n",
-> +			config_store.transition[i].shifting_up,
-> +			config_store.transition[i].power_threshold,
-> +			config_store.mode_set[i].power_floor,
-> +			config_store.transition[i].power_delta);
-> +#endif
->  	}
->  
->  	dev_dbg(dev->dev, "[AUTO_MODE] avg power: %u mW mode: %s\n", avg_power,
->  		state_as_str(config_store.current_mode));
->  
-> +#ifdef CONFIG_AMD_PMF_DEBUG
-> +	dev_dbg(dev->dev, "[AUTO MODE] priority1: %u priority2: %u priority3: %u priority4: %u\n",
-> +		config_store.transition[0].applied,
-> +		config_store.transition[1].applied,
-> +		config_store.transition[2].applied,
-> +		config_store. transition[3].applied);
+> +	if (!(rintc->flags & ACPI_MADT_ENABLED))
+> +		return 0;
+> +
+> +	cpuid =3D riscv_hartid_to_cpuid(rintc->hart_id);
+> +	/*
+> +	 * When CONFIG_SMP is disabled, mapping won't be created for
+> +	 * all cpus.
+> +	 * CPUs more than num_possible_cpus, will be ignored.
+> +	 */
+> +	if (cpuid >=3D 0 && cpuid < num_possible_cpus())
+> +		cpu_madt_rintc[cpuid] =3D *rintc;
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Instead of parsing (and freeing) the ACPI table, cache
+> + * the RINTC structures since they are frequently used
+> + * like in  cpuinfo.
+> + */
+> +void __init acpi_init_rintc_map(void)
+> +{
+> +	if (acpi_table_parse_madt(ACPI_MADT_TYPE_RINTC, acpi_parse_madt_rintc, =
+0) <=3D 0) {
+> +		pr_err("No valid RINTC entries exist\n");
+> +		BUG();
+> +	}
+> +}
+> +
+> +struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu)
+> +{
+> +	return &cpu_madt_rintc[cpu];
+> +}
+> +
+> +u32 get_acpi_id_for_cpu(int cpu)
+> +{
+> +	return acpi_cpu_get_madt_rintc(cpu)->uid;
+> +}
+> +
+>  /*
+>   * __acpi_map_table() will be called before paging_init(), so early_iore=
+map()
+>   * or early_memremap() should be called here to for ACPI table mapping.
+> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+> index 9fb839074e16..a44c7fcde12f 100644
+> --- a/arch/riscv/kernel/setup.c
+> +++ b/arch/riscv/kernel/setup.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/efi.h>
+>  #include <linux/crash_dump.h>
+> =20
+> +#include <asm/acpi.h>
+>  #include <asm/alternative.h>
+>  #include <asm/cacheflush.h>
+>  #include <asm/cpu_ops.h>
+> @@ -293,6 +294,9 @@ void __init setup_arch(char **cmdline_p)
+>  	setup_smp();
+>  #endif
+> =20
+> +	if (!acpi_disabled)
+> +		acpi_init_rintc_map();
+> +
+>  	riscv_init_cbo_blocksizes();
+>  	riscv_fill_hwcap();
+>  	apply_boot_alternatives();
+> --=20
+> 2.34.1
+>=20
 
-Extra space.
+--VyG74+KZvewY8TZ5
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
- i.
+-----BEGIN PGP SIGNATURE-----
 
-> +#endif
-> +
->  	if (update) {
->  		for (j = 0; j < AUTO_TRANSITION_MAX; j++) {
->  			/* Apply the mode with highest priority indentified */
-> diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
-> index 35af7c18f600..539b186e9027 100644
-> --- a/drivers/platform/x86/amd/pmf/cnqf.c
-> +++ b/drivers/platform/x86/amd/pmf/cnqf.c
-> @@ -175,6 +175,13 @@ int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_l
->  		config_store.trans_param[src][i].count++;
->  
->  		tp = &config_store.trans_param[src][i];
-> +
-> +#ifdef CONFIG_AMD_PMF_DEBUG
-> +		dev_dbg(dev->dev, "avg_power: %u mW total_power: %u mW count: %u timer: %u ms\n",
-> +			avg_power, config_store.trans_param[src][i].total_power,
-> +			config_store.trans_param[src][i].count,
-> +			config_store.trans_param[src][i].timer);
-> +#endif
->  		if (tp->timer >= tp->time_constant && tp->count) {
->  			avg_power = tp->total_power / tp->count;
->  
-> @@ -195,6 +202,18 @@ int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_l
->  	dev_dbg(dev->dev, "[CNQF] Avg power: %u mW socket power: %u mW mode:%s\n",
->  		avg_power, socket_power, state_as_str(config_store.current_mode));
->  
-> +#ifdef CONFIG_AMD_PMF_DEBUG
-> +	dev_dbg(dev->dev, "[CNQF] priority1: %u priority2: %u priority3: %u\n",
-> +		config_store.trans_param[src][0].priority,
-> +		config_store.trans_param[src][1].priority,
-> +		config_store.trans_param[src][2].priority);
-> +
-> +	dev_dbg(dev->dev, "[CNQF] priority4: %u priority5: %u priority6: %u\n",
-> +		config_store.trans_param[src][3].priority,
-> +		config_store.trans_param[src][4].priority,
-> +		config_store.trans_param[src][5].priority);
-> +#endif
-> +
->  	for (j = 0; j < CNQF_TRANSITION_MAX; j++) {
->  		/* apply the highest priority */
->  		if (config_store.trans_param[src][j].priority) {
-> 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZFqHzwAKCRB4tDGHoIJi
+0vwIAP42h0wsHOgAHQ3WyuVw8G1XFBezccQwODC76RxofaL0TAEA+V+4IuPaUdHr
+5H2An4OZhjeskB4ClsRk3M+rqDqMXAc=
+=OVlw
+-----END PGP SIGNATURE-----
 
+--VyG74+KZvewY8TZ5--
