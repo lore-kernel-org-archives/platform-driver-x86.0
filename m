@@ -2,60 +2,60 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7451EC7EE22
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 May 2023 21:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922E2C77B7D
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 May 2023 22:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230165AbjEJV4u (ORCPT
+        id S235511AbjEJWOa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 10 May 2023 17:56:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52132 "EHLO
+        Wed, 10 May 2023 18:14:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229555AbjEJV4t (ORCPT
+        with ESMTP id S229825AbjEJWOY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 10 May 2023 17:56:49 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FDADDB;
-        Wed, 10 May 2023 14:56:46 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-4f22908a082so5734757e87.1;
-        Wed, 10 May 2023 14:56:46 -0700 (PDT)
+        Wed, 10 May 2023 18:14:24 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54BE972B7;
+        Wed, 10 May 2023 15:14:11 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4f00d41df22so43668088e87.1;
+        Wed, 10 May 2023 15:14:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683755805; x=1686347805;
+        d=gmail.com; s=20221208; t=1683756849; x=1686348849;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rWJ+ftMhyGsytGMKQ7lp/rN3me1y8hdBPTMZiVFJYAs=;
-        b=dtAtvqEk+h3nDj4lvjRJInsjJaa53WKqjJSNP05SoUycLverqk1h30xs+u6ZUzXk5h
-         IavxXynb0UtNNIDo7Lv2UTN9XrXAk3qNq4bfq7iOf9u5dgByEoIUznKf+OwvWaUVBqX0
-         xsiiyYe5FqmYACWqFmKb4HyZCfzAQxJt16WS638wrXNVog2m2icQ93aM0n7cWBiDbE8T
-         dBOxLMIb2upy3K2cTLRpWAbgV1nKAHaaSEXLy6/8/rWRZj9K5v2/bzPFWjvaL1mDRWoR
-         E4Th7efCrIdCOPZWgAZXl96hJiDyYKz13z117f+vsRLzzF+UelBrM4PTez7xBP0wIt0n
-         +glA==
+        bh=F12xtUUbHfnnIPOcV6kMlGj3VIf41Mi5l3K4OiMlRYE=;
+        b=adGfu62pua9jfHtulZjBTNr37OcBgkpkp9PpMc0Uw8KhqvMS5dQiaE0ufS4ObFfZx6
+         vZav3Vexft6IWm7qXaulrJFyZKDoH0c0SQ9wSo3UDia90JKJ13NogFQyJncoz49YKvSn
+         ha3eTzoe0ttL4En5CZbBIDKnvPBsRiSb8c/V8eIwXthhtKhb2vPT12X6aNHr8VggNYBe
+         pL/cvCXv+epo+m6IH9irobcG9yslbnNBhzqKsCYK8ON6r5eFIx9PT2jYy1Oo5W7ry/gn
+         bz55J79U8gWrojppaO0u577h6lHllFvIxULq2iJ53X7UyhurSkgx4yaVEbQ8VcGZRJFx
+         Z5lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683755805; x=1686347805;
+        d=1e100.net; s=20221208; t=1683756849; x=1686348849;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rWJ+ftMhyGsytGMKQ7lp/rN3me1y8hdBPTMZiVFJYAs=;
-        b=KWBDWuDMgy79mkXmnQxi7at67McvyPmxXmeHYwsuP2LT6VpJKvlA7XRcPFzelRWAh3
-         7kyOY4w/VeAipZWaNxRvKXzuMYklrimmUwYwfk1rdgtDlQhI3pRs3ioQe9U4Nl4iPUI6
-         41GAJLwVDl9vO+QHJNaeGMJn3UHv0vm9kkMUuhaGZ+FLISXwmENZ95nd44HVQFyG4JcB
-         tkOvGcAFKJQwRoi6u4LPRlnWbhT4l4niTHAEoIkLaGWAbXV5W5nrfgQgXmP9XFLWREbK
-         q8KTXoYHbloQEr7cQQ/lI/GUktZRl7yWKBqtF8GRO7zoQ11wIMzwNiT//u9OJxxcRDr8
-         z4cg==
-X-Gm-Message-State: AC+VfDxarf2tZkAEd2Fp0iwFh1k2l1gr2V/k0vN+cNLtM/QKe+3hridH
-        oiVxjNUF/Rfsh4ZCEFgbskUPfB8lXE1dEVJ9pCYyZMmj
-X-Google-Smtp-Source: ACHHUZ4FXJ+5/po1Kwtnjc+SWJVQvHnkyUi1+oxI3Vu5JsKBjAUyj3yjt3HkynAWen+yNYq4KkUUXP9L1hB1RlvjfIw=
-X-Received: by 2002:a2e:9496:0:b0:2a7:9884:ad53 with SMTP id
- c22-20020a2e9496000000b002a79884ad53mr2315798ljh.48.1683755804403; Wed, 10
- May 2023 14:56:44 -0700 (PDT)
+        bh=F12xtUUbHfnnIPOcV6kMlGj3VIf41Mi5l3K4OiMlRYE=;
+        b=kOy/e8ooJhR9bOxV5hzk3u1PkiRtse02le0Plg/jQwJJQen8PH2vQFBltYUYmLZDRz
+         fFLbM8qDRz/cznVUM2DBMXd80/R8/GMLWeriySV1sTDDgQPs9kBWxnHG8DkFmT7jlfGJ
+         J6bmjhL298haJM74Y+rUp5bSXHIpLNfN6n6uvWgxnSt45eCH5kNcgcFGBtW8ZKknwuNh
+         o9p/c6V1WgYVLr6j5+NOAHFjGcX/vuNyMVbDFu5N6iP+LQPOT4h9oNDhj7he0K+HJjBZ
+         LhoAhrg2N1CyDgW9IgBabQ5z3gplrylGpswV0RA498wfX9nVKd7k13/hvr1WrHqQXFtI
+         RrkQ==
+X-Gm-Message-State: AC+VfDyWR44Y3StflJPerfWkL9Ov4UWIOjThn9JptY7Jqbe/+Ltx0UDk
+        WOmk+NiJijr0AIPZm2vab0h7Tb7ydyo5Jaep6RWc1jgA
+X-Google-Smtp-Source: ACHHUZ6yap2uHAjTn0ge4LVO4wQlRyrseuOWr4icmdg/eT2743XxvrxZt2KzjZbuhO4+HSBB0GQoz9HBok78VplGW5s=
+X-Received: by 2002:a05:6512:3990:b0:4ef:ef1d:a987 with SMTP id
+ j16-20020a056512399000b004efef1da987mr2211186lfu.25.1683756849396; Wed, 10
+ May 2023 15:14:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-11-jorge.lopez2@hp.com>
- <4537f210-4a7a-3c11-ecbb-ed4762a1f598@linux.intel.com>
-In-Reply-To: <4537f210-4a7a-3c11-ecbb-ed4762a1f598@linux.intel.com>
+References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-12-jorge.lopez2@hp.com>
+ <ef445e78-5751-bd8f-44ce-d9beaebaac6@linux.intel.com>
+In-Reply-To: <ef445e78-5751-bd8f-44ce-d9beaebaac6@linux.intel.com>
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Wed, 10 May 2023 16:56:15 -0500
-Message-ID: <CAOOmCE9m5++_4nBu3C64uWVOeyUQs3afn_Q9AJz9oudGvMHHiQ@mail.gmail.com>
-Subject: Re: [PATCH v12 10/13] HP BIOSCFG driver - spmobj-attributes
+Date:   Wed, 10 May 2023 17:13:40 -0500
+Message-ID: <CAOOmCE_dRivApf46KO1Cq-vHGsHVXNVCqbqF2NV4Y6SVpYx6hA@mail.gmail.com>
+Subject: Re: [PATCH v12 11/13] HP BIOSCFG driver - surestart-attributes
 To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de
@@ -65,7 +65,7 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, May 9, 2023 at 8:48=E2=80=AFAM Ilpo J=C3=A4rvinen
+On Tue, May 9, 2023 at 8:57=E2=80=AFAM Ilpo J=C3=A4rvinen
 <ilpo.jarvinen@linux.intel.com> wrote:
 >
 > On Fri, 5 May 2023, Jorge Lopez wrote:
@@ -114,462 +114,198 @@ mercial
 > > ---
 > > Based on the latest platform-drivers-x86.git/for-next
 > > ---
-> >  .../x86/hp/hp-bioscfg/spmobj-attributes.c     | 381 ++++++++++++++++++
-> >  1 file changed, 381 insertions(+)
-> >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/spmobj-attribute=
-s.c
+> >  .../x86/hp/hp-bioscfg/surestart-attributes.c  | 133 ++++++++++++++++++
+> >  1 file changed, 133 insertions(+)
+> >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/surestart-attrib=
+utes.c
 > >
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c b/d=
-rivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
+> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c =
+b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
 > > new file mode 100644
-> > index 000000000000..f08f7aae9423
+> > index 000000000000..b627c324f6a6
 > > --- /dev/null
-> > +++ b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
-> > @@ -0,0 +1,381 @@
+> > +++ b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+> > @@ -0,0 +1,133 @@
 > > +// SPDX-License-Identifier: GPL-2.0
 > > +/*
-> > + * Functions corresponding to secure platform management object type
-> > + * attributes under BIOS PASSWORD for use with hp-bioscfg driver
+> > + * Functions corresponding to sure start object type attributes under
+> > + * BIOS for use with hp-bioscfg driver
 > > + *
 > > + *  Copyright (c) 2022 HP Development Company, L.P.
 > > + */
 > > +
 > > +#include "bioscfg.h"
+> > +#include <linux/types.h>
 > > +
-> > +static const char * const spm_state_types[] =3D {
-> > +     "not provisioned",
-> > +     "provisioned",
-> > +     "provisioning in progress",
-> > +};
-> > +
-> > +static const char * const spm_mechanism_types[] =3D {
-> > +     "not provisioned",
-> > +     "signing-key",
-> > +     "endorsement-key",
-> > +};
-> > +
-> > +struct secureplatform_provisioning_data {
-> > +     u8 state;
-> > +     u8 version[2];
-> > +     u8 reserved1;
-> > +     u32 features;
-> > +     u32 nonce;
-> > +     u8 reserved2[28];
-> > +     u8 sk_mod[MAX_KEY_MOD];
-> > +     u8 kek_mod[MAX_KEY_MOD];
-> > +};
-> > +
-> > +int check_spm_is_enabled(void)
-> > +{
-> > +     /* do we need to check the admin password is also configured */
-> > +     return bioscfg_drv.spm_data.is_enabled;
-> > +}
-> > +
-> > +/**
-> > + * calculate_security_buffer() - determines size of security buffer
-> > + * for authentication scheme
-> > + *
-> > + * @authentication: the authentication content
-> > + *
-> > + * Currently only supported type is Admin password
+> > +/* Maximum number of log entries supported when log entry size is 16
+> > + * bytes.  This value is calculated by dividing 4096 (page size) by
+> > + * log entry size.
 > > + */
-> > +size_t calculate_security_buffer(const char *authentication)
+> > +#define LOG_MAX_ENTRIES              254
+> > +
+> > +/*
+> > + * Current Log entry size.  This value size will change in the
+> > + * future. The driver reads a total of 128 bytes for each log entry
+> > + * provided by BIOS but only the first 16 bytes are used/read.
+> > + */
+> > +#define LOG_ENTRY_SIZE               16
+> > +
+> > +/*
+> > + * audit_log_entry_count_show - Reports the number of
+> > + *                           existing audit log entries available
+> > + *                           to be read
+> > + */
+> > +static ssize_t audit_log_entry_count_show(struct kobject *kobj,
+> > +                                       struct kobj_attribute *attr, ch=
+ar *buf)
 > > +{
-> > +     int size;
+> > +     int ret;
+> > +     u32 count =3D 0;
+> > +
+> > +     ret =3D hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG_COUNT,
+> > +                                HPWMI_SURESTART,
+> > +                                &count, 1, sizeof(count));
+> > +
 >
-> Why not size_t?
-
+> Extra newline.
 Done!
 >
+> > +     if (ret < 0)
+> > +             return ret;
 > > +
-> > +     if (authentication && strlen(authentication) > 0) {
-> > +             size =3D sizeof(u16) + (strlen(authentication) * sizeof(u=
-16));
+> > +     return sysfs_emit(buf, "%d,%d,%d\n", count, LOG_ENTRY_SIZE,
+> > +                       LOG_MAX_ENTRIES);
+>
+> Why 3 values instead of 1?
+This version of BIOS only returns the number of audit log events available.
+The other two values are the current log entry size which today is
+hardcoded.  This will change in future when BIOS returns the log entry
+size.
+>
+> > +}
+> > +
+> > +/*
+> > + * audit_log_entries_show() - Return all entries found in log file
+> > + */
+> > +static ssize_t audit_log_entries_show(struct kobject *kobj,
+> > +                                   struct kobj_attribute *attr, char *=
+buf)
+> > +{
+> > +     int ret;
+> > +     int i;
+> > +     u32 count =3D 0;
+> > +     u8 audit_log_buffer[128];
+> > +
+> > +     // Get the number of event logs
+> > +     ret =3D hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG_COUNT,
+> > +                                HPWMI_SURESTART,
+> > +                                &count, 1, sizeof(count));
+> > +
+>
+> Extra newline.
+Done!
+>
+> > +     if (ret < 0)
+> > +             return ret;
+> > +
+> > +     /*
+> > +      * The show() api will not work if the audit logs ever go
+> > +      *  beyond 4KB
+>
+> Extra space.
+Done!
+>
+> > +      */
+> > +     if (count * LOG_ENTRY_SIZE > PAGE_SIZE)
+> > +             return -EIO;
+> > +
+> > +     /*
+> > +      * We are guaranteed the buffer is 4KB so today all the event
+> > +      * logs will fit
+> > +      */
+> > +     for (i =3D 0; i < count; i++) {
+> > +             audit_log_buffer[0] =3D (i + 1);
 >
 > Extra parenthesis.
 Done!
 >
-> > +             if (!strstarts(authentication, BEAM_PREFIX))
-> > +                     size +=3D strlen(UTF_PREFIX) * sizeof(u16);
 > > +
-> > +             return size;
+> > +             /*
+> > +              * read audit log entry at a time. 'buf' input value
+> > +              * provides  the audit log entry to be read.  On
+>
+> Extra spaces.
+Done!
+>
+> > +              * input, Byte 0 =3D Audit Log entry number from
+> > +              * beginning (1..254)
+> > +              * Entry number 1 is the newest entry whereas the
+> > +              * highest entry number (number of entries) is the
+> > +              * oldest entry.
+> > +              */
+> > +             ret =3D hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG,
+> > +                                        HPWMI_SURESTART,
+> > +                                        audit_log_buffer, 1, 128);
+> > +
+> > +             if (ret >=3D 0 && (LOG_ENTRY_SIZE * i) < PAGE_SIZE) {
+>
+> Can the second condition ever fail?
+>
+Only in the event BIOS data is corrupted.
+
+> > +                     memcpy(buf, audit_log_buffer, LOG_ENTRY_SIZE);
+> > +                     buf +=3D LOG_ENTRY_SIZE;
+> > +             } else {
+> > +                     /*
+> > +                      * Encountered a failure while reading
+> > +                      * individual logs. Only a partial list of
+> > +                      * audit log will be returned.
+> > +                      */
+> > +                     count =3D i + 1;
+> > +                     break;
+> > +             }
+>
+> Reverse order, do error handling with break first.
+Done!
+>
+> Why not return i * LOG_ENTRY_SIZE directly (or at the end), no need to
+> tweak count?
+
+Done!
+>
 > > +     }
 > > +
-> > +     size  =3D sizeof(u16) * 2;
->
-> Extra space
->
-> > +     return size;
->
-> I'd do it this way though:
->
->         size_t size, authlen;
->
->         if (!authentication)
->                 return sizeof(u16) * 2;
->
->         authlen =3D strlen(authentication);
->         if (!authlen)
->                 return sizeof(u16) * 2;
->
->         size =3D sizeof(u16) + authlen * sizeof(u16);
->         ...
->
->
-
-Done!
+> > +     return count * LOG_ENTRY_SIZE;
 > > +}
 > > +
-> > +/**
-> > + * populate_security_buffer() - builds a security buffer for
-> > + * authentication scheme
-> > + *
-> > + * @buffer: the buffer to populate
-> > + * @authentication: the authentication content
-> > + *
-> > + * Currently only supported type is PLAIN TEXT
-> > + */
-> > +int populate_security_buffer(u16 *buffer, const char *authentication)
+> > +static struct kobj_attribute sure_start_audit_log_entry_count =3D __AT=
+TR_RO(audit_log_entry_count);
+> > +static struct kobj_attribute sure_start_audit_log_entries =3D __ATTR_R=
+O(audit_log_entries);
+> > +
+> > +static struct attribute *sure_start_attrs[] =3D {
+> > +     &sure_start_audit_log_entry_count.attr,
+> > +     &sure_start_audit_log_entries.attr,
+> > +     NULL,
+> > +};
+> > +
+> > +static const struct attribute_group sure_start_attr_group =3D {
+> > +     .attrs =3D sure_start_attrs,
+> > +};
+> > +
+> > +void exit_sure_start_attributes(void)
 > > +{
-> > +     u16 *auth =3D buffer;
-> > +     u16 *retbuffer;
-> > +     char *strprefix =3D NULL;
-> > +     int ret =3D 0;
-> > +
-> > +     if (strstarts(authentication, BEAM_PREFIX)) {
-> > +             /*
-> > +              * BEAM_PREFIX is append to buffer when a signature
-> > +              * is provided and Sure Admin is enabled in BIOS
-> > +              */
-> > +             // BEAM_PREFIX found, convert part to unicode
-> > +             retbuffer =3D hp_ascii_to_utf16_unicode(auth, authenticat=
-ion);
-> > +             if (!retbuffer) {
-> > +                     ret =3D -EINVAL;
-> > +                     goto out_buffer;
->
-> return -EINVAL directly.
-
-Done!
->
-> > +             }
-> > +             auth =3D retbuffer;
-> > +
-> > +     } else {
-> > +             /*
-> > +              * UTF-16 prefix is append to the * buffer when a BIOS
->
-> What is "the * buffer" ?
-
-It is the data stored in 'buffer' variable which is composed of three
-strings concatenated together to be submitted to BIOS via WMI call.
-'Buffer' will looks something as    [size attribute][attribute][size
-value][value][auth size][auth payload]
-size is the length in bytes,  attribute/value/auth are string represented i=
-n u16
->
-> > +              * admin password is configured in BIOS
-> > +              */
-> > +
-> > +             // append UTF_PREFIX to part and then convert it to unico=
-de
->
-> Use /* */ comments consistently.
-
-Done!
->
-> > +             strprefix =3D kasprintf(GFP_KERNEL, "%s%s", UTF_PREFIX,
-> > +                                   authentication);
-> > +             if (!strprefix)
-> > +                     goto out_buffer;
->
-> Shouldn't you return an error code here? Also, strprefix is NULL so you
-> can do return -ENOMEM directly.
->
-> > +
-> > +             retbuffer =3D hp_ascii_to_utf16_unicode(auth, strprefix);
->
-> If you move kfree(strprefix) here, the flow is more obvious.
-
-Done!
->
-> > +             if (!retbuffer) {
-> > +                     ret =3D -EINVAL;
-> > +                     goto out_buffer;
-> > +             }
-> > +             auth =3D retbuffer;
-> > +     }
-> > +
-> > +out_buffer:
-> > +     kfree(strprefix);
-> > +     return ret;
+> > +     sysfs_remove_group(bioscfg_drv.sure_start_attr_kobj,
+> > +                        &sure_start_attr_group);
 > > +}
 > > +
-> > +static ssize_t update_spm_state(void)
+> > +int populate_sure_start_data(struct kobject *attr_name_kobj)
 > > +{
-> > +     int ret;
-> > +     struct secureplatform_provisioning_data data;
-> > +
-> > +     ret =3D hp_wmi_perform_query(HPWMI_SECUREPLATFORM_GET_STATE,
-> > +                                HPWMI_SECUREPLATFORM, &data, 0,
-> > +                                sizeof(data));
-> > +     if (ret < 0)
-> > +             goto state_exit;
->
-> return ret; directly.
-Done!
->
-> > +
-> > +     bioscfg_drv.spm_data.mechanism =3D data.state;
-> > +     if (bioscfg_drv.spm_data.mechanism)
-> > +             bioscfg_drv.spm_data.is_enabled =3D 1;
-> > +
-> > +state_exit:
-> > +     return ret;
->
-> return 0;
-Done!
->
-> > +}
-> > +
-> > +static ssize_t statusbin(struct kobject *kobj,
-> > +                      struct kobj_attribute *attr,
-> > +                      struct secureplatform_provisioning_data *buf)
-> > +{
-> > +     int ret =3D hp_wmi_perform_query(HPWMI_SECUREPLATFORM_GET_STATE,
-> > +                                    HPWMI_SECUREPLATFORM, buf, 0,
-> > +                                    sizeof(struct secureplatform_provi=
-sioning_data));
-> > +
-> > +     return ret < 0 ? ret : sizeof(struct secureplatform_provisioning_=
-data);
->
-> Split to:
->
->         int ret;
->
->         ret =3D hp_...();
->         if (ret < 0)
->                 return ret;
->
->         return sizeof(...);
->
-
-Done!
-
-> > +}
-> > +
-> > +/*
-> > + * status_show - Reads SPM status
-> > + */
-> > +static ssize_t status_show(struct kobject *kobj, struct kobj_attribute
-> > +                 *attr, char *buf)
-> > +{
-> > +     int ret, i;
-> > +     struct secureplatform_provisioning_data data;
-> > +
-> > +     ret =3D statusbin(kobj, attr, &data);
-> > +     if (ret < 0)
-> > +             goto status_exit;
->
-> Can you calculate strnlen() from buf at this point, or is the result
-> garbage? Should you return ret instead here?
-
-It should return the error instead.
->
-> > +
-> > +     sysfs_emit(buf, "%s{\n", buf);
-> > +     sysfs_emit(buf, "%s\t\"State\": \"%s\",\n", buf,
-> > +                spm_state_types[data.state]);
-> > +     sysfs_emit(buf, "%s\t\"Version\": \"%d.%d\",\n", buf, data.versio=
-n[0],
-> > +                data.version[1]);
-> > +
-> > +     /*
-> > +      * state =3D=3D 0 means secure platform management
-> > +      * feature is not configured in BIOS.
-> > +      */
-> > +     if (data.state =3D=3D 0)
-> > +             goto status_exit;
-> > +
-> > +     sysfs_emit(buf, "%s\t\"Nonce\": %d,\n", buf, data.nonce);
-> > +     sysfs_emit(buf, "%s\t\"FeaturesInUse\": %d,\n", buf, data.feature=
-s);
-> > +     sysfs_emit(buf, "%s\t\"EndorsementKeyMod\": \"", buf);
-> > +
-> > +     for (i =3D 255; i >=3D 0; i--)
-> > +             sysfs_emit(buf, "%s %u", buf, data.kek_mod[i]);
-> > +
-> > +     sysfs_emit(buf, "%s \",\n", buf);
-> > +     sysfs_emit(buf, "%s\t\"SigningKeyMod\": \"", buf);
-> > +
-> > +     for (i =3D 255; i >=3D 0; i--)
-> > +             sysfs_emit(buf, "%s %u", buf, data.sk_mod[i]);
-> > +
-> > +     /* Return buf contents */
-> > +
-> > +     sysfs_emit(buf, "%s \"\n", buf);
-> > +     sysfs_emit(buf, "%s}\n", buf);
-> > +
-> > +status_exit:
-> > +     return strnlen(buf, PAGE_SIZE);
-> > +}
->
-> Emit buf into buf? There's sysfs_emit_at(), however,
->
-> while I'm far from sysfs formatting expert, this feels something that
-> tries to expose more than one thing over same sysfs file. Shouldn't they
-> be each in their own files?
-
-This concern was brought up in earlier reviews but it was decided to
-allow returning the information as a single json file.
-Because the information is part of the same structure and received in
-a single WMI call, separating the components into multiple files can
-cause the data read in one field to be stale by the time is read.
->
-> > +static struct kobj_attribute password_spm_status =3D __ATTR_RO(status)=
+> > +     bioscfg_drv.sure_start_attr_kobj =3D attr_name_kobj;
+> > +     return sysfs_create_group(attr_name_kobj, &sure_start_attr_group)=
 ;
-> > +
-> > +ATTRIBUTE_SPM_N_PROPERTY_SHOW(is_enabled, spm);
-> > +static struct kobj_attribute password_spm_is_key_enabled =3D __ATTR_RO=
-(is_enabled);
-> > +
-> > +static ssize_t key_mechanism_show(struct kobject *kobj, struct kobj_at=
-tribute *attr,
-> > +                               char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "%s\n",
-> > +                       spm_mechanism_types[bioscfg_drv.spm_data.mechan=
-ism]);
 > > +}
-> > +
-> > +static struct kobj_attribute password_spm_key_mechanism =3D __ATTR_RO(=
-key_mechanism);
-> > +
-> > +static ssize_t sk_store(struct kobject *kobj,
-> > +                     struct kobj_attribute *attr,
-> > +                     const char *buf, size_t count)
-> > +{
-> > +     int ret;
-> > +     int length;
-> > +
-> > +     length =3D count;
-> > +     if (buf[length - 1] =3D=3D '\n')
-> > +             length--;
-> > +
-> > +     /* allocate space and copy current signing key */
-> > +     bioscfg_drv.spm_data.signing_key =3D kmalloc(length, GFP_KERNEL);
-> > +     if (!bioscfg_drv.spm_data.signing_key) {
-> > +             ret =3D -ENOMEM;
-> > +             goto exit_sk;
-> > +     }
-> > +
-> > +     strscpy(bioscfg_drv.spm_data.signing_key, buf, length);
-> > +     bioscfg_drv.spm_data.signing_key[length] =3D '\0';
-> > +
-> > +     /* submit signing key payload */
-> > +     ret =3D hp_wmi_perform_query(HPWMI_SECUREPLATFORM_SET_SK,
-> > +                                HPWMI_SECUREPLATFORM,
-> > +                                (void *)bioscfg_drv.spm_data.signing_k=
-ey,
-> > +                                length, 0);
-> > +
-> > +     if (!ret) {
-> > +             bioscfg_drv.spm_data.mechanism =3D SIGNING_KEY;
-> > +             set_reboot_and_signal_event();
-> > +     }
-> > +
-> > +exit_sk:
-> > +     kfree(bioscfg_drv.spm_data.signing_key);
-> > +     bioscfg_drv.spm_data.signing_key =3D NULL;
-> > +
-> > +     return ret ? ret : count;
-> > +}
-> > +
-> > +static struct kobj_attribute password_spm_signing_key =3D __ATTR_WO(sk=
-);
-> > +
-> > +static ssize_t kek_store(struct kobject *kobj,
-> > +                      struct kobj_attribute *attr,
-> > +                      const char *buf, size_t count)
-> > +{
-> > +     int ret;
-> > +     int length;
-> > +
-> > +     length =3D count;
-> > +     if (buf[length - 1] =3D=3D '\n')
-> > +             length--;
-> > +
-> > +     /* allocate space and copy current signing key */
-> > +     bioscfg_drv.spm_data.endorsement_key =3D kmalloc(length, GFP_KERN=
-EL);
-> > +     if (!bioscfg_drv.spm_data.endorsement_key) {
-> > +             ret =3D -ENOMEM;
-> > +             goto exit_kek;
+> >
 >
-> Return directly.
->
-> > +     }
-> > +
-> > +     memcpy(bioscfg_drv.spm_data.endorsement_key, buf, length);
-> > +     bioscfg_drv.spm_data.endorsement_key[length] =3D '\0';
-> > +
-> > +     ret =3D hp_wmi_perform_query(HPWMI_SECUREPLATFORM_SET_KEK,
-> > +                                HPWMI_SECUREPLATFORM,
-> > +                                (void *)bioscfg_drv.spm_data.endorseme=
-nt_key,
->
-> In general, casting to void * (and back) is not required.
-Done!
->
-> > +                                count, 0);
-> > +
-> > +     if (!ret) {
-> > +             bioscfg_drv.spm_data.mechanism =3D ENDORSEMENT_KEY;
-> > +             set_reboot_and_signal_event();
-> > +     }
-> > +
-> > +exit_kek:
-> > +     kfree(bioscfg_drv.spm_data.endorsement_key);
-> > +     bioscfg_drv.spm_data.endorsement_key =3D NULL;
-> > +
-> > +     return ret ? ret : count;
-> > +}
-> > +
-> > +static struct kobj_attribute password_spm_endorsement_key =3D __ATTR_W=
-O(kek);
-> > +
-> > +static ssize_t role_show(struct kobject *kobj, struct kobj_attribute *=
-attr,
-> > +                      char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "%s\n", BIOS_SPM);
-> > +}
-> > +
-> > +static struct kobj_attribute password_spm_role =3D __ATTR_RO(role);
-> > +
-> > +static ssize_t auth_token_store(struct kobject *kobj,
-> > +                             struct kobj_attribute *attr,
-> > +                             const char *buf, size_t count)
-> > +{
-> > +     int ret =3D 0;
-> > +     int length;
-> > +
-> > +     length =3D count;
-> > +     if (buf[length - 1] =3D=3D '\n')
-> > +             length--;
-> > +
-> > +     /* allocate space and copy current auth token */
-> > +     bioscfg_drv.spm_data.auth_token =3D kmalloc(count, GFP_KERNEL);
-> > +     if (!bioscfg_drv.spm_data.auth_token) {
-> > +             ret =3D -ENOMEM;
-> > +             goto exit_token;
->
-> Return directly.
-
-Done!
->
-> > +     }
-> > +
-
-<snip>
+> --
+>  i.
