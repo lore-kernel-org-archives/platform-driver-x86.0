@@ -2,60 +2,60 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0B2C7EE2D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 May 2023 20:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09260C77B7C
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 May 2023 20:36:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236447AbjEJUa1 (ORCPT
+        id S236047AbjEJUgT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 10 May 2023 16:30:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54074 "EHLO
+        Wed, 10 May 2023 16:36:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236404AbjEJUa0 (ORCPT
+        with ESMTP id S235982AbjEJUgS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 10 May 2023 16:30:26 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A1134EEC;
-        Wed, 10 May 2023 13:30:24 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-2ac88d9edf3so72958541fa.0;
-        Wed, 10 May 2023 13:30:24 -0700 (PDT)
+        Wed, 10 May 2023 16:36:18 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 015D14C16;
+        Wed, 10 May 2023 13:36:16 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4ecb137af7eso8744925e87.2;
+        Wed, 10 May 2023 13:36:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683750623; x=1686342623;
+        d=gmail.com; s=20221208; t=1683750975; x=1686342975;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PkKYgbmgy8kkxywubZx4rt5qVzmNSK/xYEb72U2zNnc=;
-        b=Gg3uv2MCPukFzmVxw4BCnADXDitRgDULWbqvkjmU4TjyCAQ5Conu7CuyCNMSLy3XW1
-         cgLINThQPJw8XFQbBkZXXPJVIK5KGQ8dh4wZ1IozNRqEM4944/CDbpYeQ9jQBzBGL85+
-         Wms/tndqNkKO8pwXIrGhUywmAvdx8VcdUAXLN2MmgD8jY4F1gy5EqEi0iBd9LAEmFmij
-         JBXaQitd1hAv16b/VPV5dNA9A3H9/CtofG1l2BApiG1ANkB0KqtyUPUl4w+VK1ytRXbI
-         56xttjnsTew1HmdeOZZTdKPte99HXizLrOd7VZZZHMScFFgZWwx7jihg6CvZQ+oPAopk
-         Ecvg==
+        bh=PTuiC0ua1kIyWi3iheh/3XF1H10GgI50sRM4ZeY/JDg=;
+        b=EtKP6OM3eAtq9L7LIAH4ZD/qwUKVCv5RUrIRvLK65LqgYDQJ6DIMmcbScvI2ybkfR9
+         18LS2Nw6eltSEzL0eos7uwew0qWPitrbQXlkjWZl904zhOl/df/DIPQIttpiz9i3ZTnt
+         m7f5lUnwmvpGSmFUq0zZExX6Vd4fVH/u78WB1mN8bT4RjYxPfUkGatD5Wvg+4XKPvmdk
+         GRLqI86DTahAPl4Vzs3OUAV2gimPQHpT8ICd/K0gXkTJBRtyzrthi0FMgfO6s/oTK7zz
+         LkgGpvSv2YNiXM2Wm2HWrgDzBpZ9eL3iqTC5xwsELAU+lLW2ilBzua/Y/jSMNxWXpAAc
+         VqbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683750623; x=1686342623;
+        d=1e100.net; s=20221208; t=1683750975; x=1686342975;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PkKYgbmgy8kkxywubZx4rt5qVzmNSK/xYEb72U2zNnc=;
-        b=jdJyEHoheFOiN2bWMJv4HS90xHTYCrNyZ5dueT1Q40xnyXPCHfe9AsqNyh5bbhHRJF
-         JDYA5hSS8cPOJ9/qlVFUyLqWXZ1/v0on797Ss95Y/O6EgZcx42pm99LaP/njLOriyafE
-         1YTGGL14xf2A99mYbtdJzyOTXa8rDEMs4xTwrJAHRcsvJa59JhUP8D1ZzKiS1Z6KhiRM
-         bWJoFuZSIIXvXDceMGDmHEpzZ38IHXjNOjDAJptclyl/f8vRnq9yvdp/EFuyT/5U1hhZ
-         bXWMSpPQyMMtUOIxsMlyzicC2XN7FcrSBxEc5VSGcDw+BE5W06NUgg7bbDC6haRb1c5e
-         +AyA==
-X-Gm-Message-State: AC+VfDznjZtZKw77Lwuama4d05gZrLySEYDynYKUiTO5LYoG+h4jJ+8Y
-        S/GDKODGRgQSYmwLp6xEx5axIyuvCN7UVZ1TTlo=
-X-Google-Smtp-Source: ACHHUZ6SArMaZ72iOQk1vfjOokK7/5jYmuxyTbx6GRzsmW/BrKn0zQVyz7wGzjhUJz2cR1a4Vr1kWwBBZ099YTwzKk4=
-X-Received: by 2002:a2e:8559:0:b0:2a8:ca1e:b63 with SMTP id
- u25-20020a2e8559000000b002a8ca1e0b63mr2304672ljj.36.1683750622500; Wed, 10
- May 2023 13:30:22 -0700 (PDT)
+        bh=PTuiC0ua1kIyWi3iheh/3XF1H10GgI50sRM4ZeY/JDg=;
+        b=Qt07KTOBAGuy5nb0+tjY3ExYGE1CgdFG2TGaW84Sik0hIpO5q4Qmkzz8WzMehlUqhA
+         VBsLhOmv9NJpA+MOa5uwg7clPna2vfjubl/7X6742tAKG1dWiC8YmxzAVzBRuNw2MVJI
+         P+ub5ChNlJ79QJRzNLOm4F8sd5EXSQjsNeDQLHlIFH4dc67134Fk5jTBPBDXyMc1QBm8
+         Qm6bcwvPHliRXRlWvT3lg05PGP3DKMG2ALTYl/BGV/C0P62poRJsqzYc2ahNIcBwjBB/
+         5Zbjh5l6mWtaJMU5dStr5v3hGjNQ+OyDPRgtl5FrCCjDZMULKTC2WSd5l02X4o7ztjbQ
+         4Yjg==
+X-Gm-Message-State: AC+VfDxFjgtgFgCdM+ktwRaMcaTPSv7u3hfZCzcpw6f4//SnOjgVcMDC
+        4FabcQFhRVx5WBi2357jTDPnw7PhdLhViNfhq4A=
+X-Google-Smtp-Source: ACHHUZ6XwOgg2hOQrhsiKgXYmI4nlnr6sziZ4fx8HXWKtAVY1Ab24dU/Ti/UlzfzD1I/LMXTVTjEbTw8wNk4pP3FDwE=
+X-Received: by 2002:a2e:9c18:0:b0:2ad:bedc:995b with SMTP id
+ s24-20020a2e9c18000000b002adbedc995bmr218134lji.16.1683750975077; Wed, 10 May
+ 2023 13:36:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-6-jorge.lopez2@hp.com>
- <266e7ffc-ee84-56d9-51c5-61f2600d4c4@linux.intel.com>
-In-Reply-To: <266e7ffc-ee84-56d9-51c5-61f2600d4c4@linux.intel.com>
+References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-8-jorge.lopez2@hp.com>
+ <882cc771-7fdb-5ba6-b4ae-36e7d3ad920@linux.intel.com>
+In-Reply-To: <882cc771-7fdb-5ba6-b4ae-36e7d3ad920@linux.intel.com>
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Wed, 10 May 2023 15:29:53 -0500
-Message-ID: <CAOOmCE_=Fv3n9kGRhh3zHT2kJDNUik8uq4H7dV9eFH+2FW1YWg@mail.gmail.com>
-Subject: Re: [PATCH v12 05/13] HP BIOSCFG driver - ordered-attributes
+Date:   Wed, 10 May 2023 15:35:46 -0500
+Message-ID: <CAOOmCE8ZS8uzt8UCeSCkxCeL+x4Wkqsyx0v6yOK8dkSbFpTDLQ@mail.gmail.com>
+Subject: Re: [PATCH v12 07/13] HP BIOSCFG driver - string-attributes
 To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de
@@ -65,7 +65,7 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, May 9, 2023 at 8:15=E2=80=AFAM Ilpo J=C3=A4rvinen
+On Tue, May 9, 2023 at 8:18=E2=80=AFAM Ilpo J=C3=A4rvinen
 <ilpo.jarvinen@linux.intel.com> wrote:
 >
 > On Fri, 5 May 2023, Jorge Lopez wrote:
@@ -114,267 +114,100 @@ mercial
 > > ---
 > > Based on the latest platform-drivers-x86.git/for-next
 > > ---
-> >  .../x86/hp/hp-bioscfg/ordered-attributes.c    | 443 ++++++++++++++++++
-> >  1 file changed, 443 insertions(+)
-> >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/ordered-attribut=
-es.c
+> >  .../x86/hp/hp-bioscfg/string-attributes.c     | 415 ++++++++++++++++++
+> >  1 file changed, 415 insertions(+)
+> >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/string-attribute=
+s.c
 > >
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c b/=
-drivers/platform/x86/hp/hp-bioscfg/ordered-attributes.c
+> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/d=
+rivers/platform/x86/hp/hp-bioscfg/string-attributes.c
 > > new file mode 100644
+> > index 000000000000..d74ecc973703
+> > --- /dev/null
 
 <snip>
 
-> > +     strscpy(ordered_list_data->common.display_name_language_code,
-> > +             LANG_CODE_STR,
-> > +             sizeof(ordered_list_data->common.display_name_language_co=
-de));
+> > +static void update_string_value(int instance_id, char *attr_value)
+> > +{
+> > +     struct string_data *string_data =3D &bioscfg_drv.string_data[inst=
+ance_id];
 > > +
-> > +     for (elem =3D 1, eloc =3D 1; elem < order_obj_count; elem++, eloc=
-++) {
-> > +             /* ONLY look at the first ORDERED_ELEM_CNT elements */
-> > +             if (eloc =3D=3D ORD_ELEM_CNT)
-> > +                     goto exit_list_package;
-> > +
-> > +             switch (order_obj[elem].type) {
-> > +             case ACPI_TYPE_STRING:
-> > +
+> > +     /* Write settings to BIOS */
+> > +     strscpy(string_data->current_value,
+> > +             attr_value,
+> > +             sizeof(string_data->current_value));
 >
-> Extra newline.
+> Use less lines.
 
 Done!
 >
-> > +                     if (elem !=3D PREREQUISITES && elem !=3D ORD_LIST=
-_ELEMENTS) {
-> > +                             ret =3D convert_hexstr_to_str(order_obj[e=
-lem].string.pointer,
-> > +                                                         order_obj[ele=
-m].string.length,
-> > +                                                         &str_value, &=
-value_len);
-> > +                             if (ret)
-> > +                                     continue;
-> > +                     }
-> > +                     break;
-> > +             case ACPI_TYPE_INTEGER:
-> > +                     int_value =3D (u32)order_obj[elem].integer.value;
-> > +                     break;
-> > +             default:
-> > +                     pr_warn("Unsupported object type [%d]\n", order_o=
-bj[elem].type);
-> > +                     continue;
-> > +             }
+> > +}
 > > +
-> > +             /* Check that both expected and read object type match */
-> > +             if (expected_order_types[eloc] !=3D order_obj[elem].type)=
- {
-> > +                     pr_err("Error expected type %d for elem  %d, but =
-got type %d instead\n",
+> > +ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name_language_code, string);
+> > +static struct kobj_attribute string_display_langcode =3D
+> > +     __ATTR_RO(display_name_language_code);
+> > +
+> > +ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, string);
+> > +static struct kobj_attribute string_display_name =3D
+> > +     __ATTR_RO(display_name);
+> > +
+> > +ATTRIBUTE_PROPERTY_STORE(current_value, string);
+> > +static struct kobj_attribute string_current_val =3D
+> > +     __ATTR_RW_MODE(current_value, 0644);
+> > +
+> > +ATTRIBUTE_N_PROPERTY_SHOW(min_length, string);
+> > +static struct kobj_attribute string_min_length =3D
+> > +     __ATTR_RO(min_length);
+> > +
+> > +ATTRIBUTE_N_PROPERTY_SHOW(max_length, string);
+> > +static struct kobj_attribute string_max_length =3D
+> > +     __ATTR_RO(max_length);
+> > +
+> > +static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *=
+attr,
+> > +                      char *buf)
+> > +{
+> > +     return sysfs_emit(buf, "string\n");
+> > +}
+> > +
+> > +static struct kobj_attribute string_type =3D
+> > +     __ATTR_RO(type);
+> > +
+> > +static struct attribute *string_attrs[] =3D {
+> > +     &string_display_langcode.attr,
+> > +     &string_display_name.attr,
+> > +     &string_current_val.attr,
+> > +     &string_min_length.attr,
+> > +     &string_max_length.attr,
+> > +     &string_type.attr,
+> > +     NULL,
+> > +};
+> > +
+> > +static const struct attribute_group string_attr_group =3D {
+> > +     .attrs =3D string_attrs,
+> > +};
+> > +
+> > +int alloc_string_data(void)
+> > +{
+> > +     bioscfg_drv.string_instances_count =3D get_instance_count(HP_WMI_=
+BIOS_STRING_GUID);
+> > +     bioscfg_drv.string_data =3D kcalloc(bioscfg_drv.string_instances_=
+count,
+> > +                                       sizeof(struct string_data), GFP=
+_KERNEL);
 >
-> Extra space before %d.
+> sizeof(*bioscfg_drv.string_data) ?
+
 Done!
+
 >
-> > +                            expected_order_types[eloc], elem, order_ob=
-j[elem].type);
-> > +                     return -EIO;
-> > +             }
-> > +
+> > +     if (!bioscfg_drv.string_data) {
+> > +             bioscfg_drv.string_instances_count =3D 0;
+> > +             return -ENOMEM;
+> > +     }
+> > +     return 0;
+> > +}
+
 <snip>
-> > +                     kfree(tmpstr);
-> > +                     break;
-> > +             default:
-> > +                     pr_warn("Invalid element: %d found in Ordered_Lis=
-t attribute or data may be malformed\n", elem);
-> > +                     break;
-> > +             }
-> > +             kfree(tmpstr);
-> > +             kfree(str_value);
-> > +     }
-> > +
-> > +exit_list_package:
-> > +     kfree(tmpstr);
-> > +     kfree(str_value);
-> > +     return 0;
-> > +}
->
-> Looks double and triple frees in this function.
 
-Done!
->
-> After reading the about same things once again, I started to wonder if
-> some of that switch content could be moved into a common helper (which
-> takes e.g. the xx->common pointer as parameter and perhaps some other
-> carefully selected pointers). There's a lots of duplication.
->
-
-I will look into how the common data can be implemented with a helper.
-
-> > +/**
-> > + * populate_ordered_list_buffer_data() - Populate all properties of an
-> > + * instance under ordered list attribute
-> > + *
-> > + * @buffer_ptr: Buffer pointer
-> > + * @buffer_size: Buffer size
-> > + * @instance_id: The instance to enumerate
-> > + * @attr_name_kobj: The parent kernel object
-> > + */
-> > +int populate_ordered_list_buffer_data(u8 *buffer_ptr, u32 *buffer_size=
-, int instance_id,
-> > +                                   struct kobject *attr_name_kobj)
-> > +{
-> > +     struct ordered_list_data *ordered_list_data =3D &bioscfg_drv.orde=
-red_list_data[instance_id];
 > > +
-> > +     ordered_list_data->attr_name_kobj =3D attr_name_kobj;
-> > +
-> > +     /* Populate ordered list elements */
-> > +     populate_ordered_list_elements_from_buffer(buffer_ptr, buffer_siz=
-e,
-> > +                                                instance_id);
-> > +     update_attribute_permissions(ordered_list_data->common.is_readonl=
-y,
-> > +                                  &ordered_list_current_val);
-> > +     friendly_user_name_update(ordered_list_data->common.path,
-> > +                               attr_name_kobj->name,
-> > +                               ordered_list_data->common.display_name,
-> > +                               sizeof(ordered_list_data->common.displa=
-y_name));
-> > +
-> > +     return sysfs_create_group(attr_name_kobj, &ordered_list_attr_grou=
-p);
-> > +}
-> > +
-> > +int populate_ordered_list_elements_from_buffer(u8 *buffer_ptr, u32 *bu=
-ffer_size,
-> > +                                            int instance_id)
-> > +{
-> > +     int reqs;
-> > +     int values;
-> > +     struct ordered_list_data *ordered_list_data =3D &bioscfg_drv.orde=
-red_list_data[instance_id];
-> > +
-> > +     strscpy(ordered_list_data->common.display_name_language_code,
-> > +             LANG_CODE_STR,
-> > +             sizeof(ordered_list_data->common.display_name_language_co=
-de));
-> > +
-> > +     // VALUE:
-> > +     get_string_from_buffer(&buffer_ptr, buffer_size, ordered_list_dat=
-a->current_value,
-> > +                            sizeof(ordered_list_data->current_value));
-> > +
-> > +     // PATH:
-> > +     get_string_from_buffer(&buffer_ptr, buffer_size, ordered_list_dat=
-a->common.path,
-> > +                            sizeof(ordered_list_data->common.path));
-> > +
-> > +     // IS_READONLY:
-> > +     get_integer_from_buffer(&buffer_ptr, buffer_size,
-> > +                             &ordered_list_data->common.is_readonly);
-> > +
-> > +     //DISPLAY_IN_UI:
-> > +     get_integer_from_buffer(&buffer_ptr, buffer_size,
-> > +                             &ordered_list_data->common.display_in_ui)=
-;
-> > +
-> > +     // REQUIRES_PHYSICAL_PRESENCE:
-> > +     get_integer_from_buffer(&buffer_ptr, buffer_size,
-> > +                             &ordered_list_data->common.requires_physi=
-cal_presence);
-> > +
-> > +     // SEQUENCE:
-> > +     get_integer_from_buffer(&buffer_ptr, buffer_size,
-> > +                             &ordered_list_data->common.sequence);
-> > +
-> > +     // PREREQUISITES_SIZE:
-> > +     get_integer_from_buffer(&buffer_ptr, buffer_size,
-> > +                             &ordered_list_data->common.prerequisites_=
-size);
-> > +
-> > +     if (ordered_list_data->common.prerequisites_size > MAX_PREREQUISI=
-TES_SIZE) {
-> > +             /* Report a message and limit prerequisite size to maximu=
-m value */
-> > +             pr_warn("String Prerequisites size value exceeded the max=
-imum number of elements supported or data may be malformed\n");
-> > +             ordered_list_data->common.prerequisites_size =3D MAX_PRER=
-EQUISITES_SIZE;
-> > +     }
-> > +
-> > +     // PREREQUISITES:
-> > +     for (reqs =3D 0;
-> > +          reqs < ordered_list_data->common.prerequisites_size && reqs =
-< MAX_PREREQUISITES_SIZE;
-> > +          reqs++)
-> > +             get_string_from_buffer(&buffer_ptr, buffer_size,
-> > +                                    ordered_list_data->common.prerequi=
-sites[reqs],
-> > +                                    sizeof(ordered_list_data->common.p=
-rerequisites[reqs]));
-> > +
-> > +     // SECURITY_LEVEL:
-> > +     get_integer_from_buffer(&buffer_ptr, buffer_size,
-> > +                             &ordered_list_data->common.security_level=
-);
-> > +
-> > +     // ORD_LIST_SIZE:
-> > +     get_integer_from_buffer(&buffer_ptr, buffer_size,
-> > +                             &ordered_list_data->elements_size);
-> > +
-> > +     if (ordered_list_data->elements_size > MAX_ELEMENTS_SIZE) {
-> > +             /* Report a message and limit elements size to maximum va=
-lue */
-> > +             pr_warn("Ordered List size value exceeded the maximum num=
-ber of elements supported or data may be malformed\n");
-> > +             ordered_list_data->elements_size =3D MAX_ELEMENTS_SIZE;
-> > +     }
-> > +
-> > +     // ORD_LIST_ELEMENTS:
-> > +     for (values =3D 0; values < ordered_list_data->elements_size && v=
-alues < MAX_ELEMENTS_SIZE;
-> > +          values++)
-> > +             get_string_from_buffer(&buffer_ptr, buffer_size,
-> > +                                    ordered_list_data->elements[values=
-],
-> > +                                    sizeof(ordered_list_data->elements=
-[values]));
-> > +
-> > +     return 0;
-> > +}
->
-> Same here. Pass buffer, buffer_size and common into a helper? Maybe some
-> other parameters too to cover many/all of the cases?
-
-I will investigate how I can use more helpers to minimize the duplication
-
->
-> > +
-> > +/**
-> > + * exit_ordered_list_attributes() - Clear all attribute data
-> > + *
-> > + * Clears all data allocated for this group of attributes
-> > + */
-> > +void exit_ordered_list_attributes(void)
-> > +{
-> > +     int instance_id;
-> > +
-> > +     for (instance_id =3D 0; instance_id < bioscfg_drv.ordered_list_in=
-stances_count;
-> > +          instance_id++) {
-> > +             struct kobject *attr_name_kobj =3D
-> > +                     bioscfg_drv.ordered_list_data[instance_id].attr_n=
-ame_kobj;
-> > +
-> > +             if (attr_name_kobj)
-> > +                     sysfs_remove_group(attr_name_kobj,
-> > +                                        &ordered_list_attr_group);
-> > +     }
-> > +     bioscfg_drv.ordered_list_instances_count =3D 0;
-> > +
-> > +     kfree(bioscfg_drv.ordered_list_data);
-> > +     bioscfg_drv.ordered_list_data =3D NULL;
-> > +}
-> >
->
-> --
->  i.
