@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73C1C77B7C
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 May 2023 09:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE1CC77B7F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 May 2023 09:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232935AbjEKJJt (ORCPT
+        id S237240AbjEKJXc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 May 2023 05:09:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35010 "EHLO
+        Thu, 11 May 2023 05:23:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229812AbjEKJJs (ORCPT
+        with ESMTP id S232333AbjEKJXb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 May 2023 05:09:48 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBF9AB8;
-        Thu, 11 May 2023 02:09:46 -0700 (PDT)
+        Thu, 11 May 2023 05:23:31 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7784910E;
+        Thu, 11 May 2023 02:23:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683796186; x=1715332186;
+  t=1683797010; x=1715333010;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=LIAE6AICDiU3JtfOGCeNPnm8ua1Fx3jeY/DvL1sM4mg=;
-  b=T7I6GnJv4Z0dOA0uk3vmKewmnYmd8wcWXmOPivUWjK5T4084zmwl1W8U
-   vVSeck3D8gGFHf9/d2vQOKws49jG6Abjm1ePCTyIEcrYxCxZhkvZletNE
-   G3FTpSfBF9xTGds4Y9PCF2aYtDVXOGVkrBnMoYhotqAMV1PIzm6v/D+SW
-   STBZu3YpbPP7TPeoxi/RC4k29/PnmQuU8NbALNCc1A/YRXqh5ho/yDO+a
-   0SEasuq4TyEPE7gpOKkyAH6I03JD1wHbr9dL3vJbSeuNQfkusaubPF9XB
-   DsA5SznWUkj8jMaPW1GPlB86/kv1/XSiSAD/uLPlTUPPFdq6G7eR16vrR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="436776667"
+  bh=QgdaHAAgZazMw6AXL+sJC63JncWFpuoO5svFVyBFHic=;
+  b=DhuD5ydFjme7MBLkVGs96GQcpXADft/ZAuc3iSYQs9Y/z4jH1UoJgaJ0
+   9eeITOJ86JZpltundD/8qtXYcIQY5VFkZTHE6tjzvQUYCNpkrbONVMCiP
+   P3chByVXQ2vw1Hx+bLrfiF67hd6ZHT7HfJWeLTWLdeEdKHNWJu3gmIojA
+   EHwTSkyyNZldvNsLQ3aMg0L8ZYJsI42MjnASy/4gt0lat+diaBMpHb2tf
+   DbDHCmga6+n4yMQjaYWUnL3UZx91XxowlhdvQm1H6W7FH3vWGfdBVd8hS
+   T8JL1miZcdWYWI2KpsJkx6UuVMgxBU9pyP6Ep4w4ClZzsEZy9XnYKnZZq
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="330806852"
 X-IronPort-AV: E=Sophos;i="5.99,266,1677571200"; 
-   d="scan'208";a="436776667"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 02:09:46 -0700
+   d="scan'208";a="330806852"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 02:23:30 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="811510125"
+X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="650087353"
 X-IronPort-AV: E=Sophos;i="5.99,266,1677571200"; 
-   d="scan'208";a="811510125"
+   d="scan'208";a="650087353"
 Received: from jsanche3-mobl1.ger.corp.intel.com ([10.252.39.112])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 02:09:44 -0700
-Date:   Thu, 11 May 2023 12:09:39 +0300 (EEST)
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 02:23:28 -0700
+Date:   Thu, 11 May 2023 12:23:25 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Jorge Lopez <jorgealtxwork@gmail.com>
 cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>, thomas@t-8ch.de
-Subject: Re: [PATCH v12 06/13] HP BIOSCFG driver - passwdobj-attributes
-In-Reply-To: <CAOOmCE9MUFyXzeb-iBaXdpD0-ctSnYPnM_07VCAzGCg-vaOjsg@mail.gmail.com>
-Message-ID: <5fe49d95-79bd-441d-3a3a-4e2894536ae9@linux.intel.com>
-References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-7-jorge.lopez2@hp.com> <ff831b68-58ca-947e-1e1-b9461b781bc0@linux.intel.com> <CAOOmCE9MUFyXzeb-iBaXdpD0-ctSnYPnM_07VCAzGCg-vaOjsg@mail.gmail.com>
+Subject: Re: [PATCH v12 10/13] HP BIOSCFG driver - spmobj-attributes
+In-Reply-To: <CAOOmCE9m5++_4nBu3C64uWVOeyUQs3afn_Q9AJz9oudGvMHHiQ@mail.gmail.com>
+Message-ID: <4a14de7-58fb-4192-496a-279dd4109b6@linux.intel.com>
+References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-11-jorge.lopez2@hp.com> <4537f210-4a7a-3c11-ecbb-ed4762a1f598@linux.intel.com> <CAOOmCE9m5++_4nBu3C64uWVOeyUQs3afn_Q9AJz9oudGvMHHiQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-502350463-1683796186=:1900"
+Content-Type: multipart/mixed; boundary="8323329-1104371954-1683797009=:1900"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -58,13 +58,13 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-502350463-1683796186=:1900
+--8323329-1104371954-1683797009=:1900
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
 
 On Wed, 10 May 2023, Jorge Lopez wrote:
 
-> On Tue, May 9, 2023 at 7:34 AM Ilpo Järvinen
+> On Tue, May 9, 2023 at 8:48 AM Ilpo Järvinen
 > <ilpo.jarvinen@linux.intel.com> wrote:
 > >
 > > On Fri, 5 May 2023, Jorge Lopez wrote:
@@ -110,33 +110,106 @@ On Wed, 10 May 2023, Jorge Lopez wrote:
 > > > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 > > >
 > > > ---
-> > > Based on the latest platform-drivers-x86.git/for-next
-> >
-> > FYI, for me you don't need to reply into the comments where you'll be
-> > following the review suggestion. It saves us both time if we focus on
-> > points where there's more to discuss.
 
 
-> > > +                     /*
-> > > +                      * This HACK is needed to keep the expected
-> > > +                      * element list pointing to the right obj[elem].type
-> > > +                      * when the size is zero.  PREREQUISITES
+> > > +     } else {
+> > > +             /*
+> > > +              * UTF-16 prefix is append to the * buffer when a BIOS
 > >
-> > Please remove all these double space from your patches (should be easy
-> > to find them with grep). Please check if your editor adds them e.g., when
-> > reflowing text.
+> > What is "the * buffer" ?
 > 
-> What double spaces are you referring to?
+> It is the data stored in 'buffer' variable which is composed of three
+> strings concatenated together to be submitted to BIOS via WMI call.
+> 'Buffer' will looks something as    [size attribute][attribute][size
+> value][value][auth size][auth payload]
+> size is the length in bytes,  attribute/value/auth are string represented in u16
 
-There's "zero.  PREREQUISITES" so double space after the full stop. We 
-don't use them in the kernel comments.
+Even after this explanation I don't understand why it's called "the * 
+buffer". Is that common terminology in this domain (in which case it's 
+fine, I just haven't come across such term before)?
 
-It could be that your editor auto inserts the second space (by default) 
-when e.g. reflowing text because it's some English rule to use two spaces 
-there.
+> > > +              * admin password is configured in BIOS
+> > > +              */
+> > > +
+
+[...snip...]
+
+> > > +/*
+> > > + * status_show - Reads SPM status
+> > > + */
+> > > +static ssize_t status_show(struct kobject *kobj, struct kobj_attribute
+> > > +                 *attr, char *buf)
+> > > +{
+> > > +     int ret, i;
+> > > +     struct secureplatform_provisioning_data data;
+> > > +
+> > > +     ret = statusbin(kobj, attr, &data);
+> > > +     if (ret < 0)
+> > > +             goto status_exit;
+> >
+> > Can you calculate strnlen() from buf at this point, or is the result
+> > garbage? Should you return ret instead here?
+> 
+> It should return the error instead.
+> >
+> > > +
+> > > +     sysfs_emit(buf, "%s{\n", buf);
+> > > +     sysfs_emit(buf, "%s\t\"State\": \"%s\",\n", buf,
+> > > +                spm_state_types[data.state]);
+> > > +     sysfs_emit(buf, "%s\t\"Version\": \"%d.%d\",\n", buf, data.version[0],
+> > > +                data.version[1]);
+> > > +
+> > > +     /*
+> > > +      * state == 0 means secure platform management
+> > > +      * feature is not configured in BIOS.
+> > > +      */
+> > > +     if (data.state == 0)
+> > > +             goto status_exit;
+> > > +
+> > > +     sysfs_emit(buf, "%s\t\"Nonce\": %d,\n", buf, data.nonce);
+> > > +     sysfs_emit(buf, "%s\t\"FeaturesInUse\": %d,\n", buf, data.features);
+> > > +     sysfs_emit(buf, "%s\t\"EndorsementKeyMod\": \"", buf);
+> > > +
+> > > +     for (i = 255; i >= 0; i--)
+> > > +             sysfs_emit(buf, "%s %u", buf, data.kek_mod[i]);
+> > > +
+> > > +     sysfs_emit(buf, "%s \",\n", buf);
+> > > +     sysfs_emit(buf, "%s\t\"SigningKeyMod\": \"", buf);
+> > > +
+> > > +     for (i = 255; i >= 0; i--)
+> > > +             sysfs_emit(buf, "%s %u", buf, data.sk_mod[i]);
+> > > +
+> > > +     /* Return buf contents */
+> > > +
+> > > +     sysfs_emit(buf, "%s \"\n", buf);
+> > > +     sysfs_emit(buf, "%s}\n", buf);
+> > > +
+> > > +status_exit:
+> > > +     return strnlen(buf, PAGE_SIZE);
+> > > +}
+> >
+> > Emit buf into buf? There's sysfs_emit_at(), however,
+> >
+> > while I'm far from sysfs formatting expert, this feels something that
+> > tries to expose more than one thing over same sysfs file. Shouldn't they
+> > be each in their own files?
+> 
+> This concern was brought up in earlier reviews but it was decided to
+> allow returning the information as a single json file.
+> Because the information is part of the same structure and received in
+> a single WMI call, separating the components into multiple files can
+> cause the data read in one field to be stale by the time is read.
+
+Okay, makes more sense. Maybe add a comment that the return is a json 
+string because that's not very obvious (I only realized now when you told 
+me).
+
+The other point is still valid though, you should keep length in a 
+variable and use sysfs_emit_at() to avoid printing buf into buf on 
+every line.
 
 
 -- 
  i.
 
---8323329-502350463-1683796186=:1900--
+--8323329-1104371954-1683797009=:1900--
