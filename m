@@ -2,54 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E5CC77B7F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 May 2023 17:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10240C7EE24
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 May 2023 17:57:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239047AbjEKR5I (ORCPT
+        id S239065AbjEKR5K (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 May 2023 13:57:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49716 "EHLO
+        Thu, 11 May 2023 13:57:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239057AbjEKR4z (ORCPT
+        with ESMTP id S239088AbjEKR47 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 May 2023 13:56:55 -0400
+        Thu, 11 May 2023 13:56:59 -0400
 Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05A9493F1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 May 2023 10:56:33 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-50bdd7b229cso16201102a12.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 May 2023 10:56:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41ADF8698
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 May 2023 10:56:35 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-50bc456cc39so13330974a12.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 May 2023 10:56:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683827791; x=1686419791;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=24nE1/kCUIt4VxUYaOy3n42p9I+OEZpARvSoMuz1JcY=;
-        b=romEM7onwBvttCZ6Iyh6XGlNl6BiuxxstU5nRxUtYf7UMwLRAB9f4qvhYA8Hk2/b0E
-         eTFG/hxUU2Y8XxM7FIoZzrxACMoLc2S+4DmXpR7cSpCMJ52jyWfqJ8E1+h/hJTgrAoss
-         zfLX/TcL2GXp82O73J4Q9kpATOy1zv31OkVg3pZse57SQJHZDCLhBSQINeiw2+xNalw6
-         sK5lnFN2l22vsfVDcTG5I7EX5iEwCvlEhPPMbPZgDUdMUQcUqMPcoGXjE0AksElbgo4q
-         AUG3A41/nx7TSKXyQpyjjStAlTU6ypVr9THjLBW9c0EUFYbWHqHCkSQhX0Wu8Uc8kOUd
-         3Gwg==
+        d=linaro.org; s=google; t=1683827792; x=1686419792;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s7FN5EFH4KBac4/ZvODbt2chzmKokVJu41Eq2V61hww=;
+        b=Ckoxt4MXbiGzc3oJKuG/KM6YiFy3QeFI/+dQye6TbeUSU4EleyP5YK2Gs78/LMYVV4
+         DL8/q40nETC8NkyT8FDKbHWqDhV2vLedB7mVNbs5LQLRTXfWrlFbOWQ2gkO+HjRrdv/H
+         tfXPgC4kjGs0432uMf/DX236CX8mRPDNNcet7VxUQD0P4x1tbb5xidJOaPLAOquKUXgn
+         S3sqD30iDEdFLlc6KqJ1hyMWI5puJqzhdcyYRjCWgeKIVlnOywTifGlp6ZDqD6Ak4nZJ
+         noHX93f2c4qJLRlh5VfbnSpUkziRwobZOB9D7xhF6IW1+dDxbzA0o3vi0rHd5unQ4lem
+         JvKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683827791; x=1686419791;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=24nE1/kCUIt4VxUYaOy3n42p9I+OEZpARvSoMuz1JcY=;
-        b=ZD/xxk5oq1Bf5YHmk+WUwETXML85QFfD66vso/Jo+65aFQzQTbNrgklGNvMcJJgYOK
-         prUm4bbsncLTYWF42KsctjjstGpYRv1MKKwKCNHpKR0kHBT43IXECx0NwTeSpctHDgUr
-         4iNTdx3mVCGf1LNzYjP62mjRM277s65/P2Eio311/iHlqc+0jh/9zD3CTBHA7XhfTOJz
-         qEbymSJ4Ek5AaO2aroZfdmooPovkUC8ia9B+IGAY1p1aYpqF3V1hycp8zql+6oN3qT6Z
-         UgC4uHUnEc2xlr8928b0rCHtTSprbW31awD8oFQ9Fs7xsrqF+zWs/m3YSdo7hFwTbaSq
-         it1g==
-X-Gm-Message-State: AC+VfDylOnZPbUk0i2ERdjhJRcyDlNxpe/3KMvUq5+3PwMdVrBeFv5WG
-        yaiLpAZXkW2AHGIpgqR4BUuQBA==
-X-Google-Smtp-Source: ACHHUZ4dVYd1ckDx8XuEHai8ueEHM1w9oSLwr1AQap+eSxw5kA9JOvV6VACtscHKKLA9r+o5MewQ/w==
-X-Received: by 2002:a50:ed99:0:b0:50b:d30c:c595 with SMTP id h25-20020a50ed99000000b0050bd30cc595mr16582930edr.7.1683827791134;
-        Thu, 11 May 2023 10:56:31 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683827792; x=1686419792;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s7FN5EFH4KBac4/ZvODbt2chzmKokVJu41Eq2V61hww=;
+        b=hCx2it9zhZhaXBs4q7AIBkcUeVhkmLHWZjEYeUexKtFzyJdLhFkqfGXS/+7I0ca686
+         SW5afElhm+nVstTJ0MoKKJGKVCIfN3GwV5gP2gknQxFAh36/LGOVMlj5YmKpCA2k/vdu
+         JDh7hK9QpAgCRU6mTk5guofNyUg+pK9lz+em6JckKckU+HNEPzmpG96cR7X2bgCd0scN
+         403wyY8f4LxNG4e5YJWHgHeJxRpTSYzS+yTwuPNrwCEF97l9cTuo+LEEq/5C38J1myw0
+         1O3hP372CDVJDoH286DGk8d6gzKjBq7lq/53EjJLmA7gaBnRpQIXN1v2K1W4GvBgznuJ
+         6q0A==
+X-Gm-Message-State: AC+VfDx/PJgZfgIxzpxmm2zCxQADTNuRDip5ZKrzH6UbfLODsFbtVkIk
+        K/2k8aSRIFOGS2Hs1WyzcuzuHF+DxEmX2tF65KG5nw==
+X-Google-Smtp-Source: ACHHUZ7JgTc7lzRjs6O7KBEfpdv2k+JY52kFwpFw3tfal7pz8tnhnl5OdOTt4XulMNGQBoAaBl44hA==
+X-Received: by 2002:a05:6402:1358:b0:50d:f9b3:444d with SMTP id y24-20020a056402135800b0050df9b3444dmr2316628edw.21.1683827792436;
+        Thu, 11 May 2023 10:56:32 -0700 (PDT)
 Received: from krzk-bin.. ([2a02:810d:15c0:828:d7cd:1be6:f89d:7218])
-        by smtp.gmail.com with ESMTPSA id l14-20020a056402028e00b00506addaaab0sm3099202edv.32.2023.05.11.10.56.29
+        by smtp.gmail.com with ESMTPSA id l14-20020a056402028e00b00506addaaab0sm3099202edv.32.2023.05.11.10.56.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 May 2023 10:56:30 -0700 (PDT)
+        Thu, 11 May 2023 10:56:31 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@weissschuh.net>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -59,10 +60,12 @@ To:     =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@weissschuh.net>,
         Azael Avalos <coproscefalo@gmail.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [RESEND PATCH 1/4] platform/x86: gigabyte: constify pointers to hwmon_channel_info
-Date:   Thu, 11 May 2023 19:56:24 +0200
-Message-Id: <20230511175627.282246-1-krzysztof.kozlowski@linaro.org>
+Subject: [RESEND PATCH 2/4] platform/x86: hp: constify pointers to hwmon_channel_info
+Date:   Thu, 11 May 2023 19:56:25 +0200
+Message-Id: <20230511175627.282246-2-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230511175627.282246-1-krzysztof.kozlowski@linaro.org>
+References: <20230511175627.282246-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -74,22 +77,22 @@ const for safety.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/platform/x86/gigabyte-wmi.c | 2 +-
+ drivers/platform/x86/hp/hp-wmi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-index 8aa665e866b8..f6ba88baee4d 100644
---- a/drivers/platform/x86/gigabyte-wmi.c
-+++ b/drivers/platform/x86/gigabyte-wmi.c
-@@ -94,7 +94,7 @@ static umode_t gigabyte_wmi_hwmon_is_visible(const void *data, enum hwmon_sensor
- 	return usable_sensors_mask & BIT(channel) ? 0444  : 0;
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 2749433b713f..7eb66cfef208 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -1536,7 +1536,7 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 	}
  }
  
--static const struct hwmon_channel_info *gigabyte_wmi_hwmon_info[] = {
-+static const struct hwmon_channel_info * const gigabyte_wmi_hwmon_info[] = {
- 	HWMON_CHANNEL_INFO(temp,
- 			   HWMON_T_INPUT,
- 			   HWMON_T_INPUT,
+-static const struct hwmon_channel_info *info[] = {
++static const struct hwmon_channel_info * const info[] = {
+ 	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
+ 	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE),
+ 	NULL
 -- 
 2.34.1
 
