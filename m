@@ -2,299 +2,167 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7F0C7EE23
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 May 2023 13:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F16FAC77B7C
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 May 2023 13:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237973AbjEKNXf (ORCPT
+        id S237480AbjEKNwf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 May 2023 09:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40156 "EHLO
+        Thu, 11 May 2023 09:52:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238151AbjEKNXS (ORCPT
+        with ESMTP id S236577AbjEKNwe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 May 2023 09:23:18 -0400
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E1201155C;
-        Thu, 11 May 2023 06:21:39 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id C098E320083A;
-        Thu, 11 May 2023 09:21:20 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 11 May 2023 09:21:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm3; t=1683811280; x=1683897680; bh=jv
-        OklUpmzSY8qaY1xynV5bsmPspeHy7w+6eOx8p4X8w=; b=M73MQWS3GO3JygbJal
-        sHzuLI+KVsi7ycupl++RI6zA7+Pl/Z1F9YDUhyc68NWZWeK8D8RzvPIambfK4XnT
-        6WPvtKoT7tFrbXcz/LKcBEUm8jmguviVp4RZyo2COy7RQaCZAqwtLaDXq60pJajp
-        AXiWkn7H4IqRcgOanhFA17ke0E3bXYDBivCX/M7VFffknWwrsmvf2nGp7iKs1CKB
-        15wKFEBE8IwXfnq4gfaBmDQnf0UQngU1MYhsIeyMgy78/ntub+ah6MPc7HDhvtc2
-        ARLZPEQ4SpbvvU6aTYMIGzKeJF+/7vVbYcBBLSZTRg3GbLMzGeCpFn18vCW7j7vg
-        BEcQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1683811280; x=1683897680; bh=jvOklUpmzSY8q
-        aY1xynV5bsmPspeHy7w+6eOx8p4X8w=; b=IuAWbfwhg3RE8hnRna4C9AojS8Wkw
-        h+/hKWuXITyAvCzMqXwyOR/Fup3ptEFxN/zCPSUOgDT9a79d+TucD/Fyk7AzebsB
-        YIwwb/yL985FLYHDWFcaVSVFLqznd7BJ72+JHzSiJxEXW+9A88epbIJH84infNoR
-        8E9/xjIrIvjqhdMYk6triaFiBBcZzkzxQP+RJfcxVSKM4KsmVhwRE1F6rpw2tSRx
-        cHIOX+0GnXg8xwPH5G2AsAQI1PfE5KWQOYfTphcNErWtIs6Mh9EyLfx/ka3rHEwI
-        Qft0Rqq1y8PEFn1ZHMN4+RDVblOfwdMyv7v7C5D0Wn19YFGkn/CxwnPtA==
-X-ME-Sender: <xms:z-tcZBSIg4rj3sYHnf5IyV6OkTM5fq-ulwOi9_3GHC9-VbOMheI-Zw>
-    <xme:z-tcZKwEqThfU4--zRnk4ZQEE1o-EOBDO9WMzsrBkG9S9kiG7MCLovCza65BmbwNU
-    vHX0ntsaFKlTzUQnsU>
-X-ME-Received: <xmr:z-tcZG3dGWgBGPu6j7EhHJcu_0QgQWHMeZ-kGBwjm49eBOs7OFVk_IDrO3cZMQPoQOa134kHSba1_55aFg8ua0qzCAQbqQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeegkedgieefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehnihhs
-    shgvucetshhtihgvrhcuoegrnhhishhsvgesrghsthhivghrrdgvuheqnecuggftrfgrth
-    htvghrnheplefhjefhvdelueekheeftefghfejfffguedvgffgueehiefggeevjeekieet
-    jeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hnihhsshgvsegrshhtihgvrhdrvghu
-X-ME-Proxy: <xmx:z-tcZJChUntGfFpovDk1w9Ubb6KHKOvvSC_whzhQbk2F6i376r6J8w>
-    <xmx:z-tcZKjuWcxbQL7T_ZROb86oXZIWWNI89Q1-WUSI1mNSjkLyB6Dgtg>
-    <xmx:z-tcZNopfAJltjC-MW7QuMzajiuvn4zLoMnJgdUhwFpkMgpHyPkbrA>
-    <xmx:0OtcZDaVGlZjWm-cOYGdOITSjvYoNRstKpnW6XsOv8f1s8OTsaIX_w>
-Feedback-ID: iccec46d4:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 11 May 2023 09:21:16 -0400 (EDT)
-Date:   Thu, 11 May 2023 15:21:13 +0200
-From:   Anisse Astier <anisse@astier.eu>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Anisse Astier <an.astier@criteo.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <brauner@kernel.org>,
-        linux-efi@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Jeremy Kerr <jk@ozlabs.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Richard Hughes <hughsient@gmail.com>,
-        "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Subject: Re: [PATCH] efivarfs: expose used and total size
-Message-ID: <ZFzouh4AJemaJAah@anisse-laptop>
-References: <20230426195853.633233-1-anisse@astier.eu>
- <CAMj1kXE2-76KZDxpHBPcZgbB8vGDmLEbiRGmw_5o-rsNzT9oQw@mail.gmail.com>
+        Thu, 11 May 2023 09:52:34 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 968C635A7;
+        Thu, 11 May 2023 06:52:32 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4f22908a082so6701818e87.1;
+        Thu, 11 May 2023 06:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683813151; x=1686405151;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=94GUMh2At/vGwoRKKOJX0Z9VU5+Cp+4GaApU4ASVFxQ=;
+        b=L1fUZuuAOKbNgn/+Qzr4dyiiTKcYNxVg7GbYuJT2ToA/8QK1DVpH8IdUm8jhE/Fs4n
+         o5+Tmu3ZnQBAcKy7WsLY67m9/VeTBJhwNk5d/6HF61OoUvE/LmcKiOPMFKa/lNYyh1Ub
+         js6KhPe508TFmYdskpWCDttqFvOwgQJeOYDPojzPZN8hTr16H3ht3k7mq4g3+4SEF7GM
+         CtBf2+deyIOWh/mpXMkpwRtpsf9P/AL0x+dEO18ZTIAeKUIYs9ojVYvh/JPl8OQAOozg
+         CTJkR34kq/MybNv2++ebco3U/MlgUPdScRQLJsAFJ9afox5694I52jZSJvXJ3SvzBIC7
+         +ygg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683813151; x=1686405151;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=94GUMh2At/vGwoRKKOJX0Z9VU5+Cp+4GaApU4ASVFxQ=;
+        b=Hfa3AdHoLdkr3YLNH+TDpNbDTp4sIY/K7ddKo9yhZ9Fp18hzG5rFlkd4dkxOflbVdD
+         FHq96ypVUXM9lZPAS8B4j20rgp+RyFqKNIZtdqFbb4oUzEf4GldXf+obHNXi0nR1Fqyy
+         UuYXQfi/AKABerhjVm6aqVMk8VvwPDrN7V0KAQrhAuR4wICtRI5yU4eIpv5s1ACCoxLW
+         D98I61HkEPRqRqbA3ki5w4bBAtmc6Hf4aM8hd9JfGnO6HpHbN5j2bkgdE5sWrqFvF373
+         cYMGfXRNpEf4scdwhXc7pgeRGYGeFtKLQjVkWGU6Dl93DzdvJJ+fqLZr6nvaN2UV+fDM
+         yAfw==
+X-Gm-Message-State: AC+VfDx7CLtd8Oe1c4YwDfP9+LLm/zvBUcm7Wr41pGqef/6kHTluxXD7
+        eD95QW3FnNYdEZNJpD2d3FRda6Vl1EED+epA8jM=
+X-Google-Smtp-Source: ACHHUZ4vwA21i8+m6tp88IUPyNNAFjRCTB2zwxs+aTrDvd1h/Qb30LjmRi3tFDX81fh1QbJCSTaHhY7veI6ca5typok=
+X-Received: by 2002:a05:6512:1024:b0:4ec:89d3:a8ac with SMTP id
+ r4-20020a056512102400b004ec89d3a8acmr2537648lfr.30.1683813150527; Thu, 11 May
+ 2023 06:52:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXE2-76KZDxpHBPcZgbB8vGDmLEbiRGmw_5o-rsNzT9oQw@mail.gmail.com>
+References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-7-jorge.lopez2@hp.com>
+ <ff831b68-58ca-947e-1e1-b9461b781bc0@linux.intel.com> <CAOOmCE9MUFyXzeb-iBaXdpD0-ctSnYPnM_07VCAzGCg-vaOjsg@mail.gmail.com>
+ <5fe49d95-79bd-441d-3a3a-4e2894536ae9@linux.intel.com>
+In-Reply-To: <5fe49d95-79bd-441d-3a3a-4e2894536ae9@linux.intel.com>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Thu, 11 May 2023 08:52:01 -0500
+Message-ID: <CAOOmCE-0V0WJEAL3Hg=RM1m1hf=vvRB1DqU1NUKaS9BrUye1Jg@mail.gmail.com>
+Subject: Re: [PATCH v12 06/13] HP BIOSCFG driver - passwdobj-attributes
+To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, thomas@t-8ch.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Thu, May 11, 2023 at 4:09=E2=80=AFAM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Wed, 10 May 2023, Jorge Lopez wrote:
+>
+> > On Tue, May 9, 2023 at 7:34=E2=80=AFAM Ilpo J=C3=A4rvinen
+> > <ilpo.jarvinen@linux.intel.com> wrote:
+> > >
+> > > On Fri, 5 May 2023, Jorge Lopez wrote:
+> > >
+> > > > HP BIOS Configuration driver purpose is to provide a driver support=
+ing
+> > > > the latest sysfs class firmware attributes framework allowing the u=
+ser
+> > > > to change BIOS settings and security solutions on HP Inc.=E2=80=99s=
+ commercial
+> > > > notebooks.
+> > > >
+> > > > Many features of HP Commercial notebooks can be managed using Windo=
+ws
+> > > > Management Instrumentation (WMI). WMI is an implementation of Web-B=
+ased
+> > > > Enterprise Management (WBEM) that provides a standards-based interf=
+ace
+> > > > for changing and monitoring system settings. HP BIOSCFG driver prov=
+ides
+> > > > a native Linux solution and the exposed features facilitates the
+> > > > migration to Linux environments.
+> > > >
+> > > > The Linux security features to be provided in hp-bioscfg driver ena=
+bles
+> > > > managing the BIOS settings and security solutions via sysfs, a virt=
+ual
+> > > > filesystem that can be used by user-mode applications. The new
+> > > > documentation cover HP-specific firmware sysfs attributes such Secu=
+re
+> > > > Platform Management and Sure Start. Each section provides security
+> > > > feature description and identifies sysfs directories and files expo=
+sed
+> > > > by the driver.
+> > > >
+> > > > Many HP Commercial notebooks include a feature called Secure Platfo=
+rm
+> > > > Management (SPM), which replaces older password-based BIOS settings
+> > > > management with public key cryptography. PC secure product manageme=
+nt
+> > > > begins when a target system is provisioned with cryptographic keys
+> > > > that are used to ensure the integrity of communications between sys=
+tem
+> > > > management utilities and the BIOS.
+> > > >
+> > > > HP Commercial notebooks have several BIOS settings that control its
+> > > > behaviour and capabilities, many of which are related to security.
+> > > > To prevent unauthorized changes to these settings, the system can
+> > > > be configured to use a cryptographic signature-based authorization
+> > > > string that the BIOS will use to verify authorization to modify the
+> > > > setting.
+> > > >
+> > > > Linux Security components are under development and not published y=
+et.
+> > > > The only linux component is the driver (hp bioscfg) at this time.
+> > > > Other published security components are under Windows.
+> > > >
+> > > > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+> > > >
+> > > > ---
+> > > > Based on the latest platform-drivers-x86.git/for-next
+> > >
+> > > FYI, for me you don't need to reply into the comments where you'll be
+> > > following the review suggestion. It saves us both time if we focus on
+> > > points where there's more to discuss.
+>
+>
+> > > > +                     /*
+> > > > +                      * This HACK is needed to keep the expected
+> > > > +                      * element list pointing to the right obj[ele=
+m].type
+> > > > +                      * when the size is zero.  PREREQUISITES
+> > >
+> > > Please remove all these double space from your patches (should be eas=
+y
+> > > to find them with grep). Please check if your editor adds them e.g., =
+when
+> > > reflowing text.
+> >
+> > What double spaces are you referring to?
+>
+> There's "zero.  PREREQUISITES" so double space after the full stop. We
+> don't use them in the kernel comments.
+>
+> It could be that your editor auto inserts the second space (by default)
+> when e.g. reflowing text because it's some English rule to use two spaces
+> there.
+>
+>
 
-On Wed, May 10, 2023 at 05:13:36PM +0200, Ard Biesheuvel wrote:
-> On Wed, 26 Apr 2023 at 21:59, Anisse Astier <anisse@astier.eu> wrote:
-> >
-> > From: Anisse Astier <an.astier@criteo.com>
-> >
-> > When writing variables, one might get errors with no other message on
-> > why it fails.
-> >
-> > Being able to see how much is used by EFI variables helps analyzing such
-> > issues.
-> >
-> > Since this is not a conventionnal filesystem, block size is
-> > intentionnally set to 1 instead of PAGE_SIZE.
-> >
-> > x86 quirks of reserved size are taken into account and available and
-> > free size can be different, further helping debugging space issues.
-> >
-> 
-> I have no objections to this, but I'm not much of a user space/ VFS
-> person, so adding some other folks that can chime in if they want.
-
-Thanks !
-
-> 
-> The point of this patch is that user space can query this information
-> using statvfs(), right?
-
-Yes, which means that a simple df command will show the used and free
-space remaining in the EFI variable storage area:
-
-   $ df -h /sys/firmware/efi/efivars/
-   Filesystem      Size  Used Avail Use% Mounted on
-   efivarfs        176K  106K   66K  62% /sys/firmware/efi/efivars
-
-Regards,
-
-Anisse
-
-> 
-> 
-> 
-> > Signed-off-by: Anisse Astier <an.astier@criteo.com>
-> > ---
-> > Notes:
-> > Patch isn't split per subsystem intentionally, for better understanding
-> > of intent; split could be trivial in a later version.
-> >
-> > I'm not sure whether statfs(2) should return an error if the efi request
-> > fails; I think it could be ignored with maybe a WARN_ONCE; which would
-> > be close to the current behaviour.
-> >
-> > Regards,
-> >
-> > Anisse
-> >
-> > ---
-> >  arch/x86/platform/efi/quirks.c |  8 ++++++++
-> >  drivers/firmware/efi/efi.c     |  1 +
-> >  drivers/firmware/efi/vars.c    | 12 ++++++++++++
-> >  fs/efivarfs/super.c            | 26 +++++++++++++++++++++++++-
-> >  include/linux/efi.h            | 10 ++++++++++
-> >  5 files changed, 56 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-> > index b0b848d6933a..587fa51230e2 100644
-> > --- a/arch/x86/platform/efi/quirks.c
-> > +++ b/arch/x86/platform/efi/quirks.c
-> > @@ -114,6 +114,14 @@ void efi_delete_dummy_variable(void)
-> >                                      EFI_VARIABLE_RUNTIME_ACCESS, 0, NULL);
-> >  }
-> >
-> > +u64 efi_reserved_space(void)
-> > +{
-> > +       if (efi_no_storage_paranoia)
-> > +               return 0;
-> > +       return EFI_MIN_RESERVE;
-> > +}
-> > +EXPORT_SYMBOL_GPL(efi_reserved_space);
-> > +
-> >  /*
-> >   * In the nonblocking case we do not attempt to perform garbage
-> >   * collection if we do not have enough free space. Rather, we do the
-> > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> > index abeff7dc0b58..d0dfa007bffc 100644
-> > --- a/drivers/firmware/efi/efi.c
-> > +++ b/drivers/firmware/efi/efi.c
-> > @@ -211,6 +211,7 @@ static int generic_ops_register(void)
-> >         generic_ops.get_variable = efi.get_variable;
-> >         generic_ops.get_next_variable = efi.get_next_variable;
-> >         generic_ops.query_variable_store = efi_query_variable_store;
-> > +       generic_ops.query_variable_info = efi.query_variable_info;
-> >
-> >         if (efi_rt_services_supported(EFI_RT_SUPPORTED_SET_VARIABLE)) {
-> >                 generic_ops.set_variable = efi.set_variable;
-> > diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
-> > index bd75b87f5fc1..c5382d5c3073 100644
-> > --- a/drivers/firmware/efi/vars.c
-> > +++ b/drivers/firmware/efi/vars.c
-> > @@ -245,3 +245,15 @@ efi_status_t efivar_set_variable(efi_char16_t *name, efi_guid_t *vendor,
-> >         return status;
-> >  }
-> >  EXPORT_SYMBOL_NS_GPL(efivar_set_variable, EFIVAR);
-> > +
-> > +efi_status_t efivar_query_variable_info(u32 attr,
-> > +                                       u64 *storage_space,
-> > +                                       u64 *remaining_space,
-> > +                                       u64 *max_variable_size)
-> > +{
-> > +       if (!__efivars->ops->query_variable_info)
-> > +               return EFI_UNSUPPORTED;
-> > +       return __efivars->ops->query_variable_info(attr, storage_space,
-> > +                       remaining_space, max_variable_size);
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(efivar_query_variable_info, EFIVAR);
-> > diff --git a/fs/efivarfs/super.c b/fs/efivarfs/super.c
-> > index 482d612b716b..064bfc0243c9 100644
-> > --- a/fs/efivarfs/super.c
-> > +++ b/fs/efivarfs/super.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/ucs2_string.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/magic.h>
-> > +#include <linux/statfs.h>
-> >
-> >  #include "internal.h"
-> >
-> > @@ -23,8 +24,31 @@ static void efivarfs_evict_inode(struct inode *inode)
-> >         clear_inode(inode);
-> >  }
-> >
-> > +static int efivarfs_statfs(struct dentry *dentry, struct kstatfs *buf)
-> > +{
-> > +       u64 storage_space, remaining_space, max_variable_size;
-> > +       efi_status_t status;
-> > +       const u32 attr = (EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS |
-> > +        EFI_VARIABLE_RUNTIME_ACCESS);
-> > +
-> > +       buf->f_type = dentry->d_sb->s_magic;
-> > +       buf->f_bsize = 1;
-> > +       buf->f_namelen = NAME_MAX;
-> > +
-> > +       status = efivar_query_variable_info(attr, &storage_space, &remaining_space,
-> > +                                           &max_variable_size);
-> > +       if (status != EFI_SUCCESS)
-> > +               return efi_status_to_err(status);
-> > +       buf->f_blocks = storage_space;
-> > +       buf->f_bfree = remaining_space;
-> > +       if (remaining_space > efi_reserved_space())
-> > +               buf->f_bavail = remaining_space - efi_reserved_space();
-> > +       else
-> > +               buf->f_bavail = 0;
-> > +       return 0;
-> > +}
-> >  static const struct super_operations efivarfs_ops = {
-> > -       .statfs = simple_statfs,
-> > +       .statfs = efivarfs_statfs,
-> >         .drop_inode = generic_delete_inode,
-> >         .evict_inode = efivarfs_evict_inode,
-> >  };
-> > diff --git a/include/linux/efi.h b/include/linux/efi.h
-> > index 7aa62c92185f..d2b686191870 100644
-> > --- a/include/linux/efi.h
-> > +++ b/include/linux/efi.h
-> > @@ -703,6 +703,7 @@ static inline void efi_enter_virtual_mode (void) {}
-> >  extern efi_status_t efi_query_variable_store(u32 attributes,
-> >                                              unsigned long size,
-> >                                              bool nonblocking);
-> > +extern u64 efi_reserved_space(void);
-> >  #else
-> >
-> >  static inline efi_status_t efi_query_variable_store(u32 attributes,
-> > @@ -711,6 +712,10 @@ static inline efi_status_t efi_query_variable_store(u32 attributes,
-> >  {
-> >         return EFI_SUCCESS;
-> >  }
-> > +static inline u64 efi_reserved_space(void)
-> > +{
-> > +       return 0;
-> > +}
-> >  #endif
-> >  extern void __iomem *efi_lookup_mapped_addr(u64 phys_addr);
-> >
-> > @@ -1042,6 +1047,7 @@ struct efivar_operations {
-> >         efi_set_variable_t *set_variable;
-> >         efi_set_variable_t *set_variable_nonblocking;
-> >         efi_query_variable_store_t *query_variable_store;
-> > +       efi_query_variable_info_t *query_variable_info;
-> >  };
-> >
-> >  struct efivars {
-> > @@ -1087,6 +1093,10 @@ efi_status_t efivar_set_variable_locked(efi_char16_t *name, efi_guid_t *vendor,
-> >  efi_status_t efivar_set_variable(efi_char16_t *name, efi_guid_t *vendor,
-> >                                  u32 attr, unsigned long data_size, void *data);
-> >
-> > +efi_status_t efivar_query_variable_info(u32 attr, u64 *storage_space,
-> > +                                       u64 *remaining_space,
-> > +                                       u64 *max_variable_size);
-> > +
-> >  #if IS_ENABLED(CONFIG_EFI_CAPSULE_LOADER)
-> >  extern bool efi_capsule_pending(int *reset_type);
-> >
-> > --
-> > 2.34.1
-> >
+Thank you for the clarification.  I checked and fixed all double
+spaces in all source files
+> --
+>  i.
