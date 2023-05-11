@@ -2,280 +2,299 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42260C77B7C
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 May 2023 09:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7F0C7EE23
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 May 2023 13:23:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236538AbjEKJdT (ORCPT
+        id S237973AbjEKNXf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 May 2023 05:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54398 "EHLO
+        Thu, 11 May 2023 09:23:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237706AbjEKJdH (ORCPT
+        with ESMTP id S238151AbjEKNXS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 May 2023 05:33:07 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBA559EE4;
-        Thu, 11 May 2023 02:32:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683797576; x=1715333576;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Im5pkr2QRlb8LR+SYpjjhDpJdt78iPfURYZcShZDMQg=;
-  b=lKtiODNvOm4/R4EsWR8dWM/mWFmJkw/9GKFKU+b1y1HmVqXN9mjSu4TU
-   UcGg8VPxXD/gf4cdy9mN0woFMMO28PAoY4MKz1wXP+cWGbv9igW75N7h5
-   K0ouQU5OPJYlpI+3TFSgPAW7Po5g1zzY6PU21b+PDDjbgWhao+zRtSIhE
-   IO2U3wteCG+eCDIMPmTn/6YR6m8J+I7cAEAU8MdDlCgI4SxwZ0bNoBmGG
-   XMcHfQkKGkQWLcKwrzznk8EUQq1ViC8wL9ZT6RxO7qtucMZj+2O6Anrh1
-   htUs+FK9+gRpMaHvMDa+aEcDMxlfBy2cACg4WpguigJPBn+SpHbiDe9AL
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="413778616"
-X-IronPort-AV: E=Sophos;i="5.99,266,1677571200"; 
-   d="scan'208";a="413778616"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 02:32:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="873902817"
-X-IronPort-AV: E=Sophos;i="5.99,266,1677571200"; 
-   d="scan'208";a="873902817"
-Received: from jsanche3-mobl1.ger.corp.intel.com ([10.252.39.112])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 02:32:53 -0700
-Date:   Thu, 11 May 2023 12:32:51 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
-cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, thomas@t-8ch.de
-Subject: Re: [PATCH v12 11/13] HP BIOSCFG driver - surestart-attributes
-In-Reply-To: <CAOOmCE_dRivApf46KO1Cq-vHGsHVXNVCqbqF2NV4Y6SVpYx6hA@mail.gmail.com>
-Message-ID: <79db2a99-5cd7-19c0-212d-9e28869a6a18@linux.intel.com>
-References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-12-jorge.lopez2@hp.com> <ef445e78-5751-bd8f-44ce-d9beaebaac6@linux.intel.com> <CAOOmCE_dRivApf46KO1Cq-vHGsHVXNVCqbqF2NV4Y6SVpYx6hA@mail.gmail.com>
+        Thu, 11 May 2023 09:23:18 -0400
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E1201155C;
+        Thu, 11 May 2023 06:21:39 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id C098E320083A;
+        Thu, 11 May 2023 09:21:20 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 11 May 2023 09:21:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm3; t=1683811280; x=1683897680; bh=jv
+        OklUpmzSY8qaY1xynV5bsmPspeHy7w+6eOx8p4X8w=; b=M73MQWS3GO3JygbJal
+        sHzuLI+KVsi7ycupl++RI6zA7+Pl/Z1F9YDUhyc68NWZWeK8D8RzvPIambfK4XnT
+        6WPvtKoT7tFrbXcz/LKcBEUm8jmguviVp4RZyo2COy7RQaCZAqwtLaDXq60pJajp
+        AXiWkn7H4IqRcgOanhFA17ke0E3bXYDBivCX/M7VFffknWwrsmvf2nGp7iKs1CKB
+        15wKFEBE8IwXfnq4gfaBmDQnf0UQngU1MYhsIeyMgy78/ntub+ah6MPc7HDhvtc2
+        ARLZPEQ4SpbvvU6aTYMIGzKeJF+/7vVbYcBBLSZTRg3GbLMzGeCpFn18vCW7j7vg
+        BEcQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1683811280; x=1683897680; bh=jvOklUpmzSY8q
+        aY1xynV5bsmPspeHy7w+6eOx8p4X8w=; b=IuAWbfwhg3RE8hnRna4C9AojS8Wkw
+        h+/hKWuXITyAvCzMqXwyOR/Fup3ptEFxN/zCPSUOgDT9a79d+TucD/Fyk7AzebsB
+        YIwwb/yL985FLYHDWFcaVSVFLqznd7BJ72+JHzSiJxEXW+9A88epbIJH84infNoR
+        8E9/xjIrIvjqhdMYk6triaFiBBcZzkzxQP+RJfcxVSKM4KsmVhwRE1F6rpw2tSRx
+        cHIOX+0GnXg8xwPH5G2AsAQI1PfE5KWQOYfTphcNErWtIs6Mh9EyLfx/ka3rHEwI
+        Qft0Rqq1y8PEFn1ZHMN4+RDVblOfwdMyv7v7C5D0Wn19YFGkn/CxwnPtA==
+X-ME-Sender: <xms:z-tcZBSIg4rj3sYHnf5IyV6OkTM5fq-ulwOi9_3GHC9-VbOMheI-Zw>
+    <xme:z-tcZKwEqThfU4--zRnk4ZQEE1o-EOBDO9WMzsrBkG9S9kiG7MCLovCza65BmbwNU
+    vHX0ntsaFKlTzUQnsU>
+X-ME-Received: <xmr:z-tcZG3dGWgBGPu6j7EhHJcu_0QgQWHMeZ-kGBwjm49eBOs7OFVk_IDrO3cZMQPoQOa134kHSba1_55aFg8ua0qzCAQbqQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeegkedgieefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehnihhs
+    shgvucetshhtihgvrhcuoegrnhhishhsvgesrghsthhivghrrdgvuheqnecuggftrfgrth
+    htvghrnheplefhjefhvdelueekheeftefghfejfffguedvgffgueehiefggeevjeekieet
+    jeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hnihhsshgvsegrshhtihgvrhdrvghu
+X-ME-Proxy: <xmx:z-tcZJChUntGfFpovDk1w9Ubb6KHKOvvSC_whzhQbk2F6i376r6J8w>
+    <xmx:z-tcZKjuWcxbQL7T_ZROb86oXZIWWNI89Q1-WUSI1mNSjkLyB6Dgtg>
+    <xmx:z-tcZNopfAJltjC-MW7QuMzajiuvn4zLoMnJgdUhwFpkMgpHyPkbrA>
+    <xmx:0OtcZDaVGlZjWm-cOYGdOITSjvYoNRstKpnW6XsOv8f1s8OTsaIX_w>
+Feedback-ID: iccec46d4:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 11 May 2023 09:21:16 -0400 (EDT)
+Date:   Thu, 11 May 2023 15:21:13 +0200
+From:   Anisse Astier <anisse@astier.eu>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Anisse Astier <an.astier@criteo.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <brauner@kernel.org>,
+        linux-efi@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Jeremy Kerr <jk@ozlabs.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Richard Hughes <hughsient@gmail.com>,
+        "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Subject: Re: [PATCH] efivarfs: expose used and total size
+Message-ID: <ZFzouh4AJemaJAah@anisse-laptop>
+References: <20230426195853.633233-1-anisse@astier.eu>
+ <CAMj1kXE2-76KZDxpHBPcZgbB8vGDmLEbiRGmw_5o-rsNzT9oQw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-624878464-1683797575=:1900"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXE2-76KZDxpHBPcZgbB8vGDmLEbiRGmw_5o-rsNzT9oQw@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323329-624878464-1683797575=:1900
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-On Wed, 10 May 2023, Jorge Lopez wrote:
-
-> On Tue, May 9, 2023 at 8:57 AM Ilpo Järvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
+On Wed, May 10, 2023 at 05:13:36PM +0200, Ard Biesheuvel wrote:
+> On Wed, 26 Apr 2023 at 21:59, Anisse Astier <anisse@astier.eu> wrote:
 > >
-> > On Fri, 5 May 2023, Jorge Lopez wrote:
+> > From: Anisse Astier <an.astier@criteo.com>
 > >
-> > > HP BIOS Configuration driver purpose is to provide a driver supporting
-> > > the latest sysfs class firmware attributes framework allowing the user
-> > > to change BIOS settings and security solutions on HP Inc.’s commercial
-> > > notebooks.
-> > >
-> > > Many features of HP Commercial notebooks can be managed using Windows
-> > > Management Instrumentation (WMI). WMI is an implementation of Web-Based
-> > > Enterprise Management (WBEM) that provides a standards-based interface
-> > > for changing and monitoring system settings. HP BIOSCFG driver provides
-> > > a native Linux solution and the exposed features facilitates the
-> > > migration to Linux environments.
-> > >
-> > > The Linux security features to be provided in hp-bioscfg driver enables
-> > > managing the BIOS settings and security solutions via sysfs, a virtual
-> > > filesystem that can be used by user-mode applications. The new
-> > > documentation cover HP-specific firmware sysfs attributes such Secure
-> > > Platform Management and Sure Start. Each section provides security
-> > > feature description and identifies sysfs directories and files exposed
-> > > by the driver.
-> > >
-> > > Many HP Commercial notebooks include a feature called Secure Platform
-> > > Management (SPM), which replaces older password-based BIOS settings
-> > > management with public key cryptography. PC secure product management
-> > > begins when a target system is provisioned with cryptographic keys
-> > > that are used to ensure the integrity of communications between system
-> > > management utilities and the BIOS.
-> > >
-> > > HP Commercial notebooks have several BIOS settings that control its
-> > > behaviour and capabilities, many of which are related to security.
-> > > To prevent unauthorized changes to these settings, the system can
-> > > be configured to use a cryptographic signature-based authorization
-> > > string that the BIOS will use to verify authorization to modify the
-> > > setting.
-> > >
-> > > Linux Security components are under development and not published yet.
-> > > The only linux component is the driver (hp bioscfg) at this time.
-> > > Other published security components are under Windows.
-> > >
-> > > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
-> > >
-> > > ---
-> > > Based on the latest platform-drivers-x86.git/for-next
-> > > ---
-
-> > > diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-> > > new file mode 100644
-> > > index 000000000000..b627c324f6a6
-> > > --- /dev/null
-> > > +++ b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-> > > @@ -0,0 +1,133 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Functions corresponding to sure start object type attributes under
-> > > + * BIOS for use with hp-bioscfg driver
-> > > + *
-> > > + *  Copyright (c) 2022 HP Development Company, L.P.
-> > > + */
-> > > +
-> > > +#include "bioscfg.h"
-> > > +#include <linux/types.h>
-> > > +
-> > > +/* Maximum number of log entries supported when log entry size is 16
-> > > + * bytes.  This value is calculated by dividing 4096 (page size) by
-> > > + * log entry size.
-> > > + */
-> > > +#define LOG_MAX_ENTRIES              254
-> > > +
-> > > +/*
-> > > + * Current Log entry size.  This value size will change in the
-> > > + * future. The driver reads a total of 128 bytes for each log entry
-> > > + * provided by BIOS but only the first 16 bytes are used/read.
-> > > + */
-> > > +#define LOG_ENTRY_SIZE               16
-> > > +
-> > > +/*
-> > > + * audit_log_entry_count_show - Reports the number of
-> > > + *                           existing audit log entries available
-> > > + *                           to be read
-> > > + */
-> > > +static ssize_t audit_log_entry_count_show(struct kobject *kobj,
-> > > +                                       struct kobj_attribute *attr, char *buf)
-> > > +{
-> > > +     int ret;
-> > > +     u32 count = 0;
-> > > +
-> > > +     ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG_COUNT,
-> > > +                                HPWMI_SURESTART,
-> > > +                                &count, 1, sizeof(count));
-> > > +
+> > When writing variables, one might get errors with no other message on
+> > why it fails.
 > >
-> > Extra newline.
-> Done!
+> > Being able to see how much is used by EFI variables helps analyzing such
+> > issues.
 > >
-> > > +     if (ret < 0)
-> > > +             return ret;
-> > > +
-> > > +     return sysfs_emit(buf, "%d,%d,%d\n", count, LOG_ENTRY_SIZE,
-> > > +                       LOG_MAX_ENTRIES);
+> > Since this is not a conventionnal filesystem, block size is
+> > intentionnally set to 1 instead of PAGE_SIZE.
 > >
-> > Why 3 values instead of 1?
-> This version of BIOS only returns the number of audit log events available.
-> The other two values are the current log entry size which today is
-> hardcoded.  This will change in future when BIOS returns the log entry
-> size.
-
-And you cannot provide the others in separate sysfs files?
-
-> > > +}
-> > > +
-> > > +/*
-> > > + * audit_log_entries_show() - Return all entries found in log file
-> > > + */
-> > > +static ssize_t audit_log_entries_show(struct kobject *kobj,
-> > > +                                   struct kobj_attribute *attr, char *buf)
-> > > +{
-> > > +     int ret;
-> > > +     int i;
-> > > +     u32 count = 0;
-> > > +     u8 audit_log_buffer[128];
-> > > +
-> > > +     // Get the number of event logs
-> > > +     ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG_COUNT,
-> > > +                                HPWMI_SURESTART,
-> > > +                                &count, 1, sizeof(count));
-> > > +
+> > x86 quirks of reserved size are taken into account and available and
+> > free size can be different, further helping debugging space issues.
 > >
-> > Extra newline.
-> Done!
-> >
-> > > +     if (ret < 0)
-> > > +             return ret;
-> > > +
-> > > +     /*
-> > > +      * The show() api will not work if the audit logs ever go
-> > > +      *  beyond 4KB
-> >
-> > Extra space.
-> Done!
-> >
-> > > +      */
-> > > +     if (count * LOG_ENTRY_SIZE > PAGE_SIZE)
-> > > +             return -EIO;
-> > > +
-> > > +     /*
-> > > +      * We are guaranteed the buffer is 4KB so today all the event
-> > > +      * logs will fit
-> > > +      */
-> > > +     for (i = 0; i < count; i++) {
-> > > +             audit_log_buffer[0] = (i + 1);
-> >
-> > Extra parenthesis.
-> Done!
-> >
-> > > +
-> > > +             /*
-> > > +              * read audit log entry at a time. 'buf' input value
-> > > +              * provides  the audit log entry to be read.  On
-> >
-> > Extra spaces.
-> Done!
-> >
-> > > +              * input, Byte 0 = Audit Log entry number from
-> > > +              * beginning (1..254)
-> > > +              * Entry number 1 is the newest entry whereas the
-> > > +              * highest entry number (number of entries) is the
-> > > +              * oldest entry.
-> > > +              */
-> > > +             ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG,
-> > > +                                        HPWMI_SURESTART,
-> > > +                                        audit_log_buffer, 1, 128);
-> > > +
-> > > +             if (ret >= 0 && (LOG_ENTRY_SIZE * i) < PAGE_SIZE) {
-> >
-> > Can the second condition ever fail?
-> >
-> Only in the event BIOS data is corrupted.
-
-i runs from 0 to count - 1 and you prevented count * LOG_ENTRY_SIZE > 
-PAGE_SIZE above. So what the BIOS data has to do with that?
-
-> > > +                     memcpy(buf, audit_log_buffer, LOG_ENTRY_SIZE);
-> > > +                     buf += LOG_ENTRY_SIZE;
-> > > +             } else {
-> > > +                     /*
-> > > +                      * Encountered a failure while reading
-> > > +                      * individual logs. Only a partial list of
-> > > +                      * audit log will be returned.
-> > > +                      */
-> > > +                     count = i + 1;
-> > > +                     break;
-> > > +             }
-> >
-> > Reverse order, do error handling with break first.
-> Done!
-> >
-> > Why not return i * LOG_ENTRY_SIZE directly (or at the end), no need to
-> > tweak count?
 > 
-> Done!
+> I have no objections to this, but I'm not much of a user space/ VFS
+> person, so adding some other folks that can chime in if they want.
+
+Thanks !
+
+> 
+> The point of this patch is that user space can query this information
+> using statvfs(), right?
+
+Yes, which means that a simple df command will show the used and free
+space remaining in the EFI variable storage area:
+
+   $ df -h /sys/firmware/efi/efivars/
+   Filesystem      Size  Used Avail Use% Mounted on
+   efivarfs        176K  106K   66K  62% /sys/firmware/efi/efivars
+
+Regards,
+
+Anisse
+
+> 
+> 
+> 
+> > Signed-off-by: Anisse Astier <an.astier@criteo.com>
+> > ---
+> > Notes:
+> > Patch isn't split per subsystem intentionally, for better understanding
+> > of intent; split could be trivial in a later version.
 > >
-> > > +     }
-> > > +
-> > > +     return count * LOG_ENTRY_SIZE;
-> > > +}
-
-
--- 
- i.
-
---8323329-624878464-1683797575=:1900--
+> > I'm not sure whether statfs(2) should return an error if the efi request
+> > fails; I think it could be ignored with maybe a WARN_ONCE; which would
+> > be close to the current behaviour.
+> >
+> > Regards,
+> >
+> > Anisse
+> >
+> > ---
+> >  arch/x86/platform/efi/quirks.c |  8 ++++++++
+> >  drivers/firmware/efi/efi.c     |  1 +
+> >  drivers/firmware/efi/vars.c    | 12 ++++++++++++
+> >  fs/efivarfs/super.c            | 26 +++++++++++++++++++++++++-
+> >  include/linux/efi.h            | 10 ++++++++++
+> >  5 files changed, 56 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+> > index b0b848d6933a..587fa51230e2 100644
+> > --- a/arch/x86/platform/efi/quirks.c
+> > +++ b/arch/x86/platform/efi/quirks.c
+> > @@ -114,6 +114,14 @@ void efi_delete_dummy_variable(void)
+> >                                      EFI_VARIABLE_RUNTIME_ACCESS, 0, NULL);
+> >  }
+> >
+> > +u64 efi_reserved_space(void)
+> > +{
+> > +       if (efi_no_storage_paranoia)
+> > +               return 0;
+> > +       return EFI_MIN_RESERVE;
+> > +}
+> > +EXPORT_SYMBOL_GPL(efi_reserved_space);
+> > +
+> >  /*
+> >   * In the nonblocking case we do not attempt to perform garbage
+> >   * collection if we do not have enough free space. Rather, we do the
+> > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > index abeff7dc0b58..d0dfa007bffc 100644
+> > --- a/drivers/firmware/efi/efi.c
+> > +++ b/drivers/firmware/efi/efi.c
+> > @@ -211,6 +211,7 @@ static int generic_ops_register(void)
+> >         generic_ops.get_variable = efi.get_variable;
+> >         generic_ops.get_next_variable = efi.get_next_variable;
+> >         generic_ops.query_variable_store = efi_query_variable_store;
+> > +       generic_ops.query_variable_info = efi.query_variable_info;
+> >
+> >         if (efi_rt_services_supported(EFI_RT_SUPPORTED_SET_VARIABLE)) {
+> >                 generic_ops.set_variable = efi.set_variable;
+> > diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
+> > index bd75b87f5fc1..c5382d5c3073 100644
+> > --- a/drivers/firmware/efi/vars.c
+> > +++ b/drivers/firmware/efi/vars.c
+> > @@ -245,3 +245,15 @@ efi_status_t efivar_set_variable(efi_char16_t *name, efi_guid_t *vendor,
+> >         return status;
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(efivar_set_variable, EFIVAR);
+> > +
+> > +efi_status_t efivar_query_variable_info(u32 attr,
+> > +                                       u64 *storage_space,
+> > +                                       u64 *remaining_space,
+> > +                                       u64 *max_variable_size)
+> > +{
+> > +       if (!__efivars->ops->query_variable_info)
+> > +               return EFI_UNSUPPORTED;
+> > +       return __efivars->ops->query_variable_info(attr, storage_space,
+> > +                       remaining_space, max_variable_size);
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(efivar_query_variable_info, EFIVAR);
+> > diff --git a/fs/efivarfs/super.c b/fs/efivarfs/super.c
+> > index 482d612b716b..064bfc0243c9 100644
+> > --- a/fs/efivarfs/super.c
+> > +++ b/fs/efivarfs/super.c
+> > @@ -13,6 +13,7 @@
+> >  #include <linux/ucs2_string.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/magic.h>
+> > +#include <linux/statfs.h>
+> >
+> >  #include "internal.h"
+> >
+> > @@ -23,8 +24,31 @@ static void efivarfs_evict_inode(struct inode *inode)
+> >         clear_inode(inode);
+> >  }
+> >
+> > +static int efivarfs_statfs(struct dentry *dentry, struct kstatfs *buf)
+> > +{
+> > +       u64 storage_space, remaining_space, max_variable_size;
+> > +       efi_status_t status;
+> > +       const u32 attr = (EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS |
+> > +        EFI_VARIABLE_RUNTIME_ACCESS);
+> > +
+> > +       buf->f_type = dentry->d_sb->s_magic;
+> > +       buf->f_bsize = 1;
+> > +       buf->f_namelen = NAME_MAX;
+> > +
+> > +       status = efivar_query_variable_info(attr, &storage_space, &remaining_space,
+> > +                                           &max_variable_size);
+> > +       if (status != EFI_SUCCESS)
+> > +               return efi_status_to_err(status);
+> > +       buf->f_blocks = storage_space;
+> > +       buf->f_bfree = remaining_space;
+> > +       if (remaining_space > efi_reserved_space())
+> > +               buf->f_bavail = remaining_space - efi_reserved_space();
+> > +       else
+> > +               buf->f_bavail = 0;
+> > +       return 0;
+> > +}
+> >  static const struct super_operations efivarfs_ops = {
+> > -       .statfs = simple_statfs,
+> > +       .statfs = efivarfs_statfs,
+> >         .drop_inode = generic_delete_inode,
+> >         .evict_inode = efivarfs_evict_inode,
+> >  };
+> > diff --git a/include/linux/efi.h b/include/linux/efi.h
+> > index 7aa62c92185f..d2b686191870 100644
+> > --- a/include/linux/efi.h
+> > +++ b/include/linux/efi.h
+> > @@ -703,6 +703,7 @@ static inline void efi_enter_virtual_mode (void) {}
+> >  extern efi_status_t efi_query_variable_store(u32 attributes,
+> >                                              unsigned long size,
+> >                                              bool nonblocking);
+> > +extern u64 efi_reserved_space(void);
+> >  #else
+> >
+> >  static inline efi_status_t efi_query_variable_store(u32 attributes,
+> > @@ -711,6 +712,10 @@ static inline efi_status_t efi_query_variable_store(u32 attributes,
+> >  {
+> >         return EFI_SUCCESS;
+> >  }
+> > +static inline u64 efi_reserved_space(void)
+> > +{
+> > +       return 0;
+> > +}
+> >  #endif
+> >  extern void __iomem *efi_lookup_mapped_addr(u64 phys_addr);
+> >
+> > @@ -1042,6 +1047,7 @@ struct efivar_operations {
+> >         efi_set_variable_t *set_variable;
+> >         efi_set_variable_t *set_variable_nonblocking;
+> >         efi_query_variable_store_t *query_variable_store;
+> > +       efi_query_variable_info_t *query_variable_info;
+> >  };
+> >
+> >  struct efivars {
+> > @@ -1087,6 +1093,10 @@ efi_status_t efivar_set_variable_locked(efi_char16_t *name, efi_guid_t *vendor,
+> >  efi_status_t efivar_set_variable(efi_char16_t *name, efi_guid_t *vendor,
+> >                                  u32 attr, unsigned long data_size, void *data);
+> >
+> > +efi_status_t efivar_query_variable_info(u32 attr, u64 *storage_space,
+> > +                                       u64 *remaining_space,
+> > +                                       u64 *max_variable_size);
+> > +
+> >  #if IS_ENABLED(CONFIG_EFI_CAPSULE_LOADER)
+> >  extern bool efi_capsule_pending(int *reset_type);
+> >
+> > --
+> > 2.34.1
+> >
