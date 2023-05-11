@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE1CC77B7F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 May 2023 09:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42260C77B7C
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 May 2023 09:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237240AbjEKJXc (ORCPT
+        id S236538AbjEKJdT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 May 2023 05:23:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46604 "EHLO
+        Thu, 11 May 2023 05:33:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232333AbjEKJXb (ORCPT
+        with ESMTP id S237706AbjEKJdH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 May 2023 05:23:31 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7784910E;
-        Thu, 11 May 2023 02:23:30 -0700 (PDT)
+        Thu, 11 May 2023 05:33:07 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBA559EE4;
+        Thu, 11 May 2023 02:32:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683797010; x=1715333010;
+  t=1683797576; x=1715333576;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=QgdaHAAgZazMw6AXL+sJC63JncWFpuoO5svFVyBFHic=;
-  b=DhuD5ydFjme7MBLkVGs96GQcpXADft/ZAuc3iSYQs9Y/z4jH1UoJgaJ0
-   9eeITOJ86JZpltundD/8qtXYcIQY5VFkZTHE6tjzvQUYCNpkrbONVMCiP
-   P3chByVXQ2vw1Hx+bLrfiF67hd6ZHT7HfJWeLTWLdeEdKHNWJu3gmIojA
-   EHwTSkyyNZldvNsLQ3aMg0L8ZYJsI42MjnASy/4gt0lat+diaBMpHb2tf
-   DbDHCmga6+n4yMQjaYWUnL3UZx91XxowlhdvQm1H6W7FH3vWGfdBVd8hS
-   T8JL1miZcdWYWI2KpsJkx6UuVMgxBU9pyP6Ep4w4ClZzsEZy9XnYKnZZq
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="330806852"
+  bh=Im5pkr2QRlb8LR+SYpjjhDpJdt78iPfURYZcShZDMQg=;
+  b=lKtiODNvOm4/R4EsWR8dWM/mWFmJkw/9GKFKU+b1y1HmVqXN9mjSu4TU
+   UcGg8VPxXD/gf4cdy9mN0woFMMO28PAoY4MKz1wXP+cWGbv9igW75N7h5
+   K0ouQU5OPJYlpI+3TFSgPAW7Po5g1zzY6PU21b+PDDjbgWhao+zRtSIhE
+   IO2U3wteCG+eCDIMPmTn/6YR6m8J+I7cAEAU8MdDlCgI4SxwZ0bNoBmGG
+   XMcHfQkKGkQWLcKwrzznk8EUQq1ViC8wL9ZT6RxO7qtucMZj+2O6Anrh1
+   htUs+FK9+gRpMaHvMDa+aEcDMxlfBy2cACg4WpguigJPBn+SpHbiDe9AL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="413778616"
 X-IronPort-AV: E=Sophos;i="5.99,266,1677571200"; 
-   d="scan'208";a="330806852"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 02:23:30 -0700
+   d="scan'208";a="413778616"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 02:32:55 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="650087353"
+X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="873902817"
 X-IronPort-AV: E=Sophos;i="5.99,266,1677571200"; 
-   d="scan'208";a="650087353"
+   d="scan'208";a="873902817"
 Received: from jsanche3-mobl1.ger.corp.intel.com ([10.252.39.112])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 02:23:28 -0700
-Date:   Thu, 11 May 2023 12:23:25 +0300 (EEST)
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 02:32:53 -0700
+Date:   Thu, 11 May 2023 12:32:51 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Jorge Lopez <jorgealtxwork@gmail.com>
 cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>, thomas@t-8ch.de
-Subject: Re: [PATCH v12 10/13] HP BIOSCFG driver - spmobj-attributes
-In-Reply-To: <CAOOmCE9m5++_4nBu3C64uWVOeyUQs3afn_Q9AJz9oudGvMHHiQ@mail.gmail.com>
-Message-ID: <4a14de7-58fb-4192-496a-279dd4109b6@linux.intel.com>
-References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-11-jorge.lopez2@hp.com> <4537f210-4a7a-3c11-ecbb-ed4762a1f598@linux.intel.com> <CAOOmCE9m5++_4nBu3C64uWVOeyUQs3afn_Q9AJz9oudGvMHHiQ@mail.gmail.com>
+Subject: Re: [PATCH v12 11/13] HP BIOSCFG driver - surestart-attributes
+In-Reply-To: <CAOOmCE_dRivApf46KO1Cq-vHGsHVXNVCqbqF2NV4Y6SVpYx6hA@mail.gmail.com>
+Message-ID: <79db2a99-5cd7-19c0-212d-9e28869a6a18@linux.intel.com>
+References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-12-jorge.lopez2@hp.com> <ef445e78-5751-bd8f-44ce-d9beaebaac6@linux.intel.com> <CAOOmCE_dRivApf46KO1Cq-vHGsHVXNVCqbqF2NV4Y6SVpYx6hA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1104371954-1683797009=:1900"
+Content-Type: multipart/mixed; boundary="8323329-624878464-1683797575=:1900"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -58,13 +58,13 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-1104371954-1683797009=:1900
+--8323329-624878464-1683797575=:1900
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
 
 On Wed, 10 May 2023, Jorge Lopez wrote:
 
-> On Tue, May 9, 2023 at 8:48 AM Ilpo Järvinen
+> On Tue, May 9, 2023 at 8:57 AM Ilpo Järvinen
 > <ilpo.jarvinen@linux.intel.com> wrote:
 > >
 > > On Fri, 5 May 2023, Jorge Lopez wrote:
@@ -110,106 +110,172 @@ On Wed, 10 May 2023, Jorge Lopez wrote:
 > > > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 > > >
 > > > ---
+> > > Based on the latest platform-drivers-x86.git/for-next
+> > > ---
 
-
-> > > +     } else {
-> > > +             /*
-> > > +              * UTF-16 prefix is append to the * buffer when a BIOS
-> >
-> > What is "the * buffer" ?
-> 
-> It is the data stored in 'buffer' variable which is composed of three
-> strings concatenated together to be submitted to BIOS via WMI call.
-> 'Buffer' will looks something as    [size attribute][attribute][size
-> value][value][auth size][auth payload]
-> size is the length in bytes,  attribute/value/auth are string represented in u16
-
-Even after this explanation I don't understand why it's called "the * 
-buffer". Is that common terminology in this domain (in which case it's 
-fine, I just haven't come across such term before)?
-
-> > > +              * admin password is configured in BIOS
-> > > +              */
-> > > +
-
-[...snip...]
-
+> > > diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+> > > new file mode 100644
+> > > index 000000000000..b627c324f6a6
+> > > --- /dev/null
+> > > +++ b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+> > > @@ -0,0 +1,133 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
 > > > +/*
-> > > + * status_show - Reads SPM status
+> > > + * Functions corresponding to sure start object type attributes under
+> > > + * BIOS for use with hp-bioscfg driver
+> > > + *
+> > > + *  Copyright (c) 2022 HP Development Company, L.P.
 > > > + */
-> > > +static ssize_t status_show(struct kobject *kobj, struct kobj_attribute
-> > > +                 *attr, char *buf)
+> > > +
+> > > +#include "bioscfg.h"
+> > > +#include <linux/types.h>
+> > > +
+> > > +/* Maximum number of log entries supported when log entry size is 16
+> > > + * bytes.  This value is calculated by dividing 4096 (page size) by
+> > > + * log entry size.
+> > > + */
+> > > +#define LOG_MAX_ENTRIES              254
+> > > +
+> > > +/*
+> > > + * Current Log entry size.  This value size will change in the
+> > > + * future. The driver reads a total of 128 bytes for each log entry
+> > > + * provided by BIOS but only the first 16 bytes are used/read.
+> > > + */
+> > > +#define LOG_ENTRY_SIZE               16
+> > > +
+> > > +/*
+> > > + * audit_log_entry_count_show - Reports the number of
+> > > + *                           existing audit log entries available
+> > > + *                           to be read
+> > > + */
+> > > +static ssize_t audit_log_entry_count_show(struct kobject *kobj,
+> > > +                                       struct kobj_attribute *attr, char *buf)
 > > > +{
-> > > +     int ret, i;
-> > > +     struct secureplatform_provisioning_data data;
+> > > +     int ret;
+> > > +     u32 count = 0;
 > > > +
-> > > +     ret = statusbin(kobj, attr, &data);
+> > > +     ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG_COUNT,
+> > > +                                HPWMI_SURESTART,
+> > > +                                &count, 1, sizeof(count));
+> > > +
+> >
+> > Extra newline.
+> Done!
+> >
 > > > +     if (ret < 0)
-> > > +             goto status_exit;
-> >
-> > Can you calculate strnlen() from buf at this point, or is the result
-> > garbage? Should you return ret instead here?
-> 
-> It should return the error instead.
-> >
+> > > +             return ret;
 > > > +
-> > > +     sysfs_emit(buf, "%s{\n", buf);
-> > > +     sysfs_emit(buf, "%s\t\"State\": \"%s\",\n", buf,
-> > > +                spm_state_types[data.state]);
-> > > +     sysfs_emit(buf, "%s\t\"Version\": \"%d.%d\",\n", buf, data.version[0],
-> > > +                data.version[1]);
+> > > +     return sysfs_emit(buf, "%d,%d,%d\n", count, LOG_ENTRY_SIZE,
+> > > +                       LOG_MAX_ENTRIES);
+> >
+> > Why 3 values instead of 1?
+> This version of BIOS only returns the number of audit log events available.
+> The other two values are the current log entry size which today is
+> hardcoded.  This will change in future when BIOS returns the log entry
+> size.
+
+And you cannot provide the others in separate sysfs files?
+
+> > > +}
+> > > +
+> > > +/*
+> > > + * audit_log_entries_show() - Return all entries found in log file
+> > > + */
+> > > +static ssize_t audit_log_entries_show(struct kobject *kobj,
+> > > +                                   struct kobj_attribute *attr, char *buf)
+> > > +{
+> > > +     int ret;
+> > > +     int i;
+> > > +     u32 count = 0;
+> > > +     u8 audit_log_buffer[128];
+> > > +
+> > > +     // Get the number of event logs
+> > > +     ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG_COUNT,
+> > > +                                HPWMI_SURESTART,
+> > > +                                &count, 1, sizeof(count));
+> > > +
+> >
+> > Extra newline.
+> Done!
+> >
+> > > +     if (ret < 0)
+> > > +             return ret;
 > > > +
 > > > +     /*
-> > > +      * state == 0 means secure platform management
-> > > +      * feature is not configured in BIOS.
+> > > +      * The show() api will not work if the audit logs ever go
+> > > +      *  beyond 4KB
+> >
+> > Extra space.
+> Done!
+> >
 > > > +      */
-> > > +     if (data.state == 0)
-> > > +             goto status_exit;
+> > > +     if (count * LOG_ENTRY_SIZE > PAGE_SIZE)
+> > > +             return -EIO;
 > > > +
-> > > +     sysfs_emit(buf, "%s\t\"Nonce\": %d,\n", buf, data.nonce);
-> > > +     sysfs_emit(buf, "%s\t\"FeaturesInUse\": %d,\n", buf, data.features);
-> > > +     sysfs_emit(buf, "%s\t\"EndorsementKeyMod\": \"", buf);
-> > > +
-> > > +     for (i = 255; i >= 0; i--)
-> > > +             sysfs_emit(buf, "%s %u", buf, data.kek_mod[i]);
-> > > +
-> > > +     sysfs_emit(buf, "%s \",\n", buf);
-> > > +     sysfs_emit(buf, "%s\t\"SigningKeyMod\": \"", buf);
-> > > +
-> > > +     for (i = 255; i >= 0; i--)
-> > > +             sysfs_emit(buf, "%s %u", buf, data.sk_mod[i]);
-> > > +
-> > > +     /* Return buf contents */
-> > > +
-> > > +     sysfs_emit(buf, "%s \"\n", buf);
-> > > +     sysfs_emit(buf, "%s}\n", buf);
-> > > +
-> > > +status_exit:
-> > > +     return strnlen(buf, PAGE_SIZE);
-> > > +}
+> > > +     /*
+> > > +      * We are guaranteed the buffer is 4KB so today all the event
+> > > +      * logs will fit
+> > > +      */
+> > > +     for (i = 0; i < count; i++) {
+> > > +             audit_log_buffer[0] = (i + 1);
 > >
-> > Emit buf into buf? There's sysfs_emit_at(), however,
+> > Extra parenthesis.
+> Done!
 > >
-> > while I'm far from sysfs formatting expert, this feels something that
-> > tries to expose more than one thing over same sysfs file. Shouldn't they
-> > be each in their own files?
+> > > +
+> > > +             /*
+> > > +              * read audit log entry at a time. 'buf' input value
+> > > +              * provides  the audit log entry to be read.  On
+> >
+> > Extra spaces.
+> Done!
+> >
+> > > +              * input, Byte 0 = Audit Log entry number from
+> > > +              * beginning (1..254)
+> > > +              * Entry number 1 is the newest entry whereas the
+> > > +              * highest entry number (number of entries) is the
+> > > +              * oldest entry.
+> > > +              */
+> > > +             ret = hp_wmi_perform_query(HPWMI_SURESTART_GET_LOG,
+> > > +                                        HPWMI_SURESTART,
+> > > +                                        audit_log_buffer, 1, 128);
+> > > +
+> > > +             if (ret >= 0 && (LOG_ENTRY_SIZE * i) < PAGE_SIZE) {
+> >
+> > Can the second condition ever fail?
+> >
+> Only in the event BIOS data is corrupted.
+
+i runs from 0 to count - 1 and you prevented count * LOG_ENTRY_SIZE > 
+PAGE_SIZE above. So what the BIOS data has to do with that?
+
+> > > +                     memcpy(buf, audit_log_buffer, LOG_ENTRY_SIZE);
+> > > +                     buf += LOG_ENTRY_SIZE;
+> > > +             } else {
+> > > +                     /*
+> > > +                      * Encountered a failure while reading
+> > > +                      * individual logs. Only a partial list of
+> > > +                      * audit log will be returned.
+> > > +                      */
+> > > +                     count = i + 1;
+> > > +                     break;
+> > > +             }
+> >
+> > Reverse order, do error handling with break first.
+> Done!
+> >
+> > Why not return i * LOG_ENTRY_SIZE directly (or at the end), no need to
+> > tweak count?
 > 
-> This concern was brought up in earlier reviews but it was decided to
-> allow returning the information as a single json file.
-> Because the information is part of the same structure and received in
-> a single WMI call, separating the components into multiple files can
-> cause the data read in one field to be stale by the time is read.
-
-Okay, makes more sense. Maybe add a comment that the return is a json 
-string because that's not very obvious (I only realized now when you told 
-me).
-
-The other point is still valid though, you should keep length in a 
-variable and use sysfs_emit_at() to avoid printing buf into buf on 
-every line.
+> Done!
+> >
+> > > +     }
+> > > +
+> > > +     return count * LOG_ENTRY_SIZE;
+> > > +}
 
 
 -- 
  i.
 
---8323329-1104371954-1683797009=:1900--
+--8323329-624878464-1683797575=:1900--
