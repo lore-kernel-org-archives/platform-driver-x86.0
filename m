@@ -2,107 +2,92 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CA8C7EE22
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 May 2023 20:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A98C77B7F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 May 2023 00:18:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239099AbjEKUfg (ORCPT
+        id S239589AbjELASV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 May 2023 16:35:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40418 "EHLO
+        Thu, 11 May 2023 20:18:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229611AbjEKUfd (ORCPT
+        with ESMTP id S231446AbjELASU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 May 2023 16:35:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FCB27298
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 May 2023 13:35:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B496A651A4
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 May 2023 20:35:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1CA0EC433A8
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 May 2023 20:35:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683837331;
-        bh=utKQbSCfrFkOsGZcYEOiOhx+8v8WMNwLnZtmEAq4yho=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=X22RvI5z8iEGX7jSyB6lrDnN2TQZK5+pecOl7uaEXvwxhJFjtcUVA0k6fHckRkkME
-         dUwu/tj8I9I67YGYLjLWzf67gNQPu3HruxyPVCKHMINJeSyb34c25/T3b/JPNPXRPO
-         TEIOtSC1xMKJ2VXxs+g012RUq35PM7lNlQ9BFzrsa4Rotjy78zHKlHiBtSnC0/a3vO
-         g7YVnbsi1h71v+woU7v1r6pW6fo7FgB1bfbTxkRTMQipxfJb/ZwcWa8D1fi4SMxDUr
-         c44u/AQNQrLeGmM/67Cje4l3D87TiETJIbROkZohnoK95Wr8nNJyoLHoPsTk/jDvrC
-         ZH+qMINXmtEHQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 0C77DC43143; Thu, 11 May 2023 20:35:31 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Thu, 11 May 2023 20:35:28 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: pauk.denis@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-c4U58tX9pk@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Thu, 11 May 2023 20:18:20 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15D9E271B;
+        Thu, 11 May 2023 17:18:20 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1aafa03f541so90106725ad.0;
+        Thu, 11 May 2023 17:18:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683850699; x=1686442699;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6BmuwAOjfLCcRX9ESzyYUHmtPI8orwXkXACX6e4YBEQ=;
+        b=JvJ3OH/S8yaPSZe+NJcYbtmIawD4FeDPHEGRiqW2D0VO5T+opsilR8Bg8myVbrrQpy
+         ua5A/WXBBKa9YvRjI135PzM3BJ3z/ebDvALE6ftI10OVzhRwH9knvwtRfzUP3EyMgW58
+         l5EUl8cUG7Bg1AuS1wg3EDJ+f7m3joINWTsMtQ+2MUmjQmrXEcFa1nsrCXcr1KXYc2v5
+         Kxz5x9UEfnvC/nVrXqD1k+3J7a8QfjH6035Edr2r5OxYWSTr4pjPcxiUUv9Mra1tf4OG
+         n3Byh8lWiXQhkhY+Je8S4bEca5OB33M7SFK1Mt0o8KS6tMZdkPr9sX1GkV9v1FRiW1no
+         yn1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683850699; x=1686442699;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6BmuwAOjfLCcRX9ESzyYUHmtPI8orwXkXACX6e4YBEQ=;
+        b=MpclHdWA2pmBWL8MO4v47eZTsZVdRsT3vyVBGMH2QE6jwXY1VGwMbgAKvM/vlV3j9Z
+         mNFNOf+hs6Y9vB3uEV9bvxEqMf/7j/eSZrJYzjLAJOX12V5JvYk3fEKGPP9KlzAvtbvI
+         sFedWd1B4NzvJxj0H4zLWJ9cXk1ANERa8ALC0mmA5VGBNZT+eVN83D66ZbZjj1BRUIYp
+         knMe84/cu4uq2IxBYa1NP0RwJwPXQSGUcKyNuTYgXQAcauM3OaFOQCuFGnK8APmBu2T4
+         N+L8tms/KXEXPxRCo75sUL5z/ILaj3pzzOb4SoBi+Pp7qnTE5EM0KPXaIncxIhlaQch6
+         4i8Q==
+X-Gm-Message-State: AC+VfDyEPqpufKdh363CyOOQxvSv9eeWg0i/wKPVzJ99Z959izeVTGcn
+        qqqQ6AiLz80hicVqMumfLpw=
+X-Google-Smtp-Source: ACHHUZ7hI2+piN2iuzv03zPPsSpCzVVOAtaqPRPnG27/3QG1XF0h/ZYg2MfCevZww4EkUjpXBEaY3A==
+X-Received: by 2002:a17:903:1105:b0:1ac:47fe:888 with SMTP id n5-20020a170903110500b001ac47fe0888mr30290379plh.28.1683850699403;
+        Thu, 11 May 2023 17:18:19 -0700 (PDT)
+Received: from dtor-ws.mtv.corp.google.com ([2620:15c:9d:2:53f7:c9da:338e:6206])
+        by smtp.gmail.com with ESMTPSA id q16-20020a170902b11000b001ab016ea3f9sm6537409plr.21.2023.05.11.17.18.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 May 2023 17:18:18 -0700 (PDT)
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] x86-android-tablets: convert to using GPIO references
+Date:   Thu, 11 May 2023 17:18:09 -0700
+Message-ID: <20230512001815.591817-1-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Hi Hans,
 
---- Comment #329 from Denis Pauk (pauk.denis@gmail.com) ---
-(In reply to Jannik Gl=C3=BCckert from comment #328)
-> Created attachment 304249 [details]
-> ASUS TUF B650M-PLUS WIFI
->=20
-> Hi, is this the correct place to also report issues with the new ASUS
-> NCT6799D support in kernel 6.3?
->=20
-> I'm on an ASUS TUF GAMING B650M-PLUS WIFI , kernel 6.3.1
->=20
-> Trying to modprobe nct6775 fails with ENODEV, doing so with force_id=3D0x=
-d428
-> works:
-> [ 1600.922632] nct6775: Found NCT6798D or compatible chip at 0x2e:0x290
-> [ 1600.931439] nct6775: Refusing to enable a Super-I/O device with a base
-> I/O port 0
->=20
-> However, all sensor values are unlabeled.
->=20
-> Or did I misunderstand, and NCT6799D is not meant to be fully supported y=
-et?
->=20
-> Attached are dmidecode, acpidump, and the readings from sensors.
+This series came about because now software nodes can be used to
+describe GPIOs (via PROPERTY_ENTRY_GPIO() macros) and I would like to
+eventually get rid of gpio_keys_platform_data structure.
 
-Upstream code has support for asus boards with such sensor. In same time
-upstream code does not have support for sensor itself. And need to apply
-additional patch from
-https://patchwork.kernel.org/project/linux-hwmon/patch/20221228135744.28175=
-2-1-linux@roeck-us.net/.
+So while I was doing the conversions from GPIO_LOOKUP() tables for
+gpio_keys devices I decided to convert the rest of them as well. Maybe
+some time in the future we can drop support for GPIO_LOOKUP() and rely
+on device properties exclusively.
 
-Patch from comment #327 also contains this patch.
+This is completely untested.
 
---=20
-You may reply to this email to add a comment.
+Thanks.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Dmitry Torokhov (4):
+  platform/x86: x86-android-tablets: convert Goodix devices to GPIO references
+  platform/x86: x86-android-tablets: convert int3496 devices to GPIO references
+  platform/x86: x86-android-tablets: convert wm1502 devices to GPIO references
+  platform/x86: x86-android-tablets: convert gpio_keys devices to GPIO references
+
+ drivers/platform/x86/x86-android-tablets.c | 355 ++++++++++++---------
+ 1 file changed, 201 insertions(+), 154 deletions(-)
+
+-- 
+Dmitry
+
