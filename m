@@ -2,254 +2,173 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0B2C77B7C
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 May 2023 15:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5515AC77B7D
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 May 2023 10:08:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241311AbjELPfW (ORCPT
+        id S231225AbjEMKI1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 12 May 2023 11:35:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54016 "EHLO
+        Sat, 13 May 2023 06:08:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241233AbjELPfV (ORCPT
+        with ESMTP id S229688AbjEMKI0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 12 May 2023 11:35:21 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD88B12A;
-        Fri, 12 May 2023 08:35:19 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-2ac82b07eb3so102783491fa.1;
-        Fri, 12 May 2023 08:35:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683905718; x=1686497718;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rGClo5yQnuXbxJbb6N7eNBaPdwNH7dImKOaMeUWqjNk=;
-        b=FdCnX2vKGhnL1s04fulB01XMFpqR3eKKjHsID5Hvotkqlozy/VxKNNVY+Nir6yzU9t
-         4e7InJEIWAiXhBxP7sstdfehHk0GYKVH64GcNzVZpCvhdF69XJrjL9kKSPoWDcHpo0Cn
-         kzAdC8b2xlooG5odHjWx+N16ywxXqLR4xi59wjp0yOX0GMLaBNinVHwcfyOyKwRYEo8E
-         XeE7Wk3G0dudfJS/WadR4EKwnR0/GiaQJBQJ5L0PrkXfDeNNlaKx6vqgDJTBm7TDTG+1
-         f/j2ZZw77LkUBfuI2mj5G3K0MGwlgeyA45ESClOWs86cPViPNbX6tbDB6glaYK+LXwEU
-         Ochg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683905718; x=1686497718;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rGClo5yQnuXbxJbb6N7eNBaPdwNH7dImKOaMeUWqjNk=;
-        b=hPxgoYQhRHxxJYx9cDsQDpjXj6FiQh2AD9wvaJUGB4m874inCJxkwqqQRCdnmjg7rX
-         KTD7PYho24QTczMfL3bEiVFQQn0lrJhkCQuSit0j3U7KLR6BYE4XD6o6HorS/QA8FkgY
-         LUPjK9okbZkefM+WxArNTd/e9u4jfO9LVUFFKrD7GoHO+95IvP+sJGiLrXRSWVU2HFX0
-         H+LFpPqAcahZCtMSmBSVv40vHsbePmWX4W/XFG2ubEQBoGmBg1eW+uxrysxJu7xaYc/2
-         79lMYEeDHawJeH40Sb94kdeo75Al+w+3ZXpsAgR4sBXT/MYaF4rCql2iA7Ok4OLwphIV
-         nrgg==
-X-Gm-Message-State: AC+VfDxEN0W7e5yz/PRxm4Rv/eiWoVZI1CE5033jFqM/0QgJpDUxizIc
-        MIRdswKDSfqtRo08SWvmeq0I26MMM1Eles1WzRY=
-X-Google-Smtp-Source: ACHHUZ5DFcntOBfjGXkq0x0qFwHKu2Qht8zuLK3cTtGceJPeALjMji/3H79vCk56D96zI9ulQKSFaWa9RsGHMnUnbIM=
-X-Received: by 2002:a05:6512:963:b0:4f2:4bc2:fc35 with SMTP id
- v3-20020a056512096300b004f24bc2fc35mr3993596lft.53.1683905717720; Fri, 12 May
- 2023 08:35:17 -0700 (PDT)
+        Sat, 13 May 2023 06:08:26 -0400
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2073.outbound.protection.outlook.com [40.107.105.73])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A6A73C2B;
+        Sat, 13 May 2023 03:08:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mcMsA/iFjK+qLzS/2s++uZcOh0+9vBwJqhryX/LiZIr+rrtmccwLZulHts25c08ng71LZe5QxgW109eY1ppw3Fxrwr1xWSWLlI76+gzKSQirG26ku1QGbj2xbTHEn7N3Pa31ZIZVylvpTZT0IqbXK700zOKvfA5nv1fUyfy7NzxbCL2OkbXGSehy1x0Hh7j2/rmc52W5kwZ3hAfR/V01PIVx3svVnnT/FiI4kIveIK3gtIsP+I5x74bOdZmfApwZ96Muj2cHr4Z2nM6VK/ExOZYTAJu6VQCtxb4iW1TnvlSLUiQyZ7WNblqzVV3SWmNejncPSpDuzSwAkamMR8p01w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VjqyCQ4dyVoXKGpkCWPAW2xsdBEEXHHyv+ABrw1F8PM=;
+ b=FzItWOPwKv06Y9JH6MzygSrYXi9RxVJSq7AYDb2HiNOMD/HUV5gUthDDxw963RYilwaNafwrz4mfDAmoDnmJbYeOWRVgBvqhqnxm0I014Z/kLn2Y9Xf+LNQ6EVcRhHua6LAvHmu4pQTatYGXz11a7H45DMV07BAwdufHxubuQrY20QG28+0hMnj7hV5IjeJdnHZYcAhV+PwaMdS+FqRoVQVmRw6/DPzXsaS7S+vgYRtDqoKGibXy//HelOmxkYWCsbBCnyIkn+tmkkEUcI4uqAIEwqjLp8Y88JEd5oQYY3pjkYZ/OjxyrmsaICMere1JV1MeF0QASDnv7H2JQNdfPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VjqyCQ4dyVoXKGpkCWPAW2xsdBEEXHHyv+ABrw1F8PM=;
+ b=bwSzpliEquSFbTOJTeym2OOCruj68UKsQm3UVVvWDmBo2e27rwZ6TuFOYCqf9fCwKK03648jJQ3XKId/5r783PA9rpjdNtyNoFjwFR3rNBQOOpI395fFv3YMvL/1AaZUgKIvx7qfyx+Zz99+q06uqqOi8Pd3/I/bI23FnfDdACwGFHioj1J5zOZ5JHzgcRQqI+c+Pk9V0H3zOU1vKTMRq/kTWelks90bJld6MYWbtj95y5z9ePq2IDpQhRwSEcaXDZqWN0mkKnabzCIkaLpLQjowPxDLAGmfMkrXMWDN63OkFtMsmPHEzztjSUoG+TB7fABkT3lUqBJffSPJ35MmAQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
+ by DB5PR10MB7704.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:4a1::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.21; Sat, 13 May
+ 2023 10:08:22 +0000
+Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::aa98:fb34:754f:8958]) by PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::aa98:fb34:754f:8958%4]) with mapi id 15.20.6387.024; Sat, 13 May 2023
+ 10:08:22 +0000
+Date:   Sat, 13 May 2023 12:08:18 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v2 0/3] leds: simatic-ipc-leds-gpio: split up
+Message-ID: <20230513120818.21b99596@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20230301170215.23382-1-henning.schild@siemens.com>
+References: <20230301170215.23382-1-henning.schild@siemens.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR0P281CA0221.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:ac::17) To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:102:269::8)
 MIME-Version: 1.0
-References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-12-jorge.lopez2@hp.com>
- <ef445e78-5751-bd8f-44ce-d9beaebaac6@linux.intel.com> <CAOOmCE_dRivApf46KO1Cq-vHGsHVXNVCqbqF2NV4Y6SVpYx6hA@mail.gmail.com>
- <79db2a99-5cd7-19c0-212d-9e28869a6a18@linux.intel.com> <CAOOmCE9rNSJDbhoMgyEenog1CG6xG_cRoPNtYp--37DAi4iqsg@mail.gmail.com>
- <a8d1a232-d0f0-16ab-57a8-28e3b2f84@linux.intel.com>
-In-Reply-To: <a8d1a232-d0f0-16ab-57a8-28e3b2f84@linux.intel.com>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Fri, 12 May 2023 10:34:48 -0500
-Message-ID: <CAOOmCE-7WyqUzST=sOW-2iXkz0=07JGrEauA0h4cVZ67NPeTkQ@mail.gmail.com>
-Subject: Re: [PATCH v12 11/13] HP BIOSCFG driver - surestart-attributes
-To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, thomas@t-8ch.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR10MB5780:EE_|DB5PR10MB7704:EE_
+X-MS-Office365-Filtering-Correlation-Id: de7320d8-8cc4-44bd-f3a0-08db5399fbc9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8AJWAeRkOV3NB7S7+jtuExDglQ2wBoN1gfVkbkpF19VAx32VcuztuUsHIBhdA24o0rOlUIyffUJOTlO9xD5Rif3Ek3Zb/hTBOLd2cDCPpZFujOOjVmO0tyjWU8rjpyuM3YtbDoni/CrSpvzT1t6YTRLQdc0VF36sK8sdc/WcenXSg3NaNtW38QmfvTh5HarbQbecm/2OKEuUl9JJwXuUSVn32aWm+KF6KKBVliSVYvM+CiROWyt+enYgLC6xDj4fjuQVauz7H1jdIfqFn0uUUA/Qp49S6aSkPN1h5dFhtSjtTVmp9m8Tfry51ftPpwYwvvGt9qTYtx+S44EaC7c9nvlSBMb4wp1NpR6rjo4whu/Z+mzbkmEuZ6MJj+w3YPUreavECIOJaB6okMvI9kSSTJxQAWJMKpl0uOxHuAVYGWr2oUwh0CqewKM49kin2kwtJ8t9NRGZUh/yo92i2GazWzpIE6ugiv0zqyQjyAubA2jL3mHAbUyUVYe/dpRebiJ78+8txQ12r+uE/UV172mebF+GuQBRDQoU/K5pIjeJUcn+qvR1bvm2gQ+JywOa8uMZ
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(346002)(376002)(366004)(136003)(396003)(451199021)(5660300002)(2906002)(6506007)(1076003)(83380400001)(9686003)(6512007)(44832011)(8676002)(8936002)(38100700002)(41300700001)(82960400001)(66476007)(66556008)(66946007)(66899021)(316002)(186003)(86362001)(478600001)(6666004)(110136005)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GH2IFkAKLundT6rweB4aLstBNxGBx07NyF1/n3t1bEso3KWZO9NKsPol9y3r?=
+ =?us-ascii?Q?XMHVLYouIEq+ibzy1yTi1T7uAgJXKa+ILwJkoXSwQfAkVfB4hYf7MUWcDLzJ?=
+ =?us-ascii?Q?oVgxuKrq5QFvqwDlnTleSrczTBMxmLWtnl7pg8fGEN17r35P/Unhn+y6CMVc?=
+ =?us-ascii?Q?RBdnMj2GXQMOa178gDjQu4PtJ0Ua29b8HDAUr9Z1lVtfbqDOIy4dzL4DSU7O?=
+ =?us-ascii?Q?GgHXcqhxpsvL+YZA5+fBeV1/SpxpC5X3OZfE6LpEXJ8llkmfc4G8dVm9KZBn?=
+ =?us-ascii?Q?y6bP1asX+nkYVRsPw5+Nc9tOr7pc0vKzFxKUlse9j+S6VOZZZ2mxqH1ihSXw?=
+ =?us-ascii?Q?t+ttUpbk0FXNJ/Iuo8AHECUt/hXVxrRTHo8AYBRBnUcpkw/t7HgfkjuECkal?=
+ =?us-ascii?Q?fF0MwlM92cnm4JZXoObF+uAOWV0o+s3uEF9yE9lQXskNwkiwTlbmQ51R5g2a?=
+ =?us-ascii?Q?u9jnO1HZ5CPcwLcxqXtnu1eT7SEig8Gw+WTtj+HpCYCNwG6Vq+PRoroxLt5T?=
+ =?us-ascii?Q?FF6At9nR2kG3FjUEjO5H2ApLPYkkaTtBuZq6HfziDtgNjdlPGFhH3YsU7kc3?=
+ =?us-ascii?Q?qhwZDc5+jAleYV2c5+X+FE4/sVG3TzkYkWQp8AeXSKfddAwqOtRnJRcRZu6h?=
+ =?us-ascii?Q?46tEncYGfr2nw9XSXJpucsALx1IpvzMxQpO2UxYHzLTlYnM0ReQR66SPKE/q?=
+ =?us-ascii?Q?sv8VX8yVIwlHP8v0YU5t+q4q9YcH5Hy0DjOuise1wKBr0AJTuAEGhsvhX2Sv?=
+ =?us-ascii?Q?7/zIurbRxK99/Mq6zQUFKA0Lp/vxcz5TJ51KawlGa6wxTfntc67PIEafwGag?=
+ =?us-ascii?Q?iiJjhUocpwYBDdeK1xWQVmEPloWVAzABaN36wz2F6BBjs4GuJbpr+dvu2VRf?=
+ =?us-ascii?Q?mPKpvEw7ejW3OLxACPyZ+6HdsPqZbg3p9xoI7HsWfgq2UonR9Rklpg6t05p9?=
+ =?us-ascii?Q?PBb3ws9+wrsAmzBGGR+MY8rRDUXFRX422Hntx4ApH7rvW6t6shnLOjN0CCcb?=
+ =?us-ascii?Q?dyNOE0dnegXWYKs9DY5VYTAKu/Xs57YM/GkhFyQ5CoFFx72n1qM8UOXp4J2S?=
+ =?us-ascii?Q?5j74OphL9ooR2rVUORYAXKQuXaOzJiD+AghEWkOV2hoJd/P6Icxy7uxXA4PL?=
+ =?us-ascii?Q?RTA+Ykb5hS08yxUNbC2OJOuZbZRFgpptfJYhw3VXwiRtiR0nzICpDAnooHfR?=
+ =?us-ascii?Q?QbO+I3kVZV2wLI9ETAjKDOMvU237HIUXLSp8JZG8tXdsWYG1BCBo9HVeKGYf?=
+ =?us-ascii?Q?F8CK7Dz7YKaZzQqzildW4bBuI5kOXbsqCApschHWfeKaIoxp8YB351PFLxEu?=
+ =?us-ascii?Q?pS0avd6CpNbSzBds8YPIgYserMgL/P602R9UquVcKuw2WlXFThQOp9I8cexE?=
+ =?us-ascii?Q?oUELBEc3CZiQyBw2F/r26tCw5uMYkVQ0wgDu4YJhoDQpMc2f+Sn+KWcQ7Knk?=
+ =?us-ascii?Q?QnoR2dx97nIWmmpJNwyDCYO3dLtKHb3lndQ2oc09Cl5HP/+0Evuzk8138gJL?=
+ =?us-ascii?Q?QDluWNl27COp8PbFNwy8/OlOaXpJHILqfE+WnfTdQHA70jCb6tad0ejEeELm?=
+ =?us-ascii?Q?wJIOujrHXJxZqLncMvvxLT3bCT9j6swGvIf98H1BIFz2GT2vK3qvWq9LBAaI?=
+ =?us-ascii?Q?Ayc8yVC/ZOcZCgJSvobXIX9IqWNq8VCUzLKpTYn3EV96nl8q2t8uxb0nEJeK?=
+ =?us-ascii?Q?HRy3gw=3D=3D?=
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: de7320d8-8cc4-44bd-f3a0-08db5399fbc9
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2023 10:08:22.4036
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C0+BxVfOW0gRGcgCcpICbwavzsWT/gJFbi+/+9sqph0fBryEkzCiqfXHKFvyf/4QWgZN5z/ca1bVKGor2qieJxmagOhD6l3OPjlS9QsThQI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5PR10MB7704
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, May 12, 2023 at 9:12=E2=80=AFAM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Fri, 12 May 2023, Jorge Lopez wrote:
->
-> > On Thu, May 11, 2023 at 4:32=E2=80=AFAM Ilpo J=C3=A4rvinen
-> > <ilpo.jarvinen@linux.intel.com> wrote:
-> > >
-> > > On Wed, 10 May 2023, Jorge Lopez wrote:
-> > >
-> > > > On Tue, May 9, 2023 at 8:57=E2=80=AFAM Ilpo J=C3=A4rvinen
-> > > > <ilpo.jarvinen@linux.intel.com> wrote:
-> > > > >
-> > > > > On Fri, 5 May 2023, Jorge Lopez wrote:
-> > > > >
-> > > > > > HP BIOS Configuration driver purpose is to provide a driver sup=
-porting
-> > > > > > the latest sysfs class firmware attributes framework allowing t=
-he user
-> > > > > > to change BIOS settings and security solutions on HP Inc.=E2=80=
-=99s commercial
-> > > > > > notebooks.
-> > > > > >
-> > > > > > Many features of HP Commercial notebooks can be managed using W=
-indows
-> > > > > > Management Instrumentation (WMI). WMI is an implementation of W=
-eb-Based
-> > > > > > Enterprise Management (WBEM) that provides a standards-based in=
-terface
-> > > > > > for changing and monitoring system settings. HP BIOSCFG driver =
-provides
-> > > > > > a native Linux solution and the exposed features facilitates th=
-e
-> > > > > > migration to Linux environments.
-> > > > > >
-> > > > > > The Linux security features to be provided in hp-bioscfg driver=
- enables
-> > > > > > managing the BIOS settings and security solutions via sysfs, a =
-virtual
-> > > > > > filesystem that can be used by user-mode applications. The new
-> > > > > > documentation cover HP-specific firmware sysfs attributes such =
-Secure
-> > > > > > Platform Management and Sure Start. Each section provides secur=
-ity
-> > > > > > feature description and identifies sysfs directories and files =
-exposed
-> > > > > > by the driver.
-> > > > > >
-> > > > > > Many HP Commercial notebooks include a feature called Secure Pl=
-atform
-> > > > > > Management (SPM), which replaces older password-based BIOS sett=
-ings
-> > > > > > management with public key cryptography. PC secure product mana=
-gement
-> > > > > > begins when a target system is provisioned with cryptographic k=
-eys
-> > > > > > that are used to ensure the integrity of communications between=
- system
-> > > > > > management utilities and the BIOS.
-> > > > > >
-> > > > > > HP Commercial notebooks have several BIOS settings that control=
- its
-> > > > > > behaviour and capabilities, many of which are related to securi=
-ty.
-> > > > > > To prevent unauthorized changes to these settings, the system c=
-an
-> > > > > > be configured to use a cryptographic signature-based authorizat=
-ion
-> > > > > > string that the BIOS will use to verify authorization to modify=
- the
-> > > > > > setting.
-> > > > > >
-> > > > > > Linux Security components are under development and not publish=
-ed yet.
-> > > > > > The only linux component is the driver (hp bioscfg) at this tim=
-e.
-> > > > > > Other published security components are under Windows.
-> > > > > >
-> > > > > > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
-> > > > > >
-> > > > > > ---
-> > > > > > Based on the latest platform-drivers-x86.git/for-next
-> > > > > > ---
->
-> > > > > > +      */
-> > > > > > +     if (count * LOG_ENTRY_SIZE > PAGE_SIZE)
-> > > > > > +             return -EIO;
-> > > > > > +
-> > > > > > +     /*
-> > > > > > +      * We are guaranteed the buffer is 4KB so today all the e=
-vent
-> > > > > > +      * logs will fit
-> > > > > > +      */
-> > > > > > +     for (i =3D 0; i < count; i++) {
-> > > > > > +             audit_log_buffer[0] =3D (i + 1);
-> > > > > > +
-> > > > > > +             /*
-> > > > > > +              * read audit log entry at a time. 'buf' input va=
-lue
-> > > > > > +              * provides  the audit log entry to be read.  On
-> > > > > > +              * input, Byte 0 =3D Audit Log entry number from
-> > > > > > +              * beginning (1..254)
-> > > > > > +              * Entry number 1 is the newest entry whereas the
-> > > > > > +              * highest entry number (number of entries) is th=
-e
-> > > > > > +              * oldest entry.
-> > > > > > +              */
-> > > > > > +             ret =3D hp_wmi_perform_query(HPWMI_SURESTART_GET_=
-LOG,
-> > > > > > +                                        HPWMI_SURESTART,
-> > > > > > +                                        audit_log_buffer, 1, 1=
-28);
-> > > > > > +
-> > > > > > +             if (ret >=3D 0 && (LOG_ENTRY_SIZE * i) < PAGE_SIZ=
-E) {
-> > > > >
-> > > > > Can the second condition ever fail?
-> > > > >
-> > > > Only in the event BIOS data is corrupted.
-> > >
-> > > i runs from 0 to count - 1 and you prevented count * LOG_ENTRY_SIZE >
-> > > PAGE_SIZE above. So what does the BIOS data have to do with that?
-> >
-> > BIOS guarantees the number of audit logs * LOG_ENTRY_SIZE will be less
-> > than 4K (PAGE_SIZE)
-> > Because Linux kernel trusts no one, we are checking that BIOS does not
-> > report more events than it should.
->
-> I know you're checking that.
->
-> What I'm trying to say that even after that check, your own code does not
-> trust that when i < count holds (as per the for loop termination
-> condition), i * LOG_ENTRY_SIZE < count * LOG_ENTRY_SIZE.
->
-> So what I'm trying to say is that this check:
->                 && (LOG_ENTRY_SIZE * i) < PAGE_SIZE
-> ...is always true (and therefore unnecessary).
->
+Ping.
 
-I partially agree.  If BIOS returns a  count size of 300 for the
-current audit log entry size of 16 bytes, then this condition is
-false.
-(299 * 16 bytes (LOG_ENTRY_SIZE) ) is greater than 4K.
-I am just trying to prevent conditions when BIOS could return invalid
-audit_log_entry_count values.
-If you still feel the code is unnecessary then I will proceed to
-remove the check.
+As far as i remember this one should be ready to merge.
 
-> > WMI expects the input buffer to include the current audit log number
-> > (audit_log_buffer[0] =3D (i + 1);) which is i+1.
->
-> I don't see how this is relevant to what I was asking.
->
-Just adding information how the messages were retrieved.
-Please ignore.
+ACKed by Hans, and Andy had no objections given the maintainers would
+accept the patches.
 
-> > > > > > +                     memcpy(buf, audit_log_buffer, LOG_ENTRY_S=
-IZE);
-> > > > > > +                     buf +=3D LOG_ENTRY_SIZE;
-> > > > > > +             } else {
-> > > > > > +                     /*
-> > > > > > +                      * Encountered a failure while reading
-> > > > > > +                      * individual logs. Only a partial list o=
-f
-> > > > > > +                      * audit log will be returned.
-> > > > > > +                      */
-> > > > > > +                     count =3D i + 1;
-> > > > > > +                     break;
-> > > > > > +             }
-> > > > >
-> > > > > Reverse order, do error handling with break first.
-> > > > Done!
-> > > > >
-> > > > > Why not return i * LOG_ENTRY_SIZE directly (or at the end), no ne=
-ed to
-> > > > > tweak count?
-> > > >
-> > > > Done!
-> > > > >
-> > > > > > +     }
-> > > > > > +
-> > > > > > +     return count * LOG_ENTRY_SIZE;
-> > > > > > +}
->
-> --
->  i.
+So i think it is the maintainers turn now, Pavel and/or Lee i guess.
+
+Henning
+
+Am Wed, 1 Mar 2023 18:02:12 +0100
+schrieb Henning Schild <henning.schild@siemens.com>:
+
+> changes since v1:
+>  - move from header- to -core.c-based implementation
+>  - style changes from review
+> 
+> This series mainly splits the one GPIO driver into two. The split
+> allows to clearly model runtime and compile time dependencies on the
+> GPIO chip drivers.
+> 
+> p1 is kind of not too related to that split but also prepares for more
+> GPIO based drivers to come.
+> 
+> p2 takes the driver we had and puts some of its content into a -core,
+> to be used by the two drivers.
+> 
+> p3 deals with more fine-grained configuration posibilities and compile
+> time dependencies.
+> 
+> It is based on
+> [PATCH v4] leds: simatic-ipc-leds-gpio: make sure we have the GPIO
+> providing driver
+> 
+> Henning Schild (3):
+>   leds: simatic-ipc-leds-gpio: move two extra gpio pins into another
+>     table
+>   leds: simatic-ipc-leds-gpio: split up into multiple drivers
+>   leds: simatic-ipc-leds-gpio: introduce more Kconfig switches
+> 
+>  drivers/leds/simple/Kconfig                   |  31 +++-
+>  drivers/leds/simple/Makefile                  |   5 +-
+>  .../simple/simatic-ipc-leds-gpio-apollolake.c |  64 ++++++++
+>  .../leds/simple/simatic-ipc-leds-gpio-core.c  | 103 +++++++++++++
+>  .../simple/simatic-ipc-leds-gpio-f7188x.c     |  64 ++++++++
+>  drivers/leds/simple/simatic-ipc-leds-gpio.c   | 139
+> ------------------ drivers/leds/simple/simatic-ipc-leds-gpio.h   |
+> 22 +++ drivers/platform/x86/simatic-ipc.c            |   7 +-
+>  8 files changed, 288 insertions(+), 147 deletions(-)
+>  create mode 100644
+> drivers/leds/simple/simatic-ipc-leds-gpio-apollolake.c create mode
+> 100644 drivers/leds/simple/simatic-ipc-leds-gpio-core.c create mode
+> 100644 drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c delete mode
+> 100644 drivers/leds/simple/simatic-ipc-leds-gpio.c create mode 100644
+> drivers/leds/simple/simatic-ipc-leds-gpio.h
+> 
+
