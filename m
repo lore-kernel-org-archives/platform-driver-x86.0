@@ -2,253 +2,249 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0C1C77B75
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 14:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996ADC77B7D
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 14:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239091AbjEOOIl (ORCPT
+        id S235849AbjEOONF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 May 2023 10:08:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43014 "EHLO
+        Mon, 15 May 2023 10:13:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240156AbjEOOIe (ORCPT
+        with ESMTP id S229568AbjEOONE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 May 2023 10:08:34 -0400
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6007210D;
-        Mon, 15 May 2023 07:08:30 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id E1120320094E;
-        Mon, 15 May 2023 10:08:28 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 15 May 2023 10:08:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm3; t=1684159708; x=1684246108; bh=xv
-        DWu8rswdlHC9tunZQlzYt+uj6XYdRxiwrOmBMzAAk=; b=kLdAG2spfJKVgbQBr0
-        Iwp10RAH+rXzkUN+kc9UEfZQdGv6rgMNsPtJ/0uBCTPX1aNH0xsYJOt2FofTdLZw
-        L42db56ns9/u3LsHjFU68O2w/1hT9rXTR34nBfYy+9x4D54d2XtGSR7GsnB+ClzD
-        c0/a0reOoIlAic791zIMjbhBXQfzXVUY34x26nMpRiFfrXFgj+muFwByL1aqUNlq
-        tiAijpXs8fcDG5JEemeTOFLPJmhr6cZchYDKYh5fQl2fi0OvE8EBA1pcSaZja+eI
-        lz/do/b6iOQa7+wr8dqAdJlNSSu52v449W7w+XpBsq/TxQx0kui3/UhTqED97Vpx
-        HLjA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1684159708; x=1684246108; bh=xvDWu8rswdlHC
-        9tunZQlzYt+uj6XYdRxiwrOmBMzAAk=; b=ELnpHSnDuqahGMLpwzdlcjqLv91PX
-        /hfqsSN8sgXFlMsbVOEc0SdpODcALY04yY5P7/Ckr83995rnrnXKw301SWbF1Hj5
-        jrUxt+aiVQ92R4EpozpdZulZb7sCu3VWQnmprWBLn266hXYLQeZgXnx4nRnuNtOq
-        +LCLSh5ME3OJZad0CcsIyhitJD/BeMsdxsSqXtPTwM5PajkrS1XaxzwIviAa8kVB
-        2GWhzmToVHRu1sxdctK9lJlf5z7Ytx4bNtbhsTXtPsqZbiMbZbGEvWuEtg6ISrsp
-        abN+BJmcIGn5XBUyKUqTmZmpmTm1EYtP0R5wuFqWJiFdqVLkjA7XQ1dug==
-X-ME-Sender: <xms:2zxiZLk0cr8FT1uc_u7iNtuXP1aH_iRhPllQqWu50bfG2cxnm886Gw>
-    <xme:2zxiZO3EgG-84iEo0MuKFi9KWTQFdO0LLMYnfit3ROVQ8q4HEMQJOhgXz61KDThAO
-    SSDKZSdkXO4Ww9UBQg>
-X-ME-Received: <xmr:2zxiZBofnTJBHBbfx6RuU1QbRROeCJsSMp9IX4KUECJS9b6T-KRpAVItyt3IW-s1luoaO67BqbKQL2xtahL7zeOmUPnx2A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeehjedgjeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehnihhs
-    shgvucetshhtihgvrhcuoegrnhhishhsvgesrghsthhivghrrdgvuheqnecuggftrfgrth
-    htvghrnheplefhjefhvdelueekheeftefghfejfffguedvgffgueehiefggeevjeekieet
-    jeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hnihhsshgvsegrshhtihgvrhdrvghu
-X-ME-Proxy: <xmx:2zxiZDkGszOAX2kxu6_DD0qk7700iDcbo6M56wy6D_1N-fJlUiJEYQ>
-    <xmx:2zxiZJ2goEGJnnRMuPSoG4dRhcGV1viY3UKxf2qiG5KTdp-ymPjicQ>
-    <xmx:2zxiZCsNVPmNleDsdeifcYLrVcj9P6ILRUHPozbS6F_HPGWvYhY3hg>
-    <xmx:3DxiZF6uy3zBmiFbsRCGmsUW1FdVVKr2g2KB0YTz3jcPUyStDyMOsA>
-Feedback-ID: iccec46d4:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 15 May 2023 10:08:25 -0400 (EDT)
-Date:   Mon, 15 May 2023 16:08:22 +0200
-From:   Anisse Astier <anisse@astier.eu>
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Anisse Astier <an.astier@criteo.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-efi@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Jeremy Kerr <jk@ozlabs.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lennart@poettering.net
-Subject: Re: [PATCH] efivarfs: expose used and total size
-Message-ID: <ZGI81p+2SNjI4VOb@anisse-laptop>
-References: <20230426195853.633233-1-anisse@astier.eu>
- <CAMj1kXE2-76KZDxpHBPcZgbB8vGDmLEbiRGmw_5o-rsNzT9oQw@mail.gmail.com>
- <20230515-vorgaben-portrait-bb1b4255d31a@brauner>
+        Mon, 15 May 2023 10:13:04 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BD8D1727;
+        Mon, 15 May 2023 07:13:03 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2ac82912a59so135948651fa.3;
+        Mon, 15 May 2023 07:13:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684159981; x=1686751981;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=chkZheqYGYzsbUmgQjZR+WqcgawPReoRF0Mt00D+UqA=;
+        b=ZWgwlfvxUB0S1xeKw6ZiyF3zHl+Ipk8aw00WTABAru+4kbJOBcNVp1Sj3CO+7d6u5g
+         HeyfCghJDQ44KYgn4QplEzIuFvahGuj81Z4oVxHyzseIyEZCclcNYM9CDRWqdgefvyEv
+         NOEcgnG/6C6FwlsYlIX5+jXPgp1ofnBj9p7mVVkFpNlYUp3jbB8bJv+ZpN/+jap6aHGR
+         T7mHLQfxij8LU+RwHR4iQ1IXSTBxDI6Algmns6BFaf2PP2L1taRE7KhZdbLHH87wfpgz
+         9QMiOWlotkDY4eYDFhNnkih7JuhydLS9ihxtbK2ljwejc49UZxUkD/ysrHy/UVB2FW9q
+         +eEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684159981; x=1686751981;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=chkZheqYGYzsbUmgQjZR+WqcgawPReoRF0Mt00D+UqA=;
+        b=ahQIH0qbMWSZBMbz1hO6njRt26so77uHp+Kf0XRyvSDdJKvDu4JghxbihJby7rVG6j
+         yJ560xNiQtnS2CH6HTvBYR/IBE6aUgOLijpfusyoWe5t/6WfuhF16qx2I95NA/QPlhqe
+         V14lAVjPuVXMs6IPEv0gnSWKzB1Vyxuuw6/+GB3i8x7ZVVjA2EVHOaH49a8HdJoPrO9o
+         6RY5Xy6jXvlQlD34nAPiTEk+zp+xFUwB8fqtvknFy4jBXBNF3yfinrTS8BREhSBEMIUj
+         7XRU2v/U+KVBC0B6RshzqoCMyY3rHdAQYYUZm3mqxYzgBcOtJ7tIHvIi6WTcWypCmoYK
+         clzw==
+X-Gm-Message-State: AC+VfDz16HPWi8/4NcRhBL1cjV2Hcy4MIdQDJKtsJWYBzzscscQEK1Ke
+        /JXN7Lc/9auPQWwAJSADT6NgEBFssPz9bOm2yHXiF4jO
+X-Google-Smtp-Source: ACHHUZ6ogG8v/77kF7RT8ye9NqI9NsJg8UC/prEmD6zJhXqj2pb8gMpr++4JY6MvW/Q6CLSF4ztDJDD67mkhC7w5iU8=
+X-Received: by 2002:a2e:93d5:0:b0:2ae:d757:4c41 with SMTP id
+ p21-20020a2e93d5000000b002aed7574c41mr1649060ljh.23.1684159980843; Mon, 15
+ May 2023 07:13:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230515-vorgaben-portrait-bb1b4255d31a@brauner>
+References: <20230505220043.39036-1-jorge.lopez2@hp.com> <20230505220043.39036-11-jorge.lopez2@hp.com>
+ <4537f210-4a7a-3c11-ecbb-ed4762a1f598@linux.intel.com> <CAOOmCE9m5++_4nBu3C64uWVOeyUQs3afn_Q9AJz9oudGvMHHiQ@mail.gmail.com>
+ <4a14de7-58fb-4192-496a-279dd4109b6@linux.intel.com>
+In-Reply-To: <4a14de7-58fb-4192-496a-279dd4109b6@linux.intel.com>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Mon, 15 May 2023 09:12:30 -0500
+Message-ID: <CAOOmCE-gipT5r1ABCkqkfFCdssKEwHhvz47yYnHa1fy74jAsFQ@mail.gmail.com>
+Subject: Re: [PATCH v12 10/13] HP BIOSCFG driver - spmobj-attributes
+To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, thomas@t-8ch.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Christian,
+On Thu, May 11, 2023 at 4:23=E2=80=AFAM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Wed, 10 May 2023, Jorge Lopez wrote:
+>
+> > On Tue, May 9, 2023 at 8:48=E2=80=AFAM Ilpo J=C3=A4rvinen
+> > <ilpo.jarvinen@linux.intel.com> wrote:
+> > >
+> > > On Fri, 5 May 2023, Jorge Lopez wrote:
+> > >
+> > > > HP BIOS Configuration driver purpose is to provide a driver support=
+ing
+> > > > the latest sysfs class firmware attributes framework allowing the u=
+ser
+> > > > to change BIOS settings and security solutions on HP Inc.=E2=80=99s=
+ commercial
+> > > > notebooks.
+> > > >
+> > > > Many features of HP Commercial notebooks can be managed using Windo=
+ws
+> > > > Management Instrumentation (WMI). WMI is an implementation of Web-B=
+ased
+> > > > Enterprise Management (WBEM) that provides a standards-based interf=
+ace
+> > > > for changing and monitoring system settings. HP BIOSCFG driver prov=
+ides
+> > > > a native Linux solution and the exposed features facilitates the
+> > > > migration to Linux environments.
+> > > >
+> > > > The Linux security features to be provided in hp-bioscfg driver ena=
+bles
+> > > > managing the BIOS settings and security solutions via sysfs, a virt=
+ual
+> > > > filesystem that can be used by user-mode applications. The new
+> > > > documentation cover HP-specific firmware sysfs attributes such Secu=
+re
+> > > > Platform Management and Sure Start. Each section provides security
+> > > > feature description and identifies sysfs directories and files expo=
+sed
+> > > > by the driver.
+> > > >
+> > > > Many HP Commercial notebooks include a feature called Secure Platfo=
+rm
+> > > > Management (SPM), which replaces older password-based BIOS settings
+> > > > management with public key cryptography. PC secure product manageme=
+nt
+> > > > begins when a target system is provisioned with cryptographic keys
+> > > > that are used to ensure the integrity of communications between sys=
+tem
+> > > > management utilities and the BIOS.
+> > > >
+> > > > HP Commercial notebooks have several BIOS settings that control its
+> > > > behaviour and capabilities, many of which are related to security.
+> > > > To prevent unauthorized changes to these settings, the system can
+> > > > be configured to use a cryptographic signature-based authorization
+> > > > string that the BIOS will use to verify authorization to modify the
+> > > > setting.
+> > > >
+> > > > Linux Security components are under development and not published y=
+et.
+> > > > The only linux component is the driver (hp bioscfg) at this time.
+> > > > Other published security components are under Windows.
+> > > >
+> > > > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+> > > >
+> > > > ---
+>
+>
+> > > > +     } else {
+> > > > +             /*
+> > > > +              * UTF-16 prefix is append to the * buffer when a BIO=
+S
+> > >
+> > > What is "the * buffer" ?
+> >
+> > It is the data stored in 'buffer' variable which is composed of three
+> > strings concatenated together to be submitted to BIOS via WMI call.
+> > 'Buffer' will looks something as    [size attribute][attribute][size
+> > value][value][auth size][auth payload]
+> > size is the length in bytes,  attribute/value/auth are string represent=
+ed in u16
+>
+> Even after this explanation I don't understand why it's called "the *
+> buffer". Is that common terminology in this domain (in which case it's
+> fine, I just haven't come across such term before)?
+>
 
-On Mon, May 15, 2023 at 10:59:49AM +0200, Christian Brauner wrote:
-> On Wed, May 10, 2023 at 05:13:36PM +0200, Ard Biesheuvel wrote:
-> > On Wed, 26 Apr 2023 at 21:59, Anisse Astier <anisse@astier.eu> wrote:
-> > >
-> > > From: Anisse Astier <an.astier@criteo.com>
-> > >
-> > > When writing variables, one might get errors with no other message on
-> > > why it fails.
-> > >
-> > > Being able to see how much is used by EFI variables helps analyzing such
-> > > issues.
-> > >
-> > > Since this is not a conventionnal filesystem, block size is
-> > > intentionnally set to 1 instead of PAGE_SIZE.
-> > >
-> > > x86 quirks of reserved size are taken into account and available and
-> > > free size can be different, further helping debugging space issues.
-> > >
-> > 
-> > I have no objections to this, but I'm not much of a user space/ VFS
-> > person, so adding some other folks that can chime in if they want.
-> > 
-> > The point of this patch is that user space can query this information
-> > using statvfs(), right?
-> 
-> Seems ok to me.
-> 
-> > 
-> > 
-> > 
-> > > Signed-off-by: Anisse Astier <an.astier@criteo.com>
-> > > ---
-> > > Notes:
-> > > Patch isn't split per subsystem intentionally, for better understanding
-> > > of intent; split could be trivial in a later version.
-> > >
-> > > I'm not sure whether statfs(2) should return an error if the efi request
-> > > fails; I think it could be ignored with maybe a WARN_ONCE; which would
-> > > be close to the current behaviour.
-> 
-> Not sure. If you're not returning an error you would have to report made
-> up/magic values that could end up confusing userspace. So better to be
-> honest and report an error.
+Point taken.  Replaced 'buffer' variable name to 'authbuf'
 
-Ack.
+> > > > +              * admin password is configured in BIOS
+> > > > +              */
+> > > > +
+>
+> [...snip...]
+>
+> > > > +/*
+> > > > + * status_show - Reads SPM status
+> > > > + */
+> > > > +static ssize_t status_show(struct kobject *kobj, struct kobj_attri=
+bute
+> > > > +                 *attr, char *buf)
+> > > > +{
+> > > > +     int ret, i;
+> > > > +     struct secureplatform_provisioning_data data;
+> > > > +
+> > > > +     ret =3D statusbin(kobj, attr, &data);
+> > > > +     if (ret < 0)
+> > > > +             goto status_exit;
+> > >
+> > > Can you calculate strnlen() from buf at this point, or is the result
+> > > garbage? Should you return ret instead here?
+> >
+> > It should return the error instead.
+Done!
 
-> 
 > > >
-> > > Regards,
+> > > > +
+> > > > +     sysfs_emit(buf, "%s{\n", buf);
+> > > > +     sysfs_emit(buf, "%s\t\"State\": \"%s\",\n", buf,
+> > > > +                spm_state_types[data.state]);
+> > > > +     sysfs_emit(buf, "%s\t\"Version\": \"%d.%d\",\n", buf, data.ve=
+rsion[0],
+> > > > +                data.version[1]);
+> > > > +
+> > > > +     /*
+> > > > +      * state =3D=3D 0 means secure platform management
+> > > > +      * feature is not configured in BIOS.
+> > > > +      */
+> > > > +     if (data.state =3D=3D 0)
+> > > > +             goto status_exit;
+> > > > +
+> > > > +     sysfs_emit(buf, "%s\t\"Nonce\": %d,\n", buf, data.nonce);
+> > > > +     sysfs_emit(buf, "%s\t\"FeaturesInUse\": %d,\n", buf, data.fea=
+tures);
+> > > > +     sysfs_emit(buf, "%s\t\"EndorsementKeyMod\": \"", buf);
+> > > > +
+> > > > +     for (i =3D 255; i >=3D 0; i--)
+> > > > +             sysfs_emit(buf, "%s %u", buf, data.kek_mod[i]);
+> > > > +
+> > > > +     sysfs_emit(buf, "%s \",\n", buf);
+> > > > +     sysfs_emit(buf, "%s\t\"SigningKeyMod\": \"", buf);
+> > > > +
+> > > > +     for (i =3D 255; i >=3D 0; i--)
+> > > > +             sysfs_emit(buf, "%s %u", buf, data.sk_mod[i]);
+> > > > +
+> > > > +     /* Return buf contents */
+> > > > +
+> > > > +     sysfs_emit(buf, "%s \"\n", buf);
+> > > > +     sysfs_emit(buf, "%s}\n", buf);
+> > > > +
+> > > > +status_exit:
+> > > > +     return strnlen(buf, PAGE_SIZE);
+> > > > +}
 > > >
-> > > Anisse
+> > > Emit buf into buf? There's sysfs_emit_at(), however,
 > > >
-> > > ---
-> > >  arch/x86/platform/efi/quirks.c |  8 ++++++++
-> > >  drivers/firmware/efi/efi.c     |  1 +
-> > >  drivers/firmware/efi/vars.c    | 12 ++++++++++++
-> > >  fs/efivarfs/super.c            | 26 +++++++++++++++++++++++++-
-> > >  include/linux/efi.h            | 10 ++++++++++
-> > >  5 files changed, 56 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-> > > index b0b848d6933a..587fa51230e2 100644
-> > > --- a/arch/x86/platform/efi/quirks.c
-> > > +++ b/arch/x86/platform/efi/quirks.c
-> > > @@ -114,6 +114,14 @@ void efi_delete_dummy_variable(void)
-> > >                                      EFI_VARIABLE_RUNTIME_ACCESS, 0, NULL);
-> > >  }
-> > >
-> > > +u64 efi_reserved_space(void)
-> > > +{
-> > > +       if (efi_no_storage_paranoia)
-> > > +               return 0;
-> > > +       return EFI_MIN_RESERVE;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(efi_reserved_space);
-> > > +
-> > >  /*
-> > >   * In the nonblocking case we do not attempt to perform garbage
-> > >   * collection if we do not have enough free space. Rather, we do the
-> > > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> > > index abeff7dc0b58..d0dfa007bffc 100644
-> > > --- a/drivers/firmware/efi/efi.c
-> > > +++ b/drivers/firmware/efi/efi.c
-> > > @@ -211,6 +211,7 @@ static int generic_ops_register(void)
-> > >         generic_ops.get_variable = efi.get_variable;
-> > >         generic_ops.get_next_variable = efi.get_next_variable;
-> > >         generic_ops.query_variable_store = efi_query_variable_store;
-> > > +       generic_ops.query_variable_info = efi.query_variable_info;
-> > >
-> > >         if (efi_rt_services_supported(EFI_RT_SUPPORTED_SET_VARIABLE)) {
-> > >                 generic_ops.set_variable = efi.set_variable;
-> > > diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
-> > > index bd75b87f5fc1..c5382d5c3073 100644
-> > > --- a/drivers/firmware/efi/vars.c
-> > > +++ b/drivers/firmware/efi/vars.c
-> > > @@ -245,3 +245,15 @@ efi_status_t efivar_set_variable(efi_char16_t *name, efi_guid_t *vendor,
-> > >         return status;
-> > >  }
-> > >  EXPORT_SYMBOL_NS_GPL(efivar_set_variable, EFIVAR);
-> > > +
-> > > +efi_status_t efivar_query_variable_info(u32 attr,
-> > > +                                       u64 *storage_space,
-> > > +                                       u64 *remaining_space,
-> > > +                                       u64 *max_variable_size)
-> > > +{
-> > > +       if (!__efivars->ops->query_variable_info)
-> > > +               return EFI_UNSUPPORTED;
-> > > +       return __efivars->ops->query_variable_info(attr, storage_space,
-> > > +                       remaining_space, max_variable_size);
-> > > +}
-> > > +EXPORT_SYMBOL_NS_GPL(efivar_query_variable_info, EFIVAR);
-> > > diff --git a/fs/efivarfs/super.c b/fs/efivarfs/super.c
-> > > index 482d612b716b..064bfc0243c9 100644
-> > > --- a/fs/efivarfs/super.c
-> > > +++ b/fs/efivarfs/super.c
-> > > @@ -13,6 +13,7 @@
-> > >  #include <linux/ucs2_string.h>
-> > >  #include <linux/slab.h>
-> > >  #include <linux/magic.h>
-> > > +#include <linux/statfs.h>
-> > >
-> > >  #include "internal.h"
-> > >
-> > > @@ -23,8 +24,31 @@ static void efivarfs_evict_inode(struct inode *inode)
-> > >         clear_inode(inode);
-> > >  }
-> > >
-> > > +static int efivarfs_statfs(struct dentry *dentry, struct kstatfs *buf)
-> > > +{
-> > > +       u64 storage_space, remaining_space, max_variable_size;
-> > > +       efi_status_t status;
-> > > +       const u32 attr = (EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS |
-> > > +        EFI_VARIABLE_RUNTIME_ACCESS);
-> > > +
-> > > +       buf->f_type = dentry->d_sb->s_magic;
-> > > +       buf->f_bsize = 1;
-> > > +       buf->f_namelen = NAME_MAX;
-> > > +
-> > > +       status = efivar_query_variable_info(attr, &storage_space, &remaining_space,
-> > > +                                           &max_variable_size);
-> > > +       if (status != EFI_SUCCESS)
-> > > +               return efi_status_to_err(status);
-> > > +       buf->f_blocks = storage_space;
-> 
-> I have no idea about efivarfs specifically but I would add comments
-> why f_bsize is set to what it is and clarify the relationship between
-> f_bsize and f_blocks. Even if just for the sake of userspace to be able
-> to interpret this.
+> > > while I'm far from sysfs formatting expert, this feels something that
+> > > tries to expose more than one thing over same sysfs file. Shouldn't t=
+hey
+> > > be each in their own files?
+> >
+> > This concern was brought up in earlier reviews but it was decided to
+> > allow returning the information as a single json file.
+> > Because the information is part of the same structure and received in
+> > a single WMI call, separating the components into multiple files can
+> > cause the data read in one field to be stale by the time is read.
+>
+> Okay, makes more sense. Maybe add a comment that the return is a json
+> string because that's not very obvious (I only realized now when you told
+> me).
+>
+A comment will be added.
 
-Ack.
+> The other point is still valid though, you should keep length in a
+> variable and use sysfs_emit_at() to avoid printing buf into buf on
+> every line.
+>
+I will update the function as indicated.
 
-Thanks for taking the time to review this patch, I'll send a new version
-soon.
-
-Regards,
-
-Anisse
-
+>
+> --
+>  i.
