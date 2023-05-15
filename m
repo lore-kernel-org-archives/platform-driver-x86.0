@@ -2,104 +2,202 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F381C7EE22
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 12:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA828C7EE23
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 12:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241981AbjEOMk7 (ORCPT
+        id S242011AbjEOMlb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 May 2023 08:40:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58990 "EHLO
+        Mon, 15 May 2023 08:41:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241489AbjEOMja (ORCPT
+        with ESMTP id S241964AbjEOMkV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 May 2023 08:39:30 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A066710D4;
-        Mon, 15 May 2023 05:37:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684154265; x=1715690265;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=mZ2YyYt7WidnvyPtpMEr2s/eyGsg7AR64W9NENyNm7c=;
-  b=gwa566qz3oIRuMNsAmLSstZWeW8NbuU1FKGrlCOEBII02agnKiOaH0Zg
-   Cl/60oeLCol6zpQOznR8okBm7/miSjVHuGum+V+aY97c4GzGNnqLDMbWO
-   JhV3QkNlEGLeotsAPsX+/KzxC8Ua4taTuzUej8y/T0X7JbrQ3aI7BJhmE
-   f4mqShDIZjlXYxvxF8Srqw5eRVoUIKTidyjvLRuXiTkoGP2/pw5AecOJ/
-   YF2q/SDbado7zz9BqmxGt3JD16mH6jRqDhNbPfKc1vnk9PCueJNHgv3yZ
-   nZFNz900gxsfsaFx78MAJQiGEC3MNa1J29gv925hVOX8SKiThN8zE+h1V
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10711"; a="437529136"
-X-IronPort-AV: E=Sophos;i="5.99,276,1677571200"; 
-   d="scan'208";a="437529136"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2023 05:37:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10711"; a="765905347"
-X-IronPort-AV: E=Sophos;i="5.99,276,1677571200"; 
-   d="scan'208";a="765905347"
-Received: from fsamelis-mobl.ger.corp.intel.com ([10.252.42.18])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2023 05:37:38 -0700
-Date:   Mon, 15 May 2023 15:37:36 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Dan Carpenter <dan.carpenter@linaro.org>
-cc:     Shravan Kumar Ramani <shravankr@nvidia.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        platform-driver-x86@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] platform/mellanox: mlxbf-pmc: fix sscanf() error
- checking
-In-Reply-To: <4ccdfd28-099b-40bf-8d77-ad4ea2e76b93@kili.mountain>
-Message-ID: <b1187d38-a390-4934-1d30-f069a1a4a730@linux.intel.com>
-References: <4ccdfd28-099b-40bf-8d77-ad4ea2e76b93@kili.mountain>
+        Mon, 15 May 2023 08:40:21 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D62F19B7
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 05:39:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1684154354;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lT/IF6S2V5Zzk178e+Y1pzx60+tI2NTT4SZX6FLl/8M=;
+        b=EnA/ccrgyr62wk8D8Fhn6xAJr1R9NPB3ezESzmqqRQv6/wKl9VMBI56eK6ZKgWht+5cqMy
+        sjKg6IdCdkk7O1MwU+JRUGEJG35D3HbDoPqdlgabgeQhvOAGVue5kL3OVrHKhQAORdIrcl
+        h1UcoqUOdnqnjNIARN573hZkKueaBWw=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-438-uC62XNRxOFKovaa6vhaLYg-1; Mon, 15 May 2023 08:39:13 -0400
+X-MC-Unique: uC62XNRxOFKovaa6vhaLYg-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9662ead7bf8so969653066b.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 05:39:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684154352; x=1686746352;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lT/IF6S2V5Zzk178e+Y1pzx60+tI2NTT4SZX6FLl/8M=;
+        b=gWCFYNPDzn8ABn1I99n6DQQ0tuPPhv8usr4Bcump42REmdOe38z2s5GmB7KB/Im2a4
+         UFAkVGXx+ukoUdgjvWPF+4xMUkwBFLHM8QQRUYpdX6WthSITDBiR0uvi1cXVEu3Ez9G1
+         CWJ9GAcr1Fxdlcb6YHbRkL+AGqEAA1v1nrrK7egNbVcuT++Avw1EF6whrVmhKO/3A7oK
+         L4rZ+s7Aiwag4IloZfDbbFHYmJHx25b/GUB5ajET1uQ12thPBsEUBEKbf2oljggKtzVx
+         9iJl2cwcIEiCufCtNO9aaJeJqXHf8Ck1UQ2tWQqf47nA6wmwIhtwNnF8X/5sH9G54ykv
+         fJHg==
+X-Gm-Message-State: AC+VfDxrXx6EEVSauriQzC+F1sX2gHxNk3qFIRd7lHWb8O3pBwdrBgnJ
+        AxFSE9wFroX69Inu+BOJpQVqrmR5m+6KtGLF+lMqt336KGYqp8nazMtc/4kXTQg5wiE3hGubc1n
+        vL40oECNcLW9400S/rChNJYTJFDqXqTMvEg==
+X-Received: by 2002:a17:907:9415:b0:94f:395b:df1b with SMTP id dk21-20020a170907941500b0094f395bdf1bmr28234970ejc.21.1684154352219;
+        Mon, 15 May 2023 05:39:12 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7/j9wy+u2tobCE8F8u/7JHHd/NPJJavUEiF0Hkh3/5VUUBXiB1qB0rkUSQhEBySOi91jviSA==
+X-Received: by 2002:a17:907:9415:b0:94f:395b:df1b with SMTP id dk21-20020a170907941500b0094f395bdf1bmr28234950ejc.21.1684154351840;
+        Mon, 15 May 2023 05:39:11 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id v21-20020a1709060b5500b00965e68b8df5sm9443451ejg.76.2023.05.15.05.39.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 May 2023 05:39:11 -0700 (PDT)
+Message-ID: <02f28fe4-bca4-f9d7-a9be-0f1999662d62@redhat.com>
+Date:   Mon, 15 May 2023 14:39:10 +0200
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1529726389-1684154260=:2173"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2 0/1] platform/x86: asus-wmi: add support for ASUS
+ screenpad
+Content-Language: en-US
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Luke D. Jones" <luke@ljones.dev>,
+        platform-driver-x86@vger.kernel.org,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, acpi4asus-user@lists.sourceforge.net,
+        corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com,
+        linux@roeck-us.net
+References: <20230505043013.2622603-1-luke@ljones.dev>
+ <4be2cc57-59b9-24e2-fd10-f2af175ff518@redhat.com>
+In-Reply-To: <4be2cc57-59b9-24e2-fd10-f2af175ff518@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323329-1529726389-1684154260=:2173
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
-On Mon, 15 May 2023, Dan Carpenter wrote:
-
-> The sscanf() function never returns negatives.  It returns the number of
-> items successfully read.
+On 5/6/23 13:52, Hans de Goede wrote:
+> Hi Luke,
 > 
-> Fixes: 1a218d312e65 ("platform/mellanox: mlxbf-pmc: Add Mellanox BlueField PMC driver")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->  drivers/platform/mellanox/mlxbf-pmc.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+> On 5/5/23 06:30, Luke D. Jones wrote:
+>> Adds support for the screenpad(-plus) found on a few ASUS laptops that have a main 16:9 or 16:10 screen and a shorter screen below the main but above the keyboard.
+>> The support consists of:
+>> - On off control
+>> - Setting brightness from 0-255
+>>
+>> There are some small quirks with this device when considering only the raw WMI methods:
+>> 1. The Off method can only switch the device off
+>> 2. Changing the brightness turns the device back on
+>> 3. To turn the device back on the brightness must be > 1
+>> 4. When the device is off the brightness can't be changed (so it is stored by the driver if device is off).
+>> 5. Booting with a value of 0 brightness (retained by bios) means the bios will set a value of > 0, < 15 which is far too dim and was unexpected by testers. The compromise was to set the brightness to 60 which is a usable brightness if the module init brightness was under 15.
+>> 6. When the device is off it is "unplugged"
+>>
+>> All of the above points are addressed within the patch to create a good user experience and keep within user expectations.
+>>
+>> Changelog:
+>> - V2
+>>   - Complete refactor to use as a backlight device
 > 
-> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
-> index c2c9b0d3244c..be967d797c28 100644
-> --- a/drivers/platform/mellanox/mlxbf-pmc.c
-> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
-> @@ -1348,9 +1348,8 @@ static int mlxbf_pmc_map_counters(struct device *dev)
->  
->  	for (i = 0; i < pmc->total_blocks; ++i) {
->  		if (strstr(pmc->block_name[i], "tile")) {
-> -			ret = sscanf(pmc->block_name[i], "tile%d", &tile_num);
-> -			if (ret < 0)
-> -				return ret;
-> +			if (sscanf(pmc->block_name[i], "tile%d", &tile_num) != 1)
-> +				return -EINVAL;
->  
->  			if (tile_num >= pmc->tile_count)
->  				continue;
+> Thank you on your work for this.
+> 
+> Unfortunately I did not get a chance to react to the v1 posting and
+> the remarks to switch to using /sys/class/backlight there before you
+> posted this v2.
+> 
+> Technically the remark to use /sys/class/backlight for this is
+> completely correct. But due to the way how userspace uses
+> /sys/class/backlight this is a problematic.
+> 
+> Userspace basically always assumes there is only 1 LCD panel
+> and it then looks at /sys/class/backlight and picks 1
+> /sys/class/backlight entry and uses that for the brightness
+> slider in the desktop-environment UI / system-menu as well
+> as to handle brightness up/down keyboard hotkey presses.
+> 
+> In the (recent) past the kernel used to register e.g.
+> both /sys/class/backlight/acpi_video0 and
+> /sys/class/backlight/intel_backlight
+> 
+> For ACPI resp. direct hw control of the LCD panel backlight
+> (so both control the same backlight, sometimes both work
+> sometimes only 1 works).
+> 
+> Userspace uses the backlight-type to determine which backlight
+> class to use, using (for GNOME, but I believe everywhere) the
+> following preference order:
+> 
+> 1. First look for "firmware" type backlight devices (like acpi_video0)
+> 2. Then try "platform" type backlight devices
+> 3. Last try "raw" type backlight devices
+> 
+> And to make things work the kernel has been hiding the "acpi_video0"
+> entry in cases where it is known that we need the "raw" aka native
+> type backlight.
+> 
+> Luke you seem to already be partly aware of this, because the patch
+> now has this:
+> 
+> 	props.type = BACKLIGHT_RAW; /* ensure this bd is last to be picked */
+> 
+> but almost all modern laptops exclusively use the raw/native type
+> for backlight control of the main LCD panel.
+> 
+> So now we end up with 2 "raw" type backlight devices and if
+> e.g. gnome-settings-daemon picks the right one now sort of
+> is left to luck.
+> 
+> Well that is not entirely true, at least gnome-settings-daemon
+> prefers raw backlight devices where the parent has an "enabled"
+> sysfs attribute (it expects the parent to be a drm_connector
+> object) and where that enabled attribute reads as "enabled".
+> 
+> This is done for hybrid-gfx laptops where there already may
+> be 2 raw backlight-class devices, 1 for each GPU but only
+> 1 of the 2 drm_connectors going to the main LCD panel should
+> actually show as enabled.
+> 
+> So typing all this out I guess we could go ahead with using
+> the backlight class for this after all, but this relies
+> on userspace preferring raw backlight-class devices
+> with a drm_connector-object parent which show as being
+> enabled.
+> 
+> Any userspace code which does not do the parent has
+> an enabled attr reading "enabled" or a similar check
+> will end up picking a random backlight class device
+> as control for the main panel brightness which will not
+> always end well. So this all is a bit fragile ...
+> 
+> And I'm not sure what is the best thing to do here.
+> 
+> Barnab√°s, Ilpo, Guenter, any comments on this ?
 
-Reviewed-by: Ilpo J‰rvinen <ilpo.jarvinen@linux.intel.com>
+Hmm, no comments from anyone on the potential problems of using
+/sys/class/backlight for this causing potential userspace confusion
+since normally /sys/class/backlight devices control the main LCD
+brightness ?
+
+Luke do you have any thoughts on this yourself ?
+
+And can you answer this question please ?  :
+
+> Luke, question how does the second/exta panel look
+> from an outputting video to it pov ?  Does it show
+> up as an extra screen connected to a drm_connector
+> on one of the GPUs. IOW can it be used with standard
+> kernel-modesetting APIs ?
+
+Regards,
+
+Hans
 
 
--- 
- i.
-
---8323329-1529726389-1684154260=:2173--
