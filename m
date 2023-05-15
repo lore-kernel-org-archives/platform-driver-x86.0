@@ -2,107 +2,119 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C919FC7EE22
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 15:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF752C7EE2F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 21:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240586AbjEOPkt (ORCPT
+        id S245617AbjEOVkz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 May 2023 11:40:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49754 "EHLO
+        Mon, 15 May 2023 17:40:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238157AbjEOPks (ORCPT
+        with ESMTP id S245568AbjEOVkx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 May 2023 11:40:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7C30F4;
-        Mon, 15 May 2023 08:40:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7CA3A6264E;
-        Mon, 15 May 2023 15:40:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA016C433D2;
-        Mon, 15 May 2023 15:40:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684165245;
-        bh=rFnD4U1nT4DNo3mnKCFI1XD74BVKYN/wnhMUD12GbHE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aRQgZ8zZnZ2WecfVIogaEhqNvGU3EIpCpE0mIjWk7kdt1NJKmR4G5vfmxi/1Mibkz
-         rgvXETIrGAOK4Hzf5ydH7K8PdwRHiTAL56fuUMdGbTOutm2TkEEpCX0Duf5FEgUPmO
-         jn/5q8lkcSMnXaFTtDo2QJfsmIVlL3z6qxRzWYJOv209BeLlO6k08RfOsKYTR9k2F3
-         uicdCpRpGPBxVRyJ4w58hfkVi1u+F4E6YNQzAetm2PqHh8Uwdljhld4x/r3VmklfLm
-         WQ0uQnNbKK0Fj1rYG8I/rA4+SNqWomgT7JJJoi8t5/8DGRFSevIh50KpK1yvF9Zovh
-         3iYE4RFV7f7bw==
-Date:   Mon, 15 May 2023 16:40:40 +0100
-From:   Lee Jones <lee@kernel.org>
+        Mon, 15 May 2023 17:40:53 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D82E510E5C;
+        Mon, 15 May 2023 14:40:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684186846; x=1715722846;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uvW3OVIO11rtZpjrfrNpvFqRUCOTmH5JtdCGGW08rcc=;
+  b=St8h7TAqtAIL2rGevUCLUw5t5eIe3C1tpdy+SnA27qAaKc9gqDmTqRrc
+   B83czgAuCPmt66PTlWZXac60OiL4mPdudx0cMK/Y9WrLQmEYb2ZjIntfz
+   I2Leui3u5nhdWi1uRn9d1YwJIcAhsMgajmkoNUzMEkZhBd9KbLXP0f/QR
+   oFx30n3yrnUaSydRJ8/JHZ3R3dNRJw2RobipWH0x7zXJUDifu9Sws0R11
+   wwgnHpzM75jOPi0G+d2C4WT0aDlTN8l+lQ9W1XhLbD/N+LitmX+l7MxaS
+   O8JS8j6EIqk0+fkJrpnW9KM1rCh3LVBGkHT2Mo+gtt0O465z7zwgX+/f2
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10711"; a="437656217"
+X-IronPort-AV: E=Sophos;i="5.99,277,1677571200"; 
+   d="scan'208";a="437656217"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2023 14:40:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10711"; a="651583790"
+X-IronPort-AV: E=Sophos;i="5.99,277,1677571200"; 
+   d="scan'208";a="651583790"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003.jf.intel.com with ESMTP; 15 May 2023 14:40:36 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pyfvm-00074t-2o;
+        Tue, 16 May 2023 00:40:34 +0300
+Date:   Tue, 16 May 2023 00:40:34 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Hans de Goede <hdegoede@redhat.com>,
+Cc:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] leds: simatic-ipc-leds-gpio: split up
-Message-ID: <20230515154040.GX10825@google.com>
-References: <20230301170215.23382-1-henning.schild@siemens.com>
- <20230513120818.21b99596@md1za8fc.ad001.siemens.net>
- <20230515095042.GE8963@google.com>
- <20230515120138.66e48bd4@md1za8fc.ad001.siemens.net>
- <20230515121247.GB10825@google.com>
- <20230515170654.7aaae69c@md1za8fc.ad001.siemens.net>
+Subject: Re: [PATCH v3 1/3] leds: simatic-ipc-leds-gpio: move two extra gpio
+ pins into another table
+Message-ID: <ZGKm0jQv/8/Tgg/a@smile.fi.intel.com>
+References: <20230515150352.30925-1-henning.schild@siemens.com>
+ <20230515150352.30925-2-henning.schild@siemens.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230515170654.7aaae69c@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20230515150352.30925-2-henning.schild@siemens.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 15 May 2023, Henning Schild wrote:
+On Mon, May 15, 2023 at 05:03:50PM +0200, Henning Schild wrote:
+> There are two special pins needed to init the LEDs. We used to have them
+> at the end of the gpiod_lookup table to give to "leds-gpio". A cleaner
+> way is to have a dedicated table for the special pins.
 
-> Am Mon, 15 May 2023 13:12:47 +0100
-> schrieb Lee Jones <lee@kernel.org>:
-> 
-> > On Mon, 15 May 2023, Henning Schild wrote:
-> > 
-> > > Am Mon, 15 May 2023 10:50:42 +0100
-> > > schrieb Lee Jones <lee@kernel.org>:
-> > >   
-> > > > On Sat, 13 May 2023, Henning Schild wrote:
-> > > >   
-> > > > > Ping.
-> > > > > 
-> > > > > As far as i remember this one should be ready to merge.
-> > > > > 
-> > > > > ACKed by Hans, and Andy had no objections given the maintainers
-> > > > > would accept the patches.
-> > > > > 
-> > > > > So i think it is the maintainers turn now, Pavel and/or Lee i
-> > > > > guess.    
-> > > > 
-> > > > Looks like there are lots of mail threads in reply to each of the
-> > > > patches.  If these culminated in acceptance, please collect all
-> > > > of the Acks you've received until this point and submit a
-> > > > [RESEND].  If there are changes to be made still, please do the
-> > > > same but submit as a new version.  
-> > > 
-> > > Ok i will send it again and include the ACK from Hans. There would
-> > > be no code change. Please review the code already, if you find it
-> > > acceptable we might receive a second ACK from Andy.  
-> > 
-> > Not sure what you mean by 'already'.
-> > 
-> > I shall not be reviewing this set until it is resent, thanks.
-> 
-> I just sent that v3 you requested. It has one Ack from Hans in p3. And
-> some minor style things from Andy, which i decided to take in when
-> having to rebase and test once more.
-> 
-> Looking forward to your feedback on that v3.
+...
 
-Thanks.  It's marked for review.
+>  static struct gpiod_lookup_table simatic_ipc_led_gpio_table_127e = {
+>  	.dev_id = "leds-gpio",
+> @@ -26,6 +27,12 @@ static struct gpiod_lookup_table simatic_ipc_led_gpio_table_127e = {
+>  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 58, NULL, 3, GPIO_ACTIVE_LOW),
+>  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 60, NULL, 4, GPIO_ACTIVE_LOW),
+>  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 51, NULL, 5, GPIO_ACTIVE_LOW),
 
-Just to set expectation, you are number 49 in the queue.
+Missing terminator. I'm wondering how this works...
+
+> +	},
+> +};
+> +
+> +static struct gpiod_lookup_table simatic_ipc_led_gpio_table_127e_extra = {
+> +	.dev_id = NULL, /* Filled during initialization */
+> +	.table = {
+>  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 56, NULL, 6, GPIO_ACTIVE_LOW),
+>  		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 59, NULL, 7, GPIO_ACTIVE_HIGH),
+>  	},
+> @@ -40,9 +47,15 @@ static struct gpiod_lookup_table simatic_ipc_led_gpio_table_227g = {
+>  		GPIO_LOOKUP_IDX("gpio-f7188x-2", 3, NULL, 3, GPIO_ACTIVE_LOW),
+>  		GPIO_LOOKUP_IDX("gpio-f7188x-2", 4, NULL, 4, GPIO_ACTIVE_LOW),
+>  		GPIO_LOOKUP_IDX("gpio-f7188x-2", 5, NULL, 5, GPIO_ACTIVE_LOW),
+
+Ditto.
+
+> +	},
+> +};
+> +
+> +static struct gpiod_lookup_table simatic_ipc_led_gpio_table_227g_extra = {
+> +	.dev_id = NULL, /* Filled during initialization */
+> +	.table = {
+>  		GPIO_LOOKUP_IDX("gpio-f7188x-3", 6, NULL, 6, GPIO_ACTIVE_HIGH),
+>  		GPIO_LOOKUP_IDX("gpio-f7188x-3", 7, NULL, 7, GPIO_ACTIVE_HIGH),
+
+Ditto.
+
+> -	}
+> +	},
+>  };
 
 -- 
-Lee Jones [李琼斯]
+With Best Regards,
+Andy Shevchenko
+
+
