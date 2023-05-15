@@ -2,83 +2,58 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9496AC77B75
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 06:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F37C77B75
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 07:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239074AbjEOGBg (ORCPT
+        id S230002AbjEOHrK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 May 2023 02:01:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35374 "EHLO
+        Mon, 15 May 2023 03:47:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239140AbjEOGAw (ORCPT
+        with ESMTP id S239707AbjEOHql (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 May 2023 02:00:52 -0400
-Received: from 167-179-156-38.a7b39c.syd.nbn.aussiebb.net (167-179-156-38.a7b39c.syd.nbn.aussiebb.net [167.179.156.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A682D71;
-        Sun, 14 May 2023 22:54:56 -0700 (PDT)
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-        by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-        id 1pyRAL-0092DT-4p; Mon, 15 May 2023 13:54:38 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 15 May 2023 13:54:37 +0800
-Date:   Mon, 15 May 2023 13:54:37 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Sunil V L <sunilvl@ventanamicro.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        llvm@lists.linux.dev, Jonathan Corbet <corbet@lwn.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Weili Qian <qianweili@huawei.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>
-Subject: Re: [PATCH V6 03/21] crypto: hisilicon/qm: Fix to enable build with
- RISC-V clang
-Message-ID: <ZGHJHcECXV0EptuT@gondor.apana.org.au>
-References: <20230515054928.2079268-1-sunilvl@ventanamicro.com>
- <20230515054928.2079268-4-sunilvl@ventanamicro.com>
+        Mon, 15 May 2023 03:46:41 -0400
+Received: from mail.stardalselva.pl (mail.stardalselva.pl [217.61.105.231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A23D1731
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 00:46:37 -0700 (PDT)
+Received: by mail.stardalselva.pl (Postfix, from userid 1002)
+        id 20B0383D7B; Mon, 15 May 2023 09:45:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=stardalselva.pl;
+        s=mail; t=1684136732;
+        bh=K+tVSZ+/RJhQkwh90Jc8eurfMzR4hfabTVxOBoYH8R8=;
+        h=Date:From:To:Subject:From;
+        b=KO4j5OTBbjL87Bqhlm2QLs/54H7GjvZfrjKcSBJBxiJA8LyDJvpoW2Tn90jXxXp3U
+         WAy5NmbiQxJBHAqueVjBmn+4w/5twe5OgPd+HCdCcEauTR9pBYRjkMFLYyg0jnnIoH
+         XkWc0rM1JqKI3wFafv0tDGUypn6BX3jD2OSyLaAlY97ievz2rFtqK87HCBHPV+QOCO
+         5/DuyjkguVSYi0M1c5VbJZ5sGg+nrYS5TtRoru08lSwOHqlwp+sHaxJ2hu7HANKL4c
+         WCpQfHkUG/Em3FEHdfMlx54F83BycBxvNsFST4NnO8a+yxgDnZvp5y+UaVS4ketb0P
+         qdeXaeS8vzD+g==
+Received: by mail.stardalselva.pl for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 07:45:26 GMT
+Message-ID: <20230515084502-0.1.p.7e1o.0.agkgc0hen2@stardalselva.pl>
+Date:   Mon, 15 May 2023 07:45:26 GMT
+From:   "Mateusz Suchocki" <mateusz.suchocki@stardalselva.pl>
+To:     <platform-driver-x86@vger.kernel.org>
+Subject: =?UTF-8?Q?Prosz=C4=99_o_kontakt?=
+X-Mailer: mail.stardalselva.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230515054928.2079268-4-sunilvl@ventanamicro.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, May 15, 2023 at 11:19:10AM +0530, Sunil V L wrote:
-> With CONFIG_ACPI enabled for RISC-V, this driver gets enabled in
-> allmodconfig build. However, build fails with clang and below
-> error is seen.
-> 
-> drivers/crypto/hisilicon/qm.c:627:10: error: invalid output constraint '+Q' in asm
->                        "+Q" (*((char __iomem *)fun_base))
->                        ^
-> This is expected error with clang due to the way it is designed.
-> 
-> To fix this issue, move arm64 assembly code under #if.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/999
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> [sunilvl@ventanamicro.com: Moved tmp0 and tmp1 into the #if]
-> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
-> ---
->  drivers/crypto/hisilicon/qm.c | 5 +++++
->  1 file changed, 5 insertions(+)
+Dzie=C5=84 dobry,
 
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Czy jest mo=C5=BCliwo=C5=9B=C4=87 nawi=C4=85zania wsp=C3=B3=C5=82pracy z =
+Pa=C5=84stwem?
+
+Z ch=C4=99ci=C4=85 porozmawiam z osob=C4=85 zajmuj=C4=85c=C4=85 si=C4=99 =
+dzia=C5=82aniami zwi=C4=85zanymi ze sprzeda=C5=BC=C4=85.
+
+Pomagamy skutecznie pozyskiwa=C4=87 nowych klient=C3=B3w.
+
+Zapraszam do kontaktu.
+
+
+Pozdrawiam
+Mateusz Suchocki
