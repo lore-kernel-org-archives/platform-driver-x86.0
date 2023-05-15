@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46230C7EE26
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5566EC7EE24
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 22:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245659AbjEOWC6 (ORCPT
+        id S245470AbjEOWC7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 May 2023 18:02:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44890 "EHLO
+        Mon, 15 May 2023 18:02:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245656AbjEOWCl (ORCPT
+        with ESMTP id S245657AbjEOWCl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Mon, 15 May 2023 18:02:41 -0400
-Received: from mail-oo1-xc31.google.com (mail-oo1-xc31.google.com [IPv6:2607:f8b0:4864:20::c31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C39A11DA5;
-        Mon, 15 May 2023 15:01:25 -0700 (PDT)
-Received: by mail-oo1-xc31.google.com with SMTP id 006d021491bc7-54feb64eec0so3374120eaf.2;
-        Mon, 15 May 2023 15:01:25 -0700 (PDT)
+Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE5AC11B48;
+        Mon, 15 May 2023 15:01:21 -0700 (PDT)
+Received: by mail-oi1-x22c.google.com with SMTP id 5614622812f47-3942c6584f0so2224525b6e.3;
+        Mon, 15 May 2023 15:01:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684188068; x=1686780068;
+        d=gmail.com; s=20221208; t=1684188067; x=1686780067;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=g6jXtwKkwhmX9yKgbWWBbOD2zZ5ek49hOnDh/HsuEF0=;
-        b=P2k0N+GRtnhLZwwwx8luGhriLSbzWWZGgqSrmBPf+jP6QIcG0y5K5G4CKWEl+KyE2J
-         GGEKmPkvIwwktwMskuL1W6KcKsKABLOUKfx2tFSf4MGU9V4WGpT7jqEQJqTnySbZS4Qs
-         wuXI7alnYVCi8u4cll19lLsE9SqH+JJFRIKKnVHqx8vLx9ru5n9D6qhU1Dd2Txug6CWp
-         yPev41YNmsj2wIUIKDNiM0rEYEljPIWddAKR4MV2ig7GC8hv3BP1PKl9PCVrh9bbPAuL
-         lB+CQht738slFdb4ID0KTF0SCEFX1kOX5QE8D1AaDzrggFKCUGghSvugBhTDbNIUiT5O
-         hLXw==
+        bh=h6Oi2Zjec7JyHr3KVNnAhVFJRyPo/n/oox9NQoIoZ3M=;
+        b=G/INr2AZcTT0v2zoz/jYfcVPhnOrdhOHtvHeiBXWh21mL3yYS8FdwB59w5/cCn6mbJ
+         dRON+BO9+B0XTmskhfXRvHfvpIVfZIds+naN5VQ1yiR3/5jwbPCh90M/ZrILcVLm8/5z
+         ButwhK/8aD508v4n8n0aa7gxStssBVgk7iRah8c8rwhw9Y40MlT6J/YWfaxcSCcqzhJM
+         UUO+tEVH04U4JkOGxDa1mWYjvtVwS9YjXkVnLRrkM7wNCn1cxPvy+JAdqc1zhrSR35su
+         HtYP4OaymZHWrNqu/WPDKZ0YQuBUXkwzxQdj5/6Ja/t8cudQkvuTrEmWkXHJ3Ur9Ic9h
+         8Nhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684188068; x=1686780068;
+        d=1e100.net; s=20221208; t=1684188067; x=1686780067;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=g6jXtwKkwhmX9yKgbWWBbOD2zZ5ek49hOnDh/HsuEF0=;
-        b=fLYzKejtMMPMhyffs5ByZkDMH0kbxWkMxtkPG64TcQa62uzWORywKVZqG2rk9Lkx33
-         LJBlkNNGInbrAFaWjYkk9sSJB66UgjIMOD+U9Xuok3ftmTJ74rvffqwPAbDYOQWSTLG4
-         5AazmWpJfN64pZ4Fw9HjFVt9afVgxMW9eZbG8JmMyDRrqnvUoW4Spj76tbMfp2S9WWiP
-         pYRxStsiA//EI+t3ETp7AFNCU/PNnfexU/bdXtU7zFXo1R4P0lUBJLMWZJfAT92EwJ9H
-         mPDGhykJ5C49PFon9qACO9y/pPYRyodqMx5g2K12PStlm6QxrLTKUkYTqF7hufS/DQsv
-         3D4A==
-X-Gm-Message-State: AC+VfDyfHEaC6W+ErveHuG/d0LthfDg44Ox2d1hnwQf2mVsPUlG0PIGi
-        NQojmxM5PX4hXnIaGe1roNQ=
-X-Google-Smtp-Source: ACHHUZ4RI5fpbydtC95BQWzqilqoLUYLLJpafeHoJ8iBdCgNv4MJEstWUPJxomvAa7cPa5FCOVgb1A==
-X-Received: by 2002:a4a:271a:0:b0:54f:49ad:1c93 with SMTP id l26-20020a4a271a000000b0054f49ad1c93mr9481127oof.0.1684188068591;
-        Mon, 15 May 2023 15:01:08 -0700 (PDT)
+        bh=h6Oi2Zjec7JyHr3KVNnAhVFJRyPo/n/oox9NQoIoZ3M=;
+        b=g+CVONjnz/hIXP4WdNs1hve4F8ss0dipG/6AVU8jl0sHjT4AZnV7F9FBlwcpUXdsKq
+         QOudvRrFiv3qlWUP6ctLkG1liQp+XkpBBj8Dr0mnoNs4ZoE4ljvowrBzfUmwID0CVK/L
+         tKlkyN63fuVrRd5Vh4jufeQGeN98N3JopXiPK/0jtYzxM9Wu2P0C/Uo+uenzHyy11WqD
+         6xfrRRIPB8uaXPw/E/McjDfD1kCsxim8g41rJYsu9ylw7CA4bSv1dN9RmYsrQDTr6D6d
+         sO7S2Q+FnJXGlp4D+nuW1/AOTI3agrylfY/VQPDO5EjHJCaaTR0wuwezLdqemlMpQBAZ
+         V2xw==
+X-Gm-Message-State: AC+VfDykPwbQXB2SQh3cy3dHua9Zt3VZbxYRojOZmwJMjtTqPTDt93Wf
+        jRfGJ8y9RVJ1Uj558RwDDvI=
+X-Google-Smtp-Source: ACHHUZ6rmODZlJ33NS7px/00wLPKoO5/ZMC/o9qgFvMFVDbk91+b7hBKODK5LX471R2mtr0aH5wLDQ==
+X-Received: by 2002:a05:6808:3b1:b0:394:4d5b:a10c with SMTP id n17-20020a05680803b100b003944d5ba10cmr8279689oie.1.1684188066543;
+        Mon, 15 May 2023 15:01:06 -0700 (PDT)
 Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:5391:4539:59c2:4092])
-        by smtp.gmail.com with ESMTPSA id i1-20020aca0c41000000b0038e07fe2c97sm5265148oiy.42.2023.05.15.15.01.07
+        by smtp.gmail.com with ESMTPSA id i1-20020aca0c41000000b0038e07fe2c97sm5265148oiy.42.2023.05.15.15.01.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 May 2023 15:01:08 -0700 (PDT)
+        Mon, 15 May 2023 15:01:06 -0700 (PDT)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de,
         ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v13 05/13] hp-bioscfg: enum-attributes
-Date:   Mon, 15 May 2023 17:00:53 -0500
-Message-Id: <20230515220101.39794-6-jorge.lopez2@hp.com>
+Subject: [PATCH v13 03/13] hp-bioscfg: bioscfg
+Date:   Mon, 15 May 2023 17:00:51 -0500
+Message-Id: <20230515220101.39794-4-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230515220101.39794-1-jorge.lopez2@hp.com>
 References: <20230515220101.39794-1-jorge.lopez2@hp.com>
@@ -112,481 +112,1004 @@ Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 ---
 Based on the latest platform-drivers-x86.git/for-next
 ---
- .../x86/hp/hp-bioscfg/enum-attributes.c       | 465 ++++++++++++++++++
- 1 file changed, 465 insertions(+)
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 988 +++++++++++++++++++
+ 1 file changed, 988 insertions(+)
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
 new file mode 100644
-index 000000000000..093148de47e8
+index 000000000000..fe0be40c8dee
 --- /dev/null
-+++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-@@ -0,0 +1,465 @@
++++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+@@ -0,0 +1,988 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Functions corresponding to enumeration type attributes under
-+ * BIOS Enumeration GUID for use with hp-bioscfg driver.
++ * Common methods for use with hp-bioscfg driver
 + *
-+ * Copyright (c) 2022 HP Development Company, L.P.
++ *  Copyright (c) 2022 HP Development Company, L.P.
 + */
 +
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/fs.h>
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/wmi.h>
 +#include "bioscfg.h"
++#include "../../firmware_attributes_class.h"
++#include <linux/nls.h>
++#include <linux/errno.h>
 +
-+GET_INSTANCE_ID(enumeration);
++MODULE_AUTHOR("Jorge Lopez <jorge.lopez2@hp.com>");
++MODULE_DESCRIPTION("HP BIOS Configuration Driver");
++MODULE_LICENSE("GPL");
 +
-+static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
++struct bioscfg_priv bioscfg_drv = {
++	.mutex = __MUTEX_INITIALIZER(bioscfg_drv.mutex),
++};
++
++static struct class *fw_attr_class;
++
++ssize_t display_name_language_code_show(struct kobject *kobj,
++					struct kobj_attribute *attr,
++					char *buf)
 +{
-+	int instance_id = get_enumeration_instance_id(kobj);
-+
-+	if (instance_id < 0)
-+		return -EIO;
-+
-+	return sysfs_emit(buf, "%s\n",
-+			 bioscfg_drv.enumeration_data[instance_id].current_value);
++	return sysfs_emit(buf, "%s\n", bioscfg_drv.display_name_language_code);
 +}
 +
-+/**
-+ * validate_enumeration_input() -
-+ * Validate input of current_value against possible values
-+ *
-+ * @instance_id: The instance on which input is validated
-+ * @buf: Input value
-+ */
-+static int validate_enumeration_input(int instance_id, const char *buf)
++int hp_get_integer_from_buffer(u8 **buffer, u32 *buffer_size, u32 *integer)
 +{
-+	int i;
-+	int found = 0;
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
++	int *ptr = PTR_ALIGN((int *)*buffer, 4);
 +
-+	/* Is it a read only attribute */
-+	if (enum_data->common.is_readonly)
-+		return -EIO;
-+
-+	for (i = 0; i < enum_data->possible_values_size && !found; i++)
-+		if (!strcasecmp(enum_data->possible_values[i], buf))
-+			found = 1;
-+
-+	if (!found)
++	/* Ensure there is enough space remaining to read the integer */
++	if (*buffer_size < sizeof(int))
 +		return -EINVAL;
 +
++	*integer = *(ptr++);
++	*buffer = (u8 *)ptr;
++	*buffer_size -= sizeof(int);
++
 +	return 0;
 +}
 +
-+static void update_enumeration_value(int instance_id, char *attr_value)
++int hp_get_string_from_buffer(u8 **buffer, u32 *buffer_size, char *dst, u32 dst_size)
 +{
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
++	u16 *src = (u16 *)*buffer;
++	u16 src_size;
 +
-+	strscpy(enum_data->current_value,
-+		attr_value,
-+		sizeof(enum_data->current_value));
-+}
++	u16 size;
++	int i;
++	int conv_dst_size;
 +
-+ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, enumeration);
-+static struct kobj_attribute enumeration_display_name =
-+		__ATTR_RO(display_name);
++	if (*buffer_size < sizeof(u16))
++		return -EINVAL;
 +
-+ATTRIBUTE_PROPERTY_STORE(current_value, enumeration);
-+static struct kobj_attribute enumeration_current_val =
-+		__ATTR_RW(current_value);
++	src_size = *(src++);
++	/* size value in u16 chars */
++	size = src_size / sizeof(u16);
 +
-+ATTRIBUTE_VALUES_PROPERTY_SHOW(possible_values, enumeration, SEMICOLON_SEP);
-+static struct kobj_attribute enumeration_poss_val =
-+		__ATTR_RO(possible_values);
++	/* Ensure there is enough space remaining to read and convert
++	 * the string
++	 */
++	if (*buffer_size < src_size)
++		return -EINVAL;
 +
-+static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			 char *buf)
-+{
-+	return sysfs_emit(buf, "enumeration\n");
-+}
++	for (i = 0; i < size; i++)
++		if (src[i] == '\\' ||
++		    src[i] == '\r' ||
++		    src[i] == '\n' ||
++		    src[i] == '\t')
++			size++;
 +
-+static struct kobj_attribute enumeration_type =
-+		__ATTR_RO(type);
++	/*
++	 * Conversion is limited to destination string max number of
++	 * bytes.
++	 */
++	conv_dst_size = size;
++	if (size > dst_size)
++		conv_dst_size = dst_size - 1;
 +
-+static struct kobj_attribute common_display_langcode =
-+	__ATTR_RO(display_name_language_code);
++	/*
++	 * convert from UTF-16 unicode to ASCII
++	 */
++	utf16s_to_utf8s(src, src_size, UTF16_HOST_ENDIAN, dst, conv_dst_size);
++	dst[conv_dst_size] = 0;
 +
-+static struct attribute *enumeration_attrs[] = {
-+	&common_display_langcode.attr,
-+	&enumeration_display_name.attr,
-+	&enumeration_current_val.attr,
-+	&enumeration_poss_val.attr,
-+	&enumeration_type.attr,
-+	NULL
-+};
++	for (i = 0; i < size && i < conv_dst_size; i++) {
++		if (*src == '\\' ||
++		    *src == '\r' ||
++		    *src == '\n' ||
++		    *src == '\t')
++			dst[i++] = '\\';
 +
-+static const struct attribute_group enumeration_attr_group = {
-+	.attrs = enumeration_attrs,
-+};
-+
-+int hp_alloc_enumeration_data(void)
-+{
-+	bioscfg_drv.enumeration_instances_count =
-+		hp_get_instance_count(HP_WMI_BIOS_ENUMERATION_GUID);
-+
-+	bioscfg_drv.enumeration_data = kcalloc(bioscfg_drv.enumeration_instances_count,
-+					       sizeof(*bioscfg_drv.enumeration_data), GFP_KERNEL);
-+	if (!bioscfg_drv.enumeration_data) {
-+		bioscfg_drv.enumeration_instances_count = 0;
-+		return -ENOMEM;
++		if (*src == '\r')
++			dst[i] = 'r';
++		else if (*src == '\n')
++			dst[i] = 'n';
++		else if (*src == '\t')
++			dst[i] = 't';
++		else if (*src == '"')
++			dst[i] = '\'';
++		else
++			dst[i] = *src;
++		src++;
 +	}
++
++	*buffer = (u8 *)src;
++	*buffer_size -= size * sizeof(u16);
++
++	return size;
++}
++
++int hp_enforce_single_line_input(char *buf, size_t count)
++{
++	char *p;
++
++	p = memchr(buf, '\n', count);
++
++	if (p == buf + count - 1)
++		*p = '\0'; /* strip trailing newline */
++	else if (p)
++		return -EINVAL;  /* enforce single line input */
++
 +	return 0;
 +}
 +
-+/* Expected Values types associated with each element */
-+static const acpi_object_type expected_enum_types[] = {
-+	[NAME] = ACPI_TYPE_STRING,
-+	[VALUE] = ACPI_TYPE_STRING,
-+	[PATH] = ACPI_TYPE_STRING,
-+	[IS_READONLY] = ACPI_TYPE_INTEGER,
-+	[DISPLAY_IN_UI] = ACPI_TYPE_INTEGER,
-+	[REQUIRES_PHYSICAL_PRESENCE] = ACPI_TYPE_INTEGER,
-+	[SEQUENCE] = ACPI_TYPE_INTEGER,
-+	[PREREQUISITES_SIZE] = ACPI_TYPE_INTEGER,
-+	[PREREQUISITES] = ACPI_TYPE_STRING,
-+	[SECURITY_LEVEL] = ACPI_TYPE_INTEGER,
-+	[ENUM_CURRENT_VALUE] = ACPI_TYPE_STRING,
-+	[ENUM_SIZE] = ACPI_TYPE_INTEGER,
-+	[ENUM_POSSIBLE_VALUES] = ACPI_TYPE_STRING,
-+};
-+
-+static int hp_populate_enumeration_elements_from_package(union acpi_object *enum_obj,
-+							 int enum_obj_count,
-+							 int instance_id)
++/* Set pending reboot value and generate KOBJ_NAME event */
++void hp_set_reboot_and_signal_event(void)
 +{
-+	char *str_value = NULL;
-+	int value_len;
-+	u32 size = 0;
-+	u32 int_value;
-+	int elem = 0;
-+	int reqs;
-+	int pos_values;
++	bioscfg_drv.pending_reboot = true;
++	kobject_uevent(&bioscfg_drv.class_dev->kobj, KOBJ_CHANGE);
++}
++
++/**
++ * hp_calculate_string_buffer() - determines size of string buffer for
++ * use with BIOS communication
++ *
++ * @str: the string to calculate based upon
++ */
++size_t hp_calculate_string_buffer(const char *str)
++{
++	size_t length = strlen(str);
++
++	/* BIOS expects 4 bytes when an empty string is found */
++	if (length == 0)
++		return 4;
++
++	/* u16 length field + one UTF16 char for each input char */
++	return sizeof(u16) + strlen(str) * sizeof(u16);
++}
++
++int hp_wmi_error_and_message(int error_code)
++{
++	char *error_msg = NULL;
 +	int ret;
-+	int eloc;
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
 +
-+	for (elem = 1, eloc = 1; elem < enum_obj_count; elem++, eloc++) {
-+		/* ONLY look at the first ENUM_ELEM_CNT elements */
-+		if (eloc == ENUM_ELEM_CNT)
-+			goto exit_enumeration_package;
++	switch (error_code) {
++	case SUCCESS:
++		error_msg = "Success";
++		ret = 0;
++		break;
++	case CMD_FAILED:
++		error_msg = "Command failed";
++		ret = -EINVAL;
++		break;
++	case INVALID_SIGN:
++		error_msg = "Invalid signature";
++		ret = -EINVAL;
++		break;
++	case INVALID_CMD_VALUE:
++		error_msg = "Invalid command value/Feature not supported";
++		ret = -EOPNOTSUPP;
++		break;
++	case INVALID_CMD_TYPE:
++		error_msg = "Invalid command type";
++		ret = -EINVAL;
++		break;
++	case INVALID_DATA_SIZE:
++		error_msg = "Invalid data size";
++		ret = -EINVAL;
++		break;
++	case INVALID_CMD_PARAM:
++		error_msg = "Invalid command parameter";
++		ret = -EINVAL;
++		break;
++	case ENCRYP_CMD_REQUIRED:
++		error_msg = "Secure/encrypted command required";
++		ret = -EACCES;
++		break;
++	case NO_SECURE_SESSION:
++		error_msg = "No secure session established";
++		ret = -EACCES;
++		break;
++	case SECURE_SESSION_FOUND:
++		error_msg = "Secure session already established";
++		ret = -EACCES;
++		break;
++	case SECURE_SESSION_FAILED:
++		error_msg = "Secure session failed";
++		ret = -EIO;
++		break;
++	case AUTH_FAILED:
++		error_msg = "Other permission/Authentication failed";
++		ret = -EACCES;
++		break;
++	case INVALID_BIOS_AUTH:
++		error_msg = "Invalid BIOS administrator password";
++		ret = -EINVAL;
++		break;
++	case NONCE_DID_NOT_MATCH:
++		error_msg = "Nonce did not match";
++		ret = -EINVAL;
++		break;
++	case GENERIC_ERROR:
++		error_msg = "Generic/Other error";
++		ret = -EIO;
++		break;
++	case BIOS_ADMIN_POLICY_NOT_MET:
++		error_msg = "BIOS Admin password does not meet password policy requirements";
++		ret = -EINVAL;
++		break;
++	case BIOS_ADMIN_NOT_SET:
++		error_msg = "BIOS Setup password is not set";
++		ret = -EPERM;
++		break;
++	case P21_NO_PROVISIONED:
++		error_msg = "P21 is not provisioned";
++		ret = -EPERM;
++		break;
++	case P21_PROVISION_IN_PROGRESS:
++		error_msg = "P21 is already provisioned or provisioning is in progress and a signing key has already been sent";
++		ret = -EINPROGRESS;
++		break;
++	case P21_IN_USE:
++		error_msg = "P21 in use (cannot deprovision)";
++		ret = -EPERM;
++		break;
++	case HEP_NOT_ACTIVE:
++		error_msg = "HEP not activated";
++		ret = -EPERM;
++		break;
++	case HEP_ALREADY_SET:
++		error_msg = "HEP Transport already set";
++		ret = -EINVAL;
++		break;
++	case HEP_CHECK_STATE:
++		error_msg = "Check the current HEP state";
++		ret = -EINVAL;
++		break;
++	default:
++		error_msg = "Generic/Other error";
++		ret = -EIO;
++		break;
++	}
 +
-+		switch (enum_obj[elem].type) {
-+		case ACPI_TYPE_STRING:
-+			if (PREREQUISITES != elem && ENUM_POSSIBLE_VALUES != elem) {
-+				ret = hp_convert_hexstr_to_str(enum_obj[elem].string.pointer,
-+							       enum_obj[elem].string.length,
-+							       &str_value, &value_len);
-+				if (ret)
-+					return -EINVAL;
++	if (error_code)
++		pr_warn_ratelimited("Returned error 0x%x, \"%s\"\n", error_code, error_msg);
++
++	return ret;
++}
++
++static ssize_t pending_reboot_show(struct kobject *kobj,
++				   struct kobj_attribute *attr,
++				   char *buf)
++{
++	return sysfs_emit(buf, "%d\n", bioscfg_drv.pending_reboot);
++}
++
++static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
++
++/*
++ * create_attributes_level_sysfs_files() - Creates pending_reboot attributes
++ */
++static int create_attributes_level_sysfs_files(void)
++{
++	return  sysfs_create_file(&bioscfg_drv.main_dir_kset->kobj,
++				&pending_reboot.attr);
++}
++
++static void attr_name_release(struct kobject *kobj)
++{
++	kfree(kobj);
++}
++
++static const struct kobj_type attr_name_ktype = {
++	.release	= attr_name_release,
++	.sysfs_ops	= &kobj_sysfs_ops,
++};
++
++/**
++ * hp_get_wmiobj_pointer() - Get Content of WMI block for particular instance
++ *
++ * @instance_id: WMI instance ID
++ * @guid_string: WMI GUID (in str form)
++ *
++ * Fetches the content for WMI block (instance_id) under GUID (guid_string)
++ * Caller must kfree the return
++ */
++union acpi_object *hp_get_wmiobj_pointer(int instance_id, const char *guid_string)
++{
++	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
++	acpi_status status;
++
++	status = wmi_query_block(guid_string, instance_id, &out);
++	return ACPI_SUCCESS(status) ? (union acpi_object *)out.pointer : NULL;
++}
++
++/**
++ * hp_get_instance_count() - Compute total number of instances under guid_string
++ *
++ * @guid_string: WMI GUID (in string form)
++ */
++int hp_get_instance_count(const char *guid_string)
++{
++	union acpi_object *wmi_obj = NULL;
++	int i = 0;
++
++	do {
++		kfree(wmi_obj);
++		wmi_obj = hp_get_wmiobj_pointer(i, guid_string);
++		i++;
++	} while (wmi_obj);
++
++	return i - 1;
++}
++
++/**
++ * hp_alloc_attributes_data() - Allocate attributes data for a particular type
++ *
++ * @attr_type: Attribute type to allocate
++ */
++static int hp_alloc_attributes_data(int attr_type)
++{
++	switch (attr_type) {
++	case HPWMI_STRING_TYPE:
++		return hp_alloc_string_data();
++
++	case HPWMI_INTEGER_TYPE:
++		return hp_alloc_integer_data();
++
++	case HPWMI_ENUMERATION_TYPE:
++		return hp_alloc_enumeration_data();
++
++	case HPWMI_ORDERED_LIST_TYPE:
++		return hp_alloc_ordered_list_data();
++
++	case HPWMI_PASSWORD_TYPE:
++		return hp_alloc_password_data();
++
++	default:
++		return 0;
++	}
++}
++
++int hp_convert_hexstr_to_str(const char *input, u32 input_len, char **str, int *len)
++{
++	int ret = 0;
++	int new_len = 0;
++	char tmp[] = "0x00";
++	char *new_str = NULL;
++	long  ch;
++	int i;
++
++	if (input_len <= 0 || !input || !str || !len)
++		return -EINVAL;
++
++	*len = 0;
++	*str = NULL;
++
++	new_str = kmalloc(input_len, GFP_KERNEL);
++	if (!new_str)
++		return -ENOMEM;
++
++	for (i = 0; i < input_len; i += 5) {
++		strncpy(tmp, input + i, strlen(tmp));
++		if (kstrtol(tmp, 16, &ch) == 0) {
++			// escape char
++			if (ch == '\\' ||
++			    ch == '\r' ||
++			    ch == '\n' || ch == '\t') {
++				if (ch == '\r')
++					ch = 'r';
++				else if (ch == '\n')
++					ch = 'n';
++				else if (ch == '\t')
++					ch = 't';
++				new_str[new_len++] = '\\';
 +			}
-+			break;
-+		case ACPI_TYPE_INTEGER:
-+			int_value = (u32)enum_obj[elem].integer.value;
-+			break;
-+		default:
-+			pr_warn("Unsupported object type [%d]\n", enum_obj[elem].type);
-+			continue;
++			new_str[new_len++] = ch;
++			if (ch == '\0')
++				break;
 +		}
++	}
 +
-+		/* Check that both expected and read object type match */
-+		if (expected_enum_types[eloc] != enum_obj[elem].type) {
-+			pr_err("Error expected type %d for elem %d, but got type %d instead\n",
-+			       expected_enum_types[eloc], elem, enum_obj[elem].type);
-+			return -EIO;
-+		}
++	if (new_len) {
++		new_str[new_len] = '\0';
++		*str = krealloc(new_str, (new_len + 1) * sizeof(char),
++				GFP_KERNEL);
++		if (*str)
++			*len = new_len;
++		else
++			ret = -ENOMEM;
++	} else {
++		ret = -EFAULT;
++	}
 +
-+		/* Assign appropriate element value to corresponding field */
-+		switch (eloc) {
-+		case NAME:
-+		case VALUE:
-+			break;
-+		case PATH:
-+			strscpy(enum_data->common.path, str_value,
-+				sizeof(enum_data->common.path));
-+			break;
-+		case IS_READONLY:
-+			enum_data->common.is_readonly = int_value;
-+			break;
-+		case DISPLAY_IN_UI:
-+			enum_data->common.display_in_ui = int_value;
-+			break;
-+		case REQUIRES_PHYSICAL_PRESENCE:
-+			enum_data->common.requires_physical_presence = int_value;
-+			break;
-+		case SEQUENCE:
-+			enum_data->common.sequence = int_value;
-+			break;
-+		case PREREQUISITES_SIZE:
-+			enum_data->common.prerequisites_size = int_value;
-+			if (int_value > MAX_PREREQUISITES_SIZE)
-+				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
++	if (ret)
++		kfree(new_str);
++	return ret;
++}
 +
-+			/*
-+			 * This HACK is needed to keep the expected
-+			 * element list pointing to the right obj[elem].type
-+			 * when the size is zero. PREREQUISITES
-+			 * object is omitted by BIOS when the size is
-+			 * zero.
-+			 */
-+			if (int_value == 0)
-+				eloc++;
-+			break;
++/* map output size to the corresponding WMI method id */
++int hp_encode_outsize_for_pvsz(int outsize)
++{
++	if (outsize > 4096)
++		return -EINVAL;
++	if (outsize > 1024)
++		return 5;
++	if (outsize > 128)
++		return 4;
++	if (outsize > 4)
++		return 3;
++	if (outsize > 0)
++		return 2;
++	return 1;
++}
 +
-+		case PREREQUISITES:
-+			size = min_t(u32, enum_data->common.prerequisites_size, MAX_PREREQUISITES_SIZE);
-+			for (reqs = 0; reqs < size; reqs++) {
-+				if (elem >= enum_obj_count) {
-+					pr_err("Error enum-objects package is too small\n");
-+					return -EINVAL;
-+				}
++/*
++ * Update friendly display name for several attributes associated to
++ * 'Schedule Power-On'
++ */
++void hp_friendly_user_name_update(char *path, const char *attr_name,
++				  char *attr_display, int attr_size)
++{
++	if (strstr(path, SCHEDULE_POWER_ON))
++		snprintf(attr_display, attr_size, "%s - %s", SCHEDULE_POWER_ON, attr_name);
++	else
++		strscpy(attr_display, attr_name, attr_size);
++}
 +
-+				ret = hp_convert_hexstr_to_str(enum_obj[elem + reqs].string.pointer,
-+							       enum_obj[elem + reqs].string.length,
-+							       &str_value, &value_len);
++/**
++ * hp_update_attribute_permissions() - Update attributes permissions when
++ * isReadOnly value is 1
++ *
++ * @is_readonly:  bool value to indicate if it a readonly attribute.
++ * @current_val: kobj_attribute corresponding to attribute.
++ *
++ */
++void hp_update_attribute_permissions(bool is_readonly, struct kobj_attribute *current_val)
++{
++	current_val->attr.mode = is_readonly ? 0444 : 0644;
++}
 +
-+				if (ret)
-+					return -EINVAL;
++/**
++ * destroy_attribute_objs() - Free a kset of kobjects
++ * @kset: The kset to destroy
++ *
++ * Fress kobjects created for each attribute_name under attribute type kset
++ */
++static void destroy_attribute_objs(struct kset *kset)
++{
++	struct kobject *pos, *next;
 +
-+				strscpy(enum_data->common.prerequisites[reqs],
-+					str_value,
-+					sizeof(enum_data->common.prerequisites[reqs]));
++	list_for_each_entry_safe(pos, next, &kset->list, entry)
++		kobject_put(pos);
++}
 +
-+				kfree(str_value);
-+			}
-+			break;
++/**
++ * release_attributes_data() - Clean-up all sysfs directories and files created
++ */
++static void release_attributes_data(void)
++{
++	mutex_lock(&bioscfg_drv.mutex);
 +
-+		case SECURITY_LEVEL:
-+			enum_data->common.security_level = int_value;
-+			break;
++	hp_exit_string_attributes();
++	hp_exit_integer_attributes();
++	hp_exit_enumeration_attributes();
++	hp_exit_ordered_list_attributes();
++	hp_exit_password_attributes();
++	hp_exit_sure_start_attributes();
++	hp_exit_secure_platform_attributes();
 +
-+		case ENUM_CURRENT_VALUE:
-+			strscpy(enum_data->current_value,
-+				str_value, sizeof(enum_data->current_value));
-+			break;
-+		case ENUM_SIZE:
-+			enum_data->possible_values_size = int_value;
-+			if (int_value > MAX_VALUES_SIZE)
-+				pr_warn("Possible number values size value exceeded the maximum number of elements supported or data may be malformed\n");
++	if (bioscfg_drv.authentication_dir_kset) {
++		destroy_attribute_objs(bioscfg_drv.authentication_dir_kset);
++		kset_unregister(bioscfg_drv.authentication_dir_kset);
++		bioscfg_drv.authentication_dir_kset = NULL;
++	}
++	if (bioscfg_drv.main_dir_kset) {
++		sysfs_remove_file(&bioscfg_drv.main_dir_kset->kobj, &pending_reboot.attr);
++		destroy_attribute_objs(bioscfg_drv.main_dir_kset);
++		kset_unregister(bioscfg_drv.main_dir_kset);
++		bioscfg_drv.main_dir_kset = NULL;
++	}
++	mutex_unlock(&bioscfg_drv.mutex);
++}
 +
-+			/*
-+			 * This HACK is needed to keep the expected
-+			 * element list pointing to the right obj[elem].type
-+			 * when the size is zero. POSSIBLE_VALUES
-+			 * object is omitted by BIOS when the size is zero.
-+			 */
-+			if (int_value == 0)
-+				eloc++;
-+			break;
++/**
++ * hp_add_other_attributes() - Initialize HP custom attributes not
++ * reported by BIOS and required to support Secure Platform and Sure
++ * Start.
++ *
++ * @attr_type: Custom HP attribute not reported by BIOS
++ *
++ * Initialize all 2 types of attributes: Platform and Sure Start
++ * object.  Populates each attribute types respective properties
++ * under sysfs files.
++ *
++ * Returns zero(0) if successful. Otherwise, a negative value.
++ */
++static int hp_add_other_attributes(int attr_type)
++{
++	struct kobject *attr_name_kobj;
++	union acpi_object *obj = NULL;
++	int retval;
++	char *attr_name;
 +
-+		case ENUM_POSSIBLE_VALUES:
-+			size = enum_data->possible_values_size;
++	mutex_lock(&bioscfg_drv.mutex);
 +
-+			for (pos_values = 0; pos_values < size && pos_values < MAX_VALUES_SIZE;
-+			     pos_values++) {
-+				if (elem >= enum_obj_count) {
-+					pr_err("Error enum-objects package is too small\n");
-+					return -EINVAL;
-+				}
++	attr_name_kobj = kzalloc(sizeof(*attr_name_kobj), GFP_KERNEL);
++	if (!attr_name_kobj) {
++		retval = -ENOMEM;
++		goto err_other_attr_init;
++	}
 +
-+				ret = hp_convert_hexstr_to_str(enum_obj[elem + pos_values].string.pointer,
-+							       enum_obj[elem + pos_values].string.length,
-+							       &str_value, &value_len);
++	/* Check if attribute type is supported */
++	switch (attr_type) {
++	case HPWMI_SECURE_PLATFORM_TYPE:
++		attr_name_kobj->kset = bioscfg_drv.authentication_dir_kset;
++		attr_name = SPM_STR;
++		break;
 +
-+				if (ret)
-+					return -EINVAL;
++	case HPWMI_SURE_START_TYPE:
++		attr_name_kobj->kset = bioscfg_drv.main_dir_kset;
++		attr_name = SURE_START_STR;
++		break;
 +
-+				/*
-+				 * ignore strings when possible values size
-+				 * is greater than MAX_VALUES_SIZE
-+				 */
-+				if (size < MAX_VALUES_SIZE)
-+					strscpy(enum_data->possible_values[pos_values],
-+						str_value,
-+						sizeof(enum_data->possible_values[pos_values]));
-+			}
-+			break;
-+		default:
-+			pr_warn("Invalid element: %d found in Enumeration attribute or data may be malformed\n", elem);
-+			break;
-+		}
++	default:
++		pr_err("Error: Unknown attr_type: %d\n", attr_type);
++		retval = -EINVAL;
++		goto err_other_attr_init;
++	}
 +
++	retval = kobject_init_and_add(attr_name_kobj, &attr_name_ktype,
++				      NULL, "%s", attr_name);
++	if (retval) {
++		pr_err("Error encountered [%d]\n", retval);
++		kobject_put(attr_name_kobj);
++		goto err_other_attr_init;
++	}
++
++	/* Populate attribute data */
++	switch (attr_type) {
++	case HPWMI_SECURE_PLATFORM_TYPE:
++		retval = hp_populate_secure_platform_data(attr_name_kobj);
++		break;
++
++	case HPWMI_SURE_START_TYPE:
++		retval = hp_populate_sure_start_data(attr_name_kobj);
++		break;
++
++	default:
++		goto err_other_attr_init;
++	}
++
++	mutex_unlock(&bioscfg_drv.mutex);
++	return 0;
++
++err_other_attr_init:
++	mutex_unlock(&bioscfg_drv.mutex);
++	kfree(obj);
++	return retval;
++}
++
++static int hp_init_bios_package_attribute(enum hp_wmi_data_type attr_type,
++					  union acpi_object *obj,
++					  const char *guid, int min_elements,
++					  int instance_id)
++{
++	struct kobject *attr_name_kobj;
++	union acpi_object *elements;
++	struct kset *temp_kset;
++
++	char *str_value = NULL;
++	int str_len;
++	int retval = 0;
++
++	/* Take action appropriate to each ACPI TYPE */
++	if (obj->package.count < min_elements) {
++		pr_err("ACPI-package does not have enough elements: %d < %d\n",
++		       obj->package.count, min_elements);
++		goto pack_attr_exit;
++	}
++
++	elements = obj->package.elements;
++
++	/* sanity checking */
++	if (elements[NAME].type != ACPI_TYPE_STRING) {
++		pr_debug("incorrect element type\n");
++		goto pack_attr_exit;
++	}
++	if (strlen(elements[NAME].string.pointer) == 0) {
++		pr_debug("empty attribute found\n");
++		goto pack_attr_exit;
++	}
++
++	if (attr_type == HPWMI_PASSWORD_TYPE)
++		temp_kset = bioscfg_drv.authentication_dir_kset;
++	else
++		temp_kset = bioscfg_drv.main_dir_kset;
++
++	/* convert attribute name to string */
++	retval = hp_convert_hexstr_to_str(elements[NAME].string.pointer,
++					  elements[NAME].string.length,
++					  &str_value, &str_len);
++
++	if (retval) {
++		pr_debug("Failed to populate integer package data. Error [0%0x]\n",
++			 retval);
 +		kfree(str_value);
++		return retval;
 +	}
 +
-+exit_enumeration_package:
++	/* All duplicate attributes found are ignored */
++	if (kset_find_obj(temp_kset, str_value)) {
++		pr_debug("Duplicate attribute name found - %s\n",
++			 str_value);
++		goto pack_attr_exit;
++	}
++
++	/* build attribute */
++	attr_name_kobj = kzalloc(sizeof(*attr_name_kobj), GFP_KERNEL);
++	if (!attr_name_kobj) {
++		retval = -ENOMEM;
++		goto pack_attr_exit;
++	}
++
++	attr_name_kobj->kset = temp_kset;
++
++	retval = kobject_init_and_add(attr_name_kobj, &attr_name_ktype,
++				      NULL, "%s", str_value);
++
++	if (retval) {
++		kobject_put(attr_name_kobj);
++		goto pack_attr_exit;
++	}
++
++	/* enumerate all of these attributes */
++	switch (attr_type) {
++	case HPWMI_STRING_TYPE:
++		retval = hp_populate_string_package_data(elements,
++							 instance_id,
++							 attr_name_kobj);
++		break;
++	case HPWMI_INTEGER_TYPE:
++		retval = hp_populate_integer_package_data(elements,
++							  instance_id,
++							  attr_name_kobj);
++		break;
++	case HPWMI_ENUMERATION_TYPE:
++		retval = hp_populate_enumeration_package_data(elements,
++							      instance_id,
++							      attr_name_kobj);
++		break;
++	case HPWMI_ORDERED_LIST_TYPE:
++		retval = hp_populate_ordered_list_package_data(elements,
++							       instance_id,
++							       attr_name_kobj);
++		break;
++	case HPWMI_PASSWORD_TYPE:
++		retval = hp_populate_password_package_data(elements,
++							   instance_id,
++							   attr_name_kobj);
++		break;
++	default:
++		pr_debug("Unknown attribute type found: 0x%x\n", attr_type);
++		break;
++	}
++
++pack_attr_exit:
 +	kfree(str_value);
++	return retval;
++}
++
++static int hp_init_bios_buffer_attribute(enum hp_wmi_data_type attr_type,
++					 union acpi_object *obj,
++					 const char *guid, int min_elements,
++					 int instance_id)
++{
++	struct kobject *attr_name_kobj;
++	struct kset *temp_kset;
++	char str[MAX_BUFF_SIZE];
++
++	char *temp_str = NULL;
++	char *str_value = NULL;
++	u8 *buffer_ptr = NULL;
++	int buffer_size;
++	int retval = 0;
++
++	buffer_size = obj->buffer.length;
++	buffer_ptr = obj->buffer.pointer;
++
++	retval = hp_get_string_from_buffer(&buffer_ptr,
++					   &buffer_size, str, MAX_BUFF_SIZE);
++
++	if (retval < 0)
++		goto buff_attr_exit;
++
++	if (attr_type == HPWMI_PASSWORD_TYPE ||
++	    attr_type == HPWMI_SECURE_PLATFORM_TYPE)
++		temp_kset = bioscfg_drv.authentication_dir_kset;
++	else
++		temp_kset = bioscfg_drv.main_dir_kset;
++
++	/* All duplicate attributes found are ignored */
++	if (kset_find_obj(temp_kset, str)) {
++		pr_debug("Duplicate attribute name found - %s\n", str);
++		goto buff_attr_exit;
++	}
++
++	/* build attribute */
++	attr_name_kobj = kzalloc(sizeof(*attr_name_kobj), GFP_KERNEL);
++	if (!attr_name_kobj) {
++		retval = -ENOMEM;
++		goto buff_attr_exit;
++	}
++
++	attr_name_kobj->kset = temp_kset;
++
++	temp_str = str;
++	if (attr_type == HPWMI_SECURE_PLATFORM_TYPE)
++		temp_str = "SPM";
++
++	retval = kobject_init_and_add(attr_name_kobj,
++				      &attr_name_ktype, NULL, "%s",
++				      temp_str);
++	if (retval) {
++		kobject_put(attr_name_kobj);
++		goto buff_attr_exit;
++	}
++
++	/* enumerate all of these attributes */
++	switch (attr_type) {
++	case HPWMI_STRING_TYPE:
++		retval = hp_populate_string_buffer_data(buffer_ptr,
++							&buffer_size,
++							instance_id,
++							attr_name_kobj);
++		break;
++	case HPWMI_INTEGER_TYPE:
++		retval = hp_populate_integer_buffer_data(buffer_ptr,
++							 &buffer_size,
++							 instance_id,
++							 attr_name_kobj);
++		break;
++	case HPWMI_ENUMERATION_TYPE:
++		retval = hp_populate_enumeration_buffer_data(buffer_ptr,
++							     &buffer_size,
++							     instance_id,
++							     attr_name_kobj);
++		break;
++	case HPWMI_ORDERED_LIST_TYPE:
++		retval = hp_populate_ordered_list_buffer_data(buffer_ptr,
++							      &buffer_size,
++							      instance_id,
++							      attr_name_kobj);
++		break;
++	case HPWMI_PASSWORD_TYPE:
++		retval = hp_populate_password_buffer_data(buffer_ptr,
++							  &buffer_size,
++							  instance_id,
++							  attr_name_kobj);
++		break;
++	default:
++		pr_debug("Unknown attribute type found: 0x%x\n", attr_type);
++		break;
++	}
++
++buff_attr_exit:
++	kfree(str_value);
++	return retval;
++}
++
++/**
++ * hp_init_bios_attributes() - Initialize all attributes for a type
++ * @attr_type: The attribute type to initialize
++ * @guid: The WMI GUID associated with this type to initialize
++ *
++ * Initialiaze all 5 types of attributes: enumeration, integer,
++ * string, password, ordered list  object.  Populates each attrbute types
++ * respective properties under sysfs files
++ */
++static int hp_init_bios_attributes(enum hp_wmi_data_type attr_type, const char *guid)
++{
++	union acpi_object *obj = NULL;
++	int min_elements;
++
++	/* instance_id needs to be reset for each type GUID
++	 * also, instance IDs are unique within GUID but not across
++	 */
++	int instance_id = 0;
++	int retval = 0;
++
++	retval = hp_alloc_attributes_data(attr_type);
++	if (retval)
++		return retval;
++
++	switch (attr_type) {
++	case HPWMI_STRING_TYPE:
++		min_elements = STR_ELEM_CNT;
++		break;
++	case HPWMI_INTEGER_TYPE:
++		min_elements = INT_ELEM_CNT;
++		break;
++	case HPWMI_ENUMERATION_TYPE:
++		min_elements = ENUM_ELEM_CNT;
++		break;
++	case HPWMI_ORDERED_LIST_TYPE:
++		min_elements = ORD_ELEM_CNT;
++		break;
++	case HPWMI_PASSWORD_TYPE:
++		min_elements = PSWD_ELEM_CNT;
++		break;
++	default:
++		pr_err("Error: Unknown attr_type: %d\n", attr_type);
++		return -EINVAL;
++	}
++
++	/* Report display name language code */
++	strscpy(bioscfg_drv.display_name_language_code,
++		LANG_CODE_STR,
++		sizeof(bioscfg_drv.display_name_language_code));
++
++	/* need to use specific instance_id and guid combination to get right data */
++	obj = hp_get_wmiobj_pointer(instance_id, guid);
++	if (!obj)
++		return -ENODEV;
++
++	mutex_lock(&bioscfg_drv.mutex);
++	while (obj) {
++		/* Take action appropriate to each ACPI TYPE */
++		if (obj->type == ACPI_TYPE_PACKAGE) {
++			retval = hp_init_bios_package_attribute(attr_type, obj,
++								guid, min_elements,
++								instance_id);
++			if (retval)
++				goto err_attr_init;
++		} else if (obj->type == ACPI_TYPE_BUFFER) {
++			retval = hp_init_bios_buffer_attribute(attr_type, obj,
++							       guid, min_elements,
++							       instance_id);
++			if (retval)
++				goto err_attr_init;
++		} else {
++			pr_err("Expected ACPI-package or buffer type, got: %d\n",
++			       obj->type);
++			retval = -EIO;
++			goto err_attr_init;
++		}
++
++		kfree(obj);
++		instance_id++;
++		obj = hp_get_wmiobj_pointer(instance_id, guid);
++	}
++
++err_attr_init:
++	mutex_unlock(&bioscfg_drv.mutex);
++	kfree(obj);
++	return retval;
++}
++
++static int __init hp_init(void)
++{
++	int ret;
++	int hp_bios_capable = wmi_has_guid(HP_WMI_BIOS_GUID);
++	int set_bios_settings = wmi_has_guid(HP_WMI_SET_BIOS_SETTING_GUID);
++
++	if (!hp_bios_capable) {
++		pr_err("Unable to run on non-HP system\n");
++		return -ENODEV;
++	}
++
++	if (!set_bios_settings) {
++		pr_err("Unable to set BIOS settings on HP systems\n");
++		return -ENODEV;
++	}
++
++	ret = hp_init_attr_set_interface();
++	if (ret)
++		return ret;
++
++	ret = fw_attributes_class_get(&fw_attr_class);
++	if (ret)
++		goto err_unregister_class;
++
++	bioscfg_drv.class_dev = device_create(fw_attr_class, NULL, MKDEV(0, 0),
++					      NULL, "%s", DRIVER_NAME);
++	if (IS_ERR(bioscfg_drv.class_dev)) {
++		ret = PTR_ERR(bioscfg_drv.class_dev);
++		goto err_unregister_class;
++	}
++
++	bioscfg_drv.main_dir_kset = kset_create_and_add("attributes", NULL,
++							&bioscfg_drv.class_dev->kobj);
++	if (!bioscfg_drv.main_dir_kset) {
++		ret = -ENOMEM;
++		pr_debug("Failed to create and add attributes\n");
++		goto err_destroy_classdev;
++	}
++
++	bioscfg_drv.authentication_dir_kset = kset_create_and_add("authentication", NULL,
++								  &bioscfg_drv.class_dev->kobj);
++	if (!bioscfg_drv.authentication_dir_kset) {
++		ret = -ENOMEM;
++		pr_debug("Failed to create and add authentication\n");
++		goto err_release_attributes_data;
++	}
++
++	/*
++	 * sysfs level attributes.
++	 * - pending_reboot
++	 */
++	ret = create_attributes_level_sysfs_files();
++	if (ret)
++		pr_debug("Failed to create sysfs level attributes\n");
++
++	ret = hp_init_bios_attributes(HPWMI_STRING_TYPE, HP_WMI_BIOS_STRING_GUID);
++	if (ret)
++		pr_debug("Failed to populate string type attributes\n");
++
++	ret = hp_init_bios_attributes(HPWMI_INTEGER_TYPE, HP_WMI_BIOS_INTEGER_GUID);
++	if (ret)
++		pr_debug("Failed to populate integer type attributes\n");
++
++	ret = hp_init_bios_attributes(HPWMI_ENUMERATION_TYPE, HP_WMI_BIOS_ENUMERATION_GUID);
++	if (ret)
++		pr_debug("Failed to populate enumeration type attributes\n");
++
++	ret = hp_init_bios_attributes(HPWMI_ORDERED_LIST_TYPE, HP_WMI_BIOS_ORDERED_LIST_GUID);
++	if (ret)
++		pr_debug("Failed to populate ordered list object type attributes\n");
++
++	ret = hp_init_bios_attributes(HPWMI_PASSWORD_TYPE, HP_WMI_BIOS_PASSWORD_GUID);
++	if (ret)
++		pr_debug("Failed to populate password object type attributes\n");
++
++	bioscfg_drv.spm_data.attr_name_kobj = NULL;
++	ret = hp_add_other_attributes(HPWMI_SECURE_PLATFORM_TYPE);
++	if (ret)
++		pr_debug("Failed to populate secure platform object type attribute\n");
++
++	bioscfg_drv.sure_start_attr_kobj = NULL;
++	ret = hp_add_other_attributes(HPWMI_SURE_START_TYPE);
++	if (ret)
++		pr_debug("Failed to populate sure start object type attribute\n");
++
 +	return 0;
++
++err_release_attributes_data:
++	release_attributes_data();
++
++err_destroy_classdev:
++	device_destroy(fw_attr_class, MKDEV(0, 0));
++
++err_unregister_class:
++	fw_attributes_class_put();
++	hp_exit_attr_set_interface();
++
++	return ret;
 +}
 +
-+/**
-+ * hp_populate_enumeration_package_data() -
-+ * Populate all properties of an instance under enumeration attribute
-+ *
-+ * @enum_obj: ACPI object with enumeration data
-+ * @instance_id: The instance to enumerate
-+ * @attr_name_kobj: The parent kernel object
-+ */
-+int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
-+					 int instance_id,
-+					 struct kobject *attr_name_kobj)
++static void __exit hp_exit(void)
 +{
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
++	release_attributes_data();
++	device_destroy(fw_attr_class, MKDEV(0, 0));
 +
-+	enum_data->attr_name_kobj = attr_name_kobj;
-+
-+	hp_populate_enumeration_elements_from_package(enum_obj,
-+						      enum_obj->package.count,
-+						      instance_id);
-+	hp_update_attribute_permissions(enum_data->common.is_readonly,
-+					&enumeration_current_val);
-+	/*
-+	 * Several attributes have names such "MONDAY". Friendly
-+	 * user nane is generated to make the name more descriptive
-+	 */
-+	hp_friendly_user_name_update(enum_data->common.path,
-+				     attr_name_kobj->name,
-+				     enum_data->common.display_name,
-+				     sizeof(enum_data->common.display_name));
-+	return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
++	fw_attributes_class_put();
++	hp_exit_attr_set_interface();
 +}
 +
-+static int hp_populate_enumeration_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
-+							int instance_id)
-+{
-+	int reqs;
-+	int values;
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-+
-+	/*
-+	 * In earlier implementation, reported errors were ignored
-+	 * causing the data to remain uninitialized. It is for this
-+	 * reason functions may return an error and no validation
-+	 * takes place.
-+	 */
-+
-+	// VALUE:
-+	hp_get_string_from_buffer(&buffer_ptr, buffer_size, enum_data->current_value,
-+				  sizeof(enum_data->current_value));
-+
-+	// PATH:
-+	hp_get_string_from_buffer(&buffer_ptr, buffer_size, enum_data->common.path,
-+				  sizeof(enum_data->common.path));
-+
-+	// IS_READONLY:
-+	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &enum_data->common.is_readonly);
-+
-+	//DISPLAY_IN_UI:
-+	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &enum_data->common.display_in_ui);
-+
-+	// REQUIRES_PHYSICAL_PRESENCE:
-+	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &enum_data->common.requires_physical_presence);
-+
-+	// SEQUENCE:
-+	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &enum_data->common.sequence);
-+
-+	// PREREQUISITES_SIZE:
-+	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &enum_data->common.prerequisites_size);
-+
-+	if (enum_data->common.prerequisites_size > MAX_PREREQUISITES_SIZE) {
-+		/* Report a message and limit prerequisite size to maximum value */
-+		pr_warn("Enum Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-+		enum_data->common.prerequisites_size = MAX_PREREQUISITES_SIZE;
-+	}
-+
-+	// PREREQUISITES:
-+	for (reqs = 0; reqs < enum_data->common.prerequisites_size; reqs++)
-+		hp_get_string_from_buffer(&buffer_ptr, buffer_size,
-+					  enum_data->common.prerequisites[reqs],
-+					  sizeof(enum_data->common.prerequisites[reqs]));
-+
-+	// SECURITY_LEVEL:
-+	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &enum_data->common.security_level);
-+
-+	// ENUM_CURRENT_VALUE:
-+	hp_get_string_from_buffer(&buffer_ptr, buffer_size,
-+				  enum_data->current_value,
-+				  sizeof(enum_data->current_value));
-+	// ENUM_SIZE:
-+	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &enum_data->possible_values_size);
-+
-+	if (enum_data->possible_values_size > MAX_VALUES_SIZE) {
-+		/* Report a message and limit possible values size to maximum value */
-+		pr_warn("Enum Possible size value exceeded the maximum number of elements supported or data may be malformed\n");
-+		enum_data->possible_values_size = MAX_VALUES_SIZE;
-+	}
-+
-+	// ENUM_POSSIBLE_VALUES:
-+
-+	for (values = 0; values < enum_data->possible_values_size; values++)
-+		hp_get_string_from_buffer(&buffer_ptr, buffer_size,
-+					  enum_data->possible_values[values],
-+					  sizeof(enum_data->possible_values[values]));
-+
-+	return 0;
-+}
-+
-+/**
-+ * hp_populate_enumeration_buffer_data() -
-+ * Populate all properties of an instance under enumeration attribute
-+ *
-+ * @buffer_ptr: Buffer pointer
-+ * @buffer_size: Buffer size
-+ * @instance_id: The instance to enumerate
-+ * @attr_name_kobj: The parent kernel object
-+ */
-+int hp_populate_enumeration_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
-+					int instance_id,
-+					struct kobject *attr_name_kobj)
-+{
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-+
-+	enum_data->attr_name_kobj = attr_name_kobj;
-+
-+	/* Populate enumeration elements */
-+	hp_populate_enumeration_elements_from_buffer(buffer_ptr, buffer_size, instance_id);
-+
-+	hp_update_attribute_permissions(enum_data->common.is_readonly,
-+					&enumeration_current_val);
-+	/*
-+	 * Several attributes have names such "MONDAY". A Friendlier
-+	 * user nane is generated to make the name more descriptive
-+	 */
-+	hp_friendly_user_name_update(enum_data->common.path,
-+				     attr_name_kobj->name,
-+				     enum_data->common.display_name,
-+				     sizeof(enum_data->common.display_name));
-+
-+	return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
-+}
-+
-+/**
-+ * hp_exit_enumeration_attributes() - Clear all attribute data
-+ *
-+ * Clears all data allocated for this group of attributes
-+ */
-+void hp_exit_enumeration_attributes(void)
-+{
-+	int instance_id;
-+
-+	for (instance_id = 0; instance_id < bioscfg_drv.enumeration_instances_count;
-+	     instance_id++) {
-+		struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-+		struct kobject *attr_name_kobj = enum_data->attr_name_kobj;
-+
-+		if (attr_name_kobj)
-+			sysfs_remove_group(attr_name_kobj, &enumeration_attr_group);
-+	}
-+	bioscfg_drv.enumeration_instances_count = 0;
-+
-+	kfree(bioscfg_drv.enumeration_data);
-+	bioscfg_drv.enumeration_data = NULL;
-+}
++module_init(hp_init);
++module_exit(hp_exit);
 -- 
 2.34.1
 
