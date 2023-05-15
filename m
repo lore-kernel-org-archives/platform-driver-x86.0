@@ -2,74 +2,78 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49746C77B75
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 13:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B10C77B75
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 13:20:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242184AbjEONUZ (ORCPT
+        id S242166AbjEONUs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 May 2023 09:20:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37916 "EHLO
+        Mon, 15 May 2023 09:20:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242248AbjEONUE (ORCPT
+        with ESMTP id S242159AbjEONUY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 May 2023 09:20:04 -0400
+        Mon, 15 May 2023 09:20:24 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAA601FF7
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 06:19:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F89F2704
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 06:19:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684156744;
+        s=mimecast20190719; t=1684156758;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ugyx/9y/SaIK86UZMSfmQ9t3C9x9uaubBNLGKyjVDLg=;
-        b=CWQ/asFQtRo1LQnhHr9eBOFSZS9I6Ovalx/u0k6xDsSs40Idjgz5Q1/x0mDeF38kH33Iiu
-        LNmGjZqCvdrj7fJrc+HpjfD+BfqcCaMiRy2/GXL3O6hZ6zAsBq4+WXkdIkPXyExajzQZmY
-        Dre0IU1eW+pT1j3NUj+1PlXZY04wZlk=
+        bh=LNZ58ncn4bTbnz3JgK1sPvomNHxhBGYZSP9178bl+vI=;
+        b=EZjZaocXUX+WEtqkl6UCg16pmxRAPl684bJV/xmGQXPIEwY0M0aLgEsW9L/xXrOqMwxuB5
+        Igo9eJ3FY+t6dFUolJqssyN8/K9TT5mohWVFeJcMBV1lArAlkN02d9/WRGWMU6WjMMN1vx
+        e+/N5FrRfQ+Pd2MMyGsWYHJvqjDfmHw=
 Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
  [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-312-F81V8mozMjSE0REsmfvpXg-1; Mon, 15 May 2023 09:19:01 -0400
-X-MC-Unique: F81V8mozMjSE0REsmfvpXg-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-965cd056598so1507668866b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 06:19:01 -0700 (PDT)
+ us-mta-654-QZZNlWicPJqUOasyEUEUjg-1; Mon, 15 May 2023 09:19:16 -0400
+X-MC-Unique: QZZNlWicPJqUOasyEUEUjg-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-94a341efd9aso1590369466b.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 06:19:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684156739; x=1686748739;
+        d=1e100.net; s=20221208; t=1684156755; x=1686748755;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ugyx/9y/SaIK86UZMSfmQ9t3C9x9uaubBNLGKyjVDLg=;
-        b=TR4qOBU5FDCO99p3lr1VXiOCX2AOAuE8lNkOYNqC9LaL8pWq44Qi2jAHs7MNA5NJ9e
-         TimYCxxvvw8ev9ku15+2WWRb7GKiFkpm10YlX1VwtlZmOSHUiscuMGEuzpIqFBDOymc6
-         nDBF2gjHXCmsGxtZ8q3GA98iY4E3ib3IJbJiQh3OzswVApv/YYmJQc8C++07gpQQdXVM
-         XIEOL9emc8BokTznwDyJsVEd4WB4pbi9/0M8K+ef7IfKzY/tuTM8ENqJdjCZSBqRDfpg
-         ylaBsFNkibYG6wwRnMcQ5FllejUDgWhvfjYqwla0Errc9NMh44ZYXKWvIhSIEdxO7fc6
-         uTEA==
-X-Gm-Message-State: AC+VfDxLEF9elAVkQ0+6NIKz+uKQmLzx/LbyNqlyeI76Nh/HiUbKG1KT
-        oOo3tb0Hci0FEbBHGX00tk6MihKZzJmZBSZtkbbFKiyUDSkIMMQAFu8+526stX8KVGovqCqPUaL
-        ba5Mmj+CMhE9t5ciJG0UVDhVmnJN2sWFNVw==
-X-Received: by 2002:a17:907:6e14:b0:96a:48ed:531d with SMTP id sd20-20020a1709076e1400b0096a48ed531dmr16117064ejc.27.1684156739247;
-        Mon, 15 May 2023 06:18:59 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6JWzlHApINa+ycH1jnoPw6aSTUWG/l60eV6Y9supVwFV5kN51lEwPRyPn3ih5y1dXs0mgpDA==
-X-Received: by 2002:a17:907:6e14:b0:96a:48ed:531d with SMTP id sd20-20020a1709076e1400b0096a48ed531dmr16117043ejc.27.1684156738805;
-        Mon, 15 May 2023 06:18:58 -0700 (PDT)
+        bh=LNZ58ncn4bTbnz3JgK1sPvomNHxhBGYZSP9178bl+vI=;
+        b=FnnIRisnP2/fHYrtWViskvAIN/3RW/0XdebjAodvLz4WUxOF57fpsRcH7oD6FvmcDB
+         M2ZKz5ESqS45spKV7a5Y5J81vWlKtss5tCLycULCOs0Cii9FIwC4l6ZceRd7Z088YdrC
+         nHusj8CkRxgsEezXDFoi7BQMmpmc/YiVByo9NJqSK2gpCpw/Sumb+Px9NrVhm871a6JE
+         2zqwTJc53OKo7tFMjh+edXI7Aq6/vSYag5OLGfHEo45VtUPABihvNz7r1tPgHLky3gtp
+         1vBjirx3CNuhnbQMZHFG9KS070L3rm7KKyr6HJ21m14zAkXSTYiO9T9l70XLhsx0D0Rg
+         iKnQ==
+X-Gm-Message-State: AC+VfDz9AnW5fOSB1RJTmdzTLlzbj2WJAjnwzc3yWV7efdNe4reSB5rb
+        w2SiRZ6SXV+2dgE7jeOa1WAi7UZ13frDtiW2UHohQUOLPfRbKEkRUcpc3ks8lLfa9gPVnAFCVqa
+        DsMipm1md6QKG1YtGKcQzsOGfcGhOF/NueQ==
+X-Received: by 2002:a17:907:7da3:b0:96a:ee54:9f19 with SMTP id oz35-20020a1709077da300b0096aee549f19mr6096943ejc.48.1684156755560;
+        Mon, 15 May 2023 06:19:15 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5hyxM8ytx+OvsALSN//ajhR1ubhIBFsdQbkfbtTy1R+a4VNo6CkhFLefpuBUWNRQav4dbn+g==
+X-Received: by 2002:a17:907:7da3:b0:96a:ee54:9f19 with SMTP id oz35-20020a1709077da300b0096aee549f19mr6096919ejc.48.1684156755092;
+        Mon, 15 May 2023 06:19:15 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id ia21-20020a170907a07500b00966392de4easm9652061ejc.14.2023.05.15.06.18.58
+        by smtp.gmail.com with ESMTPSA id hx7-20020a170906846700b00965a4350411sm9412581ejc.9.2023.05.15.06.19.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 May 2023 06:18:58 -0700 (PDT)
-Message-ID: <3e5e8697-5f19-ac1f-0dc1-be90a1707232@redhat.com>
-Date:   Mon, 15 May 2023 15:18:57 +0200
+        Mon, 15 May 2023 06:19:14 -0700 (PDT)
+Message-ID: <2e46bea9-c55f-6ca7-b68e-50dd8616736e@redhat.com>
+Date:   Mon, 15 May 2023 15:19:13 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH v4 1/2] platform/x86/amd/pmf: Add PMF acpi debug support
+Subject: Re: [PATCH v3] mlxbf-bootctl: Add sysfs file for BlueField boot log
 Content-Language: en-US
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
-        mario.limonciello@amd.com
-References: <20230510144751.66601-1-Shyam-sundar.S-k@amd.com>
+To:     Liming Sun <limings@nvidia.com>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        David Thompson <davthompson@nvidia.com>,
+        Mark Gross <markgross@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1f778872d177146336318cf856a2c0b06870b1b7.1683568762.git.limings@nvidia.com>
+ <20230511144924.171585-1-limings@nvidia.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230510144751.66601-1-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20230511144924.171585-1-limings@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -78,19 +82,17 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 5/10/23 16:47, Shyam Sundar S K wrote:
-> PMF driver maintains an internal config store for each PMF feature
-> after the feature init happens. Having a debug mechanism to triage
-> in-field issues w.r.t to mode switch not happening based on the OEM
-> fed values via the ACPI method to PMF driver is becoming the need of
-> the hour. Add support to get more ACPI debug spew guarded by a CONFIG.
+On 5/11/23 16:49, Liming Sun wrote:
+> This commit adds sysfs interface to be used to write into the
+> boot log which is 1KB HW buffer on BlueField SoC. The same log
+> buffer is also used by firmware code like ATF/UEFI, and can be
+> displayed by userspace tools or from external host via USB/PCIe.
 > 
-> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Signed-off-by: Liming Sun <limings@nvidia.com>
+> Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
 Note it will show up in my review-hans branch once I've pushed my
@@ -107,335 +109,255 @@ Hans
 
 
 
+
 > ---
-> v4:
->  - No change
+> v2->v3:
+>     Fixes for comments from David:
+>     - Add MLXBF_RSH_LOG_ASSERT;
+>     - Use FIELD_PREP generate value in "data";
+>     - Fix cut-and-paste comments;
+>     Fixes for comments from Ilpo
+>     - Use GENMASK_ULL();
+>     - Use readq_poll_timeout() in mlxbf_rsh_log_sem_lock();
+>     - No need to cast 'count' to int, keep 'size_t' instead;
+>     - Use DIV_ROUND_UP;
+>     - Use min() when calculating 'num' of words to write;
+>     - Simplify the 'Write message' loop and removed 'len' from
+>       the loop.
+> v1->v2:
+>     Fixes for comments from Hans:
+>     - Add more details in Documentation about the log levels;
+>     - Replace 0x0a with '\n';
+>     - Solve comment 'Why len + 1, this seems intended to assume some
+>       separator between prefix'. The change is to remove the '+ 1'
+>       here to avoid confusion. Yes, it's trying to remove the space
+>       separator. Since the next block 'Ignore leading spaces' already
+>       has similar logic, no need for the '+ 1" here.
+> v1: Initial version.
+> ---
+>  .../testing/sysfs-platform-mellanox-bootctl   |   9 ++
+>  drivers/platform/mellanox/mlxbf-bootctl.c     | 144 +++++++++++++++++-
+>  2 files changed, 151 insertions(+), 2 deletions(-)
 > 
-> v3:
->  - Based on review-hans branch
->  - Address Ilpo's review remarks
->  - use the right format specifiers while printing the data
-> 
-> v2:
->  - Based on review-hans branch
->  - use a pointer and not create a local copy while dumping
->  - use dummy #else blocks
-> 
->  drivers/platform/x86/amd/pmf/Kconfig     |  11 +++
->  drivers/platform/x86/amd/pmf/auto-mode.c | 120 +++++++++++++++++++++++
->  drivers/platform/x86/amd/pmf/cnqf.c      |  56 +++++++++++
->  drivers/platform/x86/amd/pmf/sps.c       |  55 +++++++++++
->  4 files changed, 242 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
-> index d87986adf91e..3064bc8ea167 100644
-> --- a/drivers/platform/x86/amd/pmf/Kconfig
-> +++ b/drivers/platform/x86/amd/pmf/Kconfig
-> @@ -16,3 +16,14 @@ config AMD_PMF
+> diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+> index 9b99a81babb1..4c5c02d8f870 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+> +++ b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+> @@ -75,3 +75,12 @@ KernelVersion:	6.4
+>  Contact:	"Liming Sun <limings@nvidia.com>"
+>  Description:
+>  		The file used to access the BlueField boot fifo.
+> +
+> +What:		/sys/bus/platform/devices/MLNXBF04:00/rsh_log
+> +Date:		May 2023
+> +KernelVersion:	6.4
+> +Contact:	"Liming Sun <limings@nvidia.com>"
+> +Description:
+> +		The file used to write BlueField boot log with the format
+> +                "[INFO|WARN|ERR|ASSERT ]<msg>". Log level 'INFO' is used by
+> +                default if not specified.
+> diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
+> index 1bad1d278672..fb9f7815c6cd 100644
+> --- a/drivers/platform/mellanox/mlxbf-bootctl.c
+> +++ b/drivers/platform/mellanox/mlxbf-bootctl.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/arm-smccc.h>
+>  #include <linux/delay.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
 >  
->  	  To compile this driver as a module, choose M here: the module will
->  	  be called amd_pmf.
-> +
-> +config AMD_PMF_DEBUG
-> +	bool "PMF debug information"
-> +	depends on AMD_PMF
-> +	help
-> +	 Enabling this option would give more debug information on the OEM fed
-> +	 power setting values for each of the PMF feature. PMF driver gets this
-> +	 information after evaluating a ACPI method and the information is stored
-> +	 in the PMF config store.
-> +
-> +	 Say Y here to enable more debug logs and Say N here if you are not sure.
-> diff --git a/drivers/platform/x86/amd/pmf/auto-mode.c b/drivers/platform/x86/amd/pmf/auto-mode.c
-> index 96a8e1832c05..64425201d353 100644
-> --- a/drivers/platform/x86/amd/pmf/auto-mode.c
-> +++ b/drivers/platform/x86/amd/pmf/auto-mode.c
-> @@ -15,6 +15,100 @@
->  static struct auto_mode_mode_config config_store;
->  static const char *state_as_str(unsigned int state);
+> @@ -45,10 +46,39 @@ static const char * const mlxbf_bootctl_lifecycle_states[] = {
+>  	[3] = "RMA",
+>  };
 >  
-> +#ifdef CONFIG_AMD_PMF_DEBUG
-> +static void amd_pmf_dump_auto_mode_defaults(struct auto_mode_mode_config *data)
-> +{
-> +	struct auto_mode_mode_settings *its_mode;
+> +/* Log header format. */
+> +#define MLXBF_RSH_LOG_TYPE_MASK		GENMASK_ULL(59, 56)
+> +#define MLXBF_RSH_LOG_LEN_MASK		GENMASK_ULL(54, 48)
+> +#define MLXBF_RSH_LOG_LEVEL_MASK	GENMASK_ULL(7, 0)
 > +
-> +	pr_debug("Auto Mode Data - BEGIN\n");
+> +/* Log module ID and type (only MSG type in Linux driver for now). */
+> +#define MLXBF_RSH_LOG_TYPE_MSG		0x04ULL
 > +
-> +	/* time constant */
-> +	pr_debug("balanced_to_perf: %u ms\n",
-> +		 data->transition[AUTO_TRANSITION_TO_PERFORMANCE].time_constant);
-> +	pr_debug("perf_to_balanced: %u ms\n",
-> +		 data->transition[AUTO_TRANSITION_FROM_PERFORMANCE_TO_BALANCE].time_constant);
-> +	pr_debug("quiet_to_balanced: %u ms\n",
-> +		 data->transition[AUTO_TRANSITION_FROM_QUIET_TO_BALANCE].time_constant);
-> +	pr_debug("balanced_to_quiet: %u ms\n",
-> +		 data->transition[AUTO_TRANSITION_TO_QUIET].time_constant);
+> +/* Log ctl/data register offset. */
+> +#define MLXBF_RSH_SCRATCH_BUF_CTL_OFF	0
+> +#define MLXBF_RSH_SCRATCH_BUF_DATA_OFF	0x10
 > +
-> +	/* power floor */
-> +	pr_debug("pfloor_perf: %u mW\n", data->mode_set[AUTO_PERFORMANCE].power_floor);
-> +	pr_debug("pfloor_balanced: %u mW\n", data->mode_set[AUTO_BALANCE].power_floor);
-> +	pr_debug("pfloor_quiet: %u mW\n", data->mode_set[AUTO_QUIET].power_floor);
+> +/* Log message levels. */
+> +enum {
+> +	MLXBF_RSH_LOG_INFO,
+> +	MLXBF_RSH_LOG_WARN,
+> +	MLXBF_RSH_LOG_ERR,
+> +	MLXBF_RSH_LOG_ASSERT
+> +};
 > +
-> +	/* Power delta for mode change */
-> +	pr_debug("pd_balanced_to_perf: %u mW\n",
-> +		 data->transition[AUTO_TRANSITION_TO_PERFORMANCE].power_delta);
-> +	pr_debug("pd_perf_to_balanced: %u mW\n",
-> +		 data->transition[AUTO_TRANSITION_FROM_PERFORMANCE_TO_BALANCE].power_delta);
-> +	pr_debug("pd_quiet_to_balanced: %u mW\n",
-> +		 data->transition[AUTO_TRANSITION_FROM_QUIET_TO_BALANCE].power_delta);
-> +	pr_debug("pd_balanced_to_quiet: %u mW\n",
-> +		 data->transition[AUTO_TRANSITION_TO_QUIET].power_delta);
+>  /* Mapped pointer for RSH_BOOT_FIFO_DATA and RSH_BOOT_FIFO_COUNT register. */
+>  static void __iomem *mlxbf_rsh_boot_data;
+>  static void __iomem *mlxbf_rsh_boot_cnt;
+>  
+> +/* Mapped pointer for rsh log semaphore/ctrl/data register. */
+> +static void __iomem *mlxbf_rsh_semaphore;
+> +static void __iomem *mlxbf_rsh_scratch_buf_ctl;
+> +static void __iomem *mlxbf_rsh_scratch_buf_data;
 > +
-> +	/* skin temperature limits */
-> +	its_mode = &data->mode_set[AUTO_PERFORMANCE_ON_LAP];
-> +	pr_debug("stt_apu_perf_on_lap: %u C\n",
-> +		 its_mode->power_control.stt_skin_temp[STT_TEMP_APU]);
-> +	pr_debug("stt_hs2_perf_on_lap: %u C\n",
-> +		 its_mode->power_control.stt_skin_temp[STT_TEMP_HS2]);
-> +	pr_debug("stt_min_limit_perf_on_lap: %u mW\n", its_mode->power_control.stt_min);
+> +/* Rsh log levels. */
+> +static const char * const mlxbf_rsh_log_level[] = {
+> +	"INFO", "WARN", "ERR", "ASSERT"};
 > +
-> +	its_mode = &data->mode_set[AUTO_PERFORMANCE];
-> +	pr_debug("stt_apu_perf: %u C\n", its_mode->power_control.stt_skin_temp[STT_TEMP_APU]);
-> +	pr_debug("stt_hs2_perf: %u C\n", its_mode->power_control.stt_skin_temp[STT_TEMP_HS2]);
-> +	pr_debug("stt_min_limit_perf: %u mW\n", its_mode->power_control.stt_min);
-> +
-> +	its_mode = &data->mode_set[AUTO_BALANCE];
-> +	pr_debug("stt_apu_balanced: %u C\n", its_mode->power_control.stt_skin_temp[STT_TEMP_APU]);
-> +	pr_debug("stt_hs2_balanced: %u C\n", its_mode->power_control.stt_skin_temp[STT_TEMP_HS2]);
-> +	pr_debug("stt_min_limit_balanced: %u mW\n", its_mode->power_control.stt_min);
-> +
-> +	its_mode = &data->mode_set[AUTO_QUIET];
-> +	pr_debug("stt_apu_quiet: %u C\n", its_mode->power_control.stt_skin_temp[STT_TEMP_APU]);
-> +	pr_debug("stt_hs2_quiet: %u C\n", its_mode->power_control.stt_skin_temp[STT_TEMP_HS2]);
-> +	pr_debug("stt_min_limit_quiet: %u mW\n", its_mode->power_control.stt_min);
-> +
-> +	/* SPL based power limits */
-> +	its_mode = &data->mode_set[AUTO_PERFORMANCE_ON_LAP];
-> +	pr_debug("fppt_perf_on_lap: %u mW\n", its_mode->power_control.fppt);
-> +	pr_debug("sppt_perf_on_lap: %u mW\n", its_mode->power_control.sppt);
-> +	pr_debug("spl_perf_on_lap: %u mW\n", its_mode->power_control.spl);
-> +	pr_debug("sppt_apu_only_perf_on_lap: %u mW\n", its_mode->power_control.sppt_apu_only);
-> +
-> +	its_mode = &data->mode_set[AUTO_PERFORMANCE];
-> +	pr_debug("fppt_perf: %u mW\n", its_mode->power_control.fppt);
-> +	pr_debug("sppt_perf: %u mW\n", its_mode->power_control.sppt);
-> +	pr_debug("spl_perf: %u mW\n", its_mode->power_control.spl);
-> +	pr_debug("sppt_apu_only_perf: %u mW\n", its_mode->power_control.sppt_apu_only);
-> +
-> +	its_mode = &data->mode_set[AUTO_BALANCE];
-> +	pr_debug("fppt_balanced: %u mW\n", its_mode->power_control.fppt);
-> +	pr_debug("sppt_balanced: %u mW\n", its_mode->power_control.sppt);
-> +	pr_debug("spl_balanced: %u mW\n", its_mode->power_control.spl);
-> +	pr_debug("sppt_apu_only_balanced: %u mW\n", its_mode->power_control.sppt_apu_only);
-> +
-> +	its_mode = &data->mode_set[AUTO_QUIET];
-> +	pr_debug("fppt_quiet: %u mW\n", its_mode->power_control.fppt);
-> +	pr_debug("sppt_quiet: %u mW\n", its_mode->power_control.sppt);
-> +	pr_debug("spl_quiet: %u mW\n", its_mode->power_control.spl);
-> +	pr_debug("sppt_apu_only_quiet: %u mW\n", its_mode->power_control.sppt_apu_only);
-> +
-> +	/* Fan ID */
-> +	pr_debug("fan_id_perf: %lu\n",
-> +		 data->mode_set[AUTO_PERFORMANCE].fan_control.fan_id);
-> +	pr_debug("fan_id_balanced: %lu\n",
-> +		 data->mode_set[AUTO_BALANCE].fan_control.fan_id);
-> +	pr_debug("fan_id_quiet: %lu\n",
-> +		 data->mode_set[AUTO_QUIET].fan_control.fan_id);
-> +
-> +	pr_debug("Auto Mode Data - END\n");
-> +}
-> +#else
-> +static void amd_pmf_dump_auto_mode_defaults(struct auto_mode_mode_config *data) {}
-> +#endif
-> +
->  static void amd_pmf_set_automode(struct amd_pmf_dev *dev, int idx,
->  				 struct auto_mode_mode_config *table)
+>  /* ARM SMC call which is atomic and no need for lock. */
+>  static int mlxbf_bootctl_smc(unsigned int smc_op, int smc_arg)
 >  {
-> @@ -140,6 +234,30 @@ static void amd_pmf_get_power_threshold(void)
->  	config_store.transition[AUTO_TRANSITION_FROM_PERFORMANCE_TO_BALANCE].power_threshold =
->  		config_store.mode_set[AUTO_PERFORMANCE].power_floor -
->  		config_store.transition[AUTO_TRANSITION_FROM_PERFORMANCE_TO_BALANCE].power_delta;
-> +
-> +#ifdef CONFIG_AMD_PMF_DEBUG
-> +	pr_debug("[AUTO MODE TO_QUIET] pt: %u mW pf: %u mW pd: %u mW\n",
-> +		 config_store.transition[AUTO_TRANSITION_TO_QUIET].power_threshold,
-> +		 config_store.mode_set[AUTO_BALANCE].power_floor,
-> +		 config_store.transition[AUTO_TRANSITION_TO_QUIET].power_delta);
-> +
-> +	pr_debug("[AUTO MODE TO_PERFORMANCE] pt: %u mW pf: %u mW pd: %u mW\n",
-> +		 config_store.transition[AUTO_TRANSITION_TO_PERFORMANCE].power_threshold,
-> +		 config_store.mode_set[AUTO_BALANCE].power_floor,
-> +		 config_store.transition[AUTO_TRANSITION_TO_PERFORMANCE].power_delta);
-> +
-> +	pr_debug("[AUTO MODE QUIET_TO_BALANCE] pt: %u mW pf: %u mW pd: %u mW\n",
-> +		 config_store.transition[AUTO_TRANSITION_FROM_QUIET_TO_BALANCE]
-> +		 .power_threshold,
-> +		 config_store.mode_set[AUTO_QUIET].power_floor,
-> +		 config_store.transition[AUTO_TRANSITION_FROM_QUIET_TO_BALANCE].power_delta);
-> +
-> +	pr_debug("[AUTO MODE PERFORMANCE_TO_BALANCE] pt: %u mW pf: %u mW pd: %u mW\n",
-> +		 config_store.transition[AUTO_TRANSITION_FROM_PERFORMANCE_TO_BALANCE]
-> +		 .power_threshold,
-> +		 config_store.mode_set[AUTO_PERFORMANCE].power_floor,
-> +		 config_store.transition[AUTO_TRANSITION_FROM_PERFORMANCE_TO_BALANCE].power_delta);
-> +#endif
+> @@ -266,12 +296,108 @@ static ssize_t fw_reset_store(struct device *dev,
+>  	return count;
 >  }
 >  
->  static const char *state_as_str(unsigned int state)
-> @@ -262,6 +380,8 @@ static void amd_pmf_load_defaults_auto_mode(struct amd_pmf_dev *dev)
->  	/* set to initial default values */
->  	config_store.current_mode = AUTO_BALANCE;
->  	dev->socket_power_history_idx = -1;
+> +/* Size(8-byte words) of the log buffer. */
+> +#define RSH_SCRATCH_BUF_CTL_IDX_MASK	0x7f
 > +
-> +	amd_pmf_dump_auto_mode_defaults(&config_store);
->  }
->  
->  int amd_pmf_reset_amt(struct amd_pmf_dev *dev)
-> diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
-> index 4beb22a19466..35af7c18f600 100644
-> --- a/drivers/platform/x86/amd/pmf/cnqf.c
-> +++ b/drivers/platform/x86/amd/pmf/cnqf.c
-> @@ -13,6 +13,61 @@
->  
->  static struct cnqf_config config_store;
->  
-> +#ifdef CONFIG_AMD_PMF_DEBUG
-> +static const char *state_as_str_cnqf(unsigned int state)
+> +/* 100ms timeout */
+> +#define RSH_SCRATCH_BUF_POLL_TIMEOUT	100000
+> +
+> +static int mlxbf_rsh_log_sem_lock(void)
 > +{
-> +	switch (state) {
-> +	case APMF_CNQF_TURBO:
-> +		return "turbo";
-> +	case APMF_CNQF_PERFORMANCE:
-> +		return "performance";
-> +	case APMF_CNQF_BALANCE:
-> +		return "balance";
-> +	case APMF_CNQF_QUIET:
-> +		return "quiet";
-> +	default:
-> +		return "Unknown CnQF State";
-> +	}
+> +	unsigned long reg;
+> +
+> +	return readq_poll_timeout(mlxbf_rsh_semaphore, reg, !reg, 0,
+> +				  RSH_SCRATCH_BUF_POLL_TIMEOUT);
 > +}
 > +
-> +static void amd_pmf_cnqf_dump_defaults(struct apmf_dyn_slider_output *data, int idx)
+> +static void mlxbf_rsh_log_sem_unlock(void)
 > +{
-> +	int i;
-> +
-> +	pr_debug("Dynamic Slider %s Defaults - BEGIN\n", idx ? "DC" : "AC");
-> +	pr_debug("size: %u\n", data->size);
-> +	pr_debug("flags: 0x%x\n", data->flags);
-> +
-> +	/* Time constants */
-> +	pr_debug("t_perf_to_turbo: %u ms\n", data->t_perf_to_turbo);
-> +	pr_debug("t_balanced_to_perf: %u ms\n", data->t_balanced_to_perf);
-> +	pr_debug("t_quiet_to_balanced: %u ms\n", data->t_quiet_to_balanced);
-> +	pr_debug("t_balanced_to_quiet: %u ms\n", data->t_balanced_to_quiet);
-> +	pr_debug("t_perf_to_balanced: %u ms\n", data->t_perf_to_balanced);
-> +	pr_debug("t_turbo_to_perf: %u ms\n", data->t_turbo_to_perf);
-> +
-> +	for (i = 0 ; i < CNQF_MODE_MAX ; i++) {
-> +		pr_debug("pfloor_%s: %u mW\n", state_as_str_cnqf(i), data->ps[i].pfloor);
-> +		pr_debug("fppt_%s: %u mW\n", state_as_str_cnqf(i), data->ps[i].fppt);
-> +		pr_debug("sppt_%s: %u mW\n", state_as_str_cnqf(i), data->ps[i].sppt);
-> +		pr_debug("sppt_apuonly_%s: %u mW\n",
-> +			 state_as_str_cnqf(i), data->ps[i].sppt_apu_only);
-> +		pr_debug("spl_%s: %u mW\n", state_as_str_cnqf(i), data->ps[i].spl);
-> +		pr_debug("stt_minlimit_%s: %u mW\n",
-> +			 state_as_str_cnqf(i), data->ps[i].stt_min_limit);
-> +		pr_debug("stt_skintemp_apu_%s: %u C\n", state_as_str_cnqf(i),
-> +			 data->ps[i].stt_skintemp[STT_TEMP_APU]);
-> +		pr_debug("stt_skintemp_hs2_%s: %u C\n", state_as_str_cnqf(i),
-> +			 data->ps[i].stt_skintemp[STT_TEMP_HS2]);
-> +		pr_debug("fan_id_%s: %u\n", state_as_str_cnqf(i), data->ps[i].fan_id);
-> +	}
-> +
-> +	pr_debug("Dynamic Slider %s Defaults - END\n", idx ? "DC" : "AC");
-> +}
-> +#else
-> +static void amd_pmf_cnqf_dump_defaults(struct apmf_dyn_slider_output *data, int idx) {}
-> +#endif
-> +
->  static int amd_pmf_set_cnqf(struct amd_pmf_dev *dev, int src, int idx,
->  			    struct cnqf_config *table)
->  {
-> @@ -284,6 +339,7 @@ static int amd_pmf_load_defaults_cnqf(struct amd_pmf_dev *dev)
->  			return ret;
->  		}
->  
-> +		amd_pmf_cnqf_dump_defaults(&out, i);
->  		amd_pmf_update_mode_set(i, &out);
->  		amd_pmf_update_trans_data(i, &out);
->  		amd_pmf_update_power_threshold(i);
-> diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
-> index bed762d47a14..0a4d0549ea03 100644
-> --- a/drivers/platform/x86/amd/pmf/sps.c
-> +++ b/drivers/platform/x86/amd/pmf/sps.c
-> @@ -12,6 +12,60 @@
->  
->  static struct amd_pmf_static_slider_granular config_store;
->  
-> +#ifdef CONFIG_AMD_PMF_DEBUG
-> +const char *slider_as_str(unsigned int state)
-> +{
-> +	switch (state) {
-> +	case POWER_MODE_PERFORMANCE:
-> +		return "PERFORMANCE";
-> +	case POWER_MODE_BALANCED_POWER:
-> +		return "BALANCED_POWER";
-> +	case POWER_MODE_POWER_SAVER:
-> +		return "POWER_SAVER";
-> +	default:
-> +		return "Unknown Slider State";
-> +	}
+> +	writeq(0, mlxbf_rsh_semaphore);
 > +}
 > +
-> +const char *source_as_str(unsigned int state)
+> +static ssize_t rsh_log_store(struct device *dev,
+> +			     struct device_attribute *attr,
+> +			     const char *buf, size_t count)
 > +{
-> +	switch (state) {
-> +	case POWER_SOURCE_AC:
-> +		return "AC";
-> +	case POWER_SOURCE_DC:
-> +		return "DC";
-> +	default:
-> +		return "Unknown Power State";
-> +	}
-> +}
+> +	int rc, idx, num, len, level = MLXBF_RSH_LOG_INFO;
+> +	size_t size = count;
+> +	u64 data;
 > +
-> +static void amd_pmf_dump_sps_defaults(struct amd_pmf_static_slider_granular *data)
-> +{
-> +	int i, j;
+> +	if (!size)
+> +		return -EINVAL;
 > +
-> +	pr_debug("Static Slider Data - BEGIN\n");
+> +	if (!mlxbf_rsh_semaphore || !mlxbf_rsh_scratch_buf_ctl)
+> +		return -EOPNOTSUPP;
 > +
-> +	for (i = 0; i < POWER_SOURCE_MAX; i++) {
-> +		for (j = 0; j < POWER_MODE_MAX; j++) {
-> +			pr_debug("--- Source:%s Mode:%s ---\n", source_as_str(i), slider_as_str(j));
-> +			pr_debug("SPL: %u mW\n", data->prop[i][j].spl);
-> +			pr_debug("SPPT: %u mW\n", data->prop[i][j].sppt);
-> +			pr_debug("SPPT_ApuOnly: %u mW\n", data->prop[i][j].sppt_apu_only);
-> +			pr_debug("FPPT: %u mW\n", data->prop[i][j].fppt);
-> +			pr_debug("STTMinLimit: %u mW\n", data->prop[i][j].stt_min);
-> +			pr_debug("STT_SkinTempLimit_APU: %u C\n",
-> +				 data->prop[i][j].stt_skin_temp[STT_TEMP_APU]);
-> +			pr_debug("STT_SkinTempLimit_HS2: %u C\n",
-> +				 data->prop[i][j].stt_skin_temp[STT_TEMP_HS2]);
+> +	/* Ignore line break at the end. */
+> +	if (buf[size - 1] == '\n')
+> +		size--;
+> +
+> +	/* Check the message prefix. */
+> +	for (idx = 0; idx < ARRAY_SIZE(mlxbf_rsh_log_level); idx++) {
+> +		len = strlen(mlxbf_rsh_log_level[idx]);
+> +		if (len + 1 < size &&
+> +		    !strncmp(buf, mlxbf_rsh_log_level[idx], len)) {
+> +			buf += len;
+> +			size -= len;
+> +			level = idx;
+> +			break;
 > +		}
 > +	}
 > +
-> +	pr_debug("Static Slider Data - END\n");
-> +}
-> +#else
-> +static void amd_pmf_dump_sps_defaults(struct amd_pmf_static_slider_granular *data) {}
-> +#endif
+> +	/* Ignore leading spaces. */
+> +	while (size > 0 && buf[0] == ' ') {
+> +		size--;
+> +		buf++;
+> +	}
 > +
->  static void amd_pmf_load_defaults_sps(struct amd_pmf_dev *dev)
->  {
->  	struct apmf_static_slider_granular_output output;
-> @@ -36,6 +90,7 @@ static void amd_pmf_load_defaults_sps(struct amd_pmf_dev *dev)
->  			idx++;
->  		}
->  	}
-> +	amd_pmf_dump_sps_defaults(&config_store);
->  }
+> +	/* Take the semaphore. */
+> +	rc = mlxbf_rsh_log_sem_lock();
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Calculate how many words are available. */
+> +	idx = readq(mlxbf_rsh_scratch_buf_ctl);
+> +	num = min((int)DIV_ROUND_UP(size, sizeof(u64)),
+> +		  RSH_SCRATCH_BUF_CTL_IDX_MASK - idx - 1);
+> +	if (num <= 0)
+> +		goto done;
+> +
+> +	/* Write Header. */
+> +	data = FIELD_PREP(MLXBF_RSH_LOG_TYPE_MASK, MLXBF_RSH_LOG_TYPE_MSG);
+> +	data |= FIELD_PREP(MLXBF_RSH_LOG_LEN_MASK, num);
+> +	data |= FIELD_PREP(MLXBF_RSH_LOG_LEVEL_MASK, level);
+> +	writeq(data, mlxbf_rsh_scratch_buf_data);
+> +
+> +	/* Write message. */
+> +	for (idx = 0; idx < num && size > 0; idx++) {
+> +		if (size < sizeof(u64)) {
+> +			data = 0;
+> +			memcpy(&data, buf, size);
+> +			size = 0;
+> +		} else {
+> +			memcpy(&data, buf, sizeof(u64));
+> +			size -= sizeof(u64);
+> +			buf += sizeof(u64);
+> +		}
+> +		writeq(data, mlxbf_rsh_scratch_buf_data);
+> +	}
+> +
+> +done:
+> +	/* Release the semaphore. */
+> +	mlxbf_rsh_log_sem_unlock();
+> +
+> +	/* Ignore the rest if no more space. */
+> +	return count;
+> +}
+> +
+>  static DEVICE_ATTR_RW(post_reset_wdog);
+>  static DEVICE_ATTR_RW(reset_action);
+>  static DEVICE_ATTR_RW(second_reset_action);
+>  static DEVICE_ATTR_RO(lifecycle_state);
+>  static DEVICE_ATTR_RO(secure_boot_fuse_state);
+>  static DEVICE_ATTR_WO(fw_reset);
+> +static DEVICE_ATTR_WO(rsh_log);
 >  
->  void amd_pmf_update_slider(struct amd_pmf_dev *dev, bool op, int idx,
+>  static struct attribute *mlxbf_bootctl_attrs[] = {
+>  	&dev_attr_post_reset_wdog.attr,
+> @@ -280,6 +406,7 @@ static struct attribute *mlxbf_bootctl_attrs[] = {
+>  	&dev_attr_lifecycle_state.attr,
+>  	&dev_attr_secure_boot_fuse_state.attr,
+>  	&dev_attr_fw_reset.attr,
+> +	&dev_attr_rsh_log.attr,
+>  	NULL
+>  };
+>  
+> @@ -345,19 +472,32 @@ static bool mlxbf_bootctl_guid_match(const guid_t *guid,
+>  static int mlxbf_bootctl_probe(struct platform_device *pdev)
+>  {
+>  	struct arm_smccc_res res = { 0 };
+> +	void __iomem *reg;
+>  	guid_t guid;
+>  	int ret;
+>  
+> -	/* Get the resource of the bootfifo data register. */
+> +	/* Map the resource of the bootfifo data register. */
+>  	mlxbf_rsh_boot_data = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(mlxbf_rsh_boot_data))
+>  		return PTR_ERR(mlxbf_rsh_boot_data);
+>  
+> -	/* Get the resource of the bootfifo counter register. */
+> +	/* Map the resource of the bootfifo counter register. */
+>  	mlxbf_rsh_boot_cnt = devm_platform_ioremap_resource(pdev, 1);
+>  	if (IS_ERR(mlxbf_rsh_boot_cnt))
+>  		return PTR_ERR(mlxbf_rsh_boot_cnt);
+>  
+> +	/* Map the resource of the rshim semaphore register. */
+> +	mlxbf_rsh_semaphore = devm_platform_ioremap_resource(pdev, 2);
+> +	if (IS_ERR(mlxbf_rsh_semaphore))
+> +		return PTR_ERR(mlxbf_rsh_semaphore);
+> +
+> +	/* Map the resource of the scratch buffer (log) registers. */
+> +	reg = devm_platform_ioremap_resource(pdev, 3);
+> +	if (IS_ERR(reg))
+> +		return PTR_ERR(reg);
+> +	mlxbf_rsh_scratch_buf_ctl = reg + MLXBF_RSH_SCRATCH_BUF_CTL_OFF;
+> +	mlxbf_rsh_scratch_buf_data = reg + MLXBF_RSH_SCRATCH_BUF_DATA_OFF;
+> +
+>  	/* Ensure we have the UUID we expect for this service. */
+>  	arm_smccc_smc(MLXBF_BOOTCTL_SIP_SVC_UID, 0, 0, 0, 0, 0, 0, 0, &res);
+>  	guid_parse(mlxbf_bootctl_svc_uuid_str, &guid);
 
