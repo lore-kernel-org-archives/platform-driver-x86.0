@@ -2,96 +2,118 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD6EC77B75
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 13:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B81C7EE23
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 13:01:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242058AbjEONAN (ORCPT
+        id S242068AbjEONAr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 May 2023 09:00:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47294 "EHLO
+        Mon, 15 May 2023 09:00:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242066AbjEOM7q (ORCPT
+        with ESMTP id S242063AbjEONAQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 May 2023 08:59:46 -0400
+        Mon, 15 May 2023 09:00:16 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C226719A1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 05:58:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F5C1989
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 05:59:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684155533;
+        s=mimecast20190719; t=1684155563;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FWCSgHKgkfiwsZPIbDFMuCcNPnF6WGYEGag89qGrc3E=;
-        b=bLewAAVG5Cq28vKS90JAkFxet5TF7xFvP/wSgOOJ/PjQwsolSRKgTaJ65dscSbn/R2YAd/
-        1dpGYRjgdEd/JnhHfHPBaOeCb7d4a65di9te5/gdnbBmXkglytlS1r3B2JyOfqbaxQKDhV
-        Gq9vZHOhFUO7BmRF+Q9yX6KRBOq5l4E=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=vqEBUzcqW2zaL08JJXg8yT6HJLVMPb5pkFmhkM5O93I=;
+        b=AEIbooCNLxGokXKgaJCR6GX0dUY4zA+W/fgsYnB15h1a3mvVlic7j/YehRPQr2RqOM1XaK
+        5GIGBOfzA9MA/R3qVhnsijbWNZQSyQ/qv2zdoyZkXSm1sPJ28dFLL4Xc/8MNCXanDuU0rZ
+        Kwp0KG+SHejtOqUQnNqxVWQsTVXE8hU=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-266-BPgyQPCQPBeXWzIIuEKfiw-1; Mon, 15 May 2023 08:58:49 -0400
-X-MC-Unique: BPgyQPCQPBeXWzIIuEKfiw-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-50bd7555c6eso11280483a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 05:58:49 -0700 (PDT)
+ us-mta-472-s2D-OmWKMMibFrsStrB2ow-1; Mon, 15 May 2023 08:59:22 -0400
+X-MC-Unique: s2D-OmWKMMibFrsStrB2ow-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-94a355cf318so1493458966b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 05:59:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684155528; x=1686747528;
+        d=1e100.net; s=20221208; t=1684155561; x=1686747561;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FWCSgHKgkfiwsZPIbDFMuCcNPnF6WGYEGag89qGrc3E=;
-        b=N0yv/8qSBFlolyr5BvprcF4XGKC86pmsuz+gRoRx9fqrykesMO15TrDJX9815qv602
-         g69zsEIKZR/nbxJn1fnmx92G6iMb527DPDX/uUiyPJpm84tfHqejAy1ik1rOoI3OZzjz
-         JshOb3hnC8Y3iy5NO/cVnbLbtzpmlhiv5LrpuTjowDSvTCaRuBV0C0KetAbNC6DPFC1c
-         AFf6i2MWCKX93lN4CWX/DUGNzNybXFq/U2S68YqhltZ//OBjni3a8H+z6iKNe/RTI/49
-         oEwiBRWOhzAmzU2YsrzD3vT/LoXv/NbJXC7nbwUfTOBowtj/HR8tq8h81PVNnQ7F+/C+
-         YnPA==
-X-Gm-Message-State: AC+VfDwSxhX9HWSocMpO99C/K9uTZbJbYubRb2rReqWK01b+KapDX1VX
-        PQwEB2FHAruzls20TyQrTSfQ9d7kKkrAjxP//KovEevrLNtBlMmRXnN5hKkmyf/xpe+m4Rifcq8
-        NxpEx5nx7F4j5CwGvkzxoBB1zxEKAwUEpoQ==
-X-Received: by 2002:a17:907:31ca:b0:960:d28d:3368 with SMTP id xf10-20020a17090731ca00b00960d28d3368mr29751365ejb.60.1684155528691;
-        Mon, 15 May 2023 05:58:48 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6xkL6WGxU1o9yYr/28OLbSJCo+7UtLQGQNg33hogDZC56D+3LydUsY1jPyQc5CP9a5ic0ZGw==
-X-Received: by 2002:a17:907:31ca:b0:960:d28d:3368 with SMTP id xf10-20020a17090731ca00b00960d28d3368mr29751349ejb.60.1684155528335;
-        Mon, 15 May 2023 05:58:48 -0700 (PDT)
+        bh=vqEBUzcqW2zaL08JJXg8yT6HJLVMPb5pkFmhkM5O93I=;
+        b=OTjdAWFOSqX9fX4jmA1y2umpR8JPDsAy4Op53sc3JjSvgdu8Qek1TUMREHl2VUqG6f
+         mowb3PnZA3a+9hTGthyZsZVdFe7ZFYSeC7LgRHHcnyj5d5SF+TYJMby+uGW97m2xMqXY
+         EqianY55Fu4ic7/+hOvY5626//7GzF1+D4vXU8nMmf31mS1VfF2bEMiqCLONZPDbSTWa
+         P3600/w/cZ86SLvQiXv31RndjHFT2rYlx2zNYCngGOOn283tqj6ZqCRTZKt6u8i+69zx
+         aWbIoq7tIgl187H+9fvMyVM1hoHmO0YvjngQK4XzewWISgw8/n9dRfZJrjFeenxFMPQr
+         /7UA==
+X-Gm-Message-State: AC+VfDyeSOivgBXN78m00j6RfeunCKWLTV9DSZ2SsfA1UqjZTM9pkW8F
+        f9jragOPaSy98ZHjiQoc6L0cDwBCOomCCY1Y3D/6a9A9h/hl51Qb+e0PGe74wcWN0OxfS4KzxvG
+        UmOinPHfe3RjfqkgAPS76mCg7uZTz5c43rA==
+X-Received: by 2002:a17:907:628c:b0:94f:2a13:4e01 with SMTP id nd12-20020a170907628c00b0094f2a134e01mr30980278ejc.74.1684155560938;
+        Mon, 15 May 2023 05:59:20 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4nFh/l7mmNHU1QDXBRWAkGROxLSEb79749jtLAmfe6bPdMOixZYCIAnqULU6abqrbSrn0SEg==
+X-Received: by 2002:a17:907:628c:b0:94f:2a13:4e01 with SMTP id nd12-20020a170907628c00b0094f2a134e01mr30980261ejc.74.1684155560652;
+        Mon, 15 May 2023 05:59:20 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id l19-20020a170906939300b0094e7d196aa4sm9298799ejx.160.2023.05.15.05.58.47
+        by smtp.gmail.com with ESMTPSA id y24-20020aa7ccd8000000b0050da1edb2e4sm7207370edt.31.2023.05.15.05.59.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 May 2023 05:58:47 -0700 (PDT)
-Message-ID: <ffe8f013-b666-0e8b-af19-4eda14fbe928@redhat.com>
-Date:   Mon, 15 May 2023 14:58:46 +0200
+        Mon, 15 May 2023 05:59:20 -0700 (PDT)
+Message-ID: <fa49c7df-2f07-e8de-74e1-272a5d70ec47@redhat.com>
+Date:   Mon, 15 May 2023 14:59:19 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH] platform/x86: asus-wmi: Ignore WMI events with codes
- 0x7B, 0xC0
+Subject: Re: [PATCH] platform/mellanox: mlxbf-pmc: fix sscanf() error checking
 Content-Language: en-US
-To:     Alexandru Sorodoc <ealex95@gmail.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230512101517.47416-1-ealex95@gmail.com>
+To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     Shravan Kumar Ramani <shravankr@nvidia.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        platform-driver-x86@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <4ccdfd28-099b-40bf-8d77-ad4ea2e76b93@kili.mountain>
+ <b1187d38-a390-4934-1d30-f069a1a4a730@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230512101517.47416-1-ealex95@gmail.com>
+In-Reply-To: <b1187d38-a390-4934-1d30-f069a1a4a730@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 5/12/23 12:15, Alexandru Sorodoc wrote:
-> On ASUS GU604V the key 0x7B is issued when the charger is connected or
-> disconnected, and key 0xC0 is issued when an external display is
-> connected or disconnected.
+On 5/15/23 14:37, Ilpo Järvinen wrote:
+> On Mon, 15 May 2023, Dan Carpenter wrote:
 > 
-> This commit maps them to KE_IGNORE to slience kernel messages about
-> unknown keys, such as:
+>> The sscanf() function never returns negatives.  It returns the number of
+>> items successfully read.
+>>
+>> Fixes: 1a218d312e65 ("platform/mellanox: mlxbf-pmc: Add Mellanox BlueField PMC driver")
+>> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+>> ---
+>>  drivers/platform/mellanox/mlxbf-pmc.c | 5 ++---
+>>  1 file changed, 2 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+>> index c2c9b0d3244c..be967d797c28 100644
+>> --- a/drivers/platform/mellanox/mlxbf-pmc.c
+>> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
+>> @@ -1348,9 +1348,8 @@ static int mlxbf_pmc_map_counters(struct device *dev)
+>>  
+>>  	for (i = 0; i < pmc->total_blocks; ++i) {
+>>  		if (strstr(pmc->block_name[i], "tile")) {
+>> -			ret = sscanf(pmc->block_name[i], "tile%d", &tile_num);
+>> -			if (ret < 0)
+>> -				return ret;
+>> +			if (sscanf(pmc->block_name[i], "tile%d", &tile_num) != 1)
+>> +				return -EINVAL;
+>>  
+>>  			if (tile_num >= pmc->tile_count)
+>>  				continue;
 > 
->     kernel: asus_wmi: Unknown key code 0x7b
-> 
-> Signed-off-by: Alexandru Sorodoc <ealex95@gmail.com>
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
 Thank you for your patch, I've applied this patch to my fixes
 branch:
@@ -107,38 +129,4 @@ Regards,
 
 Hans
 
-
-> ---
-> I'm not sure what those keys events actually mean. I assume they are
-> some redundant notifications because no laptop functionality seems to
-> depend on them.
-> 
-> If there is anything I can check or investigate please let me know.
-> 
-> Thanks,
-> Alex
-> 
->  drivers/platform/x86/asus-nb-wmi.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index e2c9a68d12df..fdf7da06af30 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -555,6 +555,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
->  	{ KE_KEY, 0x71, { KEY_F13 } }, /* General-purpose button */
->  	{ KE_IGNORE, 0x79, },  /* Charger type dectection notification */
->  	{ KE_KEY, 0x7a, { KEY_ALS_TOGGLE } }, /* Ambient Light Sensor Toggle */
-> +	{ KE_IGNORE, 0x7B, }, /* Charger connect/disconnect notification */
->  	{ KE_KEY, 0x7c, { KEY_MICMUTE } },
->  	{ KE_KEY, 0x7D, { KEY_BLUETOOTH } }, /* Bluetooth Enable */
->  	{ KE_KEY, 0x7E, { KEY_BLUETOOTH } }, /* Bluetooth Disable */
-> @@ -584,6 +585,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
->  	{ KE_KEY, 0xAE, { KEY_FN_F5 } }, /* Fn+F5 fan mode on 2020+ */
->  	{ KE_KEY, 0xB3, { KEY_PROG4 } }, /* AURA */
->  	{ KE_KEY, 0xB5, { KEY_CALC } },
-> +	{ KE_IGNORE, 0xC0, }, /* External display connect/disconnect notification */
->  	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
->  	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
->  	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
 
