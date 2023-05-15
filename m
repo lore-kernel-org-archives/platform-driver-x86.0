@@ -2,79 +2,256 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F06DC7EE24
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 21:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967A1C77B75
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 22:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242789AbjEOVlm (ORCPT
+        id S245323AbjEOWCy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 May 2023 17:41:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36914 "EHLO
+        Mon, 15 May 2023 18:02:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245218AbjEOVll (ORCPT
+        with ESMTP id S245717AbjEOWCe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 May 2023 17:41:41 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEA3D618D;
-        Mon, 15 May 2023 14:41:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684186900; x=1715722900;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YT+jpmKKG29CORJ7DZIqHysBrg87OzibafnqwKC9Ue4=;
-  b=Q3yUqvqQJidAFvNpjgOWVZUoE6qc+cmObM04KPF0nivZzUM0qgGlRJwr
-   1zI1zdyCZM4GRVL/ME9hacVx6HIbsYFZvjcDZz4V+OBPwjUN+gS8jGx0o
-   +L13Esl12taOFBqj1IHQgO2Ao7FJj3435l85xycD3BY4Ev/K+xqXXtZq4
-   ykj+JVcJoZolUcW2MztFIegubmfl7p2cxaKWk38R/KmdwVnJRxKqJccOm
-   44NQsUMeIlsPJ+KDVfNmZxFUOJEKDFSYdbjvrFit720CEPz1z3t8X+WPx
-   umJyDKS8S/kbYK5fMtZ04CmWTNMudH3rFhOd6jKdnjLOX3TmpKc42vo1j
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10711"; a="350155543"
-X-IronPort-AV: E=Sophos;i="5.99,277,1677571200"; 
-   d="scan'208";a="350155543"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2023 14:41:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10711"; a="695184571"
-X-IronPort-AV: E=Sophos;i="5.99,277,1677571200"; 
-   d="scan'208";a="695184571"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 15 May 2023 14:41:32 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pyfwg-000753-2M;
-        Tue, 16 May 2023 00:41:30 +0300
-Date:   Tue, 16 May 2023 00:41:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] leds: simatic-ipc-leds-gpio: split up into
- multiple drivers
-Message-ID: <ZGKnCmPbAw17R+sn@smile.fi.intel.com>
-References: <20230515150352.30925-1-henning.schild@siemens.com>
- <20230515150352.30925-3-henning.schild@siemens.com>
+        Mon, 15 May 2023 18:02:34 -0400
+Received: from mail-oo1-xc2e.google.com (mail-oo1-xc2e.google.com [IPv6:2607:f8b0:4864:20::c2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40FD711B73;
+        Mon, 15 May 2023 15:01:14 -0700 (PDT)
+Received: by mail-oo1-xc2e.google.com with SMTP id 006d021491bc7-5527167350bso1451447eaf.3;
+        Mon, 15 May 2023 15:01:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684188063; x=1686780063;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RNocRGH7KyBL79y9bxMlfFDjdi7MvVlxTfLw5Q7Lhis=;
+        b=ZchuJoa5tXLNgjcL+mq2WFqz3zKm5JHmm0jmuXGWA1NX+Dv0DG3vT4esC7u55YnSdt
+         O3uE5cBEVvVZV1yzbYq4WE5wBfBsfP3I4PgGyCcryn2LuQsVxNcg3CcrAXCtHYPRj1lA
+         dc41sIGk7gRfBqbycsQ2qQOgpeuX23+km2OWRMFL0gis6Q4OVASNlTvkLIBgJomV7vo4
+         dZAfvMfNX4o1if0YrolLIQ24Ku9mCJNGu3NEBcu5YhIeoRNfIvlgV/hhuWm7J0JTGJqs
+         d0WxbU8RAuRl5y8Q5fg4YrPZ6U+IrNVG71w9RSFwi409UDuEavhg/pC0u+xg6MKnxomt
+         D2WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684188063; x=1686780063;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RNocRGH7KyBL79y9bxMlfFDjdi7MvVlxTfLw5Q7Lhis=;
+        b=N5caANpRcoX9Hninj95EQz1+8TtYEFt0EcRT25L+JpypwzcMCIr/0Bqgg2GorsaYmR
+         +BEIEXuTVkfLapCho/H3kv7hg71LEQyYl75h+eA/BxHEkm6THiGmEv+JdWncPgRvVbIk
+         MwuTtdkNnku+wbiJ24cixqxWekWuXj2ZGk6VGhFKWA9Hw0aIAluzCXm0SSxAaEA1vdiA
+         BgxMMPeDaYV8wZX0XKz1arY7PNZQrs8GOOHocnt8w2ZPg0t2xEeiP1Fb1WWyGcuR82Un
+         HNTCMwY7mvwiZSWI8Hd0YdDbfYE2MXun7MSn0ZXwEqve0gsZTUwnXG0IXJKHms+FyPsi
+         /VUQ==
+X-Gm-Message-State: AC+VfDy/vh90PQPoNwLZXjYF9ZKDZh0oT2yrIpco5nJbEdIPvD0pyf5+
+        DzRpGKw1f2fex9JuW+6DuG230LShJfw=
+X-Google-Smtp-Source: ACHHUZ7a+9PbLeurLyepHoYdXaQQHUdFISBWhqlSvybr38hvoO3xGDsIbXt5fedVPAzxfsOIRUIKgg==
+X-Received: by 2002:a4a:7606:0:b0:542:5d35:12a0 with SMTP id t6-20020a4a7606000000b005425d3512a0mr10958402ooc.3.1684188063069;
+        Mon, 15 May 2023 15:01:03 -0700 (PDT)
+Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:5391:4539:59c2:4092])
+        by smtp.gmail.com with ESMTPSA id i1-20020aca0c41000000b0038e07fe2c97sm5265148oiy.42.2023.05.15.15.01.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 May 2023 15:01:02 -0700 (PDT)
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
+        ilpo.jarvinen@linux.intel.com
+Subject: [PATCH v13 00/13] hp-bioscfg driver
+Date:   Mon, 15 May 2023 17:00:48 -0500
+Message-Id: <20230515220101.39794-1-jorge.lopez2@hp.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230515150352.30925-3-henning.schild@siemens.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, May 15, 2023 at 05:03:51PM +0200, Henning Schild wrote:
-> In order to clearly describe the dependencies between the GPIO
-> controller drivers and the users the driver is split up into a core,
-> two drivers and a common header.
+HP BIOS Configuration driver purpose is to provide a driver supporting
+the latest sysfs class firmware attributes framework allowing the user
+to change BIOS settings and security solutions on HP Inc.’s commercial
+notebooks.
 
-AFAIU the GPIO lookup tables need a terminator entry.
+Many features of HP Commercial notebooks can be managed using Windows
+Management Instrumentation (WMI). WMI is an implementation of Web-Based
+Enterprise Management (WBEM) that provides a standards-based interface
+for changing and monitoring system settings. HP BIOSCFG driver provides
+a native Linux solution and the exposed features facilitates the
+migration to Linux environments.
+
+The Linux security features to be provided in hp-bioscfg driver enables
+managing the BIOS settings and security solutions via sysfs, a virtual
+filesystem that can be used by user-mode applications. The new
+documentation cover HP-specific firmware sysfs attributes such Secure
+Platform Management and Sure Start. Each section provides security
+feature description and identifies sysfs directories and files exposed
+by the driver.
+
+Many HP Commercial notebooks include a feature called Secure Platform
+Management (SPM), which replaces older password-based BIOS settings
+management with public key cryptography. PC secure product management
+begins when a target system is provisioned with cryptographic keys
+that are used to ensure the integrity of communications between system
+management utilities and the BIOS.
+
+HP Commercial notebooks have several BIOS settings that control its
+behaviour and capabilities, many of which are related to security.
+To prevent unauthorized changes to these settings, the system can
+be configured to use a cryptographic signature-based authorization
+string that the BIOS will use to verify authorization to modify the
+setting.
+
+Linux Security components are under development and not published yet.
+The only linux component is the driver (hp bioscfg) at this time.
+Other published security components are under Windows.
+
+Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+
+---
+Based on the latest platform-drivers-x86.git/for-next
+
+History
+
+Version 13
+	Only patches marked [update] changed between version 12 and 13
+	Sorted commit patches alphabetically
+	Rename ordered-attributes to order-list-attributes
+
+	Patches
+	 Documentation 			[update]
+	 biosattr-interface 		[update]
+	 bioscfg 			[update]
+	 bioscfg-h			[update]
+	 enum-attributes 		[update]
+	 int-attributes 		[update]
+	 order-list-attributes 		[update]
+	 passwdattr-interface 		[update]
+	 spmobj-attributes 		[update]
+	 string-attributes 		[update]
+	 surestart-attributes 		[update] 
+	 Makefile ../hp/Makefile ../hp/Kconfig 
+	 MAINTAINERS
+
+Version 12
+	Only patches marked [update] changed between version 11 and 12
+
+	Patches
+	 Documentation 			[update]
+	 biosattr-interface 		[update]
+	 bioscfg 			[update]
+	 int-attributes 		[update]
+	 ordered-attributes 		[update]
+	 passwdobj-attributes 	[deleted]
+	 string-attributes 		[update]
+	 bioscfg-h 			[update]
+	 enum-attributes 		[update]
+	 passwdattr-interface 		[update]
+	 spmobj-attributes 		[update]
+	 surestart-attributes 		[update] 
+	 Makefile ../hp/Makefile ../hp/Kconfig [update]
+	 MAINTAINERS
+
+
+Version 11
+	Only patches marked [update] changed between version 10 and 11
+
+	Patches
+	 Documentation
+	 biosattr-interface 		[update]
+	 bioscfg
+	 int-attributes
+	 ordered-attributes
+	 passwdobj-attributes 		[update]
+	 string-attributes
+	 bioscfg-h
+	 enum-attributes
+	 passwdattr-interface
+	 spmobj-attributes 		[update]
+	 surestart-attributes 		[update]
+	 Makefile ../hp/Makefile ../hp/Kconfig
+	 MAINTAINERS
+
+Version 10
+	Break down changes to single files per patch
+	Removed SPM/statusbin support
+	Patches
+	 Documentation
+	 biosattr-interface
+	 bioscfg
+	 int-attributes
+	 ordered-attributes
+	 passwdobj-attributes
+	 string-attributes
+	 bioscfg-h
+	 enum-attributes
+	 passwdattr-interface
+	 spmobj-attributes
+	 surestart-attributes
+	 Makefile ../hp/Makefile ../hp/Kconfig
+	 MAINTAINERS
+
+Version 9
+	Includes only sysfs-class-firmware-attributes documentation
+
+Version 8
+	Includes only sysfs-class-firmware-attributes documentation
+
+Version 7
+	Includes only sysfs-class-firmware-attributes documentation
+
+Version 6
+	Breaks down the changes into 4 patches
+	SureAdmin-attributes was removed
+
+Version 5
+	Remove version 4 patch 1
+	Address review changes proposed in Version 4
+	Reorganize all patches number and file order
+
+
+
+
+Jorge Lopez (13):
+  hp-bioscfg: Documentation
+  hp-bioscfg: bioscfg-h
+  hp-bioscfg: bioscfg
+  hp-bioscfg: biosattr-interface
+  hp-bioscfg: enum-attributes
+  hp-bioscfg: int-attributes
+  hp-bioscfg: order-list-attributes
+  hp-bioscfg: passwdobj-attributes
+  hp-bioscfg: spmobj-attributes
+  hp-bioscfg: string-attributes
+  hp-bioscfg: surestart-attributes
+  hp-bioscfg: Makefile
+  hp-bioscfg: MAINTAINERS
+
+ .../testing/sysfs-class-firmware-attributes   | 102 +-
+ MAINTAINERS                                   |   6 +
+ drivers/platform/x86/hp/Kconfig               |  16 +
+ drivers/platform/x86/hp/Makefile              |   1 +
+ drivers/platform/x86/hp/hp-bioscfg/Makefile   |  11 +
+ .../x86/hp/hp-bioscfg/biosattr-interface.c    | 318 ++++++
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  | 988 ++++++++++++++++++
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.h  | 486 +++++++++
+ .../x86/hp/hp-bioscfg/enum-attributes.c       | 465 +++++++++
+ .../x86/hp/hp-bioscfg/int-attributes.c        | 440 ++++++++
+ .../x86/hp/hp-bioscfg/order-list-attributes.c | 454 ++++++++
+ .../x86/hp/hp-bioscfg/passwdobj-attributes.c  | 540 ++++++++++
+ .../x86/hp/hp-bioscfg/spmobj-attributes.c     | 389 +++++++
+ .../x86/hp/hp-bioscfg/string-attributes.c     | 404 +++++++
+ .../x86/hp/hp-bioscfg/surestart-attributes.c  | 132 +++
+ 15 files changed, 4750 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/Makefile
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
