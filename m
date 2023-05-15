@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF57C7EE2C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 22:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4B4C7EE25
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 22:02:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245643AbjEOWC5 (ORCPT
+        id S1343492AbjEOWC6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 May 2023 18:02:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44674 "EHLO
+        Mon, 15 May 2023 18:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245650AbjEOWCk (ORCPT
+        with ESMTP id S245651AbjEOWCk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Mon, 15 May 2023 18:02:40 -0400
-Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C861711576;
-        Mon, 15 May 2023 15:01:20 -0700 (PDT)
-Received: by mail-ot1-x32c.google.com with SMTP id 46e09a7af769-6ab074ef787so3896868a34.0;
-        Mon, 15 May 2023 15:01:20 -0700 (PDT)
+Received: from mail-oo1-xc34.google.com (mail-oo1-xc34.google.com [IPv6:2607:f8b0:4864:20::c34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C0A111B6D;
+        Mon, 15 May 2023 15:01:22 -0700 (PDT)
+Received: by mail-oo1-xc34.google.com with SMTP id 006d021491bc7-54f83997f10so4918653eaf.1;
+        Mon, 15 May 2023 15:01:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684188066; x=1686780066;
+        d=gmail.com; s=20221208; t=1684188068; x=1686780068;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xReCK6kqZftID/I9QKf+JSAqdshCaBnkUU7jcVqmAtk=;
-        b=T6zDazF2qOkkPNdj8PBZGd2vOnNP4DPjOs5ERFW8/XuTtFEiPNnS3GHmCKuSRIyLCg
-         mji6G5G9KtiEiJ8R+2SpB1VEL1cow/tsZGf55T6B5gW3W3PzEOVNpKr48yipGxEMVc6A
-         wcWvo+bSlZhrAQxNJojsFtbgz6nYrtTMedASR07MDhlvd2a8vioTFRXttPUZYiwWbwgv
-         0gx5EUCR/8UTok7MZEMAvRkKXIKMu+3Z2kzDrNaaB//6xjC786wVC7j9YIwVokA5mJsS
-         zb/k03ORaicObptUd4Jl45QlszHBhKrGrjH3GUHw+f591NQ5CHYJwsu6azjA/9h5Rioi
-         S8fQ==
+        bh=yu54r7N7LEeOXWN2Jux2IdWU044d6aZfC2B6oJJ+MdM=;
+        b=mw+7Unb8bT4FJ42GBnPVaY7W2spFQU+cgHwoO8PrBs69v19Eu8gs35QOYJJ7l82wiq
+         E1zAEzmqZWlQBdeoPRCPPb9N/VnOjRmqfE+PS57I0lhwNsVTeig+u1RgNTU7OVWzkzI8
+         WtxOjfo8rvQ3eZ6RoNr8TzHDpaF9p3x4J7d4/PI7TOxX4ujf4G3spLm8yF8pwUXDNmrM
+         7PBMYun1KSYm09LQZXSgBMXDmf7RiaG0Hps76SboO/ZHaSE0O06jEc0krWLZ8ShxsT8z
+         WRgvi3JaKismNSPB5wtYy1Z3jRqrE5yyD/vw+CrQD0r5t38QnFgd1ZZMQpNavpE4ctm5
+         otzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684188066; x=1686780066;
+        d=1e100.net; s=20221208; t=1684188068; x=1686780068;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xReCK6kqZftID/I9QKf+JSAqdshCaBnkUU7jcVqmAtk=;
-        b=ELmFbQK1U2/yUOIK2SOJz4j4A3D6PisAPcOQ65KG8iYzo/bkHfs63RARRrQcRZGJlk
-         qIog7Fay4gmcSY43MI5RiPS/mLV91TFKQBwCSjFusMcfyW2r9u/zJ5pjzL6DD/x6R0Lf
-         +xMNFCm84snYtN2RUPaCK3sxDhjTrpy1SlqZFdczQ8lkiwl5fe+bJz62qTAMimRv9rxF
-         fWdXYwrkEGVxw5iCkf4qLcprkkEFEAzGtWLAFekiOjImc+lI2BUlxaSkkLxKDajaOFN3
-         6m6nw1pJbIWyjgJE2h6O/0cz+W1gPKLWjiKM0ko60Ar8F512IuI+DhxPyVeVAfojFm/t
-         dx6w==
-X-Gm-Message-State: AC+VfDwO9XVFSe3XeV7fMESBFxM2VNHTaBqm3HK2Kgw9ABrm6mrxgdy5
-        O7CWV+qCwns/eWIp/cjXGlw=
-X-Google-Smtp-Source: ACHHUZ5zgi1OShro6NroQvuZne14PkTS01hOlKjtN9aunq/AzTG04do7K+rlG8vRvyfjUUCEjqCUqA==
-X-Received: by 2002:a05:6808:11:b0:38c:bb9:e340 with SMTP id u17-20020a056808001100b0038c0bb9e340mr10040537oic.37.1684188065394;
-        Mon, 15 May 2023 15:01:05 -0700 (PDT)
+        bh=yu54r7N7LEeOXWN2Jux2IdWU044d6aZfC2B6oJJ+MdM=;
+        b=I9yyDtjCEz/I+sNdEgXWzkrbkDaJst+a4NpXc6ajbAxFVJ2noaylZn6XaW1XFkq84w
+         d5PMf5MG1tpmtfPQotZCAOs25LXfNwg74PTb9nB+w0cEHTPRd1tRaOwoHVuDcAaE701a
+         NoC8WsYuEkP+YM+jns0lChMbN7QN5fShf558bMwuz9Uw25Ye8wTlqESyhJfvqd+mNKni
+         BxwrBIDho0NOH+RFgcjADPhaQIHTfhAo3Jf8ODG8P5O+RFVc5Zzp2KeM8gI62ljGE5Ln
+         Nr0aasH1+FeGFJLyVFxz+5TjQRIyVIl8RYI6O2uwUUxFGlZ4BDxPcJX39OVJf6nORvyu
+         1CtQ==
+X-Gm-Message-State: AC+VfDxsdyQvVz4t+IxL5hmNhLbyoXtxJLupjntR5lMU8pl12NS6qeOj
+        C7txFfbHeyjI4FmYW0DGSaj1yE9gRvg=
+X-Google-Smtp-Source: ACHHUZ6/4wRb+afjoi/7yskrUlXQ5x5xp0qSxSUAH/i6yKqcUXV7iqzT3wZZsG3RY2iM1fMBxQj+Dw==
+X-Received: by 2002:a05:6808:150c:b0:395:1c40:64c6 with SMTP id u12-20020a056808150c00b003951c4064c6mr6800299oiw.37.1684188067611;
+        Mon, 15 May 2023 15:01:07 -0700 (PDT)
 Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:5391:4539:59c2:4092])
-        by smtp.gmail.com with ESMTPSA id i1-20020aca0c41000000b0038e07fe2c97sm5265148oiy.42.2023.05.15.15.01.04
+        by smtp.gmail.com with ESMTPSA id i1-20020aca0c41000000b0038e07fe2c97sm5265148oiy.42.2023.05.15.15.01.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 May 2023 15:01:05 -0700 (PDT)
+        Mon, 15 May 2023 15:01:07 -0700 (PDT)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de,
         ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v13 02/13] hp-bioscfg: bioscfg-h
-Date:   Mon, 15 May 2023 17:00:50 -0500
-Message-Id: <20230515220101.39794-3-jorge.lopez2@hp.com>
+Subject: [PATCH v13 04/13] hp-bioscfg: biosattr-interface
+Date:   Mon, 15 May 2023 17:00:52 -0500
+Message-Id: <20230515220101.39794-5-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230515220101.39794-1-jorge.lopez2@hp.com>
 References: <20230515220101.39794-1-jorge.lopez2@hp.com>
@@ -112,502 +112,334 @@ Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 ---
 Based on the latest platform-drivers-x86.git/for-next
 ---
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.h | 486 +++++++++++++++++++
- 1 file changed, 486 insertions(+)
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+ .../x86/hp/hp-bioscfg/biosattr-interface.c    | 318 ++++++++++++++++++
+ 1 file changed, 318 insertions(+)
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c b/drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
 new file mode 100644
-index 000000000000..3a3b24f766d2
+index 000000000000..fa95da03de19
 --- /dev/null
-+++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
-@@ -0,0 +1,486 @@
-+/* SPDX-License-Identifier: GPL-2.0
++++ b/drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
+@@ -0,0 +1,318 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Functions corresponding to methods under BIOS interface GUID
++ * for use with hp-bioscfg driver.
 + *
-+ * Definitions for kernel modules using hp_bioscfg driver
-+ *
-+ *  Copyright (c) 2022 HP Development Company, L.P.
++ *  Copyright (c) 2022 Hewlett-Packard Inc.
 + */
 +
-+#ifndef _HP_BIOSCFG_H_
-+#define _HP_BIOSCFG_H_
-+
 +#include <linux/wmi.h>
-+#include <linux/types.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/capability.h>
-+#include <linux/nls.h>
++#include "bioscfg.h"
 +
-+#define DRIVER_NAME		"hp-bioscfg"
-+
-+#define MAX_BUFF_SIZE		512
-+#define MAX_KEY_MOD_SIZE	256
-+#define MAX_PASSWD_SIZE		64
-+#define MAX_PREREQUISITES_SIZE	20
-+#define MAX_REQ_ELEM_SIZE	128
-+#define MAX_VALUES_SIZE		16
-+#define MAX_ENCODINGS_SIZE	16
-+#define MAX_ELEMENTS_SIZE	16
-+
-+#define SPM_STR_DESC		"Secure Platform Management"
-+#define SPM_STR			"SPM"
-+#define SURE_START_DESC		"Sure Start"
-+#define SURE_START_STR		"Sure_Start"
-+#define SETUP_PASSWD		"Setup Password"
-+#define POWER_ON_PASSWD		"Power-On Password"
-+
-+#define LANG_CODE_STR		"en_US.UTF-8"
-+#define SCHEDULE_POWER_ON	"Scheduled Power-On"
-+
-+#define COMMA_SEP		","
-+#define SEMICOLON_SEP		";"
-+
-+/* Sure Admin Functions */
-+
-+#define UTF_PREFIX		"<utf-16/>"
-+#define BEAM_PREFIX		"<BEAM/>"
-+
-+enum mechanism_values {
-+	PASSWORD		= 0x00,
-+	SIGNING_KEY		= 0x01,
-+	ENDORSEMENT_KEY		= 0x02,
++/*
++ * struct bios_args buffer is dynamically allocated.  New WMI command types
++ * were introduced that exceeds 128-byte data size.  Changes to handle
++ * the data size allocation scheme were kept in hp_wmi_perform_query function.
++ */
++struct bios_args {
++	u32 signature;
++	u32 command;
++	u32 commandtype;
++	u32 datasize;
++	u8 data[];
 +};
 +
-+#define BIOS_ADMIN		"bios-admin"
-+#define POWER_ON		"power-on"
-+#define BIOS_SPM		"enhanced-bios-auth"
++/**
++ * hp_set_attribute
++ *
++ * @a_name: The attribute name
++ * @a_value: The attribute value
++ *
++ * Sets an attribute to new value
++ *
++ * Returns zero on success
++ *	-ENODEV if device is not found
++ *	-EINVAL if the instance of 'Setup Admin' password is not found.
++ *	-ENOMEM unable to allocate memory
++ */
++int hp_set_attribute(const char *a_name, const char *a_value)
++{
++	int security_area_size;
++	int a_name_size, a_value_size;
++	u16 *buffer = NULL;
++	u16 *start;
++	int  buffer_size, instance, ret;
++	char *auth_token_choice;
 +
-+#define PASSWD_MECHANISM_TYPES "password"
++	mutex_lock(&bioscfg_drv.mutex);
++	if (!bioscfg_drv.bios_attr_wdev) {
++		ret = -ENODEV;
++		goto out_set_attribute;
++	}
 +
-+#define HP_WMI_BIOS_GUID		"5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
++	instance = hp_get_password_instance_for_type(SETUP_PASSWD);
++	if (instance < 0) {
++		ret = -EINVAL;
++		goto out_set_attribute;
++	}
 +
-+#define HP_WMI_BIOS_STRING_GUID		"988D08E3-68F4-4c35-AF3E-6A1B8106F83C"
-+#define HP_WMI_BIOS_INTEGER_GUID	"8232DE3D-663D-4327-A8F4-E293ADB9BF05"
-+#define HP_WMI_BIOS_ENUMERATION_GUID	"2D114B49-2DFB-4130-B8FE-4A3C09E75133"
-+#define HP_WMI_BIOS_ORDERED_LIST_GUID	"14EA9746-CE1F-4098-A0E0-7045CB4DA745"
-+#define HP_WMI_BIOS_PASSWORD_GUID	"322F2028-0F84-4901-988E-015176049E2D"
-+#define HP_WMI_SET_BIOS_SETTING_GUID	"1F4C91EB-DC5C-460b-951D-C7CB9B4B8D5E"
++	/* Select which auth token to use; password or [auth token] */
++	if (bioscfg_drv.spm_data.auth_token)
++		auth_token_choice = bioscfg_drv.spm_data.auth_token;
++	else
++		auth_token_choice = bioscfg_drv.password_data[instance].current_password;
 +
-+enum hp_wmi_spm_commandtype {
-+	HPWMI_SECUREPLATFORM_GET_STATE  = 0x10,
-+	HPWMI_SECUREPLATFORM_SET_KEK	= 0x11,
-+	HPWMI_SECUREPLATFORM_SET_SK	= 0x12,
-+};
++	a_name_size = hp_calculate_string_buffer(a_name);
++	a_value_size = hp_calculate_string_buffer(a_value);
++	security_area_size = hp_calculate_security_buffer(auth_token_choice);
++	buffer_size = a_name_size + a_value_size + security_area_size;
 +
-+enum hp_wmi_surestart_commandtype {
-+	HPWMI_SURESTART_GET_LOG_COUNT	= 0x01,
-+	HPWMI_SURESTART_GET_LOG		= 0x02,
-+};
++	buffer = kmalloc(buffer_size + 1, GFP_KERNEL);
++	if (!buffer) {
++		ret = -ENOMEM;
++		goto out_set_attribute;
++	}
 +
-+enum hp_wmi_command {
-+	HPWMI_READ		= 0x01,
-+	HPWMI_WRITE		= 0x02,
-+	HPWMI_ODM		= 0x03,
-+	HPWMI_SURESTART		= 0x20006,
-+	HPWMI_GM		= 0x20008,
-+	HPWMI_SECUREPLATFORM	= 0x20010,
-+};
++	/* build variables to set */
++	start = buffer;
++	start = hp_ascii_to_utf16_unicode(start, a_name);
++	if (!start) {
++		ret = -EINVAL;
++		goto out_set_attribute;
++	}
 +
-+struct bios_return {
-+	u32 sigpass;
-+	u32 return_code;
-+};
++	start = hp_ascii_to_utf16_unicode(start, a_value);
++	if (!start) {
++		ret = -EINVAL;
++		goto out_set_attribute;
++	}
 +
-+enum wmi_error_values {
-+	SUCCESS				= 0x00,
-+	CMD_FAILED			= 0x01,
-+	INVALID_SIGN			= 0x02,
-+	INVALID_CMD_VALUE		= 0x03,
-+	INVALID_CMD_TYPE		= 0x04,
-+	INVALID_DATA_SIZE		= 0x05,
-+	INVALID_CMD_PARAM		= 0x06,
-+	ENCRYP_CMD_REQUIRED		= 0x07,
-+	NO_SECURE_SESSION		= 0x08,
-+	SECURE_SESSION_FOUND		= 0x09,
-+	SECURE_SESSION_FAILED		= 0x0A,
-+	AUTH_FAILED			= 0x0B,
-+	INVALID_BIOS_AUTH		= 0x0E,
-+	NONCE_DID_NOT_MATCH		= 0x18,
-+	GENERIC_ERROR			= 0x1C,
-+	BIOS_ADMIN_POLICY_NOT_MET	= 0x28,
-+	BIOS_ADMIN_NOT_SET		= 0x38,
-+	P21_NO_PROVISIONED		= 0x1000,
-+	P21_PROVISION_IN_PROGRESS	= 0x1001,
-+	P21_IN_USE			= 0x1002,
-+	HEP_NOT_ACTIVE			= 0x1004,
-+	HEP_ALREADY_SET			= 0x1006,
-+	HEP_CHECK_STATE			= 0x1007,
-+};
++	ret = hp_populate_security_buffer(start, auth_token_choice);
++	if (ret < 0)
++		goto out_set_attribute;
 +
-+struct common_data {
-+	u8 display_name[MAX_BUFF_SIZE];
-+	u8 path[MAX_BUFF_SIZE];
-+	u32 is_readonly;
-+	u32 display_in_ui;
-+	u32 requires_physical_presence;
-+	u32 sequence;
-+	u32 prerequisites_size;
-+	u8 prerequisites[MAX_PREREQUISITES_SIZE][MAX_BUFF_SIZE];
-+	u32 security_level;
-+};
++	ret = hp_wmi_set_bios_setting(buffer, buffer_size);
 +
-+struct string_data {
-+	struct common_data common;
-+	struct kobject *attr_name_kobj;
-+	u8 current_value[MAX_BUFF_SIZE];
-+	u8 new_value[MAX_BUFF_SIZE];
-+	u32 min_length;
-+	u32 max_length;
-+};
++out_set_attribute:
++	kfree(buffer);
++	mutex_unlock(&bioscfg_drv.mutex);
++	return ret;
++}
 +
-+struct integer_data {
-+	struct common_data common;
-+	struct kobject *attr_name_kobj;
-+	u32 current_value;
-+	u32 new_value;
-+	u32 lower_bound;
-+	u32 upper_bound;
-+	u32 scalar_increment;
-+};
++/**
++ * hp_wmi_perform_query
++ *
++ * @query:	The commandtype (enum hp_wmi_commandtype)
++ * @command:	The command (enum hp_wmi_command)
++ * @buffer:	Buffer used as input and/or output
++ * @insize:	Size of input buffer
++ * @outsize:	Size of output buffer
++ *
++ * returns zero on success
++ *         an HP WMI query specific error code (which is positive)
++ *         -EINVAL if the query was not successful at all
++ *         -EINVAL if the output buffer size exceeds buffersize
++ *
++ * Note: The buffersize must at least be the maximum of the input and output
++ *       size. E.g. Battery info query is defined to have 1 byte input
++ *       and 128 byte output. The caller would do:
++ *       buffer = kzalloc(128, GFP_KERNEL);
++ *       ret = hp_wmi_perform_query(HPWMI_BATTERY_QUERY, HPWMI_READ,
++ *				    buffer, 1, 128)
++ */
++int hp_wmi_perform_query(int query, enum hp_wmi_command command, void *buffer,
++			 u32 insize, u32 outsize)
++{
++	struct acpi_buffer input, output = { ACPI_ALLOCATE_BUFFER, NULL };
++	struct bios_return *bios_return;
++	union acpi_object *obj = NULL;
++	struct bios_args *args = NULL;
++	u32 mid, actual_outsize, ret;
++	size_t bios_args_size;
 +
-+struct enumeration_data {
-+	struct common_data common;
-+	struct kobject *attr_name_kobj;
-+	u8 current_value[MAX_BUFF_SIZE];
-+	u8 new_value[MAX_BUFF_SIZE];
-+	u32 possible_values_size;
-+	u8 possible_values[MAX_VALUES_SIZE][MAX_BUFF_SIZE];
-+};
++	mid = hp_encode_outsize_for_pvsz(outsize);
++	if (WARN_ON(mid < 0))
++		return mid;
 +
-+struct ordered_list_data {
-+	struct common_data common;
-+	struct kobject *attr_name_kobj;
-+	u8 current_value[MAX_BUFF_SIZE];
-+	u8 new_value[MAX_BUFF_SIZE];
-+	u32 elements_size;
-+	u8 elements[MAX_ELEMENTS_SIZE][MAX_BUFF_SIZE];
-+};
++	bios_args_size = struct_size(args, data, insize);
++	args = kmalloc(bios_args_size, GFP_KERNEL);
++	if (!args)
++		return -ENOMEM;
 +
-+struct password_data {
-+	struct common_data common;
-+	struct kobject *attr_name_kobj;
-+	u8 current_password[MAX_PASSWD_SIZE];
-+	u8 new_password[MAX_PASSWD_SIZE];
-+	u32 min_password_length;
-+	u32 max_password_length;
-+	u32 encodings_size;
-+	u8 encodings[MAX_ENCODINGS_SIZE][MAX_BUFF_SIZE];
-+	bool is_enabled;
++	input.length = bios_args_size;
++	input.pointer = args;
++
++	/* BIOS expects 'SECU' in hex as the signature value*/
++	args->signature = 0x55434553;
++	args->command = command;
++	args->commandtype = query;
++	args->datasize = insize;
++	memcpy(args->data, buffer, flex_array_size(args, data, insize));
++
++	ret = wmi_evaluate_method(HP_WMI_BIOS_GUID, 0, mid, &input, &output);
++	if (ret)
++		goto out_free;
++
++	obj = output.pointer;
++	if (!obj) {
++		ret = -EINVAL;
++		goto out_free;
++	}
++
++	if (obj->type != ACPI_TYPE_BUFFER ||
++	    obj->buffer.length < sizeof(*bios_return)) {
++		pr_warn("query 0x%x returned wrong type or too small buffer\n", query);
++		ret = -EINVAL;
++		goto out_free;
++	}
++
++	bios_return = (struct bios_return *)obj->buffer.pointer;
++	ret = bios_return->return_code;
++	if (ret) {
++		if (ret != INVALID_CMD_VALUE && ret != INVALID_CMD_TYPE)
++			pr_warn("query 0x%x returned error 0x%x\n", query, ret);
++		goto out_free;
++	}
++
++	/* Ignore output data of zero size */
++	if (!outsize)
++		goto out_free;
++
++	actual_outsize = min_t(u32, outsize, obj->buffer.length - sizeof(*bios_return));
++	memcpy_and_pad(buffer, outsize, obj->buffer.pointer + sizeof(*bios_return),
++		       actual_outsize, 0);
++
++out_free:
++	hp_wmi_error_and_message(ret);
++	kfree(obj);
++	kfree(args);
++	return ret;
++}
++
++static void *utf16_empty_string(u16 *p)
++{
++	*p++ = 2;
++	*p++ = 0x00;
++	return p;
++}
++
++/**
++ * hp_ascii_to_utf16_unicode -  Convert ascii string to UTF-16 unicode
++ *
++ * BIOS supports UTF-16 characters that are 2 bytes long.  No variable
++ * multi-byte language supported.
++ *
++ * @p:   Unicode buffer address
++ * @str: string to convert to unicode
++ *
++ * Returns a void pointer to the buffer string
++ */
++void *hp_ascii_to_utf16_unicode(u16 *p, const u8 *str)
++{
++	int len = strlen(str);
++	int ret;
 +
 +	/*
-+	 * 'role' identifies the type of authentication.
-+	 * Two known types are bios-admin and power-on.
-+	 * 'bios-admin' represents BIOS administrator password
-+	 * 'power-on' represents a password required to use the system
++	 * Add null character when reading an empty string
++	 * "02 00 00 00"
 +	 */
-+	u32 role;
++	if (len == 0)
++		return utf16_empty_string(p);
 +
-+	/*
-+	 * 'mechanism' represents the means of authentication.
-+	 * Only supported type currently is "password"
-+	 */
-+	u32 mechanism;
++	/* Move pointer len * 2 number of bytes */
++	*p++ = len * 2;
++	ret = utf8s_to_utf16s(str, strlen(str), UTF16_HOST_ENDIAN, p, len);
++	if (ret < 0) {
++		dev_err(bioscfg_drv.class_dev, "UTF16 conversion failed\n");
++		return NULL;
++	}
++
++	if (ret * sizeof(u16) > U16_MAX) {
++		dev_err(bioscfg_drv.class_dev, "Error string too long\n");
++		return NULL;
++	}
++
++	p += len;
++	return p;
++}
++
++/**
++ * hp_wmi_set_bios_setting - Set setting's value in BIOS
++ *
++ * @input_buffer: Input buffer address
++ * @input_size:   Input buffer size
++ *
++ * Returns: Count of unicode characters written to BIOS if successful, otherwise
++ *		-ENOMEM unable to allocate memory
++ *		-EINVAL buffer not allocated or too small
++ */
++int hp_wmi_set_bios_setting(u16 *input_buffer, u32 input_size)
++{
++	union acpi_object *obj;
++	struct acpi_buffer input = {input_size, input_buffer};
++	struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
++	int ret;
++
++	ret = wmi_evaluate_method(HP_WMI_SET_BIOS_SETTING_GUID, 0, 1, &input, &output);
++
++	obj = output.pointer;
++	if (!obj)
++		return -EINVAL;
++
++	if (obj->type != ACPI_TYPE_INTEGER) {
++		ret = -EINVAL;
++		goto out_free;
++	}
++
++	ret = obj->integer.value;
++	if (ret) {
++		if (ret != INVALID_CMD_VALUE && ret != INVALID_CMD_TYPE)
++			hp_wmi_error_and_message(ret);
++		goto out_free;
++	}
++
++out_free:
++	kfree(obj);
++	return ret;
++}
++
++static int hp_attr_set_interface_probe(struct wmi_device *wdev, const void *context)
++{
++	mutex_lock(&bioscfg_drv.mutex);
++	bioscfg_drv.bios_attr_wdev = wdev;
++	mutex_unlock(&bioscfg_drv.mutex);
++	return 0;
++}
++
++static void hp_attr_set_interface_remove(struct wmi_device *wdev)
++{
++	mutex_lock(&bioscfg_drv.mutex);
++	bioscfg_drv.bios_attr_wdev = NULL;
++	mutex_unlock(&bioscfg_drv.mutex);
++}
++
++static const struct wmi_device_id hp_attr_set_interface_id_table[] = {
++	{ .guid_string = HP_WMI_BIOS_GUID},
++	{ }
 +};
 +
-+struct secure_platform_data {
-+	struct kobject *attr_name_kobj;
-+	u8 attribute_name[MAX_BUFF_SIZE];
-+	u8 *endorsement_key;
-+	u8 *signing_key;
-+	u8 *auth_token;
-+	bool is_enabled;
-+	u32 mechanism;
++static struct wmi_driver hp_attr_set_interface_driver = {
++	.driver = {
++		.name = DRIVER_NAME,
++	},
++	.probe = hp_attr_set_interface_probe,
++	.remove = hp_attr_set_interface_remove,
++	.id_table = hp_attr_set_interface_id_table,
 +};
 +
-+struct bioscfg_priv {
-+	struct wmi_device *bios_attr_wdev;
-+	struct kset *authentication_dir_kset;
-+	struct kset *main_dir_kset;
-+	struct device *class_dev;
-+	struct string_data *string_data;
-+	u32 string_instances_count;
-+	struct integer_data *integer_data;
-+	u32 integer_instances_count;
-+	struct enumeration_data *enumeration_data;
-+	u32 enumeration_instances_count;
-+	struct ordered_list_data *ordered_list_data;
-+	u32 ordered_list_instances_count;
-+	struct password_data *password_data;
-+	u32 password_instances_count;
++int hp_init_attr_set_interface(void)
++{
++	return wmi_driver_register(&hp_attr_set_interface_driver);
++}
 +
-+	struct kobject *sure_start_attr_kobj;
-+	struct secure_platform_data spm_data;
-+	u8 display_name_language_code[MAX_BUFF_SIZE];
-+	bool pending_reboot;
-+	struct mutex mutex;
-+};
++void hp_exit_attr_set_interface(void)
++{
++	wmi_driver_unregister(&hp_attr_set_interface_driver);
++}
 +
-+/* global structure used by multiple WMI interfaces */
-+extern struct bioscfg_priv bioscfg_drv;
-+
-+enum hp_wmi_data_type {
-+	HPWMI_STRING_TYPE,
-+	HPWMI_INTEGER_TYPE,
-+	HPWMI_ENUMERATION_TYPE,
-+	HPWMI_ORDERED_LIST_TYPE,
-+	HPWMI_PASSWORD_TYPE,
-+	HPWMI_SECURE_PLATFORM_TYPE,
-+	HPWMI_SURE_START_TYPE,
-+};
-+
-+enum hp_wmi_data_elements {
-+	/* Common elements */
-+	NAME = 0,
-+	VALUE = 1,
-+	PATH = 2,
-+	IS_READONLY = 3,
-+	DISPLAY_IN_UI = 4,
-+	REQUIRES_PHYSICAL_PRESENCE = 5,
-+	SEQUENCE = 6,
-+	PREREQUISITES_SIZE = 7,
-+	PREREQUISITES = 8,
-+	SECURITY_LEVEL = 9,
-+
-+	/* String elements */
-+	STR_MIN_LENGTH = 10,
-+	STR_MAX_LENGTH = 11,
-+	STR_ELEM_CNT = 12,
-+
-+	/* Integer elements */
-+	INT_LOWER_BOUND = 10,
-+	INT_UPPER_BOUND = 11,
-+	INT_SCALAR_INCREMENT = 12,
-+	INT_ELEM_CNT = 13,
-+
-+	/* Enumeration elements */
-+	ENUM_CURRENT_VALUE = 10,
-+	ENUM_SIZE = 11,
-+	ENUM_POSSIBLE_VALUES = 12,
-+	ENUM_ELEM_CNT = 13,
-+
-+	/* Ordered list elements */
-+	ORD_LIST_SIZE = 10,
-+	ORD_LIST_ELEMENTS = 11,
-+	ORD_ELEM_CNT = 12,
-+
-+	/* Password elements */
-+	PSWD_MIN_LENGTH = 10,
-+	PSWD_MAX_LENGTH = 11,
-+	PSWD_SIZE = 12,
-+	PSWD_ENCODINGS = 13,
-+	PSWD_IS_SET = 14,
-+	PSWD_ELEM_CNT = 15,
-+};
-+
-+#define GET_INSTANCE_ID(type)						\
-+	static int get_##type##_instance_id(struct kobject *kobj)	\
-+	{								\
-+		int i;							\
-+									\
-+		for (i = 0; i <= bioscfg_drv.type##_instances_count; i++) { \
-+			if (!strcmp(kobj->name, bioscfg_drv.type##_data[i].attr_name_kobj->name)) \
-+				return i;				\
-+		}							\
-+		return -EIO;						\
-+	}
-+
-+#define ATTRIBUTE_S_PROPERTY_SHOW(name, type)				\
-+	static ssize_t name##_show(struct kobject *kobj, struct kobj_attribute *attr, \
-+				   char *buf)				\
-+	{								\
-+		int i = get_##type##_instance_id(kobj);			\
-+		if (i >= 0)						\
-+			return sysfs_emit(buf, "%s\n", bioscfg_drv.type##_data[i].name); \
-+		return -EIO;						\
-+	}
-+
-+#define ATTRIBUTE_N_PROPERTY_SHOW(name, type)				\
-+	static ssize_t name##_show(struct kobject *kobj, struct kobj_attribute *attr, \
-+				   char *buf)				\
-+	{								\
-+		int i = get_##type##_instance_id(kobj);			\
-+		if (i >= 0)						\
-+			return sysfs_emit(buf, "%d\n", bioscfg_drv.type##_data[i].name); \
-+		return -EIO;						\
-+	}
-+
-+#define ATTRIBUTE_PROPERTY_STORE(curr_val, type)			\
-+	static ssize_t curr_val##_store(struct kobject *kobj,		\
-+					struct kobj_attribute *attr,	\
-+					const char *buf, size_t count)	\
-+	{								\
-+		char *attr_value = NULL;				\
-+		int i;							\
-+		int ret = -EIO;						\
-+									\
-+		attr_value = kstrdup(buf, GFP_KERNEL);			\
-+		if (!attr_value)					\
-+			return -ENOMEM;					\
-+									\
-+		ret = hp_enforce_single_line_input(attr_value, count);	\
-+		if (!ret) {						\
-+			i = get_##type##_instance_id(kobj);		\
-+			if (i >= 0)					\
-+				ret = validate_##type##_input(i, attr_value); \
-+		}							\
-+		if (!ret)						\
-+			ret = hp_set_attribute(kobj->name, attr_value);	\
-+		if (!ret) {						\
-+			update_##type##_value(i, attr_value);		\
-+			if (bioscfg_drv.type##_data[i].common.requires_physical_presence)	\
-+				hp_set_reboot_and_signal_event();	\
-+		}							\
-+		hp_clear_all_credentials();				\
-+		kfree(attr_value);					\
-+									\
-+		return ret ? ret : count;				\
-+	}
-+
-+#define ATTRIBUTE_SPM_N_PROPERTY_SHOW(name, type)			\
-+	static ssize_t name##_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf) \
-+	{								\
-+		return sysfs_emit(buf, "%d\n", bioscfg_drv.type##_data.name); \
-+	}
-+
-+#define ATTRIBUTE_SPM_S_PROPERTY_SHOW(name, type)			\
-+	static ssize_t name##_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf) \
-+	{								\
-+		return sysfs_emit(buf, "%s\n", bioscfg_drv.type##_data.name); \
-+	}
-+
-+#define ATTRIBUTE_VALUES_PROPERTY_SHOW(name, type, sep)			\
-+	static ssize_t name##_show(struct kobject *kobj,		\
-+				   struct kobj_attribute *attr, char *buf) \
-+	{								\
-+		int i;							\
-+		int len = 0;						\
-+		int instance_id = get_##type##_instance_id(kobj);	\
-+									\
-+		if (instance_id < 0)					\
-+			return 0;					\
-+									\
-+		for (i = 0; i < bioscfg_drv.type##_data[instance_id].name##_size; i++) { \
-+			if (i)						\
-+				len += sysfs_emit_at(buf, len, "%s", sep); \
-+									\
-+			len += sysfs_emit_at(buf, len, "%s",		\
-+					     bioscfg_drv.type##_data[instance_id].name[i]); \
-+		}							\
-+		len += sysfs_emit_at(buf, len, "\n");			\
-+		return len;						\
-+	}
-+
-+#define ATTRIBUTE_S_COMMON_PROPERTY_SHOW(name, type)		\
-+	static ssize_t name##_show(struct kobject *kobj, struct kobj_attribute *attr, \
-+				   char *buf)				\
-+	{								\
-+		int i = get_##type##_instance_id(kobj);			\
-+		if (i >= 0)						\
-+			return sysfs_emit(buf, "%s\n", bioscfg_drv.type##_data[i].common.name); \
-+		return -EIO;						\
-+	}
-+
-+/* Prototypes */
-+
-+/* String attributes */
-+int hp_populate_string_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
-+				   int instance_id,
-+				   struct kobject *attr_name_kobj);
-+int hp_alloc_string_data(void);
-+void hp_exit_string_attributes(void);
-+int hp_populate_string_package_data(union acpi_object *str_obj,
-+				    int instance_id,
-+				    struct kobject *attr_name_kobj);
-+
-+/* Integer attributes */
-+int hp_populate_integer_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
-+				    int instance_id,
-+				    struct kobject *attr_name_kobj);
-+int hp_alloc_integer_data(void);
-+void hp_exit_integer_attributes(void);
-+int hp_populate_integer_package_data(union acpi_object *integer_obj,
-+				     int instance_id,
-+				     struct kobject *attr_name_kobj);
-+
-+/* Enumeration attributes */
-+int hp_populate_enumeration_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
-+					int instance_id,
-+					struct kobject *attr_name_kobj);
-+int hp_alloc_enumeration_data(void);
-+void hp_exit_enumeration_attributes(void);
-+int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
-+					 int instance_id,
-+					 struct kobject *attr_name_kobj);
-+
-+/* Ordered list */
-+int hp_populate_ordered_list_buffer_data(u8 *buffer_ptr,
-+					 u32 *buffer_size,
-+					 int instance_id,
-+					 struct kobject *attr_name_kobj);
-+int hp_alloc_ordered_list_data(void);
-+void hp_exit_ordered_list_attributes(void);
-+int hp_populate_ordered_list_package_data(union acpi_object *order_obj,
-+					  int instance_id,
-+					  struct kobject *attr_name_kobj);
-+
-+/* Password authentication attributes */
-+int hp_populate_password_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
-+				     int instance_id,
-+				     struct kobject *attr_name_kobj);
-+int hp_populate_password_package_data(union acpi_object *password_obj,
-+				      int instance_id,
-+				      struct kobject *attr_name_kobj);
-+int hp_alloc_password_data(void);
-+int hp_get_password_instance_for_type(const char *name);
-+int hp_clear_all_credentials(void);
-+int hp_set_attribute(const char *a_name, const char *a_value);
-+
-+/* SPM attributes */
-+void hp_exit_password_attributes(void);
-+void hp_exit_secure_platform_attributes(void);
-+int hp_populate_secure_platform_data(struct kobject *attr_name_kobj);
-+int hp_populate_security_buffer(u16 *buffer, const char *authentication);
-+
-+/* Bios Attributes interface */
-+int hp_wmi_set_bios_setting(u16 *input_buffer, u32 input_size);
-+int hp_wmi_perform_query(int query, enum hp_wmi_command command,
-+			 void *buffer, u32 insize, u32 outsize);
-+
-+/* Sure Start attributes */
-+void hp_exit_sure_start_attributes(void);
-+int hp_populate_sure_start_data(struct kobject *attr_name_kobj);
-+
-+/* Bioscfg */
-+
-+void hp_exit_attr_set_interface(void);
-+int hp_init_attr_set_interface(void);
-+size_t hp_calculate_string_buffer(const char *str);
-+size_t hp_calculate_security_buffer(const char *authentication);
-+void *hp_ascii_to_utf16_unicode(u16 *p, const u8 *str);
-+int hp_get_integer_from_buffer(u8 **buffer, u32 *buffer_size, u32 *integer);
-+int hp_get_string_from_buffer(u8 **buffer, u32 *buffer_size, char *dst, u32 dst_size);
-+int hp_convert_hexstr_to_str(const char *input, u32 input_len, char **str, int *len);
-+int hp_encode_outsize_for_pvsz(int outsize);
-+int hp_enforce_single_line_input(char *buf, size_t count);
-+void hp_set_reboot_and_signal_event(void);
-+ssize_t display_name_language_code_show(struct kobject *kobj,
-+					struct kobj_attribute *attr,
-+					char *buf);
-+union acpi_object *hp_get_wmiobj_pointer(int instance_id, const char *guid_string);
-+int hp_get_instance_count(const char *guid_string);
-+void hp_update_attribute_permissions(bool isreadonly, struct kobj_attribute *current_val);
-+void hp_friendly_user_name_update(char *path, const char *attr_name,
-+				  char *attr_display, int attr_size);
-+int hp_wmi_error_and_message(int error_code);
-+
-+#endif
++MODULE_DEVICE_TABLE(wmi, hp_attr_set_interface_id_table);
 -- 
 2.34.1
 
