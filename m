@@ -2,202 +2,185 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA828C7EE23
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 12:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE50C7EE22
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 13:00:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242011AbjEOMlb (ORCPT
+        id S242031AbjEONAO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 May 2023 08:41:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59022 "EHLO
+        Mon, 15 May 2023 09:00:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241964AbjEOMkV (ORCPT
+        with ESMTP id S242085AbjEOM76 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 May 2023 08:40:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D62F19B7
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 05:39:15 -0700 (PDT)
+        Mon, 15 May 2023 08:59:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A49818F
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 05:59:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684154354;
+        s=mimecast20190719; t=1684155545;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lT/IF6S2V5Zzk178e+Y1pzx60+tI2NTT4SZX6FLl/8M=;
-        b=EnA/ccrgyr62wk8D8Fhn6xAJr1R9NPB3ezESzmqqRQv6/wKl9VMBI56eK6ZKgWht+5cqMy
-        sjKg6IdCdkk7O1MwU+JRUGEJG35D3HbDoPqdlgabgeQhvOAGVue5kL3OVrHKhQAORdIrcl
-        h1UcoqUOdnqnjNIARN573hZkKueaBWw=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=EU+jyy76OpL76hfSFfdqt6GtYdlVi8X+l+3db/Ak20c=;
+        b=GR3Jkigrg/6hmozFcarro1Wl3jBJ/9o4qOPgvqiwy22YyEYc0uyleqMfV5GLboKlJJ77jB
+        5SfX8VWm8ZFU/7/7qhVu3/YWclrc25NxIIyHqar1am555XKSr0tjhKyVDEYg0WH/len0ee
+        vELB44uqu8ei+h+LgyvqOXhu1zbzrNc=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-438-uC62XNRxOFKovaa6vhaLYg-1; Mon, 15 May 2023 08:39:13 -0400
-X-MC-Unique: uC62XNRxOFKovaa6vhaLYg-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9662ead7bf8so969653066b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 05:39:13 -0700 (PDT)
+ us-mta-287-V51YHKgKPZCsIAgPrv9DXQ-1; Mon, 15 May 2023 08:59:03 -0400
+X-MC-Unique: V51YHKgKPZCsIAgPrv9DXQ-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-50bf9e97bdbso13858039a12.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 05:59:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684154352; x=1686746352;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+        d=1e100.net; s=20221208; t=1684155542; x=1686747542;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lT/IF6S2V5Zzk178e+Y1pzx60+tI2NTT4SZX6FLl/8M=;
-        b=gWCFYNPDzn8ABn1I99n6DQQ0tuPPhv8usr4Bcump42REmdOe38z2s5GmB7KB/Im2a4
-         UFAkVGXx+ukoUdgjvWPF+4xMUkwBFLHM8QQRUYpdX6WthSITDBiR0uvi1cXVEu3Ez9G1
-         CWJ9GAcr1Fxdlcb6YHbRkL+AGqEAA1v1nrrK7egNbVcuT++Avw1EF6whrVmhKO/3A7oK
-         L4rZ+s7Aiwag4IloZfDbbFHYmJHx25b/GUB5ajET1uQ12thPBsEUBEKbf2oljggKtzVx
-         9iJl2cwcIEiCufCtNO9aaJeJqXHf8Ck1UQ2tWQqf47nA6wmwIhtwNnF8X/5sH9G54ykv
-         fJHg==
-X-Gm-Message-State: AC+VfDxrXx6EEVSauriQzC+F1sX2gHxNk3qFIRd7lHWb8O3pBwdrBgnJ
-        AxFSE9wFroX69Inu+BOJpQVqrmR5m+6KtGLF+lMqt336KGYqp8nazMtc/4kXTQg5wiE3hGubc1n
-        vL40oECNcLW9400S/rChNJYTJFDqXqTMvEg==
-X-Received: by 2002:a17:907:9415:b0:94f:395b:df1b with SMTP id dk21-20020a170907941500b0094f395bdf1bmr28234970ejc.21.1684154352219;
-        Mon, 15 May 2023 05:39:12 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7/j9wy+u2tobCE8F8u/7JHHd/NPJJavUEiF0Hkh3/5VUUBXiB1qB0rkUSQhEBySOi91jviSA==
-X-Received: by 2002:a17:907:9415:b0:94f:395b:df1b with SMTP id dk21-20020a170907941500b0094f395bdf1bmr28234950ejc.21.1684154351840;
-        Mon, 15 May 2023 05:39:11 -0700 (PDT)
+        bh=EU+jyy76OpL76hfSFfdqt6GtYdlVi8X+l+3db/Ak20c=;
+        b=M7/9TIyTWJkuREm11LWENSb/+VoSSQ+CvzMZIibfn3s1OCpWJu+N4JphPISsOOzz3O
+         VWYaCtfOjXU7RY2yMqAkqldcYdFgnIc8PU5Xv2Yo6Pq9Nul3AX/tHH1+3g9C+zwkbhD9
+         gUEUBNGupLy+tpri9Uyl92aT7YGXEIycE6+tKo1cD9Plu3zLEb87FThqg1N3SSmvwHlA
+         RuIQ/lcFUFy6KaubPT+8yEdgtaqdjxi81oiKFTLtenDKLP2TPQyBgGujJIvZ7OTwJJL1
+         BsLjsGZwB+7F1kGyaTUdT//eajq/2/8YI9/OVjcqsOzwxHQfjlCnuvTlNt3kaMbinzzW
+         kqAA==
+X-Gm-Message-State: AC+VfDy3BNZO892YONbWWM4gEfS88MZWLzRZPNJ0//vHgIB3/La69ceD
+        yGDlsz3T3phL6As++CVlfrw1Zj9O/WSVNXedBHCuk+qvOvhj2lkx+Em4zacrudPG6gFxFTAEmpT
+        lmMHx/AVx8y/z5YjzOkBZrMqVzDuzmm2JWQ==
+X-Received: by 2002:aa7:df11:0:b0:505:4f7:8a50 with SMTP id c17-20020aa7df11000000b0050504f78a50mr24996506edy.5.1684155542271;
+        Mon, 15 May 2023 05:59:02 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ6j0ketmGZXip/XZj7GOC3Vz8V7KmOq4GJCNCQqS+CJf5Q3VtBVCE/4Qufc/wg0JVIrOhgqIA==
+X-Received: by 2002:aa7:df11:0:b0:505:4f7:8a50 with SMTP id c17-20020aa7df11000000b0050504f78a50mr24996495edy.5.1684155541929;
+        Mon, 15 May 2023 05:59:01 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id v21-20020a1709060b5500b00965e68b8df5sm9443451ejg.76.2023.05.15.05.39.10
+        by smtp.gmail.com with ESMTPSA id k23-20020a05640212d700b0050c0b9d31a7sm7323068edx.22.2023.05.15.05.59.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 May 2023 05:39:11 -0700 (PDT)
-Message-ID: <02f28fe4-bca4-f9d7-a9be-0f1999662d62@redhat.com>
-Date:   Mon, 15 May 2023 14:39:10 +0200
+        Mon, 15 May 2023 05:59:01 -0700 (PDT)
+Message-ID: <247af7d9-f6b1-def5-a138-780f567f48cb@redhat.com>
+Date:   Mon, 15 May 2023 14:59:00 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH v2 0/1] platform/x86: asus-wmi: add support for ASUS
- screenpad
+Subject: Re: [PATCH] platform/x86/amd/pmf: Fix CnQF and auto-mode after resume
 Content-Language: en-US
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Shyam-sundar.S-k@amd.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230513011408.958-1-mario.limonciello@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Luke D. Jones" <luke@ljones.dev>,
-        platform-driver-x86@vger.kernel.org,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, acpi4asus-user@lists.sourceforge.net,
-        corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com,
-        linux@roeck-us.net
-References: <20230505043013.2622603-1-luke@ljones.dev>
- <4be2cc57-59b9-24e2-fd10-f2af175ff518@redhat.com>
-In-Reply-To: <4be2cc57-59b9-24e2-fd10-f2af175ff518@redhat.com>
+In-Reply-To: <20230513011408.958-1-mario.limonciello@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 5/6/23 13:52, Hans de Goede wrote:
-> Hi Luke,
+On 5/13/23 03:14, Mario Limonciello wrote:
+> After suspend/resume cycle there is an error message and auto-mode
+> or CnQF stops working.
 > 
-> On 5/5/23 06:30, Luke D. Jones wrote:
->> Adds support for the screenpad(-plus) found on a few ASUS laptops that have a main 16:9 or 16:10 screen and a shorter screen below the main but above the keyboard.
->> The support consists of:
->> - On off control
->> - Setting brightness from 0-255
->>
->> There are some small quirks with this device when considering only the raw WMI methods:
->> 1. The Off method can only switch the device off
->> 2. Changing the brightness turns the device back on
->> 3. To turn the device back on the brightness must be > 1
->> 4. When the device is off the brightness can't be changed (so it is stored by the driver if device is off).
->> 5. Booting with a value of 0 brightness (retained by bios) means the bios will set a value of > 0, < 15 which is far too dim and was unexpected by testers. The compromise was to set the brightness to 60 which is a usable brightness if the module init brightness was under 15.
->> 6. When the device is off it is "unplugged"
->>
->> All of the above points are addressed within the patch to create a good user experience and keep within user expectations.
->>
->> Changelog:
->> - V2
->>   - Complete refactor to use as a backlight device
+> [ 5741.447511] amd-pmf AMDI0100:00: SMU cmd failed. err: 0xff
+> [ 5741.447523] amd-pmf AMDI0100:00: AMD_PMF_REGISTER_RESPONSE:ff
+> [ 5741.447527] amd-pmf AMDI0100:00: AMD_PMF_REGISTER_ARGUMENT:7
+> [ 5741.447531] amd-pmf AMDI0100:00: AMD_PMF_REGISTER_MESSAGE:16
+> [ 5741.447540] amd-pmf AMDI0100:00: [AUTO_MODE] avg power: 0 mW mode: QUIET
 > 
-> Thank you on your work for this.
+> This is because the DRAM address used for accessing metrics table
+> needs to be refreshed after a suspend resume cycle. Add a resume
+> callback to reset this again.
 > 
-> Unfortunately I did not get a chance to react to the v1 posting and
-> the remarks to switch to using /sys/class/backlight there before you
-> posted this v2.
-> 
-> Technically the remark to use /sys/class/backlight for this is
-> completely correct. But due to the way how userspace uses
-> /sys/class/backlight this is a problematic.
-> 
-> Userspace basically always assumes there is only 1 LCD panel
-> and it then looks at /sys/class/backlight and picks 1
-> /sys/class/backlight entry and uses that for the brightness
-> slider in the desktop-environment UI / system-menu as well
-> as to handle brightness up/down keyboard hotkey presses.
-> 
-> In the (recent) past the kernel used to register e.g.
-> both /sys/class/backlight/acpi_video0 and
-> /sys/class/backlight/intel_backlight
-> 
-> For ACPI resp. direct hw control of the LCD panel backlight
-> (so both control the same backlight, sometimes both work
-> sometimes only 1 works).
-> 
-> Userspace uses the backlight-type to determine which backlight
-> class to use, using (for GNOME, but I believe everywhere) the
-> following preference order:
-> 
-> 1. First look for "firmware" type backlight devices (like acpi_video0)
-> 2. Then try "platform" type backlight devices
-> 3. Last try "raw" type backlight devices
-> 
-> And to make things work the kernel has been hiding the "acpi_video0"
-> entry in cases where it is known that we need the "raw" aka native
-> type backlight.
-> 
-> Luke you seem to already be partly aware of this, because the patch
-> now has this:
-> 
-> 	props.type = BACKLIGHT_RAW; /* ensure this bd is last to be picked */
-> 
-> but almost all modern laptops exclusively use the raw/native type
-> for backlight control of the main LCD panel.
-> 
-> So now we end up with 2 "raw" type backlight devices and if
-> e.g. gnome-settings-daemon picks the right one now sort of
-> is left to luck.
-> 
-> Well that is not entirely true, at least gnome-settings-daemon
-> prefers raw backlight devices where the parent has an "enabled"
-> sysfs attribute (it expects the parent to be a drm_connector
-> object) and where that enabled attribute reads as "enabled".
-> 
-> This is done for hybrid-gfx laptops where there already may
-> be 2 raw backlight-class devices, 1 for each GPU but only
-> 1 of the 2 drm_connectors going to the main LCD panel should
-> actually show as enabled.
-> 
-> So typing all this out I guess we could go ahead with using
-> the backlight class for this after all, but this relies
-> on userspace preferring raw backlight-class devices
-> with a drm_connector-object parent which show as being
-> enabled.
-> 
-> Any userspace code which does not do the parent has
-> an enabled attr reading "enabled" or a similar check
-> will end up picking a random backlight class device
-> as control for the main panel brightness which will not
-> always end well. So this all is a bit fragile ...
-> 
-> And I'm not sure what is the best thing to do here.
-> 
-> Barnabás, Ilpo, Guenter, any comments on this ?
+> Fixes: 1a409b35c995 ("platform/x86/amd/pmf: Get performance metrics from PMFW")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Hmm, no comments from anyone on the potential problems of using
-/sys/class/backlight for this causing potential userspace confusion
-since normally /sys/class/backlight devices control the main LCD
-brightness ?
+Thank you for your patch, I've applied this patch to my fixes
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
 
-Luke do you have any thoughts on this yourself ?
+Note it will show up in my fixes branch once I've pushed my
+local branch there, which might take a while.
 
-And can you answer this question please ?  :
-
-> Luke, question how does the second/exta panel look
-> from an outputting video to it pov ?  Does it show
-> up as an extra screen connected to a drm_connector
-> on one of the GPUs. IOW can it be used with standard
-> kernel-modesetting APIs ?
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
 Regards,
 
 Hans
 
+
+
+> ---
+>  drivers/platform/x86/amd/pmf/core.c | 32 ++++++++++++++++++++++-------
+>  1 file changed, 25 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index d5bb775dadcf..ee5f124f78b6 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -245,24 +245,29 @@ static const struct pci_device_id pmf_pci_ids[] = {
+>  	{ }
+>  };
+>  
+> -int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
+> +static void amd_pmf_set_dram_addr(struct amd_pmf_dev *dev)
+>  {
+>  	u64 phys_addr;
+>  	u32 hi, low;
+>  
+> -	INIT_DELAYED_WORK(&dev->work_buffer, amd_pmf_get_metrics);
+> +	phys_addr = virt_to_phys(dev->buf);
+> +	hi = phys_addr >> 32;
+> +	low = phys_addr & GENMASK(31, 0);
+> +
+> +	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_HIGH, 0, hi, NULL);
+> +	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_LOW, 0, low, NULL);
+> +}
+>  
+> +int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
+> +{
+>  	/* Get Metrics Table Address */
+>  	dev->buf = kzalloc(sizeof(dev->m_table), GFP_KERNEL);
+>  	if (!dev->buf)
+>  		return -ENOMEM;
+>  
+> -	phys_addr = virt_to_phys(dev->buf);
+> -	hi = phys_addr >> 32;
+> -	low = phys_addr & GENMASK(31, 0);
+> +	INIT_DELAYED_WORK(&dev->work_buffer, amd_pmf_get_metrics);
+>  
+> -	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_HIGH, 0, hi, NULL);
+> -	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_LOW, 0, low, NULL);
+> +	amd_pmf_set_dram_addr(dev);
+>  
+>  	/*
+>  	 * Start collecting the metrics data after a small delay
+> @@ -273,6 +278,18 @@ int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
+>  	return 0;
+>  }
+>  
+> +static int amd_pmf_resume_handler(struct device *dev)
+> +{
+> +	struct amd_pmf_dev *pdev = dev_get_drvdata(dev);
+> +
+> +	if (pdev->buf)
+> +		amd_pmf_set_dram_addr(pdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static DEFINE_SIMPLE_DEV_PM_OPS(amd_pmf_pm, NULL, amd_pmf_resume_handler);
+> +
+>  static void amd_pmf_init_features(struct amd_pmf_dev *dev)
+>  {
+>  	int ret;
+> @@ -413,6 +430,7 @@ static struct platform_driver amd_pmf_driver = {
+>  		.name = "amd-pmf",
+>  		.acpi_match_table = amd_pmf_acpi_ids,
+>  		.dev_groups = amd_pmf_driver_groups,
+> +		.pm = pm_sleep_ptr(&amd_pmf_pm),
+>  	},
+>  	.probe = amd_pmf_probe,
+>  	.remove_new = amd_pmf_remove,
 
