@@ -2,122 +2,253 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C515C77B75
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 13:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0C1C77B75
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 14:08:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241320AbjEONXg (ORCPT
+        id S239091AbjEOOIl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 May 2023 09:23:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37924 "EHLO
+        Mon, 15 May 2023 10:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233122AbjEONXf (ORCPT
+        with ESMTP id S240156AbjEOOIe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 May 2023 09:23:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDAD22D58
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 06:22:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684156955;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NqLATVw0o7Eqj8rOIrKMl8B2vhKff2s7T97SXZOmILY=;
-        b=TP9I2Ld8KFgAqTYnaktw4o0MA9pwMuQHDhk/1nH9GpQ//jpJCpWQ2H5aCIOt5tErZSmA7s
-        4McG/9jXRizAl11zVT7cEJejs/mQ3bgeaeE9ODpS65Qj4Ir/CwLau7cJ8ufR1/6zIM2a9C
-        CSnhTAX/49++naf6M3dIuJJi0nhsypk=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-93-srnruUJIOCuujXzgLSyoEw-1; Mon, 15 May 2023 09:22:34 -0400
-X-MC-Unique: srnruUJIOCuujXzgLSyoEw-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-94a348facbbso1590203066b.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 May 2023 06:22:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684156953; x=1686748953;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NqLATVw0o7Eqj8rOIrKMl8B2vhKff2s7T97SXZOmILY=;
-        b=SR3bkABMcnourCyP/XIpDpI9mbGWP2U7PhIWsnyHVxpN8KzIgEteH3a8qMRZPsf+vh
-         0XDe3Y629saore1FeyubnQzWuYPQiqn0Br5cOR1tw9J6tnftHSKPSFrbPejAtHy5jtKj
-         p2c2O7SYDNbknZfPKT/h9Q2TLAA5LBEn9h6Gg+94J/yL6Y0JKURxnL8lVxxeeRQeO4S2
-         4MgwcRbvxUPT0on7u/HPiGOwmudApzLwBLMBPbaB5ZGfZ96h89s/TvEleYe0cDACRGaq
-         5Ka/ZTI4DG/BKckp71qiq4Lgg/WraeQ9e9ApFrLeiBKj3nXVRZ6EI5Q5OGwcF68b+UON
-         5Hmg==
-X-Gm-Message-State: AC+VfDwTMDJlaZ6bpYwc7irx3gLOLi3mh3wJPg7HaS3pyi3h3kNRmtar
-        R9N6r8ppLiCGDKrsUpenh8Lq+kjfS7xIAXTdHskd8UKhAiXEBAKIbW2RW1fjSxUMtPmI+ol1QtT
-        hdLTEoTpP4yuRnxTu1qWLiwRyn8NbuLOYyg==
-X-Received: by 2002:a17:906:fe44:b0:969:faf3:7dba with SMTP id wz4-20020a170906fe4400b00969faf37dbamr19487511ejb.52.1684156952969;
-        Mon, 15 May 2023 06:22:32 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7piCFoS8XM96vwGW13BfAIXTEyP4aeYkYu3SbfcduU2sTMSpUlzeoyjrnhd0nhytovo0kX/g==
-X-Received: by 2002:a17:906:fe44:b0:969:faf3:7dba with SMTP id wz4-20020a170906fe4400b00969faf37dbamr19487485ejb.52.1684156952646;
-        Mon, 15 May 2023 06:22:32 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id qo28-20020a170907213c00b00965ddf2e221sm9498777ejb.93.2023.05.15.06.22.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 May 2023 06:22:32 -0700 (PDT)
-Message-ID: <0f8e5fc7-2efb-ceac-ac83-fbc8e7b62d3e@redhat.com>
-Date:   Mon, 15 May 2023 15:22:30 +0200
+        Mon, 15 May 2023 10:08:34 -0400
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6007210D;
+        Mon, 15 May 2023 07:08:30 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id E1120320094E;
+        Mon, 15 May 2023 10:08:28 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Mon, 15 May 2023 10:08:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm3; t=1684159708; x=1684246108; bh=xv
+        DWu8rswdlHC9tunZQlzYt+uj6XYdRxiwrOmBMzAAk=; b=kLdAG2spfJKVgbQBr0
+        Iwp10RAH+rXzkUN+kc9UEfZQdGv6rgMNsPtJ/0uBCTPX1aNH0xsYJOt2FofTdLZw
+        L42db56ns9/u3LsHjFU68O2w/1hT9rXTR34nBfYy+9x4D54d2XtGSR7GsnB+ClzD
+        c0/a0reOoIlAic791zIMjbhBXQfzXVUY34x26nMpRiFfrXFgj+muFwByL1aqUNlq
+        tiAijpXs8fcDG5JEemeTOFLPJmhr6cZchYDKYh5fQl2fi0OvE8EBA1pcSaZja+eI
+        lz/do/b6iOQa7+wr8dqAdJlNSSu52v449W7w+XpBsq/TxQx0kui3/UhTqED97Vpx
+        HLjA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1684159708; x=1684246108; bh=xvDWu8rswdlHC
+        9tunZQlzYt+uj6XYdRxiwrOmBMzAAk=; b=ELnpHSnDuqahGMLpwzdlcjqLv91PX
+        /hfqsSN8sgXFlMsbVOEc0SdpODcALY04yY5P7/Ckr83995rnrnXKw301SWbF1Hj5
+        jrUxt+aiVQ92R4EpozpdZulZb7sCu3VWQnmprWBLn266hXYLQeZgXnx4nRnuNtOq
+        +LCLSh5ME3OJZad0CcsIyhitJD/BeMsdxsSqXtPTwM5PajkrS1XaxzwIviAa8kVB
+        2GWhzmToVHRu1sxdctK9lJlf5z7Ytx4bNtbhsTXtPsqZbiMbZbGEvWuEtg6ISrsp
+        abN+BJmcIGn5XBUyKUqTmZmpmTm1EYtP0R5wuFqWJiFdqVLkjA7XQ1dug==
+X-ME-Sender: <xms:2zxiZLk0cr8FT1uc_u7iNtuXP1aH_iRhPllQqWu50bfG2cxnm886Gw>
+    <xme:2zxiZO3EgG-84iEo0MuKFi9KWTQFdO0LLMYnfit3ROVQ8q4HEMQJOhgXz61KDThAO
+    SSDKZSdkXO4Ww9UBQg>
+X-ME-Received: <xmr:2zxiZBofnTJBHBbfx6RuU1QbRROeCJsSMp9IX4KUECJS9b6T-KRpAVItyt3IW-s1luoaO67BqbKQL2xtahL7zeOmUPnx2A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeehjedgjeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehnihhs
+    shgvucetshhtihgvrhcuoegrnhhishhsvgesrghsthhivghrrdgvuheqnecuggftrfgrth
+    htvghrnheplefhjefhvdelueekheeftefghfejfffguedvgffgueehiefggeevjeekieet
+    jeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hnihhsshgvsegrshhtihgvrhdrvghu
+X-ME-Proxy: <xmx:2zxiZDkGszOAX2kxu6_DD0qk7700iDcbo6M56wy6D_1N-fJlUiJEYQ>
+    <xmx:2zxiZJ2goEGJnnRMuPSoG4dRhcGV1viY3UKxf2qiG5KTdp-ymPjicQ>
+    <xmx:2zxiZCsNVPmNleDsdeifcYLrVcj9P6ILRUHPozbS6F_HPGWvYhY3hg>
+    <xmx:3DxiZF6uy3zBmiFbsRCGmsUW1FdVVKr2g2KB0YTz3jcPUyStDyMOsA>
+Feedback-ID: iccec46d4:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 15 May 2023 10:08:25 -0400 (EDT)
+Date:   Mon, 15 May 2023 16:08:22 +0200
+From:   Anisse Astier <anisse@astier.eu>
+To:     Christian Brauner <brauner@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Anisse Astier <an.astier@criteo.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-efi@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Jeremy Kerr <jk@ozlabs.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lennart@poettering.net
+Subject: Re: [PATCH] efivarfs: expose used and total size
+Message-ID: <ZGI81p+2SNjI4VOb@anisse-laptop>
+References: <20230426195853.633233-1-anisse@astier.eu>
+ <CAMj1kXE2-76KZDxpHBPcZgbB8vGDmLEbiRGmw_5o-rsNzT9oQw@mail.gmail.com>
+ <20230515-vorgaben-portrait-bb1b4255d31a@brauner>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [RESEND PATCH 1/4] platform/x86: gigabyte: constify pointers to
- hwmon_channel_info
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas@weissschuh.net>,
-        Mark Gross <markgross@kernel.org>,
-        Jeremy Soller <jeremy@system76.com>,
-        System76 Product Development <productdev@system76.com>,
-        Azael Avalos <coproscefalo@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230511175627.282246-1-krzysztof.kozlowski@linaro.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230511175627.282246-1-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230515-vorgaben-portrait-bb1b4255d31a@brauner>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Christian,
 
-On 5/11/23 19:56, Krzysztof Kozlowski wrote:
-> Statically allocated array of pointers to hwmon_channel_info can be made
-> const for safety.
+On Mon, May 15, 2023 at 10:59:49AM +0200, Christian Brauner wrote:
+> On Wed, May 10, 2023 at 05:13:36PM +0200, Ard Biesheuvel wrote:
+> > On Wed, 26 Apr 2023 at 21:59, Anisse Astier <anisse@astier.eu> wrote:
+> > >
+> > > From: Anisse Astier <an.astier@criteo.com>
+> > >
+> > > When writing variables, one might get errors with no other message on
+> > > why it fails.
+> > >
+> > > Being able to see how much is used by EFI variables helps analyzing such
+> > > issues.
+> > >
+> > > Since this is not a conventionnal filesystem, block size is
+> > > intentionnally set to 1 instead of PAGE_SIZE.
+> > >
+> > > x86 quirks of reserved size are taken into account and available and
+> > > free size can be different, further helping debugging space issues.
+> > >
+> > 
+> > I have no objections to this, but I'm not much of a user space/ VFS
+> > person, so adding some other folks that can chime in if they want.
+> > 
+> > The point of this patch is that user space can query this information
+> > using statvfs(), right?
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Seems ok to me.
+> 
+> > 
+> > 
+> > 
+> > > Signed-off-by: Anisse Astier <an.astier@criteo.com>
+> > > ---
+> > > Notes:
+> > > Patch isn't split per subsystem intentionally, for better understanding
+> > > of intent; split could be trivial in a later version.
+> > >
+> > > I'm not sure whether statfs(2) should return an error if the efi request
+> > > fails; I think it could be ignored with maybe a WARN_ONCE; which would
+> > > be close to the current behaviour.
+> 
+> Not sure. If you're not returning an error you would have to report made
+> up/magic values that could end up confusing userspace. So better to be
+> honest and report an error.
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Ack.
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+> 
+> > >
+> > > Regards,
+> > >
+> > > Anisse
+> > >
+> > > ---
+> > >  arch/x86/platform/efi/quirks.c |  8 ++++++++
+> > >  drivers/firmware/efi/efi.c     |  1 +
+> > >  drivers/firmware/efi/vars.c    | 12 ++++++++++++
+> > >  fs/efivarfs/super.c            | 26 +++++++++++++++++++++++++-
+> > >  include/linux/efi.h            | 10 ++++++++++
+> > >  5 files changed, 56 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+> > > index b0b848d6933a..587fa51230e2 100644
+> > > --- a/arch/x86/platform/efi/quirks.c
+> > > +++ b/arch/x86/platform/efi/quirks.c
+> > > @@ -114,6 +114,14 @@ void efi_delete_dummy_variable(void)
+> > >                                      EFI_VARIABLE_RUNTIME_ACCESS, 0, NULL);
+> > >  }
+> > >
+> > > +u64 efi_reserved_space(void)
+> > > +{
+> > > +       if (efi_no_storage_paranoia)
+> > > +               return 0;
+> > > +       return EFI_MIN_RESERVE;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(efi_reserved_space);
+> > > +
+> > >  /*
+> > >   * In the nonblocking case we do not attempt to perform garbage
+> > >   * collection if we do not have enough free space. Rather, we do the
+> > > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > > index abeff7dc0b58..d0dfa007bffc 100644
+> > > --- a/drivers/firmware/efi/efi.c
+> > > +++ b/drivers/firmware/efi/efi.c
+> > > @@ -211,6 +211,7 @@ static int generic_ops_register(void)
+> > >         generic_ops.get_variable = efi.get_variable;
+> > >         generic_ops.get_next_variable = efi.get_next_variable;
+> > >         generic_ops.query_variable_store = efi_query_variable_store;
+> > > +       generic_ops.query_variable_info = efi.query_variable_info;
+> > >
+> > >         if (efi_rt_services_supported(EFI_RT_SUPPORTED_SET_VARIABLE)) {
+> > >                 generic_ops.set_variable = efi.set_variable;
+> > > diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
+> > > index bd75b87f5fc1..c5382d5c3073 100644
+> > > --- a/drivers/firmware/efi/vars.c
+> > > +++ b/drivers/firmware/efi/vars.c
+> > > @@ -245,3 +245,15 @@ efi_status_t efivar_set_variable(efi_char16_t *name, efi_guid_t *vendor,
+> > >         return status;
+> > >  }
+> > >  EXPORT_SYMBOL_NS_GPL(efivar_set_variable, EFIVAR);
+> > > +
+> > > +efi_status_t efivar_query_variable_info(u32 attr,
+> > > +                                       u64 *storage_space,
+> > > +                                       u64 *remaining_space,
+> > > +                                       u64 *max_variable_size)
+> > > +{
+> > > +       if (!__efivars->ops->query_variable_info)
+> > > +               return EFI_UNSUPPORTED;
+> > > +       return __efivars->ops->query_variable_info(attr, storage_space,
+> > > +                       remaining_space, max_variable_size);
+> > > +}
+> > > +EXPORT_SYMBOL_NS_GPL(efivar_query_variable_info, EFIVAR);
+> > > diff --git a/fs/efivarfs/super.c b/fs/efivarfs/super.c
+> > > index 482d612b716b..064bfc0243c9 100644
+> > > --- a/fs/efivarfs/super.c
+> > > +++ b/fs/efivarfs/super.c
+> > > @@ -13,6 +13,7 @@
+> > >  #include <linux/ucs2_string.h>
+> > >  #include <linux/slab.h>
+> > >  #include <linux/magic.h>
+> > > +#include <linux/statfs.h>
+> > >
+> > >  #include "internal.h"
+> > >
+> > > @@ -23,8 +24,31 @@ static void efivarfs_evict_inode(struct inode *inode)
+> > >         clear_inode(inode);
+> > >  }
+> > >
+> > > +static int efivarfs_statfs(struct dentry *dentry, struct kstatfs *buf)
+> > > +{
+> > > +       u64 storage_space, remaining_space, max_variable_size;
+> > > +       efi_status_t status;
+> > > +       const u32 attr = (EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS |
+> > > +        EFI_VARIABLE_RUNTIME_ACCESS);
+> > > +
+> > > +       buf->f_type = dentry->d_sb->s_magic;
+> > > +       buf->f_bsize = 1;
+> > > +       buf->f_namelen = NAME_MAX;
+> > > +
+> > > +       status = efivar_query_variable_info(attr, &storage_space, &remaining_space,
+> > > +                                           &max_variable_size);
+> > > +       if (status != EFI_SUCCESS)
+> > > +               return efi_status_to_err(status);
+> > > +       buf->f_blocks = storage_space;
+> 
+> I have no idea about efivarfs specifically but I would add comments
+> why f_bsize is set to what it is and clarify the relationship between
+> f_bsize and f_blocks. Even if just for the sake of userspace to be able
+> to interpret this.
+
+Ack.
+
+Thanks for taking the time to review this patch, I'll send a new version
+soon.
 
 Regards,
 
-Hans
-
-
-> ---
->  drivers/platform/x86/gigabyte-wmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-> index 8aa665e866b8..f6ba88baee4d 100644
-> --- a/drivers/platform/x86/gigabyte-wmi.c
-> +++ b/drivers/platform/x86/gigabyte-wmi.c
-> @@ -94,7 +94,7 @@ static umode_t gigabyte_wmi_hwmon_is_visible(const void *data, enum hwmon_sensor
->  	return usable_sensors_mask & BIT(channel) ? 0444  : 0;
->  }
->  
-> -static const struct hwmon_channel_info *gigabyte_wmi_hwmon_info[] = {
-> +static const struct hwmon_channel_info * const gigabyte_wmi_hwmon_info[] = {
->  	HWMON_CHANNEL_INFO(temp,
->  			   HWMON_T_INPUT,
->  			   HWMON_T_INPUT,
+Anisse
 
