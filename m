@@ -2,124 +2,227 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BDEC77B7D
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 14 May 2023 20:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B58C7EE26
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 05:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233939AbjENUW1 (ORCPT
+        id S235564AbjEOFtm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 14 May 2023 16:22:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59822 "EHLO
+        Mon, 15 May 2023 01:49:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233729AbjENUWZ (ORCPT
+        with ESMTP id S233811AbjEOFtl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 14 May 2023 16:22:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFC161B6
-        for <platform-driver-x86@vger.kernel.org>; Sun, 14 May 2023 13:21:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684095703;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=c1tAC8MrLbkSD9UVPWiYzK6fj9aylD3GhGT6+jdvsKI=;
-        b=bLNZgyOWhWQ4bzsVFd4KT7fO7xNvsZbUJOsN0PuDnS+gCmuLOa5K8G2+vDtByv6i4qIfVc
-        VPdDoFClsHk3AhnRpLzeZ92QNIIES7S8JAzIixZZIeM2PdB5ufZUedgvRemG63i2BELQn+
-        xBlzV/xHDH57PvQ7lXdGGefWGBVc30w=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-486-4rUu5J78OEqaxbQVTrGjdw-1; Sun, 14 May 2023 16:21:41 -0400
-X-MC-Unique: 4rUu5J78OEqaxbQVTrGjdw-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-94a341efd9aso1486166266b.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 14 May 2023 13:21:41 -0700 (PDT)
+        Mon, 15 May 2023 01:49:41 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D7A41FC1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 14 May 2023 22:49:38 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1ab01bf474aso93466165ad.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 14 May 2023 22:49:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1684129778; x=1686721778;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TZ99alEe0A23tymHcdv/vfT8nEQiGh2D6cQUBbX+NYU=;
+        b=YC+K75o6oTdqYCv/UpwXe9gABJK307bP4yAL6WMj+c0OGsLbwkOJ/0OoSCS/Hfnwsu
+         GE65E5xvfgH6srsEB4tPrXUaOlutSgYPtnJ9OnZa6Sfly4dUMHmFpX5971LIfNSqGIdP
+         Nv2gRNBDawMmNUWqOTu0rbCvluknVfp9eY5z9QAJU2PYdGv+chHD3N6e9l7aDmV5kzWK
+         lSJdnZNxeGgWdSd74Lab4pJ/OB2qUQOL81v5QcFRSIwoBmezMntHOYaPBw740unBgypm
+         Fdcxp34uF51fGVRKTaWQuNCk7Asr2mpnyQ189by4GCzwMaNY9+Mm6vBizXEnrYzhR8lK
+         UKUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684095700; x=1686687700;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c1tAC8MrLbkSD9UVPWiYzK6fj9aylD3GhGT6+jdvsKI=;
-        b=fzWHgY67Ghkh01dqFl1guzbMsf8/fh6MGXeg+V8c2hgqmlglNbKUBGjf5qFMrZPH9a
-         fx5/3ONn9CeWSR1kfFmAQR6y0nnrTEnDntCtRSbUY7EosKMxvUqXuWR2WNEOGix4nOm+
-         UkdSn/n61f+YpJyNM5uCwo4PwAM0NHCpoBa4RYFxBcbt7gxv3jxtvXIBSDD2MbWg07ro
-         J4YcvJG9zEKudkFmUQXRujzz8V59I9BxvbCZn9tuZbm7lU5Ros5CzJnFKnR77jnxaNGf
-         D2pm4ywphjtL4MkeC6Qw86DbhO9Cj6LyuaX+FQlVwKaIATpKAk4YBPGFJdFotupqhOM5
-         nhMg==
-X-Gm-Message-State: AC+VfDzi+tKVDySlN3qJVHouuKBkgzcZkJCXJLPcPH0EH4ngXSZbLKWK
-        PEX8wz0imEvno/xv72C7WmSDLj9LR0n1CpKd2Zji7V6BtTXwtPhs/4mtAjYYnVdAii+9KXW1Mbj
-        8y4+xL/w5S8k9F0ct6faygxkG0F4HlquQbByvFta71A==
-X-Received: by 2002:a17:907:9444:b0:969:e304:7a22 with SMTP id dl4-20020a170907944400b00969e3047a22mr18377130ejc.18.1684095700408;
-        Sun, 14 May 2023 13:21:40 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6ZObfspH4sKNLtf9/QPLqcX34mz9nMa9vg+VBtS3wSkEN7xRGjSLO74RXlp3y46c6bNe2RSg==
-X-Received: by 2002:a17:907:9444:b0:969:e304:7a22 with SMTP id dl4-20020a170907944400b00969e3047a22mr18377118ejc.18.1684095700154;
-        Sun, 14 May 2023 13:21:40 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id hs32-20020a1709073ea000b009534211cc97sm8534633ejc.159.2023.05.14.13.21.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 May 2023 13:21:39 -0700 (PDT)
-Message-ID: <eca4b75a-3a1d-1039-1f5d-b974a920745d@redhat.com>
-Date:   Sun, 14 May 2023 22:21:38 +0200
+        d=1e100.net; s=20221208; t=1684129778; x=1686721778;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TZ99alEe0A23tymHcdv/vfT8nEQiGh2D6cQUBbX+NYU=;
+        b=P4Jqgguy+Nf68ukTi0mRPJqQcBgLPPiog/3lxOJkadQsV+oFJu8G7Cwg4n6Yn6vBQX
+         v0QjEPodE7oVmK5HF0MhVDFx7huthnanSvznRqsD0DfXunz0RZvh9kUpbnfT2OMvY428
+         fNojSarGOiVb5XsMDsrZ760zOFUJAyfI0joz2ynJxKWTdHXnpKXkeBpsSYMsRHvc7rXW
+         vtDN8S2JyRYUxsBpBmos1UEQh+TPN7HBhZsBlXd5zP1KtN0KhXkQmUAL0C4kO6xMBjUm
+         VUbGfmLHze3zAG+oLU/wIEcllGzkJ2jl6o3c13g60ryoqEEAYq96YhKta3vbDlK7RUEG
+         P+7w==
+X-Gm-Message-State: AC+VfDyK72c6A+V7OUVSIHMspBVnPfxnLWDg4scBBBPfWrE2JVdqzNH8
+        3S9XKl/CMRrcJ+VrWCX4H+yMQA==
+X-Google-Smtp-Source: ACHHUZ66EM/Ffo2wiDqrucRe8wNpu1TreTFryx+X27BDltpTe5DxTsemz+afopAg9iZvWFHQw1Mb4A==
+X-Received: by 2002:a17:902:e9d5:b0:1ac:b52e:f3e5 with SMTP id 21-20020a170902e9d500b001acb52ef3e5mr18553911plk.43.1684129777671;
+        Sun, 14 May 2023 22:49:37 -0700 (PDT)
+Received: from localhost.localdomain ([106.51.191.118])
+        by smtp.gmail.com with ESMTPSA id f10-20020a17090274ca00b001ab28f620d0sm12423277plt.290.2023.05.14.22.49.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 May 2023 22:49:37 -0700 (PDT)
+From:   Sunil V L <sunilvl@ventanamicro.com>
+To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        llvm@lists.linux.dev
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Sunil V L <sunilvl@ventanamicro.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Weili Qian <qianweili@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH V6 00/21] Add basic ACPI support for RISC-V
+Date:   Mon, 15 May 2023 11:19:07 +0530
+Message-Id: <20230515054928.2079268-1-sunilvl@ventanamicro.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 0/4] x86-android-tablets: convert to using GPIO references
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230512001815.591817-1-dmitry.torokhov@gmail.com>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230512001815.591817-1-dmitry.torokhov@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Dmitry,
+This patch series enables the basic ACPI infrastructure for RISC-V.
+Supporting external interrupt controllers is in progress and hence it is
+tested using poll based HVC SBI console and RAM disk.
 
-On 5/12/23 02:18, Dmitry Torokhov wrote:
-> Hi Hans,
-> 
-> This series came about because now software nodes can be used to
-> describe GPIOs (via PROPERTY_ENTRY_GPIO() macros) and I would like to
-> eventually get rid of gpio_keys_platform_data structure.
-> 
-> So while I was doing the conversions from GPIO_LOOKUP() tables for
-> gpio_keys devices I decided to convert the rest of them as well. Maybe
-> some time in the future we can drop support for GPIO_LOOKUP() and rely
-> on device properties exclusively.
-> 
-> This is completely untested.
+The first patch in this series is one of the patch from Jisheng's
+series [1] which is not merged yet. This patch is required to support
+ACPI since efi_init() which gets called before sbi_init() can enable
+static branches and hits a panic.
 
-Thank you for your work on this. I have hw to test this.
-
-But it seems that you have based this on an older tree,
-in 6.4-rc1 the x86-android-tablets code has been split
-over multiple files in their own subdir because it was
-becoming unyielding.
-
-Can you please rebase this on top of:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=for-next
-
-?
-
-Regards,
-
-Hans
+Below are two ECRs approved by ASWG.
+RINTC - https://drive.google.com/file/d/1R6k4MshhN3WTT-hwqAquu5nX6xSEqK2l/view
+RHCT - https://drive.google.com/file/d/1nP3nFiH4jkPMp6COOxP6123DCZKR-tia/view
 
 
+Changes since V5:
+	1) Reordered commits in the series to avoid intermediate build failure reported by Conor.
+	2) Updated hisilicon driver patch as per feedback from Herbert Xu.
+	3) Rebased to 6.4-rc2
+
+Changes since V4:
+	1) Rebased with 6.4-rc1 which has ACPICA patches now.
+	2) Split cpufeature.c patch into two by adding patch 2/7 from Conor's series [2]
+	3) Updated caching RINTC logic to avoid global.
+	4) Added driver patches to enable allmodconfig build at the start of the series.
+	5) Updated tags
+
+Changes since V3:
+	1) Added two more driver patches to workaround allmodconfig build failure.
+	2) Separated removal of riscv_of_processor_hartid() to a different patch.
+	3) Addressed Conor's feedback.
+	4) Rebased to v6.3-rc5 and added latest tags
+
+Changes since V2:
+	1) Dropped ACPI_PROCESSOR patch.
+	2) Added new patch to print debug info of RISC-V INTC in MADT
+	3) Addressed other comments from Drew.
+	4) Rebased and updated tags
+
+Changes since V1:
+	1) Dropped PCI changes and instead added dummy interfaces just to enable
+	   building ACPI core when CONFIG_PCI is enabled. Actual PCI changes will
+	   be added in future along with external interrupt controller support
+	   in ACPI.
+	2) Squashed couple of patches so that new code added gets built in each
+	   commit.
+	3) Fixed the missing wake_cpu code in timer refactor patch as pointed by
+	   Conor
+	4) Fixed an issue with SMP disabled.
+	5) Addressed other comments from Conor.
+	6) Updated documentation patch as per feedback from Sanjaya.
+	7) Fixed W=1 and checkpatch --strict issues.
+	8) Added ACK/RB tags
+
+[1] https://lore.kernel.org/all/20220821140918.3613-1-jszhang@kernel.org/
+[2] https://lore.kernel.org/linux-riscv/20230504-divisive-unsavory-5a2ff0c3c2d1@spud/
+
+These changes are available at
+https://github.com/vlsunil/linux/commits/acpi_b1_us_review_v6
+
+Testing:
+1) Build latest Qemu 
+
+2) Build EDK2 as per instructions in
+https://github.com/vlsunil/riscv-uefi-edk2-docs/wiki/RISC-V-Qemu-Virt-support
+
+3) Build Linux after enabling SBI HVC and SBI earlycon
+CONFIG_RISCV_SBI_V01=y
+CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
+CONFIG_HVC_RISCV_SBI=y
+
+4) Build buildroot.
+
+Run with below command.
+qemu-system-riscv64   -nographic \
+-drive file=Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT.fd,if=pflash,format=raw,unit=1 \
+-machine virt -smp 16 -m 2G \
+-kernel arch/riscv/boot/Image \
+-initrd buildroot/output/images/rootfs.cpio \
+-append "root=/dev/ram ro console=hvc0 earlycon=sbi"
 
 
+Jisheng Zhang (1):
+  riscv: move sbi_init() earlier before jump_label_init()
 
-> Dmitry Torokhov (4):
->   platform/x86: x86-android-tablets: convert Goodix devices to GPIO references
->   platform/x86: x86-android-tablets: convert int3496 devices to GPIO references
->   platform/x86: x86-android-tablets: convert wm1502 devices to GPIO references
->   platform/x86: x86-android-tablets: convert gpio_keys devices to GPIO references
-> 
->  drivers/platform/x86/x86-android-tablets.c | 355 ++++++++++++---------
->  1 file changed, 201 insertions(+), 154 deletions(-)
-> 
+Sunil V L (20):
+  platform/surface: Disable for RISC-V
+  crypto: hisilicon/qm: Fix to enable build with RISC-V clang
+  ACPI: tables: Print RINTC information when MADT is parsed
+  ACPI: OSL: Make should_use_kmap() 0 for RISC-V
+  RISC-V: Add support to build the ACPI core
+  ACPI: processor_core: RISC-V: Enable mapping processor to the hartid
+  RISC-V: Add ACPI initialization in setup_arch()
+  RISC-V: ACPI: Cache and retrieve the RINTC structure
+  drivers/acpi: RISC-V: Add RHCT related code
+  RISC-V: smpboot: Create wrapper setup_smp()
+  RISC-V: smpboot: Add ACPI support in setup_smp()
+  RISC-V: only iterate over possible CPUs in ISA string parser
+  RISC-V: cpufeature: Add ACPI support in riscv_fill_hwcap()
+  RISC-V: cpu: Enable cpuinfo for ACPI systems
+  irqchip/riscv-intc: Add ACPI support
+  clocksource/timer-riscv: Refactor riscv_timer_init_dt()
+  clocksource/timer-riscv: Add ACPI support
+  RISC-V: time.c: Add ACPI support for time_init()
+  RISC-V: Enable ACPI in defconfig
+  MAINTAINERS: Add entry for drivers/acpi/riscv
+
+ .../admin-guide/kernel-parameters.txt         |   8 +-
+ MAINTAINERS                                   |   7 +
+ arch/riscv/Kconfig                            |   5 +
+ arch/riscv/configs/defconfig                  |   1 +
+ arch/riscv/include/asm/acenv.h                |  11 +
+ arch/riscv/include/asm/acpi.h                 |  84 ++++++
+ arch/riscv/include/asm/cpu.h                  |   8 +
+ arch/riscv/kernel/Makefile                    |   1 +
+ arch/riscv/kernel/acpi.c                      | 251 ++++++++++++++++++
+ arch/riscv/kernel/cpu.c                       |  30 ++-
+ arch/riscv/kernel/cpufeature.c                |  42 ++-
+ arch/riscv/kernel/setup.c                     |  11 +-
+ arch/riscv/kernel/smpboot.c                   |  77 +++++-
+ arch/riscv/kernel/time.c                      |  25 +-
+ drivers/acpi/Makefile                         |   2 +
+ drivers/acpi/osl.c                            |   2 +-
+ drivers/acpi/processor_core.c                 |  29 ++
+ drivers/acpi/riscv/Makefile                   |   2 +
+ drivers/acpi/riscv/rhct.c                     |  83 ++++++
+ drivers/acpi/tables.c                         |  10 +
+ drivers/clocksource/timer-riscv.c             |  92 ++++---
+ drivers/crypto/hisilicon/qm.c                 |   5 +
+ drivers/irqchip/irq-riscv-intc.c              |  70 +++--
+ drivers/platform/surface/aggregator/Kconfig   |   2 +-
+ 24 files changed, 772 insertions(+), 86 deletions(-)
+ create mode 100644 arch/riscv/include/asm/acenv.h
+ create mode 100644 arch/riscv/include/asm/acpi.h
+ create mode 100644 arch/riscv/include/asm/cpu.h
+ create mode 100644 arch/riscv/kernel/acpi.c
+ create mode 100644 drivers/acpi/riscv/Makefile
+ create mode 100644 drivers/acpi/riscv/rhct.c
+
+-- 
+2.34.1
 
