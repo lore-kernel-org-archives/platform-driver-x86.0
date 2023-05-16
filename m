@@ -2,619 +2,137 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BC7C7EE22
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 May 2023 22:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE15C77B7F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 May 2023 07:09:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231455AbjEOWfF (ORCPT
+        id S230482AbjEPHJP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 May 2023 18:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41614 "EHLO
+        Tue, 16 May 2023 03:09:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231202AbjEOWfA (ORCPT
+        with ESMTP id S230318AbjEPHJO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 May 2023 18:35:00 -0400
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9DF57A98;
-        Mon, 15 May 2023 15:34:49 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 62BCA5C0443;
-        Mon, 15 May 2023 18:34:47 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 15 May 2023 18:34:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
-        1684190087; x=1684276487; bh=fKjJXgRuqOv1VpJiu2ab6G7x75PW7fSUZ5w
-        ezQmsXYo=; b=aU7+bqTQ15+/i10Cd+IJYxZbwzfudjNjAnRJJodBnVqABOyGn9N
-        qNNwtN3WdE+0PNJtBJna+w7ttA/JuODyJ876ff8vetquBpP6nFbKabvAnSrHN0/z
-        /V7O3zzHcaAcjNsCVuuemj8XJ8ClrnSk26DoKq96nSZYjblMHjJo0Av3b1+tTPT3
-        Xa+xntOdE49eb4x5UngXLi0QEM3FEqJjKN7tNGJcdWboAz3pE8kTiJmbi6Un57hz
-        QK7vxv9KjBRb0x0wtQ38x5nXtcKfvnHxmSRnGHCUnzFyvPwCEz0f7L29TydnhrFj
-        iW6WH9Cq+Y8YId0z0CAjaWq1C9+72paQALQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-        1684190087; x=1684276487; bh=fKjJXgRuqOv1VpJiu2ab6G7x75PW7fSUZ5w
-        ezQmsXYo=; b=YpKnWbsV9e8ymC6LUz2hraIsahHhthqWRzBItJqZi9St2hNpphx
-        6TcOj4PhG0xc1hcSlmUaIBrPIqnSeyROxKDYlPRMHz8cXh/zmXJCteC3UQDmOlqe
-        9sC4ekAduD+JJRRy09oQaiJnUdjN3EXBN5MdO67ZlneCkYx2foY24BTGT0TH07WO
-        D2D7vDd51yCYi/V2hnFpOO4EJ2HdXcmejdG4kYub/Ff3VJfV1+KuVBwKdGpgeF8q
-        nEYIrv+PB2OntE7DHL6AdxdsAw8aGAc1Dkvmr3pJKh6zRdBwf+qFOQ2BGD1xEuYP
-        Xx++ncbwrBiFiYbYYO6vrQmlok3UGclZHcQ==
-X-ME-Sender: <xms:hrNiZKlg5fxkyH8SBHNGdPvppqCriKA1JPvnZxPo5EHfpNQuh4qxOg>
-    <xme:hrNiZB0aRLR3ChLVbTdftYWusFPxkY5TAFsHZufBfoIFikb8ze_YA9yBN6Zflm6yp
-    8y1Ynz3VkFFjiXZsT4>
-X-ME-Received: <xmr:hrNiZIqEkSDQO7LPcUD_npqOCDSf9n_eL0Vfkrfn8fNlanBNCVDoPI_9rqVX2DntsS-uEw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeehkedguddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvvefkjghfofggtgfgsehtqhertdertddunecuhfhrohhmpefnuhhk
-    vgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrh
-    hnpeetteeigefhteffhfevgfffueejffevteffueekhfevjeethefhgfekffevjeehheen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvg
-    eslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:hrNiZOnWJLsWFx0wtzOzWt8qzAZwnludCMGOR2k8pbrlh2-Wl5HxkA>
-    <xmx:hrNiZI2b1DAGBUIpmCw4yRoWgThz46AUHTk6X_jHfBpP8KSJkezD8Q>
-    <xmx:hrNiZFuFKftzocOlnxKGr36832f2jJCus0QsrlD2bY5R4C80tYPljg>
-    <xmx:h7NiZJllDPXeDUZ9yHcIJ3V6YJDqFtntieH83wtEplSSH9v-T_NcFg>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 15 May 2023 18:34:40 -0400 (EDT)
-Date:   Tue, 16 May 2023 10:34:27 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v2 0/1] platform/x86: asus-wmi: add support for ASUS
- screenpad
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     platform-driver-x86@vger.kernel.org,
-        =?iso-8859-2?q?Barnab=E1s_P=F5cze?= <pobrn@protonmail.com>,
-        Ilpo =?iso-8859-1?q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, acpi4asus-user@lists.sourceforge.net,
-        corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com,
-        linux@roeck-us.net
-Message-Id: <FD1QUR.SO09CWU6HM4Q1@ljones.dev>
-In-Reply-To: <02f28fe4-bca4-f9d7-a9be-0f1999662d62@redhat.com>
-References: <20230505043013.2622603-1-luke@ljones.dev>
-        <4be2cc57-59b9-24e2-fd10-f2af175ff518@redhat.com>
-        <02f28fe4-bca4-f9d7-a9be-0f1999662d62@redhat.com>
-X-Mailer: geary/43.0
+        Tue, 16 May 2023 03:09:14 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2042.outbound.protection.outlook.com [40.107.6.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4432B19A;
+        Tue, 16 May 2023 00:09:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TLSCe2LEfXlCw8tQ9e2qG6EozU0f2ts8TgwEcXRSA8gn8uxSU9W/R9LPyCR9+L3pPG9fAtnJHNZO/GxC9up3KAgnZe5WRRVl7/x+X30z15fwHnLxh6/2y/Of17+rMe1FMY0PDBOIYQPFcv+uLzB3zSXzS+n93yoCGYB4oiLh8y7T/utoByIv+xZTeuW+bd7MOQFfMyOGnTE/kdo61+lZ1ZyUaqBz86UX3AH9udzS9jWlZWJ60sN/2f9p2iRHeffZKHmnAlvedVPnaT0iSc+tLv+LfGjSx7CS0plCk4a77VAgbQmEjzee2yMhuxDsxfZqFaD8gw7Um1hV8xiK5WCBcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+JBzsNr98FQHrkORfc9UT2IfoaBKokWJiPmEz1cRmhk=;
+ b=G2VBG3FlkDhRqKSTyG/Jba30m2RUpKKlaOLLkamaohRem2/dK3F+P3FG0PgKH87KHPmZRuOXuG3ick2zRapJPRAtGV9vKNcC37jFjLue+Wqmd30q5hR1PS28DyhL8e3VJvaQ+qMVU9f+3FpE5t1h1TccJzfIhqDmiCO+n6aBtiSZIa2a/sPkqbGvqDhNpxdpDAEj1mYBWRXxxB63Qihoy3yC7c3c5CW2Xvz2NjFs4RVZmm1wbKy63R3duhEnCerZ+vx3tAfTwNagS6d49INCkaFBkwxKI97+f97xyDDbDwOoL5F1ElpRtknWiIdcMFOrabWV+Ss7bAUQjT2IHRm2oQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+JBzsNr98FQHrkORfc9UT2IfoaBKokWJiPmEz1cRmhk=;
+ b=YB4yZOqwJyF2sSuEN05gOb1j2/vDj8htYJwWpDcBUC54xVBVOI2WVnFiDadW0stbYssvgD51jah/obwmSR+SMWRnHFpIccoJJ7CSGI8I2z/PN+7Q5XTkn1If/MM3y6XtOVI/tSLhVBMmLfY0I8YeAXWmQBmH2+x8inU8D/7WQrjIu+eYv9LHmYxxQ/9/9gT6CmhML9xCn/Ksu7N1dpsg5Ta9PcvTbo6Rc/B9XUKaS5f2AEAn9HiUW299s2uzsA0FFNIgwNz1lg513zdGFyLKxpqpUkauNtBbNhpFbbJlCXptlBAJK658ckEkW3WGpd0RFyVGu5YXSirtBClhNRsRUw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
+ by AS2PR10MB7501.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:593::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.32; Tue, 16 May
+ 2023 07:09:11 +0000
+Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::aa98:fb34:754f:8958]) by PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::aa98:fb34:754f:8958%4]) with mapi id 15.20.6387.030; Tue, 16 May 2023
+ 07:09:11 +0000
+Date:   Tue, 16 May 2023 09:09:06 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] leds: simatic-ipc-leds-gpio: split up into
+ multiple drivers
+Message-ID: <20230516090906.0d7c6058@md1za8fc.ad001.siemens.net>
+In-Reply-To: <ZGKnCmPbAw17R+sn@smile.fi.intel.com>
+References: <20230515150352.30925-1-henning.schild@siemens.com>
+        <20230515150352.30925-3-henning.schild@siemens.com>
+        <ZGKnCmPbAw17R+sn@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR0P281CA0181.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:ab::8) To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:102:269::8)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR10MB5780:EE_|AS2PR10MB7501:EE_
+X-MS-Office365-Filtering-Correlation-Id: 23e48f4d-bfed-4094-5f6d-08db55dc72a9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PfG+2NGD615/nZdQOzxw9pbaovmrfKbTlRp8dowk/lJxj5p32gRNnhGaXKvoIwddyuSyugUAyixg93rWvQlD2GghYwutb1fZXGY7yff8nLH8ebR2gO+BxwLKJ/e/OvwhlxRA2QgdQs4hYkULInnB5NxVoDjOJi58Zk4nASt8Ekgf9MnhXaq9F+C7+aG2X3s4So/KkFBSdFJ3Xr7O++4s6UNJ62ymIv6oWKC4Zv7zLasRGkJP9z2mqwSZ9UN9gTxaC2BAEjAj/fkphl7eZQ6lGU95poc+xLvI7Eq4wfSgU9NoNrEdlfqFymPQ6++8A99pVLJWDI9mpZ12cSn3bYEozjWZNVRJxs/fSyjsOiVRfgRlKKsggWFIG7bGsqzo0xXfVS+jr6Wyvq3RGAqEolAkIaH9qiuV5uLfAY7m68vEpAPfNItSIQbRP4ZYPjise894yvrAfih4rjizZlb/Mnggb9pK9pOpOWp0aaYgssZ09xB3yYg6TN7JBdfu0herDqS32je2T/Pmaywo5nR5FRURb9zUZBNWFjiitTaqPBWH5sDM6sNyOqIYPk+YnDsC67+O
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(376002)(346002)(39860400002)(136003)(396003)(451199021)(54906003)(2906002)(4744005)(478600001)(41300700001)(86362001)(8936002)(8676002)(38100700002)(44832011)(82960400001)(4326008)(6916009)(5660300002)(66946007)(66556008)(66476007)(6506007)(6512007)(9686003)(83380400001)(1076003)(316002)(186003)(6666004)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?uIQ4RIv2DWB9Cr1ue03mbK5pALnOMu18ZA5J+pI0uX7TwOs62xWSXYXmFNH2?=
+ =?us-ascii?Q?yuE5AN/2ckZp5xMzMDrW04LTo4D3xrn35mXBcS3/u8m9I32qGGxzT8gYE7N5?=
+ =?us-ascii?Q?dschChvh3Bh6kh25OyVVToJvH6F4PtKsMl8PvpRQUV1N6Vj8E016CFQAJH+l?=
+ =?us-ascii?Q?TI875MGCfROYJbwpkhi7jE9Cg7JJtiSlYkNkmRBBugckyWXC9e/jOH2xLm6J?=
+ =?us-ascii?Q?csbvkTTh94yeL4R0PrUIIwAX4PQFQ0ZHTeYDtAZzr50L3opQo7k+GcIE6Vq9?=
+ =?us-ascii?Q?/nFGBg/33ysfkcbQm5qzubEnA+KzSgl1v9PY7PPLKwNWSCnG3idxGrRLVb33?=
+ =?us-ascii?Q?VqnVxm1pi6J0tSMsO2ay95CVASHiP7Ya5jgvGqiBD3iFV9h6clrNEqRNQc3U?=
+ =?us-ascii?Q?5Vc/28zSvV+Yq30o/r6Yd9hKMMpt6fPBC9GFvUdTMsu7/mLe4duXvm9nBsYq?=
+ =?us-ascii?Q?3hFVT5pLQTXTkEfcwJQdp7Up+WEX1csddi+fwYNtTgSJab8yYUK9ANZzOp6k?=
+ =?us-ascii?Q?AhtPpeulbcmhm5uG0jKKleogQyw5gqRnoZxuNaWuWK9W8eJAeeqRYppM7ay7?=
+ =?us-ascii?Q?te6/vkIZV/z3JsHggeZzbkJGlHWevK1qvqdJ6CHbRydJIr8RCOZn6Oyr6xug?=
+ =?us-ascii?Q?ykQhzoFp9lUOtVNEE49rMuC/qlp5lglH3yvMjJ7WoUbjrDQvC0SoURKFhIEI?=
+ =?us-ascii?Q?JG4h+4dJczFOaFhKEpll1ZYcr3hp3megwmSxTZtP+2kz0Kv2+MdT6lfjO2SZ?=
+ =?us-ascii?Q?+Vx8iUp8Pq/XxiavbpmpZ86GY5yUg5ilj8WhORl7H+XGntbhZLegnNVUHDsN?=
+ =?us-ascii?Q?d5t0EZw8wfEgCXvtTNz/tk5zutJaKnczHdji9YkuROnSkP5FbyLybDTQ4DrC?=
+ =?us-ascii?Q?gz3e2OC1DeZa5qDNvrw1wzIH6JHat8DiQoXCtFCl3U0q2euQLSex/DlI5VM1?=
+ =?us-ascii?Q?FwFtd2xGx6tNiLBR7jZp24w95jKF9N9UIP2LxUoaI5/1Zq/oYld626Vu6pRS?=
+ =?us-ascii?Q?wsu3LSUIDHV9/LG9ld8F8s6vXPcEsUVBS11MkuXifmz3r0+nJ+5mbipAZml9?=
+ =?us-ascii?Q?s24eG+8ZTL48RrlAJwGOMeai7nVQyGtciMj0yWFGQy3TDoHrSK9dOPAuqouK?=
+ =?us-ascii?Q?XKYZU4+Um+5NgFZXyLz0zkvOb6XHoi5uywXLy6yNC6oQlO/j+8OuQQWGoIsg?=
+ =?us-ascii?Q?8H5cBjY5G2mjnfTWDpqsrXVUXHdoU2iFSXGwy7+yFrEwLDPMXWOogW9LnPgI?=
+ =?us-ascii?Q?mQYnGgqqTJGGeWvsmviThe7YeqdcDUe6uoTE1PKYXBWJ7+X5dLsE/QCykJy9?=
+ =?us-ascii?Q?+j4rDvp5a37RwYyUDEwp6rgTHXf0JSnu1j+ScTPQXMLQM9h8vdggLLjrEsyB?=
+ =?us-ascii?Q?xsbJxXF2b+0F37ZjS6MpYSJLeBUQud6ViDoPKTH66jpo7j4TPCN5EoEx+S+U?=
+ =?us-ascii?Q?K/GKocF9TKrgi6HKLmuNcUGPsjD0JqZ/YrdA6DlkU38bKAnt++DD0Fv2AEdx?=
+ =?us-ascii?Q?SfUvpq4oy1sf2K5PrrXrnxrYxoXIMl3Qkg7YBvlgM+hEho/Q/SK2t5Hd+bGX?=
+ =?us-ascii?Q?eNOK6fS27oSWEQ1nAnU0BN0rL8MdvJqXhQ6DWFSfMK9RxCfjMDAPyATSFut+?=
+ =?us-ascii?Q?tz9YNFOp/TMpPR/63vQe34v0wXDGsRKy5SvX96lyfkAAjg4RKZVqQMrlVguL?=
+ =?us-ascii?Q?6B7Abw=3D=3D?=
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23e48f4d-bfed-4094-5f6d-08db55dc72a9
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2023 07:09:11.0706
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qihEVTTZDGf2Dv9sIRapX0ws84TBtcY4nzB8+QZ9istcyxif2w9hZxuyrMi/HmER6L6u560ywrcFY2jeXw7pLoclu+29spkMM1X/6KOSgv8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR10MB7501
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Am Tue, 16 May 2023 00:41:30 +0300
+schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
 
+> On Mon, May 15, 2023 at 05:03:51PM +0200, Henning Schild wrote:
+> > In order to clearly describe the dependencies between the GPIO
+> > controller drivers and the users the driver is split up into a core,
+> > two drivers and a common header.  
+> 
+> AFAIU the GPIO lookup tables need a terminator entry.
 
-On Mon, May 15 2023 at 14:39:10 +0200, Hans de Goede=20
-<hdegoede@redhat.com> wrote:
-> Hi,
->=20
-> On 5/6/23 13:52, Hans de Goede wrote:
->>  Hi Luke,
->>=20
->>  On 5/5/23 06:30, Luke D. Jones wrote:
->>>  Adds support for the screenpad(-plus) found on a few ASUS laptops=20
->>> that have a main 16:9 or 16:10 screen and a shorter screen below=20
->>> the main but above the keyboard.
->>>  The support consists of:
->>>  - On off control
->>>  - Setting brightness from 0-255
->>>=20
->>>  There are some small quirks with this device when considering only=20
->>> the raw WMI methods:
->>>  1. The Off method can only switch the device off
->>>  2. Changing the brightness turns the device back on
->>>  3. To turn the device back on the brightness must be > 1
->>>  4. When the device is off the brightness can't be changed (so it=20
->>> is stored by the driver if device is off).
->>>  5. Booting with a value of 0 brightness (retained by bios) means=20
->>> the bios will set a value of > 0, < 15 which is far too dim and was=20
->>> unexpected by testers. The compromise was to set the brightness to=20
->>> 60 which is a usable brightness if the module init brightness was=20
->>> under 15.
->>>  6. When the device is off it is "unplugged"
->>>=20
->>>  All of the above points are addressed within the patch to create a=20
->>> good user experience and keep within user expectations.
->>>=20
->>>  Changelog:
->>>  - V2
->>>    - Complete refactor to use as a backlight device
->>=20
->>  Thank you on your work for this.
->>=20
->>  Unfortunately I did not get a chance to react to the v1 posting and
->>  the remarks to switch to using /sys/class/backlight there before you
->>  posted this v2.
->>=20
->>  Technically the remark to use /sys/class/backlight for this is
->>  completely correct. But due to the way how userspace uses
->>  /sys/class/backlight this is a problematic.
->>=20
->>  Userspace basically always assumes there is only 1 LCD panel
->>  and it then looks at /sys/class/backlight and picks 1
->>  /sys/class/backlight entry and uses that for the brightness
->>  slider in the desktop-environment UI / system-menu as well
->>  as to handle brightness up/down keyboard hotkey presses.
->>=20
+They never had one in the first place and that worked, i did not add
+terminators here and that also works. My guess is that .num_leds =
+ARRAY_SIZE(simatic_ipc_gpio_leds) tells "leds-gpio" how many entries
+there are. (another array without a terminator)
 
-IMO, desktops need to adjust this expectation and start offering=20
-controls for all possible screens. This would open up the possibility=20
-of setting brightness of modern external screens also. And then they=20
-should use the "Primary display" brightness controls, or at least offer=20
-an option to set which is controlled.
+But i will add them in a v4 so things are explicit and aligned with
+other similar drivers.
 
->>=20
->>  In the (recent) past the kernel used to register e.g.
->>  both /sys/class/backlight/acpi_video0 and
->>  /sys/class/backlight/intel_backlight
->>=20
->>  For ACPI resp. direct hw control of the LCD panel backlight
->>  (so both control the same backlight, sometimes both work
->>  sometimes only 1 works).
->>=20
->>  Userspace uses the backlight-type to determine which backlight
->>  class to use, using (for GNOME, but I believe everywhere) the
->>  following preference order:
->>=20
->>  1. First look for "firmware" type backlight devices (like=20
->> acpi_video0)
->>  2. Then try "platform" type backlight devices
->>  3. Last try "raw" type backlight devices
->>=20
->>  And to make things work the kernel has been hiding the "acpi_video0"
->>  entry in cases where it is known that we need the "raw" aka native
->>  type backlight.
->>=20
->>  Luke you seem to already be partly aware of this, because the patch
->>  now has this:
->>=20
->>  	props.type =3D BACKLIGHT_RAW; /* ensure this bd is last to be picked=20
->> */
->>=20
->>  but almost all modern laptops exclusively use the raw/native type
->>  for backlight control of the main LCD panel.
->>=20
->>  So now we end up with 2 "raw" type backlight devices and if
->>  e.g. gnome-settings-daemon picks the right one now sort of
->>  is left to luck.
->>=20
-
-In a test KDE at least picked the right one.
-
->>=20
->>  Well that is not entirely true, at least gnome-settings-daemon
->>  prefers raw backlight devices where the parent has an "enabled"
->>  sysfs attribute (it expects the parent to be a drm_connector
->>  object) and where that enabled attribute reads as "enabled".
->>=20
-
-Ah I see. Parent for screenpad is "platform", while the main is on igpu=20
-with parent "pci". I will paste some udev info at the end of this reply.
-
->>=20
->>  This is done for hybrid-gfx laptops where there already may
->>  be 2 raw backlight-class devices, 1 for each GPU but only
->>  1 of the 2 drm_connectors going to the main LCD panel should
->>  actually show as enabled.
->>=20
->>  So typing all this out I guess we could go ahead with using
->>  the backlight class for this after all, but this relies
->>  on userspace preferring raw backlight-class devices
->>  with a drm_connector-object parent which show as being
->>  enabled.
->>=20
->>  Any userspace code which does not do the parent has
->>  an enabled attr reading "enabled" or a similar check
->>  will end up picking a random backlight class device
->>  as control for the main panel brightness which will not
->>  always end well. So this all is a bit fragile ...
->>=20
->>  And I'm not sure what is the best thing to do here.
->>=20
->>  Barnab=E1s, Ilpo, Guenter, any comments on this ?
->=20
-> Hmm, no comments from anyone on the potential problems of using
-> /sys/class/backlight for this causing potential userspace confusion
-> since normally /sys/class/backlight devices control the main LCD
-> brightness ?
->=20
-> Luke do you have any thoughts on this yourself ?
->=20
-> And can you answer this question please ?  :
->=20
->>  Luke, question how does the second/exta panel look
->>  from an outputting video to it pov ?  Does it show
->>  up as an extra screen connected to a drm_connector
->>  on one of the GPUs. IOW can it be used with standard
->>  kernel-modesetting APIs ?
->=20
-
-Hi Hans, sorry about delay in response, just been tied up with work.
-
-As I don't actually have this kind of laptop I can't easily get info,=20
-but I can ask a few people in my discord for information. Is there=20
-anything in particular you would need to know? From my basic=20
-understanding some of the points are:
-
-1. It does show as an actual additional screen
-2. Internal wiring is unclear, when dispaly MUX is switched to dgpu the=20
-screen is still detected but not drawn to
-3. Point 2 is actually more uncertain as it seems only wayland had this=20
-issue? I will get more info.
-
-So I think now is probably a good time to raise a particular issue I've=20
-encountered with the last two years: the display MUX.
-
-As I understand it now, there are two types of new MUX - the manual=20
-switch, and the newer "Advanced Optimus" automatic switch. The issues I=20
-have are with the manual switch since I've not encountered the advanced=20
-optimus yet.
-
-When the switch is. uh. switched. the dgpu drives the internal display,=20
-and I expect that since the display is now detected through the dgpu,=20
-this is why the dgpu is kept awake to drive it. But, the igpu is also=20
-still active, and because of this the initial boot from grub to=20
-display-manager is a black screen including tty. This means anyone with=20
-an encrypted drive will never see the prompt and they believe they have=20
-a failed boot. I don't know what to do about this?
-
-What I would love is somehow to either disable the igpu in kernel if=20
-the MUX is toggled, or to change which device is the primary. Do you=20
-have any thoughts on where I should start on this?
-
-An additional problem: `boot_vga` property of display adaptors. I've=20
-been using this as a first-stage check in supergfxctl to determine if=20
-there was a switch, but it is never ever reliable - sometimes it=20
-changes, sometimes it is entirely blank (using udev to fetch=20
-properties). And then I need to use a combination of checks to=20
-determine state. So this `boot_vga` seems to always be available but is=20
-practically unusable.
-
-
-
-UDEV info dumps:
-
-Device {
-    initialized: true,
-    device_major_minor_number: None,
-    system_path:=20
-"/sys/devices/pci0000:00/0000:00:08.1/0000:09:00.0/backlight/amdgpu_bl1",
-    device_path:=20
-"/devices/pci0000:00/0000:00:08.1/0000:09:00.0/backlight/amdgpu_bl1",
-    device_node: None,
-    subsystem_name: Some(
-        "backlight",
-    ),
-    system_name: "amdgpu_bl1",
-    instance_number: Some(
-        1,
-    ),
-    device_type: None,
-    driver: None,
-    action: None,
-    parent: Some(
-        Device {
-            initialized: true,
-            device_major_minor_number: None,
-            system_path:=20
-"/sys/devices/pci0000:00/0000:00:08.1/0000:09:00.0",
-            device_path:=20
-"/devices/pci0000:00/0000:00:08.1/0000:09:00.0",
-            device_node: None,
-            subsystem_name: Some(
-                "pci",
-            ),
-            system_name: "0000:09:00.0",
-            instance_number: Some(
-                0,
-            ),
-            device_type: None,
-            driver: Some(
-                "amdgpu",
-            ),
-            action: None,
-            parent: Some(
-                Device {
-                    initialized: true,
-                    device_major_minor_number: None,
-                    system_path: "/sys/devices/pci0000:00/0000:00:08.1",
-                    device_path: "/devices/pci0000:00/0000:00:08.1",
-                    device_node: None,
-                    subsystem_name: Some(
-                        "pci",
-                    ),
-                    system_name: "0000:00:08.1",
-                    instance_number: Some(
-                        1,
-                    ),
-                    device_type: None,
-                    driver: Some(
-                        "pcieport",
-                    ),
-                    action: None,
-                    parent: Some(
-                        Device {
-                            initialized: false,
-                            device_major_minor_number: None,
-                            system_path: "/sys/devices/pci0000:00",
-                            device_path: "/devices/pci0000:00",
-                            device_node: None,
-                            subsystem_name: None,
-                            system_name: "pci0000:00",
-                            instance_number: Some(
-                                0,
-                            ),
-                            device_type: None,
-                            driver: None,
-                            action: None,
-                            parent: None,
-                        },
-                    ),
-                },
-            ),
-        },
-    ),
-}
-  [properties]
-    - "CURRENT_TAGS" ":systemd:seat:"
-    - "DEVPATH"=20
-"/devices/pci0000:00/0000:00:08.1/0000:09:00.0/backlight/amdgpu_bl1"
-    - "DMI_FAMILY" "ROG Zephyrus Duo 16"
-    - "DMI_VENDOR" "ASUSTeK COMPUTER INC."
-    - "ID_FOR_SEAT" "backlight-pci-0000_09_00_0"
-    - "ID_PATH" "pci-0000:09:00.0"
-    - "ID_PATH_TAG" "pci-0000_09_00_0"
-    - "NVME_HOST_IFACE" "none"
-    - "SUBSYSTEM" "backlight"
-    - "SYSTEMD_WANTS" "systemd-backlight@backlight:amdgpu_bl1.service"
-    - "TAGS" ":systemd:seat:"
-    - "USEC_INITIALIZED" "6189554"
-  [attributes]
-    - "actual_brightness" ""
-    - "bl_power" ""
-    - "brightness" ""
-    - "device" ""
-    - "max_brightness" ""
-    - "power/autosuspend_delay_ms" ""
-    - "power/control" ""
-    - "power/runtime_active_time" ""
-    - "power/runtime_status" ""
-    - "power/runtime_suspended_time" ""
-    - "scale" ""
-    - "subsystem" ""
-    - "type" ""
-    - "uevent" ""
-
-Device {
-    initialized: true,
-    device_major_minor_number: None,
-    system_path:=20
-"/sys/devices/platform/asus-nb-wmi/backlight/asus_screenpad",
-    device_path:=20
-"/devices/platform/asus-nb-wmi/backlight/asus_screenpad",
-    device_node: None,
-    subsystem_name: Some(
-        "backlight",
-    ),
-    system_name: "asus_screenpad",
-    instance_number: None,
-    device_type: None,
-    driver: None,
-    action: None,
-    parent: Some(
-        Device {
-            initialized: true,
-            device_major_minor_number: None,
-            system_path: "/sys/devices/platform/asus-nb-wmi",
-            device_path: "/devices/platform/asus-nb-wmi",
-            device_node: None,
-            subsystem_name: Some(
-                "platform",
-            ),
-            system_name: "asus-nb-wmi",
-            instance_number: None,
-            device_type: None,
-            driver: Some(
-                "asus-nb-wmi",
-            ),
-            action: None,
-            parent: Some(
-                Device {
-                    initialized: false,
-                    device_major_minor_number: None,
-                    system_path: "/sys/devices/platform",
-                    device_path: "/devices/platform",
-                    device_node: None,
-                    subsystem_name: None,
-                    system_name: "platform",
-                    instance_number: None,
-                    device_type: None,
-                    driver: None,
-                    action: None,
-                    parent: None,
-                },
-            ),
-        },
-    ),
-}
-  [properties]
-    - "CURRENT_TAGS" ":systemd:seat:"
-    - "DEVPATH" "/devices/platform/asus-nb-wmi/backlight/asus_screenpad"
-    - "DMI_FAMILY" "ROG Zephyrus Duo 16"
-    - "DMI_VENDOR" "ASUSTeK COMPUTER INC."
-    - "ID_FOR_SEAT" "backlight-platform-asus-nb-wmi"
-    - "ID_PATH" "platform-asus-nb-wmi"
-    - "ID_PATH_TAG" "platform-asus-nb-wmi"
-    - "NVME_HOST_IFACE" "none"
-    - "SUBSYSTEM" "backlight"
-    - "SYSTEMD_WANTS"=20
-"systemd-backlight@backlight:asus_screenpad.service"
-    - "TAGS" ":systemd:seat:"
-    - "USEC_INITIALIZED" "6323833"
-  [attributes]
-    - "actual_brightness" ""
-    - "bl_power" ""
-    - "brightness" ""
-    - "device" ""
-    - "max_brightness" ""
-    - "power/autosuspend_delay_ms" ""
-    - "power/control" ""
-    - "power/runtime_active_time" ""
-    - "power/runtime_status" ""
-    - "power/runtime_suspended_time" ""
-    - "scale" ""
-    - "subsystem" ""
-    - "type" ""
-    - "uevent" ""
-
-
-Device {
-    initialized: true,
-    device_major_minor_number: None,
-    system_path:=20
-"/sys/devices/pci0000:00/0000:00:08.1/0000:09:00.0/drm/card1/card1-DP-1",
-    device_path:=20
-"/devices/pci0000:00/0000:00:08.1/0000:09:00.0/drm/card1/card1-DP-1",
-    device_node: None,
-    subsystem_name: Some(
-        "drm",
-    ),
-    system_name: "card1-DP-1",
-    instance_number: Some(
-        1,
-    ),
-    device_type: Some(
-        "drm_connector",
-    ),
-    driver: None,
-    action: None,
-    parent: Some(
-        Device {
-            initialized: true,
-            device_major_minor_number: Some(
-                57857,
-            ),
-            system_path:=20
-"/sys/devices/pci0000:00/0000:00:08.1/0000:09:00.0/drm/card1",
-            device_path:=20
-"/devices/pci0000:00/0000:00:08.1/0000:09:00.0/drm/card1",
-            device_node: Some(
-                "/dev/dri/card1",
-            ),
-            subsystem_name: Some(
-                "drm",
-            ),
-            system_name: "card1",
-            instance_number: Some(
-                1,
-            ),
-            device_type: Some(
-                "drm_minor",
-            ),
-            driver: None,
-            action: None,
-            parent: Some(
-                Device {
-                    initialized: true,
-                    device_major_minor_number: None,
-                    system_path:=20
-"/sys/devices/pci0000:00/0000:00:08.1/0000:09:00.0",
-                    device_path:=20
-"/devices/pci0000:00/0000:00:08.1/0000:09:00.0",
-                    device_node: None,
-                    subsystem_name: Some(
-                        "pci",
-                    ),
-                    system_name: "0000:09:00.0",
-                    instance_number: Some(
-                        0,
-                    ),
-                    device_type: None,
-                    driver: Some(
-                        "amdgpu",
-                    ),
-                    action: None,
-                    parent: Some(
-                        Device {
-                            initialized: true,
-                            device_major_minor_number: None,
-                            system_path:=20
-"/sys/devices/pci0000:00/0000:00:08.1",
-                            device_path:=20
-"/devices/pci0000:00/0000:00:08.1",
-                            device_node: None,
-                            subsystem_name: Some(
-                                "pci",
-                            ),
-                            system_name: "0000:00:08.1",
-                            instance_number: Some(
-                                1,
-                            ),
-                            device_type: None,
-                            driver: Some(
-                                "pcieport",
-                            ),
-                            action: None,
-                            parent: Some(
-                                Device {
-                                    initialized: false,
-                                    device_major_minor_number: None,
-                                    system_path:=20
-"/sys/devices/pci0000:00",
-                                    device_path: "/devices/pci0000:00",
-                                    device_node: None,
-                                    subsystem_name: None,
-                                    system_name: "pci0000:00",
-                                    instance_number: Some(
-                                        0,
-                                    ),
-                                    device_type: None,
-                                    driver: None,
-                                    action: None,
-                                    parent: None,
-                                },
-                            ),
-                        },
-                    ),
-                },
-            ),
-        },
-    ),
-}
-  [properties]
-    - "CURRENT_TAGS" ":master-of-seat:seat:"
-    - "DEVPATH"=20
-"/devices/pci0000:00/0000:00:08.1/0000:09:00.0/drm/card1/card1-DP-1"
-    - "DEVTYPE" "drm_connector"
-    - "DMI_FAMILY" "ROG Zephyrus Duo 16"
-    - "DMI_VENDOR" "ASUSTeK COMPUTER INC."
-    - "ID_FOR_SEAT" "drm-pci-0000_09_00_0"
-    - "ID_PATH" "pci-0000:09:00.0"
-    - "ID_PATH_TAG" "pci-0000_09_00_0"
-    - "SUBSYSTEM" "drm"
-    - "TAGS" ":master-of-seat:seat:"
-    - "USEC_INITIALIZED" "6196005"
-  [attributes]
-    - "ddc" ""
-    - "device" ""
-    - "dpms" ""
-    - "edid" ""
-    - "enabled" ""
-    - "modes" ""
-    - "power/autosuspend_delay_ms" ""
-    - "power/control" ""
-    - "power/runtime_active_time" ""
-    - "power/runtime_status" ""
-    - "power/runtime_suspended_time" ""
-    - "status" ""
-    - "subsystem" ""
-    - "uevent" ""
->=20
-
-
+Henning
