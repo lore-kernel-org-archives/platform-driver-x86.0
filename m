@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36203C77B7F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 May 2023 15:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FA7C7EE23
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 May 2023 15:51:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231890AbjEQPu5 (ORCPT
+        id S231983AbjEQPu7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 17 May 2023 11:50:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48582 "EHLO
+        Wed, 17 May 2023 11:50:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231658AbjEQPui (ORCPT
+        with ESMTP id S231766AbjEQPuz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 17 May 2023 11:50:38 -0400
-Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C1815FC4;
-        Wed, 17 May 2023 08:50:36 -0700 (PDT)
-Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-19a16355c51so545347fac.0;
-        Wed, 17 May 2023 08:50:36 -0700 (PDT)
+        Wed, 17 May 2023 11:50:55 -0400
+Received: from mail-oa1-x2d.google.com (mail-oa1-x2d.google.com [IPv6:2001:4860:4864:20::2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFE1F83C3;
+        Wed, 17 May 2023 08:50:38 -0700 (PDT)
+Received: by mail-oa1-x2d.google.com with SMTP id 586e51a60fabf-19a156dd5d2so372385fac.0;
+        Wed, 17 May 2023 08:50:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684338636; x=1686930636;
+        d=gmail.com; s=20221208; t=1684338638; x=1686930638;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dkmqTOnqH10zqck+vlU1cotzouf6/Ip6L8zG46cMmoY=;
-        b=CAU17i1l7jtC89q381glB5a6BzvhjXTFypQbNJ7Sf6n2+fxRBrYfiboVoZSy17Mz3V
-         r9uOxL72Iseoa6t0PXooLZyT2DAZVjdMmghadwFj1E7z+N3ln2RU3H7TU1siEMr2VmAy
-         wbHjBn4KTkPK9H86q9ZgFX+ZOYByR7A75AqvEipP+/CXoJkQkRfCuu1XmeCSBh/mD/oF
-         SmLGKTixmxvfSKBLHCSdM6W0mezvNJfOb2VV0/do6yRoSa9FL7f4WQUtTNzw4WM/P/ed
-         KPtdmxcGwQSf2FAEZVR65JHdHe3gbRAZu11j8nhHVDuhWRGnD6vpcBXBemBiKvPJJoUu
-         0C0Q==
+        bh=NAlJNssbztU5bvMMa+yxpnEzLU0I7hXq54k+hRJkXyc=;
+        b=ZG39UtbrrGfV9IfyOiM6P5kemWGCaW1vyugYoeSGdgbibF1VLYZAhjHyNj7JmM7grN
+         ba8U9FCLnwCzgIJpTFvR6oF0ry3MFpp1XZ+kYIuftj97746rELkNZARC/Yg6XeFvs3Wg
+         oGnQi5jQAjVDXFYdeQCwjHGLYs6D1aSstAHVdp4yJ7FhkllG3mmMBp8hwUZ5Ps8MnA7l
+         6kXgcZuwUnYtoSs/KjuiEelU2mIEKkOQye4JLRI61CutC7qFEzY8c+7+Y1QOx7MHJo5O
+         I8XWeemto6U6OTK9q0XAM1XQFDjNI87S87AkSDEReI8PC8MUYDWSAZ4L/ma6k2dGnSGF
+         y6eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684338636; x=1686930636;
+        d=1e100.net; s=20221208; t=1684338638; x=1686930638;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dkmqTOnqH10zqck+vlU1cotzouf6/Ip6L8zG46cMmoY=;
-        b=T8Zr77DS/lRaskaumcCXzC+mSazB+9SLm3ZulnQACIBa4XmmXSLXTHihEp7ds3kK5J
-         GOLqARd6LkUG68dBH/RpF8k36gtrvWKHYa2sTn0aid1LWWxk5NiRMkCbKxbYI+yBvWCa
-         AHrt1KvE80CZYlIQAurwqiqMUhdegAkvOXdi3DD2CW3oqcqtkUGM1cD5Q+7TcwwqNh4Y
-         VLsk8/vEke+7t2nCK3n3raxIAZkMRYWjTBR/WiRFLdf3MTYdQzGMWK9+05JSIerjzCUJ
-         XrMtN3HtP3osrhXcGeshsw2kvka+gp6RUtfyNhGYc+RBAmGcXQW7U9e8HE0m35uLa5UL
-         BaKQ==
-X-Gm-Message-State: AC+VfDwngWfXytH9KPMaQL2ml80EThk6BR4agdpsf0waOj251nKfazkM
-        xapaa7aSbR5bdt8q+IeFSbE=
-X-Google-Smtp-Source: ACHHUZ42iI0WNXHF/scQAgXp5TMrW5VyQc13KPQcxeuNDiyzS6BrI1WTTKben5/TO+dMtX4LT5aIXA==
-X-Received: by 2002:a05:6870:4c4:b0:17e:32dd:6003 with SMTP id u4-20020a05687004c400b0017e32dd6003mr20518935oam.26.1684338635702;
-        Wed, 17 May 2023 08:50:35 -0700 (PDT)
+        bh=NAlJNssbztU5bvMMa+yxpnEzLU0I7hXq54k+hRJkXyc=;
+        b=b1GDFmWPnmp11ILdr8QAWUnIgwXO3fNUFRojbRgvI7ITbus84FB+8b/HNivM2Dl+tE
+         Ocw/Lod+/xYtgtS55uRTOwZOpzixOItuKY1vHytsL8mH4tLKh6j2RZZmNh6p1N84elz4
+         u6XPF8uFvxHOQitksbGHbn/5rRBWD8n0Bop4UzJ429phZrqSpneeZAhiP5+kBpEP1I2M
+         hdV8oIZwAcQn6jYcwtByNaO+MwZPdYdjX7hOv6FpVd01VqbcEIYRtOQF4X8pJJnEmgHh
+         ykkJ2IgxkH6AU7HJKfcEgY4aLK60Sm+/6g1CfwAFeAit9aa5p3/cEMyNSiZCdZHnWh07
+         ghHg==
+X-Gm-Message-State: AC+VfDxC67+I/2sjJsa3r/2loEj/jyv1LjU1G1+N1opz5RrCfMHJfzok
+        8bLQQjIRz6/pMkNXk+fZrqw=
+X-Google-Smtp-Source: ACHHUZ7YxhEJ6pviMYQzP15oHvoI6miZ2pYKCygzL4Rdy636HTVmvneerNip/Moe6nAVlQgcf/cGZw==
+X-Received: by 2002:a05:6870:1a94:b0:19a:695:15a5 with SMTP id ef20-20020a0568701a9400b0019a069515a5mr2049917oab.25.1684338637953;
+        Wed, 17 May 2023 08:50:37 -0700 (PDT)
 Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:3754:4771:3b5:e909])
-        by smtp.gmail.com with ESMTPSA id j5-20020a056870a48500b0018b12e3a392sm14214468oal.42.2023.05.17.08.50.34
+        by smtp.gmail.com with ESMTPSA id j5-20020a056870a48500b0018b12e3a392sm14214468oal.42.2023.05.17.08.50.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 08:50:35 -0700 (PDT)
+        Wed, 17 May 2023 08:50:37 -0700 (PDT)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de,
         ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v14 05/13] hp-bioscfg: enum-attributes
-Date:   Wed, 17 May 2023 10:50:18 -0500
-Message-Id: <20230517155026.28535-6-jorge.lopez2@hp.com>
+Subject: [PATCH v14 07/13] hp-bioscfg: order-list-attributes
+Date:   Wed, 17 May 2023 10:50:20 -0500
+Message-Id: <20230517155026.28535-8-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230517155026.28535-1-jorge.lopez2@hp.com>
 References: <20230517155026.28535-1-jorge.lopez2@hp.com>
@@ -112,129 +112,134 @@ Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 ---
 Based on the latest platform-drivers-x86.git/for-next
 ---
- .../x86/hp/hp-bioscfg/enum-attributes.c       | 465 ++++++++++++++++++
- 1 file changed, 465 insertions(+)
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+ .../x86/hp/hp-bioscfg/order-list-attributes.c | 454 ++++++++++++++++++
+ 1 file changed, 454 insertions(+)
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
 new file mode 100644
-index 000000000000..80842835606d
+index 000000000000..73ed75e0e384
 --- /dev/null
-+++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-@@ -0,0 +1,465 @@
++++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+@@ -0,0 +1,454 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Functions corresponding to enumeration type attributes under
-+ * BIOS Enumeration GUID for use with hp-bioscfg driver.
++ * Functions corresponding to ordered list type attributes under
++ * BIOS ORDERED LIST GUID for use with hp-bioscfg driver.
 + *
 + * Copyright (c) 2022 HP Development Company, L.P.
 + */
 +
 +#include "bioscfg.h"
 +
-+GET_INSTANCE_ID(enumeration);
++GET_INSTANCE_ID(ordered_list);
 +
 +static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 +{
-+	int instance_id = get_enumeration_instance_id(kobj);
++	int instance_id = get_ordered_list_instance_id(kobj);
 +
 +	if (instance_id < 0)
 +		return -EIO;
 +
 +	return sysfs_emit(buf, "%s\n",
-+			 bioscfg_drv.enumeration_data[instance_id].current_value);
++			 bioscfg_drv.ordered_list_data[instance_id].current_value);
 +}
 +
-+/**
-+ * validate_enumeration_input() -
-+ * Validate input of current_value against possible values
-+ *
-+ * @instance_id: The instance on which input is validated
-+ * @buf: Input value
-+ */
-+static int validate_enumeration_input(int instance_id, const char *buf)
++static int replace_char_str(u8 *buffer, char *repl_char, char *repl_with)
 +{
-+	int i;
-+	int found = 0;
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
++	char *src = buffer;
++	int buflen = strlen(buffer);
++	int item;
 +
-+	/* Is it a read only attribute */
-+	if (enum_data->common.is_readonly)
-+		return -EIO;
-+
-+	for (i = 0; i < enum_data->possible_values_size && !found; i++)
-+		if (!strcmp(enum_data->possible_values[i], buf))
-+			found = 1;
-+
-+	if (!found)
++	if (buflen < 1)
 +		return -EINVAL;
++
++	for (item = 0; item < buflen; item++)
++		if (src[item] == *repl_char)
++			src[item] = *repl_with;
 +
 +	return 0;
 +}
 +
-+static void update_enumeration_value(int instance_id, char *attr_value)
++/**
++ * validate_ordered_list_input() -
++ * Validate input of current_value against possible values
++ *
++ * @instance: The instance on which input is validated
++ * @buf: Input value
++ */
++static int validate_ordered_list_input(int instance, char *buf)
 +{
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-+
-+	strscpy(enum_data->current_value,
-+		attr_value,
-+		sizeof(enum_data->current_value));
++	/* validation is done by BIOS. This validation function will
++	 * convert semicolon to commas. BIOS uses commas as
++	 * separators when reporting ordered-list values.
++	 */
++	return replace_char_str(buf, SEMICOLON_SEP, COMMA_SEP);
 +}
 +
-+ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, enumeration);
-+static struct kobj_attribute enumeration_display_name =
-+		__ATTR_RO(display_name);
++static void update_ordered_list_value(int instance, char *attr_value)
++{
++	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance];
 +
-+ATTRIBUTE_PROPERTY_STORE(current_value, enumeration);
-+static struct kobj_attribute enumeration_current_val =
-+		__ATTR_RW(current_value);
++	strscpy(ordered_list_data->current_value,
++		attr_value,
++		sizeof(ordered_list_data->current_value));
++}
 +
-+ATTRIBUTE_VALUES_PROPERTY_SHOW(possible_values, enumeration, SEMICOLON_SEP);
-+static struct kobj_attribute enumeration_poss_val =
-+		__ATTR_RO(possible_values);
++ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, ordered_list);
++static struct kobj_attribute ordered_list_display_name =
++	__ATTR_RO(display_name);
++
++ATTRIBUTE_PROPERTY_STORE(current_value, ordered_list);
++static struct kobj_attribute ordered_list_current_val =
++	__ATTR_RW_MODE(current_value, 0644);
++
++ATTRIBUTE_VALUES_PROPERTY_SHOW(elements, ordered_list, SEMICOLON_SEP);
++static struct kobj_attribute ordered_list_elements_val =
++	__ATTR_RO(elements);
 +
 +static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
 +			 char *buf)
 +{
-+	return sysfs_emit(buf, "enumeration\n");
++	return sysfs_emit(buf, "ordered-list\n");
 +}
 +
-+static struct kobj_attribute enumeration_type =
-+		__ATTR_RO(type);
++static struct kobj_attribute ordered_list_type =
++	__ATTR_RO(type);
 +
 +static struct kobj_attribute common_display_langcode =
 +	__ATTR_RO(display_name_language_code);
 +
-+static struct attribute *enumeration_attrs[] = {
++static struct attribute *ordered_list_attrs[] = {
 +	&common_display_langcode.attr,
-+	&enumeration_display_name.attr,
-+	&enumeration_current_val.attr,
-+	&enumeration_poss_val.attr,
-+	&enumeration_type.attr,
++	&ordered_list_display_name.attr,
++	&ordered_list_current_val.attr,
++	&ordered_list_elements_val.attr,
++	&ordered_list_type.attr,
 +	NULL
 +};
 +
-+static const struct attribute_group enumeration_attr_group = {
-+	.attrs = enumeration_attrs,
++static const struct attribute_group ordered_list_attr_group = {
++	.attrs = ordered_list_attrs,
 +};
 +
-+int hp_alloc_enumeration_data(void)
++int hp_alloc_ordered_list_data(void)
 +{
-+	bioscfg_drv.enumeration_instances_count =
-+		hp_get_instance_count(HP_WMI_BIOS_ENUMERATION_GUID);
-+
-+	bioscfg_drv.enumeration_data = kcalloc(bioscfg_drv.enumeration_instances_count,
-+					       sizeof(*bioscfg_drv.enumeration_data), GFP_KERNEL);
-+	if (!bioscfg_drv.enumeration_data) {
-+		bioscfg_drv.enumeration_instances_count = 0;
++	bioscfg_drv.ordered_list_instances_count =
++		hp_get_instance_count(HP_WMI_BIOS_ORDERED_LIST_GUID);
++	bioscfg_drv.ordered_list_data = kcalloc(bioscfg_drv.ordered_list_instances_count,
++						sizeof(*bioscfg_drv.ordered_list_data),
++						GFP_KERNEL);
++	if (!bioscfg_drv.ordered_list_data) {
++		bioscfg_drv.ordered_list_instances_count = 0;
 +		return -ENOMEM;
 +	}
 +	return 0;
 +}
 +
 +/* Expected Values types associated with each element */
-+static const acpi_object_type expected_enum_types[] = {
-+	[NAME] = ACPI_TYPE_STRING,
++static const acpi_object_type expected_order_types[] = {
++	[NAME]	= ACPI_TYPE_STRING,
 +	[VALUE] = ACPI_TYPE_STRING,
 +	[PATH] = ACPI_TYPE_STRING,
 +	[IS_READONLY] = ACPI_TYPE_INTEGER,
@@ -244,79 +249,86 @@ index 000000000000..80842835606d
 +	[PREREQUISITES_SIZE] = ACPI_TYPE_INTEGER,
 +	[PREREQUISITES] = ACPI_TYPE_STRING,
 +	[SECURITY_LEVEL] = ACPI_TYPE_INTEGER,
-+	[ENUM_CURRENT_VALUE] = ACPI_TYPE_STRING,
-+	[ENUM_SIZE] = ACPI_TYPE_INTEGER,
-+	[ENUM_POSSIBLE_VALUES] = ACPI_TYPE_STRING,
++	[ORD_LIST_SIZE] = ACPI_TYPE_INTEGER,
++	[ORD_LIST_ELEMENTS] = ACPI_TYPE_STRING,
 +};
 +
-+static int hp_populate_enumeration_elements_from_package(union acpi_object *enum_obj,
-+							 int enum_obj_count,
-+							 int instance_id)
++static int hp_populate_ordered_list_elements_from_package(union acpi_object *order_obj,
++							  int order_obj_count,
++							  int instance_id)
 +{
 +	char *str_value = NULL;
 +	int value_len;
-+	u32 size = 0;
-+	u32 int_value;
-+	int elem = 0;
-+	int reqs;
-+	int pos_values;
 +	int ret;
++	u32 size;
++	u32 int_value;
++	int elem;
++	int reqs;
 +	int eloc;
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
++	char *tmpstr = NULL;
++	char *part_tmp = NULL;
++	int tmp_len = 0;
++	char *part = NULL;
++	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
 +
-+	for (elem = 1, eloc = 1; elem < enum_obj_count; elem++, eloc++) {
-+		/* ONLY look at the first ENUM_ELEM_CNT elements */
-+		if (eloc == ENUM_ELEM_CNT)
-+			goto exit_enumeration_package;
++	if (!order_obj)
++		return -EINVAL;
 +
-+		switch (enum_obj[elem].type) {
++	for (elem = 1, eloc = 1; elem < order_obj_count; elem++, eloc++) {
++		/* ONLY look at the first ORDERED_ELEM_CNT elements */
++		if (eloc == ORD_ELEM_CNT)
++			goto exit_list;
++
++		switch (order_obj[elem].type) {
 +		case ACPI_TYPE_STRING:
-+			if (PREREQUISITES != elem && ENUM_POSSIBLE_VALUES != elem) {
-+				ret = hp_convert_hexstr_to_str(enum_obj[elem].string.pointer,
-+							       enum_obj[elem].string.length,
++			if (elem != PREREQUISITES && elem != ORD_LIST_ELEMENTS) {
++				ret = hp_convert_hexstr_to_str(order_obj[elem].string.pointer,
++							       order_obj[elem].string.length,
 +							       &str_value, &value_len);
 +				if (ret)
-+					return -EINVAL;
++					continue;
 +			}
 +			break;
 +		case ACPI_TYPE_INTEGER:
-+			int_value = (u32)enum_obj[elem].integer.value;
++			int_value = (u32)order_obj[elem].integer.value;
 +			break;
 +		default:
-+			pr_warn("Unsupported object type [%d]\n", enum_obj[elem].type);
++			pr_warn("Unsupported object type [%d]\n", order_obj[elem].type);
 +			continue;
 +		}
 +
 +		/* Check that both expected and read object type match */
-+		if (expected_enum_types[eloc] != enum_obj[elem].type) {
++		if (expected_order_types[eloc] != order_obj[elem].type) {
 +			pr_err("Error expected type %d for elem %d, but got type %d instead\n",
-+			       expected_enum_types[eloc], elem, enum_obj[elem].type);
++			       expected_order_types[eloc], elem, order_obj[elem].type);
 +			return -EIO;
 +		}
 +
-+		/* Assign appropriate element value to corresponding field */
++		/* Assign appropriate element value to corresponding field*/
 +		switch (eloc) {
-+		case NAME:
 +		case VALUE:
++			strscpy(ordered_list_data->current_value,
++				str_value, sizeof(ordered_list_data->current_value));
++			replace_char_str(ordered_list_data->current_value, COMMA_SEP, SEMICOLON_SEP);
 +			break;
 +		case PATH:
-+			strscpy(enum_data->common.path, str_value,
-+				sizeof(enum_data->common.path));
++			strscpy(ordered_list_data->common.path, str_value,
++				sizeof(ordered_list_data->common.path));
 +			break;
 +		case IS_READONLY:
-+			enum_data->common.is_readonly = int_value;
++			ordered_list_data->common.is_readonly = int_value;
 +			break;
 +		case DISPLAY_IN_UI:
-+			enum_data->common.display_in_ui = int_value;
++			ordered_list_data->common.display_in_ui = int_value;
 +			break;
 +		case REQUIRES_PHYSICAL_PRESENCE:
-+			enum_data->common.requires_physical_presence = int_value;
++			ordered_list_data->common.requires_physical_presence = int_value;
 +			break;
 +		case SEQUENCE:
-+			enum_data->common.sequence = int_value;
++			ordered_list_data->common.sequence = int_value;
 +			break;
 +		case PREREQUISITES_SIZE:
-+			enum_data->common.prerequisites_size = int_value;
++			ordered_list_data->common.prerequisites_size = int_value;
 +			if (int_value > MAX_PREREQUISITES_SIZE)
 +				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
 +
@@ -330,131 +342,116 @@ index 000000000000..80842835606d
 +			if (int_value == 0)
 +				eloc++;
 +			break;
-+
 +		case PREREQUISITES:
-+			size = min_t(u32, enum_data->common.prerequisites_size, MAX_PREREQUISITES_SIZE);
++			size = min_t(u32, ordered_list_data->common.prerequisites_size,
++				     MAX_PREREQUISITES_SIZE);
 +			for (reqs = 0; reqs < size; reqs++) {
-+				if (elem >= enum_obj_count) {
-+					pr_err("Error enum-objects package is too small\n");
-+					return -EINVAL;
-+				}
-+
-+				ret = hp_convert_hexstr_to_str(enum_obj[elem + reqs].string.pointer,
-+							       enum_obj[elem + reqs].string.length,
++				ret = hp_convert_hexstr_to_str(order_obj[elem + reqs].string.pointer,
++							       order_obj[elem + reqs].string.length,
 +							       &str_value, &value_len);
 +
 +				if (ret)
-+					return -EINVAL;
++					continue;
 +
-+				strscpy(enum_data->common.prerequisites[reqs],
++				strscpy(ordered_list_data->common.prerequisites[reqs],
 +					str_value,
-+					sizeof(enum_data->common.prerequisites[reqs]));
++					sizeof(ordered_list_data->common.prerequisites[reqs]));
 +
 +				kfree(str_value);
 +			}
 +			break;
 +
 +		case SECURITY_LEVEL:
-+			enum_data->common.security_level = int_value;
++			ordered_list_data->common.security_level = int_value;
 +			break;
 +
-+		case ENUM_CURRENT_VALUE:
-+			strscpy(enum_data->current_value,
-+				str_value, sizeof(enum_data->current_value));
-+			break;
-+		case ENUM_SIZE:
-+			enum_data->possible_values_size = int_value;
-+			if (int_value > MAX_VALUES_SIZE)
-+				pr_warn("Possible number values size value exceeded the maximum number of elements supported or data may be malformed\n");
-+
++		case ORD_LIST_SIZE:
++			ordered_list_data->elements_size = int_value;
++			if (int_value > MAX_ELEMENTS_SIZE)
++				pr_warn("Ordered List size value exceeded the maximum number of elements supported or data may be malformed\n");
 +			/*
 +			 * This HACK is needed to keep the expected
 +			 * element list pointing to the right obj[elem].type
-+			 * when the size is zero. POSSIBLE_VALUES
-+			 * object is omitted by BIOS when the size is zero.
++			 * when the size is zero. ORD_LIST_ELEMENTS
++			 * object is omitted by BIOS when the size is
++			 * zero.
 +			 */
 +			if (int_value == 0)
 +				eloc++;
 +			break;
++		case ORD_LIST_ELEMENTS:
++			size = ordered_list_data->elements_size;
 +
-+		case ENUM_POSSIBLE_VALUES:
-+			size = enum_data->possible_values_size;
++			/*
++			 * Ordered list data is stored in hex and comma separated format
++			 * Convert the data and split it to show each element
++			 */
++			ret = hp_convert_hexstr_to_str(str_value, value_len, &tmpstr, &tmp_len);
++			if (ret)
++				goto exit_list;
 +
-+			for (pos_values = 0; pos_values < size && pos_values < MAX_VALUES_SIZE;
-+			     pos_values++) {
-+				if (elem >= enum_obj_count) {
-+					pr_err("Error enum-objects package is too small\n");
-+					return -EINVAL;
-+				}
++			part_tmp = tmpstr;
++			part = strsep(&part_tmp, COMMA_SEP);
++			if (!part)
++				strscpy(ordered_list_data->elements[0],
++					tmpstr,
++					sizeof(ordered_list_data->elements[0]));
 +
-+				ret = hp_convert_hexstr_to_str(enum_obj[elem + pos_values].string.pointer,
-+							       enum_obj[elem + pos_values].string.length,
-+							       &str_value, &value_len);
-+
-+				if (ret)
-+					return -EINVAL;
-+
-+				/*
-+				 * ignore strings when possible values size
-+				 * is greater than MAX_VALUES_SIZE
-+				 */
-+				if (size < MAX_VALUES_SIZE)
-+					strscpy(enum_data->possible_values[pos_values],
-+						str_value,
-+						sizeof(enum_data->possible_values[pos_values]));
++			for (elem = 1; elem < MAX_ELEMENTS_SIZE && part; elem++) {
++				strscpy(ordered_list_data->elements[elem],
++					part,
++					sizeof(ordered_list_data->elements[elem]));
++				part = strsep(&part_tmp, SEMICOLON_SEP);
 +			}
++
 +			break;
 +		default:
-+			pr_warn("Invalid element: %d found in Enumeration attribute or data may be malformed\n", elem);
++			pr_warn("Invalid element: %d found in Ordered_List attribute or data may be malformed\n", elem);
 +			break;
 +		}
-+
++		kfree(tmpstr);
 +		kfree(str_value);
 +	}
 +
-+exit_enumeration_package:
++exit_list:
++	kfree(tmpstr);
 +	kfree(str_value);
 +	return 0;
 +}
 +
 +/**
-+ * hp_populate_enumeration_package_data() -
-+ * Populate all properties of an instance under enumeration attribute
++ * hp_populate_ordered_list_package_data() -
++ * Populate all properties of an instance under ordered_list attribute
 + *
-+ * @enum_obj: ACPI object with enumeration data
++ * @order_obj: ACPI object with ordered_list data
 + * @instance_id: The instance to enumerate
 + * @attr_name_kobj: The parent kernel object
 + */
-+int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
-+					 int instance_id,
-+					 struct kobject *attr_name_kobj)
++int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int instance_id,
++					  struct kobject *attr_name_kobj)
 +{
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
++	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
 +
-+	enum_data->attr_name_kobj = attr_name_kobj;
++	ordered_list_data->attr_name_kobj = attr_name_kobj;
 +
-+	hp_populate_enumeration_elements_from_package(enum_obj,
-+						      enum_obj->package.count,
-+						      instance_id);
-+	hp_update_attribute_permissions(enum_data->common.is_readonly,
-+					&enumeration_current_val);
-+	/*
-+	 * Several attributes have names such "MONDAY". Friendly
-+	 * user nane is generated to make the name more descriptive
-+	 */
-+	hp_friendly_user_name_update(enum_data->common.path,
++	hp_populate_ordered_list_elements_from_package(order_obj,
++						       order_obj->package.count,
++						       instance_id);
++	hp_update_attribute_permissions(ordered_list_data->common.is_readonly,
++					&ordered_list_current_val);
++	hp_friendly_user_name_update(ordered_list_data->common.path,
 +				     attr_name_kobj->name,
-+				     enum_data->common.display_name,
-+				     sizeof(enum_data->common.display_name));
-+	return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
++				     ordered_list_data->common.display_name,
++				     sizeof(ordered_list_data->common.display_name));
++	return sysfs_create_group(attr_name_kobj, &ordered_list_attr_group);
 +}
 +
-+static int hp_populate_enumeration_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
-+							int instance_id)
++static int hp_populate_ordered_list_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
++							 int instance_id)
 +{
 +	int reqs;
 +	int values;
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
++	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
 +
 +	/*
 +	 * In earlier implementation, reported errors were ignored
@@ -464,128 +461,120 @@ index 000000000000..80842835606d
 +	 */
 +
 +	// VALUE:
-+	hp_get_string_from_buffer(&buffer_ptr, buffer_size, enum_data->current_value,
-+				  sizeof(enum_data->current_value));
++	hp_get_string_from_buffer(&buffer_ptr, buffer_size, ordered_list_data->current_value,
++				  sizeof(ordered_list_data->current_value));
++	replace_char_str(ordered_list_data->current_value, COMMA_SEP, SEMICOLON_SEP);
 +
 +	// PATH:
-+	hp_get_string_from_buffer(&buffer_ptr, buffer_size, enum_data->common.path,
-+				  sizeof(enum_data->common.path));
++	hp_get_string_from_buffer(&buffer_ptr, buffer_size, ordered_list_data->common.path,
++				  sizeof(ordered_list_data->common.path));
 +
 +	// IS_READONLY:
 +	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &enum_data->common.is_readonly);
++				   &ordered_list_data->common.is_readonly);
 +
 +	//DISPLAY_IN_UI:
 +	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &enum_data->common.display_in_ui);
++				   &ordered_list_data->common.display_in_ui);
 +
 +	// REQUIRES_PHYSICAL_PRESENCE:
 +	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &enum_data->common.requires_physical_presence);
++				   &ordered_list_data->common.requires_physical_presence);
 +
 +	// SEQUENCE:
 +	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &enum_data->common.sequence);
++				   &ordered_list_data->common.sequence);
 +
 +	// PREREQUISITES_SIZE:
 +	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &enum_data->common.prerequisites_size);
++				   &ordered_list_data->common.prerequisites_size);
 +
-+	if (enum_data->common.prerequisites_size > MAX_PREREQUISITES_SIZE) {
++	if (ordered_list_data->common.prerequisites_size > MAX_PREREQUISITES_SIZE) {
 +		/* Report a message and limit prerequisite size to maximum value */
-+		pr_warn("Enum Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-+		enum_data->common.prerequisites_size = MAX_PREREQUISITES_SIZE;
++		pr_warn("String Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
++		ordered_list_data->common.prerequisites_size = MAX_PREREQUISITES_SIZE;
 +	}
 +
 +	// PREREQUISITES:
-+	for (reqs = 0; reqs < enum_data->common.prerequisites_size; reqs++)
++	for (reqs = 0; reqs < ordered_list_data->common.prerequisites_size; reqs++)
 +		hp_get_string_from_buffer(&buffer_ptr, buffer_size,
-+					  enum_data->common.prerequisites[reqs],
-+					  sizeof(enum_data->common.prerequisites[reqs]));
++					  ordered_list_data->common.prerequisites[reqs],
++					  sizeof(ordered_list_data->common.prerequisites[reqs]));
 +
 +	// SECURITY_LEVEL:
 +	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &enum_data->common.security_level);
++				   &ordered_list_data->common.security_level);
 +
-+	// ENUM_CURRENT_VALUE:
-+	hp_get_string_from_buffer(&buffer_ptr, buffer_size,
-+				  enum_data->current_value,
-+				  sizeof(enum_data->current_value));
-+	// ENUM_SIZE:
++	// ORD_LIST_SIZE:
 +	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &enum_data->possible_values_size);
++				   &ordered_list_data->elements_size);
 +
-+	if (enum_data->possible_values_size > MAX_VALUES_SIZE) {
-+		/* Report a message and limit possible values size to maximum value */
-+		pr_warn("Enum Possible size value exceeded the maximum number of elements supported or data may be malformed\n");
-+		enum_data->possible_values_size = MAX_VALUES_SIZE;
++	if (ordered_list_data->elements_size > MAX_ELEMENTS_SIZE) {
++		/* Report a message and limit elements size to maximum value */
++		pr_warn("Ordered List size value exceeded the maximum number of elements supported or data may be malformed\n");
++		ordered_list_data->elements_size = MAX_ELEMENTS_SIZE;
 +	}
 +
-+	// ENUM_POSSIBLE_VALUES:
-+
-+	for (values = 0; values < enum_data->possible_values_size; values++)
++	// ORD_LIST_ELEMENTS:
++	for (values = 0; values < ordered_list_data->elements_size; values++)
 +		hp_get_string_from_buffer(&buffer_ptr, buffer_size,
-+					  enum_data->possible_values[values],
-+					  sizeof(enum_data->possible_values[values]));
++					  ordered_list_data->elements[values],
++					  sizeof(ordered_list_data->elements[values]));
 +
 +	return 0;
 +}
 +
 +/**
-+ * hp_populate_enumeration_buffer_data() -
-+ * Populate all properties of an instance under enumeration attribute
++ * hp_populate_ordered_list_buffer_data() - Populate all properties of an
++ * instance under ordered list attribute
 + *
 + * @buffer_ptr: Buffer pointer
 + * @buffer_size: Buffer size
 + * @instance_id: The instance to enumerate
 + * @attr_name_kobj: The parent kernel object
 + */
-+int hp_populate_enumeration_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
-+					int instance_id,
-+					struct kobject *attr_name_kobj)
++int hp_populate_ordered_list_buffer_data(u8 *buffer_ptr, u32 *buffer_size, int instance_id,
++					 struct kobject *attr_name_kobj)
 +{
-+	struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
++	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
 +
-+	enum_data->attr_name_kobj = attr_name_kobj;
++	ordered_list_data->attr_name_kobj = attr_name_kobj;
 +
-+	/* Populate enumeration elements */
-+	hp_populate_enumeration_elements_from_buffer(buffer_ptr, buffer_size, instance_id);
-+
-+	hp_update_attribute_permissions(enum_data->common.is_readonly,
-+					&enumeration_current_val);
-+	/*
-+	 * Several attributes have names such "MONDAY". A Friendlier
-+	 * user nane is generated to make the name more descriptive
-+	 */
-+	hp_friendly_user_name_update(enum_data->common.path,
++	/* Populate ordered list elements */
++	hp_populate_ordered_list_elements_from_buffer(buffer_ptr, buffer_size,
++						      instance_id);
++	hp_update_attribute_permissions(ordered_list_data->common.is_readonly,
++					&ordered_list_current_val);
++	hp_friendly_user_name_update(ordered_list_data->common.path,
 +				     attr_name_kobj->name,
-+				     enum_data->common.display_name,
-+				     sizeof(enum_data->common.display_name));
++				     ordered_list_data->common.display_name,
++				     sizeof(ordered_list_data->common.display_name));
 +
-+	return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
++	return sysfs_create_group(attr_name_kobj, &ordered_list_attr_group);
 +}
 +
 +/**
-+ * hp_exit_enumeration_attributes() - Clear all attribute data
++ * hp_exit_ordered_list_attributes() - Clear all attribute data
 + *
 + * Clears all data allocated for this group of attributes
 + */
-+void hp_exit_enumeration_attributes(void)
++void hp_exit_ordered_list_attributes(void)
 +{
 +	int instance_id;
 +
-+	for (instance_id = 0; instance_id < bioscfg_drv.enumeration_instances_count;
++	for (instance_id = 0; instance_id < bioscfg_drv.ordered_list_instances_count;
 +	     instance_id++) {
-+		struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-+		struct kobject *attr_name_kobj = enum_data->attr_name_kobj;
++		struct kobject *attr_name_kobj =
++			bioscfg_drv.ordered_list_data[instance_id].attr_name_kobj;
 +
 +		if (attr_name_kobj)
-+			sysfs_remove_group(attr_name_kobj, &enumeration_attr_group);
++			sysfs_remove_group(attr_name_kobj,
++					   &ordered_list_attr_group);
 +	}
-+	bioscfg_drv.enumeration_instances_count = 0;
++	bioscfg_drv.ordered_list_instances_count = 0;
 +
-+	kfree(bioscfg_drv.enumeration_data);
-+	bioscfg_drv.enumeration_data = NULL;
++	kfree(bioscfg_drv.ordered_list_data);
++	bioscfg_drv.ordered_list_data = NULL;
 +}
 -- 
 2.34.1
