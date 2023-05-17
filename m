@@ -2,288 +2,277 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFE2C77B75
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 May 2023 15:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BA6C77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 May 2023 15:50:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230009AbjEQPiv (ORCPT
+        id S230041AbjEQPub (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 17 May 2023 11:38:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39726 "EHLO
+        Wed, 17 May 2023 11:50:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229983AbjEQPiu (ORCPT
+        with ESMTP id S229683AbjEQPua (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 17 May 2023 11:38:50 -0400
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6EF2E42;
-        Wed, 17 May 2023 08:38:48 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id BAD683200979;
-        Wed, 17 May 2023 11:38:46 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Wed, 17 May 2023 11:38:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
-        :cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to; s=fm3; t=1684337926; x=1684424326; bh=8tUkqu4Snx
-        JslSlwewBUm38PcMeP/YT6yZUNpdaIIDU=; b=DyYZzMJMGFjD7wnpL6j6isdox4
-        aOFJUSvvkY5rs7ZKwt2JtSGtImbrII0Ah+DPSe2KvIsJwC9cPniQ3kjbDsYe9pXf
-        PSVIc276h2rJ0WzgkyTmpfguxiiBhWckxx7/j4RDpkWfsC4w74NI0FWSkuT/k62P
-        Jm4tLvIqDYiicyqSFjE3hio5ymWlnn/mN8WnGqg5RCoflFLe7X4nbQbE0lGn7aAV
-        7B7iFeMZUv3+8jC1iIf3XvdRPtn0zJBH2UR2KWH53aYnXPoqKFIrZraXdqz/C4nm
-        /HJSBBBEPh1KOZIWvaQlrvQSacSH+xldDJDTzE/STppeB1a2koy/agnAeO3w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1684337926; x=1684424326; bh=8tUkqu4SnxJsl
-        SlwewBUm38PcMeP/YT6yZUNpdaIIDU=; b=TENbR30rVUVF4k3ujylMj5bzlx+pZ
-        ZZ+bc0+YgT9EEdAZFktuvKjL7mhOAt+HtPspZIdAkVatid9M6UGkp7TrzjAtYS4N
-        Yc+mWZ/6GTZmVQq2iEWpETW/EF5ff0GRC6vIU0yYM8V60O9fwNNsI1RzfqQx6SzB
-        sNcyYTDVISYX5cIV4ax/DCHjbIhbIcCnJu0+YGLLtYL7/AlGI8QByTss8vfddWF0
-        XWr+sUo7Ni5eVTTrpW7FA6GYm9N/WGLVFyp8r+gRdvdePGb7oB+C5jooTTlPyn/F
-        VcURvFsjFSpQqofwjiu7TiWCaURfzp2pYYjnU1bDYbiFvErksMTyE31iw==
-X-ME-Sender: <xms:BfVkZIehF5y55-piwtquWCZPkImNXgRvgcNWQZgoze_CsZmFdsGaFg>
-    <xme:BfVkZKMsmfNYEFA_iAfRmgRvfHQ_iwibvCcklJn5Qn6W_2eDgysCAanMJ4Wu62NMp
-    ZCvDs1EbXxqqLtAfmU>
-X-ME-Received: <xmr:BfVkZJjL9s28rAB-13cPtYLrKxcgiuC_lDkGh35aF5TBMci5nKVkO9zie1e_ioUssUuhynT3thCzdHHWCyuwG2dTMEWmSbivSO5Vwd3Bb3xL>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeeiuddgleduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomheptehnihhsshgv
-    ucetshhtihgvrhcuoegrnhhishhsvgesrghsthhivghrrdgvuheqnecuggftrfgrthhtvg
-    hrnheptdffhfelkeehhfehfeettdfhjefgffdvtdelhefftdejffdtheekteeffeeileek
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnih
-    hsshgvsegrshhtihgvrhdrvghu
-X-ME-Proxy: <xmx:BfVkZN-rAjLqVn3RKYAcQ0owthRHK3y1q7KPPHiwGgK5J-w-AHyhYw>
-    <xmx:BfVkZEtMZcEoKYZ0RYDCbzNjuzxpm-nfjn0LeiQlB0e3G_jOk67O1w>
-    <xmx:BfVkZEF6tzreWaP2VieF_ihIHFDF0l8-hCCf8hW0Yc6AlXg5mZbdjA>
-    <xmx:BvVkZFOk0Ykz4lJXKa8uH2ChXnoL6dZTqPUDc0FJ1p6bvU4oYDNlsQ>
-Feedback-ID: iccec46d4:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 17 May 2023 11:38:42 -0400 (EDT)
-From:   Anisse Astier <anisse@astier.eu>
-To:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
-        Christian Brauner <brauner@kernel.org>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Jeremy Kerr <jk@ozlabs.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anisse Astier <an.astier@criteo.com>, lennart@poettering.net,
-        Richard Hughes <hughsient@gmail.com>,
-        "Limonciello, Mario" <Mario.Limonciello@amd.com>,
-        Anisse Astier <anisse@astier.eu>
-Subject: [PATCH v2] efivarfs: expose used and total size
-Date:   Wed, 17 May 2023 17:38:12 +0200
-Message-Id: <20230517153812.2010174-1-anisse@astier.eu>
+        Wed, 17 May 2023 11:50:30 -0400
+Received: from mail-oa1-x2c.google.com (mail-oa1-x2c.google.com [IPv6:2001:4860:4864:20::2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E789B4;
+        Wed, 17 May 2023 08:50:29 -0700 (PDT)
+Received: by mail-oa1-x2c.google.com with SMTP id 586e51a60fabf-19a16c8d70cso331732fac.2;
+        Wed, 17 May 2023 08:50:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684338629; x=1686930629;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kp91NGnKmeqxxoPve0tp68TOqbttZMnuUPLj0Q3dWTU=;
+        b=rJXSO/0X4+mzvSMqlu3yV9L9H0UXivozzdyBZqYg6JjDmXtv07VuicUfnm60os3S7I
+         t2fJxmqanTJEi6FdOSh9wmD27QKUaD+g7lM/rKPO5BWY2hUa2XuCAeECxkU9rurBM3pT
+         FdiFkbId85/P926KA73YTmYerNuyu+XhjNiW7j4M3VwfdSdL/Euuj5xGvSk0ZQui0xo9
+         mzfOlr8bDmGA6AzNPkswcWiIdEWjYybuYeaq8EO/Rt2cFcAdz9Jvbp083Ix/ECVZzWiU
+         9fG6IxLRSVW5K1YL7TTVgb/lUM59KFeKt87F25l10P9HZB4xERHu19evEDVzKMNIEZbQ
+         eL6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684338629; x=1686930629;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kp91NGnKmeqxxoPve0tp68TOqbttZMnuUPLj0Q3dWTU=;
+        b=HBYvfnhU/w2OUM1hRQw7RmbVdDo0XiJeveJ+y7NH9pumwBonGojuE2dO628YrrnUAh
+         94CPiKYmBofgAFyO2sFBdtpkocecAzzqEtpCpblntDE+tLW+bwBruRVft0kdbnlVpVUE
+         VqyUZKOkOjk9MleZKsVupLOCdQxuD49UAyRLBhIuvo6XRgEcP3NPJbEnT5jOT4oi3W+K
+         eGNIRH/k6FbccRLSyTQtsH9KVvQ4eKn2GVlvDw8cBG0ia3o8SHIUDau9RCWtY7rxSGWC
+         UzvWRMFaf8QMLj0ZL+GvRLMlCyZIqhGJ70EX4l23U9NlTNWroRY6ZEwPxAUnAvYnb3I8
+         vdKw==
+X-Gm-Message-State: AC+VfDwMy6UPpTAh4mhpsUZxskSTBSL6wvNsw5yuxpX1rgOVahuMN4HR
+        OkjsGv7sFNeEF+WJ77EOLhCGndv3XiQ=
+X-Google-Smtp-Source: ACHHUZ7K8Eo+Dtt/BSqfYqy7/jYDy3fdJ0SpVW60FvcQe1BxCxYQAw6G9CVl2/hxhQg++VdOOs33UA==
+X-Received: by 2002:a05:6871:40f:b0:187:c066:a395 with SMTP id d15-20020a056871040f00b00187c066a395mr19239901oag.0.1684338628696;
+        Wed, 17 May 2023 08:50:28 -0700 (PDT)
+Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:3754:4771:3b5:e909])
+        by smtp.gmail.com with ESMTPSA id j5-20020a056870a48500b0018b12e3a392sm14214468oal.42.2023.05.17.08.50.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 08:50:28 -0700 (PDT)
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
+        ilpo.jarvinen@linux.intel.com
+Subject: [PATCH v14 00/13] hp-bioscfg driver
+Date:   Wed, 17 May 2023 10:50:13 -0500
+Message-Id: <20230517155026.28535-1-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Anisse Astier <an.astier@criteo.com>
+HP BIOS Configuration driver purpose is to provide a driver supporting
+the latest sysfs class firmware attributes framework allowing the user
+to change BIOS settings and security solutions on HP Inc.’s commercial
+notebooks.
 
-When writing EFI variables, one might get errors with no other message
-on why it fails. Being able to see how much is used by EFI variables
-helps analyzing such issues.
+Many features of HP Commercial notebooks can be managed using Windows
+Management Instrumentation (WMI). WMI is an implementation of Web-Based
+Enterprise Management (WBEM) that provides a standards-based interface
+for changing and monitoring system settings. HP BIOSCFG driver provides
+a native Linux solution and the exposed features facilitates the
+migration to Linux environments.
 
-Since this is not a conventionnal filesystem, block size is
-intentionnally set to 1 instead of PAGE_SIZE.
+The Linux security features to be provided in hp-bioscfg driver enables
+managing the BIOS settings and security solutions via sysfs, a virtual
+filesystem that can be used by user-mode applications. The new
+documentation cover HP-specific firmware sysfs attributes such Secure
+Platform Management and Sure Start. Each section provides security
+feature description and identifies sysfs directories and files exposed
+by the driver.
 
-x86 quirks of reserved size are taken into account; so that available
-and free size can be different, further helping debugging space issues.
+Many HP Commercial notebooks include a feature called Secure Platform
+Management (SPM), which replaces older password-based BIOS settings
+management with public key cryptography. PC secure product management
+begins when a target system is provisioned with cryptographic keys
+that are used to ensure the integrity of communications between system
+management utilities and the BIOS.
 
-With this patch, one can see the remaining space in EFI variable storage
-via efivarfs, like this:
+HP Commercial notebooks have several BIOS settings that control its
+behaviour and capabilities, many of which are related to security.
+To prevent unauthorized changes to these settings, the system can
+be configured to use a cryptographic signature-based authorization
+string that the BIOS will use to verify authorization to modify the
+setting.
 
-   $ df -h /sys/firmware/efi/efivars/
-   Filesystem      Size  Used Avail Use% Mounted on
-   efivarfs        176K  106K   66K  62% /sys/firmware/efi/efivars
+Linux Security components are under development and not published yet.
+The only linux component is the driver (hp bioscfg) at this time.
+Other published security components are under Windows.
 
-Signed-off-by: Anisse Astier <an.astier@criteo.com>
+Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+
 ---
-Notes:
+Based on the latest platform-drivers-x86.git/for-next
 
-Patch isn't split per subsystem intentionally, for better understanding
-of intent; I don't think it's necessary, but split could be trivial in
-an another version.
+History
 
-Changes since v1:
- - update commit message to show how it can be used in userspace
- - add comments to explain the values put in f_bsize, f_blocks, f_bfree
-   and f_bavail
- - rebase on top v6.4-rc2
+Version 14
+	Only patches marked [update] changed between version 14 and 13
+	Sorted commit patches alphabetically
+	Rename ordered-attributes to order-list-attributes
 
-Thanks to Christan Brauner for the review.
+	Patches
+	 Documentation
+	 biosattr-interface 		[update]
+	 bioscfg
+	 bioscfg-h
+	 enum-attributes 		[update]
+	 int-attributes
+	 order-list-attributes
+	 passwdattr-interface
+	 spmobj-attributes
+	 string-attributes
+	 surestart-attributes 
+	 Makefile ../hp/Makefile ../hp/Kconfig 
+	 MAINTAINERS
 
-Regards,
 
-Anisse
+Version 13
+	Only patches marked [update] changed between version 12 and 13
+	Sorted commit patches alphabetically
+	Rename ordered-attributes to order-list-attributes
 
----
- arch/x86/platform/efi/quirks.c |  8 ++++++++
- drivers/firmware/efi/efi.c     |  1 +
- drivers/firmware/efi/vars.c    | 12 ++++++++++++
- fs/efivarfs/super.c            | 36 +++++++++++++++++++++++++++++++++-
- include/linux/efi.h            | 10 ++++++++++
- 5 files changed, 66 insertions(+), 1 deletion(-)
+	Patches
+	 Documentation 			[update]
+	 biosattr-interface 		[update]
+	 bioscfg 			[update]
+	 bioscfg-h 			[update]
+	 enum-attributes 		[update]
+	 int-attributes 		[update]
+	 order-list-attributes 		[update]
+	 passwdattr-interface 		[update]
+	 spmobj-attributes 		[update]
+	 string-attributes 		[update]
+	 surestart-attributes 		[update] 
+	 Makefile ../hp/Makefile ../hp/Kconfig 
+	 MAINTAINERS
 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index b0b848d6933a..587fa51230e2 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -114,6 +114,14 @@ void efi_delete_dummy_variable(void)
- 				     EFI_VARIABLE_RUNTIME_ACCESS, 0, NULL);
- }
- 
-+u64 efi_reserved_space(void)
-+{
-+	if (efi_no_storage_paranoia)
-+		return 0;
-+	return EFI_MIN_RESERVE;
-+}
-+EXPORT_SYMBOL_GPL(efi_reserved_space);
-+
- /*
-  * In the nonblocking case we do not attempt to perform garbage
-  * collection if we do not have enough free space. Rather, we do the
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index abeff7dc0b58..d0dfa007bffc 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -211,6 +211,7 @@ static int generic_ops_register(void)
- 	generic_ops.get_variable = efi.get_variable;
- 	generic_ops.get_next_variable = efi.get_next_variable;
- 	generic_ops.query_variable_store = efi_query_variable_store;
-+	generic_ops.query_variable_info = efi.query_variable_info;
- 
- 	if (efi_rt_services_supported(EFI_RT_SUPPORTED_SET_VARIABLE)) {
- 		generic_ops.set_variable = efi.set_variable;
-diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
-index bfc5fa6aa47b..e9dc7116daf1 100644
---- a/drivers/firmware/efi/vars.c
-+++ b/drivers/firmware/efi/vars.c
-@@ -245,3 +245,15 @@ efi_status_t efivar_set_variable(efi_char16_t *name, efi_guid_t *vendor,
- 	return status;
- }
- EXPORT_SYMBOL_NS_GPL(efivar_set_variable, EFIVAR);
-+
-+efi_status_t efivar_query_variable_info(u32 attr,
-+					u64 *storage_space,
-+					u64 *remaining_space,
-+					u64 *max_variable_size)
-+{
-+	if (!__efivars->ops->query_variable_info)
-+		return EFI_UNSUPPORTED;
-+	return __efivars->ops->query_variable_info(attr, storage_space,
-+			remaining_space, max_variable_size);
-+}
-+EXPORT_SYMBOL_NS_GPL(efivar_query_variable_info, EFIVAR);
-diff --git a/fs/efivarfs/super.c b/fs/efivarfs/super.c
-index 482d612b716b..c27de959cb5b 100644
---- a/fs/efivarfs/super.c
-+++ b/fs/efivarfs/super.c
-@@ -13,6 +13,7 @@
- #include <linux/ucs2_string.h>
- #include <linux/slab.h>
- #include <linux/magic.h>
-+#include <linux/statfs.h>
- 
- #include "internal.h"
- 
-@@ -23,8 +24,41 @@ static void efivarfs_evict_inode(struct inode *inode)
- 	clear_inode(inode);
- }
- 
-+static int efivarfs_statfs(struct dentry *dentry, struct kstatfs *buf)
-+{
-+	u64 storage_space, remaining_space, max_variable_size;
-+	efi_status_t status;
-+	const u32 attr = (EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS |
-+	 EFI_VARIABLE_RUNTIME_ACCESS);
-+
-+	buf->f_type = dentry->d_sb->s_magic;
-+	/*
-+	 * This is not a normal filesystem, so no point in pretending it has a block
-+	 * size; we declare f_bsize to 1, so that we can then report the exact value
-+	 * sent by EFI QueryVariableInfo in f_blocks and f_bfree
-+	 */
-+	buf->f_bsize = 1;
-+	buf->f_namelen = NAME_MAX;
-+
-+	status = efivar_query_variable_info(attr, &storage_space, &remaining_space,
-+					    &max_variable_size);
-+	if (status != EFI_SUCCESS)
-+		return efi_status_to_err(status);
-+	buf->f_blocks = storage_space;
-+	buf->f_bfree = remaining_space;
-+	/*
-+	 * In f_bavail we declare the free space that the kernel will allow writing
-+	 * when the storage_paranoia x86 quirk is active. To use more, users
-+	 * should boot the kernel with efi_no_storage_paranoia.
-+	 */
-+	if (remaining_space > efi_reserved_space())
-+		buf->f_bavail = remaining_space - efi_reserved_space();
-+	else
-+		buf->f_bavail = 0;
-+	return 0;
-+}
- static const struct super_operations efivarfs_ops = {
--	.statfs = simple_statfs,
-+	.statfs = efivarfs_statfs,
- 	.drop_inode = generic_delete_inode,
- 	.evict_inode = efivarfs_evict_inode,
- };
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 7aa62c92185f..d2b686191870 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -703,6 +703,7 @@ static inline void efi_enter_virtual_mode (void) {}
- extern efi_status_t efi_query_variable_store(u32 attributes,
- 					     unsigned long size,
- 					     bool nonblocking);
-+extern u64 efi_reserved_space(void);
- #else
- 
- static inline efi_status_t efi_query_variable_store(u32 attributes,
-@@ -711,6 +712,10 @@ static inline efi_status_t efi_query_variable_store(u32 attributes,
- {
- 	return EFI_SUCCESS;
- }
-+static inline u64 efi_reserved_space(void)
-+{
-+	return 0;
-+}
- #endif
- extern void __iomem *efi_lookup_mapped_addr(u64 phys_addr);
- 
-@@ -1042,6 +1047,7 @@ struct efivar_operations {
- 	efi_set_variable_t *set_variable;
- 	efi_set_variable_t *set_variable_nonblocking;
- 	efi_query_variable_store_t *query_variable_store;
-+	efi_query_variable_info_t *query_variable_info;
- };
- 
- struct efivars {
-@@ -1087,6 +1093,10 @@ efi_status_t efivar_set_variable_locked(efi_char16_t *name, efi_guid_t *vendor,
- efi_status_t efivar_set_variable(efi_char16_t *name, efi_guid_t *vendor,
- 				 u32 attr, unsigned long data_size, void *data);
- 
-+efi_status_t efivar_query_variable_info(u32 attr, u64 *storage_space,
-+					u64 *remaining_space,
-+					u64 *max_variable_size);
-+
- #if IS_ENABLED(CONFIG_EFI_CAPSULE_LOADER)
- extern bool efi_capsule_pending(int *reset_type);
- 
+Version 12
+	Only patches marked [update] changed between version 11 and 12
+
+	Patches
+	 Documentation 			[update]
+	 biosattr-interface 		[update]
+	 bioscfg 			[update]
+	 int-attributes 		[update]
+	 ordered-attributes 		[update]
+	 passwdobj-attributes 	[deleted]
+	 string-attributes 		[update]
+	 bioscfg-h 			[update]
+	 enum-attributes 		[update]
+	 passwdattr-interface 		[update]
+	 spmobj-attributes 		[update]
+	 surestart-attributes 		[update] 
+	 Makefile ../hp/Makefile ../hp/Kconfig [update]
+	 MAINTAINERS
+
+
+Version 11
+	Only patches marked [update] changed between version 10 and 11
+
+	Patches
+	 Documentation
+	 biosattr-interface 		[update]
+	 bioscfg
+	 int-attributes
+	 ordered-attributes
+	 passwdobj-attributes 		[update]
+	 string-attributes
+	 bioscfg-h
+	 enum-attributes
+	 passwdattr-interface
+	 spmobj-attributes 		[update]
+	 surestart-attributes 		[update]
+	 Makefile ../hp/Makefile ../hp/Kconfig
+	 MAINTAINERS
+
+Version 10
+	Break down changes to single files per patch
+	Removed SPM/statusbin support
+	Patches
+	 Documentation
+	 biosattr-interface
+	 bioscfg
+	 int-attributes
+	 ordered-attributes
+	 passwdobj-attributes
+	 string-attributes
+	 bioscfg-h
+	 enum-attributes
+	 passwdattr-interface
+	 spmobj-attributes
+	 surestart-attributes
+	 Makefile ../hp/Makefile ../hp/Kconfig
+	 MAINTAINERS
+
+Version 9
+	Includes only sysfs-class-firmware-attributes documentation
+
+Version 8
+	Includes only sysfs-class-firmware-attributes documentation
+
+Version 7
+	Includes only sysfs-class-firmware-attributes documentation
+
+Version 6
+	Breaks down the changes into 4 patches
+	SureAdmin-attributes was removed
+
+Version 5
+	Remove version 4 patch 1
+	Address review changes proposed in Version 4
+	Reorganize all patches number and file order
+
+
+
+
+Jorge Lopez (13):
+  hp-bioscfg: Documentation
+  hp-bioscfg: bioscfg-h
+  hp-bioscfg: bioscfg
+  hp-bioscfg: biosattr-interface
+  hp-bioscfg: enum-attributes
+  hp-bioscfg: int-attributes
+  hp-bioscfg: order-list-attributes
+  hp-bioscfg: passwdobj-attributes
+  hp-bioscfg: spmobj-attributes
+  hp-bioscfg: string-attributes
+  hp-bioscfg: surestart-attributes
+  hp-bioscfg: Makefile
+  hp-bioscfg: MAINTAINERS
+
+ .../testing/sysfs-class-firmware-attributes   | 102 +-
+ MAINTAINERS                                   |   6 +
+ drivers/platform/x86/hp/Kconfig               |  16 +
+ drivers/platform/x86/hp/Makefile              |   1 +
+ drivers/platform/x86/hp/hp-bioscfg/Makefile   |  11 +
+ .../x86/hp/hp-bioscfg/biosattr-interface.c    | 317 ++++++
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  | 988 ++++++++++++++++++
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.h  | 486 +++++++++
+ .../x86/hp/hp-bioscfg/enum-attributes.c       | 465 +++++++++
+ .../x86/hp/hp-bioscfg/int-attributes.c        | 440 ++++++++
+ .../x86/hp/hp-bioscfg/order-list-attributes.c | 454 ++++++++
+ .../x86/hp/hp-bioscfg/passwdobj-attributes.c  | 540 ++++++++++
+ .../x86/hp/hp-bioscfg/spmobj-attributes.c     | 389 +++++++
+ .../x86/hp/hp-bioscfg/string-attributes.c     | 404 +++++++
+ .../x86/hp/hp-bioscfg/surestart-attributes.c  | 132 +++
+ 15 files changed, 4749 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/Makefile
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
+
 -- 
 2.34.1
 
