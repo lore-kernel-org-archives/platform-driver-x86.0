@@ -2,91 +2,162 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C4EC7EE24
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 May 2023 21:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A4BC77B7F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 May 2023 12:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229600AbjEPVoc convert rfc822-to-8bit (ORCPT
+        id S231556AbjEQMZK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 May 2023 17:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58422 "EHLO
+        Wed, 17 May 2023 08:25:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229565AbjEPVob (ORCPT
+        with ESMTP id S231381AbjEQMZJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 May 2023 17:44:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7123170D;
-        Tue, 16 May 2023 14:44:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 33A3463FB5;
-        Tue, 16 May 2023 21:44:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF912C433EF;
-        Tue, 16 May 2023 21:44:25 +0000 (UTC)
-Date:   Tue, 16 May 2023 17:44:22 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-pm@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 01/20] x86: move prepare_ftrace_return prototype to
- header
-Message-ID: <20230516174422.63e1e942@gandalf.local.home>
-In-Reply-To: <20230516193549.544673-2-arnd@kernel.org>
-References: <20230516193549.544673-1-arnd@kernel.org>
-        <20230516193549.544673-2-arnd@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Wed, 17 May 2023 08:25:09 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87F84193;
+        Wed, 17 May 2023 05:25:08 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-53202149ae2so471241a12.3;
+        Wed, 17 May 2023 05:25:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684326308; x=1686918308;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fEGoGpyrR60B8AjfNbHQnj78PfieDYrQkkUy4eueo0Q=;
+        b=kML+gvuAXtKqecLJrYpLLONtf5q3VxVj0mH3+jLLtkrkQE8d0WMDK3AeuWKiwiVBp6
+         CaxruwpHKGXvSNpTOiZ4WdaHHyG+gizh3lTsL7qFJ8fRgdCLVMZlxDGXLjjydp9T9iZf
+         v0wHNvQEkKfdpantj/99n9AktsRB8s+2WZlSolJJNo6MVJF8C1yg3HvCYMdZ4JCQn0sa
+         gwK+NvVHhiE20LuxQxyJqhYUXWpE1qCz5M/K4+4785N0wj2CkXV8SsjdN2TQFYq/toJG
+         /L9R5GU9GnqA82WbP/Zrx1wlDqJIti20Mc+hbYt9s5BdBP/0VKLOYUBfIF/2b4rEnllD
+         n4Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684326308; x=1686918308;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fEGoGpyrR60B8AjfNbHQnj78PfieDYrQkkUy4eueo0Q=;
+        b=S2GNJJcyzKFiYF0ukg3mSW9NWiSUCEDQasmcCahv8uf4JbCV+y10hJWJpAm4XjC8DA
+         AfwSAha9ewiT9HPj553DtYoPaemQ95fCW8tUfvugLerh2Bh8Tf4vXqMUrnbY745Oi+wE
+         fBpHxkxToxcEHKedLQWv+wn7ZmQRy5cBcA0AfYM6tFh6wPa5boLmruEvdM92T/SKUN8K
+         32b7iW0IMjoDWHME2FSUFb1PtbdpLGpPa7Rt1fmA8rShzFsZOoXoCARfD8LPJJyZONk3
+         e3WLkYyy0INiz5W+BCclcGhalfSiforUDp3KKQ8mTg5t8SIN+MBMh2pmjahTX5N/q4I2
+         81+w==
+X-Gm-Message-State: AC+VfDxHSBNMWvxd+MyfUZuVrZ+0/Uh9EDRrQlfm/EbyPQtYwnhy18v3
+        0zkqHDgLgXKdGf4IuvvEX6ccHOw5I2A=
+X-Google-Smtp-Source: ACHHUZ7tqN6XkclPOdB4GxCwvfImnp1nRD4DeA0mvf0+zmf9LZjB55uWWQyMz3U1XE9oy2JrH/3jiA==
+X-Received: by 2002:a05:6a20:8416:b0:ec:d7cf:bcf7 with SMTP id c22-20020a056a20841600b000ecd7cfbcf7mr51311098pzd.17.1684326307884;
+        Wed, 17 May 2023 05:25:07 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c25-20020a631c59000000b005143448896csm15283973pgm.58.2023.05.17.05.25.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 05:25:07 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Wed, 17 May 2023 05:25:06 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Yazen Ghannam <yazen.ghannam@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, markgross@kernel.org,
+        hdegoede@redhat.com, Shyam-sundar.S-k@amd.com,
+        linux-edac@vger.kernel.org, clemens@ladisch.de, jdelvare@suse.com,
+        linux-hwmon@vger.kernel.org, mario.limonciello@amd.com,
+        babu.moger@amd.com
+Subject: Re: [PATCH 3/6] hwmon: (k10temp) Check return value of amd_smn_read()
+Message-ID: <f3cce515-845c-480e-a096-8e24e0079454@roeck-us.net>
+References: <20230516202430.4157216-1-yazen.ghannam@amd.com>
+ <20230516202430.4157216-4-yazen.ghannam@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230516202430.4157216-4-yazen.ghannam@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 16 May 2023 21:35:30 +0200
-Arnd Bergmann <arnd@kernel.org> wrote:
-
-> From: Arnd Bergmann <arnd@arndb.de>
+On Tue, May 16, 2023 at 03:24:27PM -0500, Yazen Ghannam wrote:
+> Check the return value of amd_smn_read() before saving a value. This
+> ensures invalid values aren't saved or used.
 > 
-> On 32-bit builds, the prepare_ftrace_return() function only has a global
-> definition, but no prototype before it, which causes a warning:
+> There are three cases here with slightly different behavior.
 > 
-> arch/x86/kernel/ftrace.c:625:6: warning: no previous prototype for ‘prepare_ftrace_return’ [-Wmissing-prototypes]
->   625 | void prepare_ftrace_return(unsigned long ip, unsigned long *parent,
+> 1) read_tempreg_nb_zen():
+> 	This is a function pointer which does not include a return code.
+> 	In this case, set the register value to 0 on failure. This
+> 	enforces Read-as-Zero behavior.
 > 
-> Move the prototype that is already needed for some configurations into
-> a header file where it can be seen unconditionally.
+> 2) k10temp_read_temp():
+> 	This function does have return codes, so return -EINVAL on a
+> 	failed register read. Continued operation is not necessary,
+> 	since there is no valid data from the register. Furthermore, if
+> 	the register value was set to 0, then the following operation
+> 	would underflow.
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 3) k10temp_get_ccd_support():
+> 	This function reads the same register from multiple CCD
+> 	instances in a loop. And a bitmask is formed if a specific bit
+> 	is set in each register instance. The loop should continue on a
+> 	failed register read, skipping the bit check.
+> 
+> Furthermore, the __must_check attribute will be added to amd_smn_read().
+> Therefore, this change is required to avoid compile-time warnings.
+> 
+> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> Cc: stable@vger.kernel.org
 > ---
->  arch/x86/include/asm/ftrace.h | 3 +++
->  arch/x86/kernel/ftrace.c      | 3 ---
->  2 files changed, 3 insertions(+), 3 deletions(-)
+>  drivers/hwmon/k10temp.c | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-> index 5061ac98ffa1..b8d4a07f9595 100644
-> --- a/arch/x86/include/asm/ftrace.h
-> +++ b/arch/x86/include/asm/ftrace.h
+> diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
+> index 7b177b9fbb09..6ea1fa62b7c1 100644
+> --- a/drivers/hwmon/k10temp.c
+> +++ b/drivers/hwmon/k10temp.c
+> @@ -145,8 +145,9 @@ static void read_tempreg_nb_f15(struct pci_dev *pdev, u32 *regval)
+>  
+>  static void read_tempreg_nb_zen(struct pci_dev *pdev, u32 *regval)
+>  {
+> -	amd_smn_read(amd_pci_dev_to_node_id(pdev),
+> -		     ZEN_REPORTED_TEMP_CTRL_BASE, regval);
+> +	if (amd_smn_read(amd_pci_dev_to_node_id(pdev),
+> +			 ZEN_REPORTED_TEMP_CTRL_BASE, regval))
+> +		*regval = 0;
+>  }
+>  
+>  static long get_raw_temp(struct k10temp_data *data)
+> @@ -213,9 +214,11 @@ static int k10temp_read_temp(struct device *dev, u32 attr, int channel,
+>  				*val = 0;
+>  			break;
+>  		case 2 ... 13:		/* Tccd{1-12} */
+> -			amd_smn_read(amd_pci_dev_to_node_id(data->pdev),
+> -				     ZEN_CCD_TEMP(data->ccd_offset, channel - 2),
+> -						  &regval);
+> +			if (amd_smn_read(amd_pci_dev_to_node_id(data->pdev),
+> +					 ZEN_CCD_TEMP(data->ccd_offset, channel - 2),
+> +					 &regval))
+> +				return -EINVAL;
+> +
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+-EINVAL: Invalid Argument, supposed to be used for bad user input.
+I don't see how that would apply here. amd_smn_read() returns
+a valid error code. This error core should be returned to the caller,
+or there needs to be an explanation why this is not appropriate.
 
--- Steve
+>  			*val = (regval & ZEN_CCD_TEMP_MASK) * 125 - 49000;
+>  			break;
+>  		default:
+> @@ -373,8 +376,10 @@ static void k10temp_get_ccd_support(struct pci_dev *pdev,
+>  	int i;
+>  
+>  	for (i = 0; i < limit; i++) {
+> -		amd_smn_read(amd_pci_dev_to_node_id(pdev),
+> -			     ZEN_CCD_TEMP(data->ccd_offset, i), &regval);
+> +		if (amd_smn_read(amd_pci_dev_to_node_id(pdev),
+> +				 ZEN_CCD_TEMP(data->ccd_offset, i), &regval))
+> +			continue;
+> +
+The reason for ignoring the error should be explained here.
+
+>  		if (regval & ZEN_CCD_TEMP_VALID)
+>  			data->show_temp |= BIT(TCCD_BIT(i));
+>  	}
+> -- 
+> 2.34.1
+> 
