@@ -2,136 +2,281 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC061C7EE26
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 May 2023 20:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED98AC77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 May 2023 20:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230397AbjESUOP (ORCPT
+        id S229515AbjESU6r (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 19 May 2023 16:14:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50666 "EHLO
+        Fri, 19 May 2023 16:58:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231178AbjESUNc (ORCPT
+        with ESMTP id S229503AbjESU6q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 May 2023 16:13:32 -0400
-Received: from mail-oa1-x2a.google.com (mail-oa1-x2a.google.com [IPv6:2001:4860:4864:20::2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E89C91701;
-        Fri, 19 May 2023 13:13:17 -0700 (PDT)
-Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-19a3a8784c3so865989fac.1;
-        Fri, 19 May 2023 13:13:17 -0700 (PDT)
+        Fri, 19 May 2023 16:58:46 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB16BC2;
+        Fri, 19 May 2023 13:58:44 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id 38308e7fff4ca-2af2602848aso11819091fa.2;
+        Fri, 19 May 2023 13:58:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684527197; x=1687119197;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l9HhW1QPOz6WTxYOa6mD6gfn6R8qH8lALXUH8QmZoMg=;
-        b=iF6cd/SQqoESUciFgASUjAYi6K6UTP6gErDflZkogLAGLV9hAGkUUNKeLbj1VDslD/
-         BecAWYf0OwoDrCy5fFlD9SOLkufxabJEazUvYpweOLLNmOfmCIaNRit0UHaOiwUnBqwE
-         UuHJwRDl8Uk+j/vXN1Bl89ubXLAJbf/fj6JVij0kiBpXFw0IZRheJI4fGIwCwlrBBd39
-         wf940SnHZwQbQtqThmP1yCOcYuz64avYpCwsBD4NDh6prZIohrB6V86BQNMq78Zf3z1X
-         5ajDUNDOxu5s69ceFqhYoGMV5IAKs+raP6nAHQu9oTjy0/xscdz2t64KLCxET5WouP3t
-         pynA==
+        d=gmail.com; s=20221208; t=1684529923; x=1687121923;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SvHRB9FcG1nrgIWVeWJjDEuxWAphpgsmUKl7eFi3J00=;
+        b=HCetSTo78t0uCgroZErIYelZciALeYs9WojKcGAc9fNg+R2vfoF48LgARcfHYbDBv4
+         syXDsJW1Q08VmqVdtiRZgrKWoN61a2s94sp5I12MmtFP2l+d8GOesYVkTqujir2JTBnl
+         RRIPxo/8szS75XHigRAQ1l4oi/wP1hVEOX3B57XOq7fLgow1ZNs60LJcZ0+fQNYVWIR+
+         izN6zaj0hQ9T6QfWpYRR5r76kcpr8wiYAn7N2WYbsIGbEIDBT+pU7E4eL73OOLspW3/X
+         XvykUEEAMHzCw9gebIA0B9Z4CvDEICcbLgBWJ2RQwnDtBVul01RSJE8Eq+C0mcpCfQYQ
+         xbxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684527197; x=1687119197;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1684529923; x=1687121923;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l9HhW1QPOz6WTxYOa6mD6gfn6R8qH8lALXUH8QmZoMg=;
-        b=c8/zQPwJKaYasdcavZTaWzC11/eip8CziO9WAcE8dlNrfV9mOUlQY0z1FFFhXOSwVH
-         WQRK97lW2qoCkOdgAPO7nF6fRYFlp5hdgOquXxJzyW6RpLlL/r8LWQ3H5zNCPt1cCowY
-         X7x1q/ZhYYMNnvthsUYBixq/dyhIeL7wUWKtuc/pClPPSHE3rG+hss4yn9zRTkSjdfij
-         VkNdWybv7omek+MvLkApMMyo60zrXQ34KKXMdiQd0xKkjomuevxXdjMQXof4YNlQytoW
-         SJcGpburwoARAGOZudSVQwMfTo7ZCqfbGkUEn2R7Hqwl/dTswl9aa0Ea7jC0TY+4keKV
-         +Mlg==
-X-Gm-Message-State: AC+VfDzEna73/NPDEcd70KqVDFL2gXVStJYFPtcXFEj/jwdPpsnhx2uR
-        G+9MfJINHhmlbj0eHTg5N8M=
-X-Google-Smtp-Source: ACHHUZ4nmmwJNBPbGSrTLRLF35B836lq36WzmYE7nDJ7QrTgSMrxg1B5571kp19/+VlZ+jATehurKQ==
-X-Received: by 2002:a05:6870:c8a3:b0:196:4801:837c with SMTP id er35-20020a056870c8a300b001964801837cmr3132731oab.15.1684527196950;
-        Fri, 19 May 2023 13:13:16 -0700 (PDT)
-Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:e6dc:4936:31b7:d3d0])
-        by smtp.gmail.com with ESMTPSA id g4-20020a056870d20400b001964dc3dadesm2325239oac.45.2023.05.19.13.13.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 May 2023 13:13:16 -0700 (PDT)
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
-To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
-        ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v15 13/13] hp-bioscfg: MAINTAINERS
-Date:   Fri, 19 May 2023 15:13:00 -0500
-Message-Id: <20230519201300.12964-14-jorge.lopez2@hp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230519201300.12964-1-jorge.lopez2@hp.com>
-References: <20230519201300.12964-1-jorge.lopez2@hp.com>
+        bh=SvHRB9FcG1nrgIWVeWJjDEuxWAphpgsmUKl7eFi3J00=;
+        b=bfrmu+p44ZyjIo9YjV5EdV22AW8A4WHJRqCWh71/HHl2KrpgIeQtf3OH/KChK/Cfuc
+         4ftWXRyaOCzdvx35JFAkOvTmXzUkYQbELY6YbNSEHDWe8fZ/YtbTNeEaj26mUbTMYKic
+         tLrN+Ic6YGRSm356/TrOK9CA32eeCfAAa3xI2pPj48eDJj+p8lWqGPQOZvPzDQggP+uS
+         anVlvJZc1hI0EcpPaGR6SnIKPJfz7bTqKpPMSx2x8jPO35MVRwdeE9K7B47KU1icu6iq
+         f6Ypgd7Rl8Nz2hzKQ8OMYu+xRbToF6YttwIDasb4fdJkFQ3QQDTbmtvtquhRu3oT6wBS
+         B7jA==
+X-Gm-Message-State: AC+VfDzWAPQTfZlyH7tDZY+nVhspl2tmHZjit3kuirNTxt4gye9I1cjB
+        HMa0+ebXwlZg+RppM5wztlabZ8YVnTc7tTI1V48=
+X-Google-Smtp-Source: ACHHUZ5SqXNcJmF+12P0THuelwVQVrfY/kmxPyZh4U0ovP9loxx+cdjLUW3p4J8l3wNUKDsq+WfVm0oOlko28ogF+qk=
+X-Received: by 2002:a05:651c:1041:b0:2ae:cf05:5bb6 with SMTP id
+ x1-20020a05651c104100b002aecf055bb6mr1188484ljm.15.1684529922694; Fri, 19 May
+ 2023 13:58:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20230517155026.28535-1-jorge.lopez2@hp.com> <20230517155026.28535-2-jorge.lopez2@hp.com>
+ <0abdb306-1e24-4653-9a14-e5db8d508a82@app.fastmail.com>
+In-Reply-To: <0abdb306-1e24-4653-9a14-e5db8d508a82@app.fastmail.com>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Fri, 19 May 2023 15:58:10 -0500
+Message-ID: <CAOOmCE8-GB-yM-cfCP6Sw8xdnOgNm4b7viUziA48YJ4mGkGfag@mail.gmail.com>
+Subject: Re: [PATCH v14 01/13] hp-bioscfg: Documentation
+To:     Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+        ilpo.jarvinen@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-HP BIOS Configuration driver purpose is to provide a driver supporting
-the latest sysfs class firmware attributes framework allowing the user
-to change BIOS settings and security solutions on HP Inc.’s commercial
-notebooks.
+On Fri, May 19, 2023 at 12:34=E2=80=AFPM Mark Pearson <mpearson-lenovo@sque=
+bb.ca> wrote:
+>
+> Hi Jorge,
+>
+> On Wed, May 17, 2023, at 11:50 AM, Jorge Lopez wrote:
+> > HP BIOS Configuration driver purpose is to provide a driver supporting
+> > the latest sysfs class firmware attributes framework allowing the user
+> > to change BIOS settings and security solutions on HP Inc.=E2=80=99s com=
+mercial
+> > notebooks.
+> >
+> > Many features of HP Commercial notebooks can be managed using Windows
+> > Management Instrumentation (WMI). WMI is an implementation of Web-Based
+> > Enterprise Management (WBEM) that provides a standards-based interface
+> > for changing and monitoring system settings. HP BIOSCFG driver provides
+> > a native Linux solution and the exposed features facilitates the
+> > migration to Linux environments.
+> >
+> > The Linux security features to be provided in hp-bioscfg driver enables
+> > managing the BIOS settings and security solutions via sysfs, a virtual
+> > filesystem that can be used by user-mode applications. The new
+> > documentation cover HP-specific firmware sysfs attributes such Secure
+> > Platform Management and Sure Start. Each section provides security
+> > feature description and identifies sysfs directories and files exposed
+> > by the driver.
+> >
+> > Many HP Commercial notebooks include a feature called Secure Platform
+> > Management (SPM), which replaces older password-based BIOS settings
+> > management with public key cryptography. PC secure product management
+> > begins when a target system is provisioned with cryptographic keys
+> > that are used to ensure the integrity of communications between system
+> > management utilities and the BIOS.
+> >
+> > HP Commercial notebooks have several BIOS settings that control its
+> > behaviour and capabilities, many of which are related to security.
+> > To prevent unauthorized changes to these settings, the system can
+> > be configured to use a cryptographic signature-based authorization
+> > string that the BIOS will use to verify authorization to modify the
+> > setting.
+> >
+> > Linux Security components are under development and not published yet.
+> > The only linux component is the driver (hp bioscfg) at this time.
+> > Other published security components are under Windows.
+> >
+> > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+> >
+> > ---
+> > Based on the latest platform-drivers-x86.git/for-next
+> > ---
+> >  .../testing/sysfs-class-firmware-attributes   | 102 +++++++++++++++++-
+> >  1 file changed, 100 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> > b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> > index 4cdba3477176..f8d6c089228b 100644
+> > --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> > +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> <snip>
+> > +
+> > +
+> > +             HP specific class extensions - Secure Platform Manager (S=
+PM)
+> > +             --------------------------------
+> > +
+> > +What:                /sys/class/firmware-attributes/*/authentication/S=
+PM/kek
+> > +Date:                March 29
+> > +KernelVersion:       5.18
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description:
+> > +             'kek' Key-Encryption-Key is a write-only file that can be=
+ used to
+> > configure the
+> > +             RSA public key that will be used by the BIOS to verify
+> > +             signatures when setting the signing key.  When written,
+> > +             the bytes should correspond to the KEK certificate
+> > +             (x509 .DER format containing an OU).  The size of the
+> > +             certificate must be less than or equal to 4095 bytes.
+> > +
+> > +What:                /sys/class/firmware-attributes/*/authentication/S=
+PM/sk
+> > +Date:                March 29
+> > +KernelVersion:       5.18
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description:
+> > +             'sk' Signature Key is a write-only file that can be used =
+to
+> > configure the RSA
+> > +             public key that will be used by the BIOS to verify signat=
+ures
+> > +             when configuring BIOS settings and security features.  Wh=
+en
+> > +             written, the bytes should correspond to the modulus of th=
+e
+> > +             public key.  The exponent is assumed to be 0x10001.
+> > +
+> > +What:                /sys/class/firmware-attributes/*/authentication/S=
+PM/status
+> > +Date:                March 29
+> > +KernelVersion:       5.18
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description:
+> > +             'status' is a read-only file that returns ASCII text in J=
+SON format
+> > reporting
+> > +             the status information.
+> > +
+> > +               "State": "not provisioned | provisioned | provisioning =
+in progress
+> > ",
+> > +               "Version": " Major. Minor ",
+> > +               "Nonce": <16-bit unsigned number display in base 10>,
+> > +               "FeaturesInUse": <16-bit unsigned number display in bas=
+e 10>,
+> > +               "EndorsementKeyMod": "<256 bytes in base64>",
+> > +               "SigningKeyMod": "<256 bytes in base64>"
+> > +
+> > +What:                /sys/class/firmware-attributes/*/attributes/Sure_=
+Start/audit_log_entries
+> > +Date:                March 29
+> > +KernelVersion:       5.18
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description:
+> > +             'audit_log_entries' is a read-only file that returns the =
+events in
+> > the log.
+> > +
+> > +                     Audit log entry format
+> > +
+> > +                     Byte 0-15:   Requested Audit Log entry  (Each Aud=
+it log is 16 bytes)
+> > +                     Byte 16-127: Unused
+> > +
+> > +What:                /sys/class/firmware-attributes/*/attributes/Sure_=
+Start/audit_log_entry_count
+> > +Date:                March 29
+> > +KernelVersion:       5.18
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description:
+> > +             'audit_log_entry_count' is a read-only file that returns =
+the number
+> > of existing
+> > +             audit log events available to be read. Values are separat=
+ed using
+> > comma (``,``)
+> > +
+> > +                     [No of entries],[log entry size],[Max number of e=
+ntries supported]
+> > +
+> > +             log entry size identifies audit log size for the current =
+BIOS
+> > version.
+> > +             The current size is 16 bytes but it can be up to 128 byte=
+s long in
+> > future BIOS
+> > +             versions.
+> > --
+> > 2.34.1
+>
+> Firstly apologies as I've done a poor job of following the updates to thi=
+s series - so if this has already been discussed and agreed by more seasone=
+d kernel contributors please feel free to disregard my comments :) I was ca=
+tching up on my inbox and had some thoughts.
 
-Many features of HP Commercial notebooks can be managed using Windows
-Management Instrumentation (WMI). WMI is an implementation of Web-Based
-Enterprise Management (WBEM) that provides a standards-based interface
-for changing and monitoring system settings. HP BIOSCFG driver provides
-a native Linux solution and the exposed features facilitates the
-migration to Linux environments.
+No worries.
 
-The Linux security features to be provided in hp-bioscfg driver enables
-managing the BIOS settings and security solutions via sysfs, a virtual
-filesystem that can be used by user-mode applications. The new
-documentation cover HP-specific firmware sysfs attributes such Secure
-Platform Management and Sure Start. Each section provides security
-feature description and identifies sysfs directories and files exposed
-by the driver.
+>
+> For SPM - as this replaces password usage, is it done for all account typ=
+es? It seems a bit odd having it be a replacement for the passwords but in =
+it's own location and not in the same place as (for example) Admin/current_=
+password.
+> For the Lenovo implementation I put certificate, signature and save_signa=
+ture in the authentication/Admin directory and I realise your implementatio=
+n is different with the keys but if the kek and sk are only used with the A=
+dmin account then shouldn't they also be in that directory? It would be nic=
+e to have some commonality across vendors in my opinion.
+>
 
-Many HP Commercial notebooks include a feature called Secure Platform
-Management (SPM), which replaces older password-based BIOS settings
-management with public key cryptography. PC secure product management
-begins when a target system is provisioned with cryptographic keys
-that are used to ensure the integrity of communications between system
-management utilities and the BIOS.
+SPM (Security Platform Management) does not replace password usage and
+it is done for the Admin account (Setup Password).  SPM is a security
+feature available to the user to configure/update BIOS settings when
+Sure Admin is enabled in BIOS.  One of the files provided under SPM is
+the key _role and its value is set to =E2=80=98bios-spm.=E2=80=99   A =E2=
+=80=98bios-spm=E2=80=99 role
+indicates a password is used in combination with an
+endorsement/signing key.  It is also the reason why SPM is kept
+separate under the list of authentication attributes.
 
-HP Commercial notebooks have several BIOS settings that control its
-behaviour and capabilities, many of which are related to security.
-To prevent unauthorized changes to these settings, the system can
-be configured to use a cryptographic signature-based authorization
-string that the BIOS will use to verify authorization to modify the
-setting.
+> For the Sure_Start I would propose de-branding this so it's generic and I=
+ don't think it fits under attributes as it doesn't support any of the othe=
+r required attribute fields. I think your implementation of an audit log se=
+ems neat but if another vendor was to do similar it would be better to be a=
+ble to reuse the same attribute name and enable common tooling.
+> I propose having this as just log/audit_entries and log/audit_count and h=
+ave the log folder in the top alongside authentication and attributes.
+> If someone wants to add other logs in the future it would be a good place=
+ to have them.
 
-Linux Security components are under development and not published yet.
-The only linux component is the driver (hp bioscfg) at this time.
-Other published security components are under Windows.
+I like the idea of having a log folder alongside authentication and
+attributes where future logs can be placed.  Unfortunately, Sure_Start
+is part of the security attributes  and the initial driver provides a
+minimal implementation.   Other attributes associated with Sure_Start
+and available in BIOS are  'SureStart Production Mode', 'Sure Start
+Security Event Boot Notification', 'Sure Start BIOS Settings
+Protection', 'Sure Start Secure Boot Keys Protection', and 'Sure Start
+Security Event Policy'
 
-Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
-
----
-Based on the latest platform-drivers-x86.git/for-next
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9af9ace0e348..648c986f5867 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9436,6 +9436,12 @@ S:	Obsolete
- W:	http://w1.fi/hostap-driver.html
- F:	drivers/net/wireless/intersil/hostap/
- 
-+HP BIOSCFG DRIVER
-+M:	Jorge Lopez <jorge.lopez2@hp.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/hp/hp-bioscfg/
-+
- HP COMPAQ TC1100 TABLET WMI EXTRAS DRIVER
- L:	platform-driver-x86@vger.kernel.org
- S:	Orphan
--- 
-2.34.1
-
+>
+> Thanks
+> Mark
