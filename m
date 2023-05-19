@@ -2,81 +2,104 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C733FC77B7F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 May 2023 08:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94143C77B75
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 May 2023 09:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229669AbjESI0Q (ORCPT
+        id S230481AbjESJwJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 19 May 2023 04:26:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56068 "EHLO
+        Fri, 19 May 2023 05:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229599AbjESI0P (ORCPT
+        with ESMTP id S230469AbjESJwJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 May 2023 04:26:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D95BCE52;
-        Fri, 19 May 2023 01:26:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5A823654DF;
-        Fri, 19 May 2023 08:26:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44476C433EF;
-        Fri, 19 May 2023 08:26:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684484772;
-        bh=zccskR3KDaJ9BbnUz5SBNLBbWuOC91Z3hkOuUHIE9+I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VSmxtSVBXrVMlCGOsj6xh+gIo+eiyvSJ0UTJOBwofvtYONyPHqKMJSM2ySnusKLY3
-         aGgz3Ov3kgP58GBohbc+y1AU3t9qBlSBmCWH+yP0D+FxXGZDlfH9FbAj1VDmSgQ2bV
-         u4a/2vltRzL6Wnd5+y4Lm1UxoZfFleElMAvA19TtDB6efJhuEdP9oqDLgPE/4JZojJ
-         uW7lriLZZjzfM8bSpnsEod2//28+U08owcRBrzG6eu4m4sdRcg6FCEzdt00bSnEGBV
-         UYUrrfOnGiwHmoJvvXATtsfEMvYHEY7jtPGjO5sq0V6t1T3CZRb+oBkZqRtiwHbEPk
-         yucxqoEmfbKGQ==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: lenovo-yogabook: add I2C dependency
-Date:   Fri, 19 May 2023 10:25:52 +0200
-Message-Id: <20230519082606.375471-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+        Fri, 19 May 2023 05:52:09 -0400
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3282C19A;
+        Fri, 19 May 2023 02:52:03 -0700 (PDT)
+Received: by mail-qk1-x730.google.com with SMTP id af79cd13be357-7576deacbd6so157946785a.3;
+        Fri, 19 May 2023 02:52:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684489922; x=1687081922;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lYlFoKtA5IkPlUC08PPhE1HRAZ9SjNGPuMwfpP8csYw=;
+        b=nYxSjSYcaXL9wBLYYxr18nPzFhoS6t/XMYh9wWv4olQ5Ajdh0ltDPhpnV6tMT0kw2L
+         7PVzfD8g+760Xthp7t3msGPUjuZ59gQw4rwzaEmCtQ8hyGpsue8N+xUoLitFBMGgdB9W
+         jVGc5vSq1XyykVvXwliYjJhs52PRT3SjBYJ7iwE5d7/KP6vVYRumAVbxhCiJ5soKreN4
+         brAcrHDbctTGfUlLlmhxftAZM3pPIDGyFEnEQC4iY77FwsJnKWjlVhqa4CFYiyr2O4Qf
+         7YR2QIMjUYV5AhK5aiXR9mtSexGX2S4hbthpMwYW3yJ58fFaMoJ96fz6odyG79IA5mY6
+         tJ0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684489922; x=1687081922;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lYlFoKtA5IkPlUC08PPhE1HRAZ9SjNGPuMwfpP8csYw=;
+        b=jzs4CRdNuMvvpVjlEsvABhNf/hd/SQOozSPbu7zEhjHJsXaSTgEY1NVRbcn32kQVMd
+         r4NFT0N+Z83rCfQpL5qrTdFS0whkD9GLpXf7XiUoG58wLRwNNlJSH7jnMw1R7u5ORLB0
+         /kDjQQE31Dj1VHUQX3OLnVUtXlFH82OExycj41hUIgpM2JhBdkljk2p4FplgcdYNKGVd
+         x8AjpaJp1kXbkyBVRSXUBZNS2kfT/vZUEQwoUVOs5NXR/dF1qQdfdnDNSlXj9qy5imk5
+         T47F8d44zEI0STbX4bHKeWqxRCWmuK1sZhVLOurVn73nWCO1dXxqsXlHlpq1VeB83vLf
+         fARQ==
+X-Gm-Message-State: AC+VfDzvpE66CBK9U06xNWbHF+UNFIqy7k5DzX4f4eW6dacblK2nG5wQ
+        +JbBo/BM8JtE3UqJkjyDyPtvk0pewktLgM8BZqos4ia5u/wBBQ==
+X-Google-Smtp-Source: ACHHUZ5LXB2GGpTth50QwGaF1r9ATLp3VHmm5/m7EW57RPp9upvSN9LQS14BGDeYC2Kr+/Vi0wX8BeWxerm5Q629S9k=
+X-Received: by 2002:a05:6214:5183:b0:61a:fe65:4481 with SMTP id
+ kl3-20020a056214518300b0061afe654481mr2595650qvb.51.1684489921968; Fri, 19
+ May 2023 02:52:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230516193549.544673-1-arnd@kernel.org> <a78d9dcd-0bc1-7e98-a8f1-e5d6cd0c09a3@intel.com>
+In-Reply-To: <a78d9dcd-0bc1-7e98-a8f1-e5d6cd0c09a3@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 19 May 2023 12:51:25 +0300
+Message-ID: <CAHp75VeX9=1+apLMZsidudUziO_s4WUb=HOd0mraRHL17DN+cw@mail.gmail.com>
+Subject: Re: [PATCH 00/20] x86: address -Wmissing-prototype warnings
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Arnd Bergmann <arnd@kernel.org>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Juergen Gross <jgross@suse.com>,
+        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-pm@vger.kernel.org,
+        linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Fri, May 19, 2023 at 12:56=E2=80=AFAM Dave Hansen <dave.hansen@intel.com=
+> wrote:
+> On 5/16/23 12:35, Arnd Bergmann wrote:
 
-The added platform_driver support fails to link when I2C core support is
-not rechable:
+> I picked up the ones that were blatantly obvious, but left out 03, 04,
+> 10, 12 and 19 for the moment.
 
-x86_64-linux-ld: drivers/platform/x86/lenovo-yogabook.o: in function `yogabook_pdev_probe':
-lenovo-yogabook.c:(.text+0x5a5): undefined reference to `i2c_bus_type'
+Btw, there is series that went unnoticed
 
-Add a Kconfig dependency to enforce a working configuration.
+https://lore.kernel.org/all/20211119110017.48510-1-andriy.shevchenko@linux.=
+intel.com/
 
-Fixes: 6df1523fa0b7 ("platform/x86: lenovo-yogabook: Add platform driver support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/platform/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+I dunno why.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 9fe974d5f645..63637ea99c2f 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -125,6 +125,7 @@ config YOGABOOK
- 	tristate "Lenovo Yoga Book tablet key driver"
- 	depends on ACPI_WMI
- 	depends on INPUT
-+	depends on I2C
- 	select LEDS_CLASS
- 	select NEW_LEDS
- 	help
--- 
-2.39.2
-
+--=20
+With Best Regards,
+Andy Shevchenko
