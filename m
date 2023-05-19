@@ -2,89 +2,81 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F081AC7EE2C
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 May 2023 07:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C733FC77B7F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 May 2023 08:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229895AbjESHRI (ORCPT
+        id S229669AbjESI0Q (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 19 May 2023 03:17:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52978 "EHLO
+        Fri, 19 May 2023 04:26:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbjESHRG (ORCPT
+        with ESMTP id S229599AbjESI0P (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 May 2023 03:17:06 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01093E6E;
-        Fri, 19 May 2023 00:17:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684480626; x=1716016626;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ruhXfckvLspilVJ3phWpSekvwmW04n6cod92Xsdx9rw=;
-  b=GZijsJFhZqgtSoeUukdpQKV6OoD03TNzwRADhELcT5qJHj/+Lwh+mQQT
-   33ECol+vVKUmgNv+NsHwQ/YiZ+aW02zdSPgRO7LGtdeEtHDONbIb4CjIr
-   08QgVxjsY4XfNHr8yj8mWWBjFgZTIFZkVKLjL0cIcpu3MLvVhbP/RSTBn
-   f7lfi7+nQJ+S5HvDFecsi5LC6aZciYOMIhyH9w4PWCyH72DdK8aPbfGyA
-   uprbhF7J+5tbtRd8QJ3425O8oio1KsYbIe9aDHC+GeBjGBL7HLEScQOeK
-   C0O5KLq8lSeuXvvQP6wrWM5D9tVlJKYQqycmIKJCg8S9ceeVVYkCZYCwc
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="380515528"
-X-IronPort-AV: E=Sophos;i="6.00,176,1681196400"; 
-   d="scan'208";a="380515528"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 00:17:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="826692519"
-X-IronPort-AV: E=Sophos;i="6.00,176,1681196400"; 
-   d="scan'208";a="826692519"
-Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 19 May 2023 00:17:02 -0700
-Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pzuMI-000Ag2-09;
-        Fri, 19 May 2023 07:17:02 +0000
-Date:   Fri, 19 May 2023 15:16:05 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Mario Limonciello <mario.limonciello@amd.com>, rafael@kernel.org,
-        hdegoede@redhat.com, linus.walleij@linaro.org
-Cc:     oe-kbuild-all@lists.linux.dev, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
-        Shyam-sundar.S-k@amd.com, Basavaraj.Natikar@amd.com,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH 2/4] ACPI: x86: Add pm_debug_messages for LPS0 _DSM state
- tracking
-Message-ID: <202305191405.u2HzFqxM-lkp@intel.com>
-References: <20230518172752.93322-3-mario.limonciello@amd.com>
+        Fri, 19 May 2023 04:26:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D95BCE52;
+        Fri, 19 May 2023 01:26:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5A823654DF;
+        Fri, 19 May 2023 08:26:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44476C433EF;
+        Fri, 19 May 2023 08:26:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684484772;
+        bh=zccskR3KDaJ9BbnUz5SBNLBbWuOC91Z3hkOuUHIE9+I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VSmxtSVBXrVMlCGOsj6xh+gIo+eiyvSJ0UTJOBwofvtYONyPHqKMJSM2ySnusKLY3
+         aGgz3Ov3kgP58GBohbc+y1AU3t9qBlSBmCWH+yP0D+FxXGZDlfH9FbAj1VDmSgQ2bV
+         u4a/2vltRzL6Wnd5+y4Lm1UxoZfFleElMAvA19TtDB6efJhuEdP9oqDLgPE/4JZojJ
+         uW7lriLZZjzfM8bSpnsEod2//28+U08owcRBrzG6eu4m4sdRcg6FCEzdt00bSnEGBV
+         UYUrrfOnGiwHmoJvvXATtsfEMvYHEY7jtPGjO5sq0V6t1T3CZRb+oBkZqRtiwHbEPk
+         yucxqoEmfbKGQ==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: lenovo-yogabook: add I2C dependency
+Date:   Fri, 19 May 2023 10:25:52 +0200
+Message-Id: <20230519082606.375471-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230518172752.93322-3-mario.limonciello@amd.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mario,
+From: Arnd Bergmann <arnd@arndb.de>
 
-kernel test robot noticed the following build warnings:
+The added platform_driver support fails to link when I2C core support is
+not rechable:
 
-[auto build test WARNING on dac0c6388ff86af74dc6f4dd6e90a7db5a429e3d]
+x86_64-linux-ld: drivers/platform/x86/lenovo-yogabook.o: in function `yogabook_pdev_probe':
+lenovo-yogabook.c:(.text+0x5a5): undefined reference to `i2c_bus_type'
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/include-linux-suspend-h-Only-show-pm_pr_dbg-messages-at-suspend-resume/20230519-013031
-base:   dac0c6388ff86af74dc6f4dd6e90a7db5a429e3d
-patch link:    https://lore.kernel.org/r/20230518172752.93322-3-mario.limonciello%40amd.com
-patch subject: [PATCH 2/4] ACPI: x86: Add pm_debug_messages for LPS0 _DSM state tracking
-config: x86_64-randconfig-c022 (https://download.01.org/0day-ci/archive/20230519/202305191405.u2HzFqxM-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+Add a Kconfig dependency to enforce a working configuration.
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202305191405.u2HzFqxM-lkp@intel.com/
+Fixes: 6df1523fa0b7 ("platform/x86: lenovo-yogabook: Add platform driver support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-cocci warnings: (new ones prefixed by >>)
->> drivers/acpi/x86/s2idle.c:345:3-4: Unneeded semicolon
-
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 9fe974d5f645..63637ea99c2f 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -125,6 +125,7 @@ config YOGABOOK
+ 	tristate "Lenovo Yoga Book tablet key driver"
+ 	depends on ACPI_WMI
+ 	depends on INPUT
++	depends on I2C
+ 	select LEDS_CLASS
+ 	select NEW_LEDS
+ 	help
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.2
+
