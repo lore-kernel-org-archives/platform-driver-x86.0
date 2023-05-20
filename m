@@ -2,50 +2,50 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C617EC77B7D
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 20 May 2023 18:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88343C7EE2D
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 20 May 2023 18:21:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230232AbjETSTl (ORCPT
+        id S231908AbjETSV5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 20 May 2023 14:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40166 "EHLO
+        Sat, 20 May 2023 14:21:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231228AbjETST2 (ORCPT
+        with ESMTP id S231646AbjETSVt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 20 May 2023 14:19:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 086DEE7F;
-        Sat, 20 May 2023 11:19:09 -0700 (PDT)
+        Sat, 20 May 2023 14:21:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63E89E7C;
+        Sat, 20 May 2023 11:21:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EB40660B37;
-        Sat, 20 May 2023 18:18:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94668C433D2;
-        Sat, 20 May 2023 18:18:20 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 55B3660C16;
+        Sat, 20 May 2023 18:21:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF36EC433D2;
+        Sat, 20 May 2023 18:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684606701;
-        bh=OXkMsN4v3FFJULQWV4/kyARqFXtJzpyCewzKLaeiJl8=;
+        s=k20201202; t=1684606875;
+        bh=cWB1dZy+1AbY9jcNQa0xPC8wJXDRMfc8M7uaWfwUlok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y3x6GOLI7JStr8G9AQR5hFU6UYiGBGCaRg2PLpv2iPhDyavlpXp6VAAjIRNDDOHZo
-         2B6a2f/dAM22XfZ587AZjsC0unoFdIOCPdh/y+C69Ja4stJgi+f+Z5gNRcfn82sVLU
-         hdyXWmjnUKEfhuHo6pDrz37nZVaAZBNOmXeFarPdF3L7k8jHOwvitw9RUh/iIQqabO
-         AM9mpJchRTvdJWH/MY39HM7zl2TdJzaXdzMdnTp9wMv8Yq3pBZMJjz5zO11SkaoTUf
-         BeqxJr7PiAPjeedCeC+w/l0qj/JBUbwDtRFPXm0UMatX5qlEJMbsBpPypDClyBX3TD
-         Bu1eyfBGFH+ug==
+        b=my5u3OxZ+1FcvF+20aLm48zM9SRPPWRkO8Ixu1wuElLQqDJMeuk6JAN5ceExNDv08
+         Ncda8Tl5dB+fa1v0GIX++HYMjvjcibk7U9mgsmWAvLleT3MDh2tF2Cv4L40Ze4SK9E
+         qIfSEuq1QjHQkWIe/WgoTA/d9/FduepW2jyF4lVV8tfuuVmi9nf9rRA7lh2MsUrO15
+         97dJmK9UxA1Ov2t1/Z0Gx1/VcKC2nf/AGi3jNL9XdkwGm1RssHvvW6ZjDCNHIERAlj
+         3bDIl9KQiUzprnaIO+SOQiwmbwl347/WYl4N+n0aFZ0Bimi0yoxT9Hl57ZrGp8Dslo
+         Nmq7tH7H3oscQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liming Sun <limings@nvidia.com>,
-        Vadim Pasternak <vadimp@nvidia.com>,
+Cc:     Julian Winkler <julian.winkler1@web.de>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
+        Sasha Levin <sashal@kernel.org>,
+        mika.westerberg@linux.intel.com, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.3 10/18] platform/mellanox: fix potential race in mlxbf-tmfifo driver
-Date:   Sat, 20 May 2023 14:17:42 -0400
-Message-Id: <20230520181750.823365-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 06/14] platform/x86: intel_scu_pcidrv: Add back PCI ID for Medfield
+Date:   Sat, 20 May 2023 14:20:34 -0400
+Message-Id: <20230520182044.836702-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230520181750.823365-1-sashal@kernel.org>
-References: <20230520181750.823365-1-sashal@kernel.org>
+In-Reply-To: <20230520182044.836702-1-sashal@kernel.org>
+References: <20230520182044.836702-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -54,63 +54,37 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Liming Sun <limings@nvidia.com>
+From: Julian Winkler <julian.winkler1@web.de>
 
-[ Upstream commit 3d43f9f639542fadfb28f40b509bf147a6624d48 ]
+[ Upstream commit 4a9b6850c794e4394cad99e2b863d75f5bc8e92f ]
 
-This commit adds memory barrier for the 'vq' update in function
-mlxbf_tmfifo_virtio_find_vqs() to avoid potential race due to
-out-of-order memory write. It also adds barrier for the 'is_ready'
-flag to make sure the initializations are visible before this flag
-is checked.
+This id was removed in commit b47018a778c1 ("platform/x86: intel_scu_ipc:
+Remove Lincroft support"), saying it is only used on Moorestown,
+but apparently the same id is also used on Medfield.
 
-Signed-off-by: Liming Sun <limings@nvidia.com>
-Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
-Link: https://lore.kernel.org/r/b98c0ab61d644ba38fa9b3fd1607b138b0dd820b.1682518748.git.limings@nvidia.com
+Tested on the Medfield based Motorola RAZR i smartphone.
+
+Signed-off-by: Julian Winkler <julian.winkler1@web.de>
+Link: https://lore.kernel.org/r/20230416154932.6579-1-julian.winkler1@web.de
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/mellanox/mlxbf-tmfifo.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel_scu_pcidrv.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-index 91a077c35b8b8..a79318e90a139 100644
---- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -784,7 +784,7 @@ static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
- 	fifo = vring->fifo;
+diff --git a/drivers/platform/x86/intel_scu_pcidrv.c b/drivers/platform/x86/intel_scu_pcidrv.c
+index 80abc708e4f2f..d904fad499aa5 100644
+--- a/drivers/platform/x86/intel_scu_pcidrv.c
++++ b/drivers/platform/x86/intel_scu_pcidrv.c
+@@ -34,6 +34,7 @@ static int intel_scu_pci_probe(struct pci_dev *pdev,
  
- 	/* Return if vdev is not ready. */
--	if (!fifo->vdev[devid])
-+	if (!fifo || !fifo->vdev[devid])
- 		return;
- 
- 	/* Return if another vring is running. */
-@@ -980,9 +980,13 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
- 
- 		vq->num_max = vring->num;
- 
-+		vq->priv = vring;
-+
-+		/* Make vq update visible before using it. */
-+		virtio_mb(false);
-+
- 		vqs[i] = vq;
- 		vring->vq = vq;
--		vq->priv = vring;
- 	}
- 
- 	return 0;
-@@ -1302,6 +1306,9 @@ static int mlxbf_tmfifo_probe(struct platform_device *pdev)
- 
- 	mod_timer(&fifo->timer, jiffies + MLXBF_TMFIFO_TIMER_INTERVAL);
- 
-+	/* Make all updates visible before setting the 'is_ready' flag. */
-+	virtio_mb(false);
-+
- 	fifo->is_ready = true;
- 	return 0;
- 
+ static const struct pci_device_id pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x080e) },
++	{ PCI_VDEVICE(INTEL, 0x082a) },
+ 	{ PCI_VDEVICE(INTEL, 0x08ea) },
+ 	{ PCI_VDEVICE(INTEL, 0x0a94) },
+ 	{ PCI_VDEVICE(INTEL, 0x11a0) },
 -- 
 2.39.2
 
