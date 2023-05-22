@@ -2,89 +2,90 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA9DC7EE2E
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 20 May 2023 18:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE29FC7EE26
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 May 2023 07:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232343AbjETSZA (ORCPT
+        id S232062AbjEVHwH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 20 May 2023 14:25:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43378 "EHLO
+        Mon, 22 May 2023 03:52:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232144AbjETSYW (ORCPT
+        with ESMTP id S231678AbjEVHvk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 20 May 2023 14:24:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D97B1E75;
-        Sat, 20 May 2023 11:23:45 -0700 (PDT)
+        Mon, 22 May 2023 03:51:40 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F811993
+        for <platform-driver-x86@vger.kernel.org>; Mon, 22 May 2023 00:50:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0382C60AFD;
-        Sat, 20 May 2023 18:22:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AA7BC433EF;
-        Sat, 20 May 2023 18:22:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 56D5861EA9
+        for <platform-driver-x86@vger.kernel.org>; Mon, 22 May 2023 07:48:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BC3AAC433D2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 22 May 2023 07:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684606962;
-        bh=cWB1dZy+1AbY9jcNQa0xPC8wJXDRMfc8M7uaWfwUlok=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ExD7jnwjDiQaoY33tdOG7ZyDyBfnIYBtqVIavugLjYjOPAf4PljCEnHYDmsLTY6rA
-         gsiqa9t2ufwJQQD4Wz6oHLjndaB7yzWJXbXWtKOSCiLYjTYgEzgMHlDeRa+4mnzuR6
-         KpQlhDruOk6diCfmvQNmhowHYQo7errxt7xaS+tFpbI/7R0sn8yhPS9ngJlu3ijPYD
-         DvJeGtHZiF+5ZpYGSKIETqui6U1X322dkZFfM1jvzdvbxe2+MXuqaz+jcmJp5Il0pR
-         r0CWgmkky3ptWuUdZWykat9/f/tWYHjH98Zl+CF+B/kT7rpolJF5cxa/aNWVxiI2mO
-         gWDcb46HCxymA==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Winkler <julian.winkler1@web.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        mika.westerberg@linux.intel.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 05/11] platform/x86: intel_scu_pcidrv: Add back PCI ID for Medfield
-Date:   Sat, 20 May 2023 14:22:08 -0400
-Message-Id: <20230520182215.845131-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230520182215.845131-1-sashal@kernel.org>
-References: <20230520182215.845131-1-sashal@kernel.org>
+        s=k20201202; t=1684741738;
+        bh=sGz8XHgj2Jv6HUhkSVWoOB+BOVnR/cwUIwYGYUGLJkY=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=SH4WS97L2LbVffuf3nD5OYd39G9SiixxYfx4gz1AG++9deJJTP5KZMXWpLOoaVF9b
+         EP/85lcbZtnysQvd88gnmW3OKabrXZe8aainONv/t+HQ2DszNKfPzktgfN4HR4TTrf
+         0+3ZYkVdZ9djE0wB8y2DED4mFy2HL1sKHasNmqmPch4De83X/8fuYf+btJ34/VV1uR
+         4V+Bnnm67BfIcb5rXa7s4PR1GZvnj4QBdwOvLjfqOlENmRBOFHF/+2byhQjcS5OQ7k
+         eXHsJdse5Vgic3isV4fthuwrMaJ6Q1lSVHPwBSndd8EiBYyrh726RxirQVShEM7pMe
+         nsAGxINPHBNQA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id AE307C43142; Mon, 22 May 2023 07:48:58 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Mon, 22 May 2023 07:48:56 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: gregory.duhamel@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-SneaFaarGW@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Julian Winkler <julian.winkler1@web.de>
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-[ Upstream commit 4a9b6850c794e4394cad99e2b863d75f5bc8e92f ]
+--- Comment #330 from Gregory Duhamel (gregory.duhamel@gmail.com) ---
+Hello,
 
-This id was removed in commit b47018a778c1 ("platform/x86: intel_scu_ipc:
-Remove Lincroft support"), saying it is only used on Moorestown,
-but apparently the same id is also used on Medfield.
+i've this board :=20
 
-Tested on the Medfield based Motorola RAZR i smartphone.
+Base Board Information
+        Manufacturer: ASUSTeK COMPUTER INC.
+        Product Name: ROG STRIX X670E-I GAMING WIFI
 
-Signed-off-by: Julian Winkler <julian.winkler1@web.de>
-Link: https://lore.kernel.org/r/20230416154932.6579-1-julian.winkler1@web.de
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/intel_scu_pcidrv.c | 1 +
- 1 file changed, 1 insertion(+)
+But no sensors are detect on Kernel : 6.3.3-200 (Fedora)
 
-diff --git a/drivers/platform/x86/intel_scu_pcidrv.c b/drivers/platform/x86/intel_scu_pcidrv.c
-index 80abc708e4f2f..d904fad499aa5 100644
---- a/drivers/platform/x86/intel_scu_pcidrv.c
-+++ b/drivers/platform/x86/intel_scu_pcidrv.c
-@@ -34,6 +34,7 @@ static int intel_scu_pci_probe(struct pci_dev *pdev,
- 
- static const struct pci_device_id pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x080e) },
-+	{ PCI_VDEVICE(INTEL, 0x082a) },
- 	{ PCI_VDEVICE(INTEL, 0x08ea) },
- 	{ PCI_VDEVICE(INTEL, 0x0a94) },
- 	{ PCI_VDEVICE(INTEL, 0x11a0) },
--- 
-2.39.2
+Can someone please help me understand where is the issue (if any) ?
 
+Thanks a lot !
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
