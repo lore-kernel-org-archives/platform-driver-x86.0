@@ -2,213 +2,129 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FCAC7EE23
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 May 2023 08:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1538AC77B75
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 May 2023 09:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232803AbjEWIf1 (ORCPT
+        id S232089AbjEWJ1P (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 23 May 2023 04:35:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48728 "EHLO
+        Tue, 23 May 2023 05:27:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236132AbjEWIdp (ORCPT
+        with ESMTP id S235812AbjEWJ1P (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 May 2023 04:33:45 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3841AE47
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 May 2023 01:31:21 -0700 (PDT)
+        Tue, 23 May 2023 05:27:15 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8951E119;
+        Tue, 23 May 2023 02:27:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684830681; x=1716366681;
+  t=1684834033; x=1716370033;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=bueOSJjgNCTsQ/xvOElzEQ+1qyU/N6oNeiOgFlGrH1w=;
-  b=eD5rHOOkh/xcVExAaHI62xYhV1rk+9n5imUra9v0dsJDIgXycGda7Lhu
-   DIJnGrYBfiKtFYWh/eUWcXwe6EgFbXD4Qu/aiQyUlQ9zMyq/sk036pibb
-   ok3KLOgKO+KY9Gm2TGi3mMgyLUe5pwMVPvXeMHHNlOqLyu5nx93Wv5EMO
-   1bO+e3C2VJ3i2KBrq/euL11hWb7mdN4Xf8BOA6zys0W0UT4LE/cpuU/L8
-   Ig9dIzqjoX7F0JKnXjJQ4WzhOMhOfo55on1opXGVEZlLdooFGy4yzxHb/
-   Bfua4CQ2VgcUABfwaJNvZfWX70+228EDHTnfIdA7yHMzya370JDaCr83e
+  bh=4pmQFILBmz2f/mXPtC0/un3f6702ACX81f16N8rZ8rA=;
+  b=XK89COV7/PaQju0iv+jiVFWvsr1MjtgaXCFQlp7O1Yo4f3kvBpLZvxzG
+   dC5qfjvD+7Z6zHqyrLR6Z8FZW85GSOdj50Pbg3tRF03YmXJklD08eWtm7
+   1UWvmQbBjlTtV+fnuGxhDV81YjP+hZ+dIQ/xulqcCpJpdJaBCKnQEv3rh
+   om9WFBcUJrloGU+eXNlgJDWNJBp68C6U0TUb7Bt6AJlGFUgXJjfEFe/jn
+   LNJ+jmOHKaVXllPN2mFDoFyyYDOnhrN3O/dtVZu+I+Wyt70+Ve8T9Q5OI
+   7z+ABFa33Nj6idN45LyZOKHlFaTagwE5DHkajM1nMTg8yEb4bWvUYor67
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="350684752"
+X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="381429767"
 X-IronPort-AV: E=Sophos;i="6.00,185,1681196400"; 
-   d="scan'208";a="350684752"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 01:31:21 -0700
+   d="scan'208";a="381429767"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 02:27:13 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="768926154"
+X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="734683883"
 X-IronPort-AV: E=Sophos;i="6.00,185,1681196400"; 
-   d="scan'208";a="768926154"
+   d="scan'208";a="734683883"
 Received: from oodnolex-mobl1.ccr.corp.intel.com ([10.252.55.104])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 01:31:19 -0700
-Date:   Tue, 23 May 2023 11:31:16 +0300 (EEST)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 02:27:11 -0700
+Date:   Tue, 23 May 2023 12:27:08 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc:     hdegoede@redhat.com, markgross@kernel.org, Sanket.Goswami@amd.com,
-        mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] platform/x86/amd: pmc: Update metrics table info
- for Pink Sardine
-In-Reply-To: <20230516091308.3905113-5-Shyam-sundar.S-k@amd.com>
-Message-ID: <f1b5d35a-471b-3b51-ef24-d534f7c745ee@linux.intel.com>
-References: <20230516091308.3905113-1-Shyam-sundar.S-k@amd.com> <20230516091308.3905113-5-Shyam-sundar.S-k@amd.com>
+To:     Steve Wahl <steve.wahl@hpe.com>
+cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: ISST: Remove 8 socket limit
+In-Reply-To: <20230519160420.2588475-1-steve.wahl@hpe.com>
+Message-ID: <bf9a2943-f4eb-eb24-e18b-1b1c1959fe31@linux.intel.com>
+References: <20230519160420.2588475-1-steve.wahl@hpe.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323329-1415302906-1684834032=:3565"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 16 May 2023, Shyam Sundar S K wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Starting from Pink Sardine, number of IP blocks were added to the SoC
-> and the PMFW has the ability to give debug stats on each the IP blocks
-> after a S0ix cycle within part of the SMU metrics table. Add this new
-> capability to the driver.
+--8323329-1415302906-1684834032=:3565
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+
+On Fri, 19 May 2023, Steve Wahl wrote:
+
+> Stop restricting the PCI search to a range of PCI domains fed to
+> pci_get_domain_bus_and_slot().  Instead, use for_each_pci_dev() and
+> look at all PCI domains in one pass.
 > 
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> On systems with more than 8 sockets, this avoids error messages like
+> "Information: Invalid level, Can't get TDP control information at
+> specified levels on cpu 480" from the intel speed select utility.
+> 
+> Fixes: aa2ddd242572 ("platform/x86: ISST: Use numa node id for cpu pci dev mapping")
+> Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
 > ---
->  drivers/platform/x86/amd/pmc.c | 53 ++++++++++++++++++++++++++--------
->  1 file changed, 41 insertions(+), 12 deletions(-)
+>  .../x86/intel/speed_select_if/isst_if_common.c       | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-> index 7e5e6afb3410..0e67325a5aec 100644
-> --- a/drivers/platform/x86/amd/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc.c
-> @@ -45,7 +45,6 @@
->  #define AMD_PMC_STB_DUMMY_PC		0xC6000007
+> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> index e0572a29212e..02fe360a59c7 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> @@ -304,14 +304,13 @@ struct isst_if_pkg_info {
+>  static struct isst_if_cpu_info *isst_cpu_info;
+>  static struct isst_if_pkg_info *isst_pkg_info;
 >  
->  /* STB S2D(Spill to DRAM) has different message port offset */
-> -#define STB_SPILL_TO_DRAM		0xBE
->  #define AMD_S2D_REGISTER_MESSAGE	0xA20
->  #define AMD_S2D_REGISTER_RESPONSE	0xA80
->  #define AMD_S2D_REGISTER_ARGUMENT	0xA88
-> @@ -99,7 +98,6 @@
->  #define PMC_MSG_DELAY_MIN_US		50
->  #define RESPONSE_REGISTER_LOOP_MAX	20000
->  
-> -#define SOC_SUBSYSTEM_IP_MAX	12
->  #define DELAY_MIN_US		2000
->  #define DELAY_MAX_US		3000
->  #define FIFO_SIZE		4096
-> @@ -133,9 +131,18 @@ static const struct amd_pmc_bit_map soc15_ip_blk[] = {
->  	{"ISP",		BIT(6)},
->  	{"NBIO",	BIT(7)},
->  	{"DF",		BIT(8)},
-> -	{"USB0",	BIT(9)},
-> -	{"USB1",	BIT(10)},
-> +	{"USB3_0",	BIT(9)},
-> +	{"USB3_1",	BIT(10)},
->  	{"LAPIC",	BIT(11)},
-> +	{"USB3_2",	BIT(12)},
-> +	{"USB3_3",	BIT(13)},
-> +	{"USB3_4",	BIT(14)},
-> +	{"USB4_0",	BIT(15)},
-> +	{"USB4_1",	BIT(16)},
-> +	{"MPM",		BIT(17)},
-> +	{"JPEG",	BIT(18)},
-> +	{"IPU",		BIT(19)},
-> +	{"UMSCH",	BIT(20)},
->  	{}
->  };
->  
-> @@ -149,6 +156,8 @@ struct amd_pmc_dev {
->  	u32 cpu_id;
->  	u32 active_ips;
->  	u32 dram_size;
-> +	u32 num_ips;
-> +	u32 s2d_msg_id;
->  /* SMU version information */
->  	u8 smu_program;
->  	u8 major;
-> @@ -196,8 +205,8 @@ struct smu_metrics {
->  	u64 timein_s0i3_totaltime;
->  	u64 timein_swdrips_lastcapture;
->  	u64 timein_swdrips_totaltime;
-> -	u64 timecondition_notmet_lastcapture[SOC_SUBSYSTEM_IP_MAX];
-> -	u64 timecondition_notmet_totaltime[SOC_SUBSYSTEM_IP_MAX];
-> +	u64 timecondition_notmet_lastcapture[32];
-> +	u64 timecondition_notmet_totaltime[32];
->  } __packed;
->  
->  static int amd_pmc_stb_debugfs_open(struct inode *inode, struct file *filp)
-> @@ -263,7 +272,7 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
->  	dev->msg_port = 1;
->  
->  	/* Get the num_samples to calculate the last push location */
-> -	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, STB_SPILL_TO_DRAM, true);
-> +	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, dev->s2d_msg_id, true);
->  	/* Clear msg_port for other SMU operation */
->  	dev->msg_port = 0;
->  	if (ret) {
-> @@ -310,6 +319,23 @@ static const struct file_operations amd_pmc_stb_debugfs_fops_v2 = {
->  	.release = amd_pmc_stb_debugfs_release_v2,
->  };
->  
-> +static void amd_pmc_get_ip_info(struct amd_pmc_dev *dev)
-> +{
-> +	switch (dev->cpu_id) {
-> +	case AMD_CPU_ID_PCO:
-> +	case AMD_CPU_ID_RN:
-> +	case AMD_CPU_ID_YC:
-> +	case AMD_CPU_ID_CB:
-> +		dev->num_ips = 12;
-> +		dev->s2d_msg_id = 0xBE;
-
-Changelog doesn't seem to mention the addition of ->s2d_msg_id at all but 
-only describes the num_ips change.
-
-> +		break;
-> +	case AMD_CPU_ID_PS:
-> +		dev->num_ips = 21;
-> +		dev->s2d_msg_id = 0x85;
-> +		break;
-> +	}
-> +}
-> +
->  static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev)
+> -#define ISST_MAX_PCI_DOMAINS	8
+> -
+>  static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
 >  {
->  	if (dev->cpu_id == AMD_CPU_ID_PCO) {
-> @@ -471,7 +497,7 @@ static int smu_fw_info_show(struct seq_file *s, void *unused)
->  		   table.timeto_resume_to_os_lastcapture);
+>  	struct pci_dev *matched_pci_dev = NULL;
+>  	struct pci_dev *pci_dev = NULL;
+> +	struct pci_dev *_pci_dev = NULL;
+>  	int no_matches = 0, pkg_id;
+> -	int i, bus_number;
+> +	int bus_number;
 >  
->  	seq_puts(s, "\n=== Active time (in us) ===\n");
-> -	for (idx = 0 ; idx < SOC_SUBSYSTEM_IP_MAX ; idx++) {
-> +	for (idx = 0 ; idx < dev->num_ips ; idx++) {
->  		if (soc15_ip_blk[idx].bit_mask & dev->active_ips)
->  			seq_printf(s, "%-8s : %lld\n", soc15_ip_blk[idx].name,
->  				   table.timecondition_notmet_lastcapture[idx]);
-> @@ -919,7 +945,7 @@ static int amd_pmc_get_dram_size(struct amd_pmc_dev *dev)
->  		goto err_dram_size;
->  	}
+>  	if (bus_no < 0 || bus_no >= ISST_MAX_BUS_NUMBER || cpu < 0 ||
+>  	    cpu >= nr_cpu_ids || cpu >= num_possible_cpus())
+> @@ -323,12 +322,11 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
+>  	if (bus_number < 0)
+>  		return NULL;
 >  
-> -	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, STB_SPILL_TO_DRAM, true);
-> +	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->s2d_msg_id, true);
->  	if (ret || !dev->dram_size)
->  		goto err_dram_size;
+> -	for (i = 0; i < ISST_MAX_PCI_DOMAINS; ++i) {
+> -		struct pci_dev *_pci_dev;
+> +	for_each_pci_dev(_pci_dev) {
+>  		int node;
 >  
-> @@ -940,7 +966,10 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
->  	/* Spill to DRAM feature uses separate SMU message port */
->  	dev->msg_port = 1;
+> -		_pci_dev = pci_get_domain_bus_and_slot(i, bus_number, PCI_DEVFN(dev, fn));
+> -		if (!_pci_dev)
+> +		if (_pci_dev->bus->number != bus_number ||
+> +		    _pci_dev->devfn != PCI_DEVFN(dev, fn))
+>  			continue;
 >  
-> -	amd_pmc_send_cmd(dev, S2D_TELEMETRY_SIZE, &size, STB_SPILL_TO_DRAM, true);
-> +	/* Get num of IP blocks within the SoC */
-> +	amd_pmc_get_ip_info(dev);
-> +
-> +	amd_pmc_send_cmd(dev, S2D_TELEMETRY_SIZE, &size, dev->s2d_msg_id, true);
->  	if (size != S2D_TELEMETRY_BYTES_MAX)
->  		return -EIO;
->  
-> @@ -950,8 +979,8 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
->  		dev->dram_size = S2D_TELEMETRY_DRAMBYTES_MAX;
->  
->  	/* Get STB DRAM address */
-> -	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_LOW, &phys_addr_low, STB_SPILL_TO_DRAM, true);
-> -	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_HIGH, &phys_addr_hi, STB_SPILL_TO_DRAM, true);
-> +	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_LOW, &phys_addr_low, dev->s2d_msg_id, true);
-> +	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_HIGH, &phys_addr_hi, dev->s2d_msg_id, true);
->  
->  	stb_phys_addr = ((u64)phys_addr_hi << 32 | phys_addr_low);
->  
-> 
+>  		++no_matches;
+
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+With the note that _pci_dev is not a good variable name (but the rename 
+would make this fix larger than it needs to be).
 
 -- 
  i.
 
+--8323329-1415302906-1684834032=:3565--
