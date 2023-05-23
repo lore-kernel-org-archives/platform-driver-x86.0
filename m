@@ -2,333 +2,147 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1255AC77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 May 2023 14:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9299CC77B75
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 May 2023 15:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236993AbjEWOSg (ORCPT
+        id S237155AbjEWPTk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 23 May 2023 10:18:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
+        Tue, 23 May 2023 11:19:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbjEWOSf (ORCPT
+        with ESMTP id S236806AbjEWPTi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 May 2023 10:18:35 -0400
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CF5B109;
-        Tue, 23 May 2023 07:18:33 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2af1a7d2f6aso69371821fa.1;
-        Tue, 23 May 2023 07:18:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684851452; x=1687443452;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wgp0WGgQRnhS5h2HXXDa4Jv0mpviiv7tawtn9KwlyOE=;
-        b=DdScvZkRj6fz33AoLK3TCnv16P/t0+wXqgWTr4rTe0zTqKu5DOQvBQv3S6BrHEUkBO
-         3fMs8JXDX9TmaCgWWOSsazr3Gt3qhZZs0MN9ivPqYxagfro0I58n8Q3n2jUlbIh61d96
-         L71Z/uXncaqSQQ44nTkZk1AXfTeH/iy1/b9YCUc4IC6SDEgl9K+4+rzkmEVfvdKPS8eV
-         0hIaQzRFZKENbqWDxhZhW8EAGIThsBuOcf5lnTjdpkMvgmCLn5MmvhdU89jXpIzKm89w
-         aW0BprSeatwAgsdTiKek/e90S1h1calYLsKrOoSDbiHEO4LHvFIabbyD4YhUZEK+C+dp
-         HCAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684851452; x=1687443452;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wgp0WGgQRnhS5h2HXXDa4Jv0mpviiv7tawtn9KwlyOE=;
-        b=BjWtfmiIflvhYTO2QI/e8EXKcMsUpR06dicTvaCxrJEEdkaaQaswHKbPMuPKqq2D+b
-         OWL0UAMdouy/6DNaNtOYd15J/1DrPTiTGtnX4+gTz9+tyuVx5592F832SvA06N2iUBHK
-         TG5F6TjLSHlAErtSe7v2NWInZcutUYi9A7klbvLi1PWIZXwKd2QEBiWlt/ngLMbmWokF
-         crkjcq8tesZsCmCwklqb8b2WoxZXZDHOhT/QCFysheJjzKDfN3sPoYjKj+KzO3Bgu/ex
-         bE2apL0TVtyD8wwFH6u1KvVaETYvL7KuWkypgCL26fjz8WdF8gVroiHbj6+FlVt5wr/S
-         I4TQ==
-X-Gm-Message-State: AC+VfDwkLJ4KbmFOfOzSO9U5nBAIuS6s8jCOQbN9Ez8URoDZiBVL8eOi
-        xq395Cdiiopd7lzA+dOLBXVNfe35yBrGv9s73a9tyYAGLw0=
-X-Google-Smtp-Source: ACHHUZ48D9ju1tf/+willhkmKEU07oYET3oKAQ6KOM19Votg2QiqAgHNcTusHuHK4irGmk9k6b0CZqVSoKoNuSa292o=
-X-Received: by 2002:a2e:7e0a:0:b0:2ac:770f:8831 with SMTP id
- z10-20020a2e7e0a000000b002ac770f8831mr5310344ljc.40.1684851451186; Tue, 23
- May 2023 07:17:31 -0700 (PDT)
+        Tue, 23 May 2023 11:19:38 -0400
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 897CC11A;
+        Tue, 23 May 2023 08:19:36 -0700 (PDT)
+Received: from pps.filterd (m0134422.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34NCCZ6Q006179;
+        Tue, 23 May 2023 15:19:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=pps0720;
+ bh=QbeCPkHPBUmVNkZKFmZrNQRg+5xggdUJo/uJga/GnxU=;
+ b=pgwvsakbaoK0P7gjJt762OVYB3mLeBZZ5lVsrKn4Nmuq8FL7G6t9rhtxbsIEqCMz3osr
+ JjTvnXrCbG9KoG/wrxqog8m4TfSoNh5Cr6XSixZbTTutiUVOm70dFkUlTkgbBMAD+yez
+ kDVMqhM9ILcPVb/yGRSnmmRmMTdUpXzCrDm+KZC2h+tTgvRbc9c5mL9BAu75uIgxAMDU
+ vWj38yE97zbjIfpSUH688jQHhqcX0g505iBF+qfm0FsLWmhKH9cQv7tp5gSHjvNaYwfn
+ eYT/6i3dmW40uVsNULai5bgjlITQzEYuXN9j+3AFDYOGw9y+/ZKjdI8Vzv6LnfmWsxh5 SQ== 
+Received: from p1lg14880.it.hpe.com (p1lg14880.it.hpe.com [16.230.97.201])
+        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3qrw9tsksf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 May 2023 15:19:20 +0000
+Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 483DA80021E;
+        Tue, 23 May 2023 15:19:20 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id 7E87C8155A1;
+        Tue, 23 May 2023 15:19:19 +0000 (UTC)
+Date:   Tue, 23 May 2023 10:19:17 -0500
+From:   Steve Wahl <steve.wahl@hpe.com>
+To:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     Steve Wahl <steve.wahl@hpe.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: ISST: Remove 8 socket limit
+Message-ID: <ZGzZddmPO2T24TjF@swahl-home.5wahls.com>
+References: <20230519160420.2588475-1-steve.wahl@hpe.com>
+ <bf9a2943-f4eb-eb24-e18b-1b1c1959fe31@linux.intel.com>
 MIME-Version: 1.0
-References: <20230517155026.28535-1-jorge.lopez2@hp.com> <20230517155026.28535-2-jorge.lopez2@hp.com>
- <0abdb306-1e24-4653-9a14-e5db8d508a82@app.fastmail.com> <CAOOmCE8-GB-yM-cfCP6Sw8xdnOgNm4b7viUziA48YJ4mGkGfag@mail.gmail.com>
- <7406150c-4ac0-4a61-b7e5-fd5f89ef0d45@app.fastmail.com>
-In-Reply-To: <7406150c-4ac0-4a61-b7e5-fd5f89ef0d45@app.fastmail.com>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Tue, 23 May 2023 09:16:57 -0500
-Message-ID: <CAOOmCE-1LykpkkSFd112F=YFsY2Vmyphn-coE_SbDbnfGrdyGQ@mail.gmail.com>
-Subject: Re: [PATCH v14 01/13] hp-bioscfg: Documentation
-To:     Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bf9a2943-f4eb-eb24-e18b-1b1c1959fe31@linux.intel.com>
+X-Proofpoint-GUID: AFldbljK1YISAcP3cZ_-xiDDduhwppvf
+X-Proofpoint-ORIG-GUID: AFldbljK1YISAcP3cZ_-xiDDduhwppvf
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-23_10,2023-05-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 mlxscore=0 phishscore=0 adultscore=0 suspectscore=0
+ bulkscore=0 spamscore=0 clxscore=1011 mlxlogscore=999 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305230119
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, May 19, 2023 at 6:19=E2=80=AFPM Mark Pearson <mpearson-lenovo@squeb=
-b.ca> wrote:
->
-> Thanks Jorge,
->
-> On Fri, May 19, 2023, at 4:58 PM, Jorge Lopez wrote:
-> > On Fri, May 19, 2023 at 12:34=E2=80=AFPM Mark Pearson <mpearson-lenovo@=
-squebb.ca> wrote:
-> >>
-> >> Hi Jorge,
-> >>
-> >> On Wed, May 17, 2023, at 11:50 AM, Jorge Lopez wrote:
-> >> > HP BIOS Configuration driver purpose is to provide a driver supporti=
-ng
-> >> > the latest sysfs class firmware attributes framework allowing the us=
-er
-> >> > to change BIOS settings and security solutions on HP Inc.=E2=80=99s =
-commercial
-> >> > notebooks.
-> >> >
-> >> > Many features of HP Commercial notebooks can be managed using Window=
-s
-> >> > Management Instrumentation (WMI). WMI is an implementation of Web-Ba=
-sed
-> >> > Enterprise Management (WBEM) that provides a standards-based interfa=
-ce
-> >> > for changing and monitoring system settings. HP BIOSCFG driver provi=
-des
-> >> > a native Linux solution and the exposed features facilitates the
-> >> > migration to Linux environments.
-> >> >
-> >> > The Linux security features to be provided in hp-bioscfg driver enab=
-les
-> >> > managing the BIOS settings and security solutions via sysfs, a virtu=
-al
-> >> > filesystem that can be used by user-mode applications. The new
-> >> > documentation cover HP-specific firmware sysfs attributes such Secur=
-e
-> >> > Platform Management and Sure Start. Each section provides security
-> >> > feature description and identifies sysfs directories and files expos=
-ed
-> >> > by the driver.
-> >> >
-> >> > Many HP Commercial notebooks include a feature called Secure Platfor=
-m
-> >> > Management (SPM), which replaces older password-based BIOS settings
-> >> > management with public key cryptography. PC secure product managemen=
-t
-> >> > begins when a target system is provisioned with cryptographic keys
-> >> > that are used to ensure the integrity of communications between syst=
-em
-> >> > management utilities and the BIOS.
-> >> >
-> >> > HP Commercial notebooks have several BIOS settings that control its
-> >> > behaviour and capabilities, many of which are related to security.
-> >> > To prevent unauthorized changes to these settings, the system can
-> >> > be configured to use a cryptographic signature-based authorization
-> >> > string that the BIOS will use to verify authorization to modify the
-> >> > setting.
-> >> >
-> >> > Linux Security components are under development and not published ye=
-t.
-> >> > The only linux component is the driver (hp bioscfg) at this time.
-> >> > Other published security components are under Windows.
-> >> >
-> >> > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
-> >> >
-> >> > ---
-> >> > Based on the latest platform-drivers-x86.git/for-next
-> >> > ---
-> >> >  .../testing/sysfs-class-firmware-attributes   | 102 +++++++++++++++=
-++-
-> >> >  1 file changed, 100 insertions(+), 2 deletions(-)
-> >> >
-> >> > diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attribut=
-es
-> >> > b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> >> > index 4cdba3477176..f8d6c089228b 100644
-> >> > --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> >> > +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> >> <snip>
-> >> > +
-> >> > +
-> >> > +             HP specific class extensions - Secure Platform Manager=
- (SPM)
-> >> > +             --------------------------------
-> >> > +
-> >> > +What:                /sys/class/firmware-attributes/*/authenticatio=
-n/SPM/kek
-> >> > +Date:                March 29
-> >> > +KernelVersion:       5.18
-> >> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
-> >> > +Description:
-> >> > +             'kek' Key-Encryption-Key is a write-only file that can=
- be used to
-> >> > configure the
-> >> > +             RSA public key that will be used by the BIOS to verify
-> >> > +             signatures when setting the signing key.  When written=
-,
-> >> > +             the bytes should correspond to the KEK certificate
-> >> > +             (x509 .DER format containing an OU).  The size of the
-> >> > +             certificate must be less than or equal to 4095 bytes.
-> >> > +
-> >> > +What:                /sys/class/firmware-attributes/*/authenticatio=
-n/SPM/sk
-> >> > +Date:                March 29
-> >> > +KernelVersion:       5.18
-> >> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
-> >> > +Description:
-> >> > +             'sk' Signature Key is a write-only file that can be us=
-ed to
-> >> > configure the RSA
-> >> > +             public key that will be used by the BIOS to verify sig=
-natures
-> >> > +             when configuring BIOS settings and security features. =
- When
-> >> > +             written, the bytes should correspond to the modulus of=
- the
-> >> > +             public key.  The exponent is assumed to be 0x10001.
-> >> > +
-> >> > +What:                /sys/class/firmware-attributes/*/authenticatio=
-n/SPM/status
-> >> > +Date:                March 29
-> >> > +KernelVersion:       5.18
-> >> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
-> >> > +Description:
-> >> > +             'status' is a read-only file that returns ASCII text i=
-n JSON format
-> >> > reporting
-> >> > +             the status information.
-> >> > +
-> >> > +               "State": "not provisioned | provisioned | provisioni=
-ng in progress
-> >> > ",
-> >> > +               "Version": " Major. Minor ",
-> >> > +               "Nonce": <16-bit unsigned number display in base 10>=
-,
-> >> > +               "FeaturesInUse": <16-bit unsigned number display in =
-base 10>,
-> >> > +               "EndorsementKeyMod": "<256 bytes in base64>",
-> >> > +               "SigningKeyMod": "<256 bytes in base64>"
-> >> > +
-> >> > +What:                /sys/class/firmware-attributes/*/attributes/Su=
-re_Start/audit_log_entries
-> >> > +Date:                March 29
-> >> > +KernelVersion:       5.18
-> >> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
-> >> > +Description:
-> >> > +             'audit_log_entries' is a read-only file that returns t=
-he events in
-> >> > the log.
-> >> > +
-> >> > +                     Audit log entry format
-> >> > +
-> >> > +                     Byte 0-15:   Requested Audit Log entry  (Each =
-Audit log is 16 bytes)
-> >> > +                     Byte 16-127: Unused
-> >> > +
-> >> > +What:                /sys/class/firmware-attributes/*/attributes/Su=
-re_Start/audit_log_entry_count
-> >> > +Date:                March 29
-> >> > +KernelVersion:       5.18
-> >> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
-> >> > +Description:
-> >> > +             'audit_log_entry_count' is a read-only file that retur=
-ns the number
-> >> > of existing
-> >> > +             audit log events available to be read. Values are sepa=
-rated using
-> >> > comma (``,``)
-> >> > +
-> >> > +                     [No of entries],[log entry size],[Max number o=
-f entries supported]
-> >> > +
-> >> > +             log entry size identifies audit log size for the curre=
-nt BIOS
-> >> > version.
-> >> > +             The current size is 16 bytes but it can be up to 128 b=
-ytes long in
-> >> > future BIOS
-> >> > +             versions.
-> >> > --
-> >> > 2.34.1
-> >>
-> >> Firstly apologies as I've done a poor job of following the updates to =
-this series - so if this has already been discussed and agreed by more seas=
-oned kernel contributors please feel free to disregard my comments :) I was=
- catching up on my inbox and had some thoughts.
-> >
-> > No worries.
-> >
-> >>
-> >> For SPM - as this replaces password usage, is it done for all account =
-types? It seems a bit odd having it be a replacement for the passwords but =
-in it's own location and not in the same place as (for example) Admin/curre=
-nt_password.
-> >> For the Lenovo implementation I put certificate, signature and save_si=
-gnature in the authentication/Admin directory and I realise your implementa=
-tion is different with the keys but if the kek and sk are only used with th=
-e Admin account then shouldn't they also be in that directory? It would be =
-nice to have some commonality across vendors in my opinion.
-> >>
-> >
-> > SPM (Security Platform Management) does not replace password usage and
-> > it is done for the Admin account (Setup Password).  SPM is a security
-> > feature available to the user to configure/update BIOS settings when
-> > Sure Admin is enabled in BIOS.  One of the files provided under SPM is
-> > the key _role and its value is set to =E2=80=98bios-spm.=E2=80=99   A =
-=E2=80=98bios-spm=E2=80=99 role
-> > indicates a password is used in combination with an
-> > endorsement/signing key.  It is also the reason why SPM is kept
-> > separate under the list of authentication attributes.
->
-> Ah - I think I get it, and in that case I can see why you keep it separat=
-e and it is a unique role.
-> I withdraw my suggestion :)
->
-> >
-> >> For the Sure_Start I would propose de-branding this so it's generic an=
-d I don't think it fits under attributes as it doesn't support any of the o=
-ther required attribute fields. I think your implementation of an audit log=
- seems neat but if another vendor was to do similar it would be better to b=
-e able to reuse the same attribute name and enable common tooling.
-> >> I propose having this as just log/audit_entries and log/audit_count an=
-d have the log folder in the top alongside authentication and attributes.
-> >> If someone wants to add other logs in the future it would be a good pl=
-ace to have them.
-> >
-> > I like the idea of having a log folder alongside authentication and
-> > attributes where future logs can be placed.  Unfortunately, Sure_Start
-> > is part of the security attributes  and the initial driver provides a
-> > minimal implementation.   Other attributes associated with Sure_Start
-> > and available in BIOS are  'SureStart Production Mode', 'Sure Start
-> > Security Event Boot Notification', 'Sure Start BIOS Settings
-> > Protection', 'Sure Start Secure Boot Keys Protection', and 'Sure Start
-> > Security Event Policy'
->
-> Aren't all of these just regular attributes that show up under the attrib=
-utes folder (and have current_value and possible_value settings etc)? Do th=
-ey get created in your equivalent of probing the BIOS to determine what att=
-ributes are available or are they manually created entries? (I'm assuming a=
-utomatic or they would be also added to the documentation)
+On Tue, May 23, 2023 at 12:27:08PM +0300, Ilpo Järvinen wrote:
+> On Fri, 19 May 2023, Steve Wahl wrote:
+> 
+> > Stop restricting the PCI search to a range of PCI domains fed to
+> > pci_get_domain_bus_and_slot().  Instead, use for_each_pci_dev() and
+> > look at all PCI domains in one pass.
+> > 
+> > On systems with more than 8 sockets, this avoids error messages like
+> > "Information: Invalid level, Can't get TDP control information at
+> > specified levels on cpu 480" from the intel speed select utility.
+> > 
+> > Fixes: aa2ddd242572 ("platform/x86: ISST: Use numa node id for cpu pci dev mapping")
+> > Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+> > ---
+> >  .../x86/intel/speed_select_if/isst_if_common.c       | 12 +++++-------
+> >  1 file changed, 5 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> > index e0572a29212e..02fe360a59c7 100644
+> > --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> > +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> > @@ -304,14 +304,13 @@ struct isst_if_pkg_info {
+> >  static struct isst_if_cpu_info *isst_cpu_info;
+> >  static struct isst_if_pkg_info *isst_pkg_info;
+> >  
+> > -#define ISST_MAX_PCI_DOMAINS	8
+> > -
+> >  static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
+> >  {
+> >  	struct pci_dev *matched_pci_dev = NULL;
+> >  	struct pci_dev *pci_dev = NULL;
+> > +	struct pci_dev *_pci_dev = NULL;
+> >  	int no_matches = 0, pkg_id;
+> > -	int i, bus_number;
+> > +	int bus_number;
+> >  
+> >  	if (bus_no < 0 || bus_no >= ISST_MAX_BUS_NUMBER || cpu < 0 ||
+> >  	    cpu >= nr_cpu_ids || cpu >= num_possible_cpus())
+> > @@ -323,12 +322,11 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
+> >  	if (bus_number < 0)
+> >  		return NULL;
+> >  
+> > -	for (i = 0; i < ISST_MAX_PCI_DOMAINS; ++i) {
+> > -		struct pci_dev *_pci_dev;
+> > +	for_each_pci_dev(_pci_dev) {
+> >  		int node;
+> >  
+> > -		_pci_dev = pci_get_domain_bus_and_slot(i, bus_number, PCI_DEVFN(dev, fn));
+> > -		if (!_pci_dev)
+> > +		if (_pci_dev->bus->number != bus_number ||
+> > +		    _pci_dev->devfn != PCI_DEVFN(dev, fn))
+> >  			continue;
+> >  
+> >  		++no_matches;
+> 
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> 
+> With the note that _pci_dev is not a good variable name (but the rename 
+> would make this fix larger than it needs to be).
 
-'SureStart Production Mode', 'Sure Start Security Event Boot
-Notification', 'Sure Start BIOS Settings Protection', 'Sure Start
-Secure Boot Keys Protection', and 'Sure Start Security Event Policy'
-are reported by BIOS therefore listed under attributes.  'Sure
-Start/audit_log_entries and Sure_Start/audit_log_count_entries are
-created manually and kept under attributes/Sure_Start; same location
-as all other 'Sure Start' entries.
+I did look askance at that name for the briefest moment, but came to
+the same conclusion.
 
->
-> It seemed to me the audit log entries were being handled differently beca=
-use you had to specifically create the entries, with (I assume) some specia=
-l handling for display?
+Thank you for your time reviewing!
 
-Gathering the number of entries and reading each audit logs require
-making multiple WMI calls (Security related).  If 'Sure Start' was not
-part of a security feature, I would agree to move it under a log
-directory; sadly it is not the case.
->
-> Mark
+--> Steve
+
+-- 
+Steve Wahl, Hewlett Packard Enterprise
