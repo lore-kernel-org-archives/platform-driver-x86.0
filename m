@@ -2,107 +2,165 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE42C77B75
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 May 2023 12:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A63DC7EE26
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 May 2023 12:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236533AbjEWMBP (ORCPT
+        id S230024AbjEWMhQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 23 May 2023 08:01:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41028 "EHLO
+        Tue, 23 May 2023 08:37:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234381AbjEWMBO (ORCPT
+        with ESMTP id S229477AbjEWMhP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 May 2023 08:01:14 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A3D1119
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 May 2023 05:01:13 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-510b6a249a8so1490050a12.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 May 2023 05:01:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1684843271; x=1687435271;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UwDgLKuZAoJyLnwNBTa9Plj4tI2jTn00PeEyIRBeY3M=;
-        b=UlTc6dBhYhV5+FwOb+RSPI2rk8Q3qpFgLR3evPzNE3qoSA/1Tv938oYhaUah40zsTJ
-         f5TXQMK2Cs079ySx+YpwdRWznI362VlsBkVu90B+Ov9nuERDJwdJYMfohfmTSI2+kDdI
-         scPtnFlwU4iUXY9LM6WpBfRQbFpdHeGc4hMcAFqULPVX1fZW3lDlnnbfO1JqByHkrWWK
-         3iO8KQPZs0CPPK/LLdsYu6zc5ox+KJMKgleV+yRLT7U3LAyno33h5A9o/0CfapwLHQDI
-         veiFgFew6wafBYy17ZumPHmrNo9K9VFsHBpJb7AfKpU3Gm3sGMXUvay7WEwp5nxFryVv
-         cQlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684843271; x=1687435271;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UwDgLKuZAoJyLnwNBTa9Plj4tI2jTn00PeEyIRBeY3M=;
-        b=O9FYTa5Pyl/jdXEUaAv7iECtDT1UKsvyZOD+PCyG6cYq3Ypdp+9VzJ9wAOfrvSLNTR
-         kKIbv0W1hkzpx1oRrISZEhWX9RJo2yLPYp8lDD4OdNnMQU9OHQSlkHM9yXWooSAS/l50
-         IXaSDRxz5t0DeDTA7iYt2MLPlhzl4N8n0Vx8tewF3UumvfGJm+PdaXRJQ3cMusAz8u3v
-         6ZKATwLaxf1Xdlm9AgXLJl5J62PFf1+AlKh2dpSLR7TxibIbaUzNci9wvKpZBlijU2UL
-         7AUIVrZnuizBvHe+LerZkimk84l4gsuqJ37ObW4f0aT7s4CG31YEacRo7tbXz+54p2/Y
-         OOsQ==
-X-Gm-Message-State: AC+VfDxrDfEl2D7V7BwxnP1uzudvxU2xDqFq+7daeSnVCbB3/e4oF9to
-        B2LX76KZuEEyMKcnHcp/5R0YWg==
-X-Google-Smtp-Source: ACHHUZ40CX09dMi0e735PDRKFRNtfgI4LS6imtI87HuWDsDYP/q8KqRU12dipkCjnKzQegYx3Zmfiw==
-X-Received: by 2002:a17:906:d550:b0:966:4bb3:df63 with SMTP id cr16-20020a170906d55000b009664bb3df63mr15157840ejc.63.1684843271141;
-        Tue, 23 May 2023 05:01:11 -0700 (PDT)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id t20-20020a17090616d400b009662c57b4ffsm4397666ejd.96.2023.05.23.05.01.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 May 2023 05:01:10 -0700 (PDT)
-Date:   Tue, 23 May 2023 14:01:09 +0200
-From:   Andrew Jones <ajones@ventanamicro.com>
-To:     Sunil V L <sunilvl@ventanamicro.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        llvm@lists.linux.dev, Weili Qian <qianweili@huawei.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Tom Rix <trix@redhat.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH V6 09/21] RISC-V: ACPI: Cache and retrieve the RINTC
- structure
-Message-ID: <20230523-7263e5220667fd82a462afc7@orel>
-References: <20230515054928.2079268-1-sunilvl@ventanamicro.com>
- <20230515054928.2079268-10-sunilvl@ventanamicro.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230515054928.2079268-10-sunilvl@ventanamicro.com>
+        Tue, 23 May 2023 08:37:15 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7833BC4;
+        Tue, 23 May 2023 05:37:11 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id E560C5C0210;
+        Tue, 23 May 2023 08:37:10 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute5.internal (MEProxy); Tue, 23 May 2023 08:37:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm2; t=1684845430; x=1684931830; bh=Kn
+        Gn5eb4S+X3iYghnL3L3fVpbv3jSMexyjANQhxZcyc=; b=pDM+Z+AlEZqBx/UAV1
+        g4h1NeD5cA+bdcYuh++qDkn4cSaAME3/QaEzUOfTwhXScztogpr0HbWZjMEmNJiF
+        1bJG0Jvk4tAlk4pVYsuZqPjI8b1r26LSacTVUoI+f8By0iGPEiu9iDgjHrS+R75g
+        C8nobsPVPYiYmqqBCQk3T0UebQAyAMMWr32akQvTDizNRJRnutXteK65gHO7m6fy
+        XONvH8yd4Zql+oYxtGIYIZQMptYySY0ns4fzR42MvP4jHKo0sJfMAhLI3yMetb4z
+        dZeLWNaF8NcLNV98hER6ATNhh+pPr2lNeCgkpZj+GjeFrIAIUTH1hgxQinceN2UO
+        1Y0A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1684845430; x=1684931830; bh=KnGn5eb4S+X3i
+        YghnL3L3fVpbv3jSMexyjANQhxZcyc=; b=PHL1WdgBFZkfFbt9ks6liV5vLMxMt
+        xJD+cHdq6P5qn0MRk66rzRemeoK4e1cWU2JOGSedTxCxoO9/bAgaK410z2M+zg9K
+        6xEghNyJ3bzRf1CQNbomd9QUPxtlcqhPIPV03F4E8sjm9ChYH+cJ/S3OkPopJBKn
+        Qqjec4ZTQ4iej6WTL9K+/qzPoeEMEtb4t2pYcnQCMXkbStTnK2eg/ijqLinVN9ua
+        b9iBaEgtj7296vXAB+yBS0bejOU7AZlq7f9LQ17aFSNWfxwQvexfnjfRZcdtgGt+
+        Wr8plHpiqbjhPwm03rOeFrjQDCE87qpJu2khPgZruyIGu5cM70QSj0qaw==
+X-ME-Sender: <xms:drNsZGg47uNcAt92VBvdajqE-PjiABFJjh2a9_ppLTpt7hX5hUwniw>
+    <xme:drNsZHCQ8YqPTkouYQlU73N7Voxj3Tymqw1ypJogd8B58pUaGlezsFvIIzFPDZk6s
+    IUBvkdy2f-YJIy7psU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeejfedgheduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
+    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
+    drtggrqeenucggtffrrghtthgvrhhnpeeiueefjeeiveetuddvkeetfeeltdevffevudeh
+    ffefjedufedvieejgedugeekhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:drNsZOF3P2_h-awo3bPuNbVafqCqxdJWtaPKZIezpwR5Lc17HbaaYA>
+    <xmx:drNsZPScCUpRkEJ1EubMR0uXHJfdtnln9rkISO-C66LAeoqVsAC2tw>
+    <xmx:drNsZDzQTq7cuR3d7fMw4mofDmTRVw2ScRVSMGpGKpXz171DyJ5QRw>
+    <xmx:drNsZMrSU9o1Zq8KVjskrAL-vBluC9hLsgDINdlDkxpquIItK8P4CA>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 72EFDC6008B; Tue, 23 May 2023 08:37:10 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-441-ga3ab13cd6d-fm-20230517.001-ga3ab13cd
+Mime-Version: 1.0
+Message-Id: <04415f83-64fa-4d70-91fa-4425e163b350@app.fastmail.com>
+In-Reply-To: <b79fa66c-b8bc-125c-ccfa-9dae727022e9@redhat.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20230517181945.3725-1-mpearson-lenovo@squebb.ca>
+ <b79fa66c-b8bc-125c-ccfa-9dae727022e9@redhat.com>
+Date:   Tue, 23 May 2023 08:36:49 -0400
+From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To:     "Hans de Goede" <hdegoede@redhat.com>
+Cc:     "markgross@kernel.org" <markgross@kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] platform/x86: think-lmi: Enable opcode support on BIOS
+ settings
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, May 15, 2023 at 11:19:16AM +0530, Sunil V L wrote:
-> RINTC structures in the MADT provide mapping between the hartid
-> and the CPU. This is required many times even at run time like
-> cpuinfo. So, instead of parsing the ACPI table every time, cache
-> the RINTC structures and provide a function to get the correct
-> RINTC structure for a given cpu.
-> 
-> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  arch/riscv/include/asm/acpi.h | 10 ++++++++
->  arch/riscv/kernel/acpi.c      | 45 +++++++++++++++++++++++++++++++++++
->  arch/riscv/kernel/setup.c     |  4 ++++
->  3 files changed, 59 insertions(+)
+Thanks Hans,
 
+On Tue, May 23, 2023, at 6:46 AM, Hans de Goede wrote:
+> Hi Mark,
+>
+> On 5/17/23 20:19, Mark Pearson wrote:
+>> Whilst reviewing some documentation from the FW team on using WMI on
+>> Lenovo system I noticed that we weren't using Opcode support when
+>> changing BIOS settings in the thinkLMI driver.
+>> 
+>> We should be doing this to ensure we're future proof as the old
+>> non-opcode mechanism has been deprecated.
+>> 
+>> Tested on X1 Carbon G10 and G11.
+>> 
+>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> ---
+>>  drivers/platform/x86/think-lmi.c | 23 ++++++++++++++++++++++-
+>>  1 file changed, 22 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+>> index 1138f770149d..d9341305eba9 100644
+>> --- a/drivers/platform/x86/think-lmi.c
+>> +++ b/drivers/platform/x86/think-lmi.c
+>> @@ -1001,7 +1001,28 @@ static ssize_t current_value_store(struct kobject *kobj,
+>>  				tlmi_priv.pwd_admin->save_signature);
+>>  		if (ret)
+>>  			goto out;
+>
+>> -	} else { /* Non certiifcate based authentication */
+>> +	} else if (tlmi_priv.opcode_support) {
+>> +		/* If opcode support is present use that interface */
+>> +		set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
+>> +					new_setting);
+>> +		if (!set_str) {
+>> +			ret = -ENOMEM;
+>> +			goto out;
+>> +		}
+>> +
+>> +		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str);
+>> +		if (ret)
+>> +			goto out;
+>> +
+>> +		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+>> +			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
+>> +					tlmi_priv.pwd_admin->password);
+>> +			if (ret)
+>> +				goto out;
+>> +		}
+>> +
+>> +		ret = tlmi_save_bios_settings("");
+>
+> I'm a bit confused about how this works. You are calling the same
+> LENOVO_SET_BIOS_SETTINGS_GUID as the old non opcode based authentication method
+> without any auth string.
+>
+> And then afterwards you are calling LENOVO_OPCODE_IF_GUID with
+> "WmiOpcodePasswordAdmin:<passwd>"
+>
+> Won't the initial LENOVO_SET_BIOS_SETTINGS_GUID get rejected since
+> it does not include an auth-string and you have not authenticated
+> yet using the opcode mechanism either. IOW shouldn't the opcode
+> auth call go first ?
+>
+> And how does this work timing wise, vs races with userspace doing
+> multiple sysfs writes at once.
+>
+> If the authentication done afterwards really acks the last
+> LENOVO_SET_BIOS_SETTINGS_GUID call then a userspace based
+> attacker could try to race and overwrite the last
+> LENOVO_SET_BIOS_SETTINGS_GUID call before the ack happens... ?
+>
+> If this code really is correct I think we need to introduce
+> a mutex to avoid this race.
+>
+> And this also needs some comments to explain what is going on.
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Agreed - and looking at it now....I'm questioning it myself. This was tested so it works...but I wonder if that was more luck than judgement.
+Let me do some checking - I think I may have messed up here.
+
+Mark
