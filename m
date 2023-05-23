@@ -2,127 +2,150 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D56C7EE23
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 May 2023 10:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBC5C7EE26
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 May 2023 10:53:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236493AbjEWKre (ORCPT
+        id S236435AbjEWKxg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 23 May 2023 06:47:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34696 "EHLO
+        Tue, 23 May 2023 06:53:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230174AbjEWKre (ORCPT
+        with ESMTP id S232450AbjEWKxf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 May 2023 06:47:34 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D8D119
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 May 2023 03:46:57 -0700 (PDT)
+        Tue, 23 May 2023 06:53:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC8B911F
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 May 2023 03:52:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684838816;
+        s=mimecast20190719; t=1684839157;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=YdamzV1t3DecLpEkbaHfZsvvgjRzeqa9TpV6iGjo904=;
-        b=RlgjD1MSz4fyIviLcqbVD/a+7nN1i6P8ANAiQizoHjYVy0hQubTpeXbqc/jd09NPiq7jle
-        dCmhwUN9hEevapt9iF7jZKWPqbIMFrg3+f7eHli6XjtYINbl6jPemac++j5yY7TpIjInOt
-        4RK2miK1rqR+1gRKTDrK0OlMp2MnE9w=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=IRwLpBjF3y771Oa2kRIVwXk75u6DRLRrsAa1LNU04Go=;
+        b=BDFicqRbabjB9JF9cLzTvL5q2HufblOtpwIeh4PXJdCSnh/kzOStWD1nz/AiKx+xljwHBD
+        hshECsF4dTuAR8Qey26cdqMzDey4PAYHNfVUSSN9lNCmXD98AVTzFblnj+ypLcIRP86tM4
+        MW1f7eP5EyCCW/5uuZ3aVhYRiOVTodY=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-424-53m9BXRwOSmdhLmv8MN39A-1; Tue, 23 May 2023 06:46:54 -0400
-X-MC-Unique: 53m9BXRwOSmdhLmv8MN39A-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-50a16ab50e6so791895a12.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 May 2023 03:46:54 -0700 (PDT)
+ us-mta-45-HBHk4r8eMV2Cnf3OUE9DaA-1; Tue, 23 May 2023 06:52:36 -0400
+X-MC-Unique: HBHk4r8eMV2Cnf3OUE9DaA-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-96f4f1bb838so532113166b.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 May 2023 03:52:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684838814; x=1687430814;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=1e100.net; s=20221208; t=1684839155; x=1687431155;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YdamzV1t3DecLpEkbaHfZsvvgjRzeqa9TpV6iGjo904=;
-        b=bLNIRAQ3vL8Mqb5EP7bmjEk6HPwaD1O0E7N44BJ58jQAjbc2Z8gXcCy0TUGsuXQIWT
-         UzSdAvP4jhEZkNn1MXQFDJgzhnNSL3pdOEZx6KWc46MoVToT6zd/IBivRRMmD6MCBiqk
-         9XHuQqFmWtvycX92L0tyRaRgkuZQWIdh2rpDu3BV4VXEdzz0YXGZD3tnmzXhNHa91UCO
-         nQAGmT2YfJKK5LyaL3bpUXDB/IaZGTJFUhnDmGSmhTqvZCEd1xVgVqHgQp7JuLR5Rqse
-         vFQZ9QUz9Tm7NLnte4nM/fxOf3m0o53jprajllCgB05FuWtIlPICQFdKIHOtfzyiYbkn
-         5Ezg==
-X-Gm-Message-State: AC+VfDx2bJlA7yL9kW7FmZmuoaFZT7w17DM8Ynnib8TpfD/V74lzwuiw
-        Qd92sWGhzc1OGDc9/mxv1xU79Kvt1df3oWImTfysyGmR7zqQ+PMyKVRAYnJ3klifr3gbxnVCD+G
-        QafA9D9q2HD1uZu4PsI7L1YrwGVIp8RW5Zw==
-X-Received: by 2002:a17:907:74d:b0:94f:7edf:8fa1 with SMTP id xc13-20020a170907074d00b0094f7edf8fa1mr13028310ejb.32.1684838813948;
-        Tue, 23 May 2023 03:46:53 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ791OsQNLyxRvm0hlAHuT1LWt1eKUmvsJqgUmQz6Jj33QWw/nF9uPCy+9VTbhkcgy3lyVXADQ==
-X-Received: by 2002:a17:907:74d:b0:94f:7edf:8fa1 with SMTP id xc13-20020a170907074d00b0094f7edf8fa1mr13028296ejb.32.1684838813634;
-        Tue, 23 May 2023 03:46:53 -0700 (PDT)
+        bh=IRwLpBjF3y771Oa2kRIVwXk75u6DRLRrsAa1LNU04Go=;
+        b=bqZ2rHqQHya1nLJWYZHYSXXTelDAD90PGXHl2OyTm6f7X4lKViTuQQbjoX1Qsg5HHG
+         ftoOTVgqe9M5vDPZ+UCSi+cXeuxEgAcglOOtoEOt/bWrYNz/WSyJzIuiHbcY+NbWwH0w
+         0/9VfaOv0TNOEWlDKEFad+iojBqIXVB040IMxkU8e4+LgzWmEgoE/sSB/Nw3drB3WAd9
+         bt1t9pV8tXf/t8kf52s3ugy6IPqS/RRRwe+JV8Y8DdeNM3UqBJk8ZtYgTUbDsTmgmQWd
+         aG1Bux4njWB2dIT9bzsV7fkucq6FGxRlUvJgAhXjuD3IhrVGsBwO216EvZWBvbJZkQKD
+         B4oQ==
+X-Gm-Message-State: AC+VfDzo3t0n8ep0zcl3aNt4M0crU9nJT7OFUVC937Z38wAZziVPtcct
+        DfKNx4+1MTJ3uG80iJibVhlSXPRh631WGMB714Hs19Rb9t9P4rY+c/EXPQVXt4FcepVFmcIGvcE
+        TfxfCzQnuk6pS5dV3V3lFaRkdffnChHBYSIpwLo5gUA==
+X-Received: by 2002:a17:907:8a03:b0:96f:912e:5ec4 with SMTP id sc3-20020a1709078a0300b0096f912e5ec4mr11425490ejc.16.1684839155030;
+        Tue, 23 May 2023 03:52:35 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5Nbl1Vghh5ZdHqZZ5iGGQDxRmXaZZtG9X7gxBAsJ5YfMawF4xYsFX55IGJIy3Jewaqh9qB7Q==
+X-Received: by 2002:a17:907:8a03:b0:96f:912e:5ec4 with SMTP id sc3-20020a1709078a0300b0096f912e5ec4mr11425469ejc.16.1684839154706;
+        Tue, 23 May 2023 03:52:34 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id u25-20020a1709063b9900b009596e7e0dbasm4194292ejf.162.2023.05.23.03.46.52
+        by smtp.gmail.com with ESMTPSA id gr6-20020a170906e2c600b009658264076asm4247104ejb.45.2023.05.23.03.52.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 03:46:53 -0700 (PDT)
-Message-ID: <ce7d7bef-c342-fb1a-8a7a-463ffcfd2896@redhat.com>
-Date:   Tue, 23 May 2023 12:46:52 +0200
+        Tue, 23 May 2023 03:52:34 -0700 (PDT)
+Message-ID: <7c075199-df5a-2136-8bed-b2be102ed02e@redhat.com>
+Date:   Tue, 23 May 2023 12:52:33 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH 2/4] platform/x86: think-lmi: Correct System password
- interface
+Subject: Re: [PATCH] platform/x86: ISST: Remove 8 socket limit
 Content-Language: en-US, nl
-To:     Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <mpearson-lenovo@squebb.ca>
- <20230517181945.3725-1-mpearson-lenovo@squebb.ca>
- <20230517181945.3725-2-mpearson-lenovo@squebb.ca>
+To:     Steve Wahl <steve.wahl@hpe.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230519160420.2588475-1-steve.wahl@hpe.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230517181945.3725-2-mpearson-lenovo@squebb.ca>
+In-Reply-To: <20230519160420.2588475-1-steve.wahl@hpe.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark,
+Hi,
 
-On 5/17/23 20:19, Mark Pearson wrote:
-> The system password identification was incorrect. This means that if
-> the password was enabled it wouldn't be detected correctly; and setting
-> it would not work.
+On 5/19/23 18:04, Steve Wahl wrote:
+> Stop restricting the PCI search to a range of PCI domains fed to
+> pci_get_domain_bus_and_slot().  Instead, use for_each_pci_dev() and
+> look at all PCI domains in one pass.
 > 
-> Correct these mistakes.
+> On systems with more than 8 sockets, this avoids error messages like
+> "Information: Invalid level, Can't get TDP control information at
+> specified levels on cpu 480" from the intel speed select utility.
 > 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> ---
->  drivers/platform/x86/think-lmi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index d9341305eba9..b8431d3b137f 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -171,7 +171,7 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
->  #define TLMI_POP_PWD (1 << 0)
->  #define TLMI_PAP_PWD (1 << 1)
->  #define TLMI_HDD_PWD (1 << 2)
-> -#define TLMI_SYS_PWD (1 << 3)
-> +#define TLMI_SYS_PWD (1 << 6)
->  #define TLMI_CERT    (1 << 7)
->  
->  #define to_tlmi_pwd_setting(kobj)  container_of(kobj, struct tlmi_pwd_setting, kobj)
-> @@ -1504,7 +1504,7 @@ static int tlmi_analyze(void)
->  		tlmi_priv.pwd_power->valid = true;
->  
->  	if (tlmi_priv.opcode_support) {
-> -		tlmi_priv.pwd_system = tlmi_create_auth("sys", "system");
-> +		tlmi_priv.pwd_system = tlmi_create_auth("smp", "system");
+> Fixes: aa2ddd242572 ("platform/x86: ISST: Use numa node id for cpu pci dev mapping")
+> Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
 
-"smp" ?
+Thank you for your patch, I've applied this patch to my fixes
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
 
-Also this is not explained in the commit message.
+Note it will show up in my fixes branch once I've pushed my
+local branch there, which might take a while.
+
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
 Regards,
 
 Hans
 
 
->  		if (!tlmi_priv.pwd_system)
->  			goto fail_clear_attr;
+
+> ---
+>  .../x86/intel/speed_select_if/isst_if_common.c       | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> index e0572a29212e..02fe360a59c7 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> @@ -304,14 +304,13 @@ struct isst_if_pkg_info {
+>  static struct isst_if_cpu_info *isst_cpu_info;
+>  static struct isst_if_pkg_info *isst_pkg_info;
 >  
+> -#define ISST_MAX_PCI_DOMAINS	8
+> -
+>  static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
+>  {
+>  	struct pci_dev *matched_pci_dev = NULL;
+>  	struct pci_dev *pci_dev = NULL;
+> +	struct pci_dev *_pci_dev = NULL;
+>  	int no_matches = 0, pkg_id;
+> -	int i, bus_number;
+> +	int bus_number;
+>  
+>  	if (bus_no < 0 || bus_no >= ISST_MAX_BUS_NUMBER || cpu < 0 ||
+>  	    cpu >= nr_cpu_ids || cpu >= num_possible_cpus())
+> @@ -323,12 +322,11 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
+>  	if (bus_number < 0)
+>  		return NULL;
+>  
+> -	for (i = 0; i < ISST_MAX_PCI_DOMAINS; ++i) {
+> -		struct pci_dev *_pci_dev;
+> +	for_each_pci_dev(_pci_dev) {
+>  		int node;
+>  
+> -		_pci_dev = pci_get_domain_bus_and_slot(i, bus_number, PCI_DEVFN(dev, fn));
+> -		if (!_pci_dev)
+> +		if (_pci_dev->bus->number != bus_number ||
+> +		    _pci_dev->devfn != PCI_DEVFN(dev, fn))
+>  			continue;
+>  
+>  		++no_matches;
 
