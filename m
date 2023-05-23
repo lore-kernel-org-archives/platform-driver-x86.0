@@ -2,119 +2,107 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FE2C77B75
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 May 2023 11:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE42C77B75
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 May 2023 12:01:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236616AbjEWLKI (ORCPT
+        id S236533AbjEWMBP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 23 May 2023 07:10:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45092 "EHLO
+        Tue, 23 May 2023 08:01:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236163AbjEWLKH (ORCPT
+        with ESMTP id S234381AbjEWMBO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 May 2023 07:10:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6FEA196
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 May 2023 04:09:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684840161;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dpq73DY3Q6Vvrg4NdhEibDQtlEcBu/1qSSW1eGUxOMY=;
-        b=BR5E/sYaCYveT2a3X14Tb7Uvy60yy8JobyY/woiVigimXhB5xxvrMxeE69XyQwqsDmW5jd
-        OWZ+cvqTrc2vF9nlHLby4Yj/kz9gVMcrvufBtufZi7WUtFO3nfbB5rk/qU8Lbf4pttqFHp
-        0NAwMOgOPKHPOuXzCLhJ/Xz78NrUodA=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-251-O0xSvDhgOS6Sv--oThq9jw-1; Tue, 23 May 2023 07:09:20 -0400
-X-MC-Unique: O0xSvDhgOS6Sv--oThq9jw-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-50ddef368e4so827391a12.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 May 2023 04:09:20 -0700 (PDT)
+        Tue, 23 May 2023 08:01:14 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A3D1119
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 May 2023 05:01:13 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-510b6a249a8so1490050a12.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 May 2023 05:01:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1684843271; x=1687435271;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UwDgLKuZAoJyLnwNBTa9Plj4tI2jTn00PeEyIRBeY3M=;
+        b=UlTc6dBhYhV5+FwOb+RSPI2rk8Q3qpFgLR3evPzNE3qoSA/1Tv938oYhaUah40zsTJ
+         f5TXQMK2Cs079ySx+YpwdRWznI362VlsBkVu90B+Ov9nuERDJwdJYMfohfmTSI2+kDdI
+         scPtnFlwU4iUXY9LM6WpBfRQbFpdHeGc4hMcAFqULPVX1fZW3lDlnnbfO1JqByHkrWWK
+         3iO8KQPZs0CPPK/LLdsYu6zc5ox+KJMKgleV+yRLT7U3LAyno33h5A9o/0CfapwLHQDI
+         veiFgFew6wafBYy17ZumPHmrNo9K9VFsHBpJb7AfKpU3Gm3sGMXUvay7WEwp5nxFryVv
+         cQlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684840159; x=1687432159;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dpq73DY3Q6Vvrg4NdhEibDQtlEcBu/1qSSW1eGUxOMY=;
-        b=VDhvNggtv1Z3XJkwxFMK7ATPPHF5kS3+iCRVI1Xst07S+ut5lg4CDcuFbi5ZVS4L2M
-         xcsHICHi2BU/KkSCgjEqjicgTFzfNiuipcwffMSyxNzIBCUzHQMF8irXriIf7nWxLP0f
-         M+x9hv9xLUbFq9/J9xMmWnxNVFwL2rdMZDa05ZDe6px1lMFDAaP3gvkLOxIFxDRklkNS
-         LQYJWP1PRNX3lL3k3Ov/5Y35yr6c9E35a8KEqZG3mfJ7zBHIFlv0F14M/TvLNuNUaBFl
-         bWBE8/ejx5+hbvaGEuknRMzWPKUmQeVDREHJ2Vo9ctVLYU4eF//adfHevPwyyuZPiamd
-         QmCQ==
-X-Gm-Message-State: AC+VfDzRCNhpU0XeIo/n4NLvI4PQNKik5JR9VIjrVCvRAZGx+igs7R43
-        R1IV//7okyBTs6IweOjY+B+Nui74gUW43eTLE2ahlK1zZnbroomZne2A7xhgZ8H7fkHgcXhWwxE
-        q4ymXXeMHPIL6sMl/ps3i6QdqwbqEWOYz9Q==
-X-Received: by 2002:a50:fb16:0:b0:510:d9b3:11fb with SMTP id d22-20020a50fb16000000b00510d9b311fbmr10425653edq.40.1684840159553;
-        Tue, 23 May 2023 04:09:19 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6/bqhX0SXcSkrTg+pV9u1/MOymwq7M9EgUEfMocHwAdw1BVcz9nMYMWkPB9zze5choPoq94g==
-X-Received: by 2002:a50:fb16:0:b0:510:d9b3:11fb with SMTP id d22-20020a50fb16000000b00510d9b311fbmr10425639edq.40.1684840159295;
-        Tue, 23 May 2023 04:09:19 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id z17-20020aa7cf91000000b004c2158e87e6sm4032154edx.97.2023.05.23.04.09.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 04:09:18 -0700 (PDT)
-Message-ID: <c27655d4-a679-0a62-54db-494601f40f7d@redhat.com>
-Date:   Tue, 23 May 2023 13:09:18 +0200
+        d=1e100.net; s=20221208; t=1684843271; x=1687435271;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UwDgLKuZAoJyLnwNBTa9Plj4tI2jTn00PeEyIRBeY3M=;
+        b=O9FYTa5Pyl/jdXEUaAv7iECtDT1UKsvyZOD+PCyG6cYq3Ypdp+9VzJ9wAOfrvSLNTR
+         kKIbv0W1hkzpx1oRrISZEhWX9RJo2yLPYp8lDD4OdNnMQU9OHQSlkHM9yXWooSAS/l50
+         IXaSDRxz5t0DeDTA7iYt2MLPlhzl4N8n0Vx8tewF3UumvfGJm+PdaXRJQ3cMusAz8u3v
+         6ZKATwLaxf1Xdlm9AgXLJl5J62PFf1+AlKh2dpSLR7TxibIbaUzNci9wvKpZBlijU2UL
+         7AUIVrZnuizBvHe+LerZkimk84l4gsuqJ37ObW4f0aT7s4CG31YEacRo7tbXz+54p2/Y
+         OOsQ==
+X-Gm-Message-State: AC+VfDxrDfEl2D7V7BwxnP1uzudvxU2xDqFq+7daeSnVCbB3/e4oF9to
+        B2LX76KZuEEyMKcnHcp/5R0YWg==
+X-Google-Smtp-Source: ACHHUZ40CX09dMi0e735PDRKFRNtfgI4LS6imtI87HuWDsDYP/q8KqRU12dipkCjnKzQegYx3Zmfiw==
+X-Received: by 2002:a17:906:d550:b0:966:4bb3:df63 with SMTP id cr16-20020a170906d55000b009664bb3df63mr15157840ejc.63.1684843271141;
+        Tue, 23 May 2023 05:01:11 -0700 (PDT)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id t20-20020a17090616d400b009662c57b4ffsm4397666ejd.96.2023.05.23.05.01.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 05:01:10 -0700 (PDT)
+Date:   Tue, 23 May 2023 14:01:09 +0200
+From:   Andrew Jones <ajones@ventanamicro.com>
+To:     Sunil V L <sunilvl@ventanamicro.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        llvm@lists.linux.dev, Weili Qian <qianweili@huawei.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Tom Rix <trix@redhat.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH V6 09/21] RISC-V: ACPI: Cache and retrieve the RINTC
+ structure
+Message-ID: <20230523-7263e5220667fd82a462afc7@orel>
+References: <20230515054928.2079268-1-sunilvl@ventanamicro.com>
+ <20230515054928.2079268-10-sunilvl@ventanamicro.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH] platform/x86: lenovo-yogabook: add I2C dependency
-Content-Language: en-US, nl
-To:     Arnd Bergmann <arnd@kernel.org>, Mark Gross <markgross@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230519082606.375471-1-arnd@kernel.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230519082606.375471-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230515054928.2079268-10-sunilvl@ventanamicro.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Arnd,
-
-On 5/19/23 10:25, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Mon, May 15, 2023 at 11:19:16AM +0530, Sunil V L wrote:
+> RINTC structures in the MADT provide mapping between the hartid
+> and the CPU. This is required many times even at run time like
+> cpuinfo. So, instead of parsing the ACPI table every time, cache
+> the RINTC structures and provide a function to get the correct
+> RINTC structure for a given cpu.
 > 
-> The added platform_driver support fails to link when I2C core support is
-> not rechable:
-> 
-> x86_64-linux-ld: drivers/platform/x86/lenovo-yogabook.o: in function `yogabook_pdev_probe':
-> lenovo-yogabook.c:(.text+0x5a5): undefined reference to `i2c_bus_type'
-> 
-> Add a Kconfig dependency to enforce a working configuration.
-> 
-> Fixes: 6df1523fa0b7 ("platform/x86: lenovo-yogabook: Add platform driver support")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-Thank you I have pushed this to pdx86/for-next now.
-
-Regards,
-
-Hans
-
-
-
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > ---
->  drivers/platform/x86/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 9fe974d5f645..63637ea99c2f 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -125,6 +125,7 @@ config YOGABOOK
->  	tristate "Lenovo Yoga Book tablet key driver"
->  	depends on ACPI_WMI
->  	depends on INPUT
-> +	depends on I2C
->  	select LEDS_CLASS
->  	select NEW_LEDS
->  	help
+>  arch/riscv/include/asm/acpi.h | 10 ++++++++
+>  arch/riscv/kernel/acpi.c      | 45 +++++++++++++++++++++++++++++++++++
+>  arch/riscv/kernel/setup.c     |  4 ++++
+>  3 files changed, 59 insertions(+)
 
+
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
