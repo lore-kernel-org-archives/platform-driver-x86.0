@@ -2,27 +2,27 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E72C7EE32
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 May 2023 12:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0813EC77B73
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 May 2023 12:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234364AbjEXMqr (ORCPT
+        id S232240AbjEXMrL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 May 2023 08:46:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33246 "EHLO
+        Wed, 24 May 2023 08:47:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233822AbjEXMqq (ORCPT
+        with ESMTP id S232714AbjEXMrK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 May 2023 08:46:46 -0400
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2077.outbound.protection.outlook.com [40.107.13.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A4F012F;
-        Wed, 24 May 2023 05:46:44 -0700 (PDT)
+        Wed, 24 May 2023 08:47:10 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2086.outbound.protection.outlook.com [40.107.6.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C9761BD;
+        Wed, 24 May 2023 05:46:58 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JYQJjE29Aq+Yw3U2ogQHvmG6h1SRGPVXjJfOCKlXnTTP1Ius78DK56CwWj9GrMCHiwGHg4vKdqxaLwxo46CDNt/ydigcbuEhd47JIk0LrL3+OCfXyvMA0pRmk+hOE6o2W+2V19T8INDv0sE3ZzH7ZIAR9UsfexARnBFDh+xol/cLqq9WZ2vNYblCzsZhk7/qi9e4HLfEFrVA8SYvFhH7bmgTPEkq8pKdpZjwjiNIdiM0i+2DSxdApBW1trjCMB5BN8CD7a/pOt+2cy+lB2J1WdAHVR5vx+g1ZB97FYrsKXzev4qdes59DXvw65taKGC7Wkk7ml5ysHRTnTwM0rIXtA==
+ b=ULc8sjF9D0T1TmTquCEcQxBmrmM/Ri12LUmivxNG7S9HQwpjFutT/MhLuF5jJS0g+2h1opjbziuvI7igElu6iBN4HsuGNoshbRdJmK2kfrOPzrzneUmOvFJrbDcgNtvOmqLWPbfd2WHxw4Nsd/b03w3e41e7ec9R8dtnns3070yiHoqUjE3yXyEvWHxVqz0S0kz5rtKsnsjMwLq7N75hWx358Vq8QeLSfj0KzwfMxTfF67JpHFbB5suk8BnMyLORvtNJ+YTSLDsUv3kRhcs54LLXGxpucIzdDIzXtUQZFnqfPfwtSxmw/t7ORrdlggCeA8nbI6rds+zobElqYzHNuA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qRxZG0wjqpJdFYaOzUsk4ho9pjKMROxBDe6+yzl9xvs=;
- b=kFOummxUgL/pl3368b9TSeMaETYfhXZuDXJW9oR8JJeOoE5ZackaO1vMH93IgMXEXw5DiI2ctiPa1XtgZfjSuXoCFZgSgFSkVgo9roxu5WTRGxoo09FqK88czSlVZysaLJQBnECi5Yy7c46kBju2YLXsbz1xbkuLIt5cXC7pj+iiGnS4VeIBjIi1qpljfOWNa3EiX/gCQ+LMza0QfWxgzEwv9sbzKFvOqRApLRac4/iVOAnkdr6InFGfNBT19+xomzMsQ1BbLxTNl26L1/8+cYonUakQlS31Orzeyh4LRD7ne+9TS23xxBeq7W8FD9L/wXgEsAuzioQ3Uy7Y1VRArQ==
+ bh=FPeQ15n7qmOzwPQai54yq6/WTsgJDW1jLz12XX4r93o=;
+ b=NwEdWv8J6TB5E/2Q9nShJNvx7w5lHAn/2fInhsmm/Lf4P28SYp3z9yoglWxIUL/Bzp2JxzH+L4zM9fH4qVFzefckw8pWuzai1KpDJkGQI/QOrQOW90sO+S6X+U2rK64aQleGfQH9l0tBeb8E72w2u+ntJ5+ZEWkdyIoip7RJAWcqTuS8M4a2ixzzNb8Q0y5ZjdD7KL04DtUaADU677BR6e7YazmhwZBzuZNVvScJ/2KKYRJyD7PlcBGXstril7XEIfefN2QproWX1esgE+O8vAVtECJMsdjg+/+VOuqw3dwSTijLxdyGmQXHSOnCmTqAQg5meTbpvlJ8FkNhadOY+w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  194.138.21.76) smtp.rcpttodomain=ucw.cz smtp.mailfrom=siemens.com; dmarc=pass
  (p=reject sp=reject pct=100) action=none header.from=siemens.com; dkim=none
@@ -30,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qRxZG0wjqpJdFYaOzUsk4ho9pjKMROxBDe6+yzl9xvs=;
- b=HyX5rmF00KJVYar9so7MBiwTVS7i/fvqQ7alKqoHoItC2r3omj+POKrqJFfL/vd0THw9W6yA0KnA5EqIr/vPzZ4TrgHe6RHc7whmBesav/96i0zGXu4AyBULDJ3SrRBGxpOGtQ3HRQDSHVeYIXVC/61aqIOPE+yxjr7udZrYxzpySz3gZ2N3PtrFQE0xmIdfKV9yknC4d8eB0CSoc41JsNkYeQSHGxwzTWNzymc/+xtK22WBAF4QrGb7s5tAONIKV+pnFSvkgSxkfH2RzoKZk6bnRS0ZBkMmAwJ27QYeTiXX3aPvMlxivz+F1yR4xwJ/yN6EbWrnfoW5xAXwyFdqEg==
-Received: from FR3P281CA0206.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a5::10)
- by DU0PR10MB7118.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:42d::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Wed, 24 May
- 2023 12:46:41 +0000
-Received: from VE1EUR01FT089.eop-EUR01.prod.protection.outlook.com
- (2603:10a6:d10:a5:cafe::21) by FR3P281CA0206.outlook.office365.com
- (2603:10a6:d10:a5::10) with Microsoft SMTP Server (version=TLS1_2,
+ bh=FPeQ15n7qmOzwPQai54yq6/WTsgJDW1jLz12XX4r93o=;
+ b=k4IDnHUGYhg8qubxkjpm/WxNYtlDeOMnwiWLJisc80MAosxZ2sNEhQ28zskMvzJKnhjQZ5co8NGn0KI60eP5dKSiDt7pErY3xAHgW/PREBBltmo42PstVTnTzzWgkpoJv7VFSeEmXpwIjj2EN7yJJIRzh/HJ1T8lwC28wqNB3RLgohwI+ZQ8ynRgg5osY8HErgqbuKKdcdHO44aMwdA7oilJxFN9v3qkN1jBXd8CKEy26j8lkGVudGd8NkXMq8iN49CpVyZ1B0VikY122JmY0Q7xm6D1wB6BVUlJ1Fj/xm+IXP30JJl7+1RP1yOPCFiUT46duTUwN5llZh/HfPu3HQ==
+Received: from AM0PR01CA0089.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:10e::30) by DBAPR10MB4108.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:10:1c5::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.15; Wed, 24 May
+ 2023 12:46:55 +0000
+Received: from VE1EUR01FT011.eop-EUR01.prod.protection.outlook.com
+ (2603:10a6:208:10e:cafe::f2) by AM0PR01CA0089.outlook.office365.com
+ (2603:10a6:208:10e::30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.15 via Frontend
- Transport; Wed, 24 May 2023 12:46:40 +0000
+ Transport; Wed, 24 May 2023 12:46:55 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.138.21.76)
  smtp.mailfrom=siemens.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=siemens.com;
@@ -49,17 +49,17 @@ Received-SPF: Pass (protection.outlook.com: domain of siemens.com designates
  194.138.21.76 as permitted sender) receiver=protection.outlook.com;
  client-ip=194.138.21.76; helo=hybrid.siemens.com; pr=C
 Received: from hybrid.siemens.com (194.138.21.76) by
- VE1EUR01FT089.mail.protection.outlook.com (10.152.3.107) with Microsoft SMTP
+ VE1EUR01FT011.mail.protection.outlook.com (10.152.2.229) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6433.15 via Frontend Transport; Wed, 24 May 2023 12:46:40 +0000
+ 15.20.6433.16 via Frontend Transport; Wed, 24 May 2023 12:46:54 +0000
 Received: from DEMCHDC8WBA.ad011.siemens.net (139.25.226.105) by
  DEMCHDC8VSA.ad011.siemens.net (194.138.21.76) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.25; Wed, 24 May 2023 14:46:40 +0200
+ 15.2.1118.25; Wed, 24 May 2023 14:46:54 +0200
 Received: from localhost.localdomain (139.22.37.129) by
  DEMCHDC8WBA.ad011.siemens.net (139.25.226.105) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.25; Wed, 24 May 2023 14:46:39 +0200
+ 15.2.1118.25; Wed, 24 May 2023 14:46:53 +0200
 From:   Henning Schild <henning.schild@siemens.com>
 To:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -68,85 +68,554 @@ To:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
         <platform-driver-x86@vger.kernel.org>
 CC:     Henning Schild <henning.schild@siemens.com>
-Subject: [PATCH v4 0/4] leds: simatic-ipc-leds-gpio: split up
-Date:   Wed, 24 May 2023 14:46:24 +0200
-Message-ID: <20230524124628.32295-1-henning.schild@siemens.com>
+Subject: [PATCH v4 3/4] leds: simatic-ipc-leds-gpio: split up into multiple drivers
+Date:   Wed, 24 May 2023 14:46:27 +0200
+Message-ID: <20230524124628.32295-4-henning.schild@siemens.com>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20230524124628.32295-1-henning.schild@siemens.com>
+References: <20230524124628.32295-1-henning.schild@siemens.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-Originating-IP: [139.22.37.129]
-X-ClientProxiedBy: DEMCHDC8WBA.ad011.siemens.net (139.25.226.105) To
+X-ClientProxiedBy: DEMCHDC8WAA.ad011.siemens.net (139.25.226.104) To
  DEMCHDC8WBA.ad011.siemens.net (139.25.226.105)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VE1EUR01FT089:EE_|DU0PR10MB7118:EE_
-X-MS-Office365-Filtering-Correlation-Id: 63bae83e-3353-4d12-fc6f-08db5c54ebd3
+X-MS-TrafficTypeDiagnostic: VE1EUR01FT011:EE_|DBAPR10MB4108:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ad04797-18c7-445a-8cba-08db5c54f446
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: prioT+yZhv5F1w/JU4mhzpuNlZ9tkRimAmlSV5/pqtDO40eAIipeuCchwL4p53mUFl2ms26SWImwRpzU2asycgnBqQeYPV0DZLZLcE8gElkFWfpZRrppHXQi7teiVBn/LSoNtuawQAM1s7uyRZ2WbBE37c6mnQoi6QzFqf0RF0T7mmXXed3VH4rIr4fg7dHB7d4sHQNGyDJkStO78Rd2xsv5JUEbQTre3tENE0nMpWpHX7jQR6uOVAWsQy+GLcpzwHiSp3Pd8sd432+j5hGJ5SQLr1oYXvoly3GGg+MUJPRSUkoG08ovKjQWiabGcttFHe3PFCLSl6oG6/VFTL9EGxDm0RVRhWW5Q7tCX02fUdRkCY3VXt7I3RRYY1zLR5x6EYYEp5bBBycdGyBzfYqXUzkjaLc9OUgABNK5qEUTJDvcm4tBPHxlTCug3iAfamvdFwuSVWWxiectWMvw2mHVHj9wOwsrGs0MmiQK9+atSnTxXaiS9Z3QMU6ZF/tYtZJ6cj3V/8yUrg87pPn1mLZW6iDYAlKmfCO6TpanGMZyafK9CBN0TTiMazbUnYlC9vO5Uy+BngyJ5n6FDtKdhhN9XcD4z0m8WdnzJvfFA7G2jbxUloO70vrosEmoPPYhGtD1TNVIbz4cfG/aYlk0aBGB9V94nPaVUIRsgsM0XXmhyOtWvVEpGriCfuPdViFTLdazaUjFQdlPZdjgdH+jBc4DLtADW4mFidcpUepEA+VS+z9/klHXSMZk4ZoMsSQJSuqQGlQVqSgWBfQSOws96paFpw==
-X-Forefront-Antispam-Report: CIP:194.138.21.76;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(136003)(376002)(396003)(346002)(39860400002)(451199021)(40470700004)(36840700001)(46966006)(47076005)(86362001)(82740400003)(82960400001)(36860700001)(2906002)(2616005)(956004)(336012)(478600001)(8936002)(8676002)(316002)(36756003)(16526019)(1076003)(44832011)(4326008)(5660300002)(40480700001)(110136005)(107886003)(356005)(81166007)(6666004)(83380400001)(186003)(40460700003)(82310400005)(26005)(66899021)(70206006)(41300700001)(70586007)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: a3wCcZYlq09FqjPhTuOng5S2SJ0t+TdsKIHcPwMVEWCV3Fr2HfGU1rz0KLU3rD8fYYzT8+G90Wb6M6OdXKZMhU0BU7wdA3IHgenNii3Ux7gRCb+z6suInPAuS82n+OSZYSpQyb6RIORuLtGW2Xaq2GTHjNyKZMvMDOJ5UOaDAAM8MWCqTeTE1eVuy7aw30O4Dz9PVNX/01Nb6cQEanarSR9XiWWH+xLWjVOH5xLlpqWYYDkOPSCEF6+mt4AYsR74auOfZlyxMNZo2+W3g2DZHfYQn1QpInpYOZp/XUhTb5OAUxHJKwWHd99NRNQqOIORu7n2NJp5w6IuP5rOjITZAI3eVaVckNBpbqKmNjhSC5akqcVTGmjHb0HPKLnUFEr/TRGDuhwt+vRn9piEjMIp6EOziSGervft3giyw3U91mKGaunyQcWpHWeutytVw95aS6x/GSuic9ReAoH/KLHQ3/0UHXzx4btdujttvZEiUoRLQ7Ov3nTvRw+6BAw4nchMADHgCWiypC+AWdVyIWRuTCINpgY3+JARUBMFhveXG/CJREub/caRwEFvzbSEkrdtSDDUkswTK9VjrTputszIwECMS6Ro0jEcTdrvYXVn5kHDS7Vx63eTeikbLJSXhQLXOpTVcPUOzTBa3IJY/p1cTGhApPEf2qJJrCORFEDHaOiBfN1gLFQdKIRlb9Gs8u/hQR4gUpNyTn1qZ+VQqHjxPbsiva62OQQ355akNbjbxJQSfbjhmwao7AbpnQIsHs4/EYWSuQBxwmXqjWt1GYs4iQ==
+X-Forefront-Antispam-Report: CIP:194.138.21.76;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(39860400002)(346002)(376002)(136003)(451199021)(46966006)(40470700004)(36840700001)(336012)(36860700001)(47076005)(83380400001)(4326008)(70586007)(70206006)(107886003)(6666004)(2616005)(956004)(1076003)(110136005)(26005)(16526019)(186003)(478600001)(30864003)(86362001)(2906002)(8676002)(8936002)(44832011)(5660300002)(36756003)(316002)(81166007)(82960400001)(356005)(82740400003)(41300700001)(40480700001)(40460700003)(82310400005)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2023 12:46:40.6135
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2023 12:46:54.7704
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63bae83e-3353-4d12-fc6f-08db5c54ebd3
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ad04797-18c7-445a-8cba-08db5c54f446
 X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.76];Helo=[hybrid.siemens.com]
-X-MS-Exchange-CrossTenant-AuthSource: VE1EUR01FT089.eop-EUR01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: VE1EUR01FT011.eop-EUR01.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR10MB7118
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR10MB4108
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-changes since v3:
- - add terminator entries to all gpio lookup tables as new p1
+In order to clearly describe the dependencies between the GPIO
+controller drivers and the users the driver is split up into a core,
+two drivers and a common header.
 
-changes since v2:
- - some more style changes from review
-
-changes since v1:
- - move from header- to -core.c-based implementation
- - style changes from review
-
-This series mainly splits the one GPIO driver into two. The split allows
-to clearly model runtime and compile time dependencies on the GPIO chip
-drivers.
-
-p2 is kind of not too related to that split but also prepares for more
-GPIO based drivers to come.
-
-p3 takes the driver we had and puts some of its content into a -core,
-to be used by the two drivers.
-
-p4 deals with more fine-grained configuration posibilities and compile
-time dependencies.
-
-Henning Schild (4):
-  leds: simatic-ipc-leds-gpio: add terminating entries to gpio tables
-  leds: simatic-ipc-leds-gpio: move two extra gpio pins into another
-    table
-  leds: simatic-ipc-leds-gpio: split up into multiple drivers
-  leds: simatic-ipc-leds-gpio: introduce more Kconfig switches
-
- drivers/leds/simple/Kconfig                   |  31 +++-
- drivers/leds/simple/Makefile                  |   5 +-
- .../simple/simatic-ipc-leds-gpio-apollolake.c |  66 +++++++++
- .../leds/simple/simatic-ipc-leds-gpio-core.c  | 104 +++++++++++++
- .../simple/simatic-ipc-leds-gpio-f7188x.c     |  66 +++++++++
- drivers/leds/simple/simatic-ipc-leds-gpio.c   | 139 ------------------
+Signed-off-by: Henning Schild <henning.schild@siemens.com>
+---
+ drivers/leds/simple/Makefile                  |   4 +-
+ .../simple/simatic-ipc-leds-gpio-apollolake.c |  66 +++++++
+ .../leds/simple/simatic-ipc-leds-gpio-core.c  | 104 +++++++++++
+ .../simple/simatic-ipc-leds-gpio-f7188x.c     |  66 +++++++
+ drivers/leds/simple/simatic-ipc-leds-gpio.c   | 163 ------------------
  drivers/leds/simple/simatic-ipc-leds-gpio.h   |  22 +++
  drivers/leds/simple/simatic-ipc-leds.c        |   1 -
  drivers/platform/x86/simatic-ipc.c            |   7 +-
- 9 files changed, 293 insertions(+), 148 deletions(-)
+ 8 files changed, 265 insertions(+), 168 deletions(-)
  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio-apollolake.c
  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio-core.c
  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
  delete mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio.c
  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio.h
 
+diff --git a/drivers/leds/simple/Makefile b/drivers/leds/simple/Makefile
+index 1c7ef5e1324b..ed9057f7b6da 100644
+--- a/drivers/leds/simple/Makefile
++++ b/drivers/leds/simple/Makefile
+@@ -1,3 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)	+= simatic-ipc-leds.o
+-obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)	+= simatic-ipc-leds-gpio.o
++obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)  += simatic-ipc-leds-gpio-core.o
++obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)	+= simatic-ipc-leds-gpio-apollolake.o
++obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)	+= simatic-ipc-leds-gpio-f7188x.o
+diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-apollolake.c b/drivers/leds/simple/simatic-ipc-leds-gpio-apollolake.c
+new file mode 100644
+index 000000000000..e1c712729dcf
+--- /dev/null
++++ b/drivers/leds/simple/simatic-ipc-leds-gpio-apollolake.c
+@@ -0,0 +1,66 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Siemens SIMATIC IPC driver for GPIO based LEDs
++ *
++ * Copyright (c) Siemens AG, 2023
++ *
++ * Author:
++ *  Henning Schild <henning.schild@siemens.com>
++ */
++
++#include <linux/gpio/machine.h>
++#include <linux/gpio/consumer.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/platform_data/x86/simatic-ipc-base.h>
++
++#include "simatic-ipc-leds-gpio.h"
++
++static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
++	.dev_id = "leds-gpio",
++	.table = {
++		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 52, NULL, 0, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 53, NULL, 1, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 57, NULL, 2, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 58, NULL, 3, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 60, NULL, 4, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 51, NULL, 5, GPIO_ACTIVE_LOW),
++		{} /* Terminating entry */
++	},
++};
++
++static struct gpiod_lookup_table simatic_ipc_led_gpio_table_extra = {
++	.dev_id = NULL, /* Filled during initialization */
++	.table = {
++		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 56, NULL, 6, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 59, NULL, 7, GPIO_ACTIVE_HIGH),
++		{} /* Terminating entry */
++	},
++};
++
++static int simatic_ipc_leds_gpio_apollolake_probe(struct platform_device *pdev)
++{
++	return simatic_ipc_leds_gpio_probe(pdev, &simatic_ipc_led_gpio_table,
++					   &simatic_ipc_led_gpio_table_extra);
++}
++
++static int simatic_ipc_leds_gpio_apollolake_remove(struct platform_device *pdev)
++{
++	return simatic_ipc_leds_gpio_remove(pdev, &simatic_ipc_led_gpio_table,
++					    &simatic_ipc_led_gpio_table_extra);
++}
++
++static struct platform_driver simatic_ipc_led_gpio_apollolake_driver = {
++	.probe = simatic_ipc_leds_gpio_apollolake_probe,
++	.remove = simatic_ipc_leds_gpio_apollolake_remove,
++	.driver = {
++		.name = KBUILD_MODNAME,
++	},
++};
++module_platform_driver(simatic_ipc_led_gpio_apollolake_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:" KBUILD_MODNAME);
++MODULE_SOFTDEP("pre: simatic-ipc-leds-gpio-core platform:apollolake-pinctrl");
++MODULE_AUTHOR("Henning Schild <henning.schild@siemens.com>");
+diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-core.c b/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
+new file mode 100644
+index 000000000000..2a21b663df87
+--- /dev/null
++++ b/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
+@@ -0,0 +1,104 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Siemens SIMATIC IPC driver for GPIO based LEDs
++ *
++ * Copyright (c) Siemens AG, 2023
++ *
++ * Author:
++ *  Henning Schild <henning.schild@siemens.com>
++ */
++
++#include <linux/gpio/machine.h>
++#include <linux/gpio/consumer.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/platform_data/x86/simatic-ipc-base.h>
++
++#include "simatic-ipc-leds-gpio.h"
++
++static struct platform_device *simatic_leds_pdev;
++
++static const struct gpio_led simatic_ipc_gpio_leds[] = {
++	{ .name = "red:" LED_FUNCTION_STATUS "-1" },
++	{ .name = "green:" LED_FUNCTION_STATUS "-1" },
++	{ .name = "red:" LED_FUNCTION_STATUS "-2" },
++	{ .name = "green:" LED_FUNCTION_STATUS "-2" },
++	{ .name = "red:" LED_FUNCTION_STATUS "-3" },
++	{ .name = "green:" LED_FUNCTION_STATUS "-3" },
++};
++
++static const struct gpio_led_platform_data simatic_ipc_gpio_leds_pdata = {
++	.num_leds	= ARRAY_SIZE(simatic_ipc_gpio_leds),
++	.leds		= simatic_ipc_gpio_leds,
++};
++
++int simatic_ipc_leds_gpio_remove(struct platform_device *pdev,
++				 struct gpiod_lookup_table *table,
++				 struct gpiod_lookup_table *table_extra)
++{
++	gpiod_remove_lookup_table(table);
++	gpiod_remove_lookup_table(table_extra);
++	platform_device_unregister(simatic_leds_pdev);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(simatic_ipc_leds_gpio_remove);
++
++int simatic_ipc_leds_gpio_probe(struct platform_device *pdev,
++				struct gpiod_lookup_table *table,
++				struct gpiod_lookup_table *table_extra)
++{
++	const struct simatic_ipc_platform *plat = pdev->dev.platform_data;
++	struct device *dev = &pdev->dev;
++	struct gpio_desc *gpiod;
++	int err;
++
++	switch (plat->devmode) {
++	case SIMATIC_IPC_DEVICE_127E:
++	case SIMATIC_IPC_DEVICE_227G:
++		break;
++	default:
++		return -ENODEV;
++	}
++
++	gpiod_add_lookup_table(table);
++	simatic_leds_pdev = platform_device_register_resndata(NULL,
++		"leds-gpio", PLATFORM_DEVID_NONE, NULL, 0,
++		&simatic_ipc_gpio_leds_pdata,
++		sizeof(simatic_ipc_gpio_leds_pdata));
++	if (IS_ERR(simatic_leds_pdev)) {
++		err = PTR_ERR(simatic_leds_pdev);
++		goto out;
++	}
++
++	table_extra->dev_id = dev_name(dev);
++	gpiod_add_lookup_table(table_extra);
++
++	/* PM_BIOS_BOOT_N */
++	gpiod = gpiod_get_index(dev, NULL, 6, GPIOD_OUT_LOW);
++	if (IS_ERR(gpiod)) {
++		err = PTR_ERR(gpiod);
++		goto out;
++	}
++	gpiod_put(gpiod);
++
++	/* PM_WDT_OUT */
++	gpiod = gpiod_get_index(dev, NULL, 7, GPIOD_OUT_LOW);
++	if (IS_ERR(gpiod)) {
++		err = PTR_ERR(gpiod);
++		goto out;
++	}
++	gpiod_put(gpiod);
++
++	return 0;
++out:
++	simatic_ipc_leds_gpio_remove(pdev, table, table_extra);
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(simatic_ipc_leds_gpio_probe);
++
++MODULE_LICENSE("GPL v2");
++MODULE_SOFTDEP("pre: platform:leds-gpio");
++MODULE_AUTHOR("Henning Schild <henning.schild@siemens.com>");
+diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c b/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
+new file mode 100644
+index 000000000000..583a6b6c7c22
+--- /dev/null
++++ b/drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
+@@ -0,0 +1,66 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Siemens SIMATIC IPC driver for GPIO based LEDs
++ *
++ * Copyright (c) Siemens AG, 2023
++ *
++ * Author:
++ *  Henning Schild <henning.schild@siemens.com>
++ */
++
++#include <linux/gpio/machine.h>
++#include <linux/gpio/consumer.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/platform_data/x86/simatic-ipc-base.h>
++
++#include "simatic-ipc-leds-gpio.h"
++
++static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
++	.dev_id = "leds-gpio",
++	.table = {
++		GPIO_LOOKUP_IDX("gpio-f7188x-2", 0, NULL, 0, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("gpio-f7188x-2", 1, NULL, 1, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("gpio-f7188x-2", 2, NULL, 2, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("gpio-f7188x-2", 3, NULL, 3, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("gpio-f7188x-2", 4, NULL, 4, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("gpio-f7188x-2", 5, NULL, 5, GPIO_ACTIVE_LOW),
++		{} /* Terminating entry */
++	},
++};
++
++static struct gpiod_lookup_table simatic_ipc_led_gpio_table_extra = {
++	.dev_id = NULL, /* Filled during initialization */
++	.table = {
++		GPIO_LOOKUP_IDX("gpio-f7188x-3", 6, NULL, 6, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX("gpio-f7188x-3", 7, NULL, 7, GPIO_ACTIVE_HIGH),
++		{} /* Terminating entry */
++	},
++};
++
++static int simatic_ipc_leds_gpio_f7188x_probe(struct platform_device *pdev)
++{
++	return simatic_ipc_leds_gpio_probe(pdev, &simatic_ipc_led_gpio_table,
++					   &simatic_ipc_led_gpio_table_extra);
++}
++
++static int simatic_ipc_leds_gpio_f7188x_remove(struct platform_device *pdev)
++{
++	return simatic_ipc_leds_gpio_remove(pdev, &simatic_ipc_led_gpio_table,
++					    &simatic_ipc_led_gpio_table_extra);
++}
++
++static struct platform_driver simatic_ipc_led_gpio_driver = {
++	.probe = simatic_ipc_leds_gpio_f7188x_probe,
++	.remove = simatic_ipc_leds_gpio_f7188x_remove,
++	.driver = {
++		.name = KBUILD_MODNAME,
++	},
++};
++module_platform_driver(simatic_ipc_led_gpio_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:" KBUILD_MODNAME);
++MODULE_SOFTDEP("pre: simatic-ipc-leds-gpio-core gpio_f7188x");
++MODULE_AUTHOR("Henning Schild <henning.schild@siemens.com>");
+diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio.c b/drivers/leds/simple/simatic-ipc-leds-gpio.c
+deleted file mode 100644
+index 0f1fde44e8d9..000000000000
+--- a/drivers/leds/simple/simatic-ipc-leds-gpio.c
++++ /dev/null
+@@ -1,163 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Siemens SIMATIC IPC driver for GPIO based LEDs
+- *
+- * Copyright (c) Siemens AG, 2022
+- *
+- * Authors:
+- *  Henning Schild <henning.schild@siemens.com>
+- */
+-
+-#include <linux/gpio/machine.h>
+-#include <linux/gpio/consumer.h>
+-#include <linux/leds.h>
+-#include <linux/module.h>
+-#include <linux/platform_device.h>
+-#include <linux/platform_data/x86/simatic-ipc-base.h>
+-
+-static struct gpiod_lookup_table *simatic_ipc_led_gpio_table;
+-static struct gpiod_lookup_table *simatic_ipc_led_gpio_table_extra;
+-
+-static struct gpiod_lookup_table simatic_ipc_led_gpio_table_127e = {
+-	.dev_id = "leds-gpio",
+-	.table = {
+-		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 52, NULL, 0, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 53, NULL, 1, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 57, NULL, 2, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 58, NULL, 3, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 60, NULL, 4, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 51, NULL, 5, GPIO_ACTIVE_LOW),
+-		{} /* Terminating entry */
+-	},
+-};
+-
+-static struct gpiod_lookup_table simatic_ipc_led_gpio_table_127e_extra = {
+-	.dev_id = NULL, /* Filled during initialization */
+-	.table = {
+-		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 56, NULL, 6, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("apollolake-pinctrl.0", 59, NULL, 7, GPIO_ACTIVE_HIGH),
+-		{} /* Terminating entry */
+-	},
+-};
+-
+-static struct gpiod_lookup_table simatic_ipc_led_gpio_table_227g = {
+-	.dev_id = "leds-gpio",
+-	.table = {
+-		GPIO_LOOKUP_IDX("gpio-f7188x-2", 0, NULL, 0, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("gpio-f7188x-2", 1, NULL, 1, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("gpio-f7188x-2", 2, NULL, 2, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("gpio-f7188x-2", 3, NULL, 3, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("gpio-f7188x-2", 4, NULL, 4, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("gpio-f7188x-2", 5, NULL, 5, GPIO_ACTIVE_LOW),
+-		{} /* Terminating entry */
+-	},
+-};
+-
+-static struct gpiod_lookup_table simatic_ipc_led_gpio_table_227g_extra = {
+-	.dev_id = NULL, /* Filled during initialization */
+-	.table = {
+-		GPIO_LOOKUP_IDX("gpio-f7188x-3", 6, NULL, 6, GPIO_ACTIVE_HIGH),
+-		GPIO_LOOKUP_IDX("gpio-f7188x-3", 7, NULL, 7, GPIO_ACTIVE_HIGH),
+-		{} /* Terminating entry */
+-	},
+-};
+-
+-static const struct gpio_led simatic_ipc_gpio_leds[] = {
+-	{ .name = "red:" LED_FUNCTION_STATUS "-1" },
+-	{ .name = "green:" LED_FUNCTION_STATUS "-1" },
+-	{ .name = "red:" LED_FUNCTION_STATUS "-2" },
+-	{ .name = "green:" LED_FUNCTION_STATUS "-2" },
+-	{ .name = "red:" LED_FUNCTION_STATUS "-3" },
+-	{ .name = "green:" LED_FUNCTION_STATUS "-3" },
+-};
+-
+-static const struct gpio_led_platform_data simatic_ipc_gpio_leds_pdata = {
+-	.num_leds	= ARRAY_SIZE(simatic_ipc_gpio_leds),
+-	.leds		= simatic_ipc_gpio_leds,
+-};
+-
+-static struct platform_device *simatic_leds_pdev;
+-
+-static int simatic_ipc_leds_gpio_remove(struct platform_device *pdev)
+-{
+-	gpiod_remove_lookup_table(simatic_ipc_led_gpio_table);
+-	gpiod_remove_lookup_table(simatic_ipc_led_gpio_table_extra);
+-	platform_device_unregister(simatic_leds_pdev);
+-
+-	return 0;
+-}
+-
+-static int simatic_ipc_leds_gpio_probe(struct platform_device *pdev)
+-{
+-	const struct simatic_ipc_platform *plat = pdev->dev.platform_data;
+-	struct device *dev = &pdev->dev;
+-	struct gpio_desc *gpiod;
+-	int err;
+-
+-	switch (plat->devmode) {
+-	case SIMATIC_IPC_DEVICE_127E:
+-		if (!IS_ENABLED(CONFIG_PINCTRL_BROXTON))
+-			return -ENODEV;
+-		simatic_ipc_led_gpio_table = &simatic_ipc_led_gpio_table_127e;
+-		simatic_ipc_led_gpio_table_extra = &simatic_ipc_led_gpio_table_127e_extra;
+-		break;
+-	case SIMATIC_IPC_DEVICE_227G:
+-		if (!IS_ENABLED(CONFIG_GPIO_F7188X))
+-			return -ENODEV;
+-		request_module("gpio-f7188x");
+-		simatic_ipc_led_gpio_table = &simatic_ipc_led_gpio_table_227g;
+-		simatic_ipc_led_gpio_table_extra = &simatic_ipc_led_gpio_table_227g_extra;
+-		break;
+-	default:
+-		return -ENODEV;
+-	}
+-
+-	gpiod_add_lookup_table(simatic_ipc_led_gpio_table);
+-	simatic_leds_pdev = platform_device_register_resndata(NULL,
+-		"leds-gpio", PLATFORM_DEVID_NONE, NULL, 0,
+-		&simatic_ipc_gpio_leds_pdata,
+-		sizeof(simatic_ipc_gpio_leds_pdata));
+-	if (IS_ERR(simatic_leds_pdev)) {
+-		err = PTR_ERR(simatic_leds_pdev);
+-		goto out;
+-	}
+-
+-	simatic_ipc_led_gpio_table_extra->dev_id = dev_name(dev);
+-	gpiod_add_lookup_table(simatic_ipc_led_gpio_table_extra);
+-
+-	/* PM_BIOS_BOOT_N */
+-	gpiod = gpiod_get_index(dev, NULL, 6, GPIOD_OUT_LOW);
+-	if (IS_ERR(gpiod)) {
+-		err = PTR_ERR(gpiod);
+-		goto out;
+-	}
+-	gpiod_put(gpiod);
+-
+-	/* PM_WDT_OUT */
+-	gpiod = gpiod_get_index(dev, NULL, 7, GPIOD_OUT_LOW);
+-	if (IS_ERR(gpiod)) {
+-		err = PTR_ERR(gpiod);
+-		goto out;
+-	}
+-	gpiod_put(gpiod);
+-
+-	return 0;
+-out:
+-	simatic_ipc_leds_gpio_remove(pdev);
+-
+-	return err;
+-}
+-
+-static struct platform_driver simatic_ipc_led_gpio_driver = {
+-	.probe = simatic_ipc_leds_gpio_probe,
+-	.remove = simatic_ipc_leds_gpio_remove,
+-	.driver = {
+-		.name = KBUILD_MODNAME,
+-	}
+-};
+-module_platform_driver(simatic_ipc_led_gpio_driver);
+-
+-MODULE_LICENSE("GPL v2");
+-MODULE_ALIAS("platform:" KBUILD_MODNAME);
+-MODULE_SOFTDEP("pre: platform:leds-gpio");
+-MODULE_AUTHOR("Henning Schild <henning.schild@siemens.com>");
+diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio.h b/drivers/leds/simple/simatic-ipc-leds-gpio.h
+new file mode 100644
+index 000000000000..bf258c32f83d
+--- /dev/null
++++ b/drivers/leds/simple/simatic-ipc-leds-gpio.h
+@@ -0,0 +1,22 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Siemens SIMATIC IPC driver for GPIO based LEDs
++ *
++ * Copyright (c) Siemens AG, 2023
++ *
++ * Author:
++ *  Henning Schild <henning.schild@siemens.com>
++ */
++
++#ifndef _SIMATIC_IPC_LEDS_GPIO_H
++#define _SIMATIC_IPC_LEDS_GPIO_H
++
++int simatic_ipc_leds_gpio_probe(struct platform_device *pdev,
++				struct gpiod_lookup_table *table,
++				struct gpiod_lookup_table *table_extra);
++
++int simatic_ipc_leds_gpio_remove(struct platform_device *pdev,
++				 struct gpiod_lookup_table *table,
++				 struct gpiod_lookup_table *table_extra);
++
++#endif /* _SIMATIC_IPC_LEDS_GPIO_H */
+diff --git a/drivers/leds/simple/simatic-ipc-leds.c b/drivers/leds/simple/simatic-ipc-leds.c
+index 4894c228c165..2124f6d09930 100644
+--- a/drivers/leds/simple/simatic-ipc-leds.c
++++ b/drivers/leds/simple/simatic-ipc-leds.c
+@@ -126,7 +126,6 @@ static struct platform_driver simatic_ipc_led_driver = {
+ 		.name = KBUILD_MODNAME,
+ 	}
+ };
+-
+ module_platform_driver(simatic_ipc_led_driver);
+ 
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/platform/x86/simatic-ipc.c b/drivers/platform/x86/simatic-ipc.c
+index b3622419cd1a..c773995b230d 100644
+--- a/drivers/platform/x86/simatic-ipc.c
++++ b/drivers/platform/x86/simatic-ipc.c
+@@ -68,9 +68,10 @@ static int register_platform_devices(u32 station_id)
+ 	}
+ 
+ 	if (ledmode != SIMATIC_IPC_DEVICE_NONE) {
+-		if (ledmode == SIMATIC_IPC_DEVICE_127E ||
+-		    ledmode == SIMATIC_IPC_DEVICE_227G)
+-			pdevname = KBUILD_MODNAME "_leds_gpio";
++		if (ledmode == SIMATIC_IPC_DEVICE_127E)
++			pdevname = KBUILD_MODNAME "_leds_gpio_apollolake";
++		if (ledmode == SIMATIC_IPC_DEVICE_227G)
++			pdevname = KBUILD_MODNAME "_leds_gpio_f7188x";
+ 		platform_data.devmode = ledmode;
+ 		ipc_led_platform_device =
+ 			platform_device_register_data(NULL,
 -- 
 2.39.3
 
