@@ -2,175 +2,182 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C028EC7EE2E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 May 2023 12:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BA6C77B73
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 May 2023 18:21:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234536AbjEXMrM (ORCPT
+        id S236812AbjEXSVh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 May 2023 08:47:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33664 "EHLO
+        Wed, 24 May 2023 14:21:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233822AbjEXMrK (ORCPT
+        with ESMTP id S236738AbjEXSVe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 May 2023 08:47:10 -0400
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2063.outbound.protection.outlook.com [40.107.241.63])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A216E42;
-        Wed, 24 May 2023 05:46:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g2UR3vGWsmlOYgEClIBg1BRLZg5PCCQXcVD59ql030D8LNGPUApMeOW8M7eP/0lcEF7rDkjCJ2ToSzsSI9Mft4fNYoM1A4K4dFdtREqiBqHJPvn91M8oLwmlnj/QAXU3zdYSNfYJHmf59gUsqR+oX2aTLsPH9Wz6Ne33pd859YEogoyGhUSpPkhTxf9SGZRmwIB5h40ILutwr5IA9DsHjQhvJnZoUsvLdn+zPBTRdlbuRQ4wU3GVwxtMvYmV53t0iBbdqEORHLG1xPFJEmHQ1Pa9WyDC1UCY3+2uIJcGBgffD81kuz1bw5COXkaqD8Ww44TILnNfgy8utzPglC8uyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WDIbHt+GIdNrdOWSe2pZSzaoc3EgQgnGfKLokJlxn5o=;
- b=Pvb4PuPl1qtwRszyeebjP1abjw8RVl6ZxOxHnVS00LClFCVwEUXDE9c15vuhuEY+GTYx3MKp4azINjr+tfoj97yvkrP38IKSh27M54X7MlOgWJ7jiaSGO5mvZWOpeiNGEvXednhbBexEVwkw0tvg7FKpPhkQfG43Npw11Ph+JFSx8o/QZb66WIL5u1N1Qks8PSmkcnn0aaMnsCccwqVc3UBFUkT6XPPq5nFkcBDuXYqNIyxYNQasxbNylP7Cs9lE2GMryPcq4a0tUnTGtlqD2QktkHVm3uyhGzxpTRhMtkpgFOY3HB1015Zj1vFPQxv+9KAjNt4Ir4BNlzqfYekcag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 194.138.21.75) smtp.rcpttodomain=ucw.cz smtp.mailfrom=siemens.com; dmarc=pass
- (p=reject sp=reject pct=100) action=none header.from=siemens.com; dkim=none
- (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WDIbHt+GIdNrdOWSe2pZSzaoc3EgQgnGfKLokJlxn5o=;
- b=NkY/6L5hU8PaIzVUyB7/9sCTmfSwRr13zuxzBPeiY6o3TkzS9Tat87VY1z5+/y9aG4FRNLKI/cATsxGHABIrhlQQvtjcO1GECnJCPi38ZICQT5eQFKX4YpjfBh4I61qtSwkIfpUKNFIXp0Hho2o3Zv0o2UnGNsxp6qE914sD3aj2R0OqxWuZmq9XdYAaymivnM/NmA1GvSB9JUtabVDRO7mNxZMO03en+EaG1c1bXIFCTufQednnw1/D/Tmoz619ldXx6E6VquNfyA687bxShEPZnpOZBzw3MbM/+5EehQp/wiiFsulXQgu/GMfW6DJiI7+2dlrAGdfNC5AUIwcg6Q==
-Received: from DB6PR0301CA0051.eurprd03.prod.outlook.com (2603:10a6:4:54::19)
- by DB3PR10MB6884.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:428::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Wed, 24 May
- 2023 12:46:56 +0000
-Received: from DB5EUR01FT052.eop-EUR01.prod.protection.outlook.com
- (2603:10a6:4:54:cafe::88) by DB6PR0301CA0051.outlook.office365.com
- (2603:10a6:4:54::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.29 via Frontend
- Transport; Wed, 24 May 2023 12:46:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.138.21.75)
- smtp.mailfrom=siemens.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=siemens.com;
-Received-SPF: Pass (protection.outlook.com: domain of siemens.com designates
- 194.138.21.75 as permitted sender) receiver=protection.outlook.com;
- client-ip=194.138.21.75; helo=hybrid.siemens.com; pr=C
-Received: from hybrid.siemens.com (194.138.21.75) by
- DB5EUR01FT052.mail.protection.outlook.com (10.152.5.248) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6433.15 via Frontend Transport; Wed, 24 May 2023 12:46:55 +0000
-Received: from DEMCHDC8WBA.ad011.siemens.net (139.25.226.105) by
- DEMCHDC8VRA.ad011.siemens.net (194.138.21.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.25; Wed, 24 May 2023 14:46:54 +0200
-Received: from localhost.localdomain (139.22.37.129) by
- DEMCHDC8WBA.ad011.siemens.net (139.25.226.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.25; Wed, 24 May 2023 14:46:54 +0200
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>
-CC:     Henning Schild <henning.schild@siemens.com>
-Subject: [PATCH v4 4/4] leds: simatic-ipc-leds-gpio: introduce more Kconfig switches
-Date:   Wed, 24 May 2023 14:46:28 +0200
-Message-ID: <20230524124628.32295-5-henning.schild@siemens.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20230524124628.32295-1-henning.schild@siemens.com>
-References: <20230524124628.32295-1-henning.schild@siemens.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 24 May 2023 14:21:34 -0400
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9639197;
+        Wed, 24 May 2023 11:21:24 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 10A713200900;
+        Wed, 24 May 2023 14:21:20 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute5.internal (MEProxy); Wed, 24 May 2023 14:21:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm2; t=1684952480; x=1685038880; bh=8n
+        +IaACCh27iHdXNW61G4VevMtyUcvcfnjZ1YrA0koc=; b=KqOCSdZ5YUv4mmgOHf
+        kYbggNn3wN+1mm4PTofyVOyKgUuvCo7vxLQuTcAY70f8cgoKrgZgvH/PbhL953zQ
+        vOUUWGNVJo6VYxQWH38I377Ftb8N/P97u1Z9CFj+UT03Sk9+kVhNsoK8TZ6agGGn
+        24X+kUwBM2aFWK/hTZ1SUa9HNm73HXG5nSANAoqR6IBXfoKuujb2/Q/uE2317MzI
+        s6oh/QHyfoLLbqK2GBPQBdQXDC4NoNqpJIobsRndCFFfg/pYfYolW23xpe2Lsizd
+        qqQ2Y067azKCmd0aDUZjhrCMOjLKtKAEjHOnm0pMuxVyrM6EkHFOG+IsmE6VilZa
+        9QFg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1684952480; x=1685038880; bh=8n+IaACCh27iH
+        dXNW61G4VevMtyUcvcfnjZ1YrA0koc=; b=MldM9qZm6OhWPsXGkL0VBnaZuYGZP
+        gf99J8vJoDBcgoxpGvjKLjuFdBOXJ/XRm6Qpy7/Ggm/X2uG9LNsUWwV5gy8CSnai
+        kXNuuSO1diQDsemCLIT0l6Q9lnrGVO1CZhEMXSct0R6BeecWEPKqcxLyrxfCbrmn
+        k09kHxNwIrMuwVIQ4uuW45r4/T/gSXnTP/n7R4aj353nrN4IovAYrZV6EMrLGBXS
+        sESRl4NjmIlBBBwZbTqFpaB5L2BCFTh/drdkCrkxJ5W6T3jLwn0WtSsHJp5X4MeV
+        QfBIWRRv+90KSPjLjnactkU+zGpm9t92ke1niluTifZLBhmBScSNSCj8g==
+X-ME-Sender: <xms:oFVuZCjNka_Imn4qup0lSC_qfuLzv1zQqzTOZ9V9wzBrzFqNqVcP0w>
+    <xme:oFVuZDBmPNgQOglVVNfv9GeJoJlgQf959kzz2fzBMbomlvo3Uo3ZRSBo6xshVhBV1
+    auN7MlhhSh-a51Bfoc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeejhedguddvudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfo
+    rghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
+    gsrdgtrgeqnecuggftrfgrthhtvghrnhepteehgfeftdevgfehleejgedujeetkeevuefh
+    hfejteeuueeuiedvgfeihefghfehnecuffhomhgrihhnpehlvghnohhvohgtughrthdrtg
+    homhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehm
+    phgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:oFVuZKH6JiF4HZqekEpONS8HypflHSZd8ou1wzg3sXYTlY8eCmedvg>
+    <xmx:oFVuZLTIFBJUWrp67EQE_XKNeWd-8h9CSEqZlrpC5qzGCxFjx7f0Bw>
+    <xmx:oFVuZPzwXrlA1dj51AidMUNuRnvXHhQKzds-0zVJkf3yp3fa6oVkTg>
+    <xmx:oFVuZIq2sCaw-i6IF_4wurXHqAJDdC291HbRVKhRL7jDZJbj6OsR8w>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 56CC0C60091; Wed, 24 May 2023 14:21:20 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-441-ga3ab13cd6d-fm-20230517.001-ga3ab13cd
+Mime-Version: 1.0
+Message-Id: <71d0ddfa-ccca-43ee-aaac-6daf6b876824@app.fastmail.com>
+In-Reply-To: <04415f83-64fa-4d70-91fa-4425e163b350@app.fastmail.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20230517181945.3725-1-mpearson-lenovo@squebb.ca>
+ <b79fa66c-b8bc-125c-ccfa-9dae727022e9@redhat.com>
+ <04415f83-64fa-4d70-91fa-4425e163b350@app.fastmail.com>
+Date:   Wed, 24 May 2023 14:20:59 -0400
+From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To:     "Hans de Goede" <hdegoede@redhat.com>
+Cc:     "markgross@kernel.org" <markgross@kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] platform/x86: think-lmi: Enable opcode support on BIOS
+ settings
 Content-Type: text/plain
-X-Originating-IP: [139.22.37.129]
-X-ClientProxiedBy: DEMCHDC8WAA.ad011.siemens.net (139.25.226.104) To
- DEMCHDC8WBA.ad011.siemens.net (139.25.226.105)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB5EUR01FT052:EE_|DB3PR10MB6884:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5d84974d-e11a-44a5-a0c9-08db5c54f4e1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 52P0WMZL11Ws+CPPlMr0RgFx95a6czfa8NPX/1Yb8b4NnAozwhhgqJdIXGtgaYB4uQ0SQAmuTZw9v/iE5HzNydQ7XvreP2D2YYkEfSnLYzCSQRgmpespFRJ/1KIF229Uep0k4vXGNFIqaA9SYARAKilfGI+dykmvu2+i8Lq5vJoFkRyGkmk6QdnBDFqrXPz2nJ4xpCAUX8JS0FYGMyFBJ1xWtezMa++JRwRum4WngnHxUd8bKkijQKebbtrgADi4eugc2HHGM3jgsXVin/ihoxEauK8Ql1NGpo+8SXIYbWTkuQmhTajj+JuUn/dGv/slTmggiZhnbMwuGOwViPwEWk2pwRxtGwmzYYlM5SK004IMu5xcqkUlZYAXCgnEjBCW8c6w8OiHIF1/5cMZahkt3dJRbJB90PMYYa6I6rq5JM/Xa/fkF7Ws8sgLKf2hJc0B9lcxOtPmh/Xzmd/6gPxf3qCPVPoYvQ30sE4UwwN9CtEnb3E/AZbyjurMS2ZN7hxRBb+38vpQuFD+nRjP5uFY3bKkCDizy48QsdK9tvx9tks3UknfmJlq+4J/tBKkdJgAcKH3IZTXrvELR/25o8uRVfGFH8xXx75J0iZWiV7WUn61A6JoIJAtHxzIlWmGSH9tPAwABMD1QVoeZo+a07ZSsdlt3sFZzBqizSrnLXZJN2dlvnk1L2itdtBFCkPifEapF/MtlrYO8BURIPZXSVqkgJAC3XbckT+hzv4NDely/G8idIJbn+Xq/tUG9oNXUoFxTT/9H4dIL5UwntMhafXCKw==
-X-Forefront-Antispam-Report: CIP:194.138.21.75;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(346002)(376002)(136003)(396003)(39860400002)(451199021)(36840700001)(46966006)(40470700004)(6666004)(26005)(1076003)(16526019)(186003)(316002)(356005)(82960400001)(5660300002)(107886003)(41300700001)(44832011)(82740400003)(40480700001)(40460700003)(36756003)(82310400005)(86362001)(956004)(2616005)(36860700001)(478600001)(83380400001)(47076005)(110136005)(336012)(81166007)(2906002)(8936002)(8676002)(4326008)(70206006)(70586007)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2023 12:46:55.7711
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d84974d-e11a-44a5-a0c9-08db5c54f4e1
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.75];Helo=[hybrid.siemens.com]
-X-MS-Exchange-CrossTenant-AuthSource: DB5EUR01FT052.eop-EUR01.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR10MB6884
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-To describe the dependency chain better and allow for potential
-fine-grained config tuning, introduce Kconfig switch for the individual
-GPIO based drivers.
+Hi Hans,
 
-Signed-off-by: Henning Schild <henning.schild@siemens.com>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/leds/simple/Kconfig  | 31 ++++++++++++++++++++++++++++---
- drivers/leds/simple/Makefile |  7 +++----
- 2 files changed, 31 insertions(+), 7 deletions(-)
+On Tue, May 23, 2023, at 8:36 AM, Mark Pearson wrote:
+> Thanks Hans,
+>
+> On Tue, May 23, 2023, at 6:46 AM, Hans de Goede wrote:
+>> Hi Mark,
+>>
+>> On 5/17/23 20:19, Mark Pearson wrote:
+>>> Whilst reviewing some documentation from the FW team on using WMI on
+>>> Lenovo system I noticed that we weren't using Opcode support when
+>>> changing BIOS settings in the thinkLMI driver.
+>>> 
+>>> We should be doing this to ensure we're future proof as the old
+>>> non-opcode mechanism has been deprecated.
+>>> 
+>>> Tested on X1 Carbon G10 and G11.
+>>> 
+>>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>>> ---
+>>>  drivers/platform/x86/think-lmi.c | 23 ++++++++++++++++++++++-
+>>>  1 file changed, 22 insertions(+), 1 deletion(-)
+>>> 
+>>> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+>>> index 1138f770149d..d9341305eba9 100644
+>>> --- a/drivers/platform/x86/think-lmi.c
+>>> +++ b/drivers/platform/x86/think-lmi.c
+>>> @@ -1001,7 +1001,28 @@ static ssize_t current_value_store(struct kobject *kobj,
+>>>  				tlmi_priv.pwd_admin->save_signature);
+>>>  		if (ret)
+>>>  			goto out;
+>>
+>>> -	} else { /* Non certiifcate based authentication */
+>>> +	} else if (tlmi_priv.opcode_support) {
+>>> +		/* If opcode support is present use that interface */
+>>> +		set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
+>>> +					new_setting);
+>>> +		if (!set_str) {
+>>> +			ret = -ENOMEM;
+>>> +			goto out;
+>>> +		}
+>>> +
+>>> +		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str);
+>>> +		if (ret)
+>>> +			goto out;
+>>> +
+>>> +		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+>>> +			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
+>>> +					tlmi_priv.pwd_admin->password);
+>>> +			if (ret)
+>>> +				goto out;
+>>> +		}
+>>> +
+>>> +		ret = tlmi_save_bios_settings("");
+>>
+>> I'm a bit confused about how this works. You are calling the same
+>> LENOVO_SET_BIOS_SETTINGS_GUID as the old non opcode based authentication method
+>> without any auth string.
+>>
+>> And then afterwards you are calling LENOVO_OPCODE_IF_GUID with
+>> "WmiOpcodePasswordAdmin:<passwd>"
+>>
+>> Won't the initial LENOVO_SET_BIOS_SETTINGS_GUID get rejected since
+>> it does not include an auth-string and you have not authenticated
+>> yet using the opcode mechanism either. IOW shouldn't the opcode
+>> auth call go first ?
+>>
+>> And how does this work timing wise, vs races with userspace doing
+>> multiple sysfs writes at once.
+>>
+>> If the authentication done afterwards really acks the last
+>> LENOVO_SET_BIOS_SETTINGS_GUID call then a userspace based
+>> attacker could try to race and overwrite the last
+>> LENOVO_SET_BIOS_SETTINGS_GUID call before the ack happens... ?
+>>
+>> If this code really is correct I think we need to introduce
+>> a mutex to avoid this race.
+>>
+>> And this also needs some comments to explain what is going on.
+>
+> Agreed - and looking at it now....I'm questioning it myself. This was 
+> tested so it works...but I wonder if that was more luck than judgement.
+> Let me do some checking - I think I may have messed up here.
+>
 
-diff --git a/drivers/leds/simple/Kconfig b/drivers/leds/simple/Kconfig
-index fd2b8225d926..44fa0f93cb3b 100644
---- a/drivers/leds/simple/Kconfig
-+++ b/drivers/leds/simple/Kconfig
-@@ -1,11 +1,36 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config LEDS_SIEMENS_SIMATIC_IPC
- 	tristate "LED driver for Siemens Simatic IPCs"
--	depends on LEDS_GPIO
- 	depends on SIEMENS_SIMATIC_IPC
- 	help
- 	  This option enables support for the LEDs of several Industrial PCs
- 	  from Siemens.
- 
--	  To compile this driver as a module, choose M here: the modules
--	  will be called simatic-ipc-leds and simatic-ipc-leds-gpio.
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called simatic-ipc-leds.
-+
-+config LEDS_SIEMENS_SIMATIC_IPC_APOLLOLAKE
-+	tristate "LED driver for Siemens Simatic IPCs based on Intel Apollo Lake GPIO"
-+	depends on LEDS_GPIO
-+	depends on PINCTRL_BROXTON
-+	depends on SIEMENS_SIMATIC_IPC
-+	default LEDS_SIEMENS_SIMATIC_IPC
-+	help
-+	  This option enables support for the LEDs of several Industrial PCs
-+	  from Siemens based on Apollo Lake GPIO i.e. IPC127E.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called simatic-ipc-leds-gpio-apollolake.
-+
-+config LEDS_SIEMENS_SIMATIC_IPC_F7188X
-+	tristate "LED driver for Siemens Simatic IPCs based on Nuvoton GPIO"
-+	depends on LEDS_GPIO
-+	depends on GPIO_F7188X
-+	depends on SIEMENS_SIMATIC_IPC
-+	default LEDS_SIEMENS_SIMATIC_IPC
-+	help
-+	  This option enables support for the LEDs of several Industrial PCs
-+	  from Siemens based on Nuvoton GPIO i.e. IPC227G.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called simatic-ipc-leds-gpio-f7188x.
-diff --git a/drivers/leds/simple/Makefile b/drivers/leds/simple/Makefile
-index ed9057f7b6da..e3e840cea275 100644
---- a/drivers/leds/simple/Makefile
-+++ b/drivers/leds/simple/Makefile
-@@ -1,5 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)	+= simatic-ipc-leds.o
--obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)  += simatic-ipc-leds-gpio-core.o
--obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)	+= simatic-ipc-leds-gpio-apollolake.o
--obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)	+= simatic-ipc-leds-gpio-f7188x.o
-+obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)			+= simatic-ipc-leds.o
-+obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC_APOLLOLAKE)	+= simatic-ipc-leds-gpio-core.o simatic-ipc-leds-gpio-apollolake.o
-+obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC_F7188X)		+= simatic-ipc-leds-gpio-core.o simatic-ipc-leds-gpio-f7188x.o
--- 
-2.39.3
+Looked at this and the code is correct - even if it is a bit weird :)
+https://docs.lenovocdrt.com/#/bios/wmi/wmi_guide?id=set-and-save-a-bios-setting-on-newer-models
 
+The save_bios_settings would fail if a password was not set (if it's required).
+
+With regards to race conditions - that does seem somewhat unlikely in real life but I can add a mutex around this to catch that condition. I think I should probably do the same in a couple of other places (e.g. certificate_store and new_password_store) where multiple WMI calls are needed to complete an operation. 
+
+Is it OK if I do that as a separate commit on the end of the series or would you rather it was included in this commit? As the scope is, I think, more than just this function I'm leaning towards a separate commit but let me know what best practice is.
+
+Thanks
+Mark
