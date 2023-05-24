@@ -2,182 +2,82 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BA6C77B73
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 May 2023 18:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23485C77B73
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 May 2023 18:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236812AbjEXSVh (ORCPT
+        id S237314AbjEXS2V convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 May 2023 14:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52276 "EHLO
+        Wed, 24 May 2023 14:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236738AbjEXSVe (ORCPT
+        with ESMTP id S237272AbjEXS2T (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 May 2023 14:21:34 -0400
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9639197;
-        Wed, 24 May 2023 11:21:24 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 10A713200900;
-        Wed, 24 May 2023 14:21:20 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Wed, 24 May 2023 14:21:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1684952480; x=1685038880; bh=8n
-        +IaACCh27iHdXNW61G4VevMtyUcvcfnjZ1YrA0koc=; b=KqOCSdZ5YUv4mmgOHf
-        kYbggNn3wN+1mm4PTofyVOyKgUuvCo7vxLQuTcAY70f8cgoKrgZgvH/PbhL953zQ
-        vOUUWGNVJo6VYxQWH38I377Ftb8N/P97u1Z9CFj+UT03Sk9+kVhNsoK8TZ6agGGn
-        24X+kUwBM2aFWK/hTZ1SUa9HNm73HXG5nSANAoqR6IBXfoKuujb2/Q/uE2317MzI
-        s6oh/QHyfoLLbqK2GBPQBdQXDC4NoNqpJIobsRndCFFfg/pYfYolW23xpe2Lsizd
-        qqQ2Y067azKCmd0aDUZjhrCMOjLKtKAEjHOnm0pMuxVyrM6EkHFOG+IsmE6VilZa
-        9QFg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1684952480; x=1685038880; bh=8n+IaACCh27iH
-        dXNW61G4VevMtyUcvcfnjZ1YrA0koc=; b=MldM9qZm6OhWPsXGkL0VBnaZuYGZP
-        gf99J8vJoDBcgoxpGvjKLjuFdBOXJ/XRm6Qpy7/Ggm/X2uG9LNsUWwV5gy8CSnai
-        kXNuuSO1diQDsemCLIT0l6Q9lnrGVO1CZhEMXSct0R6BeecWEPKqcxLyrxfCbrmn
-        k09kHxNwIrMuwVIQ4uuW45r4/T/gSXnTP/n7R4aj353nrN4IovAYrZV6EMrLGBXS
-        sESRl4NjmIlBBBwZbTqFpaB5L2BCFTh/drdkCrkxJ5W6T3jLwn0WtSsHJp5X4MeV
-        QfBIWRRv+90KSPjLjnactkU+zGpm9t92ke1niluTifZLBhmBScSNSCj8g==
-X-ME-Sender: <xms:oFVuZCjNka_Imn4qup0lSC_qfuLzv1zQqzTOZ9V9wzBrzFqNqVcP0w>
-    <xme:oFVuZDBmPNgQOglVVNfv9GeJoJlgQf959kzz2fzBMbomlvo3Uo3ZRSBo6xshVhBV1
-    auN7MlhhSh-a51Bfoc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeejhedguddvudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfo
-    rghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
-    gsrdgtrgeqnecuggftrfgrthhtvghrnhepteehgfeftdevgfehleejgedujeetkeevuefh
-    hfejteeuueeuiedvgfeihefghfehnecuffhomhgrihhnpehlvghnohhvohgtughrthdrtg
-    homhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehm
-    phgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:oFVuZKH6JiF4HZqekEpONS8HypflHSZd8ou1wzg3sXYTlY8eCmedvg>
-    <xmx:oFVuZLTIFBJUWrp67EQE_XKNeWd-8h9CSEqZlrpC5qzGCxFjx7f0Bw>
-    <xmx:oFVuZPzwXrlA1dj51AidMUNuRnvXHhQKzds-0zVJkf3yp3fa6oVkTg>
-    <xmx:oFVuZIq2sCaw-i6IF_4wurXHqAJDdC291HbRVKhRL7jDZJbj6OsR8w>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 56CC0C60091; Wed, 24 May 2023 14:21:20 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-441-ga3ab13cd6d-fm-20230517.001-ga3ab13cd
-Mime-Version: 1.0
-Message-Id: <71d0ddfa-ccca-43ee-aaac-6daf6b876824@app.fastmail.com>
-In-Reply-To: <04415f83-64fa-4d70-91fa-4425e163b350@app.fastmail.com>
-References: <mpearson-lenovo@squebb.ca>
- <20230517181945.3725-1-mpearson-lenovo@squebb.ca>
- <b79fa66c-b8bc-125c-ccfa-9dae727022e9@redhat.com>
- <04415f83-64fa-4d70-91fa-4425e163b350@app.fastmail.com>
-Date:   Wed, 24 May 2023 14:20:59 -0400
-From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To:     "Hans de Goede" <hdegoede@redhat.com>
-Cc:     "markgross@kernel.org" <markgross@kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] platform/x86: think-lmi: Enable opcode support on BIOS
- settings
-Content-Type: text/plain
+        Wed, 24 May 2023 14:28:19 -0400
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 325A010B;
+        Wed, 24 May 2023 11:28:18 -0700 (PDT)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-50d897af77bso321159a12.1;
+        Wed, 24 May 2023 11:28:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684952896; x=1687544896;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QQCQ7wtjbEXNy+OLVRDNEyNz7R7ia4hhY3Kder7pF6M=;
+        b=bw+KeEfEr8m04dyr5mM3qmDQy9NcJlo2g/hyLxoZIsJamo9D3wSHZfc2kpCEgnp77R
+         x9NNU/9PIqsDrj+Bh6Un90FJcpnkW9cVFMAfkkKMlhDnkdcFQSTQQlSTwlB1aALyyifx
+         VRCRT3B6JhHC8C5+OgJg/XqoCzNrBIs9NM5DKXyWhgref5zxg4fKu/0ZO+xdFnvnv9Up
+         leBzj+BhE4x5dVce+M3QtjYdoATsP+Hu7BLtf9oaBBVIGTSV7ITZAOaLWQxDcHRi8+9E
+         YnjcOFnV37+Q1jDIRuc4q+gf9Tab+FRNuLfJmLeHE6JBtHRVeRzWPCBThA7XBdO4WZXt
+         qVrg==
+X-Gm-Message-State: AC+VfDyFrLVKXSxYcT0hLq/lYk4p/0Qc+RN5Bdr3U5d5qv5tooTMXYQo
+        wja6IFsB9gMiePhuzoElY2gPHw3fc6kid4uVXIQ=
+X-Google-Smtp-Source: ACHHUZ74pXxKlBSWaO1LVd3NfiSQAOR18STmBBOu3O3e4hlndYS5KMLsEZL11CQZzjkWTWJVE3m0mSjkTwEJ/CqNESw=
+X-Received: by 2002:a17:906:2218:b0:96f:4c38:4b1a with SMTP id
+ s24-20020a170906221800b0096f4c384b1amr16513902ejs.5.1684952896552; Wed, 24
+ May 2023 11:28:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230522200033.2605-1-mario.limonciello@amd.com>
+ <20230522200033.2605-3-mario.limonciello@amd.com> <ZGzwCdTO2LptPeQs@surfacebook>
+In-Reply-To: <ZGzwCdTO2LptPeQs@surfacebook>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 24 May 2023 20:28:05 +0200
+Message-ID: <CAJZ5v0hO4hq=TLZ=tK5vXv_pA4SsAo5Gqr5K9g=EU6bFRPYU6g@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] pinctrl: amd: Use pm_pr_dbg to show debugging messages
+To:     andy.shevchenko@gmail.com
+Cc:     Mario Limonciello <mario.limonciello@amd.com>, rafael@kernel.org,
+        hdegoede@redhat.com, linus.walleij@linaro.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pm@vger.kernel.org, Shyam-sundar.S-k@amd.com,
+        Basavaraj.Natikar@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
-
-On Tue, May 23, 2023, at 8:36 AM, Mark Pearson wrote:
-> Thanks Hans,
+On Tue, May 23, 2023 at 6:55 PM <andy.shevchenko@gmail.com> wrote:
 >
-> On Tue, May 23, 2023, at 6:46 AM, Hans de Goede wrote:
->> Hi Mark,
->>
->> On 5/17/23 20:19, Mark Pearson wrote:
->>> Whilst reviewing some documentation from the FW team on using WMI on
->>> Lenovo system I noticed that we weren't using Opcode support when
->>> changing BIOS settings in the thinkLMI driver.
->>> 
->>> We should be doing this to ensure we're future proof as the old
->>> non-opcode mechanism has been deprecated.
->>> 
->>> Tested on X1 Carbon G10 and G11.
->>> 
->>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->>> ---
->>>  drivers/platform/x86/think-lmi.c | 23 ++++++++++++++++++++++-
->>>  1 file changed, 22 insertions(+), 1 deletion(-)
->>> 
->>> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
->>> index 1138f770149d..d9341305eba9 100644
->>> --- a/drivers/platform/x86/think-lmi.c
->>> +++ b/drivers/platform/x86/think-lmi.c
->>> @@ -1001,7 +1001,28 @@ static ssize_t current_value_store(struct kobject *kobj,
->>>  				tlmi_priv.pwd_admin->save_signature);
->>>  		if (ret)
->>>  			goto out;
->>
->>> -	} else { /* Non certiifcate based authentication */
->>> +	} else if (tlmi_priv.opcode_support) {
->>> +		/* If opcode support is present use that interface */
->>> +		set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
->>> +					new_setting);
->>> +		if (!set_str) {
->>> +			ret = -ENOMEM;
->>> +			goto out;
->>> +		}
->>> +
->>> +		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str);
->>> +		if (ret)
->>> +			goto out;
->>> +
->>> +		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
->>> +			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
->>> +					tlmi_priv.pwd_admin->password);
->>> +			if (ret)
->>> +				goto out;
->>> +		}
->>> +
->>> +		ret = tlmi_save_bios_settings("");
->>
->> I'm a bit confused about how this works. You are calling the same
->> LENOVO_SET_BIOS_SETTINGS_GUID as the old non opcode based authentication method
->> without any auth string.
->>
->> And then afterwards you are calling LENOVO_OPCODE_IF_GUID with
->> "WmiOpcodePasswordAdmin:<passwd>"
->>
->> Won't the initial LENOVO_SET_BIOS_SETTINGS_GUID get rejected since
->> it does not include an auth-string and you have not authenticated
->> yet using the opcode mechanism either. IOW shouldn't the opcode
->> auth call go first ?
->>
->> And how does this work timing wise, vs races with userspace doing
->> multiple sysfs writes at once.
->>
->> If the authentication done afterwards really acks the last
->> LENOVO_SET_BIOS_SETTINGS_GUID call then a userspace based
->> attacker could try to race and overwrite the last
->> LENOVO_SET_BIOS_SETTINGS_GUID call before the ack happens... ?
->>
->> If this code really is correct I think we need to introduce
->> a mutex to avoid this race.
->>
->> And this also needs some comments to explain what is going on.
+> Mon, May 22, 2023 at 03:00:32PM -0500, Mario Limonciello kirjoitti:
+> > To make the GPIO tracking around suspend easier for end users to
+> > use, link it with pm_debug_messages.  This will make discovering
+> > sources of spurious GPIOs around suspend easier.
 >
-> Agreed - and looking at it now....I'm questioning it myself. This was 
-> tested so it works...but I wonder if that was more luck than judgement.
-> Let me do some checking - I think I may have messed up here.
+> Unfortunatelly this has two regressions.
 >
+> ...
+>
+> > -                             dev_dbg(&gpio_dev->pdev->dev,
+> > -                                     "GPIO %d is active: 0x%x",
+> > -                                     irqnr + i, regval);
+> > +                             pm_pr_dbg("GPIO %d is active: 0x%x",
+> > +                                       irqnr + i, regval);
+>
+> Regression 1: The device is now omitted from the output.
 
-Looked at this and the code is correct - even if it is a bit weird :)
-https://docs.lenovocdrt.com/#/bios/wmi/wmi_guide?id=set-and-save-a-bios-setting-on-newer-models
+Right.
 
-The save_bios_settings would fail if a password was not set (if it's required).
+> Regression 2: See https://stackoverflow.com/a/43957671/2511795
 
-With regards to race conditions - that does seem somewhat unlikely in real life but I can add a mutex around this to catch that condition. I think I should probably do the same in a couple of other places (e.g. certificate_store and new_password_store) where multiple WMI calls are needed to complete an operation. 
-
-Is it OK if I do that as a separate commit on the end of the series or would you rather it was included in this commit? As the scope is, I think, more than just this function I'm leaning towards a separate commit but let me know what best practice is.
-
-Thanks
-Mark
+Care to elaborate?  I'm not sure what you mean exactly.
