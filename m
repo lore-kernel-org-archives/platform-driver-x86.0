@@ -2,53 +2,53 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D51BC7EE29
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 May 2023 19:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 779FCC7EE29
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 May 2023 19:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241497AbjEYTfO (ORCPT
+        id S242138AbjEYTff (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 May 2023 15:35:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51082 "EHLO
+        Thu, 25 May 2023 15:35:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242117AbjEYTfL (ORCPT
+        with ESMTP id S241981AbjEYTfa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 May 2023 15:35:11 -0400
+        Thu, 25 May 2023 15:35:30 -0400
 Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C189E76;
-        Thu, 25 May 2023 12:34:33 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id B924E5C0163;
-        Thu, 25 May 2023 15:31:36 -0400 (EDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19539E4B;
+        Thu, 25 May 2023 12:34:58 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id C6B885C0084;
+        Thu, 25 May 2023 15:31:38 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Thu, 25 May 2023 15:31:36 -0400
+  by compute6.internal (MEProxy); Thu, 25 May 2023 15:31:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
         :cc:content-transfer-encoding:content-type:date:date:from:from
         :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm2; t=1685043096; x=
-        1685129496; bh=nIF4nS4aI6UYDF03seQTWUx2L320yvW6X+vuwnM3gHs=; b=H
-        etWuZb/DQn5hyQA486hENqKq91k8fa/wqsbZG9smS994puEzZJ656wEHjrsihNk8
-        n+PWnI8XgXgZF/IiliScJ8RR/09ShTyL4YRFLG4tWm8us6A5Zp4sqsVulED4HmJz
-        LVqd7LUNdmRO7gXtFkdCE57LrUmMO4ZpuXk2OswIr2YqjEb5YzgVpBYEj+ljvetv
-        oG7bm2faNzWsJs52yx0MFytAk2qMHSJ1TWoqmPlWBoApO1cwUfdKcAmPe8AP6Wxe
-        W9+EM45PjHVfmyJ0jhUGHQwsCm57lkWyoHWVPkphNMutUKx3FrURRJPKTxqtHn/H
-        eE+GrwQy/sazIYuoKhZVg==
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1685043098; x=
+        1685129498; bh=vRdhAijcr+SqqHZKB0865doAzp+2d040yLp8Fj5LvAw=; b=K
+        4p2qBytCnfrw9jS/FittH63a+5p7qQwL1tWyxf02Dg14PwIexBVaY/tiXdzRvKng
+        owhxti7tNgDDgtJsKeZwzQgRUF2YRiNDrJ0AbYagLjMaGFwABu+LNq7p4O8ve65w
+        IA2jwvzYR0hsZwdYsdTr8xIHVtQYeaKEacqafKqk1qHhq3JSnmKiYg+0MYcP7lsC
+        cVrjg4/kXiK0EGmjXzw1X/TZTKgpo+X6JORtgwuOwzEn8SVTkY/kPMnop6gd5uGZ
+        DaZ2p0BDpl++n2y9PAu+7XSKCo7D5BT5or8Abi7/SfY0KukMf+8lMLR9YJo3ceQb
+        m1vlOFPxGjQqpjpU5mYLQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding
         :content-type:date:date:feedback-id:feedback-id:from:from
         :in-reply-to:in-reply-to:message-id:mime-version:references
         :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1685043096; x=
-        1685129496; bh=nIF4nS4aI6UYDF03seQTWUx2L320yvW6X+vuwnM3gHs=; b=e
-        Q4PWgHOWR3v1M71bF4E4VhTVAm51jlY8CQLDXCUwhhi//Czz6XPiPGhXdyqNi2fX
-        aF5cEJbYNfycQmVj1K/d70shvmidJHqXYUY+AL6m+QdN9W33cNTENjO+gRx3uCMl
-        qH5Ydq1RAZfjwjKat1xIw+kKd0zK1iknoh2UXrTRtfZFH3V5hhpCSg+yx6ZrsLrp
-        KCvWO9zmmDCb9YiSfCLMmGTO0yT3pCLfY2V1s33JaB/XTxrLL5lq6l7mPTRRPfqv
-        chujFyo59Dx/jzucV4r+mBuhPgaNUcAl1e1dsOkt7WPytg21D+BqZsIXiWdGCgG5
-        NnNRYx1qNItvMN8cj5VHQ==
-X-ME-Sender: <xms:mLdvZGj5NXBODF39WKdFKuqZ5NawTlc0zi0KzBHxQDqck3l_ekZZRQ>
-    <xme:mLdvZHC95KiF9eM2dcMTukjULBKA8h4Lhjt5Puf-aK-lF9UNRiZVZXBYkFcsCG1Jl
-    wWJIgpbQ1FjQ-752ig>
-X-ME-Received: <xmr:mLdvZOGgNyas-cPIyu9TTiVdDFLpa5e4h88RYHz02dMePQEmjScvqmc3usxpcb9moB_a9KCDUuNtEBx6GiGrpcqjQuwTezv5A50atGyY9Vm5_ByDhBmBvlqDmQ>
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1685043098; x=
+        1685129498; bh=vRdhAijcr+SqqHZKB0865doAzp+2d040yLp8Fj5LvAw=; b=A
+        yaksA8veTA8EfyiyF7jlwflHdz1QAFH/7EV4oM7ipG4cLNjE+Q4nFZR0yylo7e7F
+        rNeD41gf9qZYfary7fUVjsMXgmaYHBc/jmqBJ1ZIoNCP//cOyGd1OV2J2QyvZMiO
+        6rFIHVOuBAGkFalIwpN6H0s9KdBvbPpuzqP2plb6A1hToFMNQvBOXrO/Cxw96FMv
+        fQxXE0LFJY5SHXtIVlzJ+PzTK1zfIvhU8rk9Et7AgeTPpJke7/LcXyui5wX5V9cL
+        NZ9ZPQG3iKDXhoFqe+cSciy46LwUP2FqHCHwnl8j4DY9F+/qoGDjqGXlk19kJv+d
+        IYF6x0ikk4uK04Q5igWoA==
+X-ME-Sender: <xms:mrdvZH008kZT1N_lAxTQF3uUdXWREbNxFFA0JCcQgAvkVmEJgwGAcA>
+    <xme:mrdvZGHDeuGWbVJOU0bobITlxbNb0Yqbm41KfSTP4GP7wWW_lI8q_juvgMZzHGxLp
+    hLGqTeU-xCdFn1-SGU>
+X-ME-Received: <xmr:mrdvZH6umn9j9syJRq0YT92gFthHQPxyHoxtn2s1CaktUpX5cW4UHTDkykjp-mGSZoYjrsfAYAGEYOQEgUSejvgeVlVAp_BsyMU0gBVdfzvADXTC--8fV1_tKg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeejjedgudefjecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecuogetfedtuddqtdduucdludehmdenucfjughrpe
@@ -57,20 +57,20 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeejjedgudefjecutefuodetgg
     frrghtthgvrhhnpeeftddvjeefleffvefhgfejjeehudetteeigeeugfekhffhgeejudeu
     teehgfdvffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
     hmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:mLdvZPQRifLXFPyaAFyuEBKoLBeY96QkH-EqWskixWAffbO_fO-Dhg>
-    <xmx:mLdvZDyhscsSCFwVFNuXG48B1GVsQlcMUZ_bRuYPfMkQopJmn6ynHA>
-    <xmx:mLdvZN4qtH1pvuVoDgyBXnHtfQLcsTi4CiikaAYbc8SFP4jFUUUedQ>
-    <xmx:mLdvZD_OlxTYB-tvNUOnsSudaL1Sal-1rK341S1bJr2mNL11p8vS6w>
+X-ME-Proxy: <xmx:mrdvZM3rrLJhjbyXFvQq4WWvL_igKAeh4avJr23--ZejSze3qIrjIA>
+    <xmx:mrdvZKFYutLckVhj5W55CahG0hz5ihpg9fuMOzDc2lw-VLtSysEGUg>
+    <xmx:mrdvZN_-SvgHi_Ruxb9M_1tNrDQAnrnCw_pxfVHDWHsuKrFuHqLJLA>
+    <xmx:mrdvZGDB2tJBGsFW8SM5G8rFBjos_7gfnj4HlS6lvLJEQGymkUmnPw>
 Feedback-ID: ibe194615:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 25 May 2023 15:31:36 -0400 (EDT)
+ 25 May 2023 15:31:38 -0400 (EDT)
 From:   Mark Pearson <mpearson-lenovo@squebb.ca>
 To:     mpearson-lenovo@squebb.ca
 Cc:     hdegoede@redhat.com, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] platform/x86: think-lmi: Correct System password interface
-Date:   Thu, 25 May 2023 15:31:29 -0400
-Message-Id: <20230525193132.3727-2-mpearson-lenovo@squebb.ca>
+Subject: [PATCH 5/5] platform/x86: think-lmi: mutex protection around multiple WMI calls
+Date:   Thu, 25 May 2023 15:31:32 -0400
+Message-Id: <20230525193132.3727-5-mpearson-lenovo@squebb.ca>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230525193132.3727-1-mpearson-lenovo@squebb.ca>
 References: <mpearson-lenovo@squebb.ca>
@@ -81,58 +81,139 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The system password identification was incorrect. This means that if
-the password was enabled it wouldn't be detected correctly; and setting
-it would not work.
-Also updated code to use TLMI_SMP_PWD instead of TLMI_SYS_PWD to be in
-sync with Lenovo documentation.
-
-Correct these mistakes.
+Add mutex protection around cases where an operation needs multiple
+WMI calls - e.g. setting password.
 
 Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 ---
-Changes in V2:
- - Updated define name to be SMP_PWD instead of SYS_PWD
- - Clarified in comments what each password type is.
+Changes in V2: New commit added after review of other patches in series.
 
- drivers/platform/x86/think-lmi.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/platform/x86/think-lmi.c | 46 ++++++++++++++++++++++++--------
+ 1 file changed, 35 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-index 2745224f62ab..c7e98fbe7c3d 100644
+index 64cd453d6e7d..f3e1e4dacba2 100644
 --- a/drivers/platform/x86/think-lmi.c
 +++ b/drivers/platform/x86/think-lmi.c
-@@ -168,11 +168,11 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
-  */
- #define LENOVO_CERT_THUMBPRINT_GUID "C59119ED-1C0D-4806-A8E9-59AA318176C4"
+@@ -14,6 +14,7 @@
+ #include <linux/acpi.h>
+ #include <linux/errno.h>
+ #include <linux/fs.h>
++#include <linux/mutex.h>
+ #include <linux/string.h>
+ #include <linux/types.h>
+ #include <linux/dmi.h>
+@@ -195,6 +196,7 @@ static const char * const level_options[] = {
+ };
+ static struct think_lmi tlmi_priv;
+ static struct class *fw_attr_class;
++static DEFINE_MUTEX(tlmi_mutex);
  
--#define TLMI_POP_PWD (1 << 0)
--#define TLMI_PAP_PWD (1 << 1)
--#define TLMI_HDD_PWD (1 << 2)
--#define TLMI_SYS_PWD (1 << 3)
--#define TLMI_CERT    (1 << 7)
-+#define TLMI_POP_PWD (1 << 0) /* Supervisor */
-+#define TLMI_PAP_PWD (1 << 1) /* Power-on */
-+#define TLMI_HDD_PWD (1 << 2) /* HDD/NVME */
-+#define TLMI_SMP_PWD (1 << 6) /* System Management */
-+#define TLMI_CERT    (1 << 7) /* Certificate Based */
+ /* ------ Utility functions ------------*/
+ /* Strip out CR if one is present */
+@@ -463,23 +465,32 @@ static ssize_t new_password_store(struct kobject *kobj,
+ 			sprintf(pwd_type, "%s", setting->pwd_type);
+ 		}
  
- #define to_tlmi_pwd_setting(kobj)  container_of(kobj, struct tlmi_pwd_setting, kobj)
- #define to_tlmi_attr_setting(kobj)  container_of(kobj, struct tlmi_attr_setting, kobj)
-@@ -1509,11 +1509,11 @@ static int tlmi_analyze(void)
- 		tlmi_priv.pwd_power->valid = true;
++		mutex_lock(&tlmi_mutex);
+ 		ret = tlmi_opcode_setting("WmiOpcodePasswordType", pwd_type);
+-		if (ret)
++		if (ret) {
++			mutex_unlock(&tlmi_mutex);
+ 			goto out;
+-
++		}
+ 		if (tlmi_priv.pwd_admin->valid) {
+ 			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
+ 					tlmi_priv.pwd_admin->password);
+-			if (ret)
++			if (ret) {
++				mutex_unlock(&tlmi_mutex);
+ 				goto out;
++			}
+ 		}
+ 		ret = tlmi_opcode_setting("WmiOpcodePasswordCurrent01", setting->password);
+-		if (ret)
++		if (ret) {
++			mutex_unlock(&tlmi_mutex);
+ 			goto out;
++		}
+ 		ret = tlmi_opcode_setting("WmiOpcodePasswordNew01", new_pwd);
+-		if (ret)
++		if (ret) {
++			mutex_unlock(&tlmi_mutex);
+ 			goto out;
++		}
+ 		ret = tlmi_simple_call(LENOVO_OPCODE_IF_GUID, "WmiOpcodePasswordSetUpdate;");
++		mutex_unlock(&tlmi_mutex);
+ 	} else {
+ 		/* Format: 'PasswordType,CurrentPw,NewPw,Encoding,KbdLang;' */
+ 		auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s,%s,%s;",
+@@ -1000,11 +1011,16 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 			goto out;
+ 		}
  
- 	if (tlmi_priv.opcode_support) {
--		tlmi_priv.pwd_system = tlmi_create_auth("sys", "system");
-+		tlmi_priv.pwd_system = tlmi_create_auth("smp", "system");
- 		if (!tlmi_priv.pwd_system)
- 			goto fail_clear_attr;
++		mutex_lock(&tlmi_mutex);
+ 		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTING_CERT_GUID, set_str);
+-		if (ret)
++		if (ret) {
++			mutex_unlock(&tlmi_mutex);
+ 			goto out;
++		}
+ 		ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
+ 				tlmi_priv.pwd_admin->save_signature);
++
++		mutex_unlock(&tlmi_mutex);
+ 		if (ret)
+ 			goto out;
+ 	} else if (tlmi_priv.opcode_support) {
+@@ -1021,18 +1037,23 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 			goto out;
+ 		}
  
--		if (tlmi_priv.pwdcfg.core.password_state & TLMI_SYS_PWD)
-+		if (tlmi_priv.pwdcfg.core.password_state & TLMI_SMP_PWD)
- 			tlmi_priv.pwd_system->valid = true;
++		mutex_lock(&tlmi_mutex);
+ 		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str);
+-		if (ret)
++		if (ret) {
++			mutex_unlock(&tlmi_mutex);
+ 			goto out;
++		}
  
- 		tlmi_priv.pwd_hdd = tlmi_create_auth("hdd", "hdd");
+ 		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+ 			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
+ 					tlmi_priv.pwd_admin->password);
+-			if (ret)
++			if (ret) {
++				mutex_unlock(&tlmi_mutex);
+ 				goto out;
++			}
+ 		}
+-
+ 		ret = tlmi_save_bios_settings("");
++		mutex_unlock(&tlmi_mutex);
+ 	} else { /* old non opcode based authentication method (deprecated)*/
+ 		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+ 			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+@@ -1056,14 +1077,17 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 			goto out;
+ 		}
+ 
++		mutex_lock(&tlmi_mutex);
+ 		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str);
+-		if (ret)
++		if (ret) {
++			mutex_unlock(&tlmi_mutex);
+ 			goto out;
+-
++		}
+ 		if (auth_str)
+ 			ret = tlmi_save_bios_settings(auth_str);
+ 		else
+ 			ret = tlmi_save_bios_settings("");
++		mutex_unlock(&tlmi_mutex);
+ 	}
+ 	if (!ret && !tlmi_priv.pending_changes) {
+ 		tlmi_priv.pending_changes = true;
 -- 
 2.40.1
 
