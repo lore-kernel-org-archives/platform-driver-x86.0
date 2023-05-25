@@ -2,178 +2,97 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE98CC77B7E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 May 2023 19:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F06BC77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 May 2023 20:50:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234662AbjEYTuu (ORCPT
+        id S241242AbjEYUu6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 May 2023 15:50:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39380 "EHLO
+        Thu, 25 May 2023 16:50:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240681AbjEYTuo (ORCPT
+        with ESMTP id S241782AbjEYUuw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 May 2023 15:50:44 -0400
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15FBE95;
-        Thu, 25 May 2023 12:50:43 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 85D1A5C037D;
-        Thu, 25 May 2023 15:50:42 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Thu, 25 May 2023 15:50:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1685044242; x=1685130642; bh=ZX
-        wcbVQTMEseDcnDDWOf0VpDhPSj5ka5jVvD+UYmm90=; b=fM1XQH6M50V7WeyZAJ
-        JKnE8GTAte3RjbCEqNcTAnNPJi5Bz/QsYvY5l/0lDHq6I/FhiHO/rbXnREM0PQyf
-        HHTz/XreHpobcEb1jh6rZywv+mXT5RmiYBw1EqpvK60Fma1BN7kyAx86jwJqqAVb
-        88Sk6DnKKDwil3Pe2H8qTmWT6YS1grlXDlYyPFKgmJGBajgxqtAKZiiYGELm42k4
-        v0ovJIYzlGfncOtetft+6clL8ACcjB2O3dBBwNUAlFwVtzV2Iiofr99koI7U7idv
-        k6ipESg+pg0yGt64LLSlHFmTQaHKYyM5pWH+4ZHZqeZhrdLobma8pvjX0ZyS72Eo
-        3Ctg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1685044242; x=1685130642; bh=ZXwcbVQTMEseD
-        cnDDWOf0VpDhPSj5ka5jVvD+UYmm90=; b=rdUHcJSygUfURMDpemuC4hLuOnOuP
-        LeUzq1r2ippYkisy1NiVhNGcg1uNYg+jvsril/6JGryFpGSjc2sv58jIiTQ+D8Cx
-        cPVevTmO42UdPbFLweBn+X+aWRMuBi6gYymqsmhoTel7OkLSLaTZg1AM816DF0y3
-        3lL16SwBludOc14rxylc4rsxfsm4Z/4zOCOO3ONm3fNQm9aIgVpRRIWFUKrHdt/h
-        3wSKfsTKAcQ8D+Z0LsWVuflGAIX9DrR2ifRrO6sTHEGPpPBRKzPEzlps0ubKmOdg
-        0r5s6QB1nULrGZResHje77gXKI0g8J4R/4QDl6Txtc/wDdmF++ttI4DPA==
-X-ME-Sender: <xms:ErxvZJawYOwXFhS4BveIdDJdQLIHZB4QecqCRUION9iiAtgiaGmsxA>
-    <xme:ErxvZAYQEKoszEvGoPWqDuo05myeZUs1CzQf-g72SSpkIRVDcsGn2cAuwLWAR_4A1
-    6yBLXX5ox1YS3Twn6Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeejjedgudegudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfo
-    rghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
-    gsrdgtrgeqnecuggftrfgrthhtvghrnhepieeufeejieevteduvdekteefledtveffvedu
-    hefffeejudefvdeijeegudegkefhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgt
-    rg
-X-ME-Proxy: <xmx:ErxvZL-OJMjdBBy_ZVxBA5GnagHLLH1sh73DXZXcqAhi_AVlOpCqTQ>
-    <xmx:ErxvZHrNx44K0maWvF6Zoju8hZVPjYRsYWyuFcKzlLn9YLcEiKitNA>
-    <xmx:ErxvZErdacIu9pBumkXFXIjIh_ojRIfiU3AeFtR-5cmqETIu1zWwrA>
-    <xmx:ErxvZBBOWRQVNI4Sd8uK5Vai3oNOqzbAav4symb6mHIom4yXESCRVA>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 36CD8C60091; Thu, 25 May 2023 15:50:42 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-441-ga3ab13cd6d-fm-20230517.001-ga3ab13cd
-Mime-Version: 1.0
-Message-Id: <f6b0b842-3ef0-4c48-afca-6d9953993c9e@app.fastmail.com>
-In-Reply-To: <6e05df16-7125-a634-6b99-3cf3079d3d5d@redhat.com>
-References: <mpearson-lenovo@squebb.ca>
- <20230525193132.3727-1-mpearson-lenovo@squebb.ca>
- <20230525193132.3727-5-mpearson-lenovo@squebb.ca>
- <6e05df16-7125-a634-6b99-3cf3079d3d5d@redhat.com>
-Date:   Thu, 25 May 2023 15:50:20 -0400
-From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To:     "Hans de Goede" <hdegoede@redhat.com>
-Cc:     "markgross@kernel.org" <markgross@kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] platform/x86: think-lmi: mutex protection around multiple WMI
- calls
-Content-Type: text/plain
+        Thu, 25 May 2023 16:50:52 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D664BD3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 13:50:50 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-309382efe13so1803867f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 13:50:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685047849; x=1687639849;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p+mpIuvVEBhYQv+k6FIeLYtDnkxDN/5dgCPu43XZjxs=;
+        b=LqF7CrbDiTtBRKQpa2D+hkvZ2F+WUX2zVpagXB3e/oSj5ptoU0BUYRAEzD7jeZVT6n
+         h3wmao3+Nt2CMoHXDTflOsuXKSBuzyHxOCh1dhRPpDY4FnjFW1IwoI92T7Akq79CPRQg
+         xC5k6BOM+k8wFQ5/ewoz9e1WGMH0AeM3nCEsb3bd1pbuWefAZ/wTpHIL89pw7WoyGubt
+         /E0g92p/g/gCTf53R8tveZHaxD8rHaJh+iR4VeJai1U2M0rTXS9AwP8LxvHm6fH1XNF7
+         uDmSe5XwKl0an9avpFF6H9sW6jKlNc3OJQ9b6noJieUDukFoDP5VqJMiAbdFThe2qKB1
+         z8wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685047849; x=1687639849;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p+mpIuvVEBhYQv+k6FIeLYtDnkxDN/5dgCPu43XZjxs=;
+        b=adK6aquTN0KLOw8dt5bj4U8tf5DVMtnpVYsl+dFL+xTnGRW3BgVXDfI2UPlZ6U8Qm2
+         zTLs09F41Vvl0bJO122iBKQX8bhdWalYQ9W/0OG0CYySeKqRfIsDmdccJK61136mp4Cx
+         LpSRCtYBixRoDlvFT49TklLfbMg4SWxuJBoevBUkdNqKAocnrDOXOvaAuTRGengTFezY
+         k+AKxQfKwpwQ+EBVrSGyLigwI1B/0xsjqFfeKiGoqJx85YFVAzFCuyJ13iDWE/S61QQp
+         0bCjnYP1n579eJVbua86uAboC+is48WoY0pRZIOtIciigKvBFcnjKYw/BOxjkcnWJSrV
+         f3YA==
+X-Gm-Message-State: AC+VfDweQqPGffkXYb8fBvVq6TG3AqTw1IrAkXjLngK2Ux7ohrVJvjSK
+        KkAtHsq6tx4BAUKXf3k21f7O7l6L8wU=
+X-Google-Smtp-Source: ACHHUZ6KnODzZON7JNeHKcc0iTy4aJ0Ar1ZCoiO/UmQzIqkPsu6/U82sdpIlQRJd6WPFb9jXXO2lsg==
+X-Received: by 2002:adf:e5cb:0:b0:2f9:482f:c13f with SMTP id a11-20020adfe5cb000000b002f9482fc13fmr3192360wrn.46.1685047849119;
+        Thu, 25 May 2023 13:50:49 -0700 (PDT)
+Received: from xws.localdomain (pd9e5a196.dip0.t-ipconnect.de. [217.229.161.150])
+        by smtp.gmail.com with ESMTPSA id d8-20020adffd88000000b003012030a0c6sm2884160wrr.18.2023.05.25.13.50.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 May 2023 13:50:48 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH] platform/surface: aggregator: Make to_ssam_device_driver() respect constness
+Date:   Thu, 25 May 2023 22:50:41 +0200
+Message-Id: <20230525205041.2774947-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.40.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Make to_ssam_device_driver() a bit safer by replacing container_of()
+with container_of_const() to respect the constness of the passed in
+pointer, instead of silently discarding any const specifications. This
+change also makes it more similar to to_ssam_device(), which already
+uses container_of_const().
 
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+ include/linux/surface_aggregator/device.h | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-On Thu, May 25, 2023, at 3:41 PM, Hans de Goede wrote:
-> Hi Mark,
->
-> On 5/25/23 21:31, Mark Pearson wrote:
->> Add mutex protection around cases where an operation needs multiple
->> WMI calls - e.g. setting password.
->> 
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> ---
->> Changes in V2: New commit added after review of other patches in series.
->> 
->>  drivers/platform/x86/think-lmi.c | 46 ++++++++++++++++++++++++--------
->>  1 file changed, 35 insertions(+), 11 deletions(-)
->> 
->> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
->> index 64cd453d6e7d..f3e1e4dacba2 100644
->> --- a/drivers/platform/x86/think-lmi.c
->> +++ b/drivers/platform/x86/think-lmi.c
->> @@ -14,6 +14,7 @@
->>  #include <linux/acpi.h>
->>  #include <linux/errno.h>
->>  #include <linux/fs.h>
->> +#include <linux/mutex.h>
->>  #include <linux/string.h>
->>  #include <linux/types.h>
->>  #include <linux/dmi.h>
->> @@ -195,6 +196,7 @@ static const char * const level_options[] = {
->>  };
->>  static struct think_lmi tlmi_priv;
->>  static struct class *fw_attr_class;
->> +static DEFINE_MUTEX(tlmi_mutex);
->>  
->>  /* ------ Utility functions ------------*/
->>  /* Strip out CR if one is present */
->> @@ -463,23 +465,32 @@ static ssize_t new_password_store(struct kobject *kobj,
->>  			sprintf(pwd_type, "%s", setting->pwd_type);
->>  		}
->>  
->> +		mutex_lock(&tlmi_mutex);
->>  		ret = tlmi_opcode_setting("WmiOpcodePasswordType", pwd_type);
->> -		if (ret)
->> +		if (ret) {
->> +			mutex_unlock(&tlmi_mutex);
->>  			goto out;
->> -
->> +		}
->>  		if (tlmi_priv.pwd_admin->valid) {
->>  			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
->>  					tlmi_priv.pwd_admin->password);
->> -			if (ret)
->> +			if (ret) {
->> +				mutex_unlock(&tlmi_mutex);
->>  				goto out;
->> +			}
->>  		}
->>  		ret = tlmi_opcode_setting("WmiOpcodePasswordCurrent01", setting->password);
->> -		if (ret)
->> +		if (ret) {
->> +			mutex_unlock(&tlmi_mutex);
->>  			goto out;
->> +		}
->>  		ret = tlmi_opcode_setting("WmiOpcodePasswordNew01", new_pwd);
->> -		if (ret)
->> +		if (ret) {
->> +			mutex_unlock(&tlmi_mutex);
->>  			goto out;
->> +		}
->>  		ret = tlmi_simple_call(LENOVO_OPCODE_IF_GUID, "WmiOpcodePasswordSetUpdate;");
->> +		mutex_unlock(&tlmi_mutex);
->>  	} else {
->>  		/* Format: 'PasswordType,CurrentPw,NewPw,Encoding,KbdLang;' */
->>  		auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s,%s,%s;",
->
->
-> I haven't take a really close / good look yet. But at a first glance
-> I think it would be cleaner to just take the mutex at the top
-> and unlock it after the out label to which all the existing goto-s
-> already go ?
->
-I did consider that - and it was in my first implementation; but then I got concerned
-about if the mutex_unlock could potentially get called without mutex_lock having been 
-called beforehand. I couldn't find any good reference as to whether that was safe or not.
+diff --git a/include/linux/surface_aggregator/device.h b/include/linux/surface_aggregator/device.h
+index df81043b9e718..42b249b4c24b1 100644
+--- a/include/linux/surface_aggregator/device.h
++++ b/include/linux/surface_aggregator/device.h
+@@ -243,11 +243,7 @@ static inline bool is_ssam_device(struct device *d)
+  * Return: Returns the pointer to the &struct ssam_device_driver wrapping the
+  * given device driver @d.
+  */
+-static inline
+-struct ssam_device_driver *to_ssam_device_driver(struct device_driver *d)
+-{
+-	return container_of(d, struct ssam_device_driver, driver);
+-}
++#define to_ssam_device_driver(d)	container_of_const(d, struct ssam_device_driver, driver)
+ 
+ const struct ssam_device_id *ssam_device_id_match(const struct ssam_device_id *table,
+ 						  const struct ssam_device_uid uid);
+-- 
+2.40.1
 
-I ended up deciding that a few extra brackets and unlock calls wasn't that ugly and was 'safer'...and 
-so went that route.
-
-Happy to change it - but do you happen to know if it's safe to call unlock without a lock? If it is then
-that implementation is cleaner.
-
-Mark
