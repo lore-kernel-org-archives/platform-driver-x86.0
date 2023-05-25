@@ -2,193 +2,131 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA946C77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 May 2023 09:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F43C7EE2C
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 May 2023 09:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240061AbjEYJxY (ORCPT
+        id S233042AbjEYJ7b (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 May 2023 05:53:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39180 "EHLO
+        Thu, 25 May 2023 05:59:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229543AbjEYJxV (ORCPT
+        with ESMTP id S232749AbjEYJ7a (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 May 2023 05:53:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81CD81A8
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 02:52:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685008352;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T483GshQ1etV4/B80hSTyHnl4OtRX6eMmZK03OF9d2k=;
-        b=ehyk8Sp1/uG/TGtsGbMfvc3IEZHO6/Hk9LgW+drL7lPwS3jhs9nRpx9iYow/CyL1QMY9Mh
-        ufuvtQlWqh81vNekqi7SelyqZCR1Kq1Lry+lwDCRgMBW0+ENFqYXxPTqjqzN5QKGV/lrb8
-        awJHfgqtLVV2JD8Jq0pdXDWDuc7bjd0=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-509-1YsvS9u5NbiWKeWPh6k9RQ-1; Thu, 25 May 2023 05:52:30 -0400
-X-MC-Unique: 1YsvS9u5NbiWKeWPh6k9RQ-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-513e0246f5fso2560676a12.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 02:52:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685008349; x=1687600349;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T483GshQ1etV4/B80hSTyHnl4OtRX6eMmZK03OF9d2k=;
-        b=Rq9JpvA/obwN7f7jkoIkudW7n4TZ5jAJQwboRUzrOx42dRixANt7HRDuA5NnBzBGDC
-         tjZUExQivzp3a10cLpNhk0ebKj2BMrCHQsnYZaUzWuuFXKoO2zPiZyOe2DAmpBkccTLk
-         xNyNam6HDeAHuiSNCIA5chbQLeFCloZZTyZj9G1eE5jO3VMUxGNdAEf/OkJ/dAaL3rw9
-         hnoKgA1Tr1tFljcfebmJZjgp5H7O0pih5NpVYcQrg6Xbp9dfLYm2KcNBlaEgKocR0u7N
-         wbKOgrwOh1DrE9WPtawg+gydf3idK6sTtpGsbdWhTYVHlGrkyofd6AOBABB1nHfmos6A
-         jDVw==
-X-Gm-Message-State: AC+VfDwh9/Q7zMsyIedm68toGaQya/xKSF573a0AHLsCvQqmin98RUj8
-        tTHs36pRbwVG8EkfwhUC47o6vj2kGsRrvxJm9Ia5/fCCIrp4KAO0XH5srUhmw1QUoaNdn42NZGR
-        hAwn9ET7CJDjPzh5nkMJMoL4ZnKZXcR7w7A==
-X-Received: by 2002:aa7:d316:0:b0:50b:c72a:2b26 with SMTP id p22-20020aa7d316000000b0050bc72a2b26mr4278276edq.9.1685008349619;
-        Thu, 25 May 2023 02:52:29 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4+iNh5Y5HpqElML4Mwp3cdCIoRI8ossZKCcSedVvPSiCi6hlR84Y6A/1kXAzHKM61nWvZOug==
-X-Received: by 2002:aa7:d316:0:b0:50b:c72a:2b26 with SMTP id p22-20020aa7d316000000b0050bc72a2b26mr4278270edq.9.1685008349312;
-        Thu, 25 May 2023 02:52:29 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id d27-20020a056402517b00b0050c0d651fb1sm377005ede.75.2023.05.25.02.52.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 May 2023 02:52:28 -0700 (PDT)
-Message-ID: <a27660bd-fa7c-20c5-b7f2-f2ff20fe6cb8@redhat.com>
-Date:   Thu, 25 May 2023 11:52:28 +0200
+        Thu, 25 May 2023 05:59:30 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 083A6122
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 02:59:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685008769; x=1716544769;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=RDN3HxvXJPNh3rlNPfPwOyt/Ii9izU/HNJkZskOQ5c8=;
+  b=CwvzmrbwyCTxho6lDYNyqwWHi76PQ1qCwZjhPltCLhak3JNwiIjBzcNa
+   NoMoeAEs8RPcBa0SCkR5bH/BXPaCQPjLayUpr24cnMUQuLI+tDO+Sl70k
+   NXn5zxuh34tPMxhCXaSUvkhVRHNZzb+UdIDvQesQ1ubXVHwwih0wHzbI1
+   OelqQJMrLRUkj3vB1OevM63zrOtmyMP157HV3Mo7U7yZ1oCXRm07+GbcH
+   JDSWds9ajm1F9hI/Jr79/ug62CM0nuRCbfnjq2Lm0TSZgsK0F4AnTky44
+   CeZpdCDeG6vRUO9jzfDmbHMRasMeXPR7p72V6O9f1691DDoXOPJKqne7w
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="353866490"
+X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
+   d="scan'208";a="353866490"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 02:59:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="698916666"
+X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
+   d="scan'208";a="698916666"
+Received: from aghiriba-mobl.ger.corp.intel.com ([10.249.40.17])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 02:59:25 -0700
+Date:   Thu, 25 May 2023 12:59:23 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc:     hdegoede@redhat.com, markgross@kernel.org, Sanket.Goswami@amd.com,
+        mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] platform/x86/amd: pmc: Add helper function to
+ check the cpu id
+In-Reply-To: <378b7e91-3b14-c6fa-036a-c91a30ab4665@amd.com>
+Message-ID: <209390a5-4945-f99a-5951-9fc61e5f6060@linux.intel.com>
+References: <20230516091308.3905113-1-Shyam-sundar.S-k@amd.com> <20230516091308.3905113-4-Shyam-sundar.S-k@amd.com> <d4e98445-d2f2-10f7-7f62-9bcb16deef79@linux.intel.com> <378b7e91-3b14-c6fa-036a-c91a30ab4665@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 1/4] platform/x86: think-lmi: Enable opcode support on
- BIOS settings
-Content-Language: en-US, nl
-To:     Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc:     "markgross@kernel.org" <markgross@kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-References: <mpearson-lenovo@squebb.ca>
- <20230517181945.3725-1-mpearson-lenovo@squebb.ca>
- <b79fa66c-b8bc-125c-ccfa-9dae727022e9@redhat.com>
- <04415f83-64fa-4d70-91fa-4425e163b350@app.fastmail.com>
- <71d0ddfa-ccca-43ee-aaac-6daf6b876824@app.fastmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <71d0ddfa-ccca-43ee-aaac-6daf6b876824@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="8323329-804892440-1685008131=:1738"
+Content-ID: <48a12368-34b3-d7d-f96-175258b61876@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 5/24/23 20:20, Mark Pearson wrote:
-> Hi Hans,
+--8323329-804892440-1685008131=:1738
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <1679d67b-7f72-93aa-7045-adfddd71d225@linux.intel.com>
+
+On Thu, 25 May 2023, Shyam Sundar S K wrote:
+> On 5/23/2023 1:56 PM, Ilpo Järvinen wrote:
+> > On Tue, 16 May 2023, Shyam Sundar S K wrote:
+> > 
+> >> Add a helper routine to check the underlying cpu id, that can be used
+> >> across the PMC driver to remove the duplicate code.
+> >>
+> >> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> >> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> >> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> >> ---
+> >>  drivers/platform/x86/amd/pmc.c | 17 ++++++++++++++---
+> >>  1 file changed, 14 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
+> >> index e2439fda5c02..7e5e6afb3410 100644
+> >> --- a/drivers/platform/x86/amd/pmc.c
+> >> +++ b/drivers/platform/x86/amd/pmc.c
+> >> @@ -564,6 +564,18 @@ static void amd_pmc_dbgfs_unregister(struct amd_pmc_dev *dev)
+> >>  	debugfs_remove_recursive(dev->dbgfs_dir);
+> >>  }
+> >>  
+> >> +static bool amd_pmc_check_sup_cpuid(struct amd_pmc_dev *dev)
+> > 
+> > Does sup refer to "supported" or some other acronym? If the latter,
 > 
-> On Tue, May 23, 2023, at 8:36 AM, Mark Pearson wrote:
->> Thanks Hans,
->>
->> On Tue, May 23, 2023, at 6:46 AM, Hans de Goede wrote:
->>> Hi Mark,
->>>
->>> On 5/17/23 20:19, Mark Pearson wrote:
->>>> Whilst reviewing some documentation from the FW team on using WMI on
->>>> Lenovo system I noticed that we weren't using Opcode support when
->>>> changing BIOS settings in the thinkLMI driver.
->>>>
->>>> We should be doing this to ensure we're future proof as the old
->>>> non-opcode mechanism has been deprecated.
->>>>
->>>> Tested on X1 Carbon G10 and G11.
->>>>
->>>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->>>> ---
->>>>  drivers/platform/x86/think-lmi.c | 23 ++++++++++++++++++++++-
->>>>  1 file changed, 22 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
->>>> index 1138f770149d..d9341305eba9 100644
->>>> --- a/drivers/platform/x86/think-lmi.c
->>>> +++ b/drivers/platform/x86/think-lmi.c
->>>> @@ -1001,7 +1001,28 @@ static ssize_t current_value_store(struct kobject *kobj,
->>>>  				tlmi_priv.pwd_admin->save_signature);
->>>>  		if (ret)
->>>>  			goto out;
->>>
->>>> -	} else { /* Non certiifcate based authentication */
->>>> +	} else if (tlmi_priv.opcode_support) {
->>>> +		/* If opcode support is present use that interface */
->>>> +		set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
->>>> +					new_setting);
->>>> +		if (!set_str) {
->>>> +			ret = -ENOMEM;
->>>> +			goto out;
->>>> +		}
->>>> +
->>>> +		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str);
->>>> +		if (ret)
->>>> +			goto out;
->>>> +
->>>> +		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
->>>> +			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
->>>> +					tlmi_priv.pwd_admin->password);
->>>> +			if (ret)
->>>> +				goto out;
->>>> +		}
->>>> +
->>>> +		ret = tlmi_save_bios_settings("");
->>>
->>> I'm a bit confused about how this works. You are calling the same
->>> LENOVO_SET_BIOS_SETTINGS_GUID as the old non opcode based authentication method
->>> without any auth string.
->>>
->>> And then afterwards you are calling LENOVO_OPCODE_IF_GUID with
->>> "WmiOpcodePasswordAdmin:<passwd>"
->>>
->>> Won't the initial LENOVO_SET_BIOS_SETTINGS_GUID get rejected since
->>> it does not include an auth-string and you have not authenticated
->>> yet using the opcode mechanism either. IOW shouldn't the opcode
->>> auth call go first ?
->>>
->>> And how does this work timing wise, vs races with userspace doing
->>> multiple sysfs writes at once.
->>>
->>> If the authentication done afterwards really acks the last
->>> LENOVO_SET_BIOS_SETTINGS_GUID call then a userspace based
->>> attacker could try to race and overwrite the last
->>> LENOVO_SET_BIOS_SETTINGS_GUID call before the ack happens... ?
->>>
->>> If this code really is correct I think we need to introduce
->>> a mutex to avoid this race.
->>>
->>> And this also needs some comments to explain what is going on.
->>
->> Agreed - and looking at it now....I'm questioning it myself. This was 
->> tested so it works...but I wonder if that was more luck than judgement.
->> Let me do some checking - I think I may have messed up here.
->>
+> Yes, please read that as "supported"
 > 
-> Looked at this and the code is correct - even if it is a bit weird :)
-> https://docs.lenovocdrt.com/#/bios/wmi/wmi_guide?id=set-and-save-a-bios-setting-on-newer-models
+> > you should mention/open it in the changelog and/or in a comment. If the 
+> > former, the function naming seems too generic (an observation entirely 
+> > based on how/where the function is used, you're not exactly verbose on 
+> > what this actually checks for other than what looks like a set of CPU 
+> > IDs but clearly there's more behind it).
 > 
-> The save_bios_settings would fail if a password was not set (if it's required).
+> OK. renaming the function as amd_pmc_is_cpu_supported() would be fine?
 
-Ok, can you add some comments to the next revision explaining this ?
-(no need to write a novel, just some short comments)
+This makes things odder, it gets used in two places:
 
-> With regards to race conditions - that does seem somewhat unlikely in real life but I can add a mutex around this to catch that condition. I think I should probably do the same in a couple of other places (e.g. certificate_store and new_password_store) where multiple WMI calls are needed to complete an operation. 
+	if (enable_stb) {
+		if (amd_pmc_check_sup_cpuid(dev))
+			debugfs_create_file(..., &amd_pmc_stb_debugfs_fops_v2);
+		else
+			debugfs_create_file(..., &amd_pmc_stb_debugfs_fops);
+	}
 
-Ack for also adding the mutex in other places where there is more
-then 1 WMI call involved.
+What about that else branch (PMC is not supported so who does that make 
+sense when the file is called pmc.c)? And here:
 
-> Is it OK if I do that as a separate commit on the end of the series or would you rather it was included in this commit? As the scope is, I think, more than just this function I'm leaning towards a separate commit but let me know what best practice is.
+static int amd_pmc_probe(...)
+{
+	...
+	if (enable_stb && amd_pmc_check_sup_cpuid(dev)) {
+		err = amd_pmc_s2d_init(dev);
+		if (err)
+			...goto + returns error
+	}
 
-Adding this in a separate commit is fine with me.
 
-Regards,
-
-Hans
+If enable_stb is not set, pmc not being supported is not going to return 
+error?
 
 
+-- 
+ i.
+--8323329-804892440-1685008131=:1738--
