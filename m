@@ -2,62 +2,62 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F06BC77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 May 2023 20:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F7CC77B7E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 May 2023 21:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241242AbjEYUu6 (ORCPT
+        id S232445AbjEYVBx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 May 2023 16:50:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50502 "EHLO
+        Thu, 25 May 2023 17:01:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241782AbjEYUuw (ORCPT
+        with ESMTP id S241964AbjEYVBn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 May 2023 16:50:52 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D664BD3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 13:50:50 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-309382efe13so1803867f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 13:50:50 -0700 (PDT)
+        Thu, 25 May 2023 17:01:43 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C411110C7
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 14:01:19 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-309438004a6so1733509f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 14:01:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685047849; x=1687639849;
+        d=gmail.com; s=20221208; t=1685048478; x=1687640478;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=p+mpIuvVEBhYQv+k6FIeLYtDnkxDN/5dgCPu43XZjxs=;
-        b=LqF7CrbDiTtBRKQpa2D+hkvZ2F+WUX2zVpagXB3e/oSj5ptoU0BUYRAEzD7jeZVT6n
-         h3wmao3+Nt2CMoHXDTflOsuXKSBuzyHxOCh1dhRPpDY4FnjFW1IwoI92T7Akq79CPRQg
-         xC5k6BOM+k8wFQ5/ewoz9e1WGMH0AeM3nCEsb3bd1pbuWefAZ/wTpHIL89pw7WoyGubt
-         /E0g92p/g/gCTf53R8tveZHaxD8rHaJh+iR4VeJai1U2M0rTXS9AwP8LxvHm6fH1XNF7
-         uDmSe5XwKl0an9avpFF6H9sW6jKlNc3OJQ9b6noJieUDukFoDP5VqJMiAbdFThe2qKB1
-         z8wg==
+        bh=JHo3JDDLra4+jfxzapcApbOLXoBnqgHSnaA0WGxS1nY=;
+        b=BRiWwVYPMbvWVZDp8ShBs1StHgZBU8OCB5M4uStwsp2zAZzkslgSSEOZy8XpVdTLEe
+         mWsMAJV+gUT1thHkslfhXsUh+/oq3phR6jKw5oPWn0jc8scmWeyFlo1NTvXNMUoaZj8V
+         pcwHnyw7RKt5CtoXaPnw6UadvHRL7V6VcmIsUmw4loVn/eOE58eSntgrN5gfFj8WPZat
+         gpjZy5c64+8grGHfqyPAljlkOc2adi4h6dhDTsVMvSMzyOybpGw2PdBdvOc6T02T4oiK
+         Pu/k8N9h8ZGyEAxFjjYwOWIFnlupPxIRmU1Ibn+k3mqaKZK4MJ/v0VI/38tRxfpyUyaD
+         /OLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685047849; x=1687639849;
+        d=1e100.net; s=20221208; t=1685048478; x=1687640478;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=p+mpIuvVEBhYQv+k6FIeLYtDnkxDN/5dgCPu43XZjxs=;
-        b=adK6aquTN0KLOw8dt5bj4U8tf5DVMtnpVYsl+dFL+xTnGRW3BgVXDfI2UPlZ6U8Qm2
-         zTLs09F41Vvl0bJO122iBKQX8bhdWalYQ9W/0OG0CYySeKqRfIsDmdccJK61136mp4Cx
-         LpSRCtYBixRoDlvFT49TklLfbMg4SWxuJBoevBUkdNqKAocnrDOXOvaAuTRGengTFezY
-         k+AKxQfKwpwQ+EBVrSGyLigwI1B/0xsjqFfeKiGoqJx85YFVAzFCuyJ13iDWE/S61QQp
-         0bCjnYP1n579eJVbua86uAboC+is48WoY0pRZIOtIciigKvBFcnjKYw/BOxjkcnWJSrV
-         f3YA==
-X-Gm-Message-State: AC+VfDweQqPGffkXYb8fBvVq6TG3AqTw1IrAkXjLngK2Ux7ohrVJvjSK
-        KkAtHsq6tx4BAUKXf3k21f7O7l6L8wU=
-X-Google-Smtp-Source: ACHHUZ6KnODzZON7JNeHKcc0iTy4aJ0Ar1ZCoiO/UmQzIqkPsu6/U82sdpIlQRJd6WPFb9jXXO2lsg==
-X-Received: by 2002:adf:e5cb:0:b0:2f9:482f:c13f with SMTP id a11-20020adfe5cb000000b002f9482fc13fmr3192360wrn.46.1685047849119;
-        Thu, 25 May 2023 13:50:49 -0700 (PDT)
+        bh=JHo3JDDLra4+jfxzapcApbOLXoBnqgHSnaA0WGxS1nY=;
+        b=J2yLSn9H0wgwRLPAwJ77yy7ViaWUvNY2sKffksNq+xgo7u+o8ljlk8b9Av2bOMRJpg
+         M8zmD4DH/otaRmvyjwk82MNTXZ+3gl7MZDlsRhLOe7c80E1STYWoaWuWrZ5Vee0tZycd
+         ApyAaH7nGEd0fSspFTQ5XlkdSFha2TZlDSnHHJWZ+Xo01RsoI5cY7IZcChWvDOaNLJEH
+         cAwRIRe1UNueoXwB+b/PXlhRoeFFq6XQMkXNj/88fS5KpIoQ75GHsF1ZkPFRsLq8+iuN
+         AbRyDM65N0yjibcsRWR+xoawhr6eAvGPXcEu26zmVdlg+DZzcidJxxzaAk/IuMnJR5aG
+         G+Xg==
+X-Gm-Message-State: AC+VfDxJZYD6e5/nedIIH2QpfnUMLQhVBjMMaWYPHmzLtrIoz2Ie8+sq
+        88Ns6Y61+gZ7Jt7nC0FNfaI=
+X-Google-Smtp-Source: ACHHUZ4BquDXazuuNwxIOxVam/4+45ywjzMloujwQfjSU43TgTWtJQ0oKfTR+Ig/nNouFqV/d0UTLg==
+X-Received: by 2002:a5d:6088:0:b0:307:bd64:f5a4 with SMTP id w8-20020a5d6088000000b00307bd64f5a4mr3414387wrt.52.1685048478083;
+        Thu, 25 May 2023 14:01:18 -0700 (PDT)
 Received: from xws.localdomain (pd9e5a196.dip0.t-ipconnect.de. [217.229.161.150])
-        by smtp.gmail.com with ESMTPSA id d8-20020adffd88000000b003012030a0c6sm2884160wrr.18.2023.05.25.13.50.48
+        by smtp.gmail.com with ESMTPSA id v9-20020a5d4a49000000b003063db8f45bsm2839262wrs.23.2023.05.25.14.01.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 May 2023 13:50:48 -0700 (PDT)
+        Thu, 25 May 2023 14:01:17 -0700 (PDT)
 From:   Maximilian Luz <luzmaximilian@gmail.com>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org,
         Maximilian Luz <luzmaximilian@gmail.com>
-Subject: [PATCH] platform/surface: aggregator: Make to_ssam_device_driver() respect constness
-Date:   Thu, 25 May 2023 22:50:41 +0200
-Message-Id: <20230525205041.2774947-1-luzmaximilian@gmail.com>
+Subject: [PATCH] platform/surface: aggregator: Allow completion work-items to be executed in parallel
+Date:   Thu, 25 May 2023 23:01:10 +0200
+Message-Id: <20230525210110.2785470-1-luzmaximilian@gmail.com>
 X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -65,34 +65,56 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Make to_ssam_device_driver() a bit safer by replacing container_of()
-with container_of_const() to respect the constness of the passed in
-pointer, instead of silently discarding any const specifications. This
-change also makes it more similar to to_ssam_device(), which already
-uses container_of_const().
+Currently, event completion work-items are restricted to be run strictly
+in non-parallel fashion by the respective workqueue. However, this has
+lead to some problems:
 
+In some instances, the event notifier function called inside this
+completion workqueue takes a non-negligible amount of time to execute.
+One such example is the battery event handling code (surface_battery.c),
+which can result in a full battery information refresh, involving
+further synchronous communication with the EC inside the event handler.
+This is made worse if the communication fails spuriously, generally
+incurring a multi-second timeout.
+
+Since the event completions are run strictly non-parallel, this blocks
+other events from being propagated to the respective subsystems. This
+becomes especially noticeable for keyboard and touchpad input, which
+also funnel their events through this system. Here, users have reported
+occasional multi-second "freezes".
+
+Note, however, that the event handling system was never intended to run
+purely sequentially. Instead, we have one work struct per EC/SAM
+subsystem, processing the event queue for that subsystem. These work
+structs were intended to run in parallel, allowing sequential processing
+of work items for each subsystem but parallel processing of work items
+across subsystems.
+
+The only restriction to this is the way the workqueue is created.
+Therefore, replace create_workqueue() with alloc_workqueue() and do not
+restrict the maximum number of parallel work items to be executed on
+that queue, resolving any cross-subsystem blockage.
+
+Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
+Link: https://github.com/linux-surface/linux-surface/issues/1026
 Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 ---
- include/linux/surface_aggregator/device.h | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/platform/surface/aggregator/controller.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/surface_aggregator/device.h b/include/linux/surface_aggregator/device.h
-index df81043b9e718..42b249b4c24b1 100644
---- a/include/linux/surface_aggregator/device.h
-+++ b/include/linux/surface_aggregator/device.h
-@@ -243,11 +243,7 @@ static inline bool is_ssam_device(struct device *d)
-  * Return: Returns the pointer to the &struct ssam_device_driver wrapping the
-  * given device driver @d.
-  */
--static inline
--struct ssam_device_driver *to_ssam_device_driver(struct device_driver *d)
--{
--	return container_of(d, struct ssam_device_driver, driver);
--}
-+#define to_ssam_device_driver(d)	container_of_const(d, struct ssam_device_driver, driver)
+diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
+index 535581c0471c5..7fc602e01487d 100644
+--- a/drivers/platform/surface/aggregator/controller.c
++++ b/drivers/platform/surface/aggregator/controller.c
+@@ -825,7 +825,7 @@ static int ssam_cplt_init(struct ssam_cplt *cplt, struct device *dev)
  
- const struct ssam_device_id *ssam_device_id_match(const struct ssam_device_id *table,
- 						  const struct ssam_device_uid uid);
+ 	cplt->dev = dev;
+ 
+-	cplt->wq = create_workqueue(SSAM_CPLT_WQ_NAME);
++	cplt->wq = alloc_workqueue(SSAM_CPLT_WQ_NAME, WQ_UNBOUND | WQ_MEM_RECLAIM, 0);
+ 	if (!cplt->wq)
+ 		return -ENOMEM;
+ 
 -- 
 2.40.1
 
