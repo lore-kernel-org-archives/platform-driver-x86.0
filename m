@@ -2,71 +2,140 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77035C7EE2E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 May 2023 17:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D50C77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 May 2023 19:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241308AbjEYReC (ORCPT
+        id S240643AbjEYTdi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 May 2023 13:34:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44178 "EHLO
+        Thu, 25 May 2023 15:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241257AbjEYRd6 (ORCPT
+        with ESMTP id S233039AbjEYTdf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 May 2023 13:33:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 768FFE4B;
-        Thu, 25 May 2023 10:33:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 246A66481D;
-        Thu, 25 May 2023 17:33:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8BEADC433D2;
-        Thu, 25 May 2023 17:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685036014;
-        bh=Qx+qUsFj4cZDhapJsSQHSYnYUJ1QlMmEhn+xr0xRgKU=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=CMRQ2Y1jDmyy+DCuRmUL0SoUygbsSRgu3dowEAkeA4Jo+7y928WmgUcQa3F9oUDfg
-         vrrv5i1ItdD7hzxpTcoGRf1pfST59jLdIv7Otuup1Rcs8mLUcBjZbIrDdApjMX6YkO
-         SOzDfVzKjKy4Va5WNR6ZUSdc5XTc9Ez1D8i6PCHok/OuYatjomamqXmd35RhBa8XmY
-         MafLxlc1KcxOpZCdE6B0VYNwUd3+te47jM8Lpil9RQ8VJOVdoX17GdtPVvW3eMDGIW
-         84nzMCSDTCDy7xjyF+25JXBAH32tpl//GTMZTPthtAUO11owBi2VeFQ19ndyXof4wH
-         kAKVoyzJhOmkg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 79ABAC4166F;
-        Thu, 25 May 2023 17:33:34 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for 6.4-3
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <941d687d-ef8e-0823-fff0-3011be6c0e0a@redhat.com>
-References: <941d687d-ef8e-0823-fff0-3011be6c0e0a@redhat.com>
-X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
-X-PR-Tracked-Message-Id: <941d687d-ef8e-0823-fff0-3011be6c0e0a@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.4-3
-X-PR-Tracked-Commit-Id: 3279decb2c3c8d58cb0b70ed5235c480735a36ee
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ecea3ba2fba2124c8bdc87b27b3829a6015ff854
-Message-Id: <168503601447.13926.4307342162500582812.pr-tracker-bot@kernel.org>
-Date:   Thu, 25 May 2023 17:33:34 +0000
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
+        Thu, 25 May 2023 15:33:35 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D949E69;
+        Thu, 25 May 2023 12:32:59 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 255DB5C010E;
+        Thu, 25 May 2023 15:31:36 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 25 May 2023 15:31:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1685043096; x=
+        1685129496; bh=2YuucB8ge+Gjjiz/CAErVcfKQLxgmGcYZa0k32yeS+o=; b=V
+        NddOGdr11wVcCWiNRkYsBegF/WljAvWvksusx68y/+1/FNxd4EE7nJmHqnr/qCgD
+        Sypzx3vSWxUHSO1cSl9dhr1NxjyuD1+osg30HIBihODpLP8GGYGUQv+XuMfDEy1g
+        UPkT/ylzF4hGTjeqjr5TaUifsWKz//nwmvHfsM1bXKSe1RnPX6bStfphsk7POoP+
+        1fhWz1rH1ha/Ib2c9Thw8646R5uE0aY3v9bqP7L1jNfPCsT+gC35NKdqQ7cMEW1m
+        GotGxUE7iprVjIfEE01fm41JS6m/w9V0uVpSMNcwgzgo06tUY/JloeK7FyTb2oi7
+        vLdMPInASb4BOvifBIXbw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1685043096; x=
+        1685129496; bh=2YuucB8ge+Gjjiz/CAErVcfKQLxgmGcYZa0k32yeS+o=; b=i
+        NGvbCK7t0iqhF1zqVLwOYOE2BCiXEKtGx56hLHKAPclCBHKgIJWijZssastntqKt
+        OJOCy8JIhxonAEHir8h/OCn+yQA8I8rjD28SVWcn0KZU1K6Ad7wOyITZQYCULCK8
+        krhYvUNpC1b3N8mjDD+/yZpWFUVAVJi0XZnk5QQI+QsIZAwH5XPlHDa4OZBKgbhL
+        cvFMC2hAAVQ4wiDHEh8ZKc+mFZ+4W5B9Gk7KMx5T461/r3EO/r/WCUqKnA/dcIeJ
+        UGcDIrtQcAopp1nEgGgjBrQP4G3C45/IXRG5P1WmjCWvP/lLNp3nHsTnqUIFlYrj
+        f/oqbS1NfeEyku2jkIE7w==
+X-ME-Sender: <xms:l7dvZB3_Kst54dHCrMsUSS4bJcuP2bD8cDVwhuUQgbcT6wnPTFmOuw>
+    <xme:l7dvZIHJNL8leR1NSjN4vMjv1JKwTGSe_I0Opo18HFaOytr3KPat6AcrfVKUXc6Pt
+    UqghRHtfFCoB4OefB8>
+X-ME-Received: <xmr:l7dvZB4K0G5f9rtn873-GWQ742g08g6O6VMS5B1LdLEayup-gBoyxYeMCZcZX8ewlXEXlbD2sOqIgKZcLkCtLPgnsKwEHEXg_ya_MZIfAfXAVO-nHkxgxPU-Bg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeejjedgudefjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecuogetfedtuddqtdduucdludehmdenucfjughrpe
+    fhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforghrkhcurfgvrghr
+    shhonhcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrqeenucggtf
+    frrghtthgvrhhnpeeftddvjeefleffvefhgfejjeehudetteeigeeugfekhffhgeejudeu
+    teehgfdvffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:l7dvZO2uNrSGBG29RMsrXBkizIhJErTbzXMgKb81jJnRIm_-Ddz_gw>
+    <xmx:l7dvZEEtMeHs6cSFuDdALCeta3-Syzzj3L5_lBCISnOsKsZxiIQTHg>
+    <xmx:l7dvZP9Ga6cwMTs8xxoH_-_iP90jY269mTrZonfUKVOtEsp7Dbf6hg>
+    <xmx:mLdvZIDtb78sTFzMkbunjzZIQTn6mU7v_UWrbh0FGvHSFZyEgcpXqw>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 25 May 2023 15:31:35 -0400 (EDT)
+From:   Mark Pearson <mpearson-lenovo@squebb.ca>
+To:     mpearson-lenovo@squebb.ca
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/5] platform/x86: think-lmi: Enable opcode support on BIOS settings
+Date:   Thu, 25 May 2023 15:31:28 -0400
+Message-Id: <20230525193132.3727-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The pull request you sent on Thu, 25 May 2023 12:03:15 +0200:
+Whilst reviewing some documentation from the FW team on using WMI on
+Lenovo system I noticed that we weren't using Opcode support when
+changing BIOS settings in the thinkLMI driver.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.4-3
+We should be doing this to ensure we're future proof as the old
+non-opcode mechanism has been deprecated.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ecea3ba2fba2124c8bdc87b27b3829a6015ff854
+Tested on X1 Carbon G10 and G11.
 
-Thank you!
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+Changes in V2: Update comment for clearer explanation of what the driver
+is doing
 
+ drivers/platform/x86/think-lmi.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index 1138f770149d..2745224f62ab 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -1001,7 +1001,33 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 				tlmi_priv.pwd_admin->save_signature);
+ 		if (ret)
+ 			goto out;
+-	} else { /* Non certiifcate based authentication */
++	} else if (tlmi_priv.opcode_support) {
++		/*
++		 * If opcode support is present use that interface.
++		 * Note - this sets the variable and then the password as separate
++		 * WMI calls. Function tlmi_save_bios_settings will error if the
++		 * password is incorrect.
++		 */
++		set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
++					new_setting);
++		if (!set_str) {
++			ret = -ENOMEM;
++			goto out;
++		}
++
++		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str);
++		if (ret)
++			goto out;
++
++		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
++			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
++					tlmi_priv.pwd_admin->password);
++			if (ret)
++				goto out;
++		}
++
++		ret = tlmi_save_bios_settings("");
++	} else { /* old non opcode based authentication method (deprecated)*/
+ 		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+ 			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+ 					tlmi_priv.pwd_admin->password,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.40.1
+
