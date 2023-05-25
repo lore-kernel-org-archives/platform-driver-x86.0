@@ -2,179 +2,232 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7C0C7EE29
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 May 2023 10:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D550C77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 May 2023 11:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233943AbjEYKoR (ORCPT
+        id S233615AbjEYLKH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 May 2023 06:44:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35380 "EHLO
+        Thu, 25 May 2023 07:10:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231542AbjEYKoR (ORCPT
+        with ESMTP id S230054AbjEYLKG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 May 2023 06:44:17 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B65139
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 03:44:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685011455; x=1716547455;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=+5+25iLs7xWyMKvBvggnJNRId9dfj3Y3w/nJJCRvs5k=;
-  b=IaRMsfbvDiV4ppoLALHV+GulvE6V/75cvdMVo1WIyOqL4nWoZwEiPUgM
-   2no95HE3qF0V+ZGbfTIUaCzuU6IenWm0F3K2il6xh/u+jR9RcUcLquKeo
-   MT5lI8Y3uY1vOHIksWu9xsTn8/iZYlvGHx4XL9Bm7OFMmzT3/IbiSz9Ph
-   M0ljnKBQrQQg7TYxDWWgXgvY+U5vc7iTQNEa0QKtnfveouPKdwpyjOpB7
-   GriI+hqoqwLe0tvHL3QWWl6x5LJjibn9CWESdYJFNXq8hxcIG1O0HkUKc
-   SBCtmhxk7h8pzAC2pkTL1GrVaNE6Jy+nDrx+SaNpOTVDUioKTFB8R31MM
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="419572963"
-X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
-   d="scan'208";a="419572963"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 03:44:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="735503759"
-X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
-   d="scan'208";a="735503759"
-Received: from aghiriba-mobl.ger.corp.intel.com ([10.249.40.17])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 03:44:11 -0700
-Date:   Thu, 25 May 2023 13:44:09 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc:     hdegoede@redhat.com, markgross@kernel.org, Sanket.Goswami@amd.com,
-        mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] platform/x86/amd: pmc: Add helper function to
- check the cpu id
-In-Reply-To: <34cf33d3-0b43-a7a5-4c1e-c9027c994d5a@amd.com>
-Message-ID: <4651d798-886-9144-7bac-4a87d73fd48@linux.intel.com>
-References: <20230516091308.3905113-1-Shyam-sundar.S-k@amd.com> <20230516091308.3905113-4-Shyam-sundar.S-k@amd.com> <d4e98445-d2f2-10f7-7f62-9bcb16deef79@linux.intel.com> <378b7e91-3b14-c6fa-036a-c91a30ab4665@amd.com> <209390a5-4945-f99a-5951-9fc61e5f6060@linux.intel.com>
- <34cf33d3-0b43-a7a5-4c1e-c9027c994d5a@amd.com>
+        Thu, 25 May 2023 07:10:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FF1DC5
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 04:09:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1685012958;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UX0UHXOxx8t0yqKIWochGuP3ifI6xO7B7bwx//kqB1E=;
+        b=fczI1aSLBXhlUXg8NixWTVJFWHrNREAjwuUKRoJwI7Jnj23GrljkSj8oBFgy7x6CbXNbAJ
+        ECcyaL1ijv9E+5fmYIj8SiWdtoRYhnAvEt97gb71TkUR+aUYPki1BxoPlOozy2O6PaxV4c
+        4Ydfk0Fh3zEO6r80XeDmbdsFuJ044O0=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-265-EtegTDLUN96DUG0DJc8XUg-1; Thu, 25 May 2023 07:09:17 -0400
+X-MC-Unique: EtegTDLUN96DUG0DJc8XUg-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-94a355c9028so58920666b.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 04:09:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685012956; x=1687604956;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UX0UHXOxx8t0yqKIWochGuP3ifI6xO7B7bwx//kqB1E=;
+        b=lPr4WSc5Ixuvi2kanAOMVooDCVQv0gte8yaAs1adrqzOGRWF/folsD8hdBzr23FZHj
+         tPz3yeSdJjcjsE14imNBCmT7hneSRB1D2wUjWk0ouTAezoKQjYhaShe9H2x+urNjhOP3
+         vthNxT4kaEj/oRcfSTEh/MwfUDAbTQSlXICJkREbXA/TDQj5n2dZ+6aYMh2HzpihpU8c
+         mdu4cBAltqEDqYw45iztflSt61EgXMvW3K9zIeXvJyHoQYZ4ZaR10xSVcCezS5DXKTFu
+         6irZhTQNKlPiQxJD4GEchYR3mRRb8rjTfkjqA+Uu267PLnlksnohl6/ez7VlrZxitL96
+         j+JA==
+X-Gm-Message-State: AC+VfDw9P2HY3BZAYEBKRCJKr55xulQdpXywvR/578qkbtniSqGzECAv
+        N2lLPRmw/oiihgdyaYV77s8EtOIKO/aQU4KOXqSCTzk5VZPLneBIv70rn3UI+r8dl3vfquT+otN
+        xeHpKvzeG7y1NcSRktAAfTAnicDg4i9rcCg==
+X-Received: by 2002:a17:907:3d87:b0:96a:bf50:3ad9 with SMTP id he7-20020a1709073d8700b0096abf503ad9mr1270722ejc.43.1685012956266;
+        Thu, 25 May 2023 04:09:16 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7xCbN+UoRC7K+jNs4/2FslhJ8VLM5029hd36tSIsq0lzZyGfl4gno14325M08N+N5vAV48TA==
+X-Received: by 2002:a17:907:3d87:b0:96a:bf50:3ad9 with SMTP id he7-20020a1709073d8700b0096abf503ad9mr1270698ejc.43.1685012955900;
+        Thu, 25 May 2023 04:09:15 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? ([2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id pg27-20020a170907205b00b009662d0e637esm686407ejb.155.2023.05.25.04.09.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 May 2023 04:09:15 -0700 (PDT)
+Message-ID: <ade1f0d1-0a6b-7eed-cc79-139e0036e562@redhat.com>
+Date:   Thu, 25 May 2023 13:09:12 +0200
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-721331926-1685011453=:1738"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2 0/1] platform/x86: asus-wmi: add support for ASUS
+ screenpad
+Content-Language: en-US, nl
+To:     Luke Jones <luke@ljones.dev>
+Cc:     platform-driver-x86@vger.kernel.org,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, acpi4asus-user@lists.sourceforge.net,
+        corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com,
+        linux@roeck-us.net
+References: <20230505043013.2622603-1-luke@ljones.dev>
+ <4be2cc57-59b9-24e2-fd10-f2af175ff518@redhat.com>
+ <02f28fe4-bca4-f9d7-a9be-0f1999662d62@redhat.com>
+ <FD1QUR.SO09CWU6HM4Q1@ljones.dev>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <FD1QUR.SO09CWU6HM4Q1@ljones.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Luke,
 
---8323329-721331926-1685011453=:1738
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+On 5/16/23 00:34, Luke Jones wrote:
+> On Mon, May 15 2023 at 14:39:10 +0200, Hans de Goede <hdegoede@redhat.com> wrote:
 
-On Thu, 25 May 2023, Shyam Sundar S K wrote:
-> On 5/25/2023 3:29 PM, Ilpo Järvinen wrote:
-> > On Thu, 25 May 2023, Shyam Sundar S K wrote:
-> >> On 5/23/2023 1:56 PM, Ilpo Järvinen wrote:
-> >>> On Tue, 16 May 2023, Shyam Sundar S K wrote:
-> >>>
-> >>>> Add a helper routine to check the underlying cpu id, that can be used
-> >>>> across the PMC driver to remove the duplicate code.
-> >>>>
-> >>>> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> >>>> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> >>>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> >>>> ---
-> >>>>  drivers/platform/x86/amd/pmc.c | 17 ++++++++++++++---
-> >>>>  1 file changed, 14 insertions(+), 3 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-> >>>> index e2439fda5c02..7e5e6afb3410 100644
-> >>>> --- a/drivers/platform/x86/amd/pmc.c
-> >>>> +++ b/drivers/platform/x86/amd/pmc.c
-> >>>> @@ -564,6 +564,18 @@ static void amd_pmc_dbgfs_unregister(struct amd_pmc_dev *dev)
-> >>>>  	debugfs_remove_recursive(dev->dbgfs_dir);
-> >>>>  }
-> >>>>  
-> >>>> +static bool amd_pmc_check_sup_cpuid(struct amd_pmc_dev *dev)
-> >>>
-> >>> Does sup refer to "supported" or some other acronym? If the latter,
-> >>
-> >> Yes, please read that as "supported"
-> >>
-> >>> you should mention/open it in the changelog and/or in a comment. If the 
-> >>> former, the function naming seems too generic (an observation entirely 
-> >>> based on how/where the function is used, you're not exactly verbose on 
-> >>> what this actually checks for other than what looks like a set of CPU 
-> >>> IDs but clearly there's more behind it).
-> >>
-> >> OK. renaming the function as amd_pmc_is_cpu_supported() would be fine?
-> > 
-> > This makes things odder, it gets used in two places:
-> > 
-> > 	if (enable_stb) {
-> > 		if (amd_pmc_check_sup_cpuid(dev))
-> > 			debugfs_create_file(..., &amd_pmc_stb_debugfs_fops_v2);
-> > 		else
-> > 			debugfs_create_file(..., &amd_pmc_stb_debugfs_fops);
-> > 	}
-> > 
-> > What about that else branch (PMC is not supported so who does that make 
-> > sense when the file is called pmc.c)? And here:
+<snip>
+
+>>>  Thank you on your work for this.
+>>>
+>>>  Unfortunately I did not get a chance to react to the v1 posting and
+>>>  the remarks to switch to using /sys/class/backlight there before you
+>>>  posted this v2.
+>>>
+>>>  Technically the remark to use /sys/class/backlight for this is
+>>>  completely correct. But due to the way how userspace uses
+>>>  /sys/class/backlight this is a problematic.
+>>>
+>>>  Userspace basically always assumes there is only 1 LCD panel
+>>>  and it then looks at /sys/class/backlight and picks 1
+>>>  /sys/class/backlight entry and uses that for the brightness
+>>>  slider in the desktop-environment UI / system-menu as well
+>>>  as to handle brightness up/down keyboard hotkey presses.
+>>>
 > 
-> I did not understand the actual concern.
+> IMO, desktops need to adjust this expectation and start offering controls for all possible screens. This would open up the possibility of setting brightness of modern external screens also. And then they should use the "Primary display" brightness controls, or at least offer an option to set which is controlled.
 
-The file is cammed pmc.c and states "AMD SoC Power Management Controller 
-Driver", so PMC, right?
+Right this is what the proposal at:
 
-You propose adding function called amd_pmc_is_cpu_supported() which to me 
-reads "is PMC supported on this CPU?" since you don't have anything else 
-in the function name to quality a sub-feature that would be be tested for 
-supported or not.
+https://lore.kernel.org/dri-devel/b61d3eeb-6213-afac-2e70-7b9791c86d2e@redhat.com/
 
-It begs a question, why probe doesn't always return error when PMC is not 
-supported by the CPU? Can you see the problem now?
+is about. ATM userspace cannot reliably determine which
+/sys/class/backlight device belongs to which screen /
+video-output . So before desktops can offer this functionality
+we first need to fix the kernel <-> userspace APIs for this.
 
-> STB is an on-demand debug
-> feature and that can only be enabled when enable_stb module param is set.
+<snip>
+
+>>>  So now we end up with 2 "raw" type backlight devices and if
+>>>  e.g. gnome-settings-daemon picks the right one now sort of
+>>>  is left to luck.
+>>>
 > 
-> The check for amd_pmc_check_sup_cpuid() is to see if the underlying CPU
-> (with the right PMFW support) supported is pre-Rembrandt, then Spill to
-> DRAM is not supported. So reading the STB buffer is a different
-> mechanism and that has been handled in the amd_pmc_stb_debugfs_fops().
-> But the platforms after Rmebrandt, supports spilling to DRAM, and that
-> has been handled in amd_pmc_stb_debugfs_fops_v2().
+> In a test KDE at least picked the right one.
 
-This kind of information should be stated the changelog up front.
+That is good to know I'm still not entirely convinced using
+/sys/class/backlight for this is a good idea though. 
 
-So is that function testing support for Spill to DRAM? Clearly, 
-Spill-to-DRAM != PMC, that's the second problem here related to function 
-naming.
+See below.
 
-> What am I missing in your comments?
+>>>  Well that is not entirely true, at least gnome-settings-daemon
+>>>  prefers raw backlight devices where the parent has an "enabled"
+>>>  sysfs attribute (it expects the parent to be a drm_connector
+>>>  object) and where that enabled attribute reads as "enabled".
+>>>
 > 
+> Ah I see. Parent for screenpad is "platform", while the main is on igpu with parent "pci". I will paste some udev info at the end of this reply.
+
+Actually for the backlight-device on the iGPU the parent
+should be a drm-connector for the eDP (and the parent of
+that is the iGPU PCI device). Note I did not check
+the udev dump.
+
+<snip>
+
+>>>  Luke, question how does the second/exta panel look
+>>>  from an outputting video to it pov ?  Does it show
+>>>  up as an extra screen connected to a drm_connector
+>>>  on one of the GPUs. IOW can it be used with standard
+>>>  kernel-modesetting APIs ?
+>>
 > 
-> > 
-> > static int amd_pmc_probe(...)
-> > {
-> > 	...
-> > 	if (enable_stb && amd_pmc_check_sup_cpuid(dev)) {
-> > 		err = amd_pmc_s2d_init(dev);
-> > 		if (err)
-> > 			...goto + returns error
-> > 	}
-> > 
-> > 
-> > If enable_stb is not set, pmc not being supported is not going to return 
-> > error?
-> > 
-> > 
+> Hi Hans, sorry about delay in response, just been tied up with work.
 > 
-> here we return only whne there is failure in s2d_init() - right?
+> As I don't actually have this kind of laptop I can't easily get info, but I can ask a few people in my discord for information. Is there anything in particular you would need to know? From my basic understanding some of the points are:
 > 
-> And yes, if enable_stb is not set, there is no need to init the s2d path.
+> 1. It does show as an actual additional screen
+> 2. Internal wiring is unclear, when dispaly MUX is switched to dgpu the screen is still detected but not drawn to
+> 3. Point 2 is actually more uncertain as it seems only wayland had this issue? I will get more info.
 
-s2d is short for Spill to DRAM I guess?
+Right, so I think we first need to better understand the interactions between the WMI calls you are making and the drm/kms interface.
 
-So in both occassions amd_pmc_check_sup_cpuid() testing support for s2d 
-rather than PMC (it certainly looks that way)? If so, name the function 
-accordingly (I suggest amd_pmc_s2d_supported()) and put a little bit more 
-explanation into the changelog and we're done here.
+Question 1:
+
+If you turn the second screen off through WMI, does it get seen as disconnected by the drm/kms driver then. Or does the drm/kms driver just go on treating it as an extra connected display, still drawing now no longer visible content to it ?
+
+IOW does the desktop environment's monitor-config panel no longer show the extra display after disabling it through WMI?
+
+The best way to check this is look under /sys/class/drm and find out which /sys/class/drm/card#-<conn-type>-# entry belongs to the extra panel. Step 1 check for all card#-<conn-type>-# entries
+where status returns connected, e.g. :
+
+[hans@shalem ~]$ cat /sys/class/drm/card1-DP-1/status 
+connected
+
+Step 2: for the connected ones cat the modes, e.g.:
+
+[hans@shalem ~]$ cat /sys/class/drm/card1-DP-1/modes
+1920x1080
+1600x1200
+...
+
+And find the one which matches with the resolution of the extra panel (the one which does not match with the resolution of the main panel).
+
+Then turn the extra panel of through WMI and cat the status attribute again. If that still reads connected then that means the desktop environment keeps seeing an extra display output which is not ideal. This will e.g. cause any windows which were on the extra panel to stay there, even though they are no longer visible.
 
 
--- 
- i.
+Question 2:
 
---8323329-721331926-1685011453=:1738--
+If you turn the second screen off through drm/kms, using the desktop environments monitor config panel does this also turn off the backlight ?
+
+After disabling the screen in the desktop environments monitor config check that the enabled attribute, e.g. cat /sys/class/drm/card1-DP-1/enabled shows disabled and after verifying this look at the extra screen in a dark room, do you see any backlight bleed indicating the backlight is still  on?
+
+
+We really want the backlight on/off state and the drm-connector enabled state to match. My proposal from above will allow this once implemented. Until we can hook this all up nicely I think it might be better to just go with the custom sysfs attributes from your v1 patch rather then adding a /sys/class/backlight device for this.
+
+
+> So I think now is probably a good time to raise a particular issue I've encountered with the last two years: the display MUX.
+> 
+> As I understand it now, there are two types of new MUX - the manual switch, and the newer "Advanced Optimus" automatic switch. The issues I have are with the manual switch since I've not encountered the advanced optimus yet.
+> 
+> When the switch is. uh. switched. the dgpu drives the internal display, and I expect that since the display is now detected through the dgpu, this is why the dgpu is kept awake to drive it. But, the igpu is also still active, and because of this the initial boot from grub to display-manager is a black screen including tty. This means anyone with an encrypted drive will never see the prompt and they believe they have a failed boot. I don't know what to do about this?
+
+Is this with EFI booting or with classic BIOS boot? With EFI booting the EFIFB should be put on the right GPU by the firmware. So I suspect this is with classic BIOS boot?
+
+I think the best thing to do here is to just use EFI on machines like this. That or put grub in text mode so that it makes BIOS calls to display text. Using GRUB_TERMINAL_OUTPUT=gfxterm combined with classic BIOS booting will make grub try to directly drive the gfx card itself and I'm not surprised that it gets that wrong in this case.
+
+Note I think that just using EFI is prefered over switching grub to GRUB_TERMINAL_OUTPUT=console. I would expect GRUB_TERMINAL_OUTPUT=console to also work but I'm not sure. I don't think that the classic BIOS boot stuff is still tested by laptop vendors and esp. not tested with non standard BIOS settings ...
+
+
+> What I would love is somehow to either disable the igpu in kernel if the MUX is toggled, or to change which device is the primary. Do you have any thoughts on where I should start on this?
+
+Not really, on the hybrid gfx devices which I have when optimus is disabled in the BIOS, muxing the main LCD to the Nvidia GPU the iGPU gets disabled by the BIOS.
+
+If the iGPU in these models does not get disabled then I guess it is still needed for some connectors, e.g. maybe for displays connected to one of the thunderbolt ports ?
+
+Or maybe it is left on now a days for things like Intel quicksync ?
+
+> An additional problem: `boot_vga` property of display adaptors. I've been using this as a first-stage check in supergfxctl to determine if there was a switch, but it is never ever reliable - sometimes it changes, sometimes it is entirely blank (using udev to fetch properties). And then I need to use a combination of checks to determine state. So this `boot_vga` seems to always be available but is practically unusable.
+
+I'm afraid I cannot really help here. I think most of these laptops ship in Optimus mode (so both GPUs enabled) by default. And the non optimus mode is likely only tested under certain circumstances so there are going to be firmware bugs here. And Linux' code for detecting this likely also has issues of its own. Combine the 2 and you get lots of "fun".
+
+I guess this is also what trips up grub. I wonder if this is better / more reliable under EFI mode though? Esp. since that is what vendors actually QA/test.
+
+Regards,
+
+Hans
+
+
