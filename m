@@ -2,131 +2,143 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F43C7EE2C
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 May 2023 09:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5488FC7EE2C
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 May 2023 10:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233042AbjEYJ7b (ORCPT
+        id S238966AbjEYKEI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 May 2023 05:59:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43804 "EHLO
+        Thu, 25 May 2023 06:04:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232749AbjEYJ7a (ORCPT
+        with ESMTP id S229719AbjEYKEH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 May 2023 05:59:30 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 083A6122
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 02:59:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685008769; x=1716544769;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=RDN3HxvXJPNh3rlNPfPwOyt/Ii9izU/HNJkZskOQ5c8=;
-  b=CwvzmrbwyCTxho6lDYNyqwWHi76PQ1qCwZjhPltCLhak3JNwiIjBzcNa
-   NoMoeAEs8RPcBa0SCkR5bH/BXPaCQPjLayUpr24cnMUQuLI+tDO+Sl70k
-   NXn5zxuh34tPMxhCXaSUvkhVRHNZzb+UdIDvQesQ1ubXVHwwih0wHzbI1
-   OelqQJMrLRUkj3vB1OevM63zrOtmyMP157HV3Mo7U7yZ1oCXRm07+GbcH
-   JDSWds9ajm1F9hI/Jr79/ug62CM0nuRCbfnjq2Lm0TSZgsK0F4AnTky44
-   CeZpdCDeG6vRUO9jzfDmbHMRasMeXPR7p72V6O9f1691DDoXOPJKqne7w
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="353866490"
-X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
-   d="scan'208";a="353866490"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 02:59:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="698916666"
-X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
-   d="scan'208";a="698916666"
-Received: from aghiriba-mobl.ger.corp.intel.com ([10.249.40.17])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 02:59:25 -0700
-Date:   Thu, 25 May 2023 12:59:23 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc:     hdegoede@redhat.com, markgross@kernel.org, Sanket.Goswami@amd.com,
-        mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] platform/x86/amd: pmc: Add helper function to
- check the cpu id
-In-Reply-To: <378b7e91-3b14-c6fa-036a-c91a30ab4665@amd.com>
-Message-ID: <209390a5-4945-f99a-5951-9fc61e5f6060@linux.intel.com>
-References: <20230516091308.3905113-1-Shyam-sundar.S-k@amd.com> <20230516091308.3905113-4-Shyam-sundar.S-k@amd.com> <d4e98445-d2f2-10f7-7f62-9bcb16deef79@linux.intel.com> <378b7e91-3b14-c6fa-036a-c91a30ab4665@amd.com>
+        Thu, 25 May 2023 06:04:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89D0F139
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 03:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1685008999;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=7CA3N1jhgCA+EK9INjfeIU30KXLxoA1XUpS7B8fqlp8=;
+        b=P4ql0qMyW3N20EFHlwwdLI9i4DJ4SSbe2wfzyyWEW7QrCbofUrhQXIc3OiZjrVLmQJIn/E
+        iXG1wrHZeW/Gb+Ym16theC4TIjVyQNcL9wrN5xxlzrJrARjsokEJ9vjxkRmOErBox3JUW+
+        9r7l04cxIDGSvyfh8W9DAPYjaPsd1xM=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-573-PuNgx3_rNVuMTH6mh8rxvg-1; Thu, 25 May 2023 06:03:18 -0400
+X-MC-Unique: PuNgx3_rNVuMTH6mh8rxvg-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-94a356c74e0so45430466b.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 May 2023 03:03:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685008997; x=1687600997;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7CA3N1jhgCA+EK9INjfeIU30KXLxoA1XUpS7B8fqlp8=;
+        b=LSmiTUftsECU6NJ0feHzxj6YLHdKRLfDX2O1y0o5+I3pcqP7yTWAEW5+3pXUIjzJ7O
+         lIgv86/S0Hg8ECqIMXaIik5HfBiTiXPrcvArYsB1DfGZ4YdmM3Fir46jagatTvPME1jV
+         UgBrJu1l9FCPKC6nuNYKU3WqYktflh3VrdyOQTM4/XHZbEC7cXy4UG6ZyvRMbh+6eejf
+         pyXGNqGrCvEFpk72QgAZv9caOdXzmYtDNUCAx99MAriJOCbffnSY4gIMLKfUrmzgWNvs
+         DWR3Tjf2WjABTAMX2yuNARf9/vL83+vx7cjSQNtCeuh3i9N8kgi4OKMR7FqwJTVWdsTg
+         NhRg==
+X-Gm-Message-State: AC+VfDzBbyz4BWGUBA6F7Y9+iKKS5hvjKejSSjrN7s/+UILjt5nycPOp
+        GVCl7n/ptnbj13pjiRVF+Eceu8m//KF77Ru+S3FiJQdLivJI4qiQxBCFavDePjuWNi9AvzQvhil
+        aZ+dgIRjlBFB/I/JUQ0RyFPkmys6eQqUhG9+8CnROgA==
+X-Received: by 2002:a17:906:9745:b0:966:5a6c:7549 with SMTP id o5-20020a170906974500b009665a6c7549mr1054354ejy.14.1685008996862;
+        Thu, 25 May 2023 03:03:16 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7Q/2L1bB5XlZ25R02jsIi9NDc7RewW3lxurnawYDHDbUeLbd0pet0VGr9CchlQrrMi8QRVUg==
+X-Received: by 2002:a17:906:9745:b0:966:5a6c:7549 with SMTP id o5-20020a170906974500b009665a6c7549mr1054330ejy.14.1685008996511;
+        Thu, 25 May 2023 03:03:16 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id j23-20020a170906475700b00967a18df1easm632621ejs.117.2023.05.25.03.03.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 May 2023 03:03:16 -0700 (PDT)
+Message-ID: <941d687d-ef8e-0823-fff0-3011be6c0e0a@redhat.com>
+Date:   Thu, 25 May 2023 12:03:15 +0200
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-804892440-1685008131=:1738"
-Content-ID: <48a12368-34b3-d7d-f96-175258b61876@linux.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+From:   Hans de Goede <hdegoede@redhat.com>
+Subject: [GIT PULL] platform-drivers-x86 for 6.4-3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Linus,
 
---8323329-804892440-1685008131=:1738
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <1679d67b-7f72-93aa-7045-adfddd71d225@linux.intel.com>
+Here is the second round of fixes for platform-drivers-x86 for 6.4.
 
-On Thu, 25 May 2023, Shyam Sundar S K wrote:
-> On 5/23/2023 1:56 PM, Ilpo Järvinen wrote:
-> > On Tue, 16 May 2023, Shyam Sundar S K wrote:
-> > 
-> >> Add a helper routine to check the underlying cpu id, that can be used
-> >> across the PMC driver to remove the duplicate code.
-> >>
-> >> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> >> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> >> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> >> ---
-> >>  drivers/platform/x86/amd/pmc.c | 17 ++++++++++++++---
-> >>  1 file changed, 14 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-> >> index e2439fda5c02..7e5e6afb3410 100644
-> >> --- a/drivers/platform/x86/amd/pmc.c
-> >> +++ b/drivers/platform/x86/amd/pmc.c
-> >> @@ -564,6 +564,18 @@ static void amd_pmc_dbgfs_unregister(struct amd_pmc_dev *dev)
-> >>  	debugfs_remove_recursive(dev->dbgfs_dir);
-> >>  }
-> >>  
-> >> +static bool amd_pmc_check_sup_cpuid(struct amd_pmc_dev *dev)
-> > 
-> > Does sup refer to "supported" or some other acronym? If the latter,
-> 
-> Yes, please read that as "supported"
-> 
-> > you should mention/open it in the changelog and/or in a comment. If the 
-> > former, the function naming seems too generic (an observation entirely 
-> > based on how/where the function is used, you're not exactly verbose on 
-> > what this actually checks for other than what looks like a set of CPU 
-> > IDs but clearly there's more behind it).
-> 
-> OK. renaming the function as amd_pmc_is_cpu_supported() would be fine?
+Nothing special to report just a few small fixes.
 
-This makes things odder, it gets used in two places:
+Regards,
 
-	if (enable_stb) {
-		if (amd_pmc_check_sup_cpuid(dev))
-			debugfs_create_file(..., &amd_pmc_stb_debugfs_fops_v2);
-		else
-			debugfs_create_file(..., &amd_pmc_stb_debugfs_fops);
-	}
-
-What about that else branch (PMC is not supported so who does that make 
-sense when the file is called pmc.c)? And here:
-
-static int amd_pmc_probe(...)
-{
-	...
-	if (enable_stb && amd_pmc_check_sup_cpuid(dev)) {
-		err = amd_pmc_s2d_init(dev);
-		if (err)
-			...goto + returns error
-	}
+Hans
 
 
-If enable_stb is not set, pmc not being supported is not going to return 
-error?
+The following changes since commit 3d43f9f639542fadfb28f40b509bf147a6624d48:
 
+  platform/mellanox: fix potential race in mlxbf-tmfifo driver (2023-05-09 11:54:35 +0200)
 
--- 
- i.
---8323329-804892440-1685008131=:1738--
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.4-3
+
+for you to fetch changes up to 3279decb2c3c8d58cb0b70ed5235c480735a36ee:
+
+  platform/x86/intel/ifs: Annotate work queue on stack so object debug does not complain (2023-05-23 12:55:16 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.4-3
+
+A small set of assorted bug fixes for 6.4.
+
+The following is an automated git shortlog grouped by driver:
+
+ISST:
+ -  Remove 8 socket limit
+
+asus-wmi:
+ -  Ignore WMI events with codes 0x7B, 0xC0
+
+platform/mellanox:
+ -  mlxbf-pmc: fix sscanf() error checking
+
+platform/x86/amd/pmf:
+ -  Fix CnQF and auto-mode after resume
+
+platform/x86/intel/ifs:
+ -  Annotate work queue on stack so object debug does not complain
+
+----------------------------------------------------------------
+Alexandru Sorodoc (1):
+      platform/x86: asus-wmi: Ignore WMI events with codes 0x7B, 0xC0
+
+Dan Carpenter (1):
+      platform/mellanox: mlxbf-pmc: fix sscanf() error checking
+
+David Arcari (1):
+      platform/x86/intel/ifs: Annotate work queue on stack so object debug does not complain
+
+Mario Limonciello (1):
+      platform/x86/amd/pmf: Fix CnQF and auto-mode after resume
+
+Steve Wahl (1):
+      platform/x86: ISST: Remove 8 socket limit
+
+ drivers/platform/mellanox/mlxbf-pmc.c              |  5 ++--
+ drivers/platform/x86/amd/pmf/core.c                | 34 +++++++++++++++++-----
+ drivers/platform/x86/asus-nb-wmi.c                 |  2 ++
+ drivers/platform/x86/intel/ifs/load.c              |  2 +-
+ .../x86/intel/speed_select_if/isst_if_common.c     | 12 ++++----
+ 5 files changed, 36 insertions(+), 19 deletions(-)
+
