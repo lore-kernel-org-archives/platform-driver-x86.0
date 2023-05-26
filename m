@@ -2,234 +2,222 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB70C77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 May 2023 09:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDA3C77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 May 2023 14:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbjEZJkN (ORCPT
+        id S243316AbjEZOAp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 26 May 2023 05:40:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44498 "EHLO
+        Fri, 26 May 2023 10:00:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242747AbjEZJjY (ORCPT
+        with ESMTP id S231470AbjEZOAo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 26 May 2023 05:39:24 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0823B1707
-        for <platform-driver-x86@vger.kernel.org>; Fri, 26 May 2023 02:38:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685093935; x=1716629935;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=dV/sSNkf1RTq+b9XhOesZ57W2JhwrUeKKYYr32i87iw=;
-  b=nd22HiMq4pXBMYU2LRrEj8zgUpwXdlxubrzhR6vsHugWdrYF4lET4hzg
-   Bw3j3CeV305kBLq+v+jSziWSxt864gUNedpo9KjKwqUtWdkDsrMWZyqbg
-   QWSQmxFKEeMdrBr8aPH5HWaKa5GuJTUuKYowcXz604jzSovwJA+ovLZNS
-   hC5s/Re5R87BEqbMFRo4FjPe6WP4a456rdK99MONv8V2UOdQXeQkDZkUJ
-   oYNiXy4zOtIMt7/rrTOiQGMQuUDVnOpnb+E32yyCStSLx6Oug1KXya9eQ
-   01+SQftnqEtALvTrS/nGQJSYCX2s8Vv6WRwtDlP3KtuCKTH4XagoGw0D9
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="343659766"
-X-IronPort-AV: E=Sophos;i="6.00,193,1681196400"; 
-   d="scan'208";a="343659766"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2023 02:38:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="829454239"
-X-IronPort-AV: E=Sophos;i="6.00,193,1681196400"; 
-   d="scan'208";a="829454239"
-Received: from eandrei-mobl5.ger.corp.intel.com ([10.252.53.213])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2023 02:38:52 -0700
-Date:   Fri, 26 May 2023 12:38:49 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc:     hdegoede@redhat.com, markgross@kernel.org, Sanket.Goswami@amd.com,
-        mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] platform/x86/amd: pmc: Update metrics table info
- for Pink Sardine
-In-Reply-To: <20230525141929.866385-5-Shyam-sundar.S-k@amd.com>
-Message-ID: <bc519ff-1ec0-f1cc-fdb3-5e3f268a9825@linux.intel.com>
-References: <20230525141929.866385-1-Shyam-sundar.S-k@amd.com> <20230525141929.866385-5-Shyam-sundar.S-k@amd.com>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1262801623-1685093934=:1602"
+        Fri, 26 May 2023 10:00:44 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAF97DF;
+        Fri, 26 May 2023 07:00:42 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 467CB5C0247;
+        Fri, 26 May 2023 10:00:40 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute5.internal (MEProxy); Fri, 26 May 2023 10:00:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm2; t=1685109640; x=1685196040; bh=X7
+        oR6fDag5Xrq2T43+f0dNcMZz0J3Tq+Q2Y71CiFeKI=; b=487qGy8RLRQLCz4qyG
+        bQBfrXdi5LdqwMp+3LsNW6oLiYWnlpCvUdk4xc2FYC4fvoJymPO3J7nbrjlTGKt1
+        HOmhwqlZ3tgks9Vcn1Vd/JSWKLVrwYNdyFe/Wap9tVaeQcGFXrhoUaS8eatkGQ69
+        VpNhFqkODHTpbRUbeQU/qUiR/+YJyxXNItb5EkQlz4yNZwDErXBv7A6svben1Pez
+        2WblubT8gVTy4ss6Kbnv9gyUzIVE+ebiZGGDea720be4/riom3aEAB/8pjhr7d0R
+        MGJqweXH1yrB3B+OH66/C95AtCVUYZUUb72PdECAxyrlPa6TWibhNF6gQyyfADBQ
+        1UqA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1685109640; x=1685196040; bh=X7oR6fDag5Xrq
+        2T43+f0dNcMZz0J3Tq+Q2Y71CiFeKI=; b=Ao72C2i+VTw+Ksf1R+jTiHA7spFzd
+        uN5bVWaObW8wr00bCGtiUIW5SJCOcam10ZuaPOdBiuebdVMeEybYOInufhIQo/0n
+        /135GowXRfjUhHxypdzqDz4h6U52WGpold8N6K/TlczU9WePSKosm0ouRgR65CkK
+        ltHRF2kn71Z4sgZ8O6Yb8GJWccnr+UiWA10IlF48hcq+j3tg2kd46kynxkqIqUPb
+        1wvn0hgS3tNx0RGu3QNU49g63mft7QpLfrii3EYARU1wZMIGl7GiGwTsqyJqlp4Z
+        sZhT2OqSzOlhOVjZumFz6yVFQ/2T5i5vNFreZWHANIAAlZOEilKCnAYAg==
+X-ME-Sender: <xms:h7twZN3ZHeGMpQ7kNNEz-peOgZACytVbL0veUjYGGswZQQURgTM-yA>
+    <xme:h7twZEFtJHGJ_kwlpZeRY4jkhaMhz5PKAnoDKa77qYjlYXL3sNQ2FHRfkhvYFG12v
+    NSiW2bbEeM_JH8CYM8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeejledgjedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
+    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
+    drtggrqeenucggtffrrghtthgvrhhnpeeiueefjeeiveetuddvkeetfeeltdevffevudeh
+    ffefjedufedvieejgedugeekhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:h7twZN5C9_OADoBP7KPzciuzbWXx5lW8BbU8cN7iVGabdti6M2E9jQ>
+    <xmx:h7twZK1Y5nP1x3QzA0TpAMrZ0p6i9dgaJ460aVs4hrbo5Ut34axfVQ>
+    <xmx:h7twZAH0fk5OoN-mmyVPRa495hkn4X8JfEghD0vxgLiJCmpfqyxVdg>
+    <xmx:iLtwZKPsHGEMFPp-jnUem5F18A1nivzPSF-5H9zYg0uoS1iIV478iw>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 0E7B6C60091; Fri, 26 May 2023 10:00:38 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-441-ga3ab13cd6d-fm-20230517.001-ga3ab13cd
+Mime-Version: 1.0
+Message-Id: <33ca3ba1-e770-4c75-81fc-60dc2561c68d@app.fastmail.com>
+In-Reply-To: <4b49873e-48ae-1164-739f-78d96ca3a7bb@redhat.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20230525193132.3727-1-mpearson-lenovo@squebb.ca>
+ <20230525193132.3727-5-mpearson-lenovo@squebb.ca>
+ <6e05df16-7125-a634-6b99-3cf3079d3d5d@redhat.com>
+ <f6b0b842-3ef0-4c48-afca-6d9953993c9e@app.fastmail.com>
+ <4b49873e-48ae-1164-739f-78d96ca3a7bb@redhat.com>
+Date:   Fri, 26 May 2023 10:00:18 -0400
+From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To:     "Hans de Goede" <hdegoede@redhat.com>
+Cc:     "markgross@kernel.org" <markgross@kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] platform/x86: think-lmi: mutex protection around multiple WMI
+ calls
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-1262801623-1685093934=:1602
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
 
-On Thu, 25 May 2023, Shyam Sundar S K wrote:
-
-> Starting from Pink Sardine, number of IP blocks were added to the SoC
-> and the PMFW has the ability to give debug stats on each the IP blocks
-> after a S0ix cycle within part of the SMU metrics table.
-> 
-> To differentiate this change, the 's2d_msg_id' is also changed.
-
-This sounds a bit vague. I'd have simply said:
-
-Pink Sardine also has different s2d message id.
-
-...but consider replacing "s2d message id" with "Spill to DRAM message 
-port offset" if that's correct way to say things. I picked up that
-wording from the comment in one of the contexts below, perhaps that 
-comment should no longer be there as the relevant define now got removed?
-
-> Add these new capabilities to the driver.
+On Fri, May 26, 2023, at 4:12 AM, Hans de Goede wrote:
+> Hi,
 >
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> On 5/25/23 21:50, Mark Pearson wrote:
+>> 
+>> 
+>> On Thu, May 25, 2023, at 3:41 PM, Hans de Goede wrote:
+>>> Hi Mark,
+>>>
+>>> On 5/25/23 21:31, Mark Pearson wrote:
+>>>> Add mutex protection around cases where an operation needs multiple
+>>>> WMI calls - e.g. setting password.
+>>>>
+>>>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>>>> ---
+>>>> Changes in V2: New commit added after review of other patches in series.
+>>>>
+>>>>  drivers/platform/x86/think-lmi.c | 46 ++++++++++++++++++++++++--------
+>>>>  1 file changed, 35 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+>>>> index 64cd453d6e7d..f3e1e4dacba2 100644
+>>>> --- a/drivers/platform/x86/think-lmi.c
+>>>> +++ b/drivers/platform/x86/think-lmi.c
+>>>> @@ -14,6 +14,7 @@
+>>>>  #include <linux/acpi.h>
+>>>>  #include <linux/errno.h>
+>>>>  #include <linux/fs.h>
+>>>> +#include <linux/mutex.h>
+>>>>  #include <linux/string.h>
+>>>>  #include <linux/types.h>
+>>>>  #include <linux/dmi.h>
+>>>> @@ -195,6 +196,7 @@ static const char * const level_options[] = {
+>>>>  };
+>>>>  static struct think_lmi tlmi_priv;
+>>>>  static struct class *fw_attr_class;
+>>>> +static DEFINE_MUTEX(tlmi_mutex);
+>>>>  
+>>>>  /* ------ Utility functions ------------*/
+>>>>  /* Strip out CR if one is present */
+>>>> @@ -463,23 +465,32 @@ static ssize_t new_password_store(struct kobject *kobj,
+>>>>  			sprintf(pwd_type, "%s", setting->pwd_type);
+>>>>  		}
+>>>>  
+>>>> +		mutex_lock(&tlmi_mutex);
+>>>>  		ret = tlmi_opcode_setting("WmiOpcodePasswordType", pwd_type);
+>>>> -		if (ret)
+>>>> +		if (ret) {
+>>>> +			mutex_unlock(&tlmi_mutex);
+>>>>  			goto out;
+>>>> -
+>>>> +		}
+>>>>  		if (tlmi_priv.pwd_admin->valid) {
+>>>>  			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
+>>>>  					tlmi_priv.pwd_admin->password);
+>>>> -			if (ret)
+>>>> +			if (ret) {
+>>>> +				mutex_unlock(&tlmi_mutex);
+>>>>  				goto out;
+>>>> +			}
+>>>>  		}
+>>>>  		ret = tlmi_opcode_setting("WmiOpcodePasswordCurrent01", setting->password);
+>>>> -		if (ret)
+>>>> +		if (ret) {
+>>>> +			mutex_unlock(&tlmi_mutex);
+>>>>  			goto out;
+>>>> +		}
+>>>>  		ret = tlmi_opcode_setting("WmiOpcodePasswordNew01", new_pwd);
+>>>> -		if (ret)
+>>>> +		if (ret) {
+>>>> +			mutex_unlock(&tlmi_mutex);
+>>>>  			goto out;
+>>>> +		}
+>>>>  		ret = tlmi_simple_call(LENOVO_OPCODE_IF_GUID, "WmiOpcodePasswordSetUpdate;");
+>>>> +		mutex_unlock(&tlmi_mutex);
+>>>>  	} else {
+>>>>  		/* Format: 'PasswordType,CurrentPw,NewPw,Encoding,KbdLang;' */
+>>>>  		auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s,%s,%s;",
+>>>
+>>>
+>>> I haven't take a really close / good look yet. But at a first glance
+>>> I think it would be cleaner to just take the mutex at the top
+>>> and unlock it after the out label to which all the existing goto-s
+>>> already go ?
+>>>
+>> I did consider that - and it was in my first implementation; but then I got concerned
+>> about if the mutex_unlock could potentially get called without mutex_lock having been 
+>> called beforehand. I couldn't find any good reference as to whether that was safe or not.
+>> 
+>> I ended up deciding that a few extra brackets and unlock calls wasn't that ugly and was 'safer'...and 
+>> so went that route.
+>> 
+>> Happy to change it - but do you happen to know if it's safe to call unlock without a lock? If it is then
+>> that implementation is cleaner.
+>
+> It is not allowed to unlock without a lock. But if you put the lock 
+> directly after the malloc for which the out: does the free then there 
+> should be no goto out paths which don't have the lock.
+>
+> E.g. for new_password_store() put it here:
+>
+>         new_pwd = kstrdup(buf, GFP_KERNEL);
+>         if (!new_pwd)
+>                 return -ENOMEM;
+>
+> 	mutex_lock(&tlmi_mutex);
+>
+> 	/* Strip out CR if one is present, setting password won't work if it 
+> is present */
+> 	...
+>
+> This does mean also taking the lock in the case where the new password 
+> store is done with a single WMI call, but that is not an issue. It 
+> makes things a tiny bit slower but WMI calls already are not fast and 
+> it is not like we are going to change the password / settings 100-times 
+> per second.
+>
+> And the same thing can be done in current_value_store():
+>
+>         new_setting = kstrdup(buf, GFP_KERNEL);
+>         if (!new_setting)
+>                 return -ENOMEM;
+>
+> 	mutex_lock(&tlmi_mutex);
+>
+>         /* Strip out CR if one is present */
+>         ...
+>
 
-The code change itself looks fine.
-
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-
-> ---
->  drivers/platform/x86/amd/pmc.c | 53 ++++++++++++++++++++++++++--------
->  1 file changed, 41 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-> index c2f03cdc9ca9..f7bda8a64c95 100644
-> --- a/drivers/platform/x86/amd/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc.c
-> @@ -45,7 +45,6 @@
->  #define AMD_PMC_STB_DUMMY_PC		0xC6000007
->  
->  /* STB S2D(Spill to DRAM) has different message port offset */
-> -#define STB_SPILL_TO_DRAM		0xBE
->  #define AMD_S2D_REGISTER_MESSAGE	0xA20
->  #define AMD_S2D_REGISTER_RESPONSE	0xA80
->  #define AMD_S2D_REGISTER_ARGUMENT	0xA88
-> @@ -99,7 +98,6 @@
->  #define PMC_MSG_DELAY_MIN_US		50
->  #define RESPONSE_REGISTER_LOOP_MAX	20000
->  
-> -#define SOC_SUBSYSTEM_IP_MAX	12
->  #define DELAY_MIN_US		2000
->  #define DELAY_MAX_US		3000
->  #define FIFO_SIZE		4096
-> @@ -133,9 +131,18 @@ static const struct amd_pmc_bit_map soc15_ip_blk[] = {
->  	{"ISP",		BIT(6)},
->  	{"NBIO",	BIT(7)},
->  	{"DF",		BIT(8)},
-> -	{"USB0",	BIT(9)},
-> -	{"USB1",	BIT(10)},
-> +	{"USB3_0",	BIT(9)},
-> +	{"USB3_1",	BIT(10)},
->  	{"LAPIC",	BIT(11)},
-> +	{"USB3_2",	BIT(12)},
-> +	{"USB3_3",	BIT(13)},
-> +	{"USB3_4",	BIT(14)},
-> +	{"USB4_0",	BIT(15)},
-> +	{"USB4_1",	BIT(16)},
-> +	{"MPM",		BIT(17)},
-> +	{"JPEG",	BIT(18)},
-> +	{"IPU",		BIT(19)},
-> +	{"UMSCH",	BIT(20)},
->  	{}
->  };
->  
-> @@ -149,6 +156,8 @@ struct amd_pmc_dev {
->  	u32 cpu_id;
->  	u32 active_ips;
->  	u32 dram_size;
-> +	u32 num_ips;
-> +	u32 s2d_msg_id;
->  /* SMU version information */
->  	u8 smu_program;
->  	u8 major;
-> @@ -196,8 +205,8 @@ struct smu_metrics {
->  	u64 timein_s0i3_totaltime;
->  	u64 timein_swdrips_lastcapture;
->  	u64 timein_swdrips_totaltime;
-> -	u64 timecondition_notmet_lastcapture[SOC_SUBSYSTEM_IP_MAX];
-> -	u64 timecondition_notmet_totaltime[SOC_SUBSYSTEM_IP_MAX];
-> +	u64 timecondition_notmet_lastcapture[32];
-> +	u64 timecondition_notmet_totaltime[32];
->  } __packed;
->  
->  static int amd_pmc_stb_debugfs_open(struct inode *inode, struct file *filp)
-> @@ -263,7 +272,7 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
->  	dev->msg_port = 1;
->  
->  	/* Get the num_samples to calculate the last push location */
-> -	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, STB_SPILL_TO_DRAM, true);
-> +	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, dev->s2d_msg_id, true);
->  	/* Clear msg_port for other SMU operation */
->  	dev->msg_port = 0;
->  	if (ret) {
-> @@ -310,6 +319,23 @@ static const struct file_operations amd_pmc_stb_debugfs_fops_v2 = {
->  	.release = amd_pmc_stb_debugfs_release_v2,
->  };
->  
-> +static void amd_pmc_get_ip_info(struct amd_pmc_dev *dev)
-> +{
-> +	switch (dev->cpu_id) {
-> +	case AMD_CPU_ID_PCO:
-> +	case AMD_CPU_ID_RN:
-> +	case AMD_CPU_ID_YC:
-> +	case AMD_CPU_ID_CB:
-> +		dev->num_ips = 12;
-> +		dev->s2d_msg_id = 0xBE;
-> +		break;
-> +	case AMD_CPU_ID_PS:
-> +		dev->num_ips = 21;
-> +		dev->s2d_msg_id = 0x85;
-> +		break;
-> +	}
-> +}
-> +
->  static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev)
->  {
->  	if (dev->cpu_id == AMD_CPU_ID_PCO) {
-> @@ -471,7 +497,7 @@ static int smu_fw_info_show(struct seq_file *s, void *unused)
->  		   table.timeto_resume_to_os_lastcapture);
->  
->  	seq_puts(s, "\n=== Active time (in us) ===\n");
-> -	for (idx = 0 ; idx < SOC_SUBSYSTEM_IP_MAX ; idx++) {
-> +	for (idx = 0 ; idx < dev->num_ips ; idx++) {
->  		if (soc15_ip_blk[idx].bit_mask & dev->active_ips)
->  			seq_printf(s, "%-8s : %lld\n", soc15_ip_blk[idx].name,
->  				   table.timecondition_notmet_lastcapture[idx]);
-> @@ -919,7 +945,7 @@ static int amd_pmc_get_dram_size(struct amd_pmc_dev *dev)
->  		goto err_dram_size;
->  	}
->  
-> -	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, STB_SPILL_TO_DRAM, true);
-> +	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->s2d_msg_id, true);
->  	if (ret || !dev->dram_size)
->  		goto err_dram_size;
->  
-> @@ -940,7 +966,10 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
->  	/* Spill to DRAM feature uses separate SMU message port */
->  	dev->msg_port = 1;
->  
-> -	amd_pmc_send_cmd(dev, S2D_TELEMETRY_SIZE, &size, STB_SPILL_TO_DRAM, true);
-> +	/* Get num of IP blocks within the SoC */
-> +	amd_pmc_get_ip_info(dev);
-> +
-> +	amd_pmc_send_cmd(dev, S2D_TELEMETRY_SIZE, &size, dev->s2d_msg_id, true);
->  	if (size != S2D_TELEMETRY_BYTES_MAX)
->  		return -EIO;
->  
-> @@ -950,8 +979,8 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
->  		dev->dram_size = S2D_TELEMETRY_DRAMBYTES_MAX;
->  
->  	/* Get STB DRAM address */
-> -	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_LOW, &phys_addr_low, STB_SPILL_TO_DRAM, true);
-> -	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_HIGH, &phys_addr_hi, STB_SPILL_TO_DRAM, true);
-> +	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_LOW, &phys_addr_low, dev->s2d_msg_id, true);
-> +	amd_pmc_send_cmd(dev, S2D_PHYS_ADDR_HIGH, &phys_addr_hi, dev->s2d_msg_id, true);
->  
->  	stb_phys_addr = ((u64)phys_addr_hi << 32 | phys_addr_low);
->  
-> 
-
--- 
- i.
-
---8323329-1262801623-1685093934=:1602--
+Yeah - you're right.
+For some reason I was trying to do the lock only in the block of code that needed locking...but it makes more sense to do it earlier. I'll update.
+Thanks!
+Mark
