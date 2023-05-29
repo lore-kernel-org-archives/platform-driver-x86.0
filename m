@@ -2,125 +2,229 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 547C5C77B7E
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 27 May 2023 08:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022FBC7EE23
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 05:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230095AbjE0I6M (ORCPT
+        id S229626AbjE2FkS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 27 May 2023 04:58:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57766 "EHLO
+        Mon, 29 May 2023 01:40:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229678AbjE0I6L (ORCPT
+        with ESMTP id S229613AbjE2FkR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 27 May 2023 04:58:11 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2DA2E3;
-        Sat, 27 May 2023 01:58:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685177890; x=1716713890;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gf5TMgt0bAt/QkheoJ/9bYtBlW8oMT6dV0D08HIpbKo=;
-  b=CF7qYxvLrseBoLef4SXhZ3LXhw0OFafammubut8gfEp265Yps7zdmVZV
-   cYELbQkxLYeI1gAZLgf56ZeqwyosS0hqzkzgqJgS3HDj1uPrkChcEx3vC
-   mp053MKLQNURCLWRRhZSgdINwbuKmhSEafog6ISQI3BTOIxxk79f71z8Y
-   UNDnqUXwaHkeHIyjEOgCBYTEJxi50el97da0P9yo/rNkSBxmIDsOHvFo5
-   D12nkG6iezVU+j5dTiE1NiRGAz0xsrrnhZLSVtQYHgY9vvh8HC2fkJCc4
-   dbI1mhbey01Q5glnbsWZLjo1+Lqc6egSdSO3c7EKasW2M9AGdYNNvpmd8
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10722"; a="382629754"
-X-IronPort-AV: E=Sophos;i="6.00,196,1681196400"; 
-   d="scan'208";a="382629754"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2023 01:58:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10722"; a="736263444"
-X-IronPort-AV: E=Sophos;i="6.00,196,1681196400"; 
-   d="scan'208";a="736263444"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP; 27 May 2023 01:58:06 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1q2pkS-000Is8-1e;
-        Sat, 27 May 2023 11:58:04 +0300
-Date:   Sat, 27 May 2023 11:58:04 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4 0/4] leds: simatic-ipc-leds-gpio: split up
-Message-ID: <ZHHGHEL4OqSvox70@smile.fi.intel.com>
-References: <20230524124628.32295-1-henning.schild@siemens.com>
+        Mon, 29 May 2023 01:40:17 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2EFEA8;
+        Sun, 28 May 2023 22:40:15 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-530638a60e1so2611673a12.2;
+        Sun, 28 May 2023 22:40:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685338815; x=1687930815;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6FOt6/jNDEYnzLxqC7AoJSZCpvzsH4Kc5a9ChdfDk7g=;
+        b=PXDX3dHrEyzRONErAjdsyLZDZPMMgh3Np79VPYpJAXqhv9G7BHgydjpSXVZNcFsXo8
+         06L7nLjJvNnPsmOfBsuF/4Q2hzkXL6nQh7znIfXYd8MBVX7STkQj/HQR9rJajEMGDdvE
+         VNppD2fA06s4o7o0PXKC0pT+Zy8NresWbOhI9sqS66eShcHPRo/BPpBwOZA8swnle56K
+         JeCXmg3y9U3w2H/Slb0KUqMphwlwKZ26K286O9rn5NKEvbOEZ6tV+E+EcaFqD3EnGO33
+         GvPyO2fUU5N6SCUlAf8rY5Pvgm3NMs5pfq9oHu7BuuW87hf7TBMOSowF2RPPgHKfVmiL
+         AJ2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685338815; x=1687930815;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6FOt6/jNDEYnzLxqC7AoJSZCpvzsH4Kc5a9ChdfDk7g=;
+        b=GiGAEGI9wvSy9QmuKu0EfvTqPXw0SBTbW0uRbuxJDpnwwJdau6xU0rEKhrQ+LEeTCc
+         TuBiXOfq6oRz4CUOt4LBIjUBY1wPgIBxWK0UClNxPu7n66mTstlAVhSe5W6Q6rmkL1zn
+         kEwr7KnysPDo7ySYf+PpTVpHfF7CaTNuAmjCJhpeivtl/d+he4YjE2AEVFDGDWEiITMU
+         w8Rkiwu7lF0VcJsCwxvJrzlZawTKmFn1T3YAl7DwefJG9a035I9m9uut53GMbULlEV0n
+         50xFoM7+PPloYtofWsCNn8dNKuCfWlyALh/yaczapujbvM3kb1DsZ4XJo0Ee7sJv3ZHW
+         evuQ==
+X-Gm-Message-State: AC+VfDzilM3gen63tSkXCionA5HGYH6+DsFYiH+hKTlECdeMLjVCZOO2
+        cX5prPNmUYorm156QmgTCa9pOV55Al8=
+X-Google-Smtp-Source: ACHHUZ6Do4fvcFcfxjOHXK8o5whrQlGz/usqWsCFS0LW7jg9gHuY+SoWfFQCtERIozPRmf8/ii4Rqw==
+X-Received: by 2002:a17:902:dac9:b0:1b0:3c1a:1238 with SMTP id q9-20020a170902dac900b001b03c1a1238mr3555125plx.59.1685338815240;
+        Sun, 28 May 2023 22:40:15 -0700 (PDT)
+Received: from localhost.localdomain ([110.46.146.116])
+        by smtp.gmail.com with ESMTPSA id p20-20020a170902a41400b001ab39cd885esm7186778plq.212.2023.05.28.22.40.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 May 2023 22:40:14 -0700 (PDT)
+From:   SungHwan Jung <onenowy@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     SungHwan Jung <onenowy@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: hp-wmi: Add thermal profile for Victus 16-d1xxx
+Date:   Mon, 29 May 2023 14:39:58 +0900
+Message-Id: <20230529053959.4876-1-onenowy@gmail.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230524124628.32295-1-henning.schild@siemens.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, May 24, 2023 at 02:46:24PM +0200, Henning Schild wrote:
-> changes since v3:
->  - add terminator entries to all gpio lookup tables as new p1
-> 
-> changes since v2:
->  - some more style changes from review
-> 
-> changes since v1:
->  - move from header- to -core.c-based implementation
->  - style changes from review
-> 
-> This series mainly splits the one GPIO driver into two. The split allows
-> to clearly model runtime and compile time dependencies on the GPIO chip
-> drivers.
-> 
-> p2 is kind of not too related to that split but also prepares for more
-> GPIO based drivers to come.
-> 
-> p3 takes the driver we had and puts some of its content into a -core,
-> to be used by the two drivers.
-> 
-> p4 deals with more fine-grained configuration posibilities and compile
-> time dependencies.
+This patch includes Platform Profile support (performance, balanced, quiet)
+for Victus 16-d1xxx (8A25).
 
-For non-commented patches
+Signed-off-by: SungHwan Jung <onenowy@gmail.com>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 104 +++++++++++++++++++++++++++++--
+ 1 file changed, 99 insertions(+), 5 deletions(-)
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Henning Schild (4):
->   leds: simatic-ipc-leds-gpio: add terminating entries to gpio tables
->   leds: simatic-ipc-leds-gpio: move two extra gpio pins into another
->     table
->   leds: simatic-ipc-leds-gpio: split up into multiple drivers
->   leds: simatic-ipc-leds-gpio: introduce more Kconfig switches
-> 
->  drivers/leds/simple/Kconfig                   |  31 +++-
->  drivers/leds/simple/Makefile                  |   5 +-
->  .../simple/simatic-ipc-leds-gpio-apollolake.c |  66 +++++++++
->  .../leds/simple/simatic-ipc-leds-gpio-core.c  | 104 +++++++++++++
->  .../simple/simatic-ipc-leds-gpio-f7188x.c     |  66 +++++++++
->  drivers/leds/simple/simatic-ipc-leds-gpio.c   | 139 ------------------
->  drivers/leds/simple/simatic-ipc-leds-gpio.h   |  22 +++
->  drivers/leds/simple/simatic-ipc-leds.c        |   1 -
->  drivers/platform/x86/simatic-ipc.c            |   7 +-
->  9 files changed, 293 insertions(+), 148 deletions(-)
->  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio-apollolake.c
->  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio-core.c
->  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio-f7188x.c
->  delete mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio.c
->  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio.h
-> 
-> -- 
-> 2.39.3
-> 
-
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 6364ae262705..6259b907ce63 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -66,6 +66,11 @@ static const char *const omen_thermal_profile_force_v0_boards[] = {
+ 	"8607", "8746", "8747", "8749", "874A", "8748"
+ };
+ 
++/* DMI Board names of Victus laptops */
++static const char * const victus_thermal_profile_boards[] = {
++	"8A25"
++};
++
+ enum hp_wmi_radio {
+ 	HPWMI_WIFI	= 0x0,
+ 	HPWMI_BLUETOOTH	= 0x1,
+@@ -176,6 +181,12 @@ enum hp_thermal_profile_omen_v1 {
+ 	HP_OMEN_V1_THERMAL_PROFILE_COOL		= 0x50,
+ };
+ 
++enum hp_thermal_profile_victus {
++	HP_VICTUS_THERMAL_PROFILE_DEFAULT		= 0x00,
++	HP_VICTUS_THERMAL_PROFILE_PERFORMANCE	= 0x01,
++	HP_VICTUS_THERMAL_PROFILE_QUIET			= 0x03,
++};
++
+ enum hp_thermal_profile {
+ 	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+ 	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+@@ -1246,6 +1257,70 @@ static int hp_wmi_platform_profile_set(struct platform_profile_handler *pprof,
+ 	return 0;
+ }
+ 
++static bool is_victus_thermal_profile(void)
++{
++	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
++
++	if (!board_name)
++		return false;
++
++	return match_string(victus_thermal_profile_boards,
++			    ARRAY_SIZE(victus_thermal_profile_boards),
++			    board_name) >= 0;
++}
++
++static int platform_profile_victus_get(struct platform_profile_handler *pprof,
++				     enum platform_profile_option *profile)
++{
++	int tp;
++
++	tp = omen_thermal_profile_get();
++	if (tp < 0)
++		return tp;
++
++	switch (tp) {
++	case HP_VICTUS_THERMAL_PROFILE_PERFORMANCE:
++		*profile =  PLATFORM_PROFILE_PERFORMANCE;
++		break;
++	case HP_VICTUS_THERMAL_PROFILE_DEFAULT:
++		*profile =  PLATFORM_PROFILE_BALANCED;
++		break;
++	case HP_VICTUS_THERMAL_PROFILE_QUIET:
++		*profile =  PLATFORM_PROFILE_QUIET;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int platform_profile_victus_set(struct platform_profile_handler *pprof,
++				     enum platform_profile_option profile)
++{
++	int err, tp;
++
++	switch (profile) {
++	case PLATFORM_PROFILE_PERFORMANCE:
++		tp =  HP_VICTUS_THERMAL_PROFILE_PERFORMANCE;
++		break;
++	case PLATFORM_PROFILE_BALANCED:
++		tp =  HP_VICTUS_THERMAL_PROFILE_DEFAULT;
++		break;
++	case PLATFORM_PROFILE_QUIET:
++		tp =  HP_VICTUS_THERMAL_PROFILE_QUIET;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	err = omen_thermal_profile_set(tp);
++	if (err < 0)
++		return err;
++
++	return 0;
++}
++
+ static int thermal_profile_setup(void)
+ {
+ 	int err, tp;
+@@ -1266,6 +1341,25 @@ static int thermal_profile_setup(void)
+ 
+ 		platform_profile_handler.profile_get = platform_profile_omen_get;
+ 		platform_profile_handler.profile_set = platform_profile_omen_set;
++
++		set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
++	} else if (is_victus_thermal_profile()) {
++		tp = omen_thermal_profile_get();
++		if (tp < 0)
++			return tp;
++
++		/*
++		 * call thermal profile write command to ensure that the
++		 * firmware correctly sets the OEM variables
++		 */
++		err = omen_thermal_profile_set(tp);
++		if (err < 0)
++			return err;
++
++		platform_profile_handler.profile_get = platform_profile_victus_get;
++		platform_profile_handler.profile_set = platform_profile_victus_set;
++
++		set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
+ 	} else {
+ 		tp = thermal_profile_get();
+ 
+@@ -1273,20 +1367,20 @@ static int thermal_profile_setup(void)
+ 			return tp;
+ 
+ 		/*
+-		 * call thermal profile write command to ensure that the
+-		 * firmware correctly sets the OEM variables for the DPTF
+-		 */
++		 * call thermal profile write command to ensure that the
++		 * firmware correctly sets the OEM variables for the DPTF
++		 */
+ 		err = thermal_profile_set(tp);
+ 		if (err)
+ 			return err;
+ 
+ 		platform_profile_handler.profile_get = hp_wmi_platform_profile_get;
+ 		platform_profile_handler.profile_set = hp_wmi_platform_profile_set;
+-
++
+ 		set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
++		set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
+ 	}
+ 
+-	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
+ 	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
+ 	set_bit(PLATFORM_PROFILE_PERFORMANCE, platform_profile_handler.choices);
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.40.1
 
