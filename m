@@ -2,54 +2,54 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A119BC77B7E
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 12:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28DBC7EE29
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 12:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230342AbjE2MDv (ORCPT
+        id S231553AbjE2MF7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 May 2023 08:03:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39000 "EHLO
+        Mon, 29 May 2023 08:05:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbjE2MDu (ORCPT
+        with ESMTP id S231575AbjE2MF6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 May 2023 08:03:50 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19CFBC7;
-        Mon, 29 May 2023 05:03:49 -0700 (PDT)
+        Mon, 29 May 2023 08:05:58 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C488F1;
+        Mon, 29 May 2023 05:05:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685361829; x=1716897829;
+  t=1685361954; x=1716897954;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=JC6wS1E/TUOOIhq2nrfMiSXO3UBC6enXa7DxWwVAz2A=;
-  b=fN8ad6VXfQlX3oNAWeeoMDvVBNOxeHY5MATcitDZwmRVoEnMJWaj8z9L
-   1OfQEPhfBeKnIheiD2aO97ERTrDy2+ZBD77oxHs8scv6etd6v/uvfYCzk
-   jUnpVI1gOGjgObfuVNc//1uHY4aFDZ/6cCI1ZZ3hUObIwyLvxBX8Y+mTG
-   93y9JqUsLbR/fedmze8k+wJWot5aohGOrS1ubjI6Lf48YYSdTYHWf80iY
-   OY+VvCkjQpLKrgPYw8nc5qSOTujknDhC+/Y+6vMz8BmDN50aVZbkEhcEd
-   mZhTSjrPUQi71nI++/jRf7ydJtjR7V1f4CObepiOLitSRQKJyIeqdQbfF
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="339278184"
+  bh=24kaNhoDDh2Sg/pbrar8VavciZH3DS7NRvSWVRs1f7I=;
+  b=l0Mkn2rV3d29TzhW4s0rkca0ex+0UkX+Qs049YzoOgDMnlT/41t7+9OQ
+   b+YLPoD3LdAd1+NxsH6ghHKqh5NGYgHlBmE6LeU29a8xIAF2PmT6UKHNl
+   0y4jYq/1xfxHF4eDXO1gDLjjVzEQ01HqER2edqAU3+laJDXb7meySodf2
+   Zr7+w2hrZfpd2zvkMjDyw1Cz/RPHh3uS82Pm9j6ZNuczyrJh3qbYGUZVk
+   dc2H2JA/oFv6YDVGkb0yn9x041iX4ZOX/i3EG9XqtKhxGdSLF0dzDQM5h
+   0ukcdC+HzfowvX3Rgdndjtm+qes7M/Kb0bw2fJrJLuZ6FFZStE40g7mhE
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="420447840"
 X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
-   d="scan'208";a="339278184"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 05:03:48 -0700
+   d="scan'208";a="420447840"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 05:05:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="706042704"
+X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="850386659"
 X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
-   d="scan'208";a="706042704"
+   d="scan'208";a="850386659"
 Received: from btaubert-mobl1.ger.corp.intel.com ([10.252.55.237])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 05:03:46 -0700
-Date:   Mon, 29 May 2023 15:03:43 +0300 (EEST)
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 05:05:32 -0700
+Date:   Mon, 29 May 2023 15:05:29 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Mark Pearson <mpearson-lenovo@squebb.ca>
 cc:     hdegoede@redhat.com, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] platform/x86: think-lmi: Correct NVME password
- handling
-In-Reply-To: <20230526171658.3886-3-mpearson-lenovo@squebb.ca>
-Message-ID: <a52f69f-2dc4-fe76-9f89-e1c143d2bb27@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca> <20230526171658.3886-1-mpearson-lenovo@squebb.ca> <20230526171658.3886-3-mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH v3 4/5] platform/x86: think-lmi: Don't display unnecessary
+ authentication settings
+In-Reply-To: <20230526171658.3886-4-mpearson-lenovo@squebb.ca>
+Message-ID: <aeb0313-e845-9134-4136-6347d691bd4@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca> <20230526171658.3886-1-mpearson-lenovo@squebb.ca> <20230526171658.3886-4-mpearson-lenovo@squebb.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
@@ -58,58 +58,40 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Fri, 26 May 2023, Mark Pearson wrote:
 
-> NVME passwords identifier have been standardised across the Lenovo
-> systems and now use udrp and adrp (user and admin level) instead of
-> unvp and mnvp.
+> If Opcode support is available (which is the standard for all platforms
+> going forward) then there is no need to have the encoding and kbdlang
+> attributes visible
 > 
-> This should apparently be backwards compatible.
-> 
-> Also cleaned up so the index is set to a default of 1 rather than 0
-> as this just makes more sense (there is no device 0).
-
-These two sound entirely separate changes. If that's the case, please 
-make own patch from the send change.
-
-Hmm, index_store() still allows 0, is that also related here? Please check 
-also ABI documentation as index default seems to be mentioned there as 
-well.
-
--- 
- i.
-
 > Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 > ---
 > Changes in v2 & v3: None. Version bumped in series
 > 
->  drivers/platform/x86/think-lmi.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/think-lmi.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 > diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index c7e98fbe7c3d..1c02958035ad 100644
+> index 1c02958035ad..64cd453d6e7d 100644
 > --- a/drivers/platform/x86/think-lmi.c
 > +++ b/drivers/platform/x86/think-lmi.c
-> @@ -456,9 +456,9 @@ static ssize_t new_password_store(struct kobject *kobj,
->  				sprintf(pwd_type, "mhdp%d", setting->index);
->  		} else if (setting == tlmi_priv.pwd_nvme) {
->  			if (setting->level == TLMI_LEVEL_USER)
-> -				sprintf(pwd_type, "unvp%d", setting->index);
-> +				sprintf(pwd_type, "udrp%d", setting->index);
->  			else
-> -				sprintf(pwd_type, "mnvp%d", setting->index);
-> +				sprintf(pwd_type, "adrp%d", setting->index);
->  		} else {
->  			sprintf(pwd_type, "%s", setting->pwd_type);
->  		}
-> @@ -1524,6 +1524,10 @@ static int tlmi_analyze(void)
->  		if (!tlmi_priv.pwd_nvme)
->  			goto fail_clear_attr;
+> @@ -879,6 +879,12 @@ static umode_t auth_attr_is_visible(struct kobject *kobj,
+>  		return 0;
+>  	}
 >  
-> +		/* Set default hdd/nvme index to 1 as there is no device 0 */
-> +		tlmi_priv.pwd_hdd->index = 1;
-> +		tlmi_priv.pwd_nvme->index = 1;
+> +	/* Don't display un-needed settings if opcode available */
+> +	if ((attr == &auth_encoding.attr ||
+> +	    attr == &auth_kbdlang.attr) &&
+
+Indentation issue here, attr must be at the same column although putting 
+the || on a single line might make this easier to read.
+
+> +	    tlmi_priv.opcode_support)
+> +		return 0;
 > +
->  		if (tlmi_priv.pwdcfg.core.password_state & TLMI_HDD_PWD) {
->  			/* Check if PWD is configured and set index to first drive found */
->  			if (tlmi_priv.pwdcfg.ext.hdd_user_password ||
+>  	return attr->mode;
+>  }
+>  
 > 
+
+-- 
+ i.
 
