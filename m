@@ -2,45 +2,45 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD193C77B7E
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 15:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F140EC77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 15:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229919AbjE2PhH (ORCPT
+        id S229983AbjE2Pl6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 May 2023 11:37:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36016 "EHLO
+        Mon, 29 May 2023 11:41:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229907AbjE2PhF (ORCPT
+        with ESMTP id S229806AbjE2Pl5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 May 2023 11:37:05 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB292EA;
-        Mon, 29 May 2023 08:36:49 -0700 (PDT)
+        Mon, 29 May 2023 11:41:57 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78394A8;
+        Mon, 29 May 2023 08:41:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685374609; x=1716910609;
+  t=1685374916; x=1716910916;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=VQv0RWKaL/bDuM/gG1UETZpVFJ8xhXtm31909sHt8wA=;
-  b=A93tXsq+tqZ9jwzt2ntfIsAPwLq32Rf4R0q1yVM95c2R8Uij48qyCTnM
-   gf9gQVq6TPXaLa50mhkghCJ2wDnIaMyRn3eW6wab909gnpufRqzxbZbGV
-   IAVNZMkYA5toS7A4yLCln8Vtx6eqBswOWTOgHcPukAEEnAv5VmknMkfiQ
-   d+dmz1UCFUjZmUBqj/crIvDF/K3CtzG37jRJzJy4XhTx2yfYyz1L7TbZ1
-   NZRS57+4jIKsmx4Qlk5tV3NTM2JW1BfpLDadVQpmds/JM5FOvJe2x+NTW
-   8KcFtc8Tjsiq2iReS6TLMj44ionIGRtL2DigKod3jjUCr+SGjmRDQKSkQ
+  bh=w/u+IjLUbY+uBycEW2YEaZDefdA9TPsQohr+akmnCn0=;
+  b=VikxalKXb2CHGaAvszgPtu0N+Ov5SkINqwpxt5weh838q8TeOP3T8JlW
+   BMrgpB3G2yEaImuj0nIyMv7HdWAlTzq5vKtP5XnSc4dP5TzFHS+MbOacD
+   1IsvqsgivDjAt1/7rn6D0BiqyCeKz1RxWXXQ96Axacyio8+lfXk6xaHME
+   Mr2ze3wdgF2OJ1quFrsmO2aUQxxx8gP5nNXObvsu52Gyt/YKjQD/8aR03
+   nL+9KX09H9qVKaVb/r/zUApGAm2BrO1wH1LSIF0kBMoodxVANAC5BAt2W
+   QTuQmUkjCXGY6uqmuRYdlbft8i7RvNsOdRSs/VcrAa0uL+/jDtjjvepWl
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="354744235"
+X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="382986158"
 X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
-   d="scan'208";a="354744235"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 08:36:49 -0700
+   d="scan'208";a="382986158"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 08:41:50 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="775984272"
+X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="771203503"
 X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
-   d="scan'208";a="775984272"
+   d="scan'208";a="771203503"
 Received: from btaubert-mobl1.ger.corp.intel.com ([10.252.55.237])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 08:36:46 -0700
-Date:   Mon, 29 May 2023 18:36:43 +0300 (EEST)
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 08:41:48 -0700
+Date:   Mon, 29 May 2023 18:41:45 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Mark Pearson <mpearson-lenovo@squebb.ca>
 cc:     Hans de Goede <hdegoede@redhat.com>,
@@ -48,13 +48,13 @@ cc:     Hans de Goede <hdegoede@redhat.com>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/5] platform/x86: think-lmi: Enable opcode support
- on BIOS settings
-In-Reply-To: <90de5786-085c-4cff-8125-215c9ae20ad1@app.fastmail.com>
-Message-ID: <93f28f8b-67d4-496b-577d-12c106fe435@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca> <20230526171658.3886-1-mpearson-lenovo@squebb.ca> <0e11913-ba27-e3a-fafe-bd5e48db8b6b@linux.intel.com> <90de5786-085c-4cff-8125-215c9ae20ad1@app.fastmail.com>
+Subject: Re: [PATCH v3 3/5] platform/x86: think-lmi: Correct NVME password
+ handling
+In-Reply-To: <709df78f-4313-460a-87da-f4d302ed8912@app.fastmail.com>
+Message-ID: <2796a7d0-8010-ab14-23a-9f69ee9d465@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca> <20230526171658.3886-1-mpearson-lenovo@squebb.ca> <20230526171658.3886-3-mpearson-lenovo@squebb.ca> <a52f69f-2dc4-fe76-9f89-e1c143d2bb27@linux.intel.com> <709df78f-4313-460a-87da-f4d302ed8912@app.fastmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-711971292-1685374608=:2737"
+Content-Type: multipart/mixed; boundary="8323329-1210459766-1685374910=:2737"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -62,96 +62,48 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-711971292-1685374608=:2737
+--8323329-1210459766-1685374910=:2737
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
 
 On Mon, 29 May 2023, Mark Pearson wrote:
-> On Mon, May 29, 2023, at 7:51 AM, Ilpo Järvinen wrote:
+> On Mon, May 29, 2023, at 8:03 AM, Ilpo Järvinen wrote:
 > > On Fri, 26 May 2023, Mark Pearson wrote:
 > >
-> >> Whilst reviewing some documentation from the FW team on using WMI on
-> >> Lenovo system I noticed that we weren't using Opcode support when
-> >> changing BIOS settings in the thinkLMI driver.
+> >> NVME passwords identifier have been standardised across the Lenovo
+> >> systems and now use udrp and adrp (user and admin level) instead of
+> >> unvp and mnvp.
 > >> 
-> >> We should be doing this to ensure we're future proof as the old
-> >> non-opcode mechanism has been deprecated.
+> >> This should apparently be backwards compatible.
 > >> 
-> >> Tested on X1 Carbon G10 and G11.
-> >> 
-> >> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> >> ---
-> >> Changes in v2: Update comment for clearer explanation of what the driver
-> >> is doing
-> >> Changes in v3: None. Version bump with rest of series
-> >> 
-> >>  drivers/platform/x86/think-lmi.c | 28 +++++++++++++++++++++++++++-
-> >>  1 file changed, 27 insertions(+), 1 deletion(-)
-> >> 
-> >> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> >> index 1138f770149d..2745224f62ab 100644
-> >> --- a/drivers/platform/x86/think-lmi.c
-> >> +++ b/drivers/platform/x86/think-lmi.c
-> >> @@ -1001,7 +1001,33 @@ static ssize_t current_value_store(struct kobject *kobj,
-> >>  				tlmi_priv.pwd_admin->save_signature);
-> >>  		if (ret)
-> >>  			goto out;
-> >> -	} else { /* Non certiifcate based authentication */
-> >> +	} else if (tlmi_priv.opcode_support) {
-> >> +		/*
-> >> +		 * If opcode support is present use that interface.
-> >> +		 * Note - this sets the variable and then the password as separate
-> >> +		 * WMI calls. Function tlmi_save_bios_settings will error if the
-> >> +		 * password is incorrect.
-> >> +		 */
-> >> +		set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
-> >> +					new_setting);
+> >> Also cleaned up so the index is set to a default of 1 rather than 0
+> >> as this just makes more sense (there is no device 0).
 > >
-> > Alignment.
+> > These two sound entirely separate changes. If that's the case, please 
+> > make own patch from the send change.
 > 
-> OK - I assume you want the new_setting lined up under the bracket.
-> I've not seen that called out as a requirement (https://www.kernel.org/doc/html/v4.10/process/coding-style.html) but I don't mind fixing....but if you can point me at the specifics it's appreciated
-
-Yes, I meant aligning to the column following the opening parenthesis.
-
-I guess it's not a hard requirement, however, there's a benefit from 
-certain things aligning because it helps in the brains in the process of 
-converting text into structure with less effort (when not specifically not 
-focusing on that particular line).
-
-> >> +		if (!set_str) {
-> >> +			ret = -ENOMEM;
-> >> +			goto out;
-> >> +		}
-> >> +
-> >> +		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str);
-> >> +		if (ret)
-> >> +			goto out;
-> >> +
-> >> +		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-> >> +			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
-> >> +					tlmi_priv.pwd_admin->password);
+> Ack. It was all related to the index setting and seemed trivial so I 
+> lumped together but I can split. This patch series is turning into a 
+> good learning exercise for my git skills :) (which are limited)
+>
+> > Hmm, index_store() still allows 0, is that also related here? Please check 
+> > also ABI documentation as index default seems to be mentioned there as 
+> > well.
 > >
-> > Align.
 > 
-> Ack.
-> 
-> >
-> >> +			if (ret)
-> >> +				goto out;
-> >> +		}
-> >> +
-> >> +		ret = tlmi_save_bios_settings("");
-> >> +	} else { /* old non opcode based authentication method (deprecated)*/
-> >
-> > non missing hyphen.
-> 
-> non-opcode I assume?
+> I'd rather not limit it so 0 isn't allowed in case our BIOS team does 
+> something weird in the future; but right now 1 is the default so it 
+> makes more sense.
 
-I think the most proper English would be non-opcode-based since "opcode 
-based" belong together (but I'm not a native speaker here).
+Sure, do what you feel makes sense here. I was just pointing out the 
+perceived inconsistency in case it wasn't intentional.
+
+It might be useful to add one sentence into changelog about the reasoning 
+so it can be found easier later on (effectively the paragraph you wrote 
+above with small tweaks is enough I think).
+
 
 -- 
  i.
 
---8323329-711971292-1685374608=:2737--
+--8323329-1210459766-1685374910=:2737--
