@@ -2,53 +2,53 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9292C77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 14:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42525C77B7E
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 14:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229821AbjE2OvK (ORCPT
+        id S229712AbjE2O6d (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 May 2023 10:51:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45890 "EHLO
+        Mon, 29 May 2023 10:58:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbjE2OvJ (ORCPT
+        with ESMTP id S229659AbjE2O6c (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 May 2023 10:51:09 -0400
+        Mon, 29 May 2023 10:58:32 -0400
 Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31824EA;
-        Mon, 29 May 2023 07:51:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7939AD;
+        Mon, 29 May 2023 07:58:31 -0700 (PDT)
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 6575D320094F;
-        Mon, 29 May 2023 10:51:07 -0400 (EDT)
+        by mailout.west.internal (Postfix) with ESMTP id E0D2532005D8;
+        Mon, 29 May 2023 10:58:30 -0400 (EDT)
 Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Mon, 29 May 2023 10:51:07 -0400
+  by compute5.internal (MEProxy); Mon, 29 May 2023 10:58:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
         :cc:content-transfer-encoding:content-type:content-type:date
         :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
         :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
-        1685371867; x=1685458267; bh=blDq+QHCOBYb/yKUOZLW7MiQVLqb5XmTXJg
-        4JUWpDqU=; b=l5Kiwo8L0qIoASMHrJVnZqJXH1sA899gLTcVKooGYR+oxF2Fuuv
-        FlyYs3Ms9QLjPlAPC5xdrH8P4TyL3uBA4m2OmYysfYUnwmFiPYR1u4+Nbwx5hgN2
-        OqmHtVnWkkTwhC0ClVGcSWy3NxkzzBuy9BqDVWmSWLj8Nn8aR4hVhr+Twa50s9tq
-        B7qu6m9yyqccmWtiZFQe6pwBCFCZI+GncUaiQ3iEYd4aZIEzuoJ4aXxfwzBTYxD9
-        SwBYc/HnpGUm4wtkj29fKqN1ha6ZHgjfwugDvxXC/KHmSqzIzBfp7l8H/pcGtBnm
-        8WgwJQ114LqwRjTLELloR6eFGvFQJu62eWQ==
+        1685372310; x=1685458710; bh=YkweKgJ4f/SmRu5LsICpz+G7m78ta5lebbS
+        sHFR7Ozk=; b=dCUp61NUgFO3iSm/DUEUtFNnC/RcH2VFIFEzBzZsxN2dPEYSi3o
+        tzetlFCygea+TNgx7hXBDBZtIIJAXCUfT076ysJEB59bMSDbIpZ9dOLV6xdZ2WKN
+        u8riGsKyoGjp94JMU9282S0E2YDk17J1y6bMy8Acls13I/hfjHHxngQgrfawx94w
+        eUNf2jF8LmRXvhTpB7/Hsm89/dTaYmuRL9SfA8tHwpve8EwW3qjXye6ZZDo/6Dr6
+        s5tGUz58h+xPUQxeWCul3ajh3kUefLc1Vw+W17yUMjt552S5BmifTEjlGM8pnwTn
+        MDJ3aGI+ozLT0kvvHYZ4OQBSy2fFPeld2Mg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding
         :content-type:content-type:date:date:feedback-id:feedback-id
         :from:from:in-reply-to:in-reply-to:message-id:mime-version
         :references:reply-to:sender:subject:subject:to:to:x-me-proxy
         :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-        1685371867; x=1685458267; bh=blDq+QHCOBYb/yKUOZLW7MiQVLqb5XmTXJg
-        4JUWpDqU=; b=MDacCx16JusqZNc/oTrvXJ7wLNV+YML3jzRHn2S7j6tUq/GrCmz
-        kCkPXGbN8OYPGQpq4NGlmVWrAGsR2MJP/5jOuMafsCrMaZVUwKiYE3XUijSE08gF
-        myp/XxvwC8FgaeTvGzuFwzxh9BtZTIYYOtg4A2y8lh1OtY94eVlrRZBPE8syMEdP
-        mSrQ8JRDspOSi2IpGOvs/JLA8L7oOlmm6UHZAsU7i8yB55j1E9QLnGJuDa2zjsGH
-        uNxf8B+DVw8vQBJ4asbpDYYJ4C/e9+iRzq9mTy4Zzw6yzZVAtuT3ovHgvHeWBKPk
-        OqSAZXvXyR0yydn6oZ2U8p1PT9xUIGkc5bw==
-X-ME-Sender: <xms:2rt0ZKrBD4Z3AutsEkU0yZFHvZ6KABcKpmrFuWemyNg2HaT-YX7ziw>
-    <xme:2rt0ZIpNYnk2aq3KULFePjBBCwzAJdIkMh2lPiJ3lh4_-h0wa9b3njpg0tQHg6V3H
-    EAusDRBeDqjHWN6igk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeekhedgkeduucetufdoteggodetrfdotf
+        1685372310; x=1685458710; bh=YkweKgJ4f/SmRu5LsICpz+G7m78ta5lebbS
+        sHFR7Ozk=; b=jRrD5F4bKmo0sbOrENH8E/8FVR3At2GrQ6eGhA18L3WWrVyWeEK
+        WoHPGXruK2tplkblehHWX8uEU5TfGCpX70CBqqnhI7QbFeEBeTDQm5mXHYa2P4iI
+        9fyhSsCI66uwUGz6zExXtDGIW6rHGWtKBCZBWypzm8YFWwxZ0ZbBWkfiFutqYVPA
+        9wYHIVWTMhv0zFX60T4Z/tnwrxgBSuwJlz+jMgIJlCChaSqV4NqfG+2JhqK8IaBt
+        8U1d08uWlQQTZ8NfNAz1b6B+LYR4v4juYE/ZUhdFXh6u6qf58wpg/l42U9GkhcTp
+        qGBMqzuZG9Gkm7br04vGX8vjE7EGV6SM9eg==
+X-ME-Sender: <xms:lr10ZKcI1MHO0DLcLZkDsvDfKov-HFnmZjRGrc6zN9U2r5aLZWxhaA>
+    <xme:lr10ZEPV9xq3Yz7otqJVo6B1kyrvga2LR5OBnyFsg8AmLxGuOW5bTjqRgE4Cul6d7
+    ZSA1rYaO2IzjgmP8Ik>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeekhedgkedvucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfo
@@ -57,83 +57,72 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeekhedgkeduucetufdoteggod
     hfejfffhtdeitdejfeekvdeugfeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
     hmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgt
     rg
-X-ME-Proxy: <xmx:2rt0ZPNXHR_u-Ys3UhgEDuyj3n5uiPqOwSFNVaMtVivOx-6VCr5cUw>
-    <xmx:2rt0ZJ4waq_UUWSBS0AYq-GQoxWAHdwX6Ebau1ryx8Lpo_njMnwodA>
-    <xmx:2rt0ZJ5r0Cmqkz1UsBnAw7sB9L0xT4qODXj981tipAs8Cl_fi2YddQ>
-    <xmx:27t0ZJEOVkO6ArkLBhxOwxZRATZumDInn1fqZqOtqr9_BGLPaJv_7w>
+X-ME-Proxy: <xmx:lr10ZLhXRNAuHCOuSlfTNtG9xd1f_HdUFP9QfqJqSxH_qVT7peB-9Q>
+    <xmx:lr10ZH8VbMY0hfDHIb-hNIyMu3PDocJ4V5KQtwGiRep7CjZGsel25Q>
+    <xmx:lr10ZGsFrcY9ZahiUtTyg7mVtNXPxmhoxS0Ss9KkUzRKTtJdN38WHg>
+    <xmx:lr10ZP407QxZ-4iIItVo0gOecejN31V1HzMm-_pXGMvs7XS_tJJ2fA>
 Feedback-ID: ibe194615:Fastmail
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id C1422C60091; Mon, 29 May 2023 10:51:06 -0400 (EDT)
+        id 35570C60091; Mon, 29 May 2023 10:58:30 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.9.0-alpha0-441-ga3ab13cd6d-fm-20230517.001-ga3ab13cd
 Mime-Version: 1.0
-Message-Id: <49631ff4-8d8c-4e77-bf13-dd8b0c1819d0@app.fastmail.com>
-In-Reply-To: <aeb0313-e845-9134-4136-6347d691bd4@linux.intel.com>
+Message-Id: <709df78f-4313-460a-87da-f4d302ed8912@app.fastmail.com>
+In-Reply-To: <a52f69f-2dc4-fe76-9f89-e1c143d2bb27@linux.intel.com>
 References: <mpearson-lenovo@squebb.ca>
  <20230526171658.3886-1-mpearson-lenovo@squebb.ca>
- <20230526171658.3886-4-mpearson-lenovo@squebb.ca>
- <aeb0313-e845-9134-4136-6347d691bd4@linux.intel.com>
-Date:   Mon, 29 May 2023 10:50:35 -0400
+ <20230526171658.3886-3-mpearson-lenovo@squebb.ca>
+ <a52f69f-2dc4-fe76-9f89-e1c143d2bb27@linux.intel.com>
+Date:   Mon, 29 May 2023 10:58:08 -0400
 From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
 To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc:     "Hans de Goede" <hdegoede@redhat.com>,
         "markgross@kernel.org" <markgross@kernel.org>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] platform/x86: think-lmi: Don't display unnecessary
- authentication settings
+Subject: Re: [PATCH v3 3/5] platform/x86: think-lmi: Correct NVME password handling
 Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Thanks Ilpo
 
-
-On Mon, May 29, 2023, at 8:05 AM, Ilpo J=C3=A4rvinen wrote:
+On Mon, May 29, 2023, at 8:03 AM, Ilpo J=C3=A4rvinen wrote:
 > On Fri, 26 May 2023, Mark Pearson wrote:
 >
->> If Opcode support is available (which is the standard for all platfor=
-ms
->> going forward) then there is no need to have the encoding and kbdlang
->> attributes visible
+>> NVME passwords identifier have been standardised across the Lenovo
+>> systems and now use udrp and adrp (user and admin level) instead of
+>> unvp and mnvp.
 >>=20
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> ---
->> Changes in v2 & v3: None. Version bumped in series
+>> This should apparently be backwards compatible.
 >>=20
->>  drivers/platform/x86/think-lmi.c | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>=20
->> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/=
-think-lmi.c
->> index 1c02958035ad..64cd453d6e7d 100644
->> --- a/drivers/platform/x86/think-lmi.c
->> +++ b/drivers/platform/x86/think-lmi.c
->> @@ -879,6 +879,12 @@ static umode_t auth_attr_is_visible(struct kobje=
-ct *kobj,
->>  		return 0;
->>  	}
->> =20
->> +	/* Don't display un-needed settings if opcode available */
->> +	if ((attr =3D=3D &auth_encoding.attr ||
->> +	    attr =3D=3D &auth_kbdlang.attr) &&
+>> Also cleaned up so the index is set to a default of 1 rather than 0
+>> as this just makes more sense (there is no device 0).
 >
-> Indentation issue here, attr must be at the same column although putti=
-ng=20
-> the || on a single line might make this easier to read.
+> These two sound entirely separate changes. If that's the case, please=20
+> make own patch from the send change.
 
-OK - will fix.
+Ack. It was all related to the index setting and seemed trivial so I lum=
+ped together but I can split.
+This patch series is turning into a good learning exercise for my git sk=
+ills :) (which are limited)
 
 >
->> +	    tlmi_priv.opcode_support)
->> +		return 0;
->> +
->>  	return attr->mode;
->>  }
->> =20
->>=20
+> Hmm, index_store() still allows 0, is that also related here? Please c=
+heck=20
+> also ABI documentation as index default seems to be mentioned there as=20
+> well.
 >
+
+I'd rather not limit it so 0 isn't allowed in case our BIOS team does so=
+mething weird in the future; but right now 1 is the default so it makes =
+more sense.
+
+Well spotted on the ABI documentation - I had completely missed that. I =
+will address that as well.
+
 > --=20
 >  i.
 
