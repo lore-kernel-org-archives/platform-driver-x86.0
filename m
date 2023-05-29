@@ -2,54 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B28DBC7EE29
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 12:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7AAC77B7E
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 12:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231553AbjE2MF7 (ORCPT
+        id S231626AbjE2MYD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 May 2023 08:05:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40432 "EHLO
+        Mon, 29 May 2023 08:24:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231575AbjE2MF6 (ORCPT
+        with ESMTP id S230332AbjE2MYC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 May 2023 08:05:58 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C488F1;
-        Mon, 29 May 2023 05:05:54 -0700 (PDT)
+        Mon, 29 May 2023 08:24:02 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75393C2;
+        Mon, 29 May 2023 05:23:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685361954; x=1716897954;
+  t=1685363027; x=1716899027;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=24kaNhoDDh2Sg/pbrar8VavciZH3DS7NRvSWVRs1f7I=;
-  b=l0Mkn2rV3d29TzhW4s0rkca0ex+0UkX+Qs049YzoOgDMnlT/41t7+9OQ
-   b+YLPoD3LdAd1+NxsH6ghHKqh5NGYgHlBmE6LeU29a8xIAF2PmT6UKHNl
-   0y4jYq/1xfxHF4eDXO1gDLjjVzEQ01HqER2edqAU3+laJDXb7meySodf2
-   Zr7+w2hrZfpd2zvkMjDyw1Cz/RPHh3uS82Pm9j6ZNuczyrJh3qbYGUZVk
-   dc2H2JA/oFv6YDVGkb0yn9x041iX4ZOX/i3EG9XqtKhxGdSLF0dzDQM5h
-   0ukcdC+HzfowvX3Rgdndjtm+qes7M/Kb0bw2fJrJLuZ6FFZStE40g7mhE
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="420447840"
+  bh=zsfRnRMXIV5r/X5furPt6ghu8XOqWi203n2Q9dk2B28=;
+  b=GUY4uDRsumjymEK1BNnByh9fG6eFMx9vHkN698/wu4vJmeiGSNuax5r1
+   55XanUm7NAXdLkx4K9tT1cGNkIuitTKVJzK+LmVpa8FdoSVO8tOJodSE8
+   QuH+iqtS2zKIZge4+CeexTL7VA00Tq3nG/QVv/v5ZLT6EsvIz+gzbYurC
+   p/JYfuNKEaA1KWw/BURLUfgl1N2bojRM1yiawcE+xk2ITq0N3e7umjx8U
+   SctYrMusy5ptMbqooPl5Irfb0swveOuIIl+T7lKa7XBdeVuHf6DAy/TQt
+   fuNN7amAtOFZDWEGQACaLmo4hu8zqLlL74UA/v6pMLQq6eob06iyhrPyr
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="441049767"
 X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
-   d="scan'208";a="420447840"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 05:05:34 -0700
+   d="scan'208";a="441049767"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 05:23:47 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="850386659"
+X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="818417659"
 X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
-   d="scan'208";a="850386659"
+   d="scan'208";a="818417659"
 Received: from btaubert-mobl1.ger.corp.intel.com ([10.252.55.237])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 05:05:32 -0700
-Date:   Mon, 29 May 2023 15:05:29 +0300 (EEST)
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 05:23:45 -0700
+Date:   Mon, 29 May 2023 15:23:42 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Mark Pearson <mpearson-lenovo@squebb.ca>
 cc:     hdegoede@redhat.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] platform/x86: think-lmi: Don't display unnecessary
- authentication settings
-In-Reply-To: <20230526171658.3886-4-mpearson-lenovo@squebb.ca>
-Message-ID: <aeb0313-e845-9134-4136-6347d691bd4@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca> <20230526171658.3886-1-mpearson-lenovo@squebb.ca> <20230526171658.3886-4-mpearson-lenovo@squebb.ca>
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 5/5] platform/x86: think-lmi: mutex protection around
+ multiple WMI calls
+In-Reply-To: <20230526171658.3886-5-mpearson-lenovo@squebb.ca>
+Message-ID: <27c7824e-ec90-c68f-3e76-92525ed7e393@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca> <20230526171658.3886-1-mpearson-lenovo@squebb.ca> <20230526171658.3886-5-mpearson-lenovo@squebb.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
@@ -58,40 +59,95 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Fri, 26 May 2023, Mark Pearson wrote:
 
-> If Opcode support is available (which is the standard for all platforms
-> going forward) then there is no need to have the encoding and kbdlang
-> attributes visible
-> 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> ---
-> Changes in v2 & v3: None. Version bumped in series
-> 
->  drivers/platform/x86/think-lmi.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index 1c02958035ad..64cd453d6e7d 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -879,6 +879,12 @@ static umode_t auth_attr_is_visible(struct kobject *kobj,
->  		return 0;
->  	}
->  
-> +	/* Don't display un-needed settings if opcode available */
-> +	if ((attr == &auth_encoding.attr ||
-> +	    attr == &auth_kbdlang.attr) &&
+> Add mutex protection around cases where an operation needs multiple
+> WMI calls - e.g. setting password.
 
-Indentation issue here, attr must be at the same column although putting 
-the || on a single line might make this easier to read.
+So you need this feature already for Patch 1/5? If that's the case, you 
+should reorder the patches and put it before 1/5.
 
-> +	    tlmi_priv.opcode_support)
-> +		return 0;
-> +
->  	return attr->mode;
->  }
->  
-> 
+That "e.g. setting password" sounds vague enough that I'm left to wonder 
+if there are other cases in the driver which need locking too. It would be 
+useful to be precise with wording here. It will help immensely when 
+somebody looks this changelog 5 years from now if you explain all cases 
+that need locking up front.
+
+So, is this needed also for some existing code, then Fixes tag might be in 
+order? (I'm looking e.g. that cert auth block in current_value_store() 
+which also does more than one call).
 
 -- 
  i.
 
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> ---
+> Changes in v2: New commit added after review of other patches in series.
+> Changes in v3: Simplified mutex handling as recommended.
+> 
+>  drivers/platform/x86/think-lmi.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+> index 64cd453d6e7d..86185358dba2 100644
+> --- a/drivers/platform/x86/think-lmi.c
+> +++ b/drivers/platform/x86/think-lmi.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/errno.h>
+>  #include <linux/fs.h>
+> +#include <linux/mutex.h>
+>  #include <linux/string.h>
+>  #include <linux/types.h>
+>  #include <linux/dmi.h>
+> @@ -195,6 +196,7 @@ static const char * const level_options[] = {
+>  };
+>  static struct think_lmi tlmi_priv;
+>  static struct class *fw_attr_class;
+> +static DEFINE_MUTEX(tlmi_mutex);
+>  
+>  /* ------ Utility functions ------------*/
+>  /* Strip out CR if one is present */
+> @@ -437,6 +439,9 @@ static ssize_t new_password_store(struct kobject *kobj,
+>  	/* Strip out CR if one is present, setting password won't work if it is present */
+>  	strip_cr(new_pwd);
+>  
+> +	/* Use lock in case multiple WMI operations needed */
+> +	mutex_lock(&tlmi_mutex);
+> +
+>  	pwdlen = strlen(new_pwd);
+>  	/* pwdlen == 0 is allowed to clear the password */
+>  	if (pwdlen && ((pwdlen < setting->minlen) || (pwdlen > setting->maxlen))) {
+> @@ -493,6 +498,7 @@ static ssize_t new_password_store(struct kobject *kobj,
+>  		kfree(auth_str);
+>  	}
+>  out:
+> +	mutex_unlock(&tlmi_mutex);
+>  	kfree(new_pwd);
+>  	return ret ?: count;
+>  }
+> @@ -987,6 +993,9 @@ static ssize_t current_value_store(struct kobject *kobj,
+>  	/* Strip out CR if one is present */
+>  	strip_cr(new_setting);
+>  
+> +	/* Use lock in case multiple WMI operations needed */
+> +	mutex_lock(&tlmi_mutex);
+> +
+>  	/* Check if certificate authentication is enabled and active */
+>  	if (tlmi_priv.certificate_support && tlmi_priv.pwd_admin->cert_installed) {
+>  		if (!tlmi_priv.pwd_admin->signature || !tlmi_priv.pwd_admin->save_signature) {
+> @@ -1031,7 +1040,6 @@ static ssize_t current_value_store(struct kobject *kobj,
+>  			if (ret)
+>  				goto out;
+>  		}
+> -
+>  		ret = tlmi_save_bios_settings("");
+>  	} else { /* old non opcode based authentication method (deprecated)*/
+>  		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+> @@ -1071,6 +1079,7 @@ static ssize_t current_value_store(struct kobject *kobj,
+>  		kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
+>  	}
+>  out:
+> +	mutex_unlock(&tlmi_mutex);
+>  	kfree(auth_str);
+>  	kfree(set_str);
+>  	kfree(new_setting);
+> 
