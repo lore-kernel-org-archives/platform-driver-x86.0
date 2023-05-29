@@ -2,79 +2,80 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8C4C77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 16:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DA7C77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 16:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229582AbjE2QGc (ORCPT
+        id S229612AbjE2QHK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 May 2023 12:06:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51538 "EHLO
+        Mon, 29 May 2023 12:07:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbjE2QG3 (ORCPT
+        with ESMTP id S229610AbjE2QHI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 May 2023 12:06:29 -0400
+        Mon, 29 May 2023 12:07:08 -0400
 Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF5D7B2;
-        Mon, 29 May 2023 09:06:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3226CD;
+        Mon, 29 May 2023 09:07:02 -0700 (PDT)
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 3B1103200908;
-        Mon, 29 May 2023 12:06:23 -0400 (EDT)
+        by mailout.west.internal (Postfix) with ESMTP id CA914320093E;
+        Mon, 29 May 2023 12:07:01 -0400 (EDT)
 Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Mon, 29 May 2023 12:06:23 -0400
+  by compute5.internal (MEProxy); Mon, 29 May 2023 12:07:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
         :cc:content-transfer-encoding:content-type:content-type:date
         :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
         :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
-        1685376382; x=1685462782; bh=Kl2w2yf8ESTuCzBcYvOTQ7d0QCjmY58J4ju
-        tHuI/gho=; b=Jjq5esziC9a4A6/qQtFHElr2sTkmSXc+1uymseRzAfrnj4zMVni
-        6LNP7HDemHbCFsaULjv4Nv3ZtPCRB0ronxNuJFZYKFl0kHAm021Ipz0YzfxvWgpx
-        TB2akyVGTS1hCW9dyPAPJLGhIrJc9VTuSx3vTo+Mv1qo4FzQDNQScoy8EZYmScob
-        P/gDNQye/s5hdkR5aXq5QByrav/V6MgzdjCLNrbjjioFDBnpAbNPpo4DguBYwAPa
-        lmY/eFX9dpYXiGekx9/jrjZNNnkmumaEK84TkQ+etde1hGv43cYp1G7zCQIhoBdf
-        SjLybqCzOoc5DbcV3OwYPtNCJUs36rhX4GQ==
+        1685376421; x=1685462821; bh=HuxZRv4TaFAuubZI3zfzO/JeEI/nq2N1lRx
+        thCFxnxE=; b=zk9e1VmYz9/vZaI0LP5XXFmBSqchntaT5WDBHIno3JSnnK82o6I
+        5betIjbZLTf67ebK/LRllk5CQq5EA0L8pjtHH7XlcaGPeahc/xA2r9xvVFzngXVU
+        9Acz/PjHUYgj6+quAYOPUHzbwFcsbJ5Mur8MIYoNDYblKv9FXM0SkIHxfG4nank7
+        Df4t2hNGLla3W72E5BQdNCdvZ/3dzmxr6n9zGKUaY5L7ELFROsKV0tGAMXsTy6JL
+        6sFd3CZWIZv0jS5CfSHjHT/OOrVQkYpiSj7Rs2cyKPpNyygZeQBlZJMHRhrfvzX+
+        vFleOlfXq6CGTokSIh6Ub6cK6TjFOjMqBvg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding
         :content-type:content-type:date:date:feedback-id:feedback-id
         :from:from:in-reply-to:in-reply-to:message-id:mime-version
         :references:reply-to:sender:subject:subject:to:to:x-me-proxy
         :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-        1685376382; x=1685462782; bh=Kl2w2yf8ESTuCzBcYvOTQ7d0QCjmY58J4ju
-        tHuI/gho=; b=reQxgBSTjEz6mfB4JhL+l4j8MUMhVZK77wrS9tAuX9zuIhTYiI0
-        Pw6v717Q2w0Iy+pOOtVDkRpyWFC8l/nXyAwF3fSQG/vv5Og/KOkS0ykDqjlvWRyo
-        Fa43F2YZmWMjG28qDmUws90MTnHLTTX0u+NubDY1JkQoBzoyNA1jNqIlPrp9H0EB
-        6ONVqcTHM2riAJPdTgmfLToHFdjvg2Qqa5zOC/P0ZtOV/KcexNuj5s+DP5XTSkLY
-        b95jtDvXCFNn13FgtK0Oz8bUJtJRaPqg82oaXtPZI5yKS9wQ69hcykPJBOSa5Szn
-        fYHLUipVcOdvkgsO3pKckGYS+HEIcqIBllA==
-X-ME-Sender: <xms:fs10ZCUUvl5y_UauZOHKCgDayZQanKt8B90GeRx0EqOKgSbwgGNTcg>
-    <xme:fs10ZOntGQ3ZGPXfUFodIOKnvxU4JglPQFJ2SXql3ozMb19Uq4rx_i8uu-eoyfE6a
-    5KsJtN_m-Yx9fnsdZ0>
+        1685376421; x=1685462821; bh=HuxZRv4TaFAuubZI3zfzO/JeEI/nq2N1lRx
+        thCFxnxE=; b=rAQRL0ZtUTHUDLvK1x8bPpUXCYS0qnh/CabOtLJzPYEZAb036+4
+        VVSAlJDzfOo94TOD2pUWsjMfdBfIuW2hCoaxrtbaFh6fHLd7rPo+ovlPyIJuw+zL
+        dWzflb4WJW6kEsN3f7Z4MTqktms0+8REJjamnmVo5E5nqUPRZQdvQCPxp/2koyZg
+        Ye3/zc0IawxhYnewVmjfKZrgY6N50aUHNm9zU9qjEcpkpokyi+SB1pWvGJoEEZSg
+        BxzqBrhwc7kf6U8DZ6rimwvrhUFN6wAtFkPW1d0txHvrt39NpzVVB4G2O39/Q3nN
+        rJX1wnKhFof53ux4JVnXQcrpYPpOKHNpb1A==
+X-ME-Sender: <xms:pc10ZK8IuY_ieK6Tuc2_WMygF-zrCles7KkYA-IGQ1DIC-2rKBxUjg>
+    <xme:pc10ZKsI4Hq5FauR-kDQuGrnEomGpdT8nQEhqJmcnkmdAsip9HuSIJ4KlSkCKeD7E
+    674ERvHYV3Tz-Ro070>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeekhedgleehucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfo
     rghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
-    gsrdgtrgeqnecuggftrfgrthhtvghrnhepfeejgedvudegvdekhedvffefjefhuedthfdt
-    heehkeffuddvgfetjeegjeeufefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghr
-    shhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:fs10ZGb69Tctqq2fZ1GhoTYX2P_Tc-b0bsrIa_15mzlMYh4VafaYtA>
-    <xmx:fs10ZJWtnmHfKFfeULvLEJfTMWk2WPrmFvHAIcfBLaYUxOHLJmlLwQ>
-    <xmx:fs10ZMmKI5hrYCzN4AiEGBZKxMiywqMb1tHKBDqsf3C-1lX-CsKVng>
-    <xmx:fs10ZBzIn1JqtIEArMwmXXAy0JcRtoA-BFrQZIomNPDfeFjKlSY53Q>
+    gsrdgtrgeqnecuggftrfgrthhtvghrnhephfefgedufeetgfetlefgkefgvdejleelvefg
+    hfejfffhtdeitdejfeekvdeugfeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgt
+    rg
+X-ME-Proxy: <xmx:pc10ZACrMdhOGP22jqHul710QaF9Zi2UdHz4FBOlezCHLgOPMD3eQw>
+    <xmx:pc10ZCc7q5XJyaxJyzPz6jrowW1uaA55BBKjL5triBRsZ5ac15HmkQ>
+    <xmx:pc10ZPP9RCfytVsXkAHbvfuWqz49LheTDQuf1bG-wju8jKOW7SgvaQ>
+    <xmx:pc10ZIa2iEffnMqNf6f_rT8vgSs_lBHH_Ma80REU_2RESm1sNQgcfQ>
 Feedback-ID: ibe194615:Fastmail
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 7A281C60093; Mon, 29 May 2023 12:06:22 -0400 (EDT)
+        id F3927C60091; Mon, 29 May 2023 12:07:00 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.9.0-alpha0-441-ga3ab13cd6d-fm-20230517.001-ga3ab13cd
 Mime-Version: 1.0
-Message-Id: <37f3c2b1-84d7-4b6e-a489-656a23e5cf88@app.fastmail.com>
-In-Reply-To: <93f28f8b-67d4-496b-577d-12c106fe435@linux.intel.com>
+Message-Id: <39791b71-7c40-42dc-8618-a2831fa08440@app.fastmail.com>
+In-Reply-To: <2796a7d0-8010-ab14-23a-9f69ee9d465@linux.intel.com>
 References: <mpearson-lenovo@squebb.ca>
  <20230526171658.3886-1-mpearson-lenovo@squebb.ca>
- <0e11913-ba27-e3a-fafe-bd5e48db8b6b@linux.intel.com>
- <90de5786-085c-4cff-8125-215c9ae20ad1@app.fastmail.com>
- <93f28f8b-67d4-496b-577d-12c106fe435@linux.intel.com>
-Date:   Mon, 29 May 2023 12:06:02 -0400
+ <20230526171658.3886-3-mpearson-lenovo@squebb.ca>
+ <a52f69f-2dc4-fe76-9f89-e1c143d2bb27@linux.intel.com>
+ <709df78f-4313-460a-87da-f4d302ed8912@app.fastmail.com>
+ <2796a7d0-8010-ab14-23a-9f69ee9d465@linux.intel.com>
+Date:   Mon, 29 May 2023 12:06:40 -0400
 From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
 To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc:     "Hans de Goede" <hdegoede@redhat.com>,
@@ -82,8 +83,7 @@ Cc:     "Hans de Goede" <hdegoede@redhat.com>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/5] platform/x86: think-lmi: Enable opcode support on BIOS
- settings
+Subject: Re: [PATCH v3 3/5] platform/x86: think-lmi: Correct NVME password handling
 Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -92,114 +92,48 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
 
-On Mon, May 29, 2023, at 11:36 AM, Ilpo J=C3=A4rvinen wrote:
+On Mon, May 29, 2023, at 11:41 AM, Ilpo J=C3=A4rvinen wrote:
 > On Mon, 29 May 2023, Mark Pearson wrote:
->> On Mon, May 29, 2023, at 7:51 AM, Ilpo J=C3=A4rvinen wrote:
+>> On Mon, May 29, 2023, at 8:03 AM, Ilpo J=C3=A4rvinen wrote:
 >> > On Fri, 26 May 2023, Mark Pearson wrote:
 >> >
->> >> Whilst reviewing some documentation from the FW team on using WMI =
-on
->> >> Lenovo system I noticed that we weren't using Opcode support when
->> >> changing BIOS settings in the thinkLMI driver.
+>> >> NVME passwords identifier have been standardised across the Lenovo
+>> >> systems and now use udrp and adrp (user and admin level) instead of
+>> >> unvp and mnvp.
 >> >>=20
->> >> We should be doing this to ensure we're future proof as the old
->> >> non-opcode mechanism has been deprecated.
+>> >> This should apparently be backwards compatible.
 >> >>=20
->> >> Tested on X1 Carbon G10 and G11.
->> >>=20
->> >> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> >> ---
->> >> Changes in v2: Update comment for clearer explanation of what the =
-driver
->> >> is doing
->> >> Changes in v3: None. Version bump with rest of series
->> >>=20
->> >>  drivers/platform/x86/think-lmi.c | 28 +++++++++++++++++++++++++++-
->> >>  1 file changed, 27 insertions(+), 1 deletion(-)
->> >>=20
->> >> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x=
-86/think-lmi.c
->> >> index 1138f770149d..2745224f62ab 100644
->> >> --- a/drivers/platform/x86/think-lmi.c
->> >> +++ b/drivers/platform/x86/think-lmi.c
->> >> @@ -1001,7 +1001,33 @@ static ssize_t current_value_store(struct k=
-object *kobj,
->> >>  				tlmi_priv.pwd_admin->save_signature);
->> >>  		if (ret)
->> >>  			goto out;
->> >> -	} else { /* Non certiifcate based authentication */
->> >> +	} else if (tlmi_priv.opcode_support) {
->> >> +		/*
->> >> +		 * If opcode support is present use that interface.
->> >> +		 * Note - this sets the variable and then the password as separ=
-ate
->> >> +		 * WMI calls. Function tlmi_save_bios_settings will error if the
->> >> +		 * password is incorrect.
->> >> +		 */
->> >> +		set_str =3D kasprintf(GFP_KERNEL, "%s,%s;", setting->display_na=
-me,
->> >> +					new_setting);
+>> >> Also cleaned up so the index is set to a default of 1 rather than 0
+>> >> as this just makes more sense (there is no device 0).
 >> >
->> > Alignment.
+>> > These two sound entirely separate changes. If that's the case, plea=
+se=20
+>> > make own patch from the send change.
 >>=20
->> OK - I assume you want the new_setting lined up under the bracket.
->> I've not seen that called out as a requirement (https://www.kernel.or=
-g/doc/html/v4.10/process/coding-style.html) but I don't mind fixing....b=
-ut if you can point me at the specifics it's appreciated
->
-> Yes, I meant aligning to the column following the opening parenthesis.
->
-> I guess it's not a hard requirement, however, there's a benefit from=20
-> certain things aligning because it helps in the brains in the process =
-of=20
-> converting text into structure with less effort (when not specifically=
- not=20
-> focusing on that particular line).
-
-Not a problem. Happy to make this change along with the others. Was just=
- curious :)
-
->
->> >> +		if (!set_str) {
->> >> +			ret =3D -ENOMEM;
->> >> +			goto out;
->> >> +		}
->> >> +
->> >> +		ret =3D tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str=
-);
->> >> +		if (ret)
->> >> +			goto out;
->> >> +
->> >> +		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password=
-[0]) {
->> >> +			ret =3D tlmi_opcode_setting("WmiOpcodePasswordAdmin",
->> >> +					tlmi_priv.pwd_admin->password);
+>> Ack. It was all related to the index setting and seemed trivial so I=20
+>> lumped together but I can split. This patch series is turning into a=20
+>> good learning exercise for my git skills :) (which are limited)
+>>
+>> > Hmm, index_store() still allows 0, is that also related here? Pleas=
+e check=20
+>> > also ABI documentation as index default seems to be mentioned there=
+ as=20
+>> > well.
 >> >
->> > Align.
 >>=20
->> Ack.
->>=20
->> >
->> >> +			if (ret)
->> >> +				goto out;
->> >> +		}
->> >> +
->> >> +		ret =3D tlmi_save_bios_settings("");
->> >> +	} else { /* old non opcode based authentication method (deprecat=
-ed)*/
->> >
->> > non missing hyphen.
->>=20
->> non-opcode I assume?
+>> I'd rather not limit it so 0 isn't allowed in case our BIOS team does=20
+>> something weird in the future; but right now 1 is the default so it=20
+>> makes more sense.
 >
-> I think the most proper English would be non-opcode-based since "opcod=
+> Sure, do what you feel makes sense here. I was just pointing out the=20
+> perceived inconsistency in case it wasn't intentional.
+>
+> It might be useful to add one sentence into changelog about the reason=
+ing=20
+> so it can be found easier later on (effectively the paragraph you wrot=
 e=20
-> based" belong together (but I'm not a native speaker here).
+> above with small tweaks is enough I think).
 
-I am a native speaker....and I don't know :) (English is weird...)
-Let's go with non-opcode; adding the based on there feels wrong to me (s=
-omewhat arbitrarily).
+Ack - will do. Thanks
 
->
-> --=20
->  i.
+Mark
