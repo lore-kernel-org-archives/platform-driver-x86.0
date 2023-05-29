@@ -2,146 +2,114 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795DBC7EE29
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 11:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A119BC77B7E
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 12:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230521AbjE2Lvx (ORCPT
+        id S230342AbjE2MDv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 May 2023 07:51:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36150 "EHLO
+        Mon, 29 May 2023 08:03:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbjE2Lvx (ORCPT
+        with ESMTP id S229453AbjE2MDu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 May 2023 07:51:53 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CF42C9;
-        Mon, 29 May 2023 04:51:51 -0700 (PDT)
+        Mon, 29 May 2023 08:03:50 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19CFBC7;
+        Mon, 29 May 2023 05:03:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685361111; x=1716897111;
+  t=1685361829; x=1716897829;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=83ZhOT2qisuB6P0cKdHDa0xFaODwdyuLx6l+kkaIoEc=;
-  b=ljEwGMSVe1iMBJnBeBIs5QCRufjLl4/dfDhYs7DFv/ebeIZYYhTGgN5i
-   WwsxoS0pXriXJe12a3J023088wzx+m2LZ3W7Y16mGDTzwZsFfiQ35nQsk
-   htMHIU9q1f4rIqIB593VQdCMiundgyN/zH+eedZKttnKXU/4RCqeV8nn6
-   bpY09F6jivlN2fYGto0djJGRV+YEKcbq4Jq/EYMlO8NgGGjSYRQah/FfG
-   Uultba5Z51QA1X41VqILJq9/rsJDXxPaCOIMSbdXMHz1TwcO/gsxTp+FJ
-   +K3ijWdtjtPZBEWzsx4U3G+shMOo5Sq8wBUWmfobqVimL2DDWYYKerO5a
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="354701370"
+  bh=JC6wS1E/TUOOIhq2nrfMiSXO3UBC6enXa7DxWwVAz2A=;
+  b=fN8ad6VXfQlX3oNAWeeoMDvVBNOxeHY5MATcitDZwmRVoEnMJWaj8z9L
+   1OfQEPhfBeKnIheiD2aO97ERTrDy2+ZBD77oxHs8scv6etd6v/uvfYCzk
+   jUnpVI1gOGjgObfuVNc//1uHY4aFDZ/6cCI1ZZ3hUObIwyLvxBX8Y+mTG
+   93y9JqUsLbR/fedmze8k+wJWot5aohGOrS1ubjI6Lf48YYSdTYHWf80iY
+   OY+VvCkjQpLKrgPYw8nc5qSOTujknDhC+/Y+6vMz8BmDN50aVZbkEhcEd
+   mZhTSjrPUQi71nI++/jRf7ydJtjR7V1f4CObepiOLitSRQKJyIeqdQbfF
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="339278184"
 X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
-   d="scan'208";a="354701370"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 04:51:51 -0700
+   d="scan'208";a="339278184"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 05:03:48 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="830368044"
+X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="706042704"
 X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
-   d="scan'208";a="830368044"
+   d="scan'208";a="706042704"
 Received: from btaubert-mobl1.ger.corp.intel.com ([10.252.55.237])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 04:51:48 -0700
-Date:   Mon, 29 May 2023 14:51:46 +0300 (EEST)
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 05:03:46 -0700
+Date:   Mon, 29 May 2023 15:03:43 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Mark Pearson <mpearson-lenovo@squebb.ca>
 cc:     hdegoede@redhat.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/5] platform/x86: think-lmi: Enable opcode support
- on BIOS settings
-In-Reply-To: <20230526171658.3886-1-mpearson-lenovo@squebb.ca>
-Message-ID: <0e11913-ba27-e3a-fafe-bd5e48db8b6b@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca> <20230526171658.3886-1-mpearson-lenovo@squebb.ca>
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/5] platform/x86: think-lmi: Correct NVME password
+ handling
+In-Reply-To: <20230526171658.3886-3-mpearson-lenovo@squebb.ca>
+Message-ID: <a52f69f-2dc4-fe76-9f89-e1c143d2bb27@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca> <20230526171658.3886-1-mpearson-lenovo@squebb.ca> <20230526171658.3886-3-mpearson-lenovo@squebb.ca>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1924053861-1685361110=:2737"
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1924053861-1685361110=:2737
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
 On Fri, 26 May 2023, Mark Pearson wrote:
 
-> Whilst reviewing some documentation from the FW team on using WMI on
-> Lenovo system I noticed that we weren't using Opcode support when
-> changing BIOS settings in the thinkLMI driver.
+> NVME passwords identifier have been standardised across the Lenovo
+> systems and now use udrp and adrp (user and admin level) instead of
+> unvp and mnvp.
 > 
-> We should be doing this to ensure we're future proof as the old
-> non-opcode mechanism has been deprecated.
+> This should apparently be backwards compatible.
 > 
-> Tested on X1 Carbon G10 and G11.
-> 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> ---
-> Changes in v2: Update comment for clearer explanation of what the driver
-> is doing
-> Changes in v3: None. Version bump with rest of series
-> 
->  drivers/platform/x86/think-lmi.c | 28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index 1138f770149d..2745224f62ab 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -1001,7 +1001,33 @@ static ssize_t current_value_store(struct kobject *kobj,
->  				tlmi_priv.pwd_admin->save_signature);
->  		if (ret)
->  			goto out;
-> -	} else { /* Non certiifcate based authentication */
-> +	} else if (tlmi_priv.opcode_support) {
-> +		/*
-> +		 * If opcode support is present use that interface.
-> +		 * Note - this sets the variable and then the password as separate
-> +		 * WMI calls. Function tlmi_save_bios_settings will error if the
-> +		 * password is incorrect.
-> +		 */
-> +		set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
-> +					new_setting);
+> Also cleaned up so the index is set to a default of 1 rather than 0
+> as this just makes more sense (there is no device 0).
 
-Alignment.
+These two sound entirely separate changes. If that's the case, please 
+make own patch from the send change.
 
-> +		if (!set_str) {
-> +			ret = -ENOMEM;
-> +			goto out;
-> +		}
-> +
-> +		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str);
-> +		if (ret)
-> +			goto out;
-> +
-> +		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-> +			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
-> +					tlmi_priv.pwd_admin->password);
-
-Align.
-
-> +			if (ret)
-> +				goto out;
-> +		}
-> +
-> +		ret = tlmi_save_bios_settings("");
-> +	} else { /* old non opcode based authentication method (deprecated)*/
-
-non missing hyphen.
-
-Missing space at the comment closing.
-
->  		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
->  			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
->  					tlmi_priv.pwd_admin->password,
-> 
-
-Except for those style issues, it look okay to me:
-
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-
+Hmm, index_store() still allows 0, is that also related here? Please check 
+also ABI documentation as index default seems to be mentioned there as 
+well.
 
 -- 
  i.
 
---8323329-1924053861-1685361110=:2737--
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> ---
+> Changes in v2 & v3: None. Version bumped in series
+> 
+>  drivers/platform/x86/think-lmi.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+> index c7e98fbe7c3d..1c02958035ad 100644
+> --- a/drivers/platform/x86/think-lmi.c
+> +++ b/drivers/platform/x86/think-lmi.c
+> @@ -456,9 +456,9 @@ static ssize_t new_password_store(struct kobject *kobj,
+>  				sprintf(pwd_type, "mhdp%d", setting->index);
+>  		} else if (setting == tlmi_priv.pwd_nvme) {
+>  			if (setting->level == TLMI_LEVEL_USER)
+> -				sprintf(pwd_type, "unvp%d", setting->index);
+> +				sprintf(pwd_type, "udrp%d", setting->index);
+>  			else
+> -				sprintf(pwd_type, "mnvp%d", setting->index);
+> +				sprintf(pwd_type, "adrp%d", setting->index);
+>  		} else {
+>  			sprintf(pwd_type, "%s", setting->pwd_type);
+>  		}
+> @@ -1524,6 +1524,10 @@ static int tlmi_analyze(void)
+>  		if (!tlmi_priv.pwd_nvme)
+>  			goto fail_clear_attr;
+>  
+> +		/* Set default hdd/nvme index to 1 as there is no device 0 */
+> +		tlmi_priv.pwd_hdd->index = 1;
+> +		tlmi_priv.pwd_nvme->index = 1;
+> +
+>  		if (tlmi_priv.pwdcfg.core.password_state & TLMI_HDD_PWD) {
+>  			/* Check if PWD is configured and set index to first drive found */
+>  			if (tlmi_priv.pwdcfg.ext.hdd_user_password ||
+> 
+
