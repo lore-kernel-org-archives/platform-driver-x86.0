@@ -2,128 +2,146 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B68C1C77B7E
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 11:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795DBC7EE29
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 May 2023 11:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231437AbjE2Lhr (ORCPT
+        id S230521AbjE2Lvx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 May 2023 07:37:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59254 "EHLO
+        Mon, 29 May 2023 07:51:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231443AbjE2Lhq (ORCPT
+        with ESMTP id S229496AbjE2Lvx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 May 2023 07:37:46 -0400
+        Mon, 29 May 2023 07:51:53 -0400
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEA4C198;
-        Mon, 29 May 2023 04:37:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CF42C9;
+        Mon, 29 May 2023 04:51:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685360234; x=1716896234;
+  t=1685361111; x=1716897111;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=NWr/6eJjlJQBWiOn+r8LQO0h+nbcFRQJQ97hoYzdinM=;
-  b=GxLlC3IlvxBzeBw629QYfKtdLzgvtDe9HjCpog52GbrYpoRhPS2wo/j1
-   DOip0QcodQvoJsd6ChEe2XxN+XLMSU/+p2KoWsrxCBrhs3HXHHdwtG0Fw
-   /ZMAuxL6iyeHrsTxmERHqvtGi+W2ILWaQd3LJb35/AsGabd84029hHLbj
-   FdAtQh6LJ9EWhndk0k+kI5ZXspnz8r+PcLIn8zOnRXGqAUewlgmVf9FeA
-   dwlw+vZQpm+KybCzYdf2oxCaI+his5F0wCE0evs4dL8yY9rYqWgmgwBkO
-   /cqvpgqmU/LueqDpM1u1fXDChqYnkh6qY7hQc1irJSK4Oi/wu3Jmk1xGk
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="354698994"
+  bh=83ZhOT2qisuB6P0cKdHDa0xFaODwdyuLx6l+kkaIoEc=;
+  b=ljEwGMSVe1iMBJnBeBIs5QCRufjLl4/dfDhYs7DFv/ebeIZYYhTGgN5i
+   WwsxoS0pXriXJe12a3J023088wzx+m2LZ3W7Y16mGDTzwZsFfiQ35nQsk
+   htMHIU9q1f4rIqIB593VQdCMiundgyN/zH+eedZKttnKXU/4RCqeV8nn6
+   bpY09F6jivlN2fYGto0djJGRV+YEKcbq4Jq/EYMlO8NgGGjSYRQah/FfG
+   Uultba5Z51QA1X41VqILJq9/rsJDXxPaCOIMSbdXMHz1TwcO/gsxTp+FJ
+   +K3ijWdtjtPZBEWzsx4U3G+shMOo5Sq8wBUWmfobqVimL2DDWYYKerO5a
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="354701370"
 X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
-   d="scan'208";a="354698994"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 04:37:14 -0700
+   d="scan'208";a="354701370"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 04:51:51 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="706035409"
+X-IronPort-AV: E=McAfee;i="6600,9927,10724"; a="830368044"
 X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
-   d="scan'208";a="706035409"
+   d="scan'208";a="830368044"
 Received: from btaubert-mobl1.ger.corp.intel.com ([10.252.55.237])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 04:37:12 -0700
-Date:   Mon, 29 May 2023 14:36:59 +0300 (EEST)
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 04:51:48 -0700
+Date:   Mon, 29 May 2023 14:51:46 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Mark Pearson <mpearson-lenovo@squebb.ca>
 cc:     hdegoede@redhat.com, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/5] platform/x86: think-lmi: Correct System password
- interface
-In-Reply-To: <20230526171658.3886-2-mpearson-lenovo@squebb.ca>
-Message-ID: <ff5513d9-ecf-50d3-1bb3-644a1d2c2347@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca> <20230526171658.3886-1-mpearson-lenovo@squebb.ca> <20230526171658.3886-2-mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH v3 1/5] platform/x86: think-lmi: Enable opcode support
+ on BIOS settings
+In-Reply-To: <20230526171658.3886-1-mpearson-lenovo@squebb.ca>
+Message-ID: <0e11913-ba27-e3a-fafe-bd5e48db8b6b@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca> <20230526171658.3886-1-mpearson-lenovo@squebb.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323329-1924053861-1685361110=:2737"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-1924053861-1685361110=:2737
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+
 On Fri, 26 May 2023, Mark Pearson wrote:
 
-> The system password identification was incorrect. This means that if
-> the password was enabled it wouldn't be detected correctly; and setting
-> it would not work.
-> Also updated code to use TLMI_SMP_PWD instead of TLMI_SYS_PWD to be in
-> sync with Lenovo documentation.
+> Whilst reviewing some documentation from the FW team on using WMI on
+> Lenovo system I noticed that we weren't using Opcode support when
+> changing BIOS settings in the thinkLMI driver.
 > 
-> Correct these mistakes.
+> We should be doing this to ensure we're future proof as the old
+> non-opcode mechanism has been deprecated.
+> 
+> Tested on X1 Carbon G10 and G11.
 > 
 > Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-
-Missing Fixes tag?
-
 > ---
-> Changes in v2:
->  - Updated define name to be SMP_PWD instead of SYS_PWD
->  - Clarified in comments what each password type is.
+> Changes in v2: Update comment for clearer explanation of what the driver
+> is doing
 > Changes in v3: None. Version bump with rest of series
 > 
->  drivers/platform/x86/think-lmi.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+>  drivers/platform/x86/think-lmi.c | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index 2745224f62ab..c7e98fbe7c3d 100644
+> index 1138f770149d..2745224f62ab 100644
 > --- a/drivers/platform/x86/think-lmi.c
 > +++ b/drivers/platform/x86/think-lmi.c
-> @@ -168,11 +168,11 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
->   */
->  #define LENOVO_CERT_THUMBPRINT_GUID "C59119ED-1C0D-4806-A8E9-59AA318176C4"
->  
-> -#define TLMI_POP_PWD (1 << 0)
-> -#define TLMI_PAP_PWD (1 << 1)
-> -#define TLMI_HDD_PWD (1 << 2)
-> -#define TLMI_SYS_PWD (1 << 3)
-> -#define TLMI_CERT    (1 << 7)
-> +#define TLMI_POP_PWD (1 << 0) /* Supervisor */
-> +#define TLMI_PAP_PWD (1 << 1) /* Power-on */
-> +#define TLMI_HDD_PWD (1 << 2) /* HDD/NVME */
-> +#define TLMI_SMP_PWD (1 << 6) /* System Management */
-> +#define TLMI_CERT    (1 << 7) /* Certificate Based */
+> @@ -1001,7 +1001,33 @@ static ssize_t current_value_store(struct kobject *kobj,
+>  				tlmi_priv.pwd_admin->save_signature);
+>  		if (ret)
+>  			goto out;
+> -	} else { /* Non certiifcate based authentication */
+> +	} else if (tlmi_priv.opcode_support) {
+> +		/*
+> +		 * If opcode support is present use that interface.
+> +		 * Note - this sets the variable and then the password as separate
+> +		 * WMI calls. Function tlmi_save_bios_settings will error if the
+> +		 * password is incorrect.
+> +		 */
+> +		set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
+> +					new_setting);
 
-Whe you're adding Fixes tag, please make this change minimal by just 
-adding TLMI_SMP_PWD.
+Alignment.
 
-The rest of these define changes are a good too but it's unrelated to the 
-actual fix so they should be in a separate patch. And once you move it 
-into own change, convert to BIT() while at it.
+> +		if (!set_str) {
+> +			ret = -ENOMEM;
+> +			goto out;
+> +		}
+> +
+> +		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str);
+> +		if (ret)
+> +			goto out;
+> +
+> +		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+> +			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
+> +					tlmi_priv.pwd_admin->password);
+
+Align.
+
+> +			if (ret)
+> +				goto out;
+> +		}
+> +
+> +		ret = tlmi_save_bios_settings("");
+> +	} else { /* old non opcode based authentication method (deprecated)*/
+
+non missing hyphen.
+
+Missing space at the comment closing.
+
+>  		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+>  			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+>  					tlmi_priv.pwd_admin->password,
+> 
+
+Except for those style issues, it look okay to me:
+
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
 
 -- 
  i.
 
-
->  #define to_tlmi_pwd_setting(kobj)  container_of(kobj, struct tlmi_pwd_setting, kobj)
->  #define to_tlmi_attr_setting(kobj)  container_of(kobj, struct tlmi_attr_setting, kobj)
-> @@ -1509,11 +1509,11 @@ static int tlmi_analyze(void)
->  		tlmi_priv.pwd_power->valid = true;
->  
->  	if (tlmi_priv.opcode_support) {
-> -		tlmi_priv.pwd_system = tlmi_create_auth("sys", "system");
-> +		tlmi_priv.pwd_system = tlmi_create_auth("smp", "system");
->  		if (!tlmi_priv.pwd_system)
->  			goto fail_clear_attr;
->  
-> -		if (tlmi_priv.pwdcfg.core.password_state & TLMI_SYS_PWD)
-> +		if (tlmi_priv.pwdcfg.core.password_state & TLMI_SMP_PWD)
->  			tlmi_priv.pwd_system->valid = true;
->  
->  		tlmi_priv.pwd_hdd = tlmi_create_auth("hdd", "hdd");
-> 
+--8323329-1924053861-1685361110=:2737--
