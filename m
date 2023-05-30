@@ -2,105 +2,111 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B17CC77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 May 2023 09:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2146FC7EE29
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 May 2023 10:55:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230490AbjE3J2D (ORCPT
+        id S230498AbjE3KzP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 30 May 2023 05:28:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43398 "EHLO
+        Tue, 30 May 2023 06:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230498AbjE3J1a (ORCPT
+        with ESMTP id S229739AbjE3KzL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 30 May 2023 05:27:30 -0400
+        Tue, 30 May 2023 06:55:11 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8457410F0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 30 May 2023 02:25:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D10893
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 May 2023 03:54:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685438722;
+        s=mimecast20190719; t=1685444069;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=iGFdC+Cr7aKjAl09TH5gAS+8YxPdVhcFSlEZ7wtzGTo=;
-        b=OZohiWF3dHisbx1uZQqPCD5/IXOBPtLNFiPA5WFSPG2OzAzr8YfpkMmSlUOaXaC2/6JhZ+
-        kJdccbosV9h6+74Sqp5m1x44qv6FyN8brvCYRE3VDrlVa2qcy4GBMB+fXJJBL0/ek42CM7
-        nJ2S3k/RSFOcPwwdmvFG4WzC6RiqTAA=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=1q0i4yZqdxDmT+xuTpGSHTNOPsQSPD0T9mC8x9n9pmQ=;
+        b=VxeNEVTSI7yS2hefjHpxBmx88WpmIBZtJUw+X+l4UEicjXpghuwK0eLH+2aZgHl26jJCqq
+        Ej8cSNBtdb+aWzHu8zL40ZjFP4TUWszNPVTrCeibXD2VbV1i1sTI2YsQf4fcJdwbFEsl+N
+        GZh+tKp6H1O5mXx1fa6O8bW0NdwSzRA=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-158-lrq0JP6YMIibsMkmKOFw7w-1; Tue, 30 May 2023 05:25:21 -0400
-X-MC-Unique: lrq0JP6YMIibsMkmKOFw7w-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5149ab05081so1781016a12.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 30 May 2023 02:25:21 -0700 (PDT)
+ us-mta-564-q8fXmQHZMjasUq4TKYeeBg-1; Tue, 30 May 2023 06:54:28 -0400
+X-MC-Unique: q8fXmQHZMjasUq4TKYeeBg-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-514b05895f7so592328a12.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 May 2023 03:54:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685438720; x=1688030720;
+        d=1e100.net; s=20221208; t=1685444067; x=1688036067;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iGFdC+Cr7aKjAl09TH5gAS+8YxPdVhcFSlEZ7wtzGTo=;
-        b=b+pM/2ac39mNP1OawtLCGX3eXq1NpkEyHtk/rkaIZsQJVv/jx46K7BulcmyiKDY2Be
-         es4vpi+gLj5IIWR/010dNH17a1GK/5GvvtG1tvqyzBjs/+f3ngRUKSeWdAHc14l1O8dg
-         bTdyEJ4CvDVhF/cuCJ1mEVMMM/6ao35ws2G9AmBTx+8vioVmcoZ4jXX0+ARFUwMlc+qr
-         U9oKSMhbl5pJ6cbHqjwrgOez6+kGpSp/dlb6FztE7LXQxjhzRoAMW5vyex9H4qWgJFOV
-         /60GqAouTMf29HMi7qHQRdCwsRU1tUuUBH7ex6utFfw7hN5Dfobn1Vzjof8pAis9spI4
-         gWlg==
-X-Gm-Message-State: AC+VfDzmg8Rj7wxG6IJNEva9iQVmR6FkokAWlqAWZ1jX5FbLx8shj1UZ
-        hJTUbQj2SXX6HMRoYwJywzxTDJKFhPh9KSG5x4dzauGVD2GqZS9kA0sBv5+kqebnzzrdofdQpyD
-        y6/0L1mNPPsA8EIxkF3KXuVdUh/+DeuTXdqcGzYmQpQ==
-X-Received: by 2002:aa7:d586:0:b0:508:3b1f:e6b5 with SMTP id r6-20020aa7d586000000b005083b1fe6b5mr1131318edq.15.1685438720208;
-        Tue, 30 May 2023 02:25:20 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ511i+IlMrjdQEJaICGOkr307RIVrnzNJvm1eJGPS5QvRTCkjJO0Vsv78u0FAcgUlNcYeeTIg==
-X-Received: by 2002:aa7:d586:0:b0:508:3b1f:e6b5 with SMTP id r6-20020aa7d586000000b005083b1fe6b5mr1131312edq.15.1685438720035;
-        Tue, 30 May 2023 02:25:20 -0700 (PDT)
+        bh=1q0i4yZqdxDmT+xuTpGSHTNOPsQSPD0T9mC8x9n9pmQ=;
+        b=SCKiSBgxRSYAyI0SHiyqUp3Rk0XbFHiswZS1Nfsv3XHclg9OPa8dUKO3nW/Ia6WUO8
+         hQIKKdaTEG+Fu211DbfG7NkPEcyXzggQk9oPF1FZbzjmFmzenVz1oGjA3WCl3oY4aN58
+         eP+s8+j7E4zu9YntFZ9P4ZtQ1iQQKEu81E8xeWzCF3CUrPqDDO7vpyUvbzoCESxD6Afx
+         Bu+4OmyAK4JvxWCLzfuUGQ7F51PRqk7xA+eYnnq5nI+LkvD4hFvbs3QtX4Y9yh/3c5q7
+         ve73v6EhGEW8u9hAmVdH7tPSI8hUBiySLAOtVOOibb6lV748rbiEDA1vvhI06Fvrk8SW
+         0eQg==
+X-Gm-Message-State: AC+VfDxydRyp3epmQJra0pP3obvGa29OpIpcdEp7ur+Hmm1TYbPSI7Gm
+        Ki/aK2o5VzC1rIeFDFj1tuNT68DsZ1u+L86ZAPVfEjYUuQ1aNPOf6IqTkWSEVnASp455GHmIUsd
+        2/nmgnN+lGHqn/q6VUfb8lL3EeDHlTF+hhA==
+X-Received: by 2002:aa7:d658:0:b0:514:9e81:906f with SMTP id v24-20020aa7d658000000b005149e81906fmr1305859edr.27.1685444066906;
+        Tue, 30 May 2023 03:54:26 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4I+096SwjLja4pHY4YqUYfGIPnsw0Zn+UHnBRONfv/VtPgD+leGxP0osXxo4zOb0YFNGuQaQ==
+X-Received: by 2002:aa7:d658:0:b0:514:9e81:906f with SMTP id v24-20020aa7d658000000b005149e81906fmr1305844edr.27.1685444066550;
+        Tue, 30 May 2023 03:54:26 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id ca28-20020aa7cd7c000000b0050bc6d0e880sm4100809edb.61.2023.05.30.02.25.19
+        by smtp.gmail.com with ESMTPSA id n2-20020aa7d042000000b00514b044ec41sm693137edo.35.2023.05.30.03.54.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 May 2023 02:25:19 -0700 (PDT)
-Message-ID: <1cd0a13e-1842-2e1c-524b-e9580ea48b52@redhat.com>
-Date:   Tue, 30 May 2023 11:25:19 +0200
+        Tue, 30 May 2023 03:54:26 -0700 (PDT)
+Message-ID: <2ca9ef5d-2a24-c6b7-06fc-5b9919a2aaee@redhat.com>
+Date:   Tue, 30 May 2023 12:54:25 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH 0/2] platform/surface: aggregator_tabletsw: Add support
- for book mode
+Subject: Re: [PATCH v3 1/5] platform/x86: think-lmi: Enable opcode support on
+ BIOS settings
 Content-Language: en-US, nl
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230525213218.2797480-1-luzmaximilian@gmail.com>
+To:     Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <mpearson-lenovo@squebb.ca>
+ <20230526171658.3886-1-mpearson-lenovo@squebb.ca>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230525213218.2797480-1-luzmaximilian@gmail.com>
+In-Reply-To: <20230526171658.3886-1-mpearson-lenovo@squebb.ca>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Mark,
 
-On 5/25/23 23:32, Maximilian Luz wrote:
-> Surface devices with a type-cover have an additional "book" mode. This
-> mode is activated when the device is oriented in portrait mode and the
-> type-cover is in an open position (including completely folded back;
-> unlike in landscape orientation there are no special modes for any of
-> the intermediate positions).
+On 5/26/23 19:16, Mark Pearson wrote:
+> Whilst reviewing some documentation from the FW team on using WMI on
+> Lenovo system I noticed that we weren't using Opcode support when
+> changing BIOS settings in the thinkLMI driver.
 > 
-> Currently, this mode is unsupported by the tablet switch driver, leading
-> to an error message (see individual commits for the exact messages).
-> Since the keyboard and touchpad input gets deactivated in this mode, map
-> it to tablet-mode.
+> We should be doing this to ensure we're future proof as the old
+> non-opcode mechanism has been deprecated.
 > 
-> I've split this change into two patches, one for each of the subsystems
-> (KIP and POS). This a) allows proper attribution via the "Fixes" tag and
-> b) with that should allow them to be backported fairly easily.
+> Tested on X1 Carbon G10 and G11.
+> 
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 
-Thank you for your patch series, I've applied this series
-to my fixes branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
+Thank you for this new version. Please prepare a v4 addressing Ilpo's
+review remarks.
 
-I will include this series in my next fixes pull-req to Linus
-for the current kernel development cycle.
+About the aligning function arguments on the next line to the '('
+of the function call start at the previous line, checkpatch also
+checks for this.
+
+It is always a good idea to run checkpatch before submitting patches.
+
+E.g.:
+
+git format-patch -v3 HEAD~5
+scripts/checkpatch.pl v3-00*.patch
+<check output is clean>
+git send-email v3-00*.patch
 
 Regards,
 
@@ -110,14 +116,51 @@ Hans
 
 
 
-
-> Maximilian Luz (2):
->   platform/surface: aggregator_tabletsw: Add support for book mode in
->     KIP subsystem
->   platform/surface: aggregator_tabletsw: Add support for book mode in
->     POS subsystem
+> ---
+> Changes in v2: Update comment for clearer explanation of what the driver
+> is doing
+> Changes in v3: None. Version bump with rest of series
 > 
->  drivers/platform/surface/surface_aggregator_tabletsw.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  drivers/platform/x86/think-lmi.c | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+> index 1138f770149d..2745224f62ab 100644
+> --- a/drivers/platform/x86/think-lmi.c
+> +++ b/drivers/platform/x86/think-lmi.c
+> @@ -1001,7 +1001,33 @@ static ssize_t current_value_store(struct kobject *kobj,
+>  				tlmi_priv.pwd_admin->save_signature);
+>  		if (ret)
+>  			goto out;
+> -	} else { /* Non certiifcate based authentication */
+> +	} else if (tlmi_priv.opcode_support) {
+> +		/*
+> +		 * If opcode support is present use that interface.
+> +		 * Note - this sets the variable and then the password as separate
+> +		 * WMI calls. Function tlmi_save_bios_settings will error if the
+> +		 * password is incorrect.
+> +		 */
+> +		set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
+> +					new_setting);
+> +		if (!set_str) {
+> +			ret = -ENOMEM;
+> +			goto out;
+> +		}
+> +
+> +		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str);
+> +		if (ret)
+> +			goto out;
+> +
+> +		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+> +			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
+> +					tlmi_priv.pwd_admin->password);
+> +			if (ret)
+> +				goto out;
+> +		}
+> +
+> +		ret = tlmi_save_bios_settings("");
+> +	} else { /* old non opcode based authentication method (deprecated)*/
+>  		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+>  			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+>  					tlmi_priv.pwd_admin->password,
 
