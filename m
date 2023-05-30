@@ -2,116 +2,72 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E304C77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 May 2023 13:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8DCC77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 May 2023 14:51:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229759AbjE3NJX (ORCPT
+        id S232805AbjE3OvV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 30 May 2023 09:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37944 "EHLO
+        Tue, 30 May 2023 10:51:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232556AbjE3NJX (ORCPT
+        with ESMTP id S232788AbjE3OvM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 30 May 2023 09:09:23 -0400
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FAF0109;
-        Tue, 30 May 2023 06:09:14 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 9E7D4320016F;
-        Tue, 30 May 2023 09:09:11 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Tue, 30 May 2023 09:09:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1685452150; x=1685538550; bh=lV
-        YHeJu8wkJLFHZkEE7erujnPC094FVsR7kmXRaB43o=; b=niZaQrSKzNEnAKJTP0
-        vwW/ik2IICWDNzj/z/OJfaNwLOCeyAb8m9ghk1J9XdvADUm3G+FKlleeAN6VBxai
-        Tgx10yt/JQtsDcLj1etZMb2aCOaXdhbzvSPJXifk8X3SmoeOUPPhPFPgLQ2Gi/oE
-        EPWFsDNNjzGd6qZ4IrznCgA0RdbaV+zzeoTIBQcCvTh3ONbwsveGFAc1YiVHHs6X
-        Jk93a0XAOOsddQiicQieFbSN99q+Jhn9wLusSTHe5VpMHWkJzLVpkERXkpLDNO1g
-        PN0XIN4QSdrSWKgtNSSk2N0Wbq97TB7aUWOve7estMunwriDNiLxs43S737ICWTf
-        211g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1685452150; x=1685538550; bh=lVYHeJu8wkJLF
-        HZkEE7erujnPC094FVsR7kmXRaB43o=; b=dPbnKSbE0Le7+/Y7Q84IITbZ1vvt3
-        olyLdAjT8sOCq9RdhIsKceFUzcEIa00qJ5Wa1lRIwyl+bEG9aSEnyqO51X9ehpBb
-        CJp4chNwd5T74LCVmK0H4xkVulM7SL/axzsKdCm+bBSfwWCxUj0NroeYUQNvBRWf
-        asM9MvmwDUrJwWcIeEoimmnnlHLOsExIttSAuQYq/BykRkqPLzqoyWNh9eqhtU7a
-        WoA1laXrRwfQVG/h+C4xFTT5Lhvw8YBqCDWB/nL2FvJdxEbExw0raa5QhDJrFaZG
-        qXbyn2NsOOnyZLBLTFOFxj2IMIv2MSthmiMAX87Mtn9pSOzy+nwAq/18w==
-X-ME-Sender: <xms:dfV1ZE7W-_VZmiveduY60UyK-vCqnGaNtlcacOE5g3O2tsq9V1782g>
-    <xme:dfV1ZF5vonqH95TR4MLc08Izn8F_c1UARdgVeRatnWGl7ozOUQ3BCUIXpwkJLyPJA
-    C4qcJ5Y2BeApb1CSqg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeekjedgiedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
-    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
-    drtggrqeenucggtffrrghtthgvrhhnpeeiueefjeeiveetuddvkeetfeeltdevffevudeh
-    ffefjedufedvieejgedugeekhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:dfV1ZDc3QE0K4A0GpKiifUSqXsLWa-orB7w2dC76RBxFqk5v7n5qZg>
-    <xmx:dfV1ZJJYinO10E49AoIgqBd_oPk2cIyRlHAg62fFq_M5dUjagKhpbA>
-    <xmx:dfV1ZIKmVvxPZ31JZvg2xiVvmxcIioeTuPMnyo0WhBBi9K1LCw7TGQ>
-    <xmx:dvV1ZCgkSWinXcZbieGPEDzZTzHsYu-iYiDXSQYb1w3DkNC9w33nTQ>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id B0C15C60093; Tue, 30 May 2023 09:09:09 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-441-ga3ab13cd6d-fm-20230517.001-ga3ab13cd
-Mime-Version: 1.0
-Message-Id: <b9b98752-da3d-4cac-b010-fb13c90bb2f5@app.fastmail.com>
-In-Reply-To: <2ca9ef5d-2a24-c6b7-06fc-5b9919a2aaee@redhat.com>
-References: <mpearson-lenovo@squebb.ca>
- <20230526171658.3886-1-mpearson-lenovo@squebb.ca>
- <2ca9ef5d-2a24-c6b7-06fc-5b9919a2aaee@redhat.com>
-Date:   Tue, 30 May 2023 09:08:49 -0400
-From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To:     "Hans de Goede" <hdegoede@redhat.com>
-Cc:     "markgross@kernel.org" <markgross@kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] platform/x86: think-lmi: Enable opcode support on BIOS
- settings
-Content-Type: text/plain
+        Tue, 30 May 2023 10:51:12 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 815271B5;
+        Tue, 30 May 2023 07:50:47 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-51b4ef5378bso3992300a12.1;
+        Tue, 30 May 2023 07:50:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685458246; x=1688050246;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3u2CdqQI+jVcz+1gBhFBjF296hftWh22Nbb1YkjjGzw=;
+        b=Tis4dnHjCk3bfnKOqN2dOqcbHdbHtoGgBItWkaaX/fZhLmWlNzHeYZJiyxl/GduQeb
+         VoWOrVht9h5XhNQkS4mgGZCCFRX+3whoAEY+GEWQHtxfcbSLg2MYTp+Ttmf1dGfw/IUn
+         1Xmc6JHzWY3XUPRLTvwE0ymqWdkcFD4QO83mrQFZyu/A+RJ4sc5e57TVoRmGi9+SpB7+
+         RcvxyEpsCSleo+IEVLCEFQnDggQnl1YdYHFAIcDSD2sLN3MXxfBzFuQebvEK6wcpYxUE
+         Y7SkZd87BzqeyiTqRERCTIvYTF37V5nd8AuebdGuPRikGk55igPC25ZgR8XCymLJ5VL1
+         UlCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685458246; x=1688050246;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3u2CdqQI+jVcz+1gBhFBjF296hftWh22Nbb1YkjjGzw=;
+        b=YPehu5XSKNp86fLMmDR/9RzvAEjCLUAkbco7hR43GZXzsA1pD+u5GdsFOz/wU6xIAv
+         ebxR/XDKkKuNVnGbobLGmmi7Shs1/w6MmJnMjjqzWoAHcqD/Vtbtq+XuEAc7LU/78Ue1
+         sEhjt6EnNborA3537bo1MAdIfMbU3So8IfESFRZE/abMdyXFdhg57rZo4fQkqrnRK8Qf
+         RXhQgLcMQ/3A1IaFNR2wOz9bE0px4xCVHpkeBrQsOx2G2wi6/+LVQS7nFwLhSoYj2fvg
+         H6+8zUSSHrt1K+hKz8BiOraP6274xth7++Joth3EaKMq5R2S4ZkGIDvTjAfpU0pgQIEk
+         K3gQ==
+X-Gm-Message-State: AC+VfDxrVKMOl95vYokdjrLQBfGxZx9yELeJ+Y8bDkRGYuSIzdeqH4ZS
+        KFv0c+TFoJSZw7FnN6SHqiTKJKV+BtE=
+X-Google-Smtp-Source: ACHHUZ4f85uWui/DJ8VmAZe+7MWeLD7UKC8GCgm/q+0O5PlnRNVumZi8INcdRUPIgYDKYyTwCbF6DQ==
+X-Received: by 2002:a17:902:e5c4:b0:1b0:6e16:b92c with SMTP id u4-20020a170902e5c400b001b06e16b92cmr1477977plf.54.1685458246437;
+        Tue, 30 May 2023 07:50:46 -0700 (PDT)
+Received: from localhost.localdomain ([110.46.146.116])
+        by smtp.gmail.com with ESMTPSA id f1-20020a17090274c100b001acacff3a70sm10326918plt.125.2023.05.30.07.50.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 May 2023 07:50:46 -0700 (PDT)
+From:   SungHwan Jung <onenowy@gmail.com>
+To:     ilpo.jarvinen@linux.intel.com
+Cc:     hdegoede@redhat.com, linux-kernel@vger.kernel.org,
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
+        SungHwan Jung <onenowy@gmail.com>
+Subject: Re: Re: [PATCH] platform/x86: hp-wmi: Add thermal profile for Victus 16-d1xxx
+Date:   Tue, 30 May 2023 23:50:12 +0900
+Message-Id: <20230530145012.16284-1-onenowy@gmail.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <3b5feff0-1d59-37cb-9a5d-22186271a6a4@linux.intel.com>
+References: <3b5feff0-1d59-37cb-9a5d-22186271a6a4@linux.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans
-
-On Tue, May 30, 2023, at 6:54 AM, Hans de Goede wrote:
-> Hi Mark,
->
-> On 5/26/23 19:16, Mark Pearson wrote:
->> Whilst reviewing some documentation from the FW team on using WMI on
->> Lenovo system I noticed that we weren't using Opcode support when
->> changing BIOS settings in the thinkLMI driver.
->> 
->> We should be doing this to ensure we're future proof as the old
->> non-opcode mechanism has been deprecated.
->> 
->> Tested on X1 Carbon G10 and G11.
->> 
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->
-> Thank you for this new version. Please prepare a v4 addressing Ilpo's
-> review remarks.
-
-Will do
-
->
-> About the aligning function arguments on the next line to the '('
-> of the function call start at the previous line, checkpatch also
-> checks for this.
->
-> It is always a good idea to run checkpatch before submitting patches.
-
-I always do - and checkpatch isn't complaining about the alignment here.
-
-Mark
+Thank you for your review. I have cleaned the patch, but found that it needs to set
+the performance profile several times to get maximum power of dedicated gpu.
+So I'll look into this. Thanks.
