@@ -2,244 +2,130 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1182C77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 May 2023 08:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DA0C7EE23
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 May 2023 09:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230051AbjE3ILf (ORCPT
+        id S229725AbjE3JKb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 30 May 2023 04:11:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60774 "EHLO
+        Tue, 30 May 2023 05:10:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230040AbjE3ILe (ORCPT
+        with ESMTP id S229701AbjE3JKa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 30 May 2023 04:11:34 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2C80A0;
-        Tue, 30 May 2023 01:11:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685434293; x=1716970293;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=rsstpHsgYbStkOeZbmzXwO97zaVxwB2tjA0G51vJYI0=;
-  b=jKqdFM2r0QhHX43go8+5OcCfOTKdk6Y763tKEzIj63YFXuwSNJoTMZRK
-   /rjWPvlzoKp9JmwXlH939mFk2BSjZn2obT9Xg6qAlKrxXX1u0EDpIbJ+b
-   gNV006CtUHM1LuDBd+NP72Fb1JLVXIajOf1qfjpdisEQL6A5+xFiv95LQ
-   3LvhTu6yKq10QHdjYED+H2aHTXx2zW2xC63Szj75Hy49Bzmb7b0juDJxZ
-   1vLfLtF9TSKoeENziOU75F6OlkWiaI8zChJcTrKagUQBf0WpSiznmc/Nu
-   yOV8Xn0KmYO+LsRX+37/CBuBFbhjHvn2dVu88BdFwbNEQd/o+nyaZvvDM
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="352348827"
-X-IronPort-AV: E=Sophos;i="6.00,203,1681196400"; 
-   d="scan'208";a="352348827"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 01:11:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="830640548"
-X-IronPort-AV: E=Sophos;i="6.00,203,1681196400"; 
-   d="scan'208";a="830640548"
-Received: from schndiet-mobl.ger.corp.intel.com ([10.251.208.132])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 01:11:31 -0700
-Date:   Tue, 30 May 2023 11:11:23 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     SungHwan Jung <onenowy@gmail.com>
-cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: hp-wmi: Add thermal profile for Victus
- 16-d1xxx
-In-Reply-To: <20230529053959.4876-1-onenowy@gmail.com>
-Message-ID: <3b5feff0-1d59-37cb-9a5d-22186271a6a4@linux.intel.com>
-References: <20230529053959.4876-1-onenowy@gmail.com>
+        Tue, 30 May 2023 05:10:30 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2100DF9
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 May 2023 02:09:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1685437778;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/iJrK51J5PADdE/kybjA9N+s+evRLT7tl/nMpFSwFbQ=;
+        b=Yof2KEP72LDFFrYC+WUM72KAXftinKqnG68v0wFbJFZ9wl3rKDM/b3H4le0YHDEOTQAcBK
+        FWYOvBXtJXgpVOL1FqGIazRBrp9aOZHKAbbYjZFU4pnFK0/qcXI94MOaFEz+PgBOS/ntWO
+        aV8ftw8b+qZCABdd9MU74MxDgxHlNfM=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-596-CpgEzfBNPo2eIN8Uq3ApCA-1; Tue, 30 May 2023 05:09:36 -0400
+X-MC-Unique: CpgEzfBNPo2eIN8Uq3ApCA-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-96fd3757c1dso456751766b.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 May 2023 02:09:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685437775; x=1688029775;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/iJrK51J5PADdE/kybjA9N+s+evRLT7tl/nMpFSwFbQ=;
+        b=X4fgZkBlSiyJ0rCuC1DFFZJsQtt/ayBSiW1DtetIy+7+/RsFkXgphuOVV6t5I3kiLw
+         Dr2XzaiKZe7qJ/XF1E4NkCCzYkwxkXwyGCwVDpEH5fsy/9DLYT9/ovx4IWVpbWSPj4Q+
+         nh1DOYNydaDtDA0NeH3lrLQ1s6Eru2e/U1UU67QkcIMC4T3kY5MJNyzDaR9X/mIR/2+7
+         K9vkmBDzE9hePZNoVIe7VZLbFyQzczyMlormaMD7vAvKZfXDUVGi/CN05mgDc7afu8Vp
+         t4wnPuVqLdazON3g0aQm0qsmYjmba62VyG0u5sxrmxWUJpTwKzz79ymAlIR5CPHmeYOM
+         tntA==
+X-Gm-Message-State: AC+VfDwbwNLJl4yASSTl+S/tKaLmi+8Sth4EETzzN0mh52iTSD0NpFsM
+        xxMJ6KLs7Zl0xOT0BRyHUNM1W3JvonDU3qr31bBvk3KEkFBfFkz1iVqgQAFw5xbTfymHeSLR9on
+        bohXRJTeWRyMEPQLylkikFVr4t4ihRFDGrA==
+X-Received: by 2002:a17:907:3e8f:b0:96f:181b:87d3 with SMTP id hs15-20020a1709073e8f00b0096f181b87d3mr1989952ejc.37.1685437775780;
+        Tue, 30 May 2023 02:09:35 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ516t9yDSxbU9B3F/l9WWgnZUyIJ2qPMBODZE3SRxwNqb4o581lHEU2AQWHUE2jSR1OiZlY5w==
+X-Received: by 2002:a17:907:3e8f:b0:96f:181b:87d3 with SMTP id hs15-20020a1709073e8f00b0096f181b87d3mr1989931ejc.37.1685437775479;
+        Tue, 30 May 2023 02:09:35 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id p18-20020a170906a01200b00966447c76f3sm7088353ejy.39.2023.05.30.02.09.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 May 2023 02:09:34 -0700 (PDT)
+Message-ID: <ca818604-0e8c-19b2-8407-0c1c226a3e85@redhat.com>
+Date:   Tue, 30 May 2023 11:09:34 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v5 0/4] Updates to AMD PMC driver
+Content-Language: en-US, nl
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
+Cc:     Sanket.Goswami@amd.com, mario.limonciello@amd.com,
+        platform-driver-x86@vger.kernel.org
+References: <20230525141929.866385-1-Shyam-sundar.S-k@amd.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230525141929.866385-1-Shyam-sundar.S-k@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 29 May 2023, SungHwan Jung wrote:
+Hi,
 
-> This patch includes Platform Profile support (performance, balanced, quiet)
-> for Victus 16-d1xxx (8A25).
+On 5/25/23 16:19, Shyam Sundar S K wrote:
+> Series includes fixes and feature updates to the PMC driver.
+> Series has been split into 4 patches to incorporate the review
+> remarks from v2.
+
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+
+
+
+> v5:
+>  - Change amd_pmc_is_cpu_supported() to amd_pmc_is_stb_supported()
 > 
-> Signed-off-by: SungHwan Jung <onenowy@gmail.com>
-> ---
->  drivers/platform/x86/hp/hp-wmi.c | 104 +++++++++++++++++++++++++++++--
->  1 file changed, 99 insertions(+), 5 deletions(-)
+> v4:
+>  - Based on review-hans branch
+>  - Address review remarks from Ilpo on the commit-msg and function names
 > 
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index 6364ae262705..6259b907ce63 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -66,6 +66,11 @@ static const char *const omen_thermal_profile_force_v0_boards[] = {
->  	"8607", "8746", "8747", "8749", "874A", "8748"
->  };
->  
-> +/* DMI Board names of Victus laptops */
-> +static const char * const victus_thermal_profile_boards[] = {
-> +	"8A25"
-> +};
-> +
->  enum hp_wmi_radio {
->  	HPWMI_WIFI	= 0x0,
->  	HPWMI_BLUETOOTH	= 0x1,
-> @@ -176,6 +181,12 @@ enum hp_thermal_profile_omen_v1 {
->  	HP_OMEN_V1_THERMAL_PROFILE_COOL		= 0x50,
->  };
->  
-> +enum hp_thermal_profile_victus {
-> +	HP_VICTUS_THERMAL_PROFILE_DEFAULT		= 0x00,
-> +	HP_VICTUS_THERMAL_PROFILE_PERFORMANCE	= 0x01,
-> +	HP_VICTUS_THERMAL_PROFILE_QUIET			= 0x03,
-
-These should be aligned.
-
-> +};
-> +
->  enum hp_thermal_profile {
->  	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
->  	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
-> @@ -1246,6 +1257,70 @@ static int hp_wmi_platform_profile_set(struct platform_profile_handler *pprof,
->  	return 0;
->  }
->  
-> +static bool is_victus_thermal_profile(void)
-> +{
-> +	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
-> +
-> +	if (!board_name)
-> +		return false;
-> +
-> +	return match_string(victus_thermal_profile_boards,
-> +			    ARRAY_SIZE(victus_thermal_profile_boards),
-> +			    board_name) >= 0;
-> +}
-> +
-> +static int platform_profile_victus_get(struct platform_profile_handler *pprof,
-> +				     enum platform_profile_option *profile)
-> +{
-> +	int tp;
-> +
-> +	tp = omen_thermal_profile_get();
-> +	if (tp < 0)
-> +		return tp;
-> +
-> +	switch (tp) {
-> +	case HP_VICTUS_THERMAL_PROFILE_PERFORMANCE:
-> +		*profile =  PLATFORM_PROFILE_PERFORMANCE;
-> +		break;
-> +	case HP_VICTUS_THERMAL_PROFILE_DEFAULT:
-> +		*profile =  PLATFORM_PROFILE_BALANCED;
-> +		break;
-> +	case HP_VICTUS_THERMAL_PROFILE_QUIET:
-> +		*profile =  PLATFORM_PROFILE_QUIET;
-
-Remove the extra space in all three assingments here.
-
-> +		break;
-> +	default:
-> +		return -EINVAL;
-
-It seems wrong to return -EINVAL when there's nothing wrong done by the 
-caller (arguments were not invalid). Maybe use -ENOENT or -ENXIO instead.
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int platform_profile_victus_set(struct platform_profile_handler *pprof,
-> +				     enum platform_profile_option profile)
-> +{
-> +	int err, tp;
-> +
-> +	switch (profile) {
-> +	case PLATFORM_PROFILE_PERFORMANCE:
-> +		tp =  HP_VICTUS_THERMAL_PROFILE_PERFORMANCE;
-> +		break;
-> +	case PLATFORM_PROFILE_BALANCED:
-> +		tp =  HP_VICTUS_THERMAL_PROFILE_DEFAULT;
-> +		break;
-> +	case PLATFORM_PROFILE_QUIET:
-> +		tp =  HP_VICTUS_THERMAL_PROFILE_QUIET;
-
-Again, remove extra spaces.
-
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	err = omen_thermal_profile_set(tp);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
->  static int thermal_profile_setup(void)
->  {
->  	int err, tp;
-> @@ -1266,6 +1341,25 @@ static int thermal_profile_setup(void)
->  
->  		platform_profile_handler.profile_get = platform_profile_omen_get;
->  		platform_profile_handler.profile_set = platform_profile_omen_set;
-> +
-> +		set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
-> +	} else if (is_victus_thermal_profile()) {
-> +		tp = omen_thermal_profile_get();
-> +		if (tp < 0)
-> +			return tp;
-> +
-> +		/*
-> +		 * call thermal profile write command to ensure that the
-> +		 * firmware correctly sets the OEM variables
-> +		 */
-> +		err = omen_thermal_profile_set(tp);
-> +		if (err < 0)
-> +			return err;
-> +
-> +		platform_profile_handler.profile_get = platform_profile_victus_get;
-> +		platform_profile_handler.profile_set = platform_profile_victus_set;
-> +
-> +		set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
->  	} else {
->  		tp = thermal_profile_get();
->  
-> @@ -1273,20 +1367,20 @@ static int thermal_profile_setup(void)
->  			return tp;
->  
->  		/*
-> -		 * call thermal profile write command to ensure that the
-> -		 * firmware correctly sets the OEM variables for the DPTF
-> -		 */
-> +		 * call thermal profile write command to ensure that the
-> +		 * firmware correctly sets the OEM variables for the DPTF
-> +		 */
-
-A stray change?
-
->  		err = thermal_profile_set(tp);
->  		if (err)
->  			return err;
->  
->  		platform_profile_handler.profile_get = hp_wmi_platform_profile_get;
->  		platform_profile_handler.profile_set = hp_wmi_platform_profile_set;
-> -
-> +
-
-A stray change?
-
->  		set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
-> +		set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
->  	}
->  
-> -	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
->  	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
->  	set_bit(PLATFORM_PROFILE_PERFORMANCE, platform_profile_handler.choices);
-
-Besides the minor things noted above, the change looks good.
-
--- 
- i.
+> v3:
+>  - Based on review-hans branch
+>  - Pass true/false instead of 1/0 the amd_pmc_send_cmd()
+>  - Add helper for supported cpu id check as suggested by Ilpo.
+> 
+> v2:
+>  - Based on review-hans branch
+>  - Add a switch for cpu-id check based on feedback from Mario.
+> 
+> Shyam Sundar S K (4):
+>   platform/x86/amd: pmc: Pass true/false to bool argument
+>   platform/x86/amd: pmc: Get STB DRAM size from PMFW
+>   platform/x86/amd: pmc: Add helper function to check the cpu id
+>   platform/x86/amd: pmc: Update metrics table info for Pink Sardine
+> 
+>  drivers/platform/x86/amd/pmc.c | 123 ++++++++++++++++++++++++++-------
+>  1 file changed, 99 insertions(+), 24 deletions(-)
+> 
 
