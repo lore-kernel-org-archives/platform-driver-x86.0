@@ -2,37 +2,37 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE8AC77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 31 May 2023 13:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D795C7EE2F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 31 May 2023 13:44:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236433AbjEaNkt (ORCPT
+        id S236675AbjEaNoW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 31 May 2023 09:40:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54398 "EHLO
+        Wed, 31 May 2023 09:44:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236446AbjEaNko (ORCPT
+        with ESMTP id S236110AbjEaNoC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 31 May 2023 09:40:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745F418F;
-        Wed, 31 May 2023 06:40:36 -0700 (PDT)
+        Wed, 31 May 2023 09:44:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9079B19A1;
+        Wed, 31 May 2023 06:42:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B360963B12;
-        Wed, 31 May 2023 13:40:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E7AEC4339B;
-        Wed, 31 May 2023 13:40:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B69BB63B5D;
+        Wed, 31 May 2023 13:42:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5268FC433A0;
+        Wed, 31 May 2023 13:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685540435;
+        s=k20201202; t=1685540539;
         bh=e8KBPGafc4lWioyFKqhihelU5VkPeA2MRjnvL3ZBZZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ljJPcyIt6VcYJr0fPWBHcVZIpRKLTdMDkvMxnRuOl68ipsChU+njToYdZKxN94pv5
-         ztVabWAFKfp4iwZ1HR4MkpqRuov6NatvUCXKpHiGFLUT8MVUECQ4hnknXnkYxS0W4P
-         2bSUPpjkHrCvZPPVPKCXDkazuIRNoJ6Y7GGQc8BtRC3vCX1YVF8xPK1hjVXP3ovdjL
-         6o8+fiJPy/IVM9pdIDhpO7QLU8WrPTjBDrWHNRzsrWGqI0oEcRVixnwDEUsC06zsbd
-         5TQE7WG+Z5QKEQ6JWcq039+gr3xyKqoDLb6pehzZHaeZKTPYNTjnC/JZAKhb8V7NiE
-         u7gSkxcZGWH5w==
+        b=JJr5Lq2iwWuZRAkDVSO3tqdKSow41cHZMueTMqll/ChdfjxmkPuGP20YdnBGyOqOQ
+         EMh8XsiELrp9wf0wwOb6PGxrzOX4QO5x+5JfUDwQu1tSwLwBFnhbwiqVAYqq9Gpi7s
+         WM/GfhAQAD/rzKYXJrtZyvg1uv0gLbUR4XsZ5p9mnd7H6sxHdz1KH/CBA1ON5cclpQ
+         8AVs8cwfSwKY2i4j7iQmhv9SJvBBWqVFcSu1ER81zbOgVBRMPc5pU5KoaOrr9JjIjD
+         1mT6DIwgXGPhAyKB7vYfoXCDYp7Y2ccVma4IIjdJuyF6pUr/fRSCHvrUQbuRqbviDB
+         QaJZFpuTUvcHg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Alexandru Sorodoc <ealex95@gmail.com>,
@@ -40,12 +40,12 @@ Cc:     Alexandru Sorodoc <ealex95@gmail.com>,
         Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
         markgross@kernel.org, acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.3 10/37] platform/x86: asus-wmi: Ignore WMI events with codes 0x7B, 0xC0
-Date:   Wed, 31 May 2023 09:39:52 -0400
-Message-Id: <20230531134020.3383253-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 09/33] platform/x86: asus-wmi: Ignore WMI events with codes 0x7B, 0xC0
+Date:   Wed, 31 May 2023 09:41:35 -0400
+Message-Id: <20230531134159.3383703-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230531134020.3383253-1-sashal@kernel.org>
-References: <20230531134020.3383253-1-sashal@kernel.org>
+In-Reply-To: <20230531134159.3383703-1-sashal@kernel.org>
+References: <20230531134159.3383703-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
