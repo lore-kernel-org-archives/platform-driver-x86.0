@@ -2,494 +2,100 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3869DC7EE23
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 May 2023 21:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE8AC77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 31 May 2023 13:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232755AbjE3Vm0 (ORCPT
+        id S236433AbjEaNkt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 30 May 2023 17:42:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57616 "EHLO
+        Wed, 31 May 2023 09:40:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230045AbjE3VmZ (ORCPT
+        with ESMTP id S236446AbjEaNko (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 30 May 2023 17:42:25 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E7ACE5;
-        Tue, 30 May 2023 14:42:22 -0700 (PDT)
-Date:   Tue, 30 May 2023 23:42:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-        t=1685482929; bh=TB3L7ZuASD9BzrB+yEp4WYe/PTKZOFkqCezxs+G4Lkk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dvIkXATBWYV/MbDESdeB8vhINftTmI171ocBO6ZWww3aCKYAL6N6qpuZ1HjqNijWc
-         xHJ+igqmtbNeQE3KelnxSBV6iD+EznAa9XvGgV5LJZBrNgfubVAyYnye3+muxt3MAy
-         HTDMLMfDRdOYMXylaHrbPtHlZw3QXzf6NSskEbvw=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH v15 05/13] hp-bioscfg: enum-attributes
-Message-ID: <dd9df9e7-9693-4ddc-8429-cc5e0567da17@t-8ch.de>
-References: <20230519201300.12964-1-jorge.lopez2@hp.com>
- <20230519201300.12964-6-jorge.lopez2@hp.com>
- <0cbd158e-0742-4e04-9996-bd376f9b555b@t-8ch.de>
- <CAOOmCE8=C_qH862G9sdLS59=QPh6U_78WY0SzJwzZfW+iSUiPA@mail.gmail.com>
+        Wed, 31 May 2023 09:40:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745F418F;
+        Wed, 31 May 2023 06:40:36 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B360963B12;
+        Wed, 31 May 2023 13:40:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E7AEC4339B;
+        Wed, 31 May 2023 13:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685540435;
+        bh=e8KBPGafc4lWioyFKqhihelU5VkPeA2MRjnvL3ZBZZs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ljJPcyIt6VcYJr0fPWBHcVZIpRKLTdMDkvMxnRuOl68ipsChU+njToYdZKxN94pv5
+         ztVabWAFKfp4iwZ1HR4MkpqRuov6NatvUCXKpHiGFLUT8MVUECQ4hnknXnkYxS0W4P
+         2bSUPpjkHrCvZPPVPKCXDkazuIRNoJ6Y7GGQc8BtRC3vCX1YVF8xPK1hjVXP3ovdjL
+         6o8+fiJPy/IVM9pdIDhpO7QLU8WrPTjBDrWHNRzsrWGqI0oEcRVixnwDEUsC06zsbd
+         5TQE7WG+Z5QKEQ6JWcq039+gr3xyKqoDLb6pehzZHaeZKTPYNTjnC/JZAKhb8V7NiE
+         u7gSkxcZGWH5w==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Alexandru Sorodoc <ealex95@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
+        markgross@kernel.org, acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.3 10/37] platform/x86: asus-wmi: Ignore WMI events with codes 0x7B, 0xC0
+Date:   Wed, 31 May 2023 09:39:52 -0400
+Message-Id: <20230531134020.3383253-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230531134020.3383253-1-sashal@kernel.org>
+References: <20230531134020.3383253-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOOmCE8=C_qH862G9sdLS59=QPh6U_78WY0SzJwzZfW+iSUiPA@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2023-05-30 12:01:57-0500, Jorge Lopez wrote:
-> On Fri, May 26, 2023 at 10:35 AM Thomas Weißschuh <thomas@t-8ch.de> wrote:
-> >
-> > On 2023-05-19 15:12:52-0500, Jorge Lopez wrote:
-> >
-> > <snip>
-> >
-> > >  .../x86/hp/hp-bioscfg/enum-attributes.c       | 465 ++++++++++++++++++
-> > >  1 file changed, 465 insertions(+)
-> > >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-> > >
-> > > diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-> > > new file mode 100644
-> > > index 000000000000..80842835606d
-> > > --- /dev/null
-> > > +++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-> > > @@ -0,0 +1,465 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Functions corresponding to enumeration type attributes under
-> > > + * BIOS Enumeration GUID for use with hp-bioscfg driver.
-> > > + *
-> > > + * Copyright (c) 2022 HP Development Company, L.P.
-> > > + */
-> > > +
-> > > +#include "bioscfg.h"
-> > > +
-> > > +GET_INSTANCE_ID(enumeration);
-> > > +
-> > > +static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-> > > +{
-> > > +     int instance_id = get_enumeration_instance_id(kobj);
-> > > +
-> > > +     if (instance_id < 0)
-> > > +             return -EIO;
-> > > +
-> > > +     return sysfs_emit(buf, "%s\n",
-> > > +                      bioscfg_drv.enumeration_data[instance_id].current_value);
-> > > +}
-> > > +
-> > > +/**
-> > > + * validate_enumeration_input() -
-> > > + * Validate input of current_value against possible values
-> > > + *
-> > > + * @instance_id: The instance on which input is validated
-> > > + * @buf: Input value
-> > > + */
-> 
-> <snip>
-> 
-> > > +static int hp_populate_enumeration_elements_from_package(union acpi_object *enum_obj,
-> > > +                                                      int enum_obj_count,
-> > > +                                                      int instance_id)
-> > > +{
-> > > +     char *str_value = NULL;
-> > > +     int value_len;
-> > > +     u32 size = 0;
-> > > +     u32 int_value;
-> > > +     int elem = 0;
-> > > +     int reqs;
-> > > +     int pos_values;
-> > > +     int ret;
-> > > +     int eloc;
-> > > +     struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-> > > +
-> > > +     for (elem = 1, eloc = 1; elem < enum_obj_count; elem++, eloc++) {
-> > > +             /* ONLY look at the first ENUM_ELEM_CNT elements */
-> > > +             if (eloc == ENUM_ELEM_CNT)
-> > > +                     goto exit_enumeration_package;
-> > > +
-> > > +             switch (enum_obj[elem].type) {
-> > > +             case ACPI_TYPE_STRING:
-> > > +                     if (PREREQUISITES != elem && ENUM_POSSIBLE_VALUES != elem) {
-> > > +                             ret = hp_convert_hexstr_to_str(enum_obj[elem].string.pointer,
-> > > +                                                            enum_obj[elem].string.length,
-> > > +                                                            &str_value, &value_len);
-> > > +                             if (ret)
-> > > +                                     return -EINVAL;
-> > > +                     }
-> > > +                     break;
-> > > +             case ACPI_TYPE_INTEGER:
-> > > +                     int_value = (u32)enum_obj[elem].integer.value;
-> > > +                     break;
-> > > +             default:
-> > > +                     pr_warn("Unsupported object type [%d]\n", enum_obj[elem].type);
-> > > +                     continue;
-> > > +             }
-> > > +
-> > > +             /* Check that both expected and read object type match */
-> > > +             if (expected_enum_types[eloc] != enum_obj[elem].type) {
-> > > +                     pr_err("Error expected type %d for elem %d, but got type %d instead\n",
-> > > +                            expected_enum_types[eloc], elem, enum_obj[elem].type);
-> > > +                     return -EIO;
-> > > +             }
-> > > +
-> > > +             /* Assign appropriate element value to corresponding field */
-> > > +             switch (eloc) {
-> > > +             case NAME:
-> > > +             case VALUE:
-> > > +                     break;
-> > > +             case PATH:
-> > > +                     strscpy(enum_data->common.path, str_value,
-> > > +                             sizeof(enum_data->common.path));
-> > > +                     break;
-> > > +             case IS_READONLY:
-> > > +                     enum_data->common.is_readonly = int_value;
-> > > +                     break;
-> > > +             case DISPLAY_IN_UI:
-> > > +                     enum_data->common.display_in_ui = int_value;
-> > > +                     break;
-> > > +             case REQUIRES_PHYSICAL_PRESENCE:
-> > > +                     enum_data->common.requires_physical_presence = int_value;
-> > > +                     break;
-> > > +             case SEQUENCE:
-> > > +                     enum_data->common.sequence = int_value;
-> > > +                     break;
-> > > +             case PREREQUISITES_SIZE:
-> > > +                     enum_data->common.prerequisites_size = int_value;
-> > > +                     if (int_value > MAX_PREREQUISITES_SIZE)
-> > > +                             pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-> > > +
-> > > +                     /*
-> > > +                      * This HACK is needed to keep the expected
-> > > +                      * element list pointing to the right obj[elem].type
-> > > +                      * when the size is zero. PREREQUISITES
-> > > +                      * object is omitted by BIOS when the size is
-> > > +                      * zero.
-> > > +                      */
-> > > +                     if (int_value == 0)
-> > > +                             eloc++;
-> > > +                     break;
-> > > +
-> > > +             case PREREQUISITES:
-> > > +                     size = min_t(u32, enum_data->common.prerequisites_size, MAX_PREREQUISITES_SIZE);
-> >
-> > We cannot blindly truncate this to a maximum value.
-> > The firmware reported an amount of elements it would return.
-> >
-> > If this value is to big than we can not just intpret the data as if it
-> > was something the firmware did not return.
-> >
-> > An error needs to be reported to userspace.
-> > A default value is not enough as userspace can not interpret this
-> > properly.
-> >
-> 
-> It is ok to truncate prerequisite size to MAX_PREREQUISITES_SIZE.
-> MAX_PREREQUISITES_SIZE is a value predefined by BIOS when the
-> prerequisite values size is invalid ( > MAX_PREREQUISITES_SIZE) and/or
-> the prerequisite data is corrupted.
-> Neither PREREQUISITES nor PREREQUISITES_SIZE are reported to the
-> userspace so there is no need to report a failure on data that is not
-> exposed.  One item that needs clarification is the fact that
-> regardless if  PREREQUISITES or PREREQUISITES_SIZE are invalid, that
-> does not mean other values are invalid.  It is for this reason, we
-> need to continue to read all remaining packages.
+From: Alexandru Sorodoc <ealex95@gmail.com>
 
-It may be that prerequisites are not reported to userspace.
-But the following values are:
+[ Upstream commit 362c1f2ec82cb65940e1c73e15a395a7a891fc6f ]
 
-security level, current value and possible values.
+On ASUS GU604V the key 0x7B is issued when the charger is connected or
+disconnected, and key 0xC0 is issued when an external display is
+connected or disconnected.
 
-And if prerequisites are garbage then those are now also garbage.
+This commit maps them to KE_IGNORE to slience kernel messages about
+unknown keys, such as:
 
-hp_populate_enumeration_package_data() always returns "0".
+    kernel: asus_wmi: Unknown key code 0x7b
 
-> In earlier reviews, it was agreed to report a warning  that reads
-> 
-> /* Report a message and limit prerequisite size to maximum value */
-> pr_warn("Enum Prerequisites size value exceeded the maximum number of
-> elements supported or data may be malformed\n");
-> 
-> See lines 370-374
-> 
-> > (Affects all attributes)
-> >
-> > > +                     for (reqs = 0; reqs < size; reqs++) {
-> > > +                             if (elem >= enum_obj_count) {
-> > > +                                     pr_err("Error enum-objects package is too small\n");
-> > > +                                     return -EINVAL;
-> > > +                             }
-> > > +
-> > > +                             ret = hp_convert_hexstr_to_str(enum_obj[elem + reqs].string.pointer,
-> > > +                                                            enum_obj[elem + reqs].string.length,
-> > > +                                                            &str_value, &value_len);
-> > > +
-> > > +                             if (ret)
-> > > +                                     return -EINVAL;
-> > > +
-> > > +                             strscpy(enum_data->common.prerequisites[reqs],
-> > > +                                     str_value,
-> > > +                                     sizeof(enum_data->common.prerequisites[reqs]));
-> > > +
-> > > +                             kfree(str_value);
-> > > +                     }
-> > > +                     break;
-> > > +
-> > > +             case SECURITY_LEVEL:
-> > > +                     enum_data->common.security_level = int_value;
-> > > +                     break;
-> > > +
-> > > +             case ENUM_CURRENT_VALUE:
-> > > +                     strscpy(enum_data->current_value,
-> > > +                             str_value, sizeof(enum_data->current_value));
-> > > +                     break;
-> > > +             case ENUM_SIZE:
-> > > +                     enum_data->possible_values_size = int_value;
-> > > +                     if (int_value > MAX_VALUES_SIZE)
-> > > +                             pr_warn("Possible number values size value exceeded the maximum number of elements supported or data may be malformed\n");
-> > > +
-> > > +                     /*
-> > > +                      * This HACK is needed to keep the expected
-> > > +                      * element list pointing to the right obj[elem].type
-> > > +                      * when the size is zero. POSSIBLE_VALUES
-> > > +                      * object is omitted by BIOS when the size is zero.
-> > > +                      */
-> > > +                     if (int_value == 0)
-> > > +                             eloc++;
-> > > +                     break;
-> > > +
-> > > +             case ENUM_POSSIBLE_VALUES:
-> > > +                     size = enum_data->possible_values_size;
-> > > +
-> > > +                     for (pos_values = 0; pos_values < size && pos_values < MAX_VALUES_SIZE;
-> > > +                          pos_values++) {
-> > > +                             if (elem >= enum_obj_count) {
-> > > +                                     pr_err("Error enum-objects package is too small\n");
-> > > +                                     return -EINVAL;
-> > > +                             }
-> > > +
-> > > +                             ret = hp_convert_hexstr_to_str(enum_obj[elem + pos_values].string.pointer,
-> > > +                                                            enum_obj[elem + pos_values].string.length,
-> > > +                                                            &str_value, &value_len);
-> > > +
-> > > +                             if (ret)
-> > > +                                     return -EINVAL;
-> > > +
-> > > +                             /*
-> > > +                              * ignore strings when possible values size
-> > > +                              * is greater than MAX_VALUES_SIZE
-> > > +                              */
-> > > +                             if (size < MAX_VALUES_SIZE)
-> > > +                                     strscpy(enum_data->possible_values[pos_values],
-> > > +                                             str_value,
-> > > +                                             sizeof(enum_data->possible_values[pos_values]));
-> > > +                     }
-> > > +                     break;
-> > > +             default:
-> > > +                     pr_warn("Invalid element: %d found in Enumeration attribute or data may be malformed\n", elem);
-> > > +                     break;
-> > > +             }
-> > > +
-> > > +             kfree(str_value);
-> > > +     }
-> > > +
-> > > +exit_enumeration_package:
-> > > +     kfree(str_value);
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +/**
-> > > + * hp_populate_enumeration_package_data() -
-> > > + * Populate all properties of an instance under enumeration attribute
-> > > + *
-> > > + * @enum_obj: ACPI object with enumeration data
-> > > + * @instance_id: The instance to enumerate
-> > > + * @attr_name_kobj: The parent kernel object
-> > > + */
-> > > +int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
-> > > +                                      int instance_id,
-> > > +                                      struct kobject *attr_name_kobj)
-> > > +{
-> > > +     struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-> > > +
-> > > +     enum_data->attr_name_kobj = attr_name_kobj;
-> > > +
-> > > +     hp_populate_enumeration_elements_from_package(enum_obj,
-> > > +                                                   enum_obj->package.count,
-> > > +                                                   instance_id);
-> > > +     hp_update_attribute_permissions(enum_data->common.is_readonly,
-> > > +                                     &enumeration_current_val);
-> > > +     /*
-> > > +      * Several attributes have names such "MONDAY". Friendly
-> > > +      * user nane is generated to make the name more descriptive
-> > > +      */
-> > > +     hp_friendly_user_name_update(enum_data->common.path,
-> > > +                                  attr_name_kobj->name,
-> > > +                                  enum_data->common.display_name,
-> > > +                                  sizeof(enum_data->common.display_name));
-> > > +     return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
-> > > +}
-> > > +
-> > > +static int hp_populate_enumeration_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
-> > > +                                                     int instance_id)
-> > > +{
-> > > +     int reqs;
-> > > +     int values;
-> > > +     struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-> > > +
-> > > +     /*
-> > > +      * In earlier implementation, reported errors were ignored
-> > > +      * causing the data to remain uninitialized. It is for this
-> > > +      * reason functions may return an error and no validation
-> > > +      * takes place.
-> > > +      */
-> >
-> > Where is this error returned?
-> 
-> functions such hp_get_string_from_buffer, hp_get_integer_from_buffer
+Signed-off-by: Alexandru Sorodoc <ealex95@gmail.com>
+Link: https://lore.kernel.org/r/20230512101517.47416-1-ealex95@gmail.com
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-But the errors returned from those functions are just thrown away, no?
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index e2c9a68d12df9..fdf7da06af306 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -555,6 +555,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0x71, { KEY_F13 } }, /* General-purpose button */
+ 	{ KE_IGNORE, 0x79, },  /* Charger type dectection notification */
+ 	{ KE_KEY, 0x7a, { KEY_ALS_TOGGLE } }, /* Ambient Light Sensor Toggle */
++	{ KE_IGNORE, 0x7B, }, /* Charger connect/disconnect notification */
+ 	{ KE_KEY, 0x7c, { KEY_MICMUTE } },
+ 	{ KE_KEY, 0x7D, { KEY_BLUETOOTH } }, /* Bluetooth Enable */
+ 	{ KE_KEY, 0x7E, { KEY_BLUETOOTH } }, /* Bluetooth Disable */
+@@ -584,6 +585,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0xAE, { KEY_FN_F5 } }, /* Fn+F5 fan mode on 2020+ */
+ 	{ KE_KEY, 0xB3, { KEY_PROG4 } }, /* AURA */
+ 	{ KE_KEY, 0xB5, { KEY_CALC } },
++	{ KE_IGNORE, 0xC0, }, /* External display connect/disconnect notification */
+ 	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
+ 	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
+ 	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
+-- 
+2.39.2
 
-> >
-> > > +
-> > > +     // VALUE:
-> > > +     hp_get_string_from_buffer(&buffer_ptr, buffer_size, enum_data->current_value,
-> > > +                               sizeof(enum_data->current_value));
-> > > +
-> > > +     // PATH:
-> > > +     hp_get_string_from_buffer(&buffer_ptr, buffer_size, enum_data->common.path,
-> > > +                               sizeof(enum_data->common.path));
-> > > +
-> > > +     // IS_READONLY:
-> > > +     hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-> > > +                                &enum_data->common.is_readonly);
-> > > +
-> > > +     //DISPLAY_IN_UI:
-> > > +     hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-> > > +                                &enum_data->common.display_in_ui);
-> > > +
-> > > +     // REQUIRES_PHYSICAL_PRESENCE:
-> > > +     hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-> > > +                                &enum_data->common.requires_physical_presence);
-> > > +
-> > > +     // SEQUENCE:
-> > > +     hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-> > > +                                &enum_data->common.sequence);
-> > > +
-> > > +     // PREREQUISITES_SIZE:
-> > > +     hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-> > > +                                &enum_data->common.prerequisites_size);
-> > > +
-> > > +     if (enum_data->common.prerequisites_size > MAX_PREREQUISITES_SIZE) {
-> > > +             /* Report a message and limit prerequisite size to maximum value */
-> > > +             pr_warn("Enum Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-> > > +             enum_data->common.prerequisites_size = MAX_PREREQUISITES_SIZE;
-> > > +     }
-> > > +
-> > > +     // PREREQUISITES:
-> > > +     for (reqs = 0; reqs < enum_data->common.prerequisites_size; reqs++)
-> > > +             hp_get_string_from_buffer(&buffer_ptr, buffer_size,
-> > > +                                       enum_data->common.prerequisites[reqs],
-> > > +                                       sizeof(enum_data->common.prerequisites[reqs]));
-> > > +
-> > > +     // SECURITY_LEVEL:
-> > > +     hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-> > > +                                &enum_data->common.security_level);
-> >
-> > The reading of all the common elemtns can be extracted into a helper
-> > and reused from all the attributes.
-> 
-> Is extracting all common elements into a helper routine absolutely
-> necessary now or can it be refactored after driver is accepted?
-
-It's not necessary.
-
-> >
-> > > +
-> > > +     // ENUM_CURRENT_VALUE:
-> > > +     hp_get_string_from_buffer(&buffer_ptr, buffer_size,
-> > > +                               enum_data->current_value,
-> > > +                               sizeof(enum_data->current_value));
-> > > +     // ENUM_SIZE:
-> > > +     hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-> > > +                                &enum_data->possible_values_size);
-> > > +
-> > > +     if (enum_data->possible_values_size > MAX_VALUES_SIZE) {
-> > > +             /* Report a message and limit possible values size to maximum value */
-> > > +             pr_warn("Enum Possible size value exceeded the maximum number of elements supported or data may be malformed\n");
-> > > +             enum_data->possible_values_size = MAX_VALUES_SIZE;
-> > > +     }
-> > > +
-> > > +     // ENUM_POSSIBLE_VALUES:
-> > > +
-> > > +     for (values = 0; values < enum_data->possible_values_size; values++)
-> > > +             hp_get_string_from_buffer(&buffer_ptr, buffer_size,
-> > > +                                       enum_data->possible_values[values],
-> > > +                                       sizeof(enum_data->possible_values[values]));
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +/**
-> > > + * hp_populate_enumeration_buffer_data() -
-> > > + * Populate all properties of an instance under enumeration attribute
-> > > + *
-> > > + * @buffer_ptr: Buffer pointer
-> > > + * @buffer_size: Buffer size
-> > > + * @instance_id: The instance to enumerate
-> > > + * @attr_name_kobj: The parent kernel object
-> > > + */
-> > > +int hp_populate_enumeration_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
-> > > +                                     int instance_id,
-> > > +                                     struct kobject *attr_name_kobj)
-> > > +{
-> > > +     struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-> > > +
-> > > +     enum_data->attr_name_kobj = attr_name_kobj;
-> > > +
-> > > +     /* Populate enumeration elements */
-> > > +     hp_populate_enumeration_elements_from_buffer(buffer_ptr, buffer_size, instance_id);
-> > > +
-> > > +     hp_update_attribute_permissions(enum_data->common.is_readonly,
-> > > +                                     &enumeration_current_val);
-> > > +     /*
-> > > +      * Several attributes have names such "MONDAY". A Friendlier
-> > > +      * user nane is generated to make the name more descriptive
-> > > +      */
-> > > +     hp_friendly_user_name_update(enum_data->common.path,
-> > > +                                  attr_name_kobj->name,
-> > > +                                  enum_data->common.display_name,
-> > > +                                  sizeof(enum_data->common.display_name));
-> > > +
-> > > +     return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
-> > > +}
-> > > +
-> > > +/**
-> > > + * hp_exit_enumeration_attributes() - Clear all attribute data
-> > > + *
-> > > + * Clears all data allocated for this group of attributes
-> > > + */
-> > > +void hp_exit_enumeration_attributes(void)
-> > > +{
-> > > +     int instance_id;
-> > > +
-> > > +     for (instance_id = 0; instance_id < bioscfg_drv.enumeration_instances_count;
-> > > +          instance_id++) {
-> > > +             struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
-> > > +             struct kobject *attr_name_kobj = enum_data->attr_name_kobj;
-> > > +
-> > > +             if (attr_name_kobj)
-> > > +                     sysfs_remove_group(attr_name_kobj, &enumeration_attr_group);
-> > > +     }
-> > > +     bioscfg_drv.enumeration_instances_count = 0;
-> > > +
-> > > +     kfree(bioscfg_drv.enumeration_data);
-> > > +     bioscfg_drv.enumeration_data = NULL;
-> > > +}
-> > > --
-> > > 2.34.1
-> > >
