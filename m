@@ -2,148 +2,290 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5369C77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 31 May 2023 16:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 520ECC77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 31 May 2023 16:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234562AbjEaQBf (ORCPT
+        id S229629AbjEaQWs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 31 May 2023 12:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42602 "EHLO
+        Wed, 31 May 2023 12:22:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231947AbjEaQBd (ORCPT
+        with ESMTP id S229566AbjEaQWp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 31 May 2023 12:01:33 -0400
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2082.outbound.protection.outlook.com [40.107.7.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A85D912B;
-        Wed, 31 May 2023 09:01:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y8xcQH5D6y3JErzyz0049aVBbvPf7btKH1wo1MDT3EhWuv78leE2t9YdKKPFKAxppIrwADIqn4G63Gz0u6hpiaUhqvndfFDY3p9PEbZVWjz5jr1+OsD5E9EJ0ucV7uY9lw1TquAktFm4yWQZQsaL3JGwiUZeK0N/E3sPusFGNf8SDj2MRUuOoAq3l4qt4Fkj05oUELwoV7VlQFhIqbdduKDdiN6imxESlpipt8D11pV8Dv4oZljxEPBPF+/BPp7sn3okxxWpjq1RhulwPfW07yZB3eOSGNcfsD1NnxxRBqzCpX74aLIhe98CZE5lZKknrfqI1us1rq1Fbvz8VzgoOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OAJJHDvxT6WvPDgSLKpf+hfrsO9Te2WO4a69vyRkutM=;
- b=mqf5C1HKdSh3zUuwO166eFXBuIejTRDvE7LQMxIl64oanT5dmV5E3EFksg7qt5AqYusVejvKZSwn0UDJ3ggcQEw8fJL1pi9lExNC4Qn6s6FBo4jcP+WBVHn2a/5oAM6nPl9dqX+RunoNxZvNxh9Jw/feWMMsNAhNtmeBbMnP0uulRAK84wYA+wILi93tnjarGljAjWAgM/Lq0t+IwBBphdJ4XN/ZpP2fG1ksCiiL1kocl1NRmfRLCceKSm/VNm8y3PfmWV2oKdOznQZ15lBHejSnnRTAE377h4DBx2QEiUpQEtjSl19DliNllWjqG9cnUNnBQ/9b2vM0/Fe5NEYvKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OAJJHDvxT6WvPDgSLKpf+hfrsO9Te2WO4a69vyRkutM=;
- b=otMS955ircpaj/5BBrv49GmBbEtQ7QvzfynAeyfhn9Ajtd5nV9m78AFKcW7SuRcU/uQqhG3nk4vgPYHSNtS7x/1obSyVUYpP+kFVLMJmvRPl+eAC4ohcb5PW5glAQT1flyiMaRmA49YcsN0DZLgFOrxDH59QRno4qC8eKmOBd6N12HisBc61XoHLcqKmf86JKmEi8w1FTS8WDdUwj8I/n2ojauCZ7+lqJA1etTK20r8trddZfsFgnSjci8JyVwNAbbCezTvEo4Ae0k45XUtRcJTaPCUNB7y8A3wkTIX2N5LPDdiT8sL5Jqkxh5a4EQbFP5mr6wrBqauxFtMmbFFfGA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
- by VI1PR10MB3646.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:138::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Wed, 31 May
- 2023 16:01:27 +0000
-Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::a171:a3f2:99b7:5f29]) by PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::a171:a3f2:99b7:5f29%6]) with mapi id 15.20.6455.020; Wed, 31 May 2023
- 16:01:27 +0000
-Date:   Wed, 31 May 2023 18:01:22 +0200
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH 0/1] leds: simatic-ipc-leds-gpio: add new model BX-21A
-Message-ID: <20230531180122.12e1506c@md1za8fc.ad001.siemens.net>
-In-Reply-To: <20230531155457.31632-1-henning.schild@siemens.com>
-References: <20230531155457.31632-1-henning.schild@siemens.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.37; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR0P281CA0213.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ac::7) To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:102:269::8)
+        Wed, 31 May 2023 12:22:45 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B815132;
+        Wed, 31 May 2023 09:22:42 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id 38308e7fff4ca-2af2c35fb85so63884201fa.3;
+        Wed, 31 May 2023 09:22:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685550160; x=1688142160;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O44tdFoCQTVZoNLcx4Jw4lcBxJgV7e1izc2pQGeyMtU=;
+        b=hccPON+QR72ivDvazjP93XS1+i5Ru4KN8gNqIBSjluVihSYaEp5QhJJIJ/GPUrf/Ur
+         o3XPAPuHX9U8qUn3B0K5SEna1kNSfMTmAuVTnc/SL9Bh8n+xl9U/6QJi7hV/NLQ7Ku66
+         FE+EcNhrAwPNPasw6c+Q7RhH9A25kLGAtQvpOv0QIpXoxGY/9dUGEgiqFNEb6RBxKr1Y
+         TzVetaJfQMlNnA/cz1eVVDilGuVS+4IEDbnWnLmYRfNw6kh5LVGGxn98LvaTcU4RFFLg
+         qeRkeUlnRzQGPwq0qI/vIZ4Zp2Vu2a3PEjiiibjyctLYIT/Wv48/WiSqKvhoHoU4cpuu
+         hIVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685550160; x=1688142160;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O44tdFoCQTVZoNLcx4Jw4lcBxJgV7e1izc2pQGeyMtU=;
+        b=jEvXIMHkjB79I4BHZRvgtF+DoCRL7n83k9P85Q7jrEysERkVOhsAj3PwoCi7y0xvyj
+         HjcnHvDqBxgkzCIo9sc790yBGGBHZraBUvt2Aex9YisVKJW25PSQ+T8TZwAv2nPasK4g
+         7NtnYHyChC7GUQ+OPvMDO/I+D5ey4rYFoUpaPH7NAsVrzbq9mNLADmYIe0Qv31V/H2XF
+         UVvxB9l8znJqL7JhsWQkj7mPtjb+6E5ZX+dYyUOdH0L+fjUkbSsJt8ghTsWFoUMnpvh2
+         43Yw65UZ0zmqJygNhf2n/uG0jNg9Db8e3h80IVDi8TEjp6USgcKCxfVqERa7KvnPVZiP
+         XwnA==
+X-Gm-Message-State: AC+VfDzT2TCZ4fLkfKTcl/XWzX3XGinQqjrzaR+zDVbASEJtImZT1t2r
+        fYkfoOODXnTnXcd051mXdfEcvQIYwQ/Iq9fWxOJkgI/7qZA=
+X-Google-Smtp-Source: ACHHUZ65gHJuYKkAkZR3FktPreo0ps4YUOaxWXtqWmXF3hTtgMbi30hbfdX0TFUnX0Tm5aNwheyvS3vRqrCtjg9DSl8=
+X-Received: by 2002:a2e:868e:0:b0:2ac:70fa:fb7b with SMTP id
+ l14-20020a2e868e000000b002ac70fafb7bmr3305255lji.18.1685550160150; Wed, 31
+ May 2023 09:22:40 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR10MB5780:EE_|VI1PR10MB3646:EE_
-X-MS-Office365-Filtering-Correlation-Id: 906271a7-ed76-49d1-1419-08db61f04a40
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MlzOGWfiAOQwkyPmvjdGHrWhNXPABC4KZjMuGRXIlOc5WyZTkhnZ0fy7H0LeQ/ZsJRL9RoHaTmiv1Dv8Qpv7I2oIe0bjuD1KsXUVgIjm6raEwzwhm+Ej/LSB+nL2sHLbhi/Wv2Cs1mOg2eE+HalZ9b2cVRw4gYDtFUd7NDfVK4d3gqSF9/vRMsoKgbqFHcoeEhjCAqwgqdvO51IkYZweqqGCdLGxKtnU9LzgWnluzru2pJydXaU6Bdw9A0FmICOHV8vEjClsx3PPKSxmJhmp3RNeL03agyho2xG3f25rstmRigab5NXqB4e2wgGcV9cWVQd93lCrlVyVJurCI3mMl1vnMHpm/gicoIaPMdXA2F0qiFkR3Z6aZ/i1vdRN8iAQZbHeakmVAktA6EFh/m2PSm/xcNOijVE+1QDvoh0HdKVRXSeKir/ss+4/DFquW0iH3OPC4ic7sfSeQBUVPW4vE5RkXxGhlOvZ8o+XGdtz0RyuNtaMwWW8Ltp2qQFX2rk1bktsuQ9X7RrGjSMx/QVZ6eIQHMYqueZlaa08PGj3DvEz/jPBJW4UXj5XnuUZhRZ2
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(136003)(39860400002)(376002)(346002)(396003)(451199021)(1076003)(26005)(38100700002)(41300700001)(6486002)(6666004)(186003)(83380400001)(6506007)(9686003)(6512007)(478600001)(110136005)(82960400001)(66476007)(66946007)(316002)(5660300002)(8936002)(8676002)(66556008)(44832011)(86362001)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rv2CJxeVdzyrGALf448G9tcEWLFH6d5IYKV5zOOOpI9ghVW3qmt3Ld/xTKqZ?=
- =?us-ascii?Q?e9vtqsxFEBEKO6QY9nXc/5USm5Xiuzyc+IBoGecpmaS/elj85UOXytnpkqd1?=
- =?us-ascii?Q?TV7PM69lBQUWaRGyIjbpLHDtFWE4ZjUFjN5aJjQqHz0Nr26zJlzOCTgAtd79?=
- =?us-ascii?Q?OyToZ9M6eCJgaqoJf8+ikhg/XuVi9JtOPtuBpLdNnKwv2kMUYmJ8BGCn5xIg?=
- =?us-ascii?Q?Vt0GNbeJb1Nzs+ebKViXLG0yO5DD/f5RFpMDlWaM/JtfN4ynkbJH6P8dVj4/?=
- =?us-ascii?Q?u+pcfICWos3mePtC/srg5UMC1ElE+nLi0zrH94RZmeYCaPQt4zacckzMqlR0?=
- =?us-ascii?Q?5fLYoC751Cg4lxIPu1emCGYGhytJkuND4DELzExA7BIwz+J/ZlDWBnNLtZBt?=
- =?us-ascii?Q?oiyB+G/bSf6KL3IH8DOCcY4uJTz8v7Zn0w25irNdZnimZSQXcmFpWxP3PpeC?=
- =?us-ascii?Q?9T+/NfETLJaMHaJx/WXow9xz5BFIKWV3yjXIz/ZHgDQiSQ11+mTHQJ4prD3U?=
- =?us-ascii?Q?y5q2zX74CyMO065GImHvZkFz4fbzA7SSn8QQLUgunxG/XyotXlEEnqo3Exx1?=
- =?us-ascii?Q?u6s6WynQM/uOtsCw+CAQTRFScYtOgYWjbFmyvRqudsl6Xc4d3JYijD7bd4HS?=
- =?us-ascii?Q?W95aWiMlE3o84r8qtHGuP+GgF4og1qiA4uD1sfHUnGTX5lPECQJMM/8lg967?=
- =?us-ascii?Q?cvjJpojJi++d129AGgXXj06oBK84hc6CbOX1B9vV3Nj6t6dLZ3jjK32aAf4n?=
- =?us-ascii?Q?cMNeQP0T37HQadbX1jIGCmQbDhbuy/q4zdI253jg+2QXDF2Pp76D3f5mgXDj?=
- =?us-ascii?Q?dn61D/mOsxaJSgs0ZIXiZrNw9G55eLnkHNNl0V6uowpDqDeRPxLMYULHErn6?=
- =?us-ascii?Q?/oXz1JwcNwHBmvDwOy5Tsrd3aM6TlWK54F2+Puir/o3IIfnGyTOkCvs1aREK?=
- =?us-ascii?Q?yPYEBs3H0LkHo1RsRphaZCjs7MxuL+FDe1/E80FmVY8ZYQaH4ZM+idSzxCBM?=
- =?us-ascii?Q?Js6vade00HSrvuRwDldoaUWzT09e6wMUsM0p5FBfcT+SUcR/d8yke57E9XjE?=
- =?us-ascii?Q?BML4kUrgB4M7jUZ0aW9wuCTKZDChdHvLPgerR346+oVrudKWlFwV/2vy25KH?=
- =?us-ascii?Q?niq+8JwTZ1p2vKe7fvVh0KnCZbJ3Ata/zMxzlEBh1Or0uwABuUl186UIPDUd?=
- =?us-ascii?Q?lAM14plL9CZ4OB4otQ5dx8f7SBQEvV3RRUZhXqi/fROXgA6GK7N70/8kPEsQ?=
- =?us-ascii?Q?xbYKWJwPo75usNdBjUmlzmE5A0mjnaT0b6PCgTdEopVBd5Yiji+jPS9VcrQ2?=
- =?us-ascii?Q?Bju+k6xb1koCckgEgWUdSaSEiAc5WDj5As0VkHlSlDrK0RvHJcd+WIZdt26S?=
- =?us-ascii?Q?2pi1b+5j+6JtusUQu2a70eFiTWE0ibeKEYs0GljPaqqyEvhLmTVUVtLLHHBJ?=
- =?us-ascii?Q?oHvwd7N/Ac8Gz4qTEQkheQ+RfwW+jJlXfJAlLHEXl/XM0E5DBWYuBCygCI2H?=
- =?us-ascii?Q?K4FoCwrgNt9e6Y/8C3l1L0wT4GDh11sw/rWe1P6L3UFe9ofAqVpWvvzh5cks?=
- =?us-ascii?Q?V6iM+CYM0e/F7hwqQYnUCSrI0Cxj4wrxUFK+96YJeGiI6N5x6MD1JpOP3nAh?=
- =?us-ascii?Q?Sw=3D=3D?=
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 906271a7-ed76-49d1-1419-08db61f04a40
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2023 16:01:27.0304
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZV0M3q1Flxc6KvQ23NWXeXagSszx22eJA3pvjhe3QZak15bn0XhTy5ZvXEtEDKLIktwl7yfkkNGFvC615xG+kfJbxS192InhjuEgGmIidy4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB3646
+References: <20230519201300.12964-1-jorge.lopez2@hp.com> <20230519201300.12964-3-jorge.lopez2@hp.com>
+ <efd7d98f-c441-4098-9ace-93529989d51d@t-8ch.de>
+In-Reply-To: <efd7d98f-c441-4098-9ace-93529989d51d@t-8ch.de>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Wed, 31 May 2023 11:22:04 -0500
+Message-ID: <CAOOmCE-EmwivPN_LJWqWMNe5WufTdmOHMuzjbJ1nNZ3n+bmpFQ@mail.gmail.com>
+Subject: Re: [PATCH v15 02/13] hp-bioscfg: bioscfg-h
+To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Wed, 31 May 2023 17:54:56 +0200
-schrieb Henning Schild <henning.schild@siemens.com>:
+On Fri, May 26, 2023 at 10:14=E2=80=AFAM Thomas Wei=C3=9Fschuh <thomas@t-8c=
+h.de> wrote:
+>
+> Hi Jorge,
+>
+> sorry for the long delay.
 
-> This is a rather simple patch adding LED support for yet another
-> Simatic IPC model.
-> 
-> Note that this is based on
->  "[PATCH v4 0/4] leds: simatic-ipc-leds-gpio: split up"
+No worries.  I got Covid while you were away so I am slowly coming back.
 
-I have been waiting with this until the split is ready to merge and
-until i got access to one of the machines. Got such a box today and the
-last comments on that split seem promising, so here we go.
+> Here we go again :-)
+>
+> On 2023-05-19 15:12:49-0500, Jorge Lopez wrote:
+>
+> <snip>
+>
+> > ---
+> >  drivers/platform/x86/hp/hp-bioscfg/bioscfg.h | 486 +++++++++++++++++++
+> >  1 file changed, 486 insertions(+)
+> >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+> >
+> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h b/drivers/pla=
+tform/x86/hp/hp-bioscfg/bioscfg.h
+> > new file mode 100644
+> > index 000000000000..3a3b24f766d2
+> > --- /dev/null
+> > +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+> > @@ -0,0 +1,486 @@
+> > +/* SPDX-License-Identifier: GPL-2.0
+> > + *
+> > + * Definitions for kernel modules using hp_bioscfg driver
+> > + *
+> > + *  Copyright (c) 2022 HP Development Company, L.P.
+> > + */
+> > +
+> > +#ifndef _HP_BIOSCFG_H_
+> > +#define _HP_BIOSCFG_H_
+> > +
+> > +#include <linux/wmi.h>
+> > +#include <linux/types.h>
+> > +#include <linux/device.h>
+> > +#include <linux/module.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/capability.h>
+>
+> Is this needed?
 
-There is at least one similar IPC still to come, but that will likely
-be contributed by someone else from Siemens. As we are trying to get
-more people into upstream work.
++#include <linux/capability.h> is not needed.  It will be removed.
 
-Henning
+>
+> > +#include <linux/nls.h>
+> > +
+> > +#define DRIVER_NAME          "hp-bioscfg"
+> > +
+> > +#define MAX_BUFF_SIZE                512
+> > +#define MAX_KEY_MOD_SIZE     256
+> > +#define MAX_PASSWD_SIZE              64
+> > +#define MAX_PREREQUISITES_SIZE       20
+> > +#define MAX_REQ_ELEM_SIZE    128
+> > +#define MAX_VALUES_SIZE              16
+> > +#define MAX_ENCODINGS_SIZE   16
+> > +#define MAX_ELEMENTS_SIZE    16
+> > +
+> > +#define SPM_STR_DESC         "Secure Platform Management"
+> > +#define SPM_STR                      "SPM"
+> > +#define SURE_START_DESC              "Sure Start"
+> > +#define SURE_START_STR               "Sure_Start"
+> > +#define SETUP_PASSWD         "Setup Password"
+> > +#define POWER_ON_PASSWD              "Power-On Password"
+> > +
+> > +#define LANG_CODE_STR                "en_US.UTF-8"
+> > +#define SCHEDULE_POWER_ON    "Scheduled Power-On"
+> > +
+> > +#define COMMA_SEP            ","
+> > +#define SEMICOLON_SEP                ";"
+> > +
+> > +/* Sure Admin Functions */
+> > +
+> > +#define UTF_PREFIX           "<utf-16/>"
+> > +#define BEAM_PREFIX          "<BEAM/>"
+> > +
+> > +enum mechanism_values {
+> > +     PASSWORD                =3D 0x00,
+> > +     SIGNING_KEY             =3D 0x01,
+> > +     ENDORSEMENT_KEY         =3D 0x02,
+> > +};
+> > +
+> > +#define BIOS_ADMIN           "bios-admin"
+> > +#define POWER_ON             "power-on"
+> > +#define BIOS_SPM             "enhanced-bios-auth"
+> > +
+> > +#define PASSWD_MECHANISM_TYPES "password"
+> > +
+> > +#define HP_WMI_BIOS_GUID             "5FB7F034-2C63-45e9-BE91-3D44E2C7=
+07E4"
+> > +
+> > +#define HP_WMI_BIOS_STRING_GUID              "988D08E3-68F4-4c35-AF3E-=
+6A1B8106F83C"
+> > +#define HP_WMI_BIOS_INTEGER_GUID     "8232DE3D-663D-4327-A8F4-E293ADB9=
+BF05"
+> > +#define HP_WMI_BIOS_ENUMERATION_GUID "2D114B49-2DFB-4130-B8FE-4A3C09E7=
+5133"
+> > +#define HP_WMI_BIOS_ORDERED_LIST_GUID        "14EA9746-CE1F-4098-A0E0-=
+7045CB4DA745"
+> > +#define HP_WMI_BIOS_PASSWORD_GUID    "322F2028-0F84-4901-988E-01517604=
+9E2D"
+> > +#define HP_WMI_SET_BIOS_SETTING_GUID "1F4C91EB-DC5C-460b-951D-C7CB9B4B=
+8D5E"
+> > +
+> > +enum hp_wmi_spm_commandtype {
+> > +     HPWMI_SECUREPLATFORM_GET_STATE  =3D 0x10,
+> > +     HPWMI_SECUREPLATFORM_SET_KEK    =3D 0x11,
+> > +     HPWMI_SECUREPLATFORM_SET_SK     =3D 0x12,
+> > +};
+> > +
+> > +enum hp_wmi_surestart_commandtype {
+> > +     HPWMI_SURESTART_GET_LOG_COUNT   =3D 0x01,
+> > +     HPWMI_SURESTART_GET_LOG         =3D 0x02,
+> > +};
+> > +
+> > +enum hp_wmi_command {
+> > +     HPWMI_READ              =3D 0x01,
+> > +     HPWMI_WRITE             =3D 0x02,
+> > +     HPWMI_ODM               =3D 0x03,
+> > +     HPWMI_SURESTART         =3D 0x20006,
+> > +     HPWMI_GM                =3D 0x20008,
+> > +     HPWMI_SECUREPLATFORM    =3D 0x20010,
+> > +};
+> > +
+> > +struct bios_return {
+> > +     u32 sigpass;
+> > +     u32 return_code;
+> > +};
+> > +
 
-> Henning Schild (1):
->   leds: simatic-ipc-leds-gpio: add new model BX-21A
-> 
->  drivers/leds/simple/Kconfig                   | 13 +++++
->  drivers/leds/simple/Makefile                  |  1 +
->  .../leds/simple/simatic-ipc-leds-gpio-core.c  |  4 ++
->  .../simatic-ipc-leds-gpio-elkhartlake.c       | 57
-> +++++++++++++++++++ drivers/platform/x86/simatic-ipc.c            |
-> 3 + .../platform_data/x86/simatic-ipc-base.h      |  1 +
->  include/linux/platform_data/x86/simatic-ipc.h |  3 +-
->  7 files changed, 81 insertions(+), 1 deletion(-)
->  create mode 100644
-> drivers/leds/simple/simatic-ipc-leds-gpio-elkhartlake.c
-> 
+<snip>
 
+> > +
+> > +struct secure_platform_data {
+> > +     struct kobject *attr_name_kobj;
+> > +     u8 attribute_name[MAX_BUFF_SIZE];
+> > +     u8 *endorsement_key;
+> > +     u8 *signing_key;
+> > +     u8 *auth_token;
+> > +     bool is_enabled;
+> > +     u32 mechanism;
+> > +};
+> > +
+> > +struct bioscfg_priv {
+> > +     struct wmi_device *bios_attr_wdev;
+>
+> This wmi_device is never really used.
+
+bios_attr_wdev will be removed from this file and biosattr-interface.c
+
+>
+> > +     struct kset *authentication_dir_kset;
+> > +     struct kset *main_dir_kset;
+> > +     struct device *class_dev;
+> > +     struct string_data *string_data;
+> > +     u32 string_instances_count;
+> > +     struct integer_data *integer_data;
+> > +     u32 integer_instances_count;
+> > +     struct enumeration_data *enumeration_data;
+> > +     u32 enumeration_instances_count;
+> > +     struct ordered_list_data *ordered_list_data;
+> > +     u32 ordered_list_instances_count;
+> > +     struct password_data *password_data;
+> > +     u32 password_instances_count;
+> > +
+> > +     struct kobject *sure_start_attr_kobj;
+> > +     struct secure_platform_data spm_data;
+> > +     u8 display_name_language_code[MAX_BUFF_SIZE];
+> > +     bool pending_reboot;
+> > +     struct mutex mutex;
+> > +};
+> > +
+> > +/* global structure used by multiple WMI interfaces */
+> > +extern struct bioscfg_priv bioscfg_drv;
+> > +
+> > +enum hp_wmi_data_type {
+> > +     HPWMI_STRING_TYPE,
+> > +     HPWMI_INTEGER_TYPE,
+> > +     HPWMI_ENUMERATION_TYPE,
+> > +     HPWMI_ORDERED_LIST_TYPE,
+> > +     HPWMI_PASSWORD_TYPE,
+> > +     HPWMI_SECURE_PLATFORM_TYPE,
+> > +     HPWMI_SURE_START_TYPE,
+> > +};
+> > +
+
+<snip>
+
+> > +/* Bioscfg */
+> > +
+> > +void hp_exit_attr_set_interface(void);
+> > +int hp_init_attr_set_interface(void);
+> > +size_t hp_calculate_string_buffer(const char *str);
+> > +size_t hp_calculate_security_buffer(const char *authentication);
+> > +void *hp_ascii_to_utf16_unicode(u16 *p, const u8 *str);
+> > +int hp_get_integer_from_buffer(u8 **buffer, u32 *buffer_size, u32 *int=
+eger);
+> > +int hp_get_string_from_buffer(u8 **buffer, u32 *buffer_size, char *dst=
+, u32 dst_size);
+> > +int hp_convert_hexstr_to_str(const char *input, u32 input_len, char **=
+str, int *len);
+> > +int hp_encode_outsize_for_pvsz(int outsize);
+> > +int hp_enforce_single_line_input(char *buf, size_t count);
+> > +void hp_set_reboot_and_signal_event(void);
+> > +ssize_t display_name_language_code_show(struct kobject *kobj,
+> > +                                     struct kobj_attribute *attr,
+> > +                                     char *buf);
+> > +union acpi_object *hp_get_wmiobj_pointer(int instance_id, const char *=
+guid_string);
+> > +int hp_get_instance_count(const char *guid_string);
+> > +void hp_update_attribute_permissions(bool isreadonly, struct kobj_attr=
+ibute *current_val);
+> > +void hp_friendly_user_name_update(char *path, const char *attr_name,
+> > +                               char *attr_display, int attr_size);
+> > +int hp_wmi_error_and_message(int error_code);
+> > +
+> > +#endif
+> > --
+> > 2.34.1
+> >
