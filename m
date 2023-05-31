@@ -2,188 +2,292 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE37C77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 31 May 2023 15:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50244C7EE2D
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 31 May 2023 15:55:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231997AbjEaPv1 (ORCPT
+        id S233855AbjEaPzP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 31 May 2023 11:51:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36372 "EHLO
+        Wed, 31 May 2023 11:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234273AbjEaPvZ (ORCPT
+        with ESMTP id S233993AbjEaPzO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 31 May 2023 11:51:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D51D893
-        for <platform-driver-x86@vger.kernel.org>; Wed, 31 May 2023 08:50:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685548233;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=K5INEdlttC/E8W3P11z/LYyq4LfEb1uvU85+ddKarIQ=;
-        b=GzEKNhtf3bS6h3nDIpXMKA3ZVvMpAClnjzbwlhzYjnWh+OOViRlsRMnT12T7tLZj4Tm/vQ
-        hshW1C/mthjmEg72H4WzOl5RGrY7wy0t8RGIhJyrF7twG2MWTML5of7Bx7k22CW7OusIOZ
-        mhrlZpEV2PGrSVIUqToBimUOjdHFeio=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-66-3EzrRgmeOeG2ay1SFhs7eA-1; Wed, 31 May 2023 11:50:31 -0400
-X-MC-Unique: 3EzrRgmeOeG2ay1SFhs7eA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-96fd3757bd1so619095666b.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 31 May 2023 08:50:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685548230; x=1688140230;
-        h=content-transfer-encoding:in-reply-to:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K5INEdlttC/E8W3P11z/LYyq4LfEb1uvU85+ddKarIQ=;
-        b=XZI0I1vLC9fZPC78E5mBOTQlAp3bnlVqOIRsrZn/v2lOH9J/rdbjPasj9KhCdOfYIw
-         BskeVxYttMO8xSAHn8tsNYjudjdlLkGOpkld7juKPktdc8hDMc+TaPrTr47wSq69aBiC
-         1snHb1O+b3YhKmmizih0otGr1Ie8j4ob4v8VUHUeXTcjimkU30/Iy4k1Cj+gwskn6Scp
-         QjFbxv6zfVadwxxDK5olMk2MXCc/rtvd05ZISA8atBb2iZavFPNArothwur3dp6fn3OP
-         SmwjDoYWJBEwfZHNQv9HSsUJsLHpZ5T73BTFf//8KNRXaO8RFWrgWKioKxOCekJDGYmH
-         FeKQ==
-X-Gm-Message-State: AC+VfDwox9zEAwUoc28phi/yNoy8B154I9SAj74BHcks4HkG32Vpahar
-        UzpMtzX4rACAE1zEUIXhqK1nCycfMmEs/3i9sod53z8pnhE6rBq6YzeaYxFzhntE+qqMM5fEcaR
-        sZidPcisUMhVvGQ0tOHrHrlAyuFbZCilWlA==
-X-Received: by 2002:a17:907:7e8d:b0:94f:3980:bf91 with SMTP id qb13-20020a1709077e8d00b0094f3980bf91mr6475788ejc.19.1685548230769;
-        Wed, 31 May 2023 08:50:30 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ76VhJ2vqW2F8QsF0N+F7byel/ft3hvC2JQLya1CrWBFHzOG4PapmKZVIL1OfoUmwcBU84SUw==
-X-Received: by 2002:a17:907:7e8d:b0:94f:3980:bf91 with SMTP id qb13-20020a1709077e8d00b0094f3980bf91mr6475776ejc.19.1685548230446;
-        Wed, 31 May 2023 08:50:30 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id bl17-20020a170906c25100b0094e4eabb402sm9171689ejb.128.2023.05.31.08.50.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 May 2023 08:50:29 -0700 (PDT)
-Message-ID: <9ec0d27d-bcee-3902-091a-9349a52a9f5d@redhat.com>
-Date:   Wed, 31 May 2023 17:50:29 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH] platform/x86: int3472: Remap reset GPIO for INT347E
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Daniel Scally <dan.scally@ideasonboard.com>,
-        Daniel Scally <djrscally@gmail.com>,
+        Wed, 31 May 2023 11:55:14 -0400
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2040.outbound.protection.outlook.com [40.107.22.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F5669D;
+        Wed, 31 May 2023 08:55:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oe+CSbF3Ut6QRE1KP9zgI05vS6JeJlVD/Fel7sVG/nbzt2++hS8fCRCUyBaLsuwvfiOWXkh5dN7WKXc5RzmRG/QAJWYOqkvYRJ+FS0V+MahUUVGtTc8manfMWN7hKc9gGWm7zeYS3aCPyw+RIoH1xj/ialKyAVhqk8K6u5luaMaoKMPDzvqma9beh9gqfYzE7oNsFXCHuyfsfXUb4uvd8PjpnZ6oFQ6VVdSvxDk6Pv/UbLuMcFfrXwJJQvfkGzcBpporqDNNhpM7wWHQ72EdU15I9fz13XTU1/csPWc0/Br3WeG2qfscB5dtMLMx+uU2tvijAwL07DxSWvBdn7c01w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sTQ5lQ0dx8t8kIW5j6FAlAY5EvbdBlLUO9pMQ9KQs1k=;
+ b=VSDtuAl5n7gvi4fcbGHNMPKvVyr5C4Ti8YGZ3CS4ZBk8mmBSrLNNDNGgljbKcMid5BlNrlM2J5p8Z4opkI7I4+doiqp/rKrLTQsHJdutNdibTyLVCw/CMxXIQ0dtN56WWXy4P0tlCf6Ozr0bbCSKOztErux2/vnyhi+cLx7zyU0EIvSWorCht3sNYx2ZvCVh75V2C033YwhV0QrmRvKnaHl8r07RFJJLKheCSa3+n3sAcnY06amwog2a9pjsRzAQlZwjE3Oi7bRZA5EpMGUBYu6d/khvoT5OKhUTYFzlkPZiopq4N+gwQbnutA+48GIv1KBWh9uF2ulGTV1pOoSlsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 194.138.21.76) smtp.rcpttodomain=ucw.cz smtp.mailfrom=siemens.com; dmarc=pass
+ (p=reject sp=reject pct=100) action=none header.from=siemens.com; dkim=none
+ (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sTQ5lQ0dx8t8kIW5j6FAlAY5EvbdBlLUO9pMQ9KQs1k=;
+ b=VML7KefdycWSy3Vf4CIcLtg035uNntYrkBloLVp3zN5Vy5rTTSq3eroDg5Wkpc1JGnJ6acqLAKUHZJ1R0CjOcZxbo/uTvkKt908J9oJTGl+Kc+0N4jA+1DF8B9lxH3UGrNJBZHb0jqhduSYfkElxqJex7m1OdIzSY03Fo0RkTt9DPYSd79MEaKaZL+MnqvnYGUeNfeF1e6BQK13+u12+eDLg26vCpMzMg1uW/ZY2cB8BK3cT9JksHPBoVqBP9pI9RAKosK0csSMMGxRsNaBFl6iup/sORFrKLdZPlQMMCUWssh9INFQE21KMf/6zAwg9vJMfLHBxprXV/sp4q3ykMA==
+Received: from GV3PEPF000000E2.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:144:1:0:2:0:f) by DU0PR10MB6534.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:10:405::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.22; Wed, 31 May
+ 2023 15:55:09 +0000
+Received: from HE1EUR01FT036.eop-EUR01.prod.protection.outlook.com
+ (2a01:111:f400:7e1f::201) by GV3PEPF000000E2.outlook.office365.com
+ (2603:1026:900:3::f) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23 via Frontend
+ Transport; Wed, 31 May 2023 15:55:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.138.21.76)
+ smtp.mailfrom=siemens.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=siemens.com;
+Received-SPF: Pass (protection.outlook.com: domain of siemens.com designates
+ 194.138.21.76 as permitted sender) receiver=protection.outlook.com;
+ client-ip=194.138.21.76; helo=hybrid.siemens.com; pr=C
+Received: from hybrid.siemens.com (194.138.21.76) by
+ HE1EUR01FT036.mail.protection.outlook.com (10.152.1.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6455.22 via Frontend Transport; Wed, 31 May 2023 15:55:08 +0000
+Received: from DEMCHDC8WBA.ad011.siemens.net (139.25.226.105) by
+ DEMCHDC8VSA.ad011.siemens.net (194.138.21.76) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.25; Wed, 31 May 2023 17:55:08 +0200
+Received: from md1za8fc.ad001.siemens.net (139.25.0.56) by
+ DEMCHDC8WBA.ad011.siemens.net (139.25.226.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.25; Wed, 31 May 2023 17:55:07 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-References: <20230311223019.14123-1-dan.scally@ideasonboard.com>
- <a97e6200-bdc3-ce8e-cb9b-498b35510bd7@redhat.com>
-In-Reply-To: <a97e6200-bdc3-ce8e-cb9b-498b35510bd7@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>
+CC:     Henning Schild <henning.schild@siemens.com>
+Subject: [PATCH 1/1] leds: simatic-ipc-leds-gpio: add new model BX-21A
+Date:   Wed, 31 May 2023 17:54:57 +0200
+Message-ID: <20230531155457.31632-2-henning.schild@siemens.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20230531155457.31632-1-henning.schild@siemens.com>
+References: <20230531155457.31632-1-henning.schild@siemens.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [139.25.0.56]
+X-ClientProxiedBy: DEMCHDC8WAA.ad011.siemens.net (139.25.226.104) To
+ DEMCHDC8WBA.ad011.siemens.net (139.25.226.105)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HE1EUR01FT036:EE_|DU0PR10MB6534:EE_
+X-MS-Office365-Filtering-Correlation-Id: b3748bf8-ebad-40f0-b8f6-08db61ef68f1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aBlyNUanDwZeoEv4zBTVCbdaf9zWJVlXq+EBro5/XmyAeevZznyXLdHvQagyAhAg5vAhy76PD5vtXbSQKvOv00k5l+h1HpAS15D5CI6i9OF7Te8Zbh97QnGod38Fe8TQSxSYu2UABD9DOMWqtEQ6KTQZpSNvlpg2BQPMAMBH66TVApzkx4Aw5+dULUxQyqIjhFGcbmd5RiXIxk1ZSKgFpert0UjukQhQYdEuuNCrmydaeMT+FZ4g+E+9ZKheE3uY48I95XcyR1q5Ji/vuVnpsBc+GRxG8srOUzJ1zvxhDb3ocE+K/S6u8RFyNIkln7RVKeranv7xbeI6Cms5CqCRd2RtM3BM4oju8VLCdjSv1kfeXKt0z0fmShrKO2T775tjLnFcGVb/Rki6dsNOQDhOhI5MFPEe3kh7P131aLUxbcH+lL3J76Aovdt8xghkOBi7JI2HCC0SOS+2gQpZhr7FJPw5WTHwHRd/4ZqisB8u9kffGqNKqtj7snRMvhvbkycnRtOTEDV7nWyArGwNkR0an3hMYq+Qg2xi8kvo1oUT4R0FY3z/wtWQQV3EffKpAa0Z31CKNWDaE5r08c5GESRkpRva/Pm+YLuFi4z2XMSvserrtb7RY1i45oPEoYKZAsqj+Q9bAqFrllOA4C1ofmCsyTW8cE9xxbYHUdM9NlKJhTciSdlDCrXYjHJ4Pru6hP2AU2WP7DhC4jm4+bYhxSWaVeZ8yDrGfzq2dbdjPSeljs0YhUDbRpvALUXte5NwuL6eItaK4gbOoXkgEexMvmlPzw==
+X-Forefront-Antispam-Report: CIP:194.138.21.76;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(376002)(39860400002)(346002)(136003)(451199021)(46966006)(40470700004)(36840700001)(86362001)(40460700003)(83380400001)(44832011)(6666004)(8676002)(336012)(8936002)(82740400003)(5660300002)(36860700001)(36756003)(26005)(1076003)(47076005)(82960400001)(107886003)(40480700001)(2906002)(356005)(4326008)(70206006)(70586007)(110136005)(478600001)(16526019)(956004)(2616005)(82310400005)(316002)(186003)(41300700001)(81166007)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2023 15:55:08.7869
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3748bf8-ebad-40f0-b8f6-08db61ef68f1
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.76];Helo=[hybrid.siemens.com]
+X-MS-Exchange-CrossTenant-AuthSource: HE1EUR01FT036.eop-EUR01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR10MB6534
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Dan,
+This adds support for the Siemens Simatic IPC BX-21A. Its LEDs are
+connected to GPIO pins provided by the Intel Elkhart Lake pinctrl
+driver.
 
-On 3/16/23 15:59, Hans de Goede wrote:
-> Hi Daniel,
-> 
-> On 3/11/23 23:30, Daniel Scally wrote:
->> ACPI _HID INT347E represents the OmniVision 7251 camera sensor. The
->> driver for this sensor expects a single pin named "enable", but on
->> some Microsoft Surface platforms the sensor is assigned a single
->> GPIO who's type flag is INT3472_GPIO_TYPE_RESET.
->>
->> Remap the GPIO pin's function from "reset" to "enable". This is done
->> outside of the existing remap table since it is a more widespread
->> discrepancy than that method is designed for. Additionally swap the
->> polarity of the pin to match the driver's expectation.
->>
->> Signed-off-by: Daniel Scally <dan.scally@ideasonboard.com>
-> 
-> I have recently been looking into GPIO mappings on various devices
-> using the atomisp2 ISP. These use the same _DSM as the IPU3 but
-> then directly on the sensor ACPI device node.
-> 
-> What I came up with is this (I still need to submit this upstream):
-> 
-> https://github.com/jwrdegoede/linux-sunxi/commit/e2287979db43d46fa7d354c1bde92eb6219b613d
-> 
-> One thing which I learned while working on this is that in the value returned by the _DSM
-> the byte with mask 0xff00 is the pin-number on the GPIO controller; and (and this is the important bit!) unlike the assumption in the IPU3/INT3472 code the order in which the GPIOs are listed in the "79234640-9e10-4fea-a5c1-b5aa8b19756f" _DSM is *NOT* always the order in which they are listed in the GPIO resources!
-> 
-> So as you can see in the linked commit I'm finding the GPIO resource to go with the _DSM value by matching the pin-numbers.
-> 
-> I'm wondering if we need to do the same thing on IPU3 and if this is maybe why we need to do any remapping at all ?
-> 
-> Can you please check if there is not something like the above going on before we add a remap quirk for this ?
+Signed-off-by: Henning Schild <henning.schild@siemens.com>
+---
+ drivers/leds/simple/Kconfig                   | 13 +++++
+ drivers/leds/simple/Makefile                  |  1 +
+ .../leds/simple/simatic-ipc-leds-gpio-core.c  |  4 ++
+ .../simatic-ipc-leds-gpio-elkhartlake.c       | 57 +++++++++++++++++++
+ drivers/platform/x86/simatic-ipc.c            |  3 +
+ .../platform_data/x86/simatic-ipc-base.h      |  1 +
+ include/linux/platform_data/x86/simatic-ipc.h |  3 +-
+ 7 files changed, 81 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio-elkhartlake.c
 
-So based on our recent related emails:
-
-https://lore.kernel.org/linux-media/7fc1a3fb-d300-de09-1e0d-606971560fc1@redhat.com/
-
-I have taken another look at this.
-
-The datasheet for the OV7251 is a bit ambiguous it names the pin as
-"XSHUTDOWN" but then describes that pin as:
-
-"reset (active low with internal pull down resistor)"
-
-so based on the longer description of the pin I believe it would
-be reasonable to patch the driver to try and get a "reset"
-con-id GPIO if getting an "enable" con-id pin fails.
-
-IMHO this would be preferably to adding more and more GPIO
-remap hacks to the INT3472 code.
-
-Regards,
-
-Hans
-
-
-
-
-
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
-> 
-> 
-> 
->> ---
->>  drivers/platform/x86/intel/int3472/discrete.c | 14 ++++++++++++++
->>  1 file changed, 14 insertions(+)
->>
->> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
->> index f064da74f50a..2064b3bbe530 100644
->> --- a/drivers/platform/x86/intel/int3472/discrete.c
->> +++ b/drivers/platform/x86/intel/int3472/discrete.c
->> @@ -98,6 +98,9 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
->>  {
->>  	const struct int3472_sensor_config *sensor_config;
->>  	char *path = agpio->resource_source.string_ptr;
->> +	const struct acpi_device_id ov7251_ids[] = {
->> +		{ "INT347E" },
->> +	};
->>  	struct gpiod_lookup *table_entry;
->>  	struct acpi_device *adev;
->>  	acpi_handle handle;
->> @@ -120,6 +123,17 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
->>  		}
->>  	}
->>  
->> +	/*
->> +	 * In addition to the function remap table we need to bulk remap the
->> +	 * "reset" GPIO for the OmniVision 7251 sensor, as the driver for that
->> +	 * expects its only GPIO pin to be called "enable" (and to have the
->> +	 * opposite polarity).
->> +	 */
->> +	if (!strcmp(func, "reset") && !acpi_match_device_ids(int3472->sensor, ov7251_ids)) {
->> +		func = "enable";
->> +		polarity = GPIO_ACTIVE_HIGH;
->> +	}
->> +
->>  	/* Functions mapped to NULL should not be mapped to the sensor */
->>  	if (!func)
->>  		return 0;
-> 
+diff --git a/drivers/leds/simple/Kconfig b/drivers/leds/simple/Kconfig
+index 44fa0f93cb3b..626ab18ac09d 100644
+--- a/drivers/leds/simple/Kconfig
++++ b/drivers/leds/simple/Kconfig
+@@ -34,3 +34,16 @@ config LEDS_SIEMENS_SIMATIC_IPC_F7188X
+ 
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called simatic-ipc-leds-gpio-f7188x.
++
++config LEDS_SIEMENS_SIMATIC_IPC_ELKHARTLAKE
++	tristate "LED driver for Siemens Simatic IPCs based on Intel Elkhart Lake GPIO"
++	depends on LEDS_GPIO
++	depends on PINCTRL_ELKHARTLAKE
++	depends on SIEMENS_SIMATIC_IPC
++	default LEDS_SIEMENS_SIMATIC_IPC
++	help
++	  This option enables support for the LEDs of several Industrial PCs
++	  from Siemens based on Elkhart Lake GPIO i.e. BX-21A.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called simatic-ipc-leds-gpio-elkhartlake.
+diff --git a/drivers/leds/simple/Makefile b/drivers/leds/simple/Makefile
+index e3e840cea275..783578f11bb0 100644
+--- a/drivers/leds/simple/Makefile
++++ b/drivers/leds/simple/Makefile
+@@ -2,3 +2,4 @@
+ obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)			+= simatic-ipc-leds.o
+ obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC_APOLLOLAKE)	+= simatic-ipc-leds-gpio-core.o simatic-ipc-leds-gpio-apollolake.o
+ obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC_F7188X)		+= simatic-ipc-leds-gpio-core.o simatic-ipc-leds-gpio-f7188x.o
++obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC_ELKHARTLAKE)	+= simatic-ipc-leds-gpio-core.o simatic-ipc-leds-gpio-elkhartlake.o
+diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-core.c b/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
+index 2a21b663df87..c552ea73ed9d 100644
+--- a/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
++++ b/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
+@@ -57,6 +57,7 @@ int simatic_ipc_leds_gpio_probe(struct platform_device *pdev,
+ 	switch (plat->devmode) {
+ 	case SIMATIC_IPC_DEVICE_127E:
+ 	case SIMATIC_IPC_DEVICE_227G:
++	case SIMATIC_IPC_DEVICE_BX_21A:
+ 		break;
+ 	default:
+ 		return -ENODEV;
+@@ -72,6 +73,9 @@ int simatic_ipc_leds_gpio_probe(struct platform_device *pdev,
+ 		goto out;
+ 	}
+ 
++	if (!table_extra)
++		return 0;
++
+ 	table_extra->dev_id = dev_name(dev);
+ 	gpiod_add_lookup_table(table_extra);
+ 
+diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-elkhartlake.c b/drivers/leds/simple/simatic-ipc-leds-gpio-elkhartlake.c
+new file mode 100644
+index 000000000000..6ba21dbb3ba0
+--- /dev/null
++++ b/drivers/leds/simple/simatic-ipc-leds-gpio-elkhartlake.c
+@@ -0,0 +1,57 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Siemens SIMATIC IPC driver for GPIO based LEDs
++ *
++ * Copyright (c) Siemens AG, 2023
++ *
++ * Author:
++ *  Henning Schild <henning.schild@siemens.com>
++ */
++
++#include <linux/gpio/machine.h>
++#include <linux/gpio/consumer.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/platform_data/x86/simatic-ipc-base.h>
++
++#include "simatic-ipc-leds-gpio.h"
++
++static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
++	.dev_id = "leds-gpio",
++	.table = {
++		GPIO_LOOKUP_IDX("INTC1020:04", 72, NULL, 0, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX("INTC1020:04", 77, NULL, 1, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX("INTC1020:04", 78, NULL, 2, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX("INTC1020:04", 58, NULL, 3, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX("INTC1020:04", 60, NULL, 4, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX("INTC1020:04", 62, NULL, 5, GPIO_ACTIVE_HIGH),
++		{} /* Terminating entry */
++	},
++};
++
++static int simatic_ipc_leds_gpio_elkhartlake_probe(struct platform_device *pdev)
++{
++	return simatic_ipc_leds_gpio_probe(pdev, &simatic_ipc_led_gpio_table,
++					   NULL);
++}
++
++static int simatic_ipc_leds_gpio_elkhartlake_remove(struct platform_device *pdev)
++{
++	return simatic_ipc_leds_gpio_remove(pdev, &simatic_ipc_led_gpio_table,
++					    NULL);
++}
++
++static struct platform_driver simatic_ipc_led_gpio_elkhartlake_driver = {
++	.probe = simatic_ipc_leds_gpio_elkhartlake_probe,
++	.remove = simatic_ipc_leds_gpio_elkhartlake_remove,
++	.driver = {
++		.name = KBUILD_MODNAME,
++	},
++};
++module_platform_driver(simatic_ipc_led_gpio_elkhartlake_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:" KBUILD_MODNAME);
++MODULE_SOFTDEP("pre: simatic-ipc-leds-gpio-core platform:elkhartlake-pinctrl");
++MODULE_AUTHOR("Henning Schild <henning.schild@siemens.com>");
+diff --git a/drivers/platform/x86/simatic-ipc.c b/drivers/platform/x86/simatic-ipc.c
+index c773995b230d..4402cd354104 100644
+--- a/drivers/platform/x86/simatic-ipc.c
++++ b/drivers/platform/x86/simatic-ipc.c
+@@ -48,6 +48,7 @@ static struct {
+ 	{SIMATIC_IPC_IPC477E, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_427E},
+ 	{SIMATIC_IPC_IPCBX_39A, SIMATIC_IPC_DEVICE_227G, SIMATIC_IPC_DEVICE_227G},
+ 	{SIMATIC_IPC_IPCPX_39A, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_227G},
++	{SIMATIC_IPC_IPCBX_21A, SIMATIC_IPC_DEVICE_BX_21A, SIMATIC_IPC_DEVICE_NONE},
+ };
+ 
+ static int register_platform_devices(u32 station_id)
+@@ -72,6 +73,8 @@ static int register_platform_devices(u32 station_id)
+ 			pdevname = KBUILD_MODNAME "_leds_gpio_apollolake";
+ 		if (ledmode == SIMATIC_IPC_DEVICE_227G)
+ 			pdevname = KBUILD_MODNAME "_leds_gpio_f7188x";
++		if (ledmode == SIMATIC_IPC_DEVICE_BX_21A)
++			pdevname = KBUILD_MODNAME "_leds_gpio_elkhartlake";
+ 		platform_data.devmode = ledmode;
+ 		ipc_led_platform_device =
+ 			platform_device_register_data(NULL,
+diff --git a/include/linux/platform_data/x86/simatic-ipc-base.h b/include/linux/platform_data/x86/simatic-ipc-base.h
+index 57d6a10dfc9e..00bf18ecb160 100644
+--- a/include/linux/platform_data/x86/simatic-ipc-base.h
++++ b/include/linux/platform_data/x86/simatic-ipc-base.h
+@@ -20,6 +20,7 @@
+ #define SIMATIC_IPC_DEVICE_127E 3
+ #define SIMATIC_IPC_DEVICE_227E 4
+ #define SIMATIC_IPC_DEVICE_227G 5
++#define SIMATIC_IPC_DEVICE_BX_21A 6
+ 
+ struct simatic_ipc_platform {
+ 	u8	devmode;
+diff --git a/include/linux/platform_data/x86/simatic-ipc.h b/include/linux/platform_data/x86/simatic-ipc.h
+index a48bb5240977..1a8e4c1099e3 100644
+--- a/include/linux/platform_data/x86/simatic-ipc.h
++++ b/include/linux/platform_data/x86/simatic-ipc.h
+@@ -2,7 +2,7 @@
+ /*
+  * Siemens SIMATIC IPC drivers
+  *
+- * Copyright (c) Siemens AG, 2018-2021
++ * Copyright (c) Siemens AG, 2018-2023
+  *
+  * Authors:
+  *  Henning Schild <henning.schild@siemens.com>
+@@ -34,6 +34,7 @@ enum simatic_ipc_station_ids {
+ 	SIMATIC_IPC_IPC227G = 0x00000F01,
+ 	SIMATIC_IPC_IPCBX_39A = 0x00001001,
+ 	SIMATIC_IPC_IPCPX_39A = 0x00001002,
++	SIMATIC_IPC_IPCBX_21A = 0x00001101,
+ };
+ 
+ static inline u32 simatic_ipc_get_station_id(u8 *data, int max_len)
+-- 
+2.39.3
 
