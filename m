@@ -2,286 +2,166 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BA4C7EE2A
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Jun 2023 08:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ED6C77B7E
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Jun 2023 13:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231513AbjFAIym (ORCPT
+        id S232373AbjFANRQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Jun 2023 04:54:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53556 "EHLO
+        Thu, 1 Jun 2023 09:17:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231424AbjFAIyl (ORCPT
+        with ESMTP id S231797AbjFANRP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Jun 2023 04:54:41 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10DA1E7
-        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Jun 2023 01:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685609634;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Y85+H09EVrraft6UYcmNFDvtbIuHgYDgtawu93D8ue0=;
-        b=cftdT1d5PaE3sux1xpuPgtxezGVXwe/1wqDq3B658WtuxV3dAr2PeY/ADXuyZQSeFBMIN4
-        5cMblmCYnKLJgB9FCssneVuBlvA05DOKMVRvB1SqYd86+8Xm128OoB9xp1vjtJDS7aBGdU
-        7DYwciazCY0GJDOeBtvmAdJp1I8jBRU=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-369-rr2vK8fHMXOQrAOhtrMywQ-1; Thu, 01 Jun 2023 04:53:51 -0400
-X-MC-Unique: rr2vK8fHMXOQrAOhtrMywQ-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-96f9996fb3dso35024366b.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Jun 2023 01:53:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685609630; x=1688201630;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y85+H09EVrraft6UYcmNFDvtbIuHgYDgtawu93D8ue0=;
-        b=XT1TCZ3uFXpQclf/A4/LT3uvoKlsQ8sjv8xniwcO8wBPI15jZqMzVRvGZ/aM3CSTCq
-         rhaVP0iMk7emRkwLABr1xl3NbHstUydPRX93USGaiyz87genIjGYeq5HR7VmdR1FHdTb
-         uwzlDjqXfq3IXmU1PsJ3G7hqdSqA53vc9XciIiKjpN5HWfpMhxEAjVJAXJMvSB9nsy80
-         Uf0LIfRyz27EzmPztkXMcgvxgtVLg2UjorI4toKyusqdy9+YN3WQdwOuNxzfVg6fBYOg
-         JUAdNNowWlX/64ZogpzPgk6M1jJvXo+AGNZ+g7NFjWlzb1eCDjYjgR8UFiUNquIIh+7D
-         IXiA==
-X-Gm-Message-State: AC+VfDyLWUcMNNgVkHTwH3PGXJcTYO1Eq7m1LziYrk364YM9iGjh0oGc
-        ZCKn5PeLc2H2olw93/35t3NN97L+oP1uQpnzGoCC8TpuvI2DbxXquc1TkPSBiiMeVgTWm2ijcPP
-        lmWtCgzSGbesDQUASYYd+FAX86kZh+Cj39g==
-X-Received: by 2002:a17:907:1c22:b0:94b:cd7c:59f4 with SMTP id nc34-20020a1709071c2200b0094bcd7c59f4mr8343824ejc.16.1685609630049;
-        Thu, 01 Jun 2023 01:53:50 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6OwrBwkbyOccrBgx+FBlzOxAlRKDhWvn4BF9AZuUDgZjj/RCQn/C88C7t+iiQLUww1b3i/Yg==
-X-Received: by 2002:a17:907:1c22:b0:94b:cd7c:59f4 with SMTP id nc34-20020a1709071c2200b0094bcd7c59f4mr8343810ejc.16.1685609629696;
-        Thu, 01 Jun 2023 01:53:49 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id oq27-20020a170906cc9b00b009662c57b4ffsm10226845ejb.96.2023.06.01.01.53.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Jun 2023 01:53:49 -0700 (PDT)
-Message-ID: <5109f2da-3b7f-421f-555c-810484d92b4c@redhat.com>
-Date:   Thu, 1 Jun 2023 10:53:48 +0200
+        Thu, 1 Jun 2023 09:17:15 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D5BE7;
+        Thu,  1 Jun 2023 06:17:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685625434; x=1717161434;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7rTn8BHWOp7NtmIZTi6wbClky6r1q098Fh3m1tEa+1U=;
+  b=H/2E92BdNHGZSGYJ4U8gfxiewWm+ktDYKHv4B/1d3kZm9kOn96uCIPw7
+   CH1n+cWRV8DF6Deo7iBoFjfMlbUdN/UuSKs1Wdm/vnfDg4x6m/AROA1P0
+   CDLcRJTX4uuJkm5ZWHLBbwQDdwx+9bxON08Ey8ZHuK7cHakuYw6Xu5rz7
+   Jp8Nof0qSTx2iZhoVP/WO9fqrY/JVunHjtjlHudNklG62vswE5wTpXiIa
+   /+YklNOBbpRAL7vbEPrJ/ROap3XFL/YQrf0kpvD7naTPEp7BFPAEia1yY
+   oWZHESGhioYnQrbcQ+z2Fy1WOVrAYL1YryXFgSpsgJMTfvbt9jTmPbdpl
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="353050858"
+X-IronPort-AV: E=Sophos;i="6.00,210,1681196400"; 
+   d="scan'208";a="353050858"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2023 06:17:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="737104338"
+X-IronPort-AV: E=Sophos;i="6.00,210,1681196400"; 
+   d="scan'208";a="737104338"
+Received: from hextor.igk.intel.com ([10.123.220.6])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2023 06:17:04 -0700
+From:   Michal Wilczynski <michal.wilczynski@intel.com>
+To:     rafael@kernel.org, lenb@kernel.org, dan.j.williams@intel.com,
+        vishal.l.verma@intel.com, dave.jiang@intel.com,
+        ira.weiny@intel.com, rui.zhang@intel.com, jdelvare@suse.com,
+        linux@roeck-us.net, jic23@kernel.org, lars@metafoo.de,
+        bleung@chromium.org, yu.c.chen@intel.com, hdegoede@redhat.com,
+        markgross@kernel.org, luzmaximilian@gmail.com,
+        corentin.chary@gmail.com, jprvita@gmail.com,
+        cascardo@holoscopio.com, don@syst.com.br, pali@kernel.org,
+        jwoithe@just42.net, matan@svgalib.org, kenneth.t.chan@gmail.com,
+        malattia@linux.it, jeremy@system76.com, productdev@system76.com,
+        herton@canonical.com, coproscefalo@gmail.com, tytso@mit.edu,
+        Jason@zx2c4.com, robert.moore@intel.com
+Cc:     linux-acpi@vger.kernel.org, nvdimm@lists.linux.dev,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        chrome-platform@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net,
+        Michal Wilczynski <michal.wilczynski@intel.com>
+Subject: [PATCH v4 00/35] Remove .notify callback in acpi_device_ops
+Date:   Thu,  1 Jun 2023 15:16:55 +0200
+Message-Id: <20230601131655.300675-1-michal.wilczynski@intel.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 1/1] leds: simatic-ipc-leds-gpio: add new model BX-21A
-Content-Language: en-US, nl
-To:     Henning Schild <henning.schild@siemens.com>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-References: <20230531155457.31632-1-henning.schild@siemens.com>
- <20230531155457.31632-2-henning.schild@siemens.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230531155457.31632-2-henning.schild@siemens.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Currently drivers support ACPI event handlers by defining .notify
+callback in acpi_device_ops. This solution is suboptimal as event
+handler installer installs intermediary function acpi_notify_device as a
+handler in every driver. Also this approach requires extra variable
+'flags' for specifying event types that the driver want to subscribe to.
+Additionally this is a pre-work required to align acpi_driver with
+platform_driver and eventually replace acpi_driver with platform_driver.
 
-On 5/31/23 17:54, Henning Schild wrote:
-> This adds support for the Siemens Simatic IPC BX-21A. Its LEDs are
-> connected to GPIO pins provided by the Intel Elkhart Lake pinctrl
-> driver.
-> 
-> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+Remove .notify callback from the acpi_device_ops. Replace it with each
+driver installing and removing it's event handlers.
 
-Thank you for the patch.
+v4:
+ - added one commit for previously missed driver sony-laptop,
+   refactored return statements, added NULL check for event installer
+v3:
+ - lkp still reported some failures for eeepc, fujitsu and
+   toshiba_bluetooth, fix those
+v2:
+ - fix compilation errors for drivers
 
-Since this mostly touches files under drivers/leds I believe it would be best for this to be merged through Lee's LEDs tree.
+Michal Wilczynski (35):
+  acpi: Adjust functions installing bus event handlers
+  acpi/ac: Move handler installing logic to driver
+  acpi/video: Move handler installing logic to driver
+  acpi/battery: Move handler installing logic to driver
+  acpi/button: Move handler installing logic to driver
+  acpi/hed: Move handler installing logic to driver
+  acpi/nfit: Move handler installing logic to driver
+  acpi/thermal: Move handler installing logic to driver
+  acpi/tiny-power-button: Move handler installing logic to driver
+  hwmon/acpi_power_meter: Move handler installing logic to driver
+  iio/acpi-als: Move handler installing logic to driver
+  platform/chromeos_tbmc: Move handler installing logic to driver
+  platform/wilco_ec: Move handler installing logic to driver
+  platform/surface/button: Move handler installing logic to driver
+  platform/x86/acer-wireless: Move handler installing logic to driver
+  platform/x86/asus-laptop: Move handler installing logic to driver
+  platform/x86/asus-wireless: Move handler installing logic to driver
+  platform/x86/classmate-laptop: Move handler installing logic to driver
+  platform/x86/dell/dell-rbtn: Move handler installing logic to driver
+  platform/x86/eeepc-laptop: Move handler installing logic to driver
+  platform/x86/fujitsu-laptop: Move handler installing logic to driver
+  platform/x86/lg-laptop: Move handler installing logic to driver
+  platform/x86/panasonic-laptop: Move handler installing logic to driver
+  platform/x86/system76_acpi: Move handler installing logic to driver
+  platform/x86/topstar-laptop: Move handler installing logic to driver
+  platform/x86/toshiba_acpi: Move handler installing logic to driver
+  platform/x86/toshiba_bluetooth: Move handler installing logic to
+    driver
+  platform/x86/toshiba_haps: Move handler installing logic to driver
+  platform/x86/wireless-hotkey: Move handler installing logic to driver
+  platform/x86/xo15-ebook: Move handler installing logic to driver
+  platform/x86/sony-laptop: Move handler installing logic to driver
+  virt/vmgenid: Move handler installing logic to driver
+  acpi/bus: Remove installing/removing notify handlers from probe/remove
+  acpi/bus: Remove redundant functions
+  acpi/bus: Remove notify callback and flags
 
-Here is my ack for merging the pdx86 bits through that tree:
+ drivers/acpi/ac.c                             |  14 +-
+ drivers/acpi/acpi_video.c                     |  16 ++-
+ drivers/acpi/battery.c                        |  16 ++-
+ drivers/acpi/bus.c                            |  56 +++-----
+ drivers/acpi/button.c                         |  16 ++-
+ drivers/acpi/hed.c                            |   7 +-
+ drivers/acpi/nfit/core.c                      |  25 ++--
+ drivers/acpi/thermal.c                        |  20 ++-
+ drivers/acpi/tiny-power-button.c              |  18 +--
+ drivers/hwmon/acpi_power_meter.c              |  15 +-
+ drivers/iio/light/acpi-als.c                  |  23 +++-
+ drivers/platform/chrome/chromeos_tbmc.c       |  14 +-
+ drivers/platform/chrome/wilco_ec/event.c      |  17 ++-
+ drivers/platform/surface/surfacepro3_button.c |  17 ++-
+ drivers/platform/x86/acer-wireless.c          |  22 ++-
+ drivers/platform/x86/asus-laptop.c            |  14 +-
+ drivers/platform/x86/asus-wireless.c          |  24 ++--
+ drivers/platform/x86/classmate-laptop.c       |  53 +++++--
+ drivers/platform/x86/dell/dell-rbtn.c         |  17 ++-
+ drivers/platform/x86/eeepc-laptop.c           |  16 ++-
+ drivers/platform/x86/fujitsu-laptop.c         |  86 +++++++-----
+ drivers/platform/x86/lg-laptop.c              |  10 +-
+ drivers/platform/x86/panasonic-laptop.c       |  18 ++-
+ drivers/platform/x86/sony-laptop.c            |   9 +-
+ drivers/platform/x86/system76_acpi.c          |  26 ++--
+ drivers/platform/x86/topstar-laptop.c         |  14 +-
+ drivers/platform/x86/toshiba_acpi.c           | 129 +++++++++---------
+ drivers/platform/x86/toshiba_bluetooth.c      |  30 ++--
+ drivers/platform/x86/toshiba_haps.c           |   9 +-
+ drivers/platform/x86/wireless-hotkey.c        |  24 +++-
+ drivers/platform/x86/xo15-ebook.c             |   9 +-
+ drivers/virt/vmgenid.c                        |  30 ++--
+ include/acpi/acpi_bus.h                       |  10 +-
+ 33 files changed, 530 insertions(+), 294 deletions(-)
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-
-> ---
->  drivers/leds/simple/Kconfig                   | 13 +++++
->  drivers/leds/simple/Makefile                  |  1 +
->  .../leds/simple/simatic-ipc-leds-gpio-core.c  |  4 ++
->  .../simatic-ipc-leds-gpio-elkhartlake.c       | 57 +++++++++++++++++++
->  drivers/platform/x86/simatic-ipc.c            |  3 +
->  .../platform_data/x86/simatic-ipc-base.h      |  1 +
->  include/linux/platform_data/x86/simatic-ipc.h |  3 +-
->  7 files changed, 81 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio-elkhartlake.c
-> 
-> diff --git a/drivers/leds/simple/Kconfig b/drivers/leds/simple/Kconfig
-> index 44fa0f93cb3b..626ab18ac09d 100644
-> --- a/drivers/leds/simple/Kconfig
-> +++ b/drivers/leds/simple/Kconfig
-> @@ -34,3 +34,16 @@ config LEDS_SIEMENS_SIMATIC_IPC_F7188X
->  
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called simatic-ipc-leds-gpio-f7188x.
-> +
-> +config LEDS_SIEMENS_SIMATIC_IPC_ELKHARTLAKE
-> +	tristate "LED driver for Siemens Simatic IPCs based on Intel Elkhart Lake GPIO"
-> +	depends on LEDS_GPIO
-> +	depends on PINCTRL_ELKHARTLAKE
-> +	depends on SIEMENS_SIMATIC_IPC
-> +	default LEDS_SIEMENS_SIMATIC_IPC
-> +	help
-> +	  This option enables support for the LEDs of several Industrial PCs
-> +	  from Siemens based on Elkhart Lake GPIO i.e. BX-21A.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called simatic-ipc-leds-gpio-elkhartlake.
-> diff --git a/drivers/leds/simple/Makefile b/drivers/leds/simple/Makefile
-> index e3e840cea275..783578f11bb0 100644
-> --- a/drivers/leds/simple/Makefile
-> +++ b/drivers/leds/simple/Makefile
-> @@ -2,3 +2,4 @@
->  obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)			+= simatic-ipc-leds.o
->  obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC_APOLLOLAKE)	+= simatic-ipc-leds-gpio-core.o simatic-ipc-leds-gpio-apollolake.o
->  obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC_F7188X)		+= simatic-ipc-leds-gpio-core.o simatic-ipc-leds-gpio-f7188x.o
-> +obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC_ELKHARTLAKE)	+= simatic-ipc-leds-gpio-core.o simatic-ipc-leds-gpio-elkhartlake.o
-> diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-core.c b/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
-> index 2a21b663df87..c552ea73ed9d 100644
-> --- a/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
-> +++ b/drivers/leds/simple/simatic-ipc-leds-gpio-core.c
-> @@ -57,6 +57,7 @@ int simatic_ipc_leds_gpio_probe(struct platform_device *pdev,
->  	switch (plat->devmode) {
->  	case SIMATIC_IPC_DEVICE_127E:
->  	case SIMATIC_IPC_DEVICE_227G:
-> +	case SIMATIC_IPC_DEVICE_BX_21A:
->  		break;
->  	default:
->  		return -ENODEV;
-> @@ -72,6 +73,9 @@ int simatic_ipc_leds_gpio_probe(struct platform_device *pdev,
->  		goto out;
->  	}
->  
-> +	if (!table_extra)
-> +		return 0;
-> +
->  	table_extra->dev_id = dev_name(dev);
->  	gpiod_add_lookup_table(table_extra);
->  
-> diff --git a/drivers/leds/simple/simatic-ipc-leds-gpio-elkhartlake.c b/drivers/leds/simple/simatic-ipc-leds-gpio-elkhartlake.c
-> new file mode 100644
-> index 000000000000..6ba21dbb3ba0
-> --- /dev/null
-> +++ b/drivers/leds/simple/simatic-ipc-leds-gpio-elkhartlake.c
-> @@ -0,0 +1,57 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Siemens SIMATIC IPC driver for GPIO based LEDs
-> + *
-> + * Copyright (c) Siemens AG, 2023
-> + *
-> + * Author:
-> + *  Henning Schild <henning.schild@siemens.com>
-> + */
-> +
-> +#include <linux/gpio/machine.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/platform_data/x86/simatic-ipc-base.h>
-> +
-> +#include "simatic-ipc-leds-gpio.h"
-> +
-> +static struct gpiod_lookup_table simatic_ipc_led_gpio_table = {
-> +	.dev_id = "leds-gpio",
-> +	.table = {
-> +		GPIO_LOOKUP_IDX("INTC1020:04", 72, NULL, 0, GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP_IDX("INTC1020:04", 77, NULL, 1, GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP_IDX("INTC1020:04", 78, NULL, 2, GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP_IDX("INTC1020:04", 58, NULL, 3, GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP_IDX("INTC1020:04", 60, NULL, 4, GPIO_ACTIVE_HIGH),
-> +		GPIO_LOOKUP_IDX("INTC1020:04", 62, NULL, 5, GPIO_ACTIVE_HIGH),
-> +		{} /* Terminating entry */
-> +	},
-> +};
-> +
-> +static int simatic_ipc_leds_gpio_elkhartlake_probe(struct platform_device *pdev)
-> +{
-> +	return simatic_ipc_leds_gpio_probe(pdev, &simatic_ipc_led_gpio_table,
-> +					   NULL);
-> +}
-> +
-> +static int simatic_ipc_leds_gpio_elkhartlake_remove(struct platform_device *pdev)
-> +{
-> +	return simatic_ipc_leds_gpio_remove(pdev, &simatic_ipc_led_gpio_table,
-> +					    NULL);
-> +}
-> +
-> +static struct platform_driver simatic_ipc_led_gpio_elkhartlake_driver = {
-> +	.probe = simatic_ipc_leds_gpio_elkhartlake_probe,
-> +	.remove = simatic_ipc_leds_gpio_elkhartlake_remove,
-> +	.driver = {
-> +		.name = KBUILD_MODNAME,
-> +	},
-> +};
-> +module_platform_driver(simatic_ipc_led_gpio_elkhartlake_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:" KBUILD_MODNAME);
-> +MODULE_SOFTDEP("pre: simatic-ipc-leds-gpio-core platform:elkhartlake-pinctrl");
-> +MODULE_AUTHOR("Henning Schild <henning.schild@siemens.com>");
-> diff --git a/drivers/platform/x86/simatic-ipc.c b/drivers/platform/x86/simatic-ipc.c
-> index c773995b230d..4402cd354104 100644
-> --- a/drivers/platform/x86/simatic-ipc.c
-> +++ b/drivers/platform/x86/simatic-ipc.c
-> @@ -48,6 +48,7 @@ static struct {
->  	{SIMATIC_IPC_IPC477E, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_427E},
->  	{SIMATIC_IPC_IPCBX_39A, SIMATIC_IPC_DEVICE_227G, SIMATIC_IPC_DEVICE_227G},
->  	{SIMATIC_IPC_IPCPX_39A, SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_227G},
-> +	{SIMATIC_IPC_IPCBX_21A, SIMATIC_IPC_DEVICE_BX_21A, SIMATIC_IPC_DEVICE_NONE},
->  };
->  
->  static int register_platform_devices(u32 station_id)
-> @@ -72,6 +73,8 @@ static int register_platform_devices(u32 station_id)
->  			pdevname = KBUILD_MODNAME "_leds_gpio_apollolake";
->  		if (ledmode == SIMATIC_IPC_DEVICE_227G)
->  			pdevname = KBUILD_MODNAME "_leds_gpio_f7188x";
-> +		if (ledmode == SIMATIC_IPC_DEVICE_BX_21A)
-> +			pdevname = KBUILD_MODNAME "_leds_gpio_elkhartlake";
->  		platform_data.devmode = ledmode;
->  		ipc_led_platform_device =
->  			platform_device_register_data(NULL,
-> diff --git a/include/linux/platform_data/x86/simatic-ipc-base.h b/include/linux/platform_data/x86/simatic-ipc-base.h
-> index 57d6a10dfc9e..00bf18ecb160 100644
-> --- a/include/linux/platform_data/x86/simatic-ipc-base.h
-> +++ b/include/linux/platform_data/x86/simatic-ipc-base.h
-> @@ -20,6 +20,7 @@
->  #define SIMATIC_IPC_DEVICE_127E 3
->  #define SIMATIC_IPC_DEVICE_227E 4
->  #define SIMATIC_IPC_DEVICE_227G 5
-> +#define SIMATIC_IPC_DEVICE_BX_21A 6
->  
->  struct simatic_ipc_platform {
->  	u8	devmode;
-> diff --git a/include/linux/platform_data/x86/simatic-ipc.h b/include/linux/platform_data/x86/simatic-ipc.h
-> index a48bb5240977..1a8e4c1099e3 100644
-> --- a/include/linux/platform_data/x86/simatic-ipc.h
-> +++ b/include/linux/platform_data/x86/simatic-ipc.h
-> @@ -2,7 +2,7 @@
->  /*
->   * Siemens SIMATIC IPC drivers
->   *
-> - * Copyright (c) Siemens AG, 2018-2021
-> + * Copyright (c) Siemens AG, 2018-2023
->   *
->   * Authors:
->   *  Henning Schild <henning.schild@siemens.com>
-> @@ -34,6 +34,7 @@ enum simatic_ipc_station_ids {
->  	SIMATIC_IPC_IPC227G = 0x00000F01,
->  	SIMATIC_IPC_IPCBX_39A = 0x00001001,
->  	SIMATIC_IPC_IPCPX_39A = 0x00001002,
-> +	SIMATIC_IPC_IPCBX_21A = 0x00001101,
->  };
->  
->  static inline u32 simatic_ipc_get_station_id(u8 *data, int max_len)
+-- 
+2.40.1
 
