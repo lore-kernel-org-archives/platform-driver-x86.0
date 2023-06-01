@@ -2,84 +2,65 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5EFC77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Jun 2023 00:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDB3C7EE23
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Jun 2023 07:56:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229672AbjFAAr1 (ORCPT
+        id S231374AbjFAH4w (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 31 May 2023 20:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58404 "EHLO
+        Thu, 1 Jun 2023 03:56:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjFAArZ (ORCPT
+        with ESMTP id S232025AbjFAHyo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 31 May 2023 20:47:25 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14E0A124;
-        Wed, 31 May 2023 17:47:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685580445; x=1717116445;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=KuKxlPpFKGkuw94zyPg91+OeFgR1NnDh94+/fmldi64=;
-  b=TaGmaCme1t9gZjdAlTFcyXkGCy+UUGojJA0DGLNpa15u5Sqmj+x31/xS
-   e0vtK4JhpfuexNd4IgTHUcGvPWZHqxunPgwW0uWKJvc9Y+NRIW44EHX7t
-   wPUxhWvxJI/aoXsIUdDQ0+T0s7S5PlSPM9UiAvENkHscPujm3dJ86G+gA
-   zRKLQuWb2JBN++cz6Lzg8ci+Jm1SkMEV3AgT7oOtgZlTg6ZUXNbB4nzAb
-   a44I8KMKUbT2/xhnubni7aFqyLMNSp43LbqT/sKQPMOPF/qcdajLx+g74
-   0dYa9/rDSnsENAFjGUJ/XNxrnTd+Md24N9l8KmRw3ykvAJU1ndpem9cVN
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10727"; a="335032782"
-X-IronPort-AV: E=Sophos;i="6.00,207,1681196400"; 
-   d="scan'208";a="335032782"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2023 17:47:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10727"; a="736871987"
-X-IronPort-AV: E=Sophos;i="6.00,207,1681196400"; 
-   d="scan'208";a="736871987"
-Received: from mawhitso-mobl1.amr.corp.intel.com (HELO xpardee-test1.hsd1.or.comcast.net) ([10.212.230.213])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2023 17:47:24 -0700
-From:   Xi Pardee <xi.pardee@intel.com>
-To:     hdegoede@redhat.com
-Cc:     xi.pardee@intel.com, irenic.rajneesh@gmail.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        rajvi.jingar@intel.com, david.e.box@linux.intel.com
-Subject: [PATCH] platform/x86:intel/pmc: Remove Meteor Lake S platform support
-Date:   Wed, 31 May 2023 17:47:06 -0700
-Message-Id: <20230601004706.871528-1-xi.pardee@intel.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 1 Jun 2023 03:54:44 -0400
+X-Greylist: delayed 490 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 01 Jun 2023 00:48:45 PDT
+Received: from mail.liffey.pl (mail.liffey.pl [89.116.26.218])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 668A5188
+        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Jun 2023 00:48:45 -0700 (PDT)
+Received: by mail.liffey.pl (Postfix, from userid 1001)
+        id 642BB7E2DCE; Thu,  1 Jun 2023 09:40:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=liffey.pl; s=mail;
+        t=1685605233; bh=OqM4+o/moYKNduuI5gw1YnFOqNP/S23znQJb9V+pDlE=;
+        h=Date:From:To:Subject:From;
+        b=KGRXqVqXnShPEzW8gi0nl0kEogETgo+x0sBiJBBgAvQyzJ0v7Rx/4iREjFb3xAaFo
+         OBWQOMQvMmQh8eOAZF1FywyH6zJJmDru80LzHr6sv6nuq/AwiO50X2fsp5ZvzA/+Le
+         yx3ZJkHSSfoiqpjppEizZE2PG5rRhDi/wnPfY7livm6WIHhHR7L4SlDizuBnfjnsT2
+         SG8gjloABfnWUYjYVJ3pRvSUdSuMRFxIO+o4Pux48QZf4af32292O5IR31BZz6A0nE
+         hYwvQ13wEbt6r+WPcmQl33+PuLrZ2ZyzrwbE2PXOtakAbZrt6akMy3FOf3hKXjVbW8
+         EMneihv0NfBhg==
+Received: by mail.liffey.pl for <platform-driver-x86@vger.kernel.org>; Thu,  1 Jun 2023 07:40:31 GMT
+Message-ID: <20230601084500-0.1.1w.24mr.0.2dhq0eturm@liffey.pl>
+Date:   Thu,  1 Jun 2023 07:40:31 GMT
+From:   =?UTF-8?Q? "Micha=C5=82_Rodziewicz" ?= 
+        <michal.rodziewicz@liffey.pl>
+To:     <platform-driver-x86@vger.kernel.org>
+Subject: =?UTF-8?Q?Bezp=C5=82atna_konsultacja?=
+X-Mailer: mail.liffey.pl
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-commit c5ad454a12c6 ("platform/x86: intel/pmc/core: Add Meteor Lake
-support to pmc core driver") was supposed to add support for Meter
-Lake P/M and mistakenly added support for Meteor Lake S instead. Meteor
-Lake P/M support was added later and MTL-S support needs to be removed
-since its currently assigned to the wrong register maps.
+Dzie=C5=84 dobry,
 
-Fixes: c5ad454a12c6 ("platform/x86: intel/pmc/core: Add Meteor Lake support to pmc core driver")
-Signed-off-by: Xi Pardee <xi.pardee@intel.com>
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/core.c | 1 -
- 1 file changed, 1 deletion(-)
+por=C3=B3wnujemy oferty r=C3=B3=C5=BCnych produkt=C3=B3w finansowych w sp=
+os=C3=B3b niezale=C5=BCny i obiektywny, dopasowuj=C4=85c ofert=C4=99 do P=
+a=C5=84stwa potrzeb.=20
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index da6e7206d38b..b8711330e411 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1039,7 +1039,6 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,        tgl_core_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		adl_core_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	adl_core_init),
--	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE,          mtl_core_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L,	mtl_core_init),
- 	{}
- };
--- 
-2.25.1
+=C5=9Awiadczymy tak=C5=BCe us=C5=82ugi serwisowania um=C3=B3w, pomagamy z=
+abezpieczy=C4=87 rodziny os=C3=B3b prowadz=C4=85cych firm=C4=99, zapewnia=
+my tak=C5=BCe sta=C5=82=C4=85 dyspozycyjno=C5=9B=C4=87 naszych doradc=C3=B3=
+w.
 
+Koncentrujemy si=C4=99 na zabezpieczeniu p=C5=82ynno=C5=9Bci finansowej K=
+lient=C3=B3w, pomagamy zbiera=C4=87 kapita=C5=82 i korzystnie go lokowa=C4=
+=87.=20
+
+Je=C5=BCeli potrzebuj=C4=85 Pa=C5=84stwa doradztwa finansowego, jeste=C5=9B=
+my do dyspozycji.
+
+
+Pozdrawiam
+Micha=C5=82 Rodziewicz
