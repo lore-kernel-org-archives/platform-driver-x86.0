@@ -2,92 +2,149 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A055C7EE2A
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Jun 2023 16:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2546EC77B7E
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Jun 2023 20:06:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230472AbjFAQvn (ORCPT
+        id S229689AbjFAUGC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Jun 2023 12:51:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34982 "EHLO
+        Thu, 1 Jun 2023 16:06:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230154AbjFAQvm (ORCPT
+        with ESMTP id S229667AbjFAUGB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Jun 2023 12:51:42 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E3601B1;
-        Thu,  1 Jun 2023 09:51:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685638270; x=1717174270;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sAhDo5ijB5QiHtdByjW35ccQhPA3g20K+nzOIsyvDVE=;
-  b=Zp9+3RQhlqcCP/4krIzcZl+67L2FqeuojoZRG2YZOxkF3FCVQ5OUdlJv
-   6lo/X26n642ID0Z96Km6sZk/M96L7WWDg2A/6CASDBSViU27JtbH3AwMZ
-   TdQU6L/uH7VwQ0qNknzfgX/5V0mQW0/7uIo7Yjob7aGSxBOXZpG3vbkDy
-   0s8VLHtrLtIM1sEJw8MQCCXSllpdIeui/bXrNQ9AkKoBlBPb6WMyrfAml
-   dDkA2UjzD0Il99jWKEBwsKJmoXeRZGWRzda+V+DetVs/1vnFFcOwwmeG+
-   tNdwTLTBuYvIq60anDLt3LpJYD3+v3me9D2DjEHRP4/sjEotUvFXI8ivi
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="421426638"
-X-IronPort-AV: E=Sophos;i="6.00,210,1681196400"; 
-   d="scan'208";a="421426638"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2023 09:51:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="777283038"
-X-IronPort-AV: E=Sophos;i="6.00,210,1681196400"; 
-   d="scan'208";a="777283038"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Jun 2023 09:51:01 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1q4lVr-000Soq-38;
-        Thu, 01 Jun 2023 19:50:59 +0300
-Date:   Thu, 1 Jun 2023 19:50:59 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/1] leds: simatic-ipc-leds-gpio: add new model BX-21A
-Message-ID: <ZHjMcwcCbSyMx5d9@smile.fi.intel.com>
-References: <20230531155457.31632-1-henning.schild@siemens.com>
- <20230531155457.31632-2-henning.schild@siemens.com>
+        Thu, 1 Jun 2023 16:06:01 -0400
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E8C134;
+        Thu,  1 Jun 2023 13:05:59 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 6EB7C32001FC;
+        Thu,  1 Jun 2023 16:05:58 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Thu, 01 Jun 2023 16:05:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1685649958; x=
+        1685736358; bh=BuihjXCY0FZRPM1FRQ1H6wx+Ft5lKyW8JMDLJbKUpdE=; b=p
+        TFEbXB2nZmJpBzR2g/prdstVVpfbEzaj0wJ+vCmlyrCotpnJ0G8igJajZ4DojHKh
+        jez4xHv2Fx9WV0jggwH0FRO7vRhqTuveCjU6cif3iLa9wgkpxO0c4IcU+tSbVOk5
+        CqWECsJzplVCsGSYOYQsVc3tiBb0lrKs8wiGQAaTZx+w58wswgpgqh8+5Jya0YSM
+        rQpZmVqszmP6uWqgjXJqjPJofHHifPzr+KAyNEXfu+RgZ/Mbp6itog3L6+J3UGiH
+        PsBO34LrY8WFxTS9nAh44VeLhs3yQ3NtBd2ykDjY9z/ffr0U2MTIFsk8M95VSLjn
+        nakJIIhLnIX1Yap9usQ2w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1685649958; x=
+        1685736358; bh=BuihjXCY0FZRPM1FRQ1H6wx+Ft5lKyW8JMDLJbKUpdE=; b=g
+        3aoVubITj4Yqj+bVpLgZA+HbXFBGAKK87N1jZ84aYdeYO60D/NlOYIfe+hMGaK/H
+        Z+TnLHdUAIdWY96g0zSNU46LbTYJGLBDy6BeUS0x5Fq9pIs280qnsBMDFEwHbDB8
+        AVBviyOr0Enw9y627yU14MEnz/DGTyawEM+UC1wDnvVuTpYs88Z1D7GktrLd9SpI
+        cHAhJaCjaDD6QxLGH7w+AaXkDgKBkqpA4i2M2DIoU1wvXECyDvsnh22CLUGecKxC
+        XlV9S5Lr58b+cKTAzTdkfe9pFkas8ayBN77mM65xqCjARtVQAMCkAeUACF0SBsRR
+        UtdBq+Ng6hu6yyuBZlIag==
+X-ME-Sender: <xms:Jfp4ZEzsw39U6kKUrKRVOyiQaIC0QnrKnAPKYoyt83JbppXWTq9gAw>
+    <xme:Jfp4ZIQAvnKwMsARyIjbaLNqFuKKq75ldffc2Tl9IQfrCitJ3lAb-vMbzSoz68yc4
+    hViex7NeGrCWpj4Ft0>
+X-ME-Received: <xmr:Jfp4ZGUobXidmF6RDJjLrJjqFkZk_N1V1PhJBgLFTpd6mVaTgEmYsipwqlowZ-mQXktIrzZ02wBav4GHSfYJO6OX1PF7KGtP0DvANZm6ZxGV71CS73jXmLNoww>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeeluddgudeghecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecuogetfedtuddqtdduucdludehmdenucfjughrpe
+    fhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforghrkhcurfgvrghr
+    shhonhcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrqeenucggtf
+    frrghtthgvrhhnpeeftddvjeefleffvefhgfejjeehudetteeigeeugfekhffhgeejudeu
+    teehgfdvffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:Jfp4ZChdxHCfaVVozUizkKiAJevq9rsQTL8WWZgRH5cJCizugVjomA>
+    <xmx:Jfp4ZGBecTz0K1S-qhgTtAmKFhcWdkAOoSUMVdWY6FbOSW7G61RUyQ>
+    <xmx:Jfp4ZDILdlh1IZX2G87iYmNDprFRRNcCom8019KrOJ36Ez1lLxyToA>
+    <xmx:Jvp4ZJ860YOogXffU9xcTd-WVG0NvMcaKdcHHR7TyLJQszujvIpk9A>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 1 Jun 2023 16:05:57 -0400 (EDT)
+From:   Mark Pearson <mpearson-lenovo@squebb.ca>
+To:     mpearson-lenovo@squebb.ca
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ilpo.jarvinen@linux.intel.com
+Subject: [PATCH v4 2/8] platform/x86: think-lmi: Enable opcode support on BIOS settings
+Date:   Thu,  1 Jun 2023 16:05:46 -0400
+Message-Id: <20230601200552.4396-2-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230601200552.4396-1-mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
+ <20230601200552.4396-1-mpearson-lenovo@squebb.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230531155457.31632-2-henning.schild@siemens.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, May 31, 2023 at 05:54:57PM +0200, Henning Schild wrote:
-> This adds support for the Siemens Simatic IPC BX-21A. Its LEDs are
-> connected to GPIO pins provided by the Intel Elkhart Lake pinctrl
-> driver.
+Whilst reviewing some documentation from the FW team on using WMI on
+Lenovo system I noticed that we weren't using Opcode support when
+changing BIOS settings in the thinkLMI driver.
 
-...
+We should be doing this to ensure we're future proof as the old
+non-opcode mechanism has been deprecated.
 
-> +static struct platform_driver simatic_ipc_led_gpio_elkhartlake_driver = {
-> +	.probe = simatic_ipc_leds_gpio_elkhartlake_probe,
-> +	.remove = simatic_ipc_leds_gpio_elkhartlake_remove,
-> +	.driver = {
-> +		.name = KBUILD_MODNAME,
+Tested on X1 Carbon G10 and G11.
 
-Just wondering if module name and hence device instance name (which may be
-longer) can be so long.
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+Changes in v2:
+ - Update comment for clearer explanation of what the driver is doing.
+Changes in v3:
+ - None. Version bump with rest of series.
+Changes in v4:
+ - Fixed code alignment as requested.
+ - changed 'non opcode' to 'non-opcode'.
+ - Missing space added at end of comment.
+ - This patch was previously #1 and is now #2 in series.
 
-Hint: you can use EHL/ehl for elkhartlake and in same way for the rest if any.
+ drivers/platform/x86/think-lmi.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-> +	},
-> +};
-
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index 6cf77bc26b05..80a5c989db03 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -1010,7 +1010,33 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 				tlmi_priv.pwd_admin->save_signature);
+ 		if (ret)
+ 			goto out;
+-	} else { /* Non certiifcate based authentication */
++	} else if (tlmi_priv.opcode_support) {
++		/*
++		 * If opcode support is present use that interface.
++		 * Note - this sets the variable and then the password as separate
++		 * WMI calls. Function tlmi_save_bios_settings will error if the
++		 * password is incorrect.
++		 */
++		set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
++				    new_setting);
++		if (!set_str) {
++			ret = -ENOMEM;
++			goto out;
++		}
++
++		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str);
++		if (ret)
++			goto out;
++
++		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
++			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
++						  tlmi_priv.pwd_admin->password);
++			if (ret)
++				goto out;
++		}
++
++		ret = tlmi_save_bios_settings("");
++	} else { /* old non-opcode based authentication method (deprecated) */
+ 		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+ 			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+ 					tlmi_priv.pwd_admin->password,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.40.1
 
