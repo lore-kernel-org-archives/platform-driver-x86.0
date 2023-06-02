@@ -2,117 +2,193 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61898C7EE29
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Jun 2023 22:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A0AC7EE2C
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Jun 2023 22:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236207AbjFBWqZ (ORCPT
+        id S236675AbjFBWzg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Jun 2023 18:46:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38746 "EHLO
+        Fri, 2 Jun 2023 18:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236162AbjFBWqY (ORCPT
+        with ESMTP id S236281AbjFBWzf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Jun 2023 18:46:24 -0400
+        Fri, 2 Jun 2023 18:55:35 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6F611AD;
-        Fri,  2 Jun 2023 15:46:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC1B719B;
+        Fri,  2 Jun 2023 15:55:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
         Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=gBjthrWaINhZ8fog0wONMrxY2BBGP8pl9HrTCIzjXho=; b=eKyf+Is9qQICpv2aaHMMdnjklb
-        fgoMoqeL1cJqFuEZSMYg/40SeCbPu9efGiQeGGjinZsNaMrOx4OWoGYssv4DzTSbDEZyvKqOaT7B/
-        qfF/TTHgmfSmGfJxOnDZyvIbAlsfq4k13XGTvbW9gbQWbRKjjqKtzKk0iM08dtWTtB+pyeLwuqJSM
-        ApsAlK1ELlc+qKWylZzqFCc4DKnk4VlVSgIOA7pgdb9jDceneufhZeOIaNySjmHPQkMBjCPn5ryw8
-        41Zx38qCe2+OjNdXF+s74lSpY3X/wKwGt2oEqm5eOX6fTwwsvrc7aHeeYBrVNvvcOUn6Y7lG5AMoB
-        dIeQVR1g==;
+        bh=/J1w8AlUBOlWVDXlEbVWbpkNX5QXg3yqI58ktXI/6E0=; b=Hn9B4kJuIFbQFXW801N8KZvQiq
+        bbFRRvX0tC6t2s8cR4b0UnWT2PuXf/os29Ur4znpUntMLSUcRwkNFXGbR5mcC6g0ONH8HUjUtdCaS
+        2wqYxlFIKEgTxrqkcanwrNrh56sy83jYiy//o7PcA41GKB240Y4iEGpf9Q9nUQ6KXynpR5X7Kn9oo
+        o1ioazccupI8/FVF2RVhhNpOUzQgDMmFnfjF348cEsV61qatP563jDmQw2V7C/Tkh5hKP3YNXEJgl
+        Z2hxVsTvCpVh3pAPRjIysqydM0EpZDEwmz0rlUzG9csoNERItteG9dfkG36xgW2odnC0P2XSSG0eJ
+        vdwvGC3A==;
 Received: from [2601:1c2:980:9ec0::2764]
         by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q5DXI-0085uk-2t;
-        Fri, 02 Jun 2023 22:46:20 +0000
-Message-ID: <83d86690-fdbe-66fb-221e-5443851330c7@infradead.org>
-Date:   Fri, 2 Jun 2023 15:46:20 -0700
+        id 1q5DgD-0086ns-0t;
+        Fri, 02 Jun 2023 22:55:33 +0000
+Message-ID: <39a19a0b-610d-52bf-5050-eb870ad2e619@infradead.org>
+Date:   Fri, 2 Jun 2023 15:55:32 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH v16 12/13] hp-bioscfg: Makefile
+Subject: Re: [PATCH v16 01/13] hp-bioscfg: Documentation
 Content-Language: en-US
 To:     Jorge Lopez <jorgealtxwork@gmail.com>, hdegoede@redhat.com,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         thomas@t-8ch.de, ilpo.jarvinen@linux.intel.com
 References: <20230602131044.3297-1-jorge.lopez2@hp.com>
- <20230602131044.3297-13-jorge.lopez2@hp.com>
+ <20230602131044.3297-2-jorge.lopez2@hp.com>
 From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20230602131044.3297-13-jorge.lopez2@hp.com>
+In-Reply-To: <20230602131044.3297-2-jorge.lopez2@hp.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi again,
+
 
 On 6/2/23 06:10, Jorge Lopez wrote:
-> HP BIOS Configuration driver purpose is to provide a driver supporting
-> the latest sysfs class firmware attributes framework allowing the user
-> to change BIOS settings and security solutions on HP Inc.’s commercial
-> notebooks.
-> 
-> Many features of HP Commercial notebooks can be managed using Windows
-> Management Instrumentation (WMI). WMI is an implementation of Web-Based
-> Enterprise Management (WBEM) that provides a standards-based interface
-> for changing and monitoring system settings. HP BIOSCFG driver provides
-> a native Linux solution and the exposed features facilitates the
-> migration to Linux environments.
-> 
-> The Linux security features to be provided in hp-bioscfg driver enables
-> managing the BIOS settings and security solutions via sysfs, a virtual
-> filesystem that can be used by user-mode applications. The new
-> documentation cover HP-specific firmware sysfs attributes such Secure
-> Platform Management and Sure Start. Each section provides security
-> feature description and identifies sysfs directories and files exposed
-> by the driver.
-> 
-> Many HP Commercial notebooks include a feature called Secure Platform
-> Management (SPM), which replaces older password-based BIOS settings
-> management with public key cryptography. PC secure product management
-> begins when a target system is provisioned with cryptographic keys
-> that are used to ensure the integrity of communications between system
-> management utilities and the BIOS.
-> 
-> HP Commercial notebooks have several BIOS settings that control its
-> behaviour and capabilities, many of which are related to security.
-> To prevent unauthorized changes to these settings, the system can
-> be configured to use a cryptographic signature-based authorization
-> string that the BIOS will use to verify authorization to modify the
-> setting.
-> 
-> Linux Security components are under development and not published yet.
-> The only linux component is the driver (hp bioscfg) at this time.
-> Other published security components are under Windows.
-> 
 
-A commit message should tell what and why. E.g.:
-
-Add Makefile and Kconfig to build hp-bioscfg.
-
-It does not need all of that boilerplate info.
-The cover letter is good for that.
-
-The "why" part can and usually should include some background/history
-info.
-
+> 
 > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 > 
 > ---
 > Based on the latest platform-drivers-x86.git/for-next
 > ---
->  drivers/platform/x86/hp/Kconfig             | 16 ++++++++++++++++
->  drivers/platform/x86/hp/Makefile            |  1 +
->  drivers/platform/x86/hp/hp-bioscfg/Makefile | 11 +++++++++++
->  3 files changed, 28 insertions(+)
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/Makefile
+>  .../testing/sysfs-class-firmware-attributes   | 101 +++++++++++++++++-
+>  1 file changed, 99 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> index 4cdba3477176..df9904b9f39c 100644
+> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> @@ -126,6 +131,21 @@ Description:
+>  					value will not be effective through sysfs until this rule is
+>  					met.
+>  
+> +		HP specific class extensions
+> +		------------------------------
+> +
+> +		On HP systems the following additional attributes are available:
+> +
+> +		"ordered-list"-type specific properties:
+> +
+> +		elements:
+> +					A file that can be read to obtain the possible
+> +					list of values of the <attr>. Values are separated using
+> +					semi-colon (``;``) and listed according to their priority.
+> +					An element listed first has the highest priority. Writing
+> +					the list in a different order to current_value alters
+> +					the priority order for the particular attribute.
+> +
+>  What:		/sys/class/firmware-attributes/*/authentication/
+>  Date:		February 2021
+>  KernelVersion:	5.11
 
-thanks.
+Why 5.11 and that date?
+
+> @@ -364,3 +393,71 @@ Description:
+>  		use it to enable extra debug attributes or BIOS features for testing purposes.
+>  
+>  		Note that any changes to this attribute requires a reboot for changes to take effect.
+> +
+> +
+> +		HP specific class extensions - Secure Platform Manager (SPM)
+> +		--------------------------------
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/kek
+> +Date:		March 2023
+> +KernelVersion:	5.18
+
+Why 5.18 and that date?
+
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:
+> +		'kek' Key-Encryption-Key is a write-only file that can be used to configure the
+> +		RSA public key that will be used by the BIOS to verify
+> +		signatures when setting the signing key.  When written,
+> +		the bytes should correspond to the KEK certificate
+> +		(x509 .DER format containing an OU).  The size of the
+> +		certificate must be less than or equal to 4095 bytes.
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/sk
+> +Date:		March 2023
+> +KernelVersion:	5.18
+
+Why 5.18 and that date?
+
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:
+> +		'sk' Signature Key is a write-only file that can be used to configure the RSA
+> +		public key that will be used by the BIOS to verify signatures
+> +		when configuring BIOS settings and security features.  When
+> +		written, the bytes should correspond to the modulus of the
+> +		public key.  The exponent is assumed to be 0x10001.
+> +
+> +What:		/sys/class/firmware-attributes/*/authentication/SPM/status
+> +Date:		March 2023
+> +KernelVersion:	5.18
+
+Why 5.18 and that date?
+
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:
+> +		'status' is a read-only file that returns ASCII text in JSON format reporting
+> +		the status information.
+> +
+> +		  "State": "not provisioned | provisioned | provisioning in progress ",
+
+Drop the space after "in progress" ?
+
+> +		  "Version": " Major. Minor ",
+
+So Major. should have a space before and after it? and Minor should have a space after it?
+
+> +		  "Nonce": <16-bit unsigned number display in base 10>,
+> +		  "FeaturesInUse": <16-bit unsigned number display in base 10>,
+> +		  "EndorsementKeyMod": "<256 bytes in base64>",
+> +		  "SigningKeyMod": "<256 bytes in base64>"
+> +
+> +What:		/sys/class/firmware-attributes/*/attributes/Sure_Start/audit_log_entries
+> +Date:		March 2023
+> +KernelVersion:	5.18
+
+Why 5.18 and that date?
+
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:
+> +		'audit_log_entries' is a read-only file that returns the events in the log.
+> +
+> +			Audit log entry format
+> +
+> +			Byte 0-15:   Requested Audit Log entry  (Each Audit log is 16 bytes)
+> +			Byte 16-127: Unused
+> +
+> +What:		/sys/class/firmware-attributes/*/attributes/Sure_Start/audit_log_entry_count
+> +Date:		March 2023
+> +KernelVersion:	5.18
+
+Why 5.18 and that date?
+
+> +Contact:	"Jorge Lopez" <jorge.lopez2@hp.com>
+> +Description:
+> +		'audit_log_entry_count' is a read-only file that returns the number of existing
+> +		audit log events available to be read. Values are separated using comma (``,``)
+
+End the sentence above with a '.' please.
+
+> +
+> +			[No of entries],[log entry size],[Max number of entries supported]
+> +
+> +		log entry size identifies audit log size for the current BIOS version.
+> +		The current size is 16 bytes but it can be up to 128 bytes long in future BIOS
+> +		versions.
+
+Thanks.
 -- 
 ~Randy
