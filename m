@@ -2,250 +2,87 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E42C7EE24
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Jun 2023 10:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AB6C77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Jun 2023 11:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229452AbjFBKzI (ORCPT
+        id S229470AbjFBLMI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Jun 2023 06:55:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42250 "EHLO
+        Fri, 2 Jun 2023 07:12:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjFBKzH (ORCPT
+        with ESMTP id S234872AbjFBLMH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Jun 2023 06:55:07 -0400
-X-Greylist: delayed 873 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 02 Jun 2023 03:55:04 PDT
-Received: from grilo.cascardo.info (grilo.cascardo.info [IPv6:2a01:4f8:13a:6e8:152:1:0:10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF26C0;
-        Fri,  2 Jun 2023 03:55:04 -0700 (PDT)
-Received: from siri.cascardo.eti.br (unknown [IPv6:2804:431:e7c5:145d:6a17:29ff:fe00:4f38])
-        by grilo.cascardo.info (Postfix) with ESMTPSA id CAF1A200172;
-        Fri,  2 Jun 2023 07:30:00 -0300 (-03)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=holoscopio.com;
-        s=mail; t=1685701803;
-        bh=ueONc7ev81AAlv0Rz4GJDLaRhMnB1XlzZCYB16hNYlg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I5bdHpqd+s4eoRZc8KF0x4CL1Kiw8qGvsKkT6cjbK5qOdlQI4qpzmC0eVHcE+i2o0
-         G5l6xmbZy9v4aliz4y6FeCamOV75bQxwdcd0B0EAXWbSrj4Fp5u2JYcQQw5UyIcVbA
-         nCRWzeRgCOkKdxXE07fUXiYkI8tTzzhK/sLk2OGAsEVNrIn8+V260BoQ88cgZ/nNYg
-         tpH6A3saSPbLp1jHDEJZZrWkXdvOmFCaH1H7yZ5v3hOnTvEbtQeYGjh71DXJuZP7dC
-         8MbuKcM6L+WAR3ZHVZBYP254NvfIFzv925+f85yM1WZDu2B+JlZlHzpB1rgZj0DDTl
-         EXjAoWdZnlz9w==
-Date:   Fri, 2 Jun 2023 07:29:56 -0300
-From:   Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-To:     Michal Wilczynski <michal.wilczynski@intel.com>
-Cc:     Daniel Oliveira Nascimento <don@syst.com.br>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-        rafael@kernel.org
-Subject: Re: [PATCH v4 18/35] platform/x86/classmate-laptop: Move handler
- installing logic to driver
-Message-ID: <ZHnEpDRJfywWP3mB@siri.cascardo.eti.br>
-References: <20230601131739.300760-3-michal.wilczynski@intel.com>
- <20230601131739.300760-19-michal.wilczynski@intel.com>
+        Fri, 2 Jun 2023 07:12:07 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E901134;
+        Fri,  2 Jun 2023 04:12:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685704326; x=1717240326;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=6uwS5tU3VpEDdfZFPP/2f6PZZV0Smc/JVe9SKo6EP0U=;
+  b=kgfUVigWwiBgk7h3sO9ucMaN7nekA/O+Qjdu23s61jQGF74ncuVyK4uW
+   o850aPzovWgxiEoC/tLQOxUwInHgnWH4hI6dKwfm+n9kHZSqzLWDRIN5k
+   l+f3QswtMIQnTG/DYjG2/VQd+lhhNKnm36/+OhAVplI8AmVZlTuD0dfQw
+   Gmwe0UkkS44TDtLpA5M1fb8gYXmtSKyN6YiikBJ8Yu5Soylff50loYt3M
+   2aC2OW2IQB6RTB6bz602fRuAFwGFPItzn7LC60MENJJcGEXYFZ4tjuPUC
+   5IULj3PChOcxeOnKT2djBEWYMn2W6cSStzPwAHvlQ4uGWP6/Qu2De2P5R
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="353339188"
+X-IronPort-AV: E=Sophos;i="6.00,212,1681196400"; 
+   d="scan'208";a="353339188"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 04:12:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="820250604"
+X-IronPort-AV: E=Sophos;i="6.00,212,1681196400"; 
+   d="scan'208";a="820250604"
+Received: from rspatil-mobl3.gar.corp.intel.com ([10.251.208.112])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 04:12:03 -0700
+Date:   Fri, 2 Jun 2023 14:12:01 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Mark Pearson <mpearson-lenovo@squebb.ca>
+cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 8/8] platform/x86: think-lmi: Don't display unnecessary
+ authentication settings
+In-Reply-To: <20230601200552.4396-8-mpearson-lenovo@squebb.ca>
+Message-ID: <bec3684e-d9d1-d88b-846a-46a1fc481ffb@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca> <20230601200552.4396-1-mpearson-lenovo@squebb.ca> <20230601200552.4396-8-mpearson-lenovo@squebb.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230601131739.300760-19-michal.wilczynski@intel.com>
+Content-Type: multipart/mixed; BOUNDARY="8323329-295843162-1685703976=:1742"
+Content-ID: <cf3f9d85-437a-1f94-72f-b3edfd943b19@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Jun 01, 2023 at 03:17:21PM +0200, Michal Wilczynski wrote:
-> Currently logic for installing notifications from ACPI devices is
-> implemented using notify callback in struct acpi_driver. Preparations
-> are being made to replace acpi_driver with more generic struct
-> platform_driver, which doesn't contain notify callback. Furthermore
-> as of now handlers are being called indirectly through
-> acpi_notify_device(), which decreases performance.
-> 
-> Call acpi_device_install_event_handler() at the end of .add() callback.
-> Call acpi_device_remove_event_handler() at the beginning of .remove()
-> callback. Change arguments passed to the notify callback to match with
-> what's required by acpi_device_install_event_handler().
-> 
-> Signed-off-by: Michal Wilczynski <michal.wilczynski@intel.com>
-> ---
->  drivers/platform/x86/classmate-laptop.c | 53 +++++++++++++++++++------
->  1 file changed, 41 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
-> index 2edaea2492df..2d36abf5ecfe 100644
-> --- a/drivers/platform/x86/classmate-laptop.c
-> +++ b/drivers/platform/x86/classmate-laptop.c
-> @@ -180,8 +180,9 @@ static acpi_status cmpc_get_accel_v4(acpi_handle handle,
->  	return status;
->  }
->  
-> -static void cmpc_accel_handler_v4(struct acpi_device *dev, u32 event)
-> +static void cmpc_accel_handler_v4(acpi_handle handle, u32 event, void *data)
->  {
-> +	struct acpi_device *dev = data;
->  	if (event == 0x81) {
->  		int16_t x, y, z;
->  		acpi_status status;
-> @@ -407,6 +408,11 @@ static int cmpc_accel_add_v4(struct acpi_device *acpi)
->  	inputdev = dev_get_drvdata(&acpi->dev);
->  	dev_set_drvdata(&inputdev->dev, accel);
->  
-> +	error = acpi_device_install_event_handler(acpi, ACPI_DEVICE_NOTIFY,
-> +						  cmpc_accel_handler_v4);
-> +	if (error)
-> +		goto failed_input;
-> +
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-In all cases, acpi_device_install_event_handler is being called after
-cmpc_add_acpi_notify_device, which allocates and registers an input
-device.
+--8323329-295843162-1685703976=:1742
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <4f5bd94-fe6b-2043-c5f3-a71a7bdebb4a@linux.intel.com>
 
-You should cleanup in case acpi_device_install_event_handler fails and
-call cmpc_remove_acpi_notify_device.
+On Thu, 1 Jun 2023, Mark Pearson wrote:
 
-Cascardo.
-
->  	return 0;
->  
->  failed_input:
-> @@ -420,6 +426,7 @@ static int cmpc_accel_add_v4(struct acpi_device *acpi)
->  
->  static void cmpc_accel_remove_v4(struct acpi_device *acpi)
->  {
-> +	acpi_device_remove_event_handler(acpi, ACPI_DEVICE_NOTIFY, cmpc_accel_handler_v4);
->  	device_remove_file(&acpi->dev, &cmpc_accel_sensitivity_attr_v4);
->  	device_remove_file(&acpi->dev, &cmpc_accel_g_select_attr_v4);
->  	cmpc_remove_acpi_notify_device(acpi);
-> @@ -441,7 +448,6 @@ static struct acpi_driver cmpc_accel_acpi_driver_v4 = {
->  	.ops = {
->  		.add = cmpc_accel_add_v4,
->  		.remove = cmpc_accel_remove_v4,
-> -		.notify = cmpc_accel_handler_v4,
->  	},
->  	.drv.pm = &cmpc_accel_pm,
->  };
-> @@ -523,8 +529,10 @@ static acpi_status cmpc_get_accel(acpi_handle handle,
->  	return status;
->  }
->  
-> -static void cmpc_accel_handler(struct acpi_device *dev, u32 event)
-> +static void cmpc_accel_handler(acpi_handle handle, u32 event, void *data)
->  {
-> +	struct acpi_device *dev = data;
-> +
->  	if (event == 0x81) {
->  		unsigned char x, y, z;
->  		acpi_status status;
-> @@ -639,6 +647,11 @@ static int cmpc_accel_add(struct acpi_device *acpi)
->  	inputdev = dev_get_drvdata(&acpi->dev);
->  	dev_set_drvdata(&inputdev->dev, accel);
->  
-> +	error = acpi_device_install_event_handler(acpi, ACPI_DEVICE_NOTIFY,
-> +						  cmpc_accel_handler);
-> +	if (error)
-> +		goto failed_input;
-> +
->  	return 0;
->  
->  failed_input:
-> @@ -650,6 +663,7 @@ static int cmpc_accel_add(struct acpi_device *acpi)
->  
->  static void cmpc_accel_remove(struct acpi_device *acpi)
->  {
-> +	acpi_device_remove_event_handler(acpi, ACPI_DEVICE_NOTIFY, cmpc_accel_handler);
->  	device_remove_file(&acpi->dev, &cmpc_accel_sensitivity_attr);
->  	cmpc_remove_acpi_notify_device(acpi);
->  }
-> @@ -667,7 +681,6 @@ static struct acpi_driver cmpc_accel_acpi_driver = {
->  	.ops = {
->  		.add = cmpc_accel_add,
->  		.remove = cmpc_accel_remove,
-> -		.notify = cmpc_accel_handler,
->  	}
->  };
->  
-> @@ -693,8 +706,9 @@ static acpi_status cmpc_get_tablet(acpi_handle handle,
->  	return status;
->  }
->  
-> -static void cmpc_tablet_handler(struct acpi_device *dev, u32 event)
-> +static void cmpc_tablet_handler(acpi_handle handle, u32 event, void *data)
->  {
-> +	struct acpi_device *dev = data;
->  	unsigned long long val = 0;
->  	struct input_dev *inputdev = dev_get_drvdata(&dev->dev);
->  
-> @@ -723,12 +737,20 @@ static void cmpc_tablet_idev_init(struct input_dev *inputdev)
->  
->  static int cmpc_tablet_add(struct acpi_device *acpi)
->  {
-> -	return cmpc_add_acpi_notify_device(acpi, "cmpc_tablet",
-> -					   cmpc_tablet_idev_init);
-> +	int ret;
-> +
-> +	ret = cmpc_add_acpi_notify_device(acpi, "cmpc_tablet",
-> +					  cmpc_tablet_idev_init);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return acpi_device_install_event_handler(acpi, ACPI_DEVICE_NOTIFY,
-> +						 cmpc_tablet_handler);
->  }
->  
->  static void cmpc_tablet_remove(struct acpi_device *acpi)
->  {
-> +	acpi_device_remove_event_handler(acpi, ACPI_DEVICE_NOTIFY, cmpc_tablet_handler);
->  	cmpc_remove_acpi_notify_device(acpi);
->  }
->  
-> @@ -761,7 +783,6 @@ static struct acpi_driver cmpc_tablet_acpi_driver = {
->  	.ops = {
->  		.add = cmpc_tablet_add,
->  		.remove = cmpc_tablet_remove,
-> -		.notify = cmpc_tablet_handler,
->  	},
->  	.drv.pm = &cmpc_tablet_pm,
->  };
-> @@ -1026,8 +1047,9 @@ static int cmpc_keys_codes[] = {
->  	KEY_MAX
->  };
->  
-> -static void cmpc_keys_handler(struct acpi_device *dev, u32 event)
-> +static void cmpc_keys_handler(acpi_handle handle, u32 event, void *data)
->  {
-> +	struct acpi_device *dev = data;
->  	struct input_dev *inputdev;
->  	int code = KEY_MAX;
->  
-> @@ -1049,12 +1071,20 @@ static void cmpc_keys_idev_init(struct input_dev *inputdev)
->  
->  static int cmpc_keys_add(struct acpi_device *acpi)
->  {
-> -	return cmpc_add_acpi_notify_device(acpi, "cmpc_keys",
-> -					   cmpc_keys_idev_init);
-> +	int error;
-> +
-> +	error = cmpc_add_acpi_notify_device(acpi, "cmpc_keys",
-> +					    cmpc_keys_idev_init);
-> +	if (error)
-> +		return error;
-> +
-> +	return acpi_device_install_event_handler(acpi, ACPI_DEVICE_NOTIFY,
-> +						 cmpc_keys_handler);
->  }
->  
->  static void cmpc_keys_remove(struct acpi_device *acpi)
->  {
-> +	acpi_device_remove_event_handler(acpi, ACPI_DEVICE_NOTIFY, cmpc_keys_handler);
->  	cmpc_remove_acpi_notify_device(acpi);
->  }
->  
-> @@ -1071,7 +1101,6 @@ static struct acpi_driver cmpc_keys_acpi_driver = {
->  	.ops = {
->  		.add = cmpc_keys_add,
->  		.remove = cmpc_keys_remove,
-> -		.notify = cmpc_keys_handler,
->  	}
->  };
->  
-> -- 
-> 2.40.1
+> If Opcode support is available (which is the standard for all platforms
+> going forward) then there is no need to have the encoding and kbdlang
+> attributes visible.
 > 
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+
+Thanks a lot, the patches look good now. One small thing for future: next 
+time, try to arrange a series such that the patches with Fixes tags are 
+the first patches, in here I think it's not a big deal since 2/8 doesn't 
+seem to conflict with 3/8.
+
+For all patches 1-8:
+
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+-- 
+ i.
+--8323329-295843162-1685703976=:1742--
