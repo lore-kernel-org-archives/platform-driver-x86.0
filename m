@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FB7C7EE32
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE80C7EE2F
 	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Jun 2023 13:11:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236011AbjFBNLN (ORCPT
+        id S236047AbjFBNLM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Jun 2023 09:11:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56726 "EHLO
+        Fri, 2 Jun 2023 09:11:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234837AbjFBNLK (ORCPT
+        with ESMTP id S235982AbjFBNLK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 2 Jun 2023 09:11:10 -0400
-Received: from mail-oo1-xc31.google.com (mail-oo1-xc31.google.com [IPv6:2607:f8b0:4864:20::c31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D6FAE43;
-        Fri,  2 Jun 2023 06:10:57 -0700 (PDT)
-Received: by mail-oo1-xc31.google.com with SMTP id 006d021491bc7-5523bd97c64so2232714eaf.0;
-        Fri, 02 Jun 2023 06:10:57 -0700 (PDT)
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 216FA1BF;
+        Fri,  2 Jun 2023 06:10:56 -0700 (PDT)
+Received: by mail-oi1-x232.google.com with SMTP id 5614622812f47-3909756b8b1so895729b6e.1;
+        Fri, 02 Jun 2023 06:10:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685711456; x=1688303456;
+        d=gmail.com; s=20221208; t=1685711455; x=1688303455;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2opJ1+W5HOUNs6DOaSrjyXEyOXFf95SoCXdS03bl+3g=;
-        b=a7rvZb3Vn6syKz5kJateGXUkkq4A2du+cWVTQx50PTbneY5bfaFfu6hRqPhgMmebhS
-         5Qb702Snw+5MSUWdvZ7ZuStKZRZLapVHgkIF8eZVSfm9ID/1144yt5MoguBQWRnNRX5j
-         HTnCiPq9qxBZfRZlUQxwGq2bg6UTgZLYwZnnT3JzPzsmGRURTMoJneCau6Jhj4sfnUfI
-         4Ho0DIMCdFjb45mwcGdDFsaG4lb6izt43enTOcyFbuBL2BRo3VvFXYzoJD7b0vicYs8H
-         czuCnhWdFkS6gNdKT/udAclpbpHpomo/emn0KMvVdFz82BZ3YaZ9qKIp0719mx1bWoxl
-         5h0g==
+        bh=G49atfAQCgSCYBfeGPg2LE9mmP22glB+FYscmE+VeHo=;
+        b=V3y8xygPuKwntv2luacIZqYS5YXadR5C40+Z/oZE4540GHYzZb3QcxtnRs9H1vojVm
+         6yRYN32/mwpJJB1Yge7Yfdq/afgmsyLsdi6mDg4VDD81Ol+3tPWwVTqLKkg4JTRih8rj
+         tZuTdYkjw/9DUK87VQNISVuRlpy+QkTeW3rsSLg2y62Wo/CwMtoOHYTtMmmbfpR9U/Wc
+         vnIJDMcTkVsryiU5QJuFQMVx+KRT02cNVNqd5VL0O4DkvjdCNWVwAHaCn8ZDRSRe1h/K
+         BdIIRTbvPekR9Gzq7N8CmK00h2ta4YDOsDSq6EjTPUt/XRjXzZIaFOpXzjVnhSd35MrL
+         8zqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685711456; x=1688303456;
+        d=1e100.net; s=20221208; t=1685711455; x=1688303455;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2opJ1+W5HOUNs6DOaSrjyXEyOXFf95SoCXdS03bl+3g=;
-        b=arJMp9o8OoJExcPptEmQn8JqkE0ZVj+39UNfknPERyWgjGiD/P4u+4w6/eBf03FiBf
-         ceONrDyIxaUj/R7x9tfoWPS9xgsBqZZdm/072cJtXurWWC8UhzTlTGzehjVb6w3BOv/z
-         MbPEXWvXJFYZAf03zdaiQmBn0GLf87rx66wG+XvQNVVPFh16od0GBvLn6ih9MwJuvC0q
-         dx5S+1liZbpZibGPXa/Kc92iqiFdz7DiWev81LLN0QZ1OMpYjuN341UomtapNMiFG6v/
-         5SKKidpZAmdlXNcirEXcT7Du1G/KCzb0Wrlr/D343/l7fMPESivrplwfJxAMaO8y9dE+
-         8xlA==
-X-Gm-Message-State: AC+VfDw+21OBRbz/lhpHFy+1Mo4aNv7llZzNb2VskbR56kmaBvfZmMrD
-        tP5VkpTkVbzxPRIFTJwTzec=
-X-Google-Smtp-Source: ACHHUZ5ZRsR4RM986s0IlG2EcdEz48nTvFmXe1mL4bYHWvz5OG7f3TNuO/VVNsbE2DCKWUpm45FQug==
-X-Received: by 2002:a05:6808:3ae:b0:38e:d57:1979 with SMTP id n14-20020a05680803ae00b0038e0d571979mr1187070oie.23.1685711456562;
-        Fri, 02 Jun 2023 06:10:56 -0700 (PDT)
+        bh=G49atfAQCgSCYBfeGPg2LE9mmP22glB+FYscmE+VeHo=;
+        b=bjeOAA02Mm5HXdWSy90s2HwthUMOSRuXtKz8r7S3gBq4s2OHjbPGvOm49XtRVOMglc
+         KV/btdTiPyq7qqrZna1QsY/ZaCpZvSwQG2TUosyt4XVRvUAiv+IA2HWGU4TXnxu/ITV8
+         YfZ9k6PE/nrYSeQY6w8OuhPJuOg97YsR67mN81efhu4/pLRuvvteu+7uN+IOIRsZDAs+
+         DEc3D/vBo6mq2yahbeyd/d/rk0LzDHHE48DRaqPXutcl+JCZfy/whDEFuG7dedkh8Oxx
+         7n10YwviIP4hjWalZEsAHWBZfdmcLGkCf5RTlrJkMQLtZnv85M9SPCGarilLI/F8Wiy9
+         VYpg==
+X-Gm-Message-State: AC+VfDyuUFn9LBw7TM0M8stHvchEH7RT+VqAMTlaRDPXaRPC0EhFi5Yx
+        kGEFfIFckkQvwfr4P1ve3VA=
+X-Google-Smtp-Source: ACHHUZ6CNgEZPSrzXw36MTbhl32T1ti10S+QwiuuQkQgb5f0Halk+Tif3zQgJ4fcjUwbAVxBC1KAEw==
+X-Received: by 2002:a54:4691:0:b0:39a:815d:8ab6 with SMTP id k17-20020a544691000000b0039a815d8ab6mr607187oic.34.1685711455246;
+        Fri, 02 Jun 2023 06:10:55 -0700 (PDT)
 Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:125c:6b6d:18e9:9361])
-        by smtp.gmail.com with ESMTPSA id k17-20020a544691000000b0039a531d9b92sm483762oic.56.2023.06.02.06.10.55
+        by smtp.gmail.com with ESMTPSA id k17-20020a544691000000b0039a531d9b92sm483762oic.56.2023.06.02.06.10.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jun 2023 06:10:56 -0700 (PDT)
+        Fri, 02 Jun 2023 06:10:54 -0700 (PDT)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de,
         ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v16 08/13] hp-bioscfg: passwdobj-attributes
-Date:   Fri,  2 Jun 2023 08:10:39 -0500
-Message-Id: <20230602131044.3297-9-jorge.lopez2@hp.com>
+Subject: [PATCH v16 07/13] hp-bioscfg: order-list-attributes
+Date:   Fri,  2 Jun 2023 08:10:38 -0500
+Message-Id: <20230602131044.3297-8-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230602131044.3297-1-jorge.lopez2@hp.com>
 References: <20230602131044.3297-1-jorge.lopez2@hp.com>
@@ -112,221 +112,131 @@ Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 ---
 Based on the latest platform-drivers-x86.git/for-next
 ---
- .../x86/hp/hp-bioscfg/passwdobj-attributes.c  | 540 ++++++++++++++++++
- 1 file changed, 540 insertions(+)
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+ .../x86/hp/hp-bioscfg/order-list-attributes.c | 451 ++++++++++++++++++
+ 1 file changed, 451 insertions(+)
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
 new file mode 100644
-index 000000000000..483426696144
+index 000000000000..6a4cb8e53108
 --- /dev/null
-+++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-@@ -0,0 +1,540 @@
++++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+@@ -0,0 +1,451 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Functions corresponding to password object type attributes under
-+ * BIOS PASSWORD for use with hp-bioscfg driver.
++ * Functions corresponding to ordered list type attributes under
++ * BIOS ORDERED LIST GUID for use with hp-bioscfg driver.
 + *
 + * Copyright (c) 2022 HP Development Company, L.P.
 + */
 +
 +#include "bioscfg.h"
-+#include <asm-generic/posix_types.h>
 +
-+GET_INSTANCE_ID(password);
-+/*
-+ * Clear all passwords copied to memory for a particular
-+ * authentication instance
-+ */
-+static int clear_passwords(const int instance)
++GET_INSTANCE_ID(ordered_list);
++
++static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 +{
-+	struct password_data *password_data = &bioscfg_drv.password_data[instance];
++	int instance_id = get_ordered_list_instance_id(kobj);
 +
-+	if (!password_data->is_enabled)
-+		return 0;
++	if (instance_id < 0)
++		return -EIO;
 +
-+	memset(password_data->current_password,
-+	       0, sizeof(password_data->current_password));
-+	memset(password_data->new_password,
-+	       0, sizeof(password_data->new_password));
-+
-+	return 0;
++	return sysfs_emit(buf, "%s\n",
++			 bioscfg_drv.ordered_list_data[instance_id].current_value);
 +}
 +
-+/*
-+ * Clear all credentials copied to memory for both Power-ON and Setup
-+ * BIOS instances
-+ */
-+int hp_clear_all_credentials(void)
++static int replace_char_str(u8 *buffer, char *repl_char, char *repl_with)
 +{
-+	int count = bioscfg_drv.password_instances_count;
-+	int instance;
++	char *src = buffer;
++	int buflen = strlen(buffer);
++	int item;
 +
-+	/* clear all passwords */
-+	for (instance = 0; instance < count; instance++)
-+		clear_passwords(instance);
-+
-+	/* clear auth_token */
-+	kfree(bioscfg_drv.spm_data.auth_token);
-+	bioscfg_drv.spm_data.auth_token = NULL;
-+
-+	return 0;
-+}
-+
-+int hp_get_password_instance_for_type(const char *name)
-+{
-+	int count = bioscfg_drv.password_instances_count;
-+	int instance;
-+
-+	for (instance = 0; instance < count; instance++)
-+		if (!strcmp(bioscfg_drv.password_data[instance].common.display_name, name))
-+			return instance;
-+
-+	return -EINVAL;
-+}
-+
-+static int validate_password_input(int instance_id, const char *buf)
-+{
-+	int length;
-+	struct password_data *password_data = &bioscfg_drv.password_data[instance_id];
-+
-+	length = strlen(buf);
-+	if (buf[length - 1] == '\n')
-+		length--;
-+
-+	if (length > MAX_PASSWD_SIZE)
-+		return INVALID_BIOS_AUTH;
-+
-+	if (password_data->min_password_length > length ||
-+	    password_data->max_password_length < length)
-+		return INVALID_BIOS_AUTH;
-+	return SUCCESS;
-+}
-+
-+ATTRIBUTE_N_PROPERTY_SHOW(is_enabled, password);
-+static struct kobj_attribute password_is_password_set = __ATTR_RO(is_enabled);
-+
-+static int store_password_instance(struct kobject *kobj, const char *buf,
-+				   size_t count, bool is_current)
-+{
-+	char *buf_cp;
-+	int id, ret = 0;
-+
-+	buf_cp = kstrdup(buf, GFP_KERNEL);
-+	if (!buf_cp)
-+		return -ENOMEM;
-+
-+	ret = hp_enforce_single_line_input(buf_cp, count);
-+	if (!ret) {
-+		id = get_password_instance_id(kobj);
-+
-+		if (id >= 0)
-+			ret = validate_password_input(id, buf_cp);
-+	}
-+
-+	if (!ret) {
-+		if (is_current)
-+			strscpy(bioscfg_drv.password_data[id].current_password,
-+				buf_cp,
-+				sizeof(bioscfg_drv.password_data[id].current_password));
-+		else
-+			strscpy(bioscfg_drv.password_data[id].new_password,
-+				buf_cp,
-+				sizeof(bioscfg_drv.password_data[id].new_password));
-+	}
-+
-+	kfree(buf_cp);
-+	return ret < 0 ? ret : count;
-+}
-+
-+static ssize_t current_password_store(struct kobject *kobj,
-+				      struct kobj_attribute *attr,
-+				      const char *buf, size_t count)
-+{
-+	return store_password_instance(kobj, buf, count, true);
-+}
-+
-+static struct kobj_attribute password_current_password = __ATTR_WO(current_password);
-+
-+static ssize_t new_password_store(struct kobject *kobj,
-+				  struct kobj_attribute *attr,
-+				  const char *buf, size_t count)
-+{
-+	return store_password_instance(kobj, buf, count, true);
-+}
-+
-+static struct kobj_attribute password_new_password = __ATTR_WO(new_password);
-+
-+ATTRIBUTE_N_PROPERTY_SHOW(min_password_length, password);
-+static struct kobj_attribute password_min_password_length = __ATTR_RO(min_password_length);
-+
-+ATTRIBUTE_N_PROPERTY_SHOW(max_password_length, password);
-+static struct kobj_attribute password_max_password_length = __ATTR_RO(max_password_length);
-+
-+static ssize_t role_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-+{
-+	if (!strcmp(kobj->name, SETUP_PASSWD))
-+		return sysfs_emit(buf, "%s\n", BIOS_ADMIN);
-+
-+	if (!strcmp(kobj->name, POWER_ON_PASSWD))
-+		return sysfs_emit(buf, "%s\n", POWER_ON);
-+
-+	return -EIO;
-+}
-+
-+static struct kobj_attribute password_role = __ATTR_RO(role);
-+
-+static ssize_t mechanism_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			      char *buf)
-+{
-+	int i = get_password_instance_id(kobj);
-+
-+	if (i < 0)
-+		return i;
-+
-+	if (bioscfg_drv.password_data[i].mechanism != PASSWORD)
++	if (buflen < 1)
 +		return -EINVAL;
 +
-+	return sysfs_emit(buf, "%s\n", PASSWD_MECHANISM_TYPES);
++	for (item = 0; item < buflen; item++)
++		if (src[item] == *repl_char)
++			src[item] = *repl_with;
++
++	return 0;
 +}
 +
-+static struct kobj_attribute password_mechanism = __ATTR_RO(mechanism);
++/**
++ * validate_ordered_list_input() -
++ * Validate input of current_value against possible values
++ *
++ * @instance: The instance on which input is validated
++ * @buf: Input value
++ */
++static int validate_ordered_list_input(int instance, char *buf)
++{
++	/* validation is done by BIOS. This validation function will
++	 * convert semicolon to commas. BIOS uses commas as
++	 * separators when reporting ordered-list values.
++	 */
++	return replace_char_str(buf, SEMICOLON_SEP, COMMA_SEP);
++}
 +
-+ATTRIBUTE_VALUES_PROPERTY_SHOW(encodings, password, SEMICOLON_SEP);
-+static struct kobj_attribute password_encodings_val = __ATTR_RO(encodings);
++static void update_ordered_list_value(int instance, char *attr_value)
++{
++	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance];
 +
-+static struct attribute *password_attrs[] = {
-+	&password_is_password_set.attr,
-+	&password_min_password_length.attr,
-+	&password_max_password_length.attr,
-+	&password_current_password.attr,
-+	&password_new_password.attr,
-+	&password_role.attr,
-+	&password_mechanism.attr,
-+	&password_encodings_val.attr,
++	strscpy(ordered_list_data->current_value,
++		attr_value,
++		sizeof(ordered_list_data->current_value));
++}
++
++ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, ordered_list);
++static struct kobj_attribute ordered_list_display_name =
++	__ATTR_RO(display_name);
++
++ATTRIBUTE_PROPERTY_STORE(current_value, ordered_list);
++static struct kobj_attribute ordered_list_current_val =
++	__ATTR_RW_MODE(current_value, 0644);
++
++ATTRIBUTE_VALUES_PROPERTY_SHOW(elements, ordered_list, SEMICOLON_SEP);
++static struct kobj_attribute ordered_list_elements_val =
++	__ATTR_RO(elements);
++
++static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
++			 char *buf)
++{
++	return sysfs_emit(buf, "ordered-list\n");
++}
++
++static struct kobj_attribute ordered_list_type =
++	__ATTR_RO(type);
++
++static struct attribute *ordered_list_attrs[] = {
++	&common_display_langcode.attr,
++	&ordered_list_display_name.attr,
++	&ordered_list_current_val.attr,
++	&ordered_list_elements_val.attr,
++	&ordered_list_type.attr,
 +	NULL
 +};
 +
-+static const struct attribute_group password_attr_group = {
-+	.attrs = password_attrs
++static const struct attribute_group ordered_list_attr_group = {
++	.attrs = ordered_list_attrs,
 +};
 +
-+int hp_alloc_password_data(void)
++int hp_alloc_ordered_list_data(void)
 +{
-+	bioscfg_drv.password_instances_count = hp_get_instance_count(HP_WMI_BIOS_PASSWORD_GUID);
-+	bioscfg_drv.password_data = kcalloc(bioscfg_drv.password_instances_count,
-+					    sizeof(*bioscfg_drv.password_data), GFP_KERNEL);
-+	if (!bioscfg_drv.password_data) {
-+		bioscfg_drv.password_instances_count = 0;
++	bioscfg_drv.ordered_list_instances_count =
++		hp_get_instance_count(HP_WMI_BIOS_ORDERED_LIST_GUID);
++	bioscfg_drv.ordered_list_data = kcalloc(bioscfg_drv.ordered_list_instances_count,
++						sizeof(*bioscfg_drv.ordered_list_data),
++						GFP_KERNEL);
++	if (!bioscfg_drv.ordered_list_data) {
++		bioscfg_drv.ordered_list_instances_count = 0;
 +		return -ENOMEM;
 +	}
-+
 +	return 0;
 +}
 +
 +/* Expected Values types associated with each element */
-+static const acpi_object_type expected_password_types[] = {
-+	[NAME] = ACPI_TYPE_STRING,
++static const acpi_object_type expected_order_types[] = {
++	[NAME]	= ACPI_TYPE_STRING,
 +	[VALUE] = ACPI_TYPE_STRING,
 +	[PATH] = ACPI_TYPE_STRING,
 +	[IS_READONLY] = ACPI_TYPE_INTEGER,
@@ -336,16 +246,13 @@ index 000000000000..483426696144
 +	[PREREQUISITES_SIZE] = ACPI_TYPE_INTEGER,
 +	[PREREQUISITES] = ACPI_TYPE_STRING,
 +	[SECURITY_LEVEL] = ACPI_TYPE_INTEGER,
-+	[PSWD_MIN_LENGTH] = ACPI_TYPE_INTEGER,
-+	[PSWD_MAX_LENGTH] = ACPI_TYPE_INTEGER,
-+	[PSWD_SIZE] = ACPI_TYPE_INTEGER,
-+	[PSWD_ENCODINGS] = ACPI_TYPE_STRING,
-+	[PSWD_IS_SET] = ACPI_TYPE_INTEGER,
++	[ORD_LIST_SIZE] = ACPI_TYPE_INTEGER,
++	[ORD_LIST_ELEMENTS] = ACPI_TYPE_STRING,
 +};
 +
-+static int hp_populate_password_elements_from_package(union acpi_object *password_obj,
-+						      int password_obj_count,
-+						      int instance_id)
++static int hp_populate_ordered_list_elements_from_package(union acpi_object *order_obj,
++							  int order_obj_count,
++							  int instance_id)
 +{
 +	char *str_value = NULL;
 +	int value_len;
@@ -355,68 +262,75 @@ index 000000000000..483426696144
 +	int elem;
 +	int reqs;
 +	int eloc;
-+	int pos_values;
-+	struct password_data *password_data = &bioscfg_drv.password_data[instance_id];
++	char *tmpstr = NULL;
++	char *part_tmp = NULL;
++	int tmp_len = 0;
++	char *part = NULL;
++	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
 +
-+	if (!password_obj)
++	if (!order_obj)
 +		return -EINVAL;
 +
-+	for (elem = 1, eloc = 1; elem < password_obj_count; elem++, eloc++) {
-+		/* ONLY look at the first PASSWORD_ELEM_CNT elements */
-+		if (eloc == PSWD_ELEM_CNT)
-+			goto exit_package;
++	for (elem = 1, eloc = 1; elem < order_obj_count; elem++, eloc++) {
++		/* ONLY look at the first ORDERED_ELEM_CNT elements */
++		if (eloc == ORD_ELEM_CNT)
++			goto exit_list;
 +
-+		switch (password_obj[elem].type) {
++		switch (order_obj[elem].type) {
 +		case ACPI_TYPE_STRING:
-+			if (PREREQUISITES != elem && PSWD_ENCODINGS != elem) {
-+				ret = hp_convert_hexstr_to_str(password_obj[elem].string.pointer,
-+							       password_obj[elem].string.length,
++			if (elem != PREREQUISITES && elem != ORD_LIST_ELEMENTS) {
++				ret = hp_convert_hexstr_to_str(order_obj[elem].string.pointer,
++							       order_obj[elem].string.length,
 +							       &str_value, &value_len);
 +				if (ret)
 +					continue;
 +			}
 +			break;
 +		case ACPI_TYPE_INTEGER:
-+			int_value = (u32)password_obj[elem].integer.value;
++			int_value = (u32)order_obj[elem].integer.value;
 +			break;
 +		default:
-+			pr_warn("Unsupported object type [%d]\n", password_obj[elem].type);
++			pr_warn("Unsupported object type [%d]\n", order_obj[elem].type);
 +			continue;
 +		}
 +
 +		/* Check that both expected and read object type match */
-+		if (expected_password_types[eloc] != password_obj[elem].type) {
++		if (expected_order_types[eloc] != order_obj[elem].type) {
 +			pr_err("Error expected type %d for elem %d, but got type %d instead\n",
-+			       expected_password_types[eloc], elem, password_obj[elem].type);
++			       expected_order_types[eloc], elem, order_obj[elem].type);
 +			return -EIO;
 +		}
 +
 +		/* Assign appropriate element value to corresponding field*/
 +		switch (eloc) {
 +		case VALUE:
++			strscpy(ordered_list_data->current_value,
++				str_value, sizeof(ordered_list_data->current_value));
++			replace_char_str(ordered_list_data->current_value, COMMA_SEP, SEMICOLON_SEP);
 +			break;
 +		case PATH:
-+			strscpy(password_data->common.path, str_value,
-+				sizeof(password_data->common.path));
++			strscpy(ordered_list_data->common.path, str_value,
++				sizeof(ordered_list_data->common.path));
 +			break;
 +		case IS_READONLY:
-+			password_data->common.is_readonly = int_value;
++			ordered_list_data->common.is_readonly = int_value;
 +			break;
 +		case DISPLAY_IN_UI:
-+			password_data->common.display_in_ui = int_value;
++			ordered_list_data->common.display_in_ui = int_value;
 +			break;
 +		case REQUIRES_PHYSICAL_PRESENCE:
-+			password_data->common.requires_physical_presence = int_value;
++			ordered_list_data->common.requires_physical_presence = int_value;
 +			break;
 +		case SEQUENCE:
-+			password_data->common.sequence = int_value;
++			ordered_list_data->common.sequence = int_value;
 +			break;
 +		case PREREQUISITES_SIZE:
-+			password_data->common.prerequisites_size = int_value;
++			ordered_list_data->common.prerequisites_size = int_value;
 +			if (int_value > MAX_PREREQUISITES_SIZE)
 +				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
 +
-+			/* This HACK is needed to keep the expected
++			/*
++			 * This HACK is needed to keep the expected
 +			 * element list pointing to the right obj[elem].type
 +			 * when the size is zero. PREREQUISITES
 +			 * object is omitted by BIOS when the size is
@@ -426,241 +340,238 @@ index 000000000000..483426696144
 +				eloc++;
 +			break;
 +		case PREREQUISITES:
-+			size = min_t(u32, password_data->common.prerequisites_size,
++			size = min_t(u32, ordered_list_data->common.prerequisites_size,
 +				     MAX_PREREQUISITES_SIZE);
-+
 +			for (reqs = 0; reqs < size; reqs++) {
-+				ret = hp_convert_hexstr_to_str(password_obj[elem + reqs].string.pointer,
-+							       password_obj[elem + reqs].string.length,
++				ret = hp_convert_hexstr_to_str(order_obj[elem + reqs].string.pointer,
++							       order_obj[elem + reqs].string.length,
 +							       &str_value, &value_len);
 +
 +				if (ret)
-+					break;
++					continue;
 +
-+				strscpy(password_data->common.prerequisites[reqs],
++				strscpy(ordered_list_data->common.prerequisites[reqs],
 +					str_value,
-+					sizeof(password_data->common.prerequisites[reqs]));
++					sizeof(ordered_list_data->common.prerequisites[reqs]));
 +
 +				kfree(str_value);
 +			}
 +			break;
-+		case SECURITY_LEVEL:
-+			password_data->common.security_level = int_value;
-+			break;
-+		case PSWD_MIN_LENGTH:
-+			password_data->min_password_length = int_value;
-+			break;
-+		case PSWD_MAX_LENGTH:
-+			password_data->max_password_length = int_value;
-+			break;
-+		case PSWD_SIZE:
-+			password_data->encodings_size = int_value;
-+			if (int_value > MAX_ENCODINGS_SIZE)
-+				pr_warn("Password Encoding size value exceeded the maximum number of elements supported or data may be malformed\n");
 +
-+			/* This HACK is needed to keep the expected
++		case SECURITY_LEVEL:
++			ordered_list_data->common.security_level = int_value;
++			break;
++
++		case ORD_LIST_SIZE:
++			ordered_list_data->elements_size = int_value;
++			if (int_value > MAX_ELEMENTS_SIZE)
++				pr_warn("Ordered List size value exceeded the maximum number of elements supported or data may be malformed\n");
++			/*
++			 * This HACK is needed to keep the expected
 +			 * element list pointing to the right obj[elem].type
-+			 * when the size is zero. PSWD_ENCODINGS
++			 * when the size is zero. ORD_LIST_ELEMENTS
 +			 * object is omitted by BIOS when the size is
 +			 * zero.
 +			 */
 +			if (int_value == 0)
 +				eloc++;
 +			break;
-+		case PSWD_ENCODINGS:
-+			size = min_t(u32, password_data->encodings_size, MAX_ENCODINGS_SIZE);
-+			for (pos_values = 0; pos_values < size; pos_values++) {
-+				ret = hp_convert_hexstr_to_str(password_obj[elem + pos_values].string.pointer,
-+							       password_obj[elem + pos_values].string.length,
-+							       &str_value, &value_len);
-+				if (ret)
-+					break;
++		case ORD_LIST_ELEMENTS:
++			size = ordered_list_data->elements_size;
 +
-+				strscpy(password_data->encodings[pos_values],
-+					str_value,
-+					sizeof(password_data->encodings[pos_values]));
-+				kfree(str_value);
++			/*
++			 * Ordered list data is stored in hex and comma separated format
++			 * Convert the data and split it to show each element
++			 */
++			ret = hp_convert_hexstr_to_str(str_value, value_len, &tmpstr, &tmp_len);
++			if (ret)
++				goto exit_list;
++
++			part_tmp = tmpstr;
++			part = strsep(&part_tmp, COMMA_SEP);
++			if (!part)
++				strscpy(ordered_list_data->elements[0],
++					tmpstr,
++					sizeof(ordered_list_data->elements[0]));
++
++			for (elem = 1; elem < MAX_ELEMENTS_SIZE && part; elem++) {
++				strscpy(ordered_list_data->elements[elem],
++					part,
++					sizeof(ordered_list_data->elements[elem]));
++				part = strsep(&part_tmp, SEMICOLON_SEP);
 +			}
-+			break;
-+		case PSWD_IS_SET:
-+			password_data->is_enabled = int_value;
++
 +			break;
 +		default:
-+			pr_warn("Invalid element: %d found in Password attribute or data may be malformed\n", elem);
++			pr_warn("Invalid element: %d found in Ordered_List attribute or data may be malformed\n", elem);
 +			break;
 +		}
++		kfree(tmpstr);
++		kfree(str_value);
 +	}
 +
-+exit_package:
++exit_list:
++	kfree(tmpstr);
 +	kfree(str_value);
 +	return 0;
 +}
 +
 +/**
-+ * hp_populate_password_package_data()
-+ *	Populate all properties for an instance under password attribute
++ * hp_populate_ordered_list_package_data() -
++ * Populate all properties of an instance under ordered_list attribute
 + *
-+ * @password_obj: ACPI object with password data
++ * @order_obj: ACPI object with ordered_list data
 + * @instance_id: The instance to enumerate
 + * @attr_name_kobj: The parent kernel object
 + */
-+int hp_populate_password_package_data(union acpi_object *password_obj, int instance_id,
-+				      struct kobject *attr_name_kobj)
++int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int instance_id,
++					  struct kobject *attr_name_kobj)
 +{
-+	struct password_data *password_data = &bioscfg_drv.password_data[instance_id];
++	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
 +
-+	password_data->attr_name_kobj = attr_name_kobj;
++	ordered_list_data->attr_name_kobj = attr_name_kobj;
 +
-+	hp_populate_password_elements_from_package(password_obj,
-+						   password_obj->package.count,
-+						   instance_id);
-+
-+	hp_friendly_user_name_update(password_data->common.path,
++	hp_populate_ordered_list_elements_from_package(order_obj,
++						       order_obj->package.count,
++						       instance_id);
++	hp_update_attribute_permissions(ordered_list_data->common.is_readonly,
++					&ordered_list_current_val);
++	hp_friendly_user_name_update(ordered_list_data->common.path,
 +				     attr_name_kobj->name,
-+				     password_data->common.display_name,
-+				     sizeof(password_data->common.display_name));
-+
-+	if (!strcmp(attr_name_kobj->name, SETUP_PASSWD))
-+		return sysfs_create_group(attr_name_kobj, &password_attr_group);
-+
-+	return sysfs_create_group(attr_name_kobj, &password_attr_group);
++				     ordered_list_data->common.display_name,
++				     sizeof(ordered_list_data->common.display_name));
++	return sysfs_create_group(attr_name_kobj, &ordered_list_attr_group);
 +}
 +
-+static int hp_populate_password_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
-+						     int instance_id)
++static int hp_populate_ordered_list_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
++							 int instance_id)
 +{
 +	int reqs;
 +	int values;
-+	int isreadonly;
-+	struct password_data *password_data = &bioscfg_drv.password_data[instance_id];
++	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
++
++	/*
++	 * In earlier implementation, reported errors were ignored
++	 * causing the data to remain uninitialized. It is for this
++	 * reason functions may return an error and no validation
++	 * takes place.
++	 */
 +
 +	// VALUE:
-+	hp_get_string_from_buffer(&buffer_ptr, buffer_size, password_data->current_password,
-+				  sizeof(password_data->current_password));
++	hp_get_string_from_buffer(&buffer_ptr, buffer_size, ordered_list_data->current_value,
++				  sizeof(ordered_list_data->current_value));
++	replace_char_str(ordered_list_data->current_value, COMMA_SEP, SEMICOLON_SEP);
 +
 +	// PATH:
-+	hp_get_string_from_buffer(&buffer_ptr, buffer_size, password_data->common.path,
-+				  sizeof(password_data->common.path));
++	hp_get_string_from_buffer(&buffer_ptr, buffer_size, ordered_list_data->common.path,
++				  sizeof(ordered_list_data->common.path));
 +
 +	// IS_READONLY:
 +	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &password_data->common.is_readonly);
++				   &ordered_list_data->common.is_readonly);
 +
 +	//DISPLAY_IN_UI:
 +	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &password_data->common.display_in_ui);
++				   &ordered_list_data->common.display_in_ui);
 +
 +	// REQUIRES_PHYSICAL_PRESENCE:
 +	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &password_data->common.requires_physical_presence);
++				   &ordered_list_data->common.requires_physical_presence);
 +
 +	// SEQUENCE:
 +	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &password_data->common.sequence);
++				   &ordered_list_data->common.sequence);
 +
 +	// PREREQUISITES_SIZE:
 +	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &password_data->common.prerequisites_size);
++				   &ordered_list_data->common.prerequisites_size);
 +
-+	if (password_data->common.prerequisites_size > MAX_PREREQUISITES_SIZE) {
++	if (ordered_list_data->common.prerequisites_size > MAX_PREREQUISITES_SIZE) {
 +		/* Report a message and limit prerequisite size to maximum value */
-+		pr_warn("Password Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-+		password_data->common.prerequisites_size = MAX_PREREQUISITES_SIZE;
++		pr_warn("String Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
++		ordered_list_data->common.prerequisites_size = MAX_PREREQUISITES_SIZE;
 +	}
 +
 +	// PREREQUISITES:
-+	for (reqs = 0; reqs < password_data->common.prerequisites_size; reqs++)
++	for (reqs = 0; reqs < ordered_list_data->common.prerequisites_size; reqs++)
 +		hp_get_string_from_buffer(&buffer_ptr, buffer_size,
-+					  password_data->common.prerequisites[reqs],
-+					  sizeof(password_data->common.prerequisites[reqs]));
++					  ordered_list_data->common.prerequisites[reqs],
++					  sizeof(ordered_list_data->common.prerequisites[reqs]));
 +
 +	// SECURITY_LEVEL:
 +	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &password_data->common.security_level);
++				   &ordered_list_data->common.security_level);
 +
-+	// PSWD_MIN_LENGTH:
++	// ORD_LIST_SIZE:
 +	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &password_data->min_password_length);
++				   &ordered_list_data->elements_size);
 +
-+	// PSWD_MAX_LENGTH:
-+	hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+				   &password_data->max_password_length);
-+
-+	// PSWD_SIZE:
-+	if (password_data->encodings_size > MAX_ENCODINGS_SIZE) {
-+		/* Report a message and limit possible values size to maximum value */
-+		pr_warn("Password Encoding size value exceeded the maximum number of elements supported or data may be malformed\n");
-+		password_data->encodings_size = MAX_ENCODINGS_SIZE;
++	if (ordered_list_data->elements_size > MAX_ELEMENTS_SIZE) {
++		/* Report a message and limit elements size to maximum value */
++		pr_warn("Ordered List size value exceeded the maximum number of elements supported or data may be malformed\n");
++		ordered_list_data->elements_size = MAX_ELEMENTS_SIZE;
 +	}
 +
-+	// PSWD_ENCODINGS:
-+	for (values = 0; values < password_data->encodings_size; values++)
++	// ORD_LIST_ELEMENTS:
++	for (values = 0; values < ordered_list_data->elements_size; values++)
 +		hp_get_string_from_buffer(&buffer_ptr, buffer_size,
-+					  password_data->encodings[values],
-+					  sizeof(password_data->encodings[values]));
-+
-+	// PSWD_IS_SET:
-+	hp_get_integer_from_buffer(&buffer_ptr, buffer_size, &isreadonly);
-+	password_data->is_enabled = isreadonly ? true : false;
++					  ordered_list_data->elements[values],
++					  sizeof(ordered_list_data->elements[values]));
 +
 +	return 0;
 +}
 +
 +/**
-+ * hp_populate_password_buffer_data()
-+ * Populate all properties for an instance under password object attribute
++ * hp_populate_ordered_list_buffer_data() - Populate all properties of an
++ * instance under ordered list attribute
 + *
 + * @buffer_ptr: Buffer pointer
 + * @buffer_size: Buffer size
 + * @instance_id: The instance to enumerate
 + * @attr_name_kobj: The parent kernel object
 + */
-+int hp_populate_password_buffer_data(u8 *buffer_ptr, u32 *buffer_size, int instance_id,
-+				     struct kobject *attr_name_kobj)
++int hp_populate_ordered_list_buffer_data(u8 *buffer_ptr, u32 *buffer_size, int instance_id,
++					 struct kobject *attr_name_kobj)
 +{
-+	struct password_data *password_data = &bioscfg_drv.password_data[instance_id];
++	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
 +
-+	password_data->attr_name_kobj = attr_name_kobj;
++	ordered_list_data->attr_name_kobj = attr_name_kobj;
 +
-+	/* Populate Password attributes */
-+	hp_populate_password_elements_from_buffer(buffer_ptr, buffer_size,
-+						  instance_id);
-+	hp_friendly_user_name_update(password_data->common.path,
++	/* Populate ordered list elements */
++	hp_populate_ordered_list_elements_from_buffer(buffer_ptr, buffer_size,
++						      instance_id);
++	hp_update_attribute_permissions(ordered_list_data->common.is_readonly,
++					&ordered_list_current_val);
++	hp_friendly_user_name_update(ordered_list_data->common.path,
 +				     attr_name_kobj->name,
-+				     password_data->common.display_name,
-+				     sizeof(password_data->common.display_name));
-+	if (!strcmp(attr_name_kobj->name, SETUP_PASSWD))
-+		return sysfs_create_group(attr_name_kobj, &password_attr_group);
++				     ordered_list_data->common.display_name,
++				     sizeof(ordered_list_data->common.display_name));
 +
-+	return sysfs_create_group(attr_name_kobj, &password_attr_group);
++	return sysfs_create_group(attr_name_kobj, &ordered_list_attr_group);
 +}
 +
 +/**
-+ * hp_exit_password_attributes() - Clear all attribute data
++ * hp_exit_ordered_list_attributes() - Clear all attribute data
 + *
 + * Clears all data allocated for this group of attributes
 + */
-+void hp_exit_password_attributes(void)
++void hp_exit_ordered_list_attributes(void)
 +{
 +	int instance_id;
 +
-+	for (instance_id = 0; instance_id < bioscfg_drv.password_instances_count;
++	for (instance_id = 0; instance_id < bioscfg_drv.ordered_list_instances_count;
 +	     instance_id++) {
 +		struct kobject *attr_name_kobj =
-+			bioscfg_drv.password_data[instance_id].attr_name_kobj;
++			bioscfg_drv.ordered_list_data[instance_id].attr_name_kobj;
 +
-+		if (attr_name_kobj) {
-+			if (!strcmp(attr_name_kobj->name, SETUP_PASSWD))
-+				sysfs_remove_group(attr_name_kobj,
-+						   &password_attr_group);
-+			else
-+				sysfs_remove_group(attr_name_kobj,
-+						   &password_attr_group);
-+		}
++		if (attr_name_kobj)
++			sysfs_remove_group(attr_name_kobj,
++					   &ordered_list_attr_group);
 +	}
-+	bioscfg_drv.password_instances_count = 0;
-+	kfree(bioscfg_drv.password_data);
-+	bioscfg_drv.password_data = NULL;
++	bioscfg_drv.ordered_list_instances_count = 0;
++
++	kfree(bioscfg_drv.ordered_list_data);
++	bioscfg_drv.ordered_list_data = NULL;
 +}
 -- 
 2.34.1
