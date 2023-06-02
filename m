@@ -2,138 +2,117 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD4BC77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Jun 2023 14:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE52CC77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Jun 2023 14:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235964AbjFBOBq (ORCPT
+        id S236307AbjFBO6r (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Jun 2023 10:01:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54766 "EHLO
+        Fri, 2 Jun 2023 10:58:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234687AbjFBOBp (ORCPT
+        with ESMTP id S235281AbjFBO6q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Jun 2023 10:01:45 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4676318C;
-        Fri,  2 Jun 2023 07:01:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685714504; x=1717250504;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=62eUZ1WgHKhSaV7KBcN4DmVlf2R9NpAJelqA4VAOaew=;
-  b=DP9nbPRU/3jz73OeCzXgeXPH4gCgl3NWU887JDpshwCR3JlI5pCG621B
-   4yz6suQAF1hGoqFFJNGAh7GlOzrxQuuCiuCGuAA7oxFd3pnzSpe5+hwzy
-   QAG5f00VJCF1/6sWYAmOZcuOgFyQAkjbKp25ehdJRkahlDFCJ2VRPrrSA
-   HihAkwc3E3UdctALlxWgN3zyltFRB+DhcOK/NvzWTYqeK1NzWo8nwq4GV
-   +L8Rhs6nfxl6IYjXm4iifQixD0DXdCXpMR/sI9N1MvnsQhnf18fBAF5x9
-   sxIR3reqQbT4MIt4iP5SLNE5VuwJeE/VegYy12N565Sbhck/HPtMHzP4L
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="421687912"
-X-IronPort-AV: E=Sophos;i="6.00,213,1681196400"; 
-   d="scan'208";a="421687912"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 07:01:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="701973651"
-X-IronPort-AV: E=Sophos;i="6.00,213,1681196400"; 
-   d="scan'208";a="701973651"
-Received: from rspatil-mobl3.gar.corp.intel.com ([10.251.208.112])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 07:01:41 -0700
-Date:   Fri, 2 Jun 2023 17:01:38 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     "Wilczynski, Michal" <michal.wilczynski@intel.com>
-cc:     =?ISO-8859-15?Q?Pali_Roh=E1r?= <pali@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-        rafael@kernel.org
-Subject: Re: [PATCH v4 19/35] platform/x86/dell/dell-rbtn: Move handler
- installing logic to driver
-In-Reply-To: <d7e2577e-b6c3-a392-4331-5ff16e68a609@intel.com>
-Message-ID: <55b4cc-22c-42c7-ec38-3985d724c84@linux.intel.com>
-References: <20230601131739.300760-3-michal.wilczynski@intel.com> <20230601131739.300760-20-michal.wilczynski@intel.com> <ba90f648-6f29-57f3-b1cc-91b929fda393@linux.intel.com> <d7e2577e-b6c3-a392-4331-5ff16e68a609@intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-593855215-1685714503=:1742"
+        Fri, 2 Jun 2023 10:58:46 -0400
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C398123;
+        Fri,  2 Jun 2023 07:58:45 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 070103200988;
+        Fri,  2 Jun 2023 10:58:42 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute5.internal (MEProxy); Fri, 02 Jun 2023 10:58:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
+        1685717922; x=1685804322; bh=7Y8TYqKsacvY7VA7C8WB1Ns1VO8mVvWK0oP
+        LQKlkwpY=; b=U2O4apWWA78FWG18DmouAFIXOcjKL1zzAONdy5E19Ecz5AJWQVo
+        ZfEmysg8/mpFe9/XZKuYQDl4J0+qe+ecyipDLcJr49zaQYOGvh8LC3/843mutNqs
+        babtnAWMtzbh6VjCsCkyp5KhteW5Y3kpgWQ2tOmycki/hMW+Taw3T8VoZNQDDaWJ
+        PFqDUtjLiw48ap0zFONMpe1Lb2wdCwTcNfd6Mx7pP0UNWeI7TRwL9bdLGxOlqpGP
+        JcxIdQ6KB1fQQrF/smcIWWkO6PLVQvSe0DWXfGRRW01qR///LKXdCRNW3x19lFHp
+        cPgTdTxy4i38sUrVX7QQeW983s8JfsSemgQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+        1685717922; x=1685804322; bh=7Y8TYqKsacvY7VA7C8WB1Ns1VO8mVvWK0oP
+        LQKlkwpY=; b=IkfmjnJN7+ffhqNEzf82XaUnTtXhgiYgbGn27+u1No8BrLxXfKL
+        YcoNLAZv9BNAiMhCK+Amsb7x+RZhjJoJWXq+IuVPC7V8Ix/KvTSzi5CBASieRlUw
+        YjViTSA1qyCk5AZQCRf8DXq237LBVcNt92UahVZP8amOgw8bZfmqwnehF7OiK7aJ
+        1tvFRBHx75NJBQyBwncCCm0BzPYI/OO0VblnLjzMv6kKrTMKEH3suz26g5qOKMcK
+        BYmA+yBce0W/ZAx6D9Fp6kFVcA9nn5JuXzL4X/xIMMgVV4CPDKAbvs2EcEfwvx7R
+        NqUz+i+psGMTS8CvJUjAfv5laQZdtzVqEXg==
+X-ME-Sender: <xms:ogN6ZH2r_h08YjMo8lrAVGc9e3T0AF9t0FKogfvEZVKtscWx2Rm6qg>
+    <xme:ogN6ZGFus1iBNtYfFyH7eydTZkiGwX2X8q1Rsnl1-9Has84NCpZ9nOJ60MQ1JIKt3
+    ZWGK_QGY5Tfr8YLs4g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeelfedgkeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfo
+    rghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
+    gsrdgtrgeqnecuggftrfgrthhtvghrnhephfefgedufeetgfetlefgkefgvdejleelvefg
+    hfejfffhtdeitdejfeekvdeugfeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgt
+    rg
+X-ME-Proxy: <xmx:ogN6ZH59XdDijpxPzMXizdaeZT0q5WXKJlFkxwJBB9DRtCGjQ_NAUQ>
+    <xmx:ogN6ZM0Ome8_BxF6WRmgp4Xun-s-GyChH9CHfTt11RHLdTmYCpWdZA>
+    <xmx:ogN6ZKE_ty6pZYJaKh7tqCplCeX2OPQcaIE68KsmGtDDAQxaKhkKCg>
+    <xmx:ogN6ZPQ_NMSPs-gtj1PCJocu1LnLww-TSQMzJeok0J_m97CYmRNO8Q>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 59814C60091; Fri,  2 Jun 2023 10:58:42 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-447-ge2460e13b3-fm-20230525.001-ge2460e13
+Mime-Version: 1.0
+Message-Id: <3dda4d38-ef79-403c-a233-a8cf774edfd2@app.fastmail.com>
+In-Reply-To: <bec3684e-d9d1-d88b-846a-46a1fc481ffb@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20230601200552.4396-1-mpearson-lenovo@squebb.ca>
+ <20230601200552.4396-8-mpearson-lenovo@squebb.ca>
+ <bec3684e-d9d1-d88b-846a-46a1fc481ffb@linux.intel.com>
+Date:   Fri, 02 Jun 2023 10:58:21 -0400
+From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     "Hans de Goede" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 8/8] platform/x86: think-lmi: Don't display unnecessary
+ authentication settings
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, Jun 2, 2023, at 7:12 AM, Ilpo J=C3=A4rvinen wrote:
+> On Thu, 1 Jun 2023, Mark Pearson wrote:
+>
+>> If Opcode support is available (which is the standard for all platfor=
+ms
+>> going forward) then there is no need to have the encoding and kbdlang
+>> attributes visible.
+>>=20
+>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>
+> Thanks a lot, the patches look good now. One small thing for future: n=
+ext=20
+> time, try to arrange a series such that the patches with Fixes tags ar=
+e=20
+> the first patches, in here I think it's not a big deal since 2/8 doesn=
+'t=20
+> seem to conflict with 3/8.
+>
+Ah - OK, thanks for the note, I didn't know that.
 
---8323329-593855215-1685714503=:1742
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+> For all patches 1-8:
+>
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+>
 
-On Fri, 2 Jun 2023, Wilczynski, Michal wrote:
-> On 6/2/2023 3:20 PM, Ilpo Järvinen wrote:
-> > On Thu, 1 Jun 2023, Michal Wilczynski wrote:
-> >
-> >> Currently logic for installing notifications from ACPI devices is
-> >> implemented using notify callback in struct acpi_driver. Preparations
-> >> are being made to replace acpi_driver with more generic struct
-> >> platform_driver, which doesn't contain notify callback. Furthermore
-> >> as of now handlers are being called indirectly through
-> >> acpi_notify_device(), which decreases performance.
-> >>
-> >> Call acpi_device_install_event_handler() at the end of .add() callback.
-> >> Call acpi_device_remove_event_handler() at the beginning of .remove()
-> >> callback. Change arguments passed to the notify callback to match with
-> >> what's required by acpi_device_install_event_handler().
-> >>
-> >> Signed-off-by: Michal Wilczynski <michal.wilczynski@intel.com>
-> >> ---
-> >>  drivers/platform/x86/dell/dell-rbtn.c | 17 ++++++++++++-----
-> >>  1 file changed, 12 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/drivers/platform/x86/dell/dell-rbtn.c b/drivers/platform/x86/dell/dell-rbtn.c
-> >> index aa0e6c907494..4dcad59eb035 100644
-> >> --- a/drivers/platform/x86/dell/dell-rbtn.c
-> >> +++ b/drivers/platform/x86/dell/dell-rbtn.c
-> >> @@ -207,7 +207,7 @@ static void rbtn_input_event(struct rbtn_data *rbtn_data)
-> >>  
-> >>  static int rbtn_add(struct acpi_device *device);
-> >>  static void rbtn_remove(struct acpi_device *device);
-> >> -static void rbtn_notify(struct acpi_device *device, u32 event);
-> >> +static void rbtn_notify(acpi_handle handle, u32 event, void *data);
-> >>  
-> >>  static const struct acpi_device_id rbtn_ids[] = {
-> >>  	{ "DELRBTN", 0 },
-> >> @@ -293,7 +293,6 @@ static struct acpi_driver rbtn_driver = {
-> >>  	.ops = {
-> >>  		.add = rbtn_add,
-> >>  		.remove = rbtn_remove,
-> >> -		.notify = rbtn_notify,
-> >>  	},
-> >>  	.owner = THIS_MODULE,
-> >>  };
-> >> @@ -422,7 +421,10 @@ static int rbtn_add(struct acpi_device *device)
-> >>  		ret = -EINVAL;
-> >>  	}
-> >>  
-> >> -	return ret;
-> >> +	if (ret)
-> >> +		return ret;
-> >> +
-> >> +	return acpi_device_install_event_handler(device, ACPI_DEVICE_NOTIFY, rbtn_notify);
-> > What about the other things that are done in rbtn_remove(), should you 
-> > rollback more?
-> 
-> Yeah you're right, but the total lack of rollback in .add() here seems 
-> to be an issue on it's own i.e even before this patchset .add() was 
-> leaking resources in case of failure.
-> I wonder whether to add missing rollback in separate commit ?
-
-Yes, make separate patch out of it and mark it with Fixes tag. You can 
-send it separately.
-
-> > I suspect there's a pre-existing lack of rbtn_acquire(device, false); 
-> > here to begin with.
-> >
-> 
-
--- 
- i.
-
---8323329-593855215-1685714503=:1742--
+Many thanks
+Mark
