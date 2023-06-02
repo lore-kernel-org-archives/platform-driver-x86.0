@@ -2,87 +2,156 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AB6C77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Jun 2023 11:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A463BC7EE29
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Jun 2023 13:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229470AbjFBLMI (ORCPT
+        id S235973AbjFBNJ7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Jun 2023 07:12:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52322 "EHLO
+        Fri, 2 Jun 2023 09:09:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234872AbjFBLMH (ORCPT
+        with ESMTP id S235963AbjFBNJ6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Jun 2023 07:12:07 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E901134;
-        Fri,  2 Jun 2023 04:12:06 -0700 (PDT)
+        Fri, 2 Jun 2023 09:09:58 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67E8D1AB;
+        Fri,  2 Jun 2023 06:09:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685704326; x=1717240326;
+  t=1685711397; x=1717247397;
   h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=6uwS5tU3VpEDdfZFPP/2f6PZZV0Smc/JVe9SKo6EP0U=;
-  b=kgfUVigWwiBgk7h3sO9ucMaN7nekA/O+Qjdu23s61jQGF74ncuVyK4uW
-   o850aPzovWgxiEoC/tLQOxUwInHgnWH4hI6dKwfm+n9kHZSqzLWDRIN5k
-   l+f3QswtMIQnTG/DYjG2/VQd+lhhNKnm36/+OhAVplI8AmVZlTuD0dfQw
-   Gmwe0UkkS44TDtLpA5M1fb8gYXmtSKyN6YiikBJ8Yu5Soylff50loYt3M
-   2aC2OW2IQB6RTB6bz602fRuAFwGFPItzn7LC60MENJJcGEXYFZ4tjuPUC
-   5IULj3PChOcxeOnKT2djBEWYMn2W6cSStzPwAHvlQ4uGWP6/Qu2De2P5R
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="353339188"
-X-IronPort-AV: E=Sophos;i="6.00,212,1681196400"; 
-   d="scan'208";a="353339188"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 04:12:05 -0700
+   references:mime-version;
+  bh=0bLFxmXhUWhrp2vU5VeAk9naT3tLznJtVEOx3Bbgzf0=;
+  b=ArEFUs2LDaTfdZWt8Chluy0eW124jvWQVUW5oJb3/6fy2E9edapYLijU
+   PKo/rS18nHicSvwP1qToFcIKqdAxykL0o77sG2XQ3g5qtNQ6dPvR1seeR
+   JpumwNH+6druoV6d8OfD2mBQYasl6482tcKkbYmZNBeaP7BlldSp5Bciz
+   8+IfLr8jbIIiP1wtccUEWpDXGJhiz6Ffe3MGLNqezkgc19lQSanA2bVGz
+   VFvKWVBbwdGkZAHFZxbI+8JELsDvR78bcOmOEEe6MRkldy+C7y2xMA8dw
+   hc9zQGixKh1Y1oitoZIa3or14dYGO2glFJBxb8Q+j4MGKRnKpLK+pwzF6
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="359164110"
+X-IronPort-AV: E=Sophos;i="6.00,213,1681196400"; 
+   d="scan'208";a="359164110"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 06:09:56 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="820250604"
-X-IronPort-AV: E=Sophos;i="6.00,212,1681196400"; 
-   d="scan'208";a="820250604"
+X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="882069405"
+X-IronPort-AV: E=Sophos;i="6.00,213,1681196400"; 
+   d="scan'208";a="882069405"
 Received: from rspatil-mobl3.gar.corp.intel.com ([10.251.208.112])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 04:12:03 -0700
-Date:   Fri, 2 Jun 2023 14:12:01 +0300 (EEST)
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 06:09:53 -0700
+Date:   Fri, 2 Jun 2023 16:09:51 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Mark Pearson <mpearson-lenovo@squebb.ca>
-cc:     hdegoede@redhat.com, markgross@kernel.org,
+To:     Michal Wilczynski <michal.wilczynski@intel.com>
+cc:     Corentin Chary <corentin.chary@gmail.com>,
+        =?ISO-8859-15?Q?Jo=E3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 8/8] platform/x86: think-lmi: Don't display unnecessary
- authentication settings
-In-Reply-To: <20230601200552.4396-8-mpearson-lenovo@squebb.ca>
-Message-ID: <bec3684e-d9d1-d88b-846a-46a1fc481ffb@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca> <20230601200552.4396-1-mpearson-lenovo@squebb.ca> <20230601200552.4396-8-mpearson-lenovo@squebb.ca>
+        acpi4asus-user@lists.sourceforge.net, linux-acpi@vger.kernel.org,
+        rafael@kernel.org
+Subject: Re: [PATCH v4 17/35] platform/x86/asus-wireless: Move handler
+ installing logic to driver
+In-Reply-To: <20230601131739.300760-18-michal.wilczynski@intel.com>
+Message-ID: <de33f84-8774-9d8-5d6c-ea6a31343fab@linux.intel.com>
+References: <20230601131739.300760-3-michal.wilczynski@intel.com> <20230601131739.300760-18-michal.wilczynski@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-295843162-1685703976=:1742"
-Content-ID: <cf3f9d85-437a-1f94-72f-b3edfd943b19@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 1 Jun 2023, Michal Wilczynski wrote:
 
---8323329-295843162-1685703976=:1742
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <4f5bd94-fe6b-2043-c5f3-a71a7bdebb4a@linux.intel.com>
-
-On Thu, 1 Jun 2023, Mark Pearson wrote:
-
-> If Opcode support is available (which is the standard for all platforms
-> going forward) then there is no need to have the encoding and kbdlang
-> attributes visible.
+> Currently logic for installing notifications from ACPI devices is
+> implemented using notify callback in struct acpi_driver. Preparations
+> are being made to replace acpi_driver with more generic struct
+> platform_driver, which doesn't contain notify callback. Furthermore
+> as of now handlers are being called indirectly through
+> acpi_notify_device(), which decreases performance.
 > 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Call acpi_device_install_event_handler() at the end of .add() callback.
+> Call acpi_device_remove_event_handler() at the beginning of .remove()
+> callback. Change arguments passed to the notify callback to match with
+> what's required by acpi_device_install_event_handler().
+> 
+> Signed-off-by: Michal Wilczynski <michal.wilczynski@intel.com>
+> ---
+>  drivers/platform/x86/asus-wireless.c | 24 +++++++++++++++---------
+>  1 file changed, 15 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/x86/asus-wireless.c
+> index abf01e00b799..6544e3419ae4 100644
+> --- a/drivers/platform/x86/asus-wireless.c
+> +++ b/drivers/platform/x86/asus-wireless.c
+> @@ -108,19 +108,22 @@ static void led_state_set(struct led_classdev *led, enum led_brightness value)
+>  	queue_work(data->wq, &data->led_work);
+>  }
+>  
+> -static void asus_wireless_notify(struct acpi_device *adev, u32 event)
+> +static void asus_wireless_notify(acpi_handle handle, u32 event, void *data)
+>  {
+> -	struct asus_wireless_data *data = acpi_driver_data(adev);
+> +	struct asus_wireless_data *w_data;
+> +	struct acpi_device *adev = data;
+> +
+> +	w_data = acpi_driver_data(adev);
+>  
+>  	dev_dbg(&adev->dev, "event=%#x\n", event);
+>  	if (event != 0x88) {
+>  		dev_notice(&adev->dev, "Unknown ASHS event: %#x\n", event);
+>  		return;
+>  	}
+> -	input_report_key(data->idev, KEY_RFKILL, 1);
+> -	input_sync(data->idev);
+> -	input_report_key(data->idev, KEY_RFKILL, 0);
+> -	input_sync(data->idev);
+> +	input_report_key(w_data->idev, KEY_RFKILL, 1);
+> +	input_sync(w_data->idev);
+> +	input_report_key(w_data->idev, KEY_RFKILL, 0);
+> +	input_sync(w_data->idev);
+>  }
+>  
+>  static int asus_wireless_add(struct acpi_device *adev)
+> @@ -169,16 +172,20 @@ static int asus_wireless_add(struct acpi_device *adev)
+>  	data->led.max_brightness = 1;
+>  	data->led.default_trigger = "rfkill-none";
+>  	err = devm_led_classdev_register(&adev->dev, &data->led);
+> -	if (err)
+> +	if (err) {
+>  		destroy_workqueue(data->wq);
+> +		return err;
+> +	}
+>  
+> -	return err;
+> +	return acpi_device_install_event_handler(adev, ACPI_DEVICE_NOTIFY, asus_wireless_notify);
 
-Thanks a lot, the patches look good now. One small thing for future: next 
-time, try to arrange a series such that the patches with Fixes tags are 
-the first patches, in here I think it's not a big deal since 2/8 doesn't 
-seem to conflict with 3/8.
-
-For all patches 1-8:
-
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+So if acpi_device_install_event_handler() returns error, should you 
+rollback something here like the error branch above? If that's the case, 
+use goto to rollback as you'll have two places calling destroy_workqueue() 
+already.
 
 -- 
  i.
---8323329-295843162-1685703976=:1742--
+
+
+>  }
+>  
+>  static void asus_wireless_remove(struct acpi_device *adev)
+>  {
+>  	struct asus_wireless_data *data = acpi_driver_data(adev);
+>  
+> +	acpi_device_remove_event_handler(adev, ACPI_DEVICE_NOTIFY, asus_wireless_notify);
+> +
+>  	if (data->wq) {
+>  		devm_led_classdev_unregister(&adev->dev, &data->led);
+>  		destroy_workqueue(data->wq);
+> @@ -192,7 +199,6 @@ static struct acpi_driver asus_wireless_driver = {
+>  	.ops = {
+>  		.add = asus_wireless_add,
+>  		.remove = asus_wireless_remove,
+> -		.notify = asus_wireless_notify,
+>  	},
+>  };
+>  module_acpi_driver(asus_wireless_driver);
+> 
