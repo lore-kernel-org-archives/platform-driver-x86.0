@@ -2,149 +2,157 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8311C77B73
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  4 Jun 2023 10:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E98C77B73
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  4 Jun 2023 16:04:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229788AbjFDKxl (ORCPT
+        id S231249AbjFDQEk convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 4 Jun 2023 06:53:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57044 "EHLO
+        Sun, 4 Jun 2023 12:04:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbjFDKxl (ORCPT
+        with ESMTP id S230070AbjFDQEk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 4 Jun 2023 06:53:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C812C0;
-        Sun,  4 Jun 2023 03:53:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B877C60E71;
-        Sun,  4 Jun 2023 10:53:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09E28C433EF;
-        Sun,  4 Jun 2023 10:53:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685876019;
-        bh=v/j4DKmdtzM+oQApqSfZhtaduo95gGQbg/IfYamNqVE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kHSDpFO6Ru/4oFyMkLmFCNWjVtNDmcWuDktSjwbpuLn1U6ByqGmXb+CPDWbKpmSzy
-         rNI2j5b5UPtxP84sfjjN993uwp+8p3AnxsQtjwGtbccUQaGxHVdMAM5XhRpK+W0S3W
-         SJy3qhYP39lhP0UJsNSvZW9rC7G+RBv7spvyYlC/WXNQ5Y5v9Qj+rMXh8z1Try6/oQ
-         n/RaYgqaD3gRqaBoNvIkEjrg0BibyUrSj75X+/xGcYQaDLgRFfIqrR9+thg6/tfccx
-         8x/7aPhTwZoRxK19fs9E/O2/f+GGPiTI3cXG4l7b2fUuxzdJJyWYTTMoc0Rlrrxy3Y
-         tc8prp8phi1Nw==
-Date:   Sun, 4 Jun 2023 11:53:35 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Michal Wilczynski <michal.wilczynski@intel.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        rafael@kernel.org
-Subject: Re: [PATCH v4 11/35] iio/acpi-als: Move handler installing logic to
- driver
-Message-ID: <20230604115335.0e66ca2f@jic23-huawei>
-In-Reply-To: <20230601131739.300760-12-michal.wilczynski@intel.com>
-References: <20230601131739.300760-3-michal.wilczynski@intel.com>
-        <20230601131739.300760-12-michal.wilczynski@intel.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+        Sun, 4 Jun 2023 12:04:40 -0400
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2861DB;
+        Sun,  4 Jun 2023 09:04:38 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-94ea38c90ccso72840466b.1;
+        Sun, 04 Jun 2023 09:04:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685894677; x=1688486677;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b+YdCv4qFRXvRPwOlYPYCldTcv+zkomgPih9OT+HI0Q=;
+        b=JTxiD9YjEMeZsF2zB30w3UkShOmbnulZnlg5ozfuKDnuKzI8IC28DSKhO0hb++C6ss
+         u/WNfW0WGgNbtEooZYgf7IrCopEJYOaSJzd3bQ67pH6Q+N4fjAgOT8fyb/8vpf9f+ldO
+         awr2/AIZpiQFTkzXl3x696fB0YOz+CuhDl0H01irAYJI5tpa8cvBk4i403JqWkcPEpCW
+         DybBRM32RCvsZpYgUDmkOeTsUu+aXDfbOaC8Ks5yvUxQNbexRc/x4e24Rb/uvRJ/v58Z
+         6e8raM6LoFcOgBdJ9v282hKjn8NeZRKRkR4T8inO2p6Ru+WdQzmsr7e9Q4pEaHhzMgBc
+         c9Kw==
+X-Gm-Message-State: AC+VfDzrFefl4tflSrn29Rf8Iw/Uffu6ulC+pQ8DBUGP+5EaSACkSXX+
+        nEC8C9ZKsUF1d9EIxzhDbngi3pSuE0qFsvuYx08=
+X-Google-Smtp-Source: ACHHUZ54m+MFnHpOVzLiL4+gc3bnx2pXxkOS3iIdfMsHrkg4Cqnn+VVTZxb7UNWMN3kJHLXsnkA5+CIFhyzBn9ykFVI=
+X-Received: by 2002:a17:906:6494:b0:965:9c7d:df96 with SMTP id
+ e20-20020a170906649400b009659c7ddf96mr12977658ejm.1.1685894677361; Sun, 04
+ Jun 2023 09:04:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20230602073025.22884-1-mario.limonciello@amd.com> <20230602073025.22884-2-mario.limonciello@amd.com>
+In-Reply-To: <20230602073025.22884-2-mario.limonciello@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sun, 4 Jun 2023 18:04:26 +0200
+Message-ID: <CAJZ5v0jNn1wHtF7c0XYKpM=XzZasdu3OwksUdqRFO3TyZwrPOg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] ACPI: x86: Add pm_debug_messages for LPS0 _DSM
+ state tracking
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Rafael Wysocki <rafael@kernel.org>, hdegoede@redhat.com,
+        linus.walleij@linaro.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu,  1 Jun 2023 15:17:14 +0200
-Michal Wilczynski <michal.wilczynski@intel.com> wrote:
+On Fri, Jun 2, 2023 at 9:32 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> Enabling debugging messages for the state requires turning on dynamic
+> debugging for the file. To make it more accessible, use
+> `pm_debug_messages` and clearer strings for what is happening.
+>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-> Currently logic for installing notifications from ACPI devices is
-> implemented using notify callback in struct acpi_driver. Preparations
-> are being made to replace acpi_driver with more generic struct
-> platform_driver, which doesn't contain notify callback. Furthermore
-> as of now handlers are being called indirectly through
-> acpi_notify_device(), which decreases performance.
-> 
-> Call acpi_device_install_event_handler() at the end of .add() callback.
-> Call acpi_device_remove_event_handler() at the beginning of .remove()
-> callback. Change arguments passed to the notify callback to match with
-> what's required by acpi_device_install_event_handler().
-> 
-> Signed-off-by: Michal Wilczynski <michal.wilczynski@intel.com>
-Hi Michal,
+I'm inclined to apply this one and the [1/4] at this point.
 
-Comments inline.
+I can also apply the 2 remaining patches in this series if I get ACKs
+for them from the respective subsystem maintainers.
 
 > ---
->  drivers/iio/light/acpi-als.c | 23 ++++++++++++++++++-----
->  1 file changed, 18 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iio/light/acpi-als.c b/drivers/iio/light/acpi-als.c
-> index 2d91caf24dd0..5e200c6d91bc 100644
-> --- a/drivers/iio/light/acpi-als.c
-> +++ b/drivers/iio/light/acpi-als.c
-> @@ -100,10 +100,14 @@ static int acpi_als_read_value(struct acpi_als *als, char *prop, s32 *val)
->  	return 0;
+>  drivers/acpi/x86/s2idle.c | 52 ++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 46 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/acpi/x86/s2idle.c b/drivers/acpi/x86/s2idle.c
+> index e499c60c4579..7681f6ecab67 100644
+> --- a/drivers/acpi/x86/s2idle.c
+> +++ b/drivers/acpi/x86/s2idle.c
+> @@ -59,6 +59,7 @@ static int lps0_dsm_func_mask;
+>
+>  static guid_t lps0_dsm_guid_microsoft;
+>  static int lps0_dsm_func_mask_microsoft;
+> +static int lps0_dsm_state;
+>
+>  /* Device constraint entry structure */
+>  struct lpi_device_info {
+> @@ -320,6 +321,44 @@ static void lpi_check_constraints(void)
+>         }
 >  }
->  
-> -static void acpi_als_notify(struct acpi_device *device, u32 event)
-> +static void acpi_als_notify(acpi_handle handle, u32 event, void *data)
->  {
-> -	struct iio_dev *indio_dev = acpi_driver_data(device);
-> -	struct acpi_als *als = iio_priv(indio_dev);
-> +	struct acpi_device *device = data;
-> +	struct iio_dev *indio_dev;
-> +	struct acpi_als *als;
-> +
-> +	indio_dev = acpi_driver_data(device);
-> +	als = iio_priv(indio_dev);
-
-Not particularly important, but I'd have kept to existing style
-
-	struct acpi_device *device = data;
-	struct iio_dev *indio_dev = acpi_driver_data(device);
-	struct acpi_als *als = iio_priv(indio_dev);
-
-Less churn that way.
-
->  
->  	if (iio_buffer_enabled(indio_dev) && iio_trigger_using_own(indio_dev)) {
->  		switch (event) {
-> @@ -225,7 +229,16 @@ static int acpi_als_add(struct acpi_device *device)
->  	if (ret)
->  		return ret;
->  
-> -	return devm_iio_device_register(dev, indio_dev);
-> +	ret = devm_iio_device_register(dev, indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return acpi_device_install_event_handler(device, ACPI_DEVICE_NOTIFY, acpi_als_notify);
-
-Prefer to keep to a fully devm managed flow for removal
-
-So use a devm_add_action_or_reset() to unwind this rather than adding a remove()
-callback.
-
-Obviously ordering is the same currently but that may change if this driver
-is modified in future and it's a lot easier to get that right if fully devm
-(or fully not).
-
-Jonathan
-
+>
+> +static bool acpi_s2idle_vendor_amd(void)
+> +{
+> +       return boot_cpu_data.x86_vendor == X86_VENDOR_AMD;
 > +}
 > +
-> +static void acpi_als_remove(struct acpi_device *device)
+> +static const char *acpi_sleep_dsm_state_to_str(unsigned int state)
 > +{
-> +	acpi_device_remove_event_handler(device, ACPI_DEVICE_NOTIFY, acpi_als_notify);
+> +       if (lps0_dsm_func_mask_microsoft || !acpi_s2idle_vendor_amd()) {
+> +               switch (state) {
+> +               case ACPI_LPS0_SCREEN_OFF:
+> +                       return "screen off";
+> +               case ACPI_LPS0_SCREEN_ON:
+> +                       return "screen on";
+> +               case ACPI_LPS0_ENTRY:
+> +                       return "lps0 entry";
+> +               case ACPI_LPS0_EXIT:
+> +                       return "lps0 exit";
+> +               case ACPI_LPS0_MS_ENTRY:
+> +                       return "lps0 ms entry";
+> +               case ACPI_LPS0_MS_EXIT:
+> +                       return "lps0 ms exit";
+> +               }
+> +       } else {
+> +               switch (state) {
+> +               case ACPI_LPS0_SCREEN_ON_AMD:
+> +                       return "screen on";
+> +               case ACPI_LPS0_SCREEN_OFF_AMD:
+> +                       return "screen off";
+> +               case ACPI_LPS0_ENTRY_AMD:
+> +                       return "lps0 entry";
+> +               case ACPI_LPS0_EXIT_AMD:
+> +                       return "lps0 exit";
+> +               }
+> +       }
+> +
+> +       return "unknown";
+> +}
+> +
+>  static void acpi_sleep_run_lps0_dsm(unsigned int func, unsigned int func_mask, guid_t dsm_guid)
+>  {
+>         union acpi_object *out_obj;
+> @@ -331,14 +370,15 @@ static void acpi_sleep_run_lps0_dsm(unsigned int func, unsigned int func_mask, g
+>                                         rev_id, func, NULL);
+>         ACPI_FREE(out_obj);
+>
+> -       acpi_handle_debug(lps0_device_handle, "_DSM function %u evaluation %s\n",
+> -                         func, out_obj ? "successful" : "failed");
+> +       lps0_dsm_state = func;
+> +       if (pm_debug_messages_on) {
+> +               acpi_handle_info(lps0_device_handle,
+> +                               "%s transitioned to state %s\n",
+> +                                out_obj ? "Successfully" : "Failed to",
+> +                                acpi_sleep_dsm_state_to_str(lps0_dsm_state));
+> +       }
 >  }
->  
->  static const struct acpi_device_id acpi_als_device_ids[] = {
-> @@ -241,7 +254,7 @@ static struct acpi_driver acpi_als_driver = {
->  	.ids	= acpi_als_device_ids,
->  	.ops = {
->  		.add	= acpi_als_add,
-> -		.notify	= acpi_als_notify,
-> +		.remove = acpi_als_remove,
->  	},
->  };
->  
-
+>
+> -static bool acpi_s2idle_vendor_amd(void)
+> -{
+> -       return boot_cpu_data.x86_vendor == X86_VENDOR_AMD;
+> -}
+>
+>  static int validate_dsm(acpi_handle handle, const char *uuid, int rev, guid_t *dsm_guid)
+>  {
+> --
+> 2.34.1
+>
