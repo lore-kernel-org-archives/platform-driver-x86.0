@@ -2,131 +2,217 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE47C77B73
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  4 Jun 2023 17:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43990C77B73
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  4 Jun 2023 17:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232152AbjFDRJ1 (ORCPT
+        id S229635AbjFDRbS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 4 Jun 2023 13:09:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55616 "EHLO
+        Sun, 4 Jun 2023 13:31:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbjFDRJZ (ORCPT
+        with ESMTP id S229449AbjFDRbR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 4 Jun 2023 13:09:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21332CF
-        for <platform-driver-x86@vger.kernel.org>; Sun,  4 Jun 2023 10:08:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685898516;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PdD6fLCgV2aQnBd7dmmJ3kgTXzpNFEeCf0r/5R17D2M=;
-        b=GcigC972vpXjsLcfGwjKVD955u9F0ZdS5VI8wK4E45bTslZ2/RMSAyg4JZEB2losNQUPfs
-        jhU8sv27pZCBcEp7N59FZQiOmHReH1GgA7dHarH4XwwJxBg0tzrhG1l2W+GInLWCTZUpRQ
-        AnLW9T34xOLWyU5Y3yBUmLepNnsRcYo=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-575-fzmR_j9wN_mZEDai0WZbTw-1; Sun, 04 Jun 2023 13:08:35 -0400
-X-MC-Unique: fzmR_j9wN_mZEDai0WZbTw-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9715654ab36so284044666b.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 04 Jun 2023 10:08:34 -0700 (PDT)
+        Sun, 4 Jun 2023 13:31:17 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E2B3D3;
+        Sun,  4 Jun 2023 10:31:15 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id 98e67ed59e1d1-256e1d87998so3404055a91.3;
+        Sun, 04 Jun 2023 10:31:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685899875; x=1688491875;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WuZXC8GCsPypNwiYsJHvBO2PQoUqa9X0C4ZuKWfxTxU=;
+        b=JCgHtLJz1SCGhb5dDTA6M86IYU28+EguiJYKI73ckeaV30cZ1uV1eu/K4l8LCso2LB
+         Ds6RH8M4uMvIInsDBJKbejwOyKfu1eRdoJxrfQl61mfWNWr7Akz8VCpI8KEQccSoo6Xv
+         HwRNwlLAeS3GKthC/AqXCtW4A7IGHdr7J11CF0Bb59ezFs557oQ6E3EtJaFUtEYs6dl6
+         Nn8snvk/NdcF0m71hPBQZWjixiWai7SRe1kJQWEK/lZaOTZboaZ45gQwA7qK7JQu2IaF
+         TKSx3rtTfUtGNPxkV2Q41sWmqFjLBV1clriOFSq0S9/Lu9hD4SHR6qc1OwmD/d9im21n
+         ddyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685898514; x=1688490514;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PdD6fLCgV2aQnBd7dmmJ3kgTXzpNFEeCf0r/5R17D2M=;
-        b=grry4DVOVGm0vY4F3pNe2+FzNf63OerKr2y3HijlN7uHvvjqm90YM8JHZ5axY1umdu
-         fgJ7Vsf40l9Cpa1xlamN5D/0QFmAH75ZxFETp5ksoJ5TnTZ+f2+7HSHmrso2NfESWsuC
-         Huvq6gOP6UG82yK+RVOAzoM+RW9aMuUMqUjyo6aDfdO3IXuX/qcsRhMc41IaOYBPAGs4
-         +mtFpNKd5FRLH4VdQNSYQ8wtiG08GUsh+KEBbnbX0TCC/cP8rjXIZELKlRKX0kzFFE8t
-         Gyw3B3/8w4gFaLuYBQi7WLn8AsX2obrEW7SpP803WYrM+23xP06cZVipNbnRVwAo3f/Q
-         aYmA==
-X-Gm-Message-State: AC+VfDzkQfJsGK7qea+9LvHcYALZx5RNFchJExYPQbplhZ//gSwesnra
-        QZTM5/0+YsB1hlEdnvZULfUevDi7PB1ZYKFawdbuqYsN1394KtMK0Y8l25Jer6Ui3totMgYKzKF
-        QuuhSoNdFDMMHQqoWn1TUW0QsdjmCB3GWGQ==
-X-Received: by 2002:a17:907:168a:b0:967:21:5887 with SMTP id hc10-20020a170907168a00b0096700215887mr4095489ejc.40.1685898513854;
-        Sun, 04 Jun 2023 10:08:33 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4TPZilX3j01WIYfIYhahPcl8kTB8RkUD2ANGHMSpVRbwGGQb9vu22ijVQ0bzecqOBy+9DBTQ==
-X-Received: by 2002:a17:907:168a:b0:967:21:5887 with SMTP id hc10-20020a170907168a00b0096700215887mr4095470ejc.40.1685898513516;
-        Sun, 04 Jun 2023 10:08:33 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id j24-20020a170906095800b009659fa6eeddsm3269450ejd.196.2023.06.04.10.08.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 Jun 2023 10:08:32 -0700 (PDT)
-Message-ID: <48a267c4-15c5-4ab6-7704-f7ee41e2fb90@redhat.com>
-Date:   Sun, 4 Jun 2023 19:08:31 +0200
+        d=1e100.net; s=20221208; t=1685899875; x=1688491875;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WuZXC8GCsPypNwiYsJHvBO2PQoUqa9X0C4ZuKWfxTxU=;
+        b=ecsLQ6D+rW3FVPknTq+MUbCxMlZf1xKJeYgqNdxDatgMTYrKqy0C92Cn8ES+6Vk/Yz
+         sDNfuxabVp0gBYx9EJryMJ5N7nC6I2YGhoZy+8NsQoPsR/JV5g53o0JI6gEbDsXZ/QJh
+         b4Qhx+oE1BG8Y7378n1OUgAlCe3yfUHX1Gusssi/vBXa1T23f4bY4/sjCI1GIgn/q4xe
+         WIG5JHExfJDoUJD8CqhAHYM5+6coP0/ZJqQBggLdB+BhArV2vjKObkXaSZ90aE0rQjVO
+         Z25etQgCgHy1makYSwjz6Fla/rzd3HjuIzgj3d16MPUXlEjnw9+ZbOhyityqQQyijje5
+         Rn3A==
+X-Gm-Message-State: AC+VfDwhHlyuU4XW7v8BBwostnHvBAzd1kMQwOXPA7lmSeL/L9c0VOVF
+        74px60j2fcT3QoLB3ogO/OE=
+X-Google-Smtp-Source: ACHHUZ7SXjPhfonWsM71FEMQKgIfD1Mxv3Fna9qH142Ah0mN/dtvSy0yF6K29g+syKXMcrvDPk/6Tw==
+X-Received: by 2002:a17:90a:6903:b0:256:544a:74c9 with SMTP id r3-20020a17090a690300b00256544a74c9mr5362200pjj.25.1685899874890;
+        Sun, 04 Jun 2023 10:31:14 -0700 (PDT)
+Received: from localhost.localdomain ([110.46.146.116])
+        by smtp.gmail.com with ESMTPSA id a14-20020a17090abe0e00b0023a84911df2sm4316741pjs.7.2023.06.04.10.31.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Jun 2023 10:31:14 -0700 (PDT)
+From:   SungHwan Jung <onenowy@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     SungHwan Jung <onenowy@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] platform/x86: hp-wmi: Add thermal profile for Victus 16-d1xxx
+Date:   Mon,  5 Jun 2023 02:30:23 +0900
+Message-ID: <20230604173023.4675-1-onenowy@gmail.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4 4/4] platform/x86/amd: pmc: Use pm_pr_dbg() for suspend
- related messages
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Rafael Wysocki <rafael@kernel.org>, linus.walleij@linaro.org
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org, Basavaraj.Natikar@amd.com,
-        Shyam-sundar.S-k@amd.com
-References: <20230602073025.22884-1-mario.limonciello@amd.com>
- <20230602073025.22884-4-mario.limonciello@amd.com>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230602073025.22884-4-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+This patch includes Platform Profile support (performance, balanced, quiet)
+for Victus 16-d1xxx (8A25).
 
-On 6/2/23 09:30, Mario Limonciello wrote:
-> Using pm_pr_dbg() allows users to toggle `/sys/power/pm_debug_messages`
-> as a single knob to turn on messages that amd-pmc can emit to aid in
-> any s2idle debugging.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: SungHwan Jung <onenowy@gmail.com>
 
-Thanks, patch looks good to me.
+---
+changes in v2 : clean up code
+---
+ drivers/platform/x86/hp/hp-wmi.c | 96 +++++++++++++++++++++++++++++++-
+ 1 file changed, 95 insertions(+), 1 deletion(-)
 
-Here is my ack for merging this through the linux-pm tree:
-
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-
-> ---
->  drivers/platform/x86/amd/pmc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-> index 427905714f79..1304cd6f13f6 100644
-> --- a/drivers/platform/x86/amd/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc.c
-> @@ -543,7 +543,7 @@ static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
->  	}
->  
->  	if (dev)
-> -		dev_dbg(pdev->dev, "SMU idlemask s0i3: 0x%x\n", val);
-> +		pm_pr_dbg("SMU idlemask s0i3: 0x%x\n", val);
->  
->  	if (s)
->  		seq_printf(s, "SMU idlemask : 0x%x\n", val);
-> @@ -769,7 +769,7 @@ static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
->  
->  	*arg |= (duration << 16);
->  	rc = rtc_alarm_irq_enable(rtc_device, 0);
-> -	dev_dbg(pdev->dev, "wakeup timer programmed for %lld seconds\n", duration);
-> +	pm_pr_dbg("wakeup timer programmed for %lld seconds\n", duration);
->  
->  	return rc;
->  }
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 6364ae262..04c05c6b0 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -66,6 +66,11 @@ static const char *const omen_thermal_profile_force_v0_boards[] = {
+ 	"8607", "8746", "8747", "8749", "874A", "8748"
+ };
+ 
++/* DMI Board names of Victus laptops */
++static const char * const victus_thermal_profile_boards[] = {
++	"8A25"
++};
++
+ enum hp_wmi_radio {
+ 	HPWMI_WIFI	= 0x0,
+ 	HPWMI_BLUETOOTH	= 0x1,
+@@ -176,6 +181,12 @@ enum hp_thermal_profile_omen_v1 {
+ 	HP_OMEN_V1_THERMAL_PROFILE_COOL		= 0x50,
+ };
+ 
++enum hp_thermal_profile_victus {
++	HP_VICTUS_THERMAL_PROFILE_DEFAULT		= 0x00,
++	HP_VICTUS_THERMAL_PROFILE_PERFORMANCE		= 0x01,
++	HP_VICTUS_THERMAL_PROFILE_QUIET			= 0x03,
++};
++
+ enum hp_thermal_profile {
+ 	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+ 	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+@@ -1246,6 +1257,70 @@ static int hp_wmi_platform_profile_set(struct platform_profile_handler *pprof,
+ 	return 0;
+ }
+ 
++static bool is_victus_thermal_profile(void)
++{
++	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
++
++	if (!board_name)
++		return false;
++
++	return match_string(victus_thermal_profile_boards,
++			    ARRAY_SIZE(victus_thermal_profile_boards),
++			    board_name) >= 0;
++}
++
++static int platform_profile_victus_get(struct platform_profile_handler *pprof,
++				     enum platform_profile_option *profile)
++{
++	int tp;
++
++	tp = omen_thermal_profile_get();
++	if (tp < 0)
++		return tp;
++
++	switch (tp) {
++	case HP_VICTUS_THERMAL_PROFILE_PERFORMANCE:
++		*profile = PLATFORM_PROFILE_PERFORMANCE;
++		break;
++	case HP_VICTUS_THERMAL_PROFILE_DEFAULT:
++		*profile = PLATFORM_PROFILE_BALANCED;
++		break;
++	case HP_VICTUS_THERMAL_PROFILE_QUIET:
++		*profile = PLATFORM_PROFILE_QUIET;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	return 0;
++}
++
++static int platform_profile_victus_set(struct platform_profile_handler *pprof,
++				     enum platform_profile_option profile)
++{
++	int err, tp;
++
++	switch (profile) {
++	case PLATFORM_PROFILE_PERFORMANCE:
++		tp = HP_VICTUS_THERMAL_PROFILE_PERFORMANCE;
++		break;
++	case PLATFORM_PROFILE_BALANCED:
++		tp = HP_VICTUS_THERMAL_PROFILE_DEFAULT;
++		break;
++	case PLATFORM_PROFILE_QUIET:
++		tp = HP_VICTUS_THERMAL_PROFILE_QUIET;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	err = omen_thermal_profile_set(tp);
++	if (err < 0)
++		return err;
++
++	return 0;
++}
++
+ static int thermal_profile_setup(void)
+ {
+ 	int err, tp;
+@@ -1266,6 +1341,25 @@ static int thermal_profile_setup(void)
+ 
+ 		platform_profile_handler.profile_get = platform_profile_omen_get;
+ 		platform_profile_handler.profile_set = platform_profile_omen_set;
++
++		set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
++	} else if (is_victus_thermal_profile()) {
++		tp = omen_thermal_profile_get();
++		if (tp < 0)
++			return tp;
++
++		/*
++		 * call thermal profile write command to ensure that the
++		 * firmware correctly sets the OEM variables
++		 */
++		err = omen_thermal_profile_set(tp);
++		if (err < 0)
++			return err;
++
++		platform_profile_handler.profile_get = platform_profile_victus_get;
++		platform_profile_handler.profile_set = platform_profile_victus_set;
++
++		set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
+ 	} else {
+ 		tp = thermal_profile_get();
+ 
+@@ -1284,9 +1378,9 @@ static int thermal_profile_setup(void)
+ 		platform_profile_handler.profile_set = hp_wmi_platform_profile_set;
+ 
+ 		set_bit(PLATFORM_PROFILE_QUIET, platform_profile_handler.choices);
++		set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
+ 	}
+ 
+-	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
+ 	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
+ 	set_bit(PLATFORM_PROFILE_PERFORMANCE, platform_profile_handler.choices);
+ 
+-- 
+2.41.0
 
