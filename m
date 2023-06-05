@@ -2,128 +2,140 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56012C7EE2D
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jun 2023 12:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7081BC7EE23
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jun 2023 13:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232982AbjFEMAH (ORCPT
+        id S230223AbjFENH0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Jun 2023 08:00:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39060 "EHLO
+        Mon, 5 Jun 2023 09:07:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230371AbjFEMAG (ORCPT
+        with ESMTP id S231546AbjFENH0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Jun 2023 08:00:06 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9C129C;
-        Mon,  5 Jun 2023 05:00:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685966404; x=1717502404;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=p5/S5k7Qizlk2AVy9vIiaRFPNQhWyVQblWCerOYsPfI=;
-  b=Od5PUG5dodEOVF18JxdxDFjkopxQ52D/ts5EObcNfNn4wxmUjGGZ3XCi
-   LqZLHO3rLG84JlJs4ufuY5IzSeN3GJal+TNeWB3oQUrI6ejkJzpMH0WL6
-   YTQCx+JLirp93iQ4XWhm0GS1teeJNYQgoQxYOr9os1NpQ2b+Syoq+VFRf
-   Jz6s1ir8RAyRaGZpH0Q9mFGRsx83PCDZLve1gWO71iqwFoSG6c2QTQpiA
-   hyFw2tP3FrOuzVtmUDKWrKi1NjdQ8wAbLPOiJi1HVq/BOvIvpHX43DeSh
-   XbxuXZHazgyJmj7ep2VCQjA2IWhAvrrjg0t+Her/jNg01aG7uiXPy6Kz/
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="422174161"
-X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
-   d="scan'208";a="422174161"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 04:59:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="702725735"
-X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
-   d="scan'208";a="702725735"
-Received: from gfittedx-mobl.ger.corp.intel.com ([10.252.47.115])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 04:59:26 -0700
-Date:   Mon, 5 Jun 2023 14:59:24 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-cc:     irenic.rajneesh@gmail.com, hdegoede@redhat.com,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] platform/x86/intel/pmc/mtl: Put devices in D3 during
- resume
-In-Reply-To: <20230602232142.278155-2-david.e.box@linux.intel.com>
-Message-ID: <9a45d987-6840-9c7a-b0b5-702cf3aba4f@linux.intel.com>
-References: <20230602232142.278155-1-david.e.box@linux.intel.com> <20230602232142.278155-2-david.e.box@linux.intel.com>
+        Mon, 5 Jun 2023 09:07:26 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A22B4EE;
+        Mon,  5 Jun 2023 06:07:22 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2b1b86146afso30415491fa.3;
+        Mon, 05 Jun 2023 06:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685970441; x=1688562441;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P6AWBTDpG34/EWY8Thq7a1h/Nl1InpKPLTTSry7qvJE=;
+        b=VpBs0u+fENX9RcEg39Bo6tqOPKkjcSgj1nY9DLdILgwpSusCYdDvW9zW9sZQB9Ag9W
+         NI6pNOJt0jn5hwIMVLISv85/a202rBEDLm3ieqa6cO2VGG/qGSgxHgMfIflGVG2Wa9qG
+         P11P55TgYxilnm10LxF1CkMf8Y35c9zwuiJ2dHufaQPLbc//GsSCz+1FbEKGm1adPZ14
+         n0oA224JggEQmuyHz/FiLmkUETFL8PfhlqW+sjV8Yllyjb2sFJbPD+AAoIGb37X6tCYp
+         /dMTEY3OfIakuOsTNyOhnh95TxgMTtNmsJqxeA7cEEB1AApwoGb04/Lg9wliKVZnd6/P
+         A1Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685970441; x=1688562441;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P6AWBTDpG34/EWY8Thq7a1h/Nl1InpKPLTTSry7qvJE=;
+        b=NflC4MK9gZRvdCt1sbWjxRt7eUFUfqsfrc7UxMDsgl4UdCKLseGdTSu6Otj1dU/Is4
+         yo6PDtWluks/ZBGfMi1ZxISimyt1SB/GjsufABOGEemitNUA+c1UVoQH6pAx8wToAbBv
+         hpTpIoXywBGnSMCNVXKlTNaFmzW0j/eTqWyl/jrEXs3UYexcEpEoWyOv2BI4fxJ7wmqG
+         z8APbSFUftf6AOJXmWbXpWmW/ndi1pfhV8AuZdxr8Znls9yrcJrdZ8DEm3xJ03OXH+cz
+         YEiJpxn0ynyfcUg4dK9aAZrR0xpbmcMsPMQBnltceyfPEXsR2FFeqOishfvCkm1Qk7zg
+         NRkw==
+X-Gm-Message-State: AC+VfDxwi1S2pxpjslK+ahl3K4mU8CQna7T0YaLAYigF13y5jT09TGVY
+        u9m+Cx7TfXwJiTmg/Rr/ZbZIAkNXyqcwLZ3n6qs9Esyy
+X-Google-Smtp-Source: ACHHUZ4CymYYxEqlTaDJBBHUqSZTWl0GK0OHPWXkjPHMEpk5B4dXP+bHTVroOgthn3gLpMFWGNU8EhJVo3g77/Whu1E=
+X-Received: by 2002:a2e:b1c4:0:b0:2ac:77e9:c7b0 with SMTP id
+ e4-20020a2eb1c4000000b002ac77e9c7b0mr4476429lja.9.1685970440606; Mon, 05 Jun
+ 2023 06:07:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20230602131044.3297-1-jorge.lopez2@hp.com> <20230602131044.3297-13-jorge.lopez2@hp.com>
+ <83d86690-fdbe-66fb-221e-5443851330c7@infradead.org>
+In-Reply-To: <83d86690-fdbe-66fb-221e-5443851330c7@infradead.org>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Mon, 5 Jun 2023 08:06:43 -0500
+Message-ID: <CAOOmCE9GnGrqzcnF54e1JgysqiFVVkjATFVuFAZVUQAZ-KvnLw@mail.gmail.com>
+Subject: Re: [PATCH v16 12/13] hp-bioscfg: Makefile
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
+        ilpo.jarvinen@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 2 Jun 2023, David E. Box wrote:
+On Fri, Jun 2, 2023 at 5:46=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org>=
+ wrote:
+>
+> Hi again,
+>
+> On 6/2/23 06:10, Jorge Lopez wrote:
+> > HP BIOS Configuration driver purpose is to provide a driver supporting
+> > the latest sysfs class firmware attributes framework allowing the user
+> > to change BIOS settings and security solutions on HP Inc.=E2=80=99s com=
+mercial
+> > notebooks.
+> >
+> > Many features of HP Commercial notebooks can be managed using Windows
+> > Management Instrumentation (WMI). WMI is an implementation of Web-Based
+> > Enterprise Management (WBEM) that provides a standards-based interface
+> > for changing and monitoring system settings. HP BIOSCFG driver provides
+> > a native Linux solution and the exposed features facilitates the
+> > migration to Linux environments.
+> >
+> > The Linux security features to be provided in hp-bioscfg driver enables
+> > managing the BIOS settings and security solutions via sysfs, a virtual
+> > filesystem that can be used by user-mode applications. The new
+> > documentation cover HP-specific firmware sysfs attributes such Secure
+> > Platform Management and Sure Start. Each section provides security
+> > feature description and identifies sysfs directories and files exposed
+> > by the driver.
+> >
+> > Many HP Commercial notebooks include a feature called Secure Platform
+> > Management (SPM), which replaces older password-based BIOS settings
+> > management with public key cryptography. PC secure product management
+> > begins when a target system is provisioned with cryptographic keys
+> > that are used to ensure the integrity of communications between system
+> > management utilities and the BIOS.
+> >
+> > HP Commercial notebooks have several BIOS settings that control its
+> > behaviour and capabilities, many of which are related to security.
+> > To prevent unauthorized changes to these settings, the system can
+> > be configured to use a cryptographic signature-based authorization
+> > string that the BIOS will use to verify authorization to modify the
+> > setting.
+> >
+> > Linux Security components are under development and not published yet.
+> > The only linux component is the driver (hp bioscfg) at this time.
+> > Other published security components are under Windows.
+> >
+>
+> A commit message should tell what and why. E.g.:
+>
+> Add Makefile and Kconfig to build hp-bioscfg.
+>
+> It does not need all of that boilerplate info.
+> The cover letter is good for that.
+>
+> The "why" part can and usually should include some background/history
+> info.
 
-> An earlier commit placed some driverless devices in D3 during boot so that
-> they don't block package cstate entry. Also place these devices in D3 after
-> resume from suspend.
-> 
-> Fixes: 336ba968d3e3 ("platform/x86/intel/pmc/mtl: Put GNA/IPU/VPU devices in D3")
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  drivers/platform/x86/intel/pmc/mtl.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-> index e8cc156412ce..d87c4597c6d4 100644
-> --- a/drivers/platform/x86/intel/pmc/mtl.c
-> +++ b/drivers/platform/x86/intel/pmc/mtl.c
-> @@ -68,11 +68,8 @@ static void mtl_set_device_d3(unsigned int device)
->  	}
->  }
->  
-> -void mtl_core_init(struct pmc_dev *pmcdev)
-> +static void mtl_fixup(void)
->  {
-> -	pmcdev->map = &mtl_reg_map;
-> -	pmcdev->core_configure = mtl_core_configure;
-> -
->  	/*
->  	 * Set power state of select devices that do not have drivers to D3
->  	 * so that they do not block Package C entry.
-> @@ -81,3 +78,13 @@ void mtl_core_init(struct pmc_dev *pmcdev)
->  	mtl_set_device_d3(MTL_IPU_PCI_DEV);
->  	mtl_set_device_d3(MTL_VPU_PCI_DEV);
-
-I'd prefer the function be called something related to d3 / power state / 
-or some along those lines rather than something obscure such as 
-mtl_fixup(). And you can move the comment to be a function comment now.
-
->  }
-> +
-> +void mtl_core_init(struct pmc_dev *pmcdev)
-> +{
-> +	pmcdev->map = &mtl_reg_map;
-> +	pmcdev->core_configure = mtl_core_configure;
-> +
-> +	mtl_fixup();
-> +
-> +	pmcdev->resume_fixup = mtl_fixup;
-
-I'm a bit on the edge here whether this is a good approach in long-term or 
-if it would be better to just provide a way for the platform file to 
-replace entire .resume() (for this task it's obviously enough but it 
-feels a bit hacky to hook into one fixed place on resume path).
-
-static __maybe_unused int pmc_core_resume(struct device *dev)
-{
-	if (pmcdev->resume)
-		return pmcdev->resume();
-	else
-		return pmc_core_resume_common();
-}
-
-where pmc_core_resume_common() contains the current pmc_core_resume() 
-contents.
-
-mtl_resume() would just call the d3 func and the common resume functions.
-
-
--- 
- i.
-
+I will update the commit message for all portions of the driver as indicate=
+d
+>
+> > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+> >
+> > ---
+> > Based on the latest platform-drivers-x86.git/for-next
+> > ---
+> >  drivers/platform/x86/hp/Kconfig             | 16 ++++++++++++++++
+> >  drivers/platform/x86/hp/Makefile            |  1 +
+> >  drivers/platform/x86/hp/hp-bioscfg/Makefile | 11 +++++++++++
+> >  3 files changed, 28 insertions(+)
+> >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/Makefile
+>
+> thanks.
+> --
+> ~Randy
