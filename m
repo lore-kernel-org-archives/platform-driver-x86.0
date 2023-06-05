@@ -2,166 +2,107 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1308CC7EE23
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jun 2023 14:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E88C7EE24
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jun 2023 15:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234647AbjFEOwt (ORCPT
+        id S231886AbjFEPQs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Jun 2023 10:52:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39392 "EHLO
+        Mon, 5 Jun 2023 11:16:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234641AbjFEOwj (ORCPT
+        with ESMTP id S230503AbjFEPQr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Jun 2023 10:52:39 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92AB61A5;
-        Mon,  5 Jun 2023 07:52:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685976752; x=1717512752;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=FhIKj5hopuivdOQ/x6J+PFFfVaor+2CRZRn4OuX7eNw=;
-  b=CSaRlHTxGcMvByZWj/TaHgHnAgId+etnyLn9GXBVGFdychsP9BVU0/eR
-   YHb9N47pxitcGkkbkMdy/ThtGzw53bhznhZNEpukr2GI7kneWZoh60+Un
-   Wo3iHxG+o/bEZO7XmH9+JHSsjntjfyAaZQk4NQ5eAArrpjO2UHaRzJM4P
-   6oZ9ZNczbE2D9XO9iILaOGr6gUup/uivRA5T7c30cRIlHMykgFQIrpAPn
-   vGvmRg8ZiNpHlf32xsCGlQPXVqeDt/D4B+zw/p8pIToClcUZqAAz76sQg
-   p3Q9Z2I2Mbv8vPwGzZZypT0S/Ux6etoZR/rBX8CG3jsKE6gMbNrYgLXuD
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="358835557"
-X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
-   d="scan'208";a="358835557"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 07:52:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="711829563"
-X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
-   d="scan'208";a="711829563"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 05 Jun 2023 07:52:31 -0700
-Received: from [10.54.75.144] (debox1-desk1.jf.intel.com [10.54.75.144])
-        by linux.intel.com (Postfix) with ESMTP id 8991B580AD7;
-        Mon,  5 Jun 2023 07:52:31 -0700 (PDT)
-Message-ID: <2c109aabf846bda8a6e34cb2c4898b7e2c3ef90a.camel@linux.intel.com>
-Subject: Re: [PATCH 2/2] platform/x86/intel/pmc/mtl: Put devices in D3
- during resume
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     irenic.rajneesh@gmail.com, hdegoede@redhat.com,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Mon, 05 Jun 2023 07:52:31 -0700
-In-Reply-To: <9a45d987-6840-9c7a-b0b5-702cf3aba4f@linux.intel.com>
-References: <20230602232142.278155-1-david.e.box@linux.intel.com>
-         <20230602232142.278155-2-david.e.box@linux.intel.com>
-         <9a45d987-6840-9c7a-b0b5-702cf3aba4f@linux.intel.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+        Mon, 5 Jun 2023 11:16:47 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15B7AD2;
+        Mon,  5 Jun 2023 08:16:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=rp5lISqZ+lbzhf71v0hSlbE2sjYGt3ZfF7uVi/XekLk=; b=2rBOrWkPniSv1eylw13i89WePy
+        GtrLAgPUl/Uk9uFw8d3iV1Q16Kr1vQDIlkqv1tzH9T5UNzPNLOIxXaE/ZN0loQYA5hp7MZKaxKPBP
+        dcttdCeYfiHRIwscX4cq6nEGf8h1TQhm7gE35e+3CQwysF3uUUVF9BKXKQ2XLn2XdPrPO3sem3A33
+        p2s0avZhQ4zz1aCV7Raar+gtLLIf0lWew/WdvGHUnHfW6zGjX2B6MHkw25djWPff82YPq09xSReW5
+        rXyobZsWHyY4KBLpO4HOWmy1dCeyoy6drs09d5t1GumCW4h/JdklO1SMBMqvBylJ70gG7jOopVMK0
+        SCdpjCCw==;
+Received: from [2601:1c2:980:9ec0::2764]
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q6Bwr-00Fve0-24;
+        Mon, 05 Jun 2023 15:16:45 +0000
+Message-ID: <24b700bd-5817-db42-ce1d-1f97c8da5c92@infradead.org>
+Date:   Mon, 5 Jun 2023 08:16:43 -0700
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH v16 01/13] hp-bioscfg: Documentation
+Content-Language: en-US
+To:     Jorge Lopez <jorgealtxwork@gmail.com>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
+        ilpo.jarvinen@linux.intel.com
+References: <20230602131044.3297-1-jorge.lopez2@hp.com>
+ <20230602131044.3297-2-jorge.lopez2@hp.com>
+ <39a19a0b-610d-52bf-5050-eb870ad2e619@infradead.org>
+ <CAOOmCE9jmPpG8Do1h3uaMX9GKoioBLwak_3BeBoGPTtUj0Yj5Q@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <CAOOmCE9jmPpG8Do1h3uaMX9GKoioBLwak_3BeBoGPTtUj0Yj5Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2023-06-05 at 14:59 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Fri, 2 Jun 2023, David E. Box wrote:
->=20
-> > An earlier commit placed some driverless devices in D3 during boot so t=
-hat
-> > they don't block package cstate entry. Also place these devices in D3 a=
-fter
-> > resume from suspend.
-> >=20
-> > Fixes: 336ba968d3e3 ("platform/x86/intel/pmc/mtl: Put GNA/IPU/VPU devic=
-es in
-> > D3")
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > ---
-> > =C2=A0drivers/platform/x86/intel/pmc/mtl.c | 15 +++++++++++----
-> > =C2=A01 file changed, 11 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/drivers/platform/x86/intel/pmc/mtl.c
-> > b/drivers/platform/x86/intel/pmc/mtl.c
-> > index e8cc156412ce..d87c4597c6d4 100644
-> > --- a/drivers/platform/x86/intel/pmc/mtl.c
-> > +++ b/drivers/platform/x86/intel/pmc/mtl.c
-> > @@ -68,11 +68,8 @@ static void mtl_set_device_d3(unsigned int device)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > =C2=A0}
-> > =C2=A0
-> > -void mtl_core_init(struct pmc_dev *pmcdev)
-> > +static void mtl_fixup(void)
-> > =C2=A0{
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmcdev->map =3D &mtl_reg_map=
-;
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmcdev->core_configure =3D m=
-tl_core_configure;
-> > -
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Set power state of s=
-elect devices that do not have drivers to D3
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * so that they do not =
-block Package C entry.
-> > @@ -81,3 +78,13 @@ void mtl_core_init(struct pmc_dev *pmcdev)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mtl_set_device_d3(MTL_I=
-PU_PCI_DEV);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mtl_set_device_d3(MTL_V=
-PU_PCI_DEV);
->=20
-> I'd prefer the function be called something related to d3 / power state /=
-=20
-> or some along those lines rather than something obscure such as=20
-> mtl_fixup(). And you can move the comment to be a function comment now.
+Hi,
 
-Okay.
+On 6/5/23 06:32, Jorge Lopez wrote:
+> On Fri, Jun 2, 2023 at 5:55 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>>
+>>
+>> On 6/2/23 06:10, Jorge Lopez wrote:
+>>
+>>>
+>>> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+>>>
+>>> ---
+>>> Based on the latest platform-drivers-x86.git/for-next
+>>> ---
+>>>  .../testing/sysfs-class-firmware-attributes   | 101 +++++++++++++++++-
+>>>  1 file changed, 99 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+>>> index 4cdba3477176..df9904b9f39c 100644
+>>> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+>>> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
 
->=20
-> > =C2=A0}
-> > +
-> > +void mtl_core_init(struct pmc_dev *pmcdev)
-> > +{
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmcdev->map =3D &mtl_reg_map=
-;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmcdev->core_configure =3D m=
-tl_core_configure;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mtl_fixup();
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmcdev->resume_fixup =3D mtl=
-_fixup;
->=20
-> I'm a bit on the edge here whether this is a good approach in long-term o=
-r=20
-> if it would be better to just provide a way for the platform file to=20
-> replace entire .resume() (for this task it's obviously enough but it=20
-> feels a bit hacky to hook into one fixed place on resume path).
->=20
-> static __maybe_unused int pmc_core_resume(struct device *dev)
-> {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (pmcdev->resume)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0return pmcdev->resume();
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0else
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0return pmc_core_resume_common();
-> }
->=20
-> where pmc_core_resume_common() contains the current pmc_core_resume()=20
-> contents.
->=20
-> mtl_resume() would just call the d3 func and the common resume functions.
+>>> @@ -364,3 +393,71 @@ Description:
+>>>               use it to enable extra debug attributes or BIOS features for testing purposes.
+>>>
+>>>               Note that any changes to this attribute requires a reboot for changes to take effect.
+>>> +
+>>> +
+>>> +             HP specific class extensions - Secure Platform Manager (SPM)
+>>> +             --------------------------------
+>>> +
+>>> +What:                /sys/class/firmware-attributes/*/authentication/SPM/kek
+>>> +Date:                March 2023
+>>> +KernelVersion:       5.18
+>>
+>> Why 5.18 and that date?
+> 
+> It is the minimum kernel version where firmware-attributes are
+> supported and date when we expected hp-bioscfg driver support to be
+> available.
+> The driver, kernel versions and date changes weekly so we were placing
+> those dates and versions as tentative.
+> Any suggestions for Date and KernelVersion fields?
+> 
 
-Yeah, makes sense. There are several conditional tasks in the current resum=
-e
-code, so trying to have a fixed place in there to call a platform specific
-workaround may not be possible if we need to use this again for a different
-reason.
+No, sorry. But the different dates and versions are confusing.
 
-David
 
->=20
->=20
+Thanks for the answers.
 
+-- 
+~Randy
