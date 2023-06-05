@@ -2,78 +2,128 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F3DC77B73
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jun 2023 11:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56012C7EE2D
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jun 2023 12:00:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231322AbjFELgU (ORCPT
+        id S232982AbjFEMAH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Jun 2023 07:36:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53434 "EHLO
+        Mon, 5 Jun 2023 08:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230309AbjFELgS (ORCPT
+        with ESMTP id S230371AbjFEMAG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Jun 2023 07:36:18 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC735DF;
-        Mon,  5 Jun 2023 04:36:17 -0700 (PDT)
+        Mon, 5 Jun 2023 08:00:06 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9C129C;
+        Mon,  5 Jun 2023 05:00:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685964977; x=1717500977;
+  t=1685966404; x=1717502404;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=i4T6wDft4HeohTQF8IPAJyWm7IEXte3wK8OmY48VPqw=;
-  b=ncfomuVxKuqJcJEvCyMrZd8F6y8qoNw5fCwhTcmu5trp5GQ+OKA8ApPD
-   i4AiAPspYKqE5Scl+CMSzrnxDIl0UX6jvwJP1qAkT4bU3HqzY6CCjj2wy
-   vUvgZbaJtsQSxSWrmc/WJkzoqCWbgCeA6FGsBDBSDbSU1htOzkVxc1gwD
-   kdhQBGW8nJ++nGIvgGGE3lJ1Xs6X9SeJr2LxUlDA1YVjc3b3/mXVS1wb6
-   YnwFDquId1gHxA9H8+/5OERZzzRMSoP3CR/9Ef9AfpwDCTq0xj2MyejZ/
-   pldHBjpFByXD4iwhyiIrVEiUd2f0N5K0wExAPBdy7kq58DRtDEtqZJbuv
+  bh=p5/S5k7Qizlk2AVy9vIiaRFPNQhWyVQblWCerOYsPfI=;
+  b=Od5PUG5dodEOVF18JxdxDFjkopxQ52D/ts5EObcNfNn4wxmUjGGZ3XCi
+   LqZLHO3rLG84JlJs4ufuY5IzSeN3GJal+TNeWB3oQUrI6ejkJzpMH0WL6
+   YTQCx+JLirp93iQ4XWhm0GS1teeJNYQgoQxYOr9os1NpQ2b+Syoq+VFRf
+   Jz6s1ir8RAyRaGZpH0Q9mFGRsx83PCDZLve1gWO71iqwFoSG6c2QTQpiA
+   hyFw2tP3FrOuzVtmUDKWrKi1NjdQ8wAbLPOiJi1HVq/BOvIvpHX43DeSh
+   XbxuXZHazgyJmj7ep2VCQjA2IWhAvrrjg0t+Her/jNg01aG7uiXPy6Kz/
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="335963380"
+X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="422174161"
 X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
-   d="scan'208";a="335963380"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 04:36:17 -0700
+   d="scan'208";a="422174161"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 04:59:28 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="821162765"
+X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="702725735"
 X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
-   d="scan'208";a="821162765"
+   d="scan'208";a="702725735"
 Received: from gfittedx-mobl.ger.corp.intel.com ([10.252.47.115])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 04:36:16 -0700
-Date:   Mon, 5 Jun 2023 14:36:13 +0300 (EEST)
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 04:59:26 -0700
+Date:   Mon, 5 Jun 2023 14:59:24 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     SungHwan Jung <onenowy@gmail.com>
-cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: hp-wmi: Add thermal profile for Victus
- 16-d1xxx
-In-Reply-To: <20230604173023.4675-1-onenowy@gmail.com>
-Message-ID: <bb58b1be-4ced-2367-1412-7019f57c3d3b@linux.intel.com>
-References: <20230604173023.4675-1-onenowy@gmail.com>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+cc:     irenic.rajneesh@gmail.com, hdegoede@redhat.com,
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] platform/x86/intel/pmc/mtl: Put devices in D3 during
+ resume
+In-Reply-To: <20230602232142.278155-2-david.e.box@linux.intel.com>
+Message-ID: <9a45d987-6840-9c7a-b0b5-702cf3aba4f@linux.intel.com>
+References: <20230602232142.278155-1-david.e.box@linux.intel.com> <20230602232142.278155-2-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1225296555-1685964977=:2703"
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, 2 Jun 2023, David E. Box wrote:
 
---8323329-1225296555-1685964977=:2703
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
-On Mon, 5 Jun 2023, SungHwan Jung wrote:
-
-> This patch includes Platform Profile support (performance, balanced, quiet)
-> for Victus 16-d1xxx (8A25).
+> An earlier commit placed some driverless devices in D3 during boot so that
+> they don't block package cstate entry. Also place these devices in D3 after
+> resume from suspend.
 > 
-> Signed-off-by: SungHwan Jung <onenowy@gmail.com>
+> Fixes: 336ba968d3e3 ("platform/x86/intel/pmc/mtl: Put GNA/IPU/VPU devices in D3")
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/mtl.c | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+> index e8cc156412ce..d87c4597c6d4 100644
+> --- a/drivers/platform/x86/intel/pmc/mtl.c
+> +++ b/drivers/platform/x86/intel/pmc/mtl.c
+> @@ -68,11 +68,8 @@ static void mtl_set_device_d3(unsigned int device)
+>  	}
+>  }
+>  
+> -void mtl_core_init(struct pmc_dev *pmcdev)
+> +static void mtl_fixup(void)
+>  {
+> -	pmcdev->map = &mtl_reg_map;
+> -	pmcdev->core_configure = mtl_core_configure;
+> -
+>  	/*
+>  	 * Set power state of select devices that do not have drivers to D3
+>  	 * so that they do not block Package C entry.
+> @@ -81,3 +78,13 @@ void mtl_core_init(struct pmc_dev *pmcdev)
+>  	mtl_set_device_d3(MTL_IPU_PCI_DEV);
+>  	mtl_set_device_d3(MTL_VPU_PCI_DEV);
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+I'd prefer the function be called something related to d3 / power state / 
+or some along those lines rather than something obscure such as 
+mtl_fixup(). And you can move the comment to be a function comment now.
+
+>  }
+> +
+> +void mtl_core_init(struct pmc_dev *pmcdev)
+> +{
+> +	pmcdev->map = &mtl_reg_map;
+> +	pmcdev->core_configure = mtl_core_configure;
+> +
+> +	mtl_fixup();
+> +
+> +	pmcdev->resume_fixup = mtl_fixup;
+
+I'm a bit on the edge here whether this is a good approach in long-term or 
+if it would be better to just provide a way for the platform file to 
+replace entire .resume() (for this task it's obviously enough but it 
+feels a bit hacky to hook into one fixed place on resume path).
+
+static __maybe_unused int pmc_core_resume(struct device *dev)
+{
+	if (pmcdev->resume)
+		return pmcdev->resume();
+	else
+		return pmc_core_resume_common();
+}
+
+where pmc_core_resume_common() contains the current pmc_core_resume() 
+contents.
+
+mtl_resume() would just call the d3 func and the common resume functions.
+
 
 -- 
  i.
 
---8323329-1225296555-1685964977=:2703--
