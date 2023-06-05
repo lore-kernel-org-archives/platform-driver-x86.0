@@ -2,60 +2,60 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7081BC7EE23
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jun 2023 13:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93EAC7EE2F
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jun 2023 13:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230223AbjFENH0 (ORCPT
+        id S232384AbjFENdV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Jun 2023 09:07:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55494 "EHLO
+        Mon, 5 Jun 2023 09:33:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231546AbjFENH0 (ORCPT
+        with ESMTP id S234087AbjFENdU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Jun 2023 09:07:26 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A22B4EE;
-        Mon,  5 Jun 2023 06:07:22 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2b1b86146afso30415491fa.3;
-        Mon, 05 Jun 2023 06:07:22 -0700 (PDT)
+        Mon, 5 Jun 2023 09:33:20 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C6FCD;
+        Mon,  5 Jun 2023 06:33:19 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-2b1adf27823so42139591fa.2;
+        Mon, 05 Jun 2023 06:33:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685970441; x=1688562441;
+        d=gmail.com; s=20221208; t=1685971997; x=1688563997;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=P6AWBTDpG34/EWY8Thq7a1h/Nl1InpKPLTTSry7qvJE=;
-        b=VpBs0u+fENX9RcEg39Bo6tqOPKkjcSgj1nY9DLdILgwpSusCYdDvW9zW9sZQB9Ag9W
-         NI6pNOJt0jn5hwIMVLISv85/a202rBEDLm3ieqa6cO2VGG/qGSgxHgMfIflGVG2Wa9qG
-         P11P55TgYxilnm10LxF1CkMf8Y35c9zwuiJ2dHufaQPLbc//GsSCz+1FbEKGm1adPZ14
-         n0oA224JggEQmuyHz/FiLmkUETFL8PfhlqW+sjV8Yllyjb2sFJbPD+AAoIGb37X6tCYp
-         /dMTEY3OfIakuOsTNyOhnh95TxgMTtNmsJqxeA7cEEB1AApwoGb04/Lg9wliKVZnd6/P
-         A1Ow==
+        bh=yl2FRRZbqp6hkInYnbnTkh2CQSLwc6kpHyElfV11jp4=;
+        b=nJKXh53CYDqPRRUCBt0EeTg0bIzYC1Z6d+GcW4Z59Nw0iY5koUcaMsIGKf2ORLIQ24
+         ONhba79cdf4J0TnhZBXhtMf3EPPHewPbJ1IDptP77tTVEAY2snKzC8F4WE8FK/kMF01w
+         9Mf8hU/Y8IQoaa/AbJO0SBstyldrnkvB5WNgtHUgFmyDS4Upgl5EsJVLQQRj9ZJFH3lA
+         Y+v2aLiePLz5HWZMge6E7XU8OQ0xMLO74qMdGYgE4PBlDLWsY2JvCcNH9hA5u6+L3bB1
+         gGLbC5FZe/QSuC0XA/BN6xLmgLwB5IPbkuQRD2lI23/ZWXZz/OqxjdGZkSR237mNBZ08
+         8v2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685970441; x=1688562441;
+        d=1e100.net; s=20221208; t=1685971997; x=1688563997;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=P6AWBTDpG34/EWY8Thq7a1h/Nl1InpKPLTTSry7qvJE=;
-        b=NflC4MK9gZRvdCt1sbWjxRt7eUFUfqsfrc7UxMDsgl4UdCKLseGdTSu6Otj1dU/Is4
-         yo6PDtWluks/ZBGfMi1ZxISimyt1SB/GjsufABOGEemitNUA+c1UVoQH6pAx8wToAbBv
-         hpTpIoXywBGnSMCNVXKlTNaFmzW0j/eTqWyl/jrEXs3UYexcEpEoWyOv2BI4fxJ7wmqG
-         z8APbSFUftf6AOJXmWbXpWmW/ndi1pfhV8AuZdxr8Znls9yrcJrdZ8DEm3xJ03OXH+cz
-         YEiJpxn0ynyfcUg4dK9aAZrR0xpbmcMsPMQBnltceyfPEXsR2FFeqOishfvCkm1Qk7zg
-         NRkw==
-X-Gm-Message-State: AC+VfDxwi1S2pxpjslK+ahl3K4mU8CQna7T0YaLAYigF13y5jT09TGVY
-        u9m+Cx7TfXwJiTmg/Rr/ZbZIAkNXyqcwLZ3n6qs9Esyy
-X-Google-Smtp-Source: ACHHUZ4CymYYxEqlTaDJBBHUqSZTWl0GK0OHPWXkjPHMEpk5B4dXP+bHTVroOgthn3gLpMFWGNU8EhJVo3g77/Whu1E=
-X-Received: by 2002:a2e:b1c4:0:b0:2ac:77e9:c7b0 with SMTP id
- e4-20020a2eb1c4000000b002ac77e9c7b0mr4476429lja.9.1685970440606; Mon, 05 Jun
- 2023 06:07:20 -0700 (PDT)
+        bh=yl2FRRZbqp6hkInYnbnTkh2CQSLwc6kpHyElfV11jp4=;
+        b=AP0KNXSPmG2xEcJ2oJJm+BSHbVR0RZT+YS/d7Hx/wISmnz9dysaiFucraw6Uwo8WWi
+         3AurffgE/Bmf87+QrzlVzz62IJmyNxe7e4lSc+hyBMaNueix7W98tdBLY8fYyQWgrraG
+         mnotoGA+2MFaENYuyrdXSI42BzpijIcQtLEMJkYFRtXuayjQBSiEgtRsnMkC/baWf/ky
+         qsOcEeufn1h/ZpzOH23R8YuAozmWS5cyAiuLwmw34LMnXDRAW6g+1kAlE0BKSGiZ2SIt
+         o8Z9WcqN0vH24F0maZJaRf6hKLGzO7TicCCNzy7Zd/ToYjwn5B1p24qH73hVisIqYiUG
+         fV+g==
+X-Gm-Message-State: AC+VfDxXASeuyFvOVs9ojNT77f6tTIolGftYeye282qVj33mVMQyThe4
+        8XS7veWyxKtW/3JaPx+Qst5jjv20Nm75j7vthqc=
+X-Google-Smtp-Source: ACHHUZ7YKBeNxLNrxcOxiF/3NT42dU2EAVK/I4SAAk/05LVJNAoDhCsUWzWxmTgxJQA+jUdRfDPixCqQVCdxPUa8Me0=
+X-Received: by 2002:a05:651c:412:b0:2ad:99b6:1728 with SMTP id
+ 18-20020a05651c041200b002ad99b61728mr3578309lja.24.1685971997091; Mon, 05 Jun
+ 2023 06:33:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230602131044.3297-1-jorge.lopez2@hp.com> <20230602131044.3297-13-jorge.lopez2@hp.com>
- <83d86690-fdbe-66fb-221e-5443851330c7@infradead.org>
-In-Reply-To: <83d86690-fdbe-66fb-221e-5443851330c7@infradead.org>
+References: <20230602131044.3297-1-jorge.lopez2@hp.com> <20230602131044.3297-2-jorge.lopez2@hp.com>
+ <39a19a0b-610d-52bf-5050-eb870ad2e619@infradead.org>
+In-Reply-To: <39a19a0b-610d-52bf-5050-eb870ad2e619@infradead.org>
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Mon, 5 Jun 2023 08:06:43 -0500
-Message-ID: <CAOOmCE9GnGrqzcnF54e1JgysqiFVVkjATFVuFAZVUQAZ-KvnLw@mail.gmail.com>
-Subject: Re: [PATCH v16 12/13] hp-bioscfg: Makefile
+Date:   Mon, 5 Jun 2023 08:32:39 -0500
+Message-ID: <CAOOmCE9jmPpG8Do1h3uaMX9GKoioBLwak_3BeBoGPTtUj0Yj5Q@mail.gmail.com>
+Subject: Re: [PATCH v16 01/13] hp-bioscfg: Documentation
 To:     Randy Dunlap <rdunlap@infradead.org>
 Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de,
@@ -66,76 +66,219 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 2, 2023 at 5:46=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org>=
+On Fri, Jun 2, 2023 at 5:55=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org>=
  wrote:
 >
-> Hi again,
+>
 >
 > On 6/2/23 06:10, Jorge Lopez wrote:
-> > HP BIOS Configuration driver purpose is to provide a driver supporting
-> > the latest sysfs class firmware attributes framework allowing the user
-> > to change BIOS settings and security solutions on HP Inc.=E2=80=99s com=
-mercial
-> > notebooks.
-> >
-> > Many features of HP Commercial notebooks can be managed using Windows
-> > Management Instrumentation (WMI). WMI is an implementation of Web-Based
-> > Enterprise Management (WBEM) that provides a standards-based interface
-> > for changing and monitoring system settings. HP BIOSCFG driver provides
-> > a native Linux solution and the exposed features facilitates the
-> > migration to Linux environments.
-> >
-> > The Linux security features to be provided in hp-bioscfg driver enables
-> > managing the BIOS settings and security solutions via sysfs, a virtual
-> > filesystem that can be used by user-mode applications. The new
-> > documentation cover HP-specific firmware sysfs attributes such Secure
-> > Platform Management and Sure Start. Each section provides security
-> > feature description and identifies sysfs directories and files exposed
-> > by the driver.
-> >
-> > Many HP Commercial notebooks include a feature called Secure Platform
-> > Management (SPM), which replaces older password-based BIOS settings
-> > management with public key cryptography. PC secure product management
-> > begins when a target system is provisioned with cryptographic keys
-> > that are used to ensure the integrity of communications between system
-> > management utilities and the BIOS.
-> >
-> > HP Commercial notebooks have several BIOS settings that control its
-> > behaviour and capabilities, many of which are related to security.
-> > To prevent unauthorized changes to these settings, the system can
-> > be configured to use a cryptographic signature-based authorization
-> > string that the BIOS will use to verify authorization to modify the
-> > setting.
-> >
-> > Linux Security components are under development and not published yet.
-> > The only linux component is the driver (hp bioscfg) at this time.
-> > Other published security components are under Windows.
-> >
 >
-> A commit message should tell what and why. E.g.:
->
-> Add Makefile and Kconfig to build hp-bioscfg.
->
-> It does not need all of that boilerplate info.
-> The cover letter is good for that.
->
-> The "why" part can and usually should include some background/history
-> info.
-
-I will update the commit message for all portions of the driver as indicate=
-d
->
+> >
 > > Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 > >
 > > ---
 > > Based on the latest platform-drivers-x86.git/for-next
 > > ---
-> >  drivers/platform/x86/hp/Kconfig             | 16 ++++++++++++++++
-> >  drivers/platform/x86/hp/Makefile            |  1 +
-> >  drivers/platform/x86/hp/hp-bioscfg/Makefile | 11 +++++++++++
-> >  3 files changed, 28 insertions(+)
-> >  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/Makefile
+> >  .../testing/sysfs-class-firmware-attributes   | 101 +++++++++++++++++-
+> >  1 file changed, 99 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes =
+b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> > index 4cdba3477176..df9904b9f39c 100644
+> > --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> > +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> > @@ -126,6 +131,21 @@ Description:
+> >                                       value will not be effective throu=
+gh sysfs until this rule is
+> >                                       met.
+> >
+> > +             HP specific class extensions
+> > +             ------------------------------
+> > +
+> > +             On HP systems the following additional attributes are ava=
+ilable:
+> > +
+> > +             "ordered-list"-type specific properties:
+> > +
+> > +             elements:
+> > +                                     A file that can be read to obtain=
+ the possible
+> > +                                     list of values of the <attr>. Val=
+ues are separated using
+> > +                                     semi-colon (``;``) and listed acc=
+ording to their priority.
+> > +                                     An element listed first has the h=
+ighest priority. Writing
+> > +                                     the list in a different order to =
+current_value alters
+> > +                                     the priority order for the partic=
+ular attribute.
+> > +
+> >  What:                /sys/class/firmware-attributes/*/authentication/
+> >  Date:                February 2021
+> >  KernelVersion:       5.11
 >
-> thanks.
+> Why 5.11 and that date?
+
+Date and Kernel values were provided by an earlier submitter.
+
+>
+> > @@ -364,3 +393,71 @@ Description:
+> >               use it to enable extra debug attributes or BIOS features =
+for testing purposes.
+> >
+> >               Note that any changes to this attribute requires a reboot=
+ for changes to take effect.
+> > +
+> > +
+> > +             HP specific class extensions - Secure Platform Manager (S=
+PM)
+> > +             --------------------------------
+> > +
+> > +What:                /sys/class/firmware-attributes/*/authentication/S=
+PM/kek
+> > +Date:                March 2023
+> > +KernelVersion:       5.18
+>
+> Why 5.18 and that date?
+
+It is the minimum kernel version where firmware-attributes are
+supported and date when we expected hp-bioscfg driver support to be
+available.
+The driver, kernel versions and date changes weekly so we were placing
+those dates and versions as tentative.
+Any suggestions for Date and KernelVersion fields?
+
+>
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description:
+> > +             'kek' Key-Encryption-Key is a write-only file that can be=
+ used to configure the
+> > +             RSA public key that will be used by the BIOS to verify
+> > +             signatures when setting the signing key.  When written,
+> > +             the bytes should correspond to the KEK certificate
+> > +             (x509 .DER format containing an OU).  The size of the
+> > +             certificate must be less than or equal to 4095 bytes.
+> > +
+> > +What:                /sys/class/firmware-attributes/*/authentication/S=
+PM/sk
+> > +Date:                March 2023
+> > +KernelVersion:       5.18
+>
+> Why 5.18 and that date?
+
+See previous explanation.
+
+>
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description:
+> > +             'sk' Signature Key is a write-only file that can be used =
+to configure the RSA
+> > +             public key that will be used by the BIOS to verify signat=
+ures
+> > +             when configuring BIOS settings and security features.  Wh=
+en
+> > +             written, the bytes should correspond to the modulus of th=
+e
+> > +             public key.  The exponent is assumed to be 0x10001.
+> > +
+> > +What:                /sys/class/firmware-attributes/*/authentication/S=
+PM/status
+> > +Date:                March 2023
+> > +KernelVersion:       5.18
+>
+> Why 5.18 and that date?
+
+See previous explanation.
+
+>
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description:
+> > +             'status' is a read-only file that returns ASCII text in J=
+SON format reporting
+> > +             the status information.
+> > +
+> > +               "State": "not provisioned | provisioned | provisioning =
+in progress ",
+>
+> Drop the space after "in progress" ?
+
+Done!
+
+>
+> > +               "Version": " Major. Minor ",
+>
+> So Major. should have a space before and after it? and Minor should have =
+a space after it?
+
+Neither.  I will remove the space before and after for both Major and
+Minor.    "Major.Minor"
+
+>
+> > +               "Nonce": <16-bit unsigned number display in base 10>,
+> > +               "FeaturesInUse": <16-bit unsigned number display in bas=
+e 10>,
+> > +               "EndorsementKeyMod": "<256 bytes in base64>",
+> > +               "SigningKeyMod": "<256 bytes in base64>"
+> > +
+> > +What:                /sys/class/firmware-attributes/*/attributes/Sure_=
+Start/audit_log_entries
+> > +Date:                March 2023
+> > +KernelVersion:       5.18
+>
+> Why 5.18 and that date?
+
+It is the minimum kernel version where firmware-attributes are
+supported and date when we expected hp-bioscfg driver support to be
+available.
+The driver, kernel versions and date changes weekly so we were placing
+those dates and versions as tentative.
+Any suggestions for Date and KernelVersion fields?
+
+>
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description:
+> > +             'audit_log_entries' is a read-only file that returns the =
+events in the log.
+> > +
+> > +                     Audit log entry format
+> > +
+> > +                     Byte 0-15:   Requested Audit Log entry  (Each Aud=
+it log is 16 bytes)
+> > +                     Byte 16-127: Unused
+> > +
+> > +What:                /sys/class/firmware-attributes/*/attributes/Sure_=
+Start/audit_log_entry_count
+> > +Date:                March 2023
+> > +KernelVersion:       5.18
+>
+> Why 5.18 and that date?
+
+See earlier explanation
+
+>
+> > +Contact:     "Jorge Lopez" <jorge.lopez2@hp.com>
+> > +Description:
+> > +             'audit_log_entry_count' is a read-only file that returns =
+the number of existing
+> > +             audit log events available to be read. Values are separat=
+ed using comma (``,``)
+>
+> End the sentence above with a '.' please.
+
+Done!
+
+>
+> > +
+> > +                     [No of entries],[log entry size],[Max number of e=
+ntries supported]
+> > +
+> > +             log entry size identifies audit log size for the current =
+BIOS version.
+> > +             The current size is 16 bytes but it can be up to 128 byte=
+s long in future BIOS
+> > +             versions.
+>
+> Thanks.
 > --
 > ~Randy
