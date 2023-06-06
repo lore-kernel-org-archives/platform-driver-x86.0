@@ -2,64 +2,112 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E322C7EE24
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jun 2023 09:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C730C7EE2F
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jun 2023 11:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237312AbjFFJ4Z (ORCPT
+        id S233309AbjFFL1X (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Jun 2023 05:56:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58518 "EHLO
+        Tue, 6 Jun 2023 07:27:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237202AbjFFJ4Y (ORCPT
+        with ESMTP id S235654AbjFFL1U (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Jun 2023 05:56:24 -0400
-Received: from mail.liffey.pl (mail.liffey.pl [89.116.26.218])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7932E58
-        for <platform-driver-x86@vger.kernel.org>; Tue,  6 Jun 2023 02:56:19 -0700 (PDT)
-Received: by mail.liffey.pl (Postfix, from userid 1001)
-        id 1D32A7E1E17; Tue,  6 Jun 2023 09:35:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=liffey.pl; s=mail;
-        t=1686036947; bh=OqM4+o/moYKNduuI5gw1YnFOqNP/S23znQJb9V+pDlE=;
-        h=Date:From:To:Subject:From;
-        b=ndk53MrKFH3nBEoOERffsvUDPdl5jaHOb8Z0aRCyqGEePHlrw2gbg95JqBFNZzs9B
-         cvlur00vRrqpikAyIAdJOIRPslmUxOKtn/YqLSCZLDWlpyBme9oOlLYik4BXZfLSUx
-         k9F/zxEb3ro1vZygrQTd8whY8xPDim6mmnTrzdx83gEPiuSBM/nykOSVKebQVBOXEr
-         88EwEVHjl+9noFmilLgWu5uCBPmsNS6WqV+v7K3uir2H3IihOxkcTht2c6mRauD7jq
-         +ppw/KgnM2YPnaFDFitLt+WqlSfGWIrwp0qbDYoe5f+EgozHV/CxDXGn8tMZ7MXH+F
-         Hyu/TPSB9jJXg==
-Received: by mail.liffey.pl for <platform-driver-x86@vger.kernel.org>; Tue,  6 Jun 2023 07:35:34 GMT
-Message-ID: <20230606084500-0.1.1z.24mr.0.b37ozo2dej@liffey.pl>
-Date:   Tue,  6 Jun 2023 07:35:34 GMT
-From:   =?UTF-8?Q? "Micha=C5=82_Rodziewicz" ?= 
-        <michal.rodziewicz@liffey.pl>
-To:     <platform-driver-x86@vger.kernel.org>
-Subject: =?UTF-8?Q?Bezp=C5=82atna_konsultacja?=
-X-Mailer: mail.liffey.pl
+        Tue, 6 Jun 2023 07:27:20 -0400
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F507E52;
+        Tue,  6 Jun 2023 04:27:19 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-3f866383b25so28426851cf.2;
+        Tue, 06 Jun 2023 04:27:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686050838; x=1688642838;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mgUkyPGtY/ECAh7OGy1FqTi4RQPwzsS/x8pOApuuV6s=;
+        b=iIjniDGDdBz6cdq98ieWcGufN5ToqSK2sdkvaIeGmOJfDlGTz+ByyK+He666X0pxL2
+         guktgF7MbaRVoFc8kXqWZdE5+fLM9SH49a8yh2G03ByOCo3NnEHwR7KUezQtmn6EJyvl
+         cSsTCFihg3wo9+zNFOhInmZ9mPi/xibvOM4muUdfEP4zwNc5hNffEQkHQy8IoXUdzq5K
+         3uzHkNmts/b8LsHpaFESTAKKoLGW+vnSupirXBCNe5WMtj3gc0p2/+dH0HO/5WkD8f6Q
+         OXp+N47+g+he0Ggf3Y6Hz1iNOUIdfkHoyyYWzJ98TS10yzrIh8x9I8zj19ndKarIc535
+         Ykhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686050838; x=1688642838;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mgUkyPGtY/ECAh7OGy1FqTi4RQPwzsS/x8pOApuuV6s=;
+        b=AMOFdzrlA1xBx8CAtm2H2LcJYljdJe8z0LlUJMORkVAV0PzEl7mKS0wEJF8pccM2Tk
+         oYHXCtP276pl841zviy2IG6cTs9rmky2fNfLfRdcKAwe7Mm2BB/xwS+Z2ShIFjh/DccE
+         pgOn6BaVXJHtEvTfO1Fg3gcupixpVPskc10GaeqvBOG1IQzO3Uo4bJYpS064ispYiFmD
+         hY5OOSMvKnWNQi5Q86a1b4/IfMduJgq+olVaAveiT61WXJtQs5Km3e+oa97tT7rBHuUB
+         AgNkR2mSftEtysj37+IVwyYhgmHrs485Va0dvOniVqs/BMQrCBKBwHkuJyJFwNXi5YFe
+         w+Hg==
+X-Gm-Message-State: AC+VfDw3nUxQ9Z19QrMJ2R/N9ttQVkCvOh1XxdfX3jV/eijX8BYRoitL
+        zsRyiTTXmt1AtOkRbeQ6aHLVkebGiSviphgC2rU=
+X-Google-Smtp-Source: ACHHUZ5Q4F4QW87/DNVfTKCqbyYWyCtIdnNppxOTyRQLbUZ4pRst0b4pGcjiSEzo4MMe8TswTsQO8W9Ey6yMT4sGA20=
+X-Received: by 2002:a05:6214:da9:b0:5f8:ad2a:fef7 with SMTP id
+ h9-20020a0562140da900b005f8ad2afef7mr2141520qvh.32.1686050838562; Tue, 06 Jun
+ 2023 04:27:18 -0700 (PDT)
 MIME-Version: 1.0
+References: <20230531134429.171337-1-hdegoede@redhat.com> <CAHp75VfZN5M8LiP3nw0NT5p3WyJJJJm6w2OZKgm28b6aokzopQ@mail.gmail.com>
+ <b1cdf8b7-ae9b-a86d-5298-bd0cfa70f9cb@redhat.com>
+In-Reply-To: <b1cdf8b7-ae9b-a86d-5298-bd0cfa70f9cb@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 6 Jun 2023 14:26:42 +0300
+Message-ID: <CAHp75Vc7fq=PK5vN5Ya6yMRG3VCFhfwBVobxsSKYwKUyWnDq3g@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/x86: int3472: Evaluate device's _DSM method
+ to control imaging clock
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Daniel Scally <dan.scally@ideasonboard.com>,
+        bingbu.cao@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        Hao Yao <hao.yao@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Dzie=C5=84 dobry,
+On Tue, Jun 6, 2023 at 12:23=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+> On 5/31/23 19:56, Andy Shevchenko wrote:
+> > On Wed, May 31, 2023 at 4:44=E2=80=AFPM Hans de Goede <hdegoede@redhat.=
+com> wrote:
 
-por=C3=B3wnujemy oferty r=C3=B3=C5=BCnych produkt=C3=B3w finansowych w sp=
-os=C3=B3b niezale=C5=BCny i obiektywny, dopasowuj=C4=85c ofert=C4=99 do P=
-a=C5=84stwa potrzeb.=20
+...
 
-=C5=9Awiadczymy tak=C5=BCe us=C5=82ugi serwisowania um=C3=B3w, pomagamy z=
-abezpieczy=C4=87 rodziny os=C3=B3b prowadz=C4=85cych firm=C4=99, zapewnia=
-my tak=C5=BCe sta=C5=82=C4=85 dyspozycyjno=C5=9B=C4=87 naszych doradc=C3=B3=
-w.
+> >> +       if (clk->ena_gpio)
+> >> +               gpiod_set_value_cansleep(clk->ena_gpio, 1);
+> >> +       else
+> >> +               skl_int3472_enable_clk_acpi_method(clk, 1);
+> >
+> > Looking at this, can we avoid duplicative validation of the GPIO?
+> > Perhaps skl_int3472_enable_clk_acpi_method() can have embedded another
+> > check so they won't be called together?
+> >
+> > ...
+> >
+> >> +       if (clk->ena_gpio)
+> >> +               gpiod_set_value_cansleep(clk->ena_gpio, 0);
+> >> +       else
+> >> +               skl_int3472_enable_clk_acpi_method(clk, 0);
+> >
+> > Ditto.
+>
+> Ack, I've squashed a fix for this into this patch while merging it into
+> my review-hans branch.
 
-Koncentrujemy si=C4=99 na zabezpieczeniu p=C5=82ynno=C5=9Bci finansowej K=
-lient=C3=B3w, pomagamy zbiera=C4=87 kapita=C5=82 i korzystnie go lokowa=C4=
-=87.=20
+Now you have two different checks for the same, I would suggest that
+you switch to check clk->cl in the skl_int3472_enable_clk()
+as it's done in the skl_int3472_register_dsm_clock() instead of GPIO.
+Other way around is also possible but it seems to me that checking for
+clock existence has better guarantees than just checking for GPIO
+availability.
 
-Je=C5=BCeli potrzebuj=C4=85 Pa=C5=84stwa doradztwa finansowego, jeste=C5=9B=
-my do dyspozycji.
-
-
-Pozdrawiam
-Micha=C5=82 Rodziewicz
+--=20
+With Best Regards,
+Andy Shevchenko
