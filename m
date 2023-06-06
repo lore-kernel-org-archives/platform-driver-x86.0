@@ -2,71 +2,119 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACE5C77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jun 2023 13:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13A0C77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jun 2023 13:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238179AbjFFNWq (ORCPT
+        id S237748AbjFFNXk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Jun 2023 09:22:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49168 "EHLO
+        Tue, 6 Jun 2023 09:23:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238202AbjFFNWj (ORCPT
+        with ESMTP id S233251AbjFFNXi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Jun 2023 09:22:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D690012F;
-        Tue,  6 Jun 2023 06:22:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 68D4563328;
-        Tue,  6 Jun 2023 13:22:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CA450C433EF;
-        Tue,  6 Jun 2023 13:22:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686057756;
-        bh=f/B8iHr2mSa6qgim0GrC6uteqpM87+oCSmgtHaNNIO0=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=bsWSudUrnqvO8u66DUdRjwQ6NeAbsefnCx8mKxmH9uWML8kDdE3RmNJHHgr7Uaws9
-         GPbxlbRR2AsyINdx9bOqCZR7lIHCLVxQG1V5SOphHa2bbRa+ASC3jyj70aaXydqxfF
-         ilKp21DpkQzKFLlpao8oPivoOVanm+AwHyHR3m/azJnUMK3yibd4N1EWbtHf21srNy
-         pZm8T7zvX777DlLBxVvRLZu0mZIDHbEu3hWBx04hdNpkOSmfnB8rFruvZc1ZPBrz+8
-         Wc5JSHzx4W9KOakYm6qaxOSOmNsZIqUuLNVoOo16IoMEAqxoE9BFOAGOSjCAkqPoA+
-         fawyAZ5GNsqEg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B6EC5C4166F;
-        Tue,  6 Jun 2023 13:22:36 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for 6.4-3
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <0614c271-1786-c032-a888-26c9f9ae5a70@redhat.com>
-References: <0614c271-1786-c032-a888-26c9f9ae5a70@redhat.com>
-X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
-X-PR-Tracked-Message-Id: <0614c271-1786-c032-a888-26c9f9ae5a70@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.4-4
-X-PR-Tracked-Commit-Id: fb109fba728407fa4a84d659b5cb87cd8399d7b3
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 846b065da6460a4ac9d927e5511ce24901bf43ad
-Message-Id: <168605775674.13551.4954484838932493292.pr-tracker-bot@kernel.org>
-Date:   Tue, 06 Jun 2023 13:22:36 +0000
+        Tue, 6 Jun 2023 09:23:38 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1851E6E;
+        Tue,  6 Jun 2023 06:23:34 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="355523748"
+X-IronPort-AV: E=Sophos;i="6.00,221,1681196400"; 
+   d="scan'208";a="355523748"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2023 06:23:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="742146299"
+X-IronPort-AV: E=Sophos;i="6.00,221,1681196400"; 
+   d="scan'208";a="742146299"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP; 06 Jun 2023 06:23:24 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1q6Weh-001dqM-0m;
+        Tue, 06 Jun 2023 16:23:23 +0300
+Date:   Tue, 6 Jun 2023 16:23:22 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Daniel Scally <dan.scally@ideasonboard.com>,
+        bingbu.cao@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        Hao Yao <hao.yao@intel.com>
+Subject: Re: [PATCH v2] platform/x86: int3472: Evaluate device's _DSM method
+ to control imaging clock
+Message-ID: <ZH8zSqY2uMr+FuHh@smile.fi.intel.com>
+References: <20230531134429.171337-1-hdegoede@redhat.com>
+ <CAHp75VfZN5M8LiP3nw0NT5p3WyJJJJm6w2OZKgm28b6aokzopQ@mail.gmail.com>
+ <b1cdf8b7-ae9b-a86d-5298-bd0cfa70f9cb@redhat.com>
+ <CAHp75Vc7fq=PK5vN5Ya6yMRG3VCFhfwBVobxsSKYwKUyWnDq3g@mail.gmail.com>
+ <5d38e467-d3f9-1d7b-84e7-e107e048cb01@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5d38e467-d3f9-1d7b-84e7-e107e048cb01@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The pull request you sent on Tue, 6 Jun 2023 10:41:29 +0200:
+On Tue, Jun 06, 2023 at 03:13:47PM +0200, Hans de Goede wrote:
+> On 6/6/23 13:26, Andy Shevchenko wrote:
+> > On Tue, Jun 6, 2023 at 12:23 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >> On 5/31/23 19:56, Andy Shevchenko wrote:
+> >>> On Wed, May 31, 2023 at 4:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.4-4
+...
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/846b065da6460a4ac9d927e5511ce24901bf43ad
+> >>>> +       if (clk->ena_gpio)
+> >>>> +               gpiod_set_value_cansleep(clk->ena_gpio, 1);
+> >>>> +       else
+> >>>> +               skl_int3472_enable_clk_acpi_method(clk, 1);
+> >>>
+> >>> Looking at this, can we avoid duplicative validation of the GPIO?
+> >>> Perhaps skl_int3472_enable_clk_acpi_method() can have embedded another
+> >>> check so they won't be called together?
+> >>>
+> >>> ...
+> >>>
+> >>>> +       if (clk->ena_gpio)
+> >>>> +               gpiod_set_value_cansleep(clk->ena_gpio, 0);
+> >>>> +       else
+> >>>> +               skl_int3472_enable_clk_acpi_method(clk, 0);
+> >>>
+> >>> Ditto.
+> >>
+> >> Ack, I've squashed a fix for this into this patch while merging it into
+> >> my review-hans branch.
+> > 
+> > Now you have two different checks for the same, I would suggest that
+> > you switch to check clk->cl in the skl_int3472_enable_clk()
+> > as it's done in the skl_int3472_register_dsm_clock() instead of GPIO.
+> > Other way around is also possible but it seems to me that checking for
+> > clock existence has better guarantees than just checking for GPIO
+> > availability.
+> 
+> Hmm, you mean the:
+> 
+>         if (int3472->clock.cl)
+>                 return 0; /* A GPIO controlled clk has already been registered */
+> 
+> Check in skl_int3472_register_dsm_clock() ? That matches with / aligns with
+> this check:
+> 
+>         if (int3472->clock.cl)
+>                 return -EBUSY;
+> 
+> in skl_int3472_register_gpio_clock().
+> 
+> To me it seems sensible to align the checks for "a clk has already been
+> registered" up this way.
 
-Thank you!
+I'm talking about enable method when we actually change the clock state.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+With Best Regards,
+Andy Shevchenko
+
+
