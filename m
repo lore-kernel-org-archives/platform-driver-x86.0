@@ -2,216 +2,142 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A21C7EE25
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Jun 2023 19:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F68C7EE23
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Jun 2023 23:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbjFGTRX (ORCPT
+        id S231970AbjFGXjP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Jun 2023 15:17:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42334 "EHLO
+        Wed, 7 Jun 2023 19:39:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232462AbjFGTRW (ORCPT
+        with ESMTP id S229968AbjFGXjP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Jun 2023 15:17:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 167D31BF9
-        for <platform-driver-x86@vger.kernel.org>; Wed,  7 Jun 2023 12:16:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686165403;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cZNWBgFagXc/NX64lSZGo0BDhqymiWiaab1rV7vOvEQ=;
-        b=gwY+jmP1jUnlPFkTMg0vHw0WYiBVJhBldJCRko2elJA9qsrwAp9BMmeRcsmmFcZtNZ8Q2S
-        F3hLGiTiutJ1PZ25QMG2jRcH3+zPmc+zv5dp5DRkolxVCnstn3zeZCdzOFXgQ0kzJl3e4e
-        FqC/vlbXz8Q8pWNVbKcwdz9RJnKQN8E=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-288-nQUkijYhN7y4fx4nx9J_6A-1; Wed, 07 Jun 2023 15:16:41 -0400
-X-MC-Unique: nQUkijYhN7y4fx4nx9J_6A-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9745c72d99cso602166266b.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 07 Jun 2023 12:16:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686165400; x=1688757400;
-        h=in-reply-to:from:content-language:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cZNWBgFagXc/NX64lSZGo0BDhqymiWiaab1rV7vOvEQ=;
-        b=mFFkMCCysbKrSlS67DBbSvJfJJ3l5vBiMpIYtFYPzuEO//ndlDdL3IULPlcp4Awfvh
-         XyZTNM4cT2hCCXzlHCJmCBifcGl8bBl1lZNBF4vh5oeliNTMJMcX0PyINsiaiSnycfSr
-         kNeKrxHBWfbhse+ttL4gOzxGBvCYdgDzMp5MZpHiNuYexo6cS9u31llGP/Xx2U42y7ZC
-         otiInYPS7QabyyndrjMIfDDgcscWS6KorxizC4hF3SGgTRmc9NplUb08EqezW38tnWFz
-         6f9UNPSGdbINhqfexjjRvsP0ZPezqmy2Y4OdkwRf2zOQVaDR0W1M+Cwip7BdIULlS6EC
-         DR8w==
-X-Gm-Message-State: AC+VfDyr124mhCX/L9b4ZL5hiU+mFBiydfn/djuyYxr19AXPejcmQi7B
-        A20oFZkFN72u0v2bv37LYp5bl3sApQBQUpidWv+DtriAMTcFH5AAhP3EL4D/sAlOxag2hmza4KQ
-        4RJKEqkGrGISK+S66L+Z2kKW8q4sAWWlIug==
-X-Received: by 2002:a17:907:7e9f:b0:978:6e73:e833 with SMTP id qb31-20020a1709077e9f00b009786e73e833mr7227271ejc.45.1686165400474;
-        Wed, 07 Jun 2023 12:16:40 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7TOrdMfH+uDvM1JCqZARTMzGMSeLSS/8e4tAp59DNw1viAJkLxxdYvH0Eb88FUvnG9o30pYg==
-X-Received: by 2002:a17:907:7e9f:b0:978:6e73:e833 with SMTP id qb31-20020a1709077e9f00b009786e73e833mr7227254ejc.45.1686165400121;
-        Wed, 07 Jun 2023 12:16:40 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id y11-20020a17090668cb00b00977eb9957e9sm3523793ejr.128.2023.06.07.12.16.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Jun 2023 12:16:39 -0700 (PDT)
-Content-Type: multipart/mixed; boundary="------------vgbUXUgh5jkimy1I05UYkAvz"
-Message-ID: <457e2a4a-e28a-cd24-c129-4ff6162ccc36@redhat.com>
-Date:   Wed, 7 Jun 2023 21:16:38 +0200
+        Wed, 7 Jun 2023 19:39:15 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A292212B;
+        Wed,  7 Jun 2023 16:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686181131; x=1717717131;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=KlCxXW3cettU4hkVoOWitZPtIUn44RhFROQOzqvvN6g=;
+  b=Z7CN/rA7g2YUusFukq0iSSbPUrX0o1v1p//tMd+CLKJCiDSxX5ly1+q0
+   pm6qx3bcoyr9nO22Xa1e1dJBMU3TkOEq5/UJKysbXM7wSeV10b4F2XmnD
+   sJAqiladYTukjGeNi9jjXfqthtNcFtZeYYOvZ9fGVIyhwfiukRwOZIJpZ
+   mqGlpyrGUmM0q91o7J3NuCKw25RyqMc3QPECYDU4HFobdE4OACTXjoH9O
+   XR9ddY4EO7tP7SuvdeHI2d1L9KM6wWYrlV7i3CxXd4IGqW3t6fkpWMVHz
+   HQ07AZ1UvuaFpByCzuImJlSgdFLnTESUavZqnYTj3kpWHFr1U9Vh6lyLl
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10734"; a="354631544"
+X-IronPort-AV: E=Sophos;i="6.00,225,1681196400"; 
+   d="scan'208";a="354631544"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2023 16:38:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10734"; a="739461201"
+X-IronPort-AV: E=Sophos;i="6.00,225,1681196400"; 
+   d="scan'208";a="739461201"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 07 Jun 2023 16:38:50 -0700
+Received: from debox1-desk4.intel.com (unknown [10.251.3.221])
+        by linux.intel.com (Postfix) with ESMTP id 159CB580B54;
+        Wed,  7 Jun 2023 16:38:50 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc:     david.e.box@linux.intel.com, markgross@kernel.org,
+        hdegoede@redhat.com, irenic.rajneesh@gmail.com,
+        ilpo.jarvinen@linux.intel.com, xi.pardee@intel.com,
+        rajvi.jingar@linux.intel.com
+Subject: [PATCH V2 1/2] platform/x86/intel/pmc: Add resume callback
+Date:   Wed,  7 Jun 2023 16:38:48 -0700
+Message-Id: <20230607233849.239047-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH] platform/x86: dell-laptop: Add drm module soft dependency
-To:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        AceLan Kao <acelan.kao@canonical.com>
-Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-References: <20230607034331.576623-1-acelan.kao@canonical.com>
- <20230607042032.GA28835@srcf.ucam.org>
- <CAFv23QmDNUFcPwvSQt5aUxtmHasfr8wrF72ObvcO-X19gfn=LA@mail.gmail.com>
- <20230607052724.GA29834@srcf.ucam.org>
- <CAFv23QkEdGnEz1q7vbyFCa9S9Dqh-zec72nRGyZ3wAz-8wpbvA@mail.gmail.com>
- <20230607062341.GA30618@srcf.ucam.org> <20230607065604.yaivqbbd3dkawxo4@pali>
- <CAFv23Q==r4newMXE3OWavRSRt-bEi5-qR0Vo-5HGLw4r9J36MA@mail.gmail.com>
- <20230607074732.GA31666@srcf.ucam.org>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230607074732.GA31666@srcf.ucam.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------vgbUXUgh5jkimy1I05UYkAvz
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Add a resume callback to perform platform specific functions during resume
+from suspend.
 
-Hi,
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
 
-On 6/7/23 09:47, Matthew Garrett wrote:
-> On Wed, Jun 07, 2023 at 03:39:33PM +0800, AceLan Kao wrote:
-> 
->> What do you think if we unregister backlight devices if the backlight type
->> is larger than the current registered one.
->> Do this check in backlight_device_register() and unregister backlight
->> devices by the order raw(1) > platform(2) > firmware(3)
->> And maybe introduce a sticky bit into the backlight device if the backlight
->> driver doesn't want to be removed.
-> 
-> Hans looked at doing this, but there were some awkward corner cases. 
-> When we first introduced this functionality, firmware was preferred to 
-> platform was preferred to raw - but on Intel, at least, this behaviour 
-> changed with later versions of Windows. I don't think there's a single 
-> static policy that works, I think you need to pay attention to the hints 
-> the platform gives you. How does Windows know which interface to use on 
-> this platform? The simplest solution may actually just be for 
-> dell-laptop to refuse to register a backlight if the platform claims to 
-> be Windows 8 or later.
+V2 - Change resume_fixup to just resume and use it a a replacement for
+     the regular resume flow (now called pmc_core_resume_common) if it
+     exist. Suggested by Ilpo.
 
-I like that idea.
+ drivers/platform/x86/intel/pmc/core.c | 14 ++++++++++++--
+ drivers/platform/x86/intel/pmc/core.h |  3 +++
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-AceLan, I guess that you hit this easy while testing on a (development)
-Meteor Lake platform ?
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index da6e7206d38b..bb2f11251f73 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -1223,11 +1223,11 @@ static inline bool pmc_core_is_s0ix_failed(struct pmc_dev *pmcdev)
+ 	return false;
+ }
+ 
+-static __maybe_unused int pmc_core_resume(struct device *dev)
++int pmc_core_resume_common(struct pmc_dev *pmcdev)
+ {
+-	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+ 	const struct pmc_bit_map **maps = pmcdev->map->lpm_sts;
+ 	int offset = pmcdev->map->lpm_status_offset;
++	struct device *dev = &pmcdev->pdev->dev;
+ 
+ 	/* Check if the syspend used S0ix */
+ 	if (pm_suspend_via_firmware())
+@@ -1257,6 +1257,16 @@ static __maybe_unused int pmc_core_resume(struct device *dev)
+ 	return 0;
+ }
+ 
++static __maybe_unused int pmc_core_resume(struct device *dev)
++{
++	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
++
++	if (pmcdev->resume)
++		return pmcdev->resume(pmcdev);
++
++	return pmc_core_resume_common(pmcdev);
++}
++
+ static const struct dev_pm_ops pmc_core_pm_ops = {
+ 	SET_LATE_SYSTEM_SLEEP_PM_OPS(pmc_core_suspend, pmc_core_resume)
+ };
+diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+index 9ca9b9746719..7c95586e742b 100644
+--- a/drivers/platform/x86/intel/pmc/core.h
++++ b/drivers/platform/x86/intel/pmc/core.h
+@@ -327,6 +327,7 @@ struct pmc_reg_map {
+  * @lpm_en_modes:	Array of enabled modes from lowest to highest priority
+  * @lpm_req_regs:	List of substate requirements
+  * @core_configure:	Function pointer to configure the platform
++ * @resume:		Function to perform platform specific resume
+  *
+  * pmc_dev contains info about power management controller device.
+  */
+@@ -345,6 +346,7 @@ struct pmc_dev {
+ 	int lpm_en_modes[LPM_MAX_NUM_MODES];
+ 	u32 *lpm_req_regs;
+ 	void (*core_configure)(struct pmc_dev *pmcdev);
++	int (*resume)(struct pmc_dev *pmcdev);
+ };
+ 
+ extern const struct pmc_bit_map msr_map[];
+@@ -398,6 +400,7 @@ extern const struct pmc_reg_map mtl_reg_map;
+ extern void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev);
+ extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
+ 
++int pmc_core_resume_common(struct pmc_dev *pmcdev);
+ void spt_core_init(struct pmc_dev *pmcdev);
+ void cnp_core_init(struct pmc_dev *pmcdev);
+ void icl_core_init(struct pmc_dev *pmcdev);
 
-I have had other/similar reports about Meteor Lake platforms.
-
-On hw from the last 10 years dell-laptop will not register
-its vendor-type backlight class device because
-acpi_video_get_backlight_type() will return acpi_backlight_video
-there (1) so it does not matter if the GPU driver shows up only
-later (2).
-
-But it seems that on Meteor Lake the ACPI tables will no longer
-contain acpi_video backlight control support which causes
-acpi_video_get_backlight_type() to return acpi_backlight_vendor (2).
-triggering the issue you are seeing.
-
-Can you give the attached patch a try please ?
-
-Regards,
-
-Hans
-
-
-1) Starting with kernel >= 6.2 acpi_video.c will only register
-the /sys/class/backlight/acpi_video# node after a drm/kms drivers
-asks it to register it.
-
-2) The native GPU driver will tell the drivers/acpi/video_detect.c
-code that native backlight control is available changing
-the return of acpi_video_get_backlight_type() to native, which
-is what loading the native GPU driver first also fixes this issue.
-
---------------vgbUXUgh5jkimy1I05UYkAvz
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-ACPI-video-Stop-trying-to-use-vendor-backlight-contr.patch"
-Content-Disposition: attachment;
- filename*0="0001-ACPI-video-Stop-trying-to-use-vendor-backlight-contr.pa";
- filename*1="tch"
-Content-Transfer-Encoding: base64
-
-RnJvbSA1OWY0OGE4ZGViNTI1ZDljNzUxM2UyYzBkZmZjN2YzMGE0MzU2MDMwIE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQu
-Y29tPgpEYXRlOiBXZWQsIDcgSnVuIDIwMjMgMjA6MzM6MTIgKzAyMDAKU3ViamVjdDogW1BB
-VENIXSBBQ1BJOiB2aWRlbzogU3RvcCB0cnlpbmcgdG8gdXNlIHZlbmRvciBiYWNrbGlnaHQg
-Y29udHJvbCBvbgogbGFwdG9wcyBmcm9tIGFmdGVyIH4yMDEyCgpUaGVyZSBoYXZlIGJlZW4g
-MiBzZXBhcmF0ZSByZXBvcnRzIG5vdyBhYm91dCBhIG5vbiB3b3JraW5nCiJkZWxsX2JhY2ts
-aWdodCIgZGV2aWNlIGdldHRpbmcgcmVnaXN0ZXJlZCB1bmRlciAvc3lzL2NsYXNzL2JhY2ts
-aWdodAp3aXRoIE1ldGVvckxha2UgKGRldmVsb3BtZW50KSBwbGF0Zm9ybXMuCgpPbiBodyBm
-cm9tIHRoZSBsYXN0IDEwIHllYXJzIGRlbGwtbGFwdG9wIHdpbGwgbm90IHJlZ2lzdGVyICJk
-ZWxsX2JhY2tsaWdodCIKYmVjYXVzZSBhY3BpX3ZpZGVvX2dldF9iYWNrbGlnaHRfdHlwZSgp
-IHdpbGwgcmV0dXJuIGFjcGlfYmFja2xpZ2h0X3ZpZGVvCnRoZXJlIGlmIGNhbGxlZCBiZWZv
-cmUgdGhlIEdQVS9rbXMgZHJpdmVyIGxvYWRzLiBTbyBpdCBkb2VzIG5vdCBtYXR0ZXIgaWYK
-dGhlIEdQVSBkcml2ZXIncyBuYXRpdmUgYmFja2xpZ2h0IGdldHMgcmVnaXN0ZXJlZCBhZnRl
-ciBkZWxsLWxhcHRvcCBsb2Fkcy4KCkJ1dCBpdCBzZWVtcyB0aGF0IG9uIE1ldGVvciBMYWtl
-IHRoZSBBQ1BJIHRhYmxlcyB3aWxsIG5vIGxvbmdlcgpjb250YWluIGFjcGlfdmlkZW8gYmFj
-a2xpZ2h0IGNvbnRyb2wgc3VwcG9ydCB3aGljaCBjYXVzZXMKYWNwaV92aWRlb19nZXRfYmFj
-a2xpZ2h0X3R5cGUoKSB0byByZXR1cm4gYWNwaV9iYWNrbGlnaHRfdmVuZG9yIGNhdXNpbmcK
-ImRlbGxfYmFja2xpZ2h0IiB0byBnZXQgcmVnaXN0ZXJlZCBpZiB0aGUgZGVsbC1sYXB0b3Ag
-bW9kdWxlIGlzIGxvYWRlZApiZWZvcmUgdGhlIEdQVS9rbXMgZHJpdmVyLgoKVmVuZG9yIHNw
-ZWNpZmljIGJhY2tsaWdodCBjb250cm9sIGxpa2UgdGhlICJkZWxsX2JhY2tsaWdodCIgZGV2
-aWNlIGlzCm9ubHkgbmVjZXNzYXJ5IG9uIHF1aXRlIG9sZCBodyAoZnJvbSBiZWZvcmUgYWNw
-aV92aWRlbyBiYWNrbGlnaHQgY29udHJvbAp3YXMgaW50cm9kdWNlZCkuIFdvcmsgYXJvdW5k
-ICJkZWxsX2JhY2tsaWdodCIgcmVnaXN0ZXJpbmcgb24gdmVyeSBuZXcKaHcgKHdoZXJlIGFj
-cGlfdmlkZW8gYmFja2xpZ2h0IGNvbnRyb2wgc2VlbXMgdG8gYmUgbm8gbW9yZSkgYnkgbWFr
-aW5nCmFjcGlfdmlkZW9fZ2V0X2JhY2tsaWdodF90eXBlKCkgdXNlIGFjcGlfYmFja2xpZ2h0
-X25vbmUgaW5zdGVhZApvZiBhY3BpX2JhY2tsaWdodF92ZW5kb3IgYXMgZmluYWwgZmFsbGJh
-Y2sgd2hlbiB0aGUgQUNQSSB0YWJsZXMgaGF2ZQpzdXBwb3J0IGZvciBXaW5kb3dzIDggb3Ig
-bGF0ZXIgKGxhcHRvcHMgZnJvbSBhZnRlciB+MjAxMikuCgpTdWdnZXN0ZWQtYnk6IE1hdHRo
-ZXcgR2FycmV0dCA8bWpnNTlAc3JjZi51Y2FtLm9yZz4KUmVwb3J0ZWQtYnk6IEFjZUxhbiBL
-YW8gPGFjZWxhbi5rYW9AY2Fub25pY2FsLmNvbT4KQ2xvc2VzOiBodHRwczovL2xvcmUua2Vy
-bmVsLm9yZy9wbGF0Zm9ybS1kcml2ZXIteDg2LzIwMjMwNjA3MDM0MzMxLjU3NjYyMy0xLWFj
-ZWxhbi5rYW9AY2Fub25pY2FsLmNvbS8KU2lnbmVkLW9mZi1ieTogSGFucyBkZSBHb2VkZSA8
-aGRlZ29lZGVAcmVkaGF0LmNvbT4KLS0tCiBkcml2ZXJzL2FjcGkvdmlkZW9fZGV0ZWN0LmMg
-fCAyMSArKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyMSBpbnNlcnRp
-b25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9hY3BpL3ZpZGVvX2RldGVjdC5jIGIvZHJp
-dmVycy9hY3BpL3ZpZGVvX2RldGVjdC5jCmluZGV4IGI4Nzc4M2M1ODcyZC4uZWIwMTRjMGVi
-YTQyIDEwMDY0NAotLS0gYS9kcml2ZXJzL2FjcGkvdmlkZW9fZGV0ZWN0LmMKKysrIGIvZHJp
-dmVycy9hY3BpL3ZpZGVvX2RldGVjdC5jCkBAIC04NDQsNiArODQ0LDI3IEBAIGVudW0gYWNw
-aV9iYWNrbGlnaHRfdHlwZSBfX2FjcGlfdmlkZW9fZ2V0X2JhY2tsaWdodF90eXBlKGJvb2wg
-bmF0aXZlLCBib29sICphdXRvCiAJaWYgKG5hdGl2ZV9hdmFpbGFibGUpCiAJCXJldHVybiBh
-Y3BpX2JhY2tsaWdodF9uYXRpdmU7CiAKKwkvKgorCSAqIFRoZSB2ZW5kb3Igc3BlY2lmaWMg
-QklPUyBpbnRlcmZhY2VzIGFyZSBvbmx5IG5lY2Vzc2FyeSBmb3IKKwkgKiBsYXB0b3BzIGZy
-b20gYmVmb3JlIH4yMDA4LgorCSAqCisJICogRm9yIGxhcHRvcHMgZnJvbSB+MjAwOCB0aWxs
-IH4yMDIzIHRoaXMgcG9pbnQgaXMgbmV2ZXIgcmVhY2hlZAorCSAqIGJlY2F1c2Ugb24gdGhv
-c2UgKHZpZGVvX2NhcHMgJiBBQ1BJX1ZJREVPX0JBQ0tMSUdIVCkgYWJvdmUgaXMgdHJ1ZS4K
-KwkgKgorCSAqIExhcHRvcHMgZnJvbSBhZnRlciB+MjAyMyBubyBsb25nZXIgc3VwcG9ydCBB
-Q1BJX1ZJREVPX0JBQ0tMSUdIVCwKKwkgKiBpZiB0aGlzIHBvaW50IGlzIHJlYWNoZWQgb24g
-dGhvc2UsIHRoaXMgbGlrZWx5IG1lYW5zIHRoYXQKKwkgKiB0aGUgR1BVIGttcyBkcml2ZXIg
-d2hpY2ggc2V0cyBuYXRpdmVfYXZhaWxhYmxlIGhhcyBub3QgbG9hZGVkIHlldC4KKwkgKgor
-CSAqIFJldHVybmluZyBhY3BpX2JhY2tsaWdodF92ZW5kb3IgaW4gdGhpcyBjYXNlIGlzIGtu
-b3duIHRvIHNvbWV0aW1lcworCSAqIGNhdXNlIGEgbm9uIHdvcmtpbmcgdmVuZG9yIHNwZWNp
-ZmljIC9zeXMvY2xhc3MvYmFja2xpZ2h0IGRldmljZSB0bworCSAqIGdldCByZWdpc3RlcmVk
-LgorCSAqCisJICogUmV0dXJuIGFjcGlfYmFja2xpZ2h0X25vbmUgb24gbGFwdG9wcyB3aXRo
-IEFDUEkgdGFibGVzIHdyaXR0ZW4KKwkgKiBmb3IgV2luZG93cyA4IChsYXB0b3BzIGZyb20g
-YWZ0ZXIgfjIwMTIpIHRvIGF2b2lkIHRoaXMgcHJvYmxlbS4KKwkgKi8KKwlpZiAoYWNwaV9v
-c2lfaXNfd2luOCgpKQorCQlyZXR1cm4gYWNwaV9iYWNrbGlnaHRfbm9uZTsKKwogCS8qIE5v
-IEFDUEkgdmlkZW8vbmF0aXZlIChvbGQgaHcpLCB1c2UgdmVuZG9yIHNwZWNpZmljIGZ3IG1l
-dGhvZHMuICovCiAJcmV0dXJuIGFjcGlfYmFja2xpZ2h0X3ZlbmRvcjsKIH0KLS0gCjIuNDAu
-MQoK
-
---------------vgbUXUgh5jkimy1I05UYkAvz--
+base-commit: 86f67fe2db439867f9476c9b78ea3ebd4a06a123
+-- 
+2.34.1
 
