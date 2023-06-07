@@ -2,215 +2,98 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11769C7EE37
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jun 2023 22:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C858C77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Jun 2023 03:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234198AbjFFWpb (ORCPT
+        id S235040AbjFGDni (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Jun 2023 18:45:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37304 "EHLO
+        Tue, 6 Jun 2023 23:43:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234076AbjFFWpa (ORCPT
+        with ESMTP id S234738AbjFGDng (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Jun 2023 18:45:30 -0400
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF5659E;
-        Tue,  6 Jun 2023 15:45:28 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id C11845C0160;
-        Tue,  6 Jun 2023 18:45:25 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Tue, 06 Jun 2023 18:45:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm3; t=1686091525; x=1686177925; bh=qT
-        sN8/KZ+hN9RAJDnxfB3SZQWIHqrMFhBdUFAir94Tw=; b=miMofI46PbgaIrZEQ8
-        YUGXmwXuTak8KWvsNI/wC8uMkkXTFwoJpJdpCc1pnmljcGVXje82ygNzL+P8j+0/
-        t8FxcIZrrAt37cYg/mw5ZYRBREtMsPNhP05vsXKhREGHxdoFrDxpQJqSJtwdG/hV
-        bKbfEs4365VH0/JQq+OIDY8yVM/ZAqcapLZrbGepnYjw1Gr32TkQTZiMgOSsDV8x
-        VlVIc2bamEPJA96wZpwBomGGzi52r1lr5GOjLOpTUIU1mIXZt44jHxO+d4m8rF9k
-        /pmkYBECloyM265SfCjfviU+MaQScUvu+uq7yOjbgE5pRZuWiv3gQYaQNnbs9rAz
-        hikA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1686091525; x=1686177925; bh=qTsN8/KZ+hN9R
-        AJDnxfB3SZQWIHqrMFhBdUFAir94Tw=; b=k/XVMEUKlLAKq89cCRF9i/x3eT6Zc
-        icvEJHvxEoeLzw7zexlz4GR++fYseCZEz0FGtl3GGaGgPYUYb32vWXnPLegs1r95
-        VPeLf4zPpS1KBamKHE3h75AxZPEpbH6BWz1h/Qg01cI1cGSheLB6ol/DDxgiPWJx
-        1LJsMSO9lLjAEabHvgSdtYGtq+OT3J531+1bcmQxz5izNa8qpRQzv0v8P3xLxcw0
-        pzvkaFxCLGVLoe5VSHjdctPhgP254aF0Ankv/6aTJ8pz4Vz3G411Mf2ZXncpidU+
-        GCANz72GE+kVtnSIPRi7vTxtIFZq2KldmHj+kUQ7HxHmEX/pv2p3srp7Q==
-X-ME-Sender: <xms:Bbd_ZNx_7L-KGaDXf2sGVsD784baLVYEqLWLcwE-siaT3cmJcj2YCw>
-    <xme:Bbd_ZNQ0WCGtjCDvfLn4otw6dRQWxapJfmNR4eJ30VAfGddUVsyeiuRgnGshh0ycc
-    8PfWrkSpTOndcrYCCU>
-X-ME-Received: <xmr:Bbd_ZHVO1fR7HXuHAGB4N74Izhyqd9dgryMOOhcxwK7jgSRbBpZsG9KuQZ00i6wM2ghaCYoeVgiwFTH4PzEq6gdckSw5ijt2V8sLoVY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgedtvddgudefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvvefufffkjghfgggtsehgtderredttddvnecuhfhrohhmpefnuhhkvgcu
-    lfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpe
-    eghfejudffteejleehleegfedtkefhtdetueegueekhfelteelgfelieeuuefgteenucff
-    ohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:Bbd_ZPjxDvI9QUOOqrRWA9scTKQGnN0MZ-S-rAYYZN6tXBjCHaqigw>
-    <xmx:Bbd_ZPCapdpHQFLoHQWkI8LzHc0B9aWVac3YOA3C6Y8OzS16VrQdUA>
-    <xmx:Bbd_ZII03VeZ87qW5f1JQvx00WmUT7gKAtEbw2F3l5uCRXEyFvheNA>
-    <xmx:Bbd_ZBCcSIrvyJfKM52i8wXP4kg8LLMroYist_02fj8Y7xzpCHvObw>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 6 Jun 2023 18:45:20 -0400 (EDT)
-From:   Luke Jones <luke@ljones.dev>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     platform-driver-x86@vger.kernel.org,
-        =?utf-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>,
-        Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, acpi4asus-user@lists.sourceforge.net,
-        corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com,
-        linux@roeck-us.net
-Subject: Re: [PATCH v2 0/1] platform/x86: asus-wmi: add support for ASUS screenpad
-Date:   Wed, 07 Jun 2023 10:45:15 +1200
-Message-ID: <5946924.lOV4Wx5bFT@fedora>
-In-Reply-To: <ffdd2d13-975e-1c74-0d2b-132ba461a3ee@redhat.com>
-References: <20230505043013.2622603-1-luke@ljones.dev>
- <06314c8dc4adeb69cd7801f9621c831f75a37c89.camel@ljones.dev>
- <ffdd2d13-975e-1c74-0d2b-132ba461a3ee@redhat.com>
+        Tue, 6 Jun 2023 23:43:36 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09F1819B7;
+        Tue,  6 Jun 2023 20:43:35 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-65131e85be4so6922191b3a.1;
+        Tue, 06 Jun 2023 20:43:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686109414; x=1688701414;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=IG9nOZCUv4yUauPuQq4zcNH7o7ub8jEFkawKImlrhhk=;
+        b=qX3ZTWs1IRMqIvjqq7bqnABkYurX/9l4HNYJZ2i7tTq57fsvu+M9epZ/q0UEZOn/Ic
+         4ZqsQZ1vMMD6GRJY++duyl6bRGikNkyup4l4TVii0ch/QXzZtgMnQTwrVllhDuznP96K
+         6qIO1euPWBoG/1K86g0cU8qhu86f8aeKXLmf4lH4HHtpqqdaPPq5U/Q/eFSh2RKXR+YH
+         2tPaxw9IED5MCocPPjkvaWFYj3StaWMMJ7LZBWKjGTH6gl+IzVV9ErDI+EROCin3qvZh
+         U+ZajWgWT3Sob4nhDhl8mT/Bz6UQaNFoQAuO7kRIoJmK2UquREEaPiVD/ktGBnbr+HmM
+         qjMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686109414; x=1688701414;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IG9nOZCUv4yUauPuQq4zcNH7o7ub8jEFkawKImlrhhk=;
+        b=iDucgUTTUb2rQOybFoPpRkZAdTyVzScHWKSyaZ7m6dAOafkPqr9nvTMDUkrcGvGT/g
+         WU3Df7R6vFzXySvLl0eHgq5LIknAq7UtClvHbioI+3eZoXhiOgPih0t4ai3c43uJNryF
+         kPIpJEeXj2G+ONMw58qq0D/pwImCDV1tMwCOJ+59hm/TRLr2+OkyE8BWrWcY6FlJxHu5
+         oM1cpLXTMfyl/C0hIacwU4d7rqbDqWbhyGPZQn4ew9yKfXnoipFGZ2LPCLuvPH1AQlCJ
+         PppXvtOuXAmYEnBB7cf4CA658InqVDCXHSrurYn1UdenfxdYNne1/d9CWnSM5pq0Lu59
+         le3Q==
+X-Gm-Message-State: AC+VfDxuzZUadVTZOBgH/3dtC53FjeNjuGv350WcTutZxWJaPuj+9NKo
+        CZf5Ruky/UPzw6PIgEPxRBw=
+X-Google-Smtp-Source: ACHHUZ7ys5tjUtfp/gd9Iyq7DlsuiXxqiiSG3nW3E/spUJswTFZ7aPK5JdFNF2mO+OYCnCv5N6gzbg==
+X-Received: by 2002:a05:6a00:896:b0:641:39cb:1716 with SMTP id q22-20020a056a00089600b0064139cb1716mr5784067pfj.20.1686109414251;
+        Tue, 06 Jun 2023 20:43:34 -0700 (PDT)
+Received: from localhost (220-135-95-34.hinet-ip.hinet.net. [220.135.95.34])
+        by smtp.gmail.com with ESMTPSA id g2-20020aa78742000000b006542462d040sm6233624pfo.206.2023.06.06.20.43.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jun 2023 20:43:33 -0700 (PDT)
+Sender: AceLan Kao <acelan@gmail.com>
+From:   AceLan Kao <acelan.kao@canonical.com>
+To:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: dell-laptop: Add drm module soft dependency
+Date:   Wed,  7 Jun 2023 11:43:31 +0800
+Message-Id: <20230607034331.576623-1-acelan.kao@canonical.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4841190.31r3eYUQgx";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
---nextPart4841190.31r3eYUQgx
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Luke Jones <luke@ljones.dev>
-To: Hans de Goede <hdegoede@redhat.com>
-Date: Wed, 07 Jun 2023 10:45:15 +1200
-Message-ID: <5946924.lOV4Wx5bFT@fedora>
-In-Reply-To: <ffdd2d13-975e-1c74-0d2b-132ba461a3ee@redhat.com>
-MIME-Version: 1.0
+From: "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>
 
-**snip**
-> >> Question 2:
-> >> 
-> >> If you turn the second screen off through drm/kms, using the desktop
-> >> environments monitor config panel does this also turn off the
-> >> backlight ?
-> > 
-> > The screen is dark but there is still some backlight coming out of it.
-> > I think this means I need to add a small pre-off to the patch to ensure
-> > backlight is fully off when display is turned off.
-> 
-> I'm afraid that this is not going to be easy to fix at the kernel level,
-> we first need to tie backlight control to drm-connectors as I proposed
-> (and plan to implement when I can make time):
-> 
-> https://lore.kernel.org/dri-devel/b61d3eeb-6213-afac-2e70-7b9791c86d2e@redha
-> t.com/
-> 
-> Once that is in place we can simply make the drm-code call out to
-> the backlight driver and have it turn the backlight off when disabling
-> the output through the drm/kms interface.
+dell_laptop is somethines loaded before nvidia driver, causing it to
+create its own backlight interface before native backlight is set.
+This results in the presence of 2 backlight interfaces in sysfs and
+leads to the backlight can't be adjusted.
+To work around this issue, delaying the loading of dell_laptop until
+after drm module has been loaded.
 
-Okay cool. But until then I can set the screenpad to turn brightness off when 
-it does the call to:
-err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
-here I can also do before that call:
-err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT,ctrl_param, NULL);
+Signed-off-by: Chia-Lin Kao (AceLan) <acelan.kao@canonical.com>
+---
+ drivers/platform/x86/dell/dell-laptop.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Then when the patch you mention is done this can be removed.
-
-**snip** 
-> > I would like to go with the backlight patch as it seems more likely I
-> > can adjust this without breaking userspace if required in future. The
-> > WMI controls behave as expected to.
-> 
-> Ok, lets go with the v2 which adds /sys/class/backlight support then.
-> 
-> I must warn you though if this does turn out to cause issues I'll have
-> no choice but to revert it.
-> 
-> I must admit I've lost track a bit of the state of v2 during this
-> discussion.  Can I pick up v2 as is, or were there (other) remarks
-> which need addressing and should I expect a v3 ?
-
-There will be a V3. I don't anticipate any issues at all with this, and some 
-folks have been using this patch with Gnome and KDE since V2 was submitted.
-
-> 
-> ####### Switch to (off-topic) GPU mux discussion ########
-**snip**
-> >> I think the best thing to do here is to just use EFI on machines like
-> >> this. That or put grub in text mode so that it makes BIOS calls to
-> >> display text. Using GRUB_TERMINAL_OUTPUT=gfxterm combined with
-> >> classic BIOS booting will make grub try to directly drive the gfx
-> >> card itself and I'm not surprised that it gets that wrong in this
-> >> case.
-> >> Note I think that just using EFI is prefered over switching grub to
-> >> GRUB_TERMINAL_OUTPUT=console. I would expect
-> >> GRUB_TERMINAL_OUTPUT=console to also work but I'm not sure. I don't
-> >> think that the classic BIOS boot stuff is still tested by laptop
-> >> vendors and esp. not tested with non standard BIOS settings ...
-> > 
-> > The grub gfx mode is GRUB_TERMINAL_OUTPUT="console", fedora default in
-> > all cases here. Grub itself shows fine when the MUX mode is in dgpu
-> > mode (aka, internal display connected to dgpu).
-> 
-> Ah ok, so I misunderstood and the problem only happens *after* grub?
-> 
-> Have I understood that correctly?
-> 
-> And this is on Fedora with the nvidia binary driver ?
-> 
-> The problem then likely is that the nvidia binary driver is not in
-> the initrd (which is by design since it may need to be rebuild on
-> a driver update while the kernel is kept at the same version,
-> so the initrd won't be rebuild).
-
-That was indeed the issue. It also creates new problems for when a user wants 
-to use iGPU only via the plain (and frankly not adequate or good) method of 
-simply removing the dGPU from the device tree.
-
-Currently I maintain the supergfxd tool which is a lot more advanced than the 
-other gpu switchers around, and I expose both the above method, and also PCI 
-hotplug, and the ASUS WMI method (which I now think is used by other vendors 
-also). Hotplug and Asus method can force the device off, and it can't be 
-brought back by a PCI rescan - but to do so safely the Nvidia drivers must be 
-unused and unloaded. I guess I'll need to tweak the boot process of supergfxd 
-and block things until this is done.
-
-Maybe we can move this to a new topic, because there looks to be a few things 
-to discuss in relation to hybrid laptops, and specifically Nvidia with MUX, 
-and Advanced Optimus.
-
-Cheers,
-Luke.
-
-
-
---nextPart4841190.31r3eYUQgx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEWREWzoOl5TYvoo5xMJobe61BDbQFAmR/tvsACgkQMJobe61B
-DbQgEQgAkTzdVjHJNUI25x6De+haJeiIwi84h1Rs8eKq26ACisldeo0PwbNFG2kS
-TTtnunNh5WTULem8wVbof1+zVcmf0euyQERPRulnx8CteGOhOEmAEq/pGHTIAYvV
-uKEDLKb1BoNBGwT4fRGflgqbD5p54TCoszYeL3AxDVyg7ttcbu60pmyBdyj7PnqS
-i7yUWYIKIAzX6fIUCue/ZjgTq55u3SGf7VBFp4SkrJG8FbZk6QE3TYy+ro4rGzyR
-vCg5NoYeGzLLyZ9iblj+lV3HluwCN6pFXrZmEXJDGd5XTCKsyQyG6xK165sTBti5
-dCCqkIt9x8rnppiWDsisg38Z3Eb90g==
-=RmpV
------END PGP SIGNATURE-----
-
---nextPart4841190.31r3eYUQgx--
-
-
+diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
+index 1321687d923e..535e6c3df529 100644
+--- a/drivers/platform/x86/dell/dell-laptop.c
++++ b/drivers/platform/x86/dell/dell-laptop.c
+@@ -2316,6 +2316,7 @@ static void __exit dell_exit(void)
+ late_initcall(dell_init);
+ module_exit(dell_exit);
+ 
++MODULE_SOFTDEP("post: drm");
+ MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
+ MODULE_AUTHOR("Gabriele Mazzotta <gabriele.mzt@gmail.com>");
+ MODULE_AUTHOR("Pali Rohár <pali@kernel.org>");
+-- 
+2.34.1
 
