@@ -2,64 +2,65 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E60C7EE23
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Jun 2023 07:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD287C77B7A
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Jun 2023 07:50:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239288AbjFGHrM (ORCPT
+        id S239193AbjFGHuC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Jun 2023 03:47:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41484 "EHLO
+        Wed, 7 Jun 2023 03:50:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239315AbjFGHqc (ORCPT
+        with ESMTP id S239315AbjFGHtV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Jun 2023 03:46:32 -0400
-X-Greylist: delayed 522 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 07 Jun 2023 00:44:48 PDT
-Received: from mail.severnusk.pl (mail.severnusk.pl [89.40.115.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C45EC30C4
-        for <platform-driver-x86@vger.kernel.org>; Wed,  7 Jun 2023 00:44:48 -0700 (PDT)
-Received: by mail.severnusk.pl (Postfix, from userid 1002)
-        id D3BAA8272E; Wed,  7 Jun 2023 09:35:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=severnusk.pl; s=mail;
-        t=1686123363; bh=+EeLr85ZLPomICoBd9HkRfsh6EPM8XdZbVfrMzFBjC8=;
-        h=Date:From:To:Subject:From;
-        b=Ks/ypoWNyd+TvAzL6RoeiTqHV27uPRv7Ov+uMhU/eVzJd4EhEpXiJ7krBTeoTCsla
-         +upOMta66VF3aQObcww/ltXSeR9NNsWYvdotHGIFYfpXgrpkf7UszvwudL57Il5Ax+
-         AgsTLOdQQZhez7jzoDOx7+Jyj8Df0xnbLRqDZFNybvnAEATEj/6YGF3GUPCYYGsGX7
-         c+E2QvcjcdIAN502jl1/VrY6lsZUgrk8o//7roTbvO8bgRgoNbh9N3gmc/6CdetJKF
-         Er+Il7N8NvX+AFfXYWt3IvNapBnokKIpB3sSffeuWgC4x4cRTGYijoM2TSdIPhwjtT
-         PXj1JID8ffYDA==
-Received: by mail.severnusk.pl for <platform-driver-x86@vger.kernel.org>; Wed,  7 Jun 2023 07:35:45 GMT
-Message-ID: <20230607084500-0.1.14.1os2.0.p5leda4q5c@severnusk.pl>
-Date:   Wed,  7 Jun 2023 07:35:45 GMT
-From:   "Tomasz Wereszko" <tomasz.wereszko@severnusk.pl>
-To:     <platform-driver-x86@vger.kernel.org>
-Subject: =?UTF-8?Q?Przyznanie_=C5=9Brodk=C3=B3w_na_rozw=C3=B3j_firmy?=
-X-Mailer: mail.severnusk.pl
+        Wed, 7 Jun 2023 03:49:21 -0400
+X-Greylist: delayed 12360 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 07 Jun 2023 00:47:34 PDT
+Received: from cavan.codon.org.uk (cavan.codon.org.uk [176.126.240.207])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC8911712;
+        Wed,  7 Jun 2023 00:47:33 -0700 (PDT)
+Received: by cavan.codon.org.uk (Postfix, from userid 1000)
+        id 897D242532; Wed,  7 Jun 2023 08:47:32 +0100 (BST)
+Date:   Wed, 7 Jun 2023 08:47:32 +0100
+From:   Matthew Garrett <mjg59@srcf.ucam.org>
+To:     AceLan Kao <acelan.kao@canonical.com>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH] platform/x86: dell-laptop: Add drm module soft dependency
+Message-ID: <20230607074732.GA31666@srcf.ucam.org>
+References: <20230607034331.576623-1-acelan.kao@canonical.com>
+ <20230607042032.GA28835@srcf.ucam.org>
+ <CAFv23QmDNUFcPwvSQt5aUxtmHasfr8wrF72ObvcO-X19gfn=LA@mail.gmail.com>
+ <20230607052724.GA29834@srcf.ucam.org>
+ <CAFv23QkEdGnEz1q7vbyFCa9S9Dqh-zec72nRGyZ3wAz-8wpbvA@mail.gmail.com>
+ <20230607062341.GA30618@srcf.ucam.org>
+ <20230607065604.yaivqbbd3dkawxo4@pali>
+ <CAFv23Q==r4newMXE3OWavRSRt-bEi5-qR0Vo-5HGLw4r9J36MA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFv23Q==r4newMXE3OWavRSRt-bEi5-qR0Vo-5HGLw4r9J36MA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Szanowni Pa=C5=84stwo,
+On Wed, Jun 07, 2023 at 03:39:33PM +0800, AceLan Kao wrote:
 
-czy chcieliby Pa=C5=84stwo skorzysta=C4=87 z dofinansowania na zamkni=C4=99=
-te szkolenie, dopasowane do Pa=C5=84stwa potrzeb rozwojowych?
+> What do you think if we unregister backlight devices if the backlight type
+> is larger than the current registered one.
+> Do this check in backlight_device_register() and unregister backlight
+> devices by the order raw(1) > platform(2) > firmware(3)
+> And maybe introduce a sticky bit into the backlight device if the backlight
+> driver doesn't want to be removed.
 
-Jako lider w pozyskiwaniu =C5=9Brodk=C3=B3w zewn=C4=99trznych finansuj=C4=
-=85cych rozw=C3=B3j przedsi=C4=99biorstw mo=C5=BCemy pom=C3=B3c Pa=C5=84s=
-twu obni=C5=BCy=C4=87 koszty inwestycji w rozw=C3=B3j pracownik=C3=B3w na=
-wet o 80%.
-
-Organizujemy szkolenia w formie stacjonarnej i zdalnej dopasowane do potr=
-zeb i konkretnych wyzwa=C5=84 w organizacji. Od 20 lat zapewniamy sperson=
-alizowane rozwi=C4=85zania, z kt=C3=B3rych skorzysta=C5=82o blisko 4,600 =
-uczestnik=C3=B3w.
-
-Prosz=C4=99 o informacj=C4=99 czy mo=C5=BCemy um=C3=B3wi=C4=87 si=C4=99 n=
-a spotkanie lub kr=C3=B3tk=C4=85 rozmow=C4=99.
-
-
-Pozdrawiam
-Tomasz Wereszko
+Hans looked at doing this, but there were some awkward corner cases. 
+When we first introduced this functionality, firmware was preferred to 
+platform was preferred to raw - but on Intel, at least, this behaviour 
+changed with later versions of Windows. I don't think there's a single 
+static policy that works, I think you need to pay attention to the hints 
+the platform gives you. How does Windows know which interface to use on 
+this platform? The simplest solution may actually just be for 
+dell-laptop to refuse to register a backlight if the platform claims to 
+be Windows 8 or later.
