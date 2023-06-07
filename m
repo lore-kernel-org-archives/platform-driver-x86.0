@@ -2,65 +2,90 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8322C7EE29
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Jun 2023 06:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DFBC7EE23
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Jun 2023 06:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233537AbjFGGXp (ORCPT
+        id S237591AbjFGG4U (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Jun 2023 02:23:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49932 "EHLO
+        Wed, 7 Jun 2023 02:56:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232580AbjFGGXo (ORCPT
+        with ESMTP id S237478AbjFGG4T (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Jun 2023 02:23:44 -0400
-Received: from cavan.codon.org.uk (irc.codon.org.uk [IPv6:2a00:1098:84:22e::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CE5AA;
-        Tue,  6 Jun 2023 23:23:42 -0700 (PDT)
-Received: by cavan.codon.org.uk (Postfix, from userid 1000)
-        id 9167742455; Wed,  7 Jun 2023 07:23:41 +0100 (BST)
-Date:   Wed, 7 Jun 2023 07:23:41 +0100
-From:   Matthew Garrett <mjg59@srcf.ucam.org>
-To:     AceLan Kao <acelan.kao@canonical.com>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Wed, 7 Jun 2023 02:56:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7D5C1BC3;
+        Tue,  6 Jun 2023 23:56:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7176D63B19;
+        Wed,  7 Jun 2023 06:56:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A50E0C433EF;
+        Wed,  7 Jun 2023 06:56:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686120967;
+        bh=kxTWU5cvbYPXD97OfkZe5ZmWUKr+C21Zw9jRkJYbsMY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BDEk6rrM+92tjnJUIo7PJ6PVQsXMHm1goz4upfVYo17T9b4OBgbYwWBKZ8MpADWpS
+         k34PbyoX2LXa5/BTSYCNa6XjLggLCYt9BFWVwkyXIr9DoEBug2nz7vGKcGgA3TII9w
+         D64O22jrrQGHK02YQphKJdoMXRS9fvr7fkheX4XtQG+P1gortbckgLeUyVSg34AcGe
+         V17l7nwTuMnhS6/GHMnKDb5oSHFQlHuNrGyJEvWkkFJZ2Q4KcWg491YMpxtykiXsGM
+         AcM5AktF0GA+mm1dL12KMYjfkgnSA5WMSqsCIdJTiKd+rrRAQ8yfgvzPKUsw47vYyR
+         +M58T5kpKH1Iw==
+Received: by pali.im (Postfix)
+        id A1989759; Wed,  7 Jun 2023 08:56:04 +0200 (CEST)
+Date:   Wed, 7 Jun 2023 08:56:04 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Matthew Garrett <mjg59@srcf.ucam.org>
+Cc:     AceLan Kao <acelan.kao@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Kai-Heng Feng <kai.heng.feng@canonical.com>
 Subject: Re: [PATCH] platform/x86: dell-laptop: Add drm module soft dependency
-Message-ID: <20230607062341.GA30618@srcf.ucam.org>
+Message-ID: <20230607065604.yaivqbbd3dkawxo4@pali>
 References: <20230607034331.576623-1-acelan.kao@canonical.com>
  <20230607042032.GA28835@srcf.ucam.org>
  <CAFv23QmDNUFcPwvSQt5aUxtmHasfr8wrF72ObvcO-X19gfn=LA@mail.gmail.com>
  <20230607052724.GA29834@srcf.ucam.org>
  <CAFv23QkEdGnEz1q7vbyFCa9S9Dqh-zec72nRGyZ3wAz-8wpbvA@mail.gmail.com>
+ <20230607062341.GA30618@srcf.ucam.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFv23QkEdGnEz1q7vbyFCa9S9Dqh-zec72nRGyZ3wAz-8wpbvA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20230607062341.GA30618@srcf.ucam.org>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jun 07, 2023 at 02:13:31PM +0800, AceLan Kao wrote:
-> Matthew Garrett <mjg59@srcf.ucam.org> 於 2023年6月7日 週三 下午1:27寫道：
-> >
-> > On Wed, Jun 07, 2023 at 01:19:40PM +0800, AceLan Kao wrote:
-> > > Gfx drivers(i915/amdgpu/nvidia) depend on the drm driver, so delaying
-> > > the loading of dell_laptop after drm can ease the issue the most.
-> > > Right, it's still possible to encounter the issue, unfortunately, we
-> > > do not have a better solution for it at the moment.
-> >
-> > We could unregister inappropriate backlight drivers when a more
-> > appropriate one is loaded, or the policy decision around which driver to
-> > use could be made in userland?
-> It's hard to decide which backlight driver is redundant, and it's kind of ugly
-> to unregister the backlight driver which is registered by other driver and maybe
-> problematic.
+On Wednesday 07 June 2023 07:23:41 Matthew Garrett wrote:
+> On Wed, Jun 07, 2023 at 02:13:31PM +0800, AceLan Kao wrote:
+> > Matthew Garrett <mjg59@srcf.ucam.org> 於 2023年6月7日 週三 下午1:27寫道：
+> > >
+> > > On Wed, Jun 07, 2023 at 01:19:40PM +0800, AceLan Kao wrote:
+> > > > Gfx drivers(i915/amdgpu/nvidia) depend on the drm driver, so delaying
+> > > > the loading of dell_laptop after drm can ease the issue the most.
+> > > > Right, it's still possible to encounter the issue, unfortunately, we
+> > > > do not have a better solution for it at the moment.
+> > >
+> > > We could unregister inappropriate backlight drivers when a more
+> > > appropriate one is loaded, or the policy decision around which driver to
+> > > use could be made in userland?
+> > It's hard to decide which backlight driver is redundant, and it's kind of ugly
+> > to unregister the backlight driver which is registered by other driver and maybe
+> > problematic.
+> 
+> But you're relying on registering the working backlight first, which is 
+> an inherently racy thing? We shouldn't be relying on order of 
+> initialisation to make this work, either we should only export a working 
+> interface or we should expose enough information for whatever is using 
+> the interfaces to make an appropriate policy decision itself.
 
-But you're relying on registering the working backlight first, which is 
-an inherently racy thing? We shouldn't be relying on order of 
-initialisation to make this work, either we should only export a working 
-interface or we should expose enough information for whatever is using 
-the interfaces to make an appropriate policy decision itself.
+IIRC, drm drivers unregister redundant fbcon drivers (vesafb), so cannot
+drm drivers use similar strategy also for backlight drivers and
+unregister the redundant? If every backlight driver would have some
+"flag" which say if it should be unregistered by drm then maybe it could
+work? Or are there some other pitfalls?
