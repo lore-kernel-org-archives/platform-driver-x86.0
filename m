@@ -2,98 +2,49 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C858C77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Jun 2023 03:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D178C7EE25
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Jun 2023 04:33:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235040AbjFGDni (ORCPT
+        id S234240AbjFGEda (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Jun 2023 23:43:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60084 "EHLO
+        Wed, 7 Jun 2023 00:33:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234738AbjFGDng (ORCPT
+        with ESMTP id S232821AbjFGEcv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Jun 2023 23:43:36 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09F1819B7;
-        Tue,  6 Jun 2023 20:43:35 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-65131e85be4so6922191b3a.1;
-        Tue, 06 Jun 2023 20:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686109414; x=1688701414;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=IG9nOZCUv4yUauPuQq4zcNH7o7ub8jEFkawKImlrhhk=;
-        b=qX3ZTWs1IRMqIvjqq7bqnABkYurX/9l4HNYJZ2i7tTq57fsvu+M9epZ/q0UEZOn/Ic
-         4ZqsQZ1vMMD6GRJY++duyl6bRGikNkyup4l4TVii0ch/QXzZtgMnQTwrVllhDuznP96K
-         6qIO1euPWBoG/1K86g0cU8qhu86f8aeKXLmf4lH4HHtpqqdaPPq5U/Q/eFSh2RKXR+YH
-         2tPaxw9IED5MCocPPjkvaWFYj3StaWMMJ7LZBWKjGTH6gl+IzVV9ErDI+EROCin3qvZh
-         U+ZajWgWT3Sob4nhDhl8mT/Bz6UQaNFoQAuO7kRIoJmK2UquREEaPiVD/ktGBnbr+HmM
-         qjMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686109414; x=1688701414;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IG9nOZCUv4yUauPuQq4zcNH7o7ub8jEFkawKImlrhhk=;
-        b=iDucgUTTUb2rQOybFoPpRkZAdTyVzScHWKSyaZ7m6dAOafkPqr9nvTMDUkrcGvGT/g
-         WU3Df7R6vFzXySvLl0eHgq5LIknAq7UtClvHbioI+3eZoXhiOgPih0t4ai3c43uJNryF
-         kPIpJEeXj2G+ONMw58qq0D/pwImCDV1tMwCOJ+59hm/TRLr2+OkyE8BWrWcY6FlJxHu5
-         oM1cpLXTMfyl/C0hIacwU4d7rqbDqWbhyGPZQn4ew9yKfXnoipFGZ2LPCLuvPH1AQlCJ
-         PppXvtOuXAmYEnBB7cf4CA658InqVDCXHSrurYn1UdenfxdYNne1/d9CWnSM5pq0Lu59
-         le3Q==
-X-Gm-Message-State: AC+VfDxuzZUadVTZOBgH/3dtC53FjeNjuGv350WcTutZxWJaPuj+9NKo
-        CZf5Ruky/UPzw6PIgEPxRBw=
-X-Google-Smtp-Source: ACHHUZ7ys5tjUtfp/gd9Iyq7DlsuiXxqiiSG3nW3E/spUJswTFZ7aPK5JdFNF2mO+OYCnCv5N6gzbg==
-X-Received: by 2002:a05:6a00:896:b0:641:39cb:1716 with SMTP id q22-20020a056a00089600b0064139cb1716mr5784067pfj.20.1686109414251;
-        Tue, 06 Jun 2023 20:43:34 -0700 (PDT)
-Received: from localhost (220-135-95-34.hinet-ip.hinet.net. [220.135.95.34])
-        by smtp.gmail.com with ESMTPSA id g2-20020aa78742000000b006542462d040sm6233624pfo.206.2023.06.06.20.43.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jun 2023 20:43:33 -0700 (PDT)
-Sender: AceLan Kao <acelan@gmail.com>
-From:   AceLan Kao <acelan.kao@canonical.com>
-To:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Wed, 7 Jun 2023 00:32:51 -0400
+X-Greylist: delayed 608 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 06 Jun 2023 21:30:57 PDT
+Received: from cavan.codon.org.uk (irc.codon.org.uk [IPv6:2a00:1098:84:22e::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4107330D1;
+        Tue,  6 Jun 2023 21:30:57 -0700 (PDT)
+Received: by cavan.codon.org.uk (Postfix, from userid 1000)
+        id 7B7DD42455; Wed,  7 Jun 2023 05:20:32 +0100 (BST)
+Date:   Wed, 7 Jun 2023 05:20:32 +0100
+From:   Matthew Garrett <mjg59@srcf.ucam.org>
+To:     AceLan Kao <acelan.kao@canonical.com>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: dell-laptop: Add drm module soft dependency
-Date:   Wed,  7 Jun 2023 11:43:31 +0800
-Message-Id: <20230607034331.576623-1-acelan.kao@canonical.com>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH] platform/x86: dell-laptop: Add drm module soft dependency
+Message-ID: <20230607042032.GA28835@srcf.ucam.org>
+References: <20230607034331.576623-1-acelan.kao@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230607034331.576623-1-acelan.kao@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>
+On Wed, Jun 07, 2023 at 11:43:31AM +0800, AceLan Kao wrote:
+> From: "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>
+> 
+> dell_laptop is somethines loaded before nvidia driver, causing it to
+> create its own backlight interface before native backlight is set.
+> This results in the presence of 2 backlight interfaces in sysfs and
+> leads to the backlight can't be adjusted.
 
-dell_laptop is somethines loaded before nvidia driver, causing it to
-create its own backlight interface before native backlight is set.
-This results in the presence of 2 backlight interfaces in sysfs and
-leads to the backlight can't be adjusted.
-To work around this issue, delaying the loading of dell_laptop until
-after drm module has been loaded.
-
-Signed-off-by: Chia-Lin Kao (AceLan) <acelan.kao@canonical.com>
----
- drivers/platform/x86/dell/dell-laptop.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-index 1321687d923e..535e6c3df529 100644
---- a/drivers/platform/x86/dell/dell-laptop.c
-+++ b/drivers/platform/x86/dell/dell-laptop.c
-@@ -2316,6 +2316,7 @@ static void __exit dell_exit(void)
- late_initcall(dell_init);
- module_exit(dell_exit);
- 
-+MODULE_SOFTDEP("post: drm");
- MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
- MODULE_AUTHOR("Gabriele Mazzotta <gabriele.mzt@gmail.com>");
- MODULE_AUTHOR("Pali Rohár <pali@kernel.org>");
--- 
-2.34.1
-
+It seems like this approach would still be broken if the nvidia module 
+isn't available at the time the dell module is loaded?
