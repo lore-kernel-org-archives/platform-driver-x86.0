@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8B0C7EE25
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jun 2023 16:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C559C7EE45
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jun 2023 16:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234282AbjFHQdo (ORCPT
+        id S235582AbjFHQdq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Jun 2023 12:33:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42288 "EHLO
+        Thu, 8 Jun 2023 12:33:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235456AbjFHQdc (ORCPT
+        with ESMTP id S235549AbjFHQdn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Jun 2023 12:33:32 -0400
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 694FE19B;
-        Thu,  8 Jun 2023 09:33:26 -0700 (PDT)
-Received: by mail-oi1-x229.google.com with SMTP id 5614622812f47-392116ae103so612483b6e.0;
-        Thu, 08 Jun 2023 09:33:26 -0700 (PDT)
+        Thu, 8 Jun 2023 12:33:43 -0400
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8328A2;
+        Thu,  8 Jun 2023 09:33:29 -0700 (PDT)
+Received: by mail-oi1-x236.google.com with SMTP id 5614622812f47-39a3f165ac5so540100b6e.3;
+        Thu, 08 Jun 2023 09:33:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686242005; x=1688834005;
+        d=gmail.com; s=20221208; t=1686242009; x=1688834009;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ms8uHnHsmA6999WHK/dFtKFqpd3DcGNarvssVUZd3Vc=;
-        b=UN1Y7iRfvUqIbvdJF3AJ52h+3PSClb0HnKOfMRTFTLspEZnchJG9KBrv8TJ4bynq/o
-         YDI4T2f6zx0cRDvcWZcbqFMDS313TWZHC6dt/e/AdYkWUYC6YPBETgGs8qs2ilB1qRgD
-         RcqsFZ25hsBgKlsO6XG5TjFTxqkfsIcbnOlITIlfn2KSEty5O3so757597j3zGkPLF/v
-         4+zMJcYTa/0zH0ZM6R4e5Vk/e105H5RdS6Ub5y1j3aFbY2gDzgvuFJBrFJSP48bdwxg1
-         /Q/qQTj2tG70tWjWaDcadOvpD0F8Ti8i0qEzJSPlxGjeL4IOCVq+o1CZvjAobbR4PRmP
-         alWg==
+        bh=lLgAgYzwvnUO4J96TzyjLt93Kq0M3uazxzPiFESbchY=;
+        b=AVZhS81OiBQi1v7W91EpLTWdK/wrCZa3IfcWbaVY6M0bztB6w9DTLr2stsjOUgExYr
+         glfuqLf+wa7G3Pe2qceLiWy4vcz80xqBrcKNO8fjUuAKwbM+m1il2gTJYV937Boi+1zt
+         kxxw5w+258uh74o+kuELo91u6Af3xXTvh+/LBUlMmEiHZju9tUZ2YZlk0DrnZcT90V7z
+         ulDwEMZKEKo318Oq7lG0Bbt59N/gh9mPGeYhHQncE95/PPk+hITfPgCZv4vaLBUs7JMP
+         CC8xRhby+4ENKw0gbd05EZQzgytK0GZqlNEgbvivojNohdru+u4Uhr0aU4TJWr45WWQ9
+         1iBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686242005; x=1688834005;
+        d=1e100.net; s=20221208; t=1686242009; x=1688834009;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ms8uHnHsmA6999WHK/dFtKFqpd3DcGNarvssVUZd3Vc=;
-        b=c89kmp2KVvD8S7dx3EvmW9FhRyHg8nk40Q0RjxHXeoQ4f74CQtTM/ylKbsg3YH/1iX
-         lmqXVo3oi1+aVE94/j7r2BcqX/MW63gxs/rZOqOBLZGT38idb2ZmEJ1tMdoP5zA52UsI
-         syyF9oMLb+jlHD3gfSnXWMGYXYcaCGqU9OU63GDvLBjiTuFcyh2OlNjyJfpz+P0MFnlY
-         AA+0CdQNPBaL9EoEJfHamkx7xRuqELIJKUiGvL6Voi258JzARQFmlJwLvKtlP584yTP4
-         lD3iVQmYVz5nzFYpiVRl933qFSxevnH9BOW5K/eJYAfM6KYqKBr3OWr+reNsgUK3SdYf
-         w6NA==
-X-Gm-Message-State: AC+VfDzKT46hCIGalLcjuWvtBWo3/02DNRpA7q4OmFg38IL9ei2BNX+6
-        NG2o+tPeZR7No0sr/lTEryw=
-X-Google-Smtp-Source: ACHHUZ6693ihosCbTZPmC3dmOHLWvkHCSteS3vLhrH3/qjPYZaQS00ZBtpkT3tBnfCbNhCsuFENIQA==
-X-Received: by 2002:a05:6808:9a7:b0:396:1bf6:d781 with SMTP id e7-20020a05680809a700b003961bf6d781mr5591307oig.6.1686242005550;
-        Thu, 08 Jun 2023 09:33:25 -0700 (PDT)
+        bh=lLgAgYzwvnUO4J96TzyjLt93Kq0M3uazxzPiFESbchY=;
+        b=V+vVHxPHcF3OuEjpMr8VWl2mQnHdN/u3iq4LanlQUIZKpOkkemUDbw8tpU5b6fE9Cz
+         nLXRMobDMl9NCXyjIcH60LjByFOc7UJWbyVRo7ZN4uqgTlR2aJvMzhEz9Qy/d9eP23xE
+         sdg6o79uGSunacr+v4XQXq0mx/T9pUwJpNP1wS2uczYlKPFgAIgecEXOXqqObOH3BQrI
+         kjGshxQj0COY+Cksz8e1TitMfaG5iHVZnF77y8P/UAqvTGbPPBLM6zE+uf+MOAQkoC7s
+         00pG+r0KsIVmzBFvEoaG7xwZsjU446bgqum33zgVujfQMmymiDYyeN+MQO8aP2ye+vTl
+         guPA==
+X-Gm-Message-State: AC+VfDznBKkouEd8v1fm3dZMZH/thtkLc3Ch0LY/5yysLsb8AfNsaF5+
+        ovu+sXC9K1ZMJUdb4jWDzq4=
+X-Google-Smtp-Source: ACHHUZ6Pj6CjXQmVYSrJ4Ykeqt390Qk2xMDO1Unk4cr9pXmilZehqGbu/m3PWyQF5Ukm2ej48CYzpA==
+X-Received: by 2002:a05:6808:3ba:b0:39a:618b:17e2 with SMTP id n26-20020a05680803ba00b0039a618b17e2mr9675362oie.21.1686242008825;
+        Thu, 08 Jun 2023 09:33:28 -0700 (PDT)
 Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:a60f:2d4d:e52b:2fca])
-        by smtp.gmail.com with ESMTPSA id e10-20020acab50a000000b003942036439dsm577500oif.46.2023.06.08.09.33.24
+        by smtp.gmail.com with ESMTPSA id e10-20020acab50a000000b003942036439dsm577500oif.46.2023.06.08.09.33.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jun 2023 09:33:25 -0700 (PDT)
+        Thu, 08 Jun 2023 09:33:28 -0700 (PDT)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de,
         ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v17 04/13] hp-bioscfg: biosattr-interface
-Date:   Thu,  8 Jun 2023 11:33:10 -0500
-Message-Id: <20230608163319.18934-5-jorge.lopez2@hp.com>
+Subject: [PATCH v17 06/13] hp-bioscfg: int-attributes
+Date:   Thu,  8 Jun 2023 11:33:12 -0500
+Message-Id: <20230608163319.18934-7-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230608163319.18934-1-jorge.lopez2@hp.com>
 References: <20230608163319.18934-1-jorge.lopez2@hp.com>
@@ -69,7 +69,7 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add WMI interface worker functions to hp-bioscfg.
+Add integer attributes support to hp-bioscfg.
 
 HP BIOS Configuration driver purpose is to provide a driver supporting
 the latest sysfs class firmware attributes framework allowing the user
@@ -81,328 +81,425 @@ Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 ---
 Based on the latest platform-drivers-x86.git/for-next
 ---
- .../x86/hp/hp-bioscfg/biosattr-interface.c    | 312 ++++++++++++++++++
- 1 file changed, 312 insertions(+)
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
+ .../x86/hp/hp-bioscfg/int-attributes.c        | 409 ++++++++++++++++++
+ 1 file changed, 409 insertions(+)
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c b/drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
 new file mode 100644
-index 000000000000..1d59ad600b84
+index 000000000000..7364c5ef9ef8
 --- /dev/null
-+++ b/drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
-@@ -0,0 +1,312 @@
++++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+@@ -0,0 +1,409 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Functions corresponding to methods under BIOS interface GUID
-+ * for use with hp-bioscfg driver.
++ * Functions corresponding to integer type attributes under
++ * BIOS Enumeration GUID for use with hp-bioscfg driver.
 + *
-+ *  Copyright (c) 2022 Hewlett-Packard Inc.
++ * Copyright (c) 2022 Hewlett-Packard Inc.
 + */
 +
-+#include <linux/wmi.h>
 +#include "bioscfg.h"
 +
-+/*
-+ * struct bios_args buffer is dynamically allocated.  New WMI command types
-+ * were introduced that exceeds 128-byte data size.  Changes to handle
-+ * the data size allocation scheme were kept in hp_wmi_perform_query function.
-+ */
-+struct bios_args {
-+	u32 signature;
-+	u32 command;
-+	u32 commandtype;
-+	u32 datasize;
-+	u8 data[];
-+};
++GET_INSTANCE_ID(integer);
++
++static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
++{
++	int instance_id = get_integer_instance_id(kobj);
++
++	if (instance_id < 0)
++		return -EIO;
++
++	return sysfs_emit(buf, "%d\n",
++			  bioscfg_drv.integer_data[instance_id].current_value);
++}
 +
 +/**
-+ * hp_set_attribute
++ * validate_integer_input() -
++ * Validate input of current_value against lower and upper bound
 + *
-+ * @a_name: The attribute name
-+ * @a_value: The attribute value
-+ *
-+ * Sets an attribute to new value
-+ *
-+ * Returns zero on success
-+ *	-ENODEV if device is not found
-+ *	-EINVAL if the instance of 'Setup Admin' password is not found.
-+ *	-ENOMEM unable to allocate memory
++ * @instance_id: The instance on which input is validated
++ * @buf: Input value
 + */
-+int hp_set_attribute(const char *a_name, const char *a_value)
++static int validate_integer_input(int instance_id, char *buf)
 +{
-+	int security_area_size;
-+	int a_name_size, a_value_size;
-+	u16 *buffer = NULL;
-+	u16 *start;
-+	int  buffer_size, instance, ret;
-+	char *auth_token_choice;
++	int in_val;
++	int ret;
++	struct integer_data *integer_data = &bioscfg_drv.integer_data[instance_id];
 +
-+	mutex_lock(&bioscfg_drv.mutex);
++	/* BIOS treats it as a read only attribute */
++	if (integer_data->common.is_readonly)
++		return -EIO;
 +
-+	instance = hp_get_password_instance_for_type(SETUP_PASSWD);
-+	if (instance < 0) {
-+		ret = -EINVAL;
-+		goto out_set_attribute;
-+	}
-+
-+	/* Select which auth token to use; password or [auth token] */
-+	if (bioscfg_drv.spm_data.auth_token)
-+		auth_token_choice = bioscfg_drv.spm_data.auth_token;
-+	else
-+		auth_token_choice = bioscfg_drv.password_data[instance].current_password;
-+
-+	a_name_size = hp_calculate_string_buffer(a_name);
-+	a_value_size = hp_calculate_string_buffer(a_value);
-+	security_area_size = hp_calculate_security_buffer(auth_token_choice);
-+	buffer_size = a_name_size + a_value_size + security_area_size;
-+
-+	buffer = kmalloc(buffer_size + 1, GFP_KERNEL);
-+	if (!buffer) {
-+		ret = -ENOMEM;
-+		goto out_set_attribute;
-+	}
-+
-+	/* build variables to set */
-+	start = buffer;
-+	start = hp_ascii_to_utf16_unicode(start, a_name);
-+	if (!start) {
-+		ret = -EINVAL;
-+		goto out_set_attribute;
-+	}
-+
-+	start = hp_ascii_to_utf16_unicode(start, a_value);
-+	if (!start) {
-+		ret = -EINVAL;
-+		goto out_set_attribute;
-+	}
-+
-+	ret = hp_populate_security_buffer(start, auth_token_choice);
++	ret = kstrtoint(buf, 10, &in_val);
 +	if (ret < 0)
-+		goto out_set_attribute;
++		return ret;
 +
-+	ret = hp_wmi_set_bios_setting(buffer, buffer_size);
++	if (in_val < integer_data->lower_bound ||
++	    in_val > integer_data->upper_bound)
++		return -ERANGE;
 +
-+out_set_attribute:
-+	kfree(buffer);
-+	mutex_unlock(&bioscfg_drv.mutex);
-+	return ret;
-+}
-+
-+/**
-+ * hp_wmi_perform_query
-+ *
-+ * @query:	The commandtype (enum hp_wmi_commandtype)
-+ * @command:	The command (enum hp_wmi_command)
-+ * @buffer:	Buffer used as input and/or output
-+ * @insize:	Size of input buffer
-+ * @outsize:	Size of output buffer
-+ *
-+ * returns zero on success
-+ *         an HP WMI query specific error code (which is positive)
-+ *         -EINVAL if the query was not successful at all
-+ *         -EINVAL if the output buffer size exceeds buffersize
-+ *
-+ * Note: The buffersize must at least be the maximum of the input and output
-+ *       size. E.g. Battery info query is defined to have 1 byte input
-+ *       and 128 byte output. The caller would do:
-+ *       buffer = kzalloc(128, GFP_KERNEL);
-+ *       ret = hp_wmi_perform_query(HPWMI_BATTERY_QUERY, HPWMI_READ,
-+ *				    buffer, 1, 128)
-+ */
-+int hp_wmi_perform_query(int query, enum hp_wmi_command command, void *buffer,
-+			 u32 insize, u32 outsize)
-+{
-+	struct acpi_buffer input, output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	struct bios_return *bios_return;
-+	union acpi_object *obj = NULL;
-+	struct bios_args *args = NULL;
-+	u32 mid, actual_outsize, ret;
-+	size_t bios_args_size;
-+
-+	mid = hp_encode_outsize_for_pvsz(outsize);
-+	if (WARN_ON(mid < 0))
-+		return mid;
-+
-+	bios_args_size = struct_size(args, data, insize);
-+	args = kmalloc(bios_args_size, GFP_KERNEL);
-+	if (!args)
-+		return -ENOMEM;
-+
-+	input.length = bios_args_size;
-+	input.pointer = args;
-+
-+	/* BIOS expects 'SECU' in hex as the signature value*/
-+	args->signature = 0x55434553;
-+	args->command = command;
-+	args->commandtype = query;
-+	args->datasize = insize;
-+	memcpy(args->data, buffer, flex_array_size(args, data, insize));
-+
-+	ret = wmi_evaluate_method(HP_WMI_BIOS_GUID, 0, mid, &input, &output);
-+	if (ret)
-+		goto out_free;
-+
-+	obj = output.pointer;
-+	if (!obj) {
-+		ret = -EINVAL;
-+		goto out_free;
-+	}
-+
-+	if (obj->type != ACPI_TYPE_BUFFER ||
-+	    obj->buffer.length < sizeof(*bios_return)) {
-+		pr_warn("query 0x%x returned wrong type or too small buffer\n", query);
-+		ret = -EINVAL;
-+		goto out_free;
-+	}
-+
-+	bios_return = (struct bios_return *)obj->buffer.pointer;
-+	ret = bios_return->return_code;
-+	if (ret) {
-+		if (ret != INVALID_CMD_VALUE && ret != INVALID_CMD_TYPE)
-+			pr_warn("query 0x%x returned error 0x%x\n", query, ret);
-+		goto out_free;
-+	}
-+
-+	/* Ignore output data of zero size */
-+	if (!outsize)
-+		goto out_free;
-+
-+	actual_outsize = min_t(u32, outsize, obj->buffer.length - sizeof(*bios_return));
-+	memcpy_and_pad(buffer, outsize, obj->buffer.pointer + sizeof(*bios_return),
-+		       actual_outsize, 0);
-+
-+out_free:
-+	ret = hp_wmi_error_and_message(ret);
-+
-+	kfree(obj);
-+	kfree(args);
-+	return ret;
-+}
-+
-+static void *utf16_empty_string(u16 *p)
-+{
-+	*p++ = 2;
-+	*p++ = 0x00;
-+	return p;
-+}
-+
-+/**
-+ * hp_ascii_to_utf16_unicode -  Convert ascii string to UTF-16 unicode
-+ *
-+ * BIOS supports UTF-16 characters that are 2 bytes long.  No variable
-+ * multi-byte language supported.
-+ *
-+ * @p:   Unicode buffer address
-+ * @str: string to convert to unicode
-+ *
-+ * Returns a void pointer to the buffer string
-+ */
-+void *hp_ascii_to_utf16_unicode(u16 *p, const u8 *str)
-+{
-+	int len = strlen(str);
-+	int ret;
-+
-+	/*
-+	 * Add null character when reading an empty string
-+	 * "02 00 00 00"
-+	 */
-+	if (len == 0)
-+		return utf16_empty_string(p);
-+
-+	/* Move pointer len * 2 number of bytes */
-+	*p++ = len * 2;
-+	ret = utf8s_to_utf16s(str, strlen(str), UTF16_HOST_ENDIAN, p, len);
-+	if (ret < 0) {
-+		dev_err(bioscfg_drv.class_dev, "UTF16 conversion failed\n");
-+		return NULL;
-+	}
-+
-+	if (ret * sizeof(u16) > U16_MAX) {
-+		dev_err(bioscfg_drv.class_dev, "Error string too long\n");
-+		return NULL;
-+	}
-+
-+	p += len;
-+	return p;
-+}
-+
-+/**
-+ * hp_wmi_set_bios_setting - Set setting's value in BIOS
-+ *
-+ * @input_buffer: Input buffer address
-+ * @input_size:   Input buffer size
-+ *
-+ * Returns: Count of unicode characters written to BIOS if successful, otherwise
-+ *		-ENOMEM unable to allocate memory
-+ *		-EINVAL buffer not allocated or too small
-+ */
-+int hp_wmi_set_bios_setting(u16 *input_buffer, u32 input_size)
-+{
-+	union acpi_object *obj;
-+	struct acpi_buffer input = {input_size, input_buffer};
-+	struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
-+	int ret;
-+
-+	ret = wmi_evaluate_method(HP_WMI_SET_BIOS_SETTING_GUID, 0, 1, &input, &output);
-+
-+	obj = output.pointer;
-+	if (!obj)
-+		return -EINVAL;
-+
-+	if (obj->type != ACPI_TYPE_INTEGER) {
-+		ret = -EINVAL;
-+		goto out_free;
-+	}
-+
-+	ret = obj->integer.value;
-+	if (ret) {
-+		ret = hp_wmi_error_and_message(ret);
-+		goto out_free;
-+	}
-+
-+out_free:
-+	kfree(obj);
-+	return ret;
-+}
-+
-+static int hp_attr_set_interface_probe(struct wmi_device *wdev, const void *context)
-+{
-+	mutex_lock(&bioscfg_drv.mutex);
-+	mutex_unlock(&bioscfg_drv.mutex);
 +	return 0;
 +}
 +
-+static void hp_attr_set_interface_remove(struct wmi_device *wdev)
++static void update_integer_value(int instance_id, char *attr_value)
 +{
-+	mutex_lock(&bioscfg_drv.mutex);
-+	mutex_unlock(&bioscfg_drv.mutex);
++	int in_val;
++	int ret;
++	struct integer_data *integer_data = &bioscfg_drv.integer_data[instance_id];
++
++	ret = kstrtoint(attr_value, 10, &in_val);
++	if (ret == 0)
++		integer_data->current_value = in_val;
++	else
++		pr_warn("Invalid integer value found: %s\n", attr_value);
 +}
 +
-+static const struct wmi_device_id hp_attr_set_interface_id_table[] = {
-+	{ .guid_string = HP_WMI_BIOS_GUID},
-+	{ }
++ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, integer);
++static struct kobj_attribute integer_display_name =
++	__ATTR_RO(display_name);
++
++ATTRIBUTE_PROPERTY_STORE(current_value, integer);
++static struct kobj_attribute integer_current_val =
++	__ATTR_RW_MODE(current_value, 0644);
++
++ATTRIBUTE_N_PROPERTY_SHOW(lower_bound, integer);
++static struct kobj_attribute integer_lower_bound =
++	__ATTR_RO(lower_bound);
++
++ATTRIBUTE_N_PROPERTY_SHOW(upper_bound, integer);
++static struct kobj_attribute integer_upper_bound =
++	__ATTR_RO(upper_bound);
++
++ATTRIBUTE_N_PROPERTY_SHOW(scalar_increment, integer);
++static struct kobj_attribute integer_scalar_increment =
++	__ATTR_RO(scalar_increment);
++
++static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
++			 char *buf)
++{
++	return sysfs_emit(buf, "integer\n");
++}
++
++static struct kobj_attribute integer_type =
++	__ATTR_RO(type);
++
++static struct attribute *integer_attrs[] = {
++	&common_display_langcode.attr,
++	&integer_display_name.attr,
++	&integer_current_val.attr,
++	&integer_lower_bound.attr,
++	&integer_upper_bound.attr,
++	&integer_scalar_increment.attr,
++	&integer_type.attr,
++	NULL
 +};
 +
-+static struct wmi_driver hp_attr_set_interface_driver = {
-+	.driver = {
-+		.name = DRIVER_NAME,
-+	},
-+	.probe = hp_attr_set_interface_probe,
-+	.remove = hp_attr_set_interface_remove,
-+	.id_table = hp_attr_set_interface_id_table,
++static const struct attribute_group integer_attr_group = {
++	.attrs = integer_attrs,
 +};
 +
-+int hp_init_attr_set_interface(void)
++int hp_alloc_integer_data(void)
 +{
-+	return wmi_driver_register(&hp_attr_set_interface_driver);
++	bioscfg_drv.integer_instances_count = hp_get_instance_count(HP_WMI_BIOS_INTEGER_GUID);
++	bioscfg_drv.integer_data = kcalloc(bioscfg_drv.integer_instances_count,
++					   sizeof(*bioscfg_drv.integer_data), GFP_KERNEL);
++
++	if (!bioscfg_drv.integer_data) {
++		bioscfg_drv.integer_instances_count = 0;
++		return -ENOMEM;
++	}
++	return 0;
 +}
 +
-+void hp_exit_attr_set_interface(void)
++/* Expected Values types associated with each element */
++static const acpi_object_type expected_integer_types[] = {
++	[NAME] = ACPI_TYPE_STRING,
++	[VALUE] = ACPI_TYPE_STRING,
++	[PATH] = ACPI_TYPE_STRING,
++	[IS_READONLY] = ACPI_TYPE_INTEGER,
++	[DISPLAY_IN_UI] = ACPI_TYPE_INTEGER,
++	[REQUIRES_PHYSICAL_PRESENCE] = ACPI_TYPE_INTEGER,
++	[SEQUENCE] = ACPI_TYPE_INTEGER,
++	[PREREQUISITES_SIZE] = ACPI_TYPE_INTEGER,
++	[PREREQUISITES] = ACPI_TYPE_STRING,
++	[SECURITY_LEVEL] = ACPI_TYPE_INTEGER,
++	[INT_LOWER_BOUND] = ACPI_TYPE_INTEGER,
++	[INT_UPPER_BOUND] = ACPI_TYPE_INTEGER,
++	[INT_SCALAR_INCREMENT] = ACPI_TYPE_INTEGER,
++};
++
++static int hp_populate_integer_elements_from_package(union acpi_object *integer_obj,
++						     int integer_obj_count,
++						     int instance_id)
 +{
-+	wmi_driver_unregister(&hp_attr_set_interface_driver);
++	char *str_value = NULL;
++	int value_len;
++	int ret;
++	u32 int_value;
++	int elem;
++	int reqs;
++	int eloc;
++	int size;
++	struct integer_data *integer_data = &bioscfg_drv.integer_data[instance_id];
++
++	if (!integer_obj)
++		return -EINVAL;
++
++	for (elem = 1, eloc = 1; elem < integer_obj_count; elem++, eloc++) {
++		/* ONLY look at the first INTEGER_ELEM_CNT elements */
++		if (eloc == INT_ELEM_CNT)
++			goto exit_integer_package;
++
++		switch (integer_obj[elem].type) {
++		case ACPI_TYPE_STRING:
++			if (elem != PREREQUISITES) {
++				ret = hp_convert_hexstr_to_str(integer_obj[elem].string.pointer,
++							       integer_obj[elem].string.length,
++							       &str_value, &value_len);
++				if (ret)
++					continue;
++			}
++			break;
++		case ACPI_TYPE_INTEGER:
++			int_value = (u32)integer_obj[elem].integer.value;
++			break;
++		default:
++			pr_warn("Unsupported object type [%d]\n", integer_obj[elem].type);
++			continue;
++		}
++		/* Check that both expected and read object type match */
++		if (expected_integer_types[eloc] != integer_obj[elem].type) {
++			pr_err("Error expected type %d for elem %d, but got type %d instead\n",
++			       expected_integer_types[eloc], elem, integer_obj[elem].type);
++			return -EIO;
++		}
++		/* Assign appropriate element value to corresponding field*/
++		switch (eloc) {
++		case VALUE:
++			ret = kstrtoint(str_value, 10, &int_value);
++			if (ret)
++				continue;
++
++			integer_data->current_value = int_value;
++			break;
++		case PATH:
++			strscpy(integer_data->common.path, str_value,
++				sizeof(integer_data->common.path));
++			break;
++		case IS_READONLY:
++			integer_data->common.is_readonly = int_value;
++			break;
++		case DISPLAY_IN_UI:
++			integer_data->common.display_in_ui = int_value;
++			break;
++		case REQUIRES_PHYSICAL_PRESENCE:
++			integer_data->common.requires_physical_presence = int_value;
++			break;
++		case SEQUENCE:
++			integer_data->common.sequence = int_value;
++			break;
++		case PREREQUISITES_SIZE:
++			if (integer_data->common.prerequisites_size > MAX_PREREQUISITES_SIZE)
++				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
++			/*
++			 * This HACK is needed to keep the expected
++			 * element list pointing to the right obj[elem].type
++			 * when the size is zero. PREREQUISITES
++			 * object is omitted by BIOS when the size is
++			 * zero.
++			 */
++			if (integer_data->common.prerequisites_size == 0)
++				eloc++;
++			break;
++		case PREREQUISITES:
++			size = min_t(u32, integer_data->common.prerequisites_size, MAX_PREREQUISITES_SIZE);
++
++			for (reqs = 0; reqs < size; reqs++) {
++				if (elem >= integer_obj_count) {
++					pr_err("Error elem-objects package is too small\n");
++					return -EINVAL;
++				}
++
++				ret = hp_convert_hexstr_to_str(integer_obj[elem + reqs].string.pointer,
++							       integer_obj[elem + reqs].string.length,
++							       &str_value, &value_len);
++
++				if (ret)
++					continue;
++
++				strscpy(integer_data->common.prerequisites[reqs],
++					str_value,
++					sizeof(integer_data->common.prerequisites[reqs]));
++				kfree(str_value);
++			}
++			break;
++
++		case SECURITY_LEVEL:
++			integer_data->common.security_level = int_value;
++			break;
++		case INT_LOWER_BOUND:
++			integer_data->lower_bound = int_value;
++			break;
++		case INT_UPPER_BOUND:
++			integer_data->upper_bound = int_value;
++			break;
++		case INT_SCALAR_INCREMENT:
++			integer_data->scalar_increment = int_value;
++			break;
++		default:
++			pr_warn("Invalid element: %d found in Integer attribute or data may be malformed\n", elem);
++			break;
++		}
++	}
++exit_integer_package:
++	kfree(str_value);
++	return 0;
 +}
 +
-+MODULE_DEVICE_TABLE(wmi, hp_attr_set_interface_id_table);
++/**
++ * hp_populate_integer_package_data() -
++ * Populate all properties of an instance under integer attribute
++ *
++ * @integer_obj: ACPI object with integer data
++ * @instance_id: The instance to enumerate
++ * @attr_name_kobj: The parent kernel object
++ */
++int hp_populate_integer_package_data(union acpi_object *integer_obj,
++				     int instance_id,
++				     struct kobject *attr_name_kobj)
++{
++	struct integer_data *integer_data = &bioscfg_drv.integer_data[instance_id];
++
++	integer_data->attr_name_kobj = attr_name_kobj;
++	hp_populate_integer_elements_from_package(integer_obj,
++						  integer_obj->package.count,
++						  instance_id);
++	hp_update_attribute_permissions(integer_data->common.is_readonly,
++					&integer_current_val);
++	hp_friendly_user_name_update(integer_data->common.path,
++				     attr_name_kobj->name,
++				     integer_data->common.display_name,
++				     sizeof(integer_data->common.display_name));
++	return sysfs_create_group(attr_name_kobj, &integer_attr_group);
++}
++
++static int hp_populate_integer_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
++						    int instance_id)
++{
++	char *dst = NULL;
++	int dst_size = *buffer_size / sizeof(u16);
++	struct integer_data *integer_data = &bioscfg_drv.integer_data[instance_id];
++	int ret = 0;
++
++	dst = kcalloc(dst_size, sizeof(char), GFP_KERNEL);
++	if (!dst)
++		return -ENOMEM;
++
++	/*
++	 * Only data relevant to this driver and its functionality is
++	 * read. BIOS defines the order in which each * element is
++	 * read. Element 0 data is not relevant to this
++	 * driver hence it is ignored. For clarity, all element names
++	 * (DISPLAY_IN_UI) which defines the order in which is read
++	 * and the name matches the variable where the data is stored.
++	 *
++	 * In earlier implementation, reported errors were ignored
++	 * causing the data to remain uninitialized. It is not
++	 * possible to determine if data read from BIOS is valid or
++	 * not. It is for this reason functions may return a error
++	 * without validating the data itself.
++	 */
++
++	// VALUE:
++	integer_data->current_value = 0;
++
++	hp_get_string_from_buffer(&buffer_ptr, buffer_size, dst, dst_size);
++	ret = kstrtoint(dst, 10, &integer_data->current_value);
++	if (ret)
++		pr_warn("Unable to convert string to integer: %s\n", dst);
++	kfree(dst);
++
++	// COMMON:
++	ret = hp_get_common_data_from_buffer(&buffer_ptr, buffer_size, &integer_data->common);
++	if (ret < 0)
++		goto buffer_exit;
++
++	// INT_LOWER_BOUND:
++	ret = hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
++					 &integer_data->lower_bound);
++	if (ret < 0)
++		goto buffer_exit;
++
++	// INT_UPPER_BOUND:
++	ret = hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
++					 &integer_data->upper_bound);
++	if (ret < 0)
++		goto buffer_exit;
++
++	// INT_SCALAR_INCREMENT:
++	ret = hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
++					 &integer_data->scalar_increment);
++
++buffer_exit:
++	return ret;
++}
++
++/**
++ * hp_populate_integer_buffer_data() -
++ * Populate all properties of an instance under integer attribute
++ *
++ * @buffer_ptr: Buffer pointer
++ * @buffer_size: Buffer size
++ * @instance_id: The instance to enumerate
++ * @attr_name_kobj: The parent kernel object
++ */
++int hp_populate_integer_buffer_data(u8 *buffer_ptr, u32 *buffer_size, int instance_id,
++				    struct kobject *attr_name_kobj)
++{
++	struct integer_data *integer_data = &bioscfg_drv.integer_data[instance_id];
++	int ret = 0;
++
++	integer_data->attr_name_kobj = attr_name_kobj;
++
++	/* Populate integer elements */
++	ret = hp_populate_integer_elements_from_buffer(buffer_ptr, buffer_size,
++						       instance_id);
++	if (ret < 0)
++		return ret;
++
++	hp_update_attribute_permissions(integer_data->common.is_readonly,
++					&integer_current_val);
++	hp_friendly_user_name_update(integer_data->common.path,
++				     attr_name_kobj->name,
++				     integer_data->common.display_name,
++				     sizeof(integer_data->common.display_name));
++
++	return sysfs_create_group(attr_name_kobj, &integer_attr_group);
++}
++
++/**
++ * hp_exit_integer_attributes() - Clear all attribute data
++ *
++ * Clears all data allocated for this group of attributes
++ */
++void hp_exit_integer_attributes(void)
++{
++	int instance_id;
++
++	for (instance_id = 0; instance_id < bioscfg_drv.integer_instances_count;
++	     instance_id++) {
++		struct kobject *attr_name_kobj =
++			bioscfg_drv.integer_data[instance_id].attr_name_kobj;
++
++		if (attr_name_kobj)
++			sysfs_remove_group(attr_name_kobj, &integer_attr_group);
++	}
++	bioscfg_drv.integer_instances_count = 0;
++
++	kfree(bioscfg_drv.integer_data);
++	bioscfg_drv.integer_data = NULL;
++}
 -- 
 2.34.1
 
