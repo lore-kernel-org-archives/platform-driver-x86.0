@@ -2,105 +2,72 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AB2C7EE25
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jun 2023 16:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5805C7EE25
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jun 2023 17:25:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236213AbjFHQeX (ORCPT
+        id S237050AbjFHRZt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Jun 2023 12:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42606 "EHLO
+        Thu, 8 Jun 2023 13:25:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235844AbjFHQdr (ORCPT
+        with ESMTP id S237059AbjFHRZs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Jun 2023 12:33:47 -0400
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAF9B30D3;
-        Thu,  8 Jun 2023 09:33:38 -0700 (PDT)
-Received: by mail-oi1-x233.google.com with SMTP id 5614622812f47-39a95068c9cso597936b6e.1;
-        Thu, 08 Jun 2023 09:33:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686242018; x=1688834018;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2dxcaCUraZHsQPKZ4fvUP+STx85HK+1pWRwL495yIwI=;
-        b=NG4RrAeSUBXIbIKt+7d/nBpdpCZNDLZ2KrrkhzoFM6/tGrsMlYvAkC9LfhswMwmw8L
-         Q982nrWUZdaGera/POcJIDOsMNibsxSUxYxYY2eHE/eIETkmhbC7X8RbFhljEks03Dzn
-         MEqf8OERJR9HSNM/lpa7TeVRUFIk7DWAKxXg/ej4tvm7u1b82TCfwxCttdEmWIspDcad
-         ditLJ4VOxgM9XuyJiUxaxFhWmDOBm0CBJkREpCwyiG1FcSEJAyVG2TSgrOAJ3BFAv3Lr
-         ad4WIZ7Op6dxnfLPAAPUhfjGL7uQmf9jE+rLMHnNQwN3PW1mR9SpUgLUwoqrAgBe1Rdi
-         PbbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686242018; x=1688834018;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2dxcaCUraZHsQPKZ4fvUP+STx85HK+1pWRwL495yIwI=;
-        b=N9kiVRCHjbbz/G8Wr5O95ajyV9jX2utS1ErUDDHaXZ1u6kHVDEvUUBdpV21TJDcJ1J
-         Z7qbuB9Dfodm9F2rEhmtKTCY4LGz2eYvGIvMn1MqZDIyyqLWuLOlI3t+fXLOzGEKWA5d
-         6+Ri0G6gJRQqgUC7R3V64eCLt7fDNik6xT42tzJ1Uc3HEoKMx1p02q7MJrfhaKTd8JDM
-         SR1cMKb4fhOyeY8GHRBMquAIVM04FoHiAubbJXBVcFSEJX8LQsJP1xHMxG9fkNXDb7Mg
-         2AEIOQK1s2f8bBr+fkXBpHPUcZkojrMgzzU/XpMDa2JRASAzgLuLXzGINXaJvgOyZA2/
-         NOGQ==
-X-Gm-Message-State: AC+VfDznkttYGGTU0qZ+SV6l/7XW+gy8PsN34vBDiPOt7TLjMZ+h2r0w
-        of1Ee2iYBhzbF8L8DYv0EZE=
-X-Google-Smtp-Source: ACHHUZ4Pb7NeGmDo6nHXDyXxLBJv7rN91QOEAT3lqGpnKJpY8Sa3DPl7fO37KNYrWi0nN+zPAWZzXA==
-X-Received: by 2002:a54:4185:0:b0:398:15e7:529f with SMTP id 5-20020a544185000000b0039815e7529fmr5892877oiy.46.1686242018023;
-        Thu, 08 Jun 2023 09:33:38 -0700 (PDT)
-Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:a60f:2d4d:e52b:2fca])
-        by smtp.gmail.com with ESMTPSA id e10-20020acab50a000000b003942036439dsm577500oif.46.2023.06.08.09.33.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jun 2023 09:33:37 -0700 (PDT)
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
-To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
-        ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v17 13/13] hp-bioscfg: MAINTAINERS
-Date:   Thu,  8 Jun 2023 11:33:19 -0500
-Message-Id: <20230608163319.18934-14-jorge.lopez2@hp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230608163319.18934-1-jorge.lopez2@hp.com>
-References: <20230608163319.18934-1-jorge.lopez2@hp.com>
+        Thu, 8 Jun 2023 13:25:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AAA22729;
+        Thu,  8 Jun 2023 10:25:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5881D64F82;
+        Thu,  8 Jun 2023 17:25:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00A1DC433D2;
+        Thu,  8 Jun 2023 17:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686245145;
+        bh=sKEE1Ha7Onv2/h4XglcashuT7Hsevk+zCcxzbAznYIM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A3intFhY6AW3soEmjHN+z/uRHcbHuuytfhyvrgmQ+ZZmte3qGf6yS5NcWlx2MZdOR
+         KNgNpFarInlPWPlvBe9hFDILFw2qyohv9pCibWlfrPdTd+4sSzKvZDTJv7psvgReCC
+         ZIW0yFy97ecYw/az2D5nZwCpc2KnOFg6A8hgyKeIHAtXfapysA2CBVSQoyu+9BCSEG
+         n+0A4nwhzETT9g1SjHMJPAGlU0IHu0Xu49vu1MP2jWM0g6CKrku7k+DhhvPvz5x9O1
+         R1fEql7U4sqKnohcsX9WhggIl2rpy7gey8oDADEomzPXHE+f2Iw5VRPwUg88XsaCv2
+         G0Oy0DEHxxm+A==
+Date:   Thu, 8 Jun 2023 18:25:40 +0100
+From:   Lee Jones <lee@kernel.org>
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] leds: simatic-ipc-leds-gpio: add terminating
+ entries to gpio tables
+Message-ID: <20230608172540.GH3572061@google.com>
+References: <20230524124628.32295-1-henning.schild@siemens.com>
+ <20230524124628.32295-2-henning.schild@siemens.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230524124628.32295-2-henning.schild@siemens.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add list of maintainers for hp-bioscfg to MAINTAINERS list
+On Wed, 24 May 2023, Henning Schild wrote:
 
-HP BIOS Configuration driver purpose is to provide a driver supporting
-the latest sysfs class firmware attributes framework allowing the user
-to change BIOS settings and security solutions on HP Inc.’s commercial
-notebooks.
+> The entries do not seem to be stricly needed when the number of entries
+> is given via the number of LEDs. But adding them is a safeguard should
+> anyone ever iterate over the tables to their end, it also gets us in
+> line with other drivers that register "leds-gpio" tables.
+> 
+> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> ---
+>  drivers/leds/simple/simatic-ipc-leds-gpio.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+Applied, thanks
 
----
-Based on the latest platform-drivers-x86.git/for-next
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9af9ace0e348..648c986f5867 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9436,6 +9436,12 @@ S:	Obsolete
- W:	http://w1.fi/hostap-driver.html
- F:	drivers/net/wireless/intersil/hostap/
- 
-+HP BIOSCFG DRIVER
-+M:	Jorge Lopez <jorge.lopez2@hp.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/hp/hp-bioscfg/
-+
- HP COMPAQ TC1100 TABLET WMI EXTRAS DRIVER
- L:	platform-driver-x86@vger.kernel.org
- S:	Orphan
 -- 
-2.34.1
-
+Lee Jones [李琼斯]
