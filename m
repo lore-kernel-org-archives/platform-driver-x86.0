@@ -2,148 +2,166 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F32C7EE23
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jun 2023 03:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 695F9C7EE23
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jun 2023 09:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232583AbjFHDFH (ORCPT
+        id S235000AbjFHJRJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Jun 2023 23:05:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56412 "EHLO
+        Thu, 8 Jun 2023 05:17:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231192AbjFHDFG (ORCPT
+        with ESMTP id S233640AbjFHJRI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Jun 2023 23:05:06 -0400
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C570A2119
-        for <platform-driver-x86@vger.kernel.org>; Wed,  7 Jun 2023 20:05:04 -0700 (PDT)
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com [209.85.128.197])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 069193F13F
-        for <platform-driver-x86@vger.kernel.org>; Thu,  8 Jun 2023 03:05:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1686193503;
-        bh=1vQ4vBsPHZFIvp0lmOIOZNeJ60q4W0FkmiQFpeJvWyk=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=Q9MnWBA1uNgLjvlbeqNm4ZN3Q8t3eF2hyaY1u4IHz7GFFJRczIyOqjJButUU/AONf
-         TFZxNVeAry8VIhlUgR0wMHV3kn2SlUmub4YH7bXvFiQwj2veB3GFTxHybcxtYJ/KUd
-         9qfm/rSTOjkStxEBFzmI/9PZL1r0ZRBWW4KShijXMivLxadyeXkHS7S3K27vZZdNsw
-         8K/jEcXgRw1z+wwfCW9Mv1yVXv4CVYTPmIyhNMG/KHw7aTeuuN2WR5UbEIw4+hzHAh
-         qmRQX8rxRFZB+1ePHrqIyud1nrICtUZONfy3BC0oa+WxAX1sPk0mwtvXeGSR/hGjJK
-         cgDykZOHMkEeg==
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-561eb6c66f6so2071557b3.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 07 Jun 2023 20:05:02 -0700 (PDT)
+        Thu, 8 Jun 2023 05:17:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85F1918F
+        for <platform-driver-x86@vger.kernel.org>; Thu,  8 Jun 2023 02:16:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1686215782;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/g6i5zf198nGPm+MV1Nr9xaejdPk8jLKCdPYWK6o4ZE=;
+        b=Bu11lhW3p2PBV3yodcONE0ymRz92bMRZ9kM6kdLEQVtBdt5bgxe1WdcoY7206nisv8zxtk
+        HANdqAx1zKB6nS7EkXmQW5aiXOLI5GQLgnapPH18lEexN0tPuHAAZkTLUJNx3gH0hxs6aB
+        GaLvCYiBAzGt+sc8F+/AQiVSBVQIGVk=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-136-zfyd3zX9MBKvTCV5H5odpQ-1; Thu, 08 Jun 2023 05:16:20 -0400
+X-MC-Unique: zfyd3zX9MBKvTCV5H5odpQ-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-97888a89775so46626166b.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Jun 2023 02:16:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686193502; x=1688785502;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1vQ4vBsPHZFIvp0lmOIOZNeJ60q4W0FkmiQFpeJvWyk=;
-        b=AXZ4MSnQiBS2HW4vv1SUIuQnB4FKSzBI2li8GNRvorrmvgt8kNLIZ0p1A5eA79i7VP
-         o2nB/35B26Awf2agb0MIx90lWuWl4LzhtCmc0G+17PJ7WNX68ftH/heUzi7Y9pEgGVqg
-         9khaqbcd+BUIWt31XSkiSD7MhFmAXHbyNs5VExU/hA1Yz0k2V2c6Rg29VXQrMVzSkeV7
-         orJxkqLOE6r8HUdyWjtPdQ/hwouEcMM8Cs3b57O7lNgXMUkK9vMHq2Ie6q2PPm8U3cll
-         +EL0VIIWMi2JpeF1wwZsHq2ZYChnmfu4QRnPLS/kX3mYxaa258cE4FTToiAMZ6IosQnc
-         Iymw==
-X-Gm-Message-State: AC+VfDwLaHLXnPEunFS1EZ4m8bY7QZ3GsTo1Lsnx4z+bLbcwzOEGJyQJ
-        lg+nfM6ggismLHBtUgdCHaH2otFd9lTFKsW6yQ2bu+3qdpAVcYdYm0e5nbkIJnkx2END+1Jmr0E
-        FCN+SBwJxkhdDvMJPqn9XACG1KXK+RXK1AlHM1E1Kn1i1pWtyeg4YXdAnqN9bpbOntvQ=
-X-Received: by 2002:a81:48c1:0:b0:561:e8e0:2e82 with SMTP id v184-20020a8148c1000000b00561e8e02e82mr7276432ywa.30.1686193501867;
-        Wed, 07 Jun 2023 20:05:01 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5OG/0WOpJ4JMsi0Sr5CLFFxcJF1xF0hyBNpCcLAXdrvVJ7Q9KF//xANbCtmP0s8KjsNS+dMbKU4RsM6GTEQVk=
-X-Received: by 2002:a81:48c1:0:b0:561:e8e0:2e82 with SMTP id
- v184-20020a8148c1000000b00561e8e02e82mr7276417ywa.30.1686193501606; Wed, 07
- Jun 2023 20:05:01 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1686215778; x=1688807778;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/g6i5zf198nGPm+MV1Nr9xaejdPk8jLKCdPYWK6o4ZE=;
+        b=dskp13nFySA6U01f8lRcUcKjVcxlJkod64KC3s6IpuXGuWLzCEuG3uUEIien2k/0wH
+         cjCz+CtKjifxau+ZyXVXP2yT6NKVLMYt1P+H7FAhgufJgQ/hsDwPo87DV83JfwCpgI5q
+         +NqkJNhIIFQJgXqOYtd7+I9sUx6o4/nB8ECBykHv6sZi4SAll7gHnAjGW8Bx3ejDTGpF
+         VfHUPp6f4vDzrARtEZ5pTzidsG5Y5JzGFN3XM1UFiCgCg/WYrUKAbcocSWOF1Ds0r5g0
+         Bgo9DXkQyZ3Z+ere4yyVZwleNy1LM8UOdtuxJtMVOCfGe6GQU0PBoClt8Iqxo34R5RXw
+         y4pg==
+X-Gm-Message-State: AC+VfDyfRqpozK5vq1TzG04M6Es+7UtCj5RPvnin58UM1UorXL4vc3Mr
+        Duiqbhh6MNPIVWQUrI33lzKpIYBQ8zXZEDihEX/ywkuuCfe1EcoXyFFhMC664nmeFSk1w/pYFaN
+        WhuQyksLxSgMuHdSfdl3+a+WSC+CMKLEgvg==
+X-Received: by 2002:a17:907:940d:b0:973:daaa:f3e1 with SMTP id dk13-20020a170907940d00b00973daaaf3e1mr8763877ejc.39.1686215778567;
+        Thu, 08 Jun 2023 02:16:18 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5ssA8LbEuNba5wrIlkWrwkykJZqPvTjTVBcB3aqCAGv0JOUgrTFDP7mbrP+L5w00CG8+Cy6g==
+X-Received: by 2002:a17:907:940d:b0:973:daaa:f3e1 with SMTP id dk13-20020a170907940d00b00973daaaf3e1mr8763864ejc.39.1686215778223;
+        Thu, 08 Jun 2023 02:16:18 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id jt26-20020a170906dfda00b00978993e0d21sm431526ejc.78.2023.06.08.02.16.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Jun 2023 02:16:17 -0700 (PDT)
+Message-ID: <f27f0d06-0b18-06bb-cb1f-042527c1ca31@redhat.com>
+Date:   Thu, 8 Jun 2023 11:16:17 +0200
 MIME-Version: 1.0
-References: <20230607034331.576623-1-acelan.kao@canonical.com>
- <20230607042032.GA28835@srcf.ucam.org> <CAFv23QmDNUFcPwvSQt5aUxtmHasfr8wrF72ObvcO-X19gfn=LA@mail.gmail.com>
- <20230607052724.GA29834@srcf.ucam.org> <CAFv23QkEdGnEz1q7vbyFCa9S9Dqh-zec72nRGyZ3wAz-8wpbvA@mail.gmail.com>
- <20230607062341.GA30618@srcf.ucam.org> <20230607065604.yaivqbbd3dkawxo4@pali>
- <CAFv23Q==r4newMXE3OWavRSRt-bEi5-qR0Vo-5HGLw4r9J36MA@mail.gmail.com>
- <20230607074732.GA31666@srcf.ucam.org> <457e2a4a-e28a-cd24-c129-4ff6162ccc36@redhat.com>
-In-Reply-To: <457e2a4a-e28a-cd24-c129-4ff6162ccc36@redhat.com>
-From:   AceLan Kao <acelan.kao@canonical.com>
-Date:   Thu, 8 Jun 2023 11:04:50 +0800
-Message-ID: <CAFv23QmVP4ZFAhAFBSx6ty-4fcQ-u9+uZb0xaD2gCJPCdpPvQg@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
 Subject: Re: [PATCH] platform/x86: dell-laptop: Add drm module soft dependency
-To:     Hans de Goede <hdegoede@redhat.com>
+Content-Language: en-US, nl
+To:     AceLan Kao <acelan.kao@canonical.com>
 Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
         Mark Gross <markgross@kernel.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Kai-Heng Feng <kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20230607034331.576623-1-acelan.kao@canonical.com>
+ <20230607042032.GA28835@srcf.ucam.org>
+ <CAFv23QmDNUFcPwvSQt5aUxtmHasfr8wrF72ObvcO-X19gfn=LA@mail.gmail.com>
+ <20230607052724.GA29834@srcf.ucam.org>
+ <CAFv23QkEdGnEz1q7vbyFCa9S9Dqh-zec72nRGyZ3wAz-8wpbvA@mail.gmail.com>
+ <20230607062341.GA30618@srcf.ucam.org> <20230607065604.yaivqbbd3dkawxo4@pali>
+ <CAFv23Q==r4newMXE3OWavRSRt-bEi5-qR0Vo-5HGLw4r9J36MA@mail.gmail.com>
+ <20230607074732.GA31666@srcf.ucam.org>
+ <457e2a4a-e28a-cd24-c129-4ff6162ccc36@redhat.com>
+ <CAFv23QmVP4ZFAhAFBSx6ty-4fcQ-u9+uZb0xaD2gCJPCdpPvQg@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAFv23QmVP4ZFAhAFBSx6ty-4fcQ-u9+uZb0xaD2gCJPCdpPvQg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hans de Goede <hdegoede@redhat.com> =E6=96=BC 2023=E5=B9=B46=E6=9C=888=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=883:16=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi,
->
-> On 6/7/23 09:47, Matthew Garrett wrote:
-> > On Wed, Jun 07, 2023 at 03:39:33PM +0800, AceLan Kao wrote:
-> >
-> >> What do you think if we unregister backlight devices if the backlight =
-type
-> >> is larger than the current registered one.
-> >> Do this check in backlight_device_register() and unregister backlight
-> >> devices by the order raw(1) > platform(2) > firmware(3)
-> >> And maybe introduce a sticky bit into the backlight device if the back=
-light
-> >> driver doesn't want to be removed.
-> >
-> > Hans looked at doing this, but there were some awkward corner cases.
-> > When we first introduced this functionality, firmware was preferred to
-> > platform was preferred to raw - but on Intel, at least, this behaviour
-> > changed with later versions of Windows. I don't think there's a single
-> > static policy that works, I think you need to pay attention to the hint=
-s
-> > the platform gives you. How does Windows know which interface to use on
-> > this platform? The simplest solution may actually just be for
-> > dell-laptop to refuse to register a backlight if the platform claims to
-> > be Windows 8 or later.
->
-> I like that idea.
->
-> AceLan, I guess that you hit this easy while testing on a (development)
-> Meteor Lake platform ?
->
-> I have had other/similar reports about Meteor Lake platforms.
->
-> On hw from the last 10 years dell-laptop will not register
-> its vendor-type backlight class device because
-> acpi_video_get_backlight_type() will return acpi_backlight_video
-> there (1) so it does not matter if the GPU driver shows up only
-> later (2).
->
-> But it seems that on Meteor Lake the ACPI tables will no longer
-> contain acpi_video backlight control support which causes
-> acpi_video_get_backlight_type() to return acpi_backlight_vendor (2).
-> triggering the issue you are seeing.
->
-> Can you give the attached patch a try please ?
->
-> Regards,
->
-> Hans
->
->
-> 1) Starting with kernel >=3D 6.2 acpi_video.c will only register
-> the /sys/class/backlight/acpi_video# node after a drm/kms drivers
-> asks it to register it.
->
-> 2) The native GPU driver will tell the drivers/acpi/video_detect.c
-> code that native backlight control is available changing
-> the return of acpi_video_get_backlight_type() to native, which
-> is what loading the native GPU driver first also fixes this issue.
+Hi AceLan,
 
-Hi Hans,
+On 6/8/23 05:04, AceLan Kao wrote:
+> Hans de Goede <hdegoede@redhat.com> 於 2023年6月8日 週四 上午3:16寫道：
+>>
+>> Hi,
+>>
+>> On 6/7/23 09:47, Matthew Garrett wrote:
+>>> On Wed, Jun 07, 2023 at 03:39:33PM +0800, AceLan Kao wrote:
+>>>
+>>>> What do you think if we unregister backlight devices if the backlight type
+>>>> is larger than the current registered one.
+>>>> Do this check in backlight_device_register() and unregister backlight
+>>>> devices by the order raw(1) > platform(2) > firmware(3)
+>>>> And maybe introduce a sticky bit into the backlight device if the backlight
+>>>> driver doesn't want to be removed.
+>>>
+>>> Hans looked at doing this, but there were some awkward corner cases.
+>>> When we first introduced this functionality, firmware was preferred to
+>>> platform was preferred to raw - but on Intel, at least, this behaviour
+>>> changed with later versions of Windows. I don't think there's a single
+>>> static policy that works, I think you need to pay attention to the hints
+>>> the platform gives you. How does Windows know which interface to use on
+>>> this platform? The simplest solution may actually just be for
+>>> dell-laptop to refuse to register a backlight if the platform claims to
+>>> be Windows 8 or later.
+>>
+>> I like that idea.
+>>
+>> AceLan, I guess that you hit this easy while testing on a (development)
+>> Meteor Lake platform ?
+>>
+>> I have had other/similar reports about Meteor Lake platforms.
+>>
+>> On hw from the last 10 years dell-laptop will not register
+>> its vendor-type backlight class device because
+>> acpi_video_get_backlight_type() will return acpi_backlight_video
+>> there (1) so it does not matter if the GPU driver shows up only
+>> later (2).
+>>
+>> But it seems that on Meteor Lake the ACPI tables will no longer
+>> contain acpi_video backlight control support which causes
+>> acpi_video_get_backlight_type() to return acpi_backlight_vendor (2).
+>> triggering the issue you are seeing.
+>>
+>> Can you give the attached patch a try please ?
+>>
+>> Regards,
+>>
+>> Hans
+>>
+>>
+>> 1) Starting with kernel >= 6.2 acpi_video.c will only register
+>> the /sys/class/backlight/acpi_video# node after a drm/kms drivers
+>> asks it to register it.
+>>
+>> 2) The native GPU driver will tell the drivers/acpi/video_detect.c
+>> code that native backlight control is available changing
+>> the return of acpi_video_get_backlight_type() to native, which
+>> is why loading the native GPU driver first also fixes this issue.
+> 
+> Hi Hans,
+> 
+> Yes, this patch works for me, thanks.
+> 
+> BTW, I encountered this issue on the RPL platform.
 
-Yes, this patch works for me, thanks.
+Thank you for testing. I have updated the commit message
+to reflect that this impacts both RPL and MTL platforms
+and submitted the fix upstream:
 
-BTW, I encountered this issue on the RPL platform.
+https://lore.kernel.org/linux-acpi/20230608091258.7963-1-hdegoede@redhat.com/
+
+Regards,
+
+Hans
+
