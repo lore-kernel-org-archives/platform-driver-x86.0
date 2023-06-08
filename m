@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DBDC83003
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jun 2023 16:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13058C7EE29
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jun 2023 16:33:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235604AbjFHQds (ORCPT
+        id S231611AbjFHQdt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Jun 2023 12:33:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42526 "EHLO
+        Thu, 8 Jun 2023 12:33:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235609AbjFHQdo (ORCPT
+        with ESMTP id S235717AbjFHQdp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Jun 2023 12:33:44 -0400
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F3592715;
-        Thu,  8 Jun 2023 09:33:32 -0700 (PDT)
-Received: by mail-oi1-x229.google.com with SMTP id 5614622812f47-394c7ba4cb5so517493b6e.1;
-        Thu, 08 Jun 2023 09:33:32 -0700 (PDT)
+        Thu, 8 Jun 2023 12:33:45 -0400
+Received: from mail-oo1-xc2c.google.com (mail-oo1-xc2c.google.com [IPv6:2607:f8b0:4864:20::c2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8792B2711;
+        Thu,  8 Jun 2023 09:33:33 -0700 (PDT)
+Received: by mail-oo1-xc2c.google.com with SMTP id 006d021491bc7-5523bd97c64so1217096eaf.0;
+        Thu, 08 Jun 2023 09:33:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686242010; x=1688834010;
+        d=gmail.com; s=20221208; t=1686242013; x=1688834013;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=AkYm4XoSmYAPuKEElPguyxa8XEwyXPC3EoB3KYP8qQc=;
-        b=XwxLTpYH+KM/0uaSyJ2j7sGPqB4+g3nawO5a60fkH0Im3RskxIwHYCf8sQxEJK1rvA
-         q138rPUltrTO8zP+FKPf+0PVgvXwBfJYQ+wPlX4pLCiDm1PXH8X8zExQ7JuU1+Q8atmr
-         tvTfW28nK0KsA9hItLbPL/Y+TFdPAyDPwCKmVCwmxI4Y2DZp8GpNYqPtHWbznWgC8YOv
-         71I3ZXbwzvnWaHxwqlJ+hI5ca7v+B3sXag1qwlPdjkyAy39JGD7p+Gw+vOVn0dQSosiX
-         AQMEFwoV38zILaV5ACc0ws4PpMtfQyXZGalxgFthlFSochvsA0au//cw3ipiNJ4KGVoD
-         XQFQ==
+        bh=7fEOh5rjWkHHjnI1FcGIXl+IfwcpsEG1P2j/5PMOEqA=;
+        b=eODll6i2bSU6rMQcj2CfZgugdlaFkLaCVE+mJsBtklgfNyH3uuDFEFo15rPyorEAoN
+         cXvUP826JMfDWwT2k9yj1RaH6s1/YuW1WGSwAH0nQalHsY6VrvayXUiuEtCK6UvOqRXq
+         grGcNjTxB/EhGcsZSsp87artU8wmjax+k08hMzFJDXyqKKs8+yFQTC08TiMRv2KeYigp
+         zoNdFUiikIcEEyQjmu+WBqoAHwG/H3ZXM9x36JpQ5nCHF6h7vic73wxiPzwtesvDpK6a
+         /IwozcVS2K1DdkTK8if6UuPdxjAMCdu/mb3kLLiL8Tt4frDzCT4Ezz2po9TWPZm0y5vl
+         bPYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686242010; x=1688834010;
+        d=1e100.net; s=20221208; t=1686242013; x=1688834013;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AkYm4XoSmYAPuKEElPguyxa8XEwyXPC3EoB3KYP8qQc=;
-        b=fYVLjaxZcKOK/eF3cv4N/kb+LIFMypjQiSdOhy1+st2TdJZNGaC8fOgjad5JXfLwyI
-         sDrhvRYeFX9s8wb+r5g2D/xvRCE+U2/YsC+iuH9fcB5q+3gMMSBm5Fea0CKjVxmaN6/r
-         cDbwcE0g+6+oTVeU7quH/DVyYCOAw9FfGYpPMNeIH1Bh4nbp8/rl4+BWFvH5N+4dBn7G
-         Q9+l8bX2sYfzQ71iPLdrj7dxnW3LjzoxAFCiSfH4ZG0s8qt1lcCHqR4xPdW6YVfHoIAt
-         7JX8adgNDTP49IvUH2lcBoAMIQKTuiORQikwklzc7Tu/A1y75LOHvCHTj0JdoOzqYCeQ
-         wi9Q==
-X-Gm-Message-State: AC+VfDzsCr1Epj0WzK6V2PckqKgMzYFzYsBB4AiyA/2dSXYDPXOiij4P
-        ECqnabDp0xWOymVB8LugFtW5W7jpW1g=
-X-Google-Smtp-Source: ACHHUZ5Wk14VHdia7uEuLGfsnoGZa8k8e0aAFBBlSat8CfsESUIUxxF3ltiQARJ4AFMX8M5WL8CmIw==
-X-Received: by 2002:a05:6808:2d2:b0:38e:6cb1:298b with SMTP id a18-20020a05680802d200b0038e6cb1298bmr8882079oid.53.1686242010012;
-        Thu, 08 Jun 2023 09:33:30 -0700 (PDT)
+        bh=7fEOh5rjWkHHjnI1FcGIXl+IfwcpsEG1P2j/5PMOEqA=;
+        b=S4qnuJ5W8vawNTpT2VrzrtHTkN/iUummV0f0T09fCuJPFuXN31myR4ZhoWwrwzS9gh
+         OQ9p04dqWC75pOWtSyTL27c3iNRohC8thVGsm1g5stYQqYFV36jRseYLU1DQOy0JtiUc
+         ZNvLUPBxNH/uPh4EibWlyhJXjKrsKskjptw5mcPXh+JYTaWMD4Ao+khiItQbKQ1f/M/6
+         u7xRM1l9+JgzV7af0jAxns+8VHIpPdG6LjNuNVHh4unPApITkMugmxafoNuPHQ0JFvF2
+         INxA8jgudmT6HqqZvdaqLtqlVGHHlHB6urq8mh4lcfbddtJhGPR+IUYiS0m8fdoE87Dd
+         K40A==
+X-Gm-Message-State: AC+VfDw5jsZr80BVUNgnk9Wmq3hPJlhJxOF8NzG7OElc7GiCjyep/8pt
+        Dqof7Y5gzuJJ2PR7ykZ47jU=
+X-Google-Smtp-Source: ACHHUZ4tcru/OJactgRUMiOQl0SsgfMsGi6a5gRSLoK7/hm6o2OlXMxCuxEuP3eW4No+qLKX+/w0kg==
+X-Received: by 2002:a05:6808:4d0:b0:39a:c245:f567 with SMTP id a16-20020a05680804d000b0039ac245f567mr1423711oie.2.1686242012383;
+        Thu, 08 Jun 2023 09:33:32 -0700 (PDT)
 Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:a60f:2d4d:e52b:2fca])
-        by smtp.gmail.com with ESMTPSA id e10-20020acab50a000000b003942036439dsm577500oif.46.2023.06.08.09.33.28
+        by smtp.gmail.com with ESMTPSA id e10-20020acab50a000000b003942036439dsm577500oif.46.2023.06.08.09.33.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jun 2023 09:33:29 -0700 (PDT)
+        Thu, 08 Jun 2023 09:33:32 -0700 (PDT)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de,
         ilpo.jarvinen@linux.intel.com
-Subject: [PATCH v17 07/13] hp-bioscfg: order-list-attributes
-Date:   Thu,  8 Jun 2023 11:33:13 -0500
-Message-Id: <20230608163319.18934-8-jorge.lopez2@hp.com>
+Subject: [PATCH v17 09/13] hp-bioscfg: spmobj-attributes
+Date:   Thu,  8 Jun 2023 11:33:15 -0500
+Message-Id: <20230608163319.18934-10-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230608163319.18934-1-jorge.lopez2@hp.com>
 References: <20230608163319.18934-1-jorge.lopez2@hp.com>
@@ -69,7 +69,7 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add ordered list attributes support to hp-bioscfg.
+Add SPM authentication attributes support to hp-bioscfg.
 
 HP BIOS Configuration driver purpose is to provide a driver supporting
 the latest sysfs class firmware attributes framework allowing the user
@@ -81,451 +81,401 @@ Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 ---
 Based on the latest platform-drivers-x86.git/for-next
 ---
- .../x86/hp/hp-bioscfg/order-list-attributes.c | 436 ++++++++++++++++++
- 1 file changed, 436 insertions(+)
- create mode 100644 drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+ .../x86/hp/hp-bioscfg/spmobj-attributes.c     | 386 ++++++++++++++++++
+ 1 file changed, 386 insertions(+)
+ create mode 100644 drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
 new file mode 100644
-index 000000000000..7e49a8427c06
+index 000000000000..02291e32684f
 --- /dev/null
-+++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-@@ -0,0 +1,436 @@
++++ b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
+@@ -0,0 +1,386 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Functions corresponding to ordered list type attributes under
-+ * BIOS ORDERED LIST GUID for use with hp-bioscfg driver.
++ * Functions corresponding to secure platform management object type
++ * attributes under BIOS PASSWORD for use with hp-bioscfg driver
 + *
 + * Copyright (c) 2022 HP Development Company, L.P.
 + */
 +
 +#include "bioscfg.h"
 +
-+GET_INSTANCE_ID(ordered_list);
++static const char * const spm_state_types[] = {
++	"not provisioned",
++	"provisioned",
++	"provisioning in progress",
++};
 +
-+static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
++static const char * const spm_mechanism_types[] = {
++	"not provisioned",
++	"signing-key",
++	"endorsement-key",
++};
++
++struct secureplatform_provisioning_data {
++	u8 state;
++	u8 version[2];
++	u8 reserved1;
++	u32 features;
++	u32 nonce;
++	u8 reserved2[28];
++	u8 sk_mod[MAX_KEY_MOD_SIZE];
++	u8 kek_mod[MAX_KEY_MOD_SIZE];
++};
++
++/**
++ * hp_calculate_security_buffer() - determines size of security buffer
++ * for authentication scheme
++ *
++ * @authentication: the authentication content
++ *
++ * Currently only supported type is Admin password
++ */
++size_t hp_calculate_security_buffer(const char *authentication)
 +{
-+	int instance_id = get_ordered_list_instance_id(kobj);
++	size_t size, authlen;
 +
-+	if (instance_id < 0)
-+		return -EIO;
++	if (!authentication)
++		return sizeof(u16) * 2;
 +
-+	return sysfs_emit(buf, "%s\n",
-+			 bioscfg_drv.ordered_list_data[instance_id].current_value);
-+}
++	authlen = strlen(authentication);
++	if (!authlen)
++		return sizeof(u16) * 2;
 +
-+static int replace_char_str(u8 *buffer, char *repl_char, char *repl_with)
-+{
-+	char *src = buffer;
-+	int buflen = strlen(buffer);
-+	int item;
++	size = sizeof(u16) + authlen * sizeof(u16);
++	if (!strstarts(authentication, BEAM_PREFIX))
++		size += strlen(UTF_PREFIX) * sizeof(u16);
 +
-+	if (buflen < 1)
-+		return -EINVAL;
-+
-+	for (item = 0; item < buflen; item++)
-+		if (src[item] == *repl_char)
-+			src[item] = *repl_with;
-+
-+	return 0;
++	return size;
 +}
 +
 +/**
-+ * validate_ordered_list_input() -
-+ * Validate input of current_value against possible values
++ * hp_populate_security_buffer() - builds a security buffer for
++ * authentication scheme
 + *
-+ * @instance: The instance on which input is validated
-+ * @buf: Input value
-+ */
-+static int validate_ordered_list_input(int instance, char *buf)
-+{
-+	/* validation is done by BIOS. This validation function will
-+	 * convert semicolon to commas. BIOS uses commas as
-+	 * separators when reporting ordered-list values.
-+	 */
-+	return replace_char_str(buf, SEMICOLON_SEP, COMMA_SEP);
-+}
-+
-+static void update_ordered_list_value(int instance, char *attr_value)
-+{
-+	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance];
-+
-+	strscpy(ordered_list_data->current_value,
-+		attr_value,
-+		sizeof(ordered_list_data->current_value));
-+}
-+
-+ATTRIBUTE_S_COMMON_PROPERTY_SHOW(display_name, ordered_list);
-+static struct kobj_attribute ordered_list_display_name =
-+	__ATTR_RO(display_name);
-+
-+ATTRIBUTE_PROPERTY_STORE(current_value, ordered_list);
-+static struct kobj_attribute ordered_list_current_val =
-+	__ATTR_RW_MODE(current_value, 0644);
-+
-+ATTRIBUTE_VALUES_PROPERTY_SHOW(elements, ordered_list, SEMICOLON_SEP);
-+static struct kobj_attribute ordered_list_elements_val =
-+	__ATTR_RO(elements);
-+
-+static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			 char *buf)
-+{
-+	return sysfs_emit(buf, "ordered-list\n");
-+}
-+
-+static struct kobj_attribute ordered_list_type =
-+	__ATTR_RO(type);
-+
-+static struct attribute *ordered_list_attrs[] = {
-+	&common_display_langcode.attr,
-+	&ordered_list_display_name.attr,
-+	&ordered_list_current_val.attr,
-+	&ordered_list_elements_val.attr,
-+	&ordered_list_type.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group ordered_list_attr_group = {
-+	.attrs = ordered_list_attrs,
-+};
-+
-+int hp_alloc_ordered_list_data(void)
-+{
-+	bioscfg_drv.ordered_list_instances_count =
-+		hp_get_instance_count(HP_WMI_BIOS_ORDERED_LIST_GUID);
-+	bioscfg_drv.ordered_list_data = kcalloc(bioscfg_drv.ordered_list_instances_count,
-+						sizeof(*bioscfg_drv.ordered_list_data),
-+						GFP_KERNEL);
-+	if (!bioscfg_drv.ordered_list_data) {
-+		bioscfg_drv.ordered_list_instances_count = 0;
-+		return -ENOMEM;
-+	}
-+	return 0;
-+}
-+
-+/* Expected Values types associated with each element */
-+static const acpi_object_type expected_order_types[] = {
-+	[NAME]	= ACPI_TYPE_STRING,
-+	[VALUE] = ACPI_TYPE_STRING,
-+	[PATH] = ACPI_TYPE_STRING,
-+	[IS_READONLY] = ACPI_TYPE_INTEGER,
-+	[DISPLAY_IN_UI] = ACPI_TYPE_INTEGER,
-+	[REQUIRES_PHYSICAL_PRESENCE] = ACPI_TYPE_INTEGER,
-+	[SEQUENCE] = ACPI_TYPE_INTEGER,
-+	[PREREQUISITES_SIZE] = ACPI_TYPE_INTEGER,
-+	[PREREQUISITES] = ACPI_TYPE_STRING,
-+	[SECURITY_LEVEL] = ACPI_TYPE_INTEGER,
-+	[ORD_LIST_SIZE] = ACPI_TYPE_INTEGER,
-+	[ORD_LIST_ELEMENTS] = ACPI_TYPE_STRING,
-+};
-+
-+static int hp_populate_ordered_list_elements_from_package(union acpi_object *order_obj,
-+							  int order_obj_count,
-+							  int instance_id)
-+{
-+	char *str_value = NULL;
-+	int value_len;
-+	int ret;
-+	u32 size;
-+	u32 int_value;
-+	int elem;
-+	int reqs;
-+	int eloc;
-+	char *tmpstr = NULL;
-+	char *part_tmp = NULL;
-+	int tmp_len = 0;
-+	char *part = NULL;
-+	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
-+
-+	if (!order_obj)
-+		return -EINVAL;
-+
-+	for (elem = 1, eloc = 1; elem < order_obj_count; elem++, eloc++) {
-+		/* ONLY look at the first ORDERED_ELEM_CNT elements */
-+		if (eloc == ORD_ELEM_CNT)
-+			goto exit_list;
-+
-+		switch (order_obj[elem].type) {
-+		case ACPI_TYPE_STRING:
-+			if (elem != PREREQUISITES && elem != ORD_LIST_ELEMENTS) {
-+				ret = hp_convert_hexstr_to_str(order_obj[elem].string.pointer,
-+							       order_obj[elem].string.length,
-+							       &str_value, &value_len);
-+				if (ret)
-+					continue;
-+			}
-+			break;
-+		case ACPI_TYPE_INTEGER:
-+			int_value = (u32)order_obj[elem].integer.value;
-+			break;
-+		default:
-+			pr_warn("Unsupported object type [%d]\n", order_obj[elem].type);
-+			continue;
-+		}
-+
-+		/* Check that both expected and read object type match */
-+		if (expected_order_types[eloc] != order_obj[elem].type) {
-+			pr_err("Error expected type %d for elem %d, but got type %d instead\n",
-+			       expected_order_types[eloc], elem, order_obj[elem].type);
-+			return -EIO;
-+		}
-+
-+		/* Assign appropriate element value to corresponding field*/
-+		switch (eloc) {
-+		case VALUE:
-+			strscpy(ordered_list_data->current_value,
-+				str_value, sizeof(ordered_list_data->current_value));
-+			replace_char_str(ordered_list_data->current_value, COMMA_SEP, SEMICOLON_SEP);
-+			break;
-+		case PATH:
-+			strscpy(ordered_list_data->common.path, str_value,
-+				sizeof(ordered_list_data->common.path));
-+			break;
-+		case IS_READONLY:
-+			ordered_list_data->common.is_readonly = int_value;
-+			break;
-+		case DISPLAY_IN_UI:
-+			ordered_list_data->common.display_in_ui = int_value;
-+			break;
-+		case REQUIRES_PHYSICAL_PRESENCE:
-+			ordered_list_data->common.requires_physical_presence = int_value;
-+			break;
-+		case SEQUENCE:
-+			ordered_list_data->common.sequence = int_value;
-+			break;
-+		case PREREQUISITES_SIZE:
-+			ordered_list_data->common.prerequisites_size = int_value;
-+			if (int_value > MAX_PREREQUISITES_SIZE)
-+				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-+
-+			/*
-+			 * This HACK is needed to keep the expected
-+			 * element list pointing to the right obj[elem].type
-+			 * when the size is zero. PREREQUISITES
-+			 * object is omitted by BIOS when the size is
-+			 * zero.
-+			 */
-+			if (int_value == 0)
-+				eloc++;
-+			break;
-+		case PREREQUISITES:
-+			size = min_t(u32, ordered_list_data->common.prerequisites_size,
-+				     MAX_PREREQUISITES_SIZE);
-+			for (reqs = 0; reqs < size; reqs++) {
-+				ret = hp_convert_hexstr_to_str(order_obj[elem + reqs].string.pointer,
-+							       order_obj[elem + reqs].string.length,
-+							       &str_value, &value_len);
-+
-+				if (ret)
-+					continue;
-+
-+				strscpy(ordered_list_data->common.prerequisites[reqs],
-+					str_value,
-+					sizeof(ordered_list_data->common.prerequisites[reqs]));
-+
-+				kfree(str_value);
-+			}
-+			break;
-+
-+		case SECURITY_LEVEL:
-+			ordered_list_data->common.security_level = int_value;
-+			break;
-+
-+		case ORD_LIST_SIZE:
-+			ordered_list_data->elements_size = int_value;
-+			if (int_value > MAX_ELEMENTS_SIZE)
-+				pr_warn("Ordered List size value exceeded the maximum number of elements supported or data may be malformed\n");
-+			/*
-+			 * This HACK is needed to keep the expected
-+			 * element list pointing to the right obj[elem].type
-+			 * when the size is zero. ORD_LIST_ELEMENTS
-+			 * object is omitted by BIOS when the size is
-+			 * zero.
-+			 */
-+			if (int_value == 0)
-+				eloc++;
-+			break;
-+		case ORD_LIST_ELEMENTS:
-+			size = ordered_list_data->elements_size;
-+
-+			/*
-+			 * Ordered list data is stored in hex and comma separated format
-+			 * Convert the data and split it to show each element
-+			 */
-+			ret = hp_convert_hexstr_to_str(str_value, value_len, &tmpstr, &tmp_len);
-+			if (ret)
-+				goto exit_list;
-+
-+			part_tmp = tmpstr;
-+			part = strsep(&part_tmp, COMMA_SEP);
-+			if (!part)
-+				strscpy(ordered_list_data->elements[0],
-+					tmpstr,
-+					sizeof(ordered_list_data->elements[0]));
-+
-+			for (elem = 1; elem < MAX_ELEMENTS_SIZE && part; elem++) {
-+				strscpy(ordered_list_data->elements[elem],
-+					part,
-+					sizeof(ordered_list_data->elements[elem]));
-+				part = strsep(&part_tmp, SEMICOLON_SEP);
-+			}
-+
-+			break;
-+		default:
-+			pr_warn("Invalid element: %d found in Ordered_List attribute or data may be malformed\n", elem);
-+			break;
-+		}
-+		kfree(tmpstr);
-+		kfree(str_value);
-+	}
-+
-+exit_list:
-+	kfree(tmpstr);
-+	kfree(str_value);
-+	return 0;
-+}
-+
-+/**
-+ * hp_populate_ordered_list_package_data() -
-+ * Populate all properties of an instance under ordered_list attribute
++ * @authbuf: the security buffer
++ * @authentication: the authentication content
 + *
-+ * @order_obj: ACPI object with ordered_list data
-+ * @instance_id: The instance to enumerate
-+ * @attr_name_kobj: The parent kernel object
++ * Currently only supported type is PLAIN TEXT
 + */
-+int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int instance_id,
-+					  struct kobject *attr_name_kobj)
++int hp_populate_security_buffer(u16 *authbuf, const char *authentication)
 +{
-+	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
-+
-+	ordered_list_data->attr_name_kobj = attr_name_kobj;
-+
-+	hp_populate_ordered_list_elements_from_package(order_obj,
-+						       order_obj->package.count,
-+						       instance_id);
-+	hp_update_attribute_permissions(ordered_list_data->common.is_readonly,
-+					&ordered_list_current_val);
-+	hp_friendly_user_name_update(ordered_list_data->common.path,
-+				     attr_name_kobj->name,
-+				     ordered_list_data->common.display_name,
-+				     sizeof(ordered_list_data->common.display_name));
-+	return sysfs_create_group(attr_name_kobj, &ordered_list_attr_group);
-+}
-+
-+static int hp_populate_ordered_list_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_size,
-+							 int instance_id)
-+{
-+	int values;
-+	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
++	u16 *auth = authbuf;
++	char *strprefix = NULL;
 +	int ret = 0;
 +
-+	/*
-+	 * Only data relevant to this driver and its functionality is
-+	 * read. BIOS defines the order in which each * element is
-+	 * read. Element 0 data is not relevant to this
-+	 * driver hence it is ignored. For clarity, all element names
-+	 * (DISPLAY_IN_UI) which defines the order in which is read
-+	 * and the name matches the variable where the data is stored.
-+	 *
-+	 * In earlier implementation, reported errors were ignored
-+	 * causing the data to remain uninitialized. It is not
-+	 * possible to determine if data read from BIOS is valid or
-+	 * not. It is for this reason functions may return a error
-+	 * without validating the data itself.
-+	 */
++	if (strstarts(authentication, BEAM_PREFIX)) {
++		/*
++		 * BEAM_PREFIX is append to authbuf when a signature
++		 * is provided and Sure Admin is enabled in BIOS
++		 */
++		/* BEAM_PREFIX found, convert part to unicode */
++		auth = hp_ascii_to_utf16_unicode(auth, authentication);
++		if (!auth)
++			return -EINVAL;
 +
-+	// VALUE:
-+	ret = hp_get_string_from_buffer(&buffer_ptr, buffer_size, ordered_list_data->current_value,
-+					sizeof(ordered_list_data->current_value));
-+	if (ret < 0)
-+		goto buffer_exit;
++	} else {
++		/*
++		 * UTF-16 prefix is append to the * authbuf when a BIOS
++		 * admin password is configured in BIOS
++		 */
 +
-+	replace_char_str(ordered_list_data->current_value, COMMA_SEP, SEMICOLON_SEP);
++		/* append UTF_PREFIX to part and then convert it to unicode */
++		strprefix = kasprintf(GFP_KERNEL, "%s%s", UTF_PREFIX,
++				      authentication);
++		if (!strprefix)
++			return -ENOMEM;
 +
-+	// COMMON:
-+	ret = hp_get_common_data_from_buffer(&buffer_ptr, buffer_size,
-+					     &ordered_list_data->common);
-+	if (ret < 0)
-+		goto buffer_exit;
++		auth = hp_ascii_to_utf16_unicode(auth, strprefix);
++		kfree(strprefix);
 +
-+	// ORD_LIST_SIZE:
-+	ret = hp_get_integer_from_buffer(&buffer_ptr, buffer_size,
-+					 &ordered_list_data->elements_size);
-+
-+	if (ordered_list_data->elements_size > MAX_ELEMENTS_SIZE) {
-+		/* Report a message and limit elements size to maximum value */
-+		pr_warn("Ordered List size value exceeded the maximum number of elements supported or data may be malformed\n");
-+		ordered_list_data->elements_size = MAX_ELEMENTS_SIZE;
++		if (!auth) {
++			ret = -EINVAL;
++			goto out_buffer;
++		}
 +	}
 +
-+	// ORD_LIST_ELEMENTS:
-+	for (values = 0; values < ordered_list_data->elements_size; values++) {
-+		ret = hp_get_string_from_buffer(&buffer_ptr, buffer_size,
-+						ordered_list_data->elements[values],
-+						sizeof(ordered_list_data->elements[values]));
-+		if (ret < 0)
-+			break;
-+	}
-+
-+buffer_exit:
++out_buffer:
 +	return ret;
 +}
 +
-+/**
-+ * hp_populate_ordered_list_buffer_data() - Populate all properties of an
-+ * instance under ordered list attribute
-+ *
-+ * @buffer_ptr: Buffer pointer
-+ * @buffer_size: Buffer size
-+ * @instance_id: The instance to enumerate
-+ * @attr_name_kobj: The parent kernel object
-+ */
-+int hp_populate_ordered_list_buffer_data(u8 *buffer_ptr, u32 *buffer_size, int instance_id,
-+					 struct kobject *attr_name_kobj)
++static ssize_t update_spm_state(void)
 +{
-+	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
-+	int ret = 0;
++	struct secureplatform_provisioning_data data;
++	int ret;
 +
-+	ordered_list_data->attr_name_kobj = attr_name_kobj;
-+
-+	/* Populate ordered list elements */
-+	ret = hp_populate_ordered_list_elements_from_buffer(buffer_ptr, buffer_size,
-+							    instance_id);
++	ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_GET_STATE,
++				   HPWMI_SECUREPLATFORM, &data, 0,
++				   sizeof(data));
 +	if (ret < 0)
 +		return ret;
 +
-+	hp_update_attribute_permissions(ordered_list_data->common.is_readonly,
-+					&ordered_list_current_val);
-+	hp_friendly_user_name_update(ordered_list_data->common.path,
-+				     attr_name_kobj->name,
-+				     ordered_list_data->common.display_name,
-+				     sizeof(ordered_list_data->common.display_name));
++	bioscfg_drv.spm_data.mechanism = data.state;
++	if (bioscfg_drv.spm_data.mechanism)
++		bioscfg_drv.spm_data.is_enabled = 1;
 +
-+	return sysfs_create_group(attr_name_kobj, &ordered_list_attr_group);
++	return 0;
 +}
 +
-+/**
-+ * hp_exit_ordered_list_attributes() - Clear all attribute data
-+ *
-+ * Clears all data allocated for this group of attributes
-+ */
-+void hp_exit_ordered_list_attributes(void)
++static ssize_t statusbin(struct kobject *kobj,
++			 struct kobj_attribute *attr,
++			 struct secureplatform_provisioning_data *buf)
 +{
-+	int instance_id;
++	int ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_GET_STATE,
++				       HPWMI_SECUREPLATFORM, buf, 0,
++				       sizeof(*buf));
 +
-+	for (instance_id = 0; instance_id < bioscfg_drv.ordered_list_instances_count;
-+	     instance_id++) {
-+		struct kobject *attr_name_kobj =
-+			bioscfg_drv.ordered_list_data[instance_id].attr_name_kobj;
++	if (ret < 0)
++		return ret;
 +
-+		if (attr_name_kobj)
-+			sysfs_remove_group(attr_name_kobj,
-+					   &ordered_list_attr_group);
++	return sizeof(struct secureplatform_provisioning_data);
++}
++
++/*
++ * status_show - Reads SPM status
++ */
++static ssize_t status_show(struct kobject *kobj, struct kobj_attribute
++			   *attr, char *buf)
++{
++	int ret, i;
++	int len = 0;
++	struct secureplatform_provisioning_data data;
++
++	ret = statusbin(kobj, attr, &data);
++	if (ret < 0)
++		return ret;
++
++	/*
++	 * 'status' is a read-only file that returns ASCII text in
++	 * JSON format reporting the status information.
++	 *
++	 * "State": "not provisioned | provisioned | provisioning in progress ",
++	 * "Version": " Major. Minor ",
++	 * "Nonce": <16-bit unsigned number display in base 10>,
++	 * "FeaturesInUse": <16-bit unsigned number display in base 10>,
++	 * "EndorsementKeyMod": "<256 bytes in base64>",
++	 * "SigningKeyMod": "<256 bytes in base64>"
++	 */
++
++	len += sysfs_emit_at(buf, len, "{\n");
++	len += sysfs_emit_at(buf, len, "\t\"State\": \"%s\",\n",
++			     spm_state_types[data.state]);
++	len += sysfs_emit_at(buf, len, "\t\"Version\": \"%d.%d\"",
++			     data.version[0], data.version[1]);
++
++	/*
++	 * state == 0 means secure platform management
++	 * feature is not configured in BIOS.
++	 */
++	if (data.state == 0) {
++		len += sysfs_emit_at(buf, len, "\n");
++		goto status_exit;
++	} else {
++		len += sysfs_emit_at(buf, len, ",\n");
 +	}
-+	bioscfg_drv.ordered_list_instances_count = 0;
 +
-+	kfree(bioscfg_drv.ordered_list_data);
-+	bioscfg_drv.ordered_list_data = NULL;
++	len += sysfs_emit_at(buf, len, "\t\"Nonce\": %d,\n", data.nonce);
++	len += sysfs_emit_at(buf, len, "\t\"FeaturesInUse\": %d,\n", data.features);
++	len += sysfs_emit_at(buf, len, "\t\"EndorsementKeyMod\": \"");
++
++	for (i = 255; i >= 0; i--)
++		len += sysfs_emit_at(buf, len, " %u", data.kek_mod[i]);
++
++	len += sysfs_emit_at(buf, len, " \",\n");
++	len += sysfs_emit_at(buf, len, "\t\"SigningKeyMod\": \"");
++
++	for (i = 255; i >= 0; i--)
++		len += sysfs_emit_at(buf, len, " %u", data.sk_mod[i]);
++
++	/* Return buf contents */
++	len += sysfs_emit_at(buf, len, " \"\n");
++
++status_exit:
++	len += sysfs_emit_at(buf, len, "}\n");
++
++	return len;
++}
++
++static struct kobj_attribute password_spm_status = __ATTR_RO(status);
++
++ATTRIBUTE_SPM_N_PROPERTY_SHOW(is_enabled, spm);
++static struct kobj_attribute password_spm_is_key_enabled = __ATTR_RO(is_enabled);
++
++static ssize_t key_mechanism_show(struct kobject *kobj, struct kobj_attribute *attr,
++				  char *buf)
++{
++	return sysfs_emit(buf, "%s\n",
++			  spm_mechanism_types[bioscfg_drv.spm_data.mechanism]);
++}
++
++static struct kobj_attribute password_spm_key_mechanism = __ATTR_RO(key_mechanism);
++
++static ssize_t sk_store(struct kobject *kobj,
++			struct kobj_attribute *attr,
++			const char *buf, size_t count)
++{
++	int ret;
++	int length;
++
++	length = count;
++	if (buf[length - 1] == '\n')
++		length--;
++
++	/* allocate space and copy current signing key */
++	bioscfg_drv.spm_data.signing_key = kmalloc(length, GFP_KERNEL);
++	if (!bioscfg_drv.spm_data.signing_key)
++		return -ENOMEM;
++
++	memcpy(bioscfg_drv.spm_data.signing_key, buf, length);
++
++	/* submit signing key payload */
++	ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_SET_SK,
++				   HPWMI_SECUREPLATFORM,
++				   (void *)bioscfg_drv.spm_data.signing_key,
++				   count, 0);
++
++	if (!ret) {
++		bioscfg_drv.spm_data.mechanism = SIGNING_KEY;
++		hp_set_reboot_and_signal_event();
++	}
++
++	kfree(bioscfg_drv.spm_data.signing_key);
++	bioscfg_drv.spm_data.signing_key = NULL;
++
++	return ret ? ret : count;
++}
++
++static struct kobj_attribute password_spm_signing_key = __ATTR_WO(sk);
++
++static ssize_t kek_store(struct kobject *kobj,
++			 struct kobj_attribute *attr,
++			 const char *buf, size_t count)
++{
++	int ret;
++	int length;
++
++	length = count;
++	if (buf[length - 1] == '\n')
++		length--;
++
++	/* allocate space and copy current signing key */
++	bioscfg_drv.spm_data.endorsement_key = kmalloc(length, GFP_KERNEL);
++	if (!bioscfg_drv.spm_data.endorsement_key) {
++		ret = -ENOMEM;
++		goto exit_kek;
++	}
++
++	memcpy(bioscfg_drv.spm_data.endorsement_key, buf, length);
++
++	ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_SET_KEK,
++				   HPWMI_SECUREPLATFORM,
++				   (void *)bioscfg_drv.spm_data.endorsement_key,
++				   count, 0);
++
++	if (!ret) {
++		bioscfg_drv.spm_data.mechanism = ENDORSEMENT_KEY;
++		hp_set_reboot_and_signal_event();
++	}
++
++exit_kek:
++	kfree(bioscfg_drv.spm_data.endorsement_key);
++	bioscfg_drv.spm_data.endorsement_key = NULL;
++
++	return ret ? ret : count;
++}
++
++static struct kobj_attribute password_spm_endorsement_key = __ATTR_WO(kek);
++
++static ssize_t role_show(struct kobject *kobj, struct kobj_attribute *attr,
++			 char *buf)
++{
++	return sysfs_emit(buf, "%s\n", BIOS_SPM);
++}
++
++static struct kobj_attribute password_spm_role = __ATTR_RO(role);
++
++static ssize_t auth_token_store(struct kobject *kobj,
++				struct kobj_attribute *attr,
++				const char *buf, size_t count)
++{
++	int ret = 0;
++	int length;
++
++	length = count;
++	if (buf[length - 1] == '\n')
++		length--;
++
++	/* allocate space and copy current auth token */
++	bioscfg_drv.spm_data.auth_token = kmalloc(length, GFP_KERNEL);
++	if (!bioscfg_drv.spm_data.auth_token) {
++		ret = -ENOMEM;
++		goto exit_token;
++	}
++
++	memcpy(bioscfg_drv.spm_data.auth_token, buf, length);
++	return count;
++
++exit_token:
++	kfree(bioscfg_drv.spm_data.auth_token);
++	bioscfg_drv.spm_data.auth_token = NULL;
++
++	return ret;
++}
++
++static struct kobj_attribute password_spm_auth_token = __ATTR_WO(auth_token);
++
++static struct attribute *secure_platform_attrs[] = {
++	&password_spm_is_key_enabled.attr,
++	&password_spm_signing_key.attr,
++	&password_spm_endorsement_key.attr,
++	&password_spm_key_mechanism.attr,
++	&password_spm_status.attr,
++	&password_spm_role.attr,
++	&password_spm_auth_token.attr,
++	NULL,
++};
++
++static const struct attribute_group secure_platform_attr_group = {
++	.attrs = secure_platform_attrs,
++};
++
++void hp_exit_secure_platform_attributes(void)
++{
++	/* remove secure platform sysfs entry and free key data*/
++
++	kfree(bioscfg_drv.spm_data.endorsement_key);
++	bioscfg_drv.spm_data.endorsement_key = NULL;
++
++	kfree(bioscfg_drv.spm_data.signing_key);
++	bioscfg_drv.spm_data.signing_key = NULL;
++
++	kfree(bioscfg_drv.spm_data.auth_token);
++	bioscfg_drv.spm_data.auth_token = NULL;
++
++	if (bioscfg_drv.spm_data.attr_name_kobj)
++		sysfs_remove_group(bioscfg_drv.spm_data.attr_name_kobj,
++				   &secure_platform_attr_group);
++}
++
++int hp_populate_secure_platform_data(struct kobject *attr_name_kobj)
++{
++	/* Populate data for Secure Platform Management */
++	bioscfg_drv.spm_data.attr_name_kobj = attr_name_kobj;
++
++	strscpy(bioscfg_drv.spm_data.attribute_name, SPM_STR,
++		sizeof(bioscfg_drv.spm_data.attribute_name));
++
++	bioscfg_drv.spm_data.is_enabled = 0;
++	bioscfg_drv.spm_data.mechanism = 0;
++	bioscfg_drv.pending_reboot = false;
++	update_spm_state();
++
++	bioscfg_drv.spm_data.endorsement_key = NULL;
++	bioscfg_drv.spm_data.signing_key = NULL;
++	bioscfg_drv.spm_data.auth_token = NULL;
++
++	return sysfs_create_group(attr_name_kobj, &secure_platform_attr_group);
 +}
 -- 
 2.34.1
