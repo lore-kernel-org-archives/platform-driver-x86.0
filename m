@@ -2,84 +2,114 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED89C7EE2F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Jun 2023 07:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 685C1C7EE29
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Jun 2023 14:27:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238333AbjFIHU0 (ORCPT
+        id S241386AbjFIO1U (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Jun 2023 03:20:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39548 "EHLO
+        Fri, 9 Jun 2023 10:27:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238426AbjFIHUY (ORCPT
+        with ESMTP id S241437AbjFIO1R (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Jun 2023 03:20:24 -0400
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 286F61706
-        for <platform-driver-x86@vger.kernel.org>; Fri,  9 Jun 2023 00:20:23 -0700 (PDT)
-Received: by mail-yb1-xb2f.google.com with SMTP id 3f1490d57ef6-bacf9edc87bso1426998276.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Jun 2023 00:20:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686295222; x=1688887222;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cNZBVVP7JndHPOZxf9bAlKS1XeMLsUa6gJUiQeAwW6I=;
-        b=zCcyyvSukjhEDwNuBb6wmktcq/UDITOEvfnI8PyYQjcRhKV4srphoHFwiCxqrhVA5q
-         VHVcwlCC0/Zv/Zb+Ii3wa/0kMlRQrLokAb9uyiIXjoIwF/Cn8mab3BHWBjmWhwX3VqZq
-         QV32sIRVJadgcxMNUrtK92NVEXeddFeOV6fEUB84dnHxyFmLNmYYUeF1TVOW7cerOKv9
-         y9I9HtfV6i3bpjy/FUr4YRNJYGEolnhCpsx4vxs3C5Pp8g+FtI8X+vlqoAo7lTkAN/CI
-         vMX6xZjsL9yslYEJi8YlLQT6hWzbBsQbtX66q7bm6xjzDAMH21t/fpO8Y4UwlV8MK5iF
-         DuyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686295222; x=1688887222;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cNZBVVP7JndHPOZxf9bAlKS1XeMLsUa6gJUiQeAwW6I=;
-        b=kv6aPjbZNDqlK0hvTQM+yBJ9ucgB055RhyWy7O3MGbPVhGeeeQEmDfgJ9jgK3KWmXB
-         SdwuNI0K1tY4Bbqq4HoxULiH/qsIv9Ij1GKmr2yv0wyuv4UUbYC4QbDPdogXQxMXNqZh
-         8nWKQXmVmxvPr+m/gm7lwmg8vATsyI66ffBClZa+QqdDDtTtIn0R/Nxj4nOoLZ1BKq0J
-         KQ4RklWPqQCVn+0MRFjyScW61WpPwGjfQPKqdNLboXF+uRIEX5U+JsdfBXc2Y92Xoylu
-         Ix+KsfgB0ya79quWOa5bB6lxPA16TsRTFLToFTg1/J8UrAgWZHzPyn79RFhBcpSbxBKo
-         YqlA==
-X-Gm-Message-State: AC+VfDxpk/rHd6vacSsnC+yAKHysTHbAfW9TR/gVgYTTQnIFKffIq/XQ
-        q5WquD7B2gJRMmL7CxvAmxoAq2/SzwDQh8fzsSGCeg==
-X-Google-Smtp-Source: ACHHUZ5BLm8h+zwKDubwqcGeuDV0Th4rhBNr2usnCf58DvcB3K79R2ksO2UJa1K05qt+BlvxUQlBsxuinEOngdQz0yw=
-X-Received: by 2002:a25:1f57:0:b0:bb3:8f5d:23f9 with SMTP id
- f84-20020a251f57000000b00bb38f5d23f9mr323386ybf.22.1686295222340; Fri, 09 Jun
- 2023 00:20:22 -0700 (PDT)
+        Fri, 9 Jun 2023 10:27:17 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9B0B3C2A;
+        Fri,  9 Jun 2023 07:26:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686320799; x=1717856799;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9bI0m+ifES+6k8pQzzNX2KP969ALq4IZ/1G6tuuvLB4=;
+  b=K144sWYmy7kS/OcBx/NatGVj1PpWLxBtZHp22ZoTz6O4QTinr5LPDmgj
+   qZV1aRqJrUNnKIzdhGP89ybnzJlxJVODjC0FgtG5biHG9FDpi6vemlooa
+   TkzgjtlFHjf2qg+d1+/OmMwcdHVhnx6OdiyGz3dMC7MIYmbJGqNz5bH7d
+   KFmGV2ZGJQrQEs98UtHcTESAbbK1SRopfH94DClGbkbirVjH8SFJo07dV
+   6RVLzUPSQ2EYnwjv9nLbAbdSynMl5xuj8g2IhiZAqoCRv+/yg14fFZ8sQ
+   SuSCOo2pr5rTwLi804fLNikna74vUNWoPVT02USYWSSAz+hDr2ppHBusK
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="355096131"
+X-IronPort-AV: E=Sophos;i="6.00,229,1681196400"; 
+   d="scan'208";a="355096131"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 07:25:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="780330340"
+X-IronPort-AV: E=Sophos;i="6.00,229,1681196400"; 
+   d="scan'208";a="780330340"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga004.fm.intel.com with ESMTP; 09 Jun 2023 07:25:26 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1q7d3M-002Pzt-31;
+        Fri, 09 Jun 2023 17:25:24 +0300
+Date:   Fri, 9 Jun 2023 17:25:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee@kernel.org>
+Cc:     Henning Schild <henning.schild@siemens.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] leds: simatic-ipc-leds-gpio: add terminating
+ entries to gpio tables
+Message-ID: <ZIM2VK9MlxGqBfDT@smile.fi.intel.com>
+References: <20230524124628.32295-1-henning.schild@siemens.com>
+ <20230524124628.32295-2-henning.schild@siemens.com>
+ <ZHHFMPEYNz9jBBRd@smile.fi.intel.com>
+ <20230530171100.75e5b86c@md1za8fc.ad001.siemens.net>
+ <ZHjLjU7WPv2W9SuJ@smile.fi.intel.com>
+ <20230608173027.GL3572061@google.com>
 MIME-Version: 1.0
-References: <20230602073025.22884-1-mario.limonciello@amd.com> <20230602073025.22884-3-mario.limonciello@amd.com>
-In-Reply-To: <20230602073025.22884-3-mario.limonciello@amd.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 9 Jun 2023 09:20:11 +0200
-Message-ID: <CACRpkdaefaapvdn3pw8dUJ_JOb-wE3kF0WM1C8XYUZVEqyd6EA@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] pinctrl: amd: Use pm_pr_dbg to show debugging messages
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Rafael Wysocki <rafael@kernel.org>, hdegoede@redhat.com,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org, Basavaraj.Natikar@amd.com,
-        Shyam-sundar.S-k@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230608173027.GL3572061@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 2, 2023 at 9:32=E2=80=AFPM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
+On Thu, Jun 08, 2023 at 06:30:27PM +0100, Lee Jones wrote:
+> On Thu, 01 Jun 2023, Andy Shevchenko wrote:
+> > On Tue, May 30, 2023 at 05:11:00PM +0200, Henning Schild wrote:
+> > > Am Sat, 27 May 2023 11:54:08 +0300
+> > > schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
+> > > 
+> > > > On Wed, May 24, 2023 at 02:46:25PM +0200, Henning Schild wrote:
+> > > > > The entries do not seem to be stricly needed when the number of
+> > > > > entries is given via the number of LEDs. But adding them is a
+> > > > > safeguard should anyone ever iterate over the tables to their end,
+> > > > > it also gets us in line with other drivers that register
+> > > > > "leds-gpio" tables.  
+> > > > 
+> > > > Reported-by?
+> > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > 
+> > > I think we could do
+> > > 
+> > > Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > 
+> > > on merge. But i would not want to send the whole series again for that
+> > > one line.
+> > 
+> > Since you added it, `b4` will happily take it, I believe no manual work even
+> > needed for that, thank you!
+> 
+> b4 didn't pick this up.  Nor the whole-series Ack provided by Hans.
+> 
+> I added both manually.
 
-> To make the GPIO tracking around suspend easier for end users to
-> use, link it with pm_debug_messages.  This will make discovering
-> sources of spurious GPIOs around suspend easier.
->
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+There is an option to take this
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+  -t, --apply-cover-trailers
+                        Apply trailers sent to the cover letter to all patches
 
-If the PM people merge the other patches they can take this too because
-of the dependency.
+have you tried it?
 
-Yours,
-Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
