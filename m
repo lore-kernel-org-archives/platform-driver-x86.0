@@ -2,43 +2,42 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED09EC7EE29
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Jun 2023 20:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4C7C7EE37
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Jun 2023 20:43:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232321AbjFIUnU (ORCPT
+        id S232335AbjFIUnV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Jun 2023 16:43:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44678 "EHLO
+        Fri, 9 Jun 2023 16:43:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232285AbjFIUnT (ORCPT
+        with ESMTP id S229471AbjFIUnU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Jun 2023 16:43:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF74930F1
-        for <platform-driver-x86@vger.kernel.org>; Fri,  9 Jun 2023 13:42:35 -0700 (PDT)
+        Fri, 9 Jun 2023 16:43:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC1B226B1
+        for <platform-driver-x86@vger.kernel.org>; Fri,  9 Jun 2023 13:42:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686343355;
+        s=mimecast20190719; t=1686343352;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tIHS4ZGwLmpBq3yASCoMhWXPQdCcm1k5A29a4Y8FLfU=;
-        b=fxOl4OdvpJHqwcwrQkTeKqps6MfXwvbY22g9ajlWeCpvPD/yWkkn4DQFDWotj4zEbNSNDc
-        F76oCQppug9kOm1ZpAbrPDR7q5/2dpwyZZmrtbSY44gPMBVvpBFhYbVOCd057az+BLi/pF
-        EBWE7JyGxxdegItZeNn13MZRiBnjecA=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+         content-transfer-encoding:content-transfer-encoding;
+        bh=i8u5YBtgug7p9/d4nlwZdckLX/Cv1cwVjAeKYPeg0YE=;
+        b=RPC98BaXVpi+jCGHXuYv8zw21cyXt2vMvOl9XZW1ul+8pQmqYU38FsDm57IevopEWj68v3
+        s281yLSrolSN0dNwWPc5Z3sf6MnwL6NBzOomyzi3iOHajOX3fg7GqBquJ7vp9LjWTeYjqM
+        RO1zH+s7W2d/nxSoWQ8AgQqrP4zdLy0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-488-XO_-YywDM367n8cR0XXYNA-1; Fri, 09 Jun 2023 16:42:33 -0400
-X-MC-Unique: XO_-YywDM367n8cR0XXYNA-1
+ us-mta-209-99Kg8QYpM8a6O7fJ6zqO9g-1; Fri, 09 Jun 2023 16:42:30 -0400
+X-MC-Unique: 99Kg8QYpM8a6O7fJ6zqO9g-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0D7343801FFB;
-        Fri,  9 Jun 2023 20:42:33 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6AA918007D9;
+        Fri,  9 Jun 2023 20:42:30 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.192.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EF85F40CFD00;
-        Fri,  9 Jun 2023 20:42:31 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 366C840CFD00;
+        Fri,  9 Jun 2023 20:42:29 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Dan Scally <dan.scally@ideasonboard.com>,
         Hao Yao <hao.yao@intel.com>, Bingbu Cao <bingbu.cao@intel.com>
@@ -46,11 +45,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
         platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
-Subject: [PATCH 2/4] platform/x86: int3472: discrete: Remove sensor_config-s
-Date:   Fri,  9 Jun 2023 22:42:26 +0200
-Message-Id: <20230609204228.74967-3-hdegoede@redhat.com>
-In-Reply-To: <20230609204228.74967-1-hdegoede@redhat.com>
-References: <20230609204228.74967-1-hdegoede@redhat.com>
+Subject: [PATCH 0/4] platform/x86: int3472: discrete: Regulator rework / Lenovo Miix 510 support
+Date:   Fri,  9 Jun 2023 22:42:24 +0200
+Message-Id: <20230609204228.74967-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
@@ -58,195 +55,56 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Currently the only 2 sensor_config-s both specify "avdd" as supply-id.
+Hi Dan, Hao Yao and Bingbu Cao,
 
-The INT3472 device is going to be the only supplier of a regulator for
-the sensor device.
+Patches 1/2 drop the sensor-config stuff since I thought we should be
+able to make things work without any board specific fixups.
 
-So there is no chance of collisions with other regulator suppliers
-and it is undesirable to need to manually add new entries to
-int3472_sensor_configs[] for each new sensor module which uses
-a GPIO regulator.
+This is the result of my working on getting IPU6 to work on Jasper Lake
+for $dayjob and then tonight I switched to trying to get the ov2680
+on the Lenovo Miix 510 to work and it turns out that does require some
+board specific workarounds after all :|
 
-Instead just always use "avdd" as supply-id when registering
-the GPIO regulator.
+With this series together with my recent ov2680 sensor driver series:
+https://lore.kernel.org/linux-media/20230607164712.63579-1-hdegoede@redhat.com/
+I can get the ov2680 driver to load and successfully read the id register:
 
-If necessary for specific sensor drivers then other supply-ids can
-be added as aliases in the future, adding aliases will be safe
-since INT3472 will be the only regulator supplier for the sensor.
+[   11.365319] ipu3-cio2 0000:00:14.3: Found supported sensor OVTI2680:00
+[   11.431595] ov2680 i2c-OVTI2680:00: supply DOVDD not found, using dummy regulator
+[   11.433125] ov2680 i2c-OVTI2680:00: supply DVDD not found, using dummy regulator
+[   11.454698] ov2680 i2c-OVTI2680:00: sensor_revision id = 0x2680, rev= 0
 
-Cc: Hao Yao <hao.yao@intel.com>
-Cc: Bingbu Cao <bingbu.cao@intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- .../x86/intel/int3472/clk_and_regulator.c     | 38 ++++++++++------
- drivers/platform/x86/intel/int3472/common.h   |  7 +--
- drivers/platform/x86/intel/int3472/discrete.c | 45 +++----------------
- 3 files changed, 31 insertions(+), 59 deletions(-)
+Dan, currently the DMI match used only matches the 12IKB version of
+the Miix 510 I think you have a 12ISK version. Can you verify this
+works there too?  I guess we can just drop the KB part of the DMI
+match if this works on the 12ISK version too.
 
-diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-index b3a55c618151..30686091300d 100644
---- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-+++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-@@ -232,32 +232,42 @@ void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472)
- 	gpiod_put(int3472->clock.ena_gpio);
- }
- 
-+/*
-+ * The INT3472 device is going to be the only supplier of a regulator for
-+ * the sensor device. But unlike the clk framework the regulator framework
-+ * does not allow matching by consumer-device-name only.
-+ *
-+ * Ideally all sensor drivers would use "avdd" as supply-id. But for drivers
-+ * where this cannot be changed because another supply-id is already used in
-+ * e.g. DeviceTree files an alias for the other supply-id can be added here.
-+ *
-+ * Do not forget to update GPIO_REGULATOR_SUPPLY_MAP_COUNT when changing this.
-+ */
-+static const char * const skl_int3472_regulator_map_supplies[] = {
-+	"avdd",
-+};
-+
- int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
- 				   struct acpi_resource_gpio *agpio)
- {
--	const struct int3472_sensor_config *sensor_config;
- 	char *path = agpio->resource_source.string_ptr;
--	struct regulator_consumer_supply supply_map;
- 	struct regulator_init_data init_data = { };
- 	struct regulator_config cfg = { };
--	int ret;
-+	int i, ret;
- 
--	sensor_config = int3472->sensor_config;
--	if (IS_ERR(sensor_config)) {
--		dev_err(int3472->dev, "No sensor module config\n");
--		return PTR_ERR(sensor_config);
-+	if (ARRAY_SIZE(skl_int3472_regulator_map_supplies) != GPIO_REGULATOR_SUPPLY_MAP_COUNT) {
-+		dev_err(int3472->dev, "Internal error ARRAY_SIZE(skl_int3472_regulator_map_supplies) != GPIO_REGULATOR_SUPPLY_MAP_COUNT\n");
-+		return -EINVAL;
- 	}
- 
--	if (!sensor_config->supply_map.supply) {
--		dev_err(int3472->dev, "No supply name defined\n");
--		return -ENODEV;
-+	for (i = 0; i < ARRAY_SIZE(skl_int3472_regulator_map_supplies); i++) {
-+		int3472->regulator.supply_map[i].supply = skl_int3472_regulator_map_supplies[i];
-+		int3472->regulator.supply_map[i].dev_name = int3472->sensor_name;
- 	}
- 
- 	init_data.constraints.valid_ops_mask = REGULATOR_CHANGE_STATUS;
--	init_data.num_consumer_supplies = 1;
--	supply_map = sensor_config->supply_map;
--	supply_map.dev_name = int3472->sensor_name;
--	init_data.consumer_supplies = &supply_map;
-+	init_data.consumer_supplies = int3472->regulator.supply_map;
-+	init_data.num_consumer_supplies = GPIO_REGULATOR_SUPPLY_MAP_COUNT;
- 
- 	snprintf(int3472->regulator.regulator_name,
- 		 sizeof(int3472->regulator.regulator_name), "%s-regulator",
-diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
-index 735567f374a6..225b067c854d 100644
---- a/drivers/platform/x86/intel/int3472/common.h
-+++ b/drivers/platform/x86/intel/int3472/common.h
-@@ -28,6 +28,7 @@
- 
- #define GPIO_REGULATOR_NAME_LENGTH				21
- #define GPIO_REGULATOR_SUPPLY_NAME_LENGTH			9
-+#define GPIO_REGULATOR_SUPPLY_MAP_COUNT				1
- 
- #define INT3472_LED_MAX_NAME_LEN				32
- 
-@@ -69,11 +70,6 @@ struct int3472_cldb {
- 	u8 reserved2[17];
- };
- 
--struct int3472_sensor_config {
--	const char *sensor_module_name;
--	struct regulator_consumer_supply supply_map;
--};
--
- struct int3472_discrete_device {
- 	struct acpi_device *adev;
- 	struct device *dev;
-@@ -83,6 +79,7 @@ struct int3472_discrete_device {
- 	const struct int3472_sensor_config *sensor_config;
- 
- 	struct int3472_gpio_regulator {
-+		struct regulator_consumer_supply supply_map[GPIO_REGULATOR_SUPPLY_MAP_COUNT];
- 		char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
- 		char supply_name[GPIO_REGULATOR_SUPPLY_NAME_LENGTH];
- 		struct gpio_desc *gpio;
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index 2ab3c7466986..3b410428cec2 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -34,48 +34,17 @@ static const guid_t cio2_sensor_module_guid =
- 	GUID_INIT(0x822ace8f, 0x2814, 0x4174,
- 		  0xa5, 0x6b, 0x5f, 0x02, 0x9f, 0xe0, 0x79, 0xee);
- 
--/*
-- * Here follows platform specific mapping information that we can pass to
-- * the functions mapping resources to the sensors. Where the sensors have
-- * a power enable pin defined in DSDT we need to provide a supply name so
-- * the sensor drivers can find the regulator. The device name will be derived
-- * from the sensor's ACPI device within the code.
-- */
--static const struct int3472_sensor_config int3472_sensor_configs[] = {
--	/* Lenovo Miix 510-12ISK - OV5648, Rear */
--	{ "GEFF150023R", REGULATOR_SUPPLY("avdd", NULL) },
--	/* Surface Go 1&2 - OV5693, Front */
--	{ "YHCU", REGULATOR_SUPPLY("avdd", NULL) },
--};
--
--static const struct int3472_sensor_config *
--skl_int3472_get_sensor_module_config(struct int3472_discrete_device *int3472)
-+static void skl_int3472_log_sensor_module_name(struct int3472_discrete_device *int3472)
- {
- 	union acpi_object *obj;
--	unsigned int i;
- 
- 	obj = acpi_evaluate_dsm_typed(int3472->sensor->handle,
- 				      &cio2_sensor_module_guid, 0x00,
- 				      0x01, NULL, ACPI_TYPE_STRING);
--
--	if (!obj) {
--		dev_err(int3472->dev,
--			"Failed to get sensor module string from _DSM\n");
--		return ERR_PTR(-ENODEV);
-+	if (obj) {
-+		dev_dbg(int3472->dev, "Sensor module id: '%s'\n", obj->string.pointer);
-+		ACPI_FREE(obj);
- 	}
--
--	for (i = 0; i < ARRAY_SIZE(int3472_sensor_configs); i++) {
--		if (!strcmp(int3472_sensor_configs[i].sensor_module_name,
--			    obj->string.pointer))
--			break;
--	}
--
--	ACPI_FREE(obj);
--
--	if (i >= ARRAY_SIZE(int3472_sensor_configs))
--		return ERR_PTR(-EINVAL);
--
--	return &int3472_sensor_configs[i];
- }
- 
- static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int3472,
-@@ -266,11 +235,7 @@ static int skl_int3472_parse_crs(struct int3472_discrete_device *int3472)
- 	LIST_HEAD(resource_list);
- 	int ret;
- 
--	/*
--	 * No error check, because not having a sensor config is not necessarily
--	 * a failure mode.
--	 */
--	int3472->sensor_config = skl_int3472_get_sensor_module_config(int3472);
-+	skl_int3472_log_sensor_module_name(int3472);
- 
- 	ret = acpi_dev_get_resources(int3472->adev, &resource_list,
- 				     skl_int3472_handle_gpio_resources,
+Hao Yao and Bingbu Cao I think that the way the issue with how different
+drivers may expect different regulator supply-ids is of interest to you
+too. Note I see that the mainline version of ov13b10.c does not have
+regulator support at all yet. So when adding this please just use
+one of the existing set of supply-names + the bulk API like how
+the ov5693.c driver is doing. In this case no int3472 driver changes
+will be necessary at all.
+
+Regards,
+
+Hans
+
+
+Hans de Goede (4):
+  platform/x86: int3472: discrete: Drop GPIO remapping support
+  platform/x86: int3472: discrete: Remove sensor_config-s
+  platform/x86: int3472: discrete: Add support for 1 GPIO regulator
+    shared between 2 sensors
+  platform/x86: int3472: discrete: Add alternative "AVDD" regulator
+    supply name
+
+ .../x86/intel/int3472/clk_and_regulator.c     | 72 ++++++++++++++----
+ drivers/platform/x86/intel/int3472/common.h   | 14 +---
+ drivers/platform/x86/intel/int3472/discrete.c | 76 ++-----------------
+ 3 files changed, 66 insertions(+), 96 deletions(-)
+
 -- 
 2.40.1
 
