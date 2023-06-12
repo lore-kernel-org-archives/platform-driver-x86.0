@@ -2,39 +2,70 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FB1C88CB2
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 15:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A97C88CB4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 15:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237813AbjFLPbB (ORCPT
+        id S233617AbjFLPhL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jun 2023 11:31:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57322 "EHLO
+        Mon, 12 Jun 2023 11:37:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235312AbjFLPan (ORCPT
+        with ESMTP id S237286AbjFLPhK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jun 2023 11:30:43 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8093E71;
-        Mon, 12 Jun 2023 08:30:28 -0700 (PDT)
-Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7F603838;
-        Mon, 12 Jun 2023 17:29:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1686583797;
-        bh=95hm2BR913/Pw2zJNHrWtrbznU22TRkeSXOWbNMzpX4=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=Alq0wX78j6Qdv28hGUUa4MYIG13salKSxGCvis5105Eg9gsd15AclwhSC/YNP3rvY
-         pWc0lgt3RaaW991qeZ3Yv1ZKbFA1A1yAveHVB3LN9i1XAr1sl/543+0V2Qq/Jzy9yT
-         Dzk6G4FL7IuMrZL2++AZpfIJfjJH7kHSFi9VUIxA=
-Message-ID: <3238cbe3-b1ef-8cce-442f-b8b82ed1df76@ideasonboard.com>
-Date:   Mon, 12 Jun 2023 16:30:23 +0100
+        Mon, 12 Jun 2023 11:37:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 662DE10CE
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jun 2023 08:36:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1686584193;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bnOsvhdJiSt5ITsGhze0Abwe9nSXBIjjDiVkeCUdJn8=;
+        b=KD2HxYFNfM0htfdwDXZQW3PjP/vdYwEYw+t+sEXtjSQD4y1cJkoGRGxlsElzsAcZRvqATZ
+        542IcqLIDLFp18JtKUDItQScnlBg00iH13EMLNYrNOdUr1c+qeDEUVGi7Fqvo2aVhFpUcS
+        AGbcBS7zuLPHr5Xk/hEPFqLHfgPT8S8=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-68-IAfncxRRM82w2m-osNNiOA-1; Mon, 12 Jun 2023 11:36:32 -0400
+X-MC-Unique: IAfncxRRM82w2m-osNNiOA-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-978a991c3f5so490157666b.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jun 2023 08:36:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686584189; x=1689176189;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bnOsvhdJiSt5ITsGhze0Abwe9nSXBIjjDiVkeCUdJn8=;
+        b=kw4zMtXwISAkWVc/9+6Uq9LvV3wackfsLeqXE2vkJe2uZOU/bFdxOxg9bPvDM7GxdN
+         aZMXJFEXGrCaRVFvMRhxSKObpmg9JmB3syltvwE1Iw52XZIi878b0ESOfXuQHA9xoqyG
+         Dt6GYMnAUvg/WgUsyJ0dJp1mnTBreslaL3Ia8e7mBp3KvaLStlm/jlIMGTUJMNFxUECP
+         NTu8NmX95XtIhglmpNf2k+UhYXFB/b6sacafhEZweLlqYqiLTXAFL5ljc93KTNRD8LCl
+         oLPsUTMj9+uM1yqZh7Y2qMCUYD1W9TrttPpwtW1QgXVSijdl7lZul3WXoc5jZnCVONNE
+         /acA==
+X-Gm-Message-State: AC+VfDxcSiRppIiJNIwxQAvqkN5BtljJow8rJp58AdWZBWVsptkuOKX5
+        Y8mW3+bBHEeXWEfW34suKcnc4k4N9/ufaJl68jgu8NX3ZDRDudnJkDcE/jjoguQnDLTks0vlJkK
+        4xCAGpzAvdCdq7rZ8d0/P46qEAa18mZgePmMRoOU+iA==
+X-Received: by 2002:a17:907:7e9f:b0:96f:136e:eadd with SMTP id qb31-20020a1709077e9f00b0096f136eeaddmr11804262ejc.66.1686584189761;
+        Mon, 12 Jun 2023 08:36:29 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4VRInm7OruhJcl9LnS0pjiwsaX9gaDdgXjmDX4I3gdxv78NBUA+iTL4xOsYTE+EhislcADzw==
+X-Received: by 2002:a17:907:7e9f:b0:96f:136e:eadd with SMTP id qb31-20020a1709077e9f00b0096f136eeaddmr11804241ejc.66.1686584189418;
+        Mon, 12 Jun 2023 08:36:29 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id h11-20020a1709063c0b00b0097883000525sm5518142ejg.15.2023.06.12.08.36.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Jun 2023 08:36:28 -0700 (PDT)
+Message-ID: <7f7f5382-9441-fd38-81b6-61b0fff5f773@redhat.com>
+Date:   Mon, 12 Jun 2023 17:36:28 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
+ Thunderbird/102.10.0
 Subject: Re: [PATCH 2/2] platform/x86: int3472: discrete: Log a warning if the
  pin-numbers don't match
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
+Content-Language: en-US, nl
+To:     Dan Scally <dan.scally@ideasonboard.com>,
         Andy Shevchenko <andy@kernel.org>,
         =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc:     platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
@@ -42,86 +73,103 @@ References: <20230612141632.5232-1-hdegoede@redhat.com>
  <20230612141632.5232-2-hdegoede@redhat.com>
  <be624721-b150-010d-f78d-1815db65bb8f@ideasonboard.com>
  <b20a54d0-2c3d-0b78-723d-78801f55cc08@redhat.com>
-From:   Dan Scally <dan.scally@ideasonboard.com>
-In-Reply-To: <b20a54d0-2c3d-0b78-723d-78801f55cc08@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <3238cbe3-b1ef-8cce-442f-b8b82ed1df76@ideasonboard.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <3238cbe3-b1ef-8cce-442f-b8b82ed1df76@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans
+Hi,
 
-On 12/06/2023 16:26, Hans de Goede wrote:
-> Hi,
->
-> On 6/12/23 16:20, Dan Scally wrote:
->> Hi Hans
+On 6/12/23 17:30, Dan Scally wrote:
+> Hi Hans
+> 
+> On 12/06/2023 16:26, Hans de Goede wrote:
+>> Hi,
 >>
->> On 12/06/2023 15:16, Hans de Goede wrote:
->>> The INT3472 discrete code assumes that the ACPI GPIO resources are
->>> in the same order as the pin-info _DSM entries.
+>> On 6/12/23 16:20, Dan Scally wrote:
+>>> Hi Hans
 >>>
->>> The returned pin-info includes the pin-number in bits 15-8. Add a check
->>> that this matches with the ACPI GPIO resource pin-number in case
->>> the assumption is not true with some ACPI tables.
+>>> On 12/06/2023 15:16, Hans de Goede wrote:
+>>>> The INT3472 discrete code assumes that the ACPI GPIO resources are
+>>>> in the same order as the pin-info _DSM entries.
+>>>>
+>>>> The returned pin-info includes the pin-number in bits 15-8. Add a check
+>>>> that this matches with the ACPI GPIO resource pin-number in case
+>>>> the assumption is not true with some ACPI tables.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 >>>
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>
->> That seems like a good idea to me:
->>
->>
->> Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
-> Thanks. Did you also see my:
-> "[PATCH 0/4] platform/x86: int3472: discrete: Regulator rework / Lenovo Miix 510 support"
->
-> series ? It would be great if I can get your input on that.
->
-> Personally I'm not entirely happy with patch 3/4 there,
-> but I don't really see any other way of solving
-> the issue on the mix 510 that 3/4 fixes.
-
-
-I did; I was hoping to go through the ov2680 set and that set today but I've been a bit busy; I'll 
-try to look at and test both asap.
-
->
-> Regards,
->
-> Hans
->
->
->>> ---
->>>    drivers/platform/x86/intel/int3472/discrete.c | 10 +++++++++-
->>>    1 file changed, 9 insertions(+), 1 deletion(-)
+>>> That seems like a good idea to me:
 >>>
->>> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
->>> index 4ef60883154d..c1132bbbff41 100644
->>> --- a/drivers/platform/x86/intel/int3472/discrete.c
->>> +++ b/drivers/platform/x86/intel/int3472/discrete.c
->>> @@ -149,8 +149,8 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->>>    {
->>>        struct int3472_discrete_device *int3472 = data;
->>>        struct acpi_resource_gpio *agpio;
->>> +    u8 active_value, pin, type;
->>>        union acpi_object *obj;
->>> -    u8 active_value, type;
->>>        const char *err_msg;
->>>        const char *func;
->>>        u32 polarity;
->>> @@ -174,10 +174,18 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->>>            return 1;
->>>        }
->>>    +    /* Bits 7-0 contain the type/function of the pin */
->>>        type = obj->integer.value & 0xff;
->>>          int3472_get_func_and_polarity(type, &func, &polarity);
->>>    +    /* Bits 15-8 contain the pin-number on the GPIO chip */
->>> +    pin = (obj->integer.value >> 8) & 0xff;
->>> +    if (pin != agpio->pin_table[0])
->>> +        dev_warn(int3472->dev, "%s %s pin number mismatch _DSM %d resource %d\n",
->>> +             func, agpio->resource_source.string_ptr, pin,
->>> +             agpio->pin_table[0]);
->>> +
->>>        /* If bits 31-24 of the _DSM entry are all 0 then the signal is inverted */
->>>        active_value = (obj->integer.value >> 24) & 0xff;
->>>        if (!active_value)
+>>>
+>>> Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
+>> Thanks. Did you also see my:
+>> "[PATCH 0/4] platform/x86: int3472: discrete: Regulator rework / Lenovo Miix 510 support"
+>>
+>> series ? It would be great if I can get your input on that.
+>>
+>> Personally I'm not entirely happy with patch 3/4 there,
+>> but I don't really see any other way of solving
+>> the issue on the mix 510 that 3/4 fixes.
+> 
+> 
+> I did; I was hoping to go through the ov2680 set and that set today but I've been a bit busy; I'll try to look at and test both asap.
+
+Ok, thank you.
+
+Note the ov2680 set does not work with the IPU3 yet. I've tried with
+the ipu3-capture.sh script after first testing the script with
+the ov5693 and my current ov2680 set is missing the link-rate /
+pixel-rate v4l2 ctrls.
+
+I plan to continue working on this, adding those ctrls tomorrow.
+
+Regards,
+
+Hans
+
+
+
+
+
+
+>>>> ---
+>>>>    drivers/platform/x86/intel/int3472/discrete.c | 10 +++++++++-
+>>>>    1 file changed, 9 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+>>>> index 4ef60883154d..c1132bbbff41 100644
+>>>> --- a/drivers/platform/x86/intel/int3472/discrete.c
+>>>> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+>>>> @@ -149,8 +149,8 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+>>>>    {
+>>>>        struct int3472_discrete_device *int3472 = data;
+>>>>        struct acpi_resource_gpio *agpio;
+>>>> +    u8 active_value, pin, type;
+>>>>        union acpi_object *obj;
+>>>> -    u8 active_value, type;
+>>>>        const char *err_msg;
+>>>>        const char *func;
+>>>>        u32 polarity;
+>>>> @@ -174,10 +174,18 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+>>>>            return 1;
+>>>>        }
+>>>>    +    /* Bits 7-0 contain the type/function of the pin */
+>>>>        type = obj->integer.value & 0xff;
+>>>>          int3472_get_func_and_polarity(type, &func, &polarity);
+>>>>    +    /* Bits 15-8 contain the pin-number on the GPIO chip */
+>>>> +    pin = (obj->integer.value >> 8) & 0xff;
+>>>> +    if (pin != agpio->pin_table[0])
+>>>> +        dev_warn(int3472->dev, "%s %s pin number mismatch _DSM %d resource %d\n",
+>>>> +             func, agpio->resource_source.string_ptr, pin,
+>>>> +             agpio->pin_table[0]);
+>>>> +
+>>>>        /* If bits 31-24 of the _DSM entry are all 0 then the signal is inverted */
+>>>>        active_value = (obj->integer.value >> 24) & 0xff;
+>>>>        if (!active_value)
+> 
+
