@@ -2,174 +2,111 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A97C88CB4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 15:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D5FC88CB2
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 17:52:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233617AbjFLPhL (ORCPT
+        id S236160AbjFLRwL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jun 2023 11:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60584 "EHLO
+        Mon, 12 Jun 2023 13:52:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237286AbjFLPhK (ORCPT
+        with ESMTP id S236088AbjFLRwK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jun 2023 11:37:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 662DE10CE
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jun 2023 08:36:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686584193;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bnOsvhdJiSt5ITsGhze0Abwe9nSXBIjjDiVkeCUdJn8=;
-        b=KD2HxYFNfM0htfdwDXZQW3PjP/vdYwEYw+t+sEXtjSQD4y1cJkoGRGxlsElzsAcZRvqATZ
-        542IcqLIDLFp18JtKUDItQScnlBg00iH13EMLNYrNOdUr1c+qeDEUVGi7Fqvo2aVhFpUcS
-        AGbcBS7zuLPHr5Xk/hEPFqLHfgPT8S8=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-68-IAfncxRRM82w2m-osNNiOA-1; Mon, 12 Jun 2023 11:36:32 -0400
-X-MC-Unique: IAfncxRRM82w2m-osNNiOA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-978a991c3f5so490157666b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jun 2023 08:36:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686584189; x=1689176189;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bnOsvhdJiSt5ITsGhze0Abwe9nSXBIjjDiVkeCUdJn8=;
-        b=kw4zMtXwISAkWVc/9+6Uq9LvV3wackfsLeqXE2vkJe2uZOU/bFdxOxg9bPvDM7GxdN
-         aZMXJFEXGrCaRVFvMRhxSKObpmg9JmB3syltvwE1Iw52XZIi878b0ESOfXuQHA9xoqyG
-         Dt6GYMnAUvg/WgUsyJ0dJp1mnTBreslaL3Ia8e7mBp3KvaLStlm/jlIMGTUJMNFxUECP
-         NTu8NmX95XtIhglmpNf2k+UhYXFB/b6sacafhEZweLlqYqiLTXAFL5ljc93KTNRD8LCl
-         oLPsUTMj9+uM1yqZh7Y2qMCUYD1W9TrttPpwtW1QgXVSijdl7lZul3WXoc5jZnCVONNE
-         /acA==
-X-Gm-Message-State: AC+VfDxcSiRppIiJNIwxQAvqkN5BtljJow8rJp58AdWZBWVsptkuOKX5
-        Y8mW3+bBHEeXWEfW34suKcnc4k4N9/ufaJl68jgu8NX3ZDRDudnJkDcE/jjoguQnDLTks0vlJkK
-        4xCAGpzAvdCdq7rZ8d0/P46qEAa18mZgePmMRoOU+iA==
-X-Received: by 2002:a17:907:7e9f:b0:96f:136e:eadd with SMTP id qb31-20020a1709077e9f00b0096f136eeaddmr11804262ejc.66.1686584189761;
-        Mon, 12 Jun 2023 08:36:29 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4VRInm7OruhJcl9LnS0pjiwsaX9gaDdgXjmDX4I3gdxv78NBUA+iTL4xOsYTE+EhislcADzw==
-X-Received: by 2002:a17:907:7e9f:b0:96f:136e:eadd with SMTP id qb31-20020a1709077e9f00b0096f136eeaddmr11804241ejc.66.1686584189418;
-        Mon, 12 Jun 2023 08:36:29 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id h11-20020a1709063c0b00b0097883000525sm5518142ejg.15.2023.06.12.08.36.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Jun 2023 08:36:28 -0700 (PDT)
-Message-ID: <7f7f5382-9441-fd38-81b6-61b0fff5f773@redhat.com>
-Date:   Mon, 12 Jun 2023 17:36:28 +0200
+        Mon, 12 Jun 2023 13:52:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3954134;
+        Mon, 12 Jun 2023 10:52:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6F62B617C7;
+        Mon, 12 Jun 2023 17:52:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A317CC433D2;
+        Mon, 12 Jun 2023 17:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686592328;
+        bh=/ToCL3aGaEH80Ud7UwLUCZyJVDohdUdWHNYivUAhkis=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=njqHybfcjZH/1+OX9IiOeAbahZfe3B3pT9mink6GUa6FeVzycmvWdso6AYv4Kuqcr
+         Y1Iqv8Dgq7md6yLGMffpc0iU4BI1KA33hiYshH3Yl4ELN+un+eauTK2c1D6quQAFjl
+         muFuHwcq3NXsbFhDx0urjXmQ4x12EEpr0fm18nX7yXhZfsOA7CpP2wlPOKJZ9cah4e
+         UncRSmKXfTd0czu/TmuSmpMc75CZxS07/Y2lrJmqRjQhCNiiBGoylzmEusJ/nu7wFT
+         oWp9/IntmnxlSlQvJWwgp/h/uQGbiPoi4M5Dlr4hhzko9XdKdP8NaWswPFYxFBDM7t
+         OvJ34GUVqt9kA==
+Received: by pali.im (Postfix)
+        id 0DF697EB; Mon, 12 Jun 2023 19:52:05 +0200 (CEST)
+Date:   Mon, 12 Jun 2023 19:52:05 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Michal Wilczynski <michal.wilczynski@intel.com>
+Cc:     linux-acpi@vger.kernel.org, rafael@kernel.org,
+        andriy.shevchenko@intel.com, ilpo.jarvinen@linux.intel.com,
+        hdegoede@redhat.com, markgross@kernel.org, fengguang.wu@intel.com,
+        dvhart@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] platform/x86/dell/dell-rbtn: Fix resources leaking on
+ error path
+Message-ID: <20230612175205.eom2guabgfmnzrce@pali>
+References: <20230612090250.1417940-1-michal.wilczynski@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 2/2] platform/x86: int3472: discrete: Log a warning if the
- pin-numbers don't match
-Content-Language: en-US, nl
-To:     Dan Scally <dan.scally@ideasonboard.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
-References: <20230612141632.5232-1-hdegoede@redhat.com>
- <20230612141632.5232-2-hdegoede@redhat.com>
- <be624721-b150-010d-f78d-1815db65bb8f@ideasonboard.com>
- <b20a54d0-2c3d-0b78-723d-78801f55cc08@redhat.com>
- <3238cbe3-b1ef-8cce-442f-b8b82ed1df76@ideasonboard.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <3238cbe3-b1ef-8cce-442f-b8b82ed1df76@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230612090250.1417940-1-michal.wilczynski@intel.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 6/12/23 17:30, Dan Scally wrote:
-> Hi Hans
+On Monday 12 June 2023 12:02:50 Michal Wilczynski wrote:
+> Currently rbtn_add() in case of failure is leaking resources. Fix this
+> by adding a proper rollback. While at it, remove unnecessary assignment
+> of NULL to device->driver_data and unnecessary whitespace, plus add a
+> break for the default case in a switch.
 > 
-> On 12/06/2023 16:26, Hans de Goede wrote:
->> Hi,
->>
->> On 6/12/23 16:20, Dan Scally wrote:
->>> Hi Hans
->>>
->>> On 12/06/2023 15:16, Hans de Goede wrote:
->>>> The INT3472 discrete code assumes that the ACPI GPIO resources are
->>>> in the same order as the pin-info _DSM entries.
->>>>
->>>> The returned pin-info includes the pin-number in bits 15-8. Add a check
->>>> that this matches with the ACPI GPIO resource pin-number in case
->>>> the assumption is not true with some ACPI tables.
->>>>
->>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>
->>> That seems like a good idea to me:
->>>
->>>
->>> Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
->> Thanks. Did you also see my:
->> "[PATCH 0/4] platform/x86: int3472: discrete: Regulator rework / Lenovo Miix 510 support"
->>
->> series ? It would be great if I can get your input on that.
->>
->> Personally I'm not entirely happy with patch 3/4 there,
->> but I don't really see any other way of solving
->> the issue on the mix 510 that 3/4 fixes.
+> Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Fixes: 817a5cdb40c8 ("dell-rbtn: Dell Airplane Mode Switch driver")
+> Signed-off-by: Michal Wilczynski <michal.wilczynski@intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/platform/x86/dell/dell-rbtn.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
+> diff --git a/drivers/platform/x86/dell/dell-rbtn.c b/drivers/platform/x86/dell/dell-rbtn.c
+> index aa0e6c907494..e9b3f9c3ab7d 100644
+> --- a/drivers/platform/x86/dell/dell-rbtn.c
+> +++ b/drivers/platform/x86/dell/dell-rbtn.c
+> @@ -420,10 +420,12 @@ static int rbtn_add(struct acpi_device *device)
+>  		break;
+>  	default:
+>  		ret = -EINVAL;
+> +		break;
+>  	}
+> +	if (ret)
+> +		rbtn_acquire(device, false);
+>  
+>  	return ret;
+> -
+>  }
+
+Hello! I'm looking at rbtn_add() function and there is also code:
+
+	rbtn_data = devm_kzalloc(&device->dev, sizeof(*rbtn_data), GFP_KERNEL);
+	if (!rbtn_data)
+		return -ENOMEM;
+
+which is called after rbtn_acquire(). So it looks like when kzalloc
+fails then there is another leak...
+
+>  
+>  static void rbtn_remove(struct acpi_device *device)
+> @@ -442,7 +444,6 @@ static void rbtn_remove(struct acpi_device *device)
+>  	}
+>  
+>  	rbtn_acquire(device, false);
+> -	device->driver_data = NULL;
+>  }
+>  
+>  static void rbtn_notify(struct acpi_device *device, u32 event)
+> -- 
+> 2.40.1
 > 
-> I did; I was hoping to go through the ov2680 set and that set today but I've been a bit busy; I'll try to look at and test both asap.
-
-Ok, thank you.
-
-Note the ov2680 set does not work with the IPU3 yet. I've tried with
-the ipu3-capture.sh script after first testing the script with
-the ov5693 and my current ov2680 set is missing the link-rate /
-pixel-rate v4l2 ctrls.
-
-I plan to continue working on this, adding those ctrls tomorrow.
-
-Regards,
-
-Hans
-
-
-
-
-
-
->>>> ---
->>>>    drivers/platform/x86/intel/int3472/discrete.c | 10 +++++++++-
->>>>    1 file changed, 9 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
->>>> index 4ef60883154d..c1132bbbff41 100644
->>>> --- a/drivers/platform/x86/intel/int3472/discrete.c
->>>> +++ b/drivers/platform/x86/intel/int3472/discrete.c
->>>> @@ -149,8 +149,8 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->>>>    {
->>>>        struct int3472_discrete_device *int3472 = data;
->>>>        struct acpi_resource_gpio *agpio;
->>>> +    u8 active_value, pin, type;
->>>>        union acpi_object *obj;
->>>> -    u8 active_value, type;
->>>>        const char *err_msg;
->>>>        const char *func;
->>>>        u32 polarity;
->>>> @@ -174,10 +174,18 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->>>>            return 1;
->>>>        }
->>>>    +    /* Bits 7-0 contain the type/function of the pin */
->>>>        type = obj->integer.value & 0xff;
->>>>          int3472_get_func_and_polarity(type, &func, &polarity);
->>>>    +    /* Bits 15-8 contain the pin-number on the GPIO chip */
->>>> +    pin = (obj->integer.value >> 8) & 0xff;
->>>> +    if (pin != agpio->pin_table[0])
->>>> +        dev_warn(int3472->dev, "%s %s pin number mismatch _DSM %d resource %d\n",
->>>> +             func, agpio->resource_source.string_ptr, pin,
->>>> +             agpio->pin_table[0]);
->>>> +
->>>>        /* If bits 31-24 of the _DSM entry are all 0 then the signal is inverted */
->>>>        active_value = (obj->integer.value >> 24) & 0xff;
->>>>        if (!active_value)
-> 
-
