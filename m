@@ -2,101 +2,160 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DF8C7EE23
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 09:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F0DC7EE2E
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 10:01:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233758AbjFLJIR (ORCPT
+        id S235962AbjFLKBw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:08:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60118 "EHLO
+        Mon, 12 Jun 2023 06:01:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232086AbjFLJHn (ORCPT
+        with ESMTP id S236459AbjFLKAC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:07:43 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C1B0526C;
-        Mon, 12 Jun 2023 02:03:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686560596; x=1718096596;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Ikq1JZUtD42zuhPeuCVWdxOC98LK4HCQX9rMW7i+Mjg=;
-  b=XntN7dRb49z5yKmZvCpysfHI6d0xSycNAiCr1ax6ql8mbdnuUrmSpR+x
-   hRzuqWybPGwF4Az3SKJwonnVvQ4/ZEiZZ33w3Ri/ZIK9cRVhk8kRYTr05
-   U/npNzWI4e05BW2h392bCWKrwlSTZ/NykDFgxE32uOQcf5xgWTZlvh/0s
-   e/PV31au44qYomFvc891z1Pc3PxMuSJGMpcKKUymnuNQJ5pMPEBtnlMUZ
-   hPXNxg6c0Kq6WHQgtiSp77o6knTAuJH2reBSW3IQ5f9TmFkRZb0fVWAIt
-   zEsbiqdsKzyGqL8QIN9str8T8mkUaPksTvlo1RTQJDvqUfW+dzMTnxizV
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10738"; a="423864270"
-X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
-   d="scan'208";a="423864270"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2023 02:03:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10738"; a="835405536"
-X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
-   d="scan'208";a="835405536"
-Received: from powerlab.fi.intel.com ([10.237.71.25])
-  by orsmga004.jf.intel.com with ESMTP; 12 Jun 2023 02:03:03 -0700
-From:   Michal Wilczynski <michal.wilczynski@intel.com>
-To:     linux-acpi@vger.kernel.org
-Cc:     rafael@kernel.org, andriy.shevchenko@intel.com,
-        ilpo.jarvinen@linux.intel.com, pali@kernel.org,
-        hdegoede@redhat.com, markgross@kernel.org, fengguang.wu@intel.com,
-        dvhart@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1] platform/x86/dell/dell-rbtn: Fix resources leaking on error path
-Date:   Mon, 12 Jun 2023 12:02:50 +0300
-Message-Id: <20230612090250.1417940-1-michal.wilczynski@intel.com>
-X-Mailer: git-send-email 2.40.1
+        Mon, 12 Jun 2023 06:00:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C26506596
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jun 2023 02:42:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1686562969;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y7baxgHaWU6fvq7DbxvEnGFwo36Yr6Dy2f1E8mkGpkM=;
+        b=ZtxFpyBP1kcP55tAzwAiknkvEKvTTVvQEhAFppD3QFzdr5iN3ZZUzFwA9aV88OfoTctqcs
+        dqCkMegRu28h169oeMJ4pUl7bdNTcOw9Ys8COxw6XVYVqLWeOH/uXR33X0Hk/OpCgwpOuC
+        V5HBhxqwNn3BGDqdwopplqbaMNC30Es=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-34-6wXgvxMxMXyy1nkJd8HQTQ-1; Mon, 12 Jun 2023 05:42:47 -0400
+X-MC-Unique: 6wXgvxMxMXyy1nkJd8HQTQ-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5142da822cbso4187586a12.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jun 2023 02:42:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686562966; x=1689154966;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y7baxgHaWU6fvq7DbxvEnGFwo36Yr6Dy2f1E8mkGpkM=;
+        b=V3DIlQMjb/EO9DV+4BfRl211nxhBQaxKnFwP3PDCQRWtmK0uzIUHd9aaGno6YiKcZv
+         Wu8/0+A0VwQ6/kOlrAIW9UNOXT/d1qCZ7K5w9AEydqALKLVuM+E19NTWuU6NAl6VWIH6
+         RP/FU3j1ZVJd5hCs5pmsBiomI5YMrXss4OXWqc6NMgof2ksr6JMgjXp/WQjjx9pE5ifU
+         tNG7CskUYf821QFfh01Kf8H0XySoFx/LREgSinGt3Aewuqz0quOzmE9p9VXz5YSQ5nnL
+         nY5VE3uNuAa5VLrEs8/nxQydgBNW0F3lCAFTSVqiEp0qKFuQFUcJWFTiEcpfuBPkA/7v
+         tiMw==
+X-Gm-Message-State: AC+VfDwQd5QyQdZORoMmoE/hOG8PMu8uG4z6cyQoj3fGRvAPpGoIoKH2
+        8uCm64gZeTI61YdDXnVwki8LuOSz0WLpcvq4dzsAJrYJp+FP0HsiDH9B/977AUBp+mKSINLMix4
+        l2JQNzcTsA8DNbcHzIX/7jUAO0ZTOJfAwnw==
+X-Received: by 2002:aa7:cfc8:0:b0:510:db93:f034 with SMTP id r8-20020aa7cfc8000000b00510db93f034mr4316208edy.36.1686562966630;
+        Mon, 12 Jun 2023 02:42:46 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ6OhFwdsi3s6xCANMkN1DJYh2u9wRP26oyq7R4vvOGiZl/mLNUVBZ6wIYtTO/JTSlIxjeAkZA==
+X-Received: by 2002:aa7:cfc8:0:b0:510:db93:f034 with SMTP id r8-20020aa7cfc8000000b00510db93f034mr4316198edy.36.1686562966380;
+        Mon, 12 Jun 2023 02:42:46 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id w16-20020aa7da50000000b00516b072e036sm4820621eds.27.2023.06.12.02.42.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Jun 2023 02:42:45 -0700 (PDT)
+Message-ID: <e5fce103-fbb6-0eb6-f6ff-4bfeadd89c90@redhat.com>
+Date:   Mon, 12 Jun 2023 11:42:45 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH V2 2/2] platform/x86/intel/pmc/mtl: Put devices in D3
+ during resume
+Content-Language: en-US
+To:     "David E. Box" <david.e.box@linux.intel.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc:     markgross@kernel.org, irenic.rajneesh@gmail.com,
+        ilpo.jarvinen@linux.intel.com, xi.pardee@intel.com,
+        rajvi.jingar@linux.intel.com
+References: <20230607233849.239047-1-david.e.box@linux.intel.com>
+ <20230607233849.239047-2-david.e.box@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230607233849.239047-2-david.e.box@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Currently rbtn_add() in case of failure is leaking resources. Fix this
-by adding a proper rollback. While at it, remove unnecessary assignment
-of NULL to device->driver_data and unnecessary whitespace, plus add a
-break for the default case in a switch.
+Hi David,
 
-Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Fixes: 817a5cdb40c8 ("dell-rbtn: Dell Airplane Mode Switch driver")
-Signed-off-by: Michal Wilczynski <michal.wilczynski@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/dell/dell-rbtn.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+On 6/8/23 01:38, David E. Box wrote:
+> An earlier commit placed some driverless devices in D3 during boot so that
+> they don't block package cstate entry on Meteor Lake. Also place these
+> devices in D3 after resume from suspend.
+> 
+> Fixes: 336ba968d3e3 ("platform/x86/intel/pmc/mtl: Put GNA/IPU/VPU devices in D3")
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 
-diff --git a/drivers/platform/x86/dell/dell-rbtn.c b/drivers/platform/x86/dell/dell-rbtn.c
-index aa0e6c907494..e9b3f9c3ab7d 100644
---- a/drivers/platform/x86/dell/dell-rbtn.c
-+++ b/drivers/platform/x86/dell/dell-rbtn.c
-@@ -420,10 +420,12 @@ static int rbtn_add(struct acpi_device *device)
- 		break;
- 	default:
- 		ret = -EINVAL;
-+		break;
- 	}
-+	if (ret)
-+		rbtn_acquire(device, false);
- 
- 	return ret;
--
- }
- 
- static void rbtn_remove(struct acpi_device *device)
-@@ -442,7 +444,6 @@ static void rbtn_remove(struct acpi_device *device)
- 	}
- 
- 	rbtn_acquire(device, false);
--	device->driver_data = NULL;
- }
- 
- static void rbtn_notify(struct acpi_device *device, u32 event)
--- 
-2.40.1
+Thank you for your patch.
+
+There is one thing which has me worried here:
+
+What about when real proper drivers show up for these blocks?
+
+I know that at least some people will likely be using the out of tree IPU6 driver with the IPU block.
+
+And having 2 different drivers poke at the hw state seems like a bad idea to me.
+
+Maybe we can add a check if no driver is bound and only set the state to D3 if no driver is bound?
+
+Regards,
+
+Hans
+
+
+
+> ---
+> 
+> V2 - rename mtl_fixup to mtl_d3_fixup. Call it from new mtl_resume
+>      function, followed by the common resume. Suggested by Ilpo.
+> 
+>  drivers/platform/x86/intel/pmc/mtl.c | 29 ++++++++++++++++++++--------
+>  1 file changed, 21 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+> index e8cc156412ce..2b00ad9da621 100644
+> --- a/drivers/platform/x86/intel/pmc/mtl.c
+> +++ b/drivers/platform/x86/intel/pmc/mtl.c
+> @@ -68,16 +68,29 @@ static void mtl_set_device_d3(unsigned int device)
+>  	}
+>  }
+>  
+> -void mtl_core_init(struct pmc_dev *pmcdev)
+> +/*
+> + * Set power state of select devices that do not have drivers to D3
+> + * so that they do not block Package C entry.
+> + */
+> +static void mtl_d3_fixup(void)
+>  {
+> -	pmcdev->map = &mtl_reg_map;
+> -	pmcdev->core_configure = mtl_core_configure;
+> -
+> -	/*
+> -	 * Set power state of select devices that do not have drivers to D3
+> -	 * so that they do not block Package C entry.
+> -	 */
+>  	mtl_set_device_d3(MTL_GNA_PCI_DEV);
+>  	mtl_set_device_d3(MTL_IPU_PCI_DEV);
+>  	mtl_set_device_d3(MTL_VPU_PCI_DEV);
+>  }
+> +
+> +static int mtl_resume(struct pmc_dev *pmcdev)
+> +{
+> +	mtl_d3_fixup();
+> +	return pmc_core_resume_common(pmcdev);
+> +}
+> +
+> +void mtl_core_init(struct pmc_dev *pmcdev)
+> +{
+> +	pmcdev->map = &mtl_reg_map;
+> +	pmcdev->core_configure = mtl_core_configure;
+> +
+> +	mtl_d3_fixup();
+> +
+> +	pmcdev->resume = mtl_resume;
+> +}
 
