@@ -2,76 +2,183 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED53C88CB2
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 17:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 503BFC88CB2
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 18:02:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235265AbjFLR6y convert rfc822-to-8bit (ORCPT
+        id S234484AbjFLSCv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jun 2023 13:58:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58620 "EHLO
+        Mon, 12 Jun 2023 14:02:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234058AbjFLR6x (ORCPT
+        with ESMTP id S231678AbjFLSCs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jun 2023 13:58:53 -0400
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17951E52;
-        Mon, 12 Jun 2023 10:58:51 -0700 (PDT)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-974539fd9f0so90926366b.0;
-        Mon, 12 Jun 2023 10:58:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686592729; x=1689184729;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A3eCuUugtCHCIvJfGUvpouutW/MqpB73NWLtQIoZsdg=;
-        b=ABMTXPLeGVnMnJf5hFuW7jME3oGWPTANcDRfpzRsFaNQlM8Qe4ziMVYy5SFdv6NYw/
-         LT5ytckvWPXtZCCEY3qDfin62hSjaZTosg4E+PvnKwwAMElQDimai7zf6gqX/opSSfc7
-         sM3NEN+g7ml0XbbBsh2v8gYDQ6AZEjzG5zAVFGOXU0pZKqq8MdcrQNa+f2H8wqRhKBRE
-         LmmtP44i200gtLBFstNVkjWvxiBom7N1OR2yp+ZQPAZbYJbsu/6k7GhwVlnyuD52jNVC
-         S+bI8baKZzwFJatz66ofh8M2DtnTlM/2IQV4hFYlGx4Flc2LhNRyGhjlWZcxi+JNND0e
-         pt8g==
-X-Gm-Message-State: AC+VfDzbm4J7I+tJBrBoj3FoAtKAPuH/RxPGRpW/aMNknFh1ZssDM2eP
-        0JLQBeiLZhy4lm0SvWUxWsYPFIKcRHz5rzqGxCiR0gk2
-X-Google-Smtp-Source: ACHHUZ7wTZfe+gmfVbQ8l5SUY8x+JfLN3gDKcmQL4KZgtE2TObrzL1rqflSKY3Pe3gZzuI2GA8PsUQ45F7+1n6Zdhtk=
-X-Received: by 2002:a17:906:5185:b0:974:5480:6270 with SMTP id
- y5-20020a170906518500b0097454806270mr8020315ejk.0.1686592729377; Mon, 12 Jun
- 2023 10:58:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230602073025.22884-1-mario.limonciello@amd.com>
- <20230602073025.22884-2-mario.limonciello@amd.com> <CAJZ5v0jNn1wHtF7c0XYKpM=XzZasdu3OwksUdqRFO3TyZwrPOg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jNn1wHtF7c0XYKpM=XzZasdu3OwksUdqRFO3TyZwrPOg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 12 Jun 2023 19:58:38 +0200
-Message-ID: <CAJZ5v0gdY93OidC=on3LsmO4+eT8e3bT8XJwrim2BrQ5AoG+vg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] ACPI: x86: Add pm_debug_messages for LPS0 _DSM
- state tracking
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mario Limonciello <mario.limonciello@amd.com>, hdegoede@redhat.com,
-        linus.walleij@linaro.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com
+        Mon, 12 Jun 2023 14:02:48 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B83FE63;
+        Mon, 12 Jun 2023 11:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686592967; x=1718128967;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=oe8Ey0rLI5aMtfcU82JWfELso1XEdXyzqck9HhvkkjY=;
+  b=KgnhfTtR7Qs1JBeeql73/gFMIVmlPr0WWbryRzalES4+doqMWBjEP6F9
+   lKHFxkuZR190/f2CTRWG00+aKqDBhxOreefMrTj8JF/Qb3bFZsIUHbHw6
+   DeygMzm2Pj2TRwnCFQ2kwEK/7DxRs2587gQTwPgeinX1dPnsFx2xLbRS3
+   cPXZ7AHRWaS0bwhNPvJxpLHcblcsv5KUv7qDmz/YuS+7qLuxSVQrbOHoG
+   kSVNVG0uSY5L7iF8Sw6/6Bm+8BGPLIJZ3egf2fRtSFbBn4JDODy9Ibi3b
+   MmL71dSK0zX7y9tLyMTdz+EaXLgrWp5l0nAD049PYUJL8zucsaBe5YfDb
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="360604070"
+X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
+   d="scan'208";a="360604070"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2023 11:02:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="824055755"
+X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
+   d="scan'208";a="824055755"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 12 Jun 2023 11:02:38 -0700
+Received: from [10.54.75.144] (debox1-desk1.jf.intel.com [10.54.75.144])
+        by linux.intel.com (Postfix) with ESMTP id 437E6580D43;
+        Mon, 12 Jun 2023 11:02:38 -0700 (PDT)
+Message-ID: <fa84b0098551123f34a68b3c0d9c7aa12f592bbf.camel@linux.intel.com>
+Subject: Re: [PATCH V2 2/2] platform/x86/intel/pmc/mtl: Put devices in D3
+ during resume
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc:     markgross@kernel.org, irenic.rajneesh@gmail.com,
+        ilpo.jarvinen@linux.intel.com, xi.pardee@intel.com,
+        rajvi.jingar@linux.intel.com
+Date:   Mon, 12 Jun 2023 11:02:38 -0700
+In-Reply-To: <e5fce103-fbb6-0eb6-f6ff-4bfeadd89c90@redhat.com>
+References: <20230607233849.239047-1-david.e.box@linux.intel.com>
+         <20230607233849.239047-2-david.e.box@linux.intel.com>
+         <e5fce103-fbb6-0eb6-f6ff-4bfeadd89c90@redhat.com>
+Organization: David E. Box
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-3.fc36) 
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Jun 4, 2023 at 6:04 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Fri, Jun 2, 2023 at 9:32 PM Mario Limonciello
-> <mario.limonciello@amd.com> wrote:
-> >
-> > Enabling debugging messages for the state requires turning on dynamic
-> > debugging for the file. To make it more accessible, use
-> > `pm_debug_messages` and clearer strings for what is happening.
-> >
-> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->
-> I'm inclined to apply this one and the [1/4] at this point.
->
-> I can also apply the 2 remaining patches in this series if I get ACKs
-> for them from the respective subsystem maintainers.
+Hi Hans,
 
-The ACKs were provided, so the entire series has been applied as 6.5
-material, thanks!
+On Mon, 2023-06-12 at 11:42 +0200, Hans de Goede wrote:
+> Hi David,
+>=20
+> On 6/8/23 01:38, David E. Box wrote:
+> > An earlier commit placed some driverless devices in D3 during boot so t=
+hat
+> > they don't block package cstate entry on Meteor Lake. Also place these
+> > devices in D3 after resume from suspend.
+> >=20
+> > Fixes: 336ba968d3e3 ("platform/x86/intel/pmc/mtl: Put GNA/IPU/VPU devic=
+es in
+> > D3")
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+>=20
+> Thank you for your patch.
+>=20
+> There is one thing which has me worried here:
+>=20
+> What about when real proper drivers show up for these blocks?
+>=20
+> I know that at least some people will likely be using the out of tree IPU=
+6
+> driver with the IPU block.
+>=20
+> And having 2 different drivers poke at the hw state seems like a bad idea=
+ to
+> me.
+>=20
+> Maybe we can add a check if no driver is bound and only set the state to =
+D3 if
+> no driver is bound?
+
+This check exists but is not shown in the patch. mtl_set_device_d3() gets t=
+he
+device lock and checks to see if dev.driver is NULL before putting in D3. T=
+his
+was checked with the GNA driver installed.
+
+David
+
+>=20
+> Regards,
+>=20
+> Hans
+>=20
+>=20
+>=20
+> > ---
+> >=20
+> > V2 - rename mtl_fixup to mtl_d3_fixup. Call it from new mtl_resume
+> > =C2=A0=C2=A0=C2=A0=C2=A0 function, followed by the common resume. Sugge=
+sted by Ilpo.
+> >=20
+> > =C2=A0drivers/platform/x86/intel/pmc/mtl.c | 29 ++++++++++++++++++++---=
+-----
+> > =C2=A01 file changed, 21 insertions(+), 8 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/intel/pmc/mtl.c
+> > b/drivers/platform/x86/intel/pmc/mtl.c
+> > index e8cc156412ce..2b00ad9da621 100644
+> > --- a/drivers/platform/x86/intel/pmc/mtl.c
+> > +++ b/drivers/platform/x86/intel/pmc/mtl.c
+> > @@ -68,16 +68,29 @@ static void mtl_set_device_d3(unsigned int device)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> > =C2=A0}
+> > =C2=A0
+> > -void mtl_core_init(struct pmc_dev *pmcdev)
+> > +/*
+> > + * Set power state of select devices that do not have drivers to D3
+> > + * so that they do not block Package C entry.
+> > + */
+> > +static void mtl_d3_fixup(void)
+> > =C2=A0{
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmcdev->map =3D &mtl_reg_map=
+;
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmcdev->core_configure =3D m=
+tl_core_configure;
+> > -
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Set power state of select=
+ devices that do not have drivers to D3
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * so that they do not block=
+ Package C entry.
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mtl_set_device_d3(MTL_G=
+NA_PCI_DEV);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mtl_set_device_d3(MTL_I=
+PU_PCI_DEV);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mtl_set_device_d3(MTL_V=
+PU_PCI_DEV);
+> > =C2=A0}
+> > +
+> > +static int mtl_resume(struct pmc_dev *pmcdev)
+> > +{
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mtl_d3_fixup();
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return pmc_core_resume_commo=
+n(pmcdev);
+> > +}
+> > +
+> > +void mtl_core_init(struct pmc_dev *pmcdev)
+> > +{
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmcdev->map =3D &mtl_reg_map=
+;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmcdev->core_configure =3D m=
+tl_core_configure;
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mtl_d3_fixup();
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmcdev->resume =3D mtl_resum=
+e;
+> > +}
+>=20
+
