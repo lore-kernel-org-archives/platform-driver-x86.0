@@ -2,104 +2,113 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980F0C7EE43
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 11:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C675C7EE25
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 11:15:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237639AbjFLLG0 (ORCPT
+        id S234564AbjFLLPn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jun 2023 07:06:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38108 "EHLO
+        Mon, 12 Jun 2023 07:15:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237644AbjFLLFl (ORCPT
+        with ESMTP id S239069AbjFLLPT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jun 2023 07:05:41 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 346D3A5F2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jun 2023 03:53:50 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-973bf581759so743546366b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jun 2023 03:53:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686567228; x=1689159228;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NeQ74c0YOMxY7A99ypxRKDeJFjSoYiwzirFYKv6Fmv0=;
-        b=ZSFZbe2OLPlegmAcTsmfykEBv47y9qj0W34tFz2jkUQU8aSO+EzxcQY2WnGnzVOnrm
-         nt1GixT1kcNH7B0KXUxLPUfihlUEkUEn39pDnQe4xqa9bU2q53n6DC+XzDmwtcFB0ZbI
-         WiVRG9xn1pL8fyr4WQOOmQCCZ0hnDmQziKjntBTUMWXxqKGQzhLGpCzMoh2Ff6elAeaj
-         5fXZyOTORtg1vMrxMAOs7dZq1HphzpKOnjE6tGpLcgupW0DDMC6P4mgoZA8hZ8aA/jk8
-         VWBWVbHJMpsMqe89Zp2KwroKK0beIYz3VEVu/a5aSj83jO8jvMS09WFe8QJnYoc6HRV6
-         jbYA==
+        Mon, 12 Jun 2023 07:15:19 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63DA532794
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jun 2023 04:03:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1686567790;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EEptruzE6IPY73ed8K17p2Qlb5Fdz1X6ts4XdMpwfZc=;
+        b=QzPBV7wmKNKOhpGSQ9ZRbwPRz0FHqyfXOiJrAVGI5tiWcBcXr3v1g4m4v4utMVZt7BMpWg
+        A76UZ5Qfcofjpf02P6Vux8mo9sKD9xz8fvWvu7bzp3MC4oSD0Ml9aI+2oxSSlUl4WpGlC9
+        JCYvbAqQQnkGDOITlQEfAqPlMXmyu+s=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-616-OHtZBQ77OH2ixoR0wWhU4g-1; Mon, 12 Jun 2023 07:03:09 -0400
+X-MC-Unique: OHtZBQ77OH2ixoR0wWhU4g-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-4f621c76606so2642863e87.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jun 2023 04:03:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686567228; x=1689159228;
+        d=1e100.net; s=20221208; t=1686567788; x=1689159788;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NeQ74c0YOMxY7A99ypxRKDeJFjSoYiwzirFYKv6Fmv0=;
-        b=ULxtQaehGqC3+JCx1sXcJ3OL9p1A/0TRKxAtlufBN4pWlXrJKyFb9vHEoVwZomqEcG
-         KVfI3OaCIYy6k7juyCAcz7WKhfZLatffm+4192BLcsjY4VQwZzcxt0DarIYJLE9sYQgf
-         KVmbL+tgD6ZaSu2heQvI5geN9msRdflQAn+VH8/adauLGr6SGQfAQ5dwhTZt3FK/K8u8
-         vqVahRycmUM+44kFwsiqQyUDYmnM6UC5EYnlqokvfNXxCId0sMjI3D1r9yZfKHlpGLmb
-         MycxfpplBK52xbOkjOxaO9rEuqOJKtwhfsuq1y25NfaYWzK0xbs0c6GQyxL1FC1jpj4/
-         +WBQ==
-X-Gm-Message-State: AC+VfDwei0K8hBqfnLOV2roKPRJlhEmyparl+arWsRdwnqtOEKC8XhtF
-        G0E2Z42K1a38Cunb9xc+7hQ=
-X-Google-Smtp-Source: ACHHUZ6g3pnA3dEdOW78X3pTjk/qftCw6VJ3V0YhOU/O9huci2fbKFj2ZqW6RZHnIH0ER1pd4vDCpQ==
-X-Received: by 2002:a17:906:eec8:b0:957:943e:7416 with SMTP id wu8-20020a170906eec800b00957943e7416mr10470769ejb.15.1686567228259;
-        Mon, 12 Jun 2023 03:53:48 -0700 (PDT)
-Received: from [10.27.0.2] ([37.120.217.170])
-        by smtp.gmail.com with ESMTPSA id j15-20020a1709064b4f00b0096f738bc2f7sm5079835ejv.60.2023.06.12.03.53.47
+        bh=EEptruzE6IPY73ed8K17p2Qlb5Fdz1X6ts4XdMpwfZc=;
+        b=JK2s3HG0rEayUiSj6ev8EwR/X8Z2VgVAekLQ/hSVhKrxVphp9uLUX81aWaBZjycJ/7
+         qsiPYt+uQOvvcIj0aTI6QkmrLUQ9d4SsBtO7Lo6ZciI0uTmQdBTSM6wxF8UeCUdg+Ppm
+         HvH4Hg2fAtC/gYdoK9zGtwg6/BfsxVx7kDXyS+iSGsaJoWTxHWBxpLgsi2CDARK0SYpl
+         zlgT/mGYaY9B4umwaAEYITBm3s4Uwix+s25bKXRAfQyHLuLzugYj8HVGj8wDCB/un7m3
+         9DyMelnsxmR95Fp0ju/pQMVCB5FZMY+u+RQm856PA44gJNyztI36byuq7UygRvlkPNLd
+         1XLg==
+X-Gm-Message-State: AC+VfDzOwRdlz46XE/ltvLKbEFUm9zt6jw1f8nnrlhYK50QVv64v4cuL
+        MK15r4iOWwgB8SLrPARIcas6nNhpg1qfGB8LZL1SB1/BXrZH+lactWmtc6UWqpRmVfJeMOkL3lz
+        /IMRjerHAK9L0gZ08FNchnV85ce2KY9dj5w==
+X-Received: by 2002:a19:e00b:0:b0:4f6:4c47:d5fe with SMTP id x11-20020a19e00b000000b004f64c47d5femr3676445lfg.14.1686567787941;
+        Mon, 12 Jun 2023 04:03:07 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ65LIRWt7Bwej+Uorv6rU70T630fT6XOS93kQ5V597hkU2IZE1xcRvQAN+/MrtuhHGPKa9xyQ==
+X-Received: by 2002:a19:e00b:0:b0:4f6:4c47:d5fe with SMTP id x11-20020a19e00b000000b004f64c47d5femr3676436lfg.14.1686567787603;
+        Mon, 12 Jun 2023 04:03:07 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id n24-20020a05640206d800b005169f9365c3sm4911010edy.20.2023.06.12.04.03.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Jun 2023 03:53:47 -0700 (PDT)
-Message-ID: <12b4bfb2-54a6-74b5-ee3c-3ddad6c57f37@gmail.com>
-Date:   Mon, 12 Jun 2023 12:53:46 +0200
+        Mon, 12 Jun 2023 04:03:06 -0700 (PDT)
+Message-ID: <632ff03d-52d8-4bb6-9445-bb31823650dc@redhat.com>
+Date:   Mon, 12 Jun 2023 13:03:05 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 1/3] surface: surface3_power: Switch back to use struct
- i2c_driver's .probe()
+ Thunderbird/102.10.0
+Subject: Re: [PATCH 0/3] platform: Switch back to use struct i2c_driver's
+ .probe()
 Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, kernel@pengutronix.de
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Mark Gross <markgross@kernel.org>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Daniel Scally <djrscally@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, kernel@pengutronix.de,
+        acpi4asus-user@lists.sourceforge.net
 References: <20230612073902.840435-1-u.kleine-koenig@pengutronix.de>
- <20230612073902.840435-2-u.kleine-koenig@pengutronix.de>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <20230612073902.840435-2-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <6649e0b3-1e59-fc1e-4abc-f9c228406aa0@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <6649e0b3-1e59-fc1e-4abc-f9c228406aa0@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 6/12/23 09:39, Uwe Kleine-König wrote:
-> After commit b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new()
-> call-back type"), all drivers being converted to .probe_new() and then
-> commit 03c835f498b5 ("i2c: Switch .probe() to not take an id parameter")
-> convert back to (the new) .probe() to be able to eventually drop
-> .probe_new() from struct i2c_driver.
+Hi,
+
+On 6/12/23 12:51, Maximilian Luz wrote:
+> On 6/12/23 09:38, Uwe Kleine-König wrote:
+>> Hello,
+>>
+>> these three patches convert three i2c drivers back to use .probe() after
+>> its prototype was changed.
+>>
+>> I was unsure if I should put the surface change together with the two
+>> other x86 changes but as surfaces are x86, too, I thought this might be
+>> right. If not: The patches are orthogonal to each other, so they can be
+>> applied to different trees without interdependencies.
 > 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> While Hans is the authority on that, I believe that's fine. Both go
+> through Hans' pdx86 tree.
 
-Thanks!
+Yes, all 3 look good to me:
 
-Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-> ---
->   drivers/platform/surface/surface3_power.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/surface/surface3_power.c b/drivers/platform/surface/surface3_power.c
-> index 73961a24c849..4c0f92562a79 100644
-> --- a/drivers/platform/surface/surface3_power.c
-> +++ b/drivers/platform/surface/surface3_power.c
-> @@ -573,7 +573,7 @@ static const struct acpi_device_id mshw0011_acpi_match[] = {
->   MODULE_DEVICE_TABLE(acpi, mshw0011_acpi_match);
->   
->   static struct i2c_driver mshw0011_driver = {
-> -	.probe_new = mshw0011_probe,
-> +	.probe = mshw0011_probe,
->   	.remove = mshw0011_remove,
->   	.driver = {
->   		.name = "mshw0011",
+and I'll merge this into my pdx86/review-hans branch soon
+(and after that they'll go to -next once the builders have
+had a chance to run their test builds on my review-hans branch).
+
+Regards,
+
+Hans
+
+
