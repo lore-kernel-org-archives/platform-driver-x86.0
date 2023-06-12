@@ -2,116 +2,78 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CFFC8300C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 11:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39478C88CB2
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 14:22:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234845AbjFLLjI (ORCPT
+        id S237465AbjFLOWj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jun 2023 07:39:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55200 "EHLO
+        Mon, 12 Jun 2023 10:22:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235701AbjFLLiR (ORCPT
+        with ESMTP id S238048AbjFLOW1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jun 2023 07:38:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 171007EF2;
-        Mon, 12 Jun 2023 04:29:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7AF9F61307;
-        Mon, 12 Jun 2023 11:29:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5B59C433D2;
-        Mon, 12 Jun 2023 11:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686569380;
-        bh=lcmmhA2dNvgHq+K/Xj1hXgfEs22fk0OtWUMVkmdqrsc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d4BKEGMZX6+4iJxLkrt5eOyGUSEjeVOpFlq8nqy7pAqrzB4nCCmwEPZM137201ob9
-         JburbX7ihz2eAbSI3ZZ8vcVQ0V5kFeYmAKkBzM/dEvXLspjAxtKmzI5sTHsFTBrhe9
-         /xzrQbVKYLFUyQAFHox2UWd+5AIoHaSH/1ojy+ODusuo5P49zMJupN5gj3QWNshgJj
-         BUQLZ/1ggLr7Toph4AtoNCt4n6aVxyEpucA8yACyU6UJYSG0bAPSMaQ37KDIrdi9wd
-         705qTXIzmsdlzvEBo67tLcKOxVQRGjR/NEPUXBIJcyRPP9TLA1EWxnFgXlcH9iYtct
-         MAYTX7835eOHw==
-Date:   Mon, 12 Jun 2023 12:29:35 +0100
-From:   Lee Jones <lee@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Henning Schild <henning.schild@siemens.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] leds: simatic-ipc-leds-gpio: add terminating
- entries to gpio tables
-Message-ID: <20230612112935.GQ3635807@google.com>
-References: <20230524124628.32295-1-henning.schild@siemens.com>
- <20230524124628.32295-2-henning.schild@siemens.com>
- <ZHHFMPEYNz9jBBRd@smile.fi.intel.com>
- <20230530171100.75e5b86c@md1za8fc.ad001.siemens.net>
- <ZHjLjU7WPv2W9SuJ@smile.fi.intel.com>
- <20230608173027.GL3572061@google.com>
- <ZIM2VK9MlxGqBfDT@smile.fi.intel.com>
- <20230612112719.GP3635807@google.com>
+        Mon, 12 Jun 2023 10:22:27 -0400
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E03C10F3;
+        Mon, 12 Jun 2023 07:20:09 -0700 (PDT)
+Received: by mail-qv1-xf32.google.com with SMTP id 6a1803df08f44-62de0e82a07so12560706d6.1;
+        Mon, 12 Jun 2023 07:20:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686579568; x=1689171568;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LGt2khsldW/yK01+mAcstIFHVN65sV05z5Q79/bd880=;
+        b=ljEZHTKkONftdKKVSCi+wKIDdm0gnLJ6SMBdTdimtUJIhZHOpe76DvW3UUDLYM/2kU
+         B5QCbInfk2RTZ/c53c+7GbxXOVj7MDaF7xLWlukwCl18GXuSd+vg6LcpZkMbWImY57Ya
+         C7Kik1WKlSuEUJDiGYpkXlh7cQsJt6pamP874FmHLJ0BElhvp7NgnXmfMfbkXC4bKPBc
+         mL5J5inTe5v5PEBFDTZOtqmlYbYR1vtwPHZ733loEQ/EqwxCfxfegSbG5KHOfGwNAukW
+         6p3lf5jb+wQS/2sfH1xjBDRKbQHv35Ul8lEApqSErk3abp2/dK6tMEKqxS7eTIx3aHb9
+         k9wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686579568; x=1689171568;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LGt2khsldW/yK01+mAcstIFHVN65sV05z5Q79/bd880=;
+        b=Xy3fXQ0WorQG4PvZ+HhUQAGdvyw2jULExN9gZhK0RVcfQiXWbxJr6kk//5vW2mqkMX
+         dLnXzzKGW+mI8pBV/CIcJXf4ix3xjKoDbgmfqFw3W4yu4HC5UvBZE3bxaZC6LrK+ihx6
+         azMjiz2gkN55QKduP5nhLBf7KxOy4v+Q7UxSgoC2AelK/G83KTiaJ1310EIvTlJ5F/4m
+         VgYV5s4qU8VHUxbozPUeBUFsAReXk2Kz8KnIq/ETbniQhEsWGXwxjcRntZ0MzANmYZSR
+         ZPb8uGAkW8vocKdOyUc4r1Bp+rQHXpkeoAfIXtJ/dz9ms79+XLWThhmu4exB2jxWeCic
+         rVdg==
+X-Gm-Message-State: AC+VfDxTGgHboHa4yHKj3WpMAJhKivLBkVLVmSA/yC/NTkZmLWuFpWo7
+        DRTy7KL+6FuuSFNjTcdWQB/reURSA2jlhPWG00CTu185TTzUew==
+X-Google-Smtp-Source: ACHHUZ7EiL/u/Oo0zMxIczzjDxMtBBH12JwT1SrPTJPkS8ghP6RD7B8U5Okx2cKU3Hp5YLtAnSFPjLBGKMuVgEDkCn8=
+X-Received: by 2002:a05:6214:2a83:b0:62b:3dd9:2dc with SMTP id
+ jr3-20020a0562142a8300b0062b3dd902dcmr9945032qvb.64.1686579568244; Mon, 12
+ Jun 2023 07:19:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230612112719.GP3635807@google.com>
+References: <20230612141632.5232-1-hdegoede@redhat.com>
+In-Reply-To: <20230612141632.5232-1-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 12 Jun 2023 17:18:52 +0300
+Message-ID: <CAHp75Ve3+XvsyrPauSzto0jU8Q1czM4Bj-qMquAc_WYK+ZHhxg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] platform/x86: int3472: discrete: Fix getting active_value
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Shevchenko <andy@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Dan Scally <dan.scally@ideasonboard.com>,
+        platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 12 Jun 2023, Lee Jones wrote:
+On Mon, Jun 12, 2023 at 5:16=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+>
+> acpi_object.integer.value is 64 bit, so to get bits 31-24
+> the value not only needs to be shifted but also masked.
 
-> On Fri, 09 Jun 2023, Andy Shevchenko wrote:
-> 
-> > On Thu, Jun 08, 2023 at 06:30:27PM +0100, Lee Jones wrote:
-> > > On Thu, 01 Jun 2023, Andy Shevchenko wrote:
-> > > > On Tue, May 30, 2023 at 05:11:00PM +0200, Henning Schild wrote:
-> > > > > Am Sat, 27 May 2023 11:54:08 +0300
-> > > > > schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
-> > > > > 
-> > > > > > On Wed, May 24, 2023 at 02:46:25PM +0200, Henning Schild wrote:
-> > > > > > > The entries do not seem to be stricly needed when the number of
-> > > > > > > entries is given via the number of LEDs. But adding them is a
-> > > > > > > safeguard should anyone ever iterate over the tables to their end,
-> > > > > > > it also gets us in line with other drivers that register
-> > > > > > > "leds-gpio" tables.  
-> > > > > > 
-> > > > > > Reported-by?
-> > > > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > > 
-> > > > > I think we could do
-> > > > > 
-> > > > > Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > > 
-> > > > > on merge. But i would not want to send the whole series again for that
-> > > > > one line.
-> > > > 
-> > > > Since you added it, `b4` will happily take it, I believe no manual work even
-> > > > needed for that, thank you!
-> > > 
-> > > b4 didn't pick this up.  Nor the whole-series Ack provided by Hans.
-> > > 
-> > > I added both manually.
-> > 
-> > There is an option to take this
-> > 
-> >   -t, --apply-cover-trailers
-> >                         Apply trailers sent to the cover letter to all patches
-> > 
-> > have you tried it?
-> 
-> Doesn't look like it:
-> 
->   b4 am -3 -slt -P_ -o - ${id} | git am -3 --reject
+Why? The type of active_value is u8. How does this make any difference?
 
-No wait - it's there.
-
-> Can't remember if I had it before then removed it, or never had it.
-> 
-> I'll attempt to add it now and see what happens.
-
--- 
-Lee Jones [李琼斯]
+--=20
+With Best Regards,
+Andy Shevchenko
