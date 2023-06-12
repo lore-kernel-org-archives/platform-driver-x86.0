@@ -2,55 +2,101 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8789CC7EE25
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 08:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DF8C7EE23
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 09:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232004AbjFLIWE (ORCPT
+        id S233758AbjFLJIR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jun 2023 04:22:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59334 "EHLO
+        Mon, 12 Jun 2023 05:08:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231136AbjFLIVl (ORCPT
+        with ESMTP id S232086AbjFLJHn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jun 2023 04:21:41 -0400
-X-Greylist: delayed 540 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 12 Jun 2023 01:21:30 PDT
-Received: from mail.wearloaf.pl (mail.wearloaf.pl [217.61.97.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C4DBE7B
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jun 2023 01:21:30 -0700 (PDT)
-Received: by mail.wearloaf.pl (Postfix, from userid 1002)
-        id 475F68347B; Mon, 12 Jun 2023 10:11:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wearloaf.pl; s=mail;
-        t=1686557527; bh=Alp5vt6L+Oh1r7lrGCLsuKtEHllfued72GFJqfbXLYQ=;
-        h=Date:From:To:Subject:From;
-        b=koqNO4CekZwkvgLRuWiO2SlIabRuzI5R/BE5i5bOyc2IkXL1v2rIqT1ZOvieMxLIT
-         a6Uj8ELNRIqflRCL1wLPxBahxM5aVK3UHEe7OrCQinUJMsavX8l2PXDHvMSUzFH+99
-         d1SWtPBZIIx42e04MGEumcJN8lSByCuutFhLdUVoChfDFHG+S0KmT7mU8Io5Z6zAqE
-         hQXgP1JkTSXZfjjd4FL4v1D7/L+KhGqn3GQaMQx0zfbJRKRxzWW4zmVFm4285XN5Wo
-         48ebyFEFnaT0KCZw8eVErYpUuDBTImlj/a8DjHAU1Rq5+ajdVgqF+DheZZ0XM2xYKF
-         /kvsHE04M688w==
-Received: by mail.wearloaf.pl for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jun 2023 08:10:45 GMT
-Message-ID: <20230612084501-0.1.d.11qg.0.1hn0jnd2ig@wearloaf.pl>
-Date:   Mon, 12 Jun 2023 08:10:45 GMT
-From:   "Weronika Kowalska" <weronika.kowalska@wearloaf.pl>
-To:     <platform-driver-x86@vger.kernel.org>
-Subject: Zatrudnienie nowej osoby 
-X-Mailer: mail.wearloaf.pl
+        Mon, 12 Jun 2023 05:07:43 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C1B0526C;
+        Mon, 12 Jun 2023 02:03:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686560596; x=1718096596;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Ikq1JZUtD42zuhPeuCVWdxOC98LK4HCQX9rMW7i+Mjg=;
+  b=XntN7dRb49z5yKmZvCpysfHI6d0xSycNAiCr1ax6ql8mbdnuUrmSpR+x
+   hRzuqWybPGwF4Az3SKJwonnVvQ4/ZEiZZ33w3Ri/ZIK9cRVhk8kRYTr05
+   U/npNzWI4e05BW2h392bCWKrwlSTZ/NykDFgxE32uOQcf5xgWTZlvh/0s
+   e/PV31au44qYomFvc891z1Pc3PxMuSJGMpcKKUymnuNQJ5pMPEBtnlMUZ
+   hPXNxg6c0Kq6WHQgtiSp77o6knTAuJH2reBSW3IQ5f9TmFkRZb0fVWAIt
+   zEsbiqdsKzyGqL8QIN9str8T8mkUaPksTvlo1RTQJDvqUfW+dzMTnxizV
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10738"; a="423864270"
+X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
+   d="scan'208";a="423864270"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2023 02:03:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10738"; a="835405536"
+X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
+   d="scan'208";a="835405536"
+Received: from powerlab.fi.intel.com ([10.237.71.25])
+  by orsmga004.jf.intel.com with ESMTP; 12 Jun 2023 02:03:03 -0700
+From:   Michal Wilczynski <michal.wilczynski@intel.com>
+To:     linux-acpi@vger.kernel.org
+Cc:     rafael@kernel.org, andriy.shevchenko@intel.com,
+        ilpo.jarvinen@linux.intel.com, pali@kernel.org,
+        hdegoede@redhat.com, markgross@kernel.org, fengguang.wu@intel.com,
+        dvhart@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] platform/x86/dell/dell-rbtn: Fix resources leaking on error path
+Date:   Mon, 12 Jun 2023 12:02:50 +0300
+Message-Id: <20230612090250.1417940-1-michal.wilczynski@intel.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Dzie=C5=84 dobry,
+Currently rbtn_add() in case of failure is leaking resources. Fix this
+by adding a proper rollback. While at it, remove unnecessary assignment
+of NULL to device->driver_data and unnecessary whitespace, plus add a
+break for the default case in a switch.
 
-kontaktuj=C4=99 si=C4=99 w sprawie zatrudnienia pracownik=C3=B3w z Ukrain=
-y w Pa=C5=84stwa zak=C5=82adzie.
+Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Fixes: 817a5cdb40c8 ("dell-rbtn: Dell Airplane Mode Switch driver")
+Signed-off-by: Michal Wilczynski <michal.wilczynski@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/dell/dell-rbtn.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Stale obs=C5=82ugujemy firmy produkcyjne w tym temacie. Je=C5=9Bli potrze=
-bujecie Pa=C5=84stwo dodatkowego personelu do pracy, prosz=C4=99 o wiadom=
-o=C5=9B=C4=87.
+diff --git a/drivers/platform/x86/dell/dell-rbtn.c b/drivers/platform/x86/dell/dell-rbtn.c
+index aa0e6c907494..e9b3f9c3ab7d 100644
+--- a/drivers/platform/x86/dell/dell-rbtn.c
++++ b/drivers/platform/x86/dell/dell-rbtn.c
+@@ -420,10 +420,12 @@ static int rbtn_add(struct acpi_device *device)
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
++		break;
+ 	}
++	if (ret)
++		rbtn_acquire(device, false);
+ 
+ 	return ret;
+-
+ }
+ 
+ static void rbtn_remove(struct acpi_device *device)
+@@ -442,7 +444,6 @@ static void rbtn_remove(struct acpi_device *device)
+ 	}
+ 
+ 	rbtn_acquire(device, false);
+-	device->driver_data = NULL;
+ }
+ 
+ static void rbtn_notify(struct acpi_device *device, u32 event)
+-- 
+2.40.1
 
-
-Pozdrawiam
-Weronika Kowalska
