@@ -2,105 +2,111 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84304C83005
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 11:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B24C7EE2E
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jun 2023 11:39:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235768AbjFLLiM convert rfc822-to-8bit (ORCPT
+        id S234772AbjFLLi7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jun 2023 07:38:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53768 "EHLO
+        Mon, 12 Jun 2023 07:38:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231252AbjFLLh5 (ORCPT
+        with ESMTP id S230039AbjFLLiL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jun 2023 07:37:57 -0400
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D34CD4480;
-        Mon, 12 Jun 2023 04:22:00 -0700 (PDT)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-974539fd9f0so81043466b.0;
-        Mon, 12 Jun 2023 04:22:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686568919; x=1689160919;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=taXnRUDY7JOSpFWMZcgwWaSEWeCazS9Jqb/ELA153gw=;
-        b=IVTo4VMm0/udU4rnoViSifIjmVHv6ZTqPhO0wHY2zrIr6Sf/2UAId3C7qGke0/lRMR
-         8tF4P0eUr8/g9Tee4Jy7gSo+f1jKy33+ECprOryeslPKM5eScf4APu1o8GXI3newXrqB
-         0MdpZ1U4VMF4VTDHY/SZ6Ma6PmFn8/YqhOpSjt7CC9h/g4kd0Nd4xvKBuT+gLzhU711N
-         k7QsNs0/1dGhi/FJ3b2IoXdxVooKVGV58rms9IGiF4DjYqU6luU2frpT7CnoE2qnxcWz
-         WhST+VtlmSEHRuaRl/D8l2GNoze9TDk3BwlWZiU5uAgSrEWNLZrozMnQr1U9FYqLUD3W
-         AylQ==
-X-Gm-Message-State: AC+VfDxA1M5WcBU8msN02SNM7lW/Sy3vCPwA7uHGtR/qi6bUSbcXh//2
-        q/WCEa9tgK3GQvuAlYEFjDffgrJOFQtRZC7syR19OiIi
-X-Google-Smtp-Source: ACHHUZ4usfZkeu1OYZW5XlPAMz8MOjk62Pc4PNSvOLe/ouIKTqlCgION7uOBp/iMtxEs0YjKYATUWMTIOUws4oAZsEQ=
-X-Received: by 2002:a17:906:72d1:b0:97e:a7f0:b1d9 with SMTP id
- m17-20020a17090672d100b0097ea7f0b1d9mr4755796ejl.3.1686568919000; Mon, 12 Jun
- 2023 04:21:59 -0700 (PDT)
+        Mon, 12 Jun 2023 07:38:11 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09FB77EDD;
+        Mon, 12 Jun 2023 04:27:26 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9B16D61510;
+        Mon, 12 Jun 2023 11:27:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B3C1C433EF;
+        Mon, 12 Jun 2023 11:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686569245;
+        bh=hmHbzFm4Dm33OgsGVFYgS4uUdY2P5aUpwmK7kHrb1KM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CaOjL7+1XFSLdT+BXOGjY401sGoIpWDlfTo9tL/2PExN/CgzzFistaKm13MbtyZb/
+         1uh/Z2jqHeyIImqWiZHwWNOzLfZj1oIo+VGfBshyLVruDgdvB78ypxxEpyAXBWgsRk
+         2lnr0m1ibuR5vLztFdk/lj7Te1axs0dnU8RDezYF7GeEdarEbylaZR7zIwqXUilZuF
+         2ISzEwnO49VC3LFDhmaXVgE9ifRUMC8baYVPdvVVDGakhL4mCrf2M433dSGjzFnjDZ
+         /JmRy4RvNsNvs/ZKFjvM/4UfbFNKvupYn+aCmg8QKmv2v2h/S/fppATKzk5ldTgK+t
+         3akJWPU5kr74A==
+Date:   Mon, 12 Jun 2023 12:27:19 +0100
+From:   Lee Jones <lee@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Henning Schild <henning.schild@siemens.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] leds: simatic-ipc-leds-gpio: add terminating
+ entries to gpio tables
+Message-ID: <20230612112719.GP3635807@google.com>
+References: <20230524124628.32295-1-henning.schild@siemens.com>
+ <20230524124628.32295-2-henning.schild@siemens.com>
+ <ZHHFMPEYNz9jBBRd@smile.fi.intel.com>
+ <20230530171100.75e5b86c@md1za8fc.ad001.siemens.net>
+ <ZHjLjU7WPv2W9SuJ@smile.fi.intel.com>
+ <20230608173027.GL3572061@google.com>
+ <ZIM2VK9MlxGqBfDT@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <20230612090250.1417940-1-michal.wilczynski@intel.com>
-In-Reply-To: <20230612090250.1417940-1-michal.wilczynski@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 12 Jun 2023 13:21:40 +0200
-Message-ID: <CAJZ5v0g2SZF5cYWoBxsq7uCcGJJM0qtexK4Riv2vBa1XCLbrwA@mail.gmail.com>
-Subject: Re: [PATCH v1] platform/x86/dell/dell-rbtn: Fix resources leaking on
- error path
-To:     Michal Wilczynski <michal.wilczynski@intel.com>
-Cc:     linux-acpi@vger.kernel.org, rafael@kernel.org,
-        andriy.shevchenko@intel.com, ilpo.jarvinen@linux.intel.com,
-        pali@kernel.org, hdegoede@redhat.com, markgross@kernel.org,
-        fengguang.wu@intel.com, dvhart@linux.intel.com,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZIM2VK9MlxGqBfDT@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 11:03 AM Michal Wilczynski
-<michal.wilczynski@intel.com> wrote:
->
-> Currently rbtn_add() in case of failure is leaking resources. Fix this
-> by adding a proper rollback. While at it, remove unnecessary assignment
-> of NULL to device->driver_data and unnecessary whitespace, plus add a
-> break for the default case in a switch.
->
-> Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Fixes: 817a5cdb40c8 ("dell-rbtn: Dell Airplane Mode Switch driver")
-> Signed-off-by: Michal Wilczynski <michal.wilczynski@intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Fri, 09 Jun 2023, Andy Shevchenko wrote:
 
-Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+> On Thu, Jun 08, 2023 at 06:30:27PM +0100, Lee Jones wrote:
+> > On Thu, 01 Jun 2023, Andy Shevchenko wrote:
+> > > On Tue, May 30, 2023 at 05:11:00PM +0200, Henning Schild wrote:
+> > > > Am Sat, 27 May 2023 11:54:08 +0300
+> > > > schrieb Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
+> > > > 
+> > > > > On Wed, May 24, 2023 at 02:46:25PM +0200, Henning Schild wrote:
+> > > > > > The entries do not seem to be stricly needed when the number of
+> > > > > > entries is given via the number of LEDs. But adding them is a
+> > > > > > safeguard should anyone ever iterate over the tables to their end,
+> > > > > > it also gets us in line with other drivers that register
+> > > > > > "leds-gpio" tables.  
+> > > > > 
+> > > > > Reported-by?
+> > > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > 
+> > > > I think we could do
+> > > > 
+> > > > Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > 
+> > > > on merge. But i would not want to send the whole series again for that
+> > > > one line.
+> > > 
+> > > Since you added it, `b4` will happily take it, I believe no manual work even
+> > > needed for that, thank you!
+> > 
+> > b4 didn't pick this up.  Nor the whole-series Ack provided by Hans.
+> > 
+> > I added both manually.
+> 
+> There is an option to take this
+> 
+>   -t, --apply-cover-trailers
+>                         Apply trailers sent to the cover letter to all patches
+> 
+> have you tried it?
 
-> ---
->  drivers/platform/x86/dell/dell-rbtn.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/dell/dell-rbtn.c b/drivers/platform/x86/dell/dell-rbtn.c
-> index aa0e6c907494..e9b3f9c3ab7d 100644
-> --- a/drivers/platform/x86/dell/dell-rbtn.c
-> +++ b/drivers/platform/x86/dell/dell-rbtn.c
-> @@ -420,10 +420,12 @@ static int rbtn_add(struct acpi_device *device)
->                 break;
->         default:
->                 ret = -EINVAL;
-> +               break;
->         }
-> +       if (ret)
-> +               rbtn_acquire(device, false);
->
->         return ret;
-> -
->  }
->
->  static void rbtn_remove(struct acpi_device *device)
-> @@ -442,7 +444,6 @@ static void rbtn_remove(struct acpi_device *device)
->         }
->
->         rbtn_acquire(device, false);
-> -       device->driver_data = NULL;
->  }
->
->  static void rbtn_notify(struct acpi_device *device, u32 event)
-> --
-> 2.40.1
->
+Doesn't look like it:
+
+  b4 am -3 -slt -P_ -o - ${id} | git am -3 --reject
+
+Can't remember if I had it before then removed it, or never had it.
+
+I'll attempt to add it now and see what happens.
+
+-- 
+Lee Jones [李琼斯]
