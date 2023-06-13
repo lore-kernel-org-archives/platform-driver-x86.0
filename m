@@ -2,115 +2,133 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DC7EB64D0
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jun 2023 15:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E694DEB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jun 2023 16:40:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240423AbjFMPhW (ORCPT
+        id S232842AbjFMQk3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Jun 2023 11:37:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52716 "EHLO
+        Tue, 13 Jun 2023 12:40:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239310AbjFMPhV (ORCPT
+        with ESMTP id S232278AbjFMQkG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jun 2023 11:37:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E841FCD
-        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jun 2023 08:35:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686670549;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XrhOZVeec/db2uALYpez63xq92Ih/dtdSBOBzIwOjR8=;
-        b=MLx/ARXx9aEFK11R9mqDf+BPyrcbpRTOak93QWFz/hdABs5G6xrwuDR9+sNjlu1i1VlCBu
-        aiJOY5kfEOZHt/QqOwPDsuPVFcAknJ/MwJQ1nye70H5XFy58Gkest5O6iFfwI61hqCrnmM
-        e+YbBMgHxUjoy5JWB7ZvLUUa/xCXTLI=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-417-2ntyR8OqOE6To2p6oGe9IA-1; Tue, 13 Jun 2023 11:35:47 -0400
-X-MC-Unique: 2ntyR8OqOE6To2p6oGe9IA-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-514abe67064so5305292a12.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jun 2023 08:35:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686670546; x=1689262546;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XrhOZVeec/db2uALYpez63xq92Ih/dtdSBOBzIwOjR8=;
-        b=Pp9EZ79sZBfgVmjq/xbLjxytBoMfwg5bI5u5EXyJa7qmmiLV6GJYI4ifvhf8uZnhHK
-         lAMugDZH7laop/FO5wDFC4upgG+8jx+q1uNcFD+ar8AtouKug4eNUEHWBbxiyeMiVZxc
-         rJloYcYcZh6Dr+5YARHHWonjSgJ3UsmwtqIjZY5FwT0p2GossFT93zO8WbaEKu7ycW6I
-         TTKegje4FRW49UHv6DcTFSpb4hVTM6FCvjbsy5TJvw11ct6hVxnDe5UEr1rvG6bBLLAT
-         jXPWMumqU+1tmKYhN+dkreQMWkL5fWBWXG5AsRoYyF/o61EBBXX3gXGFjyCUfXEL24SX
-         N82Q==
-X-Gm-Message-State: AC+VfDzEyUjL8n6c+VQY616ThTAIUfnj3uZSqgjCu4lFwzHbLXRYt9r6
-        7/ksgfOZBUYmaO7XeZ2lASRJiVEjuSq0VsuEdX1iSxbLNanFpADcWRqZxehMFruLIPF1C2u6jXG
-        scTJ9YrIt9eJLWMKYafY8RrXS0m+qBT7fRShS8Ttf5A==
-X-Received: by 2002:aa7:d49a:0:b0:50b:fd52:2f4b with SMTP id b26-20020aa7d49a000000b0050bfd522f4bmr8767192edr.24.1686670546061;
-        Tue, 13 Jun 2023 08:35:46 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7BMFmVyFJ4lCGDdWS54ulpZZa9F099khds3bj+FjvKlYT50eyMdDe0p3lFuCQ0U4uRG/Fslw==
-X-Received: by 2002:aa7:d49a:0:b0:50b:fd52:2f4b with SMTP id b26-20020aa7d49a000000b0050bfd522f4bmr8767175edr.24.1686670545829;
-        Tue, 13 Jun 2023 08:35:45 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? ([2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id j25-20020aa7c0d9000000b005148f0e8568sm6626969edp.39.2023.06.13.08.35.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jun 2023 08:35:45 -0700 (PDT)
-Message-ID: <5a6e0086-027b-cf6b-6c89-32aba244c1dd@redhat.com>
-Date:   Tue, 13 Jun 2023 17:35:42 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
+        Tue, 13 Jun 2023 12:40:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F13198B;
+        Tue, 13 Jun 2023 09:40:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 565E763792;
+        Tue, 13 Jun 2023 16:40:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EEA8C433D9;
+        Tue, 13 Jun 2023 16:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686674404;
+        bh=OkeHnH/TAQmovfwxd3UYG175EWl8VQgpXW7nfWPlfQc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PZ8A6xw3FtPAEpEP/h7HaFK8Mz0b77IlSmbpMrh7O46mIvicDAufHsTKMr0q/Z1Ei
+         8ABG7o0GoWpe10KxyVfSShuQhYaZnzMOClJQZr2f+S4SV7ovZhA9FrA6KbjWzot4uz
+         44yb2L/gaEZyRvCRV816lysX0XAEIZrMTw+rdyvEMVIVLzTfFVZLFaz95rVSxeP6Yw
+         Ys5hEtlFCZOvU91wD7c+/YljzqLo2WydeN3vGLzHO2kzQLjOZhSqfCXR42tT3z98ZP
+         xfSQppuf5YTIdIS23LOi78msw6EIpD/qeiELcAPsM8eNwVhtStRL7ViVoHMpQQV+B2
+         ILAVXHHaQ3RAQ==
+Received: by pali.im (Postfix)
+        id 92D847FD; Tue, 13 Jun 2023 18:40:01 +0200 (CEST)
+Date:   Tue, 13 Jun 2023 18:40:01 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Michal Wilczynski <michal.wilczynski@intel.com>
+Cc:     linux-acpi@vger.kernel.org, rafael@kernel.org,
+        andriy.shevchenko@intel.com, ilpo.jarvinen@linux.intel.com,
+        hdegoede@redhat.com, markgross@kernel.org, fengguang.wu@intel.com,
+        dvhart@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Subject: Re: [PATCH v2] platform/x86/dell/dell-rbtn: Fix resources leaking on
  error path
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Michal Wilczynski <michal.wilczynski@intel.com>
-Cc:     linux-acpi@vger.kernel.org, rafael@kernel.org,
-        ilpo.jarvinen@linux.intel.com, pali@kernel.org,
-        markgross@kernel.org, fengguang.wu@intel.com,
-        dvhart@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Message-ID: <20230613164001.5vdk4pajbrwgdam4@pali>
 References: <20230613084310.2775896-1-michal.wilczynski@intel.com>
- <ZIiHaEn7nW7yAFK8@smile.fi.intel.com>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ZIiHaEn7nW7yAFK8@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230613084310.2775896-1-michal.wilczynski@intel.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 6/13/23 17:12, Andy Shevchenko wrote:
-> On Tue, Jun 13, 2023 at 11:43:10AM +0300, Michal Wilczynski wrote:
->> Currently rbtn_add() in case of failure is leaking resources. Fix this
->> by adding a proper rollback. Move devm_kzalloc() before rbtn_acquire(),
->> so it doesn't require rollback in case of failure. While at it, remove
->> unnecessary assignment of NULL to device->driver_data and unnecessary
->> whitespace, plus add a break for the default case in a switch.
+On Tuesday 13 June 2023 11:43:10 Michal Wilczynski wrote:
+> Currently rbtn_add() in case of failure is leaking resources. Fix this
+> by adding a proper rollback. Move devm_kzalloc() before rbtn_acquire(),
+> so it doesn't require rollback in case of failure. While at it, remove
+> unnecessary assignment of NULL to device->driver_data and unnecessary
+> whitespace, plus add a break for the default case in a switch.
 > 
->> Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Fixes: 817a5cdb40c8 ("dell-rbtn: Dell Airplane Mode Switch driver")
+> Signed-off-by: Michal Wilczynski <michal.wilczynski@intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+
+Looks good,
+
+Reviewed-by: Pali Rohár <pali@kernel.org>
+
+> ---
+> v2:
+>  - move devm_kzalloc before rbtn_acquire as suggested
 > 
-> Isn't also suggested by Pali?
+>  drivers/platform/x86/dell/dell-rbtn.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
 > 
->> Fixes: 817a5cdb40c8 ("dell-rbtn: Dell Airplane Mode Switch driver")
->> Signed-off-by: Michal Wilczynski <michal.wilczynski@intel.com>
->> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+> diff --git a/drivers/platform/x86/dell/dell-rbtn.c b/drivers/platform/x86/dell/dell-rbtn.c
+> index aa0e6c907494..c8fcb537fd65 100644
+> --- a/drivers/platform/x86/dell/dell-rbtn.c
+> +++ b/drivers/platform/x86/dell/dell-rbtn.c
+> @@ -395,16 +395,16 @@ static int rbtn_add(struct acpi_device *device)
+>  		return -EINVAL;
+>  	}
+>  
+> +	rbtn_data = devm_kzalloc(&device->dev, sizeof(*rbtn_data), GFP_KERNEL);
+> +	if (!rbtn_data)
+> +		return -ENOMEM;
+> +
+>  	ret = rbtn_acquire(device, true);
+>  	if (ret < 0) {
+>  		dev_err(&device->dev, "Cannot enable device\n");
+>  		return ret;
+>  	}
+>  
+> -	rbtn_data = devm_kzalloc(&device->dev, sizeof(*rbtn_data), GFP_KERNEL);
+> -	if (!rbtn_data)
+> -		return -ENOMEM;
+> -
+>  	rbtn_data->type = type;
+>  	device->driver_data = rbtn_data;
+>  
+> @@ -420,10 +420,12 @@ static int rbtn_add(struct acpi_device *device)
+>  		break;
+>  	default:
+>  		ret = -EINVAL;
+> +		break;
+>  	}
+> +	if (ret)
+> +		rbtn_acquire(device, false);
+>  
+>  	return ret;
+> -
+>  }
+>  
+>  static void rbtn_remove(struct acpi_device *device)
+> @@ -442,7 +444,6 @@ static void rbtn_remove(struct acpi_device *device)
+>  	}
+>  
+>  	rbtn_acquire(device, false);
+> -	device->driver_data = NULL;
+>  }
+>  
+>  static void rbtn_notify(struct acpi_device *device, u32 event)
+> -- 
+> 2.41.0
 > 
-> ...
-> 
-> Hans, can it (an additional tag) be folded into applied change?
-
-Done and pushed to review-hans.
-
-Regards,
-
-Hans
-
-
-
-
