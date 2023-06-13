@@ -2,72 +2,114 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868C6C77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jun 2023 07:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B64CC88CB2
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jun 2023 08:11:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240719AbjFMHz3 (ORCPT
+        id S238447AbjFMIK6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Jun 2023 03:55:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49610 "EHLO
+        Tue, 13 Jun 2023 04:10:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240700AbjFMHzG (ORCPT
+        with ESMTP id S235447AbjFMIK4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jun 2023 03:55:06 -0400
-X-Greylist: delayed 539 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 13 Jun 2023 00:55:03 PDT
-Received: from mail.paretdee.com (mail.paretdee.com [141.95.17.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10237E7C
-        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jun 2023 00:55:02 -0700 (PDT)
-Received: by mail.paretdee.com (Postfix, from userid 1002)
-        id 6C051A269D; Tue, 13 Jun 2023 07:45:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=paretdee.com; s=mail;
-        t=1686642360; bh=YtPWhpqttWkror/OXW+RT7d5qvBhyF8jxaFrqRhKfz8=;
-        h=Date:From:To:Subject:From;
-        b=tN9oOuduTQhTr14IInSgmDlttbY/v+ZlTdWMRTyN9ngfBBjvFoLMvUHrwvWK0iueT
-         3EAFCWhtIZMV2anXDw0Lcyj/8jSrSfs1p2i7mjwa7f2XgwGhGxabnZBpnYE6qVg6x8
-         Am63JReCy0Llx0SRXYpcijC5vgvkaIhhHtHdd5vwthsYa7ANihNIl1H2np73FjBLuT
-         57+T34JTUVf+FLAGHpsZcCG4/yFdAl2u95nDEv7IEqNNGp62hU7kNYKmsC5adPHpdC
-         BJt92Kt+c1n+9uUKFKX436jGV6oGxO0B2JiFXmQlLi2m+Skrj3vuMoHoG7/zES4qBk
-         ucRyHWsPqCOUw==
-Received: by paretdee.com for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jun 2023 07:45:28 GMT
-Message-ID: <20230613064520-0.1.6m.fcbd.0.akvkhffg3e@paretdee.com>
-Date:   Tue, 13 Jun 2023 07:45:28 GMT
-From:   "Leos Sladek" <leos.sladek@paretdee.com>
-To:     <platform-driver-x86@vger.kernel.org>
-Subject: =?UTF-8?Q?Fotovoltaick=C3=A9_rozvodnice?=
-X-Mailer: mail.paretdee.com
+        Tue, 13 Jun 2023 04:10:56 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB91FE4E;
+        Tue, 13 Jun 2023 01:10:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686643854; x=1718179854;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=m1Rk6YnaVEg3/LvTCv6Jv04yIkKnjKWMBNr+EyDl4Ag=;
+  b=NlFI9EOSV+wva7/aY03nQXZ78YUUyUEtAGtLgDZw+cSLoSiw7cZuu+l4
+   PBwxqjqwikRulGj4LfjjlvFi454ODNxVPaHWU3MqDzpKVBJQIxPPzV9An
+   dHFWR0nyH/KqNkr4mt6dp0y3YBDQ4WTNz8HTOW4971OH+NJsKzLcS6pBO
+   QGMlT7uDvKbeEsB+n02nFjXBQfgJsA2JpAIp3etT7YOChthE2pQc0IJqu
+   +tvVVzJhhiRvKiV81LhOOw2mYG4GZLp6Q4WLEpv9wr3Cz2ZGanOyKwPwS
+   XWePzzGjuIjGfl35fM/Y32Y6rhb7agPZE5dT6TsHpeKmpz3ahqyRXySeh
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="342952157"
+X-IronPort-AV: E=Sophos;i="6.00,239,1681196400"; 
+   d="scan'208";a="342952157"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 01:10:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="776718645"
+X-IronPort-AV: E=Sophos;i="6.00,239,1681196400"; 
+   d="scan'208";a="776718645"
+Received: from abujor-mobl.ger.corp.intel.com ([10.249.44.113])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 01:10:51 -0700
+Date:   Tue, 13 Jun 2023 11:10:22 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+cc:     Andy Shevchenko <andy@kernel.org>,
+        Dan Scally <dan.scally@ideasonboard.com>,
+        platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH 2/2] platform/x86: int3472: discrete: Log a warning if
+ the pin-numbers don't match
+In-Reply-To: <20230612141632.5232-2-hdegoede@redhat.com>
+Message-ID: <1b87ee9f-8de8-6923-111d-a9d889451d80@linux.intel.com>
+References: <20230612141632.5232-1-hdegoede@redhat.com> <20230612141632.5232-2-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Dobr=C3=BD den,
+On Mon, 12 Jun 2023, Hans de Goede wrote:
 
-obrac=C3=ADm se na V=C3=A1s jm=C3=A9nem dlouholet=C3=A9ho v=C3=BDrobce fo=
-tovoltaick=C3=BDch rozvodnic ur=C4=8Den=C3=BDch pro
-soukrom=C3=A9 i pr=C5=AFmyslov=C3=A9 pou=C5=BEit=C3=AD.
+> The INT3472 discrete code assumes that the ACPI GPIO resources are
+> in the same order as the pin-info _DSM entries.
+> 
+> The returned pin-info includes the pin-number in bits 15-8. Add a check
+> that this matches with the ACPI GPIO resource pin-number in case
+> the assumption is not true with some ACPI tables.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/intel/int3472/discrete.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+> index 4ef60883154d..c1132bbbff41 100644
+> --- a/drivers/platform/x86/intel/int3472/discrete.c
+> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> @@ -149,8 +149,8 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+>  {
+>  	struct int3472_discrete_device *int3472 = data;
+>  	struct acpi_resource_gpio *agpio;
+> +	u8 active_value, pin, type;
+>  	union acpi_object *obj;
+> -	u8 active_value, type;
+>  	const char *err_msg;
+>  	const char *func;
+>  	u32 polarity;
+> @@ -174,10 +174,18 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+>  		return 1;
+>  	}
+>  
+> +	/* Bits 7-0 contain the type/function of the pin */
+>  	type = obj->integer.value & 0xff;
+>  
+>  	int3472_get_func_and_polarity(type, &func, &polarity);
+>  
+> +	/* Bits 15-8 contain the pin-number on the GPIO chip */
+> +	pin = (obj->integer.value >> 8) & 0xff;
+> +	if (pin != agpio->pin_table[0])
+> +		dev_warn(int3472->dev, "%s %s pin number mismatch _DSM %d resource %d\n",
+> +			 func, agpio->resource_source.string_ptr, pin,
+> +			 agpio->pin_table[0]);
+> +
+>  	/* If bits 31-24 of the _DSM entry are all 0 then the signal is inverted */
+>  	active_value = (obj->integer.value >> 24) & 0xff;
+>  	if (!active_value)
+> 
 
-Dod=C3=A1v=C3=A1me fotovoltaick=C3=A9 rozvodnice na zak=C3=A1zku a jsme s=
-chopni realizovat i ty nejn=C3=A1ro=C4=8Dn=C4=9Bj=C5=A1=C3=AD
-po=C5=BEadavky instala=C4=8Dn=C3=ADch firem, velkoobchod=C5=AF a distribu=
-tor=C5=AF.
+These changes made me wonder why there aren't defines for the fields? 
+And then FIELD_GET() used to read the field. Most of those comments 
+would be documented by the define name itself.
 
-Vyu=C5=BE=C3=ADv=C3=A1me nejkvalitn=C4=9Bj=C5=A1=C3=AD komponenty a mater=
-i=C3=A1ly, =C4=8D=C3=ADm=C5=BE dosahujeme vy=C5=A1=C5=A1=C3=AD odolnost, =
-stabilitu
-provozu a ochranu proti vod=C4=9B, vlku, prachu a n=C3=A1raz=C5=AFm.
+-- 
+ i.
 
-V na=C5=A1em sortimentu jsou tak=C3=A9 omezova=C4=8De p=C5=99ep=C4=9Bt=C3=
-=AD AC/DC, kter=C3=A9 zaji=C5=A1=C5=A5uj=C3=AD ochranu
-fotovoltaick=C3=BDch nap=C3=A1jec=C3=ADch instalac=C3=AD p=C5=99ed negati=
-vn=C3=ADmi efekty p=C5=99ep=C4=9Bt=C3=AD a chr=C3=A1n=C3=AD za=C5=99=C3=AD=
-zen=C3=AD p=C5=99ed
-efekty p=C5=AFsoben=C3=AD p=C5=99ep=C4=9Bt=C3=AD a bleskov=C3=BDch proud=C5=
-=AF.
-
-Chcete si vyzkou=C5=A1et na=C5=A1e =C5=99e=C5=A1en=C3=AD?
-
-
-S pozdravem
-Leos Sladek
