@@ -2,133 +2,92 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E694DEB64DC
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jun 2023 16:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C487EEB64D7
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jun 2023 22:51:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232842AbjFMQk3 (ORCPT
+        id S240660AbjFMWvm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Jun 2023 12:40:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58732 "EHLO
+        Tue, 13 Jun 2023 18:51:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232278AbjFMQkG (ORCPT
+        with ESMTP id S241111AbjFMWvg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jun 2023 12:40:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F13198B;
-        Tue, 13 Jun 2023 09:40:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 565E763792;
-        Tue, 13 Jun 2023 16:40:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EEA8C433D9;
-        Tue, 13 Jun 2023 16:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686674404;
-        bh=OkeHnH/TAQmovfwxd3UYG175EWl8VQgpXW7nfWPlfQc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PZ8A6xw3FtPAEpEP/h7HaFK8Mz0b77IlSmbpMrh7O46mIvicDAufHsTKMr0q/Z1Ei
-         8ABG7o0GoWpe10KxyVfSShuQhYaZnzMOClJQZr2f+S4SV7ovZhA9FrA6KbjWzot4uz
-         44yb2L/gaEZyRvCRV816lysX0XAEIZrMTw+rdyvEMVIVLzTfFVZLFaz95rVSxeP6Yw
-         Ys5hEtlFCZOvU91wD7c+/YljzqLo2WydeN3vGLzHO2kzQLjOZhSqfCXR42tT3z98ZP
-         xfSQppuf5YTIdIS23LOi78msw6EIpD/qeiELcAPsM8eNwVhtStRL7ViVoHMpQQV+B2
-         ILAVXHHaQ3RAQ==
-Received: by pali.im (Postfix)
-        id 92D847FD; Tue, 13 Jun 2023 18:40:01 +0200 (CEST)
-Date:   Tue, 13 Jun 2023 18:40:01 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Michal Wilczynski <michal.wilczynski@intel.com>
-Cc:     linux-acpi@vger.kernel.org, rafael@kernel.org,
-        andriy.shevchenko@intel.com, ilpo.jarvinen@linux.intel.com,
-        hdegoede@redhat.com, markgross@kernel.org, fengguang.wu@intel.com,
-        dvhart@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2] platform/x86/dell/dell-rbtn: Fix resources leaking on
- error path
-Message-ID: <20230613164001.5vdk4pajbrwgdam4@pali>
-References: <20230613084310.2775896-1-michal.wilczynski@intel.com>
+        Tue, 13 Jun 2023 18:51:36 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C7581BE7;
+        Tue, 13 Jun 2023 15:51:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686696695; x=1718232695;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=BwoJZ+qJT0AouLBc/72pTtMNJ2cOhvENSYmAHBDaG1g=;
+  b=FHyUXFxbVwHM/CqaaE3oD0mE4vhf0IxU8mdKbyF6jQhBn8ifqVeEMTcv
+   HaAVgX2S7kUPRfsi+3IQ1KkE6fFdudFo9KftoaUCtYOEWAVjznZWLeAxq
+   PiaRmEXVJY5nv+8fXQvdsrCExQvikfBsE+p9HNEslT9jn9CshR7/136mn
+   cMy5MvAaMnk5gOQ528Y0LbWKTcHPhPa5OFiUnA+ylS6PKDWcD7NDigJ2j
+   342HufV/CdLWKW1PtUuJ4/rt/TSw/ArBOzYSU9CkWdmcA6fOUFJXHAAim
+   vs+eg8ZgPx+VxOmSM44tJQTvtMZ3/QICxD0OB7F8sElhSOsiAG2nBxkhn
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="444842172"
+X-IronPort-AV: E=Sophos;i="6.00,241,1681196400"; 
+   d="scan'208";a="444842172"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 15:51:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="824589627"
+X-IronPort-AV: E=Sophos;i="6.00,241,1681196400"; 
+   d="scan'208";a="824589627"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 13 Jun 2023 15:51:34 -0700
+Received: from rjingar-desk5.amr.corp.intel.com (hciettox-mobl.amr.corp.intel.com [10.212.23.107])
+        by linux.intel.com (Postfix) with ESMTP id EC34E580BF8;
+        Tue, 13 Jun 2023 15:51:33 -0700 (PDT)
+From:   Rajvi Jingar <rajvi.jingar@linux.intel.com>
+To:     david.e.box@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+        irenic.rajneesh@gmail.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, hdegoede@redhat.com
+Cc:     xi.pardee@intel.com, Rajvi Jingar <rajvi.jingar@linux.intel.com>
+Subject: [PATCH 0/8] Add multiple PMCs support in pmc core driver
+Date:   Tue, 13 Jun 2023 15:53:39 -0700
+Message-Id: <20230613225347.2720665-1-rajvi.jingar@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230613084310.2775896-1-michal.wilczynski@intel.com>
-User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tuesday 13 June 2023 11:43:10 Michal Wilczynski wrote:
-> Currently rbtn_add() in case of failure is leaking resources. Fix this
-> by adding a proper rollback. Move devm_kzalloc() before rbtn_acquire(),
-> so it doesn't require rollback in case of failure. While at it, remove
-> unnecessary assignment of NULL to device->driver_data and unnecessary
-> whitespace, plus add a break for the default case in a switch.
-> 
-> Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Fixes: 817a5cdb40c8 ("dell-rbtn: Dell Airplane Mode Switch driver")
-> Signed-off-by: Michal Wilczynski <michal.wilczynski@intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+Newer platforms starting from Meteor Lake can have multiple PMCs.
+This patch series include changes to enable pmc core driver to support
+multiple PMCs for newer platforms. It adds devid and register maps to
+enable IOE-P and IOE-M available on Meteor Lake platform. It also fixes
+the register maps for SOC-M.
 
-Looks good,
+Patch includes:
+platform/x86:intel/pmc: Update maps for Meteor Lake P/M platforms
+platform/x86:intel/pmc: Combine core_init() and core_configure()
+platform/x86:intel/pmc: Add support to handle multiple PMCs
+platform/x86:intel/pmc: Enable debugfs multiple PMC support
+platform/x86:intel/pmc: Discover PMC devices
+platform/x86:intel/pmc: Use SSRAM to discover pwrm base address of primary PMC
+platform/x86:intel/pmc: Add Meteor Lake IOE-P PMC related maps
+platform/x86:intel/pmc: Add Meteor Lake IOE-M PMC related maps
 
-Reviewed-by: Pali Rohár <pali@kernel.org>
+ drivers/platform/x86/intel/pmc/Makefile     |   4 +-
+ drivers/platform/x86/intel/pmc/adl.c        |  16 +-
+ drivers/platform/x86/intel/pmc/cnp.c        |  18 +-
+ drivers/platform/x86/intel/pmc/core.c       | 470 ++++++----
+ drivers/platform/x86/intel/pmc/core.h       | 125 ++-
+ drivers/platform/x86/intel/pmc/core_ssram.c | 133 +++
+ drivers/platform/x86/intel/pmc/icl.c        |   7 +-
+ drivers/platform/x86/intel/pmc/mtl.c        | 954 +++++++++++++++++++-
+ drivers/platform/x86/intel/pmc/spt.c        |   7 +-
+ drivers/platform/x86/intel/pmc/tgl.c        |  21 +-
+ 10 files changed, 1516 insertions(+), 239 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/pmc/core_ssram.c
 
-> ---
-> v2:
->  - move devm_kzalloc before rbtn_acquire as suggested
-> 
->  drivers/platform/x86/dell/dell-rbtn.c | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-rbtn.c b/drivers/platform/x86/dell/dell-rbtn.c
-> index aa0e6c907494..c8fcb537fd65 100644
-> --- a/drivers/platform/x86/dell/dell-rbtn.c
-> +++ b/drivers/platform/x86/dell/dell-rbtn.c
-> @@ -395,16 +395,16 @@ static int rbtn_add(struct acpi_device *device)
->  		return -EINVAL;
->  	}
->  
-> +	rbtn_data = devm_kzalloc(&device->dev, sizeof(*rbtn_data), GFP_KERNEL);
-> +	if (!rbtn_data)
-> +		return -ENOMEM;
-> +
->  	ret = rbtn_acquire(device, true);
->  	if (ret < 0) {
->  		dev_err(&device->dev, "Cannot enable device\n");
->  		return ret;
->  	}
->  
-> -	rbtn_data = devm_kzalloc(&device->dev, sizeof(*rbtn_data), GFP_KERNEL);
-> -	if (!rbtn_data)
-> -		return -ENOMEM;
-> -
->  	rbtn_data->type = type;
->  	device->driver_data = rbtn_data;
->  
-> @@ -420,10 +420,12 @@ static int rbtn_add(struct acpi_device *device)
->  		break;
->  	default:
->  		ret = -EINVAL;
-> +		break;
->  	}
-> +	if (ret)
-> +		rbtn_acquire(device, false);
->  
->  	return ret;
-> -
->  }
->  
->  static void rbtn_remove(struct acpi_device *device)
-> @@ -442,7 +444,6 @@ static void rbtn_remove(struct acpi_device *device)
->  	}
->  
->  	rbtn_acquire(device, false);
-> -	device->driver_data = NULL;
->  }
->  
->  static void rbtn_notify(struct acpi_device *device, u32 event)
-> -- 
-> 2.41.0
-> 
+-- 
+2.25.1
+
