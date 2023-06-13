@@ -2,118 +2,92 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C36BC7EE29
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jun 2023 11:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D7DEB64D8
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jun 2023 15:12:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238175AbjFMLUq (ORCPT
+        id S240973AbjFMPMt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Jun 2023 07:20:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55256 "EHLO
+        Tue, 13 Jun 2023 11:12:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241780AbjFMLTH (ORCPT
+        with ESMTP id S240877AbjFMPMr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jun 2023 07:19:07 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F589294C;
-        Tue, 13 Jun 2023 04:17:36 -0700 (PDT)
+        Tue, 13 Jun 2023 11:12:47 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC57D1991;
+        Tue, 13 Jun 2023 08:12:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686655056; x=1718191056;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=nv36s9PsuvVj4NH4vGNtZglB8PdYZFfc+949dgKyhQs=;
-  b=DDvFoiysiw0amImZM0K1uj/1ULjeilsSM6rTBdgJU/D8Kg0UPo7qolDr
-   8rcRbpk+ale8xAN3LFZky76gafLAkEIiF9B7Gfq7IOfs/4ftKxSO9ALjv
-   YnfAoG68zAKjLm5EVSd8+lUJuS5Y3hzICN3NDX2ByagAUpXlaNuUDbTDx
-   XzszeO+iQHUYBSurRirvJrLIyRV0ddRKR65FF2XLMIK78ElH89o15aLT3
-   OuRlnDJEfrPQ1FVpO/+g0sgOQ/3v+0avsj0ved5pXgiAYL0eaiH7m9fhz
-   bAWlNLEAUUNfEer5wziuy+VOnJ6qHBiq/FqVCFOzq0uSY8VxVmYH8J0eY
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="355798371"
-X-IronPort-AV: E=Sophos;i="6.00,239,1681196400"; 
-   d="scan'208";a="355798371"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 04:17:35 -0700
+  t=1686669166; x=1718205166;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=oxh0515ME/4fPMSsCbIUJTNENfWdQwc2a7pCGR+KUNE=;
+  b=OISHmMY9DXt5qo74Xu94Gqc/P3Mn8fMNoJfgTIB+rEX5k+jVi1Vo+yer
+   7Xwr8qrV1EVmEtuQ3XO0Jv2P7V0foDnfQMIaDEHfYfQlSkWjCf1zQF4Pz
+   8A5AoJEHLb17NVXsZZhnid4Ax/VtXdrzQzx45usaaxdh7B15pScY2UupR
+   fKTJiLZ5808ATVKMs+DOuX1RLXsuPup0QbVwbZld6h05eDv27EcpX2Heq
+   qpeJo8vfNbBKyGgal/S/McoRdnJLhcjQgouQTDQjjZKQ5qjgCh3gQDe6F
+   wmqDTfK+6nZttRY+BXmaD4PmW3MVoRMOdzyYelgPYnkCM+NMvgvbmOh2w
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="361730934"
+X-IronPort-AV: E=Sophos;i="6.00,240,1681196400"; 
+   d="scan'208";a="361730934"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 08:12:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="781620757"
-X-IronPort-AV: E=Sophos;i="6.00,239,1681196400"; 
-   d="scan'208";a="781620757"
-Received: from abujor-mobl.ger.corp.intel.com ([10.249.44.113])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 04:17:34 -0700
-Date:   Tue, 13 Jun 2023 14:17:31 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-cc:     Andy Shevchenko <andy@kernel.org>,
-        Dan Scally <dan.scally@ideasonboard.com>,
-        platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH 2/2] platform/x86: int3472: discrete: Log a warning if
- the pin-numbers don't match
-In-Reply-To: <20230613110810.240193-2-hdegoede@redhat.com>
-Message-ID: <c821a4e0-ff2f-1b8d-a0fa-aadc9c541b6f@linux.intel.com>
-References: <20230613110810.240193-1-hdegoede@redhat.com> <20230613110810.240193-2-hdegoede@redhat.com>
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="824427345"
+X-IronPort-AV: E=Sophos;i="6.00,240,1681196400"; 
+   d="scan'208";a="824427345"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP; 13 Jun 2023 08:12:42 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1q95hJ-003U4D-0H;
+        Tue, 13 Jun 2023 18:12:41 +0300
+Date:   Tue, 13 Jun 2023 18:12:40 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Michal Wilczynski <michal.wilczynski@intel.com>
+Cc:     linux-acpi@vger.kernel.org, rafael@kernel.org,
+        ilpo.jarvinen@linux.intel.com, pali@kernel.org,
+        hdegoede@redhat.com, markgross@kernel.org, fengguang.wu@intel.com,
+        dvhart@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86/dell/dell-rbtn: Fix resources leaking on
+ error path
+Message-ID: <ZIiHaEn7nW7yAFK8@smile.fi.intel.com>
+References: <20230613084310.2775896-1-michal.wilczynski@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-1050445301-1686655010=:2099"
-Content-ID: <67e03eb-54cb-cf8-abc-27c699c8c143@linux.intel.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230613084310.2775896-1-michal.wilczynski@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Jun 13, 2023 at 11:43:10AM +0300, Michal Wilczynski wrote:
+> Currently rbtn_add() in case of failure is leaking resources. Fix this
+> by adding a proper rollback. Move devm_kzalloc() before rbtn_acquire(),
+> so it doesn't require rollback in case of failure. While at it, remove
+> unnecessary assignment of NULL to device->driver_data and unnecessary
+> whitespace, plus add a break for the default case in a switch.
 
---8323329-1050445301-1686655010=:2099
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <a45d97bf-ccc8-147d-bd46-c84c4c3976b3@linux.intel.com>
+> Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-On Tue, 13 Jun 2023, Hans de Goede wrote:
+Isn't also suggested by Pali?
 
-> The INT3472 discrete code assumes that the ACPI GPIO resources are
-> in the same order as the pin-info _DSM entries.
-> 
-> The returned pin-info includes the pin-number in bits 15-8. Add a check
-> that this matches with the ACPI GPIO resource pin-number in case
-> the assumption is not true with some ACPI tables.
-> 
-> Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/intel/int3472/discrete.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-> index a31964076883..850f306214c7 100644
-> --- a/drivers/platform/x86/intel/int3472/discrete.c
-> +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> @@ -154,8 +154,8 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->  {
->  	struct int3472_discrete_device *int3472 = data;
->  	struct acpi_resource_gpio *agpio;
-> +	u8 active_value, pin, type;
->  	union acpi_object *obj;
-> -	u8 active_value, type;
->  	const char *err_msg;
->  	const char *func;
->  	u32 polarity;
-> @@ -183,6 +183,12 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->  
->  	int3472_get_func_and_polarity(type, &func, &polarity);
->  
-> +	pin = FIELD_GET(INT3472_GPIO_DSM_PIN, obj->integer.value);
-> +	if (pin != agpio->pin_table[0])
-> +		dev_warn(int3472->dev, "%s %s pin number mismatch _DSM %d resource %d\n",
-> +			 func, agpio->resource_source.string_ptr, pin,
-> +			 agpio->pin_table[0]);
-> +
->  	active_value = FIELD_GET(INT3472_GPIO_DSM_SENSOR_ON_VAL, obj->integer.value);
->  	if (!active_value)
->  		polarity ^= GPIO_ACTIVE_LOW;
+> Fixes: 817a5cdb40c8 ("dell-rbtn: Dell Airplane Mode Switch driver")
+> Signed-off-by: Michal Wilczynski <michal.wilczynski@intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 
-For both 1 and 2,
+...
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Hans, can it (an additional tag) be folded into applied change?
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---
- i.
---8323329-1050445301-1686655010=:2099--
