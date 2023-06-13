@@ -2,74 +2,78 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F3BC77B7A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jun 2023 10:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0E3C88CB4
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jun 2023 10:39:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241033AbjFMKhG (ORCPT
+        id S241566AbjFMKj3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Jun 2023 06:37:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59892 "EHLO
+        Tue, 13 Jun 2023 06:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240911AbjFMKgu (ORCPT
+        with ESMTP id S239323AbjFMKj0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jun 2023 06:36:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF9810F2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jun 2023 03:35:38 -0700 (PDT)
+        Tue, 13 Jun 2023 06:39:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E89ED92
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jun 2023 03:38:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686652538;
+        s=mimecast20190719; t=1686652715;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6GH4XZj5m0XTC5S2VHTP89+wVOAuXYRuG9tQUg+YjYM=;
-        b=CjhVE676dcvrE9ecTROMJ2cF1f0rx2zz01DKY94q+qxh0M9HbpA36hZjo4gAZ3R1Mf2TwL
-        BMrfNBdcZh8qkHKHxiNsu+n+MeDmwzQDiWhxgI9XfEZCcFWBpJK25uUJR7YQ8VkB8smYOz
-        kRm4kmqLxunoUWE0BhLmr0vsSICBfMQ=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=fHn2Cp4t0XjaJjUOorn/rOHW+RZTATHi0qvjyHSPOgg=;
+        b=JrU1Lgd5ib0oGgB3rhtv4ZRvtRQ28ENX3TF10kcxFfXsMprxOZ2qb2A82NsLBhcTzozlUZ
+        JapoWbrbntBYtXm1LdJf7e/4AQ0R6BgUsAY7g2ZAffS4v4lIB46zcSFeEQ7nYco5rrCSRm
+        QnCj5UKvlJUnMr2t9Ey10wa2+wYEbM4=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-79-2IWDKGL-OviO-1avMMeUZw-1; Tue, 13 Jun 2023 06:35:37 -0400
-X-MC-Unique: 2IWDKGL-OviO-1avMMeUZw-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-4f517b5309cso3873244e87.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jun 2023 03:35:37 -0700 (PDT)
+ us-mta-644-zDgdWnzdM7y-flOm_w2GWg-1; Tue, 13 Jun 2023 06:38:33 -0400
+X-MC-Unique: zDgdWnzdM7y-flOm_w2GWg-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-9749b806f81so489747066b.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jun 2023 03:38:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686652535; x=1689244535;
+        d=1e100.net; s=20221208; t=1686652712; x=1689244712;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6GH4XZj5m0XTC5S2VHTP89+wVOAuXYRuG9tQUg+YjYM=;
-        b=CuXaILbpRIjN8V1ReAece168gCPXFoLPyeS6WbBdcm7rtFwmUWE0Cc4rKA11ubk0P5
-         +uzkXLUsMAkSU/22315G9lynit/SBQmula20R67F4niTD7Vmxx/6IIuI2xcKMNoLDouu
-         8Untc+0JHshuQJkKG56UjtNepcABFD6bgIiLD6DndD4cN7YQUxfaATDCuo0XpVu5W6zK
-         Cm092UBt+8wrh8MjyzCh+lo4gqBhTeJi6cwqygFFfaGtoUHEUzzQMu5UsDP9X1IPhTyt
-         Ajo2ErFFbYBetnjdPa9g6dsanGsxfR+6Q/dTToTMTaFHIZZnn44hUF3DLWTXn17hO/1y
-         EjTw==
-X-Gm-Message-State: AC+VfDyBgRMl5pQzfgJdWybApxLf3aIDE4kDijuBPB6uPl7rfJKihiVH
-        Z0cZ6xXNwAeqkMjn0p7dmCRf1FcVOfiDfk3vpZvPYh7v5XQ4UT+6rwB8jIBF6lwqtATNjCrLRMz
-        uWCg4bTUG4LDeF8bPX57R9e68gAmDom2jDw28eIWrDg==
-X-Received: by 2002:a05:6512:2f5:b0:4f6:7e3:ac87 with SMTP id m21-20020a05651202f500b004f607e3ac87mr6704871lfq.14.1686652535334;
-        Tue, 13 Jun 2023 03:35:35 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ49tqyzU3LAS27DBj0mSC99QBr+94hhOak2EInHe8jPlySbTiaAJVenzCvEGEjUTMpDHM7g+A==
-X-Received: by 2002:a05:6512:2f5:b0:4f6:7e3:ac87 with SMTP id m21-20020a05651202f500b004f607e3ac87mr6704858lfq.14.1686652535020;
-        Tue, 13 Jun 2023 03:35:35 -0700 (PDT)
+        bh=fHn2Cp4t0XjaJjUOorn/rOHW+RZTATHi0qvjyHSPOgg=;
+        b=W+xLtD1W60+Lq3LqWJMdwedOwUs2v53qi1ffNRjArqK58tLMWOyfxtWNrRhJh2N74+
+         Om1SFC4Aj74XXGQ37jc/Gp9HR0kr5bqmk+Bj1vE3wJKr8zw8cBoMbSohf0McQYjFnPk3
+         QInYWlQlTenNVuxAi5bG4VPr63DigsnLGL5NMGzOYxTV4Yqdpi37tQx1EKJC4CicTkqW
+         1oZo0f6uK3zthdc31MJ12azD32pMXGTdRmdXgF/pyCnlGatD6gvZRsTFJr2WwglSmNxR
+         jtl9BpGUjEwIXe7jcNOUCAhY38tpdR89dkRKGqAOFda8Zn64O7QpL4GSuPAaGuGxTe17
+         fbaA==
+X-Gm-Message-State: AC+VfDzuP2fhH2T4De3yAyFcw8p8nTQIj/l5nPkomynn1Jrf8BqFIm0f
+        BdzzxamYKHMx2kdBIBqcKMChvWlG+XBTxzLnlcJddMyf+Ey9J003wDwxUmXtGSmn2ytI5pG3pcS
+        g6OcVi5yw3K9ynkcqZ7K44rlW5r6htQg8AG8PNgnFwA==
+X-Received: by 2002:a17:907:7f0f:b0:97e:ab93:b246 with SMTP id qf15-20020a1709077f0f00b0097eab93b246mr8866641ejc.66.1686652712566;
+        Tue, 13 Jun 2023 03:38:32 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ6X6wbfVu3y3yv+RDMbjxzDtJMWcHWp3uQisW6ZXqmC/XlOuBwkoJmUpuo+7HmDhkjXgPQRwA==
+X-Received: by 2002:a17:907:7f0f:b0:97e:ab93:b246 with SMTP id qf15-20020a1709077f0f00b0097eab93b246mr8866631ejc.66.1686652712254;
+        Tue, 13 Jun 2023 03:38:32 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id e22-20020a056402149600b00501d73cfc86sm6208249edv.9.2023.06.13.03.35.34
+        by smtp.gmail.com with ESMTPSA id jw15-20020a17090776af00b00977e66ff323sm6456454ejc.75.2023.06.13.03.38.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jun 2023 03:35:34 -0700 (PDT)
-Message-ID: <a4b83ff7-2fcd-e4e0-7657-2b78b804feaa@redhat.com>
-Date:   Tue, 13 Jun 2023 12:35:33 +0200
+        Tue, 13 Jun 2023 03:38:31 -0700 (PDT)
+Message-ID: <db9f5d2c-b175-004b-b864-88c290ab7036@redhat.com>
+Date:   Tue, 13 Jun 2023 12:38:31 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH 0/2] TPMI updates for SST
+Subject: Re: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 6.5-rc1
 Content-Language: en-US, nl
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230612224033.2382527-1-srinivas.pandruvada@linux.intel.com>
+To:     "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>
+Cc:     "srinivas.pandruvada@linux.intel.com" 
+        <srinivas.pandruvada@linux.intel.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+References: <3e334999c26d2e9a71f8ee62d78c8356c074c19a.camel@intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230612224033.2382527-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <3e334999c26d2e9a71f8ee62d78c8356c074c19a.camel@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -78,24 +82,26 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 6/13/23 00:40, Srinivas Pandruvada wrote:
-> This series contains two fixes. Patches are on top of
-> review-hans branch of 
->  https://kernel.googlesource.com/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
+On 6/13/23 01:18, Pandruvada, Srinivas wrote:
+> Hi Hans,
+>  
+> Pull request for Intel Speed Select version v1.16:
 > 
-> Since these are unlreased products, I didn't mark for stable.
+> Summary of changes:
+> - Fix JSON formatting of output
+> - Fix core power configuration for non CPU dies
+> 
+> The base branch for these changes 
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
+> branch: review-hans
+> 
+> 
+> The following changes since commit
+> 2515e54267c98dc91a6273765b4bbf560c52b770:
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Thank you.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+I've merged this into my review-hans branch now.
 
 Regards,
 
@@ -103,13 +109,33 @@ Hans
 
 
 
-
-> Srinivas Pandruvada (2):
->   platform/x86: ISST: Reset default callback on unregister
->   platform/x86: ISST: Fix usage counter
 > 
->  drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 1 +
->  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 2 ++
->  2 files changed, 3 insertions(+)
+>   platform/x86: hp-wmi: Add thermal profile for Victus 16-d1xxx (2023-
+> 06-08 11:00:17 +0200)
 > 
+> are available in the Git repository at:
+> 
+>   https://github.com/spandruvada/linux-kernel.git intel-sst
+> 
+> for you to fetch changes up to
+> 7244720ac137e3193db11b009fc33c0dd4e999c9:
+> 
+>   tools/power/x86/intel-speed-select: v1.16 release (2023-06-12
+> 16:11:04 -0700)
+> 
+> ----------------------------------------------------------------
+> Srinivas Pandruvada (3):
+>       tools/power/x86/intel-speed-select: Adjust scope of core-power
+> config
+>       tools/power/x86/intel-speed-select: Fix json formatting issue
+>       tools/power/x86/intel-speed-select: v1.16 release
+> 
+>  tools/power/x86/intel-speed-select/isst-config.c    | 13 ++++++++-----
+>  tools/power/x86/intel-speed-select/isst-core-tpmi.c | 43
+> +++++++++++++++++++++++++++++++++++--------
+>  2 files changed, 43 insertions(+), 13 deletions(-)
+> 
+> 
+> Thanks,
+> Srinivas
 
