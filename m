@@ -2,105 +2,222 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE670EB64D8
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jun 2023 06:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D83EB64D9
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jun 2023 01:53:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242909AbjFNGuX (ORCPT
+        id S236289AbjFOBxh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 14 Jun 2023 02:50:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53622 "EHLO
+        Wed, 14 Jun 2023 21:53:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242891AbjFNGuV (ORCPT
+        with ESMTP id S235531AbjFOBxg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Jun 2023 02:50:21 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB301A3;
-        Tue, 13 Jun 2023 23:50:20 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-666520247f8so324236b3a.2;
-        Tue, 13 Jun 2023 23:50:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686725420; x=1689317420;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mNU2A/dUYsnfw4tdADFd8+n69e8TqzXUbv0O6opxA8E=;
-        b=V62JOONWlQRzNU874AKBiipNAAJPArF8i6gxpgW+5O+5WMIRvclpKTGCqpMExANoxz
-         ROh9x2n1UvQOBt8IOr5NiJlgeyJMbYH1rZLKSc2mXjFRyaa7o+Jp/+h1QumUYB9IGRvT
-         SW/JAJiCP4HynCBdx1AYu51vxCAzQnrkN4EzAfCe2weiJNAobq2sC9Zi5P/d8wP/dlzv
-         SRxAl5BX+lMHOfwtfG4C0EWSD4Iko2kJeNO/NFxGmiDNunB0sWpBl0xeyP4Gve5M1/W1
-         Hb4UFqNVAW1lEJ4MDsHxEoGuG8dMRZEiLusAv/m918j+U1TxvIdCzvE/x7AXf8virniK
-         cexg==
+        Wed, 14 Jun 2023 21:53:36 -0400
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AC3BE69
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Jun 2023 18:53:35 -0700 (PDT)
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com [209.85.219.197])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 13AF73F0F8
+        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Jun 2023 01:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1686794013;
+        bh=4QZ5MF49DRVWjswQ0OeAsHwz2voC9Lsfi85wkJvwEAA=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=CQec5SrPXNrlw9AKRfarvVev/HBteyx5EhiEhkY8ROlg5RTywZqZr7ez3BRVlwl/V
+         KggGI4qYw/6t5rVQjsRxf3Saa1XFf/TktGksXoycHa78ihLrdObAakv7l9EBZZyxNM
+         +rq/pLsN8YnfTPPHi7q0tyLzG6WAO+lU8xUvf9DWoDTwg8VyuSfJsdt5H+JAplL7EE
+         ESvPLMCQ2xalimpaa2DdjzRhy99iqUyIgoe2q++j2+XPt4bOt1laUm3hnviFMzbYgq
+         YU3tOJntuPl6Wd9/wJMOzJ+jEuiLMDFGaPMTsVg/jKXhaWnLmoG/MvOyEJZhSjfgR4
+         /jgoNQb58CoVg==
+Received: by mail-yb1-f197.google.com with SMTP id 3f1490d57ef6-bce24604eeaso1338874276.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Jun 2023 18:53:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686725420; x=1689317420;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mNU2A/dUYsnfw4tdADFd8+n69e8TqzXUbv0O6opxA8E=;
-        b=UqJU6UbP52n/NczctyyjvZ9/zEAlsRNUWhLQ4KfAfPIGFktyJkZp2cxo+FAMY1PXY0
-         7Rx+Hcl+6qfjTrQSF4Qmw+XUKJKXx69MoPois/xQL1fP4+791qaOM98Z44qyzmqdp37K
-         DjSU9J/HWOol9Z6R+vi9riMDAwjULpBDy1Bx3fYc61gBikWZC2w/Bvu9XZqq1J/7RAYL
-         cSUVYkIM0p7tlLt/GWvDGI331/a+2s9pmt7+4hkUAzKVjiqFuAKXoNou6PRlejpgrX8V
-         gKv/hJkZj3BEcNQkSQo+rsCN87GwtcU3P0jeVOMlhsAZe8hyVvSQpw9Tbc7l5DZZMx4g
-         zNTw==
-X-Gm-Message-State: AC+VfDzdcdcagJh3LYr563TxvvZiJXNeOAWLeCfRP6b+f84GbBZ7pc8b
-        ZzVV8DW36jUxF6qP0tVieVw=
-X-Google-Smtp-Source: ACHHUZ6TCrTOyaQrRE/PfsRWkHfvCnSu/mmtmuZs/UIQm7YuEqQwaom1mQ4V+PTcqp9nf5Pgqp9S9w==
-X-Received: by 2002:a05:6a20:7fa3:b0:112:1e0d:14ae with SMTP id d35-20020a056a207fa300b001121e0d14aemr1054131pzj.7.1686725420098;
-        Tue, 13 Jun 2023 23:50:20 -0700 (PDT)
-Received: from localhost.localdomain ([61.68.230.184])
-        by smtp.gmail.com with ESMTPSA id a18-20020a62bd12000000b0064ff855751fsm9629371pff.4.2023.06.13.23.50.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jun 2023 23:50:19 -0700 (PDT)
-From:   Orlando Chamberlain <orlandoch.dev@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orlando Chamberlain <orlandoch.dev@gmail.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH 1/1] platform/x86: apple-gmux: don't use be32_to_cpu and cpu_to_be32
-Date:   Wed, 14 Jun 2023 16:49:32 +1000
-Message-ID: <20230614064931.3263-2-orlandoch.dev@gmail.com>
-X-Mailer: git-send-email 2.41.0
+        d=1e100.net; s=20221208; t=1686794011; x=1689386011;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4QZ5MF49DRVWjswQ0OeAsHwz2voC9Lsfi85wkJvwEAA=;
+        b=C3FnGLQS42OIvhmBMhZQmiXWOpT/dwiOgTfBxMGLj/Q2J6SsB5jKWpp1tXRa9+z397
+         opcw6Hw9fpmu98aBgs0xvQa3cPmwS6SlHxGVwlCZmjnmiANvQ29JxHw/+2Z5gMpH+CF+
+         YIEVXGuLruFMCRvQMNg/Sg0Q8ZV0gPRiDOyfdMc3+CitcsoOD6hi/aPHx4POe/do1zo9
+         mnR7rxQbwEUXuXurrMxwil0ipMPyA59jMoh2smbLvI8pv/r+r29WuoCMlU4pwKOBUXc5
+         v4sPALaVlWl9p9SJEnSXeLQqGtEidUoU+pwgHUvx89c16AUdm2MyPK7/JOD2S1bSsFdv
+         EC8A==
+X-Gm-Message-State: AC+VfDxfHHckJbW1vsFNSfo4QP5aa98bH6n/iPwabU46+MX8adh3RxiX
+        Rtkw0GXQ2NdopqayyrQAWcv4J1olExTdrtgScAf0tyCOpwBqd5x1ro3+T9AmKrAO2OoUJNXCmTx
+        cEJds77lsg2mirJH8yN0DIEwZZXIQllEbxOMDyjfhyDPB+/W4Bveodt9wZKej8rEq2Q0VmhTAUa
+        +cSQ==
+X-Received: by 2002:a25:bcd1:0:b0:bbb:14a6:fc85 with SMTP id l17-20020a25bcd1000000b00bbb14a6fc85mr3606207ybm.8.1686794011527;
+        Wed, 14 Jun 2023 18:53:31 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ6zuKyxqrimiqlrwXS43VKYK+HXSbIgd0UEF4pKCHTFk8UrzT6ON3as6ybqPj6IvapwGZTlbALch+5Ilu3GkaI=
+X-Received: by 2002:a25:bcd1:0:b0:bbb:14a6:fc85 with SMTP id
+ l17-20020a25bcd1000000b00bbb14a6fc85mr3606196ybm.8.1686794011161; Wed, 14 Jun
+ 2023 18:53:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230607034331.576623-1-acelan.kao@canonical.com>
+ <20230607042032.GA28835@srcf.ucam.org> <CAFv23QmDNUFcPwvSQt5aUxtmHasfr8wrF72ObvcO-X19gfn=LA@mail.gmail.com>
+ <20230607052724.GA29834@srcf.ucam.org> <CAFv23QkEdGnEz1q7vbyFCa9S9Dqh-zec72nRGyZ3wAz-8wpbvA@mail.gmail.com>
+ <20230607062341.GA30618@srcf.ucam.org> <20230607065604.yaivqbbd3dkawxo4@pali>
+ <CAFv23Q==r4newMXE3OWavRSRt-bEi5-qR0Vo-5HGLw4r9J36MA@mail.gmail.com>
+ <20230607074732.GA31666@srcf.ucam.org> <457e2a4a-e28a-cd24-c129-4ff6162ccc36@redhat.com>
+ <CAFv23QmVP4ZFAhAFBSx6ty-4fcQ-u9+uZb0xaD2gCJPCdpPvQg@mail.gmail.com>
+ <f27f0d06-0b18-06bb-cb1f-042527c1ca31@redhat.com> <CAFv23Q==ghYCW-ukKQJZ_JhYgS4CSCDwbg9sZL9_B1Pa_LviWg@mail.gmail.com>
+ <0132feaa-6a89-2a8a-9eb2-c444b61c01b3@redhat.com>
+In-Reply-To: <0132feaa-6a89-2a8a-9eb2-c444b61c01b3@redhat.com>
+From:   AceLan Kao <acelan.kao@canonical.com>
+Date:   Thu, 15 Jun 2023 09:53:19 +0800
+Message-ID: <CAFv23QmzjKA75Z=r9v-2BzePwaD_25MepBvpWXArThypH_rMsA@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-laptop: Add drm module soft dependency
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Sparce doesn't seem to like using be32_to_cpu and cpu_to_be32 to convert
-values for the MMIO gmux to/from the host architecture.
+Hi Hans,
 
-Instead use iowrite32be and ioread32be to always convert, which should be
-fine because apple-gmux is only used on x86 with is always little endian.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202305161712.5l3f4iI4-lkp@intel.com/
-Signed-off-by: Orlando Chamberlain <orlandoch.dev@gmail.com>
----
- drivers/platform/x86/apple-gmux.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index e02b4aea4f1e..cadbb557a108 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -278,7 +278,7 @@ static u32 gmux_mmio_read32(struct apple_gmux_data *gmux_data, int port)
- 	iowrite8(GMUX_MMIO_READ | sizeof(val),
- 		gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
- 	gmux_mmio_wait(gmux_data);
--	val = be32_to_cpu(ioread32(gmux_data->iomem_base));
-+	val = ioread32be(gmux_data->iomem_base);
- 	mutex_unlock(&gmux_data->index_lock);
- 
- 	return val;
-@@ -288,7 +288,7 @@ static void gmux_mmio_write32(struct apple_gmux_data *gmux_data, int port,
- 			       u32 val)
- {
- 	mutex_lock(&gmux_data->index_lock);
--	iowrite32(cpu_to_be32(val), gmux_data->iomem_base);
-+	iowrite32be(val, gmux_data->iomem_base);
- 	iowrite8(port & 0xff, gmux_data->iomem_base + GMUX_MMIO_PORT_SELECT);
- 	iowrite8(GMUX_MMIO_WRITE | sizeof(val),
- 		gmux_data->iomem_base + GMUX_MMIO_COMMAND_SEND);
--- 
-2.41.0
-
+Hans de Goede <hdegoede@redhat.com> =E6=96=BC 2023=E5=B9=B46=E6=9C=8813=E6=
+=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=884:54=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi AceLan,
+>
+> On 6/13/23 09:30, AceLan Kao wrote:
+> > Hans de Goede <hdegoede@redhat.com> =E6=96=BC 2023=E5=B9=B46=E6=9C=888=
+=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=885:16=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> >>
+> >> Hi AceLan,
+> >>
+> >> On 6/8/23 05:04, AceLan Kao wrote:
+> >>> Hans de Goede <hdegoede@redhat.com> =E6=96=BC 2023=E5=B9=B46=E6=9C=88=
+8=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=883:16=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> >>>>
+> >>>> Hi,
+> >>>>
+> >>>> On 6/7/23 09:47, Matthew Garrett wrote:
+> >>>>> On Wed, Jun 07, 2023 at 03:39:33PM +0800, AceLan Kao wrote:
+> >>>>>
+> >>>>>> What do you think if we unregister backlight devices if the backli=
+ght type
+> >>>>>> is larger than the current registered one.
+> >>>>>> Do this check in backlight_device_register() and unregister backli=
+ght
+> >>>>>> devices by the order raw(1) > platform(2) > firmware(3)
+> >>>>>> And maybe introduce a sticky bit into the backlight device if the =
+backlight
+> >>>>>> driver doesn't want to be removed.
+> >>>>>
+> >>>>> Hans looked at doing this, but there were some awkward corner cases=
+.
+> >>>>> When we first introduced this functionality, firmware was preferred=
+ to
+> >>>>> platform was preferred to raw - but on Intel, at least, this behavi=
+our
+> >>>>> changed with later versions of Windows. I don't think there's a sin=
+gle
+> >>>>> static policy that works, I think you need to pay attention to the =
+hints
+> >>>>> the platform gives you. How does Windows know which interface to us=
+e on
+> >>>>> this platform? The simplest solution may actually just be for
+> >>>>> dell-laptop to refuse to register a backlight if the platform claim=
+s to
+> >>>>> be Windows 8 or later.
+> >>>>
+> >>>> I like that idea.
+> >>>>
+> >>>> AceLan, I guess that you hit this easy while testing on a (developme=
+nt)
+> >>>> Meteor Lake platform ?
+> >>>>
+> >>>> I have had other/similar reports about Meteor Lake platforms.
+> >>>>
+> >>>> On hw from the last 10 years dell-laptop will not register
+> >>>> its vendor-type backlight class device because
+> >>>> acpi_video_get_backlight_type() will return acpi_backlight_video
+> >>>> there (1) so it does not matter if the GPU driver shows up only
+> >>>> later (2).
+> >>>>
+> >>>> But it seems that on Meteor Lake the ACPI tables will no longer
+> >>>> contain acpi_video backlight control support which causes
+> >>>> acpi_video_get_backlight_type() to return acpi_backlight_vendor (2).
+> >>>> triggering the issue you are seeing.
+> >>>>
+> >>>> Can you give the attached patch a try please ?
+> >>>>
+> >>>> Regards,
+> >>>>
+> >>>> Hans
+> >>>>
+> >>>>
+> >>>> 1) Starting with kernel >=3D 6.2 acpi_video.c will only register
+> >>>> the /sys/class/backlight/acpi_video# node after a drm/kms drivers
+> >>>> asks it to register it.
+> >>>>
+> >>>> 2) The native GPU driver will tell the drivers/acpi/video_detect.c
+> >>>> code that native backlight control is available changing
+> >>>> the return of acpi_video_get_backlight_type() to native, which
+> >>>> is why loading the native GPU driver first also fixes this issue.
+> >>>
+> >>> Hi Hans,
+> >>>
+> >>> Yes, this patch works for me, thanks.
+> >>>
+> >>> BTW, I encountered this issue on the RPL platform.
+> >>
+> >> Thank you for testing. I have updated the commit message
+> >> to reflect that this impacts both RPL and MTL platforms
+> >> and submitted the fix upstream:
+> >>
+> >> https://lore.kernel.org/linux-acpi/20230608091258.7963-1-hdegoede@redh=
+at.com/
+> >>
+> >> Regards,
+> >>
+> >> Hans
+> >>
+> >
+> > Hi Hans,
+> >
+> > I got another issue on the same platform.
+> > The first issue was that when set to DSC graphics only in the BIOS,
+> > I encountered the issue I reported here, dell_laptop creates dell_backl=
+ight
+> > and then nvidia creates nvidia_0 later.
+> >
+> > Now, set to hybrid mode in the BIOS, I found I still got 2 backlight in=
+terfaces
+> >    $ ls /sys/class/backlight/
+> >    acpi_video0  intel_backlight
+> > acpi_video0 is redundant and non-working.
+> >
+> > Do you think should I set this platform to the dmi quirk? Or is there a=
+nything
+> > I could try to get rid of this?
+>
+>
+> This is very hard to answer without more info.
+>
+> For starters please make sure that you are testing with the latest kernel=
+ and
+> provide full dmesg output for a boot with the BIOS set to hybrid mode.
+>
+> Regards,
+>
+> Hans
+>
+Sorry to bother you, the issue has been fixed by the below commit.
+e506731c8f35 ("ACPI: video: Make acpi_backlight=3Dvideo work independent
+from GPU driver")
+Thanks.
