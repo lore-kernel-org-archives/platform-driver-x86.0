@@ -2,253 +2,219 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2CBEB64D7
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jun 2023 12:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DC6EB64D8
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jun 2023 16:39:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231916AbjFPMed (ORCPT
+        id S245415AbjFPQjm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Jun 2023 08:34:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37370 "EHLO
+        Fri, 16 Jun 2023 12:39:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344984AbjFPMeS (ORCPT
+        with ESMTP id S229653AbjFPQjl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Jun 2023 08:34:18 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F77C268A;
-        Fri, 16 Jun 2023 05:34:17 -0700 (PDT)
-Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DF6F72B3;
-        Fri, 16 Jun 2023 14:33:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1686918823;
-        bh=7T25XohTxNCWxVVKvkZnxKSDEb8hr0ts7gZi6XA4StM=;
-        h=Date:To:Cc:References:From:Subject:In-Reply-To:From;
-        b=dvWrIQmrKccgFWiNhBjYjv2axli6xCe57uu9T6ETegjjnSZGMDQgzE3DiPfXp7+yg
-         r2UEWm7i9tuJ5UXGCYXoc6iD7xa3L6cQ8M9qXXKrWjBz7ThAFp2XGWCBfedlmZvHvZ
-         0e+AE/QpCt6jgdTN97M6MBTknfSVuLQ6dTbGQzqc=
-Message-ID: <471be538-7d70-5cf3-67ce-28d5a9480b4b@ideasonboard.com>
-Date:   Fri, 16 Jun 2023 13:34:11 +0100
+        Fri, 16 Jun 2023 12:39:41 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDE752D48;
+        Fri, 16 Jun 2023 09:39:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686933580; x=1718469580;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7ksvNxfLF9nc4Gxz9YoJmx4LwenYmKnMcgqFDHXrwp0=;
+  b=V43zJ2tJoUJ/kYYN1LPzy0JhGMOBUB3YP1vRGqiYSidBDeW7b945xTf5
+   rNucFYRbOO27MkCpvGKFdVCAiOEQaBx6NxAw0Yti8XRhxKh/s+wMrtmtn
+   8zY6WEIsTxPUgQvuzDetmBW8UaKzJ/N7LflIO7p3hKow98PW1x4eLZ0O8
+   83Ds5o1Uww72FxYqH01lV/vB5v2TE7WTN4flp4rUCci985VTKzpn8ST+W
+   tU/6KN/7w7si0HHkCdwacM7cOkV3bfgZ6ncMBfkvIqhadpiEFnTqL+FrJ
+   pHrmRO4UlW2/k6AN28x2rPvv1Yogg/KYlHm5+fsbQcqnp9TRafJrwGt/j
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="339589389"
+X-IronPort-AV: E=Sophos;i="6.00,248,1681196400"; 
+   d="scan'208";a="339589389"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 09:39:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="716083284"
+X-IronPort-AV: E=Sophos;i="6.00,248,1681196400"; 
+   d="scan'208";a="716083284"
+Received: from jbonds-mobl.amr.corp.intel.com (HELO spandruv-desk1.amr.corp.intel.com) ([10.209.56.162])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 09:39:40 -0700
+Message-ID: <af450786e98c8517da341d1334431c4f67911f9a.camel@linux.intel.com>
+Subject: Re: [PATCH 1/2] platform/x86/intel/tpmi: Read feature control status
+From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Fri, 16 Jun 2023 09:39:39 -0700
+In-Reply-To: <f7a0db17-dfe6-f8e0-4aed-6a198fde6dea@linux.intel.com>
+References: <20230615193302.2507338-1-srinivas.pandruvada@linux.intel.com>
+         <20230615193302.2507338-2-srinivas.pandruvada@linux.intel.com>
+         <f7a0db17-dfe6-f8e0-4aed-6a198fde6dea@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>, Hao Yao <hao.yao@intel.com>,
-        Bingbu Cao <bingbu.cao@intel.com>
-Cc:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
-References: <20230609204228.74967-1-hdegoede@redhat.com>
- <20230609204228.74967-3-hdegoede@redhat.com>
-From:   Dan Scally <dan.scally@ideasonboard.com>
-Subject: Re: [PATCH 2/4] platform/x86: int3472: discrete: Remove
- sensor_config-s
-In-Reply-To: <20230609204228.74967-3-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans
+On Fri, 2023-06-16 at 10:13 +0300, Ilpo Järvinen wrote:
+> On Thu, 15 Jun 2023, Srinivas Pandruvada wrote:
+> 
+> > 
 
-On 09/06/2023 21:42, Hans de Goede wrote:
-> Currently the only 2 sensor_config-s both specify "avdd" as supply-id.
->
-> The INT3472 device is going to be the only supplier of a regulator for
-> the sensor device.
->
-> So there is no chance of collisions with other regulator suppliers
-> and it is undesirable to need to manually add new entries to
-> int3472_sensor_configs[] for each new sensor module which uses
-> a GPIO regulator.
->
-> Instead just always use "avdd" as supply-id when registering
-> the GPIO regulator.
->
-> If necessary for specific sensor drivers then other supply-ids can
-> be added as aliases in the future, adding aliases will be safe
-> since INT3472 will be the only regulator supplier for the sensor.
->
-> Cc: Hao Yao <hao.yao@intel.com>
-> Cc: Bingbu Cao <bingbu.cao@intel.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->   .../x86/intel/int3472/clk_and_regulator.c     | 38 ++++++++++------
->   drivers/platform/x86/intel/int3472/common.h   |  7 +--
->   drivers/platform/x86/intel/int3472/discrete.c | 45 +++----------------
->   3 files changed, 31 insertions(+), 59 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-> index b3a55c618151..30686091300d 100644
-> --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-> +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-> @@ -232,32 +232,42 @@ void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472)
->   	gpiod_put(int3472->clock.ena_gpio);
->   }
->   
-> +/*
-> + * The INT3472 device is going to be the only supplier of a regulator for
-> + * the sensor device. But unlike the clk framework the regulator framework
-> + * does not allow matching by consumer-device-name only.
-> + *
-> + * Ideally all sensor drivers would use "avdd" as supply-id. But for drivers
-> + * where this cannot be changed because another supply-id is already used in
-> + * e.g. DeviceTree files an alias for the other supply-id can be added here.
-> + *
-> + * Do not forget to update GPIO_REGULATOR_SUPPLY_MAP_COUNT when changing this.
-> + */
-> +static const char * const skl_int3472_regulator_map_supplies[] = {
-> +	"avdd",
-> +};
-> +
->   int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
->   				   struct acpi_resource_gpio *agpio)
->   {
-> -	const struct int3472_sensor_config *sensor_config;
->   	char *path = agpio->resource_source.string_ptr;
-> -	struct regulator_consumer_supply supply_map;
->   	struct regulator_init_data init_data = { };
->   	struct regulator_config cfg = { };
-> -	int ret;
-> +	int i, ret;
->   
-> -	sensor_config = int3472->sensor_config;
-> -	if (IS_ERR(sensor_config)) {
-> -		dev_err(int3472->dev, "No sensor module config\n");
-> -		return PTR_ERR(sensor_config);
-> +	if (ARRAY_SIZE(skl_int3472_regulator_map_supplies) != GPIO_REGULATOR_SUPPLY_MAP_COUNT) {
-> +		dev_err(int3472->dev, "Internal error ARRAY_SIZE(skl_int3472_regulator_map_supplies) != GPIO_REGULATOR_SUPPLY_MAP_COUNT\n");
-> +		return -EINVAL;
+[...]
+
+> > +       /* set command id to 0x10 for TPMI_GET_STATE */
+> > +       data = TPMI_GET_STATE_CMD;
+> > +       /* 32 bits for DATA offset and +8 for feature_id field */
+> > +       data |= ((u64)feature_id << (TPMI_CMD_DATA_OFFSET +
+> > TPMI_GET_STATE_CMD_DATA_OFFSET));
+> 
+> This looks like you should add the GENMASK_ULL() for the fields and
+> use 
+> FIELD_PREP() instead of adding all those OFFSET defines + custom
+> shifting.
+
+You mean, I should change one shift instruction, to FIELD_PREP()
+which will use three instructions to shift, sub and AND?
+((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask);
+
+> 
+> > +
+> > +       /* Write at command offset for qword access */
+> > +       writeq(data, tpmi_info->tpmi_control_mem +
+> > TPMI_COMMAND_OFFSET);
+> > +
+> > +       ret = tpmi_wait_for_owner(tpmi_info, TPMI_OWNER_IN_BAND);
+> > +       if (ret)
+> > +               goto err_unlock;
+> > +
+> > +       /* Set Run Busy and packet length of 2 dwords */
+> > +       writeq(BIT_ULL(TPMI_CONTROL_RB_BIT) | (TPMI_CMD_PKT_LEN <<
+> > TPMI_CMD_PKT_LEN_OFFSET),
+> 
+> Define using BIT_ULL(0) instead. Use FIELD_PREP().
 
 
-It would be nice to be able to prevent this mismatch somehow so it's never a problem; can we use 
-static_assert() perhaps? Or at least less of a problem, as I gather that gets compiled to a no-op 
-sometimes.
-
->   	}
->   
-> -	if (!sensor_config->supply_map.supply) {
-> -		dev_err(int3472->dev, "No supply name defined\n");
-> -		return -ENODEV;
-> +	for (i = 0; i < ARRAY_SIZE(skl_int3472_regulator_map_supplies); i++) {
-> +		int3472->regulator.supply_map[i].supply = skl_int3472_regulator_map_supplies[i];
-> +		int3472->regulator.supply_map[i].dev_name = int3472->sensor_name;
->   	}
->   
->   	init_data.constraints.valid_ops_mask = REGULATOR_CHANGE_STATUS;
-> -	init_data.num_consumer_supplies = 1;
-> -	supply_map = sensor_config->supply_map;
-> -	supply_map.dev_name = int3472->sensor_name;
-> -	init_data.consumer_supplies = &supply_map;
-> +	init_data.consumer_supplies = int3472->regulator.supply_map;
-> +	init_data.num_consumer_supplies = GPIO_REGULATOR_SUPPLY_MAP_COUNT;
->   
->   	snprintf(int3472->regulator.regulator_name,
->   		 sizeof(int3472->regulator.regulator_name), "%s-regulator",
-> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
-> index 735567f374a6..225b067c854d 100644
-> --- a/drivers/platform/x86/intel/int3472/common.h
-> +++ b/drivers/platform/x86/intel/int3472/common.h
-> @@ -28,6 +28,7 @@
->   
->   #define GPIO_REGULATOR_NAME_LENGTH				21
->   #define GPIO_REGULATOR_SUPPLY_NAME_LENGTH			9
-> +#define GPIO_REGULATOR_SUPPLY_MAP_COUNT				1
->   
->   #define INT3472_LED_MAX_NAME_LEN				32
->   
-> @@ -69,11 +70,6 @@ struct int3472_cldb {
->   	u8 reserved2[17];
->   };
->   
-> -struct int3472_sensor_config {
-> -	const char *sensor_module_name;
-> -	struct regulator_consumer_supply supply_map;
-> -};
-> -
->   struct int3472_discrete_device {
->   	struct acpi_device *adev;
->   	struct device *dev;
-> @@ -83,6 +79,7 @@ struct int3472_discrete_device {
->   	const struct int3472_sensor_config *sensor_config;
->   
->   	struct int3472_gpio_regulator {
-> +		struct regulator_consumer_supply supply_map[GPIO_REGULATOR_SUPPLY_MAP_COUNT];
->   		char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
->   		char supply_name[GPIO_REGULATOR_SUPPLY_NAME_LENGTH];
->   		struct gpio_desc *gpio;
-> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-> index 2ab3c7466986..3b410428cec2 100644
-> --- a/drivers/platform/x86/intel/int3472/discrete.c
-> +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> @@ -34,48 +34,17 @@ static const guid_t cio2_sensor_module_guid =
->   	GUID_INIT(0x822ace8f, 0x2814, 0x4174,
->   		  0xa5, 0x6b, 0x5f, 0x02, 0x9f, 0xe0, 0x79, 0xee);
->   
-> -/*
-> - * Here follows platform specific mapping information that we can pass to
-> - * the functions mapping resources to the sensors. Where the sensors have
-> - * a power enable pin defined in DSDT we need to provide a supply name so
-> - * the sensor drivers can find the regulator. The device name will be derived
-> - * from the sensor's ACPI device within the code.
-> - */
-> -static const struct int3472_sensor_config int3472_sensor_configs[] = {
-> -	/* Lenovo Miix 510-12ISK - OV5648, Rear */
-> -	{ "GEFF150023R", REGULATOR_SUPPLY("avdd", NULL) },
-> -	/* Surface Go 1&2 - OV5693, Front */
-> -	{ "YHCU", REGULATOR_SUPPLY("avdd", NULL) },
-> -};
-> -
-> -static const struct int3472_sensor_config *
-> -skl_int3472_get_sensor_module_config(struct int3472_discrete_device *int3472)
-> +static void skl_int3472_log_sensor_module_name(struct int3472_discrete_device *int3472)
+This code will run only on X86 64 bit, not a common device driver which
+will run in any architecture.
+Please let me know why FIELD_PREP() is better.
 
 
-I don't really think this is worth logging if we're removing the matching based on it - we can get 
-it from the DSDT anyway if we need to.
+> 
+> I'd drop _BIT from the define name but I leave it up to you, it just 
+> makes your lines longer w/o much added value.
+> 
+> > +              tpmi_info->tpmi_control_mem +
+> > TPMI_CONTROL_STATUS_OFFSET);
+> > +
+> > +       ret = read_poll_timeout(readq, control, !(control &
+> > BIT_ULL(TPMI_CONTROL_RB_BIT)),
+> > +                               TPMI_RB_TIMEOUT_US,
+> > TPMI_RB_TIMEOUT_MAX_US, false,
+> > +                               tpmi_info->tpmi_control_mem +
+> > TPMI_CONTROL_STATUS_OFFSET);
+> > +       if (ret)
+> > +               goto done_proc;
+> > +
+> > +       control = FIELD_GET(TPMI_GENMASK_STATUS, control);
+> > +       if (control != TPMI_CMD_STATUS_SUCCESS) {
+> > +               ret = -EBUSY;
+> > +               goto done_proc;
+> > +       }
+> > +
+> > +       data = readq(tpmi_info->tpmi_control_mem +
+> > TPMI_COMMAND_OFFSET);
+> > +       data >>= TPMI_CMD_DATA_OFFSET; /* Upper 32 bits are for
+> > TPMI_DATA */
+> 
+> Define the field with GENMASK() and use FIELD_GET().
+> 
+Again 3 instructions instead of 1.
 
->   {
->   	union acpi_object *obj;
-> -	unsigned int i;
->   
->   	obj = acpi_evaluate_dsm_typed(int3472->sensor->handle,
->   				      &cio2_sensor_module_guid, 0x00,
->   				      0x01, NULL, ACPI_TYPE_STRING);
-> -
-> -	if (!obj) {
-> -		dev_err(int3472->dev,
-> -			"Failed to get sensor module string from _DSM\n");
-> -		return ERR_PTR(-ENODEV);
-> +	if (obj) {
-> +		dev_dbg(int3472->dev, "Sensor module id: '%s'\n", obj->string.pointer);
-> +		ACPI_FREE(obj);
->   	}
-> -
-> -	for (i = 0; i < ARRAY_SIZE(int3472_sensor_configs); i++) {
-> -		if (!strcmp(int3472_sensor_configs[i].sensor_module_name,
-> -			    obj->string.pointer))
-> -			break;
-> -	}
-> -
-> -	ACPI_FREE(obj);
-> -
-> -	if (i >= ARRAY_SIZE(int3472_sensor_configs))
-> -		return ERR_PTR(-EINVAL);
-> -
-> -	return &int3472_sensor_configs[i];
->   }
->   
->   static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int3472,
-> @@ -266,11 +235,7 @@ static int skl_int3472_parse_crs(struct int3472_discrete_device *int3472)
->   	LIST_HEAD(resource_list);
->   	int ret;
->   
-> -	/*
-> -	 * No error check, because not having a sensor config is not necessarily
-> -	 * a failure mode.
-> -	 */
-> -	int3472->sensor_config = skl_int3472_get_sensor_module_config(int3472);
-> +	skl_int3472_log_sensor_module_name(int3472);
->   
->   	ret = acpi_dev_get_resources(int3472->adev, &resource_list,
->   				     skl_int3472_handle_gpio_resources,
+> > +
+> > +       *disabled = 0;
+> > +       *locked = 0;
+> > +
+> > +       if (!(data & BIT_ULL(TPMI_GET_STATUS_BIT_ENABLE)))
+> 
+> Put BIT_ULL() into the define.
+Good idea.
+
+> 
+> Perhaps drop _BIT_ from the name.
+I can do that.
+
+> 
+> > +               *disabled = 1;
+> > +
+> > +       if (data & BIT_ULL(TPMI_GET_STATUS_BIT_LOCKED))
+> 
+> Ditto.
+> 
+> > +               *locked = 1;
+> > +
+> > +       ret = 0;
+> > +
+> > +done_proc:
+> > +       /* SET CPL "completion"bit */
+> 
+> Missing space.
+> 
+OK
+
+> > +       writeq(BIT_ULL(TPMI_CONTROL_CPL_BIT),
+> 
+> BIT_ULL() to define.
+> 
+> > +              tpmi_info->tpmi_control_mem +
+> > TPMI_CONTROL_STATUS_OFFSET);
+> > +
+> > +err_unlock:
+> > +       mutex_unlock(&tpmi_dev_lock);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> > +int tpmi_get_feature_status(struct auxiliary_device *auxdev, int
+> > feature_id,
+> > +                           int *locked, int *disabled)
+> > +{
+> > +       struct intel_vsec_device *intel_vsec_dev =
+> > dev_to_ivdev(auxdev->dev.parent);
+> > +       struct intel_tpmi_info *tpmi_info =
+> > auxiliary_get_drvdata(&intel_vsec_dev->auxdev);
+> > +
+> > +       return tpmi_read_feature_status(tpmi_info, feature_id,
+> > locked, disabled);
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(tpmi_get_feature_status, INTEL_TPMI);
+> > +
+> > +static void tpmi_set_control_base(struct auxiliary_device *auxdev,
+> > +                                 struct intel_tpmi_info
+> > *tpmi_info,
+> > +                                 struct intel_tpmi_pm_feature
+> > *pfs)
+> > +{
+> > +       void __iomem *mem;
+> > +       u16 size;
+> > +
+> > +       size = pfs->pfs_header.num_entries * pfs-
+> > >pfs_header.entry_size * 4;
+> 
+> Can this overflow u16? Where does pfs_header content originate from?
+We can add a check, but this is coming from a trusted and validated x86
+core (Not an add on IP), which not only driver uses but all PM IP in
+the hardware.
+
+Thanks,
+Srinivas
+
+> If 
+> from HW, how is it the input validated?
+> 
+
