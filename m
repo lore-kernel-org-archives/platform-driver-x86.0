@@ -2,406 +2,199 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A63EB64DA
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jun 2023 19:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21AFEB64DA
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jun 2023 02:21:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229530AbjFOTd3 (ORCPT
+        id S230435AbjFPCVk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 15 Jun 2023 15:33:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54378 "EHLO
+        Thu, 15 Jun 2023 22:21:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231312AbjFOTd0 (ORCPT
+        with ESMTP id S231742AbjFPCVk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Jun 2023 15:33:26 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02FF62951;
-        Thu, 15 Jun 2023 12:33:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686857604; x=1718393604;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=v0J42xf/QqCOKJ7o2d6jupI6M9TKhOhr6bS65CJMIE8=;
-  b=PhBXDuaZEbPUIAKZyzdFIktPz52lsyKGBW2gYoT+6yJ2Ts2FaIZd4buF
-   uLSb7ADVnraTnuPQsxQe0gtzKSKj2qpF6DaC6nD6+323If3gfw5RgQE0a
-   em/KjopZrnMB/uCUHooIZMpWqvTQYNZIGg4j+xTbqCTO9p6xRxU3BeoyD
-   rBbzPHxAmi2O2KBeorrGVDToK0poHw+1wMiYrWvPzl2hbkmSuMsoF0v/f
-   P4N7WzZgMyYba2eEyK8DuLu2vbpuHUEg313gfUzUpgL9vm2ptCR5wkltM
-   wcIjFACqYXDmR6mMtTJh7Z/PFrtb5HiLOrnDH2ffGaSH0Oiv5WqU2CL+I
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="359019798"
-X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="359019798"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 12:33:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="825414310"
-X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="825414310"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Jun 2023 12:33:23 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     hdegoede@redhat.com, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 2/2] platform/x86/intel/tpmi: Add debugfs interface
-Date:   Thu, 15 Jun 2023 12:33:02 -0700
-Message-Id: <20230615193302.2507338-3-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230615193302.2507338-1-srinivas.pandruvada@linux.intel.com>
-References: <20230615193302.2507338-1-srinivas.pandruvada@linux.intel.com>
+        Thu, 15 Jun 2023 22:21:40 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 079DD2683;
+        Thu, 15 Jun 2023 19:21:39 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-544c0d768b9so239702a12.0;
+        Thu, 15 Jun 2023 19:21:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686882098; x=1689474098;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=+4N7B70/Rv7BZa0SRzL9Af0Cexudd4LOxkULscQwulc=;
+        b=ih7VP9eLFtU45PXs4IJnZ9z9j4G6J5rlbveKnJheJbRja1IdfK1B0UMLuINP703fZf
+         ArFswEtxYRVWp5D++oNTqwSc9xSUWp581amaALmzoZRHcokQAh8mS52AxSGRJIZ/kzzh
+         ANU5TnuEyP09iuPjmy1pDypXlPySbifM3i5SNy+X4+Rc39z1m934QQ3bvNfdUoLyhZWb
+         gc7YBW2nxdDcSDi/JooaiFt2LVdUeAQAtgwAfvMhEHnWjrq4CrNBmWtlQFB3283Kvbjx
+         kTMvBN99G+6v9rSSx2kvuKO670h6DLszdz9pEAEdyZlPeMwgRDLM15Gb54zQDuhN3afA
+         +Ntw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686882098; x=1689474098;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+4N7B70/Rv7BZa0SRzL9Af0Cexudd4LOxkULscQwulc=;
+        b=TxP5YB+X2c8YbA2bCuLMZPqrqECd5vPVtek2HCVfiOWTARlwUaMRySsFvE47vGCTXq
+         0SXaGamd7PcVbYAtKMRS6mfc6RdM8f6xgUiMyssqtM2/SCVlNpMYTp679j4ylTFDdgw9
+         8iXVR1LV0fq3nF6A9vd1+ec2JW2HxVtko50TvqTcIu5EfVwRVBst8M+tKpCE/GWq2rhw
+         IUF23gG0R7fAluwaIBBFlzPClSSHePR0ojZVNvIt5AlTq4/tMQbelJMTVL40Z97fl6df
+         wmAvZkFDrM7SXjixXIfWJdWGYFyWqIYg+YxdB9+FwIHSK/hqNiyBEUapThqSK2Ofx9zG
+         6jrg==
+X-Gm-Message-State: AC+VfDwX6+XJJXQpMWBzsR3LGZcMKHGiz+ip0uvkuGiMBJCs2cyHJU8o
+        X65zn4pM0/znUu+WcTfWB3c=
+X-Google-Smtp-Source: ACHHUZ7v4dc+4lIw84np7JkL1X+Nb2OA35xK70EZgiClGOKBg6ohZoxnfl8hdOF3Pl7ho0vy9SyKyw==
+X-Received: by 2002:a05:6a20:9192:b0:10f:be0:4dce with SMTP id v18-20020a056a20919200b0010f0be04dcemr1522678pzd.8.1686882098320;
+        Thu, 15 Jun 2023 19:21:38 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r9-20020a62e409000000b00666a83bd544sm1371070pfh.23.2023.06.15.19.21.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Jun 2023 19:21:37 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <a144a969-fa29-bc05-3daf-c6346dae644c@roeck-us.net>
+Date:   Thu, 15 Jun 2023 19:21:35 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2 3/6] hwmon: (k10temp) Check return value of
+ amd_smn_read()
+Content-Language: en-US
+To:     Yazen Ghannam <yazen.ghannam@amd.com>, x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        markgross@kernel.org, hdegoede@redhat.com,
+        Shyam-sundar.S-k@amd.com, linux-edac@vger.kernel.org,
+        clemens@ladisch.de, jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+        mario.limonciello@amd.com, babu.moger@amd.com
+References: <20230615160328.419610-1-yazen.ghannam@amd.com>
+ <20230615160328.419610-4-yazen.ghannam@amd.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <20230615160328.419610-4-yazen.ghannam@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add debugfs interface for debugging TPMI configuration and register
-contents. This shows PFS (PM Feature structure) for each TPMI device.
+On 6/15/23 09:03, Yazen Ghannam wrote:
+> Check the return value of amd_smn_read() before saving a value. This
+> ensures invalid values aren't saved or used.
+> 
+> There are three cases here with slightly different behavior.
+> 
+> 1) read_tempreg_nb_zen():
+> 	This is a function pointer which does not include a return code.
+> 	In this case, set the register value to 0 on failure. This
+> 	enforces Read-as-Zero behavior.
+> 
+> 2) k10temp_read_temp():
+> 	This function does have return codes, so return the error code
+> 	from the failed register read. Continued operation is not
+> 	necessary, since there is no valid data from the register.
+> 	Furthermore, if the register value was set to 0, then the
+> 	following operation would underflow.
+> 
+> 3) k10temp_get_ccd_support():
+> 	This function reads the same register from multiple CCD
+> 	instances in a loop. And a bitmask is formed if a specific bit
+> 	is set in each register instance. The loop should continue on a
+> 	failed register read, skipping the bit check.
+> 
+> Furthermore, the __must_check attribute will be added to amd_smn_read().
+> Therefore, this change is required to avoid compile-time warnings.
+> 
+> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> Cc: stable@vger.kernel.org
 
-For each feature shows full register contents and allows to modify
-register at an offset.
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-There is a help file, which explains debugfs contents and operations.
-
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel/tpmi.c | 245 +++++++++++++++++++++++++++++-
- 1 file changed, 238 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
-index 9545e9cdb924..9ec9c56bca68 100644
---- a/drivers/platform/x86/intel/tpmi.c
-+++ b/drivers/platform/x86/intel/tpmi.c
-@@ -48,12 +48,14 @@
- 
- #include <linux/auxiliary_bus.h>
- #include <linux/bitfield.h>
-+#include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/intel_tpmi.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-+#include <linux/string_helpers.h>
- 
- #include "vsec.h"
- 
-@@ -86,12 +88,14 @@ struct intel_tpmi_pfs_entry {
-  * @vsec_offset: Starting MMIO address for this feature in bytes. Essentially
-  *		 this offset = "Address" from VSEC header + PFS Capability
-  *		 offset for this feature entry.
-+ * @vsec_dev:	Pointer to intel_vsec_device structure for this TPMI device
-  *
-  * Represents TPMI instance information for one TPMI ID.
-  */
- struct intel_tpmi_pm_feature {
- 	struct intel_tpmi_pfs_entry pfs_header;
- 	unsigned int vsec_offset;
-+	struct intel_vsec_device *vsec_dev;
- };
- 
- /**
-@@ -102,6 +106,7 @@ struct intel_tpmi_pm_feature {
-  * @pfs_start:		Start of PFS offset for the TPMI instances in this device
-  * @plat_info:		Stores platform info which can be used by the client drivers
-  * @tpmi_control_mem:	Memory mapped IO for getting control information
-+ * @dbgfs_dir:		debugfs entry pointer
-  *
-  * Stores the information for all TPMI devices enumerated from a single PCI device.
-  */
-@@ -112,6 +117,7 @@ struct intel_tpmi_info {
- 	u64 pfs_start;
- 	struct intel_tpmi_plat_info plat_info;
- 	void __iomem *tpmi_control_mem;
-+	struct dentry *dbgfs_dir;
- };
- 
- /**
-@@ -303,6 +309,222 @@ int tpmi_get_feature_status(struct auxiliary_device *auxdev, int feature_id,
- }
- EXPORT_SYMBOL_NS_GPL(tpmi_get_feature_status, INTEL_TPMI);
- 
-+static int tpmi_help_show(struct seq_file *s, void *unused)
-+{
-+	const char *help =
-+		"TPMI debugfs help\n"
-+		"There will be multiple instances of debugfs folders, one for each package\n"
-+		"E.g. tpmi-0000:00:03.1\n"
-+		"Attributes:\n"
-+		"\tpfs_dump: Shows all PFS entries. Refer to TPMI spec for details\n"
-+		"\tEach of the TPMI ID will have its folder for read/write register access\n"
-+		"\tThe name of the folder suffixed with tpmi ID\n"
-+		"\tEach folder contains two entries\n"
-+		"\tmem_dump and mem_write\n"
-+		"\tmem_dump: Show register contents of full PFS for all TPMI instances\n"
-+		"\tThe total size will be pfs->entry_size * pfs->number of entries * 4\n"
-+		"\tmem_write: Allows to write at any offset. Hardware ignores writes on read only memory\n"
-+		"\tRead/write is at offset multiples of 4\n"
-+		"\tThe format is instance:offset:contents\n"
-+		"\tThe values are in hex\n"
-+		"\t\tExample: echo 0,0x20,0xff > mem_write\n"
-+		"\t\tExample: echo 1,64,64 > mem_write\n";
-+
-+	seq_puts(s, help);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(tpmi_help);
-+
-+static int tpmi_pfs_dbg_show(struct seq_file *s, void *unused)
-+{
-+	struct intel_tpmi_info *tpmi_info = s->private;
-+	int i, ret;
-+
-+	seq_printf(s, "tpmi PFS start offset 0x:%llx\n", tpmi_info->pfs_start);
-+	seq_puts(s, "tpmi_id\t\tnum_entries\tentry_size\t\tcap_offset\tattribute\tfull_base_pointer_for_memmap\tlocked\tdisabled\n");
-+	for (i = 0; i < tpmi_info->feature_count; ++i) {
-+		struct intel_tpmi_pm_feature *pfs;
-+		int locked, disabled;
-+
-+		pfs = &tpmi_info->tpmi_features[i];
-+		ret = tpmi_read_feature_status(tpmi_info, pfs->pfs_header.tpmi_id, &locked, &disabled);
-+		if (ret) {
-+			locked = 'U';
-+			disabled = 'U';
-+		} else {
-+			disabled = disabled ? 'Y' : 'N';
-+			locked = locked ? 'Y' : 'N';
-+		}
-+		seq_printf(s, "0x%02x\t\t0x%02x\t\t0x%06x\t\t0x%04x\t\t0x%02x\t\t0x%x\t\t\t%c\t%c\n",
-+			   pfs->pfs_header.tpmi_id, pfs->pfs_header.num_entries, pfs->pfs_header.entry_size,
-+			   pfs->pfs_header.cap_offset, pfs->pfs_header.attribute, pfs->vsec_offset, locked, disabled);
-+	}
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(tpmi_pfs_dbg);
-+
-+#define MEM_DUMP_COLUMN_COUNT	8
-+
-+static int tpmi_mem_dump_show(struct seq_file *s, void *unused)
-+{
-+	size_t row_size = MEM_DUMP_COLUMN_COUNT * sizeof(u32);
-+	struct intel_tpmi_pm_feature *pfs = s->private;
-+	int count, ret = 0;
-+	void __iomem *mem;
-+	u16 size;
-+	u32 off;
-+
-+	off = pfs->vsec_offset;
-+
-+	mutex_lock(&tpmi_dev_lock);
-+
-+	for (count = 0; count < pfs->pfs_header.num_entries; ++count) {
-+		u8 *buffer;
-+
-+		size = pfs->pfs_header.entry_size * sizeof(u32);
-+		buffer = kmalloc(size, GFP_KERNEL);
-+		if (!buffer) {
-+			ret = -ENOMEM;
-+			goto done_mem_show;
-+		}
-+
-+		seq_printf(s, "TPMI Instance:%d offset:0x%x\n", count, off);
-+
-+		mem = ioremap(off, size);
-+		if (!mem) {
-+			ret = -ENOMEM;
-+			kfree(buffer);
-+			goto done_mem_show;
-+		}
-+
-+		memcpy_fromio(buffer, mem, size);
-+
-+		seq_hex_dump(s, " ", DUMP_PREFIX_OFFSET, row_size, sizeof(u32), buffer, size, false);
-+
-+		iounmap(mem);
-+		kfree(buffer);
-+
-+		off += size;
-+	}
-+
-+done_mem_show:
-+	mutex_unlock(&tpmi_dev_lock);
-+
-+	return ret;
-+}
-+DEFINE_SHOW_ATTRIBUTE(tpmi_mem_dump);
-+
-+static ssize_t mem_write(struct file *file, const char __user *userbuf, size_t len, loff_t *ppos)
-+{
-+	struct seq_file *m = file->private_data;
-+	struct intel_tpmi_pm_feature *pfs = m->private;
-+	u32 addr, value, punit;
-+	u32 num_elems, *array;
-+	void __iomem *mem;
-+	u16 size;
-+	int ret;
-+
-+	ret = parse_int_array_user(userbuf, len, (int **)&array);
-+	if (ret < 0)
-+		return ret;
-+
-+	num_elems = *array;
-+	if (num_elems != 3) {
-+		ret = -EINVAL;
-+		goto exit_write;
-+	}
-+
-+	punit = array[1];
-+	addr = array[2];
-+	value = array[3];
-+
-+	if (punit >= pfs->pfs_header.num_entries) {
-+		ret = -EINVAL;
-+		goto exit_write;
-+	}
-+
-+	size = pfs->pfs_header.entry_size * sizeof(u32);
-+	if (addr >= size) {
-+		ret = -EINVAL;
-+		goto exit_write;
-+	}
-+
-+	mutex_lock(&tpmi_dev_lock);
-+
-+	mem = ioremap(pfs->vsec_offset + (punit * size), size);
-+	if (!mem) {
-+		ret = -ENOMEM;
-+		goto unlock_mem_write;
-+	}
-+
-+	writel(value, mem + addr);
-+
-+	iounmap(mem);
-+
-+	ret = len;
-+
-+unlock_mem_write:
-+	mutex_unlock(&tpmi_dev_lock);
-+
-+exit_write:
-+	kfree(array);
-+
-+	return ret;
-+}
-+
-+static int mem_write_show(struct seq_file *s, void *unused)
-+{
-+	return 0;
-+}
-+
-+static int mem_write_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, mem_write_show, inode->i_private);
-+}
-+
-+static const struct file_operations mem_write_ops = {
-+	.open           = mem_write_open,
-+	.read           = seq_read,
-+	.write          = mem_write,
-+	.llseek         = seq_lseek,
-+	.release        = single_release,
-+};
-+
-+#define tpmi_to_dev(info)	(&info->vsec_dev->pcidev->dev)
-+
-+static void tpmi_dbgfs_register(struct intel_tpmi_info *tpmi_info)
-+{
-+	struct dentry *top_dir;
-+	char name[64];
-+	int i;
-+
-+	snprintf(name, sizeof(name), "tpmi-%s", dev_name(tpmi_to_dev(tpmi_info)));
-+	top_dir = debugfs_create_dir(name, NULL);
-+	if (IS_ERR_OR_NULL(top_dir))
-+		return;
-+
-+	tpmi_info->dbgfs_dir = top_dir;
-+
-+	debugfs_create_file("pfs_dump", 0444, top_dir, tpmi_info,
-+			    &tpmi_pfs_dbg_fops);
-+	debugfs_create_file("help", 0444, top_dir, NULL, &tpmi_help_fops);
-+	for (i = 0; i < tpmi_info->feature_count; ++i) {
-+		struct intel_tpmi_pm_feature *pfs;
-+		struct dentry *dir;
-+
-+		pfs = &tpmi_info->tpmi_features[i];
-+		snprintf(name, sizeof(name), "tpmi-id-%02x", pfs->pfs_header.tpmi_id);
-+		dir = debugfs_create_dir(name, top_dir);
-+
-+		debugfs_create_file("mem_dump", 0444, dir, pfs,
-+				    &tpmi_mem_dump_fops);
-+		debugfs_create_file("mem_write", 0644, dir, pfs,
-+				    &mem_write_ops);
-+	}
-+}
-+
- static void tpmi_set_control_base(struct auxiliary_device *auxdev,
- 				  struct intel_tpmi_info *tpmi_info,
- 				  struct intel_tpmi_pm_feature *pfs)
-@@ -458,7 +680,7 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
- 	struct pci_dev *pci_dev = vsec_dev->pcidev;
- 	struct intel_tpmi_info *tpmi_info;
- 	u64 pfs_start = 0;
--	int i;
-+	int ret, i;
- 
- 	tpmi_info = devm_kzalloc(&auxdev->dev, sizeof(*tpmi_info), GFP_KERNEL);
- 	if (!tpmi_info)
-@@ -481,6 +703,7 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
- 		int size, ret;
- 
- 		pfs = &tpmi_info->tpmi_features[i];
-+		pfs->vsec_dev = vsec_dev;
- 
- 		res = &vsec_dev->resource[i];
- 		if (!res)
-@@ -520,7 +743,13 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
- 
- 	auxiliary_set_drvdata(auxdev, tpmi_info);
- 
--	return tpmi_create_devices(tpmi_info);
-+	ret = tpmi_create_devices(tpmi_info);
-+	if (ret)
-+		return ret;
-+
-+	tpmi_dbgfs_register(tpmi_info);
-+
-+	return 0;
- }
- 
- static int tpmi_probe(struct auxiliary_device *auxdev,
-@@ -529,11 +758,12 @@ static int tpmi_probe(struct auxiliary_device *auxdev,
- 	return intel_vsec_tpmi_init(auxdev);
- }
- 
--/*
-- * Remove callback is not needed currently as there is no
-- * cleanup required. All memory allocs are device managed. All
-- * devices created by this modules are also device managed.
-- */
-+static void tpmi_remove(struct auxiliary_device *auxdev)
-+{
-+	struct intel_tpmi_info *tpmi_info = auxiliary_get_drvdata(auxdev);
-+
-+	debugfs_remove_recursive(tpmi_info->dbgfs_dir);
-+}
- 
- static const struct auxiliary_device_id tpmi_id_table[] = {
- 	{ .name = "intel_vsec.tpmi" },
-@@ -544,6 +774,7 @@ MODULE_DEVICE_TABLE(auxiliary, tpmi_id_table);
- static struct auxiliary_driver tpmi_aux_driver = {
- 	.id_table	= tpmi_id_table,
- 	.probe		= tpmi_probe,
-+	.remove         = tpmi_remove,
- };
- 
- module_auxiliary_driver(tpmi_aux_driver);
--- 
-2.38.1
+> ---
+> Link:
+> https://lore.kernel.org/r/20230516202430.4157216-4-yazen.ghannam@amd.com
+> 
+> v1->v2:
+> * Address comments from Guenter.
+> 
+>   drivers/hwmon/k10temp.c | 36 +++++++++++++++++++++++++++---------
+>   1 file changed, 27 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
+> index 7b177b9fbb09..70f7b77e6ece 100644
+> --- a/drivers/hwmon/k10temp.c
+> +++ b/drivers/hwmon/k10temp.c
+> @@ -145,8 +145,9 @@ static void read_tempreg_nb_f15(struct pci_dev *pdev, u32 *regval)
+>   
+>   static void read_tempreg_nb_zen(struct pci_dev *pdev, u32 *regval)
+>   {
+> -	amd_smn_read(amd_pci_dev_to_node_id(pdev),
+> -		     ZEN_REPORTED_TEMP_CTRL_BASE, regval);
+> +	if (amd_smn_read(amd_pci_dev_to_node_id(pdev),
+> +			 ZEN_REPORTED_TEMP_CTRL_BASE, regval))
+> +		*regval = 0;
+>   }
+>   
+>   static long get_raw_temp(struct k10temp_data *data)
+> @@ -197,6 +198,7 @@ static int k10temp_read_temp(struct device *dev, u32 attr, int channel,
+>   			     long *val)
+>   {
+>   	struct k10temp_data *data = dev_get_drvdata(dev);
+> +	int ret = -EOPNOTSUPP;
+>   	u32 regval;
+>   
+>   	switch (attr) {
+> @@ -213,13 +215,17 @@ static int k10temp_read_temp(struct device *dev, u32 attr, int channel,
+>   				*val = 0;
+>   			break;
+>   		case 2 ... 13:		/* Tccd{1-12} */
+> -			amd_smn_read(amd_pci_dev_to_node_id(data->pdev),
+> -				     ZEN_CCD_TEMP(data->ccd_offset, channel - 2),
+> -						  &regval);
+> +			ret = amd_smn_read(amd_pci_dev_to_node_id(data->pdev),
+> +					   ZEN_CCD_TEMP(data->ccd_offset, channel - 2),
+> +					   &regval);
+> +
+> +			if (ret)
+> +				return ret;
+> +
+>   			*val = (regval & ZEN_CCD_TEMP_MASK) * 125 - 49000;
+>   			break;
+>   		default:
+> -			return -EOPNOTSUPP;
+> +			return ret;
+>   		}
+>   		break;
+>   	case hwmon_temp_max:
+> @@ -235,7 +241,7 @@ static int k10temp_read_temp(struct device *dev, u32 attr, int channel,
+>   			- ((regval >> 24) & 0xf)) * 500 + 52000;
+>   		break;
+>   	default:
+> -		return -EOPNOTSUPP;
+> +		return ret;
+>   	}
+>   	return 0;
+>   }
+> @@ -373,8 +379,20 @@ static void k10temp_get_ccd_support(struct pci_dev *pdev,
+>   	int i;
+>   
+>   	for (i = 0; i < limit; i++) {
+> -		amd_smn_read(amd_pci_dev_to_node_id(pdev),
+> -			     ZEN_CCD_TEMP(data->ccd_offset, i), &regval);
+> +		/*
+> +		 * Ignore inaccessible CCDs.
+> +		 *
+> +		 * Some systems will return a register value of 0, and the TEMP_VALID
+> +		 * bit check below will naturally fail.
+> +		 *
+> +		 * Other systems will return a PCI_ERROR_RESPONSE (0xFFFFFFFF) for
+> +		 * the register value. And this will incorrectly pass the TEMP_VALID
+> +		 * bit check.
+> +		 */
+> +		if (amd_smn_read(amd_pci_dev_to_node_id(pdev),
+> +				 ZEN_CCD_TEMP(data->ccd_offset, i), &regval))
+> +			continue;
+> +
+>   		if (regval & ZEN_CCD_TEMP_VALID)
+>   			data->show_temp |= BIT(TCCD_BIT(i));
+>   	}
 
