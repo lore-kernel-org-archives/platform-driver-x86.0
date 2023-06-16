@@ -2,57 +2,57 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DC6EB64D8
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jun 2023 16:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52717EB64D7
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jun 2023 16:57:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245415AbjFPQjm (ORCPT
+        id S1346035AbjFPQ5W (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Jun 2023 12:39:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58626 "EHLO
+        Fri, 16 Jun 2023 12:57:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229653AbjFPQjl (ORCPT
+        with ESMTP id S1345962AbjFPQ5I (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Jun 2023 12:39:41 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDE752D48;
-        Fri, 16 Jun 2023 09:39:40 -0700 (PDT)
+        Fri, 16 Jun 2023 12:57:08 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 770544C37;
+        Fri, 16 Jun 2023 09:55:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686933580; x=1718469580;
+  t=1686934511; x=1718470511;
   h=message-id:subject:from:to:cc:date:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=7ksvNxfLF9nc4Gxz9YoJmx4LwenYmKnMcgqFDHXrwp0=;
-  b=V43zJ2tJoUJ/kYYN1LPzy0JhGMOBUB3YP1vRGqiYSidBDeW7b945xTf5
-   rNucFYRbOO27MkCpvGKFdVCAiOEQaBx6NxAw0Yti8XRhxKh/s+wMrtmtn
-   8zY6WEIsTxPUgQvuzDetmBW8UaKzJ/N7LflIO7p3hKow98PW1x4eLZ0O8
-   83Ds5o1Uww72FxYqH01lV/vB5v2TE7WTN4flp4rUCci985VTKzpn8ST+W
-   tU/6KN/7w7si0HHkCdwacM7cOkV3bfgZ6ncMBfkvIqhadpiEFnTqL+FrJ
-   pHrmRO4UlW2/k6AN28x2rPvv1Yogg/KYlHm5+fsbQcqnp9TRafJrwGt/j
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="339589389"
+  bh=kEpmcXqvu9bcRZE7eSxcLWpsLyANqUirm2sGpkDahsA=;
+  b=JiaNN0BTXrK4I1JOzRXaFl9iR3DoALa5hmn6orUkoMV1USESBldYrNLO
+   ER8DQPFQQmdLcYvEAUIM6lRIqtCHD2DRkij4B+kfX0R2Y90DXFaBXL0yL
+   JMVskBtJuulnYKUFMHYTnYmPCcOiVqYq9/Fj+C1CqNlkKDpTIjeJWKVI/
+   V3UMb7ZEHmzE8Pt5qpKxIJiQhDq86rRKhw/WsmyQqi4neG4wO1B+7NkM4
+   nUQABMdUgNZQspLtRTprtj6XPX+DO2Xi4kW0gElM8jhuQYHonTvMwgsbr
+   2YXl/7uEi0W2wb6GN+rBpoNBE/y0yX+XTmMZlXB/pnWYxOfdmfA8O2XbC
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="338877179"
 X-IronPort-AV: E=Sophos;i="6.00,248,1681196400"; 
-   d="scan'208";a="339589389"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 09:39:40 -0700
+   d="scan'208";a="338877179"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 09:54:56 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="716083284"
+X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="837089615"
 X-IronPort-AV: E=Sophos;i="6.00,248,1681196400"; 
-   d="scan'208";a="716083284"
+   d="scan'208";a="837089615"
 Received: from jbonds-mobl.amr.corp.intel.com (HELO spandruv-desk1.amr.corp.intel.com) ([10.209.56.162])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 09:39:40 -0700
-Message-ID: <af450786e98c8517da341d1334431c4f67911f9a.camel@linux.intel.com>
-Subject: Re: [PATCH 1/2] platform/x86/intel/tpmi: Read feature control status
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 09:54:55 -0700
+Message-ID: <5617a6975ff1ac62739697bf315fb34b8b874aec.camel@linux.intel.com>
+Subject: Re: [PATCH 2/2] platform/x86/intel/tpmi: Add debugfs interface
 From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
 To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc:     hdegoede@redhat.com, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Date:   Fri, 16 Jun 2023 09:39:39 -0700
-In-Reply-To: <f7a0db17-dfe6-f8e0-4aed-6a198fde6dea@linux.intel.com>
+Date:   Fri, 16 Jun 2023 09:54:55 -0700
+In-Reply-To: <7e269676-6e0-6470-f9f3-4f66dde88e2a@linux.intel.com>
 References: <20230615193302.2507338-1-srinivas.pandruvada@linux.intel.com>
-         <20230615193302.2507338-2-srinivas.pandruvada@linux.intel.com>
-         <f7a0db17-dfe6-f8e0-4aed-6a198fde6dea@linux.intel.com>
+         <20230615193302.2507338-3-srinivas.pandruvada@linux.intel.com>
+         <7e269676-6e0-6470-f9f3-4f66dde88e2a@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
 MIME-Version: 1.0
@@ -61,160 +61,285 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 2023-06-16 at 10:13 +0300, Ilpo Järvinen wrote:
+On Fri, 2023-06-16 at 10:46 +0300, Ilpo Järvinen wrote:
 > On Thu, 15 Jun 2023, Srinivas Pandruvada wrote:
 > 
 > > 
 
 [...]
 
-> > +       /* set command id to 0x10 for TPMI_GET_STATE */
-> > +       data = TPMI_GET_STATE_CMD;
-> > +       /* 32 bits for DATA offset and +8 for feature_id field */
-> > +       data |= ((u64)feature_id << (TPMI_CMD_DATA_OFFSET +
-> > TPMI_GET_STATE_CMD_DATA_OFFSET));
+> > +       seq_puts(s, help);
 > 
-> This looks like you should add the GENMASK_ULL() for the fields and
-> use 
-> FIELD_PREP() instead of adding all those OFFSET defines + custom
-> shifting.
+> The appropriate place to this kinda information would seem to be:
+> 
+> Documentation/ABI/testing/debugfs-... file.
 
-You mean, I should change one shift instruction, to FIELD_PREP()
-which will use three instructions to shift, sub and AND?
-((typeof(_mask))(_val) << __bf_shf(_mask)) & (_mask);
+I prefer to add to Documentation.
+But this is for validation folks, who struggle to get documentation,
+will ask you 10 question before using. Hence added here.
+
+But I don't have strong preference here. I can move to doc area.
+
 
 > 
 > > +
-> > +       /* Write at command offset for qword access */
-> > +       writeq(data, tpmi_info->tpmi_control_mem +
-> > TPMI_COMMAND_OFFSET);
+> > +       return 0;
+> > +}
+> > +DEFINE_SHOW_ATTRIBUTE(tpmi_help);
 > > +
-> > +       ret = tpmi_wait_for_owner(tpmi_info, TPMI_OWNER_IN_BAND);
-> > +       if (ret)
-> > +               goto err_unlock;
+> > +static int tpmi_pfs_dbg_show(struct seq_file *s, void *unused)
+> > +{
+> > +       struct intel_tpmi_info *tpmi_info = s->private;
+> > +       int i, ret;
 > > +
-> > +       /* Set Run Busy and packet length of 2 dwords */
-> > +       writeq(BIT_ULL(TPMI_CONTROL_RB_BIT) | (TPMI_CMD_PKT_LEN <<
-> > TPMI_CMD_PKT_LEN_OFFSET),
+> > +       seq_printf(s, "tpmi PFS start offset 0x:%llx\n", tpmi_info-
+> > >pfs_start);
+> > +       seq_puts(s,
+> > "tpmi_id\t\tnum_entries\tentry_size\t\tcap_offset\tattribute\tfull_
+> > base_pointer_for_memmap\tlocked\tdisabled\n");
+> > +       for (i = 0; i < tpmi_info->feature_count; ++i) {
+> > +               struct intel_tpmi_pm_feature *pfs;
+> > +               int locked, disabled;
+> > +
+> > +               pfs = &tpmi_info->tpmi_features[i];
+> > +               ret = tpmi_read_feature_status(tpmi_info, pfs-
+> > >pfs_header.tpmi_id, &locked, &disabled);
+> > +               if (ret) {
+> > +                       locked = 'U';
+> > +                       disabled = 'U';
+> > +               } else {
+> > +                       disabled = disabled ? 'Y' : 'N';
+> > +                       locked = locked ? 'Y' : 'N';
+> > +               }
+> > +               seq_printf(s,
+> > "0x%02x\t\t0x%02x\t\t0x%06x\t\t0x%04x\t\t0x%02x\t\t0x%x\t\t\t%c\t%c
+> > \n",
 > 
-> Define using BIT_ULL(0) instead. Use FIELD_PREP().
-
-
-This code will run only on X86 64 bit, not a common device driver which
-will run in any architecture.
-Please let me know why FIELD_PREP() is better.
-
+> The last hex is just %x (not %08x), is it intentional?
+Not intentional.
 
 > 
-> I'd drop _BIT from the define name but I leave it up to you, it just 
-> makes your lines longer w/o much added value.
+> > +                          pfs->pfs_header.tpmi_id, pfs-
+> > >pfs_header.num_entries, pfs->pfs_header.entry_size,
+> > +                          pfs->pfs_header.cap_offset, pfs-
+> > >pfs_header.attribute, pfs->vsec_offset, locked, disabled);
 > 
-> > +              tpmi_info->tpmi_control_mem +
-> > TPMI_CONTROL_STATUS_OFFSET);
-> > +
-> > +       ret = read_poll_timeout(readq, control, !(control &
-> > BIT_ULL(TPMI_CONTROL_RB_BIT)),
-> > +                               TPMI_RB_TIMEOUT_US,
-> > TPMI_RB_TIMEOUT_MAX_US, false,
-> > +                               tpmi_info->tpmi_control_mem +
-> > TPMI_CONTROL_STATUS_OFFSET);
-> > +       if (ret)
-> > +               goto done_proc;
-> > +
-> > +       control = FIELD_GET(TPMI_GENMASK_STATUS, control);
-> > +       if (control != TPMI_CMD_STATUS_SUCCESS) {
-> > +               ret = -EBUSY;
-> > +               goto done_proc;
+> Please split parameters to 100 columns (I'm okay with the string 
+> exceeding it).
+> 
+> It would help here if you add pointer also to pfs_header struct. ;-)
+> 
+Will think about it if useful.
+
 > > +       }
 > > +
-> > +       data = readq(tpmi_info->tpmi_control_mem +
-> > TPMI_COMMAND_OFFSET);
-> > +       data >>= TPMI_CMD_DATA_OFFSET; /* Upper 32 bits are for
-> > TPMI_DATA */
+> > +       return 0;
+> > +}
+> > +DEFINE_SHOW_ATTRIBUTE(tpmi_pfs_dbg);
+> > +
+> > +#define MEM_DUMP_COLUMN_COUNT  8
+> > +
+> > +static int tpmi_mem_dump_show(struct seq_file *s, void *unused)
+> > +{
+> > +       size_t row_size = MEM_DUMP_COLUMN_COUNT * sizeof(u32);
+> > +       struct intel_tpmi_pm_feature *pfs = s->private;
+> > +       int count, ret = 0;
+> > +       void __iomem *mem;
+> > +       u16 size;
+> > +       u32 off;
+> > +
+> > +       off = pfs->vsec_offset;
+> > +
+> > +       mutex_lock(&tpmi_dev_lock);
+> > +
+> > +       for (count = 0; count < pfs->pfs_header.num_entries;
+> > ++count) {
+> > +               u8 *buffer;
 > 
-> Define the field with GENMASK() and use FIELD_GET().
-> 
-Again 3 instructions instead of 1.
+> Why only this is declared here? I see no consistency based on 
+> variable usage/scope.
+I will fix this.
 
-> > +
-> > +       *disabled = 0;
-> > +       *locked = 0;
-> > +
-> > +       if (!(data & BIT_ULL(TPMI_GET_STATUS_BIT_ENABLE)))
 > 
-> Put BIT_ULL() into the define.
-Good idea.
+> > +               size = pfs->pfs_header.entry_size * sizeof(u32);
+> 
+> Can this overflow?
+No. Coming from a trusted architectural source. The system will not
+pass BIOS if they are wrong.
 
 > 
-> Perhaps drop _BIT_ from the name.
-I can do that.
-
-> 
-> > +               *disabled = 1;
+> > +               buffer = kmalloc(size, GFP_KERNEL);
+> > +               if (!buffer) {
+> > +                       ret = -ENOMEM;
+> > +                       goto done_mem_show;
+> > +               }
 > > +
-> > +       if (data & BIT_ULL(TPMI_GET_STATUS_BIT_LOCKED))
-> 
-> Ditto.
-> 
-> > +               *locked = 1;
+> > +               seq_printf(s, "TPMI Instance:%d offset:0x%x\n",
+> > count, off);
 > > +
-> > +       ret = 0;
+> > +               mem = ioremap(off, size);
+> > +               if (!mem) {
+> > +                       ret = -ENOMEM;
+> > +                       kfree(buffer);
+> > +                       goto done_mem_show;
+> > +               }
 > > +
-> > +done_proc:
-> > +       /* SET CPL "completion"bit */
-> 
-> Missing space.
-> 
-OK
-
-> > +       writeq(BIT_ULL(TPMI_CONTROL_CPL_BIT),
-> 
-> BIT_ULL() to define.
-> 
-> > +              tpmi_info->tpmi_control_mem +
-> > TPMI_CONTROL_STATUS_OFFSET);
+> > +               memcpy_fromio(buffer, mem, size);
 > > +
-> > +err_unlock:
+> > +               seq_hex_dump(s, " ", DUMP_PREFIX_OFFSET, row_size,
+> > sizeof(u32), buffer, size, false);
+> > +
+> > +               iounmap(mem);
+> > +               kfree(buffer);
+> > +
+> > +               off += size;
+> > +       }
+> > +
+> > +done_mem_show:
 > > +       mutex_unlock(&tpmi_dev_lock);
 > > +
 > > +       return ret;
 > > +}
+> > +DEFINE_SHOW_ATTRIBUTE(tpmi_mem_dump);
 > > +
-> > +int tpmi_get_feature_status(struct auxiliary_device *auxdev, int
-> > feature_id,
-> > +                           int *locked, int *disabled)
+> > +static ssize_t mem_write(struct file *file, const char __user
+> > *userbuf, size_t len, loff_t *ppos)
 > > +{
-> > +       struct intel_vsec_device *intel_vsec_dev =
-> > dev_to_ivdev(auxdev->dev.parent);
-> > +       struct intel_tpmi_info *tpmi_info =
-> > auxiliary_get_drvdata(&intel_vsec_dev->auxdev);
-> > +
-> > +       return tpmi_read_feature_status(tpmi_info, feature_id,
-> > locked, disabled);
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(tpmi_get_feature_status, INTEL_TPMI);
-> > +
-> > +static void tpmi_set_control_base(struct auxiliary_device *auxdev,
-> > +                                 struct intel_tpmi_info
-> > *tpmi_info,
-> > +                                 struct intel_tpmi_pm_feature
-> > *pfs)
-> > +{
+> > +       struct seq_file *m = file->private_data;
+> > +       struct intel_tpmi_pm_feature *pfs = m->private;
+> > +       u32 addr, value, punit;
+> > +       u32 num_elems, *array;
 > > +       void __iomem *mem;
 > > +       u16 size;
+> > +       int ret;
 > > +
-> > +       size = pfs->pfs_header.num_entries * pfs-
-> > >pfs_header.entry_size * 4;
+> > +       ret = parse_int_array_user(userbuf, len, (int **)&array);
+> > +       if (ret < 0)
+> > +               return ret;
+> > +
+> > +       num_elems = *array;
+> > +       if (num_elems != 3) {
+> > +               ret = -EINVAL;
+> > +               goto exit_write;
+> > +       }
+> > +
+> > +       punit = array[1];
+> > +       addr = array[2];
+> > +       value = array[3];
+> > +
+> > +       if (punit >= pfs->pfs_header.num_entries) {
+> > +               ret = -EINVAL;
+> > +               goto exit_write;
+> > +       }
+> > +
+> > +       size = pfs->pfs_header.entry_size * sizeof(u32);
 > 
-> Can this overflow u16? Where does pfs_header content originate from?
-We can add a check, but this is coming from a trusted and validated x86
-core (Not an add on IP), which not only driver uses but all PM IP in
-the hardware.
+> There's no consistency in the code, some places do: entry_size * 4
+> and 
+> here it's entry_size * sizeof(u32). Please convert all of them to the
+> latter one. You need to do one additional patch to convert the
+> existing 
+> users but that's perfectly fine as an additional cleanup patch (don't
+> try to put it either of these patches "while at it").
+Good idea.
+
+> 
+> > +       if (addr >= size) {
+> > +               ret = -EINVAL;
+> > +               goto exit_write;
+> > +       }
+> > +
+> > +       mutex_lock(&tpmi_dev_lock);
+> > +
+> > +       mem = ioremap(pfs->vsec_offset + (punit * size), size);
+> 
+> Unnecessary parenthesis.
+ok
+
+> 
+> > +       if (!mem) {
+> > +               ret = -ENOMEM;
+> > +               goto unlock_mem_write;
+> > +       }
+> > +
+> > +       writel(value, mem + addr);
+> > +
+> > +       iounmap(mem);
+> > +
+> > +       ret = len;
+> > +
+> > +unlock_mem_write:
+> > +       mutex_unlock(&tpmi_dev_lock);
+> > +
+> > +exit_write:
+> > +       kfree(array);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> > +static int mem_write_show(struct seq_file *s, void *unused)
+> > +{
+> > +       return 0;
+> > +}
+> > +
+> > +static int mem_write_open(struct inode *inode, struct file *file)
+> > +{
+> > +       return single_open(file, mem_write_show, inode->i_private);
+> > +}
+> > +
+> > +static const struct file_operations mem_write_ops = {
+> > +       .open           = mem_write_open,
+> > +       .read           = seq_read,
+> > +       .write          = mem_write,
+> > +       .llseek         = seq_lseek,
+> > +       .release        = single_release,
+> > +};
+> > +
+> > +#define tpmi_to_dev(info)      (&info->vsec_dev->pcidev->dev)
+> > +
+> > +static void tpmi_dbgfs_register(struct intel_tpmi_info *tpmi_info)
+> > +{
+> > +       struct dentry *top_dir;
+> > +       char name[64];
+> > +       int i;
+> > +
+> > +       snprintf(name, sizeof(name), "tpmi-%s",
+> > dev_name(tpmi_to_dev(tpmi_info)));
+> > +       top_dir = debugfs_create_dir(name, NULL);
+> > +       if (IS_ERR_OR_NULL(top_dir))
+> > +               return;
+> > +
+> > +       tpmi_info->dbgfs_dir = top_dir;
+> > +
+> > +       debugfs_create_file("pfs_dump", 0444, top_dir, tpmi_info,
+> > +                           &tpmi_pfs_dbg_fops);
+> 
+> One line.
+OK
+
+> 
+> > +       debugfs_create_file("help", 0444, top_dir, NULL,
+> > &tpmi_help_fops);
+> > +       for (i = 0; i < tpmi_info->feature_count; ++i) {
+> > +               struct intel_tpmi_pm_feature *pfs;
+> > +               struct dentry *dir;
+> > +
+> > +               pfs = &tpmi_info->tpmi_features[i];
+> > +               snprintf(name, sizeof(name), "tpmi-id-%02x", pfs-
+> > >pfs_header.tpmi_id);
+> > +               dir = debugfs_create_dir(name, top_dir);
+> > +
+> > +               debugfs_create_file("mem_dump", 0444, dir, pfs,
+> > +                                   &tpmi_mem_dump_fops);
+> > +               debugfs_create_file("mem_write", 0644, dir, pfs,
+> > +                                   &mem_write_ops);
+> 
+> These too can be put to one line.
+> 
+OK
 
 Thanks,
 Srinivas
 
-> If 
-> from HW, how is it the input validated?
 > 
 
