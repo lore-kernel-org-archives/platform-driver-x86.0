@@ -2,165 +2,92 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD54EB64D7
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jun 2023 17:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165A0EB64D8
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jun 2023 17:22:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343934AbjFPRW0 (ORCPT
+        id S229526AbjFPRW2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Jun 2023 13:22:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57294 "EHLO
+        Fri, 16 Jun 2023 13:22:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229526AbjFPRWY (ORCPT
+        with ESMTP id S231350AbjFPRWZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Jun 2023 13:22:24 -0400
+        Fri, 16 Jun 2023 13:22:25 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3BA92101
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jun 2023 10:21:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DB5E2119
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jun 2023 10:21:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1686936098;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AIp6fOanI5PTGoVFIMq8DHV2iHwJWOmIxJo5OyBEUpw=;
-        b=Vaxhuw8wFPp2vv6wnZQ/1lKCSBa6gz1Kun5LGMMu2l4yUm/57dYF5MC1tnxHB9whRyMYQ5
-        LCqWVb0/IY+umVoJBljKdqeMqTlKbqbOq2/eSRk+iS2ag/wTv59u/0vQCT7Dv39T1X4feA
-        fcE6Yt1T2OBuGP2s/pe1mHB3igMHAAQ=
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Or7V6fNTKr0tf/TZRfsDhLdrkCX5u0NKugLK/qmwU70=;
+        b=YLhUb4S+TNjM3SKXX1VfRe5rxk3f71YXUv31sNPY8iDwYDh+an/kVZAYk2JgqhfzAhyIRm
+        Jq8GsBSA/pETYktQhoc3f/3jh1W9YpzJiy0WkC23uy9SRRjcrHGJRqCdUgDEJ8ZbiLrOM7
+        tM4YR0goMFdl+nO1aKHgYiotcFYDGEI=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-576-dHFZWSvTMUKJITy6dZ5BtA-1; Fri, 16 Jun 2023 13:21:35 -0400
-X-MC-Unique: dHFZWSvTMUKJITy6dZ5BtA-1
+ us-mta-556--2835Oc2PyC7gIYrDa9M9A-1; Fri, 16 Jun 2023 13:21:34 -0400
+X-MC-Unique: -2835Oc2PyC7gIYrDa9M9A-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 19E3385A58C;
-        Fri, 16 Jun 2023 17:21:35 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.192.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 01C8A40C95E1;
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C2E0B802666;
         Fri, 16 Jun 2023 17:21:33 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C4DE540C95E1;
+        Fri, 16 Jun 2023 17:21:32 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
         Daniel Scally <dan.scally@ideasonboard.com>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
-        Hao Yao <hao.yao@intel.com>
-Subject: [PATCH v2 1/6] platform/x86: int3472: discrete: Drop GPIO remapping support
-Date:   Fri, 16 Jun 2023 19:21:27 +0200
-Message-ID: <20230616172132.37859-2-hdegoede@redhat.com>
-In-Reply-To: <20230616172132.37859-1-hdegoede@redhat.com>
-References: <20230616172132.37859-1-hdegoede@redhat.com>
+        platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
+Subject: [PATCH v2 0/6] platform/x86: int3472: discrete: Various improvements
+Date:   Fri, 16 Jun 2023 19:21:26 +0200
+Message-ID: <20230616172132.37859-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The only sensor driver which needs GPIO remapping support is the ov2680
-driver and ACPI enumeration support + other necessary changes to
-the ov2680 driver were never upstreamed.
+Hi All,
 
-A new series updating the ov2680 driver is pending upstream now and
-in this series the ov2680 driver is patched to look for "powerdown"
-as con-id, instead of relying on GPIO remapping in the int3472 code,
-so the GPIO remapping is no longer necessary.
+Here is a v2 of my previous 2 int3472 patch series merged into
+1 bigger series.
 
-Tested-by: Hao Yao <hao.yao@intel.com>
-Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/intel/int3472/common.h   |  6 ---
- drivers/platform/x86/intel/int3472/discrete.c | 37 ++-----------------
- 2 files changed, 3 insertions(+), 40 deletions(-)
+Changes in v2:
+- Use static_assert() to check that GPIO_REGULATOR_SUPPLY_MAP_COUNT
+  and ARRAY_SIZE(skl_int3472_regulator_map_supplies) match
 
-diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
-index 0c9c899e017b..735567f374a6 100644
---- a/drivers/platform/x86/intel/int3472/common.h
-+++ b/drivers/platform/x86/intel/int3472/common.h
-@@ -69,15 +69,9 @@ struct int3472_cldb {
- 	u8 reserved2[17];
- };
- 
--struct int3472_gpio_function_remap {
--	const char *documented;
--	const char *actual;
--};
--
- struct int3472_sensor_config {
- 	const char *sensor_module_name;
- 	struct regulator_consumer_supply supply_map;
--	const struct int3472_gpio_function_remap *function_maps;
- };
- 
- struct int3472_discrete_device {
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index 8111579a59d4..2ab3c7466986 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -39,27 +39,13 @@ static const guid_t cio2_sensor_module_guid =
-  * the functions mapping resources to the sensors. Where the sensors have
-  * a power enable pin defined in DSDT we need to provide a supply name so
-  * the sensor drivers can find the regulator. The device name will be derived
-- * from the sensor's ACPI device within the code. Optionally, we can provide a
-- * NULL terminated array of function name mappings to deal with any platform
-- * specific deviations from the documented behaviour of GPIOs.
-- *
-- * Map a GPIO function name to NULL to prevent the driver from mapping that
-- * GPIO at all.
-+ * from the sensor's ACPI device within the code.
-  */
--
--static const struct int3472_gpio_function_remap ov2680_gpio_function_remaps[] = {
--	{ "reset", NULL },
--	{ "powerdown", "reset" },
--	{ }
--};
--
- static const struct int3472_sensor_config int3472_sensor_configs[] = {
--	/* Lenovo Miix 510-12ISK - OV2680, Front */
--	{ "GNDF140809R", { 0 }, ov2680_gpio_function_remaps },
- 	/* Lenovo Miix 510-12ISK - OV5648, Rear */
--	{ "GEFF150023R", REGULATOR_SUPPLY("avdd", NULL), NULL },
-+	{ "GEFF150023R", REGULATOR_SUPPLY("avdd", NULL) },
- 	/* Surface Go 1&2 - OV5693, Front */
--	{ "YHCU", REGULATOR_SUPPLY("avdd", NULL), NULL },
-+	{ "YHCU", REGULATOR_SUPPLY("avdd", NULL) },
- };
- 
- static const struct int3472_sensor_config *
-@@ -96,7 +82,6 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
- 					  struct acpi_resource_gpio *agpio,
- 					  const char *func, u32 polarity)
- {
--	const struct int3472_sensor_config *sensor_config;
- 	char *path = agpio->resource_source.string_ptr;
- 	struct gpiod_lookup *table_entry;
- 	struct acpi_device *adev;
-@@ -108,22 +93,6 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
- 		return -EINVAL;
- 	}
- 
--	sensor_config = int3472->sensor_config;
--	if (!IS_ERR(sensor_config) && sensor_config->function_maps) {
--		const struct int3472_gpio_function_remap *remap;
--
--		for (remap = sensor_config->function_maps; remap->documented; remap++) {
--			if (!strcmp(func, remap->documented)) {
--				func = remap->actual;
--				break;
--			}
--		}
--	}
--
--	/* Functions mapped to NULL should not be mapped to the sensor */
--	if (!func)
--		return 0;
--
- 	status = acpi_get_handle(NULL, path, &handle);
- 	if (ACPI_FAILURE(status))
- 		return -EINVAL;
+and this also collects all the various Tested-by-s + Reviewed-by-s.
+
+Regards,
+
+Hans
+
+
+Hans de Goede (6):
+  platform/x86: int3472: discrete: Drop GPIO remapping support
+  platform/x86: int3472: discrete: Remove sensor_config-s
+  platform/x86: int3472: discrete: Add support for 1 GPIO regulator
+    shared between 2 sensors
+  platform/x86: int3472: discrete: Add alternative "AVDD" regulator
+    supply name
+  platform/x86: int3472: discrete: Use FIELD_GET() on the GPIO _DSM
+    return value
+  platform/x86: int3472: discrete: Log a warning if the pin-numbers
+    don't match
+
+ .../x86/intel/int3472/clk_and_regulator.c     | 72 +++++++++++---
+ drivers/platform/x86/intel/int3472/common.h   | 14 +--
+ drivers/platform/x86/intel/int3472/discrete.c | 94 ++++---------------
+ 3 files changed, 79 insertions(+), 101 deletions(-)
+
 -- 
 2.41.0
 
