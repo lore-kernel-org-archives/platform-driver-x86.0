@@ -2,103 +2,250 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A57EB64DA
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jun 2023 17:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE12EB64D7
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jun 2023 21:53:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344566AbjFPRXN (ORCPT
+        id S229585AbjFPVxx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Jun 2023 13:23:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57466 "EHLO
+        Fri, 16 Jun 2023 17:53:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232242AbjFPRXM (ORCPT
+        with ESMTP id S229561AbjFPVxx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Jun 2023 13:23:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 189DA26B8
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jun 2023 10:21:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686936107;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hbhbe4lOgz4k5EXeSjp8uAwD2Dwf4BE4cmVFkBHorgg=;
-        b=BR85Ii5N28qFuvTsVIRx6aIFXRDC45wBKvONATEfYs86gIvh1AezOngrIUEldkz3Xjy6Rd
-        zzmNYk7rRrwfxFAnHAggGfiFJmj+uxjaQ+i/K71GjRdlne1agmwea8P3eFQGU+W61uJS7m
-        DHVyvhXmbyC2lWSIkSuKobSowwh/vdk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-269-MA4qkkl7PTixBxlh6DZPSA-1; Fri, 16 Jun 2023 13:21:41 -0400
-X-MC-Unique: MA4qkkl7PTixBxlh6DZPSA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 00B63800A15;
-        Fri, 16 Jun 2023 17:21:41 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.192.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E54A40C95E2;
-        Fri, 16 Jun 2023 17:21:40 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Daniel Scally <dan.scally@ideasonboard.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
-Subject: [PATCH v2 6/6] platform/x86: int3472: discrete: Log a warning if the pin-numbers don't match
-Date:   Fri, 16 Jun 2023 19:21:32 +0200
-Message-ID: <20230616172132.37859-7-hdegoede@redhat.com>
-In-Reply-To: <20230616172132.37859-1-hdegoede@redhat.com>
-References: <20230616172132.37859-1-hdegoede@redhat.com>
+        Fri, 16 Jun 2023 17:53:53 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF2D1295A;
+        Fri, 16 Jun 2023 14:53:51 -0700 (PDT)
+Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 04E907EC;
+        Fri, 16 Jun 2023 23:53:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1686952397;
+        bh=3IjPZws8n7kuka6mTiTXJgTj7gXBNf6H1JuQ0LesuAQ=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=FTWf4tO5C/8gqcE3ifJ4BVvDL3bWVJXgSxKdCLS55P9UdEyKeTGlh/h+nb+bd1FE/
+         /7Lst29hkknwOKMau4k6wOzZqzH60johYpAMK7iq7ljeVDBqgI4Gghy5/OKUVw3cAY
+         Qg8Fo9uw1DfwLdF1zvOAJw9Xl4DdVePuHviyzfyU=
+Message-ID: <82b57c76-420a-6022-54f5-3e13977607f1@ideasonboard.com>
+Date:   Fri, 16 Jun 2023 22:53:46 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2 2/6] platform/x86: int3472: discrete: Remove
+ sensor_config-s
+To:     Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
+        Bingbu Cao <bingbu.cao@intel.com>, Hao Yao <hao.yao@intel.com>
+References: <20230616172132.37859-1-hdegoede@redhat.com>
+ <20230616172132.37859-3-hdegoede@redhat.com>
+Content-Language: en-US
+From:   Dan Scally <dan.scally@ideasonboard.com>
+In-Reply-To: <20230616172132.37859-3-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The INT3472 discrete code assumes that the ACPI GPIO resources are
-in the same order as the pin-info _DSM entries.
+Hi Hans
 
-The returned pin-info includes the pin-number in bits 15-8. Add a check
-that this matches with the ACPI GPIO resource pin-number in case
-the assumption is not true with some ACPI tables.
+On 16/06/2023 18:21, Hans de Goede wrote:
+> Currently the only 2 sensor_config-s both specify "avdd" as supply-id.
+>
+> The INT3472 device is going to be the only supplier of a regulator for
+> the sensor device.
+>
+> So there is no chance of collisions with other regulator suppliers
+> and it is undesirable to need to manually add new entries to
+> int3472_sensor_configs[] for each new sensor module which uses
+> a GPIO regulator.
+>
+> Instead just always use "avdd" as supply-id when registering
+> the GPIO regulator.
+>
+> If necessary for specific sensor drivers then other supply-ids can
+> be added as aliases in the future, adding aliases will be safe
+> since INT3472 will be the only regulator supplier for the sensor.
+>
+> Cc: Bingbu Cao <bingbu.cao@intel.com>
+> Tested-by: Hao Yao <hao.yao@intel.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+
 
 Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/intel/int3472/discrete.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index 557517f43ede..e33c2d75975c 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -154,8 +154,8 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- {
- 	struct int3472_discrete_device *int3472 = data;
- 	struct acpi_resource_gpio *agpio;
-+	u8 active_value, pin, type;
- 	union acpi_object *obj;
--	u8 active_value, type;
- 	const char *err_msg;
- 	const char *func;
- 	u32 polarity;
-@@ -183,6 +183,12 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 
- 	int3472_get_func_and_polarity(type, &func, &polarity);
- 
-+	pin = FIELD_GET(INT3472_GPIO_DSM_PIN, obj->integer.value);
-+	if (pin != agpio->pin_table[0])
-+		dev_warn(int3472->dev, "%s %s pin number mismatch _DSM %d resource %d\n",
-+			 func, agpio->resource_source.string_ptr, pin,
-+			 agpio->pin_table[0]);
-+
- 	active_value = FIELD_GET(INT3472_GPIO_DSM_SENSOR_ON_VAL, obj->integer.value);
- 	if (!active_value)
- 		polarity ^= GPIO_ACTIVE_LOW;
--- 
-2.41.0
-
+> Changes in v2:
+> - Use static_assert() to check that GPIO_REGULATOR_SUPPLY_MAP_COUNT
+>    and ARRAY_SIZE(skl_int3472_regulator_map_supplies) match
+> ---
+>   .../x86/intel/int3472/clk_and_regulator.c     | 40 ++++++++++-------
+>   drivers/platform/x86/intel/int3472/common.h   |  7 +--
+>   drivers/platform/x86/intel/int3472/discrete.c | 45 +++----------------
+>   3 files changed, 31 insertions(+), 61 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+> index 410073ca371c..5487f3ab66ad 100644
+> --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+> +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+> @@ -234,32 +234,40 @@ void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472)
+>   	gpiod_put(int3472->clock.ena_gpio);
+>   }
+>   
+> +/*
+> + * The INT3472 device is going to be the only supplier of a regulator for
+> + * the sensor device. But unlike the clk framework the regulator framework
+> + * does not allow matching by consumer-device-name only.
+> + *
+> + * Ideally all sensor drivers would use "avdd" as supply-id. But for drivers
+> + * where this cannot be changed because another supply-id is already used in
+> + * e.g. DeviceTree files an alias for the other supply-id can be added here.
+> + *
+> + * Do not forget to update GPIO_REGULATOR_SUPPLY_MAP_COUNT when changing this.
+> + */
+> +static const char * const skl_int3472_regulator_map_supplies[] = {
+> +	"avdd",
+> +};
+> +
+> +static_assert(ARRAY_SIZE(skl_int3472_regulator_map_supplies) ==
+> +	      GPIO_REGULATOR_SUPPLY_MAP_COUNT);
+> +
+>   int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
+>   				   struct acpi_resource_gpio *agpio)
+>   {
+> -	const struct int3472_sensor_config *sensor_config;
+>   	char *path = agpio->resource_source.string_ptr;
+> -	struct regulator_consumer_supply supply_map;
+>   	struct regulator_init_data init_data = { };
+>   	struct regulator_config cfg = { };
+> -	int ret;
+> +	int i, ret;
+>   
+> -	sensor_config = int3472->sensor_config;
+> -	if (IS_ERR(sensor_config)) {
+> -		dev_err(int3472->dev, "No sensor module config\n");
+> -		return PTR_ERR(sensor_config);
+> -	}
+> -
+> -	if (!sensor_config->supply_map.supply) {
+> -		dev_err(int3472->dev, "No supply name defined\n");
+> -		return -ENODEV;
+> +	for (i = 0; i < ARRAY_SIZE(skl_int3472_regulator_map_supplies); i++) {
+> +		int3472->regulator.supply_map[i].supply = skl_int3472_regulator_map_supplies[i];
+> +		int3472->regulator.supply_map[i].dev_name = int3472->sensor_name;
+>   	}
+>   
+>   	init_data.constraints.valid_ops_mask = REGULATOR_CHANGE_STATUS;
+> -	init_data.num_consumer_supplies = 1;
+> -	supply_map = sensor_config->supply_map;
+> -	supply_map.dev_name = int3472->sensor_name;
+> -	init_data.consumer_supplies = &supply_map;
+> +	init_data.consumer_supplies = int3472->regulator.supply_map;
+> +	init_data.num_consumer_supplies = GPIO_REGULATOR_SUPPLY_MAP_COUNT;
+>   
+>   	snprintf(int3472->regulator.regulator_name,
+>   		 sizeof(int3472->regulator.regulator_name), "%s-regulator",
+> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
+> index 735567f374a6..225b067c854d 100644
+> --- a/drivers/platform/x86/intel/int3472/common.h
+> +++ b/drivers/platform/x86/intel/int3472/common.h
+> @@ -28,6 +28,7 @@
+>   
+>   #define GPIO_REGULATOR_NAME_LENGTH				21
+>   #define GPIO_REGULATOR_SUPPLY_NAME_LENGTH			9
+> +#define GPIO_REGULATOR_SUPPLY_MAP_COUNT				1
+>   
+>   #define INT3472_LED_MAX_NAME_LEN				32
+>   
+> @@ -69,11 +70,6 @@ struct int3472_cldb {
+>   	u8 reserved2[17];
+>   };
+>   
+> -struct int3472_sensor_config {
+> -	const char *sensor_module_name;
+> -	struct regulator_consumer_supply supply_map;
+> -};
+> -
+>   struct int3472_discrete_device {
+>   	struct acpi_device *adev;
+>   	struct device *dev;
+> @@ -83,6 +79,7 @@ struct int3472_discrete_device {
+>   	const struct int3472_sensor_config *sensor_config;
+>   
+>   	struct int3472_gpio_regulator {
+> +		struct regulator_consumer_supply supply_map[GPIO_REGULATOR_SUPPLY_MAP_COUNT];
+>   		char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
+>   		char supply_name[GPIO_REGULATOR_SUPPLY_NAME_LENGTH];
+>   		struct gpio_desc *gpio;
+> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+> index 2ab3c7466986..3b410428cec2 100644
+> --- a/drivers/platform/x86/intel/int3472/discrete.c
+> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> @@ -34,48 +34,17 @@ static const guid_t cio2_sensor_module_guid =
+>   	GUID_INIT(0x822ace8f, 0x2814, 0x4174,
+>   		  0xa5, 0x6b, 0x5f, 0x02, 0x9f, 0xe0, 0x79, 0xee);
+>   
+> -/*
+> - * Here follows platform specific mapping information that we can pass to
+> - * the functions mapping resources to the sensors. Where the sensors have
+> - * a power enable pin defined in DSDT we need to provide a supply name so
+> - * the sensor drivers can find the regulator. The device name will be derived
+> - * from the sensor's ACPI device within the code.
+> - */
+> -static const struct int3472_sensor_config int3472_sensor_configs[] = {
+> -	/* Lenovo Miix 510-12ISK - OV5648, Rear */
+> -	{ "GEFF150023R", REGULATOR_SUPPLY("avdd", NULL) },
+> -	/* Surface Go 1&2 - OV5693, Front */
+> -	{ "YHCU", REGULATOR_SUPPLY("avdd", NULL) },
+> -};
+> -
+> -static const struct int3472_sensor_config *
+> -skl_int3472_get_sensor_module_config(struct int3472_discrete_device *int3472)
+> +static void skl_int3472_log_sensor_module_name(struct int3472_discrete_device *int3472)
+>   {
+>   	union acpi_object *obj;
+> -	unsigned int i;
+>   
+>   	obj = acpi_evaluate_dsm_typed(int3472->sensor->handle,
+>   				      &cio2_sensor_module_guid, 0x00,
+>   				      0x01, NULL, ACPI_TYPE_STRING);
+> -
+> -	if (!obj) {
+> -		dev_err(int3472->dev,
+> -			"Failed to get sensor module string from _DSM\n");
+> -		return ERR_PTR(-ENODEV);
+> +	if (obj) {
+> +		dev_dbg(int3472->dev, "Sensor module id: '%s'\n", obj->string.pointer);
+> +		ACPI_FREE(obj);
+>   	}
+> -
+> -	for (i = 0; i < ARRAY_SIZE(int3472_sensor_configs); i++) {
+> -		if (!strcmp(int3472_sensor_configs[i].sensor_module_name,
+> -			    obj->string.pointer))
+> -			break;
+> -	}
+> -
+> -	ACPI_FREE(obj);
+> -
+> -	if (i >= ARRAY_SIZE(int3472_sensor_configs))
+> -		return ERR_PTR(-EINVAL);
+> -
+> -	return &int3472_sensor_configs[i];
+>   }
+>   
+>   static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int3472,
+> @@ -266,11 +235,7 @@ static int skl_int3472_parse_crs(struct int3472_discrete_device *int3472)
+>   	LIST_HEAD(resource_list);
+>   	int ret;
+>   
+> -	/*
+> -	 * No error check, because not having a sensor config is not necessarily
+> -	 * a failure mode.
+> -	 */
+> -	int3472->sensor_config = skl_int3472_get_sensor_module_config(int3472);
+> +	skl_int3472_log_sensor_module_name(int3472);
+>   
+>   	ret = acpi_dev_get_resources(int3472->adev, &resource_list,
+>   				     skl_int3472_handle_gpio_resources,
