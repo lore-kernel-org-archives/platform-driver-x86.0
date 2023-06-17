@@ -2,95 +2,107 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8B4EB64D7
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jun 2023 22:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425C7EB64D7
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Jun 2023 01:45:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244034AbjFPWOc (ORCPT
+        id S229671AbjFQBo7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Jun 2023 18:14:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53900 "EHLO
+        Fri, 16 Jun 2023 21:44:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345724AbjFPWO3 (ORCPT
+        with ESMTP id S229500AbjFQBo6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Jun 2023 18:14:29 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA4D1FF5;
-        Fri, 16 Jun 2023 15:14:27 -0700 (PDT)
-Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7DAB08E1;
-        Sat, 17 Jun 2023 00:13:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1686953632;
-        bh=3xCPeWHH0cBffVrsIuImdGBvDgV44XrHQG/XTlLrZt0=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=XA+31oBdOM+FBraru2ZCvLhyzsuEh7iijr+iZnDny7Jpcl9YAV/3qCcGkA0ZI4flF
-         kkRb2Vfg4iy+SQb6sOVT/flT1R8Nz12YdYszsxtIbUHhPTIo3FxF55hnxEC2Er4WJv
-         N3Lx0QLy9x7qncQv1DDgMEvkIZkKmurQjGpbVmg8=
-Message-ID: <d1ec42e1-530a-ed13-7056-cce5ca423626@ideasonboard.com>
-Date:   Fri, 16 Jun 2023 23:14:21 +0100
+        Fri, 16 Jun 2023 21:44:58 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 962363AB4;
+        Fri, 16 Jun 2023 18:44:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686966297; x=1718502297;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5os4uL0tj6EqAUIyn9+nlsK5sK4S/kAFE+rIybEFyjE=;
+  b=K0fgDNNmwSmyvCY9UR6AGuTbqZq2EHRNr4rJtf08qmONunYFFC9XZ9Gd
+   AgjHZIgQD5nZAm//0b+k/+Y16yKMUQBOrRZECFt8SoonT60AtVp1YJBfy
+   4WBiW4ktWsqB5VxkqANsYttgr6D9jwVA+3gK1vnHWqKhsy7P5VRKpfLA1
+   vydXPIYiEokjMREFlucadIn8M8NKNTD3DVlGpSkqjvKcWkY9GEul/tw2H
+   g3Pqhkz0CwLhg3RQEjxNOPZ0e9yNsViUmCCSdj1gwgUGPpAGXxlct5nbC
+   pYVDJe6FzGverrqz0VtaGzISEmWsTE9i7diW+6eSrwGoZg8u4laLJ6S/v
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="349059129"
+X-IronPort-AV: E=Sophos;i="6.00,249,1681196400"; 
+   d="scan'208";a="349059129"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 18:44:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="857590830"
+X-IronPort-AV: E=Sophos;i="6.00,249,1681196400"; 
+   d="scan'208";a="857590830"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Jun 2023 18:44:56 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org,
+        ilpo.jarvinen@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86/intel: tpmi: Remove hardcoded unit and offset
+Date:   Fri, 16 Jun 2023 18:44:47 -0700
+Message-Id: <20230617014447.2543592-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2 4/6] platform/x86: int3472: discrete: Add alternative
- "AVDD" regulator supply name
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
-        Hao Yao <hao.yao@intel.com>
-References: <20230616172132.37859-1-hdegoede@redhat.com>
- <20230616172132.37859-5-hdegoede@redhat.com>
-From:   Dan Scally <dan.scally@ideasonboard.com>
-In-Reply-To: <20230616172132.37859-5-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Use sizeof(u32) for TPMI entry size units. Also add a define
+for capability offset unit size.
 
-On 16/06/2023 18:21, Hans de Goede wrote:
-> Add an "AVDD" regulator supply name alias to the supply-map which
-> gets registered for the INT3472 GPIO regulator.
->
-> This is necessary for the ov2680 driver which expects "AVDD" rather then
-> "avdd". Updating the ov2680 driver to use "avdd" is not possible because
-> that will break compatibility with existing DT / DTB files.
->
-> Tested-by: Hao Yao <hao.yao@intel.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ drivers/platform/x86/intel/tpmi.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
+index a5227951decc..9c606ee2030c 100644
+--- a/drivers/platform/x86/intel/tpmi.c
++++ b/drivers/platform/x86/intel/tpmi.c
+@@ -222,7 +222,7 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
+ 	snprintf(feature_id_name, sizeof(feature_id_name), "tpmi-%s", name);
+ 
+ 	for (i = 0, tmp = res; i < pfs->pfs_header.num_entries; i++, tmp++) {
+-		u64 entry_size_bytes = pfs->pfs_header.entry_size * 4;
++		u64 entry_size_bytes = pfs->pfs_header.entry_size * sizeof(u32);
+ 
+ 		tmp->start = pfs->vsec_offset + entry_size_bytes * i;
+ 		tmp->end = tmp->start + entry_size_bytes - 1;
+@@ -277,7 +277,7 @@ static int tpmi_process_info(struct intel_tpmi_info *tpmi_info,
+ 	void __iomem *info_mem;
+ 
+ 	info_mem = ioremap(pfs->vsec_offset + TPMI_INFO_BUS_INFO_OFFSET,
+-			   pfs->pfs_header.entry_size * 4 - TPMI_INFO_BUS_INFO_OFFSET);
++			   pfs->pfs_header.entry_size * sizeof(u32) - TPMI_INFO_BUS_INFO_OFFSET);
+ 	if (!info_mem)
+ 		return -ENOMEM;
+ 
+@@ -308,6 +308,8 @@ static int tpmi_fetch_pfs_header(struct intel_tpmi_pm_feature *pfs, u64 start, i
+ 	return 0;
+ }
+ 
++#define TPMI_CAP_OFFSET_UNIT	1024
++
+ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
+ {
+ 	struct intel_vsec_device *vsec_dev = auxdev_to_ivdev(auxdev);
+@@ -354,7 +356,7 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
+ 		if (!pfs_start)
+ 			pfs_start = res_start;
+ 
+-		pfs->pfs_header.cap_offset *= 1024;
++		pfs->pfs_header.cap_offset *= TPMI_CAP_OFFSET_UNIT;
+ 
+ 		pfs->vsec_offset = pfs_start + pfs->pfs_header.cap_offset;
+ 
+-- 
+2.38.1
 
-Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
-
->   drivers/platform/x86/intel/int3472/clk_and_regulator.c | 1 +
->   drivers/platform/x86/intel/int3472/common.h            | 2 +-
->   2 files changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-> index a5c60b86f5de..61aeca804ba2 100644
-> --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-> +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-> @@ -248,6 +248,7 @@ void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472)
->    */
->   static const char * const skl_int3472_regulator_map_supplies[] = {
->   	"avdd",
-> +	"AVDD",
->   };
->   
->   static_assert(ARRAY_SIZE(skl_int3472_regulator_map_supplies) ==
-> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
-> index fd2a3d3884fa..9f29baa13860 100644
-> --- a/drivers/platform/x86/intel/int3472/common.h
-> +++ b/drivers/platform/x86/intel/int3472/common.h
-> @@ -28,7 +28,7 @@
->   
->   #define GPIO_REGULATOR_NAME_LENGTH				21
->   #define GPIO_REGULATOR_SUPPLY_NAME_LENGTH			9
-> -#define GPIO_REGULATOR_SUPPLY_MAP_COUNT				1
-> +#define GPIO_REGULATOR_SUPPLY_MAP_COUNT				2
->   
->   #define INT3472_LED_MAX_NAME_LEN				32
->   
