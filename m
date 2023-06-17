@@ -2,107 +2,91 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 425C7EB64D7
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Jun 2023 01:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C94CEB64D9
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Jun 2023 14:44:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229671AbjFQBo7 (ORCPT
+        id S229972AbjFQOop (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Jun 2023 21:44:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43810 "EHLO
+        Sat, 17 Jun 2023 10:44:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbjFQBo6 (ORCPT
+        with ESMTP id S236051AbjFQOon (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Jun 2023 21:44:58 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 962363AB4;
-        Fri, 16 Jun 2023 18:44:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686966297; x=1718502297;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=5os4uL0tj6EqAUIyn9+nlsK5sK4S/kAFE+rIybEFyjE=;
-  b=K0fgDNNmwSmyvCY9UR6AGuTbqZq2EHRNr4rJtf08qmONunYFFC9XZ9Gd
-   AgjHZIgQD5nZAm//0b+k/+Y16yKMUQBOrRZECFt8SoonT60AtVp1YJBfy
-   4WBiW4ktWsqB5VxkqANsYttgr6D9jwVA+3gK1vnHWqKhsy7P5VRKpfLA1
-   vydXPIYiEokjMREFlucadIn8M8NKNTD3DVlGpSkqjvKcWkY9GEul/tw2H
-   g3Pqhkz0CwLhg3RQEjxNOPZ0e9yNsViUmCCSdj1gwgUGPpAGXxlct5nbC
-   pYVDJe6FzGverrqz0VtaGzISEmWsTE9i7diW+6eSrwGoZg8u4laLJ6S/v
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="349059129"
-X-IronPort-AV: E=Sophos;i="6.00,249,1681196400"; 
-   d="scan'208";a="349059129"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 18:44:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="857590830"
-X-IronPort-AV: E=Sophos;i="6.00,249,1681196400"; 
-   d="scan'208";a="857590830"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
-  by fmsmga001.fm.intel.com with ESMTP; 16 Jun 2023 18:44:56 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     hdegoede@redhat.com, markgross@kernel.org,
-        ilpo.jarvinen@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86/intel: tpmi: Remove hardcoded unit and offset
-Date:   Fri, 16 Jun 2023 18:44:47 -0700
-Message-Id: <20230617014447.2543592-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.39.1
+        Sat, 17 Jun 2023 10:44:43 -0400
+Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A67281BF3;
+        Sat, 17 Jun 2023 07:44:42 -0700 (PDT)
+Received: by mail-qv1-xf35.google.com with SMTP id 6a1803df08f44-630074df712so7011796d6.1;
+        Sat, 17 Jun 2023 07:44:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687013081; x=1689605081;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sLolGhYclmQaW5o7zV+d/VOXcPSOBFE0oX7ksBODT6U=;
+        b=oDRxMSjUN186InS30QTEzlvpBOEvG5QFhozhA2mLKPQqsnnVT6Kf55AZH+Ltz3TfR8
+         z/WUpBGyoDEDyjwBBuxEsCzVsh4I63/S+bi1Rnsdfi9GCRMj7GCsq5P+XZIsB+3Xir35
+         jU9z+W+SaRTtToMioy0h1hXKCzoxf8Nczjl1NnJTcxXugDmBz8+9lPSM/ZSpNIr5YNEK
+         rSVj5PlKLyz+oeMJSuXeTj9G/Q843TtuNGMXdimlQPdBOZfUKJy1mTR0EGjkh4aEiZql
+         79I72xJULuWn9UtlmLlxNcvpVd3M3jEeIGlmxqWJH2hCIj1LOF2m1i76KZQEtheeZFqZ
+         O7Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687013081; x=1689605081;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sLolGhYclmQaW5o7zV+d/VOXcPSOBFE0oX7ksBODT6U=;
+        b=AHFa/0Au4LFEz9JKFIJkVc38HUZrUKj6Pj1wev47fZLvtqlnvP94cYW+bKlYTH4Vvs
+         CC9Cu+4N68tHv63KuJFL9dvotKfFXIbmaHM4vRxB7joh4M+9FQemr1EUTXIcN4Ie79/r
+         KoF74d5778nd6VtJzToxOyjHAHa9+nl6fUh7hYZsoxthdwgp5lD0thcdUaB1p5d9np9d
+         uZ6gUYDXqq3CnN/AL5m7AKsaWkFE0SGEDGcyKYVHtR7emyPPBsxE4Gm0CVOzsUwLrqZv
+         4aby0X0Z25vp3/z8W7uv1vZViK42OFDvQ+DVWRJTOeS7AuJJXlnNw5X2jIEZ+vDfIk2A
+         iK+Q==
+X-Gm-Message-State: AC+VfDyMi3XXhvp3xi72Vppha81kaC7B4zwJmWv+alX2HPhmkTEGT/mF
+        pXLTs1N5SWZO7tawKRvoALgt+v2AuP6IoeTMXvex2pv1+h0=
+X-Google-Smtp-Source: ACHHUZ4p9RNOf744Cx4yu79ntGpssxEc5tCzmUVkD/J/iAhgxdCiBH0PJYimoJSo4cbKLmga6+xQ7QS5GXtZo5HDmQo=
+X-Received: by 2002:a05:6214:124b:b0:625:7c0b:4640 with SMTP id
+ r11-20020a056214124b00b006257c0b4640mr6481569qvv.22.1687013081669; Sat, 17
+ Jun 2023 07:44:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230616172132.37859-1-hdegoede@redhat.com> <20230616172132.37859-7-hdegoede@redhat.com>
+In-Reply-To: <20230616172132.37859-7-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 17 Jun 2023 17:44:04 +0300
+Message-ID: <CAHp75VfUN3ckdqcj=W8y_Mh8-wt3KHyFsc2grC92r9x42uM9mQ@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] platform/x86: int3472: discrete: Log a warning if
+ the pin-numbers don't match
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Daniel Scally <dan.scally@ideasonboard.com>,
+        platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Use sizeof(u32) for TPMI entry size units. Also add a define
-for capability offset unit size.
+On Fri, Jun 16, 2023 at 8:21=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+>
+> The INT3472 discrete code assumes that the ACPI GPIO resources are
+> in the same order as the pin-info _DSM entries.
+>
+> The returned pin-info includes the pin-number in bits 15-8. Add a check
+> that this matches with the ACPI GPIO resource pin-number in case
+> the assumption is not true with some ACPI tables.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- drivers/platform/x86/intel/tpmi.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+...
 
-diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
-index a5227951decc..9c606ee2030c 100644
---- a/drivers/platform/x86/intel/tpmi.c
-+++ b/drivers/platform/x86/intel/tpmi.c
-@@ -222,7 +222,7 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
- 	snprintf(feature_id_name, sizeof(feature_id_name), "tpmi-%s", name);
- 
- 	for (i = 0, tmp = res; i < pfs->pfs_header.num_entries; i++, tmp++) {
--		u64 entry_size_bytes = pfs->pfs_header.entry_size * 4;
-+		u64 entry_size_bytes = pfs->pfs_header.entry_size * sizeof(u32);
- 
- 		tmp->start = pfs->vsec_offset + entry_size_bytes * i;
- 		tmp->end = tmp->start + entry_size_bytes - 1;
-@@ -277,7 +277,7 @@ static int tpmi_process_info(struct intel_tpmi_info *tpmi_info,
- 	void __iomem *info_mem;
- 
- 	info_mem = ioremap(pfs->vsec_offset + TPMI_INFO_BUS_INFO_OFFSET,
--			   pfs->pfs_header.entry_size * 4 - TPMI_INFO_BUS_INFO_OFFSET);
-+			   pfs->pfs_header.entry_size * sizeof(u32) - TPMI_INFO_BUS_INFO_OFFSET);
- 	if (!info_mem)
- 		return -ENOMEM;
- 
-@@ -308,6 +308,8 @@ static int tpmi_fetch_pfs_header(struct intel_tpmi_pm_feature *pfs, u64 start, i
- 	return 0;
- }
- 
-+#define TPMI_CAP_OFFSET_UNIT	1024
-+
- static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
- {
- 	struct intel_vsec_device *vsec_dev = auxdev_to_ivdev(auxdev);
-@@ -354,7 +356,7 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
- 		if (!pfs_start)
- 			pfs_start = res_start;
- 
--		pfs->pfs_header.cap_offset *= 1024;
-+		pfs->pfs_header.cap_offset *= TPMI_CAP_OFFSET_UNIT;
- 
- 		pfs->vsec_offset = pfs_start + pfs->pfs_header.cap_offset;
- 
--- 
-2.38.1
+> +       pin =3D FIELD_GET(INT3472_GPIO_DSM_PIN, obj->integer.value);
 
+I believe the definition should be in this patch which sounds to me
+more logical.
+
+
+
+
+--
+With Best Regards,
+Andy Shevchenko
