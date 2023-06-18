@@ -2,87 +2,83 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C11AEB64D7
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Jun 2023 18:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D1BEB64D7
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Jun 2023 20:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbjFRSx1 (ORCPT
+        id S229519AbjFRULS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 18 Jun 2023 14:53:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35506 "EHLO
+        Sun, 18 Jun 2023 16:11:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbjFRSx1 (ORCPT
+        with ESMTP id S229515AbjFRULQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 18 Jun 2023 14:53:27 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2621BB;
-        Sun, 18 Jun 2023 11:53:23 -0700 (PDT)
-Date:   Sun, 18 Jun 2023 20:53:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-        s=mail; t=1687114395;
-        bh=rLTd3jpeF1FaigKyO68fT4DEucsRqZYkjGpFz56TY1g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q8p6aQpS1h6Vj8KyaE/d+OPQtiY0JJejyn81bL5ZMtRTUhripMvDJhsw8hMX2xBmE
-         nMwA3CGF36yE50tujmrVOB8qW98lzXcWPGxE/WDn7rFUv6KXlvkLCEa3kGd5RvciIv
-         q4EpoWDpRxIwsqe9QRnIrVK4l/MXxNfFLUvXisCU=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH v17 00/13] hp-bioscfg driver
-Message-ID: <207d43d3-ae23-4b6e-a75a-5632e0dd66c5@t-8ch.de>
-References: <20230608163319.18934-1-jorge.lopez2@hp.com>
+        Sun, 18 Jun 2023 16:11:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51AF7E60
+        for <platform-driver-x86@vger.kernel.org>; Sun, 18 Jun 2023 13:11:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BF6A160F7D
+        for <platform-driver-x86@vger.kernel.org>; Sun, 18 Jun 2023 20:11:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1F880C433C9
+        for <platform-driver-x86@vger.kernel.org>; Sun, 18 Jun 2023 20:11:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687119071;
+        bh=csDSgt/VBzlZ4KAoppbaWbpa1o27UGyi4Xgz3K2esNw=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=MR/B3+Gig3sKbwYz45IWnRAc0R/y2sUDawUtX1cGjLAEv8oteJfr0YAua50qubXxi
+         O8do8b4BwgtRzZWa0LwR88eOYlbmaH7029oOFsymHYYcDJMmSFSCc9QQvNYm3QbKF9
+         2DAOBZEi+79cnfF9FtjcQFgCau+KlWhZs/bdlB6oTT/VvVbbo4cp2SpNPRMxtMh2jC
+         W5e+otM4LBpWT/Ldptn9YAN6stKLZuYX44tK4qzei5lq4LEvjDp/6D+zUuiHTerC2P
+         cBPZnb1zl9yonp+2l2jhx/t2tdKBnPa7GQN/hDuEHAdm8HrzbS8AtHf/q07wXmNe+Z
+         4n8xcxPk3rYAw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 0114CC4332E; Sun, 18 Jun 2023 20:11:10 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 217571] amd_pmf: AMD 7840HS cpufreq locked at 400-544MHz after
+ power unplugged
+Date:   Sun, 18 Jun 2023 20:11:10 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: aros@gmx.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc cf_kernel_version
+Message-ID: <bug-217571-215701-cEFyg8kP8Q@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-217571-215701@https.bugzilla.kernel.org/>
+References: <bug-217571-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230608163319.18934-1-jorge.lopez2@hp.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Jorge,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D217571
 
-On 2023-06-08 11:33:06-0500, Jorge Lopez wrote:
-<snip>
+Artem S. Tashkinov (aros@gmx.com) changed:
 
-> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |mario.limonciello@amd.com
+     Kernel Version|                            |6.3.8; 6.4.0-rc6; GIT
 
-<snip>
+--=20
+You may reply to this email to add a comment.
 
-> 
->  .../testing/sysfs-class-firmware-attributes   |  101 +-
->  MAINTAINERS                                   |    6 +
->  drivers/platform/x86/hp/Kconfig               |   16 +
->  drivers/platform/x86/hp/Makefile              |    1 +
->  drivers/platform/x86/hp/hp-bioscfg/Makefile   |   11 +
->  .../x86/hp/hp-bioscfg/biosattr-interface.c    |  312 +++++
->  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  | 1055 +++++++++++++++++
->  drivers/platform/x86/hp/hp-bioscfg/bioscfg.h  |  487 ++++++++
->  .../x86/hp/hp-bioscfg/enum-attributes.c       |  447 +++++++
->  .../x86/hp/hp-bioscfg/int-attributes.c        |  409 +++++++
->  .../x86/hp/hp-bioscfg/order-list-attributes.c |  436 +++++++
->  .../x86/hp/hp-bioscfg/passwdobj-attributes.c  |  543 +++++++++
->  .../x86/hp/hp-bioscfg/spmobj-attributes.c     |  386 ++++++
->  .../x86/hp/hp-bioscfg/string-attributes.c     |  390 ++++++
->  .../x86/hp/hp-bioscfg/surestart-attributes.c  |  132 +++
->  15 files changed, 4730 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/Makefile
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
->  create mode 100644 drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-
-That looks much better now! Thanks for all the resubmissions.
-
-For the full series:
-
-Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
-
-
-Thomas
+You are receiving this mail because:
+You are watching the assignee of the bug.=
