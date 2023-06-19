@@ -2,83 +2,96 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1D1EB64DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Jun 2023 14:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CDCEB64DA
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Jun 2023 23:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232059AbjFSOOC (ORCPT
+        id S229663AbjFSXng (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Jun 2023 10:14:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55940 "EHLO
+        Mon, 19 Jun 2023 19:43:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232146AbjFSON6 (ORCPT
+        with ESMTP id S229670AbjFSXne (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Jun 2023 10:13:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C0DC9
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jun 2023 07:13:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5213460C57
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jun 2023 14:13:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BAE64C433CB
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jun 2023 14:13:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687184032;
-        bh=pX3VxyABNVGTGNBXgVzatJ1wvo6fw/dN6YZXg0B0/rM=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=nyrqqK29pGrpzMRyDAggY6pdcA/W4S9PG5x7lPNU3Evj85Ze45sHgxt1zrhWVvF2t
-         8glPS8iXeG2OcQae+/ELqdQGfiSZMTRmPaxrfUOu+7wc9Wv9TOhk9HkGdNF/PrBTTW
-         QDMr6OwzQJbhn0Vrow3AQAsLSNvl8RMG2ZTzcj68DAXcLq3VYH78AXROOVL3NIM7rG
-         BL6u1gNIFIOhlmh7SOO6JVKFKaZScMxo5dYSsDiIGfhiejZKn3Oic0EwgfQPItdO5a
-         f5a1T0xkIGfKaINexPH9vXk3xHNM7jUYSvPkDctDrrGJymrmFVGnGJtnM4d6IObPp1
-         Xu6ka5lW2oxlA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id A22FAC4332E; Mon, 19 Jun 2023 14:13:52 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 217571] amd_pmf: AMD 7840HS cpufreq locked at 400-544MHz after
- power unplugged
-Date:   Mon, 19 Jun 2023 14:13:52 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: shyam-sundar.s-k@amd.com
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: assigned_to
-Message-ID: <bug-217571-215701-e0U60XjGmn@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-217571-215701@https.bugzilla.kernel.org/>
-References: <bug-217571-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 19 Jun 2023 19:43:34 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D504A186;
+        Mon, 19 Jun 2023 16:43:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687218213; x=1718754213;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2IydA7aDSW7WAlkvgWIB7B8MuolrT6i4fpDMP7/KzxQ=;
+  b=Ou8khvC0mKcie3XfRCeAvE+vLIfcT9X74jf+zmIyB6SgoyFaa/0JqQzW
+   PMK4fZgKQRXFhNmnT4zgg+xLlMaPx4uGl8+jYzXeESePiQiOrVGhSyTGJ
+   rrmmm6P+jKFurl7nWDceTlhnIbTHAt2ucNuJwFDsHwCAvdiQMxbz8YqIx
+   RUMmozqOhiaCeXXV8YVAr1YV9bn2Lig939B5wWa29lrtQQ7K6BhoYCoxe
+   QdYOI2Aha+KMa32TBdko7GrFzXkFbKqBIypSYQYuOL5Uqe9CLRrUWIEeN
+   xOZ8eZDzKHQy9ccXZspL2b6CRDESUfLkXPjJ1jr++VwsdGHs8t0QWOW+U
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10746"; a="340071423"
+X-IronPort-AV: E=Sophos;i="6.00,255,1681196400"; 
+   d="scan'208";a="340071423"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2023 16:43:33 -0700
+X-IronPort-AV: E=McAfee;i="6600,9927,10746"; a="747789680"
+X-IronPort-AV: E=Sophos;i="6.00,255,1681196400"; 
+   d="scan'208";a="747789680"
+Received: from unknown (HELO fred..) ([172.25.112.68])
+  by orsmga001.jf.intel.com with ESMTP; 19 Jun 2023 16:43:31 -0700
+From:   Xin Li <xin3.li@intel.com>
+To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        iommu@lists.linux.dev, linux-hyperv@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, x86@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, steve.wahl@hpe.com,
+        mike.travis@hpe.com, dimitri.sivanich@hpe.com,
+        russ.anderson@hpe.com, dvhart@infradead.org, andy@infradead.org,
+        joro@8bytes.org, suravee.suthikulpanit@amd.com, will@kernel.org,
+        robin.murphy@arm.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, dwmw2@infradead.org,
+        baolu.lu@linux.intel.com, peterz@infradead.org, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, xin3.li@intel.com, seanjc@google.com,
+        jiangshanlai@gmail.com, jgg@ziepe.ca, yangtiezhu@loongson.cn
+Subject: [PATCH 0/3] Do IRQ move cleanup with a timer instead of an IPI
+Date:   Mon, 19 Jun 2023 16:16:08 -0700
+Message-Id: <20230619231611.2230-1-xin3.li@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D217571
+No point to waste a vector for cleaning up the leftovers of a moved
+interrupt. Aside of that this must be the lowest priority of all vectors
+which makes FRED systems utilizing vectors 0x10-0x1f more complicated
+than necessary.
 
-Mario Limonciello (AMD) (mario.limonciello@amd.com) changed:
+Schedule a timer instead.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-           Assignee|drivers_platform_x86@kernel |shyam-sundar.s-k@amd.com
-                   |-bugs.osdl.org              |
+Thomas Gleixner (2):
+  x86/vector: Rename send_cleanup_vector() to vector_schedule_cleanup()
+  x86/vector: Replace IRQ_MOVE_CLEANUP_VECTOR with a timer callback
 
---=20
-You may reply to this email to add a comment.
+Xin Li (1):
+  tools: Get rid of IRQ_MOVE_CLEANUP_VECTOR from tools
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+ arch/x86/include/asm/hw_irq.h                 |   4 +-
+ arch/x86/include/asm/idtentry.h               |   1 -
+ arch/x86/include/asm/irq_vectors.h            |   7 --
+ arch/x86/kernel/apic/vector.c                 | 109 ++++++++++++++----
+ arch/x86/kernel/idt.c                         |   1 -
+ arch/x86/platform/uv/uv_irq.c                 |   2 +-
+ drivers/iommu/amd/iommu.c                     |   2 +-
+ drivers/iommu/hyperv-iommu.c                  |   4 +-
+ drivers/iommu/intel/irq_remapping.c           |   2 +-
+ tools/arch/x86/include/asm/irq_vectors.h      |   7 --
+ .../beauty/tracepoints/x86_irq_vectors.sh     |   2 +-
+ 11 files changed, 92 insertions(+), 49 deletions(-)
+
+-- 
+2.34.1
+
