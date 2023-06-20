@@ -2,133 +2,227 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF06DEB64DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jun 2023 10:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8ECEB64DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jun 2023 16:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232403AbjFTK47 (ORCPT
+        id S232509AbjFTQbn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 20 Jun 2023 06:56:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38414 "EHLO
+        Tue, 20 Jun 2023 12:31:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232416AbjFTK46 (ORCPT
+        with ESMTP id S231865AbjFTQbf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Jun 2023 06:56:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E85EA197
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jun 2023 03:56:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1687258570;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=052e1nKmdQCg7m1wzHj9pJt49WF7dYPUwtoAs0k/Va4=;
-        b=PpfWwK4ng6VyENrfrlr5L/va1gsfc3lfu7WuRlY4JVshgJdYCuzLID5f1N9BfCPWypZX6T
-        MmX0JDrRmrdQLsIrjop1yQKZSpwil3DZFGU5fP+YfgLtsDz9RKpF+NI1aFmkg6Kuh9ZqB3
-        1VinauVRI0AG2Rtv/ODQ/Dg28OwAUec=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-524-3MTlMSJfNSGhjp3GYXe29Q-1; Tue, 20 Jun 2023 06:56:08 -0400
-X-MC-Unique: 3MTlMSJfNSGhjp3GYXe29Q-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9835bf83157so334784966b.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jun 2023 03:56:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687258567; x=1689850567;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=052e1nKmdQCg7m1wzHj9pJt49WF7dYPUwtoAs0k/Va4=;
-        b=d48UazFotONkzoRs39YfRW8N/Lli9lV4jt+YrnQSN95V2zwzhM2pXujWDouHdpQcOV
-         6rIq9EnUDsvFcwPQHVhIRpgQHzzFvNCPedyJVC72VEci3OPbPhJenb2c7H6A9JwfUULw
-         +RKpg0MZA4AMuVYlUQGeuKqSkA0FOeY3XX4IDIHq8TTytPCx9YEd7JDTsenrBhGuf+Uu
-         AmE3UEfrIxxUCXrFH1igvQ+B2p9nbbaiJVWVgKdZYWnzPQzNyfwsxlk3lcOtsFs/cfgb
-         WW1EzrjUrewzL6unCJJh13kZffwAMGZ96N2dmmRxRWUyDX30oKZ1hNJvgJWJo5Ge7uwZ
-         x5pw==
-X-Gm-Message-State: AC+VfDxmUNoYuB7pcDD+3hNM002ZyJVSo8Lmt1uEHLUt+gYdwAZ788jA
-        7XHCKFMVFdTyd1fTr9kG/n/kwgejzLq6xOTlUsfRxIsJddLYzj2rZSNJsms6vR9xMM5z0R4imPP
-        m+L5tVJnj9qUfrZwHiZ24vfhmVz4nMA9ZFw==
-X-Received: by 2002:a17:907:3e0a:b0:974:1ef1:81ad with SMTP id hp10-20020a1709073e0a00b009741ef181admr12126275ejc.4.1687258567471;
-        Tue, 20 Jun 2023 03:56:07 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6PVKZpAWGwEI7g+6CZqHGpDz+kkW/Ai2NeMQNHK6x359/dg6aaPO/nDhVVoU6EdBIvy0yLHg==
-X-Received: by 2002:a17:907:3e0a:b0:974:1ef1:81ad with SMTP id hp10-20020a1709073e0a00b009741ef181admr12126263ejc.4.1687258567173;
-        Tue, 20 Jun 2023 03:56:07 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id x12-20020a1709060a4c00b009737b8d47b6sm1140785ejf.203.2023.06.20.03.56.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Jun 2023 03:56:06 -0700 (PDT)
-Message-ID: <99b14625-b760-21c2-61da-755813755971@redhat.com>
-Date:   Tue, 20 Jun 2023 12:56:06 +0200
+        Tue, 20 Jun 2023 12:31:35 -0400
+Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 929F819AB;
+        Tue, 20 Jun 2023 09:30:54 -0700 (PDT)
+Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35KFQaEh017220;
+        Tue, 20 Jun 2023 16:27:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pps0720; bh=Wq0tNAZYntMOwujjPXOicpBp9fXP+Uj7oYrHjROJbZA=;
+ b=M+xfl8GZ6kqZ1CiDzA9X4UIph7j8Uxk6Zk8O01krfcaIRWFNJug8wkFrqz3VGFySwXya
+ 1Xk55oPZl9kiBmZShhESmyFrg0lc+brEJpdfF+dLLRDmCDyq/nx5YTaKjX0OV3r4lYC7
+ MIBtmOJSNz4ns3EIlzL3a7oZp4aWDTOMu+knYFslil3rQbLnqc96PMraSGJeJa7VRE1H
+ YmjPkI97ewmuBuxLOd1zXrNKZFnIQqF0/Rcgql9LdSnHw9EsHQMEpaoIr2rABytBDo4p
+ q7vDTnFAz2SfEK3+Ff7iW5H3E2HEE04CQMsPUXDChNXXMiyufzK11zizYoWdBnsNvC0O IA== 
+Received: from p1lg14879.it.hpe.com (p1lg14879.it.hpe.com [16.230.97.200])
+        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3rberk8jh6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Jun 2023 16:27:49 +0000
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by p1lg14879.it.hpe.com (Postfix) with ESMTPS id EB7DD12B43;
+        Tue, 20 Jun 2023 16:27:47 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id A16C180871B;
+        Tue, 20 Jun 2023 16:27:43 +0000 (UTC)
+Date:   Tue, 20 Jun 2023 11:27:41 -0500
+From:   Steve Wahl <steve.wahl@hpe.com>
+To:     Xin Li <xin3.li@intel.com>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        iommu@lists.linux.dev, linux-hyperv@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, x86@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, steve.wahl@hpe.com,
+        dimitri.sivanich@hpe.com, russ.anderson@hpe.com,
+        dvhart@infradead.org, andy@infradead.org, joro@8bytes.org,
+        suravee.suthikulpanit@amd.com, will@kernel.org,
+        robin.murphy@arm.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, dwmw2@infradead.org,
+        baolu.lu@linux.intel.com, peterz@infradead.org, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, seanjc@google.com, jiangshanlai@gmail.com,
+        jgg@ziepe.ca, yangtiezhu@loongson.cn
+Subject: Re: [PATCH 1/3] x86/vector: Rename send_cleanup_vector() to
+ vector_schedule_cleanup()
+Message-ID: <ZJHTYUrKA/mclxRZ@swahl-home.5wahls.com>
+References: <20230619231611.2230-1-xin3.li@intel.com>
+ <20230619231611.2230-2-xin3.li@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 0/8] Add multiple PMCs support in pmc core driver
-Content-Language: en-US, nl
-To:     Rajvi Jingar <rajvi.jingar@linux.intel.com>,
-        david.e.box@linux.intel.com, ilpo.jarvinen@linux.intel.com,
-        irenic.rajneesh@gmail.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     xi.pardee@intel.com
-References: <20230613225347.2720665-1-rajvi.jingar@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230613225347.2720665-1-rajvi.jingar@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230619231611.2230-2-xin3.li@intel.com>
+X-Proofpoint-GUID: sv3OUwB2DgkiAQGU6DCGBG-2zzGjyhJ8
+X-Proofpoint-ORIG-GUID: sv3OUwB2DgkiAQGU6DCGBG-2zzGjyhJ8
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-20_12,2023-06-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0
+ impostorscore=0 malwarescore=0 priorityscore=1501 clxscore=1011
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306200148
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
 
-On 6/14/23 00:53, Rajvi Jingar wrote:
-> Newer platforms starting from Meteor Lake can have multiple PMCs.
-> This patch series include changes to enable pmc core driver to support
-> multiple PMCs for newer platforms. It adds devid and register maps to
-> enable IOE-P and IOE-M available on Meteor Lake platform. It also fixes
-> the register maps for SOC-M.
+On Mon, Jun 19, 2023 at 04:16:09PM -0700, Xin Li wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
 > 
-> Patch includes:
-> platform/x86:intel/pmc: Update maps for Meteor Lake P/M platforms
-> platform/x86:intel/pmc: Combine core_init() and core_configure()
-> platform/x86:intel/pmc: Add support to handle multiple PMCs
-> platform/x86:intel/pmc: Enable debugfs multiple PMC support
-> platform/x86:intel/pmc: Discover PMC devices
-> platform/x86:intel/pmc: Use SSRAM to discover pwrm base address of primary PMC
-> platform/x86:intel/pmc: Add Meteor Lake IOE-P PMC related maps
-> platform/x86:intel/pmc: Add Meteor Lake IOE-M PMC related maps
-
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-
-
+> Rename send_cleanup_vector() to vector_schedule_cleanup() for the next
+> patch to replace vector cleanup IPI with a timer callback.
 > 
->  drivers/platform/x86/intel/pmc/Makefile     |   4 +-
->  drivers/platform/x86/intel/pmc/adl.c        |  16 +-
->  drivers/platform/x86/intel/pmc/cnp.c        |  18 +-
->  drivers/platform/x86/intel/pmc/core.c       | 470 ++++++----
->  drivers/platform/x86/intel/pmc/core.h       | 125 ++-
->  drivers/platform/x86/intel/pmc/core_ssram.c | 133 +++
->  drivers/platform/x86/intel/pmc/icl.c        |   7 +-
->  drivers/platform/x86/intel/pmc/mtl.c        | 954 +++++++++++++++++++-
->  drivers/platform/x86/intel/pmc/spt.c        |   7 +-
->  drivers/platform/x86/intel/pmc/tgl.c        |  21 +-
->  10 files changed, 1516 insertions(+), 239 deletions(-)
->  create mode 100644 drivers/platform/x86/intel/pmc/core_ssram.c
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Xin Li <xin3.li@intel.com>
+> ---
+>  arch/x86/include/asm/hw_irq.h       | 4 ++--
+>  arch/x86/kernel/apic/vector.c       | 8 ++++----
+>  arch/x86/platform/uv/uv_irq.c       | 2 +-
+>  drivers/iommu/amd/iommu.c           | 2 +-
+>  drivers/iommu/hyperv-iommu.c        | 4 ++--
+>  drivers/iommu/intel/irq_remapping.c | 2 +-
+>  6 files changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/hw_irq.h b/arch/x86/include/asm/hw_irq.h
+> index d465ece58151..551829884734 100644
+> --- a/arch/x86/include/asm/hw_irq.h
+> +++ b/arch/x86/include/asm/hw_irq.h
+> @@ -97,10 +97,10 @@ extern struct irq_cfg *irqd_cfg(struct irq_data *irq_data);
+>  extern void lock_vector_lock(void);
+>  extern void unlock_vector_lock(void);
+>  #ifdef CONFIG_SMP
+> -extern void send_cleanup_vector(struct irq_cfg *);
+> +extern void vector_schedule_cleanup(struct irq_cfg *);
+>  extern void irq_complete_move(struct irq_cfg *cfg);
+>  #else
+> -static inline void send_cleanup_vector(struct irq_cfg *c) { }
+> +static inline void vector_schedule_cleanup(struct irq_cfg *c) { }
+>  static inline void irq_complete_move(struct irq_cfg *c) { }
+>  #endif
+>  
+> diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+> index c1efebd27e6c..aa370bd0d933 100644
+> --- a/arch/x86/kernel/apic/vector.c
+> +++ b/arch/x86/kernel/apic/vector.c
+> @@ -967,7 +967,7 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_irq_move_cleanup)
+>  	raw_spin_unlock(&vector_lock);
+>  }
+>  
+> -static void __send_cleanup_vector(struct apic_chip_data *apicd)
+> +static void __vector_schedule_cleanup(struct apic_chip_data *apicd)
+>  {
+>  	unsigned int cpu;
+>  
+> @@ -983,13 +983,13 @@ static void __send_cleanup_vector(struct apic_chip_data *apicd)
+>  	raw_spin_unlock(&vector_lock);
+>  }
+>  
+> -void send_cleanup_vector(struct irq_cfg *cfg)
+> +void vector_schedule_cleanup(struct irq_cfg *cfg)
+>  {
+>  	struct apic_chip_data *apicd;
+>  
+>  	apicd = container_of(cfg, struct apic_chip_data, hw_irq_cfg);
+>  	if (apicd->move_in_progress)
+> -		__send_cleanup_vector(apicd);
+> +		__vector_schedule_cleanup(apicd);
+>  }
+>  
+>  void irq_complete_move(struct irq_cfg *cfg)
+> @@ -1007,7 +1007,7 @@ void irq_complete_move(struct irq_cfg *cfg)
+>  	 * on the same CPU.
+>  	 */
+>  	if (apicd->cpu == smp_processor_id())
+> -		__send_cleanup_vector(apicd);
+> +		__vector_schedule_cleanup(apicd);
+>  }
+>  
+>  /*
+> diff --git a/arch/x86/platform/uv/uv_irq.c b/arch/x86/platform/uv/uv_irq.c
+> index ee21d6a36a80..4221259a5870 100644
+> --- a/arch/x86/platform/uv/uv_irq.c
+> +++ b/arch/x86/platform/uv/uv_irq.c
+> @@ -58,7 +58,7 @@ uv_set_irq_affinity(struct irq_data *data, const struct cpumask *mask,
+>  	ret = parent->chip->irq_set_affinity(parent, mask, force);
+>  	if (ret >= 0) {
+>  		uv_program_mmr(cfg, data->chip_data);
+> -		send_cleanup_vector(cfg);
+> +		vector_schedule_cleanup(cfg);
+>  	}
+>  
+>  	return ret;
+> diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+> index dc1ec6849775..b5900e70de60 100644
+> --- a/drivers/iommu/amd/iommu.c
+> +++ b/drivers/iommu/amd/iommu.c
+> @@ -3658,7 +3658,7 @@ static int amd_ir_set_affinity(struct irq_data *data,
+>  	 * at the new destination. So, time to cleanup the previous
+>  	 * vector allocation.
+>  	 */
+> -	send_cleanup_vector(cfg);
+> +	vector_schedule_cleanup(cfg);
+>  
+>  	return IRQ_SET_MASK_OK_DONE;
+>  }
+> diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
+> index 8302db7f783e..8a5c17b97310 100644
+> --- a/drivers/iommu/hyperv-iommu.c
+> +++ b/drivers/iommu/hyperv-iommu.c
+> @@ -51,7 +51,7 @@ static int hyperv_ir_set_affinity(struct irq_data *data,
+>  	if (ret < 0 || ret == IRQ_SET_MASK_OK_DONE)
+>  		return ret;
+>  
+> -	send_cleanup_vector(cfg);
+> +	vector_schedule_cleanup(cfg);
+>  
+>  	return 0;
+>  }
+> @@ -257,7 +257,7 @@ static int hyperv_root_ir_set_affinity(struct irq_data *data,
+>  	if (ret < 0 || ret == IRQ_SET_MASK_OK_DONE)
+>  		return ret;
+>  
+> -	send_cleanup_vector(cfg);
+> +	vector_schedule_cleanup(cfg);
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/irq_remapping.c
+> index a1b987335b31..55d899f5a14b 100644
+> --- a/drivers/iommu/intel/irq_remapping.c
+> +++ b/drivers/iommu/intel/irq_remapping.c
+> @@ -1180,7 +1180,7 @@ intel_ir_set_affinity(struct irq_data *data, const struct cpumask *mask,
+>  	 * at the new destination. So, time to cleanup the previous
+>  	 * vector allocation.
+>  	 */
+> -	send_cleanup_vector(cfg);
+> +	vector_schedule_cleanup(cfg);
+>  
+>  	return IRQ_SET_MASK_OK_DONE;
+>  }
+> -- 
+> 2.34.1
 > 
 
+-- 
+Steve Wahl, Hewlett Packard Enterprise
