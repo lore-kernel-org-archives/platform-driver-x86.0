@@ -2,110 +2,122 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0BDEB64DA
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Jun 2023 23:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9291EB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jun 2023 02:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229813AbjFSXnv (ORCPT
+        id S229830AbjFTC5K (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Jun 2023 19:43:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50686 "EHLO
+        Mon, 19 Jun 2023 22:57:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229737AbjFSXnj (ORCPT
+        with ESMTP id S229522AbjFTC5J (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Jun 2023 19:43:39 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0E01A4;
-        Mon, 19 Jun 2023 16:43:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687218219; x=1718754219;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=93F5iXdL1aFe8xiqIFZhy89J/IUrk/GxSpjv1QQ9jI0=;
-  b=DTkuV9hSKSVd+wYCSoMEpj6y+gTl+n2bl6SwRvDqN5XgyPeGK7u/dQpV
-   QN2epjFjSSvSrTEb2cR/+RqUo1yZ2BLJlgMgk36irYSRAs6ylEe23Ynie
-   dcijUwfU4tf2hpsRLjOWJ7ltkif/7JSXxnG7Bf9eZOVnY0aAJ4M/PrCqf
-   WbvuEon0uFWeQGzlDh92te5hYgloYHpmBrF+mpcQA4Fnma3Xw7RDPW0II
-   //XRmKtnVxTo26it36Gh5C0V3yy9xmxapiVlNJKPiSrZwgA//3fwG7FvG
-   NmmmOFNmDrGqzBg7m7DipOPV6KWhzpkL4Zt2MLrO80UyGn6a97W3SY2Aj
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10746"; a="340071499"
-X-IronPort-AV: E=Sophos;i="6.00,255,1681196400"; 
-   d="scan'208";a="340071499"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2023 16:43:38 -0700
-X-IronPort-AV: E=McAfee;i="6600,9927,10746"; a="747789703"
-X-IronPort-AV: E=Sophos;i="6.00,255,1681196400"; 
-   d="scan'208";a="747789703"
-Received: from unknown (HELO fred..) ([172.25.112.68])
-  by orsmga001.jf.intel.com with ESMTP; 19 Jun 2023 16:43:36 -0700
-From:   Xin Li <xin3.li@intel.com>
-To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        iommu@lists.linux.dev, linux-hyperv@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, x86@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, steve.wahl@hpe.com,
-        mike.travis@hpe.com, dimitri.sivanich@hpe.com,
-        russ.anderson@hpe.com, dvhart@infradead.org, andy@infradead.org,
-        joro@8bytes.org, suravee.suthikulpanit@amd.com, will@kernel.org,
-        robin.murphy@arm.com, kys@microsoft.com, haiyangz@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, dwmw2@infradead.org,
-        baolu.lu@linux.intel.com, peterz@infradead.org, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, xin3.li@intel.com, seanjc@google.com,
-        jiangshanlai@gmail.com, jgg@ziepe.ca, yangtiezhu@loongson.cn
-Subject: [PATCH 3/3] tools: Get rid of IRQ_MOVE_CLEANUP_VECTOR from tools
-Date:   Mon, 19 Jun 2023 16:16:11 -0700
-Message-Id: <20230619231611.2230-4-xin3.li@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230619231611.2230-1-xin3.li@intel.com>
-References: <20230619231611.2230-1-xin3.li@intel.com>
+        Mon, 19 Jun 2023 22:57:09 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE4601AC;
+        Mon, 19 Jun 2023 19:57:07 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 99F8A5C01ED;
+        Mon, 19 Jun 2023 22:57:05 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 19 Jun 2023 22:57:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to; s=fm3; t=1687229825; x=1687316225; bh=9GbRm5CtvL
+        ke73jGmzLqa1s16vX991t6TY9JsVkBVzQ=; b=L2Z8EDoHD1b0HgywJKMUqbYghi
+        w4HOj/I3nsuQ8KI0h0O2GxCR7l4G//W7cOwYkjvuMRDmH7804KZHJlajDMSmFjHs
+        g/a8at4dlV6WXwjhBatXLVqtTCXMqJKWyAMCECbgj7d8O51mbyLa5Mt1Snk8hpr1
+        5NpTA4/nm4XwQw99O40jQ0bTdxnInqu97uTX+rcYaUZ2+D8vahBTMr10sWPYZXgq
+        NxYUdhpB1cBDA1cta5dQ7UWMfjHomzpeTzvZkekIApVl628quWkQ9SRIA3LB8BLM
+        wz235mhV9NcwQvC8wsA3I9YbIGoJ6s/7XKE7++/OfwaV3efAlHTHUMZUh/Sw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1687229825; x=1687316225; bh=9GbRm5CtvLke7
+        3jGmzLqa1s16vX991t6TY9JsVkBVzQ=; b=mT6b9Wt/th9vO+9nY9HJrhkhYuiwy
+        dOEqXs54lJv1wJ/SdI2/cmiK7UXp7IbtvzVUP37+OKARidx+9pguIGKQh+xInlwJ
+        ZxV5XTucqdKGwyGEXXRM3CtuAY9CX8AtlQQvCM76sBGXLCjs5rqVKXYrHBrHO2ct
+        Z3lOpEPpH5rOh+pP8SQK664s7GxwflndtvRwyPZXhh29ffYGJusMXaN3VHiW7aPC
+        5f1PEYRzaCNYaM9qOQsaTkRUPRPruq3vy8dPbYaIDfadj8LeXd7RVFUG2RsDWfDw
+        u0Eu+k5NMdn2mtVUl4LSmZU65A86egATcePEzoTfetUJmYZGUFZDVUu1w==
+X-ME-Sender: <xms:gRWRZMy83k_1lVNQnylydsu3rpwGRJop8333gbooZTJJOONYCUKrNQ>
+    <xme:gRWRZATHe1vCimEDWsJpRfT07ScwWDueYoji43aD2pwlotRc6IcA1S6vzMXVmChLa
+    mnfUrCo6beL24M22_s>
+X-ME-Received: <xmr:gRWRZOWskQ9jdMMaIoGdbgBp5Wj9ESeh7YGbwSK8zFmL5z-PBwoyDVMJxDHt>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgeefgedgvddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
+    nhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfdujedthfduudekffefkeeiffdttd
+    dvhfegudduueffuefhfefggeefteevvdegnecuvehluhhsthgvrhfuihiivgeptdenucfr
+    rghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:gRWRZKjHW8BHuCvf1TLgIAhMqH88kO2_v1qnz39FAHJNSpeEbS1v_g>
+    <xmx:gRWRZOC2mFdRzFtrQxjnh7iis7fR1TezmZB7CnymAgaJ9w0pgrWT1Q>
+    <xmx:gRWRZLK5udewIp7phIf2DQcx_zKHRCXZM_93ox95S2qYsZEn1Nl6kg>
+    <xmx:gRWRZEAaNdL5-4H32xxfw1j0k_6hPL3Y0SqiiyVuwlHq3-vdXMjDJQ>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 19 Jun 2023 22:57:02 -0400 (EDT)
+From:   "Luke D. Jones" <luke@ljones.dev>
+To:     hdegoede@redhat.com
+Cc:     corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, markgross@kernel.org,
+        jdelvare@suse.com, linux@roeck-us.net,
+        "Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH 0/8] asus-wmi: add/expose more features, fixes
+Date:   Tue, 20 Jun 2023 14:56:33 +1200
+Message-Id: <20230620025641.53197-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Get rid of IRQ_MOVE_CLEANUP_VECTOR from tools.
+This patch series adds or exposes more features that are available in the ROG
+laptop series.
 
-Signed-off-by: Xin Li <xin3.li@intel.com>
----
- tools/arch/x86/include/asm/irq_vectors.h               | 7 -------
- tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh | 2 +-
- 2 files changed, 1 insertion(+), 8 deletions(-)
+- expose dGPU and CPU tunables for ROG
+  - These are things like GPU boost, CPU Pl1 and PL2, package power limits
+- support setting mini-LED mode
+  - Some newer laptops have a screen that can toggle between regular style
+    backlight and using mini-LED backlight
+- add WMI method to show if egpu connected
+  - This WMI method can be monitored/queried to see if it is possible to begin
+    the change-over to eGPU
+- support middle fan custom curves
+  - Some newer laptops have a center/middle fan which blows across the CPU and GPU
+- add support for showing middle fan RPM
+- add support for showing charger mode (AC, USB-C, both plugged)
+- add additional checks to GPU switching code
+  - These try to prevent a sceanrio such as the user disabling the dGPU while it
+    is driving the internal panel via MUX, resulting in no output at all.
+    There are no checks in the ACPI code for this, but on some newer models ASUS
+    did finally add a switch in the BIOS menu. It is best to try and prevent this
+    at the kernel level rather than userland level.
 
-diff --git a/tools/arch/x86/include/asm/irq_vectors.h b/tools/arch/x86/include/asm/irq_vectors.h
-index 43dcb9284208..3a19904c2db6 100644
---- a/tools/arch/x86/include/asm/irq_vectors.h
-+++ b/tools/arch/x86/include/asm/irq_vectors.h
-@@ -35,13 +35,6 @@
-  */
- #define FIRST_EXTERNAL_VECTOR		0x20
- 
--/*
-- * Reserve the lowest usable vector (and hence lowest priority)  0x20 for
-- * triggering cleanup after irq migration. 0x21-0x2f will still be used
-- * for device interrupts.
-- */
--#define IRQ_MOVE_CLEANUP_VECTOR		FIRST_EXTERNAL_VECTOR
--
- #define IA32_SYSCALL_VECTOR		0x80
- 
- /*
-diff --git a/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh b/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
-index eed9ce0fcbe6..87dc68c7de0c 100755
---- a/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
-+++ b/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
-@@ -12,7 +12,7 @@ x86_irq_vectors=${arch_x86_header_dir}/irq_vectors.h
- 
- # FIRST_EXTERNAL_VECTOR is not that useful, find what is its number
- # and then replace whatever is using it and that is useful, which at
--# the time of writing of this script was: IRQ_MOVE_CLEANUP_VECTOR.
-+# the time of writing of this script was: 0x20.
- 
- first_external_regex='^#define[[:space:]]+FIRST_EXTERNAL_VECTOR[[:space:]]+(0x[[:xdigit:]]+)$'
- first_external_vector=$(grep -E ${first_external_regex} ${x86_irq_vectors} | sed -r "s/${first_external_regex}/\1/g")
+All patches pass ./scripts/checkpatch.pl
+
+Luke D. Jones (8):
+  platform/x86: asus-wmi: add support for showing charger mode
+  platform/x86: asus-wmi: add support for showing middle fan RPM
+  platform/x86: asus-wmi: support middle fan custom curves
+  platform/x86: asus-wmi: add WMI method to show if egpu connected
+  platform/x86: asus-wmi: don't allow eGPU switching if eGPU not
+    connected
+  platform/x86: asus-wmi: add safety checks to gpu switching
+  platform/x86: asus-wmi: support setting mini-LED mode
+  platform/x86: asus-wmi: expose dGPU and CPU tunables for ROG
+
+ .../ABI/testing/sysfs-platform-asus-wmi       | 100 +++
+ drivers/platform/x86/asus-wmi.c               | 685 +++++++++++++++++-
+ include/linux/platform_data/x86/asus-wmi.h    |  21 +-
+ 3 files changed, 803 insertions(+), 3 deletions(-)
+
 -- 
-2.34.1
+2.40.1
 
