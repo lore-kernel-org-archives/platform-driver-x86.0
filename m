@@ -2,63 +2,85 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D04A5EB64D8
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jun 2023 07:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D34EB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jun 2023 08:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231737AbjFTH4q (ORCPT
+        id S231745AbjFTIhL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 20 Jun 2023 03:56:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52056 "EHLO
+        Tue, 20 Jun 2023 04:37:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231272AbjFTH4X (ORCPT
+        with ESMTP id S230102AbjFTIhK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Jun 2023 03:56:23 -0400
-X-Greylist: delayed 524 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 20 Jun 2023 00:55:01 PDT
-Received: from mail.lahouille.pl (mail.lahouille.pl [217.182.69.204])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1BB619BF
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jun 2023 00:55:01 -0700 (PDT)
-Received: by mail.lahouille.pl (Postfix, from userid 1002)
-        id 381E9463A0; Tue, 20 Jun 2023 07:46:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lahouille.pl; s=mail;
-        t=1687247175; bh=aes4pTqKgBnWjaRufbrhtQag/Wjwd7pKgVnSqLd2GlA=;
-        h=Date:From:To:Subject:From;
-        b=J+Dq5pYsDhsOcu7pYxVv2124iqzNZYBLkz3dVN27L2NYPb9ku56+xpci+zufpjqXe
-         ErCv9rPcpqtu9kC9AaZzFifR6/cklCWe/BhFXmyf1xL2urGQr8Gwt4TVioR8IuzpIp
-         r9mDMbI0lRAXxQ1nlsAS1U8NxpbodmD0pc0eXqRcSGkIjs0eDe5TruvHB8JhiM92Ps
-         VNR5QtnBnij93JTNf9cJS+Ae3cMS03iqrvEVRZxj448H2IY8tzWO9eHXF60hAkAZ4y
-         WEpqSEnrsGm8dw08W/n27A6Y1kRnh0X4FI7j0YsnJlk/pooCChpSNFiT6FiF5fLKjo
-         s1rSoqCAgZWxA==
-Received: by mail.lahouille.pl for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jun 2023 07:46:08 GMT
-Message-ID: <20230620064500-0.1.2d.52wv.0.tavi1ih5sr@lahouille.pl>
-Date:   Tue, 20 Jun 2023 07:46:08 GMT
-From:   =?UTF-8?Q? "Micha=C5=82_Rodziewicz" ?= 
-        <michal.rodziewicz@lahouille.pl>
-To:     <platform-driver-x86@vger.kernel.org>
-Subject: =?UTF-8?Q?Bezp=C5=82atna_konsultacja?=
-X-Mailer: mail.lahouille.pl
+        Tue, 20 Jun 2023 04:37:10 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74ECDB;
+        Tue, 20 Jun 2023 01:37:08 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1687250226;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xnki0r5y4TroSJ8P6p+PySOa093W7Oqe6Ng8UJe+axY=;
+        b=hTZCKfB0Dm0qkGSiW0lNQniI9H/ypBbK7XnHzIc5Wwxs9kiU1bYYKN1DCX73COz8El7lMD
+        8xfUtjV7cwd0WLJNkhTh17eB7bVthya5jhWunDMV78HExnjqeBj0OUeD8Xq9e/1AMhvJw2
+        iseST0n/ECErlpj0huXQ7hSNp+6zbeewlnRpl/wxviFKgHyUIQkllbQVQ4Xznqb37Ywx5f
+        Qqzi+TVZsG+PyNX3p0HAIkRlR0outyujAcjrhaIue/bDvgd+tbQvghO4y3A5FtjcHmLYuS
+        Ek3XJZCQn+zMr6blc5ym9tm5qvEEZZVEh9fY5qX50MDwBP2qFoFsU2SKRzP83g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1687250226;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xnki0r5y4TroSJ8P6p+PySOa093W7Oqe6Ng8UJe+axY=;
+        b=fom0Ekn1nFU9HjMfw1gEd0/2MwYHr82fLAnc+vgq8OJvpEvu6ubNuyRjR3ADXM7DS+wvFE
+        LljsU4/9A0poFpCw==
+To:     Xin Li <xin3.li@intel.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, iommu@lists.linux.dev,
+        linux-hyperv@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org
+Cc:     mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, steve.wahl@hpe.com, mike.travis@hpe.com,
+        dimitri.sivanich@hpe.com, russ.anderson@hpe.com,
+        dvhart@infradead.org, andy@infradead.org, joro@8bytes.org,
+        suravee.suthikulpanit@amd.com, will@kernel.org,
+        robin.murphy@arm.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, dwmw2@infradead.org,
+        baolu.lu@linux.intel.com, peterz@infradead.org, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, xin3.li@intel.com, seanjc@google.com,
+        jiangshanlai@gmail.com, jgg@ziepe.ca, yangtiezhu@loongson.cn
+Subject: Re: [PATCH 2/3] x86/vector: Replace IRQ_MOVE_CLEANUP_VECTOR with a
+ timer callback
+In-Reply-To: <20230619231611.2230-3-xin3.li@intel.com>
+References: <20230619231611.2230-1-xin3.li@intel.com>
+ <20230619231611.2230-3-xin3.li@intel.com>
+Date:   Tue, 20 Jun 2023 10:37:05 +0200
+Message-ID: <87h6r2pm1a.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Dzie=C5=84 dobry,
+On Mon, Jun 19 2023 at 16:16, Xin Li wrote:
+> +/*
+> + * Called with vector_lock held
+> + */
 
-czy konsultowali Pa=C5=84stwo swoj=C4=85 umow=C4=99 ubezpieczeniow=C4=85 =
-z niezale=C5=BCnym doradc=C4=85?
+Such a comment is patently bad. 
 
-Wi=C4=99kszo=C5=9B=C4=87 moich Klient=C3=B3w, dotychczas nie by=C5=82a =C5=
-=9Bwiadoma, jak bardzo przep=C5=82acaj=C4=85 za polisy.
+> +static void __vector_cleanup(struct vector_cleanup *cl, bool check_irr)
+>  {
+        ....
 
-Jako specjalista niepowi=C4=85zany z =C5=BCadn=C4=85 organizacja ubezpiec=
-zeniow=C4=85 bezp=C5=82atnie przeanalizuj=C4=99 Pa=C5=84stwa rozwi=C4=85z=
-ania finansowe i zarekomenduj=C4=99 najkorzystniejsze na rynku alternatyw=
-y, kt=C3=B3re pozwol=C4=85 zmniejszy=C4=87 dotychczasowe koszty przy jedn=
-ocze=C5=9Bnie zwi=C4=99kszonej ochronie.
+        lockdep_assert_held(&vector_lock);
 
-Byliby Pa=C5=84stwo zainteresowani?
+Documents the requirement clearly _and_ catches any caller which does not
+hold the lock when lockdep is enabled.
 
+Thanks,
 
-Pozdrawiam
-Micha=C5=82 Rodziewicz
+        tglx
