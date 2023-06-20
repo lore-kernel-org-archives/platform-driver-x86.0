@@ -2,85 +2,120 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D34EB64DC
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jun 2023 08:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E01EB64D7
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jun 2023 10:45:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231745AbjFTIhL (ORCPT
+        id S231334AbjFTKpa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 20 Jun 2023 04:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47002 "EHLO
+        Tue, 20 Jun 2023 06:45:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230102AbjFTIhK (ORCPT
+        with ESMTP id S230346AbjFTKpW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Jun 2023 04:37:10 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74ECDB;
-        Tue, 20 Jun 2023 01:37:08 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1687250226;
+        Tue, 20 Jun 2023 06:45:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E84CE42
+        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jun 2023 03:44:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1687257861;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xnki0r5y4TroSJ8P6p+PySOa093W7Oqe6Ng8UJe+axY=;
-        b=hTZCKfB0Dm0qkGSiW0lNQniI9H/ypBbK7XnHzIc5Wwxs9kiU1bYYKN1DCX73COz8El7lMD
-        8xfUtjV7cwd0WLJNkhTh17eB7bVthya5jhWunDMV78HExnjqeBj0OUeD8Xq9e/1AMhvJw2
-        iseST0n/ECErlpj0huXQ7hSNp+6zbeewlnRpl/wxviFKgHyUIQkllbQVQ4Xznqb37Ywx5f
-        Qqzi+TVZsG+PyNX3p0HAIkRlR0outyujAcjrhaIue/bDvgd+tbQvghO4y3A5FtjcHmLYuS
-        Ek3XJZCQn+zMr6blc5ym9tm5qvEEZZVEh9fY5qX50MDwBP2qFoFsU2SKRzP83g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1687250226;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xnki0r5y4TroSJ8P6p+PySOa093W7Oqe6Ng8UJe+axY=;
-        b=fom0Ekn1nFU9HjMfw1gEd0/2MwYHr82fLAnc+vgq8OJvpEvu6ubNuyRjR3ADXM7DS+wvFE
-        LljsU4/9A0poFpCw==
-To:     Xin Li <xin3.li@intel.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, iommu@lists.linux.dev,
-        linux-hyperv@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        x86@kernel.org
-Cc:     mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, steve.wahl@hpe.com, mike.travis@hpe.com,
-        dimitri.sivanich@hpe.com, russ.anderson@hpe.com,
-        dvhart@infradead.org, andy@infradead.org, joro@8bytes.org,
-        suravee.suthikulpanit@amd.com, will@kernel.org,
-        robin.murphy@arm.com, kys@microsoft.com, haiyangz@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, dwmw2@infradead.org,
-        baolu.lu@linux.intel.com, peterz@infradead.org, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, xin3.li@intel.com, seanjc@google.com,
-        jiangshanlai@gmail.com, jgg@ziepe.ca, yangtiezhu@loongson.cn
-Subject: Re: [PATCH 2/3] x86/vector: Replace IRQ_MOVE_CLEANUP_VECTOR with a
- timer callback
-In-Reply-To: <20230619231611.2230-3-xin3.li@intel.com>
-References: <20230619231611.2230-1-xin3.li@intel.com>
- <20230619231611.2230-3-xin3.li@intel.com>
-Date:   Tue, 20 Jun 2023 10:37:05 +0200
-Message-ID: <87h6r2pm1a.ffs@tglx>
+        bh=ONCSTWvDzW9P2kSA0X/B/sFo3vDt2b7SS93G2FNlhfs=;
+        b=Bo8WJNk4Wv7/8KfeIdyNfPMuLOHGmY61mwQ9bx2hzBjnZnMPXHcS8DVs2BnQoPpx88sx32
+        zFMhHz7U/vuYQ0I0lKkQ/qg7lpqcTMR0cvDWx7oAxjHSwvhh2aorBnUI1SJMjXFrsxnw0X
+        TRbaQTw7b87h/tDfGPUDn89EBQcG2Go=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-41-HIYYT2jCMdyJPP4UameVcw-1; Tue, 20 Jun 2023 06:44:19 -0400
+X-MC-Unique: HIYYT2jCMdyJPP4UameVcw-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-51a4a83d597so2121550a12.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jun 2023 03:44:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687257858; x=1689849858;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ONCSTWvDzW9P2kSA0X/B/sFo3vDt2b7SS93G2FNlhfs=;
+        b=GcuMlMLO8PQ3BzCHe7JtM2ah5KRcwSYd8jRjXptEmMwWP9oEczDcFApVJdLhJrkDn6
+         v6PRA0KGVrrhAZMAhkF7deu3TC6pGqTXf7rC6CRoRCm17RqpZDfEzZ4mZe08fsYEUZxs
+         2qg90syOz2UEBuXBfKrgW6OaP30ul0MElKvsRfxQEjqXoRBZJ+quOFFP7FEF4vrluszq
+         zob7DsbFaO/uIze827MERljzqT6Z629lW+USuRIgW6FakiyjBw/Mewjx/iIceSoyeMvE
+         h9M0a3h+DcP9oSOCisGyrKd+XLtA0LfIsPjxNh6x/RIkv27GFplSjLlsK55bEKnYT2Sc
+         6Kuw==
+X-Gm-Message-State: AC+VfDwkWzFPdLD8f1NCgMLFz2Rh9Y9fBSNdP1ofgrJgnOxPM/6vDMNj
+        UqB0oJgpi2d1se6xa9kzt1KUPVDm5W6sHmEBCzXq+cASubIQgIEcAngdqs5acz3dRZdH+ghQhiB
+        2vI4415+vNhPD/TUdxTZ2Of5F6ET8N8KrQg==
+X-Received: by 2002:aa7:d30f:0:b0:51a:4c86:e555 with SMTP id p15-20020aa7d30f000000b0051a4c86e555mr4639102edq.40.1687257858525;
+        Tue, 20 Jun 2023 03:44:18 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7T2O5iLbLc+k+4O9CHLPAq+N4ey4Nk6dDxJl+IpzEYcPgnSY9xjTvOdolGV9QrxYE+PIOV+g==
+X-Received: by 2002:aa7:d30f:0:b0:51a:4c86:e555 with SMTP id p15-20020aa7d30f000000b0051a4c86e555mr4639094edq.40.1687257858282;
+        Tue, 20 Jun 2023 03:44:18 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id u24-20020aa7d898000000b0051897e3b5efsm960707edq.42.2023.06.20.03.44.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Jun 2023 03:44:17 -0700 (PDT)
+Message-ID: <744bb522-a4b2-4bda-3a02-e63795151d84@redhat.com>
+Date:   Tue, 20 Jun 2023 12:44:16 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v2 0/6] platform/x86: int3472: discrete: Various
+ improvements
+Content-Language: en-US, nl
+To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Daniel Scally <dan.scally@ideasonboard.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
+References: <20230616172132.37859-1-hdegoede@redhat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230616172132.37859-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jun 19 2023 at 16:16, Xin Li wrote:
-> +/*
-> + * Called with vector_lock held
-> + */
+Hi all,
 
-Such a comment is patently bad. 
+On 6/16/23 19:21, Hans de Goede wrote:
+> Hi All,
+> 
+> Here is a v2 of my previous 2 int3472 patch series merged into
+> 1 bigger series.
+> 
+> Changes in v2:
+> - Use static_assert() to check that GPIO_REGULATOR_SUPPLY_MAP_COUNT
+>   and ARRAY_SIZE(skl_int3472_regulator_map_supplies) match
+> 
+> and this also collects all the various Tested-by-s + Reviewed-by-s.
 
-> +static void __vector_cleanup(struct vector_cleanup *cl, bool check_irr)
->  {
-        ....
+I've added this (v2) to my review-hans (soon to be for-next) branch now (again).
 
-        lockdep_assert_held(&vector_lock);
+Regards,
 
-Documents the requirement clearly _and_ catches any caller which does not
-hold the lock when lockdep is enabled.
+Hans
 
-Thanks,
 
-        tglx
+
+
+> Hans de Goede (6):
+>   platform/x86: int3472: discrete: Drop GPIO remapping support
+>   platform/x86: int3472: discrete: Remove sensor_config-s
+>   platform/x86: int3472: discrete: Add support for 1 GPIO regulator
+>     shared between 2 sensors
+>   platform/x86: int3472: discrete: Add alternative "AVDD" regulator
+>     supply name
+>   platform/x86: int3472: discrete: Use FIELD_GET() on the GPIO _DSM
+>     return value
+>   platform/x86: int3472: discrete: Log a warning if the pin-numbers
+>     don't match
+> 
+>  .../x86/intel/int3472/clk_and_regulator.c     | 72 +++++++++++---
+>  drivers/platform/x86/intel/int3472/common.h   | 14 +--
+>  drivers/platform/x86/intel/int3472/discrete.c | 94 ++++---------------
+>  3 files changed, 79 insertions(+), 101 deletions(-)
+> 
+
