@@ -2,77 +2,110 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52422EB64D7
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jun 2023 21:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D33EB64D7
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jun 2023 21:51:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229564AbjFUV3i (ORCPT
+        id S229994AbjFUVvh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Jun 2023 17:29:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48280 "EHLO
+        Wed, 21 Jun 2023 17:51:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229680AbjFUV3h (ORCPT
+        with ESMTP id S229690AbjFUVvh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Jun 2023 17:29:37 -0400
-Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60AD11BC;
-        Wed, 21 Jun 2023 14:29:36 -0700 (PDT)
-Date:   Wed, 21 Jun 2023 21:29:21 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail3; t=1687382974; x=1687642174;
-        bh=d4/p/34ZRL0B4kHlNuD6nT1/glyHyKCZyn6h9RoTdyM=;
-        h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-         Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-         Message-ID:BIMI-Selector;
-        b=TFQPfdiTQ9tw//SNJgyKYCdL9IABZDSubp6ZLkMV2l3NoRWG6BSEuctdkkfivzSRu
-         xN8eMESwInDSUAcxxrLYpzM2Smf0O/KVibOydGsl2P9LjfN3tCxfndb0QU7fs3l9oZ
-         AbWgDvbwOoxiwhG6FaAnABJ45sL915+9k4VHnWpiyS9d9lNdQPWKh3wL89vpslNxsh
-         NLVmuc3Vykc17r52Dfph/Y6AGDZA8YRbjIiJSkh99QGaWP6QDoxHUD+7K5uyunPLw6
-         hm+IKBqWyIGDyN55CdpR4FGIi8YjpRK55SOJF55/hGlvHC3S7gBpmw9qBLEusJAjIt
-         DEFSnNsBkZqYA==
-To:     Armin Wolf <W_Armin@gmx.de>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+        Wed, 21 Jun 2023 17:51:37 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7EFCFC;
+        Wed, 21 Jun 2023 14:51:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
+ s=s31663417; t=1687384253; x=1687989053; i=w_armin@gmx.de;
+ bh=6Xmv7vD6eiYx1sPenoCtuNkZHGz8aSPHMuGO9T/g0Sk=;
+ h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+ b=NhriHbVw+FOYLlhhG6uLZ/MSQ5CT14SYwbWSdD+PjNlGyuW75thcR9Ux7qdvFxoWKoPG5wl
+ broNgCkD3q1AOcFiXhiBsKTMIqE362qzBPTxo+r5DiUaK7nM5e4RjAS7AS3NrvsU0hX5kkBmI
+ q2x6vf6vLR77F8gm3eZYJ2kRhP0vEWwUoXpmc47NTHmfhSsBBUh6i7/LpjZYSlissWHz/71i9
+ sYgQapcU7It57IdLqc+i/ON2356yNfFOQdllaj6VlKkUrsYG9N3X6qN9A2QTqHKb0tSupgkxr
+ 9rGAft5Sq9lvwCqHhYafl0KUCyDj9r4kll4A3BlGhHPPiUWu7F6Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MxUnz-1ps4vc163F-00xqAh; Wed, 21
+ Jun 2023 23:50:53 +0200
+Subject: Re: [PATCH v1 1/2] platform/x86: wmi: Break possible infinite loop
+ when parsing GUID
+To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v1 1/2] platform/x86: wmi: Break possible infinite loop when parsing GUID
-Message-ID: <TnTqU2wwXh3DG07kYUwMAe0hdBiaKiuoMOqBCBIttT27lXdw-KZVV8fZ7x-Zrg_Ux8mJUHClgyFHRbDoCRmhaOI7GwOPhUPYBRLzThV8iYI=@protonmail.com>
-In-Reply-To: <25715979-8148-8d1d-fd67-a973661f9781@gmx.de>
-References: <20230621151155.78279-1-andriy.shevchenko@linux.intel.com> <25715979-8148-8d1d-fd67-a973661f9781@gmx.de>
-Feedback-ID: 20568564:user:proton
+References: <20230621151155.78279-1-andriy.shevchenko@linux.intel.com>
+ <25715979-8148-8d1d-fd67-a973661f9781@gmx.de>
+ <TnTqU2wwXh3DG07kYUwMAe0hdBiaKiuoMOqBCBIttT27lXdw-KZVV8fZ7x-Zrg_Ux8mJUHClgyFHRbDoCRmhaOI7GwOPhUPYBRLzThV8iYI=@protonmail.com>
+From:   Armin Wolf <W_Armin@gmx.de>
+Message-ID: <b4dc2571-1163-805a-f92b-30dcc8b69246@gmx.de>
+Date:   Wed, 21 Jun 2023 23:50:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <TnTqU2wwXh3DG07kYUwMAe0hdBiaKiuoMOqBCBIttT27lXdw-KZVV8fZ7x-Zrg_Ux8mJUHClgyFHRbDoCRmhaOI7GwOPhUPYBRLzThV8iYI=@protonmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Provags-ID: V03:K1:XHfB6/2Fw6zz+QB/CB9tZ0O8zinCxxSfWML+9No86ri+yX0CoJH
+ G5idFR+azcQWZ49WEUGsJZkps+ALNG78sxxKGKiB/iqO1E+Zuy0gzQHy2N1qkQLsIwP/2N+
+ e6GQXKiCaacTZ3PzdkLuvmQ+LI89oO8YkPml5pUvDRXZVfG9nCxMgPLqmAGNlA4cpIcmoDx
+ ODdrKzCsCL6n5Vq5gT8Yg==
+UI-OutboundReport: notjunk:1;M01:P0:kiMdPi8m4vc=;LCPJhRcRzh4tDsBZEYMWbKcawvc
+ 2G7UekStaOwsb3virvIbfMVyyr4587Vjk18g53vJPa8LGW3HeiLFuRmnJGXP46I7iOk4X96As
+ VLYLG8oZxNdP66mjiwtNbTP77Ishh8sJspEh9pBWDwkVh2/Y0A9FXz9DubvIdQ20inijoCvI1
+ RuWB96ocDCjOHI4q6NqKw+HCWjVZaM5DWD+gjuyxA2nAaeksurii4hDLelCgCi2/xl9WJr4O2
+ ZOHaGuesSYPBhkJzJ0XpMAOQRNg2/lwMMavp+QYzO52maIcbpNmaVEyvYMlSozXjqOqBgjuWf
+ xICy9qJVP59HftGEpGoPLelnqHCAoXe31Z2TTzSBXYXP5y91Ai8SWCVynS7LErD18sGsLOk7T
+ OlU3qT4egReVD16Szi+Sp0H28rP1P8F9HZTK8JKWFtjXjjOZi4xEEVqtUGAWdFJgZKsZDymph
+ S55+tQmMQrkGUhdOczruxcOq4QZjw8CIcbPFvLxOpR+L1QYjeTJEuPRmQ4m5QUmi8rUH96vLJ
+ h1ElvdVrsQWDcDWPMrXk0PfMlPnUm02v2D0D0dgQD4Y6Q1qy3Ro64dcPLEvZaQqGG7Nl/am4w
+ kphyrynbEr6Eh/T8EptWhyjBbnGWwSdYt4l/UldCusNQjj/SOuTJC6i9Ftkgur2BWqSLolfUH
+ p0QDRql93xSM78KsVKTIb+7yaqTblTYruDI3JfOncyLKGDbHdTB6ZxdxOzvZSDhRkq7929Ygo
+ hL11twN/Ug7v4ZcZ661n5AUqzvuwSaoHTQB2MVgLxxOxxJ8t13gsrXK+MRuyGBK9harjKiI8b
+ uEQVffJuaGKGNz0ETMdpIpl7PTh6MqRksBWkSCa2marHAd1Uole9/eLp+tQwDPx9nPFV3O1G9
+ Lfj1rgaVj6iNDudsyIVqPJHaezrbHOpqnuJiWSdSFMDO+jA8TCkJeXoiKBELLTivizzLRa7cN
+ a81KvNuOuI0eMDRAvdkuvsftlqY=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
+Am 21.06.23 um 23:29 schrieb Barnab=C3=A1s P=C5=91cze:
 
+> Hi
+>
+>
+> 2023. j=C3=BAnius 21., szerda 23:20 keltez=C3=A9ssel, Armin Wolf <W_Armi=
+n@gmx.de> =C3=ADrta:
+>
+>> [...]
+>>> @@ -895,11 +901,7 @@ static int wmi_dev_match(struct device *dev, stru=
+ct device_driver *driver)
+>>>    		return 0;
+>>>
+>>>    	while (*id->guid_string) {
+>>> -		guid_t driver_guid;
+>>> -
+>>> -		if (WARN_ON(guid_parse(id->guid_string, &driver_guid)))
+>> Hi,
+>>
+>> just an idea: how about printing an error/debug message in case of an m=
+alformed GUID?
+>> This could be useful when searching for typos in GUIDs used by WMI driv=
+ers.
+>> [...]
+> Wouldn't it be better to change `__wmi_driver_register()` to check that?
+>
+>
+> Regards,
+> Barnab=C3=A1s P=C5=91cze
 
-2023. j=C3=BAnius 21., szerda 23:20 keltez=C3=A9ssel, Armin Wolf <W_Armin@g=
-mx.de> =C3=ADrta:
+Good point, i guess we can just forget this idea. The original motivation =
+for it was the WARN_ON()
+inside wmi_dev_match(), but your right that this is the wrong place to che=
+ck the GUID formating.
 
-> [...]
-> > @@ -895,11 +901,7 @@ static int wmi_dev_match(struct device *dev, struc=
-t device_driver *driver)
-> >   =09=09return 0;
-> >
-> >   =09while (*id->guid_string) {
-> > -=09=09guid_t driver_guid;
-> > -
-> > -=09=09if (WARN_ON(guid_parse(id->guid_string, &driver_guid)))
->=20
-> Hi,
->=20
-> just an idea: how about printing an error/debug message in case of an mal=
-formed GUID?
-> This could be useful when searching for typos in GUIDs used by WMI driver=
-s.
-> [...]
+Armin Wolf
 
-Wouldn't it be better to change `__wmi_driver_register()` to check that?
-
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
