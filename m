@@ -2,149 +2,128 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC892EB64D8
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jun 2023 23:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A51EB64D7
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jun 2023 15:16:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229547AbjFTXtv (ORCPT
+        id S233176AbjFUPQ3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 20 Jun 2023 19:49:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36004 "EHLO
+        Wed, 21 Jun 2023 11:16:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbjFTXtu (ORCPT
+        with ESMTP id S233282AbjFUPQF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Jun 2023 19:49:50 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 603F9E2;
-        Tue, 20 Jun 2023 16:49:48 -0700 (PDT)
+        Wed, 21 Jun 2023 11:16:05 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2302B5254;
+        Wed, 21 Jun 2023 08:11:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687304988; x=1718840988;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yjG5HbXpzyMj0TodosWe+wCE8+H6yKMdv5B0rKBSF0w=;
-  b=A13lpcQBddZOoNYsdtjQvFe9Mu+XZjF7ziDlzfiJ+jwI/IJLABhiiaU6
-   iD4H1CD28cwLR/UgAzoWUIUWXxkVgTy0kivCKE5aoF2OdgIJMMpLeu4zz
-   MafNv+P+zJPQU7d9ZTzg08RrGVRe6x11ay6z5DpiMrd6uZvXE583CicWh
-   YQrqPK7Ad2LPk+KatXPtAbrV+pMpF+r+qCJ5PCxC1UT02jsbE50/xFWCq
-   vlUZ5Aakk+Ed8fNCHUZEkO18eGmGbWxTlpQ26M4JJ3vDD6oGbZ0PqDvBZ
-   j+TUHC3qAfdBurwpcFQ1xPSwSMzzkNvWrfB2H6SwBv99E4Cz7e5fBe76K
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="357508091"
-X-IronPort-AV: E=Sophos;i="6.00,258,1681196400"; 
-   d="scan'208";a="357508091"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 16:49:47 -0700
+  t=1687360312; x=1718896312;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=avPldn+bfrcBhDUfOYNR74bNnMBvVnz4MZjZ32hxuoE=;
+  b=GFLP5JDI7/6kbhhGidyyOFWpiTV2k10kTnNZtqVcbVE/PtWR07jX406w
+   tpuGjtJ64HwAzDs7Fc1McxzTsN7gIzuJZPl9vN+JKAcxeliBIS6hM7bBK
+   h2siX21VObUav1gwF/I3OxY8/bVDnbPorGnXRVegzflqy001nQ1c34dZT
+   FPkOTq8H4J2W4hNZTQvfCL2iEm6eoze2oLAMoc+triLEBbEFpctPUjclZ
+   i2+0lcVKCXXyh+BycKBOksNGDZhGN80wrJ2Cvi5k7MxaArW7gfC0vaQrC
+   eqi6lls0rKztIbaJvEpz3PVfyxoT9L9CBuHmxrJj01wCh0wPR8NwiwlkP
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10748"; a="344937863"
+X-IronPort-AV: E=Sophos;i="6.00,260,1681196400"; 
+   d="scan'208";a="344937863"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2023 08:11:50 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="804142637"
-X-IronPort-AV: E=Sophos;i="6.00,258,1681196400"; 
-   d="scan'208";a="804142637"
-Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Jun 2023 16:49:44 -0700
-Received: from kbuild by 783282924a45 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qBl6W-0006Lg-07;
-        Tue, 20 Jun 2023 23:49:44 +0000
-Date:   Wed, 21 Jun 2023 07:49:02 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Luke D. Jones" <luke@ljones.dev>, hdegoede@redhat.com
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, markgross@kernel.org,
-        jdelvare@suse.com, linux@roeck-us.net,
-        "Luke D. Jones" <luke@ljones.dev>
-Subject: Re: [PATCH v3 1/1] platform/x86: asus-wmi: add support for ASUS
- screenpad
-Message-ID: <202306210717.OFFdFt8Q-lkp@intel.com>
-References: <20230620030033.55033-2-luke@ljones.dev>
+X-IronPort-AV: E=McAfee;i="6600,9927,10748"; a="827489542"
+X-IronPort-AV: E=Sophos;i="6.00,260,1681196400"; 
+   d="scan'208";a="827489542"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 21 Jun 2023 08:11:47 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 6E6291FD; Wed, 21 Jun 2023 18:11:58 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/2] platform/x86: wmi: Break possible infinite loop when parsing GUID
+Date:   Wed, 21 Jun 2023 18:11:54 +0300
+Message-Id: <20230621151155.78279-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230620030033.55033-2-luke@ljones.dev>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Luke,
+The while-loop may break on one of the two conditions, either ID string
+is empty or GUID matches. The second one, may never be reached if the
+parsed string is not correct GUID. In such a case the loop will never
+advance to check the next ID.
 
-kernel test robot noticed the following build warnings:
+Break possible infinite loop by factoring out guid_parse_and_compare()
+helper which may be moved to the generic header for everyone later on
+and preventing from similar mistake in the future.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.4-rc7 next-20230620]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Interestingly that firstly it appeared when WMI was turned into a bus
+driver, but later when duplicated GUIDs were checked, the while-loop
+has been replaced by for-loop and hence no mistake made again.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Luke-D-Jones/platform-x86-asus-wmi-add-support-for-ASUS-screenpad/20230620-110305
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20230620030033.55033-2-luke%40ljones.dev
-patch subject: [PATCH v3 1/1] platform/x86: asus-wmi: add support for ASUS screenpad
-config: x86_64-randconfig-a001-20230620 (https://download.01.org/0day-ci/archive/20230621/202306210717.OFFdFt8Q-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project.git 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
-reproduce: (https://download.01.org/0day-ci/archive/20230621/202306210717.OFFdFt8Q-lkp@intel.com/reproduce)
+Fixes: a48e23385fcf ("platform/x86: wmi: add context pointer field to struct wmi_device_id")
+Fixes: 844af950da94 ("platform/x86: wmi: Turn WMI into a bus driver")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/wmi.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306210717.OFFdFt8Q-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/platform/x86/asus-wmi.c:3293:41: warning: variable 'bd' is uninitialized when used here [-Wuninitialized]
-           brightness = read_screenpad_brightness(bd);
-                                                  ^~
-   drivers/platform/x86/asus-wmi.c:3285:29: note: initialize the variable 'bd' to silence this warning
-           struct backlight_device *bd;
-                                      ^
-                                       = NULL
-   1 warning generated.
-
-
-vim +/bd +3293 drivers/platform/x86/asus-wmi.c
-
-  3282	
-  3283	static int asus_screenpad_init(struct asus_wmi *asus)
-  3284	{
-  3285		struct backlight_device *bd;
-  3286		struct backlight_properties props;
-  3287		int power, brightness;
-  3288	
-  3289		power = read_screenpad_backlight_power(asus);
-  3290		if (power < 0)
-  3291			return power;
-  3292	
-> 3293		brightness = read_screenpad_brightness(bd);
-  3294		if (brightness < 0)
-  3295			return brightness;
-  3296	
-  3297		memset(&props, 0, sizeof(struct backlight_properties));
-  3298		props.type = BACKLIGHT_RAW; /* ensure this bd is last to be picked */
-  3299		props.max_brightness = 255;
-  3300		bd = backlight_device_register("asus_screenpad",
-  3301					       &asus->platform_device->dev, asus,
-  3302					       &asus_screenpad_bl_ops, &props);
-  3303		if (IS_ERR(bd)) {
-  3304			pr_err("Could not register backlight device\n");
-  3305			return PTR_ERR(bd);
-  3306		}
-  3307	
-  3308		asus->screenpad_backlight_device = bd;
-  3309		/*
-  3310		 * Counter an odd behaviour where default is set to < 13 if it was 0 on boot.
-  3311		 * 60 is subjective, but accepted as a good compromise to retain visibility.
-  3312		 */
-  3313		if (brightness < 60)
-  3314			brightness = 60;
-  3315	
-  3316		asus->driver->screenpad_brightness = brightness;
-  3317		bd->props.brightness = brightness;
-  3318		bd->props.power = power;
-  3319		backlight_update_status(bd);
-  3320	
-  3321		return 0;
-  3322	}
-  3323	
-
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 5b95d7aa5c2f..098512a53170 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -136,6 +136,16 @@ static acpi_status find_guid(const char *guid_string, struct wmi_block **out)
+ 	return AE_NOT_FOUND;
+ }
+ 
++static bool guid_parse_and_compare(const char *string, const guid_t *guid)
++{
++	guid_t guid_input;
++
++	if (guid_parse(string, &guid_input))
++		return false;
++
++	return guid_equal(&guid_input, guid);
++}
++
+ static const void *find_guid_context(struct wmi_block *wblock,
+ 				     struct wmi_driver *wdriver)
+ {
+@@ -146,11 +156,7 @@ static const void *find_guid_context(struct wmi_block *wblock,
+ 		return NULL;
+ 
+ 	while (*id->guid_string) {
+-		guid_t guid_input;
+-
+-		if (guid_parse(id->guid_string, &guid_input))
+-			continue;
+-		if (guid_equal(&wblock->gblock.guid, &guid_input))
++		if (guid_parse_and_compare(id->guid_string, &wblock->gblock.guid))
+ 			return id->context;
+ 		id++;
+ 	}
+@@ -895,11 +901,7 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
+ 		return 0;
+ 
+ 	while (*id->guid_string) {
+-		guid_t driver_guid;
+-
+-		if (WARN_ON(guid_parse(id->guid_string, &driver_guid)))
+-			continue;
+-		if (guid_equal(&driver_guid, &wblock->gblock.guid))
++		if (guid_parse_and_compare(id->guid_string, &wblock->gblock.guid))
+ 			return 1;
+ 
+ 		id++;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.40.0.1.gaa8946217a0b
+
