@@ -2,169 +2,90 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6FFEB64DC
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Jun 2023 15:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B305EB64DA
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Jun 2023 19:57:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232270AbjFVPH4 (ORCPT
+        id S230010AbjFVT5s (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 22 Jun 2023 11:07:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45400 "EHLO
+        Thu, 22 Jun 2023 15:57:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232267AbjFVPHz (ORCPT
+        with ESMTP id S229726AbjFVT5r (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 22 Jun 2023 11:07:55 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C07391731;
-        Thu, 22 Jun 2023 08:07:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8TPy4M/IgqT8baUzBBF1Ot9HCGGq63OZ2dRMS9U2qEs=; b=hr+LCn33yjNicFl80hCKAgwrYa
-        93pDGSYl0/5FwW8xGbJb8Bzwztin6lA17hYELqtlfCGcjrfacnkQeDW1Lnhs4p6Yp9NR9LNSd0rby
-        dueuqWRwCA/tDevppb+kFIH3iP5TedRM6dFD9YtjJX/8Ws4z3nGPQtt/kPtZ3e1NnRrVf76+qMMas
-        62BEzt/rZsSylnXlBn0qSGDCDDv9NEhrrUizNFGFJRep32eCpFzYECJyP8A5b3s7RW+cRqYqeWdnp
-        VDJTdWx8a7knGFAp2YasyuIJXY4IANgHDg2DsKL018BtVc64glMoFn4kujqH487kklA3eYmyQy7u1
-        E9hIGVdw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:43762)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1qCLtO-0004OW-29; Thu, 22 Jun 2023 16:06:38 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1qCLtH-0000Wx-N7; Thu, 22 Jun 2023 16:06:31 +0100
-Date:   Thu, 22 Jun 2023 16:06:31 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Simon Horman <simon.horman@corigine.com>
-Cc:     Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Wong Vee Khee <veekhee@apple.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Revanth Kumar Uppala <ruppala@nvidia.com>,
-        Shenwei Wang <shenwei.wang@nxp.com>,
-        Andrey Konovalov <andrey.konovalov@linaro.org>,
-        Jochen Henneberg <jh@henneberg-systemdesign.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
-        "Tan, Tee Min" <tee.min.tan@linux.intel.com>,
-        Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-        Lai Peter Jun Ann <jun.ann.lai@intel.com>
-Subject: Re: [PATCH net-next 3/6] net: phy: update in-band AN mode when
- changing interface by PHY driver
-Message-ID: <ZJRjd0oqj95U0nHc@shell.armlinux.org.uk>
-References: <20230622041905.629430-1-yong.liang.choong@linux.intel.com>
- <20230622041905.629430-4-yong.liang.choong@linux.intel.com>
- <ZJReJ2yxqKGQx1BU@corigine.com>
+        Thu, 22 Jun 2023 15:57:47 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7131D1BF0;
+        Thu, 22 Jun 2023 12:57:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687463866; x=1718999866;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=BgpRqo4puNcohYTMFAWxOVTW7DldqwzOBNgi36hCvWc=;
+  b=P+4zkcKWB/q9HpxDCd/eRNI94SwcTW4jBesvOHLqgF+3O4tjxqD4+PoS
+   CMGM2gffjr3xuYVZZWC2ioDvfWtLlBCAqpQsPcn+DG5OI0aXsyrpZKJKy
+   da9b+lyJA2v+t82VmEZReO/S2sWvvEfRnxdsVpTv4c8bB3/TRycS8UMVG
+   CTzTpp6b4aNnLLt6iO9ISU3LDiupbsEiRCtrB/z785+YvVtkE2ALMJU7h
+   2mkMBHwTIeiJsL7xUzK78+7wt+NplIqbCGsaM2BqcdTVOM/zquRZf2utI
+   X5lZBY0YdkCYOoSu271+khdf1VqK7bUTOZl+1uFYJUSgwBI9UzaeBasbK
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10749"; a="358088608"
+X-IronPort-AV: E=Sophos;i="6.01,149,1684825200"; 
+   d="scan'208";a="358088608"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2023 12:57:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10749"; a="889204563"
+X-IronPort-AV: E=Sophos;i="6.01,149,1684825200"; 
+   d="scan'208";a="889204563"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
+  by orsmga005.jf.intel.com with ESMTP; 22 Jun 2023 12:57:28 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86/intel/tpmi: Prevent overflow for cap_offset
+Date:   Thu, 22 Jun 2023 12:57:17 -0700
+Message-Id: <20230622195717.3125088-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZJReJ2yxqKGQx1BU@corigine.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Jun 22, 2023 at 04:43:51PM +0200, Simon Horman wrote:
-> On Thu, Jun 22, 2023 at 12:19:02PM +0800, Choong Yong Liang wrote:
-> > From: "Tan, Tee Min" <tee.min.tan@linux.intel.com>
-> > 
-> > Add cur_link_an_mode into phy_device struct for PHY drivers to
-> > communicate the in-band AN mode setting with phylink framework.
-> > 
-> > As there is a mechanism in PHY drivers to switch the PHY interface
-> > between SGMII and 2500BaseX according to link speed. In this case,
-> > the in-band AN mode should be switching based on the PHY interface
-> > as well, if the PHY interface has been changed/updated by PHY driver.
-> > 
-> > For e.g., disable in-band AN in 2500BaseX mode, or enable in-band AN
-> > back for SGMII mode (10/100/1000Mbps).
-> > 
-> > Signed-off-by: Tan, Tee Min <tee.min.tan@linux.intel.com>
-> > Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-> 
-> ...
-> 
-> > diff --git a/include/linux/phy.h b/include/linux/phy.h
-> > index 11c1e91563d4..c685b526e307 100644
-> > --- a/include/linux/phy.h
-> > +++ b/include/linux/phy.h
-> > @@ -756,6 +756,8 @@ struct phy_device {
-> >  	/* MACsec management functions */
-> >  	const struct macsec_ops *macsec_ops;
-> >  #endif
-> > +	/* For communicate the AN mode setting with phylink framework. */
-> > +	u8 cur_link_an_mode;
-> >  };
-> 
-> Hi Choong Yong Liang,
-> 
-> Please consider adding cur_link_an_mode to the kernel doc
-> for struct phy_device - which is above the definition of struct phy_device.
+cap_offset is a u16 field, so multiplying with TPMI_CAP_OFFSET_UNIT
+(which is equal to 1024) to covert to bytes will cause overflow. This
+will be a problem once more TPMI features are added.
 
-This looks like it's grabbing something from phylink and stuffing it
-into phylib.  However, I have no idea, because I don't seem to have
-received the original patches. I'm guessing the reason is:
+This field is not used except for calculating pfs->vsec_offset. So, leave
+cap_offset field unchanged and multiply with TPMI_CAP_OFFSET_UNIT while
+calculating pfs->vsec_offset.
 
-2023-06-22 05:21:24 1qCBoy-0003ji-G9 H=mga03.intel.com
-[134.134.136.65]:57703 I=[78.32.30.218]:25
-X=TLS1.2:ECDHE_SECP521R1__RSA_SHA512__AES_256_GCM:256
-F=<yong.liang.choong@linux.intel.com> rejected after DATA: unqualified
-address not permitted: failing address in "Cc:" header is: Tan
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+Rebased on top of
+https://kernel.googlesource.com/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
+review-hans 
 
-Which I suspect came from:
+ drivers/platform/x86/intel/tpmi.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-	Tan, Tee Min <tee.min.tan@linux.intel.com>
-
-and someone doesn't realise that a "," in the display-name part of
-an address *must* be quoted, otherwise "," is taken to be a separator
-in the address list.
-
-Consequently, it has now become:
-
-	Tan@web.codeaurora.org, Tee Min <tee.min.tan@linux.intel.com>,
-
-It should have been:
-
-	"Tan, Tee Min" <tee.min.tan@linux.intel.com>
-
-with the double-quotes.
-
-Please do not review this series further, but instead, please can the
-author repost it forthwith with correct conformant headers so that a
-proper review can be undertaken by all?
-
-Thanks.
-
+diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
+index 9c606ee2030c..d1fd6e69401c 100644
+--- a/drivers/platform/x86/intel/tpmi.c
++++ b/drivers/platform/x86/intel/tpmi.c
+@@ -356,9 +356,7 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
+ 		if (!pfs_start)
+ 			pfs_start = res_start;
+ 
+-		pfs->pfs_header.cap_offset *= TPMI_CAP_OFFSET_UNIT;
+-
+-		pfs->vsec_offset = pfs_start + pfs->pfs_header.cap_offset;
++		pfs->vsec_offset = pfs_start + pfs->pfs_header.cap_offset * TPMI_CAP_OFFSET_UNIT;
+ 
+ 		/*
+ 		 * Process TPMI_INFO to get PCI device to CPU package ID.
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.38.1
+
