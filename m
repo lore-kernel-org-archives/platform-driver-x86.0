@@ -2,110 +2,153 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D33EB64D7
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jun 2023 21:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F192CEB64D8
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Jun 2023 04:19:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbjFUVvh (ORCPT
+        id S230230AbjFVETo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Jun 2023 17:51:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56248 "EHLO
+        Thu, 22 Jun 2023 00:19:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbjFUVvh (ORCPT
+        with ESMTP id S229608AbjFVETn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Jun 2023 17:51:37 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7EFCFC;
-        Wed, 21 Jun 2023 14:51:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
- s=s31663417; t=1687384253; x=1687989053; i=w_armin@gmx.de;
- bh=6Xmv7vD6eiYx1sPenoCtuNkZHGz8aSPHMuGO9T/g0Sk=;
- h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
- b=NhriHbVw+FOYLlhhG6uLZ/MSQ5CT14SYwbWSdD+PjNlGyuW75thcR9Ux7qdvFxoWKoPG5wl
- broNgCkD3q1AOcFiXhiBsKTMIqE362qzBPTxo+r5DiUaK7nM5e4RjAS7AS3NrvsU0hX5kkBmI
- q2x6vf6vLR77F8gm3eZYJ2kRhP0vEWwUoXpmc47NTHmfhSsBBUh6i7/LpjZYSlissWHz/71i9
- sYgQapcU7It57IdLqc+i/ON2356yNfFOQdllaj6VlKkUrsYG9N3X6qN9A2QTqHKb0tSupgkxr
- 9rGAft5Sq9lvwCqHhYafl0KUCyDj9r4kll4A3BlGhHPPiUWu7F6Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MxUnz-1ps4vc163F-00xqAh; Wed, 21
- Jun 2023 23:50:53 +0200
-Subject: Re: [PATCH v1 1/2] platform/x86: wmi: Break possible infinite loop
- when parsing GUID
-To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thu, 22 Jun 2023 00:19:43 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92BA719C;
+        Wed, 21 Jun 2023 21:19:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687407582; x=1718943582;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rKgnFurbdIRdoh4CHd4XKUen+Eh+ergId4ed9rxs1x8=;
+  b=gj96WUnnBYTye/kmRrfT2ZVvXrLM1DUUXYOZQyYq6oV++xu0RFbgIXVM
+   Z1l79ss+1h0KOQziz4jbh3O/VgPQjnp6JNLQOHCGre0jt+aYx71SrwlKR
+   lgCaNfAmcchuHagP/0Zk53Z99bwN/wUD0YOaSIsd7bwF1HPR+8xnaEqyW
+   j4wI8fWuAtxgLTdFg8j7em+3Q2C6x9/2X4qlbhZTurtxHBgTjwDD5tryC
+   K1PcmEQ8BUOzGr0qFkk96Ss3AYgRyvb1tLLMmZlN0C9dzLvGnaiNHijiR
+   FsCCJJJKkUTVEzUm4VmjiDgm8F8PuNj+zp7xmez5GzQKxDopNczzNOGIC
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10748"; a="363811732"
+X-IronPort-AV: E=Sophos;i="6.00,262,1681196400"; 
+   d="scan'208";a="363811732"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2023 21:19:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10748"; a="744453724"
+X-IronPort-AV: E=Sophos;i="6.00,262,1681196400"; 
+   d="scan'208";a="744453724"
+Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.229.33])
+  by orsmga008.jf.intel.com with ESMTP; 21 Jun 2023 21:19:27 -0700
+From:   Choong Yong Liang <yong.liang.choong@linux.intel.com>
+To:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>
-References: <20230621151155.78279-1-andriy.shevchenko@linux.intel.com>
- <25715979-8148-8d1d-fd67-a973661f9781@gmx.de>
- <TnTqU2wwXh3DG07kYUwMAe0hdBiaKiuoMOqBCBIttT27lXdw-KZVV8fZ7x-Zrg_Ux8mJUHClgyFHRbDoCRmhaOI7GwOPhUPYBRLzThV8iYI=@protonmail.com>
-From:   Armin Wolf <W_Armin@gmx.de>
-Message-ID: <b4dc2571-1163-805a-f92b-30dcc8b69246@gmx.de>
-Date:   Wed, 21 Jun 2023 23:50:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Mark Gross <markgross@kernel.org>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Wong Vee Khee <veekhee@apple.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Revanth Kumar Uppala <ruppala@nvidia.com>,
+        Shenwei Wang <shenwei.wang@nxp.com>,
+        Andrey Konovalov <andrey.konovalov@linaro.org>,
+        Jochen Henneberg <jh@henneberg-systemdesign.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
+        Tan@vger.kernel.org, Tee Min <tee.min.tan@linux.intel.com>,
+        Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+        Lai Peter Jun Ann <jun.ann.lai@intel.com>
+Subject: [PATCH net-next 0/6] TSN auto negotiation between 1G and 2.5G
+Date:   Thu, 22 Jun 2023 12:18:59 +0800
+Message-Id: <20230622041905.629430-1-yong.liang.choong@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <TnTqU2wwXh3DG07kYUwMAe0hdBiaKiuoMOqBCBIttT27lXdw-KZVV8fZ7x-Zrg_Ux8mJUHClgyFHRbDoCRmhaOI7GwOPhUPYBRLzThV8iYI=@protonmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Provags-ID: V03:K1:XHfB6/2Fw6zz+QB/CB9tZ0O8zinCxxSfWML+9No86ri+yX0CoJH
- G5idFR+azcQWZ49WEUGsJZkps+ALNG78sxxKGKiB/iqO1E+Zuy0gzQHy2N1qkQLsIwP/2N+
- e6GQXKiCaacTZ3PzdkLuvmQ+LI89oO8YkPml5pUvDRXZVfG9nCxMgPLqmAGNlA4cpIcmoDx
- ODdrKzCsCL6n5Vq5gT8Yg==
-UI-OutboundReport: notjunk:1;M01:P0:kiMdPi8m4vc=;LCPJhRcRzh4tDsBZEYMWbKcawvc
- 2G7UekStaOwsb3virvIbfMVyyr4587Vjk18g53vJPa8LGW3HeiLFuRmnJGXP46I7iOk4X96As
- VLYLG8oZxNdP66mjiwtNbTP77Ishh8sJspEh9pBWDwkVh2/Y0A9FXz9DubvIdQ20inijoCvI1
- RuWB96ocDCjOHI4q6NqKw+HCWjVZaM5DWD+gjuyxA2nAaeksurii4hDLelCgCi2/xl9WJr4O2
- ZOHaGuesSYPBhkJzJ0XpMAOQRNg2/lwMMavp+QYzO52maIcbpNmaVEyvYMlSozXjqOqBgjuWf
- xICy9qJVP59HftGEpGoPLelnqHCAoXe31Z2TTzSBXYXP5y91Ai8SWCVynS7LErD18sGsLOk7T
- OlU3qT4egReVD16Szi+Sp0H28rP1P8F9HZTK8JKWFtjXjjOZi4xEEVqtUGAWdFJgZKsZDymph
- S55+tQmMQrkGUhdOczruxcOq4QZjw8CIcbPFvLxOpR+L1QYjeTJEuPRmQ4m5QUmi8rUH96vLJ
- h1ElvdVrsQWDcDWPMrXk0PfMlPnUm02v2D0D0dgQD4Y6Q1qy3Ro64dcPLEvZaQqGG7Nl/am4w
- kphyrynbEr6Eh/T8EptWhyjBbnGWwSdYt4l/UldCusNQjj/SOuTJC6i9Ftkgur2BWqSLolfUH
- p0QDRql93xSM78KsVKTIb+7yaqTblTYruDI3JfOncyLKGDbHdTB6ZxdxOzvZSDhRkq7929Ygo
- hL11twN/Ug7v4ZcZ661n5AUqzvuwSaoHTQB2MVgLxxOxxJ8t13gsrXK+MRuyGBK9harjKiI8b
- uEQVffJuaGKGNz0ETMdpIpl7PTh6MqRksBWkSCa2marHAd1Uole9/eLp+tQwDPx9nPFV3O1G9
- Lfj1rgaVj6iNDudsyIVqPJHaezrbHOpqnuJiWSdSFMDO+jA8TCkJeXoiKBELLTivizzLRa7cN
- a81KvNuOuI0eMDRAvdkuvsftlqY=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 21.06.23 um 23:29 schrieb Barnab=C3=A1s P=C5=91cze:
+Intel platforms’ integrated Gigabit Ethernet controllers support
+2.5Gbps mode statically using BIOS programming. In the current
+implementation, the BIOS menu provides an option to select between
+10/100/1000Mbps and 2.5Gbps modes. Based on the selection, the BIOS
+programs the Phase Lock Loop (PLL) registers. The BIOS also read the
+TSN lane registers from Flexible I/O Adapter (FIA) block and provided
+10/100/1000Mbps/2.5Gbps information to the stmmac driver. But
+auto-negotiation between 10/100/1000Mbps and 2.5Gbps is not allowed.
 
-> Hi
->
->
-> 2023. j=C3=BAnius 21., szerda 23:20 keltez=C3=A9ssel, Armin Wolf <W_Armi=
-n@gmx.de> =C3=ADrta:
->
->> [...]
->>> @@ -895,11 +901,7 @@ static int wmi_dev_match(struct device *dev, stru=
-ct device_driver *driver)
->>>    		return 0;
->>>
->>>    	while (*id->guid_string) {
->>> -		guid_t driver_guid;
->>> -
->>> -		if (WARN_ON(guid_parse(id->guid_string, &driver_guid)))
->> Hi,
->>
->> just an idea: how about printing an error/debug message in case of an m=
-alformed GUID?
->> This could be useful when searching for typos in GUIDs used by WMI driv=
-ers.
->> [...]
-> Wouldn't it be better to change `__wmi_driver_register()` to check that?
->
->
-> Regards,
-> Barnab=C3=A1s P=C5=91cze
+The new proposal is to support auto-negotiation between 10/100/1000Mbps
+and 2.5Gbps . Auto-negotiation between 10, 100, 1000Mbps will use
+in-band auto negotiation. Auto-negotiation between 10/100/1000Mbps and
+2.5Gbps will work as the following proposed flow, the stmmac driver reads
+the PHY link status registers then identifies the negotiated speed.
+Based on the speed stmmac driver will identify TSN lane registers from
+FIA then send IPC command to the Power Management controller (PMC)
+through PMC driver/API. PMC will act as a proxy to programs the
+PLL registers.
 
-Good point, i guess we can just forget this idea. The original motivation =
-for it was the WARN_ON()
-inside wmi_dev_match(), but your right that this is the wrong place to che=
-ck the GUID formating.
+Choong Yong Liang (1):
+  net: stmmac: Add 1G/2.5G auto-negotiation support for ADL-N
 
-Armin Wolf
+David E. Box (1):
+  platform/x86: intel_pmc_core: Add IPC mailbox accessor function and
+    add SoC register access
+
+Michael Sit Wei Hong (1):
+  stmmac: intel: Separate driver_data of ADL-N from TGL
+
+Tan, Tee Min (3):
+  net: pcs: xpcs: combine C37 SGMII AN and 2500BASEX for Intel mGbE
+    controller
+  net: phy: update in-band AN mode when changing interface by PHY driver
+  net: stmmac: enable Intel mGbE 1G/2.5G auto-negotiation support
+
+ MAINTAINERS                                   |   1 +
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |   1 +
+ .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 183 +++++++++++++++++-
+ .../net/ethernet/stmicro/stmmac/dwmac-intel.h |  81 ++++++++
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |  20 ++
+ drivers/net/pcs/pcs-xpcs.c                    |  72 +++++--
+ drivers/net/phy/marvell10g.c                  |   6 +
+ drivers/net/phy/phylink.c                     |   3 +
+ drivers/platform/x86/intel/pmc/adl.c          |   2 +-
+ drivers/platform/x86/intel/pmc/cnp.c          |   2 +-
+ drivers/platform/x86/intel/pmc/core.c         |  63 +++++-
+ drivers/platform/x86/intel/pmc/icl.c          |   2 +-
+ drivers/platform/x86/intel/pmc/mtl.c          |   2 +-
+ drivers/platform/x86/intel/pmc/spt.c          |   2 +-
+ drivers/platform/x86/intel/pmc/tgl.c          |   2 +-
+ .../core.h => include/linux/intel_pmc_core.h  |  27 ++-
+ include/linux/pcs/pcs-xpcs.h                  |   1 +
+ include/linux/phy.h                           |   2 +
+ include/linux/stmmac.h                        |   1 +
+ 19 files changed, 449 insertions(+), 24 deletions(-)
+ rename drivers/platform/x86/intel/pmc/core.h => include/linux/intel_pmc_core.h (95%)
+
+-- 
+2.25.1
 
