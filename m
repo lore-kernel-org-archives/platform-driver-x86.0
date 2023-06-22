@@ -2,186 +2,414 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392E7EB64D8
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Jun 2023 06:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6948CEB64D8
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Jun 2023 08:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230265AbjFVGDh (ORCPT
+        id S229994AbjFVITp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 22 Jun 2023 02:03:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40100 "EHLO
+        Thu, 22 Jun 2023 04:19:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbjFVGDg (ORCPT
+        with ESMTP id S229931AbjFVITk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 22 Jun 2023 02:03:36 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2047.outbound.protection.outlook.com [40.107.93.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22DECEA
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jun 2023 23:03:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b1F4oS5mh8R74YCJJ/j5/YML0Uzv6sX16tUtrFVUZrvizY347ak7BoX8cnu/xztzmYiA4dOPW/hgxlMlsni6YwPgTFnBq9Ud0YA9BrQNdMO8vt3qdwpflWOVw3EoTWZ9vgNoAnKDDfV9kaXfbObfVzl0j86k1J05tDJviY0nY5SCDy45h1UwWti3Z1LFw+17w06y9gTVVSky7WiT6bGh8vYrvo84NE28MKNhvcGdYZgGzsxepPeHMZjynGYi9VxS3tHnOPrn+0VDqNvLd/JIw8CS8s2BZx7++SAyatgjpH4bi0vK59ow0rGM4g5VCgTD7gxbx3Hp7F1yP6uLpvdytw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5iQ+p8E2LWziEeolBqMvckiXKmxkVkqeGVmeERp+Yuc=;
- b=ZNDnhV3OgkCzaaSFv9Z5LHlAMznhR1Nv6gqF99JrDEtQxAdNCYfOHLOuE08CbVhz8ktQ6OgVinn8Kzp4wZOe/rWj6X0eoKCYwZQjKeUdl+z93KaYy1moT13hRyyGeFzI/R/bGPsq3uuAk2pb4dr8rZeL1AoVbwNJ16T801l5mGcMt/DLWif8B+TNAv5K/kpHKa2oRo3w7Ukb1bKBePTOJEXPSrRpBGJ6BjMIvcN2DS1QIA7lBY+7d6OUC2ybOyi/hF9M3HtH0zp62pYkKVIbqifC0bwqZsXJ1pWvKKZa6B4grNlG+sgeQY3b194g3ZGr3xFXKJ7pr9hFC2UY0KN9BQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5iQ+p8E2LWziEeolBqMvckiXKmxkVkqeGVmeERp+Yuc=;
- b=bsfCfZn4pH2YPnXX8RlZqM0iBLeQRI+GwQbHv15/PBDN6KpG+rHEezQzUnzEznc5wgvYbD+vsjUZ/sxbGB6iR+2McOyMzLCgyDiwBR+GmRdZ2uMFGRO3nW3SkGCyJWooLq+SKMJwx6UEuB9Pwvwr0GNQL0XFIL7iaYE50HgQPws=
-Received: from DS7PR06CA0045.namprd06.prod.outlook.com (2603:10b6:8:54::26) by
- CY5PR12MB6381.namprd12.prod.outlook.com (2603:10b6:930:3f::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6500.36; Thu, 22 Jun 2023 06:03:33 +0000
-Received: from DM6NAM11FT032.eop-nam11.prod.protection.outlook.com
- (2603:10b6:8:54:cafe::4b) by DS7PR06CA0045.outlook.office365.com
- (2603:10b6:8:54::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24 via Frontend
- Transport; Thu, 22 Jun 2023 06:03:33 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT032.mail.protection.outlook.com (10.13.173.93) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6500.41 via Frontend Transport; Thu, 22 Jun 2023 06:03:33 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 22 Jun
- 2023 01:03:30 -0500
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To:     <hdegoede@redhat.com>, <markgross@kernel.org>
-CC:     <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
-        <mario.limonciello@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Allen Zhong <allen@atr.me>
-Subject: [PATCH] platform/x86/amd/pmf: Register notify handler only if SPS is enabled
-Date:   Thu, 22 Jun 2023 11:33:09 +0530
-Message-ID: <20230622060309.310001-1-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 22 Jun 2023 04:19:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E731BF9
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Jun 2023 01:18:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1687421910;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9165t1I/uhRF5KMhHJE8BVUjT2kznhbBzSsVByfD1j8=;
+        b=b76e0IWlozi8Uceg3duJ/H0NciSSCvTgQt+glXQbFK2fHhMtfglOdQlcojoLUEnma+AzMG
+        4xANRTqOWQGL8Kp1EISbE84/6u8FYab9ZNhyg7MFAOqMn4iCeS+7TTCS//tTmwgYaq4h7F
+        xLJahFCuFtq+RwepG+ciGSE7j1CepKE=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-355-zu0kK85iMmuBRvlA6PK41Q-1; Thu, 22 Jun 2023 04:18:28 -0400
+X-MC-Unique: zu0kK85iMmuBRvlA6PK41Q-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5161e17f374so473998a12.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Jun 2023 01:18:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687421907; x=1690013907;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9165t1I/uhRF5KMhHJE8BVUjT2kznhbBzSsVByfD1j8=;
+        b=Fru7GCwjrLsRtC5L7LkwZkdV7Q0bBvmCqQ1XkOsCorSIvT3b2Dxy1CQCnxMmai9A2S
+         Zgd5lCvgTNO/m0h+iLVCKWHtXZw1rs0ny+ZJzoDk8j3mC5VmILgzDjwy5QcdEo7Q2O+/
+         dQq7T8dActRFIpc3HgWfJcML/FAL7COKCZDNDVwLrTJzGLui6SliMH40G2qTbTV6LnAU
+         rncniOGmEHrsA5JixX2lhB6sEZh4hC3CINzEwVHk6KSxn9axaUKxhQQIlo2xcyjd2U63
+         4xzK4p9EgXzKB1EKbXH0icGoGwf/DAXqG2I5sn5QNFJKgRb10BOl1F70IQEM7Xa4LUmG
+         ra9A==
+X-Gm-Message-State: AC+VfDzdCE6hU5SbFDzT+sh+j17ZNNQ85Tgf4MdUTPxYPKWsPHZ1s7ZS
+        Uo7BfDMkWR3irBqYOCyZTBpt4uSw2sW4ZbMgNe+oM2dsk2NNK5oPmwh1du9egpZIqOc22gmUx2a
+        +/+3xv3bt/yYfXunXdEE1JmM9TsbVMqAGWw==
+X-Received: by 2002:a05:6402:1d49:b0:51b:d59f:8518 with SMTP id dz9-20020a0564021d4900b0051bd59f8518mr5910611edb.16.1687421907406;
+        Thu, 22 Jun 2023 01:18:27 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ6g0HUfA5kMm9iiZnbdF5JVa1vaSBMAPniXZ2SxZ+md/CR90yZZSiif6KqMQdRlA4FZqjbJXg==
+X-Received: by 2002:a05:6402:1d49:b0:51b:d59f:8518 with SMTP id dz9-20020a0564021d4900b0051bd59f8518mr5910591edb.16.1687421907045;
+        Thu, 22 Jun 2023 01:18:27 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id s6-20020a056402014600b0051bdf152295sm1639168edu.76.2023.06.22.01.18.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Jun 2023 01:18:26 -0700 (PDT)
+Message-ID: <0652c9c8-27ee-0af9-9aa8-a2909142d405@redhat.com>
+Date:   Thu, 22 Jun 2023 10:18:25 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT032:EE_|CY5PR12MB6381:EE_
-X-MS-Office365-Filtering-Correlation-Id: 21eec468-ae48-42ba-2b2f-08db72e668ee
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ow/LwQGlPNH0gcIQ9XJ+h8fN2ybxcdJ2RbDdhjvVywtlysfmSTusdLA4jULnI1SgXsmUn/EIsSYVTfbIF/yFHmoHPrMlpACQy57yoTxoc1AvYvZUWh2h97jsAEP+BL6OAtQ8EAFtR7x6yxTottaezxNj2X4oo1hKyhg+AXRKFhvkM+sB8Bb6g+zNXscSdqVsKcjjKebVNYbpie/TMe0aP751YsZhxtRj3RebIRNcUuI+qwPHqI8dl4YLOiaaqWizyidcZrCyPO5W2cpOwfVSNOHud60mNJl4gRyKkaz6qGYoieVEogX21S1NFbOMXjZnoDIghooDVDEQmGrZnjN2td2/1bd+eAqcZZGwlsOXqBakot7xdx1QXVtJ3HclPZlwmMddeO22BZWeUa5XKKCJxDDOEWt0FcNiG2XmyGzgWv+75iCPon9YdFhap14tHbC7ZJLGSTCFeF5vAwL7E3+d1BdL4B4HdCbzGzWxAuADKfTlKVbWCFLAeDj0Xgz2bU9WG8pDEO95NuVXVssyX2qiwmXN8Z2fIHRlxUUKEAQprcgZTKiAcCWv3ugYVyVzPpS8u711O0YK+p75yqiSjvz/vH1MYhNtePghGrgs051wDMntBKiIEAHjJYFYyK1Zgv3gaXJ62jglPEnr7Zk4+ZmtOIIVhNmtm/yJrU16LrWAo50M52U2roE8KhelOvC8AUPJNEdFSEeLaMwL0Cq4ppWEp5iRvBPOKKrtfYKuEgp9jwsQMU9jEva4oeVee+ZTn6D8xG79fA1k7A8T8vo6BJ6NgA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(39860400002)(136003)(376002)(451199021)(36840700001)(40470700004)(46966006)(81166007)(356005)(426003)(336012)(2616005)(86362001)(83380400001)(2906002)(47076005)(36860700001)(5660300002)(82740400003)(40460700003)(4326008)(54906003)(110136005)(8936002)(70586007)(16526019)(82310400005)(70206006)(8676002)(186003)(41300700001)(478600001)(36756003)(40480700001)(1076003)(966005)(7696005)(26005)(316002)(6666004)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2023 06:03:33.0759
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21eec468-ae48-42ba-2b2f-08db72e668ee
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT032.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6381
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH net-next 1/6] platform/x86: intel_pmc_core: Add IPC
+ mailbox accessor function and add SoC register access
+To:     Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        =?UTF-8?Q?Marek_Beh=c3=ban?= <kabel@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Wong Vee Khee <veekhee@apple.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Revanth Kumar Uppala <ruppala@nvidia.com>,
+        Shenwei Wang <shenwei.wang@nxp.com>,
+        Andrey Konovalov <andrey.konovalov@linaro.org>,
+        Jochen Henneberg <jh@henneberg-systemdesign.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
+        Tee Min <tee.min.tan@linux.intel.com>,
+        Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+        Lai Peter Jun Ann <jun.ann.lai@intel.com>
+References: <20230622041905.629430-1-yong.liang.choong@linux.intel.com>
+ <20230622041905.629430-2-yong.liang.choong@linux.intel.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230622041905.629430-2-yong.liang.choong@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Power source notify handler is getting registered even when none of the
-PMF feature in enabled leading to a crash.
+Hi,
 
-...
-[   22.592162] Call Trace:
-[   22.592164]  <TASK>
-[   22.592164]  ? rcu_note_context_switch+0x5e0/0x660
-[   22.592166]  ? __warn+0x81/0x130
-[   22.592171]  ? rcu_note_context_switch+0x5e0/0x660
-[   22.592172]  ? report_bug+0x171/0x1a0
-[   22.592175]  ? prb_read_valid+0x1b/0x30
-[   22.592177]  ? handle_bug+0x3c/0x80
-[   22.592178]  ? exc_invalid_op+0x17/0x70
-[   22.592179]  ? asm_exc_invalid_op+0x1a/0x20
-[   22.592182]  ? rcu_note_context_switch+0x5e0/0x660
-[   22.592183]  ? acpi_ut_delete_object_desc+0x86/0xb0
-[   22.592186]  ? acpi_ut_update_ref_count.part.0+0x22d/0x930
-[   22.592187]  __schedule+0xc0/0x1410
-[   22.592189]  ? ktime_get+0x3c/0xa0
-[   22.592191]  ? lapic_next_event+0x1d/0x30
-[   22.592193]  ? hrtimer_start_range_ns+0x25b/0x350
-[   22.592196]  schedule+0x5e/0xd0
-[   22.592197]  schedule_hrtimeout_range_clock+0xbe/0x140
-[   22.592199]  ? __pfx_hrtimer_wakeup+0x10/0x10
-[   22.592200]  usleep_range_state+0x64/0x90
-[   22.592203]  amd_pmf_send_cmd+0x106/0x2a0 [amd_pmf bddfe0fe3712aaa99acce3d5487405c5213c6616]
-[   22.592207]  amd_pmf_update_slider+0x56/0x1b0 [amd_pmf bddfe0fe3712aaa99acce3d5487405c5213c6616]
-[   22.592210]  amd_pmf_set_sps_power_limits+0x72/0x80 [amd_pmf bddfe0fe3712aaa99acce3d5487405c5213c6616]
-[   22.592213]  amd_pmf_pwr_src_notify_call+0x49/0x90 [amd_pmf bddfe0fe3712aaa99acce3d5487405c5213c6616]
-[   22.592216]  notifier_call_chain+0x5a/0xd0
-[   22.592218]  atomic_notifier_call_chain+0x32/0x50
-...
+On 6/22/23 06:19, Choong Yong Liang wrote:
+> From: "David E. Box" <david.e.box@linux.intel.com>
+> 
+> - Exports intel_pmc_core_ipc() for host access to the PMC IPC mailbox
+> - Add support to use IPC command allows host to access SoC registers
+> through PMC firmware that are otherwise inaccessible to the host due to
+> security policies.
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Signed-off-by: Chao Qin <chao.qin@intel.com>
+> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
 
-Fix this by moving the registration of source change notify handler only
-when SPS(Static Slider) is advertised as supported.
+This seem to be 2 patches in 1:
 
-Reported-by: Allen Zhong <allen@atr.me>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217571
-Fixes: 4c71ae414474 ("platform/x86/amd/pmf: Add support SPS PMF feature")
-Tested-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- drivers/platform/x86/amd/pmf/core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+1. Move core.h to include/linux/intel_pmc_core.h
+2. The actual adding of IPC mailbox accessor function and add SoC register access
 
-diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-index d5bb775dadcf..a5b8f9bbc0d9 100644
---- a/drivers/platform/x86/amd/pmf/core.c
-+++ b/drivers/platform/x86/amd/pmf/core.c
-@@ -280,6 +280,8 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
- 	/* Enable Static Slider */
- 	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR)) {
- 		amd_pmf_init_sps(dev);
-+		dev->pwr_src_notifier.notifier_call = amd_pmf_pwr_src_notify_call;
-+		power_supply_reg_notifier(&dev->pwr_src_notifier);
- 		dev_dbg(dev->dev, "SPS enabled and Platform Profiles registered\n");
- 	}
- 
-@@ -298,8 +300,10 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
- 
- static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
- {
--	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR))
-+	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR)) {
-+		power_supply_unreg_notifier(&dev->pwr_src_notifier);
- 		amd_pmf_deinit_sps(dev);
-+	}
- 
- 	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
- 		amd_pmf_deinit_auto_mode(dev);
-@@ -382,9 +386,6 @@ static int amd_pmf_probe(struct platform_device *pdev)
- 	apmf_install_handler(dev);
- 	amd_pmf_dbgfs_register(dev);
- 
--	dev->pwr_src_notifier.notifier_call = amd_pmf_pwr_src_notify_call;
--	power_supply_reg_notifier(&dev->pwr_src_notifier);
--
- 	dev_info(dev->dev, "registered PMF device successfully\n");
- 
- 	return 0;
-@@ -394,7 +395,6 @@ static void amd_pmf_remove(struct platform_device *pdev)
- {
- 	struct amd_pmf_dev *dev = platform_get_drvdata(pdev);
- 
--	power_supply_unreg_notifier(&dev->pwr_src_notifier);
- 	amd_pmf_deinit_features(dev);
- 	apmf_acpi_deinit(dev);
- 	amd_pmf_dbgfs_unregister(dev);
--- 
-2.25.1
+I wonder if you really need to move the entire core.h ?
+
+IMHO it would be better to just add a new header with just the bits
+which you actually need to export the desired functionality.
+
+If you do believe that you really need to move core.h please split
+this into 2 separate patches and please place the header in a x86
+specific place, e.g. : include/linux/platform_data/x86/
+
+
+
+Also note that a somewhat big refactor, to add support for
+multiple PMCs for Meteor Lake is on its way to linux-next.
+
+Currently this is available in my review-hans branch:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Please base a next version of this on this.
+
+There also is the question of how to merge this. Assuming this is
+ready for merging once 6.5-rc1 is out then I can merge this intel_pmc_core
+change into an immutable branch and send a pull-req to the net folks
+for this.
+
+Regards,
+
+Hans
+
+
+
+
+
+
+> ---
+>  MAINTAINERS                                   |  1 +
+>  drivers/platform/x86/intel/pmc/adl.c          |  2 +-
+>  drivers/platform/x86/intel/pmc/cnp.c          |  2 +-
+>  drivers/platform/x86/intel/pmc/core.c         | 63 ++++++++++++++++++-
+>  drivers/platform/x86/intel/pmc/icl.c          |  2 +-
+>  drivers/platform/x86/intel/pmc/mtl.c          |  2 +-
+>  drivers/platform/x86/intel/pmc/spt.c          |  2 +-
+>  drivers/platform/x86/intel/pmc/tgl.c          |  2 +-
+>  .../core.h => include/linux/intel_pmc_core.h  | 27 +++++++-
+>  9 files changed, 95 insertions(+), 8 deletions(-)
+>  rename drivers/platform/x86/intel/pmc/core.h => include/linux/intel_pmc_core.h (95%)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index cb14589d14ab..bdb08a79a5f8 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10581,6 +10581,7 @@ L:	platform-driver-x86@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/ABI/testing/sysfs-platform-intel-pmc
+>  F:	drivers/platform/x86/intel/pmc/
+> +F:	include/linux/intel_pmc_core*
+>  
+>  INTEL PMIC GPIO DRIVERS
+>  M:	Andy Shevchenko <andy@kernel.org>
+> diff --git a/drivers/platform/x86/intel/pmc/adl.c b/drivers/platform/x86/intel/pmc/adl.c
+> index 5cbd40979f2a..b6a376c536c0 100644
+> --- a/drivers/platform/x86/intel/pmc/adl.c
+> +++ b/drivers/platform/x86/intel/pmc/adl.c
+> @@ -8,7 +8,7 @@
+>   *
+>   */
+>  
+> -#include "core.h"
+> +#include <linux/intel_pmc_core.h>
+>  
+>  /* Alder Lake: PGD PFET Enable Ack Status Register(s) bitmap */
+>  const struct pmc_bit_map adl_pfear_map[] = {
+> diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
+> index 7fb38815c4eb..504034cc5ec3 100644
+> --- a/drivers/platform/x86/intel/pmc/cnp.c
+> +++ b/drivers/platform/x86/intel/pmc/cnp.c
+> @@ -8,7 +8,7 @@
+>   *
+>   */
+>  
+> -#include "core.h"
+> +#include <linux/intel_pmc_core.h>
+>  
+>  /* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
+>  const struct pmc_bit_map cnp_pfear_map[] = {
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index da6e7206d38b..0d60763c5144 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/dmi.h>
+>  #include <linux/io.h>
+> +#include <linux/intel_pmc_core.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+>  #include <linux/slab.h>
+> @@ -26,7 +27,9 @@
+>  #include <asm/msr.h>
+>  #include <asm/tsc.h>
+>  
+> -#include "core.h"
+> +#define PMC_IPCS_PARAM_COUNT           7
+> +
+> +static const struct x86_cpu_id *pmc_cpu_id;
+>  
+>  /* Maximum number of modes supported by platfoms that has low power mode capability */
+>  const char *pmc_lpm_modes[] = {
+> @@ -53,6 +56,63 @@ const struct pmc_bit_map msr_map[] = {
+>  	{}
+>  };
+>  
+> +int intel_pmc_core_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *rbuf)
+> +{
+> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	union acpi_object params[PMC_IPCS_PARAM_COUNT] = {
+> +		{.type = ACPI_TYPE_INTEGER,},
+> +		{.type = ACPI_TYPE_INTEGER,},
+> +		{.type = ACPI_TYPE_INTEGER,},
+> +		{.type = ACPI_TYPE_INTEGER,},
+> +		{.type = ACPI_TYPE_INTEGER,},
+> +		{.type = ACPI_TYPE_INTEGER,},
+> +		{.type = ACPI_TYPE_INTEGER,},
+> +	};
+> +	struct acpi_object_list arg_list = { PMC_IPCS_PARAM_COUNT, params };
+> +	union acpi_object *obj;
+> +	int status;
+> +
+> +	if (!pmc_cpu_id || !ipc_cmd || !rbuf)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * 0: IPC Command
+> +	 * 1: IPC Sub Command
+> +	 * 2: Size
+> +	 * 3-6: Write Buffer for offset
+> +	 */
+> +	params[0].integer.value = ipc_cmd->cmd;
+> +	params[1].integer.value = ipc_cmd->sub_cmd;
+> +	params[2].integer.value = ipc_cmd->size;
+> +	params[3].integer.value = ipc_cmd->wbuf[0];
+> +	params[4].integer.value = ipc_cmd->wbuf[1];
+> +	params[5].integer.value = ipc_cmd->wbuf[2];
+> +	params[6].integer.value = ipc_cmd->wbuf[3];
+> +
+> +	status = acpi_evaluate_object(NULL, "\\IPCS", &arg_list, &buffer);
+> +	if (ACPI_FAILURE(status))
+> +		return -ENODEV;
+> +
+> +	obj = buffer.pointer;
+> +	/* Check if the number of elements in package is 5 */
+> +	if (obj && obj->type == ACPI_TYPE_PACKAGE && obj->package.count == 5) {
+> +		const union acpi_object *objs = obj->package.elements;
+> +
+> +		if ((u8)objs[0].integer.value != 0)
+> +			return -EINVAL;
+> +
+> +		rbuf[0] = objs[1].integer.value;
+> +		rbuf[1] = objs[2].integer.value;
+> +		rbuf[2] = objs[3].integer.value;
+> +		rbuf[3] = objs[4].integer.value;
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(intel_pmc_core_ipc);
+> +
+>  static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
+>  {
+>  	return readl(pmcdev->regbase + reg_offset);
+> @@ -1130,6 +1190,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+>  	mutex_init(&pmcdev->lock);
+>  	core_init(pmcdev);
+>  
+> +	pmc_cpu_id = cpu_id;
+>  
+>  	if (lpit_read_residency_count_address(&slp_s0_addr)) {
+>  		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+> diff --git a/drivers/platform/x86/intel/pmc/icl.c b/drivers/platform/x86/intel/pmc/icl.c
+> index 2f11b1a6daeb..f18048ff9382 100644
+> --- a/drivers/platform/x86/intel/pmc/icl.c
+> +++ b/drivers/platform/x86/intel/pmc/icl.c
+> @@ -8,7 +8,7 @@
+>   *
+>   */
+>  
+> -#include "core.h"
+> +#include <linux/intel_pmc_core.h>
+>  
+>  const struct pmc_bit_map icl_pfear_map[] = {
+>  	{"RES_65",		BIT(0)},
+> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+> index e8cc156412ce..7897f5fe9881 100644
+> --- a/drivers/platform/x86/intel/pmc/mtl.c
+> +++ b/drivers/platform/x86/intel/pmc/mtl.c
+> @@ -9,7 +9,7 @@
+>   */
+>  
+>  #include <linux/pci.h>
+> -#include "core.h"
+> +#include <linux/intel_pmc_core.h>
+>  
+>  const struct pmc_reg_map mtl_reg_map = {
+>  	.pfear_sts = ext_tgl_pfear_map,
+> diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
+> index e16982236778..95ce490cf5d6 100644
+> --- a/drivers/platform/x86/intel/pmc/spt.c
+> +++ b/drivers/platform/x86/intel/pmc/spt.c
+> @@ -8,7 +8,7 @@
+>   *
+>   */
+>  
+> -#include "core.h"
+> +#include <linux/intel_pmc_core.h>
+>  
+>  const struct pmc_bit_map spt_pll_map[] = {
+>  	{"MIPI PLL",			SPT_PMC_BIT_MPHY_CMN_LANE0},
+> diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
+> index c245ada849d0..a1719d809497 100644
+> --- a/drivers/platform/x86/intel/pmc/tgl.c
+> +++ b/drivers/platform/x86/intel/pmc/tgl.c
+> @@ -8,7 +8,7 @@
+>   *
+>   */
+>  
+> -#include "core.h"
+> +#include <linux/intel_pmc_core.h>
+>  
+>  #define ACPI_S0IX_DSM_UUID		"57a6512e-3979-4e9d-9708-ff13b2508972"
+>  #define ACPI_GET_LOW_MODE_REGISTERS	1
+> diff --git a/drivers/platform/x86/intel/pmc/core.h b/include/linux/intel_pmc_core.h
+> similarity index 95%
+> rename from drivers/platform/x86/intel/pmc/core.h
+> rename to include/linux/intel_pmc_core.h
+> index 9ca9b9746719..82810e8b92a2 100644
+> --- a/drivers/platform/x86/intel/pmc/core.h
+> +++ b/include/linux/intel_pmc_core.h
+> @@ -250,7 +250,16 @@ enum ppfear_regs {
+>  #define MTL_LPM_STATUS_OFFSET			0x1700
+>  #define MTL_LPM_LIVE_STATUS_OFFSET		0x175C
+>  
+> -extern const char *pmc_lpm_modes[];
+> +#define IPC_SOC_REGISTER_ACCESS			0xAA
+> +#define IPC_SOC_SUB_CMD_READ			0x00
+> +#define IPC_SOC_SUB_CMD_WRITE			0x01
+> +
+> +struct pmc_ipc_cmd {
+> +	u32 cmd;
+> +	u32 sub_cmd;
+> +	u32 size;
+> +	u32 wbuf[4];
+> +};
+>  
+>  struct pmc_bit_map {
+>  	const char *name;
+> @@ -427,4 +436,20 @@ static const struct file_operations __name ## _fops = {			\
+>  	.release	= single_release,				\
+>  }
+>  
+> +#if IS_ENABLED(CONFIG_INTEL_PMC_CORE)
+> +/**
+> + * intel_pmc_core_ipc() - PMC IPC Mailbox accessor
+> + * @ipc_cmd:  struct pmc_ipc_cmd prepared with input to send
+> + * @rbuf:     Allocated u32[4] array for returned IPC data
+> + *
+> + * Return: 0 on success. Non-zero on mailbox error
+> + */
+> +int intel_pmc_core_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *rbuf);
+> +#else
+> +static inline int intel_pmc_core_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *rbuf)
+> +{
+> +	return -ENODEV;
+> +}
+> +#endif /* CONFIG_INTEL_PMC_CORE */
+> +
+>  #endif /* PMC_CORE_H */
 
