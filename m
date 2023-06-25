@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7F7C001DD
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 25 Jun 2023 16:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD313EB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 25 Jun 2023 16:30:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230389AbjFYQ3p (ORCPT
+        id S231277AbjFYQ3r (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 25 Jun 2023 12:29:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57300 "EHLO
+        Sun, 25 Jun 2023 12:29:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbjFYQ3g (ORCPT
+        with ESMTP id S231290AbjFYQ3i (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 25 Jun 2023 12:29:36 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1ECC10E4
-        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Jun 2023 09:29:12 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-98df6bc0048so154688966b.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Jun 2023 09:29:12 -0700 (PDT)
+        Sun, 25 Jun 2023 12:29:38 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFDDA1A4
+        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Jun 2023 09:29:14 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-9786fc23505so193127966b.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Jun 2023 09:29:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687710530; x=1690302530;
+        d=linaro.org; s=google; t=1687710532; x=1690302532;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HFr85Va+I3JFQ/CS1AHNqQf8ybLG0IaDbtC5ESPVDI4=;
-        b=P4/793FflPwuLOra9+yrjA1oii1q+mVvOCozzGq6xWF1CWxQa5aZaBBkMLzabIuC62
-         Yvd4/yFuCpxebdB1dgr8lR14V4yBjqIr5vrShuzX7UtrZ6Xmj6TDNHeJDvsL540s/0kh
-         jg1bjAJJlDKifdR5vSy9w+PBoKbOBp2JmHYqnkWjUeuxy5lMtNflQkL/YHpfyMBTx6Sr
-         /xf8EdttzMS2cRAbvHLzP3cnSiWJMPbRAEDoeBCXxOqfw9uBus9Wio2VRQxTTEMdrYES
-         53N507f6V0yvEqvE8EnkwGCgxv9U0V2LkZJHk1M1Kzl9vCqW1qNzKUhQ3uUJEEIM6rb6
-         g9kw==
+        bh=HxreeCUsKJctxClqKw334DOez932+KTIErInSPtTaVw=;
+        b=Pp8yU/zBVYnTMMwOHEiumkUJwl8bUqlFFz1uk6Dfxyx294USOCkvzgAQsJlReLPAc9
+         99GkJWzMhJf4GX2WkoSLyeXcFg01SnkQkcc1XU/NZCS0wO6yvUSmDuCvKJiRM2e/1PxH
+         1fVn/kVsNZPsEXyle6ijoWdOHPo3AAdUgTiWv/Qdlc/WsGOvNXzdpODp4SUxFjFThmb3
+         m5wRSZZ8LVPW5R76tvysT/4nUeracMSQ3/aR4THtDfaO+1olvVMeDOgNGBORXEthJdU5
+         7isF7QGeuO3ST1gp9lqFsyapaIS1UIoDIkoTCAja5ASrvQCjeUBamfYtXaLhVMdNEV3U
+         gbjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687710530; x=1690302530;
+        d=1e100.net; s=20221208; t=1687710532; x=1690302532;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HFr85Va+I3JFQ/CS1AHNqQf8ybLG0IaDbtC5ESPVDI4=;
-        b=fMBN5IoA/JEStfn5dd7hnYVMO7VCHXdC/z/67qob44zFMkUQU7tJvsTHDQCCX3dVcN
-         xBUK1s07ojNnglhyFznB2RIX+IkU8v+ECewZGxHzb31QRqveX4SRAs15HjHjAi0zxTT1
-         BF9f1xvjU688ZTe4ocb23cY8zXzFQYMoZhWfHKTx9OPYA6ZzwuCAoSXFMnaMg9A7G7D3
-         QcVG2GCnib8SPWNBvcpioTjqXKeP6H+UY+XI1xe4Dy5/z8QeqIrU82fKHLI3d5iOH5H7
-         Tq635kYZvKq4y04XrnTRXYiQ1QAcV69+Ydl/PHehZMBBsr72cjRRyZZJ/yl+D4EvyMHO
-         U3LA==
-X-Gm-Message-State: AC+VfDxkQtGEyjMuNUnf6bGooh2Twjo4srT17kckJaoaPxXlKrGwyQRd
-        7k6IR2xp3FXfmP64M5Lm761j4g==
-X-Google-Smtp-Source: ACHHUZ4iIpuVAQ8JeSeF/0XeL1REszISpgqSO7v4nyUS+OWRO4inwAZIh67lnuhSqW8mMFQdRGOTpg==
-X-Received: by 2002:a17:907:3e88:b0:97d:cdf4:719f with SMTP id hs8-20020a1709073e8800b0097dcdf4719fmr25395707ejc.68.1687710530492;
-        Sun, 25 Jun 2023 09:28:50 -0700 (PDT)
+        bh=HxreeCUsKJctxClqKw334DOez932+KTIErInSPtTaVw=;
+        b=UhDC+GuHwffgaB6xErrJ5yAj/dWWR9h1ypfr10z8Y/cinS7eQJ/DueNgZMkQkZGziD
+         zA1ba2ddSN7kfJCXgUT718kWpGSIE7KYfyGlb2iimKaiZUXPueaPa22G43mxIamfxdK+
+         MnsnUFzyhdQ5Ry5Z8nTdSPRz3wh1iWbkGLwmLkZEPdhRWgwn38NP1645dIAtgZBhNbio
+         21LjIgIn7BkxE4A1T24SKxabA8/uX2ThabI9AieKfUuDRLKRUKavWkN3+TGmpLeNW1A3
+         aFZ7XwKPSgMXXyO2V2TZ4Opds3EoEi3ZVLiblFeT3iX4qA4bXiv1cAOFV/0g60Zg8Dyl
+         e5Qg==
+X-Gm-Message-State: AC+VfDx/iLPbc6LUSZlJf7hpbDxQj1F+OOStTtHysteySUmdcvkRteS/
+        GEvi2FKeUk2X45pdLlovKNFOaQ==
+X-Google-Smtp-Source: ACHHUZ54nGtBAMtD5A4/SW79a5y2ixsRKqYjqAOBnJSC2bwhdzniIMKmttm6MbTvAQykre2mPU6owg==
+X-Received: by 2002:a17:907:5ca:b0:97b:6c24:8d2b with SMTP id wg10-20020a17090705ca00b0097b6c248d2bmr24694857ejb.55.1687710532198;
+        Sun, 25 Jun 2023 09:28:52 -0700 (PDT)
 Received: from krzk-bin.. ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id ec10-20020a170906b6ca00b00982be08a9besm2277731ejb.172.2023.06.25.09.28.48
+        by smtp.gmail.com with ESMTPSA id ec10-20020a170906b6ca00b00982be08a9besm2277731ejb.172.2023.06.25.09.28.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Jun 2023 09:28:50 -0700 (PDT)
+        Sun, 25 Jun 2023 09:28:51 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -65,9 +65,9 @@ Cc:     Andi Shyti <andi.shyti@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v4 15/24] Input: pixcir_i2c_ts - Simplify with dev_err_probe()
-Date:   Sun, 25 Jun 2023 18:28:08 +0200
-Message-Id: <20230625162817.100397-16-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v4 16/24] Input: raydium_i2c_ts - Simplify with dev_err_probe()
+Date:   Sun, 25 Jun 2023 18:28:09 +0200
+Message-Id: <20230625162817.100397-17-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230625162817.100397-1-krzysztof.kozlowski@linaro.org>
 References: <20230625162817.100397-1-krzysztof.kozlowski@linaro.org>
@@ -84,67 +84,55 @@ Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/input/touchscreen/pixcir_i2c_ts.c | 38 +++++++----------------
- 1 file changed, 12 insertions(+), 26 deletions(-)
+ drivers/input/touchscreen/raydium_i2c_ts.c | 30 +++++++---------------
+ 1 file changed, 9 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-index 554e179c2e48..0b4576091dac 100644
---- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-+++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-@@ -515,41 +515,27 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client)
- 	input_set_drvdata(input, tsdata);
+diff --git a/drivers/input/touchscreen/raydium_i2c_ts.c b/drivers/input/touchscreen/raydium_i2c_ts.c
+index 76e7d62d5870..78dd3059d585 100644
+--- a/drivers/input/touchscreen/raydium_i2c_ts.c
++++ b/drivers/input/touchscreen/raydium_i2c_ts.c
+@@ -1087,32 +1087,20 @@ static int raydium_i2c_probe(struct i2c_client *client)
+ 	i2c_set_clientdata(client, ts);
  
- 	tsdata->gpio_attb = devm_gpiod_get(dev, "attb", GPIOD_IN);
--	if (IS_ERR(tsdata->gpio_attb)) {
--		error = PTR_ERR(tsdata->gpio_attb);
+ 	ts->avdd = devm_regulator_get(&client->dev, "avdd");
+-	if (IS_ERR(ts->avdd)) {
+-		error = PTR_ERR(ts->avdd);
 -		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to request ATTB gpio: %d\n",
--				error);
+-			dev_err(&client->dev,
+-				"Failed to get 'avdd' regulator: %d\n", error);
 -		return error;
 -	}
-+	if (IS_ERR(tsdata->gpio_attb))
-+		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_attb),
-+				     "Failed to request ATTB gpio\n");
++	if (IS_ERR(ts->avdd))
++		return dev_err_probe(&client->dev, PTR_ERR(ts->avdd),
++				     "Failed to get 'avdd' regulator\n");
  
- 	tsdata->gpio_reset = devm_gpiod_get_optional(dev, "reset",
- 						     GPIOD_OUT_LOW);
--	if (IS_ERR(tsdata->gpio_reset)) {
--		error = PTR_ERR(tsdata->gpio_reset);
+ 	ts->vccio = devm_regulator_get(&client->dev, "vccio");
+-	if (IS_ERR(ts->vccio)) {
+-		error = PTR_ERR(ts->vccio);
 -		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to request RESET gpio: %d\n",
--				error);
+-			dev_err(&client->dev,
+-				"Failed to get 'vccio' regulator: %d\n", error);
 -		return error;
 -	}
-+	if (IS_ERR(tsdata->gpio_reset))
-+		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_reset),
-+				     "Failed to request RESET gpio\n");
++	if (IS_ERR(ts->vccio))
++		return dev_err_probe(&client->dev, PTR_ERR(ts->vccio),
++				     "Failed to get 'vccio' regulator\n");
  
- 	tsdata->gpio_wake = devm_gpiod_get_optional(dev, "wake",
- 						    GPIOD_OUT_HIGH);
--	if (IS_ERR(tsdata->gpio_wake)) {
--		error = PTR_ERR(tsdata->gpio_wake);
+ 	ts->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+ 						 GPIOD_OUT_LOW);
+-	if (IS_ERR(ts->reset_gpio)) {
+-		error = PTR_ERR(ts->reset_gpio);
 -		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get wake gpio: %d\n", error);
+-			dev_err(&client->dev,
+-				"failed to get reset gpio: %d\n", error);
 -		return error;
 -	}
-+	if (IS_ERR(tsdata->gpio_wake))
-+		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_wake),
-+				     "Failed to get wake gpio\n");
++	if (IS_ERR(ts->reset_gpio))
++		return dev_err_probe(&client->dev, PTR_ERR(ts->reset_gpio),
++				     "Failed to get reset gpio\n");
  
- 	tsdata->gpio_enable = devm_gpiod_get_optional(dev, "enable",
- 						      GPIOD_OUT_HIGH);
--	if (IS_ERR(tsdata->gpio_enable)) {
--		error = PTR_ERR(tsdata->gpio_enable);
--		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get enable gpio: %d\n", error);
--		return error;
--	}
-+	if (IS_ERR(tsdata->gpio_enable))
-+		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_enable),
-+				     "Failed to get enable gpio\n");
- 
- 	if (tsdata->gpio_enable)
- 		msleep(100);
+ 	error = raydium_i2c_power_on(ts);
+ 	if (error)
 -- 
 2.34.1
 
