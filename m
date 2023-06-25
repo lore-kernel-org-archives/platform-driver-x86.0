@@ -2,120 +2,148 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82BBEB64D7
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 23 Jun 2023 12:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DB7EB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 25 Jun 2023 16:28:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231644AbjFWMqX (ORCPT
+        id S230127AbjFYQ20 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 23 Jun 2023 08:46:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34834 "EHLO
+        Sun, 25 Jun 2023 12:28:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231689AbjFWMp4 (ORCPT
+        with ESMTP id S230041AbjFYQ20 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 23 Jun 2023 08:45:56 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 893D52130;
-        Fri, 23 Jun 2023 05:45:07 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-666e6541c98so418205b3a.2;
-        Fri, 23 Jun 2023 05:45:07 -0700 (PDT)
+        Sun, 25 Jun 2023 12:28:26 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE02D2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Jun 2023 09:28:24 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-9741caaf9d4so194381566b.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Jun 2023 09:28:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687524307; x=1690116307;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2sk22LSjhy08WjBidsivSikrImU390NZZ49H7BXVoJQ=;
-        b=dgy9ZZ/B/vzCfojJVvZFlMcbLu3U6AgURT7rc5FqQVNQ1ELPMyoJgnhNKdbnnSvKHw
-         4ed/xa08bzusVTq2xsiDkJz8HAbslFeisfotHSzb6BROJQgM8Lhk3T/hvBq8jzvYlKcq
-         27lIJ13qyy2Q+8VUVrDZwzgW44vlG4VhrBgv3yIyS9GDwH/KFZdjU9yBQyC0r6Nsa2xm
-         GZa6mWGhu9Wi7yv1VnipgVBE9u3228i3fyfJeTHBRpxcYLyyjjef2luCa/bWKz+X2kSd
-         En6B81JiqQtZmTiVcTuYkZdw7Ht1YzZDb4TjLongLYNkUAgS7hNxC5LOKFlNfYrA9/I2
-         IrPA==
+        d=linaro.org; s=google; t=1687710502; x=1690302502;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AhMc+nxOeeYfPI6LH+23GF4WjZTIppk4w21bXTn1i6k=;
+        b=uqVIEWk9mXUl3tPmf96YMRhOYSC6ezjzeSdSBuHds+lRnYs/EGaceTAXVxQy+bZu9y
+         QNjSbNeUU+Ho/3KsZrBX4XT0Vk1Wkv/VqrFzgGmLHQk1BBUt7k+7MpFs0F55GR6nFK98
+         9uSZx75DA8hKpGgkY8Dar3mQNc+HfulYzJhkoxBNfVsgqdmTaI6VQNl7Y9Txpbn7z8ys
+         GUGk+WuBC1JKYuUgw9v+sKGBeygcneRy1zCXElLnnq1w70PeR4nhZ+UJnjIC5NwjIj95
+         zafkdznKqBB28vTQAne2h7+Z7TayS6MZZNXShL8IhBMjlCSjdBqRzLh9elzulwZ+cMPa
+         OMUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687524307; x=1690116307;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2sk22LSjhy08WjBidsivSikrImU390NZZ49H7BXVoJQ=;
-        b=Nrm863dTY6S/l2y1nc4DXSlRCavc56OMMTx8U4pAAw8i8U8JpQFLHsyf+GL5Eit6Zq
-         IGjdWzTO3FCeZ56flzRpoRCOLHoxOgDQ92+Vv0CH8zC6bXBNcB9az58zObP74Nd8x/x7
-         35+kNhJq+zY6wl+Ufyc+1RFU+zUj6rcxETV6rzNIzXei8ZlimrrrlzbEoPafYuH158RU
-         CvyYOqSb9pDIsQBRDYg7QtDp35Cfei0h5mfHug33ejjFok2eLghCszv2QdRwSmhIATB9
-         hnhhRNg4GeJa1434XAdH29LHTQDKFakpNZocRLJh9F43jme7S0TSFzKaer1uCDyt0ewl
-         ey8w==
-X-Gm-Message-State: AC+VfDyk8ihSxJUEQrPWhifPZeG8nV//iwBay908+A+jNSPaCaS3+LqX
-        KHN6BBhFAnZHe3ICByYHAPg=
-X-Google-Smtp-Source: ACHHUZ6yh1r1E1jdJMamk8/pwcIqXZFbn5z9Z4TX1FSYCK9sWTPK/gmdJAqZ5PY9Qy0QovhJWcDbvw==
-X-Received: by 2002:a05:6a20:54aa:b0:112:2843:b546 with SMTP id i42-20020a056a2054aa00b001122843b546mr26730950pzk.58.1687524306826;
-        Fri, 23 Jun 2023 05:45:06 -0700 (PDT)
-Received: from VkUbuntu ([150.117.130.6])
-        by smtp.gmail.com with ESMTPSA id y20-20020a1709027c9400b001b53c8659fesm7120300pll.30.2023.06.23.05.44.56
+        d=1e100.net; s=20221208; t=1687710502; x=1690302502;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AhMc+nxOeeYfPI6LH+23GF4WjZTIppk4w21bXTn1i6k=;
+        b=BoJVlttWdUQmIeXmUEloaD25CqJJaaRdMd3wdEIHx7l0qUtHvQFl+QLYW21Mfxg5x4
+         K9LLKmFlJBQpDB1eV5QW2RP80BPEd56eL8ju4kYe9Jc7olAGIjqrZSrTpDfztESwYQzl
+         Q66GU36cl6xyZ/5ZcVbr/p5PRrGVb0BxH1qqDdzaGeggK1XudYmM1rjMilJxA6DXgAOj
+         B5yQIQ7FeJ7+n8z23GbMAEtOGABVCCu5JXZsuWSoS+YQluArQKbFP7/EYK6FxM5KP6m9
+         2j4qxSusiJqJmhCSBm/5hUI196a89EJ1T0HhhAv0lS3ZBRBi0b/ZjvYE9fVwEWKiJwV9
+         SHTw==
+X-Gm-Message-State: AC+VfDwFIDm0/UACp5uiHCjgc7Qi0LnWh+oAT1GO8ZZlQQ++utxm22dE
+        kZSDwkONHqzOjkiiSa7aNh70wA==
+X-Google-Smtp-Source: ACHHUZ58ULOzDOJCexuPb2LZkzug6PxFwG0fGJFHGbNRaGPX6JktTn/Hnhut++sDtTqn1YFIlgUk1Q==
+X-Received: by 2002:a17:907:2682:b0:977:4b64:f5e8 with SMTP id bn2-20020a170907268200b009774b64f5e8mr23641312ejc.57.1687710502339;
+        Sun, 25 Jun 2023 09:28:22 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id ec10-20020a170906b6ca00b00982be08a9besm2277731ejb.172.2023.06.25.09.28.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jun 2023 05:45:06 -0700 (PDT)
-Date:   Fri, 23 Jun 2023 20:44:54 +0800
-From:   Wong Vee Khee <veekhee@gmail.com>
-To:     Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Wong Vee Khee <veekhee@apple.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Revanth Kumar Uppala <ruppala@nvidia.com>,
-        Shenwei Wang <shenwei.wang@nxp.com>,
-        Andrey Konovalov <andrey.konovalov@linaro.org>,
-        Jochen Henneberg <jh@henneberg-systemdesign.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
-        Tee Min <tee.min.tan@linux.intel.com>,
-        Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-        Lai Peter Jun Ann <jun.ann.lai@intel.com>
-Subject: Re: [PATCH net-next 1/6] platform/x86: intel_pmc_core: Add IPC
- mailbox accessor function and add SoC register access
-Message-ID: <ZJWTxiJA4Z028/2G@VkUbuntu>
-References: <20230622041905.629430-1-yong.liang.choong@linux.intel.com>
- <20230622041905.629430-2-yong.liang.choong@linux.intel.com>
- <0652c9c8-27ee-0af9-9aa8-a2909142d405@redhat.com>
- <1599dd7a-f297-577b-7f5c-295a660c0c9c@linux.intel.com>
+        Sun, 25 Jun 2023 09:28:21 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@collabora.com>,
+        =?UTF-8?q?Mika=20Penttil=C3=A4?= <mpenttil@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc:     Andi Shyti <andi.shyti@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v4 00/24] Input: Simplify with dev_err_probe()
+Date:   Sun, 25 Jun 2023 18:27:53 +0200
+Message-Id: <20230625162817.100397-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1599dd7a-f297-577b-7f5c-295a660c0c9c@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 23, 2023 at 01:52:49PM +0800, Choong Yong Liang wrote:
-> Hi Hans,
-> 
-> I will discuss it with David but currently he is on vacation. It might take
-> some time to get the final output. Thank you.
->
+Hi,
 
-Please remember not to top post on ML.
+Three years ago I sent v3 of this series. There was never an anwser from Dmitry
+- no comment at all. Maybe after three years this can go in? It makes
+the code nicely smaller.
 
-Regards,
- Vee Khee
+Changes since v3:
+1. Rebase
+2. Drop gpio-keys patch as it depends on GPIO helpers and I am too bored to
+   rebase it.
+v3: https://lore.kernel.org/all/20200827185829.30096-1-krzk@kernel.org/
+
+Changes since v2:
+1. Add review tags,
+2. Fixes after review (see individual patches).
+3. Two new patches - 26 and 27.
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (24):
+  Input: gpio_keys_polled - Simplify with dev_err_probe()
+  Input: gpio-vibra - Simplify with dev_err_probe()
+  Input: pwm-vibra - Simplify with dev_err_probe()
+  Input: rotary_encoder - Simplify with dev_err_probe()
+  Input: elan_i2c - Simplify with dev_err_probe()
+  Input: bu21013_ts - Simplify with dev_err_probe()
+  Input: bu21029_ts - Simplify with dev_err_probe()
+  Input: chipone_icn8318 - Simplify with dev_err_probe()
+  Input: cy8ctma140 - Simplify with dev_err_probe()
+  Input: edf-ft5x06 - Simplify with dev_err_probe()
+  Input: ektf2127 - Simplify with dev_err_probe()
+  Input: elants_i2c - Simplify with dev_err_probe()
+  Input: goodix - Simplify with dev_err_probe()
+  Input: melfas_mip4 - Simplify with dev_err_probe()
+  Input: pixcir_i2c_ts - Simplify with dev_err_probe()
+  Input: raydium_i2c_ts - Simplify with dev_err_probe()
+  Input: resistive-adc-touch - Simplify with dev_err_probe()
+  Input: silead - Simplify with dev_err_probe()
+  Input: sis_i2c - Simplify with dev_err_probe()
+  Input: surface3_spi - Simplify with dev_err_probe()
+  Input: sx8643 - Simplify with dev_err_probe()
+  Input: bcm-keypad - Simplify with dev_err_probe()
+  Input: bu21013_ts - Use local 'client->dev' variable in probe()
+  Input: bu21029_ts - Use local 'client->dev' variable in probe()
+
+ drivers/input/keyboard/bcm-keypad.c           | 14 ++--
+ drivers/input/keyboard/gpio_keys_polled.c     |  8 +--
+ drivers/input/misc/gpio-vibra.c               | 20 ++----
+ drivers/input/misc/pwm-beeper.c               | 19 ++---
+ drivers/input/misc/pwm-vibra.c                | 30 +++-----
+ drivers/input/misc/rotary_encoder.c           |  8 +--
+ drivers/input/mouse/elan_i2c_core.c           |  9 +--
+ drivers/input/touchscreen/bu21013_ts.c        | 72 ++++++++-----------
+ drivers/input/touchscreen/bu21029_ts.c        | 51 +++++--------
+ drivers/input/touchscreen/chipone_icn8318.c   |  8 +--
+ drivers/input/touchscreen/cy8ctma140.c        |  8 +--
+ drivers/input/touchscreen/edt-ft5x06.c        | 10 +--
+ drivers/input/touchscreen/ektf2127.c          |  8 +--
+ drivers/input/touchscreen/elants_i2c.c        | 22 ++----
+ drivers/input/touchscreen/goodix.c            | 40 +++--------
+ drivers/input/touchscreen/melfas_mip4.c       |  9 +--
+ drivers/input/touchscreen/pixcir_i2c_ts.c     | 38 ++++------
+ drivers/input/touchscreen/raydium_i2c_ts.c    | 30 +++-----
+ .../input/touchscreen/resistive-adc-touch.c   |  8 +--
+ drivers/input/touchscreen/silead.c            |  8 +--
+ drivers/input/touchscreen/sis_i2c.c           | 20 ++----
+ drivers/input/touchscreen/surface3_spi.c      | 13 +---
+ drivers/input/touchscreen/sx8654.c            | 10 +--
+ 23 files changed, 146 insertions(+), 317 deletions(-)
+
+-- 
+2.34.1
+
