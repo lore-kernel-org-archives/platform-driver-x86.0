@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D4FC04A94
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 25 Jun 2023 16:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D2EC04A6A
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 25 Jun 2023 16:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231526AbjFYQaJ (ORCPT
+        id S231469AbjFYQaH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 25 Jun 2023 12:30:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57746 "EHLO
+        Sun, 25 Jun 2023 12:30:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbjFYQ3q (ORCPT
+        with ESMTP id S231477AbjFYQ3n (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 25 Jun 2023 12:29:46 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79EB11739
-        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Jun 2023 09:29:29 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-9741caaf9d4so194418666b.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Jun 2023 09:29:29 -0700 (PDT)
+        Sun, 25 Jun 2023 12:29:43 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB96E5B
+        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Jun 2023 09:29:24 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-9896216338cso193268866b.3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Jun 2023 09:29:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687710542; x=1690302542;
+        d=linaro.org; s=google; t=1687710538; x=1690302538;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+eG4JxfUU5OHHCechxQb+4pnO54NYHWPt20ucibo4lY=;
-        b=vpgYRQDgbfrJZi4G3H9i5osvGe/QUrJCZaBZ6brT2dDynlvhwjMrnarKaXvQSmkDu9
-         LEf0QicKYroQPJbEbe8927u7FbOzTMS/wcQkObAqvj/husrdLsBZHJC7X5A1CHZ2WHFy
-         YkCMHJ9y9YZGBx+HbYiXVRkKH0WnYvrch4cXyVbRLa8MdEQckIob+hkQ5TznlSu1so4c
-         CaZEG4/CvA2BQhDPT0N+C63/IHMVKQsKtS3btGTxZCq+JzALBAoG2SJt+zK65FsY02jF
-         MVZdNKSnzqfDmtNZUQqK8But8lp/IA5oAJ6FmtYWQOOnccakW78mF+0hd90Wto2V7pDD
-         M1zA==
+        bh=JmS3pJ1SyrLevST8bGOOD7yXt2zH6zG2iD3vhDp7X08=;
+        b=gTI8JU+ZA8Kr8RNGjDMmEGGx04B54DFxcjCoX05mV0tdcOiQ4/ZIBpJFZNDajO7s/5
+         QL2aWBoD+OfKOt2tAoJ7uTt42SwAznxpokPO5sZnwMPs2KGSNPlM+S13UJkE5iHwC1FO
+         NsdjUL8HRmHUvJmp3UsD0RwKEKlIsjvpHVJj8spyjxzzusT6BsJWFzYc8K1ZJXjnhAmZ
+         jAvL39DCwkF16P784MtycdiOLNy4fKQUTdHxK950v0WaUa2L1nSZQGPWXYXi7Fh37mO0
+         GAwHz0vxkoEDDxuoKGy52+dSO9bqSwf0SlyU0YVORQE29RC2sqfzZ/PclYPOPSpl5+qf
+         IBrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687710542; x=1690302542;
+        d=1e100.net; s=20221208; t=1687710538; x=1690302538;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+eG4JxfUU5OHHCechxQb+4pnO54NYHWPt20ucibo4lY=;
-        b=iXfwC5SRTOlI8wRx7jLRz8lqENBvXeyVqvLQm65PKI9bkWcV71rhwAIXJ4T2HAciWw
-         9aTnxSXS4qFNTeAAlM00LoO+RPm43yFPUNrCEkljr+mN6yrBCHg+nT6pRTvqeCGMpf9k
-         0ZZ6XEyjvHTsN5dLNCn+WnZQOnt0jo8kS8/FnE5brnwFQZKwzzQx7qfBYhnK4zsgfr+e
-         CY7kBlQLlOIc8bAgXAQ+UXgNg3KG1h4klzhLKlfVm+YS3bRwc8FI6arh4pwkATrwh5Yu
-         bcorXY4nxWpHggSJ+KlHoENXG+gJ3jl2RYOPSq01bIFWrwWQK3PEL6ZP9ThfV12laJ3C
-         IEKw==
-X-Gm-Message-State: AC+VfDzenaPKZLz43g1ZflxrJ69QMjP09M/gWDce5LFPOGVddw/qqZNg
-        tc0AIg0kxIlh6n4drIp3wzN5Pg==
-X-Google-Smtp-Source: ACHHUZ7Nfjp+egfAHh54srSRxyVh2PA3trwxm/iteOotlhhb/2Fm2fOdwsIIa4LhyHwcJMlWjUNuNg==
-X-Received: by 2002:a17:907:7811:b0:98d:9dfe:e9b3 with SMTP id la17-20020a170907781100b0098d9dfee9b3mr4531048ejc.24.1687710541832;
-        Sun, 25 Jun 2023 09:29:01 -0700 (PDT)
+        bh=JmS3pJ1SyrLevST8bGOOD7yXt2zH6zG2iD3vhDp7X08=;
+        b=bCORpaHb8E+az+6lMLzz8v+nWcljeTi3a8Pi8RbOaQpgJ3UtSSMFKY5PAx8iI0rDU3
+         EYGOE/i/oEUvokTivymNqGnIoaZlBL/unU+trk5/jXW5R3W0AgWvjGMbZo3euakWJ4HH
+         Ro1M4a82Qn+OB1JHP+HGeVr8S5nKmNTvo6aZlfq1bm/UwWVJVXd3Ajslj6EWsum2NNxV
+         EBzODiiwUT/EtUwORMs5nRuu8pFuulqyBmsPaJHJ6sB/K4PSQAVqZ7Zo+1UHTbKgtqWF
+         E37H4LWVpToqOqie2VBzaKu/XXh28NLyKWjpUZ+imAoewpE1HdNZd89yz/aSDB382T/1
+         QlkQ==
+X-Gm-Message-State: AC+VfDz+uopQUmdNS+Nl032xcgwtYECCMSQJW/J50rwdRabzGLCVj7fK
+        mnYLNJeK9v74SaarjPpliAbSkg==
+X-Google-Smtp-Source: ACHHUZ40Qb3W3LkY7oK41/MEkUCkEpBE4VxbC9OyUmcAy8rrCe5L4wQOsEbshuUjWAUUngr7rO15IQ==
+X-Received: by 2002:a17:907:2be7:b0:98e:2b00:c509 with SMTP id gv39-20020a1709072be700b0098e2b00c509mr1551774ejc.30.1687710538039;
+        Sun, 25 Jun 2023 09:28:58 -0700 (PDT)
 Received: from krzk-bin.. ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id ec10-20020a170906b6ca00b00982be08a9besm2277731ejb.172.2023.06.25.09.29.00
+        by smtp.gmail.com with ESMTPSA id ec10-20020a170906b6ca00b00982be08a9besm2277731ejb.172.2023.06.25.09.28.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Jun 2023 09:29:01 -0700 (PDT)
+        Sun, 25 Jun 2023 09:28:57 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -65,9 +65,9 @@ Cc:     Andi Shyti <andi.shyti@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v4 21/24] Input: sx8643 - Simplify with dev_err_probe()
-Date:   Sun, 25 Jun 2023 18:28:14 +0200
-Message-Id: <20230625162817.100397-22-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v4 19/24] Input: sis_i2c - Simplify with dev_err_probe()
+Date:   Sun, 25 Jun 2023 18:28:12 +0200
+Message-Id: <20230625162817.100397-20-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230625162817.100397-1-krzysztof.kozlowski@linaro.org>
 References: <20230625162817.100397-1-krzysztof.kozlowski@linaro.org>
@@ -84,30 +84,43 @@ Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/input/touchscreen/sx8654.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/input/touchscreen/sis_i2c.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
-index 0293c493bc79..f5c5881cef6b 100644
---- a/drivers/input/touchscreen/sx8654.c
-+++ b/drivers/input/touchscreen/sx8654.c
-@@ -323,13 +323,9 @@ static int sx8654_probe(struct i2c_client *client)
+diff --git a/drivers/input/touchscreen/sis_i2c.c b/drivers/input/touchscreen/sis_i2c.c
+index 426564d0fc39..ed56cb546f39 100644
+--- a/drivers/input/touchscreen/sis_i2c.c
++++ b/drivers/input/touchscreen/sis_i2c.c
+@@ -310,23 +310,15 @@ static int sis_ts_probe(struct i2c_client *client)
  
- 	sx8654->gpio_reset = devm_gpiod_get_optional(&client->dev, "reset",
- 						     GPIOD_OUT_HIGH);
--	if (IS_ERR(sx8654->gpio_reset)) {
--		error = PTR_ERR(sx8654->gpio_reset);
+ 	ts->attn_gpio = devm_gpiod_get_optional(&client->dev,
+ 						"attn", GPIOD_IN);
+-	if (IS_ERR(ts->attn_gpio)) {
+-		error = PTR_ERR(ts->attn_gpio);
 -		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev, "unable to get reset-gpio: %d\n",
--				error);
+-			dev_err(&client->dev,
+-				"Failed to get attention GPIO: %d\n", error);
 -		return error;
 -	}
-+	if (IS_ERR(sx8654->gpio_reset))
-+		return dev_err_probe(&client->dev, PTR_ERR(sx8654->gpio_reset),
-+				     "unable to get reset-gpio\n");
- 	dev_dbg(&client->dev, "got GPIO reset pin\n");
++	if (IS_ERR(ts->attn_gpio))
++		return dev_err_probe(&client->dev, PTR_ERR(ts->attn_gpio),
++				     "Failed to get attention GPIO\n");
  
- 	sx8654->data = device_get_match_data(&client->dev);
+ 	ts->reset_gpio = devm_gpiod_get_optional(&client->dev,
+ 						 "reset", GPIOD_OUT_LOW);
+-	if (IS_ERR(ts->reset_gpio)) {
+-		error = PTR_ERR(ts->reset_gpio);
+-		if (error != -EPROBE_DEFER)
+-			dev_err(&client->dev,
+-				"Failed to get reset GPIO: %d\n", error);
+-		return error;
+-	}
++	if (IS_ERR(ts->reset_gpio))
++		return dev_err_probe(&client->dev, PTR_ERR(ts->reset_gpio),
++				     "Failed to get reset GPIO\n");
+ 
+ 	sis_ts_reset(ts);
+ 
 -- 
 2.34.1
 
