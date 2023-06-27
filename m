@@ -2,136 +2,89 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE69EB64D9
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Jun 2023 17:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7196EEB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Jun 2023 18:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230056AbjF0RfT (ORCPT
+        id S229804AbjF0SPD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Jun 2023 13:35:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53286 "EHLO
+        Tue, 27 Jun 2023 14:15:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229867AbjF0RfS (ORCPT
+        with ESMTP id S231254AbjF0SO5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Jun 2023 13:35:18 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EA2C26BC;
-        Tue, 27 Jun 2023 10:35:17 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1b8063aa2e1so15197085ad.1;
-        Tue, 27 Jun 2023 10:35:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687887316; x=1690479316;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DErWY5bdlKQCL//WmeXr10V4jZWPluRiVB2lnX+rujc=;
-        b=mZMNmRiDHPzwczy14YHFEWN/K65Z5d0lqh1AJtn6QPvZk6mWJRaZAopuVyoDuwBRsd
-         S6rwWpbGLn34fUZcXTKjVl0VYBPyqrkdaME7LiX5Oys51enRGnZME6FZvD6E5+5MWCIE
-         Jrx29LLOd0CeMa5ZVzctI9+ZiaPFyT5nvNiKws/fCF14jpazezTEoor8olhvKCSeY2LF
-         wpvNhvzNIe/ntytLxE1bOtlEws/Ol7waUrEgX1LP6G503hPuJA++RWmmPQ9VvxN6THKj
-         fHBZEBaiKq9bK4GpflfgCXlWsBtW7QRrN+X5qDM4wCyIwy5B6OohZ1eoLpWoeCQFijv/
-         qeGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687887316; x=1690479316;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DErWY5bdlKQCL//WmeXr10V4jZWPluRiVB2lnX+rujc=;
-        b=RE2SkGG30+psH6QwqIKmRnZVrRZvap0bZxYqNMgaCBkIH2Foz37Dac4oJM6OHLFO7D
-         +d6K6liCyPmyUvlR5a8ETlF7GceX49rcG9/099WGsTFIQ/ax/cDEA2y/PAQ1+ukfVo6K
-         lwBGlFmHlUfemF8q0O6+Gs82ha43MlFbYbc8PSnfN+qSoew6URHE8lE3bc5+eQDDohj9
-         fawSTMGLjh2FRjWVgriEoNK3bpykpHUm7BNTDHXiMeKnz6ZDYb9Qbxdo2DTGHKRmkKIH
-         yDIrGmlb3JIU4cXxqrLZXBn9QcPx+879wU9PPyFTvWOhzdDYYUf7qXTzkS1zTAmomOmr
-         yC9w==
-X-Gm-Message-State: AC+VfDwgCafwHGItsqKlebUgfQzz5EBTQbPz59WDuvdwclWsfcowvoDX
-        sJj3XetJYX6ySz4tbp/LQT4=
-X-Google-Smtp-Source: ACHHUZ7Q8KTIOWBGjpxVDyMWBixDhFwzMIxmuxtA5JDDKNNBqtiGeXHJkc/I08VEiBA48unVy6V7Fw==
-X-Received: by 2002:a17:902:bc44:b0:1b8:25b:4efb with SMTP id t4-20020a170902bc4400b001b8025b4efbmr4712441plz.62.1687887316531;
-        Tue, 27 Jun 2023 10:35:16 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:eb71:7977:cb6e:6d32])
-        by smtp.gmail.com with ESMTPSA id b17-20020a170903229100b001b675b24438sm5637836plh.284.2023.06.27.10.35.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jun 2023 10:35:15 -0700 (PDT)
-Date:   Tue, 27 Jun 2023 10:35:13 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Eray =?iso-8859-1?Q?Or=E7unus?= <erayorcunus@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, ike.pan@canonical.com,
-        jikos@kernel.org, benjamin.tissoires@redhat.com,
-        hdegoede@redhat.com, mgross@linux.intel.com, pobrn@protonmail.com,
-        Eray =?iso-8859-1?Q?Or=E7unus?= <erayorcunus@gmail.com>
-Subject: Re: [PATCH v2 2/7] HID: add mapping for camera access keys
-Message-ID: <CAKdAkRQwGOf5Of7wfOHYr7D3Y0GEWtL0+0keGFXfrOic3ZiJgA@mail.gmail.com>
-References: <20221029120311.11152-1-erayorcunus@gmail.com>
- <20221029120311.11152-3-erayorcunus@gmail.com>
+        Tue, 27 Jun 2023 14:14:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D48910D7
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Jun 2023 11:14:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C0BA5611FD
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Jun 2023 18:13:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2A555C433C0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Jun 2023 18:13:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687889637;
+        bh=apVeWoSKbo2Ht2tFWUt870rOmidSB8xlNSZkBXwUHIY=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=HnWDp57fCwR6ljtUpVJCkAenEfdUzXTgQRGjyXUWj0jDlNxb92Bm4aedeYvznzVSt
+         QU0jSPlaNE43axAzJzNHAoAWmeEBBtJnFIukF8rr3XcKq3MKpFpoeGaVuZOysgvJ1q
+         hzknKYCEC1ZFr5PZeuLbchtXDFGoLYH+QTFeC31nZsMUBym3Q3qbXc3vPFVqC0ETyb
+         +H4gUUUeVv2sRHJ/cLNdoMoaaXa4owO4aFRgHZKrY5lQw4o8v9PX75L7ngiwOMxyAt
+         lHoruaef8CDXM8MBFoA2lpiLsg+Nh0h8A6WfV9jm/Zuf0cVVD5m8fYNE+3x8tHkj8z
+         h89WJaV/pWn2Q==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 1B237C4332E; Tue, 27 Jun 2023 18:13:57 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Tue, 27 Jun 2023 18:13:53 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: zurabid2016@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-204807-215701-fenN2uS1lC@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221029120311.11152-3-erayorcunus@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Eray,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-On Sat, Oct 29, 2022 at 5:04 AM Eray Orçunus <erayorcunus@gmail.com> wrote:
->
-> HUTRR72 added 3 new usage codes for keys that are supposed to enable,
-> disable and toggle camera access. These are useful, considering many
-> laptops today have key(s) for toggling access to camera.
->
-> This patch adds new key definitions for KEY_CAMERA_ACCESS_ENABLE,
-> KEY_CAMERA_ACCESS_DISABLE and KEY_CAMERA_ACCESS_TOGGLE. Additionally
-> hid-debug is adjusted to recognize this new usage codes as well.
->
-> Signed-off-by: Eray Orçunus <erayorcunus@gmail.com>
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/hid/hid-debug.c                | 3 +++
->  drivers/hid/hid-input.c                | 3 +++
->  include/uapi/linux/input-event-codes.h | 3 +++
->  3 files changed, 9 insertions(+)
->
-> diff --git a/drivers/hid/hid-debug.c b/drivers/hid/hid-debug.c
-> index f48d3534e020..991f880fdbd4 100644
-> --- a/drivers/hid/hid-debug.c
-> +++ b/drivers/hid/hid-debug.c
-> @@ -936,6 +936,9 @@ static const char *keys[KEY_MAX + 1] = {
->         [KEY_ASSISTANT] = "Assistant",
->         [KEY_KBD_LAYOUT_NEXT] = "KbdLayoutNext",
->         [KEY_EMOJI_PICKER] = "EmojiPicker",
-> +       [KEY_CAMERA_ACCESS_ENABLE] = "CameraAccessEnable",
-> +       [KEY_CAMERA_ACCESS_DISABLE] = "CameraAccessDisable",
-> +       [KEY_CAMERA_ACCESS_TOGGLE] = "CameraAccessToggle",
->         [KEY_DICTATE] = "Dictate",
->         [KEY_BRIGHTNESS_MIN] = "BrightnessMin",
->         [KEY_BRIGHTNESS_MAX] = "BrightnessMax",
-> diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-> index f197aed6444a..f8e6513e77b8 100644
-> --- a/drivers/hid/hid-input.c
-> +++ b/drivers/hid/hid-input.c
-> @@ -995,6 +995,9 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
->                 case 0x0cd: map_key_clear(KEY_PLAYPAUSE);       break;
->                 case 0x0cf: map_key_clear(KEY_VOICECOMMAND);    break;
->
-> +               case 0x0d5: map_key_clear(KEY_CAMERA_ACCESS_ENABLE);            break;
-> +               case 0x0d6: map_key_clear(KEY_CAMERA_ACCESS_DISABLE);           break;
-> +               case 0x0d7: map_key_clear(KEY_CAMERA_ACCESS_TOGGLE);            break;
+zurabid2016@gmail.com changed:
 
-I was looking at the HID Usages table spec and it came to my attention
-that HUTRR72 actually established 0x76, 0x77 and 0x78 as the usages for
-then new camera access controls:
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |zurabid2016@gmail.com
 
-https://www.usb.org/sites/default/files/hutrr72_-_usages_to_control_camera_access_0.pdf
+--- Comment #331 from zurabid2016@gmail.com ---
+Hey, I use 6.3.9 custom kernel on Gentoo GNU/Linux and it seems that my
+motherboard is not (yet) supported. It is TUF GAMING B460-PLUS. I looked at
+6.4.0 sources and.. voila it is there. Will wait for the next stable releas=
+e,
+then
 
-Where did 0xd5, 0xd6 and 0xd7 came from?
+--=20
+You may reply to this email to add a comment.
 
-It looks like we need to update the hid-input mappings as the are
-clashing with game recording controls from HUTRR64:
-
-https://www.usb.org/sites/default/files/hutrr64b_-_game_recording_controllers_0.pdf
-
-Thanks.
-
--- 
-Dmitry
+You are receiving this mail because:
+You are watching the assignee of the bug.=
