@@ -2,246 +2,358 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8000BEB64DA
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  1 Jul 2023 00:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F17EB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  1 Jul 2023 04:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbjGAAno (ORCPT
+        id S229880AbjGAEDj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 30 Jun 2023 20:43:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56094 "EHLO
+        Sat, 1 Jul 2023 00:03:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbjGAAnn (ORCPT
+        with ESMTP id S229480AbjGAEDi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 30 Jun 2023 20:43:43 -0400
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5023C3C02
-        for <platform-driver-x86@vger.kernel.org>; Fri, 30 Jun 2023 17:43:42 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 5ED0A3200952;
-        Fri, 30 Jun 2023 20:43:41 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Fri, 30 Jun 2023 20:43:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=system76.com; h=
-        cc:cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1688172220; x=1688258620; bh=qnct9qxDQk
-        IWrpMnVZY13A/TzgVRygoA+Eajrxbv22M=; b=F86VEFkP2bKs/hPUq0P7CRknTb
-        pI8S/ZAp3dTMomS3vkR/5DOJWK66Mmd+FGE/5Dsb9dwIRVQfWGo3f6/xERN/UeYi
-        ykkgH9ZrbheSkV4W5OuK08mpdQHGQZ3Lsg2kybD8n1wKaqdA2dG5JsEU3tdbN9Qg
-        MTC5Ue752706yVghEIrJ5BpxjRy7DiIFBSrAqOLY3sVtXmEM8ElKwohA3mgJH/RP
-        G+Eg1/PE2P7LU1pQK0+iYSE6SZTfLkIa4Ich0CPjoxjfHCM1sxYzDm400+PuXjdf
-        JRy5Ed1kz4T5WkupLlHojrquzn6ga4lZamYQwqHQ3YocCLQAT0KXQN3KoFVA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1688172220; x=1688258620; bh=qnct9qxDQkIWr
-        pMnVZY13A/TzgVRygoA+Eajrxbv22M=; b=YSJ9hJ4ZbuVgkT8+/PHbnno8XWRCn
-        2wzQu71LmF8+/iC2ACBd+y/HxyWIqTpfbgRJcWlyY1V0PBq4ghQyzvlkxr+Qhfpp
-        EPBAcb3dUtnyTtPAVKWw1dMJBCTriHVWMaBRXqka3FwNcxxq1qMptUt3L77NFQ32
-        7vd1DWXzv1e1jtru5vCMkGyt14mc/JJmGzKeW0Pr45g5eVFPk5R840pcMu2cONKh
-        0KJBHPGaUvw9J6FVPXi/twwYgzr1jB3EN7D5JO231pRM293/liKDUqdKR6mxhAQE
-        XyYiqt719dQbh4g2v9N2dgrtXRFF1G5jpEXRnSFj2Lphur8r+QxRNfMsA==
-X-ME-Sender: <xms:vHafZAPvYZyMfJHR13g2sSBzF1DaHKjVZ6JvA8HLwSC3PoMqqhzATA>
-    <xme:vHafZG-SKcuKTBcITuYHnJTZhFZnQ3VyHwaY0OJZymScfSshUFwNUhairwc6Q5PgB
-    aFP7fPaYz9gQed99w>
-X-ME-Received: <xmr:vHafZHRr9xFDUH4CHDSN96Qc-gldrJ3rxoO9pVz-VhA2YDvq3C2aHfc12qHnWBUyxiZ2JHc0w6O6ImcrDrXFSsp9AuQUqW7hwrubVakkag>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrtdejgdefjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekredtre
-    dttdenucfhrhhomhepvfhimhcuvehrrgiffhhorhguuceothgtrhgrfihfohhrugesshih
-    shhtvghmjeeirdgtohhmqeenucggtffrrghtthgvrhhnpeegvdefgeehhfffvdfgkeelff
-    dvgfetvdeffeevfedugfevgeetffekfefhudffkeenucffohhmrghinhepghhithhhuhgs
-    rdgtohhmpdgtohhrvggsohhothdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehttghrrgiffhhorhgusehshihsthgvmhejiedrtgho
-    mh
-X-ME-Proxy: <xmx:vHafZItkttyeWBSQtj8T1kOtlvyYe7JgVquvK1-qyDFaM9siCHQh4g>
-    <xmx:vHafZId1ZU5n9JwG-L_tT87PgqSLr6Sb_4H5s5qCgQbAPBuOZl-lzw>
-    <xmx:vHafZM3wJHTKexDwSriRKkopt1uooIBel7JNpZExkGhdDIxg-f_SwA>
-    <xmx:vHafZEFWY7SewGP4U5tQMga7GSWQve3Y-Ozu3Me_h-5hgpDmNWu07Q>
-Feedback-ID: i1761444e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 30 Jun 2023 20:43:40 -0400 (EDT)
-From:   Tim Crawford <tcrawford@system76.com>
+        Sat, 1 Jul 2023 00:03:38 -0400
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::227])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 922DD92
+        for <platform-driver-x86@vger.kernel.org>; Fri, 30 Jun 2023 21:03:35 -0700 (PDT)
+X-GND-Sasl: robert.joslyn@redrectangle.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redrectangle.org;
+        s=gm1; t=1688184214;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=xJo0cdRyOqavK8B0cG9OTc4NoXV8ClJVf1c4IC/C7FA=;
+        b=H8aSYjHSfIvaX3N/V3ue0JyczZ+8sKRXj9+j/ioDY1F50PUvXfucvnqWo8rsxwG+ak+i+v
+        3kRqzu48YERW1YnHBTbG689OI3TR3VOLGI9TmxEyv47EZd1R/D3qNsLeoU7k5hyn/gbiAz
+        g1K7bSTaZitdkBZ1uEHUXUZvBkZmeO7JIp5WOYITCAmYbjE09V2toPqnoald4c3qnpVfQR
+        woFrJ+eyS4aIc8kNfRCL4IHj/WhvEoQgjgkGepGgjXRf/JdmW8NBNOAMVbp2DjiwVlSe29
+        JOJ1YBsjdtVf15gelpwF55s7raZaFLEp6c+d+KFcwpFfNXirX6hKDRRoUBnImw==
+X-GND-Sasl: robert.joslyn@redrectangle.org
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 01D8120003;
+        Sat,  1 Jul 2023 04:03:32 +0000 (UTC)
+From:   Robert Joslyn <robert.joslyn@redrectangle.org>
 To:     platform-driver-x86@vger.kernel.org
-Cc:     productdev@system76.com, Tim Crawford <tcrawford@system76.com>
-Subject: [PATCH] platform/x86: system76: Handle new KBLED ACPI methods
-Date:   Fri, 30 Jun 2023 18:43:29 -0600
-Message-ID: <20230701004329.88288-1-tcrawford@system76.com>
-X-Mailer: git-send-email 2.41.0
+Cc:     Robert Joslyn <robert.joslyn@redrectangle.org>
+Subject: [PATCH] platform/x86: Add SEL-3350 platform driver
+Date:   Fri, 30 Jun 2023 21:02:40 -0700
+Message-Id: <20230701040240.550813-1-robert.joslyn@redrectangle.org>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-System76 EC since system76/ec@9ac513128ad9 detects if the keyboard is
-white or RGB backlit via `RGBKB-DET#` at run-time instead of being set
-at compile-time. As part of this, the brightness of white-only backlit
-keyboards was also changed to behave more like the RGB-backlit
-keyboards: a value between 0 and 255 instead of a firmware-defined
-level.
+Add a driver for Schweitzer Engineering Laboratories SEL-3350 computers
+front LEDs and power supplies. LED and power supply status is provided
+by the Intel SoC GPIO.
 
-The EC ACPI methods in coreboot have been updated for this new
-functionality only, removing the old behavior.
-
-This should preserve behavior as we roll out new firmware with these
-changes included and users update to it.
-
-Ref: https://github.com/system76/ec/pull/357
-Ref: https://review.coreboot.org/c/coreboot/+/76152
-Signed-off-by: Tim Crawford <tcrawford@system76.com>
+Signed-off-by: Robert Joslyn <robert.joslyn@redrectangle.org>
 ---
- drivers/platform/x86/system76_acpi.c | 84 ++++++++++++++++++++++------
- 1 file changed, 67 insertions(+), 17 deletions(-)
+ drivers/platform/x86/Kconfig            |  16 ++
+ drivers/platform/x86/Makefile           |   3 +
+ drivers/platform/x86/sel3350-platform.c | 254 ++++++++++++++++++++++++
+ 3 files changed, 273 insertions(+)
+ create mode 100644 drivers/platform/x86/sel3350-platform.c
 
-diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/system76_acpi.c
-index fc4708fa6ebe..a172769f5172 100644
---- a/drivers/platform/x86/system76_acpi.c
-+++ b/drivers/platform/x86/system76_acpi.c
-@@ -2,7 +2,7 @@
- /*
-  * System76 ACPI Driver
-  *
-- * Copyright (C) 2019 System76
-+ * Copyright (C) 2023 System76
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-@@ -24,6 +24,12 @@
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 49c2c4cd8d00..d464038d6ce5 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1094,6 +1094,22 @@ config WINMATE_FM07_KEYS
+ 	  buttons below the display. This module adds an input device
+ 	  that delivers key events when these buttons are pressed.
  
- #include <acpi/battery.h>
++config SEL3350_PLATFORM
++	tristate "SEL-3350 LEDs and power supplies"
++	depends on ACPI
++	select POWER_SUPPLY
++	select GPIOLIB
++	select NEW_LEDS
++	select LEDS_CLASS
++	select LEDS_GPIO
++	select PINCTRL
++	select PINCTRL_BROXTON
++	help
++	  Support for LEDs and power supplies on SEL-3350 computers.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called sel3350-platform.
++
+ endif # X86_PLATFORM_DEVICES
  
-+enum kbled_type {
-+	KBLED_NONE,
-+	KBLED_WHITE,
-+	KBLED_RGB,
+ config P2SB
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 52dfdf574ac2..a1e989ac0d80 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -135,3 +135,6 @@ obj-$(CONFIG_SIEMENS_SIMATIC_IPC)	+= simatic-ipc.o
+ 
+ # Winmate
+ obj-$(CONFIG_WINMATE_FM07_KEYS)		+= winmate-fm07-keys.o
++
++# SEL
++obj-$(CONFIG_SEL3350_PLATFORM)		+= sel3350-platform.o
+diff --git a/drivers/platform/x86/sel3350-platform.c b/drivers/platform/x86/sel3350-platform.c
+new file mode 100644
+index 000000000000..0a8341c1f714
+--- /dev/null
++++ b/drivers/platform/x86/sel3350-platform.c
+@@ -0,0 +1,254 @@
++// SPDX-License-Identifier: GPL-2.0-only OR BSD-3-Clause
++/*
++ * Copyright 2023 Schweitzer Engineering Laboratories, Inc.
++ * 2350 NE Hopkins Court, Pullman, WA 99163 USA
++ *
++ * Platform support for the b2093 mainboard used in SEL-3350 computers.
++ * Consumes GPIO from the SoC to provide standard LED and power supply
++ * devices.
++ */
++
++#include <linux/acpi.h>
++#include <linux/gpio/consumer.h>
++#include <linux/gpio/machine.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/power_supply.h>
++
++/* Broxton communities */
++#define BXT_NW "INT3452:01"
++#define BXT_W  "INT3452:02"
++#define BXT_SW "INT3452:03"
++
++#define B2093_GPIO_ACPI_ID "SEL0003"
++
++#define SEL_PS_A        "sel_ps_a"
++#define SEL_PS_A_DETECT "sel_ps_a_detect"
++#define SEL_PS_A_GOOD   "sel_ps_a_good"
++#define SEL_PS_B        "sel_ps_b"
++#define SEL_PS_B_DETECT "sel_ps_b_detect"
++#define SEL_PS_B_GOOD   "sel_ps_b_good"
++
++/* LEDs */
++static const struct gpio_led sel3350_leds[] = {
++	{ .name = "sel:green:aux1" },
++	{ .name = "sel:green:aux2" },
++	{ .name = "sel:green:aux3" },
++	{ .name = "sel:green:aux4" },
++	{ .name = "sel:red:alarm" },
++	{ .name = "sel:green:enabled",
++	  .default_state = LEDS_GPIO_DEFSTATE_ON },
++	{ .name = "sel:red:aux1" },
++	{ .name = "sel:red:aux2" },
++	{ .name = "sel:red:aux3" },
++	{ .name = "sel:red:aux4" },
 +};
 +
- struct system76_data {
- 	struct acpi_device *acpi_dev;
- 	struct led_classdev ap_led;
-@@ -36,6 +42,7 @@ struct system76_data {
- 	union acpi_object *ntmp;
- 	struct input_dev *input;
- 	bool has_open_ec;
-+	enum kbled_type kbled_type;
- };
- 
- static const struct acpi_device_id device_ids[] = {
-@@ -51,7 +58,7 @@ static const enum led_brightness kb_levels[] = {
- 	96,
- 	144,
- 	192,
--	255
-+	255,
- };
- 
- // Array of keyboard LED colors in 24-bit RGB format
-@@ -62,7 +69,7 @@ static const int kb_colors[] = {
- 	0xFF00FF,
- 	0x00FF00,
- 	0x00FFFF,
--	0xFFFF00
-+	0xFFFF00,
- };
- 
- // Get a System76 ACPI device value by name
-@@ -327,7 +334,11 @@ static int kb_led_set(struct led_classdev *led, enum led_brightness value)
- 
- 	data = container_of(led, struct system76_data, kb_led);
- 	data->kb_brightness = value;
--	return system76_set(data, "SKBL", (int)data->kb_brightness);
-+	if (acpi_has_method(acpi_device_handle(data->acpi_dev), "GKBK")) {
-+		return system76_set(data, "SKBB", (int)data->kb_brightness);
-+	} else {
-+		return system76_set(data, "SKBL", (int)data->kb_brightness);
-+	}
- }
- 
- // Get the last set keyboard LED color
-@@ -399,7 +410,12 @@ static void kb_led_hotkey_hardware(struct system76_data *data)
- {
- 	int value;
- 
--	value = system76_get(data, "GKBL");
-+	if (acpi_has_method(acpi_device_handle(data->acpi_dev), "GKBK")) {
-+		value = system76_get(data, "GKBB");
-+	} else {
-+		value = system76_get(data, "GKBL");
-+	}
++static const struct gpio_led_platform_data sel3350_leds_pdata = {
++	.num_leds = ARRAY_SIZE(sel3350_leds),
++	.leds = sel3350_leds,
++};
 +
- 	if (value < 0)
- 		return;
- 	data->kb_brightness = value;
-@@ -683,20 +699,54 @@ static int system76_add(struct acpi_device *acpi_dev)
- 	if (err)
- 		return err;
- 
--	data->kb_led.name = "system76_acpi::kbd_backlight";
--	data->kb_led.flags = LED_BRIGHT_HW_CHANGED | LED_CORE_SUSPENDRESUME;
--	data->kb_led.brightness_get = kb_led_get;
--	data->kb_led.brightness_set_blocking = kb_led_set;
--	if (acpi_has_method(acpi_device_handle(data->acpi_dev), "SKBC")) {
--		data->kb_led.max_brightness = 255;
--		data->kb_led.groups = system76_kb_led_color_groups;
--		data->kb_toggle_brightness = 72;
--		data->kb_color = 0xffffff;
--		system76_set(data, "SKBC", data->kb_color);
-+	if (acpi_has_method(acpi_device_handle(data->acpi_dev), "GKBK")) {
-+		// Use the new ACPI methods
-+		data->kbled_type = system76_get(data, "GKBK");
++/* Map GPIOs to LEDs */
++static struct gpiod_lookup_table sel3350_leds_table = {
++	.dev_id = "leds-gpio",
++	.table = {
++		GPIO_LOOKUP_IDX(BXT_NW, 49, NULL, 0, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(BXT_NW, 50, NULL, 1, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(BXT_NW, 51, NULL, 2, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(BXT_NW, 52, NULL, 3, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(BXT_W,  20, NULL, 4, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(BXT_W,  21, NULL, 5, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(BXT_SW, 37, NULL, 6, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(BXT_SW, 38, NULL, 7, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(BXT_SW, 39, NULL, 8, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(BXT_SW, 40, NULL, 9, GPIO_ACTIVE_HIGH),
++		{},
++	}
++};
 +
-+		switch (data->kbled_type) {
-+		case KBLED_NONE:
-+			data->kb_led.max_brightness = 0;
-+			data->kb_color = -1;
-+			break;
-+		case KBLED_WHITE:
-+			data->kb_led.name = "system76_acpi::kbd_backlight";
-+			data->kb_led.flags = LED_BRIGHT_HW_CHANGED | LED_CORE_SUSPENDRESUME;
-+			data->kb_led.brightness_get = kb_led_get;
-+			data->kb_led.brightness_set_blocking = kb_led_set;
-+			data->kb_led.max_brightness = 255;
-+			data->kb_toggle_brightness = 72;
-+			data->kb_color = 0xffffff;
-+			break;
-+		case KBLED_RGB:
-+			data->kb_led.name = "system76_acpi::kbd_backlight";
-+			data->kb_led.flags = LED_BRIGHT_HW_CHANGED | LED_CORE_SUSPENDRESUME;
-+			data->kb_led.brightness_get = kb_led_get;
-+			data->kb_led.brightness_set_blocking = kb_led_set;
-+			data->kb_led.max_brightness = 255;
-+			data->kb_led.groups = system76_kb_led_color_groups;
-+			data->kb_toggle_brightness = 72;
-+			data->kb_color = 0xffffff;
-+			system76_set(data, "SKBC", data->kb_color);
-+			break;
-+		}
- 	} else {
--		data->kb_led.max_brightness = 5;
--		data->kb_color = -1;
-+		// Use the old ACPI methods
-+		data->kb_led.name = "system76_acpi::kbd_backlight";
-+		data->kb_led.flags = LED_BRIGHT_HW_CHANGED | LED_CORE_SUSPENDRESUME;
-+		data->kb_led.brightness_get = kb_led_get;
-+		data->kb_led.brightness_set_blocking = kb_led_set;
-+		if (acpi_has_method(acpi_device_handle(data->acpi_dev), "SKBC")) {
-+			data->kb_led.max_brightness = 255;
-+			data->kb_led.groups = system76_kb_led_color_groups;
-+			data->kb_toggle_brightness = 72;
-+			data->kb_color = 0xffffff;
-+			system76_set(data, "SKBC", data->kb_color);
++/* Map GPIOs to power supplies */
++static struct gpiod_lookup_table sel3350_gpios_table = {
++	.dev_id = B2093_GPIO_ACPI_ID ":00",
++	.table = {
++		GPIO_LOOKUP(BXT_NW, 44, SEL_PS_A_DETECT, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP(BXT_NW, 45, SEL_PS_A_GOOD,   GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP(BXT_NW, 46, SEL_PS_B_DETECT, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP(BXT_NW, 47, SEL_PS_B_GOOD,   GPIO_ACTIVE_LOW),
++		{},
++	}
++};
++
++/* Power Supplies */
++
++struct sel3350_power_cfg_data {
++	struct gpio_desc *ps_detect;
++	struct gpio_desc *ps_good;
++};
++
++static int sel3350_power_get_property(struct power_supply *psy,
++				      enum power_supply_property psp,
++				      union power_supply_propval *val)
++{
++	struct sel3350_power_cfg_data *data = power_supply_get_drvdata(psy);
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_HEALTH:
++		if (gpiod_get_value(data->ps_detect)) {
++			if (gpiod_get_value(data->ps_good))
++				val->intval = POWER_SUPPLY_HEALTH_GOOD;
++			else
++				val->intval = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
 +		} else {
-+			data->kb_led.max_brightness = 5;
-+			data->kb_color = -1;
++			val->intval = POWER_SUPPLY_HEALTH_UNKNOWN;
 +		}
- 	}
++		break;
++	case POWER_SUPPLY_PROP_PRESENT:
++		val->intval = gpiod_get_value(data->ps_detect);
++		break;
++	case POWER_SUPPLY_PROP_ONLINE:
++		val->intval = gpiod_get_value(data->ps_good);
++		break;
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
 +
- 	err = devm_led_classdev_register(&acpi_dev->dev, &data->kb_led);
- 	if (err)
- 		return err;
++static const enum power_supply_property sel3350_power_properties[] = {
++	POWER_SUPPLY_PROP_HEALTH,
++	POWER_SUPPLY_PROP_PRESENT,
++	POWER_SUPPLY_PROP_ONLINE,
++};
++
++static const struct power_supply_desc sel3350_ps_a_desc = {
++	.name = SEL_PS_A,
++	.type = POWER_SUPPLY_TYPE_MAINS,
++	.properties = sel3350_power_properties,
++	.num_properties = ARRAY_SIZE(sel3350_power_properties),
++	.get_property = sel3350_power_get_property,
++};
++
++static const struct power_supply_desc sel3350_ps_b_desc = {
++	.name = SEL_PS_B,
++	.type = POWER_SUPPLY_TYPE_MAINS,
++	.properties = sel3350_power_properties,
++	.num_properties = ARRAY_SIZE(sel3350_power_properties),
++	.get_property = sel3350_power_get_property,
++};
++
++struct sel3350_data {
++	struct platform_device *leds_pdev;
++	struct power_supply *ps_a;
++	struct power_supply *ps_b;
++	struct power_supply_config ps_a_cfg;
++	struct power_supply_config ps_b_cfg;
++	struct sel3350_power_cfg_data ps_a_cfg_data;
++	struct sel3350_power_cfg_data ps_b_cfg_data;
++};
++
++static int sel3350_probe(struct platform_device *pdev)
++{
++	int rs;
++	struct sel3350_data *sel3350;
++
++	sel3350 = devm_kzalloc(&pdev->dev, sizeof(struct sel3350_data), GFP_KERNEL);
++	if (!sel3350)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, sel3350);
++
++	gpiod_add_lookup_table(&sel3350_leds_table);
++	gpiod_add_lookup_table(&sel3350_gpios_table);
++
++	sel3350->leds_pdev = platform_device_register_data(
++			NULL,
++			"leds-gpio",
++			PLATFORM_DEVID_NONE,
++			&sel3350_leds_pdata,
++			sizeof(sel3350_leds_pdata));
++	if (IS_ERR(sel3350->leds_pdev)) {
++		rs = PTR_ERR(sel3350->leds_pdev);
++		dev_err(&pdev->dev, "Failed registering platform device: %d\n", rs);
++		goto err_platform;
++	}
++
++	/* Power Supply A */
++	sel3350->ps_a_cfg_data.ps_detect = devm_gpiod_get(&pdev->dev,
++							  SEL_PS_A_DETECT,
++							  GPIOD_IN);
++	sel3350->ps_a_cfg_data.ps_good = devm_gpiod_get(&pdev->dev,
++							SEL_PS_A_GOOD,
++							GPIOD_IN);
++	sel3350->ps_a_cfg.drv_data = &sel3350->ps_a_cfg_data;
++	sel3350->ps_a_cfg.of_node = pdev->dev.of_node;
++	sel3350->ps_a = devm_power_supply_register(&pdev->dev,
++						   &sel3350_ps_a_desc,
++						   &sel3350->ps_a_cfg);
++	if (IS_ERR(sel3350->ps_a)) {
++		rs = PTR_ERR(sel3350->ps_a);
++		dev_err(&pdev->dev, "Failed registering power supply A: %d\n", rs);
++		goto err_ps;
++	}
++
++	/* Power Supply B */
++	sel3350->ps_b_cfg_data.ps_detect = devm_gpiod_get(&pdev->dev,
++							  SEL_PS_B_DETECT,
++							  GPIOD_IN);
++	sel3350->ps_b_cfg_data.ps_good = devm_gpiod_get(&pdev->dev,
++							SEL_PS_B_GOOD,
++							GPIOD_IN);
++	sel3350->ps_b_cfg.drv_data = &sel3350->ps_b_cfg_data;
++	sel3350->ps_b_cfg.of_node = pdev->dev.of_node;
++	sel3350->ps_b = devm_power_supply_register(&pdev->dev,
++						   &sel3350_ps_b_desc,
++						   &sel3350->ps_b_cfg);
++	if (IS_ERR(sel3350->ps_b)) {
++		rs = PTR_ERR(sel3350->ps_b);
++		dev_err(&pdev->dev, "Failed registering power supply B: %d\n", rs);
++		goto err_ps;
++	}
++
++	return 0;
++
++err_ps:
++	platform_device_unregister(sel3350->leds_pdev);
++err_platform:
++	gpiod_remove_lookup_table(&sel3350_gpios_table);
++	gpiod_remove_lookup_table(&sel3350_leds_table);
++
++	return rs;
++}
++
++static int sel3350_remove(struct platform_device *pdev)
++{
++	struct sel3350_data *sel3350 = platform_get_drvdata(pdev);
++
++	platform_device_unregister(sel3350->leds_pdev);
++	gpiod_remove_lookup_table(&sel3350_gpios_table);
++	gpiod_remove_lookup_table(&sel3350_leds_table);
++
++	return 0;
++}
++
++static const struct acpi_device_id sel3350_device_ids[] = {
++	{ B2093_GPIO_ACPI_ID, 0 },
++	{ "", 0 },
++};
++MODULE_DEVICE_TABLE(acpi, sel3350_device_ids);
++
++static struct platform_driver sel3350_platform_driver = {
++	.probe = sel3350_probe,
++	.remove = sel3350_remove,
++	.driver = {
++		.name = "sel3350-platform",
++		.acpi_match_table = sel3350_device_ids,
++	},
++};
++module_platform_driver(sel3350_platform_driver);
++
++MODULE_AUTHOR("Schweitzer Engineering Laboratories");
++MODULE_DESCRIPTION("SEL-3350 platform driver");
++MODULE_LICENSE("Dual BSD/GPL");
++MODULE_SOFTDEP("pre: pinctrl_broxton leds-gpio");
 -- 
-2.41.0
+2.39.3
 
