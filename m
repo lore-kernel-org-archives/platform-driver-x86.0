@@ -2,68 +2,68 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCB6EB64DD
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Jul 2023 11:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F81EB64D9
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 Jul 2023 11:35:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231290AbjGDLem (ORCPT
+        id S230399AbjGDLfH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 Jul 2023 07:34:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45290 "EHLO
+        Tue, 4 Jul 2023 07:35:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231294AbjGDLei (ORCPT
+        with ESMTP id S230011AbjGDLfH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 Jul 2023 07:34:38 -0400
+        Tue, 4 Jul 2023 07:35:07 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB8AE7C
-        for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jul 2023 04:33:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE147103
+        for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jul 2023 04:34:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1688470428;
+        s=mimecast20190719; t=1688470463;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=AP906CQeKENtFxB9v3MuwBBwQNmL1xeBz24MopTkVu0=;
-        b=QOuYRTD3FYCjq4rtvqIfaBPDB+J16gT6RbsMdpoqJC0OXrHdtakFeDvnrTl2HwTI4D0/OV
-        tnHJkUFWMGa+MtrLflWvX0+nG+WlX+pKW1Vxdw+t8xSvJeUjMwQsMdcVVVsyT6w/GTmI9O
-        iCP6b5Yd+2jdPJhJlo+d7qkFBlO9frw=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=vxLYuCdnQA3Ah4/ruIpzmAEqdEfVDtkjGli+yH05U8A=;
+        b=A+x+NMuNfUxVIRcsapiSdxS5CPCPtuhNlSRMFBS7Qu+DU5im6PdfBYuOaw41HnSMr8FwXK
+        SxA9m0CSxUfrJgPmIzEHkW05HcTam5iqZL2RhJhH27DiXdirH6Xtke/5R9OrsU7hX1YG2c
+        xfWWYGH61TSEbXBl1a5Nx3C7p30kVYI=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-422-DBL8jTo_N-WlS1gogenhBw-1; Tue, 04 Jul 2023 07:33:46 -0400
-X-MC-Unique: DBL8jTo_N-WlS1gogenhBw-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-94a355cf318so402767766b.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Jul 2023 04:33:46 -0700 (PDT)
+ us-mta-386-7QptGAg4M-iRTscaebQvDw-1; Tue, 04 Jul 2023 07:34:21 -0400
+X-MC-Unique: 7QptGAg4M-iRTscaebQvDw-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9892495397cso380383266b.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Jul 2023 04:34:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688470425; x=1691062425;
+        d=1e100.net; s=20221208; t=1688470460; x=1691062460;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AP906CQeKENtFxB9v3MuwBBwQNmL1xeBz24MopTkVu0=;
-        b=PRT03J5nuNZ8AkAN/FX6/fPMBrz37GpmGbFycGXXRDPw9ixX7ncvKpVzyeizyticG9
-         Pq2XyEaA6nZqoXdhD7opS5IRzQi7brsqdek7uVhZdTw7hzaH6lN1GSCj5taPHMUPVyE8
-         hr8p02a8eSWZtspizI5XAdOqtimqsG0mxGmIkHwltL6NCX8Rvfj3saCFWPEPHZjXsebV
-         BZQ3wgNDZLr2BM4EWV77fHOMZQ2WwHcLRbm70nRxyZSitAxPJ9FuGvdhfmjqjae2tc83
-         lc5TiJmAQA65KnMQuPxLXCCqGU3lAPtHoxdHUst3dwj4fRnGUs9TZX57DYwljObKc/57
-         fdUA==
-X-Gm-Message-State: ABy/qLZyC+qpNqtB6ZMs4iptDzKHBT0cQm1LpahP3d+jlHpcDgCP1iPQ
-        wzgJmp/wHKuLLzKqcl/yeZMhh8Y8gKqiQhKn20Eyq7+raMyNOYs0RuB540u98LJBQsz90OA2vSc
-        GvLL0RUcHttZxe2abBT/f/+9HqsSi/sp0bVG1wRP1nw==
-X-Received: by 2002:a17:906:4e52:b0:992:3897:1985 with SMTP id g18-20020a1709064e5200b0099238971985mr8422647ejw.43.1688470425318;
-        Tue, 04 Jul 2023 04:33:45 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlH6MTr9UljByURLngipchirENI4KQ2zstcPaJRBYMBgcxi0/BVxXFMfC4daFV7kmhsdphHcFA==
-X-Received: by 2002:a17:906:4e52:b0:992:3897:1985 with SMTP id g18-20020a1709064e5200b0099238971985mr8422631ejw.43.1688470424989;
-        Tue, 04 Jul 2023 04:33:44 -0700 (PDT)
+        bh=vxLYuCdnQA3Ah4/ruIpzmAEqdEfVDtkjGli+yH05U8A=;
+        b=gFT/YG6GWTYBcwmB/ikTYjsomfhZyaiBUOPRn14ya+/wr/XkFoDkacuDoVrGERzS/E
+         WgZPdbg2fO9qXOxoGh/2sYS9OEdqjiDo/cpNVMNKIaSkmxd8w8nKjOeajyI05gRFc6//
+         vSJA0HWPXN6IuUWkUQ2YX+N2lhFz+CPbn9m0gkss60RUIzuvZRtBPYiHckoRIFfTHnsm
+         RKT3x0CcVOFEVmKBbYdJFyuynh+iXOiqW2lPHAVmlmwAvhthz5ddyJhqqJMHHsOB7YoN
+         m3xXZ7OzW3XmAeePBvung1kgJd8tEUfA0dRcnyjEGDkVA71T0TKGPYyNbF8LIUIx7jLe
+         0gbA==
+X-Gm-Message-State: ABy/qLY2J/Bqy/HhI4bDitywQaxS2t2B85ElYY45roN46n/K2rqfkGFO
+        2HpCXU2XWUK2VUWaCe7g7Cg9QwN1a7APXMTO1cVOW5N9IH9+Plm/uvYkEOuyxjtinzZMzeT9A/Q
+        WW1qnRw3yjNHEatUCa7FACkStmjA620bH7dt9ooA35w==
+X-Received: by 2002:a17:907:2ce6:b0:965:6075:d0e1 with SMTP id hz6-20020a1709072ce600b009656075d0e1mr11648667ejc.72.1688470460583;
+        Tue, 04 Jul 2023 04:34:20 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlFbP0dfy7qSoADSddL4PV6jg5euYx6hJBwxet3YxNjoi+xzmLFfiqDFHNc0ZAbcmmbjWjsMeg==
+X-Received: by 2002:a17:907:2ce6:b0:965:6075:d0e1 with SMTP id hz6-20020a1709072ce600b009656075d0e1mr11648653ejc.72.1688470460304;
+        Tue, 04 Jul 2023 04:34:20 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id lw27-20020a170906bcdb00b0099315454e76sm4867174ejb.211.2023.07.04.04.33.44
+        by smtp.gmail.com with ESMTPSA id gx23-20020a170906f1d700b00992dcae806bsm6038392ejb.5.2023.07.04.04.34.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jul 2023 04:33:44 -0700 (PDT)
-Message-ID: <964c53a9-26bc-d8f6-05d9-032ce20e6b14@redhat.com>
-Date:   Tue, 4 Jul 2023 13:33:43 +0200
+        Tue, 04 Jul 2023 04:34:19 -0700 (PDT)
+Message-ID: <6f4f2959-155b-68ba-d5e1-ea16c4fb2980@redhat.com>
+Date:   Tue, 4 Jul 2023 13:34:19 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH v2 2/8] platform/x86: asus-wmi: add support for showing
- middle fan RPM
+Subject: Re: [PATCH v2 3/8] platform/x86: asus-wmi: support middle fan custom
+ curves
 Content-Language: en-US, nl
 To:     "Luke D. Jones" <luke@ljones.dev>
 Cc:     corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net,
@@ -71,9 +71,9 @@ Cc:     corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net,
         linux-hwmon@vger.kernel.org, markgross@kernel.org,
         jdelvare@suse.com, linux@roeck-us.net
 References: <20230630053552.976579-1-luke@ljones.dev>
- <20230630053552.976579-3-luke@ljones.dev>
+ <20230630053552.976579-4-luke@ljones.dev>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230630053552.976579-3-luke@ljones.dev>
+In-Reply-To: <20230630053552.976579-4-luke@ljones.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -83,11 +83,8 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 6/30/23 07:35, Luke D. Jones wrote:
-> Some newer ASUS ROG laptops now have a middle/center fan in addition
-> to the CPU and GPU fans. This new fan typically blows across the
-> heatpipes and VRMs betweent eh CPU and GPU.
-> 
-> This commit exposes that fan to PWM control plus showing RPM.
+> Adds support for fan curves defined for the middle fan which
+> is available on some ASUS ROG laptops.
 > 
 > Signed-off-by: Luke D. Jones <luke@ljones.dev>
 
@@ -99,187 +96,176 @@ Regards,
 
 Hans
 
+p.s.
+
+I've ran out of time to spend on reviews today, to be
+continued later (for the rest of the series) ...
+
+
+
+
+
 
 
 > ---
->  drivers/platform/x86/asus-wmi.c            | 91 ++++++++++++++++++++++
+>  drivers/platform/x86/asus-wmi.c            | 77 +++++++++++++++++++++-
 >  include/linux/platform_data/x86/asus-wmi.h |  1 +
->  2 files changed, 92 insertions(+)
+>  2 files changed, 76 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index f23375d5fb82..375d25ae0aca 100644
+> index 375d25ae0aca..fb27218e51cf 100644
 > --- a/drivers/platform/x86/asus-wmi.c
 > +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -72,6 +72,7 @@ module_param(fnlock_default, bool, 0444);
+> @@ -113,6 +113,7 @@ module_param(fnlock_default, bool, 0444);
+>  #define FAN_CURVE_BUF_LEN		32
+>  #define FAN_CURVE_DEV_CPU		0x00
+>  #define FAN_CURVE_DEV_GPU		0x01
+> +#define FAN_CURVE_DEV_MID		0x02
+>  /* Mask to determine if setting temperature or percentage */
+>  #define FAN_CURVE_PWM_MASK		0x04
 >  
->  #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
+> @@ -253,7 +254,8 @@ struct asus_wmi {
 >  
-> +#define ASUS_MID_FAN_DESC		"mid_fan"
->  #define ASUS_GPU_FAN_DESC		"gpu_fan"
->  #define ASUS_FAN_DESC			"cpu_fan"
->  #define ASUS_FAN_MFUN			0x13
-> @@ -229,8 +230,10 @@ struct asus_wmi {
+>  	bool cpu_fan_curve_available;
+>  	bool gpu_fan_curve_available;
+> -	struct fan_curve_data custom_fan_curves[2];
+> +	bool mid_fan_curve_available;
+> +	struct fan_curve_data custom_fan_curves[3];
 >  
->  	enum fan_type fan_type;
->  	enum fan_type gpu_fan_type;
-> +	enum fan_type mid_fan_type;
->  	int fan_pwm_mode;
->  	int gpu_fan_pwm_mode;
-> +	int mid_fan_pwm_mode;
->  	int agfn_pwm;
+>  	struct platform_profile_handler platform_profile_handler;
+>  	bool platform_profile_support;
+> @@ -2080,6 +2082,8 @@ static ssize_t pwm1_enable_store(struct device *dev,
+>  		asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled = false;
+>  	if (asus->gpu_fan_curve_available)
+>  		asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled = false;
+> +	if (asus->mid_fan_curve_available)
+> +		asus->custom_fan_curves[FAN_CURVE_DEV_MID].enabled = false;
 >  
->  	bool fan_boost_mode_available;
-> @@ -2129,6 +2132,31 @@ static ssize_t fan2_label_show(struct device *dev,
->  	return sysfs_emit(buf, "%s\n", ASUS_GPU_FAN_DESC);
->  }
->  
-> +/* Middle/Center fan on modern ROG laptops */
-> +static ssize_t fan3_input_show(struct device *dev,
-> +					struct device_attribute *attr,
-> +					char *buf)
-> +{
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +	int value;
-> +	int ret;
-> +
-> +	ret = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_MID_FAN_CTRL, &value);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	value &= 0xffff;
-> +
-> +	return sysfs_emit(buf, "%d\n", value * 100);
-> +}
-> +
-> +static ssize_t fan3_label_show(struct device *dev,
-> +					  struct device_attribute *attr,
-> +					  char *buf)
-> +{
-> +	return sysfs_emit(buf, "%s\n", ASUS_MID_FAN_DESC);
-> +}
-> +
->  static ssize_t pwm2_enable_show(struct device *dev,
->  				struct device_attribute *attr,
->  				char *buf)
-> @@ -2175,6 +2203,52 @@ static ssize_t pwm2_enable_store(struct device *dev,
 >  	return count;
 >  }
+> @@ -2531,6 +2535,9 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
+>  	if (fan_dev == ASUS_WMI_DEVID_GPU_FAN_CURVE)
+>  		fan_idx = FAN_CURVE_DEV_GPU;
 >  
-> +static ssize_t pwm3_enable_show(struct device *dev,
-> +				struct device_attribute *attr,
-> +				char *buf)
-> +{
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
+> +	if (fan_dev == ASUS_WMI_DEVID_MID_FAN_CURVE)
+> +		fan_idx = FAN_CURVE_DEV_MID;
 > +
-> +	return sysfs_emit(buf, "%d\n", asus->mid_fan_pwm_mode);
-> +}
-> +
-> +static ssize_t pwm3_enable_store(struct device *dev,
-> +				 struct device_attribute *attr,
-> +				 const char *buf, size_t count)
-> +{
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +	int state;
-> +	int value;
-> +	int ret;
-> +	u32 retval;
-> +
-> +	ret = kstrtouint(buf, 10, &state);
-> +	if (ret)
-> +		return ret;
-> +
-> +	switch (state) { /* standard documented hwmon values */
-> +	case ASUS_FAN_CTRL_FULLSPEED:
-> +		value = 1;
-> +		break;
-> +	case ASUS_FAN_CTRL_AUTO:
-> +		value = 0;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = asus_wmi_set_devstate(ASUS_WMI_DEVID_MID_FAN_CTRL,
-> +				    value, &retval);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (retval != 1)
-> +		return -EIO;
-> +
-> +	asus->mid_fan_pwm_mode = state;
-> +	return count;
-> +}
-> +
->  /* Fan1 */
->  static DEVICE_ATTR_RW(pwm1);
->  static DEVICE_ATTR_RW(pwm1_enable);
-> @@ -2184,6 +2258,10 @@ static DEVICE_ATTR_RO(fan1_label);
->  static DEVICE_ATTR_RW(pwm2_enable);
->  static DEVICE_ATTR_RO(fan2_input);
->  static DEVICE_ATTR_RO(fan2_label);
-> +/* Fan3 - Middle/center fan */
-> +static DEVICE_ATTR_RW(pwm3_enable);
-> +static DEVICE_ATTR_RO(fan3_input);
-> +static DEVICE_ATTR_RO(fan3_label);
+>  	curves = &asus->custom_fan_curves[fan_idx];
+>  	err = asus_wmi_evaluate_method_buf(asus->dsts_id, fan_dev, mode, buf,
+>  					   FAN_CURVE_BUF_LEN);
+> @@ -2819,6 +2826,42 @@ static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point7_pwm, fan_curve,
+>  static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point8_pwm, fan_curve,
+>  			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 7);
 >  
->  /* Temperature */
->  static DEVICE_ATTR(temp1_input, S_IRUGO, asus_hwmon_temp1, NULL);
-> @@ -2192,10 +2270,13 @@ static struct attribute *hwmon_attributes[] = {
->  	&dev_attr_pwm1.attr,
->  	&dev_attr_pwm1_enable.attr,
->  	&dev_attr_pwm2_enable.attr,
-> +	&dev_attr_pwm3_enable.attr,
->  	&dev_attr_fan1_input.attr,
->  	&dev_attr_fan1_label.attr,
->  	&dev_attr_fan2_input.attr,
->  	&dev_attr_fan2_label.attr,
-> +	&dev_attr_fan3_input.attr,
-> +	&dev_attr_fan3_label.attr,
->  
->  	&dev_attr_temp1_input.attr,
+> +/* MID */
+> +static SENSOR_DEVICE_ATTR_RW(pwm3_enable, fan_curve_enable, FAN_CURVE_DEV_GPU);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point1_temp, fan_curve,
+> +			       FAN_CURVE_DEV_GPU, 0);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point2_temp, fan_curve,
+> +			       FAN_CURVE_DEV_GPU, 1);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point3_temp, fan_curve,
+> +			       FAN_CURVE_DEV_GPU, 2);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point4_temp, fan_curve,
+> +			       FAN_CURVE_DEV_GPU, 3);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point5_temp, fan_curve,
+> +			       FAN_CURVE_DEV_GPU, 4);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point6_temp, fan_curve,
+> +			       FAN_CURVE_DEV_GPU, 5);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point7_temp, fan_curve,
+> +			       FAN_CURVE_DEV_GPU, 6);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point8_temp, fan_curve,
+> +			       FAN_CURVE_DEV_GPU, 7);
+> +
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point1_pwm, fan_curve,
+> +			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 0);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point2_pwm, fan_curve,
+> +			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 1);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point3_pwm, fan_curve,
+> +			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 2);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point4_pwm, fan_curve,
+> +			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 3);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point5_pwm, fan_curve,
+> +			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 4);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point6_pwm, fan_curve,
+> +			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 5);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point7_pwm, fan_curve,
+> +			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 6);
+> +static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point8_pwm, fan_curve,
+> +			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 7);
+> +
+>  static struct attribute *asus_fan_curve_attr[] = {
+>  	/* CPU */
+>  	&sensor_dev_attr_pwm1_enable.dev_attr.attr,
+> @@ -2856,6 +2899,24 @@ static struct attribute *asus_fan_curve_attr[] = {
+>  	&sensor_dev_attr_pwm2_auto_point6_pwm.dev_attr.attr,
+>  	&sensor_dev_attr_pwm2_auto_point7_pwm.dev_attr.attr,
+>  	&sensor_dev_attr_pwm2_auto_point8_pwm.dev_attr.attr,
+> +	/* MID */
+> +	&sensor_dev_attr_pwm3_enable.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point1_temp.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point2_temp.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point3_temp.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point4_temp.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point5_temp.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point6_temp.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point7_temp.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point8_temp.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point1_pwm.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point2_pwm.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point3_pwm.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point4_pwm.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point5_pwm.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point6_pwm.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point7_pwm.dev_attr.attr,
+> +	&sensor_dev_attr_pwm3_auto_point8_pwm.dev_attr.attr,
 >  	NULL
-> @@ -2221,6 +2302,11 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
->  	    || attr == &dev_attr_pwm2_enable.attr) {
->  		if (asus->gpu_fan_type == FAN_TYPE_NONE)
->  			return 0;
-> +	} else if (attr == &dev_attr_fan3_input.attr
-> +	    || attr == &dev_attr_fan3_label.attr
-> +	    || attr == &dev_attr_pwm3_enable.attr) {
-> +		if (asus->mid_fan_type == FAN_TYPE_NONE)
-> +			return 0;
->  	} else if (attr == &dev_attr_temp1_input.attr) {
->  		int err = asus_wmi_get_devstate(asus,
->  						ASUS_WMI_DEVID_THERMAL_CTRL,
-> @@ -2264,6 +2350,7 @@ static int asus_wmi_hwmon_init(struct asus_wmi *asus)
->  static int asus_wmi_fan_init(struct asus_wmi *asus)
->  {
->  	asus->gpu_fan_type = FAN_TYPE_NONE;
-> +	asus->mid_fan_type = FAN_TYPE_NONE;
->  	asus->fan_type = FAN_TYPE_NONE;
->  	asus->agfn_pwm = -1;
+>  };
 >  
-> @@ -2278,6 +2365,10 @@ static int asus_wmi_fan_init(struct asus_wmi *asus)
->  	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_FAN_CTRL))
->  		asus->gpu_fan_type = FAN_TYPE_SPEC83;
+> @@ -2875,6 +2936,9 @@ static umode_t asus_fan_curve_is_visible(struct kobject *kobj,
+>  	if (asus->gpu_fan_curve_available && attr->name[3] == '2')
+>  		return 0644;
 >  
-> +	/* Some models also have a center/middle fan */
-> +	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MID_FAN_CTRL))
-> +		asus->mid_fan_type = FAN_TYPE_SPEC83;
+> +	if (asus->mid_fan_curve_available && attr->name[3] == '3')
+> +		return 0644;
 > +
->  	if (asus->fan_type == FAN_TYPE_NONE)
->  		return -ENODEV;
+>  	return 0;
+>  }
 >  
+> @@ -2904,7 +2968,14 @@ static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
+>  	if (err)
+>  		return err;
+>  
+> -	if (!asus->cpu_fan_curve_available && !asus->gpu_fan_curve_available)
+> +	err = fan_curve_check_present(asus, &asus->mid_fan_curve_available,
+> +				      ASUS_WMI_DEVID_MID_FAN_CURVE);
+> +	if (err)
+> +		return err;
+> +
+> +	if (!asus->cpu_fan_curve_available
+> +		&& !asus->gpu_fan_curve_available
+> +		&& !asus->mid_fan_curve_available)
+>  		return 0;
+>  
+>  	hwmon = devm_hwmon_device_register_with_groups(
+> @@ -2973,6 +3044,8 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
+>  		asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled = false;
+>  	if (asus->gpu_fan_curve_available)
+>  		asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled = false;
+> +	if (asus->mid_fan_curve_available)
+> +		asus->custom_fan_curves[FAN_CURVE_DEV_MID].enabled = false;
+>  
+>  	return 0;
+>  }
 > diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index f90cafe26af1..2c03bda7703f 100644
+> index 2c03bda7703f..329efc086993 100644
 > --- a/include/linux/platform_data/x86/asus-wmi.h
 > +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -80,6 +80,7 @@
->  #define ASUS_WMI_DEVID_FAN_CTRL		0x00110012 /* deprecated */
->  #define ASUS_WMI_DEVID_CPU_FAN_CTRL	0x00110013
->  #define ASUS_WMI_DEVID_GPU_FAN_CTRL	0x00110014
-> +#define ASUS_WMI_DEVID_MID_FAN_CTRL 0x00110031
+> @@ -83,6 +83,7 @@
+>  #define ASUS_WMI_DEVID_MID_FAN_CTRL 0x00110031
 >  #define ASUS_WMI_DEVID_CPU_FAN_CURVE	0x00110024
 >  #define ASUS_WMI_DEVID_GPU_FAN_CURVE	0x00110025
+> +#define ASUS_WMI_DEVID_MID_FAN_CURVE	0x00110032
 >  
+>  /* Power */
+>  #define ASUS_WMI_DEVID_PROCESSOR_STATE	0x00120012
 
