@@ -2,89 +2,105 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7D2EB64D9
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 Jul 2023 23:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9133EB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  9 Jul 2023 02:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232088AbjGGX6g (ORCPT
+        id S229620AbjGICU2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 7 Jul 2023 19:58:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45592 "EHLO
+        Sat, 8 Jul 2023 22:20:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231761AbjGGX6g (ORCPT
+        with ESMTP id S229436AbjGICU1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 7 Jul 2023 19:58:36 -0400
-Received: from mail-oa1-x2a.google.com (mail-oa1-x2a.google.com [IPv6:2001:4860:4864:20::2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76D94128;
-        Fri,  7 Jul 2023 16:58:35 -0700 (PDT)
-Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-1b3ff2460ecso2338484fac.0;
-        Fri, 07 Jul 2023 16:58:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688774314; x=1691366314;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=S6eL5nr6Nk1rZTEECNFgxuQom9O+jnlr3zDn+Htet7U=;
-        b=rJbu/o9jUa7x7ny9UvaYf4Zrq+/Yrm76jI89jkxDOJutSg2tbX0t1f+jByZ2LI91xa
-         gyFfNLvcCWFyLlQ7i0edJ3dYtVOs8j8rucLgk84DgrMGEW9Rh7Hx00daPrrmF5+CLZT5
-         VIR6KEwsawFECyQ9CxH5kKBxegiHvv2W8uCA/lDUv6PWJph6ZQ5tdOprqolD3TpX7147
-         XiY7zkEPHy5pPhSbRfWdLnaYI6cerBm/J/8sNJsjxwhI0Ri+MTBh95DNAp1MHJK/qXnf
-         caHsQYgi6YCxtuHsM2vkMtaI/CZs3W1q58OXtlTbb51eEn99fSdsao6/QQn87+5Z/rZD
-         6K6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688774314; x=1691366314;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S6eL5nr6Nk1rZTEECNFgxuQom9O+jnlr3zDn+Htet7U=;
-        b=JD3o+dTkiIcr4JEDbUcxv5ioLkxT28ExzxBhgN56zMvJjWOjKleHoSZQAeqjtKm65J
-         knwiEnUjaNkqoQRmKZ/L202//PUOrzvrmH6LcJMMS68FurV2GKLpN+E+G3POasgjzCNv
-         Rsn/6vPGPPMuSS1BIaIaZgiyf6jdoBgsgIALIsDAoFMTme7YrMwlwhjJmY3fK/+mO6g8
-         MkAyE0igcuT9AtLrZjGfcm+V/Pj5NG6E6Pw4kj2Tw1j2hxU3zS9RQtjBtCtoDxl1lQYZ
-         mJdek6iiCQKionJVrIdTKj9t8DPbO8akL+koiQ17uVFRkuP18h26ICLyGr61I1W9G6fS
-         bxVg==
-X-Gm-Message-State: ABy/qLaidruuWnBdDH/sr34384U3Y7BDo+OugqtgAhSxO+FSps4Apl7G
-        /9OCacF3MSUawAHPnA3rv+Y=
-X-Google-Smtp-Source: APBJJlFscm1KEUL9wwHSwMQV51AHitnXKGceRfk+/HnD3zE2YRKQ4lmQsgGAkrzaAd4km1irpj2Zaw==
-X-Received: by 2002:a05:6870:548e:b0:1b3:caa2:eedb with SMTP id f14-20020a056870548e00b001b3caa2eedbmr7571581oan.44.1688774314204;
-        Fri, 07 Jul 2023 16:58:34 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:38de:2bd4:8f55:60cd])
-        by smtp.gmail.com with ESMTPSA id u6-20020a17090341c600b001b896686c78sm3792834ple.66.2023.07.07.16.58.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jul 2023 16:58:33 -0700 (PDT)
-Date:   Fri, 7 Jul 2023 16:58:30 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bastien Nocera <hadess@hadess.net>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Eugen Hristev <eugen.hristev@collabora.com>,
-        Mika =?iso-8859-1?Q?Penttil=E4?= <mpenttil@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 00/24] Input: Simplify with dev_err_probe()
-Message-ID: <ZKimpkYz/aAgOPEX@google.com>
-References: <20230625162817.100397-1-krzysztof.kozlowski@linaro.org>
+        Sat, 8 Jul 2023 22:20:27 -0400
+Received: from mail.208.org (unknown [183.242.55.162])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82E29E48
+        for <platform-driver-x86@vger.kernel.org>; Sat,  8 Jul 2023 19:20:24 -0700 (PDT)
+Received: from mail.208.org (email.208.org [127.0.0.1])
+        by mail.208.org (Postfix) with ESMTP id 4Qz9pC6CTDzBJBg0
+        for <platform-driver-x86@vger.kernel.org>; Sun,  9 Jul 2023 10:20:19 +0800 (CST)
+Authentication-Results: mail.208.org (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)" header.d=208.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=208.org; h=
+        content-transfer-encoding:content-type:message-id:user-agent
+        :references:in-reply-to:subject:to:from:date:mime-version; s=
+        dkim; t=1688869219; x=1691461220; bh=OMj0mD7w63Eoj+ZmWte4KNF80np
+        SnitFI2YY/qJPBFQ=; b=pZAr6KA98kD3UI8C3vRPP1Ky+uXrXCdHtWSGquofO5u
+        jqoR1d6zHyC97uroeWQf11+AmtBTjKNFXOjyHX6Bqhi44PgYXk1ShOM6b9H2G9L4
+        XsN7f6kIMPSZSCS4Z2/7ZF5fIcXq3SwFmWmEjSDFjaOu1qjwWmFNtSImgti3VvcB
+        ffGiUY3DquKVgW754D+ZqEoHgsTD7QXav6iodYCcqpQWRJEfKmyWmWsjOt0hQuqP
+        AhcQ/zX36YegcVe6eydP9EeX8Y4JHChhqKK4RaccgVvReKG5Z/kw/xjLZNhEov4d
+        QM9cKKvLebvH8Uvx77trN3JF8Z1tvcj7ajYnf40DyDw==
+X-Virus-Scanned: amavisd-new at mail.208.org
+Received: from mail.208.org ([127.0.0.1])
+        by mail.208.org (mail.208.org [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id zjOrC_OWQqvB for <platform-driver-x86@vger.kernel.org>;
+        Sun,  9 Jul 2023 10:20:19 +0800 (CST)
+Received: from localhost (email.208.org [127.0.0.1])
+        by mail.208.org (Postfix) with ESMTPSA id 4Qz9pB4gcNzBHXR1;
+        Sun,  9 Jul 2023 10:20:18 +0800 (CST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230625162817.100397-1-krzysztof.kozlowski@linaro.org>
+Date:   Sun, 09 Jul 2023 10:20:18 +0800
+From:   xuanzhenggang001@208suo.com
+To:     ardb@kernel.org, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dvhart@infradead.org, andy@infradead.org
+Subject: [PATCH] efi: x86: prefer 'unsigned int' to bare use of 'unsigned'
+In-Reply-To: <tencent_513E2ED35A17B9569C91CF75664724C7620A@qq.com>
+References: <tencent_513E2ED35A17B9569C91CF75664724C7620A@qq.com>
+User-Agent: Roundcube Webmail
+Message-ID: <d60c850cbfa5a25fcf97eef724f5b701@208suo.com>
+X-Sender: xuanzhenggang001@208suo.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Jun 25, 2023 at 06:27:53PM +0200, Krzysztof Kozlowski wrote:
-> Hi,
-> 
-> Three years ago I sent v3 of this series. There was never an anwser from Dmitry
-> - no comment at all. Maybe after three years this can go in? It makes
-> the code nicely smaller.
+This patch fixes the following checkpatch warning:
+arch/x86/platform/efi/efi_64.c:109: WARNING: Prefer 'unsigned int' to 
+bare use of 'unsigned'
+arch/x86/platform/efi/efi_64.c:177: WARNING: Prefer 'unsigned int' to 
+bare use of 'unsigned'
+arch/x86/platform/efi/efi_64.c:182: WARNING: Prefer 'unsigned int' to 
+bare use of 'unsigned'
 
-OK, I give up. I still think that this API is wrong, but I will not get
-around to making producers note the reasons for deferral, so be it.
+Signed-off-by: Zhenggang Xuan <xuanzhenggang001@208suo.com>
+---
+  arch/x86/platform/efi/efi_64.c | 6 +++---
+  1 file changed, 3 insertions(+), 3 deletions(-)
 
-Applied the lot, thank you.
+diff --git a/arch/x86/platform/efi/efi_64.c 
+b/arch/x86/platform/efi/efi_64.c
+index 232acf418cfb..0f69bd6eb144 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -106,7 +106,7 @@ int __init efi_alloc_page_tables(void)
+   */
+  void efi_sync_low_kernel_mappings(void)
+  {
+-    unsigned num_entries;
++    unsigned int num_entries;
+      pgd_t *pgd_k, *pgd_efi;
+      p4d_t *p4d_k, *p4d_efi;
+      pud_t *pud_k, *pud_efi;
+@@ -174,12 +174,12 @@ virt_to_phys_or_null_size(void *va, unsigned long 
+size)
+  #define virt_to_phys_or_null(addr)                \
+      virt_to_phys_or_null_size((addr), sizeof(*(addr)))
 
--- 
-Dmitry
+-int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned 
+num_pages)
++int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned int 
+num_pages)
+  {
+      extern const u8 __efi64_thunk_ret_tramp[];
+      unsigned long pfn, text, pf, rodata, tramp;
+      struct page *page;
+-    unsigned npages;
++    unsigned int npages;
+      pgd_t *pgd = efi_mm.pgd;
+
+      /*
