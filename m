@@ -2,89 +2,153 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DC1EB64DC
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  9 Jul 2023 18:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8D7EB64D9
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 10 Jul 2023 09:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230118AbjGISPH (ORCPT
+        id S229894AbjGJJXe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 9 Jul 2023 14:15:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49920 "EHLO
+        Mon, 10 Jul 2023 05:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbjGISPG (ORCPT
+        with ESMTP id S229500AbjGJJXd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 9 Jul 2023 14:15:06 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A9DCE1;
-        Sun,  9 Jul 2023 11:15:05 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-51e566b1774so610571a12.1;
-        Sun, 09 Jul 2023 11:15:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688926504; x=1691518504;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=57/DKKkczSnhAi5y9UitWkgGZTdh91iHF+xGOadtOFM=;
-        b=JqgAROm8i61wufU7LuF28KU0aXCGQddOImOAfyTB426/c17WRmkd2T9T6Anm2TvHIV
-         g6D48+umt9NmkM5YgI3n8k7yu12SNcLBLgf10KbhKVX1ebjYDKY0GALjwfBvMUNejs9J
-         uZpmNDdGumcoT+hcqy63eizDWDcV4eavXaoP+kxhX50PKCqTiYyNbymKkCxvYrXQ91XB
-         N27asGrmywii8+cJsmzgvYhgkAe4xYHXQxDwW2GMS3dXawPWzKLPt4PkaSTjPV++Ae2Y
-         Q+WLZ20K4jX4058RQlVd8ouF00vPE3TKtkGXmCsIoV2WJMhGhr31UDUk9Bdq94hc4WMj
-         HLHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688926504; x=1691518504;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=57/DKKkczSnhAi5y9UitWkgGZTdh91iHF+xGOadtOFM=;
-        b=e4UjPhOA0DJ4iyNrjiL+o28vondd4TLGhQCn3SQHLzFS+wWUTi2v8ABKcm2ZDJMbmi
-         EqSLgQ6+EEqEYzgorxoN/j3ff/J2TGFT9DlY/4ku5WDcyJShshz59+j62X0XqODlKxpM
-         /mehWU02SqiIt2rJjXD/n1oS5UvOwo0bqmgjlIXmIe8ZHkG/GnWw170ZSPaS/MvqCEIw
-         d99Lr6u/Q3TygjDBMG/0hwY814IaU1hTcTAjZY8ORYWNgr4Yw20nsFqem0jRkUxVJIdh
-         P3V0I3kTd8IyR3bmF0DT18CNIO0ijBsgSzVlFD1/Uf29vSON6J9ytBR2YlGBeo+Ov7xz
-         7r/Q==
-X-Gm-Message-State: ABy/qLZi2aX1Nn9k4I0EeLX/RzZYkyFJ4tc1M9totUQlKvW6LYJzfwXB
-        422PIYBbM6aeC+ZcAJv9WRycV/znb9JVQDE2Te0=
-X-Google-Smtp-Source: APBJJlFIP798NTJcxwR8lUhj9TiP8qI9WcDYYSMIaZ7DeB5aDYU8XrCnz/MEGfHSgG8l7bba+Zi7W6//YHVXuUPnOnk=
-X-Received: by 2002:aa7:d1d9:0:b0:51e:ed6:df38 with SMTP id
- g25-20020aa7d1d9000000b0051e0ed6df38mr9224006edp.13.1688926503676; Sun, 09
- Jul 2023 11:15:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <tencent_513E2ED35A17B9569C91CF75664724C7620A@qq.com> <d60c850cbfa5a25fcf97eef724f5b701@208suo.com>
-In-Reply-To: <d60c850cbfa5a25fcf97eef724f5b701@208suo.com>
+        Mon, 10 Jul 2023 05:23:33 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A28D92
+        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Jul 2023 02:23:32 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10766"; a="344623591"
+X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
+   d="scan'208";a="344623591"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 02:23:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10766"; a="865279841"
+X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
+   d="scan'208";a="865279841"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Jul 2023 02:23:31 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1qIn7C-001VqK-0Q;
+        Mon, 10 Jul 2023 12:23:30 +0300
+Date:   Mon, 10 Jul 2023 12:23:29 +0300
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 9 Jul 2023 21:14:27 +0300
-Message-ID: <CAHp75VcbUOuQ9_2VL9mcs3e1x=ZOV5yd+c1U_iE24G5k-Uk7AA@mail.gmail.com>
-Subject: Re: [PATCH] efi: x86: prefer 'unsigned int' to bare use of 'unsigned'
-To:     xuanzhenggang001@208suo.com
-Cc:     ardb@kernel.org, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dvhart@infradead.org,
-        andy@infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: Add intel_bytcrc_pwrsrc driver
+Message-ID: <ZKvOEXaS6OElB0Tq@smile.fi.intel.com>
+References: <20230303221928.285477-1-hdegoede@redhat.com>
+ <CAHp75VfOUnVVr=_VcTch4-=KTv6v5yG3g+adgn2CtnjKCV0YYw@mail.gmail.com>
+ <68a17e4e-a9ee-fe8b-abcd-7ccb4932e72a@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <68a17e4e-a9ee-fe8b-abcd-7ccb4932e72a@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Jul 9, 2023 at 5:20=E2=80=AFAM <xuanzhenggang001@208suo.com> wrote:
->
-> This patch fixes the following checkpatch warning:
-> arch/x86/platform/efi/efi_64.c:109: WARNING: Prefer 'unsigned int' to
-> bare use of 'unsigned'
-> arch/x86/platform/efi/efi_64.c:177: WARNING: Prefer 'unsigned int' to
-> bare use of 'unsigned'
-> arch/x86/platform/efi/efi_64.c:182: WARNING: Prefer 'unsigned int' to
-> bare use of 'unsigned'
+On Sat, Mar 04, 2023 at 11:00:59AM +0100, Hans de Goede wrote:
+> On 3/3/23 23:41, Andy Shevchenko wrote:
+> > On Sat, Mar 4, 2023 at 12:19 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> >>
+> >> Add a new driver for the power-, wake- and reset-source functionality
+> >> of the Bay Trail (BYT) version of the Crystal Cove PMIC.
+> >>
+> >> The main functionality here is detecting which power-sources (USB /
+> >> DC in / battery) are active. This is normally exposed to userspace as
+> >> a power_supply class charger device with an online sysfs attribute.
+> >>
+> >> But if a charger is online or not is already exposed on BYT-CRC devices
+> >> through either an ACPI AC power_supply device, or through a native driver
+> >> for the battery charger chip (e.g. a BQ24292i).
+> >>
+> >> So instead of adding duplicate info under the power_supply class this
+> >> driver exports the info through debugfs and likewise adds debugfs files
+> >> for the reset- and wake-source info / registers.
+> >>
+> >> Despite this driver only exporting debugfs bits it is still useful to
+> >> have this driver because it clears the wake- and reset-source registers
+> >> after reading them. Not clearing these can have undesirable side-effects.
+> > 
+> > Hmm... Why is the existing regmap debugfs not enough? OK, maybe adding
+> > something (clearing bits) to the actual CRC PMIC driver.
+> > (You also can add a write callback so regmap will provide the write
+> > access to the registers).
+> 
+> I did consider adding clearing the bits to the actual CRC PMIC driver,
+> but this seemed like a cleaner solution and it gives a much nicer
+> (debug) interface then raw register access.
+> 
+> Also after clearing the wake + reset reasons they are gone and cannot
+> be retreived using debugfs regmap accesses.
+> 
+> This driver caches the values before clearing them.
 
-> -int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned
-> num_pages)
-> +int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned int
-> num_pages)
+One can always print them before clearing for debug purposes.
 
-Nice, but you shouldn't just blindly do some mechanic "fixes". Now
-your patch makes differences between the function prototype and its
-implementation.
+> >> Specifically if the WAKESRC register contains 0x01 (wake by powerbutton)
+> >> on reboot then the firmware on some tablets turns the reboot into
+> >> a poweroff. I guess this may be necessary to make long power-presses turn
+> >> into a poweroff somehow?
+> > 
+> > Have not a doc at hand. Next week I will try to dig into it to see if
+> > there is anything regarding it.
+> 
+> Note this seems to be a thing on BYT tablets which shipped with Android
+> and lack an EC compared to other BYT tablets with an CRC PMIC. So I think
+> things have been hacked around a bit here to deal with the lack of an EC.
+> 
+> I doubt this will be in the official docs, with that said thank you for
+> the offer to look this up.
+> 
+> Note for later BYTCR (Cost Reduced) tablets not having an EC is normal,
+> but these are pre BYTCR Android tablets actually AFAICT and their
+> Windows counterparts (same motherboard with some different components
+> do have an EC).
 
---=20
+Sorry, seems slipped in cracks. I have checked the doc, below is the citation.
+
+5.6.4
+ Wake Source Indicators
+ The PMIC contains one register which is intended to store the cause of a wake event,
+ so that software can determine why the system was woken from Cold Off. These bits
+ are write-1-to-clear.
+ If the WAKESRC register is not cleared by the SOC, stale bits (from past wakes) will
+ auto-clear. This is to ensure that only the most recent wake reason is flagged for SW
+
+ Table 5-51: Wake Source Register
+ Register Name R/W D7 D6 D5 D4 D3 D2 D1 D0 Initial Address
+ WAKESRC R RSVD WAKE WAKU WAKE WAKE 0X00 TBD
+		ADPT SB BAT PBTN
+ BIT NAME FUNCTION DEFAULT
+ D[7:4]	  Reserved
+ 		  Reserved
+ 0
+ D[3]	  WAKEADPT
+ 		  0 = No wake by an AC/DC adapter insertion
+ 		  1 = Wake was triggered by an AC/DC adapter
+ 		  insertion.
+ 0
+ D[2]	  WAKEUSB
+ 		  0 = No wake by a USB charger insertion
+ 		  1 = Wake was triggered by a USB charger insertion.
+ 0
+ D[1]	  WAKEBAT
+ 		  0 = No wake by a battery insertion
+ 		  1 = Wake was triggered by a battery insertion.
+ 0
+ D[0]	  WAKEPBTN
+ 		  0 = No wake by user pressing the power button
+ 		  1 = Wake was triggered by user pressing the power
+ 		  button.
+ 0
+
+-- 
 With Best Regards,
 Andy Shevchenko
+
+
