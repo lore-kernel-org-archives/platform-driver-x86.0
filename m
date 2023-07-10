@@ -2,153 +2,277 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8D7EB64D9
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 10 Jul 2023 09:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07B1EB64D9
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 10 Jul 2023 13:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229894AbjGJJXe (ORCPT
+        id S229992AbjGJN0V (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 10 Jul 2023 05:23:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47530 "EHLO
+        Mon, 10 Jul 2023 09:26:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbjGJJXd (ORCPT
+        with ESMTP id S231266AbjGJN0U (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 10 Jul 2023 05:23:33 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A28D92
-        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Jul 2023 02:23:32 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10766"; a="344623591"
-X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
-   d="scan'208";a="344623591"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 02:23:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10766"; a="865279841"
-X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
-   d="scan'208";a="865279841"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Jul 2023 02:23:31 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1qIn7C-001VqK-0Q;
-        Mon, 10 Jul 2023 12:23:30 +0300
-Date:   Mon, 10 Jul 2023 12:23:29 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: Add intel_bytcrc_pwrsrc driver
-Message-ID: <ZKvOEXaS6OElB0Tq@smile.fi.intel.com>
-References: <20230303221928.285477-1-hdegoede@redhat.com>
- <CAHp75VfOUnVVr=_VcTch4-=KTv6v5yG3g+adgn2CtnjKCV0YYw@mail.gmail.com>
- <68a17e4e-a9ee-fe8b-abcd-7ccb4932e72a@redhat.com>
+        Mon, 10 Jul 2023 09:26:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99D22180
+        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Jul 2023 06:25:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1688995511;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jby3fwWq49Ha1sduxZlOKoh8VaQzBZ57+w8tL8enNh0=;
+        b=NKfNPE61aemfstStPjHnbVPBOJAQ8iQJda1qobG5Qq5QVpxE1iuXEb+BmAme6EphQGWqlm
+        1XjTonvUCgh5VQPQABXsaBmAlBIUrCO0E+4cKwXH/dUkXQLjKnj6jzj0z8V1xg0FuU1gpZ
+        R/WxVm1ZT0ESaOA0J71lNbMcAyHWAz4=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-313-apvozO7kOViEbpXyWulh5g-1; Mon, 10 Jul 2023 09:25:10 -0400
+X-MC-Unique: apvozO7kOViEbpXyWulh5g-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-993c24f3246so478919966b.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Jul 2023 06:25:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688995509; x=1691587509;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jby3fwWq49Ha1sduxZlOKoh8VaQzBZ57+w8tL8enNh0=;
+        b=KaHdN/xL5v2ojR1J1u8+TsMXIFuMuU2DCB/jVm9Lo1dk8RmdBNqQtXNMajR51lbkLS
+         hIJfeJwjBUBFwTNhMkfCL5EbcMJqJfOHdCTEeAACngifrkHpbtSv+jbqJNPT2kk1W7rW
+         ydfGeHelr6ae+N7dZxMdpr2ioTGeX9l+9XRHG3z6HIS9MHPv92RI4UDUavkiZTpPVnml
+         7fPlq/2S3BoprWt+tNDOMdp/AWBs8I0i31VQ71ibPRDiqV+hWxrVkIJPYh6rVawQ/xhj
+         5ixeSwmSR7laFO9KADhbVxibwT4PJvpOAXxW1G4JQz6WwmSMqA7FP7OTeW9KZ6/T/jcV
+         4tVw==
+X-Gm-Message-State: ABy/qLZ2wwLuY5UDNcsjkG0cIN5GkyVfQzZhzSTifYJdTgcWnKk11HY3
+        zPPp2HT8J9aF8oG78NnPfrrqJbN1Z4MzK+cO+zFzt2UPDcf7OohsRZ7RdO4qI894Xe21n9RWtL9
+        VnhmHlFM+xqA2h47I9+qiG5FeUllRNvTRVQ==
+X-Received: by 2002:a17:906:314f:b0:992:6d73:5696 with SMTP id e15-20020a170906314f00b009926d735696mr14109522eje.5.1688995509486;
+        Mon, 10 Jul 2023 06:25:09 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlGUQwDMyrPQc/seU14sKXx7W1Lk8SBsWn8IlAG/Blrppi6ur7wgsoQ8eYgOp17vlw5NGM06IA==
+X-Received: by 2002:a17:906:314f:b0:992:6d73:5696 with SMTP id e15-20020a170906314f00b009926d735696mr14109495eje.5.1688995509111;
+        Mon, 10 Jul 2023 06:25:09 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id g5-20020a170906348500b00992c92af6easm6106293ejb.161.2023.07.10.06.25.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Jul 2023 06:25:08 -0700 (PDT)
+Message-ID: <dae5723a-b725-ef2e-43a1-0c2f2a255057@redhat.com>
+Date:   Mon, 10 Jul 2023 15:25:07 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <68a17e4e-a9ee-fe8b-abcd-7ccb4932e72a@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH] platform/x86: system76: Handle new KBLED ACPI methods
+Content-Language: en-US
+To:     Tim Crawford <tcrawford@system76.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     productdev@system76.com
+References: <20230701004329.88288-1-tcrawford@system76.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230701004329.88288-1-tcrawford@system76.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Mar 04, 2023 at 11:00:59AM +0100, Hans de Goede wrote:
-> On 3/3/23 23:41, Andy Shevchenko wrote:
-> > On Sat, Mar 4, 2023 at 12:19 AM Hans de Goede <hdegoede@redhat.com> wrote:
-> >>
-> >> Add a new driver for the power-, wake- and reset-source functionality
-> >> of the Bay Trail (BYT) version of the Crystal Cove PMIC.
-> >>
-> >> The main functionality here is detecting which power-sources (USB /
-> >> DC in / battery) are active. This is normally exposed to userspace as
-> >> a power_supply class charger device with an online sysfs attribute.
-> >>
-> >> But if a charger is online or not is already exposed on BYT-CRC devices
-> >> through either an ACPI AC power_supply device, or through a native driver
-> >> for the battery charger chip (e.g. a BQ24292i).
-> >>
-> >> So instead of adding duplicate info under the power_supply class this
-> >> driver exports the info through debugfs and likewise adds debugfs files
-> >> for the reset- and wake-source info / registers.
-> >>
-> >> Despite this driver only exporting debugfs bits it is still useful to
-> >> have this driver because it clears the wake- and reset-source registers
-> >> after reading them. Not clearing these can have undesirable side-effects.
-> > 
-> > Hmm... Why is the existing regmap debugfs not enough? OK, maybe adding
-> > something (clearing bits) to the actual CRC PMIC driver.
-> > (You also can add a write callback so regmap will provide the write
-> > access to the registers).
+Hi,
+
+Thank you for the patch, I have several review remarks below.
+
+On 7/1/23 02:43, Tim Crawford wrote:
+> System76 EC since system76/ec@9ac513128ad9 detects if the keyboard is
+> white or RGB backlit via `RGBKB-DET#` at run-time instead of being set
+> at compile-time. As part of this, the brightness of white-only backlit
+> keyboards was also changed to behave more like the RGB-backlit
+> keyboards: a value between 0 and 255 instead of a firmware-defined
+> level.
 > 
-> I did consider adding clearing the bits to the actual CRC PMIC driver,
-> but this seemed like a cleaner solution and it gives a much nicer
-> (debug) interface then raw register access.
+> The EC ACPI methods in coreboot have been updated for this new
+> functionality only, removing the old behavior.
 > 
-> Also after clearing the wake + reset reasons they are gone and cannot
-> be retreived using debugfs regmap accesses.
+> This should preserve behavior as we roll out new firmware with these
+> changes included and users update to it.
 > 
-> This driver caches the values before clearing them.
-
-One can always print them before clearing for debug purposes.
-
-> >> Specifically if the WAKESRC register contains 0x01 (wake by powerbutton)
-> >> on reboot then the firmware on some tablets turns the reboot into
-> >> a poweroff. I guess this may be necessary to make long power-presses turn
-> >> into a poweroff somehow?
-> > 
-> > Have not a doc at hand. Next week I will try to dig into it to see if
-> > there is anything regarding it.
+> Ref: https://github.com/system76/ec/pull/357
+> Ref: https://review.coreboot.org/c/coreboot/+/76152
+> Signed-off-by: Tim Crawford <tcrawford@system76.com>
+> ---
+>  drivers/platform/x86/system76_acpi.c | 84 ++++++++++++++++++++++------
+>  1 file changed, 67 insertions(+), 17 deletions(-)
 > 
-> Note this seems to be a thing on BYT tablets which shipped with Android
-> and lack an EC compared to other BYT tablets with an CRC PMIC. So I think
-> things have been hacked around a bit here to deal with the lack of an EC.
-> 
-> I doubt this will be in the official docs, with that said thank you for
-> the offer to look this up.
-> 
-> Note for later BYTCR (Cost Reduced) tablets not having an EC is normal,
-> but these are pre BYTCR Android tablets actually AFAICT and their
-> Windows counterparts (same motherboard with some different components
-> do have an EC).
+> diff --git a/drivers/platform/x86/system76_acpi.c b/drivers/platform/x86/system76_acpi.c
+> index fc4708fa6ebe..a172769f5172 100644
+> --- a/drivers/platform/x86/system76_acpi.c
+> +++ b/drivers/platform/x86/system76_acpi.c
+> @@ -2,7 +2,7 @@
+>  /*
+>   * System76 ACPI Driver
+>   *
+> - * Copyright (C) 2019 System76
+> + * Copyright (C) 2023 System76
+>   *
+>   * This program is free software; you can redistribute it and/or modify
+>   * it under the terms of the GNU General Public License version 2 as
+> @@ -24,6 +24,12 @@
+>  
+>  #include <acpi/battery.h>
+>  
+> +enum kbled_type {
+> +	KBLED_NONE,
+> +	KBLED_WHITE,
+> +	KBLED_RGB,
+> +};
+> +
+>  struct system76_data {
+>  	struct acpi_device *acpi_dev;
+>  	struct led_classdev ap_led;
+> @@ -36,6 +42,7 @@ struct system76_data {
+>  	union acpi_object *ntmp;
+>  	struct input_dev *input;
+>  	bool has_open_ec;
+> +	enum kbled_type kbled_type;
+>  };
+>  
+>  static const struct acpi_device_id device_ids[] = {
+> @@ -51,7 +58,7 @@ static const enum led_brightness kb_levels[] = {
+>  	96,
+>  	144,
+>  	192,
+> -	255
+> +	255,
+>  };
+>  
+>  // Array of keyboard LED colors in 24-bit RGB format
 
-Sorry, seems slipped in cracks. I have checked the doc, below is the citation.
+Please drop this unnecessary addition of the ',' .
 
-5.6.4
- Wake Source Indicators
- The PMIC contains one register which is intended to store the cause of a wake event,
- so that software can determine why the system was woken from Cold Off. These bits
- are write-1-to-clear.
- If the WAKESRC register is not cleared by the SOC, stale bits (from past wakes) will
- auto-clear. This is to ensure that only the most recent wake reason is flagged for SW
+> @@ -62,7 +69,7 @@ static const int kb_colors[] = {
+>  	0xFF00FF,
+>  	0x00FF00,
+>  	0x00FFFF,
+> -	0xFFFF00
+> +	0xFFFF00,
+>  };
+>  
+>  // Get a System76 ACPI device value by name
 
- Table 5-51: Wake Source Register
- Register Name R/W D7 D6 D5 D4 D3 D2 D1 D0 Initial Address
- WAKESRC R RSVD WAKE WAKU WAKE WAKE 0X00 TBD
-		ADPT SB BAT PBTN
- BIT NAME FUNCTION DEFAULT
- D[7:4]	  Reserved
- 		  Reserved
- 0
- D[3]	  WAKEADPT
- 		  0 = No wake by an AC/DC adapter insertion
- 		  1 = Wake was triggered by an AC/DC adapter
- 		  insertion.
- 0
- D[2]	  WAKEUSB
- 		  0 = No wake by a USB charger insertion
- 		  1 = Wake was triggered by a USB charger insertion.
- 0
- D[1]	  WAKEBAT
- 		  0 = No wake by a battery insertion
- 		  1 = Wake was triggered by a battery insertion.
- 0
- D[0]	  WAKEPBTN
- 		  0 = No wake by user pressing the power button
- 		  1 = Wake was triggered by user pressing the power
- 		  button.
- 0
+Please drop this unnecessary addition of the ',' .
 
--- 
-With Best Regards,
-Andy Shevchenko
+> @@ -327,7 +334,11 @@ static int kb_led_set(struct led_classdev *led, enum led_brightness value)
+>  
+>  	data = container_of(led, struct system76_data, kb_led);
+>  	data->kb_brightness = value;
+> -	return system76_set(data, "SKBL", (int)data->kb_brightness);
+> +	if (acpi_has_method(acpi_device_handle(data->acpi_dev), "GKBK")) {
+> +		return system76_set(data, "SKBB", (int)data->kb_brightness);
+> +	} else {
+> +		return system76_set(data, "SKBL", (int)data->kb_brightness);
+> +	}
+>  }
+>  
+>  // Get the last set keyboard LED color
+> @@ -399,7 +410,12 @@ static void kb_led_hotkey_hardware(struct system76_data *data)
+>  {
+>  	int value;
+>  
+> -	value = system76_get(data, "GKBL");
+> +	if (acpi_has_method(acpi_device_handle(data->acpi_dev), "GKBK")) {
+> +		value = system76_get(data, "GKBB");
+> +	} else {
+> +		value = system76_get(data, "GKBL");
+> +	}
+> +
+>  	if (value < 0)
+>  		return;
+>  	data->kb_brightness = value;
+> @@ -683,20 +699,54 @@ static int system76_add(struct acpi_device *acpi_dev)
+>  	if (err)
+>  		return err;
+>  
+> -	data->kb_led.name = "system76_acpi::kbd_backlight";
+> -	data->kb_led.flags = LED_BRIGHT_HW_CHANGED | LED_CORE_SUSPENDRESUME;
+> -	data->kb_led.brightness_get = kb_led_get;
+> -	data->kb_led.brightness_set_blocking = kb_led_set;
 
+These 4 lines are repeated in all 3 scenarios below, please just
+keep them here above the if () ... ... ... blocks.
+
+> -	if (acpi_has_method(acpi_device_handle(data->acpi_dev), "SKBC")) {
+> -		data->kb_led.max_brightness = 255;
+> -		data->kb_led.groups = system76_kb_led_color_groups;
+> -		data->kb_toggle_brightness = 72;
+> -		data->kb_color = 0xffffff;
+> -		system76_set(data, "SKBC", data->kb_color);
+> +	if (acpi_has_method(acpi_device_handle(data->acpi_dev), "GKBK")) {
+> +		// Use the new ACPI methods
+> +		data->kbled_type = system76_get(data, "GKBK");
+> +
+> +		switch (data->kbled_type) {
+> +		case KBLED_NONE:
+> +			data->kb_led.max_brightness = 0;
+> +			data->kb_color = -1;
+> +			break;
+
+In this case you don't want to call the devm_led_classdev_register()
+below, so perhaps do an early return from the function here ?
+
+> +		case KBLED_WHITE:
+> +			data->kb_led.name = "system76_acpi::kbd_backlight";
+> +			data->kb_led.flags = LED_BRIGHT_HW_CHANGED | LED_CORE_SUSPENDRESUME;
+> +			data->kb_led.brightness_get = kb_led_get;
+> +			data->kb_led.brightness_set_blocking = kb_led_set;
+> +			data->kb_led.max_brightness = 255;
+> +			data->kb_toggle_brightness = 72;
+> +			data->kb_color = 0xffffff;
+
+I don't think that setting kb_color for the non color keyboard
+makes sense ? Note the old code uses -1 as color for the non RGB
+backlight case.
+
+> +			break;
+> +		case KBLED_RGB:
+> +			data->kb_led.name = "system76_acpi::kbd_backlight";
+> +			data->kb_led.flags = LED_BRIGHT_HW_CHANGED | LED_CORE_SUSPENDRESUME;
+> +			data->kb_led.brightness_get = kb_led_get;
+> +			data->kb_led.brightness_set_blocking = kb_led_set;
+> +			data->kb_led.max_brightness = 255;
+> +			data->kb_led.groups = system76_kb_led_color_groups;
+> +			data->kb_toggle_brightness = 72;
+> +			data->kb_color = 0xffffff;
+> +			system76_set(data, "SKBC", data->kb_color);
+> +			break;
+> +		}
+>  	} else {
+> -		data->kb_led.max_brightness = 5;
+> -		data->kb_color = -1;
+> +		// Use the old ACPI methods
+> +		data->kb_led.name = "system76_acpi::kbd_backlight";
+> +		data->kb_led.flags = LED_BRIGHT_HW_CHANGED | LED_CORE_SUSPENDRESUME;
+> +		data->kb_led.brightness_get = kb_led_get;
+> +		data->kb_led.brightness_set_blocking = kb_led_set;
+> +		if (acpi_has_method(acpi_device_handle(data->acpi_dev), "SKBC")) {
+> +			data->kb_led.max_brightness = 255;
+> +			data->kb_led.groups = system76_kb_led_color_groups;
+> +			data->kb_toggle_brightness = 72;
+> +			data->kb_color = 0xffffff;
+> +			system76_set(data, "SKBC", data->kb_color);
+> +		} else {
+> +			data->kb_led.max_brightness = 5;
+> +			data->kb_color = -1;
+
+Same remark, is it necesssary to set kb_color here at all ?
+
+Regards,
+
+Hans
+
+
+
+> +		}
+>  	}
+> +
+>  	err = devm_led_classdev_register(&acpi_dev->dev, &data->kb_led);
+>  	if (err)
+>  		return err;
 
