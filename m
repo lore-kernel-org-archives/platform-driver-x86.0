@@ -2,105 +2,113 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A084EB64DC
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jul 2023 09:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FE3EB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jul 2023 10:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230252AbjGKJ4F (ORCPT
+        id S229491AbjGKKAo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Jul 2023 05:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41964 "EHLO
+        Tue, 11 Jul 2023 06:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231618AbjGKJ4C (ORCPT
+        with ESMTP id S229503AbjGKKAm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Jul 2023 05:56:02 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DE96A1;
-        Tue, 11 Jul 2023 02:56:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689069361; x=1720605361;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=M/f+ykgD0/00bi7s9VfR+ZWCB9q02eWktKsVZC95AV4=;
-  b=YW9rZdgQxBi7gWLadRP6qG8+TjxfpZbX2QtUtKxk948Z+ajbXQytarDf
-   +DTMZuEc4pygVCwl4sAMRGzQkOrpbyNpZcwXMjIrDIRjAZbrnR17Tl9no
-   U29yBgVQT0xAKxgaDFY8AaonJE0Z2qgb+dkOSssH+RbW/3zAMkqOVLXhu
-   qLaPTNykJ3VfTo/vytgIg3zMLhtehUSNr0buYZOn6ouCJr2OcdtkZgx2F
-   S257R7u94ZI8m8vAWAXn9pV22lVYiCWLFsbDdbWHfmgUPc7j3cZriE9pw
-   DmKm5juLZjo2KNUNZOyP1uwnL+EMCO4PRtaKNBbdeKX6jFghvyub6Jouj
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="368075976"
-X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
-   d="scan'208";a="368075976"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 02:56:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="715126919"
-X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
-   d="scan'208";a="715126919"
-Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 11 Jul 2023 02:55:58 -0700
-Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qJA69-0004hd-1f;
-        Tue, 11 Jul 2023 09:55:57 +0000
-Date:   Tue, 11 Jul 2023 17:55:05 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Luke D. Jones" <luke@ljones.dev>, hdegoede@redhat.com
-Cc:     oe-kbuild-all@lists.linux.dev, corentin.chary@gmail.com,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, markgross@kernel.org,
-        jdelvare@suse.com, linux@roeck-us.net,
-        "Luke D. Jones" <luke@ljones.dev>
-Subject: Re: [PATCH v2 8/8] platform/x86: asus-wmi: expose dGPU and CPU
- tunables for ROG
-Message-ID: <202307111702.ErlUZY2B-lkp@intel.com>
-References: <20230630053552.976579-9-luke@ljones.dev>
+        Tue, 11 Jul 2023 06:00:42 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29F9D170F
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jul 2023 02:59:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1689069567;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=AQCWcJgO+RKGt+vFczTs2LPbw5cRHdoMjztQtecMY5M=;
+        b=YyRWBlTj6J9Aie9ZCcr4VHqJs5DJVK9q6jFNlbVth5lZwXEbKH2/0UE9Z9CpOBly35ny3o
+        d/6JHfK8GpUYvpGyfHyk/2kfrlxkyYBjWC/XVjLlaf2m83iJ3ryW9IVn7OE3HpbI/13qqU
+        QafrWGTRQoLeznv1ZbshHArW3AtuYvQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-227-hSs_72dOMgqjEnkoTyI_vA-1; Tue, 11 Jul 2023 05:59:23 -0400
+X-MC-Unique: hSs_72dOMgqjEnkoTyI_vA-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 820571044592;
+        Tue, 11 Jul 2023 09:59:23 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.224])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 998C74CD0C1;
+        Tue, 11 Jul 2023 09:59:22 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH] platform/x86/amd: pmc: Use release_mem_region() to undo request_mem_region_muxed()
+Date:   Tue, 11 Jul 2023 11:59:20 +0200
+Message-ID: <20230711095920.264308-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230630053552.976579-9-luke@ljones.dev>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Luke,
+Muxed (mem) regions will wait in request_mem_region_muxed() if the region
+is busy (in use by another consumer) during the call.
 
-kernel test robot noticed the following build warnings:
+In order to wake-up possibly waiting other consumers of the region,
+it must be released by a release_mem_region() call, which will actually
+wake up any waiters.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.5-rc1 next-20230711]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+release_mem_region() also frees the resource created by
+request_mem_region_muxed(), avoiding the need for the unmatched kfree().
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Luke-D-Jones/platform-x86-asus-wmi-add-support-for-showing-charger-mode/20230630-133937
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20230630053552.976579-9-luke%40ljones.dev
-patch subject: [PATCH v2 8/8] platform/x86: asus-wmi: expose dGPU and CPU tunables for ROG
-reproduce: (https://download.01.org/0day-ci/archive/20230711/202307111702.ErlUZY2B-lkp@intel.com/reproduce)
+Cc: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Mario, can you ask one of the reporters with a machine which needs the quirk
+to test this ?
+---
+ drivers/platform/x86/amd/pmc-quirks.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202307111702.ErlUZY2B-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> Documentation/ABI/testing/sysfs-platform-asus-wmi:131: WARNING: Unexpected indentation.
-
-vim +131 Documentation/ABI/testing/sysfs-platform-asus-wmi
-
- > 131	Date:		Jun 2023
-   132	KernelVersion:	6.5
-   133	Contact:	"Luke Jones" <luke@ljones.dev>
-   134	Description:
-   135			Set the Package Power Target total of CPU: PL1 on Intel, SPL on AMD.
-   136			Shown on Intel+Nvidia or AMD+Nvidia based systems.
-   137				* min=5, max=250
-   138	
-
+diff --git a/drivers/platform/x86/amd/pmc-quirks.c b/drivers/platform/x86/amd/pmc-quirks.c
+index 362e7c0097d7..ad702463a65d 100644
+--- a/drivers/platform/x86/amd/pmc-quirks.c
++++ b/drivers/platform/x86/amd/pmc-quirks.c
+@@ -11,7 +11,6 @@
+ #include <linux/dmi.h>
+ #include <linux/io.h>
+ #include <linux/ioport.h>
+-#include <linux/slab.h>
+ 
+ #include "pmc.h"
+ 
+@@ -135,12 +134,10 @@ static const struct dmi_system_id fwbug_list[] = {
+  */
+ static void amd_pmc_skip_nvme_smi_handler(u32 s2idle_bug_mmio)
+ {
+-	struct resource *res;
+ 	void __iomem *addr;
+ 	u8 val;
+ 
+-	res = request_mem_region_muxed(s2idle_bug_mmio, 1, "amd_pmc_pm80");
+-	if (!res)
++	if (!request_mem_region_muxed(s2idle_bug_mmio, 1, "amd_pmc_pm80"))
+ 		return;
+ 
+ 	addr = ioremap(s2idle_bug_mmio, 1);
+@@ -152,8 +149,7 @@ static void amd_pmc_skip_nvme_smi_handler(u32 s2idle_bug_mmio)
+ 
+ 	iounmap(addr);
+ cleanup_resource:
+-	release_resource(res);
+-	kfree(res);
++	release_mem_region(s2idle_bug_mmio, 1);
+ }
+ 
+ void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev)
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.41.0
+
