@@ -2,216 +2,163 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B395C001DC
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 10 Jul 2023 18:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCF1EB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jul 2023 09:37:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232445AbjGJSzH (ORCPT
+        id S231322AbjGKJhZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 10 Jul 2023 14:55:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56638 "EHLO
+        Tue, 11 Jul 2023 05:37:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229730AbjGJSzG (ORCPT
+        with ESMTP id S231545AbjGKJhP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 10 Jul 2023 14:55:06 -0400
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2071.outbound.protection.outlook.com [40.107.21.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1325137;
-        Mon, 10 Jul 2023 11:55:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G8aokrR3L3nSSqpCFK4VUZn+xxjZ75c/9tGJIS5Rbj5ByLWuVJ3iGAMpBLHgJRf78vKIfgYz/cc2qC8IG3l794CLCsE1bQkhuzKzX/Tl1E2SUTbQQrJ4upC92JA3+Bw4qEeSo8DGC66E81SUnzPnsuItuvQkI+SuftaMAfSpXs5TKSbLryLd8DfA1mrEXlJXTxyQIv/GYhOG/FnC5UnRA9WxXQbz+cCTBodUtpFXuhPbsmQ+OZJ9dbLFedV5f4VFVgJFeqh4C5giK2fwrBMT6RegLoqcf2ZW/wyO3NdAjQmRFakw6jjA/RlWLu/ewNoVU+6ybe0QGnX18yx5TmPXGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8q5YRDn5H5A3zZSldbHYAEh5jtBe7Qc326nV9lNIbXs=;
- b=ZhVjrccd5MteZbS8mGYJDgwrV0ucWjZsuuKUvYmlTbg2zumqVxonz8Mkm5QoVGUzmbxOaJ/lx6bhmsS2ZJIrifnsE3NJWZlxvuJs3K/dGrbQTFgXcYZ+rNihuxFcURNE5w8oIXn8MqcKUKMXEh84OmdTg5S2y13z3eoVLSwyDYjClXfujXE17F+PKFIWQLHUuOarHY7tToeku+YczTM6GjaSoFWy1qtVFMnjwPMKq5rOTs2uFwhcwMdkzfztkyf26MlIN4DQBGT1gL16T0tAd2UInAsVc0G4Q8lxpDNJWbEA7n6JUjaj04M6VxNB7DEvGQqJDPgcYqgwU2Lzqb3xbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8q5YRDn5H5A3zZSldbHYAEh5jtBe7Qc326nV9lNIbXs=;
- b=Re5KPaOh3PGbpTWI1K84CEpxnA0/eEX6l7MDGXgp5Nl5mYWd13wN0fv0MyLS2X7Mv+bs5XXc8cC/YhGlsh97JVorhKbnTVyPGagO7MBMdiHXAEEee++6R0rktQVUR5bNvEO0OIKjeVcfn5sq0siWb6htNU6UF8t8NWtII7xPxcpSYq+MTGNwDyrswGgLzX1o1aY+BcA5X9QGgehG1cUnF48UMUQAtEAmOtjtk4pcz4x+FskgOu04cXa925qKurjajpRJpI4Ar92Lue5aEu9/YaHocgQ+qaxcoCuSO6YnDlvYpdEl8mtvkwf27C1XTgKAqQWy7k7Y2TRj2rc+ts1AAg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
- by DB9PR10MB6522.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:3d6::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.30; Mon, 10 Jul
- 2023 18:55:02 +0000
-Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::a171:a3f2:99b7:5f29]) by PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::a171:a3f2:99b7:5f29%6]) with mapi id 15.20.6565.028; Mon, 10 Jul 2023
- 18:55:02 +0000
-Date:   Mon, 10 Jul 2023 20:54:57 +0200
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Tobias Schaffner <tobias.schaffner@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
-Subject: Re: [PATCH 1/2] watchdog: simatic-ipc-wdt: make IO region access of
- one model muxed
-Message-ID: <20230710205457.6894d978@md1za8fc.ad001.siemens.net>
-In-Reply-To: <087368d7-15d6-45e2-bd1e-5955bf81d206@roeck-us.net>
-References: <20230706154831.19100-1-henning.schild@siemens.com>
-        <20230706154831.19100-2-henning.schild@siemens.com>
-        <876f6a08-1850-21cd-83d1-b309e7e1e912@roeck-us.net>
-        <4a11393d-69bb-8e9d-3bfe-21aa7a7fb1e3@redhat.com>
-        <087368d7-15d6-45e2-bd1e-5955bf81d206@roeck-us.net>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: FR0P281CA0099.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a9::17) To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:102:269::8)
+        Tue, 11 Jul 2023 05:37:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DAF110A
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jul 2023 02:36:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1689068185;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nxZnkt/GWTCVKy5gbmmUIjXS8Q3h8dniG0lrhXDybwQ=;
+        b=N0YKmQNmjHe2Z6/xubzhVSQU1davKD2a9dO8wlXLbO7ARqDvC9GgkrZhiZoAhskBKRBgTa
+        iJoD0bbFDx2UvQ5XVrcEdqC+dd/udHQ49ZevGShNB2Q3j+zseshR4YT3MgSDqiouMNBZ9P
+        t6j/YL0bHmrphptTFWVmJDEXsYW1KvQ=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-670-6lj343bUOs25iq1_nnnRig-1; Tue, 11 Jul 2023 05:36:24 -0400
+X-MC-Unique: 6lj343bUOs25iq1_nnnRig-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2b710c5677eso34316721fa.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jul 2023 02:36:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689068182; x=1691660182;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nxZnkt/GWTCVKy5gbmmUIjXS8Q3h8dniG0lrhXDybwQ=;
+        b=HFztQUovXl5xXeiFyDsCPa7iZr6uo9zMHfVFHIL4Hx26HpzU6HdERGpFbkeyQLGlkG
+         PBHY57t80dpAUxqKhx62WuBSAZzb5idn00tyjUmMueT+Fa0SGYPbI8GnVJd2bIT3JaYN
+         Tck1nN6m5kZPQijW3p3Dt1mK/iKFZ3UN1i3XRHvxPJd4S1sToRvABxRXiwgwK347Lgi+
+         hnZklINwmpzpu97SjLNKAb3Z3wnHVXnttMKJWF1p6Bto6QtQlzp7lD6Qm0vonQdaF1sF
+         L5oY3my0eJn9CSJuLBh3o3ADEMgPglQ776S5YSv4kjzYmBxlKu/viMIU0UIzrQbhUpsQ
+         SIMA==
+X-Gm-Message-State: ABy/qLZ/eA7jZnl7gbOHRJBFVcK7MnCw6v1HWJ09KFi/7IgJEYDMZm4z
+        NS61jhzaZhKrg9ymCPACyk1QZtWEVExNtP6jZBKOR+07hTboCuGnrFCaEmQCH8c8dvzLgHsP3EL
+        YuZRiUmaM6qTXt7UIIz16ZUZc6x7ydIlIjw==
+X-Received: by 2002:a2e:87d9:0:b0:2b5:9e51:2912 with SMTP id v25-20020a2e87d9000000b002b59e512912mr12591751ljj.24.1689068182627;
+        Tue, 11 Jul 2023 02:36:22 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlEUGsAXeMRIT10j5xnsaH1kDZrQGa77TizJzh04nRcJoaLS6Op78e4ChusyYi8YYOJjDGfFWQ==
+X-Received: by 2002:a2e:87d9:0:b0:2b5:9e51:2912 with SMTP id v25-20020a2e87d9000000b002b59e512912mr12591736ljj.24.1689068182272;
+        Tue, 11 Jul 2023 02:36:22 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id dk7-20020a170906f0c700b009931a3adf64sm937696ejb.17.2023.07.11.02.36.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jul 2023 02:36:21 -0700 (PDT)
+Message-ID: <1dfb573a-7e60-2bad-00a1-132d37d05cfc@redhat.com>
+Date:   Tue, 11 Jul 2023 11:36:20 +0200
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR10MB5780:EE_|DB9PR10MB6522:EE_
-X-MS-Office365-Filtering-Correlation-Id: c1155e08-82ea-4177-39b6-08db81772a85
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gWXxenQksyIuWRoT+D6i+3B/o9xo9D5pop2ASwlHP13bWFcHXfT/XAzWHMpyK75PCv728tz1amBdM65JyvWxT94dpCu3Mr5rUaghvMssrxsG7r0T7i+HlcffmuEhGK+1dKPKnfgVMwTNZpJaWr9EmV4vTdr+2TFo+F7udUuLYo5gzyZdqB/k2+1tekKTNZPSk7vVcIYt6Wea4a8ptanWWE0cBxkyBXuW6MTh8GqPhMdaqFu16DRXxNf8AEvIJKDcYJLiF2LAX0XHDISTcVUVcFdr4bUD838WobAI2u8CpkYREcdQS1D7a26HiWNMpwcJ/BaeGvcEdE4UhHFWRIxg3ZCZ3PgrtAtCYGNO5hTUzJG6jlRROMmLTSv5dNRwaWDwN8XvSX84Q229y1NZnWeZ3AmXNpT/xRWH8/+Lk37jU5zKhkSDjDWUxwc0JxqgZI9nGnOk4UAJKTMG16ZJocK0sKXdxv8zduIzcZ87gCrBKnoGAVcvUMePChYoJkRWWqFyZ3itxV8MICtKxH2dAs0f14j2bUEz/ei7FAZ6NhorBHy1TTRUZBrXbmFZzIoj3RIZ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(366004)(396003)(136003)(346002)(39860400002)(451199021)(186003)(6506007)(53546011)(6512007)(1076003)(107886003)(9686003)(83380400001)(41300700001)(4326008)(6916009)(66556008)(316002)(2906002)(5660300002)(66476007)(8676002)(66946007)(44832011)(8936002)(478600001)(6486002)(6666004)(54906003)(82960400001)(38100700002)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aEpSS3ovMGdLVkVWNmI1Q2MvUHRTeU1hdmI2TTNQU28wTTE0QWNNcVlZeUwr?=
- =?utf-8?B?aEsrSWFoQ3h4Y0R1a0pzYTNzNzRTWlZoeVNFaVpKZ3M2c2Foa0ZKZVZHbitX?=
- =?utf-8?B?Tm9aZThpTlQwNFlmZ1Bua1N6amZ1N0hhN1BTTlZUdGZpN1pFNUhncThGZ1Fv?=
- =?utf-8?B?WW1yQXFjQUVFaEtSUG1XYjNKOXlNSHJ2bXF1NzRGVlBMalVCTFp6WEx2cHRT?=
- =?utf-8?B?ZGZUajlrdkIyc3VmdGFYZGZZRjNrM1R5a3kxdWNnQ0Y4b29wUkIxN3FjSlRl?=
- =?utf-8?B?T2E3cmhFN0NoRk9sKzlnUE9ocDF1MWdvWEIyV2FSaC9UdlZCdkdFQUdHOW85?=
- =?utf-8?B?WHNBWWpJL0tYMkljY2xoaGVNUDl3blA3dmVhcG5BTVVTakVNWGZyNUNCejRa?=
- =?utf-8?B?U3FEQ2dINlMyWno4V0hTNDRVcFh2bXFreWhBcm1xSUtBN2pYRFBQQWcxd0pF?=
- =?utf-8?B?ZS9QSSsxazR0VmtCdWw5NWphaWEyV1JKcEFSSDdFVGZxUmpSU0xaZlYxTXJF?=
- =?utf-8?B?RTg3OGRmVENGdGc2LzVxNXZMTTBJSGpGNDlHNVlqNHBMMnQ2bUZhN2VocUpQ?=
- =?utf-8?B?YWNueHAyd0w2Y0hyVEFndEMwZ0Z5RFNqVjdQWFVpVlNSRFl2bDlobUVMY3VK?=
- =?utf-8?B?T1J2ZHp5VkZDUjB3K0l4eU1zdkx0Y0ZjdE05OU9qKzZIUXBDV2ZRdVBTSVF5?=
- =?utf-8?B?SnJZT3V0V0JuejdudVZURHZGbU9DeTFRbm5SNkl3cGcvTVhwRjFhZW5CZ2lv?=
- =?utf-8?B?SEtwdUFqSk5OR2hMWmJGaENtQzJJdlhNNlRQT1MycGp1N1I4bXBDN1ZwODli?=
- =?utf-8?B?Tm52ckUwNUpVQlJ1TlJXVWJLRGxSazJtRU96ZHVnS0ROeW82OHZ6dUt0dnJT?=
- =?utf-8?B?UG9Tak5jNnRSSVdKbjdHczR1MlhJemlrYmYvUm9keW03VXllVko1WEFmemhu?=
- =?utf-8?B?OWhQa1RzSXVVek9NTG9MVm5mUG1XWkZaRXFBYTc1WHE0MXJhZHlMNiswUVhr?=
- =?utf-8?B?Yk10cWR4MW5pUTd4NVF4ZHFyT2VyQXJIRk80cWFMWUlpcjFZOS9jd216YWEx?=
- =?utf-8?B?S1Y1Y2dlSnRHNHlCellIT0dkOG4wRWVNdVNFWkdWM1hJN2FyQ1dwUldpOWhW?=
- =?utf-8?B?ODdMZDJEZDcweU8zdm44RThidGQ4VWpmbjZGSlZSRmVFMDBFcld1ZUhndjFz?=
- =?utf-8?B?cm0ra01DTGUxTDZHUFdwR28xTUFkUGJ5dThmWUtOY1diSzJ3N2NGMG5BTnVV?=
- =?utf-8?B?aXdZVHl3Q09xZVRkWk1Ic1VZMjYxWElyNHJpV1RDZm05bTBFOS9IWVpKNUZG?=
- =?utf-8?B?YURxMW1PNTBaa3o5VUR4aU13ZXM0WWVaMENSRmRCZEhiaERndGNZUmhpaGtj?=
- =?utf-8?B?ZEdydFk3ZmsvT0F4WFBvSGY0eTY3bi9INzRFVUk4RnBvbG5DVE9vWjM0S0RQ?=
- =?utf-8?B?djRhbmRMKzgybTE5SmNmWWJXRXBLdVV1ZlUrdnZRQzVxdWJFL2JRQ2ZteEZQ?=
- =?utf-8?B?dU95OFV4cVpuYUMvRUFVbGtWY1U3WGtZYm1vYm1xN1B0dVV2OW54bXdlY0dN?=
- =?utf-8?B?dUtWYTVBQnUzNFBCNlUxN3dtMTJHY1BrVlNlUzVYeGJpR0IxK09XUjZPRHA0?=
- =?utf-8?B?VTRFQ1JaQVg3c2ZYYnlaaHM1SllZeFlRUWI5bHFDTGZDa29ERWY4QXp4c2JI?=
- =?utf-8?B?VWtDMEVvbXhGak9hNVZpVno1NzhSY29YZ1kxbkN4VzNvYlJKODlJSVlMRjZx?=
- =?utf-8?B?aWRBaGFpcXJjN1kxTzlMRFp1NGk1Ty8xd1ZYdnBGWms2WlN0cWxSVHQ4dEtQ?=
- =?utf-8?B?aURVZ25oRDNiMVp1QmVjT1g2d3djTmUyeXZRV3BkUjFrRFFKN3BFeEhHeEZV?=
- =?utf-8?B?UkJodGoyUjVFNHpmcnovVWJmb3I3ZnQ4MjlNckVPenNrWXBIS3dmVlJGZlNl?=
- =?utf-8?B?TTJXZ1doL0puVjZuUEVUbU1HNm9pa0NrdTRTekJJc1Uyc3ZiMHZWN1NMbVpU?=
- =?utf-8?B?YUY5UnB0RHdsZ0svUjhmTEFFbzIyUElQRWhrSEtwN2ZhYlFEMDBVeXRLci9r?=
- =?utf-8?B?S2tWc3J4QmR0R2pMT2YvTEl2UkJuMlZtQzZ1MUF3bm9WNnR0SDN3QldZUm4v?=
- =?utf-8?B?Rk5mMzI1TUpiK1RNY3FqNWRDdHJMQ2tVUG5YcVA0RStCOENNQ1FwVFU3V0xW?=
- =?utf-8?B?Y1VmQlBOYUJIbHNWR1VBR3EwVGk1QlNLdWRXSjhwZVZPTFhaMmYzaWM2MGpI?=
- =?utf-8?B?YjkzNUIwdHpYVWtqQm80SGJtT2dRPT0=?=
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1155e08-82ea-4177-39b6-08db81772a85
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2023 18:55:01.9830
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 31HeOopfnjUznUw7xqFYSBImW2pTc+r+gPuU93Iy3yeKNmqENI09ObDHXxAugaBqIpelXQr6g73l2JIZtzV4hTrN0hb2/cjagGKz+nCTg1s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR10MB6522
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v1 1/2] platform/x86: wmi: Break possible infinite loop
+ when parsing GUID
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Gross <markgross@kernel.org>
+References: <20230621151155.78279-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230621151155.78279-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Mon, 10 Jul 2023 06:45:14 -0700
-schrieb Guenter Roeck <linux@roeck-us.net>:
+Hi,
 
-> On Mon, Jul 10, 2023 at 03:33:45PM +0200, Hans de Goede wrote:
-> > Hi Guenter,
-> >=20
-> > On 7/6/23 18:03, Guenter Roeck wrote: =20
-> > > On 7/6/23 08:48, Henning Schild wrote: =20
-> > >> The IO region used for the watchdog also hold CMOS battery
-> > >> monitoring information. Make the access muxed so that a hwmon
-> > >> driver can use the region as well.
-> > >>
-> > >> Signed-off-by: Henning Schild <henning.schild@siemens.com> =20
-> > >=20
-> > > Acked-by: Guenter Roeck <linux@roeck-us.net> =20
-> >=20
-> > Thank you. Is it ok if I pick up his patch and merge it together
-> > with 2/2 through the pdx86 tree ?
-> >  =20
->=20
-> Yes. That was my assumption.
+On 6/21/23 17:11, Andy Shevchenko wrote:
+> The while-loop may break on one of the two conditions, either ID string
+> is empty or GUID matches. The second one, may never be reached if the
+> parsed string is not correct GUID. In such a case the loop will never
+> advance to check the next ID.
+> 
+> Break possible infinite loop by factoring out guid_parse_and_compare()
+> helper which may be moved to the generic header for everyone later on
+> and preventing from similar mistake in the future.
+> 
+> Interestingly that firstly it appeared when WMI was turned into a bus
+> driver, but later when duplicated GUIDs were checked, the while-loop
+> has been replaced by for-loop and hence no mistake made again.
+> 
+> Fixes: a48e23385fcf ("platform/x86: wmi: add context pointer field to struct wmi_device_id")
+> Fixes: 844af950da94 ("platform/x86: wmi: Turn WMI into a bus driver")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Thanks guys. Cant believe i made it with v1. Getting better at this ;)
+Thank you for your series, I've applied this series to my fixes
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
 
-Henning
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
-> Guenter
->=20
-> > Regards,
-> >=20
-> > Hans
-> >=20
-> >  =20
-> > >  =20
-> > >> ---
-> > >> =C2=A0 drivers/watchdog/simatic-ipc-wdt.c | 9 ++++++---
-> > >> =C2=A0 1 file changed, 6 insertions(+), 3 deletions(-)
-> > >>
-> > >> diff --git a/drivers/watchdog/simatic-ipc-wdt.c
-> > >> b/drivers/watchdog/simatic-ipc-wdt.c index
-> > >> 6599695dc672..cdc1a2e15180 100644 ---
-> > >> a/drivers/watchdog/simatic-ipc-wdt.c +++
-> > >> b/drivers/watchdog/simatic-ipc-wdt.c @@ -155,9 +155,8 @@ static
-> > >> int simatic_ipc_wdt_probe(struct platform_device *pdev) switch
-> > >> (plat->devmode) { case SIMATIC_IPC_DEVICE_227E:
-> > >> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!devm_request_region=
-(dev,
-> > >> gp_status_reg_227e_res.start,
-> > >> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 resource_size(&gp_st=
-atus_reg_227e_res),
-> > >> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 KBUILD_MODNAME)) {
-> > >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 res =3D &gp_status_reg_2=
-27e_res;
-> > >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!request_muxed_regio=
-n(res->start,
-> > >> resource_size(res), res->name)) { dev_err(dev,
-> > >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Unable to register IO resource at %pR=
-\n",
-> > >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &gp_status_reg_227e_res);
-> > >> @@ -210,6 +209,10 @@ static int simatic_ipc_wdt_probe(struct
-> > >> platform_device *pdev) if (wdd_data.bootstatus)
-> > >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_warn(dev,=
- "last reboot caused by watchdog
-> > >> reset\n");
-> > >> =C2=A0 +=C2=A0=C2=A0=C2=A0 if (plat->devmode =3D=3D SIMATIC_IPC_DEVI=
-CE_227E)
-> > >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 release_region(gp_status=
-_reg_227e_res.start,
-> > >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 resource_size(&gp_status_reg_227=
-e_res));
-> > >> +
-> > >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 watchdog_set_nowayout(&wdd_data, nowa=
-yout);
-> > >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 watchdog_stop_on_reboot(&wdd_data);
-> > >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return devm_watchdog_register_device(=
-dev, &wdd_data); =20
-> > >  =20
-> >  =20
+Regards,
+
+Hans
+
+
+
+> ---
+>  drivers/platform/x86/wmi.c | 22 ++++++++++++----------
+>  1 file changed, 12 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index 5b95d7aa5c2f..098512a53170 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -136,6 +136,16 @@ static acpi_status find_guid(const char *guid_string, struct wmi_block **out)
+>  	return AE_NOT_FOUND;
+>  }
+>  
+> +static bool guid_parse_and_compare(const char *string, const guid_t *guid)
+> +{
+> +	guid_t guid_input;
+> +
+> +	if (guid_parse(string, &guid_input))
+> +		return false;
+> +
+> +	return guid_equal(&guid_input, guid);
+> +}
+> +
+>  static const void *find_guid_context(struct wmi_block *wblock,
+>  				     struct wmi_driver *wdriver)
+>  {
+> @@ -146,11 +156,7 @@ static const void *find_guid_context(struct wmi_block *wblock,
+>  		return NULL;
+>  
+>  	while (*id->guid_string) {
+> -		guid_t guid_input;
+> -
+> -		if (guid_parse(id->guid_string, &guid_input))
+> -			continue;
+> -		if (guid_equal(&wblock->gblock.guid, &guid_input))
+> +		if (guid_parse_and_compare(id->guid_string, &wblock->gblock.guid))
+>  			return id->context;
+>  		id++;
+>  	}
+> @@ -895,11 +901,7 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
+>  		return 0;
+>  
+>  	while (*id->guid_string) {
+> -		guid_t driver_guid;
+> -
+> -		if (WARN_ON(guid_parse(id->guid_string, &driver_guid)))
+> -			continue;
+> -		if (guid_equal(&driver_guid, &wblock->gblock.guid))
+> +		if (guid_parse_and_compare(id->guid_string, &wblock->gblock.guid))
+>  			return 1;
+>  
+>  		id++;
 
