@@ -2,168 +2,105 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D92C001B0
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jul 2023 09:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A084EB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jul 2023 09:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230311AbjGKJsP (ORCPT
+        id S230252AbjGKJ4F (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Jul 2023 05:48:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37218 "EHLO
+        Tue, 11 Jul 2023 05:56:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231828AbjGKJsF (ORCPT
+        with ESMTP id S231618AbjGKJ4C (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Jul 2023 05:48:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5726CA1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jul 2023 02:47:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689068839;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rUm+pZx3Dcl0b3Pl2ghj/mOdNmFNLUrrNmowYZCq6lY=;
-        b=AyB2M1/egqwGnSbonUvQmSB549HpIvlvNJlSwOOP9T045dNDHBbXX9tdvekSQro/yupUg1
-        UmbsOUe3SygpXzuLCRPDdoDgZjCikBngG1ErqI5/ubmEc0fDsqjnaJSkfMkEFg3WncsZBX
-        L6wJmiVDy0bGNsxxxD4CKJ/a7KizuLg=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-270-B_nmz17ZPHaaFd9xANs2Og-1; Tue, 11 Jul 2023 05:47:18 -0400
-X-MC-Unique: B_nmz17ZPHaaFd9xANs2Og-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-94a355cf318so368760266b.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jul 2023 02:47:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689068837; x=1691660837;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rUm+pZx3Dcl0b3Pl2ghj/mOdNmFNLUrrNmowYZCq6lY=;
-        b=KIgScdn2hJpwe1Q11siAGUJL9quycZkDl7tdqXmd8mmfHIHkVWq9MATjolfji7HLFR
-         pR8wUoUMP9+B0FGZaQXUOIsAHTb8tnoDiZIKC+mh/8IO3emMw8jMfyHun8Ranl3duZCe
-         NlsHxhPPbB7eV9uJ7hkDwTbScCxBfpga/LhzkGURPCjoHOHTErroHuyOpreJs+zX3Tmp
-         8A1e07CEH/n9XdkbwARgXKrRi4RDXUA8JH66/uu3qQvgBmxWMaxQz1WJcJp3aQgZHto8
-         +FhDUzN0ERkOFgS9yPO7477sH7/kXzFK4AYbMSrxywcBPLGPFe5Zx+rkBL31KXcxKKvH
-         CvwQ==
-X-Gm-Message-State: ABy/qLYgL9+2Rr/EvRh40xOZhu8g3rhJ0PLoTznlxYwgAWrT2NdAli47
-        2dmG+E0y3/Cd3IsOcH+n3tqyZqnfEHUDILa0zgllVNtnv+R3F8+eLyI8FQdkrJEbCrHSkrt7uH9
-        5SDO2A1VTtESCtlshovJwgUtFFF+YhFd3ltzNgAWmcQ==
-X-Received: by 2002:a17:907:2943:b0:979:dad9:4e9 with SMTP id et3-20020a170907294300b00979dad904e9mr14001327ejc.50.1689068837255;
-        Tue, 11 Jul 2023 02:47:17 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlFQVQlSVaL8/fDqCRTKgXel2KCGpYTdEc3Vazq/wPpYriWSa9jsARdABikkIHUPmZBMtg6LJA==
-X-Received: by 2002:a17:907:2943:b0:979:dad9:4e9 with SMTP id et3-20020a170907294300b00979dad904e9mr14001311ejc.50.1689068836965;
-        Tue, 11 Jul 2023 02:47:16 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id y24-20020a170906471800b00992b71d8f19sm922827ejq.133.2023.07.11.02.47.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jul 2023 02:47:16 -0700 (PDT)
-Message-ID: <95ad7037-76c4-d3fd-b2ea-430488a7e6e9@redhat.com>
-Date:   Tue, 11 Jul 2023 11:47:15 +0200
+        Tue, 11 Jul 2023 05:56:02 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DE96A1;
+        Tue, 11 Jul 2023 02:56:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689069361; x=1720605361;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=M/f+ykgD0/00bi7s9VfR+ZWCB9q02eWktKsVZC95AV4=;
+  b=YW9rZdgQxBi7gWLadRP6qG8+TjxfpZbX2QtUtKxk948Z+ajbXQytarDf
+   +DTMZuEc4pygVCwl4sAMRGzQkOrpbyNpZcwXMjIrDIRjAZbrnR17Tl9no
+   U29yBgVQT0xAKxgaDFY8AaonJE0Z2qgb+dkOSssH+RbW/3zAMkqOVLXhu
+   qLaPTNykJ3VfTo/vytgIg3zMLhtehUSNr0buYZOn6ouCJr2OcdtkZgx2F
+   S257R7u94ZI8m8vAWAXn9pV22lVYiCWLFsbDdbWHfmgUPc7j3cZriE9pw
+   DmKm5juLZjo2KNUNZOyP1uwnL+EMCO4PRtaKNBbdeKX6jFghvyub6Jouj
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="368075976"
+X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
+   d="scan'208";a="368075976"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 02:56:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="715126919"
+X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
+   d="scan'208";a="715126919"
+Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 11 Jul 2023 02:55:58 -0700
+Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qJA69-0004hd-1f;
+        Tue, 11 Jul 2023 09:55:57 +0000
+Date:   Tue, 11 Jul 2023 17:55:05 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Luke D. Jones" <luke@ljones.dev>, hdegoede@redhat.com
+Cc:     oe-kbuild-all@lists.linux.dev, corentin.chary@gmail.com,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, markgross@kernel.org,
+        jdelvare@suse.com, linux@roeck-us.net,
+        "Luke D. Jones" <luke@ljones.dev>
+Subject: Re: [PATCH v2 8/8] platform/x86: asus-wmi: expose dGPU and CPU
+ tunables for ROG
+Message-ID: <202307111702.ErlUZY2B-lkp@intel.com>
+References: <20230630053552.976579-9-luke@ljones.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 0/2] Fix s2idle resume on HP 15s-eq2xxx
-Content-Language: en-US, nl
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20230710183934.17315-1-mario.limonciello@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230710183934.17315-1-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230630053552.976579-9-luke@ljones.dev>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mario,
+Hi Luke,
 
-On 7/10/23 20:39, Mario Limonciello wrote:
-> HP 15s-eq2xxx has problems resuming from s2idle when IOMMU is enabled.
-> This is the same root cause as some Lenovo laptops had where IOMMU enabled
-> caused issues with NVME during s2idle resume from a problematic SMI.
-> 
-> To series fixes the issue by re-using the same quirk developed from the
-> older Lenovo laptops.
-> 
-> Mario Limonciello (2):
->   platform/x86: Move s2idle quirk from thinkpad-acpi to amd-pmc
->   platform/x86/amd: pmc: Apply nvme quirk to HP 15s-eq2xxx
-> 
->  drivers/platform/x86/amd/Makefile     |   2 +-
->  drivers/platform/x86/amd/pmc-quirks.c | 172 ++++++++++++++++++++++++++
->  drivers/platform/x86/amd/pmc.c        |  30 +----
->  drivers/platform/x86/amd/pmc.h        |  43 +++++++
->  drivers/platform/x86/thinkpad_acpi.c  | 143 ---------------------
->  5 files changed, 222 insertions(+), 168 deletions(-)
->  create mode 100644 drivers/platform/x86/amd/pmc-quirks.c
->  create mode 100644 drivers/platform/x86/amd/pmc.h
+kernel test robot noticed the following build warnings:
 
-Thank you for your series, I've applied this series to my fixes
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.5-rc1 next-20230711]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-For patch 1/2 the inclusion of linux/pci.h in
-drivers/platform/x86/amd/pmc.h is not necessary, where as
-some actually needed headers (types and mutex) were missing.
+url:    https://github.com/intel-lab-lkp/linux/commits/Luke-D-Jones/platform-x86-asus-wmi-add-support-for-showing-charger-mode/20230630-133937
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20230630053552.976579-9-luke%40ljones.dev
+patch subject: [PATCH v2 8/8] platform/x86: asus-wmi: expose dGPU and CPU tunables for ROG
+reproduce: (https://download.01.org/0day-ci/archive/20230711/202307111702.ErlUZY2B-lkp@intel.com/reproduce)
 
-So I've moved the pci.h include back to pmc.c and added
-a few missing includes. I have squashed the following diff
-into 1/2 while merging for this:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202307111702.ErlUZY2B-lkp@intel.com/
 
-diff --git a/drivers/platform/x86/amd/pmc-quirks.c b/drivers/platform/x86/amd/pmc-quirks.c
-index cdf4c7d0a36b..362e7c0097d7 100644
---- a/drivers/platform/x86/amd/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc-quirks.c
-@@ -9,6 +9,9 @@
-  */
- 
- #include <linux/dmi.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/slab.h>
- 
- #include "pmc.h"
- 
-diff --git a/drivers/platform/x86/amd/pmc.c b/drivers/platform/x86/amd/pmc.c
-index 5a9bc062fa8a..a8ca95a5d44c 100644
---- a/drivers/platform/x86/amd/pmc.c
-+++ b/drivers/platform/x86/amd/pmc.c
-@@ -20,6 +20,7 @@
- #include <linux/iopoll.h>
- #include <linux/limits.h>
- #include <linux/module.h>
-+#include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/rtc.h>
- #include <linux/serio.h>
-diff --git a/drivers/platform/x86/amd/pmc.h b/drivers/platform/x86/amd/pmc.h
-index 8f78985ba340..c27bd6a5642f 100644
---- a/drivers/platform/x86/amd/pmc.h
-+++ b/drivers/platform/x86/amd/pmc.h
-@@ -11,7 +11,8 @@
- #ifndef PMC_H
- #define PMC_H
- 
--#include <linux/pci.h>
-+#include <linux/types.h>
-+#include <linux/mutex.h>
- 
- struct amd_pmc_dev {
- 	void __iomem *regbase;
+All warnings (new ones prefixed by >>):
 
-Since this is just changing #include-s this should not cause
-any functional changes.
+>> Documentation/ABI/testing/sysfs-platform-asus-wmi:131: WARNING: Unexpected indentation.
 
-I will include this series in my next fixes pull-req to Linus
-for the current kernel development cycle.
+vim +131 Documentation/ABI/testing/sysfs-platform-asus-wmi
 
-Regards,
+ > 131	Date:		Jun 2023
+   132	KernelVersion:	6.5
+   133	Contact:	"Luke Jones" <luke@ljones.dev>
+   134	Description:
+   135			Set the Package Power Target total of CPU: PL1 on Intel, SPL on AMD.
+   136			Shown on Intel+Nvidia or AMD+Nvidia based systems.
+   137				* min=5, max=250
+   138	
 
-Hans
-
-
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
