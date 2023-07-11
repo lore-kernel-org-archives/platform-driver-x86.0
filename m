@@ -2,320 +2,130 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 048BAEB64DD
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jul 2023 09:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E092EB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jul 2023 09:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230419AbjGKJn0 (ORCPT
+        id S230397AbjGKJoU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Jul 2023 05:43:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34270 "EHLO
+        Tue, 11 Jul 2023 05:44:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230018AbjGKJnZ (ORCPT
+        with ESMTP id S230018AbjGKJoT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Jul 2023 05:43:25 -0400
+        Tue, 11 Jul 2023 05:44:19 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFAE810DF
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jul 2023 02:42:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3D9AE56
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jul 2023 02:43:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689068548;
+        s=mimecast20190719; t=1689068616;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5tXuHSt42vOhi/RR7LZmETd8IFscnoA25c33wyaRGfc=;
-        b=InUJIdVHVqTfujB+2wEyO9QwAg5kIL4xZi2xzJ/QVEOp5Jzc6x2C/YCV3c2/7PYs8aNWPN
-        3xC2UHGVsCZArIJ9faSpAHS4ln5Hu8E2AgTLDXXoX19zsG+E78IAGaEOntCISv06gXJEom
-        DTNgVXBIS0/ioDUoSp1uIVqvQ71KLgM=
+        bh=Od1/19kFhHmX9rdsBJAf2fw/H3xJi3JwZ125IHGO3Ho=;
+        b=bUXf+Me8/RDa0ZsFb7p47JqDM0ZwhDji3S69fCs2+OWVRgzHPaPslkfG4Q8qGZ5DzA5hZe
+        vCFYwfqtIaKYR4g2bZGUD43z21zNdIWD1mIbizjXIHs7UBxk+ap1DNlyr321a7ROmSIQa1
+        kLckmop2sYvxMXZbPSZBg9eyyBpTxZg=
 Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
  [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-422-_vi1TNddP2WCvhHlxsP25Q-1; Tue, 11 Jul 2023 05:42:27 -0400
-X-MC-Unique: _vi1TNddP2WCvhHlxsP25Q-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-94a355cf318so368454266b.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jul 2023 02:42:27 -0700 (PDT)
+ us-mta-468-7Lz2AX1APduum30gCxFhEw-1; Tue, 11 Jul 2023 05:43:35 -0400
+X-MC-Unique: 7Lz2AX1APduum30gCxFhEw-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-978a991c3f5so369419666b.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jul 2023 02:43:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689068547; x=1691660547;
+        d=1e100.net; s=20221208; t=1689068613; x=1691660613;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5tXuHSt42vOhi/RR7LZmETd8IFscnoA25c33wyaRGfc=;
-        b=jy6FKFdYqPAml+FhuBCFQ+5GP637GtMPnuVLqrA5tXynz0KPae1YZLahlF9JpSaMxq
-         +g0rTdoquuGYUYldM+kMh8OzirFIkRib8Nzz8/kxV+pdbv4Kv/qlAipYMvMAoJFC4+1e
-         3VMoTJLtuzy67FOC/butdnlK/FM07kxH0Vh97CJQPUI8RzzFIs8hII5WjlTlKdRs7zND
-         MAIXvpMRdpyZi0zaAadO2NSKc1NkNpgrX5lNLEGPYXQjJxXt1B3OQ1pw/4d5XSxVXAnB
-         FNE6cIMeh//7aj8F3q84HePbVjeB6CSwsRqNWgj2DvwBo/n5kHGzYuUGQwg3JlaLco+V
-         QBTg==
-X-Gm-Message-State: ABy/qLYi1Q8rvPRdS8nyx1TTzzka8clo9K/r9A6+I57htnf0dL4CMnRo
-        iFWafsawKc6Cm3okyvV3G52dzNo8U5ueMINzkj9U/6koBWd1Ms9RrcqqQcwBc67PZxMxinSfd6V
-        V5WqQfGTjFNjdEGkmhnIDm2xrnJbRCaH44g==
-X-Received: by 2002:a17:906:1392:b0:97e:aace:b6bc with SMTP id f18-20020a170906139200b0097eaaceb6bcmr14187409ejc.53.1689068546627;
-        Tue, 11 Jul 2023 02:42:26 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlG5oNHW/3l71/L8d2Jx6e6y4wCLbtZsMzUF9WeJiuUI31nQYW8MwxDMb6YtJIa3Ct+4x4Mjvw==
-X-Received: by 2002:a17:906:1392:b0:97e:aace:b6bc with SMTP id f18-20020a170906139200b0097eaaceb6bcmr14187392ejc.53.1689068546321;
-        Tue, 11 Jul 2023 02:42:26 -0700 (PDT)
+        bh=Od1/19kFhHmX9rdsBJAf2fw/H3xJi3JwZ125IHGO3Ho=;
+        b=cwOW5WStKG72Hf1R/QRrCZNTsZoH+Hpd8dbfUhZV60Jh2T2+haJbu/6Zl7LT9Jdfx3
+         i1daJItKxJzuiIycSxEOP647NUTNMUvflnrqHx8u3/HacMT9djeYD4UXe866digDPwdU
+         As8ge6QrKhMo8BVAoYdx/ANr968PuvdwL1vhdrrowVKbZuC+1MLTLNidLbsTmr0TBzBx
+         +OWfSM91zl0tXgNqVcDDeKE5gN5UkycRiHoHf/+mia/xk948NeEFFCSVL01bBFibgZNi
+         4z82ZGUKf70YznN/ROWYtSnlTMD+Wh0jvBNRFdTZtevC9rmqW51bcVBBoPgjEmsMTgS/
+         kyew==
+X-Gm-Message-State: ABy/qLaR5+SJ6zu1pRDciZC7UE8hJ9s7uEGju7ewlPqv8Spmz7Kxi8xa
+        XWvZ2DPNYP/wWNiz1IWyZGMSPuaKf+PpVdZSkAJ5/VDD46moIbMxnLyhUHNQOsc+E4PWgxUTzjF
+        7P8F1n/qaY9r0gfhV7YgzyypcuPPRyjtfLw==
+X-Received: by 2002:a17:906:89a1:b0:992:9756:6a22 with SMTP id gg33-20020a17090689a100b0099297566a22mr13153273ejc.48.1689068613673;
+        Tue, 11 Jul 2023 02:43:33 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlGMqb4E+QCCQyWkhsASzNp0G+JFQtsiQCik8JuUn+PF7LBYxukV6D1AZlMYmFRkVD/IFqP7BQ==
+X-Received: by 2002:a17:906:89a1:b0:992:9756:6a22 with SMTP id gg33-20020a17090689a100b0099297566a22mr13153264ejc.48.1689068613415;
+        Tue, 11 Jul 2023 02:43:33 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id rk21-20020a170907215500b00993150e5325sm928676ejb.60.2023.07.11.02.42.25
+        by smtp.gmail.com with ESMTPSA id ox10-20020a170907100a00b00991dfb5dfbbsm935652ejb.67.2023.07.11.02.43.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jul 2023 02:42:25 -0700 (PDT)
-Message-ID: <350cfb54-f435-4482-5a40-18d4358bf747@redhat.com>
-Date:   Tue, 11 Jul 2023 11:42:25 +0200
+        Tue, 11 Jul 2023 02:43:32 -0700 (PDT)
+Message-ID: <c93f102d-d169-a693-95ed-6754e2f1a939@redhat.com>
+Date:   Tue, 11 Jul 2023 11:43:32 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH v4 1/1] platform/x86: asus-wmi: add support for ASUS
- screenpad
+Subject: Re: [PATCH] platform/x86/intel/tpmi: Prevent overflow for cap_offset
 Content-Language: en-US, nl
-To:     Luke Jones <luke@ljones.dev>
-Cc:     corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, markgross@kernel.org,
-        jdelvare@suse.com, linux@roeck-us.net
-References: <20230630041743.911303-1-luke@ljones.dev>
- <20230630041743.911303-2-luke@ljones.dev>
- <974093b4-5dac-dc29-8f86-304eb5c6c19b@redhat.com>
- <39e6044b960c1099ecc34d76f78aad12496b23e2.camel@ljones.dev>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230622195717.3125088-1-srinivas.pandruvada@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <39e6044b960c1099ecc34d76f78aad12496b23e2.camel@ljones.dev>
+In-Reply-To: <20230622195717.3125088-1-srinivas.pandruvada@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 7/7/23 00:23, Luke Jones wrote:
-> On Tue, 2023-07-04 at 13:16 +0200, Hans de Goede wrote:
->> Hi Luke,
->>
->> On 6/30/23 06:17, Luke D. Jones wrote:
->>> Add support for the WMI methods used to turn off and adjust the
->>> brightness of the secondary "screenpad" device found on some high-
->>> end
->>> ASUS laptops like the GX650P series and others.
->>>
->>> These methods are utilised in a new backlight device named
->>> asus_screenpad.
->>>
->>> Signed-off-by: Luke D. Jones <luke@ljones.dev>
->>
->> Thank you for your work on this. I have one small change request
->> and then v5 should be ready for merging, see me inline comment
->> below.
->>
->>> ---
->>>  drivers/platform/x86/asus-wmi.c            | 128
->>> +++++++++++++++++++++
->>>  drivers/platform/x86/asus-wmi.h            |   1 +
->>>  include/linux/platform_data/x86/asus-wmi.h |   4 +
->>>  3 files changed, 133 insertions(+)
->>>
->>> diff --git a/drivers/platform/x86/asus-wmi.c
->>> b/drivers/platform/x86/asus-wmi.c
->>> index 62cee13f5576..967c92ceb041 100644
->>> --- a/drivers/platform/x86/asus-wmi.c
->>> +++ b/drivers/platform/x86/asus-wmi.c
->>> @@ -25,6 +25,7 @@
->>>  #include <linux/input/sparse-keymap.h>
->>>  #include <linux/kernel.h>
->>>  #include <linux/leds.h>
->>> +#include <linux/minmax.h>
->>>  #include <linux/module.h>
->>>  #include <linux/pci.h>
->>>  #include <linux/pci_hotplug.h>
->>> @@ -212,6 +213,7 @@ struct asus_wmi {
->>>  
->>>         struct input_dev *inputdev;
->>>         struct backlight_device *backlight_device;
->>> +       struct backlight_device *screenpad_backlight_device;
->>>         struct platform_device *platform_device;
->>>  
->>>         struct led_classdev wlan_led;
->>> @@ -3839,6 +3841,123 @@ static int is_display_toggle(int code)
->>>         return 0;
->>>  }
->>>  
->>> +/* Screenpad backlight
->>> *******************************************************/
->>> +
->>> +static int read_screenpad_backlight_power(struct asus_wmi *asus)
->>> +{
->>> +       int ret;
->>> +
->>> +       ret = asus_wmi_get_devstate_simple(asus,
->>> ASUS_WMI_DEVID_SCREENPAD_POWER);
->>> +       if (ret < 0)
->>> +               return ret;
->>> +       /* 1 == powered */
->>> +       return ret ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
->>> +}
->>> +
->>> +static int read_screenpad_brightness(struct backlight_device *bd)
->>> +{
->>> +       struct asus_wmi *asus = bl_get_data(bd);
->>> +       u32 retval;
->>> +       int err;
->>> +
->>> +       err = read_screenpad_backlight_power(asus);
->>> +       if (err < 0)
->>> +               return err;
->>> +       /* The device brightness can only be read if powered, so
->>> return stored */
->>> +       if (err == FB_BLANK_POWERDOWN)
->>> +               return asus->driver->screenpad_brightness;
->>> +
->>> +       err = asus_wmi_get_devstate(asus,
->>> ASUS_WMI_DEVID_SCREENPAD_LIGHT, &retval);
->>> +       if (err < 0)
->>> +               return err;
->>> +
->>> +       return retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
->>> +}
->>> +
->>> +static int update_screenpad_bl_status(struct backlight_device *bd)
->>> +{
->>> +       struct asus_wmi *asus = bl_get_data(bd);
->>> +       int power, err = 0;
->>> +       u32 ctrl_param;
->>> +
->>> +       power = read_screenpad_backlight_power(asus);
->>> +       if (power < 0)
->>> +               return power;
->>> +
->>> +       if (bd->props.power != power) {
->>> +               if (power != FB_BLANK_UNBLANK) {
->>> +                       /* Only brightness > 0 can power it back on
->>> */
->>> +                       ctrl_param = max(1, asus->driver-
->>>> screenpad_brightness);
->>> +                       err =
->>> asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT,
->>> +                                                   ctrl_param,
->>> NULL);
->>> +               } else {
->>> +                       err =
->>> asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
->>> +               }
->>> +       } else if (power == FB_BLANK_UNBLANK) {
->>> +               /* Only set brightness if powered on or we get
->>> invalid/unsync state */
->>> +               ctrl_param = bd->props.brightness;
->>> +               err =
->>> asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT, ctrl_param,
->>> NULL);
->>> +       }
->>> +
->>> +       /* Ensure brightness is stored to turn back on with */
->>> +       asus->driver->screenpad_brightness = bd->props.brightness;
->>> +
->>> +       return err;
->>> +}
->>> +
->>> +static const struct backlight_ops asus_screenpad_bl_ops = {
->>> +       .get_brightness = read_screenpad_brightness,
->>> +       .update_status = update_screenpad_bl_status,
->>> +       .options = BL_CORE_SUSPENDRESUME,
->>> +};
->>> +
->>> +static int asus_screenpad_init(struct asus_wmi *asus)
->>> +{
->>> +       struct backlight_device *bd;
->>> +       struct backlight_properties props;
->>> +       int err, power;
->>> +       int brightness = 0;
->>> +
->>> +       power = read_screenpad_backlight_power(asus);
->>> +       if (power < 0)
->>> +               return power;
->>> +
->>> +       if (power != FB_BLANK_POWERDOWN) {
->>> +               err = asus_wmi_get_devstate(asus,
->>> ASUS_WMI_DEVID_SCREENPAD_LIGHT, &brightness);
->>> +               if (err < 0)
->>> +                       return err;
->>> +       }
->>> +       /* default to an acceptable min brightness on boot if too
->>> low */
->>> +       if (brightness < 60)
->>> +               brightness = 60;
->>
->> If settings below 60 are no good, then the correct way to handle
->> this is to limit the range to 0 - (255-60) and add / substract
->> 60 when setting / getting the brightness.
->>
->> E.g. do something like this:
->>
->> #define SCREENPAD_MIN_BRIGHTNESS        60
->> #define SCREENPAD_MAX_BRIGHTNESS        255
->>
->>         props.max_brightness = SCREENPAD_MAX_BRIGHTNESS -
->> SCREENPAD_MIN_BRIGHTNESS;
->>
->> And in update_screenpad_bl_status() do:
->>
->>         ctrl_param = bd->props.brightness + SCREENPAD_MIN_BRIGHTNESS;
->>
->> And when reading the brightness substract SCREENPAD_MIN_BRIGHTNESS,
->> clamping to a minimum value of 0.
->>
->> This avoids a dead-zone in the brightness range between 0-60 .
+On 6/22/23 21:57, Srinivas Pandruvada wrote:
+> cap_offset is a u16 field, so multiplying with TPMI_CAP_OFFSET_UNIT
+> (which is equal to 1024) to covert to bytes will cause overflow. This
+> will be a problem once more TPMI features are added.
 > 
-> Hi Hans, I think this is the wrong thing to do.
+> This field is not used except for calculating pfs->vsec_offset. So, leave
+> cap_offset field unchanged and multiply with TPMI_CAP_OFFSET_UNIT while
+> calculating pfs->vsec_offset.
 > 
-> The initial point of that first `brightness = 60;` is only to set it to
-> an acceptable brightness on boot. We don't want to prevent the user
-> from going below that brightness at all - this is just to ensure the
-> screen is visible on boot if the brightness was under that value, and
-> it is usually only under that value if it was set to off before
-> shutdown/reboot.
-> 
-> It's not to try and put the range between 60-255, it's just to make the
-> screen visible on boot if it was off previously. The folks who have
-> tested this have found that this is the desired behaviour they expect.
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+> Rebased on top of
+> https://kernel.googlesource.com/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
+> review-hans 
 
-I see.
+Thank you for your patch, I've applied this patch to my fixes
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
 
-So if I understand things correctly then 60 is a good default,
-but the screen can go darker and still be usable.
+Note it will show up in my fixes branch once I've pushed my
+local branch there, which might take a while.
 
-But 1 leads to an unusable screen, so we still need
-a SCREENPAD_MIN_BRIGHTNESS to avoid the screen being able
-to go so dark that it is no longer usable and then still
-move the range a bit, but just not by 60, but by some
-other number (something in the 10-30 range I guess?)
-
-Combined with adding a:
-
-#define SCREENPAD_DEFAULT_BRIGHTNESS        60
-
-And at boot when the read back brightness <
-SCREENPAD_MIN_BRIGHTNESS set it to SCREENPAD_DEFAULT_BRIGHTNESS.
-
-We really want to avoid users to be able to set an unusable
-low brightness level. As mentioned in the new panel brightness
-API proposal:
-
-https://lore.kernel.org/dri-devel/b61d3eeb-6213-afac-2e70-7b9791c86d2e@redhat.com/
-
-"3. The meaning of 0 is not clearly defined, it can be either off,
-   or minimum brightness at which the display is still readable
-  (in a low light environment)"
-
-and the plan going forward is to:
-
-"Unlike the /sys/class/backlight/foo/brightness this brightness property
-has a clear definition for the value 0. The kernel must ensure that 0
-means minimum brightness (so 0 should _never_ turn the backlight off).
-If necessary the kernel must enforce a minimum value by adding
-an offset to the value seen in the property to ensure this behavior."
-
-So I really want to see this new backlight driver implement the
-new planned behavior for 0 from the start, with 0 meaning minimum
-*usable* brightness.
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
 Regards,
 
 Hans
 
 
+
+> 
+>  drivers/platform/x86/intel/tpmi.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
+> index 9c606ee2030c..d1fd6e69401c 100644
+> --- a/drivers/platform/x86/intel/tpmi.c
+> +++ b/drivers/platform/x86/intel/tpmi.c
+> @@ -356,9 +356,7 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
+>  		if (!pfs_start)
+>  			pfs_start = res_start;
+>  
+> -		pfs->pfs_header.cap_offset *= TPMI_CAP_OFFSET_UNIT;
+> -
+> -		pfs->vsec_offset = pfs_start + pfs->pfs_header.cap_offset;
+> +		pfs->vsec_offset = pfs_start + pfs->pfs_header.cap_offset * TPMI_CAP_OFFSET_UNIT;
+>  
+>  		/*
+>  		 * Process TPMI_INFO to get PCI device to CPU package ID.
 
