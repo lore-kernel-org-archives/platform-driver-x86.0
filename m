@@ -2,336 +2,403 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF69EB64DC
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jul 2023 22:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4011EB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 Jul 2023 22:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231493AbjGKWWA (ORCPT
+        id S231797AbjGKWbO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 Jul 2023 18:22:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60476 "EHLO
+        Tue, 11 Jul 2023 18:31:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230006AbjGKWV7 (ORCPT
+        with ESMTP id S229512AbjGKWbM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 Jul 2023 18:21:59 -0400
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB28110DD;
-        Tue, 11 Jul 2023 15:21:57 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8FC2C5C005C;
-        Tue, 11 Jul 2023 18:21:55 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Tue, 11 Jul 2023 18:21:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm1; t=1689114115; x=1689200515; bh=mH
-        86TgVfV4JZkGhMIyC+EW6bw8ichhKxn48ihxYt7nU=; b=cO+wHhvUD2OEgVT7S4
-        4QFobF0oc2qf6T4VvQARI7OKNTDI7u1oYeVr98OXQAH1+EfrlhazhNQZ/H00GtDT
-        ODm1+T0conBg7SdnQYSjGanIrLCNcM2XxWZAx+J7PR6OznDQt9EHfBib02FzD+LC
-        TdB0nd3sZhWaQEHRoNDYKqaA8Do7CebVQmfz1FHhbM2/7Ep6qJRvDEP88Ey7nhbj
-        Jv3eE61xCDuJDFmp6BIoe2dUuC2DvB+wZo0tCu4sbFX7OwRo2xx3xS9whPSl3Eev
-        LO76IYqW2CNNhjrGPs/WkMsaY6D/ZR4Mw4NxbKFJFZgs+mdnaYhZgL90sgTCbCGf
-        Foig==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1689114115; x=1689200515; bh=mH86TgVfV4JZk
-        GhMIyC+EW6bw8ichhKxn48ihxYt7nU=; b=CpYPP9pn5qWHeQnpsiA7oZWpVKsPD
-        KeIZkc6U9ErTJA76JsxKvR9WaCRq2SRC5OBJFerIiqHcLtCVIg6CtP4v12NQdXW0
-        FZOm86JRo7nY9k3upsoz6e+J4UQ1DgSRVBhMvv7FcA5JGGyVLPaEF7sqE7XJH0Wr
-        inw+6NGjCfs6ySd3eSpa2siMYCY7lipYyo6jIr39wJkG3GI+4GQYmSuoI+e+wT26
-        pyzWZ5huDtuqFEmcbnbGkkHK/NcIOEpvFtKCnW7QCE50L/YQh0IDh79K25Wo4reM
-        3sASBtqjcjh3nhi7n4HZ0Z22/ZU6b022wOz/zB5UyBhcQRHXareoKmd2Q==
-X-ME-Sender: <xms:A9atZN9mjBme9-8IGaFTwVIMeYmZwxeQNFkYE0s9KKUXND0xLDGsdA>
-    <xme:A9atZBtDvoTOMV9YgHuXYDfwwQriLuJNEaz_Z53GqkY9YZTVsXMYmnjxIsJ5UEQP3
-    qTo8w_q2n1KoU78ROo>
-X-ME-Received: <xmr:A9atZLAskbNB1H4XH-eYicG3Un0BrDqOo7Y8LHAtSAtlGE7z0KjQfN53GNBaoZnNb7qX9Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrfedugddtkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffuvfevkfgjfhfogggtsehttdertdertddvnecuhfhrohhmpefnuhhkvgcu
-    lfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpe
-    fhieegtdevfeejueekteefkedtfeeffeetkeefffeiieetieeghefhuddtiedtheenucff
-    ohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:A9atZBeTGfpDcbgmYbT79Bn27He7NIoaoK_MCgYuU8zoliLnPTbXPQ>
-    <xmx:A9atZCMPgj5haulyEtlmC5yyy2j8szvSj308tQzPb47IVx6sYiI1AA>
-    <xmx:A9atZDmAJEYzQOVogqP3HeXW4mHGH31maC-NbH6wJZ7KPF58Mh58NQ>
-    <xmx:A9atZOBB7X2aXSzE-LIuMDChzir3ZQY6snua4SQKL37OL0f6YkU98Q>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 11 Jul 2023 18:21:48 -0400 (EDT)
-Date:   Wed, 12 Jul 2023 10:21:33 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v4 1/1] platform/x86: asus-wmi: add support for ASUS
- screenpad
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, markgross@kernel.org,
-        jdelvare@suse.com, linux@roeck-us.net
-Message-Id: <XRKNXR.QG8FQ0SYV74U2@ljones.dev>
-In-Reply-To: <350cfb54-f435-4482-5a40-18d4358bf747@redhat.com>
-References: <20230630041743.911303-1-luke@ljones.dev>
-        <20230630041743.911303-2-luke@ljones.dev>
-        <974093b4-5dac-dc29-8f86-304eb5c6c19b@redhat.com>
-        <39e6044b960c1099ecc34d76f78aad12496b23e2.camel@ljones.dev>
-        <350cfb54-f435-4482-5a40-18d4358bf747@redhat.com>
-X-Mailer: geary/44.0
+        Tue, 11 Jul 2023 18:31:12 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0EE1705;
+        Tue, 11 Jul 2023 15:31:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689114670; x=1720650670;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=I2Fcxw+mYIAj0ZMiDeIDju14MGD1q+xQPg79UL6JZEU=;
+  b=NvOTMdIlbrU5jBo3zZSM2YjlcQ5cTKk6Hy4mPXEBxXXf4wOyC93gFZkX
+   2UD+xHdhJI6CsoEqe85BKqklRnIWLGeQPe35YZN4K65vihIgvPtDuwDep
+   DoVO8GX7a23cW4wsjoWrFk7T0LvLcuRtkPkMTuK8ztgmDOzaGZ0JHAHGY
+   52yPMb5xl1HJuvPnUow3f0YqqRnfaT4IBacJVZ9rqxynVGvRmM7CqCGf1
+   iBM0TDmS51ZQHXQfvNmXdfSIdSdeZlZgii6ChiVtMZZjR7LwqwC+8v/zD
+   7W6+RSeReDQYd26ZiY0AIst7cdIIvRpOVqViIvrXuRnJsfCziuPLWGRFb
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="364786859"
+X-IronPort-AV: E=Sophos;i="6.01,197,1684825200"; 
+   d="scan'208";a="364786859"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 15:31:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="811372211"
+X-IronPort-AV: E=Sophos;i="6.01,197,1684825200"; 
+   d="scan'208";a="811372211"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.8])
+  by FMSMGA003.fm.intel.com with ESMTP; 11 Jul 2023 15:31:09 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org,
+        ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [UPDATE][PATCH v2 2/3] platform/x86/intel/tpmi: Add debugfs interface
+Date:   Tue, 11 Jul 2023 15:31:03 -0700
+Message-Id: <20230711223103.77057-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Add debugfs interface for debugging TPMI configuration and register
+contents. This shows PFS (PM Feature structure) for each TPMI device.
 
+For each feature, show full register contents and allow to modify
+register at an offset.
 
-On Tue, Jul 11 2023 at 11:42:25 +02:00:00, Hans de Goede 
-<hdegoede@redhat.com> wrote:
-> Hi,
-> 
-> On 7/7/23 00:23, Luke Jones wrote:
->>  On Tue, 2023-07-04 at 13:16 +0200, Hans de Goede wrote:
->>>  Hi Luke,
->>> 
->>>  On 6/30/23 06:17, Luke D. Jones wrote:
->>>>  Add support for the WMI methods used to turn off and adjust the
->>>>  brightness of the secondary "screenpad" device found on some high-
->>>>  end
->>>>  ASUS laptops like the GX650P series and others.
->>>> 
->>>>  These methods are utilised in a new backlight device named
->>>>  asus_screenpad.
->>>> 
->>>>  Signed-off-by: Luke D. Jones <luke@ljones.dev>
->>> 
->>>  Thank you for your work on this. I have one small change request
->>>  and then v5 should be ready for merging, see me inline comment
->>>  below.
->>> 
->>>>  ---
->>>>   drivers/platform/x86/asus-wmi.c            | 128
->>>>  +++++++++++++++++++++
->>>>   drivers/platform/x86/asus-wmi.h            |   1 +
->>>>   include/linux/platform_data/x86/asus-wmi.h |   4 +
->>>>   3 files changed, 133 insertions(+)
->>>> 
->>>>  diff --git a/drivers/platform/x86/asus-wmi.c
->>>>  b/drivers/platform/x86/asus-wmi.c
->>>>  index 62cee13f5576..967c92ceb041 100644
->>>>  --- a/drivers/platform/x86/asus-wmi.c
->>>>  +++ b/drivers/platform/x86/asus-wmi.c
->>>>  @@ -25,6 +25,7 @@
->>>>   #include <linux/input/sparse-keymap.h>
->>>>   #include <linux/kernel.h>
->>>>   #include <linux/leds.h>
->>>>  +#include <linux/minmax.h>
->>>>   #include <linux/module.h>
->>>>   #include <linux/pci.h>
->>>>   #include <linux/pci_hotplug.h>
->>>>  @@ -212,6 +213,7 @@ struct asus_wmi {
->>>> 
->>>>          struct input_dev *inputdev;
->>>>          struct backlight_device *backlight_device;
->>>>  +       struct backlight_device *screenpad_backlight_device;
->>>>          struct platform_device *platform_device;
->>>> 
->>>>          struct led_classdev wlan_led;
->>>>  @@ -3839,6 +3841,123 @@ static int is_display_toggle(int code)
->>>>          return 0;
->>>>   }
->>>> 
->>>>  +/* Screenpad backlight
->>>>  *******************************************************/
->>>>  +
->>>>  +static int read_screenpad_backlight_power(struct asus_wmi *asus)
->>>>  +{
->>>>  +       int ret;
->>>>  +
->>>>  +       ret = asus_wmi_get_devstate_simple(asus,
->>>>  ASUS_WMI_DEVID_SCREENPAD_POWER);
->>>>  +       if (ret < 0)
->>>>  +               return ret;
->>>>  +       /* 1 == powered */
->>>>  +       return ret ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
->>>>  +}
->>>>  +
->>>>  +static int read_screenpad_brightness(struct backlight_device *bd)
->>>>  +{
->>>>  +       struct asus_wmi *asus = bl_get_data(bd);
->>>>  +       u32 retval;
->>>>  +       int err;
->>>>  +
->>>>  +       err = read_screenpad_backlight_power(asus);
->>>>  +       if (err < 0)
->>>>  +               return err;
->>>>  +       /* The device brightness can only be read if powered, so
->>>>  return stored */
->>>>  +       if (err == FB_BLANK_POWERDOWN)
->>>>  +               return asus->driver->screenpad_brightness;
->>>>  +
->>>>  +       err = asus_wmi_get_devstate(asus,
->>>>  ASUS_WMI_DEVID_SCREENPAD_LIGHT, &retval);
->>>>  +       if (err < 0)
->>>>  +               return err;
->>>>  +
->>>>  +       return retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
->>>>  +}
->>>>  +
->>>>  +static int update_screenpad_bl_status(struct backlight_device 
->>>> *bd)
->>>>  +{
->>>>  +       struct asus_wmi *asus = bl_get_data(bd);
->>>>  +       int power, err = 0;
->>>>  +       u32 ctrl_param;
->>>>  +
->>>>  +       power = read_screenpad_backlight_power(asus);
->>>>  +       if (power < 0)
->>>>  +               return power;
->>>>  +
->>>>  +       if (bd->props.power != power) {
->>>>  +               if (power != FB_BLANK_UNBLANK) {
->>>>  +                       /* Only brightness > 0 can power it back 
->>>> on
->>>>  */
->>>>  +                       ctrl_param = max(1, asus->driver-
->>>>>  screenpad_brightness);
->>>>  +                       err =
->>>>  asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT,
->>>>  +                                                   ctrl_param,
->>>>  NULL);
->>>>  +               } else {
->>>>  +                       err =
->>>>  asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
->>>>  +               }
->>>>  +       } else if (power == FB_BLANK_UNBLANK) {
->>>>  +               /* Only set brightness if powered on or we get
->>>>  invalid/unsync state */
->>>>  +               ctrl_param = bd->props.brightness;
->>>>  +               err =
->>>>  asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT, ctrl_param,
->>>>  NULL);
->>>>  +       }
->>>>  +
->>>>  +       /* Ensure brightness is stored to turn back on with */
->>>>  +       asus->driver->screenpad_brightness = bd->props.brightness;
->>>>  +
->>>>  +       return err;
->>>>  +}
->>>>  +
->>>>  +static const struct backlight_ops asus_screenpad_bl_ops = {
->>>>  +       .get_brightness = read_screenpad_brightness,
->>>>  +       .update_status = update_screenpad_bl_status,
->>>>  +       .options = BL_CORE_SUSPENDRESUME,
->>>>  +};
->>>>  +
->>>>  +static int asus_screenpad_init(struct asus_wmi *asus)
->>>>  +{
->>>>  +       struct backlight_device *bd;
->>>>  +       struct backlight_properties props;
->>>>  +       int err, power;
->>>>  +       int brightness = 0;
->>>>  +
->>>>  +       power = read_screenpad_backlight_power(asus);
->>>>  +       if (power < 0)
->>>>  +               return power;
->>>>  +
->>>>  +       if (power != FB_BLANK_POWERDOWN) {
->>>>  +               err = asus_wmi_get_devstate(asus,
->>>>  ASUS_WMI_DEVID_SCREENPAD_LIGHT, &brightness);
->>>>  +               if (err < 0)
->>>>  +                       return err;
->>>>  +       }
->>>>  +       /* default to an acceptable min brightness on boot if too
->>>>  low */
->>>>  +       if (brightness < 60)
->>>>  +               brightness = 60;
->>> 
->>>  If settings below 60 are no good, then the correct way to handle
->>>  this is to limit the range to 0 - (255-60) and add / substract
->>>  60 when setting / getting the brightness.
->>> 
->>>  E.g. do something like this:
->>> 
->>>  #define SCREENPAD_MIN_BRIGHTNESS        60
->>>  #define SCREENPAD_MAX_BRIGHTNESS        255
->>> 
->>>          props.max_brightness = SCREENPAD_MAX_BRIGHTNESS -
->>>  SCREENPAD_MIN_BRIGHTNESS;
->>> 
->>>  And in update_screenpad_bl_status() do:
->>> 
->>>          ctrl_param = bd->props.brightness + 
->>> SCREENPAD_MIN_BRIGHTNESS;
->>> 
->>>  And when reading the brightness substract SCREENPAD_MIN_BRIGHTNESS,
->>>  clamping to a minimum value of 0.
->>> 
->>>  This avoids a dead-zone in the brightness range between 0-60 .
->> 
->>  Hi Hans, I think this is the wrong thing to do.
->> 
->>  The initial point of that first `brightness = 60;` is only to set 
->> it to
->>  an acceptable brightness on boot. We don't want to prevent the user
->>  from going below that brightness at all - this is just to ensure the
->>  screen is visible on boot if the brightness was under that value, 
->> and
->>  it is usually only under that value if it was set to off before
->>  shutdown/reboot.
->> 
->>  It's not to try and put the range between 60-255, it's just to make 
->> the
->>  screen visible on boot if it was off previously. The folks who have
->>  tested this have found that this is the desired behaviour they 
->> expect.
-> 
-> I see.
-> 
-> So if I understand things correctly then 60 is a good default,
-> but the screen can go darker and still be usable.
-> 
-> But 1 leads to an unusable screen, so we still need
-> a SCREENPAD_MIN_BRIGHTNESS to avoid the screen being able
-> to go so dark that it is no longer usable and then still
-> move the range a bit, but just not by 60, but by some
-> other number (something in the 10-30 range I guess?)
-> 
-> Combined with adding a:
-> 
-> #define SCREENPAD_DEFAULT_BRIGHTNESS        60
-> 
-> And at boot when the read back brightness <
-> SCREENPAD_MIN_BRIGHTNESS set it to SCREENPAD_DEFAULT_BRIGHTNESS.
-> 
-> We really want to avoid users to be able to set an unusable
-> low brightness level. As mentioned in the new panel brightness
-> API proposal:
-> 
-> https://lore.kernel.org/dri-devel/b61d3eeb-6213-afac-2e70-7b9791c86d2e@redhat.com/
-> 
-> "3. The meaning of 0 is not clearly defined, it can be either off,
->    or minimum brightness at which the display is still readable
->   (in a low light environment)"
-> 
-> and the plan going forward is to:
-> 
-> "Unlike the /sys/class/backlight/foo/brightness this brightness 
-> property
-> has a clear definition for the value 0. The kernel must ensure that 0
-> means minimum brightness (so 0 should _never_ turn the backlight off).
-> If necessary the kernel must enforce a minimum value by adding
-> an offset to the value seen in the property to ensure this behavior."
-> 
-> So I really want to see this new backlight driver implement the
-> new planned behavior for 0 from the start, with 0 meaning minimum
-> *usable* brightness.
+This debugfs interface is not present on locked down kernel with no
+DEVMEM access and without CAP_SYS_RAWIO permission.
 
-Hi Hans, yeah okay that makes sense. I'll get on to it.
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+v2_update
+- I missed one change suggested in last review, sorry about that.
+  This is for local variable declarations.
 
-Cheers,
-Luke.
+v2
+- Check for locked down kernel and permissions
+- Move help to documentation folder
+- Cosmetic changes
+- size check
 
+ drivers/platform/x86/intel/tpmi.c | 234 +++++++++++++++++++++++++++++-
+ 1 file changed, 227 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
+index 024e7671687a..5b78cf131c6f 100644
+--- a/drivers/platform/x86/intel/tpmi.c
++++ b/drivers/platform/x86/intel/tpmi.c
+@@ -48,12 +48,15 @@
+ 
+ #include <linux/auxiliary_bus.h>
+ #include <linux/bitfield.h>
++#include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/intel_tpmi.h>
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
++#include <linux/security.h>
++#include <linux/string_helpers.h>
+ 
+ #include "vsec.h"
+ 
+@@ -86,12 +89,14 @@ struct intel_tpmi_pfs_entry {
+  * @vsec_offset: Starting MMIO address for this feature in bytes. Essentially
+  *		 this offset = "Address" from VSEC header + PFS Capability
+  *		 offset for this feature entry.
++ * @vsec_dev:	Pointer to intel_vsec_device structure for this TPMI device
+  *
+  * Represents TPMI instance information for one TPMI ID.
+  */
+ struct intel_tpmi_pm_feature {
+ 	struct intel_tpmi_pfs_entry pfs_header;
+ 	unsigned int vsec_offset;
++	struct intel_vsec_device *vsec_dev;
+ };
+ 
+ /**
+@@ -102,6 +107,7 @@ struct intel_tpmi_pm_feature {
+  * @pfs_start:		Start of PFS offset for the TPMI instances in this device
+  * @plat_info:		Stores platform info which can be used by the client drivers
+  * @tpmi_control_mem:	Memory mapped IO for getting control information
++ * @dbgfs_dir:		debugfs entry pointer
+  *
+  * Stores the information for all TPMI devices enumerated from a single PCI device.
+  */
+@@ -112,6 +118,7 @@ struct intel_tpmi_info {
+ 	u64 pfs_start;
+ 	struct intel_tpmi_plat_info plat_info;
+ 	void __iomem *tpmi_control_mem;
++	struct dentry *dbgfs_dir;
+ };
+ 
+ /**
+@@ -330,6 +337,203 @@ int tpmi_get_feature_status(struct auxiliary_device *auxdev, int feature_id,
+ }
+ EXPORT_SYMBOL_NS_GPL(tpmi_get_feature_status, INTEL_TPMI);
+ 
++static int tpmi_pfs_dbg_show(struct seq_file *s, void *unused)
++{
++	struct intel_tpmi_info *tpmi_info = s->private;
++	struct intel_tpmi_pm_feature *pfs;
++	int locked, disabled, ret, i;
++
++	seq_printf(s, "tpmi PFS start offset 0x:%llx\n", tpmi_info->pfs_start);
++	seq_puts(s, "tpmi_id\t\tentries\t\tsize\t\tcap_offset\tattribute\tvsec_offset\tlocked\tdisabled\n");
++	for (i = 0; i < tpmi_info->feature_count; ++i) {
++		pfs = &tpmi_info->tpmi_features[i];
++		ret = tpmi_read_feature_status(tpmi_info, pfs->pfs_header.tpmi_id, &locked,
++					       &disabled);
++		if (ret) {
++			locked = 'U';
++			disabled = 'U';
++		} else {
++			disabled = disabled ? 'Y' : 'N';
++			locked = locked ? 'Y' : 'N';
++		}
++		seq_printf(s, "0x%02x\t\t0x%02x\t\t0x%04x\t\t0x%04x\t\t0x%02x\t\t0x%08x\t%c\t%c\n",
++			   pfs->pfs_header.tpmi_id, pfs->pfs_header.num_entries,
++			   pfs->pfs_header.entry_size, pfs->pfs_header.cap_offset,
++			   pfs->pfs_header.attribute, pfs->vsec_offset, locked, disabled);
++	}
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(tpmi_pfs_dbg);
++
++#define MEM_DUMP_COLUMN_COUNT	8
++
++static int tpmi_mem_dump_show(struct seq_file *s, void *unused)
++{
++	size_t row_size = MEM_DUMP_COLUMN_COUNT * sizeof(u32);
++	struct intel_tpmi_pm_feature *pfs = s->private;
++	int count, ret = 0;
++	void __iomem *mem;
++	u32 off, size;
++	u8 *buffer;
++
++	off = pfs->vsec_offset;
++
++	mutex_lock(&tpmi_dev_lock);
++
++	for (count = 0; count < pfs->pfs_header.num_entries; ++count) {
++		size = pfs->pfs_header.entry_size * sizeof(u32);
++		/* The size is from a trusted hardware, but verify anyway */
++		if (size > TPMI_MAX_BUFFER_SIZE) {
++			/*
++			 * The next offset depends on the current size. So, can't skip to the
++			 * display of the next entry. Simply return from this function with error.
++			 */
++			ret = -EIO;
++			goto done_mem_show;
++		}
++
++		buffer = kmalloc(size, GFP_KERNEL);
++		if (!buffer) {
++			ret = -ENOMEM;
++			goto done_mem_show;
++		}
++
++		seq_printf(s, "TPMI Instance:%d offset:0x%x\n", count, off);
++
++		mem = ioremap(off, size);
++		if (!mem) {
++			ret = -ENOMEM;
++			kfree(buffer);
++			goto done_mem_show;
++		}
++
++		memcpy_fromio(buffer, mem, size);
++
++		seq_hex_dump(s, " ", DUMP_PREFIX_OFFSET, row_size, sizeof(u32), buffer, size,
++			     false);
++
++		iounmap(mem);
++		kfree(buffer);
++
++		off += size;
++	}
++
++done_mem_show:
++	mutex_unlock(&tpmi_dev_lock);
++
++	return ret;
++}
++DEFINE_SHOW_ATTRIBUTE(tpmi_mem_dump);
++
++static ssize_t mem_write(struct file *file, const char __user *userbuf, size_t len, loff_t *ppos)
++{
++	struct seq_file *m = file->private_data;
++	struct intel_tpmi_pm_feature *pfs = m->private;
++	u32 addr, value, punit, size;
++	u32 num_elems, *array;
++	void __iomem *mem;
++	int ret;
++
++	size = pfs->pfs_header.entry_size * sizeof(u32);
++	if (size > TPMI_MAX_BUFFER_SIZE)
++		return -EIO;
++
++	ret = parse_int_array_user(userbuf, len, (int **)&array);
++	if (ret < 0)
++		return ret;
++
++	num_elems = *array;
++	if (num_elems != 3) {
++		ret = -EINVAL;
++		goto exit_write;
++	}
++
++	punit = array[1];
++	addr = array[2];
++	value = array[3];
++
++	if (punit >= pfs->pfs_header.num_entries) {
++		ret = -EINVAL;
++		goto exit_write;
++	}
++
++	if (addr >= size) {
++		ret = -EINVAL;
++		goto exit_write;
++	}
++
++	mutex_lock(&tpmi_dev_lock);
++
++	mem = ioremap(pfs->vsec_offset + punit * size, size);
++	if (!mem) {
++		ret = -ENOMEM;
++		goto unlock_mem_write;
++	}
++
++	writel(value, mem + addr);
++
++	iounmap(mem);
++
++	ret = len;
++
++unlock_mem_write:
++	mutex_unlock(&tpmi_dev_lock);
++
++exit_write:
++	kfree(array);
++
++	return ret;
++}
++
++static int mem_write_show(struct seq_file *s, void *unused)
++{
++	return 0;
++}
++
++static int mem_write_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, mem_write_show, inode->i_private);
++}
++
++static const struct file_operations mem_write_ops = {
++	.open           = mem_write_open,
++	.read           = seq_read,
++	.write          = mem_write,
++	.llseek         = seq_lseek,
++	.release        = single_release,
++};
++
++#define tpmi_to_dev(info)	(&info->vsec_dev->pcidev->dev)
++
++static void tpmi_dbgfs_register(struct intel_tpmi_info *tpmi_info)
++{
++	struct dentry *top_dir;
++	char name[64];
++	int i;
++
++	snprintf(name, sizeof(name), "tpmi-%s", dev_name(tpmi_to_dev(tpmi_info)));
++	top_dir = debugfs_create_dir(name, NULL);
++	if (IS_ERR_OR_NULL(top_dir))
++		return;
++
++	tpmi_info->dbgfs_dir = top_dir;
++
++	debugfs_create_file("pfs_dump", 0444, top_dir, tpmi_info, &tpmi_pfs_dbg_fops);
++
++	for (i = 0; i < tpmi_info->feature_count; ++i) {
++		struct intel_tpmi_pm_feature *pfs;
++		struct dentry *dir;
++
++		pfs = &tpmi_info->tpmi_features[i];
++		snprintf(name, sizeof(name), "tpmi-id-%02x", pfs->pfs_header.tpmi_id);
++		dir = debugfs_create_dir(name, top_dir);
++
++		debugfs_create_file("mem_dump", 0444, dir, pfs, &tpmi_mem_dump_fops);
++		debugfs_create_file("mem_write", 0644, dir, pfs, &mem_write_ops);
++	}
++}
++
+ static void tpmi_set_control_base(struct auxiliary_device *auxdev,
+ 				  struct intel_tpmi_info *tpmi_info,
+ 				  struct intel_tpmi_pm_feature *pfs)
+@@ -491,7 +695,7 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
+ 	struct pci_dev *pci_dev = vsec_dev->pcidev;
+ 	struct intel_tpmi_info *tpmi_info;
+ 	u64 pfs_start = 0;
+-	int i;
++	int ret, i;
+ 
+ 	tpmi_info = devm_kzalloc(&auxdev->dev, sizeof(*tpmi_info), GFP_KERNEL);
+ 	if (!tpmi_info)
+@@ -514,6 +718,7 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
+ 		int size, ret;
+ 
+ 		pfs = &tpmi_info->tpmi_features[i];
++		pfs->vsec_dev = vsec_dev;
+ 
+ 		res = &vsec_dev->resource[i];
+ 		if (!res)
+@@ -551,7 +756,20 @@ static int intel_vsec_tpmi_init(struct auxiliary_device *auxdev)
+ 
+ 	auxiliary_set_drvdata(auxdev, tpmi_info);
+ 
+-	return tpmi_create_devices(tpmi_info);
++	ret = tpmi_create_devices(tpmi_info);
++	if (ret)
++		return ret;
++
++	/*
++	 * Allow debugfs when security policy allows. Everything this debugfs
++	 * interface provides, can also be done via /dev/mem access. If
++	 * /dev/mem interface is locked, don't allow debugfs to present any
++	 * information. Also check for CAP_SYS_RAWIO as /dev/mem interface.
++	 */
++	if (!security_locked_down(LOCKDOWN_DEV_MEM) && capable(CAP_SYS_RAWIO))
++		tpmi_dbgfs_register(tpmi_info);
++
++	return 0;
+ }
+ 
+ static int tpmi_probe(struct auxiliary_device *auxdev,
+@@ -560,11 +778,12 @@ static int tpmi_probe(struct auxiliary_device *auxdev,
+ 	return intel_vsec_tpmi_init(auxdev);
+ }
+ 
+-/*
+- * Remove callback is not needed currently as there is no
+- * cleanup required. All memory allocs are device managed. All
+- * devices created by this modules are also device managed.
+- */
++static void tpmi_remove(struct auxiliary_device *auxdev)
++{
++	struct intel_tpmi_info *tpmi_info = auxiliary_get_drvdata(auxdev);
++
++	debugfs_remove_recursive(tpmi_info->dbgfs_dir);
++}
+ 
+ static const struct auxiliary_device_id tpmi_id_table[] = {
+ 	{ .name = "intel_vsec.tpmi" },
+@@ -575,6 +794,7 @@ MODULE_DEVICE_TABLE(auxiliary, tpmi_id_table);
+ static struct auxiliary_driver tpmi_aux_driver = {
+ 	.id_table	= tpmi_id_table,
+ 	.probe		= tpmi_probe,
++	.remove         = tpmi_remove,
+ };
+ 
+ module_auxiliary_driver(tpmi_aux_driver);
+-- 
+2.40.1
 
