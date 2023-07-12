@@ -2,78 +2,74 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A542EB64DA
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Jul 2023 14:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04333EB64DA
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Jul 2023 14:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232135AbjGLO6m (ORCPT
+        id S232214AbjGLO75 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 Jul 2023 10:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47716 "EHLO
+        Wed, 12 Jul 2023 10:59:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232083AbjGLO6j (ORCPT
+        with ESMTP id S231299AbjGLO74 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Jul 2023 10:58:39 -0400
+        Wed, 12 Jul 2023 10:59:56 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B6EC19A0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Jul 2023 07:57:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513EB1BC5
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Jul 2023 07:59:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689173870;
+        s=mimecast20190719; t=1689173944;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xwIK8Xp+ZlyZ3fE/narngnVGQrICZUH+p26lYA0NZYY=;
-        b=HWCuVIB/O5VnxQidvHGebGu2PcC+jTy6qehsoHRdwEY5Mv918e1fZz/Fby4jdqQ8uirEEH
-        g6BIjkHAb9W2skA2BteM5LEpsie5PU93iywgpYt1zslnPNNxh7yBa6eZ9nhrJp2+GYfFDx
-        VAM1FOtZbR9Yw7dmfUbDd3eICoMHxX8=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=XyZS2nlr2eMi1kRH99kg7hVqiv5OOY3BmMOh1X5/FTo=;
+        b=aFt1w4dhp94xd0KJXt7EaeDjqp7JaJXmaOgcB/8vqjWuu18qvp1NLKvbuH2nod7Lj+KdTq
+        R8etcQ0ocFz3dAlBsC4k3xTRNBbaXjmJNCQ2mT02GV8eyNfFSJXLKhT/ImEplALd7WAa7N
+        KSkrj8jP15P1hzR0J6qpzY1ir+RAXY8=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-121-IewUUK2-P3qtSt4qkPN7uA-1; Wed, 12 Jul 2023 10:57:47 -0400
-X-MC-Unique: IewUUK2-P3qtSt4qkPN7uA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-993eeb3a950so283228066b.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Jul 2023 07:57:47 -0700 (PDT)
+ us-mta-539-cHNhrBjNODirAYP72BJYMw-1; Wed, 12 Jul 2023 10:59:02 -0400
+X-MC-Unique: cHNhrBjNODirAYP72BJYMw-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2b703a076ceso69800701fa.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Jul 2023 07:59:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689173866; x=1691765866;
+        d=1e100.net; s=20221208; t=1689173940; x=1691765940;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xwIK8Xp+ZlyZ3fE/narngnVGQrICZUH+p26lYA0NZYY=;
-        b=LqEOvtlejRlNfuCG9eVvyzhDzBlRWuyfX5Xaty9QrqJpbD3ugJdy+kQIsJ/oC2A20j
-         JRjcLh5AfNRXSfkUvqdA7NECGfLW9IVEgYYqm+zMhjF/CCRKHDgxcKAT3M6ikAtsmj6v
-         yI/FDS04JTFepTQXr0ga+FtnJYsikQbUNgVpsBh8dX1cFOgI2afwFMVge/eZ+nB6HOxZ
-         JyonhvXH6ExUQ7AaDio4R8CkZIMyLzI0wOswXOdkNNpW1Yo+8kyuy+PmaDBmGPjwq7NI
-         RJuJ2foaBtfaguH3eAKz/JEycuPxV9Y/8DTCPfhT8ExHxTyC1/BJPn4Bx6IIt0J0jnqC
-         /Dlw==
-X-Gm-Message-State: ABy/qLbVl/wp0P9ZPP6KQxFyd7X1MUQCrr74np+Ag4gHvDDXVXNqZTcn
-        aCKYeGWDcZvuIVtqUcrdvmJVwNlhxCrB59dVi/JCIvfebqgJJeUEiam8VyoH6ah3y3/J4/M1SJM
-        7iFfV05vp/sYPZlHOmuZP3wDOjw2bJkV37g==
-X-Received: by 2002:a17:906:9bf3:b0:992:91ce:4508 with SMTP id de51-20020a1709069bf300b0099291ce4508mr18643512ejc.53.1689173866314;
-        Wed, 12 Jul 2023 07:57:46 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlF46Z4lBys7UoyTuTRq8wOOgQVr5c2mQuMSId88KcOkCBJtud5ivYnpMmatJwO5DEVkOVAW7w==
-X-Received: by 2002:a17:906:9bf3:b0:992:91ce:4508 with SMTP id de51-20020a1709069bf300b0099291ce4508mr18643500ejc.53.1689173865983;
-        Wed, 12 Jul 2023 07:57:45 -0700 (PDT)
+        bh=XyZS2nlr2eMi1kRH99kg7hVqiv5OOY3BmMOh1X5/FTo=;
+        b=kgadGai9tvx5tDdRcfntxg/yQpanH/9XNeKU4XTWcpAO6l7LqhiS2RpSMsVJXCdOv0
+         lOJEo4FT6q0uBJ13Ssipq9F/qQlwoKWhEpzb9h1RIeuaT/CzASg4eFcu7tcoUq4N/MNk
+         1tJEoggHca8O+ufPkgoC/kbHf5hRF5YFNKIertVqstEM9Hiu10raQpNNj2QprdqrfXlX
+         +Z9FZ+OvN9FFh/fmeB8O2Hz4q8Ws7LXV8AoP+gK2WaIqw6KR+ra3NqCQ4oGhM0pYBTMP
+         Yx0CbI7QtPOLrRrliROnYR+kwvn7I/yB69A9Q+fOV0A+X0i7ghLGa6D/id2JyaLphbE1
+         CRRQ==
+X-Gm-Message-State: ABy/qLbpCc1NwG6/vZfS7VBl4FYBvx7yPdDmpc7qwtigklfHrmvQFuUx
+        MipUIgwCbjIb4l4gI4LbGeetTtHDIo6zlaXpP1GqJnAom02njT4RicFcIPhZt15usngikpA742N
+        8ONi3Qe8vXVWFQqODCe57FeJjo31670UChA==
+X-Received: by 2002:a2e:8809:0:b0:2b7:15d:24 with SMTP id x9-20020a2e8809000000b002b7015d0024mr16055183ljh.41.1689173940647;
+        Wed, 12 Jul 2023 07:59:00 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlEMbqBhX05PrTpjyq5wgeFLOdY+bK+gPQoN3mUn4+tZ1lFRpvGGS9gaLuzGslF3lz5YP4qiBQ==
+X-Received: by 2002:a2e:8809:0:b0:2b7:15d:24 with SMTP id x9-20020a2e8809000000b002b7015d0024mr16055167ljh.41.1689173940309;
+        Wed, 12 Jul 2023 07:59:00 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id gz19-20020a170906f2d300b00992e94bcfabsm2618996ejb.167.2023.07.12.07.57.44
+        by smtp.gmail.com with ESMTPSA id g18-20020a1709064e5200b009930042510csm2647453ejw.222.2023.07.12.07.58.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jul 2023 07:57:45 -0700 (PDT)
-Message-ID: <f9d34a4c-6c1e-0632-3fdc-2ec7171561e7@redhat.com>
-Date:   Wed, 12 Jul 2023 16:57:44 +0200
+        Wed, 12 Jul 2023 07:58:59 -0700 (PDT)
+Message-ID: <1122525e-1567-f7e1-cefc-dacd938220e3@redhat.com>
+Date:   Wed, 12 Jul 2023 16:58:58 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH v2 8/8] platform/x86: asus-wmi: expose dGPU and CPU
- tunables for ROG
+Subject: Re: [PATCH] platform/x86/amd/pmf: Add new ACPI ID AMDI0103
 Content-Language: en-US, nl
-To:     "Luke D. Jones" <luke@ljones.dev>
-Cc:     corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, markgross@kernel.org,
-        jdelvare@suse.com, linux@roeck-us.net
-References: <20230630053552.976579-1-luke@ljones.dev>
- <20230630053552.976579-9-luke@ljones.dev>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
+        mario.limonciello@amd.com
+References: <20230711100903.384151-1-Shyam-sundar.S-k@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230630053552.976579-9-luke@ljones.dev>
+In-Reply-To: <20230711100903.384151-1-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -82,450 +78,56 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 6/30/23 07:35, Luke D. Jones wrote:
-> Expose various CPU and dGPU tunables that are available on many ASUS
-> ROG laptops. The tunables shown in sysfs will vary depending on the CPU
-> and dGPU vendor.
+On 7/11/23 12:09, Shyam Sundar S K wrote:
+> Add new ACPI ID AMDI0103 used by upcoming AMD platform to the PMF
+> supported list of devices.
 > 
-> All of these variables are write only and there is no easy way to find
-> what the defaults are. In general they seem to default to the max value
-> the vendor sets for the CPU and dGPU package - this is not the same as
-> the min/max writable value. Values written to these variables that are
-> beyond the capabilities of the CPU are ignored by the laptop.
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 
-Thanks, patch looks good to me:
+Thank you for your patch, I've applied this patch to my fixes
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-(I'll fix the make htmldocs warning lkp spotted while merging this).
+I have already included this patch in my first fixes pull-req to Linus
+for the current kernel development cycle.
 
 Regards,
 
 Hans
 
+
+
+
 > ---
->  .../ABI/testing/sysfs-platform-asus-wmi       |  58 ++++
->  drivers/platform/x86/asus-wmi.c               | 285 ++++++++++++++++++
->  include/linux/platform_data/x86/asus-wmi.h    |   9 +
->  3 files changed, 352 insertions(+)
+>  drivers/platform/x86/amd/pmf/core.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> index 5624bdef49cb..caaccd28fabf 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> @@ -126,3 +126,61 @@ Description:
->  		Change the mini-LED mode:
->  			* 0 - Single-zone,
->  			* 1 - Multi-zone
-> +
-> +What:		/sys/devices/platform/<platform>/ppt_pl1_spl
-> +Date:		Jun 2023
-> +KernelVersion:	6.5
-> +Contact:	"Luke Jones" <luke@ljones.dev>
-> +Description:
-> +		Set the Package Power Target total of CPU: PL1 on Intel, SPL on AMD.
-> +		Shown on Intel+Nvidia or AMD+Nvidia based systems.
-> +			* min=5, max=250
-> +
-> +What:		/sys/devices/platform/<platform>/ppt_pl2_sppt
-> +Date:		Jun 2023
-> +KernelVersion:	6.5
-> +Contact:	"Luke Jones" <luke@ljones.dev>
-> +Description:
-> +		Set the Slow Package Power Tracking Limit of CPU: PL2 on Intel, SPPT,
-> +		on AMD. Shown on Intel+Nvidia or AMD+Nvidia based systems.
-> +			* min=5, max=250
-> +
-> +What:		/sys/devices/platform/<platform>/ppt_fppt
-> +Date:		Jun 2023
-> +KernelVersion:	6.5
-> +Contact:	"Luke Jones" <luke@ljones.dev>
-> +Description:
-> +		Set the Fast Package Power Tracking Limit of CPU. AMD+Nvidia only.
-> +			* min=5, max=250
-> +
-> +What:		/sys/devices/platform/<platform>/ppt_apu_sppt
-> +Date:		Jun 2023
-> +KernelVersion:	6.5
-> +Contact:	"Luke Jones" <luke@ljones.dev>
-> +Description:
-> +		Set the APU SPPT limit. Shown on full AMD systems only.
-> +			* min=5, max=130
-> +
-> +What:		/sys/devices/platform/<platform>/ppt_platform_sppt
-> +Date:		Jun 2023
-> +KernelVersion:	6.5
-> +Contact:	"Luke Jones" <luke@ljones.dev>
-> +Description:
-> +		Set the platform SPPT limit. Shown on full AMD systems only.
-> +			* min=5, max=130
-> +
-> +What:		/sys/devices/platform/<platform>/nv_dynamic_boost
-> +Date:		Jun 2023
-> +KernelVersion:	6.5
-> +Contact:	"Luke Jones" <luke@ljones.dev>
-> +Description:
-> +		Set the dynamic boost limit of the Nvidia dGPU:
-> +			* min=5, max=25
-> +
-> +What:		/sys/devices/platform/<platform>/nv_temp_target
-> +Date:		Jun 2023
-> +KernelVersion:	6.5
-> +Contact:	"Luke Jones" <luke@ljones.dev>
-> +Description:
-> +		Set the target temperature limit of the Nvidia dGPU:
-> +			* min=75, max=87
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 1fc9e8afc2f3..d9a353081f91 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -117,6 +117,16 @@ module_param(fnlock_default, bool, 0444);
->  /* Mask to determine if setting temperature or percentage */
->  #define FAN_CURVE_PWM_MASK		0x04
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index d5bb775dadcf..730b22457117 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -40,6 +40,7 @@
+>  /* List of supported CPU ids */
+>  #define AMD_CPU_ID_RMB			0x14b5
+>  #define AMD_CPU_ID_PS			0x14e8
+> +#define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT	0x1507
 >  
-> +/* Limits for tunables available on ASUS ROG laptops */
-> +#define PPT_TOTAL_MIN		5
-> +#define PPT_TOTAL_MAX		250
-> +#define PPT_CPU_MIN			5
-> +#define PPT_CPU_MAX			130
-> +#define NVIDIA_BOOST_MIN	5
-> +#define NVIDIA_BOOST_MAX	25
-> +#define NVIDIA_TEMP_MIN		75
-> +#define NVIDIA_TEMP_MAX		87
-> +
->  static const char * const ashs_ids[] = { "ATK4001", "ATK4002", NULL };
->  
->  static int throttle_thermal_policy_write(struct asus_wmi *);
-> @@ -247,6 +257,15 @@ struct asus_wmi {
->  	bool dgpu_disable_available;
->  	bool gpu_mux_mode_available;
->  
-> +	/* Tunables provided by ASUS for gaming laptops */
-> +	bool ppt_pl2_sppt_available;
-> +	bool ppt_pl1_spl_available;
-> +	bool ppt_apu_sppt_available;
-> +	bool ppt_plat_sppt_available;
-> +	bool ppt_fppt_available;
-> +	bool nv_dyn_boost_available;
-> +	bool nv_temp_tgt_available;
-> +
->  	bool kbd_rgb_mode_available;
->  	bool kbd_rgb_state_available;
->  
-> @@ -946,6 +965,244 @@ static const struct attribute_group *kbd_rgb_mode_groups[] = {
->  	NULL,
+>  #define PMF_MSG_DELAY_MIN_US		50
+>  #define RESPONSE_REGISTER_LOOP_MAX	20000
+> @@ -242,6 +243,7 @@ int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32
+>  static const struct pci_device_id pmf_pci_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RMB) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PS) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_ROOT) },
+>  	{ }
 >  };
 >  
-> +/* Tunable: PPT: Intel=PL1, AMD=SPPT *****************************************/
-> +static ssize_t ppt_pl2_sppt_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count)
-> +{
-> +	int result, err;
-> +	u32 value;
-> +
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +
-> +	result = kstrtou32(buf, 10, &value);
-> +	if (result)
-> +		return result;
-> +
-> +	if (value < PPT_TOTAL_MIN || value > PPT_TOTAL_MAX)
-> +		return -EINVAL;
-> +
-> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_PPT_PL2_SPPT, value, &result);
-> +	if (err) {
-> +		pr_warn("Failed to set ppt_pl2_sppt: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (result > 1) {
-> +		pr_warn("Failed to set ppt_pl2_sppt (result): 0x%x\n", result);
-> +		return -EIO;
-> +	}
-> +
-> +	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_pl2_sppt");
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_WO(ppt_pl2_sppt);
-> +
-> +/* Tunable: PPT, Intel=PL1, AMD=SPL ******************************************/
-> +static ssize_t ppt_pl1_spl_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count)
-> +{
-> +	int result, err;
-> +	u32 value;
-> +
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +
-> +	result = kstrtou32(buf, 10, &value);
-> +	if (result)
-> +		return result;
-> +
-> +	if (value < PPT_TOTAL_MIN || value > PPT_TOTAL_MAX)
-> +		return -EINVAL;
-> +
-> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_PPT_PL1_SPL, value, &result);
-> +	if (err) {
-> +		pr_warn("Failed to set ppt_pl1_spl: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (result > 1) {
-> +		pr_warn("Failed to set ppt_pl1_spl (result): 0x%x\n", result);
-> +		return -EIO;
-> +	}
-> +
-> +	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_pl1_spl");
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_WO(ppt_pl1_spl);
-> +
-> +/* Tunable: PPT APU FPPT ******************************************************/
-> +static ssize_t ppt_fppt_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count)
-> +{
-> +	int result, err;
-> +	u32 value;
-> +
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +
-> +	result = kstrtou32(buf, 10, &value);
-> +	if (result)
-> +		return result;
-> +
-> +	if (value < PPT_TOTAL_MIN || value > PPT_TOTAL_MAX)
-> +		return -EINVAL;
-> +
-> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_PPT_FPPT, value, &result);
-> +	if (err) {
-> +		pr_warn("Failed to set ppt_fppt: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (result > 1) {
-> +		pr_warn("Failed to set ppt_fppt (result): 0x%x\n", result);
-> +		return -EIO;
-> +	}
-> +
-> +	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_fpu_sppt");
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_WO(ppt_fppt);
-> +
-> +/* Tunable: PPT APU SPPT *****************************************************/
-> +static ssize_t ppt_apu_sppt_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count)
-> +{
-> +	int result, err;
-> +	u32 value;
-> +
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +
-> +	result = kstrtou32(buf, 10, &value);
-> +	if (result)
-> +		return result;
-> +
-> +	if (value < PPT_CPU_MIN || value > PPT_CPU_MAX)
-> +		return -EINVAL;
-> +
-> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_PPT_APU_SPPT, value, &result);
-> +	if (err) {
-> +		pr_warn("Failed to set ppt_apu_sppt: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (result > 1) {
-> +		pr_warn("Failed to set ppt_apu_sppt (result): 0x%x\n", result);
-> +		return -EIO;
-> +	}
-> +
-> +	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_apu_sppt");
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_WO(ppt_apu_sppt);
-> +
-> +/* Tunable: PPT platform SPPT ************************************************/
-> +static ssize_t ppt_platform_sppt_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count)
-> +{
-> +	int result, err;
-> +	u32 value;
-> +
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +
-> +	result = kstrtou32(buf, 10, &value);
-> +	if (result)
-> +		return result;
-> +
-> +	if (value < PPT_CPU_MIN || value > PPT_CPU_MAX)
-> +		return -EINVAL;
-> +
-> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_PPT_PLAT_SPPT, value, &result);
-> +	if (err) {
-> +		pr_warn("Failed to set ppt_platform_sppt: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (result > 1) {
-> +		pr_warn("Failed to set ppt_platform_sppt (result): 0x%x\n", result);
-> +		return -EIO;
-> +	}
-> +
-> +	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_platform_sppt");
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_WO(ppt_platform_sppt);
-> +
-> +/* Tunable: NVIDIA dynamic boost *********************************************/
-> +static ssize_t nv_dynamic_boost_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count)
-> +{
-> +	int result, err;
-> +	u32 value;
-> +
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +
-> +	result = kstrtou32(buf, 10, &value);
-> +	if (result)
-> +		return result;
-> +
-> +	if (value < NVIDIA_BOOST_MIN || value > NVIDIA_BOOST_MAX)
-> +		return -EINVAL;
-> +
-> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_NV_DYN_BOOST, value, &result);
-> +	if (err) {
-> +		pr_warn("Failed to set nv_dynamic_boost: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (result > 1) {
-> +		pr_warn("Failed to set nv_dynamic_boost (result): 0x%x\n", result);
-> +		return -EIO;
-> +	}
-> +
-> +	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "nv_dynamic_boost");
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_WO(nv_dynamic_boost);
-> +
-> +/* Tunable: NVIDIA temperature target ****************************************/
-> +static ssize_t nv_temp_target_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count)
-> +{
-> +	int result, err;
-> +	u32 value;
-> +
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +
-> +	result = kstrtou32(buf, 10, &value);
-> +	if (result)
-> +		return result;
-> +
-> +	if (value < NVIDIA_TEMP_MIN || value > NVIDIA_TEMP_MAX)
-> +		return -EINVAL;
-> +
-> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_NV_THERM_TARGET, value, &result);
-> +	if (err) {
-> +		pr_warn("Failed to set nv_temp_target: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (result > 1) {
-> +		pr_warn("Failed to set nv_temp_target (result): 0x%x\n", result);
-> +		return -EIO;
-> +	}
-> +
-> +	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "nv_temp_target");
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_WO(nv_temp_target);
-> +
->  /* Battery ********************************************************************/
->  
->  /* The battery maximum charging percentage */
-> @@ -3775,6 +4032,13 @@ static struct attribute *platform_attributes[] = {
->  	&dev_attr_als_enable.attr,
->  	&dev_attr_fan_boost_mode.attr,
->  	&dev_attr_throttle_thermal_policy.attr,
-> +	&dev_attr_ppt_pl2_sppt.attr,
-> +	&dev_attr_ppt_pl1_spl.attr,
-> +	&dev_attr_ppt_fppt.attr,
-> +	&dev_attr_ppt_apu_sppt.attr,
-> +	&dev_attr_ppt_platform_sppt.attr,
-> +	&dev_attr_nv_dynamic_boost.attr,
-> +	&dev_attr_nv_temp_target.attr,
->  	&dev_attr_panel_od.attr,
->  	&dev_attr_mini_led_mode.attr,
->  	NULL
-> @@ -3812,6 +4076,20 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
->  		ok = asus->fan_boost_mode_available;
->  	else if (attr == &dev_attr_throttle_thermal_policy.attr)
->  		ok = asus->throttle_thermal_policy_available;
-> +	else if (attr == &dev_attr_ppt_pl2_sppt.attr)
-> +		ok = asus->ppt_pl2_sppt_available;
-> +	else if (attr == &dev_attr_ppt_pl1_spl.attr)
-> +		ok = asus->ppt_pl1_spl_available;
-> +	else if (attr == &dev_attr_ppt_fppt.attr)
-> +		ok = asus->ppt_fppt_available;
-> +	else if (attr == &dev_attr_ppt_apu_sppt.attr)
-> +		ok = asus->ppt_apu_sppt_available;
-> +	else if (attr == &dev_attr_ppt_platform_sppt.attr)
-> +		ok = asus->ppt_plat_sppt_available;
-> +	else if (attr == &dev_attr_nv_dynamic_boost.attr)
-> +		ok = asus->nv_dyn_boost_available;
-> +	else if (attr == &dev_attr_nv_temp_target.attr)
-> +		ok = asus->nv_temp_tgt_available;
->  	else if (attr == &dev_attr_panel_od.attr)
->  		ok = asus->panel_overdrive_available;
->  	else if (attr == &dev_attr_mini_led_mode.attr)
-> @@ -4077,6 +4355,13 @@ static int asus_wmi_add(struct platform_device *pdev)
->  	asus->gpu_mux_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX);
->  	asus->kbd_rgb_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE);
->  	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
-> +	asus->ppt_pl2_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PL2_SPPT);
-> +	asus->ppt_pl1_spl_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PL1_SPL);
-> +	asus->ppt_fppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_FPPT);
-> +	asus->ppt_apu_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_APU_SPPT);
-> +	asus->ppt_plat_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PLAT_SPPT);
-> +	asus->nv_dyn_boost_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_DYN_BOOST);
-> +	asus->nv_temp_tgt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_THERM_TARGET);
->  	asus->panel_overdrive_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD);
->  	asus->mini_led_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE);
->  
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index ea80361ac6c7..16e99a1c37fc 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -86,6 +86,15 @@
->  #define ASUS_WMI_DEVID_GPU_FAN_CURVE	0x00110025
->  #define ASUS_WMI_DEVID_MID_FAN_CURVE	0x00110032
->  
-> +/* Tunables for AUS ROG laptops */
-> +#define ASUS_WMI_DEVID_PPT_PL2_SPPT		0x001200A0
-> +#define ASUS_WMI_DEVID_PPT_PL1_SPL		0x001200A3
-> +#define ASUS_WMI_DEVID_PPT_APU_SPPT		0x001200B0
-> +#define ASUS_WMI_DEVID_PPT_PLAT_SPPT	0x001200B1
-> +#define ASUS_WMI_DEVID_PPT_FPPT			0x001200C1
-> +#define ASUS_WMI_DEVID_NV_DYN_BOOST		0x001200C0
-> +#define ASUS_WMI_DEVID_NV_THERM_TARGET	0x001200C2
-> +
->  /* Power */
->  #define ASUS_WMI_DEVID_PROCESSOR_STATE	0x00120012
->  
+> @@ -312,6 +314,7 @@ static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
+>  static const struct acpi_device_id amd_pmf_acpi_ids[] = {
+>  	{"AMDI0100", 0x100},
+>  	{"AMDI0102", 0},
+> +	{"AMDI0103", 0},
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(acpi, amd_pmf_acpi_ids);
 
