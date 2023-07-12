@@ -2,117 +2,121 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7956CC0015E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Jul 2023 15:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C284EB64DA
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Jul 2023 17:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233813AbjGLPuF (ORCPT
+        id S231981AbjGLRug (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 Jul 2023 11:50:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59240 "EHLO
+        Wed, 12 Jul 2023 13:50:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233814AbjGLPuD (ORCPT
+        with ESMTP id S231891AbjGLRug (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Jul 2023 11:50:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EF17FB
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Jul 2023 08:49:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689176957;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bkK/lE9xVUoE2L0I2FE1bsKN4N40S5rUCyjcnz9lCPs=;
-        b=JMxXOq08+wheDLN69i7pavsjZzgwWwuqN9cHY2SJZ84oHCzu7rf/dT6eAM7N5Dp2vAsP0b
-        PxwLm4DG/l88fQodkFdccSZ/93DDUz6sU5/WMckzLlFq5pPXuE0stujVf1FNr61FJUDsDF
-        l7z0KWHQ2fmW5QwF2BGwofDwOyQ4cWk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-349-DwhU4qJuN-ujhv-4n4uLBg-1; Wed, 12 Jul 2023 11:49:15 -0400
-X-MC-Unique: DwhU4qJuN-ujhv-4n4uLBg-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-31443e13f9dso4164261f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Jul 2023 08:49:14 -0700 (PDT)
+        Wed, 12 Jul 2023 13:50:36 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5F541980;
+        Wed, 12 Jul 2023 10:50:33 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-3fbf1b82de7so7147985e9.1;
+        Wed, 12 Jul 2023 10:50:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689184232; x=1691776232;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LZqLINOtBwV5zC4WW6O4f4il0pqHzOeFeKN7V/Riank=;
+        b=JZg4UToys+m3hyc3PDmhlRIvzt2GNAcrwRwmAxhwe0XgTRDePrnFKWBWRAC9l9DKFT
+         V23CASp1H4expuyNbmf52cqrOkt8HX2U8xjoZxa8pLkMHb3YtYoeOO5joFlwF9fN01cn
+         wOMcXbrPX4g514OugpkhjvTDu+5kuj6tqDlv4sKJ9uVvDWux1U+XBK0ArVJ6ZO/GNHxR
+         pjT7/r02Uxu1wDzWg39XPxu5tU178shEchL3Glu1HlZHkLxZZ/8JrPlNm6g08zV3pTgw
+         XHppda1g+RsxbUohUJcTTtA6udBhnnFBsPoyWrnVhzvvLeRDN1pkQ7VE6TNcth98L2De
+         abHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689176954; x=1691768954;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bkK/lE9xVUoE2L0I2FE1bsKN4N40S5rUCyjcnz9lCPs=;
-        b=aK/tELGNUImGE84OQ0qf/8fKMcSEANaJkrP3M3jmCPyCrHJc1eGoakcMSD+tTvUgir
-         Z+NnKtC54fGVGvJ+3Uzr497X9ILPCwFF/+oVabvvZTOgy9a9tX7+yXKHznJJ7n0tfg8J
-         mlN6DgAACc6XCH0Xv2K14QeQYVno4xhfsPBt9xuCjLyFhOb3UgxBmyPdCc2DAtroOKtv
-         BSp4bl0Ryp9aWXh/d8Nt+YbKeoltlHKOibwejINW0qKx3AWrPhE7qSwTTPPKA8Nk/1y7
-         NHzy+vOJazwokwCmVlgrCHoY845UQ2xB5nJHWKgdmewkkO2VdwQVWM2CJoQdsRkN9wYw
-         IBSQ==
-X-Gm-Message-State: ABy/qLZlOrdi431f3JXOXpkYoouO9hxFxTG8xyAp8G6jOH1geexQOGQF
-        jdn4IHFVRoMQ5/CcgbKnKjvaNqn3BhyJHHQi1dB7t7kHoHKyPWzzk5JOhihRaPEmTfUlJVddsQS
-        e0Czhk1tz5ZLYd4TitBHRqewJcMPFq3gQSw==
-X-Received: by 2002:a5d:4603:0:b0:315:ad1a:5abc with SMTP id t3-20020a5d4603000000b00315ad1a5abcmr2505857wrq.5.1689176954067;
-        Wed, 12 Jul 2023 08:49:14 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlHfZBXzs0WOpOSK4uyREoe1iPHFVtvPrhE48RQBaY4V+m6OOpZMax9BclCH2P9YghADvfsQjA==
-X-Received: by 2002:a5d:4603:0:b0:315:ad1a:5abc with SMTP id t3-20020a5d4603000000b00315ad1a5abcmr2505833wrq.5.1689176953749;
-        Wed, 12 Jul 2023 08:49:13 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id u24-20020a170906069800b009920f18a5f0sm2732141ejb.185.2023.07.12.08.49.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jul 2023 08:49:13 -0700 (PDT)
-Message-ID: <af2be377-ff04-3b00-62c7-a1ff53dddd16@redhat.com>
-Date:   Wed, 12 Jul 2023 17:49:12 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 0/2] platform/x86: thinkpad_acpi: lockdep support
-Content-Language: en-US, nl
-To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        d=1e100.net; s=20221208; t=1689184232; x=1691776232;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LZqLINOtBwV5zC4WW6O4f4il0pqHzOeFeKN7V/Riank=;
+        b=B8a35pegvomN/AekrTf5E17JsCK2sB89Sj/3L6LkIThUyhMQXTbH91axvwFRJR7meq
+         dG3Jj1Kj/vQDTlmJJzO/hnOE2VQ2fLLh5jgqdp1b73hVRNZsvAbVdl/kkW8hq2k+K+Uy
+         9v7AVBohp+M/UgjanRNEVjYyzVP4rHfsG2OrT/LjuInW17Q/qm4toPksdetBsa4b7WzQ
+         H8chdwNRqgRQ+IujuQkB80lVQQpA/QFRqZRK7Xfh7B91tquBtsY37RVUkU19YCJ2zBmV
+         HEKegGeF0/QQe37yUaemqLn5R+AauiM654Dc+qx6v90v2bP0Ze65mU3EKerbMRnubV7S
+         2RCQ==
+X-Gm-Message-State: ABy/qLYlMoLogkaSOdB7ees9nWNVApPQnlCYutqA0dZBpyzGXXPnBMCX
+        qi9K0cBXRAAjJrwm5BnVcVHCIaPZo7ASDmR/HcjApw==
+X-Google-Smtp-Source: APBJJlEDVrkg2aUJMb9F1hfAJ3sNJWM1NtrYsD/SjHfIqa74JWlrpN0wNdOQCGYwys+AQMetnzcxSQ==
+X-Received: by 2002:a05:600c:220f:b0:3f4:2a69:409 with SMTP id z15-20020a05600c220f00b003f42a690409mr75782wml.11.1689184231951;
+        Wed, 12 Jul 2023 10:50:31 -0700 (PDT)
+Received: from localhost (04.nur.exit.tor.loki.tel. [94.16.121.226])
+        by smtp.gmail.com with ESMTPSA id s6-20020a05600c044600b003fbdf8292a7sm5575968wmb.46.2023.07.12.10.50.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jul 2023 10:50:31 -0700 (PDT)
+From:   Maxim Mikityanskiy <maxtram95@gmail.com>
+To:     Alex Hung <alexhung@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>
-Cc:     ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230704-thinkpad_acpi-lockdep-v1-0-60129548a738@weissschuh.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230704-thinkpad_acpi-lockdep-v1-0-60129548a738@weissschuh.net>
-Content-Type: text/plain; charset=UTF-8
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Richard Hughes <hughsient@gmail.com>,
+        Jorge Lopez <jorge.lopez2@hp.com>,
+        Maxim Mikityanskiy <maxtram95@gmail.com>
+Subject: [PATCH] platform/x86/intel/hid: Add HP Dragonfly G2 to DMI quirks
+Date:   Wed, 12 Jul 2023 20:50:23 +0300
+Message-ID: <20230712175023.31651-1-maxtram95@gmail.com>
+X-Mailer: git-send-email 2.41.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+SW_TABLET_MODE reports are broken on BIOS versions newer than 1.9.1 on
+HP Elite Dragonfly G2. Analysis of SSDT9 shows that the BTNL method has
+to be called to start getting 0xcc and 0xcd events. Apparently, the
+button_array_present method used to return true on BIOS 1.9.1 and older,
+but it returns false on newer BIOSes due to HEBC returning 0x000033f3
+(bits 0x60000 and 0x20000 are not set).
 
-On 7/4/23 23:03, Thomas Weißschuh wrote:
-> Validate locking requirements in thinkpad_acpi through lockdep.
-> 
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Add this laptop to button_array_table to force the BTNL call, and also
+add it to dmi_vgbs_allow_list to read the initial state and sync VBDS
+with VBPS, because this laptop has a reliable VGBS method.
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Tested with BIOS 1.13.1.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+---
+ drivers/platform/x86/intel/hid.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-> ---
-> Thomas Weißschuh (2):
->       platform/x86: thinkpad_acpi: take mutex for hotkey_mask_{set,get}
->       platform/x86: thinkpad_acpi: use lockdep annotations
-> 
->  drivers/platform/x86/thinkpad_acpi.c | 45 ++++++++++++++++++++++--------------
->  1 file changed, 28 insertions(+), 17 deletions(-)
-> ---
-> base-commit: 03275585cabd0240944f19f33d7584a1b099a3a8
-> change-id: 20230704-thinkpad_acpi-lockdep-7def9d7f91b5
-> 
-> Best regards,
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index 5632bd3c534a..5c78b476ed1e 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -128,6 +128,13 @@ static const struct dmi_system_id button_array_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Surface Go 3"),
+ 		},
+ 	},
++	{
++		.ident = "HP Elite Dragonfly G2",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "HP Elite Dragonfly G2 Notebook PC"),
++		},
++	},
+ 	{ }
+ };
+ 
+@@ -150,6 +157,12 @@ static const struct dmi_system_id dmi_vgbs_allow_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Surface Go"),
+ 		},
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "HP Elite Dragonfly G2 Notebook PC"),
++		},
++	},
+ 	{ }
+ };
+ 
+-- 
+2.41.0
 
