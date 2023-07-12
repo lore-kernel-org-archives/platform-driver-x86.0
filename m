@@ -2,78 +2,78 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EDFEB64DD
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Jul 2023 14:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F276EB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Jul 2023 14:44:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232599AbjGLOoE (ORCPT
+        id S233008AbjGLOoj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 Jul 2023 10:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41260 "EHLO
+        Wed, 12 Jul 2023 10:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232254AbjGLOoD (ORCPT
+        with ESMTP id S231816AbjGLOoh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Jul 2023 10:44:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D02FE6F
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Jul 2023 07:43:18 -0700 (PDT)
+        Wed, 12 Jul 2023 10:44:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52F241991
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Jul 2023 07:43:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689172997;
+        s=mimecast20190719; t=1689173034;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=WwTNGJ/hdYZ+xK2vGDnfq6wxMTM0TCxvXYqihV24QFU=;
-        b=BtLJmt8VbBTOVYGNJ8U+bMgGEKzmpajRB7axZttxWly7IMswuvsccz6rT3I/55TibZSL+I
-        A6iIReUnsq4Auybjlf3hwA+Ro5ZQ6j8Lwy7VgIYlFmGNEBAra3FHmo9K8M79ebN3dpX0jB
-        F7ouvxK3pZ/pDsLyJmnNT79IRs/6W+Q=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=C34WsFlKYjYWkTFb9HgsWdoRE76RVrfdGiTYT+vpVqI=;
+        b=Ipm2wPWzc4VwzA+Kn+zGjIOG2FUCUiWnzgSr7dnxGKnMKCZSLuEltedlG3dyrxry7fHcb2
+        ZRS9WgsMBQWzsZ54alUkFObN7e9dedV/zaTP/JUZ5sA44KAy4T3D1KybTcVZmq3tRu4WOp
+        YUkVNqYjWtJtCG3OGnK2icKif2P1SXk=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-536-nj1t0f6gNOeDQBeXZNhVjQ-1; Wed, 12 Jul 2023 10:43:16 -0400
-X-MC-Unique: nj1t0f6gNOeDQBeXZNhVjQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-993c2d9e4a0so406922566b.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Jul 2023 07:43:16 -0700 (PDT)
+ us-mta-527-96NcsXtiMTOGkVPLA_epWA-1; Wed, 12 Jul 2023 10:43:53 -0400
+X-MC-Unique: 96NcsXtiMTOGkVPLA_epWA-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-51bef8bb689so1131144a12.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Jul 2023 07:43:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689172995; x=1691764995;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1689173032; x=1691765032;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WwTNGJ/hdYZ+xK2vGDnfq6wxMTM0TCxvXYqihV24QFU=;
-        b=hWZFkmjhRW2kuwE3Uq9L8CMcN2C2CkO76Tsbk7igk4tvlaEaYsoNKCSDlQ6UVsnK25
-         PpWbOCI5KgqF/C4dy5p6xWdnCvJUB5OgaoPiNPRCQqdoXRkaMEiv3+Y7BlOi/o6B7p92
-         I1qWWf5sekSky40SVH+ixR/YK9+5XwFpY12Qx80nrN7VpYsO3Qep4BNz036ssxabnDEX
-         JRcI2LZnRWfQG/2hBZG+wZq2mEHhRikCcA7soKmRYhouNRPBT4DjqOBn2KW/xtrkk+xI
-         6GTy0Lb9eESVxk0UFav/nR++woLWP/O6Zr6V8gSvF2S6CLJex3JacWdKXDJ3BnFcXuLs
-         n5cA==
-X-Gm-Message-State: ABy/qLYgf7uGQZXvwDQ9huSGFPn5S52O1AzLgxFux7kKRoBkdEK6v16+
-        1XUo0W6LctHhIo1a4pnWXHTYBWYGqTYrQtiunqp81NwsAwCG3EKk/MK+jOLO8M1vew/zL2nRJMY
-        4WuwQfMgHmAWneDNWV0rht2b13kfDKS7Z0bJx915/Mw==
-X-Received: by 2002:a17:906:1099:b0:994:3037:c27 with SMTP id u25-20020a170906109900b0099430370c27mr1567225eju.30.1689172994930;
-        Wed, 12 Jul 2023 07:43:14 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlH/EZtl60L1VjcZkRd5rj6HKTcZr+yqIAMrE9EwcYPoXTubTfVk2/6+n1d0Iyx7bDnP23e5SQ==
-X-Received: by 2002:a17:906:1099:b0:994:3037:c27 with SMTP id u25-20020a170906109900b0099430370c27mr1567203eju.30.1689172994645;
-        Wed, 12 Jul 2023 07:43:14 -0700 (PDT)
+        bh=C34WsFlKYjYWkTFb9HgsWdoRE76RVrfdGiTYT+vpVqI=;
+        b=QETJOT6ME/pevO1gp4lCvwu1VfgimsGLWeP8Ie3+1a2LUGw/HqH0jnVbTW9CDKUsYm
+         +DXrflgo5y0Bwg3CC5WVk48GylD6JHCVChkOwOQgwUpEnuFXYuTPAhOhAIlNaUBNTkff
+         SUms6wNBA0sPpGCwJYZEzW5m0a//1zY9W57dm1d58foikLkXSaAuvzXzcaH0dAUXZdDE
+         VL8RdW/actByw61OSHo79mVPHTVJW/+xojx3H7pVAHnV8FgY7AXJYWf9M3NJ1G60zOre
+         cQZU0t4GxnBWhjxanGTCNpBnSgBWgUzyttaxGeXuRk4/S7cldb83jsWAvcEswhbNyNic
+         Gjyg==
+X-Gm-Message-State: ABy/qLaOlUqYTZRIQNi2LMIjunSNqw8Tgj6XEs57yMVSNhWhN6KuAhry
+        ffJjQ3SFIfIYaorlZleDBrDSOVXOVDcgwwIvv6kpKFewNZWVfhT9ALLgKxvUbnThjY8WnHC1bMJ
+        Pb2o3/G1GwfK7x248IOR7V39xwj+BpPGEiQ==
+X-Received: by 2002:a05:6402:5245:b0:51f:c6a1:4355 with SMTP id t5-20020a056402524500b0051fc6a14355mr3025301edd.4.1689173032284;
+        Wed, 12 Jul 2023 07:43:52 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlEa35eKJ9IGbLw5gzEbWDSaeBN07RQx+T2XC+mOrnyClSMdlCkLN6eYHK5OBBuZ4tkrEJMU7Q==
+X-Received: by 2002:a05:6402:5245:b0:51f:c6a1:4355 with SMTP id t5-20020a056402524500b0051fc6a14355mr3025281edd.4.1689173032056;
+        Wed, 12 Jul 2023 07:43:52 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id h14-20020a170906110e00b009829dc0f2a0sm2694602eja.111.2023.07.12.07.43.13
+        by smtp.gmail.com with ESMTPSA id u7-20020aa7d0c7000000b0051a2d2f82fdsm2877251edo.6.2023.07.12.07.43.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jul 2023 07:43:13 -0700 (PDT)
-Message-ID: <611e5609-3013-7ac7-efd8-af41431aa2be@redhat.com>
-Date:   Wed, 12 Jul 2023 16:43:12 +0200
+        Wed, 12 Jul 2023 07:43:51 -0700 (PDT)
+Message-ID: <0f50cb97-0507-bcbb-03c6-e3394690ae80@redhat.com>
+Date:   Wed, 12 Jul 2023 16:43:50 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH v2 4/8] platform/x86: asus-wmi: add WMI method to show if
- egpu connected
+Subject: Re: [PATCH v2 5/8] platform/x86: asus-wmi: don't allow eGPU switching
+ if eGPU not connected
+Content-Language: en-US, nl
 To:     "Luke D. Jones" <luke@ljones.dev>
 Cc:     corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hwmon@vger.kernel.org, markgross@kernel.org,
         jdelvare@suse.com, linux@roeck-us.net
 References: <20230630053552.976579-1-luke@ljones.dev>
- <20230630053552.976579-5-luke@ljones.dev>
-Content-Language: en-US, nl
+ <20230630053552.976579-6-luke@ljones.dev>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230630053552.976579-5-luke@ljones.dev>
+In-Reply-To: <20230630053552.976579-6-luke@ljones.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -83,8 +83,8 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 6/30/23 07:35, Luke D. Jones wrote:
-> Exposes the WMI method which tells if the eGPU is properly connected
-> on the devices that support it.
+> Check the ASUS_WMI_DEVID_EGPU_CONNECTED method for eGPU connection
+> before allowing the ASUS_WMI_DEVID_EGPU method to run.
 > 
 > Signed-off-by: Luke D. Jones <luke@ljones.dev>
 
@@ -96,106 +96,28 @@ Regards,
 
 Hans
 
-
 > ---
->  .../ABI/testing/sysfs-platform-asus-wmi       | 11 +++++++++-
->  drivers/platform/x86/asus-wmi.c               | 21 +++++++++++++++++++
->  include/linux/platform_data/x86/asus-wmi.h    |  4 +++-
->  3 files changed, 34 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/asus-wmi.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> index eb29e3023c7b..878daf7c2036 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> @@ -107,4 +107,13 @@ Description:
->  		Get the current charging mode being used:
->  			* 1 - Barrel connected charger,
->  			* 2 - USB-C charging
-> -			* 3 - Both connected, barrel used for charging
-> \ No newline at end of file
-> +			* 3 - Both connected, barrel used for charging
-> +
-> +What:		/sys/devices/platform/<platform>/egpu_connected
-> +Date:		Jun 2023
-> +KernelVersion:	6.5
-> +Contact:	"Luke Jones" <luke@ljones.dev>
-> +Description:
-> +		Show if the egpu (XG Mobile) is correctly connected:
-> +			* 0 - False,
-> +			* 1 - True
 > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index fb27218e51cf..0c8a4a46b121 100644
+> index 0c8a4a46b121..821addb284d7 100644
 > --- a/drivers/platform/x86/asus-wmi.c
 > +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -243,6 +243,7 @@ struct asus_wmi {
+> @@ -693,6 +693,15 @@ static ssize_t egpu_enable_store(struct device *dev,
+>  	if (enable > 1)
+>  		return -EINVAL;
 >  
->  	bool charge_mode_available;
->  	bool egpu_enable_available;
-> +	bool egpu_connect_available;
->  	bool dgpu_disable_available;
->  	bool gpu_mux_mode_available;
->  
-> @@ -709,6 +710,22 @@ static ssize_t egpu_enable_store(struct device *dev,
->  }
->  static DEVICE_ATTR_RW(egpu_enable);
->  
-> +/* Is eGPU connected? *********************************************************/
-> +static ssize_t egpu_connected_show(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +	int result;
+> +	err = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
+> +	if (err < 0)
+> +		return err;
+> +	if (err < 1) {
+> +		err = -ENODEV;
+> +		pr_warn("Failed to set egpu disable: %d\n", err);
+> +		return err;
+> +	}
 > +
-> +	result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
-> +	if (result < 0)
-> +		return result;
-> +
-> +	return sysfs_emit(buf, "%d\n", result);
-> +}
-> +
-> +static DEVICE_ATTR_RO(egpu_connected);
-> +
->  /* gpu mux switch *************************************************************/
->  static ssize_t gpu_mux_mode_show(struct device *dev,
->  				 struct device_attribute *attr, char *buf)
-> @@ -3645,6 +3662,7 @@ static struct attribute *platform_attributes[] = {
->  	&dev_attr_touchpad.attr,
->  	&dev_attr_charge_mode.attr,
->  	&dev_attr_egpu_enable.attr,
-> +	&dev_attr_egpu_connected.attr,
->  	&dev_attr_dgpu_disable.attr,
->  	&dev_attr_gpu_mux_mode.attr,
->  	&dev_attr_lid_resume.attr,
-> @@ -3677,6 +3695,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
->  		ok = asus->charge_mode_available;
->  	else if (attr == &dev_attr_egpu_enable.attr)
->  		ok = asus->egpu_enable_available;
-> +	else if (attr == &dev_attr_egpu_connected.attr)
-> +		ok = asus->egpu_connect_available;
->  	else if (attr == &dev_attr_dgpu_disable.attr)
->  		ok = asus->dgpu_disable_available;
->  	else if (attr == &dev_attr_gpu_mux_mode.attr)
-> @@ -3943,6 +3963,7 @@ static int asus_wmi_add(struct platform_device *pdev)
->  
->  	asus->charge_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CHARGE_MODE);
->  	asus->egpu_enable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU);
-> +	asus->egpu_connect_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
->  	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
->  	asus->gpu_mux_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX);
->  	asus->kbd_rgb_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE);
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 329efc086993..2034648f8cdf 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -100,7 +100,9 @@
->  /* Charging mode - 1=Barrel, 2=USB */
->  #define ASUS_WMI_DEVID_CHARGE_MODE	0x0012006C
->  
-> -/* dgpu on/off */
-> +/* epu is connected? 1 == true */
-> +#define ASUS_WMI_DEVID_EGPU_CONNECTED	0x00090018
-> +/* egpu on/off */
->  #define ASUS_WMI_DEVID_EGPU		0x00090019
->  
->  /* dgpu on/off */
+>  	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_EGPU, enable, &result);
+>  	if (err) {
+>  		pr_warn("Failed to set egpu disable: %d\n", err);
 
