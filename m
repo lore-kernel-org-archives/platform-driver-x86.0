@@ -2,57 +2,56 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010D3EB64DA
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Jul 2023 23:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4A4C001DE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 Jul 2023 23:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233240AbjGLXGr (ORCPT
+        id S232140AbjGLXIP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 Jul 2023 19:06:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52114 "EHLO
+        Wed, 12 Jul 2023 19:08:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232176AbjGLXG0 (ORCPT
+        with ESMTP id S233289AbjGLXH7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 Jul 2023 19:06:26 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92BB730FA;
-        Wed, 12 Jul 2023 16:05:43 -0700 (PDT)
+        Wed, 12 Jul 2023 19:07:59 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 676C1268D;
+        Wed, 12 Jul 2023 16:07:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689203143; x=1720739143;
+  t=1689203258; x=1720739258;
   h=message-id:subject:from:to:cc:date:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=e7LYvcVy+v9S3RlgAaVngEjeffDD+Hja50r5usVYpTk=;
-  b=MXejf7MCf3VWQMtPaexmqz66LTUTqsQ15F3pxIFkINSe88+squDsDWzL
-   uS4Yx3jYZkmIDDMzpd2YN0HsRquqCBxwvoARNVu5neCClsicMJ3cf3zDi
-   3e15mRGz2o3fw4K5pwzxJ05Bn3VNcvNVz3+l7s5VEdYueQaOO2toTAf+/
-   Jlyf7ec/XOAhCADjcr2xVE7/uv+v+Knj3NCPJ2Pwr4q3qwliq2J1nEfs7
-   Nldm6QCFzPS9+LN4toPPlm7bsbM0G71msoMIdz/aD6cBlYBlPxeRXk5hd
-   oo3aEbRrxQeQLcRrd/n+4e7Uh7LUxNzEKQF1iZMfb6B+abPvPUTp2YPyC
+  bh=zF/TXZw6hOm08VrKmM6zI6uDz3q9AB/6cG/sj6SO8/Q=;
+  b=aQ35bKgZcelOnc+imrUyyFKdEZiwY5g54N1ZRi/9TkX3ReAuW7wsdOlJ
+   vHu/KuRuFG6+6ODHjUtkQteh8v1a9dM2lui7OBRWp48RdN11m0Vxu0zUh
+   RGSfSGIgiWjWvqYfChrrwwtBPv0DtBjgwult2FsKOWEGIQfVoxxbYpjOz
+   j3Zyb/39XrNQRSCC8b0u4MMoJnnveiEzNb6+z3CNuTEtHsxbn2AFrlIIG
+   zvMFioGHKpdrZLi8DUqXEr62KtSLfXuxZN3PoztxFJZT3pMKxG06Z93WA
+   8aZBmqBSAqBDJwAx/j5dQ5mXbawASg5hN5oYXjl80eeSsuakv8ACIXQPD
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="428774641"
+X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="451388411"
 X-IronPort-AV: E=Sophos;i="6.01,200,1684825200"; 
-   d="scan'208";a="428774641"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2023 16:03:59 -0700
+   d="scan'208";a="451388411"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2023 16:07:20 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="835338901"
+X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="751351909"
 X-IronPort-AV: E=Sophos;i="6.01,200,1684825200"; 
-   d="scan'208";a="835338901"
+   d="scan'208";a="751351909"
 Received: from nlsegerl-mobl1.amr.corp.intel.com (HELO spandruv-desk1.amr.corp.intel.com) ([10.212.182.248])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2023 16:03:58 -0700
-Message-ID: <9e6873e53112ea9568fd0d1c8ef50e652ca05d84.camel@linux.intel.com>
-Subject: Re: [PATCH v2 1/3] platform/x86/intel/tpmi: Read feature control
- status
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2023 16:07:19 -0700
+Message-ID: <39172b7b3016a7f850cbffe752cb8ccdb986623d.camel@linux.intel.com>
+Subject: Re: [PATCH v2 3/3] doc: TPMI: Add debugfs documentation
 From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     hdegoede@redhat.com, markgross@kernel.org,
         ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Wed, 12 Jul 2023 16:03:57 -0700
-In-Reply-To: <ZK7BL0GIPgr3alVr@smile.fi.intel.com>
+Date:   Wed, 12 Jul 2023 16:07:19 -0700
+In-Reply-To: <ZK7DYuyo88efUje+@smile.fi.intel.com>
 References: <20230711220949.71881-1-srinivas.pandruvada@linux.intel.com>
-         <20230711220949.71881-2-srinivas.pandruvada@linux.intel.com>
-         <ZK7BL0GIPgr3alVr@smile.fi.intel.com>
+         <20230711220949.71881-4-srinivas.pandruvada@linux.intel.com>
+         <ZK7DYuyo88efUje+@smile.fi.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
 MIME-Version: 1.0
@@ -61,101 +60,29 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 2023-07-12 at 18:05 +0300, Andy Shevchenko wrote:
-> On Tue, Jul 11, 2023 at 03:09:47PM -0700, Srinivas Pandruvada wrote:
-> > Some of the PM features can be locked or disabled. In that case,
-> > write
-> > interface can be locked.
-> > 
-> > This status is read via a mailbox. There is one TPMI ID which
-> > provides
-> > base address for interface and data register for mail box
-> > operation.
-> > The mailbox operations is defined in the TPMI specification. Refer
-> > to
-> > https://github.com/intel/tpmi_power_management/ for TPMI
-> > specifications.
-> > 
-> > An API is exposed to feature drivers to read feature control
-> > status.
+On Wed, 2023-07-12 at 18:14 +0300, Andy Shevchenko wrote:
+> On Tue, Jul 11, 2023 at 03:09:49PM -0700, Srinivas Pandruvada wrote:
+> > Describe fields in the TPMI debugfs folder.
 > 
 > ...
 > 
-> > +/*
-> > + * TPMI PFS and per feature memory size can't exceed 4K.
-> > + * Also PFS start and feature memory is 4K aligned.
-> > + */
-> > +#define TPMI_MAX_BUFFER_SIZE    (4 * 1024)
+> > +What:          /sys/kernel/debug/tpmi-<n>/pfs_dump
+> > +Date:          December 2023
 > 
-> SZ_4K from sizes.h?
+> November ?
 > 
-> ...
-I added a macro for size and uses sizes.h define.
+Changed.
 
-> 
-> > +#define TPMI_CONTROL_TIMEOUT_MAX_US    USEC_PER_SEC
-> 
-> > +#define TPMI_RB_TIMEOUT_MAX_US         USEC_PER_SEC
-> 
-> I think it's easier to get in a form (1 * ..._SEC)
-> 
-OK
-
-> ...
-> 
-> > +static int tpmi_wait_for_owner(struct intel_tpmi_info *tpmi_info,
-> > u8 owner)
-> > +{
-> > +       u64 control;
-> > +
-> > +       return read_poll_timeout(readq, control,
-> > +                                owner ==
-> > FIELD_GET(TPMI_CONTROL_STATUS_OWNER, control),
-> > +                                TPMI_CONTROL_TIMEOUT_US,
-> > TPMI_CONTROL_TIMEOUT_MAX_US, false,
-> > +                                tpmi_info->tpmi_control_mem +
-> > TPMI_CONTROL_STATUS_OFFSET);
-> 
-> Since you have "false" why not use readq_poll_timeout()?
-> 
-Changed in new version
-
-> > +}
-> 
-> ...
-> 
-> > +       /* Wait for Run Busy clear */
-> > +       ret = read_poll_timeout(readq, control, !(control &
-> > TPMI_CONTROL_STATUS_RB),
-> > +                               TPMI_RB_TIMEOUT_US,
-> > TPMI_RB_TIMEOUT_MAX_US, false,
-> > +                               tpmi_info->tpmi_control_mem +
-> > TPMI_CONTROL_STATUS_OFFSET);
-> 
-> Ditto.
-Done.
-
-> 
-> > +       if (ret)
-> > +               goto done_proc;
-> 
-> ...
-> 
-> > +       size = pfs->pfs_header.num_entries * pfs-
-> > >pfs_header.entry_size * sizeof(u32);
-> > +       /* This size is coming from trusted hardware, but verify
-> > anyway */
-> 
-> I would move this comment before size assignment that we already know
-> that it's
-> from the trusted hw.
-Created a macro.
 
 Thanks,
 Srinivas
 
+> > +KernelVersion: 6.6
 > 
-> > +       if (size > TPMI_MAX_BUFFER_SIZE)
-> > +               return;
+> ...
+> 
+> > +Date:          December 2023
+> 
+> > +Date:          December 2023
 > 
 
