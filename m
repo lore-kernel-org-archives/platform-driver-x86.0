@@ -2,101 +2,97 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF74C001DD
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 Jul 2023 17:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649E1C001B0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 Jul 2023 18:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230024AbjGMRDb (ORCPT
+        id S231234AbjGMSJb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 13 Jul 2023 13:03:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38508 "EHLO
+        Thu, 13 Jul 2023 14:09:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229980AbjGMRDa (ORCPT
+        with ESMTP id S230337AbjGMSJb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 Jul 2023 13:03:30 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12DC2700;
-        Thu, 13 Jul 2023 10:03:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689267810; x=1720803810;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XU4CSxnU4cVeY82reTW8Q0CzJu4o7aUuNfQXk1GU5gA=;
-  b=kdt+w2WSZ9URNRZKiwcdMCUoXv2eOxc8pNpKAmtluDKj0wq0eiXOhSR5
-   jULYpG8hjv8TAdwjdzXrA5z7G6NCeSmUL0X3GpQIlt/JH7jxyEJY+Undf
-   i9ciZlwY2Zv35NQb+Jz96J2LgVmWVCPskST6G/gjaP7fxInE8G5Ggktuv
-   OSRCWt5gxmGr6txLWC4LYoS2hw/Af2fqIc/G08bTN1VNYEAvOZR/aaEEd
-   e30rbRRvaGpse9Z/mFd3toIaYwtrRiJduNDVMYG7IfWnFS60oFXG/x5nn
-   DO2VVCVcpx86PyFjf/4SLcA8hmXFbISBfM0Z+PKdj0CUCFmZ3UHzi+bi9
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="345571759"
-X-IronPort-AV: E=Sophos;i="6.01,203,1684825200"; 
-   d="scan'208";a="345571759"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 10:01:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="896093125"
-X-IronPort-AV: E=Sophos;i="6.01,203,1684825200"; 
-   d="scan'208";a="896093125"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP; 13 Jul 2023 10:01:32 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qJzh4-002RXp-0i;
-        Thu, 13 Jul 2023 20:01:30 +0300
-Date:   Thu, 13 Jul 2023 20:01:29 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Tobias Schaffner <tobias.schaffner@siemens.com>,
-        "xingtong . wu" <xingtong.wu@siemens.com>
-Subject: Re: [PATCH v2 0/2] leds: simatic-ipc-leds-gpio: add new model BX-21A
-Message-ID: <ZLAt6RDjqyWhN/NU@smile.fi.intel.com>
-References: <20230713115639.16419-1-henning.schild@siemens.com>
+        Thu, 13 Jul 2023 14:09:31 -0400
+X-Greylist: delayed 316 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 13 Jul 2023 11:09:24 PDT
+Received: from smtp-out.abv.bg (smtp-out.abv.bg [194.153.145.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6110126AF
+        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Jul 2023 11:09:24 -0700 (PDT)
+Received: from nm83.abv.bg (nm83.ni.bg [192.168.151.146])
+        by smtp-out.abv.bg (Postfix) with UTF8SMTP id 848531822EF4;
+        Thu, 13 Jul 2023 21:04:02 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=abv.bg; s=smtp-out;
+        t=1689271442; bh=ywZACtYI5HP42DnktRCREwiDQpPzRYNjm5QRLGG/fBE=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=KQzu2SSgVLXDGmYR5kzj0Sef4s5BYthCnaLL+Ua5x3Zoo/Y1sKV5f53aqk1BHYnIv
+         RXTvX9fQvIRyL0zBIZMseMpAk8Ff+XTjtgzedX+Sd9sMW8GDroRzJbGAnMbbmj4LXb
+         Qj1OVfXs6nNu1HgpgPg/9hxnm682GqYp2cUnfc/0=
+Received: from nm83.abv.bg (localhost [127.0.0.1])
+        by nm83.abv.bg (Postfix) with UTF8SMTP id 815469D7FB;
+        Thu, 13 Jul 2023 21:04:02 +0300 (EEST)
+Date:   Thu, 13 Jul 2023 21:04:02 +0300 (EEST)
+From:   Kristian Angelov <kristiana2000@abv.bg>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     luke@ljones.dev, hdegoede@redhat.com
+Message-ID: <1170345346.1954736.1689271442530@nm83.abv.bg>
+In-Reply-To: <221464915.1954715.1689271415914@nm83.abv.bg>
+References: <221464915.1954715.1689271415914@nm83.abv.bg>
+Subject: [PATCH] platform/x86: asus-wmi: Allow setting RGB mode on some TUF  laptops
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230713115639.16419-1-henning.schild@siemens.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: AbvMail 3.0
+X-Originating-IP: 84.238.195.102
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Jul 13, 2023 at 01:56:37PM +0200, Henning Schild wrote:
-> change since v1:
-> - split into two patches to separate leds from platform code and ease
->   merging
-> 
-> These are rather simple patches adding LED support for yet another Simatic
-> IPC model.
+This patch allows for the manual setting of cmd values 0xb3 and 0xb4.
+This is necessary on some TUF laptops in order to set the RGB mode.
+This should not break functionality that other machines might depend on.
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> Henning Schild (2):
->   platform/x86: simatic-ipc: add another model BX-21A
->   leds: simatic-ipc-leds-gpio: add Elkhart Lake version
-> 
->  drivers/leds/simple/Kconfig                   | 13 +++++
->  drivers/leds/simple/Makefile                  |  1 +
->  .../leds/simple/simatic-ipc-leds-gpio-core.c  |  4 ++
->  .../simatic-ipc-leds-gpio-elkhartlake.c       | 57 +++++++++++++++++++
->  drivers/platform/x86/simatic-ipc.c            |  3 +
->  .../platform_data/x86/simatic-ipc-base.h      |  3 +-
->  include/linux/platform_data/x86/simatic-ipc.h |  3 +-
->  7 files changed, 82 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio-elkhartlake.c
-> 
-> -- 
-> 2.41.0
-> 
+See bug report: https://lore.kernel.org/platform-driver-x86/443078148.491022.1677576298133@nm83.abv.bg/
 
--- 
-With Best Regards,
-Andy Shevchenko
 
+With this you can pass 179 and 180 to the /sys/class/leds interface.
+I think a better solution would be to somehow detect which devices require
+these values on driver initialization and then just handle it like before
+1 saving to bios and 0 simply setting it.
+
+
+Please CC.
+
+
+Best regard,
+
+
+Kristian
+
+
+Signed-off-by: Kristian Angelov <kristiana2000@abv.bg>
+---
+ drivers/platform/x86/asus-wmi.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 1038dfdcdd32..8d3d283fb306 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -744,7 +744,12 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
+ 	if (sscanf(buf, "%d %d %d %d %d %d", &cmd, &mode, &r, &g, &b, &speed) != 6)
+ 		return -EINVAL;
+ 
+-	cmd = !!cmd;
++	/*
++	 * Some TUF models need B3 for setting the color and B4 for saving to BIOS.
++	 * Keep old functionality for all other values
++	 */
++	if (cmd != 0xb3 || cmd != 0xb4)
++		cmd = !!cmd;
+ 
+ 	/* These are the known usable modes across all TUF/ROG */
+ 	if (mode >= 12 || mode == 9)
+-- 
+2.40.0
 
