@@ -2,91 +2,97 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9677FC0015E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 Jul 2023 16:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF74C001DD
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 Jul 2023 17:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235386AbjGMQtY (ORCPT
+        id S230024AbjGMRDb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 13 Jul 2023 12:49:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59300 "EHLO
+        Thu, 13 Jul 2023 13:03:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235409AbjGMQtL (ORCPT
+        with ESMTP id S229980AbjGMRDa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 Jul 2023 12:49:11 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E277130F2;
-        Thu, 13 Jul 2023 09:48:56 -0700 (PDT)
+        Thu, 13 Jul 2023 13:03:30 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12DC2700;
+        Thu, 13 Jul 2023 10:03:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689266936; x=1720802936;
+  t=1689267810; x=1720803810;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=59+LYzhy+0HnTxIOhHyvr1lUJNvrJlPI3qg9viatPhw=;
-  b=RsSn98qNzo36YDz8LB9gE/UYTT+FNCd8p1PdHEz3NhgigiWapiBGy9jw
-   XjIh9jECFZVM5pyuPgBhtqoytUGm5YZJUe7eF3Jh1ZsP3DzAlPXdXmKL6
-   AXltNhTjtY6cqRwneDaSI70OzVYUgISWvp6gOeQfCDnK6VbbB8o02yEnm
-   7JsqSroTBPbL+WJnqbeGoUM5+YyDtMfc3qnHlNlyQny4crYxRh5Qmal7b
-   jdCpTOVd+utwYDnFBAxjeXXH56aCLmXWWEA+ddc/vM7YNywYh5AbE+eyc
-   d9cI+ykItg9m5gK6ra5UfYFlqp5F7AMfGnYnxGCXxrZIazFcboAG43sxX
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="365286096"
+  bh=XU4CSxnU4cVeY82reTW8Q0CzJu4o7aUuNfQXk1GU5gA=;
+  b=kdt+w2WSZ9URNRZKiwcdMCUoXv2eOxc8pNpKAmtluDKj0wq0eiXOhSR5
+   jULYpG8hjv8TAdwjdzXrA5z7G6NCeSmUL0X3GpQIlt/JH7jxyEJY+Undf
+   i9ciZlwY2Zv35NQb+Jz96J2LgVmWVCPskST6G/gjaP7fxInE8G5Ggktuv
+   OSRCWt5gxmGr6txLWC4LYoS2hw/Af2fqIc/G08bTN1VNYEAvOZR/aaEEd
+   e30rbRRvaGpse9Z/mFd3toIaYwtrRiJduNDVMYG7IfWnFS60oFXG/x5nn
+   DO2VVCVcpx86PyFjf/4SLcA8hmXFbISBfM0Z+PKdj0CUCFmZ3UHzi+bi9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="345571759"
 X-IronPort-AV: E=Sophos;i="6.01,203,1684825200"; 
-   d="scan'208";a="365286096"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 09:48:56 -0700
+   d="scan'208";a="345571759"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 10:01:43 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="787520642"
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="896093125"
 X-IronPort-AV: E=Sophos;i="6.01,203,1684825200"; 
-   d="scan'208";a="787520642"
+   d="scan'208";a="896093125"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP; 13 Jul 2023 09:48:54 -0700
+  by orsmga005.jf.intel.com with ESMTP; 13 Jul 2023 10:01:32 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qJzUr-002RPD-1P;
-        Thu, 13 Jul 2023 19:48:53 +0300
-Date:   Thu, 13 Jul 2023 19:48:53 +0300
+        id 1qJzh4-002RXp-0i;
+        Thu, 13 Jul 2023 20:01:30 +0300
+Date:   Thu, 13 Jul 2023 20:01:29 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org,
-        ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] TPMI control and debugfs support
-Message-ID: <ZLAq9YnaQ5XPsiZG@smile.fi.intel.com>
-References: <20230712225950.171326-1-srinivas.pandruvada@linux.intel.com>
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Tobias Schaffner <tobias.schaffner@siemens.com>,
+        "xingtong . wu" <xingtong.wu@siemens.com>
+Subject: Re: [PATCH v2 0/2] leds: simatic-ipc-leds-gpio: add new model BX-21A
+Message-ID: <ZLAt6RDjqyWhN/NU@smile.fi.intel.com>
+References: <20230713115639.16419-1-henning.schild@siemens.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230712225950.171326-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20230713115639.16419-1-henning.schild@siemens.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 03:59:47PM -0700, Srinivas Pandruvada wrote:
-> The first patch provides interface to read feature status. This is
-> generic patch to be used by other feature drivers.
+On Thu, Jul 13, 2023 at 01:56:37PM +0200, Henning Schild wrote:
+> change since v1:
+> - split into two patches to separate leds from platform code and ease
+>   merging
 > 
-> The second patch add support for debugfs. Debugfs also display
-> feature status using the first patch
+> These are rather simple patches adding LED support for yet another Simatic
+> IPC model.
 
+FWIW,
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-A couple of nit-picks in the individual comments.
-
-> Srinivas Pandruvada (3):
->   platform/x86/intel/tpmi: Read feature control status
->   platform/x86/intel/tpmi: Add debugfs interface
->   doc: TPMI: Add debugfs documentation
+> Henning Schild (2):
+>   platform/x86: simatic-ipc: add another model BX-21A
+>   leds: simatic-ipc-leds-gpio: add Elkhart Lake version
 > 
->  Documentation/ABI/testing/debugfs-tpmi |  31 ++
->  MAINTAINERS                            |   1 +
->  drivers/platform/x86/intel/tpmi.c      | 399 ++++++++++++++++++++++++-
->  include/linux/intel_tpmi.h             |   2 +
->  4 files changed, 426 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/ABI/testing/debugfs-tpmi
+>  drivers/leds/simple/Kconfig                   | 13 +++++
+>  drivers/leds/simple/Makefile                  |  1 +
+>  .../leds/simple/simatic-ipc-leds-gpio-core.c  |  4 ++
+>  .../simatic-ipc-leds-gpio-elkhartlake.c       | 57 +++++++++++++++++++
+>  drivers/platform/x86/simatic-ipc.c            |  3 +
+>  .../platform_data/x86/simatic-ipc-base.h      |  3 +-
+>  include/linux/platform_data/x86/simatic-ipc.h |  3 +-
+>  7 files changed, 82 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/leds/simple/simatic-ipc-leds-gpio-elkhartlake.c
 > 
 > -- 
-> 2.40.1
+> 2.41.0
 > 
 
 -- 
