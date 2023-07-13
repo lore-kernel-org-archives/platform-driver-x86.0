@@ -2,88 +2,141 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D1CC0015E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 Jul 2023 16:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B15C001DE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 Jul 2023 16:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232786AbjGMQpD (ORCPT
+        id S230484AbjGMQsT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 13 Jul 2023 12:45:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56468 "EHLO
+        Thu, 13 Jul 2023 12:48:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235221AbjGMQpC (ORCPT
+        with ESMTP id S235322AbjGMQsR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 Jul 2023 12:45:02 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05048211F;
-        Thu, 13 Jul 2023 09:45:02 -0700 (PDT)
+        Thu, 13 Jul 2023 12:48:17 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50A7D2D4E;
+        Thu, 13 Jul 2023 09:48:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689266702; x=1720802702;
+  t=1689266896; x=1720802896;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=snXTa2azq0xnvrMVVYEmz2Vp8CufjzE+QoK451TgVig=;
-  b=bcotvVHAw4LSxtrKGgbin0SUiFMdlKnROqaNJTlrcXj71zp2wD5PFdHU
-   2QteACk3OuDcJQZ148fT3qtMnG14aoYB8ROweyEVngid1BkFcrNYHY5XC
-   45/zGM3HUYsBcL+sZo0b+O/oHtn5WYTFkMz/oUp8wyB1EFGIu2TvF6M3X
-   q7AyACzTacDAjHDup+Q2JAEwaiDMpu7ekEBa70A/oSUZ10Sf+fv2D8A0W
-   4P3MOeOiSXRyAfUkkj+I0tLCtg4PuUAaitD59iBRJ49v6bx0dEMqwHEk2
-   /bwaRg0WZ8kEVsGRK1urDb3Tx/n4mDczTvI4RaC2KamNeGmh6fc7zfu1O
+  bh=Tj4bWOVtIkY6Zc/uDzLYtWIJ1eesZDcBpkM6O9U8etY=;
+  b=biA66LTs5/XrNqkyB5cR/ip4+dV+yb0Mb86dWAp2Ke+Psw0mvhZJgsCE
+   Z0J9cxmLTxNAI/932V9+4fBGPzKwWKLvzoAKwsuoWdKDVWO4Tztexf2ux
+   hqBZjoTXViG3Z9BeOm5D0ksl2hfysupxYLA21xs/a9vFQpIXdv7NtWvgc
+   3tGj05sLTQ/vDv1mnGhQB/P4eEqkna8YCPJjWDk0Osj7aKeSVoe6R+/3L
+   YNhVM9nU3Jbwi+YpLmK0d5LSjOC0NtTpIeTkUkUtTb0XFwXd4W6gHPZvP
+   5s1k9+/yBUW5vFXpqB3KXrNEtr7aFUMqe6K8TIkVX/XazXAT/EVm+M+cz
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="345566222"
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="365285932"
 X-IronPort-AV: E=Sophos;i="6.01,203,1684825200"; 
-   d="scan'208";a="345566222"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 09:45:01 -0700
+   d="scan'208";a="365285932"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 09:48:15 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="716024032"
+X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="751707087"
 X-IronPort-AV: E=Sophos;i="6.01,203,1684825200"; 
-   d="scan'208";a="716024032"
+   d="scan'208";a="751707087"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 13 Jul 2023 09:44:56 -0700
+  by orsmga008.jf.intel.com with ESMTP; 13 Jul 2023 09:48:13 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qJzR1-002RMV-1y;
-        Thu, 13 Jul 2023 19:44:55 +0300
-Date:   Thu, 13 Jul 2023 19:44:55 +0300
+        id 1qJzUB-002ROg-2m;
+        Thu, 13 Jul 2023 19:48:11 +0300
+Date:   Thu, 13 Jul 2023 19:48:11 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Cc:     hdegoede@redhat.com, markgross@kernel.org,
         ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] platform/x86/intel/tpmi: Read feature control
- status
-Message-ID: <ZLAqBzZTvylHn2Yp@smile.fi.intel.com>
+Subject: Re: [PATCH v3 2/3] platform/x86/intel/tpmi: Add debugfs interface
+Message-ID: <ZLAqyzaFaF1BUIdZ@smile.fi.intel.com>
 References: <20230712225950.171326-1-srinivas.pandruvada@linux.intel.com>
- <20230712225950.171326-2-srinivas.pandruvada@linux.intel.com>
+ <20230712225950.171326-3-srinivas.pandruvada@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230712225950.171326-2-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20230712225950.171326-3-srinivas.pandruvada@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 03:59:48PM -0700, Srinivas Pandruvada wrote:
-> Some of the PM features can be locked or disabled. In that case, write
-> interface can be locked.
+On Wed, Jul 12, 2023 at 03:59:49PM -0700, Srinivas Pandruvada wrote:
+> Add debugfs interface for debugging TPMI configuration and register
+> contents. This shows PFS (PM Feature structure) for each TPMI device.
 > 
-> This status is read via a mailbox. There is one TPMI ID which provides
-> base address for interface and data register for mail box operation.
-> The mailbox operations is defined in the TPMI specification. Refer to
-> https://github.com/intel/tpmi_power_management/ for TPMI specifications.
+> For each feature, show full register contents and allow to modify
+> register at an offset.
 > 
-> An API is exposed to feature drivers to read feature control status.
+> This debugfs interface is not present on locked down kernel with no
+> DEVMEM access and without CAP_SYS_RAWIO permission.
 
 ...
 
+> +	for (i = 0; i < tpmi_info->feature_count; ++i) {
 
-> +#define TPMI_CONTROL_TIMEOUT_MAX_US	(1 * USEC_PER_SEC)
+As I explained in the discussion in previous version the preincrement is rising
+unneeded attention when there is nothing special about it.
 
+> +		pfs = &tpmi_info->tpmi_features[i];
+> +		ret = tpmi_read_feature_status(tpmi_info, pfs->pfs_header.tpmi_id, &locked,
+> +					       &disabled);
+> +		if (ret) {
+> +			locked = 'U';
+> +			disabled = 'U';
+> +		} else {
+> +			disabled = disabled ? 'Y' : 'N';
+> +			locked = locked ? 'Y' : 'N';
+> +		}
+> +		seq_printf(s, "0x%02x\t\t0x%02x\t\t0x%04x\t\t0x%04x\t\t0x%02x\t\t0x%08x\t%c\t%c\n",
+> +			   pfs->pfs_header.tpmi_id, pfs->pfs_header.num_entries,
+> +			   pfs->pfs_header.entry_size, pfs->pfs_header.cap_offset,
+> +			   pfs->pfs_header.attribute, pfs->vsec_offset, locked, disabled);
+> +	}
 
-> +#define TPMI_RB_TIMEOUT_MAX_US		USEC_PER_SEC
+...
 
-In the similar way?
+> +	for (count = 0; count < pfs->pfs_header.num_entries; ++count) {
+
+Ditto.
+
+> +		seq_printf(s, "TPMI Instance:%d offset:0x%x\n", count, off);
+> +
+> +		mem = ioremap(off, size);
+> +		if (!mem) {
+> +			ret = -ENOMEM;
+> +			break;
+> +		}
+> +
+> +		memcpy_fromio(buffer, mem, size);
+> +
+> +		seq_hex_dump(s, " ", DUMP_PREFIX_OFFSET, row_size, sizeof(u32), buffer, size,
+> +			     false);
+> +
+> +		iounmap(mem);
+> +
+> +		off += size;
+> +	}
+
+...
+
+> +	for (i = 0; i < tpmi_info->feature_count; ++i) {
+
+Ditto.
+
+> +		struct intel_tpmi_pm_feature *pfs;
+> +		struct dentry *dir;
+> +
+> +		pfs = &tpmi_info->tpmi_features[i];
+> +		snprintf(name, sizeof(name), "tpmi-id-%02x", pfs->pfs_header.tpmi_id);
+> +		dir = debugfs_create_dir(name, tpmi_info->dbgfs_dir);
+> +
+> +		debugfs_create_file("mem_dump", 0444, dir, pfs, &tpmi_mem_dump_fops);
+> +		debugfs_create_file("mem_write", 0644, dir, pfs, &mem_write_ops);
+> +	}
+> +}
 
 -- 
 With Best Regards,
