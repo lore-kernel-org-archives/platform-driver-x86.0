@@ -2,167 +2,140 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C807DC0015E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 Jul 2023 13:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FE7C0015E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 Jul 2023 14:48:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234722AbjGMNgY (ORCPT
+        id S230020AbjGMOsu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 13 Jul 2023 09:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39504 "EHLO
+        Thu, 13 Jul 2023 10:48:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233943AbjGMNgX (ORCPT
+        with ESMTP id S230502AbjGMOsq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 Jul 2023 09:36:23 -0400
-Received: from AUS01-ME3-obe.outbound.protection.outlook.com (mail-me3aus01olkn2166.outbound.protection.outlook.com [40.92.63.166])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 673502117;
-        Thu, 13 Jul 2023 06:36:10 -0700 (PDT)
+        Thu, 13 Jul 2023 10:48:46 -0400
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2075.outbound.protection.outlook.com [40.107.22.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845DE19A6;
+        Thu, 13 Jul 2023 07:48:45 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mxNQClUl2kkYypFC0l5TDFnohK2hKE1Mnje9xn/cA8pZGyAT719dYmPRpC8EBudzbzn6DwP4Eauh2ATQG1gcO7dq5HHt4TBsW9Lia+9Y03cBQcnC2sHARBCDfo1CtKaYBSqXfArwvIQ5CeN29SYhGY98fZJKuL6S1rUO4SNL79hQi6kabtBEleRZ3sLYN9colDk6H9AXN9e+2mY2hyK8R0ia2dUkxGu8F4/aT991btPGhTcfgaVi6+jGbz5Evy70WtOSBPeLIToZo7PtKl7yBLVOMfPndZaGJv/GEHG9XUTNPV4hnDOPZ/tfgMWw4ovdcB6kJjHxZCpM65vaLo3L3w==
+ b=HEwxvsSANxnHyepr+pbpPMVSEwOHshLMLfL2Q41H2b72kerp830kCTXMrQLFKlXEs8Zef64m+gH6yUD6t69lzcnu74eWtlT7RezlwuK7zH0TaOSVvoX59YhzjReA+LPeZp5Qt49dO6bBSvhWuZwuSFBToFTXXJ9qLHdt6wLaDd+w+Yz+Bkm9QOTgqWG7lDnKMZk7v2oO0rrzjj9VzFctcwFs2tKpTjs6hEn/DXDrksx/2xqSCOVqXtBkaZ11qOuujBWh9HSqhZQETYmWHrczjwgRJjXv5rYjX5XKDZ9KMXCeBsspqW8wCmcHYV7RpSywvMyBAW30HWmlEjDyA9Emjw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q2R7AIAXQSBoQ4lD/ydBuXX+CA6cPmpgWbd2F7HkpDs=;
- b=Y35v8hi8okQLGZ+KDmnQMJBk8t81fqP/JZEiVmNf9FVlJTZw1gD+ypiN6RBY0CNyDzvNF+I+HLztMvj6Zk6oxFfkOOvsHdmQ1vbw38paiSrdptVAnRL10hEHzQu0aGtKPnoViwzRh/K7wKPFmDoItDsGkbkeRCLL0usBCcnP1gQVhlHL9h5oNWk0JakCgDTkSii7TTWVuGB4WvlG9PIp/obUbc4TC+PG1DT5KlnEmtf0H43BYRDEoSnU6RTwwmclvJP9S+4EE5RHy1nUhoAP07mxZ+Imz8m08ZRG3tzZ9d8ckFZQTwJ6FuWxyJqDRMEmPzIp65ASfm5EZ7M8kK9XoA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
+ bh=a3o08JJ2NLz/Fgw25/v/+sKZF2ePY1JWNSfOdLKgsvo=;
+ b=kWIOrueqAdL04p6iJklBCV/ipBjd9+8MdQLv3/yeKuJf/5w2BpCmiVCHZeKR24TJpy56XGNGDwGrPAMwjpuaqH2SQbZJUMNcnJbSquTakGPdvGOFiM+XaIjv8bakrdHCLAnHRSlZnRki/sTvciWFgx5FUiDVJymr6HeB//Ulg/oUDx+REvV6Jev/LumKCELOFTZFq2+2+cif5JArnHOcTBecc4k8HieRQ4iyRsy8JBHBPVkSqjbkJye+7IL0gznwQWrbzqwANPPqevaK5J1IsPNjjMAegTUx55OvpmjX+RkM8jUus+PtTRCkzUqh+FeXaneCTPaSfFSXHfjxhcs3kA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 194.138.21.75) smtp.rcpttodomain=redhat.com smtp.mailfrom=siemens.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=siemens.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q2R7AIAXQSBoQ4lD/ydBuXX+CA6cPmpgWbd2F7HkpDs=;
- b=e8EC7YTqHMpkgYEowCfTYz4JL+Jnjy4o6gTj5BuAlakX4eapofEfEmAU6i6/BSQYKsdbWQS2WK+Ssd4fUV1mm+e6lwGRcYTeJoOHq05L+PX6Mmey0ptvQSRSok3kTr/FC2Y7Vb9dVO4g3SQACNK7DK5VnVWkGbaHtCYFPJyyiIHP4uHIG337rGE4Ie30ilR6AtdJzc6VGnpTduzL0mZd+qc9+k0VAvDzE4tVaqYJr35fEAOl+wKWPpRPG9VX2bkF31ImXFGknpAGmX/DuvrQ5yxoC28NhwlsMmMXZ2waSGIZgAkM96LWBvy4f47TSbX8maO7C936KCczPPmaLGqkpg==
-Received: from SY4P282MB1835.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:c2::7) by
- ME4P282MB0935.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:9f::8) with Microsoft
+ bh=a3o08JJ2NLz/Fgw25/v/+sKZF2ePY1JWNSfOdLKgsvo=;
+ b=PKtbDbpyFuUHuP/J7NbNEhtJDtbnWeq362ej92JuiLkE0TwQicY5mIWGemynGIXIcBLHbOPnqyfzQZAMM54RYE4i7Fd1UZ2dkUTaYw8qQoT5Z2rKbB8srxkeY+1Dy3C1FdaP0Jz4EkYHEj+dNeZRvlhW20PeUhv6/0ShbKWwWh2VDV4QTEcaHguTbVf+adqmu/2mmKIZIUQ/BcnvRDQRuVWtWKRhLaz9q5/cwRUgz4c+xxCmJK1WQt6JoBoPxSYlIxuJfsU1HWmUv7I/6+GYZL+z9ZXlTG7RX1vFh0bWIyvHqnFgtCgyMDy5OeJHTojuk938qkbTz5hT20TObIMr0Q==
+Received: from FR3P281CA0166.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a0::9) by
+ AS8PR10MB6868.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:5b5::6) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6588.26; Thu, 13 Jul 2023 13:36:06 +0000
-Received: from SY4P282MB1835.AUSP282.PROD.OUTLOOK.COM
- ([fe80::8302:9e75:933d:b45]) by SY4P282MB1835.AUSP282.PROD.OUTLOOK.COM
- ([fe80::8302:9e75:933d:b45%6]) with mapi id 15.20.6588.024; Thu, 13 Jul 2023
- 13:36:06 +0000
-From:   David Xu <xuwd1@hotmail.com>
-To:     hdegoede@redhat.com, markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xuwd1@hotmail.com
-Subject: [PATCH] platform/x86: serial-multi-instantiate: Auto detect IRQ resource for CSC3551
-Date:   Thu, 13 Jul 2023 21:35:28 +0800
-Message-ID: <SY4P282MB18350CD8288687B87FFD2243E037A@SY4P282MB1835.AUSP282.PROD.OUTLOOK.COM>
+ 15.20.6588.24; Thu, 13 Jul 2023 14:48:43 +0000
+Received: from VE1EUR01FT073.eop-EUR01.prod.protection.outlook.com
+ (2603:10a6:d10:a0:cafe::5b) by FR3P281CA0166.outlook.office365.com
+ (2603:10a6:d10:a0::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.8 via Frontend
+ Transport; Thu, 13 Jul 2023 14:48:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.138.21.75)
+ smtp.mailfrom=siemens.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=siemens.com;
+Received-SPF: Pass (protection.outlook.com: domain of siemens.com designates
+ 194.138.21.75 as permitted sender) receiver=protection.outlook.com;
+ client-ip=194.138.21.75; helo=hybrid.siemens.com; pr=C
+Received: from hybrid.siemens.com (194.138.21.75) by
+ VE1EUR01FT073.mail.protection.outlook.com (10.152.3.38) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6588.25 via Frontend Transport; Thu, 13 Jul 2023 14:48:43 +0000
+Received: from DEMCHDC8WAA.ad011.siemens.net (139.25.226.104) by
+ DEMCHDC8VRA.ad011.siemens.net (194.138.21.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.30; Thu, 13 Jul 2023 16:48:42 +0200
+Received: from md1za8fc.ppmd.siemens.net (139.25.69.128) by
+ DEMCHDC8WAA.ad011.siemens.net (139.25.226.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.25; Thu, 13 Jul 2023 16:48:42 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Tobias Schaffner <tobias.schaffner@siemens.com>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: [PATCH v2 1/3] platform/x86: simatic-ipc: add another model
+Date:   Thu, 13 Jul 2023 16:48:30 +0200
+Message-ID: <20230713144832.26473-2-henning.schild@siemens.com>
 X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230713144832.26473-1-henning.schild@siemens.com>
+References: <20230713144832.26473-1-henning.schild@siemens.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-TMN:  [0ECX7ySrbZC4lACPEPl/5jGvP22+Zf0V]
-X-ClientProxiedBy: SI2P153CA0017.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:140::10) To SY4P282MB1835.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:c2::7)
-X-Microsoft-Original-Message-ID: <20230713133528.6017-1-xuwd1@hotmail.com>
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
+X-Originating-IP: [139.25.69.128]
+X-ClientProxiedBy: DEMCHDC8WBA.ad011.siemens.net (139.25.226.105) To
+ DEMCHDC8WAA.ad011.siemens.net (139.25.226.104)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SY4P282MB1835:EE_|ME4P282MB0935:EE_
-X-MS-Office365-Filtering-Correlation-Id: 66c175c4-a2f9-4fba-cdea-08db83a61c2a
-X-MS-Exchange-SLBlob-MailProps: 0wLWl8rLpvs46l3gX9vBVjaw7zgiAvRIH1VTORd8VCBR1gHLX7V+zWcUNNbEde0wEuErj9FJTnPThz4rNSVhMOHwd0yOwLN8B/jGZp/oB3qA0CGgtciLDNDxjE1WVIfkrs2Zcx74KMavVZvrhUODuKaQFp80OWZV0TVpT8Ne7SbI7AZwjuvGwnLQenKwYK9Jm9NTuKQyHk5onr8DXncY4cTNyJPxODASbiivLO0sYy1lFQxVjI15tdoQZF9uXAnCW3wBVOL6e31xsnksU/PpSgqP/81dKIFND3gfbnUOk3ePmqiZddQlO9JtbHCi3CFbnVLt3w4xHw3a/4Mg47XDFlqXui2aqZpr3JOWLEsCcRNYQJlFznF3D8aHbYUXiyTSNmeriV4+kWL62gApfGtp2a91dJa8YcArOdHLCgRvDNSkZ1bCsbQNzCWW0TSABcolxdUXO6WLApjb8bs9PMiEaNkmxiQQKQQ3+AuWHDtFHeO+6OXZDAm+egS05e/8EnbSbKrkNN7SuqlC4T4/9yMA/w5o/wdZEj7J/tMRKQr4NB9RPqNs0Sqdi0YZ8iNDvWPzCQ+zdj3QC8Rt41RGzjK1InhxHokbF/rs+yOVdDWOMAZRJhEXfYrR4vgGj8YmatXeac50puqpko4PecYsKYw6gt2MogQjx0pkuMI3D5MfSFTI2YJAm5e6BW3HYQQDmbVYgvKt0jPHfsDKp27CvzOhDAIg3gz1lpEG6Sm4FtNpnP+4Woju0jDOYnumVkv4dpbkSZRTt3apayQ=
+X-MS-TrafficTypeDiagnostic: VE1EUR01FT073:EE_|AS8PR10MB6868:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8c5ccae2-e525-4807-5075-08db83b040fe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: phOGmUPF5W41DhpTMidTRmZaP3jhEk4lAkZJG8xOLRl7wDlSkVu8Gu+V1ul5ncKVmv34WSVpocS/+swpBu+l/Gu/VgGOXs8tdCg9/PJTBMIYxwvunRLvXXSHiwUvV5PrwJ8ooh/WJ39ANWsLMYdkEmGPjzJWIN+7nZ9W7/ee37CYzWMtipq/Fj1qMTlXOQtc8rgzewPQkMVMaiKuwFZT3CJtGoPDmMCkYnc+7X90k9n+MMXHdUDD7OtL17zO4v7qK7Q2ZMsYycRWtYdYPGEUBeCySIzazn/aKJQwsNlLZ8oBb50tMgrgcWYEo0zKCgplgxDr2MpMc/DRvhT24qRcxTb6rvxNq54/klRaYjq+QP521H2dbxYpcxVZLKYTgssEREjCJfp6m8cCNRnL+VIU9vsLvQDs7dr1UNIgk8LwGx+dd6Sl9Upo1Ft0fYRL/fCnvT2ztwTLvoIUZeuu5egN7F8kxw078hB/NGk3kQBcZOkGTAbU3vHp344/BNbZxptscnYt+L0NemL7yZDCSRcxoa4nJIWAI/koH7qo0ABKQINzhfGfqHc5b9+eXGirdcdAM/+E9dsxOQFNJ/m5zB7WRYEnfCUzm7LxX7KiDfDWaOGCPzzlEMp6DgXTsVcObsKT
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/PI96fxpFggyMQf/vtpcloupuqrybSXNQ32OHtw/+b4YutwDtKXQqss+Jqm0?=
- =?us-ascii?Q?y9ac2m+8CKDwpkLOJr1qdnukVVWT8MROQUkIMtH7rjFFZtdFP2r52+v7b0F7?=
- =?us-ascii?Q?5iOH8dCyAC+P0QrgDg/5RkxpeyFZWMS7MPgmtHn5dhuBOYdzvZSPb2W7Cziy?=
- =?us-ascii?Q?ITOveHceWy6oo9aLNpuU9KCiCWmcA83AYceV1a0Qtm4izilJjuzW8IZLJ4ux?=
- =?us-ascii?Q?Ak0yvou7dLuCeR6Qq321J3jYXrDCSlJPWWvzipZ4YgdiiJFPNHWgMotWqYLD?=
- =?us-ascii?Q?5avG5kQuaUU7zvLvoRADLtzF8aUUW9EYwoeNulxS6rQUzmIUBt6sCmbXNlUp?=
- =?us-ascii?Q?4jYghuFeoCMeLdjtlW20XqwkAESrEv/C3Z96PKsKZTooJWI8fM0SEly0/ijy?=
- =?us-ascii?Q?02myyJgfCaKfNSFFbyd8GkpBlc9HDbiKgbiSi//y/vsMsRLjEM3T3D7Db+LD?=
- =?us-ascii?Q?52oowJJyf7zj4S4NK/cyxRBYT8smowNddJygO2JQT84TirZ+B3x/ix7F+qXq?=
- =?us-ascii?Q?hEWTBoVblexZxJ6zYxCQhTCLTlu41a8WBztm7J8nmT5WJuuH+IL1xsSOvy47?=
- =?us-ascii?Q?E2L5+qYODc1XDFQ794DhskoyRBFGQnIxYPt4RxxRX3EC/bzByRpd1kifX/Qf?=
- =?us-ascii?Q?SrbYQujxDrB0zlvoyV6yKBkIDCLLS9zNft35I8RZvyJUpJAmjwP7V7MJu0bT?=
- =?us-ascii?Q?/qtoG0DWnLlhBcMjHxwGYm+LigwQP9BspZxkr9aG/ga4uQyqISN7kF5ISCaV?=
- =?us-ascii?Q?Y8Gwm0SvY6xxMsEiA1KCKUECW7/d6/e+S5z+VykIBnBOqYsjNPDM2GgbERt6?=
- =?us-ascii?Q?dNa4zf7R775HBSOoklk2fFmZ1iJUyoS/3xWDJfcipA7BT+lS9/DN9Wn2KLml?=
- =?us-ascii?Q?86xZWeEwqE9drdZWfXn4UwVaYpc+Jv7GDtvdMBI/eSV5mo+8K3Y93a6GzOLv?=
- =?us-ascii?Q?6vY0Xdpj8ugI6PbZFDRwzpw2SPQrO/800xxzLupFcYkx7A8U+nXR6HaXiYbf?=
- =?us-ascii?Q?X+TZeD1q+SkuI5fQA9asxq+dIzxhS2taTFfm5uWDNT5dK8acEI0et0DY2wWw?=
- =?us-ascii?Q?Cp8T20OBxZzrOvxWfJLJ6Eg+WfffVxI/LZdeKEXhK+Ftmzz+v4ALrpHM0D9y?=
- =?us-ascii?Q?DRn9QW+g1RHDhGTdL8At7EP+pMUH1OcTPuIAXRRJTfLy8Z/BaxetCZDhAVU2?=
- =?us-ascii?Q?xk20PvIo1jum3GgQjegSiNikTfg1PBvX6Xa0Cg=3D=3D?=
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-746f3.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66c175c4-a2f9-4fba-cdea-08db83a61c2a
-X-MS-Exchange-CrossTenant-AuthSource: SY4P282MB1835.AUSP282.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2023 13:36:06.5433
+X-Microsoft-Antispam-Message-Info: 3DcFUQjI/KgB5V264/vVx9X9mtPuxbmHXTgauX0y8TdreZDKVl1EFehZKRL9WlT46vY6WXc+4gU2ari8ldJSuMKJaSGZri8eZ1U46aYdY1D2dYsVNLn4QcZrWNFVd/aaXFe88FlQygb0sn8HwEEHixRQL5ArLdKJZyqjqPGo1cTRyLt650XVQHaVm3VZndpCOfjUss5D+P0OEm11C31F8YRAf05SyGeAaKM1oR3d3rK41yW0MQYHhRREkPKA//JeD3WeTm9osZRoz+DvQcENmKs64WW1ta+ZaSrrYHK2jc4w1Jc387SJWP9p7JTm167IrmXYnINHNyG/pgrbCeOfii8Hqb+PRrl07+k56OHbNYUuU2ZFoqJpfmp0T5IxF1twbrYdxBs50BIGZHfcNjTSPSe7ZDz8WBC5xI+UL60A1vAlpl9lBm0eaSdgpYqTd5hnRN5Rd1IzJJRdtfqy1/fvZsdKPo2MzyyWjTGSEwtnB8jqjJCnfvBAAA8HnSb8jpooH9Wyq/p1k9gJLpw0OwlwTYgf4G8XXTtL7OvTgG8PcNqph/eqSHrmosVZzaur6fFQvNJUb0qOD2Vj639nLJgZPRB6f+nS0AtqLJmHXeu+M0jAL2TzjRCVBHDHYkeY+ezPGf7reapm4J88G61SYfMrWSisxhdVjuG86ug2ZSC99EOMO+zguDvCBBr6GuhThutRS6WOg7zcbbSQf4YYzSAIiHxrsKgv0G4rUcBik60wz4RmYvBcYiLCGJQMWEh9OGSqhshHCYZQvvlJMXMJEM83+g==
+X-Forefront-Antispam-Report: CIP:194.138.21.75;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(346002)(39860400002)(376002)(451199021)(40470700004)(36840700001)(46966006)(107886003)(40460700003)(8676002)(8936002)(36860700001)(47076005)(2906002)(2616005)(956004)(82740400003)(356005)(82960400001)(36756003)(81166007)(86362001)(82310400005)(40480700001)(26005)(5660300002)(44832011)(1076003)(186003)(336012)(16526019)(4326008)(70206006)(70586007)(110136005)(54906003)(6666004)(41300700001)(478600001)(316002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2023 14:48:43.0323
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ME4P282MB0935
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c5ccae2-e525-4807-5075-08db83b040fe
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.75];Helo=[hybrid.siemens.com]
+X-MS-Exchange-CrossTenant-AuthSource: VE1EUR01FT073.eop-EUR01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR10MB6868
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The current code assumes that the CSC3551(multiple cs35l41) always have
-its interrupt pin connected to GPIO thus the IRQ can be acquired with
-acpi_dev_gpio_irq_get. However on some newer laptop models this is no
-longer the case as they have the CSC3551's interrupt pin connected to
-APIC. This causes smi_i2c_probe to fail on these machines.
+This is the panel variant of a device we already did have. All the same,
+just no LEDs.
 
-To support these machines, a new macro IRQ_RESOURCE_AUTO was introduced
-for cs35l41 smi_node, and smi_get_irq function was modified so it tries
-to get GPIO irq resource first and if failed, tries to get
-APIC irq resource for cs35l41.
-
-This patch affects only the cs35l41's probing and brings no negative
-influence on machines that indeed have the cs35l41's interrupt pin
-connected to GPIO.
-
-Signed-off-by: David Xu <xuwd1@hotmail.com>
+Signed-off-by: Henning Schild <henning.schild@siemens.com>
 ---
- .../platform/x86/serial-multi-instantiate.c   | 21 +++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ drivers/platform/x86/simatic-ipc.c            | 2 ++
+ include/linux/platform_data/x86/simatic-ipc.h | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
-index f3dcbdd72fec..2c2abf69f049 100644
---- a/drivers/platform/x86/serial-multi-instantiate.c
-+++ b/drivers/platform/x86/serial-multi-instantiate.c
-@@ -21,6 +21,7 @@
- #define IRQ_RESOURCE_NONE	0
- #define IRQ_RESOURCE_GPIO	1
- #define IRQ_RESOURCE_APIC	2
-+#define IRQ_RESOURCE_AUTO   3
- 
- enum smi_bus_type {
- 	SMI_I2C,
-@@ -52,6 +53,18 @@ static int smi_get_irq(struct platform_device *pdev, struct acpi_device *adev,
- 	int ret;
- 
- 	switch (inst->flags & IRQ_RESOURCE_TYPE) {
-+	case IRQ_RESOURCE_AUTO:
-+		ret = acpi_dev_gpio_irq_get(adev, inst->irq_idx);
-+		if (ret > 0) {
-+			dev_dbg(&pdev->dev, "Using gpio irq\n");
-+			break;
-+		}
-+		ret = platform_get_irq(pdev, inst->irq_idx);
-+		if (ret > 0) {
-+			dev_dbg(&pdev->dev, "Using platform irq\n");
-+			break;
-+		}
-+		break;
- 	case IRQ_RESOURCE_GPIO:
- 		ret = acpi_dev_gpio_irq_get(adev, inst->irq_idx);
- 		break;
-@@ -307,10 +320,10 @@ static const struct smi_node int3515_data = {
- 
- static const struct smi_node cs35l41_hda = {
- 	.instances = {
--		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
--		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
--		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
--		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-+		{ "cs35l41-hda", IRQ_RESOURCE_AUTO, 0 },
-+		{ "cs35l41-hda", IRQ_RESOURCE_AUTO, 0 },
-+		{ "cs35l41-hda", IRQ_RESOURCE_AUTO, 0 },
-+		{ "cs35l41-hda", IRQ_RESOURCE_AUTO, 0 },
- 		{}
- 	},
- 	.bus_type = SMI_AUTO_DETECT,
+diff --git a/drivers/platform/x86/simatic-ipc.c b/drivers/platform/x86/simatic-ipc.c
+index 6d2c94c17414..71487216d33f 100644
+--- a/drivers/platform/x86/simatic-ipc.c
++++ b/drivers/platform/x86/simatic-ipc.c
+@@ -48,6 +48,8 @@ static struct {
+ 		SIMATIC_IPC_DEVICE_427E, SIMATIC_IPC_DEVICE_227E, SIMATIC_IPC_DEVICE_227E},
+ 	{SIMATIC_IPC_IPC227G,
+ 		SIMATIC_IPC_DEVICE_227G, SIMATIC_IPC_DEVICE_227G, SIMATIC_IPC_DEVICE_227G},
++	{SIMATIC_IPC_IPC277G,
++		SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_227G, SIMATIC_IPC_DEVICE_227G},
+ 	{SIMATIC_IPC_IPC277E,
+ 		SIMATIC_IPC_DEVICE_NONE, SIMATIC_IPC_DEVICE_227E, SIMATIC_IPC_DEVICE_227E},
+ 	{SIMATIC_IPC_IPC427D,
+diff --git a/include/linux/platform_data/x86/simatic-ipc.h b/include/linux/platform_data/x86/simatic-ipc.h
+index 1a8e4c1099e3..f2eafa43a605 100644
+--- a/include/linux/platform_data/x86/simatic-ipc.h
++++ b/include/linux/platform_data/x86/simatic-ipc.h
+@@ -32,6 +32,7 @@ enum simatic_ipc_station_ids {
+ 	SIMATIC_IPC_IPC477E = 0x00000A02,
+ 	SIMATIC_IPC_IPC127E = 0x00000D01,
+ 	SIMATIC_IPC_IPC227G = 0x00000F01,
++	SIMATIC_IPC_IPC277G = 0x00000F02,
+ 	SIMATIC_IPC_IPCBX_39A = 0x00001001,
+ 	SIMATIC_IPC_IPCPX_39A = 0x00001002,
+ 	SIMATIC_IPC_IPCBX_21A = 0x00001101,
 -- 
 2.41.0
 
