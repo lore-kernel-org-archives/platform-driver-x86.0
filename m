@@ -2,147 +2,94 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 133DEEB64DA
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Jul 2023 10:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258B8EB64DA
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Jul 2023 10:51:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236185AbjGNKS7 (ORCPT
+        id S234989AbjGNKvv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 14 Jul 2023 06:18:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33656 "EHLO
+        Fri, 14 Jul 2023 06:51:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236160AbjGNKSw (ORCPT
+        with ESMTP id S234735AbjGNKvu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 14 Jul 2023 06:18:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 821C8198A
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jul 2023 03:18:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689329887;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=96qqFzDGT6zmEWh/wldMyUAPgFi2WARkbaGaLknDDcA=;
-        b=E0pA+QK0lfNA1fqbUW8KHJHIltcB4cI6sgmruahmq70cZFVJdymVYkphtPX1x4nxU4harE
-        aCYK0jbLd6ik4MaO2DrXcDFTquYyIxR/4vEmZf6mOHwld5Oy+qbstnjIAM1fuxNXKzXh4l
-        /f/qF+VfFPmWYsQmdOOKNfVIFJzmbHk=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-384-VCACwOSrNue-VCknPAJMiw-1; Fri, 14 Jul 2023 06:18:06 -0400
-X-MC-Unique: VCACwOSrNue-VCknPAJMiw-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-99388334de6so97057066b.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jul 2023 03:18:06 -0700 (PDT)
+        Fri, 14 Jul 2023 06:51:50 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA411720
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jul 2023 03:51:49 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-3159d5e409dso1924913f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jul 2023 03:51:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689331907; x=1691923907;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kohT6Hd6nZdYcJ4DfvQ1FTBZVDjmixlQ0k+6GpMkxck=;
+        b=RswgI+aif5Si4qUjmbXLiJGUfYdBEK0JIADuTCvDP3sS1N6JcfaGyimCDbQILguFT1
+         CyahLpyqjM06Ez0/pkgtoL1/UrnPjdFwlufiVxnP808iC9inoDrdO7V1rCGJH0N6+vYD
+         z09svMtM875lNp2YXeFpu6cOnTTFRAPYt5QxSvELUpv+OUdgt51ifbDNj7yOGfHeZmG3
+         aC4mHYiz7ASu/1fpfK/414EeI8lSAEdw3wcR8wU3moSn0LQQbd6xPU82fIaoPgh5+eDB
+         9K9hQ9UsraOrSZS1RrX/jtZMRyJWV3D+niUxolTE76tCR9v1KJqT8FaJoc1Kbl6QcSVf
+         UXsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689329885; x=1691921885;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=96qqFzDGT6zmEWh/wldMyUAPgFi2WARkbaGaLknDDcA=;
-        b=Y45tuxICkG0/YuyrsQwiRpe4TOUCkvAnjlf4/E/fISMn2rsvBvlO751GsYG4y+hDdD
-         W6cWIwrvDibSiciE9EHgpzMmK2LseVmh2WR4AlEI0aEn4/eD5O/TcevOhVqPHnq6ptq2
-         g92mTiHnw0EGNePzOaWWM8lJZk/GtERjYFINOa+dyti3SS4RZ4VtxIWefcTpoCKcAub5
-         q+A+zZSqoR6D3jBa0VMwSti7I6Bxvv52woPtbpkL5ef16UymHvicPO3zHYccqgeIxsTt
-         EfqT8OhcUHxJZGcxL0A8IGMZY7umTCZlXpKa2gM2XD5M5ruqCKyUoXPdodozT6pQE3iA
-         Os5g==
-X-Gm-Message-State: ABy/qLYeYk/HcocAsG470tviQ6BWrVNwKeiC2/0foU9NKQSC02uO0PBu
-        ETlBgWFwKbAojrttl97j42RKi4BVUDc/47S3updJ7UPzvwMtXWSZxKXRVgvQ1bd38WgLxwiAT1+
-        Vm6bBTDzJdDcIeXIQ47pfYVZDMg9v53hBqw==
-X-Received: by 2002:a17:906:10cf:b0:993:d8be:53f3 with SMTP id v15-20020a17090610cf00b00993d8be53f3mr3484731ejv.14.1689329885489;
-        Fri, 14 Jul 2023 03:18:05 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlHCJTIIyRl8+BlQ73bAXsPhvOQ7wy4rqxK16R36vhSzNRVVss/aPygJ8qwcA5idF2uURvfUbA==
-X-Received: by 2002:a17:906:10cf:b0:993:d8be:53f3 with SMTP id v15-20020a17090610cf00b00993d8be53f3mr3484717ejv.14.1689329885208;
-        Fri, 14 Jul 2023 03:18:05 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id s8-20020a170906a18800b0098e0a937a6asm5218411ejy.69.2023.07.14.03.18.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Jul 2023 03:18:04 -0700 (PDT)
-Message-ID: <88021872-8aff-4bd2-ba95-8277a5a8e1fe@redhat.com>
-Date:   Fri, 14 Jul 2023 12:18:04 +0200
+        d=1e100.net; s=20221208; t=1689331907; x=1691923907;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kohT6Hd6nZdYcJ4DfvQ1FTBZVDjmixlQ0k+6GpMkxck=;
+        b=e9TFn/D+ap4TPm2GW26Mytgzd0cQdr15hmAFTGW7xXjeizO77nJ1o395JmjB5C7FWF
+         3Bx1gLAF/rskK2JVyIK4D8qtqprQ5BK85+8m0nCq+o/bKJk9xf5GTruYs6hPiOiZLSPZ
+         w/EljV7/Mi1QWuZWiIhr2y7kQiwZQzBvuLmDdNag1W7K70dB9nu1uFzSBqPe2nqwwr2K
+         OQNJXhKpascySIqUYpS0gLwUaTMsbTh8tv6H1c5fwW1tCoOHJuYTS70n4oDMpwJDtGbL
+         QCdRoJv2gGX4htFo5tdCIYq9h3fRtzVAUtTZtgQy25tjisJq/wZDPVmmaWf7oXKGz3Yo
+         I+1g==
+X-Gm-Message-State: ABy/qLYFYwPMZn5C/9zgAHKhEFdrsE+hOXgD6JuI/4KdaPvYYwhAWOpp
+        vHrRgQBx2BPrz7rmyq/ozCKShvlhpxp9hA==
+X-Google-Smtp-Source: APBJJlH2PQdts3pFOFXVuYf9qKHBixOb/RGafKU820YsJwlgauKSNrNkNRPVQQBw7i5rR89SpS7djA==
+X-Received: by 2002:a05:6000:181:b0:314:2c77:681b with SMTP id p1-20020a056000018100b003142c77681bmr1884184wrx.30.1689331907289;
+        Fri, 14 Jul 2023 03:51:47 -0700 (PDT)
+Received: from fedora.. ([2a01:e0a:a9f:60f0:5d0b:d730:cb58:674c])
+        by smtp.gmail.com with ESMTPSA id q14-20020a05600000ce00b003062b2c5255sm10524054wrx.40.2023.07.14.03.51.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jul 2023 03:51:46 -0700 (PDT)
+From:   Thomas GENTY <tomlohave@gmail.com>
+To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
+Cc:     tomlohave@gmail.com
+Subject: [PATCH] touchscreen_dmi.c : small changes for Archos 101 Cesium Educ tablet
+Date:   Fri, 14 Jul 2023 12:51:17 +0200
+Message-ID: <20230714105117.192938-1-tomlohave@gmail.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v2 0/3] platform/x86: simatic-ipc: add another model and
- hwmon module loading
-Content-Language: en-US, nl
-To:     Henning Schild <henning.schild@siemens.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tobias Schaffner <tobias.schaffner@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
-References: <20230713144832.26473-1-henning.schild@siemens.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230713144832.26473-1-henning.schild@siemens.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Henning,
+It fixes axes and adds home button support as suggested by Hans de Goede
 
-On 7/13/23 16:48, Henning Schild wrote:
-> cahnged since v1:
->  - switch to using a list of modules per device
->  - add p3 and make the watchdog module load code use what p2 created
-> 
-> The first patch just adds a device that is pretty similar to another one
-> we already had here.
-> 
-> The second patch loads modules for hwmon support, should they be
-> available. That will save users the need to detect and manually load
-> those modules after a machine has been clearly identified by its Siemens
-> Simatic IPC station id.
-> 
-> And finally p3 changes another request_module call to use the mechanism
-> introduced in p2.
-> 
-> Henning Schild (3):
->   platform/x86: simatic-ipc: add another model
->   platform/x86: simatic-ipc: add auto-loading of hwmon modules
->   platform/x86: simatic-ipc: use extra module loading for watchdog
-> 
->  drivers/platform/x86/simatic-ipc.c            | 74 ++++++++++++++-----
->  include/linux/platform_data/x86/simatic-ipc.h |  1 +
->  2 files changed, 57 insertions(+), 18 deletions(-)
+Signed-off-by: Thomas GENTY <tomlohave@gmail.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-p.s.
-
-Looking at the latest simatic pdx86 code:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=platform-drivers-x86-simatic-ipc
-
-I see 5 Kconfig options and 5 .c files directly under
-
-drivers/platform/x86/
-
-at this point I think it would be nice to move this into its
-own simatic subdir: drivers/platform/x86/simatic
-
-with its own Makefile and Kconfig to avoid cluttering the main
-drivers/platform/x86 dir and Kconfig too much.
-
-Can you prepare a patch for this on top of:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=platform-drivers-x86-simatic-ipc
-
-?
-
-See:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f1e1ea516721d1ea0b21327ff9e6cb2c2bb86e28
-
-For an example of a similar move done for Dell.
-
-Note this example also adds
-
-"default m"
-
-to all options except for the main X86_PLATFORM_DRIVERS_DELL (X86_PLATFORM_DRIVERS_SIMATIC in this case) so that on interactive make config only the X86_PLATFORM_DRIVERS_SIMATIC will gets asked about and then the rest will automatically get enabled as modules.
-
-Regards,
-
-Hans
-
-
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index a5b687eed8f3..f9301a9382e7 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -27,11 +27,12 @@ struct ts_dmi_data {
+ /* NOTE: Please keep all entries sorted alphabetically */
+ 
+ static const struct property_entry archos_101_cesium_educ_props[] = {
+-	PROPERTY_ENTRY_U32("touchscreen-size-x", 1280),
+-	PROPERTY_ENTRY_U32("touchscreen-size-y", 1850),
+-	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1850),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1280),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+ 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+ 	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,home-button"),
+ 	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-archos-101-cesium-educ.fw"),
+ 	{ }
+ };
+-- 
+2.41.0
 
