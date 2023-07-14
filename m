@@ -2,74 +2,76 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A173CEB64DC
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Jul 2023 15:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DBAC0015E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Jul 2023 15:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236099AbjGNPtQ (ORCPT
+        id S236013AbjGNPt1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 14 Jul 2023 11:49:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34912 "EHLO
+        Fri, 14 Jul 2023 11:49:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235841AbjGNPtP (ORCPT
+        with ESMTP id S235841AbjGNPt0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 14 Jul 2023 11:49:15 -0400
+        Fri, 14 Jul 2023 11:49:26 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E628E30F8
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jul 2023 08:48:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07F293595
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jul 2023 08:48:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689349711;
+        s=mimecast20190719; t=1689349717;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=KuBI4Hxp72xNemjys3KmdMcpVgNEh08ilYSo+MrOi+I=;
-        b=S3Knft1HuGMXnHXRtlSS2FApAyd+7p8e0zt9o1XTfuZqagH+HAQdsOQTQB20EmOLlhmhpT
-        WbY9EdCccyDZTxCisOcY+EvTNgMVwtdN6xDkSZoyBuWWe0S1F3NjchhOYPzLW1185qmM1Y
-        WzyReh7It1YBrMUQXKFVyWxaA3CRgkQ=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=5XeKksbSURQEd8d5fxKgEoZsC0sT/WC/oRl5S5IUbo4=;
+        b=aabH85B+uRzPcqz0RyKeOJ0CmFmxZHiWrteyuW5NX8ZKmWfAKkvJzD3wBS0TErLSRbUkKg
+        RevxmsU3P+2WQjJTkn58sPrw2Rb1scHxax6ZusOzk9ccqkUaudQjeOfbgyhll91oAL/PoZ
+        /rbRisnJZZSgegXiJNT4zA0XBHPz3Uc=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-194-SosW9DTOOrGizb41UwKFJQ-1; Fri, 14 Jul 2023 11:48:29 -0400
-X-MC-Unique: SosW9DTOOrGizb41UwKFJQ-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2b6fbef3087so20686601fa.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jul 2023 08:48:29 -0700 (PDT)
+ us-mta-232-qp5nLgxONBqLbJFkX7CHGQ-1; Fri, 14 Jul 2023 11:48:35 -0400
+X-MC-Unique: qp5nLgxONBqLbJFkX7CHGQ-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-514b3b99882so1310510a12.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jul 2023 08:48:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689349708; x=1691941708;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        d=1e100.net; s=20221208; t=1689349714; x=1691941714;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KuBI4Hxp72xNemjys3KmdMcpVgNEh08ilYSo+MrOi+I=;
-        b=I8MspQHJiY6V7H1bE6vLrNUgZbPAoHx4KCscA6wlPXC6DXoE/GnzwrqcCQewauwDC3
-         izXqxW4l2iUHwBaqIKFajmWGP/6m7UNWtWVjCxM2vuPOZHTiKToe/DcZCnamVGeGcCt/
-         o2AE5mvbflwbQcuUmtgcJi3kmCh+Yt7QKu+QWxez6CZHJeJsyI1dx0VujWbnnIYgEEhG
-         mKhaMofeQBUbFsIUTKjm2Zkw9ZiV2JPcKb/jnLu8vErzpZXo6GPfOvJOSqCvdoUSXjgh
-         aO9WGnqYMbSd9AjxQtgHaLjf4MS4ENDhyauK4X7v6I0FtPdCn/Klw9YDoKkgjU9U0qkj
-         rCGQ==
-X-Gm-Message-State: ABy/qLbSaAVfnPGbUgVsY04kmZIzmEj9VbKXFE8uIjNOMM4YReNZZM8h
-        UjpSyqxSQIn8HBqY6UDEo+JcjGr7C3EUtu2JfTBw7KIO4y2QeE97lzWylHZ+dyOBaVLl8xKI1ab
-        GPM7STxuHuO+QYqIbUo/c+Yla8dVyhUtoKyj4ICMURQ==
-X-Received: by 2002:a05:651c:108:b0:2b6:daa3:f0af with SMTP id a8-20020a05651c010800b002b6daa3f0afmr4285692ljb.25.1689349707424;
-        Fri, 14 Jul 2023 08:48:27 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlG0oL16cZ4AlkFf0taRz+08E99eQQfU1vZns5d2jsxIwcRfFmY+hUtOgm5B52tYfFyCMea3fA==
-X-Received: by 2002:a17:906:3497:b0:970:1b2d:45cc with SMTP id g23-20020a170906349700b009701b2d45ccmr4300412ejb.57.1689349682066;
-        Fri, 14 Jul 2023 08:48:02 -0700 (PDT)
+        bh=5XeKksbSURQEd8d5fxKgEoZsC0sT/WC/oRl5S5IUbo4=;
+        b=f7GMcwuHQe6IJvQi9YLTiX/z+Bhi2I0W7DmpLcqMqwrhk/K28TUZcE8LrqCogbUU90
+         F/hTdjG7F9/DHZf6HHFZQz0zxfE+0Z0sceT+yLDRPDEESQGOw6sF1r0OdsM5352N8NoR
+         WqDoNja+PD9Fw4uqq5HaJxL8aKqw9UTJEIyhGM7uGalJEqgDjwJG/ZXEPTITpBzaKWuD
+         9gB+ZjA1bdzuewgV6WkTQ7W++gb02OcXXilXeQmr1SERYK9WxWKlJZBNt9I7ssrLkfV6
+         lst60ZlkmqsyuQYK7Lwq4piTkNPUyyvH2PBezRtlIsOWWE6sAE5AVacuBGaqt+BeJHqT
+         anyA==
+X-Gm-Message-State: ABy/qLaRygUM5z7nvou9l7ar12XGSaQhErJjJtThYBHT7pn5pn4ySQkO
+        k1k7v9KwxT6AvQ3EXN+rZ+kpP044tNyP/fTkm5w1rj7a+RR5gMfpyBuOLAYo/yTCSZ0EJDEEpBY
+        Gy7svFXtV4H0r7O8lggqG+UuwNwQMOLhU5Q==
+X-Received: by 2002:a17:907:724f:b0:974:183a:54b6 with SMTP id ds15-20020a170907724f00b00974183a54b6mr5681388ejc.33.1689349714578;
+        Fri, 14 Jul 2023 08:48:34 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHt6qr4U4VNQtkZWtvqgIEWbFQVI5FjvwF/m0mTUTy5odDXP5lYc0uWRbR0VIqkObZfKlYAIg==
+X-Received: by 2002:a17:907:724f:b0:974:183a:54b6 with SMTP id ds15-20020a170907724f00b00974183a54b6mr5681379ejc.33.1689349714299;
+        Fri, 14 Jul 2023 08:48:34 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id o26-20020a170906289a00b0098f99048053sm5611213ejd.148.2023.07.14.08.48.01
+        by smtp.gmail.com with ESMTPSA id f26-20020a1709062c5a00b0098242730348sm5605470ejh.72.2023.07.14.08.48.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Jul 2023 08:48:01 -0700 (PDT)
-Message-ID: <7eb38e45-2c98-03ef-2d1d-b146657f7928@redhat.com>
-Date:   Fri, 14 Jul 2023 17:48:00 +0200
+        Fri, 14 Jul 2023 08:48:33 -0700 (PDT)
+Message-ID: <7ba62c1c-3287-99fb-39d2-ea698b4a3695@redhat.com>
+Date:   Fri, 14 Jul 2023 17:48:33 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH] touchscreen_dmi.c : small changes for Archos 101 Cesium
- Educ tablet
+Subject: Re: [PATCH] platform/x86/amd: pmc: Use release_mem_region() to undo
+ request_mem_region_muxed()
 Content-Language: en-US, nl
-To:     Thomas GENTY <tomlohave@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-References: <20230714105117.192938-1-tomlohave@gmail.com>
+To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org,
+        Mario Limonciello <mario.limonciello@amd.com>
+References: <20230711095920.264308-1-hdegoede@redhat.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230714105117.192938-1-tomlohave@gmail.com>
+In-Reply-To: <20230711095920.264308-1-hdegoede@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -78,17 +80,23 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 7/14/23 12:51, Thomas GENTY wrote:
-> It fixes axes and adds home button support as suggested by Hans de Goede
+On 7/11/23 11:59, Hans de Goede wrote:
+> Muxed (mem) regions will wait in request_mem_region_muxed() if the region
+> is busy (in use by another consumer) during the call.
 > 
-> Signed-off-by: Thomas GENTY <tomlohave@gmail.com>
+> In order to wake-up possibly waiting other consumers of the region,
+> it must be released by a release_mem_region() call, which will actually
+> wake up any waiters.
+> 
+> release_mem_region() also frees the resource created by
+> request_mem_region_muxed(), avoiding the need for the unmatched kfree().
+> 
+> Cc: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Thank you for your patch, I've applied this patch to my fixes
-branch:
+Mario, Andy, thank you for the reviews, I've applied this patch
+to my fixes branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
-
-Note it will show up in my fixes branch once I've pushed my
-local branch there, which might take a while.
 
 I will include this patch in my next fixes pull-req to Linus
 for the current kernel development cycle.
@@ -99,28 +107,48 @@ Hans
 
 
 
+
 > ---
->  drivers/platform/x86/touchscreen_dmi.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> Mario, can you ask one of the reporters with a machine which needs the quirk
+> to test this ?
+> ---
+>  drivers/platform/x86/amd/pmc-quirks.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index a5b687eed8f3..f9301a9382e7 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -27,11 +27,12 @@ struct ts_dmi_data {
->  /* NOTE: Please keep all entries sorted alphabetically */
+> diff --git a/drivers/platform/x86/amd/pmc-quirks.c b/drivers/platform/x86/amd/pmc-quirks.c
+> index 362e7c0097d7..ad702463a65d 100644
+> --- a/drivers/platform/x86/amd/pmc-quirks.c
+> +++ b/drivers/platform/x86/amd/pmc-quirks.c
+> @@ -11,7 +11,6 @@
+>  #include <linux/dmi.h>
+>  #include <linux/io.h>
+>  #include <linux/ioport.h>
+> -#include <linux/slab.h>
 >  
->  static const struct property_entry archos_101_cesium_educ_props[] = {
-> -	PROPERTY_ENTRY_U32("touchscreen-size-x", 1280),
-> -	PROPERTY_ENTRY_U32("touchscreen-size-y", 1850),
-> -	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
-> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1850),
-> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1280),
-> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
->  	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
->  	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +	PROPERTY_ENTRY_BOOL("silead,home-button"),
->  	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-archos-101-cesium-educ.fw"),
->  	{ }
->  };
+>  #include "pmc.h"
+>  
+> @@ -135,12 +134,10 @@ static const struct dmi_system_id fwbug_list[] = {
+>   */
+>  static void amd_pmc_skip_nvme_smi_handler(u32 s2idle_bug_mmio)
+>  {
+> -	struct resource *res;
+>  	void __iomem *addr;
+>  	u8 val;
+>  
+> -	res = request_mem_region_muxed(s2idle_bug_mmio, 1, "amd_pmc_pm80");
+> -	if (!res)
+> +	if (!request_mem_region_muxed(s2idle_bug_mmio, 1, "amd_pmc_pm80"))
+>  		return;
+>  
+>  	addr = ioremap(s2idle_bug_mmio, 1);
+> @@ -152,8 +149,7 @@ static void amd_pmc_skip_nvme_smi_handler(u32 s2idle_bug_mmio)
+>  
+>  	iounmap(addr);
+>  cleanup_resource:
+> -	release_resource(res);
+> -	kfree(res);
+> +	release_mem_region(s2idle_bug_mmio, 1);
+>  }
+>  
+>  void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev)
 
