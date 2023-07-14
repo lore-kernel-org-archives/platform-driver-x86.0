@@ -2,94 +2,115 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258B8EB64DA
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Jul 2023 10:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075A3C0015E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 Jul 2023 13:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234989AbjGNKvv (ORCPT
+        id S234688AbjGNN2K (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 14 Jul 2023 06:51:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50390 "EHLO
+        Fri, 14 Jul 2023 09:28:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234735AbjGNKvu (ORCPT
+        with ESMTP id S234638AbjGNN2I (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 14 Jul 2023 06:51:50 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA411720
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jul 2023 03:51:49 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-3159d5e409dso1924913f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jul 2023 03:51:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689331907; x=1691923907;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kohT6Hd6nZdYcJ4DfvQ1FTBZVDjmixlQ0k+6GpMkxck=;
-        b=RswgI+aif5Si4qUjmbXLiJGUfYdBEK0JIADuTCvDP3sS1N6JcfaGyimCDbQILguFT1
-         CyahLpyqjM06Ez0/pkgtoL1/UrnPjdFwlufiVxnP808iC9inoDrdO7V1rCGJH0N6+vYD
-         z09svMtM875lNp2YXeFpu6cOnTTFRAPYt5QxSvELUpv+OUdgt51ifbDNj7yOGfHeZmG3
-         aC4mHYiz7ASu/1fpfK/414EeI8lSAEdw3wcR8wU3moSn0LQQbd6xPU82fIaoPgh5+eDB
-         9K9hQ9UsraOrSZS1RrX/jtZMRyJWV3D+niUxolTE76tCR9v1KJqT8FaJoc1Kbl6QcSVf
-         UXsw==
+        Fri, 14 Jul 2023 09:28:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB052698
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jul 2023 06:27:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1689341240;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9IgKJJNZS/TbDNJUn/7MzKZpZbUXG/7hMfiYQjSmbSw=;
+        b=VxqRzXuD12LnOLfxlcltVbe7fEJ8+7pEHNntrPo0B8lXK0A6FFbX0vwnZX22ej8UBVsb07
+        TSSD20qfBgltkoXoKNRiB7LPQKOARLa+0nY4FtxDVya+t+5nHsEWnqGsYD2GV2GHoyM3iX
+        7hhtNE7JMJh1ueb8I5I4XY3+sEGqMfY=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-572-vecv8WC6MiW1xfF9VETKrg-1; Fri, 14 Jul 2023 09:27:19 -0400
+X-MC-Unique: vecv8WC6MiW1xfF9VETKrg-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-94a34a0b75eso117811266b.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jul 2023 06:27:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689331907; x=1691923907;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kohT6Hd6nZdYcJ4DfvQ1FTBZVDjmixlQ0k+6GpMkxck=;
-        b=e9TFn/D+ap4TPm2GW26Mytgzd0cQdr15hmAFTGW7xXjeizO77nJ1o395JmjB5C7FWF
-         3Bx1gLAF/rskK2JVyIK4D8qtqprQ5BK85+8m0nCq+o/bKJk9xf5GTruYs6hPiOiZLSPZ
-         w/EljV7/Mi1QWuZWiIhr2y7kQiwZQzBvuLmDdNag1W7K70dB9nu1uFzSBqPe2nqwwr2K
-         OQNJXhKpascySIqUYpS0gLwUaTMsbTh8tv6H1c5fwW1tCoOHJuYTS70n4oDMpwJDtGbL
-         QCdRoJv2gGX4htFo5tdCIYq9h3fRtzVAUtTZtgQy25tjisJq/wZDPVmmaWf7oXKGz3Yo
-         I+1g==
-X-Gm-Message-State: ABy/qLYFYwPMZn5C/9zgAHKhEFdrsE+hOXgD6JuI/4KdaPvYYwhAWOpp
-        vHrRgQBx2BPrz7rmyq/ozCKShvlhpxp9hA==
-X-Google-Smtp-Source: APBJJlH2PQdts3pFOFXVuYf9qKHBixOb/RGafKU820YsJwlgauKSNrNkNRPVQQBw7i5rR89SpS7djA==
-X-Received: by 2002:a05:6000:181:b0:314:2c77:681b with SMTP id p1-20020a056000018100b003142c77681bmr1884184wrx.30.1689331907289;
-        Fri, 14 Jul 2023 03:51:47 -0700 (PDT)
-Received: from fedora.. ([2a01:e0a:a9f:60f0:5d0b:d730:cb58:674c])
-        by smtp.gmail.com with ESMTPSA id q14-20020a05600000ce00b003062b2c5255sm10524054wrx.40.2023.07.14.03.51.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jul 2023 03:51:46 -0700 (PDT)
-From:   Thomas GENTY <tomlohave@gmail.com>
-To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
-Cc:     tomlohave@gmail.com
-Subject: [PATCH] touchscreen_dmi.c : small changes for Archos 101 Cesium Educ tablet
-Date:   Fri, 14 Jul 2023 12:51:17 +0200
-Message-ID: <20230714105117.192938-1-tomlohave@gmail.com>
-X-Mailer: git-send-email 2.41.0
+        d=1e100.net; s=20221208; t=1689341237; x=1691933237;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9IgKJJNZS/TbDNJUn/7MzKZpZbUXG/7hMfiYQjSmbSw=;
+        b=CuP5Qe2xAA9AWPWBoC/x5z/4a+Ah1vcM346MNLg2bagqV3zwnz4n7SmJAlvuIeoIXi
+         IrKnHwUTzOhWfyh2X3CeS+pCQ1UeIAdblKCob7sJM3Sk6/XwydIPg1Q5vKUchKPfRtz0
+         hi5yrIgTrPMZ7MqXAcztPyq874goUemwn5/Y61lQtQEPdU9H2oo3xrBQZJo9H1XAo6mG
+         KANaLq7T/WOFErleHlTgbWVPeeEVIuOLn/4tTZURulZFLlikDHtNfyVL8SZn/RCXAOrY
+         ZTllrZLRpnqPUzfccEWY4GLGbHncOXkakrnPkrZA+9hpaliVnTYsvqS/ilJS0pM22tnH
+         JZbQ==
+X-Gm-Message-State: ABy/qLbQT+JJDV/69KS6p5cGEPjlME6NWPGYHJlYnb4Xt6xER131PdJp
+        X1vItSf4bnDbRv3VGAMcjIai+AEP1Gnur8SluZ2KH/UQ5Pk/Q7G6oWcPXPYhlxbFFQw4PTwhG90
+        AIKrZbjJg061V9cu3ibkkXooAfWTSblCoYY42fbd8SQ==
+X-Received: by 2002:a17:906:3497:b0:970:1b2d:45cc with SMTP id g23-20020a170906349700b009701b2d45ccmr3970350ejb.57.1689341237592;
+        Fri, 14 Jul 2023 06:27:17 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHZ/14VylTsfFAfhnHMA1XfeuCqWXa+D2USRkhwFQazztUpCpKRZA9cAXIsQP6UXeld4EY29A==
+X-Received: by 2002:a17:906:3497:b0:970:1b2d:45cc with SMTP id g23-20020a170906349700b009701b2d45ccmr3970342ejb.57.1689341237291;
+        Fri, 14 Jul 2023 06:27:17 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id p18-20020a1709060dd200b00982d0563b11sm5405286eji.197.2023.07.14.06.27.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Jul 2023 06:27:16 -0700 (PDT)
+Message-ID: <8737515b-e5ef-2614-70bf-c296eeda46d5@redhat.com>
+Date:   Fri, 14 Jul 2023 15:27:16 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v3 0/3] TPMI control and debugfs support
+Content-Language: en-US, nl
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        markgross@kernel.org, ilpo.jarvinen@linux.intel.com,
+        andriy.shevchenko@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230712225950.171326-1-srinivas.pandruvada@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230712225950.171326-1-srinivas.pandruvada@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-It fixes axes and adds home button support as suggested by Hans de Goede
+Hi,
 
-Signed-off-by: Thomas GENTY <tomlohave@gmail.com>
----
- drivers/platform/x86/touchscreen_dmi.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+On 7/13/23 00:59, Srinivas Pandruvada wrote:
+> The first patch provides interface to read feature status. This is
+> generic patch to be used by other feature drivers.
+> 
+> The second patch add support for debugfs. Debugfs also display
+> feature status using the first patch
+> 
+> Srinivas Pandruvada (3):
+>   platform/x86/intel/tpmi: Read feature control status
+>   platform/x86/intel/tpmi: Add debugfs interface
+>   doc: TPMI: Add debugfs documentation
+> 
+>  Documentation/ABI/testing/debugfs-tpmi |  31 ++
+>  MAINTAINERS                            |   1 +
+>  drivers/platform/x86/intel/tpmi.c      | 399 ++++++++++++++++++++++++-
+>  include/linux/intel_tpmi.h             |   2 +
+>  4 files changed, 426 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/debugfs-tpmi
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index a5b687eed8f3..f9301a9382e7 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -27,11 +27,12 @@ struct ts_dmi_data {
- /* NOTE: Please keep all entries sorted alphabetically */
- 
- static const struct property_entry archos_101_cesium_educ_props[] = {
--	PROPERTY_ENTRY_U32("touchscreen-size-x", 1280),
--	PROPERTY_ENTRY_U32("touchscreen-size-y", 1850),
--	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1850),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1280),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
- 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
- 	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
- 	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-archos-101-cesium-educ.fw"),
- 	{ }
- };
--- 
-2.41.0
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+With Andy's Reviewed-by added.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
 
