@@ -2,129 +2,117 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D38C0015E
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 15 Jul 2023 17:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575A1C001B0
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 15 Jul 2023 18:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229665AbjGORki (ORCPT
+        id S229800AbjGOSQK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 15 Jul 2023 13:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36534 "EHLO
+        Sat, 15 Jul 2023 14:16:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbjGORki (ORCPT
+        with ESMTP id S229500AbjGOSQJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 15 Jul 2023 13:40:38 -0400
-Received: from smtp-out.abv.bg (smtp-out.abv.bg [194.153.145.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C069D1B3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 15 Jul 2023 10:40:33 -0700 (PDT)
-Received: from nm81.abv.bg (nm81.ni.bg [192.168.151.111])
-        by smtp-out.abv.bg (Postfix) with UTF8SMTP id 0DD743396;
-        Sat, 15 Jul 2023 20:40:29 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=abv.bg; s=smtp-out;
-        t=1689442829; bh=/W8wdkonqy9CnSs1AukiV1ZHbieNr1HorXno2GEQN7M=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=v/a7vJewtOV9NDJ6y5kGgIxQ26bAmPpb3rZLW5j76v9jy0WAgZ7Z4O1XHU3BWVUKR
-         AcTOMFHwxiP6XeTRrYIDNd6N9ZmBpIbrcBJWN7SkTzS7g0c5mpfY5yF1+Mc5DL20D3
-         D8bnZ2dRNSAtDwobeGup2APXQcqrreNgjTEiGFPw=
-Received: from nm81.abv.bg (localhost [127.0.0.1])
-        by nm81.abv.bg (Postfix) with UTF8SMTP id EE1539D7E8;
-        Sat, 15 Jul 2023 20:40:28 +0300 (EEST)
-Date:   Sat, 15 Jul 2023 20:40:28 +0300 (EEST)
-From:   Kristian Angelov <kristiana2000@abv.bg>
-To:     Luke Jones <luke@ljones.dev>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
-Message-ID: <826952617.2041770.1689442828976@nm81.abv.bg>
-In-Reply-To: <5bc0abe6f218bf7ae59dc20de099e3609e077a36.camel@ljones.dev>
-References: <ZLGzxoJN_7Dhl_si@wyvern.localdomain>
-         <7ae06b8a-6c67-f6a6-06ed-2b6c8430c12c@redhat.com>
-         <1549bab6dae1e4509f7190469c0d2371f127a4f0.camel@ljones.dev>
-         <87d34e1d-1fcb-6d24-662f-91ff62f65dc2@redhat.com> <5bc0abe6f218bf7ae59dc20de099e3609e077a36.camel@ljones.dev>
-Subject: Re: [PATCH v2] platform/x86: asus-wmi: Fix setting RGB mode on some TUF laptops
+        Sat, 15 Jul 2023 14:16:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9365269D
+        for <platform-driver-x86@vger.kernel.org>; Sat, 15 Jul 2023 11:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1689444921;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=EDw3+ZIzjkB3zu28sluxaA/MlvRqIl/wiRUzRrhLaMQ=;
+        b=Nzq0B6Re4tlF76teZgoACU2cBMO5/wPt0gdUHKbbCfYlaH7pEohKEEZC1n6u83digaPB3r
+        LA6J6xU+h8N0XXGq2b1+/UzMa5gYnmXQJY7oXIOY21J9yWBwlJuxYrnxmZg3/iF/jwBxzR
+        tyxAE1PgLQg3F1hOlbRMYEVcd78inJg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-652-u9H5wR6oPQ6PTgr1ocDb1g-1; Sat, 15 Jul 2023 14:15:18 -0400
+X-MC-Unique: u9H5wR6oPQ6PTgr1ocDb1g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D0522858290;
+        Sat, 15 Jul 2023 18:15:17 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 07ED52166B25;
+        Sat, 15 Jul 2023 18:15:16 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org,
+        Maxim Mikityanskiy <maxtram95@gmail.com>
+Subject: [PATCH] platform/x86: intel: hid: Always call BTNL ACPI method
+Date:   Sat, 15 Jul 2023 20:15:16 +0200
+Message-ID: <20230715181516.5173-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: AbvMail 3.0
-X-Originating-IP: 84.238.195.102
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 15/07/23 09:40, Hans de Goede wrote:
-> Hi Kristian,
-> 
-> On 7/14/23 22:44, Kristian Angelov wrote:
-> > This patch fixes setting the cmd values to 0xb3 and 0xb4.
-> > This is necessary on some TUF laptops in order to set the RGB mode.
-> > 
-> > Closes: https://lore.kernel.org/platform-driver-x86/443078148.491022.1677576298133@nm83.abv.bg
-> > Signed-off-by: Kristian Angelov <kristiana2000@abv.bg>
-> > ---
-> >  V1 -> V2. Make setting 0xb3 and 0xb4 the default logic
-> >  
-> >  drivers/platform/x86/asus-wmi.c | 13 +++++++++++--
-> >  1 file changed, 11 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> > index 1038dfdcdd32..eb82ed723b42 100644
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
-> > @@ -738,13 +738,22 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
-> >  				 struct device_attribute *attr,
-> >  				 const char *buf, size_t count)
-> >  {
-> > -	u32 cmd, mode, r, g,  b,  speed;
-> > +	u32 cmd, mode, r, g, b, speed;
-> >  	int err;
-> >  
-> >  	if (sscanf(buf, "%d %d %d %d %d %d", &cmd, &mode, &r, &g, &b, &speed) != 6)
-> >  		return -EINVAL;
-> >  
-> > -	cmd = !!cmd;
-> > +	/* B3 is set and B4 is save to BIOS. Only set by default*/
-> > +	switch (cmd) {
-> > +	default:
-> > +	case 0:
-> > +		cmd = 0xb3;
-> > +		break;
-> > +	case 1:
-> > +		cmd = 0xb4;
-> > +		break;
-> > +	}
-> 
-> You are now leaving the value of cmd unmodified for values which are not 0 and 1.
-> 
-> I think you need to add a:
-> 
-> 	default:
-> 		return -EINVAL;
-> 
-> here to catch cmd not being either 0 or 1.
-> 
-> Luke, what do you think ?
-> 
-> Regards,
-> 
-> Hans
+On a HP Elite Dragonfly G2 the 0xcc and 0xcd events for SW_TABLET_MODE
+are only send after the BTNL ACPI method has been called.
 
+Likely more devices need this, so make the BTNL ACPI method unconditional
+instead of only doing it on devices with a 5 button array.
 
-Hi Hans,
+Note this also makes the intel_button_array_enable() call in probe()
+unconditional, that function does its own priv->array check. This makes
+the intel_button_array_enable() call in probe() consistent with the calls
+done on suspend/resume which also rely on the priv->array check inside
+the function.
 
+Reported-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+Closes: https://lore.kernel.org/platform-driver-x86/20230712175023.31651-1-maxtram95@gmail.com/
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/intel/hid.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-If you would notice I did:
->	switch (cmd) {
->	default:
->	case 0:
->		cmd = 0xb3;
->		break;
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index 5632bd3c534a..641f2797406e 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -620,7 +620,7 @@ static bool button_array_present(struct platform_device *device)
+ static int intel_hid_probe(struct platform_device *device)
+ {
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
+-	unsigned long long mode;
++	unsigned long long mode, dummy;
+ 	struct intel_hid_priv *priv;
+ 	acpi_status status;
+ 	int err;
+@@ -692,18 +692,15 @@ static int intel_hid_probe(struct platform_device *device)
+ 	if (err)
+ 		goto err_remove_notify;
+ 
+-	if (priv->array) {
+-		unsigned long long dummy;
++	intel_button_array_enable(&device->dev, true);
+ 
+-		intel_button_array_enable(&device->dev, true);
+-
+-		/* Call button load method to enable HID power button */
+-		if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_BTNL_FN,
+-					       &dummy)) {
+-			dev_warn(&device->dev,
+-				 "failed to enable HID power button\n");
+-		}
+-	}
++	/*
++	 * Call button load method to enable HID power button
++	 * Always do this since it activates events on some devices without
++	 * a button array too.
++	 */
++	if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_BTNL_FN, &dummy))
++		dev_warn(&device->dev, "failed to enable HID power button\n");
+ 
+ 	device_init_wakeup(&device->dev, true);
+ 	/*
+-- 
+2.41.0
 
-
-In the case of cmd not being 1 or 0. It would default to 0 which would only set
-the RGB mode, not save it to BIOS. I guess this would depend on preference.
-Is it better to fail out on invalid input or simply ignore it and perform the
-"default" action. Setting the RGB mode is not persistent, only saving it is. So
-defaulting to this seems reasonable, but if not I'll do a v3 with EINVAL fail.
-
-
-Best regards,
-
-
-Kristian
