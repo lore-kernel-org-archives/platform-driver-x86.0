@@ -2,141 +2,177 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF94EB64DC
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 15 Jul 2023 10:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECAAC0015E
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 15 Jul 2023 17:33:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbjGOKcH (ORCPT
+        id S229775AbjGORdn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 15 Jul 2023 06:32:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38496 "EHLO
+        Sat, 15 Jul 2023 13:33:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbjGOKcG (ORCPT
+        with ESMTP id S229549AbjGORdm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 15 Jul 2023 06:32:06 -0400
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB4221FDB
-        for <platform-driver-x86@vger.kernel.org>; Sat, 15 Jul 2023 03:32:05 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id 281F432002D8;
-        Sat, 15 Jul 2023 06:32:05 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Sat, 15 Jul 2023 06:32:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm1; t=
-        1689417124; x=1689503524; bh=53zTCJqtw6B1ofQs4+6OxxUBWeGL/OdnQw7
-        zl5y4xbE=; b=brwerP2Htdc7Bid0xltkiqkUTEiIsxlxXecroVG11oDFtoSESxi
-        5pOilGWWCv61E1DL8MKSHkzlfGDa2DsDUL1SW5yvL+Rj/Si0rAW3YOfet4jS5O2j
-        glCaegAubsEm3ByKG1fVRDusDN3lwh4FzmwldC8eCk8bVujOF1HQppugJgJvWfXx
-        5ffXatMZw5iUw5CuPcwSRXfx7gmmXFKlJdCyMyX2YvTl9/JHQHOetHfK9os3sHMq
-        ZBiq9tMr+cpqcCBKKIiZGZRwJPniXyHgZJFotUDhrUfSloRUCzqZS/Qtow03Wa4+
-        DjFasRrnJFbv1QlsgmBY9CYbiDhCQeIs3RA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-        1689417124; x=1689503524; bh=53zTCJqtw6B1ofQs4+6OxxUBWeGL/OdnQw7
-        zl5y4xbE=; b=OpUIHDJIgJ2tVH7MBpbbQFoKi8KN86KS/VNDGv/I7z33N+t/dnx
-        yZABBfOHn9f4uAIV4qjWjSb16p5ALRvb7aZX/XKy99OkO8KnDPXAy1JxOxCHTHl3
-        aeGMfi5xXJGQfDcYnJ8eR3PoX/szk+tUF4XFQwAn6EPnW4/FuBARZPyjkK2cmzps
-        dCRvcD06A5gnqOGmNDr8/VW8YyP/ARYEEUCFWuieF17XWT10dcmzYYyTZGB+le8S
-        cJ9QNcPlyjF1tByoQ4vZ3zdcC2jRXeFOzwiPkAOomLi7zLslNm6KOhf3yU0c1nVk
-        yY1+23Ax2kTNltpdhP5pVwbkAXVNXqcpIJQ==
-X-ME-Sender: <xms:pHWyZCinnkTcGHY7Ai2JaYrawEw0ruAxE7vEbrpS89ILTDwbK24rOg>
-    <xme:pHWyZDA4kdIPA_vkw1h9IwLmZTT4xfUp6eHlXMCkeaVsqVCrwGou01-BtJmWLqnTv
-    LkLDZGxhofXjBcVSwU>
-X-ME-Received: <xmr:pHWyZKFk8INF3Fnr6ryHRN8dqMjhSjz_yPf9yjc9n1wlGUSPI0NyIk7NHgHAtAhuY5gXDA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrfeekgdeftdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfevffgjfhgtgfgfggesthgsredttderjeenucfhrhhomhepnfhukhgv
-    ucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnh
-    epveejleeludfgheettdelvedtgeejieetieffiefhudeiffffffeftdetffekvdelnecu
-    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:pHWyZLTqEs-VAuhF3S2vd9gqFmttVaq_4-OYI_sEgp1jYRCdr_qpPQ>
-    <xmx:pHWyZPxqH9x2_dimqw0KC7GbD7YKo_YvhkTGrCrfhzf_bRkdedUdzg>
-    <xmx:pHWyZJ6RtZxmgxWgTIgI80kAerIzvGB1xupeH3-3jbEAIczKWp6XZQ>
-    <xmx:pHWyZNYUDwO9MChzip92IxxP4H8uyTUarnaL07-BzRkH1exAg2RKuA>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 15 Jul 2023 06:32:02 -0400 (EDT)
-Message-ID: <5bc0abe6f218bf7ae59dc20de099e3609e077a36.camel@ljones.dev>
-Subject: Re: [PATCH v2] platform/x86: asus-wmi: Fix setting RGB mode on some
- TUF laptops
-From:   Luke Jones <luke@ljones.dev>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Kristian Angelov <kristiana2000@abv.bg>
-Cc:     platform-driver-x86@vger.kernel.org
-Date:   Sat, 15 Jul 2023 22:31:56 +1200
-In-Reply-To: <87d34e1d-1fcb-6d24-662f-91ff62f65dc2@redhat.com>
-References: <ZLGzxoJN_7Dhl_si@wyvern.localdomain>
-         <7ae06b8a-6c67-f6a6-06ed-2b6c8430c12c@redhat.com>
-         <1549bab6dae1e4509f7190469c0d2371f127a4f0.camel@ljones.dev>
-         <87d34e1d-1fcb-6d24-662f-91ff62f65dc2@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.3 (by Flathub.org) 
+        Sat, 15 Jul 2023 13:33:42 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C801172C;
+        Sat, 15 Jul 2023 10:33:41 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-3158a5e64b6so2994608f8f.0;
+        Sat, 15 Jul 2023 10:33:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689442419; x=1692034419;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e5lBpFjcCM8ICwBqvH4u5XdokFHe2AakZ8reWsweCKQ=;
+        b=JPhW42vvXf0KAbwfNqd3hIpQQhdECfDll5zxT2xWwcLhGLMSw/lKt7c3Y5VKVoy9k5
+         SjbmENMYNURFWsrv6SJba7MX3vDWTLP4CKpNRvqDuPUnISwMUSbSELT9eXP39fSG/RhA
+         aTxDJ91WC77BZiGooEQgdHz6bFmY3lXPgoc/44Y6y5UMLe3AJoWpwC7knqFeN1fAK3Nw
+         ucDso93hlHy1je/2Sh1PcoOWg93KbUY74wSNsjViQK7fJSb8dG73fbxsNmVLLooQ+/xS
+         MedfCBRfcke09CN+QYrh3GhhC3Jq3PYnaeWHgIV0dmTvSrbV1fj9vKz0iq498oeUP7OS
+         khdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689442419; x=1692034419;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e5lBpFjcCM8ICwBqvH4u5XdokFHe2AakZ8reWsweCKQ=;
+        b=CKvKmtGttHhdedOs7sZCZaT0LXgY+zgiRpmqvUGnMb1kUBKU8dbUlp+YLnCR477Ojk
+         rBOgVeBIzyQ2rj8e2Q8QdpAMbt0OAZOs58Wzgfqho+z/PkRIR+scJrAgutnf7hrYpKcT
+         7uGgQPgTOQjKiMBtS1xYOM4QY1WSpvtbO74xY1V+b4Mzuc5Jz/xiLRxFefDaTxqjd2jB
+         gh75srmSaRetQTPnFGOgSusXfG/OQKKQ3uHj86Qm/EIZ9T9P1uyEtacgtBQu8HZPxz5f
+         SHOGYmJcLHojW5C7FlGF++hlPUs3YbV5ReXmdrYxjum8ErBFuJCj9IX9+QUFUGkk+MeP
+         U3Ag==
+X-Gm-Message-State: ABy/qLYSGn3WxgbeCn+mMaoeQH3dpTWHtyxvMg7MTHlfW254jhb/SPZK
+        dgn9T0bQdIFETH/qJqrY1+XTeIBLHGyqpXF6s8c=
+X-Google-Smtp-Source: APBJJlFS2IPwYaxMES/dSmbeBBhwRK5Mlr+veXC1fF+cFCnNpii+8auBVezC/EEl7BICKzitHM67P39hBCL9Nkurep4=
+X-Received: by 2002:a5d:5706:0:b0:314:2b0a:dac7 with SMTP id
+ a6-20020a5d5706000000b003142b0adac7mr7200870wrv.36.1689442419348; Sat, 15 Jul
+ 2023 10:33:39 -0700 (PDT)
 MIME-Version: 1.0
+References: <20230712175023.31651-1-maxtram95@gmail.com> <4b7da537-8ec3-95e2-4053-871c56e980ea@redhat.com>
+In-Reply-To: <4b7da537-8ec3-95e2-4053-871c56e980ea@redhat.com>
+From:   Maxim Mikityanskiy <maxtram95@gmail.com>
+Date:   Sat, 15 Jul 2023 20:33:12 +0300
+Message-ID: <CAKErNvr+F_6_qFyQi_JeDwKNyUapTWZ=KuNx7-UeNgLJoFPrwg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86/intel/hid: Add HP Dragonfly G2 to DMI quirks
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Alex Hung <alexhung@gmail.com>, Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Richard Hughes <hughsient@gmail.com>,
+        Jorge Lopez <jorge.lopez2@hp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-PiBIaSwKPiAKPiBPbiA3LzE1LzIzIDEyOjAzLCBMdWtlIEpvbmVzIHdyb3RlOgo+ID4gT24gU2F0
-LCAyMDIzLTA3LTE1IGF0IDExOjQwICswMjAwLCBIYW5zIGRlIEdvZWRlIHdyb3RlOgo+ID4gPiBI
-aSBLcmlzdGlhbiwKPiA+ID4gCj4gPiA+IE9uIDcvMTQvMjMgMjI6NDQsIEtyaXN0aWFuIEFuZ2Vs
-b3Ygd3JvdGU6Cj4gPiA+ID4gVGhpcyBwYXRjaCBmaXhlcyBzZXR0aW5nIHRoZSBjbWQgdmFsdWVz
-IHRvIDB4YjMgYW5kIDB4YjQuCj4gPiA+ID4gVGhpcyBpcyBuZWNlc3Nhcnkgb24gc29tZSBUVUYg
-bGFwdG9wcyBpbiBvcmRlciB0byBzZXQgdGhlIFJHQgo+ID4gPiA+IG1vZGUuCj4gPiA+ID4gCj4g
-PiA+ID4gQ2xvc2VzOgo+ID4gPiA+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BsYXRmb3JtLWRy
-aXZlci14ODYvNDQzMDc4MTQ4LjQ5MTAyMi4xNjc3NTc2Mjk4MTMzQG5tODMuYWJ2LmJnCj4gPiA+
-ID4gU2lnbmVkLW9mZi1ieTogS3Jpc3RpYW4gQW5nZWxvdiA8a3Jpc3RpYW5hMjAwMEBhYnYuYmc+
-Cj4gPiA+ID4gLS0tCj4gPiA+ID4gwqBWMSAtPiBWMi4gTWFrZSBzZXR0aW5nIDB4YjMgYW5kIDB4
-YjQgdGhlIGRlZmF1bHQgbG9naWMKPiA+ID4gPiDCoAo+ID4gPiA+IMKgZHJpdmVycy9wbGF0Zm9y
-bS94ODYvYXN1cy13bWkuYyB8IDEzICsrKysrKysrKysrLS0KPiA+ID4gPiDCoDEgZmlsZSBjaGFu
-Z2VkLCAxMSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+ID4gPiA+IAo+ID4gPiA+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9hc3VzLXdtaS5jCj4gPiA+ID4gYi9kcml2
-ZXJzL3BsYXRmb3JtL3g4Ni9hc3VzLXdtaS5jCj4gPiA+ID4gaW5kZXggMTAzOGRmZGNkZDMyLi5l
-YjgyZWQ3MjNiNDIgMTAwNjQ0Cj4gPiA+ID4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvYXN1
-cy13bWkuYwo+ID4gPiA+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FzdXMtd21pLmMKPiA+
-ID4gPiBAQCAtNzM4LDEzICs3MzgsMjIgQEAgc3RhdGljIHNzaXplX3Qga2JkX3JnYl9tb2RlX3N0
-b3JlKHN0cnVjdAo+ID4gPiA+IGRldmljZSAqZGV2LAo+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IGRl
-dmljZV9hdHRyaWJ1dGUgKmF0dHIsCj4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb25zdCBjaGFyICpidWYsIHNp
-emVfdCBjb3VudCkKPiA+ID4gPiDCoHsKPiA+ID4gPiAtwqDCoMKgwqDCoMKgwqB1MzIgY21kLCBt
-b2RlLCByLCBnLMKgIGIswqAgc3BlZWQ7Cj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgdTMyIGNtZCwg
-bW9kZSwgciwgZywgYiwgc3BlZWQ7Cj4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoGludCBlcnI7Cj4g
-PiA+ID4gwqAKPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgaWYgKHNzY2FuZihidWYsICIlZCAlZCAl
-ZCAlZCAlZCAlZCIsICZjbWQsICZtb2RlLCAmciwKPiA+ID4gPiAmZywKPiA+ID4gPiAmYiwgJnNw
-ZWVkKSAhPSA2KQo+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJu
-IC1FSU5WQUw7Cj4gPiA+ID4gwqAKPiA+ID4gPiAtwqDCoMKgwqDCoMKgwqBjbWQgPSAhIWNtZDsK
-PiA+ID4gPiArwqDCoMKgwqDCoMKgwqAvKiBCMyBpcyBzZXQgYW5kIEI0IGlzIHNhdmUgdG8gQklP
-Uy4gT25seSBzZXQgYnkKPiA+ID4gPiBkZWZhdWx0Ki8KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqBz
-d2l0Y2ggKGNtZCkgewo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoGRlZmF1bHQ6Cj4gPiA+ID4gK8Kg
-wqDCoMKgwqDCoMKgY2FzZSAwOgo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqBjbWQgPSAweGIzOwo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBicmVh
-azsKPiA+ID4gPiArwqDCoMKgwqDCoMKgwqBjYXNlIDE6Cj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoGNtZCA9IDB4YjQ7Cj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoGJyZWFrOwo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoH0KPiA+ID4gCj4gPiA+IFlv
-dSBhcmUgbm93IGxlYXZpbmcgdGhlIHZhbHVlIG9mIGNtZCB1bm1vZGlmaWVkIGZvciB2YWx1ZXMg
-d2hpY2gKPiA+ID4gYXJlCj4gPiA+IG5vdCAwIGFuZCAxLgo+ID4gPiAKPiA+ID4gSSB0aGluayB5
-b3UgbmVlZCB0byBhZGQgYToKPiA+ID4gCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqBkZWZhdWx0Ogo+
-ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAtRUlOVkFMOwo+ID4g
-PiAKPiA+ID4gaGVyZSB0byBjYXRjaCBjbWQgbm90IGJlaW5nIGVpdGhlciAwIG9yIDEuCj4gPiA+
-IAo+ID4gPiBMdWtlLCB3aGF0IGRvIHlvdSB0aGluayA/Cj4gPiAKPiA+IExvb2tzIGZpbmUgdG8g
-bWUuCj4gCj4gRmluZSB3aXRoIG9yIHdpdGhvdXQgdGhlIGRlZmF1bHQ6IHJldHVybiAtRUlOVkFM
-OyBhZGRlZCA/CgpTb3JyeSwgaSB3YXNuJ3QgdmVyeSBjbGVhciBhdCBhbGwuIFdpdGggLUVJTlZB
-TC4gSSBkb24ndCBzZWUgYW55IHJlYXNvbgppdCBzaG91bGQgY29udGludWUgd2l0aCB1bi1pbml0
-aWFsaXNlZCBjbWQsIG9yIGEgZGVmYXVsdCB2YWx1ZSBhcyBhCmRlZmF1bHQgbWlnaHQgZ2l2ZSBm
-YWxzZSBleHBlY3RhdGlvbnMuCgo+IAo+ID4gU2lnbmVkLW9mZi1ieTogTHVrZSBELiBKb25lcyA8
-bHVrZUBsam9uZXMuZGV2Pgo+IAo+IEkgZ3Vlc3MgeW91IG1lYW4gUmV2aWV3ZWQtYnkgPwoKWWVz
-IHNvcnJ5LCBJIHNob3VsZG4ndCBoYXZlIGV2ZW4gYWRkZWQgdGhhdC4gSSB3aWxsIGFkZCByZXZp
-ZXcgZm9yIFYzLgoKPiAKPiBSZWdhcmRzLAo+IAo+IEhhbnMKPiAKPiAKPiAKPiAKPiA+ID4gPiDC
-oMKgwqDCoMKgwqDCoMKgLyogVGhlc2UgYXJlIHRoZSBrbm93biB1c2FibGUgbW9kZXMgYWNyb3Nz
-IGFsbCBUVUYvUk9HCj4gPiA+ID4gKi8KPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgaWYgKG1vZGUg
-Pj0gMTIgfHwgbW9kZSA9PSA5KQo+ID4gPiAKPiA+IAo+IAoK
+On Fri, 14 Jul 2023 at 20:00, Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi Maxim,
+>
+> On 7/12/23 19:50, Maxim Mikityanskiy wrote:
+> > SW_TABLET_MODE reports are broken on BIOS versions newer than 1.9.1 on
+> > HP Elite Dragonfly G2. Analysis of SSDT9 shows that the BTNL method has
+> > to be called to start getting 0xcc and 0xcd events. Apparently, the
+> > button_array_present method used to return true on BIOS 1.9.1 and older=
+,
+> > but it returns false on newer BIOSes due to HEBC returning 0x000033f3
+> > (bits 0x60000 and 0x20000 are not set).
+> >
+> > Add this laptop to button_array_table to force the BTNL call, and also
+> > add it to dmi_vgbs_allow_list to read the initial state and sync VBDS
+> > with VBPS, because this laptop has a reliable VGBS method.
+> >
+> > Tested with BIOS 1.13.1.
+> >
+> > Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+>
+> Thank you for figuring this out and thank you for the patch.
+>
+> WRT the need to call BTNL, I expect that if one laptop needs this likely =
+more models will need it and I expect / hope that this will not cause any i=
+ssues when called everywhere.
+>
+> So I think it would be better to instead of adding this model to the butt=
+on_array_table[] it would be better to just always call BTNL (I suspect thi=
+s is also what Windows does).
+>
+> Can you give the attached path to always call BTNL a try ?
 
+Thanks for the patch, I tested it, and it works for me. Also tested on
+a non-convertible laptop and didn't see any side effects.
+
+Regarding calling BTNL unconditionally, I guess it's fine to try it,
+my only concern is that it might break buttons on some laptops if it
+has some weird side effects there, but the change can always be
+reverted if you get some bug reports.
+
+I couldn't find any publicly available docs on this interface, so I
+don't know whether the driver is expected to call BTNL to get tablet
+mode events, or whether such behavior is specific to HP.
+
+> As for adding the model to dmi_vgbs_allow_list[] on many models it seems =
+that the EC will send a 0xcc / 0xcd event at boot (now that I think about i=
+t I guess this may be in response to the BTNL call) and then on that event =
+the SW_TABLET_STATE evdev gets registered and the first event also syncs th=
+e state.
+>
+> Can you check if just using the always call BTNL patch, without the quirk=
+ perhaps already makes the SW_TABLET_STATE evdev show up (including the cor=
+rect state) ?
+
+Yes, I checked it before, my laptop sends an event on boot (after an
+arbitrary delay of about 0.5..1.5 s), but only when started in the
+laptop mode. If I turn it on in the tablet mode, there is no initial
+event, so I'm afraid the VGBS quirk is needed.
+
+
+> If no event is send during boot, the n I'm fine with adding the model to =
+the dmi_vgbs_allow_list[], but perhaps this is not necessary?
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+> > ---
+> >  drivers/platform/x86/intel/hid.c | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/in=
+tel/hid.c
+> > index 5632bd3c534a..5c78b476ed1e 100644
+> > --- a/drivers/platform/x86/intel/hid.c
+> > +++ b/drivers/platform/x86/intel/hid.c
+> > @@ -128,6 +128,13 @@ static const struct dmi_system_id button_array_tab=
+le[] =3D {
+> >                       DMI_MATCH(DMI_PRODUCT_NAME, "Surface Go 3"),
+> >               },
+> >       },
+> > +     {
+> > +             .ident =3D "HP Elite Dragonfly G2",
+> > +             .matches =3D {
+> > +                     DMI_MATCH(DMI_SYS_VENDOR, "HP"),
+> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "HP Elite Dragonfly G=
+2 Notebook PC"),
+> > +             },
+> > +     },
+> >       { }
+> >  };
+> >
+> > @@ -150,6 +157,12 @@ static const struct dmi_system_id dmi_vgbs_allow_l=
+ist[] =3D {
+> >                       DMI_MATCH(DMI_PRODUCT_NAME, "Surface Go"),
+> >               },
+> >       },
+> > +     {
+> > +             .matches =3D {
+> > +                     DMI_MATCH(DMI_SYS_VENDOR, "HP"),
+> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "HP Elite Dragonfly G=
+2 Notebook PC"),
+> > +             },
+> > +     },
+> >       { }
+> >  };
+> >
