@@ -2,89 +2,105 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F99C001B0
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 15 Jul 2023 21:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE98EB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 16 Jul 2023 18:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229631AbjGOVYd (ORCPT
+        id S229585AbjGPScW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 15 Jul 2023 17:24:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50990 "EHLO
+        Sun, 16 Jul 2023 14:32:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbjGOVYc (ORCPT
+        with ESMTP id S229450AbjGPScW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 15 Jul 2023 17:24:32 -0400
-Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FBF3270A
-        for <platform-driver-x86@vger.kernel.org>; Sat, 15 Jul 2023 14:24:31 -0700 (PDT)
-Date:   Sat, 15 Jul 2023 21:24:16 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail3; t=1689456269; x=1689715469;
-        bh=D16/wC9ybg52jiDQV5+eLtWgvfFQ5TkNWX0NVbvr7UM=;
-        h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-         Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-        b=HEgOvr1gXJfy3G3zyZiPwPxBdoD7tktehWXIfQl+Sm1e2Hm0s/k6GRcV8TV+XeZNz
-         hh8E2Eq8rjgZURZ0ZRfjRfW072M6VW2tbTnwUmR68cifj5lxylUJ4SuXjdwjbtzp4j
-         m6TA4hW/B4Qm7a7kCNlzCvAarU8o9HHaytB9V9zCCUOo/iBXBKSccN4t4deV7xOzig
-         BZhJaXNO8bYWBO4lGuqrWPg1+ySeA2MC5iYBCsq9yDmYF218ldwWyH8bj4V7Z2Mh5b
-         GB2iE57fDk0zm0nOV1dMfg4J7FiTD4WUwn7GeTo+TqAtbz0eo2NLOwFHVfCouI3faf
-         ikSm1Ec7BpaIA==
-To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>,
+        Sun, 16 Jul 2023 14:32:22 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E8ADF;
+        Sun, 16 Jul 2023 11:32:20 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-51bece5d935so5385179a12.1;
+        Sun, 16 Jul 2023 11:32:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689532339; x=1692124339;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eoxN8xF03T7cZqcQApZMu5JlfIYPUFqX+rnqT1miq2o=;
+        b=VaGlBnl7PMz8cnF6BTLHqoF3g+DQvHafo6pmiuBu3IQbrsvDoms0g5SgnH4Q/kwUs8
+         Eeiy8BAXmQb33rcRyv8FUDWi9nzl+MWTuG50So357nniMTXjQ0XPTcvXccpFRvktjrTN
+         Nn9g5kDQ2EPRwKf2mKnckmx4Ye4vQZl+OriOhhGmwKdfeHrrP0VdzharW144I4z9l5hQ
+         iokfVUcYX88xWazdG7hzma1fvJ+W1Qw9R3Nm7MGdEN5RsPBSnylk9KmPcfrCpBy2mFTD
+         Ov3i7UK/wZA8Wk00IId9pzeCUyHpS4jj06EWX5J5IXUFQxnzN8/QojS25dE9Ppthfh4J
+         jzsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689532339; x=1692124339;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eoxN8xF03T7cZqcQApZMu5JlfIYPUFqX+rnqT1miq2o=;
+        b=HDPDFhMuvB/UuY7e/TObBYqPe+vMcNYl1gyV2hliT2wnJmN4KruZY7SDSc/bTQbl9B
+         RrdBaH2ldsq0HWajQkCR4y48m0Z+bAm9S0dsHxcgjVDo3LxeMAeW/MsfZQOpQrrCtlfN
+         aJYBdzypX1PYVWYT+ZLu9H/i3sbgMppGskZ7wlb2f4Tehp+GT5yweAZB2LgXLSNx3aMH
+         5E3EH2BDKaIZnC7yhJDkvF4TyGLS9sRb91Wxo9ythQhu+cGcKsrAhJIdS7HwtTOc66Xf
+         ig5u/WYYUrnbMCAAV4Z/mn0rGVJPRBWmx8nzHp9fgc8GasIJHzqg4+EvyAtXy+su5CZN
+         Q58A==
+X-Gm-Message-State: ABy/qLbFJc124x6GFEB8LCtK6cermfsiZ1cjmfmEH9Nbq1sN/fvhJfV8
+        jwj6U+3Asc730ZLE99/y5vL5f9LJgk1qJg==
+X-Google-Smtp-Source: APBJJlFiSWW6CNJglKO9srZc6x0ffWly/Rw3yEoz+X7VNowODJ+qTL01Yn9M3cinRWOH6tJZNPL5ow==
+X-Received: by 2002:a05:6402:68c:b0:51e:1095:5ae5 with SMTP id f12-20020a056402068c00b0051e10955ae5mr10540578edy.8.1689532338830;
+        Sun, 16 Jul 2023 11:32:18 -0700 (PDT)
+Received: from localhost ([185.220.101.82])
+        by smtp.gmail.com with ESMTPSA id i21-20020aa7c9d5000000b0051495ce23absm8636612edt.10.2023.07.16.11.32.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Jul 2023 11:32:18 -0700 (PDT)
+From:   Maxim Mikityanskiy <maxtram95@gmail.com>
+To:     Alex Hung <alexhung@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Armin Wolf <W_Armin@gmx.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [RFC PATCH v1] platform/x86: wmi: Do not register driver with invalid GUID
-Message-ID: <20230715211604.1272227-1-pobrn@protonmail.com>
-Feedback-ID: 20568564:user:proton
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxim Mikityanskiy <maxtram95@gmail.com>
+Subject: [PATCH v2] platform/x86/intel/hid: Add HP Dragonfly G2 to VGBS DMI quirks
+Date:   Sun, 16 Jul 2023 21:32:13 +0300
+Message-ID: <20230716183213.64173-1-maxtram95@gmail.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Since a WMI driver's ID table contains strings it is relatively
-easy to make mistakes. At the moment, there is no feedback
-if any of the specified GUIDs are invalid (since
-028e6e204ace1f080cfeacd72c50397eb8ae8883).
+HP Elite Dragonfly G2 (a convertible laptop/tablet) has a reliable VGBS
+method. If VGBS is not called on boot, the firmware sends an initial
+0xcd event shortly after calling the BTNL method, but only if the device
+is booted in the laptop mode. However, if the device is booted in the
+tablet mode and VGBS is not called, there is no initial 0xcc event, and
+the input device for SW_TABLET_MODE is not registered up until the user
+turns the device into the laptop mode.
 
-So check if the GUIDs in the driver's ID table are valid,
-print all invalid ones, and refuse to register the driver
-if any of the GUIDs are invalid.
+Call VGBS on boot on this device to get the initial state of
+SW_TABLET_MODE in a reliable way.
 
-Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
+Tested with BIOS 1.13.1.
+
+Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
 ---
- drivers/platform/x86/wmi.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/platform/x86/intel/hid.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index a78ddd83cda0..bf0be40b418a 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -1513,6 +1513,19 @@ static int acpi_wmi_probe(struct platform_device *de=
-vice)
- int __must_check __wmi_driver_register(struct wmi_driver *driver,
- =09=09=09=09       struct module *owner)
- {
-+=09bool any_id_invalid =3D false;
-+
-+=09for (const struct wmi_device_id *id =3D driver->id_table; *id->guid_str=
-ing; id++) {
-+=09=09if (!uuid_is_valid(id->guid_string)) {
-+=09=09=09pr_err("driver '%s' has invalid GUID: %s",
-+=09=09=09       driver->driver.name, id->guid_string);
-+=09=09=09any_id_invalid =3D true;
-+=09=09}
-+=09}
-+
-+=09if (any_id_invalid)
-+=09=09return -EINVAL;
-+
- =09driver->driver.owner =3D owner;
- =09driver->driver.bus =3D &wmi_bus_type;
-=20
---=20
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index 5632bd3c534a..afa16520b363 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -150,6 +150,12 @@ static const struct dmi_system_id dmi_vgbs_allow_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Surface Go"),
+ 		},
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "HP Elite Dragonfly G2 Notebook PC"),
++		},
++	},
+ 	{ }
+ };
+ 
+-- 
 2.41.0
-
 
