@@ -2,138 +2,283 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7394C001B0
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Jul 2023 10:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C273EB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 Jul 2023 10:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbjGQKL3 (ORCPT
+        id S229725AbjGQKj4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 17 Jul 2023 06:11:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33948 "EHLO
+        Mon, 17 Jul 2023 06:39:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbjGQKL2 (ORCPT
+        with ESMTP id S229927AbjGQKjz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 17 Jul 2023 06:11:28 -0400
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2129.outbound.protection.outlook.com [40.107.215.129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B247C91;
-        Mon, 17 Jul 2023 03:11:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GrT9SKL6gFm1XN0XTuGWK/9sSF4+f3n+HFMERa1f5/hpqz9wvZuf5t0D6nXy9ikMeypVyX+zoAGM6WVvP0oj/Pg8UoS6xp3k7VNyLufPIqMgkzR3Dw8/dvYikNP2I5BrGsbovHUMRWF6ZaFotAkMRRbuGLqHJtlky1nDeSZNh5Hs+tCFZCInmKKpic6XMWcBO2ZfYcZB6rXAAE1QSXIDLSWhMJTutXMY7r5oWU7sT2+YibQnCnMkUmFK1vI9qP9FIcQq1xBPuF/6ZnRZ0UOCOdVtBDeLBsdh7DmNKhfdTy9aRKLP2W9STN6vd3QvxkbBF0thn5qf65DZL4iAcog5gQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5B2hiMta0IVLS0vR3ynw4Cp2FY0Ll3OEBCetJGfCuUA=;
- b=PBWTjLRO1AscqqOVN9uayk5zODTOT16VLiRPb4MeE291SGrw5hPuNWLlp3oVp908EBzWyqbH8yopDLS4Af2UX8blS/hs8/f8wqBeUH3j91GBwKO4FDVFGbnfDfqHdzM+hygprMk7GUlrS1oS6mSJjWlmO0S80BXz2P8vS5r0myudwXsshsEELI4SLbRYqtAuvVqWumL10HFzG6pBX/T7YWF7cpPHEjjFYjnwMUDlkn7/Q0/lJLnathyEZFHWce7KBk28pB/1wi3U7RPrueHefJFFNRlKDJwRs5kWQPKehB9UDvNRB3uSObgJDsHlJF9+jhg/1aOUOy0jFzAUNUBakA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5B2hiMta0IVLS0vR3ynw4Cp2FY0Ll3OEBCetJGfCuUA=;
- b=OYazJiVmPHvnYObVqiVVnBPhCZ+3CfxfCVWq505yLcQrEKnhlByak1HVYYWSuZs+kDF+j6ZVs3oyv9AzDkwFv43SxubgDzBWy5t/7qltTlcWCIuXRdRJ1TGg3VQwmzzL2a29sqKWWLtoaI/N6QTHuDN966usNsNu8J0KMXKsLgvHmHZljzQs1Qahp4egd6GRybyRoWsMpHKQFz822VA04KB+2Er6ElNWI5B9Y7ZO88fJPhlPYNE6Yaws6uWpNqP8F8loLsHLsMu3EIXFjsdfzoE+Hytjfv11u3iJbKEslTkrMvaPyuXqnMq15WPmY1U9Hp8Qdx9PNqQj6nRTuDJc+Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SG2PR06MB3743.apcprd06.prod.outlook.com (2603:1096:4:d0::18) by
- SI2PR06MB5140.apcprd06.prod.outlook.com (2603:1096:4:1af::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6588.31; Mon, 17 Jul 2023 10:11:23 +0000
-Received: from SG2PR06MB3743.apcprd06.prod.outlook.com
- ([fe80::2a86:a42:b60a:470c]) by SG2PR06MB3743.apcprd06.prod.outlook.com
- ([fe80::2a86:a42:b60a:470c%4]) with mapi id 15.20.6588.031; Mon, 17 Jul 2023
- 10:11:23 +0000
-From:   Wang Ming <machel@vivo.com>
-To:     Mark Pearson <markpearson@lenovo.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Wang Ming <machel@vivo.com>
-Subject: [PATCH v1] platform: x86: Use kfree_sensitive instead of kfree
-Date:   Mon, 17 Jul 2023 18:11:02 +0800
-Message-Id: <20230717101114.18966-1-machel@vivo.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR04CA0201.apcprd04.prod.outlook.com
- (2603:1096:4:187::23) To SG2PR06MB3743.apcprd06.prod.outlook.com
- (2603:1096:4:d0::18)
+        Mon, 17 Jul 2023 06:39:55 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E2DE83
+        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Jul 2023 03:39:54 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-3fbf7fbe722so44168745e9.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Jul 2023 03:39:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1689590392; x=1692182392;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fuCFMsQClr5rFgpN+j3xKHrlZMkg7POCDTigrcZC/pg=;
+        b=rPeGmYiTuSVoUjEme6nJzPDhb4XOea2aAJ3BGtt+Pi9XE5HDioGDdB8YQ/1bv7aZZt
+         9CuzVTTZI21JRZSpouZCuA+pD84frNIt0S0WvqoSZ6vbj/ZdApDjzbugZaFqb7iWceEZ
+         sH+dfoHtBVUulDenTlYs7HL7bupeTxZ6fg6L7zMreVErQoY2IwKLjw+jrND+i64DpbPu
+         c8fd9VWLMgT0uzI0W138FbWwE1iAXVgFKHTbkigJZVD+VcLWXx+l5OOMT5nWO732Zc0F
+         Gjlmb2gm0SxXUlKJtI369P94kdkEwqw4o4zpO1ct4IZ9L3Oj2kTyRtWUugZpbI7Ye4R1
+         QwEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689590392; x=1692182392;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fuCFMsQClr5rFgpN+j3xKHrlZMkg7POCDTigrcZC/pg=;
+        b=dpC/ez39uzQXVeiLnAu3YTzTmVfW1HUKExOUMreKCBDkJuTHvsTrjIcVYKW0BCpBnR
+         kMAG92lKT/rgNMEnCUdpVo3GCVNQ9HsaunXs6crYDoEPu+FLntTNtf8oqOx1+wsI2jfM
+         Ci8JZlvsxxY41iqgZoFbUlHXKd0CJM1sY6K2Si74J0BlPb0yIqovHoFvwQNgRx2iSSub
+         G0uQSCgTWaB5U1Bi2PwByYzov5yGVlzpDsz/pdTjUbCYd6T8wUSZFuK4SR/hHA0pdS47
+         ItfC8w3LgqYFKAPp+C5V642tccOFIH4yowp0e3Uspps8AogCSxiqgFQHmGMgs/UVT4cB
+         Fapg==
+X-Gm-Message-State: ABy/qLZQZBpEWlTFL2zqy3oiGCpV2nLvA9mAeAP9Q8aO+WlomR+d9eY+
+        e8s7CPEtUjT4jj8Vo+qvDgEdR6xhsaWtRSPdj/0=
+X-Google-Smtp-Source: APBJJlHRQRZP/tomKE6Xz0dx5JRUPE1W3IrEBf9jWEPbXDjGjjpqOQUxlQxItDQ0gHFZ/hUGTmp3xA==
+X-Received: by 2002:a1c:f213:0:b0:3fc:4e9:ae27 with SMTP id s19-20020a1cf213000000b003fc04e9ae27mr11210785wmc.40.1689590392602;
+        Mon, 17 Jul 2023 03:39:52 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id l7-20020a1ced07000000b003fbe561f6a3sm7682275wmh.37.2023.07.17.03.39.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jul 2023 03:39:50 -0700 (PDT)
+Date:   Mon, 17 Jul 2023 13:39:46 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     jorge.lopez2@hp.com
+Cc:     platform-driver-x86@vger.kernel.org
+Subject: [bug report] platform/x86: hp-bioscfg: enum-attributes
+Message-ID: <176e14a2-41f8-41b2-854e-77319ec2416d@moroto.mountain>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PR06MB3743:EE_|SI2PR06MB5140:EE_
-X-MS-Office365-Filtering-Correlation-Id: 971a207b-1bbc-4924-c0c0-08db86ae2c8d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cfB9y2e0S9xy02cO3+XqxvUrLvPDy7E0zE3xB+gh5CAZKyJK+YXCpCJVcWjoODwlmcZHLem1Ei4u1RKYnY2B2uRApDPfY5b2frQ5JjKtfmmnygX4nAww2HU3C2thbk1vHD++du5FEE+10EaR4GTjOFLYmvpiWrgSfwssgrP4Htbt7fxYYg5RCf2jKYU0kxgWmNYiGbpDqhi5rz42tP4oz0ZJSv5bDXG+TMAC4CTNhPililCAd4gujl5jqtVjHgTJ3Hm/J2WZCVgkk/GMic5Hw9jTxmfppWzEwCVu55iHnDZyVpj3oet6VFC5AWTLSUuza07kJE0slhLIMHEbu8HaVgiyTdeS+cUG5jJEedzPzJ4iy6P6VZhrHb5Np80KzRtsOPz1g670K9lH5MhUcDatiB26KCnQJ7+ITWDmPOCNwD9laB3Yay65qrIWDZRlPDFqXYZ+ojFy0qZB9q73LrzCbUNuPZMwRbrOasxgmGEfKaYF58QH3wc5ISme0wa3SrOAhRnqnUV23uRVBWXRnmWbZZkDEioQdas/kBrTDJyFLeycJR6xdNv1QavUoeK0Ssbel++apzyC45HD2DPl7KJXZ5B5T26nPR0BvAlKUZbuluR+ls4hR0j5Tp/5KuigRANX
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB3743.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(396003)(136003)(346002)(366004)(39860400002)(451199021)(6666004)(110136005)(38100700002)(38350700002)(6486002)(52116002)(41300700001)(8936002)(478600001)(5660300002)(8676002)(66476007)(66946007)(316002)(4326008)(66556008)(2616005)(186003)(83380400001)(6512007)(1076003)(6506007)(26005)(107886003)(86362001)(36756003)(4744005)(2906002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?THkD/wdBrhTmbRmVzdBKMcIjLPGT0BvhveA3P/J8btNqFdu7jWnnQQXg8V86?=
- =?us-ascii?Q?e45mPPpeyz7v9dOzI6UzKTmgFzatNaWkaG0BC36LQaoLabVNS6YYEnSpbOBt?=
- =?us-ascii?Q?4ZpGyEzAlqPqcewZvnk3em1Pygya82GR7M65Y1k6SUvTMzILFUO4RsUIied7?=
- =?us-ascii?Q?dAZfeAREPh5mZEfMt/MNJqP3IFiNHBeMfJBTRcxj/FUOpn1a6Fz3LbM/OOR4?=
- =?us-ascii?Q?r7KTNEy9JM6J8lhOOIXykR/lVf41h58yrw6ilbf0pQ9D6EFRXp/vGqUc7clg?=
- =?us-ascii?Q?Nuu6HJK8HyHozjfsD0mD/55NdIhuw0Zpj/coOcJfWmjxiU5fX4NkWrOk7Qud?=
- =?us-ascii?Q?dYXLRLKfFfI/rAQ8oEKw1zw9v30xEesvl6ff9G/P+HZ9gAEiExmt97BvdlU3?=
- =?us-ascii?Q?FDl0riKC1K77d9GlCri7OS37UUgjP8bZDvazs9FvMMW64QpTpkJaGhHSQf0O?=
- =?us-ascii?Q?rFaKgtBybV8V35GVtntwZfA+FPGCcUl+8FwSUf1uof1o6njcXAJh9rpf09ZL?=
- =?us-ascii?Q?wAzahEn56PziIJm2fytm+nlaWpHgtmodOAe7r4tEF8LmGY5mcdjzXFkc4XZo?=
- =?us-ascii?Q?stwOa4Pl8JUW+f8obDBuuTPpbQsioqUm3OH6JyiTusV0WdnU9Fmnw+CELyd3?=
- =?us-ascii?Q?9NQTrXHnZbgL2mfm7jBRty9gryfanKiGuQdfoZsvHwzf2Z9SbeQq7bV8h9h8?=
- =?us-ascii?Q?D5uqewPSMtyQpCOZt2UJrX/0DXzzhTrDU3msGO6BAFgw3mqBhu1CBzdeZ2fW?=
- =?us-ascii?Q?KfKefhxjEM0HL2R/7I12kDxpAunycm8FOSVNGozewUD4FF7QHqs7jXcQq3Pw?=
- =?us-ascii?Q?c1Wl0Gi8JjiSQDikFnyliZ/IvwV7WjytU4xGZJTAwcnshY3YMOzZelRxtExJ?=
- =?us-ascii?Q?StAf9zrAgkePudl9iszcjs/wavl3UeIzYBK41ftxM15zSskwaGqW8IIleHUR?=
- =?us-ascii?Q?uzs6oMIoLRQAASHVMb0kyy+N1PuJdR3ZnTf4lntEsPbY/MyxY758nrY2ZDAZ?=
- =?us-ascii?Q?xX6NEyrwwj9I6/gZcYo3+21OhS1dA0e64iLig9y1uFnk2VBYL9gsPuKFyqri?=
- =?us-ascii?Q?JGSXmNnx5z6F6qiTP3f4UJSYmIyqOLjXxe4gPah0Kn2qNn6WBXJOTBAOz96g?=
- =?us-ascii?Q?0y0Wg7DMNYZuAkg02aTOSrT1iM4to5gJcCk2pY5muCo5LnVawQ3crQoS1syK?=
- =?us-ascii?Q?Vixd3NOqznUZ5dpf9Luqbw1P9sEFo+LmBxMbFrsbFhiYWqU0ADZuY2ZJaLpf?=
- =?us-ascii?Q?l2rSA19ue1WSsGlmHAIdp5odJXiI899GOj3j588KePiiTm11ezgEotlW5o/K?=
- =?us-ascii?Q?IGw/gf+SdPS8sowYKnnMSmGJTAG3PxCjjtRr6MzaB3/ZLL8MguaIZnI9xSVQ?=
- =?us-ascii?Q?a4beTJJk8NxRcbPlNs/i3rwDsB1N9UCub1hpZo0/uAcggVgYXHgcnnsmfcC6?=
- =?us-ascii?Q?HcuFXsyjACqNGIp0B8x5mzP1x7YCjgvdAMXZDWq7vuCaVoR/RbIxnXY6rz66?=
- =?us-ascii?Q?Ae4H2+YzzSW0A4FiOfiW2CfXunso6FNhWpBBReKHZptZJVXBwLE6MTbmYd5m?=
- =?us-ascii?Q?Y4M1aD7NP8+1xcOIC+dNiT2ZWJrff2Uc7U3UH+W/?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 971a207b-1bbc-4924-c0c0-08db86ae2c8d
-X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3743.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2023 10:11:23.4344
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jfIKI5PP6fDC9hfOewTs5uaGh5fbcMFmDZ0s3IrfvrnESwsSgPO1H6c+CcSL5NB5zdZvNg9Q8D4GB7JRRlH0dg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB5140
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-key might contain private part of the key, so better use
-kfree_sensitive to free it.
+Hello Jorge Lopez,
 
-Signed-off-by: Wang Ming <machel@vivo.com>
----
- drivers/platform/x86/think-lmi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The patch 6b2770bfd6f9: "platform/x86: hp-bioscfg: enum-attributes"
+from Jun 8, 2023 (linux-next), leads to the following Smatch static
+checker warning:
 
-diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-index 52d1ce8dfe44..79346881cadb 100644
---- a/drivers/platform/x86/think-lmi.c
-+++ b/drivers/platform/x86/think-lmi.c
-@@ -719,12 +719,12 @@ static ssize_t cert_to_password_store(struct kobject *kobj,
- 	/* Format: 'Password,Signature' */
- 	auth_str = kasprintf(GFP_KERNEL, "%s,%s", passwd, setting->signature);
- 	if (!auth_str) {
--		kfree(passwd);
-+		kfree_sensitive(passwd);
- 		return -ENOMEM;
- 	}
- 	ret = tlmi_simple_call(LENOVO_CERT_TO_PASSWORD_GUID, auth_str);
- 	kfree(auth_str);
--	kfree(passwd);
-+	kfree_sensitive(passwd);
- 
- 	return ret ?: count;
- }
--- 
-2.25.1
+drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c:285 hp_populate_enumeration_elements_from_package() error: double free of 'str_value'
+drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c:289 hp_populate_enumeration_elements_from_package() error: double free of 'str_value'
+drivers/platform/x86/hp/hp-bioscfg/int-attributes.c:263 hp_populate_integer_elements_from_package() error: double free of 'str_value'
+drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:286 hp_populate_ordered_list_elements_from_package() error: double free of 'str_value'
+drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:290 hp_populate_ordered_list_elements_from_package() error: double free of 'tmpstr'
+drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:291 hp_populate_ordered_list_elements_from_package() error: double free of 'str_value'
+drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:371 hp_populate_password_elements_from_package() error: double free of 'str_value'
+drivers/platform/x86/hp/hp-bioscfg/string-attributes.c:252 hp_populate_string_elements_from_package() error: double free of 'str_value'
+drivers/platform/x86/hp/hp-bioscfg/string-attributes.c:256 hp_populate_string_elements_from_package() error: double free of 'str_value'
 
+drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+    125 static int hp_populate_enumeration_elements_from_package(union acpi_object *enum_obj,
+    126                                                          int enum_obj_count,
+    127                                                          int instance_id)
+    128 {
+    129         char *str_value = NULL;
+
+str_value starts as NULL.
+
+    130         int value_len;
+    131         u32 size = 0;
+    132         u32 int_value;
+    133         int elem = 0;
+    134         int reqs;
+    135         int pos_values;
+    136         int ret;
+    137         int eloc;
+    138         struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
+    139 
+    140         for (elem = 1, eloc = 1; elem < enum_obj_count; elem++, eloc++) {
+    141                 /* ONLY look at the first ENUM_ELEM_CNT elements */
+    142                 if (eloc == ENUM_ELEM_CNT)
+    143                         goto exit_enumeration_package;
+
+But here we free the str_value from the previous iteration.
+
+    144 
+    145                 switch (enum_obj[elem].type) {
+    146                 case ACPI_TYPE_STRING:
+    147                         if (PREREQUISITES != elem && ENUM_POSSIBLE_VALUES != elem) {
+    148                                 ret = hp_convert_hexstr_to_str(enum_obj[elem].string.pointer,
+    149                                                                enum_obj[elem].string.length,
+    150                                                                &str_value, &value_len);
+    151                                 if (ret)
+    152                                         return -EINVAL;
+
+Here the str_value from the previos iteration is re-assigned without
+being freed.  (memory leak).
+
+    153                         }
+    154                         break;
+    155                 case ACPI_TYPE_INTEGER:
+    156                         int_value = (u32)enum_obj[elem].integer.value;
+    157                         break;
+    158                 default:
+    159                         pr_warn("Unsupported object type [%d]\n", enum_obj[elem].type);
+    160                         continue;
+    161                 }
+    162 
+    163                 /* Check that both expected and read object type match */
+    164                 if (expected_enum_types[eloc] != enum_obj[elem].type) {
+    165                         pr_err("Error expected type %d for elem %d, but got type %d instead\n",
+    166                                expected_enum_types[eloc], elem, enum_obj[elem].type);
+    167                         return -EIO;
+    168                 }
+    169 
+    170                 /* Assign appropriate element value to corresponding field */
+    171                 switch (eloc) {
+    172                 case NAME:
+    173                 case VALUE:
+    174                         break;
+    175                 case PATH:
+    176                         strscpy(enum_data->common.path, str_value,
+
+If str_value is NULL this will crash.
+
+    177                                 sizeof(enum_data->common.path));
+    178                         break;
+    179                 case IS_READONLY:
+    180                         enum_data->common.is_readonly = int_value;
+    181                         break;
+    182                 case DISPLAY_IN_UI:
+    183                         enum_data->common.display_in_ui = int_value;
+    184                         break;
+    185                 case REQUIRES_PHYSICAL_PRESENCE:
+    186                         enum_data->common.requires_physical_presence = int_value;
+    187                         break;
+    188                 case SEQUENCE:
+    189                         enum_data->common.sequence = int_value;
+    190                         break;
+    191                 case PREREQUISITES_SIZE:
+    192                         enum_data->common.prerequisites_size = int_value;
+    193                         if (int_value > MAX_PREREQUISITES_SIZE)
+    194                                 pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
+    195 
+    196                         /*
+    197                          * This HACK is needed to keep the expected
+    198                          * element list pointing to the right obj[elem].type
+    199                          * when the size is zero. PREREQUISITES
+    200                          * object is omitted by BIOS when the size is
+    201                          * zero.
+    202                          */
+    203                         if (int_value == 0)
+    204                                 eloc++;
+    205                         break;
+    206 
+    207                 case PREREQUISITES:
+    208                         size = min_t(u32, enum_data->common.prerequisites_size, MAX_PREREQUISITES_SIZE);
+    209                         for (reqs = 0; reqs < size; reqs++) {
+    210                                 if (elem >= enum_obj_count) {
+    211                                         pr_err("Error enum-objects package is too small\n");
+    212                                         return -EINVAL;
+    213                                 }
+    214 
+    215                                 ret = hp_convert_hexstr_to_str(enum_obj[elem + reqs].string.pointer,
+    216                                                                enum_obj[elem + reqs].string.length,
+    217                                                                &str_value, &value_len);
+
+str_value is re-assigned again.  (memory leak).
+
+    218 
+    219                                 if (ret)
+    220                                         return -EINVAL;
+    221 
+    222                                 strscpy(enum_data->common.prerequisites[reqs],
+    223                                         str_value,
+    224                                         sizeof(enum_data->common.prerequisites[reqs]));
+    225 
+    226                                 kfree(str_value);
+
+str_value is freed.  (this will lead to a crash).
+
+    227                         }
+    228                         break;
+    229 
+    230                 case SECURITY_LEVEL:
+    231                         enum_data->common.security_level = int_value;
+    232                         break;
+    233 
+    234                 case ENUM_CURRENT_VALUE:
+    235                         strscpy(enum_data->current_value,
+    236                                 str_value, sizeof(enum_data->current_value));
+
+No check for NULL.
+
+    237                         break;
+    238                 case ENUM_SIZE:
+    239                         enum_data->possible_values_size = int_value;
+    240                         if (int_value > MAX_VALUES_SIZE)
+    241                                 pr_warn("Possible number values size value exceeded the maximum number of elements supported or data may be malformed\n");
+    242 
+    243                         /*
+    244                          * This HACK is needed to keep the expected
+    245                          * element list pointing to the right obj[elem].type
+    246                          * when the size is zero. POSSIBLE_VALUES
+    247                          * object is omitted by BIOS when the size is zero.
+    248                          */
+    249                         if (int_value == 0)
+    250                                 eloc++;
+    251                         break;
+    252 
+    253                 case ENUM_POSSIBLE_VALUES:
+    254                         size = enum_data->possible_values_size;
+    255 
+    256                         for (pos_values = 0; pos_values < size && pos_values < MAX_VALUES_SIZE;
+    257                              pos_values++) {
+    258                                 if (elem >= enum_obj_count) {
+    259                                         pr_err("Error enum-objects package is too small\n");
+    260                                         return -EINVAL;
+    261                                 }
+    262 
+    263                                 ret = hp_convert_hexstr_to_str(enum_obj[elem + pos_values].string.pointer,
+    264                                                                enum_obj[elem + pos_values].string.length,
+    265                                                                &str_value, &value_len);
+
+Re-assigned again.
+
+    266 
+    267                                 if (ret)
+    268                                         return -EINVAL;
+    269 
+    270                                 /*
+    271                                  * ignore strings when possible values size
+    272                                  * is greater than MAX_VALUES_SIZE
+    273                                  */
+    274                                 if (size < MAX_VALUES_SIZE)
+    275                                         strscpy(enum_data->possible_values[pos_values],
+    276                                                 str_value,
+    277                                                 sizeof(enum_data->possible_values[pos_values]));
+    278                         }
+    279                         break;
+    280                 default:
+    281                         pr_warn("Invalid element: %d found in Enumeration attribute or data may be malformed\n", elem);
+    282                         break;
+    283                 }
+    284 
+--> 285                 kfree(str_value);
+
+str_value is freed at the end of every iteration so this is double free
+from the PREREQUISITES code.
+
+    286         }
+    287 
+    288 exit_enumeration_package:
+    289         kfree(str_value);
+
+This is a double free as well.  I don't see how this one could have been
+avoided in testing???
+
+    290         return 0;
+    291 }
+
+regards,
+dan carpenter
