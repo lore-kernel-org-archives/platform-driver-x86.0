@@ -2,144 +2,132 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ABEEB64DA
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 Jul 2023 07:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C95CEB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 Jul 2023 10:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231391AbjGRHzZ (ORCPT
+        id S230355AbjGRKwa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 18 Jul 2023 03:55:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57976 "EHLO
+        Tue, 18 Jul 2023 06:52:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbjGRHzY (ORCPT
+        with ESMTP id S229938AbjGRKw3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 18 Jul 2023 03:55:24 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8B6610E3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Jul 2023 00:55:21 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-307d58b3efbso5226802f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Jul 2023 00:55:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689666920; x=1692258920;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NdilMJISR5wvc4vwmBF9SNnKXESfY7+e59Ex0pjjOmw=;
-        b=lAfcYogieoGPmQAFXOi5QWLKTilJpUmp611vykSXyqp+P7EErHzeAUYwtwQ2d37b74
-         YoTXMajaYq7LKIlclzk1CPI1RhuCah4aybodnwSc3YvmaRUW56SBgA+IZOsO3C/zRFev
-         /F+74KwgFQOq4PZHaWX5VkVPcrtVMhM5n6uzhXdZKf92X2eEBLlMmb7AYqRj3Uqz2/qV
-         OOWUy3Sj83Po8zX+e+njnq/T2DhACJSKznfhbU5WkaXXrYIFgfLcVMDGww0d+94VqaUM
-         SY7ckNVN9jIlPti72I17WqPv6haVHl1a4P/kCQ5i1swlHFXqArP9yb/FWl3HXWGi6rSb
-         ycZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689666920; x=1692258920;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NdilMJISR5wvc4vwmBF9SNnKXESfY7+e59Ex0pjjOmw=;
-        b=S9BQOwfw8T1xIW/6HE+lsF8UoSaYrhp0jCL+GoKQSrVrK0Js3Qwm4Tm33C7hped7mf
-         pUl/f7LMZFU89gp/N0z6ViRh4AcYY1mU5cPG4ecThOhkB2z9nCqf3OyCmx3Qop0DJlLV
-         tywZeNZhZOTAOo4EwyKfHQXVoF6DtOfTijGnQoETOhdD9GIrhXRCN5pC+5kPZhQmOxRx
-         rH/4zaPgAArMXhzGq7FAPVchznW4zeWiNlXNAz8XO7EGYvHWgnKrYqdHomUVvTfop70j
-         hJPISrLO+Uy4MJI0xBFBBFrHOU9B1Et2vVLRn0+glq6328+sk5hyaxV+ySCZE6VnbUSr
-         dpSQ==
-X-Gm-Message-State: ABy/qLYiG0GnskKtvTiGDL0lkMEMnxsr0+HSg/5g2VoIbl7kXZXbLvam
-        4+Jj2CpUWC7GMagkQ65wrnW0Dw==
-X-Google-Smtp-Source: APBJJlH0Qfpe7l+mV5gquhWpn74L0kv6ijmTHfMV7Q3nHfIQ5xPHd3jMd5jS6RrSydbgNDMpVmMjdg==
-X-Received: by 2002:adf:ed4c:0:b0:313:f347:eea0 with SMTP id u12-20020adfed4c000000b00313f347eea0mr9666351wro.60.1689666920436;
-        Tue, 18 Jul 2023 00:55:20 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id x6-20020adff0c6000000b0030fb828511csm1551650wro.100.2023.07.18.00.55.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jul 2023 00:55:18 -0700 (PDT)
-Date:   Tue, 18 Jul 2023 10:55:15 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Jorge Lopez <jorge.lopez2@hp.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: hp-bioscfg: Fix some memory leaks in
- hp_populate_enumeration_elements_from_package()
-Message-ID: <81fd0ef0-e254-4a24-a88a-459b1d773354@kadam.mountain>
-References: <9770122e4e079dfa87d860ed86ba1a1237bcf944.1689627201.git.christophe.jaillet@wanadoo.fr>
+        Tue, 18 Jul 2023 06:52:29 -0400
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2040.outbound.protection.outlook.com [40.107.249.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AC0C94;
+        Tue, 18 Jul 2023 03:52:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CLbYAqhaFiW+M4nMDuIVaMGnQ/nBnvdhKjYzgOhbmYHFnpKrw/TJTz0chf3fTktD8HMa/up9JGUUHcSZmQTRbx2yEnY86qy0Psb0kEV9486Fu67wTAAQwjDSGX+39yQSreZIDUNpUto04WLAUdRPutAH5sJAAhSnDH3b+bf7TuJfokO76d7ert3ZLXXa9+swXzrc8/kvcJjUUaU8fU+kctljV+g805agDHBTW3EH/fgEkF8APuaFNJx3aM3gqLcjhYnBlbPfboPmvkULJ2NJv4C5X/9rp/zgO1ZY1Y2X8psH6Vgf0JiEkGFiu9gF26fJ4XEYBExC1euq6JF7w/z+8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eKyd+lnbu0O5uR6fuMHww+jkRKGvzNNenyEBsKCUcSo=;
+ b=oTDvRncxjpWBKjyatBV0MXtL3KH9pq+q7iy6IVip65R42DFMWJVmUfiYgM2nC7FoSdPpdjZHlG4idyT2mQL2sqz+fBWGejkaVM1qXrY19XnzreddfWncATw1+xwEPvHzhEY9SbLv5/VKAoM25xG9mgP2DtWF+XUjjp1J/lIfJcVOQCoK+N1UjIqFy91NbFoifJFNjLs1UbfbT1BMwvcYybUSsNZ1wisa05AW6MLLU9F8Dh261Sp4Esf0YGYgn8xcBaFmITWSlCLf8PNk+AKp/9kpafr7PXtV64hz0mGLtZvhJMb3atT1lezBoQdizlubKEfgE13pd8rcjlCitxR2vQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 194.138.21.75) smtp.rcpttodomain=kernel.org smtp.mailfrom=siemens.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=siemens.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eKyd+lnbu0O5uR6fuMHww+jkRKGvzNNenyEBsKCUcSo=;
+ b=FMqQfzIHx2NF8/6LgYz4cp7cSr75jj6cpQujucASeM6CAO94qB0LZKrDCmZ48eSAx5jHKMfEj09pGyaL5BsjstHRckuYPowC1HmB7EWnaBP5Yv0aRBQ0R4iHDzIUULWZgjjoY81/eQTI6E52MoVsEnmGq7RMuTEAQWzTgXlozyzo0lG+WVWZ8QEoGyQKuOxJd7MD8N49RkXBy86P16pOWF4YsowUJOUapeEJ1ROhs43v1Dqsoae/sE65BobvW2Y9d0izPjfonBMR922Etnu/HVQGYh5nbeDHPIobwAYfCJ1XhuiQkcvvAKQxhOSq0d85agbEQRv4c/sTwJ1/euswkA==
+Received: from FR0P281CA0037.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:48::19)
+ by AS4PR10MB5647.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:4f2::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.31; Tue, 18 Jul
+ 2023 10:52:25 +0000
+Received: from VE1EUR01FT031.eop-EUR01.prod.protection.outlook.com
+ (2603:10a6:d10:48:cafe::a5) by FR0P281CA0037.outlook.office365.com
+ (2603:10a6:d10:48::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.23 via Frontend
+ Transport; Tue, 18 Jul 2023 10:52:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.138.21.75)
+ smtp.mailfrom=siemens.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=siemens.com;
+Received-SPF: Pass (protection.outlook.com: domain of siemens.com designates
+ 194.138.21.75 as permitted sender) receiver=protection.outlook.com;
+ client-ip=194.138.21.75; helo=hybrid.siemens.com; pr=C
+Received: from hybrid.siemens.com (194.138.21.75) by
+ VE1EUR01FT031.mail.protection.outlook.com (10.152.2.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6609.23 via Frontend Transport; Tue, 18 Jul 2023 10:52:25 +0000
+Received: from DEMCHDC8WAA.ad011.siemens.net (139.25.226.104) by
+ DEMCHDC8VRA.ad011.siemens.net (194.138.21.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.30; Tue, 18 Jul 2023 12:52:24 +0200
+Received: from md1za8fc.ppmd.siemens.net (139.25.68.216) by
+ DEMCHDC8WAA.ad011.siemens.net (139.25.226.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.25; Tue, 18 Jul 2023 12:52:24 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Lee Jones <lee@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        "Wim Van Sebroeck" <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-watchdog@vger.kernel.org>
+CC:     Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        Tobias Schaffner <tobias.schaffner@siemens.com>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: [PATCH 2/3] leds: simatic-ipc-leds: default config switch to platform switch
+Date:   Tue, 18 Jul 2023 12:52:12 +0200
+Message-ID: <20230718105213.1275-3-henning.schild@siemens.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230718105213.1275-1-henning.schild@siemens.com>
+References: <20230718105213.1275-1-henning.schild@siemens.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9770122e4e079dfa87d860ed86ba1a1237bcf944.1689627201.git.christophe.jaillet@wanadoo.fr>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [139.25.68.216]
+X-ClientProxiedBy: DEMCHDC8WBA.ad011.siemens.net (139.25.226.105) To
+ DEMCHDC8WAA.ad011.siemens.net (139.25.226.104)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VE1EUR01FT031:EE_|AS4PR10MB5647:EE_
+X-MS-Office365-Filtering-Correlation-Id: a13f2e75-2ea4-460d-806e-08db877d1288
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hawnKRpydw40J9A3Kp79L5B32oDT2fGHhkIQ0RSi1nBfzOVgk1eSwTxUNN3BzRnOUVX9EIznZ9C48TuBxq5t82D4CReQ2614lRTK5hBfRgz7EJz/SBDKP6dYPu5vVXvJjwgeXEdhsnW/YAu1T5YEMJoGE3HHj6DZvvMXqS9rwhutIx15rzYyJSIN5EuX3n6IsGYVRaQnKvohrJf369chzfZbV4yWn70Imn7tIHiY5b0wTfz04Ovvatl3IW7WdtZzVdgVRcjWAM0y9nNNO/X2cVNJpk/xLTMKokmVTtUiaA7EbpIsDUOoUZdjO2agWpeYFLYnDIzJWw+FfuUNWNp31XBtjkysxjLlF4t+1WQRiF52h2NO9vVHyzOrFFJi2LvAlgU1Iz5cWGHQWiUHW3ifRIirMY+nbt8JzbmnXPNs1WzGd/2SMm93YexGeTGBO/55yyU/8b37RweJPeV5y3K/4pIMVy78gkDEG5BxUVdztbGAKkm73tbj0UHCap1Twtx0UQUVscQakz9R87RSXZHXqsKg/GIB4yN+dU6T6WPoTKIB7uoTfTySM1v9oU7IEnULH5q/iT7r8dzUJKPtWN59z63Ow0r9xFfBL2CaBLX/86l4PKvT83/n3X2pKpHNGyaaKamGrQQi2CD+NZDkzMZaCsu9kbI6F2IJNaSqoJGDC1pT0ZgAlbDQK+UcENjYWQ2cg7mOTGbwN8SCHTUX+yOL4cK8c/LTaQaAo1xOsO7iCXpGH+4FjbotrYiGsaqCqiw8sVV3J/ucv0ZcBbFxMPU60ETz8joQbK0ig8OSXZgBeaw=
+X-Forefront-Antispam-Report: CIP:194.138.21.75;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(346002)(396003)(376002)(136003)(82310400008)(451199021)(40470700004)(46966006)(36840700001)(82960400001)(6666004)(478600001)(82740400003)(356005)(47076005)(16526019)(36860700001)(186003)(336012)(2616005)(956004)(26005)(1076003)(40460700003)(40480700001)(107886003)(8936002)(4744005)(41300700001)(8676002)(4326008)(2906002)(5660300002)(316002)(86362001)(36756003)(70206006)(54906003)(110136005)(7416002)(70586007)(81166007)(44832011)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2023 10:52:25.4105
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a13f2e75-2ea4-460d-806e-08db877d1288
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.75];Helo=[hybrid.siemens.com]
+X-MS-Exchange-CrossTenant-AuthSource: VE1EUR01FT031.eop-EUR01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR10MB5647
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jul 17, 2023 at 10:53:37PM +0200, Christophe JAILLET wrote:
-> In the loop in the ENUM_POSSIBLE_VALUES case, we allocate some memory that
-> is never freed.
-> 
-> While at it, add some "str_value = NULL" to avoid some potential double
-> free.
-> 
-> Fixes: 6b2770bfd6f9 ("platform/x86: hp-bioscfg: enum-attributes")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> /!\ Speculative /!\
-> 
->    This patch is based on analysis of the surrounding code and should be
->    reviewed with care !
-> 
-> /!\ Speculative /!\
+If a user did choose to enable Siemens Simatic platform support they
+likely want the LED drivers to be enabled without having to flip more
+config switches. So we make the LED drivers config switch default to
+the platform driver switches value.
 
-I reported these bugs yesterday.  I don't think this is the correct fix.
-I thought about making the str_value local to the for loop.  That's sort
-of like what your patch does.  But I wasn't sure that was necessarily
-correct either.
+Signed-off-by: Henning Schild <henning.schild@siemens.com>
+---
+ drivers/leds/simple/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-This code needs more testing as well.  It seems no one has called this
-function.
+diff --git a/drivers/leds/simple/Kconfig b/drivers/leds/simple/Kconfig
+index 44fa0f93cb3b..9666bf22d554 100644
+--- a/drivers/leds/simple/Kconfig
++++ b/drivers/leds/simple/Kconfig
+@@ -2,6 +2,7 @@
+ config LEDS_SIEMENS_SIMATIC_IPC
+ 	tristate "LED driver for Siemens Simatic IPCs"
+ 	depends on SIEMENS_SIMATIC_IPC
++	default SIEMENS_SIMATIC_IPC
+ 	help
+ 	  This option enables support for the LEDs of several Industrial PCs
+ 	  from Siemens.
+-- 
+2.41.0
 
-Smatch complained about uninitialized variables as well.  I didn't
-bother to report that yesterday but I may as well.
-
-regards,
-dan carpenter
-
-drivers/platform/x86/hp/hp-bioscfg/string-attributes.c:188 hp_populate_string_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/string-attributes.c:191 hp_populate_string_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/string-attributes.c:194 hp_populate_string_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/string-attributes.c:197 hp_populate_string_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/string-attributes.c:200 hp_populate_string_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/string-attributes.c:239 hp_populate_string_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/string-attributes.c:242 hp_populate_string_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/string-attributes.c:245 hp_populate_string_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:192 hp_populate_ordered_list_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:195 hp_populate_ordered_list_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:198 hp_populate_ordered_list_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:201 hp_populate_ordered_list_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:204 hp_populate_ordered_list_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:238 hp_populate_ordered_list_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:242 hp_populate_ordered_list_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:262 hp_populate_ordered_list_elements_from_package() error: uninitialized symbol 'value_len'.
-drivers/platform/x86/hp/hp-bioscfg/int-attributes.c:198 hp_populate_integer_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/int-attributes.c:201 hp_populate_integer_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/int-attributes.c:204 hp_populate_integer_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/int-attributes.c:207 hp_populate_integer_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/int-attributes.c:246 hp_populate_integer_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/int-attributes.c:249 hp_populate_integer_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/int-attributes.c:252 hp_populate_integer_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/int-attributes.c:255 hp_populate_integer_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c:180 hp_populate_enumeration_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c:183 hp_populate_enumeration_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c:186 hp_populate_enumeration_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c:189 hp_populate_enumeration_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c:192 hp_populate_enumeration_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c:231 hp_populate_enumeration_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c:239 hp_populate_enumeration_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:279 hp_populate_password_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:282 hp_populate_password_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:285 hp_populate_password_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:288 hp_populate_password_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:291 hp_populate_password_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:324 hp_populate_password_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:327 hp_populate_password_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:330 hp_populate_password_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:333 hp_populate_password_elements_from_package() error: uninitialized symbol 'int_value'.
-drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:362 hp_populate_password_elements_from_package() error: uninitialized symbol 'int_value'.
