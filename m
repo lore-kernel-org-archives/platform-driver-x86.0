@@ -2,325 +2,407 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3F8EB64DA
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 Jul 2023 10:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4350DEB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 Jul 2023 10:58:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbjGRKzj (ORCPT
+        id S231920AbjGRK64 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 18 Jul 2023 06:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53484 "EHLO
+        Tue, 18 Jul 2023 06:58:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230201AbjGRKzi (ORCPT
+        with ESMTP id S231996AbjGRK6m (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 18 Jul 2023 06:55:38 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0C5EE60
-        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Jul 2023 03:55:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689677735; x=1721213735;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=GGNNNlOEXaCus2zmP5N8Sf5g6ZyJiM7ZpGSjGwVcg+I=;
-  b=c0Xuvo9Jfc8GK+L9nXorgIj7CTg+l5pL5M8sEeA0jR8ljto+SHcZVVNP
-   y05b/ZkhDxkrKXKPwMbwcG63r5/7WpkCgG0diEgTYf8cQZsHnppMHKvbZ
-   5PzP8+C816DCV2kj4U02DgA/PG9sdnEfM7iRPazLr80qV/OuPfuQUUuYN
-   54iqwudsXDaLGMi+HAcuRAwltdpS1hn3kkFtb8cHGPJ+lOgQ/0lAELXtk
-   iCjtJ7R54VbB2pNRNClgVgk7nOHFj5hGxSb6MB9SYY3OE5/3ecWZitgEe
-   UrTIQfnKFQeH+e3T9rG4kjTNvZrvmdXtr3rZcwJPryrQmRc4kZlpAD8vY
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="452553483"
-X-IronPort-AV: E=Sophos;i="6.01,214,1684825200"; 
-   d="scan'208";a="452553483"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2023 03:55:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="673863752"
-X-IronPort-AV: E=Sophos;i="6.01,214,1684825200"; 
-   d="scan'208";a="673863752"
-Received: from ijarvine-mobl2.ger.corp.intel.com ([10.252.47.53])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2023 03:55:33 -0700
-Date:   Tue, 18 Jul 2023 13:55:32 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Dan Carpenter <dan.carpenter@linaro.org>, jorge.lopez2@hp.com
-cc:     platform-driver-x86@vger.kernel.org
-Subject: Re: [bug report] platform/x86: hp-bioscfg: enum-attributes
-In-Reply-To: <176e14a2-41f8-41b2-854e-77319ec2416d@moroto.mountain>
-Message-ID: <18c3c8c6-52d4-dbde-7fd9-2335974bdfd7@linux.intel.com>
-References: <176e14a2-41f8-41b2-854e-77319ec2416d@moroto.mountain>
-MIME-Version: 1.0
+        Tue, 18 Jul 2023 06:58:42 -0400
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2056.outbound.protection.outlook.com [40.107.104.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 835E21987;
+        Tue, 18 Jul 2023 03:58:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nZivMtwmI0ktRQFJ53suMY+gHhk0vgMGKioLyd7bWdEVNqUCpUkfCLvfowwtGPo15uev2eGI5HVTQr8vLbY6ToReVLOvdAGFcuCdb/H1uab9rzHfQQrHYtWclZibijICFQ3PSvR6ZHUJfnrStSGJf3YGNInxJagNaeLMYtvQQcCwWoWKDWAoJRZ27oEG5Y0iE4VC8hW6HZ4oXp6sHgQ7HgsKsQnHmRyP6UE/DJPUYdXgtqBeF5TvUogJGjm/mnF6dTZXDuoeadc8n9gykyuRslzAwhMvaxvhPwPDfLOWuP59SpzDllPqF4YYXGbG02PxmcO09BxgUQWD4tBKK5Lagw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JQ5a8S6u7sPEoZEc5ndote9Fxr91I5XLCWpEIYhH/8Y=;
+ b=ltnj5Vn/5ZLuZqE6Vg8QAEcTNShAvInnFYYUA+1IIishu7R3ew13wDEC74ntEs/njduJXtduxhCQXzlTaWDYmoSp8TnzBbG2DdsTq3DuFXMUgH4vzvOxq62nhlZ7Ctrqty4gHjPVxQvzEzgRDHFwY5vG9qx5kErOC2VnOHiwccAnGPCeWibnh4qGHLQNklU7TEouIgAo7JW86YTwm/yaUXHTXrFVRnv6OKguhU//y1KUgZIdJdN5bb0wq4JGbNtQQg4zDbohX10FWQN+mIfPemY2IMZ19pZaMKfy8hEFOWyihySYS7+wmbh/Huhd1urIYPSX6F5nccnv1bOLy8AReg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JQ5a8S6u7sPEoZEc5ndote9Fxr91I5XLCWpEIYhH/8Y=;
+ b=xi2V/6Fn9sprRjC2rE7+ofKf2/mvUvIYm2JGyROvp9dM32JMIcXDQDHpmfML2SOKpLuGWgzpRcNf8+KC9PNWcP0yaYHLP9Ka4q5Yjs5S0qhmoF4j66pPGizpFomxpnqmVe5bn1B4xq0r4wo4Pfq8OHzkoWSOgpELT/fC4F4+COFClVfQbvrcLzRUb6qr0cU16uYznZ/cuGgHzF8i6ZvC8LRXEQl3dRlzwTASBGrFbcChujMbjU8MlFAMFTKDtrZD3kgYGKw3oCrHAjaf/n0Lat7Phwrjo1A+8mteV+5tBkL2LSfB963IW91iYP8vcmAYKlNeaXonECbuxcaGuNUfmg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
+ by DU0PR10MB5411.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:32a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.31; Tue, 18 Jul
+ 2023 10:58:32 +0000
+Received: from PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::a171:a3f2:99b7:5f29]) by PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::a171:a3f2:99b7:5f29%6]) with mapi id 15.20.6588.031; Tue, 18 Jul 2023
+ 10:58:32 +0000
+Date:   Tue, 18 Jul 2023 12:58:27 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-watchdog@vger.kernel.org>
+Cc:     Lee Jones <lee@kernel.org>,
+        "Wim Van Sebroeck" <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Mark Gross <markgross@kernel.org>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        Tobias Schaffner <tobias.schaffner@siemens.com>
+Subject: Re: [PATCH 3/3] platform/x86: Move all simatic ipc drivers to the
+ subdirectory siemens
+Message-ID: <20230718125827.40971d76@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20230718105213.1275-4-henning.schild@siemens.com>
+References: <20230718105213.1275-1-henning.schild@siemens.com>
+        <20230718105213.1275-4-henning.schild@siemens.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FRYP281CA0016.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::26)
+ To PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:269::8)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR10MB5780:EE_|DU0PR10MB5411:EE_
+X-MS-Office365-Filtering-Correlation-Id: b2ca4cfe-57f4-4a8e-3bbe-08db877ded1f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kmVcwff+wFenxbF5nZ6h14/AsSiwvvwG2noBInVCkS2Dx1X0Z3oVQBiC/RHiIWNEqta/GUbN0PRfj25C2TBVKfxLubpRVHE9rq0m7a6zQ0LGcqMXrh/Ul3uzMS1kIc6hTM3y73kf0vK4B6TXb6p6E8Ii9GcjYq2pugiqbmKqB/FgT/iHUbIf24XHP3D4L80068svEIEKZaxESiyyWtGJUO6b4XjzeSMkTrzfSMPjKQATWRd9+Okbvie/ZL3u9NRliKYvDV3tFx9yjKMVOQK6YANbqIeO2Ko22RlBer8aZF7/vQ+Gw8KEQ9zo67/E29LezaUWa2luP55urgcIwGsAzJ+BgNW2vBZTRGk3oYE3XVSC705Grn8jx8u9imWPP2pizOYvF6K+UH+R17wvy5PrVdRFNBw3af7CkgQeWLDpK0lCWDMCmO7atFKsCM/6LQ36YlH8urmLcN6xZ4vx0uSvzGyzjCc+2Mb6ELS18/yJObqqI/1Xi22PpQPpi3sNap0i8Du45jLttdJ/pBzxnUeig7aMJ7fFyw1kwLLQ28EvB/aP69Af8Oi70dgFdHNr4b47
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(376002)(39860400002)(136003)(346002)(396003)(451199021)(7416002)(86362001)(30864003)(2906002)(44832011)(6512007)(83380400001)(186003)(9686003)(6506007)(1076003)(107886003)(82960400001)(6666004)(6486002)(54906003)(110136005)(316002)(4326008)(66946007)(38100700002)(66476007)(5660300002)(478600001)(8936002)(66556008)(8676002)(41300700001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?yKi3CT1xpjS2RPx09UEbDkdE0R0jN5U5DkLNfcs3YsMGDxL5r1Z3mKcVosy9?=
+ =?us-ascii?Q?AkI6qKDzoa+eND0BIOeUl3ZCFiDxud65E3K810dFTfGJgD+MhPS2GcUmAu4V?=
+ =?us-ascii?Q?mimWeKR1EYFLH90kStzhJapfh0I3IyqEBDaahLtTQtlPyisSZHYXQFy3W5MX?=
+ =?us-ascii?Q?/cLxfzjTE47DdKE0OeOKDLjSOvk9HyfOaIGgeXXGvatURdXKEkos5kUhisG3?=
+ =?us-ascii?Q?3NIwZiN5cASu5YmKRpdonsOJUjm0inSTUpv/rC5AjqBIHnkUU1bWQ8RSLoq8?=
+ =?us-ascii?Q?BlxKontdlvkzimRWgDgTrz85G4Ir/udOWNscC3IASH7miKGpXVWOEJPhGW9s?=
+ =?us-ascii?Q?LkTUgpmm3rj8n+KDx1gCbr1/nqG3rM+vGYYpEF/tETxNAKmDYbXk5twztDFo?=
+ =?us-ascii?Q?tLYP08S84TiVJYw8WX99jD/bc6jVd2ZMOiGV3FGPmJknBennFj6iq0gn7rH4?=
+ =?us-ascii?Q?pAPSJmIiat5S1iWIL9wpcDugC8QkUgbb02YpEZJr370zuqaxMPqVGm53Iruk?=
+ =?us-ascii?Q?Agzl/jgyxKwe1UwKXb/PWMmvjMLGVNv7aRqcAnTTK/7k6k1/gw6Kq41/kuqn?=
+ =?us-ascii?Q?oj1I3Esb2JNlFn/YPySA18xSbL+4Rds57sIM2wDOKw1o3tnZ554BZC8wWlay?=
+ =?us-ascii?Q?Mn5Hn47UVKfWwRdrFpWw/ujf/TnV1ZHaM6aML2TIwUHy2LzsCrextsxyJa//?=
+ =?us-ascii?Q?aKmgXuO9rCbehop0sRfxXy07xu0e+pqpUYzJ0GcZQqdgonOavyXAGI7YpWuP?=
+ =?us-ascii?Q?+ODnhGgCd/XQmnKflBbVHQFqTRhe7P78c00vzVHTutQbFkp2xU0nM+mN9YSV?=
+ =?us-ascii?Q?ABaNcZBA/xhBoPCMas4sNJc1MZPqLsL6/WksneE6Ekjki2HX1EuaOmY6q4ea?=
+ =?us-ascii?Q?v4BygsRLxDGK274ovxLpRlMrLCvb+FykCH2nZ+/5v9HIioxsJ+ADjtMUkA/z?=
+ =?us-ascii?Q?jJzd8qaFv6l0YkMqQ9wArsX9daQozG+qz+j3+6noLvKBy0oBsEYuQ/GBaoHG?=
+ =?us-ascii?Q?kwk6tFXioN6EIig68ymw9oW8sORb5MSDKj1AiSLSrR+woIXXr0pIXy6sFbiP?=
+ =?us-ascii?Q?DMy/I4Sbq6d8H3+v1sAVRksPk3MiuhQUQ942vM9m5aRAvFIVUaDrhzcqLhel?=
+ =?us-ascii?Q?JncEGdHqkV5mH0AraQ6xcrmIaeOgJtbv1k72c/DeixksCK+cs/N9wrOdHA6v?=
+ =?us-ascii?Q?JG1TJGyosxyQgYXoF3QWY3MNsPDGHALTk/sW+dGLAZvzbhn9CeG/1nlvirkl?=
+ =?us-ascii?Q?zsyQEASGx6v5iRJfmXWtj/m1R+y+ZFYrWae6yx/eFwWjFb30CPAhf7GeqMBK?=
+ =?us-ascii?Q?zhrJEPfQwHV9z8GfPKEh/NXtM5uCjt3F/E6i9UZc2Ij1dNZoGzKgsjTljVPi?=
+ =?us-ascii?Q?7yxl8jlnjwMkQsMKBmyxbGjtoVIt5f1WBNPoOHT41f/ManIV8VK52ozkBipL?=
+ =?us-ascii?Q?7lX1TVuLQJMnqpMuBbrpaC8GCXpO2Fm9m5/N2Sr0SbMc2bUHaNa1nmr0UBR5?=
+ =?us-ascii?Q?WMJnd9uJ7KUZg0cETYVVI1df0/O6yEwnV8mGOsYGu0N8CAayq33sLplcePNa?=
+ =?us-ascii?Q?QhqRJmtd29inRa4IToB9AHvEs7jok4fehfxejDKbMHtYHi2lXQzn4Y/C+s2V?=
+ =?us-ascii?Q?7/3YfQb8bdSMLfiwXzl1IjwrYuH0xALpmReI+QsHpM2fYRZrQu+mVae85rGl?=
+ =?us-ascii?Q?UWDAaQ=3D=3D?=
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2ca4cfe-57f4-4a8e-3bbe-08db877ded1f
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5780.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2023 10:58:32.3753
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XClr6/UUij5qgSb4X6VQtWX0FKDn93d8a324w+WX7JQOjJ8ywtsNnbNVgYIJD23Z5VS+R5fJj7Ch6LloFeHFjgdhgrCDvP36DOVIVZq/qoY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR10MB5411
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 17 Jul 2023, Dan Carpenter wrote:
+Hans,
 
-> Hello Jorge Lopez,
-> 
-> The patch 6b2770bfd6f9: "platform/x86: hp-bioscfg: enum-attributes"
-> from Jun 8, 2023 (linux-next), leads to the following Smatch static
-> checker warning:
-> 
-> drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c:285 hp_populate_enumeration_elements_from_package() error: double free of 'str_value'
-> drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c:289 hp_populate_enumeration_elements_from_package() error: double free of 'str_value'
-> drivers/platform/x86/hp/hp-bioscfg/int-attributes.c:263 hp_populate_integer_elements_from_package() error: double free of 'str_value'
-> drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:286 hp_populate_ordered_list_elements_from_package() error: double free of 'str_value'
-> drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:290 hp_populate_ordered_list_elements_from_package() error: double free of 'tmpstr'
-> drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:291 hp_populate_ordered_list_elements_from_package() error: double free of 'str_value'
-> drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:371 hp_populate_password_elements_from_package() error: double free of 'str_value'
-> drivers/platform/x86/hp/hp-bioscfg/string-attributes.c:252 hp_populate_string_elements_from_package() error: double free of 'str_value'
-> drivers/platform/x86/hp/hp-bioscfg/string-attributes.c:256 hp_populate_string_elements_from_package() error: double free of 'str_value'
-> 
-> drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
->     125 static int hp_populate_enumeration_elements_from_package(union acpi_object *enum_obj,
->     126                                                          int enum_obj_count,
->     127                                                          int instance_id)
->     128 {
->     129         char *str_value = NULL;
-> 
-> str_value starts as NULL.
-> 
->     130         int value_len;
->     131         u32 size = 0;
->     132         u32 int_value;
->     133         int elem = 0;
->     134         int reqs;
->     135         int pos_values;
->     136         int ret;
->     137         int eloc;
->     138         struct enumeration_data *enum_data = &bioscfg_drv.enumeration_data[instance_id];
->     139 
->     140         for (elem = 1, eloc = 1; elem < enum_obj_count; elem++, eloc++) {
->     141                 /* ONLY look at the first ENUM_ELEM_CNT elements */
->     142                 if (eloc == ENUM_ELEM_CNT)
->     143                         goto exit_enumeration_package;
-> 
-> But here we free the str_value from the previous iteration.
-> 
->     144 
->     145                 switch (enum_obj[elem].type) {
->     146                 case ACPI_TYPE_STRING:
->     147                         if (PREREQUISITES != elem && ENUM_POSSIBLE_VALUES != elem) {
->     148                                 ret = hp_convert_hexstr_to_str(enum_obj[elem].string.pointer,
->     149                                                                enum_obj[elem].string.length,
->     150                                                                &str_value, &value_len);
->     151                                 if (ret)
->     152                                         return -EINVAL;
-> 
-> Here the str_value from the previos iteration is re-assigned without
-> being freed.  (memory leak).
-> 
->     153                         }
->     154                         break;
->     155                 case ACPI_TYPE_INTEGER:
->     156                         int_value = (u32)enum_obj[elem].integer.value;
->     157                         break;
->     158                 default:
->     159                         pr_warn("Unsupported object type [%d]\n", enum_obj[elem].type);
->     160                         continue;
->     161                 }
->     162 
->     163                 /* Check that both expected and read object type match */
->     164                 if (expected_enum_types[eloc] != enum_obj[elem].type) {
->     165                         pr_err("Error expected type %d for elem %d, but got type %d instead\n",
->     166                                expected_enum_types[eloc], elem, enum_obj[elem].type);
->     167                         return -EIO;
->     168                 }
->     169 
->     170                 /* Assign appropriate element value to corresponding field */
->     171                 switch (eloc) {
->     172                 case NAME:
->     173                 case VALUE:
->     174                         break;
->     175                 case PATH:
->     176                         strscpy(enum_data->common.path, str_value,
-> 
-> If str_value is NULL this will crash.
-> 
->     177                                 sizeof(enum_data->common.path));
->     178                         break;
->     179                 case IS_READONLY:
->     180                         enum_data->common.is_readonly = int_value;
->     181                         break;
->     182                 case DISPLAY_IN_UI:
->     183                         enum_data->common.display_in_ui = int_value;
->     184                         break;
->     185                 case REQUIRES_PHYSICAL_PRESENCE:
->     186                         enum_data->common.requires_physical_presence = int_value;
->     187                         break;
->     188                 case SEQUENCE:
->     189                         enum_data->common.sequence = int_value;
->     190                         break;
->     191                 case PREREQUISITES_SIZE:
->     192                         enum_data->common.prerequisites_size = int_value;
->     193                         if (int_value > MAX_PREREQUISITES_SIZE)
->     194                                 pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
->     195 
->     196                         /*
->     197                          * This HACK is needed to keep the expected
->     198                          * element list pointing to the right obj[elem].type
->     199                          * when the size is zero. PREREQUISITES
->     200                          * object is omitted by BIOS when the size is
->     201                          * zero.
->     202                          */
->     203                         if (int_value == 0)
->     204                                 eloc++;
->     205                         break;
->     206 
->     207                 case PREREQUISITES:
->     208                         size = min_t(u32, enum_data->common.prerequisites_size, MAX_PREREQUISITES_SIZE);
->     209                         for (reqs = 0; reqs < size; reqs++) {
->     210                                 if (elem >= enum_obj_count) {
->     211                                         pr_err("Error enum-objects package is too small\n");
->     212                                         return -EINVAL;
->     213                                 }
->     214 
->     215                                 ret = hp_convert_hexstr_to_str(enum_obj[elem + reqs].string.pointer,
->     216                                                                enum_obj[elem + reqs].string.length,
->     217                                                                &str_value, &value_len);
-> 
-> str_value is re-assigned again.  (memory leak).
-> 
->     218 
->     219                                 if (ret)
->     220                                         return -EINVAL;
->     221 
->     222                                 strscpy(enum_data->common.prerequisites[reqs],
->     223                                         str_value,
->     224                                         sizeof(enum_data->common.prerequisites[reqs]));
->     225 
->     226                                 kfree(str_value);
-> 
-> str_value is freed.  (this will lead to a crash).
-> 
->     227                         }
->     228                         break;
->     229 
->     230                 case SECURITY_LEVEL:
->     231                         enum_data->common.security_level = int_value;
->     232                         break;
->     233 
->     234                 case ENUM_CURRENT_VALUE:
->     235                         strscpy(enum_data->current_value,
->     236                                 str_value, sizeof(enum_data->current_value));
-> 
-> No check for NULL.
-> 
->     237                         break;
->     238                 case ENUM_SIZE:
->     239                         enum_data->possible_values_size = int_value;
->     240                         if (int_value > MAX_VALUES_SIZE)
->     241                                 pr_warn("Possible number values size value exceeded the maximum number of elements supported or data may be malformed\n");
->     242 
->     243                         /*
->     244                          * This HACK is needed to keep the expected
->     245                          * element list pointing to the right obj[elem].type
->     246                          * when the size is zero. POSSIBLE_VALUES
->     247                          * object is omitted by BIOS when the size is zero.
->     248                          */
->     249                         if (int_value == 0)
->     250                                 eloc++;
->     251                         break;
->     252 
->     253                 case ENUM_POSSIBLE_VALUES:
->     254                         size = enum_data->possible_values_size;
->     255 
->     256                         for (pos_values = 0; pos_values < size && pos_values < MAX_VALUES_SIZE;
->     257                              pos_values++) {
->     258                                 if (elem >= enum_obj_count) {
->     259                                         pr_err("Error enum-objects package is too small\n");
->     260                                         return -EINVAL;
->     261                                 }
->     262 
->     263                                 ret = hp_convert_hexstr_to_str(enum_obj[elem + pos_values].string.pointer,
->     264                                                                enum_obj[elem + pos_values].string.length,
->     265                                                                &str_value, &value_len);
-> 
-> Re-assigned again.
-> 
->     266 
->     267                                 if (ret)
->     268                                         return -EINVAL;
->     269 
->     270                                 /*
->     271                                  * ignore strings when possible values size
->     272                                  * is greater than MAX_VALUES_SIZE
->     273                                  */
->     274                                 if (size < MAX_VALUES_SIZE)
->     275                                         strscpy(enum_data->possible_values[pos_values],
->     276                                                 str_value,
->     277                                                 sizeof(enum_data->possible_values[pos_values]));
->     278                         }
->     279                         break;
->     280                 default:
->     281                         pr_warn("Invalid element: %d found in Enumeration attribute or data may be malformed\n", elem);
->     282                         break;
->     283                 }
->     284 
-> --> 285                 kfree(str_value);
-> 
-> str_value is freed at the end of every iteration so this is double free
-> from the PREREQUISITES code.
-> 
->     286         }
->     287 
->     288 exit_enumeration_package:
->     289         kfree(str_value);
-> 
-> This is a double free as well.  I don't see how this one could have been
-> avoided in testing???
-> 
->     290         return 0;
->     291 }
+this is based on your tag "ib-pdx86-simatic-v6.6" as you requested.
 
-I found what looked like even triple frees during my review of this series 
-against one of these constructs [1]. The whole series was full of 
-copy-pasted code so the same bugs and problems probably repeat over and over.
+Henning
 
-Due to copy-pasted code, I suggested moving common code into helpers which 
-would have simplified these functions significantly but like you see, not 
-much really happened (and seemingly not even the bugs that I explicitly 
-mentioned were addressed :-().
+Am Tue, 18 Jul 2023 12:52:13 +0200
+schrieb Henning Schild <henning.schild@siemens.com>:
 
-Diffing some of these functions yields:
-
-...
-                case PATH:
--                       strscpy(enum_data->common.path, str_value,
--                               sizeof(enum_data->common.path));
-+                       strscpy(ordered_list_data->common.path, str_value,
-+                               sizeof(ordered_list_data->common.path));
-                        break;
-                case IS_READONLY:
--                       enum_data->common.is_readonly = int_value;
-+                       ordered_list_data->common.is_readonly = int_value;
-                        break;
-                case DISPLAY_IN_UI:
--                       enum_data->common.display_in_ui = int_value;
-+                       ordered_list_data->common.display_in_ui = int_value;
-                        break;
-                case REQUIRES_PHYSICAL_PRESENCE:
--                       enum_data->common.requires_physical_presence = int_value;
-+                       ordered_list_data->common.requires_physical_presence = int_value;
-                        break;
-                case SEQUENCE:
--                       enum_data->common.sequence = int_value;
-+                       ordered_list_data->common.sequence = int_value;
-                        break;
-                case PREREQUISITES_SIZE:
--                       enum_data->common.prerequisites_size = int_value;
-+                       ordered_list_data->common.prerequisites_size = int_value;
-                        if (int_value > MAX_PREREQUISITES_SIZE)
-                                pr_warn("Prerequisites size value exceeded the maximum number of e>
-...
-
-...that part of the struct is even called "common" so it should be pretty 
-obvious there might be some common code.
-
-[1] https://patchwork.kernel.org/project/platform-driver-x86/patch/20230505220043.39036-6-jorge.lopez2@hp.com/#25328544
-
-
--- 
- i.
+> Users without a Siemens Simatic IPC will not care about any of these
+> drivers. Users who do care can enable the submenu and all drivers
+> behind it will be enabled.
+> 
+> Suggested-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> ---
+>  drivers/platform/x86/Kconfig                  | 59 +-------------
+>  drivers/platform/x86/Makefile                 |  6 +-
+>  drivers/platform/x86/siemens/Kconfig          | 77
+> +++++++++++++++++++ drivers/platform/x86/siemens/Makefile         |
+> 11 +++ .../simatic-ipc-batt-apollolake.c             |  0
+>  .../simatic-ipc-batt-elkhartlake.c            |  0
+>  .../{ => siemens}/simatic-ipc-batt-f7188x.c   |  0
+>  .../x86/{ => siemens}/simatic-ipc-batt.c      |  0
+>  .../x86/{ => siemens}/simatic-ipc-batt.h      |  0
+>  .../platform/x86/{ => siemens}/simatic-ipc.c  |  0
+>  10 files changed, 90 insertions(+), 63 deletions(-)
+>  create mode 100644 drivers/platform/x86/siemens/Kconfig
+>  create mode 100644 drivers/platform/x86/siemens/Makefile
+>  rename drivers/platform/x86/{ =>
+> siemens}/simatic-ipc-batt-apollolake.c (100%) rename
+> drivers/platform/x86/{ => siemens}/simatic-ipc-batt-elkhartlake.c
+> (100%) rename drivers/platform/x86/{ =>
+> siemens}/simatic-ipc-batt-f7188x.c (100%) rename
+> drivers/platform/x86/{ => siemens}/simatic-ipc-batt.c (100%) rename
+> drivers/platform/x86/{ => siemens}/simatic-ipc-batt.h (100%) rename
+> drivers/platform/x86/{ => siemens}/simatic-ipc.c (100%)
+> 
+> diff --git a/drivers/platform/x86/Kconfig
+> b/drivers/platform/x86/Kconfig index 487d3d8f4da9..f5fcb1ca1b63 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1074,64 +1074,7 @@ config INTEL_SCU_IPC_UTIL
+>  	  low level access for debug work and updating the firmware.
+> Say N unless you will be doing this on an Intel MID platform.
+>  
+> -config SIEMENS_SIMATIC_IPC
+> -	tristate "Siemens Simatic IPC Class driver"
+> -	help
+> -	  This Simatic IPC class driver is the central of several
+> drivers. It
+> -	  is mainly used for system identification, after which
+> drivers in other
+> -	  classes will take care of driving specifics of those
+> machines.
+> -	  i.e. LEDs and watchdog.
+> -
+> -	  To compile this driver as a module, choose M here: the
+> module
+> -	  will be called simatic-ipc.
+> -
+> -config SIEMENS_SIMATIC_IPC_BATT
+> -	tristate "CMOS battery driver for Siemens Simatic IPCs"
+> -	depends on HWMON
+> -	depends on SIEMENS_SIMATIC_IPC
+> -	default SIEMENS_SIMATIC_IPC
+> -	help
+> -	  This option enables support for monitoring the voltage of
+> the CMOS
+> -	  batteries of several Industrial PCs from Siemens.
+> -
+> -	  To compile this driver as a module, choose M here: the
+> module
+> -	  will be called simatic-ipc-batt.
+> -
+> -config SIEMENS_SIMATIC_IPC_BATT_APOLLOLAKE
+> -	tristate "CMOS Battery monitoring for Simatic IPCs based on
+> Apollo Lake GPIO"
+> -	depends on PINCTRL_BROXTON
+> -	depends on SIEMENS_SIMATIC_IPC_BATT
+> -	default SIEMENS_SIMATIC_IPC_BATT
+> -	help
+> -	  This option enables CMOS battery monitoring for Simatic
+> Industrial PCs
+> -	  from Siemens based on Apollo Lake GPIO.
+> -
+> -	  To compile this driver as a module, choose M here: the
+> module
+> -	  will be called simatic-ipc-batt-apollolake.
+> -
+> -config SIEMENS_SIMATIC_IPC_BATT_ELKHARTLAKE
+> -	tristate "CMOS Battery monitoring for Simatic IPCs based on
+> Elkhart Lake GPIO"
+> -	depends on PINCTRL_ELKHARTLAKE
+> -	depends on SIEMENS_SIMATIC_IPC_BATT
+> -	default SIEMENS_SIMATIC_IPC_BATT
+> -	help
+> -	  This option enables CMOS battery monitoring for Simatic
+> Industrial PCs
+> -	  from Siemens based on Elkhart Lake GPIO.
+> -
+> -	  To compile this driver as a module, choose M here: the
+> module
+> -	  will be called simatic-ipc-batt-elkhartlake.
+> -
+> -config SIEMENS_SIMATIC_IPC_BATT_F7188X
+> -	tristate "CMOS Battery monitoring for Simatic IPCs based on
+> Nuvoton GPIO"
+> -	depends on GPIO_F7188X
+> -	depends on SIEMENS_SIMATIC_IPC_BATT
+> -	default SIEMENS_SIMATIC_IPC_BATT
+> -	help
+> -	  This option enables CMOS battery monitoring for Simatic
+> Industrial PCs
+> -	  from Siemens based on Nuvoton GPIO.
+> -
+> -	  To compile this driver as a module, choose M here: the
+> module
+> -	  will be called simatic-ipc-batt-elkhartlake.
+> +source "drivers/platform/x86/siemens/Kconfig"
+>  
+>  config WINMATE_FM07_KEYS
+>  	tristate "Winmate FM07/FM07P front-panel keys driver"
+> diff --git a/drivers/platform/x86/Makefile
+> b/drivers/platform/x86/Makefile index 522da0d1584d..f3bf4b90b878
+> 100644 --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -131,11 +131,7 @@ obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+=
+> intel_scu_ipcutil.o obj-$(CONFIG_X86_INTEL_LPSS)		+=
+> pmc_atom.o 
+>  # Siemens Simatic Industrial PCs
+> -obj-$(CONFIG_SIEMENS_SIMATIC_IPC)			+=
+> simatic-ipc.o -obj-$(CONFIG_SIEMENS_SIMATIC_IPC_BATT)
+> 	+= simatic-ipc-batt.o
+> -obj-$(CONFIG_SIEMENS_SIMATIC_IPC_BATT_APOLLOLAKE)	+=
+> simatic-ipc-batt-apollolake.o
+> -obj-$(CONFIG_SIEMENS_SIMATIC_IPC_BATT_ELKHARTLAKE)	+=
+> simatic-ipc-batt-elkhartlake.o
+> -obj-$(CONFIG_SIEMENS_SIMATIC_IPC_BATT_F7188X)		+=
+> simatic-ipc-batt-f7188x.o
+> +obj-$(CONFIG_X86_PLATFORM_DRIVERS_SIEMENS)		+=
+> siemens/ # Winmate obj-$(CONFIG_WINMATE_FM07_KEYS)		+=
+> winmate-fm07-keys.o diff --git a/drivers/platform/x86/siemens/Kconfig
+> b/drivers/platform/x86/siemens/Kconfig new file mode 100644 index
+> 000000000000..64479f83698c --- /dev/null +++
+> b/drivers/platform/x86/siemens/Kconfig @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Siemens X86 Platform Specific Drivers
+> +#
+> +
+> +menuconfig X86_PLATFORM_DRIVERS_SIEMENS
+> +	bool "Siemens X86 Platform Specific Device Drivers"
+> +	help
+> +	  Say Y here to get to see options for device drivers for
+> various
+> +	  Siemens x86 platforms, mainly Simatic Industrial PCs.
+> +	  This option alone does not add any kernel code.
+> +
+> +	  If you say N, all options in this submenu will be skipped
+> and disabled. +
+> +if X86_PLATFORM_DRIVERS_SIEMENS
+> +
+> +config SIEMENS_SIMATIC_IPC
+> +	tristate "Siemens Simatic IPC Class driver"
+> +	default m
+> +	help
+> +	  This Simatic IPC class driver is the central of several
+> drivers. It
+> +	  is mainly used for system identification, after which
+> drivers in other
+> +	  classes will take care of driving specifics of those
+> machines.
+> +	  i.e. LEDs and watchdog.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> module
+> +	  will be called simatic-ipc.
+> +
+> +config SIEMENS_SIMATIC_IPC_BATT
+> +	tristate "CMOS battery driver for Siemens Simatic IPCs"
+> +	depends on HWMON
+> +	depends on SIEMENS_SIMATIC_IPC
+> +	default SIEMENS_SIMATIC_IPC
+> +	help
+> +	  This option enables support for monitoring the voltage of
+> the CMOS
+> +	  batteries of several Industrial PCs from Siemens.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> module
+> +	  will be called simatic-ipc-batt.
+> +
+> +config SIEMENS_SIMATIC_IPC_BATT_APOLLOLAKE
+> +	tristate "CMOS Battery monitoring for Simatic IPCs based on
+> Apollo Lake GPIO"
+> +	depends on PINCTRL_BROXTON
+> +	depends on SIEMENS_SIMATIC_IPC_BATT
+> +	default SIEMENS_SIMATIC_IPC_BATT
+> +	help
+> +	  This option enables CMOS battery monitoring for Simatic
+> Industrial PCs
+> +	  from Siemens based on Apollo Lake GPIO.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> module
+> +	  will be called simatic-ipc-batt-apollolake.
+> +
+> +config SIEMENS_SIMATIC_IPC_BATT_ELKHARTLAKE
+> +	tristate "CMOS Battery monitoring for Simatic IPCs based on
+> Elkhart Lake GPIO"
+> +	depends on PINCTRL_ELKHARTLAKE
+> +	depends on SIEMENS_SIMATIC_IPC_BATT
+> +	default SIEMENS_SIMATIC_IPC_BATT
+> +	help
+> +	  This option enables CMOS battery monitoring for Simatic
+> Industrial PCs
+> +	  from Siemens based on Elkhart Lake GPIO.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> module
+> +	  will be called simatic-ipc-batt-elkhartlake.
+> +
+> +config SIEMENS_SIMATIC_IPC_BATT_F7188X
+> +	tristate "CMOS Battery monitoring for Simatic IPCs based on
+> Nuvoton GPIO"
+> +	depends on GPIO_F7188X
+> +	depends on SIEMENS_SIMATIC_IPC_BATT
+> +	default SIEMENS_SIMATIC_IPC_BATT
+> +	help
+> +	  This option enables CMOS battery monitoring for Simatic
+> Industrial PCs
+> +	  from Siemens based on Nuvoton GPIO.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> module
+> +	  will be called simatic-ipc-batt-elkhartlake.
+> +
+> +endif # X86_PLATFORM_DRIVERS_SIEMENS
+> diff --git a/drivers/platform/x86/siemens/Makefile
+> b/drivers/platform/x86/siemens/Makefile new file mode 100644
+> index 000000000000..2b384b4cb8ba
+> --- /dev/null
+> +++ b/drivers/platform/x86/siemens/Makefile
+> @@ -0,0 +1,11 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Makefile for linux/drivers/platform/x86/siemens
+> +# Siemens x86 Platform-Specific Drivers
+> +#
+> +
+> +obj-$(CONFIG_SIEMENS_SIMATIC_IPC)			+=
+> simatic-ipc.o +obj-$(CONFIG_SIEMENS_SIMATIC_IPC_BATT)
+> 	+= simatic-ipc-batt.o
+> +obj-$(CONFIG_SIEMENS_SIMATIC_IPC_BATT_APOLLOLAKE)	+=
+> simatic-ipc-batt-apollolake.o
+> +obj-$(CONFIG_SIEMENS_SIMATIC_IPC_BATT_ELKHARTLAKE)	+=
+> simatic-ipc-batt-elkhartlake.o
+> +obj-$(CONFIG_SIEMENS_SIMATIC_IPC_BATT_F7188X)		+=
+> simatic-ipc-batt-f7188x.o diff --git
+> a/drivers/platform/x86/simatic-ipc-batt-apollolake.c
+> b/drivers/platform/x86/siemens/simatic-ipc-batt-apollolake.c
+> similarity index 100% rename from
+> drivers/platform/x86/simatic-ipc-batt-apollolake.c rename to
+> drivers/platform/x86/siemens/simatic-ipc-batt-apollolake.c diff --git
+> a/drivers/platform/x86/simatic-ipc-batt-elkhartlake.c
+> b/drivers/platform/x86/siemens/simatic-ipc-batt-elkhartlake.c
+> similarity index 100% rename from
+> drivers/platform/x86/simatic-ipc-batt-elkhartlake.c rename to
+> drivers/platform/x86/siemens/simatic-ipc-batt-elkhartlake.c diff
+> --git a/drivers/platform/x86/simatic-ipc-batt-f7188x.c
+> b/drivers/platform/x86/siemens/simatic-ipc-batt-f7188x.c similarity
+> index 100% rename from drivers/platform/x86/simatic-ipc-batt-f7188x.c
+> rename to drivers/platform/x86/siemens/simatic-ipc-batt-f7188x.c diff
+> --git a/drivers/platform/x86/simatic-ipc-batt.c
+> b/drivers/platform/x86/siemens/simatic-ipc-batt.c similarity index
+> 100% rename from drivers/platform/x86/simatic-ipc-batt.c rename to
+> drivers/platform/x86/siemens/simatic-ipc-batt.c diff --git
+> a/drivers/platform/x86/simatic-ipc-batt.h
+> b/drivers/platform/x86/siemens/simatic-ipc-batt.h similarity index
+> 100% rename from drivers/platform/x86/simatic-ipc-batt.h rename to
+> drivers/platform/x86/siemens/simatic-ipc-batt.h diff --git
+> a/drivers/platform/x86/simatic-ipc.c
+> b/drivers/platform/x86/siemens/simatic-ipc.c similarity index 100%
+> rename from drivers/platform/x86/simatic-ipc.c rename to
+> drivers/platform/x86/siemens/simatic-ipc.c
 
