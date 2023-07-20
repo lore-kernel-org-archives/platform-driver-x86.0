@@ -2,89 +2,97 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B371FEB64DA
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Jul 2023 15:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D403EB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Jul 2023 16:08:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230366AbjGTPap (ORCPT
+        id S231699AbjGTQIL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 20 Jul 2023 11:30:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36010 "EHLO
+        Thu, 20 Jul 2023 12:08:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231855AbjGTPao (ORCPT
+        with ESMTP id S229961AbjGTQII (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Jul 2023 11:30:44 -0400
-Received: from pop36.abv.bg (pop36.abv.bg [194.153.145.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE03513E
-        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jul 2023 08:30:18 -0700 (PDT)
-Received: from smtp.abv.bg (localhost [127.0.0.1])
-        by pop36.abv.bg (Postfix) with ESMTP id 73CC91805D2F;
-        Thu, 20 Jul 2023 18:29:57 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=abv.bg; s=smtp-out;
-        t=1689866997; bh=D/1wzZK+6FHt5YLqg4iQGLtXh3TyizXfYbDLc9gPtN4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YF4LCZNMg1XJsDyPka+A38KUKqh60R4KO7MCnUZDXSNaXm1FZmh+oza1URNcQ9i4e
-         CuYjzaADaodIZZl/BktrdfsjMsp58LaJ8RmRIsG2mE7560c4HchgkZaRA7asadquXg
-         xD5lLb5XklXJ7GnQzjz7Gigc3qlMJe63k6zz61rs=
-X-HELO: wyvern.localdomain
-Authentication-Results: smtp.abv.bg; auth=pass (login) smtp.auth=kristiana2000@abv.bg
-Received: from 77-85-214-96.ip.btc-net.bg (HELO wyvern.localdomain) (77.85.214.96)
- by smtp.abv.bg (qpsmtpd/0.96) with ESMTPSA (ECDHE-RSA-AES256-GCM-SHA384 encrypted); Thu, 20 Jul 2023 18:29:57 +0300
-Date:   Thu, 20 Jul 2023 18:29:50 +0300
-From:   Kristian Angelov <kristiana2000@abv.bg>
-To:     luke@ljones.dev
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
-Subject: [PATCH V3] platform/x86: asus-wmi: Fix setting RGB mode on some TUF
- laptops
-Message-ID: <ZLlS7o6UdTUBkyqa@wyvern.localdomain>
+        Thu, 20 Jul 2023 12:08:08 -0400
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9D22F0;
+        Thu, 20 Jul 2023 09:08:06 -0700 (PDT)
+Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36KG571m029141;
+        Thu, 20 Jul 2023 16:08:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : subject :
+ date : message-id : mime-version : content-transfer-encoding; s=pps0720;
+ bh=WW8wnQDb5F04c8xPquGYN1xbIFjNJENXcqLbV7qEtsk=;
+ b=M5Ye+ZwEtM/STZRtpe7Je8s9VAzE14AaDdKOOgcc18Z8r1Hww4JmPEt/Szyatp6glwqn
+ F/Y5rh9u0OV44HRCa07oVphQkCJ991uMLnZ3ENJ9agJwykKCqA5ExG8E1dN9GLsUl0r1
+ hOjjHoQOajFTGy+dfqd5ybfWwkUg5vCihCVp7bFe8VaxkHkwYXITv6ZraCLoawHPdV8o
+ SP5W/L1eoVAbTcuj4TtSJAaAHVeinlQgpBokFOpAjUfXdnK9mcNlOEeBXpRevLvRSjHA
+ RZmSG9EtptlTNz/k1YAc5l5vENULPHlFO/s0NnAniClF6i2kvfa8uzyvPQ/8tVIeJe0I UQ== 
+Received: from p1lg14878.it.hpe.com (p1lg14878.it.hpe.com [16.230.97.204])
+        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3rxwk7e1wf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Jul 2023 16:08:05 +0000
+Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by p1lg14878.it.hpe.com (Postfix) with ESMTPS id A994AD2CF;
+        Thu, 20 Jul 2023 16:08:04 +0000 (UTC)
+Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.39])
+        by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id 53E0180CBEB;
+        Thu, 20 Jul 2023 16:08:04 +0000 (UTC)
+Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 48746)
+        id CDFFC302F47FB; Thu, 20 Jul 2023 11:08:03 -0500 (CDT)
+From:   Frank Ramsay <frank.ramsay@hpe.com>
+To:     Frank Ramsay <frank.ramsay@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] tools/power/x86/intel-speed-select: Support more than 8 sockets.
+Date:   Thu, 20 Jul 2023 11:08:03 -0500
+Message-Id: <20230720160803.1648970-1-frank.ramsay@hpe.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: 1s8DvVvOYPEgCw-8rqXI84_qufLTSZM4
+X-Proofpoint-GUID: 1s8DvVvOYPEgCw-8rqXI84_qufLTSZM4
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-20_08,2023-07-20_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ lowpriorityscore=0 suspectscore=0 phishscore=0 spamscore=0 impostorscore=0
+ bulkscore=0 malwarescore=0 adultscore=0 mlxlogscore=863 priorityscore=1501
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307200135
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This patch fixes setting the cmd values to 0xb3 and 0xb4.
-This is necessary on some TUF laptops in order to set the RGB mode.
+MAX_PACKAGE_COUNT limits the intel-speed-select to systems with 8 sockets or fewer.
+On a system with more than 8 sockets intel-speed-select silently ignores everything
+beyond the 8th socket, rendering the tool useless for those systems.
 
-Closes: https://lore.kernel.org/platform-driver-x86/443078148.491022.1677576298133@nm83.abv.bg
-Signed-off-by: Kristian Angelov <kristiana2000@abv.bg>
+Increase MAX_PACKAGE_COUNT to support systems with up to 32 sockets.
+
+Signed-off-by: Frank Ramsay <frank.ramsay@hpe.com>
 ---
- V1 -> V2. Make setting 0xb3 and 0xb4 the default logic
- V2 -> V3. Defualt to -EINVAL to match the rest of asus-wmi.
+ tools/power/x86/intel-speed-select/isst.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/platform/x86/asus-wmi.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 1038dfdcdd32..8bef66a2f0ce 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -738,13 +738,23 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
- 				 struct device_attribute *attr,
- 				 const char *buf, size_t count)
- {
--	u32 cmd, mode, r, g,  b,  speed;
-+	u32 cmd, mode, r, g, b, speed;
- 	int err;
+diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
+index 54fc21575d56..8def22dec4a2 100644
+--- a/tools/power/x86/intel-speed-select/isst.h
++++ b/tools/power/x86/intel-speed-select/isst.h
+@@ -79,7 +79,7 @@
  
- 	if (sscanf(buf, "%d %d %d %d %d %d", &cmd, &mode, &r, &g, &b, &speed) != 6)
- 		return -EINVAL;
+ #define DISP_FREQ_MULTIPLIER 100
  
--	cmd = !!cmd;
-+	/* B3 is set and B4 is save to BIOS */
-+	switch (cmd) {
-+	case 0:
-+		cmd = 0xb3;
-+		break;
-+	case 1:
-+		cmd = 0xb4;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
+-#define MAX_PACKAGE_COUNT	8
++#define MAX_PACKAGE_COUNT	32
+ #define MAX_DIE_PER_PACKAGE	2
+ #define MAX_PUNIT_PER_DIE	8
  
- 	/* These are the known usable modes across all TUF/ROG */
- 	if (mode >= 12 || mode == 9)
 -- 
-2.40.0
+2.39.1
 
