@@ -2,86 +2,137 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C165CEB64DA
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Jul 2023 21:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8083EB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 Jul 2023 22:30:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229552AbjGTVQu (ORCPT
+        id S229652AbjGTWab (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 20 Jul 2023 17:16:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50978 "EHLO
+        Thu, 20 Jul 2023 18:30:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229668AbjGTVQu (ORCPT
+        with ESMTP id S229589AbjGTWaa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 Jul 2023 17:16:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E0B2D46
-        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jul 2023 14:16:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A33FB61C7B
-        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jul 2023 21:16:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1657AC433C9
-        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jul 2023 21:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689887804;
-        bh=f/xD1M5wILXqAkCLw8fHxh889mK4966mp5UufdaW1dw=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=N2aQxJm9TezrV2IF8/8KSqt9MO80tq7KU4G9qytZuZA875zfiEhI45QVHBSSJH6dq
-         FE3MnAv066f3bqLaoLeA086qHhpmb7BH5rQgarAkZUEat6vYB5GCkWCCTmRCT/P8i/
-         c+ZCe7IYjGd8EjwaXIhIflvMNRtRD9fix8zOgxl8xd6pe8tpOl5RfdbhOfOy7gWPoA
-         NX8iYvWdI8p1dpBs78qNHwFLknC4qlMcLWgDc6YdRWda7SWF6hp84UdzxOxSP+GNZL
-         iABVYfOG/Ym46dHZ7Vjcrh90oBXXHUjAdpdKAc8Ba7NWqteDQFzmS2YIIOzc6BZsbF
-         eZVHL9uCTknXw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id EFA6FC53BCD; Thu, 20 Jul 2023 21:16:43 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 216176] ideapad-laptop doesn't expose rapid charge
-Date:   Thu, 20 Jul 2023 21:16:43 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: sid.swapnildevesh@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-216176-215701-cKWmVwpRDI@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216176-215701@https.bugzilla.kernel.org/>
-References: <bug-216176-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Thu, 20 Jul 2023 18:30:30 -0400
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 642F410FC
+        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jul 2023 15:30:29 -0700 (PDT)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id D4BE35C01B7;
+        Thu, 20 Jul 2023 18:30:28 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Thu, 20 Jul 2023 18:30:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1689892228; x=1689978628; bh=Wc
+        tNg4gxw0VtRbL35WYiHcOPsplNdfJ0g3Vlw40YNhs=; b=kEqBB3bIPi8T2ywli2
+        3pZ2iWOPndn7ZmW9B26ybRhRKTARa87vEQXQnthdRjhbGrTEINdYq4L9MRP3/O4m
+        ts1h8zyakwTmo4ZFJQlYKmn4P7kDQuSlDs3ZWWM47TeoNtwOJQrh5QOqovV2mq0l
+        Wpqoc2w8paL5WEqDyFFeA2T1fwg552fhfeYHLWgAFypWWD4PalhMPDK4mezsqcje
+        7tJVoGTFQHC77oXiU82lIckYXbbJL+h70/r8Dkmqx/HWwTHcu8607HJHdk04E9Di
+        dMlvzF+uXyB5ijw3b8JHRwlwccdXoz9Jxvb9xzM8PV2HDdknlBZISSHbImacz6SN
+        +QEg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1689892228; x=1689978628; bh=WctNg4gxw0VtR
+        bL35WYiHcOPsplNdfJ0g3Vlw40YNhs=; b=yh2q4DJFPFHnbZvOcsP3fyRP3K8AU
+        THy2gZFUABcNVf2rnsP5NQsqj45L8+Ei8pwgEOLXFNRuDPchsCXNZGBBMGAOtaAO
+        /oESZzozDM2gI5x+uZOrA+3BdsitUF7YIhqsxZRfEfroSEMbAnXpx3PfNjEsBMqb
+        FCzGo70cIg5cqsVWlDgksXWt1uEU2A9DemhKUOaFEtoqasTLn5s9dbGKwU8ZM6CS
+        GfF7WrTc6+64LjixY02rO19v1ZPSjPr15W0Lg/4FxIZ0/EH9BxoBCJxjJ0wVW0be
+        ZGETi9xKF15SSUUhWmMv5s7DrO7wldkBKwghnMZIiUKLsVGF8NtQU9c0w==
+X-ME-Sender: <xms:hLW5ZJUiB92f3cSKn6_tGjCkGeKqhkX2vSeJtjI9me1joRDjeLHeKA>
+    <xme:hLW5ZJmzbeQ7fcneNTA8Cx6Jzis0tA0LeLApozdpm1jelu0DuGEAmOv_YPf4ohKLG
+    27qnuz-Hgw1Cm4XkPs>
+X-ME-Received: <xmr:hLW5ZFZGfQikRxeWwC9jtiIcfi4A3_maHo0yMFtuODEGV1JDghkuoZdTHLIx8WP89es5yA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrhedugddutdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffuvfevkfgjfhfogggtsehttdertdertddvnecuhfhrohhmpefnuhhkvgcu
+    lfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpe
+    fhieegtdevfeejueekteefkedtfeeffeetkeefffeiieetieeghefhuddtiedtheenucff
+    ohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:hLW5ZMWis9qSEndtyI1umw8n9HIM4Kpt-LoNW_4N613UYWbaevP4yQ>
+    <xmx:hLW5ZDkQmaI4aH__FZBljAPArACPhuKUZumkEcW-RWiP46xVakZSRg>
+    <xmx:hLW5ZJe6MaOCPuJkkiEzVmOyS-6fMcghtxVRe8v4oKJUxg4iNFCMLg>
+    <xmx:hLW5ZCuYkKNvlaN0gsPhOWNpsp-ku8kaiLS4CLTB_EdTC3DPrP2K3g>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 20 Jul 2023 18:30:25 -0400 (EDT)
+Date:   Fri, 21 Jul 2023 10:30:12 +1200
+From:   Luke Jones <luke@ljones.dev>
+Subject: Re: [PATCH V3] platform/x86: asus-wmi: Fix setting RGB mode on some
+ TUF laptops
+To:     Kristian Angelov <kristiana2000@abv.bg>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
+Message-Id: <C694YR.K5DWX6WG90S31@ljones.dev>
+In-Reply-To: <ZLlS7o6UdTUBkyqa@wyvern.localdomain>
+References: <ZLlS7o6UdTUBkyqa@wyvern.localdomain>
+X-Mailer: geary/44.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216176
+Looks good to me.
 
-Swapnil Devesh (sid.swapnildevesh@gmail.com) changed:
+Reviewed-by: Luke D. Jones <luke@ljones.dev>
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |sid.swapnildevesh@gmail.com
+On Thu, Jul 20 2023 at 18:29:50 +03:00:00, Kristian Angelov 
+<kristiana2000@abv.bg> wrote:
+> This patch fixes setting the cmd values to 0xb3 and 0xb4.
+> This is necessary on some TUF laptops in order to set the RGB mode.
+> 
+> Closes: 
+> https://lore.kernel.org/platform-driver-x86/443078148.491022.1677576298133@nm83.abv.bg
+> Signed-off-by: Kristian Angelov <kristiana2000@abv.bg>
+> ---
+>  V1 -> V2. Make setting 0xb3 and 0xb4 the default logic
+>  V2 -> V3. Defualt to -EINVAL to match the rest of asus-wmi.
+> 
+>  drivers/platform/x86/asus-wmi.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c 
+> b/drivers/platform/x86/asus-wmi.c
+> index 1038dfdcdd32..8bef66a2f0ce 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -738,13 +738,23 @@ static ssize_t kbd_rgb_mode_store(struct device 
+> *dev,
+>  				 struct device_attribute *attr,
+>  				 const char *buf, size_t count)
+>  {
+> -	u32 cmd, mode, r, g,  b,  speed;
+> +	u32 cmd, mode, r, g, b, speed;
+>  	int err;
+> 
+>  	if (sscanf(buf, "%d %d %d %d %d %d", &cmd, &mode, &r, &g, &b, 
+> &speed) != 6)
+>  		return -EINVAL;
+> 
+> -	cmd = !!cmd;
+> +	/* B3 is set and B4 is save to BIOS */
+> +	switch (cmd) {
+> +	case 0:
+> +		cmd = 0xb3;
+> +		break;
+> +	case 1:
+> +		cmd = 0xb4;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> 
+>  	/* These are the known usable modes across all TUF/ROG */
+>  	if (mode >= 12 || mode == 9)
+> --
+> 2.40.0
+> 
 
---- Comment #9 from Swapnil Devesh (sid.swapnildevesh@gmail.com) ---
-Is there any progress on this ? I think exposing rapid change in ideapad-la=
-ptop
-makes sense similar to conservation_mode until a better api is implemented.
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
