@@ -2,63 +2,94 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66F6EB64DC
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 Jul 2023 08:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AE7EB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 Jul 2023 09:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229707AbjGUINf (ORCPT
+        id S231696AbjGUJR2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 21 Jul 2023 04:13:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57118 "EHLO
+        Fri, 21 Jul 2023 05:17:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229729AbjGUINe (ORCPT
+        with ESMTP id S229924AbjGUJR1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 Jul 2023 04:13:34 -0400
-Received: from mail.bizcodes.pl (mail.bizcodes.pl [151.80.57.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A21D2708
-        for <platform-driver-x86@vger.kernel.org>; Fri, 21 Jul 2023 01:13:33 -0700 (PDT)
-Received: by mail.bizcodes.pl (Postfix, from userid 1002)
-        id 4A4D1A5811; Fri, 21 Jul 2023 08:10:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bizcodes.pl; s=mail;
-        t=1689927070; bh=5QPMt7jNntM5ZbstM20BWsHIeLbmRE8lVU4Iu89IleQ=;
-        h=Date:From:To:Subject:From;
-        b=j42XriK8E+BYvp8neJ0tt5YuqO1IcyMha44z1oLNkVtIfQhGPFHpgVNqsNFQCcKDs
-         6oK1i4gBFEML+T53GwC0CNakCeF6NHYdEgEAaCs9qW0Z+7i0i5gRw6g4mFE47tN6kV
-         fbyBKzAoLcg9mgbDbyPp9JuVLk2xiMJrcTr4pn5RJLlctqy4kbU4lBC9fOHvovV/q8
-         qIIAv7WVIDE2nFhelpSoLWLKTd4l82RL9QAdEY3nGoxnZArUib5RXzF60AuoJXxzOV
-         EVBZtCJi8Q+C4KKbwKsTr/BkzoQB27vTk/lrU1PTH/tbBxHepjBzE7AHiuJBKO9RoP
-         /8t+yo/Q8Xzkw==
-Received: by mail.bizcodes.pl for <platform-driver-x86@vger.kernel.org>; Fri, 21 Jul 2023 08:10:28 GMT
-Message-ID: <20230721064500-0.1.am.17n01.0.9llm012fll@bizcodes.pl>
-Date:   Fri, 21 Jul 2023 08:10:28 GMT
-From:   "Marcin Chruszcz" <marcin.chruszcz@bizcodes.pl>
-To:     <platform-driver-x86@vger.kernel.org>
-Subject: Prezentacja
-X-Mailer: mail.bizcodes.pl
+        Fri, 21 Jul 2023 05:17:27 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8E512D7E;
+        Fri, 21 Jul 2023 02:17:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689931046; x=1721467046;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=At/XX8D34+ZirskRZoM0gc4kR3O4x9uKb1Fn8SBafdU=;
+  b=nwcxKHoQTB0j5aOqu+0IbJ3hzYr9grQPG8H9JeCtoJRGPdRoZ1rzUy8D
+   0uP+d6S2Ikvynassncn00qyVSaqOm8+qT9t+PnKePS1UmaR87DejGfaVw
+   oU/PsSPw8WTTuppxfNCwpLfr8VfXK5qVb2dGtKxEpjF6kcGiDBk60nLN6
+   AOuoxx4c7ThZ5N3AR4+J4G8o6zkCFt+wy5GxmGHMGemqnXtkxsjAklLKa
+   svd8tlfpvECAESVNM3XJZGsM6H/8PXdUjSZ2ehRwk/H2U/gLsaAz0qTHh
+   JpftYiWIbfZvkR+aG8VKuHAlhDwYwZ3qJGu9DvpuWiY/gl2bDIKJWUP9q
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="365870940"
+X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
+   d="scan'208";a="365870940"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 02:17:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="718751338"
+X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
+   d="scan'208";a="718751338"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga007.jf.intel.com with ESMTP; 21 Jul 2023 02:17:24 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qMmGI-00F8sC-1s;
+        Fri, 21 Jul 2023 12:17:22 +0300
+Date:   Fri, 21 Jul 2023 12:17:22 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [RFC PATCH v1] platform/x86: wmi: Do not register driver with
+ invalid GUID
+Message-ID: <ZLpNIsLrrQGWOQc/@smile.fi.intel.com>
+References: <20230715211604.1272227-1-pobrn@protonmail.com>
+ <ZLUOxnE58wUgZXWx@smile.fi.intel.com>
+ <mL0s5ZsO3eU18EzO_7zVsawf2rr7o-zsOrwBDncazQIAgRn-LRNTGw2ugm1bfRoHKWTRYmUHt8s7zjfNEESapwFZlaNj6B041x_AZ-pagoI=@protonmail.com>
+ <ZLUmh0nKJdRMmhX1@smile.fi.intel.com>
+ <kN5iBK5RwAEr8LXNTgb6dUk7zxuGFFtF2q_ReNezksLqaq7C4frYfo6ELswUu0wVoewy3UENAwFjjK48d2qBwf6q4is8ST28zpK6-ze_eIU=@protonmail.com>
+ <ZLjyDQ80QKWtKqUk@smile.fi.intel.com>
+ <_szgAop-lIsQt90xoCYXQbiJtrQclFitfhE2ak2omTiPCx37toqB4lq7OTmBD_vMEn6TonpAns5NgVH1xFpGQLyuLkd0pOGwRqrB8C9INRw=@protonmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <_szgAop-lIsQt90xoCYXQbiJtrQclFitfhE2ak2omTiPCx37toqB4lq7OTmBD_vMEn6TonpAns5NgVH1xFpGQLyuLkd0pOGwRqrB8C9INRw=@protonmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Dzie=C5=84 dobry!
+On Thu, Jul 20, 2023 at 10:42:29AM +0000, Barnabás Pőcze wrote:
+> 2023. július 20., csütörtök 10:36 keltezéssel, Andy Shevchenko írta:
+> > On Wed, Jul 19, 2023 at 07:23:37PM +0000, Barnabás Pőcze wrote:
 
-Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
-=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
-zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
+...
 
-Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
-=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe tworzenie planu tras czy =
-dostaw.
+> > Yes, that's what file2alias is for. We trust modules we build, right?
+> > If you don't trust, then we have much bigger problem than this patch
+> > tries to address.
 
-Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
-nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
- co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
+> It seems we have to agree to disagree then.
 
-Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
-=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
-zania w Pa=C5=84stwa firmie.
+I am confused. The parts are related to each other, you can't disagree on both.
+
+You mean we have much bigger problem in the kernel or file2alias is the proper
+place? I.o.w. which part you agree with and respectively disagree?
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Pozdrawiam
-Marcin Chruszcz
