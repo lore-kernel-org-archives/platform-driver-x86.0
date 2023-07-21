@@ -2,94 +2,135 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AE7EB64DC
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 Jul 2023 09:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99280EB64DC
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 Jul 2023 14:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231696AbjGUJR2 (ORCPT
+        id S229566AbjGUOyh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 21 Jul 2023 05:17:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41024 "EHLO
+        Fri, 21 Jul 2023 10:54:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbjGUJR1 (ORCPT
+        with ESMTP id S229805AbjGUOyg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 Jul 2023 05:17:27 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8E512D7E;
-        Fri, 21 Jul 2023 02:17:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689931046; x=1721467046;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=At/XX8D34+ZirskRZoM0gc4kR3O4x9uKb1Fn8SBafdU=;
-  b=nwcxKHoQTB0j5aOqu+0IbJ3hzYr9grQPG8H9JeCtoJRGPdRoZ1rzUy8D
-   0uP+d6S2Ikvynassncn00qyVSaqOm8+qT9t+PnKePS1UmaR87DejGfaVw
-   oU/PsSPw8WTTuppxfNCwpLfr8VfXK5qVb2dGtKxEpjF6kcGiDBk60nLN6
-   AOuoxx4c7ThZ5N3AR4+J4G8o6zkCFt+wy5GxmGHMGemqnXtkxsjAklLKa
-   svd8tlfpvECAESVNM3XJZGsM6H/8PXdUjSZ2ehRwk/H2U/gLsaAz0qTHh
-   JpftYiWIbfZvkR+aG8VKuHAlhDwYwZ3qJGu9DvpuWiY/gl2bDIKJWUP9q
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="365870940"
-X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
-   d="scan'208";a="365870940"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 02:17:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="718751338"
-X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
-   d="scan'208";a="718751338"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 21 Jul 2023 02:17:24 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qMmGI-00F8sC-1s;
-        Fri, 21 Jul 2023 12:17:22 +0300
-Date:   Fri, 21 Jul 2023 12:17:22 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>,
+        Fri, 21 Jul 2023 10:54:36 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A7AB121;
+        Fri, 21 Jul 2023 07:54:35 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2b74310566cso30586561fa.2;
+        Fri, 21 Jul 2023 07:54:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689951273; x=1690556073;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p18D6PEGwHZfci/zN2/shTnhQCgmj3XJsAK+DBdady0=;
+        b=LeZFMEyzNH2rUW5qlERk7OHgFC4JT7udCzLCdY8GulHU5guy0npYZDiRCcOlRH7oP1
+         l3BcHD1cIrS5rEKu0r9mpTC0MZgBI9hmeo8YHgV/6Hh7Oy4bf/vx481R7C59OB9ysc39
+         M6BuL5EmX+VeB+BgvayuBP5BGnbTVYVDYNOzrRyRwoSab2wh/iC9B6+/OMEYtiqSDAGk
+         h+B2DXX5K0hjEKuuJRed/wTkjb5Dw/jXM3sXVJVJj1zhOQCJIfgeXxfwfxjsefqBq2je
+         QxBGEDt2wlS6Hoz1KnVaymJsD1UOP6HL7lwMPki+9BPGwAciU5zX2Rnqmkblx5DX2awW
+         tg6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689951273; x=1690556073;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p18D6PEGwHZfci/zN2/shTnhQCgmj3XJsAK+DBdady0=;
+        b=jeGkWADlUond2CuQoXG50xPR50vmvtwDO7OuAIR2T/AdUr0ZLTODmMwQSJr5XzRKTg
+         jDMik3G906T4yCoi+isBjKc2MNlIA+FENid9JErVY/D5PLvCuqFz+hX2JMXSDNxS9Hrd
+         tvUv9cBLjLI3ZB2BSZTGmzdrDexAMZDPPVbveAfKiVk9bQvtnzVPsCfY2CY4iq0ETXA3
+         0TQE+ehED+QyID1Q8bQ89k8ahqcn8c4L/p7Swk8ae4gsxAR8V7um4T9WibhUNQ/NpFQc
+         OYRPQZoSS48Cu/hB+YvuUdEaQ1XdqxOCxCaPi0yVcukpFH0JoUZ5Rx4SZHygCElUYwrW
+         5IRg==
+X-Gm-Message-State: ABy/qLaV9kqx84YTjqFiLzDHvcVn+f7Rb69u7jho7+KLedf4wd8++Vt8
+        +Qmk168H12VzBtn5jMSuDg0=
+X-Google-Smtp-Source: APBJJlEVSQIHS57WY/7masMQAjH951ZCqyx4T5TCZWNHS5UBtWWegZfR2Duqzr2C8ATT77X2h3Mr0g==
+X-Received: by 2002:a2e:8810:0:b0:2b6:a057:8098 with SMTP id x16-20020a2e8810000000b002b6a0578098mr1745920ljh.0.1689951273335;
+        Fri, 21 Jul 2023 07:54:33 -0700 (PDT)
+Received: from localhost ([95.214.234.139])
+        by smtp.gmail.com with ESMTPSA id l12-20020a05651c10cc00b002b6b60c14besm968554ljn.29.2023.07.21.07.54.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jul 2023 07:54:32 -0700 (PDT)
+From:   Maxim Mikityanskiy <maxtram95@gmail.com>
+To:     "Lee, Chun-Yi" <jlee@suse.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Armin Wolf <W_Armin@gmx.de>
-Subject: Re: [RFC PATCH v1] platform/x86: wmi: Do not register driver with
- invalid GUID
-Message-ID: <ZLpNIsLrrQGWOQc/@smile.fi.intel.com>
-References: <20230715211604.1272227-1-pobrn@protonmail.com>
- <ZLUOxnE58wUgZXWx@smile.fi.intel.com>
- <mL0s5ZsO3eU18EzO_7zVsawf2rr7o-zsOrwBDncazQIAgRn-LRNTGw2ugm1bfRoHKWTRYmUHt8s7zjfNEESapwFZlaNj6B041x_AZ-pagoI=@protonmail.com>
- <ZLUmh0nKJdRMmhX1@smile.fi.intel.com>
- <kN5iBK5RwAEr8LXNTgb6dUk7zxuGFFtF2q_ReNezksLqaq7C4frYfo6ELswUu0wVoewy3UENAwFjjK48d2qBwf6q4is8ST28zpK6-ze_eIU=@protonmail.com>
- <ZLjyDQ80QKWtKqUk@smile.fi.intel.com>
- <_szgAop-lIsQt90xoCYXQbiJtrQclFitfhE2ak2omTiPCx37toqB4lq7OTmBD_vMEn6TonpAns5NgVH1xFpGQLyuLkd0pOGwRqrB8C9INRw=@protonmail.com>
+        Mark Gross <markgross@kernel.org>
+Cc:     Matthew Garrett <matthew.garrett@nebula.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxim Mikityanskiy <maxtram95@gmail.com>
+Subject: [PATCH] platform/x86: msi-laptop: Fix rfkill out-of-sync on MSI Wind U100
+Date:   Fri, 21 Jul 2023 17:54:23 +0300
+Message-ID: <20230721145423.161057-1-maxtram95@gmail.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <_szgAop-lIsQt90xoCYXQbiJtrQclFitfhE2ak2omTiPCx37toqB4lq7OTmBD_vMEn6TonpAns5NgVH1xFpGQLyuLkd0pOGwRqrB8C9INRw=@protonmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 10:42:29AM +0000, Barnabás Pőcze wrote:
-> 2023. július 20., csütörtök 10:36 keltezéssel, Andy Shevchenko írta:
-> > On Wed, Jul 19, 2023 at 07:23:37PM +0000, Barnabás Pőcze wrote:
+Only the HW rfkill state is toggled on laptops with quirks->ec_read_only
+(so far only MSI Wind U90/U100). There are, however, a few issues with
+the implementation:
 
-...
+1. The initial HW state is always unblocked, regardless of the actual
+   state on boot, because msi_init_rfkill only sets the SW state,
+   regardless of ec_read_only.
 
-> > Yes, that's what file2alias is for. We trust modules we build, right?
-> > If you don't trust, then we have much bigger problem than this patch
-> > tries to address.
+2. The initial SW state corresponds to the actual state on boot, but it
+   can't be changed afterwards, because set_device_state returns
+   -EOPNOTSUPP. It confuses the userspace, making Wi-Fi and/or Bluetooth
+   unusable if it was blocked on boot, and breaking the airplane mode if
+   the rfkill was unblocked on boot.
 
-> It seems we have to agree to disagree then.
+Address the above issues by properly initializing the HW state on
+ec_read_only laptops and by allowing the userspace to toggle the SW
+state. Don't set the SW state ourselves and let the userspace fully
+control it. Toggling the SW state is a no-op, however, it allows the
+userspace to properly toggle the airplane mode. The actual SW radio
+disablement is handled by the corresponding rtl818x_pci and btusb
+drivers that have their own rfkills.
 
-I am confused. The parts are related to each other, you can't disagree on both.
+Tested on MSI Wind U100 Plus, BIOS ver 1.0G, EC ver 130.
 
-You mean we have much bigger problem in the kernel or file2alias is the proper
-place? I.o.w. which part you agree with and respectively disagree?
+Fixes: 0816392b97d4 ("msi-laptop: merge quirk tables to one")
+Fixes: 0de6575ad0a8 ("msi-laptop: Add MSI Wind U90/U100 support")
+Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+---
+ drivers/platform/x86/msi-laptop.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
+index 6b18ec543ac3..f4c6c36e05a5 100644
+--- a/drivers/platform/x86/msi-laptop.c
++++ b/drivers/platform/x86/msi-laptop.c
+@@ -208,7 +208,7 @@ static ssize_t set_device_state(const char *buf, size_t count, u8 mask)
+ 		return -EINVAL;
+ 
+ 	if (quirks->ec_read_only)
+-		return -EOPNOTSUPP;
++		return 0;
+ 
+ 	/* read current device state */
+ 	result = ec_read(MSI_STANDARD_EC_COMMAND_ADDRESS, &rdata);
+@@ -838,15 +838,15 @@ static bool msi_laptop_i8042_filter(unsigned char data, unsigned char str,
+ static void msi_init_rfkill(struct work_struct *ignored)
+ {
+ 	if (rfk_wlan) {
+-		rfkill_set_sw_state(rfk_wlan, !wlan_s);
++		msi_rfkill_set_state(rfk_wlan, !wlan_s);
+ 		rfkill_wlan_set(NULL, !wlan_s);
+ 	}
+ 	if (rfk_bluetooth) {
+-		rfkill_set_sw_state(rfk_bluetooth, !bluetooth_s);
++		msi_rfkill_set_state(rfk_bluetooth, !bluetooth_s);
+ 		rfkill_bluetooth_set(NULL, !bluetooth_s);
+ 	}
+ 	if (rfk_threeg) {
+-		rfkill_set_sw_state(rfk_threeg, !threeg_s);
++		msi_rfkill_set_state(rfk_threeg, !threeg_s);
+ 		rfkill_threeg_set(NULL, !threeg_s);
+ 	}
+ }
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.41.0
 
