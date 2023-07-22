@@ -2,105 +2,122 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F56FEB64DD
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 22 Jul 2023 00:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A90EB64DA
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 22 Jul 2023 16:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229744AbjGVAJR (ORCPT
+        id S230162AbjGVP77 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 21 Jul 2023 20:09:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37516 "EHLO
+        Sat, 22 Jul 2023 11:59:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbjGVAJQ (ORCPT
+        with ESMTP id S229509AbjGVP76 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 Jul 2023 20:09:16 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AD0C30FF;
-        Fri, 21 Jul 2023 17:09:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
- s=s31663417; t=1689984553; x=1690589353; i=w_armin@gmx.de;
- bh=K7v4oJ8bdkwFUPWX9U+8bpz7Y/cvFtbhuun3p54pee0=;
- h=X-UI-Sender-Class:To:From:Subject:Date;
- b=qwKRhfghIa3keHMzx4uSFavLV4CO/ROdE/39zcMNui9uRJvQl5FnR+xG+bQ0ANHoxZjdo1d
- vpgX9ySRQ6X7Xj8OQlIEqD+xT/cOMbu5OvZu2tUIk+roni2wAVMM3jfc96zn42qvAEMRYkn+x
- pE6ubj5wG7ijk+L5D97T4I0WFKc0a64omALaFom58Hi4HpccwvVRpQvnv7VucTOtvfBGlRLYK
- pTya5W20i23696QtA2woG9xsc2YP3K11/+yKGEiCGJQ8tUaPMDLaALqHGTk13/sN7gVMzzhS3
- fRi6qu4fHAXt0V7mHYNZRTglQXx49XkAY5swSojd+bE4AnWWJFrA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MSKuA-1qThDt1SbA-00Sdzc; Sat, 22
- Jul 2023 02:09:13 +0200
-To:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Armin Wolf <W_Armin@gmx.de>
-Subject: WMI probe failure when reprobing
-Message-ID: <1252c8fb-8d5f-98ad-b24a-5fabec2e1c8b@gmx.de>
-Date:   Sat, 22 Jul 2023 02:09:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Sat, 22 Jul 2023 11:59:58 -0400
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8721D1FDC;
+        Sat, 22 Jul 2023 08:59:57 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 6E6FA320014C;
+        Sat, 22 Jul 2023 11:59:56 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Sat, 22 Jul 2023 11:59:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ftml.net; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to; s=fm3; t=1690041595; x=1690127995; bh=XSn0NBNwuY
+        2+CuFFTgdqK4m2Fuiyt/hZZPFunq38Eik=; b=NTK7b1IctvITGMtbtjIqdFJsxM
+        7ujv3dqQ02HKem42Wj8h33QjWmX0Uqg35FJ43q5YguD+xWmdUJAFxXIG9nuR91iW
+        neuGysvCIs8SdYQN3R33NHFLDArTswyQTN/c7zj017Jdv+UZg1tXIU4jThqyNgmp
+        QxJ0n21rIg7dw+ruyD5Dxk95jRXAZgQ2AIgvFoKPgwbruS6Il/He6qrF+mrVjm/U
+        qFSdojXbFZ8xOA/x4sUBBtC6kXDkcwD6Q4M3T5aTXUez22GcGM4iXlQIJs6QCrO8
+        UrNQId7HZVABGSKihxVXN5uldi5TkCUyk5lVvlcSImLGA+C4SNZrnTqiic4g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1690041595; x=1690127995; bh=XSn0NBNwuY2+C
+        uFFTgdqK4m2Fuiyt/hZZPFunq38Eik=; b=sW3KPl/KgW6M2t95HWVm/QoNjDjnW
+        4gvD3V3E5iZsxUVcC5WRKCZOhoxmWKiUP9mlUh4xX5R3seORwxlUlTpcRj7fjKNs
+        7GTe/HRY5xUMMFscVk42AmJ/TcCZ43ag2MzJvd5BXTi52VEDZaLiIQsf8+zmp8cl
+        j4FiY4Gk/dsnHZQoIB68TYUuenmoal0zMNFq2JdXCIObhG4xfokiB35sKqRx08F0
+        jI52+3gGxI9aBfpX1IKkG5X8wMoRaccQxgmopIW5njf9U9Z6MsEfBJnX1jGL/ayJ
+        jqmaP1kvTc6dAUaoNuqLmmxSM5+pzaHHBjdMrx4qwFLYso14CbEqmhBTw==
+X-ME-Sender: <xms:-_y7ZAa1Fyvbd7dm-lmwienpPwJpx44rcZ1u0_yiv7JJR0qsm6_8aw>
+    <xme:-_y7ZLaTOQPGS0WGq8NPSUYG1Aj0X5kkixgrVLc8TMcqMmmcE0JlyADXIifAkFQgj
+    Z8yts2Nn-VhgvTMPoM>
+X-ME-Received: <xmr:-_y7ZK_AYRGLQLpQuDlGk_l6W_rniR4QwIAvxjVnfaPVWC4VYSVpym5tpgRaxw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrheeggdelfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefmohhnshhtrghn
+    thhinhcuufhhvghlvghkhhhinhcuoehkrdhshhgvlhgvkhhhihhnsehfthhmlhdrnhgvth
+    eqnecuggftrfgrthhtvghrnhepfefgtdelhffffeefgfduveehtdekhedvieejveekheef
+    gfduleduteejgfevudevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkrdhshhgvlhgvkhhh
+    ihhnsehfthhmlhdrnhgvth
+X-ME-Proxy: <xmx:-_y7ZKqw8-Ekridky9ogdM2EUM8B8upFB9O7_D3IhB9ZYBzvdlnJbw>
+    <xmx:-_y7ZLq4dqoQAdM-NCQBm21VhZyrZklzIUGNCESBwh7z5WxfBYBn2w>
+    <xmx:-_y7ZIRf4lZ654jxxKklbFEyRep5xonKTNHwyGKWR2r3W_4C8DUl8Q>
+    <xmx:-_y7ZMmAjgYDcTnYNvAcyWytHkDDXIpyk_VcAKjs74PcMMrZQ6Xqvw>
+Feedback-ID: ib7794740:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 22 Jul 2023 11:59:54 -0400 (EDT)
+From:   Konstantin Shelekhin <k.shelekhin@ftml.net>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Konstantin Shelekhin <k.shelekhin@ftml.net>
+Subject: [PATCH] platform/x86: huawei-wmi: Silence ambient light sensor
+Date:   Sat, 22 Jul 2023 18:59:20 +0300
+Message-ID: <20230722155922.173856-1-k.shelekhin@ftml.net>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:ieJ3CecbsjmP11vfKIEAPflCd7vibaLKj4sekxzv5yerJQjjw2l
- E80/JeqZPifOz4f5gvvepLlGpQMVXNAoD2TdhRXnh5cqmpw9cljCh9LmzSJ6JA+3n3tHdo4
- Z1oBA/+bptEgHJCu+Z9bRKjKcvsqA82iz1M8RBmeXKbwjbVCQWvdu//vodR22h2G/7uotmk
- sqMV1tgliyacBV9AGc2qA==
-UI-OutboundReport: notjunk:1;M01:P0:5atBhy26hpM=;h62WOA6O+MGfKxeXV1o+KhFnYrd
- qcWGHqmtYZZ293JgLXaAI1hdhnX1RoWlbc2uDuCP7AOALvBDI70GBK1ZiSil6LPEJIO4zigH3
- jUgzMKukwcj/Wb33Un7cK3l+kyFhnK3452c0DTr+a1Wjy+DpveFWad7u4UNr88xKlKpgDzVyU
- 7whK2sELy/rUC9f1nvYUKWJyx5BWxjs4BpyVuAAeBFHHkN1NY1n2ym+eEwfG4VJcLqxOLzLPB
- iYJDObt8B+nX0dfVTvP/cpLOOPsYmtjN8+wjcy3XNMpuZTkTlDHWpQ462ZXyZQFl2v21Eak3r
- ws1lNxRU51EAU3oZU2/qGaYizTX+aggcNgQQ8vBXRuIDpXi7qCGJpGZmL3Zzhz359nNAhjnJX
- GMH1Ot4yWXgfCgw1KMFIJi56AHloqQ5J9ezfNFFFZKwcMSZ8GQBvAroc0EGOeJKLBjQPXgzr9
- rdyVvN4ZioAtuo5MO+BlZiQLQaIY3XAIuDbP8HjxSYX5E05sL7MoelaFr7OopkFdG6xmUL9IK
- xL+7UOq9ufhzmIKOBhbROOK9qiWxyo0tlHoeBfONSl7gqyI4LrwYx4YSDKBYpl4IDcLaAMrOM
- 8LahbpVfMoZpqybPCNQeaWOZux9Z+IRQXoA5rJT/sh4DO4oNM2CYGLzKMtMYhkZc3/jVdMwak
- FcsamAI9zH4fFSDXGylb22GdGyhrWX6QbbyugjBUZrHNOljgz4m1dABiYYzpKNBAWe36ph25l
- Kjfq+tMNUM8OH3J8Yb5IxJv/YsctGMJ2TqVEYRIJtmwTwm2m8RJtyF8br1xHZPdXHmSe+XVab
- OHYaZSGr/Qea4UjG7IxV/KWBIUgbO5iVyAUaYSb88PqeBu4OkaOhCNzgRDkQDCIeWqx2yX2Qo
- iS7eGxmkelcnYdLUDVlLAfNsYqF3uvW9XaMMtSyFASSuklsvJrJ5JKBz+D5vos6rFfGBuNVAz
- 4W++SFgM4SXnSpk2gOIg726BE8M=
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hello,
+Currently huawei-wmi causes a lot of spam in dmesg on my
+Huawei MateBook X Pro 2022:
 
-i just noticed that under some circumstances, ACPI WMI devices might fail to reprobe
-when being manually unbound and later rebound.
-Example:
+  ...
+  [36409.328463] input input9: Unknown key pressed, code: 0x02c1
+  [36411.335104] input input9: Unknown key pressed, code: 0x02c1
+  [36412.338674] input input9: Unknown key pressed, code: 0x02c1
+  [36414.848564] input input9: Unknown key pressed, code: 0x02c1
+  [36416.858706] input input9: Unknown key pressed, code: 0x02c1
+  ...
 
-1. ACPI WMI device #1 binds and registers WMI device with GUID
-"05901221-D566-11D1-B2F0-00A0C9062910", resulting in the device
-being named "05901221-D566-11D1-B2F0-00A0C9062910".
-2. ACPI WMI device #2 binds and registers WMI device with GUID
-"05901221-D566-11D1-B2F0-00A0C9062910", resulting in the device
-being named "05901221-D566-11D1-B2F0-00A0C9062910-1".
-3. ACPI WMI device #1 is manually unbound and later rebound,
-now the WMI device with GUID "05901221-D566-11D1-B2F0-00A0C9062910"
-is being named "05901221-D566-11D1-B2F0-00A0C9062910-1" too, since
-device naming depends on the number of GUIDs currently known to
-the WMI subsystem.
-4. A WMI device named "05901221-D566-11D1-B2F0-00A0C9062910-1" already
-exists, causing the registration of the new WMI device to fail.
+Fix that by ignoring events generated by ambient light sensor.
 
-I thought about some possible ways to solve this naming issue:
+This issue was reported on GitHub and resolved with the following merge
+request:
 
-- symlinks to simulate old WMI devices names, new WMI device names similar to "wmiX" with X being a global unique id
-- no symlinks, new WMI device names similar to "wmiX" with X being a global unique id
-- use global id instead of GUID number
+  https://github.com/aymanbagabas/Huawei-WMI/pull/70
 
-The first approach has full sysfs backward compatibility but i do not know how to create symlinks inside the "devices"
-directory. The second approach is the easiest and cleanest one, but provides no sysfs backward compatibility. The last
-approach provides only limited sysfs backward compatibility and only for programs which can handle "<GUID>-X" WMI device
-names.
+I've contacted the mainter of this repo and he gave me the "go ahead" to
+send this patch to the maling list.
 
-Currently, there is one single stable sysfs ABI entry concerning the WMI subsystem (for wmi-bmof), and two testing
-sysfs ABI entries (dell-wmi-privacy, sbl-fw-update). I do not know of any userspace programs relying on these ABIs,
-but i suspect there might be a couple of scripts which might be affected.
+Signed-off-by: Konstantin Shelekhin <k.shelekhin@ftml.net>
+---
+ drivers/platform/x86/huawei-wmi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Which approach should i take to solve this problem?
-
-Armin Wolf
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index 70e5c4c0574d..0ef1c46b617b 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -85,6 +85,8 @@ static const struct key_entry huawei_wmi_keymap[] = {
+ 	{ KE_IGNORE, 0x293, { KEY_KBDILLUMTOGGLE } },
+ 	{ KE_IGNORE, 0x294, { KEY_KBDILLUMUP } },
+ 	{ KE_IGNORE, 0x295, { KEY_KBDILLUMUP } },
++	// Ignore Ambient Light Sensoring
++	{ KE_KEY,    0x2c1, { KEY_RESERVED } },
+ 	{ KE_END,	 0 }
+ };
+ 
+-- 
+2.41.0
 
