@@ -2,135 +2,105 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99280EB64DC
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 Jul 2023 14:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F56FEB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 22 Jul 2023 00:09:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229566AbjGUOyh (ORCPT
+        id S229744AbjGVAJR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 21 Jul 2023 10:54:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36866 "EHLO
+        Fri, 21 Jul 2023 20:09:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229805AbjGUOyg (ORCPT
+        with ESMTP id S229533AbjGVAJQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 Jul 2023 10:54:36 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A7AB121;
-        Fri, 21 Jul 2023 07:54:35 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2b74310566cso30586561fa.2;
-        Fri, 21 Jul 2023 07:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689951273; x=1690556073;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=p18D6PEGwHZfci/zN2/shTnhQCgmj3XJsAK+DBdady0=;
-        b=LeZFMEyzNH2rUW5qlERk7OHgFC4JT7udCzLCdY8GulHU5guy0npYZDiRCcOlRH7oP1
-         l3BcHD1cIrS5rEKu0r9mpTC0MZgBI9hmeo8YHgV/6Hh7Oy4bf/vx481R7C59OB9ysc39
-         M6BuL5EmX+VeB+BgvayuBP5BGnbTVYVDYNOzrRyRwoSab2wh/iC9B6+/OMEYtiqSDAGk
-         h+B2DXX5K0hjEKuuJRed/wTkjb5Dw/jXM3sXVJVJj1zhOQCJIfgeXxfwfxjsefqBq2je
-         QxBGEDt2wlS6Hoz1KnVaymJsD1UOP6HL7lwMPki+9BPGwAciU5zX2Rnqmkblx5DX2awW
-         tg6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689951273; x=1690556073;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p18D6PEGwHZfci/zN2/shTnhQCgmj3XJsAK+DBdady0=;
-        b=jeGkWADlUond2CuQoXG50xPR50vmvtwDO7OuAIR2T/AdUr0ZLTODmMwQSJr5XzRKTg
-         jDMik3G906T4yCoi+isBjKc2MNlIA+FENid9JErVY/D5PLvCuqFz+hX2JMXSDNxS9Hrd
-         tvUv9cBLjLI3ZB2BSZTGmzdrDexAMZDPPVbveAfKiVk9bQvtnzVPsCfY2CY4iq0ETXA3
-         0TQE+ehED+QyID1Q8bQ89k8ahqcn8c4L/p7Swk8ae4gsxAR8V7um4T9WibhUNQ/NpFQc
-         OYRPQZoSS48Cu/hB+YvuUdEaQ1XdqxOCxCaPi0yVcukpFH0JoUZ5Rx4SZHygCElUYwrW
-         5IRg==
-X-Gm-Message-State: ABy/qLaV9kqx84YTjqFiLzDHvcVn+f7Rb69u7jho7+KLedf4wd8++Vt8
-        +Qmk168H12VzBtn5jMSuDg0=
-X-Google-Smtp-Source: APBJJlEVSQIHS57WY/7masMQAjH951ZCqyx4T5TCZWNHS5UBtWWegZfR2Duqzr2C8ATT77X2h3Mr0g==
-X-Received: by 2002:a2e:8810:0:b0:2b6:a057:8098 with SMTP id x16-20020a2e8810000000b002b6a0578098mr1745920ljh.0.1689951273335;
-        Fri, 21 Jul 2023 07:54:33 -0700 (PDT)
-Received: from localhost ([95.214.234.139])
-        by smtp.gmail.com with ESMTPSA id l12-20020a05651c10cc00b002b6b60c14besm968554ljn.29.2023.07.21.07.54.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jul 2023 07:54:32 -0700 (PDT)
-From:   Maxim Mikityanskiy <maxtram95@gmail.com>
-To:     "Lee, Chun-Yi" <jlee@suse.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     Matthew Garrett <matthew.garrett@nebula.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxim Mikityanskiy <maxtram95@gmail.com>
-Subject: [PATCH] platform/x86: msi-laptop: Fix rfkill out-of-sync on MSI Wind U100
-Date:   Fri, 21 Jul 2023 17:54:23 +0300
-Message-ID: <20230721145423.161057-1-maxtram95@gmail.com>
-X-Mailer: git-send-email 2.41.0
+        Fri, 21 Jul 2023 20:09:16 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AD0C30FF;
+        Fri, 21 Jul 2023 17:09:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
+ s=s31663417; t=1689984553; x=1690589353; i=w_armin@gmx.de;
+ bh=K7v4oJ8bdkwFUPWX9U+8bpz7Y/cvFtbhuun3p54pee0=;
+ h=X-UI-Sender-Class:To:From:Subject:Date;
+ b=qwKRhfghIa3keHMzx4uSFavLV4CO/ROdE/39zcMNui9uRJvQl5FnR+xG+bQ0ANHoxZjdo1d
+ vpgX9ySRQ6X7Xj8OQlIEqD+xT/cOMbu5OvZu2tUIk+roni2wAVMM3jfc96zn42qvAEMRYkn+x
+ pE6ubj5wG7ijk+L5D97T4I0WFKc0a64omALaFom58Hi4HpccwvVRpQvnv7VucTOtvfBGlRLYK
+ pTya5W20i23696QtA2woG9xsc2YP3K11/+yKGEiCGJQ8tUaPMDLaALqHGTk13/sN7gVMzzhS3
+ fRi6qu4fHAXt0V7mHYNZRTglQXx49XkAY5swSojd+bE4AnWWJFrA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MSKuA-1qThDt1SbA-00Sdzc; Sat, 22
+ Jul 2023 02:09:13 +0200
+To:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Armin Wolf <W_Armin@gmx.de>
+Subject: WMI probe failure when reprobing
+Message-ID: <1252c8fb-8d5f-98ad-b24a-5fabec2e1c8b@gmx.de>
+Date:   Sat, 22 Jul 2023 02:09:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:ieJ3CecbsjmP11vfKIEAPflCd7vibaLKj4sekxzv5yerJQjjw2l
+ E80/JeqZPifOz4f5gvvepLlGpQMVXNAoD2TdhRXnh5cqmpw9cljCh9LmzSJ6JA+3n3tHdo4
+ Z1oBA/+bptEgHJCu+Z9bRKjKcvsqA82iz1M8RBmeXKbwjbVCQWvdu//vodR22h2G/7uotmk
+ sqMV1tgliyacBV9AGc2qA==
+UI-OutboundReport: notjunk:1;M01:P0:5atBhy26hpM=;h62WOA6O+MGfKxeXV1o+KhFnYrd
+ qcWGHqmtYZZ293JgLXaAI1hdhnX1RoWlbc2uDuCP7AOALvBDI70GBK1ZiSil6LPEJIO4zigH3
+ jUgzMKukwcj/Wb33Un7cK3l+kyFhnK3452c0DTr+a1Wjy+DpveFWad7u4UNr88xKlKpgDzVyU
+ 7whK2sELy/rUC9f1nvYUKWJyx5BWxjs4BpyVuAAeBFHHkN1NY1n2ym+eEwfG4VJcLqxOLzLPB
+ iYJDObt8B+nX0dfVTvP/cpLOOPsYmtjN8+wjcy3XNMpuZTkTlDHWpQ462ZXyZQFl2v21Eak3r
+ ws1lNxRU51EAU3oZU2/qGaYizTX+aggcNgQQ8vBXRuIDpXi7qCGJpGZmL3Zzhz359nNAhjnJX
+ GMH1Ot4yWXgfCgw1KMFIJi56AHloqQ5J9ezfNFFFZKwcMSZ8GQBvAroc0EGOeJKLBjQPXgzr9
+ rdyVvN4ZioAtuo5MO+BlZiQLQaIY3XAIuDbP8HjxSYX5E05sL7MoelaFr7OopkFdG6xmUL9IK
+ xL+7UOq9ufhzmIKOBhbROOK9qiWxyo0tlHoeBfONSl7gqyI4LrwYx4YSDKBYpl4IDcLaAMrOM
+ 8LahbpVfMoZpqybPCNQeaWOZux9Z+IRQXoA5rJT/sh4DO4oNM2CYGLzKMtMYhkZc3/jVdMwak
+ FcsamAI9zH4fFSDXGylb22GdGyhrWX6QbbyugjBUZrHNOljgz4m1dABiYYzpKNBAWe36ph25l
+ Kjfq+tMNUM8OH3J8Yb5IxJv/YsctGMJ2TqVEYRIJtmwTwm2m8RJtyF8br1xHZPdXHmSe+XVab
+ OHYaZSGr/Qea4UjG7IxV/KWBIUgbO5iVyAUaYSb88PqeBu4OkaOhCNzgRDkQDCIeWqx2yX2Qo
+ iS7eGxmkelcnYdLUDVlLAfNsYqF3uvW9XaMMtSyFASSuklsvJrJ5JKBz+D5vos6rFfGBuNVAz
+ 4W++SFgM4SXnSpk2gOIg726BE8M=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Only the HW rfkill state is toggled on laptops with quirks->ec_read_only
-(so far only MSI Wind U90/U100). There are, however, a few issues with
-the implementation:
+Hello,
 
-1. The initial HW state is always unblocked, regardless of the actual
-   state on boot, because msi_init_rfkill only sets the SW state,
-   regardless of ec_read_only.
+i just noticed that under some circumstances, ACPI WMI devices might fail to reprobe
+when being manually unbound and later rebound.
+Example:
 
-2. The initial SW state corresponds to the actual state on boot, but it
-   can't be changed afterwards, because set_device_state returns
-   -EOPNOTSUPP. It confuses the userspace, making Wi-Fi and/or Bluetooth
-   unusable if it was blocked on boot, and breaking the airplane mode if
-   the rfkill was unblocked on boot.
+1. ACPI WMI device #1 binds and registers WMI device with GUID
+"05901221-D566-11D1-B2F0-00A0C9062910", resulting in the device
+being named "05901221-D566-11D1-B2F0-00A0C9062910".
+2. ACPI WMI device #2 binds and registers WMI device with GUID
+"05901221-D566-11D1-B2F0-00A0C9062910", resulting in the device
+being named "05901221-D566-11D1-B2F0-00A0C9062910-1".
+3. ACPI WMI device #1 is manually unbound and later rebound,
+now the WMI device with GUID "05901221-D566-11D1-B2F0-00A0C9062910"
+is being named "05901221-D566-11D1-B2F0-00A0C9062910-1" too, since
+device naming depends on the number of GUIDs currently known to
+the WMI subsystem.
+4. A WMI device named "05901221-D566-11D1-B2F0-00A0C9062910-1" already
+exists, causing the registration of the new WMI device to fail.
 
-Address the above issues by properly initializing the HW state on
-ec_read_only laptops and by allowing the userspace to toggle the SW
-state. Don't set the SW state ourselves and let the userspace fully
-control it. Toggling the SW state is a no-op, however, it allows the
-userspace to properly toggle the airplane mode. The actual SW radio
-disablement is handled by the corresponding rtl818x_pci and btusb
-drivers that have their own rfkills.
+I thought about some possible ways to solve this naming issue:
 
-Tested on MSI Wind U100 Plus, BIOS ver 1.0G, EC ver 130.
+- symlinks to simulate old WMI devices names, new WMI device names similar to "wmiX" with X being a global unique id
+- no symlinks, new WMI device names similar to "wmiX" with X being a global unique id
+- use global id instead of GUID number
 
-Fixes: 0816392b97d4 ("msi-laptop: merge quirk tables to one")
-Fixes: 0de6575ad0a8 ("msi-laptop: Add MSI Wind U90/U100 support")
-Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
----
- drivers/platform/x86/msi-laptop.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+The first approach has full sysfs backward compatibility but i do not know how to create symlinks inside the "devices"
+directory. The second approach is the easiest and cleanest one, but provides no sysfs backward compatibility. The last
+approach provides only limited sysfs backward compatibility and only for programs which can handle "<GUID>-X" WMI device
+names.
 
-diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
-index 6b18ec543ac3..f4c6c36e05a5 100644
---- a/drivers/platform/x86/msi-laptop.c
-+++ b/drivers/platform/x86/msi-laptop.c
-@@ -208,7 +208,7 @@ static ssize_t set_device_state(const char *buf, size_t count, u8 mask)
- 		return -EINVAL;
- 
- 	if (quirks->ec_read_only)
--		return -EOPNOTSUPP;
-+		return 0;
- 
- 	/* read current device state */
- 	result = ec_read(MSI_STANDARD_EC_COMMAND_ADDRESS, &rdata);
-@@ -838,15 +838,15 @@ static bool msi_laptop_i8042_filter(unsigned char data, unsigned char str,
- static void msi_init_rfkill(struct work_struct *ignored)
- {
- 	if (rfk_wlan) {
--		rfkill_set_sw_state(rfk_wlan, !wlan_s);
-+		msi_rfkill_set_state(rfk_wlan, !wlan_s);
- 		rfkill_wlan_set(NULL, !wlan_s);
- 	}
- 	if (rfk_bluetooth) {
--		rfkill_set_sw_state(rfk_bluetooth, !bluetooth_s);
-+		msi_rfkill_set_state(rfk_bluetooth, !bluetooth_s);
- 		rfkill_bluetooth_set(NULL, !bluetooth_s);
- 	}
- 	if (rfk_threeg) {
--		rfkill_set_sw_state(rfk_threeg, !threeg_s);
-+		msi_rfkill_set_state(rfk_threeg, !threeg_s);
- 		rfkill_threeg_set(NULL, !threeg_s);
- 	}
- }
--- 
-2.41.0
+Currently, there is one single stable sysfs ABI entry concerning the WMI subsystem (for wmi-bmof), and two testing
+sysfs ABI entries (dell-wmi-privacy, sbl-fw-update). I do not know of any userspace programs relying on these ABIs,
+but i suspect there might be a couple of scripts which might be affected.
+
+Which approach should i take to solve this problem?
+
+Armin Wolf
 
