@@ -2,31 +2,30 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0319DC001B0
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 22 Jul 2023 17:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFE4C41513
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 22 Jul 2023 17:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229983AbjGVRgs (ORCPT
+        id S229662AbjGVRqW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 22 Jul 2023 13:36:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39820 "EHLO
+        Sat, 22 Jul 2023 13:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230005AbjGVRgo (ORCPT
+        with ESMTP id S229552AbjGVRqT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 22 Jul 2023 13:36:44 -0400
-X-Greylist: delayed 656 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 22 Jul 2023 10:36:41 PDT
+        Sat, 22 Jul 2023 13:46:19 -0400
 Received: from rs227.mailgun.us (rs227.mailgun.us [209.61.151.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A4E12690
-        for <platform-driver-x86@vger.kernel.org>; Sat, 22 Jul 2023 10:36:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 835E226B7
+        for <platform-driver-x86@vger.kernel.org>; Sat, 22 Jul 2023 10:46:16 -0700 (PDT)
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=equiv.tech; q=dns/txt;
- s=mx; t=1690047399; x=1690054599; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Subject: Cc: To: To:
- From: From: Sender: Sender; bh=gBGdbi7zMsDc4jLtV1jMwsUxbQ0E089NfPCcUt+Wu1E=;
- b=eRTbJ/S1WfiLQ/OUrYTy2eyxCf4ic8Sg3R/0VKgofdT6tb+W8se3mBHo9dJx7EfcrQc3Ryg294N3ZNFqXt8a6dNW+0Wt2Vi09yZbfAwgk1OPnXADvKfbbH0iaQbm0EIv6WcwLxcg2oBc/HBNdQKlLkj5VFDKRJRb4QqqLSyLvw3Mg47e0D8SKOH+rkOxqx9nSdzOQd2pkpr42dnOP2XwvS71O+q8q/ZUzK8EqOhWPadc/ejHIWjRtwmI/efcBUnLBqM3NcYjdexZhcQHh1NlQgiMt88+28cquMCscJLMb0zqT4x5Za1Cd5vkXxY/jwN3yg7qUgQE1LNQZBVMdDs3Bg==
+ s=mx; t=1690047975; x=1690055175; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Subject: Cc: To: To: From: From: Sender: Sender;
+ bh=2ZM8uvTNkSlbDWoHgS2NyrOFq+N/5mog0L1a0g4U21Y=;
+ b=C0t9MmKxdY1HrqDEkRqBsbD+FMFZkmgZBT6szcVPUma6OzMtyLmUPEmudDDQmgNoo49lTeMz+hLaJfNbbV1i5hxJplMuo78WvGrg8QSJtePNIRbFJUiSycMBCkkJzOD8Mi4Cm3XJiIGo7HxYizpjGFQ7qFXQnrsesHRbhTzQ+kN4bo1Xpc1gDUwrZykdQVx/ITxAkC6+oI0uTztwSeiGnBeTIXemfFOqHf8jxJwAibiNBH2hmWwtrfjFApbOsTDnVFinwbrYDx2GthJLQAChA/nRF/a+tFS3uP/sjy8MY3V/abv8GGvUzrtFCWXQOwII4hvLPwfleNvuFUPNC01ejA==
 X-Mailgun-Sending-Ip: 209.61.151.227
 X-Mailgun-Sid: WyI0MzAwNyIsInBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnIiwiOTNkNWFiIl0=
-Received: from mail.equiv.tech (equiv.tech [142.93.28.83]) by 1b08b7c1fb5c with SMTP id
- 64bc11319b55128dd86e2555 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 22 Jul 2023 17:26:09 GMT
+Received: from mail.equiv.tech (equiv.tech [142.93.28.83]) by 1b2ddc83fb9c with SMTP id
+ 64bc11178dca71a24a2eda78 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 22 Jul 2023 17:25:43 GMT
 Sender: james@equiv.tech
 From:   James Seo <james@equiv.tech>
 To:     Jean Delvare <jdelvare@suse.com>,
@@ -35,40 +34,28 @@ Cc:     James Seo <james@equiv.tech>, linux-hwmon@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
         Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] docs: hwmon: hp-wmi-sensors: Change document title
-Date:   Sat, 22 Jul 2023 10:25:14 -0700
-Message-Id: <20230722172513.9324-3-james@equiv.tech>
-In-Reply-To: <20230722172513.9324-1-james@equiv.tech>
-References: <20230722172513.9324-1-james@equiv.tech>
+Subject: [PATCH 0/2] hwmon: hp-wmi-sensors: Minor fixes
+Date:   Sat, 22 Jul 2023 10:25:11 -0700
+Message-Id: <20230722172513.9324-1-james@equiv.tech>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Change title to "Kernel driver hp-wmi-sensors" for consistency with
-most of the rest of Documentation/hwmon.
----
- Documentation/hwmon/hp-wmi-sensors.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Make driver init slightly more efficient and the appearance of
+generated documentation more consistent.
 
-diff --git a/Documentation/hwmon/hp-wmi-sensors.rst b/Documentation/hwmon/hp-wmi-sensors.rst
-index a6bca9aecdde..a611c6263074 100644
---- a/Documentation/hwmon/hp-wmi-sensors.rst
-+++ b/Documentation/hwmon/hp-wmi-sensors.rst
-@@ -2,9 +2,9 @@
- 
- .. include:: <isonum.txt>
- 
--===========================
--Linux HP WMI Sensors Driver
--===========================
-+============================
-+Kernel driver hp-wmi-sensors
-+============================
- 
- :Copyright: |copy| 2023 James Seo <james@equiv.tech>
- 
+James Seo (2):
+  hwmon: hp-wmi-sensors: Get WMI instance count from WMI driver core
+  docs: hwmon: hp-wmi-sensors: Change document title
+
+ Documentation/hwmon/hp-wmi-sensors.rst |  6 +++---
+ drivers/hwmon/hp-wmi-sensors.c         | 20 +++-----------------
+ 2 files changed, 6 insertions(+), 20 deletions(-)
+
+
+base-commit: c4be22597a36e3487474aee9b4177cc8cf780124
 -- 
 2.39.2
 
