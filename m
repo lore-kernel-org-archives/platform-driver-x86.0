@@ -2,64 +2,77 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F618C0015E
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 22 Jul 2023 19:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A93AC001DF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Jul 2023 09:18:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbjGVTRk (ORCPT
+        id S232204AbjGXJSR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 22 Jul 2023 15:17:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54412 "EHLO
+        Mon, 24 Jul 2023 05:18:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbjGVTRh (ORCPT
+        with ESMTP id S232208AbjGXJR7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 22 Jul 2023 15:17:37 -0400
-X-Greylist: delayed 301 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 22 Jul 2023 12:17:35 PDT
-Received: from so254-32.mailgun.net (so254-32.mailgun.net [198.61.254.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7693EE65
-        for <platform-driver-x86@vger.kernel.org>; Sat, 22 Jul 2023 12:17:35 -0700 (PDT)
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=equiv.tech; q=dns/txt;
- s=mx; t=1690053454; x=1690060654; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Subject: Cc: To: To: From: From: Date:
- Sender: Sender; bh=WQzZK+blyTCu7eLt0L8ry7tHXhEBXBc4LGk52ofwZsI=;
- b=V9vnMnGUBVkbrby8htPa2LcJvOi5AObWX0vDc8MfHjQeLN21asuQU2hSBEAKIXov2gyhlvtck9tOMDnVtCnUWDBmQQ5Ad4vu1l4LNAxkHhQD/H5NdTZfvnulDkwpmfuerzPsr3YR8ztn/7TdIxPd2QrvROTenUuT9ZeOcKJ7+TcvC5zD3qaPBduW+IJvJH5JESS7HG7sX39ifKagwTM6ARyYHFsizAHfgKmMiyUtMVAONmeNimhW8Gpbnhspr3NvziEAkPqDJlTcBGCyFD0Lczk4Q2t+OxvVlWUrLlHAuoNBBQppmVAf7ZWUab3eILojvuFsyvC7qbWi56wy/jat3g==
-X-Mailgun-Sending-Ip: 198.61.254.32
-X-Mailgun-Sid: WyI0MzAwNyIsInBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnIiwiOTNkNWFiIl0=
-Received: from mail.equiv.tech (equiv.tech [142.93.28.83]) by 23c5fbb932a2 with SMTP id
- 64bc2a21cd5627293bffe735 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 22 Jul 2023 19:12:33 GMT
-Sender: james@equiv.tech
-Date:   Sat, 22 Jul 2023 12:12:32 -0700
-From:   James Seo <james@equiv.tech>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        Mon, 24 Jul 2023 05:17:59 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C093A6;
+        Mon, 24 Jul 2023 02:17:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 92DE461000;
+        Mon, 24 Jul 2023 09:17:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E051C433C7;
+        Mon, 24 Jul 2023 09:17:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690190276;
+        bh=8a29HgSLoVm9OT+3DOAGJKF4MS3J2IMMxQ4wA9HJO4I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q7mDhZF6QyCJBUWj+rU0z2Z4B0dMWl2PQGQaPeq5SGN3vmEKhgJc3qaWb311TrJlt
+         d4J9J6icXBk/54Z1FsejZvX3LTVOa34QSr7tgkZdanmiqoydW0kp+KszNzwXS0RZQF
+         mcZZ/eaMUHA2MkMkybmnGGXh1BeAhzrVwnHFCb3LvqXFo8jFIG7KPx9zED/w5DY2r+
+         gNP/FsoGyz/5qlH5U/84iDNQF8APFAWiVlgZd7K/LaCT+AdaCanbwxokbAr1oUTukE
+         MX+a1BQhDkgjdCSv9ppRWZZ0Q9zriBr8QlS9EZPmbbg1CZLv3ygPf2YF6c3WpdzL7M
+         X6SfJJB1XuKew==
+Date:   Mon, 24 Jul 2023 10:17:51 +0100
+From:   Lee Jones <lee@kernel.org>
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] docs: hwmon: hp-wmi-sensors: Change document title
-Message-ID: <ZLwqIIq0yj3gejEX@equiv.tech>
-References: <20230722172513.9324-1-james@equiv.tech>
- <20230722172513.9324-3-james@equiv.tech>
- <7a689374-25bd-4b82-acbe-159fb85a2347@roeck-us.net>
+        linux-watchdog@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tobias Schaffner <tobias.schaffner@siemens.com>
+Subject: Re: [PATCH v2 2/3] leds: simatic-ipc-leds: default config switch to
+ platform switch
+Message-ID: <20230724091751.GA11203@google.com>
+References: <20230719153518.13073-1-henning.schild@siemens.com>
+ <20230719153518.13073-3-henning.schild@siemens.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7a689374-25bd-4b82-acbe-159fb85a2347@roeck-us.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230719153518.13073-3-henning.schild@siemens.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Jul 22, 2023 at 11:24:18AM -0700, Guenter Roeck wrote:
-> On Sat, Jul 22, 2023 at 10:25:14AM -0700, James Seo wrote:
->> Change title to "Kernel driver hp-wmi-sensors" for consistency with
->> most of the rest of Documentation/hwmon.
+On Wed, 19 Jul 2023, Henning Schild wrote:
+
+> If a user did choose to enable Siemens Simatic platform support they
+> likely want the LED drivers to be enabled without having to flip more
+> config switches. So we make the LED drivers config switch default to
+> the platform driver switches value.
 > 
-> Not sure if it is worth it, but either case: Signed-off-by: missing.
-> 
-> Guenter
+> Signed-off-by: Henning Schild <henning.schild@siemens.com>
+> ---
+>  drivers/leds/simple/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 
-Oops. Forget it for now, then. I'll resubmit if/when there are more changes.
+Acked-by: Lee Jones <lee@kernel.org>
 
-Thanks.
-
-James
-
+-- 
+Lee Jones [李琼斯]
