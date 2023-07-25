@@ -2,117 +2,216 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6D1C001DF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Jul 2023 15:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477A7C001DF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Jul 2023 18:01:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231485AbjGYPMD (ORCPT
+        id S232289AbjGYSBk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 Jul 2023 11:12:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42002 "EHLO
+        Tue, 25 Jul 2023 14:01:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230376AbjGYPMC (ORCPT
+        with ESMTP id S232311AbjGYSBi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Jul 2023 11:12:02 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2346F128;
-        Tue, 25 Jul 2023 08:12:02 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-563de62f861so7157a12.1;
-        Tue, 25 Jul 2023 08:12:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690297921; x=1690902721;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1K+i7mlSf2+UQsadMuz2ht79KN5VhwZVnNbPb9Y0ncE=;
-        b=Fuw2K/IiWZgWLZow/It4IMeAsOn9oA0KIRavpmmuefFzF0OEMS37Q0+sD9gLbhbn9M
-         baSNjKDfZybqhKMUmhHqUm/yYKWARfQqGHZALVfbgcxMvdztBlgm5P+64f6/KGT1rmhw
-         X1LzS6JF+VY59pm/0MMKt8cj/wkWIeheS2TEgP1NLRoJedV6xf8ujOxI3M/wQL5iv0TD
-         hISaaM+6w9lIF80bmnb/8TBiGC4lHI3POsuOzSp3U0HtNgRFLXkJAIEY8JaJMnB2RGUm
-         FkcL21SeZmjlzl6lyAf/odFonpohMDz2BdrBbwiTKtqYZozhp2lEUpu0mBheBx2pDBMr
-         /veA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690297921; x=1690902721;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1K+i7mlSf2+UQsadMuz2ht79KN5VhwZVnNbPb9Y0ncE=;
-        b=hIHC6JaqqswLppq6awKk66+T1BgDcyNhtwCfT00275S3gcKKY4IgeaDHnPmhml/GKd
-         X3E1BTF8xnb9oQwDK3PKFbUHWwTqLeVrVoW+hU7xQfCuTn1BCtWXtl24hDLewSU23ZJO
-         wcEqhvtrByz7cLIyPfZ4C/6++rwwTFtjXngpEOtOiemudKHClIsjjvGvI2sRTK7bp5zd
-         kbQvAhmdBDQ/xs09+TMUmvNvw6ArIE83FgM9HeDLSteY07h6knBqFVoOEDllLlfKn2hh
-         c2ZVtYB6EaFumtdmKUOhSc3SQfRmCIn+5LQvQfc7OVCaRuXp0XfhVfR0WZoC3i/frcJo
-         9zxg==
-X-Gm-Message-State: ABy/qLZyRnIelF+dHorQCgLHHQxpyeA2zGlyJSschPIbKHdpyXZ7Q1ys
-        J73CTpa9EMuSWcfrepNzNgA=
-X-Google-Smtp-Source: APBJJlFzRkJFGHJD6i4My0dQn8buh5u10emnPTWynCNoKwvLzyLDMgHocPqch0Xif0RMyK/R1W7D5A==
-X-Received: by 2002:a05:6a00:9a0:b0:686:baf2:35f4 with SMTP id u32-20020a056a0009a000b00686baf235f4mr388055pfg.29.1690297921510;
-        Tue, 25 Jul 2023 08:12:01 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m7-20020aa79007000000b006636c4f57a6sm9793039pfo.27.2023.07.25.08.12.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jul 2023 08:12:01 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Tue, 25 Jul 2023 08:12:00 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     James Seo <james@equiv.tech>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: (hp-wmi-sensors) Initialize pevents in
- hp_wmi_sensors_init()
-Message-ID: <46734914-d323-44b3-8e97-b34aa4fc9f89@roeck-us.net>
-References: <20230725094817.588640-1-james@equiv.tech>
+        Tue, 25 Jul 2023 14:01:38 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90FEE1FDA;
+        Tue, 25 Jul 2023 11:01:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
+ s=s31663417; t=1690308091; x=1690912891; i=w_armin@gmx.de;
+ bh=MFtLul5oSSszrVcEGTe5MHBdR1ywo9IPpRQm1iAxTkQ=;
+ h=X-UI-Sender-Class:Subject:To:References:From:Date:In-Reply-To;
+ b=YiWu5QIPYvSyzXtriM0HxjVutXRgVWMrt+kI1AIMfhieHyxHyoO6FlOU/uxofV+zon1iKUr
+ DZImf7mQxyTV4uZiXw/Cwad1XAK+qtRdmifdVln+UEeW04PIrT2mzYNYxCdC73tLOfldla9wi
+ uzApNc+Q/olWynM06M1kb116ArHX2jXbgvK1B2F+wlCUMOfc/QFyIFIx8AhlKtCAKguAfMbQQ
+ Q+05yo9BCbD/k9cOyfNdMy9pYRpBNLddYYPjG6tZjyqhuJNTVVaBzvKz22FyIajcDWrtcLJhV
+ 97QGeD4pERdjf+n/zpCWcjeZypXIrCeBpaK4RNQlTHQvkvguUTog==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.14] ([141.30.226.119]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MzyuS-1pdphV0oKs-00x0HG; Tue, 25
+ Jul 2023 20:01:31 +0200
+Subject: Re: WMI probe failure when reprobing
+To:     Hans de Goede <hdegoede@redhat.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1252c8fb-8d5f-98ad-b24a-5fabec2e1c8b@gmx.de>
+ <d219e8b4-f57e-a546-3794-6f6bc7030e9e@redhat.com>
+From:   Armin Wolf <W_Armin@gmx.de>
+Message-ID: <0062ade3-bff2-781f-0e31-ce3bdcf6942e@gmx.de>
+Date:   Tue, 25 Jul 2023 20:01:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230725094817.588640-1-james@equiv.tech>
+In-Reply-To: <d219e8b4-f57e-a546-3794-6f6bc7030e9e@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Provags-ID: V03:K1:zdgyd6+mj1/oDa66NphThoBJhYf606sGkiEGKlJv1SjB2FcTCW1
+ x/i6m/i0T9D90+Si6LO3r5M8cQzbMVnTSk3FGY7m2Fdu6NxeqfCiDtKZ7HXnHIDBRmDmPVK
+ YhakcowSs6DiFq6IqyLpHvG9w/8w/ZRx3khegt544sQgyPdjuYjUO7U94tJFXNavx3uGjkk
+ 0fLNAhs/OQ7xDaklJk+dw==
+UI-OutboundReport: notjunk:1;M01:P0:tGGP/1a9zok=;OdjcMc/me4OEtbU96mZNcMp9mCb
+ GdVYabUUy/EKLU9HyKdlQMd6Tm2NgbqhhVoEvazBEe/JDXA0gN6iCTYBv1sAOef1ESznGf4tj
+ UltLGxou29/TEfghMHCZ93m3rOgD7NNu+2Jx9NIHbvhT/3TV2mVkNyeowpat6c6NXy+raoJW9
+ pAr3gUGCYIUVGStgYNnj5SZtDiEixhA/ONYdaNaF3oFYx1r4bPVrhYmtmsjEp2hAeRdenMRi+
+ kDwK20EgucUSX2Y/xcQAXLe/KzgelE+nYyEhy3Pw2p/mQWg9ofp4YxJ5vIzCFk0kXwcpA5jQ0
+ KpHRkDMQ2Nk8BX+7xuA2P1U/uiE5laRb+5lFgEpiGXjgQ6DAHFQ90CeW6l9UyV0hPzS8Xgs2N
+ ggi90jkOqPhnOEMgk+iGrIZDhV19+aZBCHNZDBoyfqkPhkD2hxIqkvYUJiwqkbvJYbyN+Ot0u
+ klQ3qDfSUwS6HqV5bCpISNuJcISHpJ+Vj4gJbxAUVFou8hfgoB7kFWfsD2M8VJDf3CyXTnob6
+ tNxE8UxkojyBDnvX6wfewI/KJk+KrpqwIVKalckk2nUh1dpjsGC6c14bl6kVTAb4XE7lHjSCH
+ EGqML3PiIBIOeMttAmSfCs+QNI0xfiYMxuE5QFkxz40GolvZDLazCVKlLJTxrnbS3WKeOqTjs
+ QNGVT+DE/O2UC+lg8mvSTYL+foS2hWDqMMoQbAxJ43Z0BcF9BraM/zrYi2UH3z3osgEOgvBXJ
+ MaXMVyYT0c/0zyGuWh7/cUSJwieEEFYD4oDCGCIx83TVnruUx16BFYevhuooxgXSxyIg/Q1rs
+ 4Hevqsm4I9/LOKbxRiazhCiDD98DES5R/LVl2x03ilvi/dYyhzUhnmowbiiOm8AEyXEtah/td
+ uilGPD9Ew2ASEQHalNI3SNPfXv1AfNQSv++5ynKaElDl36m0+oULpIlQ1rb5Bh4Jbgu9AYXxs
+ m3+vQSCk/cgyCf20C/N+QIkvASM=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jul 25, 2023 at 02:48:17AM -0700, James Seo wrote:
-> The following warning is given by the Smatch static checker:
-> 
->   drivers/hwmon/hp-wmi-sensors.c:1937 hp_wmi_sensors_init()
->   error: uninitialized symbol 'pevents'.
-> 
-> If there are no instances of the HPBIOS_PlatformEvents WMI object
-> available, init_platform_events() never initializes this pointer,
-> which may then be passed to hp_wmi_debugfs_init() uninitialized.
-> 
-> The impact should be limited because hp_wmi_debugfs_init() uses this
-> pointer only if the count of HPBIOS_PlatformEvents instances is _not_
-> zero, while conversely, it will be uninitialized only if the count of
-> such instances _is_ zero. However, passing it uninitialized still
-> constitutes a bug.
-> 
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/linux-hwmon/f72c129b-8c57-406a-bf41-bd889b65ea0f@moroto.mountain/
-> Signed-off-by: James Seo <james@equiv.tech>
+Am 25.07.23 um 17:07 schrieb Hans de Goede:
 
-Applied.
+> Hi Armin,
+>
+> On 7/22/23 02:09, Armin Wolf wrote:
+>> Hello,
+>>
+>> i just noticed that under some circumstances, ACPI WMI devices might fa=
+il to reprobe
+>> when being manually unbound and later rebound.
+>> Example:
+>>
+>> 1. ACPI WMI device #1 binds and registers WMI device with GUID
+>> "05901221-D566-11D1-B2F0-00A0C9062910", resulting in the device
+>> being named "05901221-D566-11D1-B2F0-00A0C9062910".
+>> 2. ACPI WMI device #2 binds and registers WMI device with GUID
+>> "05901221-D566-11D1-B2F0-00A0C9062910", resulting in the device
+>> being named "05901221-D566-11D1-B2F0-00A0C9062910-1".
+>> 3. ACPI WMI device #1 is manually unbound and later rebound,
+>> now the WMI device with GUID "05901221-D566-11D1-B2F0-00A0C9062910"
+>> is being named "05901221-D566-11D1-B2F0-00A0C9062910-1" too, since
+>> device naming depends on the number of GUIDs currently known to
+>> the WMI subsystem.
+>> 4. A WMI device named "05901221-D566-11D1-B2F0-00A0C9062910-1" already
+>> exists, causing the registration of the new WMI device to fail.
+>>
+>> I thought about some possible ways to solve this naming issue:
+>>
+>> - symlinks to simulate old WMI devices names, new WMI device names simi=
+lar to "wmiX" with X being a global unique id
+>> - no symlinks, new WMI device names similar to "wmiX" with X being a gl=
+obal unique id
+>> - use global id instead of GUID number
+>>
+>> The first approach has full sysfs backward compatibility but i do not k=
+now how to create symlinks inside the "devices"
+>> directory. The second approach is the easiest and cleanest one, but pro=
+vides no sysfs backward compatibility. The last
+>> approach provides only limited sysfs backward compatibility and only fo=
+r programs which can handle "<GUID>-X" WMI device
+>> names.
+>>
+>> Currently, there is one single stable sysfs ABI entry concerning the WM=
+I subsystem (for wmi-bmof), and two testing
+>> sysfs ABI entries (dell-wmi-privacy, sbl-fw-update). I do not know of a=
+ny userspace programs relying on these ABIs,
+>> but i suspect there might be a couple of scripts which might be affecte=
+d.
+>>
+>> Which approach should i take to solve this problem?
+>
+> The standard approach to get reliable unique ids in the kernel is to use
+> something like this:
+>
+> #include <linux/idr.h>
+>
+> static DEFINE_MUTEX(ida_lock);
+>
+> struct guid_data {
+> 	guid_t guid;
+> 	struct ida ida;
+> 	struct list_head list;
+> };
+>
+> int guid_init() {
+> 	ida_init(&guid_data->ida);
+> }
+>
+> int wmi_create_device()
+> {
+> 	int index;
+> 	...
+> 	mutex_lock(&ida_lock);
+> 	index =3D ida_alloc(&guid_data->ida, GFP_KERNEL);
+> 	mutex_unlock(&ida_lock);
+> 	if (index < 0)
+> 		return index;
+>
+> 	// store index for use on acpi_wmi_remove
+> 	wmi_block->index =3D index;
+> 	// use index to generate name, don't add -%d for index=3D=3D0
+> 	...
+> }
+>
+> static void wmi_dev_release(struct device *dev)
+> {
+>          struct wmi_block *wblock =3D dev_to_wblock(dev);
+>
+> 	mutex_lock(&ida_lock);
+> 	ida_free(&guid_data->ida, wblock->index);
+> 	mutex_unlock(&ida_lock);
+>          kfree(wblock);
+> }
+>
+>
+> This is going to need a linked-list of struct guid_data
+> structs and a new wmi_get_guid_data() function which
+> takes a new global mutex to protect the list and then
+> first walks that list looking for a guid match
+>
+> If nothing is found kzalloc a new struct, init
+> the ida struct and add it to the list before releasing
+> the mutex protecting the list.
+>
+> At the end of wmi_get_guid_data() return the found
+> or created struct guid_data or NULL on kzalloc error.
+>
+> And in wmi_create_device() and wmi_dev_release()
+> use this to get a struct_guid_data matching the wblock
+> GUID so that we have 1 ida struct per GUID.
+>
+> I would not worry about releasing the struct guid_data
+> if somehow the last wblock with that GUID disappears
+> chances are we are going to need it again soon and
+> the ida id-array will be empty then so we will start
+> with a clean-slate if we just re-use the old one
+> when a new wblock with the same GUID shows up again.
+>
+> ###
+>
+> Not the prettiest with the need to have a new linked
+> lists of structs to get a per GUID ida, but it nicely
+> matches how most subsystems do this so I think it is
+> best.
+>
+> I hope this small sketch of what a solution for this
+> could look like is useful.
+>
+> Regards,
+>
+> Hans
+>
+Would it be feasible to use the duplicate GUID allowlist instead?
+Since the issue does only exists on GUIDs which can be duplicated, only WM=
+I devices handling those
+need a unique id after the GUID, the rest keeps the classic WMI device nam=
+e.
+This would also allow for individual WMI drivers to provide backwards comp=
+atibility in case userspace
+needs the old WMI device name for the WMI devices they control. If a WMI d=
+river knows that userspace
+can handle the new WMI device name for his GUIDs, then they can just add t=
+hem to the allowlist.
 
-Thanks,
-Guenter
+Armin Wolf
 
-> ---
->  drivers/hwmon/hp-wmi-sensors.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> 
-> base-commit: 55612007f16b5d7b1fb83a7b0f5bb686829db7c7
-> 
-> diff --git a/drivers/hwmon/hp-wmi-sensors.c b/drivers/hwmon/hp-wmi-sensors.c
-> index 3a99cc5f44b2..17ae62f88bbf 100644
-> --- a/drivers/hwmon/hp-wmi-sensors.c
-> +++ b/drivers/hwmon/hp-wmi-sensors.c
-> @@ -1913,7 +1913,7 @@ static bool add_event_handler(struct hp_wmi_sensors *state)
->  static int hp_wmi_sensors_init(struct hp_wmi_sensors *state)
->  {
->  	struct hp_wmi_info *connected[HP_WMI_MAX_INSTANCES];
-> -	struct hp_wmi_platform_events *pevents;
-> +	struct hp_wmi_platform_events *pevents = NULL;
->  	struct device *dev = &state->wdev->dev;
->  	struct hp_wmi_info *info;
->  	struct device *hwdev;
