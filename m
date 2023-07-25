@@ -2,84 +2,148 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ED0C0015E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Jul 2023 09:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4E4C0015E
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Jul 2023 13:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232625AbjGYJsr (ORCPT
+        id S230391AbjGYN3u (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 Jul 2023 05:48:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51822 "EHLO
+        Tue, 25 Jul 2023 09:29:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232128AbjGYJso (ORCPT
+        with ESMTP id S230344AbjGYN3t (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Jul 2023 05:48:44 -0400
-Received: from rs227.mailgun.us (rs227.mailgun.us [209.61.151.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B0B1AD
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Jul 2023 02:48:42 -0700 (PDT)
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=equiv.tech; q=dns/txt;
- s=mx; t=1690278521; x=1690285721; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Subject: Cc: To: To: From: From: Sender: Sender;
- bh=a7euifVUehZsKlaZIpC9d5sGc1HeYiQSbpWf0EJ7QP8=;
- b=aMwyHjc1Ie3XzN3jSnYF0T6fY+zfs44bBdIaPzPeija+U4Ejh8SuJD9bgUd4Orwl45uUqrhiwTCXAerA/Kqe3rKEc6Z8XghNoEPbAPc3SBPf8T6kSAoTIDcZDShYvrQ0bV8MUCw2Xo/xxhioZSuaEtrcYBKGwBPrWtxX8ylAyAPqyy0G9L9eV7u/+LLNn4FvezaY7Y30ze/rGeRu3YBzTgfCGHDY/OMEtzEyPo2WyaXaefBAHMHDyI8cAeU+oNe7LhSFKDAIYixlHkbqszOsFhrgqAAaopRed09nfdW5MdFUGHx97yWTASh8A4WyITgsuOqr7PsbZx+VToUlYipfIA==
-X-Mailgun-Sending-Ip: 209.61.151.227
-X-Mailgun-Sid: WyI0MzAwNyIsInBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnIiwiOTNkNWFiIl0=
-Received: from mail.equiv.tech (equiv.tech [142.93.28.83]) by 292765024a19 with SMTP id
- 64bf9a7995a6293efb65da66 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 25 Jul 2023 09:48:41 GMT
-Sender: james@equiv.tech
-From:   James Seo <james@equiv.tech>
-To:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     James Seo <james@equiv.tech>,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] hwmon: (hp-wmi-sensors) Initialize pevents in hp_wmi_sensors_init()
-Date:   Tue, 25 Jul 2023 02:48:17 -0700
-Message-Id: <20230725094817.588640-1-james@equiv.tech>
+        Tue, 25 Jul 2023 09:29:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A00AE6D
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Jul 2023 06:29:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1690291747;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1ug17HCPyYXgIfirXBr+hlqgJSFu4HDkRRhm0FIONRA=;
+        b=JDcAwDRj/JHJAxCXEwsYqp5qzBtOAInywC18rh6SriKPtOPtEpw9etqyHToF8tEd3/JEjb
+        1gWbM6SRYU3Z9Bp24yQqKTnaQWrOSn590jJNEMTkTiXPnie8FhlqNPXLF6LNG0FzRwOiYE
+        d5KftfN103RlsoF+YZJLIh8Vu7VSXv8=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-520-89vvBjt8MZqyR4aSWeb7VA-1; Tue, 25 Jul 2023 09:29:05 -0400
+X-MC-Unique: 89vvBjt8MZqyR4aSWeb7VA-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-993d631393fso457639266b.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Jul 2023 06:29:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690291744; x=1690896544;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ug17HCPyYXgIfirXBr+hlqgJSFu4HDkRRhm0FIONRA=;
+        b=dzAVzXPUcUa8jIdP4ZeTOYPyZ9pRK49xtE6e8VMwg6MsMZa0Hmy9Zew+xGl9HB+DHt
+         LDg85SV8DasBM7ANaOAIYsUk8KI8D8+C9SHU3Eqyop2yywQqP6J1zv1l7DPgBrx6uR5t
+         22Jat60J8s6LgyfaMtDGp/6bhaeW5ZYjmc0b0vpJSQXtHH6l/KAIPtUsBsSP99KLu9PH
+         5uwarKG8eZFb0Iqt1vLmSmND/H6bYSY5X75DElVkgmrmMLW+7RcBrHO9cPJ30mmmJeWA
+         Zfbd5izwNRo0sGUYPyDpR6rSPy+C/lOr2ZP5QIxAhtWf1/mWqEDLvQ3YL5f63ftGQIDH
+         u4uw==
+X-Gm-Message-State: ABy/qLbwRAPpEzzmQnDORMOYPqCJmPsy56HuNrdreCzU5uVSau7KH6eQ
+        0S9z+s62M8Ff+QT5/SrRx817hOm7mKDaKmIu9pmExlFs9Qvotx0Bz0qLYAJmpi7VsJ6Vgr0OgXn
+        uBmTjeStvdS9o4yMHPw0rPtFueb6TVFijSw==
+X-Received: by 2002:a17:907:75d5:b0:994:34a2:8724 with SMTP id jl21-20020a17090775d500b0099434a28724mr12367215ejc.52.1690291744433;
+        Tue, 25 Jul 2023 06:29:04 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlEnsJKulanRAGbekw+sjjwoWdFvJGP+rywhpS9pzsSO2vEEFcPtvAKQuNKCCA0ROgLwR7sHzA==
+X-Received: by 2002:a17:907:75d5:b0:994:34a2:8724 with SMTP id jl21-20020a17090775d500b0099434a28724mr12367204ejc.52.1690291744161;
+        Tue, 25 Jul 2023 06:29:04 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id kg8-20020a17090776e800b0099329b3ab67sm8184337ejc.71.2023.07.25.06.29.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Jul 2023 06:29:03 -0700 (PDT)
+Message-ID: <5374b550-16b3-b8b9-d322-d9895861b70e@redhat.com>
+Date:   Tue, 25 Jul 2023 15:29:02 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH] platform/x86: intel: hid: Always call BTNL ACPI method
+Content-Language: en-US, nl
+To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org,
+        Maxim Mikityanskiy <maxtram95@gmail.com>
+References: <20230715181516.5173-1-hdegoede@redhat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230715181516.5173-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The following warning is given by the Smatch static checker:
+Hi,
 
-  drivers/hwmon/hp-wmi-sensors.c:1937 hp_wmi_sensors_init()
-  error: uninitialized symbol 'pevents'.
+On 7/15/23 20:15, Hans de Goede wrote:
+> On a HP Elite Dragonfly G2 the 0xcc and 0xcd events for SW_TABLET_MODE
+> are only send after the BTNL ACPI method has been called.
+> 
+> Likely more devices need this, so make the BTNL ACPI method unconditional
+> instead of only doing it on devices with a 5 button array.
+> 
+> Note this also makes the intel_button_array_enable() call in probe()
+> unconditional, that function does its own priv->array check. This makes
+> the intel_button_array_enable() call in probe() consistent with the calls
+> done on suspend/resume which also rely on the priv->array check inside
+> the function.
+> 
+> Reported-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+> Closes: https://lore.kernel.org/platform-driver-x86/20230712175023.31651-1-maxtram95@gmail.com/
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-If there are no instances of the HPBIOS_PlatformEvents WMI object
-available, init_platform_events() never initializes this pointer,
-which may then be passed to hp_wmi_debugfs_init() uninitialized.
+I've added this to the pdx86/fixes branch now.
 
-The impact should be limited because hp_wmi_debugfs_init() uses this
-pointer only if the count of HPBIOS_PlatformEvents instances is _not_
-zero, while conversely, it will be uninitialized only if the count of
-such instances _is_ zero. However, passing it uninitialized still
-constitutes a bug.
+Regards,
 
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/linux-hwmon/f72c129b-8c57-406a-bf41-bd889b65ea0f@moroto.mountain/
-Signed-off-by: James Seo <james@equiv.tech>
----
- drivers/hwmon/hp-wmi-sensors.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hans
 
-diff --git a/drivers/hwmon/hp-wmi-sensors.c b/drivers/hwmon/hp-wmi-sensors.c
-index 3a99cc5f44b2..17ae62f88bbf 100644
---- a/drivers/hwmon/hp-wmi-sensors.c
-+++ b/drivers/hwmon/hp-wmi-sensors.c
-@@ -1913,7 +1913,7 @@ static bool add_event_handler(struct hp_wmi_sensors *state)
- static int hp_wmi_sensors_init(struct hp_wmi_sensors *state)
- {
- 	struct hp_wmi_info *connected[HP_WMI_MAX_INSTANCES];
--	struct hp_wmi_platform_events *pevents;
-+	struct hp_wmi_platform_events *pevents = NULL;
- 	struct device *dev = &state->wdev->dev;
- 	struct hp_wmi_info *info;
- 	struct device *hwdev;
-
-base-commit: 55612007f16b5d7b1fb83a7b0f5bb686829db7c7
--- 
-2.39.2
+> ---
+>  drivers/platform/x86/intel/hid.c | 21 +++++++++------------
+>  1 file changed, 9 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+> index 5632bd3c534a..641f2797406e 100644
+> --- a/drivers/platform/x86/intel/hid.c
+> +++ b/drivers/platform/x86/intel/hid.c
+> @@ -620,7 +620,7 @@ static bool button_array_present(struct platform_device *device)
+>  static int intel_hid_probe(struct platform_device *device)
+>  {
+>  	acpi_handle handle = ACPI_HANDLE(&device->dev);
+> -	unsigned long long mode;
+> +	unsigned long long mode, dummy;
+>  	struct intel_hid_priv *priv;
+>  	acpi_status status;
+>  	int err;
+> @@ -692,18 +692,15 @@ static int intel_hid_probe(struct platform_device *device)
+>  	if (err)
+>  		goto err_remove_notify;
+>  
+> -	if (priv->array) {
+> -		unsigned long long dummy;
+> +	intel_button_array_enable(&device->dev, true);
+>  
+> -		intel_button_array_enable(&device->dev, true);
+> -
+> -		/* Call button load method to enable HID power button */
+> -		if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_BTNL_FN,
+> -					       &dummy)) {
+> -			dev_warn(&device->dev,
+> -				 "failed to enable HID power button\n");
+> -		}
+> -	}
+> +	/*
+> +	 * Call button load method to enable HID power button
+> +	 * Always do this since it activates events on some devices without
+> +	 * a button array too.
+> +	 */
+> +	if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_BTNL_FN, &dummy))
+> +		dev_warn(&device->dev, "failed to enable HID power button\n");
+>  
+>  	device_init_wakeup(&device->dev, true);
+>  	/*
 
