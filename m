@@ -2,75 +2,76 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4E4C0015E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Jul 2023 13:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A13DC001DF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Jul 2023 13:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230391AbjGYN3u (ORCPT
+        id S230263AbjGYNaO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 Jul 2023 09:29:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58174 "EHLO
+        Tue, 25 Jul 2023 09:30:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230344AbjGYN3t (ORCPT
+        with ESMTP id S230416AbjGYNaJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Jul 2023 09:29:49 -0400
+        Tue, 25 Jul 2023 09:30:09 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A00AE6D
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Jul 2023 06:29:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 118FF10E5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Jul 2023 06:29:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1690291747;
+        s=mimecast20190719; t=1690291760;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1ug17HCPyYXgIfirXBr+hlqgJSFu4HDkRRhm0FIONRA=;
-        b=JDcAwDRj/JHJAxCXEwsYqp5qzBtOAInywC18rh6SriKPtOPtEpw9etqyHToF8tEd3/JEjb
-        1gWbM6SRYU3Z9Bp24yQqKTnaQWrOSn590jJNEMTkTiXPnie8FhlqNPXLF6LNG0FzRwOiYE
-        d5KftfN103RlsoF+YZJLIh8Vu7VSXv8=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=YzaB62IfAWaKjr40MIeUKzOgDRHbKPqjxnRlUir3NLA=;
+        b=fSI21d1KDwtRpn/frJm6PunJhxk6MTmcjri6IySwAXuvsHFe0XGuFt0CqzGKgw1a8bPLV/
+        j1/9anjOz2TjDNzJ+v67+P04vHJku5rF5WwyJ4ZQXbzwShkdp8zYFdL9QrABRf1p+9pu7o
+        wGPfLh06sypfv/MyFk5ezla+smNBPIM=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-520-89vvBjt8MZqyR4aSWeb7VA-1; Tue, 25 Jul 2023 09:29:05 -0400
-X-MC-Unique: 89vvBjt8MZqyR4aSWeb7VA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-993d631393fso457639266b.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Jul 2023 06:29:05 -0700 (PDT)
+ us-mta-6-HfQ-cbcnN6ClERzKeH-Ajg-1; Tue, 25 Jul 2023 09:29:18 -0400
+X-MC-Unique: HfQ-cbcnN6ClERzKeH-Ajg-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-4f76712f950so4808576e87.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Jul 2023 06:29:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690291744; x=1690896544;
+        d=1e100.net; s=20221208; t=1690291756; x=1690896556;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ug17HCPyYXgIfirXBr+hlqgJSFu4HDkRRhm0FIONRA=;
-        b=dzAVzXPUcUa8jIdP4ZeTOYPyZ9pRK49xtE6e8VMwg6MsMZa0Hmy9Zew+xGl9HB+DHt
-         LDg85SV8DasBM7ANaOAIYsUk8KI8D8+C9SHU3Eqyop2yywQqP6J1zv1l7DPgBrx6uR5t
-         22Jat60J8s6LgyfaMtDGp/6bhaeW5ZYjmc0b0vpJSQXtHH6l/KAIPtUsBsSP99KLu9PH
-         5uwarKG8eZFb0Iqt1vLmSmND/H6bYSY5X75DElVkgmrmMLW+7RcBrHO9cPJ30mmmJeWA
-         Zfbd5izwNRo0sGUYPyDpR6rSPy+C/lOr2ZP5QIxAhtWf1/mWqEDLvQ3YL5f63ftGQIDH
-         u4uw==
-X-Gm-Message-State: ABy/qLbwRAPpEzzmQnDORMOYPqCJmPsy56HuNrdreCzU5uVSau7KH6eQ
-        0S9z+s62M8Ff+QT5/SrRx817hOm7mKDaKmIu9pmExlFs9Qvotx0Bz0qLYAJmpi7VsJ6Vgr0OgXn
-        uBmTjeStvdS9o4yMHPw0rPtFueb6TVFijSw==
-X-Received: by 2002:a17:907:75d5:b0:994:34a2:8724 with SMTP id jl21-20020a17090775d500b0099434a28724mr12367215ejc.52.1690291744433;
-        Tue, 25 Jul 2023 06:29:04 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlEnsJKulanRAGbekw+sjjwoWdFvJGP+rywhpS9pzsSO2vEEFcPtvAKQuNKCCA0ROgLwR7sHzA==
-X-Received: by 2002:a17:907:75d5:b0:994:34a2:8724 with SMTP id jl21-20020a17090775d500b0099434a28724mr12367204ejc.52.1690291744161;
-        Tue, 25 Jul 2023 06:29:04 -0700 (PDT)
+        bh=YzaB62IfAWaKjr40MIeUKzOgDRHbKPqjxnRlUir3NLA=;
+        b=WQM1v7wwB4FKQ2v/qLgr8Q4JtLEYECv+8uP+PQHoj705T+q6UZWyt8QyGh70uA5x9S
+         S7KT+kFVi1pZSjZqeLajdDHPrE8lb2HsxtZlHn0h0oO7T+VJkXIw4mlUR3VDewIQBHOf
+         hAWSKVGShIZ18nC2mx8ahSnKzDe+4NZxjKQlu9j9fFWSGCEDoE+XtrnHYPAzDq9GcJJW
+         l7FkfGsX+u4oMlrVQsNqkSLs1fZem8/Mc/aSIEL61mC8Kxuf6QrUAPbiM1zseERmsL/q
+         LrGXgffc3Y0hdVLi2qG3r8vHcbtWIXnN2/BcbJWCyFZx+u0Z2xbMSDltvSgQjpnLoXVD
+         gcFg==
+X-Gm-Message-State: ABy/qLbOapqJ/mO7yC3XCqzt6XuJV8SN2GNuP7YbkLGhV6ZFPk6liwLf
+        GUOv4Jrjpw7XKKusN2czpw2UlZlAS/hpPfLJFhSJJy20QU1e54ZHK1ktlSKpxpT75QD6Bromzbm
+        k3zril5cjMBvKlYokv2XiLhALAMSIuTRCvg==
+X-Received: by 2002:a19:6755:0:b0:4f8:5bf7:db05 with SMTP id e21-20020a196755000000b004f85bf7db05mr7629945lfj.27.1690291756660;
+        Tue, 25 Jul 2023 06:29:16 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlGw2c86Cn66zy4bQqoIKumKm0BfA80x2pk+JYd9dSrQcwOhbJEgPVS2pMMZ19DB8JETCR0Yig==
+X-Received: by 2002:a19:6755:0:b0:4f8:5bf7:db05 with SMTP id e21-20020a196755000000b004f85bf7db05mr7629939lfj.27.1690291756351;
+        Tue, 25 Jul 2023 06:29:16 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id kg8-20020a17090776e800b0099329b3ab67sm8184337ejc.71.2023.07.25.06.29.03
+        by smtp.gmail.com with ESMTPSA id d15-20020aa7ce0f000000b0052238bc70ccsm2145750edv.89.2023.07.25.06.29.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jul 2023 06:29:03 -0700 (PDT)
-Message-ID: <5374b550-16b3-b8b9-d322-d9895861b70e@redhat.com>
-Date:   Tue, 25 Jul 2023 15:29:02 +0200
+        Tue, 25 Jul 2023 06:29:15 -0700 (PDT)
+Message-ID: <1a018895-6bc6-2816-8cc9-cc6a7106ebc1@redhat.com>
+Date:   Tue, 25 Jul 2023 15:29:14 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH] platform/x86: intel: hid: Always call BTNL ACPI method
+Subject: Re: [PATCH v2] platform/x86/intel/hid: Add HP Dragonfly G2 to VGBS
+ DMI quirks
 Content-Language: en-US, nl
-To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Maxim Mikityanskiy <maxtram95@gmail.com>
-References: <20230715181516.5173-1-hdegoede@redhat.com>
+To:     Maxim Mikityanskiy <maxtram95@gmail.com>,
+        Alex Hung <alexhung@gmail.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230716183213.64173-1-maxtram95@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230715181516.5173-1-hdegoede@redhat.com>
+In-Reply-To: <20230716183213.64173-1-maxtram95@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,71 +80,57 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 7/15/23 20:15, Hans de Goede wrote:
-> On a HP Elite Dragonfly G2 the 0xcc and 0xcd events for SW_TABLET_MODE
-> are only send after the BTNL ACPI method has been called.
+On 7/16/23 20:32, Maxim Mikityanskiy wrote:
+> HP Elite Dragonfly G2 (a convertible laptop/tablet) has a reliable VGBS
+> method. If VGBS is not called on boot, the firmware sends an initial
+> 0xcd event shortly after calling the BTNL method, but only if the device
+> is booted in the laptop mode. However, if the device is booted in the
+> tablet mode and VGBS is not called, there is no initial 0xcc event, and
+> the input device for SW_TABLET_MODE is not registered up until the user
+> turns the device into the laptop mode.
 > 
-> Likely more devices need this, so make the BTNL ACPI method unconditional
-> instead of only doing it on devices with a 5 button array.
+> Call VGBS on boot on this device to get the initial state of
+> SW_TABLET_MODE in a reliable way.
 > 
-> Note this also makes the intel_button_array_enable() call in probe()
-> unconditional, that function does its own priv->array check. This makes
-> the intel_button_array_enable() call in probe() consistent with the calls
-> done on suspend/resume which also rely on the priv->array check inside
-> the function.
+> Tested with BIOS 1.13.1.
 > 
-> Reported-by: Maxim Mikityanskiy <maxtram95@gmail.com>
-> Closes: https://lore.kernel.org/platform-driver-x86/20230712175023.31651-1-maxtram95@gmail.com/
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
 
-I've added this to the pdx86/fixes branch now.
+Thank you for your patch, I've applied this patch to my fixes
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
+
+Note it will show up in my fixes branch once I've pushed my
+local branch there, which might take a while.
+
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
 Regards,
 
 Hans
 
+
+
 > ---
->  drivers/platform/x86/intel/hid.c | 21 +++++++++------------
->  1 file changed, 9 insertions(+), 12 deletions(-)
+>  drivers/platform/x86/intel/hid.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 > diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-> index 5632bd3c534a..641f2797406e 100644
+> index 5632bd3c534a..afa16520b363 100644
 > --- a/drivers/platform/x86/intel/hid.c
 > +++ b/drivers/platform/x86/intel/hid.c
-> @@ -620,7 +620,7 @@ static bool button_array_present(struct platform_device *device)
->  static int intel_hid_probe(struct platform_device *device)
->  {
->  	acpi_handle handle = ACPI_HANDLE(&device->dev);
-> -	unsigned long long mode;
-> +	unsigned long long mode, dummy;
->  	struct intel_hid_priv *priv;
->  	acpi_status status;
->  	int err;
-> @@ -692,18 +692,15 @@ static int intel_hid_probe(struct platform_device *device)
->  	if (err)
->  		goto err_remove_notify;
+> @@ -150,6 +150,12 @@ static const struct dmi_system_id dmi_vgbs_allow_list[] = {
+>  			DMI_MATCH(DMI_PRODUCT_NAME, "Surface Go"),
+>  		},
+>  	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "HP Elite Dragonfly G2 Notebook PC"),
+> +		},
+> +	},
+>  	{ }
+>  };
 >  
-> -	if (priv->array) {
-> -		unsigned long long dummy;
-> +	intel_button_array_enable(&device->dev, true);
->  
-> -		intel_button_array_enable(&device->dev, true);
-> -
-> -		/* Call button load method to enable HID power button */
-> -		if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_BTNL_FN,
-> -					       &dummy)) {
-> -			dev_warn(&device->dev,
-> -				 "failed to enable HID power button\n");
-> -		}
-> -	}
-> +	/*
-> +	 * Call button load method to enable HID power button
-> +	 * Always do this since it activates events on some devices without
-> +	 * a button array too.
-> +	 */
-> +	if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_BTNL_FN, &dummy))
-> +		dev_warn(&device->dev, "failed to enable HID power button\n");
->  
->  	device_init_wakeup(&device->dev, true);
->  	/*
 
