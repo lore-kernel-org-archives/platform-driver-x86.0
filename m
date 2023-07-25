@@ -2,446 +2,295 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7437EB64DD
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Jul 2023 19:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583EAC0015E
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Jul 2023 20:01:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230484AbjGYTuc (ORCPT
+        id S230077AbjGYUBM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 Jul 2023 15:50:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40994 "EHLO
+        Tue, 25 Jul 2023 16:01:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229608AbjGYTub (ORCPT
+        with ESMTP id S229545AbjGYUBL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Jul 2023 15:50:31 -0400
+        Tue, 25 Jul 2023 16:01:11 -0400
 Received: from us-smtp-delivery-162.mimecast.com (us-smtp-delivery-162.mimecast.com [170.10.133.162])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6103A19B0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Jul 2023 12:49:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ABE02102
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Jul 2023 13:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hp.com; s=mimecast20180716;
-        t=1690314582;
+        t=1690315224;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=/RxVgIVrOB+2mchdbRZnao1fG8xrprtvDP0Fb1HcCmA=;
-        b=GZtoAMOPRA3S0zGXijLXR2oicpqaLnBpWo7xlhdWhKjNIwD+ump8vyJYepAeUzsuxi0ww8
-        hF/Vedun+/dpHst8w4wRi6J5lAl/cFGVq7QL0nybArDyS9DQVePoXtqNe/2+eBkmhe+eD7
-        xKD3BwP234ko8qzEYGgU5/+1CG6ZKCw=
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com
- (mail-mw2nam10lp2108.outbound.protection.outlook.com [104.47.55.108]) by
+        bh=FkaJyAw8A7NAbYoC4CjLz0tzHnovXo3a+ZjSNoiarB4=;
+        b=I0eC2+l1DT4ozTVSQRZaMuyhh0ELNyuk+X9fuxCPGDSWHEVMqjUc0AIJrrI5kVNQfaHeXb
+        xxy7qwGw2uxAdXsNDgXTK2PnC39geAkFqVlFYwcrzxHPb5ovAu6CrQEmzsmD85RpljHiIc
+        1U6rcd7dE9M14esGL5Pvh7J+yjXLBzE=
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com
+ (mail-bn8nam04lp2049.outbound.protection.outlook.com [104.47.74.49]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-680-uczssUUsOVG3l64gL7dKvQ-1; Tue, 25 Jul 2023 15:49:36 -0400
-X-MC-Unique: uczssUUsOVG3l64gL7dKvQ-1
+ us-mta-402-hmHK8lunNMOxg1W0gBqaCA-1; Tue, 25 Jul 2023 16:00:23 -0400
+X-MC-Unique: hmHK8lunNMOxg1W0gBqaCA-1
 Received: from PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:510:160::10)
- by MW5PR84MB1425.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:303:1ab::10) with
+ by CH3PR84MB3571.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:610:1ad::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.32; Tue, 25 Jul
- 2023 19:49:33 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.28; Tue, 25 Jul
+ 2023 20:00:20 +0000
 Received: from PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM
  ([fe80::5e6b:1f96:bb19:ec40]) by PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM
  ([fe80::5e6b:1f96:bb19:ec40%7]) with mapi id 15.20.6609.031; Tue, 25 Jul 2023
- 19:49:32 +0000
+ 20:00:20 +0000
 From:   "Lopez, Jorge A (Security)" <jorge.lopez2@hp.com>
-To:     Dan Carpenter <dan.carpenter@linaro.org>
-CC:     "platform-driver-x86@vger.kernel.org" 
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Dan Carpenter <dan.carpenter@linaro.org>
+CC:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        =?utf-8?B?VGhvbWFzIFdlacOfc2NodWg=?= <linux@weissschuh.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>
-Subject: RE: [bug report] platform/x86: hp-bioscfg: enum-attributes
-Thread-Topic: [bug report] platform/x86: hp-bioscfg: enum-attributes
-Thread-Index: AQHZuJsJKPiFXgxXfUWCSftSA1z06K/K8JOw
-Date:   Tue, 25 Jul 2023 19:49:32 +0000
-Message-ID: <PH0PR84MB19534201D5136646B17738E3A803A@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
-References: <176e14a2-41f8-41b2-854e-77319ec2416d@moroto.mountain>
-In-Reply-To: <176e14a2-41f8-41b2-854e-77319ec2416d@moroto.mountain>
+Subject: RE: [PATCH] platform/x86: hp-bioscfg: Fix some memory leaks in
+ hp_populate_enumeration_elements_from_package()
+Thread-Topic: [PATCH] platform/x86: hp-bioscfg: Fix some memory leaks in
+ hp_populate_enumeration_elements_from_package()
+Thread-Index: AQHZuPHkIWGabZ7ClU64DUVfhVGEta+/KHuAgACigoCACyVmUA==
+Date:   Tue, 25 Jul 2023 20:00:20 +0000
+Message-ID: <PH0PR84MB19533DF0CE1E2F5951031150A803A@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
+References: <9770122e4e079dfa87d860ed86ba1a1237bcf944.1689627201.git.christophe.jaillet@wanadoo.fr>
+ <81fd0ef0-e254-4a24-a88a-459b1d773354@kadam.mountain>
+ <8d98b544-6191-53ce-fcb7-07d932c40f82@wanadoo.fr>
+In-Reply-To: <8d98b544-6191-53ce-fcb7-07d932c40f82@wanadoo.fr>
 Accept-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-bromium-msgid: 61409e0b-d56e-40ca-b7bd-e75a25ac96f4
+x-bromium-msgid: 40c4c1de-bccc-4f64-84c2-5d6be3a2cf58
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR84MB1953:EE_|MW5PR84MB1425:EE_
-x-ms-office365-filtering-correlation-id: c0991bf5-ec30-4501-27b0-08db8d48447c
+x-ms-traffictypediagnostic: PH0PR84MB1953:EE_|CH3PR84MB3571:EE_
+x-ms-office365-filtering-correlation-id: 6abc66eb-911e-4872-edaa-08db8d49c693
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0
-x-microsoft-antispam-message-info: 0qVrkjSXrjP7RGXTH2m5Mzv7dGA9K5ePuzCNDOIDHXDWN01XOGuErOx+2ThGOtWutpwzb3UGplwa18phtIoeQC1MtR4acc+bIVssE5t5rqW08LWGsZ7iMgha4tlhNAP9bpg8jUfsKjNb2fFlpcNRptSXcut7vDebh3fPUqwzE54WKh35eVDTDyCI731kWMPCaPTquwjpTtfk5x4mD2K+JaN2DilFOvW9oeO68hXW0DhgqT8vtDeOW0toFGTDT0uLgyMMeZ0rxLaklzQAw8hb+dp2mxPX4IGEYsQqVBNd7qRFxUAlGtZZ1uiY6o/ojwe8Bwu2ElqZS8xTDUibf+0qocYVjOMVAFhCEvIL4CdA5ajvbRnGyiBUEGi9Nr1m1sbbkIIJvqfsJXID5PoARKfSlqEQO9TBzohckIn8sI5lwIrjh0/OaVEko6eWZ4sCOh5ONbeEpN0B7NZru5crnuoDjHWcMhm1RdWLk3AodiyhvMyzzhCuq2AS7urayRikP8UfVWSNSkQNhKHm88fo+rZPF1H/XAN0CqBp0s5KZrCpYCvknyswE/JosZqDPWWiBHYc2W2fseW7DWqbTmx/gES/wNk807RT3rVl6hmln7/nhS1Dje3bmWZKrQyjNckgXQSH
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(366004)(376002)(136003)(396003)(346002)(451199021)(8936002)(8676002)(82960400001)(316002)(66446008)(66556008)(52536014)(66476007)(6916009)(5660300002)(122000001)(4326008)(66946007)(76116006)(64756008)(38100700002)(38070700005)(26005)(33656002)(6506007)(41300700001)(53546011)(83380400001)(478600001)(186003)(2906002)(9686003)(86362001)(7696005)(71200400001)(55016003);DIR:OUT;SFP:1102
+x-microsoft-antispam-message-info: tir1SWJ/m2HL9O1Wdb4gQ2k8dSC/2HinKM/oqN+gFNKATupUIhZs7KxXBT67bnyJx749htVI/qShjsHykMRu0qYvjx9giZf9l6u7KtOcPkqLcxyWC7R6xC/1FCcXGrE8pFCuhjoadRrGzRl6Tt9Af7zcTAQ5skEEkOA2G75Uy8xh6A07x7FEmhr12RjRrWeLbftzkd7PKZH4+XuOTOZH97xFT4/ETaQ+5N7p0KDoDk1ARnBox9R+c1ymQWU1MpIRFYTdy/yu0bLRAALvdE0W3ZY1Trwyi9HTMecLZVQHB06iX1q+pEeYizTOiyMytJ0K9SY5rdosdYAcnMQcxpXnrBLeRSsC4ZTsEIawuQYUPthnzS1LxMNiCbMPnJnpbNNxhdqVEN2eOj3Nkn2VN0EvDHkevhjHGHFD75KG8U481s/n+ohy9RVJrv9MppYrG9JnFZ9wHJwAO4ZuS9OSKYCQA1ywbZx+OAq/JBHo4/FcHkmj1/O4RFhTLXEGHgAV8lcaek52BIcE1kVYRMd1XjgPNhfJ0hy2GTlMjkbL0gmWma7UnM7teyw7dd2GuDcyvJOAHnhmOu9xKntyJ3br64Df5mi3r3tHMiGpiIqDMJwgYEHk6pUdIPizIFErZXjR8t99
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(396003)(366004)(39860400002)(376002)(451199021)(53546011)(122000001)(38100700002)(82960400001)(71200400001)(38070700005)(186003)(6506007)(66574015)(83380400001)(55016003)(2906002)(26005)(52536014)(5660300002)(8936002)(41300700001)(8676002)(86362001)(110136005)(478600001)(7696005)(9686003)(66476007)(66556008)(66946007)(66446008)(64756008)(76116006)(316002)(4326008)(54906003)(33656002);DIR:OUT;SFP:1102
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?f51Kf144ugBthVrVfyyrN2NzFeGQbhcumaujTOvrgTzBykHIZ6Cl8IWaM/QD?=
- =?us-ascii?Q?F3W9q/jb7boKnOX3+6EPG7XAED5y9jOfsjgSGvRY4tx5PzOcnFS0jfFaJFLq?=
- =?us-ascii?Q?XGmiDNYmnPrjR1uNMrjwaAvwhet1xy3nRQEXHDXB6IQS+prXaaYq0CiNDUUh?=
- =?us-ascii?Q?kZ+lUmOGPschaNRabRFfJkiV9+sCFhq5shzsxemVO1ms02Y3paIXiY414oFx?=
- =?us-ascii?Q?fHgscqvWiiSaA7BWD1Oh7n6Sx3GiPd2JhD5cpH28pdqAp9UvEdnh1CnMlLm9?=
- =?us-ascii?Q?wrG02QSpJePNIoz88tYFkdJwIyWFL//UFUMAmCdfps7bSaHjc0o+g+y5QyaJ?=
- =?us-ascii?Q?7yGW3avv8lCMyyXu5qzguc8WHztygKebeqDxghKQORPpLkcv1wKsy1YXGk3B?=
- =?us-ascii?Q?/0qwPk+4r3KORwr7iha8eQ6fTzulC631fZb3zTvoGha/sb1l8xhNNllllqFk?=
- =?us-ascii?Q?u7m/tWVTlZEWkf1FOSwXng1p3eDbiqptPH5V3TdKZZsoluijzxDxRtZRMCsw?=
- =?us-ascii?Q?RGaD933HuC8T2TF2c1j/GkPhcg/EagbYgFf7BHz/fq8ED/qw9kL7UTCNyTSE?=
- =?us-ascii?Q?obHNnIpGbr3ps8hXccz2uwDUeHT8NYIjHm/aCC3dxoBnDFqCfRtX4wX2fTR7?=
- =?us-ascii?Q?nAFdPwTvb4kq/9N1lssj1/NnU+dzO+TPZCg7SaVsF5nZG7Dg8YnL+3CDNMxu?=
- =?us-ascii?Q?wpb0E/im/1KMycyBZuHXzlXLUyeY+uJY/Ja1JSv2wxT7z9T108aWPiopqRSm?=
- =?us-ascii?Q?rn7iZRvVN0A/zAjf1wbXrNyaav1wYpSkiT61CVLvrzcGOAF8aKLfu/zjmrNU?=
- =?us-ascii?Q?jo34nFpRs3VddGH8LecLq0UPdkANNSAtjqQiNj0R5w8r2ITdoJK/i+ZFWQK7?=
- =?us-ascii?Q?1+i3ifZJ0fIuendWvT7ijclu5jnmYX8YYgdvqtzktFCj42Si06+bE7a9epRk?=
- =?us-ascii?Q?yNFZ+zDyIGLlkdKtMRE7z4TrLvEo8gVAiGqq5gV5VADk3OVk0wZ2Ld16uKGd?=
- =?us-ascii?Q?Kp5biD4mQ3FMIvd+dDQXocfU6h3deEjfnXFVhJttv4Np6s4JuR0BVPn9zs0a?=
- =?us-ascii?Q?7Ucm40TCZ1GinYnnRC/17BUYbJYE9zF2LHyFYexTpVUqV1qHSd/ghZBe0ll6?=
- =?us-ascii?Q?nTp+AvbNIt/kYqdvD1FU/xrOJAwcEQOKrAU17DRztRx8V+nfx87EHu1nsNrc?=
- =?us-ascii?Q?10rUdvFj/BqTIQjTu7TwaQ7IbgpeNEExrK9/cIt7YwlrnrgXepHcvGIN6lSd?=
- =?us-ascii?Q?mK8W9MmlzmyiZOj2oIG61rBygkME9+4oCKhpP65CFiQiXeTvdhXoonZjcdOb?=
- =?us-ascii?Q?54LDhGexqRUAXiXM74Jn4VSwshFGw7QS5C3+lrso/c3cmC2ojQQOSGk84dNP?=
- =?us-ascii?Q?N5C+whNDbBIK39nEZ1HgG+VX+Q8to022pQZ9059ztNaspm4DHwg/QPBMofas?=
- =?us-ascii?Q?HaNf4qW3GcY2HAHD28KKiTYcfn6hcGy8phQQyOzbfzbYsb7gN0YCINd8x/VT?=
- =?us-ascii?Q?twoU15BT+rTtVt5EBJ8Sr9e4iObMbNuZzmifNiVBxEQZdGiIIJtYbA+kGzdP?=
- =?us-ascii?Q?yymmy99DnQlMYFBVG7eo8Cv301QLxTvGj+u40Hxn?=
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?eDlYUFBrdlc4dHQrZkh4ZCtMTVVWdUhKTzNlaWlnaGE1MU5oa0lLeFk1dEFm?=
+ =?utf-8?B?dmU3YkJheXVrdlZQL1BnVWNkUUszbE8wOUNNWEFxdWNiZkorYjE2aExNekVD?=
+ =?utf-8?B?VW1KMFRvNEN5MmV1YzRaZGRwamlQNndmQVBOczU4SzRTcUp4NTRKYXE1TVVE?=
+ =?utf-8?B?M2xEUlF4OEdrdm9MUytwZ1Q2ejdNdmo1aHB5Qkxzc2I5TnR5Uk5IOEQzSFo0?=
+ =?utf-8?B?aENjcHJoeEZ1dkRxcng3TEMyb1d1L1Q4UTBwYTA1ZXFCNk1Bc1AxYVJhSG1y?=
+ =?utf-8?B?N2lTd3dIT1Q5aVpJUkR4M2h5U2dKOVFEQ09WNnpZM3NqWmpnNnBLWURiUTI5?=
+ =?utf-8?B?dHNIVk01cjVsTVN3SXpZSzdvOFphdkNZNVRPTTlSWG16RzRkRHp2V29rWmFW?=
+ =?utf-8?B?d1N1Y3ZMdjlQYUF4bzdmSTJybVNpbFpIV2J1NVB2UXhncW5xV2J3aGd4ajBa?=
+ =?utf-8?B?bkFycWlFSEdWb0QrekpRQTcxWWdMY2pqMXhvRHo2K0ZEdTR2Wldueno5ekQ4?=
+ =?utf-8?B?VWREKzZ5OHBVNXVCM0ZwL0NGVkhSOUVJM0pBTzlFcFpQQnRUVFZrVFREcmxi?=
+ =?utf-8?B?UFJYSFVBTzFHR3QxZnJrb1Q5Y1BwMjB4UDZaeEJoc0FVN003NllCN2dJYWl5?=
+ =?utf-8?B?VjZlbisreEJUZS9QS2F4K0IzNTRuTmRRci9PWWhCUk1XMGE5aFMvKy9DQUdn?=
+ =?utf-8?B?a1l5SXFXMzRuNEJtSUxjOWRQTDRscWJHTHBNbmFuRTRiQXIwdUVGTTNjNHlM?=
+ =?utf-8?B?UEp4cU9CMWdhQ0JvUU13S05yWUU0TFd1YWtRbEg4cGhIQjAxa2RvM2g5TWZD?=
+ =?utf-8?B?Z3FXZlZGZm42b3kwVkswbEhUbXo4Vk8yd0E1NmZVc3ZQcXljQ0pZUFpPMFhJ?=
+ =?utf-8?B?Q1hOUFhrdm04SkhMUlFvdjNLWDd0UHpJOEY0L3dFVlFTVGM0c3owd3VIdHUv?=
+ =?utf-8?B?aG5hSDl5bkdVS2daN2RwUURNZ0NEa2tHcGtQeFJHUUFsWm1IMFVEQUNDL0E5?=
+ =?utf-8?B?R04yQVNyVEczYWxIL3d0K3V5SWFiaUZxZXg0QU9tU1VLM2tqcXdmNHpyQ1Zx?=
+ =?utf-8?B?TDZLSFBFTVFrUXovVkcrZmtlclV1Y3JzVS9mWU5hcCtUaVVwZ2R2bld0dm1I?=
+ =?utf-8?B?NkxHTytteXJXWnUyWVNtYzkvYmMweHBwL1pNNlRPeHlnMXFtVUxPWWlRRWwy?=
+ =?utf-8?B?SlhqRkFYcWRHZGVjbUcvck9VSGlHdi9EQTVFT242NFE0clBRK2lVNkNSSjZJ?=
+ =?utf-8?B?R1pOWUxKVSt0d3AvcUtPV0dVRWdOa3JjYjBuS2NYUStibUNsV013UVJhRmVN?=
+ =?utf-8?B?YURENGNaaWtiMnczZWc1ZHJ5cis5NjkycDgwOCtKSG1ZTVBsRGUrSU1ac2xz?=
+ =?utf-8?B?Mm1JRG14a1BQU1puU0l2NjdkYmxKRFl6elFLK244dk4za0ZEb3BMY2tWeHZR?=
+ =?utf-8?B?OG45MHNmQ0trek43bVVRZEpZVW12RlRTZWQvUjl0RVNCeHJwZzhBcjBZZ0p5?=
+ =?utf-8?B?YmxoM3ZTZkY2Lyt6U29Vcmw5Z29IV0pSQ2luczNjcnVLL1ZtRXdaYUgyVkNs?=
+ =?utf-8?B?NWI5VDdSL0w0dHB3Qmh5b1orbFhzeko5UUsvN2F4YzVQN2RUSlFkWHZxV1hx?=
+ =?utf-8?B?WG5tQWlhSXV6SUl6TzRVRzlpRFM0aFRyekRrYmtXVzUyWFlCVEh3WlV3Q2R6?=
+ =?utf-8?B?bHRSUDFua1MybGRNVGYvL3pqTzJUV1FCdERYQVhEVUt6QTg5YS9NQXU1Mitk?=
+ =?utf-8?B?Zng1NExxbjJkVWhLK2tPWjF4WG1JOUd2aGhIQXBTT21Cb3V6M29CS3JFQ0E3?=
+ =?utf-8?B?L00zeVFncXV4UXdhRkozakNuRmhtakJlQVl6OWU4czFhSUVXUzBLZGY3V2NU?=
+ =?utf-8?B?UG1iQ1JLcFFuVm9LWWVuWDI4UnUvU0NXeVB6ZDc5a3MvZTFCa2xKbTZKeTJM?=
+ =?utf-8?B?ZTNwUFdVdzA5WHNCcGI5aDJtNjRtVDdZdkx2dlExME5qb045S2llNjFhRXFL?=
+ =?utf-8?B?elFSMkNibUVhSjhFd1QxTU1ieVlubTY0bEh4eCtSVXJCZWVpOHF4TE1hSWxv?=
+ =?utf-8?B?bS9XWXE1N08vQ0EyOGdFNFd4cVU5WnE5b0tvTmlGeS9wRTZwV2VUZ0dMMFBD?=
+ =?utf-8?Q?+3UJDEojFWSlMrt+zYuWyGsfI?=
 MIME-Version: 1.0
 X-OriginatorOrg: hp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0991bf5-ec30-4501-27b0-08db8d48447c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2023 19:49:32.8921
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6abc66eb-911e-4872-edaa-08db8d49c693
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2023 20:00:20.6272
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: ca7981a2-785a-463d-b82a-3db87dfc3ce6
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JC6Q9s38qld6tdERrm/O/R7eDw/BlkalaZcZaX9FpmxcsblOZ8S2rjK1j+SbP34ykqDCzrs8cDu32tVARFChjA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR84MB1425
+X-MS-Exchange-CrossTenant-userprincipalname: eZ8fcaL3FQBoSpX0IiWT+0uV5rSnVnnPKlvfhfSkWZXKMbj9KHaF2mrnrS1tgc6B4b39+IDOoziNXY3wrTayRw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR84MB3571
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: hp.com
 Content-Language: en-US
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Dan,
-
-I will submit a patch to address memory leaks in hp_populate_enumeration_el=
-ements_from_package() reported here and to address some uninitialized varia=
-ble errors reported in a separate email.
-
-
-
-Regards,
-
-Jorge Lopez
-HP Inc
-
-"Once you stop learning, you start dying"
-Albert Einstein
-
-> -----Original Message-----
-> From: Dan Carpenter <dan.carpenter@linaro.org>
-> Sent: Monday, July 17, 2023 5:40 AM
-> To: Lopez, Jorge A (Security) <jorge.lopez2@hp.com>
-> Cc: platform-driver-x86@vger.kernel.org
-> Subject: [bug report] platform/x86: hp-bioscfg: enum-attributes
->=20
-> CAUTION: External Email
->=20
-> Hello Jorge Lopez,
->=20
-> The patch 6b2770bfd6f9: "platform/x86: hp-bioscfg: enum-attributes"
-> from Jun 8, 2023 (linux-next), leads to the following Smatch static check=
-er
-> warning:
->=20
-> drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c:285
-> hp_populate_enumeration_elements_from_package() error: double free of
-> 'str_value'
-> drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c:289
-> hp_populate_enumeration_elements_from_package() error: double free of
-> 'str_value'
-> drivers/platform/x86/hp/hp-bioscfg/int-attributes.c:263
-> hp_populate_integer_elements_from_package() error: double free of
-> 'str_value'
-> drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:286
-> hp_populate_ordered_list_elements_from_package() error: double free of
-> 'str_value'
-> drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:290
-> hp_populate_ordered_list_elements_from_package() error: double free of
-> 'tmpstr'
-> drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c:291
-> hp_populate_ordered_list_elements_from_package() error: double free of
-> 'str_value'
-> drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:371
-> hp_populate_password_elements_from_package() error: double free of
-> 'str_value'
-> drivers/platform/x86/hp/hp-bioscfg/string-attributes.c:252
-> hp_populate_string_elements_from_package() error: double free of
-> 'str_value'
-> drivers/platform/x86/hp/hp-bioscfg/string-attributes.c:256
-> hp_populate_string_elements_from_package() error: double free of
-> 'str_value'
->=20
-> drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
->     125 static int hp_populate_enumeration_elements_from_package(union
-> acpi_object *enum_obj,
->     126                                                          int enum=
-_obj_count,
->     127                                                          int inst=
-ance_id)
->     128 {
->     129         char *str_value =3D NULL;
->=20
-> str_value starts as NULL.
->=20
->     130         int value_len;
->     131         u32 size =3D 0;
->     132         u32 int_value;
->     133         int elem =3D 0;
->     134         int reqs;
->     135         int pos_values;
->     136         int ret;
->     137         int eloc;
->     138         struct enumeration_data *enum_data =3D
-> &bioscfg_drv.enumeration_data[instance_id];
->     139
->     140         for (elem =3D 1, eloc =3D 1; elem < enum_obj_count; elem+=
-+, eloc++) {
->     141                 /* ONLY look at the first ENUM_ELEM_CNT elements =
-*/
->     142                 if (eloc =3D=3D ENUM_ELEM_CNT)
->     143                         goto exit_enumeration_package;
->=20
-> But here we free the str_value from the previous iteration.
->=20
->     144
->     145                 switch (enum_obj[elem].type) {
->     146                 case ACPI_TYPE_STRING:
->     147                         if (PREREQUISITES !=3D elem && ENUM_POSSI=
-BLE_VALUES
-> !=3D elem) {
->     148                                 ret =3D
-> hp_convert_hexstr_to_str(enum_obj[elem].string.pointer,
->     149                                                                en=
-um_obj[elem].string.length,
->     150                                                                &s=
-tr_value, &value_len);
->     151                                 if (ret)
->     152                                         return -EINVAL;
->=20
-> Here the str_value from the previos iteration is re-assigned without bein=
-g
-> freed.  (memory leak).
->=20
->     153                         }
->     154                         break;
->     155                 case ACPI_TYPE_INTEGER:
->     156                         int_value =3D (u32)enum_obj[elem].integer=
-.value;
->     157                         break;
->     158                 default:
->     159                         pr_warn("Unsupported object type [%d]\n",
-> enum_obj[elem].type);
->     160                         continue;
->     161                 }
->     162
->     163                 /* Check that both expected and read object type =
-match */
->     164                 if (expected_enum_types[eloc] !=3D enum_obj[elem]=
-.type) {
->     165                         pr_err("Error expected type %d for elem %=
-d, but got
-> type %d instead\n",
->     166                                expected_enum_types[eloc], elem,
-> enum_obj[elem].type);
->     167                         return -EIO;
->     168                 }
->     169
->     170                 /* Assign appropriate element value to correspond=
-ing field
-> */
->     171                 switch (eloc) {
->     172                 case NAME:
->     173                 case VALUE:
->     174                         break;
->     175                 case PATH:
->     176                         strscpy(enum_data->common.path, str_value=
-,
->=20
-> If str_value is NULL this will crash.
->=20
->     177                                 sizeof(enum_data->common.path));
->     178                         break;
->     179                 case IS_READONLY:
->     180                         enum_data->common.is_readonly =3D int_val=
-ue;
->     181                         break;
->     182                 case DISPLAY_IN_UI:
->     183                         enum_data->common.display_in_ui =3D int_v=
-alue;
->     184                         break;
->     185                 case REQUIRES_PHYSICAL_PRESENCE:
->     186                         enum_data->common.requires_physical_prese=
-nce =3D
-> int_value;
->     187                         break;
->     188                 case SEQUENCE:
->     189                         enum_data->common.sequence =3D int_value;
->     190                         break;
->     191                 case PREREQUISITES_SIZE:
->     192                         enum_data->common.prerequisites_size =3D =
-int_value;
->     193                         if (int_value > MAX_PREREQUISITES_SIZE)
->     194                                 pr_warn("Prerequisites size value=
- exceeded the
-> maximum number of elements supported or data may be malformed\n");
->     195
->     196                         /*
->     197                          * This HACK is needed to keep the expect=
-ed
->     198                          * element list pointing to the right obj=
-[elem].type
->     199                          * when the size is zero. PREREQUISITES
->     200                          * object is omitted by BIOS when the siz=
-e is
->     201                          * zero.
->     202                          */
->     203                         if (int_value =3D=3D 0)
->     204                                 eloc++;
->     205                         break;
->     206
->     207                 case PREREQUISITES:
->     208                         size =3D min_t(u32, enum_data-
-> >common.prerequisites_size, MAX_PREREQUISITES_SIZE);
->     209                         for (reqs =3D 0; reqs < size; reqs++) {
->     210                                 if (elem >=3D enum_obj_count) {
->     211                                         pr_err("Error enum-object=
-s package is too
-> small\n");
->     212                                         return -EINVAL;
->     213                                 }
->     214
->     215                                 ret =3D hp_convert_hexstr_to_str(=
-enum_obj[elem +
-> reqs].string.pointer,
->     216                                                                en=
-um_obj[elem +
-> reqs].string.length,
->     217                                                                &s=
-tr_value, &value_len);
->=20
-> str_value is re-assigned again.  (memory leak).
->=20
->     218
->     219                                 if (ret)
->     220                                         return -EINVAL;
->     221
->     222                                 strscpy(enum_data->common.prerequ=
-isites[reqs],
->     223                                         str_value,
->     224                                         sizeof(enum_data-
-> >common.prerequisites[reqs]));
->     225
->     226                                 kfree(str_value);
->=20
-> str_value is freed.  (this will lead to a crash).
->=20
->     227                         }
->     228                         break;
->     229
->     230                 case SECURITY_LEVEL:
->     231                         enum_data->common.security_level =3D int_=
-value;
->     232                         break;
->     233
->     234                 case ENUM_CURRENT_VALUE:
->     235                         strscpy(enum_data->current_value,
->     236                                 str_value, sizeof(enum_data->curr=
-ent_value));
->=20
-> No check for NULL.
->=20
->     237                         break;
->     238                 case ENUM_SIZE:
->     239                         enum_data->possible_values_size =3D int_v=
-alue;
->     240                         if (int_value > MAX_VALUES_SIZE)
->     241                                 pr_warn("Possible number values s=
-ize value
-> exceeded the maximum number of elements supported or data may be
-> malformed\n");
->     242
->     243                         /*
->     244                          * This HACK is needed to keep the expect=
-ed
->     245                          * element list pointing to the right obj=
-[elem].type
->     246                          * when the size is zero. POSSIBLE_VALUES
->     247                          * object is omitted by BIOS when the siz=
-e is zero.
->     248                          */
->     249                         if (int_value =3D=3D 0)
->     250                                 eloc++;
->     251                         break;
->     252
->     253                 case ENUM_POSSIBLE_VALUES:
->     254                         size =3D enum_data->possible_values_size;
->     255
->     256                         for (pos_values =3D 0; pos_values < size =
-&& pos_values <
-> MAX_VALUES_SIZE;
->     257                              pos_values++) {
->     258                                 if (elem >=3D enum_obj_count) {
->     259                                         pr_err("Error enum-object=
-s package is too
-> small\n");
->     260                                         return -EINVAL;
->     261                                 }
->     262
->     263                                 ret =3D hp_convert_hexstr_to_str(=
-enum_obj[elem +
-> pos_values].string.pointer,
->     264                                                                en=
-um_obj[elem +
-> pos_values].string.length,
->     265                                                                &s=
-tr_value, &value_len);
->=20
-> Re-assigned again.
->=20
->     266
->     267                                 if (ret)
->     268                                         return -EINVAL;
->     269
->     270                                 /*
->     271                                  * ignore strings when possible v=
-alues size
->     272                                  * is greater than MAX_VALUES_SIZ=
-E
->     273                                  */
->     274                                 if (size < MAX_VALUES_SIZE)
->     275                                         strscpy(enum_data-
-> >possible_values[pos_values],
->     276                                                 str_value,
->     277                                                 sizeof(enum_data-
-> >possible_values[pos_values]));
->     278                         }
->     279                         break;
->     280                 default:
->     281                         pr_warn("Invalid element: %d found in Enu=
-meration
-> attribute or data may be malformed\n", elem);
->     282                         break;
->     283                 }
->     284
-> --> 285                 kfree(str_value);
->=20
-> str_value is freed at the end of every iteration so this is double free f=
-rom
-> the PREREQUISITES code.
->=20
->     286         }
->     287
->     288 exit_enumeration_package:
->     289         kfree(str_value);
->=20
-> This is a double free as well.  I don't see how this one could have been
-> avoided in testing???
->=20
->     290         return 0;
->     291 }
->=20
-> regards,
-> dan carpenter
+SGkgQ2hyaXN0b3BoZSwNCg0KSSB3aWxsIHN1Ym1pdCBpbmRpdmlkdWFsIHBhdGNoZXMgdG8gYWRk
+cmVzcyBtZW1vcnkgbGVha3MgYW5kIHVuaW5pdGlhbGl6ZWQgdmFyaWFibGUgZXJyb3JzIGZvciBl
+YWNoIHNvdXJjZSBmaWxlIGxpc3RlZCBiZWxvdy4NCg0KPiBocF9wb3B1bGF0ZV9zdHJpbmdfZWxl
+bWVudHNfZnJvbV9wYWNrYWdlDQpkcml2ZXJzL3BsYXRmb3JtL3g4Ni9ocC9ocC1iaW9zY2ZnL3N0
+cmluZy1hdHRyaWJ1dGVzLmMNCg0KPiBocF9wb3B1bGF0ZV9vcmRlcmVkX2xpc3RfZWxlbWVudHNf
+ZnJvbV9wYWNrYWdlKCkNCmRyaXZlcnMvcGxhdGZvcm0veDg2L2hwL2hwLWJpb3NjZmcvb3JkZXIt
+bGlzdC1hdHRyaWJ1dGVzLmMNCg0KPiBocF9wb3B1bGF0ZV9pbnRlZ2VyX2VsZW1lbnRzX2Zyb21f
+cGFja2FnZSgpDQpkcml2ZXJzL3BsYXRmb3JtL3g4Ni9ocC9ocC1iaW9zY2ZnL2ludC1hdHRyaWJ1
+dGVzLmMNCg0KPiBocF9wb3B1bGF0ZV9lbnVtZXJhdGlvbl9lbGVtZW50c19mcm9tX3BhY2thZ2Uo
+KQ0KZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAvaHAtYmlvc2NmZy9lbnVtLWF0dHJpYnV0ZXMuYw0K
+DQo+IGhwX3BvcHVsYXRlX3Bhc3N3b3JkX2VsZW1lbnRzX2Zyb21fcGFja2FnZSgpDQpkcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9ocC9ocC1iaW9zY2ZnL3Bhc3N3ZG9iai1hdHRyaWJ1dGVzLmMNCg0KDQpS
+ZWdhcmRzLA0KDQpKb3JnZSBMb3Bleg0KSFAgSW5jDQoNCuKAnE9uY2UgeW91IHN0b3AgbGVhcm5p
+bmcsIHlvdSBzdGFydCBkeWluZ+KAnQ0KQWxiZXJ0IEVpbnN0ZWluDQoNCj4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2hyaXN0b3BoZSBKQUlMTEVUIDxjaHJpc3RvcGhlLmph
+aWxsZXRAd2FuYWRvby5mcj4NCj4gU2VudDogVHVlc2RheSwgSnVseSAxOCwgMjAyMyAxMjozNyBQ
+TQ0KPiBUbzogRGFuIENhcnBlbnRlciA8ZGFuLmNhcnBlbnRlckBsaW5hcm8ub3JnPg0KPiBDYzog
+TG9wZXosIEpvcmdlIEEgKFNlY3VyaXR5KSA8am9yZ2UubG9wZXoyQGhwLmNvbT47IEhhbnMgZGUg
+R29lZGUNCj4gPGhkZWdvZWRlQHJlZGhhdC5jb20+OyBNYXJrIEdyb3NzIDxtYXJrZ3Jvc3NAa2Vy
+bmVsLm9yZz47IFRob21hcw0KPiBXZWnDn3NjaHVoIDxsaW51eEB3ZWlzc3NjaHVoLm5ldD47IGxp
+bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGtlcm5lbC0NCj4gamFuaXRvcnNAdmdlci5rZXJu
+ZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBS
+ZTogW1BBVENIXSBwbGF0Zm9ybS94ODY6IGhwLWJpb3NjZmc6IEZpeCBzb21lIG1lbW9yeSBsZWFr
+cyBpbg0KPiBocF9wb3B1bGF0ZV9lbnVtZXJhdGlvbl9lbGVtZW50c19mcm9tX3BhY2thZ2UoKQ0K
+PiANCj4gQ0FVVElPTjogRXh0ZXJuYWwgRW1haWwNCj4gDQo+IExlIDE4LzA3LzIwMjMgw6AgMDk6
+NTUsIERhbiBDYXJwZW50ZXIgYSDDqWNyaXQgOg0KPiA+IE9uIE1vbiwgSnVsIDE3LCAyMDIzIGF0
+IDEwOjUzOjM3UE0gKzAyMDAsIENocmlzdG9waGUgSkFJTExFVCB3cm90ZToNCj4gPj4gSW4gdGhl
+IGxvb3AgaW4gdGhlIEVOVU1fUE9TU0lCTEVfVkFMVUVTIGNhc2UsIHdlIGFsbG9jYXRlIHNvbWUN
+Cj4gbWVtb3J5DQo+ID4+IHRoYXQgaXMgbmV2ZXIgZnJlZWQuDQo+ID4+DQo+ID4+IFdoaWxlIGF0
+IGl0LCBhZGQgc29tZSAic3RyX3ZhbHVlID0gTlVMTCIgdG8gYXZvaWQgc29tZSBwb3RlbnRpYWwN
+Cj4gPj4gZG91YmxlIGZyZWUuDQo+ID4+DQo+ID4+IEZpeGVzOiA2YjI3NzBiZmQ2ZjkgKCJwbGF0
+Zm9ybS94ODY6IGhwLWJpb3NjZmc6IGVudW0tYXR0cmlidXRlcyIpDQo+ID4+IFNpZ25lZC1vZmYt
+Ynk6IENocmlzdG9waGUgSkFJTExFVCA8Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI+DQo+
+ID4+IC0tLQ0KPiA+PiAvIVwgU3BlY3VsYXRpdmUgLyFcDQo+ID4+DQo+ID4+ICAgICBUaGlzIHBh
+dGNoIGlzIGJhc2VkIG9uIGFuYWx5c2lzIG9mIHRoZSBzdXJyb3VuZGluZyBjb2RlIGFuZCBzaG91
+bGQgYmUNCj4gPj4gICAgIHJldmlld2VkIHdpdGggY2FyZSAhDQo+ID4+DQo+ID4+IC8hXCBTcGVj
+dWxhdGl2ZSAvIVwNCj4gPg0KPiA+IEkgcmVwb3J0ZWQgdGhlc2UgYnVncyB5ZXN0ZXJkYXkuDQo+
+IA0KPiBPaywgc2VlbiBub3cuLi4NCj4gLi4uIGJ1dCBJIGRvbid0IHJlYWQgcGxhdGZvcm0tZHJp
+dmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmcgOikNCj4gDQo+IENKDQo+IA0KPiA+IEkgZG9uJ3QgdGhp
+bmsgdGhpcyBpcyB0aGUgY29ycmVjdCBmaXguDQo+ID4gSSB0aG91Z2h0IGFib3V0IG1ha2luZyB0
+aGUgc3RyX3ZhbHVlIGxvY2FsIHRvIHRoZSBmb3IgbG9vcC4gIFRoYXQncw0KPiA+IHNvcnQgb2Yg
+bGlrZSB3aGF0IHlvdXIgcGF0Y2ggZG9lcy4gIEJ1dCBJIHdhc24ndCBzdXJlIHRoYXQgd2FzDQo+
+ID4gbmVjZXNzYXJpbHkgY29ycmVjdCBlaXRoZXIuDQo+ID4NCj4gPiBUaGlzIGNvZGUgbmVlZHMg
+bW9yZSB0ZXN0aW5nIGFzIHdlbGwuICBJdCBzZWVtcyBubyBvbmUgaGFzIGNhbGxlZCB0aGlzDQo+
+ID4gZnVuY3Rpb24uDQo+ID4NCj4gPiBTbWF0Y2ggY29tcGxhaW5lZCBhYm91dCB1bmluaXRpYWxp
+emVkIHZhcmlhYmxlcyBhcyB3ZWxsLiAgSSBkaWRuJ3QNCj4gPiBib3RoZXIgdG8gcmVwb3J0IHRo
+YXQgeWVzdGVyZGF5IGJ1dCBJIG1heSBhcyB3ZWxsLg0KPiA+DQo+ID4gcmVnYXJkcywNCj4gPiBk
+YW4gY2FycGVudGVyDQo+ID4NCj4gPiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9ocC9ocC1iaW9zY2Zn
+L3N0cmluZy1hdHRyaWJ1dGVzLmM6MTg4DQo+IGhwX3BvcHVsYXRlX3N0cmluZ19lbGVtZW50c19m
+cm9tX3BhY2thZ2UoKSBlcnJvcjogdW5pbml0aWFsaXplZCBzeW1ib2wNCj4gJ2ludF92YWx1ZScu
+DQo+ID4gZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAvaHAtYmlvc2NmZy9zdHJpbmctYXR0cmlidXRl
+cy5jOjE5MQ0KPiBocF9wb3B1bGF0ZV9zdHJpbmdfZWxlbWVudHNfZnJvbV9wYWNrYWdlKCkgZXJy
+b3I6IHVuaW5pdGlhbGl6ZWQgc3ltYm9sDQo+ICdpbnRfdmFsdWUnLg0KPiA+IGRyaXZlcnMvcGxh
+dGZvcm0veDg2L2hwL2hwLWJpb3NjZmcvc3RyaW5nLWF0dHJpYnV0ZXMuYzoxOTQNCj4gaHBfcG9w
+dWxhdGVfc3RyaW5nX2VsZW1lbnRzX2Zyb21fcGFja2FnZSgpIGVycm9yOiB1bmluaXRpYWxpemVk
+IHN5bWJvbA0KPiAnaW50X3ZhbHVlJy4NCj4gPiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9ocC9ocC1i
+aW9zY2ZnL3N0cmluZy1hdHRyaWJ1dGVzLmM6MTk3DQo+IGhwX3BvcHVsYXRlX3N0cmluZ19lbGVt
+ZW50c19mcm9tX3BhY2thZ2UoKSBlcnJvcjogdW5pbml0aWFsaXplZCBzeW1ib2wNCj4gJ2ludF92
+YWx1ZScuDQo+ID4gZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAvaHAtYmlvc2NmZy9zdHJpbmctYXR0
+cmlidXRlcy5jOjIwMA0KPiBocF9wb3B1bGF0ZV9zdHJpbmdfZWxlbWVudHNfZnJvbV9wYWNrYWdl
+KCkgZXJyb3I6IHVuaW5pdGlhbGl6ZWQgc3ltYm9sDQo+ICdpbnRfdmFsdWUnLg0KPiA+IGRyaXZl
+cnMvcGxhdGZvcm0veDg2L2hwL2hwLWJpb3NjZmcvc3RyaW5nLWF0dHJpYnV0ZXMuYzoyMzkNCj4g
+aHBfcG9wdWxhdGVfc3RyaW5nX2VsZW1lbnRzX2Zyb21fcGFja2FnZSgpIGVycm9yOiB1bmluaXRp
+YWxpemVkIHN5bWJvbA0KPiAnaW50X3ZhbHVlJy4NCj4gPiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9o
+cC9ocC1iaW9zY2ZnL3N0cmluZy1hdHRyaWJ1dGVzLmM6MjQyDQo+IGhwX3BvcHVsYXRlX3N0cmlu
+Z19lbGVtZW50c19mcm9tX3BhY2thZ2UoKSBlcnJvcjogdW5pbml0aWFsaXplZCBzeW1ib2wNCj4g
+J2ludF92YWx1ZScuDQo+ID4gZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAvaHAtYmlvc2NmZy9zdHJp
+bmctYXR0cmlidXRlcy5jOjI0NQ0KPiBocF9wb3B1bGF0ZV9zdHJpbmdfZWxlbWVudHNfZnJvbV9w
+YWNrYWdlKCkgZXJyb3I6IHVuaW5pdGlhbGl6ZWQgc3ltYm9sDQo+ICdpbnRfdmFsdWUnLg0KPiA+
+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2hwL2hwLWJpb3NjZmcvb3JkZXItbGlzdC1hdHRyaWJ1dGVz
+LmM6MTkyDQo+IGhwX3BvcHVsYXRlX29yZGVyZWRfbGlzdF9lbGVtZW50c19mcm9tX3BhY2thZ2Uo
+KSBlcnJvcjogdW5pbml0aWFsaXplZA0KPiBzeW1ib2wgJ2ludF92YWx1ZScuDQo+ID4gZHJpdmVy
+cy9wbGF0Zm9ybS94ODYvaHAvaHAtYmlvc2NmZy9vcmRlci1saXN0LWF0dHJpYnV0ZXMuYzoxOTUN
+Cj4gaHBfcG9wdWxhdGVfb3JkZXJlZF9saXN0X2VsZW1lbnRzX2Zyb21fcGFja2FnZSgpIGVycm9y
+OiB1bmluaXRpYWxpemVkDQo+IHN5bWJvbCAnaW50X3ZhbHVlJy4NCj4gPiBkcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9ocC9ocC1iaW9zY2ZnL29yZGVyLWxpc3QtYXR0cmlidXRlcy5jOjE5OA0KPiBocF9w
+b3B1bGF0ZV9vcmRlcmVkX2xpc3RfZWxlbWVudHNfZnJvbV9wYWNrYWdlKCkgZXJyb3I6IHVuaW5p
+dGlhbGl6ZWQNCj4gc3ltYm9sICdpbnRfdmFsdWUnLg0KPiA+IGRyaXZlcnMvcGxhdGZvcm0veDg2
+L2hwL2hwLWJpb3NjZmcvb3JkZXItbGlzdC1hdHRyaWJ1dGVzLmM6MjAxDQo+IGhwX3BvcHVsYXRl
+X29yZGVyZWRfbGlzdF9lbGVtZW50c19mcm9tX3BhY2thZ2UoKSBlcnJvcjogdW5pbml0aWFsaXpl
+ZA0KPiBzeW1ib2wgJ2ludF92YWx1ZScuDQo+ID4gZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAvaHAt
+Ymlvc2NmZy9vcmRlci1saXN0LWF0dHJpYnV0ZXMuYzoyMDQNCj4gaHBfcG9wdWxhdGVfb3JkZXJl
+ZF9saXN0X2VsZW1lbnRzX2Zyb21fcGFja2FnZSgpIGVycm9yOiB1bmluaXRpYWxpemVkDQo+IHN5
+bWJvbCAnaW50X3ZhbHVlJy4NCj4gPiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9ocC9ocC1iaW9zY2Zn
+L29yZGVyLWxpc3QtYXR0cmlidXRlcy5jOjIzOA0KPiBocF9wb3B1bGF0ZV9vcmRlcmVkX2xpc3Rf
+ZWxlbWVudHNfZnJvbV9wYWNrYWdlKCkgZXJyb3I6IHVuaW5pdGlhbGl6ZWQNCj4gc3ltYm9sICdp
+bnRfdmFsdWUnLg0KPiA+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2hwL2hwLWJpb3NjZmcvb3JkZXIt
+bGlzdC1hdHRyaWJ1dGVzLmM6MjQyDQo+IGhwX3BvcHVsYXRlX29yZGVyZWRfbGlzdF9lbGVtZW50
+c19mcm9tX3BhY2thZ2UoKSBlcnJvcjogdW5pbml0aWFsaXplZA0KPiBzeW1ib2wgJ2ludF92YWx1
+ZScuDQo+ID4gZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAvaHAtYmlvc2NmZy9vcmRlci1saXN0LWF0
+dHJpYnV0ZXMuYzoyNjINCj4gaHBfcG9wdWxhdGVfb3JkZXJlZF9saXN0X2VsZW1lbnRzX2Zyb21f
+cGFja2FnZSgpIGVycm9yOiB1bmluaXRpYWxpemVkDQo+IHN5bWJvbCAndmFsdWVfbGVuJy4NCj4g
+PiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9ocC9ocC1iaW9zY2ZnL2ludC1hdHRyaWJ1dGVzLmM6MTk4
+DQo+IGhwX3BvcHVsYXRlX2ludGVnZXJfZWxlbWVudHNfZnJvbV9wYWNrYWdlKCkgZXJyb3I6IHVu
+aW5pdGlhbGl6ZWQgc3ltYm9sDQo+ICdpbnRfdmFsdWUnLg0KPiA+IGRyaXZlcnMvcGxhdGZvcm0v
+eDg2L2hwL2hwLWJpb3NjZmcvaW50LWF0dHJpYnV0ZXMuYzoyMDENCj4gaHBfcG9wdWxhdGVfaW50
+ZWdlcl9lbGVtZW50c19mcm9tX3BhY2thZ2UoKSBlcnJvcjogdW5pbml0aWFsaXplZCBzeW1ib2wN
+Cj4gJ2ludF92YWx1ZScuDQo+ID4gZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAvaHAtYmlvc2NmZy9p
+bnQtYXR0cmlidXRlcy5jOjIwNA0KPiBocF9wb3B1bGF0ZV9pbnRlZ2VyX2VsZW1lbnRzX2Zyb21f
+cGFja2FnZSgpIGVycm9yOiB1bmluaXRpYWxpemVkIHN5bWJvbA0KPiAnaW50X3ZhbHVlJy4NCj4g
+PiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9ocC9ocC1iaW9zY2ZnL2ludC1hdHRyaWJ1dGVzLmM6MjA3
+DQo+IGhwX3BvcHVsYXRlX2ludGVnZXJfZWxlbWVudHNfZnJvbV9wYWNrYWdlKCkgZXJyb3I6IHVu
+aW5pdGlhbGl6ZWQgc3ltYm9sDQo+ICdpbnRfdmFsdWUnLg0KPiA+IGRyaXZlcnMvcGxhdGZvcm0v
+eDg2L2hwL2hwLWJpb3NjZmcvaW50LWF0dHJpYnV0ZXMuYzoyNDYNCj4gaHBfcG9wdWxhdGVfaW50
+ZWdlcl9lbGVtZW50c19mcm9tX3BhY2thZ2UoKSBlcnJvcjogdW5pbml0aWFsaXplZCBzeW1ib2wN
+Cj4gJ2ludF92YWx1ZScuDQo+ID4gZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAvaHAtYmlvc2NmZy9p
+bnQtYXR0cmlidXRlcy5jOjI0OQ0KPiBocF9wb3B1bGF0ZV9pbnRlZ2VyX2VsZW1lbnRzX2Zyb21f
+cGFja2FnZSgpIGVycm9yOiB1bmluaXRpYWxpemVkIHN5bWJvbA0KPiAnaW50X3ZhbHVlJy4NCj4g
+PiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9ocC9ocC1iaW9zY2ZnL2ludC1hdHRyaWJ1dGVzLmM6MjUy
+DQo+IGhwX3BvcHVsYXRlX2ludGVnZXJfZWxlbWVudHNfZnJvbV9wYWNrYWdlKCkgZXJyb3I6IHVu
+aW5pdGlhbGl6ZWQgc3ltYm9sDQo+ICdpbnRfdmFsdWUnLg0KPiA+IGRyaXZlcnMvcGxhdGZvcm0v
+eDg2L2hwL2hwLWJpb3NjZmcvaW50LWF0dHJpYnV0ZXMuYzoyNTUNCj4gaHBfcG9wdWxhdGVfaW50
+ZWdlcl9lbGVtZW50c19mcm9tX3BhY2thZ2UoKSBlcnJvcjogdW5pbml0aWFsaXplZCBzeW1ib2wN
+Cj4gJ2ludF92YWx1ZScuDQo+ID4gZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAvaHAtYmlvc2NmZy9l
+bnVtLWF0dHJpYnV0ZXMuYzoxODANCj4gaHBfcG9wdWxhdGVfZW51bWVyYXRpb25fZWxlbWVudHNf
+ZnJvbV9wYWNrYWdlKCkgZXJyb3I6IHVuaW5pdGlhbGl6ZWQNCj4gc3ltYm9sICdpbnRfdmFsdWUn
+Lg0KPiA+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2hwL2hwLWJpb3NjZmcvZW51bS1hdHRyaWJ1dGVz
+LmM6MTgzDQo+IGhwX3BvcHVsYXRlX2VudW1lcmF0aW9uX2VsZW1lbnRzX2Zyb21fcGFja2FnZSgp
+IGVycm9yOiB1bmluaXRpYWxpemVkDQo+IHN5bWJvbCAnaW50X3ZhbHVlJy4NCj4gPiBkcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9ocC9ocC1iaW9zY2ZnL2VudW0tYXR0cmlidXRlcy5jOjE4Ng0KPiBocF9w
+b3B1bGF0ZV9lbnVtZXJhdGlvbl9lbGVtZW50c19mcm9tX3BhY2thZ2UoKSBlcnJvcjogdW5pbml0
+aWFsaXplZA0KPiBzeW1ib2wgJ2ludF92YWx1ZScuDQo+ID4gZHJpdmVycy9wbGF0Zm9ybS94ODYv
+aHAvaHAtYmlvc2NmZy9lbnVtLWF0dHJpYnV0ZXMuYzoxODkNCj4gaHBfcG9wdWxhdGVfZW51bWVy
+YXRpb25fZWxlbWVudHNfZnJvbV9wYWNrYWdlKCkgZXJyb3I6IHVuaW5pdGlhbGl6ZWQNCj4gc3lt
+Ym9sICdpbnRfdmFsdWUnLg0KPiA+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2hwL2hwLWJpb3NjZmcv
+ZW51bS1hdHRyaWJ1dGVzLmM6MTkyDQo+IGhwX3BvcHVsYXRlX2VudW1lcmF0aW9uX2VsZW1lbnRz
+X2Zyb21fcGFja2FnZSgpIGVycm9yOiB1bmluaXRpYWxpemVkDQo+IHN5bWJvbCAnaW50X3ZhbHVl
+Jy4NCj4gPiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9ocC9ocC1iaW9zY2ZnL2VudW0tYXR0cmlidXRl
+cy5jOjIzMQ0KPiBocF9wb3B1bGF0ZV9lbnVtZXJhdGlvbl9lbGVtZW50c19mcm9tX3BhY2thZ2Uo
+KSBlcnJvcjogdW5pbml0aWFsaXplZA0KPiBzeW1ib2wgJ2ludF92YWx1ZScuDQo+ID4gZHJpdmVy
+cy9wbGF0Zm9ybS94ODYvaHAvaHAtYmlvc2NmZy9lbnVtLWF0dHJpYnV0ZXMuYzoyMzkNCj4gaHBf
+cG9wdWxhdGVfZW51bWVyYXRpb25fZWxlbWVudHNfZnJvbV9wYWNrYWdlKCkgZXJyb3I6IHVuaW5p
+dGlhbGl6ZWQNCj4gc3ltYm9sICdpbnRfdmFsdWUnLg0KPiA+IGRyaXZlcnMvcGxhdGZvcm0veDg2
+L2hwL2hwLWJpb3NjZmcvcGFzc3dkb2JqLWF0dHJpYnV0ZXMuYzoyNzkNCj4gaHBfcG9wdWxhdGVf
+cGFzc3dvcmRfZWxlbWVudHNfZnJvbV9wYWNrYWdlKCkgZXJyb3I6IHVuaW5pdGlhbGl6ZWQNCj4g
+c3ltYm9sICdpbnRfdmFsdWUnLg0KPiA+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2hwL2hwLWJpb3Nj
+ZmcvcGFzc3dkb2JqLWF0dHJpYnV0ZXMuYzoyODINCj4gaHBfcG9wdWxhdGVfcGFzc3dvcmRfZWxl
+bWVudHNfZnJvbV9wYWNrYWdlKCkgZXJyb3I6IHVuaW5pdGlhbGl6ZWQNCj4gc3ltYm9sICdpbnRf
+dmFsdWUnLg0KPiA+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2hwL2hwLWJpb3NjZmcvcGFzc3dkb2Jq
+LWF0dHJpYnV0ZXMuYzoyODUNCj4gaHBfcG9wdWxhdGVfcGFzc3dvcmRfZWxlbWVudHNfZnJvbV9w
+YWNrYWdlKCkgZXJyb3I6IHVuaW5pdGlhbGl6ZWQNCj4gc3ltYm9sICdpbnRfdmFsdWUnLg0KPiA+
+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2hwL2hwLWJpb3NjZmcvcGFzc3dkb2JqLWF0dHJpYnV0ZXMu
+YzoyODgNCj4gaHBfcG9wdWxhdGVfcGFzc3dvcmRfZWxlbWVudHNfZnJvbV9wYWNrYWdlKCkgZXJy
+b3I6IHVuaW5pdGlhbGl6ZWQNCj4gc3ltYm9sICdpbnRfdmFsdWUnLg0KPiA+IGRyaXZlcnMvcGxh
+dGZvcm0veDg2L2hwL2hwLWJpb3NjZmcvcGFzc3dkb2JqLWF0dHJpYnV0ZXMuYzoyOTENCj4gaHBf
+cG9wdWxhdGVfcGFzc3dvcmRfZWxlbWVudHNfZnJvbV9wYWNrYWdlKCkgZXJyb3I6IHVuaW5pdGlh
+bGl6ZWQNCj4gc3ltYm9sICdpbnRfdmFsdWUnLg0KPiA+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2hw
+L2hwLWJpb3NjZmcvcGFzc3dkb2JqLWF0dHJpYnV0ZXMuYzozMjQNCj4gaHBfcG9wdWxhdGVfcGFz
+c3dvcmRfZWxlbWVudHNfZnJvbV9wYWNrYWdlKCkgZXJyb3I6IHVuaW5pdGlhbGl6ZWQNCj4gc3lt
+Ym9sICdpbnRfdmFsdWUnLg0KPiA+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2hwL2hwLWJpb3NjZmcv
+cGFzc3dkb2JqLWF0dHJpYnV0ZXMuYzozMjcNCj4gaHBfcG9wdWxhdGVfcGFzc3dvcmRfZWxlbWVu
+dHNfZnJvbV9wYWNrYWdlKCkgZXJyb3I6IHVuaW5pdGlhbGl6ZWQNCj4gc3ltYm9sICdpbnRfdmFs
+dWUnLg0KPiA+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2hwL2hwLWJpb3NjZmcvcGFzc3dkb2JqLWF0
+dHJpYnV0ZXMuYzozMzANCj4gaHBfcG9wdWxhdGVfcGFzc3dvcmRfZWxlbWVudHNfZnJvbV9wYWNr
+YWdlKCkgZXJyb3I6IHVuaW5pdGlhbGl6ZWQNCj4gc3ltYm9sICdpbnRfdmFsdWUnLg0KPiA+IGRy
+aXZlcnMvcGxhdGZvcm0veDg2L2hwL2hwLWJpb3NjZmcvcGFzc3dkb2JqLWF0dHJpYnV0ZXMuYzoz
+MzMNCj4gaHBfcG9wdWxhdGVfcGFzc3dvcmRfZWxlbWVudHNfZnJvbV9wYWNrYWdlKCkgZXJyb3I6
+IHVuaW5pdGlhbGl6ZWQNCj4gc3ltYm9sICdpbnRfdmFsdWUnLg0KPiA+IGRyaXZlcnMvcGxhdGZv
+cm0veDg2L2hwL2hwLWJpb3NjZmcvcGFzc3dkb2JqLWF0dHJpYnV0ZXMuYzozNjINCj4gaHBfcG9w
+dWxhdGVfcGFzc3dvcmRfZWxlbWVudHNfZnJvbV9wYWNrYWdlKCkgZXJyb3I6IHVuaW5pdGlhbGl6
+ZWQNCj4gc3ltYm9sICdpbnRfdmFsdWUnLg0KPiA+DQoNCg==
 
