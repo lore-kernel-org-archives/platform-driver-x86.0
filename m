@@ -2,139 +2,103 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF185C41513
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Jul 2023 21:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D89C0015E
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Jul 2023 22:01:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231462AbjGYVCt (ORCPT
+        id S229907AbjGYWBA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 Jul 2023 17:02:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50450 "EHLO
+        Tue, 25 Jul 2023 18:01:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231451AbjGYVCs (ORCPT
+        with ESMTP id S229743AbjGYWA7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 Jul 2023 17:02:48 -0400
-Received: from smtp.smtpout.orange.fr (smtp-24.smtpout.orange.fr [80.12.242.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A5561A8
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Jul 2023 14:02:46 -0700 (PDT)
-Received: from [192.168.1.18] ([86.243.2.178])
-        by smtp.orange.fr with ESMTPA
-        id OPAzqClnw1d2aOPAzqO6Qd; Tue, 25 Jul 2023 23:02:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-        s=t20230301; t=1690318962;
-        bh=nkQ74CLtd9z0A/xmDW80xpHVujKaMTsHCLvN52AI+kQ=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To;
-        b=BI/3ze1WDYB6B3HbHDeTVuGDMKPe8SLnC8Mslv6Y3Whh9NOpDtu8WXaHi7h2Nbm24
-         h2MfFIhTpsqT7js9r1Awwjc2mihbKmyHlCn+0Hb5irpP4HAu6ALL5VZr1+niNRvpWT
-         1jYhUxBhR0ow2JkN8XaX0WoVucKu6avcRFBA//X1BKmps6NHDRyDEedraTOaa88vmI
-         /cwjOJAUKipjsmDXgpgr54jKiaD9Bbv8QZuOwHkcLV3eCnow8CDQczL8pUfrDGnDwe
-         /3k/0SIS3YfujCiSiJy+oBlU+mctzK8dmzYGItw+bK7+5TK7fVsHHAGBcm0i7wyWgd
-         b/GO9GGkg7lwQ==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 25 Jul 2023 23:02:42 +0200
-X-ME-IP: 86.243.2.178
-Message-ID: <fb62b2e7-7c7c-dc2e-768d-3393f151eb32@wanadoo.fr>
-Date:   Tue, 25 Jul 2023 23:02:37 +0200
+        Tue, 25 Jul 2023 18:00:59 -0400
+Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC30DE0;
+        Tue, 25 Jul 2023 15:00:58 -0700 (PDT)
+Received: by mail-ot1-x32b.google.com with SMTP id 46e09a7af769-6b9e478e122so5536861a34.1;
+        Tue, 25 Jul 2023 15:00:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690322458; x=1690927258;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XxN5Cc7Zc72irm/qgq/pZDW5Q0BP09uehHsPOp/dI4Y=;
+        b=Wk7Z50ipI0jvX7dwPWATsewRqjTx7b9TNpWXfSxGVv2VCvJA9Fhj93WGGmCFJbbMWT
+         svx3lYre22SYZ0yqwThUw3+YVKkamXkJR3a4EuP49CkIfsPfHjhJsq9gjt5uZhcGCpyk
+         xecVB05BBJy3CPdL3nyRra1qnenwvmK6h5zZV/b1yYSz2z7TPJjp622LFtyqXSrmL+/Y
+         Gvk2uB+T27BMo4Qblt4BEqSqKZ9IMoxz1gha2T/keuOSd46L56MT73taX97uvj3LFdBj
+         /F9GnugZQIozksen6U4lHVUPe+08LWTx1IwBx+x8pdllRwtr5X620mc81f/x9HGqy9DL
+         1c8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690322458; x=1690927258;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XxN5Cc7Zc72irm/qgq/pZDW5Q0BP09uehHsPOp/dI4Y=;
+        b=TACE8w4w5Cy1pGnSFtw3VSgdM5BIFviRxEaIWmvrhSFF1km9ddGn+ASsHxA/+TYXh/
+         SFJkyBsmmad6pETh1yNMtLnusqo+FBLDTWawk/CRzrT5rADHbyei4sM00IODjez5KPA4
+         UIg56o6FV9oUirsp3usUJC26dSt1+TyFRTBzaGlNzNbTi+cbVjtWqPgNAQM6oo+ljh5q
+         7EkY3Vuo0sxODw3clL5Mab13fawGaFqEle/Qa2q840u9IV+sDQC2+irSq22gm/Lu3lNh
+         RkgVgb+DunGpEb1qcGJW7ntXizZUQP5hsOO5NtnWqJL5JXVJgArhiGKPIaISqqwWAnVt
+         Df1g==
+X-Gm-Message-State: ABy/qLbL8SmHMiNT6TE2jVWQsPMqtyw+tvU2RPZFIZXxQEfGynp+bkj9
+        5j5W0+G2xqGcu5+5bn4hRJ0=
+X-Google-Smtp-Source: APBJJlGhLgoGB+6MrON/H7WEp+vL3vdnSgIQQgTRSBWuhtndGLU3upZAWkb5SJnppSJbhOYPSvsiXg==
+X-Received: by 2002:a05:6870:d183:b0:1b0:7661:dd18 with SMTP id a3-20020a056870d18300b001b07661dd18mr457536oac.23.1690322457836;
+        Tue, 25 Jul 2023 15:00:57 -0700 (PDT)
+Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:871d:ebb3:c6e2:8ac3])
+        by smtp.gmail.com with ESMTPSA id v40-20020a4a8c6b000000b0056688eea98csm5870026ooj.27.2023.07.25.15.00.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jul 2023 15:00:57 -0700 (PDT)
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
+        ilpo.jarvinen@linux.intel.com
+Subject: [PATCH 0/5]  hp-bioscfg: Address memory leaks and uninitialized variable errors
+Date:   Tue, 25 Jul 2023 17:00:51 -0500
+Message-Id: <20230725220056.25560-1-jorge.lopez2@hp.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] Add Silicom Platform Driver
-Content-Language: fr
-To:     Henry Shi <henryshi2018@gmail.com>, hbshi69@hotmail.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        hdegoede@redhat.com, markgross@kernel.org, jdelvare@suse.com,
-        linux@roeck-us.net, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org
-Cc:     hb_shi2003@yahoo.com, henrys@silicom-usa.com, wenw@silicom-usa.com
-References: <20230718160104.2716-1-henryshi2018@gmail.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20230718160104.2716-1-henryshi2018@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Le 18/07/2023 à 18:01, Henry Shi a écrit :
-> The Silicom platform (silicom-platform) Linux driver for Swisscom
-> Business Box (Swisscom BB) as well as Cordoba family products is a
-> software solution designed to facilitate the efficient management
-> and control of devices through the integration of various Linux
-> frameworks. This platform driver provides seamless support for
-> device management via the Linux LED framework, GPIO framework,
-> Hardware Monitoring (HWMON), and device attributes. The Silicom
-> platform driver's compatibility with these Linux frameworks allows
-> applications to access and control Cordoba family devices using
-> existing software that is compatible with these frameworks. This
-> compatibility simplifies the development process, reduces
-> dependencies on proprietary solutions, and promotes
-> interoperability with other Linux-based systems and software.
-> 
-> Signed-off-by: Henry Shi <henryshi2018@gmail.com>
-> ---
+Submit individual patches to address memory leaks and uninitialized 
+variable errors for each source file listed below.
 
-[...]
+- hp_populate_string_elements_from_package()
+drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
 
-> +static int __init silicom_mc_leds_register(struct device *dev,
-> +					   const struct led_classdev_mc *mc_leds)
-> +{
-> +	struct led_classdev_mc *led;
-> +	int i, err;
-> +
-> +	for (i = 0; mc_leds[i].led_cdev.name; i++) {
-> +		/* allocate and copy data from the init constansts */
-> +		led = devm_kzalloc(dev, sizeof(struct led_classdev_mc), GFP_KERNEL);
+- hp_populate_ordered_list_elements_from_package()
+drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
 
-sizeof(*led) is shorter.
-Mostly a matter of taste.
+- hp_populate_integer_elements_from_package()
+drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
 
-Maybe even devm_kmemdup()?
+- hp_populate_enumeration_elements_from_package()
+drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
 
-> +		if (IS_ERR_OR_NULL(led)) {
+- hp_populate_password_elements_from_package()
+drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
 
-if (!led)
-is enough.
+Changes were tested with a HP EliteBook x360 1030 G3
 
-> +			dev_err(dev, "Failed to alloc led_classdev_mc[%d]: %ld\n", i, PTR_ERR(led));
 
-This kind of message is useless and should be removed (checkpatch should 
-warn about it)
+Jorge Lopez (5):
+  hp-bioscfg: Fix memory leaks in string_elements_from_package()
+  hp-bioscfg: Fix memory leaks in ordered_list_elements_from_package
+  hp-bioscfg: Fix memory leaks in integer_elements_from_package
+  hp-bioscfg: Fix memory leaks in enumeration_elements_from_package()
+  hp-bioscfg: Fix memory leaks in password_elements_from_package()
 
-> +			return -ENOMEM;
-> +		}
-> +		memcpy(led, &mc_leds[i], sizeof(*led));
-> +
-> +		led->subled_info = devm_kzalloc(dev, led->num_colors * sizeof(struct mc_subled),
-> +						GFP_KERNEL);
+ drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c   |  8 +++++++-
+ drivers/platform/x86/hp/hp-bioscfg/int-attributes.c    |  7 ++++++-
+ .../platform/x86/hp/hp-bioscfg/order-list-attributes.c | 10 ++++++++--
+ .../platform/x86/hp/hp-bioscfg/passwdobj-attributes.c  | 10 +++++++++-
+ drivers/platform/x86/hp/hp-bioscfg/string-attributes.c |  5 ++++-
+ 5 files changed, 34 insertions(+), 6 deletions(-)
 
-Maybe even devm_kmemdup()?
-
-> +		if (IS_ERR_OR_NULL(led->subled_info)) {
-
-if (!led->subled_info)
-is enough.
-
-> +			dev_err(dev, "Failed to alloc subled_info[%d]: %ld\n",
-> +				i, PTR_ERR(led->subled_info));
-
-This kind of message is useless and should be removed (checkpatch should 
-warn about it)
-
-> +			return -ENOMEM;
-> +		}
-> +		memcpy(led->subled_info, mc_leds[i].subled_info,
-> +			led->num_colors * sizeof(struct mc_subled));
-> +
-> +		err = devm_led_classdev_multicolor_register(dev, led);
-> +		if (err) {
-> +			dev_err(dev, "Failed to register[%d]: %d\n", i, err);
-> +			return err;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
-[...]
+-- 
+2.34.1
 
