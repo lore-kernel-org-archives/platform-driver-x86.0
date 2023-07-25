@@ -2,85 +2,121 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD78C0015E
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 Jul 2023 19:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2975C001DF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 Jul 2023 09:34:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229676AbjGXTwq (ORCPT
+        id S232876AbjGYJeN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 Jul 2023 15:52:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48916 "EHLO
+        Tue, 25 Jul 2023 05:34:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbjGXTwp (ORCPT
+        with ESMTP id S232844AbjGYJd7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 Jul 2023 15:52:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA88DB
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Jul 2023 12:52:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AA54661342
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Jul 2023 19:52:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F10D6C433C8
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Jul 2023 19:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690228364;
-        bh=kUfI+WYawudP16v6Ntw92++dh2jR0og6n/rHb+0sDjI=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=bFxk8/ShCekvduJRPMZEw77jlj9gCjBpjYIHP8jRNfw72axivBW3/NmBkRdqpwv0t
-         hsDdNtttcYUahoZFXPq0Dngyo4xSv7ehCnL80oXLIwGbBsyp8cb5W1atomBAI8xWUG
-         zQ9wkcNUR1bxxA9NOwRqouiVKgvCfpMnd6+QztROXGYVrYlsXkfa3wbIWpDMdtz9uY
-         uLAKPAjpoKqp4WTWrBczmu5HtIqEHknxnAvw2dEzlSlGl1Ubp0XHcqUleQt0tPjQpL
-         xDq5stFx6K0KzG0xqUGpIyalX3S44OV3RgVZ+41DZEwsKb/VZkExusNtJHrusUlzTn
-         mC7ZZCskmCHaQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id D9E51C4332E; Mon, 24 Jul 2023 19:52:43 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 217696] Looking for a way to enable power saving mode for Ryzen
- APUs, along with limiting the upper temperature and total power consumption
-Date:   Mon, 24 Jul 2023 19:52:43 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEEDINFO
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status
-Message-ID: <bug-217696-215701-glxXzl6Rd2@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-217696-215701@https.bugzilla.kernel.org/>
-References: <bug-217696-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 25 Jul 2023 05:33:59 -0400
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on0607.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe0e::607])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C9D19BF;
+        Tue, 25 Jul 2023 02:32:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qu9AWD0rp2GU63nX+vvBUlFeNkkfbTsGwAk81YsGHaoEFXcwVvzBM0OZmFfeUlehArbycoPykahespb6tOo7gj/+kZJ56z2QuBaqTfkQUS/hLYDvXqvJ0KEYwyzQVV52qrRBBVSBKwE58Rh4zjDFn5bdwV8A85y1YZTeyeJvS+M8b4G1K2rj5R8Cs1UfgTN2aBAjNQZom5DWl/+5n26hK9eiSRuI/qws+Vpp4ho9Jft9XCQ027nBVeUyofG0JEAsaCC1CGF7X+kIo4DUnxe0vR5cV8WD8GISDsKyUzzpUjtWugF0717zl5doRpT3jwX/HSG+GnMszvFhVEFm2zi4Mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EeZF2GTALl5c3GzY+uIKWc9Iia3qgoKekwql8Jocwko=;
+ b=WY8lXq8qAjVyeJWyOo50TttMeIQM/6zgj6IWaq/2X//XaZxpTkFKsrgEhwP7Zlkgs8Sykc2QSvBWKXkwO7LrSC+DE4F/bTmPQY+uG9tFbPIjeCCd+G2cxYM1mP9r8t3jGJvmP4CfFrMGDcR4KYt5TjOd6JxgvGMnbdrp00YbseQXqvNtxc1vwCxCPbZdkM3uS/utqPRhfQFjAastMykmqT5C4jqfKi46sLVVGJQffwjAAPD46dyciY09zU1xhaRy2xSvEdGRX7wTY8d78pShRcLF5/ye2dyz2TbhMSU0qrcygwOGrnQPwepQi1sK3LoxxVLpg21n3KdtU5yInwwo/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 194.138.21.76) smtp.rcpttodomain=redhat.com smtp.mailfrom=siemens.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=siemens.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EeZF2GTALl5c3GzY+uIKWc9Iia3qgoKekwql8Jocwko=;
+ b=h6dRAXed8y2S30EBlnLTP9Sor46MLAggQhMSBMQCTtWFO1+aoOj0tZWqDlJ5OMLBOaNHqa5J6kRWFzMXZJoz+XIO3LGK+w5SeHG67gK++uLUYsFSe1rq1keYu0Fa9fct47hl4jDmrpqTM3JAt0eMq4H28G+OMb9Xo6rMe9lz+9seEPPDYjwA5ZnGnEwt2QRA6i8E5xi+6+oz6L/tbtWWA7KRpzZj8Zu+Rwd44gcT625C+1ct0mCNcEWpz4hSy3qs+1WsSN9m9QX+HHxpzrP+N8d/Kh3AdeRVg4TY4jbSNSn6PlmY0YfvEQ38+apR5YiFPaZ+FMMT5Pn66+xL629a7g==
+Received: from DUZPR01CA0133.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4bc::28) by GV1PR10MB6196.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:150:93::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.33; Tue, 25 Jul
+ 2023 09:31:25 +0000
+Received: from DB5EUR01FT066.eop-EUR01.prod.protection.outlook.com
+ (2603:10a6:10:4bc:cafe::ae) by DUZPR01CA0133.outlook.office365.com
+ (2603:10a6:10:4bc::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.33 via Frontend
+ Transport; Tue, 25 Jul 2023 09:31:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.138.21.76)
+ smtp.mailfrom=siemens.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=siemens.com;
+Received-SPF: Pass (protection.outlook.com: domain of siemens.com designates
+ 194.138.21.76 as permitted sender) receiver=protection.outlook.com;
+ client-ip=194.138.21.76; helo=hybrid.siemens.com; pr=C
+Received: from hybrid.siemens.com (194.138.21.76) by
+ DB5EUR01FT066.mail.protection.outlook.com (10.152.4.121) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6631.24 via Frontend Transport; Tue, 25 Jul 2023 09:31:25 +0000
+Received: from DEMCHDC8WBA.ad011.siemens.net (139.25.226.105) by
+ DEMCHDC8VSA.ad011.siemens.net (194.138.21.76) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.16; Tue, 25 Jul 2023 11:31:24 +0200
+Received: from md1za8fc.ppmd.siemens.net (139.25.68.189) by
+ DEMCHDC8WBA.ad011.siemens.net (139.25.226.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.25; Tue, 25 Jul 2023 11:31:24 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Tobias Schaffner <tobias.schaffner@siemens.com>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: [PATCH 0/2] platform/x86/siemens: fixes for CMOS battery hwmon
+Date:   Tue, 25 Jul 2023 11:31:11 +0200
+Message-ID: <20230725093113.9739-1-henning.schild@siemens.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [139.25.68.189]
+X-ClientProxiedBy: DEMCHDC8WAA.ad011.siemens.net (139.25.226.104) To
+ DEMCHDC8WBA.ad011.siemens.net (139.25.226.105)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB5EUR01FT066:EE_|GV1PR10MB6196:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ebd7028-addd-4d09-9cc3-08db8cf1ea72
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4ZbCxu5zD5Z7r5Ifbk/tsVysLsG0vqHJOF6A/nCqD0x0A/WXa3UymBm2adZr5olRWi81C+nD5lrCtvZdhsFXWaUQ5G0WkN7oKr849qzhJayU4n33gtogw2mNrg+uLHAr25zwAg6SY7PckJ7AAsDN6k1PNAXAmbSrzmkuG1NQHmyE+4Ev6PUCJYOX6K+orlSCfuB2RO5IJtX7+k0VxORqD2qfgv2RuGBbcEYHFKNolbJRHIvr5bQcYcET/V+poJOQZB1X1pC/+3xEISE7G15YMRvY4oxGI2cO+31RF8b7JZzzYdGV8103LA9Vj4RPX264MD6w+Kj7TUrw2Kdesrcf6gsIfoQ2zH3Pl9HDtCEdJ6grzb2DSMVFIxPlZfK3zKVznHhXuQ77Gv9keoIOPjZfuJywNUqAnx6qzTZgThXMLyFzohOyBs/5ltGtQZDOQPelH/IJpZLAWeldzurQjydKItp89R3aCsurWLgqV0xifGGwzwGt28azArq5IKhZ9voJzjBm+KIWr8nxsRU03J59TdgbgGwds1tr0Y+y1KImmlQT/7LHSHiVVWp94msb5g1pXRewHMPMtLObW8h2Wk6g97ehsTkAXXo9WKC6wd9L2/Ywc+YXDDO5kp2kZLCNID3HtmK1DkgE6SHmYnFMQ7oMAGoudpiPzKOPj7QMUqlf05aXiVFPKSHLBerfFXlenU68YQMjofjJP7PJtB/Rd1Ebr22+Rz4TLuTD1obmSaa7PsAxQC972t1c5B2H/EG3IoshYffdT4KHidmtUxpvi/JcAA==
+X-Forefront-Antispam-Report: CIP:194.138.21.76;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(39860400002)(346002)(396003)(451199021)(82310400008)(46966006)(40470700004)(36840700001)(956004)(2616005)(336012)(186003)(107886003)(1076003)(16526019)(26005)(40480700001)(36860700001)(40460700003)(83380400001)(47076005)(356005)(6666004)(82740400003)(81166007)(110136005)(478600001)(54906003)(86362001)(82960400001)(36756003)(41300700001)(70586007)(316002)(4326008)(70206006)(2906002)(4744005)(8936002)(8676002)(5660300002)(44832011)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jul 2023 09:31:25.0665
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ebd7028-addd-4d09-9cc3-08db8cf1ea72
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.76];Helo=[hybrid.siemens.com]
+X-MS-Exchange-CrossTenant-AuthSource: DB5EUR01FT066.eop-EUR01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR10MB6196
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D217696
+These two fixes apply on top of
 
-Mario Limonciello (AMD) (mario.limonciello@amd.com) changed:
+[PATCH v2 0/3] platform/x86: move simatic drivers into subdir
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|NEW                         |NEEDINFO
+One minor documentation mistake and one functional patch where one IPC
+did not read out the GPIOs correctly.
 
---- Comment #14 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-No worry.  Look forward to your results later.
+Henning Schild (1):
+  platform/x86/siemens: Kconfig: adjust help text
 
---=20
-You may reply to this email to add a comment.
+xingtong.wu (1):
+  platform/x86: simatic-ipc-batt: fix reading in BX_21A
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+ drivers/platform/x86/siemens/Kconfig          |  2 +-
+ .../platform/x86/siemens/simatic-ipc-batt.c   | 21 +++++++++----------
+ 2 files changed, 11 insertions(+), 12 deletions(-)
+
+-- 
+2.41.0
+
