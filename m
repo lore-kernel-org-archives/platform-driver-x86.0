@@ -2,228 +2,145 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AAAC001DC
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Jul 2023 08:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58CDC41513
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Jul 2023 08:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232897AbjGZIKj (ORCPT
+        id S230224AbjGZIyA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 26 Jul 2023 04:10:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54526 "EHLO
+        Wed, 26 Jul 2023 04:54:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231858AbjGZIKK (ORCPT
+        with ESMTP id S233528AbjGZIxL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 Jul 2023 04:10:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E54655B2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 01:02:02 -0700 (PDT)
+        Wed, 26 Jul 2023 04:53:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C84007A87
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 01:46:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1690358522;
+        s=mimecast20190719; t=1690361163;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=7VZnODAdGbREQMbHOw1LLCZSQAoP+39Rk+Ko12t+I+Q=;
-        b=I/AaxEKlsn/zAMeiPVfBZbWEE3hhL1m8GdzCi58/qwEaukD9Z8tEnFsLTjDuryvbZMcJim
-        zyL5zgqTI1aAYh0FCJUVVGAOezgzjTzAfvixobv6JeOy0jiphuN10524rLqIFcuQynNdHy
-        vyVquk8bCuxfoKeGBllHuxFIfss/EX4=
+        bh=Ub5GeO5Ezrxd1eWr4bFQ+Xv5ustr9L2gJSjy4MO2o7A=;
+        b=G4Yk/mivsGVI6r1/QHwnekGw2R+tNBUNwMXhLiI+PFexzRDOLi1chksntlbIRYcMt9yRNT
+        vKDfMm+Fi+iRC/nAsA+9HdbfGFlFkcRmrb5nP9l8oQiASVrNi+uo1JVtdwgn341HSvCaWx
+        ojZqVlePROH6id7RvmJLSSOtnJBJUvk=
 Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
  [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-564-sFHJLQ4ONnexPxfMEPdPlg-1; Wed, 26 Jul 2023 04:02:00 -0400
-X-MC-Unique: sFHJLQ4ONnexPxfMEPdPlg-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-993d500699fso461419366b.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 01:02:00 -0700 (PDT)
+ us-mta-663-F57AQU95PCulnX6DJNhuIQ-1; Wed, 26 Jul 2023 04:46:02 -0400
+X-MC-Unique: F57AQU95PCulnX6DJNhuIQ-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-98df34aa83aso75711766b.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 01:46:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690358518; x=1690963318;
+        d=1e100.net; s=20221208; t=1690361161; x=1690965961;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7VZnODAdGbREQMbHOw1LLCZSQAoP+39Rk+Ko12t+I+Q=;
-        b=Lhxwgh61tTMegGfAqF8m6zZg+KFvyLPlY7kTPkfokkHjey3Hy7dmtrWKFWYAz9FYXQ
-         Oj6Y8+LpSacj91X/rxGjlviHqau3cKhd921PW18Mc+pH1xlS5wSRghjEj14ItaA21jnY
-         JU+Uz+JYRG4rX+PioAwmDPFiaWYxicB0zxNM+HcXHrfUrWGqPEX0Xd9OBmAwc70xdQIN
-         Ikrj18xIh3Q/ptu7orjQZRQ0R8dkldt7tZj0+qKg5mjul9kRDKEWof6bwJlthndsn64F
-         oQsM1E4q7bVIdpK3XvgG6pTjuPCphb01gEyIEcY60lCyKbX3ZnWr5peFBnihccHzMqgg
-         XwiA==
-X-Gm-Message-State: ABy/qLageKXvtlkLGNeGSo+s9z92X1eEV7pLJhLy0hk0wWQ8CWzkjv75
-        q2D6BbxHrM3/FI8O3EKu8B7Q/0Is9GRh2v4aq6X2kleCd3BNjJU/rjvMfPiLscL4nFIBdFIStcQ
-        31rmBuj/Wm8ZIUKiJPLKl19hs8lVoLDuUTbAcwTsdkA==
-X-Received: by 2002:a17:906:101b:b0:99b:4378:a5ab with SMTP id 27-20020a170906101b00b0099b4378a5abmr1024261ejm.74.1690358518671;
-        Wed, 26 Jul 2023 01:01:58 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlGaeosLOMAlXgEYThSUVL//fAmSARS37vWr6pEmCAsmmqoXXrDLneG0WAUoE9rGveU9eAFc7g==
-X-Received: by 2002:a17:906:101b:b0:99b:4378:a5ab with SMTP id 27-20020a170906101b00b0099b4378a5abmr1024241ejm.74.1690358518364;
-        Wed, 26 Jul 2023 01:01:58 -0700 (PDT)
+        bh=Ub5GeO5Ezrxd1eWr4bFQ+Xv5ustr9L2gJSjy4MO2o7A=;
+        b=gwsDdlznwEhTlRalgTAdUd4UzEh93uj6Tj0sKwknSXuemFgNHTx6N3V3LtYFlabqJi
+         d6oYgnvl1Ew9RjezzOXnnpKJHUrhqoOHkkVZAVndqI1zPZ8EDZiErmLFb7EXIYBvdskv
+         GzKoCM06ZnB4N59wz7Er5KcQyQj7KvDBvRxNrkTM6anSL6R1pGHgG3WwQyM78StKRNms
+         1JX33kE4/3g6xZpy6vr5SQJpOXjuMsAgBAGSq8Ci6f9PwetsWFDGW3v9Mmoy0uu2D8Ut
+         eiwMeUv+1Ya2l7HiVXBcgBwFjDQfnXIQbURuo/AbW2XR+Al85UXXTllv7Jnn8NNBxkxz
+         rv3A==
+X-Gm-Message-State: ABy/qLaRlQ//evoKa+7o4UjpDiaRoFWvgK9jVc0VgBP0l38iutbHfLNt
+        dwyPAYEh0grBXV3CVV8qAqLYcEiSat/xBigeMENFyZFC6xKjpmrK2cSqGi+aDyEWhbYLllEriAN
+        HLXnaj/AJP/G1o7G3oYelpXXnUq6vfRypgA==
+X-Received: by 2002:a17:906:64c6:b0:99b:c2ce:501c with SMTP id p6-20020a17090664c600b0099bc2ce501cmr1280306ejn.19.1690361161020;
+        Wed, 26 Jul 2023 01:46:01 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlFVSwR5f8G724gmsihQpPs+qWoRbi1NErvN5vf88zyw8UwdqGfs8C9PKzk4sfXNIPO5vBYBUA==
+X-Received: by 2002:a17:906:64c6:b0:99b:c2ce:501c with SMTP id p6-20020a17090664c600b0099bc2ce501cmr1280289ejn.19.1690361160621;
+        Wed, 26 Jul 2023 01:46:00 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id x2-20020a1709060a4200b00992ddf46e65sm9171546ejf.46.2023.07.26.01.01.57
+        by smtp.gmail.com with ESMTPSA id k27-20020a1709063e1b00b00982842ea98bsm9192626eji.195.2023.07.26.01.45.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jul 2023 01:01:57 -0700 (PDT)
-Message-ID: <60c9f64f-d53b-72f2-5440-0eae18c9357d@redhat.com>
-Date:   Wed, 26 Jul 2023 10:01:57 +0200
+        Wed, 26 Jul 2023 01:45:59 -0700 (PDT)
+Message-ID: <efe4b91f-2602-2115-738e-bb99b42ec5b6@redhat.com>
+Date:   Wed, 26 Jul 2023 10:45:59 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: WMI probe failure when reprobing
+Subject: Re: [RFC PATCH v1] platform/x86: wmi: Do not register driver with
+ invalid GUID
 Content-Language: en-US, nl
-To:     Armin Wolf <W_Armin@gmx.de>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1252c8fb-8d5f-98ad-b24a-5fabec2e1c8b@gmx.de>
- <d219e8b4-f57e-a546-3794-6f6bc7030e9e@redhat.com>
- <0062ade3-bff2-781f-0e31-ce3bdcf6942e@gmx.de>
+To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>, Armin Wolf <W_Armin@gmx.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20230715211604.1272227-1-pobrn@protonmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <0062ade3-bff2-781f-0e31-ce3bdcf6942e@gmx.de>
+In-Reply-To: <20230715211604.1272227-1-pobrn@protonmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Barnabás,
 
-On 7/25/23 20:01, Armin Wolf wrote:
-> Am 25.07.23 um 17:07 schrieb Hans de Goede:
+On 7/15/23 23:24, Barnabás Pőcze wrote:
+> Since a WMI driver's ID table contains strings it is relatively
+> easy to make mistakes. At the moment, there is no feedback
+> if any of the specified GUIDs are invalid (since
+> 028e6e204ace1f080cfeacd72c50397eb8ae8883).
 > 
->> Hi Armin,
->>
->> On 7/22/23 02:09, Armin Wolf wrote:
->>> Hello,
->>>
->>> i just noticed that under some circumstances, ACPI WMI devices might fail to reprobe
->>> when being manually unbound and later rebound.
->>> Example:
->>>
->>> 1. ACPI WMI device #1 binds and registers WMI device with GUID
->>> "05901221-D566-11D1-B2F0-00A0C9062910", resulting in the device
->>> being named "05901221-D566-11D1-B2F0-00A0C9062910".
->>> 2. ACPI WMI device #2 binds and registers WMI device with GUID
->>> "05901221-D566-11D1-B2F0-00A0C9062910", resulting in the device
->>> being named "05901221-D566-11D1-B2F0-00A0C9062910-1".
->>> 3. ACPI WMI device #1 is manually unbound and later rebound,
->>> now the WMI device with GUID "05901221-D566-11D1-B2F0-00A0C9062910"
->>> is being named "05901221-D566-11D1-B2F0-00A0C9062910-1" too, since
->>> device naming depends on the number of GUIDs currently known to
->>> the WMI subsystem.
->>> 4. A WMI device named "05901221-D566-11D1-B2F0-00A0C9062910-1" already
->>> exists, causing the registration of the new WMI device to fail.
->>>
->>> I thought about some possible ways to solve this naming issue:
->>>
->>> - symlinks to simulate old WMI devices names, new WMI device names similar to "wmiX" with X being a global unique id
->>> - no symlinks, new WMI device names similar to "wmiX" with X being a global unique id
->>> - use global id instead of GUID number
->>>
->>> The first approach has full sysfs backward compatibility but i do not know how to create symlinks inside the "devices"
->>> directory. The second approach is the easiest and cleanest one, but provides no sysfs backward compatibility. The last
->>> approach provides only limited sysfs backward compatibility and only for programs which can handle "<GUID>-X" WMI device
->>> names.
->>>
->>> Currently, there is one single stable sysfs ABI entry concerning the WMI subsystem (for wmi-bmof), and two testing
->>> sysfs ABI entries (dell-wmi-privacy, sbl-fw-update). I do not know of any userspace programs relying on these ABIs,
->>> but i suspect there might be a couple of scripts which might be affected.
->>>
->>> Which approach should i take to solve this problem?
->>
->> The standard approach to get reliable unique ids in the kernel is to use
->> something like this:
->>
->> #include <linux/idr.h>
->>
->> static DEFINE_MUTEX(ida_lock);
->>
->> struct guid_data {
->>     guid_t guid;
->>     struct ida ida;
->>     struct list_head list;
->> };
->>
->> int guid_init() {
->>     ida_init(&guid_data->ida);
->> }
->>
->> int wmi_create_device()
->> {
->>     int index;
->>     ...
->>     mutex_lock(&ida_lock);
->>     index = ida_alloc(&guid_data->ida, GFP_KERNEL);
->>     mutex_unlock(&ida_lock);
->>     if (index < 0)
->>         return index;
->>
->>     // store index for use on acpi_wmi_remove
->>     wmi_block->index = index;
->>     // use index to generate name, don't add -%d for index==0
->>     ...
->> }
->>
->> static void wmi_dev_release(struct device *dev)
->> {
->>          struct wmi_block *wblock = dev_to_wblock(dev);
->>
->>     mutex_lock(&ida_lock);
->>     ida_free(&guid_data->ida, wblock->index);
->>     mutex_unlock(&ida_lock);
->>          kfree(wblock);
->> }
->>
->>
->> This is going to need a linked-list of struct guid_data
->> structs and a new wmi_get_guid_data() function which
->> takes a new global mutex to protect the list and then
->> first walks that list looking for a guid match
->>
->> If nothing is found kzalloc a new struct, init
->> the ida struct and add it to the list before releasing
->> the mutex protecting the list.
->>
->> At the end of wmi_get_guid_data() return the found
->> or created struct guid_data or NULL on kzalloc error.
->>
->> And in wmi_create_device() and wmi_dev_release()
->> use this to get a struct_guid_data matching the wblock
->> GUID so that we have 1 ida struct per GUID.
->>
->> I would not worry about releasing the struct guid_data
->> if somehow the last wblock with that GUID disappears
->> chances are we are going to need it again soon and
->> the ida id-array will be empty then so we will start
->> with a clean-slate if we just re-use the old one
->> when a new wblock with the same GUID shows up again.
->>
->> ###
->>
->> Not the prettiest with the need to have a new linked
->> lists of structs to get a per GUID ida, but it nicely
->> matches how most subsystems do this so I think it is
->> best.
->>
->> I hope this small sketch of what a solution for this
->> could look like is useful.
->>
->> Regards,
->>
->> Hans
->>
-> Would it be feasible to use the duplicate GUID allowlist instead?
+> So check if the GUIDs in the driver's ID table are valid,
+> print all invalid ones, and refuse to register the driver
+> if any of the GUIDs are invalid.
+> 
+> Signed-off-by: Barnabás Pőcze <pobrn@protonmail.com>
 
-Yes that is a good idea, if you make it non const you can just
-store the ida struct there. You'll likely need to add some macro
-to init the entries then which also inits the ida struct.
+Thank you for working on this!
 
-> Since the issue does only exists on GUIDs which can be duplicated, only WMI devices handling those
-> need a unique id after the GUID, the rest keeps the classic WMI device name.
+About the do this here, vs do this in file2alias.c discussion,
+we have many old style WMI drivers which are not covered by
+the check you are adding for the new style WMI bus driver.
 
-ack.
+So I think having a check in file2alias.c would be a very good
+thing to have. AFAICT that would also cause compile time
+failures rather then the run-time errors your current approach
+results in.
 
-> This would also allow for individual WMI drivers to provide backwards compatibility in case userspace
-> needs the old WMI device name for the WMI devices they control. If a WMI driver knows that userspace
-> can handle the new WMI device name for his GUIDs, then they can just add them to the allowlist.
-
-For backward compat I would still omit the "-%d" suffix for the wblock device which gets index 0, that should still be the same one as before.
+I think that having an additional check like the one which you
+propose has some value too, even if it is just to cover drivers
+which for some reason don't use `MODULE_DEVICE_TABLE()`, but IMHO
+the most important check to have is a check in file2alias.c .
 
 Regards,
 
 Hans
 
+
+
+
+> ---
+>  drivers/platform/x86/wmi.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index a78ddd83cda0..bf0be40b418a 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -1513,6 +1513,19 @@ static int acpi_wmi_probe(struct platform_device *device)
+>  int __must_check __wmi_driver_register(struct wmi_driver *driver,
+>  				       struct module *owner)
+>  {
+> +	bool any_id_invalid = false;
+> +
+> +	for (const struct wmi_device_id *id = driver->id_table; *id->guid_string; id++) {
+> +		if (!uuid_is_valid(id->guid_string)) {
+> +			pr_err("driver '%s' has invalid GUID: %s",
+> +			       driver->driver.name, id->guid_string);
+> +			any_id_invalid = true;
+> +		}
+> +	}
+> +
+> +	if (any_id_invalid)
+> +		return -EINVAL;
+> +
+>  	driver->driver.owner = owner;
+>  	driver->driver.bus = &wmi_bus_type;
+>  
 
