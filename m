@@ -2,91 +2,162 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECA4C001B0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Jul 2023 14:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C088C0015E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Jul 2023 14:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231325AbjGZODQ (ORCPT
+        id S234207AbjGZOQY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 26 Jul 2023 10:03:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33310 "EHLO
+        Wed, 26 Jul 2023 10:16:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233643AbjGZODC (ORCPT
+        with ESMTP id S234204AbjGZOQI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 Jul 2023 10:03:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 330FF2701
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 07:02:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C10AA61AF2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 14:02:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 28454C433B8
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 14:02:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690380178;
-        bh=PbxPAhBaRo2c4IqN3YfAw0L9ScrdbQEuMTyJWB5xGjk=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=soxl40ZV9aBk+BMEb3ohcl6oUJBre5fW7Lli3k4/Hf1I8ZKXkNb7ns4b8dvGc8Z7U
-         ElGGq9Mxnw7AR0/3XmHl301MACY8Eq8LyViitP6kglaY4IdYkJ9PHn6C6XqUoolSeS
-         YoD/GptFfKue7S33ceuyjB2LZ9obri2xvJkoO4IcUFbqkvAotkZClopTZuZMOcXpo+
-         Vge+K1cENM8nDe1r2jsuhpTQQf6sSwViZCjmKP+Rvs97bzSm3NSTscpkybBxfWPBs7
-         38xWJgEBoj8nu8J+/SDrYp+BuwVvY2GTU+tmdlEM/oicw2WwXBQMeKtWNfn1+KpRiD
-         9ujFrIClswEPA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 0749BC4332E; Wed, 26 Jul 2023 14:02:58 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 217696] Looking for a way to enable power saving mode for Ryzen
- APUs, along with limiting the upper temperature and total power consumption
-Date:   Wed, 26 Jul 2023 14:02:57 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: aros@gmx.com
-X-Bugzilla-Status: ASSIGNED
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-217696-215701-TevhLJvANw@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-217696-215701@https.bugzilla.kernel.org/>
-References: <bug-217696-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 26 Jul 2023 10:16:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85569420A
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 07:14:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1690380812;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KyY1COWWZwFG4H+/fy8Ic1ZEI+oVlwAbyLmr8esJTF4=;
+        b=fg2mPODsIlbBFUASFAqq5z3cZ6tc0CtUYViinG5GRhM96tqpv3jsGuyY1blivSN57CNeVa
+        JiUP/096B3j3H+iIODwFyHAvwL0s2u37FQAKUIJFFntnGzwIHgrTXF3zN5+2U8ODhpMuRD
+        x+WofMw+UXSpTOdPOP049HeWvAkRqkg=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-552-EjBvujb0NDqRsZfnHMonhw-1; Wed, 26 Jul 2023 10:13:31 -0400
+X-MC-Unique: EjBvujb0NDqRsZfnHMonhw-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-97542592eb9so436183866b.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 07:13:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690380809; x=1690985609;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KyY1COWWZwFG4H+/fy8Ic1ZEI+oVlwAbyLmr8esJTF4=;
+        b=CgIp+5RXWm1HPx4R92NByBh7fKHc/zCGl0US1+FStIYmtkoXi5H5Xt69Wr3V5j18qC
+         tkdSMRE8kWx/TrFgLd9wo5ePjWKvOHUC470zjVwEc+kfz/wVCyOxgFgkfDE1rC2A3h01
+         8KNmPuBMO5nglrSQJ6Il9dxLtP4ZoZVwX+IFgmPxj9/WjdaXtCrHN3SnXsts1HnTXEVO
+         eSS+SE/D0Qnca/TvZ/JjyUoWStgqWPI6prL82p0BK77eid53xfudgjuqQXKZktUszMEx
+         fMz7xPHvwanl9MDURKraT4LUFoBhCTLV6xRM8LBSNB61Mz+2NP3q5A9wlTQ7JA3qdSJF
+         1CkA==
+X-Gm-Message-State: ABy/qLaPlMkW5uL7x2stxqxUXEVD1mebu/cbc6otu0loriHXqHt3e4Gn
+        7t0ARE79fyadvDdJjLEAS0ieKRC0rec5+7oy/O42xPRifDn5D24TM+l5aIyN8VomorPZvxlcVW8
+        DV/bTWbMCIFWx72pb16i0ymM9U29C0lTSJcadwnGOeQ==
+X-Received: by 2002:a17:907:78c9:b0:99a:7ff1:9b5a with SMTP id kv9-20020a17090778c900b0099a7ff19b5amr1914205ejc.4.1690380809507;
+        Wed, 26 Jul 2023 07:13:29 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlFdhfFeI7OOPveQLJFoZw4tzXl5uQexk/9zkYfeT1992uWM69oWilEd8x1eiUFOP6qI7Sc0Gg==
+X-Received: by 2002:a17:907:78c9:b0:99a:7ff1:9b5a with SMTP id kv9-20020a17090778c900b0099a7ff19b5amr1914182ejc.4.1690380809169;
+        Wed, 26 Jul 2023 07:13:29 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id ko5-20020a170907986500b00988781076e2sm9639387ejc.78.2023.07.26.07.13.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jul 2023 07:13:28 -0700 (PDT)
+Message-ID: <33cdbf63-8fe4-da7e-5d36-6e63fe303b24@redhat.com>
+Date:   Wed, 26 Jul 2023 16:13:28 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] ACPI: scan: Create platform device for CS35L56
+Content-Language: en-US, nl
+To:     Richard Fitzgerald <rf@opensource.cirrus.com>, rafael@kernel.org,
+        lenb@kernel.org, markgross@kernel.org
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com,
+        Simon Trimmer <simont@opensource.cirrus.com>
+References: <20230726112759.18814-1-rf@opensource.cirrus.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230726112759.18814-1-rf@opensource.cirrus.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D217696
+Hi Richard,
 
---- Comment #20 from Artem S. Tashkinov (aros@gmx.com) ---
-I'm a little bit lost in all of that.
+On 7/26/23 13:27, Richard Fitzgerald wrote:
+> From: Simon Trimmer <simont@opensource.cirrus.com>
+> 
+> The ACPI device CSC3556 is a Cirrus Logic CS35L56 mono amplifier which
+> is used in multiples, and can be connected either to I2C or SPI.
+> 
+> There will be multiple instances under the same Device() node. Add it
+> to ignore_serial_bus_ids and handle it in the serial-multi-instantiate
+> driver.
+> 
+> Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
+> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 
-Originally I was looking for a way to control my APU TDP(TTP) and maximum
-temperature threshold *without* using ryzenadj because CPU control registers
-are locked in secure boot mode.
+Thanks, patch looks good to me:
 
-The second issue is my 7840HS never going above 4.5GHZ either in Linux or
-Windows.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Trusted Execution Environment (TEE) or not I wonder if my firmware is simply
-buggy and there's an artificial CPU frequency limit set by HP for no reasons
-and whether I should continue pushing them to released fixed firmware or if
-your fellow AMD engineers could politely ask HP to remove the restriction.
+I have 1 other serial-multi-instantiate.c patches in my fixes branch (see below) and since this just adds new hw-ids I think this can go upstream through my fixes branch too.
 
---=20
-You may reply to this email to add a comment.
+Rafael, do you agree with me taking this upstream as a 6.5 fix? And if yes may I have your ack for that ?
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+About that 1 patch, that adds a new IRQ type: IRQ_RESOURCE_AUTO and I wonder if this patch should not use that same new type right from the start:
+
+https://git.kernel.org/pub/scm/linux/kernel/agit/pdx86/platform-drivers-x86.git/commit/?h=fixes&id=676b7c5ecab36274442887ceadd6dee8248a244f
+
+This makes me realize that I should probably have pinged you and ask for feedback on that patch since it was send by a community member rather then by Cirrus. Note this is currently in Linus' master tree, so any fixes to it need to be submitted on top (not that I expect any issues since it still behaves as before on acpi_dev_gpio_irq_get() success and only adds an platform_get_irq() fallback when that fails).
+
+Regards,
+
+Hans
+
+
+
+> ---
+>  drivers/acpi/scan.c                             |  1 +
+>  drivers/platform/x86/serial-multi-instantiate.c | 12 ++++++++++++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 5b145f1aaa1b..87e385542576 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -1714,6 +1714,7 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
+>  		{"BSG1160", },
+>  		{"BSG2150", },
+>  		{"CSC3551", },
+> +		{"CSC3556", },
+>  		{"INT33FE", },
+>  		{"INT3515", },
+>  		/* Non-conforming _HID for Cirrus Logic already released */
+> diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
+> index f3dcbdd72fec..dcf2914b97c9 100644
+> --- a/drivers/platform/x86/serial-multi-instantiate.c
+> +++ b/drivers/platform/x86/serial-multi-instantiate.c
+> @@ -316,6 +316,17 @@ static const struct smi_node cs35l41_hda = {
+>  	.bus_type = SMI_AUTO_DETECT,
+>  };
+>  
+> +static const struct smi_node cs35l56_hda = {
+> +	.instances = {
+> +		{ "cs35l56-hda", IRQ_RESOURCE_GPIO, 0 },
+> +		{ "cs35l56-hda", IRQ_RESOURCE_GPIO, 0 },
+> +		{ "cs35l56-hda", IRQ_RESOURCE_GPIO, 0 },
+> +		{ "cs35l56-hda", IRQ_RESOURCE_GPIO, 0 },
+> +		{}
+> +	},
+> +	.bus_type = SMI_AUTO_DETECT,
+> +};
+> +
+>  /*
+>   * Note new device-ids must also be added to ignore_serial_bus_ids in
+>   * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
+> @@ -324,6 +335,7 @@ static const struct acpi_device_id smi_acpi_ids[] = {
+>  	{ "BSG1160", (unsigned long)&bsg1160_data },
+>  	{ "BSG2150", (unsigned long)&bsg2150_data },
+>  	{ "CSC3551", (unsigned long)&cs35l41_hda },
+> +	{ "CSC3556", (unsigned long)&cs35l56_hda },
+>  	{ "INT3515", (unsigned long)&int3515_data },
+>  	/* Non-conforming _HID for Cirrus Logic already released */
+>  	{ "CLSA0100", (unsigned long)&cs35l41_hda },
+
