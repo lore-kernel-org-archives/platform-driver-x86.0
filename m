@@ -2,99 +2,179 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBC0C0015E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Jul 2023 12:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB818C0015E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 Jul 2023 13:47:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231167AbjGZMx1 (ORCPT
+        id S234024AbjGZNr0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 26 Jul 2023 08:53:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55676 "EHLO
+        Wed, 26 Jul 2023 09:47:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234405AbjGZMxN (ORCPT
+        with ESMTP id S234217AbjGZNrX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 Jul 2023 08:53:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 139FD2109
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 05:53:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6469E6138B
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 12:53:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C49A5C433C8
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 12:53:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690375985;
-        bh=+mpOsDZn6WRB3Ti9gjOTbLYM1BRkWcoM86teQUi9aPw=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=GODijF1YxMWPZWn0rmuq8i7G8QRpchXFOGa9SiHncGkdFhhtevYVQAclpBSYvx8Ap
-         X3w8yasKHBP90cNYc751W0qYGgktnZpOglt1zIpcPHJJLiyxwhdZQyIXtmWnL+iNGk
-         FfVVKoZr2IEk16MT4r6qSBbGQqOZTd06nuL1SDo1M9DrE9EHRYoRzPjkxzgbgAeOS2
-         YPPCDKHqxax+fE+qf1WhjG0ZdkncO2Wr1efTyPIiSc4nZRJb8WkogUR0WnF8OrOAw3
-         sNIEJPmp6pvMlITb653CglJbqB1Yf+c6pxZrjjcJrLphcbL5WsWXubJy6MSoYb66Yz
-         C95cToqZ/rmYw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id A5F94C4332E; Wed, 26 Jul 2023 12:53:05 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 217696] Looking for a way to enable power saving mode for Ryzen
- APUs, along with limiting the upper temperature and total power consumption
-Date:   Wed, 26 Jul 2023 12:53:05 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: ASSIGNED
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-217696-215701-Xm0YVt90JJ@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-217696-215701@https.bugzilla.kernel.org/>
-References: <bug-217696-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 26 Jul 2023 09:47:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B16CE10FA
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 06:46:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1690379202;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=rEG/U+TLlVv43HHlSY9pUTPTHc4HTbiADhfLN7VMotg=;
+        b=glDRCdMDpraThvQ890b1rBMbvjJWUEPG5PzT11rhrhGJtAzZAh7OqGn4FhXRb9xCWljoC3
+        ASpioYLbctxMEVVr1FPMjk+Ynb+nz9Af+EysbRLxbwof+ceyYWVPg2e4Y9DjmPvJbOSW1N
+        nQockkgff0AqgkuDDVx090ECk26PQ6Y=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-209-RSpZfrLxPFCYTJNfp9Q7Ow-1; Wed, 26 Jul 2023 09:46:41 -0400
+X-MC-Unique: RSpZfrLxPFCYTJNfp9Q7Ow-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-98df34aa83aso103972866b.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 06:46:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690379200; x=1690984000;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rEG/U+TLlVv43HHlSY9pUTPTHc4HTbiADhfLN7VMotg=;
+        b=G2n94WYPSp5aCPZN6bjBvxrpXRiUNWg+n3W15U4vx0MNYNqJiMj+29CoJgykOwg0N0
+         FJHgpGjxUFVsk5AHYAuhZCGr+up+mZiJ2HeTQaoXJX0f3KfpTxiWLH7H0zsi8RF7jQAF
+         PV0bwqLHFR//5A74oC06AetsaAGRGomNjfxGrfd4CE8YtQAxKK0lOxCGf7+VBfrDb5cd
+         meUvN0vAVLGHvvcP52jUBj8rUtUtvWmaCa/P06LTxFWki6L+H5nixicYoK6NABbuQAb+
+         NdLkm7iKRBih5rQZZhq/uizRffggnqklhMDRvX/qVb9UZXRov4nFXvN00vlsJZdg9EzC
+         KmBQ==
+X-Gm-Message-State: ABy/qLa2QQbKVve0Xd6xTvl4p9D6KngMSYUtxoB4cz5tuLXNUSNbI8fT
+        SycuoAimbW7DrwNLGyNlvsD9he4XPtfE7owWK7VZ8jSOaBPHBMWoWwGfuyBJZ/Ds6gvizaveNSW
+        xZ0B1F4zkX0SuFN+iCsTVX8zj98FKI4qWOysS1bei3Q==
+X-Received: by 2002:aa7:d85a:0:b0:522:4cb6:d1e3 with SMTP id f26-20020aa7d85a000000b005224cb6d1e3mr2372970eds.10.1690379200170;
+        Wed, 26 Jul 2023 06:46:40 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlGR6I1o9aqOuAPNaqeSVQ2TapHUW0cgQIjLsHpYkuqyp+lE9EJQgW5n3bh7OSQfppmArvzh/w==
+X-Received: by 2002:aa7:d85a:0:b0:522:4cb6:d1e3 with SMTP id f26-20020aa7d85a000000b005224cb6d1e3mr2372950eds.10.1690379199897;
+        Wed, 26 Jul 2023 06:46:39 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id o26-20020aa7d3da000000b005222c160464sm4267251edr.72.2023.07.26.06.46.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jul 2023 06:46:39 -0700 (PDT)
+Message-ID: <ac0f0e92-ea4b-4d47-dfd5-cfe8e0b95f55@redhat.com>
+Date:   Wed, 26 Jul 2023 15:46:38 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+From:   Hans de Goede <hdegoede@redhat.com>
+Subject: [GIT PULL] platform-drivers-x86 for 6.5-3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D217696
+Hi Linus,
 
---- Comment #19 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-> /sys/firmware/acpi/platform_profile which now contains "balanced".
-> /sys/firmware/acpi/platform_profile_choices contains:
-> low_power balanced performance
+Here is the second round of fixes for platform-drivers-x86 for 6.5.
 
-OK good news and bad news.
+Nothing special to report just various small fixes + hw-id additions.
 
-* The good news: this means the patch "works" and you're now seeing the ext=
-ra
-values for power slider notifications.
+Regards,
 
-* The bad news: It appears that HP's EC doesn't do "all" the power state ch=
-ange
-notifications.  Some of it is handled by code that runs in the APU's TEE
-environment.
+Hans
 
-> [45870.908318] amd-pmf AMDI0102:00: supported functions:0xe0c3
-> notifications:0x10
 
-There are some other bits not yet supported by amd-pmf in Linux.  Let's lea=
-ve
-this issue opened until that code is submitted.
+The following changes since commit 6b293a8c91bca52726448d03216e65da509e9bb7:
 
---=20
-You may reply to this email to add a comment.
+  platform/x86: touchscreen_dmi: Add info for the Archos 101 Cesium Educ tablet (2023-07-11 12:15:30 +0200)
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.5-3
+
+for you to fetch changes up to c21733754cd6ecbca346f2adf9b17d4cfa50504f:
+
+  platform/x86: huawei-wmi: Silence ambient light sensor (2023-07-25 16:38:03 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.5-3
+
+Misc. small fixes and hw-id additions.
+
+The following is an automated git shortlog grouped by driver:
+
+asus-wmi:
+ -  Fix setting RGB mode on some TUF laptops
+
+huawei-wmi:
+ -  Silence ambient light sensor
+
+intel:
+ -  hid: Always call BTNL ACPI method
+
+msi-laptop:
+ -  Fix rfkill out-of-sync on MSI Wind U100
+
+platform/x86/amd:
+ -  pmc: Use release_mem_region() to undo request_mem_region_muxed()
+
+platform/x86/amd/pmf:
+ -  Notify OS power slider update
+ -  reduce verbosity of apmf_get_system_params
+
+platform/x86/intel/hid:
+ -  Add HP Dragonfly G2 to VGBS DMI quirks
+
+serial-multi-instantiate:
+ -  Auto detect IRQ resource for CSC3551
+
+think-lmi:
+ -  Use kfree_sensitive instead of kfree
+
+touchscreen_dmi.c:
+ -  small changes for Archos 101 Cesium Educ tablet
+
+----------------------------------------------------------------
+David Xu (1):
+      platform/x86: serial-multi-instantiate: Auto detect IRQ resource for CSC3551
+
+Hans de Goede (2):
+      platform/x86/amd: pmc: Use release_mem_region() to undo request_mem_region_muxed()
+      platform/x86: intel: hid: Always call BTNL ACPI method
+
+Konstantin Shelekhin (1):
+      platform/x86: huawei-wmi: Silence ambient light sensor
+
+Kristian Angelov (1):
+      platform/x86: asus-wmi: Fix setting RGB mode on some TUF laptops
+
+Maxim Mikityanskiy (2):
+      platform/x86/intel/hid: Add HP Dragonfly G2 to VGBS DMI quirks
+      platform/x86: msi-laptop: Fix rfkill out-of-sync on MSI Wind U100
+
+Shyam Sundar S K (2):
+      platform/x86/amd/pmf: reduce verbosity of apmf_get_system_params
+      platform/x86/amd/pmf: Notify OS power slider update
+
+Thomas GENTY (1):
+      platform/x86: touchscreen_dmi.c: small changes for Archos 101 Cesium Educ tablet
+
+Wang Ming (1):
+      platform/x86: think-lmi: Use kfree_sensitive instead of kfree
+
+ drivers/platform/x86/amd/pmc-quirks.c           |  8 +--
+ drivers/platform/x86/amd/pmf/acpi.c             | 23 +++++++-
+ drivers/platform/x86/amd/pmf/core.c             |  9 ++-
+ drivers/platform/x86/amd/pmf/pmf.h              | 16 ++++++
+ drivers/platform/x86/amd/pmf/sps.c              | 74 +++++++++++++++++++++++--
+ drivers/platform/x86/asus-wmi.c                 | 14 ++++-
+ drivers/platform/x86/huawei-wmi.c               |  2 +
+ drivers/platform/x86/intel/hid.c                | 27 +++++----
+ drivers/platform/x86/msi-laptop.c               |  8 +--
+ drivers/platform/x86/serial-multi-instantiate.c | 21 +++++--
+ drivers/platform/x86/think-lmi.c                |  4 +-
+ drivers/platform/x86/touchscreen_dmi.c          |  7 ++-
+ 12 files changed, 173 insertions(+), 40 deletions(-)
+
