@@ -2,340 +2,64 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE8DC0015E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Jul 2023 06:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8875CC001E0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Jul 2023 07:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231233AbjG0GVN (ORCPT
+        id S232112AbjG0Hqv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 27 Jul 2023 02:21:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56786 "EHLO
+        Thu, 27 Jul 2023 03:46:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230232AbjG0GVM (ORCPT
+        with ESMTP id S233312AbjG0Hq0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 Jul 2023 02:21:12 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4986F10DB
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 23:21:10 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-3fbf1b82d9cso5811965e9.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jul 2023 23:21:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690438869; x=1691043669;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gJVdwD2hN1IoV2iHEFfG+qqTN9wFexemBdbel1dZ6/0=;
-        b=jOdOIVAoSVB6mUY+/XF74SvOGVCPzCApWYNMNO7abuOVW8e8S2iK83xe3k41Jm6poH
-         j7j21aDANuJdILLIFcpjma2bm2ZxglHLRgiEq8dtK11DKz3omZehCTzTgUNf/Ec4ohHB
-         +Q/+V42Eiwr13mKbKdmyPk/JyGR8QULoO3kyAH26m9b3IE/4dM4LgKX021QeMoYVxd/r
-         /qDq/1DjStCa/Q2FAxTflQtUz+78+z2HDJz9aDPa80iwZIQo0yY/+TmmqwobsMtaDMu3
-         o61eABOU4ygCtkRP3cMvxObriYkqIn0/x2pgS506IwJ1Pj8ytOIncnUM1lmrYIDFm7I2
-         eM5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690438869; x=1691043669;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gJVdwD2hN1IoV2iHEFfG+qqTN9wFexemBdbel1dZ6/0=;
-        b=bbwelBeVnfClZhYYHucKDSVve8vlvhJj9tqvlNCumMg2Xypx7EMl4DfY13mChCDpVI
-         Ak1lB2Pja+HN8l/HlSV+HOgxZ2MmAhs3bnNaKrnDReUhIeOKk0zPPcH8A9MIpy2OOC8U
-         rq7J5n43K8NoRy/e7gV8rDzlNwQQfacS/mi2EMJDllID6eihUbmVVR3lYaNppPT6GH58
-         e5ju5nB3Qc50kLF7LQJgNke1P6qbXSub0bTWI2TAeeUG37eZFNHyYHeyPiYImLnmH8q2
-         cier6ZZjsbPoH8BdwARUYHRRH4gaqoA/n28q7EbLRIcx+QBw/E29xGlHtBavNNuA+qV/
-         NJkQ==
-X-Gm-Message-State: ABy/qLbSqZKURDNPtC67fU6tgEea7qhWYpmuK1IPDLJVJ76GSu3fUR+c
-        7xWz6MjcCZPUsXNWXWMy5Y6dtQ==
-X-Google-Smtp-Source: APBJJlF3IgSEbyph9IM4JI2qxZemsymqPAaq2UVNfuIr0Q6pddfHRid63sQxM6o3GBzU1yNQslwnMg==
-X-Received: by 2002:a05:600c:2244:b0:3f9:c8b2:dfbd with SMTP id a4-20020a05600c224400b003f9c8b2dfbdmr837449wmm.19.1690438868685;
-        Wed, 26 Jul 2023 23:21:08 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id q14-20020a7bce8e000000b003fb41491670sm3715509wmj.24.2023.07.26.23.21.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jul 2023 23:21:08 -0700 (PDT)
-Date:   Thu, 27 Jul 2023 09:21:04 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
-        ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH 2/5] hp-bioscfg: Fix memory leaks in
- ordered_list_elements_from_package
-Message-ID: <77867e93-7785-457c-9e37-4b41503bb509@moroto.mountain>
-References: <20230725220056.25560-1-jorge.lopez2@hp.com>
- <20230725220056.25560-3-jorge.lopez2@hp.com>
+        Thu, 27 Jul 2023 03:46:26 -0400
+X-Greylist: delayed 505 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 27 Jul 2023 00:39:42 PDT
+Received: from mail.slaney.pl (mail.slaney.pl [217.61.14.87])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A71E26A0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Jul 2023 00:39:41 -0700 (PDT)
+Received: by mail.slaney.pl (Postfix, from userid 1001)
+        id B5470A37DF; Thu, 27 Jul 2023 08:31:08 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=slaney.pl; s=mail;
+        t=1690443073; bh=ghiyMxWFpzC1kQQxLxRTsGAjAnjan/GRs/A/P3iUyis=;
+        h=Date:From:To:Subject:From;
+        b=UAuUas24ZgXmYtD670w6dEdwS3HrUhC8Mm4PZjKuebeXOii5XBl1B7w516ATZloYU
+         +Je+9L0tNBumMvSX/uqHY1WHECGuLxL9zgyVlUeeB/hPniV763QwrjCxJ+Gwmks91z
+         ohrKlxJmEKrnWcv8U5GuYSeLeOmi0sk1He/7El0kn4tPuLBAhWljbnjjCuVRZTE0Z9
+         gTHr48j8qRPk83bVUcemoHxveh1w2fqHzWPtrpjFzzzvgaUILc81T5zDTRNMhw/6CS
+         3uzhGBhtf2yp/UdfgE4ZCTTQI1nI5w0BH09Cy8u5ERkqjiDtxAdeerRvxxnJjPi6lj
+         sD17j9tARHgww==
+Received: by mail.slaney.pl for <platform-driver-x86@vger.kernel.org>; Thu, 27 Jul 2023 07:31:04 GMT
+Message-ID: <20230727074500-0.1.b3.f2mv.0.6710qr59j7@slaney.pl>
+Date:   Thu, 27 Jul 2023 07:31:04 GMT
+From:   "Kamila Matuszewska" <kamila.matuszewska@slaney.pl>
+To:     <platform-driver-x86@vger.kernel.org>
+Subject: Zmiany w interfejsie POS
+X-Mailer: mail.slaney.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230725220056.25560-3-jorge.lopez2@hp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-I went through this pretty carefully.  There is a small bug in the
-ORD_LIST_ELEMENTS case where the value_len is wrong.  Otherwise, I
-complained a little about style nits...  You can feel free to ignore
-everything except the ORD_LIST_ELEMENTS stuff.
+Dzie=C5=84 dobry, =20
 
-regards,
-dan carpenter
+czy mog=C5=82abym skontaktowa=C4=87 si=C4=99 z osob=C4=85, kt=C3=B3ra jes=
+t odpowiedzialna za sprzeda=C5=BC w Pa=C5=84stwa firmie?
 
-drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-   129  static int hp_populate_ordered_list_elements_from_package(union acpi_object *order_obj,
-   130                                                            int order_obj_count,
-   131                                                            int instance_id)
-   132  {
-   133          char *str_value = NULL;
+Odpowiednio zaprojektowane narz=C4=99dzia wsparcia sprzeda=C5=BCy mog=C4=85=
+ prze=C5=82o=C5=BCy=C4=87 si=C4=99 na kilkudziesi=C4=99cioprocentowy wzro=
+st sprzeda=C5=BCy.
 
-It would be better to make str_value local to the loop.  Then we
-could delete all the str_value = NULL assignments and the exit_list:
-code at the end.  At the end of the loop we could do something like:
+Jest to efektywny system z=C5=82o=C5=BCony z procedur dzia=C5=82ania i na=
+rz=C4=99dzi zar=C3=B3wno dla Przedstawicieli Handlowych jak i Pa=C5=84stw=
+a klient=C3=B3w B2B, kt=C3=B3ry dzi=C4=99ki sp=C3=B3jnemu dzia=C5=82aniu =
+zawsze przynosi doskona=C5=82e rezultaty.
 
-	kfree(str_value);
-	if (ret)
-		return ret;
-
-   134          int value_len = 0;
-   135          int ret;
-   136          u32 size;
-   137          u32 int_value = 0;
-
-It confused me that it's called int_value when it's not an int.  Just
-call it "u32 value = 0;".
-
-   138          int elem;
-   139          int reqs;
-   140          int eloc;
-   141          char *tmpstr = NULL;
-   142          char *part_tmp = NULL;
-   143          int tmp_len = 0;
-   144          char *part = NULL;
-   145          struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
-   146  
-   147          if (!order_obj)
-   148                  return -EINVAL;
-   149  
-   150          for (elem = 1, eloc = 1; elem < order_obj_count; elem++, eloc++) {
-   151                  /* ONLY look at the first ORDERED_ELEM_CNT elements */
-   152                  if (eloc == ORD_ELEM_CNT)
-   153                          goto exit_list;
-
-We really expect to exit when eloc is ORD_ELEM_CNT.  So I think this
-would be more clear as:
-
-	for (elem = 1, eloc = 1; eloc < ORD_ELEM_CNT; elem++, eloc++) {
-
-I don't really know what eloc stands for...  dst_idx?
-
-		if (elem >= order_obj_count)
-			return -EINVAL;
-
-		obj = &order_obj[elem];
-
-Let's move the "Check that both expected and read object type match"
-stuff from line 173 up to here.
-
-		if (obj->type != expected_order_types[eloc]) {
-			pr_err("Error expected type %d for elem %d, but got type %d instead\n",
-				expected_order_types[eloc], elem, obj->type);
-			return -EINVAL;
-		}
-
-   154  
-   155                  switch (order_obj[elem].type) {
-
-	switch(obj->type) {
-
-   156                  case ACPI_TYPE_STRING:
-   157                          if (elem != PREREQUISITES && elem != ORD_LIST_ELEMENTS) {
-   158                                  ret = hp_convert_hexstr_to_str(order_obj[elem].string.pointer,
-   159                                                                 order_obj[elem].string.length,
-   160                                                                 &str_value, &value_len);
-   161                                  if (ret)
-   162                                          continue;
-
-return ret;
-
-   163                          }
-   164                          break;
-   165                  case ACPI_TYPE_INTEGER:
-   166                          int_value = (u32)order_obj[elem].integer.value;
-   167                          break;
-   168                  default:
-   169                          pr_warn("Unsupported object type [%d]\n", order_obj[elem].type);
-   170                          continue;
-
-return -EINVAL;
-
-   171                  }
-   172  
-   173                  /* Check that both expected and read object type match */
-   174                  if (expected_order_types[eloc] != order_obj[elem].type) {
-   175                          pr_err("Error expected type %d for elem %d, but got type %d instead\n",
-   176                                 expected_order_types[eloc], elem, order_obj[elem].type);
-   177                          kfree(str_value);
-   178                          return -EIO;
-   179                  }
-   180  
-   181                  /* Assign appropriate element value to corresponding field*/
-   182                  switch (eloc) {
-   183                  case VALUE:
-   184                          strscpy(ordered_list_data->current_value,
-   185                                  str_value, sizeof(ordered_list_data->current_value));
-   186                          replace_char_str(ordered_list_data->current_value, COMMA_SEP, SEMICOLON_SEP);
-   187                          break;
-   188                  case PATH:
-   189                          strscpy(ordered_list_data->common.path, str_value,
-   190                                  sizeof(ordered_list_data->common.path));
-   191                          break;
-   192                  case IS_READONLY:
-   193                          ordered_list_data->common.is_readonly = int_value;
-   194                          break;
-   195                  case DISPLAY_IN_UI:
-   196                          ordered_list_data->common.display_in_ui = int_value;
-   197                          break;
-   198                  case REQUIRES_PHYSICAL_PRESENCE:
-   199                          ordered_list_data->common.requires_physical_presence = int_value;
-   200                          break;
-   201                  case SEQUENCE:
-   202                          ordered_list_data->common.sequence = int_value;
-   203                          break;
-   204                  case PREREQUISITES_SIZE:
-   205                          ordered_list_data->common.prerequisites_size = int_value;
-   206                          if (int_value > MAX_PREREQUISITES_SIZE)
-   207                                  pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
-
-	ret = -EINVAL;
-	break;
-
-   208  
-   209                          /*
-   210                           * This HACK is needed to keep the expected
-   211                           * element list pointing to the right obj[elem].type
-   212                           * when the size is zero. PREREQUISITES
-   213                           * object is omitted by BIOS when the size is
-   214                           * zero.
-
-It's not really a HACK.
-
-	/*
-	 * If prerequisites_size is zero then there isn't a PREREQUISITES
-	 * object so skip that and jump to SECURITY_LEVEL.
-	 *
-	 */
+Je=C5=BCeli mog=C5=82abym przedstawi=C4=87 funkcjonalno=C5=9B=C4=87 takie=
+go wdro=C5=BCenia i om=C3=B3wi=C4=87 dok=C5=82adnie korzy=C5=9Bci jakie z=
+ niego p=C5=82yn=C4=85,  prosz=C4=99 o informacj=C4=99.=20
 
 
-   215                           */
-   216                          if (int_value == 0)
-   217                                  eloc++;
-   218                          break;
-   219                  case PREREQUISITES:
-   220                          size = min_t(u32, ordered_list_data->common.prerequisites_size,
-   221                                       MAX_PREREQUISITES_SIZE);
-
-If we returned when we hit invalid data then there is no need for this
-min_t().
-
-	size = ordered_list_data->common.prerequisites_size;
-
-   222                          for (reqs = 0; reqs < size; reqs++) {
-   223                                  ret = hp_convert_hexstr_to_str(order_obj[elem + reqs].string.pointer,
-   224                                                                 order_obj[elem + reqs].string.length,
-   225                                                                 &str_value, &value_len);
-
-This is fine but it might be nicer to do what ORD_LIST_ELEMENTS does
-and use tmpstr instead of str_value.
-
-   226  
-   227                                  if (ret)
-   228                                          continue;
-
-break;
-
-   229  
-   230                                  strscpy(ordered_list_data->common.prerequisites[reqs],
-   231                                          str_value,
-   232                                          sizeof(ordered_list_data->common.prerequisites[reqs]));
-   233  
-   234                                  kfree(str_value);
-   235                                  str_value = NULL;
-   236                          }
-   237                          break;
-   238  
-   239                  case SECURITY_LEVEL:
-   240                          ordered_list_data->common.security_level = int_value;
-   241                          break;
-   242  
-   243                  case ORD_LIST_SIZE:
-   244                          ordered_list_data->elements_size = int_value;
-   245                          if (int_value > MAX_ELEMENTS_SIZE)
-   246                                  pr_warn("Ordered List size value exceeded the maximum number of elements supported or data may be malformed\n");
-
-ret = -EINVAL;
-break;
-
-   247                          /*
-   248                           * This HACK is needed to keep the expected
-   249                           * element list pointing to the right obj[elem].type
-   250                           * when the size is zero. ORD_LIST_ELEMENTS
-   251                           * object is omitted by BIOS when the size is
-   252                           * zero.
-   253                           */
-   254                          if (int_value == 0)
-   255                                  eloc++;
-   256                          break;
-   257                  case ORD_LIST_ELEMENTS:
-   258                          size = ordered_list_data->elements_size;
-
-We don't use size anywhere so this can be deleted.
-
-   259  
-   260                          /*
-   261                           * Ordered list data is stored in hex and comma separated format
-   262                           * Convert the data and split it to show each element
-   263                           */
-   264                          ret = hp_convert_hexstr_to_str(str_value, value_len, &tmpstr, &tmp_len);
-
-The value_len here is wrong.  We don't read value_len for ORD_LIST_ELEMENTS
-or PREREQUISITES so this value_len comes from the PATH object.
-
-   265                          if (ret)
-   266                                  goto exit_list;
-   267  
-   268                          part_tmp = tmpstr;
-   269                          part = strsep(&part_tmp, COMMA_SEP);
-   270                          if (!part)
-   271                                  strscpy(ordered_list_data->elements[0],
-   272                                          tmpstr,
-   273                                          sizeof(ordered_list_data->elements[0]));
-   274  
-   275                          for (elem = 1; elem < MAX_ELEMENTS_SIZE && part; elem++) {
-
-Please don't re-use the "elem" iterator for this inner loop.
-
-regards,
-dan carpenter
-
-   276                                  strscpy(ordered_list_data->elements[elem],
-   277                                          part,
-   278                                          sizeof(ordered_list_data->elements[elem]));
-   279                                  part = strsep(&part_tmp, SEMICOLON_SEP);
-   280                          }
-   281
-   282                          kfree(str_value);
-   283                          str_value = NULL;
-   284                          break;
-   285                  default:
-   286                          pr_warn("Invalid element: %d found in Ordered_List attribute or data may be malformed\n", elem);
-   287                          break;
-   288                  }
-   289                  kfree(tmpstr);
-   290                  tmpstr = NULL;
-   291                  kfree(str_value);
-   292                  str_value = NULL;
-   293          }
-   294
-   295  exit_list:
-   296          kfree(tmpstr);
-   297          kfree(str_value);
-   298          return 0;
-   299  }
-
-
+Pozdrawiam
+Kamila Matuszewska
