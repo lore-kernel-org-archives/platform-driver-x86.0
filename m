@@ -2,99 +2,103 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B5BC41513
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Jul 2023 09:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD561C41513
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 Jul 2023 09:50:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234530AbjG0JfH (ORCPT
+        id S232999AbjG0JuF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 27 Jul 2023 05:35:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54626 "EHLO
+        Thu, 27 Jul 2023 05:50:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233007AbjG0Jet (ORCPT
+        with ESMTP id S231645AbjG0Jt4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 Jul 2023 05:34:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D58364EE7;
-        Thu, 27 Jul 2023 02:26:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6600C61DE1;
-        Thu, 27 Jul 2023 09:26:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73D78C433C7;
-        Thu, 27 Jul 2023 09:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690449996;
-        bh=kUXhLysuJz2igAetLsPv8M5l4rwBIHgBRT7Gl31+jf0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hFMjnaK+KO2aW3q7hRteUVeYF+wY/QkadPWcAIFz5supd0QI7Oacso1EW+0GcmBfO
-         1LZNa+nI4IOEUlAGlewGRvRbzkif2vjBcqpFC18p9x11H22TJsrMdiRrAlsRqRBVI2
-         7AjiwqGeofWgsEhnxUd4EbVwRWozux9e0S8/uJWhFPKI1C4Ib9tiAtw6MZCzpfSCfr
-         qn6R8AR6vTeO5sUDvQi8F3qY14O/tAhekgb4zDcao5CEgQxxoVDcOXZSaqWsR6CiMQ
-         WkGDVIf5Cy5ETIj6Sf+Gp1D9HGUbDW93EVQfUiFE4vIin3/c2mKHP676ByMXgoSsjo
-         C318sLv+1XqHA==
-Date:   Thu, 27 Jul 2023 10:26:31 +0100
-From:   Lee Jones <lee@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Henning Schild <henning.schild@siemens.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Mark Gross <markgross@kernel.org>,
-        Tobias Schaffner <tobias.schaffner@siemens.com>
-Subject: Re: [PATCH v2 0/3] platform/x86: move simatic drivers into subdir
-Message-ID: <20230727092631.GB8175@google.com>
-References: <20230719153518.13073-1-henning.schild@siemens.com>
- <ZLgJ7Oz1XlicGzEn@smile.fi.intel.com>
- <be72ecd8-cec1-41ec-b586-e9fb413b1458@redhat.com>
+        Thu, 27 Jul 2023 05:49:56 -0400
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AA7E35A1;
+        Thu, 27 Jul 2023 02:49:29 -0700 (PDT)
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 36R9aF7A012017;
+        Thu, 27 Jul 2023 04:48:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+        message-id:date:mime-version:subject:to:cc:references:from
+        :in-reply-to:content-type:content-transfer-encoding; s=
+        PODMain02222019; bh=jMvL9VlxQ9UJpNngccwFBjpOPFbato9a8JtaOXUwEik=; b=
+        d2K2kZvNEQro5YxOswWZ55QDBQjOMqzqdDK74unjANHqaNNfaTlZGZuEC91S2MC4
+        wkFrgFF5Hz+y9giIpedlyELjDU46ROa5GVRNS4akzkp80M++X741jJa4MI1YOgFq
+        5I/FjHU8V3EbTMe7XvB9G+18WJCEVb8TAQuLM9m7FGDL7hpjBEPQKDJNJkgrahpy
+        wX25wEXV0Kg7SLsLU4e//o/Qout4iUaa8fDfOsZ4fwOTpv+57ZEHIGEDXFWuFOyR
+        FHWpy79YhE9mlf0bKmpjHgoWCBT9BDdz6gq7UqbbhJIpY19lS+z3V5PQafv4ymfH
+        +LUi7pOHpiCPOPDJyGWf9A==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+        by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3s1nm9bshy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Jul 2023 04:48:06 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Thu, 27 Jul
+ 2023 10:48:05 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.2.1118.30 via Frontend
+ Transport; Thu, 27 Jul 2023 10:48:05 +0100
+Received: from [198.61.65.196] (EDIN4L06LR3.ad.cirrus.com [198.61.65.196])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id D3E3111AB;
+        Thu, 27 Jul 2023 09:48:04 +0000 (UTC)
+Message-ID: <42399566-2d25-e888-7226-05a86767b644@opensource.cirrus.com>
+Date:   Thu, 27 Jul 2023 10:48:05 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <be72ecd8-cec1-41ec-b586-e9fb413b1458@redhat.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] ACPI: scan: Create platform device for CS35L56
+To:     Hans de Goede <hdegoede@redhat.com>, <rafael@kernel.org>,
+        <lenb@kernel.org>, <markgross@kernel.org>
+CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <patches@opensource.cirrus.com>,
+        Simon Trimmer <simont@opensource.cirrus.com>
+References: <20230726112759.18814-1-rf@opensource.cirrus.com>
+ <33cdbf63-8fe4-da7e-5d36-6e63fe303b24@redhat.com>
+Content-Language: en-US
+From:   Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <33cdbf63-8fe4-da7e-5d36-6e63fe303b24@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: _hjSqRdhx5niJqtXdtAQck9CO9J3Ke7j
+X-Proofpoint-GUID: _hjSqRdhx5niJqtXdtAQck9CO9J3Ke7j
+X-Proofpoint-Spam-Reason: safe
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 25 Jul 2023, Hans de Goede wrote:
+On 26/7/23 15:13, Hans de Goede wrote:
+> Hi Richard,
+> 
+> On 7/26/23 13:27, Richard Fitzgerald wrote:
+>> From: Simon Trimmer <simont@opensource.cirrus.com>
+>>
+>> The ACPI device CSC3556 is a Cirrus Logic CS35L56 mono amplifier which
+>> is used in multiples, and can be connected either to I2C or SPI.
+>>
+>> There will be multiple instances under the same Device() node. Add it
+>> to ignore_serial_bus_ids and handle it in the serial-multi-instantiate
+>> driver.
+>>
+>> Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
+>> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+> 
+> Thanks, patch looks good to me:
+> 
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> 
+> I have 1 other serial-multi-instantiate.c patches in my fixes branch (see below) and since this just adds new hw-ids I think this can go upstream through my fixes branch too.
+> 
+> Rafael, do you agree with me taking this upstream as a 6.5 fix? And if yes may I have your ack for that ?
+> 
+> About that 1 patch, that adds a new IRQ type: IRQ_RESOURCE_AUTO and I wonder if this patch should not use that same new type right from the start:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/agit/pdx86/platform-drivers-x86.git/commit/?h=fixes&id=676b7c5ecab36274442887ceadd6dee8248a244f
+> 
 
-> Hi,
-> 
-> On 7/19/23 18:06, Andy Shevchenko wrote:
-> > On Wed, Jul 19, 2023 at 05:35:15PM +0200, Henning Schild wrote:
-> >> change since v1:
-> >>  - switch LED/wdt Kconfig to "default y"
-> >>  - remove guard which could hide whole siemens submenu, and default m
-> >>
-> >> This series does two things. It builds up a Kconfig inheritance chain
-> >> for all platform device drivers, namely Watchdog and LED. And then it
-> >> puts all Siemens Simatic IPC drivers in the platform/x86/ directory in
-> >> a subdirectory called "siemens".
-> >>
-> >> That is so that users have to flip less config switches, and to ease
-> >> maintenance.
-> > 
-> > All three good enough, although I prefer the ordering that 'tristate'
-> > followed by 'default' without interleaved 'depends on'. I leave it
-> > to Hans. Other that that,
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> Thank you.
-> 
-> Lee, Guenter do you want me to take the entire series on top of:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=platform-drivers-x86-simatic-ipc (aka ib-pdx86-simatic-v6.6)
-> 
-> And send an updated pull-req ?
+Link doesn't work, but I think you mean:
+https://lore.kernel.org/platform-driver-x86/b9f81a5b-0511-9950-5a20-9e6cbd92d085@redhat.com/T/#t
 
-Please apply - no PR required for me.
-
-> Or shall I take just 3/3 and will you take the Kconfig
-> changes from 1/3 resp 2/3 directly ?
-
--- 
-Lee Jones [李琼斯]
+I'll send a V2 of this CS35L56 patch to use the new IRQ_RESOURCE_AUTO.
