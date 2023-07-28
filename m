@@ -2,95 +2,129 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180C0C001DF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 28 Jul 2023 14:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D89CC001DE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 28 Jul 2023 15:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237144AbjG1OjR (ORCPT
+        id S236685AbjG1PbV convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 28 Jul 2023 10:39:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56556 "EHLO
+        Fri, 28 Jul 2023 11:31:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237141AbjG1OjQ (ORCPT
+        with ESMTP id S229734AbjG1PbV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Jul 2023 10:39:16 -0400
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63E993C21;
-        Fri, 28 Jul 2023 07:39:15 -0700 (PDT)
-Date:   Fri, 28 Jul 2023 14:39:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail3; t=1690555153; x=1690814353;
-        bh=Xeoc38myen4AFKLJ8wKnwjebkYeRV21cILl3Fot7Ftk=;
-        h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-         Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-         Message-ID:BIMI-Selector;
-        b=nXPX277Ri5KlMdssd7NDeGxseX+aMDdxKn9o0ZFkdWHioOWPP3P5enF2Gw6b2R+au
-         /O4DXS4BW8IgVwyTn5xucEqEfp0wG54eGaKJmQv446te958wc5FpaLhxZNomkZpXJ/
-         DE4dow1a29zCCKl1qteD9FhxaI0GIKZ0QaDbJ1IU6AmNJluqcimHr0XP/LlL1+ZZtO
-         GJ1ZsQkKpN7nIZu65VyxdYkqc5D/PsfWL8VF0qnhdL26UADuZ9GWLvPqi9VjdydJ2m
-         hDdrXdknZ/tGkrNdxCkhVn9fG7e0yJYFP8Hf8XJZEOV3SHpPWoGJFq+XZc7Y6G4pg8
-         XQkYSMqZ1ft/Q==
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>, Armin Wolf <W_Armin@gmx.de>
-Subject: Re: [RFC PATCH v1] platform/x86: wmi: Do not register driver with invalid GUID
-Message-ID: <wg3zDdNbblZ43zsIf667-fzagNaEDu7WRuCUeLmIQWc68QcIsDF6nw1wCCbzy1NzmaKvXipcVt2oNJAqRvhxdzgLScwnB3KIts_OajtNROM=@protonmail.com>
-In-Reply-To: <ZMOSO5HgpurayDsN@smile.fi.intel.com>
-References: <20230715211604.1272227-1-pobrn@protonmail.com> <efe4b91f-2602-2115-738e-bb99b42ec5b6@redhat.com> <pjVZC4te3dWaMwoS7jB1-n4z390Ohz0mvuCCUZHwiXlZVMjzwySf_DMa49RDmbhzfvkzRY3FI8zQ0xltNimu-GpBAqJ2Kc3SENu_fwJDJ7E=@protonmail.com> <ZMOSO5HgpurayDsN@smile.fi.intel.com>
-Feedback-ID: 20568564:user:proton
+        Fri, 28 Jul 2023 11:31:21 -0400
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4824335A8;
+        Fri, 28 Jul 2023 08:31:20 -0700 (PDT)
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-565e64ed9f7so264656eaf.1;
+        Fri, 28 Jul 2023 08:31:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690558279; x=1691163079;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1hVzfuNh9MUjr8i57XR6qph+tGTTd2zJJ4as7llKbWk=;
+        b=G9x1/sbAZWydm0xql2fwrZLwlPPnm7/njtnQSP9E+R0URaixOtfvH6akrRfNDU2VRm
+         7dqTcb6lHNqj99IuLYHMxi7trI9/fyFmX2vKIcPShmzKpMCmpcvL7r1RnT4IcbIaFuQ3
+         VeKFxYrwjzjcvQaagXBwofcMe5qEBOeOAOuiUY4VPofB8CNlkjDFDUBfye0DpnCtOPEg
+         dnBkYF0ko0jPRylEiAWqSVyyNDhWMiG9QVb+BJnE7NwucfZvd5OUWLXgoUKwCz4bx2HA
+         el/yDkPwsHcZkVnaMa5S1F8UCKGdqjTa4r1rkY3CvmlrBKdz/HP4Us86S16JhcYXZVgx
+         uuEg==
+X-Gm-Message-State: ABy/qLYTScKE0uZiVxD7ff+djjL+R4RWA987UJPpGBnrXSwoU92uWtfg
+        M6hEtrPaZzKgl3+FBS1h9EQ5lI2fhXR1XN5PIrZo8f3p
+X-Google-Smtp-Source: APBJJlE74kpzfh4LxDdn446uwEZun6DOOyt8oYsPPadxJeNcZQXVmQ9WTlDD6R9Dw93N1faGjY8q7HYCKy1rsJoGAII=
+X-Received: by 2002:a4a:ba07:0:b0:56c:5e21:c730 with SMTP id
+ b7-20020a4aba07000000b0056c5e21c730mr2383772oop.1.1690558279483; Fri, 28 Jul
+ 2023 08:31:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20230728111345.7224-1-rf@opensource.cirrus.com>
+In-Reply-To: <20230728111345.7224-1-rf@opensource.cirrus.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 28 Jul 2023 17:31:08 +0200
+Message-ID: <CAJZ5v0ii8AR9fXQJo_DXd60yFrui4Wiw=9C6xPqrKPie8rBSVQ@mail.gmail.com>
+Subject: Re: [PATCH v3] ACPI: scan: Create platform device for CS35L56
+To:     Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc:     rafael@kernel.org, hdegoede@redhat.com, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@opensource.cirrus.com,
+        Simon Trimmer <simont@opensource.cirrus.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
+On Fri, Jul 28, 2023 at 1:13 PM Richard Fitzgerald
+<rf@opensource.cirrus.com> wrote:
+>
+> From: Simon Trimmer <simont@opensource.cirrus.com>
+>
+> The ACPI device CSC3556 is a Cirrus Logic CS35L56 mono amplifier which
+> is used in multiples, and can be connected either to I2C or SPI.
+>
+> There will be multiple instances under the same Device() node. Add it
+> to ignore_serial_bus_ids and handle it in the serial-multi-instantiate
+> driver.
+>
+> There can be a 5th I2cSerialBusV2, but this is an alias address and doesn't
+> represent a real device. Ignore this by having a dummy 5th entry in the
+> serial-multi-instantiate instance list with the name of a non-existent
+> driver, on the same pattern as done for bsg2150.
+>
+> Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
+> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 
+Still ACKed.
 
-2023. j=C3=BAlius 28., p=C3=A9ntek 12:02 keltez=C3=A9ssel, Andy Shevchenko =
-<andriy.shevchenko@linux.intel.com> =C3=ADrta:
-
-> On Thu, Jul 27, 2023 at 10:54:26PM +0000, Barnab=C3=A1s P=C5=91cze wrote:
-> > 2023. j=C3=BAlius 26., szerda 10:45 keltez=C3=A9ssel, Hans de Goede <hd=
-egoede@redhat.com> =C3=ADrta:
-> > > On 7/15/23 23:24, Barnab=C3=A1s P=C5=91cze wrote:
->=20
-> ...
->=20
-> > > I think that having an additional check like the one which you
-> > > propose has some value too, even if it is just to cover drivers
-> > > which for some reason don't use `MODULE_DEVICE_TABLE()`, but IMHO
-> > > the most important check to have is a check in file2alias.c .
-> >
-> > Okay... any tips on how to avoid copying `uuid_is_valid()`?
->=20
-> I think I already told the rough design: we need to split uuid.c to three
-> files: libuuid.h, libuuid.c uuid.c and libuuid.c should be built twice:
-> once for uuid.c and once for file2alias.c. libuuid.h should contain the
-> definitions file2alias.c is using.  Something like that.
-
-What is not clear at all to me is how includes should be handled. `uuid_is_=
-valid()`
-uses `isxdigit()`, which is found in different header files based on whethe=
-r it is
-a kernel or user space build.
-
-
->=20
-> > Another idea I had was that maybe `struct wmi_device_id::guid_string` n=
-eeds to be
-> > changed to be `guid_t` and then `GUID_INIT()` or something similar coul=
-d be used
-> > to initialize it. That way it is impossible to mess up the format. The =
-only downside
-> > I can see is that guid is no longer "grep-able".
->=20
-> Strictly speaking you may not do that because it's a (semi-)ABI.
-
-Why is that the case?
-
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
+> ---
+>  drivers/acpi/scan.c                             |  1 +
+>  drivers/platform/x86/serial-multi-instantiate.c | 14 ++++++++++++++
+>  2 files changed, 15 insertions(+)
+>
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 5b145f1aaa1b..87e385542576 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -1714,6 +1714,7 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
+>                 {"BSG1160", },
+>                 {"BSG2150", },
+>                 {"CSC3551", },
+> +               {"CSC3556", },
+>                 {"INT33FE", },
+>                 {"INT3515", },
+>                 /* Non-conforming _HID for Cirrus Logic already released */
+> diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
+> index 2c2abf69f049..8158e3cf5d6d 100644
+> --- a/drivers/platform/x86/serial-multi-instantiate.c
+> +++ b/drivers/platform/x86/serial-multi-instantiate.c
+> @@ -329,6 +329,19 @@ static const struct smi_node cs35l41_hda = {
+>         .bus_type = SMI_AUTO_DETECT,
+>  };
+>
+> +static const struct smi_node cs35l56_hda = {
+> +       .instances = {
+> +               { "cs35l56-hda", IRQ_RESOURCE_AUTO, 0 },
+> +               { "cs35l56-hda", IRQ_RESOURCE_AUTO, 0 },
+> +               { "cs35l56-hda", IRQ_RESOURCE_AUTO, 0 },
+> +               { "cs35l56-hda", IRQ_RESOURCE_AUTO, 0 },
+> +               /* a 5th entry is an alias address, not a real device */
+> +               { "cs35l56-hda_dummy_dev" },
+> +               {}
+> +       },
+> +       .bus_type = SMI_AUTO_DETECT,
+> +};
+> +
+>  /*
+>   * Note new device-ids must also be added to ignore_serial_bus_ids in
+>   * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
+> @@ -337,6 +350,7 @@ static const struct acpi_device_id smi_acpi_ids[] = {
+>         { "BSG1160", (unsigned long)&bsg1160_data },
+>         { "BSG2150", (unsigned long)&bsg2150_data },
+>         { "CSC3551", (unsigned long)&cs35l41_hda },
+> +       { "CSC3556", (unsigned long)&cs35l56_hda },
+>         { "INT3515", (unsigned long)&int3515_data },
+>         /* Non-conforming _HID for Cirrus Logic already released */
+>         { "CLSA0100", (unsigned long)&cs35l41_hda },
+> --
+> 2.30.2
+>
