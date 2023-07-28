@@ -2,151 +2,95 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35363C001E0
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 28 Jul 2023 14:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180C0C001DF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 28 Jul 2023 14:39:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237032AbjG1O2k (ORCPT
+        id S237144AbjG1OjR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 28 Jul 2023 10:28:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51744 "EHLO
+        Fri, 28 Jul 2023 10:39:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237059AbjG1O2j (ORCPT
+        with ESMTP id S237141AbjG1OjQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 28 Jul 2023 10:28:39 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B0A23A97;
-        Fri, 28 Jul 2023 07:28:38 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-2680eee423aso1247150a91.2;
-        Fri, 28 Jul 2023 07:28:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690554518; x=1691159318;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZtDsi+pEp/nNRMu+KQzhU8MBpSDJijbUVBsN9cf24GY=;
-        b=OmGn8k07nYiaEegv+GN8Im0wQ/MpUTRCtGXnxVIXHRXZhnkinbLI1dHjM0Wy+8280B
-         0B7Tj81pS5VPYDyNSntXbAH52kvELUz6/AeraNGj2ls6QGAi41zzdb0p8Ep63toSfeX4
-         i4wgVCtgk4vvbeJwonFdItN3LBliaSw5obqJjYw9s0D4oyblTc3wvEMSPo1K8+QncJDl
-         N6UN9YdNm4w5hvjkCZ6tAXTBJy4oiit2eN4Zm7QcW4kaWiWA1MtN0VDtGdVwUmAl4mfu
-         FUbLag8pu2jGxZfma8MfyBl+UcQan7RkBzSI14+VZ8wbIlYVlDmqaN46fYGFO5ODfo1e
-         haeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690554518; x=1691159318;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZtDsi+pEp/nNRMu+KQzhU8MBpSDJijbUVBsN9cf24GY=;
-        b=S4CDW/0GgHEGjcJ/zItdMlh/Ka3NaJHmk6v/uCflY6lCd5iX/qgOVD3AEuTobGWNeU
-         ZQ1oUpADr+tpyQuvDbCTh8kypWeixEHxC1v9VOg0ja9dryqMilBZBwg0/A/U1uQy3rEM
-         L1dpj5n0Ls1/UTec57s7VxyiLzSrRcrrtT0FOkshWrf+czDF7tf1yiNtDCqypz2TnCMg
-         PrflM6T6Ow/ME4snhxX3z0zYBqFv7Bqjwfjyj5yLZAUDUXms6CljKAIJ25Eue4GiDuq8
-         uUHIzIk7SMbBqRTVT4mj/qhuxpwOGJ8j4wo+PkHaayJJ40MuFDxXHdaYQv/DkIqVTv4R
-         V8rQ==
-X-Gm-Message-State: ABy/qLb/Wh8Cr3MrOOlwnZ7ZvWgVDZiUiNs5FeS2nXu2YYGD4VQ4X8fg
-        kQVjQTHVFxv9kHTxgu0mBs0=
-X-Google-Smtp-Source: APBJJlGq9Ppy+Td/hyv0vhyaQQiigQlnAv2Qg4dsZhHVbEQ+e/KYrMad5RnxSg1dauRUoujuBVziQA==
-X-Received: by 2002:a17:90b:38c6:b0:268:8da4:72ac with SMTP id nn6-20020a17090b38c600b002688da472acmr1145098pjb.22.1690554517616;
-        Fri, 28 Jul 2023 07:28:37 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id ms19-20020a17090b235300b00263f446d432sm4381643pjb.43.2023.07.28.07.28.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jul 2023 07:28:37 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <8686c5c3-81b0-278f-d81b-0c906bac62a8@roeck-us.net>
-Date:   Fri, 28 Jul 2023 07:28:35 -0700
+        Fri, 28 Jul 2023 10:39:16 -0400
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63E993C21;
+        Fri, 28 Jul 2023 07:39:15 -0700 (PDT)
+Date:   Fri, 28 Jul 2023 14:39:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail3; t=1690555153; x=1690814353;
+        bh=Xeoc38myen4AFKLJ8wKnwjebkYeRV21cILl3Fot7Ftk=;
+        h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+         Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+         Message-ID:BIMI-Selector;
+        b=nXPX277Ri5KlMdssd7NDeGxseX+aMDdxKn9o0ZFkdWHioOWPP3P5enF2Gw6b2R+au
+         /O4DXS4BW8IgVwyTn5xucEqEfp0wG54eGaKJmQv446te958wc5FpaLhxZNomkZpXJ/
+         DE4dow1a29zCCKl1qteD9FhxaI0GIKZ0QaDbJ1IU6AmNJluqcimHr0XP/LlL1+ZZtO
+         GJ1ZsQkKpN7nIZu65VyxdYkqc5D/PsfWL8VF0qnhdL26UADuZ9GWLvPqi9VjdydJ2m
+         hDdrXdknZ/tGkrNdxCkhVn9fG7e0yJYFP8Hf8XJZEOV3SHpPWoGJFq+XZc7Y6G4pg8
+         XQkYSMqZ1ft/Q==
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>, Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [RFC PATCH v1] platform/x86: wmi: Do not register driver with invalid GUID
+Message-ID: <wg3zDdNbblZ43zsIf667-fzagNaEDu7WRuCUeLmIQWc68QcIsDF6nw1wCCbzy1NzmaKvXipcVt2oNJAqRvhxdzgLScwnB3KIts_OajtNROM=@protonmail.com>
+In-Reply-To: <ZMOSO5HgpurayDsN@smile.fi.intel.com>
+References: <20230715211604.1272227-1-pobrn@protonmail.com> <efe4b91f-2602-2115-738e-bb99b42ec5b6@redhat.com> <pjVZC4te3dWaMwoS7jB1-n4z390Ohz0mvuCCUZHwiXlZVMjzwySf_DMa49RDmbhzfvkzRY3FI8zQ0xltNimu-GpBAqJ2Kc3SENu_fwJDJ7E=@protonmail.com> <ZMOSO5HgpurayDsN@smile.fi.intel.com>
+Feedback-ID: 20568564:user:proton
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] Add Silicom Platform Driver
-Content-Language: en-US
-To:     Huibin Shi <henrys@silicom-usa.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Henry Shi <henryshi2018@gmail.com>,
-        "hbshi69@hotmail.com" <hbshi69@hotmail.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>
-Cc:     "hb_shi2003@yahoo.com" <hb_shi2003@yahoo.com>,
-        Wen Wang <wenw@silicom-usa.com>
-References: <20230718160104.2716-1-henryshi2018@gmail.com>
- <fb62b2e7-7c7c-dc2e-768d-3393f151eb32@wanadoo.fr>
- <PA4PR04MB92225B65A45868A9CBE25B999A06A@PA4PR04MB9222.eurprd04.prod.outlook.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <PA4PR04MB92225B65A45868A9CBE25B999A06A@PA4PR04MB9222.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 7/28/23 05:59, Huibin Shi wrote:
-> Christophe,
-> 
-> Thanks for the comments. See my comments below.
-> 
-> Updated patch will be sent out later after review comments from other reviewers are addressed.
-> 
-> Henry
-> -----Original Message-----
-> From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Sent: Tuesday, July 25, 2023 5:03 PM
-> To: Henry Shi <henryshi2018@gmail.com>; hbshi69@hotmail.com; tglx@linutronix.de; mingo@redhat.com; bp@alien8.de; dave.hansen@linux.intel.com; x86@kernel.org; hpa@zytor.com; hdegoede@redhat.com; markgross@kernel.org; jdelvare@suse.com; linux@roeck-us.net; linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; linux-hwmon@vger.kernel.org
-> Cc: hb_shi2003@yahoo.com; Huibin Shi <henrys@silicom-usa.com>; Wen Wang <wenw@silicom-usa.com>
-> Subject: Re: [PATCH] Add Silicom Platform Driver
-> 
-> Caution: This is an external email. Please take care when clicking links or opening attachments.
-> 
-> 
-> Le 18/07/2023 à 18:01, Henry Shi a écrit :
->> The Silicom platform (silicom-platform) Linux driver for Swisscom
->> Business Box (Swisscom BB) as well as Cordoba family products is a
->> software solution designed to facilitate the efficient management and
->> control of devices through the integration of various Linux
->> frameworks. This platform driver provides seamless support for device
->> management via the Linux LED framework, GPIO framework, Hardware
->> Monitoring (HWMON), and device attributes. The Silicom platform
->> driver's compatibility with these Linux frameworks allows applications
->> to access and control Cordoba family devices using existing software
->> that is compatible with these frameworks. This compatibility
->> simplifies the development process, reduces dependencies on
->> proprietary solutions, and promotes interoperability with other
->> Linux-based systems and software.
->>
->> Signed-off-by: Henry Shi <henryshi2018@gmail.com>
->> ---
-> 
-> [...]
-> 
->> +static int __init silicom_mc_leds_register(struct device *dev,
->> +                                        const struct led_classdev_mc
->> +*mc_leds) {
->> +     struct led_classdev_mc *led;
->> +     int i, err;
->> +
->> +     for (i = 0; mc_leds[i].led_cdev.name; i++) {
->> +             /* allocate and copy data from the init constansts */
->> +             led = devm_kzalloc(dev, sizeof(struct led_classdev_mc),
->> + GFP_KERNEL);
-> 
-> sizeof(*led) is shorter.
-> Mostly a matter of taste.
-> 
-> Maybe even devm_kmemdup()?
-> 
-> Henry: thanks. Devm_kmemdup() API requires additional argument that is not necessary of this driver. I prefer devm_kzalloc for now.
-> 
+Hi
 
-I am curious: What would that additional argument be ?
 
-Guenter
+2023. j=C3=BAlius 28., p=C3=A9ntek 12:02 keltez=C3=A9ssel, Andy Shevchenko =
+<andriy.shevchenko@linux.intel.com> =C3=ADrta:
 
+> On Thu, Jul 27, 2023 at 10:54:26PM +0000, Barnab=C3=A1s P=C5=91cze wrote:
+> > 2023. j=C3=BAlius 26., szerda 10:45 keltez=C3=A9ssel, Hans de Goede <hd=
+egoede@redhat.com> =C3=ADrta:
+> > > On 7/15/23 23:24, Barnab=C3=A1s P=C5=91cze wrote:
+>=20
+> ...
+>=20
+> > > I think that having an additional check like the one which you
+> > > propose has some value too, even if it is just to cover drivers
+> > > which for some reason don't use `MODULE_DEVICE_TABLE()`, but IMHO
+> > > the most important check to have is a check in file2alias.c .
+> >
+> > Okay... any tips on how to avoid copying `uuid_is_valid()`?
+>=20
+> I think I already told the rough design: we need to split uuid.c to three
+> files: libuuid.h, libuuid.c uuid.c and libuuid.c should be built twice:
+> once for uuid.c and once for file2alias.c. libuuid.h should contain the
+> definitions file2alias.c is using.  Something like that.
+
+What is not clear at all to me is how includes should be handled. `uuid_is_=
+valid()`
+uses `isxdigit()`, which is found in different header files based on whethe=
+r it is
+a kernel or user space build.
+
+
+>=20
+> > Another idea I had was that maybe `struct wmi_device_id::guid_string` n=
+eeds to be
+> > changed to be `guid_t` and then `GUID_INIT()` or something similar coul=
+d be used
+> > to initialize it. That way it is impossible to mess up the format. The =
+only downside
+> > I can see is that guid is no longer "grep-able".
+>=20
+> Strictly speaking you may not do that because it's a (semi-)ABI.
+
+Why is that the case?
+
+
+Regards,
+Barnab=C3=A1s P=C5=91cze
