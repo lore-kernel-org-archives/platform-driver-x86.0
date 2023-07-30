@@ -2,72 +2,94 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC148EB64DD
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Jul 2023 07:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D924EB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Jul 2023 07:35:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229651AbjG3HLs (ORCPT
+        id S229472AbjG3Hfo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 30 Jul 2023 03:11:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54074 "EHLO
+        Sun, 30 Jul 2023 03:35:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbjG3HLs (ORCPT
+        with ESMTP id S229445AbjG3Hfo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 30 Jul 2023 03:11:48 -0400
+        Sun, 30 Jul 2023 03:35:44 -0400
 Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97AB210FE;
-        Sun, 30 Jul 2023 00:11:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1046C172D;
+        Sun, 30 Jul 2023 00:35:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-        t=1690701105; bh=6KsWxnNkLsIsG1Z1NryHYXBIgz9MS/anYhTsN24ECwg=;
+        t=1690702541; bh=sGIOWsIPlGt8qaISVdgflYWDhjtHBowgyQUKfHGzZoM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VVc/uQUO7ffAqoOyfdXDzBgz6NsLgsVtoFHCzOF5AKh0WOXmybH6ZXrbesERzEh9i
-         qzbn7lW/0l6qQ8kIjzsFfvJst+Jnsquwo4JPghuSi1bHcaDNDPEXxO5kPiB2Z38Q7g
-         7zl8boQqv/UPyvSrp4t7fV+yjJHdtHjyOHgptd80=
-Date:   Sun, 30 Jul 2023 09:11:45 +0200
+        b=FunvjMWfn33J23cDykcmYsM/yZyY4LC4gpVfb5porXa/pvSnDqC1c7eIIO6h6qs7r
+         w8C9/qtfo0t+FEipjHsCdIdqxRs/p+F3zI5KVvrc0DlhCFmSUnM81JxDFHgiL6Uvw0
+         5wvtCJK1U0Q6Tj5BlRtbWbufqENrsbJgD83HOy4w=
+Date:   Sun, 30 Jul 2023 09:35:40 +0200
 From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
 To:     Armin Wolf <W_Armin@gmx.de>
 Cc:     hdegoede@redhat.com, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] platform/x86: wmi-bmof: Update MAINTAINERS entry
-Message-ID: <873de462-b06c-44af-a5d3-559a78161a7d@t-8ch.de>
+Subject: Re: [PATCH 2/3] platform/x86: wmi-bmof: Simplify read_bmof()
+Message-ID: <099d2ef4-76d3-4b9f-9264-22ad8437eb5b@t-8ch.de>
 References: <20230730043817.12888-1-W_Armin@gmx.de>
- <20230730043817.12888-3-W_Armin@gmx.de>
+ <20230730043817.12888-2-W_Armin@gmx.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230730043817.12888-3-W_Armin@gmx.de>
+In-Reply-To: <20230730043817.12888-2-W_Armin@gmx.de>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2023-07-30 06:38:17+0200, Armin Wolf wrote:
-> The WMI Binary MOF driver is important for the development
-> of modern WMI drivers, i am willing to maintain it.
-> Also fix the mailing list address.
+On 2023-07-30 06:38:16+0200, Armin Wolf wrote:
+> Replace offset handling code with a single call
+> to memory_read_from_buffer() to simplify read_bmof().
+> 
+> Tested on a ASUS PRIME B650-PLUS.
 > 
 > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 > ---
->  MAINTAINERS | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/wmi-bmof.c | 22 +++++-----------------
+>  1 file changed, 5 insertions(+), 17 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 426d3be71da2..9b871fb34e83 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -22954,8 +22954,9 @@ S:	Odd fixes
->  F:	drivers/net/wireless/legacy/wl3501*
+> diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bmof.c
+> index d0516cacfcb5..644d2fd889c0 100644
+> --- a/drivers/platform/x86/wmi-bmof.c
+> +++ b/drivers/platform/x86/wmi-bmof.c
+> @@ -25,25 +25,13 @@ struct bmof_priv {
+>  	struct bin_attribute bmof_bin_attr;
+>  };
 > 
->  WMI BINARY MOF DRIVER
-> -L:	platform-drivers-x86@vger.kernel.org
-> -S:	Orphan
-> +M:	Armin Wolf <W_Armin@gmx.de>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Maintained
+> -static ssize_t
+> -read_bmof(struct file *filp, struct kobject *kobj,
+> -	 struct bin_attribute *attr,
+> -	 char *buf, loff_t off, size_t count)
+> +static ssize_t read_bmof(struct file *filp, struct kobject *kobj, struct bin_attribute *attr,
+> +			 char *buf, loff_t off, size_t count)
+>  {
+> -	struct bmof_priv *priv =
+> -		container_of(attr, struct bmof_priv, bmof_bin_attr);
+> +	struct bmof_priv *priv = container_of(attr, struct bmof_priv, bmof_bin_attr);
+> 
+> -	if (off < 0)
+> -		return -EINVAL;
+> -
+> -	if (off >= priv->bmofdata->buffer.length)
+> -		return 0;
+> -
+> -	if (count > priv->bmofdata->buffer.length - off)
+> -		count = priv->bmofdata->buffer.length - off;
+> -
+> -	memcpy(buf, priv->bmofdata->buffer.pointer + off, count);
+> -	return count;
+> +	return memory_read_from_buffer(buf, count, &off, priv->bmofdata->buffer.pointer,
+> +				       priv->bmofdata->buffer.length);
 
-If you want a reviewer or second maintainer I would be volunteering.
+Note: sysfs_kf_bin_read() seems also to be doing most of this validation.
+So the invalid input values, expect for negative "off", can't happen anyways.
+memory_read_from_buffer() is still nice though.
 
->  F:	Documentation/ABI/stable/sysfs-platform-wmi-bmof
->  F:	Documentation/wmi/devices/wmi-bmof.rst
->  F:	drivers/platform/x86/wmi-bmof.c
+>  }
+> 
+>  static int wmi_bmof_probe(struct wmi_device *wdev, const void *context)
 > --
 > 2.39.2
 > 
