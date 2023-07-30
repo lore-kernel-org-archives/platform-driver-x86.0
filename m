@@ -2,85 +2,80 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2328DEB64DD
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Jul 2023 04:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24D4EB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Jul 2023 07:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229459AbjG3Eth (ORCPT
+        id S229555AbjG3HKe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 30 Jul 2023 00:49:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41086 "EHLO
+        Sun, 30 Jul 2023 03:10:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbjG3Etg (ORCPT
+        with ESMTP id S229449AbjG3HKd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 30 Jul 2023 00:49:36 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F50D18B;
-        Sat, 29 Jul 2023 21:49:34 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1qPyN1-0000Tk-CT; Sun, 30 Jul 2023 06:49:31 +0200
-Message-ID: <8ee87fe1-684f-ad59-21c7-4401a4e70bee@leemhuis.info>
-Date:   Sun, 30 Jul 2023 06:49:30 +0200
+        Sun, 30 Jul 2023 03:10:33 -0400
+Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 392EC10FE;
+        Sun, 30 Jul 2023 00:10:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
+        t=1690701029; bh=ATqRlo8LtsDvVCdJdSwTHcECxAmz60tFbmxDsJJ7stk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lMvY8YgC6MMin+su5szDVx5+GH27Z03H3fi88ErT0IWNceW+A6l/zDlwAYtH8qEkV
+         tIM/26C3LLAdA3L0fb1VpezrHQbwXTlN4/46HTAPKG+0nKs1wpz3MrhZ+nb19vNshv
+         GUGy1CxhFkI3WRD+smpEZCaZoDcVFOdgUgR9TcwQ=
+Date:   Sun, 30 Jul 2023 09:10:29 +0200
+From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+To:     Armin Wolf <W_Armin@gmx.de>
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] platform/x86: wmi-bmof: Use device_create_bin_file()
+Message-ID: <5dc6355a-dedd-4471-abab-6b0c4ea434b1@t-8ch.de>
+References: <20230730043817.12888-1-W_Armin@gmx.de>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: 6.5 - 6.4.7 Regression : ASUS UM5302TA Keyboard don't work
-Content-Language: en-US, de-DE
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Linux Input Devices <linux-input@vger.kernel.org>,
-        ACPI Asus <acpi4asus-user@lists.sourceforge.net>,
-        Linux x86 Platform Drivers 
-        <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Regressions <regressions@lists.linux.dev>,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Guilhem Lettron <guilhem@lettron.fr>
-References: <bdc6cb4d-a853-72b2-b132-989b64740ad9@gmail.com>
-From:   "Linux regression tracking (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <bdc6cb4d-a853-72b2-b132-989b64740ad9@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1690692574;533bb25a;
-X-HE-SMSGID: 1qPyN1-0000Tk-CT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230730043817.12888-1-W_Armin@gmx.de>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Lo!
+On 2023-07-30 06:38:15+0200, Armin Wolf wrote:
+> Use device_create_bin_file() instead of sysfs_create_bin_file()
+> to avoid having to access the device kobject.
+> 
+> Tested on a ASUS PRIME B650-PLUS.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 
-On 30.07.23 04:41, Bagas Sanjaya wrote:
-> 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
-> 
->> On a kernel 6.4.5 and less, the keyboard is working fine.
->>
->> Beginning with 6.5 rc1 and 6.4.7 any key don't respond.
+Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+Tested-by: Thomas Weißschuh <linux@weissschuh.net>
 
-That is a AMD Ryzen Laptop. And if that really started from
-v6.4.6..v6.4.7 then I guess there is a decent chance that this is caused
-by ```ACPI: resource: Remove "Zen" specific match and quirks``` from
-Mario. Hence adding him to the list of recipients.
-
-Guilhem Lettron: if you have a minute, could you try if reverting that
-patch ontop of 6.4.7 fixes things?
-
-Ciao, Thorsten
-
->> [    0.668850] input: ASUE140D:00 04F3:31B9 Keyboard as /devices/platform/AMDI0010:01/i2c-1/i2c-ASUE140D:00/0018:04F3:31B9.0001/input/input5
->> ...
->> [    1.930328] input: ASUE140D:00 04F3:31B9 Keyboard as /devices/platform/AMDI0010:01/i2c-1/i2c-ASUE140D:00/0018:04F3:31B9.0001/input/input13
+> ---
+>  drivers/platform/x86/wmi-bmof.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> See Bugzilla for the full thread.
+> diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bmof.c
+> index 80137afb9753..d0516cacfcb5 100644
+> --- a/drivers/platform/x86/wmi-bmof.c
+> +++ b/drivers/platform/x86/wmi-bmof.c
+> @@ -75,7 +75,7 @@ static int wmi_bmof_probe(struct wmi_device *wdev, const void *context)
+>  	priv->bmof_bin_attr.read = read_bmof;
+>  	priv->bmof_bin_attr.size = priv->bmofdata->buffer.length;
 > 
-> Anyway, I'm adding this regression to regzbot:
+> -	ret = sysfs_create_bin_file(&wdev->dev.kobj, &priv->bmof_bin_attr);
+> +	ret = device_create_bin_file(&wdev->dev, &priv->bmof_bin_attr);
+>  	if (ret)
+>  		goto err_free;
 > 
-> #regzbot introduced: v6.4..v6.5-rc1 https://bugzilla.kernel.org/show_bug.cgi?id=217726
-> #regzbot title: ASUE140D:00 04F3:31B9 doesn't respond to input
+> @@ -90,7 +90,7 @@ static void wmi_bmof_remove(struct wmi_device *wdev)
+>  {
+>  	struct bmof_priv *priv = dev_get_drvdata(&wdev->dev);
 > 
-> Thanks.
+> -	sysfs_remove_bin_file(&wdev->dev.kobj, &priv->bmof_bin_attr);
+> +	device_remove_bin_file(&wdev->dev, &priv->bmof_bin_attr);
+>  	kfree(priv->bmofdata);
+>  }
 > 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217726
-
+> --
+> 2.39.2
+> 
