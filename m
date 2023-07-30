@@ -2,108 +2,105 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4E3C001DC
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Jul 2023 20:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33137C001DC
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Jul 2023 20:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230019AbjG3UaX (ORCPT
+        id S229626AbjG3Uhk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 30 Jul 2023 16:30:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60830 "EHLO
+        Sun, 30 Jul 2023 16:37:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229820AbjG3UaW (ORCPT
+        with ESMTP id S229602AbjG3Uhk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 30 Jul 2023 16:30:22 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF64E113;
-        Sun, 30 Jul 2023 13:30:20 -0700 (PDT)
+        Sun, 30 Jul 2023 16:37:40 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE6BE7B;
+        Sun, 30 Jul 2023 13:37:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
- s=s31663417; t=1690749011; x=1691353811; i=w_armin@gmx.de;
- bh=1EdUeSoMNd8wr3Gkc7pk6EgX5RIq5J8Xt9rcA1v6fmA=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=XsIunzewEyOm8RlGLbuHmNn92steIF4+jtPbLkNGX8oLP6rNZh+63ay7Qrnn3o9PXa0soM0
- meEF6F/np/KjuPQxIrhYbe/EcyWJ2H1/o46BcmIJ8HwIwudIh0U+cmdv0gvy+786XyjcIZDzx
- d5WITbH+rbX+HWRoEuLkCrG3Qp9Td6zLTZMEhEgGOCmLUUcpNWs/D6pe0fNR7GPgn8+j1nWLQ
- 7tBCuIbTm5kRV0PCN8DPEIjIdvH7e+FzkXozi2NkhoOvbeXehJx0ZJz7gCjI6twIKwdOejx8K
- QD+RkovPG9oK/XCisNtXXXywIrwnwoPD6lfl8dlZ3ZqmQEhrh95g==
+ s=s31663417; t=1690749449; x=1691354249; i=w_armin@gmx.de;
+ bh=q7OP8V2DT813Vh5AtHafrOKSFe4UpPHy9Xm2bDdU1kY=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+ b=kowpZfu343ZK+RMc8H2L7q/Mzd4NQ0gMBL5b2wfvDfytLI6aaRHBp3ZOKEFXXzYo5Hw+vfw
+ 6xRFIYba3RqFINQqZ1Wc3qk1mmTYNf49cd/EzSK/uWvnLmA8hkVMuvKQjLWYQVAIs6AFGZa8j
+ Kcd/+G2DG6CMimmxKXCnaxepofkWHN7JqnV0FrBqP2xIggv6YHDtpZkBbK6R/8+CoLHypMa9k
+ gYekBIXbjlDdw2HsAQRzhNFxLF93bbQLy84zWzv/JdcbMt1I5e9kjNgf31KqyXZPCXyMdubTg
+ 9kqKIAoWeIxcIpfUfJlIcbe6HBaIA2J7qwfW2hgUogfkURb2V6nA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWics-1qNz3K41lo-00X3pV; Sun, 30
- Jul 2023 22:30:11 +0200
-Message-ID: <0f761565-424b-695f-222d-64c672dfbdc5@gmx.de>
-Date:   Sun, 30 Jul 2023 22:30:10 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 3/3] platform/x86: wmi-bmof: Update MAINTAINERS entry
-To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <thomas@t-8ch.de>
-Cc:     hdegoede@redhat.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230730043817.12888-1-W_Armin@gmx.de>
- <20230730043817.12888-3-W_Armin@gmx.de>
- <873de462-b06c-44af-a5d3-559a78161a7d@t-8ch.de>
-Content-Language: en-US
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1Mg6Zq-1pvpxu3Lgs-00hcts; Sun, 30 Jul 2023 22:37:28 +0200
 From:   Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <873de462-b06c-44af-a5d3-559a78161a7d@t-8ch.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     hdegoede@redhat.com, markgross@kernel.org, thomas@t-8ch.de
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] platform/x86: wmi-bmof: Use device_create_bin_file()
+Date:   Sun, 30 Jul 2023 22:37:21 +0200
+Message-Id: <20230730203723.8882-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Qw14HjhCgz/eFYEuZ1ZhaX6yBB97u51HkoH/dWXItrhRaeQjl9g
- eU7Uzex06B4V8Zu58SHm/DXw9tza1hQe/N/atRUa32axnbMtSU2Uw7eJPnT7skNMFwzJwA5
- YQ6U9kMlarVaNLVBgAWdTjKXS9qoyhba85lOwUHA5BvT7l2uTqxXKsVTBxeS4Gtf1gdvOor
- 8Tq+/n7wwYmDlftz7cW8A==
-UI-OutboundReport: notjunk:1;M01:P0:TjD20CGeY4w=;co2UyZosuA25nvCG+/vlxtiVTrx
- 1+C0nsV9jIbLWok2kfu62HXwikT6AN5YmtTCvpE+3R3On7oxvbnOQFnXu/XRWt3jKDJ6atvLh
- PfksAw2ZRkuaLPACQM921UeUluO8+EWbu5Tzgi9yKT5/0/lGJp7k1P2VrwlRzCTX/28yYB/YS
- 0e6PyXtYtNmWHDV8mW8ZAmpiJ97blQxWebiTKGncTb5o0q1vep5h6w9I4Wu1GIP9hk68yphV3
- BHRNOTU+Og7wZbUsO/a07bhMa9LDH/ZwTyRcr3gtbM3W/XT/wvsx0/Pp6/ObNck3qXwW7uQsP
- V8Fd8KQKUpMKcaeuqmXVKCTvoFVacqDxAk87Y4Y7erYmp5iY7Ml+3S30TLfRVqV1u1tgQp0SB
- D+QtmTdet36Mss3/x9Rn/mffdRvflHi2n4d2nAxydCM0Uw6vb0L/p1Q+T3ZYx+kGl0E2aOimr
- VhNhmSGpEnBUdTBB8VLN09lzaLYHJSorPqVNQhUBIKWfmv/faMytaGfW+xzgBfWcs/ieVEJK8
- TWp9vypU2kbVcL3wa1Qm2QkFnadcluC0aedc4U53E6XMj/4AVoUaw5cYVoTOCLFXW7Nzl/Bsj
- 2+WyFZszN9l++Nl7S/84hgYNMRa3m/5MVNXfOsWD2LyCw04VFCN0GxxlREUZP4oxPlTo9ujpL
- /ybGpCmiY9cq+mTLQ8YN7Q4dnPr+Fv17ReGNr51H/sg5GYf0NIoGZDnks1shBwPfDb2H9EB/e
- XsNztMY5eVtOGXFJKNlLwCbv+utkG9Scp+VXWjFxLXWBBh4w9nZ5DlAi7oJiLj+UaRCYB/u0K
- ds+htf/EyM0FTg4RCjZnwTfOv9QXerVEQ/At5CC9VGgop1sGXC8wKn27cU9gUxIlDEKCv5zV8
- t7oMHCP1b4hl3a3RpE1oPU3Tif6Dw00UJGLq34Hovzw6pLv9VkSbQxmz3FkedbbLK1VTbM11l
- 9TsA9w==
+X-Provags-ID: V03:K1:CdbeZQsXtKr9gi1eNdbTGVnk8pvpGaJz1jXBA1gTTkaiEr8xSPK
+ 8E05q9XA7a2Pq8W7CvwcN9x1uJMbjLYIzea8aCDgfsGnRdoAo4jDMEzzlGsIgacQZjcCO/U
+ 8pQvelw/F7DBpbfEeBPuClURw2XZrTQFxP9rOz4JQt+ucL+NO0+/LYls1q7aBQattOtEXt+
+ pY7oAfh2B8RLTawWdqUEw==
+UI-OutboundReport: notjunk:1;M01:P0:WWo3pNYYI5o=;sbV8szpItLDdEUNWWVcud2Sls2y
+ VYmyEzUdqwOONARNTHJ5nke28qFWModApFJ4PFUwv3Vfh5edVii6spFasUdn5nAKnZ8vF8oLg
+ kBVAdXJoDGuO5clpzzuPgI4EMIJxbypgCjpFWB8TTN6N2Az5HPjqBvut0nJjNGZ5DnhmvKeiT
+ 2Vj8yzEFrQeLCdXW2Ngt/nKFPuiplnp6zb9+GZ2kF8FiEYdmWZSngfpovqz6CA1CrB9UNZF1Q
+ 9E2qGVhvH6tcFRRcdnOf22HAa97IWSBe60BaVwojguXHh0RXMycXxvhaboh3uANPfiP65JN+G
+ U94hGQT6DAw2mQMUqahA+/RIN41vtHbpdNLvmhPO44Yo05Lsw1BGEzPQ8u08oD6DkVTMwCwYv
+ qvumQPE6ZVqgfJYo/v5a2pOB4tnH3XBVEwaShhJcjutDQjR1ZUiPRS2ycKjhzJ2rDk3hADeH0
+ MioLiJc074v+q2umhe8KZM0fit3NPQR4gn8lB+2rq1OESOpJ4zaASucHyr8g+l1fhm1FPFV/B
+ FeQq3J4OkThcMLf88o84+5k/rccaB7uOxqs1o59WnlpGHH22m/PqEn8Bc4jYcuinhBCFenJXq
+ KLXiBUZQHtY6LkGq+dbTkidQ2dOdON0h/CdsaHrulfI8wSM5tlvc1QwUm3eI69M/io5YvQNiI
+ jPJmB4NQ4L1WZaI43slwvxKz1iX/p+4vfRqJX9590WiG9B2ghFXn2T9bI7/aTYzDZNhNLjyqi
+ EsZxzc8GtZeUE6X7bCOyVIID+heWxZA/banfaLg4uJgNJwiDwT877H/goTi52oJGib53lNVdT
+ Fiu4a7t1hRY8Ynx2W7ZAumUSYC1KBkK2F6+yCMQ8tR6AMRaoARVy4Zz/fe14/VbN6Qc4MrELw
+ cus0oYKjSkbgntdMNuvYW0mJusmthWzmBY+s3570uRaP67P0M/WjWkY5Z0Uw8dL+0mLYLOOqW
+ i4gtmaobG2+7gm8YkvHYly06LQY=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 30.07.23 um 09:11 schrieb Thomas Wei=C3=9Fschuh:
+Use device_create_bin_file() instead of sysfs_create_bin_file()
+to avoid having to access the device kobject.
 
-> On 2023-07-30 06:38:17+0200, Armin Wolf wrote:
->> The WMI Binary MOF driver is important for the development
->> of modern WMI drivers, i am willing to maintain it.
->> Also fix the mailing list address.
->>
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->> ---
->>   MAINTAINERS | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 426d3be71da2..9b871fb34e83 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -22954,8 +22954,9 @@ S:	Odd fixes
->>   F:	drivers/net/wireless/legacy/wl3501*
->>
->>   WMI BINARY MOF DRIVER
->> -L:	platform-drivers-x86@vger.kernel.org
->> -S:	Orphan
->> +M:	Armin Wolf <W_Armin@gmx.de>
->> +L:	platform-driver-x86@vger.kernel.org
->> +S:	Maintained
-> If you want a reviewer or second maintainer I would be volunteering.
+Tested on a ASUS PRIME B650-PLUS.
 
-Sure, the driver might be quite small, but having an reviewer is always go=
-od.
+Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+Tested-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Changes since v1:
+- add Revieved-by and Tested-by tags
+=2D--
+ drivers/platform/x86/wmi-bmof.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Armin Wolf
+diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bm=
+of.c
+index 80137afb9753..d0516cacfcb5 100644
+=2D-- a/drivers/platform/x86/wmi-bmof.c
++++ b/drivers/platform/x86/wmi-bmof.c
+@@ -75,7 +75,7 @@ static int wmi_bmof_probe(struct wmi_device *wdev, const=
+ void *context)
+ 	priv->bmof_bin_attr.read =3D read_bmof;
+ 	priv->bmof_bin_attr.size =3D priv->bmofdata->buffer.length;
 
->>   F:	Documentation/ABI/stable/sysfs-platform-wmi-bmof
->>   F:	Documentation/wmi/devices/wmi-bmof.rst
->>   F:	drivers/platform/x86/wmi-bmof.c
->> --
->> 2.39.2
->>
+-	ret =3D sysfs_create_bin_file(&wdev->dev.kobj, &priv->bmof_bin_attr);
++	ret =3D device_create_bin_file(&wdev->dev, &priv->bmof_bin_attr);
+ 	if (ret)
+ 		goto err_free;
+
+@@ -90,7 +90,7 @@ static void wmi_bmof_remove(struct wmi_device *wdev)
+ {
+ 	struct bmof_priv *priv =3D dev_get_drvdata(&wdev->dev);
+
+-	sysfs_remove_bin_file(&wdev->dev.kobj, &priv->bmof_bin_attr);
++	device_remove_bin_file(&wdev->dev, &priv->bmof_bin_attr);
+ 	kfree(priv->bmofdata);
+ }
+
+=2D-
+2.39.2
+
