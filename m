@@ -2,100 +2,99 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D1FC001DC
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Jul 2023 02:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AFEEB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 30 Jul 2023 04:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbjG3Clu (ORCPT
+        id S229492AbjG3Eig (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 29 Jul 2023 22:41:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60232 "EHLO
+        Sun, 30 Jul 2023 00:38:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjG3Clt (ORCPT
+        with ESMTP id S229379AbjG3Eif (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 29 Jul 2023 22:41:49 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A7E2D47;
-        Sat, 29 Jul 2023 19:41:48 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1bb893e6365so21204715ad.2;
-        Sat, 29 Jul 2023 19:41:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690684908; x=1691289708;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QAiaID6w1L7IDF4pZp9zfrtsyHgijsW1Y/7VAznx6cY=;
-        b=EuS25bqI/gdh/aViCI9NX1VTpgUw8o1S+MN+jO0vY/GVNfOY+Gyj4X48Kn63ZDTeli
-         y7mWBYVCuyiUNN09nyTrbr8mQuuwBFu9Cmj7f3jyKpSI7DSVxYTif31xz1Iq7dvtk4g9
-         D0MCaGNLPmAH/QLfwNgLfUNqug8XEHVlQIxgUIiNJZP9MgkvfVhy/Rho3+E1NNWvBd0w
-         iqj6dkadE/1XAszud6/cDAL+DSwtl5v+YXkXvS/bHeTAQyKSDMJO61mEZjMUqxSulvwY
-         kR388w0dLZoRaxQcH8NAmWZgnI2W5uq7LswLHckcvn7XNC3gq5UEBfEQFno/x0ZdvSxX
-         V8pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690684908; x=1691289708;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QAiaID6w1L7IDF4pZp9zfrtsyHgijsW1Y/7VAznx6cY=;
-        b=aZTuxu+f81mKvsvPrVbovVsRxOFxUFn2v18IyknpwWTz+Mm56qa6qC1xJO3jJSllDj
-         BtejeBgQV6Z/r+U4c/bibzbulauRCFkxQzFXumNvM6VFlyBTZxEb7Ig7dv4M4EAKEU6n
-         Zj/wYuAi299ZjtzbgKOkh8MHRMkJ0Q0efRMmVh2LH79wfrb6KJdgxBlOmPLegsc7pQz3
-         kZsb9l2Q0qHPrW6drr84ko/EHMgR9jGbMa+H7a1jDKFI8JwVH7wRTKsH5W9L18ei6kWr
-         RA3M366DRXsYBJAJ3tqPbLAqRdC08XQxoGxwR3CGsdryIQZfDYFW2XV9LGT+a3hL8uE2
-         KNvg==
-X-Gm-Message-State: ABy/qLbNC1P/W1hznun05lWeF+/d5+ZoWKPvNJ/mOHyL++vSJmMwziGO
-        jajcKoInfN2hSK53u5t9YoE=
-X-Google-Smtp-Source: APBJJlFnfFzSE3di4bhKDbvhJVvGN9MhEqLfHgyjFDntNOf917WPORB5Hu9T0YH8iLOVwImfCCPjTA==
-X-Received: by 2002:a17:902:7242:b0:1b8:e2a:9ede with SMTP id c2-20020a170902724200b001b80e2a9edemr5433751pll.25.1690684907836;
-        Sat, 29 Jul 2023 19:41:47 -0700 (PDT)
-Received: from [192.168.0.105] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id cx3-20020a17090afd8300b002681deec24csm5943281pjb.20.2023.07.29.19.41.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Jul 2023 19:41:47 -0700 (PDT)
-Message-ID: <bdc6cb4d-a853-72b2-b132-989b64740ad9@gmail.com>
-Date:   Sun, 30 Jul 2023 09:41:40 +0700
+        Sun, 30 Jul 2023 00:38:35 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB9C690;
+        Sat, 29 Jul 2023 21:38:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
+ s=s31663417; t=1690691905; x=1691296705; i=w_armin@gmx.de;
+ bh=BD8hFlQwsdOyFI9NzhWM+aGWhlWruJtFDzKFX/mPS20=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+ b=Aaqs9WgUpFXoFMBasWsFu90ILhzXYU6QwBagSYceGlhk/uandX4wJREBbST9LgLJ3264OT3
+ z/OwaAkFHL/LDFEcESo6quO1LoJBMZVj6xEF+EdmhUa1zgqww5E7wg7xKsedJ3l7aFo7ONfFH
+ 0QAkMd/ufzNMb1kiIuVV/iYDKZ2kbrMCWy2rryFBXzRy/VglqgX7Ehw1aCt4J2ikpfBqkdu3A
+ zeMLPvN8r7KtkS9UfoFMdag1k+lpBPnrGXj1YO1Z/jG3oM1DGBhyN48q0Tfw0pOBuYkfYLh/t
+ xpfbAANaD7d3nyts1CG6Z3/rqVuR+CgsbRlerxOSXmx2fsUkvu2g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1N0X8u-1pcHxc3esu-00wY0N; Sun, 30 Jul 2023 06:38:24 +0200
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] platform/x86: wmi-bmof: Use device_create_bin_file()
+Date:   Sun, 30 Jul 2023 06:38:15 +0200
+Message-Id: <20230730043817.12888-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Content-Language: en-US
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Guilhem Lettron <guilhem@lettron.fr>
-Cc:     Linux Input Devices <linux-input@vger.kernel.org>,
-        ACPI Asus <acpi4asus-user@lists.sourceforge.net>,
-        Linux x86 Platform Drivers 
-        <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Regressions <regressions@lists.linux.dev>
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: 6.5 - 6.4.7 Regression : ASUS UM5302TA Keyboard don't work
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:T1uTsb7y5VIVnDKiXgPZOzjWPZIpfxC4PGQkNaHPeQsAZyWqW7X
+ w/MP9O8ahGpiJZuGUQve7isw0NHtq9m+M5lDtNszJ0Kuh3octY1BBcFZevf2qsJuhPWj/tg
+ i0/fYYae5R/TYSTGNkfbMAI4TlGS2C1u3nahRvaGX5fkk9OgL2tJ+UADxwnug1R74ecPAFv
+ 80tTrhPw8SKy2KqAh9/WA==
+UI-OutboundReport: notjunk:1;M01:P0:40wm7Byt9GE=;r23/9AEoafCMS53crVWTWtqEeax
+ 7DJ/RqqW82A9oGPyemOGUki4uoWDehFSf9QsPeELIJ+CMfMWAcGZ3FwnRbvUHGT6Usl2r3pAv
+ 9kah7XVKlQCsicDYYJR/F6eggFYt3dldBuWTG4Crmu7AcNoduevAq6ybGzRy9c4p59rGDvpm3
+ siCGPDn085Ctif8CqH/X0kkEUvLsJ4uESkjak7XMinI3pAdnGsrMjYWMbqhx86qbGp7zzEh6h
+ j4g6FMlP7wS6aOP5UQugvucQQ9s1282lDqLrYAOUwy575gzuMulrZRop8HIPoy0BX4w4z8zql
+ E8obJqEngg1Ck0E+TxceGExP2j4ppkHQYrEKlYmXuzh0723l7N+MWYrvvyUk4wY4sVsmNCY19
+ bPJaKlvJWKTeqFg9Paon/xnMQ/86vVclpL7qPfta1A+IWB3OVnwEXARu4801qckQ5ZD8HT9Mn
+ gHDB6CQuOrDtGRYM3aLh1+caZQ2vKfdRDWC4GHh7zr5nhcGsdNqvNqZEzBVNyUWNawfI3NMsf
+ eMAH96ZxQILtphwaZhmWL//W23Dm+ZFAF3kIFI+xxlOKkdjocKi8NbNHEAcs47RM07pGrjCO5
+ G8hhEtTRawYn9ybwrnfuyvYyQ4OdqvX5MxpE4UnppDIJD4RLkSwviDhyNpWvMNnADoZv4+JUu
+ JAJtyGzOnwPoaMTL1z6Nbcr+6s0CEw/2VB9aHQrvEiNAiINJ4ox3BAVIgOXP4QXUqfhq5n0l/
+ j7tVU3mdv7fO2Lp52SItIMRwauq9MsEaXInGNRXJzoxzBtoA48BGyq1mSAgRcr9yaR6cT/v3c
+ YdIya9rxkLVSp2+xOYH/W6CrC1ASoT9wE+/Yf7g8G5bNRrKDc+vIbpHLweJxnzgSOVEkSATVr
+ 3QPOmCqQRNCYJOfcL5k/SgxccwBEIKiv6l3C07/LZ1R3ynwUcAOymY4CR6ksbIHHCBuinaOHm
+ GQRgCvFi00Afc1NQRUwSr/1S9IU=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Use device_create_bin_file() instead of sysfs_create_bin_file()
+to avoid having to access the device kobject.
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+Tested on a ASUS PRIME B650-PLUS.
 
-> On a kernel 6.4.5 and less, the keyboard is working fine.
-> 
-> Beginning with 6.5 rc1 and 6.4.7 any key don't respond.
-> 
-> [    0.668850] input: ASUE140D:00 04F3:31B9 Keyboard as /devices/platform/AMDI0010:01/i2c-1/i2c-ASUE140D:00/0018:04F3:31B9.0001/input/input5
-> ...
-> [    1.930328] input: ASUE140D:00 04F3:31B9 Keyboard as /devices/platform/AMDI0010:01/i2c-1/i2c-ASUE140D:00/0018:04F3:31B9.0001/input/input13
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/wmi-bmof.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-See Bugzilla for the full thread.
+diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bm=
+of.c
+index 80137afb9753..d0516cacfcb5 100644
+=2D-- a/drivers/platform/x86/wmi-bmof.c
++++ b/drivers/platform/x86/wmi-bmof.c
+@@ -75,7 +75,7 @@ static int wmi_bmof_probe(struct wmi_device *wdev, const=
+ void *context)
+ 	priv->bmof_bin_attr.read =3D read_bmof;
+ 	priv->bmof_bin_attr.size =3D priv->bmofdata->buffer.length;
 
-Anyway, I'm adding this regression to regzbot:
+-	ret =3D sysfs_create_bin_file(&wdev->dev.kobj, &priv->bmof_bin_attr);
++	ret =3D device_create_bin_file(&wdev->dev, &priv->bmof_bin_attr);
+ 	if (ret)
+ 		goto err_free;
 
-#regzbot introduced: v6.4..v6.5-rc1 https://bugzilla.kernel.org/show_bug.cgi?id=217726
-#regzbot title: ASUE140D:00 04F3:31B9 doesn't respond to input
+@@ -90,7 +90,7 @@ static void wmi_bmof_remove(struct wmi_device *wdev)
+ {
+ 	struct bmof_priv *priv =3D dev_get_drvdata(&wdev->dev);
 
-Thanks.
+-	sysfs_remove_bin_file(&wdev->dev.kobj, &priv->bmof_bin_attr);
++	device_remove_bin_file(&wdev->dev, &priv->bmof_bin_attr);
+ 	kfree(priv->bmofdata);
+ }
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217726
+=2D-
+2.39.2
 
--- 
-An old man doll... just what I always wanted! - Clara
