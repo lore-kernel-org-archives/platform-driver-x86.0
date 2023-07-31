@@ -2,204 +2,163 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 951A9C001DC
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Jul 2023 16:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D048C001DE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Jul 2023 16:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232996AbjGaQWk (ORCPT
+        id S233496AbjGaQhe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 31 Jul 2023 12:22:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55294 "EHLO
+        Mon, 31 Jul 2023 12:37:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231444AbjGaQWh (ORCPT
+        with ESMTP id S233472AbjGaQhH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 31 Jul 2023 12:22:37 -0400
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 842831BC;
-        Mon, 31 Jul 2023 09:22:34 -0700 (PDT)
-Received: by mail-ot1-x334.google.com with SMTP id 46e09a7af769-6bca6c06e56so743362a34.1;
-        Mon, 31 Jul 2023 09:22:34 -0700 (PDT)
+        Mon, 31 Jul 2023 12:37:07 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 848672696;
+        Mon, 31 Jul 2023 09:36:40 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4fe11652b64so7824077e87.0;
+        Mon, 31 Jul 2023 09:36:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690820554; x=1691425354;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lzDgNvvV4+bZsRGmwAKaLXNz2B8luD/46V4R65j5gic=;
-        b=C0Le20HcBnso+YRaacqK4yVMkuJZQ6t40Wk9lFOz04YTFH3+fzUmXD5q/D16jn3hGS
-         1ILSPorameEjHnW0Inaym0UIANGGcbS2a9BDHyoZZB+xcLFyVd661FQZjU5pvHHK69Wr
-         bz6paJSCY2SLV0gMfH3jvSdhtajeGO1S1gabOd04zc00WLoIOJRnw7AUHAdJbTj9sIK7
-         1fQLOIfwVPR9HUFtJBLtiQL6Jqkw5Mq7aBh+5y/6tXi1Wg1Fmf8MCxJjcP9lnNCCpFcx
-         WIMEEBNTa3WMjwnbvwUp+4zsSCaYOXqH9MecIe6q5bF1stHkyvW8jGyJaGegomvTCzYo
-         mPfQ==
+        d=gmail.com; s=20221208; t=1690821392; x=1691426192;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jhfT1yEl0YlwSpMeZ+Q6Gzotam/qS/GL4FEPmGiv+3k=;
+        b=OAbpDmTyW57PeNdSksMcnO+YFe7ZX4Ne9VdCjPul9HyNAA9faDGZxhIotneyYZkYC6
+         MibB0Gzjo1qNuO6TVvovAjRewqXv9RG8H2Epsl52l7JjYwmEU2t/+I6TxLeuNvVaJE+f
+         KAhOQmxAnBcC5jJHhHNN5ExE0rPV8CNydavxccURobvNcinHFnXtSAgwauGsCvlrbpa5
+         gaue4EFjRbWI8y932cnbyzcKHMw0MWVEB4kIsSByjPMwv5miVkiog80w0bXOgue2j/l+
+         zP9nL6Ff+/yjnqi2gNqeza0RPY1sPpd15GJ8q2z7c7j69+dZYKlKfqyzg73IaMLhZcFV
+         nZqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690820554; x=1691425354;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lzDgNvvV4+bZsRGmwAKaLXNz2B8luD/46V4R65j5gic=;
-        b=WeHVhCd5z78gf5fNo74LVZMJXJsf/G1etlTTCNIl4oyp6RiMuSEn1r99EO/3dj1BkU
-         892VgnKNFVZexu0taKvXLWtja8AIKWb3F0wtoQJGcr1sp2/g5tBPpCa7S+4UZn6Xxksu
-         Kyx89p47A7uPLwX2zS3QB1r2TjNQyo8cdICkstz45bBBkF8/2wFxQvPh5F2NWW+llxIU
-         wY4E8WqsKSHZN1kOX+hmQJAjx4inSoDUBvYmkB2UED+5TAPZ9nwOMrNq8ImW/yETkleq
-         n7wWjvhztkhGG9GU33eRTXJ1NF2cXAyEHHoLVVIsO6nM7o6NJfVVv32fCx5ABAAgTZe1
-         cikw==
-X-Gm-Message-State: ABy/qLZnMjf8je6mG/aFFipeaNKIBpKkFz7ZAzTCgcDzt6iGxff/zL5W
-        AIDrIsaWkOVRQRFJbrZ4jyyEzc++0lc=
-X-Google-Smtp-Source: APBJJlFIMMfplnYJagHynrP0HtUV5sTdOmIzJtKNZy+4Pk4oG5B350Akhyg4f9zCLZrBNKtcsGTtVw==
-X-Received: by 2002:a05:6870:f690:b0:1b3:977b:8201 with SMTP id el16-20020a056870f69000b001b3977b8201mr12268949oab.7.1690820553235;
-        Mon, 31 Jul 2023 09:22:33 -0700 (PDT)
-Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:b620:ce9:47eb:26ab])
-        by smtp.gmail.com with ESMTPSA id dw18-20020a056870771200b001b04434d934sm4606268oab.34.2023.07.31.09.22.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 09:22:32 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1690821392; x=1691426192;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jhfT1yEl0YlwSpMeZ+Q6Gzotam/qS/GL4FEPmGiv+3k=;
+        b=fNQiT+sqdkZFcCw7AvQeAB/Ved9wIanNkVjk4a6femKdDxx3KlkPy2AXr8cqaudLX4
+         /bauAic9eQVC0HxwCV13HL9ACrSu4QjFcP/UPKFDpJ1B/ICCOll1QF0rPVNBHgBwCfZ4
+         daRoeVNxcc6w47He+fG72QftPD8irvKfkiUe4C8fB8LsydMYeagwdnHq6JeMsMWgctzi
+         YoI7HxBvKocB+i0/tcdl5+fKMU6/5bbCQiu1eWxgPrxZVwdhC5YM08+0G30kFBU2X6F4
+         DJAzejDZwTaf4XRM8j92rrMQaUcJulPSFTPOdb7FssCYiVAF4SyJFIz6pHMv3fRuec5l
+         UPcw==
+X-Gm-Message-State: ABy/qLaGHDbijY5bmt8PYOffbnqsVC2UT/n5R8mZcBYR8VTyCpIVU3bu
+        ekNuGO6OdZtG7ML+12hIG6vTGwbLMkwGg45ZGLg=
+X-Google-Smtp-Source: APBJJlGZzqiqtAC+2b2S6DIw+UBXpwa+s70YRdad4k5S4j8TUpLfA53ThBB//OYvDy9VUZQ0DPN/K1B1Mpaw7SvzH/g=
+X-Received: by 2002:a19:2d59:0:b0:4fe:2efa:b847 with SMTP id
+ t25-20020a192d59000000b004fe2efab847mr244618lft.23.1690821392320; Mon, 31 Jul
+ 2023 09:36:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230725220056.25560-1-jorge.lopez2@hp.com> <20230725220056.25560-3-jorge.lopez2@hp.com>
+ <77867e93-7785-457c-9e37-4b41503bb509@moroto.mountain> <CAOOmCE_uRxqjTYueZkStbXeU5GKRUnvFOSGNhiBbtWDfkvxveg@mail.gmail.com>
+ <2978ca9d-fbab-45b1-8d90-321fb9453965@kadam.mountain>
+In-Reply-To: <2978ca9d-fbab-45b1-8d90-321fb9453965@kadam.mountain>
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
-X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
-To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+Date:   Mon, 31 Jul 2023 11:35:35 -0500
+Message-ID: <CAOOmCE_p_QgV0QJZKtYZD+t7Y9MzNOQ9sEkfSM88VoHDUCwdCw@mail.gmail.com>
+Subject: Re: [PATCH 2/5] hp-bioscfg: Fix memory leaks in ordered_list_elements_from_package
+To:     Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de,
         ilpo.jarvinen@linux.intel.com
-Subject: [PATCH] Fixes for ordered_list_elements_from_package
-Date:   Mon, 31 Jul 2023 11:22:31 -0500
-Message-Id: <20230731162231.15814-1-jorge.lopez2@hp.com>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Address latest comments and requested changes to
-ordered_list_elements_from_package
+On Mon, Jul 31, 2023 at 11:16=E2=80=AFAM Dan Carpenter <dan.carpenter@linar=
+o.org> wrote:
+>
+> On Mon, Jul 31, 2023 at 11:03:42AM -0500, Jorge Lopez wrote:
+> > On Thu, Jul 27, 2023 at 1:21=E2=80=AFAM Dan Carpenter <dan.carpenter@li=
+naro.org> wrote:
+> > >    134          int value_len =3D 0;
+> > >    135          int ret;
+> > >    136          u32 size;
+> > >    137          u32 int_value =3D 0;
+> > >
+> > > It confused me that it's called int_value when it's not an int.  Just
+> > > call it "u32 value =3D 0;".
+> >
+> > The variable is named int_value when it is not an int because it
+> > stores the value reported by ACPI_TYPE_INTEGER package.
+> > The variable will be renamed to  type_int_value;
+>
+> Eep!  That's even worse!  Just leave it as-is then.
 
-Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+Oops!  just send a new patch using type_int_value.  Should I change it back=
+?
+>
+> > >    201                  case SEQUENCE:
+> > >    202                          ordered_list_data->common.sequence =
+=3D int_value;
+> > >    203                          break;
+> > >    204                  case PREREQUISITES_SIZE:
+> > >    205                          ordered_list_data->common.prerequisit=
+es_size =3D int_value;
+> > >    206                          if (int_value > MAX_PREREQUISITES_SIZ=
+E)
+> > >    207                                  pr_warn("Prerequisites size v=
+alue exceeded the maximum number of elements supported or data may be malfo=
+rmed\n");
+> > >
+> > >         ret =3D -EINVAL;
+> > >         break;
+> > >
+> > We encountered during our testing that one or more packages could be
+> > assigned the wrong package type or invalid data..
+> > For this reason, it was decided to ignore any invalid data and
+> > incorrect type package and allow the read process to continue.
+> >
+>
+> So you have BIOSes which are still printing this warning and you can't
+> fix it?  Fine.  Are you sure it's not because you re-used the elem
+> iterator and started looping again in the middle?
 
----
-Based on the latest platform-drivers-x86.git/for-next
----
- .../x86/hp/hp-bioscfg/order-list-attributes.c | 44 +++++++++----------
- 1 file changed, 21 insertions(+), 23 deletions(-)
+Yes.  I am sure.   The BIOS where this code is applicable to is for
+2018 platforms and earlier.
+This is the reason, a customer may encounter this problem in an old BIOS.
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-index 89e67db733eb..98e51759134c 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-@@ -134,8 +134,9 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
- 	int value_len = 0;
- 	int ret;
- 	u32 size;
--	u32 int_value = 0;
-+	u32 type_int_value = 0;
- 	int elem;
-+	int ord_list_elem;
- 	int reqs;
- 	int eloc;
- 	char *tmpstr = NULL;
-@@ -147,10 +148,7 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
- 	if (!order_obj)
- 		return -EINVAL;
- 
--	for (elem = 1, eloc = 1; elem < order_obj_count; elem++, eloc++) {
--		/* ONLY look at the first ORDERED_ELEM_CNT elements */
--		if (eloc == ORD_ELEM_CNT)
--			goto exit_list;
-+	for (elem = 1, eloc = 1; eloc < ORD_ELEM_CNT; elem++, eloc++) {
- 
- 		switch (order_obj[elem].type) {
- 		case ACPI_TYPE_STRING:
-@@ -163,7 +161,7 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
- 			}
- 			break;
- 		case ACPI_TYPE_INTEGER:
--			int_value = (u32)order_obj[elem].integer.value;
-+			type_int_value = (u32)order_obj[elem].integer.value;
- 			break;
- 		default:
- 			pr_warn("Unsupported object type [%d]\n", order_obj[elem].type);
-@@ -190,30 +188,30 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
- 				sizeof(ordered_list_data->common.path));
- 			break;
- 		case IS_READONLY:
--			ordered_list_data->common.is_readonly = int_value;
-+			ordered_list_data->common.is_readonly = type_int_value;
- 			break;
- 		case DISPLAY_IN_UI:
--			ordered_list_data->common.display_in_ui = int_value;
-+			ordered_list_data->common.display_in_ui = type_int_value;
- 			break;
- 		case REQUIRES_PHYSICAL_PRESENCE:
--			ordered_list_data->common.requires_physical_presence = int_value;
-+			ordered_list_data->common.requires_physical_presence = type_int_value;
- 			break;
- 		case SEQUENCE:
--			ordered_list_data->common.sequence = int_value;
-+			ordered_list_data->common.sequence = type_int_value;
- 			break;
- 		case PREREQUISITES_SIZE:
--			ordered_list_data->common.prerequisites_size = int_value;
--			if (int_value > MAX_PREREQUISITES_SIZE)
-+			ordered_list_data->common.prerequisites_size = type_int_value;
-+			if (type_int_value > MAX_PREREQUISITES_SIZE)
- 				pr_warn("Prerequisites size value exceeded the maximum number of elements supported or data may be malformed\n");
- 
- 			/*
--			 * This HACK is needed to keep the expected
-+			 * This step is needed to keep the expected
- 			 * element list pointing to the right obj[elem].type
- 			 * when the size is zero. PREREQUISITES
- 			 * object is omitted by BIOS when the size is
- 			 * zero.
- 			 */
--			if (int_value == 0)
-+			if (type_int_value == 0)
- 				eloc++;
- 			break;
- 		case PREREQUISITES:
-@@ -237,21 +235,21 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
- 			break;
- 
- 		case SECURITY_LEVEL:
--			ordered_list_data->common.security_level = int_value;
-+			ordered_list_data->common.security_level = type_int_value;
- 			break;
- 
- 		case ORD_LIST_SIZE:
--			ordered_list_data->elements_size = int_value;
--			if (int_value > MAX_ELEMENTS_SIZE)
-+			ordered_list_data->elements_size = type_int_value;
-+			if (type_int_value > MAX_ELEMENTS_SIZE)
- 				pr_warn("Ordered List size value exceeded the maximum number of elements supported or data may be malformed\n");
- 			/*
--			 * This HACK is needed to keep the expected
-+			 * This step is needed to keep the expected
- 			 * element list pointing to the right obj[elem].type
- 			 * when the size is zero. ORD_LIST_ELEMENTS
- 			 * object is omitted by BIOS when the size is
- 			 * zero.
- 			 */
--			if (int_value == 0)
-+			if (type_int_value == 0)
- 				eloc++;
- 			break;
- 		case ORD_LIST_ELEMENTS:
-@@ -261,7 +259,7 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
- 			 * Ordered list data is stored in hex and comma separated format
- 			 * Convert the data and split it to show each element
- 			 */
--			ret = hp_convert_hexstr_to_str(str_value, value_len, &tmpstr, &tmp_len);
-+			ret = hp_convert_hexstr_to_str(str_value, size, &tmpstr, &tmp_len);
- 			if (ret)
- 				goto exit_list;
- 
-@@ -272,10 +270,10 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
- 					tmpstr,
- 					sizeof(ordered_list_data->elements[0]));
- 
--			for (elem = 1; elem < MAX_ELEMENTS_SIZE && part; elem++) {
--				strscpy(ordered_list_data->elements[elem],
-+			for (ord_list_elem = 1; ord_list_elem < MAX_ELEMENTS_SIZE && part; ord_list_elem++) {
-+				strscpy(ordered_list_data->elements[ord_list_elem],
- 					part,
--					sizeof(ordered_list_data->elements[elem]));
-+					sizeof(ordered_list_data->elements[ord_list_elem]));
- 				part = strsep(&part_tmp, SEMICOLON_SEP);
- 			}
- 
--- 
-2.34.1
+>
+> Could you at least do the bounds check here instead of in the next step?
+>
+>
+>                 if (int_value > MAX_PREREQUISITES_SIZE) {
+>                         pr_warn("Prerequisites size value exceeded the ma=
+ximum number of elements supported or data may be malformed\n");
+>                         int_value =3D MAX_PREREQUISITES_SIZE;
+>                 }
+>                 ordered_list_data->common.prerequisites_size =3D int_valu=
+e;
+>
+> > >    257                  case ORD_LIST_ELEMENTS:
+> > >    258                          size =3D ordered_list_data->elements_=
+size;
+> > >
+> > > We don't use size anywhere so this can be deleted.
+> > >
+> > >    259
+> > >    260                          /*
+> > >    261                           * Ordered list data is stored in hex=
+ and comma separated format
+> > >    262                           * Convert the data and split it to s=
+how each element
+> > >    263                           */
+> > >    264                          ret =3D hp_convert_hexstr_to_str(str_=
+value, value_len, &tmpstr, &tmp_len);
+> > >
+> > > The value_len here is wrong.  We don't read value_len for ORD_LIST_EL=
+EMENTS
+> > > or PREREQUISITES so this value_len comes from the PATH object.
+> > The size
+>
+I meant to say,  I should have used 'size' instead of 'value_len' in line 2=
+64.
 
+ret =3D hp_convert_hexstr_to_str(str_value, size, &tmpstr, &tmp_len);
+
+> ?
+>
+> regards,
+> dan carpenter
