@@ -2,163 +2,116 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D048C001DE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Jul 2023 16:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C637C001DE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Jul 2023 19:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233496AbjGaQhe (ORCPT
+        id S229583AbjGaTwn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 31 Jul 2023 12:37:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38394 "EHLO
+        Mon, 31 Jul 2023 15:52:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233472AbjGaQhH (ORCPT
+        with ESMTP id S229454AbjGaTwn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 31 Jul 2023 12:37:07 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 848672696;
-        Mon, 31 Jul 2023 09:36:40 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4fe11652b64so7824077e87.0;
-        Mon, 31 Jul 2023 09:36:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690821392; x=1691426192;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jhfT1yEl0YlwSpMeZ+Q6Gzotam/qS/GL4FEPmGiv+3k=;
-        b=OAbpDmTyW57PeNdSksMcnO+YFe7ZX4Ne9VdCjPul9HyNAA9faDGZxhIotneyYZkYC6
-         MibB0Gzjo1qNuO6TVvovAjRewqXv9RG8H2Epsl52l7JjYwmEU2t/+I6TxLeuNvVaJE+f
-         KAhOQmxAnBcC5jJHhHNN5ExE0rPV8CNydavxccURobvNcinHFnXtSAgwauGsCvlrbpa5
-         gaue4EFjRbWI8y932cnbyzcKHMw0MWVEB4kIsSByjPMwv5miVkiog80w0bXOgue2j/l+
-         zP9nL6Ff+/yjnqi2gNqeza0RPY1sPpd15GJ8q2z7c7j69+dZYKlKfqyzg73IaMLhZcFV
-         nZqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690821392; x=1691426192;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jhfT1yEl0YlwSpMeZ+Q6Gzotam/qS/GL4FEPmGiv+3k=;
-        b=fNQiT+sqdkZFcCw7AvQeAB/Ved9wIanNkVjk4a6femKdDxx3KlkPy2AXr8cqaudLX4
-         /bauAic9eQVC0HxwCV13HL9ACrSu4QjFcP/UPKFDpJ1B/ICCOll1QF0rPVNBHgBwCfZ4
-         daRoeVNxcc6w47He+fG72QftPD8irvKfkiUe4C8fB8LsydMYeagwdnHq6JeMsMWgctzi
-         YoI7HxBvKocB+i0/tcdl5+fKMU6/5bbCQiu1eWxgPrxZVwdhC5YM08+0G30kFBU2X6F4
-         DJAzejDZwTaf4XRM8j92rrMQaUcJulPSFTPOdb7FssCYiVAF4SyJFIz6pHMv3fRuec5l
-         UPcw==
-X-Gm-Message-State: ABy/qLaGHDbijY5bmt8PYOffbnqsVC2UT/n5R8mZcBYR8VTyCpIVU3bu
-        ekNuGO6OdZtG7ML+12hIG6vTGwbLMkwGg45ZGLg=
-X-Google-Smtp-Source: APBJJlGZzqiqtAC+2b2S6DIw+UBXpwa+s70YRdad4k5S4j8TUpLfA53ThBB//OYvDy9VUZQ0DPN/K1B1Mpaw7SvzH/g=
-X-Received: by 2002:a19:2d59:0:b0:4fe:2efa:b847 with SMTP id
- t25-20020a192d59000000b004fe2efab847mr244618lft.23.1690821392320; Mon, 31 Jul
- 2023 09:36:32 -0700 (PDT)
+        Mon, 31 Jul 2023 15:52:43 -0400
+Received: from mgamail.intel.com (unknown [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E168CA0;
+        Mon, 31 Jul 2023 12:52:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690833161; x=1722369161;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=xqmlNqtY5MAvTWtEPT/Gz6q8D0HC/50BGqD/OuVYrlU=;
+  b=dgvRTABlA6fkv1WT6oPRu0+7WsO2BWeJvZHxzGatOxuJk0bTUaknXdA/
+   RWgUCqsWAIcZ2z7zB2LC5o06CQvLpsvC+BLuwXsVie6Qfx7TTPb27pG6v
+   Xz3XavWG4/7Z8+pJ2bAyEoo1w5zxztvlOo+RrAvW/0hxOF6p+cCHKWks5
+   TiffVIcm+XSEb7jmJXGBpvx0SCR5RC1tJNgkQY6sjLOxJMk5dpzelCd2w
+   P1QIuaIdgFzy424CZFYDlgC5U4fk5/BW7n+6Hb48y1HkdkYCcZOdjA68g
+   2VZXfCc82W5suZJB8BxLPCGbIDHC9ja16KLMGpoQTfkm9P7FsshE/fvUX
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10788"; a="368017911"
+X-IronPort-AV: E=Sophos;i="6.01,245,1684825200"; 
+   d="scan'208";a="368017911"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2023 12:52:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10788"; a="793851078"
+X-IronPort-AV: E=Sophos;i="6.01,245,1684825200"; 
+   d="scan'208";a="793851078"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP; 31 Jul 2023 12:52:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qQYwX-003cO8-0K;
+        Mon, 31 Jul 2023 22:52:37 +0300
+Date:   Mon, 31 Jul 2023 22:52:36 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>, Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [RFC PATCH v1] platform/x86: wmi: Do not register driver with
+ invalid GUID
+Message-ID: <ZMgRBKm85DbY+WIm@smile.fi.intel.com>
+References: <20230715211604.1272227-1-pobrn@protonmail.com>
+ <efe4b91f-2602-2115-738e-bb99b42ec5b6@redhat.com>
+ <pjVZC4te3dWaMwoS7jB1-n4z390Ohz0mvuCCUZHwiXlZVMjzwySf_DMa49RDmbhzfvkzRY3FI8zQ0xltNimu-GpBAqJ2Kc3SENu_fwJDJ7E=@protonmail.com>
+ <ZMOSO5HgpurayDsN@smile.fi.intel.com>
+ <wg3zDdNbblZ43zsIf667-fzagNaEDu7WRuCUeLmIQWc68QcIsDF6nw1wCCbzy1NzmaKvXipcVt2oNJAqRvhxdzgLScwnB3KIts_OajtNROM=@protonmail.com>
 MIME-Version: 1.0
-References: <20230725220056.25560-1-jorge.lopez2@hp.com> <20230725220056.25560-3-jorge.lopez2@hp.com>
- <77867e93-7785-457c-9e37-4b41503bb509@moroto.mountain> <CAOOmCE_uRxqjTYueZkStbXeU5GKRUnvFOSGNhiBbtWDfkvxveg@mail.gmail.com>
- <2978ca9d-fbab-45b1-8d90-321fb9453965@kadam.mountain>
-In-Reply-To: <2978ca9d-fbab-45b1-8d90-321fb9453965@kadam.mountain>
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Mon, 31 Jul 2023 11:35:35 -0500
-Message-ID: <CAOOmCE_p_QgV0QJZKtYZD+t7Y9MzNOQ9sEkfSM88VoHDUCwdCw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] hp-bioscfg: Fix memory leaks in ordered_list_elements_from_package
-To:     Dan Carpenter <dan.carpenter@linaro.org>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
-        ilpo.jarvinen@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <wg3zDdNbblZ43zsIf667-fzagNaEDu7WRuCUeLmIQWc68QcIsDF6nw1wCCbzy1NzmaKvXipcVt2oNJAqRvhxdzgLScwnB3KIts_OajtNROM=@protonmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jul 31, 2023 at 11:16=E2=80=AFAM Dan Carpenter <dan.carpenter@linar=
-o.org> wrote:
->
-> On Mon, Jul 31, 2023 at 11:03:42AM -0500, Jorge Lopez wrote:
-> > On Thu, Jul 27, 2023 at 1:21=E2=80=AFAM Dan Carpenter <dan.carpenter@li=
-naro.org> wrote:
-> > >    134          int value_len =3D 0;
-> > >    135          int ret;
-> > >    136          u32 size;
-> > >    137          u32 int_value =3D 0;
-> > >
-> > > It confused me that it's called int_value when it's not an int.  Just
-> > > call it "u32 value =3D 0;".
-> >
-> > The variable is named int_value when it is not an int because it
-> > stores the value reported by ACPI_TYPE_INTEGER package.
-> > The variable will be renamed to  type_int_value;
->
-> Eep!  That's even worse!  Just leave it as-is then.
+On Fri, Jul 28, 2023 at 02:39:07PM +0000, Barnabás Pőcze wrote:
+> 2023. július 28., péntek 12:02 keltezéssel, Andy Shevchenko <andriy.shevchenko@linux.intel.com> írta:
+> > On Thu, Jul 27, 2023 at 10:54:26PM +0000, Barnabás Pőcze wrote:
+> > > 2023. július 26., szerda 10:45 keltezéssel, Hans de Goede <hdegoede@redhat.com> írta:
+> > > > On 7/15/23 23:24, Barnabás Pőcze wrote:
 
-Oops!  just send a new patch using type_int_value.  Should I change it back=
-?
->
-> > >    201                  case SEQUENCE:
-> > >    202                          ordered_list_data->common.sequence =
-=3D int_value;
-> > >    203                          break;
-> > >    204                  case PREREQUISITES_SIZE:
-> > >    205                          ordered_list_data->common.prerequisit=
-es_size =3D int_value;
-> > >    206                          if (int_value > MAX_PREREQUISITES_SIZ=
-E)
-> > >    207                                  pr_warn("Prerequisites size v=
-alue exceeded the maximum number of elements supported or data may be malfo=
-rmed\n");
-> > >
-> > >         ret =3D -EINVAL;
-> > >         break;
-> > >
-> > We encountered during our testing that one or more packages could be
-> > assigned the wrong package type or invalid data..
-> > For this reason, it was decided to ignore any invalid data and
-> > incorrect type package and allow the read process to continue.
-> >
->
-> So you have BIOSes which are still printing this warning and you can't
-> fix it?  Fine.  Are you sure it's not because you re-used the elem
-> iterator and started looping again in the middle?
+...
 
-Yes.  I am sure.   The BIOS where this code is applicable to is for
-2018 platforms and earlier.
-This is the reason, a customer may encounter this problem in an old BIOS.
-
->
-> Could you at least do the bounds check here instead of in the next step?
->
->
->                 if (int_value > MAX_PREREQUISITES_SIZE) {
->                         pr_warn("Prerequisites size value exceeded the ma=
-ximum number of elements supported or data may be malformed\n");
->                         int_value =3D MAX_PREREQUISITES_SIZE;
->                 }
->                 ordered_list_data->common.prerequisites_size =3D int_valu=
-e;
->
-> > >    257                  case ORD_LIST_ELEMENTS:
-> > >    258                          size =3D ordered_list_data->elements_=
-size;
+> > > > I think that having an additional check like the one which you
+> > > > propose has some value too, even if it is just to cover drivers
+> > > > which for some reason don't use `MODULE_DEVICE_TABLE()`, but IMHO
+> > > > the most important check to have is a check in file2alias.c .
 > > >
-> > > We don't use size anywhere so this can be deleted.
-> > >
-> > >    259
-> > >    260                          /*
-> > >    261                           * Ordered list data is stored in hex=
- and comma separated format
-> > >    262                           * Convert the data and split it to s=
-how each element
-> > >    263                           */
-> > >    264                          ret =3D hp_convert_hexstr_to_str(str_=
-value, value_len, &tmpstr, &tmp_len);
-> > >
-> > > The value_len here is wrong.  We don't read value_len for ORD_LIST_EL=
-EMENTS
-> > > or PREREQUISITES so this value_len comes from the PATH object.
-> > The size
->
-I meant to say,  I should have used 'size' instead of 'value_len' in line 2=
-64.
+> > > Okay... any tips on how to avoid copying `uuid_is_valid()`?
+> > 
+> > I think I already told the rough design: we need to split uuid.c to three
+> > files: libuuid.h, libuuid.c uuid.c and libuuid.c should be built twice:
+> > once for uuid.c and once for file2alias.c. libuuid.h should contain the
+> > definitions file2alias.c is using.  Something like that.
+> 
+> What is not clear at all to me is how includes should be handled. `uuid_is_valid()`
+> uses `isxdigit()`, which is found in different header files based on whether it is
+> a kernel or user space build.
 
-ret =3D hp_convert_hexstr_to_str(str_value, size, &tmpstr, &tmp_len);
+It may be conditional build or some other tricks (I haven't investigated
+myself, though). Alternatively libuuid.c can be included in the other
+C-file.
 
-> ?
->
-> regards,
-> dan carpenter
+> > > Another idea I had was that maybe `struct wmi_device_id::guid_string` needs to be
+> > > changed to be `guid_t` and then `GUID_INIT()` or something similar could be used
+> > > to initialize it. That way it is impossible to mess up the format. The only downside
+> > > I can see is that guid is no longer "grep-able".
+> > 
+> > Strictly speaking you may not do that because it's a (semi-)ABI.
+> 
+> Why is that the case?
+
+As a developer of that idea you should prove that it won't break any of all
+possible user configurations (for example, first that comes to my mind is
+multi-version modules: when kernel is not signed, but it might be not the
+case, you need to research and convince us that there will be no breakage).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
