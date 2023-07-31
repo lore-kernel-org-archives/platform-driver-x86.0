@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EF7C04E69
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Jul 2023 20:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B49BC001DE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 Jul 2023 20:32:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230443AbjGaUcQ (ORCPT
+        id S230481AbjGaUcT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 31 Jul 2023 16:32:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51720 "EHLO
+        Mon, 31 Jul 2023 16:32:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229851AbjGaUcP (ORCPT
+        with ESMTP id S230478AbjGaUcR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 31 Jul 2023 16:32:15 -0400
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 041D71FE4;
-        Mon, 31 Jul 2023 13:31:45 -0700 (PDT)
-Received: by mail-ot1-x334.google.com with SMTP id 46e09a7af769-6bc9efb5091so991272a34.1;
-        Mon, 31 Jul 2023 13:31:45 -0700 (PDT)
+        Mon, 31 Jul 2023 16:32:17 -0400
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB7101FFA;
+        Mon, 31 Jul 2023 13:31:49 -0700 (PDT)
+Received: by mail-ot1-x332.google.com with SMTP id 46e09a7af769-6bc9de53ee2so1112135a34.2;
+        Mon, 31 Jul 2023 13:31:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690835505; x=1691440305;
+        d=gmail.com; s=20221208; t=1690835509; x=1691440309;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6etgdLhlCvwrN3XxAkq8IgBOAz9g8chc4g8ku19/Um8=;
-        b=lAOKnEYr51S+mk8Cn85+E8N3t8/zWUaA4tcAilXB3LQ0tKtlsv2eMub1UlsnUHuM3L
-         jq9pdYcmxwZdjiuNWPgpDZDYphyc4Xf90Xj1kG+BweGOcwV56rjpp102t/8VLEuz/6B5
-         5aFRbjhJSX1bQ00o2QYCqhDbEMTei/IeCLt3zTqbv+SRmNKrRjFyEynBcGuBKBK5jXWZ
-         ANt8+rm/8mzYHabh5JMYySgLDHKIOHAXekGsjt0ApsOTtzt1kc8L5m7bqdnassNgHfOU
-         ZVcNOYMNg82UnaCMM58jV2pWn/C47MFK6KDbKklqd3UzsOD15xOLPyvQNofTvMccIb7B
-         WSmA==
+        bh=TwRSmfU6RJWP4ZN9Da8lv+MVwRca/bs+SmazkO+4OqA=;
+        b=Jyhx/7DtIEcu4CsTRBgHUv3ubhTc9rMPIj/ph+21A9SsjaNzhIKUQ4ZQUeSUvyuEBh
+         9eRuwL+5CrTelz7Gw929iORd8Swi3j5ZgHRliUZcsaXwtC1Od3uJWZt8uWx+XSDsBVtI
+         cYGnsAyj+Xc/gcD49RJ9B0YMq/cvIJRVB7tgnGW/5RbKQsgFRv+iufdgNadXdLhhKDic
+         w71VxohNoe5olylTYg4a80D7WXZ+oHYs1NA3G9lqDm2PrDdo1rojKVn78BnLJbmzuibm
+         6SYp97tkIx3Mu/nDiyEWs8In7f95wpSxveUtCUznT53fAD3x8r0MYk9/k/ecDNG6BOFP
+         lqzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690835505; x=1691440305;
+        d=1e100.net; s=20221208; t=1690835509; x=1691440309;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6etgdLhlCvwrN3XxAkq8IgBOAz9g8chc4g8ku19/Um8=;
-        b=HsEBOgwzDbTrqzW4SFeUvMTqYipYRk9h29bRADwHqyoK6Ede6FtmDZNkMdUU3Fbwlk
-         bCGfEvEAEEV/RfSvHSuBYZq7ZxD5TKbMXJmGJTIVmvrAaPQJWpaXOjnUpPCKyFz2O0fw
-         lc5l/JAP93hOjBpcOk+udUiNE9Sp6JHiIJlVE1+IU6+R9XImK+8h3WdKfQtGYJSDfp20
-         HnGzRD//3e5VzsVYNvHLbyLdVekEqHM9rx9D+o96G6D1K/smxMecA08HlTZmsG4MSusP
-         XptaWGN2RsmndnXPqBY2fvBYPbelcCZGu2YdQQtbMAdSf8aSc2Afhs1bP43giZAv1Gv1
-         H3JQ==
-X-Gm-Message-State: ABy/qLZq8NZQQySW+CIpkuvH+hnIS03ch5TLaT8kUMG4p21VYPzFaYBJ
-        nx5H9nxjeDvjbcn4nICpVls=
-X-Google-Smtp-Source: APBJJlFArQcIw8leDIvWHellOjfCxDxrNkOqjoe5lrrEZDh2X/twXbk7wXOWAdM0lullVdpngDGJ9w==
-X-Received: by 2002:a05:6830:102:b0:6b9:cfc3:65d1 with SMTP id i2-20020a056830010200b006b9cfc365d1mr9518433otp.17.1690835505296;
-        Mon, 31 Jul 2023 13:31:45 -0700 (PDT)
+        bh=TwRSmfU6RJWP4ZN9Da8lv+MVwRca/bs+SmazkO+4OqA=;
+        b=dv2Lcr4EJAFhlUniQP4k2repEFSZHmFePb8x8167Fw/9A9cm9aICSlzhv0w2Mm3r77
+         4kqtd4UXap9+ETfrGVhRbveUqSGBPeWZpPw4ENvhk8Kzgf0fkZQjRgvF+fxeu3ROMV35
+         +bP3R3Yo12PNhpyFV69ickxwF1KsmVLwEQ8df3QM5HSz7DZniyH9qvPzHT5NUm/5BveY
+         DeMYEWSaX+IVJSe6XQvjV6bPSoWII4q7Ltp3w7BpWS1RF0PSkc8CePutHLpVLCDxo7Be
+         r7aqi02J9L5y3tMcc+lo7pAcHHvomrqB1UqBfyOwmj2fFHJjpXb5L0Bl9GHwU1ZrEHpG
+         +7Xw==
+X-Gm-Message-State: ABy/qLY1VQNZ4GaGhf2KSPaZmP8also3saOJxoqnPNSGgfB2IS1DHsNI
+        dmA36SSRnzr/bN7pdKs4cJM=
+X-Google-Smtp-Source: APBJJlETEAJS60DwTtNbNSUOHXYlkWJVgBY6u8u258sPi0mEePE8jWnT8wuWHm/zLy9tbOBErxIfug==
+X-Received: by 2002:a9d:75d5:0:b0:6b9:cf84:8cdd with SMTP id c21-20020a9d75d5000000b006b9cf848cddmr9544789otl.24.1690835509105;
+        Mon, 31 Jul 2023 13:31:49 -0700 (PDT)
 Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:b620:ce9:47eb:26ab])
-        by smtp.gmail.com with ESMTPSA id g8-20020a9d6208000000b006b9848f8aa7sm4498841otj.45.2023.07.31.13.31.44
+        by smtp.gmail.com with ESMTPSA id g8-20020a9d6208000000b006b9848f8aa7sm4498841otj.45.2023.07.31.13.31.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 13:31:45 -0700 (PDT)
+        Mon, 31 Jul 2023 13:31:48 -0700 (PDT)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
 X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
 To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de,
         ilpo.jarvinen@linux.intel.com, dan.carpenter@linaro.org
-Subject: [PATCH 2/8] hp-bioscfg: Fix uninitialized variable errors
-Date:   Mon, 31 Jul 2023 15:31:35 -0500
-Message-Id: <20230731203141.30044-3-jorge.lopez2@hp.com>
+Subject: [PATCH 5/8] hp-bioscfg: Change how order list size is evaluated
+Date:   Mon, 31 Jul 2023 15:31:38 -0500
+Message-Id: <20230731203141.30044-6-jorge.lopez2@hp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230731203141.30044-1-jorge.lopez2@hp.com>
 References: <20230731203141.30044-1-jorge.lopez2@hp.com>
@@ -68,89 +68,35 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Fix uninitialized variable errors.
+Update steps how order list size is evaluated
 
 Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 
 ---
 Based on the latest platform-drivers-x86.git/for-next
 ---
- drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c       | 2 +-
- drivers/platform/x86/hp/hp-bioscfg/int-attributes.c        | 2 +-
- drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c | 4 ++--
- drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c  | 2 +-
- drivers/platform/x86/hp/hp-bioscfg/string-attributes.c     | 2 +-
- 5 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-index 8e615ccfc9b5..7f77963cd7fa 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-@@ -129,7 +129,7 @@ static int hp_populate_enumeration_elements_from_package(union acpi_object *enum
- 	char *str_value = NULL;
- 	int value_len;
- 	u32 size = 0;
--	u32 int_value;
-+	u32 int_value = 0;
- 	int elem = 0;
- 	int reqs;
- 	int pos_values;
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-index 6db2c8ba02a9..97f88e0ef0cc 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-@@ -143,7 +143,7 @@ static int hp_populate_integer_elements_from_package(union acpi_object *integer_
- 	char *str_value = NULL;
- 	int value_len;
- 	int ret;
--	u32 int_value;
-+	u32 int_value = 0;
- 	int elem;
- 	int reqs;
- 	int eloc;
 diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-index 739998682874..89e67db733eb 100644
+index 71f588cbdf88..3b073910b430 100644
 --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
 +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-@@ -131,10 +131,10 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
- 							  int instance_id)
- {
- 	char *str_value = NULL;
--	int value_len;
-+	int value_len = 0;
- 	int ret;
- 	u32 size;
--	u32 int_value;
-+	u32 int_value = 0;
- 	int elem;
- 	int reqs;
- 	int eloc;
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-index 3f7b9fe857f1..5e833ea0c5e3 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-@@ -227,7 +227,7 @@ static int hp_populate_password_elements_from_package(union acpi_object *passwor
- 	int value_len;
- 	int ret;
- 	u32 size;
--	u32 int_value;
-+	u32 int_value = 0;
- 	int elem;
- 	int reqs;
- 	int eloc;
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-index c9e124af170e..e0ecdfca4def 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-@@ -133,7 +133,7 @@ static int hp_populate_string_elements_from_package(union acpi_object *string_ob
- 	char *str_value = NULL;
- 	int value_len;
- 	int ret = 0;
--	u32 int_value;
-+	u32 int_value = 0;
- 	int elem;
- 	int reqs;
- 	int eloc;
+@@ -243,9 +243,12 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+ 			break;
+ 
+ 		case ORD_LIST_SIZE:
++			if (int_value > MAX_ELEMENTS_SIZE) {
++				pr_warn("Order List size value exceeded the maximum number of elements supported or data may be malformed\n");
++				int_value = MAX_ELEMENTS_SIZE;
++			}
+ 			ordered_list_data->elements_size = int_value;
+-			if (int_value > MAX_ELEMENTS_SIZE)
+-				pr_warn("Ordered List size value exceeded the maximum number of elements supported or data may be malformed\n");
++
+ 			/*
+ 			 * This step is needed to keep the expected
+ 			 * element list pointing to the right obj[elem].type
 -- 
 2.34.1
 
