@@ -2,106 +2,125 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A3FEB64DD
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Aug 2023 05:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E49DEB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Aug 2023 09:14:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230503AbjHAFym (ORCPT
+        id S232588AbjHAJOt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Aug 2023 01:54:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55674 "EHLO
+        Tue, 1 Aug 2023 05:14:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229946AbjHAFyl (ORCPT
+        with ESMTP id S232604AbjHAJOc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Aug 2023 01:54:41 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1747810C1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Jul 2023 22:54:40 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-3fe1d462762so17300775e9.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Jul 2023 22:54:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690869278; x=1691474078;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=N80uoosdDa7yvdA2hpRb8uu5HD+aBTdak3hppZUjvME=;
-        b=W81z5LIvTNakNfnLI9h3rRYOTVhxMuXypfc2ZPp23NYR4TBHZZIZ6FC2WY5K8qM0v7
-         c9KtpjQEzbz03YmYXSu9sfaMCIXLovw2AYzmSNAagTnDxlKdSCOjUZdQi5mOIom5iTnt
-         SYbmdG3PHq5eH2hSykAFJ/EHcpvNEOppuR5pEYZ9CgxjPmyAlrUczgYGxu1oyEEyIpYd
-         KH0urdQDlL+Y4r4OFB58hK9UNpFplEmNntMwJimg6KV3FGWu3tFYyMmC5VV51rjYxWHn
-         ApEfWU7lB2Q5bcxJ97ooXjZcsz6kHxi/QhZybjhi91GsdM/L09iyus+govgCNBVVdhdD
-         DroQ==
+        Tue, 1 Aug 2023 05:14:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FBB630EE
+        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Aug 2023 02:11:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1690881024;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SxWFjCCAM3ihInbD4ANY0NAVJ+r4OZ28eSTne+Tfr18=;
+        b=R5ph2uJZdFtLquFiNZsEFKQn3YhImvb/1huTPGAeim15IbzVacs4DknUAHUjvLlLd6pxYd
+        wNgz3WMWr6Y5ga2En576zb9sNchCQj5gkMuoZNXGxHkJ4/fUlSbjbfKQidfeM2044XWY+z
+        Kj+ZE0AZpr+qwAGDsMJmcdyCLlOOiEc=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-602-9gUoo0j2PGCqfL9WY9w2wQ-1; Tue, 01 Aug 2023 05:10:22 -0400
+X-MC-Unique: 9gUoo0j2PGCqfL9WY9w2wQ-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-99bb3a2c781so437207866b.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Aug 2023 02:10:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690869278; x=1691474078;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20221208; t=1690881022; x=1691485822;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N80uoosdDa7yvdA2hpRb8uu5HD+aBTdak3hppZUjvME=;
-        b=AwEj8Vq6RHqGdE2E3HcsRcxtWUvrN9P6zb5k5DPB9ODJx3QhctXgD9IBpNAED5gitT
-         1KuxK2az1wr5KET24+DnZU0rE79cum/HvZH2SDsH2YgPJ5OGvkAGSH2S+lbOYj+2mp1V
-         BtI+hIURGxGGVgbuZc+9v7L+NttJoFD/1Vb2zoUqUmRkOJfWQ0aQtZaqkIVEOL8X44yx
-         KqH4StuN9yDg7eerP/uP/vM8Eckxt1mZuykSY1IkZw2CVCb1RSYRYaedtLLY9cLA5Cs2
-         dMzBNgkF866ApWTWKnKiyaduOViqkMmP6UeApuuasBdP2rgiS1rVnrtZ2j7mStO166dW
-         GI7w==
-X-Gm-Message-State: ABy/qLbTtOOSAJ+7NJgulfQjzOc8XLsmMzosXCsWREeHHCzbIZKwto12
-        Owt/aE9gt61bIE20O+olW/jBpw==
-X-Google-Smtp-Source: APBJJlF7w8g4PdS0vx0UCedzEPqIB3jut1ot+T356u96ck8Ze0W/oghlj8TAPWJYmtsTeMO2yGB1Qg==
-X-Received: by 2002:a7b:cc88:0:b0:3fe:1d13:4663 with SMTP id p8-20020a7bcc88000000b003fe1d134663mr1535750wma.1.1690869278559;
-        Mon, 31 Jul 2023 22:54:38 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id m8-20020a7bce08000000b003fe18d03188sm7679010wmc.17.2023.07.31.22.54.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 22:54:38 -0700 (PDT)
-Date:   Tue, 1 Aug 2023 08:54:34 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
-        ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH 2/5] hp-bioscfg: Fix memory leaks in
- ordered_list_elements_from_package
-Message-ID: <0f8c1b87-e211-4ca7-bf92-8fde5bb77cd2@kadam.mountain>
-References: <20230725220056.25560-1-jorge.lopez2@hp.com>
- <20230725220056.25560-3-jorge.lopez2@hp.com>
- <77867e93-7785-457c-9e37-4b41503bb509@moroto.mountain>
- <CAOOmCE_uRxqjTYueZkStbXeU5GKRUnvFOSGNhiBbtWDfkvxveg@mail.gmail.com>
- <2978ca9d-fbab-45b1-8d90-321fb9453965@kadam.mountain>
- <CAOOmCE_p_QgV0QJZKtYZD+t7Y9MzNOQ9sEkfSM88VoHDUCwdCw@mail.gmail.com>
+        bh=SxWFjCCAM3ihInbD4ANY0NAVJ+r4OZ28eSTne+Tfr18=;
+        b=WY0k3uG/h5YGgnL95QVtuIMY7TiVNqt05sZmPvzS1BUvFYCPJbnizSsAGQtTDeXAdP
+         SGi1Jzn0mhTIeXsoBIpV2h6YcGdhE3HaVAe/vcoYCid0BfK1KY7CfVAgNb0d1yzKAD90
+         kbpGQOPCbGBPEc9cwNly+wEjhsuymlfaXv9POzs2yQG2t/uJyb2s1WWKcBDQben8Z0h9
+         9LFobgPPqyHCD0iunBevMn3yFwRb2AVwnFKC2U6YtZUwBoiPNWZnHfzAClFaQUgN8gMZ
+         gthR3778SKO5kZvVQtqKFtR1QOzHqhMsgx36dTYbURnNjG5lJR3TQLAKRHXH4uFb0kc0
+         Fz4w==
+X-Gm-Message-State: ABy/qLY+io6CtFJIzCkOyZ6Lym+7YFevLOtXe7A/Eb33q8rJddX/rjLu
+        UdW0qqmwazaWMlkrtyXOjHwDQJSwMxEzu98ih/LgN3gOmoeEIQSFTFl5OGjFh/GIiWtaKSnZcv9
+        q5s5/Qxk2HVXE/vvCfaKFfdlYSPvvF1tc+w==
+X-Received: by 2002:a17:906:1d9:b0:992:9756:6a22 with SMTP id 25-20020a17090601d900b0099297566a22mr1923877ejj.48.1690881021848;
+        Tue, 01 Aug 2023 02:10:21 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlED1JBaSc5+efiYma1WksHdzfTB4bo//PvWCEO5Zke8EubdRGKbEqTUv71WdddGZ1AYb/dIZA==
+X-Received: by 2002:a17:906:1d9:b0:992:9756:6a22 with SMTP id 25-20020a17090601d900b0099297566a22mr1923859ejj.48.1690881021603;
+        Tue, 01 Aug 2023 02:10:21 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id s13-20020a1709060c0d00b00988b8ff849csm7269644ejf.108.2023.08.01.02.10.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Aug 2023 02:10:21 -0700 (PDT)
+Message-ID: <18b3a57f-0f8f-6177-4414-0b1f821d9a2d@redhat.com>
+Date:   Tue, 1 Aug 2023 11:10:20 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOOmCE_p_QgV0QJZKtYZD+t7Y9MzNOQ9sEkfSM88VoHDUCwdCw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 1/2] platform/x86/siemens: simatic-ipc: fix logic error in
+ BX-59A
+Content-Language: en-US, nl
+To:     xingtong_wu@163.com, markgross@kernel.org,
+        andriy.shevchenko@linux.intel.com, xingtong.wu@siemens.com,
+        lee@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     gerd.haeussler.ext@siemens.com, tobias.schaffner@siemens.com,
+        kernel test robot <lkp@intel.com>
+References: <20230731071424.4663-2-xingtong_wu@163.com>
+ <20230801090423.4747-1-xingtong_wu@163.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230801090423.4747-1-xingtong_wu@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jul 31, 2023 at 11:35:35AM -0500, Jorge Lopez wrote:
-> On Mon, Jul 31, 2023 at 11:16 AM Dan Carpenter <dan.carpenter@linaro.org> wrote:
-> >
-> > On Mon, Jul 31, 2023 at 11:03:42AM -0500, Jorge Lopez wrote:
-> > > On Thu, Jul 27, 2023 at 1:21 AM Dan Carpenter <dan.carpenter@linaro.org> wrote:
-> > > >    134          int value_len = 0;
-> > > >    135          int ret;
-> > > >    136          u32 size;
-> > > >    137          u32 int_value = 0;
-> > > >
-> > > > It confused me that it's called int_value when it's not an int.  Just
-> > > > call it "u32 value = 0;".
-> > >
-> > > The variable is named int_value when it is not an int because it
-> > > stores the value reported by ACPI_TYPE_INTEGER package.
-> > > The variable will be renamed to  type_int_value;
-> >
-> > Eep!  That's even worse!  Just leave it as-is then.
+Hi xingtong,
+
+Thank you for the quick fixes for the issues lkp spotted.
+
+I'll merge these into the pdx86-simatic-ipc branch next time
+I do a round of merges (within about a week).
+
+Regards,
+
+Hans
+
+
+
+
+
+On 8/1/23 11:04, xingtong_wu@163.com wrote:
+> From: "xingtong.wu" <xingtong.wu@siemens.com>
 > 
-> Oops!  just send a new patch using type_int_value.  Should I change it back?
-
-In order of preference for me, it's "value", "int_value", and
-"type_int_value".  But it doesn't really matter.  I feel there were a
-couple bugs like the size vs value_len and re-using the iterator.  You
-have addressed the real problems so lets not worry about variable names.
-Whatever you pick is fine.
-
-regards,
-dan carpenter
+> There is a bug in if statement that lead to logical error
+> and have influence to other IPC, it get correct now.
+> 
+> Fixes: b8af77951941 ("platform/x86/siemens: simatic-ipc: add new models BX-56A/BX-59A")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202307312322.Aa8upHWK-lkp@intel.com/
+> Signed-off-by: xingtong.wu <xingtong.wu@siemens.com>
+> ---
+>  drivers/platform/x86/siemens/simatic-ipc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/siemens/simatic-ipc.c b/drivers/platform/x86/siemens/simatic-ipc.c
+> index 02c540cf4070..8ca6e277fa03 100644
+> --- a/drivers/platform/x86/siemens/simatic-ipc.c
+> +++ b/drivers/platform/x86/siemens/simatic-ipc.c
+> @@ -129,7 +129,7 @@ static int register_platform_devices(u32 station_id)
+>  		pdevname = KBUILD_MODNAME "_leds";
+>  		if (ledmode == SIMATIC_IPC_DEVICE_127E)
+>  			pdevname = KBUILD_MODNAME "_leds_gpio_apollolake";
+> -		if (ledmode == SIMATIC_IPC_DEVICE_227G || SIMATIC_IPC_DEVICE_BX_59A)
+> +		if (ledmode == SIMATIC_IPC_DEVICE_227G || ledmode == SIMATIC_IPC_DEVICE_BX_59A)
+>  			pdevname = KBUILD_MODNAME "_leds_gpio_f7188x";
+>  		if (ledmode == SIMATIC_IPC_DEVICE_BX_21A)
+>  			pdevname = KBUILD_MODNAME "_leds_gpio_elkhartlake";
 
