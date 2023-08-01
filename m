@@ -2,80 +2,114 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430EAC0015E
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Aug 2023 09:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA8BC0015E
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Aug 2023 13:25:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232301AbjHAJyV (ORCPT
+        id S234252AbjHANZg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Aug 2023 05:54:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54024 "EHLO
+        Tue, 1 Aug 2023 09:25:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232249AbjHAJyU (ORCPT
+        with ESMTP id S234219AbjHANZ3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Aug 2023 05:54:20 -0400
-Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.215])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AF898BE;
-        Tue,  1 Aug 2023 02:54:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=BQfXO
-        CjZPrtRckyFX59tE8t/r09gbeMjp4tsbkFXRoA=; b=aJmyFCeU4s3ty/kyWq5+A
-        fBbOzQwFswh9Tk+S8s2IEu/pY5qgOBdnECEVdZ3khAo7JfWHEQLBhovvJS6AYvdZ
-        AZej76aK71UzFaXq6+OobHoVouAqsgCSG9PKSDcTB5GppAQYzEywykf4RI+tVkM8
-        TbnkYcTw74vLpuF7dxH76Q=
-Received: from localhost.localdomain (unknown [39.144.138.221])
-        by zwqz-smtp-mta-g2-4 (Coremail) with SMTP id _____wAnrPhDy8hkKJqFBw--.35093S2;
-        Tue, 01 Aug 2023 17:07:17 +0800 (CST)
-From:   xingtong_wu@163.com
-To:     hdegoede@redhat.com, markgross@kernel.org, xingtong.wu@siemens.com,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     gerd.haeussler.ext@siemens.com, tobias.schaffner@siemens.com,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH 2/2] platform/x86/siemens: simatic-ipc-batt: fix logic error for BX-59A
-Date:   Tue,  1 Aug 2023 17:07:12 +0800
-Message-Id: <20230801090712.4856-1-xingtong_wu@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230731072148.4781-1-xingtong_wu@163.com>
-References: <20230731072148.4781-1-xingtong_wu@163.com>
+        Tue, 1 Aug 2023 09:25:29 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BD2F2737;
+        Tue,  1 Aug 2023 06:25:15 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2b9b9f0387dso87350561fa.0;
+        Tue, 01 Aug 2023 06:25:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690896313; x=1691501113;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q8OLUUybG7mywXTwGuAft0hB1qqA3p7z9IQpVXR4T64=;
+        b=JqQeJgSHyLQSNQcOj7FmdWoTuJ9TUbYIwknCk4eQ0VYiypQQoQurFZ6XeBElynO9Jb
+         POHxBxyRVIFYmQdfHcAat7OsVDTHHNy8NLsANdztx88j0UMNBv9MPV71zbV3M57TfwoF
+         hZ8N3m2WbB6lmDPItpaEexfpbYFa0Q2OlgeZKmxCoIHPAJS5bpskA9w6/bbRLYaJleoz
+         G5J0z0UWyNJ0eTep8B3M0GOS6Ko2eZWOcu/bkixRK+ZBPnQjGZghxlD67zTkscMQVMPA
+         zlDw+wKw+KoT0PUM8gJbVIKlKjcx3qpT1ci3BST947WBRgnBWapGXr22ZdEqSjiL7LU/
+         fjQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690896313; x=1691501113;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q8OLUUybG7mywXTwGuAft0hB1qqA3p7z9IQpVXR4T64=;
+        b=SBYLzX6mIt+LXIjlLsB5SMsTlOOQuRGCbuplQBU6d7a984M2mAYccMajCGFuN1bFrv
+         WweajAr8fahvjItsStZ76P9hk5ztWKfF9fXamwGt/5DLPw3SKYmeQe2+Hjc7zU5+k5Q7
+         a0YMGbnGQr1XjaJnbs7QI2fGSVCMT6IWiv9si7y77rXa1KKJagywGEzJs2J0uBSNw4ja
+         bCNzqrwDAA4J8t5TRF1zYWpfB98szcl2eri9LQ483cGFOszZqiH/N7ICwLURbsWGqq+A
+         wEi0dgAyVr1NLesjLvq61Uh3PaXEZhuYzun/5Z77UpBbDdPp5hTcarBOsn1YPxPQUXeZ
+         NISw==
+X-Gm-Message-State: ABy/qLZT82U2llRVtd5Dr564QGy3e+sUKrR7Cn8Ep7ennfYX2Yy8Bp7t
+        5FYf2uyAUQ9QHfSNj7eRHBNpl7RRz1VXtIxpJX3F7WqU
+X-Google-Smtp-Source: APBJJlF5jj2faYb4gUrVOiFGygQ7pjgK9lm26/bax2trfDz2tLI2QNlQor9YrRHvepN8raC/WeXMeMLjNTGPnVzUb2k=
+X-Received: by 2002:a2e:3502:0:b0:2b9:e8a8:66ab with SMTP id
+ z2-20020a2e3502000000b002b9e8a866abmr2373461ljz.28.1690896312994; Tue, 01 Aug
+ 2023 06:25:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _____wAnrPhDy8hkKJqFBw--.35093S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7uw1xWr45KF13ZrW7tw4xWFg_yoW8GF1fpF
-        4rAa10kFW5Ww4YywsrGay7ZF45Za13KrW7GFyqyw13Z3sFv3Wftr1fAa13ZrsIyr45Way5
-        JF93trW3Ca1DZFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jhPEfUUUUU=
-X-Originating-IP: [39.144.138.221]
-X-CM-SenderInfo: p0lqw35rqjs4rx6rljoofrz/1tbiTBe+0GI0aQoqpgACsO
+References: <20230725220056.25560-1-jorge.lopez2@hp.com> <20230725220056.25560-3-jorge.lopez2@hp.com>
+ <77867e93-7785-457c-9e37-4b41503bb509@moroto.mountain> <CAOOmCE_uRxqjTYueZkStbXeU5GKRUnvFOSGNhiBbtWDfkvxveg@mail.gmail.com>
+ <2978ca9d-fbab-45b1-8d90-321fb9453965@kadam.mountain> <CAOOmCE_p_QgV0QJZKtYZD+t7Y9MzNOQ9sEkfSM88VoHDUCwdCw@mail.gmail.com>
+ <0f8c1b87-e211-4ca7-bf92-8fde5bb77cd2@kadam.mountain>
+In-Reply-To: <0f8c1b87-e211-4ca7-bf92-8fde5bb77cd2@kadam.mountain>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Tue, 1 Aug 2023 08:24:15 -0500
+Message-ID: <CAOOmCE-z6S6LEvDq-nJPtK8c1FOapo+bH2cwTuGsA2JyMfx38g@mail.gmail.com>
+Subject: Re: [PATCH 2/5] hp-bioscfg: Fix memory leaks in ordered_list_elements_from_package
+To:     Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
+        ilpo.jarvinen@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: "xingtong.wu" <xingtong.wu@siemens.com>
+I submitted a new set of patches as directed by Hans in which the
+variable name 'int_value' was kept.
+Thank you for replying back to me.
 
-There is a bug in if statement that lead to logical error
-and have influence to other IPC, it get correct now.
+Regards,
 
-Fixes: c56beff20375 ("platform/x86/siemens: simatic-ipc-batt: add support for module BX-59A")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202308010001.BGYCSQrl-lkp@intel.com/
-Signed-off-by: xingtong.wu <xingtong.wu@siemens.com>
----
- drivers/platform/x86/siemens/simatic-ipc-batt.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Jorge Lopez
 
-diff --git a/drivers/platform/x86/siemens/simatic-ipc-batt.c b/drivers/platform/x86/siemens/simatic-ipc-batt.c
-index d66b9969234b..e6c12c52843c 100644
---- a/drivers/platform/x86/siemens/simatic-ipc-batt.c
-+++ b/drivers/platform/x86/siemens/simatic-ipc-batt.c
-@@ -194,7 +194,8 @@ int simatic_ipc_batt_probe(struct platform_device *pdev, struct gpiod_lookup_tab
- 
- 	if (table->table[2].key) {
- 		flags = GPIOD_OUT_HIGH;
--		if (priv.devmode == SIMATIC_IPC_DEVICE_BX_21A || SIMATIC_IPC_DEVICE_BX_59A)
-+		if (priv.devmode == SIMATIC_IPC_DEVICE_BX_21A ||
-+		    priv.devmode == SIMATIC_IPC_DEVICE_BX_59A)
- 			flags = GPIOD_OUT_LOW;
- 		priv.gpios[2] = devm_gpiod_get_index(dev, "CMOSBattery meter", 2, flags);
- 		if (IS_ERR(priv.gpios[2])) {
--- 
-2.25.1
-
+On Tue, Aug 1, 2023 at 12:54=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
+>
+> On Mon, Jul 31, 2023 at 11:35:35AM -0500, Jorge Lopez wrote:
+> > On Mon, Jul 31, 2023 at 11:16=E2=80=AFAM Dan Carpenter <dan.carpenter@l=
+inaro.org> wrote:
+> > >
+> > > On Mon, Jul 31, 2023 at 11:03:42AM -0500, Jorge Lopez wrote:
+> > > > On Thu, Jul 27, 2023 at 1:21=E2=80=AFAM Dan Carpenter <dan.carpente=
+r@linaro.org> wrote:
+> > > > >    134          int value_len =3D 0;
+> > > > >    135          int ret;
+> > > > >    136          u32 size;
+> > > > >    137          u32 int_value =3D 0;
+> > > > >
+> > > > > It confused me that it's called int_value when it's not an int.  =
+Just
+> > > > > call it "u32 value =3D 0;".
+> > > >
+> > > > The variable is named int_value when it is not an int because it
+> > > > stores the value reported by ACPI_TYPE_INTEGER package.
+> > > > The variable will be renamed to  type_int_value;
+> > >
+> > > Eep!  That's even worse!  Just leave it as-is then.
+> >
+> > Oops!  just send a new patch using type_int_value.  Should I change it =
+back?
+>
+> In order of preference for me, it's "value", "int_value", and
+> "type_int_value".  But it doesn't really matter.  I feel there were a
+> couple bugs like the size vs value_len and re-using the iterator.  You
+> have addressed the real problems so lets not worry about variable names.
+> Whatever you pick is fine.
+>
+> regards,
+> dan carpenter
+>
