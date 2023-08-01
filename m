@@ -2,89 +2,95 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA654C0015E
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Aug 2023 15:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3520AC001DF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Aug 2023 15:11:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232633AbjHAPER (ORCPT
+        id S232257AbjHAPLG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Aug 2023 11:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39246 "EHLO
+        Tue, 1 Aug 2023 11:11:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232445AbjHAPEQ (ORCPT
+        with ESMTP id S230297AbjHAPLF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Aug 2023 11:04:16 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DCE31B1
-        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Aug 2023 08:04:15 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-3fbea14706eso53501205e9.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Aug 2023 08:04:15 -0700 (PDT)
+        Tue, 1 Aug 2023 11:11:05 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB0A1B1;
+        Tue,  1 Aug 2023 08:11:04 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2b9a828c920so89177411fa.1;
+        Tue, 01 Aug 2023 08:11:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690902253; x=1691507053;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5uuNfkxYesmIemPiABp4WONeX4fMNiIa9h0mEc9ZlfQ=;
-        b=ddIC42148FiD1bFz0COMhlRajuwwmXRXtSttwUupyxZT7DuOlagS/guVxTNwy0NTF4
-         bJHJSV96xm6m8m4X/U9hvhUOXVTemku23zEYJdxgXe+Fuol5Z5TrXpO8bMU3qNSA+7Iw
-         0jbgd9V6ctfOHd/ucKm/R1SWBazIqu9uSP+/a8W1mo9khCsWFVJD6yRJvtBDE3fDQDpV
-         CTNlm2eP2hV2tgTIBgJbmZ4CpIO9Awi16CttcrTadBe1/O/kblnek/Kr0FnCNdU+E/dI
-         DzzCOchQvmNP3gzVWF6zsox+jGyUn6UVooc65dsZqnfI+iTioTam9oMwNmOuizW12Rt3
-         oYSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690902253; x=1691507053;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1690902663; x=1691507463;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5uuNfkxYesmIemPiABp4WONeX4fMNiIa9h0mEc9ZlfQ=;
-        b=W3Ke/jS0LXHcIi+m6vBumEpCGgLD4bQlkNgBG0AB9FRyAxv22/7SpQ1HTUPJyPvq5P
-         VNzNkafCV56Fl0BbVQmFhy/XbAmmGEwOzmGZv432Hc2Ms9dS5tqxzAX48CZ/1xe9LShB
-         t2d07yZXpZiKm//u2BPHcuKi0NkCOE5U6QH/fZiUGFWTmlzmruA2q2XDGhqQIy0QvBha
-         fPZZGj3E++t1oBEs1mFKJjYyMewzeRuN5qaodfQboWkUCs4OcYOMm81qpm64S4CMas5f
-         P7Pn7C4W6WofsYnaTSGKehOaSEl02A/gf5w522vf73PC8kduus5eWVzIj29wryAfQ28V
-         D1Bw==
-X-Gm-Message-State: ABy/qLYquv/PzyJqP7wRyuJe3HgG/XSIyxOQz1gxgeQOCF1fxFcZBBPa
-        aS9Tn8ubaOcxqwVtikvbl9TPiw==
-X-Google-Smtp-Source: APBJJlE+NvyG8l2+SLSauX+BQGM6V0ql3WRzZWkAP6hg+vtCeXJYp+g9ssAbkVLrMXs1/hRnD++T5w==
-X-Received: by 2002:a1c:7915:0:b0:3fe:16c8:65fa with SMTP id l21-20020a1c7915000000b003fe16c865famr2596721wme.4.1690902253573;
-        Tue, 01 Aug 2023 08:04:13 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id z13-20020a5d654d000000b00314398e4dd4sm16273770wrv.54.2023.08.01.08.04.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Aug 2023 08:04:13 -0700 (PDT)
-Date:   Tue, 1 Aug 2023 18:04:10 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
+        bh=Ply/M1oL6Fq7JzUxYf0RMHVAjtQKWKZdsAYugDGBkbQ=;
+        b=iUqKDoSKqVP5ULIA0O7A2XpGZ8pGgRra6ehXytZRvgnM4OOVEJd29s/vL5s0fteAsQ
+         /GNSZUyyTqawpKG4kEd8s9E2np7wiLP5069H4AMJkghoG3fpLWTyvlijLFN9bUaEhGYX
+         mxhcnFvOvsOtSvvTaMbk3TVC/NtjYT3NGuM6O0At37+rUnHUCA2movZttsalu0Dscj6g
+         Vz7eopg5GUcBZDQFiw3Km7IpmHvsg00LGFdEYgTYq+tUZkLNBYWwGdWzgAXpE9U4tcWo
+         AHmXGm6TFgEsYsfy7qAmS/r88kqHDeN8s+hVnx4ah1Ix4d45RBLw9UEfmlftoPk4rXIN
+         n2aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690902663; x=1691507463;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ply/M1oL6Fq7JzUxYf0RMHVAjtQKWKZdsAYugDGBkbQ=;
+        b=Lyg7FIYBDmYfbWY5uf9DxXwRrK2pVNA/6UkFSxXe+eVn3RKa3LU8O+Tznfdz/oGNRB
+         qiJfERcwq494LpFgLAMQDZ5zmfJeqhkEZ7FZPltu/Dr7gE3j/5x7O0daAOlJaYSWxhAd
+         HUhfSaJACkMWsUSmkFSEBxG4JIZi5xytY+H3fVBYFv31eKX2RIMq5PYRxHDzRzXMQJXa
+         Oc44agk4DGeYrxTzAt6SoP6/7/BNj4RINkAQRJOQYAI/NxRV5PMAlTdl5orVt1wZaUnl
+         +/vW6UrhgwWUtJkd2JO8HP69Wp2Fbeyijh3pAasBXeCrFOq/occaKvKviF+8bUT+prJm
+         Ba5g==
+X-Gm-Message-State: ABy/qLZoa+vPwFjZdKEtVczqVQOyeQ9X64JqBd3JsButz/27kRdlEXpm
+        KmwQ03U7NIOke+n2xSi2J30guN7+YvLl1RKe6CcN50vZ
+X-Google-Smtp-Source: APBJJlFCYr6FiTshFjokSiMYetnA4bQNdJ20kE7XejmNaEXmiYAfKp6hJM50X5elsUL1+jJVvcRGnk6WPYM+qQrwTXA=
+X-Received: by 2002:a2e:968e:0:b0:2b9:ee3e:240b with SMTP id
+ q14-20020a2e968e000000b002b9ee3e240bmr2715597lji.41.1690902662863; Tue, 01
+ Aug 2023 08:11:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230731203141.30044-1-jorge.lopez2@hp.com> <c891e1cb-3fb6-448a-850c-e94c48d32c66@kadam.mountain>
+ <CAOOmCE8xLxE9fSZNhPeYumRyzg9S-C9++8LH5jDq5vVwgFMdCQ@mail.gmail.com> <6c6143bd-5352-4edc-a44c-143c27fbf1cf@kadam.mountain>
+In-Reply-To: <6c6143bd-5352-4edc-a44c-143c27fbf1cf@kadam.mountain>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Tue, 1 Aug 2023 10:10:05 -0500
+Message-ID: <CAOOmCE85enO=C+i8SUAroJpMCi7cGYvJ5TOCgsVbL2b-6pPpNw@mail.gmail.com>
+Subject: Re: [PATCH 0/8] hp-bioscfg: Overall fixes and code cleanup
+To:     Dan Carpenter <dan.carpenter@linaro.org>
 Cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org, thomas@t-8ch.de,
         ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH 0/8] hp-bioscfg: Overall fixes and code cleanup
-Message-ID: <6c6143bd-5352-4edc-a44c-143c27fbf1cf@kadam.mountain>
-References: <20230731203141.30044-1-jorge.lopez2@hp.com>
- <c891e1cb-3fb6-448a-850c-e94c48d32c66@kadam.mountain>
- <CAOOmCE8xLxE9fSZNhPeYumRyzg9S-C9++8LH5jDq5vVwgFMdCQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOOmCE8xLxE9fSZNhPeYumRyzg9S-C9++8LH5jDq5vVwgFMdCQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Aug 01, 2023 at 09:52:05AM -0500, Jorge Lopez wrote:
-> I will submit a new patch replacing 'value_len' for 'size' in line 267
-> as indicated.
-> 'value_len' is utilized earlier in the code so we cannot remove it
-> completely from the function.
-> 
+Ok. Thanks for the clarification.  I will remove 'value_len' and
+replace all its references with 'size'.
 
-After replacing size then it looks like this.
-
-$ grep value_len drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-        int value_len = 0;
-                                                               &str_value, &value_len);
-                                                               &str_value, &value_len);
-
-It's a write only variable.
-
-regards,
-dan carpenter
-
+On Tue, Aug 1, 2023 at 10:04=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
+>
+> On Tue, Aug 01, 2023 at 09:52:05AM -0500, Jorge Lopez wrote:
+> > I will submit a new patch replacing 'value_len' for 'size' in line 267
+> > as indicated.
+> > 'value_len' is utilized earlier in the code so we cannot remove it
+> > completely from the function.
+> >
+>
+> After replacing size then it looks like this.
+>
+> $ grep value_len drivers/platform/x86/hp/hp-bioscfg/order-list-attributes=
+.c
+>         int value_len =3D 0;
+>                                                                &str_value=
+, &value_len);
+>                                                                &str_value=
+, &value_len);
+>
+> It's a write only variable.
+>
+> regards,
+> dan carpenter
+>
