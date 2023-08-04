@@ -2,94 +2,161 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E18AC04A6A
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Aug 2023 13:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CE6C41513
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Aug 2023 08:47:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236505AbjHCNpG (ORCPT
+        id S229585AbjHDIrE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Aug 2023 09:45:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34214 "EHLO
+        Fri, 4 Aug 2023 04:47:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236513AbjHCNoh (ORCPT
+        with ESMTP id S229496AbjHDIq7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Aug 2023 09:44:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6200B211E;
-        Thu,  3 Aug 2023 06:42:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0053361DA6;
-        Thu,  3 Aug 2023 13:42:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6952CC433D9;
-        Thu,  3 Aug 2023 13:42:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691070144;
-        bh=HkJvbwl/48R8J5YNsxtYO5+3r594Gr8/X4+1eEb9j2c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Dn8uTPdEfNbU02/ZXy9zzIgwuqU1ay6ISow6lFGOp+sBdGFeMHJaHfnyaTh3sO18U
-         5Gv3C9Yh9hRStaK675kYLzxbGhB76lehmbN/v9dztbgAQ3YIIpJ5o+2Fo7yw5xU2Me
-         Vp6TqVuHGb/T72Q+iVuYXA4fCVZqGJauckCRg4/lxuzTIgYsAGilMu6DAgtniFga12
-         Vt+fmzJ1umXy1m7i2Mm/IrbPs3F9LqU4x/AKs8YVVDmRbQeTsv5Y9cztaLu1NEWu/y
-         53RiovUKFe6hVD1nnxxZFqNFtR3GQBoKq6MsFvnNJP8o66UhaB/uKzPz5QUDylJFIz
-         /71wck+YX7RLA==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-4fe0e23a4b1so1747362e87.3;
-        Thu, 03 Aug 2023 06:42:24 -0700 (PDT)
-X-Gm-Message-State: ABy/qLaZsX4ih9v3BFNahI/X4Ezp6Kx7FcmhnrTW6b1S46c3YPl9GvNk
-        F5cWSymCxwbLg73/WUHysXD49m1jInE/NcJjwLM=
-X-Google-Smtp-Source: APBJJlEg78HAokAHmCZSplx4tG+txNUrrxYn1f5dudWXxaEOGih0o7XxLDmQWbKI8l0FCPWeDFMIspm7qQ0z1fORLHc=
-X-Received: by 2002:ac2:4e06:0:b0:4fe:993:2218 with SMTP id
- e6-20020ac24e06000000b004fe09932218mr8495427lfr.31.1691070142386; Thu, 03 Aug
- 2023 06:42:22 -0700 (PDT)
+        Fri, 4 Aug 2023 04:46:59 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0543B49C9;
+        Fri,  4 Aug 2023 01:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691138817; x=1722674817;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MAcJ299wo3k+KdBjVHFQ6R9T4MfMmRMDb+y4waGUqbo=;
+  b=LefVT/ui/fcTxEHGAtBfJc9JfvF+3TLqfKlpkwiz/M3DTEV824QPerPR
+   JI655C2TELcazqceBAyul369MdGg83zjXy6Z6DZN/Q+kEllZTlplkp1fu
+   iqGA7E5NTTnuG5RtzLEu3USOgD/METFjG8dk6ZPye8wX6o+o+Y5HXtnNY
+   wVRDw8Qgmhbn+IRcsrb0ikV8/yBu5j51b5yjvKbRAE7oUhKgPycQH67mb
+   MhMgxFaTHrkN1e1oZjtwW8vh1t4i0pSGg72PBHhQq2jNPBp/thydDN6XR
+   eLSjIBAbH+T2Lc9xjax82VQyI86m0oAqaeIdc6zc9JSBctn7I2KhEtZ4d
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="456478220"
+X-IronPort-AV: E=Sophos;i="6.01,254,1684825200"; 
+   d="scan'208";a="456478220"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 01:46:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="765017754"
+X-IronPort-AV: E=Sophos;i="6.01,254,1684825200"; 
+   d="scan'208";a="765017754"
+Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.229.33])
+  by orsmga001.jf.intel.com with ESMTP; 04 Aug 2023 01:46:36 -0700
+From:   Choong Yong Liang <yong.liang.choong@linux.intel.com>
+To:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Wong Vee Khee <veekhee@apple.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Revanth Kumar Uppala <ruppala@nvidia.com>,
+        Shenwei Wang <shenwei.wang@nxp.com>,
+        Andrey Konovalov <andrey.konovalov@linaro.org>,
+        Jochen Henneberg <jh@henneberg-systemdesign.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
+        Tan Tee Min <tee.min.tan@linux.intel.com>,
+        Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+        Lai Peter Jun Ann <jun.ann.lai@intel.com>
+Subject: [PATCH net-next v2 0/5] TSN auto negotiation between 1G and 2.5G
+Date:   Fri,  4 Aug 2023 16:45:22 +0800
+Message-Id: <20230804084527.2082302-1-yong.liang.choong@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20230731112001.212982-1-wangzhu9@huawei.com>
-In-Reply-To: <20230731112001.212982-1-wangzhu9@huawei.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 3 Aug 2023 15:42:11 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXG+jPH3h9YWCWVbq9hx2gT0iqqRC_zRRHaJwhRF2Su_QQ@mail.gmail.com>
-Message-ID: <CAMj1kXG+jPH3h9YWCWVbq9hx2gT0iqqRC_zRRHaJwhRF2Su_QQ@mail.gmail.com>
-Subject: Re: [PATCH -next] efi: memmap: Remove kernel-doc warnings
-To:     Zhu Wang <wangzhu9@huawei.com>
-Cc:     dvhart@infradead.org, andy@infradead.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 31 Jul 2023 at 13:20, Zhu Wang <wangzhu9@huawei.com> wrote:
->
-> Remove kernel-doc warnings:
->
-> arch/x86/platform/efi/memmap.c:94: warning: Function parameter or member
-> 'data' not described in 'efi_memmap_install'
-> arch/x86/platform/efi/memmap.c:94: warning: Excess function parameter
-> 'ctx' description in 'efi_memmap_install'
->
-> Signed-off-by: Zhu Wang <wangzhu9@huawei.com>
+Intel platforms’ integrated Gigabit Ethernet controllers support
+2.5Gbps mode statically using BIOS programming. In the current
+implementation, the BIOS menu provides an option to select between
+10/100/1000Mbps and 2.5Gbps modes. Based on the selection, the BIOS
+programs the Phase Lock Loop (PLL) registers. The BIOS also read the
+TSN lane registers from Flexible I/O Adapter (FIA) block and provided
+10/100/1000Mbps/2.5Gbps information to the stmmac driver. But
+auto-negotiation between 10/100/1000Mbps and 2.5Gbps is not allowed.
+The new proposal is to support auto-negotiation between 10/100/1000Mbps
+and 2.5Gbps . Auto-negotiation between 10, 100, 1000Mbps will use
+in-band auto negotiation. Auto-negotiation between 10/100/1000Mbps and
+2.5Gbps will work as the following proposed flow, the stmmac driver reads
+the PHY link status registers then identifies the negotiated speed.
+Based on the speed stmmac driver will identify TSN lane registers from
+FIA then send IPC command to the Power Management controller (PMC)
+through PMC driver/API. PMC will act as a proxy to programs the
+PLL registers.
 
-Queued up in efi/next - thanks,
+changelog:
+v1 -> v2: 
+ - Created intel_pmc_core.h in include/linux/platform_data/x86/ and
+ export the desired functionality.
+ - Add cur_link_an_mode to the kernel doc
+ - Update cfg_link_an_mode value during phy driver changed
+ - Combine 2 commits i.e. "stmmac: intel: Separate driver_data of ADL-N
+ from TGL" and "net: stmmac: Add 1G/2.5G auto-negotiation
+ support for ADL-N" into 1 commit.
 
-> ---
->  arch/x86/platform/efi/memmap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/platform/efi/memmap.c b/arch/x86/platform/efi/memmap.c
-> index c69f8471e6d0..4ef20b49eb5e 100644
-> --- a/arch/x86/platform/efi/memmap.c
-> +++ b/arch/x86/platform/efi/memmap.c
-> @@ -82,7 +82,7 @@ int __init efi_memmap_alloc(unsigned int num_entries,
->
->  /**
->   * efi_memmap_install - Install a new EFI memory map in efi.memmap
-> - * @ctx: map allocation parameters (address, size, flags)
-> + * @data: efi memmap installation parameters
->   *
->   * Unlike efi_memmap_init_*(), this function does not allow the caller
->   * to switch from early to late mappings. It simply uses the existing
-> --
-> 2.17.1
->
+
+v1 -> v2: 
+ - Add static to pmc_lpm_modes declaration
+ - Add cur_link_an_mode to the kernel doc
+ - Combine 2 commits i.e. "stmmac: intel: Separate driver_data of ADL-N
+ from TGL" and "net: stmmac: Add 1G/2.5G auto-negotiation
+ support for ADL-N" into 1 commit.
+---
+Choong Yong Liang (1):
+  stmmac: intel: Add 1G/2.5G auto-negotiation support for ADL-N
+
+David E. Box (1):
+  platform/x86: intel_pmc_core: Add IPC mailbox accessor function and
+    add SoC register access
+
+Tan, Tee Min (3):
+  net: pcs: xpcs: combine C37 SGMII AN and 2500BASEX for Intel mGbE
+    controller
+  net: phy: update in-band AN mode when changing interface by PHY driver
+  net: stmmac: enable Intel mGbE 1G/2.5G auto-negotiation support
+
+ MAINTAINERS                                   |   1 +
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |   1 +
+ .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 183 +++++++++++++++++-
+ .../net/ethernet/stmicro/stmmac/dwmac-intel.h |  81 ++++++++
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |  20 ++
+ drivers/net/pcs/pcs-xpcs.c                    |  72 +++++--
+ drivers/net/phy/marvell10g.c                  |   6 +
+ drivers/net/phy/phylink.c                     |   4 +
+ drivers/platform/x86/intel/pmc/core.c         |  60 ++++++
+ include/linux/pcs/pcs-xpcs.h                  |   1 +
+ include/linux/phy.h                           |   3 +
+ .../linux/platform_data/x86/intel_pmc_core.h  |  41 ++++
+ include/linux/stmmac.h                        |   1 +
+ 13 files changed, 458 insertions(+), 16 deletions(-)
+ create mode 100644 include/linux/platform_data/x86/intel_pmc_core.h
+
+-- 
+2.25.1
+
