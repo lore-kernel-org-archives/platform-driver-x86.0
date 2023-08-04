@@ -2,107 +2,118 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 338AAC41513
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Aug 2023 12:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD57C001DF
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Aug 2023 13:41:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229557AbjHDMFY (ORCPT
+        id S230409AbjHDNlX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Aug 2023 08:05:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55778 "EHLO
+        Fri, 4 Aug 2023 09:41:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229510AbjHDMFX (ORCPT
+        with ESMTP id S229781AbjHDNlV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Aug 2023 08:05:23 -0400
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43C75B1;
-        Fri,  4 Aug 2023 05:05:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-        Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-        In-Reply-To:References; bh=BF7IxsJwwF3H6hTxOnnRHhHm2pxerHz0TwcwSYZ5mmo=; b=hn
-        ITZz2x2U9gv8VyS3tbPuS1qJb2s+QdLDombVGgJBuIMp94B/jdNGHm1K8rEfkYkMQ3+ewn5LIO6kF
-        LbiK6e4ZLwcXUaPHNQrnsjqHyQv9cFjU/JmA3DscTJjlqurbFbCQLAHvCpreRbwfhm9fptZMUrUZ6
-        wuSJ327BFnrmpP0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1qRtXG-0034lQ-BA; Fri, 04 Aug 2023 14:04:02 +0200
-Date:   Fri, 4 Aug 2023 14:04:02 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Wong Vee Khee <veekhee@apple.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Revanth Kumar Uppala <ruppala@nvidia.com>,
-        Shenwei Wang <shenwei.wang@nxp.com>,
-        Andrey Konovalov <andrey.konovalov@linaro.org>,
-        Jochen Henneberg <jh@henneberg-systemdesign.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
-        Tan Tee Min <tee.min.tan@linux.intel.com>,
-        Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-        Lai Peter Jun Ann <jun.ann.lai@intel.com>
-Subject: Re: [PATCH net-next v2 0/5] TSN auto negotiation between 1G and 2.5G
-Message-ID: <5bd05ba2-fd88-4e5c-baed-9971ff917484@lunn.ch>
-References: <20230804084527.2082302-1-yong.liang.choong@linux.intel.com>
+        Fri, 4 Aug 2023 09:41:21 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C08FB2;
+        Fri,  4 Aug 2023 06:41:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691156480; x=1722692480;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=MDSYZhj7/7wGWpS1UJBXxryVsZGphR0ixktJVtaUnls=;
+  b=ZV4lwNwQzL5GranKTXwmexjiMN0+fntX+cnIjZMcCwdLed4Mo8SoTiiK
+   xrECSDzIBG0evdfGVhabPJuFJiCCmibCLb+wOjn63qTFY9statslmkW/D
+   jnHlCyEUOVkpQhXt4EpgAUBA/85+gU3TUhPGGSWhKFJWBXTlOlys3WNCP
+   ujvudk9g6fBMzi4VS7iJy5bRxoJX1q4v4a7g0MVORaN65jFYxl1jZV6xH
+   83jr/Y2tk+Jrov6AGVmhB3LZBXVx1Ch89OUqaxaZed5rEB1lCLMrHm3bQ
+   1BlYPxZlBuDezC1yo/QibYkj7srmEHbhGI9IiM10VW18avWgf4PqDifS2
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="436476102"
+X-IronPort-AV: E=Sophos;i="6.01,255,1684825200"; 
+   d="scan'208";a="436476102"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 06:41:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="759599363"
+X-IronPort-AV: E=Sophos;i="6.01,255,1684825200"; 
+   d="scan'208";a="759599363"
+Received: from mmocanu-mobl1.ger.corp.intel.com ([10.252.38.186])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 06:41:16 -0700
+Date:   Fri, 4 Aug 2023 16:41:14 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     xingtong_wu@163.com
+cc:     hdegoede@redhat.com, markgross@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        xingtong.wu@siemens.com, lee@kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        gerd.haeussler.ext@siemens.com, tobias.schaffner@siemens.com,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH 1/2] platform/x86/siemens: simatic-ipc: fix logic error
+ in BX-59A
+In-Reply-To: <20230801090423.4747-1-xingtong_wu@163.com>
+Message-ID: <7196d4b9-34fe-4a18-863b-65d07c4a348c@linux.intel.com>
+References: <20230731071424.4663-2-xingtong_wu@163.com> <20230801090423.4747-1-xingtong_wu@163.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230804084527.2082302-1-yong.liang.choong@linux.intel.com>
+Content-Type: multipart/mixed; boundary="8323329-411269591-1691156479=:1581"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Aug 04, 2023 at 04:45:22PM +0800, Choong Yong Liang wrote:
-> Intel platformsâ€™ integrated Gigabit Ethernet controllers support
-> 2.5Gbps mode statically using BIOS programming. In the current
-> implementation, the BIOS menu provides an option to select between
-> 10/100/1000Mbps and 2.5Gbps modes. Based on the selection, the BIOS
-> programs the Phase Lock Loop (PLL) registers. The BIOS also read the
-> TSN lane registers from Flexible I/O Adapter (FIA) block and provided
-> 10/100/1000Mbps/2.5Gbps information to the stmmac driver. But
-> auto-negotiation between 10/100/1000Mbps and 2.5Gbps is not allowed.
-> The new proposal is to support auto-negotiation between 10/100/1000Mbps
-> and 2.5Gbps . Auto-negotiation between 10, 100, 1000Mbps will use
-> in-band auto negotiation. Auto-negotiation between 10/100/1000Mbps and
-> 2.5Gbps will work as the following proposed flow, the stmmac driver reads
-> the PHY link status registers then identifies the negotiated speed.
-> Based on the speed stmmac driver will identify TSN lane registers from
-> FIA then send IPC command to the Power Management controller (PMC)
-> through PMC driver/API. PMC will act as a proxy to programs the
-> PLL registers.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Have you considered using out of band for all link modes? You might
-end up with a cleaner architecture, and not need any phylink/phylib
-hacks.
+--8323329-411269591-1691156479=:1581
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
 
-	Andrew
+On Tue, 1 Aug 2023, xingtong_wu@163.com wrote:
+
+> From: "xingtong.wu" <xingtong.wu@siemens.com>
+> 
+> There is a bug in if statement that lead to logical error
+
+Variable is missing from the ledmode if statement that leads to a logic 
+error.
+
+> and have influence to other IPC
+
+I don't understand what you're trying to say with this. Not that it feels 
+very necessary anyway.
+
+>, it get correct now.
+
+I'd say (in own sentence):
+
+"Add the missing variable to the if condition."
+
+> Fixes: b8af77951941 ("platform/x86/siemens: simatic-ipc: add new models BX-56A/BX-59A")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202307312322.Aa8upHWK-lkp@intel.com/
+> Signed-off-by: xingtong.wu <xingtong.wu@siemens.com>
+> ---
+>  drivers/platform/x86/siemens/simatic-ipc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/siemens/simatic-ipc.c b/drivers/platform/x86/siemens/simatic-ipc.c
+> index 02c540cf4070..8ca6e277fa03 100644
+> --- a/drivers/platform/x86/siemens/simatic-ipc.c
+> +++ b/drivers/platform/x86/siemens/simatic-ipc.c
+> @@ -129,7 +129,7 @@ static int register_platform_devices(u32 station_id)
+>  		pdevname = KBUILD_MODNAME "_leds";
+>  		if (ledmode == SIMATIC_IPC_DEVICE_127E)
+>  			pdevname = KBUILD_MODNAME "_leds_gpio_apollolake";
+> -		if (ledmode == SIMATIC_IPC_DEVICE_227G || SIMATIC_IPC_DEVICE_BX_59A)
+> +		if (ledmode == SIMATIC_IPC_DEVICE_227G || ledmode == SIMATIC_IPC_DEVICE_BX_59A)
+>  			pdevname = KBUILD_MODNAME "_leds_gpio_f7188x";
+>  		if (ledmode == SIMATIC_IPC_DEVICE_BX_21A)
+>  			pdevname = KBUILD_MODNAME "_leds_gpio_elkhartlake";
+> 
+
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+-- 
+ i.
+
+--8323329-411269591-1691156479=:1581--
