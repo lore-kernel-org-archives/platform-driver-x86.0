@@ -2,134 +2,132 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 192DAEB64DD
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Aug 2023 08:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376B7C001DB
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Aug 2023 13:10:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229817AbjHEIKS (ORCPT
+        id S229761AbjHENKS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 5 Aug 2023 04:10:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53840 "EHLO
+        Sat, 5 Aug 2023 09:10:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbjHEIKR (ORCPT
+        with ESMTP id S229672AbjHENKQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 5 Aug 2023 04:10:17 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA8010C4;
-        Sat,  5 Aug 2023 01:10:14 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id CD27521850;
-        Sat,  5 Aug 2023 08:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1691223012; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Rc19v92ZKafrhVQKT2HLoHZy05f/qnyul6RyA91HupU=;
-        b=B6KiFOWHoOIn5u1j98c+r7UwASnbrsREC4fVUPsApdI2L4eB33gNQo6ScfEsDvSUuCOIVx
-        np2c4OX5c8AuRm1RM2Qbb9WgRS9lMsaXBZtQGPL/cDSh3J52sKttCzfADK7R1WKDX2rBrr
-        I7U6xkQvI5bwzebbFO+UdGVGGbEJ4wM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1691223012;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Rc19v92ZKafrhVQKT2HLoHZy05f/qnyul6RyA91HupU=;
-        b=Dj/Fr446/aTkfAy501dU9GiOzgjCwpDuN0K+hG10rP/YnhgT2FtNjw2ux7aCxIp3IQnPcr
-        AkmBM6gAzy7i8RBA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9C520139BC;
-        Sat,  5 Aug 2023 08:10:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id UahEJOQDzmRCNAAAMHmgww
-        (envelope-from <jdelvare@suse.de>); Sat, 05 Aug 2023 08:10:12 +0000
-Date:   Sat, 5 Aug 2023 10:10:10 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>, Nikita@imap2.suse-dmz.suse.de,
-        "Kravets <teackot"@gmail.com, Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Subject: [PATCH] platform/x86: msi-ec: Fix the build
-Message-ID: <20230805101010.54d49e91@endymion.delvare>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.34; x86_64-suse-linux-gnu)
+        Sat, 5 Aug 2023 09:10:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4813B10DC
+        for <platform-driver-x86@vger.kernel.org>; Sat,  5 Aug 2023 06:09:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1691240969;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ehu/P9kMK+ANcrbIAM1h/zk8lNfm0lCws3biHgn8nz4=;
+        b=CI0jo9MBKoaQvqrtnuQzaNyo4VYwgHlISi0CzkMczdFqXkqrOx2UHE9kigwAx7CMFWOc9m
+        tpy2lrrTG0zefi6t7w1QLhsV7fFoRzsEhohEGD6pYVeoUqVtda91KRRngtaK2s9JqlT1S/
+        5+uupAT10759SqDwt7zuiJNNc6vU2E8=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-569-Ukl2HrzJPqS2pbjPTG6nSg-1; Sat, 05 Aug 2023 09:09:28 -0400
+X-MC-Unique: Ukl2HrzJPqS2pbjPTG6nSg-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-99cc32f2ec5so13252366b.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 05 Aug 2023 06:09:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691240967; x=1691845767;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ehu/P9kMK+ANcrbIAM1h/zk8lNfm0lCws3biHgn8nz4=;
+        b=bMqOsG0qVAfRFAfmIGPIqskq8PP9YIECoTgV9UvQgWltBmKlJjmr6foZ3uZ6nPA8LK
+         poXXawIjmJtG+yMeuv6ySdrRFdCRdk0FAKDbcVY2Qw39zvqvhkxLHYfgPi1lN0ik6T1v
+         jltDonfbWabNgPKRFjx4DL1Aq4K0sje4AS7cwGvk0qPxntzNc2MHDh8MWhvTZOW9s4dj
+         sYzxokUN1eXcsPxmRy14cEhifX7jT0VKp8KXKZQzSTgdG0ZhsAXzDaZ5s8Ez6yaxKtzU
+         TbhDb6evFiMS8Ee0SbFhRBdyP8uNv2y2RGTITDVz4N0tyPgJArXQgbL1PEcfdGKqH0os
+         Npng==
+X-Gm-Message-State: AOJu0YziHh9OlS6iaVIVs9FKsWEXv/KJzkxkKFgEPYlhmL95lW7Ajzfv
+        gx6HhryB1RLHzIfmfLppqfEzDc4+iiphDxleie8g99kUconynJc9KPubZBufaZGYgpuaMPVB36I
+        wVlT49FQnsbqbGvrb5wjiMAtbGI7LAP4XCA==
+X-Received: by 2002:a17:906:cc0f:b0:99b:f03d:de37 with SMTP id ml15-20020a170906cc0f00b0099bf03dde37mr3201768ejb.60.1691240966971;
+        Sat, 05 Aug 2023 06:09:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHxTUJ6UfA+ygtRAtwWtx1Jz30S537FK+47etHoPWUHMHvqfERQhu5bImDIb6Ym41ie3dNhlA==
+X-Received: by 2002:a17:906:cc0f:b0:99b:f03d:de37 with SMTP id ml15-20020a170906cc0f00b0099bf03dde37mr3201754ejb.60.1691240966704;
+        Sat, 05 Aug 2023 06:09:26 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id kg12-20020a17090776ec00b0098951bb4dc3sm2666439ejc.184.2023.08.05.06.09.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Aug 2023 06:09:25 -0700 (PDT)
+Message-ID: <cc9e37b4-b5cb-fd4d-84b8-5b824afe710a@redhat.com>
+Date:   Sat, 5 Aug 2023 15:09:25 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: Fwd: 6.5 - 6.4.7 Regression : ASUS UM5302TA Keyboard don't work
+To:     August Wikerfors <git@augustwikerfors.se>,
+        Linux regressions mailing list <regressions@lists.linux.dev>
+Cc:     Mario Limonciello <mario.limonciello@amd.com>,
+        Linux Input Devices <linux-input@vger.kernel.org>,
+        ACPI Asus <acpi4asus-user@lists.sourceforge.net>,
+        Linux x86 Platform Drivers 
+        <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Guilhem Lettron <guilhem@lettron.fr>
+References: <bdc6cb4d-a853-72b2-b132-989b64740ad9@gmail.com>
+ <8ee87fe1-684f-ad59-21c7-4401a4e70bee@leemhuis.info>
+ <b7df9a02-3b81-4f8c-aeba-222c298180d4@augustwikerfors.se>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <b7df9a02-3b81-4f8c-aeba-222c298180d4@augustwikerfors.se>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The msi-ec driver fails to build for me (gcc 7.5):
+Hi,
 
-  CC [M]  drivers/platform/x86/msi-ec.o
-drivers/platform/x86/msi-ec.c:72:6: error: initializer element is not const=
-ant
-    { SM_ECO_NAME,     0xc2 },
-      ^~~~~~~~~~~
-drivers/platform/x86/msi-ec.c:72:6: note: (near initialization for =E2=80=
-=98CONF0.shift_mode.modes[0].name=E2=80=99)
-drivers/platform/x86/msi-ec.c:73:6: error: initializer element is not const=
-ant
-    { SM_COMFORT_NAME, 0xc1 },
-      ^~~~~~~~~~~~~~~
-drivers/platform/x86/msi-ec.c:73:6: note: (near initialization for =E2=80=
-=98CONF0.shift_mode.modes[1].name=E2=80=99)
-drivers/platform/x86/msi-ec.c:74:6: error: initializer element is not const=
-ant
-    { SM_SPORT_NAME,   0xc0 },
-      ^~~~~~~~~~~~~
-drivers/platform/x86/msi-ec.c:74:6: note: (near initialization for =E2=80=
-=98CONF0.shift_mode.modes[2].name=E2=80=99)
-(...)
+On 8/4/23 17:26, August Wikerfors wrote:
+> On 2023-07-30 06:49, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> Lo!
+>>
+>> On 30.07.23 04:41, Bagas Sanjaya wrote:
+>>>
+>>> I notice a regression report on Bugzilla [1]. Quoting from it:
+>>>
+>>>> On a kernel 6.4.5 and less, the keyboard is working fine.
+>>>>
+>>>> Beginning with 6.5 rc1 and 6.4.7 any key don't respond.
+>>
+>> That is a AMD Ryzen Laptop. And if that really started from
+>> v6.4.6..v6.4.7 then I guess there is a decent chance that this is caused
+>> by ```ACPI: resource: Remove "Zen" specific match and quirks``` from
+>> Mario. Hence adding him to the list of recipients.
+> 
+> Confirmed now, see https://bugzilla.kernel.org/show_bug.cgi?id=217726#c9
+> 
+> #regzbot introduced: a9c4a912b7dc7ff922d4b9261160c001558f9755
 
-Don't try to be smart, just use defines for the constant strings. The
-compiler will recognize it's the same string and will store it only
-once in the data section anyway.
+We just have received 2 bug reports for Fedora which I believe are also
+this issue (not confirmed yet):
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Fixes: 392cacf2aa10 ("platform/x86: Add new msi-ec driver")
-Cc: stable@vger.kernel.org
-Cc: Nikita Kravets <teackot@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <markgross@kernel.org>
----
- drivers/platform/x86/msi-ec.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+https://bugzilla.redhat.com/show_bug.cgi?id=2229165
+https://bugzilla.redhat.com/show_bug.cgi?id=2229317
 
---- linux-6.4.orig/drivers/platform/x86/msi-ec.c
-+++ linux-6.4/drivers/platform/x86/msi-ec.c
-@@ -27,15 +27,15 @@
- #include <linux/seq_file.h>
- #include <linux/string.h>
-=20
--static const char *const SM_ECO_NAME       =3D "eco";
--static const char *const SM_COMFORT_NAME   =3D "comfort";
--static const char *const SM_SPORT_NAME     =3D "sport";
--static const char *const SM_TURBO_NAME     =3D "turbo";
-+#define SM_ECO_NAME		"eco"
-+#define SM_COMFORT_NAME		"comfort"
-+#define SM_SPORT_NAME		"sport"
-+#define SM_TURBO_NAME		"turbo"
-=20
--static const char *const FM_AUTO_NAME     =3D "auto";
--static const char *const FM_SILENT_NAME   =3D "silent";
--static const char *const FM_BASIC_NAME    =3D "basic";
--static const char *const FM_ADVANCED_NAME =3D "advanced";
-+#define FM_AUTO_NAME		"auto"
-+#define FM_SILENT_NAME		"silent"
-+#define FM_BASIC_NAME		"basic"
-+#define FM_ADVANCED_NAME	"advanced"
-=20
- static const char * const ALLOWED_FW_0[] __initconst =3D {
- 	"14C1EMS1.012",
+I'm going to create a Fedora 6.4.y test-kernel with a9c4a912b7dc7ff
+reverted.
+
+IMHO we really should revert a9c4a912b7dc7ff upstream,
+at least for the 6.4.y series where it seems to be doing
+more harm then good.
+
+And propably also for 6.5-rc# for now until we figure out
+a better solution.
+
+Regards,
+
+Hans
 
 
---=20
-Jean Delvare
-SUSE L3 Support
