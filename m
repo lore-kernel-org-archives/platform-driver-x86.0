@@ -2,94 +2,111 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B29C04A6A
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Aug 2023 15:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284CEEB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Aug 2023 05:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231598AbjHDPb4 (ORCPT
+        id S229494AbjHEFg0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Aug 2023 11:31:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34198 "EHLO
+        Sat, 5 Aug 2023 01:36:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231592AbjHDPbk (ORCPT
+        with ESMTP id S229445AbjHEFgZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Aug 2023 11:31:40 -0400
-X-Greylist: delayed 304 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 04 Aug 2023 08:31:22 PDT
-Received: from abi149hd127.arn1.oracleemaildelivery.com (abi149hd127.arn1.oracleemaildelivery.com [129.149.84.127])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39C47524B
-        for <platform-driver-x86@vger.kernel.org>; Fri,  4 Aug 2023 08:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=oci-arn1-20220924;
- d=augustwikerfors.se;
- h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
- bh=lkeyCUNxw6Rc/OPS654INdsxLT2B3j/nzdnoNSEJjig=;
- b=bac6FmIFqM2VTXBwCerNcTs1vGSwGm1YskznsLbPIatRy6FNMCF0GpZOJe6uP/K2LzGhvGvYNKhv
-   AFgxcTdVPaxd4yH41nkWVlvrB0QhIJozfiL5zG/LLPyGubxrRLd1XnfMtkq7+MnHH+EsoaXlOUZL
-   1SHp9GIChx4CWxEUz7Kg3KlGqZz708Y06INpwUzBMwHQROF+Ameh3i36FxIYtKDOTF3ijsdkn3s4
-   yRQf8S8uKtsCbslTRfbZlCLnHauQlg16rPnxNzCjS+0CP3GT5vGI/fj6Yfb3LGeC59Vv7N75+MG7
-   7CUrBkZxMIl7yB80aZPpIVc00jbubo89NhzNvQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=prod-arn-20211201;
- d=arn1.rp.oracleemaildelivery.com;
- h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
- bh=lkeyCUNxw6Rc/OPS654INdsxLT2B3j/nzdnoNSEJjig=;
- b=UQ/wioqw7YM345lLt/Rg5JZCedZ4CgI/TLJydeYOoOXCWITVJuslpve8uNh1b37zxAIYqD5jUTU2
-   8HiF1MxGap3Y4scje345llC3CG5owAQtGVPe5uFR28am1ISnuJbAG7wOcdnWBak/AXb9XCwEr17V
-   W0FDraxbITYS3WYQb8qSD27BKLDSOzWtO9LqS2dhB6o4oEQmqu23A+rs/lkMWk11iIDwwLXYTKS+
-   LCFFVdUIjITOJhigCifcav24LBQlXvWxWK4AFqAxHCQH6D1mSo05tCgcPWPU91aMbXryEcLw0kzD
-   yP7ayI3G+Qe0HlzN35WaXT6vpJtp5TI2gkWpyw==
-Received: by omta-ad1-fd2-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com
- (Oracle Communications Messaging Server 8.1.0.1.20230707 64bit (built Jul  7
- 2023))
- with ESMTPS id <0RYV005XUHJT7R80@omta-ad1-fd2-401-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com>
- for platform-driver-x86@vger.kernel.org; Fri, 04 Aug 2023 15:26:17 +0000 (GMT)
-Message-id: <b7df9a02-3b81-4f8c-aeba-222c298180d4@augustwikerfors.se>
-Date:   Fri, 4 Aug 2023 17:26:14 +0200
-MIME-version: 1.0
-Subject: Re: Fwd: 6.5 - 6.4.7 Regression : ASUS UM5302TA Keyboard don't work
-Content-language: en-US
-To:     Linux regressions mailing list <regressions@lists.linux.dev>
-Cc:     Mario Limonciello <mario.limonciello@amd.com>,
-        Linux Input Devices <linux-input@vger.kernel.org>,
-        ACPI Asus <acpi4asus-user@lists.sourceforge.net>,
-        Linux x86 Platform Drivers 
-        <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Guilhem Lettron <guilhem@lettron.fr>
-References: <bdc6cb4d-a853-72b2-b132-989b64740ad9@gmail.com>
- <8ee87fe1-684f-ad59-21c7-4401a4e70bee@leemhuis.info>
-From:   August Wikerfors <git@augustwikerfors.se>
-In-reply-to: <8ee87fe1-684f-ad59-21c7-4401a4e70bee@leemhuis.info>
-Content-type: text/plain; charset=UTF-8; format=flowed
-Content-transfer-encoding: 7bit
-Reporting-Meta: AAFFfLcUsxW36ThPzjsNnUXQm7U6Sr9gxxLdxvDmieyTQubvanypwsv0aq8t1egt
- VXasQBWsOdnmCguJTPNqbAfWd/iC2bEZITLDPzLaixnby1orXDatUCn/crAyfoWj
- S5lVLW2Quy80DrB+8b+CWE+2GMdq0lsyMJGpmlS9CxMX5L2Zzk/YgFaGtLMh4/+l
- tXRVYoBNfoOSGh6jNLZoU1tUFpgS14VeySwuatKYwjUxlmbjP4nXNUWbWA8KFWi0
- QkwFnuPiGYlz+oR+9wHdTmBzjYSzPHlwFWuVERLrHUj53pIi9KtBPELekdm7K/vE
- u6EKyv+pM2GZP2ELPgrfaPKxYLdn2XjhL3x1hA/IeNpriGiQ272beUC8KYEQDxZr
- 3Y35/VBUtf7eq5tjzoFa15qjL/mzQB0U3iNuyOWoE0aADE8V1LJIRMRzV+K9B31j
- QeVq7X61T9sJV7I=
+        Sat, 5 Aug 2023 01:36:25 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DC8146B3;
+        Fri,  4 Aug 2023 22:36:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
+ s=s31663417; t=1691213772; x=1691818572; i=w_armin@gmx.de;
+ bh=Xc5Uz3yHM1cYmTbfdHFbQvSyh54bIq4BmIZkafOGP8Q=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+ b=WztmmToYD9V4MELG/sZBCibor6a4SSfMWRdoyJwHc7C0tXWvmk3fm8nxyAbcqUfSXxfkXJe
+ k28cl35Y2q8MG3wnrNhURND5OZxLtlHM3JuAGpiU9IXEm3ef7qZciXWR681lqMjlYWmX757Xo
+ Z4Zu9YgtYe66nxjySsjLkYbpkQNmwY4JYKiqL1f0LdnPAFq+F7ynjM8xfZWC1q8jb5IO7zzvk
+ mnas6TjctvI9KBwczHsxQXDkJEjvoDssLcR5gWbZNQuD/1M8YCW7cls5jtLwsui1z5FWuxZ+n
+ qN7mM0A/o8Q7DzUOGBVa12xXz3OSNt11IPQYRGfh1Ve2+MzQu6Sg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1N6bfw-1plbjW1n14-01816B; Sat, 05 Aug 2023 07:36:12 +0200
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     prasanth.ksr@dell.com, hdegoede@redhat.com, markgross@kernel.org
+Cc:     Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: dell-sysman: Fix reference leak
+Date:   Sat,  5 Aug 2023 07:36:10 +0200
+Message-Id: <20230805053610.7106-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:1Ex/nogT+uSYoxHzoSeE2GZ+pKYhOchFCLlj5z6jUoNGPKe2SjA
+ J75Wan7+Iwod2cEJ44K77Zx9Bcfju/lM7QwMk13kUe78nf2kInsQx8mjbMdGFbOp7Hl1Mm7
+ qTGOpryQvdv4uQSTAA1oxpKxRxyIDaav/3JojZMz+ZhPurLTG/M6qLSpnE+HxjLnKVXgFBo
+ c9CrIVUFE/mXf/ANmuJdw==
+UI-OutboundReport: notjunk:1;M01:P0:ngpWxp/2kfA=;g7ty0ncJA6Hjq7/2V689EIaIFfa
+ r2C2BIh5qn2LbyRwBRrkia4TROv8AvqnvHj6+W2iAmReszrr6Bwt6lV6yDvlb83Ew00dgb7qh
+ 1ro3PsrEMUrbtLT+w6OqyMaqlGOJSqIprSS12bJ/dNXHEDfqwHIsup1yCK5npXvSKT3zNOtlz
+ pKO6Qwh1DQLYC4cqqdBXcJF+714uAFEy9VSlR28fE9RkfaiFztCaVV1kh4ziZ04jkFDHV+yVo
+ pseBOUZuhKX0PbwRwKQK+0EYl06VdD9oexVICYOFPUhdDeZnYF9goF/TkQSlYghD+rvhlML4x
+ e551SuEXfiO1Czb9ShWmfjyjCm4/0BBRCH5YhnUultRgcN6nb5WVn/jx9/T+uXYZrMBUYjCSJ
+ aw26VTeUO3nh5i7BQO0XsU2O5E4EQIXPFEDeqon+Wp/micIHpYenY1q8sASdpnmXSOnF42UTo
+ FjSogej/r/clRC4+9bN1R/aMa4I4FGqYNqkJ0wJZGx7Bd5UHSXsmJTD1McjLcvDxfkQ9jcApu
+ jwMWZXe/oZnSbjeRyGvVbzXADoxJX0QJjv7uryMIcYBlviS+qj3vHr2Tbt4O6LMjcUUvg4ehB
+ 5EHsuvX/G3YtR/TuuFhnPYMkZFYaS1Lw3ItYNykWU9YrNqlilfLPnnND62jMW3SR8D1BlYhBC
+ o8mHL9rAfC8lyKnv7J5FvaAD5t0zqW4rMCwiklV1vgK0Yo04VQvGidnGht/RY7vDrZ2V0AXq8
+ I1E+Pt+P7rJKxZKzzBvvSSMIXzLjqJuSZ8Nzf245J1qAc8dxr71f8KN0tU2D34k4cSFYy76aP
+ Wq8Zn+2wN0FTC3PPu0/uINXWQRl2h/H3+cSEjKHrVFLCe/ILxAyf94EAkSUNWBl3C/n1LtvQY
+ mkY5EVMNLEznoNJmsWGkfjvKSWyaA9WdMm8dwUGif/n7JLmxCok76xE0j4Nu/yyHmifFLaxd6
+ xtC+tTaLCJiJkPzV4iZ57AOctyM=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2023-07-30 06:49, Linux regression tracking (Thorsten Leemhuis) wrote:
-> Lo!
-> 
-> On 30.07.23 04:41, Bagas Sanjaya wrote:
->>
->> I notice a regression report on Bugzilla [1]. Quoting from it:
->>
->>> On a kernel 6.4.5 and less, the keyboard is working fine.
->>>
->>> Beginning with 6.5 rc1 and 6.4.7 any key don't respond.
-> 
-> That is a AMD Ryzen Laptop. And if that really started from
-> v6.4.6..v6.4.7 then I guess there is a decent chance that this is caused
-> by ```ACPI: resource: Remove "Zen" specific match and quirks``` from
-> Mario. Hence adding him to the list of recipients.
+If a duplicate attribute is found using kset_find_obj(),
+a reference to that attribute is returned. This means
+that we need to dispose it accordingly. Use kobject_put()
+to dispose the duplicate attribute in such a case.
 
-Confirmed now, see https://bugzilla.kernel.org/show_bug.cgi?id=217726#c9
+Compile-tested only.
 
-#regzbot introduced: a9c4a912b7dc7ff922d4b9261160c001558f9755
+Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Manageme=
+nt Driver over WMI for Dell Systems")
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/=
+platform/x86/dell/dell-wmi-sysman/sysman.c
+index b68dd11cb892..b929b4f82420 100644
+=2D-- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+@@ -393,6 +393,7 @@ static int init_bios_attributes(int attr_type, const c=
+har *guid)
+ 	struct kobject *attr_name_kobj; //individual attribute names
+ 	union acpi_object *obj =3D NULL;
+ 	union acpi_object *elements;
++	struct kobject *duplicate;
+ 	struct kset *tmp_set;
+ 	int min_elements;
+
+@@ -451,9 +452,11 @@ static int init_bios_attributes(int attr_type, const =
+char *guid)
+ 		else
+ 			tmp_set =3D wmi_priv.main_dir_kset;
+
+-		if (kset_find_obj(tmp_set, elements[ATTR_NAME].string.pointer)) {
+-			pr_debug("duplicate attribute name found - %s\n",
+-				elements[ATTR_NAME].string.pointer);
++		duplicate =3D kset_find_obj(tmp_set, elements[ATTR_NAME].string.pointer=
+);
++		if (duplicate) {
++			pr_debug("Duplicate attribute name found - %s\n",
++				 elements[ATTR_NAME].string.pointer);
++			kobject_put(duplicate);
+ 			goto nextobj;
+ 		}
+
+=2D-
+2.39.2
+
