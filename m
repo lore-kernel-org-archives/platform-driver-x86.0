@@ -2,111 +2,134 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284CEEB64DD
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Aug 2023 05:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 192DAEB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Aug 2023 08:10:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229494AbjHEFg0 (ORCPT
+        id S229817AbjHEIKS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 5 Aug 2023 01:36:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57368 "EHLO
+        Sat, 5 Aug 2023 04:10:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjHEFgZ (ORCPT
+        with ESMTP id S229460AbjHEIKR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 5 Aug 2023 01:36:25 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DC8146B3;
-        Fri,  4 Aug 2023 22:36:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
- s=s31663417; t=1691213772; x=1691818572; i=w_armin@gmx.de;
- bh=Xc5Uz3yHM1cYmTbfdHFbQvSyh54bIq4BmIZkafOGP8Q=;
- h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
- b=WztmmToYD9V4MELG/sZBCibor6a4SSfMWRdoyJwHc7C0tXWvmk3fm8nxyAbcqUfSXxfkXJe
- k28cl35Y2q8MG3wnrNhURND5OZxLtlHM3JuAGpiU9IXEm3ef7qZciXWR681lqMjlYWmX757Xo
- Z4Zu9YgtYe66nxjySsjLkYbpkQNmwY4JYKiqL1f0LdnPAFq+F7ynjM8xfZWC1q8jb5IO7zzvk
- mnas6TjctvI9KBwczHsxQXDkJEjvoDssLcR5gWbZNQuD/1M8YCW7cls5jtLwsui1z5FWuxZ+n
- qN7mM0A/o8Q7DzUOGBVa12xXz3OSNt11IPQYRGfh1Ve2+MzQu6Sg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1N6bfw-1plbjW1n14-01816B; Sat, 05 Aug 2023 07:36:12 +0200
-From:   Armin Wolf <W_Armin@gmx.de>
-To:     prasanth.ksr@dell.com, hdegoede@redhat.com, markgross@kernel.org
-Cc:     Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: dell-sysman: Fix reference leak
-Date:   Sat,  5 Aug 2023 07:36:10 +0200
-Message-Id: <20230805053610.7106-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
+        Sat, 5 Aug 2023 04:10:17 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA8010C4;
+        Sat,  5 Aug 2023 01:10:14 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id CD27521850;
+        Sat,  5 Aug 2023 08:10:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1691223012; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Rc19v92ZKafrhVQKT2HLoHZy05f/qnyul6RyA91HupU=;
+        b=B6KiFOWHoOIn5u1j98c+r7UwASnbrsREC4fVUPsApdI2L4eB33gNQo6ScfEsDvSUuCOIVx
+        np2c4OX5c8AuRm1RM2Qbb9WgRS9lMsaXBZtQGPL/cDSh3J52sKttCzfADK7R1WKDX2rBrr
+        I7U6xkQvI5bwzebbFO+UdGVGGbEJ4wM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1691223012;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Rc19v92ZKafrhVQKT2HLoHZy05f/qnyul6RyA91HupU=;
+        b=Dj/Fr446/aTkfAy501dU9GiOzgjCwpDuN0K+hG10rP/YnhgT2FtNjw2ux7aCxIp3IQnPcr
+        AkmBM6gAzy7i8RBA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9C520139BC;
+        Sat,  5 Aug 2023 08:10:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id UahEJOQDzmRCNAAAMHmgww
+        (envelope-from <jdelvare@suse.de>); Sat, 05 Aug 2023 08:10:12 +0000
+Date:   Sat, 5 Aug 2023 10:10:10 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>, Nikita@imap2.suse-dmz.suse.de,
+        "Kravets <teackot"@gmail.com, Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Subject: [PATCH] platform/x86: msi-ec: Fix the build
+Message-ID: <20230805101010.54d49e91@endymion.delvare>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.34; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1Ex/nogT+uSYoxHzoSeE2GZ+pKYhOchFCLlj5z6jUoNGPKe2SjA
- J75Wan7+Iwod2cEJ44K77Zx9Bcfju/lM7QwMk13kUe78nf2kInsQx8mjbMdGFbOp7Hl1Mm7
- qTGOpryQvdv4uQSTAA1oxpKxRxyIDaav/3JojZMz+ZhPurLTG/M6qLSpnE+HxjLnKVXgFBo
- c9CrIVUFE/mXf/ANmuJdw==
-UI-OutboundReport: notjunk:1;M01:P0:ngpWxp/2kfA=;g7ty0ncJA6Hjq7/2V689EIaIFfa
- r2C2BIh5qn2LbyRwBRrkia4TROv8AvqnvHj6+W2iAmReszrr6Bwt6lV6yDvlb83Ew00dgb7qh
- 1ro3PsrEMUrbtLT+w6OqyMaqlGOJSqIprSS12bJ/dNXHEDfqwHIsup1yCK5npXvSKT3zNOtlz
- pKO6Qwh1DQLYC4cqqdBXcJF+714uAFEy9VSlR28fE9RkfaiFztCaVV1kh4ziZ04jkFDHV+yVo
- pseBOUZuhKX0PbwRwKQK+0EYl06VdD9oexVICYOFPUhdDeZnYF9goF/TkQSlYghD+rvhlML4x
- e551SuEXfiO1Czb9ShWmfjyjCm4/0BBRCH5YhnUultRgcN6nb5WVn/jx9/T+uXYZrMBUYjCSJ
- aw26VTeUO3nh5i7BQO0XsU2O5E4EQIXPFEDeqon+Wp/micIHpYenY1q8sASdpnmXSOnF42UTo
- FjSogej/r/clRC4+9bN1R/aMa4I4FGqYNqkJ0wJZGx7Bd5UHSXsmJTD1McjLcvDxfkQ9jcApu
- jwMWZXe/oZnSbjeRyGvVbzXADoxJX0QJjv7uryMIcYBlviS+qj3vHr2Tbt4O6LMjcUUvg4ehB
- 5EHsuvX/G3YtR/TuuFhnPYMkZFYaS1Lw3ItYNykWU9YrNqlilfLPnnND62jMW3SR8D1BlYhBC
- o8mHL9rAfC8lyKnv7J5FvaAD5t0zqW4rMCwiklV1vgK0Yo04VQvGidnGht/RY7vDrZ2V0AXq8
- I1E+Pt+P7rJKxZKzzBvvSSMIXzLjqJuSZ8Nzf245J1qAc8dxr71f8KN0tU2D34k4cSFYy76aP
- Wq8Zn+2wN0FTC3PPu0/uINXWQRl2h/H3+cSEjKHrVFLCe/ILxAyf94EAkSUNWBl3C/n1LtvQY
- mkY5EVMNLEznoNJmsWGkfjvKSWyaA9WdMm8dwUGif/n7JLmxCok76xE0j4Nu/yyHmifFLaxd6
- xtC+tTaLCJiJkPzV4iZ57AOctyM=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-If a duplicate attribute is found using kset_find_obj(),
-a reference to that attribute is returned. This means
-that we need to dispose it accordingly. Use kobject_put()
-to dispose the duplicate attribute in such a case.
+The msi-ec driver fails to build for me (gcc 7.5):
 
-Compile-tested only.
+  CC [M]  drivers/platform/x86/msi-ec.o
+drivers/platform/x86/msi-ec.c:72:6: error: initializer element is not const=
+ant
+    { SM_ECO_NAME,     0xc2 },
+      ^~~~~~~~~~~
+drivers/platform/x86/msi-ec.c:72:6: note: (near initialization for =E2=80=
+=98CONF0.shift_mode.modes[0].name=E2=80=99)
+drivers/platform/x86/msi-ec.c:73:6: error: initializer element is not const=
+ant
+    { SM_COMFORT_NAME, 0xc1 },
+      ^~~~~~~~~~~~~~~
+drivers/platform/x86/msi-ec.c:73:6: note: (near initialization for =E2=80=
+=98CONF0.shift_mode.modes[1].name=E2=80=99)
+drivers/platform/x86/msi-ec.c:74:6: error: initializer element is not const=
+ant
+    { SM_SPORT_NAME,   0xc0 },
+      ^~~~~~~~~~~~~
+drivers/platform/x86/msi-ec.c:74:6: note: (near initialization for =E2=80=
+=98CONF0.shift_mode.modes[2].name=E2=80=99)
+(...)
 
-Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Manageme=
-nt Driver over WMI for Dell Systems")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Don't try to be smart, just use defines for the constant strings. The
+compiler will recognize it's the same string and will store it only
+once in the data section anyway.
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/=
-platform/x86/dell/dell-wmi-sysman/sysman.c
-index b68dd11cb892..b929b4f82420 100644
-=2D-- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-@@ -393,6 +393,7 @@ static int init_bios_attributes(int attr_type, const c=
-har *guid)
- 	struct kobject *attr_name_kobj; //individual attribute names
- 	union acpi_object *obj =3D NULL;
- 	union acpi_object *elements;
-+	struct kobject *duplicate;
- 	struct kset *tmp_set;
- 	int min_elements;
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Fixes: 392cacf2aa10 ("platform/x86: Add new msi-ec driver")
+Cc: stable@vger.kernel.org
+Cc: Nikita Kravets <teackot@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Gross <markgross@kernel.org>
+---
+ drivers/platform/x86/msi-ec.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-@@ -451,9 +452,11 @@ static int init_bios_attributes(int attr_type, const =
-char *guid)
- 		else
- 			tmp_set =3D wmi_priv.main_dir_kset;
+--- linux-6.4.orig/drivers/platform/x86/msi-ec.c
++++ linux-6.4/drivers/platform/x86/msi-ec.c
+@@ -27,15 +27,15 @@
+ #include <linux/seq_file.h>
+ #include <linux/string.h>
+=20
+-static const char *const SM_ECO_NAME       =3D "eco";
+-static const char *const SM_COMFORT_NAME   =3D "comfort";
+-static const char *const SM_SPORT_NAME     =3D "sport";
+-static const char *const SM_TURBO_NAME     =3D "turbo";
++#define SM_ECO_NAME		"eco"
++#define SM_COMFORT_NAME		"comfort"
++#define SM_SPORT_NAME		"sport"
++#define SM_TURBO_NAME		"turbo"
+=20
+-static const char *const FM_AUTO_NAME     =3D "auto";
+-static const char *const FM_SILENT_NAME   =3D "silent";
+-static const char *const FM_BASIC_NAME    =3D "basic";
+-static const char *const FM_ADVANCED_NAME =3D "advanced";
++#define FM_AUTO_NAME		"auto"
++#define FM_SILENT_NAME		"silent"
++#define FM_BASIC_NAME		"basic"
++#define FM_ADVANCED_NAME	"advanced"
+=20
+ static const char * const ALLOWED_FW_0[] __initconst =3D {
+ 	"14C1EMS1.012",
 
--		if (kset_find_obj(tmp_set, elements[ATTR_NAME].string.pointer)) {
--			pr_debug("duplicate attribute name found - %s\n",
--				elements[ATTR_NAME].string.pointer);
-+		duplicate =3D kset_find_obj(tmp_set, elements[ATTR_NAME].string.pointer=
-);
-+		if (duplicate) {
-+			pr_debug("Duplicate attribute name found - %s\n",
-+				 elements[ATTR_NAME].string.pointer);
-+			kobject_put(duplicate);
- 			goto nextobj;
- 		}
 
-=2D-
-2.39.2
-
+--=20
+Jean Delvare
+SUSE L3 Support
