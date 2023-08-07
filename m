@@ -2,158 +2,147 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBA9C001DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Aug 2023 11:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC35C05051
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Aug 2023 11:33:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231382AbjHGLDj (ORCPT
+        id S232518AbjHGLdm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Aug 2023 07:03:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40622 "EHLO
+        Mon, 7 Aug 2023 07:33:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230467AbjHGLD0 (ORCPT
+        with ESMTP id S232785AbjHGLcf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Aug 2023 07:03:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF9061FC0
-        for <platform-driver-x86@vger.kernel.org>; Mon,  7 Aug 2023 04:02:18 -0700 (PDT)
+        Mon, 7 Aug 2023 07:32:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9501155B3
+        for <platform-driver-x86@vger.kernel.org>; Mon,  7 Aug 2023 04:29:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691406137;
+        s=mimecast20190719; t=1691407685;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4tVoX28GTGtCUXdSQaBJtaWNWRKg0UVBLfIJI4oLwi0=;
-        b=f54uQ9wDTCAncOyoTEDVTngyx2J74k1myFrtcVj5c29v1EmPCgLYAzUG00Z1eiWxspUxJE
-        XggSfqmqzVP2QlP/a6nCfZPqtIYES5Y7ZogetERZdpaycWFsZpea4fbPANykFLWtKP7uVX
-        0PetFQWzNCxoUQOT7rFX3MymNUQ9CBI=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=L+DEVgtcyYjHcyymwge3U6fgCPUFF6bULa9g46xzT1g=;
+        b=N0aBuSpCNdhlECXDZo9J7C+dedzo0VGYFS2aDG3yR2Z5jS/nOTi5JwFmt+Q/ca5nuLECMa
+        dJpju7Aobh+PJJicdiB6m7RRvhKhXvKgEGxd/gZltdc/2But1bqYb0yAIXE49jxWbXbh4U
+        BI6hpwpckYHhDDE5YmAW6jwW1CDKyN4=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-262-HxEFkNcQOg-szjWsNjwLzw-1; Mon, 07 Aug 2023 07:02:15 -0400
-X-MC-Unique: HxEFkNcQOg-szjWsNjwLzw-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5218b9647a8so2922492a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Aug 2023 04:02:14 -0700 (PDT)
+ us-mta-311-NTCQ4IPFNdK9wJqfdYunvw-1; Mon, 07 Aug 2023 07:28:04 -0400
+X-MC-Unique: NTCQ4IPFNdK9wJqfdYunvw-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-99c0bd2ca23so343057366b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Aug 2023 04:28:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691406133; x=1692010933;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=1e100.net; s=20221208; t=1691407683; x=1692012483;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4tVoX28GTGtCUXdSQaBJtaWNWRKg0UVBLfIJI4oLwi0=;
-        b=guhkurBhVafAUos/k9wODAVTIhkhq1Dulf4XpjcKERUh+vUkfAApHc9491iXLryC3b
-         9urCNlFf8YejggynupMjaGPLv06YbTWDrHY0qiHGYwTEOWtCAceKKK41ZS9og05SCwAg
-         8IxZ1tZ8l6od389CHG+YHcm0s7rE1MWNOMKy8b+Y1Kk0BQDT7ixwLNSalSE6FzsKAdfY
-         TUhlaI5nUUaMsg4IBgDRD2cbeprJuMlr6bTabZZdkZ2aQ4KO7uhxGPeRWu16XCzHdsw6
-         dZnKB9vq+m+HWVOxI+eBwfy55FY9TUmoOAp8O7TmtVvRUNx+Q5Zn34ko0+tPsEKLBFYE
-         kONQ==
-X-Gm-Message-State: AOJu0YxYoy0y2teRrKthcrL3+KNI8OdRHIN4odbkedhMlr9AeJtI9qw2
-        If9xLef2ILlqzCMF60QwEO78Uu0jt5FlQ8+kk+tfAkzJE2g5WKMHH6fXNcnm0cfuZLtjJrhPXCO
-        0NkJLlpqPxUAvPgbao/WV4S2263kE/Vy0SA==
-X-Received: by 2002:aa7:da91:0:b0:523:f29:a912 with SMTP id q17-20020aa7da91000000b005230f29a912mr5825485eds.21.1691406133624;
-        Mon, 07 Aug 2023 04:02:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEpV1CiOzHk73Q0S1VjzXSs0/DvHhdz0S3B8+70wxb75oVf2/18bmu8foLRZEbGwYEDxL6b1A==
-X-Received: by 2002:aa7:da91:0:b0:523:f29:a912 with SMTP id q17-20020aa7da91000000b005230f29a912mr5825448eds.21.1691406133282;
-        Mon, 07 Aug 2023 04:02:13 -0700 (PDT)
+        bh=L+DEVgtcyYjHcyymwge3U6fgCPUFF6bULa9g46xzT1g=;
+        b=dvfEVzrEsLkdtpb2KsmnZnRn4rJzSeZlTk9yUdWbpyEbIc1JCyft6s4TM2vZeYO4tU
+         rTIHnSfijQj7R0pT9Yoqbqx9wdKcdZ8a5opMTd7kMNY513rFlyakeHWo8bl8W1qMByp2
+         emZ46OF1o7OBKd+yTju9wmdCHTo9H9InEZ1F8k5zpu4a+63Ceb/KGm7HvoWN4hUSMK4r
+         cfoV+6yfR74sSDw72hA2SgDqKEdwwBn3JZg1WQlMohwiiufx+5qqkjb/O3V41hZDIZGN
+         mVseZgGCj1eo3nBgyk8t/dhg9xCXVnUOpeSnUmzCsmiN01LeHZgFVFNNWKibkQSRmmZk
+         YntA==
+X-Gm-Message-State: AOJu0YwmXo8r5R1HxWnBMgRcWvnxrwZ5FBCpmqapUX33e4fYMeQVzQL1
+        2l3nTkc7FVJm28hcYbJDHh7ff1RyliJUUmTADZ68Dn7NJcD3PWSSstfX6ubpoEaHRtShEamP6UP
+        r60CwXpDdewx+nSjVBAEiPGfMRa2tt+ow2pJQ7NgZXg==
+X-Received: by 2002:a17:907:7888:b0:99b:7297:fbf5 with SMTP id ku8-20020a170907788800b0099b7297fbf5mr8492241ejc.61.1691407683348;
+        Mon, 07 Aug 2023 04:28:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH0lkFbI/zZjElmBIpJVyuqN+E93cJNxamRKeqNSP680dkoF4EwoL/NR/d8EakF6TXJm7nkFQ==
+X-Received: by 2002:a17:907:7888:b0:99b:7297:fbf5 with SMTP id ku8-20020a170907788800b0099b7297fbf5mr8492227ejc.61.1691407683079;
+        Mon, 07 Aug 2023 04:28:03 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id t10-20020aa7d4ca000000b005226f281bc5sm5036828edr.25.2023.08.07.04.02.11
+        by smtp.gmail.com with ESMTPSA id s5-20020a170906168500b00999bb1e01dfsm5042686ejd.52.2023.08.07.04.28.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Aug 2023 04:02:12 -0700 (PDT)
-Message-ID: <145d7375-0e58-b7cf-6240-5d8bc16b0344@redhat.com>
-Date:   Mon, 7 Aug 2023 13:02:11 +0200
+        Mon, 07 Aug 2023 04:28:02 -0700 (PDT)
+Message-ID: <4ab55129-d35c-fea5-0c59-5183928d55d1@redhat.com>
+Date:   Mon, 7 Aug 2023 13:28:01 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH net-next v2 1/5] platform/x86: intel_pmc_core: Add IPC
- mailbox accessor function and add SoC register access
+Subject: Re: [PATCH] hp-bioscfg: Update string length calculation
 Content-Language: en-US
-To:     Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        =?UTF-8?Q?Marek_Beh=c3=ban?= <kabel@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Wong Vee Khee <veekhee@apple.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Shenwei Wang <shenwei.wang@nxp.com>,
-        Andrey Konovalov <andrey.konovalov@linaro.org>,
-        Jochen Henneberg <jh@henneberg-systemdesign.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
-        Tan Tee Min <tee.min.tan@linux.intel.com>,
-        Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-        Lai Peter Jun Ann <jun.ann.lai@intel.com>
-References: <20230804084527.2082302-1-yong.liang.choong@linux.intel.com>
- <20230804084527.2082302-2-yong.liang.choong@linux.intel.com>
+To:     Jorge Lopez <jorgealtxwork@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas@t-8ch.de, ilpo.jarvinen@linux.intel.com,
+        dan.carpenter@linaro.org
+References: <20230801191629.45942-1-jorge.lopez2@hp.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230804084527.2082302-2-yong.liang.choong@linux.intel.com>
+In-Reply-To: <20230801191629.45942-1-jorge.lopez2@hp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi David,
+Hi Jorge,
 
-On 8/4/23 10:45, Choong Yong Liang wrote:
-> From: "David E. Box" <david.e.box@linux.intel.com>
+On 8/1/23 21:16, Jorge Lopez wrote:
+> Replace method how the string length is calculated.
+> Removed unused variable 'size'
 > 
-> - Exports intel_pmc_core_ipc() for host access to the PMC IPC mailbox
-> - Add support to use IPC command allows host to access SoC registers
-> through PMC firmware that are otherwise inaccessible to the host due to
-> security policies.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Signed-off-by: Chao Qin <chao.qin@intel.com>
-> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 
-The new exported intel_pmc_core_ipc() function does not seem to
-depend on any existing PMC code.
+While reviewing this I have noticed that the parsing of ORD_LIST_ELEMENTS
+in hp_populate_ordered_list_elements_from_package() seems to be quite buggy:
 
-IMHO it would be better to put this in a new .c file under
-arch/x86/platform/intel/ this is where similar helpers like
-the iosf_mbi functions also live.
+1. Normally str_value and value_len get set for string type package elements by:
 
-This also avoids Kconfig complications. Currently the
-drivers/platform/x86/intel/pmc/core.c code is only
-build if CONFIG_X86_PLATFORM_DEVICES and
-CONFIG_INTEL_PMC_CORE are both set. So if a driver
-wants to make sure this is enabled by selecting them
-then it needs to select both.
+                case ACPI_TYPE_STRING:
+                        if (elem != PREREQUISITES && elem != ORD_LIST_ELEMENTS) {
+                                ret = hp_convert_hexstr_to_str(order_obj[elem].string.pointer,
+                                                               order_obj[elem].string.length,
+                                                               &str_value, &value_len);
+                                if (ret)
+                                        continue;
+                        }
+                        break;
 
-Talking about Kconfig:
+But notice how the  hp_convert_hexstr_to_str() call gets stepped when
+elem == ORD_LIST_ELEMENTS .
 
-#if IS_ENABLED(CONFIG_INTEL_PMC_CORE)
-int intel_pmc_core_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *rbuf);
-#else
-static inline int intel_pmc_core_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *rbuf)
-{
-	return -ENODEV;
-}
-#endif /* CONFIG_INTEL_PMC_CORE */
+Yes when next dealing with ORD_LIST_ELEMENTS the never updated str_value and value_len
+get used:
 
-Notice that CONFIG_INTEL_PMC_CORE is a tristate, so pmc might be build as a module where as a consumer of intel_pmc_core_ipc() might end up builtin in which case this will not work without extra Kconfig protection. And if you are going to add extra Kconfig you might just as well select or depend on INTEL_PMC_CORE and drop the #if .
+		switch (eloc) {
+		...
+                case ORD_LIST_ELEMENTS:
+                        /*
+                         * Ordered list data is stored in hex and comma separated format
+                         * Convert the data and split it to show each element
+                         */
+                        ret = hp_convert_hexstr_to_str(str_value, value_len, &tmpstr, &tmp_len);
+                        if (ret)
+                                goto exit_list;
+
+So that does not seem right.
+
+2. ordered_list_data->elements[0] never gets filled when there actually is a comma in
+   the ordered-list, iow when there is more then 1 element:
+
+                        part_tmp = tmpstr;
+                        part = strsep(&part_tmp, COMMA_SEP);
+                        if (!part)
+                                strscpy(ordered_list_data->elements[0],
+                                        tmpstr,
+                                        sizeof(ordered_list_data->elements[0]));
+
+                        for (elem = 1; elem < MAX_ELEMENTS_SIZE && part; elem++) {
+                                strscpy(ordered_list_data->elements[elem],
+                                        part,
+                                        sizeof(ordered_list_data->elements[elem]));
+                                part = strsep(&part_tmp, SEMICOLON_SEP);
+                        }
+
+Notice how the for starts at elem = 1, so if part is not NULL (and it is never NULL for the first call strsep will always return tmpstr) then ordered_list_data->elements[0] never gets filled.
+
+3. ordered_list_data->elements_size is set but never validated. You should compare elem after the loop with ordered_list_data->elements_size and make sure they match. IOW verify that 0-(ordered_list_data->elements_size-1) entries of the ordered_list_data->elements[] array have been filled.
+
+4. For specific values of eloc the code expects the current order_obj[elem] to be either an integer or a string, but this is not validated. Please validate that order_obj[elem].type matches with what is expected (string or int) for the current value of eloc.
+
+This all makes me wonder if this specific code-path has been tested ?  Please make sure to test this specific code-path.
 
 Regards,
 
@@ -163,156 +152,39 @@ Hans
 
 
 
-
-> ---
->  MAINTAINERS                                   |  1 +
->  drivers/platform/x86/intel/pmc/core.c         | 60 +++++++++++++++++++
->  .../linux/platform_data/x86/intel_pmc_core.h  | 41 +++++++++++++
->  3 files changed, 102 insertions(+)
->  create mode 100644 include/linux/platform_data/x86/intel_pmc_core.h
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 069e176d607a..8a034dee9da9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10648,6 +10648,7 @@ L:	platform-driver-x86@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/ABI/testing/sysfs-platform-intel-pmc
->  F:	drivers/platform/x86/intel/pmc/
-> +F:	linux/platform_data/x86/intel_pmc_core.h
+> ---
+> Based on the latest platform-drivers-x86.git/for-next
+> ---
+>  drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> index cffc1c9ba3e7..b19644ed12e0 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> @@ -258,13 +258,11 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+>  				eloc++;
+>  			break;
+>  		case ORD_LIST_ELEMENTS:
+> -			size = ordered_list_data->elements_size;
+> -
+>  			/*
+>  			 * Ordered list data is stored in hex and comma separated format
+>  			 * Convert the data and split it to show each element
+>  			 */
+> -			ret = hp_convert_hexstr_to_str(str_value, value_len, &tmpstr, &tmp_len);
+> +			ret = hp_convert_hexstr_to_str(str_value, strlen(str_value), &tmpstr, &tmp_len);
+>  			if (ret)
+>  				goto exit_list;
 >  
->  INTEL PMIC GPIO DRIVERS
->  M:	Andy Shevchenko <andy@kernel.org>
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-> index 5a36b3f77bc5..6fb1b0f453d8 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -20,6 +20,7 @@
->  #include <linux/pci.h>
->  #include <linux/slab.h>
->  #include <linux/suspend.h>
-> +#include <linux/platform_data/x86/intel_pmc_core.h>
+> @@ -279,7 +277,7 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+>  				strscpy(ordered_list_data->elements[olist_elem],
+>  					part,
+>  					sizeof(ordered_list_data->elements[olist_elem]));
+> -				part = strsep(&part_tmp, SEMICOLON_SEP);
+> +				part = strsep(&part_tmp, COMMA_SEP);
+>  			}
 >  
->  #include <asm/cpu_device_id.h>
->  #include <asm/intel-family.h>
-> @@ -28,6 +29,8 @@
->  
->  #include "core.h"
->  
-> +#define PMC_IPCS_PARAM_COUNT           7
-> +
->  /* Maximum number of modes supported by platfoms that has low power mode capability */
->  const char *pmc_lpm_modes[] = {
->  	"S0i2.0",
-> @@ -53,6 +56,63 @@ const struct pmc_bit_map msr_map[] = {
->  	{}
->  };
->  
-> +int intel_pmc_core_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *rbuf)
-> +{
-> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-> +	union acpi_object params[PMC_IPCS_PARAM_COUNT] = {
-> +		{.type = ACPI_TYPE_INTEGER,},
-> +		{.type = ACPI_TYPE_INTEGER,},
-> +		{.type = ACPI_TYPE_INTEGER,},
-> +		{.type = ACPI_TYPE_INTEGER,},
-> +		{.type = ACPI_TYPE_INTEGER,},
-> +		{.type = ACPI_TYPE_INTEGER,},
-> +		{.type = ACPI_TYPE_INTEGER,},
-> +	};
-> +	struct acpi_object_list arg_list = { PMC_IPCS_PARAM_COUNT, params };
-> +	union acpi_object *obj;
-> +	int status;
-> +
-> +	if (!ipc_cmd || !rbuf)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * 0: IPC Command
-> +	 * 1: IPC Sub Command
-> +	 * 2: Size
-> +	 * 3-6: Write Buffer for offset
-> +	 */
-> +	params[0].integer.value = ipc_cmd->cmd;
-> +	params[1].integer.value = ipc_cmd->sub_cmd;
-> +	params[2].integer.value = ipc_cmd->size;
-> +	params[3].integer.value = ipc_cmd->wbuf[0];
-> +	params[4].integer.value = ipc_cmd->wbuf[1];
-> +	params[5].integer.value = ipc_cmd->wbuf[2];
-> +	params[6].integer.value = ipc_cmd->wbuf[3];
-> +
-> +	status = acpi_evaluate_object(NULL, "\\IPCS", &arg_list, &buffer);
-> +	if (ACPI_FAILURE(status))
-> +		return -ENODEV;
-> +
-> +	obj = buffer.pointer;
-> +	/* Check if the number of elements in package is 5 */
-> +	if (obj && obj->type == ACPI_TYPE_PACKAGE && obj->package.count == 5) {
-> +		const union acpi_object *objs = obj->package.elements;
-> +
-> +		if ((u8)objs[0].integer.value != 0)
-> +			return -EINVAL;
-> +
-> +		rbuf[0] = objs[1].integer.value;
-> +		rbuf[1] = objs[2].integer.value;
-> +		rbuf[2] = objs[3].integer.value;
-> +		rbuf[3] = objs[4].integer.value;
-> +	} else {
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(intel_pmc_core_ipc);
-> +
->  static inline u32 pmc_core_reg_read(struct pmc *pmc, int reg_offset)
->  {
->  	return readl(pmc->regbase + reg_offset);
-> diff --git a/include/linux/platform_data/x86/intel_pmc_core.h b/include/linux/platform_data/x86/intel_pmc_core.h
-> new file mode 100644
-> index 000000000000..9bb3394fedcf
-> --- /dev/null
-> +++ b/include/linux/platform_data/x86/intel_pmc_core.h
-> @@ -0,0 +1,41 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Intel Core SoC Power Management Controller Header File
-> + *
-> + * Copyright (c) 2023, Intel Corporation.
-> + * All Rights Reserved.
-> + *
-> + * Authors: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-> + *          David E. Box <david.e.box@linux.intel.com>
-> + */
-> +#ifndef INTEL_PMC_CORE_H
-> +#define INTEL_PMC_CORE_H
-> +
-> +#define IPC_SOC_REGISTER_ACCESS			0xAA
-> +#define IPC_SOC_SUB_CMD_READ			0x00
-> +#define IPC_SOC_SUB_CMD_WRITE			0x01
-> +
-> +struct pmc_ipc_cmd {
-> +	u32 cmd;
-> +	u32 sub_cmd;
-> +	u32 size;
-> +	u32 wbuf[4];
-> +};
-> +
-> +#if IS_ENABLED(CONFIG_INTEL_PMC_CORE)
-> +/**
-> + * intel_pmc_core_ipc() - PMC IPC Mailbox accessor
-> + * @ipc_cmd:  struct pmc_ipc_cmd prepared with input to send
-> + * @rbuf:     Allocated u32[4] array for returned IPC data
-> + *
-> + * Return: 0 on success. Non-zero on mailbox error
-> + */
-> +int intel_pmc_core_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *rbuf);
-> +#else
-> +static inline int intel_pmc_core_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *rbuf)
-> +{
-> +	return -ENODEV;
-> +}
-> +#endif /* CONFIG_INTEL_PMC_CORE */
-> +
-> +#endif /* INTEL_PMC_CORE_H */
+>  			kfree(str_value);
 
