@@ -2,67 +2,89 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 844DCC00528
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Aug 2023 15:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D212C001B0
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Aug 2023 15:56:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229939AbjHGPIo (ORCPT
+        id S229545AbjHGP4Y (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Aug 2023 11:08:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39696 "EHLO
+        Mon, 7 Aug 2023 11:56:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229592AbjHGPIn (ORCPT
+        with ESMTP id S229491AbjHGP4X (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Aug 2023 11:08:43 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2422C1FCE;
-        Mon,  7 Aug 2023 08:08:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Subject:Cc:To:From:Date:Message-ID:
-        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=Cc7Qso+rtqYL4z41yt/S7GCvRApv9pu8SfGh30r2Ct4=; b=MKv0W1lCMX7Ig/GFUcBTKF23rP
-        kfBI64q+FB4WSJjX6NLuD/+/rI1HuEZYBeNX4bB27POHliDxcoNHoNoWlsu9NHNEwKx6wwKUH/LBO
-        fqV+CBH06QCDe0I9F8TZ0t4NMynLzlsPSklN7kaf3+B0oxuZhz1PqzcCXYjfy8Z6Z2XAjLtwJXjBB
-        jf/rRReJO/M2ohlj0sKH7G/H4XsMbNe/2MTZh0mqu74JeloE+UbHZR7veW953WyUdAVKlhl6YMdyz
-        pPiZMhetJCBDFbwW/n6JlAULYU0CFK0YTLWocYBY27vtMfOvclELTaZho3UbToYjWu3l2gMyc0zbA
-        ECZ/gBzQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qT1pP-00BlpC-Vn; Mon, 07 Aug 2023 15:07:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8AB0C30014A;
-        Mon,  7 Aug 2023 17:07:27 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 6D7CA2028F056; Mon,  7 Aug 2023 17:07:27 +0200 (CEST)
-Message-ID: <20230807123806.700370534@infradead.org>
-User-Agent: quilt/0.66
-Date:   Mon, 07 Aug 2023 14:38:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     x86@kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com,
-        Tony Luck <tony.luck@intel.com>, luto@kernel.org,
-        james.morse@arm.com, mchehab@kernel.org, rric@kernel.org,
-        jacob.jun.pan@linux.intel.com, lenb@kernel.org,
-        irenic.rajneesh@gmail.com, david.e.box@intel.com,
-        hdegoede@redhat.com, markgross@kernel.org,
-        srinivas.pandruvada@linux.intel.com, rafael@kernel.org,
-        daniel.lezcano@linaro.org, amitk@kernel.org, rui.zhang@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH 0/3] x86/cpu: Cleanup of INTEL_FAM6_foo
+        Mon, 7 Aug 2023 11:56:23 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3720F0;
+        Mon,  7 Aug 2023 08:56:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691423782; x=1722959782;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=udsAEu9C41dvA0CswFSJhLFhNgvz1he+2g/uOtdU38Y=;
+  b=nkrbVUn1NPyvTBU38sHTs9MTkQKz1hyxCJXXdrqlLUwDFQKbwqrdIIMP
+   Dd/cubs5Acw42DKbeqFNj6jF+QEMjn7mDqQiP7f2AkZ2IbSgFNbch8dcd
+   jiwxec9VBDbsqawMYKIkqeXAEpUEI0KK4WrqbKdMQvRAUxCMyKnRtkp4i
+   b8Ud+4WLQPX2uVHn2Ybfhk2pSs8ffeaQrry+NSf9j1C2EGzgK4tqZ2XtJ
+   tGkCJrqhcPEDzOsJwYEQZcShpNQHz9OG8lbZw0tnn/SuRS+Aj3mGuCbsP
+   zVQ5zOdpvwB4LoKn+1i61JNJlH1puyKpVG3uasX038otnEqaN35U8J2Kq
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="456965930"
+X-IronPort-AV: E=Sophos;i="6.01,262,1684825200"; 
+   d="scan'208";a="456965930"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 08:56:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="724559351"
+X-IronPort-AV: E=Sophos;i="6.01,262,1684825200"; 
+   d="scan'208";a="724559351"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga007.jf.intel.com with ESMTP; 07 Aug 2023 08:56:16 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qT2ac-000kTr-36;
+        Mon, 07 Aug 2023 18:56:14 +0300
+Date:   Mon, 7 Aug 2023 18:56:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     xingtong_wu@163.com
+Cc:     ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
+        markgross@kernel.org, xingtong.wu@siemens.com, lee@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gerd.haeussler.ext@siemens.com, tobias.schaffner@siemens.com,
+        lkp@intel.com
+Subject: Re: [PATCH v2 1/2] platform/x86/siemens: simatic-ipc: fix logic
+ error in BX-59A
+Message-ID: <ZNEUHo0fR280O4mN@smile.fi.intel.com>
+References: <7196d4b9-34fe-4a18-863b-65d07c4a348c@linux.intel.com>
+ <20430731173026.2631-1-xingtong_wu@163.com>
+ <20430731173026.2631-2-xingtong_wu@163.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20430731173026.2631-2-xingtong_wu@163.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Sat, Aug 01, 2043 at 01:30:26AM +0800, xingtong_wu@163.com wrote:
+> From: "xingtong.wu" <xingtong.wu@siemens.com>
+> 
+> The variable "ledmode" is missing from if statement that leads to
+> a logical error. Add the missing variable to the if condition.
+> 
+> Fixes: b8af77951941 ("platform/x86/siemens: simatic-ipc: add new models BX-56A/BX-59A")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202307312322.Aa8upHWK-lkp@intel.com/
 
-I seem to have missed 'spring' but here goes...
+> 
+
+Blank lines are not allowed in the tag block.
+
+> Signed-off-by: xingtong.wu <xingtong.wu@siemens.com>
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
