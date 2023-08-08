@@ -2,206 +2,185 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E21C04A6A
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Aug 2023 03:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2E9C001DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Aug 2023 16:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231181AbjHHDRu (ORCPT
+        id S230155AbjHHQHx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Aug 2023 23:17:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44200 "EHLO
+        Tue, 8 Aug 2023 12:07:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231133AbjHHDRl (ORCPT
+        with ESMTP id S231365AbjHHQG1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Aug 2023 23:17:41 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2080.outbound.protection.outlook.com [40.107.243.80])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AD08121;
-        Mon,  7 Aug 2023 20:17:40 -0700 (PDT)
+        Tue, 8 Aug 2023 12:06:27 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2084.outbound.protection.outlook.com [40.107.237.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EDDE729D;
+        Tue,  8 Aug 2023 08:45:50 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FKKwvLAm8YRYX0UssyxtmuEN7PEyIH+NqAhIXcBPXy7+fiVQMESJNa5WIORepdJxmaBXO6QYqAoPzmhJMv1u+tVe0ncgSwMKFoioOPT65HvlbQLuz/DAHhZ+R4PyaBBQA7u8i6UK0K8HO9SRY8oq64Hr0acKEr2q5Le+SHaXay3sbVKXbPXWLbHmQLJ09cq2xu2HKkJz/sNurjmT/D6VwUfFBO+0f4r4L5s7723sLkhripXgcsevFJKJWEqkP1QTXmJ7DVCWXkzaMSLv5E3AmklPza52XznQIBEFoonPrM6TJ9J2EbgaDSJQJ9n/W3ZNErOpDHthLkQB7mXuKG7vyg==
+ b=k2V0KYftGF19E8h3Id2KWxL/S2LG5G6dC9FT2c8WSrhUJR+5jex/fqirtq8VOleUts0DHIVk7DyhSEQ4LSzsgCSTUGW1WsujwCOnzHo+K05ZEoJkYRltRvYpvFClVQoLi2/mNiGJglZKP8X+0Nhgt71Uj925dE4bpWY+N2TLwK/fi74FwiiIu84+yHWBtoxK9ng64Lk0AeMyIGGKTBcNHz8SBW5rhATwrn9IkgGwWwd0vxtmf3uaoJnCMm2CMaKHKHqPnv0Er6RG/8ruM4M4qDAVg+AlMu5nRMIfTSVRMZGblLr1NaAE0uI9rL75+3TrvREPOzuHDngy5jUH+AYA4A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DdfdwSKY+8sgskLtvJ6VrPmwBgz8azui54rjacT5+nA=;
- b=BE1lfrx7TgAGs5UNncxTTJ5oVIBXz5+SjfB6lcTMRVzvQ4pA9WxvwBZo3aV5/OMEvdYiGRP/ZLougXL/OwAcb+j2uMvpQJVi1R9Qo083EBeaLONtvToNe71/YHffVCdB7s1R/v44kPZE69QVLF98Mxm003OBgeML1zD3X6pA16bvOsrMMDhmm3r4NFuSPQB9a0lznRUlNywmm3QTnK9nAVandCZ4d1mpRLvGU+PJxqPPsdpG9v04gMb5DYKL8Xzl9grHwNiemNFIplDlvxRd09KSyiiLF231UB/dcGP6RYahfZ4fGezEXCwy0vjE5tIGBRmyAtwYCsQIq8BoChHFDw==
+ bh=e9tL71pqQz3IJjk+70GlRPiNsV8/meuwjRTgGsCLjHA=;
+ b=PyCR4zOwESgclLt2U3h7MWyTf8OPGDBT0bjLTSKRTEkTJQJKbsf2hjjwLGw8dPdXzm6VtZ8T99nuGUzJF2OIELrjvNOv0LonfU9zH9thGSd33rsoMU9mTc7sqGzCwB0c+mDFQvudoqlr/MZAHKOwdC1bs1dIxMyuMxmKG4k+EL7y4aWR+yOutLo8GV/rHRPrYAKj34jsKjb6Os//4y61NPKBlxUSaN7PMFaSH0rSXqLrFCDwxjwQIUUkeufirO8kIQV2Jby3C7Wb7XtNVZ97THwjzJXqfZzGi5zSDgruvrxd1iu96dWnRG5XPNMu3kzuis2rDOhshk9JE4D17W/EAg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DdfdwSKY+8sgskLtvJ6VrPmwBgz8azui54rjacT5+nA=;
- b=NENwyMqGxAgHbh3jYCqMHhvzMNz+sjVAXiWk4JckZqMVjAKzZB6Ayst7ZardSYhMwUxl/lq5g1T44DJ5utvHFtNr12tBhZO0XOWsjCGHwRoc44xgLZ10b5GTdH1xPti6HnbD+qVAV7WH1iDQNJ+lEcJ9xznUhHJD/lZBrHPQvnE=
+ bh=e9tL71pqQz3IJjk+70GlRPiNsV8/meuwjRTgGsCLjHA=;
+ b=SU+Qox2VkU9SX6/uUdS3ywdBa/AJI/ZEqU8xGTCY/MqlsnHV6yatL54uvqwe7Tk5Ak5WQHsHTsDyzizw/xWASvNazEly8czzW6UjgxWKEgl6lUvB8hPKLl/iTnyo5n1es0hCEL4e5YnR5XH2moMkeB9YWdikv52jXDYwiEVlX1k=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by BY5PR12MB5013.namprd12.prod.outlook.com (2603:10b6:a03:1dc::9) with
+Received: from BN8PR12MB3108.namprd12.prod.outlook.com (2603:10b6:408:40::20)
+ by LV3PR12MB9185.namprd12.prod.outlook.com (2603:10b6:408:199::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.27; Tue, 8 Aug
- 2023 03:17:33 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6652.026; Tue, 8 Aug 2023
- 03:17:32 +0000
-Message-ID: <894b3737-1a0a-4139-9c73-686a95481795@amd.com>
-Date:   Mon, 7 Aug 2023 22:17:33 -0500
+ 2023 15:18:10 +0000
+Received: from BN8PR12MB3108.namprd12.prod.outlook.com
+ ([fe80::377c:b288:3718:408b]) by BN8PR12MB3108.namprd12.prod.outlook.com
+ ([fe80::377c:b288:3718:408b%7]) with mapi id 15.20.6652.026; Tue, 8 Aug 2023
+ 15:18:10 +0000
+Message-ID: <b5609e88-2bdb-44ad-8a3a-b61196ee540a@amd.com>
+Date:   Tue, 8 Aug 2023 11:18:07 -0400
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] platform/x86/amd: Introduce AMD Address Translation
- Library
-To:     Yazen Ghannam <yazen.ghannam@amd.com>, bp@alien8.de,
+Cc:     yazen.ghannam@amd.com,
+        "Limonciello, Mario" <mario.limonciello@amd.com>,
         linux-edac@vger.kernel.org, hdegoede@redhat.com,
         markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        "Luck, Tony" <tony.luck@intel.com>
-Cc:     linux-kernel@vger.kernel.org, avadhut.naik@amd.com
+        "Luck, Tony" <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
+        avadhut.naik@amd.com
+Subject: Re: [PATCH 1/2] platform/x86/amd: Introduce AMD Address Translation
+ Library
+To:     Borislav Petkov <bp@alien8.de>
 References: <20230802185504.606855-1-yazen.ghannam@amd.com>
  <20230802185504.606855-2-yazen.ghannam@amd.com>
  <58934edf-4fad-48e0-bc5d-62712b11e607@amd.com>
+ <894b3737-1a0a-4139-9c73-686a95481795@amd.com>
+ <B3BE6B56-FBAB-4878-A45D-E95AFAC86AB1@alien8.de>
+ <f989cd56-a066-409a-8d82-40d0bc6ff89b@amd.com>
+ <20230808142007.GCZNJPFy8PqTJgTAN5@fat_crate.local>
+ <a62282e0-3784-4d96-b632-fdd6d2627ca3@amd.com>
+ <20230808143735.GDZNJTL0DlJd3225db@fat_crate.local>
 Content-Language: en-US
-From:   "Limonciello, Mario" <mario.limonciello@amd.com>
-In-Reply-To: <58934edf-4fad-48e0-bc5d-62712b11e607@amd.com>
+From:   Yazen Ghannam <yazen.ghannam@amd.com>
+In-Reply-To: <20230808143735.GDZNJTL0DlJd3225db@fat_crate.local>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DM6PR07CA0041.namprd07.prod.outlook.com
- (2603:10b6:5:74::18) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BN0PR04CA0102.namprd04.prod.outlook.com
+ (2603:10b6:408:ec::17) To BN8PR12MB3108.namprd12.prod.outlook.com
+ (2603:10b6:408:40::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|BY5PR12MB5013:EE_
-X-MS-Office365-Filtering-Correlation-Id: 692cda97-9f38-492f-8885-08db97be016b
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3108:EE_|LV3PR12MB9185:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0d6eadb8-71e6-4092-a2d8-08db9822acec
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3I6WrxYPrVTyNi4NiySNw1Aigi5GTw2jLLmOu3uZq0aRXOi6RGeTHfVrU5Qc0RAwU0kPQIjSEulMao5HA3vNBxBnirJuyeyxUdrWFi60fTmpvVCYzRIrK24iW+C3ubC06CWG+157zuUvKNZL0fvevWxj8jrCkvjkpvmiTTDikjk+nOxwFds2eYAE+0rteB73XaydaRnbYoAroSxB/MjvimtX/zWIzUriUa7pJFWIclFfkhZZUkBoMJWc8p3eUdXNiD0FaUrkgSJpK1VCoL35Bga96YReI9X/8+ZKv/w1/hzF8XYhbiFgVPuuqmcdUji+pqo/Z4tnPY7E0d/jroj//TesqMOStsgoZGkx9LEXeGJD+rhclEcyfPBCxvCl01sn7h1WwQctYoPJ+XsLifwbIuInK0vJv0JJ6Bu0/DMqpF+hse/Y+OBqHFV3odCtaKis2dQWRp6lhFhPgFKK08x1b7Iy0jJu6NqMHsdd3I+51PilTJE8LafjJJJYksjssSWo4Npvfq7OwtfsHbM/ECDNjEU/ThPKPkjSkkrThZs+YPOIkDFjerhBEcVA/uunkAv4Idvz9SdfyBx2n9ioZslsifr05fVeA5/XjAYA8R9G7IhMgGUyqn6z2IqTZJ7cVbTu84SMofxVKiNWvgq9gurG0HH7DPbgISQlRZAn5BpWYWWlu+wS1GDHi2tCFth85IPgxFM5bpLDvjtJxIT6DqKryA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(366004)(396003)(136003)(346002)(376002)(90011799007)(451199021)(90021799007)(186006)(1800799003)(8676002)(8936002)(5660300002)(4326008)(41300700001)(316002)(86362001)(83380400001)(31696002)(2906002)(6512007)(6486002)(2616005)(6506007)(53546011)(26005)(36756003)(66476007)(66556008)(66946007)(478600001)(31686004)(110136005)(38100700002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 0luB0BUSRnE5FjGrMlla95Lj+WDtgwGzjSOg5P56M+J4x4tgwcEtWviR+ReQeawkpqiqsEqB65R2zscRIUcBmNlFUjTPJj2C3I6jDdvp0EhO0aEgEoedET386uNbZ+vRFOzNiUDRDzVzrV8n/zxZwKHugUH6GFHqITDUHPDdgCr9TzeDj3lTzBXmLjuStK7dL0EQcZ19NmWgznETCJifL4aBucR+igji+LHAPa6PpC7Q8Uyr7y5T6Ct2/A6iU4HvUvLavQT1YjyBoxKQB0gevz4YHqNJ7TiNS6gjM5lCAH3CD568YXbbOLWVMRLWc1nwQXv4Nsf3KVewp71tggCyA+MzLt4qnxACE1o7u91J9J3/v/hUnSGy7KZhPyzQv5zSVy5/HSn+CwnW/oeRlBIxPbHsyAS783dCdxo0eoooO3naUR3OQXzC3ftcBxs3r3zmvIPkOz5H3tv5ETXKIEk+TAl0gt3tyz83HRwiwu/rioQeuBtp4heWk9kj4TiPZYGH2+7j2teAG7LHRRlueDZhjnapa2mVKJU2O+9blRPT+X0tqZWiv/DoYKfXI2DERH7MoyFJB5aUgNqiQLWBSeLiQeGgeulOz/9aS1VMP35TAfU6TTsHnsobEjmz4jV8S1o1VBKcS/PbStZUVcKQSeT80Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(366004)(396003)(39860400002)(346002)(376002)(451199021)(1800799003)(186006)(2906002)(41300700001)(8936002)(316002)(8676002)(5660300002)(44832011)(36756003)(31696002)(86362001)(2616005)(6666004)(54906003)(6486002)(38100700002)(478600001)(31686004)(53546011)(6506007)(26005)(6512007)(66476007)(4326008)(6916009)(66946007)(83380400001)(66556008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OHpLdmdUY3dHNkR6SWlqWVVyR2g1SXI0cUJPaEF2U01LazJRK3Uvd0lvOUlI?=
- =?utf-8?B?M1pkbHVoNGZsbkNSUXlsUVhmQ2Vxc3JXMENOLzVweWtoMW95UzBJRHl0MnRE?=
- =?utf-8?B?Ujl6aEhZOEk4RTdUMjdTUzFCME1CdGNQTGthaUNnYUUvTklVdk1tZWZSVVhI?=
- =?utf-8?B?ZDhUZHVTUEM2QTF0R0RGTU1KTEJKNlBvbHJWM0dla2E1TXhiS2tIbzRIb1Mw?=
- =?utf-8?B?SVhvRVhwOEFnTXQydEs4TGYxaitNNkVRSHpsN3MrazhPd0JtRElBMU9uRHhJ?=
- =?utf-8?B?cnFCbEViRXVtRjRrZkZsWE9FL0x2bUVKbE1mVmVzRktTMzVjd2pxSmJldkFF?=
- =?utf-8?B?QlY0dGxpejVMSExnclBJaXM1MGhSYWJWSUkwTVpiSXhiKzlWQnZhU3FqWWE2?=
- =?utf-8?B?SE9QcUV1aVJ2WWJzcU1ISDExMURLeklWSnorZEhTZ0JRUjJhcVBiakgrVUdx?=
- =?utf-8?B?a3IzVUZTSDk3Zk92RUVyaTRvak9INHRNU3hUOS9EWTVYSjJFWDhyaVg0R0o1?=
- =?utf-8?B?REcwaTJpY2kyaHhENGRvMEdPc0NmbStBLzNyM2JpbWhCY0pEdUpVMnlVdzhP?=
- =?utf-8?B?Wk1tYTFLZGlaeDRTTkpobVAxNHF6MldBK2pUeTAvVEpqL1M1Tkt0TkNhNlZB?=
- =?utf-8?B?dHlwU1gyQU83RndQZEp4S2NxeVFwY2FUZ1NBdWJvQXdOWjV5UDN3dUp2M2tW?=
- =?utf-8?B?V3NwZDVTVDgzWldzZXZUUVp3ZWtqcGNDdEgyeFBoLzkvRnY1aDNWY1J0STMv?=
- =?utf-8?B?OU9DemREdkZRK0xvL1dMWi8rNEp2czFKR0U5QlR5VU1FNFNQVk5DaCtnaDZi?=
- =?utf-8?B?ZDY5MStuYUQwV2tCRnJJa2lBWXZFT0xkOGxPL1F0RU1RSmI0S0V1OThocWtl?=
- =?utf-8?B?L0tweEVXTHVvbTBqL3N3N0xCR2owUkdWbFc5ZWxEZkU0ZkEwQUVxZUg4bkIy?=
- =?utf-8?B?NG5yUmpwVnFQOW9ES2oyUCs4SWpsMFJ6UGtYTjVwTWlDenNsMG0vclVXUUtx?=
- =?utf-8?B?dytDU1BvbHB0dzg4dXhxUkRUdlRTLzZ6Y3pLb2hKVWVlQVpUdUVHSkltSkh3?=
- =?utf-8?B?VHU0aFcrTjR6QVMrUnNPTUc4U3ZuR0JHL1RGakxDQWkxNDk4dFNBZjMrRk5y?=
- =?utf-8?B?bmFFT3pqSXlBakd5OWxtUnE3eU9sQVJIU0ZuSTBBRHVlVy81Zyt6RVRLZ1ln?=
- =?utf-8?B?bzgvd2VDaEZLNmpUNTIyWWNNTkljcG01UXptQmFGR0hRd09HWXo5RXR1YmE4?=
- =?utf-8?B?RTYwU1gwZHJranFmekdKWnpBNmFRQk84VWFFcGJ6YjQyTFpBbWMvejI3cXRM?=
- =?utf-8?B?ZnY3SjJyUzFJNW5TbU8xWXRBREJIU0VRLy9UM2pCRWJnVUM2WG9uaGxZQk1K?=
- =?utf-8?B?TEFCaE1QbDA3TDFYV3VxTkNvdTJkUXNFcFdsYW8zZVUwN2U4SUlHbHNSbjFx?=
- =?utf-8?B?NzRWbkVmM2RVOWc2YW9LcDI0am1DUWsrNFZubDRTTHJsMG0wTjE3ams4U0xx?=
- =?utf-8?B?S0pNNmNUU28rdXp1R3lsMU1vZ0lkcHpDK3c0aFBZQ0NRWjZ5dEVCbTJkQjMx?=
- =?utf-8?B?L3NYZGJ5OVlZZ0UrMjZMYk51TUZTQXF4YjU2YjRyUWVIRXhtU0NlMGtqemQw?=
- =?utf-8?B?SVB3MzUwcnBOYUx6QkNoOUtaZEdQdnl6SDFWTTFKdE5YWmxwUlRNLzFFOE5m?=
- =?utf-8?B?YUttdFpXL015UDJTL0NkSDJMdTBkS3dZaWIxcWxmZVl5YkFOWThneHlYeDZ5?=
- =?utf-8?B?aFdVVTlPYkU0MmtBQzQ3WEhac1BncXY3SnRITE5TeVNrcmV0dFR5bFNsZGt2?=
- =?utf-8?B?aHZMQVhKVkplS0NrcXd5eDZqcWhMVnpSSFhqaWQzSkEwcy9hQXhBcXR0TUlS?=
- =?utf-8?B?dllDM1RuODllT1dIQnoreFBOdVFKbVFoMnVQSWVKaHg2NWxqZXRVTkxwbVdL?=
- =?utf-8?B?U0JwNWJQbmdrc0ZQZHZmQklQYlpwVHR5WE1BbFlEMUZFL2hVZkYwdy9OUkVs?=
- =?utf-8?B?Tlh0L0ZNV0ZqcmVsYXZvNUZta1FiaTZCbXUwUTRSM2JQZXhPeU5ZNXA0dlRz?=
- =?utf-8?B?MXZQcEUwaFJ1RFZSQ0Y1SGV1OHJZZGdzS3Q0djZwc3haRlRCRTlBNDNjSlY5?=
- =?utf-8?Q?SdRsjIhL+Lt/IoMmcqkalV2ho?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?S29CaVZkcThGOGdPODRzVzliUGRLMjQzZ1E5RW5SNVZNdEZkMWFhSElwUTJW?=
+ =?utf-8?B?NzJFMnNiVDNjVllwbXNPQ01Kdjg5T1cyaFpIRXlXWUp5dlY4aXlhbTR0cENr?=
+ =?utf-8?B?NWlQaTQ5Sis4c2E3WnhodU5RdzlOUHVvRFJHQm9DdWRUSEdvZ0FiTHFIRzRV?=
+ =?utf-8?B?bDVQMXdZd21ZL1MzRXhobjcvL1VZclNnd1FDNnlBbE13RVdTMGpWdmhXczlh?=
+ =?utf-8?B?dDE1L0xKYzdNYVlCbjgvTXZVaUF6bDZpdlJ1Z2xFc2dXSGdhVXpCa0JCU0JP?=
+ =?utf-8?B?NXJ3NmRoS0Nsd2ZBamF6NDJOODBOY3h4Uk43cnc0dGpVYmN4cVFxRm8xMllR?=
+ =?utf-8?B?K1Q2WGVnMlk3V1RsTjVmdlpFdGtncUFWbElBbGpDQ3VwVEZlNG9OZEJjc2JV?=
+ =?utf-8?B?K0pwTTU5eHdvZk1kWlErOVEyWGdMMUU1clV0ZU9vTmZ6VklwN2tBdjU2SGIz?=
+ =?utf-8?B?SjZuRU41WGsxWC94NzZGSHlDNlE5Q1M5cTk0MlNjNzhBTldzSWloWjNjT0E5?=
+ =?utf-8?B?WTR0WGIyZWFRUndsZis3dC9Nb2JlVjhiNWFYUVZYOVhMV1IyMnM2NWNIQnkr?=
+ =?utf-8?B?MGZtVjFnT0hvaFd3T1FRZWx3L3JjYUdYSjFmeWF1UTF5d2NKMTZCbU5Zc2RJ?=
+ =?utf-8?B?RmtCcU91eXY2MksxNmk1MzdyZXZhZUUwVmsvU3dwSlBncmhBcjJQUlNMMUVt?=
+ =?utf-8?B?NWl4UFZ1MjhoTW1IVG4xS1BpSlpXR3RYWWlweityZzlkS2w0a1RQYWN3M21V?=
+ =?utf-8?B?VGFKNXhOL1ZoRTcwUHF1eHRYaE1iRDFJdVlUY3p0Skd6d2N5SEl6K3ZWOWY0?=
+ =?utf-8?B?NTlkYVRrOE1EWEkzc2ZUVk5MaGJackdxNERMYUR5aVlvbGNiVTRlcStqc0Yx?=
+ =?utf-8?B?ZS9MM0IxYldhMFFvZnJrWTBqajZ4RnVCamRJb2JXblcvaXZiMzZHUitINHdy?=
+ =?utf-8?B?ZFBzOTg1OEhnWkg4NWZnSHRrVVRLRW41ZDYzUGFTRHdjUnJhM2RQbHR2ejQ3?=
+ =?utf-8?B?Ui9MWnAwRW9qbmJkQUgzRHgyaG4rZVVWSEJqZm1BdktqS3VFM3hVendnU3VU?=
+ =?utf-8?B?OUJ1V1hMYVdlVVZZM1Jtc1d1QXRDUTdTTUIxcFNIZnQrZEVRQkZsazRJc1or?=
+ =?utf-8?B?ZmxzaGFLSFNWSHZUdXI1ZTVEOWJkbHV4WEdRMzN0cTJQWTJpVFRsd2ZHKzQr?=
+ =?utf-8?B?L2VEQjViMm9OeTJ3SGJ2SWtTT2ZTZFpLd2NkSjZSamprOG16VGNwbVBmMUU4?=
+ =?utf-8?B?L0xDd1V5TEowRzdCV3pJR0UwQzZCTVJRY1Q2MVREbWdEdUJxTXBDR2FOc1VI?=
+ =?utf-8?B?a0lERlBOTG13MG5hRDNBUGJkZHdmdG9ReXVZZXVuWTdaZ1B6QjBYLzBCamsx?=
+ =?utf-8?B?VFBxblN1ZWVvY1lXSDBrWFp2YWV2dUVlUmowdldRZlBBYVQ1cDJZekJOaHpC?=
+ =?utf-8?B?K0d6WXh1aGFQWE02c0MxbGNnUXJmRGFSUmU0RTFzcEhURGZJSytvQVUyZmpm?=
+ =?utf-8?B?NldWMXlVUnJCeCtST1ZDbUlEcTJpRUpQcHNtWGVDeW1EUnVic2FkWkxsSVFU?=
+ =?utf-8?B?Q2FJeWJmdmZBNWRYSzdtajlqbUJQczV5UzM5dHBUK05ObUpZNCs4NEJyYVpt?=
+ =?utf-8?B?bjgvdk5LSDZkR1h2dnRFUks1ODUzSE5PQyszemhUYU4rcWJTbkVsYmJBa1lO?=
+ =?utf-8?B?WExVWUhaUGZuMzVhbmN3cVI4Vi80SXRMMHUxdWUxZGNTcmtKcE90bE5Ra2xp?=
+ =?utf-8?B?L3k5M1ZXempGbDhXRXBqR2dNdjVzQW04NGNZZ0RDdVpjTWtTRTBIOXlHeURT?=
+ =?utf-8?B?TmhHTm1oUXlENWJPU3YwdDhsZ3hpOGJwUFM4RXphTitJS2FqMXcweE5RcDQ3?=
+ =?utf-8?B?ZDh4cllnd0xYRXNWVnBZV0N1WmtOQ0FNeXZaM0xrQW81Zmo0SWNsY1E4Z2lW?=
+ =?utf-8?B?bzdQOUFKcXRmbkd3M2FRK3FjUHVRaHkvbXdteko5SnpULzh3ZGNOQW1iOXZ4?=
+ =?utf-8?B?MU5uNFFIblRnbTdHODRma0o1MXp3YlVQbmk2dHNxTitWaWFxMXlKRDh2djJl?=
+ =?utf-8?B?c3lPUGtaUiszd09YWGhtSTFDeVdGbHl1ekx0aGJDQkloY0FlZkxqZTdPWFlK?=
+ =?utf-8?Q?l+Nyj9M0/UOGTJP1Qe5XUCPfy?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 692cda97-9f38-492f-8885-08db97be016b
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d6eadb8-71e6-4092-a2d8-08db9822acec
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3108.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2023 03:17:32.8628
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2023 15:18:10.2419
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J9Cigs4b5HWbyPkErfMgmLcPt1wycp0MvALLyW8rmTPdoZceuPj9pwzO+hu2EtGzpvrnG1T3p7JCNqrR+9Ez+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB5013
+X-MS-Exchange-CrossTenant-UserPrincipalName: YRe76hEGJF7P3h/7waN8qvlDdUzXkuUuwuaBSa7pQepYkSLxNCz4tmdinF9xTpjKuXmGsCFwnFQVXUTUv3hWHQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9185
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On 8/8/2023 10:37 AM, Borislav Petkov wrote:
+> On Tue, Aug 08, 2023 at 10:28:51AM -0400, Yazen Ghannam wrote:
+>> Because this isn't intended to be only for MCA errors. The translation code
+>> is related to the AMD Data Fabric. And it'll be a common back-end for memory
+>> errors coming from MCA and CXL.
+> 
+> But EDAC is not only about memory errors. Why not extend this into
+> something which does other RAS functionality instead of doing a second
+> one which is more or less related?
+>
+> mce_amd is already loaded on the system, why add a second module if it
+> can be part of the first one just the same?
+>
 
+I think it would be better to avoid dependencies between independent things.
 
-On 8/7/2023 3:44 PM, Yazen Ghannam wrote:
-> On 8/2/2023 2:55 PM, Yazen Ghannam wrote:
->> AMD Zen-based systems report memory errors through Machine Check banks
->> representing Unified Memory Controllers (UMCs). The address value
->> reported for DRAM ECC errors is a "normalized address" that is relative
->> to the UMC. This normalized address must be converted to a system
->> physical address to be usable by the OS.
->>
->> Support for this address translation was introduced to the MCA subsystem
->> with Zen1 systems. The code was later moved to the AMD64 EDAC module,
->> since this was the only user of the code at the time.
->>
->> However, there are uses for this translation outside of EDAC. The system
->> physical address can be used in MCA for preemptive page offlining as done
->> in some MCA notifier functions. Also, this translation is needed as the
->> basis of similar functionality needed for some CXL configurations on AMD
->> systems.
->>
->> Introduce a common address translation library that can be used for
->> multiple subsystems including MCA, EDAC, and CXL.
->>
->> Include support for UMC normalized to system physical address
->> translation for current CPU systems.
->>
->> Future development to include:
->> - DF4.5 Non-power-of-2 interleaving modes.
->> - Heterogeneous CPU+GPU system support.
->> - CXL translation support.
->> - Caching of common intermediate values and results.
->> - Leverage UEFI PRM methods as alternate backends to existing native
->>    code.
->>
->> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
->> ---
->>   MAINTAINERS                                |   7 +
->>   drivers/platform/x86/amd/Kconfig           |   1 +
->>   drivers/platform/x86/amd/Makefile          |   1 +
->>   drivers/platform/x86/amd/atl/Kconfig       |  20 +
->>   drivers/platform/x86/amd/atl/Makefile      |  18 +
->>   drivers/platform/x86/amd/atl/access.c      | 107 ++++
->>   drivers/platform/x86/amd/atl/core.c        | 212 +++++++
->>   drivers/platform/x86/amd/atl/dehash.c      | 459 ++++++++++++++
->>   drivers/platform/x86/amd/atl/denormalize.c | 644 ++++++++++++++++++++
->>   drivers/platform/x86/amd/atl/internal.h    | 307 ++++++++++
->>   drivers/platform/x86/amd/atl/map.c         | 659 +++++++++++++++++++++
->>   drivers/platform/x86/amd/atl/reg_fields.h  | 603 +++++++++++++++++++
->>   drivers/platform/x86/amd/atl/system.c      | 282 +++++++++
->>   drivers/platform/x86/amd/atl/umc.c         |  53 ++
->>   include/linux/amd-atl.h                    |  18 +
->>
-> 
-> Hi all,
-> 
-> I'd like to get feedback on the most appropriate place for this code.
-> 
-> I want to move this out of EDAC, since it's not really an EDAC feature. 
-> And it needs to be used by subsystems other than EDAC.
-> 
-> I thought x86 Platform Drivers, because the code is very 
-> platform-specific. And there are already some AMD platform drivers. But 
-> there isn't any platform control or management for this translation. 
-> It's just reading registers and calculating values. So it's not really a 
-> "platform driver" in the sense that it manages platform-specific behavior.
-> 
-> Another option is for this code to be in arch/x86/ras/. But I would like 
-> the option for this code to be built as a module, at least for debug and 
-> development. And I don't know that modules, nor platform-specific code, 
-> should be in arch/.
-> 
-> Currently, I think this could go in drivers/ras/. This address 
-> translation is needed for RAS use cases, so making it a part of "RAS 
-> Infrastructure" may make the most sense.
-> 
-> Boris, Tony, (and others) what do you think?
+For example, amd_smn_read() is mostly used in amd64_edac. EDAC was the 
+original user of SMN accesses, and all the SMN stuff could have been 
+included in EDAC. However, SMN is not specifically for EDAC, so it was 
+added to amd_nb.c to be commonly available. Currently, SMN accesses are 
+done in other modules. I don't think it would have been a good idea to 
+force other modules or subsystems to require EDAC to be used.
 
-Given it's 'library code' to be used by a bunch of things and also want 
-to be able to use a module, what about putting it in lib/?  There's 
-plenty of library code there as tristate.
+This is my reasoning for a separate, independent module for the 
+translation. EDAC is the first user of this. But there will be future 
+code that can leverage this, like CXL, and even the MCE subsystem. And, 
+yes, mce_amd may be already loaded, but this isn't a given. A person may 
+want MCE and CXL support without wanting to use EDAC.
+
+Furthermore, some things using the translation will be built-in, so the 
+translation module will need to be built-in. And it seems unnecessary to 
+require all of mce_amd to be built-in just for the translation part.
+
+> Strictly speaking, this all should've been drivers/ras/ from the very
+> beginning and all EDAC should move there but that's going to be madness
+> to do now.
+> 
+
+I agree. And I don't think much of the existing things in EDAC should be 
+moved out. But this is new code, so there's an opportunity to have it in 
+a more appropriate place.
+
+And, thinking on it more, this could be another example for future 
+"common RAS" functionality. Isn't that why the CEC is in drivers/ras? It 
+seems like things go into EDAC because it's thought of as the de facto 
+RAS location. But why have something in EDAC if it doesn't provide EDAC 
+functionality? Other RAS things, like AER, APEI, etc., don't live in EDAC.
+
+Thanks,
+Yazen
+
 
 
