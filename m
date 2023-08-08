@@ -2,94 +2,84 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF834C05052
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Aug 2023 19:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E31C001B0
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Aug 2023 20:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235940AbjHHTWf (ORCPT
+        id S233619AbjHHUB4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 8 Aug 2023 15:22:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53344 "EHLO
+        Tue, 8 Aug 2023 16:01:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236198AbjHHTWB (ORCPT
+        with ESMTP id S232575AbjHHUBq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Aug 2023 15:22:01 -0400
-X-Greylist: delayed 2978 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 08 Aug 2023 09:45:44 PDT
-Received: from mail.alien8.de (mail.alien8.de [IPv6:2a01:4f9:3051:3f93::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 707E810E9D1;
-        Tue,  8 Aug 2023 09:45:44 -0700 (PDT)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E14CA40E0195;
-        Tue,  8 Aug 2023 14:20:22 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-        header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-        by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id HuT5X_6YHG5g; Tue,  8 Aug 2023 14:20:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-        t=1691504421; bh=Ja/4Je+eQgflIPt0xBBlPFb2JkS0+HhGaeLu0Idap6o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U1SjwFKpQtDG5Qh7oIa3iME7IroVA+8T10PvQZHUUqAtxqdnLOVc2MQDG4JB1jpZT
-         gKykGZhQn2JZ9G/0Ncw8EfTy5rYEyUSznPl7lrOc4IJ1bfEBAdsSZ06aCgTcf8xKBr
-         scvAmXm96mihB3D0klClpiJHyYCPkiErUjBOansPrh+DBDFi+YqLVbk/wyIvhLqzYp
-         hLNtH0wimamG0TVvOWOL5tjPoAMUVLstyfzLjuCXNdF1P3R2bxgxtAN4sCUHp+6b0D
-         qotyPf84fVzrKhUiX0MivWmUGgB1PnMPtuRpMHzeEzPg88cVerUb9cAomVUoZoOeoF
-         u59MsfV241sDqEYUrkXatwWEr4KrBhxEvV7gP0Nl+wjveRve69qa4XOffEmbPPnuc6
-         4LZY7U60JwXokXFhkGyV26ypAHMMyRKgL2+sytv7InAhg81GavOCpvFziYfmbhCYss
-         0mtmBwpE+CE9p4EuPmHRBsvTHCb4JKlTLBc6fggqvHVvanIM6rUH76+BNwDS4mQ+bN
-         gXqMFohgHGEzHnbKsay1bRGfggNsPY97AO9qqRXiewZEZRpJPoba2S6cs0v5rvrOKk
-         uuxNk0e8pYKcr0m4wrX/OkueOQCCa/7YzGhidZ1WJXtroJwS6FyBxnZ4IE0X6rSU7R
-         m6n1b+yARY+iSUe2ebx8/YP4=
-Received: from zn.tnic (pd9530d32.dip0.t-ipconnect.de [217.83.13.50])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-        (No client certificate requested)
-        by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E3C2940E01A2;
-        Tue,  8 Aug 2023 14:20:11 +0000 (UTC)
-Date:   Tue, 8 Aug 2023 16:20:07 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yazen Ghannam <yazen.ghannam@amd.com>
-Cc:     "Limonciello, Mario" <mario.limonciello@amd.com>,
-        linux-edac@vger.kernel.org, hdegoede@redhat.com,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        "Luck, Tony" <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
-        avadhut.naik@amd.com
-Subject: Re: [PATCH 1/2] platform/x86/amd: Introduce AMD Address Translation
- Library
-Message-ID: <20230808142007.GCZNJPFy8PqTJgTAN5@fat_crate.local>
-References: <20230802185504.606855-1-yazen.ghannam@amd.com>
- <20230802185504.606855-2-yazen.ghannam@amd.com>
- <58934edf-4fad-48e0-bc5d-62712b11e607@amd.com>
- <894b3737-1a0a-4139-9c73-686a95481795@amd.com>
- <B3BE6B56-FBAB-4878-A45D-E95AFAC86AB1@alien8.de>
- <f989cd56-a066-409a-8d82-40d0bc6ff89b@amd.com>
+        Tue, 8 Aug 2023 16:01:46 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88527810DE;
+        Tue,  8 Aug 2023 11:17:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691518667; x=1723054667;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=f91rR6f/4Edvrb7hPV3707WcDUjqWofH1o8H8I62aAs=;
+  b=hIX7P10whAD6hILEHhMj5Gy2SlW/H9qZDZpGiCSAxPmTF1IR+lHMv9g2
+   fNXcoyZJeXerb7GdGMl8KrD/K1IVEO2b1zmvaEmGScEtTFBOXHsstcl/w
+   3OmrDkZH6zzqoD1b2bQMkr4cb5cDak/SKQoBRLremnpLZH9G+0WDfzW1U
+   AUDeNwAWBGdvoWiYMlpfTdavxMsaeVxWwxC2+jnCN5pEHJZBI0ssAZMJQ
+   +soi1Fi4aYLUrICZLJF6eGaUBnDdm9PEZhSnVXqUaPslNZGt7Oxazy1Qd
+   3GN3H1Fe3FXlIrv210vnPc4tr0KRNQJgKe8csjKRt2ZaMvuF/r/lzI4G/
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="437268539"
+X-IronPort-AV: E=Sophos;i="6.01,156,1684825200"; 
+   d="scan'208";a="437268539"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2023 10:44:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="801407277"
+X-IronPort-AV: E=Sophos;i="6.01,156,1684825200"; 
+   d="scan'208";a="801407277"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
+  by fmsmga004.fm.intel.com with ESMTP; 08 Aug 2023 10:44:09 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86: ISST: Reduce noise for missing numa information in logs
+Date:   Tue,  8 Aug 2023 10:43:59 -0700
+Message-Id: <20230808174359.50602-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f989cd56-a066-409a-8d82-40d0bc6ff89b@amd.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Aug 08, 2023 at 10:07:19AM -0400, Yazen Ghannam wrote:
-> But just because there's existing vendor-specific code in arch/x86 doesn't
-> necessarily mean we should keep adding to it. So is this okay?
+On platforms with no numa support and with several CPUs, logs have lots
+of noise for message "Fail to get numa node for CPU:.."
 
-I'd say since it is not so close to the arch/ part, drivers/ras/ is more
-fitting IMO. Just like mce_amd is in drivers/edac/.
+Change pr_info() to pr_info_once() as one print is enough to show the
+issue.
 
-Which reminds me: why aren't you adding it to
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-drivers/edac/mce_amd.c
-
-?
-
-That is an MCE decoder *already*.
-
-Thx.
-
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+index 1f59ac55c5f7..a95004e3d80b 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+@@ -335,8 +335,8 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
+ 
+ 		node = dev_to_node(&_pci_dev->dev);
+ 		if (node == NUMA_NO_NODE) {
+-			pr_info("Fail to get numa node for CPU:%d bus:%d dev:%d fn:%d\n",
+-				cpu, bus_no, dev, fn);
++			pr_info_once("Fail to get numa node for CPU:%d bus:%d dev:%d fn:%d\n",
++				     cpu, bus_no, dev, fn);
+ 			continue;
+ 		}
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.41.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
