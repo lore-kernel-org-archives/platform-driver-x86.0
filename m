@@ -2,206 +2,124 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FCCC001B0
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Aug 2023 20:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED0AC001B0
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Aug 2023 21:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233985AbjHIUSO (ORCPT
+        id S233131AbjHIVHo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 9 Aug 2023 16:18:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51240 "EHLO
+        Wed, 9 Aug 2023 17:07:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbjHIUSO (ORCPT
+        with ESMTP id S233136AbjHIVHo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 9 Aug 2023 16:18:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05CF110CF
-        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Aug 2023 13:17:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691612244;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Lr3GiLnlAC+xPvWF1RfzTjSqSRLJdfFt+hjS6z6XxhQ=;
-        b=g2jDInvsQF48H0mtx129DXDqf6QsTDzs5Fq2dtyT6iYllOo8YhUnhdfU6F080l9OJUf+i1
-        U41C1XEHjCQpBw0kkDkOgDDenytscHKBrChemZpuohrE8MLlcD6Qwm2d05GRJBMBgCxiYE
-        82W7R8mYQTB7JX5ahRkuhbnjYIxarMs=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-304-jq1KIcedOaOWbveGyYEpXA-1; Wed, 09 Aug 2023 16:17:22 -0400
-X-MC-Unique: jq1KIcedOaOWbveGyYEpXA-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-51d981149b5so77408a12.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Aug 2023 13:17:22 -0700 (PDT)
+        Wed, 9 Aug 2023 17:07:44 -0400
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 311281FD2;
+        Wed,  9 Aug 2023 14:07:43 -0700 (PDT)
+Received: by mail-ot1-x334.google.com with SMTP id 46e09a7af769-6bd066b0fd4so214373a34.2;
+        Wed, 09 Aug 2023 14:07:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691615262; x=1692220062;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B35FL86sKskIjPM/ffA3EI5QZafQThibDMhYf5nJ0Xg=;
+        b=SG9DwWmWWuvsH2fAgofeTRhLkIKvEiFkcI03U+DBYDfR7tm9vVRM9wrgeAtg9bSQFx
+         tYkHacKyA+tM825TuRzLW+NaauH2VgXlha+oUBRfjw/295l0wrbqIiN8PCxGD/+86UHb
+         EQEwtXoPrnoLY9G8onP9RiO1/ErCGA5qSESOJP3N3GnvMMxw2y9+GxORqLAZDzTDkq6y
+         rhZ4uxEO7hBSXs+t7xvsU+AVmGODsB+2LJC/VKlabfd6E3tVyYQd8AKIutEdVrs1krpJ
+         3ZkYvN4ihOwrO60f7291SIMxgjsYTJoWG4n9CBJ7yfip51G2eJqnS7au3pM8D1fScqb6
+         yrAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691612241; x=1692217041;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lr3GiLnlAC+xPvWF1RfzTjSqSRLJdfFt+hjS6z6XxhQ=;
-        b=Va4Yhla3+UarXiGZdMEL5BKzQ373/o6kJ4OobRdb/N8Z+t4vRe9rb+jFEvTPfd+kda
-         HFQsMqLo2XhCJ+hVQwp7RHXjFMohyKsiGAvLFpGAUfv/ohFmHsd0uQ5YK2p/K5YyWvcS
-         iKXGw7umQ1+1FtV9FN5g7uYYGgez1WDpf3OWq0/2OeZF19e0Bg3XO5udTD9oJt/Pmbsh
-         xxYSZ1f+H0zF8CeIxbfLyNpKwG6/RDEajie0JEd/Lc6o0vukRyR9pNrmfoJMpUVMaxvW
-         G/cTs5djnlO1yGkgliTzP/mcVS+UhyvayVK7Gwsv9r62n20+MVnnHyaNyGF1a5arZi7P
-         Di7g==
-X-Gm-Message-State: AOJu0YxQJ4GJInoLL9vL6cOpJEn7B2oyrdzc7kqnHL8KjfAAtoTrAFOw
-        dof71XM6H4vU7EsmzGUbFPqe37XZvoNaztgbeNuswoM9EOldyox7s1lECmmDeK8uhwl5SagSB43
-        PeX7rYly7km37ZDfYDb/nla2w1qbMvjAqEK0Z0kgZ6w==
-X-Received: by 2002:a17:906:53ce:b0:961:be96:b0e7 with SMTP id p14-20020a17090653ce00b00961be96b0e7mr124306ejo.48.1691612240923;
-        Wed, 09 Aug 2023 13:17:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEi5enSz4+7S/hdQqf9nmKqDtHv6YXKZqfYN2DZXgla89kZwO8xisyoFdrMIKjbkQdREkPNBw==
-X-Received: by 2002:a17:906:53ce:b0:961:be96:b0e7 with SMTP id p14-20020a17090653ce00b00961be96b0e7mr124298ejo.48.1691612240731;
-        Wed, 09 Aug 2023 13:17:20 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id c8-20020a170906170800b009930308425csm8439596eje.31.2023.08.09.13.17.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Aug 2023 13:17:20 -0700 (PDT)
-Message-ID: <e908e683-1297-1d7c-5c36-d55e0342c807@redhat.com>
-Date:   Wed, 9 Aug 2023 22:17:19 +0200
+        d=1e100.net; s=20221208; t=1691615262; x=1692220062;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B35FL86sKskIjPM/ffA3EI5QZafQThibDMhYf5nJ0Xg=;
+        b=LgYY+eJz7O9sKYey3OvkgzhhU6khTjXUOwFhtaVNCpNMGRzf6Pj01vk9xDMKlWIKke
+         0ssXqHELRq0CNc4ZMQ3YcZFUlUXU0+HIxdUh6Bjcd1o7uvwciTLCXPm5ZAgVlBmiUkyk
+         KFNySRAolSfYcWn47c3ky9upyEDdzgP3oWBl0PlKgoVhDq4Z5B2oU7d690ZWN4fuxmiJ
+         f4T3ETxUqWUKG9lXlShKQUpClaT0xsJzv05tOh1jQ7pn73U3wMXjRWFDYjfz4GP2tL2X
+         i0QYW0wQY4ZCTOkYwClQ8S7htpd3XE4XFeTRe1qHEH1C0xgiJfVNUSi8ZJGpH8TwrToB
+         Fdmg==
+X-Gm-Message-State: AOJu0YyGx5xwdVZrLwDNBvlxwXg8R4whiT1fCvZ1fn40QcMN0dE66SNU
+        fWYpCU/0121wJ4xZlqMj9Pw=
+X-Google-Smtp-Source: AGHT+IHgGhDsVVRSGZzJZPWmm7kPGrSiJpkvNI1mZzvqk1OOKLkpeQ4jc7feeMjqxDyWipotwvSQ/w==
+X-Received: by 2002:a05:6870:d5a7:b0:1be:f7d9:c0df with SMTP id u39-20020a056870d5a700b001bef7d9c0dfmr461779oao.10.1691615262248;
+        Wed, 09 Aug 2023 14:07:42 -0700 (PDT)
+Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:2825:7de2:269d:39bc])
+        by smtp.gmail.com with ESMTPSA id x5-20020a056870740500b001bfd65998aesm39845oam.58.2023.08.09.14.07.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Aug 2023 14:07:41 -0700 (PDT)
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
+        ilpo.jarvinen@linux.intel.com, dan.carpenter@linaro.org
+Subject: [PATCH] hp-bioscfg: Update steps how order list elements are evaluated
+Date:   Wed,  9 Aug 2023 16:07:40 -0500
+Message-Id: <20230809210740.18392-1-jorge.lopez2@hp.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [GIT PULL v2]: tools/power/x86/intel-speed-select pull request
- for 6.6-rc1
-Content-Language: en-US, nl
-To:     srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>
-Cc:     "frank.ramsay@hpe.com" <frank.ramsay@hpe.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-References: <9994927f661f93289b9c4c78c7346cea93c8869a.camel@intel.com>
- <c32cebce5e394f155cf4ab9a678f530fb2cda3d6.camel@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <c32cebce5e394f155cf4ab9a678f530fb2cda3d6.camel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Update steps how order list elements data and elements size are
+evaluated
 
-On 8/9/23 18:05, srinivas pandruvada wrote:
-> Hi Hans,
-> 
-> Sorry, I have to update to fix a bugzilla issue from RedHat compared to
-> previous pull for memory frequency display.
-> 
-> Pull request for Intel Speed Select version v1.17:
-> Summary of changes:
-> - Fix display issue for cpu count for power domain != 0
-> - Increase sockect count
-> - Preventing CPU 0 offline for kernel version 6.5 and later
-> - Error when number of CPUs requested more than 256 in one request
-> 
-> The base branch for these changes 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
-> branch: review-hans
-> 
-> The following changes since commit
-> 6f8972a02a6c103b67dc3a0ed9b1722943f65276:
-> 
->   platform/x86: hp-bioscfg: Use kmemdup() to replace kmalloc + memcpy
-> (2023-08-07 13:36:20 +0200)
-> 
-> are available in the Git repository at:
-> 
->   https://github.com/spandruvada/linux-kernel.git intel-sst
-> 
-> for you to fetch changes up to
-> 2fff509adceb10f991b259c02ef2e096a89f075e:
+Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 
-Thank you, I've merged this into my review-hans branch now.
+---
+Based on the latest platform-drivers-x86.git/for-next
+---
+ .../x86/hp/hp-bioscfg/order-list-attributes.c    | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-
-
-
->   tools/power/x86/intel-speed-select: v1.17 release (2023-08-09
-> 08:57:58 -0700)
-> 
-> ----------------------------------------------------------------
-> Frank Ramsay (1):
->       tools/power/x86/intel-speed-select: Support more than 8 sockets.
-> 
-> Srinivas Pandruvada (5):
->       tools/power/x86/intel-speed-select: Fix CPU count display
->       tools/power/x86/intel-speed-select: Error on CPU count exceed in
-> request
->       tools/power/x86/intel-speed-select: Prevent CPU 0 offline
->       tools/power/x86/intel-speed-select: Change mem-frequency display
-> name
->       tools/power/x86/intel-speed-select: v1.17 release
-> 
->  tools/power/x86/intel-speed-select/isst-config.c  | 51
-> +++++++++++++++++++++++++++++++++++++++++++++++++--
->  tools/power/x86/intel-speed-select/isst-display.c |  2 +-
->  tools/power/x86/intel-speed-select/isst.h         |  2 +-
->  3 files changed, 51 insertions(+), 4 deletions(-)
-> 
-> Thanks,
-> Srinivas
-> 
-> On Tue, 2023-08-08 at 22:26 +0000, Pandruvada, Srinivas wrote:
->> Hi Hans,
->>
->> Pull request for Intel Speed Select version v1.17:
->> Summary of changes:
->> - Fix display issue for cpu count for power domain != 0
->> - Increase sockect count
->> - Preventing CPU 0 offline for kernel version 6.5 and later
->> - Error when number of CPUs requested more than 256 in one request
->>
->> The base branch for these changes 
->> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
->> branch: review-hans
->>
->> The following changes since commit
->> 6f8972a02a6c103b67dc3a0ed9b1722943f65276:
->>
->>   platform/x86: hp-bioscfg: Use kmemdup() to replace kmalloc + memcpy
->> (2023-08-07 13:36:20 +0200)
->>
->> are available in the Git repository at:
->>
->>   https://github.com/spandruvada/linux-kernel.git intel-sst
->>
->> for you to fetch changes up to
->> 5abc392b38a1716d194c904c0f4f5aa201b0c0dd:
->>
->>   tools/power/x86/intel-speed-select: v1.17 release (2023-08-08
->> 15:16:40 -0700)
->>
->> ----------------------------------------------------------------
->> Frank Ramsay (1):
->>       tools/power/x86/intel-speed-select: Support more than 8
->> sockets.
->>
->> Srinivas Pandruvada (4):
->>       tools/power/x86/intel-speed-select: Fix CPU count display
->>       tools/power/x86/intel-speed-select: Error on CPU count exceed
->> in
->> request
->>       tools/power/x86/intel-speed-select: Prevent CPU 0 offline
->>       tools/power/x86/intel-speed-select: v1.17 release
->>
->>  tools/power/x86/intel-speed-select/isst-config.c | 51
->> +++++++++++++++++++++++++++++++++++++++++++++++++--
->>  tools/power/x86/intel-speed-select/isst.h        |  2 +-
->>  2 files changed, 50 insertions(+), 3 deletions(-)
->>
->> Thanks,
->> Srinivas
-> 
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+index b19644ed12e0..d2b61ab950d4 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+@@ -152,7 +152,7 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+ 
+ 		switch (order_obj[elem].type) {
+ 		case ACPI_TYPE_STRING:
+-			if (elem != PREREQUISITES && elem != ORD_LIST_ELEMENTS) {
++			if (elem != PREREQUISITES) {
+ 				ret = hp_convert_hexstr_to_str(order_obj[elem].string.pointer,
+ 							       order_obj[elem].string.length,
+ 							       &str_value, &value_len);
+@@ -266,6 +266,15 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+ 			if (ret)
+ 				goto exit_list;
+ 
++			/*
++			 * It is expected for the element size value
++			 * to be 1 and not to represent the actual
++			 * number of elements stored in comma
++			 * separated format. element size value is
++			 * recalculated to report the correct number
++			 * of data elements found.
++			 */
++
+ 			part_tmp = tmpstr;
+ 			part = strsep(&part_tmp, COMMA_SEP);
+ 			if (!part)
+@@ -273,11 +282,14 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+ 					tmpstr,
+ 					sizeof(ordered_list_data->elements[0]));
+ 
+-			for (olist_elem = 1; olist_elem < MAX_ELEMENTS_SIZE && part; olist_elem++) {
++			for (olist_elem = 0; olist_elem < MAX_ELEMENTS_SIZE && part; olist_elem++) {
+ 				strscpy(ordered_list_data->elements[olist_elem],
+ 					part,
+ 					sizeof(ordered_list_data->elements[olist_elem]));
++
+ 				part = strsep(&part_tmp, COMMA_SEP);
++				if (part && ordered_list_data->elements_size < MAX_ELEMENTS_SIZE)
++					ordered_list_data->elements_size++;
+ 			}
+ 
+ 			kfree(str_value);
+-- 
+2.34.1
 
