@@ -2,116 +2,98 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1820C001B0
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Aug 2023 20:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD086C001B0
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Aug 2023 20:02:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232979AbjHIUAW (ORCPT
+        id S230049AbjHIUCj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 9 Aug 2023 16:00:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37702 "EHLO
+        Wed, 9 Aug 2023 16:02:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232281AbjHIUAS (ORCPT
+        with ESMTP id S229583AbjHIUCi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 9 Aug 2023 16:00:18 -0400
+        Wed, 9 Aug 2023 16:02:38 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EE72121
-        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Aug 2023 12:59:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57B7110E0
+        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Aug 2023 13:01:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691611171;
+        s=mimecast20190719; t=1691611311;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=i1btU9N+flfBepGrbeDBkidThui9A+VviKVGjNtRmik=;
-        b=F3i4I9DVjVtKkgLHPA2XpJj0xG5OMe+nWf0IK19rxvczbDDqNbpAmvhEMTFqP1aD7bR+jo
-        S47bg1vXZ/VlPVU1T4/C0RwlGaCNDjvBUVOKXVrBZfwX8+IJ3nw/USWrh6jT/M3g+Mwnbw
-        SEhIouCmWJgHjpJ8Q5Coc4vKyhzqcuM=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=IHsnx+XgYvq7zVbyX3fE1g8eFuqDc6DMbNib2NAq4Jc=;
+        b=RDSwfY8WkCIeBz58gGThbV8bFqhl/zi6zCMad87HyBuGwOUsDhZ03thTHbn741FmiUg/oc
+        E0AS5AXmP94mk0KeN6dcwqpeFoCSoz2v9G5gnQMziqfGpqs6JqZDmcHRY4ENqvVAeoLNS5
+        53d8Ggm0zVxno3r1DI/K97tYvt5Ut1Q=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-382-34i7nZl6NPeQHjpDz7ehLg-1; Wed, 09 Aug 2023 15:59:30 -0400
-X-MC-Unique: 34i7nZl6NPeQHjpDz7ehLg-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-4fe27502459so126465e87.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Aug 2023 12:59:29 -0700 (PDT)
+ us-mta-492-shQKwX3DMBm2CvPhLaW28g-1; Wed, 09 Aug 2023 16:01:49 -0400
+X-MC-Unique: shQKwX3DMBm2CvPhLaW28g-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-99c01c680beso13759966b.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Aug 2023 13:01:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691611168; x=1692215968;
+        d=1e100.net; s=20221208; t=1691611308; x=1692216108;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i1btU9N+flfBepGrbeDBkidThui9A+VviKVGjNtRmik=;
-        b=PXr+724MH+lE8e1pBEMX3M6+vmcXx4b98jc9m9Z9UzaJjBuR/t2RIMYrWu41COKjRA
-         ZgIyx5oIoMmm30g/IIA7/sRUhxHub2doTvsmSvx5MIFxwxE0IiJI/kkGCQrOUKARWZr+
-         oPXUt5fS5Cy/fsCfsvrMRWmzegNg6qVU0dFsY8QLdCRN8eMqbzUbmTkm/+9Zz8iWFi54
-         z1A61Ybf1QRrycXsNQqy0HyoN2mExSE17H2H0Ll+A74NMRoh+W//+efVIrc0UojG+FDe
-         mLKkkqHg3FVmcGCdUi1gC0mvS+r8rQSH4tp+lxYGf+7EG2JBl372Ccsgb4tdtsn/yKvT
-         wKHA==
-X-Gm-Message-State: AOJu0Yxg0+I/1hmvRHUaCAUqz1rqxOCbTHaHX8S6EtNReDbnDwsYF0iQ
-        WdgAYCRRmsCTH7HaIqPZZVpyxSn/PiGxT6b8L70LuFt7NVOxCPmLVTEyw7LHl3lix/J69cgwkbw
-        r3oSwQGrS0Sc4Uv+xw0jyysqIRwmj+CXvQQ==
-X-Received: by 2002:a05:6512:e93:b0:4f8:e4e9:499e with SMTP id bi19-20020a0565120e9300b004f8e4e9499emr139077lfb.12.1691611168749;
-        Wed, 09 Aug 2023 12:59:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHhTdRCrTEoAr/L525XFk81vlAmpbzlO1IBoukC/kPxUsu6iu8v/eYX9HCtoWajQ01yWqeu3Q==
-X-Received: by 2002:a05:6512:e93:b0:4f8:e4e9:499e with SMTP id bi19-20020a0565120e9300b004f8e4e9499emr139059lfb.12.1691611168359;
-        Wed, 09 Aug 2023 12:59:28 -0700 (PDT)
+        bh=IHsnx+XgYvq7zVbyX3fE1g8eFuqDc6DMbNib2NAq4Jc=;
+        b=R7Yl507AfY3BVQQ12fkgy5n1ZPD7kJ5boLfT3w87EtCCfehYz82n2UARYPH72NLDD2
+         W2gh1Th7a+Jsgvr7Q0qawA1+BlhC+XJy6MOjV/M68PDccqjQ3F8RxAYzNEgel1+wYuoa
+         xuaNOT0iRwpTjz+3l6TsMM1CsG7hOZW8+LaytE5W4Lsgd39zn6yu+D4axHJ5vtaBZC+1
+         q0ryemuHTp4B7AqkpxA0mLtFBnO0prv2R95pbHTfyoBtkLv/OC0VARAL5EgX2k4511uz
+         PhjPr4ELj+ehifUytP9ATrszMcSwHOA86lUBn1wVe8SZJPSKeFL9/avx5sPDSi0Clbtk
+         htBw==
+X-Gm-Message-State: AOJu0YxA2NIxbPW+Pf1IxuADsF2hf3kb0EMslPnc0ymCRlBKKSAs3ZSu
+        yUAN2x4J8GOtMIlz23n6TFE+TkBCyYULZSPk9ydbHmt5HTpkQf/CN2alMuX88e10pVdAjIwFqwF
+        cGJ9GP7pLf3flatD+O/E/OrYHnrcAf8EqtA==
+X-Received: by 2002:a17:906:1da1:b0:99c:3da8:63a9 with SMTP id u1-20020a1709061da100b0099c3da863a9mr102082ejh.29.1691611307900;
+        Wed, 09 Aug 2023 13:01:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHvrBtzGaCDsgAfmEDv2vzTugocmqCO+v7o4HM7Pynq5OPxeQOxgdhhgeQcbsQ9IoeWaK9jjg==
+X-Received: by 2002:a17:906:1da1:b0:99c:3da8:63a9 with SMTP id u1-20020a1709061da100b0099c3da863a9mr102063ejh.29.1691611307593;
+        Wed, 09 Aug 2023 13:01:47 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id i5-20020aa7dd05000000b005234011bb44sm3212652edv.11.2023.08.09.12.59.27
+        by smtp.gmail.com with ESMTPSA id lt1-20020a170906fa8100b009934707378fsm8337278ejb.87.2023.08.09.13.01.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Aug 2023 12:59:27 -0700 (PDT)
-Message-ID: <e818c889-40f8-0318-e29d-372da57c33d8@redhat.com>
-Date:   Wed, 9 Aug 2023 21:59:27 +0200
+        Wed, 09 Aug 2023 13:01:44 -0700 (PDT)
+Message-ID: <aa35b6e9-e58e-de92-9a86-c5a9be13fd26@redhat.com>
+Date:   Wed, 9 Aug 2023 22:01:44 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH] platform/x86: msi-ec: Fix the build
+Subject: Re: [PATCH] platform/x86: ISST: Reduce noise for missing numa
+ information in logs
 Content-Language: en-US, nl
-To:     Jean Delvare <jdelvare@suse.de>,
-        platform-driver-x86@vger.kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Nikita Kravets <teackot@gmail.com>
-References: <20230805101010.54d49e91@endymion.delvare>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230808174359.50602-1-srinivas.pandruvada@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230805101010.54d49e91@endymion.delvare>
+In-Reply-To: <20230808174359.50602-1-srinivas.pandruvada@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 8/5/23 10:10, Jean Delvare wrote:
-> The msi-ec driver fails to build for me (gcc 7.5):
+On 8/8/23 19:43, Srinivas Pandruvada wrote:
+> On platforms with no numa support and with several CPUs, logs have lots
+> of noise for message "Fail to get numa node for CPU:.."
 > 
->   CC [M]  drivers/platform/x86/msi-ec.o
-> drivers/platform/x86/msi-ec.c:72:6: error: initializer element is not constant
->     { SM_ECO_NAME,     0xc2 },
->       ^~~~~~~~~~~
-> drivers/platform/x86/msi-ec.c:72:6: note: (near initialization for ‘CONF0.shift_mode.modes[0].name’)
-> drivers/platform/x86/msi-ec.c:73:6: error: initializer element is not constant
->     { SM_COMFORT_NAME, 0xc1 },
->       ^~~~~~~~~~~~~~~
-> drivers/platform/x86/msi-ec.c:73:6: note: (near initialization for ‘CONF0.shift_mode.modes[1].name’)
-> drivers/platform/x86/msi-ec.c:74:6: error: initializer element is not constant
->     { SM_SPORT_NAME,   0xc0 },
->       ^~~~~~~~~~~~~
-> drivers/platform/x86/msi-ec.c:74:6: note: (near initialization for ‘CONF0.shift_mode.modes[2].name’)
-> (...)
+> Change pr_info() to pr_info_once() as one print is enough to show the
+> issue.
 > 
-> Don't try to be smart, just use defines for the constant strings. The
-> compiler will recognize it's the same string and will store it only
-> once in the data section anyway.
-> 
-> Signed-off-by: Jean Delvare <jdelvare@suse.de>
-> Fixes: 392cacf2aa10 ("platform/x86: Add new msi-ec driver")
-> Cc: stable@vger.kernel.org
-> Cc: Nikita Kravets <teackot@gmail.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Mark Gross <markgross@kernel.org>
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
 Thank you for your patch, I've applied this patch to my fixes
 branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
+
+Note it will show up in my fixes branch once I've pushed my
+local branch there, which might take a while.
 
 I will include this patch in my next fixes pull-req to Linus
 for the current kernel development cycle.
@@ -122,40 +104,23 @@ Hans
 
 
 
-
-
-
-
 > ---
->  drivers/platform/x86/msi-ec.c |   16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+>  drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> --- linux-6.4.orig/drivers/platform/x86/msi-ec.c
-> +++ linux-6.4/drivers/platform/x86/msi-ec.c
-> @@ -27,15 +27,15 @@
->  #include <linux/seq_file.h>
->  #include <linux/string.h>
+> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> index 1f59ac55c5f7..a95004e3d80b 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> @@ -335,8 +335,8 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
 >  
-> -static const char *const SM_ECO_NAME       = "eco";
-> -static const char *const SM_COMFORT_NAME   = "comfort";
-> -static const char *const SM_SPORT_NAME     = "sport";
-> -static const char *const SM_TURBO_NAME     = "turbo";
-> +#define SM_ECO_NAME		"eco"
-> +#define SM_COMFORT_NAME		"comfort"
-> +#define SM_SPORT_NAME		"sport"
-> +#define SM_TURBO_NAME		"turbo"
+>  		node = dev_to_node(&_pci_dev->dev);
+>  		if (node == NUMA_NO_NODE) {
+> -			pr_info("Fail to get numa node for CPU:%d bus:%d dev:%d fn:%d\n",
+> -				cpu, bus_no, dev, fn);
+> +			pr_info_once("Fail to get numa node for CPU:%d bus:%d dev:%d fn:%d\n",
+> +				     cpu, bus_no, dev, fn);
+>  			continue;
+>  		}
 >  
-> -static const char *const FM_AUTO_NAME     = "auto";
-> -static const char *const FM_SILENT_NAME   = "silent";
-> -static const char *const FM_BASIC_NAME    = "basic";
-> -static const char *const FM_ADVANCED_NAME = "advanced";
-> +#define FM_AUTO_NAME		"auto"
-> +#define FM_SILENT_NAME		"silent"
-> +#define FM_BASIC_NAME		"basic"
-> +#define FM_ADVANCED_NAME	"advanced"
->  
->  static const char * const ALLOWED_FW_0[] __initconst = {
->  	"14C1EMS1.012",
-> 
-> 
 
