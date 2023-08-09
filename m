@@ -2,75 +2,75 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD086C001B0
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Aug 2023 20:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB0CC001DE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Aug 2023 20:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230049AbjHIUCj (ORCPT
+        id S229731AbjHIUEb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 9 Aug 2023 16:02:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38808 "EHLO
+        Wed, 9 Aug 2023 16:04:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbjHIUCi (ORCPT
+        with ESMTP id S229583AbjHIUEb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 9 Aug 2023 16:02:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57B7110E0
-        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Aug 2023 13:01:52 -0700 (PDT)
+        Wed, 9 Aug 2023 16:04:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5592310D8
+        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Aug 2023 13:03:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691611311;
+        s=mimecast20190719; t=1691611420;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=IHsnx+XgYvq7zVbyX3fE1g8eFuqDc6DMbNib2NAq4Jc=;
-        b=RDSwfY8WkCIeBz58gGThbV8bFqhl/zi6zCMad87HyBuGwOUsDhZ03thTHbn741FmiUg/oc
-        E0AS5AXmP94mk0KeN6dcwqpeFoCSoz2v9G5gnQMziqfGpqs6JqZDmcHRY4ENqvVAeoLNS5
-        53d8Ggm0zVxno3r1DI/K97tYvt5Ut1Q=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=8rnKEWBFLg7YYTkqe0xcAf969fJr0x8Fd+K32gXjng8=;
+        b=NvFXS4eE9dwW/xuzg+xB9FP+nsqWjxSlQOy9v+lKVzvWgFUrXTvPfYjLGukW/bnOmFOC3S
+        B1Mon9oeMZ9aT5r6LxMEjrPUy+NeOi0BHzjQndQoD07iZiNlqWfcjkdhWS6ojwqDA9xALY
+        1xGOEJdvFlk6ir2+CRoVKYrt88E/qKw=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-492-shQKwX3DMBm2CvPhLaW28g-1; Wed, 09 Aug 2023 16:01:49 -0400
-X-MC-Unique: shQKwX3DMBm2CvPhLaW28g-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-99c01c680beso13759966b.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Aug 2023 13:01:48 -0700 (PDT)
+ us-mta-49-jgh0fgAvMaCRyFbZv1CPsA-1; Wed, 09 Aug 2023 16:03:38 -0400
+X-MC-Unique: jgh0fgAvMaCRyFbZv1CPsA-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-993eeb3a950so12762966b.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Aug 2023 13:03:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691611308; x=1692216108;
+        d=1e100.net; s=20221208; t=1691611417; x=1692216217;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IHsnx+XgYvq7zVbyX3fE1g8eFuqDc6DMbNib2NAq4Jc=;
-        b=R7Yl507AfY3BVQQ12fkgy5n1ZPD7kJ5boLfT3w87EtCCfehYz82n2UARYPH72NLDD2
-         W2gh1Th7a+Jsgvr7Q0qawA1+BlhC+XJy6MOjV/M68PDccqjQ3F8RxAYzNEgel1+wYuoa
-         xuaNOT0iRwpTjz+3l6TsMM1CsG7hOZW8+LaytE5W4Lsgd39zn6yu+D4axHJ5vtaBZC+1
-         q0ryemuHTp4B7AqkpxA0mLtFBnO0prv2R95pbHTfyoBtkLv/OC0VARAL5EgX2k4511uz
-         PhjPr4ELj+ehifUytP9ATrszMcSwHOA86lUBn1wVe8SZJPSKeFL9/avx5sPDSi0Clbtk
-         htBw==
-X-Gm-Message-State: AOJu0YxA2NIxbPW+Pf1IxuADsF2hf3kb0EMslPnc0ymCRlBKKSAs3ZSu
-        yUAN2x4J8GOtMIlz23n6TFE+TkBCyYULZSPk9ydbHmt5HTpkQf/CN2alMuX88e10pVdAjIwFqwF
-        cGJ9GP7pLf3flatD+O/E/OrYHnrcAf8EqtA==
-X-Received: by 2002:a17:906:1da1:b0:99c:3da8:63a9 with SMTP id u1-20020a1709061da100b0099c3da863a9mr102082ejh.29.1691611307900;
-        Wed, 09 Aug 2023 13:01:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHvrBtzGaCDsgAfmEDv2vzTugocmqCO+v7o4HM7Pynq5OPxeQOxgdhhgeQcbsQ9IoeWaK9jjg==
-X-Received: by 2002:a17:906:1da1:b0:99c:3da8:63a9 with SMTP id u1-20020a1709061da100b0099c3da863a9mr102063ejh.29.1691611307593;
-        Wed, 09 Aug 2023 13:01:47 -0700 (PDT)
+        bh=8rnKEWBFLg7YYTkqe0xcAf969fJr0x8Fd+K32gXjng8=;
+        b=crq8RUHR7as7CG4Unf0kNI0bCN7wep2rab9AzO/YbrzZiJPD1Q+ELSNEZBvr307UbQ
+         BWY+9sCvfyXaFmzmrUcoaKa2nFtvDGSnqo2TSMgNjLGjKTKFw/cZ2tmNfxdmzDd62HcR
+         csLwXSUJeSDsx/2eVX4ic9k03E2whqml/v4Ftu0GBS22lN05wzGrS6rIDdLFB/gXeqOf
+         1x/UxtYnOYof7/ibz2vlfSSzqHsnLUxe2NYY7WqpsgMEGzrWPYklwYbV+AIPTGgkOz41
+         Ud9aLrsHpzzwH1MrEhoX9E3rXbtN/s/YRiBsJ0WnMptp6Ic2te+TzsTqGPitzxZIBZXq
+         juyA==
+X-Gm-Message-State: AOJu0Yw4KbYoGLkLip72h20HgH8v+mVgnJ77cSgN65ZXBjDUchZc2yhi
+        vbP1TnPoSXruze8qkWvLCFLSnUfYLgNfeyijEH/o55bJ8wQbfjfUhvPnMcOWgzKex2/KIvpqtsb
+        O6zHhWY/uH15Udqp+0L0FDClyh1cyvzOjSg==
+X-Received: by 2002:a17:906:76d0:b0:94e:4489:f24d with SMTP id q16-20020a17090676d000b0094e4489f24dmr112001ejn.61.1691611417792;
+        Wed, 09 Aug 2023 13:03:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHmX8bb9KtcMZxHa4yaIj2lp52XlnNj3tMr9xCYD+5Y3XIPawZIIk2tzBaI7RFxdJjvy1Mivw==
+X-Received: by 2002:a17:906:76d0:b0:94e:4489:f24d with SMTP id q16-20020a17090676d000b0094e4489f24dmr111989ejn.61.1691611417514;
+        Wed, 09 Aug 2023 13:03:37 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id lt1-20020a170906fa8100b009934707378fsm8337278ejb.87.2023.08.09.13.01.44
+        by smtp.gmail.com with ESMTPSA id la4-20020a170906ad8400b0099bd682f317sm8253188ejb.206.2023.08.09.13.03.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Aug 2023 13:01:44 -0700 (PDT)
-Message-ID: <aa35b6e9-e58e-de92-9a86-c5a9be13fd26@redhat.com>
-Date:   Wed, 9 Aug 2023 22:01:44 +0200
+        Wed, 09 Aug 2023 13:03:35 -0700 (PDT)
+Message-ID: <31565090-2ccd-3ceb-bfff-c944e0399b20@redhat.com>
+Date:   Wed, 9 Aug 2023 22:03:34 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH] platform/x86: ISST: Reduce noise for missing numa
- information in logs
+Subject: Re: [PATCH -next] platform/x86/siemens: simatic-ipc-batt: fix wrong
+ pointer pass to PTR_ERR()
 Content-Language: en-US, nl
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        markgross@kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230808174359.50602-1-srinivas.pandruvada@linux.intel.com>
+To:     Yang Yingliang <yangyingliang@huawei.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     markgross@kernel.org, henning.schild@siemens.com
+References: <20230809081227.1221267-1-yangyingliang@huawei.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230808174359.50602-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20230809081227.1221267-1-yangyingliang@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -79,24 +79,23 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 8/8/23 19:43, Srinivas Pandruvada wrote:
-> On platforms with no numa support and with several CPUs, logs have lots
-> of noise for message "Fail to get numa node for CPU:.."
+On 8/9/23 10:12, Yang Yingliang wrote:
+> Fix wrong pointer pass to PTR_ERR() if devm_gpiod_get_index() fails.
 > 
-> Change pr_info() to pr_info_once() as one print is enough to show the
-> issue.
-> 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Fixes: 917f54340794 ("platform/x86: simatic-ipc: add CMOS battery monitoring")
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
 
-Thank you for your patch, I've applied this patch to my fixes
+Thank you for your patch, I've applied this patch to my review-hans 
 branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Note it will show up in my fixes branch once I've pushed my
+Note it will show up in my review-hans branch once I've pushed my
 local branch there, which might take a while.
 
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
@@ -105,22 +104,20 @@ Hans
 
 
 > ---
->  drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/siemens/simatic-ipc-batt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> index 1f59ac55c5f7..a95004e3d80b 100644
-> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> @@ -335,8 +335,8 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
->  
->  		node = dev_to_node(&_pci_dev->dev);
->  		if (node == NUMA_NO_NODE) {
-> -			pr_info("Fail to get numa node for CPU:%d bus:%d dev:%d fn:%d\n",
-> -				cpu, bus_no, dev, fn);
-> +			pr_info_once("Fail to get numa node for CPU:%d bus:%d dev:%d fn:%d\n",
-> +				     cpu, bus_no, dev, fn);
->  			continue;
+> diff --git a/drivers/platform/x86/siemens/simatic-ipc-batt.c b/drivers/platform/x86/siemens/simatic-ipc-batt.c
+> index d66b9969234b..15c08c4900b8 100644
+> --- a/drivers/platform/x86/siemens/simatic-ipc-batt.c
+> +++ b/drivers/platform/x86/siemens/simatic-ipc-batt.c
+> @@ -198,7 +198,7 @@ int simatic_ipc_batt_probe(struct platform_device *pdev, struct gpiod_lookup_tab
+>  			flags = GPIOD_OUT_LOW;
+>  		priv.gpios[2] = devm_gpiod_get_index(dev, "CMOSBattery meter", 2, flags);
+>  		if (IS_ERR(priv.gpios[2])) {
+> -			err = PTR_ERR(priv.gpios[1]);
+> +			err = PTR_ERR(priv.gpios[2]);
+>  			priv.gpios[2] = NULL;
+>  			goto out;
 >  		}
->  
 
