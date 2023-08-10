@@ -2,403 +2,498 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E3CC04A6A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Aug 2023 16:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB18C001E0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Aug 2023 17:48:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231336AbjHJQnn (ORCPT
+        id S235447AbjHJRsl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Aug 2023 12:43:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46918 "EHLO
+        Thu, 10 Aug 2023 13:48:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234645AbjHJQn3 (ORCPT
+        with ESMTP id S235429AbjHJRsj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Aug 2023 12:43:29 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B58D10C4;
-        Thu, 10 Aug 2023 09:43:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691685808; x=1723221808;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=r7+pRLOhmCU2mY1+yp43/cT6YSLlci8CmLi2j4cMZDM=;
-  b=a7b4p0prZDMNt18PH5rRzljbNrrJfQGyyvuROzBm1LFttHstKjunoOdt
-   hoNWUhvQeuyuceWq/n5VRdm8v4l/7yvODAVrLkVHsfKS0ZhVpfaoRq83h
-   CbnfcgRMgPdMx/ib1NTPnGzROBUhNifxXn9hCu5L9p9hYxA1SrXM16f2W
-   vsGWEXBuhoBq3BO+2C9nj1TgJi++vgjwjQVKD05O1dR/r7ZORBbMScnyL
-   tZV+L9IhtFngAvRhdk94a0ksFG6bKfqcYWTFnuWpPhTM0X5aByhKa6Uex
-   HvlCyk9xMf8aRjg4x4+Fi3a13wze2fzI2AyIHWhlJOT7iUUoxxGrTOnYv
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="351776957"
-X-IronPort-AV: E=Sophos;i="6.01,162,1684825200"; 
-   d="scan'208";a="351776957"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2023 09:36:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="855987630"
-X-IronPort-AV: E=Sophos;i="6.01,162,1684825200"; 
-   d="scan'208";a="855987630"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 10 Aug 2023 09:36:15 -0700
-Received: from tphi-mobl.amr.corp.intel.com (tphi-mobl.amr.corp.intel.com [10.209.57.169])
-        by linux.intel.com (Postfix) with ESMTP id 47411580AFF;
-        Thu, 10 Aug 2023 09:36:15 -0700 (PDT)
-Message-ID: <b14b087d8905297504dde89920d8d0a67b7544e8.camel@linux.intel.com>
-Subject: Re: [PATCH net-next v2 1/5] platform/x86: intel_pmc_core: Add IPC
- mailbox accessor function and add SoC register access
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Marek =?ISO-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Wong Vee Khee <veekhee@apple.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Shenwei Wang <shenwei.wang@nxp.com>,
-        Andrey Konovalov <andrey.konovalov@linaro.org>,
-        Jochen Henneberg <jh@henneberg-systemdesign.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
-        Tan Tee Min <tee.min.tan@linux.intel.com>,
-        Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-        Lai Peter Jun Ann <jun.ann.lai@intel.com>
-Date:   Thu, 10 Aug 2023 09:36:15 -0700
-In-Reply-To: <145d7375-0e58-b7cf-6240-5d8bc16b0344@redhat.com>
-References: <20230804084527.2082302-1-yong.liang.choong@linux.intel.com>
-         <20230804084527.2082302-2-yong.liang.choong@linux.intel.com>
-         <145d7375-0e58-b7cf-6240-5d8bc16b0344@redhat.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 10 Aug 2023 13:48:39 -0400
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2117.outbound.protection.outlook.com [40.107.104.117])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3F402D47;
+        Thu, 10 Aug 2023 10:48:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ICDfZkcV/NL4SlODOD1X5XY7PeABAZXpfJ3rXuWHz8VMSKhfVCFYsvzqdb0PQhorhSp29Yeok7VoSLKadnmP5jf715Vi6TlW9MS++pgv694ZEjiRK8VkMwzz9H9ahhU5lAVzMvnQIGlOSjtMspVUBPWrrICRi3A7zGekWWLGRDJRKH0qvDYbwlD0F9jlMEZFvdNHURhiZeB2qnRGBFRlfJ6A1bnl9Ac06dLVrdPI/MYsyLM0UDSMkEPymXIYZQi1vO3OqiH51J0V31mA3MBDyk/3xOkJdwr+6UO+TALxbxTJmsSTUHYaFyh18WVIKyT3YX/iJXH/liduWHiQJVUulg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=p9ptBL72rB01dk/uKGXa7+DM91k+Xzq7l5EXWEF5N1I=;
+ b=I/91EkoEnG0byU3/bSRxMCQrSSH9b2XA+wzyUXFz76lbd3PJx56Sqr4M3M26xpw+pksbzJnis9lQ7xUxMRTDR9P17j/IcqtLeZoqIQL1m572yPmmKemk5Osa3nwT7gq/blcyKX3jPXAe/4O6qdn8rKGnZOp8E2WT7i8hDR9U2MAd/jT988TTg7fZbwOFEuctF/Q+83PKh9KQzFT/xte4m2VDc7g2dsHkMtP6XM+h2VDN+CkRYq+yDS4e9ujmmpGkg0jaDM/uUdDb8C1aB2/kJBeam+6sTf9Rd2HZLj2zzAkVS8BkNEefdYBCRCPiW8dnHbo4KVRe9awOD+MLid2csw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silicom-usa.com; dmarc=pass action=none
+ header.from=silicom-usa.com; dkim=pass header.d=silicom-usa.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=SILICOMLTD.onmicrosoft.com; s=selector2-SILICOMLTD-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p9ptBL72rB01dk/uKGXa7+DM91k+Xzq7l5EXWEF5N1I=;
+ b=Pg801RQZyH98TXdJBzVNBB7SAlYNVUZzxqAMaYTCeDoHtfIEH9cX4aWfgDVLiSUPlxJ9+U9r8Zz7v6jmGShDKXQoXrbmMaqvLhuhowQ6jpmrWt1vULUJDl6NSe1Hpf7Nzzyo00RkGKIxh8kxru0v6gZcou14UUuH4tyB4EpXiIQ=
+Received: from PA4PR04MB9222.eurprd04.prod.outlook.com (2603:10a6:102:2a1::18)
+ by DBBPR04MB8057.eurprd04.prod.outlook.com (2603:10a6:10:1f1::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.30; Thu, 10 Aug
+ 2023 17:48:30 +0000
+Received: from PA4PR04MB9222.eurprd04.prod.outlook.com
+ ([fe80::d62d:f67e:ba75:b5dc]) by PA4PR04MB9222.eurprd04.prod.outlook.com
+ ([fe80::d62d:f67e:ba75:b5dc%4]) with mapi id 15.20.6652.029; Thu, 10 Aug 2023
+ 17:48:29 +0000
+From:   Huibin Shi <henrys@silicom-usa.com>
+To:     =?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "jdelvare@suse.com" <jdelvare@suse.com>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "hb_shi2003@yahoo.com" <hb_shi2003@yahoo.com>,
+        Wen Wang <wenw@silicom-usa.com>
+Subject: RE: [PATCH] Add Silicom Platform Driver
+Thread-Topic: [PATCH] Add Silicom Platform Driver
+Thread-Index: AQHZuZEcSTfJXOh+tEO5M8hB8nDqzq/BAaYAgAhCLzCAD07vAIAIVRGw
+Date:   Thu, 10 Aug 2023 17:48:29 +0000
+Message-ID: <PA4PR04MB922238E924D10FE9A5B2625D9A13A@PA4PR04MB9222.eurprd04.prod.outlook.com>
+References: <20230718160104.2716-1-henryshi2018@gmail.com>
+ <94cbb7d-68a-765-8bdf-5c8f8e41891@linux.intel.com>
+ <PA4PR04MB922224D96319862CF987FE459A06A@PA4PR04MB9222.eurprd04.prod.outlook.com>
+ <58da791d-866c-ce2f-94bb-1feff8506c2@linux.intel.com>
+In-Reply-To: <58da791d-866c-ce2f-94bb-1feff8506c2@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=silicom-usa.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PA4PR04MB9222:EE_|DBBPR04MB8057:EE_
+x-ms-office365-filtering-correlation-id: bef6beb2-ee60-4fb3-c784-08db99ca01f1
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PbFbYGoTEVsnv0IMteDP16Wkll4L/wu4JaIe8XolnLum2rpmE/rAYDCWTqeohN8+OzoC7uRt63ucdA2yoLr8w69/P+dkHvUqPYXg80E29LGN/u7+z+Nj8g2a7RQVPE7s6PyAFxSFNvvDoILrXrX6MvPz6aad6JVVsyhBqUYBm+X3Wv+iUnvAfx5m7GQIlGBYI1hPFQ+mOoJ8vYlYFge8835DUUhLBnvEzP+ItFoqc21L6hRe1tt6JKG1DKB0zRCjlxKzEsq4IKdqwgXXUXTYBAtIqI01kpARmf4pmldEw870AxXj0ysntax4xgrw2OfHj+Rpj4V8N7wjzmm1jLssKH1fr1iig1gLnQvukVYWpAPwoPAnxu3NgEQ2XNxKXFyq+q7t2X8Kl19NtTwWH+w4SCyPN3Jf4DG8tAr9ocq1okTptXKMleWIXVm4S/qL95KhhK9nSXQ1vsb3B1omrxMIYSaLCyVbypBz66ik28FHhejaQyR3mXwRB1KFtA/2XnV9sk5EonV4QpvOB0tuWXQwBg5HJ0R1Vr0ZUyhrr7HmNuFKw0Ayl5y0K5zPyix2kDqIDcCloJA7NAQGasIRx6I5pfYfeU367+eVZv2mijJvPP3bfLFE8YdcfrOUr6ES6Fd3djsPsV1kHWWAlMFr6sVHZA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9222.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(396003)(39850400004)(346002)(136003)(366004)(186006)(1800799006)(451199021)(54906003)(83380400001)(30864003)(66574015)(38100700002)(122000001)(76116006)(2906002)(55016003)(8676002)(33656002)(316002)(8936002)(5660300002)(66556008)(7416002)(41300700001)(66476007)(64756008)(107886003)(66946007)(66446008)(53546011)(6916009)(52536014)(4326008)(86362001)(478600001)(45080400002)(9686003)(6506007)(71200400001)(38070700005)(7696005)(21314003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?Si+V8CSCztr7hOmjXWIGsXeni7+Wac9WTArGutuAv0h++PrMnDTR04bhkh?=
+ =?iso-8859-1?Q?fPqb0q784mjuxb6pYVc7AasWpe6kJ8g5l5/GYsbGsm/1EtO9WOGZq6AUfW?=
+ =?iso-8859-1?Q?lgbgOHlSxt+IAAajECLPra+zpyu6/nRuMdYZSb2or1UCwryWtwYYmc16rr?=
+ =?iso-8859-1?Q?ZrCUTUnjUEN/7C3SgsxCItM0CHJNDECixD5oefZLDDtwtimUMg/jDcjTn3?=
+ =?iso-8859-1?Q?H2J6ZUCMLYJQgzsaMAfVEWdEv0nQppk3m6qC3liRt9B9O/6SAoKnU4WSQl?=
+ =?iso-8859-1?Q?ImZwlDgss+lNwwtMcfyu+cGxKtSUqaebjrkdSAQ5IVQ+F87WNoP6M295HR?=
+ =?iso-8859-1?Q?UF0NIvne5aqxd8ZanGBIMBdjRAGL6237vnCOVKTuKzPCYNROAMgZoWuO71?=
+ =?iso-8859-1?Q?z6d5qR8WSarAUdmD8aBsA6jVlxQvDaZt77NdMp0v8zEYQT6xiduduguTR4?=
+ =?iso-8859-1?Q?lsLTEJpQKV+f242v+AAqzLH8lyKwoewr2p8DGDB5vgELE2sYDeljM7FdYR?=
+ =?iso-8859-1?Q?FkTICacoPLqy6dYhl9+VYnO7UFnIK/hy0osmYVk4mqSd0bhsprFLMP8o4Y?=
+ =?iso-8859-1?Q?NxmI1NtFpjgjLEyMfS7pOGVU7BzLc+OgOsOVcd2Z8cAP6GvoTNLNmpav7Z?=
+ =?iso-8859-1?Q?ndpzYl0PbxrsC83TGIUhkVworL5uzeUOrYWi3mN+XPkCL/QRnc8shsQ3bZ?=
+ =?iso-8859-1?Q?yNMMkXhXb9VhluT3gCUKj2xx4Q3KO1wHGVzQxqsjMsoIYp5dKzaBMcD4bk?=
+ =?iso-8859-1?Q?8xDF3L1cQYdC953OhzhLNZ3m55OxNXfejLP8MRHFcxlu4CAkFCxsenHnr+?=
+ =?iso-8859-1?Q?Wa3OVfJXA8BQvq+W49LxOjYolapCE9DyRJ0bw8VBXtFTU+Vf4cmryqWkUF?=
+ =?iso-8859-1?Q?b8d7RmMm8Lpl4WuJny4iZKqLL5nD56CuuSdvdZ+7yuxuSizggAigHyYByC?=
+ =?iso-8859-1?Q?BQnUKQT3iWoAXT/aF/zC2FvPYMoUsVzWiG6s+vqT0e+VomYTqBbzS7SMqr?=
+ =?iso-8859-1?Q?Lx9/KuyYDFnzoz63GgNqudSBQAzaFSPtS1tWvjptzyv6Oxo8hjynlSQCDd?=
+ =?iso-8859-1?Q?+46O3I+iw9IifpA4+q+jxIZN9DM9iK4Kv+sE2EaPCyu/wcqJmRqvhxwnEc?=
+ =?iso-8859-1?Q?NJVsgxNjIzsgiYSgYNtQe6/r1RfwVjubXGHYLesh8fGK/M+D7z3sXykoDo?=
+ =?iso-8859-1?Q?Mf/xiOyHtW84R2RWGrLDA4M5Js4JLSCtbuJ74ps2buCZYM461pUGKgI1IH?=
+ =?iso-8859-1?Q?FKSiRIfykJqBry3afVfRhx1FfWMsOMsKQ41qRBmYbmcrKM4JMOZkEZrQcE?=
+ =?iso-8859-1?Q?mOs/RqXC0yrBZiDgY1Uenzunjp+TAHWmapLzS6zE4xvETNg1lcyGjSOfGp?=
+ =?iso-8859-1?Q?vjgEUI8ff5CGTX7KVQzO/fyVzlICE7fDKBkS1i+HDAbWSyk/iGJbQbfEX4?=
+ =?iso-8859-1?Q?LlueLdL5lg6BzF6dbS5JJMUrnpbohrLfR+9jE+vMpGSv8WtEVPSww8uke2?=
+ =?iso-8859-1?Q?AsYNWyMwGgq+EOKpNHxjxIX2Fjt8KaphJC3k/fb9A8dS0Xm/BQPTH+d3sc?=
+ =?iso-8859-1?Q?6sWPCuHbG2NUgAEE6EaBS2q8KaOgNR0ujDpHdJLC0hgiaeaMPUVZozgZd/?=
+ =?iso-8859-1?Q?QXoNwtLgZJJMfOYgH5AmaDlnaW8CsC2UXWW6OkbUwPC9NZJc06jOr/JHcR?=
+ =?iso-8859-1?Q?IoqpNMDoyVfiT5lk6tC4ng1YXSi8oCbA9puMnyEd?=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
 MIME-Version: 1.0
+X-OriginatorOrg: silicom-usa.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9222.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bef6beb2-ee60-4fb3-c784-08db99ca01f1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Aug 2023 17:48:29.7705
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c9e326d8-ce47-4930-8612-cc99d3c87ad1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +2JMq7mVjVRF6yagqQpQPs7zLdplYlA33uw7rNKrWlfyS58IYV+xGxizq2HM5KN8mvPx7KP3m6WjkRLUFCvaKQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB8057
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+Ilpo,=20
 
-On Mon, 2023-08-07 at 13:02 +0200, Hans de Goede wrote:
-> > Hi David,
-> >=20
-> > On 8/4/23 10:45, Choong Yong Liang wrote:
-> > > > From: "David E. Box" <david.e.box@linux.intel.com>
-> > > >=20
-> > > > - Exports intel_pmc_core_ipc() for host access to the PMC IPC mailb=
-ox
-> > > > - Add support to use IPC command allows host to access SoC register=
-s
-> > > > through PMC firmware that are otherwise inaccessible to the host du=
-e to
-> > > > security policies.
-> > > >=20
-> > > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > > > Signed-off-by: Chao Qin <chao.qin@intel.com>
-> > > > Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com=
+See my comments below.
+
+Thanks.
+Henry
+----Original Message-----
+From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>=20
+Sent: Thursday, August 3, 2023 8:07 AM
+To: Huibin Shi <henrys@silicom-usa.com>
+Cc: tglx@linutronix.de; mingo@redhat.com; bp@alien8.de; dave.hansen@linux.i=
+ntel.com; x86@kernel.org; hpa@zytor.com; hdegoede@redhat.com; markgross@ker=
+nel.org; jdelvare@suse.com; linux@roeck-us.net; linux-kernel@vger.kernel.or=
+g; platform-driver-x86@vger.kernel.org; linux-hwmon@vger.kernel.org; hb_shi=
+2003@yahoo.com; Wen Wang <wenw@silicom-usa.com>
+Subject: RE: [PATCH] Add Silicom Platform Driver
+
+Caution: This is an external email. Please take care when clicking links or=
+ opening attachments.
+
+
+On Fri, 28 Jul 2023, Huibin Shi wrote:
+
+> Ilpo,
 >
-> >=20
-> > The new exported intel_pmc_core_ipc() function does not seem to
-> > depend on any existing PMC code.
-> >=20
-> > IMHO it would be better to put this in a new .c file under
-> > arch/x86/platform/intel/ this is where similar helpers like
-> > the iosf_mbi functions also live.
-> >=20
-> > This also avoids Kconfig complications. Currently the
-> > drivers/platform/x86/intel/pmc/core.c code is only
-> > build if CONFIG_X86_PLATFORM_DEVICES and
-> > CONFIG_INTEL_PMC_CORE are both set. So if a driver
-> > wants to make sure this is enabled by selecting them
-> > then it needs to select both.
+> Thanks for the comments. See my comments below.
+>
+> Updated patch will be sent out later after review comments from other rev=
+iewer are addressed.
+>
+> Henry
+> -----Original Message-----
+> From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> Sent: Wednesday, July 19, 2023 8:13 AM
+> To: Henry Shi <henryshi2018@gmail.com>
+> Cc: hbshi69@hotmail.com; tglx@linutronix.de; mingo@redhat.com;=20
+> bp@alien8.de; dave.hansen@linux.intel.com; x86@kernel.org;=20
+> hpa@zytor.com; hdegoede@redhat.com; markgross@kernel.org;=20
+> jdelvare@suse.com; linux@roeck-us.net; LKML=20
+> <linux-kernel@vger.kernel.org>; platform-driver-x86@vger.kernel.org;=20
+> linux-hwmon@vger.kernel.org; hb_shi2003@yahoo.com; Huibin Shi=20
+> <henrys@silicom-usa.com>; Wen Wang <wenw@silicom-usa.com>
+> Subject: Re: [PATCH] Add Silicom Platform Driver
+>
+> Caution: This is an external email. Please take care when clicking links =
+or opening attachments.
+>
+>
+> On Tue, 18 Jul 2023, Henry Shi wrote:
+>
+> > The Silicom platform (silicom-platform) Linux driver for Swisscom=20
+> > Business Box (Swisscom BB) as well as Cordoba family products is a=20
+> > software solution designed to facilitate the efficient management=20
+> > and control of devices through the integration of various Linux=20
+> > frameworks. This platform driver provides seamless support for=20
+> > device management via the Linux LED framework, GPIO framework,=20
+> > Hardware Monitoring (HWMON), and device attributes. The Silicom=20
+> > platform driver's compatibility with these Linux frameworks allows=20
+> > applications to access and control Cordoba family devices using=20
+> > existing software that is compatible with these frameworks. This=20
+> > compatibility simplifies the development process, reduces=20
+> > dependencies on proprietary solutions, and promotes interoperability=20
+> > with other Linux-based systems and software.
+> >
+> > Signed-off-by: Henry Shi <henryshi2018@gmail.com>
+> > ---
+> >  drivers/platform/x86/Kconfig            |   12 +
+> >  drivers/platform/x86/Makefile           |    1 +
+> >  drivers/platform/x86/silicom-platform.c | 1123
+> > +++++++++++++++++++++++
+> >  3 files changed, 1136 insertions(+)  create mode 100644=20
+> > drivers/platform/x86/silicom-platform.c
+> >
 
-Yeah, makes sense. This is an old patch. Once upon a time the PMC driver wa=
-s
-going to use the IPC to access some registers but we were able to get them =
-from
-elsewhere. The patch was brought back for the TSN use case. But you're corr=
-ect
-that arch/x86/platform/intel makes more sense if the function is to be expo=
-rted
-now and doesn't require to PMC driver to discover the interface. We'll do t=
-hat.
+> > +void lock_io_modules(void)
+> > +{
+> > +     mutex_lock(&mec_io_mutex);
+> > +}
+> > +EXPORT_SYMBOL(lock_io_modules);
+> > +
+> > +void unlock_io_modules(void)
+> > +{
+> > +     mutex_unlock(&mec_io_mutex);
+> > +}
+> > +EXPORT_SYMBOL(unlock_io_modules);
 
-> >=20
-> > Talking about Kconfig:
-> >=20
-> > #if IS_ENABLED(CONFIG_INTEL_PMC_CORE)
-> > int intel_pmc_core_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *rbuf);
-> > #else
-> > static inline int intel_pmc_core_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *=
-rbuf)
-> > {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return -ENODEV;
-> > }
-> > #endif /* CONFIG_INTEL_PMC_CORE */
-> >=20
-> > Notice that CONFIG_INTEL_PMC_CORE is a tristate, so pmc might be build =
-as a
-> > > module where as a consumer of intel_pmc_core_ipc() might end up built=
-in in
-> > > which case this will not work without extra Kconfig protection. And i=
-f you
-> > are > going to add extra Kconfig you might just as well select or depen=
-d on
-> > > INTEL_PMC_CORE and drop the #if .
+These are unused.
 
-Sure. Thanks.
+Henry: This will be used by another Silicom driver, which source code is no=
+t pushed to kernel repository.=20
 
-David
 
-> >=20
-> > Regards,
-> >=20
-> > Hans
-> >=20
-> >=20
-> >=20
-> >=20
-> >=20
-> >=20
-> > > > ---
-> > > > =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 |=C2=A0 1 +
-> > > > =C2=A0drivers/platform/x86/intel/pmc/core.c=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 60 +++++++++++++++++++
-> > > > =C2=A0.../linux/platform_data/x86/intel_pmc_core.h=C2=A0 | 41 +++++=
-++++++++
-> > > > =C2=A03 files changed, 102 insertions(+)
-> > > > =C2=A0create mode 100644 include/linux/platform_data/x86/intel_pmc_=
-core.h
-> > > >=20
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > index 069e176d607a..8a034dee9da9 100644
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -10648,6 +10648,7 @@ L:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0platf=
-orm-driver-x86@vger.kernel.org
-> > > > =C2=A0S:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Maintained
-> > > > =C2=A0F:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Documentation/ABI/testing/sys=
-fs-platform-intel-pmc
-> > > > =C2=A0F:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0drivers/platform/x86/intel/pm=
-c/
-> > > > +F:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0linux/platform_data/x86/intel_pmc_=
-core.h
-> > > > =C2=A0
-> > > > =C2=A0INTEL PMIC GPIO DRIVERS
-> > > > =C2=A0M:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Andy Shevchenko <andy@kernel.=
-org>
-> > > > diff --git a/drivers/platform/x86/intel/pmc/core.c > >
-> > > > b/drivers/platform/x86/intel/pmc/core.c
-> > > > index 5a36b3f77bc5..6fb1b0f453d8 100644
-> > > > --- a/drivers/platform/x86/intel/pmc/core.c
-> > > > +++ b/drivers/platform/x86/intel/pmc/core.c
-> > > > @@ -20,6 +20,7 @@
-> > > > =C2=A0#include <linux/pci.h>
-> > > > =C2=A0#include <linux/slab.h>
-> > > > =C2=A0#include <linux/suspend.h>
-> > > > +#include <linux/platform_data/x86/intel_pmc_core.h>
-> > > > =C2=A0
-> > > > =C2=A0#include <asm/cpu_device_id.h>
-> > > > =C2=A0#include <asm/intel-family.h>
-> > > > @@ -28,6 +29,8 @@
-> > > > =C2=A0
-> > > > =C2=A0#include "core.h"
-> > > > =C2=A0
-> > > > +#define PMC_IPCS_PARAM_COUNT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 7
-> > > > +
-> > > > =C2=A0/* Maximum number of modes supported by platfoms that has low=
- power
-> > > > mode > > capability */
-> > > > =C2=A0const char *pmc_lpm_modes[] =3D {
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"S0i2.0",
-> > > > @@ -53,6 +56,63 @@ const struct pmc_bit_map msr_map[] =3D {
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0{}
-> > > > =C2=A0};
-> > > > =C2=A0
-> > > > +int intel_pmc_core_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *rbuf)
-> > > > +{
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct acpi_buffer buffe=
-r =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0union acpi_object params=
-[PMC_IPCS_PARAM_COUNT] =3D {
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0{.type =3D ACPI_TYPE_INTEGER,},
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0{.type =3D ACPI_TYPE_INTEGER,},
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0{.type =3D ACPI_TYPE_INTEGER,},
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0{.type =3D ACPI_TYPE_INTEGER,},
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0{.type =3D ACPI_TYPE_INTEGER,},
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0{.type =3D ACPI_TYPE_INTEGER,},
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0{.type =3D ACPI_TYPE_INTEGER,},
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct acpi_object_list =
-arg_list =3D { PMC_IPCS_PARAM_COUNT,
-> > > > params };
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0union acpi_object *obj;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int status;
-> > > > +
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!ipc_cmd || !rbuf)
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0return -EINVAL;
-> > > > +
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * 0: IPC Command
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * 1: IPC Sub Command
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * 2: Size
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * 3-6: Write Buffer for=
- offset
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0params[0].integer.value =
-=3D ipc_cmd->cmd;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0params[1].integer.value =
-=3D ipc_cmd->sub_cmd;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0params[2].integer.value =
-=3D ipc_cmd->size;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0params[3].integer.value =
-=3D ipc_cmd->wbuf[0];
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0params[4].integer.value =
-=3D ipc_cmd->wbuf[1];
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0params[5].integer.value =
-=3D ipc_cmd->wbuf[2];
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0params[6].integer.value =
-=3D ipc_cmd->wbuf[3];
-> > > > +
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0status =3D acpi_evaluate=
-_object(NULL, "\\IPCS", &arg_list,
-> > > > &buffer);
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ACPI_FAILURE(status)=
-)
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0return -ENODEV;
-> > > > +
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0obj =3D buffer.pointer;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Check if the number o=
-f elements in package is 5 */
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (obj && obj->type =3D=
-=3D ACPI_TYPE_PACKAGE && obj->package.count
-> > > > =3D=3D > > 5) {
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0const union acpi_object *objs =3D obj->package.elem=
-ents;
-> > > > +
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0if ((u8)objs[0].integer.value !=3D 0)
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret=
-urn -EINVAL;
-> > > > +
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0rbuf[0] =3D objs[1].integer.value;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0rbuf[1] =3D objs[2].integer.value;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0rbuf[2] =3D objs[3].integer.value;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0rbuf[3] =3D objs[4].integer.value;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0} else {
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0return -EINVAL;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > > > +
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
-> > > > +}
-> > > > +EXPORT_SYMBOL(intel_pmc_core_ipc);
-> > > > +
-> > > > =C2=A0static inline u32 pmc_core_reg_read(struct pmc *pmc, int reg_=
-offset)
-> > > > =C2=A0{
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return readl(pmc->r=
-egbase + reg_offset);
-> > > > diff --git a/include/linux/platform_data/x86/intel_pmc_core.h > >
-> > > > b/include/linux/platform_data/x86/intel_pmc_core.h
-> > > > new file mode 100644
-> > > > index 000000000000..9bb3394fedcf
-> > > > --- /dev/null
-> > > > +++ b/include/linux/platform_data/x86/intel_pmc_core.h
-> > > > @@ -0,0 +1,41 @@
-> > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > +/*
-> > > > + * Intel Core SoC Power Management Controller Header File
-> > > > + *
-> > > > + * Copyright (c) 2023, Intel Corporation.
-> > > > + * All Rights Reserved.
-> > > > + *
-> > > > + * Authors: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-> > > > + *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 David E. =
-Box <david.e.box@linux.intel.com>
-> > > > + */
-> > > > +#ifndef INTEL_PMC_CORE_H
-> > > > +#define INTEL_PMC_CORE_H
-> > > > +
-> > > > +#define IPC_SOC_REGISTER_ACCESS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00xAA
-> > > > +#define IPC_SOC_SUB_CMD_READ=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A00x00
-> > > > +#define IPC_SOC_SUB_CMD_WRITE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00x0=
-1
-> > > > +
-> > > > +struct pmc_ipc_cmd {
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 cmd;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 sub_cmd;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 size;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 wbuf[4];
-> > > > +};
-> > > > +
-> > > > +#if IS_ENABLED(CONFIG_INTEL_PMC_CORE)
-> > > > +/**
-> > > > + * intel_pmc_core_ipc() - PMC IPC Mailbox accessor
-> > > > + * @ipc_cmd:=C2=A0 struct pmc_ipc_cmd prepared with input to send
-> > > > + * @rbuf:=C2=A0=C2=A0=C2=A0=C2=A0 Allocated u32[4] array for retur=
-ned IPC data
-> > > > + *
-> > > > + * Return: 0 on success. Non-zero on mailbox error
-> > > > + */
-> > > > +int intel_pmc_core_ipc(struct pmc_ipc_cmd *ipc_cmd, u32 *rbuf);
-> > > > +#else
-> > > > +static inline int intel_pmc_core_ipc(struct pmc_ipc_cmd *ipc_cmd, =
-u32 >
-> > > > > *rbuf)
-> > > > +{
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return -ENODEV;
-> > > > +}
-> > > > +#endif /* CONFIG_INTEL_PMC_CORE */
-> > > > +
-> > > > +#endif /* INTEL_PMC_CORE_H */
-> >=20
+> > +     u32 byte_pos =3D 0;
+> > +
+> > +     mutex_lock(&mec_io_mutex);
+> > +     /* Select memory region */
+> > +     outb(bank, EC_ADDR_MSB);
+> > +     outb(offset, EC_ADDR_LSB);
+> > +
+> > +     /* Set to 1 for current date from the address */
+> > +     outb(1, MEC_DATA(byte_pos));
+>
+> Hmm, this is really misleading. MEC_DATA() seems to calculate _an offset_=
+, not data? Name things accordingly.
+>
+> Henry: OK, changed the defined to  "#define MEC_DATA(offset) ((mec_io_bas=
+e) + 0x04 + (offset))"
 
+Not much better, unfortunately. Call it MEC_OFFSET() or MEC_DATA_OFFSET() i=
+nstead of MEC_DATA().
+
+Henry: Agree.
+
+> > +static void silicom_gpio_set(struct gpio_chip *gc, unsigned int=20
+> > +offset, int value) {
+> > +     u8 *channels =3D gpiochip_get_data(gc);
+> > +     int direction =3D silicom_gpio_get_direction(gc, offset);
+> > +     int channel =3D channels[offset];
+> > +     u8 reg;
+> > +
+> > +     if (direction =3D=3D GPIO_LINE_DIRECTION_IN)
+> > +             return;
+> > +
+> > +     mutex_lock(&mec_io_mutex);
+> > +     /* Get the dword offset from the channel */
+> > +     outb((channel >> 3) & 0xfc, MEC_ADDR);
+> > +
+> > +     /* Get the current register */
+> > +     reg =3D inb(MEC_DATA((channel >> 3) & 0x03));
+> > +     if (value =3D=3D 0)
+> > +             reg &=3D ~(1 << (channel & 0x7));
+> > +     else if (value > 0)
+> > +             reg |=3D 1 << (channel & 0x7);
+> > +     else
+> > +             pr_err("Invalid GPIO value: %d\n", value);
+> > +     outb(reg, MEC_DATA((channel >> 3) & 0x03));
+> > +     mutex_unlock(&mec_io_mutex);
+> > +}
+> > +
+> > +static int silicom_gpio_direction_output(struct gpio_chip *gc,=20
+> > +unsigned int offset, int value) {
+> > +     int direction =3D silicom_gpio_get_direction(gc, offset);
+> > +
+> > +     if (direction =3D=3D GPIO_LINE_DIRECTION_IN)
+> > +             return -EINVAL;
+> > +
+> > +     silicom_gpio_set(gc, offset, value);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int silicom_gpio_get(struct gpio_chip *gc, unsigned int
+> > +offset) {
+> > +     u8 *channels =3D gpiochip_get_data(gc);
+> > +     int channel =3D channels[offset];
+> > +     u8 reg;
+> > +
+> > +     mutex_lock(&mec_io_mutex);
+> > +     /* Get the dword offset from the channel */
+> > +     outb((channel >> 3) & 0xfc, MEC_ADDR);
+> > +
+> > +     /* Get the current register */
+> > +     reg =3D inb(MEC_DATA((channel >> 3) & 0x03));
+> > +     mutex_unlock(&mec_io_mutex);
+> > +
+> > +     return (reg >> (channel & 0x7)) & 0x01; }
+
+> > +static void silicom_mec_led_set(int channel, int on) {
+> > +     u8 reg;
+> > +
+> > +     mutex_lock(&mec_io_mutex);
+> > +     /* Get the dword offset from the channel */
+> > +     outb((channel >> 3) & 0xfc, MEC_ADDR);
+> > +     /* Get the current LED settings */
+> > +     reg =3D inb(MEC_DATA((channel >> 3) & 0x03));
+> > +
+> > +     /* Outputs are active low, so clear the bit for on, or set it for=
+ off */
+> > +     if (on)
+> > +             reg &=3D ~(1 << (channel & 0x7));
+> > +     else
+> > +             reg |=3D 1 << (channel & 0x7);
+> > +
+> > +     /* Write back the updated register */
+> > +     outb(reg, MEC_DATA((channel >> 3) & 0x03));
+> > +
+> > +     mutex_unlock(&mec_io_mutex);
+>
+> There's an identical code block in silicom_gpio_set(). Why not simply=20
+> call this from silicom_gpio_set()?
+>
+> Henry: these two block of date are different: silicom_mec_led_set(xxx,=20
+> int on), argument on, when on is 1, it means turn on LED; 0 means turn=20
+> off LED. For  silicom_gpio_set(), the argument value, which is really=20
+> the 0 or 1 bit value that passed to reg.
+
+The necessary conversion (and checks) can be made before/when calling the f=
+unction from another. The code is so identical that I don't buy it cannot b=
+e done (I've diff'ed those functions against each other so I know for sure!=
+).
+
+Henry: OK, I will change it in next submission.
+
+> > +}
+> > +
+> > +static void silicom_mec_led_mc_brightness_set(struct led_classdev *led=
+_cdev,
+> > +                                           enum led_brightness
+> > +brightness) {
+> > +     struct led_classdev_mc *mc_cdev =3D lcdev_to_mccdev(led_cdev);
+> > +     int i;
+> > +
+> > +     led_mc_calc_color_components(mc_cdev, brightness);
+> > +
+> > +     for (i =3D 0; i < mc_cdev->num_colors; i++) {
+> > +             silicom_mec_led_set(mc_cdev->subled_info[i].channel,
+> > +                                 mc_cdev->subled_info[i].brightness);
+> > +     }
+> > +}
+> > +
+> > +static enum led_brightness silicom_mec_led_get(int channel) {
+> > +     u8 reg;
+> > +
+> > +     mutex_lock(&mec_io_mutex);
+> > +     /* Get the dword offset of the register for this LED from the cha=
+nnel */
+> > +     outb((channel >> 3) & 0xfc, MEC_ADDR);
+> > +     /* Get the current LED settings */
+> > +     reg =3D inb(MEC_DATA((channel >> 3) & 0x03));
+> > +     mutex_unlock(&mec_io_mutex);
+> > +
+> > +     /* Outputs are active low */
+> > +     return reg & (1 << (channel & 0x7)) ? LED_OFF : LED_ON;
+>
+> Looks identical to a part of silicom_gpio_get(). Perhaps it should call t=
+his function??
+>
+> Henry: some of the code block of these two functions are similar. But=20
+> function return types are different. Gpio has status of 0 or 1, but=20
+> LED has status of LED_OFF and LED_ON.
+
+The same comment as above for the set. I think the return types can be conv=
+erted in the calling function before returning.
+
+Henry: OK.
+
+> > +static int __init silicom_platform_info_init(const struct=20
+> > +dmi_system_id *id) {
+> > +     struct silicom_platform_info *info =3D id->driver_data;
+> > +
+> > +     dev_info(&silicom_platform_dev->dev, "Detected %s\n",
+> > + id->ident);
+> > +
+> > +     mec_io_base =3D info->io_base;
+> > +     mec_io_len =3D info->io_len;
+> > +     silicom_led_info =3D info->led_info;
+> > +     silicom_gpio_channels =3D info->gpio_channels;
+> > +     silicom_gpiochip =3D info->gpiochip;
+> > +     if (silicom_gpiochip)
+>
+> How can this be NULL?
+>
+> Henry: in case something wrong with info->gpiochip
+
+But how can that occur? Both struct defining silicom_platform_info provide =
+a non-NULL value. There's no need for such safety construct which cannot be=
+ every true within the kernel code.
+
+Henry: OK, will remove checking.=20
+
+> > +static int __init silicom_platform_init(void) {
+> > +     struct device *dev;
+> > +     int err;
+> > +
+> > +     /* register a platform device to act as the parent for LEDS, etc.=
+ */
+> > +     silicom_platform_dev =3D platform_device_register_simple("silicom=
+-platform", -1, NULL, 0);
+> > +     if (IS_ERR(silicom_platform_dev)) {
+> > +             err =3D PTR_ERR(silicom_platform_dev);
+> > +             pr_err("failed to register silicom-platform device: %d\n"=
+, err);
+> > +             goto silicom_init_register_err;
+
+Instead of goto, return directly as there's nothing to rollback:
+
+return err;
+
+Henry: OK.
+
+> > +     }
+> > +     dev =3D &silicom_platform_dev->dev;
+> > +
+> > +     err =3D dmi_check_system(silicom_dmi_ids);
+> > +     if (err =3D=3D 0) {
+> > +             dev_err(dev, "No DMI match for this platform\n");
+> > +             err =3D -ENODEV;
+> > +             goto silicom_init_probe_err;
+> > +     }
+> > +
+> > +     /* Directly probe the platform driver in init since this isn't a
+> > +      * hotpluggable device.  That means we don't need to register a d=
+river
+> > +      * that needs to wait around in memory on the chance a matching d=
+evice
+> > +      * would get added.  Instead run once in __init so that we can fr=
+ee all
+> > +      * those resources when the __init region is wiped
+> > +      */
+> > +     err =3D platform_driver_probe(&silicom_platform_driver, silicom_p=
+latform_probe);
+> > +     if (err) {
+> > +             dev_err(dev, "Failed to probe platform driver %d\n", err)=
+;
+> > +             goto silicom_init_probe_err;
+> > +     }
+> > +
+> > +     return 0;
+> > +
+> > +silicom_init_probe_err:
+> > +     if (silicom_platform_dev) {
+>
+> How can this by NULL?
+>
+> Henry: if function platform_device_register_simple() failed to=20
+> regiseter, silicom_platform_dev will be NULL,
+
+Ah, sorry. I should have mentioned that that branch should return error ins=
+tead rather than gotoing here.
+
+Henry: OK.=20
+
+> > +             platform_device_unregister(silicom_platform_dev);
+> > +             silicom_platform_dev =3D NULL;
+>
+> Seems unnecessary.
+>
+> Henry: It is need. I saw when registering device failed, the driver crash=
+es.
+
+From which access of silicom_platform_dev??
+
+> > +     }
+> > +     if (my_dev_ctl.my_dev) {
+> > +             root_device_unregister(my_dev_ctl.my_dev);
+> > +             my_dev_ctl.my_dev =3D NULL;
+>
+> Ditto.
+>
+> Henry: It is need. I saw when registering device failed, the driver crash=
+es.
+
+Ah, I didn't notice it before but this should be properly arranged into rev=
+erse order such that goto xx can target the correct amount of rollback (in =
+reverse order than init). Add xx labels as necessary for each rollback step=
+ you need to jump to.
+
+Henry: OK.
+
+> > +     }
+> > +
+> > +silicom_init_register_err:
+> > +     return err;
+> > +}
+
+
+--
+ i.
