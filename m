@@ -2,124 +2,189 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED0AC001B0
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Aug 2023 21:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6D9C001B0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Aug 2023 09:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233131AbjHIVHo (ORCPT
+        id S233028AbjHJJYC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 9 Aug 2023 17:07:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40734 "EHLO
+        Thu, 10 Aug 2023 05:24:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233136AbjHIVHo (ORCPT
+        with ESMTP id S229709AbjHJJYC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 9 Aug 2023 17:07:44 -0400
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 311281FD2;
-        Wed,  9 Aug 2023 14:07:43 -0700 (PDT)
-Received: by mail-ot1-x334.google.com with SMTP id 46e09a7af769-6bd066b0fd4so214373a34.2;
-        Wed, 09 Aug 2023 14:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691615262; x=1692220062;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=B35FL86sKskIjPM/ffA3EI5QZafQThibDMhYf5nJ0Xg=;
-        b=SG9DwWmWWuvsH2fAgofeTRhLkIKvEiFkcI03U+DBYDfR7tm9vVRM9wrgeAtg9bSQFx
-         tYkHacKyA+tM825TuRzLW+NaauH2VgXlha+oUBRfjw/295l0wrbqIiN8PCxGD/+86UHb
-         EQEwtXoPrnoLY9G8onP9RiO1/ErCGA5qSESOJP3N3GnvMMxw2y9+GxORqLAZDzTDkq6y
-         rhZ4uxEO7hBSXs+t7xvsU+AVmGODsB+2LJC/VKlabfd6E3tVyYQd8AKIutEdVrs1krpJ
-         3ZkYvN4ihOwrO60f7291SIMxgjsYTJoWG4n9CBJ7yfip51G2eJqnS7au3pM8D1fScqb6
-         yrAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691615262; x=1692220062;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B35FL86sKskIjPM/ffA3EI5QZafQThibDMhYf5nJ0Xg=;
-        b=LgYY+eJz7O9sKYey3OvkgzhhU6khTjXUOwFhtaVNCpNMGRzf6Pj01vk9xDMKlWIKke
-         0ssXqHELRq0CNc4ZMQ3YcZFUlUXU0+HIxdUh6Bjcd1o7uvwciTLCXPm5ZAgVlBmiUkyk
-         KFNySRAolSfYcWn47c3ky9upyEDdzgP3oWBl0PlKgoVhDq4Z5B2oU7d690ZWN4fuxmiJ
-         f4T3ETxUqWUKG9lXlShKQUpClaT0xsJzv05tOh1jQ7pn73U3wMXjRWFDYjfz4GP2tL2X
-         i0QYW0wQY4ZCTOkYwClQ8S7htpd3XE4XFeTRe1qHEH1C0xgiJfVNUSi8ZJGpH8TwrToB
-         Fdmg==
-X-Gm-Message-State: AOJu0YyGx5xwdVZrLwDNBvlxwXg8R4whiT1fCvZ1fn40QcMN0dE66SNU
-        fWYpCU/0121wJ4xZlqMj9Pw=
-X-Google-Smtp-Source: AGHT+IHgGhDsVVRSGZzJZPWmm7kPGrSiJpkvNI1mZzvqk1OOKLkpeQ4jc7feeMjqxDyWipotwvSQ/w==
-X-Received: by 2002:a05:6870:d5a7:b0:1be:f7d9:c0df with SMTP id u39-20020a056870d5a700b001bef7d9c0dfmr461779oao.10.1691615262248;
-        Wed, 09 Aug 2023 14:07:42 -0700 (PDT)
-Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:2825:7de2:269d:39bc])
-        by smtp.gmail.com with ESMTPSA id x5-20020a056870740500b001bfd65998aesm39845oam.58.2023.08.09.14.07.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Aug 2023 14:07:41 -0700 (PDT)
-From:   Jorge Lopez <jorgealtxwork@gmail.com>
-X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
-To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
-        ilpo.jarvinen@linux.intel.com, dan.carpenter@linaro.org
-Subject: [PATCH] hp-bioscfg: Update steps how order list elements are evaluated
-Date:   Wed,  9 Aug 2023 16:07:40 -0500
-Message-Id: <20230809210740.18392-1-jorge.lopez2@hp.com>
-X-Mailer: git-send-email 2.34.1
+        Thu, 10 Aug 2023 05:24:02 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5E11704;
+        Thu, 10 Aug 2023 02:24:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691659441; x=1723195441;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=0kRWsvAisMK8ylRZ6jr2PcSZ59g1ZWZu9ngL3IpeqhQ=;
+  b=if79p6KNkX9HPd4iYmAbauSL7aogj4XWKmuUJuzpsu0JETkKFB/i7Mp/
+   T6qGm8Q5pqjU3L+m1DH23CVi7MCSLdsQqAJSPZwchNpwJherL0bcFSNgF
+   9H4w2Se+TrLp/XqeF4QvEmnaD0E5T022DH45osLk9LhvJ6nRAgCIZXayw
+   Latlbmu3Cdn4OatnUcD/JjAARaicPgiAQtlMDweyp83W02D0cnkFPFyJ2
+   YHxhXQd/XZHUg25xnkVAROTjPKzG+T/M9cT7lnovxDAdwzytJfGYRBA4X
+   26ZtwZ+R+yilmMuIMxF9P7YB03gEN0rjXsnpsF/WnSOroocLxCEoiT596
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10797"; a="375066398"
+X-IronPort-AV: E=Sophos;i="6.01,161,1684825200"; 
+   d="scan'208";a="375066398"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2023 02:24:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10797"; a="905981541"
+X-IronPort-AV: E=Sophos;i="6.01,161,1684825200"; 
+   d="scan'208";a="905981541"
+Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.213.42.193]) ([10.213.42.193])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2023 02:23:48 -0700
+Message-ID: <0aacc9b8-3780-6298-60db-7b140a52b92f@linux.intel.com>
+Date:   Thu, 10 Aug 2023 17:23:44 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH net-next v2 3/5] net: phy: update in-band AN mode when
+ changing interface by PHY driver
+To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        =?UTF-8?Q?Marek_Beh=c3=ban?= <kabel@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Wong Vee Khee <veekhee@apple.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Revanth Kumar Uppala <ruppala@nvidia.com>,
+        Shenwei Wang <shenwei.wang@nxp.com>,
+        Andrey Konovalov <andrey.konovalov@linaro.org>,
+        Jochen Henneberg <jh@henneberg-systemdesign.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
+        Tan Tee Min <tee.min.tan@linux.intel.com>,
+        Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+        Lai Peter Jun Ann <jun.ann.lai@intel.com>
+References: <20230804084527.2082302-1-yong.liang.choong@linux.intel.com>
+ <20230804084527.2082302-4-yong.liang.choong@linux.intel.com>
+ <ZMy+q84hVAbTQIk5@shell.armlinux.org.uk>
+Content-Language: en-US
+From:   Choong Yong Liang <yong.liang.choong@linux.intel.com>
+In-Reply-To: <ZMy+q84hVAbTQIk5@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Update steps how order list elements data and elements size are
-evaluated
 
-Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 
----
-Based on the latest platform-drivers-x86.git/for-next
----
- .../x86/hp/hp-bioscfg/order-list-attributes.c    | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+On 4/8/2023 5:02 pm, Russell King (Oracle) wrote:
+> On Fri, Aug 04, 2023 at 04:45:25PM +0800, Choong Yong Liang wrote:
+>> From: "Tan, Tee Min" <tee.min.tan@linux.intel.com>
+>>
+>> Add cur_link_an_mode into phy_device struct for PHY drivers to
+>> communicate the in-band AN mode setting with phylink framework.
+>>
+>> As there is a mechanism in PHY drivers to switch the PHY interface
+>> between SGMII and 2500BaseX according to link speed. In this case,
+>> the in-band AN mode should be switching based on the PHY interface
+>> as well, if the PHY interface has been changed/updated by PHY driver.
+>>
+>> For e.g., disable in-band AN in 2500BaseX mode, or enable in-band AN
+>> back for SGMII mode (10/100/1000Mbps).
+>>
+>> Signed-off-by: Tan, Tee Min <tee.min.tan@linux.intel.com>
+>> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+>> ---
+>>   drivers/net/phy/marvell10g.c | 6 ++++++
+>>   drivers/net/phy/phylink.c    | 4 ++++
+>>   include/linux/phy.h          | 3 +++
+>>   3 files changed, 13 insertions(+)
+>>
+>> diff --git a/drivers/net/phy/marvell10g.c b/drivers/net/phy/marvell10g.c
+>> index d4bb90d76881..a9df19278618 100644
+>> --- a/drivers/net/phy/marvell10g.c
+>> +++ b/drivers/net/phy/marvell10g.c
+>> @@ -30,6 +30,7 @@
+>>   #include <linux/phy.h>
+>>   #include <linux/sfp.h>
+>>   #include <linux/netdevice.h>
+>> +#include <linux/phylink.h>
+>>   
+>>   #define MV_PHY_ALASKA_NBT_QUIRK_MASK	0xfffffffe
+>>   #define MV_PHY_ALASKA_NBT_QUIRK_REV	(MARVELL_PHY_ID_88X3310 | 0xa)
+>> @@ -946,6 +947,9 @@ static void mv3310_update_interface(struct phy_device *phydev)
+>>   	 * xaui / rxaui modes according to the speed.
+>>   	 * Florian suggests setting phydev->interface to communicate this to the
+>>   	 * MAC. Only do this if we are already in one of the above modes.
+>> +	 * In-band Auto-negotiation is not supported in 2500BASE-X.
+>> +	 * Setting phydev->cur_link_an_mode to communicate this to the
+>> +	 * phylink framework.
+>>   	 */
+>>   	switch (phydev->speed) {
+>>   	case SPEED_10000:
+>> @@ -956,11 +960,13 @@ static void mv3310_update_interface(struct phy_device *phydev)
+>>   		break;
+>>   	case SPEED_2500:
+>>   		phydev->interface = PHY_INTERFACE_MODE_2500BASEX;
+>> +		phydev->cur_link_an_mode = MLO_AN_PHY;
+>>   		break;
+>>   	case SPEED_1000:
+>>   	case SPEED_100:
+>>   	case SPEED_10:
+>>   		phydev->interface = PHY_INTERFACE_MODE_SGMII;
+>> +		phydev->cur_link_an_mode = MLO_AN_INBAND;
+>>   		break;
+>>   	default:
+>>   		break;
+>> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+>> index 4f1c8bb199e9..f9cbb6d7e134 100644
+>> --- a/drivers/net/phy/phylink.c
+>> +++ b/drivers/net/phy/phylink.c
+>> @@ -1720,6 +1720,8 @@ static void phylink_phy_change(struct phy_device *phydev, bool up)
+>>   		pl->phy_state.pause |= MLO_PAUSE_RX;
+>>   	pl->phy_state.interface = phydev->interface;
+>>   	pl->phy_state.link = up;
+>> +	pl->cur_link_an_mode = phydev->cur_link_an_mode;
+>> +	pl->cfg_link_an_mode = phydev->cur_link_an_mode;
+>>   	mutex_unlock(&pl->state_mutex);
+>>   
+>>   	phylink_run_resolve(pl);
+>> @@ -1824,6 +1826,8 @@ static int phylink_bringup_phy(struct phylink *pl, struct phy_device *phy,
+>>   	if (pl->config->mac_managed_pm)
+>>   		phy->mac_managed_pm = true;
+>>   
+>> +	pl->phydev->cur_link_an_mode = pl->cur_link_an_mode;
+> 
+> I am really not happy with exposing phylink's AN mode into phylib.
+> 
+Hi Russell,
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-index b19644ed12e0..d2b61ab950d4 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-@@ -152,7 +152,7 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
- 
- 		switch (order_obj[elem].type) {
- 		case ACPI_TYPE_STRING:
--			if (elem != PREREQUISITES && elem != ORD_LIST_ELEMENTS) {
-+			if (elem != PREREQUISITES) {
- 				ret = hp_convert_hexstr_to_str(order_obj[elem].string.pointer,
- 							       order_obj[elem].string.length,
- 							       &str_value, &value_len);
-@@ -266,6 +266,15 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
- 			if (ret)
- 				goto exit_list;
- 
-+			/*
-+			 * It is expected for the element size value
-+			 * to be 1 and not to represent the actual
-+			 * number of elements stored in comma
-+			 * separated format. element size value is
-+			 * recalculated to report the correct number
-+			 * of data elements found.
-+			 */
-+
- 			part_tmp = tmpstr;
- 			part = strsep(&part_tmp, COMMA_SEP);
- 			if (!part)
-@@ -273,11 +282,14 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
- 					tmpstr,
- 					sizeof(ordered_list_data->elements[0]));
- 
--			for (olist_elem = 1; olist_elem < MAX_ELEMENTS_SIZE && part; olist_elem++) {
-+			for (olist_elem = 0; olist_elem < MAX_ELEMENTS_SIZE && part; olist_elem++) {
- 				strscpy(ordered_list_data->elements[olist_elem],
- 					part,
- 					sizeof(ordered_list_data->elements[olist_elem]));
-+
- 				part = strsep(&part_tmp, COMMA_SEP);
-+				if (part && ordered_list_data->elements_size < MAX_ELEMENTS_SIZE)
-+					ordered_list_data->elements_size++;
- 			}
- 
- 			kfree(str_value);
--- 
-2.34.1
-
+Thank you for the feedback.
+After conducting further analysis on my end, it appears that this line 
+"pl->phydev->cur_link_an_mode = pl->cur_link_an_mode;" is not necessary.
+If we remove this line of code, would the implementation of this patch be 
+acceptable to you?
