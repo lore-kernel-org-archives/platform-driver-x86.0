@@ -2,130 +2,101 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EC3C0015E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Aug 2023 13:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB847C001DB
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Aug 2023 13:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235221AbjHKNR4 (ORCPT
+        id S230509AbjHKNfO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 11 Aug 2023 09:17:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54392 "EHLO
+        Fri, 11 Aug 2023 09:35:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235257AbjHKNRz (ORCPT
+        with ESMTP id S231631AbjHKNfN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 11 Aug 2023 09:17:55 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68E6E2D52;
-        Fri, 11 Aug 2023 06:17:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691759874; x=1723295874;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=UtEU+TMPBT1c10GjY9uMrXkMmC6y0n8ZdxPYDC6jDys=;
-  b=N6bhm8frt3Ww6pUHuqelDfZegYOBE4QL6wjybnyM0vZa7+2P1RX/rf4u
-   Vh8DD3FWGZ2bw4GiU4wKdqhRPfbiihMTgjsdL1OOCh9+KeOsXyqKJZa5+
-   nwKStPRI1areQUwsVwqIU1SoEPWsNXANMj3ruE1h+gN10Me4E6weDrpIm
-   0F2qkLpNdCjV+fBjfmbftr2a8SDH1M7XdTXBRTtOROo2f6c3529WfrcBU
-   m68wU5A/qGOi9az4v0gl92mwVzfAfQ/Pcy7mfEuLQuQY7ufhl8W3c3WoI
-   z8be14COX1VBPpp4nMhaUBFzJxUxicY7fdlFu4H3Lvw6V0f3HtizaTsHl
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="370572250"
-X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="370572250"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 06:17:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="726264645"
-X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="726264645"
-Received: from aberko-mobl1.ger.corp.intel.com ([10.252.51.87])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 06:17:43 -0700
-Date:   Fri, 11 Aug 2023 16:17:41 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Arnd Bergmann <arnd@kernel.org>
-cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        "xingtong.wu" <xingtong.wu@siemens.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Henning Schild <henning.schild@siemens.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH] platform/x86/siemens: simatic-ipc: fix nonsensical
- condition
-In-Reply-To: <20230811130948.2211800-1-arnd@kernel.org>
-Message-ID: <97764bad-7091-e9ed-6f49-d31861fc622f@linux.intel.com>
-References: <20230811130948.2211800-1-arnd@kernel.org>
+        Fri, 11 Aug 2023 09:35:13 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20FC330CA;
+        Fri, 11 Aug 2023 06:35:13 -0700 (PDT)
+Received: from [192.168.100.7] (unknown [39.34.188.71])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: usama.anjum)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 7DFD36607247;
+        Fri, 11 Aug 2023 14:35:10 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1691760911;
+        bh=wWTqUHKBvsZnlOKHdHWeuHapPEJsmt6jPNGdT3SHPtI=;
+        h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+        b=orq9x3eg7xN4TyOAgdyS23eCgbHr8uMTJOeU8YN7E6ovljXmTPqKfGT/Jhu0K6Ivc
+         wCYKGCciUJaMwbhS7DLTXQV0UeSrZOHJWcyH+12i+UhzaubUneKKxSAIROko1/oQQM
+         /xOInSnzhb8nZjQMoJza+Bi9sB8uF9pwdIEQ8xyikNyuHUSRmulxkF2ngmQpdkPnrM
+         qAsPmhkMZHlHocR3X0ojsRB9nN4s8pTOkrIBCmdmTcWvA+9ZkWiTyEUpgRdwh6FfSh
+         vu9ZMl9o91JGRrkBmq5tx3Df/Z/dUCKJaPpxTvW5eW32MWhmh15bVWhSH8TCWPschm
+         MZBrxFyK+8OEw==
+Message-ID: <1690b97a-e19a-18fc-7248-b0bae0757cb7@collabora.com>
+Date:   Fri, 11 Aug 2023 18:35:06 +0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.1
+Cc:     Muhammad Usama Anjum <usama.anjum@collabora.com>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v1 1/1] platform/x86/amd/pmf: Use str_on_off() helper
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230811131330.71263-1-andriy.shevchenko@linux.intel.com>
+From:   Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20230811131330.71263-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 11 Aug 2023, Arnd Bergmann wrote:
+On 8/11/23 6:13 PM, Andy Shevchenko wrote:
+> We have a common helper to represent a boolean value as "on"/"off"
+> string. Use it for the sake of the unified style.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The condition checking for a constant SIMATIC_IPC_DEVICE_BX_59A value
-> clearly makes no sense, as clang warns:
-> 
-> drivers/platform/x86/siemens/simatic-ipc.c:132:42: error: use of logical '||' with constant operand [-Werror,-Wconstant-logical-operand]
->                 if (ledmode == SIMATIC_IPC_DEVICE_227G || SIMATIC_IPC_DEVICE_BX_59A)
->                                                        ^  ~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/platform/x86/siemens/simatic-ipc-batt.c:197:49: error: use of logical '||' with constant operand [-Werror,-Wconstant-logical-operand]
->                 if (priv.devmode == SIMATIC_IPC_DEVICE_BX_21A || SIMATIC_IPC_DEVICE_BX_59A)
->                                                               ^  ~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Most likely, this was meant to check ledmode to be one of the two values,
-> so change it to that.
-> 
-> Fixes: b8af77951941e ("platform/x86/siemens: simatic-ipc: add new models BX-56A/BX-59A")
-> Fixes: c56beff203754 ("platform/x86/siemens: simatic-ipc-batt: add support for module BX-59A")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/platform/x86/siemens/simatic-ipc-batt.c | 3 ++-
->  drivers/platform/x86/siemens/simatic-ipc.c      | 3 ++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/amd/pmf/cnqf.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/siemens/simatic-ipc-batt.c b/drivers/platform/x86/siemens/simatic-ipc-batt.c
-> index d66b9969234bf..e6c12c52843ca 100644
-> --- a/drivers/platform/x86/siemens/simatic-ipc-batt.c
-> +++ b/drivers/platform/x86/siemens/simatic-ipc-batt.c
-> @@ -194,7 +194,8 @@ int simatic_ipc_batt_probe(struct platform_device *pdev, struct gpiod_lookup_tab
+> diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
+> index 539b186e9027..bc8899e15c91 100644
+> --- a/drivers/platform/x86/amd/pmf/cnqf.c
+> +++ b/drivers/platform/x86/amd/pmf/cnqf.c
+> @@ -8,6 +8,7 @@
+>   * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>   */
 >  
->  	if (table->table[2].key) {
->  		flags = GPIOD_OUT_HIGH;
-> -		if (priv.devmode == SIMATIC_IPC_DEVICE_BX_21A || SIMATIC_IPC_DEVICE_BX_59A)
-> +		if (priv.devmode == SIMATIC_IPC_DEVICE_BX_21A ||
-> +		    priv.devmode == SIMATIC_IPC_DEVICE_BX_59A)
->  			flags = GPIOD_OUT_LOW;
->  		priv.gpios[2] = devm_gpiod_get_index(dev, "CMOSBattery meter", 2, flags);
->  		if (IS_ERR(priv.gpios[2])) {
-> diff --git a/drivers/platform/x86/siemens/simatic-ipc.c b/drivers/platform/x86/siemens/simatic-ipc.c
-> index 02c540cf40702..e11d28ffac604 100644
-> --- a/drivers/platform/x86/siemens/simatic-ipc.c
-> +++ b/drivers/platform/x86/siemens/simatic-ipc.c
-> @@ -129,7 +129,8 @@ static int register_platform_devices(u32 station_id)
->  		pdevname = KBUILD_MODNAME "_leds";
->  		if (ledmode == SIMATIC_IPC_DEVICE_127E)
->  			pdevname = KBUILD_MODNAME "_leds_gpio_apollolake";
-> -		if (ledmode == SIMATIC_IPC_DEVICE_227G || SIMATIC_IPC_DEVICE_BX_59A)
-> +		if (ledmode == SIMATIC_IPC_DEVICE_227G ||
-> +		    ledmode == SIMATIC_IPC_DEVICE_BX_59A)
->  			pdevname = KBUILD_MODNAME "_leds_gpio_f7188x";
->  		if (ledmode == SIMATIC_IPC_DEVICE_BX_21A)
->  			pdevname = KBUILD_MODNAME "_leds_gpio_elkhartlake";
-
-Thank you for the patch but these are already fixed by commits:
-
-7abf253afa5c ("platform/x86/siemens: simatic-ipc-batt: fix logical error for BX-59A")
-b01c1e022f7f ("platform/x86/siemens: simatic-ipc: fix logical error for BX-59A")
-
+> +#include <linux/string_choices.h>
+>  #include <linux/workqueue.h>
+>  #include "pmf.h"
+>  
+> @@ -399,7 +400,7 @@ static ssize_t cnqf_enable_store(struct device *dev,
+>  			amd_pmf_set_sps_power_limits(pdev);
+>  	}
+>  
+> -	dev_dbg(pdev->dev, "Received CnQF %s\n", input ? "on" : "off");
+> +	dev_dbg(pdev->dev, "Received CnQF %s\n", str_on_off(input));
+>  	return count;
+>  }
+>  
+> @@ -409,7 +410,7 @@ static ssize_t cnqf_enable_show(struct device *dev,
+>  {
+>  	struct amd_pmf_dev *pdev = dev_get_drvdata(dev);
+>  
+> -	return sysfs_emit(buf, "%s\n", pdev->cnqf_enabled ? "on" : "off");
+> +	return sysfs_emit(buf, "%s\n", str_on_off(pdev->cnqf_enabled));
+>  }
+>  
+>  static DEVICE_ATTR_RW(cnqf_enable);
 
 -- 
- i.
-
+BR,
+Muhammad Usama Anjum
