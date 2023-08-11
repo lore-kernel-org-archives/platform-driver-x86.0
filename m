@@ -2,115 +2,130 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C19C001DB
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Aug 2023 13:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EC3C0015E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Aug 2023 13:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234754AbjHKNOO (ORCPT
+        id S235221AbjHKNR4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 11 Aug 2023 09:14:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38124 "EHLO
+        Fri, 11 Aug 2023 09:17:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234751AbjHKNON (ORCPT
+        with ESMTP id S235257AbjHKNRz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 11 Aug 2023 09:14:13 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA641270F;
-        Fri, 11 Aug 2023 06:14:13 -0700 (PDT)
+        Fri, 11 Aug 2023 09:17:55 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68E6E2D52;
+        Fri, 11 Aug 2023 06:17:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691759653; x=1723295653;
+  t=1691759874; x=1723295874;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=DqlutKDFR+edpFN90YKfv+7uoSGtCYEEKq4YBuFZQSA=;
-  b=SeIJURKK1QkinR4OL07QpMSY0amBYCeB7p9gyxOp+vZCxV4LiR/54jbB
-   AWpW3ycXHdlpqzR30ifOqDQBS9MsSMCsmagpfNp1e88q/jR68pW+wrr1U
-   9ECj7BmeZK3O446p1vkqKHGp/5MFuxAB2ROuymskfFVAdvfVNCtv7/U27
-   F5gGb48CPMk3FGP/7q43tmMFB8VcllOVztIKRT/sxXvj5RMZokY9FmcV3
-   HD5w9Yj75JEC/jn/U5d2x0UqxEKIdeAO/dRUcvIa9IdjAy/808V48dMR1
-   ia4GPIhGJaH4c+v8mX/vc/8zd7lFBRXlqpKCYxnxB0JwVdPdgkmR341Tn
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="369145177"
+  bh=UtEU+TMPBT1c10GjY9uMrXkMmC6y0n8ZdxPYDC6jDys=;
+  b=N6bhm8frt3Ww6pUHuqelDfZegYOBE4QL6wjybnyM0vZa7+2P1RX/rf4u
+   Vh8DD3FWGZ2bw4GiU4wKdqhRPfbiihMTgjsdL1OOCh9+KeOsXyqKJZa5+
+   nwKStPRI1areQUwsVwqIU1SoEPWsNXANMj3ruE1h+gN10Me4E6weDrpIm
+   0F2qkLpNdCjV+fBjfmbftr2a8SDH1M7XdTXBRTtOROo2f6c3529WfrcBU
+   m68wU5A/qGOi9az4v0gl92mwVzfAfQ/Pcy7mfEuLQuQY7ufhl8W3c3WoI
+   z8be14COX1VBPpp4nMhaUBFzJxUxicY7fdlFu4H3Lvw6V0f3HtizaTsHl
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="370572250"
 X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="369145177"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 06:14:13 -0700
+   d="scan'208";a="370572250"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 06:17:47 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="846802058"
+X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="726264645"
 X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="846802058"
+   d="scan'208";a="726264645"
 Received: from aberko-mobl1.ger.corp.intel.com ([10.252.51.87])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 06:14:11 -0700
-Date:   Fri, 11 Aug 2023 16:14:08 +0300 (EEST)
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 06:17:43 -0700
+Date:   Fri, 11 Aug 2023 16:17:41 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Arnd Bergmann <arnd@kernel.org>
 cc:     Hans de Goede <hdegoede@redhat.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Muhammad Usama Anjum <usama.anjum@collabora.com>,
+        Mark Gross <markgross@kernel.org>,
+        "xingtong.wu" <xingtong.wu@siemens.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee@kernel.org>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v1 1/1] platform/x86/amd/pmf: Use str_on_off() helper
-In-Reply-To: <20230811131330.71263-1-andriy.shevchenko@linux.intel.com>
-Message-ID: <3c7dde60-e6a8-1729-4ace-9768d331c2d0@linux.intel.com>
-References: <20230811131330.71263-1-andriy.shevchenko@linux.intel.com>
+        llvm@lists.linux.dev
+Subject: Re: [PATCH] platform/x86/siemens: simatic-ipc: fix nonsensical
+ condition
+In-Reply-To: <20230811130948.2211800-1-arnd@kernel.org>
+Message-ID: <97764bad-7091-e9ed-6f49-d31861fc622f@linux.intel.com>
+References: <20230811130948.2211800-1-arnd@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1649411613-1691759652=:50003"
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, 11 Aug 2023, Arnd Bergmann wrote:
 
---8323329-1649411613-1691759652=:50003
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
-On Fri, 11 Aug 2023, Andy Shevchenko wrote:
-
-> We have a common helper to represent a boolean value as "on"/"off"
-> string. Use it for the sake of the unified style.
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> The condition checking for a constant SIMATIC_IPC_DEVICE_BX_59A value
+> clearly makes no sense, as clang warns:
+> 
+> drivers/platform/x86/siemens/simatic-ipc.c:132:42: error: use of logical '||' with constant operand [-Werror,-Wconstant-logical-operand]
+>                 if (ledmode == SIMATIC_IPC_DEVICE_227G || SIMATIC_IPC_DEVICE_BX_59A)
+>                                                        ^  ~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/platform/x86/siemens/simatic-ipc-batt.c:197:49: error: use of logical '||' with constant operand [-Werror,-Wconstant-logical-operand]
+>                 if (priv.devmode == SIMATIC_IPC_DEVICE_BX_21A || SIMATIC_IPC_DEVICE_BX_59A)
+>                                                               ^  ~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Most likely, this was meant to check ledmode to be one of the two values,
+> so change it to that.
+> 
+> Fixes: b8af77951941e ("platform/x86/siemens: simatic-ipc: add new models BX-56A/BX-59A")
+> Fixes: c56beff203754 ("platform/x86/siemens: simatic-ipc-batt: add support for module BX-59A")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/platform/x86/amd/pmf/cnqf.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/siemens/simatic-ipc-batt.c | 3 ++-
+>  drivers/platform/x86/siemens/simatic-ipc.c      | 3 ++-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/amd/pmf/cnqf.c b/drivers/platform/x86/amd/pmf/cnqf.c
-> index 539b186e9027..bc8899e15c91 100644
-> --- a/drivers/platform/x86/amd/pmf/cnqf.c
-> +++ b/drivers/platform/x86/amd/pmf/cnqf.c
-> @@ -8,6 +8,7 @@
->   * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->   */
+> diff --git a/drivers/platform/x86/siemens/simatic-ipc-batt.c b/drivers/platform/x86/siemens/simatic-ipc-batt.c
+> index d66b9969234bf..e6c12c52843ca 100644
+> --- a/drivers/platform/x86/siemens/simatic-ipc-batt.c
+> +++ b/drivers/platform/x86/siemens/simatic-ipc-batt.c
+> @@ -194,7 +194,8 @@ int simatic_ipc_batt_probe(struct platform_device *pdev, struct gpiod_lookup_tab
 >  
-> +#include <linux/string_choices.h>
->  #include <linux/workqueue.h>
->  #include "pmf.h"
->  
-> @@ -399,7 +400,7 @@ static ssize_t cnqf_enable_store(struct device *dev,
->  			amd_pmf_set_sps_power_limits(pdev);
->  	}
->  
-> -	dev_dbg(pdev->dev, "Received CnQF %s\n", input ? "on" : "off");
-> +	dev_dbg(pdev->dev, "Received CnQF %s\n", str_on_off(input));
->  	return count;
->  }
->  
-> @@ -409,7 +410,7 @@ static ssize_t cnqf_enable_show(struct device *dev,
->  {
->  	struct amd_pmf_dev *pdev = dev_get_drvdata(dev);
->  
-> -	return sysfs_emit(buf, "%s\n", pdev->cnqf_enabled ? "on" : "off");
-> +	return sysfs_emit(buf, "%s\n", str_on_off(pdev->cnqf_enabled));
->  }
->  
->  static DEVICE_ATTR_RW(cnqf_enable);
-> 
+>  	if (table->table[2].key) {
+>  		flags = GPIOD_OUT_HIGH;
+> -		if (priv.devmode == SIMATIC_IPC_DEVICE_BX_21A || SIMATIC_IPC_DEVICE_BX_59A)
+> +		if (priv.devmode == SIMATIC_IPC_DEVICE_BX_21A ||
+> +		    priv.devmode == SIMATIC_IPC_DEVICE_BX_59A)
+>  			flags = GPIOD_OUT_LOW;
+>  		priv.gpios[2] = devm_gpiod_get_index(dev, "CMOSBattery meter", 2, flags);
+>  		if (IS_ERR(priv.gpios[2])) {
+> diff --git a/drivers/platform/x86/siemens/simatic-ipc.c b/drivers/platform/x86/siemens/simatic-ipc.c
+> index 02c540cf40702..e11d28ffac604 100644
+> --- a/drivers/platform/x86/siemens/simatic-ipc.c
+> +++ b/drivers/platform/x86/siemens/simatic-ipc.c
+> @@ -129,7 +129,8 @@ static int register_platform_devices(u32 station_id)
+>  		pdevname = KBUILD_MODNAME "_leds";
+>  		if (ledmode == SIMATIC_IPC_DEVICE_127E)
+>  			pdevname = KBUILD_MODNAME "_leds_gpio_apollolake";
+> -		if (ledmode == SIMATIC_IPC_DEVICE_227G || SIMATIC_IPC_DEVICE_BX_59A)
+> +		if (ledmode == SIMATIC_IPC_DEVICE_227G ||
+> +		    ledmode == SIMATIC_IPC_DEVICE_BX_59A)
+>  			pdevname = KBUILD_MODNAME "_leds_gpio_f7188x";
+>  		if (ledmode == SIMATIC_IPC_DEVICE_BX_21A)
+>  			pdevname = KBUILD_MODNAME "_leds_gpio_elkhartlake";
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Thank you for the patch but these are already fixed by commits:
+
+7abf253afa5c ("platform/x86/siemens: simatic-ipc-batt: fix logical error for BX-59A")
+b01c1e022f7f ("platform/x86/siemens: simatic-ipc: fix logical error for BX-59A")
 
 
 -- 
  i.
 
---8323329-1649411613-1691759652=:50003--
