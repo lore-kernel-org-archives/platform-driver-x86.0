@@ -2,49 +2,49 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE04C001DB
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Aug 2023 16:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02F4C41513
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Aug 2023 16:04:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232346AbjHMQEk (ORCPT
+        id S230473AbjHMQEv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Aug 2023 12:04:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43100 "EHLO
+        Sun, 13 Aug 2023 12:04:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232319AbjHMQEf (ORCPT
+        with ESMTP id S232287AbjHMQEi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Aug 2023 12:04:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91AED1BD0;
-        Sun, 13 Aug 2023 09:04:15 -0700 (PDT)
+        Sun, 13 Aug 2023 12:04:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C0D0E6D;
+        Sun, 13 Aug 2023 09:04:20 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 26E4D6359B;
-        Sun, 13 Aug 2023 16:03:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3680FC433C7;
-        Sun, 13 Aug 2023 16:03:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 806D7635DD;
+        Sun, 13 Aug 2023 16:03:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C42CC433C7;
+        Sun, 13 Aug 2023 16:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691942589;
-        bh=/vqSNNZ5+lR1zs6x8i3yuAvsraEA351cHw2U4cusriE=;
+        s=k20201202; t=1691942597;
+        bh=nQvAvCGoObOnSxg0rFoBXH0ftGjqypR2Bm32uM1Ya98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JxDcFUspfsnszH82gTdvcYGCQdnRHY2HFbMmN1ud5PA6LAdSEyb/rav9Ldr7pD6VX
-         cH46GBUqG4QtFIJB+mIoLyKJ1PeDTfJx0POtbEayp2zIQtG7RFgx1puAmqnUIheAkA
-         hxVozlieU2GZBg7HvYHNOu1vF/NaeunNbPZ+hpd/C5gCnRi3nMpGeuC6ybs1MKy39d
-         Iu63Hu6sgt6gy10umeFh3fG9XMTfc3D+U/y3Y66c7UB5F8ZEsh1Ew9JCZrZINAlDhS
-         ny4XCkEkx47CH6PbgPEacceSG3WgfBZ0eNeUFDdrmIv5DJT0epmDGoAP8rdswOLudu
-         PRPPjSiXdMZ9Q==
+        b=Wn5ufq63PnID3eBbr2db6w7eAuD6Opa/ZZF9B7R/nMck/v9asAK6hAzNmpfCffL7/
+         o6yAPNfYCvc+eGpBqUBSSYet+YTxr7gAW8cUuTD0gB9nlyS9yvo34rFUxrSw80LNRc
+         hKCHp3/Ru2NORmHbu2OlN2SjIFgPX8gJcPEcRYhNmZpeiM96C0kC2JTsiluvCQFylw
+         vRZYTV3x1BY3L1m6i3L+o2T+lla6zXmzmX7bp2q2Fhn/17ZJDxmi+gvnPaIOERb82P
+         Y/qH8X4ysj9IKuvbcirheM4jD4aJSfkAM35DODkNpINXSRAWFvjh0FFu7xDSJfWaU5
+         5JaKr0UTLXkSw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        Patil Rajesh Reddy <Patil.Reddy@amd.com>,
+Cc:     Kristian Angelov <kristiana2000@abv.bg>,
+        "Luke D . Jones" <luke@ljones.dev>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
+        Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
+        markgross@kernel.org, acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 31/47] platform/x86/amd/pmf: Notify OS power slider update
-Date:   Sun, 13 Aug 2023 11:59:26 -0400
-Message-Id: <20230813160006.1073695-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 35/47] platform/x86: asus-wmi: Fix setting RGB mode on some TUF laptops
+Date:   Sun, 13 Aug 2023 11:59:30 -0400
+Message-Id: <20230813160006.1073695-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230813160006.1073695-1-sashal@kernel.org>
 References: <20230813160006.1073695-1-sashal@kernel.org>
@@ -57,243 +57,54 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+From: Kristian Angelov <kristiana2000@abv.bg>
 
-[ Upstream commit 33c9ab5b493a0e922b06c12fed4fdcb862212cda ]
+[ Upstream commit 6a758a3e831ce1a84c9c209ac6dc755f4c8ce77a ]
 
-APMF fn8 can notify EC about the OS slider position change. Add this
-capability to the PMF driver so that it can call the APMF fn8 based on
-the changes in the Platform profile events.
+This patch fixes setting the cmd values to 0xb3 and 0xb4.
+This is necessary on some TUF laptops in order to set the RGB mode.
 
-Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Link: https://lore.kernel.org/r/20230714144435.1239776-2-Shyam-sundar.S-k@amd.com
+Closes: https://lore.kernel.org/platform-driver-x86/443078148.491022.1677576298133@nm83.abv.bg
+Signed-off-by: Kristian Angelov <kristiana2000@abv.bg>
+Reviewed-by: Luke D. Jones <luke@ljones.dev>
+Link: https://lore.kernel.org/r/ZLlS7o6UdTUBkyqa@wyvern.localdomain
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/amd/pmf/acpi.c | 21 ++++++++
- drivers/platform/x86/amd/pmf/core.c |  9 +++-
- drivers/platform/x86/amd/pmf/pmf.h  | 16 +++++++
- drivers/platform/x86/amd/pmf/sps.c  | 74 +++++++++++++++++++++++++++--
- 4 files changed, 114 insertions(+), 6 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-index 732b15b392ab9..3fc5e4547d9f2 100644
---- a/drivers/platform/x86/amd/pmf/acpi.c
-+++ b/drivers/platform/x86/amd/pmf/acpi.c
-@@ -106,6 +106,27 @@ int apmf_get_static_slider_granular(struct amd_pmf_dev *pdev,
- 									 data, sizeof(*data));
- }
- 
-+int apmf_os_power_slider_update(struct amd_pmf_dev *pdev, u8 event)
-+{
-+	struct os_power_slider args;
-+	struct acpi_buffer params;
-+	union acpi_object *info;
-+	int err = 0;
-+
-+	args.size = sizeof(args);
-+	args.slider_event = event;
-+
-+	params.length = sizeof(args);
-+	params.pointer = (void *)&args;
-+
-+	info = apmf_if_call(pdev, APMF_FUNC_OS_POWER_SLIDER_UPDATE, &params);
-+	if (!info)
-+		err = -EIO;
-+
-+	kfree(info);
-+	return err;
-+}
-+
- static void apmf_sbios_heartbeat_notify(struct work_struct *work)
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 02bf286924183..36effe04c6f33 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -738,13 +738,23 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
+ 				 struct device_attribute *attr,
+ 				 const char *buf, size_t count)
  {
- 	struct amd_pmf_dev *dev = container_of(work, struct amd_pmf_dev, heart_beat.work);
-diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-index 73d2357e32f8e..8a38cd94a605d 100644
---- a/drivers/platform/x86/amd/pmf/core.c
-+++ b/drivers/platform/x86/amd/pmf/core.c
-@@ -71,7 +71,11 @@ static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long
- 			return NOTIFY_DONE;
- 	}
- 
--	amd_pmf_set_sps_power_limits(pmf);
-+	if (is_apmf_func_supported(pmf, APMF_FUNC_STATIC_SLIDER_GRANULAR))
-+		amd_pmf_set_sps_power_limits(pmf);
-+
-+	if (is_apmf_func_supported(pmf, APMF_FUNC_OS_POWER_SLIDER_UPDATE))
-+		amd_pmf_power_slider_update_event(pmf);
- 
- 	return NOTIFY_OK;
- }
-@@ -295,7 +299,8 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
- 	int ret;
- 
- 	/* Enable Static Slider */
--	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR)) {
-+	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR) ||
-+	    is_apmf_func_supported(dev, APMF_FUNC_OS_POWER_SLIDER_UPDATE)) {
- 		amd_pmf_init_sps(dev);
- 		dev->pwr_src_notifier.notifier_call = amd_pmf_pwr_src_notify_call;
- 		power_supply_reg_notifier(&dev->pwr_src_notifier);
-diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index 06c30cdc05733..deba88e6e4c8d 100644
---- a/drivers/platform/x86/amd/pmf/pmf.h
-+++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -21,6 +21,7 @@
- #define APMF_FUNC_SBIOS_HEARTBEAT			4
- #define APMF_FUNC_AUTO_MODE					5
- #define APMF_FUNC_SET_FAN_IDX				7
-+#define APMF_FUNC_OS_POWER_SLIDER_UPDATE		8
- #define APMF_FUNC_STATIC_SLIDER_GRANULAR       9
- #define APMF_FUNC_DYN_SLIDER_AC				11
- #define APMF_FUNC_DYN_SLIDER_DC				12
-@@ -44,6 +45,14 @@
- #define GET_STT_LIMIT_APU	0x20
- #define GET_STT_LIMIT_HS2	0x21
- 
-+/* OS slider update notification */
-+#define DC_BEST_PERF		0
-+#define DC_BETTER_PERF		1
-+#define DC_BATTERY_SAVER	3
-+#define AC_BEST_PERF		4
-+#define AC_BETTER_PERF		5
-+#define AC_BETTER_BATTERY	6
-+
- /* Fan Index for Auto Mode */
- #define FAN_INDEX_AUTO		0xFFFFFFFF
- 
-@@ -193,6 +202,11 @@ struct amd_pmf_static_slider_granular {
- 	struct apmf_sps_prop_granular prop[POWER_SOURCE_MAX][POWER_MODE_MAX];
- };
- 
-+struct os_power_slider {
-+	u16 size;
-+	u8 slider_event;
-+} __packed;
-+
- struct fan_table_control {
- 	bool manual;
- 	unsigned long fan_id;
-@@ -383,6 +397,7 @@ int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32
- int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev);
- int amd_pmf_get_power_source(void);
- int apmf_install_handler(struct amd_pmf_dev *pmf_dev);
-+int apmf_os_power_slider_update(struct amd_pmf_dev *dev, u8 flag);
- 
- /* SPS Layer */
- int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
-@@ -393,6 +408,7 @@ void amd_pmf_deinit_sps(struct amd_pmf_dev *dev);
- int apmf_get_static_slider_granular(struct amd_pmf_dev *pdev,
- 				    struct apmf_static_slider_granular_output *output);
- bool is_pprof_balanced(struct amd_pmf_dev *pmf);
-+int amd_pmf_power_slider_update_event(struct amd_pmf_dev *dev);
- 
- 
- int apmf_update_fan_idx(struct amd_pmf_dev *pdev, bool manual, u32 idx);
-diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
-index bed762d47a14a..fd448844de206 100644
---- a/drivers/platform/x86/amd/pmf/sps.c
-+++ b/drivers/platform/x86/amd/pmf/sps.c
-@@ -119,14 +119,77 @@ int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
- 	return mode;
- }
- 
-+int amd_pmf_power_slider_update_event(struct amd_pmf_dev *dev)
-+{
-+	u8 mode, flag = 0;
-+	int src;
-+
-+	mode = amd_pmf_get_pprof_modes(dev);
-+	if (mode < 0)
-+		return mode;
-+
-+	src = amd_pmf_get_power_source();
-+
-+	if (src == POWER_SOURCE_AC) {
-+		switch (mode) {
-+		case POWER_MODE_PERFORMANCE:
-+			flag |= BIT(AC_BEST_PERF);
-+			break;
-+		case POWER_MODE_BALANCED_POWER:
-+			flag |= BIT(AC_BETTER_PERF);
-+			break;
-+		case POWER_MODE_POWER_SAVER:
-+			flag |= BIT(AC_BETTER_BATTERY);
-+			break;
-+		default:
-+			dev_err(dev->dev, "unsupported platform profile\n");
-+			return -EOPNOTSUPP;
-+		}
-+
-+	} else if (src == POWER_SOURCE_DC) {
-+		switch (mode) {
-+		case POWER_MODE_PERFORMANCE:
-+			flag |= BIT(DC_BEST_PERF);
-+			break;
-+		case POWER_MODE_BALANCED_POWER:
-+			flag |= BIT(DC_BETTER_PERF);
-+			break;
-+		case POWER_MODE_POWER_SAVER:
-+			flag |= BIT(DC_BATTERY_SAVER);
-+			break;
-+		default:
-+			dev_err(dev->dev, "unsupported platform profile\n");
-+			return -EOPNOTSUPP;
-+		}
-+	}
-+
-+	apmf_os_power_slider_update(dev, flag);
-+
-+	return 0;
-+}
-+
- static int amd_pmf_profile_set(struct platform_profile_handler *pprof,
- 			       enum platform_profile_option profile)
- {
- 	struct amd_pmf_dev *pmf = container_of(pprof, struct amd_pmf_dev, pprof);
-+	int ret = 0;
- 
- 	pmf->current_profile = profile;
- 
--	return amd_pmf_set_sps_power_limits(pmf);
-+	/* Notify EC about the slider position change */
-+	if (is_apmf_func_supported(pmf, APMF_FUNC_OS_POWER_SLIDER_UPDATE)) {
-+		ret = amd_pmf_power_slider_update_event(pmf);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (is_apmf_func_supported(pmf, APMF_FUNC_STATIC_SLIDER_GRANULAR)) {
-+		ret = amd_pmf_set_sps_power_limits(pmf);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
- }
- 
- int amd_pmf_init_sps(struct amd_pmf_dev *dev)
-@@ -134,10 +197,13 @@ int amd_pmf_init_sps(struct amd_pmf_dev *dev)
+-	u32 cmd, mode, r, g,  b,  speed;
++	u32 cmd, mode, r, g, b, speed;
  	int err;
  
- 	dev->current_profile = PLATFORM_PROFILE_BALANCED;
--	amd_pmf_load_defaults_sps(dev);
+ 	if (sscanf(buf, "%d %d %d %d %d %d", &cmd, &mode, &r, &g, &b, &speed) != 6)
+ 		return -EINVAL;
  
--	/* update SPS balanced power mode thermals */
--	amd_pmf_set_sps_power_limits(dev);
-+	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR)) {
-+		amd_pmf_load_defaults_sps(dev);
-+
-+		/* update SPS balanced power mode thermals */
-+		amd_pmf_set_sps_power_limits(dev);
+-	cmd = !!cmd;
++	/* B3 is set and B4 is save to BIOS */
++	switch (cmd) {
++	case 0:
++		cmd = 0xb3;
++		break;
++	case 1:
++		cmd = 0xb4;
++		break;
++	default:
++		return -EINVAL;
 +	}
  
- 	dev->pprof.profile_get = amd_pmf_profile_get;
- 	dev->pprof.profile_set = amd_pmf_profile_set;
+ 	/* These are the known usable modes across all TUF/ROG */
+ 	if (mode >= 12 || mode == 9)
 -- 
 2.40.1
 
