@@ -2,47 +2,49 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BE1C04A6A
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Aug 2023 15:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0E4C001B0
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Aug 2023 15:53:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231867AbjHMPwj (ORCPT
+        id S231775AbjHMPxE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Aug 2023 11:52:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41946 "EHLO
+        Sun, 13 Aug 2023 11:53:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231728AbjHMPwP (ORCPT
+        with ESMTP id S231599AbjHMPwU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Aug 2023 11:52:15 -0400
+        Sun, 13 Aug 2023 11:52:20 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF1E42123;
-        Sun, 13 Aug 2023 08:51:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5455C1FE1;
+        Sun, 13 Aug 2023 08:52:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 26C06632DE;
-        Sun, 13 Aug 2023 15:51:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C159C433C9;
-        Sun, 13 Aug 2023 15:51:48 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D33E2632EC;
+        Sun, 13 Aug 2023 15:51:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21D8DC433CD;
+        Sun, 13 Aug 2023 15:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691941909;
-        bh=ycF+1MpYLV72vAgLpj05djCAc8L1xc6HcwrON1MCUow=;
+        s=k20201202; t=1691941915;
+        bh=a4tKwIlk6BKXx45kX+IE0Y64HFfOz13SuOgrUcmq/VI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PlavyK5ObkfzxVMyYZJux3dZCL8VsRM/qCLLZO7NkVifdvHSy6SShXzsCSBojifYh
-         ZXPjsBoCumUfoQ0hTs7WY80HLfY1SwD1O1kfugfZC/onafZ/WhdGrNWVioFI5TkGiQ
-         GRZjVJ3pS2gSMfN+QYjHm9mjTT72j6OynJif43obudpng8reWahr5MR9TfZ1fY1+SV
-         2RsW0tf+I2dTaLB7H6TNHsgUjMai6SA4y8MmPuN4TcAElzPIkNUTZyI3NbIgGDg/n4
-         b0ewkZsS4LGS5MBmNli+6ebNrCbkqm2VvqHxF4wlXKVeyeE/25N6V21F67/eiTOAcQ
-         OSRK9hYpy5tMQ==
+        b=USMw1uV8v2KxqIUjGezqlKqNup+xvgUxZ0vv2r823PLDy+0Md9LwaQ6HC5m1UZF57
+         /9qdpqFzVGXZ78eCIYpBixEgLxW+Xf+b/mBYA6Rw7NHH+nn7I9VTbDRaeMY5NbqPhf
+         BP7oUs6nt5TASo22M3OA0dLkCN+Xk3X0T2h+8e8m533R0y9VzfhRZTNz4Bi9pu5dbh
+         bPHmZxnPUcSLVCEbE75Ysdr0zTc0m8DWIaDyDDPUc+iZw5pYhZfyuXlV6fy0LwdEH9
+         oyG47rGAb9LljOazw20jRgzJiM1nXPAFhqY4ICOKm/VmbeuF4YCA/Z2GMRlbWcTFVf
+         XUHNdXf3Gx3OA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Maxim Mikityanskiy <maxtram95@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, alexhung@gmail.com,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.4 37/54] platform/x86: intel: hid: Always call BTNL ACPI method
-Date:   Sun, 13 Aug 2023 11:49:16 -0400
-Message-Id: <20230813154934.1067569-37-sashal@kernel.org>
+Cc:     Kristian Angelov <kristiana2000@abv.bg>,
+        "Luke D . Jones" <luke@ljones.dev>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
+        markgross@kernel.org, acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.4 40/54] platform/x86: asus-wmi: Fix setting RGB mode on some TUF laptops
+Date:   Sun, 13 Aug 2023 11:49:19 -0400
+Message-Id: <20230813154934.1067569-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230813154934.1067569-1-sashal@kernel.org>
 References: <20230813154934.1067569-1-sashal@kernel.org>
@@ -55,71 +57,54 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Kristian Angelov <kristiana2000@abv.bg>
 
-[ Upstream commit e3ab18de2b09361d6f0e4aafb9cfd6d002ce43a1 ]
+[ Upstream commit 6a758a3e831ce1a84c9c209ac6dc755f4c8ce77a ]
 
-On a HP Elite Dragonfly G2 the 0xcc and 0xcd events for SW_TABLET_MODE
-are only send after the BTNL ACPI method has been called.
+This patch fixes setting the cmd values to 0xb3 and 0xb4.
+This is necessary on some TUF laptops in order to set the RGB mode.
 
-Likely more devices need this, so make the BTNL ACPI method unconditional
-instead of only doing it on devices with a 5 button array.
-
-Note this also makes the intel_button_array_enable() call in probe()
-unconditional, that function does its own priv->array check. This makes
-the intel_button_array_enable() call in probe() consistent with the calls
-done on suspend/resume which also rely on the priv->array check inside
-the function.
-
-Reported-by: Maxim Mikityanskiy <maxtram95@gmail.com>
-Closes: https://lore.kernel.org/platform-driver-x86/20230712175023.31651-1-maxtram95@gmail.com/
+Closes: https://lore.kernel.org/platform-driver-x86/443078148.491022.1677576298133@nm83.abv.bg
+Signed-off-by: Kristian Angelov <kristiana2000@abv.bg>
+Reviewed-by: Luke D. Jones <luke@ljones.dev>
+Link: https://lore.kernel.org/r/ZLlS7o6UdTUBkyqa@wyvern.localdomain
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20230715181516.5173-1-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel/hid.c | 21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-index 5632bd3c534a3..641f2797406e1 100644
---- a/drivers/platform/x86/intel/hid.c
-+++ b/drivers/platform/x86/intel/hid.c
-@@ -620,7 +620,7 @@ static bool button_array_present(struct platform_device *device)
- static int intel_hid_probe(struct platform_device *device)
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 1038dfdcdd325..8bef66a2f0ce7 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -738,13 +738,23 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
+ 				 struct device_attribute *attr,
+ 				 const char *buf, size_t count)
  {
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
--	unsigned long long mode;
-+	unsigned long long mode, dummy;
- 	struct intel_hid_priv *priv;
- 	acpi_status status;
+-	u32 cmd, mode, r, g,  b,  speed;
++	u32 cmd, mode, r, g, b, speed;
  	int err;
-@@ -692,18 +692,15 @@ static int intel_hid_probe(struct platform_device *device)
- 	if (err)
- 		goto err_remove_notify;
  
--	if (priv->array) {
--		unsigned long long dummy;
-+	intel_button_array_enable(&device->dev, true);
+ 	if (sscanf(buf, "%d %d %d %d %d %d", &cmd, &mode, &r, &g, &b, &speed) != 6)
+ 		return -EINVAL;
  
--		intel_button_array_enable(&device->dev, true);
--
--		/* Call button load method to enable HID power button */
--		if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_BTNL_FN,
--					       &dummy)) {
--			dev_warn(&device->dev,
--				 "failed to enable HID power button\n");
--		}
--	}
-+	/*
-+	 * Call button load method to enable HID power button
-+	 * Always do this since it activates events on some devices without
-+	 * a button array too.
-+	 */
-+	if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_BTNL_FN, &dummy))
-+		dev_warn(&device->dev, "failed to enable HID power button\n");
+-	cmd = !!cmd;
++	/* B3 is set and B4 is save to BIOS */
++	switch (cmd) {
++	case 0:
++		cmd = 0xb3;
++		break;
++	case 1:
++		cmd = 0xb4;
++		break;
++	default:
++		return -EINVAL;
++	}
  
- 	device_init_wakeup(&device->dev, true);
- 	/*
+ 	/* These are the known usable modes across all TUF/ROG */
+ 	if (mode >= 12 || mode == 9)
 -- 
 2.40.1
 
