@@ -2,46 +2,48 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3038C001DB
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Aug 2023 16:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2296C001DB
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Aug 2023 16:04:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231728AbjHMQBc (ORCPT
+        id S231496AbjHMQEX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Aug 2023 12:01:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55034 "EHLO
+        Sun, 13 Aug 2023 12:04:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231819AbjHMQBW (ORCPT
+        with ESMTP id S231609AbjHMQEP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Aug 2023 12:01:22 -0400
+        Sun, 13 Aug 2023 12:04:15 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 353281719;
-        Sun, 13 Aug 2023 09:01:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C00A1BE4;
+        Sun, 13 Aug 2023 09:03:58 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3794261F63;
-        Sun, 13 Aug 2023 16:00:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC76EC433C8;
-        Sun, 13 Aug 2023 16:00:44 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3BE1663601;
+        Sun, 13 Aug 2023 16:03:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A1DBC433C9;
+        Sun, 13 Aug 2023 16:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691942445;
-        bh=6vpI4hncf8p7sj5smIbF2U7rTxg/8La1G1cZO1nKrAc=;
+        s=k20201202; t=1691942586;
+        bh=7aGq13H8vkd5h5pvyfTB2rxIn/wgA+LwyikdI52dkbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q0ax7+WEGhOH1biErRsan8ZfstjLds1sYOYrsFiwAegEZpV/E6bF7YbPTc7wvtyaZ
-         /xQLuhzQNSs09GaJ+jTzzpvP6o+Xsmxzw1oMmxF1LcQ8dE20P1GzgPfAcq08Omamic
-         hZMHTVI7vRyv0nxhHBStau+phhN/lbYG1bN5qAeHR6ix3U8OPe+MIUk2J2yynjviI2
-         4zZnppWqrdwMgb66hQR5Cy3tZ69KWKFr07X0+w+xVhZCb2FKDi6FkX2ore8E2oqvcX
-         BI1q6cEuU25JVgJ4i0DOE3nK5wHtGymBJKNX9L9o9sX99gMCXRtC1n78b7+Y/jMK5d
-         SIkr19x9VAEaA==
+        b=tPCLShQ7JD1LHZmOIhtsEVevX1ChlQaJgd3dbitNIpFmmShJeixfJ2FERvgzFVdcp
+         vxm8cs5Imk5NIN4DUpWZRfmmkMgx+CKpa79Qk7B6+g/zZcoaA9ux1zt1L/fmukdnQz
+         txFUQmwsjyaLXbHvqwVQ631zrWI5iWNpQYi7vvpPLtkHipAOaA4hm3TCmVKk/xhbmJ
+         A7C+mnSBceTpu8XIy6ncseSteO3gnhib3bjkPKsHNzKytkNqUHGvDaLIB98szgfQwY
+         M1m2lasznfD6nMEZkNxJHubDJU5EK2fUJksrUvxM+c3V6bXZNcB0nQm9T33ctkvl+l
+         zfVMSjF4S0o/g==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Xu <xuwd1@hotmail.com>, Hans de Goede <hdegoede@redhat.com>,
+Cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 06/47] platform/x86: serial-multi-instantiate: Auto detect IRQ resource for CSC3551
-Date:   Sun, 13 Aug 2023 11:59:01 -0400
-Message-Id: <20230813160006.1073695-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 30/47] platform/x86/amd/pmf: reduce verbosity of apmf_get_system_params
+Date:   Sun, 13 Aug 2023 11:59:25 -0400
+Message-Id: <20230813160006.1073695-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230813160006.1073695-1-sashal@kernel.org>
 References: <20230813160006.1073695-1-sashal@kernel.org>
@@ -54,80 +56,36 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: David Xu <xuwd1@hotmail.com>
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 
-[ Upstream commit 676b7c5ecab36274442887ceadd6dee8248a244f ]
+[ Upstream commit 839e90e75e695b3d9ee17f5a2811e7ee5aea8d4a ]
 
-The current code assumes that the CSC3551(multiple cs35l41) always have
-its interrupt pin connected to GPIO thus the IRQ can be acquired with
-acpi_dev_gpio_irq_get. However on some newer laptop models this is no
-longer the case as they have the CSC3551's interrupt pin connected to
-APIC. This causes smi_i2c_probe to fail on these machines.
+apmf_get_system_params() failure is not a critical event, reduce its
+verbosity from dev_err to dev_dbg.
 
-To support these machines, a new macro IRQ_RESOURCE_AUTO was introduced
-for cs35l41 smi_node, and smi_get_irq function was modified so it tries
-to get GPIO irq resource first and if failed, tries to get
-APIC irq resource for cs35l41.
-
-This patch affects only the cs35l41's probing and brings no negative
-influence on machines that indeed have the cs35l41's interrupt pin
-connected to GPIO.
-
-Signed-off-by: David Xu <xuwd1@hotmail.com>
-Link: https://lore.kernel.org/r/SY4P282MB18350CD8288687B87FFD2243E037A@SY4P282MB1835.AUSP282.PROD.OUTLOOK.COM
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Link: https://lore.kernel.org/r/20230714144435.1239776-1-Shyam-sundar.S-k@amd.com
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../platform/x86/serial-multi-instantiate.c   | 21 +++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ drivers/platform/x86/amd/pmf/acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
-index 5362f1a7b77c5..85c9eabd85c08 100644
---- a/drivers/platform/x86/serial-multi-instantiate.c
-+++ b/drivers/platform/x86/serial-multi-instantiate.c
-@@ -21,6 +21,7 @@
- #define IRQ_RESOURCE_NONE	0
- #define IRQ_RESOURCE_GPIO	1
- #define IRQ_RESOURCE_APIC	2
-+#define IRQ_RESOURCE_AUTO   3
+diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
+index 081e84e116e79..732b15b392ab9 100644
+--- a/drivers/platform/x86/amd/pmf/acpi.c
++++ b/drivers/platform/x86/amd/pmf/acpi.c
+@@ -289,7 +289,7 @@ int apmf_acpi_init(struct amd_pmf_dev *pmf_dev)
  
- enum smi_bus_type {
- 	SMI_I2C,
-@@ -52,6 +53,18 @@ static int smi_get_irq(struct platform_device *pdev, struct acpi_device *adev,
- 	int ret;
+ 	ret = apmf_get_system_params(pmf_dev);
+ 	if (ret) {
+-		dev_err(pmf_dev->dev, "APMF apmf_get_system_params failed :%d\n", ret);
++		dev_dbg(pmf_dev->dev, "APMF apmf_get_system_params failed :%d\n", ret);
+ 		goto out;
+ 	}
  
- 	switch (inst->flags & IRQ_RESOURCE_TYPE) {
-+	case IRQ_RESOURCE_AUTO:
-+		ret = acpi_dev_gpio_irq_get(adev, inst->irq_idx);
-+		if (ret > 0) {
-+			dev_dbg(&pdev->dev, "Using gpio irq\n");
-+			break;
-+		}
-+		ret = platform_get_irq(pdev, inst->irq_idx);
-+		if (ret > 0) {
-+			dev_dbg(&pdev->dev, "Using platform irq\n");
-+			break;
-+		}
-+		break;
- 	case IRQ_RESOURCE_GPIO:
- 		ret = acpi_dev_gpio_irq_get(adev, inst->irq_idx);
- 		break;
-@@ -308,10 +321,10 @@ static const struct smi_node int3515_data = {
- 
- static const struct smi_node cs35l41_hda = {
- 	.instances = {
--		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
--		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
--		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
--		{ "cs35l41-hda", IRQ_RESOURCE_GPIO, 0 },
-+		{ "cs35l41-hda", IRQ_RESOURCE_AUTO, 0 },
-+		{ "cs35l41-hda", IRQ_RESOURCE_AUTO, 0 },
-+		{ "cs35l41-hda", IRQ_RESOURCE_AUTO, 0 },
-+		{ "cs35l41-hda", IRQ_RESOURCE_AUTO, 0 },
- 		{}
- 	},
- 	.bus_type = SMI_AUTO_DETECT,
 -- 
 2.40.1
 
