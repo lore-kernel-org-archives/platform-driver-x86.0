@@ -2,47 +2,47 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE7AC04A6A
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Aug 2023 16:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B84DC001DE
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Aug 2023 16:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232357AbjHMQFB (ORCPT
+        id S229703AbjHMQFU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Aug 2023 12:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48446 "EHLO
+        Sun, 13 Aug 2023 12:05:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232421AbjHMQEo (ORCPT
+        with ESMTP id S232511AbjHMQEz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Aug 2023 12:04:44 -0400
+        Sun, 13 Aug 2023 12:04:55 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24F07173E;
-        Sun, 13 Aug 2023 09:04:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5D3719B9;
+        Sun, 13 Aug 2023 09:04:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 781D063590;
-        Sun, 13 Aug 2023 16:03:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F30CEC433C8;
-        Sun, 13 Aug 2023 16:03:18 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 042A663607;
+        Sun, 13 Aug 2023 16:03:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62026C433C7;
+        Sun, 13 Aug 2023 16:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691942599;
-        bh=Ew0C012RpvnvvBBLyNFAXlAzsov5vmvkwKfVgX5mbbU=;
+        s=k20201202; t=1691942593;
+        bh=DE3xchYQ1DeF+BA8X8plPuGdl7Ffut3alLrhla818+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gv9kZMwMevVryu3N0Ghb40WI4u738W2kysO5UZgKfw7CF3964X5QP3p6KSmAsBauQ
-         gjrn3RQsDN30XywBkdPUiEqfEVjkzWNKYSQvTFh0I5KteyLiGcIhcEZC0pJvyLAsVe
-         fMkgorC3FAmTfLntXEQ2CZ007GhghvvLGElCg547NRMmVD/fWabD+TUoAllKIdB83t
-         ifiIJnsifPfa5iTzPEDQfU8xfX48ZHQt3xMJegkFsy3lI0IHEaRSGlx3YYIa1XOe6i
-         DrVjm5eVmcvc3qXQ1OYSqxXq1AwgrfvCKo87SZqraNbvlIHDdIupV4BtaDTq7kv/9I
-         Spvfypho2jzog==
+        b=aG5WO8Q+NWzQYsiruhAh6T1RCvNAr/KeHv3jQrx/CKOyDjVAN18dpnW2qCS8/Qzku
+         oPBWsFbviHj6xGKCheuTY+2T51buvyimDkGPO36edrvezFVq+viMtCuxg/zgJxN3gN
+         +6e/RLjSJ++YYonon1sB33l1QdGhsdRH7QqldlcAIl3F3gNa+W1zjUpWj1XigJ7WGH
+         bnr8Lme/Kw5OXl+l+VBsbivMjRkhKrf4/WwL8+Mprl+k6JxZRmU/ylMMCfwz7X8Xcm
+         W6SH3Go/fMArvtitjRpM7JXufYG3TgZgfsCpViNnKwugA3ysnMKTeRZxw5ZpMenWZ5
+         eO6eO8L0GL/Lw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Shelekhin <k.shelekhin@ftml.net>,
+Cc:     Maxim Mikityanskiy <maxtram95@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 36/47] platform/x86: huawei-wmi: Silence ambient light sensor
-Date:   Sun, 13 Aug 2023 11:59:31 -0400
-Message-Id: <20230813160006.1073695-36-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, alexhung@gmail.com,
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 33/47] platform/x86/intel/hid: Add HP Dragonfly G2 to VGBS DMI quirks
+Date:   Sun, 13 Aug 2023 11:59:28 -0400
+Message-Id: <20230813160006.1073695-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230813160006.1073695-1-sashal@kernel.org>
 References: <20230813160006.1073695-1-sashal@kernel.org>
@@ -55,51 +55,47 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Konstantin Shelekhin <k.shelekhin@ftml.net>
+From: Maxim Mikityanskiy <maxtram95@gmail.com>
 
-[ Upstream commit c21733754cd6ecbca346f2adf9b17d4cfa50504f ]
+[ Upstream commit 7783e97f8558ad7a4d1748922461bc88483fbcdf ]
 
-Currently huawei-wmi causes a lot of spam in dmesg on my
-Huawei MateBook X Pro 2022:
+HP Elite Dragonfly G2 (a convertible laptop/tablet) has a reliable VGBS
+method. If VGBS is not called on boot, the firmware sends an initial
+0xcd event shortly after calling the BTNL method, but only if the device
+is booted in the laptop mode. However, if the device is booted in the
+tablet mode and VGBS is not called, there is no initial 0xcc event, and
+the input device for SW_TABLET_MODE is not registered up until the user
+turns the device into the laptop mode.
 
-  ...
-  [36409.328463] input input9: Unknown key pressed, code: 0x02c1
-  [36411.335104] input input9: Unknown key pressed, code: 0x02c1
-  [36412.338674] input input9: Unknown key pressed, code: 0x02c1
-  [36414.848564] input input9: Unknown key pressed, code: 0x02c1
-  [36416.858706] input input9: Unknown key pressed, code: 0x02c1
-  ...
+Call VGBS on boot on this device to get the initial state of
+SW_TABLET_MODE in a reliable way.
 
-Fix that by ignoring events generated by ambient light sensor.
+Tested with BIOS 1.13.1.
 
-This issue was reported on GitHub and resolved with the following merge
-request:
-
-  https://github.com/aymanbagabas/Huawei-WMI/pull/70
-
-I've contacted the mainter of this repo and he gave me the "go ahead" to
-send this patch to the maling list.
-
-Signed-off-by: Konstantin Shelekhin <k.shelekhin@ftml.net>
-Link: https://lore.kernel.org/r/20230722155922.173856-1-k.shelekhin@ftml.net
+Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+Link: https://lore.kernel.org/r/20230716183213.64173-1-maxtram95@gmail.com
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/huawei-wmi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/intel/hid.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index b85050e4a0d65..ae5daecff1771 100644
---- a/drivers/platform/x86/huawei-wmi.c
-+++ b/drivers/platform/x86/huawei-wmi.c
-@@ -86,6 +86,8 @@ static const struct key_entry huawei_wmi_keymap[] = {
- 	{ KE_IGNORE, 0x293, { KEY_KBDILLUMTOGGLE } },
- 	{ KE_IGNORE, 0x294, { KEY_KBDILLUMUP } },
- 	{ KE_IGNORE, 0x295, { KEY_KBDILLUMUP } },
-+	// Ignore Ambient Light Sensoring
-+	{ KE_KEY,    0x2c1, { KEY_RESERVED } },
- 	{ KE_END,	 0 }
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index df533b277b999..b96ef0eb82aff 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -131,6 +131,12 @@ static const struct dmi_system_id dmi_vgbs_allow_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Surface Go"),
+ 		},
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "HP Elite Dragonfly G2 Notebook PC"),
++		},
++	},
+ 	{ }
  };
  
 -- 
