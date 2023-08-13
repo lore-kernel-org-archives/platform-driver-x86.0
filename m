@@ -2,48 +2,47 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2296C001DB
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Aug 2023 16:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C798C001DB
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Aug 2023 16:04:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231496AbjHMQEX (ORCPT
+        id S231602AbjHMQEc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Aug 2023 12:04:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44620 "EHLO
+        Sun, 13 Aug 2023 12:04:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231609AbjHMQEP (ORCPT
+        with ESMTP id S232319AbjHMQEZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Aug 2023 12:04:15 -0400
+        Sun, 13 Aug 2023 12:04:25 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C00A1BE4;
-        Sun, 13 Aug 2023 09:03:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8CD1994;
+        Sun, 13 Aug 2023 09:04:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3BE1663601;
-        Sun, 13 Aug 2023 16:03:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A1DBC433C9;
-        Sun, 13 Aug 2023 16:03:05 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3C2D46362B;
+        Sun, 13 Aug 2023 16:03:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 616D0C433C8;
+        Sun, 13 Aug 2023 16:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691942586;
-        bh=7aGq13H8vkd5h5pvyfTB2rxIn/wgA+LwyikdI52dkbY=;
+        s=k20201202; t=1691942591;
+        bh=gteSTZLidRDukhVvLhCWvSwspoReseKyOftiBzQKocc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tPCLShQ7JD1LHZmOIhtsEVevX1ChlQaJgd3dbitNIpFmmShJeixfJ2FERvgzFVdcp
-         vxm8cs5Imk5NIN4DUpWZRfmmkMgx+CKpa79Qk7B6+g/zZcoaA9ux1zt1L/fmukdnQz
-         txFUQmwsjyaLXbHvqwVQ631zrWI5iWNpQYi7vvpPLtkHipAOaA4hm3TCmVKk/xhbmJ
-         A7C+mnSBceTpu8XIy6ncseSteO3gnhib3bjkPKsHNzKytkNqUHGvDaLIB98szgfQwY
-         M1m2lasznfD6nMEZkNxJHubDJU5EK2fUJksrUvxM+c3V6bXZNcB0nQm9T33ctkvl+l
-         zfVMSjF4S0o/g==
+        b=nKjhYSan6XZB30U/zP/5N9qNipPyyuslHDh1e24HQ04d4K/i+KHC1/GJJe+Jya1Dc
+         9uLgi1ml0rjBARR7eDSw55tA+sZ8gPPzKYFRCErbJ0IFDoLp25Ik2TR2NVU0hCELgz
+         5Y2Kv0NrHX71Z/onqiBkwPc55iK0VDMsXTGgclWjgZlesBvCqJS413SNPqllGidnEW
+         +Zst57Iz9k/wBi277+JKuGLa2rUJN5yU6NC6ulrwws6Fvf+M7z1PfFmR1vMmAaCvYK
+         vJ0AcryWOUCSZSVK5Rvc4wOoZyixY6nHQFkklIZlwhO8NlRpKbZkJQbxSnppazU7n3
+         KPYtqKtDbwJTw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 30/47] platform/x86/amd/pmf: reduce verbosity of apmf_get_system_params
-Date:   Sun, 13 Aug 2023 11:59:25 -0400
-Message-Id: <20230813160006.1073695-30-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Maxim Mikityanskiy <maxtram95@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, alexhung@gmail.com,
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 32/47] platform/x86: intel: hid: Always call BTNL ACPI method
+Date:   Sun, 13 Aug 2023 11:59:27 -0400
+Message-Id: <20230813160006.1073695-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230813160006.1073695-1-sashal@kernel.org>
 References: <20230813160006.1073695-1-sashal@kernel.org>
@@ -56,36 +55,71 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 839e90e75e695b3d9ee17f5a2811e7ee5aea8d4a ]
+[ Upstream commit e3ab18de2b09361d6f0e4aafb9cfd6d002ce43a1 ]
 
-apmf_get_system_params() failure is not a critical event, reduce its
-verbosity from dev_err to dev_dbg.
+On a HP Elite Dragonfly G2 the 0xcc and 0xcd events for SW_TABLET_MODE
+are only send after the BTNL ACPI method has been called.
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Link: https://lore.kernel.org/r/20230714144435.1239776-1-Shyam-sundar.S-k@amd.com
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Likely more devices need this, so make the BTNL ACPI method unconditional
+instead of only doing it on devices with a 5 button array.
+
+Note this also makes the intel_button_array_enable() call in probe()
+unconditional, that function does its own priv->array check. This makes
+the intel_button_array_enable() call in probe() consistent with the calls
+done on suspend/resume which also rely on the priv->array check inside
+the function.
+
+Reported-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+Closes: https://lore.kernel.org/platform-driver-x86/20230712175023.31651-1-maxtram95@gmail.com/
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20230715181516.5173-1-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/amd/pmf/acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/intel/hid.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-index 081e84e116e79..732b15b392ab9 100644
---- a/drivers/platform/x86/amd/pmf/acpi.c
-+++ b/drivers/platform/x86/amd/pmf/acpi.c
-@@ -289,7 +289,7 @@ int apmf_acpi_init(struct amd_pmf_dev *pmf_dev)
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index b6313ecd190c0..df533b277b999 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -601,7 +601,7 @@ static bool button_array_present(struct platform_device *device)
+ static int intel_hid_probe(struct platform_device *device)
+ {
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
+-	unsigned long long mode;
++	unsigned long long mode, dummy;
+ 	struct intel_hid_priv *priv;
+ 	acpi_status status;
+ 	int err;
+@@ -666,18 +666,15 @@ static int intel_hid_probe(struct platform_device *device)
+ 	if (err)
+ 		goto err_remove_notify;
  
- 	ret = apmf_get_system_params(pmf_dev);
- 	if (ret) {
--		dev_err(pmf_dev->dev, "APMF apmf_get_system_params failed :%d\n", ret);
-+		dev_dbg(pmf_dev->dev, "APMF apmf_get_system_params failed :%d\n", ret);
- 		goto out;
- 	}
+-	if (priv->array) {
+-		unsigned long long dummy;
++	intel_button_array_enable(&device->dev, true);
  
+-		intel_button_array_enable(&device->dev, true);
+-
+-		/* Call button load method to enable HID power button */
+-		if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_BTNL_FN,
+-					       &dummy)) {
+-			dev_warn(&device->dev,
+-				 "failed to enable HID power button\n");
+-		}
+-	}
++	/*
++	 * Call button load method to enable HID power button
++	 * Always do this since it activates events on some devices without
++	 * a button array too.
++	 */
++	if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_BTNL_FN, &dummy))
++		dev_warn(&device->dev, "failed to enable HID power button\n");
+ 
+ 	device_init_wakeup(&device->dev, true);
+ 	/*
 -- 
 2.40.1
 
