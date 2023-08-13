@@ -2,54 +2,54 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9574AC001DB
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Aug 2023 16:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE36C001DE
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Aug 2023 16:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232958AbjHMQPR (ORCPT
+        id S234016AbjHMQXq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Aug 2023 12:15:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42174 "EHLO
+        Sun, 13 Aug 2023 12:23:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233029AbjHMQOp (ORCPT
+        with ESMTP id S233692AbjHMQX1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Aug 2023 12:14:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12B60448C;
-        Sun, 13 Aug 2023 09:14:18 -0700 (PDT)
+        Sun, 13 Aug 2023 12:23:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9803435AF;
+        Sun, 13 Aug 2023 09:14:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D48F63BD5;
-        Sun, 13 Aug 2023 16:13:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C12BC433CA;
-        Sun, 13 Aug 2023 16:13:05 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 56F4263C6B;
+        Sun, 13 Aug 2023 16:14:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93CB5C433C8;
+        Sun, 13 Aug 2023 16:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691943186;
-        bh=+66TjdqKoboEptohitQOQ5cYNsOvG/QHi4Nv4JA3TGw=;
+        s=k20201202; t=1691943255;
+        bh=ziEa6Gfdr7b4GSHXE/B64zf4AYZ3aen0/Tb604f4MaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uRQxzrEo2tA+v9oSWjm9qyuimWnr5HWlt8LlETSD2vQWomuy74VD8XyeZKinSvmfv
-         hYz8JCZvgCtAj5FIJ5Llh4j4gTAptlM7gpg/qm5LuSg0n0nHWaTy7tERZXpjByBJNz
-         8jNCXEjaPY0UZQicUA6jcMoYVFStTYYh3vpHDYT+1XgPFYnJEaBzloAHqDEg29BgVu
-         YC/+wrmVUDu4QhAaqr31UMKzrH1pXUI4rdlpM3+2Te5iTz7QiDj5wWl7meczAfrj9G
-         QRPfDelPfd9FsSykgX3OE7CCvGfsHubbE+xKA247LPbcsXd68jdOZ4qbszFnPtWkfQ
-         OrqDZa3bSfxHA==
+        b=JD+gkNYTiQumM0o0RlVIdYAvCrXMmG+7AbWfMp7fM4iIPPbcS77ItQjybq9sjuvCr
+         o1IaArM+hz9yOaosS8xwTzNkJjIeQDpUy6kYF9VmjHDqbZ22ivucgQZH77m8H+e7nN
+         1oV7xjxNokJrGTX9NWOzc7YwNYCqH9qEivjaTc1d7s6DBFSfIgb1mahKKJDNMLDkkf
+         JwrPvf4NTJH4aF5H1LG8C1DoVYn9r2YEidlDmghSR5swEC/A85bsLITOV/oQ+HOggJ
+         6zge47HcnEOM8Ih9pCzdqgkkoXbgesKE2pwdbQn321R973hVWGopvooKeCIdlPZ5fK
+         0oVzFW6swgfzg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Maxim Mikityanskiy <maxtram95@gmail.com>,
         Sasha Levin <sashal@kernel.org>, markgross@kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 12/14] platform/x86: intel: hid: Always call BTNL ACPI method
-Date:   Sun, 13 Aug 2023 12:12:00 -0400
-Message-Id: <20230813161202.1086004-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 12/13] platform/x86: intel: hid: Always call BTNL ACPI method
+Date:   Sun, 13 Aug 2023 12:13:16 -0400
+Message-Id: <20230813161317.1087606-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230813161202.1086004-1-sashal@kernel.org>
-References: <20230813161202.1086004-1-sashal@kernel.org>
+In-Reply-To: <20230813161317.1087606-1-sashal@kernel.org>
+References: <20230813161317.1087606-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.253
+X-stable-base: Linux 4.19.291
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -81,7 +81,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 9 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index 164bebbfea214..050f8f7970374 100644
+index fa3cda69cec96..159284bfdd7f2 100644
 --- a/drivers/platform/x86/intel-hid.c
 +++ b/drivers/platform/x86/intel-hid.c
 @@ -449,7 +449,7 @@ static bool button_array_present(struct platform_device *device)
@@ -119,7 +119,7 @@ index 164bebbfea214..050f8f7970374 100644
 +		dev_warn(&device->dev, "failed to enable HID power button\n");
  
  	device_init_wakeup(&device->dev, true);
- 	/*
+ 	return 0;
 -- 
 2.40.1
 
