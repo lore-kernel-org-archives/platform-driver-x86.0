@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C71F2EB64DD
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Aug 2023 11:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F7BEB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Aug 2023 11:08:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229578AbjHMLB3 (ORCPT
+        id S229563AbjHMLIp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Aug 2023 07:01:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53066 "EHLO
+        Sun, 13 Aug 2023 07:08:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbjHMLB2 (ORCPT
+        with ESMTP id S229519AbjHMLIo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Aug 2023 07:01:28 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50608170D;
-        Sun, 13 Aug 2023 04:01:29 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-686f19b6dd2so2321055b3a.2;
-        Sun, 13 Aug 2023 04:01:29 -0700 (PDT)
+        Sun, 13 Aug 2023 07:08:44 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BE6ABF;
+        Sun, 13 Aug 2023 04:08:47 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1bc8045e09dso21122485ad.0;
+        Sun, 13 Aug 2023 04:08:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691924489; x=1692529289;
+        d=gmail.com; s=20221208; t=1691924927; x=1692529727;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dIx3E8QDpnEzVTbkCLWDZWHa0zlmtqhLo20j+vuNiJQ=;
-        b=Mx8py+HisInkEu9PfRzoQPep/XRUv3Dr/F+4qHdbjKCaMYQSirKh8yRNZ2jTEJjMBC
-         clnpY7oBdlB/Z4uf7kApAgBuTKn9W6b+n8Uz4cnY8qvKQQh5TnVSpI5/kQb2WsKDpHj7
-         772PL4jmMfBKI+To2PES2+oTy6K52lF6HAXCiHcmDrX0oPxisEKuf1vpf5tE132tkRWy
-         kb/jmzneTntyTpcWpGAy2fl/S12w0bM6YhdEHC67opRl4vRMyGlls8DZT2xuGILgSt3w
-         4Ztoc2WFmgPtIgDYyZUsgxepXNq02WCXsCWUTox8riDojjpCIM5B8eW9JoM9aHF1pRK3
-         jY5w==
+        bh=SsTxCPc1FRbAQu+e710DcZ5hw9KbeEFuU6FiiWJ0vJM=;
+        b=o7bz97etTRFrHOOxA8YPH4LZZ6DNi3D8HA+1Yj7/KT0Qh09pjAaj1f9+0tiDYhKW39
+         M2l2qf0Cd3Lvf7p5AGeq/0llMEof6BVNI/a6sSxPSkavQgZAPEKfBS54xQvxP4OQ4rZD
+         6zHbRs1EbkiAypuEX+a4JHPIQj7x+k34hUMNVQoJKmdg4vytzv/OzI7mUXps4Y/wa402
+         mKckoIC/UYpkpErG68BFKs7XBc/Ls5qYW6dV6fxK6761GIodkPP/6WTU9aHybRVzr4NH
+         o4AX8pTqIJCsL8ffNy5oGeKhhF2DmztcveWwPa025lQPTzFmPoLxTrQWWX6frk7nCmg2
+         vXPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691924489; x=1692529289;
+        d=1e100.net; s=20221208; t=1691924927; x=1692529727;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dIx3E8QDpnEzVTbkCLWDZWHa0zlmtqhLo20j+vuNiJQ=;
-        b=CG+f+ye0vqT6oU3SWcgZuX7hedhz4NcZeCAkZ/l+L5iBZC53qkkugMt6sAVq5Kh0IJ
-         qHwmaOYJtfMmX5Ksn7tLwLgxIr47E6hbCye2aKYbfoFSv/65X1pEY7aKTNAZZjeqGCmj
-         L747vzCn0oNr7JqWIY0HkXouNuchvJPr8weTYWYxp4i/qgXryM+Le4bva9Tuq8tuS+st
-         ylKjLTyJ85Ed7kX/oiN3FZ8CgYn75FZ7twYbBvozfEfD0V/ihLef1f+7QRB+VzzrmswI
-         u0N/+TZx5UYI+iWnZDy7U32svMb0irDI9p3H6zLSSPk4LhuVonD9eQgyY1R9YJSK7uB6
-         ePLw==
-X-Gm-Message-State: AOJu0YwzG8+bsPT0HP4I82wO56fQuZidAAKewjYg+81dQ46BQhN4v4U7
-        PAUIEHP+frjDMzo1JOoym+w=
-X-Google-Smtp-Source: AGHT+IGJTQuQonYB6BKUw4PWJ3jAaaanpnTdgGLbZC1g7Y//dgViTo9wIIKcRsJAbvIzTZja+okZ7g==
-X-Received: by 2002:a17:902:f545:b0:1b9:e972:134d with SMTP id h5-20020a170902f54500b001b9e972134dmr5764797plf.3.1691924488635;
-        Sun, 13 Aug 2023 04:01:28 -0700 (PDT)
+        bh=SsTxCPc1FRbAQu+e710DcZ5hw9KbeEFuU6FiiWJ0vJM=;
+        b=Nr5Fa9cRkOZm6Bj5opBpwSpOG+tOxbbXcJwU2dTgi9winGin2n2JCcWcelzVOwmCXd
+         lROzQ3dqqO8nR1nfHf9F8oV4GBqGUAiSCYxPORb0EuuzYGeiEVmSJARLe3fbbFRQeEAv
+         Ft/2RE1RwjZe0YjcSCJ+7X1FZ3w98e03Z2qGrTHXLk1y7e8IhRus41DubLsW38w/MIG/
+         aI/B8D1OoYryXeRzR7z79D+6Mvw7oS3tuwmcNNixjHz4blY6YQx6Pw8F5nUWiafPlzNz
+         YiQAU7NweshlRFLWzy+LVzzHduhy307B2ocdMxeXgr9C0v7fOX4zfgA5X7zrcGtpQkSg
+         z8eA==
+X-Gm-Message-State: AOJu0YxHA73Sw53MRGI2JK2YIP+gmIbw+0n+Lv5UbFn8/Vrod5BmpwVr
+        1UVUAfFzLqDJ1m3v88Ku7rgwtAKFPCM=
+X-Google-Smtp-Source: AGHT+IFkEYzu/K2uHtVx4RUNoiA3sjvyV1RZ7XxaOOlzLZahj9blAepnvECtMVlFp0IwnrbfvCkxtQ==
+X-Received: by 2002:a17:902:da8f:b0:1b6:9551:e297 with SMTP id j15-20020a170902da8f00b001b69551e297mr5071022plx.44.1691924926670;
+        Sun, 13 Aug 2023 04:08:46 -0700 (PDT)
 Received: from localhost.localdomain ([2409:40c2:100c:8e93:d00a:1992:423:e24e])
-        by smtp.gmail.com with ESMTPSA id k8-20020a17090a404800b00268b439a0cbsm6103075pjg.23.2023.08.13.04.01.25
+        by smtp.gmail.com with ESMTPSA id c12-20020a170902d48c00b001bdc2fdcf7esm3910509plg.129.2023.08.13.04.08.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Aug 2023 04:01:28 -0700 (PDT)
+        Sun, 13 Aug 2023 04:08:46 -0700 (PDT)
 From:   coolrrsh@gmail.com
 To:     Shyam-sundar.S-k@amd.com, hdegoede@redhat.com,
         markgross@kernel.org, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
         Rajeshwar R Shinde <coolrrsh@gmail.com>
-Subject: [PATCH] platform: sps: Fix an unsigned comparison that can
-Date:   Sun, 13 Aug 2023 16:31:22 +0530
-Message-Id: <20230813110122.129793-1-coolrrsh@gmail.com>
+Subject: [PATCH v2] platform: sps: Fix an unsigned comparison that can never be negative
+Date:   Sun, 13 Aug 2023 16:38:41 +0530
+Message-Id: <20230813110841.130206-1-coolrrsh@gmail.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -79,6 +79,10 @@ drivers/platform/x86/amd/pmf/sps.c:128:5-9:
 WARNING: Unsigned expression compared with zero: mode < 0
 
 Signed-off-by: Rajeshwar R Shinde <coolrrsh@gmail.com>
+
+---
+v1->v2
+changed the commit subject
 ---
  drivers/platform/x86/amd/pmf/sps.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
