@@ -2,156 +2,144 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7738AC04E69
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Aug 2023 08:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87917C001DB
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Aug 2023 09:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234858AbjHNImY (ORCPT
+        id S235884AbjHNJBD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Aug 2023 04:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52228 "EHLO
+        Mon, 14 Aug 2023 05:01:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234864AbjHNImV (ORCPT
+        with ESMTP id S234036AbjHNJAc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Aug 2023 04:42:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFC8910F
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Aug 2023 01:41:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1692002491;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xM5TcdGqAZTIxIDTi8jCL3j4zWIJ0PMbEonLxDzztkY=;
-        b=b5lTlj8/F2yherX6YuI9JaXNC+cf7He8/UniCKuIUodPQwXU8lJJiVxSEdj8ynhKx1+6Jf
-        V9dMQZ1QKu3Sv8OA17N0DUUu59IxbufRASK6sNHIPofNFimXgTwiWu15tj6UL5AwUltVXa
-        AwMSAAy7U+1p/4BtAxV4FqoW6JtUfyo=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-325-LCyiVBzHMmGpXeRDJq8SdA-1; Mon, 14 Aug 2023 04:41:30 -0400
-X-MC-Unique: LCyiVBzHMmGpXeRDJq8SdA-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-978a991c3f5so270916366b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Aug 2023 01:41:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692002489; x=1692607289;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xM5TcdGqAZTIxIDTi8jCL3j4zWIJ0PMbEonLxDzztkY=;
-        b=h3Gor+XlTpkGeub70C15MUwtg2nryydAXZbRtzsbHhgBoRHcnwM2sfhytij/MnRc8k
-         jRPCWiANFzX6d3DPUAJNXlwTkczv3M3GRgc0C6hcsxKgRWFHG98iSf888ldoPvuVLd/2
-         P2YjDDs4VHxmG/1rxK2TpzATkf3XG0wNCgLuiOejEHgbXbsR6Fw9tunEaKKJxM8epcAi
-         nUROWDqm+DRGHfiWx8rU4n6RjQUtVcZ9XFiiTlb22a+5jEJzIFIWWhe98oHZlHLZ3gbT
-         zyG8JW+8GnueKr+RCZ426Zm9+NUo9ciF20f9pJdqxnpjp8SjDYcdxyfUvcrKwkpQXPcJ
-         AfHw==
-X-Gm-Message-State: AOJu0YxOg0lD0L47NPcoC616bFhcgME6otin5VVGmT8mZYpox5LhKpXU
-        QLMlPlPVh99jf89tOLJL0FZbTQ0U0P5RW13M/YvssjYOl4lFnw4bjv3z4gN4d+BeTJPUk46fBsj
-        VCOjEt1iYoVmT0iW0amQJrZl1cjchqT2Kkw==
-X-Received: by 2002:a17:907:78d3:b0:99d:6b3c:3d40 with SMTP id kv19-20020a17090778d300b0099d6b3c3d40mr7910579ejc.6.1692002489144;
-        Mon, 14 Aug 2023 01:41:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHRq/dhKOfnSYvY9aYKaMAIiDw1ImqjsybQ94lcw+hZP3oPogp8hFYWlbE4FXIg8mmI3yY6Kw==
-X-Received: by 2002:a17:907:78d3:b0:99d:6b3c:3d40 with SMTP id kv19-20020a17090778d300b0099d6b3c3d40mr7910574ejc.6.1692002488868;
-        Mon, 14 Aug 2023 01:41:28 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id cw13-20020a170906c78d00b00992e265495csm5377312ejb.212.2023.08.14.01.41.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Aug 2023 01:41:28 -0700 (PDT)
-Message-ID: <10276e15-8528-41a9-4b90-7fdf6b890206@redhat.com>
-Date:   Mon, 14 Aug 2023 10:41:27 +0200
+        Mon, 14 Aug 2023 05:00:32 -0400
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2085.outbound.protection.outlook.com [40.107.95.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBCAE3594
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Aug 2023 02:00:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SummNpMvJ+ppsuxafJSjHGjv9pRXfyT0acS2XpD6qm3Jh/pWhaeMWfhhzRUxpsSheH1/M6GVxLSNop2Gs8ZaP2zfMCUs/oG9fNeoU8fWmVMvHs/+9cPi5oONOnq89LTWODScARe5hVtHp8eXRt23Ns8K7R4UCMFmTqKzIy3SIM7CXE453lWZXnfbKVRNClHmsMHHdqUFWjrxkRwrrskOoehtY4uYBV6Wnvp/HDZ0ppm2uc6wbatfFsO5lWHUk3P4Y0ho425e57GsHmXJvLsAx0IRvvVM3UNiAks3ZUxGuMQtSEYyKwliC8bjJ+kvgbDE+dUrOqf5doHHo7VCIVAHsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wIfvYpg0TpGqP3q8ijl/ltoshmSs0R0qAGqQrwDhAvc=;
+ b=TrlKM5U5aM6e3F9nwHfCRtw3I44SDVTZUS2PRicOlW34UTYDgzryAKwcyhoR+/WotcXWU7HH5w76VN4PrVaKbKIqREm+K/BzJ9syekdV/EAP0rZBtkDIKLE6dP2CCYuazQEoYn/Q+wcdpocN6TGg6Gj6hzVJP8DOEBgnVso5G+FmippfmxKAmZlJ2sd4HETZsJqluz4VYjCjeyHl7TnZcJL8wgEEBkCKjCFXigzY6ydclfrsjSBoKltCws1Y3W2SyyggEVunsUNVn49AI5vwOmvUr+J4cdYm5ws+xD75AzImiS6jwU4yaoOS8orkCP1PeT04Y5w80IMVQw+ovTIE6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wIfvYpg0TpGqP3q8ijl/ltoshmSs0R0qAGqQrwDhAvc=;
+ b=Bd10ckSVSNaJWylaPlbNmvy+7QwJ4a0fv67H2gVRAw6MZ7KszUNJYvGdNqlRAiDdomiaoC7ru/ja+pDuuyNko2Q01gBN7UcnoNHXNkL1PSZSr+OFJh8zd1Sqow7TdLcHZLRr1BP2eGk22mck4BNnOn4AcN04xAJkBA3wGwfZoTKkpaMEIYQX2+H85/t5YPRshe8BbLvG3uS+EWjNdgKs2ifmuW6TI+q4RUXheVO4cWaW0XZMSNmxwDWY/FpGmD8gRB19IaEW42yET6uTTTiB45Mn5NC0ETCv6JNUrUX3OTLPBbEfsYnWa5tfBE41E+0QrvlgE3hBDwhnK4x+djobSQ==
+Received: from CY8PR19CA0015.namprd19.prod.outlook.com (2603:10b6:930:44::25)
+ by MN2PR12MB4552.namprd12.prod.outlook.com (2603:10b6:208:24f::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.24; Mon, 14 Aug
+ 2023 08:59:47 +0000
+Received: from CY4PEPF0000EDD1.namprd03.prod.outlook.com
+ (2603:10b6:930:44:cafe::28) by CY8PR19CA0015.outlook.office365.com
+ (2603:10b6:930:44::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.33 via Frontend
+ Transport; Mon, 14 Aug 2023 08:59:47 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CY4PEPF0000EDD1.mail.protection.outlook.com (10.167.241.205) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6699.12 via Frontend Transport; Mon, 14 Aug 2023 08:59:46 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Mon, 14 Aug 2023
+ 01:59:33 -0700
+Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.230.37) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.37; Mon, 14 Aug 2023 01:59:31 -0700
+From:   Vadim Pasternak <vadimp@nvidia.com>
+To:     <hdegoede@redhat.com>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>
+Subject: [PATCH platform-next 01/16] platform: mellanox: Add new attributes
+Date:   Mon, 14 Aug 2023 08:58:55 +0000
+Message-ID: <20230814085910.56069-2-vadimp@nvidia.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20230814085910.56069-1-vadimp@nvidia.com>
+References: <20230814085910.56069-1-vadimp@nvidia.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] hp-bioscfg: Update steps how order list elements are
- evaluated
-Content-Language: en-US, nl
-To:     Jorge Lopez <jorgealtxwork@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas@t-8ch.de, ilpo.jarvinen@linux.intel.com,
-        dan.carpenter@linaro.org
-References: <20230809210740.18392-1-jorge.lopez2@hp.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230809210740.18392-1-jorge.lopez2@hp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.126.230.37]
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD1:EE_|MN2PR12MB4552:EE_
+X-MS-Office365-Filtering-Correlation-Id: 25f89e18-f579-4bf5-db1e-08db9ca4cf5e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kcNiMEPyeWFAjKSOfogQje+sw6gdnfrc9vj/KBdzg1WgAnoBvPrewlra9jqYGjvqbQrGECPC0Jghc7BWX1uMB98oKOLDyDomw1A2uIS5TI8Dhb9nOFDwx2/tKGcwbnhxYqH5TrCuuwKAr+qo8EDaNL19RsIfMl5RLRDA9HG0f7K5mUFSMqDISvQ2cZTAgONfLylN5HJTKYJdhj6flF7cZ5ZcYzx/DwuO5Tl0kvDdKt/WVxnkA5ay34ECCqKYYvAPFRCJzLKFxAJE6tAkLtbcsjOzrKpNlsOshNtK8n0HiocFSvLjS/kKxC4E9oX24jDaz9K15ltign0FPsPF+5xRwskb1b3v3tsHLbYouRz6oDEtn0kg+OfOqMJnak6AUsabkTuxiXU/pYfuWBhTnnQxz6nbgdKFwddv33DzoavQW0CtQoZEvKhrOEE0jUM/B7ipQdaexAHARxdhbfXCgNXPf+8+I/6sosmX6z0AiNq1mXBillC/CVuQoRjwEmmD9++NjtHfv5URTTMT+BApadizJYnh4pDGWbFRS4NxfaB1taHS/+CzotZDJNqByr7lJx0+vyXvTikyxe1UVaR8JtjmUIAQk5d2GOIkP1iEYMcuwtilDDbxN94fgBjnsDdopJdtxoIHnwNNj+T2uja/FhqJ++6krVJY6AR5zautEIlV1WWPT1wv/UfjMVYQP9rWzwcKu8dIuYbptw1y/TX4GWqjJMID6mAwMqIHAhnoWiRTKx2Hl/yURhjm3F53XH8ZSIuS
+X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(136003)(396003)(376002)(1800799006)(186006)(82310400008)(451199021)(46966006)(40470700004)(36840700001)(107886003)(16526019)(26005)(1076003)(41300700001)(336012)(8936002)(70206006)(70586007)(316002)(8676002)(36860700001)(2616005)(47076005)(83380400001)(426003)(6666004)(40460700003)(478600001)(40480700001)(54906003)(36756003)(86362001)(4326008)(6916009)(82740400003)(7636003)(356005)(5660300002)(2906002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2023 08:59:46.9320
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25f89e18-f579-4bf5-db1e-08db9ca4cf5e
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000EDD1.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4552
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Jorge,
+Add new attribute:
+"lid_open" - to indicate system intrusion detection.
+"reset_long_pwr_pb" - to indicate that system has been reset due to
+long press of power button.
 
-On 8/9/23 23:07, Jorge Lopez wrote:
-> Update steps how order list elements data and elements size are
-> evaluated
-> 
-> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
-> 
-> ---
-> Based on the latest platform-drivers-x86.git/for-next
-> ---
->  .../x86/hp/hp-bioscfg/order-list-attributes.c    | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> index b19644ed12e0..d2b61ab950d4 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> @@ -152,7 +152,7 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
->  
->  		switch (order_obj[elem].type) {
->  		case ACPI_TYPE_STRING:
-> -			if (elem != PREREQUISITES && elem != ORD_LIST_ELEMENTS) {
-> +			if (elem != PREREQUISITES) {
->  				ret = hp_convert_hexstr_to_str(order_obj[elem].string.pointer,
->  							       order_obj[elem].string.length,
->  							       &str_value, &value_len);
-> @@ -266,6 +266,15 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
->  			if (ret)
->  				goto exit_list;
->  
-> +			/*
-> +			 * It is expected for the element size value
-> +			 * to be 1 and not to represent the actual
-> +			 * number of elements stored in comma
-> +			 * separated format. element size value is
-> +			 * recalculated to report the correct number
-> +			 * of data elements found.
-> +			 */
-> +
->  			part_tmp = tmpstr;
->  			part = strsep(&part_tmp, COMMA_SEP);
->  			if (!part)
-> @@ -273,11 +282,14 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
->  					tmpstr,
->  					sizeof(ordered_list_data->elements[0]));
->  
-> -			for (olist_elem = 1; olist_elem < MAX_ELEMENTS_SIZE && part; olist_elem++) {
-> +			for (olist_elem = 0; olist_elem < MAX_ELEMENTS_SIZE && part; olist_elem++) {
->  				strscpy(ordered_list_data->elements[olist_elem],
->  					part,
->  					sizeof(ordered_list_data->elements[olist_elem]));
-> +
->  				part = strsep(&part_tmp, COMMA_SEP);
-> +				if (part && ordered_list_data->elements_size < MAX_ELEMENTS_SIZE)
-> +					ordered_list_data->elements_size++;
->  			}
+Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
+Reviewed-by: Michael Shych <michaelsh@nvidia.com>
+---
+ drivers/platform/x86/mlx-platform.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-I believe that you can replace the:
-
-				if (part && ordered_list_data->elements_size < MAX_ELEMENTS_SIZE)
-					ordered_list_data->elements_size++;
-			}
-
-Lines with simply (after the loop has finished) doing:
-
-			}
-			ordered_list_data->elements_size = olist_elem'
-
-Or am I missing something ?
-
-Regards,
-
-Hans
-
-
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 7d33977d9c60..26748c285ddc 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -3792,6 +3792,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
+ 		.mask = GENMASK(7, 0) & ~BIT(1),
+ 		.mode = 0444,
+ 	},
++	{
++		.label = "lid_open",
++		.reg = MLXPLAT_CPLD_LPC_REG_GP4_RO_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(2),
++		.mode = 0444,
++	},
+ 	{
+ 		.label = "clk_brd1_boot_fail",
+ 		.reg = MLXPLAT_CPLD_LPC_REG_GP4_RO_OFFSET,
+@@ -4431,6 +4437,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_chassis_blade_regs_io_data[] = {
+ 		.mask = GENMASK(7, 0) & ~BIT(6),
+ 		.mode = 0444,
+ 	},
++	{
++		.label = "reset_long_pwr_pb",
++		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(7),
++		.mode = 0444,
++	},
+ 	{
+ 		.label = "pwr_cycle",
+ 		.reg = MLXPLAT_CPLD_LPC_REG_GP1_OFFSET,
+-- 
+2.20.1
 
