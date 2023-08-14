@@ -2,103 +2,131 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90258C41513
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Aug 2023 13:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB7EC001DB
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Aug 2023 13:47:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231313AbjHNNqc (ORCPT
+        id S229485AbjHNNrD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Aug 2023 09:46:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59598 "EHLO
+        Mon, 14 Aug 2023 09:47:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231700AbjHNNqS (ORCPT
+        with ESMTP id S231664AbjHNNql (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Aug 2023 09:46:18 -0400
-Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B64B106;
-        Mon, 14 Aug 2023 06:46:17 -0700 (PDT)
-Received: by mail-il1-x133.google.com with SMTP id e9e14a558f8ab-34aa2883f1cso2893845ab.3;
-        Mon, 14 Aug 2023 06:46:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692020777; x=1692625577;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9yKMPxUGe84xvNf8pYF68HzMRRk71stM/ItQSRJOA3k=;
-        b=sX+Sbzaeg5OOm/s+UizNkCgX2zeHA5HPploXfuUVhikqDqFfRm23IwYoX3/jPH8lsS
-         KD0YbGTDaAS/zDnKlvAqYwmzMBszYiFlLNKpCabd6x0rjhPNw4PwheGvhYRYtcNqR5q7
-         PcbWBhEdfvYdLLNQmHWRjHuCDPpuZGwynTbwi1w/zVaBC3XAtpEQNu6/3+3ZbNUweWfx
-         VDFara0unQ+olJ4ptNYY66tT4/l0mlo/nvsNdlFLcFXoXMgFWW33BN2inJ7ILVOrYZdS
-         zC/+frcGxM9VH0+IuvZIA5ghcHmavTHWzACH5nDugUtUUWzOPGqruuMjeSzYmPc15EVN
-         Q3HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692020777; x=1692625577;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9yKMPxUGe84xvNf8pYF68HzMRRk71stM/ItQSRJOA3k=;
-        b=Bv/6/BdSPZ6TdagmbZnkisRFGfo+v6tGU92O6UaJvpffR5CmXegIFE6O/9C6WNIIBj
-         IqtmcIeVUC/unT3dpZ+UbVQrEDEEVuwWzCHKPWn6Bm/2VR69Z5QtCwV4PuSxySLoamfe
-         K3Z1lKRC/AEYxI6a0cyE5u7CSG4sb5CtxifqIhovnkvJ9gfiXq1vwhfEj554hNVz0evg
-         KHZ1Bpk7iA5jpx6DiY/daMxKmso4f6KjvS2UWzTMrviWyVkEbXtLeh8nZVwQFKMu5GHM
-         6CKkIE2Wo9yLm+tC3kcXwwhbayISdcvyU//nW7EDI0d9zUxh/tknXWt93Ir7Rd3okUw4
-         piHw==
-X-Gm-Message-State: AOJu0Yz+PjUJVprDYJpOXSKOC/kBB2vAHqAThTbAutL4LosEaCAEDXjn
-        GkOaoip4wIP/t5UeI0xVs3I=
-X-Google-Smtp-Source: AGHT+IF1ZkjHYTAqORYWQkSZckevSGpcdYvx95BZ20yXmvWcSuKnv1NxDwAsmCC/O3CxhjfPqm0Stw==
-X-Received: by 2002:a05:6e02:20e7:b0:348:8576:15b5 with SMTP id q7-20020a056e0220e700b00348857615b5mr13574235ilv.3.1692020776945;
-        Mon, 14 Aug 2023 06:46:16 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z6-20020a92d186000000b0034a921bc93asm1538168ilz.1.2023.08.14.06.46.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Aug 2023 06:46:16 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Mon, 14 Aug 2023 06:46:15 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Gerd Haeussler <haeussler.gerd@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Tobias Schaffner <tobias.schaffner@siemens.com>,
-        Xing Tong Wu <xingtong.wu@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
-Subject: Re: [PATCH] MAINTAINERS: Add entries for Siemens IPC modules
-Message-ID: <5f072764-b4c5-49cb-b880-a735f6d152b6@roeck-us.net>
-References: <20230814073114.2885-1-haeussler.gerd@gmail.com>
+        Mon, 14 Aug 2023 09:46:41 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99F2A1701
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Aug 2023 06:46:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692020798; x=1723556798;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=iONhHrWqV8e0o6a8WMO9s+CxTrDDCoe+SVVUJ2ftk/g=;
+  b=HravW3G2nvv6VRo74v/cBU4ew7IEwPDditvbynbotjKtE70y7ZNwiQqa
+   151b9qXcLxjSXCHmKy59cHTlWqc/rbeMrOBHBWtvx4aUfRbSqdEE58sNh
+   Dlu9xJHqlA/oJdatxEAb/d9NMImXfRYau71UjBy5uLIrDVLHA6O4yfjXW
+   CAXiwO+nVGnOEpN60gMBPdyVdxBOtIpPCZnlQDjLngjNGoOZbloQ+Q5ho
+   ksX2Q9RjYYYAmyurdAmXDBlnyDcep1cipUYvJ0EOUfsEcl3t6A8wPlzgF
+   7KTteTZxwte+BJJL3DZSuG1SjDsnaMxYlUh8a1ow6w6/bK8EK1lcJo6ln
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="458402548"
+X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
+   d="scan'208";a="458402548"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 06:46:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="710319938"
+X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
+   d="scan'208";a="710319938"
+Received: from lgarello-mobl.ger.corp.intel.com ([10.249.40.121])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 06:46:36 -0700
+Date:   Mon, 14 Aug 2023 16:46:34 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Vadim Pasternak <vadimp@nvidia.com>
+cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH platform-next 08/16] platform: mellanox: Cosmetic
+ changes
+In-Reply-To: <20230814085910.56069-9-vadimp@nvidia.com>
+Message-ID: <acb5835-99af-c525-c3e8-954f12baa9cc@linux.intel.com>
+References: <20230814085910.56069-1-vadimp@nvidia.com> <20230814085910.56069-9-vadimp@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230814073114.2885-1-haeussler.gerd@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Aug 14, 2023 at 09:31:14AM +0200, Gerd Haeussler wrote:
-> From: Gerd Haeussler <gerd.haeussler.ext@siemens.com>
-> 
-> There are different IPC driver modules in the kernel that are actively
-> maintained by Siemens but not yet listed in the MAINTAINERS file.
-> Add the missing entries.
-> 
-> Signed-off-by: Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+On Mon, 14 Aug 2023, Vadim Pasternak wrote:
+
+> Fix routines and labels names by s/topology/topology.
+
+You meant: s/topolgy/topology (add the typo to the pattern).
+
+> Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
+> Reviewed-by: Michael Shych <michaelsh@nvidia.com>
 > ---
->  MAINTAINERS | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+>  drivers/platform/x86/mlx-platform.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0f966f05fb0d..6ca5564a4f8c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-[ ... ]
-> +
-> +SIEMENS IPC WATCHDOG DRIVERS
-> +M:	Gerd Haeussler <gerd.haeussler.ext@siemens.com>
-> +M:	Xing Tong Wu <xingtong.wu@siemens.com>
-> +M:	Tobias Schaffner <tobias.schaffner@siemens.com>
-> +L:	linux-watchdog@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/watchdog/simatic-ipc-wdt.c
-> +
+> diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+> index a505f619f337..1010064d54e9 100644
+> --- a/drivers/platform/x86/mlx-platform.c
+> +++ b/drivers/platform/x86/mlx-platform.c
+> @@ -6265,7 +6265,7 @@ mlxplat_i2c_mux_complition_notify(void *handle, struct i2c_adapter *parent,
+>  	return mlxplat_post_init(priv);
+>  }
+>  
+> -static int mlxplat_i2c_mux_topolgy_init(struct mlxplat_priv *priv)
+> +static int mlxplat_i2c_mux_topology_init(struct mlxplat_priv *priv)
+>  {
+>  	int i, err;
+>  
+> @@ -6294,7 +6294,7 @@ static int mlxplat_i2c_mux_topolgy_init(struct mlxplat_priv *priv)
+>  	return err;
+>  }
+>  
+> -static void mlxplat_i2c_mux_topolgy_exit(struct mlxplat_priv *priv)
+> +static void mlxplat_i2c_mux_topology_exit(struct mlxplat_priv *priv)
+>  {
+>  	int i;
+>  
+> @@ -6308,7 +6308,7 @@ static int mlxplat_i2c_main_complition_notify(void *handle, int id)
+>  {
+>  	struct mlxplat_priv *priv = handle;
+>  
+> -	return mlxplat_i2c_mux_topolgy_init(priv);
+> +	return mlxplat_i2c_mux_topology_init(priv);
+>  }
+>  
+>  static int mlxplat_i2c_main_init(struct mlxplat_priv *priv)
+> @@ -6336,14 +6336,14 @@ static int mlxplat_i2c_main_init(struct mlxplat_priv *priv)
+>  	}
+>  
+>  	if (priv->i2c_main_init_status == MLXPLAT_I2C_MAIN_BUS_NOTIFIED) {
+> -		err = mlxplat_i2c_mux_topolgy_init(priv);
+> +		err = mlxplat_i2c_mux_topology_init(priv);
+>  		if (err)
+> -			goto fail_mlxplat_i2c_mux_topolgy_init;
+> +			goto fail_mlxplat_i2c_mux_topology_init;
+>  	}
+>  
+>  	return 0;
+>  
+> -fail_mlxplat_i2c_mux_topolgy_init:
+> +fail_mlxplat_i2c_mux_topology_init:
+>  fail_platform_i2c_register:
+>  fail_mlxplat_mlxcpld_verify_bus_topology:
+>  	return err;
+> @@ -6351,7 +6351,7 @@ static int mlxplat_i2c_main_init(struct mlxplat_priv *priv)
+>  
+>  static void mlxplat_i2c_main_exit(struct mlxplat_priv *priv)
+>  {
+> -	mlxplat_i2c_mux_topolgy_exit(priv);
+> +	mlxplat_i2c_mux_topology_exit(priv);
+>  	if (priv->pdev_i2c)
+>  		platform_device_unregister(priv->pdev_i2c);
+>  }
+> 
 
-For watchdog:
+-- 
+ i.
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
