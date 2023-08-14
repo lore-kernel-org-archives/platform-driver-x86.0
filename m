@@ -2,27 +2,27 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 685BCC41513
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Aug 2023 09:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2C7EB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Aug 2023 09:04:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230384AbjHNJDm (ORCPT
+        id S232712AbjHNJEO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Aug 2023 05:03:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40274 "EHLO
+        Mon, 14 Aug 2023 05:04:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236147AbjHNJDJ (ORCPT
+        with ESMTP id S235340AbjHNJD6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Aug 2023 05:03:09 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on20602.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe59::602])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFD34199E
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Aug 2023 02:03:00 -0700 (PDT)
+        Mon, 14 Aug 2023 05:03:58 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2076.outbound.protection.outlook.com [40.107.220.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EE9F10B
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Aug 2023 02:03:56 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UCPjbU/UcaNSzcJIAqmJyTXRZwB6r6+XeVg95Sp17QsYrE5eCuUakTI5x4uRQ0o8NPiWotrdLvbBj7rK79MIPjF8UHVlDauKsUYsgttzTb2r0DluH+0ddR+L5tEbVnYcMoD8pgfihP8PC0LGpew86uzeRALCRA3pKbbGbCP3w/sCNR6vkFj++zO8Rqo1kd8p3dItWw0uXL2sMBvuYaTikxHOigTO1Ew4diM/h32lsTeVl/tjudO6p3ji/qAptFm/7lV7WRTbonj9fHrWz7uDzjfthrbBok/LPXsnG/Y0AGfmyxY1lO2oBH86D7XfIjnZNQnEmZ924+x/ZAuD/ca/BQ==
+ b=Vun2ANOv8zTzjbxWG8yyh+Jgh4YeqK0oP1tji00bEkZqVOZQ0L2Mfs+1oE9PhAcEE9S2r3cove7DND6L9aZGFFdl9Wfy94s6AZg2jGP5wl0tqTTuDuVEFNTLg5CPwW/8KcfklocbZSoHLjzKpjflumqnpH8f/VUBso57MZDG2AaIz5mDyncDR2mLgzfMLuYYAvISZcGiyJT/s/G5mepD9NyCjpOXpGBjfOILAebVjUzXmGA8dIYQx06iM9TpihQ4j/t2LziZfciO8cx4BJDDXQvycon/sFdyOlTcL3+2HCX3nIoohygTYZI6kHLCVqQZWFu5UM1YkyEhuIsdlEk3vw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Hk6OFUz+T9evPk//wvLYS7BbFza/pvWfb39Mi5hAS1k=;
- b=bjqfRR/OGLPwK9mU3sFdnX86k1pEzq6GayfFht6miwRXWa/smMT2yDW9lXagdLR4N6oOA4dWFR8ZQQE2xfCnOR8ShmoY4X5Md0Yji41EflimghhD5GY1USvtxvNUhdsg8ulLqa4ANV35EtXT2LJZbMOMbncJ1YK2myK9IDkVpDnduTVu+C69A7hTFwihe2Gg1a7pUOrJ3580qYnbdjeRdg4/JLU0vM1M7pNt64r/RUeb8JIOMy0d/0h8Mmisy24MGou62nrED4ZRFmOoahpG0vt7qv527MEr5rfZRiS+gjEMEMXCC3ghy4nZ65gdMMyVBhTf6qirA/oDCYUeX4V7qA==
+ bh=n/UTiBt53ju3zjGpbgFY7Usyp4hzY8kpdQKfuYK8XGo=;
+ b=V2aWxUEjAzUp5GT/QqqWTigjlI05tp5V/lCCT9r7aYTgQZX+JOPrshG5EqAtphMVG7sbqfs9njgSKDJhmlXD54z/uJ/IvEmafsjH+NqnhaZez/SIUazYEj/K2DiwYU6S8LrAF+GmEcmPPYQ38iaJlDJr5gBWn36uKjmsqmk4uS9am4VhNDcLt4vqNyfaWdmxeCvDvr/jVz4DFhZL9Zxt0z0UOXkl1bLvNbkXyQ5gWjzyIpxaTDlCMP4YJJvyXtHCY1jq7qy2CIrhZS/p+gU+SJAT3h9xgnRa5jGD7y+Op1YF8qg/5Pq2s+hW/Olk/OWmGS97LkQ8BKB2SgtnPChkCA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
@@ -30,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hk6OFUz+T9evPk//wvLYS7BbFza/pvWfb39Mi5hAS1k=;
- b=Ph24P7N1gA7M5pYEgEbIYPIIwEFOJsYjNkb8rHYR98Zgq2S4xTD1zsjhBLiTBvvbu/rfm8XvAac3v3KoU7HRnccdVX6ZXdmHWiDG3kOxc6WXkFvNeFxXWr32H3IJHehmQ/1LVWpj72OnyB3Frcy7ePRURYzM9qOXHGkFxiNjaLb70L9aribL3cQE2ZxNnHeGThQjG+LkOsm5y/jkzOVlPUu0WjaV1hOjqTDWEa+Y4x4RJPHnX+cyAhUb1Gi7m9RIre6/S9JjlmiMN2xWdrFhJVOwBD+g97rtfMRqh5PsOsfHtWWh9f+RUhSToA7cTxScCjv5k7eYqM67SxuKMxEZdg==
-Received: from MW4PR04CA0362.namprd04.prod.outlook.com (2603:10b6:303:81::7)
- by PH7PR12MB8105.namprd12.prod.outlook.com (2603:10b6:510:2b7::14) with
+ bh=n/UTiBt53ju3zjGpbgFY7Usyp4hzY8kpdQKfuYK8XGo=;
+ b=m6j0cnDIok6PhqaohHUr4lejrTty4hH7TcBKEDh5re3Q5fWlep2LYgNBCSA08XDk+Am0P1Sd8j4ch1Ae/g6zUmLPRl5gfiaFwWk6t9toUA3kjCc6wY+wd256HfYG+b1GiMBHo9lLKb5Rms6bZDn7deQGkV4pYlvetuPs3YZufoOgLorro3QG9boFa+7ahdp62c27SM8iKfu7a+RfczP0ypC8YfVDEa6YPzOPbVEn1fFAOYbCQLzZAJQ0uNX1RdZ9uNZt/JMXJOAmhAWwXVufww5Ju8+BVa4atWH6RS6DWUNisiergq9vXWzgdQ3QX1G3qzoBqcKPRWPgI/8exyUMyw==
+Received: from MW4PR03CA0045.namprd03.prod.outlook.com (2603:10b6:303:8e::20)
+ by DS0PR12MB8502.namprd12.prod.outlook.com (2603:10b6:8:15b::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.19; Mon, 14 Aug
- 2023 09:02:58 +0000
-Received: from MWH0EPF000971E5.namprd02.prod.outlook.com
- (2603:10b6:303:81:cafe::74) by MW4PR04CA0362.outlook.office365.com
- (2603:10b6:303:81::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.24; Mon, 14 Aug
+ 2023 09:02:52 +0000
+Received: from MWH0EPF000971E9.namprd02.prod.outlook.com
+ (2603:10b6:303:8e:cafe::25) by MW4PR03CA0045.outlook.office365.com
+ (2603:10b6:303:8e::20) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.33 via Frontend
- Transport; Mon, 14 Aug 2023 09:02:58 +0000
+ Transport; Mon, 14 Aug 2023 09:02:52 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -49,24 +49,24 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.117.160 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
 Received: from mail.nvidia.com (216.228.117.160) by
- MWH0EPF000971E5.mail.protection.outlook.com (10.167.243.73) with Microsoft
+ MWH0EPF000971E9.mail.protection.outlook.com (10.167.243.71) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6699.12 via Frontend Transport; Mon, 14 Aug 2023 09:02:57 +0000
+ 15.20.6699.12 via Frontend Transport; Mon, 14 Aug 2023 09:02:52 +0000
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
  (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Mon, 14 Aug 2023
- 02:02:43 -0700
+ 02:02:37 -0700
 Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.230.37) by
  rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.37; Mon, 14 Aug 2023 02:02:42 -0700
+ 15.2.986.37; Mon, 14 Aug 2023 02:02:36 -0700
 From:   Vadim Pasternak <vadimp@nvidia.com>
 To:     <hdegoede@redhat.com>
 CC:     <platform-driver-x86@vger.kernel.org>,
         Vadim Pasternak <vadimp@nvidia.com>
-Subject: [PATCH platform-next 12/16] platform: mellanox: mlx-platform: Get interrupt line through ACPI
-Date:   Mon, 14 Aug 2023 08:59:06 +0000
-Message-ID: <20230814085910.56069-13-vadimp@nvidia.com>
+Subject: [PATCH platform-next 10/16] platform: mellanox: mlx-platform: Prepare driver to allow probing through ACPI infrastructure
+Date:   Mon, 14 Aug 2023 08:59:04 +0000
+Message-ID: <20230814085910.56069-11-vadimp@nvidia.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20230814085910.56069-1-vadimp@nvidia.com>
 References: <20230814085910.56069-1-vadimp@nvidia.com>
@@ -78,92 +78,285 @@ X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
  rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E5:EE_|PH7PR12MB8105:EE_
-X-MS-Office365-Filtering-Correlation-Id: d9f075ca-4d71-434e-ef23-08db9ca5412f
+X-MS-TrafficTypeDiagnostic: MWH0EPF000971E9:EE_|DS0PR12MB8502:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5d113db5-36ee-464b-c433-08db9ca53dcb
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QXJeZriIqzPwpxaAvgtp9/Icl1UpTtLMRYQKL5l38LeIC/pOCP40haGyki8bFNJGodOYlx7Fi4/6cPnma8v+jVHmRGZ9E3gLKTL7VTaqr8/HHA5mC3/EEbP+b6aeE22cM1RtEBdZc5KWcduNVgGcZjImDNe9MRGPSTOERy/UpWN/ESx8Ab2ibTgHSQMH9XNp0vR5xp2gagD6tX0/Va8umvEb/rLwT7i4r9zHAHpVpPaX0Hd5hvmPJO1R1/KBX+ZC6PchaulLxX6dyUnNd6mJ3cF/wXQjc6wbILjNEQlYfZ63qSE7EZppj5nwK8zpscD+cn82Q75On/w8+r1BWDiqRVHln/TGRlo969IwWJPs41bjkB9digXh7k6MrZFj2BAFjwx/Ka+dZbtTZEPcVnyYi5f/c+E5q/YjDJlbtQx4e0vXL4SGtQSMkR3WM/nAub1dGHZRzirNMzM2W6g7RYf3O9LXsaIMay0NQ35yoASmFzTXGgq10C1YS00RT4iwUQmqNuCahIxe2ahpoK8zx2em1eekeotrnulc1L/ZedQAjn5JNnL+Pe3ARsd+mn910DQZfA6jpn5j+i+GZkVRMhaEReFCSfvL0QPgDYpjVWja/Lb+yFLt9TU4l+qBcqmIApADj7fMaNIUrVM4RXhSZHpp/keOmqnk1Fxi2OgPYR9tv5kCHZjH+VRW2vSbeH4jPYR7l9PRokLZ/OaifHtSwauJm3zAEuks7eJy4aCFHrghSMwTLaneZLs3gYtkynHhnUol
-X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(346002)(376002)(396003)(136003)(451199021)(186006)(82310400008)(1800799006)(36840700001)(46966006)(40470700004)(1076003)(2616005)(107886003)(6666004)(36860700001)(36756003)(47076005)(86362001)(40480700001)(356005)(7636003)(82740400003)(16526019)(83380400001)(336012)(26005)(316002)(426003)(40460700003)(54906003)(41300700001)(6916009)(8676002)(4326008)(8936002)(70586007)(70206006)(5660300002)(2906002)(478600001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: wDWnYcGLkmBJxaOBztEC/n5TWGhPyEu4WMjym9yMtgaYqWSxtf7EiNaEROfMkY3lfGkP6diiicRJ/Ve1cKCTwwVETzzbFjB1kbUHey+uCBNzfhSGihSyf0e8VCzYO2Gj99INjgpocNUscDXa3M+quDjfJyvrWo3Lor+e3J24rREuJp4UYbk0TiyNbTkm3JdHNLhBtLNjwD8mPF8RlBpDliKYR+VUvMmkQNiMd8RnXtIUk3aSmgG4mkdvkCbEC3N2m/11RY3Iid0UzWIyRMvPmBR833pDdJxwhGWvG81xFwK9PS0IQjIfAXocthkwr4CD6ZqxisjgICMXPxeLZhnnvqW5xPg8Vq1dPOF0jDBi6r9fiMyC/n4e163CTCpJAFC/6LWzFlTSJfMMExr4aOEjMe/NwiTTlZIb58GaBVYZm6ew3Th8s6dBHvK00oMkKjOtdOd5YFqU+9NXRUqSrCDRjaTFKMmRcWw4DZ+sRR/sCXUE7hXnVA8bNB4/tdBEfR4bnN1o0M2T7Nt0EJxhgPacgV8sWhbAMIiMp4DmfKpuvyyh5Ftmsfo9B+8KZGg9HvoB0J4kRjv+kD8DykFJtZ+WWz4kC8lBv1VifIkuIZjCLd7NofCrzYHCj2AB19GtnJOrxW65pARNaa6IDFi9RimRqwpQzTnTADeNY3zllZ9rwE99gNpL+vdzICUjhD+V4UAH2ju6uNB9kQcZXUvMHonWPTduvL3sI76s4V3AL7OsRplw2LbolmsaFnoPrK01eJI5
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(396003)(346002)(136003)(39860400002)(376002)(451199021)(82310400008)(186006)(1800799006)(36840700001)(40470700004)(46966006)(40460700003)(6666004)(478600001)(70206006)(70586007)(47076005)(83380400001)(36860700001)(16526019)(36756003)(86362001)(2906002)(40480700001)(426003)(1076003)(26005)(107886003)(2616005)(336012)(82740400003)(356005)(7636003)(316002)(4326008)(8676002)(6916009)(54906003)(5660300002)(41300700001)(8936002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2023 09:02:57.9316
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2023 09:02:52.2264
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9f075ca-4d71-434e-ef23-08db9ca5412f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d113db5-36ee-464b-c433-08db9ca53dcb
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: MWH0EPF000971E5.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: MWH0EPF000971E9.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8105
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8502
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add support for getting system interrupt line from ACPI table.
+Currently driver is activated through DMI hooks.
+Prepare driver to allow activation also through ACPI trigger.
+
+Modify mlxplat_init()/mlxplat_exit() routines.
+Add mlxplat_probe()/mlxplat_remove() routines and "mlxplat_driver"
+structure.
 
 Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
 Reviewed-by: Michael Shych <michaelsh@nvidia.com>
 ---
- drivers/platform/x86/mlx-platform.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/platform/x86/mlx-platform.c | 91 +++++++++++++++++++----------
+ 1 file changed, 61 insertions(+), 30 deletions(-)
 
 diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index e2226c218a54..a70b86e60721 100644
+index b577ce572ab1..68bfa446738e 100644
 --- a/drivers/platform/x86/mlx-platform.c
 +++ b/drivers/platform/x86/mlx-platform.c
-@@ -342,6 +342,7 @@
-  * @hotplug_resources: system hotplug resources
-  * @hotplug_resources_size: size of system hotplug resources
-  * @hi2c_main_init_status: init status of I2C main bus
-+ * @irq_fpga: FPGA IRQ number
-  */
- struct mlxplat_priv {
- 	struct platform_device *pdev_i2c;
-@@ -355,6 +356,7 @@ struct mlxplat_priv {
- 	struct resource *hotplug_resources;
- 	unsigned int hotplug_resources_size;
- 	u8 i2c_main_init_status;
-+	int irq_fpga;
- };
+@@ -5573,6 +5573,17 @@ static void mlxplat_poweroff(void)
+ 	kernel_halt();
+ }
  
- static struct platform_device *mlxplat_dev;
-@@ -6187,6 +6189,8 @@ static int mlxplat_post_init(struct mlxplat_priv *priv)
- 	/* Add hotplug driver */
- 	if (mlxplat_hotplug) {
- 		mlxplat_hotplug->regmap = priv->regmap;
-+		if (priv->irq_fpga)
-+			mlxplat_hotplug->irq = priv->irq_fpga;
- 		priv->pdev_hotplug =
- 		platform_device_register_resndata(&mlxplat_dev->dev,
- 						  "mlxreg-hotplug", PLATFORM_DEVID_NONE,
-@@ -6395,11 +6399,17 @@ static int mlxplat_probe(struct platform_device *pdev)
++static int __init mlxplat_register_platform_device(void)
++{
++	mlxplat_dev = platform_device_register_simple(MLX_PLAT_DEVICE_NAME, -1,
++						      mlxplat_lpc_resources,
++						      ARRAY_SIZE(mlxplat_lpc_resources));
++	if (IS_ERR(mlxplat_dev))
++		return PTR_ERR(mlxplat_dev);
++	else
++		return 1;
++}
++
+ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
  {
- 	unsigned int hotplug_resources_size = 0;
- 	struct resource *hotplug_resources = NULL;
-+	struct acpi_device *acpi_dev;
+ 	int i;
+@@ -5593,7 +5604,7 @@ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
+ 	mlxplat_i2c = &mlxplat_mlxcpld_i2c_default_data;
+ 
+-	return 1;
++	return mlxplat_register_platform_device();
+ }
+ 
+ static int __init mlxplat_dmi_default_wc_matched(const struct dmi_system_id *dmi)
+@@ -5616,7 +5627,7 @@ static int __init mlxplat_dmi_default_wc_matched(const struct dmi_system_id *dmi
+ 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
+ 	mlxplat_i2c = &mlxplat_mlxcpld_i2c_default_data;
+ 
+-	return 1;
++	return mlxplat_register_platform_device();
+ }
+ 
+ static int __init mlxplat_dmi_default_eth_wc_blade_matched(const struct dmi_system_id *dmi)
+@@ -5641,7 +5652,7 @@ static int __init mlxplat_dmi_default_eth_wc_blade_matched(const struct dmi_syst
+ 	mlxplat_i2c = &mlxplat_mlxcpld_i2c_ng_data;
+ 	mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_ng;
+ 
+-	return 1;
++	return mlxplat_register_platform_device();
+ }
+ 
+ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
+@@ -5664,7 +5675,7 @@ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
+ 	mlxplat_i2c = &mlxplat_mlxcpld_i2c_default_data;
+ 
+-	return 1;
++	return mlxplat_register_platform_device();
+ }
+ 
+ static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
+@@ -5687,7 +5698,7 @@ static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
+ 	mlxplat_i2c = &mlxplat_mlxcpld_i2c_default_data;
+ 
+-	return 1;
++	return mlxplat_register_platform_device();
+ }
+ 
+ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
+@@ -5710,7 +5721,7 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
+ 	mlxplat_i2c = &mlxplat_mlxcpld_i2c_default_data;
+ 
+-	return 1;
++	return mlxplat_register_platform_device();
+ }
+ 
+ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
+@@ -5736,7 +5747,7 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_i2c = &mlxplat_mlxcpld_i2c_ng_data;
+ 	mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_ng;
+ 
+-	return 1;
++	return mlxplat_register_platform_device();
+ }
+ 
+ static int __init mlxplat_dmi_comex_matched(const struct dmi_system_id *dmi)
+@@ -5761,7 +5772,7 @@ static int __init mlxplat_dmi_comex_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_i2c = &mlxplat_mlxcpld_i2c_default_data;
+ 	mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_comex;
+ 
+-	return 1;
++	return mlxplat_register_platform_device();
+ }
+ 
+ static int __init mlxplat_dmi_ng400_matched(const struct dmi_system_id *dmi)
+@@ -5787,7 +5798,7 @@ static int __init mlxplat_dmi_ng400_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_i2c = &mlxplat_mlxcpld_i2c_ng_data;
+ 	mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_ng400;
+ 
+-	return 1;
++	return mlxplat_register_platform_device();
+ }
+ 
+ static int __init mlxplat_dmi_modular_matched(const struct dmi_system_id *dmi)
+@@ -5807,7 +5818,7 @@ static int __init mlxplat_dmi_modular_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_i2c = &mlxplat_mlxcpld_i2c_ng_data;
+ 	mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_eth_modular;
+ 
+-	return 1;
++	return mlxplat_register_platform_device();
+ }
+ 
+ static int __init mlxplat_dmi_chassis_blade_matched(const struct dmi_system_id *dmi)
+@@ -5829,7 +5840,7 @@ static int __init mlxplat_dmi_chassis_blade_matched(const struct dmi_system_id *
+ 	mlxplat_i2c = &mlxplat_mlxcpld_i2c_ng_data;
+ 	mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_ng400;
+ 
+-	return 1;
++	return mlxplat_register_platform_device();
+ }
+ 
+ static int __init mlxplat_dmi_rack_switch_matched(const struct dmi_system_id *dmi)
+@@ -5850,7 +5861,7 @@ static int __init mlxplat_dmi_rack_switch_matched(const struct dmi_system_id *dm
+ 	mlxplat_i2c = &mlxplat_mlxcpld_i2c_ng_data;
+ 	mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_rack_switch;
+ 
+-	return 1;
++	return mlxplat_register_platform_device();
+ }
+ 
+ static int __init mlxplat_dmi_ng800_matched(const struct dmi_system_id *dmi)
+@@ -5871,7 +5882,7 @@ static int __init mlxplat_dmi_ng800_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_i2c = &mlxplat_mlxcpld_i2c_ng_data;
+ 	mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_ng400;
+ 
+-	return 1;
++	return mlxplat_register_platform_device();
+ }
+ 
+ static int __init mlxplat_dmi_l1_switch_matched(const struct dmi_system_id *dmi)
+@@ -5894,7 +5905,7 @@ static int __init mlxplat_dmi_l1_switch_matched(const struct dmi_system_id *dmi)
+ 	pm_power_off = mlxplat_poweroff;
+ 	mlxplat_reboot_nb = &mlxplat_reboot_default_nb;
+ 
+-	return 1;
++	return mlxplat_register_platform_device();
+ }
+ 
+ static const struct dmi_system_id mlxplat_dmi_table[] __initconst = {
+@@ -6138,12 +6149,6 @@ static int mlxplat_lpc_cpld_device_init(struct resource **hotplug_resources,
+ {
+ 	int err;
+ 
+-	mlxplat_dev = platform_device_register_simple(MLX_PLAT_DEVICE_NAME, PLATFORM_DEVID_NONE,
+-						      mlxplat_lpc_resources,
+-						      ARRAY_SIZE(mlxplat_lpc_resources));
+-	if (IS_ERR(mlxplat_dev))
+-		return PTR_ERR(mlxplat_dev);
+-
+ 	mlxplat_mlxcpld_regmap_ctx.base = devm_ioport_map(&mlxplat_dev->dev,
+ 							  mlxplat_lpc_resources[1].start, 1);
+ 	if (!mlxplat_mlxcpld_regmap_ctx.base) {
+@@ -6157,13 +6162,11 @@ static int mlxplat_lpc_cpld_device_init(struct resource **hotplug_resources,
+ 	return 0;
+ 
+ fail_devm_ioport_map:
+-	platform_device_unregister(mlxplat_dev);
+ 	return err;
+ }
+ 
+ static void mlxplat_lpc_cpld_device_exit(void)
+ {
+-	platform_device_unregister(mlxplat_dev);
+ }
+ 
+ static int
+@@ -6388,16 +6391,13 @@ static void mlxplat_i2c_main_exit(struct mlxplat_priv *priv)
+ 		platform_device_unregister(priv->pdev_i2c);
+ }
+ 
+-static int __init mlxplat_init(void)
++static int mlxplat_probe(struct platform_device *pdev)
+ {
+-	unsigned int hotplug_resources_size;
+-	struct resource *hotplug_resources;
++	unsigned int hotplug_resources_size = 0;
++	struct resource *hotplug_resources = NULL;
  	struct mlxplat_priv *priv;
--	int i, err;
-+	int irq_fpga = 0, i, err;
+ 	int i, err;
  
--	if (ACPI_COMPANION(&pdev->dev))
-+	acpi_dev = ACPI_COMPANION(&pdev->dev);
-+	if (acpi_dev) {
-+		irq_fpga = acpi_dev_gpio_irq_get(acpi_dev, 0);
-+		if (irq_fpga < 0)
-+			return -ENODEV;
- 		mlxplat_dev = pdev;
-+	}
- 
+-	if (!dmi_check_system(mlxplat_dmi_table))
+-		return -ENODEV;
+-
  	err = mlxplat_pre_init(&hotplug_resources, &hotplug_resources_size);
  	if (err)
-@@ -6414,6 +6424,7 @@ static int mlxplat_probe(struct platform_device *pdev)
- 	platform_set_drvdata(mlxplat_dev, priv);
- 	priv->hotplug_resources = hotplug_resources;
- 	priv->hotplug_resources_size = hotplug_resources_size;
-+	priv->irq_fpga = irq_fpga;
+ 		return err;
+@@ -6460,9 +6460,8 @@ static int __init mlxplat_init(void)
  
- 	if (!mlxplat_regmap_config)
- 		mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config;
+ 	return err;
+ }
+-module_init(mlxplat_init);
+ 
+-static void __exit mlxplat_exit(void)
++static int mlxplat_remove(struct platform_device *pdev)
+ {
+ 	struct mlxplat_priv *priv = platform_get_drvdata(mlxplat_dev);
+ 
+@@ -6473,6 +6472,38 @@ static void __exit mlxplat_exit(void)
+ 	mlxplat_pre_exit(priv);
+ 	mlxplat_i2c_main_exit(priv);
+ 	mlxplat_post_exit();
++	return 0;
++}
++
++static struct platform_driver mlxplat_driver = {
++	.driver		= {
++		.name	= "mlxplat",
++		.probe_type = PROBE_FORCE_SYNCHRONOUS,
++	},
++	.probe		= mlxplat_probe,
++	.remove		= mlxplat_remove,
++};
++
++static int __init mlxplat_init(void)
++{
++	int err;
++
++	if (!dmi_check_system(mlxplat_dmi_table))
++		return -ENODEV;
++
++	err = platform_driver_register(&mlxplat_driver);
++	if (err)
++		return err;
++	return 0;
++}
++module_init(mlxplat_init);
++
++static void __exit mlxplat_exit(void)
++{
++	if (mlxplat_dev)
++		platform_device_unregister(mlxplat_dev);
++
++	platform_driver_unregister(&mlxplat_driver);
+ }
+ module_exit(mlxplat_exit);
+ 
 -- 
 2.20.1
 
