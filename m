@@ -2,72 +2,74 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BEEC001DB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A81EB64DD
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Aug 2023 09:02:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233038AbjHNJCH (ORCPT
+        id S229460AbjHNJCG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Aug 2023 05:02:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57384 "EHLO
+        Mon, 14 Aug 2023 05:02:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235136AbjHNJBj (ORCPT
+        with ESMTP id S235829AbjHNJBc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Aug 2023 05:01:39 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2080.outbound.protection.outlook.com [40.107.237.80])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DFFC127
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Aug 2023 02:01:19 -0700 (PDT)
+        Mon, 14 Aug 2023 05:01:32 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2056.outbound.protection.outlook.com [40.107.220.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBFF2172E
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Aug 2023 02:01:16 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=daQAjaBUUbJzeF1hN67MjyQHUGXBot5zVMacKMWsu9r2y3Q1X0uWUpBMcNmAlIlBtiZ450AibOIw24lFIjv4LQpEFQk8rf0cAOD8i/qU9c+6nDHEZgjShlv2QEbHGPQXe94k4vfENnI5oVxMyq7PPvbEBWu/tuDLyvaKT2X66pZcgjEgLvJZb/+Jn0mmARIJ1QkDG6R0+ZXVc6Cxt8bCl7jVeV4/7xDdg3kRN44Njd+iFmXLDKRXfQK9uenb+vHWz1SH4d1HsSCiyn7MyByY8DXeo33yNmFW7yUlF54yHDdAgsMzMI/Gn3wgSSgknFeb/FKtN/HxdMJGBm1BItfovQ==
+ b=SU0LV/m7Q9oa1H1pEJPw3IsOuOj7mPrUqmnrsjptdSha3j5t6OQXxKOugeyzoDgqi3tZbLFOt7ZN7+9NY9t25dAIQENAeD92jtg4yNssEsPFMNhlJabKL5J6A+V8ZTw31Epf9kyXRV8cEGciDf5Revg8Bp6M3GJgiA6O1sY3ZF4rTF2GLdyoAuJBAj6VTSx/yV755qUeP8UD7OGHvQAbQdWscmxnZKiF0ExssUEPv7yhUBil7PbsnyITC6laJTx4Yhg1XPub1YGzsDUDjAgwmf+0gKijak79KYvOuruPJpm9tg5Vpw9mTyp8xNzsAAkdR4+uEsF4LZYEmHDnlNSoag==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WKup1nM2q52phjb/Qt2JjZwPFQ1LEG69kUy89XCx4LY=;
- b=W3DKrmKqvvZcTvdoMNMUo4yPd7dpED4MpsMgxXTm5VTLd8z65e5QhgIPc2PagycLpOpx18wQ3vr8fgNSmIn5+4gtgoLnUyYKOxHyKjHcWwzqSpl8SSV43c0U/2Xlh4mS/Uz472gbPuJB21ywhT2IPvoNr41xod4dO2pJ2MYnBUy43nIsw0Maw5c7uVfQ9b+JD19K/z8C4dp+WDJRzRpU+TBono9UTUDwRYwDvDhGqJWP4+z0vl4GPx9CtbcDaY1AwwRNFMFeIUChTfSrW34f+E3K3J5lJruEiHhDSunxUqrsQupvsrGNyhAhzvK3lKuUdUflPL3x0ZhbEBHV993R2A==
+ bh=/5lkbwuXaKYhnHRx76HIGr0lMKCPiw3Uu3qMe14L4FQ=;
+ b=ALwGWUBGYxoSXIjKEDMD/OsvyvcB8MFui2vfv4jsyPcDe+o5TAts1GEpU1GuB3GpJ+B6oRgkW10oCtYVqjNU+EuspwNlq6vxqGCyBrz4ZdMSJvRdNBPWOJZ4CSsrjamU16NCNGFUNYLISccMibUSrsMQvKoYccSX4I0IUjkk2mL1wpSYTfCv1iuugw9DIWVo8zs7ByOM7LSpT4YSxglTpPRdyuW6UuA7CDViKo0hHX6Yx1wa2WuRsfK4O4SDjhTMEcE/RBSRhtKlmzrzcnAGs8zntDmIvVl5LXKyKnQKPCPQzqeiWDeHN0Ot3S+YLaFd27Q8k0MOjQFWUh6Pq5U4XQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ 216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WKup1nM2q52phjb/Qt2JjZwPFQ1LEG69kUy89XCx4LY=;
- b=MDYy+CkkNojHvwOHtvPxkODVG/wwSkWfFwze7i1LPXFTSKAhb5PGjchvhhoT37eqQiGlUjuiBvo9tSHSj8UofuS4t901tOQvO8GzPuOeHuTKchJgjZqmOdI0GBju2Hzk9Zfkj+REeUHYb65Zr1HfkRXD6WBSWQ9Vjw3cGf0fMLtuIr4a5IXiZ0ikyhOzA0GLWOd6DzBXdnFZIUpO3Y5A+J4lXrn7TBwxYwYCUC+n9cSA7IYsXPC1g/Ue1ZPynsQd0fcNqGHw4qA5Zk/jDcoqsq5MEfnEKobnpiZc+XEZDcJhJm9xagZJAt9Mzk5ZJ/yg+6qcoAsYYIkzGwK/XTBbAA==
-Received: from CYXPR02CA0067.namprd02.prod.outlook.com (2603:10b6:930:cd::18)
- by DS0PR12MB6630.namprd12.prod.outlook.com (2603:10b6:8:d2::22) with
+ bh=/5lkbwuXaKYhnHRx76HIGr0lMKCPiw3Uu3qMe14L4FQ=;
+ b=mgPSNpEZoZmYwE5wwvCWXgZ3uvExnjonXwEsFabAbD9KmsPbxxCktqlbycixuC/cGFgBp0A5PVyyJtuHv9hfRTkaOodnSeji+7ZITovNaEZYmTniS25m7pRk7DYHe8Ed75bGd1/MRuV7xgeRdkXZdHMzJf0zev511z55LEO6dtP+mJtliIeq7nVp04CQCUfXz1P2wAPyIRlds6fYLASLypBd8v0j4JXmJuBUONIYqdqpO46v0R2XcxXfowyQMjbXQotY3zXQYzmmrBBSrZzi+3f/J6A+48rXCb44CFEFSZMHFF4u8wqefzdR84/HetBwob5JcWG/ZdsBHBQyBFmbVg==
+Received: from BYAPR06CA0006.namprd06.prod.outlook.com (2603:10b6:a03:d4::19)
+ by DS0PR12MB8248.namprd12.prod.outlook.com (2603:10b6:8:f3::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.24; Mon, 14 Aug
- 2023 08:59:44 +0000
-Received: from CY4PEPF0000EDD6.namprd03.prod.outlook.com
- (2603:10b6:930:cd:cafe::10) by CYXPR02CA0067.outlook.office365.com
- (2603:10b6:930:cd::18) with Microsoft SMTP Server (version=TLS1_2,
+ 2023 09:01:15 +0000
+Received: from CO1PEPF000042A8.namprd03.prod.outlook.com
+ (2603:10b6:a03:d4:cafe::92) by BYAPR06CA0006.outlook.office365.com
+ (2603:10b6:a03:d4::19) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.33 via Frontend
- Transport; Mon, 14 Aug 2023 08:59:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ Transport; Mon, 14 Aug 2023 09:01:14 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CY4PEPF0000EDD6.mail.protection.outlook.com (10.167.241.210) with Microsoft
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CO1PEPF000042A8.mail.protection.outlook.com (10.167.243.37) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6699.12 via Frontend Transport; Mon, 14 Aug 2023 08:59:43 +0000
+ 15.20.6699.12 via Frontend Transport; Mon, 14 Aug 2023 09:01:14 +0000
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Mon, 14 Aug 2023
- 01:59:30 -0700
+ 02:01:04 -0700
 Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.230.37) by
  rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.37; Mon, 14 Aug 2023 01:59:28 -0700
+ 15.2.986.37; Mon, 14 Aug 2023 02:01:03 -0700
 From:   Vadim Pasternak <vadimp@nvidia.com>
 To:     <hdegoede@redhat.com>
 CC:     <platform-driver-x86@vger.kernel.org>,
         Vadim Pasternak <vadimp@nvidia.com>
-Subject: [PATCH platform-next 00/16] Add new features and amendments for Nvidia systems
-Date:   Mon, 14 Aug 2023 08:58:54 +0000
-Message-ID: <20230814085910.56069-1-vadimp@nvidia.com>
+Subject: [PATCH platform-next 05/16] platform: mellanox: mlx-platform: Add reset cause attribute
+Date:   Mon, 14 Aug 2023 08:58:59 +0000
+Message-ID: <20230814085910.56069-6-vadimp@nvidia.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20230814085910.56069-1-vadimp@nvidia.com>
+References: <20230814085910.56069-1-vadimp@nvidia.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -76,85 +78,54 @@ X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
  rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD6:EE_|DS0PR12MB6630:EE_
-X-MS-Office365-Filtering-Correlation-Id: 49de9dd5-b873-4a0f-5416-08db9ca4cd8f
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042A8:EE_|DS0PR12MB8248:EE_
+X-MS-Office365-Filtering-Correlation-Id: 064e304b-c836-4a72-4dd4-08db9ca50382
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vKl/pXdLEHQokPdM9Cl5QgOTX5V9JrZU7gq+T+sb1Z95/1ZswKjm220fOdrjCeeH2KBmecomBJnTvF45KzNstLolWE988x9N6Kz3ZFStvlVuumreripxOap19/Dw3CWtwcdwQHXONhVmX1BOlU6iWE8K9wV+x0HLZSc9YJHhawOgDCpMdZKjj0XsCaxHYualMvsykTuaJUW6S4pMUKKFaum18imsCjmD29qDAtahQ47J9OvUNowEpLTdjjYftnzHNrYcWTc9smIilRNTruT1srBwVbBkahMB8Bp8MiDOt6JaAIPtsDbOtJ9YXpI83e4rEXdMtt/WVxKat5NVUz5GS7y26cfzpo8pO2/n3XIorliMiHSHABhJqYCNhw7Xih+aqbhH9p+gNcVJrHqw6wjfzP5CvHnwkx8JK5vPOvcZ881F6mbL4fdMuzxs6HXV5UHdZbksJ+FQ0+qYjJRFw9kI121v6hpAbkuEtqIdKho3GUONMglrRmopTNp8v+uj1gOLq5qvayDtVLSMsicGk2uA/Yi9VJVX5niHgB7FvvoFfJvBqVl4cFvNphg1y3Bkzulk5/tVeSzhxhXzL2A1Zhy3nNtGpurMpv8Wi3xbauH8nxy17b1npR4RxPEEtHZU2rR8Z2iMCjUa4cBbY9Yg+/VYYDWpzNO0pHzMgjIudUbda6kDInZ/nGZAmdp9jO5T+T24WDd6HcX+VUJQxqe3T4YmVnFnTy5tXuY5ZTRPGwoHPwVAYfrpsVy9QInItX1Gd8Z5
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(396003)(346002)(39860400002)(376002)(136003)(451199021)(82310400008)(186006)(1800799006)(36840700001)(40470700004)(46966006)(40460700003)(6666004)(70206006)(70586007)(478600001)(47076005)(83380400001)(36860700001)(16526019)(36756003)(86362001)(2906002)(40480700001)(426003)(1076003)(107886003)(26005)(2616005)(336012)(82740400003)(356005)(7636003)(316002)(4326008)(8676002)(6916009)(54906003)(5660300002)(8936002)(41300700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: nijBI1LBoYAQR6J9lNBh0s3yyTgm5CpvyIvwK6mWe1QSBEtybgp+haW4xAecvRxI0qiATfOaSOwg4nkiQKVYtVb13whI1rp40ZfvPEwRckyQ1O4mLcLv4c7JaYyWZ9MKa1zQWnJHdF/sH06QSoVe+u53r2190F7zjNf1oQ/X/UC20JPMdLnyrDRgtBatgYt3YvDGnxBgZ6rE3TSKeOYrlFlpXLFvtYHz3U79w5uloMbu+WhVAn1GyXLJjcDSsThw5DCYONOjPeNBD2Rft6hta8MFU1y2npqa8MSaGB/WGxUyJBosfQL8VaN5MTRGAYBlq2jFi/9w9ZY+R3MNToPltXGSJsFr2rv5t78lTva0X6WqqUf74jyUK0YszlnlqzrU5inALtgEPw71jQsmuqIzyca+SWYhlhQPgE6DjCpbsMDsoqLxbfBVbz70oZSi5a+E+BC7LMzWIseICX62XefGCF83D7ma8S1iEFB8rZyicEsNv4gn3dld978LDWb0n9viZM9GYqh/2b9y1Re+o1LqI6KXdYdkLIuPDqdiXwdPMhXkMWHo0KaBkybvX5uvTJ9uXEx6bXJV2T3KyVS9evjO6MUqrVTxRZXtGYCcbvRAOVipJvSkPHpFr7s/7iD3d+BXBsFrg22LAh9zYoDaJFMV0x1mXS9b2Any31vluWHfQ4FU/jy/Qh/pI986gigSGiTz1nmegFSSDPT5X+07BB3/KJH80++edLq0f8z0v3qqN13+Y7cqxm06Lzn3Q95mQfHR
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(346002)(396003)(376002)(1800799006)(186006)(82310400008)(451199021)(40470700004)(36840700001)(46966006)(6666004)(36756003)(356005)(7636003)(82740400003)(83380400001)(47076005)(36860700001)(86362001)(26005)(1076003)(107886003)(2906002)(4744005)(54906003)(40480700001)(426003)(2616005)(16526019)(336012)(478600001)(8676002)(41300700001)(8936002)(70206006)(5660300002)(40460700003)(70586007)(6916009)(316002)(4326008);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2023 08:59:43.8942
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2023 09:01:14.4527
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49de9dd5-b873-4a0f-5416-08db9ca4cd8f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 064e304b-c836-4a72-4dd4-08db9ca50382
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000EDD6.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000042A8.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6630
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8248
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The patch set:
-- Provides New system attributes for monitoring.
-- Adds system reboot callback to perform system specific operations.
-- Adds support for ACPI based initialization flow.
-- Adds support for FPGA device connected through PCIe bus.
-- Adds additional logic for hotplug events handling.
-- Contains some amendments and cosmetic changes.
+Extend IO registers description for some system types with reset cause
+attribute "reset_swb_dc_dc_pwr_fail" to indicate reset caused by switch
+board DC-DC power failure.
 
-The patch set includes:
-Patches #1 - #3, #5: add new attributes for monitoring.
-Patch #4: sets hotplug event action for health and power signals.
-Patch #6: adds CPLD versioning registers for systems equipped with five
-	  CPLD devices.
-Patch #7: modifies power off callback.
-Patch #8: cosmetic changes - fixes misspelling.
-Patch #9: provides system reboot callback through system reboot
-	  notifier.
-Patch #10: prepares driver to allow probing through ACPI hooks along
-	   with probing through DMI hooks.
-Patch #11: adds ACPI match hook for initialization flow.
-Patch #12: adds support for getting system interrupt line from ACPI
-	   table.
-Patch #13: adds initial support for programming logic device connected
-	   through PCIe.
-Patch #14: Extends condition for notification callback processing.
-Patch #15: defines the exact i2c bus of fans on the SN2201 system.
-Patch #16: Documents new attributes.
+Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
+Reviewed-by: Michael Shych <michaelsh@nvidia.com>
+---
+ drivers/platform/x86/mlx-platform.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Michael Shych (1):
-  platform: mellanox: nvsw-sn2201: change fans i2c busses.
-
-Vadim Pasternak (15):
-  platform: mellanox: Add new attributes
-  platform: mellanox: Add field upgrade capability register
-  platform: mellanox: Modify reset causes description
-  platform: mellanox: mlx-platform: Modify health and power hotplug
-    action
-  platform: mellanox: mlx-platform: Add reset cause attribute
-  platform: mellanox: mlx-platform: add support for additional CPLD
-  platform: mellanox: mlx-platform: Modify power off callback
-  platform: mellanox: Cosmetic changes
-  platform: mellanox: mlx-platform: Add reset callback
-  platform: mellanox: mlx-platform: Prepare driver to allow probing
-    through ACPI infrastructure
-  platform: mellanox: mlx-platform: Introduce ACPI init flow
-  platform: mellanox: mlx-platform: Get interrupt line through ACPI
-  platform: mellanox: Add initial support for PCIe based programming
-    logic device
-  platform/mellanox: mlxreg-hotplug: Extend condition for notification
-    callback processing
-  Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
-
- .../ABI/stable/sysfs-driver-mlxreg-io         |  42 ++
- drivers/platform/mellanox/mlxreg-hotplug.c    |   2 +-
- drivers/platform/mellanox/nvsw-sn2201.c       |  12 +-
- drivers/platform/x86/mlx-platform.c           | 375 ++++++++++++++++--
- 4 files changed, 382 insertions(+), 49 deletions(-)
-
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 648b27eff0b0..8e07ed3dc552 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -3558,6 +3558,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
+ 		.mask = GENMASK(7, 0) & ~BIT(2),
+ 		.mode = 0444,
+ 	},
++	{
++		.label = "reset_swb_dc_dc_pwr_fail",
++		.reg = MLXPLAT_CPLD_LPC_REG_RESET_CAUSE_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(3),
++		.mode = 0444,
++	},
+ 	{
+ 		.label = "reset_from_asic",
+ 		.reg = MLXPLAT_CPLD_LPC_REG_RESET_CAUSE_OFFSET,
 -- 
 2.20.1
 
