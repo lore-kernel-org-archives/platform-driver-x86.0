@@ -2,132 +2,152 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9102C41513
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Aug 2023 07:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3CFC41513
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Aug 2023 08:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233924AbjHNHlB (ORCPT
+        id S233291AbjHNIfT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Aug 2023 03:41:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51230 "EHLO
+        Mon, 14 Aug 2023 04:35:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234198AbjHNHke (ORCPT
+        with ESMTP id S234064AbjHNIew (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Aug 2023 03:40:34 -0400
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD815E73;
-        Mon, 14 Aug 2023 00:40:30 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8CB125C0125;
-        Mon, 14 Aug 2023 03:40:27 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Mon, 14 Aug 2023 03:40:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
-        1691998827; x=1692085227; bh=zhIr+YFny3Ax+nBYjcGNtxMTlKdI2p4qsam
-        OFHm/fmU=; b=lQyzt8ZLnsC5Y4UD4rcO9dWLQemDrz7il2Mxuh11MQmaHw+tEBa
-        WZDt4/Dez0EgliHQKAHWxE4olKashOAKJ6eUkT6FdeyTLJECyYPyhtI7i4Gqe5nF
-        hXE6HrnSoZ6cNhxVj0CHKKmbmxhXFP2ByD0RE+1S1kRlkWJJZqH9l30gc508ss8m
-        Fg1u3TpiwcMJJTDRRJr0uQBmB0QKwNWirPjXPTrv+Z3XSDNBykO6ibnWw6zyMfz4
-        7h0n5DQtmxjoUKRmRBuZcbHmWJz/yrIUe0B38slYIg2GDnRq3r3t1G+84c91JRXI
-        1sLrN+lAiojvZUzO0Ry+J6LnON2gDb4OI4g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-        1691998827; x=1692085227; bh=zhIr+YFny3Ax+nBYjcGNtxMTlKdI2p4qsam
-        OFHm/fmU=; b=ocFr0qDmiS9E5/sOvsP5cpWIFi/jWAZeosdutO/nXN7USaZsaWk
-        y58ZvbAPa3S7o+UGyrYhowIRb1sAuz/9U+GsjxUJQAyE/XayHiVEvwJwgnVvEmQe
-        k4FTPfXsOXc+nz+Xe2sNy0jtI2dz40sA7SfVHT84lGO/8bNHR9L4vZ/9gyp21Xsp
-        2ZKzxntQsMuRqJ1s6VUUbASKVBdXE42/CG5RiftQajbPvvPg5q5ofhTYxqlTmL/s
-        WTIoamvXGGQwqbbhr6ON10dpRo291lnWNwmp8/tZ5NaKykQGuzYb+KZlwNxg3uOA
-        929mGr7RtvjAA9TdObEckQhGXE38FFv5J9w==
-X-ME-Sender: <xms:a9rZZJxVYOZsaqZENcyzopD3CtKe5tFkIQUZg3rPO6d2SA7gluVCeg>
-    <xme:a9rZZJS3tB-x7dcIKYmjO4rPBmWW5L3Ywr495ocjCW0xbx-Wy2KzdFX7nHBuTyuD1
-    jsnc75lyCZWQgQrbGE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddtfedguddvfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedf
-    tehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrf
-    grthhtvghrnhepfffhvdejieelteeljeekgeegieevheelueehieehkeehgeekhfdtleek
-    teevtefgnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:a9rZZDV6sWgYeiJIG9l0H429IJUdAOX6rpdnSlDQnxUlYBUaqOP3jg>
-    <xmx:a9rZZLgSHOuGLrTQOY2l4NjhImeSCbZbevftVnV5RGOhsPFjsxBNDg>
-    <xmx:a9rZZLAMqWGDYsiYycxVcCVfogs40BAJLvSqK8N1YcTw9K_df-yVRw>
-    <xmx:a9rZZLzDpj7cOzLpPrQRj3-TU_ZNHS5nYbeyG41sbHaf5PlCLw4-tg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id E93C5B60089; Mon, 14 Aug 2023 03:40:26 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
-Mime-Version: 1.0
-Message-Id: <075ff937-645e-41fe-87cd-0fa878dd6408@app.fastmail.com>
-In-Reply-To: <7aa516e1.1dfc.189f22149f6.Coremail.xingtong_wu@163.com>
-References: <20230811130948.2211800-1-arnd@kernel.org>
- <97764bad-7091-e9ed-6f49-d31861fc622f@linux.intel.com>
- <ef7d94a4-9f65-47fb-906a-4fed4480d020@app.fastmail.com>
- <69fbdb7bb4d048bc9c5eb756bbf87f56@siemens.com>
- <7aa516e1.1dfc.189f22149f6.Coremail.xingtong_wu@163.com>
-Date:   Mon, 14 Aug 2023 09:40:04 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "xingtong.wu" <xingtong_wu@163.com>
-Cc:     "xingtong.wu" <xingtong.wu@siemens.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        "Arnd Bergmann" <arnd@kernel.org>,
-        "Hans de Goede" <hdegoede@redhat.com>,
-        "Mark Gross" <markgross@kernel.org>,
-        "Nathan Chancellor" <nathan@kernel.org>,
-        "Nick Desaulniers" <ndesaulniers@google.com>,
-        "Tom Rix" <trix@redhat.com>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Lee Jones" <lee@kernel.org>, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        gerd.haeussler.ext@siemens.com, tobias.schaffner@siemens.com
-Subject: Re: FW: [PATCH] platform/x86/siemens: simatic-ipc: fix nonsensical condition
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Mon, 14 Aug 2023 04:34:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73E0FBF
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Aug 2023 01:34:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1692002049;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RgXFFW+V5FTk3EF/2a/DSCETIneRMJrqKo+yjAx/Zs8=;
+        b=cu/DgPjCI3UcR5wg8B0eriqp/aD0otvPfVFiXvWtQwGnrFrnGi+tO9jZ7zfrYRNs0LNZgZ
+        cGrmEMyrFqHI0Kr8By3RDYwvS8ypSRwrhk3m8c9bLg3x1ze0kAAYL4b1J1ygMyoNDWismd
+        qsL4IStxF6HUxdURUq4xm28og6OBe7I=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-686-q_eciPW4PouGt3Q8_eEY8g-1; Mon, 14 Aug 2023 04:34:08 -0400
+X-MC-Unique: q_eciPW4PouGt3Q8_eEY8g-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-99c0bd2ca23so245857966b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Aug 2023 01:34:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692002047; x=1692606847;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RgXFFW+V5FTk3EF/2a/DSCETIneRMJrqKo+yjAx/Zs8=;
+        b=NjbYnzwxAccf2QtPVtyH1r6+irR2+IouKp4G+qNamKcCA5ZVxLuPnkeCkffJy+vyjc
+         LvqM5sK5hGGJZ4tCsTXzQ0qBa0EhMjgsBdh+5d4TTZR0vo64INJNwl2hrSaRZEpkPZnM
+         /zfFKwfY0J9zrYCR9KIVFgr5+5TsFqoVLyaTYBfS7wA9zOyy/QI8W8KVQ5walthXT6Uh
+         9BT20Yai2UvVpqg5kelpQDcIk9RYi2SaBnEzxFjv6n40qR11ru3YPC6u1fi11NPP2PPx
+         vbQmZvTMPWsPu9dVd1wsmtxQgPcL2rZWlTCVietVHoBgpjM1wUr6tChF644Lkvp9uAtY
+         1ZCA==
+X-Gm-Message-State: AOJu0YzLcY4iwZ9wBhHbCm/7KR+lV+HoiW48gtfON2GMwbmlLYivz1nj
+        NbF7mWPEgXc73nUAUH4hZddeI+q8Gj8VS5vUYw/p8tEw9IFX9q/kGV1joggFnUo6PVA3YVIKx29
+        UTDKow7e7gHu+PHkGy4YDofK+PJy205F6dw==
+X-Received: by 2002:a17:907:7608:b0:99c:180a:ea61 with SMTP id jx8-20020a170907760800b0099c180aea61mr6625100ejc.32.1692002047131;
+        Mon, 14 Aug 2023 01:34:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFfL8E6nRn9oKZz3TvrEP1iFjy7/Sw0a6a81AvTaKtEKUsy7RECnJhv7Kt6XCM66ig2D9GMbw==
+X-Received: by 2002:a17:907:7608:b0:99c:180a:ea61 with SMTP id jx8-20020a170907760800b0099c180aea61mr6625092ejc.32.1692002046875;
+        Mon, 14 Aug 2023 01:34:06 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id gf17-20020a170906e21100b00992e14af9c3sm5470076ejb.143.2023.08.14.01.34.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Aug 2023 01:34:06 -0700 (PDT)
+Message-ID: <cf05f66b-c74e-79b8-f2ec-a41a2c7c5ead@redhat.com>
+Date:   Mon, 14 Aug 2023 10:34:05 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] MAINTAINERS: Add entries for Siemens IPC modules
+Content-Language: en-US, nl
+To:     Gerd Haeussler <haeussler.gerd@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        Tobias Schaffner <tobias.schaffner@siemens.com>,
+        Xing Tong Wu <xingtong.wu@siemens.com>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+References: <20230814073114.2885-1-haeussler.gerd@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230814073114.2885-1-haeussler.gerd@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Aug 14, 2023, at 05:40, xingtong.wu wrote:
->>From: Arnd Bergmann <arnd@arndb.de>=20
->
->>Sent: Friday, August 11, 2023 11:02 PM
->>
->>Ok, I see. I missed those as there is hasn't been a new linux-next in =
-a few days.
->>
->>I suppose this one is also fixed then?
->>
->>WARNING: unmet direct dependencies detected for P2SB
->>  Depends on [n]: PCI [=3Dn] && X86 [=3Dy]
->>  Selected by [m]:
->>  - SIEMENS_SIMATIC_IPC_WDT [=3Dm] && WATCHDOG [=3Dy] && SIEMENS_SIMAT=
-IC_IPC [=3Dy]
->>drivers/platform/x86/p2sb.c:68:9: error: call to undeclared function '=
-pci_scan_single_device'; ISO C99 and later do not support implicit funct=
-ion declarations [-Wimplicit-function-declaration]
->
-> I=E2=80=99m pretty sure your .config file is error to compile the kern=
-el,
-> you must have changed the .config file manually, and there will be no
-> possibility that option SIEMENS_SIMATIC_IPC is [y] while PCI is [n].
-> reason:
-> https://elixir.bootlin.com/linux/v6.5-rc6/source/drivers/platform/x86/=
-Kconfig#L1079
->
-> if the PCI option is [n], the "p2sb.c" should never compile pass.
->
-> I suggest you make menuconfig to build kernel and check your .config
-> carefully.
+Hi,
 
-It was broken in linux-next by commit b72da71ce24b0 ("platform/x86:
-simatic-ipc: drop PCI runtime depends and header"), I sent a fix now.
+On 8/14/23 09:31, Gerd Haeussler wrote:
+> From: Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+> 
+> There are different IPC driver modules in the kernel that are actively
+> maintained by Siemens but not yet listed in the MAINTAINERS file.
+> Add the missing entries.
+> 
+> Signed-off-by: Gerd Haeussler <gerd.haeussler.ext@siemens.com>
 
-    Arnd
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+
+> ---
+>  MAINTAINERS | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0f966f05fb0d..6ca5564a4f8c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -19402,6 +19402,32 @@ F:	drivers/media/mmc/siano/
+>  F:	drivers/media/usb/siano/
+>  F:	drivers/media/usb/siano/
+>  
+> +SIEMENS IPC LED DRIVERS
+> +M:	Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+> +M:	Xing Tong Wu <xingtong.wu@siemens.com>
+> +M:	Tobias Schaffner <tobias.schaffner@siemens.com>
+> +L:	linux-leds@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/leds/simple/
+> +
+> +SIEMENS IPC PLATFORM DRIVERS
+> +M:	Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+> +M:	Xing Tong Wu <xingtong.wu@siemens.com>
+> +M:	Tobias Schaffner <tobias.schaffner@siemens.com>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/platform/x86/siemens/
+> +F:	include/linux/platform_data/x86/simatic-ipc-base.h
+> +F:	include/linux/platform_data/x86/simatic-ipc.h
+> +
+> +SIEMENS IPC WATCHDOG DRIVERS
+> +M:	Gerd Haeussler <gerd.haeussler.ext@siemens.com>
+> +M:	Xing Tong Wu <xingtong.wu@siemens.com>
+> +M:	Tobias Schaffner <tobias.schaffner@siemens.com>
+> +L:	linux-watchdog@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/watchdog/simatic-ipc-wdt.c
+> +
+>  SIFIVE DRIVERS
+>  M:	Palmer Dabbelt <palmer@dabbelt.com>
+>  M:	Paul Walmsley <paul.walmsley@sifive.com>
+
