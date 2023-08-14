@@ -2,71 +2,71 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB82C001B0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBACDC04A94
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Aug 2023 09:02:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234036AbjHNJCH (ORCPT
+        id S235516AbjHNJCL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Aug 2023 05:02:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48100 "EHLO
+        Mon, 14 Aug 2023 05:02:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235523AbjHNJBs (ORCPT
+        with ESMTP id S235741AbjHNJB6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Aug 2023 05:01:48 -0400
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on20601.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e8d::601])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB791199D
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Aug 2023 02:01:25 -0700 (PDT)
+        Mon, 14 Aug 2023 05:01:58 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2085.outbound.protection.outlook.com [40.107.92.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B97171B
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Aug 2023 02:01:35 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V6YybHY9Zh9wSXk9I6KWWB7TjJT7Hjass5uIg1w5QHYO0Ln/JZTdWBRqAf7W+gSmABP5ioPi5jhKHZ/H/Dxq03N8FRi0j+cPd6p3054SCL9/w15rBYBFucVilG+W72OzI25ftvfMMqNMsqYcsOk0B7k9GYL4Jjfk2LzlkMqPiI/xITGfo4z95CQEI/Eo+OiKq8AW/O561hcKeDeuEa3UwFaC0Yon0gd+C4i3oL4dSS14KfzKhDqgnDGh0F9zYAJ10G8JCfgwuO6roHdfPV7AcgsCKCe5fZymMAMfChOhA4CVwsjThOaJMQiTswHPVHLp9NSy0j47N5/Ay7Rol4KQ1w==
+ b=JO8EPSQfLKe0Uq1ZuwWIALmZt7Pig9q5VKnGK1GP79GN256gWbyTr7rrU1l0QY5WRUUEHREd2Dn69PDMTSkKCxNPXwQQgSIQe5FVrvk9LuHp+0EOGLibcT0O6NaGRVPzCxJeOZob90fLgQIV0D+hmsSuLqalMFfZVTFZAzpk/9MxnvKeGt97XlR5b3wrq0uOyTI6BEyi/E926623QRp6WeJl+ZA1GWhoxoVuu5XHbSE3O838I7hV7OkYZm3OcNkuCbI3cVg6Kbu6x0jkJhycMjlzDvWeQ/0tOsOudLHy+E43pE9wbEoyriNyJ7G8kDjYOK+hxIvKbRgSJCE6xgk31g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sj/48k7xmk1m/uzjsMFaYjUeKRCSxSITBMelJkeNCBg=;
- b=F1e2vQmXNmgw0MxjgQwviJrVZrsCzg/KvwrQtK85hnI9D6dPNYYHZz94ZVhK17xIeiRtbChwj5L+6qaf65Fkd6iB8FsFLMe6dqZVvBPtnTuhAI4ZyxTSLH+/ju5ZOotMz5+HQy8QbwvsYKwRnP+LC6R2iCmVuMpoRqH/ePUebdubSLj02m54/92fYtM2GeelSt+1kE6+k25NErDnJaWBuvr5JoSWktZbDvOz72VbvuuvFekkP4Z99h3pvI0llBeWkC5owVksKkU7TYQZmHB2fsctEB9NjV48JbGH2OHp4vOAADmsmCkcisifaSwBVQX99aHMcMZR8O3VIoLs8ZISNw==
+ bh=kGZsqncu6h51vEmJbmlJgNA4y6AnXVWWChYo3Cws2sc=;
+ b=XWbL9di9jPAgQEze4TkXEMT5eOJ32w4ZPb1lxh8F4LrqxLvkEOElIbHl+Dl56kLkpAzb9v1Cg1rqZZ73OwrjmT1advrs9/MQCDCQ5HsvJbmMkPZ88RB7pCqL5h5XviRWDCxlYh1+ISx8OTAmA831TUPr9CExyzc9+NhOixvo31+h6h1Wh5VVc4kr098WNI2RmxzXo0wZzyKe3++MovT5+ddJ+/KjgqY9hYXcIPl7PA2NysTOWlEZ7tfhG7Wy9pWTGsS47hmcBiRtM0I57e5X19whkvoPivxTp/v6+lzP0XDWhb9BPBwlJbLyJ7DkJ/PSv63tppvFIUAtgEe8oqsqQg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ 216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sj/48k7xmk1m/uzjsMFaYjUeKRCSxSITBMelJkeNCBg=;
- b=rFa/mQBjP7BShIyxm2+2o5jhcHTwz4QkZfnXLgn1bJ8LpFEnXnC0SZLtZ6Uo6Mt7qduev1W4jYg0n8S4lR5GxaRf4f3Z42Hd23uryi5RruaWYbZ3UCCvIPPk462S16dgEqaZdT9CjLakxMVQNsoADkdRdOolgC1AjGwGkFkwfjcfY034Fpl1DkUD7igoxoq+VR1EtIp9tI7KJ7MWe0TxZU5V4OcO5roujKVjSjA53XLSJTjcN0k2VQAM6wh0eVJ16i0SAkUiYzB2QDaP6gjKGKlgkLe9W5W7CbmnR0CgTq2KfCFS2hVtP1+yvv723FVb9ruunTlHMsvPvi3y3xMewg==
-Received: from DM6PR02CA0155.namprd02.prod.outlook.com (2603:10b6:5:332::22)
- by MW6PR12MB8900.namprd12.prod.outlook.com (2603:10b6:303:244::19) with
+ bh=kGZsqncu6h51vEmJbmlJgNA4y6AnXVWWChYo3Cws2sc=;
+ b=ofBUBsbCgQ/Z9uxhPSSu4iwu8HsY7UEryrXunB/QgwK7qr+bLQt3krVdhaHAl7qAw20cE+BjKBnwBaX/c5wM7uz05Fd1kGW8h9PF6qFfbW53ag2cgRqz4/PnyJeyO/WSx8+lb53tAco+GhscNFpzHeXE325lDJnu7314kYwPfD8ZL+yYXh1bTQyeN3mxz9MKBwl4z1gG6vm1FeD5hYxpuOv48ScSV1JuQimDD9L5Xu13h8vOBGwICg2hKYtTwQdedzAWewb8eMfvQD/MsgiyHOARoyTPJnyfx/D8B1qdBRVPbPVOC8Nt2HFpONG7N1TAEhtHll8hmRFU9oU7F6exDA==
+Received: from SJ0PR03CA0357.namprd03.prod.outlook.com (2603:10b6:a03:39c::32)
+ by SA3PR12MB7974.namprd12.prod.outlook.com (2603:10b6:806:307::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.24; Mon, 14 Aug
- 2023 09:01:20 +0000
-Received: from CY4PEPF0000EDD0.namprd03.prod.outlook.com
- (2603:10b6:5:332:cafe::30) by DM6PR02CA0155.outlook.office365.com
- (2603:10b6:5:332::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.26; Mon, 14 Aug
+ 2023 09:01:34 +0000
+Received: from CO1PEPF000042AB.namprd03.prod.outlook.com
+ (2603:10b6:a03:39c:cafe::cc) by SJ0PR03CA0357.outlook.office365.com
+ (2603:10b6:a03:39c::32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.33 via Frontend
- Transport; Mon, 14 Aug 2023 09:01:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ Transport; Mon, 14 Aug 2023 09:01:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CY4PEPF0000EDD0.mail.protection.outlook.com (10.167.241.204) with Microsoft
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CO1PEPF000042AB.mail.protection.outlook.com (10.167.243.40) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6699.12 via Frontend Transport; Mon, 14 Aug 2023 09:01:20 +0000
+ 15.20.6699.12 via Frontend Transport; Mon, 14 Aug 2023 09:01:33 +0000
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Mon, 14 Aug 2023
- 02:01:08 -0700
+ 02:01:16 -0700
 Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.230.37) by
  rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.37; Mon, 14 Aug 2023 02:01:06 -0700
+ 15.2.986.37; Mon, 14 Aug 2023 02:01:15 -0700
 From:   Vadim Pasternak <vadimp@nvidia.com>
 To:     <hdegoede@redhat.com>
 CC:     <platform-driver-x86@vger.kernel.org>,
         Vadim Pasternak <vadimp@nvidia.com>
-Subject: [PATCH platform-next 06/16] platform: mellanox: mlx-platform: add support for additional CPLD
-Date:   Mon, 14 Aug 2023 08:59:00 +0000
-Message-ID: <20230814085910.56069-7-vadimp@nvidia.com>
+Subject: [PATCH platform-next 09/16] platform: mellanox: mlx-platform: Add reset callback
+Date:   Mon, 14 Aug 2023 08:59:03 +0000
+Message-ID: <20230814085910.56069-10-vadimp@nvidia.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20230814085910.56069-1-vadimp@nvidia.com>
 References: <20230814085910.56069-1-vadimp@nvidia.com>
@@ -78,147 +78,170 @@ X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
  rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD0:EE_|MW6PR12MB8900:EE_
-X-MS-Office365-Filtering-Correlation-Id: c5e90d4b-3926-48f2-3e27-08db9ca50718
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042AB:EE_|SA3PR12MB7974:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2ed2e335-5539-49f3-ed31-08db9ca50f07
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: l4WEMWk62ol5ggJeBHiBtK5Qo79wvajiFYG5kDaqi9pyZnWXI9um1vImNSTm5RB/XAuE2KBOdysQLca4+ZFt68zWs+jASTqiWeKfFGeAjc6LFSLrY3F5N1tsGcDcmNg2bOsbmYB24CdrQDIUhlo9GjmPN3SAzJuTQ1J/XnsUNpRGRsbB3t69VComCP29n4lHUjDm3GpA+BUKBJfOYcg9EbCH+Ht7KH37IlR2yL/y6f4YBqGtXtzrb7vG2zI1HUCmVFRqEbGfwyqj2y0TG8Xf9XBXqex0Uscp44AYTeN6L1/pHhxWgzcNKpJCo8MraFGsO0rtwBuBRKmpcWvkRLXt3m/hYx90lUcNt8MAiUVJ/yta8mWTyh/0QqQu03mcCTYw8ZP9svbzIganyMpM/pltmqNrj4L26PA0iXCT4vW79NJaau1IQcRZV39bFQrdMhUHIZNs7htAfesf1cQ0Y3cdgLmahjaZnZ1zAe5bzYYCY6DqTgDAqfX8OjV6ZVVHk9Etfn6WSbXZ6jDzl1ojLxUmy7tqUYPMH9KQ4OgHTLsaE34jwnYQV/lQ+DOQfoqIML3HqpocXPyLt1M+6LXyKlQ8k9mvi29yXdd7iMiLAT7AL0Ir3w83XE4sl0wKda79459Eh1p9twjC073+3fbtDjICGuORR+xFdLLoqFjEYTfTiBwKY4EMsFha9p4Lv8IR55b56/e361NLlfxG62EE8WziyPcoAiQe7/t82YPcnDTNgYElnTNzhZxGX/NU892QsQEy
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(376002)(396003)(39860400002)(82310400008)(1800799006)(186006)(451199021)(40470700004)(46966006)(36840700001)(16526019)(36860700001)(36756003)(1076003)(107886003)(26005)(336012)(54906003)(478600001)(6666004)(426003)(2616005)(47076005)(82740400003)(356005)(7636003)(86362001)(5660300002)(316002)(6916009)(70586007)(41300700001)(70206006)(4326008)(2906002)(40480700001)(40460700003)(8936002)(8676002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: k+4duESRR6WMW8SltV3tlNT4xWucul22tjCJ5wD5ewnS1KyBF5JT6cO3jteLUNy7+7I1eABvwL2uNwDBrS2bcGLS39ABySWeENVI8diq8VE40xLjLrsGAAQEwdAZQWjGHDZHW6TX6gqLs3yM/ufG4h/VCqmNChYhs+8fsOegkZTWQHWE09CGxgUDgJ078lqLrceMikdnR1H78+H4thhLETig/U8DNrm90gBOpH+SMjNB2G9qPyp4iOQTvsSVmYTZXo7rrrVLmDz5zfRiLuURVxViaOouyzZWYHG6+5sm8ZZOzzh7S679V6YPu02tA59ccUuq11hrU+XrtloHdpE05HsXgNX1CKaZCndVHMmaIgXFm3qnOzzhJAhB4s27ORenmrHTG41D0N38Zn7JQT4SmtibTBUAIdJzj5IL3YzU8VjqjVKfhBWHGsw6amuT9Gk+5zPcLNLc6F9kmKp3kHSSSW8OFgLlQTRwWCJNL2luUJaVfprSFVevzfmB0x/p8iBd28dkF5Or6VFHCZ+KLezI4yKVgB3lwhlO9VfgaXweJ+4MreEm4G5yL1fC92Iq2BnrM83/kZDmuXUq3zOlPHURbHKUURfQ+Ss9MteYyg0ok7C6EdWJ4xxh83a45H+PB5o65GLFqmrVIQz90Ex05dQ6gqSeqaazGQTsbXrzWD4p64pZTcqlfFdY4Rm82m3Vd10W4nzz+PuhzFAZ272qBKUqZ29Gf1RMkq2GuwWCLkgx+7LaIocfAwWRZtejDyleWoEm
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(376002)(346002)(396003)(136003)(186006)(1800799006)(451199021)(82310400008)(36840700001)(40470700004)(46966006)(40480700001)(40460700003)(478600001)(7636003)(356005)(82740400003)(6666004)(8936002)(8676002)(4326008)(70206006)(54906003)(6916009)(316002)(41300700001)(70586007)(83380400001)(36860700001)(47076005)(336012)(26005)(16526019)(1076003)(107886003)(426003)(2616005)(86362001)(2906002)(5660300002)(36756003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2023 09:01:20.4217
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2023 09:01:33.7677
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5e90d4b-3926-48f2-3e27-08db9ca50718
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ed2e335-5539-49f3-ed31-08db9ca50f07
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000EDD0.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000042AB.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8900
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7974
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Extend to support 5-th CPLD version, PN and minimal version registers.
+On L1 switches reset should include special actions against CPLD device
+for performing graceful operations.
+For that purpose, special PLATFORM_RESET# signal should be indicated.
 
 Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
 Reviewed-by: Michael Shych <michaelsh@nvidia.com>
 ---
- drivers/platform/x86/mlx-platform.c | 31 +++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/platform/x86/mlx-platform.c | 45 +++++++++++++++++++++++++++--
+ 1 file changed, 43 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 8e07ed3dc552..dce35934cc37 100644
+index 1010064d54e9..b577ce572ab1 100644
 --- a/drivers/platform/x86/mlx-platform.c
 +++ b/drivers/platform/x86/mlx-platform.c
-@@ -95,6 +95,9 @@
- #define MLXPLAT_CPLD_LPC_REG_FAN_OFFSET		0x88
- #define MLXPLAT_CPLD_LPC_REG_FAN_EVENT_OFFSET	0x89
- #define MLXPLAT_CPLD_LPC_REG_FAN_MASK_OFFSET	0x8a
-+#define MLXPLAT_CPLD_LPC_REG_CPLD5_VER_OFFSET	0x8e
-+#define MLXPLAT_CPLD_LPC_REG_CPLD5_PN_OFFSET	0x8f
-+#define MLXPLAT_CPLD_LPC_REG_CPLD5_PN1_OFFSET	0x90
- #define MLXPLAT_CPLD_LPC_REG_EROT_OFFSET	0x91
- #define MLXPLAT_CPLD_LPC_REG_EROT_EVENT_OFFSET	0x92
- #define MLXPLAT_CPLD_LPC_REG_EROT_MASK_OFFSET	0x93
-@@ -129,6 +132,7 @@
- #define MLXPLAT_CPLD_LPC_REG_DBG4_OFFSET	0xb9
- #define MLXPLAT_CPLD_LPC_REG_GP4_RO_OFFSET	0xc2
- #define MLXPLAT_CPLD_LPC_REG_SPI_CHNL_SELECT	0xc3
-+#define MLXPLAT_CPLD_LPC_REG_CPLD5_MVER_OFFSET	0xc4
- #define MLXPLAT_CPLD_LPC_REG_WD_CLEAR_OFFSET	0xc7
- #define MLXPLAT_CPLD_LPC_REG_WD_CLEAR_WP_OFFSET	0xc8
- #define MLXPLAT_CPLD_LPC_REG_WD1_TMR_OFFSET	0xc9
-@@ -3431,6 +3435,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.bit = GENMASK(7, 0),
- 		.mode = 0444,
- 	},
-+	{
-+		.label = "cpld5_version",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD5_VER_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
- 	{
- 		.label = "cpld1_pn",
- 		.reg = MLXPLAT_CPLD_LPC_REG_CPLD1_PN_OFFSET,
-@@ -3459,6 +3469,13 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.mode = 0444,
- 		.regnum = 2,
- 	},
-+	{
-+		.label = "cpld5_pn",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD5_PN_OFFSET,
-+		.bit = GENMASK(15, 0),
-+		.mode = 0444,
-+		.regnum = 2,
-+	},
- 	{
- 		.label = "cpld1_version_min",
- 		.reg = MLXPLAT_CPLD_LPC_REG_CPLD1_MVER_OFFSET,
-@@ -3483,6 +3500,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.bit = GENMASK(7, 0),
- 		.mode = 0444,
- 	},
-+	{
-+		.label = "cpld5_version_min",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CPLD5_MVER_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
- 	{
- 		.label = "asic_reset",
- 		.reg = MLXPLAT_CPLD_LPC_REG_RESET_GP2_OFFSET,
-@@ -5031,6 +5054,7 @@ static bool mlxplat_mlxcpld_readable_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_CPLD2_VER_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD3_VER_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD4_VER_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CPLD5_VER_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD1_PN_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD1_PN1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD2_PN_OFFSET:
-@@ -5039,6 +5063,8 @@ static bool mlxplat_mlxcpld_readable_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_CPLD3_PN1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD4_PN_OFFSET:
+@@ -35,6 +35,7 @@
+ #define MLXPLAT_CPLD_LPC_REG_CPLD3_PN1_OFFSET	0x09
+ #define MLXPLAT_CPLD_LPC_REG_CPLD4_PN_OFFSET	0x0a
+ #define MLXPLAT_CPLD_LPC_REG_CPLD4_PN1_OFFSET	0x0b
++#define MLXPLAT_CPLD_LPC_REG_RESET_GP1_OFFSET	0x17
+ #define MLXPLAT_CPLD_LPC_REG_RESET_GP2_OFFSET	0x19
+ #define MLXPLAT_CPLD_LPC_REG_RESET_GP4_OFFSET	0x1c
+ #define MLXPLAT_CPLD_LPC_REG_RESET_CAUSE_OFFSET	0x1d
+@@ -265,6 +266,7 @@
+ #define MLXPLAT_CPLD_LPC_LC_MASK	GENMASK(7, 0)
+ 
+ #define MLXPLAT_CPLD_HALT_MASK		BIT(3)
++#define MLXPLAT_CPLD_RESET_MASK		0xfe
+ 
+ /* Default I2C parent bus number */
+ #define MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR	1
+@@ -441,6 +443,7 @@ static struct i2c_mux_reg_platform_data mlxplat_default_mux_data[] = {
+ static int mlxplat_max_adap_num;
+ static int mlxplat_mux_num;
+ static struct i2c_mux_reg_platform_data *mlxplat_mux_data;
++static struct notifier_block *mlxplat_reboot_nb;
+ 
+ /* Platform extended mux data */
+ static struct i2c_mux_reg_platform_data mlxplat_extended_mux_data[] = {
+@@ -2361,8 +2364,11 @@ static int
+ mlxplat_mlxcpld_l1_switch_pwr_events_handler(void *handle, enum mlxreg_hotplug_kind kind,
+ 					     u8 action)
+ {
+-	dev_info(&mlxplat_dev->dev, "System shutdown due to short press of power button");
+-	kernel_power_off();
++	if (action) {
++		dev_info(&mlxplat_dev->dev, "System shutdown due to short press of power button");
++		kernel_power_off();
++	}
++
+ 	return 0;
+ }
+ 
+@@ -4957,6 +4963,7 @@ static struct mlxreg_core_platform_data mlxplat_mlxcpld_wd_set_type3[] = {
+ static bool mlxplat_mlxcpld_writeable_reg(struct device *dev, unsigned int reg)
+ {
+ 	switch (reg) {
++	case MLXPLAT_CPLD_LPC_REG_RESET_GP1_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_RESET_GP4_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_LED1_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_LED2_OFFSET:
+@@ -5065,6 +5072,7 @@ static bool mlxplat_mlxcpld_readable_reg(struct device *dev, unsigned int reg)
  	case MLXPLAT_CPLD_LPC_REG_CPLD4_PN1_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CPLD5_PN_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CPLD5_PN1_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_CPLD5_PN_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_CPLD5_PN1_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_RESET_GP1_OFFSET:
  	case MLXPLAT_CPLD_LPC_REG_RESET_GP4_OFFSET:
  	case MLXPLAT_CPLD_LPC_REG_RESET_CAUSE_OFFSET:
  	case MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET:
-@@ -5150,6 +5176,7 @@ static bool mlxplat_mlxcpld_readable_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_CPLD2_MVER_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD3_MVER_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD4_MVER_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CPLD5_MVER_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_PWM1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_PWM2_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_PWM3_OFFSET:
-@@ -5191,6 +5218,7 @@ static bool mlxplat_mlxcpld_volatile_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_CPLD2_VER_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD3_VER_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD4_VER_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CPLD5_VER_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD1_PN_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD1_PN1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD2_PN_OFFSET:
-@@ -5199,6 +5227,8 @@ static bool mlxplat_mlxcpld_volatile_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_CPLD3_PN1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD4_PN_OFFSET:
+@@ -5229,6 +5237,7 @@ static bool mlxplat_mlxcpld_volatile_reg(struct device *dev, unsigned int reg)
  	case MLXPLAT_CPLD_LPC_REG_CPLD4_PN1_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CPLD5_PN_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CPLD5_PN1_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_CPLD5_PN_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_CPLD5_PN1_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_RESET_GP1_OFFSET:
  	case MLXPLAT_CPLD_LPC_REG_RESET_GP4_OFFSET:
  	case MLXPLAT_CPLD_LPC_REG_RESET_CAUSE_OFFSET:
  	case MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET:
-@@ -5302,6 +5332,7 @@ static bool mlxplat_mlxcpld_volatile_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_CPLD2_MVER_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD3_MVER_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_CPLD4_MVER_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CPLD5_MVER_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_PWM1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_PWM2_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_PWM3_OFFSET:
+@@ -5533,11 +5542,33 @@ static struct mlxreg_core_platform_data
+ 	*mlxplat_wd_data[MLXPLAT_CPLD_WD_MAX_DEVS];
+ static const struct regmap_config *mlxplat_regmap_config;
+ 
++/* Platform default reset function */
++static int mlxplat_reboot_notifier(struct notifier_block *nb, unsigned long action, void *unused)
++{
++	struct mlxplat_priv *priv = platform_get_drvdata(mlxplat_dev);
++	u32 regval;
++	int ret;
++
++	ret = regmap_read(priv->regmap, MLXPLAT_CPLD_LPC_REG_RESET_GP1_OFFSET, &regval);
++
++	if (action == SYS_RESTART && !ret && regval & BIT(0))
++		regmap_write(priv->regmap, MLXPLAT_CPLD_LPC_REG_RESET_GP1_OFFSET,
++			     MLXPLAT_CPLD_RESET_MASK);
++
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block mlxplat_reboot_default_nb = {
++	.notifier_call = mlxplat_reboot_notifier,
++};
++
+ /* Platform default poweroff function */
+ static void mlxplat_poweroff(void)
+ {
+ 	struct mlxplat_priv *priv = platform_get_drvdata(mlxplat_dev);
+ 
++	if (mlxplat_reboot_nb)
++		unregister_reboot_notifier(mlxplat_reboot_nb);
+ 	regmap_write(priv->regmap, MLXPLAT_CPLD_LPC_REG_GP1_OFFSET, MLXPLAT_CPLD_HALT_MASK);
+ 	kernel_halt();
+ }
+@@ -5861,6 +5892,7 @@ static int __init mlxplat_dmi_l1_switch_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_i2c = &mlxplat_mlxcpld_i2c_ng_data;
+ 	mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_rack_switch;
+ 	pm_power_off = mlxplat_poweroff;
++	mlxplat_reboot_nb = &mlxplat_reboot_default_nb;
+ 
+ 	return 1;
+ }
+@@ -6410,8 +6442,15 @@ static int __init mlxplat_init(void)
+ 	if (err)
+ 		goto fail_regcache_sync;
+ 
++	if (mlxplat_reboot_nb) {
++		err = register_reboot_notifier(mlxplat_reboot_nb);
++		if (err)
++			goto fail_register_reboot_notifier;
++	}
++
+ 	return 0;
+ 
++fail_register_reboot_notifier:
+ fail_regcache_sync:
+ 	mlxplat_pre_exit(priv);
+ fail_mlxplat_i2c_main_init:
+@@ -6429,6 +6468,8 @@ static void __exit mlxplat_exit(void)
+ 
+ 	if (pm_power_off)
+ 		pm_power_off = NULL;
++	if (mlxplat_reboot_nb)
++		unregister_reboot_notifier(mlxplat_reboot_nb);
+ 	mlxplat_pre_exit(priv);
+ 	mlxplat_i2c_main_exit(priv);
+ 	mlxplat_post_exit();
 -- 
 2.20.1
 
