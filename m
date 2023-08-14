@@ -2,277 +2,133 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66622C001B0
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Aug 2023 14:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36632EB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Aug 2023 17:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229461AbjHNONx (ORCPT
+        id S230311AbjHNRyO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Aug 2023 10:13:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39744 "EHLO
+        Mon, 14 Aug 2023 13:54:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232322AbjHNONa (ORCPT
+        with ESMTP id S231555AbjHNRxv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Aug 2023 10:13:30 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90A96198E
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Aug 2023 07:13:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692022390; x=1723558390;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=NKbwb5L8wx+Ah4pGQ3sz7JqZwrZvsSX7GAiSc6f7WvU=;
-  b=kZlqiicnjcdZpjYHOD+IoB1GOfPLwaEKAaNt5oZcX7oHA8vWIKBMblvD
-   m7GMPjsf4ByZOGt74RKKhafJG2osPxcXJ1EmlapYo0B5Vzgri5b7Y5zHc
-   S8onxMtEPeRyPOoLVqUPZ+EK4KQMQldgMAnNcdRo/Md3R2LTReEfAp7gO
-   vwdVtFJJ1ifLvP8Ae4oo1e4pcV/veClS+sX4rwGznYsHAa3S5WhW25kil
-   KirnZO4FO8pqfT6NerWiISnGX0jjPpWCPZ6F4i0V1irYHlNvsS0c/PIT5
-   XGfVHpt85Q5I8bWA0IwO1Im2kIY9G+HmXo3xbVe7Tfe4ZRbtAXhLhdPBr
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="372040175"
-X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="372040175"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 07:07:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="803471330"
-X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="803471330"
-Received: from lgarello-mobl.ger.corp.intel.com ([10.249.40.121])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 07:07:40 -0700
-Date:   Mon, 14 Aug 2023 17:07:37 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Vadim Pasternak <vadimp@nvidia.com>
-cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH platform-next 13/16] platform: mellanox: Add initial
- support for PCIe based programming logic device
-In-Reply-To: <20230814085910.56069-14-vadimp@nvidia.com>
-Message-ID: <e742d08e-1135-0c4-39cd-5e88ab642833@linux.intel.com>
-References: <20230814085910.56069-1-vadimp@nvidia.com> <20230814085910.56069-14-vadimp@nvidia.com>
+        Mon, 14 Aug 2023 13:53:51 -0400
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2077.outbound.protection.outlook.com [40.107.100.77])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBD7810DE;
+        Mon, 14 Aug 2023 10:53:37 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jcen/iKt5HjEDh39zyot+jZSeVSRkHSfRTWRVRK5GGPTGCfCVgQnWauczxPxGfntVtQO8d12BI36oPUH/ZlZYP2+Xu4TtF07FJ6/BrNaawgMMytVhdF95jUBXzKaD30EpSJ+M1u0bcgtGsFeY1JGsUFUFAQfASL9+nEb4V24H+DwA40zmmknd3Yn3Z2dDbXvVRfUE2Etf/46AefXWc/52y7GwlaWyKC3ytiN6uRZ28kLc4p/68MTIbxERsy8/mZn2c6AT1asewsTpfJV48NlN0y+ovpmAMx0Y9hBNYRtjQ41oIyHN68Z6U6Xk0A63hxtIpaDsXNWZioZDcwqHaMnIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jMN6WhXqUtTc1YiWF0LPPCAGNDnMp7uwKlQ5cu+2LXQ=;
+ b=LvIP6vG2tWEFxxX4C6Jg4L5qdVfrlrjgK+vXvqOPiQX/xkOOPfOvFgKz1WiUM7gAcDyH4nOq5kBYa/4LkukoLqn1i3pt0SHjV7dnpGC1ys9keZsf23oS39Fb2tEiGBYSdChSE0lr2bTdPHLwXstdtECxupuB8y8fbozIYVJnIcYr2XJju+mYdPBGOFiiQ6L7ghnyWrdlM6GDwIflGqjZgiNERyOrvavFlww68VCBymrc+hDsB/IrjvW8VXeoxe1rX/3nin6XaXNdHnRc2KWxI7Z8v5TUNpOgcg1tTUtllYpnoC7+QJzyAbuPXwEh5/NK89lRngH3uAMgtWtbKivNhw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jMN6WhXqUtTc1YiWF0LPPCAGNDnMp7uwKlQ5cu+2LXQ=;
+ b=mRogemFavf2ZuGaul5K+1ixyEtBXuZk93RBdv135rFTsZf4Qinwb5XLE0+9U/k8xzw3bHlDJo5YIgCfN3e/vPyObFjzqwFlf6Q4zYWsIvzzlM6rTKEgHGqbN7hwk4ZsPd/jcSb2cjo/oH6a83M164whADt0crijS0Yvvh6GVqDAy+64NdVoKjmYgj466L2s2I3eprhQaNG8wYR67nf4JYKWsLfaCdE21lOjmagLuRguyc92w35Q1Oab9UWCqvmZPfA5ODb4/3ocd0/J8b6DkYApQ9hmwf9UkwRgusheCgCDFc9NOFg6TFRuxppZcu9rvcvq8BfNY75bU0lW7xfXEDw==
+Received: from SJ0PR13CA0118.namprd13.prod.outlook.com (2603:10b6:a03:2c5::33)
+ by PH7PR12MB8155.namprd12.prod.outlook.com (2603:10b6:510:2b2::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.23; Mon, 14 Aug
+ 2023 17:53:33 +0000
+Received: from CO1PEPF000044F0.namprd05.prod.outlook.com
+ (2603:10b6:a03:2c5:cafe::cc) by SJ0PR13CA0118.outlook.office365.com
+ (2603:10b6:a03:2c5::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.13 via Frontend
+ Transport; Mon, 14 Aug 2023 17:53:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CO1PEPF000044F0.mail.protection.outlook.com (10.167.241.70) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6699.12 via Frontend Transport; Mon, 14 Aug 2023 17:53:33 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Mon, 14 Aug 2023
+ 10:53:17 -0700
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Mon, 14 Aug
+ 2023 10:53:17 -0700
+Received: from vdi.nvidia.com (10.127.8.9) by mail.nvidia.com (10.129.68.7)
+ with Microsoft SMTP Server id 15.2.986.37 via Frontend Transport; Mon, 14 Aug
+ 2023 10:53:15 -0700
+From:   Shiih-Yi Chen <shihyic@nvidia.com>
+To:     <linux-kernel@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Mark Gross" <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        <platform-driver-x86@vger.kernel.org>
+CC:     shihyic <shihyic@nvidia.com>, <davthompson@nvidia.com>,
+        <limings@nvidia.com>
+Subject: [PATCH v1] [v1] platform/mellanox: Fix mlxbf-tmfifo not handling all virtio CONSOLE notifictions
+Date:   Mon, 14 Aug 2023 13:53:13 -0400
+Message-ID: <20230814175313.7101-1-shihyic@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F0:EE_|PH7PR12MB8155:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1abead0e-8e25-4063-f6af-08db9cef60a7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: heWfW+VF4wTNRj8wpyom9ilJACPHFUJIB6Khqn6Q2NzaaBlMwDjWiX7OWQ0qPBAqJhgZau2CdfWt1KnimvHSVeOtRhxi5ED0jSpgXEk7r8eZnDWpwmcBw02eJzL/U83PIcqBuDTqj1DnfJOV82VQ0x7QTWcExPVomjxul+a5DA9uvpslO6wwto41MG+C1qgT2HcaPejoeYyWJjm0TjcTDjJNJ5SLbrE8XUgoH95GlB5NcyZILEnLwFp2pYCVU9k3bA3MDV/75Etnw/j6SyYo2p88NatIPKcAiiPAbT3rFyJt+CGKA1VR0tMOzN5miHIUhCnwX9wBq5ZaNCKwulVEcvDpbHbdvE/hc3DSp24GzVH0HZXRJjbSDtQZ+44wXrxY96nohrfuIZ78Dn2copnamGnMa/OsEEEqYOebgLjvqPC9nZ+c2RvnekEyWrOIbzsKNhMofL+UGltJQxb/I4MHzUEXG3W4TUagKw6mVA19Ro1XZE5tUxo9yVxYHmu0Cz9cDSBxHhy5ubyPH/QwV/2rJ+aJWX3kaVKV55PYxA66dC9gnEhV/ap0wBjIVdIxm3vHXP1PVif3fYNJLTmjdHTc2NZw4LDeyuwlAST3IFzAwaNoVpU3KLw/lqupjZuOxShoSeONtyzL/fF34lPOMrOZspToZd+v7oATAMO0tuwb8OXFI+03FAv8v8FXqM/vcvak7JBytqqgHQQffPGgRW1VFKSYYUd1N+He54CF8H7vsbSbTUbwJS0zj6/aZuVMNhyQ
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(396003)(346002)(376002)(39860400002)(136003)(82310400008)(1800799006)(451199021)(186006)(36840700001)(46966006)(40470700004)(2906002)(4744005)(70586007)(40480700001)(316002)(41300700001)(70206006)(4326008)(40460700003)(5660300002)(8936002)(8676002)(1076003)(336012)(26005)(107886003)(2616005)(426003)(47076005)(36860700001)(36756003)(83380400001)(110136005)(478600001)(54906003)(82740400003)(7696005)(7636003)(356005)(86362001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2023 17:53:33.4075
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1abead0e-8e25-4063-f6af-08db9cef60a7
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000044F0.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8155
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 14 Aug 2023, Vadim Pasternak wrote:
+From: shihyic <shihyic@nvidia.com>
 
-> Extend driver to support logic implemented by FPGA device connected
-> through PCIe bus.
-> 
-> The motivation two support new generation of Nvidia COME module
-> equipped with Lattice LFD2NX-40 FPGA device.
-> 
-> In order to support new Nvidia COME module FPGA device driver
-> initialization flow is modified. In case FPGA device is detected,
-> system resources are to be mapped to this device, otherwise system
-> resources are to be mapped same as it has been done before for Lattice
-> LPC based CPLD.
-> 
-> FPGA device is associated with three PCIe devices:
-> - PCIe-LPC bridge for main register space access.
-> - PCIe-I2C bridge for I2C controller access.
-> - PCIe-JTAG bridge for JTAG access.
-> 
-> Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
-> Reviewed-by: Michael Shych <michaelsh@nvidia.com>
-> ---
->  drivers/platform/x86/mlx-platform.c | 134 +++++++++++++++++++++++++++-
->  1 file changed, 132 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-> index a70b86e60721..d60f7470e208 100644
-> --- a/drivers/platform/x86/mlx-platform.c
-> +++ b/drivers/platform/x86/mlx-platform.c
-> @@ -12,6 +12,7 @@
->  #include <linux/i2c-mux.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
-> +#include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <linux/platform_data/i2c-mux-reg.h>
->  #include <linux/platform_data/mlxreg.h>
-> @@ -330,6 +331,12 @@
->  #define MLXPLAT_I2C_MAIN_BUS_NOTIFIED		0x01
->  #define MLXPLAT_I2C_MAIN_BUS_HANDLE_CREATED	0x02
->  
-> +/* Lattice FPGA PCI configuration */
-> +#define PCI_VENDOR_ID_LATTICE			0x1204
-> +#define PCI_DEVICE_ID_LATTICE_I2C_BRIDGE	0x9c2f
-> +#define PCI_DEVICE_ID_LATTICE_JTAG_BRIDGE	0x9c30
-> +#define PCI_DEVICE_ID_LATTICE_LPC_BRIDGE	0x9c32
-> +
->  /* mlxplat_priv - platform private data
->   * @pdev_i2c - i2c controller platform device
->   * @pdev_mux - array of mux platform devices
-> @@ -361,6 +368,7 @@ struct mlxplat_priv {
->  
->  static struct platform_device *mlxplat_dev;
->  static int mlxplat_i2c_main_complition_notify(void *handle, int id);
-> +static void __iomem *i2c_bridge_addr, *jtag_bridge_addr;
->  
->  /* Regions for LPC I2C controller and LPC base register space */
->  static const struct resource mlxplat_lpc_resources[] = {
-> @@ -5543,6 +5551,9 @@ static struct mlxreg_core_platform_data *mlxplat_fan;
->  static struct mlxreg_core_platform_data
->  	*mlxplat_wd_data[MLXPLAT_CPLD_WD_MAX_DEVS];
->  static const struct regmap_config *mlxplat_regmap_config;
-> +static struct pci_dev *lpc_bridge;
-> +static struct pci_dev *i2c_bridge;
-> +static struct pci_dev *jtag_bridge;
->  
->  /* Platform default reset function */
->  static int mlxplat_reboot_notifier(struct notifier_block *nb, unsigned long action, void *unused)
-> @@ -6171,15 +6182,131 @@ static void mlxplat_lpc_cpld_device_exit(void)
->  {
->  }
->  
-> +static int
-> +mlxplat_pci_fpga_device_init(unsigned int device, const char *res_name, struct pci_dev **pci_bridge,
-> +			     void __iomem **pci_bridge_addr)
-> +{
-> +	void __iomem *pci_mem_addr;
-> +	struct pci_dev *pci_dev;
-> +	int err;
-> +
-> +	pci_dev = pci_get_device(PCI_VENDOR_ID_LATTICE, device, NULL);
-> +	if (!pci_dev)
-> +		return -ENODEV;
-> +
-> +	err = pci_enable_device(pci_dev);
-> +	if (err) {
-> +		dev_err(&pci_dev->dev, "pci_enable_device failed with error %d\n", err);
-> +		goto fail_pci_enable_device;
-> +	}
-> +
-> +	err = pci_request_region(pci_dev, 0, res_name);
-> +	if (err) {
-> +		dev_err(&pci_dev->dev, "pci_request_regions failed with error %d\n", err);
-> +		goto fail_pci_request_regions;
-> +	}
-> +
-> +	err = dma_set_mask_and_coherent(&pci_dev->dev, DMA_BIT_MASK(64));
-> +	if (err) {
-> +		err = dma_set_mask(&pci_dev->dev, DMA_BIT_MASK(32));
-> +		if (err) {
-> +			dev_err(&pci_dev->dev, "dma_set_mask failed with error %d\n", err);
-> +			goto fail_pci_set_dma_mask;
-> +		}
-> +	}
-> +
-> +	pci_set_master(pci_dev);
-> +
-> +	pci_mem_addr = devm_ioremap(&pci_dev->dev, pci_resource_start(pci_dev, 0),
-> +				    pci_resource_len(pci_dev, 0));
-> +	if (!pci_mem_addr) {
-> +		dev_err(&mlxplat_dev->dev, "ioremap failed\n");
-> +		err = -EIO;
-> +		goto fail_ioremap;
-> +	}
-> +
-> +	*pci_bridge = pci_dev;
-> +	*pci_bridge_addr = pci_mem_addr;
-> +
-> +	return 0;
-> +
-> +fail_ioremap:
-> +fail_pci_set_dma_mask:
+rshim console does not show all entries of dmesg.
 
-The problem with using what fails to name labels produces this very 
-problem of duplicated labels. If you'd have a label called 
-release_regions: it wouldn't be necessary.
+Fixed by setting MLXBF_TM_TX_LWM_IRQ for every CONSOLE notification. 
+ 
 
+Signed-off-by: shihyic <shihyic@nvidia.com>
+Review-by: limings@nvidia.com
+
+---
+ drivers/platform/mellanox/mlxbf-tmfifo.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index a79318e90a13..4561b7d42412 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -887,6 +887,8 @@ static bool mlxbf_tmfifo_virtio_notify(struct virtqueue *vq)
+ 			tm_vdev = fifo->vdev[VIRTIO_ID_CONSOLE];
+ 			mlxbf_tmfifo_console_output(tm_vdev, vring);
+ 			spin_unlock_irqrestore(&fifo->spin_lock[0], flags);
++			test_and_set_bit(MLXBF_TM_TX_LWM_IRQ,
++					 &fifo->pend_events);
+ 		} else if (test_and_set_bit(MLXBF_TM_TX_LWM_IRQ,
+ 					    &fifo->pend_events)) {
+ 			return true;
 -- 
- i.
+2.30.1
 
-> +	pci_release_regions(pci_dev);
-> +fail_pci_request_regions:
-> +	pci_disable_device(pci_dev);
-> +fail_pci_enable_device:
-> +	return err;
-> +}
-> +
-> +static void
-> +mlxplat_pci_fpga_device_exit(struct pci_dev *pci_bridge,
-> +			     void __iomem *pci_bridge_addr)
-> +{
-> +	iounmap(pci_bridge_addr);
-> +	pci_release_regions(pci_bridge);
-> +	pci_disable_device(pci_bridge);
-> +}
-> +
-> +static int
-> +mlxplat_pci_fpga_devices_init(struct resource **hotplug_resources,
-> +			      unsigned int *hotplug_resources_size)
-> +{
-> +	int err;
-> +
-> +	err = mlxplat_pci_fpga_device_init(PCI_DEVICE_ID_LATTICE_LPC_BRIDGE,
-> +					   "mlxplat_lpc_bridge", &lpc_bridge,
-> +					   &mlxplat_mlxcpld_regmap_ctx.base);
-> +	if (err)
-> +		goto mlxplat_pci_fpga_device_init_lpc_fail;
-> +
-> +	err = mlxplat_pci_fpga_device_init(PCI_DEVICE_ID_LATTICE_I2C_BRIDGE,
-> +					   "mlxplat_i2c_bridge", &i2c_bridge,
-> +					    &i2c_bridge_addr);
-> +	if (err)
-> +		goto mlxplat_pci_fpga_device_init_i2c_fail;
-> +
-> +	err = mlxplat_pci_fpga_device_init(PCI_DEVICE_ID_LATTICE_JTAG_BRIDGE,
-> +					   "mlxplat_jtag_bridge", &jtag_bridge,
-> +					    &jtag_bridge_addr);
-> +	if (err)
-> +		goto mlxplat_pci_fpga_device_init_jtag_fail;
-> +
-> +	return 0;
-> +
-> +mlxplat_pci_fpga_device_init_jtag_fail:
-> +	mlxplat_pci_fpga_device_exit(i2c_bridge, i2c_bridge_addr);
-> +mlxplat_pci_fpga_device_init_i2c_fail:
-> +	mlxplat_pci_fpga_device_exit(lpc_bridge, mlxplat_mlxcpld_regmap_ctx.base);
-> +mlxplat_pci_fpga_device_init_lpc_fail:
-> +	return err;
-> +}
-> +
-> +static void mlxplat_pci_fpga_devices_exit(void)
-> +{
-> +	mlxplat_pci_fpga_device_exit(jtag_bridge, jtag_bridge_addr);
-> +	mlxplat_pci_fpga_device_exit(i2c_bridge, i2c_bridge_addr);
-> +	mlxplat_pci_fpga_device_exit(lpc_bridge, mlxplat_mlxcpld_regmap_ctx.base);
-> +}
-> +
->  static int
->  mlxplat_pre_init(struct resource **hotplug_resources, unsigned int *hotplug_resources_size)
->  {
-> -	return mlxplat_lpc_cpld_device_init(hotplug_resources, hotplug_resources_size);
-> +	int err;
-> +
-> +	err = mlxplat_pci_fpga_devices_init(hotplug_resources, hotplug_resources_size);
-> +	if (err == -ENODEV)
-> +		return mlxplat_lpc_cpld_device_init(hotplug_resources, hotplug_resources_size);
-> +
-> +	return err;
->  }
->  
->  static void mlxplat_post_exit(void)
->  {
-> -	mlxplat_lpc_cpld_device_exit();
-> +	if (lpc_bridge)
-> +		mlxplat_pci_fpga_devices_exit();
-> +	else
-> +		mlxplat_lpc_cpld_device_exit();
->  }
->  
->  static int mlxplat_post_init(struct mlxplat_priv *priv)
-> @@ -6365,6 +6492,9 @@ static int mlxplat_i2c_main_init(struct mlxplat_priv *priv)
->  	mlxplat_i2c->regmap = priv->regmap;
->  	mlxplat_i2c->handle = priv;
->  
-> +	/* Set mapped base address of I2C-LPC bridge over PCIe */
-> +	if (lpc_bridge)
-> +		mlxplat_i2c->addr = i2c_bridge_addr;
->  	priv->pdev_i2c = platform_device_register_resndata(&mlxplat_dev->dev, "i2c_mlxcpld",
->  							   nr, priv->hotplug_resources,
->  							   priv->hotplug_resources_size,
-> 
