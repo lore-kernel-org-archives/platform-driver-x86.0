@@ -2,167 +2,273 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F08CC001DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Aug 2023 20:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 624E4C001E0
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Aug 2023 01:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230518AbjHNUkJ (ORCPT
+        id S233911AbjHOBmo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Aug 2023 16:40:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57362 "EHLO
+        Mon, 14 Aug 2023 21:42:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232626AbjHNUja (ORCPT
+        with ESMTP id S233906AbjHOBm2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Aug 2023 16:39:30 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2047.outbound.protection.outlook.com [40.107.220.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19575171A
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Aug 2023 13:39:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hqwuUVDzuQH/I9e+VKTUAQlAcMgbzdM6xXIhKgqUBdC7aPIrZIL5EdniuzzLRD2pHVSzGPOeHbh3f7FG/+UHQUKKZoxyEbgG0Uyb+qwxM4jl44PzyP7NxLKF63/8SocIhfWbvz+/JPdcifZNYtaHxgZicm04IGxJgs1eXdBr71w3S4BGh3pWOXluvPB0RdOK2WtwJNpJqyX6+r6pDpXBmUqO5o/poEUoYobhnHoyV1q0BKCWkv0kAael+sMwd6KacbniFPtSH48sor9UbMGxgRLNOPdtbf9oGMhr/yk1IVxLv+U7LhEteZFMrEMkMpE8BQBizO0RZF3rij3qFiHxaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=weOk10MDBUQYhj0gbqxOz2vJzRheG88GF4qAUMkOjcY=;
- b=U9bteyAfKSMsaFBCpt/mW7YWqWea0ft+cvIlFAYrFwWwyuTO9ZZATmgN/gdf7U0HuxqW7OvVzg+NVGdZ6KyKUJPKRJZ9DwKluApjwDua90/TzN4gcwQ9MkWzvq0pfA9GajsjD+HOeNMVaCgrcjqURCPNh7YJhUlCAW0uP5j5CZzvcJ9MJCJUmTRj+PrtcgGyKh+K0ExT+b8wad0iWymPzkfMGeSUX+YjxAFpuEFLC0vsnjulSSABitp51fstdE1MvuX1gwnkrREz4zWbSF6fJZOXaM7GyUUN9LcZ7hGqB0LmwKZt30/vt/lqHVXJkWZkKUabi356zTyoYK5tAHgtSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=weOk10MDBUQYhj0gbqxOz2vJzRheG88GF4qAUMkOjcY=;
- b=Pbg0b2q2dPwqhpkS54wgRPCF4lcRTYx7S5EIx1DW++/6sfD8/oaFbyCNCWHiaomp3UN5g4HT9tLfDRzSv0ND6zjQ/zKl6wHExk5zwfPJXc8wuuuUgNtzxs7IYw6rQLNsarOAYs8BGDH1InNP9mqp/2qc+K15GVN+bmTJtgrUkbfWczW1lcjdzcTbJ3QVTeY21aPautZBzFF2XwOhUu2lgRoLCyKMlnaqBNigl3G2ZkgbgzDxISGr56XO1YOeB3vQmsiG5VCviGCQtysflRev4WMPdAgaFkHRECuYsDYoKw/wWaCEYHMfQ7mFmi4M6EDZM2PiGKi0IGEkY4zyzpZgGw==
-Received: from BN7PR06CA0061.namprd06.prod.outlook.com (2603:10b6:408:34::38)
- by PH8PR12MB6892.namprd12.prod.outlook.com (2603:10b6:510:1bc::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.24; Mon, 14 Aug
- 2023 20:39:26 +0000
-Received: from SN1PEPF000252A1.namprd05.prod.outlook.com
- (2603:10b6:408:34:cafe::14) by BN7PR06CA0061.outlook.office365.com
- (2603:10b6:408:34::38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.33 via Frontend
- Transport; Mon, 14 Aug 2023 20:39:26 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- SN1PEPF000252A1.mail.protection.outlook.com (10.167.242.8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6699.12 via Frontend Transport; Mon, 14 Aug 2023 20:39:26 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Mon, 14 Aug 2023
- 13:39:14 -0700
-Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.230.37) by
- rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.37; Mon, 14 Aug 2023 13:39:12 -0700
-From:   Vadim Pasternak <vadimp@nvidia.com>
-To:     <hdegoede@redhat.com>
-CC:     <ilpo.jarvinen@linux.intel.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>
-Subject: [PATCH platform-next v2 16/16] Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
-Date:   Mon, 14 Aug 2023 20:34:06 +0000
-Message-ID: <20230814203406.12399-17-vadimp@nvidia.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20230814203406.12399-1-vadimp@nvidia.com>
-References: <20230814203406.12399-1-vadimp@nvidia.com>
+        Mon, 14 Aug 2023 21:42:28 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFFDBE7;
+        Mon, 14 Aug 2023 18:42:26 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 7BD255C0053;
+        Mon, 14 Aug 2023 21:42:23 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Mon, 14 Aug 2023 21:42:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1692063743; x=1692150143; bh=3JXm4bHOCb
+        kD2/F5u79KkMptwDjPTtVVNoaOoSGIkrU=; b=WQ4wrxJJKMY1kNd4lu1bduOHLy
+        cBTdF7Ak7j+rDKmWMNkgcjaO8WJxOGTcfd28vRuS54RbnjRkWrPrW1kQDmp99Rrr
+        vvb/7MMatA5ZJ1xmEDbOmzjre54E+y2fZ+kOWU5NudilA0vVoDj5Wws/LvhC4PN6
+        Hef4CPHmqa3AhCcjrmNekL3MrpuZ+U4NF8Bpzm5Ncj2YhbytgHmr7T4PVIlMF+Re
+        YUP+ylFvKNDPJj9fxkmzIVxDfMfa9e3iopnL33ws/E9ppUa+Q27lzykPFDro76h0
+        qAaie3T1PMti8lGQsAiPMj2tBzkOckGpoz+I5gEX2mThfwupK07iULjMh0ZA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1692063743; x=1692150143; bh=3JXm4bHOCbkD2
+        /F5u79KkMptwDjPTtVVNoaOoSGIkrU=; b=gvbXJtsfQgfHoCYKoGtyEjtHim4W9
+        aLtOTSDowBc8zrEdxSRMtsUhpWPuzfMuvw3MyV2+QV72ho8RCs/QsUTiEIpgdrqZ
+        fpxIv/2Th6IdQZIxToYussqwEBb1ME6fmzBmeYwfC84NTu16FHL+CvhRRZlZhtsL
+        R8biPXz46QFzb5ytSo7LS7YPKZdvOet3LgQR/M5SuVg0IoweDsFpvIgVkNvttcbO
+        rrKiIcGdxJvTxTWfYy6lkhIQoei25KGvc6qNraZab80jE8yR5JtR9HdQ825Wextq
+        lyvk25EXDqpT+YXv1SmPbwws7Bd5tJooh1QnK2eiRpgRc56PFfsgY/UsA==
+X-ME-Sender: <xms:_9faZIH3oFVebyjHj7-N0VCLae3eZC0lP75mMfHis1g19PXf3I1ZeA>
+    <xme:_9faZBVkyWRmr5185RaHSuY-4OVdmMeEipFTSSOdsdqJ1dpTWZhPgtO7Fc02IYfcP
+    ocTwHmFFm-_Zg7vfG4>
+X-ME-Received: <xmr:_9faZCLTZkqqC_jf_juHL0yMF5UD7LWfcMFEDjxEvhFgx5MnBBBZA1OCA3Jh>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddtiedggeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
+    nhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfdujedthfduudekffefkeeiffdttd
+    dvhfegudduueffuefhfefggeefteevvdegnecuvehluhhsthgvrhfuihiivgeptdenucfr
+    rghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:_9faZKHds3PUfkq30WEAK4zx9U9MAUWOWnKSuecc4pCJLrPBtBNvqA>
+    <xmx:_9faZOXHYwd5Mbqf6wpWDYZ9oMvt4blqMRn88oTMfXk-TtK2qilqCA>
+    <xmx:_9faZNN2Finw9GghjR8HcXSPNfCf0rmw2T-Q1BWV1pv5EF2IN7GRsw>
+    <xmx:_9faZAI_rzE09N-FROCyX9gpCkf0N6huL5uEZqa7F82Mr_FtIHa6GQ>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 14 Aug 2023 21:42:20 -0400 (EDT)
+From:   "Luke D. Jones" <luke@ljones.dev>
+To:     hdegoede@redhat.com
+Cc:     corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com,
+        linux@roeck-us.net, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        "Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH] Fixes: a23870110a38 ("asus-wmi: add support for showing middle fan RPM")
+Date:   Tue, 15 Aug 2023 13:42:09 +1200
+Message-ID: <20230815014209.44903-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.126.230.37]
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000252A1:EE_|PH8PR12MB6892:EE_
-X-MS-Office365-Filtering-Correlation-Id: fbde4f03-00a8-4201-39e8-08db9d068d0e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aoI99PQC0ric2hoP2K0yqlw6wRq2yw53fdS0KDu5bTHAeotF/zYxxOxVNJ1Z+4MtovvQroVN50Sjtw2ezxncKdc06xxAkhCuT+YU+2TH9TawaZaXQq2n1gGdblg3jQxqElJKzJLEguiHWF1vt3R19BbOsxZAlmF9cAo5kwLPKqYpzFtb9UZr7FWR9Pk3yNYvMAh+n8EKnjyDVEeMiLsBoUw0gQhmX4Oxw2YpI+/7uMjbRGH3X2y8RExh+AjcgS+2AgfEFgDh0PN2CVK7/3fXAWlKlToczMgTrVnJmuvakCunJ4Cr+f4Myc91N0iHacjdPDyezOSk4iLjOWAULi3cIyTWJoFe1eRv3cspma2WW5MTBwkXAShaYE2b3txJC0/gGU8frqxkc23M8+f7GYbYY1YO4TKYsrWF0SQw0kk/X+B7vDzbyoIuu5RiaMTQ84yNAr02ok7/cZd4ZaylA1VLDavwJcUI59uijFI1HvGyPs9CJf4DU7PdH58wuq544pcC2VOC0Lf2s0PePdDADNf5hHnHqyIpxO5nKB3zjFrdI/kPWhaX13E18Lp0AB3QmV7OJiGtxO60sS+023Y9XbL0xVNHeDMRdJZdYjurFOellMGntJsvfpQEj1S2qL6gInCTMPSPQMo9XzB4nVlIPsWzcZxYoO+gAWUJ97CeN7FA4Pc9/J1mQmVElGN93B6cxtct9Qqa8ZxLk1pmLTSbUBv4rIE6nnC9VZTwUjGpfC9kgqA2ksWr+7Da87aGZ2XpKWc1
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(376002)(396003)(136003)(39860400002)(346002)(186006)(1800799006)(82310400008)(451199021)(46966006)(40470700004)(36840700001)(83380400001)(336012)(426003)(36756003)(47076005)(36860700001)(86362001)(40480700001)(41300700001)(82740400003)(478600001)(356005)(7636003)(54906003)(70206006)(70586007)(6916009)(316002)(8676002)(8936002)(5660300002)(4326008)(40460700003)(2616005)(16526019)(1076003)(107886003)(26005)(6666004)(2906002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2023 20:39:26.3535
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbde4f03-00a8-4201-39e8-08db9d068d0e
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1PEPF000252A1.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6892
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add documentation for the new attributes:
-- CPLD versioning: "cpld5_pn", "cpld5_version", "cpld5_version_min".
-- JTAG capability: "jtag_cap", indicating the available method of
-  CPLD/FPGA devices field update.
-- System lid status: "lid_open".
-- Reset caused by long press of power button: "reset_long_pwr_pb".
+After the addition of the mid fan custom curve functionality various
+incorrect behaviour was uncovered. This commit fixes these areas.
 
-Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
-Reviewed-by: Michael Shych <michaelsh@nvidia.com>
+- Ensure mid fan attributes actually use the correct fan ID
+- Correction to a bit mask for selecting the correct fan data
+- Refactor the curve show/store functions to be cleaner and and
+  match each others layout
+
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
 ---
- .../ABI/stable/sysfs-driver-mlxreg-io         | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ drivers/platform/x86/asus-wmi.c | 78 ++++++++++++++++-----------------
+ 1 file changed, 38 insertions(+), 40 deletions(-)
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-index 60953903d007..633be2bf2cd0 100644
---- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-+++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-@@ -662,3 +662,45 @@ Description:	This file shows the system reset cause due to AC power failure.
- 		Value 1 in file means this is reset cause, 0 - otherwise.
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index d14d0ea9d65f..14ee43c61eb2 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2902,9 +2902,8 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
+ {
+ 	struct fan_curve_data *curves;
+ 	u8 buf[FAN_CURVE_BUF_LEN];
+-	int fan_idx = 0;
++	int err, fan_idx;
+ 	u8 mode = 0;
+-	int err;
  
- 		The file is read only.
+ 	if (asus->throttle_thermal_policy_available)
+ 		mode = asus->throttle_thermal_policy_mode;
+@@ -2914,13 +2913,6 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
+ 	else if (mode == 1)
+ 		mode = 2;
+ 
+-	if (fan_dev == ASUS_WMI_DEVID_GPU_FAN_CURVE)
+-		fan_idx = FAN_CURVE_DEV_GPU;
+-
+-	if (fan_dev == ASUS_WMI_DEVID_MID_FAN_CURVE)
+-		fan_idx = FAN_CURVE_DEV_MID;
+-
+-	curves = &asus->custom_fan_curves[fan_idx];
+ 	err = asus_wmi_evaluate_method_buf(asus->dsts_id, fan_dev, mode, buf,
+ 					   FAN_CURVE_BUF_LEN);
+ 	if (err) {
+@@ -2928,9 +2920,17 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
+ 		return err;
+ 	}
+ 
+-	fan_curve_copy_from_buf(curves, buf);
++	fan_idx = FAN_CURVE_DEV_CPU;
++	if (fan_dev == ASUS_WMI_DEVID_GPU_FAN_CURVE)
++		fan_idx = FAN_CURVE_DEV_GPU;
 +
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld5_pn
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld5_version
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld5_version_min
-+Date:		August 2023
-+KernelVersion:	6.6
-+Contact:	Vadim Pasternak <vadimp@nvidia.com>
-+Description:	These files show with which CPLD part numbers, version and minor
-+		versions have been burned the 5-th CPLD device equipped on a
-+		system.
++	if (fan_dev == ASUS_WMI_DEVID_MID_FAN_CURVE)
++		fan_idx = FAN_CURVE_DEV_MID;
 +
-+		The files are read only.
-+
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/jtag_cap
-+Date:		August 2023
-+KernelVersion:	6.6
-+Contact:	Vadim Pasternak <vadimp@nvidia.com>
-+Description:    This file indicates the available method of CPLD/FPGA devices
-+		field update through the JTAG chain:
-+		 b00 - field update through LPC bus register memory space.
-+		 b01 - Reserved.
-+		 b10 - Reserved.
-+		 b11 - field update through CPU GPIOs bit-banging.
-+
-+		The file is read only.
-+
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/lid_open
-+Date:		August 2023
-+KernelVersion:	6.6
-+Contact:	Vadim Pasternak <vadimp@nvidia.com>
-+Description:	1 - indicates that system lid is opened, otherwise 0.
-+
-+		The file is read only.
-+
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_long_pwr_pb
-+Date:		August 2023
-+KernelVersion:	6.6
-+Contact:	Vadim Pasternak <vadimp@nvidia.com>
-+Description:	This file if set 1 indicates that system has been reset by
-+		long press of power button.
-+
-+		The file is read only.
++	curves = &asus->custom_fan_curves[fan_idx];
+ 	curves->device_id = fan_dev;
+ 
++	fan_curve_copy_from_buf(curves, buf);
+ 	return 0;
+ }
+ 
+@@ -2960,7 +2960,7 @@ static struct fan_curve_data *fan_curve_attr_select(struct asus_wmi *asus,
+ {
+ 	int index = to_sensor_dev_attr(attr)->index;
+ 
+-	return &asus->custom_fan_curves[index & FAN_CURVE_DEV_GPU];
++	return &asus->custom_fan_curves[index];
+ }
+ 
+ /* Determine which fan the attribute is for if SENSOR_ATTR_2 */
+@@ -2969,7 +2969,7 @@ static struct fan_curve_data *fan_curve_attr_2_select(struct asus_wmi *asus,
+ {
+ 	int nr = to_sensor_dev_attr_2(attr)->nr;
+ 
+-	return &asus->custom_fan_curves[nr & FAN_CURVE_DEV_GPU];
++	return &asus->custom_fan_curves[nr & ~FAN_CURVE_PWM_MASK];
+ }
+ 
+ static ssize_t fan_curve_show(struct device *dev,
+@@ -2978,13 +2978,13 @@ static ssize_t fan_curve_show(struct device *dev,
+ 	struct sensor_device_attribute_2 *dev_attr = to_sensor_dev_attr_2(attr);
+ 	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	struct fan_curve_data *data;
+-	int value, index, nr;
++	int value, pwm, index;
+ 
+ 	data = fan_curve_attr_2_select(asus, attr);
++	pwm = dev_attr->nr & FAN_CURVE_PWM_MASK;
+ 	index = dev_attr->index;
+-	nr = dev_attr->nr;
+ 
+-	if (nr & FAN_CURVE_PWM_MASK)
++	if (pwm)
+ 		value = data->percents[index];
+ 	else
+ 		value = data->temps[index];
+@@ -3027,23 +3027,21 @@ static ssize_t fan_curve_store(struct device *dev,
+ 	struct sensor_device_attribute_2 *dev_attr = to_sensor_dev_attr_2(attr);
+ 	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	struct fan_curve_data *data;
++	int err, pwm, index;
+ 	u8 value;
+-	int err;
+-
+-	int pwm = dev_attr->nr & FAN_CURVE_PWM_MASK;
+-	int index = dev_attr->index;
+ 
+ 	data = fan_curve_attr_2_select(asus, attr);
++	pwm = dev_attr->nr & FAN_CURVE_PWM_MASK;
++	index = dev_attr->index;
+ 
+ 	err = kstrtou8(buf, 10, &value);
+ 	if (err < 0)
+ 		return err;
+ 
+-	if (pwm) {
++	if (pwm)
+ 		data->percents[index] = value;
+-	} else {
++	else
+ 		data->temps[index] = value;
+-	}
+ 
+ 	/*
+ 	 * Mark as disabled so the user has to explicitly enable to apply a
+@@ -3156,7 +3154,7 @@ static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point8_temp, fan_curve,
+ 			       FAN_CURVE_DEV_CPU, 7);
+ 
+ static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point1_pwm, fan_curve,
+-			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 0);
++				FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 0);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point2_pwm, fan_curve,
+ 			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 1);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point3_pwm, fan_curve,
+@@ -3209,40 +3207,40 @@ static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point8_pwm, fan_curve,
+ 			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 7);
+ 
+ /* MID */
+-static SENSOR_DEVICE_ATTR_RW(pwm3_enable, fan_curve_enable, FAN_CURVE_DEV_GPU);
++static SENSOR_DEVICE_ATTR_RW(pwm3_enable, fan_curve_enable, FAN_CURVE_DEV_MID);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point1_temp, fan_curve,
+-			       FAN_CURVE_DEV_GPU, 0);
++			       FAN_CURVE_DEV_MID, 0);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point2_temp, fan_curve,
+-			       FAN_CURVE_DEV_GPU, 1);
++			       FAN_CURVE_DEV_MID, 1);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point3_temp, fan_curve,
+-			       FAN_CURVE_DEV_GPU, 2);
++			       FAN_CURVE_DEV_MID, 2);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point4_temp, fan_curve,
+-			       FAN_CURVE_DEV_GPU, 3);
++			       FAN_CURVE_DEV_MID, 3);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point5_temp, fan_curve,
+-			       FAN_CURVE_DEV_GPU, 4);
++			       FAN_CURVE_DEV_MID, 4);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point6_temp, fan_curve,
+-			       FAN_CURVE_DEV_GPU, 5);
++			       FAN_CURVE_DEV_MID, 5);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point7_temp, fan_curve,
+-			       FAN_CURVE_DEV_GPU, 6);
++			       FAN_CURVE_DEV_MID, 6);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point8_temp, fan_curve,
+-			       FAN_CURVE_DEV_GPU, 7);
++			       FAN_CURVE_DEV_MID, 7);
+ 
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point1_pwm, fan_curve,
+-			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 0);
++			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 0);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point2_pwm, fan_curve,
+-			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 1);
++			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 1);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point3_pwm, fan_curve,
+-			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 2);
++			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 2);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point4_pwm, fan_curve,
+-			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 3);
++			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 3);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point5_pwm, fan_curve,
+-			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 4);
++			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 4);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point6_pwm, fan_curve,
+-			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 5);
++			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 5);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point7_pwm, fan_curve,
+-			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 6);
++			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 6);
+ static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point8_pwm, fan_curve,
+-			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 7);
++			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 7);
+ 
+ static struct attribute *asus_fan_curve_attr[] = {
+ 	/* CPU */
 -- 
-2.20.1
+2.41.0
 
