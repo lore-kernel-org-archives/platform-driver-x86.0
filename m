@@ -2,273 +2,146 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 624E4C001E0
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Aug 2023 01:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE92C001B0
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Aug 2023 08:07:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233911AbjHOBmo (ORCPT
+        id S235556AbjHOIHA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Aug 2023 21:42:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38682 "EHLO
+        Tue, 15 Aug 2023 04:07:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233906AbjHOBm2 (ORCPT
+        with ESMTP id S235538AbjHOIGh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Aug 2023 21:42:28 -0400
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFFDBE7;
-        Mon, 14 Aug 2023 18:42:26 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7BD255C0053;
-        Mon, 14 Aug 2023 21:42:23 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 14 Aug 2023 21:42:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1692063743; x=1692150143; bh=3JXm4bHOCb
-        kD2/F5u79KkMptwDjPTtVVNoaOoSGIkrU=; b=WQ4wrxJJKMY1kNd4lu1bduOHLy
-        cBTdF7Ak7j+rDKmWMNkgcjaO8WJxOGTcfd28vRuS54RbnjRkWrPrW1kQDmp99Rrr
-        vvb/7MMatA5ZJ1xmEDbOmzjre54E+y2fZ+kOWU5NudilA0vVoDj5Wws/LvhC4PN6
-        Hef4CPHmqa3AhCcjrmNekL3MrpuZ+U4NF8Bpzm5Ncj2YhbytgHmr7T4PVIlMF+Re
-        YUP+ylFvKNDPJj9fxkmzIVxDfMfa9e3iopnL33ws/E9ppUa+Q27lzykPFDro76h0
-        qAaie3T1PMti8lGQsAiPMj2tBzkOckGpoz+I5gEX2mThfwupK07iULjMh0ZA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1692063743; x=1692150143; bh=3JXm4bHOCbkD2
-        /F5u79KkMptwDjPTtVVNoaOoSGIkrU=; b=gvbXJtsfQgfHoCYKoGtyEjtHim4W9
-        aLtOTSDowBc8zrEdxSRMtsUhpWPuzfMuvw3MyV2+QV72ho8RCs/QsUTiEIpgdrqZ
-        fpxIv/2Th6IdQZIxToYussqwEBb1ME6fmzBmeYwfC84NTu16FHL+CvhRRZlZhtsL
-        R8biPXz46QFzb5ytSo7LS7YPKZdvOet3LgQR/M5SuVg0IoweDsFpvIgVkNvttcbO
-        rrKiIcGdxJvTxTWfYy6lkhIQoei25KGvc6qNraZab80jE8yR5JtR9HdQ825Wextq
-        lyvk25EXDqpT+YXv1SmPbwws7Bd5tJooh1QnK2eiRpgRc56PFfsgY/UsA==
-X-ME-Sender: <xms:_9faZIH3oFVebyjHj7-N0VCLae3eZC0lP75mMfHis1g19PXf3I1ZeA>
-    <xme:_9faZBVkyWRmr5185RaHSuY-4OVdmMeEipFTSSOdsdqJ1dpTWZhPgtO7Fc02IYfcP
-    ocTwHmFFm-_Zg7vfG4>
-X-ME-Received: <xmr:_9faZCLTZkqqC_jf_juHL0yMF5UD7LWfcMFEDjxEvhFgx5MnBBBZA1OCA3Jh>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddtiedggeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
-    nhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfdujedthfduudekffefkeeiffdttd
-    dvhfegudduueffuefhfefggeefteevvdegnecuvehluhhsthgvrhfuihiivgeptdenucfr
-    rghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:_9faZKHds3PUfkq30WEAK4zx9U9MAUWOWnKSuecc4pCJLrPBtBNvqA>
-    <xmx:_9faZOXHYwd5Mbqf6wpWDYZ9oMvt4blqMRn88oTMfXk-TtK2qilqCA>
-    <xmx:_9faZNN2Finw9GghjR8HcXSPNfCf0rmw2T-Q1BWV1pv5EF2IN7GRsw>
-    <xmx:_9faZAI_rzE09N-FROCyX9gpCkf0N6huL5uEZqa7F82Mr_FtIHa6GQ>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 14 Aug 2023 21:42:20 -0400 (EDT)
-From:   "Luke D. Jones" <luke@ljones.dev>
-To:     hdegoede@redhat.com
-Cc:     corentin.chary@gmail.com, markgross@kernel.org, jdelvare@suse.com,
-        linux@roeck-us.net, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        "Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH] Fixes: a23870110a38 ("asus-wmi: add support for showing middle fan RPM")
-Date:   Tue, 15 Aug 2023 13:42:09 +1200
-Message-ID: <20230815014209.44903-1-luke@ljones.dev>
-X-Mailer: git-send-email 2.41.0
+        Tue, 15 Aug 2023 04:06:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 790411984
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Aug 2023 01:05:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1692086749;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qhprIM6hY/iuxPy5lR02/M1aZ7iIX9RH9xD2H8AWyoM=;
+        b=MQz+zuz/26FHjWlQOS4imHhdsGv3p9imIBMOFhB/cyTBh7uU0Lne5JFURIF0lNKylpV7iI
+        ZVbcesgLx41ZNLXk33GLQU/9jRYuOSnja3SoEnlWJwyqieowt2X3suAbbYRzuwONvPINYW
+        XFddvU7XenDL3b9EFt4czjD1g2hOuXk=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-184-kHCPbfuZOFSIhXvvZS0jTg-1; Tue, 15 Aug 2023 04:05:48 -0400
+X-MC-Unique: kHCPbfuZOFSIhXvvZS0jTg-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-993eeb3a950so299550566b.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Aug 2023 01:05:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692086746; x=1692691546;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qhprIM6hY/iuxPy5lR02/M1aZ7iIX9RH9xD2H8AWyoM=;
+        b=heMfZAb34wn1kweuh+N9HXfhINF9Rr1lvoTMgSheGGLX6MYHAGcoYKgrJs59syYMAf
+         Hau8VSRktcIbe91Ly0IQeBeEzD8mndxkGQ27EJLwTvARrEk6S04twUTGSppUG/Q56fph
+         c+/cf1HDyh/Lpm/GtYduzqHvO0Mx9xBp5c6KpY29pR+n7EKAr6I+4Og3EEDOUVg79i5P
+         NKhpYVc+Q54HBsWCsJUJ9N5hwzyUTt3dY430gTgXMsWz8awlbBdK+Utw0XNiqWFgjY5t
+         FV96X1P4trF3+jUFvN66FaulUdmmI3SdNVG51rrE8Gbe4EWWJJDbKZgr1TBLPqQ7Kaan
+         oDaw==
+X-Gm-Message-State: AOJu0Yzh3sIf3FLvQhhKJ05X+/hBdeaylwWaimRFwtcSbXuBdvZi87Ii
+        2HmPGD0vZLhmhhueuwgJgoOcaxhSza7Sr+vIo6tFNF08zWJqZQJyuybjsMz8w1kTs3E9GgCg1CP
+        CoJJfC4xAp4cZvrmpFaVPp2aZJXdduaPXi/k7+hnOSw==
+X-Received: by 2002:a17:907:2724:b0:99b:f3f5:9752 with SMTP id d4-20020a170907272400b0099bf3f59752mr9640017ejl.14.1692086746026;
+        Tue, 15 Aug 2023 01:05:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHPHSzXn1d/mAu9NqDEoFu1o9B70LsUXHY5lHRbiMemSd2TGYpCGib82OHwFvLchQk8YJdjBw==
+X-Received: by 2002:a17:907:2724:b0:99b:f3f5:9752 with SMTP id d4-20020a170907272400b0099bf3f59752mr9640007ejl.14.1692086745611;
+        Tue, 15 Aug 2023 01:05:45 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id x18-20020a170906805200b0099bcbaa242asm6684626ejw.9.2023.08.15.01.05.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Aug 2023 01:05:44 -0700 (PDT)
+Message-ID: <34f2c08b-c07b-b789-487b-615868cde500@redhat.com>
+Date:   Tue, 15 Aug 2023 10:05:44 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH platform-next v2 00/16] Add new features and amendments
+ for Nvidia systems
+Content-Language: en-US, nl
+To:     Vadim Pasternak <vadimp@nvidia.com>
+Cc:     ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
+References: <20230814203406.12399-1-vadimp@nvidia.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230814203406.12399-1-vadimp@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-After the addition of the mid fan custom curve functionality various
-incorrect behaviour was uncovered. This commit fixes these areas.
+Hi,
 
-- Ensure mid fan attributes actually use the correct fan ID
-- Correction to a bit mask for selecting the correct fan data
-- Refactor the curve show/store functions to be cleaner and and
-  match each others layout
+It would be nice if there was a changelog somewhere in this cover
+letter explaining what has changed in v2 ?
 
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- drivers/platform/x86/asus-wmi.c | 78 ++++++++++++++++-----------------
- 1 file changed, 38 insertions(+), 40 deletions(-)
+Regards,
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index d14d0ea9d65f..14ee43c61eb2 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -2902,9 +2902,8 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
- {
- 	struct fan_curve_data *curves;
- 	u8 buf[FAN_CURVE_BUF_LEN];
--	int fan_idx = 0;
-+	int err, fan_idx;
- 	u8 mode = 0;
--	int err;
- 
- 	if (asus->throttle_thermal_policy_available)
- 		mode = asus->throttle_thermal_policy_mode;
-@@ -2914,13 +2913,6 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
- 	else if (mode == 1)
- 		mode = 2;
- 
--	if (fan_dev == ASUS_WMI_DEVID_GPU_FAN_CURVE)
--		fan_idx = FAN_CURVE_DEV_GPU;
--
--	if (fan_dev == ASUS_WMI_DEVID_MID_FAN_CURVE)
--		fan_idx = FAN_CURVE_DEV_MID;
--
--	curves = &asus->custom_fan_curves[fan_idx];
- 	err = asus_wmi_evaluate_method_buf(asus->dsts_id, fan_dev, mode, buf,
- 					   FAN_CURVE_BUF_LEN);
- 	if (err) {
-@@ -2928,9 +2920,17 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
- 		return err;
- 	}
- 
--	fan_curve_copy_from_buf(curves, buf);
-+	fan_idx = FAN_CURVE_DEV_CPU;
-+	if (fan_dev == ASUS_WMI_DEVID_GPU_FAN_CURVE)
-+		fan_idx = FAN_CURVE_DEV_GPU;
-+
-+	if (fan_dev == ASUS_WMI_DEVID_MID_FAN_CURVE)
-+		fan_idx = FAN_CURVE_DEV_MID;
-+
-+	curves = &asus->custom_fan_curves[fan_idx];
- 	curves->device_id = fan_dev;
- 
-+	fan_curve_copy_from_buf(curves, buf);
- 	return 0;
- }
- 
-@@ -2960,7 +2960,7 @@ static struct fan_curve_data *fan_curve_attr_select(struct asus_wmi *asus,
- {
- 	int index = to_sensor_dev_attr(attr)->index;
- 
--	return &asus->custom_fan_curves[index & FAN_CURVE_DEV_GPU];
-+	return &asus->custom_fan_curves[index];
- }
- 
- /* Determine which fan the attribute is for if SENSOR_ATTR_2 */
-@@ -2969,7 +2969,7 @@ static struct fan_curve_data *fan_curve_attr_2_select(struct asus_wmi *asus,
- {
- 	int nr = to_sensor_dev_attr_2(attr)->nr;
- 
--	return &asus->custom_fan_curves[nr & FAN_CURVE_DEV_GPU];
-+	return &asus->custom_fan_curves[nr & ~FAN_CURVE_PWM_MASK];
- }
- 
- static ssize_t fan_curve_show(struct device *dev,
-@@ -2978,13 +2978,13 @@ static ssize_t fan_curve_show(struct device *dev,
- 	struct sensor_device_attribute_2 *dev_attr = to_sensor_dev_attr_2(attr);
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	struct fan_curve_data *data;
--	int value, index, nr;
-+	int value, pwm, index;
- 
- 	data = fan_curve_attr_2_select(asus, attr);
-+	pwm = dev_attr->nr & FAN_CURVE_PWM_MASK;
- 	index = dev_attr->index;
--	nr = dev_attr->nr;
- 
--	if (nr & FAN_CURVE_PWM_MASK)
-+	if (pwm)
- 		value = data->percents[index];
- 	else
- 		value = data->temps[index];
-@@ -3027,23 +3027,21 @@ static ssize_t fan_curve_store(struct device *dev,
- 	struct sensor_device_attribute_2 *dev_attr = to_sensor_dev_attr_2(attr);
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	struct fan_curve_data *data;
-+	int err, pwm, index;
- 	u8 value;
--	int err;
--
--	int pwm = dev_attr->nr & FAN_CURVE_PWM_MASK;
--	int index = dev_attr->index;
- 
- 	data = fan_curve_attr_2_select(asus, attr);
-+	pwm = dev_attr->nr & FAN_CURVE_PWM_MASK;
-+	index = dev_attr->index;
- 
- 	err = kstrtou8(buf, 10, &value);
- 	if (err < 0)
- 		return err;
- 
--	if (pwm) {
-+	if (pwm)
- 		data->percents[index] = value;
--	} else {
-+	else
- 		data->temps[index] = value;
--	}
- 
- 	/*
- 	 * Mark as disabled so the user has to explicitly enable to apply a
-@@ -3156,7 +3154,7 @@ static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point8_temp, fan_curve,
- 			       FAN_CURVE_DEV_CPU, 7);
- 
- static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point1_pwm, fan_curve,
--			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 0);
-+				FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 0);
- static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point2_pwm, fan_curve,
- 			       FAN_CURVE_DEV_CPU | FAN_CURVE_PWM_MASK, 1);
- static SENSOR_DEVICE_ATTR_2_RW(pwm1_auto_point3_pwm, fan_curve,
-@@ -3209,40 +3207,40 @@ static SENSOR_DEVICE_ATTR_2_RW(pwm2_auto_point8_pwm, fan_curve,
- 			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 7);
- 
- /* MID */
--static SENSOR_DEVICE_ATTR_RW(pwm3_enable, fan_curve_enable, FAN_CURVE_DEV_GPU);
-+static SENSOR_DEVICE_ATTR_RW(pwm3_enable, fan_curve_enable, FAN_CURVE_DEV_MID);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point1_temp, fan_curve,
--			       FAN_CURVE_DEV_GPU, 0);
-+			       FAN_CURVE_DEV_MID, 0);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point2_temp, fan_curve,
--			       FAN_CURVE_DEV_GPU, 1);
-+			       FAN_CURVE_DEV_MID, 1);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point3_temp, fan_curve,
--			       FAN_CURVE_DEV_GPU, 2);
-+			       FAN_CURVE_DEV_MID, 2);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point4_temp, fan_curve,
--			       FAN_CURVE_DEV_GPU, 3);
-+			       FAN_CURVE_DEV_MID, 3);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point5_temp, fan_curve,
--			       FAN_CURVE_DEV_GPU, 4);
-+			       FAN_CURVE_DEV_MID, 4);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point6_temp, fan_curve,
--			       FAN_CURVE_DEV_GPU, 5);
-+			       FAN_CURVE_DEV_MID, 5);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point7_temp, fan_curve,
--			       FAN_CURVE_DEV_GPU, 6);
-+			       FAN_CURVE_DEV_MID, 6);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point8_temp, fan_curve,
--			       FAN_CURVE_DEV_GPU, 7);
-+			       FAN_CURVE_DEV_MID, 7);
- 
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point1_pwm, fan_curve,
--			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 0);
-+			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 0);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point2_pwm, fan_curve,
--			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 1);
-+			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 1);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point3_pwm, fan_curve,
--			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 2);
-+			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 2);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point4_pwm, fan_curve,
--			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 3);
-+			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 3);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point5_pwm, fan_curve,
--			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 4);
-+			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 4);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point6_pwm, fan_curve,
--			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 5);
-+			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 5);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point7_pwm, fan_curve,
--			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 6);
-+			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 6);
- static SENSOR_DEVICE_ATTR_2_RW(pwm3_auto_point8_pwm, fan_curve,
--			       FAN_CURVE_DEV_GPU | FAN_CURVE_PWM_MASK, 7);
-+			       FAN_CURVE_DEV_MID | FAN_CURVE_PWM_MASK, 7);
- 
- static struct attribute *asus_fan_curve_attr[] = {
- 	/* CPU */
--- 
-2.41.0
+Hans
+
+On 8/14/23 22:33, Vadim Pasternak wrote:
+> The patch set:
+> - Provides New system attributes for monitoring.
+> - Adds system reboot callback to perform system specific operations.
+> - Adds support for ACPI based initialization flow.
+> - Adds support for FPGA device connected through PCIe bus.
+> - Adds additional logic for hotplug events handling.
+> - Contains some amendments and cosmetic changes.
+> 
+> The patch set includes:
+> Patches #1 - #3, #5: add new attributes for monitoring.
+> Patch #4: sets hotplug event action for health and power signals.
+> Patch #6: adds CPLD versioning registers for systems equipped with five
+> 	  CPLD devices.
+> Patch #7: modifies power off callback.
+> Patch #8: cosmetic changes - fixes misspelling.
+> Patch #9: provides system reboot callback through system reboot
+> 	  notifier.
+> Patch #10: prepares driver to allow probing through ACPI hooks along
+> 	   with probing through DMI hooks.
+> Patch #11: adds ACPI match hook for initialization flow.
+> Patch #12: adds support for getting system interrupt line from ACPI
+> 	   table.
+> Patch #13: adds initial support for programming logic device connected
+> 	   through PCIe.
+> Patch #14: Extends condition for notification callback processing.
+> Patch #15: defines the exact i2c bus of fans on the SN2201 system.
+> Patch #16: Documents new attributes.
+> 
+> Michael Shych (1):
+>   platform: mellanox: nvsw-sn2201: change fans i2c busses.
+> 
+> Vadim Pasternak (15):
+>   platform: mellanox: Add new attributes
+>   platform: mellanox: Add field upgrade capability register
+>   platform: mellanox: Modify reset causes description
+>   platform: mellanox: mlx-platform: Modify health and power hotplug
+>     action
+>   platform: mellanox: mlx-platform: Add reset cause attribute
+>   platform: mellanox: mlx-platform: add support for additional CPLD
+>   platform: mellanox: mlx-platform: Modify power off callback
+>   platform: mellanox: Cosmetic changes
+>   platform: mellanox: mlx-platform: Add reset callback
+>   platform: mellanox: mlx-platform: Prepare driver to allow probing
+>     through ACPI infrastructure
+>   platform: mellanox: mlx-platform: Introduce ACPI init flow
+>   platform: mellanox: mlx-platform: Get interrupt line through ACPI
+>   platform: mellanox: Add initial support for PCIe based programming
+>     logic device
+>   platform/mellanox: mlxreg-hotplug: Extend condition for notification
+>     callback processing
+>   Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
+> 
+>  .../ABI/stable/sysfs-driver-mlxreg-io         |  42 ++
+>  drivers/platform/mellanox/mlxreg-hotplug.c    |   2 +-
+>  drivers/platform/mellanox/nvsw-sn2201.c       |  12 +-
+>  drivers/platform/x86/mlx-platform.c           | 376 ++++++++++++++++--
+>  4 files changed, 383 insertions(+), 49 deletions(-)
+> 
 
