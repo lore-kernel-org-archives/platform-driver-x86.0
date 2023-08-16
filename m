@@ -2,90 +2,99 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7115C001B0
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Aug 2023 23:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4D7C001E0
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Aug 2023 15:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239099AbjHOXep (ORCPT
+        id S235330AbjHPPrb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Aug 2023 19:34:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33746 "EHLO
+        Wed, 16 Aug 2023 11:47:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240620AbjHOXeX (ORCPT
+        with ESMTP id S1344393AbjHPPr1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Aug 2023 19:34:23 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF6513E
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Aug 2023 16:34:22 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-4fe21e7f3d1so9586755e87.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Aug 2023 16:34:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692142460; x=1692747260;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bYGbYHxglGSO09fv3jXWvZ/Qps6KmHcn+IsSYo2giWA=;
-        b=fb6eNIcb4rgqD+S13VAl54Td8AIz2jaUyG2yz2Qdy0OQkwoZXPUn+1MzePpcm1JPGx
-         MCcCpv0q8I7NJSXndN9b3EOQx7J/PiPRqogai46/jtBGB1U/x/NI8eBWIFXTFFrqeSI8
-         mDoQemzW8Ai/Vc9msW3CCbDlaCL8wXwYw8jdnzaqROBRCIWN7DmWiiSgCseTe5nn/bUb
-         lj5ixIeO6Al/NhyaRSc3/aNKXA5FfGSg58lP4q65AojfI+Xx4PNi83DLLoPhMygj30r/
-         AdLD6u1DrigQWHzw3/Z7ljzN/0NnSV0gdG4d3MljuNCG/QhlzZf4XzpyWiM3kpsv6zUd
-         DrvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692142460; x=1692747260;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bYGbYHxglGSO09fv3jXWvZ/Qps6KmHcn+IsSYo2giWA=;
-        b=cUkyMbVmNf0LgN5AUPBntSAVcAaa8UOgWRGY4Z6o3rOXYseu7Mhl58ZIbOjcSRZTnO
-         ml0ri4R40tYS3+3t9BNbOB22dN9ohgjkogq8f/uyQUc3rM0FIRxEWnKLhpwZkMm/aclM
-         kn292/vsxiio6kiwk9xpOWfTlRds6/bkUagK1H//VTgwGRWOCR9pJKdwHHXyxyUc3sEg
-         5uB2Mkurn8HkJns11LHrTcu/Y1bC6v8ZLBbG1NmJPwEmHvvFRFOwN5Be87jBVhRz/LnJ
-         BkCXioOhyUbxMSLnwyrWXnMfixmGm2y6rAhgV+FsK7T++M6iD4ezHwXNdqDtFb/c3BmD
-         6Y7g==
-X-Gm-Message-State: AOJu0YyFcby/YYs5WdvRW/8f1uEg2K3TjO07lPYDy/APlltBro6uhYkT
-        IXmalQXUg3vCy2jaC8TQ4gAxJBxzCPvGtYTnvuotFqUL8nyyRA==
-X-Google-Smtp-Source: AGHT+IHyfD4o+d/a7ve3hJ3NYqK/bjoF5NXlMrRtqsEnURG2KkBzL2MA6KigS4kBZ1arQvcu1B0dyP/1fiQb8Rq2lp0=
-X-Received: by 2002:a05:6512:3c87:b0:4fb:8939:d95c with SMTP id
- h7-20020a0565123c8700b004fb8939d95cmr287043lfv.30.1692142459737; Tue, 15 Aug
- 2023 16:34:19 -0700 (PDT)
+        Wed, 16 Aug 2023 11:47:27 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAECE26A8;
+        Wed, 16 Aug 2023 08:47:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692200846; x=1723736846;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GMVGcSIQ+QH/TIp6M4nqrBd2HmKhNCvR/nQLZrf3CoE=;
+  b=Gf3KU/x5oB0qOcTEEeVMOUN9nPsxUwAblqskVHe5zmVeEo7o2FC93I9k
+   FuA8GkrYTUzltCpT4igzdk7XHAduylVnW0AgDHiFqyX7SbZhy/SOx/ZY0
+   Kt/q0Arn3Kr/EkQDyd7shOivXvy8FMIGHHCNLH8H/Xw3DU2gQqB/x6gis
+   DRLXfMBwCYBsWxMhPQuiqEvxHecy1J8xHVx8vvdPohRYYjES91tnA6RkC
+   EseyKKuILZKGcZCUyOuc9f/WR36ASVyXGnALykw41yWnbhw/9AsQ6dy4k
+   Z4cElbWABoDUn/qahIfo2xmGDIDt61VaU8lYFcHh7ip9jqyEOPsl6h2Sg
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="458918297"
+X-IronPort-AV: E=Sophos;i="6.01,177,1684825200"; 
+   d="scan'208";a="458918297"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 08:47:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="684113034"
+X-IronPort-AV: E=Sophos;i="6.01,177,1684825200"; 
+   d="scan'208";a="684113034"
+Received: from araj-dh-work.jf.intel.com (HELO araj-dh-work) ([10.165.157.158])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 08:47:26 -0700
+Date:   Wed, 16 Aug 2023 08:45:52 -0700
+From:   Ashok Raj <ashok_raj@linux.intel.com>
+To:     xingtong_wu@163.com
+Cc:     ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
+        markgross@kernel.org, xingtong.wu@siemens.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gerd.haeussler.ext@siemens.com, tobias.schaffner@siemens.com,
+        lkp@intel.com, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v2 2/2] platform/x86/siemens: simatic-ipc-batt: fix logic
+ error for BX-59A
+Message-ID: <ZNzvMMCUMDrgmTnn@araj-dh-work>
+References: <d41d3ae3-9c1b-661-4664-51d62ad1d786@linux.intel.com>
+ <20430731173417.2692-1-xingtong_wu@163.com>
 MIME-Version: 1.0
-From:   Swapnil Devesh <sid.swapnildevesh@gmail.com>
-Date:   Wed, 16 Aug 2023 05:04:08 +0530
-Message-ID: <CAH-ry+a38SW4hqXw-n8nEMLV9rX-eoGp2+VT6ivNqFpKVSfDYw@mail.gmail.com>
-Subject: Add Lenovo Yoga 7 14ACN6 (82N7) to ec_trigger_quirk_dmi_table in the
- new Lenovo YMC driver
-To:     platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20430731173417.2692-1-xingtong_wu@163.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This adds my laptop Lenovo Yoga 7 14ACN6, with Product Name: 82N7
-(from `dmidecode -t1 | grep "Product Name"`) to the
-ec_trigger_quirk_dmi_table, have tested that this is required for the
-YMC driver to work correctly on this model.
+On Sat, Aug 01, 2043 at 01:34:17AM +0800, xingtong_wu@163.com wrote:
+^^^^^^^^^^^^^^^^^^^^
 
-Thanks to Gergo, the author of the Lenovo YMC driver for guiding this.
+Nice way to keep your mail on top of the sort :-).. You need to fixup your
+system date.
 
-Signed-off-by: Swapnil Devesh <me@sidevesh.com>
----
- drivers/platform/x86/lenovo-ymc.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/platform/x86/lenovo-ymc.c
-b/drivers/platform/x86/lenovo-ymc.c
-index 41676188b373..7d38151a5b27 100644
---- a/drivers/platform/x86/lenovo-ymc.c
-+++ b/drivers/platform/x86/lenovo-ymc.c
-@@ -32,6 +32,13 @@ static const struct dmi_system_id
-ec_trigger_quirk_dmi_table[] = {
-  DMI_MATCH(DMI_PRODUCT_NAME, "82QF"),
-  },
-  },
-+ {
-+ /* Lenovo Yoga 7 14ACN6 */
-+ .matches = {
-+ DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+ DMI_MATCH(DMI_PRODUCT_NAME, "82N7"),
-+ },
-+ },
-  { }
- };
+> From: "xingtong.wu" <xingtong.wu@siemens.com>
+> 
+> The variable "priv.devmode" is missing from if statement that leads
+> to a logical error. Add the missing variable to the if condition.
+> 
+> Fixes: c56beff20375 ("platform/x86/siemens: simatic-ipc-batt: add support for module BX-59A")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202308010001.BGYCSQrl-lkp@intel.com/
+> 
+> Signed-off-by: xingtong.wu <xingtong.wu@siemens.com>
+> ---
+>  drivers/platform/x86/siemens/simatic-ipc-batt.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/siemens/simatic-ipc-batt.c b/drivers/platform/x86/siemens/simatic-ipc-batt.c
+> index d66b9969234b..e6c12c52843c 100644
+> --- a/drivers/platform/x86/siemens/simatic-ipc-batt.c
+> +++ b/drivers/platform/x86/siemens/simatic-ipc-batt.c
+> @@ -194,7 +194,8 @@ int simatic_ipc_batt_probe(struct platform_device *pdev, struct gpiod_lookup_tab
+>  
+>  	if (table->table[2].key) {
+>  		flags = GPIOD_OUT_HIGH;
+> -		if (priv.devmode == SIMATIC_IPC_DEVICE_BX_21A || SIMATIC_IPC_DEVICE_BX_59A)
+> +		if (priv.devmode == SIMATIC_IPC_DEVICE_BX_21A ||
+> +		    priv.devmode == SIMATIC_IPC_DEVICE_BX_59A)
+>  			flags = GPIOD_OUT_LOW;
+>  		priv.gpios[2] = devm_gpiod_get_index(dev, "CMOSBattery meter", 2, flags);
+>  		if (IS_ERR(priv.gpios[2])) {
+> -- 
+> 2.25.1
+> 
