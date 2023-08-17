@@ -2,509 +2,606 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DAFC2FC14
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Aug 2023 08:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D7EC27C7A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Aug 2023 08:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348727AbjHQIH1 (ORCPT
+        id S234251AbjHQIct (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Aug 2023 04:07:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52600 "EHLO
+        Thu, 17 Aug 2023 04:32:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348748AbjHQIHH (ORCPT
+        with ESMTP id S1348907AbjHQIck (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Aug 2023 04:07:07 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12CF2D76;
-        Thu, 17 Aug 2023 01:07:03 -0700 (PDT)
+        Thu, 17 Aug 2023 04:32:40 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77E87273C;
+        Thu, 17 Aug 2023 01:32:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692259623; x=1723795623;
+  t=1692261157; x=1723797157;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=zqH/R479KNyQikBtfg36CdkBuRoeOnIW0XVP0VXeiLk=;
-  b=CgPmDgFYvs8xzSR4dZ70sJUM9Api6Xv5B5yZO0OIJyAnb/ccEDdvYQU3
-   cMN1S8K0U/w0/rhRDY/sML4XhPrndgijDEe5EaVC+BSikS91DrFhJ5VoO
-   D9JtnhfIUX8m8LokM2G0NKDKIyK7eansNCuyXwTItanv69MOGguMDFiuK
-   mGJE0/0KgGFBXV8fpG0YgRG3V6hWBSWaQwI+tKUGtHUSsziX1ohNhq4ff
-   c5rGd/igS6UKyyPAnBrJUZciL+FojDNGUF8TRNakkebCuam+H0/Z77PpQ
-   SDERloSuWubAlLCEIWparz8Zjckxzdmc45jkylKvJQHdhgUkjvBIxjEHV
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="357710317"
+  bh=vmK2h68WjTJnIuo5vPQTovXCPE94MFgp1M+n5FnOZSA=;
+  b=FuNWlLDttAO6dojIOHI99r6FWEcsAmxrUgdxJ882vgNA2Y81fUgQ+fZ9
+   owdT9fKEesXVd075Ni1CLGA4MG3Id+EEWP9y1LCf8+uPEUnLLPHm+S+RC
+   UfcchHJm8I4vaKlAHQ7Axa6rfQ5GwOkGxBM8Bs2rxHQ1gkJ8Qt8cb0ios
+   3zcY2nUvmyDrR4neQDOka6JkfLgcqkuTx1yhWseyg9Lub/xIe507kLwNT
+   rJ8Tq1Ztx9ukn3r73rzinzArl2ox2y6/dzXKWb2awFHkskZUOFgPdHOzm
+   utjBO0S+vwpn1r4y2eZ2FQtl0Duo74yAnbUy8HIH7q65E2AsHz7/Q8OsQ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="436653700"
 X-IronPort-AV: E=Sophos;i="6.01,179,1684825200"; 
-   d="scan'208";a="357710317"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2023 01:07:02 -0700
+   d="scan'208";a="436653700"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2023 01:30:54 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="804543869"
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="858151003"
 X-IronPort-AV: E=Sophos;i="6.01,179,1684825200"; 
-   d="scan'208";a="804543869"
+   d="scan'208";a="858151003"
 Received: from lababeix-mobl1.ger.corp.intel.com ([10.251.212.52])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2023 01:06:58 -0700
-Date:   Thu, 17 Aug 2023 11:06:52 +0300 (EEST)
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2023 01:30:52 -0700
+Date:   Thu, 17 Aug 2023 11:30:50 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Henry Shi <henryshi2018@gmail.com>
-cc:     hbshi69@hotmail.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, hdegoede@redhat.com, markgross@kernel.org,
-        jdelvare@suse.com, linux@roeck-us.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        hb_shi2003@yahoo.com, henrys@silicom-usa.com, wenw@silicom-usa.com
-Subject: Re: [PATCH] Add Silicom Platform Driver
-In-Reply-To: <20230815133759.7690-1-henryshi2018@gmail.com>
-Message-ID: <e376de55-5962-875-2c51-928a4fdfcea@linux.intel.com>
-References: <20230815133759.7690-1-henryshi2018@gmail.com>
+To:     David Thompson <davthompson@nvidia.com>
+cc:     hdegoede@redhat.com, markgross@kernel.org, vadimp@nvidia.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shravankr@nvidia.com
+Subject: Re: [PATCH v1] mlxbf-bootctl: Support sysfs entries for MFG fields
+In-Reply-To: <20230815213832.16698-1-davthompson@nvidia.com>
+Message-ID: <e874042-d78-b73-5a49-8da9285cb3c1@linux.intel.com>
+References: <20230815213832.16698-1-davthompson@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 15 Aug 2023, Henry Shi wrote:
+On Tue, 15 Aug 2023, David Thompson wrote:
 
-> The Silicom platform (silicom-platform) Linux driver for Swisscom
-> Business Box (Swisscom BB) as well as Cordoba family products is a 
-> software solution designed to facilitate the efficient management
-> and control of devices through the integration of various Linux
-> frameworks. This platform driver provides seamless support for
-> device management via the Linux LED framework, GPIO framework,
-> Hardware Monitoring (HWMON), and device attributes. The Silicom
-> platform driver's compatibility with these Linux frameworks allows
-> applications to access and control Cordoba family devices using
-> existing software that is compatible with these frameworks. This
-> compatibility simplifies the development process, reduces
-> dependencies on proprietary solutions, and promotes
-> interoperability with other Linux-based systems and software.
+> This patch extends the mlxbf-bootctl driver's sysfs entries
+> to support read and write access for the manufacturing (MFG)
+> fields in the board-level EEPROM.  The MFG fields are set
+> once during the board manufacturing phase, and then the MFG
+> fields are write-protected.
 > 
-> Signed-off-by: Henry Shi <henryshi2018@gmail.com>
+> Signed-off-by: David Thompson <davthompson@nvidia.com>
+> Reviewed-by: Shravan Kumar Ramani <shravankr@nvidia.com>
 > ---
-
-You should use version the submission (vXX should appear already in the 
-subject) and provide the version history in a list (listing version to 
-version changes).
-
->  drivers/platform/x86/Kconfig            |   11 +
->  drivers/platform/x86/Makefile           |    1 +
->  drivers/platform/x86/silicom-platform.c | 1053 +++++++++++++++++++++++
->  3 files changed, 1065 insertions(+)
->  create mode 100644 drivers/platform/x86/silicom-platform.c
+>  drivers/platform/mellanox/mlxbf-bootctl.c | 456 ++++++++++++++++++++++
+>  drivers/platform/mellanox/mlxbf-bootctl.h |   8 +
+>  2 files changed, 464 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 22052031c719..7680c0dbcd8d 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -188,6 +188,17 @@ config ACER_WMI
->  	  If you have an ACPI-WMI compatible Acer/ Wistron laptop, say Y or M
->  	  here.
+> diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
+> index 0bf29eee1e70..bf6ce37e3dbb 100644
+> --- a/drivers/platform/mellanox/mlxbf-bootctl.c
+> +++ b/drivers/platform/mellanox/mlxbf-bootctl.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/arm-smccc.h>
+>  #include <linux/delay.h>
+> +#include <linux/if_ether.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> @@ -81,6 +82,50 @@ static const char * const mlxbf_rsh_log_level[] = {
 >  
-> +config SILICOM_PLATFORM
-> +	tristate "Silicom Edge Networking device support"
-> +	depends on DMI
-> +	select LEDS_CLASS_MULTICOLOR
-> +	select GPIOLIB
-> +	help
-> +	  This option enables support for the LEDs/GPIO/etc downstream of the
-> +	  embedded controller on Silicom "Cordoba" hardware and derivatives.
+>  static DEFINE_MUTEX(icm_ops_lock);
+>  static DEFINE_MUTEX(os_up_lock);
+> +static DEFINE_MUTEX(mfg_ops_lock);
 > +
-> +	  If you have a Silicom network appliance, say Y or M here.
+> +/*
+> + * Objects are stored within the MFG partition per type.
+> + * Type 0 is not supported.
+> + */
+> +enum {
+> +	MLNX_MFG_TYPE_OOB_MAC = 1,
+> +	MLNX_MFG_TYPE_OPN_0,
+> +	MLNX_MFG_TYPE_OPN_1,
+> +	MLNX_MFG_TYPE_OPN_2,
+> +	MLNX_MFG_TYPE_SKU_0,
+> +	MLNX_MFG_TYPE_SKU_1,
+> +	MLNX_MFG_TYPE_SKU_2,
+> +	MLNX_MFG_TYPE_MODL_0,
+> +	MLNX_MFG_TYPE_MODL_1,
+> +	MLNX_MFG_TYPE_MODL_2,
+> +	MLNX_MFG_TYPE_SN_0,
+> +	MLNX_MFG_TYPE_SN_1,
+> +	MLNX_MFG_TYPE_SN_2,
+> +	MLNX_MFG_TYPE_UUID_0,
+> +	MLNX_MFG_TYPE_UUID_1,
+> +	MLNX_MFG_TYPE_UUID_2,
+> +	MLNX_MFG_TYPE_UUID_3,
+> +	MLNX_MFG_TYPE_UUID_4,
+> +	MLNX_MFG_TYPE_REV,
+> +};
 > +
->  source "drivers/platform/x86/amd/Kconfig"
+> +#define MLNX_MFG_OOB_MAC_LEN         ETH_ALEN
+
+Why add this own define and not use ETH_ALEN directly?
+
+> +#define MLNX_MFG_OPN_VAL_LEN         24
+> +#define MLNX_MFG_SKU_VAL_LEN         24
+> +#define MLNX_MFG_MODL_VAL_LEN        24
+> +#define MLNX_MFG_SN_VAL_LEN          24
+> +#define MLNX_MFG_UUID_VAL_LEN        40
+> +#define MLNX_MFG_REV_VAL_LEN         8
+> +#define MLNX_MFG_VAL_QWORD_CNT(type) \
+> +	(MLNX_MFG_##type##_VAL_LEN / sizeof(u64))
+> +
+> +/*
+> + * The MAC address consists of 6 bytes (2 digits each) separated by ':'.
+> + * The expected format is: "XX:XX:XX:XX:XX:XX"
+> + */
+> +#define MLNX_MFG_OOB_MAC_FORMAT_LEN \
+> +	((MLNX_MFG_OOB_MAC_LEN * 2) + (MLNX_MFG_OOB_MAC_LEN - 1))
 >  
->  config ADV_SWBUTTON
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 2cafe51ec4d8..9355ebbc56ca 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -113,6 +113,7 @@ obj-$(CONFIG_SERIAL_MULTI_INSTANTIATE)	+= serial-multi-instantiate.o
->  obj-$(CONFIG_MLX_PLATFORM)		+= mlx-platform.o
->  obj-$(CONFIG_TOUCHSCREEN_DMI)		+= touchscreen_dmi.o
->  obj-$(CONFIG_WIRELESS_HOTKEY)		+= wireless-hotkey.o
-> +obj-$(CONFIG_SILICOM_PLATFORM)		+= silicom-platform.o
->  obj-$(CONFIG_X86_ANDROID_TABLETS)	+= x86-android-tablets/
+>  /* ARM SMC call which is atomic and no need for lock. */
+>  static int mlxbf_bootctl_smc(unsigned int smc_op, int smc_arg)
+> @@ -454,6 +499,401 @@ static ssize_t os_up_store(struct device *dev,
+>  	return count;
+>  }
 >  
->  # Intel uncore drivers
-> diff --git a/drivers/platform/x86/silicom-platform.c b/drivers/platform/x86/silicom-platform.c
-> new file mode 100644
-> index 000000000000..f8d1eb68b105
-> --- /dev/null
-> +++ b/drivers/platform/x86/silicom-platform.c
-> @@ -0,0 +1,1053 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +//
-> +// silicom-platform.c - Silicom MEC170x platform driver
-> +//
-> +// Copyright (C) 2023 Henry Shi <henrys@silicom-usa.com>
-> +
-> +#include <linux/dmi.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/init.h>
-> +#include <linux/ioport.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/led-class-multicolor.h>
-> +#include <linux/module.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/mutex.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/string.h>
-> +#include <linux/kobject.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/bits.h>
-> +#include <linux/bitfield.h>
-> +
-> +#define MEC_ADDR ((mec_io_base) + 0x02)
-> +#define MEC_DATA(offset) ((mec_io_base) + 0x04 + (offset))
-> +#define EC_ADDR_LSB MEC_ADDR
-> +#define EC_ADDR_MSB ((mec_io_base) + 0x03)
-> +#define SILICOM_MEC_MAGIC 0x5a
-> +#define OFFSET_BIT_TO_CHANNEL(off, bit) ((((off) + 0x014) << 3) | (bit))
-> +#define CHANNEL_TO_OFFSET(chan) (((chan) >> 3) - 0x14)
-> +#define IO_REG_BANK 0
-> +#define DEFAULT_CHAN_LO 0
-> +#define DEFAULT_CHAN_HI 0
-> +
-> +static DEFINE_MUTEX(mec_io_mutex);
-> +static int mec_io_base, mec_io_len;
-> +static struct device *my_dev;
-> +static int efuse_status;
-> +static int mec_uc_version;
-> +static int power_cycle;
-> +
-> +struct silicom_fan_control_data {
-> +	struct   device *hdev;
-> +	int      temp;
-> +	int      fan_speed;
-> +};
-> +
-> +static const struct hwmon_channel_info *silicom_fan_control_info[] = {
-> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_LABEL),
-> +	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT | HWMON_T_LABEL),
-> +	NULL
-> +};
-> +
-> +struct silicom_platform_info {
-> +	int io_base;
-> +	int io_len;
-> +	struct led_classdev_mc *led_info;
-> +	struct gpio_chip *gpiochip;
-> +	u8 *gpio_channels;
-> +	u16 ngpio;
-> +};
-> +
-> +static const char * const plat_0222_gpio_names[] = {
-> +	"AUTOM0_SFP_TX_FAULT",
-> +	"SLOT2_LED_OUT",
-> +	"SIM_M2_SLOT2_B_DET",
-> +	"SIM_M2_SLOT2_A_DET",
-> +	"SLOT1_LED_OUT",
-> +	"SIM_M2_SLOT1_B_DET",
-> +	"SIM_M2_SLOT1_A_DET",
-> +	"SLOT0_LED_OUT",
-> +	"WAN_SFP0_RX_LOS",
-> +	"WAN_SFP0_PRSNT_N",
-> +	"WAN_SFP0_TX_FAULT",
-> +	"AUTOM1_SFP_RX_LOS",
-> +	"AUTOM1_SFP_PRSNT_N",
-> +	"AUTOM1_SFP_TX_FAULT",
-> +	"AUTOM0_SFP_RX_LOS",
-> +	"AUTOM0_SFP_PRSNT_N",
-> +	"WAN_SFP1_RX_LOS",
-> +	"WAN_SFP1_PRSNT_N",
-> +	"WAN_SFP1_TX_FAULT",
-> +	"SIM_M2_SLOT1_MUX_SEL",
-> +	"W_DISABLE_M2_SLOT1_N",
-> +	"W_DISABLE_MPCIE_SLOT0_N",
-> +	"W_DISABLE_M2_SLOT0_N",
-> +	"BT_COMMAND_MODE",
-> +	"WAN_SFP1_TX_DISABLE",
-> +	"WAN_SFP0_TX_DISABLE",
-> +	"AUTOM1_SFP_TX_DISABLE",
-> +	"AUTOM0_SFP_TX_DISABLE",
-> +	"SIM_M2_SLOT2_MUX_SEL",
-> +	"W_DISABLE_M2_SLOT2_N",
-> +	"RST_CTL_M2_SLOT_1_N",
-> +	"RST_CTL_M2_SLOT_2_N",
-> +	"PM_USB_PWR_EN_BOT",
-> +	"PM_USB_PWR_EN_TOP",
-> +};
-> +
-> +static u8 plat_0222_gpio_channels[] = {
-> +	OFFSET_BIT_TO_CHANNEL(0x00, 0),
-> +	OFFSET_BIT_TO_CHANNEL(0x00, 1),
-> +	OFFSET_BIT_TO_CHANNEL(0x00, 2),
-> +	OFFSET_BIT_TO_CHANNEL(0x00, 3),
-> +	OFFSET_BIT_TO_CHANNEL(0x00, 4),
-> +	OFFSET_BIT_TO_CHANNEL(0x00, 5),
-> +	OFFSET_BIT_TO_CHANNEL(0x00, 6),
-> +	OFFSET_BIT_TO_CHANNEL(0x00, 7),
-> +	OFFSET_BIT_TO_CHANNEL(0x01, 0),
-> +	OFFSET_BIT_TO_CHANNEL(0x01, 1),
-> +	OFFSET_BIT_TO_CHANNEL(0x01, 2),
-> +	OFFSET_BIT_TO_CHANNEL(0x01, 3),
-> +	OFFSET_BIT_TO_CHANNEL(0x01, 4),
-> +	OFFSET_BIT_TO_CHANNEL(0x01, 5),
-> +	OFFSET_BIT_TO_CHANNEL(0x01, 6),
-> +	OFFSET_BIT_TO_CHANNEL(0x01, 7),
-> +	OFFSET_BIT_TO_CHANNEL(0x02, 0),
-> +	OFFSET_BIT_TO_CHANNEL(0x02, 1),
-> +	OFFSET_BIT_TO_CHANNEL(0x02, 2),
-> +	OFFSET_BIT_TO_CHANNEL(0x09, 0),
-> +	OFFSET_BIT_TO_CHANNEL(0x09, 1),
-> +	OFFSET_BIT_TO_CHANNEL(0x09, 2),
-> +	OFFSET_BIT_TO_CHANNEL(0x09, 3),
-> +	OFFSET_BIT_TO_CHANNEL(0x0a, 0),
-> +	OFFSET_BIT_TO_CHANNEL(0x0a, 1),
-> +	OFFSET_BIT_TO_CHANNEL(0x0a, 2),
-> +	OFFSET_BIT_TO_CHANNEL(0x0a, 3),
-> +	OFFSET_BIT_TO_CHANNEL(0x0a, 4),
-> +	OFFSET_BIT_TO_CHANNEL(0x0a, 5),
-> +	OFFSET_BIT_TO_CHANNEL(0x0a, 6),
-> +	OFFSET_BIT_TO_CHANNEL(0x0b, 0),
-> +	OFFSET_BIT_TO_CHANNEL(0x0b, 1),
-> +	OFFSET_BIT_TO_CHANNEL(0x0b, 2),
-> +	OFFSET_BIT_TO_CHANNEL(0x0b, 3),
-> +};
-> +
-> +static struct platform_device *silicom_platform_dev;
-> +static struct led_classdev_mc *silicom_led_info __initdata;
-> +static struct gpio_chip *silicom_gpiochip __initdata;
-> +static u8 *silicom_gpio_channels __initdata;
-> +
-> +static int silicom_mec_port_get(unsigned int offset)
+> +static ssize_t oob_mac_show(struct device *dev,
+> +			    struct device_attribute *attr, char *buf)
 > +{
-> +	u8 reg;
+> +	char mac_str[MLNX_MFG_OOB_MAC_FORMAT_LEN + 1] = { 0 };
+> +	struct arm_smccc_res res;
+> +	u8 *mac_byte_ptr;
 > +
-> +	mutex_lock(&mec_io_mutex);
-> +	/* Get the dword offset from the channel */
-> +	outb((offset >> 3) & 0xfc, MEC_ADDR);
+> +	mutex_lock(&mfg_ops_lock);
+> +	arm_smccc_smc(MLXBF_BOOTCTL_GET_MFG_INFO, MLNX_MFG_TYPE_OOB_MAC, 0, 0, 0,
+> +		      0, 0, 0, &res);
+> +	mutex_unlock(&mfg_ops_lock);
+> +	if (res.a0)
+> +		return -EPERM;
 > +
-> +	/* Get the current register */
-> +	reg = inb(MEC_DATA((offset >> 3) & 0x03));
-> +	mutex_unlock(&mec_io_mutex);
+> +	mac_byte_ptr = (u8 *)&res.a1;
 > +
-> +	return (reg >> (offset & 0x7)) & 0x01;
-> +}
-> +
-> +static enum led_brightness silicom_mec_led_get(int channel)
-> +{
-> +	u8 reg;
-> +
-> +	mutex_lock(&mec_io_mutex);
-> +	/* Get the dword offset of the register for this LED from the channel */
-> +	outb((channel >> 3) & 0xfc, MEC_ADDR);
-> +	/* Get the current LED settings */
-> +	reg = inb(MEC_DATA((channel >> 3) & 0x03));
-> +	mutex_unlock(&mec_io_mutex);
-> +
-> +	/* Outputs are active low */
-> +	return silicom_mec_port_get(channel) ? LED_OFF : LED_ON;
+> +	sprintf(mac_str, "%02X:%02X:%02X:%02X:%02X:%02X",
+> +		mac_byte_ptr[0], mac_byte_ptr[1], mac_byte_ptr[2],
+> +		mac_byte_ptr[3], mac_byte_ptr[4], mac_byte_ptr[5]);
 
-Why is code now done twice, first in this function and then it calls 
-silicom_mec_port_get() which does the same thing?? Perhaps you forgot to 
-remove it from this function while you added the call.
+Always use snprintf() with sizeof(). Please check 
+Documentation/core-api/printk-formats.rst for MAC address format 
+specifier.
+
+> +	return snprintf(buf, PAGE_SIZE, "%s", mac_str);
+
+Can't you use sysfs_format_mac()?
 
 > +}
 > +
-> +static void silicom_mec_port_set(int channel, int on)
+> +static ssize_t oob_mac_store(struct device *dev,
+> +			     struct device_attribute *attr,
+> +			     const char *buf, size_t count)
 > +{
-> +	u8 reg;
+> +	int byte[MLNX_MFG_OOB_MAC_FORMAT_LEN] = { 0 };
+> +	struct arm_smccc_res res;
+> +	int byte_idx, len;
+> +	u64 mac_addr = 0;
+> +	u8 *mac_byte_ptr;
 > +
-> +	mutex_lock(&mec_io_mutex);
-> +	/* Get the dword offset from the channel */
-> +	outb((channel >> 3) & 0xfc, MEC_ADDR);
-> +	/* Get the current port settings */
-> +	reg = inb(MEC_DATA((channel >> 3) & 0x03));
-> +	/* Outputs are active low, so clear the bit for on, or set it for off */
-> +	if (on)
-> +		reg &= ~(1 << (channel & 0x7));
-> +	else
-> +		reg |= 1 << (channel & 0x7);
-> +	/* Write back the updated register */
-> +	outb(reg, MEC_DATA((channel >> 3) & 0x03));
-> +	mutex_unlock(&mec_io_mutex);
-> +}
-> +
-> +static enum led_brightness silicom_mec_led_mc_brightness_get(struct led_classdev *led_cdev)
-> +{
-> +	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(led_cdev);
-> +	enum led_brightness brightness = LED_OFF;
-> +	int i;
-> +
-> +	for (i = 0; i < mc_cdev->num_colors; i++) {
-> +		mc_cdev->subled_info[i].brightness =
-> +			silicom_mec_led_get(mc_cdev->subled_info[i].channel);
-> +		/* Mark the overall brightness as LED_ON if any of the subleds are on */
-> +		if (mc_cdev->subled_info[i].brightness != LED_OFF)
-> +			brightness = LED_ON;
-> +	}
-> +
-> +	return brightness;
-> +}
-> +
-> +static void silicom_mec_led_mc_brightness_set(struct led_classdev *led_cdev,
-> +											enum led_brightness brightness)
-> +{
-> +	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(led_cdev);
-> +	int i;
-> +
-> +	led_mc_calc_color_components(mc_cdev, brightness);
-> +	for (i = 0; i < mc_cdev->num_colors; i++) {
-> +		silicom_mec_port_set(mc_cdev->subled_info[i].channel,
-> +					mc_cdev->subled_info[i].brightness);
-
-Align the arguments to the same column please.
-
-> +	}
-> +}
-> +
-> +static int silicom_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	u8 *channels = gpiochip_get_data(gc);
-> +
-> +	/* Input registers have offsets between [0x00, 0x07] */
-> +	if (CHANNEL_TO_OFFSET(channels[offset]) < 0x08)
-> +		return GPIO_LINE_DIRECTION_IN;
-> +
-> +	return GPIO_LINE_DIRECTION_OUT;
-> +}
-> +
-> +static int silicom_gpio_direction_input(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	int direction = silicom_gpio_get_direction(gc, offset);
-> +
-> +	return direction == GPIO_LINE_DIRECTION_IN ? 0 : -EINVAL;
-> +}
-> +
-> +static void silicom_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
-> +{
-> +	u8 *channels = gpiochip_get_data(gc);
-> +	int direction = silicom_gpio_get_direction(gc, offset);
-> +	int channel = channels[offset];
-> +
-> +	if (direction == GPIO_LINE_DIRECTION_IN)
-> +		return;
-> +
-> +	if (value)
-> +		silicom_mec_port_set(channel, 0);
-> +	else if (value == 0)
-> +		silicom_mec_port_set(channel, 1);
-> +	else
-> +		pr_err("Wrong argument value: %d\n", value);
-> +}
-> +
-> +static int silicom_gpio_direction_output(struct gpio_chip *gc, unsigned int offset, int value)
-> +{
-> +	int direction = silicom_gpio_get_direction(gc, offset);
-> +
-> +	if (direction == GPIO_LINE_DIRECTION_IN)
+> +	if ((count - 1) != MLNX_MFG_OOB_MAC_FORMAT_LEN)
 > +		return -EINVAL;
 > +
-> +	silicom_gpio_set(gc, offset, value);
+> +	len = sscanf(buf, "%02x:%02x:%02x:%02x:%02x:%02x",
+> +		     &byte[0], &byte[1], &byte[2],
+> +		     &byte[3], &byte[4], &byte[5]);
+
+Why is byte int, unsigned int at minimum.
+
+> +	if (len != MLNX_MFG_OOB_MAC_LEN)
+> +		return -EINVAL;
 > +
-> +	return 0;
+> +	mac_byte_ptr = (u8 *)&mac_addr;
+> +
+> +	for (byte_idx = 0; byte_idx < MLNX_MFG_OOB_MAC_LEN; byte_idx++)
+> +		mac_byte_ptr[byte_idx] = (u8)byte[byte_idx];
+> +
+> +	mutex_lock(&mfg_ops_lock);
+> +	arm_smccc_smc(MLXBF_BOOTCTL_SET_MFG_INFO, MLNX_MFG_TYPE_OOB_MAC,
+> +		      MLNX_MFG_OOB_MAC_LEN, mac_addr, 0, 0, 0, 0, &res);
+> +	mutex_unlock(&mfg_ops_lock);
+> +
+> +	return res.a0 ? -EPERM : count;
 > +}
 > +
-> +static int silicom_gpio_get(struct gpio_chip *gc, unsigned int offset)
+> +static ssize_t opn_show(struct device *dev,
+> +			struct device_attribute *attr, char *buf)
 > +{
-> +	u8 *channels = gpiochip_get_data(gc);
-> +	int channel = channels[offset];
+> +	u64 opn_data[MLNX_MFG_VAL_QWORD_CNT(OPN)] = { 0 };
+> +	char opn[MLNX_MFG_OPN_VAL_LEN + 1] = { 0 };
+> +	struct arm_smccc_res res;
+> +	int word;
 > +
-> +	return silicom_mec_port_get(channel);
-> +}
-> +
-> +
-
-
-> +static ssize_t efuse_status_show(struct device *dev, struct device_attribute *attr,
-> +								char *buf)
-> +{
-> +	u32 reg;
-> +
-> +	mutex_lock(&mec_io_mutex);
-> +	/* Select memory region */
-> +	outb(IO_REG_BANK, EC_ADDR_MSB);
-> +	outb(0x28, EC_ADDR_LSB);
-
-That 0x28 is some HW offset right? It should be named to what is found at 
-that address with a define. Fiven the function name, perhaps something 
-along the lines of #define MEC_EFUSE_STATUS	0x28
-
-> +
-> +	/* Get current data from the address */
-> +	reg = inl(MEC_DATA(DEFAULT_CHAN_LO));
-> +	mutex_unlock(&mec_io_mutex);
-> +
-> +	efuse_status = reg & 0x1;
-> +
-> +	return sprintf(buf, "%d\n", efuse_status);
-> +}
-> +
-> +static ssize_t uc_version_show(struct device *dev,
-> +					struct device_attribute *attr,
-> +					char *buf)
-> +{
-> +	u32 reg;
-> +	int uc_version;
-> +
-> +	mutex_lock(&mec_io_mutex);
-> +	outb(IO_REG_BANK, EC_ADDR_MSB);
-> +	outb(0x0, EC_ADDR_LSB);
-
-Named define for 0x0.
-
-> +
-> +	reg = inl(MEC_DATA(DEFAULT_CHAN_LO));
-> +	mutex_unlock(&mec_io_mutex);
-> +	uc_version = FIELD_GET(GENMASK(15, 8), reg);
-
-In general, it's more useful to have #define with name for GENMASK() like 
-this, but see below...
-
-> +	if (uc_version >= 64 && uc_version < 128) {
-> +		uc_version &= ~(1 << 6);
-> +		uc_version = 100 + uc_version;
-> +	} else if (uc_version >= 128 && uc_version < 192) {
-> +		uc_version &= ~(1 << 7);
-> +		uc_version = 200 + uc_version;
+> +	mutex_lock(&mfg_ops_lock);
+> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(OPN); word++) {
+> +		arm_smccc_smc(MLXBF_BOOTCTL_GET_MFG_INFO,
+> +			      MLNX_MFG_TYPE_OPN_0 + word,
+> +			      0, 0, 0, 0, 0, 0, &res);
+> +		if (res.a0) {
+> +			mutex_unlock(&mfg_ops_lock);
+> +			return -EPERM;
+> +		}
+> +		opn_data[word] = res.a1;
 > +	}
-
-I see you probably missed what I tried to say earlier. Does this version 
-field have two distinct fields? How about this:
-
-#define	MEC_VERSION_MAJOR	GENMASK(15, 14)
-#define MEC_VERSION_MINOR	GENMASK(13, 8)
-
-	uc_version = FIELD_GET(MEC_VERSION_MAJOR, reg) * 100 +
-		     FIELD_GET(MEC_VERSION_MINOR, reg);
-
-...you might want to add something for >= 192 values (or accept they'll be 
-in 300..3xx range if that's okay, I don't know the internals of this 
-fields so I cannot tell which is preferred here).
-
-I think the results are identical to what the above code does but doesn't
-require any if()s (sans >= 192 that might need additional check).
-
-> +	mec_uc_version = uc_version;
-> +	return sprintf(buf, "%d\n", mec_uc_version);
+> +	mutex_unlock(&mfg_ops_lock);
+> +	memcpy(opn, opn_data, MLNX_MFG_OPN_VAL_LEN);
+> +
+> +	return snprintf(buf, PAGE_SIZE, "%s", opn);
 > +}
 > +
-> +static ssize_t power_cycle_show(struct device *dev,
-> +				struct device_attribute *attr,
-> +				char *buf)
+> +static ssize_t opn_store(struct device *dev,
+> +			 struct device_attribute *attr,
+> +			 const char *buf, size_t count)
 > +{
-> +	return sprintf(buf, "%d\n", power_cycle);
+> +	u64 opn[MLNX_MFG_VAL_QWORD_CNT(OPN)] = { 0 };
+> +	struct arm_smccc_res res;
+> +	int word;
+> +
+> +	if (count > MLNX_MFG_OPN_VAL_LEN)
+> +		return -EINVAL;
+> +
+> +	memcpy(opn, buf, count);
+> +
+> +	mutex_lock(&mfg_ops_lock);
+> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(OPN); word++) {
+> +		arm_smccc_smc(MLXBF_BOOTCTL_SET_MFG_INFO,
+> +			      MLNX_MFG_TYPE_OPN_0 + word,
+> +			      sizeof(u64), opn[word], 0, 0, 0, 0, &res);
+> +		if (res.a0) {
+> +			mutex_unlock(&mfg_ops_lock);
+> +			return -EPERM;
+> +		}
+> +	}
+> +	mutex_unlock(&mfg_ops_lock);
+> +
+> +	return count;
 > +}
 > +
-> +static void powercycle_uc(void)
+> +static ssize_t sku_show(struct device *dev,
+> +			struct device_attribute *attr, char *buf)
 > +{
-> +	mutex_lock(&mec_io_mutex);
-> +	/* Select memory region */
-> +	outb(IO_REG_BANK, EC_ADDR_MSB);
-> +	outb(0x24, EC_ADDR_LSB);
+> +	u64 sku_data[MLNX_MFG_VAL_QWORD_CNT(SKU)] = { 0 };
+> +	char sku[MLNX_MFG_SKU_VAL_LEN + 1] = { 0 };
+> +	struct arm_smccc_res res;
+> +	int word;
+> +
+> +	mutex_lock(&mfg_ops_lock);
+> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(SKU); word++) {
+> +		arm_smccc_smc(MLXBF_BOOTCTL_GET_MFG_INFO,
+> +			      MLNX_MFG_TYPE_SKU_0 + word,
+> +			      0, 0, 0, 0, 0, 0, &res);
+> +		if (res.a0) {
+> +			mutex_unlock(&mfg_ops_lock);
+> +			return -EPERM;
+> +		}
+> +		sku_data[word] = res.a1;
+> +	}
+> +	mutex_unlock(&mfg_ops_lock);
+> +	memcpy(sku, sku_data, MLNX_MFG_SKU_VAL_LEN);
+> +
+> +	return snprintf(buf, PAGE_SIZE, "%s", sku);
+> +}
+> +
+> +static ssize_t sku_store(struct device *dev,
+> +			 struct device_attribute *attr,
+> +			 const char *buf, size_t count)
+> +{
+> +	u64 sku[MLNX_MFG_VAL_QWORD_CNT(SKU)] = { 0 };
+> +	struct arm_smccc_res res;
+> +	int word;
+> +
+> +	if (count > MLNX_MFG_SKU_VAL_LEN)
+> +		return -EINVAL;
+> +
+> +	memcpy(sku, buf, count);
+> +
+> +	mutex_lock(&mfg_ops_lock);
+> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(SKU); word++) {
+> +		arm_smccc_smc(MLXBF_BOOTCTL_SET_MFG_INFO,
+> +			      MLNX_MFG_TYPE_SKU_0 + word,
+> +			      sizeof(u64), sku[word], 0, 0, 0, 0, &res);
+> +		if (res.a0) {
+> +			mutex_unlock(&mfg_ops_lock);
+> +			return -EPERM;
+> +		}
+> +	}
+> +	mutex_unlock(&mfg_ops_lock);
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t modl_show(struct device *dev,
+> +			 struct device_attribute *attr, char *buf)
+> +{
+> +	u64 modl_data[MLNX_MFG_VAL_QWORD_CNT(MODL)] = { 0 };
+> +	char modl[MLNX_MFG_MODL_VAL_LEN + 1] = { 0 };
+> +	struct arm_smccc_res res;
+> +	int word;
+> +
+> +	mutex_lock(&mfg_ops_lock);
+> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(MODL); word++) {
+> +		arm_smccc_smc(MLXBF_BOOTCTL_GET_MFG_INFO,
+> +			      MLNX_MFG_TYPE_MODL_0 + word,
+> +			      0, 0, 0, 0, 0, 0, &res);
+> +		if (res.a0) {
+> +			mutex_unlock(&mfg_ops_lock);
+> +			return -EPERM;
+> +		}
+> +		modl_data[word] = res.a1;
+> +	}
+> +	mutex_unlock(&mfg_ops_lock);
+> +	memcpy(modl, modl_data, MLNX_MFG_MODL_VAL_LEN);
 
-Named define for 0x24.
+Why are these memcpy()s needed?
+
+> +	return snprintf(buf, PAGE_SIZE, "%s", modl);
+> +}
+> +
+> +static ssize_t modl_store(struct device *dev,
+> +			  struct device_attribute *attr,
+> +			  const char *buf, size_t count)
+> +{
+> +	u64 modl[MLNX_MFG_VAL_QWORD_CNT(MODL)] = { 0 };
+> +	struct arm_smccc_res res;
+> +	int word;
+> +
+> +	if (count > MLNX_MFG_MODL_VAL_LEN)
+> +		return -EINVAL;
+> +
+> +	memcpy(modl, buf, count);
+> +
+> +	mutex_lock(&mfg_ops_lock);
+> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(MODL); word++) {
+> +		arm_smccc_smc(MLXBF_BOOTCTL_SET_MFG_INFO,
+> +			      MLNX_MFG_TYPE_MODL_0 + word,
+> +			      sizeof(u64), modl[word], 0, 0, 0, 0, &res);
+> +		if (res.a0) {
+> +			mutex_unlock(&mfg_ops_lock);
+> +			return -EPERM;
+> +		}
+> +	}
+> +	mutex_unlock(&mfg_ops_lock);
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t sn_show(struct device *dev,
+> +		       struct device_attribute *attr, char *buf)
+> +{
+> +	u64 sn_data[MLNX_MFG_VAL_QWORD_CNT(SN)] = { 0 };
+> +	char sn[MLNX_MFG_SN_VAL_LEN + 1] = { 0 };
+> +	struct arm_smccc_res res;
+> +	int word;
+> +
+> +	mutex_lock(&mfg_ops_lock);
+> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(SN); word++) {
+> +		arm_smccc_smc(MLXBF_BOOTCTL_GET_MFG_INFO,
+> +			      MLNX_MFG_TYPE_SN_0 + word,
+> +			      0, 0, 0, 0, 0, 0, &res);
+> +		if (res.a0) {
+> +			mutex_unlock(&mfg_ops_lock);
+> +			return -EPERM;
+> +		}
+> +		sn_data[word] = res.a1;
+> +	}
+> +	mutex_unlock(&mfg_ops_lock);
+> +	memcpy(sn, sn_data, MLNX_MFG_SN_VAL_LEN);
+> +
+> +	return snprintf(buf, PAGE_SIZE, "%s", sn);
+> +}
+> +
+> +static ssize_t sn_store(struct device *dev,
+> +			struct device_attribute *attr,
+> +			const char *buf, size_t count)
+> +{
+> +	u64 sn[MLNX_MFG_VAL_QWORD_CNT(SN)] = { 0 };
+> +	struct arm_smccc_res res;
+> +	int word;
+> +
+> +	if (count > MLNX_MFG_SN_VAL_LEN)
+> +		return -EINVAL;
+> +
+> +	memcpy(sn, buf, count);
+> +
+> +	mutex_lock(&mfg_ops_lock);
+> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(SN); word++) {
+> +		arm_smccc_smc(MLXBF_BOOTCTL_SET_MFG_INFO,
+> +			      MLNX_MFG_TYPE_SN_0 + word,
+> +			      sizeof(u64), sn[word], 0, 0, 0, 0, &res);
+> +		if (res.a0) {
+> +			mutex_unlock(&mfg_ops_lock);
+> +			return -EPERM;
+> +		}
+> +	}
+> +	mutex_unlock(&mfg_ops_lock);
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t uuid_show(struct device *dev,
+> +			 struct device_attribute *attr, char *buf)
+> +{
+> +	u64 uuid_data[MLNX_MFG_VAL_QWORD_CNT(UUID)] = { 0 };
+> +	char uuid[MLNX_MFG_UUID_VAL_LEN + 1] = { 0 };
+> +	struct arm_smccc_res res;
+> +	int word;
+> +
+> +	mutex_lock(&mfg_ops_lock);
+> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(UUID); word++) {
+> +		arm_smccc_smc(MLXBF_BOOTCTL_GET_MFG_INFO,
+> +			      MLNX_MFG_TYPE_UUID_0 + word,
+> +			      0, 0, 0, 0, 0, 0, &res);
+> +		if (res.a0) {
+> +			mutex_unlock(&mfg_ops_lock);
+> +			return -EPERM;
+> +		}
+> +		uuid_data[word] = res.a1;
+> +	}
+> +	mutex_unlock(&mfg_ops_lock);
+> +	memcpy(uuid, uuid_data, MLNX_MFG_UUID_VAL_LEN);
+> +
+> +	return snprintf(buf, PAGE_SIZE, "%s", uuid);
+> +}
+> +
+> +static ssize_t uuid_store(struct device *dev,
+> +			  struct device_attribute *attr,
+> +			  const char *buf, size_t count)
+> +{
+> +	u64 uuid[MLNX_MFG_VAL_QWORD_CNT(UUID)] = { 0 };
+> +	struct arm_smccc_res res;
+> +	int word;
+> +
+> +	if (count > MLNX_MFG_UUID_VAL_LEN)
+> +		return -EINVAL;
+> +
+> +	memcpy(uuid, buf, count);
+> +
+> +	mutex_lock(&mfg_ops_lock);
+> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(UUID); word++) {
+> +		arm_smccc_smc(MLXBF_BOOTCTL_SET_MFG_INFO,
+> +			      MLNX_MFG_TYPE_UUID_0 + word,
+> +			      sizeof(u64), uuid[word], 0, 0, 0, 0, &res);
+> +		if (res.a0) {
+> +			mutex_unlock(&mfg_ops_lock);
+> +			return -EPERM;
+> +		}
+> +	}
+> +	mutex_unlock(&mfg_ops_lock);
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t rev_show(struct device *dev,
+> +			struct device_attribute *attr, char *buf)
+> +{
+> +	u64 rev_data[MLNX_MFG_VAL_QWORD_CNT(REV)] = { 0 };
+> +	char rev[MLNX_MFG_REV_VAL_LEN + 1] = { 0 };
+> +	struct arm_smccc_res res;
+> +	int word;
+> +
+> +	mutex_lock(&mfg_ops_lock);
+> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(REV); word++) {
+> +		arm_smccc_smc(MLXBF_BOOTCTL_GET_MFG_INFO,
+> +			      MLNX_MFG_TYPE_REV + word,
+> +			      0, 0, 0, 0, 0, 0, &res);
+> +		if (res.a0) {
+> +			mutex_unlock(&mfg_ops_lock);
+> +			return -EPERM;
+> +		}
+> +		rev_data[word] = res.a1;
+> +	}
+> +	mutex_unlock(&mfg_ops_lock);
+> +	memcpy(rev, rev_data, MLNX_MFG_REV_VAL_LEN);
+> +
+> +	return snprintf(buf, PAGE_SIZE, "%s", rev);
+> +}
+> +
+> +static ssize_t rev_store(struct device *dev,
+> +			 struct device_attribute *attr,
+> +			 const char *buf, size_t count)
+> +{
+> +	u64 rev[MLNX_MFG_VAL_QWORD_CNT(REV)] = { 0 };
+> +	struct arm_smccc_res res;
+> +	int word;
+> +
+> +	if (count > MLNX_MFG_REV_VAL_LEN)
+> +		return -EINVAL;
+> +
+> +	memcpy(rev, buf, count);
+> +
+> +	mutex_lock(&mfg_ops_lock);
+> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(REV); word++) {
+> +		arm_smccc_smc(MLXBF_BOOTCTL_SET_MFG_INFO,
+> +			      MLNX_MFG_TYPE_REV + word,
+> +			      sizeof(u64), rev[word], 0, 0, 0, 0, &res);
+> +		if (res.a0) {
+> +			mutex_unlock(&mfg_ops_lock);
+> +			return -EPERM;
+> +		}
+> +	}
+> +	mutex_unlock(&mfg_ops_lock);
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t mfg_lock_store(struct device *dev,
+> +			      struct device_attribute *attr,
+> +			      const char *buf, size_t count)
+> +{
+> +	struct arm_smccc_res res;
+> +	unsigned long val;
+> +	int err;
+> +
+> +	err = kstrtoul(buf, 10, &val);
+> +	if (err)
+> +		return err;
+> +
+> +	if (val != 1)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&mfg_ops_lock);
+> +	arm_smccc_smc(MLXBF_BOOTCTL_LOCK_MFG_INFO, 0, 0, 0, 0, 0, 0, 0, &res);
+> +	mutex_unlock(&mfg_ops_lock);
+> +
+> +	return count;
+> +}
+> +
+>  static DEVICE_ATTR_RW(post_reset_wdog);
+>  static DEVICE_ATTR_RW(reset_action);
+>  static DEVICE_ATTR_RW(second_reset_action);
+> @@ -463,6 +903,14 @@ static DEVICE_ATTR_WO(fw_reset);
+>  static DEVICE_ATTR_WO(rsh_log);
+>  static DEVICE_ATTR_RW(large_icm);
+>  static DEVICE_ATTR_WO(os_up);
+> +static DEVICE_ATTR_RW(oob_mac);
+> +static DEVICE_ATTR_RW(opn);
+> +static DEVICE_ATTR_RW(sku);
+> +static DEVICE_ATTR_RW(modl);
+> +static DEVICE_ATTR_RW(sn);
+> +static DEVICE_ATTR_RW(uuid);
+> +static DEVICE_ATTR_RW(rev);
+> +static DEVICE_ATTR_WO(mfg_lock);
+>  
+>  static struct attribute *mlxbf_bootctl_attrs[] = {
+>  	&dev_attr_post_reset_wdog.attr,
+> @@ -474,6 +922,14 @@ static struct attribute *mlxbf_bootctl_attrs[] = {
+>  	&dev_attr_rsh_log.attr,
+>  	&dev_attr_large_icm.attr,
+>  	&dev_attr_os_up.attr,
+> +	&dev_attr_oob_mac.attr,
+> +	&dev_attr_opn.attr,
+> +	&dev_attr_sku.attr,
+> +	&dev_attr_modl.attr,
+> +	&dev_attr_sn.attr,
+> +	&dev_attr_uuid.attr,
+> +	&dev_attr_rev.attr,
+> +	&dev_attr_mfg_lock.attr,
+>  	NULL
+>  };
+>  
+> diff --git a/drivers/platform/mellanox/mlxbf-bootctl.h b/drivers/platform/mellanox/mlxbf-bootctl.h
+> index 613963d448f2..1299750a8661 100644
+> --- a/drivers/platform/mellanox/mlxbf-bootctl.h
+> +++ b/drivers/platform/mellanox/mlxbf-bootctl.h
+> @@ -81,6 +81,14 @@
+>   */
+>  #define MLXBF_BOOTCTL_FW_RESET  0x8200000D
+>  
+> +/*
+> + * SMC function IDs to set, get and lock the manufacturing information
+> + * stored within the eeprom.
+> + */
+> +#define MLXBF_BOOTCTL_SET_MFG_INFO    0x8200000E
+> +#define MLXBF_BOOTCTL_GET_MFG_INFO    0x8200000F
+> +#define MLXBF_BOOTCTL_LOCK_MFG_INFO   0x82000011
+> +
+>  /*
+>   * SMC function IDs to set and get the large ICM carveout size
+>   * stored in the eeprom.
+> 
 
 -- 
  i.
-
 
