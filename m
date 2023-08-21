@@ -2,125 +2,94 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD58EE49AB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Aug 2023 10:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F92EE4996
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Aug 2023 10:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234603AbjHUKkV (ORCPT
+        id S232670AbjHUKpj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Aug 2023 06:40:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50504 "EHLO
+        Mon, 21 Aug 2023 06:45:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230050AbjHUKkU (ORCPT
+        with ESMTP id S232758AbjHUKpj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Aug 2023 06:40:20 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C409D9;
-        Mon, 21 Aug 2023 03:40:19 -0700 (PDT)
+        Mon, 21 Aug 2023 06:45:39 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3575DB
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Aug 2023 03:45:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692614419; x=1724150419;
+  t=1692614737; x=1724150737;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=T3pqH57YeRysEQczHrN7LymfQeIVRRCVLyFCg4RwBgM=;
-  b=fp7y7dUpU631MgHWai5Y3qyxWrhVFuyIMW4ivjBiijk0jGFmdR29MJOQ
-   aMmY66q+0O5weOW+Hvrj3BNJceasxPABG2+gPqGisOC/bBunjhdnnmlxF
-   oUJu/uAy935gaFThedr/WcXjSUvEcU/Ub7SEyKmtSUR+4yzIubZRNMQo8
-   KnCnXrnS1Xc1chQazAEi19bo0NR7xRNoBUG0YD+3I0+82ioJy1nG1JgRh
-   DoqWuZcMfoPCu8ElA3iv5xQv1fmrxP6MThTzEQzItylCD06YxBAW44o0Z
-   yct3+oNmxym4sWsVjKM2Yb0VKAbfXHm3Z3bf77Q6CyOknkDvWKg/WkpyT
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="370987904"
+  bh=YgEiRbrMplcLCRrYJ7mwbMYmLF1w4emYCH6J8165Cik=;
+  b=YUXKegkagxyAEr2H74lQQbTBDl5YhlehmzzHxFVqgXVvwTGVp5aLk0vx
+   a8VdMfpP08SDu0xJdt8mS6paXcShes53jv4ZYzPvxvt3TlV4MKJRG/uPm
+   wocdfjzrom33BeNtNDO//H3RX0h3bS0eCEkv0pwGNSYnQkeaYFXtrF3ce
+   dJUGam9pv/wiiy35CRGbZeRIi1778aukNQC+0FkCvqubXVqiNkG7nieKb
+   K3rDwFuV+QkS9zsd8lnsne1z/Sgjz+FqsBSl6EzIDsHhDHIVK+bm1Ar0I
+   nL3rtjgtDAaRSwAm7laiN+JZ777EMDjERScCJ7bB33Ekoq8uRPVkyHZ+D
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="404559351"
 X-IronPort-AV: E=Sophos;i="6.01,189,1684825200"; 
-   d="scan'208";a="370987904"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 03:40:03 -0700
+   d="scan'208";a="404559351"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 03:45:37 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="729380551"
+X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="712743036"
 X-IronPort-AV: E=Sophos;i="6.01,189,1684825200"; 
-   d="scan'208";a="729380551"
+   d="scan'208";a="712743036"
 Received: from nsnaveen-mobl.gar.corp.intel.com ([10.252.54.252])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 03:39:57 -0700
-Date:   Mon, 21 Aug 2023 13:39:55 +0300 (EEST)
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 03:45:35 -0700
+Date:   Mon, 21 Aug 2023 13:45:33 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Huibin Shi <henrys@silicom-usa.com>
-cc:     Henry Shi <henryshi2018@gmail.com>,
-        "hbshi69@hotmail.com" <hbshi69@hotmail.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "hb_shi2003@yahoo.com" <hb_shi2003@yahoo.com>,
-        Wen Wang <wenw@silicom-usa.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] Add Silicom Platform Driver
-In-Reply-To: <7f537cef-d5cd-4816-a07b-9df27954ef93@roeck-us.net>
-Message-ID: <1ecd7ad-3878-c826-45a5-7123e55d8527@linux.intel.com>
-References: <20230818154341.20553-1-henryshi2018@gmail.com> <8b8b0503-8f8f-4615-97ab-11d2c0e1a960@roeck-us.net> <PA4PR04MB9222910BAC2754A073A70E609A18A@PA4PR04MB9222.eurprd04.prod.outlook.com> <7f537cef-d5cd-4816-a07b-9df27954ef93@roeck-us.net>
+To:     Suma Hegde <Suma.Hegde@amd.com>
+cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        Naveen Krishna Chatradhi <nchatrad@amd.com>
+Subject: Re: [PATCH 3/4] platform/x86/amd/hsmp: change the print message
+In-Reply-To: <20230818125119.1323499-4-Suma.Hegde@amd.com>
+Message-ID: <58185d5f-e9ff-a8dd-f4e6-4a40393ebb4e@linux.intel.com>
+References: <20230818125119.1323499-1-Suma.Hegde@amd.com> <20230818125119.1323499-4-Suma.Hegde@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, 19 Aug 2023, Guenter Roeck wrote:
+The coverletter has 0/3 but the patches came with /4?!?
 
-> On Sat, Aug 19, 2023 at 02:20:32PM +0000, Huibin Shi wrote:
-> > Hi Guenter,
-> > 
-> > Thanks for your comments. Probably, I should not resubmit patch too rushed. I will add version number to subject and change log in cover letter for next resubmission.
-> > 
-> > See my comments below. Please let me know whether you accept my explanation.
-> > 
-> > Henry
-> > -----Original Message-----
-> [ ... ]
+On Fri, 18 Aug 2023, Suma Hegde wrote:
+
+> From: Suma Hegde <suma.hegde@amd.com>
 > 
-> > > +
-> > > +static u32 temp_get(void)
-> > > +{
-> > > +     u32 reg;
-> > > +
-> > > +     mutex_lock(&mec_io_mutex);
-> > > +     /* Select memory region */
-> > > +     outb(IO_REG_BANK, EC_ADDR_MSB);
-> > > +     outb(0xc, EC_ADDR_LSB);
-> > > +     /* Get current data from the address */
-> > > +     reg = inl(MEC_DATA(DEFAULT_CHAN_LO));
-> > > +     mutex_unlock(&mec_io_mutex);
-> > > +
-> > > +     return (reg >> 16) / 10;
-> > 
-> > The hwmon ABI expects temperatures to be reported in milli-degrees C.
-> > The above sets the maximum temperature to 65,535 / 10 = 6,553 milli-degrees or 6.553 degrees C. It is very unlikely that this is correct.
-> > 
-> > Again, I commented on this before.
-> > 
-> > Henry: this is due to an internal implementation of MIcor-controller firmware, instead of putting real temperature to the register, it put (real temperature * 10 ) to the register. So, in order to report correct temperature to user space application, the read value is divided by 10, then report to user space. 
-> > 
-> > Please let me know if you accept this. If not, I can change the code, but let user space application to do adjustment. 
+> The print message during platform init is little ambiguous
+> so change it to a more meaningful clear message.
 > 
-> No, I do not accept this. I do not believe that the maximum temperature
-> reported by the microcontroller is 6.553 degrees C. I suspect it reports
-> 10th of degrees C. In that case, the number reported should be multiplied
-> by 100 to make it milli-degrees C as expected by the ABI.
+> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+> Reviewed-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
+> ---
+>  drivers/platform/x86/amd/hsmp.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
+> index cab59750cde2..1f03a22a9d8a 100644
+> --- a/drivers/platform/x86/amd/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp.c
+> @@ -537,10 +537,10 @@ static int __init hsmp_plt_init(void)
+>  	for (i = 0; i < num_sockets; i++) {
+>  		ret = hsmp_test(i, 0xDEADBEEF);
+>  		if (ret) {
+> -			pr_err("HSMP is not supported on Fam:%x model:%x\n",
+> +			pr_err("HSMP test message failed on Fam:%x model:%x\n",
+>  			       boot_cpu_data.x86, boot_cpu_data.x86_model);
+> -			pr_err("Or Is HSMP disabled in BIOS ?\n");
+> -			return -EOPNOTSUPP;
+> +			pr_err("Is HSMP disabled in BIOS ?\n");
+> +			return ret;
 
-...And for that multiplication, please use the constant defined in 
-include/linux/units.h instead of a literal.
-
-
-And please do version the patches properly, it's getting messy to track 
-which version is which (if something is new or not). If you use git 
-format-patch, it has an argument that can be used to add the version, no 
-need to add it by hand.
-
+Your changelog only talks about changing print, and yet you also change 
+return statement. Please explain things properly in the changelog (or 
+perhaps even make a separate patch out of the return change if it's 
+independent change you planned to make).
 
 -- 
  i.
