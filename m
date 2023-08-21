@@ -2,138 +2,438 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8606EE49A6
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Aug 2023 11:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1358DEE4993
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Aug 2023 11:25:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231592AbjHULNz (ORCPT
+        id S232071AbjHULZi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Aug 2023 07:13:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45772 "EHLO
+        Mon, 21 Aug 2023 07:25:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231425AbjHULNy (ORCPT
+        with ESMTP id S232057AbjHULZi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Aug 2023 07:13:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 202DBE2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Aug 2023 04:13:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1692616387;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FLv+TkAFGQoQHMU5iUg8DMV6ijqUrDP2mgBfimkSRB8=;
-        b=Vs5Gi8kzYdTXaI8t8WhjlqQQOZT/gUSqbQKRPSIUk7Pa+YchXXk4rHXx8C/uTMktkqdnHG
-        YwenJO4ZTWX6xEWsUqplnne0eUpLKOFHpoW9TTuVSndtwJ1sprpaPNFoXBdlOmyblcAwls
-        uqjKC7Z9XSZk0hn08CDWHuEhU9Yn5Z8=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-207-0qXEkgO1NcKmRyCRKERvFA-1; Mon, 21 Aug 2023 07:13:06 -0400
-X-MC-Unique: 0qXEkgO1NcKmRyCRKERvFA-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-99388334de6so214436366b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Aug 2023 04:13:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692616384; x=1693221184;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FLv+TkAFGQoQHMU5iUg8DMV6ijqUrDP2mgBfimkSRB8=;
-        b=CZjIIen5L08N6/WVJKUvySJPp9bpJijhEwmdVKa39m1247KmP+9kkog0+ELClocLcq
-         NFfB7oMYoYy0PzmgSCnd+gUkichx+69MLIfH5In6XUsdLFq1gwzgp/zewjJbZ9vQ0ZSL
-         oN1dkoBtBuDdFE9nVkdb0/UEkpOC243FNXV7GTUlm4tKo4cRrc+QDhLCvwyoOd71BVMd
-         3kk4+6cuRyG0WkItRf30B9TB9tIlqR8xED85KSRCSCvb6fWBDyWSjW6w7z1Ph/pICssA
-         6Y8iUkzPvo+WkWeAFyL8yhzggbzrtMFqnkx0pgnYUkj0sGBpUpHAWAVRK5/MvW2n6ShT
-         k5VQ==
-X-Gm-Message-State: AOJu0YxWCYlv/qVimEklmltSZ1H/Jhh6mQoHdgX5Q5Vi/8BQEKAJQO7L
-        aaTCpWT65WITAU0pt18AYrf0ZXJjftyusga0Ehnvq83fT1uYvKpqm7nO2kVsNSVRiIkDMv45xei
-        Xvu6drbCxKJTXt/+SruZivoxtf9RL5Lm2t4gOWINGlw==
-X-Received: by 2002:a17:906:cc48:b0:99c:bb4d:f5a0 with SMTP id mm8-20020a170906cc4800b0099cbb4df5a0mr4863400ejb.14.1692616384695;
-        Mon, 21 Aug 2023 04:13:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGHWHdNmfToWu5FBCGghpN2lVEXfePQq5j5r60KTclBOe+eLY3OTLQaTvwFKHiCQS8piS/PcQ==
-X-Received: by 2002:a17:906:cc48:b0:99c:bb4d:f5a0 with SMTP id mm8-20020a170906cc4800b0099cbb4df5a0mr4863391ejb.14.1692616384514;
-        Mon, 21 Aug 2023 04:13:04 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id o22-20020a170906289600b0099bd86f9248sm6379338ejd.63.2023.08.21.04.13.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Aug 2023 04:13:04 -0700 (PDT)
-Message-ID: <3d537df6-d5b1-835c-b856-1783747f4eb4@redhat.com>
-Date:   Mon, 21 Aug 2023 13:13:03 +0200
+        Mon, 21 Aug 2023 07:25:38 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF5DD8
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Aug 2023 04:25:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692617133; x=1724153133;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=IaQNL0j2IroZuaW5soVxvNzOGrseLBenwy24BKOZOW0=;
+  b=jZ7gRn7a9ZluzK8vRsRJfUBYgmJNWQRgFC7GDkdSt0tL8scfVufdmHIX
+   KFZBWEsUAQSV2rqJC6ao/bsOzUoFlf8guLWr70ZKHP9zoW8EXfrbst1k2
+   MHCTlA29zgw+JRnNvMvoyPcZyJuwsmDbYv9svQ/NCsYyRjRBIOK/ZFkZx
+   5mualtoljtmUeWV4uyzKuBW+0VG8tjATQd8xteBL1Tv0x4kAmqRkxPDSG
+   vpcrm2+XAo0xxYlY8v9CzW1hchf+qZkE4cfgw7iiSqP+tA/nNVLfujQwU
+   HEBuri52lcttmMxXPOyjmlzCURc2mlUIVxgcAKAVQDOA7U/BzxLcWSgyx
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="439935355"
+X-IronPort-AV: E=Sophos;i="6.01,190,1684825200"; 
+   d="scan'208";a="439935355"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 04:25:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="765332194"
+X-IronPort-AV: E=Sophos;i="6.01,190,1684825200"; 
+   d="scan'208";a="765332194"
+Received: from nsnaveen-mobl.gar.corp.intel.com ([10.252.54.252])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 04:25:33 -0700
+Date:   Mon, 21 Aug 2023 14:25:30 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Suma Hegde <Suma.Hegde@amd.com>
+cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        Naveen Krishna Chatradhi <nchatrad@amd.com>
+Subject: Re: [PATCH 2/4] platform/x86/amd/hsmp: add support for metrics tbl
+In-Reply-To: <20230818125119.1323499-3-Suma.Hegde@amd.com>
+Message-ID: <6fda67c7-f2c4-26db-c3ce-b8b7b53f7ee@linux.intel.com>
+References: <20230818125119.1323499-1-Suma.Hegde@amd.com> <20230818125119.1323499-3-Suma.Hegde@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Add support for new hotkeys
- found on ThinkBook 14s Yoga ITL
-Content-Language: en-US
-To:     =?UTF-8?Q?Andr=c3=a9_Apitzsch?= <git@apitzsch.eu>,
-        Ike Panhc <ike.pan@canonical.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230819-lenovo_keys-v1-1-9d34eac88e0a@apitzsch.eu>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230819-lenovo_keys-v1-1-9d34eac88e0a@apitzsch.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Fri, 18 Aug 2023, Suma Hegde wrote:
 
-On 8/19/23 09:12, André Apitzsch wrote:
-> The Lenovo Thinkbook 14s Yoga ITL has 4 new symbols/shortcuts on their
-> F9-F11 and PrtSc keys:
+> From: Suma Hegde <suma.hegde@amd.com>
 > 
-> F9:    Has a symbol of a head with a headset, the manual says "Service key"
-> F10:   Has a symbol of a telephone horn which has been picked up from the
->        receiver, the manual says: "Answer incoming calls"
-> F11:   Has a symbol of a telephone horn which is resting on the receiver,
->        the manual says: "Reject incoming calls"
-> PrtSc: Has a symbol of a siccor and a dashed ellipse, the manual says:
->        "Open the Windows 'Snipping' Tool app"
+> AMD MI300 MCM provides GET_METRICS_TABLE message with which
+> all the system management information from SMU can be retrieved in just
+> one message.
 > 
-> This commit adds support for these 4 new hkey events.
+> The metrics table is available as hexadecimal sysfs binary file in
+> /sys/devices/platform/amd_hsmp/socket%d_metrics_bin 
+> Metrics table definitions will be documented as part of PPR which
+> available in public domain. The same is defined in the amd_hsmp.h header
+> file as well.
 > 
-> Signed-off-by: André Apitzsch <git@apitzsch.eu>
-
-Thank you for your patch, I've applied this patch to my fixes
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
-
-Note it will show up in my fixes branch once I've pushed my
-local branch there, which might take a while.
-
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
-
-Regards,
-
-Hans
-
+> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+> Reviewed-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
 > ---
->  drivers/platform/x86/ideapad-laptop.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  arch/x86/include/uapi/asm/amd_hsmp.h | 109 +++++++++++++++++++
+>  drivers/platform/x86/amd/hsmp.c      | 155 ++++++++++++++++++++++++++-
+>  2 files changed, 259 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index d2fee9a3e239..6d9297c1d96c 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -1049,6 +1049,11 @@ static const struct key_entry ideapad_keymap[] = {
->  	{ KE_IGNORE,	0x03 | IDEAPAD_WMI_KEY },
->  	/* Customizable Lenovo Hotkey ("star" with 'S' inside) */
->  	{ KE_KEY,	0x01 | IDEAPAD_WMI_KEY, { KEY_FAVORITES } },
-> +	{ KE_KEY,	0x04 | IDEAPAD_WMI_KEY, { KEY_SELECTIVE_SCREENSHOT } },
-> +	/* Lenovo Support */
-> +	{ KE_KEY,	0x07 | IDEAPAD_WMI_KEY, { KEY_HELP } },
-> +	{ KE_KEY,	0x0e | IDEAPAD_WMI_KEY, { KEY_PICKUP_PHONE } },
-> +	{ KE_KEY,	0x0f | IDEAPAD_WMI_KEY, { KEY_HANGUP_PHONE } },
->  	/* Dark mode toggle */
->  	{ KE_KEY,	0x13 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
->  	/* Sound profile switch */
+> diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
+> index 769b939444ae..832701b41c7d 100644
+> --- a/arch/x86/include/uapi/asm/amd_hsmp.h
+> +++ b/arch/x86/include/uapi/asm/amd_hsmp.h
+> @@ -47,6 +47,9 @@ enum hsmp_message_ids {
+>  	HSMP_SET_PCI_RATE,		/* 20h Control link rate on PCIe devices */
+>  	HSMP_SET_POWER_MODE,		/* 21h Select power efficiency profile policy */
+>  	HSMP_SET_PSTATE_MAX_MIN,	/* 22h Set the max and min DF P-State  */
+> +	HSMP_GET_METRIC_TABLE_VER,	/* 23h Get metrics table version  */
+> +	HSMP_GET_METRIC_TABLE,		/* 24h Get metrics table  */
+
+extra spaces before */
+
+> +	HSMP_GET_METRIC_TABLE_DRAM_ADDR,/* 25h Get metrics table dram address */
+>  	HSMP_MSG_ID_MAX,
+>  };
+>  
+> @@ -64,6 +67,14 @@ enum hsmp_msg_type {
+>  	HSMP_GET  = 1,
+>  };
+>  
+> +enum hsmp_proto_versions {
+> +	HSMP_PROTO_VER2	= 2,
+> +	HSMP_PROTO_VER3,
+> +	HSMP_PROTO_VER4,
+> +	HSMP_PROTO_VER5,
+> +	HSMP_PROTO_VER6
+> +};
+> +
+>  struct hsmp_msg_desc {
+>  	int num_args;
+>  	int response_sz;
+> @@ -295,6 +306,104 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[] = {
+>  	 * input: args[0] = min df pstate[15:8] + max df pstate[7:0]
+>  	 */
+>  	{1, 0, HSMP_SET},
+> +
+> +	/*
+> +	 * HSMP_GET_METRIC_TABLE_VER, num_args = 0, response_sz = 1
+> +	 * output: args[0] = metrics table version
+> +	 */
+> +	{0, 1, HSMP_GET},
+> +
+> +	/*
+> +	 * HSMP_GET_METRIC_TABLE, num_args = 0, response_sz = 0
+> +	 */
+> +	{0, 0, HSMP_GET},
+> +
+> +	/*
+> +	 * HSMP_GET_METRIC_TABLE_DRAM_ADDR, num_args = 0, response_sz = 2
+> +	 * output: args[0] = lower 32 bits of the address
+> +	 * output: args[1] = upper 32 bits of the address
+> +	 */
+> +	{0, 2, HSMP_GET},
+> +};
+> +
+> +/* Metrics table for EPYC socket(supported only from proto version 6) */
+> +struct hsmp_metric_table {
+> +	__u32 accumulation_counter;
+> +
+> +	//TEMPERATURE
+> +	__u32 max_socket_temperature;
+> +	__u32 max_vr_temperature;
+> +	__u32 max_hbm_temperature;
+> +	__u64 max_socket_temperature_acc;
+> +	__u64 max_vr_temperature_acc;
+> +	__u64 max_hbm_temperature_acc;
+> +
+> +	//POWER
+> +	__u32 socket_power_limit;
+> +	__u32 max_socket_power_limit;
+> +	__u32 socket_power;
+> +
+> +	//ENERGY
+> +	__u64 timestamp;
+> +	__u64 socket_energy_acc;
+> +	__u64 ccd_energy_acc;
+> +	__u64 xcd_energy_acc;
+> +	__u64 aid_energy_acc;
+> +	__u64 hbm_energy_acc;
+> +
+> +	//FREQUENCY
+> +	__u32 cclk_frequency_limit;
+> +	__u32 gfxclk_frequency_limit;
+> +	__u32 fclk_frequency;
+> +	__u32 uclk_frequency;
+> +	__u32 socclk_frequency[4];
+> +	__u32 vclk_frequency[4];
+> +	__u32 dclk_frequency[4];
+> +	__u32 lclk_frequency[4];
+> +	__u64 gfxclk_frequency_acc[8];
+> +	__u64 cclk_frequency_acc[96];
+> +
+> +	//FREQUENCY RANGE
+> +	__u32 max_cclk_frequency;
+> +	__u32 min_cclk_frequency;
+> +	__u32 max_gfxclk_frequency;
+> +	__u32 min_gfxclk_frequency;
+> +	__u32 fclk_frequency_table[4];
+> +	__u32 uclk_frequency_table[4];
+> +	__u32 socclk_frequency_table[4];
+> +	__u32 vclk_frequency_table[4];
+> +	__u32 dclk_frequency_table[4];
+> +	__u32 lclk_frequency_table[4];
+> +	__u32 max_lclk_dpm_range;
+> +	__u32 min_lclk_dpm_range;
+> +
+> +	//XGMI
+> +	__u32 xgmi_width;
+> +	__u32 xgmi_bitrate;
+> +	__u64 xgmi_read_bandwidth_acc[8];
+> +	__u64 xgmi_write_bandwidth_acc[8];
+> +
+> +	//ACTIVITY
+> +	__u32 socket_c0_residency;
+> +	__u32 socket_gfx_busy;
+> +	__u32 dram_bandwidth_utilization;
+> +	__u64 socket_c0_residency_acc;
+> +	__u64 socket_gfx_busy_acc;
+> +	__u64 dram_bandwidth_acc;
+> +	__u32 max_dram_bandwidth;
+> +	__u64 dram_bandwidth_utilization_acc;
+> +	__u64 pcie_bandwidth_acc[4];
+> +
+> +	//THROTTLERS
+> +	__u32 prochot_residency_acc;
+> +	__u32 ppt_residency_acc;
+> +	__u32 socket_thm_residency_acc;
+> +	__u32 vr_thm_residency_acc;
+> +	__u32 hbm_thm_residency_acc;
+> +	__u32 spare;
+> +
+> +	// New Items at end to maintain driver compatibility
+> +	__u32 gfxclk_frequency[8];
+>  };
+>  
+>  /* Reset to default packing */
+> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
+> index 699c22f7cd42..cab59750cde2 100644
+> --- a/drivers/platform/x86/amd/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp.c
+> @@ -20,7 +20,7 @@
+>  #include <linux/semaphore.h>
+>  
+>  #define DRIVER_NAME		"amd_hsmp"
+> -#define DRIVER_VERSION		"1.0"
+> +#define DRIVER_VERSION		"2.0"
+>  
+>  /* HSMP Status / Error codes */
+>  #define HSMP_STATUS_NOT_READY	0x00
+> @@ -47,7 +47,12 @@
+>  #define HSMP_INDEX_REG		0xc4
+>  #define HSMP_DATA_REG		0xc8
+>  
+> +#define HSMP_CDEV_NAME		"hsmp_cdev"
+> +#define HSMP_DEVNODE_NAME	"hsmp"
+> +
+>  struct hsmp_socket {
+> +	struct bin_attribute hsmp_attr;
+> +	void __iomem *metric_tbl_addr;
+>  	struct semaphore hsmp_sem;
+>  	u16 sock_ind;
+>  };
+> @@ -56,6 +61,7 @@ struct hsmp_plat_device {
+>  	struct miscdevice hsmp_device;
+>  	struct hsmp_socket *sock;
+>  	struct device *dev;
+> +	u32 proto_ver;
+>  };
+>  
+>  static u16 num_sockets;
+> @@ -328,9 +334,122 @@ static const struct file_operations hsmp_fops = {
+>  	.compat_ioctl	= hsmp_ioctl,
+>  };
+>  
+> +static ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
+> +				    struct bin_attribute *bin_attr, char *buf,
+> +				    loff_t off, size_t count)
+> +{
+> +	struct hsmp_socket *sock = bin_attr->private;
+> +	struct hsmp_message msg = { 0 };
+> +	int ret;
+> +
+> +	if (count == 0 || count > sizeof(struct hsmp_metric_table))
+
+!count
+
+> +		return 0;
+> +
+> +	msg.msg_id	= HSMP_GET_METRIC_TABLE;
+> +	msg.sock_ind	= sock->sock_ind;
+> +
+> +	ret = hsmp_send_message(&msg);
+> +	if (ret)
+> +		return ret;
+> +	memcpy(buf, sock->metric_tbl_addr, count);
+> +
+> +	return count;
+> +}
+> +
+> +#define HSMP_ATRR_NAME_SIZE 25
+
+ATTR (typo)?
+
+> +static int hsmp_create_metric_tbl_sysfs_file(int sock_ind)
+> +{
+> +	struct bin_attribute *hattr = &plat_dev.sock[sock_ind].hsmp_attr;
+> +	char *name;
+> +
+> +	sysfs_attr_init(&plat_dev.sock[sock_ind].hsmp_attr);
+> +	name = devm_kzalloc(plat_dev.dev, HSMP_ATRR_NAME_SIZE, GFP_KERNEL);
+> +	if (!name)
+> +		return -ENOMEM;
+> +	sprintf(name, "socket%d_metrics_bin", sock_ind);
+
+snprintf()
+
+> +	hattr->attr.name	= name;
+> +	hattr->attr.mode	= 0444;
+> +	hattr->read		= hsmp_metric_tbl_read;
+> +	hattr->size		= sizeof(struct hsmp_metric_table);
+> +	hattr->private		= &plat_dev.sock[sock_ind];
+> +
+> +	return device_create_bin_file(plat_dev.dev, hattr);
+> +}
+> +
+> +static int hsmp_get_tbl_dram_base(u16 sock_ind)
+> +{
+> +	struct hsmp_socket *sock = &plat_dev.sock[sock_ind];
+> +	struct hsmp_message msg = { 0 };
+> +	phys_addr_t dram_addr;
+> +	int ret;
+> +
+> +	msg.sock_ind	= sock_ind;
+> +	msg.response_sz	= hsmp_msg_desc_table[HSMP_GET_METRIC_TABLE_DRAM_ADDR].response_sz;
+> +	msg.msg_id	= HSMP_GET_METRIC_TABLE_DRAM_ADDR;
+> +
+> +	ret = hsmp_send_message(&msg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * calculate the metric table DRAM address from lower and upper 32 bits
+> +	 * sent from SMU and ioremap it to virtual address.
+> +	 */
+> +	dram_addr = msg.args[0] | ((u64)(msg.args[1]) << 32);
+> +	if (!dram_addr)
+> +		return -ENOMEM;
+> +	sock->metric_tbl_addr = devm_ioremap(plat_dev.dev, dram_addr,
+> +					     sizeof(struct hsmp_metric_table));
+> +	if (!sock->metric_tbl_addr) {
+> +		dev_err(plat_dev.dev, "Unable to ioremap metric table addr\n");
+> +		return -ENOMEM;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int hsmp_create_sysfs_file(void)
+> +{
+> +	int ret, i;
+> +
+> +	for (i = 0; i < num_sockets; i++) {
+> +		ret = hsmp_get_tbl_dram_base(i);
+> +		if (ret)
+> +			goto cleanup;
+> +
+> +		ret = hsmp_create_metric_tbl_sysfs_file(i);
+> +		if (ret) {
+> +			dev_err(plat_dev.dev, "Unable to create sysfs file for metric table\n");
+> +			goto cleanup;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +cleanup:
+> +	while (i > 0)
+> +		device_remove_bin_file(plat_dev.dev, &plat_dev.sock[--i].hsmp_attr);
+> +	return ret;
+> +}
+> +
+> +static int hsmp_cache_proto_ver(void)
+> +{
+> +	struct hsmp_message msg = { 0 };
+> +	int ret;
+> +
+> +	msg.msg_id	= HSMP_GET_PROTO_VER;
+> +	msg.sock_ind	= 0;
+> +	msg.response_sz = hsmp_msg_desc_table[HSMP_GET_PROTO_VER].response_sz;
+> +
+> +	ret = hsmp_send_message(&msg);
+> +	if (!ret)
+> +		plat_dev.proto_ver = msg.args[0];
+> +
+> +	return ret;
+> +}
+> +
+>  static int hsmp_pltdrv_probe(struct platform_device *pdev)
+>  {
+> -	int i;
+> +	int ret, i;
+>  
+>  	plat_dev.sock = devm_kzalloc(&pdev->dev,
+>  				     (num_sockets * sizeof(struct hsmp_socket)),
+> @@ -344,18 +463,44 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
+>  		plat_dev.sock[i].sock_ind = i;
+>  	}
+>  
+> -	plat_dev.hsmp_device.name	= "hsmp_cdev";
+> +	plat_dev.hsmp_device.name	= HSMP_CDEV_NAME;
+>  	plat_dev.hsmp_device.minor	= MISC_DYNAMIC_MINOR;
+>  	plat_dev.hsmp_device.fops	= &hsmp_fops;
+>  	plat_dev.hsmp_device.parent	= &pdev->dev;
+> -	plat_dev.hsmp_device.nodename	= "hsmp";
+> +	plat_dev.hsmp_device.nodename	= HSMP_DEVNODE_NAME;
+>  	plat_dev.hsmp_device.mode	= 0644;
+>  
+> -	return misc_register(&plat_dev.hsmp_device);
+> +	ret = misc_register(&plat_dev.hsmp_device);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = hsmp_cache_proto_ver();
+> +	if (ret) {
+> +		dev_err(plat_dev.dev, "Failed to read HSMP protocol version\n");
+> +		goto cleanup;
+> +	}
+> +
+> +	/* metrics table is supported only from proto ver6 EPYCs */
+> +	if (plat_dev.proto_ver >= HSMP_PROTO_VER6) {
+> +		ret = hsmp_create_sysfs_file();
+> +		if (ret)
+> +			goto cleanup;
+> +	}
+> +	return 0;
+> +
+> +cleanup:
+
+Instead naming labels as "cleanup", try to name them according to what you 
+cleanup, so e.g. here deregister:
+
+> +	misc_deregister(&plat_dev.hsmp_device);
+> +	return ret;
+>  }
+>  
+>  static void hsmp_pltdrv_remove(struct platform_device *pdev)
+>  {
+> +	int i;
+> +
+> +	if (plat_dev.proto_ver >= HSMP_PROTO_VER6) {
+> +		for (i = 0; i < num_sockets; i++)
+> +			device_remove_bin_file(plat_dev.dev, &plat_dev.sock[i].hsmp_attr);
+> +	}
+>  	misc_deregister(&plat_dev.hsmp_device);
+>  }
+>  
 > 
-> ---
-> base-commit: 7271b2a530428b879443b274c191b34536a4ea11
-> change-id: 20230819-lenovo_keys-ed658f4d34d7
-> 
-> Best regards,
+
+-- 
+ i.
 
