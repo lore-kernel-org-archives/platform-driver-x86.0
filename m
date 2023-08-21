@@ -2,438 +2,260 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1358DEE4993
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Aug 2023 11:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707FCEE49A6
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Aug 2023 11:56:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232071AbjHULZi (ORCPT
+        id S232908AbjHUL44 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Aug 2023 07:25:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51174 "EHLO
+        Mon, 21 Aug 2023 07:56:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232057AbjHULZi (ORCPT
+        with ESMTP id S233366AbjHUL44 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Aug 2023 07:25:38 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF5DD8
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Aug 2023 04:25:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692617133; x=1724153133;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=IaQNL0j2IroZuaW5soVxvNzOGrseLBenwy24BKOZOW0=;
-  b=jZ7gRn7a9ZluzK8vRsRJfUBYgmJNWQRgFC7GDkdSt0tL8scfVufdmHIX
-   KFZBWEsUAQSV2rqJC6ao/bsOzUoFlf8guLWr70ZKHP9zoW8EXfrbst1k2
-   MHCTlA29zgw+JRnNvMvoyPcZyJuwsmDbYv9svQ/NCsYyRjRBIOK/ZFkZx
-   5mualtoljtmUeWV4uyzKuBW+0VG8tjATQd8xteBL1Tv0x4kAmqRkxPDSG
-   vpcrm2+XAo0xxYlY8v9CzW1hchf+qZkE4cfgw7iiSqP+tA/nNVLfujQwU
-   HEBuri52lcttmMxXPOyjmlzCURc2mlUIVxgcAKAVQDOA7U/BzxLcWSgyx
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="439935355"
-X-IronPort-AV: E=Sophos;i="6.01,190,1684825200"; 
-   d="scan'208";a="439935355"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 04:25:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="765332194"
-X-IronPort-AV: E=Sophos;i="6.01,190,1684825200"; 
-   d="scan'208";a="765332194"
-Received: from nsnaveen-mobl.gar.corp.intel.com ([10.252.54.252])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 04:25:33 -0700
-Date:   Mon, 21 Aug 2023 14:25:30 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Suma Hegde <Suma.Hegde@amd.com>
-cc:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
-        Naveen Krishna Chatradhi <nchatrad@amd.com>
-Subject: Re: [PATCH 2/4] platform/x86/amd/hsmp: add support for metrics tbl
-In-Reply-To: <20230818125119.1323499-3-Suma.Hegde@amd.com>
-Message-ID: <6fda67c7-f2c4-26db-c3ce-b8b7b53f7ee@linux.intel.com>
-References: <20230818125119.1323499-1-Suma.Hegde@amd.com> <20230818125119.1323499-3-Suma.Hegde@amd.com>
+        Mon, 21 Aug 2023 07:56:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0E0EB
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Aug 2023 04:55:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1692618957;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JZlQIqocknrIlMtIJUoMhvddTuUyuE/0jPIZUKQyydA=;
+        b=iGqtKl9YKyergrp38ul8U55hj8pSIyRety6vA2jObl2/QdhID/jLHJZxTcYc9wEFg2Q4jD
+        MrjbYQoyHyW/HYum//5zOGY7kUCBuVeOQUDTX8R8croRGGJbZBlwS9wl4QiNXe+p9kxtdV
+        99vDJelvC2yUnfQ5yxCQNVXa1b3G3V4=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-107-5BmujlCmO2qs3c8UXAGqow-1; Mon, 21 Aug 2023 07:55:56 -0400
+X-MC-Unique: 5BmujlCmO2qs3c8UXAGqow-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-52a0f6f7a3bso1097361a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Aug 2023 04:55:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692618955; x=1693223755;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JZlQIqocknrIlMtIJUoMhvddTuUyuE/0jPIZUKQyydA=;
+        b=hav0MByjfixZ6lOGsITeOMdhNZEvFoyBSIGFUuKOLKdkuyyk5jg+4FWyyDWu5sGD92
+         /IAyWMZ8UPUG6TLIXu3p61yCbSiicg8XAsCJkI9e/R2/KiRv0WXcG5yOMeU44rYfk3T7
+         Lhe0zSSU9YH7mNRw7uZKXF5iSvWicNJQlwdGvJmcFltVGGr1YsFxjYGOwFymt2DXbr6l
+         9uKWyjhl8Z1gjKrdCyVLKl3eFOoNdQBB7rg8wq35FvHQyrbwceyEkWiJ+YcWJsA9Wp27
+         vD86+37fRs6LfSTC6aUQv7Wqj1wWVpeX9I9NwfLHlhfWXfn1qAkkW1O8WqKbkG/z+kFu
+         Eayw==
+X-Gm-Message-State: AOJu0YzH/0p7OwBu4RiRc+oVg/Spd3X6EFPeHx5lDXJdw+FcJxgZE2F5
+        RzijF4j2K2NNZu6oEWeVR+jgVb3e9jv9A95tWoZCPzCQsZ4z2PRNGl6Huw/imY8+UgNburRZ5Ie
+        xi+zVycmXTAS3sc4WGIaDTxdblHPdj/4ohQ==
+X-Received: by 2002:a05:6402:34cf:b0:51d:b184:efd with SMTP id w15-20020a05640234cf00b0051db1840efdmr6553362edc.20.1692618954840;
+        Mon, 21 Aug 2023 04:55:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEABWvi6B1Krzc1SSY2cCBIIEFUFPascY0xaQ3yGfVFTEepN9Pwava+XwcBzunnU5jT4KODyg==
+X-Received: by 2002:a05:6402:34cf:b0:51d:b184:efd with SMTP id w15-20020a05640234cf00b0051db1840efdmr6553347edc.20.1692618954554;
+        Mon, 21 Aug 2023 04:55:54 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id d16-20020a50fb10000000b005224d15d3dfsm5905781edq.87.2023.08.21.04.55.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Aug 2023 04:55:54 -0700 (PDT)
+Message-ID: <767165e4-5eae-a35c-aead-1db7801050dd@redhat.com>
+Date:   Mon, 21 Aug 2023 13:55:53 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] hp-bioscfg: Update steps how order list elements are
+ evaluated
+Content-Language: en-US
+To:     Jorge Lopez <jorgealtxwork@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas@t-8ch.de, ilpo.jarvinen@linux.intel.com,
+        dan.carpenter@linaro.org
+References: <20230809210740.18392-1-jorge.lopez2@hp.com>
+ <10276e15-8528-41a9-4b90-7fdf6b890206@redhat.com>
+ <CAOOmCE9PFi5Xwmyr4jMPZ7LgofPY1fwLW71itfXw1km50B-Ybg@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAOOmCE9PFi5Xwmyr4jMPZ7LgofPY1fwLW71itfXw1km50B-Ybg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 18 Aug 2023, Suma Hegde wrote:
+Hi Jorge,
 
-> From: Suma Hegde <suma.hegde@amd.com>
+On 8/14/23 15:44, Jorge Lopez wrote:
+> Hi Hans,
 > 
-> AMD MI300 MCM provides GET_METRICS_TABLE message with which
-> all the system management information from SMU can be retrieved in just
-> one message.
+> On Mon, Aug 14, 2023 at 3:41 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Hi Jorge,
+>>
+>> On 8/9/23 23:07, Jorge Lopez wrote:
+>>> Update steps how order list elements data and elements size are
+>>> evaluated
+>>>
+>>> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+>>>
+>>> ---
+>>> Based on the latest platform-drivers-x86.git/for-next
+>>> ---
+>>>  .../x86/hp/hp-bioscfg/order-list-attributes.c    | 16 ++++++++++++++--
+>>>  1 file changed, 14 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+>>> index b19644ed12e0..d2b61ab950d4 100644
+>>> --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+>>> +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+>>> @@ -152,7 +152,7 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+>>>
+>>>               switch (order_obj[elem].type) {
+>>>               case ACPI_TYPE_STRING:
+>>> -                     if (elem != PREREQUISITES && elem != ORD_LIST_ELEMENTS) {
+>>> +                     if (elem != PREREQUISITES) {
+>>>                               ret = hp_convert_hexstr_to_str(order_obj[elem].string.pointer,
+>>>                                                              order_obj[elem].string.length,
+>>>                                                              &str_value, &value_len);
+>>> @@ -266,6 +266,15 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+>>>                       if (ret)
+>>>                               goto exit_list;
+>>>
+>>> +                     /*
+>>> +                      * It is expected for the element size value
+>>> +                      * to be 1 and not to represent the actual
+>>> +                      * number of elements stored in comma
+>>> +                      * separated format. element size value is
+>>> +                      * recalculated to report the correct number
+>>> +                      * of data elements found.
+>>> +                      */
+>>> +
+>>>                       part_tmp = tmpstr;
+>>>                       part = strsep(&part_tmp, COMMA_SEP);
+>>>                       if (!part)
+>>> @@ -273,11 +282,14 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+>>>                                       tmpstr,
+>>>                                       sizeof(ordered_list_data->elements[0]));
+>>>
+>>> -                     for (olist_elem = 1; olist_elem < MAX_ELEMENTS_SIZE && part; olist_elem++) {
+>>> +                     for (olist_elem = 0; olist_elem < MAX_ELEMENTS_SIZE && part; olist_elem++) {
+>>>                               strscpy(ordered_list_data->elements[olist_elem],
+>>>                                       part,
+>>>                                       sizeof(ordered_list_data->elements[olist_elem]));
+>>> +
+>>>                               part = strsep(&part_tmp, COMMA_SEP);
+>>> +                             if (part && ordered_list_data->elements_size < MAX_ELEMENTS_SIZE)
+>>> +                                     ordered_list_data->elements_size++;
+>>>                       }
+>>
+>> I believe that you can replace the:
+>>
+>>                                 if (part && ordered_list_data->elements_size < MAX_ELEMENTS_SIZE)
+>>                                         ordered_list_data->elements_size++;
+>>                         }
+>>
+>> Lines with simply (after the loop has finished) doing:
+>>
+>>                         }
+>>                         ordered_list_data->elements_size = olist_elem'
+>>
+>> Or am I missing something ?
 > 
-> The metrics table is available as hexadecimal sysfs binary file in
-> /sys/devices/platform/amd_hsmp/socket%d_metrics_bin 
-> Metrics table definitions will be documented as part of PPR which
-> available in public domain. The same is defined in the amd_hsmp.h header
-> file as well.
-> 
-> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-> Reviewed-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
-> ---
->  arch/x86/include/uapi/asm/amd_hsmp.h | 109 +++++++++++++++++++
->  drivers/platform/x86/amd/hsmp.c      | 155 ++++++++++++++++++++++++++-
->  2 files changed, 259 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
-> index 769b939444ae..832701b41c7d 100644
-> --- a/arch/x86/include/uapi/asm/amd_hsmp.h
-> +++ b/arch/x86/include/uapi/asm/amd_hsmp.h
-> @@ -47,6 +47,9 @@ enum hsmp_message_ids {
->  	HSMP_SET_PCI_RATE,		/* 20h Control link rate on PCIe devices */
->  	HSMP_SET_POWER_MODE,		/* 21h Select power efficiency profile policy */
->  	HSMP_SET_PSTATE_MAX_MIN,	/* 22h Set the max and min DF P-State  */
-> +	HSMP_GET_METRIC_TABLE_VER,	/* 23h Get metrics table version  */
-> +	HSMP_GET_METRIC_TABLE,		/* 24h Get metrics table  */
+> The lines cannot be replaced with a single line for several reasons,
+> 1. elements_size is initially set to 1 and it is only incremented when
+> a COMMA_SEP is found.  (See part variable)
 
-extra spaces before */
+Right, but we are not incrementing elements_size here, but overriding it,
+so the start value does not matter.
 
-> +	HSMP_GET_METRIC_TABLE_DRAM_ADDR,/* 25h Get metrics table dram address */
->  	HSMP_MSG_ID_MAX,
->  };
->  
-> @@ -64,6 +67,14 @@ enum hsmp_msg_type {
->  	HSMP_GET  = 1,
->  };
->  
-> +enum hsmp_proto_versions {
-> +	HSMP_PROTO_VER2	= 2,
-> +	HSMP_PROTO_VER3,
-> +	HSMP_PROTO_VER4,
-> +	HSMP_PROTO_VER5,
-> +	HSMP_PROTO_VER6
-> +};
-> +
->  struct hsmp_msg_desc {
->  	int num_args;
->  	int response_sz;
-> @@ -295,6 +306,104 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[] = {
->  	 * input: args[0] = min df pstate[15:8] + max df pstate[7:0]
->  	 */
->  	{1, 0, HSMP_SET},
-> +
-> +	/*
-> +	 * HSMP_GET_METRIC_TABLE_VER, num_args = 0, response_sz = 1
-> +	 * output: args[0] = metrics table version
-> +	 */
-> +	{0, 1, HSMP_GET},
-> +
-> +	/*
-> +	 * HSMP_GET_METRIC_TABLE, num_args = 0, response_sz = 0
-> +	 */
-> +	{0, 0, HSMP_GET},
-> +
-> +	/*
-> +	 * HSMP_GET_METRIC_TABLE_DRAM_ADDR, num_args = 0, response_sz = 2
-> +	 * output: args[0] = lower 32 bits of the address
-> +	 * output: args[1] = upper 32 bits of the address
-> +	 */
-> +	{0, 2, HSMP_GET},
-> +};
-> +
-> +/* Metrics table for EPYC socket(supported only from proto version 6) */
-> +struct hsmp_metric_table {
-> +	__u32 accumulation_counter;
-> +
-> +	//TEMPERATURE
-> +	__u32 max_socket_temperature;
-> +	__u32 max_vr_temperature;
-> +	__u32 max_hbm_temperature;
-> +	__u64 max_socket_temperature_acc;
-> +	__u64 max_vr_temperature_acc;
-> +	__u64 max_hbm_temperature_acc;
-> +
-> +	//POWER
-> +	__u32 socket_power_limit;
-> +	__u32 max_socket_power_limit;
-> +	__u32 socket_power;
-> +
-> +	//ENERGY
-> +	__u64 timestamp;
-> +	__u64 socket_energy_acc;
-> +	__u64 ccd_energy_acc;
-> +	__u64 xcd_energy_acc;
-> +	__u64 aid_energy_acc;
-> +	__u64 hbm_energy_acc;
-> +
-> +	//FREQUENCY
-> +	__u32 cclk_frequency_limit;
-> +	__u32 gfxclk_frequency_limit;
-> +	__u32 fclk_frequency;
-> +	__u32 uclk_frequency;
-> +	__u32 socclk_frequency[4];
-> +	__u32 vclk_frequency[4];
-> +	__u32 dclk_frequency[4];
-> +	__u32 lclk_frequency[4];
-> +	__u64 gfxclk_frequency_acc[8];
-> +	__u64 cclk_frequency_acc[96];
-> +
-> +	//FREQUENCY RANGE
-> +	__u32 max_cclk_frequency;
-> +	__u32 min_cclk_frequency;
-> +	__u32 max_gfxclk_frequency;
-> +	__u32 min_gfxclk_frequency;
-> +	__u32 fclk_frequency_table[4];
-> +	__u32 uclk_frequency_table[4];
-> +	__u32 socclk_frequency_table[4];
-> +	__u32 vclk_frequency_table[4];
-> +	__u32 dclk_frequency_table[4];
-> +	__u32 lclk_frequency_table[4];
-> +	__u32 max_lclk_dpm_range;
-> +	__u32 min_lclk_dpm_range;
-> +
-> +	//XGMI
-> +	__u32 xgmi_width;
-> +	__u32 xgmi_bitrate;
-> +	__u64 xgmi_read_bandwidth_acc[8];
-> +	__u64 xgmi_write_bandwidth_acc[8];
-> +
-> +	//ACTIVITY
-> +	__u32 socket_c0_residency;
-> +	__u32 socket_gfx_busy;
-> +	__u32 dram_bandwidth_utilization;
-> +	__u64 socket_c0_residency_acc;
-> +	__u64 socket_gfx_busy_acc;
-> +	__u64 dram_bandwidth_acc;
-> +	__u32 max_dram_bandwidth;
-> +	__u64 dram_bandwidth_utilization_acc;
-> +	__u64 pcie_bandwidth_acc[4];
-> +
-> +	//THROTTLERS
-> +	__u32 prochot_residency_acc;
-> +	__u32 ppt_residency_acc;
-> +	__u32 socket_thm_residency_acc;
-> +	__u32 vr_thm_residency_acc;
-> +	__u32 hbm_thm_residency_acc;
-> +	__u32 spare;
-> +
-> +	// New Items at end to maintain driver compatibility
-> +	__u32 gfxclk_frequency[8];
->  };
->  
->  /* Reset to default packing */
-> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
-> index 699c22f7cd42..cab59750cde2 100644
-> --- a/drivers/platform/x86/amd/hsmp.c
-> +++ b/drivers/platform/x86/amd/hsmp.c
-> @@ -20,7 +20,7 @@
->  #include <linux/semaphore.h>
->  
->  #define DRIVER_NAME		"amd_hsmp"
-> -#define DRIVER_VERSION		"1.0"
-> +#define DRIVER_VERSION		"2.0"
->  
->  /* HSMP Status / Error codes */
->  #define HSMP_STATUS_NOT_READY	0x00
-> @@ -47,7 +47,12 @@
->  #define HSMP_INDEX_REG		0xc4
->  #define HSMP_DATA_REG		0xc8
->  
-> +#define HSMP_CDEV_NAME		"hsmp_cdev"
-> +#define HSMP_DEVNODE_NAME	"hsmp"
-> +
->  struct hsmp_socket {
-> +	struct bin_attribute hsmp_attr;
-> +	void __iomem *metric_tbl_addr;
->  	struct semaphore hsmp_sem;
->  	u16 sock_ind;
->  };
-> @@ -56,6 +61,7 @@ struct hsmp_plat_device {
->  	struct miscdevice hsmp_device;
->  	struct hsmp_socket *sock;
->  	struct device *dev;
-> +	u32 proto_ver;
->  };
->  
->  static u16 num_sockets;
-> @@ -328,9 +334,122 @@ static const struct file_operations hsmp_fops = {
->  	.compat_ioctl	= hsmp_ioctl,
->  };
->  
-> +static ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
-> +				    struct bin_attribute *bin_attr, char *buf,
-> +				    loff_t off, size_t count)
-> +{
-> +	struct hsmp_socket *sock = bin_attr->private;
-> +	struct hsmp_message msg = { 0 };
-> +	int ret;
-> +
-> +	if (count == 0 || count > sizeof(struct hsmp_metric_table))
+olist_elem keeps count of how many times strscpy() has been called
+and thus of how many elements there are in
+the ordered_list_data->elements_size, so:
 
-!count
+                         ordered_list_data->elements_size = olist_elem;
 
-> +		return 0;
-> +
-> +	msg.msg_id	= HSMP_GET_METRIC_TABLE;
-> +	msg.sock_ind	= sock->sock_ind;
-> +
-> +	ret = hsmp_send_message(&msg);
-> +	if (ret)
-> +		return ret;
-> +	memcpy(buf, sock->metric_tbl_addr, count);
-> +
-> +	return count;
-> +}
-> +
-> +#define HSMP_ATRR_NAME_SIZE 25
+will give us the correct size with much simpler code.
 
-ATTR (typo)?
+> 2. Limit the number of element_size to  MAX_ELEMENTS_SIZE.  The user
+> requires entering all items in the new order when a change is needed.
+> For instance, updating boot order.
 
-> +static int hsmp_create_metric_tbl_sysfs_file(int sock_ind)
-> +{
-> +	struct bin_attribute *hattr = &plat_dev.sock[sock_ind].hsmp_attr;
-> +	char *name;
-> +
-> +	sysfs_attr_init(&plat_dev.sock[sock_ind].hsmp_attr);
-> +	name = devm_kzalloc(plat_dev.dev, HSMP_ATRR_NAME_SIZE, GFP_KERNEL);
-> +	if (!name)
-> +		return -ENOMEM;
-> +	sprintf(name, "socket%d_metrics_bin", sock_ind);
+olist_elem itself is also already limited to MAX_ELEMENTS_SIZE.
 
-snprintf()
+> 3. Limiting  elements_size and not just olist_elem to to
+> MAX_ELEMENTS_SIZE removes the possibility of  array overflow
+> (ordered_list_data->elements[..]).   olist_elem value is 0 (zero)
+> based while elements_size is 1 based
 
-> +	hattr->attr.name	= name;
-> +	hattr->attr.mode	= 0444;
-> +	hattr->read		= hsmp_metric_tbl_read;
-> +	hattr->size		= sizeof(struct hsmp_metric_table);
-> +	hattr->private		= &plat_dev.sock[sock_ind];
-> +
-> +	return device_create_bin_file(plat_dev.dev, hattr);
-> +}
-> +
-> +static int hsmp_get_tbl_dram_base(u16 sock_ind)
-> +{
-> +	struct hsmp_socket *sock = &plat_dev.sock[sock_ind];
-> +	struct hsmp_message msg = { 0 };
-> +	phys_addr_t dram_addr;
-> +	int ret;
-> +
-> +	msg.sock_ind	= sock_ind;
-> +	msg.response_sz	= hsmp_msg_desc_table[HSMP_GET_METRIC_TABLE_DRAM_ADDR].response_sz;
-> +	msg.msg_id	= HSMP_GET_METRIC_TABLE_DRAM_ADDR;
-> +
-> +	ret = hsmp_send_message(&msg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * calculate the metric table DRAM address from lower and upper 32 bits
-> +	 * sent from SMU and ioremap it to virtual address.
-> +	 */
-> +	dram_addr = msg.args[0] | ((u64)(msg.args[1]) << 32);
-> +	if (!dram_addr)
-> +		return -ENOMEM;
-> +	sock->metric_tbl_addr = devm_ioremap(plat_dev.dev, dram_addr,
-> +					     sizeof(struct hsmp_metric_table));
-> +	if (!sock->metric_tbl_addr) {
-> +		dev_err(plat_dev.dev, "Unable to ioremap metric table addr\n");
-> +		return -ENOMEM;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int hsmp_create_sysfs_file(void)
-> +{
-> +	int ret, i;
-> +
-> +	for (i = 0; i < num_sockets; i++) {
-> +		ret = hsmp_get_tbl_dram_base(i);
-> +		if (ret)
-> +			goto cleanup;
-> +
-> +		ret = hsmp_create_metric_tbl_sysfs_file(i);
-> +		if (ret) {
-> +			dev_err(plat_dev.dev, "Unable to create sysfs file for metric table\n");
-> +			goto cleanup;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +cleanup:
-> +	while (i > 0)
-> +		device_remove_bin_file(plat_dev.dev, &plat_dev.sock[--i].hsmp_attr);
-> +	return ret;
-> +}
-> +
-> +static int hsmp_cache_proto_ver(void)
-> +{
-> +	struct hsmp_message msg = { 0 };
-> +	int ret;
-> +
-> +	msg.msg_id	= HSMP_GET_PROTO_VER;
-> +	msg.sock_ind	= 0;
-> +	msg.response_sz = hsmp_msg_desc_table[HSMP_GET_PROTO_VER].response_sz;
-> +
-> +	ret = hsmp_send_message(&msg);
-> +	if (!ret)
-> +		plat_dev.proto_ver = msg.args[0];
-> +
-> +	return ret;
-> +}
-> +
->  static int hsmp_pltdrv_probe(struct platform_device *pdev)
->  {
-> -	int i;
-> +	int ret, i;
->  
->  	plat_dev.sock = devm_kzalloc(&pdev->dev,
->  				     (num_sockets * sizeof(struct hsmp_socket)),
-> @@ -344,18 +463,44 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
->  		plat_dev.sock[i].sock_ind = i;
->  	}
->  
-> -	plat_dev.hsmp_device.name	= "hsmp_cdev";
-> +	plat_dev.hsmp_device.name	= HSMP_CDEV_NAME;
->  	plat_dev.hsmp_device.minor	= MISC_DYNAMIC_MINOR;
->  	plat_dev.hsmp_device.fops	= &hsmp_fops;
->  	plat_dev.hsmp_device.parent	= &pdev->dev;
-> -	plat_dev.hsmp_device.nodename	= "hsmp";
-> +	plat_dev.hsmp_device.nodename	= HSMP_DEVNODE_NAME;
->  	plat_dev.hsmp_device.mode	= 0644;
->  
-> -	return misc_register(&plat_dev.hsmp_device);
-> +	ret = misc_register(&plat_dev.hsmp_device);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = hsmp_cache_proto_ver();
-> +	if (ret) {
-> +		dev_err(plat_dev.dev, "Failed to read HSMP protocol version\n");
-> +		goto cleanup;
-> +	}
-> +
-> +	/* metrics table is supported only from proto ver6 EPYCs */
-> +	if (plat_dev.proto_ver >= HSMP_PROTO_VER6) {
-> +		ret = hsmp_create_sysfs_file();
-> +		if (ret)
-> +			goto cleanup;
-> +	}
-> +	return 0;
-> +
-> +cleanup:
+As already mentioned olist_elem itself is already limited to MAX_ELEMENTS_SIZE,
+so doing:
 
-Instead naming labels as "cleanup", try to name them according to what you 
-cleanup, so e.g. here deregister:
+ordered_list_data->elements_size = olist_elem;
 
-> +	misc_deregister(&plat_dev.hsmp_device);
-> +	return ret;
->  }
->  
->  static void hsmp_pltdrv_remove(struct platform_device *pdev)
->  {
-> +	int i;
-> +
-> +	if (plat_dev.proto_ver >= HSMP_PROTO_VER6) {
-> +		for (i = 0; i < num_sockets; i++)
-> +			device_remove_bin_file(plat_dev.dev, &plat_dev.sock[i].hsmp_attr);
-> +	}
->  	misc_deregister(&plat_dev.hsmp_device);
->  }
->  
-> 
+Automatically limits ordered_list_data->elements_size too.
 
--- 
- i.
+###
+
+I see you also left the "if (!part)" above the loop.
+
+That is not necessary because after the first strsep() call part
+will always be non NULL.
+
+For a string without any delimiters, so only 1 element strsep()
+will only return NULL on the second strsep() call.
+
+strsep() always returns *part_tmp, which before the first
+call is non NULL, so the first call always returns non NULL.
+
+###
+
+And there still is an unused assignment of size directly
+after "case ORD_LIST_ELEMENTS" :
+
+                        size = ordered_list_data->elements_size;
+
+###
+
+Also you seem to have based this patch on top of a weird base
+commit. This patch assumes both strsep() calls use COMMA_SEP
+as separator. But the latest code in:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Still uses the wrong SEMICOLON_SEP for the second strsep() call.
+
+Please make sure to base your next version on top of the latest
+review-hans commit.
+
+###
+
+TL;DR: for your next version the "case ORD_LIST_ELEMENTS"
+should end up looking like this:
+
+		case ORD_LIST_ELEMENTS:
+			/*
+			 * Ordered list data is stored in hex and comma separated format
+			 * Convert the data and split it to show each element
+			 */
+			ret = hp_convert_hexstr_to_str(str_value, value_len, &tmpstr, &tmp_len);
+			if (ret)
+				goto exit_list;
+
+			part_tmp = tmpstr;
+			part = strsep(&part_tmp, COMMA_SEP);
+
+			for (olist_elem = 0; olist_elem < MAX_ELEMENTS_SIZE && part; olist_elem++) {
+				strscpy(ordered_list_data->elements[olist_elem],
+					part,
+					sizeof(ordered_list_data->elements[olist_elem]));
+				part = strsep(&part_tmp, COMMA_SEP);
+			}
+			ordered_list_data->elements_size = olist_elem;
+
+			kfree(str_value);
+			str_value = NULL;
+			break;
+
+Unless I'm missing something and you believe that this will not work.
+
+Regards,
+
+Hans
 
