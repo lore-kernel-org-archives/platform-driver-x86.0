@@ -2,231 +2,112 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A953EE4996
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Aug 2023 14:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74357EE49AC
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Aug 2023 14:42:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232659AbjHUO1R (ORCPT
+        id S236088AbjHUOmR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Aug 2023 10:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38084 "EHLO
+        Mon, 21 Aug 2023 10:42:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232345AbjHUO1R (ORCPT
+        with ESMTP id S236090AbjHUOmQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Aug 2023 10:27:17 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23452DB;
-        Mon, 21 Aug 2023 07:27:15 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4ff9b389677so5074818e87.3;
-        Mon, 21 Aug 2023 07:27:15 -0700 (PDT)
+        Mon, 21 Aug 2023 10:42:16 -0400
+Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 509AFE7;
+        Mon, 21 Aug 2023 07:42:08 -0700 (PDT)
+Received: by mail-oi1-x22c.google.com with SMTP id 5614622812f47-3a7f74134e7so2514443b6e.1;
+        Mon, 21 Aug 2023 07:42:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692628033; x=1693232833;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lCBw8JHS56QmypmYynEc49hFuIg6hZes912H9EXOgeo=;
-        b=O0WW+kVCNDlsQDrDUmQi0phhj/KUatuVu408I34merJum46eO4L1VpSm4fqHlDsq2O
-         0LBpXjkDSmrEu3PSpzgEtXuO0JP2ATsVJzePS6OvMSd4MKYf9deMGY/oh5/d7Qs4kyNu
-         OwVMDNUpCByWgulvK0AIFft9H6jC6U9lmrEY2LJSVmejCqOKX2d4lK7nxLXB/Nph1ESd
-         SN7+451y8i89M5nhGCVc1GDuLjDBmjVJOBt4DVeO5Thg8BKS40LaIIJo2qg9wwy71MND
-         tR8NBhkze5pfhZ/4NSlpy89AZDo+pNF/rhfko1RZZSP2QOgKSBl7kjSn2PJH8DQOC3mp
-         piDQ==
+        d=gmail.com; s=20221208; t=1692628927; x=1693233727;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=niRR0I8vNh+UgrE9dgAw0mTmrgJypa/tdMhRQCasF5c=;
+        b=Mp3wQbMkztPW2+/ZUoIKP0tCMDSg6ni4R8HJgOhd9ZpQAaMToJInGltabwGA1B82ER
+         oB6Ajmp1sgDbCvqeK8leUtrIjUvkzPfSJ2NdTJEctyUjFjzTwfaSCS4hvV8g7H1TmJO+
+         IOj2SuMZEut+6uw5rfUDa6VPgczcbYIbzDJyla4mSr1IXaNET+qR4y9+sjJaBzm4kGbc
+         2veFTNX11P3S4jnwQ02WGYBS7pVOUgGvPME4qRV4r1yumJHmwWbrpML7LOcwXw8OjIDN
+         WOOr4qmM/TxQYFooUTYTMztUedWWTFzRwwoLBDwKHXqxvtc8wAO0sVqB3SQ6HDXdvvQ+
+         SR5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692628033; x=1693232833;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lCBw8JHS56QmypmYynEc49hFuIg6hZes912H9EXOgeo=;
-        b=ZixntsKXz7FOpUP3ltYGrU5BdlylgkX/wHi6TWp8QQSsG7RwMwgh1aBCeFp+oSSAKF
-         e85CBuSX+ZXptt5p1XtkdkaZaH+fjAwlb7iTIchW3LC+Q9IaRFfIU44e9i/3jREqsVlA
-         abzfVgbvD7NvZzZgYOc1ox7/wKqPKJQSUwdxgFJlZc1WYnexGhQ+qYYRoi6OgdLazgVY
-         zH60g0S+Gq65emUBAIYq9UGiAmvqzF3UYOe20saXpG16BWMFzGkywVlmwdYMBLlCXdPQ
-         XJXf/tI3Mq9c6ozYOOqmlqD4wWDB0vHayFi1DnIngRdmTdUpJLDhBX+LLq2EOpxsdtwk
-         vKqg==
-X-Gm-Message-State: AOJu0YxAx6WSaij13GY3kgPicXRwRtdM6ZP5+y/bkULX+kQsWEckjKRy
-        YvYJcGMV1syAFAhvm25/x70DnHnd4H+7rA1e0U0=
-X-Google-Smtp-Source: AGHT+IFvT7bgLSZEodSEKnNjEWo87qbU6tBszMXEiKdUHhU+OCaoEQADFsSA6MBJDhak/REL2JsxGM3YQzThSJ6AsKM=
-X-Received: by 2002:a05:6512:2522:b0:4f1:3d7d:409e with SMTP id
- be34-20020a056512252200b004f13d7d409emr5787494lfb.0.1692628033053; Mon, 21
- Aug 2023 07:27:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230809210740.18392-1-jorge.lopez2@hp.com> <10276e15-8528-41a9-4b90-7fdf6b890206@redhat.com>
- <CAOOmCE9PFi5Xwmyr4jMPZ7LgofPY1fwLW71itfXw1km50B-Ybg@mail.gmail.com> <767165e4-5eae-a35c-aead-1db7801050dd@redhat.com>
-In-Reply-To: <767165e4-5eae-a35c-aead-1db7801050dd@redhat.com>
+        d=1e100.net; s=20221208; t=1692628927; x=1693233727;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=niRR0I8vNh+UgrE9dgAw0mTmrgJypa/tdMhRQCasF5c=;
+        b=TjXqOY63ReA4tRPPhVfx2WRZlLtGaKuGlM6ItZWPw/lgtTkrPjAR0603hk64ghDpk8
+         qz6POQBRPqaMKFa7sRURItdPu8uRN0fGC2c1fjP+qtMi3nuz3Bw3Ux3V5x9o+gNgqJyJ
+         j1Ze4Qkdjo1+RyHPUBb3SXyVNQi4o1NkoOYX7XMYqnbvKMdQjGs9jfAB+RsJ1FA677C9
+         RqgEmiMjJ/5Jz5FCJhW9sXyt8/zXYgYk2jmiFr2uFEYieyn7vKoyHi/0KkOBgVfElSe2
+         S1n5tFhWa206siFAtCvI14zpokOjRlQSHUGQoBGmeGBxFMyd8tySb670VLDIfw9dqpCw
+         /w+Q==
+X-Gm-Message-State: AOJu0YxjVWZC4OSA2VAu8qMn4a7gUG9aPG/a3r21bx9PtXFD9apMl9DQ
+        kDz1xlx2/eWrHI1H0WSLaVI=
+X-Google-Smtp-Source: AGHT+IFz/ERShvBKzkGk13sAA0L+8DpvEfRtYs29tFk4Hv62VEK12oyztzlVHpwJY+hR1dRu0JuGmA==
+X-Received: by 2002:a05:6808:2028:b0:3a7:5557:16c2 with SMTP id q40-20020a056808202800b003a7555716c2mr12056866oiw.0.1692628927554;
+        Mon, 21 Aug 2023 07:42:07 -0700 (PDT)
+Received: from grumpy-VECTOR.hsd1.tx.comcast.net ([2601:2c3:480:7390:33b3:b7f9:ce8a:596a])
+        by smtp.gmail.com with ESMTPSA id k1-20020a544401000000b003a371c611f6sm3599856oiw.18.2023.08.21.07.42.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Aug 2023 07:42:07 -0700 (PDT)
 From:   Jorge Lopez <jorgealtxwork@gmail.com>
-Date:   Mon, 21 Aug 2023 09:26:08 -0500
-Message-ID: <CAOOmCE_m6t4a0V9WRdPL8=hBfpXA+t9S5_7szy4qXeG=u1SD8Q@mail.gmail.com>
-Subject: Re: [PATCH] hp-bioscfg: Update steps how order list elements are evaluated
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas@t-8ch.de, ilpo.jarvinen@linux.intel.com,
-        dan.carpenter@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Google-Original-From: Jorge Lopez <jorge.lopez2@hp.com>
+To:     hdegoede@redhat.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas@t-8ch.de,
+        ilpo.jarvinen@linux.intel.com, dan.carpenter@linaro.org
+Subject: [PATCH] Update steps order list elements are evaluated
+Date:   Mon, 21 Aug 2023 09:42:05 -0500
+Message-Id: <20230821144205.13529-1-jorge.lopez2@hp.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 6:55=E2=80=AFAM Hans de Goede <hdegoede@redhat.com>=
- wrote:
->
-> Hi Jorge,
->
-> On 8/14/23 15:44, Jorge Lopez wrote:
-> > Hi Hans,
-> >
-> > On Mon, Aug 14, 2023 at 3:41=E2=80=AFAM Hans de Goede <hdegoede@redhat.=
-com> wrote:
-> >>
-> >> Hi Jorge,
-> >>
-> >> On 8/9/23 23:07, Jorge Lopez wrote:
-> >>> Update steps how order list elements data and elements size are
-> >>> evaluated
-> >>>
-> >>> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
-> >>>
-> >>> ---
-> >>> Based on the latest platform-drivers-x86.git/for-next
-> >>> ---
-> >>>  .../x86/hp/hp-bioscfg/order-list-attributes.c    | 16 ++++++++++++++=
---
-> >>>  1 file changed, 14 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes=
-.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> >>> index b19644ed12e0..d2b61ab950d4 100644
-> >>> --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> >>> +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> >>> @@ -152,7 +152,7 @@ static int hp_populate_ordered_list_elements_from=
-_package(union acpi_object *ord
-> >>>
-> >>>               switch (order_obj[elem].type) {
-> >>>               case ACPI_TYPE_STRING:
-> >>> -                     if (elem !=3D PREREQUISITES && elem !=3D ORD_LI=
-ST_ELEMENTS) {
-> >>> +                     if (elem !=3D PREREQUISITES) {
-> >>>                               ret =3D hp_convert_hexstr_to_str(order_=
-obj[elem].string.pointer,
-> >>>                                                              order_ob=
-j[elem].string.length,
-> >>>                                                              &str_val=
-ue, &value_len);
-> >>> @@ -266,6 +266,15 @@ static int hp_populate_ordered_list_elements_fro=
-m_package(union acpi_object *ord
-> >>>                       if (ret)
-> >>>                               goto exit_list;
-> >>>
-> >>> +                     /*
-> >>> +                      * It is expected for the element size value
-> >>> +                      * to be 1 and not to represent the actual
-> >>> +                      * number of elements stored in comma
-> >>> +                      * separated format. element size value is
-> >>> +                      * recalculated to report the correct number
-> >>> +                      * of data elements found.
-> >>> +                      */
-> >>> +
-> >>>                       part_tmp =3D tmpstr;
-> >>>                       part =3D strsep(&part_tmp, COMMA_SEP);
-> >>>                       if (!part)
-> >>> @@ -273,11 +282,14 @@ static int hp_populate_ordered_list_elements_fr=
-om_package(union acpi_object *ord
-> >>>                                       tmpstr,
-> >>>                                       sizeof(ordered_list_data->eleme=
-nts[0]));
-> >>>
-> >>> -                     for (olist_elem =3D 1; olist_elem < MAX_ELEMENT=
-S_SIZE && part; olist_elem++) {
-> >>> +                     for (olist_elem =3D 0; olist_elem < MAX_ELEMENT=
-S_SIZE && part; olist_elem++) {
-> >>>                               strscpy(ordered_list_data->elements[oli=
-st_elem],
-> >>>                                       part,
-> >>>                                       sizeof(ordered_list_data->eleme=
-nts[olist_elem]));
-> >>> +
-> >>>                               part =3D strsep(&part_tmp, COMMA_SEP);
-> >>> +                             if (part && ordered_list_data->elements=
-_size < MAX_ELEMENTS_SIZE)
-> >>> +                                     ordered_list_data->elements_siz=
-e++;
-> >>>                       }
-> >>
-> >> I believe that you can replace the:
-> >>
-> >>                                 if (part && ordered_list_data->element=
-s_size < MAX_ELEMENTS_SIZE)
-> >>                                         ordered_list_data->elements_si=
-ze++;
-> >>                         }
-> >>
-> >> Lines with simply (after the loop has finished) doing:
-> >>
-> >>                         }
-> >>                         ordered_list_data->elements_size =3D olist_ele=
-m'
-> >>
-> >> Or am I missing something ?
-> >
-<snip>
+Update steps how order list elements data and elements size are
+evaluated
 
- ###
->
-> Also you seem to have based this patch on top of a weird base
-> commit. This patch assumes both strsep() calls use COMMA_SEP
-> as separator. But the latest code in:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x8=
-6.git/log/?h=3Dreview-hans
->
-> Still uses the wrong SEMICOLON_SEP for the second strsep() call.
->
-> Please make sure to base your next version on top of the latest
-> review-hans commit.
->
+Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
 
-local work branch was reset and now it is in sync with review-hans branch
+---
+Based on the latest platform-drivers-x86.git/for-next
+---
+ .../platform/x86/hp/hp-bioscfg/order-list-attributes.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-> ###
->
-> TL;DR: for your next version the "case ORD_LIST_ELEMENTS"
-> should end up looking like this:
->
->                 case ORD_LIST_ELEMENTS:
->                         /*
->                          * Ordered list data is stored in hex and comma s=
-eparated format
->                          * Convert the data and split it to show each ele=
-ment
->                          */
->                         ret =3D hp_convert_hexstr_to_str(str_value, value=
-_len, &tmpstr, &tmp_len);
->                         if (ret)
->                                 goto exit_list;
->
->                         part_tmp =3D tmpstr;
->                         part =3D strsep(&part_tmp, COMMA_SEP);
->
->                         for (olist_elem =3D 0; olist_elem < MAX_ELEMENTS_=
-SIZE && part; olist_elem++) {
->                                 strscpy(ordered_list_data->elements[olist=
-_elem],
->                                         part,
->                                         sizeof(ordered_list_data->element=
-s[olist_elem]));
->                                 part =3D strsep(&part_tmp, COMMA_SEP);
->                         }
->                         ordered_list_data->elements_size =3D olist_elem;
->
->                         kfree(str_value);
->                         str_value =3D NULL;
->                         break;
->
-> Unless I'm missing something and you believe that this will not work.
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+index cffc1c9ba3e7..1ff09dfb7d7e 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+@@ -258,7 +258,6 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+ 				eloc++;
+ 			break;
+ 		case ORD_LIST_ELEMENTS:
+-			size = ordered_list_data->elements_size;
+ 
+ 			/*
+ 			 * Ordered list data is stored in hex and comma separated format
+@@ -270,17 +269,14 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+ 
+ 			part_tmp = tmpstr;
+ 			part = strsep(&part_tmp, COMMA_SEP);
+-			if (!part)
+-				strscpy(ordered_list_data->elements[0],
+-					tmpstr,
+-					sizeof(ordered_list_data->elements[0]));
+ 
+-			for (olist_elem = 1; olist_elem < MAX_ELEMENTS_SIZE && part; olist_elem++) {
++			for (olist_elem = 0; olist_elem < MAX_ELEMENTS_SIZE && part; olist_elem++) {
+ 				strscpy(ordered_list_data->elements[olist_elem],
+ 					part,
+ 					sizeof(ordered_list_data->elements[olist_elem]));
+-				part = strsep(&part_tmp, SEMICOLON_SEP);
++				part = strsep(&part_tmp, COMMA_SEP);
+ 			}
++			ordered_list_data->elements_size = olist_elem;
+ 
+ 			kfree(str_value);
+ 			str_value = NULL;
+-- 
+2.34.1
 
-Concur with the proposed solution.  It achieves the same objective
-using fewer checks.
-New patch will follow
-
-Regards,
-
-Jorge.
