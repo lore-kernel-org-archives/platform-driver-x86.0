@@ -2,616 +2,231 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10847EE4996
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Aug 2023 13:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A953EE4996
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Aug 2023 14:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235514AbjHUNvu (ORCPT
+        id S232659AbjHUO1R (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Aug 2023 09:51:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35458 "EHLO
+        Mon, 21 Aug 2023 10:27:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232370AbjHUNvt (ORCPT
+        with ESMTP id S232345AbjHUO1R (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Aug 2023 09:51:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F3DE3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Aug 2023 06:51:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1692625861;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=10Fo2ozRX3AHiAUCjC/DOAP9UJ/a8nPM6586lexVlDI=;
-        b=MWcEtgatxXN5fne0hfiC9ACNZz3beor74ULsvZfTFXwkYdddIOdwntUAICmMRO+WXXbPFW
-        ErCFueOla6wEZXsKvKQXR0Hp3Mg2+YNLESbyATR++aS8Ec1wU88HDzhpOJDjTDhXj8IaGl
-        CFT6mp7SjfenpVWXARhpG+4BKF4QBEU=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-562-9PIKmleFNVW2tGRASskEDw-1; Mon, 21 Aug 2023 09:51:00 -0400
-X-MC-Unique: 9PIKmleFNVW2tGRASskEDw-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-94f7a2b21fdso220000566b.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Aug 2023 06:51:00 -0700 (PDT)
+        Mon, 21 Aug 2023 10:27:17 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23452DB;
+        Mon, 21 Aug 2023 07:27:15 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4ff9b389677so5074818e87.3;
+        Mon, 21 Aug 2023 07:27:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692628033; x=1693232833;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lCBw8JHS56QmypmYynEc49hFuIg6hZes912H9EXOgeo=;
+        b=O0WW+kVCNDlsQDrDUmQi0phhj/KUatuVu408I34merJum46eO4L1VpSm4fqHlDsq2O
+         0LBpXjkDSmrEu3PSpzgEtXuO0JP2ATsVJzePS6OvMSd4MKYf9deMGY/oh5/d7Qs4kyNu
+         OwVMDNUpCByWgulvK0AIFft9H6jC6U9lmrEY2LJSVmejCqOKX2d4lK7nxLXB/Nph1ESd
+         SN7+451y8i89M5nhGCVc1GDuLjDBmjVJOBt4DVeO5Thg8BKS40LaIIJo2qg9wwy71MND
+         tR8NBhkze5pfhZ/4NSlpy89AZDo+pNF/rhfko1RZZSP2QOgKSBl7kjSn2PJH8DQOC3mp
+         piDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692625859; x=1693230659;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=10Fo2ozRX3AHiAUCjC/DOAP9UJ/a8nPM6586lexVlDI=;
-        b=BIgi3N6LZ/Lgx+igf2mCB6poPWlY4DJ+NYWkACHt7eC4i4sPsdh163rOaTN5t/SoZF
-         YH1WKfr4u1ly/GgN1DVf4HCu1oFf7ySzTM7t3kNcqshXBMnPix1o1I4wOko1v20tS6Hb
-         PAQfQi+YNrN7jfxT73mwbjJa8mYgrZfSx5Hge+nnkITAs7raUwAS+uUmu+J/WAlcGTF1
-         VyiZa/yP9T6woY+sXUdK7iLkh8ugWppVH+wSKApuFIdDqM5Y41/T/TORArrjo0JzrXCu
-         o8sa8Zpj1LNytGJgk/6EWLecXEjUm4isk++3QiZAZCJ1obwNt+ixIRWatfNtXGWRvsQZ
-         62Dw==
-X-Gm-Message-State: AOJu0Yw089cDQTeYz9ARWTcuBN3vgeTIpSVW5oJTqZuTRFky9mw79V5T
-        sZBF1or+4tXFp+zNYB/RAdMvdIQrw9vhdRCQSALNd/2asX69Ngg5Qc1ZVvK08LVmbb0Y2DkAmw9
-        F9yAoTmXWB67iuhm1zPbw57dLsMeGY9m8eQ==
-X-Received: by 2002:a17:906:5a53:b0:993:d7cf:f58 with SMTP id my19-20020a1709065a5300b00993d7cf0f58mr5721799ejc.2.1692625859188;
-        Mon, 21 Aug 2023 06:50:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGaV3h7zCYtJ8lRvqiCvScPFq7FOXZJnHAjgqSpV3bAx8lal3SR33cEkHxv1vyOGEX0xO4Tkg==
-X-Received: by 2002:a17:906:5a53:b0:993:d7cf:f58 with SMTP id my19-20020a1709065a5300b00993d7cf0f58mr5721781ejc.2.1692625858805;
-        Mon, 21 Aug 2023 06:50:58 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id q16-20020a170906b29000b0099ddc81903asm6568858ejz.221.2023.08.21.06.50.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Aug 2023 06:50:58 -0700 (PDT)
-Message-ID: <e0bee8fa-fc7c-fd94-e56d-16054e6d114d@redhat.com>
-Date:   Mon, 21 Aug 2023 15:50:57 +0200
+        d=1e100.net; s=20221208; t=1692628033; x=1693232833;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lCBw8JHS56QmypmYynEc49hFuIg6hZes912H9EXOgeo=;
+        b=ZixntsKXz7FOpUP3ltYGrU5BdlylgkX/wHi6TWp8QQSsG7RwMwgh1aBCeFp+oSSAKF
+         e85CBuSX+ZXptt5p1XtkdkaZaH+fjAwlb7iTIchW3LC+Q9IaRFfIU44e9i/3jREqsVlA
+         abzfVgbvD7NvZzZgYOc1ox7/wKqPKJQSUwdxgFJlZc1WYnexGhQ+qYYRoi6OgdLazgVY
+         zH60g0S+Gq65emUBAIYq9UGiAmvqzF3UYOe20saXpG16BWMFzGkywVlmwdYMBLlCXdPQ
+         XJXf/tI3Mq9c6ozYOOqmlqD4wWDB0vHayFi1DnIngRdmTdUpJLDhBX+LLq2EOpxsdtwk
+         vKqg==
+X-Gm-Message-State: AOJu0YxAx6WSaij13GY3kgPicXRwRtdM6ZP5+y/bkULX+kQsWEckjKRy
+        YvYJcGMV1syAFAhvm25/x70DnHnd4H+7rA1e0U0=
+X-Google-Smtp-Source: AGHT+IFvT7bgLSZEodSEKnNjEWo87qbU6tBszMXEiKdUHhU+OCaoEQADFsSA6MBJDhak/REL2JsxGM3YQzThSJ6AsKM=
+X-Received: by 2002:a05:6512:2522:b0:4f1:3d7d:409e with SMTP id
+ be34-20020a056512252200b004f13d7d409emr5787494lfb.0.1692628033053; Mon, 21
+ Aug 2023 07:27:13 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2] mlxbf-bootctl: Support sysfs entries for MFG fields
-Content-Language: en-US
-To:     David Thompson <davthompson@nvidia.com>,
-        ilpo.jarvinen@linux.intel.com, markgross@kernel.org,
-        vadimp@nvidia.com
+References: <20230809210740.18392-1-jorge.lopez2@hp.com> <10276e15-8528-41a9-4b90-7fdf6b890206@redhat.com>
+ <CAOOmCE9PFi5Xwmyr4jMPZ7LgofPY1fwLW71itfXw1km50B-Ybg@mail.gmail.com> <767165e4-5eae-a35c-aead-1db7801050dd@redhat.com>
+In-Reply-To: <767165e4-5eae-a35c-aead-1db7801050dd@redhat.com>
+From:   Jorge Lopez <jorgealtxwork@gmail.com>
+Date:   Mon, 21 Aug 2023 09:26:08 -0500
+Message-ID: <CAOOmCE_m6t4a0V9WRdPL8=hBfpXA+t9S5_7szy4qXeG=u1SD8Q@mail.gmail.com>
+Subject: Re: [PATCH] hp-bioscfg: Update steps how order list elements are evaluated
+To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shravankr@nvidia.com
-References: <20230818213417.17942-1-davthompson@nvidia.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230818213417.17942-1-davthompson@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        thomas@t-8ch.de, ilpo.jarvinen@linux.intel.com,
+        dan.carpenter@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi David,
+On Mon, Aug 21, 2023 at 6:55=E2=80=AFAM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+>
+> Hi Jorge,
+>
+> On 8/14/23 15:44, Jorge Lopez wrote:
+> > Hi Hans,
+> >
+> > On Mon, Aug 14, 2023 at 3:41=E2=80=AFAM Hans de Goede <hdegoede@redhat.=
+com> wrote:
+> >>
+> >> Hi Jorge,
+> >>
+> >> On 8/9/23 23:07, Jorge Lopez wrote:
+> >>> Update steps how order list elements data and elements size are
+> >>> evaluated
+> >>>
+> >>> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
+> >>>
+> >>> ---
+> >>> Based on the latest platform-drivers-x86.git/for-next
+> >>> ---
+> >>>  .../x86/hp/hp-bioscfg/order-list-attributes.c    | 16 ++++++++++++++=
+--
+> >>>  1 file changed, 14 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes=
+.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> >>> index b19644ed12e0..d2b61ab950d4 100644
+> >>> --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> >>> +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> >>> @@ -152,7 +152,7 @@ static int hp_populate_ordered_list_elements_from=
+_package(union acpi_object *ord
+> >>>
+> >>>               switch (order_obj[elem].type) {
+> >>>               case ACPI_TYPE_STRING:
+> >>> -                     if (elem !=3D PREREQUISITES && elem !=3D ORD_LI=
+ST_ELEMENTS) {
+> >>> +                     if (elem !=3D PREREQUISITES) {
+> >>>                               ret =3D hp_convert_hexstr_to_str(order_=
+obj[elem].string.pointer,
+> >>>                                                              order_ob=
+j[elem].string.length,
+> >>>                                                              &str_val=
+ue, &value_len);
+> >>> @@ -266,6 +266,15 @@ static int hp_populate_ordered_list_elements_fro=
+m_package(union acpi_object *ord
+> >>>                       if (ret)
+> >>>                               goto exit_list;
+> >>>
+> >>> +                     /*
+> >>> +                      * It is expected for the element size value
+> >>> +                      * to be 1 and not to represent the actual
+> >>> +                      * number of elements stored in comma
+> >>> +                      * separated format. element size value is
+> >>> +                      * recalculated to report the correct number
+> >>> +                      * of data elements found.
+> >>> +                      */
+> >>> +
+> >>>                       part_tmp =3D tmpstr;
+> >>>                       part =3D strsep(&part_tmp, COMMA_SEP);
+> >>>                       if (!part)
+> >>> @@ -273,11 +282,14 @@ static int hp_populate_ordered_list_elements_fr=
+om_package(union acpi_object *ord
+> >>>                                       tmpstr,
+> >>>                                       sizeof(ordered_list_data->eleme=
+nts[0]));
+> >>>
+> >>> -                     for (olist_elem =3D 1; olist_elem < MAX_ELEMENT=
+S_SIZE && part; olist_elem++) {
+> >>> +                     for (olist_elem =3D 0; olist_elem < MAX_ELEMENT=
+S_SIZE && part; olist_elem++) {
+> >>>                               strscpy(ordered_list_data->elements[oli=
+st_elem],
+> >>>                                       part,
+> >>>                                       sizeof(ordered_list_data->eleme=
+nts[olist_elem]));
+> >>> +
+> >>>                               part =3D strsep(&part_tmp, COMMA_SEP);
+> >>> +                             if (part && ordered_list_data->elements=
+_size < MAX_ELEMENTS_SIZE)
+> >>> +                                     ordered_list_data->elements_siz=
+e++;
+> >>>                       }
+> >>
+> >> I believe that you can replace the:
+> >>
+> >>                                 if (part && ordered_list_data->element=
+s_size < MAX_ELEMENTS_SIZE)
+> >>                                         ordered_list_data->elements_si=
+ze++;
+> >>                         }
+> >>
+> >> Lines with simply (after the loop has finished) doing:
+> >>
+> >>                         }
+> >>                         ordered_list_data->elements_size =3D olist_ele=
+m'
+> >>
+> >> Or am I missing something ?
+> >
+<snip>
 
-On 8/18/23 23:34, David Thompson wrote:
-> This patch extends the mlxbf-bootctl driver's sysfs entries
-> to support read and write access for the manufacturing (MFG)
-> fields in the board-level EEPROM.  The MFG fields are set
-> once during the board manufacturing phase, and then the MFG
-> fields are write-protected.
-> 
-> Signed-off-by: David Thompson <davthompson@nvidia.com>
-> Reviewed-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-> ---
-> v1->v2
->    - use ETH_ALEN instead of custom #define (MLNX_MFG_OOB_MAC_LEN)
->    - changes to xxx_show() methods:
->       a) removed unnecessary memcpy() calls, instead use data from xxx_data[]
->       b) increment size of xxx_data[] by 1 to ensure null termination
->    - changed "byte[]" variable to unsigned int in oob_mac_store()
->    - use sysfs_format_mac() in oob_mac_show()
+ ###
+>
+> Also you seem to have based this patch on top of a weird base
+> commit. This patch assumes both strsep() calls use COMMA_SEP
+> as separator. But the latest code in:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x8=
+6.git/log/?h=3Dreview-hans
+>
+> Still uses the wrong SEMICOLON_SEP for the second strsep() call.
+>
+> Please make sure to base your next version on top of the latest
+> review-hans commit.
+>
 
-Thank you for the new version.
+local work branch was reset and now it is in sync with review-hans branch
 
-Please add documentation for the newly added sysfs attributes to:
+> ###
+>
+> TL;DR: for your next version the "case ORD_LIST_ELEMENTS"
+> should end up looking like this:
+>
+>                 case ORD_LIST_ELEMENTS:
+>                         /*
+>                          * Ordered list data is stored in hex and comma s=
+eparated format
+>                          * Convert the data and split it to show each ele=
+ment
+>                          */
+>                         ret =3D hp_convert_hexstr_to_str(str_value, value=
+_len, &tmpstr, &tmp_len);
+>                         if (ret)
+>                                 goto exit_list;
+>
+>                         part_tmp =3D tmpstr;
+>                         part =3D strsep(&part_tmp, COMMA_SEP);
+>
+>                         for (olist_elem =3D 0; olist_elem < MAX_ELEMENTS_=
+SIZE && part; olist_elem++) {
+>                                 strscpy(ordered_list_data->elements[olist=
+_elem],
+>                                         part,
+>                                         sizeof(ordered_list_data->element=
+s[olist_elem]));
+>                                 part =3D strsep(&part_tmp, COMMA_SEP);
+>                         }
+>                         ordered_list_data->elements_size =3D olist_elem;
+>
+>                         kfree(str_value);
+>                         str_value =3D NULL;
+>                         break;
+>
+> Unless I'm missing something and you believe that this will not work.
 
-Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-
-this will make it easier for me to review the new userspace API
-for this.
+Concur with the proposed solution.  It achieves the same objective
+using fewer checks.
+New patch will follow
 
 Regards,
 
-Hans
-
-
-
-> ---
->  drivers/platform/mellanox/mlxbf-bootctl.c | 438 ++++++++++++++++++++++
->  drivers/platform/mellanox/mlxbf-bootctl.h |   8 +
->  2 files changed, 446 insertions(+)
-> 
-> diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
-> index 0bf29eee1e70..4ee7bb431b7c 100644
-> --- a/drivers/platform/mellanox/mlxbf-bootctl.c
-> +++ b/drivers/platform/mellanox/mlxbf-bootctl.c
-> @@ -11,6 +11,7 @@
->  #include <linux/acpi.h>
->  #include <linux/arm-smccc.h>
->  #include <linux/delay.h>
-> +#include <linux/if_ether.h>
->  #include <linux/iopoll.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> @@ -81,6 +82,49 @@ static const char * const mlxbf_rsh_log_level[] = {
->  
->  static DEFINE_MUTEX(icm_ops_lock);
->  static DEFINE_MUTEX(os_up_lock);
-> +static DEFINE_MUTEX(mfg_ops_lock);
-> +
-> +/*
-> + * Objects are stored within the MFG partition per type.
-> + * Type 0 is not supported.
-> + */
-> +enum {
-> +	MLNX_MFG_TYPE_OOB_MAC = 1,
-> +	MLNX_MFG_TYPE_OPN_0,
-> +	MLNX_MFG_TYPE_OPN_1,
-> +	MLNX_MFG_TYPE_OPN_2,
-> +	MLNX_MFG_TYPE_SKU_0,
-> +	MLNX_MFG_TYPE_SKU_1,
-> +	MLNX_MFG_TYPE_SKU_2,
-> +	MLNX_MFG_TYPE_MODL_0,
-> +	MLNX_MFG_TYPE_MODL_1,
-> +	MLNX_MFG_TYPE_MODL_2,
-> +	MLNX_MFG_TYPE_SN_0,
-> +	MLNX_MFG_TYPE_SN_1,
-> +	MLNX_MFG_TYPE_SN_2,
-> +	MLNX_MFG_TYPE_UUID_0,
-> +	MLNX_MFG_TYPE_UUID_1,
-> +	MLNX_MFG_TYPE_UUID_2,
-> +	MLNX_MFG_TYPE_UUID_3,
-> +	MLNX_MFG_TYPE_UUID_4,
-> +	MLNX_MFG_TYPE_REV,
-> +};
-> +
-> +#define MLNX_MFG_OPN_VAL_LEN         24
-> +#define MLNX_MFG_SKU_VAL_LEN         24
-> +#define MLNX_MFG_MODL_VAL_LEN        24
-> +#define MLNX_MFG_SN_VAL_LEN          24
-> +#define MLNX_MFG_UUID_VAL_LEN        40
-> +#define MLNX_MFG_REV_VAL_LEN         8
-> +#define MLNX_MFG_VAL_QWORD_CNT(type) \
-> +	(MLNX_MFG_##type##_VAL_LEN / sizeof(u64))
-> +
-> +/*
-> + * The MAC address consists of 6 bytes (2 digits each) separated by ':'.
-> + * The expected format is: "XX:XX:XX:XX:XX:XX"
-> + */
-> +#define MLNX_MFG_OOB_MAC_FORMAT_LEN \
-> +	((ETH_ALEN * 2) + (ETH_ALEN - 1))
->  
->  /* ARM SMC call which is atomic and no need for lock. */
->  static int mlxbf_bootctl_smc(unsigned int smc_op, int smc_arg)
-> @@ -454,6 +498,384 @@ static ssize_t os_up_store(struct device *dev,
->  	return count;
->  }
->  
-> +static ssize_t oob_mac_show(struct device *dev,
-> +			    struct device_attribute *attr, char *buf)
-> +{
-> +	struct arm_smccc_res res;
-> +	u8 *mac_byte_ptr;
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	arm_smccc_smc(MLXBF_BOOTCTL_GET_MFG_INFO, MLNX_MFG_TYPE_OOB_MAC, 0, 0, 0,
-> +		      0, 0, 0, &res);
-> +	mutex_unlock(&mfg_ops_lock);
-> +	if (res.a0)
-> +		return -EPERM;
-> +
-> +	mac_byte_ptr = (u8 *)&res.a1;
-> +
-> +	return sysfs_format_mac(buf, mac_byte_ptr, ETH_ALEN);
-> +}
-> +
-> +static ssize_t oob_mac_store(struct device *dev,
-> +			     struct device_attribute *attr,
-> +			     const char *buf, size_t count)
-> +{
-> +	unsigned int byte[MLNX_MFG_OOB_MAC_FORMAT_LEN] = { 0 };
-> +	struct arm_smccc_res res;
-> +	int byte_idx, len;
-> +	u64 mac_addr = 0;
-> +	u8 *mac_byte_ptr;
-> +
-> +	if ((count - 1) != MLNX_MFG_OOB_MAC_FORMAT_LEN)
-> +		return -EINVAL;
-> +
-> +	len = sscanf(buf, "%02x:%02x:%02x:%02x:%02x:%02x",
-> +		     &byte[0], &byte[1], &byte[2],
-> +		     &byte[3], &byte[4], &byte[5]);
-> +	if (len != ETH_ALEN)
-> +		return -EINVAL;
-> +
-> +	mac_byte_ptr = (u8 *)&mac_addr;
-> +
-> +	for (byte_idx = 0; byte_idx < ETH_ALEN; byte_idx++)
-> +		mac_byte_ptr[byte_idx] = (u8)byte[byte_idx];
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	arm_smccc_smc(MLXBF_BOOTCTL_SET_MFG_INFO, MLNX_MFG_TYPE_OOB_MAC,
-> +		      ETH_ALEN, mac_addr, 0, 0, 0, 0, &res);
-> +	mutex_unlock(&mfg_ops_lock);
-> +
-> +	return res.a0 ? -EPERM : count;
-> +}
-> +
-> +static ssize_t opn_show(struct device *dev,
-> +			struct device_attribute *attr, char *buf)
-> +{
-> +	u64 opn_data[MLNX_MFG_VAL_QWORD_CNT(OPN) + 1] = { 0 };
-> +	struct arm_smccc_res res;
-> +	int word;
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(OPN); word++) {
-> +		arm_smccc_smc(MLXBF_BOOTCTL_GET_MFG_INFO,
-> +			      MLNX_MFG_TYPE_OPN_0 + word,
-> +			      0, 0, 0, 0, 0, 0, &res);
-> +		if (res.a0) {
-> +			mutex_unlock(&mfg_ops_lock);
-> +			return -EPERM;
-> +		}
-> +		opn_data[word] = res.a1;
-> +	}
-> +	mutex_unlock(&mfg_ops_lock);
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%s", (char *)opn_data);
-> +}
-> +
-> +static ssize_t opn_store(struct device *dev,
-> +			 struct device_attribute *attr,
-> +			 const char *buf, size_t count)
-> +{
-> +	u64 opn[MLNX_MFG_VAL_QWORD_CNT(OPN)] = { 0 };
-> +	struct arm_smccc_res res;
-> +	int word;
-> +
-> +	if (count > MLNX_MFG_OPN_VAL_LEN)
-> +		return -EINVAL;
-> +
-> +	memcpy(opn, buf, count);
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(OPN); word++) {
-> +		arm_smccc_smc(MLXBF_BOOTCTL_SET_MFG_INFO,
-> +			      MLNX_MFG_TYPE_OPN_0 + word,
-> +			      sizeof(u64), opn[word], 0, 0, 0, 0, &res);
-> +		if (res.a0) {
-> +			mutex_unlock(&mfg_ops_lock);
-> +			return -EPERM;
-> +		}
-> +	}
-> +	mutex_unlock(&mfg_ops_lock);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t sku_show(struct device *dev,
-> +			struct device_attribute *attr, char *buf)
-> +{
-> +	u64 sku_data[MLNX_MFG_VAL_QWORD_CNT(SKU) + 1] = { 0 };
-> +	struct arm_smccc_res res;
-> +	int word;
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(SKU); word++) {
-> +		arm_smccc_smc(MLXBF_BOOTCTL_GET_MFG_INFO,
-> +			      MLNX_MFG_TYPE_SKU_0 + word,
-> +			      0, 0, 0, 0, 0, 0, &res);
-> +		if (res.a0) {
-> +			mutex_unlock(&mfg_ops_lock);
-> +			return -EPERM;
-> +		}
-> +		sku_data[word] = res.a1;
-> +	}
-> +	mutex_unlock(&mfg_ops_lock);
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%s", (char *)sku_data);
-> +}
-> +
-> +static ssize_t sku_store(struct device *dev,
-> +			 struct device_attribute *attr,
-> +			 const char *buf, size_t count)
-> +{
-> +	u64 sku[MLNX_MFG_VAL_QWORD_CNT(SKU)] = { 0 };
-> +	struct arm_smccc_res res;
-> +	int word;
-> +
-> +	if (count > MLNX_MFG_SKU_VAL_LEN)
-> +		return -EINVAL;
-> +
-> +	memcpy(sku, buf, count);
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(SKU); word++) {
-> +		arm_smccc_smc(MLXBF_BOOTCTL_SET_MFG_INFO,
-> +			      MLNX_MFG_TYPE_SKU_0 + word,
-> +			      sizeof(u64), sku[word], 0, 0, 0, 0, &res);
-> +		if (res.a0) {
-> +			mutex_unlock(&mfg_ops_lock);
-> +			return -EPERM;
-> +		}
-> +	}
-> +	mutex_unlock(&mfg_ops_lock);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t modl_show(struct device *dev,
-> +			 struct device_attribute *attr, char *buf)
-> +{
-> +	u64 modl_data[MLNX_MFG_VAL_QWORD_CNT(MODL) + 1] = { 0 };
-> +	struct arm_smccc_res res;
-> +	int word;
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(MODL); word++) {
-> +		arm_smccc_smc(MLXBF_BOOTCTL_GET_MFG_INFO,
-> +			      MLNX_MFG_TYPE_MODL_0 + word,
-> +			      0, 0, 0, 0, 0, 0, &res);
-> +		if (res.a0) {
-> +			mutex_unlock(&mfg_ops_lock);
-> +			return -EPERM;
-> +		}
-> +		modl_data[word] = res.a1;
-> +	}
-> +	mutex_unlock(&mfg_ops_lock);
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%s", (char *)modl_data);
-> +}
-> +
-> +static ssize_t modl_store(struct device *dev,
-> +			  struct device_attribute *attr,
-> +			  const char *buf, size_t count)
-> +{
-> +	u64 modl[MLNX_MFG_VAL_QWORD_CNT(MODL)] = { 0 };
-> +	struct arm_smccc_res res;
-> +	int word;
-> +
-> +	if (count > MLNX_MFG_MODL_VAL_LEN)
-> +		return -EINVAL;
-> +
-> +	memcpy(modl, buf, count);
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(MODL); word++) {
-> +		arm_smccc_smc(MLXBF_BOOTCTL_SET_MFG_INFO,
-> +			      MLNX_MFG_TYPE_MODL_0 + word,
-> +			      sizeof(u64), modl[word], 0, 0, 0, 0, &res);
-> +		if (res.a0) {
-> +			mutex_unlock(&mfg_ops_lock);
-> +			return -EPERM;
-> +		}
-> +	}
-> +	mutex_unlock(&mfg_ops_lock);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t sn_show(struct device *dev,
-> +		       struct device_attribute *attr, char *buf)
-> +{
-> +	u64 sn_data[MLNX_MFG_VAL_QWORD_CNT(SN) + 1] = { 0 };
-> +	struct arm_smccc_res res;
-> +	int word;
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(SN); word++) {
-> +		arm_smccc_smc(MLXBF_BOOTCTL_GET_MFG_INFO,
-> +			      MLNX_MFG_TYPE_SN_0 + word,
-> +			      0, 0, 0, 0, 0, 0, &res);
-> +		if (res.a0) {
-> +			mutex_unlock(&mfg_ops_lock);
-> +			return -EPERM;
-> +		}
-> +		sn_data[word] = res.a1;
-> +	}
-> +	mutex_unlock(&mfg_ops_lock);
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%s", (char *)sn_data);
-> +}
-> +
-> +static ssize_t sn_store(struct device *dev,
-> +			struct device_attribute *attr,
-> +			const char *buf, size_t count)
-> +{
-> +	u64 sn[MLNX_MFG_VAL_QWORD_CNT(SN)] = { 0 };
-> +	struct arm_smccc_res res;
-> +	int word;
-> +
-> +	if (count > MLNX_MFG_SN_VAL_LEN)
-> +		return -EINVAL;
-> +
-> +	memcpy(sn, buf, count);
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(SN); word++) {
-> +		arm_smccc_smc(MLXBF_BOOTCTL_SET_MFG_INFO,
-> +			      MLNX_MFG_TYPE_SN_0 + word,
-> +			      sizeof(u64), sn[word], 0, 0, 0, 0, &res);
-> +		if (res.a0) {
-> +			mutex_unlock(&mfg_ops_lock);
-> +			return -EPERM;
-> +		}
-> +	}
-> +	mutex_unlock(&mfg_ops_lock);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t uuid_show(struct device *dev,
-> +			 struct device_attribute *attr, char *buf)
-> +{
-> +	u64 uuid_data[MLNX_MFG_VAL_QWORD_CNT(UUID) + 1] = { 0 };
-> +	struct arm_smccc_res res;
-> +	int word;
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(UUID); word++) {
-> +		arm_smccc_smc(MLXBF_BOOTCTL_GET_MFG_INFO,
-> +			      MLNX_MFG_TYPE_UUID_0 + word,
-> +			      0, 0, 0, 0, 0, 0, &res);
-> +		if (res.a0) {
-> +			mutex_unlock(&mfg_ops_lock);
-> +			return -EPERM;
-> +		}
-> +		uuid_data[word] = res.a1;
-> +	}
-> +	mutex_unlock(&mfg_ops_lock);
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%s", (char *)uuid_data);
-> +}
-> +
-> +static ssize_t uuid_store(struct device *dev,
-> +			  struct device_attribute *attr,
-> +			  const char *buf, size_t count)
-> +{
-> +	u64 uuid[MLNX_MFG_VAL_QWORD_CNT(UUID)] = { 0 };
-> +	struct arm_smccc_res res;
-> +	int word;
-> +
-> +	if (count > MLNX_MFG_UUID_VAL_LEN)
-> +		return -EINVAL;
-> +
-> +	memcpy(uuid, buf, count);
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(UUID); word++) {
-> +		arm_smccc_smc(MLXBF_BOOTCTL_SET_MFG_INFO,
-> +			      MLNX_MFG_TYPE_UUID_0 + word,
-> +			      sizeof(u64), uuid[word], 0, 0, 0, 0, &res);
-> +		if (res.a0) {
-> +			mutex_unlock(&mfg_ops_lock);
-> +			return -EPERM;
-> +		}
-> +	}
-> +	mutex_unlock(&mfg_ops_lock);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t rev_show(struct device *dev,
-> +			struct device_attribute *attr, char *buf)
-> +{
-> +	u64 rev_data[MLNX_MFG_VAL_QWORD_CNT(REV) + 1] = { 0 };
-> +	struct arm_smccc_res res;
-> +	int word;
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(REV); word++) {
-> +		arm_smccc_smc(MLXBF_BOOTCTL_GET_MFG_INFO,
-> +			      MLNX_MFG_TYPE_REV + word,
-> +			      0, 0, 0, 0, 0, 0, &res);
-> +		if (res.a0) {
-> +			mutex_unlock(&mfg_ops_lock);
-> +			return -EPERM;
-> +		}
-> +		rev_data[word] = res.a1;
-> +	}
-> +	mutex_unlock(&mfg_ops_lock);
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%s", (char *)rev_data);
-> +}
-> +
-> +static ssize_t rev_store(struct device *dev,
-> +			 struct device_attribute *attr,
-> +			 const char *buf, size_t count)
-> +{
-> +	u64 rev[MLNX_MFG_VAL_QWORD_CNT(REV)] = { 0 };
-> +	struct arm_smccc_res res;
-> +	int word;
-> +
-> +	if (count > MLNX_MFG_REV_VAL_LEN)
-> +		return -EINVAL;
-> +
-> +	memcpy(rev, buf, count);
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	for (word = 0; word < MLNX_MFG_VAL_QWORD_CNT(REV); word++) {
-> +		arm_smccc_smc(MLXBF_BOOTCTL_SET_MFG_INFO,
-> +			      MLNX_MFG_TYPE_REV + word,
-> +			      sizeof(u64), rev[word], 0, 0, 0, 0, &res);
-> +		if (res.a0) {
-> +			mutex_unlock(&mfg_ops_lock);
-> +			return -EPERM;
-> +		}
-> +	}
-> +	mutex_unlock(&mfg_ops_lock);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t mfg_lock_store(struct device *dev,
-> +			      struct device_attribute *attr,
-> +			      const char *buf, size_t count)
-> +{
-> +	struct arm_smccc_res res;
-> +	unsigned long val;
-> +	int err;
-> +
-> +	err = kstrtoul(buf, 10, &val);
-> +	if (err)
-> +		return err;
-> +
-> +	if (val != 1)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&mfg_ops_lock);
-> +	arm_smccc_smc(MLXBF_BOOTCTL_LOCK_MFG_INFO, 0, 0, 0, 0, 0, 0, 0, &res);
-> +	mutex_unlock(&mfg_ops_lock);
-> +
-> +	return count;
-> +}
-> +
->  static DEVICE_ATTR_RW(post_reset_wdog);
->  static DEVICE_ATTR_RW(reset_action);
->  static DEVICE_ATTR_RW(second_reset_action);
-> @@ -463,6 +885,14 @@ static DEVICE_ATTR_WO(fw_reset);
->  static DEVICE_ATTR_WO(rsh_log);
->  static DEVICE_ATTR_RW(large_icm);
->  static DEVICE_ATTR_WO(os_up);
-> +static DEVICE_ATTR_RW(oob_mac);
-> +static DEVICE_ATTR_RW(opn);
-> +static DEVICE_ATTR_RW(sku);
-> +static DEVICE_ATTR_RW(modl);
-> +static DEVICE_ATTR_RW(sn);
-> +static DEVICE_ATTR_RW(uuid);
-> +static DEVICE_ATTR_RW(rev);
-> +static DEVICE_ATTR_WO(mfg_lock);
->  
->  static struct attribute *mlxbf_bootctl_attrs[] = {
->  	&dev_attr_post_reset_wdog.attr,
-> @@ -474,6 +904,14 @@ static struct attribute *mlxbf_bootctl_attrs[] = {
->  	&dev_attr_rsh_log.attr,
->  	&dev_attr_large_icm.attr,
->  	&dev_attr_os_up.attr,
-> +	&dev_attr_oob_mac.attr,
-> +	&dev_attr_opn.attr,
-> +	&dev_attr_sku.attr,
-> +	&dev_attr_modl.attr,
-> +	&dev_attr_sn.attr,
-> +	&dev_attr_uuid.attr,
-> +	&dev_attr_rev.attr,
-> +	&dev_attr_mfg_lock.attr,
->  	NULL
->  };
->  
-> diff --git a/drivers/platform/mellanox/mlxbf-bootctl.h b/drivers/platform/mellanox/mlxbf-bootctl.h
-> index 613963d448f2..1299750a8661 100644
-> --- a/drivers/platform/mellanox/mlxbf-bootctl.h
-> +++ b/drivers/platform/mellanox/mlxbf-bootctl.h
-> @@ -81,6 +81,14 @@
->   */
->  #define MLXBF_BOOTCTL_FW_RESET  0x8200000D
->  
-> +/*
-> + * SMC function IDs to set, get and lock the manufacturing information
-> + * stored within the eeprom.
-> + */
-> +#define MLXBF_BOOTCTL_SET_MFG_INFO    0x8200000E
-> +#define MLXBF_BOOTCTL_GET_MFG_INFO    0x8200000F
-> +#define MLXBF_BOOTCTL_LOCK_MFG_INFO   0x82000011
-> +
->  /*
->   * SMC function IDs to set and get the large ICM carveout size
->   * stored in the eeprom.
-
+Jorge.
