@@ -2,134 +2,260 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFF1EE4993
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Aug 2023 15:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C942EE49A6
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Aug 2023 15:48:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229866AbjHUPHJ (ORCPT
+        id S236467AbjHUPso (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Aug 2023 11:07:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38736 "EHLO
+        Mon, 21 Aug 2023 11:48:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231829AbjHUPHJ (ORCPT
+        with ESMTP id S236471AbjHUPsn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Aug 2023 11:07:09 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2070.outbound.protection.outlook.com [40.107.93.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B3BD1;
-        Mon, 21 Aug 2023 08:07:04 -0700 (PDT)
+        Mon, 21 Aug 2023 11:48:43 -0400
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2098.outbound.protection.outlook.com [40.107.7.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 674EEA1;
+        Mon, 21 Aug 2023 08:48:38 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JZ6I2DZZz2EUrWkCuyeg8dv7BgFqk1ukLA4J2TvVwEvPf44N2LrUEc9g79xiqD4CXLyXlxPdpGTlNKGBKP2LJ0u1Qm+6TlhEvAHnfDTCkyLxsXJu+DFUPLGdHzMsbC4mQHNl9v4UYy18UPAiF0FL5FQLKcxQcV7bHqee3EPuu8VXmI8ccHh/XJai4x+nTj6AWJrpjYPE3zjKjMgbStXH1YwxJ28NcnWbXBp4JRqF5J6qqDGNTR4xcWp0Qu5pVxUMnj7uV9J6LXRt/zk33Zg+Z6Mfa4tVWZob3daNILsH/ljJI3Ye4RWAb984v2h2gSHVkR1F0QNmfPXoHMLGiasv6Q==
+ b=cNqo8Oj/PB/fJXSE7rA+b+CAGj0eWO76CLHVFna+fTZv97R/Ng+mYhrswvYi+5SeR9W8LsVpW3N+/syzkUEoxphygAm5t8zRVn9uykDSl7K3tdEYyMsLJsQORCDNkEWy6CjKDCrnLRnEcakMCQ/r+eBztsmSTrM4mMUNndonbe76kSZyzZ64dglWURJLnzyeQlar6BiX7UEuxHIKkhW6axG+uy3qFnMIu/lxsN+ylSHl6xYqc43kVXeZm9zx+LP7PwjU22U12Vo3gxkGB+JsxSFQsVH8mC3t07l77pyP0Mo4R6UapYCfBqR47n59hP7HraRr1DZ6hMOylcMUQ1TI0w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=crmS/WivdPQKYd3aKMn/RcggR7JNT44mq8vQ2IYCylE=;
- b=Xz2A8CZt2aG2ZB89RF9sxl5QxyiQxA3gdJ+cu9TcGa2CT9dEVMx7yXVtqesr71+nylmenC41uD8mlnuuyZeQgt8cQ1hEk9jfVZ24zSoODxQB3HLxfWnlVNqtWXtDTMYV/JMbrIoO4lxUGx5qd+EvVIoEesqFNPBBBCYdF1wi6me2jxfZGS2DfcZfRlcmqS6KRRoZxtlAlVq2zqgnwagZvgcA0q2S4+PI83RzONFA6xIe9uR3C84MiXXUCQqRCwEnrQkXcGwaeY9I8TsxVaFKnzKiPu8wxDRZ9919DhYybyT1fjOJLKZJUoiFwL9rEocxsLRx1N5BKatFnP6WOygVXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=BtoWvOfeldTYGE55hsufUxHhvZzYf3beR8VAkpWWdH8=;
+ b=nUSdHxdOgt3miETgxjPVTejOFG8fRXFRZZsNmdOgc1zDIUaPLuK7oOx3uEz2rSd2eyRo6VzJzeatyWnWRQs31n3gS+oN9z9B4dYgVwNtn/rBY4rALZyvHJrApih2nNM2/8C35fDwzdBCF+ht5SjVvn++WsmePEdSEWFAexCy0ebBlGzLqa3B1Oc4eBoBFUEkHqs9eAdCNhT3AtY5ngBIUmRSI8xpHLsqu5yaO2NfQuJ2rIib4qVpoJd8li0JDvda0IJjDibO4RpOG4pYePomHroQyHYMxmDr86TvoqcZLtF5XImeV1urJvGYpywad5axt61Gf0JYJpxMfOhlSPycrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silicom-usa.com; dmarc=pass action=none
+ header.from=silicom-usa.com; dkim=pass header.d=silicom-usa.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=SILICOMLTD.onmicrosoft.com; s=selector2-SILICOMLTD-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=crmS/WivdPQKYd3aKMn/RcggR7JNT44mq8vQ2IYCylE=;
- b=LutAVMnbtx/qoTGv+gpKmq0v+Nh0LRMwg2N0rj0iHZiEAvlW2O0sazu1Ay6GzYdEw9We07juq8ijblmn6G9/fIJxZfrCQX71sUUIjBsIZZIIN0bOYCOYaFqkLrEJQhNiGIpkFjbPWWilpwodUdAYTt50q1JJjbgvKAsTf8tSY9PLHwP3OezQ8zsTDojr+o35H3tBVWxlsb9PKQKDDdYOvYIWY7/u9JMmDSLmMAnw2B/boJ0B17CfZ5zX7xTpvvgFlY1jMwf+fVQofE2dL5KZJnj88+CAOjrFmCs/7y+CcE6arxxJucswuw6M4Ab05F0/9Q5a3I6bREVgSPWGJ5DeAw==
-Received: from CYZPR05CA0046.namprd05.prod.outlook.com (2603:10b6:930:a3::6)
- by CY8PR12MB7241.namprd12.prod.outlook.com (2603:10b6:930:5a::12) with
+ bh=BtoWvOfeldTYGE55hsufUxHhvZzYf3beR8VAkpWWdH8=;
+ b=E4gsoWBfF0na9c5hD74ch+xyvbv+2+VRtoCDh9Y1ktVdmhqALe3UUhyPTkdcxF0dXRBOx/kdJPXhLuL9LjVKca4bGi+vbH/cgiHO1c9IRXxQaxW0l0u6T853kdjlGkCqkfnAQs7q91N8nM3B72YkPZyrGeRujoV+P0qgwbi7On8=
+Received: from PA4PR04MB9222.eurprd04.prod.outlook.com (2603:10a6:102:2a1::18)
+ by GVXPR04MB10071.eurprd04.prod.outlook.com (2603:10a6:150:11a::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.24; Mon, 21 Aug
- 2023 15:07:03 +0000
-Received: from CY4PEPF0000E9CE.namprd03.prod.outlook.com
- (2603:10b6:930:a3:cafe::2f) by CYZPR05CA0046.outlook.office365.com
- (2603:10b6:930:a3::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.14 via Frontend
- Transport; Mon, 21 Aug 2023 15:07:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- CY4PEPF0000E9CE.mail.protection.outlook.com (10.167.241.141) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6699.14 via Frontend Transport; Mon, 21 Aug 2023 15:07:02 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Mon, 21 Aug 2023
- 08:06:46 -0700
-Received: from drhqmail202.nvidia.com (10.126.190.181) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.37; Mon, 21 Aug 2023 08:06:45 -0700
-Received: from vdi.nvidia.com (10.127.8.9) by mail.nvidia.com (10.126.190.181)
- with Microsoft SMTP Server id 15.2.986.37 via Frontend Transport; Mon, 21 Aug
- 2023 08:06:44 -0700
-From:   Shih-Yi Chen <shihyic@nvidia.com>
-To:     <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Mark Gross" <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        <platform-driver-x86@vger.kernel.org>
-CC:     shihyic <shihyic@nvidia.com>, Liming Sung <limings@nvidia.com>,
-        "David Thompson" <davthompson@nvidia.com>
-Subject: [PATCH] [v2] platform/mellanox: Fix mlxbf-tmfifo not handling all virtio CONSOLE notifictions      updated to use set_bit()
-Date:   Mon, 21 Aug 2023 11:06:27 -0400
-Message-ID: <20230821150627.26075-1-shihyic@nvidia.com>
-X-Mailer: git-send-email 2.30.1
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.20; Mon, 21 Aug
+ 2023 15:48:33 +0000
+Received: from PA4PR04MB9222.eurprd04.prod.outlook.com
+ ([fe80::d62d:f67e:ba75:b5dc]) by PA4PR04MB9222.eurprd04.prod.outlook.com
+ ([fe80::d62d:f67e:ba75:b5dc%4]) with mapi id 15.20.6699.020; Mon, 21 Aug 2023
+ 15:48:33 +0000
+From:   Huibin Shi <henrys@silicom-usa.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Henry Shi <henryshi2018@gmail.com>,
+        "hbshi69@hotmail.com" <hbshi69@hotmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "jdelvare@suse.com" <jdelvare@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "hb_shi2003@yahoo.com" <hb_shi2003@yahoo.com>,
+        Wen Wang <wenw@silicom-usa.com>
+Subject: RE: [PATCH] Add Silicom Platform Driver
+Thread-Topic: [PATCH] Add Silicom Platform Driver
+Thread-Index: AQHZ0erQKIGuJyMiIEioe7g7XMHTza/xkQCAgAAWSwCAAAnggIADNjHA
+Date:   Mon, 21 Aug 2023 15:48:33 +0000
+Message-ID: <PA4PR04MB9222CA6111C291AE1C7D1B3D9A1EA@PA4PR04MB9222.eurprd04.prod.outlook.com>
+References: <20230818154341.20553-1-henryshi2018@gmail.com>
+ <8b8b0503-8f8f-4615-97ab-11d2c0e1a960@roeck-us.net>
+ <PA4PR04MB9222910BAC2754A073A70E609A18A@PA4PR04MB9222.eurprd04.prod.outlook.com>
+ <7f537cef-d5cd-4816-a07b-9df27954ef93@roeck-us.net>
+In-Reply-To: <7f537cef-d5cd-4816-a07b-9df27954ef93@roeck-us.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=silicom-usa.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PA4PR04MB9222:EE_|GVXPR04MB10071:EE_
+x-ms-office365-filtering-correlation-id: ee0742b7-c232-4a17-fe87-08dba25e1334
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: V4c5VyiBzUVF14duB+1bZy/SSQLey5hs2JGrMxTwLLDtKzTu9YUMIHAmJEmqVF4bGvkKuA1hRGYl3oDIUcJ4AyYdDbs162ilWAKeEQQh+jDwzVhLCtxAaYEPTbkxlS2jhwLvpbcr/r8m1kPaFi63E4nzuxn0OGdVxLxrOd1EtacGxgoScULiiIuRGDdWAWnRQwyty9bor/F51a5gLV41lwD4Xq9ETJwpH7Sgd0+vHjkwvksnTOUbHZz+hNMDm+FP+OIBhYMsKfjEJb8RiKTNg6qWHsAGGBLW6b87Wddr5cpe1w7fuFSQFw/y7/aMcPgk6tZf235U4LIY6RPznOIWcoBc++bVJVl3D8ec9/y/U2i6YUmjsTqVTkgh38HsfR1VHwnm7S4s7B2ZxmZ3tl67NfQwr8dU+PWwQ0sik3V2Ic5ZmCIdOFBl3MmxXoCnzkoGCkDcNi4itdEpwhZQ4Jz2rX41bOyvUrPG3n/aSXuYHzD7ev+zjfoG2/vYIySFY3SSV6ebyxCXPbVqf9dl55mDdfHFHjX1WJ8uq98+GkLEAQnAxJWI9fi7bmlfv22MNl0qxnK5sGmSoSlI7DllV57OF0HYN/EbJ2MPbPKxnX2agqYrmM9LE4ileUXoqyslbOZB
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9222.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(376002)(396003)(136003)(39850400004)(451199024)(186009)(1800799009)(122000001)(316002)(107886003)(9686003)(6506007)(71200400001)(53546011)(7696005)(45080400002)(4326008)(83380400001)(5660300002)(8936002)(8676002)(2906002)(52536014)(7416002)(41300700001)(64756008)(76116006)(66556008)(66946007)(66476007)(66446008)(54906003)(478600001)(6916009)(38070700005)(38100700002)(55016003)(33656002)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?nAZDUPS07qP0goe8Xy+8DoaW+st++s7SRcvD4ygISiC9ZlWVw2sXRViArfzK?=
+ =?us-ascii?Q?sijFhICq+v2yUc1A0CGzMxmddLkAVM1fy0JlrCTonTQb42jSqq5A9fy2RtAl?=
+ =?us-ascii?Q?q2v+hYlr39bcbiIO7skOHB9+NAWxiNMRR/l4qHSgVx9D71/fUNAkUA2wdVd1?=
+ =?us-ascii?Q?mTArWmE/nMK/71FcF6oRhW60z/jYDwd3ixP1f3sT+I6OSx4dhyy2HtmfhZne?=
+ =?us-ascii?Q?eEH9STOaWJcAxcSBLPF74rR2vLtb26hlqqnNLTQrZ5ZksppQ6rlXOP3QqoxM?=
+ =?us-ascii?Q?QRU6Po5iY2vBZgzq0ftYBhj72O4yBz2AVTCyHaiHLaY95ajLRYJ4gb/JY8wZ?=
+ =?us-ascii?Q?S7KdK9s8br0ZF5wMQYLLfBaj3wGjrGS+Q62ljGlXWlHyNVMOTTwT43N/drSZ?=
+ =?us-ascii?Q?C+jOXi/FG9NAVpYt62H3V04Z8cTcvKxUamCiHoirh1L2PIp/N1Sanl5KldSF?=
+ =?us-ascii?Q?tYqwD+llgTKT/juYPoKUfCHWAQ5ZT/+P/w0kkcLfjLyXlvxuErZYC1W/kv9H?=
+ =?us-ascii?Q?Ic2HKC/XQfjztER54VEjFz8O2fUvtHxgKrwNqi057FZjj64ZC3yDeUAK0u5B?=
+ =?us-ascii?Q?vwEMcIL68bizGtFz33Wn+VNdNZtNLG0KEsDBtopAk89j9qIwgOf5fM3SFeob?=
+ =?us-ascii?Q?rdXu5TXcH1vsJnRnkHcqk1kCnag/z/VjDZ4pDvGinWzNuaPAfA2q61O0yuXX?=
+ =?us-ascii?Q?HyGvideoU9g9dNhbzJ3jxq373BrVcF8eGLjaWVAw3d+uk4E7KAlvzDTtFh4Q?=
+ =?us-ascii?Q?lzA9GVN8jngefW7t9TfjmReFFY7QwzJDVbFFUJMt6Lzc8fbo5ekCfo13geG7?=
+ =?us-ascii?Q?3Oo5RcvYi7ARpECENic2in/3f84hJvLBxrrv5GYFJWSzHQSev2/I2Bwi5rZZ?=
+ =?us-ascii?Q?+TUnGbKm9AtPs4PgoO8VxkX97YpUfZ1j1xBAZyqHRhbuPOuJZo3k1aPg2nsi?=
+ =?us-ascii?Q?dhRLJ5nndFyaWWeeJ3lU7axVtIrnKQroPE2+YKAQFicYXbpdmftUs/4Ak4bk?=
+ =?us-ascii?Q?JSvzusgk+2KgF+jk9dtBi/QxLV67Gzq6ryOR4MPRwhjI2zUdsawKYWVFtHvX?=
+ =?us-ascii?Q?1v4c7zT2m4dVTUFLhMInT2LL7hdiJUr9s7OuBxdhI49EaLREig4KIC1Zcc07?=
+ =?us-ascii?Q?uufPBvgqL4j2Eq2i/oOYdj2YNb9IBB81DCPEhFkwpka+kYE88Nqq8GYr7BXP?=
+ =?us-ascii?Q?pQ3UEotJcY69zaaEfrINSWyNttxhgurWKmRBudMVAUbEwh4yyjJk5bL4PZCz?=
+ =?us-ascii?Q?1Ce+FkkvjdfdaRmWVtbSldmbSHNzYmv1T6dVw2hhx1G88wcHbmySRPvKTXYW?=
+ =?us-ascii?Q?7yeJnP9IwjLFnpWnennbGdeQLBQtGhp7QjCqCdL0M60+YUnX7H4kvejnmSv3?=
+ =?us-ascii?Q?sVPPsOdbMOlgZDkHWsYmsY763ZJt54F22/udjA3zMGlCawwuP+L38Z7eh9CU?=
+ =?us-ascii?Q?1cML6CXTXjLbyvcupeJzR8fYAnPOFkBXFE60Y0QHyl4ZlZe8BOvnLotIO42z?=
+ =?us-ascii?Q?ECoPb9+WB8sBFErTLJR6fdNZgJkekjQ//ysOMI4bdbTjux1AzocDAKbiiBBv?=
+ =?us-ascii?Q?/RIRlErFzg7Xufaxkf2XqL//oGrvrB9aJuzhjWEpiPUlMoiPchXkJVjZUmme?=
+ =?us-ascii?Q?iSQx7surGF5oH367REJFu7q8ZBGYy7C6KC/9ud0n0KC8?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9CE:EE_|CY8PR12MB7241:EE_
-X-MS-Office365-Filtering-Correlation-Id: f8386f04-497a-4273-c20e-08dba25846a7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YmsJs4K5Ap08hTcN8ZOsIdEdd9w3JpAki8NDrr18EaLJzvVR5h/8UIGYrObx4PnIQnHIEtP0e2Z0lw4znQwn49HCRt80WVEWAD8MPIVIQiDUSsRtymbVpaY5ebp93iI69uOkEI6QfXtSLClH8GKURCyQoum2K+3R1Q7+MH4wsvzIJpkTXVgIpcn/OUJy8gkdOdiMM5PS/kAFSIGHeoKXXDGygNlE4KY6YclAeOOvyCBGR5W5nfd1WGLoUw2Zu6h4cTopGkeG45RTlw06jQnLn3HYquWAu9z5B/nAgAQq1klQusSXDMb2+wKsmmL8Ye3SLQvPyljYsUX3ye+uU5XTINFgAxlmmNl53dONvW86L4h/Z2qFi+HVL3HSiz56fNWTlD0Jy/dg2aL8iazUrRn9j8+xbyODLl7gAaBPZ7iO3epMDPlZkw6k1Tp4+KNXj0RXuqUhnfmBzUgL14CApR0cYBKLNYXsVpa8giJws6xPRQMebN+3O7DAq+v7NXgr//tG52FkS2227BVRmvtlDjT20xoFWhV2YwfQJOqT9/OTeoaBghLoKMrwWbPfpMlrg8eHQEb5B7NwL2wy1iXOgyzlK9M63/oHosbrCgpI8DmlK+orSCXncY5ve8yFuhFFBJDyTO1vHrP+6HS62qmeSn6TfL1OJXnywRpjsGtr2SFoLpZnWJBjncpQEI+jlf92Ay9is6BP5rIIN8M5HfPmtywYEkdtnEo5mOnrWtZSPlFlVcuCmCiIB5bobENo1d10IqV4
-X-Forefront-Antispam-Report: CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(346002)(39860400002)(376002)(136003)(396003)(82310400011)(451199024)(186009)(1800799009)(36840700001)(40470700004)(46966006)(2906002)(40480700001)(15650500001)(83380400001)(5660300002)(336012)(426003)(26005)(7696005)(86362001)(36860700001)(47076005)(8676002)(2616005)(8936002)(107886003)(4326008)(70206006)(316002)(54906003)(70586007)(110136005)(478600001)(82740400003)(356005)(6666004)(36756003)(41300700001)(40460700003)(7636003)(1076003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2023 15:07:02.8184
+X-OriginatorOrg: silicom-usa.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9222.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee0742b7-c232-4a17-fe87-08dba25e1334
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2023 15:48:33.5389
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8386f04-497a-4273-c20e-08dba25846a7
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000E9CE.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7241
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c9e326d8-ce47-4930-8612-cc99d3c87ad1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UoYQiY51OlB1A3e92nuhh7yqscvUD9iFXP9IDf0A7PiTydyNLg0rUe05yhOb+oiVEvRxxhMgKztZPcAUSLzTwQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10071
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: shihyic <shihyic@nvidia.com>
+Guenter,
 
-rshim console does not show all entries of dmesg.
+See my comments below.
 
-Fixed by setting MLXBF_TM_TX_LWM_IRQ for every CONSOLE notification.
+Thanks
+Henry
 
-Signed-off-by: Shih-Yi Chen <shihyic@nvidia.com>
-Reviewed-by: Liming Sung <limings@nvidia.com>, David Thompson <davthompson@nvidia.com>
-Reviewed-by: David Thompson <davthompson@nvidia.com>
----
-v1->v2:
- - Per review comment, replaced test_and_set_bit() with set_bit()
+-----Original Message-----
+From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
+Sent: Saturday, August 19, 2023 10:36 AM
+To: Huibin Shi <henrys@silicom-usa.com>
+Cc: Henry Shi <henryshi2018@gmail.com>; hbshi69@hotmail.com; tglx@linutroni=
+x.de; mingo@redhat.com; bp@alien8.de; dave.hansen@linux.intel.com; x86@kern=
+el.org; hpa@zytor.com; hdegoede@redhat.com; markgross@kernel.org; jdelvare@=
+suse.com; linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org=
+; linux-hwmon@vger.kernel.org; hb_shi2003@yahoo.com; Wen Wang <wenw@silicom=
+-usa.com>
+Subject: Re: [PATCH] Add Silicom Platform Driver
 
- drivers/platform/mellanox/mlxbf-tmfifo.c | 1 +
- 1 file changed, 1 insertion(+)
+Caution: This is an external email. Please take care when clicking links or=
+ opening attachments.
 
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-index a79318e90a13..b600b77d91ef 100644
---- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -887,6 +887,7 @@ static bool mlxbf_tmfifo_virtio_notify(struct virtqueue *vq)
- 			tm_vdev = fifo->vdev[VIRTIO_ID_CONSOLE];
- 			mlxbf_tmfifo_console_output(tm_vdev, vring);
- 			spin_unlock_irqrestore(&fifo->spin_lock[0], flags);
-+			set_bit(MLXBF_TM_TX_LWM_IRQ, &fifo->pend_events);
- 		} else if (test_and_set_bit(MLXBF_TM_TX_LWM_IRQ,
- 					    &fifo->pend_events)) {
- 			return true;
--- 
-2.30.1
 
+On Sat, Aug 19, 2023 at 02:20:32PM +0000, Huibin Shi wrote:
+> Hi Guenter,
+>
+> Thanks for your comments. Probably, I should not resubmit patch too rushe=
+d. I will add version number to subject and change log in cover letter for =
+next resubmission.
+>
+> See my comments below. Please let me know whether you accept my explanati=
+on.
+>
+> Henry
+> -----Original Message-----
+[ ... ]
+
+> > +
+> > +static u32 temp_get(void)
+> > +{
+> > +     u32 reg;
+> > +
+> > +     mutex_lock(&mec_io_mutex);
+> > +     /* Select memory region */
+> > +     outb(IO_REG_BANK, EC_ADDR_MSB);
+> > +     outb(0xc, EC_ADDR_LSB);
+> > +     /* Get current data from the address */
+> > +     reg =3D inl(MEC_DATA(DEFAULT_CHAN_LO));
+> > +     mutex_unlock(&mec_io_mutex);
+> > +
+> > +     return (reg >> 16) / 10;
+>
+> The hwmon ABI expects temperatures to be reported in milli-degrees C.
+> The above sets the maximum temperature to 65,535 / 10 =3D 6,553 milli-deg=
+rees or 6.553 degrees C. It is very unlikely that this is correct.
+>
+> Again, I commented on this before.
+>
+> Henry: this is due to an internal implementation of MIcor-controller firm=
+ware, instead of putting real temperature to the register, it put (real tem=
+perature * 10 ) to the register. So, in order to report correct temperature=
+ to user space application, the read value is divided by 10, then report to=
+ user space.
+>
+> Please let me know if you accept this. If not, I can change the code, but=
+ let user space application to do adjustment.
+
+No, I do not accept this. I do not believe that the maximum temperature rep=
+orted by the microcontroller is 6.553 degrees C. I suspect it reports 10th =
+of degrees C. In that case, the number reported should be multiplied by 100=
+ to make it milli-degrees C as expected by the ABI.
+
+Henry: OK, I will remove "/10" in driver, and let user space application (o=
+r script) to the calculation.
+
+[ ... ]
+
+> > +static int silicom_fan_control_read_labels(struct device *dev, enum hw=
+mon_sensor_types type,
+> > +                                        u32 attr, int channel,=20
+> > +const char **str) {
+> > +     switch (type) {
+> > +     case hwmon_fan:
+> > +             *str =3D "Fan Speed";
+> > +             return 0;
+> > +     case hwmon_temp:
+> > +             *str =3D "Thermostat Sensor";
+> > +             return 0;
+>
+> Those labels have no practical value.
+>
+> Henry: Those labels will be used by user space code to identify Silicom_p=
+latform driver.
+>
+
+The driver is identified by the driver name, not by the name of a temperatu=
+re sensor or fan speed attribute. Any other driver could return "Fan Speed"=
+ or "Thermostat Sensor" here. Userspace relying on such values to identify =
+the driver are simply broken.
+
+Henry: Good point.=20
+
+When this driver installed, there is one directory created under /sys/class=
+/hwmon/, called hwmon#. The exact # for the newly created directory can be =
+different at run time. So the intention here is let user space software to =
+identify the right directory for Silicom-platform driver. I can change the =
+driver return to "Silicom-platform: Fan Speed" and "Silicom-platform: Therm=
+ostat Sensor" to identify silicom-platform driver. Any objection?
+
+> > +     default:
+> > +             return -EOPNOTSUPP;
+> > +     }
+> > +}
+> > +
+> > +static const struct hwmon_ops silicom_fan_control_hwmon_ops =3D {
+> > +     .is_visible =3D silicom_fan_control_is_visible,
+> > +     .read =3D silicom_fan_control_read,
+> > +     .write =3D NULL,
+>
+> Unnecessary.
+>
+> Henry: OK, will be removed silicom_fan_control_is_visible.
+
+The NULL pointer assignment is unnecessary. I have no idea what that has to=
+ do with silicom_fan_control_is_visible(), or why you would want to remove =
+that function.
+
+Henry: OK, will remove the NULL pointer assignment.
+
+Guenter
