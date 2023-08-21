@@ -2,260 +2,134 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 707FCEE49A6
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Aug 2023 11:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF98EEE4996
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Aug 2023 12:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232908AbjHUL44 (ORCPT
+        id S234180AbjHUMuo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Aug 2023 07:56:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50620 "EHLO
+        Mon, 21 Aug 2023 08:50:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233366AbjHUL44 (ORCPT
+        with ESMTP id S233727AbjHUMun (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Aug 2023 07:56:56 -0400
+        Mon, 21 Aug 2023 08:50:43 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0E0EB
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Aug 2023 04:55:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7449CC
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Aug 2023 05:50:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1692618957;
+        s=mimecast20190719; t=1692622199;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=JZlQIqocknrIlMtIJUoMhvddTuUyuE/0jPIZUKQyydA=;
-        b=iGqtKl9YKyergrp38ul8U55hj8pSIyRety6vA2jObl2/QdhID/jLHJZxTcYc9wEFg2Q4jD
-        MrjbYQoyHyW/HYum//5zOGY7kUCBuVeOQUDTX8R8croRGGJbZBlwS9wl4QiNXe+p9kxtdV
-        99vDJelvC2yUnfQ5yxCQNVXa1b3G3V4=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=U2tMdqihoLdVc/FNclnLyyqSQNriGxLnDeEcp+obbhU=;
+        b=L5VtZk9w658Wu9ZkxuC9MVn2q8ErxKVx7ng7iHCqFevK1lFX2GA+Wqjp/dLid3TG5fAsTJ
+        Uw6akBRcqOTfnspM8VeRcUIs5NVGEahhO+wH/8iMek9I0hQMCYNrx5XnHr995lf3bM1414
+        pRGfwKMxCg6LRqt7Dkb5cVrEiZrl+0w=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-107-5BmujlCmO2qs3c8UXAGqow-1; Mon, 21 Aug 2023 07:55:56 -0400
-X-MC-Unique: 5BmujlCmO2qs3c8UXAGqow-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-52a0f6f7a3bso1097361a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Aug 2023 04:55:55 -0700 (PDT)
+ us-mta-677-8B6TKIplN7ui6-6ztp2Irw-1; Mon, 21 Aug 2023 08:49:58 -0400
+X-MC-Unique: 8B6TKIplN7ui6-6ztp2Irw-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-523d73637e2so2102150a12.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Aug 2023 05:49:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692618955; x=1693223755;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=1e100.net; s=20221208; t=1692622197; x=1693226997;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JZlQIqocknrIlMtIJUoMhvddTuUyuE/0jPIZUKQyydA=;
-        b=hav0MByjfixZ6lOGsITeOMdhNZEvFoyBSIGFUuKOLKdkuyyk5jg+4FWyyDWu5sGD92
-         /IAyWMZ8UPUG6TLIXu3p61yCbSiicg8XAsCJkI9e/R2/KiRv0WXcG5yOMeU44rYfk3T7
-         Lhe0zSSU9YH7mNRw7uZKXF5iSvWicNJQlwdGvJmcFltVGGr1YsFxjYGOwFymt2DXbr6l
-         9uKWyjhl8Z1gjKrdCyVLKl3eFOoNdQBB7rg8wq35FvHQyrbwceyEkWiJ+YcWJsA9Wp27
-         vD86+37fRs6LfSTC6aUQv7Wqj1wWVpeX9I9NwfLHlhfWXfn1qAkkW1O8WqKbkG/z+kFu
-         Eayw==
-X-Gm-Message-State: AOJu0YzH/0p7OwBu4RiRc+oVg/Spd3X6EFPeHx5lDXJdw+FcJxgZE2F5
-        RzijF4j2K2NNZu6oEWeVR+jgVb3e9jv9A95tWoZCPzCQsZ4z2PRNGl6Huw/imY8+UgNburRZ5Ie
-        xi+zVycmXTAS3sc4WGIaDTxdblHPdj/4ohQ==
-X-Received: by 2002:a05:6402:34cf:b0:51d:b184:efd with SMTP id w15-20020a05640234cf00b0051db1840efdmr6553362edc.20.1692618954840;
-        Mon, 21 Aug 2023 04:55:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEABWvi6B1Krzc1SSY2cCBIIEFUFPascY0xaQ3yGfVFTEepN9Pwava+XwcBzunnU5jT4KODyg==
-X-Received: by 2002:a05:6402:34cf:b0:51d:b184:efd with SMTP id w15-20020a05640234cf00b0051db1840efdmr6553347edc.20.1692618954554;
-        Mon, 21 Aug 2023 04:55:54 -0700 (PDT)
+        bh=U2tMdqihoLdVc/FNclnLyyqSQNriGxLnDeEcp+obbhU=;
+        b=S3D6F3DewWTL4Ptqt9YoLrH8foO4489XYPnTcHirzILBjDljkOdlxO6eOFopItTjPX
+         9/xALBye8aYf+niYhu7F46YHabn+LrygE/FsvzcCwJrTp71gMIAy13mRFBbkKbBB4iiL
+         yp9EnU1QqWVmWn45wKEgGQXL66rBiHVR1LRKEQhnGtdLWTTKC9RTE1E/AbY4Th5XvawZ
+         vLUorDWGoOMA11Izcn9pQ6iKUm3xWHBeTMoMEPQAGnHu9wMJL0QUaAmToGJvXNqaSOfe
+         xQKP5uLu6LKEeb7XiDiZzl3DMrRbM36oAwvE90W4Lw8RrfMRP6WvAO8cRbN6+9mkfDIg
+         d0Rg==
+X-Gm-Message-State: AOJu0YwHCXzPEaHTIfu5vvWmj8QehEUSOCuM5FbyK4sc6eCIWlwtoLi5
+        yX76Db61u1vlTUy8YQ0u3UOZGX0rz7T7NG6k2N5EEela1wGZb0ciPOBeStjufMP8zfnhTZxnsPg
+        L9VaoP0Ct2m6NDKQPoW7x7AfU28zG+UBJ0kbw8A/l9g==
+X-Received: by 2002:a17:906:1da2:b0:99b:c830:cf23 with SMTP id u2-20020a1709061da200b0099bc830cf23mr5454458ejh.27.1692622197179;
+        Mon, 21 Aug 2023 05:49:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGfv9DsJSZhAGR7ioe4x0Zc5TqTJCwThGMpHNpW8bHZXlrcqN3j3A6qu33K7waNuUF/HM/ziQ==
+X-Received: by 2002:a17:906:1da2:b0:99b:c830:cf23 with SMTP id u2-20020a1709061da200b0099bc830cf23mr5454446ejh.27.1692622196895;
+        Mon, 21 Aug 2023 05:49:56 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id d16-20020a50fb10000000b005224d15d3dfsm5905781edq.87.2023.08.21.04.55.53
+        by smtp.gmail.com with ESMTPSA id r25-20020a170906a21900b00992f309cfe8sm6503224ejy.178.2023.08.21.05.49.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Aug 2023 04:55:54 -0700 (PDT)
-Message-ID: <767165e4-5eae-a35c-aead-1db7801050dd@redhat.com>
-Date:   Mon, 21 Aug 2023 13:55:53 +0200
+        Mon, 21 Aug 2023 05:49:56 -0700 (PDT)
+Message-ID: <d237c65d-f63e-f085-119f-8faf4ecf082c@redhat.com>
+Date:   Mon, 21 Aug 2023 14:49:55 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH] hp-bioscfg: Update steps how order list elements are
- evaluated
+Subject: Re: [PATCH -next] platform/x86: thinkpad_acpi: Switch to
+ memdup_user_nul() helper
 Content-Language: en-US
-To:     Jorge Lopez <jorgealtxwork@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas@t-8ch.de, ilpo.jarvinen@linux.intel.com,
-        dan.carpenter@linaro.org
-References: <20230809210740.18392-1-jorge.lopez2@hp.com>
- <10276e15-8528-41a9-4b90-7fdf6b890206@redhat.com>
- <CAOOmCE9PFi5Xwmyr4jMPZ7LgofPY1fwLW71itfXw1km50B-Ybg@mail.gmail.com>
+To:     Ruan Jinjie <ruanjinjie@huawei.com>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Mark Gross <markgross@kernel.org>
+References: <20230810122012.2110410-1-ruanjinjie@huawei.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAOOmCE9PFi5Xwmyr4jMPZ7LgofPY1fwLW71itfXw1km50B-Ybg@mail.gmail.com>
+In-Reply-To: <20230810122012.2110410-1-ruanjinjie@huawei.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Jorge,
+Hi,
 
-On 8/14/23 15:44, Jorge Lopez wrote:
-> Hi Hans,
+On 8/10/23 14:20, Ruan Jinjie wrote:
+> Use memdup_user_nul() helper instead of open-coding to simplify the code.
 > 
-> On Mon, Aug 14, 2023 at 3:41 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi Jorge,
->>
->> On 8/9/23 23:07, Jorge Lopez wrote:
->>> Update steps how order list elements data and elements size are
->>> evaluated
->>>
->>> Signed-off-by: Jorge Lopez <jorge.lopez2@hp.com>
->>>
->>> ---
->>> Based on the latest platform-drivers-x86.git/for-next
->>> ---
->>>  .../x86/hp/hp-bioscfg/order-list-attributes.c    | 16 ++++++++++++++--
->>>  1 file changed, 14 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
->>> index b19644ed12e0..d2b61ab950d4 100644
->>> --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
->>> +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
->>> @@ -152,7 +152,7 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
->>>
->>>               switch (order_obj[elem].type) {
->>>               case ACPI_TYPE_STRING:
->>> -                     if (elem != PREREQUISITES && elem != ORD_LIST_ELEMENTS) {
->>> +                     if (elem != PREREQUISITES) {
->>>                               ret = hp_convert_hexstr_to_str(order_obj[elem].string.pointer,
->>>                                                              order_obj[elem].string.length,
->>>                                                              &str_value, &value_len);
->>> @@ -266,6 +266,15 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
->>>                       if (ret)
->>>                               goto exit_list;
->>>
->>> +                     /*
->>> +                      * It is expected for the element size value
->>> +                      * to be 1 and not to represent the actual
->>> +                      * number of elements stored in comma
->>> +                      * separated format. element size value is
->>> +                      * recalculated to report the correct number
->>> +                      * of data elements found.
->>> +                      */
->>> +
->>>                       part_tmp = tmpstr;
->>>                       part = strsep(&part_tmp, COMMA_SEP);
->>>                       if (!part)
->>> @@ -273,11 +282,14 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
->>>                                       tmpstr,
->>>                                       sizeof(ordered_list_data->elements[0]));
->>>
->>> -                     for (olist_elem = 1; olist_elem < MAX_ELEMENTS_SIZE && part; olist_elem++) {
->>> +                     for (olist_elem = 0; olist_elem < MAX_ELEMENTS_SIZE && part; olist_elem++) {
->>>                               strscpy(ordered_list_data->elements[olist_elem],
->>>                                       part,
->>>                                       sizeof(ordered_list_data->elements[olist_elem]));
->>> +
->>>                               part = strsep(&part_tmp, COMMA_SEP);
->>> +                             if (part && ordered_list_data->elements_size < MAX_ELEMENTS_SIZE)
->>> +                                     ordered_list_data->elements_size++;
->>>                       }
->>
->> I believe that you can replace the:
->>
->>                                 if (part && ordered_list_data->elements_size < MAX_ELEMENTS_SIZE)
->>                                         ordered_list_data->elements_size++;
->>                         }
->>
->> Lines with simply (after the loop has finished) doing:
->>
->>                         }
->>                         ordered_list_data->elements_size = olist_elem'
->>
->> Or am I missing something ?
-> 
-> The lines cannot be replaced with a single line for several reasons,
-> 1. elements_size is initially set to 1 and it is only incremented when
-> a COMMA_SEP is found.  (See part variable)
+> Signed-off-by: Ruan Jinjie <ruanjinjie@huawei.com>
 
-Right, but we are not incrementing elements_size here, but overriding it,
-so the start value does not matter.
-
-olist_elem keeps count of how many times strscpy() has been called
-and thus of how many elements there are in
-the ordered_list_data->elements_size, so:
-
-                         ordered_list_data->elements_size = olist_elem;
-
-will give us the correct size with much simpler code.
-
-> 2. Limit the number of element_size to  MAX_ELEMENTS_SIZE.  The user
-> requires entering all items in the new order when a change is needed.
-> For instance, updating boot order.
-
-olist_elem itself is also already limited to MAX_ELEMENTS_SIZE.
-
-> 3. Limiting  elements_size and not just olist_elem to to
-> MAX_ELEMENTS_SIZE removes the possibility of  array overflow
-> (ordered_list_data->elements[..]).   olist_elem value is 0 (zero)
-> based while elements_size is 1 based
-
-As already mentioned olist_elem itself is already limited to MAX_ELEMENTS_SIZE,
-so doing:
-
-ordered_list_data->elements_size = olist_elem;
-
-Automatically limits ordered_list_data->elements_size too.
-
-###
-
-I see you also left the "if (!part)" above the loop.
-
-That is not necessary because after the first strsep() call part
-will always be non NULL.
-
-For a string without any delimiters, so only 1 element strsep()
-will only return NULL on the second strsep() call.
-
-strsep() always returns *part_tmp, which before the first
-call is non NULL, so the first call always returns non NULL.
-
-###
-
-And there still is an unused assignment of size directly
-after "case ORD_LIST_ELEMENTS" :
-
-                        size = ordered_list_data->elements_size;
-
-###
-
-Also you seem to have based this patch on top of a weird base
-commit. This patch assumes both strsep() calls use COMMA_SEP
-as separator. But the latest code in:
-
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Still uses the wrong SEMICOLON_SEP for the second strsep() call.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-Please make sure to base your next version on top of the latest
-review-hans commit.
-
-###
-
-TL;DR: for your next version the "case ORD_LIST_ELEMENTS"
-should end up looking like this:
-
-		case ORD_LIST_ELEMENTS:
-			/*
-			 * Ordered list data is stored in hex and comma separated format
-			 * Convert the data and split it to show each element
-			 */
-			ret = hp_convert_hexstr_to_str(str_value, value_len, &tmpstr, &tmp_len);
-			if (ret)
-				goto exit_list;
-
-			part_tmp = tmpstr;
-			part = strsep(&part_tmp, COMMA_SEP);
-
-			for (olist_elem = 0; olist_elem < MAX_ELEMENTS_SIZE && part; olist_elem++) {
-				strscpy(ordered_list_data->elements[olist_elem],
-					part,
-					sizeof(ordered_list_data->elements[olist_elem]));
-				part = strsep(&part_tmp, COMMA_SEP);
-			}
-			ordered_list_data->elements_size = olist_elem;
-
-			kfree(str_value);
-			str_value = NULL;
-			break;
-
-Unless I'm missing something and you believe that this will not work.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
+
+
+
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 13 +++----------
+>  1 file changed, 3 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 85772bad753e..d70c89d32534 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -908,16 +908,9 @@ static ssize_t dispatch_proc_write(struct file *file,
+>  	if (count > PAGE_SIZE - 1)
+>  		return -EINVAL;
+>  
+> -	kernbuf = kmalloc(count + 1, GFP_KERNEL);
+> -	if (!kernbuf)
+> -		return -ENOMEM;
+> -
+> -	if (copy_from_user(kernbuf, userbuf, count)) {
+> -		kfree(kernbuf);
+> -		return -EFAULT;
+> -	}
+> -
+> -	kernbuf[count] = 0;
+> +	kernbuf = memdup_user_nul(userbuf, count);
+> +	if (IS_ERR(kernbuf))
+> +		return PTR_ERR(kernbuf);
+>  	ret = ibm->write(kernbuf);
+>  	if (ret == 0)
+>  		ret = count;
 
