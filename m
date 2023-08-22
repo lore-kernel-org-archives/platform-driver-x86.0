@@ -2,85 +2,96 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D01EE4993
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Aug 2023 10:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D2EEE49A3
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Aug 2023 11:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230313AbjHVKoF (ORCPT
+        id S234428AbjHVLgY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Aug 2023 06:44:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38344 "EHLO
+        Tue, 22 Aug 2023 07:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjHVKoF (ORCPT
+        with ESMTP id S234729AbjHVLgY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Aug 2023 06:44:05 -0400
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA692199;
-        Tue, 22 Aug 2023 03:44:03 -0700 (PDT)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 848841C000B; Tue, 22 Aug 2023 12:44:02 +0200 (CEST)
-Date:   Tue, 22 Aug 2023 12:44:02 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        Patil Rajesh Reddy <Patil.Reddy@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.4 36/54] platform/x86/amd/pmf: Notify OS power
- slider update
-Message-ID: <ZOSRcmbzTxI9POQR@duo.ucw.cz>
-References: <20230813154934.1067569-1-sashal@kernel.org>
- <20230813154934.1067569-36-sashal@kernel.org>
+        Tue, 22 Aug 2023 07:36:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D1ACF8;
+        Tue, 22 Aug 2023 04:35:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 902B264AA1;
+        Tue, 22 Aug 2023 11:35:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9209BC433C7;
+        Tue, 22 Aug 2023 11:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692704158;
+        bh=S7/4s+iDxNxtTNGeDtAq1MLwAPIHwlcpSk7B6Czqm+0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HCi+FrcxnvIy6kMORZZZspKipvjpTZR8+K2Gq5o+OUN/olIGIBAiEfJg1AAFeVY/d
+         Miqj7b1IYbn5MIo7kfVAFpANalpNLfV26bj3KrzMClnNjzmXirMsmO0WTn4daOXVlA
+         Txz3VU5nC7yAMhhYKU9IQtrJk6dWQiHouEqmmY4ILlXfk3+vWIdJJ+lvzD5KHUWzRS
+         +y8tNkTNQqQ7xQtYV9k6jDmLZfaemwhRTUnHNhYD8zaVzlh2VkJOUgmydndUdzIVqL
+         ZzjXcvJ9RBFxhc2uqgGnlJLi7VurHFfygMrRvlJNQ8+v3n/fReISgzrsVZmsOQfec7
+         XVprUwhu75BZg==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Yang Li <yang.lee@linux.alibaba.com>,
+        Abaci Robot <abaci@linux.alibaba.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, Shyam-sundar.S-k@amd.com,
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.4 02/11] platform/x86/amd/pmf: Fix unsigned comparison with less than zero
+Date:   Tue, 22 Aug 2023 07:35:44 -0400
+Message-Id: <20230822113553.3551206-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230822113553.3551206-1-sashal@kernel.org>
+References: <20230822113553.3551206-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="SO4HukLAp6rMFfdj"
-Content-Disposition: inline
-In-Reply-To: <20230813154934.1067569-36-sashal@kernel.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.4.11
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+From: Yang Li <yang.lee@linux.alibaba.com>
 
---SO4HukLAp6rMFfdj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 785c00993dc4c4bb2f7b0f3a3f29c03a6f7aab2e ]
 
-Hi!
+The return value from the call to amd_pmf_get_pprof_modes() is int.
+However, the return value is being assigned to an unsigned char
+variable 'mode', so making 'mode' an int.
 
-> From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->=20
-> [ Upstream commit 33c9ab5b493a0e922b06c12fed4fdcb862212cda ]
->=20
-> APMF fn8 can notify EC about the OS slider position change. Add this
-> capability to the PMF driver so that it can call the APMF fn8 based on
-> the changes in the Platform profile events.
+silence the warning:
+./drivers/platform/x86/amd/pmf/sps.c:183:5-9: WARNING: Unsigned expression compared with zero: mode < 0
 
-New feature with a new API. Why is it in AUTOSEL?
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=5995
+Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+Link: https://lore.kernel.org/r/20230727014315.51375-1-yang.lee@linux.alibaba.com
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/amd/pmf/sps.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Best regards,
-							Pavel
-						=09
->  drivers/platform/x86/amd/pmf/acpi.c | 21 ++++++++
->  drivers/platform/x86/amd/pmf/core.c |  9 +++-
->  drivers/platform/x86/amd/pmf/pmf.h  | 16 +++++++
->  drivers/platform/x86/amd/pmf/sps.c  | 74 +++++++++++++++++++++++++++--
->  4 files changed, 114 insertions(+), 6 deletions(-)
->=20
+diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
+index fd448844de206..b2cf62937227c 100644
+--- a/drivers/platform/x86/amd/pmf/sps.c
++++ b/drivers/platform/x86/amd/pmf/sps.c
+@@ -121,7 +121,8 @@ int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
+ 
+ int amd_pmf_power_slider_update_event(struct amd_pmf_dev *dev)
+ {
+-	u8 mode, flag = 0;
++	u8 flag = 0;
++	int mode;
+ 	int src;
+ 
+ 	mode = amd_pmf_get_pprof_modes(dev);
+-- 
+2.40.1
 
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---SO4HukLAp6rMFfdj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZOSRcgAKCRAw5/Bqldv6
-8tFRAJ452vjYFE8xY9aSd2vPedW7W5GrNgCdEuTof7OBA47HBWUZ2cL/z+IcBHU=
-=QsoG
------END PGP SIGNATURE-----
-
---SO4HukLAp6rMFfdj--
