@@ -2,168 +2,76 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9E2C6FA8F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Aug 2023 18:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 310E6C71133
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Aug 2023 07:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243134AbjHXSwl (ORCPT
+        id S231446AbjHYHof (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Aug 2023 14:52:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55090 "EHLO
+        Fri, 25 Aug 2023 03:44:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243164AbjHXSwY (ORCPT
+        with ESMTP id S240551AbjHYHoZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Aug 2023 14:52:24 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E561FC3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Aug 2023 11:52:20 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d74b711ec0dso199671276.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Aug 2023 11:52:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692903139; x=1693507939;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=X26WvOzy5oJ3MeqlsYjn2koOcuAQQ3KEg2XfToQOxXw=;
-        b=WHN+Eefh6bKrD9RWcqtDuywPxsQoonS9cjh2KaLTSVyshwXlT+KepgMTEwFJt36len
-         pK/m85tQwzbyNh/5ig2PfstaXcTo31MT1xZ9hDNJp8ljRblqd0kcBs8cXYDXXa+HzxJK
-         SLG0U+P9ffPbYeYlkn7/PYcutQprryagMherff3gSF1uc8ixqJUv04fT1dAhDJwJtZyL
-         f8p9eXpgVb8wjYTH2k3Bj17fAQwnO0uW/WYFYuBX2u3/GYFOiXaWZvTMJ3cZqQnE0+9q
-         +bB9N029QEkNY+qi5fPAsE4BjExnQTUeP4i9Gm9nbm3pE4NDXcKdFZsA46BeXI/j5Rly
-         FpCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692903139; x=1693507939;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=X26WvOzy5oJ3MeqlsYjn2koOcuAQQ3KEg2XfToQOxXw=;
-        b=J4thd3C75k132sO2gloapjVKyUqXc2WTacKMEnH+zUarRNrdLMFaa9STiSj3h/08Jc
-         09eXWTwFuaKunEpRlAkCD6E0SmNuKTHUnTn0qoA6Gy3sue7EdQvcK6PPMcdK1MMf30kZ
-         6Iw0LgElD0eDPceuPKQH7CsXY7cQQ20xZaF3huyd42NbUZ2vM5HQHLIXt377/fB9nwAu
-         KtrANdR7aH8zGG8qGN+0lE4oueJI6K//pjM3NxVzxrf1VvkTjRf3G5PyBImzm8IiWHVo
-         dcHSVCjAT1a3HtJTIv8eAOy1TRO69drNlw63fzpOCNENOHjjP/pVqhZraeX/mNXkW/O8
-         Bgfw==
-X-Gm-Message-State: AOJu0Yz4QOhysmKe+918W4ItFslPeIasZntVWBtt6K3mcJFuVMlvaj6f
-        mv26wit+BPgz8ToMCERgqDMyLK8cq1tK9MKlfg==
-X-Google-Smtp-Source: AGHT+IE+JiRZwWrLWvtRDI0jKIK2Z0+jDYHzkX+1eVQb7ZeOGGU1kMrCDY//zkdFEp6Gk/TjP2vGDgxa0BNolPEFzw==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:24d8:0:b0:d3f:5b2:e89e with SMTP
- id k207-20020a2524d8000000b00d3f05b2e89emr223020ybk.6.1692903139428; Thu, 24
- Aug 2023 11:52:19 -0700 (PDT)
-Date:   Thu, 24 Aug 2023 18:52:18 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAOGm52QC/5WNQQqDMBBFryKz7hQzaqtd9R5FisRRBzSRxAZFv
- HtTb1D4m/cX7+3g2Ql7eCQ7OA7ixZoIdElAD43pGaWNDJRSlpZE6Bdn9Lxh4/SAa3nDeWyWzro
- JPyHubSbB/J5zQVWhSSuIptlxJ+tZedWRB/GLddsZDer3/ucPChVWmeqoyrOW0/bZW9uPfNV2g vo4ji+9LS721wAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1692903138; l=3362;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=ew5SyseFI+/34xeeHZRp+glk59V46DA9p5hpUEsbe4Q=; b=X6W0Xg6w2Sz0OjN2608y1zuc9ebtDeA76/E4FRwcXuXjB1OWEazDVEl+K9drE1HtPXOmbpdza
- uyxvM/APzMwCAcN39JjEYCwBsc2Oz6qgb0KflN+TrfK1IH1qesmw10y
-X-Mailer: b4 0.12.3
-Message-ID: <20230824-strncpy-arch-x86-platform-uv-uv_nmi-v2-1-e16d9a3ec570@google.com>
-Subject: [PATCH v2] x86/platform/uv: refactor deprecated strcpy and strncpy
-From:   Justin Stitt <justinstitt@google.com>
-To:     Steve Wahl <steve.wahl@hpe.com>, Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Yang Yang <yang.yang29@zte.com.cn>,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 25 Aug 2023 03:44:25 -0400
+X-Greylist: delayed 499 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 25 Aug 2023 00:44:23 PDT
+Received: from mail.tinyunique.pl (mail.tinyunique.pl [217.61.112.218])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A94C10F
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Aug 2023 00:44:22 -0700 (PDT)
+Received: by mail.tinyunique.pl (Postfix, from userid 1002)
+        id D8A1A82AB0; Fri, 25 Aug 2023 09:35:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tinyunique.pl;
+        s=mail; t=1692948960;
+        bh=Kb6NgVLZnLsszj8shhCqc1Tmenx13TEbz1NRLH8RWKY=;
+        h=Date:From:To:Subject:From;
+        b=U7hVBAwsVWu1YS5mOUwtvBshGmdi7vBOVspop018Dq9/4brcfC+/Bz31GpyuqvDU/
+         Vmn3AHliq5axr4/RMnSiAZBVfRCBUlktSdI2+8vN4WBx6veu0YL3PpmTSTrb+hscEJ
+         HLs34YE8MRS5F95cR4WPkOwH+2GzkYdJN59qnCHw6u5YhJh87ooesOfUDVPUvJqd29
+         sWpG1MfdT/uAyDVvPxN28znctbxooxJmT/3a9RIF8s6L4lrUt07/73E4me2o9jp/6v
+         pWrmWduoe8m5z9P3eZqL5prMVwbAas69dwkx2Dlp8BoxpBivuYA+Dc5lS7S753HP3W
+         IL9UTNICwANqw==
+Received: by mail.tinyunique.pl for <platform-driver-x86@vger.kernel.org>; Fri, 25 Aug 2023 07:35:50 GMT
+Message-ID: <20230825084500-0.1.26.4xpt.0.oismlnrh99@tinyunique.pl>
+Date:   Fri, 25 Aug 2023 07:35:50 GMT
+From:   =?UTF-8?Q? "Adrian_Ko=C5=9Bcierski" ?= 
+        <adrian.koscierski@tinyunique.pl>
+To:     <platform-driver-x86@vger.kernel.org>
+Subject: =?UTF-8?Q?Outsourcing_zespo=C5=82u_IT?=
+X-Mailer: mail.tinyunique.pl
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Both `strncpy` and `strcpy` are deprecated for use on NUL-terminated
-destination strings [1].
+Dzie=C5=84 dobry,
 
-A suitable replacement is `strscpy` [2] due to the fact that it
-guarantees NUL-termination on its destination buffer argument which is
-_not_ the case for `strncpy` or `strcpy`!
+czy Pa=C5=84stwa firma poszukuje obecnie specjalist=C3=B3w IT?=20
 
-In this case, we can drop both the forced NUL-termination and the `... -1` from:
-|       strncpy(arg, val, ACTION_LEN - 1);
-as `strscpy` implicitly has this behavior.
+Nasz=C4=85 specjalizacj=C4=85 w Sektorze IT jest pozyskiwanie specjalist=C3=
+=B3w ds. rozwoju oprogramowania (.net/java/php/C++), ale podejmujemy si=C4=
+=99 rekrutacji na ka=C5=BCde stanowisko IT. Wspieramy tak=C5=BCe w rolach=
+ zwi=C4=85zanych z infrastruktur=C4=85 (Microsoft/Linux/DevOps) i zarz=C4=
+=85dzaniem projektami (Scrum i Waterfall).=20
 
-Also include slight refactor to code removing possible new-line chars as
-per Yang Yang's work at [3]. This reduces code size and complexity by
-using more robust and better understood interfaces.
+Aktualnie mamy kandydat=C3=B3w na wolne stanowiska:
+ - DevOps (Azure)
+ - Programista Javy
+ - Programista .NET
+ - In=C5=BCynier Sharepointa
+ - Starszy programista (Node.JS)=20
+ - Starszy programista (Android)
+ - Specjalista ds. Analityki Danych
+ - In=C5=BCynier VoIP
+ - wsparcie informatyczne
 
-Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://lore.kernel.org/all/202212091545310085328@zte.com.cn/ [3]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Co-developed-by: Yang Yang <yang.yang29@zte.com.cn>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- use `sizeof` on destination string instead of `strlen` (thanks Andy, Kees and Dimitri)
-- refactor code to remove potential new-line chars (thanks Yang Yang and Andy)
-- Link to v1: https://lore.kernel.org/r/20230822-strncpy-arch-x86-platform-uv-uv_nmi-v1-1-931f2943de0d@google.com
----
-Note: build-tested only
+Wiele lat do=C5=9Bwiadczenia pozwala nam w kr=C3=B3tkim czasie znale=C5=BA=
+=C4=87 najbardziej dopasowany profil kandydata do oczekiwa=C5=84 firmy, d=
+aj=C4=85c Pa=C5=84stwu gwarancj=C4=99 pewnego zatrudnienia.=20
 
-Another thing, Yang Yang's patch [3] had some review from Andy regarding
-the use of `-1` and `+1` in and around the strnchrnul invocation. I
-believe Yang Yang's original implementation is correct but let's also
-just use sizeof(arg) instead of ACTION_LEN.
+Je=C5=BCeli interesuje Pa=C5=84stwa wsp=C3=B3=C5=82praca w tym obszarze -=
+ prosz=C4=99 o kontakt.=20
 
-Here's a godbolt link detailing some findings around the new-line
-refactor in response to Andy's feedback: https://godbolt.org/z/K8drG3oq5
----
- arch/x86/platform/uv/uv_nmi.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
-index a60af0230e27..913347b2b9ab 100644
---- a/arch/x86/platform/uv/uv_nmi.c
-+++ b/arch/x86/platform/uv/uv_nmi.c
-@@ -202,21 +202,17 @@ static int param_set_action(const char *val, const struct kernel_param *kp)
- {
- 	int i;
- 	int n = ARRAY_SIZE(valid_acts);
--	char arg[ACTION_LEN], *p;
-+	char arg[ACTION_LEN];
- 
- 	/* (remove possible '\n') */
--	strncpy(arg, val, ACTION_LEN - 1);
--	arg[ACTION_LEN - 1] = '\0';
--	p = strchr(arg, '\n');
--	if (p)
--		*p = '\0';
-+	strscpy(arg, val, strnchrnul(val, sizeof(arg) - 1, '\n') - val + 1);
- 
- 	for (i = 0; i < n; i++)
- 		if (!strcmp(arg, valid_acts[i].action))
- 			break;
- 
- 	if (i < n) {
--		strcpy(uv_nmi_action, arg);
-+		strscpy(uv_nmi_action, arg, sizeof(uv_nmi_action));
- 		pr_info("UV: New NMI action:%s\n", uv_nmi_action);
- 		return 0;
- 	}
-@@ -959,7 +955,7 @@ static int uv_handle_nmi(unsigned int reason, struct pt_regs *regs)
- 
- 		/* Unexpected return, revert action to "dump" */
- 		if (master)
--			strncpy(uv_nmi_action, "dump", strlen(uv_nmi_action));
-+			strscpy(uv_nmi_action, "dump", sizeof(uv_nmi_action));
- 	}
- 
- 	/* Pause as all CPU's enter the NMI handler */
-
----
-base-commit: 706a741595047797872e669b3101429ab8d378ef
-change-id: 20230822-strncpy-arch-x86-platform-uv-uv_nmi-474e5295c2c1
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+Pozdrawiam
+Adrian Ko=C5=9Bcierski
