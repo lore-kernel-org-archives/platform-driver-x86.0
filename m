@@ -2,150 +2,132 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 841B6C83F01
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Aug 2023 10:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF9FC83F15
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Aug 2023 10:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231843AbjHZKKU (ORCPT
+        id S232034AbjHZK1x (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 26 Aug 2023 06:10:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60136 "EHLO
+        Sat, 26 Aug 2023 06:27:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232404AbjHZKKQ (ORCPT
+        with ESMTP id S232027AbjHZK12 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 26 Aug 2023 06:10:16 -0400
+        Sat, 26 Aug 2023 06:27:28 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 786DE1BF2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Aug 2023 03:09:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB0961FF6
+        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Aug 2023 03:26:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693044566;
+        s=mimecast20190719; t=1693045598;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dAkaA+AncOVwhdekXkUnuSCht94d3FshWqsBj1ltMo8=;
-        b=Uysi2IXz3I7cLiPOjqNi7O+IQNN/n3W9dC0BIDfBVLr+7Z9rYUlFcLThIKmBXNjNDDIJxV
-        ORECHQmEHMJwN6rb7IUXAFb5c6UXZnGSzX+rnYFEA1DQMJ/AKW3oyBKl8qi4Sttsm1PnrK
-        mRV2eQ7bg18odJNtDHZs+NzVuM9Xj1Q=
+        bh=hgjehK23Y8dKnBIGq/90eR6N9qpsiDO03ILle5ORVqM=;
+        b=B0HTHVQuX6/YTbrH8hvFZnU1JtqeXRLtDZxLW/ZWR6T1psGenJgqhXCTIFrDnIRxl8iUI5
+        o372pV9w3kS48+miuRij1ghYWEvZFOIoy5QdbusWG9yuoKSAJaOuGyuT4FhFjnh/vtAF4d
+        sVjBy3T/kv93YLaDdtaZZGGqCRR+jYw=
 Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
  [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-194-lj8rxmdoNiCWQTHmL2EwMw-1; Sat, 26 Aug 2023 06:09:19 -0400
-X-MC-Unique: lj8rxmdoNiCWQTHmL2EwMw-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-51bee352ffcso1481813a12.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Aug 2023 03:09:19 -0700 (PDT)
+ us-mta-182-rUwr2a03OiOgIkuxFfxgdQ-1; Sat, 26 Aug 2023 06:26:36 -0400
+X-MC-Unique: rUwr2a03OiOgIkuxFfxgdQ-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-518676b6d09so1483549a12.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Aug 2023 03:26:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693044558; x=1693649358;
+        d=1e100.net; s=20221208; t=1693045595; x=1693650395;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dAkaA+AncOVwhdekXkUnuSCht94d3FshWqsBj1ltMo8=;
-        b=fOAC2r/Sn3GA5XeVs8yNtD9ohCK5aA2jr+uUotGGydk9K+mytFanlI+0wUDtFfUmmg
-         R1Pg8gzuJzCb8bMiP9v7iY3A6EA2gjIG3qPl+Oo1priF1oCCUvRwe7sXIvr5FXANHxqQ
-         UTKrwW4FHgF3CK3NUiqAaqMlglJLqQzKpoSc+F9We/8I0GaukHquBoBsNuduUl0QS3N/
-         q/4kq3Sb56wpOSXEIkqd7md75tF3zN0auLkoSwSR2Xvbmj+RqEWTNXBiygruw1O0T0fx
-         gnsguJRgN76zAaTzRaJiT7HKsYP2fL39Za3I+u6OaZsU8hx2lOxVdhJ7u9uI8Tk7DWN+
-         UC9w==
-X-Gm-Message-State: AOJu0YyNogrme0pklDnszxI9VFtAhnga7ZAi5/pyvOsD+zWkWCkuvmwS
-        anNfxnEPssQa63wfCoIPRjTSzz/nSMo1LuTjq8x1bGV+DPGqx0d3bVro9jazmngp8DmH7aGSoMu
-        7JI0KoQF0iJJHCkbQlwM5e2oljoP/D3S7zg==
-X-Received: by 2002:aa7:cd50:0:b0:525:4471:6b5d with SMTP id v16-20020aa7cd50000000b0052544716b5dmr15539027edw.19.1693044558775;
-        Sat, 26 Aug 2023 03:09:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGQtWqiv0wW4XL2klN5mZTWrqxxMPryC+Bn5krbgv30YaqVSV1tJrUGUUIiJAYfpVeGFnijFw==
-X-Received: by 2002:aa7:cd50:0:b0:525:4471:6b5d with SMTP id v16-20020aa7cd50000000b0052544716b5dmr15539015edw.19.1693044558491;
-        Sat, 26 Aug 2023 03:09:18 -0700 (PDT)
+        bh=hgjehK23Y8dKnBIGq/90eR6N9qpsiDO03ILle5ORVqM=;
+        b=Jfsv9qL0W7xwmo1hdqClROiCHJKU67kc5hCKCTKR8mmSBrQy2pNNqRPS1xHI26vRWk
+         T78WkMHA/l3NAvaadyY0YBcdPKa0J0O//woMXWQ7ptl2nc8itenEONV/pkUvs8rzBNkD
+         BQd8u6W+mauxsmB8ckcMJXdF9UZUvNVrwKUTlaRmMR1A6lEsaYsfXIoK1e/b+q9VvOMh
+         i0lJ2+TW0o4jbvdkFPW6JimyqqGXicbqkKBHgj86Ky4r+vTZomkY/48JYSPedSZTrweH
+         y8+OldYyR6Agoru0OkVmWpGb6wgwUl/jFUfolayTKGmc9rNy9EIXSry3DXGWqlHzOPAi
+         mKJg==
+X-Gm-Message-State: AOJu0Yxo11pSzIk0WgCfOjaB84GV+cqsphziwDuKqAB4IdDl54QYPGWu
+        W7Fw/3oP3rgm6oieAU+NCn9WNC8mkkPhygvJP2xS0iA7xPp74RNDX4lLKMsg4+Otnpo1VgUQOs6
+        twUdclUBxljn2kQe5d2UUrue0Nyjd42DrKg==
+X-Received: by 2002:a05:6402:5178:b0:523:4d60:71c0 with SMTP id d24-20020a056402517800b005234d6071c0mr12825986ede.33.1693045595105;
+        Sat, 26 Aug 2023 03:26:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGVRF161f0x3klD3Re4TcVObGkJ68TCSIolyHtb11kjX63CJv8xb2+Dt/gmLSQsPsm79mY0oA==
+X-Received: by 2002:a05:6402:5178:b0:523:4d60:71c0 with SMTP id d24-20020a056402517800b005234d6071c0mr12825977ede.33.1693045594826;
+        Sat, 26 Aug 2023 03:26:34 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id l5-20020a056402124500b005222c6fb512sm1990989edw.1.2023.08.26.03.09.17
+        by smtp.gmail.com with ESMTPSA id p8-20020aa7d308000000b005288f0e547esm1997934edq.55.2023.08.26.03.26.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Aug 2023 03:09:17 -0700 (PDT)
-Message-ID: <613570c6-7f5d-778c-183a-4aeb967c69d8@redhat.com>
-Date:   Sat, 26 Aug 2023 12:09:17 +0200
+        Sat, 26 Aug 2023 03:26:34 -0700 (PDT)
+Message-ID: <7bc47fa9-3b8e-23c2-6bf1-ccd230433ed0@redhat.com>
+Date:   Sat, 26 Aug 2023 12:26:33 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: linux-next: Tree for Aug 23 (drivers/platform/x86/amd/pmc.c)
+Subject: Re: [PATCH] platform/x86/amd/pmf: Fix a missing cleanup path
 Content-Language: en-US, nl
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20230823161428.3af51dee@canb.auug.org.au>
- <5181685c-29d8-22a4-a2d7-682f26e2e031@infradead.org>
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Shyam-sundar.S-k@amd.com
+Cc:     markgross@kernel.org, Patil.Reddy@amd.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230823185421.23959-1-mario.limonciello@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <5181685c-29d8-22a4-a2d7-682f26e2e031@infradead.org>
+In-Reply-To: <20230823185421.23959-1-mario.limonciello@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi All,
+Hi,
 
-On 8/24/23 04:06, Randy Dunlap wrote:
+On 8/23/23 20:54, Mario Limonciello wrote:
+> On systems that support slider notifications but don't otherwise support
+> granular slider the SPS cleanup path doesn't run.
 > 
+> This means that loading/unloading/loading leads to failures because
+> the sysfs files don't get setup properly when reloaded.
 > 
-> On 8/22/23 23:14, Stephen Rothwell wrote:
->> Hi all,
->>
->> Changes since 20230822:
->>
->> New tree: drm-ci
->>
-> 
-> on x86_64:
-> # CONFIG_SUSPEND is not set
-> # CONFIG_PM is not set
-> 
-> 
-> ../drivers/platform/x86/amd/pmc.c:878:15: error: variable ‘amd_pmc_s2idle_dev_ops’ has initializer but incomplete type
->   878 | static struct acpi_s2idle_dev_ops amd_pmc_s2idle_dev_ops = {
->       |               ^~~~~~~~~~~~~~~~~~~
-> ../drivers/platform/x86/amd/pmc.c:879:10: error: ‘struct acpi_s2idle_dev_ops’ has no member named ‘prepare’
->   879 |         .prepare = amd_pmc_s2idle_prepare,
->       |          ^~~~~~~
-> ../drivers/platform/x86/amd/pmc.c:879:20: warning: excess elements in struct initializer
->   879 |         .prepare = amd_pmc_s2idle_prepare,
->       |                    ^~~~~~~~~~~~~~~~~~~~~~
-> ../drivers/platform/x86/amd/pmc.c:879:20: note: (near initialization for ‘amd_pmc_s2idle_dev_ops’)
-> ../drivers/platform/x86/amd/pmc.c:880:10: error: ‘struct acpi_s2idle_dev_ops’ has no member named ‘check’
->   880 |         .check = amd_pmc_s2idle_check,
->       |          ^~~~~
-> ../drivers/platform/x86/amd/pmc.c:880:18: warning: excess elements in struct initializer
->   880 |         .check = amd_pmc_s2idle_check,
->       |                  ^~~~~~~~~~~~~~~~~~~~
-> ../drivers/platform/x86/amd/pmc.c:880:18: note: (near initialization for ‘amd_pmc_s2idle_dev_ops’)
-> ../drivers/platform/x86/amd/pmc.c:881:10: error: ‘struct acpi_s2idle_dev_ops’ has no member named ‘restore’
->   881 |         .restore = amd_pmc_s2idle_restore,
->       |          ^~~~~~~
-> ../drivers/platform/x86/amd/pmc.c:881:20: warning: excess elements in struct initializer
->   881 |         .restore = amd_pmc_s2idle_restore,
->       |                    ^~~~~~~~~~~~~~~~~~~~~~
-> ../drivers/platform/x86/amd/pmc.c:881:20: note: (near initialization for ‘amd_pmc_s2idle_dev_ops’)
->   CC [M]  drivers/staging/iio/impedance-analyzer/ad5933.o
-> ../drivers/platform/x86/amd/pmc.c: In function ‘amd_pmc_probe’:
-> ../drivers/platform/x86/amd/pmc.c:1070:23: error: implicit declaration of function ‘acpi_register_lps0_dev’; did you mean ‘acpi_register_gsi’? [-Werror=implicit-function-declaration]
->  1070 |                 err = acpi_register_lps0_dev(&amd_pmc_s2idle_dev_ops);
->       |                       ^~~~~~~~~~~~~~~~~~~~~~
->       |                       acpi_register_gsi
->   CC [M]  drivers/staging/rts5208/rtsx_scsi.o
-> ../drivers/platform/x86/amd/pmc.c: In function ‘amd_pmc_remove’:
-> ../drivers/platform/x86/amd/pmc.c:1091:17: error: implicit declaration of function ‘acpi_unregister_lps0_dev’; did you mean ‘acpi_unregister_gsi’? [-Werror=implicit-function-declaration]
->  1091 |                 acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
->       |                 ^~~~~~~~~~~~~~~~~~~~~~~~
->       |                 acpi_unregister_gsi
-> ../drivers/platform/x86/amd/pmc.c: At top level:
-> ../drivers/platform/x86/amd/pmc.c:878:35: error: storage size of ‘amd_pmc_s2idle_dev_ops’ isn’t known
->   878 | static struct acpi_s2idle_dev_ops amd_pmc_s2idle_dev_ops = {
->       |                                   ^~~~~~~~~~~~~~~~~~~~~~
-> 
-> 
-> Full randconfig file is attached.
+> Add the missing cleanup path.Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Shyam, can you look into fixing this please?
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
+
+
+
+
+> Fixes: 33c9ab5b493a ("platform/x86/amd/pmf: Notify OS power slider update")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+
+
+
+> ---
+>  drivers/platform/x86/amd/pmf/core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index 7780705917b76..8f93681c5c9c5 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -317,7 +317,8 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
+>  
+>  static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
+>  {
+> -	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR)) {
+> +	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR) ||
+> +	    is_apmf_func_supported(dev, APMF_FUNC_OS_POWER_SLIDER_UPDATE)) {
+>  		power_supply_unreg_notifier(&dev->pwr_src_notifier);
+>  		amd_pmf_deinit_sps(dev);
+>  	}
+> 
+> base-commit: 65c6ea33e7f63799090158866cdcfdfe8d63ce16
 
