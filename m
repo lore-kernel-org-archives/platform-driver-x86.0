@@ -2,165 +2,136 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF526C83F15
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Aug 2023 04:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BA8C83F12
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Aug 2023 08:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230033AbjH1E3F (ORCPT
+        id S229552AbjH1ItD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Aug 2023 00:29:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55554 "EHLO
+        Mon, 28 Aug 2023 04:49:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229975AbjH1E2l (ORCPT
+        with ESMTP id S229456AbjH1Isb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Aug 2023 00:28:41 -0400
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2079.outbound.protection.outlook.com [40.107.102.79])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5567B11B;
-        Sun, 27 Aug 2023 21:28:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RZQvX/O6ewO7Ys/uO/BI1DlzEYMQbUXoiY6AnBhqp+dT7wZuTDP8FaSTIOWQypEEw8tm3dUGHUgl71t/CgjlOa0Jd4NI/Ypfig5WHxtyD76kEfhPvRCUCAvEvUX0JnnsSenZHEloc2tlNcNkbLU8zrVfKPMIfs2EMEM97QAeukZPKxCBz8AgZvW3g6bKsfr3HTuc5zu+qyMoT5FxpAluql0spdaFyrZUdO/kptYCphW9SW0yUARaID8IZraJB6apPCfjAuYJUlEml7O3do/amtycJKanDkGmp+bfsycmoR56x5foaX0bXOuZonUvj5MPEGnZZQ34NGltvzSDKRN9dQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L3sKBtE2Tjksx8Bw9f+AV6tiWIalNLIXFrzg0qmOxM4=;
- b=KFytJSLYCmDwMmCm4vu0yzmDE5CRWtZgRlQY3CURYPxhW2Naz0zyeNlTawU4vZeV5c6WX24vVsvPAxw0fX27jY4OJA8xQEPkKtQc80758bnz8IukABT9PQabyht83FvFJC7HWwh2D28MXbd0WkxLjzK9SCswhPMNxE8ojGL+HkJRDC/kVDcfamKB5sHXWUB2sYwAgMVXhuCI9YOGFNsmwWWwq4tsRxmlg6cZp+HO6guNe/n9AXkzPmFkKU6d9Wl2ZutSrF34vpZh0h+ZngPoT4PAu41G7sUujdOVPMv+Se43vk3QDtohZMu5JI+f9ENR1BcvZ8V8sIoL5q5dx8psCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L3sKBtE2Tjksx8Bw9f+AV6tiWIalNLIXFrzg0qmOxM4=;
- b=SiA24unyeEBWsLSIBHUoCuKI4dKnaWgwAkUcSK+XJTAapm00w8hApAJVUId4dusWco0V4iY2asJONqAirdnLEKsJB+4FhuqfpBSq6mlrarg+rUsioXT/6i025GUEV8LeC9d072kRe1SxdKfwIuqKMcsKhbSSISkX64oHNwi0fSU=
-Received: from CY8PR12CA0037.namprd12.prod.outlook.com (2603:10b6:930:49::19)
- by BN9PR12MB5226.namprd12.prod.outlook.com (2603:10b6:408:11f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.34; Mon, 28 Aug
- 2023 04:28:35 +0000
-Received: from CY4PEPF0000EE36.namprd05.prod.outlook.com
- (2603:10b6:930:49:cafe::9b) by CY8PR12CA0037.outlook.office365.com
- (2603:10b6:930:49::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.35 via Frontend
- Transport; Mon, 28 Aug 2023 04:28:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EE36.mail.protection.outlook.com (10.167.242.42) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6745.17 via Frontend Transport; Mon, 28 Aug 2023 04:28:35 +0000
-Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Sun, 27 Aug
- 2023 23:28:34 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     <hdegoede@redhat.com>, <Shyam-sundar.S-k@amd.com>
-CC:     <bhelgaas@google.com>, <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <iain@orangesquash.org.uk>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v15 2/2] platform/x86/amd: pmc: Don't let PCIe root ports go into D3
-Date:   Sun, 27 Aug 2023 23:28:19 -0500
-Message-ID: <20230828042819.47013-2-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230828042819.47013-1-mario.limonciello@amd.com>
-References: <20230828042819.47013-1-mario.limonciello@amd.com>
+        Mon, 28 Aug 2023 04:48:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46C45E5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Aug 2023 01:47:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1693212469;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZIR24c3vPFcM6K3A8B2/DkgNIDGAMx2+kAdxcC9gh4E=;
+        b=LzXG3/Wp3Y3AIBqcpQfE4uejo5HxA0+ZXfs+hcfaVuHxr9VCUlebb8KUtuaiFgPDJ6zW1I
+        b6LUrV0yuXQx9HreDdAKMLowWnWU/yL0XJCe/HO7zAAOIZKIEqwx1M6Yfgb0CyXyXDEyZk
+        B+4yP6EHtfirCrStuWPgQwY+pJA93Z4=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-352-GmvpBhlPO06rl4V8xq-qeQ-1; Mon, 28 Aug 2023 04:47:48 -0400
+X-MC-Unique: GmvpBhlPO06rl4V8xq-qeQ-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9a5944adecbso118023366b.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Aug 2023 01:47:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693212467; x=1693817267;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZIR24c3vPFcM6K3A8B2/DkgNIDGAMx2+kAdxcC9gh4E=;
+        b=TPj6mVErwlfmzcSaI0qYqu4O4PctE2gro0qirYfyrE+PEK0zy5pRVHDYYCoqhzI3oM
+         e38oZvvKT7LoHABrQhUYE8mzRbwhps6CQgXybGKKMOFkmu5EXkfCaaTinUyLwQuJKKmK
+         KZ1uw2og4eJnCGU62qDyqq7hxU3qXRg8zGmvXl5ZCCEoTYrQXm4zsFURYnCVZ9iInxTM
+         3m7je9grqteoVGg/tpC4icjJnMTfOYELt8GRRpAXLRXCcIgtQEeRlO8BzOpp+W4KgSNR
+         xB0QeaOyGhIv1+bsi207TkfNmnR3qGiEGCojywWt/eiIXhyPdv/yeyKMCl48smpFlQK/
+         sDIA==
+X-Gm-Message-State: AOJu0Yy5M3KGtyF7zQo7ygZ+pwwcgI3HfrV0+nHMwcxdUxtYMPyMs8RJ
+        zwZw+ZsxQRskfCIbDIXZ2mbjKUk6Tcr2qWkZFtKrzsUqiWAlrd0PPQCoRgoMKX0X+LA3NzH36PA
+        CTfBCMuR81wJTRqZJsziHt2Poz+g3wNNUPw==
+X-Received: by 2002:a17:906:cc18:b0:99b:f58d:1c49 with SMTP id ml24-20020a170906cc1800b0099bf58d1c49mr20763411ejb.53.1693212467014;
+        Mon, 28 Aug 2023 01:47:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGkTC5xnIKk0N3MdNfyiHpci75qoN00vzCyHDZIGHZnB1ajcjllQWI5ZWfCvdmkdWSPW39g2Q==
+X-Received: by 2002:a17:906:cc18:b0:99b:f58d:1c49 with SMTP id ml24-20020a170906cc1800b0099bf58d1c49mr20763403ejb.53.1693212466772;
+        Mon, 28 Aug 2023 01:47:46 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id f23-20020a1709067f9700b0098748422178sm4378345ejr.56.2023.08.28.01.47.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Aug 2023 01:47:45 -0700 (PDT)
+Message-ID: <34fe4306-5628-f46d-e89e-1d77d59f9c87@redhat.com>
+Date:   Mon, 28 Aug 2023 10:47:44 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE36:EE_|BN9PR12MB5226:EE_
-X-MS-Office365-Filtering-Correlation-Id: d9428ba2-6768-499a-6390-08dba77f3e82
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: C8/5lRGWWgO7z1zNLC2InOegVdSZVNBrnemtcS4ZPn4f7lfs/K/KHVUzS8FQxf8H5euDGaSHAucp5Y5SyNCNdf22jH6qa2JYxNowv2UMc8fgQlOcszfkNJyA48iS/xoiiFc2ijPfYYF5ESKlZfpBYAfC9iNtFtj+Jgy6CiF72tDIbCrZA/Q65JnWcC1aEtJMfMJYija7mLRIlJn9NBfyUn+UBpyOjcYkvxuUmjckqAVIFUCtauLQ44FpEUnXF5o6XRSlrW2hT7EBRhxG8iPcHsvWwrfXBVXPIrDhhW2PBi8Y7A8ci0aMZzF83aLv+fvOfATfQvpLwPN2NzMOXewJzrkjpJNMC1fyDu4QhXbgaHYWXfsnAscrKJkbGntWDBw9CaoiXJBUzWhGIsjyVLZPCdhm2ZmJe2/ijUEFkO7HcX1yVZGy1sOxLcoAlTSpryv7dIPtHpQTd3DDNKSMgOmzfzq3CXc/Jxxle/oyVr4icG8shILlPYzUME05W+3l2nSB2baWGyjOD7HXuTrGYmhOjOoxoZCI9FaSKRcgtRpzLOGOYsb1tnKFGcJQ98DcsF5E3MUB9GHWRVDFaDnenZckro85ZYdqDM/oZ/E9nzKz3HqHbjCApjlL4/dY1RePd9gfEyNxmA+wGEp4TJCKqZuNt+WLWsf3dNOQbksG8Bju2tXk4zOJAmo3r3euHGZtTpLkyujnoDWIF9ZxgWhRvPiQHjZlcnp+C82pHTYx4sxaGj+Uz0iatG1wS8nyGzFLpVmDbV7/xaQniYrixMmdJ0A7Uw==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(39860400002)(136003)(396003)(376002)(186009)(1800799009)(451199024)(82310400011)(40470700004)(36840700001)(46966006)(6666004)(2616005)(1076003)(7696005)(40480700001)(110136005)(40460700003)(2906002)(86362001)(5660300002)(44832011)(6636002)(70206006)(4326008)(8936002)(8676002)(54906003)(36756003)(70586007)(41300700001)(316002)(82740400003)(81166007)(356005)(478600001)(966005)(83380400001)(47076005)(36860700001)(16526019)(26005)(426003)(336012)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2023 04:28:35.3381
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9428ba2-6768-499a-6390-08dba77f3e82
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000EE36.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5226
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] platform/x86/amd/pmc: Fix build error with randconfig
+Content-Language: en-US
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org
+Cc:     Sanket.Goswami@amd.com, mario.limonciello@amd.com,
+        platform-driver-x86@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>
+References: <20230826161213.3180194-1-Shyam-sundar.S-k@amd.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230826161213.3180194-1-Shyam-sundar.S-k@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-changed pci_bridge_d3_possible() so that any vendor's PCIe ports
-from modern machines (>=2015) are allowed to be put into D3.
+Hi,
 
-Iain reports that USB devices can't be used to wake a Lenovo Z13
-from suspend. This is because the PCIe root port has been put
-into D3 and AMD's platform can't handle USB devices waking from
-a hardware sleep state in this case.
+On 8/26/23 18:12, Shyam Sundar S K wrote:
+> on x86_64:
+> 
+> CONFIG_SUSPEND is not set
+> CONFIG_PM is not set
+> 
+> this leads to build failure of the AMD PMC driver. Add a 'depends on'
+> in the Kconfig.
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Closes: https://lore.kernel.org/lkml/5181685c-29d8-22a4-a2d7-682f26e2e031@infradead.org/
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 
-This problem only occurs on Linux, and only when the AMD PMC driver
-is utilized to put the device into a hardware sleep state. Comparing
-the behavior on Windows and Linux, Windows doesn't put the root ports
-into D3.
+Note everything under drivers/platform/x86/ (1) already is only build if CONFIG_X86 is set,
+so there is no need for the depends on X86 part of this patch. I've dropped this while
+merging the fix.
 
-A variety of approaches were discussed to change PCI core to handle this
-case generically but no consensus was reached. To limit the scope of
-effect only to the affected machines introduce a workaround into the
-amd-pmc driver to only apply to the PCI root ports in affected machines
-when going into hardware sleep.
+1) with the exception of the p2sb code
 
-Link: https://lore.kernel.org/linux-pci/20230818193932.27187-1-mario.limonciello@amd.com/
-Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-Reported-by: Iain Lane <iain@orangesquash.org.uk>
-Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/platform/x86/amd/pmc/pmc.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index eb2a4263814c..f7bfe704ce39 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -741,6 +741,21 @@ static int amd_pmc_czn_wa_irq1(struct amd_pmc_dev *pdev)
- 	return 0;
- }
- 
-+static int amd_pmc_rp_wa(struct amd_pmc_dev *pdev)
-+{
-+	struct pci_dev *pci_dev = NULL;
-+
-+	while ((pci_dev = pci_get_device(PCI_VENDOR_ID_AMD, PCI_ANY_ID, pci_dev))) {
-+		if (!pci_is_pcie(pci_dev) ||
-+		    !(pci_pcie_type(pci_dev) == PCI_EXP_TYPE_ROOT_PORT))
-+			continue;
-+		pci_dev->bridge_d3 = 0;
-+		dev_info_once(pdev->dev, "Disabling D3 for PCIe root ports\n");
-+	}
-+
-+	return 0;
-+}
-+
- static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
- {
- 	struct rtc_device *rtc_device;
-@@ -893,6 +908,10 @@ static int amd_pmc_suspend_handler(struct device *dev)
- 	case AMD_CPU_ID_CZN:
- 		rc = amd_pmc_czn_wa_irq1(pdev);
- 		break;
-+	case AMD_CPU_ID_YC:
-+	case AMD_CPU_ID_PS:
-+		rc = amd_pmc_rp_wa(pdev);
-+		break;
- 	default:
- 		break;
- 	}
--- 
-2.34.1
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+> ---
+> 
+> based on 'linux-next'
+> 
+>  drivers/platform/x86/amd/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+> index d9685aef0887..383ae4c1df00 100644
+> --- a/drivers/platform/x86/amd/Kconfig
+> +++ b/drivers/platform/x86/amd/Kconfig
+> @@ -8,6 +8,7 @@ source "drivers/platform/x86/amd/pmf/Kconfig"
+>  config AMD_PMC
+>  	tristate "AMD SoC PMC driver"
+>  	depends on ACPI && PCI && RTC_CLASS && AMD_NB
+> +	depends on X86 && SUSPEND
+>  	select SERIO
+>  	help
+>  	  The driver provides support for AMD Power Management Controller
 
