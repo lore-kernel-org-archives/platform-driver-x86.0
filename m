@@ -2,171 +2,362 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A36C83F11
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Aug 2023 09:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D13C83F16
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Aug 2023 10:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230212AbjH1JUf (ORCPT
+        id S229509AbjH1KQw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Aug 2023 05:20:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52442 "EHLO
+        Mon, 28 Aug 2023 06:16:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230004AbjH1JUI (ORCPT
+        with ESMTP id S230466AbjH1KQt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Aug 2023 05:20:08 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFD59109
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Aug 2023 02:19:16 -0700 (PDT)
+        Mon, 28 Aug 2023 06:16:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B59D5C6
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Aug 2023 03:15:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693214356;
+        s=mimecast20190719; t=1693217758;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xymSw+t/vP8y0DXU30BsI+ohlLbDzyxDKkuan19aoZY=;
-        b=MJUlmO0NmL3ba/cF1lE+H8EbL76782KJUuXr/P43BB2Hv5hW1C00ITcUTnhh5oeKrAxyDC
-        3NHOJLvkYa1RPp94g9yTHoeoFwiiIJ52yQmlhfGaDv3gAzM0yL8G2kFvPa93KV91Z9cNyg
-        qvaE+b1k+9ohZALfiViDSXHp4NKT5KU=
+        bh=1UDRJi+Us13eQNcsdNoL16FRlNPmURBlCRFMRZwnle4=;
+        b=I5NwvSvwzg+oFNXxzabnj9GmIRhBU+kom4G+N2bX3BhK4lICPECeCvpP9ttV0ElPvFhVtO
+        sgmnImxy7dbeJ30UDpR99rdg9nFxZnPibpB+RFjRuMLtxL2djWZAWl7F9Z/Z0GjnvXhFz7
+        JQwQWFEIi9Ool6wffjXhiBmV9qjxgSc=
 Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
  [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-546-Amd7x9BGOf-KDvRNZz2ibA-1; Mon, 28 Aug 2023 05:19:11 -0400
-X-MC-Unique: Amd7x9BGOf-KDvRNZz2ibA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-993d41cbc31so236173866b.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Aug 2023 02:19:10 -0700 (PDT)
+ us-mta-693-PRlVSiTvOX2lQGcHItoABQ-1; Mon, 28 Aug 2023 06:15:57 -0400
+X-MC-Unique: PRlVSiTvOX2lQGcHItoABQ-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9a1cf3e6c04so247996866b.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Aug 2023 03:15:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693214349; x=1693819149;
+        d=1e100.net; s=20221208; t=1693217756; x=1693822556;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xymSw+t/vP8y0DXU30BsI+ohlLbDzyxDKkuan19aoZY=;
-        b=CJn6hTBu5Wy5m+GJrr9t11drAoos0T4gehBdhbXVwHqwPmBTAARIVSH8iGdCaFBwvA
-         VEB0bX2eJzEIcBg7bwdQcq1/YtuMBK++lakvQjDYoEj2Pk8iaCR0Zj5Tb3VaKAKJQo7Q
-         8piLUX0bc8/kNltBK1LrnaQIaCf1ju1w5hnF+OOXHZQ1nuBqomoqsGuRzj8+ud5hNMVx
-         9l289O0QIGSULxH6eC8vJLv70GnCBCYszUchoD9+yIXTn6lfUMxMS45Jn2peJPH31KRR
-         O9rlvFTtY2LVjUvVW7zyjWtRNgD8fJeBTs8hF/Nxs7bGt1TrGgCGcbzukvW0RvYeTa/b
-         QNZQ==
-X-Gm-Message-State: AOJu0Yy3JRBcTvHURVYX/IyvbJY3Q38A5XE5jJ9Sfy9uxo+raHtCWcHO
-        s83k4SeA70+scE0WdpYJ+zapgop5lKi4tQR2ahF1KS/BaFulKts80qbTWP+K9HNQI1G/UBMee9M
-        etwXDL9J6qPHYUXG7SjMTy0HLqQwb36KUQ9qmbOZqaw==
-X-Received: by 2002:a17:906:8a61:b0:9a1:aea8:d7cd with SMTP id hy1-20020a1709068a6100b009a1aea8d7cdmr13435607ejc.46.1693214348981;
-        Mon, 28 Aug 2023 02:19:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHh0RYUKMOb1oB+Q5xRNb2ImnHzcqrkps87lgWV0Q4FJ2Z22TFHY7IN2fK8dBWxRKSIuVLNkw==
-X-Received: by 2002:a17:906:8a61:b0:9a1:aea8:d7cd with SMTP id hy1-20020a1709068a6100b009a1aea8d7cdmr13435594ejc.46.1693214348657;
-        Mon, 28 Aug 2023 02:19:08 -0700 (PDT)
+        bh=1UDRJi+Us13eQNcsdNoL16FRlNPmURBlCRFMRZwnle4=;
+        b=jVWnkxn6faXXETtYziwyqLCyit6pj16yjfwWjRD3G4UkC4SMtxPhTP6VA7Zre43iAH
+         OCH5npT2DaH+MSeL6x4b7rCeKs0Y/UKG8JXcsYqvkMJY0HdTAy5kinvVmqMhSCeyu0yf
+         4Y2Ov5B7t+mbph6YqC2LYZj8qohhEYE2K7eAo+602IGmPEsuzX7R61NUZyiAk/BwVjDK
+         /T+fjHDHtjvrgpYV281IQVu+286XOb225aXBa4xD8Sh/UoW+aC4twEJFBVGOA9lY41NA
+         2Ge6M35EvjOYuLsJFuHcxPrfgsP+KmlUACmIqNsD0c7t1mQAe9W2AZrJTz7DEdJV7N/w
+         RcSg==
+X-Gm-Message-State: AOJu0YyTPKaELhzry094Bsv6++wtzJU0jXn7JWbOE9vAb2wBy4pIvW2m
+        DfzhkBU4705DUznk2x7+LX/6DWokV4wfgMQ2lkIEnq4KznamZimO8lhXL6Pdl5Tccc/aIzpbC6r
+        sBrxd822CkrXv3g6LBNVuXVvS9U/C3kDluQ==
+X-Received: by 2002:a17:907:2c48:b0:99d:6b3c:3d40 with SMTP id hf8-20020a1709072c4800b0099d6b3c3d40mr18280046ejc.6.1693217756072;
+        Mon, 28 Aug 2023 03:15:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF867WGM0kQGBrcSH9ynKW92cBd+NL/+tw6CGitJ0h1k4pScu6DhP8XxHOwMcefaMMZb7j06Q==
+X-Received: by 2002:a17:907:2c48:b0:99d:6b3c:3d40 with SMTP id hf8-20020a1709072c4800b0099d6b3c3d40mr18280033ejc.6.1693217755639;
+        Mon, 28 Aug 2023 03:15:55 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id i27-20020a170906115b00b0099bd0b5a2bcsm4403134eja.101.2023.08.28.02.19.07
+        by smtp.gmail.com with ESMTPSA id z1-20020a17090655c100b0098cf565d98asm4473226ejp.22.2023.08.28.03.15.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Aug 2023 02:19:08 -0700 (PDT)
-Message-ID: <53d26a63-64f3-e736-99f5-32bf4b5ba31d@redhat.com>
-Date:   Mon, 28 Aug 2023 11:19:07 +0200
+        Mon, 28 Aug 2023 03:15:55 -0700 (PDT)
+Message-ID: <c51c4159-c5d5-8fc1-58d2-b02bc1eb731d@redhat.com>
+Date:   Mon, 28 Aug 2023 12:15:54 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH v15 2/2] platform/x86/amd: pmc: Don't let PCIe root ports
- go into D3
+Subject: Re: [PATCH v5 1/1] platform/x86: asus-wmi: add support for ASUS
+ screenpad
 Content-Language: en-US
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Shyam-sundar.S-k@amd.com, bhelgaas@google.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        iain@orangesquash.org.uk
-References: <20230828042819.47013-1-mario.limonciello@amd.com>
- <20230828042819.47013-2-mario.limonciello@amd.com>
+To:     "Luke D. Jones" <luke@ljones.dev>
+Cc:     corentin.chary@gmail.com, markgross@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+References: <20230827232358.80512-1-luke@ljones.dev>
+ <20230827232358.80512-2-luke@ljones.dev>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230828042819.47013-2-mario.limonciello@amd.com>
+In-Reply-To: <20230827232358.80512-2-luke@ljones.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mario,
+Hi Luke,
 
-On 8/28/23 06:28, Mario Limonciello wrote:
-> commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> changed pci_bridge_d3_possible() so that any vendor's PCIe ports
-> from modern machines (>=2015) are allowed to be put into D3.
+Thank you for your patch.
+
+For the next version please don't forget to
+Cc: platform-driver-x86@vger.kernel.org
+
+On 8/28/23 01:23, Luke D. Jones wrote:
+> Add support for the WMI methods used to turn off and adjust the
+> brightness of the secondary "screenpad" device found on some high-end
+> ASUS laptops like the GX650P series and others.
 > 
-> Iain reports that USB devices can't be used to wake a Lenovo Z13
-> from suspend. This is because the PCIe root port has been put
-> into D3 and AMD's platform can't handle USB devices waking from
-> a hardware sleep state in this case.
+> These methods are utilised in a new backlight device named asus_screenpad.
+
+You have quite a bit of useful extra info in your cover-letter,
+for the next version please add a copy of that info to your
+commit message.
+
 > 
-> This problem only occurs on Linux, and only when the AMD PMC driver
-> is utilized to put the device into a hardware sleep state. Comparing
-> the behavior on Windows and Linux, Windows doesn't put the root ports
-> into D3.
-> 
-> A variety of approaches were discussed to change PCI core to handle this
-> case generically but no consensus was reached. To limit the scope of
-> effect only to the affected machines introduce a workaround into the
-> amd-pmc driver to only apply to the PCI root ports in affected machines
-> when going into hardware sleep.
-> 
-> Link: https://lore.kernel.org/linux-pci/20230818193932.27187-1-mario.limonciello@amd.com/
-> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> Reported-by: Iain Lane <iain@orangesquash.org.uk>
-> Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
 > ---
->  drivers/platform/x86/amd/pmc/pmc.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+>  drivers/platform/x86/asus-wmi.c            | 131 +++++++++++++++++++++
+>  drivers/platform/x86/asus-wmi.h            |   1 +
+>  include/linux/platform_data/x86/asus-wmi.h |   4 +
+>  3 files changed, 136 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-> index eb2a4263814c..f7bfe704ce39 100644
-> --- a/drivers/platform/x86/amd/pmc/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc/pmc.c
-> @@ -741,6 +741,21 @@ static int amd_pmc_czn_wa_irq1(struct amd_pmc_dev *pdev)
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 13547e55ae82..2801c691133a 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/input/sparse-keymap.h>
+>  #include <linux/kernel.h>
+>  #include <linux/leds.h>
+> +#include <linux/minmax.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+>  #include <linux/pci_hotplug.h>
+> @@ -127,6 +128,9 @@ module_param(fnlock_default, bool, 0444);
+>  #define NVIDIA_TEMP_MIN		75
+>  #define NVIDIA_TEMP_MAX		87
+>  
+> +#define ASUS_SCREENPAD_BRIGHT_MIN 20
+
+Hmm, in the coverletter you talk about 15 as min value
+and 60 as default value when the value read back from
+the hw at probe() time is < min.
+
+I'm fine with using 20 instead of 15, but the whole
+"The compromise was to set the brightness to 60 which is
+a usable brightness if the module init brightness was under 15."
+thing from your cover letter seems to be missing.
+
+> +#define ASUS_SCREENPAD_BRIGHT_MAX 255
+> +
+>  static const char * const ashs_ids[] = { "ATK4001", "ATK4002", NULL };
+>  
+>  static int throttle_thermal_policy_write(struct asus_wmi *);
+> @@ -212,6 +216,7 @@ struct asus_wmi {
+>  
+>  	struct input_dev *inputdev;
+>  	struct backlight_device *backlight_device;
+> +	struct backlight_device *screenpad_backlight_device;
+>  	struct platform_device *platform_device;
+>  
+>  	struct led_classdev wlan_led;
+> @@ -3776,6 +3781,123 @@ static int is_display_toggle(int code)
 >  	return 0;
 >  }
 >  
-> +static int amd_pmc_rp_wa(struct amd_pmc_dev *pdev)
+> +/* Screenpad backlight *******************************************************/
+> +
+> +static int read_screenpad_backlight_power(struct asus_wmi *asus)
 > +{
-> +	struct pci_dev *pci_dev = NULL;
+> +	int ret;
 > +
-> +	while ((pci_dev = pci_get_device(PCI_VENDOR_ID_AMD, PCI_ANY_ID, pci_dev))) {
-> +		if (!pci_is_pcie(pci_dev) ||
-> +		    !(pci_pcie_type(pci_dev) == PCI_EXP_TYPE_ROOT_PORT))
-> +			continue;
-> +		pci_dev->bridge_d3 = 0;
-> +		dev_info_once(pdev->dev, "Disabling D3 for PCIe root ports\n");
-> +	}
-> +
-> +	return 0;
+> +	ret = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_SCREENPAD_POWER);
+> +	if (ret < 0)
+> +		return ret;
+> +	/* 1 == powered */
+> +	return ret ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
 > +}
 > +
->  static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
->  {
->  	struct rtc_device *rtc_device;
-> @@ -893,6 +908,10 @@ static int amd_pmc_suspend_handler(struct device *dev)
->  	case AMD_CPU_ID_CZN:
->  		rc = amd_pmc_czn_wa_irq1(pdev);
->  		break;
-> +	case AMD_CPU_ID_YC:
-> +	case AMD_CPU_ID_PS:
-> +		rc = amd_pmc_rp_wa(pdev);
-> +		break;
->  	default:
->  		break;
->  	}
+> +static int read_screenpad_brightness(struct backlight_device *bd)
+> +{
+> +	struct asus_wmi *asus = bl_get_data(bd);
+> +	u32 retval;
+> +	int err;
+> +
+> +	err = read_screenpad_backlight_power(asus);
+> +	if (err < 0)
+> +		return err;
+> +	/* The device brightness can only be read if powered, so return stored */
+> +	if (err == FB_BLANK_POWERDOWN)
+> +		return asus->driver->screenpad_brightness;
 
+You are missing a " - ASUS_SCREENPAD_BRIGHT_MIN" here (you do add
+it when storing values to asus->driver->screenpad_brightness
+in update_screenpad_bl_status()).
 
-I'm fine with moving this into the amd-pmc code, but I have some questions about the current approach:
+> +
+> +	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT, &retval);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	return (retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK) - ASUS_SCREENPAD_BRIGHT_MIN;
+> +}
+> +
+> +static int update_screenpad_bl_status(struct backlight_device *bd)
+> +{
+> +	struct asus_wmi *asus = bl_get_data(bd);
+> +	int power, err = 0;
+> +	u32 ctrl_param;
+> +
+> +	power = read_screenpad_backlight_power(asus);
+> +	if (power < 0)
+> +		return power;
+> +
+> +	if (bd->props.power != power) {
+> +		if (power != FB_BLANK_UNBLANK) {
+> +			/* Only brightness > 0 can power it back on */
+> +			ctrl_param = max(ASUS_SCREENPAD_BRIGHT_MIN, asus->driver->screenpad_brightness);
 
-1. The current approach sets pci_dev->bridge_d3 = 0 for all root ports, I assume this WA is indeed necessary for all root ports and not just for one specific root port ?
+Not sure you need the max() here, I don't think you ever store a value
+below ASUS_SCREENPAD_BRIGHT_MIN in driver->screenpad_brightness ?
 
-2. The current approach runs from the suspend pm-op for the PCI-device for the PMC. So when it runs we know that the root-port for the PMC will not have been suspended yet. But what is stopping other root ports, which already have had all their children run-time suspended before the system-suspend, from already being in suspended state and thus possibly in D3 state ?
+> +			err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT,
+> +						    ctrl_param, NULL);
+> +		} else {
+> +			err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
+> +		}
+> +	} else if (power == FB_BLANK_UNBLANK) {
+> +		/* Only set brightness if powered on or we get invalid/unsync state */
+> +		ctrl_param = bd->props.brightness + ASUS_SCREENPAD_BRIGHT_MIN;
+> +		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT, ctrl_param, NULL);
+> +	}
+> +
 
-And we also cannot just set pci_dev->bridge_d3 = 0 once on probe time since pci_bridge_d3_possible() is called every time pci devices are added/removed so then it may get reset to 1 again.
+Not sure if you should update screenpad_brightness here on errors ?
+Maybe add a "if (err == 0)" as condition ?
 
-What I think is necessary here and what I hope will be acceptable to Bjorn, is for platform code to be able to register a callback to be called from pci_bridge_d3_possible() which can veto the decision to use d3. This way we don't pollute the PCI core with this, while still allowing platform specific tweaks.
+> +	/* Ensure brightness is stored to turn back on with */
+> +	asus->driver->screenpad_brightness = bd->props.brightness + ASUS_SCREENPAD_BRIGHT_MIN;
 
-If we make this a sorted list of callbacks (allowing to specify a priority at register time)
-instead of just 1 callback the the 2015 BIOS date check could be move to arch/x86 and the DMI blacklist can probably also be moved there.
+So screenpad_brightness is never below ASUS_SCREENPAD_BRIGHT_MIN here.
 
-And the platform_pci_bridge_d3() check can then also be a callback registered by the ACPI code.
+> +
+> +	return err;
+> +}
+> +
+> +static const struct backlight_ops asus_screenpad_bl_ops = {
+> +	.get_brightness = read_screenpad_brightness,
+> +	.update_status = update_screenpad_bl_status,
+> +	.options = BL_CORE_SUSPENDRESUME,
+> +};
+> +
+> +static int asus_screenpad_init(struct asus_wmi *asus)
+> +{
+> +	struct backlight_device *bd;
+> +	struct backlight_properties props;
+> +	int err, power;
+> +	int brightness = 0;
+> +
+> +	power = read_screenpad_backlight_power(asus);
+> +	if (power < 0)
+> +		return power;
+> +
+> +	if (power != FB_BLANK_POWERDOWN) {
+> +		err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT, &brightness);
+> +		if (err < 0)
+> +			return err;
+> +	}
+> +	/* default to an acceptable min brightness on boot if too low */
+> +	if (brightness < ASUS_SCREENPAD_BRIGHT_MIN)
+> +		brightness = ASUS_SCREENPAD_BRIGHT_MIN;
+
+		brightness = ASUS_SCREENPAD_BRIGHT_DEFAULT;
+
+Instead (new define for "60") ?
+
+> +
+> +	memset(&props, 0, sizeof(struct backlight_properties));
+> +	props.type = BACKLIGHT_RAW; /* ensure this bd is last to be picked */
+> +	props.max_brightness = ASUS_SCREENPAD_BRIGHT_MAX - ASUS_SCREENPAD_BRIGHT_MIN;
+> +	bd = backlight_device_register("asus_screenpad",
+> +				       &asus->platform_device->dev, asus,
+> +				       &asus_screenpad_bl_ops, &props);
+> +	if (IS_ERR(bd)) {
+> +		pr_err("Could not register backlight device\n");
+> +		return PTR_ERR(bd);
+> +	}
+> +
+> +	asus->screenpad_backlight_device = bd;
+> +	asus->driver->screenpad_brightness = brightness;
+> +	bd->props.brightness = brightness;
+
+And you've checked brightness against ASUS_SCREENPAD_BRIGHT_MIN above,
+so screenpad_brightness is never below ASUS_SCREENPAD_BRIGHT_MIN here either.
+
+Otherwise this looks good to me.
 
 Regards,
 
 Hans
 
+
+
+> +	bd->props.power = power;
+> +	backlight_update_status(bd);
+> +
+> +	return 0;
+> +}
+> +
+> +static void asus_screenpad_exit(struct asus_wmi *asus)
+> +{
+> +	backlight_device_unregister(asus->screenpad_backlight_device);
+> +
+> +	asus->screenpad_backlight_device = NULL;
+> +}
+> +
+>  /* Fn-lock ********************************************************************/
+>  
+>  static bool asus_wmi_has_fnlock_key(struct asus_wmi *asus)
+> @@ -4431,6 +4553,12 @@ static int asus_wmi_add(struct platform_device *pdev)
+>  	} else if (asus->driver->quirks->wmi_backlight_set_devstate)
+>  		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL);
+>  
+> +	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT)) {
+> +		err = asus_screenpad_init(asus);
+> +		if (err && err != -ENODEV)
+> +			goto fail_screenpad;
+> +	}
+> +
+>  	if (asus_wmi_has_fnlock_key(asus)) {
+>  		asus->fnlock_locked = fnlock_default;
+>  		asus_wmi_fnlock_update(asus);
+> @@ -4454,6 +4582,8 @@ static int asus_wmi_add(struct platform_device *pdev)
+>  	asus_wmi_backlight_exit(asus);
+>  fail_backlight:
+>  	asus_wmi_rfkill_exit(asus);
+> +fail_screenpad:
+> +	asus_screenpad_exit(asus);
+>  fail_rfkill:
+>  	asus_wmi_led_exit(asus);
+>  fail_leds:
+> @@ -4480,6 +4610,7 @@ static int asus_wmi_remove(struct platform_device *device)
+>  	asus = platform_get_drvdata(device);
+>  	wmi_remove_notify_handler(asus->driver->event_guid);
+>  	asus_wmi_backlight_exit(asus);
+> +	asus_screenpad_exit(asus);
+>  	asus_wmi_input_exit(asus);
+>  	asus_wmi_led_exit(asus);
+>  	asus_wmi_rfkill_exit(asus);
+> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+> index a478ebfd34df..5fbdd0eafa02 100644
+> --- a/drivers/platform/x86/asus-wmi.h
+> +++ b/drivers/platform/x86/asus-wmi.h
+> @@ -57,6 +57,7 @@ struct quirk_entry {
+>  struct asus_wmi_driver {
+>  	int			brightness;
+>  	int			panel_power;
+> +	int			screenpad_brightness;
+>  	int			wlan_ctrl_by_user;
+>  
+>  	const char		*name;
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index 16e99a1c37fc..63e630276499 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -58,6 +58,10 @@
+>  #define ASUS_WMI_DEVID_KBD_BACKLIGHT	0x00050021
+>  #define ASUS_WMI_DEVID_LIGHT_SENSOR	0x00050022 /* ?? */
+>  #define ASUS_WMI_DEVID_LIGHTBAR		0x00050025
+> +/* This can only be used to disable the screen, not re-enable */
+> +#define ASUS_WMI_DEVID_SCREENPAD_POWER	0x00050031
+> +/* Writing a brightness re-enables the screen if disabled */
+> +#define ASUS_WMI_DEVID_SCREENPAD_LIGHT	0x00050032
+>  #define ASUS_WMI_DEVID_FAN_BOOST_MODE	0x00110018
+>  #define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY 0x00120075
+>  
 
