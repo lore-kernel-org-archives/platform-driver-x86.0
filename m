@@ -2,182 +2,147 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A71C83F15
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Aug 2023 15:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F046FC83F11
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Aug 2023 15:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229853AbjH1PP0 (ORCPT
+        id S229785AbjH1PW0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Aug 2023 11:15:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45238 "EHLO
+        Mon, 28 Aug 2023 11:22:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232636AbjH1PPX (ORCPT
+        with ESMTP id S230145AbjH1PWH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Aug 2023 11:15:23 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2059.outbound.protection.outlook.com [40.107.237.59])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D31E0;
-        Mon, 28 Aug 2023 08:15:12 -0700 (PDT)
+        Mon, 28 Aug 2023 11:22:07 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2059.outbound.protection.outlook.com [40.107.93.59])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 828D9E8
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Aug 2023 08:22:04 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q8cfjTEt/sMeHp7u7vAyKPP50jF6aIkAHzuVmM5sylzrqEEY3h4hstoIZXZl5bpqoE76HMqEXJ/4ynhJ0nt1IrHnILhCexNfJUnw8hEQ/H2CRMQWv9NoCTEIAiiTH2NFg93F+FdF6IVNmQmXjPzWZ7K6bMkmTVUpPEmWlk5DxvtnAtEmG+ogNxbAjIX5S6xRVUCwsodQ0C+9gqCFNL7pLXLymleDvvWnvt5wEQ0cifzYUZIhhlCsVlEBNqfw60UlKPYpcH89ZCu8O/VhcWLDEX/k/WDTIm8FRvORmU7F5yq7h3BGAv9QkUQ0i++nijl2VAcBb0KmDZK6zJEy9wxpjQ==
+ b=VIr7sZSnPpch8S5zykwguNmoxFAQVuggE1vttyZkvJSfa6ouJcgDCXpGYy/nyw8+cls4Hf7K7vqLZLUcu1VFOoed2oVAdS+RRUmOcJ6akJ7DDxTmha7mfabULuJzZCajpzv6uNgSI//yugWKMaDkgKbYEp2BcTAvFUPqvexaFyHT7e+LhnV5Pwjj9Uc/LrI/4blIBTuTJu6ciTwQCLJMMTY15LTZgei8eZgx4EltvvQ/fa+OEvSEyUHRlu8krFE5eh2ucEEHNePzaUKKAHlT+EYEiMVXbpx8qsmG7lsItyFUmg70WFjbm65DUOv0DflmP74zzqYPkX3Hl+aviGFOCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bBgFLdaKaNyrGr+dqoKfk2k3vwzWf7Gv5t7XYDzqO+w=;
- b=bVPY8SD/tPL5OGAZwHNpdLd1oZN0XPA4k6gTimRR80G9GQssLRHOdKG+j1JO6YQWfTQSSYlUZBLvZg6DbQ+ud1wh4XbNMhAIDFEZhIUKSpJnFKRiF8XDYMONE890XrwYnsGoIdrIoa+hjx6Sh43jETwTVoQ1z9UGQgM1T9018SFxdJ/l2jEAr5dvR4QQ93qg2sc5Y8uLlHwu3LwyZRDoMg5jvjmM/NzWVB1SCfEb0JCA1g3C62fR37B/rBNAWGiFVUGYYV/oV9iRGNx72LtDRF05f/mAC3hAiukHEM0EdTITgx1gzQj7YmKtdyDwERFK69RFRABFst5eBNNFTpaE8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+ bh=H3Oglz6ABC2He/rZtd2oNcDuFbBYBtAsYXHJiwawWjc=;
+ b=VFMprvh8eEQU2FbHT444D0ZO7KIeTUPXi0sThj2BjPjJlRK5Y1e+y3/myXXk3iGj/U0Oi4EeVm1GGGFZYgdaVGi+XNJovmJ5m0nzjFTnDGoyUG2vAgb9zZCvjeCW0AgCnkLs+rdIk3H8br618EqHijhDjAwcU7zCW6lil8TMzAI3AqWrLn4JxCF8cUKnP9RxAPvslARlRFv107dZ8kX9wjU5XJL7nKN0Q08ZXZx/8bwAiAHHnrmUoMm9rjnzJMcrZhC8ecSZQU62efsfcmero4yL3aMqiP6JPejiK546gwnLfiVXhsw+NWt9TDEbSxkHajmHN1JuXBGijvNKAXspYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bBgFLdaKaNyrGr+dqoKfk2k3vwzWf7Gv5t7XYDzqO+w=;
- b=O26deq2erMNNq6FXDndXCoxxCBsexFARZWa3Ieu04oOmy5bAY0IHbhH7zVTFy8hpoOIYyZRvz/Ei5TbG1L2M6ff+EMb475P4cesmw6Uzzmh9sSd2BKaHLuQ8tJyDSrbb7P57TXn4+y4uxIMKwqCCX9xYiFZCo8nag0qZ3BIkTbg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6095.namprd12.prod.outlook.com (2603:10b6:8:9c::19) by
- PH7PR12MB7138.namprd12.prod.outlook.com (2603:10b6:510:1ee::11) with
+ bh=H3Oglz6ABC2He/rZtd2oNcDuFbBYBtAsYXHJiwawWjc=;
+ b=1SVskcwH16BBmIB2qx3MjaQT0taKQIXSDVvUUl4i+8SJX/QgN4GBlor1Bq4qSHZEjROlcCktR/Hd12JorhSQf0DJ9es0hcYSZ9qPwzR2kKoQRbSwSKOBGhO4sf4CLbSigVS6KKh2vCP93eAlzKfvj4uEriCAg9xPuJXyPx1bz/w=
+Received: from SN7PR04CA0233.namprd04.prod.outlook.com (2603:10b6:806:127::28)
+ by CH2PR12MB4117.namprd12.prod.outlook.com (2603:10b6:610:ae::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.34; Mon, 28 Aug
- 2023 15:15:10 +0000
-Received: from DS7PR12MB6095.namprd12.prod.outlook.com
- ([fe80::44a:f414:7a0f:9dae]) by DS7PR12MB6095.namprd12.prod.outlook.com
- ([fe80::44a:f414:7a0f:9dae%7]) with mapi id 15.20.6699.034; Mon, 28 Aug 2023
- 15:15:10 +0000
-Message-ID: <0ebd3eb9-7629-4897-b1c4-01574145d02d@amd.com>
-Date:   Mon, 28 Aug 2023 10:15:06 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 2/2] platform/x86/amd: pmc: Don't let PCIe root ports
- go into D3
-Content-Language: en-US
-To:     Hans de Goede <hdegoede@redhat.com>, Shyam-sundar.S-k@amd.com,
-        bhelgaas@google.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        iain@orangesquash.org.uk
-References: <20230828042819.47013-1-mario.limonciello@amd.com>
- <20230828042819.47013-2-mario.limonciello@amd.com>
- <53d26a63-64f3-e736-99f5-32bf4b5ba31d@redhat.com>
-From:   Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <53d26a63-64f3-e736-99f5-32bf4b5ba31d@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR12CA0026.namprd12.prod.outlook.com
- (2603:10b6:806:6f::31) To DS7PR12MB6095.namprd12.prod.outlook.com
- (2603:10b6:8:9c::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.35; Mon, 28 Aug
+ 2023 15:22:02 +0000
+Received: from SN1PEPF000252A2.namprd05.prod.outlook.com
+ (2603:10b6:806:127:cafe::e1) by SN7PR04CA0233.outlook.office365.com
+ (2603:10b6:806:127::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.34 via Frontend
+ Transport; Mon, 28 Aug 2023 15:22:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF000252A2.mail.protection.outlook.com (10.167.242.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6745.17 via Frontend Transport; Mon, 28 Aug 2023 15:22:01 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 28 Aug
+ 2023 10:21:59 -0500
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To:     <hdegoede@redhat.com>, <markgross@kernel.org>
+CC:     <Sanket.Goswami@amd.com>, <mario.limonciello@amd.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH 1/2] platform/x86/amd/pmc: Add PMFW command id to support S2D force flush
+Date:   Mon, 28 Aug 2023 20:51:33 +0530
+Message-ID: <20230828152134.4120496-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6095:EE_|PH7PR12MB7138:EE_
-X-MS-Office365-Filtering-Correlation-Id: c79e26ef-6d42-4440-1a88-08dba7d99162
+X-MS-TrafficTypeDiagnostic: SN1PEPF000252A2:EE_|CH2PR12MB4117:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6be40777-a9fd-4ab7-251d-08dba7da876d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: A2b2tzgqf/XUVagtiLNLlACujbD2+TnUGHqVIh8VOyQPOysgmqVfeA37B30SdCvw+Fr/ovqk1UZgZG6TpTBKhwW+A9V6VZ0UggVtL+u8bm2s61MAe5r93EU2gChaDttHVBHbAw/O1jqL3lLeAd6RPNyrUuayGc7LSZq/6VlYnP9t6wL50igrRdI+lGWB6Ts11SAZnIX8hint8M2Ek4S6aRXlYQjWiT1MTdimC+a9tcl/7Uwc48YmCz8L2kn8HFmlfbTvr+/wapvBMkZ8yZw/D0tAH82SOoSV0nvRBC+vwm3x78XyjyOwH12pR0zAc99wHbjEU0gURseJksIFzfi6ZuKAMunMy6NeGVGSq2vYRa9XGk2cYif6ihSeToMLHI8hNRa/68YWic+/h3xGRnunPzXxl75n79Gfgz5fGb83XYFHYPLUD/TkEPzfB9STkYMqjrxsrqz+W2LoLSW8I+fKtYqzLwq26TsHVBrdO4q/xd4PgnQ3CpDSy3Pxx21c9IogkWjT5KWn8frkBKWhTB+S+MLlsV9c+9NhLkY5VUba7Pd3qTjhvIs0K0s0hSZVgjMs0a1p2hOuZnEnQoDsquRsA+Qrw2/xvkguOFvmXKIIG7ScVvdUP6kGnI/T1800dkd9Brr2nQr8G1Qy1E0rebWz6Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6095.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(136003)(396003)(39860400002)(376002)(186009)(1800799009)(451199024)(41300700001)(38100700002)(6666004)(31696002)(86362001)(478600001)(83380400001)(26005)(2616005)(6512007)(6506007)(6486002)(53546011)(36756003)(316002)(2906002)(66946007)(66476007)(66556008)(5660300002)(8676002)(8936002)(4326008)(44832011)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OEtBT2N3ckkrVCs1T2toeG9qN0pZZHhpTnk5YzFYdkxaeHJVVUxlanNjR2hB?=
- =?utf-8?B?VHpzbjB0YUFpRGdBY1FsbmpIcHBrd01jWmpza1ZTWVJ3VHpXaC9QTXhNRVVR?=
- =?utf-8?B?YkNDMURQRmw5Mm9ncmJhTHB5Yk5SYmlFRnVyK3huZGtJTlMrQUR0YnJ5TTNr?=
- =?utf-8?B?ek4vSk5EcktNUitMQVJMdmlSRnJJMjJWNFdmYjFoL1FlYzRwc1E4aVg4ckg2?=
- =?utf-8?B?T0MveHMzRVpsRGJKQ25kZ2QzTXVqSW9ja1dvakdsVXBDakp5M0l0YVZvczlo?=
- =?utf-8?B?Q0NRNEozU3AxS2NrVW5acERhb0pXbmN1NXE3SERyVkduTkZ3TFZyQVR5bm9v?=
- =?utf-8?B?Q0NwK2EvbnhxKzRiTkE4NjlvTTZnQk9jUGtpcUwxYUFCUHZvZGJ1NnpxRGlP?=
- =?utf-8?B?Z3hqTExaam9Xd04rbXU3RnVMa1duNTM0N0xRNG1RenFCbXJOS3o3NHdOT2Rw?=
- =?utf-8?B?UzVpMFdiemNiWmdmNG5sTDhKbmtmTGZPM2ZKUlNWQVJERlI5Q2NQNk0yWmdl?=
- =?utf-8?B?bXZhYzBndHBMUWkvaWNyREtSMzU0MFg2RnVCYTNIZXZ1WHQwRzdDdGNTNGE5?=
- =?utf-8?B?RVdMRWI2Ty9KMHg3b3E5d0pBNEkxSEs0N28rUS9Ma0c0cmExaEszNnRuTjIy?=
- =?utf-8?B?RXFpSnZFRlgvRE9SeWJqbFBlaFMvRWpWZTg3WVBIWEhFSzZuTDc4TVlROEQz?=
- =?utf-8?B?cjZXbEQvOEtsWFlSRDM2QWdkQnpKdi9XVXRKR053UHA0azBuS0dSUlUxTFgr?=
- =?utf-8?B?NzBBOGFwZnIwL2l0SVpPdEdFS1phQ2hMNGdoV3dWOHdEalBNa1RvTWFBREYr?=
- =?utf-8?B?clpKMEtaeWVkcHJHRHZyUkpiM0lZeFdPOG1tRHVST01pVGh4MWpKYnZ2Tklv?=
- =?utf-8?B?SUlwQTUzWnJHN1ZQMU8vSDMwYXVMYUlhNjNsOVVRR0ZBZUNSSm5rME90bGx4?=
- =?utf-8?B?ZU9IbVphblY1TEQ5L0FNYUluWGltYUhnK0c3d2lNYzFoMytvc0o4QnJIajBp?=
- =?utf-8?B?S3BDckpHUjlJTUlJeThCek8zbks5b2g3cThyMGdtVkM2WStab2NraWdEWFdy?=
- =?utf-8?B?cTc0TUFDZlk1ZjJVRzZKSUxQamFPazM5RGpNUGRkWkpOcEx0NGY2UEFaN3da?=
- =?utf-8?B?VWhSbnZwN3IweXAyOXk4TElpYThPRU9pUHBEb2NwQ2ExUzEvNzZrUUVUMm1H?=
- =?utf-8?B?Q1RZWklEQnFKZStVdDloT3RwTHdZaVNTZGNPT0wwN1poWTE5YUE0WC9VeE5w?=
- =?utf-8?B?Q3dxc29XVHJvM29uRmFOa3hXVDlSNjRtUmthMUpvVUd4NHBBUzFoeEpZQnRj?=
- =?utf-8?B?U2dySDVwTkVJTmZrYzI0R0VpUjhZRk1vc3ljUTVZcmIybmpnd2xjN0t3VVRU?=
- =?utf-8?B?ZHZQbXdrbytQUWwweXhTdGswTlNaYkd4Z0lVTjRzcGo5ckdvbXRTMW02WU9r?=
- =?utf-8?B?MnpJNnNPcmdaZ3daK3pZOEo4d3UrcXAvVjVsZTJuTEw3Wk5xWEJpNjlNeVhE?=
- =?utf-8?B?Zk42aDBqSkZDVGZjNmFtZEVDR3QxbzEvV0JZUzNFVmxrUUY0VmxqUUVIUFly?=
- =?utf-8?B?clZ2bkF4RnBFQzU1UnJoWUpXUkExSUYyQnkrTTRVOFZ1TTVsRkU1S1NxbXA5?=
- =?utf-8?B?S1NtTCtjdWhYdUx2SnQ4Z0NBUGl0T3p4SXR3WHg3NTFSa1ExYzI2Rm1sYlov?=
- =?utf-8?B?ajYvT3pZMmo0Mml4VVc0N3gvOVUwYi93NzhVVVpJYVdLUHpmdVZVakY5cUxS?=
- =?utf-8?B?YWQrVW40VThscUFNclNrYXhhV1NpM3dTRHVqWVQxTW5MbG9iN2MwanJyZXhO?=
- =?utf-8?B?MkJGRXJPYkh3MElQRU4xZkljZUtHbEMzc01IamtRSVFydVBGcVp6ZU5QYk9G?=
- =?utf-8?B?Tm5ZRDBwb2VuWklSOTA5N05EdTVGeUpQc0NHQU1ldW9uZ044OEdwYk1STVRJ?=
- =?utf-8?B?bFpwNXBFTlhoZGlYNmRFNVU3b3lzL3duL3F1c1Y0NmNDTk44anp5NHJZVlNu?=
- =?utf-8?B?WTA2UUdJRDI2VkxyUnh5TllUVDAvVVVPQWthcGE1aXJUUEtQK093Qk1CelUx?=
- =?utf-8?B?eUZDMldlc3REOGl1UFpOK1dWRHRGSUkvZVpyTnF5cTdiSk83dTYyeDYwNGZU?=
- =?utf-8?Q?SaI+DxIz1E01lmcdZFiLh4j+k?=
+X-Microsoft-Antispam-Message-Info: qEwDeKCy6j1HwDgZnzJAip34io//e3nVtNwV49cqhlnrFivoGFftV3xylrxtFNlwxkYlJScvH2WfkIL4WyDfrUTDhXUz9W6mUXddQsDlXCpJu/IBDFk8gCbhV9/5OLKyR2HsBj2MUiUtKasd7WCtR694DiV9u1TfloIg81eQ6iADaCCS3DQjphLlBqHTu0NGGpf9AZgFhcZAPD+Hip8l8WqyB3+xyHu/CP6fgPYCBNA2mHdiVLNdJcWL/V152850v+BImibJ5xWN68G2Q1rlONOThJ9QSlCBf8nbn4JlqXJ2n6eQ2+ztj/FnfIvIXRnPwpDFu9ga/C3XL7feLc7Eohwv9IZAU/NyyN8UQ0Z3MJIh2Xo1qnwFCLEAPUX0nq77EKPUyYyWE5VFNflTNHf6frr4QGYZc765IYyClSffo87i+BnuZH7rcjZyXj1DPv1wV7mKJh1otJ3fa9IXhWGlubrkwegk9KE0ej0qpR5JywOqIyeHN+nUpSDfQXcgpWJ52ek3La8hzqIQJLxxyEOdi7tIB5wMbzE4ihKom3k4H+mPGbwMfb60sYXJozGgk59LrT898PVKsrP6aOFJ+DRZyc4zKmJdLdDJfbojIhk90o4m5JrzOYwE1/6TAyKPKaiGK7yuC/BWUEWfY4s/BtAg8yPrJTplopPNbxj6lrh/W0zSO02UNTzAtoxDCefysWfmavVzhiBbTAyynHxrxzLrR34oIe7dkzaM28zZFiWbwhMy2ffhFsRRBU2NMGeKhMvHvCGTHNsgmRbnm0nEYGpwpQ==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(376002)(396003)(39860400002)(346002)(451199024)(1800799009)(186009)(82310400011)(40470700004)(46966006)(36840700001)(82740400003)(7696005)(6666004)(40460700003)(36756003)(86362001)(81166007)(356005)(40480700001)(36860700001)(47076005)(2616005)(1076003)(2906002)(336012)(426003)(16526019)(26005)(83380400001)(478600001)(110136005)(70586007)(70206006)(41300700001)(8676002)(4326008)(8936002)(5660300002)(54906003)(316002)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c79e26ef-6d42-4440-1a88-08dba7d99162
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6095.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2023 15:15:10.4083
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2023 15:22:01.9218
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6be40777-a9fd-4ab7-251d-08dba7da876d
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AXmRaJPsAMtNmMoX9FpRmUuGOcqgKdXUAStZnKiJix/6M8rRtzBd/1zLY7ikDal/GtdrTY8GiiPw7LDYQsxGdg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7138
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: SN1PEPF000252A2.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4117
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 8/28/2023 04:19, Hans de Goede wrote:
-> 
-> 
-> I'm fine with moving this into the amd-pmc code, but I have some questions about the current approach:
-> 
-> 1. The current approach sets pci_dev->bridge_d3 = 0 for all root ports, I assume this WA is indeed necessary for all root ports and not just for one specific root port ?
+Recent PMFW have the capability that can force flush the FIFO
+contents to DRAM on sending a command id via the mailbox. Add this support
+to the driver.
 
-For the issue reported, yes it's only needed for two specific root ports 
-that the USB4 controllers are connected to.
+Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
+Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+---
+v1->v2:
+ - rebase to 'review-hans' branch
+ - drop 2/4 of v1
+   (https://patchwork.kernel.org/project/platform-driver-x86/list/?series=775324&state=%2A&archive=both)
 
-The reason that I applied it to all root ports is that this is what 
-Windows does over Modern Standby on the same hardware.
+ drivers/platform/x86/amd/pmc/pmc.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-For stuff like this I generally prefer to be "bug compatible" with 
-Windows if we can.
+diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+index c1e788b67a74..c92dd5077a16 100644
+--- a/drivers/platform/x86/amd/pmc/pmc.c
++++ b/drivers/platform/x86/amd/pmc/pmc.c
+@@ -55,6 +55,9 @@
+ #define S2D_TELEMETRY_BYTES_MAX		0x100000
+ #define S2D_TELEMETRY_DRAMBYTES_MAX	0x1000000
+ 
++/* STB Spill to DRAM Message Definition */
++#define STB_FORCE_FLUSH_DATA		0xCF
++
+ /* Base address of SMU for mapping physical address to virtual address */
+ #define AMD_PMC_MAPPING_SIZE		0x01000
+ #define AMD_PMC_BASE_ADDR_OFFSET	0x10000
+@@ -236,7 +239,7 @@ static const struct file_operations amd_pmc_stb_debugfs_fops = {
+ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
+ {
+ 	struct amd_pmc_dev *dev = filp->f_inode->i_private;
+-	u32 *buf, fsize, num_samples, stb_rdptr_offset = 0;
++	u32 *buf, fsize, num_samples, val, stb_rdptr_offset = 0;
+ 	int ret;
+ 
+ 	/* Write dummy postcode while reading the STB buffer */
+@@ -251,6 +254,10 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
+ 	/* Spill to DRAM num_samples uses separate SMU message port */
+ 	dev->msg_port = 1;
+ 
++	ret = amd_pmc_send_cmd(dev, 0, &val, STB_FORCE_FLUSH_DATA, 1);
++	if (ret)
++		dev_warn_once(dev->dev, "S2D force flush not supported\n");
++
+ 	/* Get the num_samples to calculate the last push location */
+ 	ret = amd_pmc_send_cmd(dev, S2D_NUM_SAMPLES, &num_samples, dev->s2d_msg_id, true);
+ 	/* Clear msg_port for other SMU operation */
+-- 
+2.25.1
 
-I have another idea here in using the new 'acpi_get_lps0_constraint' 
-symbol in the context of the workaround to figure out which root ports 
-to apply it to.
-
-This is something that I toyed with in earlier versions of the series 
-generally but there was concerns for regressions in other hardware.  It 
-might work well in this really narrow context.
-
-Windows uses the constraints to decide which devices *to put into D3*. 
-We might be able to use them in reverse for the PCIe root ports.
-
-> 
-> 2. The current approach runs from the suspend pm-op for the PCI-device for the PMC. So when it runs we know that the root-port for the PMC will not have been suspended yet. But what is stopping other root ports, which already have had all their children run-time suspended before the system-suspend, from already being in suspended state and thus possibly in D3 state ?
-> 
-
-That's a good point.
-
-> And we also cannot just set pci_dev->bridge_d3 = 0 once on probe time since pci_bridge_d3_possible() is called every time pci devices are added/removed so then it may get reset to 1 again.
-> 
-
-Yeah; that was my finding too when I was putting this approach together.
-
-> What I think is necessary here and what I hope will be acceptable to Bjorn, is for platform code to be able to register a callback to be called from pci_bridge_d3_possible() which can veto the decision to use d3. This way we don't pollute the PCI core with this, while still allowing platform specific tweaks.
-> 
-> If we make this a sorted list of callbacks (allowing to specify a priority at register time)
-> instead of just 1 callback the the 2015 BIOS date check could be move to arch/x86 and the DMI blacklist can probably also be moved there.
-
-Based on the conversations that have transpired so far on various 
-versions of this in PCI core I don't think Bjorn will want to move the 
-2015 BIOS date check to somewhere X86 specific in fear of regressions 
-for non-X86.
-
-> 
-> And the platform_pci_bridge_d3() check can then also be a callback registered by the ACPI code.
-> 
-
-Sure, let's see what Bjorn thinks of this idea of yours.
-
-> Regards,
-> 
-> Hans
-> 
->
