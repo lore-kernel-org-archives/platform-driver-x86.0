@@ -2,195 +2,370 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38098C83F14
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Aug 2023 11:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C5EC83F12
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Aug 2023 13:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230053AbjH2LTq (ORCPT
+        id S235901AbjH2NPv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 29 Aug 2023 07:19:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54648 "EHLO
+        Tue, 29 Aug 2023 09:15:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231793AbjH2LT2 (ORCPT
+        with ESMTP id S235982AbjH2NPu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 29 Aug 2023 07:19:28 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6389F1B4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Aug 2023 04:19:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693307963; x=1724843963;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=ocnBImR6IWIg4NQFiW7MloxXKb4Yi2oYtbSYq7LENds=;
-  b=c3b4YlQBNPeveNmrTTI2gI8hu5P0/+6KDltD8FnqyqFIKZEuxVTUnV/B
-   TZ04/LAXHTQolyNEOlJWN1yns8ug8gc+bgyDrD1Oc5TWaFUgGewUW7d6Y
-   H6GG1DWmEXQu4aJ7cdp/Fahybrkg3oSFreOWEqs4Br9clkO2Yndlt/6Pf
-   t1xDDhLmDEWUwxH6QOtalKQPYQHu3UsOigKnXobCd6oRr8fuEM7HL+Es9
-   cgJI3L7iEAzHHZF5sQKbmQJmo0l9TK8sfqm+Lfw1O34kavtQ53KppINpy
-   H8HGOBd1ABwCvO954caQxJYohC5tWRZBj1YbvE2N/VRkTVCaPViRz95jI
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="365545835"
-X-IronPort-AV: E=Sophos;i="6.02,210,1688454000"; 
-   d="scan'208";a="365545835"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 04:19:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="768036524"
-X-IronPort-AV: E=Sophos;i="6.02,210,1688454000"; 
-   d="scan'208";a="768036524"
-Received: from tgodea-mobl.ger.corp.intel.com ([10.251.214.174])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 04:19:20 -0700
-Date:   Tue, 29 Aug 2023 14:19:16 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc:     hdegoede@redhat.com, markgross@kernel.org, Sanket.Goswami@amd.com,
-        mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org,
-        Harsh Jain <Harsh.Jain@amd.com>
-Subject: Re: [PATCH v3 2/2] platform/x86/amd/pmc: Add dump_custom_stb module
- parameter
-In-Reply-To: <ce8d2e56-29cc-4b6e-6b61-69c28b7b7d10@amd.com>
-Message-ID: <fae9a214-1d65-f7b-7329-f13ddb669daa@linux.intel.com>
-References: <20230829035239.4132737-1-Shyam-sundar.S-k@amd.com> <20230829035239.4132737-2-Shyam-sundar.S-k@amd.com> <31b525c2-1271-f9b0-af58-6b68b5d9f967@linux.intel.com> <ce8d2e56-29cc-4b6e-6b61-69c28b7b7d10@amd.com>
+        Tue, 29 Aug 2023 09:15:50 -0400
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF45090;
+        Tue, 29 Aug 2023 06:15:47 -0700 (PDT)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 845D33200960;
+        Tue, 29 Aug 2023 09:15:46 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 29 Aug 2023 09:15:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1693314946; x=
+        1693401346; bh=7eE8kIWPw+PT41ZWWcbQ49teQsvDbEroy4Q2kUgeN18=; b=I
+        Z0xBNJEDmRbsEkQ9dv8XIeJltm8/mdy8QoY9/iEx9VzlhJfkPd+AFqUaJWOz7Zgx
+        BSQG9ounuyZO6ol+nHU2GZXmtagwBUDM9RarmkuESDKUV8A8Z4RWTT1VY2pSWnix
+        F4Lu9qRCL6w52xJ/lJWnnbFoHaJmeu/+fV+8IMDLNlkTRXvzDw0d6ZspPR+Kpu83
+        ALHoyf3EjgSWvxlMVH0Ro2AB9asksDEiNkgHM4+jHYXBHwdO/4aNasRqP/lll4l7
+        TsRD5shR0H14xGvs1iVi6nBe4lVC3kl9iWCPfMotl9eXS6MvROa4dzdCtwrwXvc1
+        BYPR3W9d0dp4boU+LBhVQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1693314946; x=
+        1693401346; bh=7eE8kIWPw+PT41ZWWcbQ49teQsvDbEroy4Q2kUgeN18=; b=J
+        5z0iZs/dh94MrYFPI8B8y88qtZ8RmLGq6YtlDpvBN7MDCLdFySJgj3GKO0KVwcVX
+        b+RQxLH0cRR1+OUJG7flrI3gH5Hh1Od2bTIuHE8D2enQ//unwnX7uxL4xvvmre/L
+        CmyZ6pJKoRrMZqeoGfXNKVrWjaKgKVAsNpKRESjsgGqWRynOCAO9zWq5T9KkElv5
+        Ieiod5CAhk237gp+3i+DmX3fEZOLH5Rv1BA/GSEi6gVUP11wkVx1WCsgoZO0Kmaj
+        +Jxlmlsd1zPn6LNHY+L5mQyLvRVT7XiLAltf7Eoewn2OXubG3McCqh99w2uOxm/H
+        XG6Jw9joq6OnT1gdU9p/w==
+X-ME-Sender: <xms:ge_tZJ5fZYs18ZqhnMtIgXprOnYG9pvqKJbGizJO9FIIA9jncCNlzg>
+    <xme:ge_tZG7Gr9_m4GT1doAiroA2bdICyo_MOKGkrUvWuP3mvq1XOghTO9S7Fy0QYeUgr
+    3pi590R0YP14qRQrdU>
+X-ME-Received: <xmr:ge_tZAep5nIR59bc3IW6pkUihx7gxDdZuv2AMC1ppk5B4-krCqCNUnISuA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudefiedgiedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucgoteeftdduqddtudculdduhedmnecujfgurhephf
+    fvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrhhs
+    ohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggftrf
+    grthhtvghrnhepfedtvdejfeelffevhffgjeejheduteetieeguefgkefhhfegjeduueet
+    hefgvdffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+X-ME-Proxy: <xmx:ge_tZCKuaVHHw6l8VQ69q1Nnz9ZwJVsUYYzjgVhFMjgQ4Dt5JATxrA>
+    <xmx:ge_tZNJ0Ddz8Fv33dob6Xa4pv_zRL5O9KwqYQOfgSALaaxUKjnkZWQ>
+    <xmx:ge_tZLwFLhdy3jTNn4_mS3tNUt706eqrWhftXuv04VrMMJys-JuboQ>
+    <xmx:gu_tZN3mUhAv_SGYa0NxNqJFWnRJcKBaYIf4XTA2lDnfZyWLlXY6yg>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 29 Aug 2023 09:15:45 -0400 (EDT)
+From:   Mark Pearson <mpearson-lenovo@squebb.ca>
+To:     mpearson-lenovo@squebb.ca
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: think-lmi: Add bulk save feature
+Date:   Tue, 29 Aug 2023 09:15:08 -0400
+Message-ID: <20230829131523.17369-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-1076844689-1693307905=:1757"
-Content-ID: <2872d795-6dc1-3781-de9c-78e910a1da4d@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Lenovo platforms there is a limitation in the number of times an
+attribute can be saved. This is an architectural limitation and it limits
+the number of attributes that can be modified to 48.
+A solution for this is instead of the attribute being saved after every
+modification allow a user to bulk set the attributes and then trigger a
+final save. This allows unlimited attributes.
 
---8323329-1076844689-1693307905=:1757
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <7d41eb27-f632-4f87-3fb3-6088c33a33eb@linux.intel.com>
+This patch introduces a save_settings attribute that can be configured to
+either single or bulk mode by the user.
+Single mode is the default but customers who want to avoid the 48
+attribute limit can enable bulk mode.
 
-On Tue, 29 Aug 2023, Shyam Sundar S K wrote:
+Displaying the save_settings attribute will display the enabled mode.
 
-> 
-> 
-> On 8/29/2023 3:09 PM, Ilpo Järvinen wrote:
-> > On Tue, 29 Aug 2023, Shyam Sundar S K wrote:
-> > 
-> >> There have been instances when the default size (1M) of the STB is not
-> >> sufficient to get the complete traces of the failure. In such scenarios
-> >> we can use a module_param to enable full trace that shall contain more
-> >> debugging data. This is not a regular case and hence not enabling this
-> >> capability by default.
-> >>
-> >> Co-developed-by: Harsh Jain <Harsh.Jain@amd.com>
-> >> Signed-off-by: Harsh Jain <Harsh.Jain@amd.com>
-> >> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> >> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> >> ---
-> >> v2->v3:
-> >>  - no change
-> >>
-> >> v1->v2:
-> >>  - rebase to 'review-hans' branch
-> >>  - drop 2/4 of v1
-> >>    (https://patchwork.kernel.org/project/platform-driver-x86/list/?series=775324&state=%2A&archive=both)
-> >>
-> >>  drivers/platform/x86/amd/pmc/pmc.c | 34 +++++++++++++++++++-----------
-> >>  drivers/platform/x86/amd/pmc/pmc.h |  1 +
-> >>  2 files changed, 23 insertions(+), 12 deletions(-)
-> >>
-> >> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-> >> index 443bb78ea5f4..0e61ae74f1a9 100644
-> >> --- a/drivers/platform/x86/amd/pmc/pmc.c
-> >> +++ b/drivers/platform/x86/amd/pmc/pmc.c
-> >> @@ -53,6 +53,7 @@
-> >>  
-> >>  /* STB Spill to DRAM Parameters */
-> >>  #define S2D_TELEMETRY_BYTES_MAX		0x100000
-> >> +#define S2D_TELEMETRY_FSIZE_MAX		0x200000
-> >>  #define S2D_TELEMETRY_DRAMBYTES_MAX	0x1000000
-> >>  
-> >>  /* STB Spill to DRAM Message Definition */
-> >> @@ -160,6 +161,10 @@ static bool disable_workarounds;
-> >>  module_param(disable_workarounds, bool, 0644);
-> >>  MODULE_PARM_DESC(disable_workarounds, "Disable workarounds for platform bugs");
-> >>  
-> >> +static bool dump_custom_stb;
-> >> +module_param(dump_custom_stb, bool, 0644);
-> >> +MODULE_PARM_DESC(dump_custom_stb, "Enable to dump full STB buffer");
-> >> +
-> >>  static struct amd_pmc_dev pmc;
-> >>  static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret);
-> >>  static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
-> >> @@ -239,7 +244,7 @@ static const struct file_operations amd_pmc_stb_debugfs_fops = {
-> >>  static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
-> >>  {
-> >>  	struct amd_pmc_dev *dev = filp->f_inode->i_private;
-> >> -	u32 *buf, fsize, num_samples, val, stb_rdptr_offset = 0;
-> >> +	u32 *buf, num_samples, val, stb_rdptr_offset = 0;
-> >>  	int ret;
-> >>  
-> >>  	/* Write dummy postcode while reading the STB buffer */
-> >> @@ -247,10 +252,6 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
-> >>  	if (ret)
-> >>  		dev_err(dev->dev, "error writing to STB: %d\n", ret);
-> >>  
-> >> -	buf = kzalloc(S2D_TELEMETRY_BYTES_MAX, GFP_KERNEL);
-> >> -	if (!buf)
-> >> -		return -ENOMEM;
-> >> -
-> >>  	/* Spill to DRAM num_samples uses separate SMU message port */
-> >>  	dev->msg_port = 1;
-> >>  
-> >> @@ -264,20 +265,27 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
-> >>  	dev->msg_port = 0;
-> >>  	if (ret) {
-> >>  		dev_err(dev->dev, "error: S2D_NUM_SAMPLES not supported : %d\n", ret);
-> >> -		kfree(buf);
-> >>  		return ret;
-> >>  	}
-> >>  
-> >>  	/* Start capturing data from the last push location */
-> >> -	if (num_samples > S2D_TELEMETRY_BYTES_MAX) {
-> >> -		fsize  = S2D_TELEMETRY_BYTES_MAX;
-> >> -		stb_rdptr_offset = num_samples - fsize;
-> >> +	if (dump_custom_stb &&
-> >> +	    (dev->dram_size - S2D_TELEMETRY_BYTES_MAX <= S2D_TELEMETRY_FSIZE_MAX)) {
-> >> +		dev->fsize = dev->dram_size - S2D_TELEMETRY_BYTES_MAX;
-> >> +		stb_rdptr_offset = 0;
-> >> +	} else if (num_samples > S2D_TELEMETRY_BYTES_MAX) {
-> > 
-> > I find the logic here somewhat suspicious in the first if check (I fail 
-> > to follow the reasoning here despite spending considerable amount of time 
-> > staring at it).
-> > 
-> > Lets assume dump_custom_stb is set. If dev->dram_size is large, the first 
-> > if condition will be false because LHS of <= is large. Thus, we go to the 
-> > second branch and dump exactly as many samples as before this patch. 
-> > ...And that is opposite of what this patch claims to do?
-> > 
-> 
-> Let me explain:
-> 
-> We have cases where the S2D (Spill to DRAM) STB (Smart Trace Buffer -
-> which is meant to have debug data that gives information about the
-> system conditions, be it success or failure.) may not fit in the current
-> stb buffer size of 1M (i.e. S2D_TELEMETRY_BYTES_MAX). The stb buffer
-> size of 1M is sufficient for most of the platforms, but there could be
-> exceptions.
-> 
-> In those cases, the dram_size would be updated by the PMFW (Power
-> Management Firmware) coupled with "dump_custom_stb" to fit into a custom
-> requirement.
-> 
-> As an example (with this proposed change):
-> 
-> when dump_custom_stb is SET and dev->dram_size is 3M (received from
-> PMFW) the first if() will be successful and it takes the corresponding
-> code path.
+When in bulk mode writing 'save' to the save_settings attribute will
+trigger a save. Once this has been done a reboot is required before more
+attributes can be modified.
 
-Heh, I can see the numbers work in that case, however, the above still 
-doesn't really explain why only S2D_TELEMETRY_BYTES_MAX is copied if 
-dram_size - S2D_TELEMETRY_BYTES_MAX > S2D_TELEMETRY_FSIZE_MAX and not
-S2D_TELEMETRY_FSIZE_MAX as I would expect?
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+ .../testing/sysfs-class-firmware-attributes   |  30 ++++
+ drivers/platform/x86/think-lmi.c              | 134 ++++++++++++++++--
+ drivers/platform/x86/think-lmi.h              |  14 ++
+ 3 files changed, 163 insertions(+), 15 deletions(-)
 
+diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+index f205d39409a3..c2f1a044475e 100644
+--- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
++++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+@@ -383,6 +383,36 @@ Description:
+ 		Note that any changes to this attribute requires a reboot
+ 		for changes to take effect.
+ 
++What:		/sys/class/firmware-attributes/*/attributes/save_settings
++Date:		August 2023
++KernelVersion:	6.5
++Contact:	Mark Pearson <mpearson-lenovo@squebb.ca>
++Description:
++		On Lenovo platforms there is a limitation in the number of times an attribute can be
++		saved. This is an architectural limitation and it limits the number of attributes
++		that can be modified to 48.
++		A solution for this is instead of the attribute being saved after every modification,
++		to allow a user to bulk set the attributes, and then trigger a final save. This allows
++		unlimited attributes.
++
++		Read the attribute to check what save mode is enabled (single or bulk).
++		E.g:
++		# cat /sys/class/firmware-attributes/thinklmi/attributes/save_settings
++		single
++
++		Write the attribute with 'bulk' to enable bulk save mode.
++		Write the attribute with 'single' to enable saving, after every attribute set.
++		The default setting is single mode.
++		E.g:
++		# echo bulk > /sys/class/firmware-attributes/thinklmi/attributes/save_settings
++
++		When in bulk mode write 'save' to trigger a save of all currently modified attributes.
++		Note, once a save has been triggered, in bulk mode, attributes can no longer be set and
++		will return a permissions error. This is to prevent users hitting the 48+ save limitation
++		(which requires entering the BIOS to clear the error condition)
++		E.g:
++		# echo save > /sys/class/firmware-attributes/thinklmi/attributes/save_settings
++
+ What:		/sys/class/firmware-attributes/*/attributes/debug_cmd
+ Date:		July 2021
+ KernelVersion:	5.14
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index 52d1ce8dfe44..87e8f06ee7c8 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -985,6 +985,13 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 	if (!tlmi_priv.can_set_bios_settings)
+ 		return -EOPNOTSUPP;
+ 
++	/*
++	 * If we are using bulk saves a reboot should be done once save has
++	 * been called
++	 */
++	if (tlmi_priv.save_mode == TLMI_SAVE_BULK && tlmi_priv.reboot_required)
++		return -EPERM;
++
+ 	new_setting = kstrdup(buf, GFP_KERNEL);
+ 	if (!new_setting)
+ 		return -ENOMEM;
+@@ -1011,10 +1018,11 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTING_CERT_GUID, set_str);
+ 		if (ret)
+ 			goto out;
+-		ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
+-				tlmi_priv.pwd_admin->save_signature);
+-		if (ret)
+-			goto out;
++		if (tlmi_priv.save_mode == TLMI_SAVE_BULK)
++			tlmi_priv.save_required = true;
++		else
++			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
++					       tlmi_priv.pwd_admin->save_signature);
+ 	} else if (tlmi_priv.opcode_support) {
+ 		/*
+ 		 * If opcode support is present use that interface.
+@@ -1033,14 +1041,17 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 		if (ret)
+ 			goto out;
+ 
+-		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+-			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
+-						  tlmi_priv.pwd_admin->password);
+-			if (ret)
+-				goto out;
++		if (tlmi_priv.save_mode == TLMI_SAVE_BULK) {
++			tlmi_priv.save_required = true;
++		} else {
++			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
++				ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
++							  tlmi_priv.pwd_admin->password);
++				if (ret)
++					goto out;
++			}
++			ret = tlmi_save_bios_settings("");
+ 		}
+-
+-		ret = tlmi_save_bios_settings("");
+ 	} else { /* old non-opcode based authentication method (deprecated) */
+ 		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+ 			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+@@ -1068,10 +1079,14 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 		if (ret)
+ 			goto out;
+ 
+-		if (auth_str)
+-			ret = tlmi_save_bios_settings(auth_str);
+-		else
+-			ret = tlmi_save_bios_settings("");
++		if (tlmi_priv.save_mode == TLMI_SAVE_BULK) {
++			tlmi_priv.save_required = true;
++		} else {
++			if (auth_str)
++				ret = tlmi_save_bios_settings(auth_str);
++			else
++				ret = tlmi_save_bios_settings("");
++		}
+ 	}
+ 	if (!ret && !tlmi_priv.pending_changes) {
+ 		tlmi_priv.pending_changes = true;
+@@ -1152,6 +1167,89 @@ static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *
+ 
+ static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
+ 
++static ssize_t save_settings_show(struct kobject *kobj, struct kobj_attribute *attr,
++				  char *buf)
++{
++	return sprintf(buf, "%s\n", tlmi_priv.save_mode == TLMI_SAVE_SINGLE ? "single" : "bulk");
++}
++
++static ssize_t save_settings_store(struct kobject *kobj, struct kobj_attribute *attr,
++				   const char *buf, size_t count)
++{
++	char *auth_str = NULL;
++	int ret;
++
++	/* Check if user is trying to change the save mode */
++	if (!strncmp(buf, "bulk", 4) || !strncmp(buf, "single", 6)) {
++		tlmi_priv.save_mode = strncmp(buf, "bulk", 4) ? TLMI_SAVE_SINGLE : TLMI_SAVE_BULK;
++		return count;
++	}
++	if (strncmp(buf, "save", 4))
++		return -EINVAL;
++
++	/* Otherwise assume the user is triggering a save - if supported*/
++	if (!tlmi_priv.can_set_bios_settings ||
++	    tlmi_priv.save_mode == TLMI_SAVE_SINGLE)
++		return -EOPNOTSUPP;
++
++	/* Check there is actually something to save */
++	if (!tlmi_priv.save_required)
++		return -ENOENT;
++
++	/* Use lock in case multiple WMI operations needed */
++	mutex_lock(&tlmi_mutex);
++
++	/* Check if certificate authentication is enabled and active */
++	if (tlmi_priv.certificate_support && tlmi_priv.pwd_admin->cert_installed) {
++		if (!tlmi_priv.pwd_admin->signature || !tlmi_priv.pwd_admin->save_signature) {
++			ret = -EINVAL;
++			goto out;
++		}
++		ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
++				       tlmi_priv.pwd_admin->save_signature);
++		if (ret)
++			goto out;
++	} else if (tlmi_priv.opcode_support) {
++		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
++			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
++						  tlmi_priv.pwd_admin->password);
++			if (ret)
++				goto out;
++		}
++		ret = tlmi_save_bios_settings("");
++	} else { /* old non-opcode based authentication method (deprecated) */
++		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
++			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
++					     tlmi_priv.pwd_admin->password,
++					     encoding_options[tlmi_priv.pwd_admin->encoding],
++					     tlmi_priv.pwd_admin->kbdlang);
++			if (!auth_str) {
++				ret = -ENOMEM;
++				goto out;
++			}
++		}
++
++		if (auth_str)
++			ret = tlmi_save_bios_settings(auth_str);
++		else
++			ret = tlmi_save_bios_settings("");
++	}
++	tlmi_priv.save_required = false;
++	tlmi_priv.reboot_required = true;
++
++	if (!ret && !tlmi_priv.pending_changes) {
++		tlmi_priv.pending_changes = true;
++		/* let userland know it may need to check reboot pending again */
++		kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
++	}
++out:
++	mutex_unlock(&tlmi_mutex);
++	kfree(auth_str);
++	return ret ?: count;
++}
++
++static struct kobj_attribute save_settings = __ATTR_RW(save_settings);
++
+ /* ---- Debug interface--------------------------------------------------------- */
+ static ssize_t debug_cmd_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 				const char *buf, size_t count)
+@@ -1221,6 +1319,8 @@ static void tlmi_release_attr(void)
+ 		}
+ 	}
+ 	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &pending_reboot.attr);
++	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &save_settings.attr);
++
+ 	if (tlmi_priv.can_debug_cmd && debug_support)
+ 		sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
+ 
+@@ -1302,6 +1402,10 @@ static int tlmi_sysfs_init(void)
+ 	if (ret)
+ 		goto fail_create_attr;
+ 
++	ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &save_settings.attr);
++	if (ret)
++		goto fail_create_attr;
++
+ 	if (tlmi_priv.can_debug_cmd && debug_support) {
+ 		ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
+ 		if (ret)
+diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
+index 4daba6151cd6..0c6304f323ed 100644
+--- a/drivers/platform/x86/think-lmi.h
++++ b/drivers/platform/x86/think-lmi.h
+@@ -27,6 +27,17 @@ enum level_option {
+ 	TLMI_LEVEL_MASTER,
+ };
+ 
++/* There are a limit on the number of WMI operations you can do if you use
++ * the default implementation of saving on every set. This is due to a
++ * limitation in EFI variable space used.
++ * Have a 'bulk save' mode where you can manually trigger the save, and can
++ * therefore set unlimited variables - for users that need it.
++ */
++enum save_mode {
++	TLMI_SAVE_SINGLE,
++	TLMI_SAVE_BULK,
++};
++
+ /* password configuration details */
+ struct tlmi_pwdcfg_core {
+ 	uint32_t password_mode;
+@@ -86,6 +97,9 @@ struct think_lmi {
+ 	bool can_debug_cmd;
+ 	bool opcode_support;
+ 	bool certificate_support;
++	enum save_mode save_mode;
++	bool save_required;
++	bool reboot_required;
+ 
+ 	struct tlmi_attr_setting *setting[TLMI_SETTINGS_COUNT];
+ 	struct device *class_dev;
 -- 
- i.
---8323329-1076844689-1693307905=:1757--
+2.41.0
+
