@@ -2,158 +2,205 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9DBC83F12
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Aug 2023 05:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E071AC83F12
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Aug 2023 09:41:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231642AbjH2Fjw (ORCPT
+        id S229853AbjH2Jkg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 29 Aug 2023 01:39:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52086 "EHLO
+        Tue, 29 Aug 2023 05:40:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233371AbjH2Fj1 (ORCPT
+        with ESMTP id S234898AbjH2JkH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 29 Aug 2023 01:39:27 -0400
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2057.outbound.protection.outlook.com [40.107.102.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D89B5C3;
-        Mon, 28 Aug 2023 22:39:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AkMdSProa13G/L2JQ5UgCEg9NDTyPvrQTI2jvIDJaRSSb8sBQXvzrP4+fclpIba8Pnmh1cFQrbrxH47SeObEF38Cdt/Wr0aIkPWknzNo8FRRW6fjx1mo0/UxkkserUpT+JIK3fbg9uJ2D4uzcqCounj9jnJhLlNC7SlZfajOA4nBSTJFdPcdpGdy/7cVw4L9VQuw+wXeyVdLwvjIhAA3/zxwxNw7TaDy0p1EjPUOhSwZzx0+s0S5OxP/TP3yclfD/BaahDtSP+LXXKg8GtBxPYBMp+2srt4QghO3SegOuNG1VnbKN+4vbk0zuyg38MUNDAtBzd5g7KoTmOZD6tW6cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ijFPucyABGEWRDgLUAoXVQBrjKtpk5fkhTCM4LLY2So=;
- b=ISHA+vfmckBQ5GmSuMesGECoSDmTpsxIkAZR0aITUPJEbRtdqEWc51jazuMy4Emo6SJQRMVexBX9vhqqi/tQ5iVpgsdhXT14LGIPz0eln+mxIVTySs1iNe+vqFJlImbp2Mzyx6PLiosFhZH/qRWpRs4SY+ztLnR8bR/WSKNVA3DwcH4qJqNjYzOIjcm7dKndP812u43KNhpmNKhMHHnEMmkW70ptcVHzKt+K8TCfngUA1e88fsnHrmbTPjNBEyvZcqOBOl7l397X8V8OZ6QruTLz60uy5zLZFJrFsE8g2R7oFbzpoKvBMBaq4HTmhl3Dz7IVKvDlVQ+Rd9eLY6maiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ijFPucyABGEWRDgLUAoXVQBrjKtpk5fkhTCM4LLY2So=;
- b=INrg6KJUcLyTAaxFh6OwHPeVP7FtNjTCYlimqTOkCOdOEixbHu80lNtKvFce6vTaNuE1g5MThzz3GJNGZpLLnDOdSXNWclyjVfLozZAvHpLuJoNkFk1RtupEnkLGhSIXUfEA+EjtWvVbtvAbf+V1q3N1e2UptRjZTvEFzN9imrwRbLOcYA0eaY7xxO3QZdJ32eREtgurFiat0pUagWONLPtFAuXn3lAwnMA7HWLa/iU8ZxNRw0G/kEy3C03dbURkf/TrffeyrnnN8/tpiS7Z8IoS8ij8k4MJ9ypc7wT+B+XMhfM4X9AM3A4uIl5/pQI8ewje3KPgNPptAsBfSE/Vvw==
-Received: from BN9PR12MB5381.namprd12.prod.outlook.com (2603:10b6:408:102::24)
- by CH0PR12MB5369.namprd12.prod.outlook.com (2603:10b6:610:d4::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.35; Tue, 29 Aug
- 2023 05:39:18 +0000
-Received: from BN9PR12MB5381.namprd12.prod.outlook.com
- ([fe80::5fa6:31e7:e6fb:3beb]) by BN9PR12MB5381.namprd12.prod.outlook.com
- ([fe80::5fa6:31e7:e6fb:3beb%4]) with mapi id 15.20.6699.035; Tue, 29 Aug 2023
- 05:39:18 +0000
-From:   Vadim Pasternak <vadimp@nvidia.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        PCI <linux-pci@vger.kernel.org>
-Subject: RE: linux-next: Tree for Aug 28 (drivers/platform/x86/mlx-platform.c)
-Thread-Topic: linux-next: Tree for Aug 28
- (drivers/platform/x86/mlx-platform.c)
-Thread-Index: AQHZ2e9IpU/X0JHUSUePE8AhAQPCHLAAwguQ
-Date:   Tue, 29 Aug 2023 05:39:18 +0000
-Message-ID: <BN9PR12MB5381C39F394EA2E292A057BFAFE7A@BN9PR12MB5381.namprd12.prod.outlook.com>
-References: <20230828150220.31624576@canb.auug.org.au>
- <ad664c17-9bd4-08ed-6a23-54de4a94e0a3@infradead.org>
-In-Reply-To: <ad664c17-9bd4-08ed-6a23-54de4a94e0a3@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR12MB5381:EE_|CH0PR12MB5369:EE_
-x-ms-office365-filtering-correlation-id: 8b873273-fd05-4174-c1c2-08dba85249c1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lWUXgCV+gAJsRC9JtE8/sHzQKQhnac0FEyLmEXsiNbRoUNrsxspjemdI5wEV7h6upRMvchUG4HF8KHmIeMHI2BLrngVavwu8Jngz3NCsWAsJeoqd0gALN3uTJsfGh2NTWLjoxba/TDWFFVMjX3OTheKeMwVDJRrAJoQ+zUPoFebu6QOqxqPzNSjC1WAXWKUqEW0+6alfKM2Fy6JJ/sbbn4tjThOJeyE9Pv/2SaTdsq7vrlBvHuZbyHpRlt6w4k5+jmesp8eIGmdzphxtpz2y0C2eZzW4KQ4mDLk2ZtIk1OnuiWnibupWx/mIH6LlMxm79NmCbEvup8cJBryjGLezxiHnxAZ1di0q3He0IGQYZythUroZIEaKfKSmiUNWq/s+xHj07Bw8dHdU7XNtDAbea3zEPMJdA4yOWtz4UAoNcsBqn2TOnVLh9SBWk0egyDHvHFXV5BLNtUj+bGZRTlY79KG5fWYjaYcu2dKicG9QUHWhqZflHxaGnPYNRciA2qzGE7eDjD9OiIxO89uwgRCBmd0eZ2+Mu556RBe5XbmEPWDi+Y9wQtUA9JJmd1HUqQ0q4XFHZV6oTM5gu42KA11UFysApvYxMS94roJAfYr58WzthyZiVE9Rn5Bvmc8i7aod
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5381.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(346002)(366004)(396003)(376002)(1800799009)(451199024)(186009)(9686003)(38100700002)(316002)(38070700005)(41300700001)(4326008)(33656002)(2906002)(83380400001)(86362001)(52536014)(26005)(5660300002)(8676002)(55016003)(8936002)(71200400001)(6506007)(7696005)(66556008)(66476007)(66446008)(64756008)(54906003)(66946007)(53546011)(110136005)(76116006)(122000001)(478600001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?V093UlVQNFlDemlXQ0UzSlN3cGxtbVNETHRSS0Z2clJWRm9DTGRCVVRWOFRB?=
- =?utf-8?B?OVBoSlMwSTQ4N1oxUXh2dEpTY2NOclZHQWY0NUlQdmZpdThUS1NtbFN0aURW?=
- =?utf-8?B?RnpyS1cvenFYNHBNQll3cEZPVjZRRnJ1b1FpV1hIWGxtS2kwdmFhQmE0cCtJ?=
- =?utf-8?B?WXZHMnYzTEhQcjBTV1JlWGtMVEF2QXpWUjJaNGRiL29EeFZ2WUVOTVM5Q2Vj?=
- =?utf-8?B?S0JUa1pZZHRuRGN4ZGc0cTkzU0FkYzFDM3JZYzRwWW56R3F5cjhuWStsK05r?=
- =?utf-8?B?UGk4NnBWNHA4azA4bVZtbmJnRmFZN0F0eXh4NWVLUXFzQXhTNkc5TVcwMTRC?=
- =?utf-8?B?UHlyT25tL2tZWUZkSk9jNFBXZ0c0NGxIM1JQMXdOYWVVU0x2bDNSUjVmdjVG?=
- =?utf-8?B?RUVtWVBwWHJBSENnVnZBZFY0dnNvajBWRmpQbjN5ckhUZEgwTTRsWDFERnJw?=
- =?utf-8?B?NUJHandwRXNxOE41RXNaeFRacW9sUElSY1laK3VHeHE4UXBSbDNZRGtTdXky?=
- =?utf-8?B?aVJLWXJRTTJzR3JJTWhRcFYvdldQdDZlMDhGT1lwZlFYa2wxMkpHT3U4NGVR?=
- =?utf-8?B?M2hNcmtMdXUwRHhKRnZnUk9lTE1JN21zWURBQStPNXA5dk41Q1BMcitYaW0v?=
- =?utf-8?B?YkhidDVUaXNQYVRqOE1Ta2hQMWl2S2t0aUw5SHl2MU9Vb1dJVm1keGYweFRW?=
- =?utf-8?B?SkhMOWlNYkkxWUp6TXF4RlNVdHpHWHE2SVp6Y29RbUd4dXVRNjR0OG5pTUkr?=
- =?utf-8?B?anRQcFVRTGp6ajZ1YzYxVUpxMnB0bWMwenNVMUZxbEpUZm1hRzFUcGh2TUJB?=
- =?utf-8?B?SHJGTS95cTg3dEQ4U2JCQ1V5cS9Rc0ZRa09aRjQ3UWc3RVRhMVQyN1plcFYr?=
- =?utf-8?B?Z3F6dFdMOVJJZXNQOXFCbnlWV3dHYWwzLzFzQVZxMHJScmM1bnYyT1Zveis4?=
- =?utf-8?B?RGxreVM3aDJvNnU4V3AyMjVoaVFCS3BwUUNJQjRUNDdjc1BwZktLaldqTWlz?=
- =?utf-8?B?ajY2Zk84MWxHSVpSVnMyT2NJdDF6Rko5OW84eklsUmV1eDJ3MVdtMFJLVDZi?=
- =?utf-8?B?eSszNHBkY0VDVVMwUTZDU3ZYWCtKYitBLzVDMWpud1pxY3E4RkxKNUlHYlMw?=
- =?utf-8?B?NlJQL2cwZ1RHNEZVVCtmWXZlRjUzUVhlYU1OWlBuY0hXR0N0M21YdjZLVlNP?=
- =?utf-8?B?ekw3NkxuSVM1WVJObE9ZWjJjN3Q3K3FJd2grWU1aWWZDVVZ1UzRCMXFQbTJP?=
- =?utf-8?B?TmM3V0VrcEl4MFNXSGM1dk1pMUc3eGJZbHpQelJSb2FpZGd6N0VGRjNwQXRQ?=
- =?utf-8?B?NDUwbXpjaEVYOHNxOWNiN3ZObjRFNWd5bVlGcWFFWXhoVFFmdVZCK0pZcVlU?=
- =?utf-8?B?cm9idzZZK2hoQmFWTnFOTGpyU0J4ZjMxek9RRWxSR2o0ajBjSG5KOHVqNDJx?=
- =?utf-8?B?ME43RlRtMTh6TXZGTTcwellpQmZyTGhkNDAvV1ZwcElUYUhWWUdndjdIbFhY?=
- =?utf-8?B?bjVIUEFTWEpwU1U3TWpURGJrekthU0d4eTFoUi9JUnhQOUtzeVJPUllHNXdQ?=
- =?utf-8?B?bm0yQmZQcnk0V2M1VXRKV25oZVRkT2JONGoxLzVmdlBjLzVOMnlQcW9oOXc2?=
- =?utf-8?B?d2N2Z1prK0xhbFl3K0ZIOVkvRUF5OVNXUWtjZDlZSks4ZUg5aTNDclBjWUVa?=
- =?utf-8?B?QW1rMEpiSzJaM3BVbGFHb2pqNnloUW9rV1YzeHVNVTE4a3NhWHZTL0NQZnY1?=
- =?utf-8?B?bTQwUmJ4T3FDL01kT3hKSGVpa3JuYmRvL1hua2xwbTlyS0RJZzF4NWp1TEFy?=
- =?utf-8?B?akJlWmdaMDhTalQ3bnpiMFVrZjBoazBGdWhiZ3Jta0s4YkhXN2VDRE9OSzFP?=
- =?utf-8?B?R2xMODZTWm94dWpMWlFmT2xneXFnQkJPVWVIM1BiUVBaMHdnbE1IbWJtbHFH?=
- =?utf-8?B?SW9UalU1ek9CMmh5QnRyeGFkS1VCbFF4WTA0N2J3aUZ6QSt3K2l0aTFJeTdn?=
- =?utf-8?B?QWNOYnJjSUFvL2V0TGZNZnRWUGcxam5BQThwMkszSmFXejM4M25GcGJLVWkz?=
- =?utf-8?B?a3krZ2FaL0Q1ajdsc1NhVTlsVmJIVUV3NlV5SmVsM21VUjcwOXRNOGpReTND?=
- =?utf-8?Q?xydg=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 29 Aug 2023 05:40:07 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 979A410E
+        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Aug 2023 02:40:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693302003; x=1724838003;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=IK0nbzcaWuX+3uyd3sCeuBYb+AyTKETTdpA1WoSX7Og=;
+  b=jtQTPlxOBMLyv0SbW1lJm8TYoE3P/fMJoxFU58Kv4U9PPkXJnoqjHyjb
+   Wh0+UtS/CwC3422oehELMLXJ47dIcPCG5N/jFfuJUHe/y5P8ZIClAel23
+   vLs8kq0J3QKfj4RnK11diZ6snccSTriS8RaxyPfP8UreuYaXce+PU52LU
+   mNm9OlyaRNoEOPKu6zNBkbEjimaBhjS0IKFT2THzMVYAMzSILifCtU7RK
+   2K1jjtfHwKV+Y6vdpiPMSvJ7LsOrRwQ+96Kvyzn0XDznsqRDy1cjFBfAR
+   Tmhckn1pQzgNEoazmxyJAXTnH/RUGz/gBvyGNk4MOSI1cd+6EAszw2x5S
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="375287094"
+X-IronPort-AV: E=Sophos;i="6.02,210,1688454000"; 
+   d="scan'208";a="375287094"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 02:40:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="808603530"
+X-IronPort-AV: E=Sophos;i="6.02,210,1688454000"; 
+   d="scan'208";a="808603530"
+Received: from tgodea-mobl.ger.corp.intel.com ([10.251.214.174])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 02:40:00 -0700
+Date:   Tue, 29 Aug 2023 12:39:58 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc:     hdegoede@redhat.com, markgross@kernel.org, Sanket.Goswami@amd.com,
+        mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org,
+        Harsh Jain <Harsh.Jain@amd.com>
+Subject: Re: [PATCH v3 2/2] platform/x86/amd/pmc: Add dump_custom_stb module
+ parameter
+In-Reply-To: <20230829035239.4132737-2-Shyam-sundar.S-k@amd.com>
+Message-ID: <31b525c2-1271-f9b0-af58-6b68b5d9f967@linux.intel.com>
+References: <20230829035239.4132737-1-Shyam-sundar.S-k@amd.com> <20230829035239.4132737-2-Shyam-sundar.S-k@amd.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5381.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b873273-fd05-4174-c1c2-08dba85249c1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2023 05:39:18.0913
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kY8RvgguOcrwEcv6BNyNojbxpuyY9q/vrawxvKvdANEybrjgYvqhxlzbg5uvxeIW4gQPjtNyvU9/Eudd7fpICg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5369
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFuZHkgRHVubGFwIDxy
-ZHVubGFwQGluZnJhZGVhZC5vcmc+DQo+IFNlbnQ6IE1vbmRheSwgMjggQXVndXN0IDIwMjMgMjM6
-MzYNCj4gVG86IFN0ZXBoZW4gUm90aHdlbGwgPHNmckBjYW5iLmF1dWcub3JnLmF1PjsgTGludXgg
-TmV4dCBNYWlsaW5nIExpc3QgPGxpbnV4LQ0KPiBuZXh0QHZnZXIua2VybmVsLm9yZz4NCj4gQ2M6
-IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+
-OyBvcGVuIGxpc3Q6WDg2DQo+IFBMQVRGT1JNIERSSVZFUlMgPHBsYXRmb3JtLWRyaXZlci14ODZA
-dmdlci5rZXJuZWwub3JnPjsgVmFkaW0gUGFzdGVybmFrDQo+IDx2YWRpbXBAbnZpZGlhLmNvbT47
-IEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJlZGhhdC5jb20+OyBNYXJrDQo+IEdyb3NzIDxtYXJr
-Z3Jvc3NAa2VybmVsLm9yZz47IFBDSSA8bGludXgtcGNpQHZnZXIua2VybmVsLm9yZz4NCj4gU3Vi
-amVjdDogUmU6IGxpbnV4LW5leHQ6IFRyZWUgZm9yIEF1ZyAyOCAoZHJpdmVycy9wbGF0Zm9ybS94
-ODYvbWx4LXBsYXRmb3JtLmMpDQo+IA0KPiANCj4gDQo+IE9uIDgvMjcvMjMgMjI6MDIsIFN0ZXBo
-ZW4gUm90aHdlbGwgd3JvdGU6DQo+ID4gSGkgYWxsLA0KPiA+DQo+ID4gUGxlYXNlIGRvICpub3Qq
-IGluY2x1ZGUgbWF0ZXJpYWwgZGVzdGluZWQgZm9yIHY2LjcgaW4geW91ciBsaW51eC1uZXh0DQo+
-ID4gaW5jbHVkZWQgYnJhbmNoZXMgdW50aWwgKmFmdGVyKiB2Ni42LXJjMSBoYXMgYmVlbiByZWxl
-YXNlZC4gIEFsc28sIGRvDQo+ID4gKm5vdCogcmViYXNlIHlvdSBsaW51LW5leHQgaW5jbHVkZWQg
-YnJhbmNoZXMgb250byB2Ni41Lg0KPiA+DQo+ID4gQ2hhbmdlcyBzaW5jZSAyMDIzMDgyNToNCj4g
-Pg0KPiANCj4gb24gaTM4NjoNCj4gQ09ORklHX0FDUEk9eQ0KPiBDT05GSUdfSVNBPXkNCj4gIyBD
-T05GSUdfUENJIGlzIG5vdCBzZXQNCj4gDQo+IC4uL2RyaXZlcnMvcGxhdGZvcm0veDg2L21seC1w
-bGF0Zm9ybS5jOiBJbiBmdW5jdGlvbg0KPiAnbWx4cGxhdF9wY2lfZnBnYV9kZXZpY2VfaW5pdCc6
-DQo+IC4uL2RyaXZlcnMvcGxhdGZvcm0veDg2L21seC1wbGF0Zm9ybS5jOjYyMDQ6MTU6IGVycm9y
-OiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZg0KPiBmdW5jdGlvbiAncGNpX3JlcXVlc3RfcmVnaW9u
-JzsgZGlkIHlvdSBtZWFuICdwY2lfcmVxdWVzdF9yZWdpb25zJz8gWy0NCj4gV2Vycm9yPWltcGxp
-Y2l0LWZ1bmN0aW9uLWRlY2xhcmF0aW9uXQ0KPiAgNjIwNCB8ICAgICAgICAgZXJyID0gcGNpX3Jl
-cXVlc3RfcmVnaW9uKHBjaV9kZXYsIDAsIHJlc19uYW1lKTsNCj4gICAgICAgfCAgICAgICAgICAg
-ICAgIF5+fn5+fn5+fn5+fn5+fn5+fg0KPiAgICAgICB8ICAgICAgICAgICAgICAgcGNpX3JlcXVl
-c3RfcmVnaW9ucw0KPiANCj4gU2hvdWxkIE1MWF9QTEFURk9STSBkZXBlbmQgb24gUENJPw0KPiAN
-Cj4gb3IgZG8gd2UgbmVlZCBhIHN0dWIgZm9yIHBjaV9yZXF1ZXN0X3JlZ2lvbigpPw0KDQpUaGFu
-a3MsIFJhbmR5Lg0KDQpOZWVkIHRvIGFkZDogJ2RlcGVuZCBvbiBQQ0knLg0KDQpJIHdpbGwgc2Vu
-ZCBhIHBhdGNoLg0KDQo+IA0KPiAtLQ0KPiB+UmFuZHkNCg==
+On Tue, 29 Aug 2023, Shyam Sundar S K wrote:
+
+> There have been instances when the default size (1M) of the STB is not
+> sufficient to get the complete traces of the failure. In such scenarios
+> we can use a module_param to enable full trace that shall contain more
+> debugging data. This is not a regular case and hence not enabling this
+> capability by default.
+> 
+> Co-developed-by: Harsh Jain <Harsh.Jain@amd.com>
+> Signed-off-by: Harsh Jain <Harsh.Jain@amd.com>
+> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+> v2->v3:
+>  - no change
+> 
+> v1->v2:
+>  - rebase to 'review-hans' branch
+>  - drop 2/4 of v1
+>    (https://patchwork.kernel.org/project/platform-driver-x86/list/?series=775324&state=%2A&archive=both)
+> 
+>  drivers/platform/x86/amd/pmc/pmc.c | 34 +++++++++++++++++++-----------
+>  drivers/platform/x86/amd/pmc/pmc.h |  1 +
+>  2 files changed, 23 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+> index 443bb78ea5f4..0e61ae74f1a9 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+> @@ -53,6 +53,7 @@
+>  
+>  /* STB Spill to DRAM Parameters */
+>  #define S2D_TELEMETRY_BYTES_MAX		0x100000
+> +#define S2D_TELEMETRY_FSIZE_MAX		0x200000
+>  #define S2D_TELEMETRY_DRAMBYTES_MAX	0x1000000
+>  
+>  /* STB Spill to DRAM Message Definition */
+> @@ -160,6 +161,10 @@ static bool disable_workarounds;
+>  module_param(disable_workarounds, bool, 0644);
+>  MODULE_PARM_DESC(disable_workarounds, "Disable workarounds for platform bugs");
+>  
+> +static bool dump_custom_stb;
+> +module_param(dump_custom_stb, bool, 0644);
+> +MODULE_PARM_DESC(dump_custom_stb, "Enable to dump full STB buffer");
+> +
+>  static struct amd_pmc_dev pmc;
+>  static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool ret);
+>  static int amd_pmc_read_stb(struct amd_pmc_dev *dev, u32 *buf);
+> @@ -239,7 +244,7 @@ static const struct file_operations amd_pmc_stb_debugfs_fops = {
+>  static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
+>  {
+>  	struct amd_pmc_dev *dev = filp->f_inode->i_private;
+> -	u32 *buf, fsize, num_samples, val, stb_rdptr_offset = 0;
+> +	u32 *buf, num_samples, val, stb_rdptr_offset = 0;
+>  	int ret;
+>  
+>  	/* Write dummy postcode while reading the STB buffer */
+> @@ -247,10 +252,6 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
+>  	if (ret)
+>  		dev_err(dev->dev, "error writing to STB: %d\n", ret);
+>  
+> -	buf = kzalloc(S2D_TELEMETRY_BYTES_MAX, GFP_KERNEL);
+> -	if (!buf)
+> -		return -ENOMEM;
+> -
+>  	/* Spill to DRAM num_samples uses separate SMU message port */
+>  	dev->msg_port = 1;
+>  
+> @@ -264,20 +265,27 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
+>  	dev->msg_port = 0;
+>  	if (ret) {
+>  		dev_err(dev->dev, "error: S2D_NUM_SAMPLES not supported : %d\n", ret);
+> -		kfree(buf);
+>  		return ret;
+>  	}
+>  
+>  	/* Start capturing data from the last push location */
+> -	if (num_samples > S2D_TELEMETRY_BYTES_MAX) {
+> -		fsize  = S2D_TELEMETRY_BYTES_MAX;
+> -		stb_rdptr_offset = num_samples - fsize;
+> +	if (dump_custom_stb &&
+> +	    (dev->dram_size - S2D_TELEMETRY_BYTES_MAX <= S2D_TELEMETRY_FSIZE_MAX)) {
+> +		dev->fsize = dev->dram_size - S2D_TELEMETRY_BYTES_MAX;
+> +		stb_rdptr_offset = 0;
+> +	} else if (num_samples > S2D_TELEMETRY_BYTES_MAX) {
+
+I find the logic here somewhat suspicious in the first if check (I fail 
+to follow the reasoning here despite spending considerable amount of time 
+staring at it).
+
+Lets assume dump_custom_stb is set. If dev->dram_size is large, the first 
+if condition will be false because LHS of <= is large. Thus, we go to the 
+second branch and dump exactly as many samples as before this patch. 
+...And that is opposite of what this patch claims to do?
+
+> +		dev->fsize  = S2D_TELEMETRY_BYTES_MAX;
+
+Please remove also the extra space here since you're touching this line.
+
+-- 
+ i.
+
+> +		stb_rdptr_offset = num_samples - dev->fsize;
+
+>  	} else {
+> -		fsize = num_samples;
+> +		dev->fsize = num_samples;
+>  		stb_rdptr_offset = 0;
+>  	}
+>  
+> -	memcpy_fromio(buf, dev->stb_virt_addr + stb_rdptr_offset, fsize);
+> +	buf = kzalloc(dev->fsize, GFP_KERNEL);
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	memcpy_fromio(buf, dev->stb_virt_addr + stb_rdptr_offset, dev->fsize);
+>  	filp->private_data = buf;
+>  
+>  	return 0;
+> @@ -286,11 +294,13 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
+>  static ssize_t amd_pmc_stb_debugfs_read_v2(struct file *filp, char __user *buf, size_t size,
+>  					   loff_t *pos)
+>  {
+> +	struct amd_pmc_dev *dev = filp->f_inode->i_private;
+> +
+>  	if (!filp->private_data)
+>  		return -EINVAL;
+>  
+>  	return simple_read_from_buffer(buf, size, pos, filp->private_data,
+> -					S2D_TELEMETRY_BYTES_MAX);
+> +					dev->fsize);
+>  }
+>  
+>  static int amd_pmc_stb_debugfs_release_v2(struct inode *inode, struct file *filp)
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
+> index c27bd6a5642f..f73d265430b8 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.h
+> +++ b/drivers/platform/x86/amd/pmc/pmc.h
+> @@ -26,6 +26,7 @@ struct amd_pmc_dev {
+>  	u32 dram_size;
+>  	u32 num_ips;
+>  	u32 s2d_msg_id;
+> +	u32 fsize;
+>  /* SMU version information */
+>  	u8 smu_program;
+>  	u8 major;
+> 
