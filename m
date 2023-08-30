@@ -2,137 +2,110 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D031FC71153
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Aug 2023 02:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3BBC83F10
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Aug 2023 03:23:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241712AbjH3C3g (ORCPT
+        id S238752AbjH3DXG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 29 Aug 2023 22:29:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50694 "EHLO
+        Tue, 29 Aug 2023 23:23:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241713AbjH3C32 (ORCPT
+        with ESMTP id S238899AbjH3DWt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 29 Aug 2023 22:29:28 -0400
+        Tue, 29 Aug 2023 23:22:49 -0400
 Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 327E883;
-        Tue, 29 Aug 2023 19:29:26 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 3928A3200985;
-        Tue, 29 Aug 2023 22:29:25 -0400 (EDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 986071A1;
+        Tue, 29 Aug 2023 20:22:46 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id A728E32003F4;
+        Tue, 29 Aug 2023 23:22:45 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 29 Aug 2023 22:29:25 -0400
+  by compute6.internal (MEProxy); Tue, 29 Aug 2023 23:22:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
         :cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm2; t=1693362564; x=
-        1693448964; bh=HEpiK3a0e5YZP+QDu46vUt5AK2l3SqMXFcyefmW/6xg=; b=b
-        p+FGW/xPzI/yFyGbXqRc+a4OvZY+9lVnmM7/vULpKjU5xWC52uIxmslES5G0V8gf
-        FlyJpsNT9K36ZbOx+N7iwIgYEKQUpJrUGu8eF8YyFCt/gbdmZ2JyqccCDeq4v7Nz
-        3rIs4eTqbt8CXdG05qrYbUqmEOq8Mi799dpQOWhYm6sxFf/pXz96WNEvg2oxegQM
-        jPeMo7wX8Mi+AzjPMN5Dl2T8HP1XKOrIlABr2pvE2c8+zdnm+xyKJighLi5w+iPL
-        ANbyCtwYn9R//0IHT9TOH8QpSWaW/ZoXYcB8BcB0Y3n3IXvBMdnG+QRsMn64xY2x
-        CaLfTLfy7wf3SFKeyh72Q==
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1693365765; x=1693452165; bh=o/VONQHUq9
+        xAiRo+AGRw830zSqwSj1iW1vkdoxTZSmc=; b=BDjeTPWkTAhZo1BtDcGPfnyy0y
+        L0wyZtSWKuFg6Z5UlMFeZluZF3vXDi+nEkRw8TOTPU9ohniT+THfgznF0n3/njDz
+        pLhYSz1LI7lizRzqmW04tEmpCaUlPEiRGpNGRVRYz7NrVunkD4PhHoMS3QU9c9AI
+        vTOZPZUsDuDNM4vY4XfpJDELfPDoV/uBWCe8O4S0ryOaLZxJg84OWHAB9q48DyRK
+        ajdC2TNGatatRe8xCvJm+6x1C9ur89pvF1P6MVugDPdYw6uIqW4x+aVM6Gb4NGM3
+        c/nERSeTjFO6Ho/e5sCOZgR7loV3ZXJjqbDMusT0rpEzQKEZMB0ULyActAIA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding
         :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1693362564; x=
-        1693448964; bh=HEpiK3a0e5YZP+QDu46vUt5AK2l3SqMXFcyefmW/6xg=; b=D
-        K/+S0iO3y3Dl37KfJvgn/Eq1Qk7YeAqWr5KPaZTfzYkORX46HB1f3OGLVhC+qFjO
-        j7Av9aFc/eKNqj16no5F2SA8tIzi6HHWlXQ4L2YdWxkQbLA/xmsdOu54h7/P7M4B
-        otIERxacrA/4Iy6jX2ImDCsjCK9gkb+JYVmz+75YC6k7vpCeNtwA4r2AU64q+agA
-        P2a3X9KlboCxZ+xGuFoUrPEQF+ly0GLNQ0NbHhdbudYmMwiiJoZR0WvJ0iRX22qE
-        5KZgkCQv17Bh0ivA2kSOrhYCiY6lskHCmdR2BYujgXV/qGHsr+rOFVe7CQQ3/J3k
-        K9J5DVVqPXF3r95aJSM+g==
-X-ME-Sender: <xms:hKnuZOCQKTTvt5Zb_N9uK4IZi3kwN5Q7LDSNCke7tQevNgzsiLxdpA>
-    <xme:hKnuZIgLUqRZTUYCh_xWBTleOSVsfEHi1IiQQGFuUuLt6n-hA_Y-Yal82vOaYi8AV
-    DMTJzKEUDSsPTA4ffY>
-X-ME-Received: <xmr:hKnuZBlxCzaY_bKWa2c4Z_dLoX4dAa3XtZihnBcwq-3CMuU6VwIkDIY_sung>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudefjedgheekucetufdoteggodetrfdotf
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1693365765; x=1693452165; bh=o/VONQHUq9xAi
+        Ro+AGRw830zSqwSj1iW1vkdoxTZSmc=; b=vbpeWuFFterzKqRBEXKe1qKjUq7Ec
+        xb2dF0EmQZn4h0B8KPnZKo17SzATOjd04Fa5gDwkNjQ1WELDh1gcOHld/dvA3k9u
+        uMmaQxXhhpGiai/Nr2uyYvLVkxnxpwgN9/xtZq443HKE537A3+4daGxAXj0ZrvRU
+        OiXQCbGNJC9dlekncTwRY/JMCZ7qInGdropcwx67EpWdCo1aCO2yXr3aYr/JgiSl
+        14dGcHk46ACtHWOeflxl44IUEeqbrDCEJ/aJF2Ox4Jh/QirFltmwapiE5x4cQs0z
+        5qKHUL62fG3bwAp1IvJK6p6a7X9m2FTOpZNp7yXq+aQTcOkp5if18dp9Q==
+X-ME-Sender: <xms:BLbuZCgGVfGt7yY_tRwPWjEwyYhdIEOMATGSa9uG6yxnvspkEBSLPw>
+    <xme:BLbuZDCrkcnP4ggs20gZID1vFgIod-bzhqX41Jl3_YS7WxlkX0RZ7Lq9rUSjBC5jx
+    X9fTbl5azRaUdgU4j8>
+X-ME-Received: <xmr:BLbuZKFbcxoMH08VyL06EB3FycOtx_M5XKhlil5x79LIzUBrj6ipVCGvmB5Z>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudefjedgieelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehl
-    jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfetfedugfetudeuheetjefhue
-    fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:hKnuZMwJa4BS-SfQKBDUjM1BfbiOxU5NMkOvMYsrnSchpBAp5w5MRQ>
-    <xmx:hKnuZDQ4tASenkerbJEQn-cOXzSnAxs_EMtxLa3yhI40Ejlgczc8ew>
-    <xmx:hKnuZHZCEVTJ1qQHH1qcKOpZjnW3bYWyLpBXcrzUH3BWXFTYjoNCxw>
-    <xmx:hKnuZNdAN1l4w7UYxIRSt6pqQNIYbObJ_qZm2c0BdnCfpZK0nHPMiQ>
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
+    nhgvshdruggvvheqnecuggftrfgrthhtvghrnheptdehkeeigeeggfelkeeufeefjeduvd
+    ejveduvdehtdegveeftdeugeetvdeltdejnecuffhomhgrihhnpehkvghrnhgvlhdrohhr
+    ghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluh
+    hkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:BbbuZLQVwEIvP9P55jqtqp0b7OQ78gv8OYXuFmj3Fs5lrGiEvoem1g>
+    <xmx:BbbuZPy5fFVTO6yxzjMxmJoJ_tuh0NXSYYK7pU8VF9S44b43u8sisw>
+    <xmx:BbbuZJ40avIyVezGV_HSVhXxHUjqLnKOuyFlgg6AHK3e6XPVRaQMiw>
+    <xmx:BbbuZP9P3djlu0wzdNaZNWKs-QBxbuW4LnwuWKeGF1fCD-lK-BXyRA>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 29 Aug 2023 22:29:22 -0400 (EDT)
+ 29 Aug 2023 23:22:42 -0400 (EDT)
 From:   "Luke D. Jones" <luke@ljones.dev>
 To:     hdegoede@redhat.com
 Cc:     corentin.chary@gmail.com, markgross@kernel.org,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         "Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH v2 1/1] platform/x86: asus-wmi: corrections to egpu safety check
-Date:   Wed, 30 Aug 2023 14:29:08 +1200
-Message-ID: <20230830022908.36264-2-luke@ljones.dev>
+Subject: [PATCH v6 0/1] platform/x86: asus-wmi: add support for ASUS screenpad
+Date:   Wed, 30 Aug 2023 15:22:36 +1200
+Message-ID: <20230830032237.42987-1-luke@ljones.dev>
 X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230830022908.36264-1-luke@ljones.dev>
-References: <20230830022908.36264-1-luke@ljones.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-An incorrect if statement was preventing the enablement of the egpu.
+Add support for the WMI methods used to turn off and adjust the
+brightness of the secondary "screenpad" device found on some high-end
+ASUS laptops like the GX650P series and others.
 
-Fixes: d49f4d1a30ac ("platform/x86: asus-wmi: don't allow eGPU switching if eGPU not connected")
+Changelog:
+- V6
+  - Move bulk of cover letter in to commit message
+  - Add define for ASUS_SCREENPAD_BRIGHT_DEFAULT to be used on boot
+  - Remove the use of max() in update_screenpad_bl_status()
+  - Previous: https://lore.kernel.org/all/20230827232358.80512-1-luke@ljones.dev/
+- V5
+  - Add minimum brightness to prevent screen from becoming invisible
+  - Previous: https://lore.kernel.org/all/20230630041743.911303-1-luke@ljones.dev/
+- V4
+  - Fix a null dereference that happened if the display was powered off and dev struct uninitialised yet
+  - Previous: https://lore.kernel.org/all/20230620030033.55033-1-luke@ljones.dev/
+- V3
+  - Refactor error handling in all functions
+- V2
+  - Complete refactor to use as a backlight device
 
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- drivers/platform/x86/asus-wmi.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+Luke D. Jones (1):
+  platform/x86: asus-wmi: add support for ASUS screenpad
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 9783893d2d6e..f54178d6f780 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -726,19 +726,18 @@ static ssize_t egpu_enable_store(struct device *dev,
- 		return -EINVAL;
- 
- 	err = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
--	if (err < 0)
--		return err;
--	if (err < 1) {
--		err = -ENODEV;
--		pr_warn("Failed to set egpu disable: %d\n", err);
-+	if (err < 0) {
-+		pr_warn("Failed to get egpu connection status: %d\n", err);
- 		return err;
- 	}
- 
- 	if (asus->gpu_mux_mode_available) {
- 		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GPU_MUX);
--		if (result < 0)
-+		if (result < 0) {
- 			/* An error here may signal greater failure of GPU handling */
-+			pr_warn("Failed to get gpu mux status: %d\n", err);
- 			return result;
-+		}
- 		if (!result && enable) {
- 			err = -ENODEV;
- 			pr_warn("Can not enable eGPU when the MUX is in dGPU mode: %d\n", err);
-@@ -748,12 +747,12 @@ static ssize_t egpu_enable_store(struct device *dev,
- 
- 	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_EGPU, enable, &result);
- 	if (err) {
--		pr_warn("Failed to set egpu disable: %d\n", err);
-+		pr_warn("Failed to set egpu state: %d\n", err);
- 		return err;
- 	}
- 
- 	if (result > 1) {
--		pr_warn("Failed to set egpu disable (retval): 0x%x\n", result);
-+		pr_warn("Failed to set egpu state (retval): 0x%x\n", result);
- 		return -EIO;
- 	}
- 
+ drivers/platform/x86/asus-wmi.c            | 133 +++++++++++++++++++++
+ drivers/platform/x86/asus-wmi.h            |   1 +
+ include/linux/platform_data/x86/asus-wmi.h |   4 +
+ 3 files changed, 138 insertions(+)
+
 -- 
 2.41.0
 
