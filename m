@@ -2,162 +2,91 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E46EC6FA8F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Aug 2023 01:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03B3C83F16
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Aug 2023 02:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241584AbjH3BhQ (ORCPT
+        id S240644AbjH3C3f (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 29 Aug 2023 21:37:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59936 "EHLO
+        Tue, 29 Aug 2023 22:29:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241581AbjH3BhF (ORCPT
+        with ESMTP id S241712AbjH3C3Y (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 29 Aug 2023 21:37:05 -0400
-Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6E7DCC5;
-        Tue, 29 Aug 2023 18:37:00 -0700 (PDT)
-Received: by mail-io1-xd2e.google.com with SMTP id ca18e2360f4ac-76c64da0e46so173831639f.0;
-        Tue, 29 Aug 2023 18:37:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693359420; x=1693964220; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YcVzJ1hbhq9Ov/W8Ofp/tN+KBi3VQ+ExZZ65FircAyo=;
-        b=G9571n01fbFDw1loYE6OJdVeeX0G7mqKNuwX+KdUfb447I3RxTdJURh5QEWRqTJ92q
-         tf8NejmUmgnKgyGC9nlp9VCfgSm9s8wDq11KrUC8PGnT76JhtZEsbF+hg2Yn++TvNtjK
-         pXXVu7jEYrSnph6IPqaqn2S36diKIat5kJm98pBMFdKJ+5nz/lzsCGYEKftTnET++rN8
-         44XY4cjN8pzQZeY0agWxvQUqvs1K/HxD4oVbdzEagTeY1JpiUVAPcWdyOrC0F1sn3ESx
-         8dLzwGTxoTbfryaIfAd6creENWYnOSZErWS3zZkcDnwzoMukkW+wcXrDxGJbkqtRhPSP
-         zGHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693359420; x=1693964220;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YcVzJ1hbhq9Ov/W8Ofp/tN+KBi3VQ+ExZZ65FircAyo=;
-        b=AAw66sVdTPm0wcFKPpFW5v0EYA8RDyVS7PiJBrgNU5Vxpgx4whrG0V7fxo3F82j7RT
-         GqyvqfzxMZScDAH/yjDyQmThpc6Xaky/a1ZiUjksAPaibIaFIUXAAEWCCkJxtfPYfIXA
-         at31M6swYGPI94hGGv/TMufKAtMfav46M/RMluHEhE3WFp0wY8xPbUBOWw80kx2DHMeB
-         KOvLC0Li/3GQyfQRLZaVaoPsQzK2rn3cEq76+dVXgladIJaShxQHWGjjw/KW4IPNH7wt
-         odOera0qCvx+iB+QWuOjhkiYNQuQI2rwZ3GZ45bRP4op8qJ/WBflJ/oR/Tee5MO0dzpD
-         lOMw==
-X-Gm-Message-State: AOJu0YzgI9Pk0fVbVb7dvlmlw8gS92JxFS8Yzgld/B/bhCmuuQU151HU
-        SZMyEMnjoHdebv8WrlqiZpY=
-X-Google-Smtp-Source: AGHT+IFnKU9/P7PLg9OvuUJYiT+ycpH/CeV4Mv42jUxWMGaUeno1rEjvBEcEwsnP1QGLNTKQLXm95A==
-X-Received: by 2002:a6b:d213:0:b0:792:70c2:9db1 with SMTP id q19-20020a6bd213000000b0079270c29db1mr889185iob.1.1693359419893;
-        Tue, 29 Aug 2023 18:36:59 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z21-20020a6b0a15000000b0079187c8524asm3556839ioi.3.2023.08.29.18.36.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Aug 2023 18:36:59 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Tue, 29 Aug 2023 18:36:57 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Huibin Shi <henrys@silicom-usa.com>
-Cc:     Henry Shi <henryshi2018@gmail.com>,
-        "hbshi69@hotmail.com" <hbshi69@hotmail.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "hb_shi2003@yahoo.com" <hb_shi2003@yahoo.com>,
-        Wen Wang <wenw@silicom-usa.com>
-Subject: Re: [PATCH v5] Add Silicom Platform Driver
-Message-ID: <b47b79c7-1ddc-4336-8bbc-f524872198ca@roeck-us.net>
-References: <20230828212622.32485-1-henryshi2018@gmail.com>
- <15039461-6099-40a1-952f-fc31d65a0d3f@roeck-us.net>
- <PA4PR04MB92225C42CC763DCBA622C6579AE7A@PA4PR04MB9222.eurprd04.prod.outlook.com>
+        Tue, 29 Aug 2023 22:29:24 -0400
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5946C83;
+        Tue, 29 Aug 2023 19:29:22 -0700 (PDT)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 5E74A3200985;
+        Tue, 29 Aug 2023 22:29:21 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 29 Aug 2023 22:29:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1693362560; x=1693448960; bh=n+eYkmAdN1
+        MV5ouSzZB5e6d6nE6x/n9nGF1JVwzQT88=; b=Nti7U0vbxoz+RWIaZPrpkAqC59
+        SuBm+O9VjdS4qdq+wWzL/gl+rPX2JJ38D0FE2YzHEzxQ5XLDRgdtSQadY9RRlilx
+        dCOf04cyZx96L4thyNAtYDwwikK1tbJJ+NkWKv6mvQnLQEjlUCkNgqV6h8xqcZTZ
+        r4QcnQsbWmcVzFyB/hwxQPO2VwroBh9qUfs20iTzu/D4DxWCRWnQMBVUCgsg2/5q
+        S2t86a4JaLjz7yOL5dLNrHWxHk6eRuqv7Mw2TQdW6nkmKZHI2n6yR7yyqydwgDbY
+        d5hfFjGLNRQhCSu9x7UP2bTOEFBtARDlwDYmFWkCdd+Xu7bw6E2jwOkvuPqA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1693362560; x=1693448960; bh=n+eYkmAdN1MV5
+        ouSzZB5e6d6nE6x/n9nGF1JVwzQT88=; b=k+9iWhmxhbJs+pVPMt1K9EnEcUw8h
+        eOixJqPPQEop1oJV2pcmM2xi6XY/hMo3yjkFsLCD/ZhXsV8AMuvCbeYDIXvOprvp
+        f47Mhx+seQMSRwgDTGlHECDdJvbDJqC26nFJ8C4LT5P3nh9UoyDGVz+Xfj3DHtay
+        iQ2oCccq1F58oQtymq+/DsRiF8HE9ywkfKtmE0Y8Bx8vJvJ0FE8RUl3DNb0gBLi2
+        +n2oxaWEbSURC5at2wJ8xC4VFwfkZKTKACyhldrieSkJeQ5FL5YhBnOPTqZ7/wBm
+        lc2eOwssBZU8jXwx8VuItyoQCxwHpQfs9lcn6Wh4CScF0PKQFH+CTpuww==
+X-ME-Sender: <xms:gKnuZOABS0Zh7WSweonoxwUye_mIaIIIClNH93bqiyEur2offtFecA>
+    <xme:gKnuZIgoFZSWWJDAhBKLMXjzlsQTcOzgkIACCxo9zs2GlZ6qMS7u5zCQ2iRbu36JG
+    aOILMKI_ZhxKe5XugQ>
+X-ME-Received: <xmr:gKnuZBnKLFScNGcYBo__AMJRu9bIfJBwYUYn5IoSlKyTqOxkd2la5LoMH8Js>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudefjedgheelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
+    nhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfdujedthfduudekffefkeeiffdttd
+    dvhfegudduueffuefhfefggeefteevvdegnecuvehluhhsthgvrhfuihiivgeptdenucfr
+    rghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:gKnuZMzuk1aVfI7EFnHx9RjHGxJIQmolMfVRXevlqt_ECtCUtvBytA>
+    <xmx:gKnuZDS52w2tbNJgDam6lCUbKv0n_b7oN7MT5cF5C_1OOuQxOk-RCA>
+    <xmx:gKnuZHYvyaMsCCqPKJy80oUZ3N7fuC75mQ0e4cDJLKPXHR3e_n5_Nw>
+    <xmx:gKnuZNfNHx2Tpm7Obg8bhtxkZ717f4uIQ4kQANXllwSONI0PZcXhHA>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 29 Aug 2023 22:29:18 -0400 (EDT)
+From:   "Luke D. Jones" <luke@ljones.dev>
+To:     hdegoede@redhat.com
+Cc:     corentin.chary@gmail.com, markgross@kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        "Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v2 0/1] platform/x86: asus-wmi: corrections to egpu safety check
+Date:   Wed, 30 Aug 2023 14:29:07 +1200
+Message-ID: <20230830022908.36264-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PA4PR04MB92225C42CC763DCBA622C6579AE7A@PA4PR04MB9222.eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Aug 29, 2023 at 10:17:47PM +0000, Huibin Shi wrote:
-> Hi Guenter,
-> 
-> Appreciate your feedback. Please see my comments below.
-> 
-> Thanks
-> Henry
-> 
-> -----Original Message-----
-> From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
-> Sent: Monday, August 28, 2023 8:41 PM
-> To: Henry Shi <henryshi2018@gmail.com>
-> Cc: hbshi69@hotmail.com; tglx@linutronix.de; mingo@redhat.com; bp@alien8.de; dave.hansen@linux.intel.com; x86@kernel.org; hpa@zytor.com; hdegoede@redhat.com; markgross@kernel.org; jdelvare@suse.com; linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; linux-hwmon@vger.kernel.org; hb_shi2003@yahoo.com; Huibin Shi <henrys@silicom-usa.com>; Wen Wang <wenw@silicom-usa.com>
-> Subject: Re: [PATCH v5] Add Silicom Platform Driver
-> 
-> Caution: This is an external email. Please take care when clicking links or opening attachments.
-> 
-> 
-> On Mon, Aug 28, 2023 at 05:26:22PM -0400, Henry Shi wrote:
-> > The Silicom platform (silicom-platform) Linux driver for Swisscom 
-> > Business Box (Swisscom BB) as well as Cordoba family products is a 
-> > software solution designed to facilitate the efficient management and 
-> > control of devices through the integration of various Linux 
-> > frameworks. This platform driver provides seamless support for device 
-> > management via the Linux LED framework, GPIO framework, Hardware 
-> > Monitoring (HWMON), and device attributes. The Silicom platform 
-> > driver's compatibility with these Linux frameworks allows applications 
-> > to access and control Cordoba family devices using existing software 
-> > that is compatible with these frameworks. This compatibility 
-> > simplifies the development process, reduces dependencies on 
-> > proprietary solutions, and promotes interoperability with other 
-> > Linux-based systems and software.
-> >
-> > Signed-off-by: Henry Shi <henryshi2018@gmail.com>
-> 
-> Again, my feedback is only for hwmon code.
-> 
-> [ ... ]
-> 
-> > +
-> > +static int silicom_fan_control_read(struct device *dev,
-> > +                                                                     enum hwmon_sensor_types type,
-> > +                                                                     u32 attr, int channel,
-> > +                                                                     
-> > +long *val)
-> 
-> Excessively long continuation lines.
-> That seeme to be the case for almost all continuation lines, except where it is too short. I'd suggest to run the patch through checkpatch --strict and fix what it reports.
-> 
-> total: 0 errors, 9 warnings, 18 checks, 1077 lines checked
-> 
-> is really a bit much.
-> 
-> Henry: OK, I will fix those warnings.
-> 
-> [ ... ]
-> 
-> > +
-> > +     hwmon_dev = devm_hwmon_device_register_with_info(&device->dev, name, NULL,
-> > +                             &silicom_chip_info, NULL);
-> 
-> Did you try to compile this with CONFIG_HWMON=n or with CONFIG_HWMON=m and SILICOM_PLATFORM=y ?
-> 
-> Henry: Great question. I did not try that before. When I force "CONFIG_HWMON=m and SILICOM_PLATFORM=y" and compile kernel, the build failed with message "silicom-platform.c:(.init.text+0x8ff5b): undefined reference to `devm_hwmon_device_register_with_info'". I tried following change in drivers/platform/x86/Kconfig:
-> 
-> config SILICOM_PLATFORM
-> 	tristate "Silicom Edge Networking device support"
-> 	depends on DMI
-> 	select LEDS_CLASS_MULTICOLOR
-> 	select GPIOLIB
-> 	select HWMON  ----> added 
+Changelog:
+- v2
+  - Apply on platform-drivers/for-next and reference correct commit
+  - Fix an incorrectly name err/result
 
-No, that is wrong. It needs to be "depends on HWMON",
-or the hwmon code needs to be conditional and the dependency
-must be something like "depends on HWMON || HWMON=n".
+Luke D. Jones (1):
+  platform/x86: asus-wmi: corrections to egpu safety check
 
-Guenter
+ drivers/platform/x86/asus-wmi.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+-- 
+2.41.0
+
