@@ -2,144 +2,162 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027BBC6FA8F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Aug 2023 23:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E46EC6FA8F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Aug 2023 01:37:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240916AbjH2XEj (ORCPT
+        id S241584AbjH3BhQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 29 Aug 2023 19:04:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53220 "EHLO
+        Tue, 29 Aug 2023 21:37:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239194AbjH2XED (ORCPT
+        with ESMTP id S241581AbjH3BhF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 29 Aug 2023 19:04:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC4B11BE;
-        Tue, 29 Aug 2023 16:04:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7EC5A63CEB;
-        Tue, 29 Aug 2023 23:04:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5F01C433C7;
-        Tue, 29 Aug 2023 23:03:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693350239;
-        bh=jVzcnu/UgsHYD4Nl9qqosC0UyycvjOZKdeezuanMBlY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=N5CUupjqE2hmWGcJ1w4pdoCQSaTp7vl8t22wKUpp3/GMVwelN5jFjmKIlEXlFiJ2U
-         OgQ96lJCG/hLuz1SIasmSrTsTfWyq/IMNGt/CbuTEugzMBVBvUUT+8nj1zW+QcSpWF
-         o25tUcVyIJmstbkNkBOHl9qd6sc4XX9HIlNNkancgRX0MZzd8d/m5QUKX0UE3ooY6i
-         r8B8ApDYx7E6yoYXF1fNO9pcq1jH+4r1QD8EsoXaTNu5Y4fhxNvHLo+SaWz3+PHWnk
-         BSRoEH6s+1xVdy+Tud3PqSUKgYMtIxyktWJCsUW0bpakrq0rbRAHseOH28w18DoOir
-         AJG7wqrBLgEFw==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-4fe1b00fce2so7905532e87.3;
-        Tue, 29 Aug 2023 16:03:59 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwCPbSXw/l9kGDfeDaextC0MGs80+MWVZghbqkLF5O/zZmOgGmb
-        slhWdgDK9NEuR1g9RWYr+bJv/D+EAAeaDnTCOuc=
-X-Google-Smtp-Source: AGHT+IGIqSRBbmlWliRp4UptnUYFlODvNphG0DEO9yK/aY0OPFiqZtDaXA7n3RqP+rAtqSAo4Ru1d2zsSyM1QBhvxkQ=
-X-Received: by 2002:a19:e006:0:b0:4ff:7602:5879 with SMTP id
- x6-20020a19e006000000b004ff76025879mr179992lfg.55.1693350237951; Tue, 29 Aug
- 2023 16:03:57 -0700 (PDT)
+        Tue, 29 Aug 2023 21:37:05 -0400
+Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6E7DCC5;
+        Tue, 29 Aug 2023 18:37:00 -0700 (PDT)
+Received: by mail-io1-xd2e.google.com with SMTP id ca18e2360f4ac-76c64da0e46so173831639f.0;
+        Tue, 29 Aug 2023 18:37:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693359420; x=1693964220; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YcVzJ1hbhq9Ov/W8Ofp/tN+KBi3VQ+ExZZ65FircAyo=;
+        b=G9571n01fbFDw1loYE6OJdVeeX0G7mqKNuwX+KdUfb447I3RxTdJURh5QEWRqTJ92q
+         tf8NejmUmgnKgyGC9nlp9VCfgSm9s8wDq11KrUC8PGnT76JhtZEsbF+hg2Yn++TvNtjK
+         pXXVu7jEYrSnph6IPqaqn2S36diKIat5kJm98pBMFdKJ+5nz/lzsCGYEKftTnET++rN8
+         44XY4cjN8pzQZeY0agWxvQUqvs1K/HxD4oVbdzEagTeY1JpiUVAPcWdyOrC0F1sn3ESx
+         8dLzwGTxoTbfryaIfAd6creENWYnOSZErWS3zZkcDnwzoMukkW+wcXrDxGJbkqtRhPSP
+         zGHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693359420; x=1693964220;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YcVzJ1hbhq9Ov/W8Ofp/tN+KBi3VQ+ExZZ65FircAyo=;
+        b=AAw66sVdTPm0wcFKPpFW5v0EYA8RDyVS7PiJBrgNU5Vxpgx4whrG0V7fxo3F82j7RT
+         GqyvqfzxMZScDAH/yjDyQmThpc6Xaky/a1ZiUjksAPaibIaFIUXAAEWCCkJxtfPYfIXA
+         at31M6swYGPI94hGGv/TMufKAtMfav46M/RMluHEhE3WFp0wY8xPbUBOWw80kx2DHMeB
+         KOvLC0Li/3GQyfQRLZaVaoPsQzK2rn3cEq76+dVXgladIJaShxQHWGjjw/KW4IPNH7wt
+         odOera0qCvx+iB+QWuOjhkiYNQuQI2rwZ3GZ45bRP4op8qJ/WBflJ/oR/Tee5MO0dzpD
+         lOMw==
+X-Gm-Message-State: AOJu0YzgI9Pk0fVbVb7dvlmlw8gS92JxFS8Yzgld/B/bhCmuuQU151HU
+        SZMyEMnjoHdebv8WrlqiZpY=
+X-Google-Smtp-Source: AGHT+IFnKU9/P7PLg9OvuUJYiT+ycpH/CeV4Mv42jUxWMGaUeno1rEjvBEcEwsnP1QGLNTKQLXm95A==
+X-Received: by 2002:a6b:d213:0:b0:792:70c2:9db1 with SMTP id q19-20020a6bd213000000b0079270c29db1mr889185iob.1.1693359419893;
+        Tue, 29 Aug 2023 18:36:59 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z21-20020a6b0a15000000b0079187c8524asm3556839ioi.3.2023.08.29.18.36.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Aug 2023 18:36:59 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Tue, 29 Aug 2023 18:36:57 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Huibin Shi <henrys@silicom-usa.com>
+Cc:     Henry Shi <henryshi2018@gmail.com>,
+        "hbshi69@hotmail.com" <hbshi69@hotmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "jdelvare@suse.com" <jdelvare@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "hb_shi2003@yahoo.com" <hb_shi2003@yahoo.com>,
+        Wen Wang <wenw@silicom-usa.com>
+Subject: Re: [PATCH v5] Add Silicom Platform Driver
+Message-ID: <b47b79c7-1ddc-4336-8bbc-f524872198ca@roeck-us.net>
+References: <20230828212622.32485-1-henryshi2018@gmail.com>
+ <15039461-6099-40a1-952f-fc31d65a0d3f@roeck-us.net>
+ <PA4PR04MB92225C42CC763DCBA622C6579AE7A@PA4PR04MB9222.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20230829-missingvardecl-efi-v1-1-13d055a55176@google.com>
-In-Reply-To: <20230829-missingvardecl-efi-v1-1-13d055a55176@google.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 30 Aug 2023 01:03:46 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE_xs+wWno4G4U+6CFCOwO7JWcmNv4et5=W=ZRrQatWnQ@mail.gmail.com>
-Message-ID: <CAMj1kXE_xs+wWno4G4U+6CFCOwO7JWcmNv4et5=W=ZRrQatWnQ@mail.gmail.com>
-Subject: Re: [PATCH] efi: fix -Wmissing-variable-declarations warning
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PA4PR04MB92225C42CC763DCBA622C6579AE7A@PA4PR04MB9222.eurprd04.prod.outlook.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Justin,
+On Tue, Aug 29, 2023 at 10:17:47PM +0000, Huibin Shi wrote:
+> Hi Guenter,
+> 
+> Appreciate your feedback. Please see my comments below.
+> 
+> Thanks
+> Henry
+> 
+> -----Original Message-----
+> From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
+> Sent: Monday, August 28, 2023 8:41 PM
+> To: Henry Shi <henryshi2018@gmail.com>
+> Cc: hbshi69@hotmail.com; tglx@linutronix.de; mingo@redhat.com; bp@alien8.de; dave.hansen@linux.intel.com; x86@kernel.org; hpa@zytor.com; hdegoede@redhat.com; markgross@kernel.org; jdelvare@suse.com; linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; linux-hwmon@vger.kernel.org; hb_shi2003@yahoo.com; Huibin Shi <henrys@silicom-usa.com>; Wen Wang <wenw@silicom-usa.com>
+> Subject: Re: [PATCH v5] Add Silicom Platform Driver
+> 
+> Caution: This is an external email. Please take care when clicking links or opening attachments.
+> 
+> 
+> On Mon, Aug 28, 2023 at 05:26:22PM -0400, Henry Shi wrote:
+> > The Silicom platform (silicom-platform) Linux driver for Swisscom 
+> > Business Box (Swisscom BB) as well as Cordoba family products is a 
+> > software solution designed to facilitate the efficient management and 
+> > control of devices through the integration of various Linux 
+> > frameworks. This platform driver provides seamless support for device 
+> > management via the Linux LED framework, GPIO framework, Hardware 
+> > Monitoring (HWMON), and device attributes. The Silicom platform 
+> > driver's compatibility with these Linux frameworks allows applications 
+> > to access and control Cordoba family devices using existing software 
+> > that is compatible with these frameworks. This compatibility 
+> > simplifies the development process, reduces dependencies on 
+> > proprietary solutions, and promotes interoperability with other 
+> > Linux-based systems and software.
+> >
+> > Signed-off-by: Henry Shi <henryshi2018@gmail.com>
+> 
+> Again, my feedback is only for hwmon code.
+> 
+> [ ... ]
+> 
+> > +
+> > +static int silicom_fan_control_read(struct device *dev,
+> > +                                                                     enum hwmon_sensor_types type,
+> > +                                                                     u32 attr, int channel,
+> > +                                                                     
+> > +long *val)
+> 
+> Excessively long continuation lines.
+> That seeme to be the case for almost all continuation lines, except where it is too short. I'd suggest to run the patch through checkpatch --strict and fix what it reports.
+> 
+> total: 0 errors, 9 warnings, 18 checks, 1077 lines checked
+> 
+> is really a bit much.
+> 
+> Henry: OK, I will fix those warnings.
+> 
+> [ ... ]
+> 
+> > +
+> > +     hwmon_dev = devm_hwmon_device_register_with_info(&device->dev, name, NULL,
+> > +                             &silicom_chip_info, NULL);
+> 
+> Did you try to compile this with CONFIG_HWMON=n or with CONFIG_HWMON=m and SILICOM_PLATFORM=y ?
+> 
+> Henry: Great question. I did not try that before. When I force "CONFIG_HWMON=m and SILICOM_PLATFORM=y" and compile kernel, the build failed with message "silicom-platform.c:(.init.text+0x8ff5b): undefined reference to `devm_hwmon_device_register_with_info'". I tried following change in drivers/platform/x86/Kconfig:
+> 
+> config SILICOM_PLATFORM
+> 	tristate "Silicom Edge Networking device support"
+> 	depends on DMI
+> 	select LEDS_CLASS_MULTICOLOR
+> 	select GPIOLIB
+> 	select HWMON  ----> added 
 
-On Wed, 30 Aug 2023 at 00:54, Justin Stitt <justinstitt@google.com> wrote:
->
-> When building x86/defconfig with Clang-18 I encounter the following warnings:
-> | arch/x86/platform/efi/efi.c:934:23: warning: no previous extern declaration for non-static variable 'efi_attr_fw_vendor' [-Wmissing-variable-declarations]
-> |   934 | struct kobj_attribute efi_attr_fw_vendor = __ATTR_RO(fw_vendor);
-> | arch/x86/platform/efi/efi.c:935:23: warning: no previous extern declaration for non-static variable 'efi_attr_runtime' [-Wmissing-variable-declarations]
-> |   935 | struct kobj_attribute efi_attr_runtime = __ATTR_RO(runtime);
-> | arch/x86/platform/efi/efi.c:936:23: warning: no previous extern declaration for non-static variable 'efi_attr_config_table' [-Wmissing-variable-declarations]
-> |   936 | struct kobj_attribute efi_attr_config_table = __ATTR_RO(config_table);
->
-> These variables are not externally declared anywhere (AFAIK)
+No, that is wrong. It needs to be "depends on HWMON",
+or the hwmon code needs to be conditional and the dependency
+must be something like "depends on HWMON || HWMON=n".
 
-They are:
-
-drivers/firmware/efi/efi.c:extern __weak struct kobj_attribute
-efi_attr_fw_vendor;
-drivers/firmware/efi/efi.c:extern __weak struct kobj_attribute efi_attr_runtime;
-drivers/firmware/efi/efi.c:extern __weak struct kobj_attribute
-efi_attr_config_table;
-
-> so let's
-> add the static keyword and ensure we follow the ODR.
->
-
-One Definition Rule, right? Better to spell that out.
-
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1920
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> When building x86/defconfig with Clang-18 I encounter the following warnings:
-> | arch/x86/platform/efi/efi.c:934:23: warning: no previous extern declaration for non-static variable 'efi_attr_fw_vendor' [-Wmissing-variable-declarations]
-> |   934 | struct kobj_attribute efi_attr_fw_vendor = __ATTR_RO(fw_vendor);
-> | arch/x86/platform/efi/efi.c:935:23: warning: no previous extern declaration for non-static variable 'efi_attr_runtime' [-Wmissing-variable-declarations]
-> |   935 | struct kobj_attribute efi_attr_runtime = __ATTR_RO(runtime);
-> | arch/x86/platform/efi/efi.c:936:23: warning: no previous extern declaration for non-static variable 'efi_attr_config_table' [-Wmissing-variable-declarations]
-> |   936 | struct kobj_attribute efi_attr_config_table = __ATTR_RO(config_table);
-
-This is duplicated. Is this a b4 fail?
-
-> ---
-> Note: build-tested.
-> ---
->  arch/x86/platform/efi/efi.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> index e9f99c56f3ce..30c354c52ad4 100644
-> --- a/arch/x86/platform/efi/efi.c
-> +++ b/arch/x86/platform/efi/efi.c
-> @@ -931,9 +931,9 @@ EFI_ATTR_SHOW(fw_vendor);
->  EFI_ATTR_SHOW(runtime);
->  EFI_ATTR_SHOW(config_table);
->
-> -struct kobj_attribute efi_attr_fw_vendor = __ATTR_RO(fw_vendor);
-> -struct kobj_attribute efi_attr_runtime = __ATTR_RO(runtime);
-> -struct kobj_attribute efi_attr_config_table = __ATTR_RO(config_table);
-> +static struct kobj_attribute efi_attr_fw_vendor = __ATTR_RO(fw_vendor);
-> +static struct kobj_attribute efi_attr_runtime = __ATTR_RO(runtime);
-> +static struct kobj_attribute efi_attr_config_table = __ATTR_RO(config_table);
->
->  umode_t efi_attr_is_visible(struct kobject *kobj, struct attribute *attr, int n)
->  {
->
-
-This won't work.
-
-Those variables are referenced via weak references in generic code.
-The idea is that the weak references resolve to NULL pointers on
-architectures other than x86, terminating the array early and hiding
-the non-existent variables.
-
-Making them static in arch/x86/platform/efi/efi.c means that these
-references will remain unsatisfied, and so the variables will no
-longer be exposed on x86 either.
+Guenter
