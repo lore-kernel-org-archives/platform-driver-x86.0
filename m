@@ -2,119 +2,129 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60B4C83F1F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Aug 2023 18:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1912AC83F22
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Aug 2023 18:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243253AbjH3SrT (ORCPT
+        id S243263AbjH3SrW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:47:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41292 "EHLO
+        Wed, 30 Aug 2023 14:47:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243487AbjH3LMx (ORCPT
+        with ESMTP id S244596AbjH3NZP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 30 Aug 2023 07:12:53 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2073.outbound.protection.outlook.com [40.107.94.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E57F7CD6;
-        Wed, 30 Aug 2023 04:12:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WXXeN08qpMZyF17cmYzDFWgOG3QRUdUieqZLB/7WmbGdJHy1ZOXT6wVtPUYBc8mjFHZCJ5gy4LnsmP/WY6D5wZTMkr+OJrlcxOXW23/TYGfdPz3HXJi7CAjhugf/3x4JtnDmzOjy+zXYZEB5ObW/CY5nl1GwGQousqzOcXe5aBSO2OEuDYQXLB5ywcpJqwUMIdMiCkIWc96c/1X5L1UAhUuhWqkLSwNg9GbvIth/XiMLHrjCzRI6wplNiUdporXawFhfa3VF//wQfzgO0AA8aUxpV73JcSy52L/QvAxha9KTClTOu7qOfZjBmnkFw5J09iHCurMCHtES4aIW6vvwNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5d7D5Qcpl6EPzzgDa/kfRS3pg9aqg7AScJeEsjadZvo=;
- b=oMg8U3RVGjOjaJGi3VqOu0yc81gtBnGZCvXlqrlX5YUMU2ad79mne62sGGR7e50EIcgOzBCWHI3SVr6pRcsHzH4QLWgY4w/d71TJKVlg9ULkGI1/HUCkLKyoTvpMPNU573i98SYWZlmTyHrFk62zzyQ/V3BdUQF+LwJ8zDDlFliBIlQ2nVYGoE9nSNRpkrKid3ICAZ8XrpjmC/8dNVP3eLzsWnAWfx3EBL/Rk3991BORsL3shV2TaLXi/jnGPkVcJ7gks6ZCdC4BJkvrzfWIBwXMgheOf5DFl9NMY9l2MBVw4yAmmUDzD0hjVywP98jJ+6wrd97CbtW1oWaJe9y7vw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5d7D5Qcpl6EPzzgDa/kfRS3pg9aqg7AScJeEsjadZvo=;
- b=qoxJhEFOz/fYdcB+rDb41rFBfkO0PQXUgHAXghNlY4PedSazpekBKjGKaJrw7I49WVACYhWHAyclSv5ssipjmvzx5XnMLIeGG1sLu5qMe02HXAWwyhqaQp2iU/6yGGLqI+BytZzNHt/LwJdUAOks7Pg6wHkOCTsh9qPlGkFjoZceapKd6AkBUWPjSOVns1DiDVd3u421lbu1eETwuvhj1sYZ0wskr646yYurt70Xb4tYaQgSxEr90pFUVeDfQ8DF1GU7tYs4mKogCinfnWPkJ/40BMbgrc7xvvLttxhVvsgwAX6ET7/reMFRJCKV6M+5QIe4L+gcC5u2gf5AqWKGBw==
-Received: from DM6PR07CA0111.namprd07.prod.outlook.com (2603:10b6:5:330::12)
- by IA1PR12MB8223.namprd12.prod.outlook.com (2603:10b6:208:3f3::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.34; Wed, 30 Aug
- 2023 11:12:48 +0000
-Received: from CY4PEPF0000E9D6.namprd05.prod.outlook.com (2603:10b6:5:330::4)
- by DM6PR07CA0111.outlook.office365.com (2603:10b6:5:330::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6745.20 via Frontend Transport; Wed, 30 Aug 2023 11:12:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- CY4PEPF0000E9D6.mail.protection.outlook.com (10.167.241.80) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6745.17 via Frontend Transport; Wed, 30 Aug 2023 11:12:48 +0000
-Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Wed, 30 Aug 2023
- 04:12:38 -0700
-Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.37; Wed, 30 Aug 2023 04:12:38 -0700
-Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com
- (10.126.190.180) with Microsoft SMTP Server id 15.2.986.37 via Frontend
- Transport; Wed, 30 Aug 2023 04:12:37 -0700
-From:   Shravan Kumar Ramani <shravankr@nvidia.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        David Thompson <davthompson@nvidia.com>
-CC:     Shravan Kumar Ramani <shravankr@nvidia.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v1 0/3] Updates to Mellanox PMC driver
-Date:   Wed, 30 Aug 2023 07:12:31 -0400
-Message-ID: <cover.1693393544.git.shravankr@nvidia.com>
-X-Mailer: git-send-email 2.30.1
+        Wed, 30 Aug 2023 09:25:15 -0400
+Received: from mail-oo1-xc2b.google.com (mail-oo1-xc2b.google.com [IPv6:2607:f8b0:4864:20::c2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0150B137;
+        Wed, 30 Aug 2023 06:25:12 -0700 (PDT)
+Received: by mail-oo1-xc2b.google.com with SMTP id 006d021491bc7-573ac2fa37aso1042977eaf.3;
+        Wed, 30 Aug 2023 06:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693401911; x=1694006711; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CmogliSTtL2RB5d6BjlDVGsgCldCZrhobb3z+lU+kTo=;
+        b=swRqPUmcO44iiWQ5MgqCQfbQmcu++UPi9CJ/44UZ+e+sJymaH81+5H128BdbFciiss
+         LeiWuvIfpoV8G1NW+nyTYaTvNoIjWjitHyaq8t+VIeg1Fd1aH6tHc1w5kRJVYQABZ+bV
+         Dp+wCaelk/sz+bfPjYW3dYXhyCz2Dge1NY15QHTkUCa9mmCaQfbOoZcS8p4OXarCMhhd
+         jZgIK8VS5H3059Xr84PWkhYB8HU6JtYvyu40IjQgjXtSD2inRmX63mA6in1Ct0gC/cBv
+         Qs8PnhIRwytKLsI+kZytfA8j8usPz9qEiXO6ICgdd4Faqhm+mPlqySD+UaTRu/Pki9za
+         BZMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693401911; x=1694006711;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CmogliSTtL2RB5d6BjlDVGsgCldCZrhobb3z+lU+kTo=;
+        b=SvtjBNS0Vju462r0nd4+BsvAVvbhxX3r3GcRzAg4jmfa/dWdavOwN8pRzaqn/GMNsR
+         mzZ/JbXgrsHwFCUADWLcWMZOBol3LMFBvQCQ2jLD405ODwrtif8lUX9ddGt0SQBNiyx6
+         peDhYGNu30fuDRJi9jzm0WWLlcwktKPGC32sbGYG0qPFF1hHVHsBdE6BtGYPnE26YXaJ
+         +xc5QXoURrl0SRV159HRRz5Vo9DKYo6zyF8Nd2lkpci1gI74r8vRT5qsRWte3sF6H7PL
+         Z/U6L80+FzB8DcMo2AnwbOHm3vD8lnQtXIVCzGw3HPzvcZcF1t+OlITNq8FVYqsOPZLJ
+         2Psg==
+X-Gm-Message-State: AOJu0YxGqmimBDsUDRgqWx9RVB/bYEw4o1SG3qNmt/Pcx9HrIivg7EaW
+        ibAGKT7+3ElQBl9tmIeMbpS1Bbfs+TNBL5+Juos=
+X-Google-Smtp-Source: AGHT+IGcm+fuYV6DElZl0ERELQLCKFcV4jDm/YiJBfQen9r6vTRbRZD6JbCmADX4a3ozRdhakxdldUDiTEXW6Kpe6p0=
+X-Received: by 2002:a4a:2a1c:0:b0:573:55f4:516a with SMTP id
+ k28-20020a4a2a1c000000b0057355f4516amr1923557oof.3.1693401911143; Wed, 30 Aug
+ 2023 06:25:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D6:EE_|IA1PR12MB8223:EE_
-X-MS-Office365-Filtering-Correlation-Id: 60cd32c7-981d-49b4-5e4e-08dba94a0b36
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +VI0br4eHLtaKjpmdhoZDxZ2LsvGaTyA3i1FhYstJOZXQiAxjs9YnLoCg/DIxHDWUn5UieftH5Q2v+6ea0/Rhkx7YswYM8RzQXBvaPusxdWex38DOU+O/noCNiFo8n/A3HVuGR5lHJr5Gk/ZrWznaZrys7ErQ/xCKFn4Hco0GtzBEyLgSccbV7lve7mDb0csPGNbAaYPc5R33XoWryHFAA7yu86rAnQKk7m2N+ks/KXLSOO5v/AouuUMs6eY4RGFBv43hDIZEakE3OAYPUy8LlXdC7wfb2U1Gedru8bvl4kYKbsDbkLFd0/OIYyqxeOtDZRRHJEYYklVrWd3UR6UAiNOysi+k2Pi6RVjmZHxOY0qmuVI8Ne1Qsmh3vFI646oAQ/pLs4wZInDyAkTqVXQDVsJJeP7Ee98R8lj58jCaGjfnGHJPzohFNxuEwG75KfzmP2j/nYrf1OGvgPKNeWjtOobrhAOXmsDOv7XsYGeBemjkqfqJnRxSpbQHDCXwF0PCzMcirhAHn91hILoROgd9CflnxM0Ot8uNrPWnaWtusoGv6Vz1q89fI+BqVNcSN9mC7Bm8atBF/ah+SuQOiydDx2YQUEH392m1iWlqvPRglUzHtszYpS++nrnH1e65dDkgccEGarmt3QMf1isuyA1tHmwrkbazRfJYKxxfAOlaLFuaiHuZNTDEamroQWDGLTWve+NdRLLFoShtIDN3e8N3PaGyuox2xvxYU3R68Dhw0TSbJiOn6JQQ/BHAlrbEm6a
-X-Forefront-Antispam-Report: CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(346002)(376002)(396003)(39860400002)(136003)(451199024)(1800799009)(82310400011)(186009)(36840700001)(46966006)(40470700004)(5660300002)(316002)(6636002)(36860700001)(41300700001)(54906003)(70206006)(110136005)(70586007)(83380400001)(356005)(478600001)(7636003)(2906002)(4744005)(8676002)(4326008)(8936002)(47076005)(82740400003)(86362001)(6666004)(40480700001)(7696005)(426003)(2616005)(336012)(36756003)(26005)(40460700003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2023 11:12:48.2906
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60cd32c7-981d-49b4-5e4e-08dba94a0b36
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000E9D6.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8223
+References: <20230829-missingvardecl-efi-v1-1-13d055a55176@google.com> <CAMj1kXE_xs+wWno4G4U+6CFCOwO7JWcmNv4et5=W=ZRrQatWnQ@mail.gmail.com>
+In-Reply-To: <CAMj1kXE_xs+wWno4G4U+6CFCOwO7JWcmNv4et5=W=ZRrQatWnQ@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 30 Aug 2023 16:24:34 +0300
+Message-ID: <CAHp75VeEvWXQoMwfmMixw_DHWrXq3=eSPkxgzJaKTT0L3G_Fpg@mail.gmail.com>
+Subject: Re: [PATCH] efi: fix -Wmissing-variable-declarations warning
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Justin Stitt <justinstitt@google.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This submission consists of 3 patches:
-1. Patch 1 replaces sprintf usage with snprintf or sysfs_emit, as applicable.
-2. Patch 2 fixes a bug with reading unprogrammed events.
-3. Patch 3 adds support for BlueField-3 platform which uses a different
-access mechanism.
+On Wed, Aug 30, 2023 at 2:04=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> wr=
+ote:
+> On Wed, 30 Aug 2023 at 00:54, Justin Stitt <justinstitt@google.com> wrote=
+:
 
-Shravan Kumar Ramani (3):
-  platform/mellanox: mlxbf-pmc: Fix potential buffer overflows
-  platform/mellanox: mlxbf-pmc: Fix reading of unprogrammed events
-  platform/mellanox: mlxbf-pmc: Add support for BlueField-3
+...
 
- drivers/platform/mellanox/mlxbf-pmc.c | 740 ++++++++++++++++++++++++--
- 1 file changed, 681 insertions(+), 59 deletions(-)
+> > When building x86/defconfig with Clang-18 I encounter the following war=
+nings:
+> > | arch/x86/platform/efi/efi.c:934:23: warning: no previous extern decla=
+ration for non-static variable 'efi_attr_fw_vendor' [-Wmissing-variable-dec=
+larations]
+> > |   934 | struct kobj_attribute efi_attr_fw_vendor =3D __ATTR_RO(fw_ven=
+dor);
+> > | arch/x86/platform/efi/efi.c:935:23: warning: no previous extern decla=
+ration for non-static variable 'efi_attr_runtime' [-Wmissing-variable-decla=
+rations]
+> > |   935 | struct kobj_attribute efi_attr_runtime =3D __ATTR_RO(runtime)=
+;
+> > | arch/x86/platform/efi/efi.c:936:23: warning: no previous extern decla=
+ration for non-static variable 'efi_attr_config_table' [-Wmissing-variable-=
+declarations]
+> > |   936 | struct kobj_attribute efi_attr_config_table =3D __ATTR_RO(con=
+fig_table);
+> >
+> > These variables are not externally declared anywhere (AFAIK)
+>
+> They are:
+>
+> drivers/firmware/efi/efi.c:extern __weak struct kobj_attribute
+> efi_attr_fw_vendor;
+> drivers/firmware/efi/efi.c:extern __weak struct kobj_attribute efi_attr_r=
+untime;
+> drivers/firmware/efi/efi.c:extern __weak struct kobj_attribute
+> efi_attr_config_table;
+>
+> > so let's add the static keyword and ensure we follow the ODR.
 
--- 
-2.30.1
+> This won't work.
+>
+> Those variables are referenced via weak references in generic code.
+> The idea is that the weak references resolve to NULL pointers on
+> architectures other than x86, terminating the array early and hiding
+> the non-existent variables.
+>
+> Making them static in arch/x86/platform/efi/efi.c means that these
+> references will remain unsatisfied, and so the variables will no
+> longer be exposed on x86 either.
 
+So it means that we have no definitions in the header for these, right?
+
+--=20
+With Best Regards,
+Andy Shevchenko
