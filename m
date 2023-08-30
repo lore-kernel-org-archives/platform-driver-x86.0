@@ -2,113 +2,122 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC639C83F01
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Aug 2023 18:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD13C83F1A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Aug 2023 18:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243235AbjH3SrL (ORCPT
+        id S243241AbjH3SrP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:47:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34192 "EHLO
+        Wed, 30 Aug 2023 14:47:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244509AbjH3NPn (ORCPT
+        with ESMTP id S244601AbjH3N0D (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 30 Aug 2023 09:15:43 -0400
+        Wed, 30 Aug 2023 09:26:03 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8AD1137
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Aug 2023 06:14:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03167137
+        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Aug 2023 06:25:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693401291;
+        s=mimecast20190719; t=1693401913;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lP5a4CGoL1GuVDAsyC/hpiFpJSmcUBrYbHJlw7q1lZo=;
-        b=JDmHHRIbqb26wYMyPloHKnWqDmt7JXMO/NO7FX/1B8yI3XddsO4AgTmA7iFWQNyWo4Cqhq
-        GVPFDxc+r5uHVOq29zLz15fQaZ51e4G6ESYW8Pk/Vky7b+h4ZhqTVcLGqnVyXWzljrMq9I
-        0MW6pAfsuipWp7v/Wux2ZAEiAE9T38c=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=kFnD1m1yLujtko63yZwJAVnOy/cqW7aQ9lGmVnvKkI0=;
+        b=ObJbHhwClcz2wpyq4kp78br/peL+E0pAjyVww5D4OsXo7sPVM6hux/VAB7OxQScsaMpOEK
+        cnsuat7GgzU9WnDFlPDlfX8ITvTsUZmUJM48tP/cAoXzhyogp3+60WT+nr2NzxkdzFX+7b
+        bzGXO7d0W0F1RFDP3gLSLq+cKUkYl1E=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-654--ggF-ly7O3qBFjeYvNWq6g-1; Wed, 30 Aug 2023 09:14:50 -0400
-X-MC-Unique: -ggF-ly7O3qBFjeYvNWq6g-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-51bef8bb689so1273766a12.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Aug 2023 06:14:49 -0700 (PDT)
+ us-mta-524-CMs8cZj5MDuW2DHfGm0q8g-1; Wed, 30 Aug 2023 09:25:12 -0400
+X-MC-Unique: CMs8cZj5MDuW2DHfGm0q8g-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9a198d4d98aso407629066b.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Aug 2023 06:25:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693401288; x=1694006088;
+        d=1e100.net; s=20221208; t=1693401911; x=1694006711;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lP5a4CGoL1GuVDAsyC/hpiFpJSmcUBrYbHJlw7q1lZo=;
-        b=Kw+eLZbeHsXslQyYhRLApi0iCEUbm9l6zjB8NIrujnyZz8JpK3bUoE8u2NvEFQFxD0
-         BdphnX96zq5vDJUYxalzZcGmIC2ZFVMMJJWsgdw2wWwvno/T3Nkmr2a12ttMUSFzkix3
-         7FOXAkNSiSvz5q3hiPH4NvGoI2O76hwgfx4m0wMg29SqXA7WdweyXtuG+lyrMkt01VeQ
-         CPyvv0qssefWTqn/t13ZF+iv6TNqPPclst38sK3CcDC3PBbQ4h7GPOCoLrhVipgrR90L
-         BfeavM8sbLb/k0Bp26Rcx5LAmbhhhM/X5so2YrRQz/4DWTatbpUmPP2PAsc7t6I68wJM
-         qsyw==
-X-Gm-Message-State: AOJu0Yy74Fs5y93L38EBiAEsC1da9drJ/FUvKW9etIo3zveV+xGwedsN
-        tsLLdPNdXNuD19YY8rmhlIcFGGCGMV0PJvF91U4qx/itig6B9Q4vCSDEdF0j129BuVLtXjY2tjd
-        B6ac9SJrdvp4TD8yI/yAaqB6JTpKSIIRR5mm/tl4CGA==
-X-Received: by 2002:a50:ee8e:0:b0:522:4764:8baa with SMTP id f14-20020a50ee8e000000b0052247648baamr2691580edr.12.1693401288588;
-        Wed, 30 Aug 2023 06:14:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFh/afixJi8lRGGEOre6wLTRpOs6xL2ck9cJQH4w5xBcYhh8gO8hTskCJlm+kr1G5DURfUv/w==
-X-Received: by 2002:a50:ee8e:0:b0:522:4764:8baa with SMTP id f14-20020a50ee8e000000b0052247648baamr2691562edr.12.1693401288268;
-        Wed, 30 Aug 2023 06:14:48 -0700 (PDT)
+        bh=kFnD1m1yLujtko63yZwJAVnOy/cqW7aQ9lGmVnvKkI0=;
+        b=SfuUAe81tlBkZYrzxYlWziNEJ4v/OU5HKBP1dKbXTNU363rMVQx8jwhodFYzCZOBey
+         ZgvtHLreSSLT6h7lidiPJt99bLhejNoAkl9a1bZ0kGMHtctYNDUhDIK36NekbnNSV3SS
+         OohcBIk2vQKncP/epr5ETKEW/h/oNwA5PCLHF8Cy8+B1Bs0tHxAuURLFqEuF5faoCeMN
+         ECRsbaUE9PHIDCH8is1O/GIN8bl6R+QDB4KupJNiDwos3fAdDR0/4ulGU+d4L+vYW52x
+         kBmtn7NxfKb0aBoYkR9CK7LiFngzIYpr7puVFZP7Ch2HvGm01UWoTIvaoroK626yLHDt
+         K62w==
+X-Gm-Message-State: AOJu0YyvV898KN7rkF/RNUXijTFSf2Nb6ulE16QAp/H/nv27UM9Ad6aT
+        wZEGIOXn50Yl1yEP1GYykHe5VVh9WGLPUbUmP+3AmtRe/SkUZfENXNTWFrYDTQKQ63oN/FozWyR
+        rhCkfH/jntnoAZR1qYz72J9bGg5vLKCNmNg==
+X-Received: by 2002:a17:907:a07c:b0:9a5:846d:d829 with SMTP id ia28-20020a170907a07c00b009a5846dd829mr1702015ejc.18.1693401911212;
+        Wed, 30 Aug 2023 06:25:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGBVdw6KKG0vv0Oq7Kq7f5ODajPyvo+lDFA68sx6L6XsWgpLto9ykCgUvXPgSQBXx0UE1urzw==
+X-Received: by 2002:a17:907:a07c:b0:9a5:846d:d829 with SMTP id ia28-20020a170907a07c00b009a5846dd829mr1702006ejc.18.1693401910925;
+        Wed, 30 Aug 2023 06:25:10 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id e5-20020a056402088500b0052a48f4065esm6742048edy.39.2023.08.30.06.14.47
+        by smtp.gmail.com with ESMTPSA id p21-20020a170906229500b0099cf44adf2csm7162311eja.46.2023.08.30.06.25.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Aug 2023 06:14:47 -0700 (PDT)
-Message-ID: <ef0ebf50-35a7-b3f9-2209-2a0a8cc265d2@redhat.com>
-Date:   Wed, 30 Aug 2023 15:14:46 +0200
+        Wed, 30 Aug 2023 06:25:10 -0700 (PDT)
+Message-ID: <f6a745d2-aed4-b10d-3343-d34a364f5236@redhat.com>
+Date:   Wed, 30 Aug 2023 15:25:09 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH platform-next 1/1] platform/x86: mlx-platform: Add
- dependency on PCI to Kconfig
+Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: corrections to egpu safety
+ check
 Content-Language: en-US, nl
-To:     Vadim Pasternak <vadimp@nvidia.com>
-Cc:     ilpo.jarvinen@linux.intel.com, rdunlap@infradead.org,
-        platform-driver-x86@vger.kernel.org
-References: <20230829133748.58208-1-vadimp@nvidia.com>
- <20230829133748.58208-2-vadimp@nvidia.com>
+To:     "Luke D. Jones" <luke@ljones.dev>
+Cc:     corentin.chary@gmail.com, markgross@kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20230830022908.36264-1-luke@ljones.dev>
+ <20230830022908.36264-2-luke@ljones.dev>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230829133748.58208-2-vadimp@nvidia.com>
+In-Reply-To: <20230830022908.36264-2-luke@ljones.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Luke,
 
-On 8/29/23 15:37, Vadim Pasternak wrote:
-> Add dependency on PCI to avoid 'mlx-platform' compilation error in case
-> CONFIG_PCI is not set.
+On 8/30/23 04:29, Luke D. Jones wrote:
+> An incorrect if statement was preventing the enablement of the egpu.
 > 
-> Failed on i386:
-> CONFIG_ACPI=y
-> CONFIG_ISA=y
+> Fixes: d49f4d1a30ac ("platform/x86: asus-wmi: don't allow eGPU switching if eGPU not connected")
 > 
-> Error In function 'mlxplat_pci_fpga_device_init':
-> implicit declaration of function 'pci_request_region':
->  6204 |         err = pci_request_region(pci_dev, 0, res_name);
->       |               ^~~~~~~~~~~~~~~~~~
->       |               pci_request_regions
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 15 +++++++--------
+>  1 file changed, 7 insertions(+), 8 deletions(-)
 > 
-> Fixes: 1316e0af2dc0 ("platform: mellanox: mlx-platform: Introduce ACPI init flow")
-> Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
-> Reviewed-by: Michael Shych <michaelsh@nvidia.com>
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 9783893d2d6e..f54178d6f780 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -726,19 +726,18 @@ static ssize_t egpu_enable_store(struct device *dev,
+>  		return -EINVAL;
+>  
+>  	err = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
+> -	if (err < 0)
+> -		return err;
+> -	if (err < 1) {
+> -		err = -ENODEV;
+> -		pr_warn("Failed to set egpu disable: %d\n", err);
+> +	if (err < 0) {
+> +		pr_warn("Failed to get egpu connection status: %d\n", err);
+>  		return err;
+>  	}
+>  
+>  	if (asus->gpu_mux_mode_available) {
+>  		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GPU_MUX);
+> -		if (result < 0)
+> +		if (result < 0) {
+>  			/* An error here may signal greater failure of GPU handling */
+> +			pr_warn("Failed to get gpu mux status: %d\n", err);
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+The error-code to print here should be result not err, since the error is stored in result.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+I've fixed this up while merging this.
 
 Regards,
 
@@ -116,22 +125,24 @@ Hans
 
 
 
-> ---
->  drivers/platform/x86/Kconfig | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index a43db6731f34..2a1070543391 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -965,8 +965,7 @@ config SERIAL_MULTI_INSTANTIATE
+>  			return result;
+> +		}
+>  		if (!result && enable) {
+>  			err = -ENODEV;
+>  			pr_warn("Can not enable eGPU when the MUX is in dGPU mode: %d\n", err);
+> @@ -748,12 +747,12 @@ static ssize_t egpu_enable_store(struct device *dev,
 >  
->  config MLX_PLATFORM
->  	tristate "Mellanox Technologies platform support"
-> -	depends on ACPI
-> -	depends on I2C
-> +	depends on ACPI && I2C && PCI
->  	select REGMAP
->  	help
->  	  This option enables system support for the Mellanox Technologies
+>  	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_EGPU, enable, &result);
+>  	if (err) {
+> -		pr_warn("Failed to set egpu disable: %d\n", err);
+> +		pr_warn("Failed to set egpu state: %d\n", err);
+>  		return err;
+>  	}
+>  
+>  	if (result > 1) {
+> -		pr_warn("Failed to set egpu disable (retval): 0x%x\n", result);
+> +		pr_warn("Failed to set egpu state (retval): 0x%x\n", result);
+>  		return -EIO;
+>  	}
+>  
 
