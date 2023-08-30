@@ -2,160 +2,136 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9797C6FA8F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Aug 2023 18:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC639C83F01
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Aug 2023 18:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242742AbjH3SrF (ORCPT
+        id S243235AbjH3SrL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:47:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48006 "EHLO
+        Wed, 30 Aug 2023 14:47:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343986AbjH3Rvi (ORCPT
+        with ESMTP id S244509AbjH3NPn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 30 Aug 2023 13:51:38 -0400
-Received: from mail-ot1-x34a.google.com (mail-ot1-x34a.google.com [IPv6:2607:f8b0:4864:20::34a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8AE41A2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Aug 2023 10:51:34 -0700 (PDT)
-Received: by mail-ot1-x34a.google.com with SMTP id 46e09a7af769-6bb31e13a13so110939a34.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Aug 2023 10:51:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693417893; x=1694022693; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EYjQFc4xOJMLhqSY/15Eo/bkP9OF+XNV2qczMiBYtL4=;
-        b=aw9dPjDYPDyipNtu8Wxx18Dx9m/0Xd2cYgG3isygHJfTvcaiF7aSiPVrgFXiAdlEHI
-         MOl7xQcITcqAi8kEmkQZeVP9JhUFBg0Y2hDCV9jZsq8cACSTmPMEraSRDXAbcmMqdY2i
-         WIxR+ba/wJ6bZ4wyPiOW4TzGS8jBpZLI0frOzSqPgjKqtpiZ5C6LI5lBoE9vfLzV13aj
-         E4lG7ZDx8vddONjM/G4VsainecpOjvLzRVKLEvsU3WJDk6FNp5aQKPJ92qu7r95VTCNW
-         9e/ENAlk22sgytAuyCk8508oyLXZ9kbfQeWujtLs4VjfCSWOuyAW6qgMT+vSnUCqFzcu
-         fGQw==
+        Wed, 30 Aug 2023 09:15:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8AD1137
+        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Aug 2023 06:14:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1693401291;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lP5a4CGoL1GuVDAsyC/hpiFpJSmcUBrYbHJlw7q1lZo=;
+        b=JDmHHRIbqb26wYMyPloHKnWqDmt7JXMO/NO7FX/1B8yI3XddsO4AgTmA7iFWQNyWo4Cqhq
+        GVPFDxc+r5uHVOq29zLz15fQaZ51e4G6ESYW8Pk/Vky7b+h4ZhqTVcLGqnVyXWzljrMq9I
+        0MW6pAfsuipWp7v/Wux2ZAEiAE9T38c=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-654--ggF-ly7O3qBFjeYvNWq6g-1; Wed, 30 Aug 2023 09:14:50 -0400
+X-MC-Unique: -ggF-ly7O3qBFjeYvNWq6g-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-51bef8bb689so1273766a12.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Aug 2023 06:14:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693417893; x=1694022693;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EYjQFc4xOJMLhqSY/15Eo/bkP9OF+XNV2qczMiBYtL4=;
-        b=JhI0CpKMeM4iCzE0IZERlkoQqMvyxpIFE7w0NX+3+f4vpILDsChoRhJlrWrSYU4q/K
-         LvdNPW8MUvSJxfo8V6FDTD1+5+hYlTAX5SditEEQ0xzL3k2qUa/aCJ2zxNzZ3cBjQWBY
-         ARNv9NZ25DU1W1OaVH4Qht1FG6Vi8Dx1pW8sf9GXE4zMIdYcYEDRbHsDiNYzkfjuf7Te
-         25oRm5FqZP49KZ8f6iW7/o1nr81l1M0YP2/6gIwtUEr5hrWGR1/zJomyr4SYIIzf/hn0
-         P5I4R6NqLHIE2w7a+4v9nbEBfsERKxRuo52+eDNWh0pdMc7HsTPy/Xz1reCAdG3Wm2MY
-         iESg==
-X-Gm-Message-State: AOJu0Yw/XSDY+jqJw7zrU3Bf4uoaRH7eaKAM6/rY+JEacXQvIocFk2QS
-        /FcuhBdUNQ9Xe4NYEjraCN8t41UjLA1xjbaFXw==
-X-Google-Smtp-Source: AGHT+IGL/3lcQ6hwMvsl4p1gk/LCm0paBP0RD6v6Kz3Tt1iisx7fE8BgSUyT/0wksBkGcJvZoAMVnrwDfWF9o8Lg1w==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6870:5b1b:b0:1c0:e9e9:ae91 with
- SMTP id ds27-20020a0568705b1b00b001c0e9e9ae91mr137879oab.3.1693417893238;
- Wed, 30 Aug 2023 10:51:33 -0700 (PDT)
-Date:   Wed, 30 Aug 2023 17:51:29 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAKCB72QC/32NTQrCMBSEr1Le2kh+TLWuvId0EZLX9EGblESCU
- nJ3Yw8gs/oG5psdMibCDPduh4SFMsXQQJ46sLMJHhm5xiC5VPwmB7ZSzhR8McmhXRhOxPSgeG+
- MndBdoA231Nr3IX2OjWfKr5g+x0cRv/avrgjWohzX2mgtrv3Dx+gXPNu4wlhr/QIVCrnRtQAAA A==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1693417892; l=3644;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=+vRGVRwlIjkmcXJXBfhvIJnVrDxDHX9+bhatyE7XQZE=; b=tEmNmV0Gd9vM2MDL3PKKkeIiRgAoxL8apKcKfw1CvhU6tPKZlGnans1x4nL4cCT6uVZeVgfd6
- lVCgmhdzg/wB7MReF69x2zwkmSByyHgiMvfwCsafFz90SSsJqUm4woN
-X-Mailer: b4 0.12.3
-Message-ID: <20230830-missingvardecl-efi-v2-1-818081a204d2@google.com>
-Subject: [PATCH v2] efi: fix -Wmissing-variable-declarations warning
-From:   Justin Stitt <justinstitt@google.com>
-To:     Ard Biesheuvel <ardb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>
-Cc:     linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+        d=1e100.net; s=20221208; t=1693401288; x=1694006088;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lP5a4CGoL1GuVDAsyC/hpiFpJSmcUBrYbHJlw7q1lZo=;
+        b=Kw+eLZbeHsXslQyYhRLApi0iCEUbm9l6zjB8NIrujnyZz8JpK3bUoE8u2NvEFQFxD0
+         BdphnX96zq5vDJUYxalzZcGmIC2ZFVMMJJWsgdw2wWwvno/T3Nkmr2a12ttMUSFzkix3
+         7FOXAkNSiSvz5q3hiPH4NvGoI2O76hwgfx4m0wMg29SqXA7WdweyXtuG+lyrMkt01VeQ
+         CPyvv0qssefWTqn/t13ZF+iv6TNqPPclst38sK3CcDC3PBbQ4h7GPOCoLrhVipgrR90L
+         BfeavM8sbLb/k0Bp26Rcx5LAmbhhhM/X5so2YrRQz/4DWTatbpUmPP2PAsc7t6I68wJM
+         qsyw==
+X-Gm-Message-State: AOJu0Yy74Fs5y93L38EBiAEsC1da9drJ/FUvKW9etIo3zveV+xGwedsN
+        tsLLdPNdXNuD19YY8rmhlIcFGGCGMV0PJvF91U4qx/itig6B9Q4vCSDEdF0j129BuVLtXjY2tjd
+        B6ac9SJrdvp4TD8yI/yAaqB6JTpKSIIRR5mm/tl4CGA==
+X-Received: by 2002:a50:ee8e:0:b0:522:4764:8baa with SMTP id f14-20020a50ee8e000000b0052247648baamr2691580edr.12.1693401288588;
+        Wed, 30 Aug 2023 06:14:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFh/afixJi8lRGGEOre6wLTRpOs6xL2ck9cJQH4w5xBcYhh8gO8hTskCJlm+kr1G5DURfUv/w==
+X-Received: by 2002:a50:ee8e:0:b0:522:4764:8baa with SMTP id f14-20020a50ee8e000000b0052247648baamr2691562edr.12.1693401288268;
+        Wed, 30 Aug 2023 06:14:48 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id e5-20020a056402088500b0052a48f4065esm6742048edy.39.2023.08.30.06.14.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Aug 2023 06:14:47 -0700 (PDT)
+Message-ID: <ef0ebf50-35a7-b3f9-2209-2a0a8cc265d2@redhat.com>
+Date:   Wed, 30 Aug 2023 15:14:46 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH platform-next 1/1] platform/x86: mlx-platform: Add
+ dependency on PCI to Kconfig
+Content-Language: en-US, nl
+To:     Vadim Pasternak <vadimp@nvidia.com>
+Cc:     ilpo.jarvinen@linux.intel.com, rdunlap@infradead.org,
+        platform-driver-x86@vger.kernel.org
+References: <20230829133748.58208-1-vadimp@nvidia.com>
+ <20230829133748.58208-2-vadimp@nvidia.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230829133748.58208-2-vadimp@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-When building x86/defconfig with Clang-18 I encounter the following warnings:
-| arch/x86/platform/efi/efi.c:934:23: warning: no previous extern declaration for non-static variable 'efi_attr_fw_vendor' [-Wmissing-variable-declarations]
-|   934 | struct kobj_attribute efi_attr_fw_vendor = __ATTR_RO(fw_vendor);
-| arch/x86/platform/efi/efi.c:935:23: warning: no previous extern declaration for non-static variable 'efi_attr_runtime' [-Wmissing-variable-declarations]
-|   935 | struct kobj_attribute efi_attr_runtime = __ATTR_RO(runtime);
-| arch/x86/platform/efi/efi.c:936:23: warning: no previous extern declaration for non-static variable 'efi_attr_config_table' [-Wmissing-variable-declarations]
-|   936 | struct kobj_attribute efi_attr_config_table = __ATTR_RO(config_table);
+Hi,
 
-These symbols are declared extern in drivers/firmware/efi/efi.c. Move
-the declarations to linux/efi.h to resolve these warnings.
+On 8/29/23 15:37, Vadim Pasternak wrote:
+> Add dependency on PCI to avoid 'mlx-platform' compilation error in case
+> CONFIG_PCI is not set.
+> 
+> Failed on i386:
+> CONFIG_ACPI=y
+> CONFIG_ISA=y
+> 
+> Error In function 'mlxplat_pci_fpga_device_init':
+> implicit declaration of function 'pci_request_region':
+>  6204 |         err = pci_request_region(pci_dev, 0, res_name);
+>       |               ^~~~~~~~~~~~~~~~~~
+>       |               pci_request_regions
+> 
+> Fixes: 1316e0af2dc0 ("platform: mellanox: mlx-platform: Introduce ACPI init flow")
+> Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
+> Reviewed-by: Michael Shych <michaelsh@nvidia.com>
 
-Also, trim a trailing space from efi_set_variable_t typedef.
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/1920
-Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- Don't use static. Instead move symbols to header file (thanks Ard)
-- Remove duplicated warnings output from b4 (thanks Ard)
-- Link to v1: https://lore.kernel.org/r/20230829-missingvardecl-efi-v1-1-13d055a55176@google.com
----
-Note: build-tested.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-Also, a question: Why does the compiler warn at all? The extern
-declarations _do_ exist as Ard points out [1].
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
-[1]: https://lore.kernel.org/all/CAMj1kXE_xs+wWno4G4U+6CFCOwO7JWcmNv4et5=W=ZRrQatWnQ@mail.gmail.com/
----
- drivers/firmware/efi/efi.c | 3 ---
- include/linux/efi.h        | 6 +++++-
- 2 files changed, 5 insertions(+), 4 deletions(-)
+Regards,
 
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index 1599f1176842..7b4e59ccf09e 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -161,9 +161,6 @@ static ssize_t fw_platform_size_show(struct kobject *kobj,
- 	return sprintf(buf, "%d\n", efi_enabled(EFI_64BIT) ? 64 : 32);
- }
- 
--extern __weak struct kobj_attribute efi_attr_fw_vendor;
--extern __weak struct kobj_attribute efi_attr_runtime;
--extern __weak struct kobj_attribute efi_attr_config_table;
- static struct kobj_attribute efi_attr_fw_platform_size =
- 	__ATTR_RO(fw_platform_size);
- 
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index ab088c662e88..32f7ca60b0e9 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -287,7 +287,7 @@ typedef efi_status_t efi_get_variable_t (efi_char16_t *name, efi_guid_t *vendor,
- 					 unsigned long *data_size, void *data);
- typedef efi_status_t efi_get_next_variable_t (unsigned long *name_size, efi_char16_t *name,
- 					      efi_guid_t *vendor);
--typedef efi_status_t efi_set_variable_t (efi_char16_t *name, efi_guid_t *vendor, 
-+typedef efi_status_t efi_set_variable_t (efi_char16_t *name, efi_guid_t *vendor,
- 					 u32 attr, unsigned long data_size,
- 					 void *data);
- typedef efi_status_t efi_get_next_high_mono_count_t (u32 *count);
-@@ -632,6 +632,10 @@ typedef struct {
- 
- extern unsigned long __ro_after_init efi_rng_seed;		/* RNG Seed table */
- 
-+extern __weak struct kobj_attribute efi_attr_fw_vendor;
-+extern __weak struct kobj_attribute efi_attr_runtime;
-+extern __weak struct kobj_attribute efi_attr_config_table;
-+
- /*
-  * All runtime access to EFI goes through this structure:
-  */
+Hans
 
----
-base-commit: 706a741595047797872e669b3101429ab8d378ef
-change-id: 20230829-missingvardecl-efi-59306aacfed4
 
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+
+> ---
+>  drivers/platform/x86/Kconfig | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index a43db6731f34..2a1070543391 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -965,8 +965,7 @@ config SERIAL_MULTI_INSTANTIATE
+>  
+>  config MLX_PLATFORM
+>  	tristate "Mellanox Technologies platform support"
+> -	depends on ACPI
+> -	depends on I2C
+> +	depends on ACPI && I2C && PCI
+>  	select REGMAP
+>  	help
+>  	  This option enables system support for the Mellanox Technologies
 
