@@ -2,151 +2,90 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D461C83F01
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 31 Aug 2023 14:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D41C83F2F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 31 Aug 2023 18:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237335AbjHaO31 (ORCPT
+        id S1347095AbjHaS7L convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 31 Aug 2023 10:29:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49888 "EHLO
+        Thu, 31 Aug 2023 14:59:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229834AbjHaO3X (ORCPT
+        with ESMTP id S236263AbjHaS7K (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 31 Aug 2023 10:29:23 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1027BD1;
-        Thu, 31 Aug 2023 07:29:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693492159; x=1725028159;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=14SEUhfhuXCd3crFTb7Q/Qo1nASIqzlXwb6vFU9XxOM=;
-  b=jXXuqVyon+9QDo7oKnDdBsHEhlrddNBgaPGC21nTcjR4IFo1VMI1Tz6k
-   FXc9jUbJ5l02jBQgUBIi1ZynpN+LCq5bs4tCE+LMQeRj9cLHCTGbkdqwd
-   FBhibF2OcS87rti2TlYJgN3HSvmGwIWRxi0s26uyW8/Zy2LmM4Lvtiqcr
-   e0ejudaSHu3qyRxLxEQ4qBhYmGPBIqqNh2kg0pLPF7mfDJPtvBSSFM6n/
-   h21Ft66M4gsVYky9JE0YkdywpdfsOxU3Is8LqKIJpuHrDpLAuU9i5g3JQ
-   +sDGfDTYIPBlqXJgtjZ0Hkum4QRDtrr8aRSb3bXbZTQi39W/ByR5Tvx84
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10819"; a="360980372"
-X-IronPort-AV: E=Sophos;i="6.02,217,1688454000"; 
-   d="scan'208";a="360980372"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2023 07:27:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10819"; a="689371496"
-X-IronPort-AV: E=Sophos;i="6.02,217,1688454000"; 
-   d="scan'208";a="689371496"
-Received: from bcnelson-mobl2.amr.corp.intel.com (HELO [10.209.16.42]) ([10.209.16.42])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2023 07:27:34 -0700
-Message-ID: <321578a9-91fb-4733-b4c7-82dcc0ec8f8f@linux.intel.com>
-Date:   Thu, 31 Aug 2023 07:27:35 -0700
+        Thu, 31 Aug 2023 14:59:10 -0400
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32EABE65;
+        Thu, 31 Aug 2023 11:59:08 -0700 (PDT)
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5711d5dac14so244255eaf.0;
+        Thu, 31 Aug 2023 11:59:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693508347; x=1694113147;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=owyEPNij5vc6Nz2n0ejjQMnqcMpa572QB0sGcFXBGz8=;
+        b=LjajlZ7S7cbdk43eoZo8ptAi+oFmslR2pVqPBl2JQrddoOKNsrznHGgHVDm0D6gf2b
+         OthL4dRfrx+6u1cW2XwSwfig8ghVZsz8oIZqL3GOBy5r2xs/+tWqdF9Dc5vHF2rOBzY/
+         247JlfQzfZFUkw5BL/2YgwvjsiBobP4OiMtsbbX9/cKNaaM/qDFjPY0GCflucqjvXAzg
+         gu0IXP0bcqYN/d5dTPKDGqnVmdl6jRrf0C4BnUg6rOiWSso19Qd9RVkhdie6iLwC4Piy
+         RZE76ILa9Os3EVDQv9aO9T7omx8iInElqAn7lncIZTYFkXoMUkWzU1pTX7YXNuyWrQ4J
+         ovVA==
+X-Gm-Message-State: AOJu0YysaCvN86xUobgAjy2CpYenL1qD2/RdHeko9M+nZGiFA8iceuF7
+        xV/OUyBRM6ZHN1sCB8qux81HpoZziyM6IV2m6Io=
+X-Google-Smtp-Source: AGHT+IGpKGlHdPEGp22AQkareb+5rq++ydP6FTuJfuT1OAMYhCYVcGMDVWj2hXHVNh1eU8X0Pwl78FPHzenlT/yslnY=
+X-Received: by 2002:a4a:de43:0:b0:573:2a32:6567 with SMTP id
+ z3-20020a4ade43000000b005732a326567mr400925oot.0.1693508347419; Thu, 31 Aug
+ 2023 11:59:07 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] platform/x86: intel_scu_ipc: Check status upon
- timeout in ipc_wait_for_interrupt()
-Content-Language: en-US
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-        platform-driver-x86@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Prashant Malani <pmalani@chromium.org>
-References: <20230831011405.3246849-1-swboyd@chromium.org>
- <20230831011405.3246849-3-swboyd@chromium.org>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20230831011405.3246849-3-swboyd@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230829171212.156688-1-mario.limonciello@amd.com> <20230829171212.156688-2-mario.limonciello@amd.com>
+In-Reply-To: <20230829171212.156688-2-mario.limonciello@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 31 Aug 2023 20:58:56 +0200
+Message-ID: <CAJZ5v0ggnjtnyZtNYfozTPpHN7qondg8bAYZ7jE=+Q4LTLHE0w@mail.gmail.com>
+Subject: Re: [PATCH v16 1/3] ACPI: x86: s2idle: Export symbol for fetching
+ constraints for module use
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     hdegoede@redhat.com, bhelgaas@google.com, rafael@kernel.org,
+        Shyam-sundar.S-k@amd.com, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Tue, Aug 29, 2023 at 9:28 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> The amd-pmc driver will be fetching constraints to make decisions at
+> suspend time. This driver can be compiled as a module, so export the
+> symbol for when it is a module.
+>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-On 8/30/2023 6:14 PM, Stephen Boyd wrote:
-> It's possible for the completion in ipc_wait_for_interrupt() to timeout,
-> simply because the interrupt was delayed in being processed. A timeout
-> in itself is not an error. This driver should check the status register
-> upon a timeout to ensure that scheduling or interrupt processing delays
-> don't affect the outcome of the IPC return value.
-> 
->  CPU0                                                   SCU
->  ----                                                   ---
->  ipc_wait_for_interrupt()
->   wait_for_completion_timeout(&scu->cmd_complete)
->   [TIMEOUT]                                             status[IPC_BUSY]=0
-> 
-> Fix this problem by reading the status bit in all cases, regardless of
-> the timeout. If the completion times out, we'll assume the problem was
-> that the IPC_BUSY bit was still set, but if the status bit is cleared in
-> the meantime we know that we hit some scheduling delay and we should
-> just check the error bit.
-> 
-> Cc: Prashant Malani <pmalani@chromium.org>
-> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Fixes: ed12f295bfd5 ("ipc: Added support for IPC interrupt mode")
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+and please route this along with the rest of the series.
+
 > ---
->  drivers/platform/x86/intel_scu_ipc.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-> index 5a37becc65aa..2a21153e3bf3 100644
-> --- a/drivers/platform/x86/intel_scu_ipc.c
-> +++ b/drivers/platform/x86/intel_scu_ipc.c
-> @@ -246,16 +246,19 @@ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
->  /* Wait till ipc ioc interrupt is received or timeout in 10 HZ */
->  static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
->  {
-> -	int status;
-> +	unsigned long time_left;
-> +	u8 status;
-> +	int err = 0;
->  
-> -	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT))
-> -		return -ETIMEDOUT;
-> +	time_left = wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT);
-> +	if (!time_left)
-> +		err = -ETIMEDOUT;
-
-Since you are not using the return value, I would not use time_left. I think the
-following version is easy to read. But it is up to you.
-
-wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT)
-
-status = ipc_read_status(scu);
-
-if (status & IPC_STATUS_BUSY)
-   return -ETIMEDOUT;
-
-if (status & IPC_STATUS_ERR)
-   return -EIO;
-
-return 0;
-
-With above fixed, you can add
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
-
->  
->  	status = ipc_read_status(scu);
-> -	if (status & IPC_STATUS_ERR)
-> -		return -EIO;
-> +	if (!(status & IPC_STATUS_BUSY))
-> +		err = (status & IPC_STATUS_ERR) ? -EIO : 0;
->  
-> -	return 0;
-> +	return err;
+> v15->v16:
+>  * new patch
+> ---
+>  drivers/acpi/x86/s2idle.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/acpi/x86/s2idle.c b/drivers/acpi/x86/s2idle.c
+> index 08f7c6708206..de9c313c21fa 100644
+> --- a/drivers/acpi/x86/s2idle.c
+> +++ b/drivers/acpi/x86/s2idle.c
+> @@ -322,6 +322,7 @@ int acpi_get_lps0_constraint(struct acpi_device *adev)
+>
+>         return ACPI_STATE_UNKNOWN;
 >  }
->  
->  static int intel_scu_ipc_check_status(struct intel_scu_ipc_dev *scu)
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+> +EXPORT_SYMBOL_GPL(acpi_get_lps0_constraint);
+>
+>  static void lpi_check_constraints(void)
+>  {
+> --
+> 2.34.1
+>
