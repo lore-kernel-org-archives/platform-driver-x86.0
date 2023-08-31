@@ -2,156 +2,102 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E1EC83F01
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 31 Aug 2023 01:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A5CC83F2B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 31 Aug 2023 03:29:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345504AbjHaBOU (ORCPT
+        id S242910AbjHaD3G (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 30 Aug 2023 21:14:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33852 "EHLO
+        Wed, 30 Aug 2023 23:29:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242075AbjHaBOT (ORCPT
+        with ESMTP id S241909AbjHaD3G (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 30 Aug 2023 21:14:19 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 887E0CF3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Aug 2023 18:14:11 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1bf6ea270b2so1908075ad.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Aug 2023 18:14:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693444451; x=1694049251; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mEJrJjFBjmTqZTkw0c+MWJuIIZBtJEhPZv34AHJkSns=;
-        b=e9jK+OWpu67aLOcXzPA0EqK8nAUsV2jYZppTtpy/Me6rCuHGKc9Qv4y6Loa+pKnu2O
-         Iah/kH/DA4ODhUPLFfbWNmJFR6l2zaG89WOIMRYXG6O9f31e71oyXfmdCxojj/gbJpd0
-         DDAPYyPUGAhiQp8AiPaqKpa93PMHCYpfeCAaM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693444451; x=1694049251;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mEJrJjFBjmTqZTkw0c+MWJuIIZBtJEhPZv34AHJkSns=;
-        b=JWpL4wY47wkz5+WPOblEvgYIQGnrEDDw34QsIWlQn6n7cuLzdfBZoE/oCL2PyGg3tL
-         vyXcZyXetEJOEhBQcYADjTkIgxCqrZxdnor922bG88bOlX3xfJi9jDqu7wJT7Rd1HUQX
-         UqoflraghKxEGDEWFIv3XDTMAqfBXIv3V62hoHuhNM+BOiujo/42lGouLNNNJSSYts7x
-         9vy90InPicx5acTGC1677xNLQJiNWx7/G34WAiR1nECxfWuLrlgPd0oj83zYJlglg6xe
-         Wha2zylf0IFxhuab2biZ7ROgflOxuvEwiXLV0rhrVTlFCRm9LoJ1feBUtUfTlA1a68km
-         qoiQ==
-X-Gm-Message-State: AOJu0YyOADmMjKQDfjmHPPRMiYmRbbUIzdaoTU2w2x7LcZd0p9OxkiGp
-        K59kOijRTiQ7JhPM6ocPnnI6WA==
-X-Google-Smtp-Source: AGHT+IGHRduua6XQHeyDpp5hHrYBbEi8NumNCWTxbmxfFd2rZUkD/waUAals2TVmFzvmYy5Ipr4rAA==
-X-Received: by 2002:a17:902:6b47:b0:1c0:ec0a:316a with SMTP id g7-20020a1709026b4700b001c0ec0a316amr3353964plt.36.1693444451091;
-        Wed, 30 Aug 2023 18:14:11 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:11a:201:248f:d364:b451:2bc0])
-        by smtp.gmail.com with ESMTPSA id im23-20020a170902bb1700b001bbb7af4963sm132604plb.68.2023.08.30.18.14.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 18:14:10 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wed, 30 Aug 2023 23:29:06 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44BD1CD6;
+        Wed, 30 Aug 2023 20:28:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693452539; x=1724988539;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mMebp850JOshB3+YN1rRwuWyCX0M90aaEB7z5FJE9VI=;
+  b=ScauuD3sjd3M/H+zFbyF5kRLC2ORV7LCFGKU3kEbRqU0WW83g1YFDHqv
+   nzfIkBn7755vsmgxkpdC5uOFtv3aZu8eynYlZIviCqESfdNjew+W3kW/n
+   4XrKaRlLgIOfSMt2xZIsa14UzFyeFC1TnGlEaIKf7tWqVyxAIfNuyyaTF
+   feF+1MwaJyxsX6dkRiBmFWOIBtaHpDP42aIr8d7OUUaVf3Sz+g3mK8hNy
+   Qt66PJIFQ4wmLPnzyUVqbLMl2XfefUq0xFc59dXHS5yixerny2pUHed9Y
+   CFvc7i4oPEQvsfPTT09g+YzWFyie+ELP410+lNKPqjTRTmsoWSZ1yyT9g
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="356115591"
+X-IronPort-AV: E=Sophos;i="6.02,215,1688454000"; 
+   d="scan'208";a="356115591"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2023 20:28:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="716155798"
+X-IronPort-AV: E=Sophos;i="6.02,215,1688454000"; 
+   d="scan'208";a="716155798"
+Received: from asehgal1-mobl.amr.corp.intel.com (HELO [10.212.136.74]) ([10.212.136.74])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2023 20:28:58 -0700
+Message-ID: <934250db-b05f-4d48-8138-06986a14b3fb@linux.intel.com>
+Date:   Wed, 30 Aug 2023 20:28:57 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] platform/x86: intel_scu_ipc: Timeout fixes
+Content-Language: en-US
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, patches@lists.linux.dev,
         platform-driver-x86@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Prashant Malani <pmalani@chromium.org>
-Subject: [PATCH 3/3] platform/x86: intel_scu_ipc: Fail IPC send if still busy
-Date:   Wed, 30 Aug 2023 18:14:03 -0700
-Message-ID: <20230831011405.3246849-4-swboyd@chromium.org>
-X-Mailer: git-send-email 2.42.0.rc2.253.gd59a3bf2b4-goog
-In-Reply-To: <20230831011405.3246849-1-swboyd@chromium.org>
 References: <20230831011405.3246849-1-swboyd@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20230831011405.3246849-1-swboyd@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-It's possible for interrupts to get significantly delayed to the point
-that callers of intel_scu_ipc_dev_command() and friends can call the
-function once, hit a timeout, and call it again while the interrupt
-still hasn't been processed. This driver will get seriously confused if
-the interrupt is finally processed after the second IPC has been sent
-with ipc_command(). It won't know which IPC has been completed. This
-could be quite disastrous if calling code assumes something has happened
-upon return from intel_scu_ipc_dev_simple_command() when it actually
-hasn't.
 
-Let's avoid this scenario by simply returning -EBUSY in this case.
-Hopefully higher layers will know to back off or fail gracefully when
-this happens. It's all highly unlikely anyway, but it's better to be
-correct here as we have no way to know which IPC the status register is
-telling us about if we send a second IPC while the previous IPC is still
-processing.
 
-Cc: Prashant Malani <pmalani@chromium.org>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Fixes: ed12f295bfd5 ("ipc: Added support for IPC interrupt mode")
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/platform/x86/intel_scu_ipc.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+On 8/30/2023 6:14 PM, Stephen Boyd wrote:
+> I recently looked at some crash reports on ChromeOS devices that call
+> into this intel_scu_ipc driver. They were hitting timeouts, and it
+> certainly looks possible for those timeouts to be triggering because of
+> scheduling issues. Once things started going south, the timeouts kept
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 2a21153e3bf3..5a56be319f0e 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -266,6 +266,19 @@ static int intel_scu_ipc_check_status(struct intel_scu_ipc_dev *scu)
- 	return scu->irq > 0 ? ipc_wait_for_interrupt(scu) : busy_loop(scu);
- }
- 
-+static bool intel_scu_ipc_busy(struct intel_scu_ipc_dev *scu)
-+{
-+	u8 status;
-+
-+	status = ipc_read_status(scu);
-+	if (status & IPC_STATUS_BUSY) {
-+		dev_err(&scu->dev, "device is busy\n");
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- /* Read/Write power control(PMIC in Langwell, MSIC in PenWell) registers */
- static int pwr_reg_rdwr(struct intel_scu_ipc_dev *scu, u16 *addr, u8 *data,
- 			u32 count, u32 op, u32 id)
-@@ -285,6 +298,10 @@ static int pwr_reg_rdwr(struct intel_scu_ipc_dev *scu, u16 *addr, u8 *data,
- 		mutex_unlock(&ipclock);
- 		return -ENODEV;
- 	}
-+	if (intel_scu_ipc_busy(scu)) {
-+		mutex_unlock(&ipclock);
-+		return -EBUSY;
-+	}
- 
- 	for (nc = 0; nc < count; nc++, offset += 2) {
- 		cbuf[offset] = addr[nc];
-@@ -445,6 +462,10 @@ int intel_scu_ipc_dev_simple_command(struct intel_scu_ipc_dev *scu, int cmd,
- 		return -ENODEV;
- 	}
- 	scu = ipcdev;
-+	if (intel_scu_ipc_busy(scu)) {
-+		mutex_unlock(&ipclock);
-+		return -EBUSY;
-+	}
- 	cmdval = sub << 12 | cmd;
- 	ipc_command(scu, cmdval);
- 	err = intel_scu_ipc_check_status(scu);
-@@ -490,6 +511,10 @@ int intel_scu_ipc_dev_command_with_size(struct intel_scu_ipc_dev *scu, int cmd,
- 		mutex_unlock(&ipclock);
- 		return -ENODEV;
- 	}
-+	if (intel_scu_ipc_busy(scu)) {
-+		mutex_unlock(&ipclock);
-+		return -EBUSY;
-+	}
- 
- 	memcpy(inbuf, in, inlen);
- 	for (i = 0; i < inbuflen; i++)
+Are you talking about timeouts during IPC command?
+
+> coming. Maybe that's because the other side got seriously confused? I
+> don't know. I'll poke at it some more by injecting timeouts on the
+> kernel side.
+
+Do you think it is possible due to a firmware issue?
+
+> 
+> The first two patches are only lightly tested (normal functions keep
+> working), while the third one is purely speculation. I was going to make
+> the interrupt delay for a long time to see if I could hit the timeout.
+> 
+> Stephen Boyd (3):
+>   platform/x86: intel_scu_ipc: Check status after timeouts in
+>     busy_loop()
+>   platform/x86: intel_scu_ipc: Check status upon timeout in
+>     ipc_wait_for_interrupt()
+>   platform/x86: intel_scu_ipc: Fail IPC send if still busy
+> 
+>  drivers/platform/x86/intel_scu_ipc.c | 59 ++++++++++++++++++++--------
+>  1 file changed, 42 insertions(+), 17 deletions(-)
+> 
+> 
+> base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
+
 -- 
-https://chromeos.dev
-
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
