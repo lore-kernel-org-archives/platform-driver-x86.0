@@ -2,223 +2,1040 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293C1C83F2C
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 16:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F582C83F3E
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 16:34:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343617AbjIEQeH (ORCPT
+        id S1355061AbjIEQeJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:34:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48260 "EHLO
+        Tue, 5 Sep 2023 12:34:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354186AbjIEKJF (ORCPT
+        with ESMTP id S1354590AbjIEMuI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Sep 2023 06:09:05 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 043AB90;
-        Tue,  5 Sep 2023 03:09:00 -0700 (PDT)
+        Tue, 5 Sep 2023 08:50:08 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2085.outbound.protection.outlook.com [40.107.94.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 779E11A8;
+        Tue,  5 Sep 2023 05:50:03 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WCKdA90DJCn3foSxAvGOEMYEdE6Nizr83hfNo9CrpthIwRJdU35Bz0l5AkBhZ8Sh+3/DLOYP9MxquZVUTdKlcnL3yqhbHu8eD5A7hN6OnANF44ZG2gnw9q8Lj3t5aKIV6Rwf527RAUg38FHuxH12oDHX7mHbaeS7WltceCP9Jl1Lje2nw+TJTO8C5xaVC04PX7SGfiziYo43XrdNY8XJhI+niR/rILElSgx4Etd2hUkZmq8e1cBLwaxmEduAOgIT14SievDY1CRI5pzrIs0HZtn5+jOcqjwSB4fiLYYQ3RtwbnKPRRQ6Or/F11YoVTYWQ8nDyzDTa0ZvjvyTtvk7gA==
+ b=cA7ZSDGES5FPlC7TWMQTod9MhK0kEarF6EjSQ+pO+aP0UG1KowzDcpxbuuNUww7XEwNtq6/xYT1pEHBuGKGAE6a49TnBsawvJ+U2aJhxYFhtkEHnlpw7FfeYbaskFIKfYWShbDQaZq+3vwTdNrNRKU5ttmXjUMpPCdDcde78ej1lzvfH3XnOdjRK5N8GtLOD5MUQPR60d6BpISIpTQvpqAMjiqHwH5Dbb9zmENKCLedW/SVc10TWrKb4rUO+jhjIIfTetQux/QPAgBiZV8XHyNNG9Hbgsk800t85MAv0pTeOhVLUb5vyh0PkXLrX0IZUtaUoojiDc9Ca1EFsbYBZ3A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JxyfHejIV285ryU6pas1mBSrFU8Jcnwl6AKn/g2F/+w=;
- b=LdAPzrNYCcXNYc52mDm40TPA+/6mWdi5mz7YEkOTpeufHt9oI6c1WGF/JlCQrWUkORs4Du9ffjJ6W+pMHf6PFmsJGwIKR4QbGL09jiczxnOEUzKjHeY5TxgyrDlvsFqv2AabhE2V0qcwUUXJ2EPwUiiEE0z2waSLh4Ti5KVmGz5yNvuSU1xvkSUCEhkvxcvjtnCwwPRI9LeHQjmBUfOZFBqODSHAox6wJaucf4ZzgQMu5pw3qOM0fOc9/QO4cdj22QUgl8oey2Pb89l9VI0jQX1JpColxptGpaBWprJJrxcFK5oRXbS0PY2n00SRm+AcjpoQpJ+eFMGjYTiC3nasZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=OI6SJ2180mHAkXHK0TNhW6CBMutizbKYso0sGNd5A9I=;
+ b=RP9CmbFA8ZUU3EEzI7xdW9502JsxSjvCmd+98sr7qDcap0kBqiyCb/gz0Wy1Dq1qQbUYAqU4sExK2Cjwc9erwNEkqVySOZ9fN6/R68oqjUs/+z/R4uGwqmZO232NWS62BjMODdcgMeUIkhMd/nGEam/9x1wWXYSgbpOdP3agSWJc8GXBEn6wzSXQ4rqXtGMvdKexcEVe53LTz/EK61taZLg8tsPWrwtOQEj4Nzc+O+ro6h8uVb0LWsCeJ6Jg129tWkBeYVowEPK8wtgQrNaf2OPuG5/hEHAhW+RyHFnjUusgTSmIaXP8+h2/i63mV8tkMg182bbNWogDSwmK82HioQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JxyfHejIV285ryU6pas1mBSrFU8Jcnwl6AKn/g2F/+w=;
- b=PDt490WzzyHQPKELFTx1qTM6f++4T3XMM42Ccm1RgJCjjcbS2WZWPVloeUeWL6Q/mhCforgGtB/FB3sQPmwzkTaImdieM/HBbIE146gMzzoUDMG7JXxxak789CTAPJl182VA9jT6Zum3qfaz0MC9BjHWgQi/1MtXJVInZ0zvbxE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by LV3PR12MB9440.namprd12.prod.outlook.com (2603:10b6:408:215::5) with
+ bh=OI6SJ2180mHAkXHK0TNhW6CBMutizbKYso0sGNd5A9I=;
+ b=Gx4cXWp0EdzkR5VAi8ZM1A9qOFA2KmDa/KCmTBCSOcgBk+oQM/738KExhYJJigV9evi5LuugrQDwl4atWz2F0OirhMKQRSJY+I8ue/qsefTVn6HqB3vEsMekRG8eHGAMQJ+wHnGUJSL39YUVof6oD2ISHDmRAO/ll61fvcQH7BHYFDNKQVRFciHU78zQcsbYwx6FzPSTYHuV+/zrEM9DAMRTNu1A8XuYO3ZGIhyRODC4T0FkJbpO2/p/TChl3bGVDcNHis8ebpcA0nWQQsGUFC1Z3n588L7CtF6uYv+dXRJK0V15F9YoXqUDPAhw8wpAivVPxIAMnS+HvgTtS5Kfeg==
+Received: from CY8PR22CA0013.namprd22.prod.outlook.com (2603:10b6:930:45::21)
+ by MN0PR12MB5980.namprd12.prod.outlook.com (2603:10b6:208:37f::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.33; Tue, 5 Sep
- 2023 10:08:56 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::5564:8c7:6c3a:867d]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::5564:8c7:6c3a:867d%6]) with mapi id 15.20.6745.030; Tue, 5 Sep 2023
- 10:08:56 +0000
-Message-ID: <ceda84a0-e5cd-f6dc-3e3c-52e85fda8318@amd.com>
-Date:   Tue, 5 Sep 2023 15:38:44 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
-Subject: Re: [PATCH v16 3/3] platform/x86/amd: pmc: Don't let PCIe root ports
- go into D3
-To:     Mario Limonciello <mario.limonciello@amd.com>, hdegoede@redhat.com,
-        bhelgaas@google.com, rafael@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Iain Lane <iain@orangesquash.org.uk>
-References: <20230829171212.156688-1-mario.limonciello@amd.com>
- <20230829171212.156688-4-mario.limonciello@amd.com>
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <20230829171212.156688-4-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0012.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:95::21) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
+ 2023 12:49:59 +0000
+Received: from CY4PEPF0000E9D0.namprd03.prod.outlook.com
+ (2603:10b6:930:45:cafe::11) by CY8PR22CA0013.outlook.office365.com
+ (2603:10b6:930:45::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.33 via Frontend
+ Transport; Tue, 5 Sep 2023 12:49:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ CY4PEPF0000E9D0.mail.protection.outlook.com (10.167.241.143) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6768.25 via Frontend Transport; Tue, 5 Sep 2023 12:49:58 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Tue, 5 Sep 2023
+ 05:49:44 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.37; Tue, 5 Sep 2023 05:49:44 -0700
+Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server id 15.2.986.37 via Frontend
+ Transport; Tue, 5 Sep 2023 05:49:43 -0700
+From:   Shravan Kumar Ramani <shravankr@nvidia.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        David Thompson <davthompson@nvidia.com>
+CC:     Shravan Kumar Ramani <shravankr@nvidia.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 3/3] platform/mellanox: mlxbf-pmc: Add support for BlueField-3
+Date:   Tue, 5 Sep 2023 08:49:34 -0400
+Message-ID: <d5feee745f6bfd163e0c361e300d4b2ef1d72e00.1693917738.git.shravankr@nvidia.com>
+X-Mailer: git-send-email 2.30.1
+In-Reply-To: <cover.1693917738.git.shravankr@nvidia.com>
+References: <cover.1693917738.git.shravankr@nvidia.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|LV3PR12MB9440:EE_
-X-MS-Office365-Filtering-Correlation-Id: 719af9b6-53a2-491b-a98a-08dbadf81d57
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D0:EE_|MN0PR12MB5980:EE_
+X-MS-Office365-Filtering-Correlation-Id: 67c852d4-9088-47c6-282b-08dbae0e9cea
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eP1DR9lNpe1mlbXFIvVnyKxVdUnxyCytjQa5w89BkJx3ZqI6l4ZKOZI1rANuUvG0S8bAF5H8FKhgx3UUEkGLQn+kUnWpYA7Z4qR9CLU18SK9MuBhfC97fg0svJnxDYY71QPg+VMOgB1f6d0baCjDd49h+GA/Xs1fj+GD1+DTD7AEhzuYdmbDLpgWQ1OLKED6qS/v/Mwh4jl5fWDG0pgWeDczKnNR1l7qycaLsoIc5Wp/vLpCt159nzB1sBTJv0GaumzLv66ClqFyreQBcd2hP7/JoAhJ0GQct7ItKfKEUyIovUfwoBueRD2PEzLI4i40hGBYCz3Rm4bdQaK6+Or1FLDJOBftne9SskL0OqDKSSB9XmbIgSOHstqyxwqIAbq6VOFHrlukeapZCpHNQafUriH+EjEfhbUc4zcUWwQ2le4X3vXYIf2y5fNe2KuYFglL4QWJCNJNB+fqcc9OGeoaP4+I9tRzStMB+S63gA5+0HJke4wK0oA6Xe6fSSYe8o13qxDgRLPDSm4MRjdhSUkC/iA91web28hNcSK5YS/L6FivmuOLCrsYV67OyWCZyzBzPPtL3GJ/Ad8Ir4mLzlEa9K/Zn7Uo9TWiqHpuzYdQLzkvlxjc2rJeZ9mAvpw1WWrrPeaaQSZGw37Riqv0PG2m/A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(39860400002)(136003)(346002)(376002)(451199024)(186009)(1800799009)(38100700002)(41300700001)(966005)(66476007)(66946007)(66556008)(478600001)(2616005)(26005)(6512007)(6506007)(6486002)(6666004)(53546011)(4326008)(8676002)(5660300002)(8936002)(316002)(31696002)(86362001)(31686004)(83380400001)(2906002)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?T2F3L2RhQTJodnlRc1pUKyt2UmV3cEJFSXRiWDBYTUUyVVNVajBKOHlucUlH?=
- =?utf-8?B?b2xUTzdwd3RSL09BTlZGNTlNV0FOMnJCNThOOVpRMk5yTjNuemZlN2IvQWVM?=
- =?utf-8?B?L1RodEhvYy83ZEZiTCs4OGNBdnlrajdwRDhCWUp3ZHlUVlFxcTRqTkl2aTJO?=
- =?utf-8?B?ZzVJYmFJRzNyMXgzR1NOaG5YdHVFbEUyYUExenBRdUo3WEhzNHNzQTlnd1BQ?=
- =?utf-8?B?UUlGTW1Fb3dVNklhZ2liUjN3Q0Fwa0JHa3FqYXNleWRpTHkrb3lVSFg0bjh6?=
- =?utf-8?B?VEc5ckxJSmI5cmV1NnAxVG4yUzAxMStDT1lSWDFmb044dUpuaUdwQ3J5NGZH?=
- =?utf-8?B?TDNxVm1rUm5mMmxJbUhQWjEvSldCb2ZqTHh6Vjdrck0xa1hNM2Y4NXpnMXVK?=
- =?utf-8?B?K1VuQ2lwVjZrR3k5R1U1VGhqcWViME4xREJzdzREd3BnZCt2YVg0Zm56KzBL?=
- =?utf-8?B?c0VqNEhic0loaDU3dG00NkdZQUt4RFJxZU1wRjYyRDRZUHRpRHRGbmtqd1Ba?=
- =?utf-8?B?OWpWVHJ1eldNYWZHRFVxQTV6NU1qc1ZhNHk4UGNQY0p1OXJtUVlUSTVEaU1M?=
- =?utf-8?B?cGVLVlNjbmRRMURwaHQ3WmFRUnlZdGtpVkJLUlg4cFVzWktxenhZSVl3RWly?=
- =?utf-8?B?aVJ3YVFHN3FzMmdEUHlPM3dPQkxERDVWY28wWmh1dGNTRE8zYW9aV3NGZHV6?=
- =?utf-8?B?YW50RXpFbzZocjVYY1lMU2FqeFVRTXo3RHltZHBoT0hiWG1YQXhteWlPeUdk?=
- =?utf-8?B?c0x3U3NuZFR4SUlVdGdpUkVwTERBQ2hyTnZZbjdpZEtrQWtMdGJaMU83VXNM?=
- =?utf-8?B?Z2ZqWEhwU3FvWUZoalEwaUc1RGJzMHVCZ3ptSTB3Wkl3VGpndVN4UUIwODhy?=
- =?utf-8?B?bFQ3OTRHY2tNb0N4YnZMelpoVFp4bm9jSTBobXF5dHh0YzZodGo0KzVzdGRp?=
- =?utf-8?B?TzJWSndTQkdORlNMWVUreDZNUnBOcW9RN3NGRHoyNXhtMk1ubFkycEpEMG8r?=
- =?utf-8?B?QnR3ZDJvd2VacXZzejE4Tkp6cVdwOEtMNVk3dWovNWVkU2FGeFF0aGwrbTAw?=
- =?utf-8?B?RjVubGRLcVRhMGlIUjMwRUtTUUdLZ1JCTFdiUWpUdDQrNnpmZVBPanlaMVhH?=
- =?utf-8?B?bCtkR2Zvb0JTaDhMdEEyckVGNHNya2ZNT24wVGtwNnJnMjFuSFhzb3B1ZmJ4?=
- =?utf-8?B?VkNUVC8vNVRUV1FQYVBucnE2S0tvYVdTRWZ0UzNNQUx0ekZrWFZtRXNKSDQx?=
- =?utf-8?B?WmpWcEIxQzVweGMySnZjc1ZKb2ovUzZwbEpXYi9IanZsM0NVTForYXRlMVQx?=
- =?utf-8?B?MENkSHgyZmpFUENiSjdyZkR5dHJNQ3UwcysxQnlseGZNcGhTZzRKYTZ0YkU5?=
- =?utf-8?B?aHhwRUpjOENENkNWNUYwZTdwU3g0aml5UGd4TnMrYVEwbDVPczhqa2tqaFlq?=
- =?utf-8?B?OHNNV1kyWUpSUW92TnUzM21NK1pjYkZlb3RkNUNKMkp4cThBbUlWWlcxRHNp?=
- =?utf-8?B?M3lNcExlQ3dKbm5HTkZXcmpTR1FtbGIrbFVMSU1oYUMyWWRDMHpoMkwvUGMx?=
- =?utf-8?B?cW9qc2k0ZUt0TnhIMURocXJGOXBxdncrMEVxSUZBTm5tWjJ3bElPeXJLS0Q4?=
- =?utf-8?B?SkFHQVowYmVuVFdqaEw2RWlDb2VCdjVqK1ZjeWFxYWYyNzNsOGppd3NGdXhm?=
- =?utf-8?B?akhFeFlGWDJQOVpsY3gxSk1LaE1BdTkvNC9XbURZU0d4RDFHNEhKaTRBdVVH?=
- =?utf-8?B?TGFFR1lmTkVwYnNyYUhjU1RUMHZSQWhBaHBoblRzcVFoVEtmaW9HQ2JOME5Z?=
- =?utf-8?B?QWRNSGx6eTJTWC9wQWJsNVRVVUdTb0FSUHlYd3I3NEh2b0xkbWZKWXRSL25v?=
- =?utf-8?B?Q09uaitTaCtnQ1gwK2JvMVE3dHMzMW0xOURGZVpVaUpXanZmWkIwNHBHWFp3?=
- =?utf-8?B?TGhNRWNBU01QSjZtdjMxWW1DMDVUa2Ryeitwek9oQW1RaFF2VHNmV0E1a0V3?=
- =?utf-8?B?TGk3SVowUm5LdUl2SkJhMVVJRUJla2tnTnliSkRDamdOV3V3TnAxTE4yVnZP?=
- =?utf-8?B?WTl0WFIyczhzd0dUZUJjc1RaS0JkMmRDNG5qaENoVG9ETGZwUlgwemhnUm14?=
- =?utf-8?Q?qHdTJ7T8QpzM7O7USszGdf4uw?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 719af9b6-53a2-491b-a98a-08dbadf81d57
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2023 10:08:56.2797
+X-Microsoft-Antispam-Message-Info: j6fwdmtNOtFKeNc/oLLeD4RMC8mbZuLPC7JAk3xWZ2i91hPoUEGgPqnyETnCTZdjajUjMVbXkoy5MeYHKSnodPqhT+L35/SzG9nUB/9o4FcFO9hwxTQ7vz/zncBJbpo8QIxKuvwe5AT6T1MO1qo3JVHIAcuy6tZKvZ4o11e5A7bTQk0SSMeiKyjEjoMNLzKrR0tCsGVFpHypPoTm7Kv7ZIUhezOKz/zvJc3chlwcNxU4iNlkCR7fXTWP4LmUjafmyPSX52x9b49S+AmVFol333kZA5Clmno3KNKnvKoA0Rwg2tUqdrO2gM8yJIWo+foI3DQMU1CYJ7UUUlYScXHn++ixlkdbkOo/1rTzqrpvS0nHTbczZUg4vgsHp72pA/GEb5OIHn4QwnY/wox8Qur7fAJU4aomVn6uksaZCw3Qo2W4oUibM0xb8AFRaUZLghTAv//s8ADaIHI6eP20vVIbgmWYpB2KgFj/1IW5Ho2inYR32K9WWDtMkvhClHmxIcF8hgS7myh3iHnYvBdCorYXXDgl7e1q1/jY6uKEejyQmkj7xs4ypsCnNaHocW0R4w12EGCPaUemxjg0HXigY0AeERB2tCwEwWiDQh6fAtOWN/gw+MATbIX6TNhanwQbfL3nHtgriqs9cq0hrRZTGNAHYoqB/yioUpjorRqg2YOMz0pRJMEQArN5KUCbCA25NY0OzsJW8Dj/zRJHi8tZpN6+MxCkjj9GrENGgd9QMWeVXMvT4Bo2Ie5euJ/UERtqt+UNt6hiM6/owkIqHr6VS/izZQ==
+X-Forefront-Antispam-Report: CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(376002)(39860400002)(396003)(136003)(346002)(1800799009)(186009)(82310400011)(451199024)(40470700004)(36840700001)(46966006)(40480700001)(40460700003)(6666004)(45080400002)(7696005)(478600001)(36860700001)(47076005)(7636003)(356005)(30864003)(2906002)(83380400001)(110136005)(2616005)(336012)(426003)(26005)(86362001)(82740400003)(54906003)(70586007)(6636002)(316002)(70206006)(8676002)(5660300002)(8936002)(41300700001)(36756003)(4326008)(309714004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2023 12:49:58.7329
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oAon2LDG/sfrQSijGIe+8FEN5j2o+JqCcN0hE776tH+u1XMeaEB2uOsOD8JBBrC/UPwub5GpEcbeV6R4qitYDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9440
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67c852d4-9088-47c6-282b-08dbae0e9cea
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000E9D0.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5980
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Add new access mechanism and list of supported events to program
+and read the counters in BlueField-3.
+Performance counter blocks being added for BlueField-3 include:
+  - Memory Sub-system (mss) which has counters for monitoring
+various DRAM and related skylib events
+  - Last level Tile, which has 2 sets of counters (llt, llt_miss)
+for monitoring Tile and cache metrics
 
+Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+Reviewed-by: David Thompson <davthompson@nvidia.com>
+---
+ drivers/platform/mellanox/mlxbf-pmc.c | 686 ++++++++++++++++++++++++--
+ 1 file changed, 654 insertions(+), 32 deletions(-)
 
-On 8/29/2023 10:42 PM, Mario Limonciello wrote:
-> commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> changed pci_bridge_d3_possible() so that any vendor's PCIe ports
-> from modern machines (>=2015) are allowed to be put into D3.
-> 
-> Iain reports that USB devices can't be used to wake a Lenovo Z13
-> from suspend. This is because the PCIe root port has been put
-> into D3 and AMD's platform can't handle USB devices waking from
-> a hardware sleep state in this case.
-> 
-> This problem only occurs on Linux, and only when the AMD PMC driver
-> is utilized to put the device into a hardware sleep state. Comparing
-> the behavior on Windows and Linux, Windows doesn't put the root ports
-> into D3.
-> 
-> A variety of approaches were discussed to change PCI core to handle this
-> case generically but no consensus was reached. To limit the scope of
-> effect only to the affected machines introduce a workaround into the
-> amd-pmc driver to only apply to the PCI root ports in affected machines
-> when going into hardware sleep.
-> 
-> Link: https://lore.kernel.org/linux-pci/20230818193932.27187-1-mario.limonciello@amd.com/
-> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> Reported-by: Iain Lane <iain@orangesquash.org.uk>
-> Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+index 2d4bbe99959e..0b427fc24a96 100644
+--- a/drivers/platform/mellanox/mlxbf-pmc.c
++++ b/drivers/platform/mellanox/mlxbf-pmc.c
+@@ -30,14 +30,16 @@
+ 
+ #define MLXBF_PMC_EVENT_SET_BF1 0
+ #define MLXBF_PMC_EVENT_SET_BF2 1
++#define MLXBF_PMC_EVENT_SET_BF3 2
+ #define MLXBF_PMC_EVENT_INFO_LEN 100
+ 
+ #define MLXBF_PMC_MAX_BLOCKS 30
+-#define MLXBF_PMC_MAX_ATTRS 30
++#define MLXBF_PMC_MAX_ATTRS 70
+ #define MLXBF_PMC_INFO_SZ 4
+ #define MLXBF_PMC_REG_SIZE 8
+ #define MLXBF_PMC_L3C_REG_SIZE 4
+ 
++#define MLXBF_PMC_TYPE_CRSPACE 2
+ #define MLXBF_PMC_TYPE_COUNTER 1
+ #define MLXBF_PMC_TYPE_REGISTER 0
+ 
+@@ -78,6 +80,16 @@
+ #define MLXBF_PMC_L3C_PERF_CNT_LOW_VAL GENMASK(31, 0)
+ #define MLXBF_PMC_L3C_PERF_CNT_HIGH_VAL GENMASK(24, 0)
+ 
++#define MLXBF_PMC_CRSPACE_PERFMON_REG0 0x0
++#define MLXBF_PMC_CRSPACE_PERFSEL_SZ 4
++#define MLXBF_PMC_CRSPACE_PERFSEL0 GENMASK(23, 16)
++#define MLXBF_PMC_CRSPACE_PERFSEL1 GENMASK(7, 0)
++#define MLXBF_PMC_CRSPACE_PERFMON_REG0_SZ 0x2
++#define MLXBF_PMC_CRSPACE_PERFMON_CTL(n) (n * MLXBF_PMC_CRSPACE_PERFMON_REG0_SZ)
++#define MLXBF_PMC_CRSPACE_PERFMON_EN BIT(30)
++#define MLXBF_PMC_CRSPACE_PERFMON_CLR BIT(28)
++#define MLXBF_PMC_CRSPACE_PERFMON_VAL0(n) (MLXBF_PMC_CRSPACE_PERFMON_CTL(n) + 0xc)
++
+ /**
+  * struct mlxbf_pmc_attribute - Structure to hold attribute and block info
+  * for each sysfs entry
+@@ -124,6 +136,9 @@ struct mlxbf_pmc_block_info {
+  * @pdev: The kernel structure representing the device
+  * @total_blocks: Total number of blocks
+  * @tile_count: Number of tiles in the system
++ * @llt_enable: Info on enabled LLTs
++ * @mss_enable: Info on enabled MSSs
++ * @group_num: Group number assigned to each valid block
+  * @hwmon_dev: Hwmon device for bfperf
+  * @block_name: Block name
+  * @block:  Block info
+@@ -136,6 +151,9 @@ struct mlxbf_pmc_context {
+ 	struct platform_device *pdev;
+ 	uint32_t total_blocks;
+ 	uint32_t tile_count;
++	uint8_t llt_enable;
++	uint8_t mss_enable;
++	uint32_t group_num;
+ 	struct device *hwmon_dev;
+ 	const char *block_name[MLXBF_PMC_MAX_BLOCKS];
+ 	struct mlxbf_pmc_block_info block[MLXBF_PMC_MAX_BLOCKS];
+@@ -260,7 +278,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_ecc_events[] = {
+ 	{ 0x348, "DRAM_ECC_ERROR" },
+ };
+ 
+-static const struct mlxbf_pmc_events mlxbf_pmc_mss_events[] = {
++static const struct mlxbf_pmc_events mlxbf_pmc_mss_events_1[] = {
+ 	{ 0x0, "DISABLE" },
+ 	{ 0xc0, "RXREQ_MSS" },
+ 	{ 0xc1, "RXDAT_MSS" },
+@@ -268,6 +286,164 @@ static const struct mlxbf_pmc_events mlxbf_pmc_mss_events[] = {
+ 	{ 0xc3, "TXDAT_MSS" },
+ };
+ 
++static const struct mlxbf_pmc_events mlxbf_pmc_mss_events_3[] = {
++	{0, "SKYLIB_CDN_TX_FLITS"},
++	{1, "SKYLIB_DDN_TX_FLITS"},
++	{2, "SKYLIB_NDN_TX_FLITS"},
++	{3, "SKYLIB_SDN_TX_FLITS"},
++	{4, "SKYLIB_UDN_TX_FLITS"},
++	{5, "SKYLIB_CDN_RX_FLITS"},
++	{6, "SKYLIB_DDN_RX_FLITS"},
++	{7, "SKYLIB_NDN_RX_FLITS"},
++	{8, "SKYLIB_SDN_RX_FLITS"},
++	{9, "SKYLIB_UDN_RX_FLITS"},
++	{10, "SKYLIB_CDN_TX_STALL"},
++	{11, "SKYLIB_DDN_TX_STALL"},
++	{12, "SKYLIB_NDN_TX_STALL"},
++	{13, "SKYLIB_SDN_TX_STALL"},
++	{14, "SKYLIB_UDN_TX_STALL"},
++	{15, "SKYLIB_CDN_RX_STALL"},
++	{16, "SKYLIB_DDN_RX_STALL"},
++	{17, "SKYLIB_NDN_RX_STALL"},
++	{18, "SKYLIB_SDN_RX_STALL"},
++	{19, "SKYLIB_UDN_RX_STALL"},
++	{20, "SKYLIB_CHI_REQ0_TX_FLITS"},
++	{21, "SKYLIB_CHI_DATA0_TX_FLITS"},
++	{22, "SKYLIB_CHI_RESP0_TX_FLITS"},
++	{23, "SKYLIB_CHI_SNP0_TX_FLITS"},
++	{24, "SKYLIB_CHI_REQ1_TX_FLITS"},
++	{25, "SKYLIB_CHI_DATA1_TX_FLITS"},
++	{26, "SKYLIB_CHI_RESP1_TX_FLITS"},
++	{27, "SKYLIB_CHI_SNP1_TX_FLITS"},
++	{28, "SKYLIB_CHI_REQ2_TX_FLITS"},
++	{29, "SKYLIB_CHI_DATA2_TX_FLITS"},
++	{30, "SKYLIB_CHI_RESP2_TX_FLITS"},
++	{31, "SKYLIB_CHI_SNP2_TX_FLITS"},
++	{32, "SKYLIB_CHI_REQ3_TX_FLITS"},
++	{33, "SKYLIB_CHI_DATA3_TX_FLITS"},
++	{34, "SKYLIB_CHI_RESP3_TX_FLITS"},
++	{35, "SKYLIB_CHI_SNP3_TX_FLITS"},
++	{36, "SKYLIB_TLP_REQ_TX_FLITS"},
++	{37, "SKYLIB_TLP_RESP_TX_FLITS"},
++	{38, "SKYLIB_TLP_META_TX_FLITS"},
++	{39, "SKYLIB_AXIS_DATA_TX_FLITS"},
++	{40, "SKYLIB_AXIS_CRED_TX_FLITS"},
++	{41, "SKYLIB_APB_TX_FLITS"},
++	{42, "SKYLIB_VW_TX_FLITS"},
++	{43, "SKYLIB_GGA_MSN_W_TX_FLITS"},
++	{44, "SKYLIB_GGA_MSN_N_TX_FLITS"},
++	{45, "SKYLIB_CR_REQ_TX_FLITS"},
++	{46, "SKYLIB_CR_RESP_TX_FLITS"},
++	{47, "SKYLIB_MSN_PRNF_TX_FLITS"},
++	{48, "SKYLIB_DBG_DATA_TX_FLITS"},
++	{49, "SKYLIB_DBG_CRED_TX_FLITS"},
++	{50, "SKYLIB_CHI_REQ0_RX_FLITS"},
++	{51, "SKYLIB_CHI_DATA0_RX_FLITS"},
++	{52, "SKYLIB_CHI_RESP0_RX_FLITS"},
++	{53, "SKYLIB_CHI_SNP0_RX_FLITS"},
++	{54, "SKYLIB_CHI_REQ1_RX_FLITS"},
++	{55, "SKYLIB_CHI_DATA1_RX_FLITS"},
++	{56, "SKYLIB_CHI_RESP1_RX_FLITS"},
++	{57, "SKYLIB_CHI_SNP1_RX_FLITS"},
++	{58, "SKYLIB_CHI_REQ2_RX_FLITS"},
++	{59, "SKYLIB_CHI_DATA2_RX_FLITS"},
++	{60, "SKYLIB_CHI_RESP2_RX_FLITS"},
++	{61, "SKYLIB_CHI_SNP2_RX_FLITS"},
++	{62, "SKYLIB_CHI_REQ3_RX_FLITS"},
++	{63, "SKYLIB_CHI_DATA3_RX_FLITS"},
++	{64, "SKYLIB_CHI_RESP3_RX_FLITS"},
++	{65, "SKYLIB_CHI_SNP3_RX_FLITS"},
++	{66, "SKYLIB_TLP_REQ_RX_FLITS"},
++	{67, "SKYLIB_TLP_RESP_RX_FLITS"},
++	{68, "SKYLIB_TLP_META_RX_FLITS"},
++	{69, "SKYLIB_AXIS_DATA_RX_FLITS"},
++	{70, "SKYLIB_AXIS_CRED_RX_FLITS"},
++	{71, "SKYLIB_APB_RX_FLITS"},
++	{72, "SKYLIB_VW_RX_FLITS"},
++	{73, "SKYLIB_GGA_MSN_W_RX_FLITS"},
++	{74, "SKYLIB_GGA_MSN_N_RX_FLITS"},
++	{75, "SKYLIB_CR_REQ_RX_FLITS"},
++	{76, "SKYLIB_CR_RESP_RX_FLITS"},
++	{77, "SKYLIB_MSN_PRNF_RX_FLITS"},
++	{78, "SKYLIB_DBG_DATA_RX_FLITS"},
++	{79, "SKYLIB_DBG_CRED_RX_FLITS"},
++	{80, "SKYLIB_CHI_REQ0_TX_STALL"},
++	{81, "SKYLIB_CHI_DATA0_TX_STALL"},
++	{82, "SKYLIB_CHI_RESP0_TX_STALL"},
++	{83, "SKYLIB_CHI_SNP0_TX_STALL"},
++	{84, "SKYLIB_CHI_REQ1_TX_STALL"},
++	{85, "SKYLIB_CHI_DATA1_TX_STALL"},
++	{86, "SKYLIB_CHI_RESP1_TX_STALL"},
++	{87, "SKYLIB_CHI_SNP1_TX_STALL"},
++	{88, "SKYLIB_CHI_REQ2_TX_STALL"},
++	{89, "SKYLIB_CHI_DATA2_TX_STALL"},
++	{90, "SKYLIB_CHI_RESP2_TX_STALL"},
++	{91, "SKYLIB_CHI_SNP2_TX_STALL"},
++	{92, "SKYLIB_CHI_REQ3_TX_STALL"},
++	{93, "SKYLIB_CHI_DATA3_TX_STALL"},
++	{94, "SKYLIB_CHI_RESP3_TX_STALL"},
++	{95, "SKYLIB_CHI_SNP3_TX_STALL"},
++	{96, "SKYLIB_TLP_REQ_TX_STALL"},
++	{97, "SKYLIB_TLP_RESP_TX_STALL"},
++	{98, "SKYLIB_TLP_META_TX_STALL"},
++	{99, "SKYLIB_AXIS_DATA_TX_STALL"},
++	{100, "SKYLIB_AXIS_CRED_TX_STALL"},
++	{101, "SKYLIB_APB_TX_STALL"},
++	{102, "SKYLIB_VW_TX_STALL"},
++	{103, "SKYLIB_GGA_MSN_W_TX_STALL"},
++	{104, "SKYLIB_GGA_MSN_N_TX_STALL"},
++	{105, "SKYLIB_CR_REQ_TX_STALL"},
++	{106, "SKYLIB_CR_RESP_TX_STALL"},
++	{107, "SKYLIB_MSN_PRNF_TX_STALL"},
++	{108, "SKYLIB_DBG_DATA_TX_STALL"},
++	{109, "SKYLIB_DBG_CRED_TX_STALL"},
++	{110, "SKYLIB_CHI_REQ0_RX_STALL"},
++	{111, "SKYLIB_CHI_DATA0_RX_STALL"},
++	{112, "SKYLIB_CHI_RESP0_RX_STALL"},
++	{113, "SKYLIB_CHI_SNP0_RX_STALL"},
++	{114, "SKYLIB_CHI_REQ1_RX_STALL"},
++	{115, "SKYLIB_CHI_DATA1_RX_STALL"},
++	{116, "SKYLIB_CHI_RESP1_RX_STALL"},
++	{117, "SKYLIB_CHI_SNP1_RX_STALL"},
++	{118, "SKYLIB_CHI_REQ2_RX_STALL"},
++	{119, "SKYLIB_CHI_DATA2_RX_STALL"},
++	{120, "SKYLIB_CHI_RESP2_RX_STALL"},
++	{121, "SKYLIB_CHI_SNP2_RX_STALL"},
++	{122, "SKYLIB_CHI_REQ3_RX_STALL"},
++	{123, "SKYLIB_CHI_DATA3_RX_STALL"},
++	{124, "SKYLIB_CHI_RESP3_RX_STALL"},
++	{125, "SKYLIB_CHI_SNP3_RX_STALL"},
++	{126, "SKYLIB_TLP_REQ_RX_STALL"},
++	{127, "SKYLIB_TLP_RESP_RX_STALL"},
++	{128, "SKYLIB_TLP_META_RX_STALL"},
++	{129, "SKYLIB_AXIS_DATA_RX_STALL"},
++	{130, "SKYLIB_AXIS_CRED_RX_STALL"},
++	{131, "SKYLIB_APB_RX_STALL"},
++	{132, "SKYLIB_VW_RX_STALL"},
++	{133, "SKYLIB_GGA_MSN_W_RX_STALL"},
++	{134, "SKYLIB_GGA_MSN_N_RX_STALL"},
++	{135, "SKYLIB_CR_REQ_RX_STALL"},
++	{136, "SKYLIB_CR_RESP_RX_STALL"},
++	{137, "SKYLIB_MSN_PRNF_RX_STALL"},
++	{138, "SKYLIB_DBG_DATA_RX_STALL"},
++	{139, "SKYLIB_DBG_CRED_RX_STALL"},
++	{140, "SKYLIB_CDN_LOOPBACK_FLITS"},
++	{141, "SKYLIB_DDN_LOOPBACK_FLITS"},
++	{142, "SKYLIB_NDN_LOOPBACK_FLITS"},
++	{143, "SKYLIB_SDN_LOOPBACK_FLITS"},
++	{144, "SKYLIB_UDN_LOOPBACK_FLITS"},
++	{145, "HISTOGRAM_HISTOGRAM_BIN0"},
++	{146, "HISTOGRAM_HISTOGRAM_BIN1"},
++	{147, "HISTOGRAM_HISTOGRAM_BIN2"},
++	{148, "HISTOGRAM_HISTOGRAM_BIN3"},
++	{149, "HISTOGRAM_HISTOGRAM_BIN4"},
++	{150, "HISTOGRAM_HISTOGRAM_BIN5"},
++	{151, "HISTOGRAM_HISTOGRAM_BIN6"},
++	{152, "HISTOGRAM_HISTOGRAM_BIN7"},
++	{153, "HISTOGRAM_HISTOGRAM_BIN8"},
++	{154, "HISTOGRAM_HISTOGRAM_BIN9"},
++};
++
+ static const struct mlxbf_pmc_events mlxbf_pmc_hnf_events[] = {
+ 	{ 0x0, "DISABLE" },
+ 	{ 0x45, "HNF_REQUESTS" },
+@@ -429,6 +605,260 @@ static const struct mlxbf_pmc_events mlxbf_pmc_l3c_events[] = {
+ 	{ 0x2b, "ANY_REJECT_BANK1" },
+ };
+ 
++static const struct mlxbf_pmc_events mlxbf_pmc_llt_events[] = {
++	{0, "HNF0_CYCLES"},
++	{1, "HNF0_REQS_RECEIVED"},
++	{2, "HNF0_REQS_PROCESSED"},
++	{3, "HNF0_DIR_HIT"},
++	{4, "HNF0_DIR_MISS"},
++	{5, "HNF0_DIR_RD_ALLOC"},
++	{6, "HNF0_DIR_WR_ALLOC"},
++	{7, "HNF0_DIR_VICTIM"},
++	{8, "HNF0_CL_HAZARD"},
++	{9, "HNF0_ALL_HAZARD"},
++	{10, "HNF0_PIPE_STALLS"},
++	{11, "HNF0_MEM_READS"},
++	{12, "HNF0_MEM_WRITES"},
++	{13, "HNF0_MEM_ACCESS"},
++	{14, "HNF0_DCL_READ"},
++	{15, "HNF0_DCL_INVAL"},
++	{16, "HNF0_CHI_RXDAT"},
++	{17, "HNF0_CHI_RXRSP"},
++	{18, "HNF0_CHI_TXDAT"},
++	{19, "HNF0_CHI_TXRSP"},
++	{20, "HNF0_CHI_TXSNP"},
++	{21, "HNF0_DCT_SNP"},
++	{22, "HNF0_SNP_FWD_DATA"},
++	{23, "HNF0_SNP_FWD_RSP"},
++	{24, "HNF0_SNP_RSP"},
++	{25, "HNF0_EXCL_FULL"},
++	{26, "HNF0_EXCL_WRITE_F"},
++	{27, "HNF0_EXCL_WRITE_S"},
++	{28, "HNF0_EXCL_WRITE"},
++	{29, "HNF0_EXCL_READ"},
++	{30, "HNF0_REQ_BUF_EMPTY"},
++	{31, "HNF0_ALL_MAFS_BUSY"},
++	{32, "HNF0_TXDAT_NO_LCRD"},
++	{33, "HNF0_TXSNP_NO_LCRD"},
++	{34, "HNF0_TXRSP_NO_LCRD"},
++	{35, "HNF0_TXREQ_NO_LCRD"},
++	{36, "HNF0_WRITE"},
++	{37, "HNF0_READ"},
++	{38, "HNF0_ACCESS"},
++	{39, "HNF0_MAF_N_BUSY"},
++	{40, "HNF0_MAF_N_REQS"},
++	{41, "HNF0_SEL_OPCODE"},
++	{42, "HNF1_CYCLES"},
++	{43, "HNF1_REQS_RECEIVED"},
++	{44, "HNF1_REQS_PROCESSED"},
++	{45, "HNF1_DIR_HIT"},
++	{46, "HNF1_DIR_MISS"},
++	{47, "HNF1_DIR_RD_ALLOC"},
++	{48, "HNF1_DIR_WR_ALLOC"},
++	{49, "HNF1_DIR_VICTIM"},
++	{50, "HNF1_CL_HAZARD"},
++	{51, "HNF1_ALL_HAZARD"},
++	{52, "HNF1_PIPE_STALLS"},
++	{53, "HNF1_MEM_READS"},
++	{54, "HNF1_MEM_WRITES"},
++	{55, "HNF1_MEM_ACCESS"},
++	{56, "HNF1_DCL_READ"},
++	{57, "HNF1_DCL_INVAL"},
++	{58, "HNF1_CHI_RXDAT"},
++	{59, "HNF1_CHI_RXRSP"},
++	{60, "HNF1_CHI_TXDAT"},
++	{61, "HNF1_CHI_TXRSP"},
++	{62, "HNF1_CHI_TXSNP"},
++	{63, "HNF1_DCT_SNP"},
++	{64, "HNF1_SNP_FWD_DATA"},
++	{65, "HNF1_SNP_FWD_RSP"},
++	{66, "HNF1_SNP_RSP"},
++	{67, "HNF1_EXCL_FULL"},
++	{68, "HNF1_EXCL_WRITE_F"},
++	{69, "HNF1_EXCL_WRITE_S"},
++	{70, "HNF1_EXCL_WRITE"},
++	{71, "HNF1_EXCL_READ"},
++	{72, "HNF1_REQ_BUF_EMPTY"},
++	{73, "HNF1_ALL_MAFS_BUSY"},
++	{74, "HNF1_TXDAT_NO_LCRD"},
++	{75, "HNF1_TXSNP_NO_LCRD"},
++	{76, "HNF1_TXRSP_NO_LCRD"},
++	{77, "HNF1_TXREQ_NO_LCRD"},
++	{78, "HNF1_WRITE"},
++	{79, "HNF1_READ"},
++	{80, "HNF1_ACCESS"},
++	{81, "HNF1_MAF_N_BUSY"},
++	{82, "HNF1_MAF_N_REQS"},
++	{83, "HNF1_SEL_OPCODE"},
++	{84, "GDC_BANK0_RD_REQ"},
++	{85, "GDC_BANK0_WR_REQ"},
++	{86, "GDC_BANK0_ALLOCATE"},
++	{87, "GDC_BANK0_HIT"},
++	{88, "GDC_BANK0_MISS"},
++	{89, "GDC_BANK0_INVALIDATE"},
++	{90, "GDC_BANK0_EVICT"},
++	{91, "GDC_BANK0_RD_RESP"},
++	{92, "GDC_BANK0_WR_ACK"},
++	{93, "GDC_BANK0_SNOOP"},
++	{94, "GDC_BANK0_SNOOP_NORMAL"},
++	{95, "GDC_BANK0_SNOOP_FWD"},
++	{96, "GDC_BANK0_SNOOP_STASH"},
++	{97, "GDC_BANK0_SNOOP_STASH_INDPND_RD"},
++	{98, "GDC_BANK0_FOLLOWER"},
++	{99, "GDC_BANK0_FW"},
++	{100, "GDC_BANK0_HIT_DCL_BOTH"},
++	{101, "GDC_BANK0_HIT_DCL_PARTIAL"},
++	{102, "GDC_BANK0_EVICT_DCL"},
++	{103, "GDC_BANK0_G_RSE_PIPE_CACHE_DATA0"},
++	{103, "GDC_BANK0_G_RSE_PIPE_CACHE_DATA1"},
++	{105, "GDC_BANK0_ARB_STRB"},
++	{106, "GDC_BANK0_ARB_WAIT"},
++	{107, "GDC_BANK0_GGA_STRB"},
++	{108, "GDC_BANK0_GGA_WAIT"},
++	{109, "GDC_BANK0_FW_STRB"},
++	{110, "GDC_BANK0_FW_WAIT"},
++	{111, "GDC_BANK0_SNP_STRB"},
++	{112, "GDC_BANK0_SNP_WAIT"},
++	{113, "GDC_BANK0_MISS_INARB_STRB"},
++	{114, "GDC_BANK0_MISS_INARB_WAIT"},
++	{115, "GDC_BANK0_G_FIFO_FF_GGA_RSP_RD0"},
++	{116, "GDC_BANK0_G_FIFO_FF_GGA_RSP_RD1"},
++	{117, "GDC_BANK0_G_FIFO_FF_GGA_RSP_RD2"},
++	{118, "GDC_BANK0_G_FIFO_FF_GGA_RSP_RD3"},
++	{119, "GDC_BANK0_G_FIFO_FF_GGA_RSP_WR0"},
++	{120, "GDC_BANK0_G_FIFO_FF_GGA_RSP_WR1"},
++	{121, "GDC_BANK0_G_FIFO_FF_GGA_RSP_WR2"},
++	{122, "GDC_BANK0_G_FIFO_FF_GGA_RSP_WR3"},
++	{123, "GDC_BANK1_RD_REQ"},
++	{124, "GDC_BANK1_WR_REQ"},
++	{125, "GDC_BANK1_ALLOCATE"},
++	{126, "GDC_BANK1_HIT"},
++	{127, "GDC_BANK1_MISS"},
++	{128, "GDC_BANK1_INVALIDATE"},
++	{129, "GDC_BANK1_EVICT"},
++	{130, "GDC_BANK1_RD_RESP"},
++	{131, "GDC_BANK1_WR_ACK"},
++	{132, "GDC_BANK1_SNOOP"},
++	{133, "GDC_BANK1_SNOOP_NORMAL"},
++	{134, "GDC_BANK1_SNOOP_FWD"},
++	{135, "GDC_BANK1_SNOOP_STASH"},
++	{136, "GDC_BANK1_SNOOP_STASH_INDPND_RD"},
++	{137, "GDC_BANK1_FOLLOWER"},
++	{138, "GDC_BANK1_FW"},
++	{139, "GDC_BANK1_HIT_DCL_BOTH"},
++	{140, "GDC_BANK1_HIT_DCL_PARTIAL"},
++	{141, "GDC_BANK1_EVICT_DCL"},
++	{142, "GDC_BANK1_G_RSE_PIPE_CACHE_DATA0"},
++	{143, "GDC_BANK1_G_RSE_PIPE_CACHE_DATA1"},
++	{144, "GDC_BANK1_ARB_STRB"},
++	{145, "GDC_BANK1_ARB_WAIT"},
++	{146, "GDC_BANK1_GGA_STRB"},
++	{147, "GDC_BANK1_GGA_WAIT"},
++	{148, "GDC_BANK1_FW_STRB"},
++	{149, "GDC_BANK1_FW_WAIT"},
++	{150, "GDC_BANK1_SNP_STRB"},
++	{151, "GDC_BANK1_SNP_WAIT"},
++	{152, "GDC_BANK1_MISS_INARB_STRB"},
++	{153, "GDC_BANK1_MISS_INARB_WAIT"},
++	{154, "GDC_BANK1_G_FIFO_FF_GGA_RSP_RD0"},
++	{155, "GDC_BANK1_G_FIFO_FF_GGA_RSP_RD1"},
++	{156, "GDC_BANK1_G_FIFO_FF_GGA_RSP_RD2"},
++	{157, "GDC_BANK1_G_FIFO_FF_GGA_RSP_RD3"},
++	{158, "GDC_BANK1_G_FIFO_FF_GGA_RSP_WR0"},
++	{159, "GDC_BANK1_G_FIFO_FF_GGA_RSP_WR1"},
++	{160, "GDC_BANK1_G_FIFO_FF_GGA_RSP_WR2"},
++	{161, "GDC_BANK1_G_FIFO_FF_GGA_RSP_WR3"},
++	{162, "HISTOGRAM_HISTOGRAM_BIN0"},
++	{163, "HISTOGRAM_HISTOGRAM_BIN1"},
++	{164, "HISTOGRAM_HISTOGRAM_BIN2"},
++	{165, "HISTOGRAM_HISTOGRAM_BIN3"},
++	{166, "HISTOGRAM_HISTOGRAM_BIN4"},
++	{167, "HISTOGRAM_HISTOGRAM_BIN5"},
++	{168, "HISTOGRAM_HISTOGRAM_BIN6"},
++	{169, "HISTOGRAM_HISTOGRAM_BIN7"},
++	{170, "HISTOGRAM_HISTOGRAM_BIN8"},
++	{171, "HISTOGRAM_HISTOGRAM_BIN9"},
++};
++
++static const struct mlxbf_pmc_events mlxbf_pmc_llt_miss_events[] = {
++	{0, "GDC_MISS_MACHINE_RD_REQ"},
++	{1, "GDC_MISS_MACHINE_WR_REQ"},
++	{2, "GDC_MISS_MACHINE_SNP_REQ"},
++	{3, "GDC_MISS_MACHINE_EVICT_REQ"},
++	{4, "GDC_MISS_MACHINE_FW_REQ"},
++	{5, "GDC_MISS_MACHINE_RD_RESP"},
++	{6, "GDC_MISS_MACHINE_WR_RESP"},
++	{7, "GDC_MISS_MACHINE_SNP_STASH_DATAPULL_DROP"},
++	{8, "GDC_MISS_MACHINE_SNP_STASH_DATAPULL_DROP_TXDAT"},
++	{9, "GDC_MISS_MACHINE_CHI_TXREQ"},
++	{10, "GDC_MISS_MACHINE_CHI_RXRSP"},
++	{11, "GDC_MISS_MACHINE_CHI_TXDAT"},
++	{12, "GDC_MISS_MACHINE_CHI_RXDAT"},
++	{13, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC0_0"},
++	{14, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC0_1 "},
++	{15, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC0_2"},
++	{16, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC0_3 "},
++	{17, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC1_0 "},
++	{18, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC1_1 "},
++	{19, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC1_2 "},
++	{20, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC1_3 "},
++	{21, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC_DONE0_0"},
++	{22, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC_DONE0_1"},
++	{23, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC_DONE0_2"},
++	{24, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC_DONE0_3"},
++	{25, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC_DONE1_0 "},
++	{26, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC_DONE1_1"},
++	{27, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC_DONE1_2"},
++	{28, "GDC_MISS_MACHINE_G_FIFO_FF_EXEC_DONE1_3"},
++	{29, "GDC_MISS_MACHINE_GDC_LINK_LIST_FF_0"},
++	{30, "GDC_MISS_MACHINE_GDC_LINK_LIST_FF_1"},
++	{31, "GDC_MISS_MACHINE_GDC_LINK_LIST_FF_2"},
++	{32, "GDC_MISS_MACHINE_GDC_LINK_LIST_FF_3"},
++	{33, "GDC_MISS_MACHINE_GDC_LINK_LIST_FF_4"},
++	{34, "GDC_MISS_MACHINE_GDC_LINK_LIST_FF_5"},
++	{35, "GDC_MISS_MACHINE_GDC_LINK_LIST_FF_6"},
++	{36, "GDC_MISS_MACHINE_G_RSE_PIPE_TXREQ_0"},
++	{37, "GDC_MISS_MACHINE_G_RSE_PIPE_TXREQ_1"},
++	{38, "GDC_MISS_MACHINE_G_CREDIT_TXREQ_0"},
++	{39, "GDC_MISS_MACHINE_G_CREDIT_TXREQ_1"},
++	{40, "GDC_MISS_MACHINE_G_RSE_PIPE_TXDAT_0"},
++	{41, "GDC_MISS_MACHINE_G_RSE_PIPE_TXDAT_1"},
++	{42, "GDC_MISS_MACHINE_G_CREDIT_TXDAT_0"},
++	{43, "GDC_MISS_MACHINE_G_CREDIT_TXDAT_1"},
++	{44, "GDC_MISS_MACHINE_G_FIFO_FF_COMPACK_0"},
++	{45, "GDC_MISS_MACHINE_G_FIFO_FF_COMPACK_1"},
++	{46, "GDC_MISS_MACHINE_G_FIFO_FF_COMPACK_2"},
++	{47, "GDC_MISS_MACHINE_G_FIFO_FF_COMPACK_3"},
++	{48, "GDC_MISS_MACHINE_G_RSE_PIPE_TXRSP_0"},
++	{49, "GDC_MISS_MACHINE_G_RSE_PIPE_TXRSP_1"},
++	{50, "GDC_MISS_MACHINE_G_CREDIT_TXRSP_0"},
++	{51, "GDC_MISS_MACHINE_G_CREDIT_TXRSP_1"},
++	{52, "GDC_MISS_MACHINE_G_RSE_PIPE_INARB_0"},
++	{53, "GDC_MISS_MACHINE_G_RSE_PIPE_INARB_1"},
++	{54, "GDC_MISS_MACHINE_G_FIFO_FF_SNOOP_IN_0"},
++	{55, "GDC_MISS_MACHINE_G_FIFO_FF_SNOOP_IN_1"},
++	{56, "GDC_MISS_MACHINE_G_FIFO_FF_SNOOP_IN_2"},
++	{57, "GDC_MISS_MACHINE_G_FIFO_FF_SNOOP_IN_3"},
++	{58, "GDC_MISS_MACHINE_G_FIFO_FF_TXRSP_SNOOP_DATAPULL_0"},
++	{59, "GDC_MISS_MACHINE_G_FIFO_FF_TXRSP_SNOOP_DATAPULL_1"},
++	{60, "GDC_MISS_MACHINE_G_FIFO_FF_TXRSP_SNOOP_DATAPULL_2"},
++	{61, "GDC_MISS_MACHINE_G_FIFO_FF_TXRSP_SNOOP_DATAPULL_3"},
++	{62, "GDC_MISS_MACHINE_G_FIFO_FF_TXDAT_SNOOP_DATAPULL_4"},
++	{63, "GDC_MISS_MACHINE_G_FIFO_FF_TXDAT_SNOOP_DATAPULL_5"},
++	{64, "GDC_MISS_MACHINE_G_FIFO_FF_TXDAT_SNOOP_DATAPULL_6"},
++	{65, "GDC_MISS_MACHINE_G_FIFO_FF_TXDAT_SNOOP_DATAPULL_7"},
++	{66, "HISTOGRAM_HISTOGRAM_BIN0"},
++	{67, "HISTOGRAM_HISTOGRAM_BIN1"},
++	{68, "HISTOGRAM_HISTOGRAM_BIN2"},
++	{69, "HISTOGRAM_HISTOGRAM_BIN3"},
++	{70, "HISTOGRAM_HISTOGRAM_BIN4"},
++	{71, "HISTOGRAM_HISTOGRAM_BIN5"},
++	{72, "HISTOGRAM_HISTOGRAM_BIN6"},
++	{73, "HISTOGRAM_HISTOGRAM_BIN7"},
++	{74, "HISTOGRAM_HISTOGRAM_BIN8"},
++	{75, "HISTOGRAM_HISTOGRAM_BIN9"},
++};
++
+ static struct mlxbf_pmc_context *pmc;
+ 
+ /* UUID used to probe ATF service. */
+@@ -569,8 +999,21 @@ static const struct mlxbf_pmc_events *mlxbf_pmc_event_list(const char *blk,
+ 			break;
+ 		}
+ 	} else if (strstr(blk, "mss")) {
+-		events = mlxbf_pmc_mss_events;
+-		*size = ARRAY_SIZE(mlxbf_pmc_mss_events);
++		switch (pmc->event_set) {
++		case MLXBF_PMC_EVENT_SET_BF1:
++		case MLXBF_PMC_EVENT_SET_BF2:
++			events = mlxbf_pmc_mss_events_1;
++			*size = ARRAY_SIZE(mlxbf_pmc_mss_events_1);
++			break;
++		case MLXBF_PMC_EVENT_SET_BF3:
++			events = mlxbf_pmc_mss_events_3;
++			*size = ARRAY_SIZE(mlxbf_pmc_mss_events_3);
++			break;
++		default:
++			events = NULL;
++			*size = 0;
++			break;
++		}
+ 	} else if (strstr(blk, "ecc")) {
+ 		events = mlxbf_pmc_ecc_events;
+ 		*size = ARRAY_SIZE(mlxbf_pmc_ecc_events);
+@@ -586,6 +1029,12 @@ static const struct mlxbf_pmc_events *mlxbf_pmc_event_list(const char *blk,
+ 	} else if (strstr(blk, "smmu")) {
+ 		events = mlxbf_pmc_smgen_events;
+ 		*size = ARRAY_SIZE(mlxbf_pmc_smgen_events);
++	} else if (strstr(blk, "llt_miss")) {
++		events = mlxbf_pmc_llt_miss_events;
++		*size = ARRAY_SIZE(mlxbf_pmc_llt_miss_events);
++	} else if (strstr(blk, "llt")) {
++		events = mlxbf_pmc_llt_events;
++		*size = ARRAY_SIZE(mlxbf_pmc_llt_events);
+ 	} else {
+ 		events = NULL;
+ 		*size = 0;
+@@ -712,6 +1161,43 @@ static int mlxbf_pmc_program_l3_counter(int blk_num, uint32_t cnt_num,
+ 	return mlxbf_pmc_write(pmcaddr, MLXBF_PMC_WRITE_REG_32, *wordaddr);
+ }
+ 
++/* Method to handle crspace counter programming */
++static int mlxbf_pmc_program_crspace_counter(int blk_num, uint32_t cnt_num,
++					     uint32_t evt)
++{
++	uint32_t word;
++	void *addr;
++	int ret;
++
++	addr = pmc->block[blk_num].mmio_base +
++		(rounddown(cnt_num, 2) * MLXBF_PMC_CRSPACE_PERFSEL_SZ);
++	ret = mlxbf_pmc_readl(addr, &word);
++	if (ret)
++		return ret;
++
++	if (cnt_num % 2) {
++		word &= ~MLXBF_PMC_CRSPACE_PERFSEL1;
++		word |= FIELD_PREP(MLXBF_PMC_CRSPACE_PERFSEL1, evt);
++	} else {
++		word &= ~MLXBF_PMC_CRSPACE_PERFSEL0;
++		word |= FIELD_PREP(MLXBF_PMC_CRSPACE_PERFSEL0, evt);
++	}
++
++	return mlxbf_pmc_write(addr, MLXBF_PMC_WRITE_REG_32, word);
++}
++
++/* Method to clear crspace counter value */
++static int mlxbf_pmc_clear_crspace_counter(int blk_num, uint32_t cnt_num)
++{
++	void *addr;
++
++	addr = pmc->block[blk_num].mmio_base +
++		MLXBF_PMC_CRSPACE_PERFMON_VAL0(pmc->block[blk_num].counters) +
++		(cnt_num * 4);
++
++	return mlxbf_pmc_write(addr, MLXBF_PMC_WRITE_REG_32, 0x0);
++}
++
+ /* Method to program a counter to monitor an event */
+ static int mlxbf_pmc_program_counter(int blk_num, uint32_t cnt_num,
+ 				     uint32_t evt, bool is_l3)
+@@ -724,6 +1210,10 @@ static int mlxbf_pmc_program_counter(int blk_num, uint32_t cnt_num,
+ 	if (is_l3)
+ 		return mlxbf_pmc_program_l3_counter(blk_num, cnt_num, evt);
+ 
++	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE)
++		return mlxbf_pmc_program_crspace_counter(blk_num, cnt_num,
++							 evt);
++
+ 	/* Configure the counter */
+ 	perfctl = FIELD_PREP(MLXBF_PMC_PERFCTL_EN0, 1);
+ 	perfctl |= FIELD_PREP(MLXBF_PMC_PERFCTL_EB0, 0);
+@@ -778,7 +1268,7 @@ static int mlxbf_pmc_read_l3_counter(int blk_num, uint32_t cnt_num,
+ {
+ 	uint32_t perfcnt_low = 0, perfcnt_high = 0;
+ 	uint64_t value;
+-	int status = 0;
++	int status;
+ 
+ 	status = mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+ 					 MLXBF_PMC_L3C_PERF_CNT_LOW +
+@@ -804,6 +1294,24 @@ static int mlxbf_pmc_read_l3_counter(int blk_num, uint32_t cnt_num,
+ 	return 0;
+ }
+ 
++/* Method to handle crspace counter reads */
++static int mlxbf_pmc_read_crspace_counter(int blk_num, uint32_t cnt_num,
++					  uint64_t *result)
++{
++	uint32_t value;
++	int status = 0;
++
++	status = mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
++		MLXBF_PMC_CRSPACE_PERFMON_VAL0(pmc->block[blk_num].counters) +
++		(cnt_num * 4), &value);
++	if (status)
++		return status;
++
++	*result = value;
++
++	return 0;
++}
++
+ /* Method to read the counter value */
+ static int mlxbf_pmc_read_counter(int blk_num, uint32_t cnt_num, bool is_l3,
+ 				  uint64_t *result)
+@@ -818,6 +1326,9 @@ static int mlxbf_pmc_read_counter(int blk_num, uint32_t cnt_num, bool is_l3,
+ 	if (is_l3)
+ 		return mlxbf_pmc_read_l3_counter(blk_num, cnt_num, result);
+ 
++	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE)
++		return mlxbf_pmc_read_crspace_counter(blk_num, cnt_num, result);
++
+ 	perfcfg_offset = cnt_num * MLXBF_PMC_REG_SIZE;
+ 	perfval_offset = perfcfg_offset +
+ 			 pmc->block[blk_num].counters * MLXBF_PMC_REG_SIZE;
+@@ -893,6 +1404,30 @@ static int mlxbf_pmc_read_l3_event(int blk_num, uint32_t cnt_num,
+ 	return 0;
+ }
+ 
++/* Method to read crspace block event */
++static int mlxbf_pmc_read_crspace_event(int blk_num, uint32_t cnt_num,
++					uint64_t *result)
++{
++	uint32_t word, evt;
++	void *addr;
++	int ret;
++
++	addr = pmc->block[blk_num].mmio_base +
++		(rounddown(cnt_num, 2) * MLXBF_PMC_CRSPACE_PERFSEL_SZ);
++	ret = mlxbf_pmc_readl(addr, &word);
++	if (ret)
++		return ret;
++
++	if (cnt_num % 2)
++		evt = FIELD_GET(MLXBF_PMC_CRSPACE_PERFSEL1, word);
++	else
++		evt = FIELD_GET(MLXBF_PMC_CRSPACE_PERFSEL0, word);
++
++	*result = evt;
++
++	return 0;
++}
++
+ /* Method to find the event currently being monitored by a counter */
+ static int mlxbf_pmc_read_event(int blk_num, uint32_t cnt_num, bool is_l3,
+ 				uint64_t *result)
+@@ -906,6 +1441,9 @@ static int mlxbf_pmc_read_event(int blk_num, uint32_t cnt_num, bool is_l3,
+ 	if (is_l3)
+ 		return mlxbf_pmc_read_l3_event(blk_num, cnt_num, result);
+ 
++	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE)
++		return mlxbf_pmc_read_crspace_event(blk_num, cnt_num, result);
++
+ 	perfcfg_offset = cnt_num * MLXBF_PMC_REG_SIZE;
+ 	perfval_offset = perfcfg_offset +
+ 			 pmc->block[blk_num].counters * MLXBF_PMC_REG_SIZE;
+@@ -982,7 +1520,8 @@ static ssize_t mlxbf_pmc_counter_show(struct device *dev,
+ 	if (strstr(pmc->block_name[blk_num], "l3cache"))
+ 		is_l3 = true;
+ 
+-	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_COUNTER) {
++	if ((pmc->block[blk_num].type == MLXBF_PMC_TYPE_COUNTER) ||
++	    (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE)) {
+ 		if (mlxbf_pmc_read_counter(blk_num, cnt_num, is_l3, &value))
+ 			return -EINVAL;
+ 	} else if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_REGISTER) {
+@@ -1040,6 +1579,10 @@ static ssize_t mlxbf_pmc_counter_store(struct device *dev,
+ 		err = mlxbf_pmc_write_reg(blk_num, offset, data);
+ 		if (err)
+ 			return err;
++	} else if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE) {
++		if (sscanf(attr->attr.name, "counter%d", &cnt_num) != 1)
++			return -EINVAL;
++		err = mlxbf_pmc_clear_crspace_counter(blk_num, cnt_num);
+ 	} else
+ 		return -EINVAL;
+ 
+@@ -1137,28 +1680,37 @@ static ssize_t mlxbf_pmc_event_list_show(struct device *dev,
+ 	return ret;
+ }
+ 
+-/* Show function for "enable" sysfs files - only for l3cache */
++/* Show function for "enable" sysfs files - only for l3cache & crspace */
+ static ssize_t mlxbf_pmc_enable_show(struct device *dev,
+ 				     struct device_attribute *attr, char *buf)
+ {
+ 	struct mlxbf_pmc_attribute *attr_enable = container_of(
+ 		attr, struct mlxbf_pmc_attribute, dev_attr);
+-	uint32_t perfcnt_cfg;
++	uint32_t perfcnt_cfg, word;
+ 	int blk_num, value;
+ 
+ 	blk_num = attr_enable->nr;
+ 
+-	if (mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+-				    MLXBF_PMC_L3C_PERF_CNT_CFG,
+-			    &perfcnt_cfg))
+-		return -EINVAL;
++	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE) {
++		if (mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
++				MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
++				&word))
++			return -EINVAL;
+ 
+-	value = FIELD_GET(MLXBF_PMC_L3C_PERF_CNT_CFG_EN, perfcnt_cfg);
++		value = FIELD_GET(MLXBF_PMC_CRSPACE_PERFMON_EN, word);
++	} else {
++		if (mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
++					    MLXBF_PMC_L3C_PERF_CNT_CFG,
++				    &perfcnt_cfg))
++			return -EINVAL;
++
++		value = FIELD_GET(MLXBF_PMC_L3C_PERF_CNT_CFG_EN, perfcnt_cfg);
++	}
+ 
+ 	return sysfs_emit(buf, "%d\n", value);
+ }
+ 
+-/* Store function for "enable" sysfs files - only for l3cache */
++/* Store function for "enable" sysfs files - only for l3cache & crspace */
+ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+ 				      struct device_attribute *attr,
+ 				      const char *buf, size_t count)
+@@ -1166,6 +1718,7 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+ 	struct mlxbf_pmc_attribute *attr_enable = container_of(
+ 		attr, struct mlxbf_pmc_attribute, dev_attr);
+ 	int err, en, blk_num;
++	uint32_t word;
+ 
+ 	blk_num = attr_enable->nr;
+ 
+@@ -1173,19 +1726,35 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+ 	if (err < 0)
+ 		return err;
+ 
+-	if (!en) {
+-		err = mlxbf_pmc_config_l3_counters(blk_num, false, false);
++	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE) {
++		err = mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
++			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
++			&word);
+ 		if (err)
+-			return err;
+-	} else if (en == 1) {
+-		err = mlxbf_pmc_config_l3_counters(blk_num, false, true);
+-		if (err)
+-			return err;
+-		err = mlxbf_pmc_config_l3_counters(blk_num, true, false);
++			return -EINVAL;
++
++		word &= ~MLXBF_PMC_CRSPACE_PERFMON_EN;
++		word |= FIELD_PREP(MLXBF_PMC_CRSPACE_PERFMON_EN, en);
++		if (en)
++			word |= FIELD_PREP(MLXBF_PMC_CRSPACE_PERFMON_CLR, 1);
++
++		mlxbf_pmc_write(pmc->block[blk_num].mmio_base +
++			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
++			MLXBF_PMC_WRITE_REG_32, word);
++	} else {
++		if (en && en != 1)
++			return -EINVAL;
++
++		err = mlxbf_pmc_config_l3_counters(blk_num, false, !!en);
+ 		if (err)
+ 			return err;
+-	} else
+-		return -EINVAL;
++
++		if (en == 1) {
++			err = mlxbf_pmc_config_l3_counters(blk_num, true, false);
++			if (err)
++				return err;
++		}
++	}
+ 
+ 	return count;
+ }
+@@ -1206,7 +1775,8 @@ static int mlxbf_pmc_init_perftype_counter(struct device *dev, int blk_num)
+ 	attr = NULL;
+ 
+ 	/* "enable" sysfs to start/stop the counters. Only in L3C blocks */
+-	if (strstr(pmc->block_name[blk_num], "l3cache")) {
++	if (strstr(pmc->block_name[blk_num], "l3cache") ||
++	    ((pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE))) {
+ 		attr = &pmc->block[blk_num].attr_enable;
+ 		attr->dev_attr.attr.mode = 0644;
+ 		attr->dev_attr.show = mlxbf_pmc_enable_show;
+@@ -1297,7 +1867,8 @@ static int mlxbf_pmc_create_groups(struct device *dev, int blk_num)
+ 	int err;
+ 
+ 	/* Populate attributes based on counter type */
+-	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_COUNTER)
++	if ((pmc->block[blk_num].type == MLXBF_PMC_TYPE_COUNTER) ||
++	    (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE))
+ 		err = mlxbf_pmc_init_perftype_counter(dev, blk_num);
+ 	else if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_REGISTER)
+ 		err = mlxbf_pmc_init_perftype_reg(dev, blk_num);
+@@ -1311,7 +1882,8 @@ static int mlxbf_pmc_create_groups(struct device *dev, int blk_num)
+ 	pmc->block[blk_num].block_attr_grp.attrs = pmc->block[blk_num].block_attr;
+ 	pmc->block[blk_num].block_attr_grp.name = devm_kasprintf(
+ 		dev, GFP_KERNEL, pmc->block_name[blk_num]);
+-	pmc->groups[blk_num] = &pmc->block[blk_num].block_attr_grp;
++	pmc->groups[pmc->group_num] = &pmc->block[blk_num].block_attr_grp;
++	pmc->group_num++;
+ 
+ 	return 0;
+ }
+@@ -1334,13 +1906,52 @@ static int mlxbf_pmc_map_counters(struct device *dev)
+ 	int i, tile_num, ret;
+ 
+ 	for (i = 0; i < pmc->total_blocks; ++i) {
+-		if (strstr(pmc->block_name[i], "tile")) {
++		/* Create sysfs for tiles only if block number <  tile_count */
++		if (strstr(pmc->block_name[i], "tilenet")) {
++			if (sscanf(pmc->block_name[i], "tilenet%d", &tile_num) != 1)
++				continue;
++
++			if (tile_num >= pmc->tile_count)
++				continue;
++		} else if (strstr(pmc->block_name[i], "tile")) {
+ 			if (sscanf(pmc->block_name[i], "tile%d", &tile_num) != 1)
+-				return -EINVAL;
++				continue;
+ 
+ 			if (tile_num >= pmc->tile_count)
+ 				continue;
+ 		}
++
++		/* Create sysfs only for enabled MSS blocks */
++		if (strstr(pmc->block_name[i], "mss") &&
++		    pmc->event_set == MLXBF_PMC_EVENT_SET_BF3) {
++			int mss_num;
++
++			if (sscanf(pmc->block_name[i], "mss%d", &mss_num) != 1)
++				continue;
++
++			if (!((pmc->mss_enable >> mss_num) & 0x1))
++				continue;
++		}
++
++		/* Create sysfs only for enabled LLT blocks */
++		if (strstr(pmc->block_name[i], "llt_miss")) {
++			int llt_num;
++
++			if (sscanf(pmc->block_name[i], "llt_miss%d", &llt_num) != 1)
++				continue;
++
++			if (!((pmc->llt_enable >> llt_num) & 0x1))
++				continue;
++		} else if (strstr(pmc->block_name[i], "llt")) {
++			int llt_num;
++
++			if (sscanf(pmc->block_name[i], "llt%d", &llt_num) != 1)
++				continue;
++
++			if (!((pmc->llt_enable >> llt_num) & 0x1))
++				continue;
++		}
++
+ 		ret = device_property_read_u64_array(dev, pmc->block_name[i],
+ 						     info, MLXBF_PMC_INFO_SZ);
+ 		if (ret)
+@@ -1417,6 +2028,8 @@ static int mlxbf_pmc_probe(struct platform_device *pdev)
+ 		pmc->event_set = MLXBF_PMC_EVENT_SET_BF1;
+ 	else if (!strcmp(hid, "MLNXBFD1"))
+ 		pmc->event_set = MLXBF_PMC_EVENT_SET_BF2;
++	else if (!strcmp(hid, "MLNXBFD2"))
++		pmc->event_set = MLXBF_PMC_EVENT_SET_BF3;
+ 	else
+ 		return -ENODEV;
+ 
+@@ -1430,11 +2043,19 @@ static int mlxbf_pmc_probe(struct platform_device *pdev)
+ 	if (ret != pmc->total_blocks)
+ 		return -EFAULT;
+ 
+-	ret = device_property_read_u32(dev, "tile_num", &pmc->tile_count);
+-	if (ret)
+-		return ret;
++	if (device_property_read_u32(dev, "tile_num", &pmc->tile_count)) {
++		if (device_property_read_u8(dev, "llt_enable", &pmc->llt_enable)) {
++			dev_err(dev, "Number of tiles/LLTs undefined\n");
++			return -EINVAL;
++		}
++		if (device_property_read_u8(dev, "mss_enable", &pmc->mss_enable)) {
++			dev_err(dev, "Number of tiles/MSSs undefined\n");
++			return -EINVAL;
++		}
++	}
+ 
+ 	pmc->pdev = pdev;
++	pmc->group_num = 0;
+ 
+ 	ret = mlxbf_pmc_map_counters(dev);
+ 	if (ret)
+@@ -1449,6 +2070,7 @@ static int mlxbf_pmc_probe(struct platform_device *pdev)
+ 
+ static const struct acpi_device_id mlxbf_pmc_acpi_ids[] = { { "MLNXBFD0", 0 },
+ 							    { "MLNXBFD1", 0 },
++							    { "MLNXBFD2", 0 },
+ 							    {}, };
+ 
+ MODULE_DEVICE_TABLE(acpi, mlxbf_pmc_acpi_ids);
+-- 
+2.30.1
 
-See if this change can be moved to pmc-quirks.c, besides that change
-looks good to me. Thank you.
-
-Acked-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-
-> ---
-> v15->v16:
->  * Only match PCIe root ports with ACPI companions
->  * Use constraints when workaround activated
-> ---
->  drivers/platform/x86/amd/pmc/pmc.c | 39 ++++++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-> index eb2a4263814c..6a037447ec5a 100644
-> --- a/drivers/platform/x86/amd/pmc/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc/pmc.c
-> @@ -741,6 +741,41 @@ static int amd_pmc_czn_wa_irq1(struct amd_pmc_dev *pdev)
->  	return 0;
->  }
->  
-> +/* only allow PCIe root ports with a LPS0 constraint configured to go to D3 */
-> +static int amd_pmc_rp_wa(struct amd_pmc_dev *pdev)
-> +{
-> +	struct pci_dev *pci_dev = NULL;
-> +
-> +	while ((pci_dev = pci_get_device(PCI_VENDOR_ID_AMD, PCI_ANY_ID, pci_dev))) {
-> +		struct acpi_device *adev;
-> +		int constraint;
-> +
-> +		if (!pci_is_pcie(pci_dev) ||
-> +		    !(pci_pcie_type(pci_dev) == PCI_EXP_TYPE_ROOT_PORT))
-> +			continue;
-> +
-> +		if (pci_dev->current_state == PCI_D3hot ||
-> +		    pci_dev->current_state == PCI_D3cold)
-> +			continue;
-> +
-> +		adev = ACPI_COMPANION(&pci_dev->dev);
-> +		if (!adev)
-> +			continue;
-> +
-> +		constraint = acpi_get_lps0_constraint(adev);
-> +		if (constraint != ACPI_STATE_UNKNOWN &&
-> +		    constraint >= ACPI_STATE_S3)
-> +			continue;
-> +
-> +		if (pci_dev->bridge_d3 == 0)
-> +			continue;
-> +		pci_dev->bridge_d3 = 0;
-> +		dev_info(&pci_dev->dev, "Disabling D3 on PCIe root port due lack of constraint\n");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
->  {
->  	struct rtc_device *rtc_device;
-> @@ -893,6 +928,10 @@ static int amd_pmc_suspend_handler(struct device *dev)
->  	case AMD_CPU_ID_CZN:
->  		rc = amd_pmc_czn_wa_irq1(pdev);
->  		break;
-> +	case AMD_CPU_ID_YC:
-> +	case AMD_CPU_ID_PS:
-> +		rc = amd_pmc_rp_wa(pdev);
-> +		break;
->  	default:
->  		break;
->  	}
-> 
