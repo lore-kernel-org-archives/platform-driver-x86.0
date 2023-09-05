@@ -2,108 +2,234 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6E0C83F3E
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 16:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4FACA0FF3
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 16:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241187AbjIEQeP (ORCPT
+        id S235194AbjIEQeT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:34:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58938 "EHLO
+        Tue, 5 Sep 2023 12:34:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353880AbjIEI2a (ORCPT
+        with ESMTP id S1354346AbjIEKxT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Sep 2023 04:28:30 -0400
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 964D5CC7;
-        Tue,  5 Sep 2023 01:28:23 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2070F5C00D7;
-        Tue,  5 Sep 2023 04:28:21 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 05 Sep 2023 04:28:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-        :cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1693902501; x=1693988901; bh=5jDiTe+a/3
-        BCTH6WBKikex+dCxi9PDN83ta/4fvqmq4=; b=OQ2OZCMhVJRg+6WqZErqBVoT9v
-        2xMzxyifLmMlWa5I9bvt3rBkxS1WTu1MtEy58VSE1oj4+U4cOkhcwq6W4VaOZEce
-        YbNAh5lC1UBN8upNmD4zFgcdF9ml4y0QyYzQgbw9JqGK26iu7RPCgrtZbqP2Ibj6
-        I019kBPGIt4wE36JC6a6OjnmGD70GX1pgoDz74iTMo9QKjJPjsnaw8vFGyk8jDjI
-        wehj4+5GWVrQrTsjVBjFLBgdMyyllzS2bJVoPRX4yNAtu85bjIYnk2PmupnlNK6O
-        KOAD8ZLgiusjtvdAFYtSf+hTuu5BVs1BoUbjnu7kqGt330hBrMpQCr1TZsgw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1693902501; x=1693988901; bh=5jDiTe+a/3BCT
-        H6WBKikex+dCxi9PDN83ta/4fvqmq4=; b=2ifOQ2uCleqetPbzngex4dyPZdi2d
-        hqs/QhUV3DE7CCygtSKs3p8KpzO+6JedjlqyCO2FvOlaL5L2MfEGkQezNGfsvamL
-        ZgmFOOZFTuJo7stjRrWbT6J8cm7nw5MDH/rx3DopXCySwp6s4SpQGgT4sYqNoSG/
-        VuCoAJcFEiCSLLoEBsBwyw0718ViPlkwjnYmLSxwSgFq8ftCn0pVuHoV475LMAIA
-        MwKYX6/KutsaxxEtUxDNE+pW7x6S/vD3cz0r5yHUsq5flV87PYaeBnDR0PnXIpEY
-        3nviijDCeIiqZQfH1kB2/lKcu8M5mEdeNiac29P7GHkdLES3Y62QaAnlw==
-X-ME-Sender: <xms:pOb2ZHgZlA9kWQD45_1qmEBGVxUucbb6WPne_oR_alJNWKfpSRBEVQ>
-    <xme:pOb2ZEDEhoONAfZ4BFvqqazyS6SFNEcRbdNC2GbR9bNl9BKqnU3MD3i-T5tGqre7i
-    v6WGz7DjYM6BOJKXVk>
-X-ME-Received: <xmr:pOb2ZHFnE3e3nPNbjL9sHGDITjKvaoqTA4CuxcZD59fcmsqQ86FueEHNuhpz>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudehtddgtdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
-    nhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfdujedthfduudekffefkeeiffdttd
-    dvhfegudduueffuefhfefggeefteevvdegnecuvehluhhsthgvrhfuihiivgeptdenucfr
-    rghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:pOb2ZET9QcHJX99u1L6lEHba7Chzd094Nbdjr_BeTUjlgJ5G3-Sfag>
-    <xmx:pOb2ZEyyl0G7srbsMCObuAknbAKiMlSuyJU9r6xuQA_CrgWPWcdnRw>
-    <xmx:pOb2ZK7Ovf77afHvUVQH5ncI0Mf1baFjD6xDrQODOLveS9xRmpKMQw>
-    <xmx:peb2ZA8cpJCVl8lTP7X8Qxo6NEGi8HGnMtTAwFrItqQRKPeuaAaMEw>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 5 Sep 2023 04:28:18 -0400 (EDT)
-From:   "Luke D. Jones" <luke@ljones.dev>
-To:     hdegoede@redhat.com
-Cc:     corentin.chary@gmail.com, markgross@kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        "Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH] platform/x86: asus-wmi: Support 2023 ROG X16 tablet mode
-Date:   Tue,  5 Sep 2023 20:28:13 +1200
-Message-ID: <20230905082813.13470-1-luke@ljones.dev>
-X-Mailer: git-send-email 2.41.0
+        Tue, 5 Sep 2023 06:53:19 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ED3E1AB
+        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Sep 2023 03:52:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1693911150;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iA7IdFpDwtnuDlVKS2NZegEsBXTaUrliGdVa1RbXg5w=;
+        b=Es1xkVMA8pqJ/q+AzM3D0OSLZ0ig+L7i50hlre3yz6xqZjkUWb/VFbwRPTdF7E+mDp94om
+        MSlZTrt3XnmCgDfsen0bNxac/5wJvZgNGqM8rtVBXFPeeCvbdwWYBAjh2HJJIf9Avx9Zpo
+        TeVRHZiPTczP59FQKO7a1YuxD2r8LWQ=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-690-vLV2BLtGPXGxKbIjHbYT4w-1; Tue, 05 Sep 2023 06:52:29 -0400
+X-MC-Unique: vLV2BLtGPXGxKbIjHbYT4w-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-99c8bbc902eso179941966b.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Sep 2023 03:52:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693911145; x=1694515945;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iA7IdFpDwtnuDlVKS2NZegEsBXTaUrliGdVa1RbXg5w=;
+        b=QNr/4gvOG4vaSJTb2kGZL3u61VsSjNC0Z20MHSnHiko0s40KdmwAX1HnA/NPENtrFG
+         pXdv7lv8F14I3KyQB7WGEYlK2kxHZzxMjHp2q1RDFMDS2QamZoGHTAgpvhEeEuqHpwDL
+         BmlD6v1pnWpbMQkWvOhh4FUETchcRRWd7k5JfQznEiSMeInHk13C215QDfnSpq9avnSr
+         /0c7yTx4XkEpTym8IVpZeGlq4oKfV/L5DC7eUFS/e/PyrlWjEIZY+tHXo7izzFXuJefw
+         T3cbayBFN4ePBMpntaE7JhdoawRvfBJCtE1ptPL5dO4t0MhXyRBddoLNydUuDEzxtbHT
+         8q5A==
+X-Gm-Message-State: AOJu0YyF1S5nNvdAvaHP0vmJUzKQNQD/0xHt5IoZb7NAjWlA0mXg5VlG
+        JQdH1oMDAn6eRsin/sTWiC+6fjZpV9BFEgn7tAuyNNDCr9RdKNCXDICcswir9M4ifbbegk0RD79
+        z+aENwO/8ZlFWC15FtMIWiNwbE0DGKHF5tw==
+X-Received: by 2002:a17:906:cc18:b0:9a5:ce62:6e19 with SMTP id ml24-20020a170906cc1800b009a5ce626e19mr8533487ejb.69.1693911145442;
+        Tue, 05 Sep 2023 03:52:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFP3ELd8tEEkkAjXou7dlgTGLonfFfdHBVi8/VthBpLHkYSyll3QShK2Y6WgqpuYr5U998Zpg==
+X-Received: by 2002:a17:906:cc18:b0:9a5:ce62:6e19 with SMTP id ml24-20020a170906cc1800b009a5ce626e19mr8533467ejb.69.1693911145117;
+        Tue, 05 Sep 2023 03:52:25 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id vi18-20020a170907d41200b0098ec690e6d7sm7430529ejc.73.2023.09.05.03.52.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Sep 2023 03:52:24 -0700 (PDT)
+Message-ID: <685e4951-e283-835c-5cce-ddd802fadf62@redhat.com>
+Date:   Tue, 5 Sep 2023 12:52:23 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2] x86/platform/uv: refactor deprecated strcpy and
+ strncpy
+Content-Language: en-US, nl
+To:     Justin Stitt <justinstitt@google.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Mike Travis <mike.travis@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Yang Yang <yang.yang29@zte.com.cn>
+References: <20230824-strncpy-arch-x86-platform-uv-uv_nmi-v2-1-e16d9a3ec570@google.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230824-strncpy-arch-x86-platform-uv-uv_nmi-v2-1-e16d9a3ec570@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add quirk for ASUS ROG X16 (GV601V, 2023 versions) Flow 2-in-1
-to enable tablet mode with lid flip (all screen rotations).
+Hi Justin,
 
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 8/24/23 20:52, Justin Stitt wrote:
+> Both `strncpy` and `strcpy` are deprecated for use on NUL-terminated
+> destination strings [1].
+> 
+> A suitable replacement is `strscpy` [2] due to the fact that it
+> guarantees NUL-termination on its destination buffer argument which is
+> _not_ the case for `strncpy` or `strcpy`!
+> 
+> In this case, we can drop both the forced NUL-termination and the `... -1` from:
+> |       strncpy(arg, val, ACTION_LEN - 1);
+> as `strscpy` implicitly has this behavior.
+> 
+> Also include slight refactor to code removing possible new-line chars as
+> per Yang Yang's work at [3]. This reduces code size and complexity by
+> using more robust and better understood interfaces.
+> 
+> Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://lore.kernel.org/all/202212091545310085328@zte.com.cn/ [3]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Co-developed-by: Yang Yang <yang.yang29@zte.com.cn>
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Changes in v2:
+> - use `sizeof` on destination string instead of `strlen` (thanks Andy, Kees and Dimitri)
+> - refactor code to remove potential new-line chars (thanks Yang Yang and Andy)
+> - Link to v1: https://lore.kernel.org/r/20230822-strncpy-arch-x86-platform-uv-uv_nmi-v1-1-931f2943de0d@google.com
+> ---
+> Note: build-tested only
+> 
+> Another thing, Yang Yang's patch [3] had some review from Andy regarding
+> the use of `-1` and `+1` in and around the strnchrnul invocation. I
+> believe Yang Yang's original implementation is correct but let's also
+> just use sizeof(arg) instead of ACTION_LEN.
+> 
+> Here's a godbolt link detailing some findings around the new-line
+> refactor in response to Andy's feedback: https://godbolt.org/z/K8drG3oq5
+> ---
+>  arch/x86/platform/uv/uv_nmi.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
+> index a60af0230e27..913347b2b9ab 100644
+> --- a/arch/x86/platform/uv/uv_nmi.c
+> +++ b/arch/x86/platform/uv/uv_nmi.c
+> @@ -202,21 +202,17 @@ static int param_set_action(const char *val, const struct kernel_param *kp)
+>  {
+>  	int i;
+>  	int n = ARRAY_SIZE(valid_acts);
+> -	char arg[ACTION_LEN], *p;
+> +	char arg[ACTION_LEN];
+>  
+>  	/* (remove possible '\n') */
+> -	strncpy(arg, val, ACTION_LEN - 1);
+> -	arg[ACTION_LEN - 1] = '\0';
+> -	p = strchr(arg, '\n');
+> -	if (p)
+> -		*p = '\0';
+> +	strscpy(arg, val, strnchrnul(val, sizeof(arg) - 1, '\n') - val + 1);
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index fdf7da06af30..d85d895fee89 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -478,6 +478,15 @@ static const struct dmi_system_id asus_quirks[] = {
- 		},
- 		.driver_data = &quirk_asus_tablet_mode,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUS ROG FLOW X16",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GV601V"),
-+		},
-+		.driver_data = &quirk_asus_tablet_mode,
-+	},
- 	{
- 		.callback = dmi_matched,
- 		.ident = "ASUS VivoBook E410MA",
--- 
-2.41.0
+I have 25 years of C-programming experience and even I
+cannot read this.
+
+It seems to me that you are trying to use the length
+argument to not copy the '\n' here.
+
+While at the same time using strnchr(..., sizeof(arg) ...)
+instead of normal strchr() to make sure you don't pass\
+a value bigger then sizeof(arg) as length to strscpy().
+
+Please do not do this it is needlessly complicated and
+makes the code almost impossible to read / reason about.
+
+What the original code was doing, first copying at
+most ACTION_LEN - 1 bytes into arg and then ensuring
+0 termination, followed by stripping '\n' from the
+writable copy we have just made is much cleaner.
+
+IMHO this patch should simple replace the strncpy()
++ 0 termination with a strscpy() and not make
+any other changes, leading to:
+
+	/* (remove possible '\n') */
+	strscpy(arg, val, sizeof(arg));
+	p = strchr(arg, '\n');
+	if (p)
+		*p = '\0';
+
+See how this is much much more readable /
+much easier to wrap ones mind around ?
+
+And then as a *separate* followup patch
+you could simplify this further by using strchrnul():
+
+	/* (remove possible '\n') */
+	strscpy(arg, val, sizeof(arg));
+	p = strchrnul(arg, '\n');
+	*p = '\0';
+
+But again that belongs in a separate patch
+since it is not:
+
+"refactor deprecated strcpy and strncpy"
+
+Regards,
+
+Hans
+
+
+
+
+
+
+>  
+>  	for (i = 0; i < n; i++)
+>  		if (!strcmp(arg, valid_acts[i].action))
+>  			break;
+>  
+>  	if (i < n) {
+> -		strcpy(uv_nmi_action, arg);
+> +		strscpy(uv_nmi_action, arg, sizeof(uv_nmi_action));
+>  		pr_info("UV: New NMI action:%s\n", uv_nmi_action);
+>  		return 0;
+>  	}
+> @@ -959,7 +955,7 @@ static int uv_handle_nmi(unsigned int reason, struct pt_regs *regs)
+>  
+>  		/* Unexpected return, revert action to "dump" */
+>  		if (master)
+> -			strncpy(uv_nmi_action, "dump", strlen(uv_nmi_action));
+> +			strscpy(uv_nmi_action, "dump", sizeof(uv_nmi_action));
+>  	}
+>  
+>  	/* Pause as all CPU's enter the NMI handler */
+> 
+> ---
+> base-commit: 706a741595047797872e669b3101429ab8d378ef
+> change-id: 20230822-strncpy-arch-x86-platform-uv-uv_nmi-474e5295c2c1
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
 
