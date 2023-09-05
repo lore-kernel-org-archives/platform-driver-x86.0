@@ -2,211 +2,170 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F89CA0FF3
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 16:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F40CA0FFA
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 18:55:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243068AbjIEQed (ORCPT
+        id S239151AbjIESzD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:34:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37346 "EHLO
+        Tue, 5 Sep 2023 14:55:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354588AbjIEMtv (ORCPT
+        with ESMTP id S229529AbjIESy6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Sep 2023 08:49:51 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2058.outbound.protection.outlook.com [40.107.223.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5D601A8;
-        Tue,  5 Sep 2023 05:49:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dgbfRIO+k3Op+FGwqojHs7hmn9olwVVUOiu+NEF1Ks3J3Q06jQ4XonWcB/+FxjuRD2ANdvN9vIRGVcvgj+gXXthpn1NBCjEVXKG4IYQi+hVeWgYHeKbC/Z61VpRYAzfSNLMiX1CmZULegnkUmELyVEH+iqXDVQvNuNn0ySBsnHMgKMMfiwVoXeQwTPk+HuuffxRD24ydCLlo2kWvUi5lIs5MA/A14SG0x82hsjTce6luXpavSJRyixBLWHDaqL1mOjjStBwdwjvIRNnJoxkJOu/xms2iBb52uuZQqLtlXSJGj2brhYT+7QibZ5GtXuLqaSfBJQ+bSsodGrPumR7HMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bRPWyppAceuvfSFgwLFF7O6J8nvnNKM01OGA0U4NISU=;
- b=J9FHsAaA1FHQE+nNc0wIEZbOeK4QiOmEkLLaLYIshVBKwP5ySx+KfivPGMZiv9fQhEAtnnL6tK22GXQHFvuM7bKR1h4eIlJbmre1YgEhdCHDkEgM1f0Q87moL2f4PLnuZNEMY49nAOmeSBd9R7y2GVH91kafjg1ryDQz5QYsAUaQdZ21dImvGWbCCecpGiquMYM54PDHsLFOeKlrc+LZtlQit7sDQCkL8RYsvl0lJDW/1NbP4jTZy6ObzS7AYnwbBIUmFcCnPElRTfpg3I0oZQTzIz0So0RD9ozS1v1EE8wVBc2op+kM/F5f5Mk4l3cxtFiukIls/Wh7clo/Pq9G9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bRPWyppAceuvfSFgwLFF7O6J8nvnNKM01OGA0U4NISU=;
- b=ZpgpdYzkJpqvSJSg/7DzPuNjnX7yBjrJRJuklZ2Qg2NuQUbW9VX1bEHCPWaPDYXrFv2huC4n8nKhecLIRdiFyFprDZ5N5jnAM6nCtkIjcfACyknGBhT51g11XOYOs3zfDn+kbf+IeVILr8VaasoZneJHjWgfCnSS3VGfRMwPQYrqroDLv0PA9fvuoJoYbfIUTZlc291WemT2Bp+3Q3kybibNU6/q94ixs+xy7w/Uw+LuLyrjEAUwLRw8L10PbxQxzYUNb4RLnMPToJ9q9hVzeBGaHpmqPv7eMWonGcbNyRZEZlswlwgHn12UlNVBU3CEf1jNl15/xFRQJEdySp/iMw==
-Received: from CY8PR22CA0001.namprd22.prod.outlook.com (2603:10b6:930:45::6)
- by CH2PR12MB4907.namprd12.prod.outlook.com (2603:10b6:610:68::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.33; Tue, 5 Sep
- 2023 12:49:45 +0000
-Received: from CY4PEPF0000E9D0.namprd03.prod.outlook.com
- (2603:10b6:930:45:cafe::8f) by CY8PR22CA0001.outlook.office365.com
- (2603:10b6:930:45::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.33 via Frontend
- Transport; Tue, 5 Sep 2023 12:49:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- CY4PEPF0000E9D0.mail.protection.outlook.com (10.167.241.143) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6768.25 via Frontend Transport; Tue, 5 Sep 2023 12:49:45 +0000
-Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Tue, 5 Sep 2023
- 05:49:42 -0700
-Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.37; Tue, 5 Sep 2023 05:49:42 -0700
-Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com
- (10.126.190.180) with Microsoft SMTP Server id 15.2.986.37 via Frontend
- Transport; Tue, 5 Sep 2023 05:49:41 -0700
-From:   Shravan Kumar Ramani <shravankr@nvidia.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        David Thompson <davthompson@nvidia.com>
-CC:     Shravan Kumar Ramani <shravankr@nvidia.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 2/3] platform/mellanox: mlxbf-pmc: Fix reading of unprogrammed events
-Date:   Tue, 5 Sep 2023 08:49:33 -0400
-Message-ID: <04d0213932d32681de1c716b54320ed894e52425.1693917738.git.shravankr@nvidia.com>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <cover.1693917738.git.shravankr@nvidia.com>
-References: <cover.1693917738.git.shravankr@nvidia.com>
+        Tue, 5 Sep 2023 14:54:58 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C924083
+        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Sep 2023 11:54:29 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-31dcd553fecso2362296f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Sep 2023 11:54:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693940007; x=1694544807; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A2GE4FHHqs6bBZBv794WL9eWtt6b/gcHhoE6C2vLyfs=;
+        b=qU/fWNXV1VJfKZ2SoOwOtjhwuDd0NYdQLryt6PlmFtdk073sxaBx8DHaIkvrlf7ih0
+         044RxVvgY15XfF6o637PEbb3CfuM52holeRFB4yBINIbL0iSj4jRVep386mVXLT4CaOL
+         uS+3PHKEqcpzRfusgTfiDxdEUJn++OmfPjg4E0jz2FU4QwVDtUL7k1+aktNGDqxh69zp
+         1zOAJZghnJ8SilpocO4fKNsk1QMZoYxVi6YH4h7woAupKdkh33Rz3DMKudoN2PL1RTZ3
+         fBF8vOHHOB7TWvpJUV72sEs1gEEKAhmt/O+H9l6A3fuxqgHBaqHgGAxT2M1u3rkRen4Z
+         xJVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693940007; x=1694544807;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A2GE4FHHqs6bBZBv794WL9eWtt6b/gcHhoE6C2vLyfs=;
+        b=FpmyelXTa1kzCNMjSxDMGwYPfC2yTctdPFP+6SMmKJDHeT9dUstq5FDdLFptXXu1PW
+         0cZZ4AeIJSXCAofLi9Rs1o6m/t3rR0TCN1p9D5EAU3jkAhSSzCvIfDuZ3cwNEFMF9Uuy
+         xDdQrkG5KoRm30eTBGhv9YEMtUSMx76Xa1c1GAqGBOuPoOpM7353KDxd0Lov9RvmjvEP
+         n10EOimJNnVm86VmhBpuEtT0ifzSKiiMapcXIK6DV3o/1e9lHr7M+olioyYRIZd9U7Jq
+         gLldwcwlCnY6TklwvjkjqbLOPgj4v30GRD499cu+d+DEL+ORUfeNl1g9Or+wITX93Vp3
+         MKYg==
+X-Gm-Message-State: AOJu0YwgPDfM1mItgfT8hZMoL/vVW2S22PBm2mXKuK2ce6hPpdC7Vs8o
+        /waX7pJSHygCNHhIG5x3l79OEQ==
+X-Google-Smtp-Source: AGHT+IEMv51XL5FvHHG3cRgXKYfBtpCzIaG0xueCnriuyRygrFNOOQC3x8IGQeLMqwqbAjFRM5ODiw==
+X-Received: by 2002:adf:ce8c:0:b0:31c:762b:ceb3 with SMTP id r12-20020adfce8c000000b0031c762bceb3mr489509wrn.48.1693940007276;
+        Tue, 05 Sep 2023 11:53:27 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7a54:5dbc:6d09:48b7])
+        by smtp.gmail.com with ESMTPSA id 17-20020a05600c249100b003fbc30825fbsm17550010wms.39.2023.09.05.11.53.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Sep 2023 11:53:26 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH 01/21] gpiolib: make gpio_device_get() and gpio_device_put() public
+Date:   Tue,  5 Sep 2023 20:52:49 +0200
+Message-Id: <20230905185309.131295-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230905185309.131295-1-brgl@bgdev.pl>
+References: <20230905185309.131295-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D0:EE_|CH2PR12MB4907:EE_
-X-MS-Office365-Filtering-Correlation-Id: 47369a45-9400-4294-fa7f-08dbae0e94e2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: coKuitk4SdJDShubN2a/wC6qZV2Plwk/OfMDal9QzkXZXENa1lo1eskFTlUH8ZHkAMLuW8DogaF4D8JIjuRuH1P7E8wuQmcgCiS0R/TZLMLCjCmVS/mIgUqYQ0o1RQtQCsRMJsKzTEWP+o6gAEpOI6KKU6st5zXeWjJwyxk/Lg+qWGaVkAmPfIgbBthI8NQBrs31ClCPVpMkICgqayrYd5WM1ZtpGckZP0HNThE4+ZIRpyGcdcWBn6/WwtBvjakmaBDrmSxRb0olXbSH/W8BSQ8vv+4C4R9oLKZ+NKupGlVVFadIJgOYBVyl9MerARSuSKayrr9xX2I1dZLEn8e9AAwEfU4Ba1gy1IgvrWyRsTd/7TqxzXyGSUdKvm0NaAxOjPv0p1NHQd1quMwE0Cxi8WuuCg8EpxTbE4ht+ouhmnP6Clcldu3/12YPioH/GTXubVx2iP5JRTgwMHnIVGp8Rpaluz/tru81AJe9me2+n3O7hiaopv3n6tA/th8TXLtQ0LXj2t0Bw8gK2rXxgc1YFQU7fRqO7dGLzGuC8VSN3TglNXjAZaP1Mott5bSztRzbnsbOxIMiJtKEQHwUpUsu5LE6Wc9o6VnVG07RXVWas3PUg5DKNr2r8C4kv3gFpU7MAoVozh+ARzhcaJrtZiI0JDb6j+rSQPHBdyrf/I5x60+DnCE24xUWQftSM13fY0t/wHNnMu1VBXKAuHsapyV75W2juwy452tfKChW09Vp3GLiCWuZcO3fYnC6CnZmDCbE
-X-Forefront-Antispam-Report: CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(396003)(346002)(39860400002)(376002)(1800799009)(82310400011)(186009)(451199024)(40470700004)(36840700001)(46966006)(26005)(5660300002)(2616005)(8676002)(4326008)(40460700003)(8936002)(2906002)(47076005)(83380400001)(86362001)(7636003)(356005)(36860700001)(36756003)(426003)(336012)(82740400003)(40480700001)(7696005)(6666004)(110136005)(70586007)(70206006)(54906003)(478600001)(6636002)(41300700001)(316002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2023 12:49:45.2798
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47369a45-9400-4294-fa7f-08dbae0e94e2
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000E9D0.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4907
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This fix involves 2 changes:
- - All event regs have a reset value of 0, which is not a valid
-   event_number as per the event_list for most blocks and hence seen
-   as an error. Add a "disable" event with event_number 0 for all blocks.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
- - The enable bit for each counter need not be checked before
-   reading the event info, and hence removed.
+In order to start migrating away from accessing struct gpio_chip by
+users other than their owners, let's first make the reference management
+functions for the opaque struct gpio_device public in the driver.h
+header.
 
-Fixes: 1a218d312e65 ("platform/mellanox: mlxbf-pmc: Add Mellanox BlueField PMC driver")
-Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
-Reviewed-by: David Thompson <davthompson@nvidia.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/platform/mellanox/mlxbf-pmc.c | 27 +++++++--------------------
- 1 file changed, 7 insertions(+), 20 deletions(-)
+ drivers/gpio/gpiolib.c      | 24 ++++++++++++++++++++++++
+ drivers/gpio/gpiolib.h      | 10 ----------
+ include/linux/gpio/driver.h |  3 +++
+ 3 files changed, 27 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
-index 95afcae7b9fa..2d4bbe99959e 100644
---- a/drivers/platform/mellanox/mlxbf-pmc.c
-+++ b/drivers/platform/mellanox/mlxbf-pmc.c
-@@ -191,6 +191,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_smgen_events[] = {
- };
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index edffa0d2acaa..f84ad54d8dbd 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1058,6 +1058,30 @@ static struct gpio_chip *find_chip_by_name(const char *name)
+ 	return gpiochip_find((void *)name, gpiochip_match_name);
+ }
  
- static const struct mlxbf_pmc_events mlxbf_pmc_trio_events_1[] = {
-+	{ 0x0, "DISABLE" },
- 	{ 0xa0, "TPIO_DATA_BEAT" },
- 	{ 0xa1, "TDMA_DATA_BEAT" },
- 	{ 0xa2, "MAP_DATA_BEAT" },
-@@ -214,6 +215,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_trio_events_1[] = {
- };
++/**
++ * gpio_device_get() - Increase the reference count of this GPIO device
++ * @gdev: GPIO device to increase the refcount for
++ *
++ * Returns:
++ * Pointer to @gdev.
++ */
++struct gpio_device *gpio_device_get(struct gpio_device *gdev)
++{
++	return to_gpio_device(get_device(&gdev->dev));
++}
++EXPORT_SYMBOL_GPL(gpio_device_get);
++
++/**
++ * gpio_device_put() - Decrease the reference count of this GPIO device and
++ *                     possibly free all resources associated with it.
++ * @gdev: GPIO device to decrease the reference count for
++ */
++void gpio_device_put(struct gpio_device *gdev)
++{
++	put_device(&gdev->dev);
++}
++EXPORT_SYMBOL_GPL(gpio_device_put);
++
+ #ifdef CONFIG_GPIOLIB_IRQCHIP
  
- static const struct mlxbf_pmc_events mlxbf_pmc_trio_events_2[] = {
-+	{ 0x0, "DISABLE" },
- 	{ 0xa0, "TPIO_DATA_BEAT" },
- 	{ 0xa1, "TDMA_DATA_BEAT" },
- 	{ 0xa2, "MAP_DATA_BEAT" },
-@@ -246,6 +248,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_trio_events_2[] = {
- };
+ /*
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index 9bff5c2cf720..3ccacf3c1288 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -86,16 +86,6 @@ static inline struct gpio_device *to_gpio_device(struct device *dev)
+ 	return container_of(dev, struct gpio_device, dev);
+ }
  
- static const struct mlxbf_pmc_events mlxbf_pmc_ecc_events[] = {
-+	{ 0x0, "DISABLE" },
- 	{ 0x100, "ECC_SINGLE_ERROR_CNT" },
- 	{ 0x104, "ECC_DOUBLE_ERROR_CNT" },
- 	{ 0x114, "SERR_INJ" },
-@@ -258,6 +261,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_ecc_events[] = {
- };
- 
- static const struct mlxbf_pmc_events mlxbf_pmc_mss_events[] = {
-+	{ 0x0, "DISABLE" },
- 	{ 0xc0, "RXREQ_MSS" },
- 	{ 0xc1, "RXDAT_MSS" },
- 	{ 0xc2, "TXRSP_MSS" },
-@@ -265,6 +269,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_mss_events[] = {
- };
- 
- static const struct mlxbf_pmc_events mlxbf_pmc_hnf_events[] = {
-+	{ 0x0, "DISABLE" },
- 	{ 0x45, "HNF_REQUESTS" },
- 	{ 0x46, "HNF_REJECTS" },
- 	{ 0x47, "ALL_BUSY" },
-@@ -323,6 +328,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_hnf_events[] = {
- };
- 
- static const struct mlxbf_pmc_events mlxbf_pmc_hnfnet_events[] = {
-+	{ 0x0, "DISABLE" },
- 	{ 0x12, "CDN_REQ" },
- 	{ 0x13, "DDN_REQ" },
- 	{ 0x14, "NDN_REQ" },
-@@ -892,7 +898,7 @@ static int mlxbf_pmc_read_event(int blk_num, uint32_t cnt_num, bool is_l3,
- 				uint64_t *result)
- {
- 	uint32_t perfcfg_offset, perfval_offset;
--	uint64_t perfmon_cfg, perfevt, perfctl;
-+	uint64_t perfmon_cfg, perfevt;
- 
- 	if (cnt_num >= pmc->block[blk_num].counters)
- 		return -EINVAL;
-@@ -904,25 +910,6 @@ static int mlxbf_pmc_read_event(int blk_num, uint32_t cnt_num, bool is_l3,
- 	perfval_offset = perfcfg_offset +
- 			 pmc->block[blk_num].counters * MLXBF_PMC_REG_SIZE;
- 
--	/* Set counter in "read" mode */
--	perfmon_cfg = FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_ADDR,
--				 MLXBF_PMC_PERFCTL);
--	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_STROBE, 1);
--	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_WR_R_B, 0);
+-static inline struct gpio_device *gpio_device_get(struct gpio_device *gdev)
+-{
+-	return to_gpio_device(get_device(&gdev->dev));
+-}
 -
--	if (mlxbf_pmc_write(pmc->block[blk_num].mmio_base + perfcfg_offset,
--			    MLXBF_PMC_WRITE_REG_64, perfmon_cfg))
--		return -EFAULT;
+-static inline void gpio_device_put(struct gpio_device *gdev)
+-{
+-	put_device(&gdev->dev);
+-}
 -
--	/* Check if the counter is enabled */
--
--	if (mlxbf_pmc_read(pmc->block[blk_num].mmio_base + perfval_offset,
--			   MLXBF_PMC_READ_REG_64, &perfctl))
--		return -EFAULT;
--
--	if (!FIELD_GET(MLXBF_PMC_PERFCTL_EN0, perfctl))
--		return -EINVAL;
--
- 	/* Set counter in "read" mode */
- 	perfmon_cfg = FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_ADDR,
- 				 MLXBF_PMC_PERFEVT);
+ /* gpio suffixes used for ACPI and device tree lookup */
+ static __maybe_unused const char * const gpio_suffixes[] = { "gpios", "gpio" };
+ 
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 8f0859ba7065..a2060dc3344b 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -606,6 +606,9 @@ int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc,
+ struct gpio_chip *gpiochip_find(void *data,
+ 				int (*match)(struct gpio_chip *gc, void *data));
+ 
++struct gpio_device *gpio_device_get(struct gpio_device *gdev);
++void gpio_device_put(struct gpio_device *gdev);
++
+ bool gpiochip_line_is_irq(struct gpio_chip *gc, unsigned int offset);
+ int gpiochip_reqres_irq(struct gpio_chip *gc, unsigned int offset);
+ void gpiochip_relres_irq(struct gpio_chip *gc, unsigned int offset);
 -- 
-2.30.1
+2.39.2
 
