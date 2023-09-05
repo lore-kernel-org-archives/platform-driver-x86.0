@@ -2,137 +2,169 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78750CA100A
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 20:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0D8CA100C
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 20:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238413AbjIEUVp convert rfc822-to-8bit (ORCPT
+        id S240664AbjIEU53 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Sep 2023 16:21:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42382 "EHLO
+        Tue, 5 Sep 2023 16:57:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232376AbjIEUVp (ORCPT
+        with ESMTP id S234705AbjIEU52 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Sep 2023 16:21:45 -0400
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3675CC;
-        Tue,  5 Sep 2023 13:21:38 -0700 (PDT)
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5711d5dac14so691528eaf.0;
-        Tue, 05 Sep 2023 13:21:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693945298; x=1694550098;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gqmUDO2TVzPYAnNQVahrjzI0bVUxc1RvWHpjYvgFhjI=;
-        b=guTnggz4CJWrCcc/2lWfqP61U0I6fs9HTHB/LYgyUdgC/DGm2iCFt/OTKq0iAgjlYk
-         arnk0Y1xtkqCLQXc27iAnNPBOmE4jDu8iAPVYDcM2qo6v2R1ki/K23PPtjWPUahgqcZ1
-         z0zfaNlj96MSU0fx8C70VFoJvjskb7M17yLQIQBi8ak1tsdR0UbivyAGNyghu8PiUig5
-         8FuX7eBi2aC5cXpXURKK6bCKwTk6eGQRj6lWlJmq0hLUadkS/feoBULJMD0psyBIHBWp
-         MywjVeMUA3CQ3NoZol94WvX1Wk3C8VeQJo3monXWGKiynhEX2uMYP1lu+BnoGnLGQSdH
-         TMdA==
-X-Gm-Message-State: AOJu0Ywg00EyERbtB7RPBPkAlm2ucrf8knpltiPi4CCyHmS+HbFKkrZW
-        8fQrBtIv2CIz2fAZXIFV3TQvJPOQlmzrdX56VmY=
-X-Google-Smtp-Source: AGHT+IF+rVWTTtREO43KaXIUg4yrMf2Rqt/lXRG7d75/4KbLqE0xzo29kqTQemqewyg7UZEZ0Bs76jRlTcDqrHolj1w=
-X-Received: by 2002:a4a:de43:0:b0:573:2a32:6567 with SMTP id
- z3-20020a4ade43000000b005732a326567mr11610639oot.0.1693945297813; Tue, 05 Sep
- 2023 13:21:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230829171212.156688-1-mario.limonciello@amd.com>
- <20230829171212.156688-4-mario.limonciello@amd.com> <ceda84a0-e5cd-f6dc-3e3c-52e85fda8318@amd.com>
- <ead0bc03-2008-96d8-c313-5dc4a9e63479@redhat.com> <f1c65b21-88cb-4ba3-8380-0d2d3fb42c8d@amd.com>
-In-Reply-To: <f1c65b21-88cb-4ba3-8380-0d2d3fb42c8d@amd.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 5 Sep 2023 22:21:26 +0200
-Message-ID: <CAJZ5v0iqn=Pj1k4=u5Mb9PyYeB471Efob5rUiEBchbUrJeL=rg@mail.gmail.com>
+        Tue, 5 Sep 2023 16:57:28 -0400
+X-Greylist: delayed 376 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Sep 2023 13:57:24 PDT
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B2FAC;
+        Tue,  5 Sep 2023 13:57:24 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C655C433CD;
+        Tue,  5 Sep 2023 20:51:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693947067;
+        bh=j4VZbhneezS5ukKmIZ2uZimOa3neoOXs4OmnssGUIZo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=SRMIreR3MbvlHVssKklNjRJUN8OK5Yy/okWw4R0X5iuACktEViVghv9GG99706CeT
+         W2gEdQexSVPrWX8Mya07w/Bc9sqJe1TGfUDJV4JOSZcydeOZEl9l2y89/bG1dtCX2m
+         EjKLQyaOaXfYiKMy2wDm72jK5vNGv+gWg3gX0BAUCN2Ouqrc8o8gtZmO3+UzJA0dnL
+         /5Qp+N03IBytPGFxncdP9anpTypbGmI6QUYwpKNnGOxepNLoOJa103PlKVNf5gmQeX
+         8+g4qT6wZOTQKdXonB9tZjiuHp1wNl1wUWmttVnTjVQ8PoALdWgXAv2NbUpqVEM3mp
+         NtsZIJL01cUvQ==
+Date:   Tue, 5 Sep 2023 15:51:05 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     hdegoede@redhat.com, bhelgaas@google.com, rafael@kernel.org,
+        Shyam-sundar.S-k@amd.com, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Iain Lane <iain@orangesquash.org.uk>
 Subject: Re: [PATCH v16 3/3] platform/x86/amd: pmc: Don't let PCIe root ports
  go into D3
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Iain Lane <iain@orangesquash.org.uk>, rafael@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Message-ID: <20230905205105.GA191110@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230829171212.156688-4-mario.limonciello@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Sep 5, 2023 at 9:57 PM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> On 9/5/2023 05:15, Hans de Goede wrote:
-> > Hi Shyam,
-> >
-> > On 9/5/23 12:08, Shyam Sundar S K wrote:
-> >>
-> >>
-> >> On 8/29/2023 10:42 PM, Mario Limonciello wrote:
-> >>> commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> >>> changed pci_bridge_d3_possible() so that any vendor's PCIe ports
-> >>> from modern machines (>=2015) are allowed to be put into D3.
-> >>>
-> >>> Iain reports that USB devices can't be used to wake a Lenovo Z13
-> >>> from suspend. This is because the PCIe root port has been put
-> >>> into D3 and AMD's platform can't handle USB devices waking from
-> >>> a hardware sleep state in this case.
-> >>>
-> >>> This problem only occurs on Linux, and only when the AMD PMC driver
-> >>> is utilized to put the device into a hardware sleep state. Comparing
-> >>> the behavior on Windows and Linux, Windows doesn't put the root ports
-> >>> into D3.
-> >>>
-> >>> A variety of approaches were discussed to change PCI core to handle this
-> >>> case generically but no consensus was reached. To limit the scope of
-> >>> effect only to the affected machines introduce a workaround into the
-> >>> amd-pmc driver to only apply to the PCI root ports in affected machines
-> >>> when going into hardware sleep.
-> >>>
-> >>> Link: https://lore.kernel.org/linux-pci/20230818193932.27187-1-mario.limonciello@amd.com/
-> >>> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> >>> Reported-by: Iain Lane <iain@orangesquash.org.uk>
-> >>> Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
-> >>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> >>
-> >> See if this change can be moved to pmc-quirks.c, besides that change
-> >> looks good to me. Thank you.
-> >>
-> >> Acked-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> >
-> > Thank you for the review.
-> >
-> > I also just replied to this series (to the cover-letter)
-> > with an alternative approach based on making the
-> > XHCI driver call pci_d3cold_disable() on the XHCI
-> > PCIe-device on affected AMD chipsets.
-> >
-> > That seems like a cleaner approach to me. I wonder
-> > if you have any remarks about that approach ?
-> >
->
-> I was thinking more about Hans' comments to the cover letter as well as
-> Shyam's comments to move it into pmc-quirks.c.
->
-> Perhaps it would better be conveying what's going on by having a
-> dedicated step that amd-pmc calls pci_choose_state() for each PCIe
-> device and checks the value against the constraints.  If "any" of them
-> are mismatched it could emit a message.  This is a little bit of
-> duplication though because drivers/acpi/x86/s2idle.c already also emits
-> a similar message for some devices when pm_debug_messages is enabled.
->
-> Then the special case would be for PCIe root ports that are mismatched
-> the driver overrides it.  If this logic change is wouldn't make sense
-> for it to be moved into pmc-quirks.c.
->
-> I don't think using pci_d3cold_disable() / pci_d3cold_enable() is
-> correct though.  If PCI core stays the same it should still be setting
-> pdev->bridge_d3 to zero.  The problem isn't with D3cold on the PCIe RP
-> at s2didle, it's with D3hot.
+[+cc Hans]
 
-Well, it's not even that.
+On Tue, Aug 29, 2023 at 12:12:12PM -0500, Mario Limonciello wrote:
+> commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+> changed pci_bridge_d3_possible() so that any vendor's PCIe ports
+> from modern machines (>=2015) are allowed to be put into D3.
+> 
+> Iain reports that USB devices can't be used to wake a Lenovo Z13
+> from suspend. This is because the PCIe root port has been put
+> into D3 and AMD's platform can't handle USB devices waking from
+> a hardware sleep state in this case.
 
-If there were no devices expected to wake up the system from sleep
-under the given Root Port, it might very well go into D3hot IIUC, so
-the wakeup capability seems to be the key property here.
+Can you be specific in the subject and commit log about whether "D3"
+refers to "D3hot", "D3cold", or both?  It's probably obvious to PM
+folks, but it's always a stumbling block for me.
 
-I need to think a bit more about this.
+I assume "can't handle USB devices waking" does not refer to a problem
+with the USB adapter and whatever mechanism it uses to send a wakeup
+event to request that power be turned on, but rather it means that the
+wakeup event doesn't get propagated through the Root Port?
+
+Is this actually specific to USB devices?  Or could a NIC below the
+Root Port suffer the same problem when a wake-on-lan packet causes it
+to send a wakeup event?  It seems like we've had this conversation
+before; sorry to ask the same questions again.
+
+If it's not specific to USB, I would say something like "when the Root
+Port is in D3cold, wakeup events from devices below it are lost" (or
+whatever the actual problem is).
+
+> This problem only occurs on Linux, and only when the AMD PMC driver
+> is utilized to put the device into a hardware sleep state.
+
+Is the AMD PMC driver doing something magic that can't be done via
+other power management paths?  That's what "only when the AMD PMC
+driver is utilized" suggests.  But if the problem occurs when the Root
+Port is put into D3cold via *any* means, just say that.
+
+And if you can say a specific PCI power state instead of "hardware
+sleep state", that would be good, too.
+
+> Comparing
+> the behavior on Windows and Linux, Windows doesn't put the root ports
+> into D3.
+> 
+> A variety of approaches were discussed to change PCI core to handle this
+> case generically but no consensus was reached. To limit the scope of
+> effect only to the affected machines introduce a workaround into the
+> amd-pmc driver to only apply to the PCI root ports in affected machines
+> when going into hardware sleep.
+
+> +/* only allow PCIe root ports with a LPS0 constraint configured to go to D3 */
+> +static int amd_pmc_rp_wa(struct amd_pmc_dev *pdev)
+> +{
+> +	struct pci_dev *pci_dev = NULL;
+> +
+> +	while ((pci_dev = pci_get_device(PCI_VENDOR_ID_AMD, PCI_ANY_ID, pci_dev))) {
+
+I hate to add more uses of pci_get_device() because it doesn't account
+for hot-added devices.  Maybe there's no need to support hot-add of
+AMD Root Ports, but that's not obvious to readers here.
+
+One mechanism to avoid pci_get_device() is to use quirks, although it
+might be hard to deal with PCI/ACPI ordering issues.
+
+> +		struct acpi_device *adev;
+> +		int constraint;
+> +
+> +		if (!pci_is_pcie(pci_dev) ||
+> +		    !(pci_pcie_type(pci_dev) == PCI_EXP_TYPE_ROOT_PORT))
+> +			continue;
+> +
+> +		if (pci_dev->current_state == PCI_D3hot ||
+> +		    pci_dev->current_state == PCI_D3cold)
+> +			continue;
+
+If we're trying to determine a property of the device, why does the
+current power state make a difference?
+
+It looks like this loop runs every time we suspend (from
+amd_pmc_suspend_handler()), even though this is something we should
+know at boot-time, so we only need it once.
+
+> +		adev = ACPI_COMPANION(&pci_dev->dev);
+> +		if (!adev)
+> +			continue;
+> +
+> +		constraint = acpi_get_lps0_constraint(adev);
+> +		if (constraint != ACPI_STATE_UNKNOWN &&
+> +		    constraint >= ACPI_STATE_S3)
+> +			continue;
+> +
+> +		if (pci_dev->bridge_d3 == 0)
+> +			continue;
+> +		pci_dev->bridge_d3 = 0;
+> +		dev_info(&pci_dev->dev, "Disabling D3 on PCIe root port due lack of constraint\n");
+
+D3hot?  D3cold?  Both?  "lack of constraint"?
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
+>  {
+>  	struct rtc_device *rtc_device;
+> @@ -893,6 +928,10 @@ static int amd_pmc_suspend_handler(struct device *dev)
+>  	case AMD_CPU_ID_CZN:
+>  		rc = amd_pmc_czn_wa_irq1(pdev);
+>  		break;
+> +	case AMD_CPU_ID_YC:
+> +	case AMD_CPU_ID_PS:
+> +		rc = amd_pmc_rp_wa(pdev);
+> +		break;
+>  	default:
+>  		break;
+>  	}
+> -- 
+> 2.34.1
+> 
