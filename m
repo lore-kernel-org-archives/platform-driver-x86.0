@@ -2,131 +2,133 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8CBCA0FE2
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 16:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B44CA0FF3
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 16:34:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354079AbjIEQeA (ORCPT
+        id S1354567AbjIEQeE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:34:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49718 "EHLO
+        Tue, 5 Sep 2023 12:34:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354233AbjIEKN4 (ORCPT
+        with ESMTP id S1354587AbjIEMtq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Sep 2023 06:13:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FDB21AB
-        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Sep 2023 03:13:07 -0700 (PDT)
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-495-SMK2IsWUPhqMHCui7CsHyg-1; Tue, 05 Sep 2023 06:13:05 -0400
-X-MC-Unique: SMK2IsWUPhqMHCui7CsHyg-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-5009796123dso2253869e87.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Sep 2023 03:13:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693908784; x=1694513584;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p6wyL4VpWvSOwlagHKIDQgjznH0ETmOhDgwZtUvrzvM=;
-        b=hkGASUpLlvZ5QhIPziN/ozUm+Vj9CkY+kS5KcTzDBN6SD12DYrMxS8pg91s3CWS4A1
-         gd92GdL4K1KHqOyhTHS7+EAvPeuvJexTUTPTTnzb+jDl1ZZPp2pl3I0gazpnJ7xdHrsP
-         in3jKg493T4YgH9UI/X4veaRK/IWHEl4ZsDE4YTMW2x9hMabtZ9oKSRwO2zPl3Lkw33s
-         ZNpWIV+eYvT2cD7+EfvKCfyFHC3JpeGJn011Bdr5FPD+JY5vBgFm5eRj3hcrj0cOBcDG
-         WlpJUViQLHYh+V3gvhZxjkPVwLw9LPapNa2y1yPsG8v8DeEy3UJ1GF3QOu+Fnm+8FdWL
-         dTzw==
-X-Gm-Message-State: AOJu0Yye8I/lc6TzuQwuDSruDbT4X/weRRNy8cVwIWoGdvzMA0qgjncL
-        GTCMQGWW1nHUzdwzOzKSgH5ApqajR6B9zmSvk9Px/R1nyEDfEil3Ty/6oJJ824+Vf77ooZF5Abb
-        wDKHa+9M54FY6SqN0tqf9qtYX/P0IxP/nMw==
-X-Received: by 2002:a05:6512:3ca8:b0:500:b5db:990b with SMTP id h40-20020a0565123ca800b00500b5db990bmr10401954lfv.47.1693908783990;
-        Tue, 05 Sep 2023 03:13:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHBkFcLSUGWrgQdqfNIE14GXda1QLUBJpdBcLUIHVClHNN/wzy3ZDA/sL5yOG9VDO9km86lbA==
-X-Received: by 2002:a05:6512:3ca8:b0:500:b5db:990b with SMTP id h40-20020a0565123ca800b00500b5db990bmr10401937lfv.47.1693908783636;
-        Tue, 05 Sep 2023 03:13:03 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id gj17-20020a170906e11100b00982be08a9besm7497301ejb.172.2023.09.05.03.13.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Sep 2023 03:13:02 -0700 (PDT)
-Message-ID: <6ce36e6e-726a-69f3-882c-0790d311eee1@redhat.com>
-Date:   Tue, 5 Sep 2023 12:13:02 +0200
+        Tue, 5 Sep 2023 08:49:46 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2052.outbound.protection.outlook.com [40.107.243.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C951D1A8;
+        Tue,  5 Sep 2023 05:49:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nz1B5YhB6ttswRph8FbPHZ71ZGGH4b8VopCb9co+GjLl4t2+rF09a6CMzuK1bQhDQpYRrIl4cZ+h66LXH0S2I5qja6ff58ofbvQjoHRdhL9F2SImxO0OIfU+7MOZ2iQcchJPdvH/HQKI/g71ip1+dhrri5B6RlBNPErhsbwkWRdj+KCjrLfCOa1MbT6THy2n5ZJXCcwI9lBqLggphPYGmFACiHHqNRv6WR+r92rPeCkj+HT462JFXpX2qFaOapOJyYFJLBcHaxsWzz153R0PhvnfYwlfprUAKqLMMFVGNgNLMQW07+4/AztTbZodDuQWuOOT6NrhENOHRbIbq/x2sA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9D1YaNncJa6/g2Zv5Bv4GmBDt/8+bEzO3PeBg99Spcc=;
+ b=EQ6pLq9mCxZq+mLS+zSTQUNgO74ze2kg05G3ORXKUN8Qeipda9TP33OmPFTShsWi4EsxVJTnLfVhiifxSVTRxSP5p3/nGSafVf68qwtqgRC06wjDYOPEcZtl4W45xl4He4734Qlz8BbyT+DqK+Syz4fokdhkIPDG4YHfFkzoGTBHN4aBlMoGGnP7ASAx0KhA+geahk9Cmv7QV4qYKOdSHDgevmlGOFVDA0agQ2iTRX0cRefU9zbH25AMJAley7VloNzURCvCOFtaxUYeNAx/8IxkqZ0NccJXjIZToW/P2vUnLKryt0ePudKPa2RRw03UKWcfY6vulfUezHVC80jvtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9D1YaNncJa6/g2Zv5Bv4GmBDt/8+bEzO3PeBg99Spcc=;
+ b=OP1Kw0o+M8CY7J6zPMxgOiYUIqBlauGJ6TnqwX7CHjs2UZ//E7ZKksz6iTs30U9Cv/5lb4zyGH9KS+RxW2+xhfHzoHFpEW/Tqlq1O8ci6dOzj8dJEZVT84pfbQQGPQRljKZqTpb91LQ2dcoIY3MGzwRCNXg6/IE5l4mr7kljT54usgjiavZTkUqgcSQQa/1c3sDdRGtdThF4BOwQWx/p0HCXvkp62002oEMaa6AYtH3UyCRN1iHiNXtctaZ7oC8xhGOEFFWNBAFcz0rKzW4KEdZu58x59oUGtaUqInTWoovYtfQgVwqNzRUdvrmOPDPAtur0EcirBzYekSkRS14KOA==
+Received: from CY5PR15CA0091.namprd15.prod.outlook.com (2603:10b6:930:7::10)
+ by DS7PR12MB6264.namprd12.prod.outlook.com (2603:10b6:8:94::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.33; Tue, 5 Sep
+ 2023 12:49:39 +0000
+Received: from CY4PEPF0000E9CD.namprd03.prod.outlook.com
+ (2603:10b6:930:7:cafe::86) by CY5PR15CA0091.outlook.office365.com
+ (2603:10b6:930:7::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.35 via Frontend
+ Transport; Tue, 5 Sep 2023 12:49:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ CY4PEPF0000E9CD.mail.protection.outlook.com (10.167.241.140) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6768.25 via Frontend Transport; Tue, 5 Sep 2023 12:49:39 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Tue, 5 Sep 2023
+ 05:49:38 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.37; Tue, 5 Sep 2023 05:49:37 -0700
+Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server id 15.2.986.37 via Frontend
+ Transport; Tue, 5 Sep 2023 05:49:36 -0700
+From:   Shravan Kumar Ramani <shravankr@nvidia.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        David Thompson <davthompson@nvidia.com>
+CC:     Shravan Kumar Ramani <shravankr@nvidia.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 0/3] Updates to Mellanox PMC driver
+Date:   Tue, 5 Sep 2023 08:49:31 -0400
+Message-ID: <cover.1693917738.git.shravankr@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v16 0/3] Avoid PCIe D3 for AMD PCIe root ports
-Content-Language: en-US, nl
-To:     Mario Limonciello <mario.limonciello@amd.com>, bhelgaas@google.com,
-        rafael@kernel.org, Shyam-sundar.S-k@amd.com
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-References: <20230829171212.156688-1-mario.limonciello@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230829171212.156688-1-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9CD:EE_|DS7PR12MB6264:EE_
+X-MS-Office365-Filtering-Correlation-Id: e6c29283-175f-4c5a-8f4f-08dbae0e9170
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Hc+2/IJv4y9627+WMjFWMgdkxOnm/uaoCpdDjUwHDpbT7Xs5a7AKKIoXBLLZKyO2c38oKy5JWQhxmogvA8OS88+AM9Yik0GAtZ4k3dkk3+5Ua9eTj84aEkDJeqE+0IJboSk2Z0m6mtYfPIEFRXHR6Ml2Ji9cNRzLm/fcfloRcrGePZLoquO6xdK9X+U9ooGiqKgGqxGYahklAQaBo+0x8FjWqWdRp8ZZdv/LxQlTg5j5GsR9q+2YY3sVnMxXAwPwbFtrtJqTGaNFwsJZLpPFjb1udcWI5c2fqbHwSaTlc6AICFsJ8qFMDgsc77ZjWfDst9tSqlcQnCc4z3VTFJHSed+zV26Sg8+/z3yTQCGXfXNk/e8856jTIGMwvBz46LmalYk/r2NJIYEpgQejUyJ0faISiGBq9t9Qqt7emWf5/Y/f1n2nZ2kimCZPiOyltIY0SlqPncN/hMS/Z9C3f1XeA8To6pwB1mKZtqm7YIhO4vqkAbyNTD7TSgA/X7Fy7bi5/W2kAYVw+ssxLaNKzFVToHEmpXA3WEs9jjjSKy72ie+WLreo0vaF+GP6t5tFTqgZxwPwLj/K+fXea1YuZEJQuMRK4VeDIlgRUCjeZNAAkCiJ4mN4oHyKg5MiJQFizKER0+WhJBRKjy91qf0vB1JSWF11a09+N8N86wrFISGXdG/DPK9rXTgCQsCPvwdHChA7/RLPL4sTS4rI7Ug/Vgnr1SRpKT1jypd2mj1keAXuC3dg2tERRaUK6EBJIya/UNf6
+X-Forefront-Antispam-Report: CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(346002)(136003)(376002)(82310400011)(1800799009)(186009)(451199024)(46966006)(40470700004)(36840700001)(7696005)(6666004)(478600001)(83380400001)(2616005)(26005)(336012)(426003)(4744005)(2906002)(6636002)(54906003)(316002)(41300700001)(70206006)(70586007)(110136005)(5660300002)(4326008)(8676002)(8936002)(40460700003)(36756003)(40480700001)(47076005)(36860700001)(86362001)(82740400003)(356005)(7636003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2023 12:49:39.4811
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6c29283-175f-4c5a-8f4f-08dbae0e9170
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000E9CD.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6264
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mario,
+This submission consists of 3 patches:
+1. Patch 1 replaces sprintf usage with snprintf or sysfs_emit, as applicable.
+2. Patch 2 fixes a bug with reading unprogrammed events.
+3. Patch 3 adds support for BlueField-3 platform which uses a different
+access mechanism.
 
-On 8/29/23 19:12, Mario Limonciello wrote:
-> D3 on PCIe root ports isn't used on Windows systems in Modern Standby.
-> This series adjusts the amd-pmc driver to choose the same strategy
-> for Rembrandt and Phoenix platforms in Linux with s2idle.
-> 
-> LPS0 constraints are the basis for it; which if they are added for
-> Windows would also apply for Linux as well.
-> 
-> This version doesn't incorporate a callback, as it's pending feedback
-> from Bjorn if that approach is amenable.
-> 
-> NOTE:
-> This series relies upon changes that are both in linux-pm.git and
-> platform-x86.git. So it won't be able to apply to either maintainer's
-> tree until later.
-> 
-> Mario Limonciello (3):
->   ACPI: x86: s2idle: Export symbol for fetching constraints for module
->     use
->   platform/x86/amd: pmc: Adjust workarounds to be part of a switch/case
->   platform/x86/amd: pmc: Don't let PCIe root ports go into D3
+Patch 3:
+v1 -> v2
+1. Fixed naming inconsistency with events struct
+2. Replaced switch case instance with if else as suggested
+3. Used rounddown instead of calculating the value
 
-Thank you for the new version.
+v2 -> v3
+Removed empty lines and added Reviewed-by tag
 
-I understand you wanted to get this new approach "out there" but
-this does not address my remarks on v15:
+v3 -> v4
+Added macro for crspace event register size
+Changed line split as suggested
 
-https://lore.kernel.org/platform-driver-x86/53d26a63-64f3-e736-99f5-32bf4b5ba31d@redhat.com/
+Shravan Kumar Ramani (3):
+  platform/mellanox: mlxbf-pmc: Fix potential buffer overflows
+  platform/mellanox: mlxbf-pmc: Fix reading of unprogrammed events
+  platform/mellanox: mlxbf-pmc: Add support for BlueField-3
 
-Bjorn, I suggest to allow platform code to register a callback
-to influence pci_bridge_d3_possible() results there. Can you
-take a look at this and let us know what you think of this
-suggestion ?
+ drivers/platform/mellanox/mlxbf-pmc.c | 727 +++++++++++++++++++++++---
+ 1 file changed, 668 insertions(+), 59 deletions(-)
 
-Looking at this problem again and rereading the commit message
-of "platform/x86/amd: pmc: Don't let PCIe root ports go into D3"
-
-I see that the problem is that the PCIe root ports to which
-the USB controllers connect should not be allowed to go
-into D3 when an USB child of them is configured to wakeup
-the system.
-
-It seems to me that given that problem description,
-we should not be directly messing with the bridge_d3
-setting at all.
-
-Instead the XHCI code should have an AMD specific quirk
-where it either unconditionally calls pci_d3cold_disable()
-on the XHCI PCIe device; or it could even try to be smart
-and call pci_d3cold_enable() / pci_d3cold_disable()
-from its (runtime)suspend handler depending on if any
-USB child is configured as a system wakeup source.
-
-Note that it is safe to repeatedly call pci_d3cold_enable()
-/ _disable() there is no need to balance the calls.
-
-Regards,
-
-Hans
-
+-- 
+2.30.1
 
