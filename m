@@ -2,169 +2,243 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0D8CA100C
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 20:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D66CA1008
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 21:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240664AbjIEU53 (ORCPT
+        id S238674AbjIEVlD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Sep 2023 16:57:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40280 "EHLO
+        Tue, 5 Sep 2023 17:41:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234705AbjIEU52 (ORCPT
+        with ESMTP id S229908AbjIEVlB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Sep 2023 16:57:28 -0400
-X-Greylist: delayed 376 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Sep 2023 13:57:24 PDT
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B2FAC;
-        Tue,  5 Sep 2023 13:57:24 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C655C433CD;
-        Tue,  5 Sep 2023 20:51:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693947067;
-        bh=j4VZbhneezS5ukKmIZ2uZimOa3neoOXs4OmnssGUIZo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=SRMIreR3MbvlHVssKklNjRJUN8OK5Yy/okWw4R0X5iuACktEViVghv9GG99706CeT
-         W2gEdQexSVPrWX8Mya07w/Bc9sqJe1TGfUDJV4JOSZcydeOZEl9l2y89/bG1dtCX2m
-         EjKLQyaOaXfYiKMy2wDm72jK5vNGv+gWg3gX0BAUCN2Ouqrc8o8gtZmO3+UzJA0dnL
-         /5Qp+N03IBytPGFxncdP9anpTypbGmI6QUYwpKNnGOxepNLoOJa103PlKVNf5gmQeX
-         8+g4qT6wZOTQKdXonB9tZjiuHp1wNl1wUWmttVnTjVQ8PoALdWgXAv2NbUpqVEM3mp
-         NtsZIJL01cUvQ==
-Date:   Tue, 5 Sep 2023 15:51:05 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     hdegoede@redhat.com, bhelgaas@google.com, rafael@kernel.org,
-        Shyam-sundar.S-k@amd.com, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Iain Lane <iain@orangesquash.org.uk>
-Subject: Re: [PATCH v16 3/3] platform/x86/amd: pmc: Don't let PCIe root ports
- go into D3
-Message-ID: <20230905205105.GA191110@bhelgaas>
+        Tue, 5 Sep 2023 17:41:01 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ADB4E78
+        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Sep 2023 14:40:26 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-99c93638322so61553566b.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Sep 2023 14:40:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1693950024; x=1694554824; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ftHNFQGZNkAXLxgpiw6/3lCLKom4x3ijuZmKXi24tTU=;
+        b=xipF4/TE+J7hoNY88VFIBZHjxzlUk7eQOTjI/EEI7jEIV1Kb5BEQpTtxpf6JuEuIC7
+         /vJvVP6veP7vrDTBtsEpufvv0bCs6/aqhNVwK3BICC5tAHVeNuLNGvmIjb0DPeNA5Wcu
+         dXDgheFltVamZmZG2vaPmKbcLES3ixWBlzMkuYSP2xmGoGRUlS2HchzVaPcmqUKfFfAk
+         0u9YFMW+jSiXj9lBc0pOd3zfqA6w6TmZvC2BiOylLARKR1aAr+Qd3yaXuHoJh+JmkuPx
+         4Nab36xbVEFXHUJ1vpJcZ55K/WiT04rG02HrMoPMM0tbBzIY5b538/xUsku8D69Nmi8k
+         DZ0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693950024; x=1694554824;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ftHNFQGZNkAXLxgpiw6/3lCLKom4x3ijuZmKXi24tTU=;
+        b=kmwXkY5nEPHTW9Tk+2A5Qa9KunnJkkgq42zZHSS5XDIXfkWxU2zTmVqrS5O2uiUYnP
+         bGTmmrtQ10FyQ5OFLxx7o60Ci5F8ChF4031k9ip2Lt1uyqwYkSRHnEV18Wq3bn0ETxD+
+         QtFOk17yw2wEhSOFeGlyMIFJvdTcaAJHCuRLdWZVqsTaok1t1pDr7GrMj8QwzX1WOwL/
+         a3lb89D+Jd9PMXD0DrHq1ASYprNaYN2CQNLzEIDKW3Zmse7vO4ZFkqRN+5RjPCjZiPqS
+         cQbkCGJE9fWDUR+uv1S1A1htzpcp36ZN1vZdg0CKBtH9h0vSFTlzCvARb1ckKaPk1T1H
+         RWJA==
+X-Gm-Message-State: AOJu0YzZvjQGgyVjpP6N0j3Vv4Ornj82gG6pDtrw+UzJ74BJ9Qp5jdmw
+        /qZ/7pmNc/20P52PFqM5+fad5ngn54qqtGJw/ZEsDw==
+X-Google-Smtp-Source: AGHT+IEMEhXVZsRVEMtjU89/Dvw/FRWlEJmOTvL/QdzNNU2bgrWU7M/nv4RmlZrpgAFmszFzkzajJuGmbex0Rqn6dGM=
+X-Received: by 2002:a17:907:60cd:b0:9a4:11a3:c32b with SMTP id
+ hv13-20020a17090760cd00b009a411a3c32bmr902957ejc.29.1693950023734; Tue, 05
+ Sep 2023 14:40:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230829171212.156688-4-mario.limonciello@amd.com>
+References: <20230824-strncpy-arch-x86-platform-uv-uv_nmi-v2-1-e16d9a3ec570@google.com>
+ <685e4951-e283-835c-5cce-ddd802fadf62@redhat.com>
+In-Reply-To: <685e4951-e283-835c-5cce-ddd802fadf62@redhat.com>
+From:   Justin Stitt <justinstitt@google.com>
+Date:   Tue, 5 Sep 2023 14:40:11 -0700
+Message-ID: <CAFhGd8rzrUDwKyP7Bp-u4WZ1pS1Qbkapci+J+PCLFmD9Pv4Oyg@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/platform/uv: refactor deprecated strcpy and strncpy
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Steve Wahl <steve.wahl@hpe.com>, Mike Travis <mike.travis@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Yang Yang <yang.yang29@zte.com.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-[+cc Hans]
+On Tue, Sep 5, 2023 at 3:52=E2=80=AFAM Hans de Goede <hdegoede@redhat.com> =
+wrote:
+>
+> Hi Justin,
+>
+> On 8/24/23 20:52, Justin Stitt wrote:
+> > Both `strncpy` and `strcpy` are deprecated for use on NUL-terminated
+> > destination strings [1].
+> >
+> > A suitable replacement is `strscpy` [2] due to the fact that it
+> > guarantees NUL-termination on its destination buffer argument which is
+> > _not_ the case for `strncpy` or `strcpy`!
+> >
+> > In this case, we can drop both the forced NUL-termination and the `... =
+-1` from:
+> > |       strncpy(arg, val, ACTION_LEN - 1);
+> > as `strscpy` implicitly has this behavior.
+> >
+> > Also include slight refactor to code removing possible new-line chars a=
+s
+> > per Yang Yang's work at [3]. This reduces code size and complexity by
+> > using more robust and better understood interfaces.
+> >
+> > Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on=
+-nul-terminated-strings[1]
+> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en=
+.html [2]
+> > Link: https://lore.kernel.org/all/202212091545310085328@zte.com.cn/ [3]
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Cc: linux-hardening@vger.kernel.org
+> > Co-developed-by: Yang Yang <yang.yang29@zte.com.cn>
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > ---
+> > Changes in v2:
+> > - use `sizeof` on destination string instead of `strlen` (thanks Andy, =
+Kees and Dimitri)
+> > - refactor code to remove potential new-line chars (thanks Yang Yang an=
+d Andy)
+> > - Link to v1: https://lore.kernel.org/r/20230822-strncpy-arch-x86-platf=
+orm-uv-uv_nmi-v1-1-931f2943de0d@google.com
+> > ---
+> > Note: build-tested only
+> >
+> > Another thing, Yang Yang's patch [3] had some review from Andy regardin=
+g
+> > the use of `-1` and `+1` in and around the strnchrnul invocation. I
+> > believe Yang Yang's original implementation is correct but let's also
+> > just use sizeof(arg) instead of ACTION_LEN.
+> >
+> > Here's a godbolt link detailing some findings around the new-line
+> > refactor in response to Andy's feedback: https://godbolt.org/z/K8drG3oq=
+5
+> > ---
+> >  arch/x86/platform/uv/uv_nmi.c | 12 ++++--------
+> >  1 file changed, 4 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nm=
+i.c
+> > index a60af0230e27..913347b2b9ab 100644
+> > --- a/arch/x86/platform/uv/uv_nmi.c
+> > +++ b/arch/x86/platform/uv/uv_nmi.c
+> > @@ -202,21 +202,17 @@ static int param_set_action(const char *val, cons=
+t struct kernel_param *kp)
+> >  {
+> >       int i;
+> >       int n =3D ARRAY_SIZE(valid_acts);
+> > -     char arg[ACTION_LEN], *p;
+> > +     char arg[ACTION_LEN];
+> >
+> >       /* (remove possible '\n') */
+> > -     strncpy(arg, val, ACTION_LEN - 1);
+> > -     arg[ACTION_LEN - 1] =3D '\0';
+> > -     p =3D strchr(arg, '\n');
+> > -     if (p)
+> > -             *p =3D '\0';
+> > +     strscpy(arg, val, strnchrnul(val, sizeof(arg) - 1, '\n') - val + =
+1);
+>
+> I have 25 years of C-programming experience and even I
+> cannot read this.
+>
+> It seems to me that you are trying to use the length
+> argument to not copy the '\n' here.
+>
+> While at the same time using strnchr(..., sizeof(arg) ...)
+> instead of normal strchr() to make sure you don't pass\
+> a value bigger then sizeof(arg) as length to strscpy().
+>
+> Please do not do this it is needlessly complicated and
+> makes the code almost impossible to read / reason about.
+>
+> What the original code was doing, first copying at
+> most ACTION_LEN - 1 bytes into arg and then ensuring
+> 0 termination, followed by stripping '\n' from the
+> writable copy we have just made is much cleaner.
+>
+> IMHO this patch should simple replace the strncpy()
+> + 0 termination with a strscpy() and not make
+> any other changes, leading to:
+>
+>         /* (remove possible '\n') */
+>         strscpy(arg, val, sizeof(arg));
+>         p =3D strchr(arg, '\n');
+>         if (p)
+>                 *p =3D '\0';
+>
+> See how this is much much more readable /
+> much easier to wrap ones mind around ?
 
-On Tue, Aug 29, 2023 at 12:12:12PM -0500, Mario Limonciello wrote:
-> commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> changed pci_bridge_d3_possible() so that any vendor's PCIe ports
-> from modern machines (>=2015) are allowed to be put into D3.
-> 
-> Iain reports that USB devices can't be used to wake a Lenovo Z13
-> from suspend. This is because the PCIe root port has been put
-> into D3 and AMD's platform can't handle USB devices waking from
-> a hardware sleep state in this case.
+Right, I agree. This was basically the v1 of my patch. I will send a
+v3 with feedback implemented.
 
-Can you be specific in the subject and commit log about whether "D3"
-refers to "D3hot", "D3cold", or both?  It's probably obvious to PM
-folks, but it's always a stumbling block for me.
-
-I assume "can't handle USB devices waking" does not refer to a problem
-with the USB adapter and whatever mechanism it uses to send a wakeup
-event to request that power be turned on, but rather it means that the
-wakeup event doesn't get propagated through the Root Port?
-
-Is this actually specific to USB devices?  Or could a NIC below the
-Root Port suffer the same problem when a wake-on-lan packet causes it
-to send a wakeup event?  It seems like we've had this conversation
-before; sorry to ask the same questions again.
-
-If it's not specific to USB, I would say something like "when the Root
-Port is in D3cold, wakeup events from devices below it are lost" (or
-whatever the actual problem is).
-
-> This problem only occurs on Linux, and only when the AMD PMC driver
-> is utilized to put the device into a hardware sleep state.
-
-Is the AMD PMC driver doing something magic that can't be done via
-other power management paths?  That's what "only when the AMD PMC
-driver is utilized" suggests.  But if the problem occurs when the Root
-Port is put into D3cold via *any* means, just say that.
-
-And if you can say a specific PCI power state instead of "hardware
-sleep state", that would be good, too.
-
-> Comparing
-> the behavior on Windows and Linux, Windows doesn't put the root ports
-> into D3.
-> 
-> A variety of approaches were discussed to change PCI core to handle this
-> case generically but no consensus was reached. To limit the scope of
-> effect only to the affected machines introduce a workaround into the
-> amd-pmc driver to only apply to the PCI root ports in affected machines
-> when going into hardware sleep.
-
-> +/* only allow PCIe root ports with a LPS0 constraint configured to go to D3 */
-> +static int amd_pmc_rp_wa(struct amd_pmc_dev *pdev)
-> +{
-> +	struct pci_dev *pci_dev = NULL;
-> +
-> +	while ((pci_dev = pci_get_device(PCI_VENDOR_ID_AMD, PCI_ANY_ID, pci_dev))) {
-
-I hate to add more uses of pci_get_device() because it doesn't account
-for hot-added devices.  Maybe there's no need to support hot-add of
-AMD Root Ports, but that's not obvious to readers here.
-
-One mechanism to avoid pci_get_device() is to use quirks, although it
-might be hard to deal with PCI/ACPI ordering issues.
-
-> +		struct acpi_device *adev;
-> +		int constraint;
-> +
-> +		if (!pci_is_pcie(pci_dev) ||
-> +		    !(pci_pcie_type(pci_dev) == PCI_EXP_TYPE_ROOT_PORT))
-> +			continue;
-> +
-> +		if (pci_dev->current_state == PCI_D3hot ||
-> +		    pci_dev->current_state == PCI_D3cold)
-> +			continue;
-
-If we're trying to determine a property of the device, why does the
-current power state make a difference?
-
-It looks like this loop runs every time we suspend (from
-amd_pmc_suspend_handler()), even though this is something we should
-know at boot-time, so we only need it once.
-
-> +		adev = ACPI_COMPANION(&pci_dev->dev);
-> +		if (!adev)
-> +			continue;
-> +
-> +		constraint = acpi_get_lps0_constraint(adev);
-> +		if (constraint != ACPI_STATE_UNKNOWN &&
-> +		    constraint >= ACPI_STATE_S3)
-> +			continue;
-> +
-> +		if (pci_dev->bridge_d3 == 0)
-> +			continue;
-> +		pci_dev->bridge_d3 = 0;
-> +		dev_info(&pci_dev->dev, "Disabling D3 on PCIe root port due lack of constraint\n");
-
-D3hot?  D3cold?  Both?  "lack of constraint"?
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
->  {
->  	struct rtc_device *rtc_device;
-> @@ -893,6 +928,10 @@ static int amd_pmc_suspend_handler(struct device *dev)
->  	case AMD_CPU_ID_CZN:
->  		rc = amd_pmc_czn_wa_irq1(pdev);
->  		break;
-> +	case AMD_CPU_ID_YC:
-> +	case AMD_CPU_ID_PS:
-> +		rc = amd_pmc_rp_wa(pdev);
-> +		break;
->  	default:
->  		break;
->  	}
-> -- 
-> 2.34.1
-> 
+>
+> And then as a *separate* followup patch
+> you could simplify this further by using strchrnul():
+>
+>         /* (remove possible '\n') */
+>         strscpy(arg, val, sizeof(arg));
+>         p =3D strchrnul(arg, '\n');
+>         *p =3D '\0';
+>
+> But again that belongs in a separate patch
+> since it is not:
+>
+> "refactor deprecated strcpy and strncpy"
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+>
+>
+> >
+> >       for (i =3D 0; i < n; i++)
+> >               if (!strcmp(arg, valid_acts[i].action))
+> >                       break;
+> >
+> >       if (i < n) {
+> > -             strcpy(uv_nmi_action, arg);
+> > +             strscpy(uv_nmi_action, arg, sizeof(uv_nmi_action));
+> >               pr_info("UV: New NMI action:%s\n", uv_nmi_action);
+> >               return 0;
+> >       }
+> > @@ -959,7 +955,7 @@ static int uv_handle_nmi(unsigned int reason, struc=
+t pt_regs *regs)
+> >
+> >               /* Unexpected return, revert action to "dump" */
+> >               if (master)
+> > -                     strncpy(uv_nmi_action, "dump", strlen(uv_nmi_acti=
+on));
+> > +                     strscpy(uv_nmi_action, "dump", sizeof(uv_nmi_acti=
+on));
+> >       }
+> >
+> >       /* Pause as all CPU's enter the NMI handler */
+> >
+> > ---
+> > base-commit: 706a741595047797872e669b3101429ab8d378ef
+> > change-id: 20230822-strncpy-arch-x86-platform-uv-uv_nmi-474e5295c2c1
+> >
+> > Best regards,
+> > --
+> > Justin Stitt <justinstitt@google.com>
+> >
+>
