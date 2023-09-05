@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23898C83F3E
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 19:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77072C83F3E
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 19:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240999AbjIETAa (ORCPT
+        id S233326AbjIETAw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Sep 2023 15:00:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43210 "EHLO
+        Tue, 5 Sep 2023 15:00:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241197AbjIETAR (ORCPT
+        with ESMTP id S240212AbjIETAv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Sep 2023 15:00:17 -0400
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B5DC1997
-        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Sep 2023 11:59:51 -0700 (PDT)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-402be83929eso28292935e9.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Sep 2023 11:59:51 -0700 (PDT)
+        Tue, 5 Sep 2023 15:00:51 -0400
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A20A1708
+        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Sep 2023 12:00:21 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4018af103bcso1014395e9.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Sep 2023 12:00:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693940016; x=1694544816; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693940029; x=1694544829; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gD8mhbYtSpsp4MugkXhi33yXQT05nfWNxdtLBId4RL8=;
-        b=ilV5yCdeRzZ+G5yIoeldAMeJvdL6TejWCwd6BDF10srY/hFvyug/k5w/DpbABu2kuB
-         esKaZbpatQxH4BV8YUHRoJfnEZ8iZml3r8QocdOmnTXpd5EbarxqhB+KAPBs8RFJFbpk
-         FkqXYWuo7hfzKH0NpOXh6toJVQFtFAgoulvWzpPj1Bd9V7D7JRe40+idqmCj2vU4GvfN
-         7C4O3LXRHOKpk9pt8C9JOmogDWJt7fgmcaOUGg/zuQ+LckXuUGahGsMKQWkoLslh2Z8e
-         WW2ri+AaMwI+sQbAmlEmxl8D7DuUfWBNLtC3pQRVELrcGofDc9GVqdFIZIHr+0UOzKzU
-         rSXg==
+        bh=5ZhpZtSP2svZAFrzaQvlM9FAg/vPyJ7DXBzIjcVtHYA=;
+        b=buT7UOYrpUdoU2SUwCrxJCh0ANOJPBxCPgsw4wlC8KBPfgZjsKX4MCSTMEwxECHbRf
+         NSQpjIyiXYow7q+P0qMYeSSjpw2wkMrUKKvTAwMEdBJDeuZEGDmgar+6oytaZmsbzSoL
+         4sEVCbL1avOWpPrDhy0fRh6rwA0WY5FtVl2PiJrMN4SLC7t4/gkmqwG5WjrfSnJ/aFpu
+         ttZvq9wjhyyu3eFQv8dFgyjIYWKOsb7sLWmSKWB0kVjzSZHzwJjLS3HXesFS9l07jo5Y
+         ZK+YqLcemIU66LN2/DTUwv94/C4ndjFOvsUEMmXrHN8uF2sz1hHQ9VgPG2E5b6LKbsC9
+         pTyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693940016; x=1694544816;
+        d=1e100.net; s=20221208; t=1693940029; x=1694544829;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gD8mhbYtSpsp4MugkXhi33yXQT05nfWNxdtLBId4RL8=;
-        b=fDhFOpJMfXawBTkyIcTRzvbmTOe0z+f8UILkT1Lsi0u8+os3ycDNb7Qr0YhJ7wQB7l
-         csKJ3VL/Q2tuoVrkvWU/CtxrNSYrNM52f4AN1UVFLCEaYihqEKdAFZq6iCEcoT50bbCZ
-         jndrw61qB3doOYnMhxxuRzEqO8aKFw6dZ/GHbv+o3JZ9lxS7Y8h+7JzQFMdbQAeoI2Gg
-         d/6vOZ1+dFQmTOyl+wMVNEAuSmzS6qaF0ucuttFn7OLSbs87HHsVSZX+JwtkRaaWJndB
-         961/2X/T8YQVgqRiHkATvIZPZAfv+6qGkepEv6JRFttgyGiPNrmnN4VpUb7KIGii+xZR
-         8a9Q==
-X-Gm-Message-State: AOJu0YzncDxYaZ/zPoD8JIKcXFEUJFROzwMlSaLbiqxaIskHJELVirIV
-        MbxzgUUKO9w31xWqGIRplf3S+g==
-X-Google-Smtp-Source: AGHT+IFIMVvhNg464qJima4kezuYWuRmRs+hpxgOQnc+URZYC5BvtqpinR7GN44km7chTJtWGj8fDQ==
-X-Received: by 2002:a7b:c390:0:b0:401:38dc:8918 with SMTP id s16-20020a7bc390000000b0040138dc8918mr481515wmj.24.1693940015869;
-        Tue, 05 Sep 2023 11:53:35 -0700 (PDT)
+        bh=5ZhpZtSP2svZAFrzaQvlM9FAg/vPyJ7DXBzIjcVtHYA=;
+        b=JdjYDhphIabjPmZo30IxUw74i95aYyN4kDHjgeb4dyxhRc1LVAJb9iAyk2XkB/WAI8
+         wrmzGDGsSPTNLXpMYcBYDjWmjAcydEKd0RcQcku/1NhCt6EMcAl7Pjy1EmkaJM0PlKo3
+         6FvXQR9nV6PxBwNASk3tLgeBkiaAN5vOmQmw2hbFyrqZac/rsBhVgntrn9D9A/X2mBgL
+         lSH3bhmGfGgoc1wX9vvzaRQJOJZPLPH9ccNbUdu4F25MntiOXs2FEpi89tXPGcdpOt3j
+         IOhmb0XoFmAotHwUly9XGI/jy3FxQorBBrhpBVGOktoFUbvGvuAtLTAx3YmTDPanU2XR
+         +nYw==
+X-Gm-Message-State: AOJu0YxYww6AcrJl9G0a8Q4pL7Td3kZFIovDIOFu4fyM3ZGl06qyJCGa
+        nEHCDNanjEqOlTjGI5E74MdGXQ==
+X-Google-Smtp-Source: AGHT+IH6GCfGhH5bbknVyv1QFmzhhSWppXhliMEz+gshhPkUMADba7JqAHg0E1eXfiJxmPf9zlRrog==
+X-Received: by 2002:a05:600c:3d0d:b0:402:b8:d022 with SMTP id bh13-20020a05600c3d0d00b0040200b8d022mr609236wmb.16.1693940029130;
+        Tue, 05 Sep 2023 11:53:49 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7a54:5dbc:6d09:48b7])
-        by smtp.gmail.com with ESMTPSA id 17-20020a05600c249100b003fbc30825fbsm17550010wms.39.2023.09.05.11.53.34
+        by smtp.gmail.com with ESMTPSA id 17-20020a05600c249100b003fbc30825fbsm17550010wms.39.2023.09.05.11.53.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Sep 2023 11:53:35 -0700 (PDT)
+        Tue, 05 Sep 2023 11:53:48 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
         Janusz Krzysztofik <jmkrzyszt@gmail.com>,
@@ -70,9 +70,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
         linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
         linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 08/21] gpio: acpi: provide acpi_gpio_device_free_interrupts()
-Date:   Tue,  5 Sep 2023 20:52:56 +0200
-Message-Id: <20230905185309.131295-9-brgl@bgdev.pl>
+Subject: [PATCH 19/21] gpio: swnode: replace gpiochip_find() with gpio_device_find_by_label()
+Date:   Tue,  5 Sep 2023 20:53:07 +0200
+Message-Id: <20230905185309.131295-20-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230905185309.131295-1-brgl@bgdev.pl>
 References: <20230905185309.131295-1-brgl@bgdev.pl>
@@ -84,86 +84,75 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-We're moving away from public functions that take struct gpio_chip as
-argument as the chip - unlike struct gpio_device - is owned by its
-provider and tied to its lifetime.
-
-Provide an alternative to acpi_gpiochip_free_interrupts().
+We're porting all users of gpiochip_find() to using gpio_device_find().
+Update the swnode GPIO code.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpiolib-acpi.c | 29 +++++++++++++++++++++++------
- include/linux/gpio/driver.h | 12 ++++++++++++
- 2 files changed, 35 insertions(+), 6 deletions(-)
+ drivers/gpio/gpiolib-swnode.c | 29 ++++++++++++-----------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index fbda452fb4d6..5633e39396bc 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -558,12 +558,9 @@ void acpi_gpiochip_request_interrupts(struct gpio_chip *chip)
+diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnode.c
+index b5a6eaf3729b..56c8519be538 100644
+--- a/drivers/gpio/gpiolib-swnode.c
++++ b/drivers/gpio/gpiolib-swnode.c
+@@ -31,31 +31,26 @@ static void swnode_format_propname(const char *con_id, char *propname,
+ 		strscpy(propname, "gpios", max_size);
  }
- EXPORT_SYMBOL_GPL(acpi_gpiochip_request_interrupts);
  
--/**
-- * acpi_gpiochip_free_interrupts() - Free GPIO ACPI event interrupts.
-- * @chip:      GPIO chip
-- *
-- * Free interrupts associated with GPIO ACPI event method for the given
-- * GPIO chip.
-+/*
-+ * This function is deprecated, use acpi_gpio_device_free_interrupts()
-+ * instead.
-  */
- void acpi_gpiochip_free_interrupts(struct gpio_chip *chip)
+-static int swnode_gpiochip_match_name(struct gpio_chip *chip, void *data)
++static struct gpio_device *swnode_get_gpio_device(struct fwnode_handle *fwnode)
  {
-@@ -604,6 +601,26 @@ void acpi_gpiochip_free_interrupts(struct gpio_chip *chip)
- }
- EXPORT_SYMBOL_GPL(acpi_gpiochip_free_interrupts);
+-	return !strcmp(chip->label, data);
+-}
++	const struct software_node *gdev_node;
++	struct gpio_device *gdev;
  
-+/**
-+ * acpi_gpio_device_free_interrupts() - Free GPIO ACPI event interrupts.
-+ * @chip	GPIO device
-+ *
-+ * Free interrupts associated with GPIO ACPI event method for the given
-+ * GPIO device.
-+ */
-+void acpi_gpio_device_free_interrupts(struct gpio_device *gdev)
-+{
-+	struct gpio_chip *gc;
-+
-+	/* TODO: protect gdev->chip once SRCU is in place in GPIOLIB. */
-+	gc = gdev->chip;
-+	if (!gc)
-+		return;
-+
-+	acpi_gpiochip_free_interrupts(gc);
-+}
-+EXPORT_SYMBOL_GPL(acpi_gpio_device_free_interrupts);
-+
- int acpi_dev_add_driver_gpios(struct acpi_device *adev,
- 			      const struct acpi_gpio_mapping *gpios)
+-static struct gpio_chip *swnode_get_chip(struct fwnode_handle *fwnode)
+-{
+-	const struct software_node *chip_node;
+-	struct gpio_chip *chip;
+-
+-	chip_node = to_software_node(fwnode);
+-	if (!chip_node || !chip_node->name)
++	gdev_node = to_software_node(fwnode);
++	if (!gdev_node || !gdev_node->name)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	chip = gpiochip_find((void *)chip_node->name, swnode_gpiochip_match_name);
+-	return chip ?: ERR_PTR(-EPROBE_DEFER);
++	gdev = gpio_device_find_by_label((void *)gdev_node->name);
++	return gdev ?: ERR_PTR(-EPROBE_DEFER);
+ }
+ 
+ struct gpio_desc *swnode_find_gpio(struct fwnode_handle *fwnode,
+ 				   const char *con_id, unsigned int idx,
+ 				   unsigned long *flags)
  {
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index b68b3493b29d..47906bc56b3d 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -835,4 +835,16 @@ static inline struct fwnode_handle *gpiochip_node_get_first(struct device *dev)
- 	return NULL;
- }
++	struct gpio_device *gdev __free(gpio_device_put) = NULL;
+ 	const struct software_node *swnode;
+ 	struct fwnode_reference_args args;
+-	struct gpio_chip *chip;
+ 	struct gpio_desc *desc;
+ 	char propname[32]; /* 32 is max size of property name */
+ 	int error;
+@@ -77,12 +72,12 @@ struct gpio_desc *swnode_find_gpio(struct fwnode_handle *fwnode,
+ 		return ERR_PTR(error);
+ 	}
  
-+/*
-+ * FIXME: Remove this once the only driver that uses it - android tablets -
-+ * becomes a good citizen and stops abusing GPIOLIB.
-+ */
-+#ifdef CONFIG_ACPI
-+void acpi_gpio_device_free_interrupts(struct gpio_device *gdev);
-+#else
-+static inline void acpi_gpio_device_free_interrupts(struct gpio_device *gdev)
-+{
-+}
-+#endif
-+
- #endif /* __LINUX_GPIO_DRIVER_H */
+-	chip = swnode_get_chip(args.fwnode);
++	gdev = swnode_get_gpio_device(args.fwnode);
+ 	fwnode_handle_put(args.fwnode);
+-	if (IS_ERR(chip))
+-		return ERR_CAST(chip);
++	if (IS_ERR(gdev))
++		return ERR_CAST(gdev);
+ 
+-	desc = gpiochip_get_desc(chip, args.args[0]);
++	desc = gpiochip_get_desc(gdev->chip, args.args[0]);
+ 	*flags = args.args[1]; /* We expect native GPIO flags */
+ 
+ 	pr_debug("%s: parsed '%s' property of node '%pfwP[%d]' - status (%d)\n",
 -- 
 2.39.2
 
