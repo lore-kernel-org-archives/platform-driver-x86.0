@@ -2,162 +2,152 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6666EEB8FD7
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Sep 2023 14:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E190EB8FD7
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Sep 2023 14:10:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241435AbjIFOJO (ORCPT
+        id S240466AbjIFOKl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Sep 2023 10:09:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56148 "EHLO
+        Wed, 6 Sep 2023 10:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232210AbjIFOJO (ORCPT
+        with ESMTP id S233888AbjIFOKk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Sep 2023 10:09:14 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CE0FA9;
-        Wed,  6 Sep 2023 07:09:10 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-31c5cac3ae2so3183818f8f.3;
-        Wed, 06 Sep 2023 07:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694009349; x=1694614149; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u9W/IcTlMNGZK9Ps/aVx0GxYtJz9nPGjUgurMbWW3dw=;
-        b=QJfHpDJnpEUBAaI/6+tZGy1fH1WDgOp3YKCz/n6ngCpUQlV8NvDwgJHuCan5vQG3dk
-         WNuS1CJ6pBxFbso16ZncRyipJ6uwHpVO9tvnicwwVSv+0cg8nraZWptPuCUz6zLj5Xuf
-         nEC0dnrmyE56BnOYwqWbmtqDWzNZJp7dsqMhr52jFR1zSwP3l09/lWD1Z6ftXSNvOtfU
-         UyD8fFFJq2eH8hmfzqom2NX2JvT+QW29clVjOJQnSbRfXjK3dTKYxg5s3++5cDYQMpDw
-         S3Rs8lTaDIlAbXrjIbUONrKXZ44NWxmSGbeBFPsUnYTizQuZ3lxy/UkfGMCUub844RkX
-         xjQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694009349; x=1694614149;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u9W/IcTlMNGZK9Ps/aVx0GxYtJz9nPGjUgurMbWW3dw=;
-        b=ir61yBKoico30vhFVmQQF/ZUvqCw3Ymb2p03x9ISosBMDR0K9YJGTzP+nPR5fEQTYY
-         qe3qi0+ufoJfZh8D+s7ipvHg1TiOrznpXILp5jZQBD/FUe6+f+CWZ5cz8XdOZvZRVTUe
-         nf+yFXiaD2DcaVr1tkGVpk3qXIoFlKeqTDF7It61eKWkBiWG1UkZJJM2RkjUbLmJ8Js1
-         NkjXFu7oLQN9bRVNiZyYr0oK2hKc5kiqLirROwcA+k2m5zW3oaUxJaANgSTAjcHin+3+
-         fOs8GEJ00inACiO9o6libjNK0K3Q5HxoVQa2EuVZzu65JAPcpuNd0rwMKrLg8EHsdEUb
-         TvgQ==
-X-Gm-Message-State: AOJu0Yz+rdbk0zThRXsbI6WxnGPVgPL19lC5IVOlsfnVA2sh0AC6qqx7
-        lk63kYFQEjvCg4uq04ll8uMveczg2Ps=
-X-Google-Smtp-Source: AGHT+IEyyJOYBjWMd5RqK365SmNrfFzw+bEYRaLE3YHtYnxhlNi1gTmlhpmWYimIiShBesCw0X57nQ==
-X-Received: by 2002:a05:6000:184:b0:313:f1c8:a968 with SMTP id p4-20020a056000018400b00313f1c8a968mr2423710wrx.2.1694009348590;
-        Wed, 06 Sep 2023 07:09:08 -0700 (PDT)
-Received: from gmail.com (1F2EF6A2.nat.pool.telekom.hu. [31.46.246.162])
-        by smtp.gmail.com with ESMTPSA id a3-20020a056000050300b003179d5aee67sm20483099wrf.94.2023.09.06.07.09.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Sep 2023 07:09:03 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date:   Wed, 6 Sep 2023 16:09:01 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Justin Stitt <justinstitt@google.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] x86/platform/uv: refactor deprecated strcpy and
- strncpy
-Message-ID: <ZPiH/ds9oeimXDdb@gmail.com>
-References: <20230905-strncpy-arch-x86-platform-uv-uv_nmi-v3-1-3efd6798b569@google.com>
- <ZPhsSzHG6YMViOSk@gmail.com>
- <bce762af-0da7-bb5e-1580-b42803c183f6@redhat.com>
+        Wed, 6 Sep 2023 10:10:40 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 639B51726;
+        Wed,  6 Sep 2023 07:10:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694009427; x=1725545427;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=F7bl2h3DX3KJUesLeL2e/fpx9L5jnQCY/nK4NgE/LN8=;
+  b=g3TfX+F5c9xs045JV9UkPGwPcOsj25+u2hqakhIJSlX5rsF/Xnj+2PbX
+   GFOUeqZxs1Omg3vIbqQoir+ARc9lysQGgTbH1lgVFKuzr2wIE3LQF5Dkl
+   LVPw/mEiJWCmdAR4HCu/aP9PXgiWO/3JSdpmPo/OaqRJcAyB+/2dFLsy4
+   fJ+zadFSrAZsoP2M8E4LWE7t6OvVY9G7h+fg3Z8loUTRNpqBR2VRVWPRh
+   gKhXFt91pM8pzQFuyWtfVd3rHmUWpC0yGL3FdxgGlD8yWVFGfkUdypJ9K
+   EQfqvoL8PafH9Q1XCCFqblVCAkFqmy9VY3mDMUPokCMjvYcGcMiit++O3
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="441049792"
+X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
+   d="scan'208";a="441049792"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 07:10:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="735068521"
+X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
+   d="scan'208";a="735068521"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 07:10:21 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qdtEY-006xYP-12;
+        Wed, 06 Sep 2023 17:10:18 +0300
+Date:   Wed, 6 Sep 2023 17:10:18 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 02/21] gpiolib: provide gpio_device_find()
+Message-ID: <ZPiISpLoVx35PuYc@smile.fi.intel.com>
+References: <20230905185309.131295-1-brgl@bgdev.pl>
+ <20230905185309.131295-3-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bce762af-0da7-bb5e-1580-b42803c183f6@redhat.com>
+In-Reply-To: <20230905185309.131295-3-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Tue, Sep 05, 2023 at 08:52:50PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> gpiochip_find() is wrong and its kernel doc is misleading as the
+> function doesn't return a reference to the gpio_chip but just a raw
+> pointer. The chip itself is not guaranteed to stay alive, in fact it can
+> be deleted at any point. Also: other than GPIO drivers themselves,
+> nobody else has any business accessing gpio_chip structs.
+> 
+> Provide a new gpio_device_find() function that returns a real reference
+> to the opaque gpio_device structure that is guaranteed to stay alive for
+> as long as there are active users of it.
 
-* Hans de Goede <hdegoede@redhat.com> wrote:
+...
 
-> Hi Ingo,
-> 
-> On 9/6/23 14:10, Ingo Molnar wrote:
-> > 
-> > * Justin Stitt <justinstitt@google.com> wrote:
-> > 
-> >> Both `strncpy` and `strcpy` are deprecated for use on NUL-terminated
-> >> destination strings [1].
-> >>
-> >> We can see that `arg` and `uv_nmi_action` are expected to be
-> >> NUL-terminated strings due to their use within `strcmp()` and format
-> >> strings respectively.
-> >>
-> >> With this in mind, a suitable replacement is `strscpy` [2] due to the
-> >> fact that it guarantees NUL-termination on its destination buffer
-> >> argument which is _not_ the case for `strncpy` or `strcpy`!
-> >>
-> >> In this case, we can drop both the forced NUL-termination and the `... -1` from:
-> >> |       strncpy(arg, val, ACTION_LEN - 1);
-> >> as `strscpy` implicitly has this behavior.
-> >>
-> >> Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
-> >> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> >> Link: https://github.com/KSPP/linux/issues/90
-> >> Cc: linux-hardening@vger.kernel.org
-> >> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > 
-> >>  arch/x86/platform/uv/uv_nmi.c | 7 +++----
-> >>  1 file changed, 3 insertions(+), 4 deletions(-)
-> > 
-> > Note that this commit is already upstream:
-> > 
-> >   1e6f01f72855 ("x86/platform/uv: Refactor code using deprecated strcpy()/strncpy() interfaces to use strscpy()")
-> > 
-> > Below is the delta your v3 patch has compared to what is upstream - is it 
-> > really necessary to open code it, instead of using strnchrnul() as your 
-> > original patch did? Am I missing anything here?
-> 
-> The new version is a result of a review from my because IMHO:
-> 
-> 	strscpy(arg, val, strnchrnul(val, sizeof(arg)-1, '\n') - val + 1);
-> 
-> Is really unreadable / really hard to reason about if
-> this is actually correct and does not contain any
-> of by 1 bugs.
-> 
-> Note that the diff of v3 compared to the code before v2 landed is
-> actually smaller now and actually matches the subject of:
-> "refactor deprecated strcpy and strncpy"
-> 
-> Where as v2 actually touches more code / refactor things
-> which fall outside of a "one change per patch" approach.
-> The:
-> 
-> 	p = strchr(arg, '\n');
-> 	if (p)
-> 		*p = '\0';
-> 
-> was already there before v2 landed.
-> 
-> I also suggested to do a follow up patch to change things to:
-> 
-> 	strscpy(arg, val, sizeof(arg));
-> 	p = strchrnul(arg, '\n');
-> 	*p = '\0';
-> 
-> Which IMHO is much more readable then what has landed
-> now. But since v2 has already landed I guess the best
-> thing is just to stick with what we have upstream now...
+> +/**
+> + * gpio_device_find() - find a specific GPIO device
+> + * @data: data to pass to match function
+> + * @match: Callback function to check gpio_chip
 
-Well, how about we do a delta patch with all the changes
-you suggested? I'm all for readability.
+> + * Returns:
+> + * New reference to struct gpio_device.
 
-Thanks,
+I believe this is wrong location of the Return section.
+AFAIU how kernel doc uses section markers, this entire description becomes
+a Return(s) section. Have you tried to render man/html/pdf and see this?
 
-	Ingo
+> + * Similar to bus_find_device(). It returns a reference to a gpio_device as
+> + * determined by a user supplied @match callback. The callback should return
+> + * 0 if the device doesn't match and non-zero if it does. If the callback
+> + * returns non-zero, this function will return to the caller and not iterate
+> + * over any more gpio_devices.
+> + *
+> + * The callback takes the GPIO chip structure as argument. During the execution
+> + * of the callback function the chip is protected from being freed. TODO: This
+> + * actually has yet to be implemented.
+> + *
+> + * If the function returns non-NULL, the returned reference must be freed by
+> + * the caller using gpio_device_put().
+> + */
+> +struct gpio_device *gpio_device_find(void *data,
+
+> +				     int (*match)(struct gpio_chip *gc,
+> +						  void *data))
+
+One line?
+Or maybe a type for it? (gpio_match_fn, for example)
+
+> +{
+> +	struct gpio_device *gdev;
+> +
+> +	guard(spinlock_irqsave)(&gpio_lock);
+> +
+> +	list_for_each_entry(gdev, &gpio_devices, list) {
+> +		if (gdev->chip && match(gdev->chip, data))
+> +			return gpio_device_get(gdev);
+> +	}
+> +
+> +	return NULL;
+> +}
+
+...
+
+> +struct gpio_device *gpio_device_find(void *data,
+> +				     int (*match)(struct gpio_chip *gc,
+> +						  void *data));
+
+Ditto.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
