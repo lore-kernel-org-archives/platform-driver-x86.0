@@ -2,95 +2,114 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FDBEB8FDD
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Sep 2023 14:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A13FCA100E
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Sep 2023 14:47:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241611AbjIFOcx (ORCPT
+        id S241892AbjIFOrb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Sep 2023 10:32:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55008 "EHLO
+        Wed, 6 Sep 2023 10:47:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241666AbjIFOcn (ORCPT
+        with ESMTP id S237665AbjIFOra (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Sep 2023 10:32:43 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A21B198D;
-        Wed,  6 Sep 2023 07:32:37 -0700 (PDT)
+        Wed, 6 Sep 2023 10:47:30 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E4441733;
+        Wed,  6 Sep 2023 07:47:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694010757; x=1725546757;
+  t=1694011641; x=1725547641;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=V5V26GejPVyOSxfUjPT2mOYUtjVt5U4tPwu4TvOFpFo=;
-  b=DGcdpouBJM6X78hmVQXFs0SGvjbjaHu8Eq4J+vAMr3cvb85yzqSyzF6i
-   vK9aUlLiOVeaYSLvbW+kjMrrWIbVT87hJQGKm35QTq0fVsNrlcrH0X4Zb
-   izVDhTHbMH3z2cgREvr5jgXb/sJHkmIwlmaLJOOfS1XTIptXSmR2sbSR9
-   juqZVze/SbpA6OrzG4Ja4x8eyvDk72lxzcmdb+HNaVJytZbGkg2/sJk3T
-   PKmpr90+fUBSacei9zZlDw7C7BxUEpNLX+J5E9XGwJ3kw4JSDaqujvBT+
-   z6o9dAoj70IK8GxutcccTh67FsaVWKq7g4+8JgMrQRxPSTl2e0mQ3k9ul
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="441055375"
+  bh=+wfY4dLBSqJqYH1eCxjcFAXhA4C/3J/082gICwAh3j0=;
+  b=ghK7etziZqPENMCNQvwzCS7ygAOgdueW+tE38+Ww6ksvDkA4qr5BpEhc
+   OBu9qxG4lVgsYl31tAU5j2fEv/Qee3UXEUmX8EWFfEP34EhmmC9nrzCwS
+   kjTCf+ROOrc2zkByGx49ivz5NWiJaRe0BCoOFyv+5IucD4JiB9neSQS5t
+   PP9X5LLbDbV+31IlXGNwfSPZrZkkGNx0cHQuQBIkkDulGRC9YsK2ut3ux
+   d/lcyKoQBsLWYLh/87LCdCHBzIcNROzqv1Rm5+KnfsS35y75hp1u7k21g
+   1qg/kJ1IQlF5ZGvjrJLV+/QzC0aYoxQ/ZWySObnynBJm8WaO9hvblY8z9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="408088687"
 X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
-   d="scan'208";a="441055375"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 07:31:52 -0700
+   d="scan'208";a="408088687"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 07:47:10 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="811685411"
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="856460670"
 X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
-   d="scan'208";a="811685411"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Sep 2023 07:31:49 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id BCEB017D; Wed,  6 Sep 2023 17:31:47 +0300 (EEST)
-Date:   Wed, 6 Sep 2023 17:31:47 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
+   d="scan'208";a="856460670"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 07:47:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qdto5-006y0f-0Q;
+        Wed, 06 Sep 2023 17:47:01 +0300
+Date:   Wed, 6 Sep 2023 17:47:00 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-        platform-driver-x86@vger.kernel.org,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Prashant Malani <pmalani@chromium.org>
-Subject: Re: [PATCH 1/3] platform/x86: intel_scu_ipc: Check status after
- timeouts in busy_loop()
-Message-ID: <20230906143147.GD1599918@black.fi.intel.com>
-References: <20230831011405.3246849-1-swboyd@chromium.org>
- <20230831011405.3246849-2-swboyd@chromium.org>
- <20230901055011.GT3465@black.fi.intel.com>
- <CAE-0n50XCw7ugkoTAUfb5Jrr6-Vh=bvXfTOSeHV_ymyOQfRB2g@mail.gmail.com>
- <ZPiCz6AaLc4mqGH8@smile.fi.intel.com>
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFT PATCH 14/21] hte: tegra194: don't access struct gpio_chip
+Message-ID: <ZPiQ5AvmjCiudnWK@smile.fi.intel.com>
+References: <20230905185309.131295-1-brgl@bgdev.pl>
+ <20230905185309.131295-15-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZPiCz6AaLc4mqGH8@smile.fi.intel.com>
+In-Reply-To: <20230905185309.131295-15-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 06, 2023 at 04:46:55PM +0300, Andy Shevchenko wrote:
-> On Tue, Sep 05, 2023 at 05:27:23PM -0500, Stephen Boyd wrote:
-> > Quoting Mika Westerberg (2023-08-31 22:50:11)
-> > > On Wed, Aug 30, 2023 at 06:14:01PM -0700, Stephen Boyd wrote:
-> > > > It's possible for the polling loop in busy_loop() to get scheduled away
-> > > > for a long time.
-> > > >
-> > > >   status = ipc_read_status(scu);
-> > > >   <long time scheduled away>
-> > > >   if (!(status & IPC_STATUS_BUSY))
-> > >
-> > > How can the status bit change here as we are the only user and the SCU
-> > > access is serialized by ipclock?
-> > 
-> > I don't know how the SCU works. I thought that IPC_STATUS_BUSY bit was
-> > cleared by the SCU when it was done processing. With that assumption, I
-> > tried to show that the status is read and then the process schedules
-> > away for a long time and has an outdated view of the busy bit.
+On Tue, Sep 05, 2023 at 08:53:02PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> We probably have different versions of firmwares for the different SoC
-> generations. But I _think_ that you are right, the SCU firmware should
-> clear the bit when it's done.
+> Using struct gpio_chip is not safe as it will disappear if the
+> underlying driver is unbound for any reason. Switch to using reference
+> counted struct gpio_device and its dedicated accessors.
 
-Yes, IIRC it does. Okay I see the (potential, although quite unlikely)
-problem now. Thanks!
+...
+
+> +	struct gpio_device *gdev __free(gpio_device_put) = NULL;
+
+Using this requires cleanup.h to be included.
+Does any of the included GPIO headers guarantee that inclusion implicitly?
+Even though, it's a good practice to include headers of what we are using
+independently if other (library) headers include them. I.o.w. we can rely
+only on our headers (here HTE framework related) to guarantee any inclusions
+implicitly.
+
+This also applies to other users of the same construct.
+
+...
+
+>  static int tegra_gpiochip_match(struct gpio_chip *chip, void *data)
+>  {
+>  	return chip->fwnode == of_node_to_fwnode(data);
+>  }
+
+Not sure how many users of this kind of match, but it might be useful to have
+it by GPIO library
+
+	gpio_device_find_by_fwnode()
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
