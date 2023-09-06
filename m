@@ -2,90 +2,93 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2A8EE49BF
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Sep 2023 23:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78512EB8FAD
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Sep 2023 05:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230363AbjIEXM2 (ORCPT
+        id S239847AbjIFFHo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Sep 2023 19:12:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39302 "EHLO
+        Wed, 6 Sep 2023 01:07:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbjIEXM2 (ORCPT
+        with ESMTP id S239631AbjIFFHn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Sep 2023 19:12:28 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BFB91B6
-        for <platform-driver-x86@vger.kernel.org>; Tue,  5 Sep 2023 16:12:24 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D14B7C433C7;
-        Tue,  5 Sep 2023 23:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693955035;
-        bh=wMx4Tp3d/EJsu6/oCM6hDQiu1DWer7zBkf0OEbTAv7s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GyAowMHhMN3dIJNd8pMn037z7dgwt4wq+dDE7tACBzarLdVtEtDwprbQBEk31n9bD
-         BNFePJFYmmDf1rgi8g3viVXEM4CSHSg6cRfLHBeFgqnHqDpGkrbDk2zAKgVho88o4x
-         KwkhuDx1gRDXR1bDAoZWjrAz2N0ESrqLPhPNLM+WXqqAt8R7y1pCMn4CzlUL9OQZV2
-         uX5uTjvnaYA2ZqcIjjELu7MEnmmRYRv/A4LY5vbqWNc7XYlzunrbmUIJI9X5nMdj+1
-         f3DTCgAA9KsyWwZNKIGew7hd9OVGhNj+0GKi8XhKmNL6LOV4Q6jnq+IQiOO0hs6EOj
-         dw/hI836iz3Ow==
-Date:   Wed, 6 Sep 2023 01:03:52 +0200
-From:   Andi Shyti <andi.shyti@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Michael Shych <michaelsh@nvidia.com>,
-        Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] platform/mellanox: NVSW_SN2201 should depend on ACPI
-Message-ID: <20230905230352.nizvkaurtwqjdoxe@zenone.zhora.eu>
-References: <cover.1693828363.git.geert+renesas@glider.be>
- <ec5a4071691ab08d58771b7732a9988e89779268.1693828363.git.geert+renesas@glider.be>
+        Wed, 6 Sep 2023 01:07:43 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7D44197;
+        Tue,  5 Sep 2023 22:07:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=lu5CsFTRvNr2ltXiexrLfJ//QES5eteF0z+ySRWEFww=; b=fBMcQWBkpelZiJnLJ61x+/6zhe
+        t/iDgcdwPc4iUifkHpZqMwkKw9lah9QNFs5GXDilC0YmlSdh3K0HkdQKphSlzHx5m6POhpxVwoUMp
+        eIKGpvq6HxSIbeP1zC/6z9pbDAzEBy+GKI0ZtWZnVLjfgqvsGMF1eJYkSdvlM4MQh5T5ee7/gNYui
+        4vmz4fgXnKcuaF92nzfJ+hgtQiSfoa8dYFjNAwllcSpBkC49zthaDiCL5WWInBg19UeGO6kyE3DTk
+        UgZLYqnzoiEdcQeY1x0asLAz3NBoreo8VhJ9gD5JBFhWlaY/7sYulJEZVzaV3m/S9q5Y0L1EfvnUU
+        kKYPaVoA==;
+Received: from [2601:1c2:980:9ec0::2764]
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qdklK-007H5s-2l;
+        Wed, 06 Sep 2023 05:07:34 +0000
+Message-ID: <4b55e7c0-aed2-5225-fcac-1122a985800b@infradead.org>
+Date:   Tue, 5 Sep 2023 22:07:33 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec5a4071691ab08d58771b7732a9988e89779268.1693828363.git.geert+renesas@glider.be>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v1] mlxbf-bootctl: add NET dependency into Kconfig
+Content-Language: en-US
+To:     David Thompson <davthompson@nvidia.com>, hdegoede@redhat.com,
+        markgross@kernel.org, vadimp@nvidia.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+References: <20230905133243.31550-1-davthompson@nvidia.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20230905133243.31550-1-davthompson@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Geert,
 
-On Mon, Sep 04, 2023 at 02:00:35PM +0200, Geert Uytterhoeven wrote:
-> The only probing method supported by the Nvidia SN2201 platform driver
-> is probing through an ACPI match table.  Hence add a dependency on
-> ACPI, to prevent asking the user about this driver when configuring a
-> kernel without ACPI support.
+Hi,
+
+On 9/5/23 06:32, David Thompson wrote:
+> The latest version of the mlxbf_bootctl driver utilizes
+> "sysfs_format_mac", and this API is only available if
+> NET is defined in the kernel configuration. This patch
+> changes the mlxbf_bootctl Kconfig to depend on NET.
 > 
-> Fixes: 662f24826f954d49 ("platform/mellanox: Add support for new SN2201 system")
+> Reported-by: kernel test robot <lkp@intel.com>
 
-I don't think the Fixes tag is needed here...
+Also
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202309031058.JvwNDBKt-lkp@intel.com/
+> Signed-off-by: David Thompson <davthompson@nvidia.com>
 > ---
->  drivers/platform/mellanox/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/platform/mellanox/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 > diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
-> index 382793e73a60a8b3..30b50920b278c94b 100644
+> index 382793e73a60..e52aea996ca5 100644
 > --- a/drivers/platform/mellanox/Kconfig
 > +++ b/drivers/platform/mellanox/Kconfig
-> @@ -80,8 +80,8 @@ config MLXBF_PMC
->  
->  config NVSW_SN2201
->  	tristate "Nvidia SN2201 platform driver support"
-> -	depends on HWMON
-> -	depends on I2C
-> +	depends on HWMON && I2C
-> +	depends on ACPI || COMPILE_TEST
-
-Acked-by: Andi Shyti <andi.shyti@kernel.org> 
-
-Andi
-
->  	select REGMAP_I2C
+> @@ -60,6 +60,7 @@ config MLXBF_BOOTCTL
+>  	tristate "Mellanox BlueField Firmware Boot Control driver"
+>  	depends on ARM64
+>  	depends on ACPI
+> +	depends on NET
 >  	help
->  	  This driver provides support for the Nvidia SN2201 platform.
-> -- 
-> 2.34.1
-> 
+>  	  The Mellanox BlueField firmware implements functionality to
+>  	  request swapping the primary and alternate eMMC boot partition,
+
+
+I'm sure that this will fix the build problem, but I don't see this
+being a network driver. To me it looks like some management s/w
+that can run independently of networking software.
+It just wants to show/store a MAC address -- no networking.
+FWIW.
+
+-- 
+~Randy
