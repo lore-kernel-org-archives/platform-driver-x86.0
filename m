@@ -2,93 +2,185 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78512EB8FAD
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Sep 2023 05:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B148FEB8FB8
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Sep 2023 07:10:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239847AbjIFFHo (ORCPT
+        id S230309AbjIFHKq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Sep 2023 01:07:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57176 "EHLO
+        Wed, 6 Sep 2023 03:10:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239631AbjIFFHn (ORCPT
+        with ESMTP id S230155AbjIFHKp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Sep 2023 01:07:43 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7D44197;
-        Tue,  5 Sep 2023 22:07:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=lu5CsFTRvNr2ltXiexrLfJ//QES5eteF0z+ySRWEFww=; b=fBMcQWBkpelZiJnLJ61x+/6zhe
-        t/iDgcdwPc4iUifkHpZqMwkKw9lah9QNFs5GXDilC0YmlSdh3K0HkdQKphSlzHx5m6POhpxVwoUMp
-        eIKGpvq6HxSIbeP1zC/6z9pbDAzEBy+GKI0ZtWZnVLjfgqvsGMF1eJYkSdvlM4MQh5T5ee7/gNYui
-        4vmz4fgXnKcuaF92nzfJ+hgtQiSfoa8dYFjNAwllcSpBkC49zthaDiCL5WWInBg19UeGO6kyE3DTk
-        UgZLYqnzoiEdcQeY1x0asLAz3NBoreo8VhJ9gD5JBFhWlaY/7sYulJEZVzaV3m/S9q5Y0L1EfvnUU
-        kKYPaVoA==;
-Received: from [2601:1c2:980:9ec0::2764]
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qdklK-007H5s-2l;
-        Wed, 06 Sep 2023 05:07:34 +0000
-Message-ID: <4b55e7c0-aed2-5225-fcac-1122a985800b@infradead.org>
-Date:   Tue, 5 Sep 2023 22:07:33 -0700
+        Wed, 6 Sep 2023 03:10:45 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63CDDE4F;
+        Wed,  6 Sep 2023 00:10:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693984240; x=1725520240;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CzVsvBBCQyE6nmVgfBDTPc4IJEBFPNuhlR6CIA56RSY=;
+  b=jh/OGLjnnh+SnvwGZL7DuwN60omR4cuAf2PX0vJQ7p/CET3lBGgpZJR5
+   7rjsb1HNryP1TBaRL/jk98Y422kNMsKrOVWp7KOOZosizmmytsIDyYmxf
+   UQqbe0mltBJ4CM564EqEsMh/4fubF0TZ//RsrvAFbfgjKcdz6h9N0R/an
+   F+lCVtfGBuzhnmh6DLJ/3+26qxG9Jx7cjiK4hSrVR9l2C+C3lY/wmowZb
+   HuzC2ExpL/6BzIntGnhIca6vkn6qCvVoaU9XJTDTIrgVzcYKik44HxU+B
+   vA0UOJgeBpPVy7bFaVQmyIT9RYibrXr1qW++ahSFmQ5ksD3eYTVpfLkRC
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="407993429"
+X-IronPort-AV: E=Sophos;i="6.02,231,1688454000"; 
+   d="scan'208";a="407993429"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 00:10:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="734933655"
+X-IronPort-AV: E=Sophos;i="6.02,231,1688454000"; 
+   d="scan'208";a="734933655"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 06 Sep 2023 00:10:33 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 1DF7F30D; Wed,  6 Sep 2023 10:10:32 +0300 (EEST)
+Date:   Wed, 6 Sep 2023 10:10:32 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 08/21] gpio: acpi: provide
+ acpi_gpio_device_free_interrupts()
+Message-ID: <20230906071032.GA1599918@black.fi.intel.com>
+References: <20230905185309.131295-1-brgl@bgdev.pl>
+ <20230905185309.131295-9-brgl@bgdev.pl>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v1] mlxbf-bootctl: add NET dependency into Kconfig
-Content-Language: en-US
-To:     David Thompson <davthompson@nvidia.com>, hdegoede@redhat.com,
-        markgross@kernel.org, vadimp@nvidia.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-References: <20230905133243.31550-1-davthompson@nvidia.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20230905133243.31550-1-davthompson@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230905185309.131295-9-brgl@bgdev.pl>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-
 Hi,
 
-On 9/5/23 06:32, David Thompson wrote:
-> The latest version of the mlxbf_bootctl driver utilizes
-> "sysfs_format_mac", and this API is only available if
-> NET is defined in the kernel configuration. This patch
-> changes the mlxbf_bootctl Kconfig to depend on NET.
+On Tue, Sep 05, 2023 at 08:52:56PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
+> We're moving away from public functions that take struct gpio_chip as
+> argument as the chip - unlike struct gpio_device - is owned by its
+> provider and tied to its lifetime.
+> 
+> Provide an alternative to acpi_gpiochip_free_interrupts().
 
-Also
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Looks good to me, few minor comments below.
 
-> Closes: https://lore.kernel.org/oe-kbuild-all/202309031058.JvwNDBKt-lkp@intel.com/
-> Signed-off-by: David Thompson <davthompson@nvidia.com>
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
 > ---
->  drivers/platform/mellanox/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/gpio/gpiolib-acpi.c | 29 +++++++++++++++++++++++------
+>  include/linux/gpio/driver.h | 12 ++++++++++++
+>  2 files changed, 35 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
-> index 382793e73a60..e52aea996ca5 100644
-> --- a/drivers/platform/mellanox/Kconfig
-> +++ b/drivers/platform/mellanox/Kconfig
-> @@ -60,6 +60,7 @@ config MLXBF_BOOTCTL
->  	tristate "Mellanox BlueField Firmware Boot Control driver"
->  	depends on ARM64
->  	depends on ACPI
-> +	depends on NET
->  	help
->  	  The Mellanox BlueField firmware implements functionality to
->  	  request swapping the primary and alternate eMMC boot partition,
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index fbda452fb4d6..5633e39396bc 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -558,12 +558,9 @@ void acpi_gpiochip_request_interrupts(struct gpio_chip *chip)
+>  }
+>  EXPORT_SYMBOL_GPL(acpi_gpiochip_request_interrupts);
+>  
+> -/**
+> - * acpi_gpiochip_free_interrupts() - Free GPIO ACPI event interrupts.
+> - * @chip:      GPIO chip
+> - *
+> - * Free interrupts associated with GPIO ACPI event method for the given
+> - * GPIO chip.
+> +/*
+> + * This function is deprecated, use acpi_gpio_device_free_interrupts()
+> + * instead.
+>   */
+>  void acpi_gpiochip_free_interrupts(struct gpio_chip *chip)
+>  {
+> @@ -604,6 +601,26 @@ void acpi_gpiochip_free_interrupts(struct gpio_chip *chip)
+>  }
+>  EXPORT_SYMBOL_GPL(acpi_gpiochip_free_interrupts);
+>  
+> +/**
+> + * acpi_gpio_device_free_interrupts() - Free GPIO ACPI event interrupts.
+> + * @chip	GPIO device
 
+Should be:
 
-I'm sure that this will fix the build problem, but I don't see this
-being a network driver. To me it looks like some management s/w
-that can run independently of networking software.
-It just wants to show/store a MAC address -- no networking.
-FWIW.
+@chip: GPIO device
 
--- 
-~Randy
+> + *
+> + * Free interrupts associated with GPIO ACPI event method for the given
+> + * GPIO device.
+> + */
+> +void acpi_gpio_device_free_interrupts(struct gpio_device *gdev)
+> +{
+> +	struct gpio_chip *gc;
+> +
+> +	/* TODO: protect gdev->chip once SRCU is in place in GPIOLIB. */
+> +	gc = gdev->chip;
+> +	if (!gc)
+> +		return;
+> +
+> +	acpi_gpiochip_free_interrupts(gc);
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_gpio_device_free_interrupts);
+> +
+>  int acpi_dev_add_driver_gpios(struct acpi_device *adev,
+>  			      const struct acpi_gpio_mapping *gpios)
+>  {
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index b68b3493b29d..47906bc56b3d 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -835,4 +835,16 @@ static inline struct fwnode_handle *gpiochip_node_get_first(struct device *dev)
+>  	return NULL;
+>  }
+>  
+> +/*
+> + * FIXME: Remove this once the only driver that uses it - android tablets -
+> + * becomes a good citizen and stops abusing GPIOLIB.
+
+There are a acouple of more when grepping for acpi_gpiochip_free_interrupts().
+
+I'm not entirely sure why these functions are exposed to the drivers in
+the first place. IMHO GPIOLIB should deal with these but perhaps there
+is some good reason these drivers do it...
+
+> + */
+> +#ifdef CONFIG_ACPI
+> +void acpi_gpio_device_free_interrupts(struct gpio_device *gdev);
+> +#else
+> +static inline void acpi_gpio_device_free_interrupts(struct gpio_device *gdev)
+> +{
+> +}
+
+I would put these {} to the same line:
+
+static inline void acpi_gpio_device_free_interrupts(struct gpio_device *gdev) { }
+
+> +#endif
+> +
+>  #endif /* __LINUX_GPIO_DRIVER_H */
+> -- 
+> 2.39.2
