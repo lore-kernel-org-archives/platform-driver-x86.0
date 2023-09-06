@@ -2,49 +2,49 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8929AEB8FD3
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Sep 2023 13:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0661EB8FD5
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Sep 2023 13:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237070AbjIFNrW (ORCPT
+        id S241345AbjIFN6P (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Sep 2023 09:47:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40426 "EHLO
+        Wed, 6 Sep 2023 09:58:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232279AbjIFNrW (ORCPT
+        with ESMTP id S241336AbjIFN6P (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Sep 2023 09:47:22 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A87E2CF1;
-        Wed,  6 Sep 2023 06:47:16 -0700 (PDT)
+        Wed, 6 Sep 2023 09:58:15 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FB8D1730;
+        Wed,  6 Sep 2023 06:58:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694008036; x=1725544036;
+  t=1694008691; x=1725544691;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=zDFPAPYGX2IZoTeqMbNV/DXZinj8Poy4eWm5AtR/VnU=;
-  b=Xjs8s0VkJanOfenWMR+CwGjZZTnbEYx5a/E8yOACsO02jRa2HhzIo5rT
-   8he5wCfwdFYvAwjC/O3/2pgaaaBkd0FIYUwpBFs5649NZT6TXQy5JowKz
-   1Ny+brNE/2bsk06/jsTglFIr71/YhTOqXBPapavHMhkxzQMJv8iXlmezp
-   GehxQ0mdjYAHshBVn+kyrWjN/TRtJqLe89HtKs4CJZ1BR2eD+lFxCQAvg
-   ejBoj9OEz8Fx6F3yuP7a7doLEzIhAD6qwUY0nB7Iuh8OiFbuA89Sgh/8K
-   6uwx+HD+g7mroo7Emo0WpKeoCVAJ/Kk8kxLecVh6hTCDY+O26YIzeTg31
+  bh=2WWHRUyg9p2ZSwhYGZ7eiU78qxzL0KM29diRxubyLdk=;
+  b=YLvgcZNKiyxkNpMan/KckybSeHCIcxRWofzdkeSDN1LlFE4wTbpaIVvh
+   vppeAUTojFMPOhg+NVPthyNna4weP3yWnm2MYimt1bnp16YnQM5SUVagL
+   mtM8yJDRAivAXl6fjDZGjc/c1QMBRhbAee3JmLtj9khTY3zERVrbmTpmL
+   A2D/LxSDUfIJN3P9lUa4j2tZg5NwGlsHopObBlY7eg2rcav0igbcU6V9n
+   LfwHBwv1y/8+8qFjm4ltbn2uC62k87xy/ZbHugMXn90eZkiaB4/PM/rdG
+   DHAY9pQ8BCogbSE+yWE/k84Id1EQkbRClCDi/B90fRkdrY7kwSkFpVj2m
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="380866183"
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="357382157"
 X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
-   d="scan'208";a="380866183"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 06:47:15 -0700
+   d="scan'208";a="357382157"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 06:58:10 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="988236819"
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="741558602"
 X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
-   d="scan'208";a="988236819"
+   d="scan'208";a="741558602"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 06:47:12 -0700
+  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 06:58:08 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qdsrw-006xGR-01;
-        Wed, 06 Sep 2023 16:46:56 +0300
-Date:   Wed, 6 Sep 2023 16:46:55 +0300
+        id 1qdt2j-006xPT-07;
+        Wed, 06 Sep 2023 16:58:05 +0300
+Date:   Wed, 6 Sep 2023 16:58:04 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Stephen Boyd <swboyd@chromium.org>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -57,22 +57,22 @@ Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Prashant Malani <pmalani@chromium.org>
 Subject: Re: [PATCH 1/3] platform/x86: intel_scu_ipc: Check status after
  timeouts in busy_loop()
-Message-ID: <ZPiCz6AaLc4mqGH8@smile.fi.intel.com>
+Message-ID: <ZPiFbDWeUV99YE50@smile.fi.intel.com>
 References: <20230831011405.3246849-1-swboyd@chromium.org>
  <20230831011405.3246849-2-swboyd@chromium.org>
- <20230901055011.GT3465@black.fi.intel.com>
- <CAE-0n50XCw7ugkoTAUfb5Jrr6-Vh=bvXfTOSeHV_ymyOQfRB2g@mail.gmail.com>
+ <ZPCbSse3J6ksZwJa@smile.fi.intel.com>
+ <CAE-0n52wAqsmm4cs6JX2W2G10VxjLzocXVmF9c_GC+52Fi4djQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAE-0n50XCw7ugkoTAUfb5Jrr6-Vh=bvXfTOSeHV_ymyOQfRB2g@mail.gmail.com>
+In-Reply-To: <CAE-0n52wAqsmm4cs6JX2W2G10VxjLzocXVmF9c_GC+52Fi4djQ@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Sep 05, 2023 at 05:27:23PM -0500, Stephen Boyd wrote:
-> Quoting Mika Westerberg (2023-08-31 22:50:11)
+On Tue, Sep 05, 2023 at 05:24:29PM -0500, Stephen Boyd wrote:
+> Quoting Andy Shevchenko (2023-08-31 06:53:14)
 > > On Wed, Aug 30, 2023 at 06:14:01PM -0700, Stephen Boyd wrote:
 > > > It's possible for the polling loop in busy_loop() to get scheduled away
 > > > for a long time.
@@ -80,18 +80,35 @@ On Tue, Sep 05, 2023 at 05:27:23PM -0500, Stephen Boyd wrote:
 > > >   status = ipc_read_status(scu);
 > > >   <long time scheduled away>
 > > >   if (!(status & IPC_STATUS_BUSY))
+> > >
+> > > If this happens, then the status bit could change and this function
+> > > would never test it again after checking the jiffies against the timeout
+> > > limit. Polling code should check the condition one more time after the
+> > > timeout in case this happens.
+> > >
+> > > The read_poll_timeout() helper implements this logic, and is shorter, so
+> > > simply use that helper here.
 > >
-> > How can the status bit change here as we are the only user and the SCU
-> > access is serialized by ipclock?
+> > I don't remember by heart, but on some older Intel hardware this might have
+> > been called during early stages where ktime() is not functional yet.
+> >
+> > Is this still a case here?
 > 
-> I don't know how the SCU works. I thought that IPC_STATUS_BUSY bit was
-> cleared by the SCU when it was done processing. With that assumption, I
-> tried to show that the status is read and then the process schedules
-> away for a long time and has an outdated view of the busy bit.
+> I have no idea if that happens in early stages.
 
-We probably have different versions of firmwares for the different SoC
-generations. But I _think_ that you are right, the SCU firmware should
-clear the bit when it's done.
+I briefly browsed the current tree and it seems it's not the case.
+
+> What about
+> suspend/resume though? I suppose timekeeping could be suspended in that
+> case, so we can't really check anything with ktime.
+
+Hmm... SCU itself is running all the time I think. The timekeeping depends on
+the platform, but is it really the case? I dunno.
+
+> I can rework this patch to simply recheck the busy bit so that we don't
+> have to figure out if the code is called early or from suspend paths.
+
+Yeah, probably we can do this and leave this nice cleanup in place.
 
 -- 
 With Best Regards,
