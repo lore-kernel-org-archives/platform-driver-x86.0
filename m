@@ -2,320 +2,95 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595E7EB8FD6
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Sep 2023 14:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FDBEB8FDD
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Sep 2023 14:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236036AbjIFO1a (ORCPT
+        id S241611AbjIFOcx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Sep 2023 10:27:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60778 "EHLO
+        Wed, 6 Sep 2023 10:32:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233285AbjIFO1a (ORCPT
+        with ESMTP id S241666AbjIFOcn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Sep 2023 10:27:30 -0400
-Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A32210D3
-        for <platform-driver-x86@vger.kernel.org>; Wed,  6 Sep 2023 07:27:26 -0700 (PDT)
-Received: by mail-vs1-xe31.google.com with SMTP id ada2fe7eead31-44ee1123667so607139137.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 06 Sep 2023 07:27:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694010445; x=1694615245; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pW/0ftx44nuZvnIVfoBb4IXQmDJJsfiAnE8tMNiYS4g=;
-        b=O9xhEB3Plkxv5dvcADeOe1tj7cOcbLoR2NDbG5kcwLAOeK3P4tA4+sJm6a03eNZ0d/
-         vRjfL7g6VlDq4GsMpFGGnreKG9aqsTwcEWVN+49kZZzj12SusOUAPjHHdrtWZWqb/5n9
-         MfhqV1ShoTknqadFy6QQNyaD5SebwwdzChO9l5cxdylXiYyr/qI+qGl08fJeg6zGOlO9
-         aEZdGyaBc5jD47p+ioo+jhnohFgVZVjuIhm978HlZUQ5B5FP45R70X5BOUEhK0BSAa1K
-         g3iBH+uPGjOWixtNEYIu/6UxV9lITjIWm1ytCAiEjs4+5BaXRc6+PNa31GyqUDn2aZYa
-         vacw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694010445; x=1694615245;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pW/0ftx44nuZvnIVfoBb4IXQmDJJsfiAnE8tMNiYS4g=;
-        b=Q6k5hu5/vWedJuPoT3DuLb9cp/5QCa8GIZykCnMqy+8LwAKNtE61D2u/OCzySJCNiG
-         eSf5XYfR6/KZ99Eue9Dj63hhF8pzq9mao8vdIDG4xbLnGir41ravd0Py4kRRYfiYSewA
-         VgCJQSgK956ARffr4QISXMyqCq9sxLjReu4x1K/VAE4SIbp/OZnoayRZMQBG62cWBoF0
-         0BkTeUzLqAK3MXUFvVFIaMhMVVdY2NYEoTdUxTJ8iFjX57Zo9wppIYjA0Oc/Z4JVyRIy
-         SDxXiw/QTuP8bdAcxZfpyK5E/s8Kpq/u2IkT8/2F+6xuYD5wSqijFEfLmjN4tmrwV7Oq
-         s1Tw==
-X-Gm-Message-State: AOJu0YwYsTA6vLrNCEWPWR1bVFhugWeIlw5b2xWKerG0G4L9wA5ifvbY
-        8Uvhe3wtQbe57pzDPsStgcDM8wpEBlxtMe5Riewsvg==
-X-Google-Smtp-Source: AGHT+IHoZDtEvlafSlOtaL3eIj2H5vP48KL4yKOmxNr5WPPA1hwUKpDDD/YvuNOyFoHGnvDWIVi1aWHPf6UcXmEixBk=
-X-Received: by 2002:a05:6102:3003:b0:44d:acfd:6f0a with SMTP id
- s3-20020a056102300300b0044dacfd6f0amr1975222vsa.16.1694010445227; Wed, 06 Sep
- 2023 07:27:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230905185309.131295-1-brgl@bgdev.pl> <20230905185309.131295-12-brgl@bgdev.pl>
- <8f51b4a8-bb9c-4918-61a8-4ab402da1ed0@redhat.com>
-In-Reply-To: <8f51b4a8-bb9c-4918-61a8-4ab402da1ed0@redhat.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 6 Sep 2023 16:27:14 +0200
-Message-ID: <CAMRc=Mfmp3Nd5jwNWr=kc8RFO-arFDwEvLxj5Qu9_1OOXR2gHQ@mail.gmail.com>
-Subject: Re: [RFT PATCH 11/21] platform: x86: android-tablets: don't access
- GPIOLIB private members
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dipen Patel <dipenp@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
+        Wed, 6 Sep 2023 10:32:43 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A21B198D;
+        Wed,  6 Sep 2023 07:32:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694010757; x=1725546757;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=V5V26GejPVyOSxfUjPT2mOYUtjVt5U4tPwu4TvOFpFo=;
+  b=DGcdpouBJM6X78hmVQXFs0SGvjbjaHu8Eq4J+vAMr3cvb85yzqSyzF6i
+   vK9aUlLiOVeaYSLvbW+kjMrrWIbVT87hJQGKm35QTq0fVsNrlcrH0X4Zb
+   izVDhTHbMH3z2cgREvr5jgXb/sJHkmIwlmaLJOOfS1XTIptXSmR2sbSR9
+   juqZVze/SbpA6OrzG4Ja4x8eyvDk72lxzcmdb+HNaVJytZbGkg2/sJk3T
+   PKmpr90+fUBSacei9zZlDw7C7BxUEpNLX+J5E9XGwJ3kw4JSDaqujvBT+
+   z6o9dAoj70IK8GxutcccTh67FsaVWKq7g4+8JgMrQRxPSTl2e0mQ3k9ul
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="441055375"
+X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
+   d="scan'208";a="441055375"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 07:31:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="811685411"
+X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
+   d="scan'208";a="811685411"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 06 Sep 2023 07:31:49 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id BCEB017D; Wed,  6 Sep 2023 17:31:47 +0300 (EEST)
+Date:   Wed, 6 Sep 2023 17:31:47 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
-        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Prashant Malani <pmalani@chromium.org>
+Subject: Re: [PATCH 1/3] platform/x86: intel_scu_ipc: Check status after
+ timeouts in busy_loop()
+Message-ID: <20230906143147.GD1599918@black.fi.intel.com>
+References: <20230831011405.3246849-1-swboyd@chromium.org>
+ <20230831011405.3246849-2-swboyd@chromium.org>
+ <20230901055011.GT3465@black.fi.intel.com>
+ <CAE-0n50XCw7ugkoTAUfb5Jrr6-Vh=bvXfTOSeHV_ymyOQfRB2g@mail.gmail.com>
+ <ZPiCz6AaLc4mqGH8@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZPiCz6AaLc4mqGH8@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 6, 2023 at 3:01=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
-wrote:
->
-> Hi Bartosz,
->
-> On 9/5/23 20:52, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > We're slowly removing cases of abuse of the GPIOLIB public API. One of
-> > the biggest issues is looking up and accessing struct gpio_chip whose
-> > life-time is tied to the provider and which can disappear from under an=
-y
-> > user at any given moment. We have provided new interfaces that use the
-> > opaque struct gpio_device which is reference counted and will soon be
-> > thorougly protected with appropriate locking.
-> >
-> > Stop using old interfaces in this driver and switch to safer
-> > alternatives.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> First of all sorry for the issues this hack-ish kernel module
-> is causing for cleaning up gpiolib APIs.
->
-> I don't know how close a look you took at the code, so first of
-> all let me try to briefly explain what this hackish kernel module
-> is for:
->
-> There are some x86_64/ACPI tablets which shipped with Android as
-> factory OS. On these tablets the device-specific (BSP style)
-> kernel has things like the touchscreen driver simply having
-> a hardcoded I2C bus-number + I2C client address. Combined
-> with also hardcoded GPIO numbers (using the old number base APIs)
-> for any GPIOs it needs.
->
-> So the original Android kernels do not need the devices
-> to be properly described in ACPI and the ACPI tables are
-> just one big copy and paste job from some BSP which do
-> not accurately describe the hardware at all.
->
-> x86-android-tablets.ko identifies affected models by their
-> DMI strings and then manually instantiates things like
-> i2c-clients for the touchscreen, accelerometer and also
-> other stuff. Yes this is ugly but it allows mainline kernels
-> to run pretty well on these devices since other then
-> the messed up ACPI tables these are pretty standard x86/ACPI
-> tablets.
->
-> I hope this explains the hacks, now on to the problems
-> these are causing:
+On Wed, Sep 06, 2023 at 04:46:55PM +0300, Andy Shevchenko wrote:
+> On Tue, Sep 05, 2023 at 05:27:23PM -0500, Stephen Boyd wrote:
+> > Quoting Mika Westerberg (2023-08-31 22:50:11)
+> > > On Wed, Aug 30, 2023 at 06:14:01PM -0700, Stephen Boyd wrote:
+> > > > It's possible for the polling loop in busy_loop() to get scheduled away
+> > > > for a long time.
+> > > >
+> > > >   status = ipc_read_status(scu);
+> > > >   <long time scheduled away>
+> > > >   if (!(status & IPC_STATUS_BUSY))
+> > >
+> > > How can the status bit change here as we are the only user and the SCU
+> > > access is serialized by ipclock?
+> > 
+> > I don't know how the SCU works. I thought that IPC_STATUS_BUSY bit was
+> > cleared by the SCU when it was done processing. With that assumption, I
+> > tried to show that the status is read and then the process schedules
+> > away for a long time and has an outdated view of the busy bit.
+> 
+> We probably have different versions of firmwares for the different SoC
+> generations. But I _think_ that you are right, the SCU firmware should
+> clear the bit when it's done.
 
-This makes sense! Maybe we'd need a good-old board file setting up all
-non-described devices using the driver model?
-
->
-> > ---
-> >  .../platform/x86/x86-android-tablets/core.c   | 38 ++++++++++---------
-> >  1 file changed, 20 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/=
-platform/x86/x86-android-tablets/core.c
-> > index 2fd6060a31bb..687f84cd193c 100644
-> > --- a/drivers/platform/x86/x86-android-tablets/core.c
-> > +++ b/drivers/platform/x86/x86-android-tablets/core.c
-> > @@ -12,6 +12,7 @@
-> >
-> >  #include <linux/acpi.h>
-> >  #include <linux/dmi.h>
-> > +#include <linux/gpio/consumer.h>
-> >  #include <linux/gpio/driver.h>
-> >  #include <linux/gpio/machine.h>
-> >  #include <linux/irq.h>
-> > @@ -21,27 +22,28 @@
-> >  #include <linux/string.h>
-> >
-> >  #include "x86-android-tablets.h"
-> > -/* For gpiochip_get_desc() which is EXPORT_SYMBOL_GPL() */
-> > -#include "../../../gpio/gpiolib.h"
-> > -#include "../../../gpio/gpiolib-acpi.h"
-> > -
-> > -static int gpiochip_find_match_label(struct gpio_chip *gc, void *data)
-> > -{
-> > -     return gc->label && !strcmp(gc->label, data);
-> > -}
-> >
-> >  int x86_android_tablet_get_gpiod(const char *label, int pin, struct gp=
-io_desc **desc)
-> >  {
-> > +     struct gpio_device *gdev;
-> >       struct gpio_desc *gpiod;
-> > -     struct gpio_chip *chip;
-> >
-> > -     chip =3D gpiochip_find((void *)label, gpiochip_find_match_label);
-> > -     if (!chip) {
-> > -             pr_err("error cannot find GPIO chip %s\n", label);
-> > +     /*
-> > +      * FIXME: handle GPIOs correctly! This driver should really use s=
-truct
-> > +      * device and GPIO lookup tables.
-> > +      *
-> > +      * WONTDO: We do leak this reference, but the whole approach to g=
-etting
-> > +      * GPIOs in this driver is such an abuse of the GPIOLIB API that =
-it
-> > +      * doesn't make it much worse and it's the only way to keep the
-> > +      * interrupt requested later functional...
-> > +      */
-> > +     gdev =3D gpio_device_find_by_label(label);
-> > +     if (!gdev) {
-> > +             pr_err("error cannot find GPIO device %s\n", label);
-> >               return -ENODEV;
-> >       }
-> >
-> > -     gpiod =3D gpiochip_get_desc(chip, pin);
-> > +     gpiod =3D gpio_device_get_desc(gdev, pin);
-> >       if (IS_ERR(gpiod)) {
-> >               pr_err("error %ld getting GPIO %s %d\n", PTR_ERR(gpiod), =
-label, pin);
-> >               return PTR_ERR(gpiod);
->
->
-> So rather then the above I think what needs to happen here
-> (and I can hopefully make some time for that this weekend) is:
->
-> 1. Have the x86-android-tablets code instantiate a
->    "x86-android-tablets" platform-dev
-> 2. Have the code generate a gpiod_lookup_table for all GPIOs
->    for which it currently uses x86_android_tablet_get_gpiod()
->    with the .dev_id set to "x86-android-tablets"
-> 3. Use regular gpiod_get() on the "x86-android-tablets" pdev
->    to get the desc.
->
-> I think this should solve all the issues with
-> x86_android_tablet_get_gpiod() poking inside
-> gpiolib external since now it is only using
-> public gpiolib APIs, right ?
->
-> One question about 2. there are 2 ways to do this:
->
-> i. Have the module_init() function loop over all
-> x86_dev_info members which will result in calling
-> x86_android_tablet_get_gpiod() and have it generate
-> one big gpiod_lookup_table for all GPIOs needed
-> in one go. At which point x86_android_tablet_get_gpiod()
-> goes away and can be directly replaced with gpiod_get()
-> calls on the pdev.
->
-> ii. Keep x86_android_tablet_get_gpiod() and have it
-> generate a gpiod_lookup_table with just 1 entry for
-> the GPIO which its caller wants. Register the lookup
-> table, do the gpiod_get() and then immediately
-> unregister the lookup table again.
->
-> ii. Would be easier for me to implement, especially
-> since there is also some custom (board specific)
-> init code calling x86_android_tablet_get_gpiod()
-> which would require some special handling for i.
->
-> OTOH I guess some people will consider ii. somewhat
-> ugly, although AFAICT it is perfectly ok to use
-> the gpiolib lookup APIs this way.
->
-> Can you please let me known if you are ok with ii,
-> or if you would prefer me going with solution i. ?
->
-
-I am fine with ii. I have recently sent a patch that does exactly that
-in one of the SPI drivers. It's ugly but it's better than what we have
-now.
-
-> That way when I can make some time to start working
-> on this I can pick the preferred solution right away.
->
->
->
-> > @@ -257,9 +259,9 @@ static void x86_android_tablet_cleanup(void)
-> >
-> >  static __init int x86_android_tablet_init(void)
-> >  {
-> > +     struct gpio_device *gdev __free(gpio_device_put) =3D NULL;
-> >       const struct x86_dev_info *dev_info;
-> >       const struct dmi_system_id *id;
-> > -     struct gpio_chip *chip;
-> >       int i, ret =3D 0;
-> >
-> >       id =3D dmi_first_match(x86_android_tablet_ids);
-> > @@ -273,13 +275,13 @@ static __init int x86_android_tablet_init(void)
-> >        * _AEI (ACPI Event Interrupt) handlers, disable these.
-> >        */
-> >       if (dev_info->invalid_aei_gpiochip) {
-> > -             chip =3D gpiochip_find(dev_info->invalid_aei_gpiochip,
-> > -                                  gpiochip_find_match_label);
-> > -             if (!chip) {
-> > +             gdev =3D gpio_device_find_by_label(
-> > +                             dev_info->invalid_aei_gpiochip);
-> > +             if (!gdev) {
-> >                       pr_err("error cannot find GPIO chip %s\n", dev_in=
-fo->invalid_aei_gpiochip);
-> >                       return -ENODEV;
-> >               }
-> > -             acpi_gpiochip_free_interrupts(chip);
-> > +             acpi_gpio_device_free_interrupts(gdev);
-> >       }
-> >
-> >       /*
->
-> After some recent improvements there is only 1 board left which sets
-> dev_info->invalid_aei_gpiochip and that can easily be replaced with
-> with adding 1 extra entry to gpiolib_acpi_quirks[] inside
-> drivers/gpio/gpiolib-acpi.c .
->
-> So I believe the right solution here is to just remove
-> dev_info->invalid_aei_gpiochip support for x86-android-tablets
-> all together and then at least x86-android-tablets will no
-> longer be making any hackish acpi_gpiochip_free_interrupts() calls.
->
-> I don't want to make any promises wrt the timing, but I should
-> be able to prepare a set of patches which simply removes all
-> the private gpiolib API use from x86-android-tablets, so that
-> you don't need to workaround that in this patch series.
->
-> With some luck I can have an immutable branch with 6.6-rc1 +
-> such a patch-series ready for you soon after 6.6-rc1 is
-> released.
->
-
-That would be awesome, thanks a lot!
-
-> Regards,
->
-> Hans
->
->
->
-
-Bart
-
-[1] https://lore.kernel.org/lkml/d57a99ce-77eb-409f-8371-95f2658fa0c0@siren=
-a.org.uk/T/
+Yes, IIRC it does. Okay I see the (potential, although quite unlikely)
+problem now. Thanks!
