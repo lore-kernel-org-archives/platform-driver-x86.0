@@ -2,139 +2,108 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C24EE14D0
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Sep 2023 20:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589F8EE14D0
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Sep 2023 20:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244330AbjIFUVQ (ORCPT
+        id S244398AbjIFUWv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Sep 2023 16:21:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47964 "EHLO
+        Wed, 6 Sep 2023 16:22:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231742AbjIFUVQ (ORCPT
+        with ESMTP id S244326AbjIFUWv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Sep 2023 16:21:16 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA61E59;
-        Wed,  6 Sep 2023 13:21:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694031669; x=1725567669;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3kMW/s9vc1JzXHZ7uyADzsTe7V4Y9mN4qtrmBkPH9GE=;
-  b=ZCckbjlWeOK67v8tA72mEN7VbAzynj8+tKKGoOvINPcJFu3ep15eQAuc
-   tdlu41HHjFWwfpo6hF+krlmZCJtmK9iPMz0Pasn21c3c4n6XNL8nGlxNr
-   Ijt95IKiqXdPdi2Qi+HsqLcjfDvGVspRVXLpRyd3erpRFd51JcAsdDHYG
-   PcDTR+ghlxJnVKJJMun4H0bhzSxPQy5mZEdp9m9gkgfIzdU75tfSq8UN8
-   1SQWDE+vqHLK9NHxTkn32i0A1Q4dvgJ71Lt/dzIkf5ScOq0TPq5BbgMLl
-   NhTN8aw++R7DREIiSE2BWJdSHe17NEjt4kvOO9toHCO0DJo7Z3S80ugQg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="380968198"
-X-IronPort-AV: E=Sophos;i="6.02,233,1688454000"; 
-   d="scan'208";a="380968198"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 13:20:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="744813919"
-X-IronPort-AV: E=Sophos;i="6.02,233,1688454000"; 
-   d="scan'208";a="744813919"
-Received: from jseong-mobl45.amr.corp.intel.com (HELO [10.209.51.7]) ([10.209.51.7])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 13:20:48 -0700
-Message-ID: <1248ebb9-ff14-418a-ae01-cfa5c8ca9d68@linux.intel.com>
-Date:   Wed, 6 Sep 2023 13:20:49 -0700
+        Wed, 6 Sep 2023 16:22:51 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3D7C19A6
+        for <platform-driver-x86@vger.kernel.org>; Wed,  6 Sep 2023 13:22:45 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2bcc4347d2dso4909721fa.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 06 Sep 2023 13:22:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1694031764; x=1694636564; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zxKCsV8R8YrR5Gy4S8qpXFuMk6MLJhqEnRXr9jkGcto=;
+        b=EhfnE2/SPpAjyK8S4cYUaToslBQkg4F8mbbZkbSAjaz4G9VDCAE04tBN4H/3Mji1O7
+         P18hBCHGL96otMv4HbyqPUtF7RSppICJaOK8awnHlN0wBr+1D77Qsc3bLyz3b3Rudh1G
+         VfPB2uAv8Se9parOuwKzAJcCzhbeFRYiDCQ5w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694031764; x=1694636564;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zxKCsV8R8YrR5Gy4S8qpXFuMk6MLJhqEnRXr9jkGcto=;
+        b=jNet/N8sVF6VhNuVxImeNTsrmR2Fw4cYF4MmqRQNJISp0WlsVSlH7GxPC6FUdz7USP
+         xXKre5wH2UExBjUHvKABSJrLShZM5/DUtpu4IazKZlxQJNJSOvW7ZvN3sLrkDo+7B4RU
+         UReygTFmU7fOY6QzkMOU8wZs4K2KlkaIOhUDl1YBJhS957DlW2l4aGR0bl4jccOlKYv2
+         kQo3IEqFgtMjfWFUjs/HWFU1GFNs1fdKRQhdDsq0Eu2l9J/cFcCOoxmzeeF9DW68YImd
+         B6XXRhftHtEqscgcmVTpK2ZfRGbPVIlryUpjjMhOuV0Dm7vug0DyrjTIzEAbdpQKxUwi
+         UqKw==
+X-Gm-Message-State: AOJu0YwKIWCH23E6bbpGodDlf2emHSea0Vg2EbyEyOEAPZ4F90fsZJEI
+        MmJ6rl+5EqjKHuw1V5Kl+xsAJAAbTZMSxI/RETW94g==
+X-Google-Smtp-Source: AGHT+IEmvetndVdOFFwz7V6Ymy0S4rpC+9TPoqGCwOVPobwU6fcOpZdLTjsBJP1lmQrg+aBzt/1Fql+MvEJ3cIL85Eo=
+X-Received: by 2002:a2e:8756:0:b0:2b6:e2aa:8fbc with SMTP id
+ q22-20020a2e8756000000b002b6e2aa8fbcmr3268617ljj.8.1694031764129; Wed, 06 Sep
+ 2023 13:22:44 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 6 Sep 2023 15:22:43 -0500
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] platform/x86: intel_scu_ipc: Check status after
- timeout in busy_loop()
-Content-Language: en-US
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+In-Reply-To: <ZPjdZ3xNmBEBvNiS@smile.fi.intel.com>
+References: <20230906180944.2197111-1-swboyd@chromium.org> <20230906180944.2197111-4-swboyd@chromium.org>
+ <ZPjdZ3xNmBEBvNiS@smile.fi.intel.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date:   Wed, 6 Sep 2023 15:22:43 -0500
+Message-ID: <CAE-0n53iGCL3q=CsDKZr28eMjx40miLNG6+-jf12JKMxuAKkKg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] platform/x86: intel_scu_ipc: Fail IPC send if
+ still busy
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
         linux-kernel@vger.kernel.org, patches@lists.linux.dev,
         platform-driver-x86@vger.kernel.org,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Prashant Malani <pmalani@chromium.org>
-References: <20230906180944.2197111-1-swboyd@chromium.org>
- <20230906180944.2197111-2-swboyd@chromium.org>
- <ZPjbZqIQBlIGpoCK@smile.fi.intel.com>
- <CAE-0n52REGuVrqG8LUdWzjgqAun7uvDFPJeSkjX02OxD=fUhqg@mail.gmail.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <CAE-0n52REGuVrqG8LUdWzjgqAun7uvDFPJeSkjX02OxD=fUhqg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Quoting Andy Shevchenko (2023-09-06 13:13:27)
+> On Wed, Sep 06, 2023 at 11:09:43AM -0700, Stephen Boyd wrote:
+> > It's possible for interrupts to get significantly delayed to the point
+> > that callers of intel_scu_ipc_dev_command() and friends can call the
+> > function once, hit a timeout, and call it again while the interrupt
+> > still hasn't been processed. This driver will get seriously confused if
+> > the interrupt is finally processed after the second IPC has been sent
+> > with ipc_command(). It won't know which IPC has been completed. This
+> > could be quite disastrous if calling code assumes something has happened
+> > upon return from intel_scu_ipc_dev_simple_command() when it actually
+> > hasn't.
+> >
+> > Let's avoid this scenario by simply returning -EBUSY in this case.
+> > Hopefully higher layers will know to back off or fail gracefully when
+> > this happens. It's all highly unlikely anyway, but it's better to be
+> > correct here as we have no way to know which IPC the status register is
+> > telling us about if we send a second IPC while the previous IPC is still
+> > processing.
+>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>
+> Also see below.
+>
+> ...
+>
+> > @@ -450,6 +468,12 @@ int intel_scu_ipc_dev_simple_command(struct intel_scu_ipc_dev *scu, int cmd,
+> >               return -ENODEV;
+> >       }
+>
+> >       scu = ipcdev;
+>
+> Side observation: Isn't this a bug? We should not override the supplied parameter.
 
-
-On 9/6/2023 1:14 PM, Stephen Boyd wrote:
-> Quoting Andy Shevchenko (2023-09-06 13:04:54)
->> On Wed, Sep 06, 2023 at 11:09:41AM -0700, Stephen Boyd wrote:
->>> It's possible for the polling loop in busy_loop() to get scheduled away
->>> for a long time.
->>>
->>>   status = ipc_read_status(scu); // status = IPC_STATUS_BUSY
->>>   <long time scheduled away>
->>>   if (!(status & IPC_STATUS_BUSY))
->>>
->>> If this happens, then the status bit could change while the task is
->>> scheduled away and this function would never read the status again after
->>> timing out. Instead, the function will return -ETIMEDOUT when it's
->>> possible that scheduling didn't work out and the status bit was cleared.
->>> Bit polling code should always check the bit being polled one more time
->>> after the timeout in case this happens.
->>>
->>> Fix this by reading the status once more after the while loop breaks.
->>
->> ...
->>
->>>  static inline int busy_loop(struct intel_scu_ipc_dev *scu)
->>>  {
->>>       unsigned long end = jiffies + IPC_TIMEOUT;
->>> +     u32 status;
->>>
->>>       do {
->>> -             u32 status;
->>> -
->>>               status = ipc_read_status(scu);
->>>               if (!(status & IPC_STATUS_BUSY))
->>
->>> -                     return (status & IPC_STATUS_ERR) ? -EIO : 0;
->>> +                     goto not_busy;
->>
->> Wouldn't simple 'break' suffice here?
-> 
-> Yes, at the cost of reading the status again when it isn't busy, or
-> checking the busy bit after the loop breaks out and reading it once
-> again when it is busy. I suppose the compiler would figure that out and
-> optimize so that break would simply goto the return statement.
-> 
-> The code could look like this without a goto.
-> 
-> 	do {
-> 		status = ipc_read_status(scu);
-> 		if (!(status & IPC_STATUS_BUSY))
-> 			break;
-> 	} while (time_before(jiffies, end));
-> 
-> 	if (status & IPC_STATUS_BUSY)
-> 		status = ipc_read_status(scu);
-
-IMO, you can remove the if condition and read again the status in all cases.
-It is more readable. But it is up to you.
-
-/* Always read again to double check and get the latest status */
-status = ipc_read_status(scu);
-
-> 
-> 	if (status & IPC_STATUS_BUSY)
-> 		return -ETIMEDOUT;
-> 	
-> 	return (status & IPC_STATUS_ERR) ? -EIO : 0;
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+If it is a bug that would be great to know. I wanted to make an API that
+got the scu if it wasn't busy but then I ran across this code that
+replaced the scu with ipcdev.
