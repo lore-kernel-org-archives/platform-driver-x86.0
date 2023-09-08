@@ -2,62 +2,49 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32944EC875B
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Sep 2023 20:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F81EE57C2
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Sep 2023 04:59:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236621AbjIGULY (ORCPT
+        id S237432AbjIHE75 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 7 Sep 2023 16:11:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56418 "EHLO
+        Fri, 8 Sep 2023 00:59:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234405AbjIGULX (ORCPT
+        with ESMTP id S229485AbjIHE75 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 7 Sep 2023 16:11:23 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCEAC1703
-        for <platform-driver-x86@vger.kernel.org>; Thu,  7 Sep 2023 13:11:19 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-501cba1ec0aso2260866e87.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Sep 2023 13:11:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694117478; x=1694722278; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oEHxSDa9suqIfWb1cKERrinpzjakMUw8unQ7h6nJqSc=;
-        b=KcyGO8UDHPBTqkTpB7rbYnQU4oHg05FzIqvnAxFi90K5CWx6GQ/pH6Lp5ajpSkpRzQ
-         Sx5bh3eUTimnIj4eNOX15dWLrkLdLS0XSXLIskDkIM9gy+qggnWfR8Hem5qFzRdVxZeE
-         vmIYLYzO55kTEyL4aC305tLPXSvHNgu2EjEX4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694117478; x=1694722278;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oEHxSDa9suqIfWb1cKERrinpzjakMUw8unQ7h6nJqSc=;
-        b=Kmd73N4f8ubgTtHc6a95/2vixMv2AqfT9zR6Aa1jJjXf3LLC7CWNLqrIqfTOAqz/qs
-         1SY2QsTDA9SccVpYY1LA3j23ggGQ5LRnkYLYn8rtht/7E4FrPptCfjMfUk1EJEJ/UO97
-         2rKqTFVT2w0AL3UwabxDr3wYsdZaUkNPgwjlxJ2T+WBmlOFQ61xaIhGXF6QfwOg/rviB
-         wp0PLLHB8HwenfZ2J35VxWYXZ3cnweY8h1ATstDFt+YUXBnWSN2Ajyj3lyttipwDIEYD
-         C7rptnVTVdlC869hAEbtWNTiS7i26jT0CTOFiYp70A+Hz5Dx+ANfEuWABJyTR5dg01Al
-         jxDA==
-X-Gm-Message-State: AOJu0YzjezNCb9EUUzyF30lAGTJ8ClOQn9lSXmw3j8hlQzaEp0ztTA4V
-        DdgO2ayUlNhwG4Gamtf1IS3g5aJJd/vGe7AwK0qyqg==
-X-Google-Smtp-Source: AGHT+IGR5cMoVWwXVyWrK1LKM17/LRlIOSjJUog6feEzya5HRB58qZr2MIyqwOsYVySx4563NE0zbrLUR3k/No5bLKY=
-X-Received: by 2002:a05:6512:3a87:b0:4fb:9712:a717 with SMTP id
- q7-20020a0565123a8700b004fb9712a717mr458584lfu.13.1694117477859; Thu, 07 Sep
- 2023 13:11:17 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 7 Sep 2023 13:11:17 -0700
-MIME-Version: 1.0
-In-Reply-To: <20230907053513.GH1599918@black.fi.intel.com>
-References: <20230906180944.2197111-1-swboyd@chromium.org> <20230906180944.2197111-2-swboyd@chromium.org>
- <20230907053513.GH1599918@black.fi.intel.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.10
-Date:   Thu, 7 Sep 2023 13:11:17 -0700
-Message-ID: <CAE-0n51Ut296M2ZetuzXGpX32pS11bbWzfcbaFfqNxgSjzafJw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] platform/x86: intel_scu_ipc: Check status after
- timeout in busy_loop()
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+        Fri, 8 Sep 2023 00:59:57 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4850D19AB;
+        Thu,  7 Sep 2023 21:59:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694149192; x=1725685192;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=frFa2A5SVWE7iimjbT1DhSuiHkk/xjKviFEZ54bN9r0=;
+  b=NtgXqvmSJSUBWZE0DBNCT0bnf84bN80LFJRIzMPBJGseu4LgrZWhHIT5
+   +9UeVeEUJ5eDxiY5x+x//mYrEGvvrx8NUv2W1DtLBL5TJ6cJ23wcl9Drd
+   U919dGkAvaisQzSkiQysltYkRUHIFrCc0HR4nqvsK3DGlsZkeTK7HlVs1
+   1VQpuTByD6NJ3/NAZAhKGeOnnfg/cSdvL8OQG1yFZsVM+503QSZczO94n
+   +C77l38Fm5z8A8PiMbCtsKMUETOzbUpx2YZfoXrNKzwsDp1rzc/ux1wcY
+   iTgOMnqZbXB7L9wIfH9wTGr0HdzBVEV17+47vCuzlyh9pxsAzktyNirN4
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="463939480"
+X-IronPort-AV: E=Sophos;i="6.02,236,1688454000"; 
+   d="scan'208";a="463939480"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 21:59:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="719007615"
+X-IronPort-AV: E=Sophos;i="6.02,236,1688454000"; 
+   d="scan'208";a="719007615"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga006.jf.intel.com with ESMTP; 07 Sep 2023 21:59:48 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 41E49192; Fri,  8 Sep 2023 07:59:46 +0300 (EEST)
+Date:   Fri, 8 Sep 2023 07:59:46 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Stephen Boyd <swboyd@chromium.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
         linux-kernel@vger.kernel.org, patches@lists.linux.dev,
@@ -66,84 +53,98 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Prashant Malani <pmalani@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2 1/3] platform/x86: intel_scu_ipc: Check status after
+ timeout in busy_loop()
+Message-ID: <20230908045946.GM1599918@black.fi.intel.com>
+References: <20230906180944.2197111-1-swboyd@chromium.org>
+ <20230906180944.2197111-2-swboyd@chromium.org>
+ <20230907053513.GH1599918@black.fi.intel.com>
+ <CAE-0n51Ut296M2ZetuzXGpX32pS11bbWzfcbaFfqNxgSjzafJw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAE-0n51Ut296M2ZetuzXGpX32pS11bbWzfcbaFfqNxgSjzafJw@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Quoting Mika Westerberg (2023-09-06 22:35:13)
-> On Wed, Sep 06, 2023 at 11:09:41AM -0700, Stephen Boyd wrote:
-> > It's possible for the polling loop in busy_loop() to get scheduled away
-> > for a long time.
+On Thu, Sep 07, 2023 at 01:11:17PM -0700, Stephen Boyd wrote:
+> Quoting Mika Westerberg (2023-09-06 22:35:13)
+> > On Wed, Sep 06, 2023 at 11:09:41AM -0700, Stephen Boyd wrote:
+> > > It's possible for the polling loop in busy_loop() to get scheduled away
+> > > for a long time.
+> > >
+> > >   status = ipc_read_status(scu); // status = IPC_STATUS_BUSY
+> > >   <long time scheduled away>
+> > >   if (!(status & IPC_STATUS_BUSY))
+> > >
+> > > If this happens, then the status bit could change while the task is
+> > > scheduled away and this function would never read the status again after
+> > > timing out. Instead, the function will return -ETIMEDOUT when it's
+> > > possible that scheduling didn't work out and the status bit was cleared.
+> > > Bit polling code should always check the bit being polled one more time
+> > > after the timeout in case this happens.
+> > >
+> > > Fix this by reading the status once more after the while loop breaks.
+> > >
+> > > Cc: Prashant Malani <pmalani@chromium.org>
+> > > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Fixes: e7b7ab3847c9 ("platform/x86: intel_scu_ipc: Sleeping is fine when polling")
+> > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > > ---
+> > >
+> > > This is sufficiently busy so I didn't add any tags from previous round.
+> > >
+> > >  drivers/platform/x86/intel_scu_ipc.c | 11 +++++++----
+> > >  1 file changed, 7 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+> > > index 6851d10d6582..b2a2de22b8ff 100644
+> > > --- a/drivers/platform/x86/intel_scu_ipc.c
+> > > +++ b/drivers/platform/x86/intel_scu_ipc.c
+> > > @@ -232,18 +232,21 @@ static inline u32 ipc_data_readl(struct intel_scu_ipc_dev *scu, u32 offset)
+> > >  static inline int busy_loop(struct intel_scu_ipc_dev *scu)
+> > >  {
+> > >       unsigned long end = jiffies + IPC_TIMEOUT;
+> > > +     u32 status;
+> > >
+> > >       do {
+> > > -             u32 status;
+> > > -
+> > >               status = ipc_read_status(scu);
+> > >               if (!(status & IPC_STATUS_BUSY))
+> > > -                     return (status & IPC_STATUS_ERR) ? -EIO : 0;
+> > > +                     goto not_busy;
+> > >
+> > >               usleep_range(50, 100);
+> > >       } while (time_before(jiffies, end));
+> > >
+> > > -     return -ETIMEDOUT;
+> > > +     status = ipc_read_status(scu);
 > >
-> >   status = ipc_read_status(scu); // status = IPC_STATUS_BUSY
-> >   <long time scheduled away>
-> >   if (!(status & IPC_STATUS_BUSY))
-> >
-> > If this happens, then the status bit could change while the task is
-> > scheduled away and this function would never read the status again after
-> > timing out. Instead, the function will return -ETIMEDOUT when it's
-> > possible that scheduling didn't work out and the status bit was cleared.
-> > Bit polling code should always check the bit being polled one more time
-> > after the timeout in case this happens.
-> >
-> > Fix this by reading the status once more after the while loop breaks.
-> >
-> > Cc: Prashant Malani <pmalani@chromium.org>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Fixes: e7b7ab3847c9 ("platform/x86: intel_scu_ipc: Sleeping is fine when polling")
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > ---
-> >
-> > This is sufficiently busy so I didn't add any tags from previous round.
-> >
-> >  drivers/platform/x86/intel_scu_ipc.c | 11 +++++++----
-> >  1 file changed, 7 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-> > index 6851d10d6582..b2a2de22b8ff 100644
-> > --- a/drivers/platform/x86/intel_scu_ipc.c
-> > +++ b/drivers/platform/x86/intel_scu_ipc.c
-> > @@ -232,18 +232,21 @@ static inline u32 ipc_data_readl(struct intel_scu_ipc_dev *scu, u32 offset)
-> >  static inline int busy_loop(struct intel_scu_ipc_dev *scu)
-> >  {
-> >       unsigned long end = jiffies + IPC_TIMEOUT;
-> > +     u32 status;
-> >
-> >       do {
-> > -             u32 status;
-> > -
-> >               status = ipc_read_status(scu);
-> >               if (!(status & IPC_STATUS_BUSY))
-> > -                     return (status & IPC_STATUS_ERR) ? -EIO : 0;
-> > +                     goto not_busy;
-> >
-> >               usleep_range(50, 100);
-> >       } while (time_before(jiffies, end));
-> >
-> > -     return -ETIMEDOUT;
-> > +     status = ipc_read_status(scu);
->
-> Does the issue happen again if we get scheduled away here for a long
-> time? ;-)
+> > Does the issue happen again if we get scheduled away here for a long
+> > time? ;-)
+> 
+> Given the smiley I'll assume you're making a joke. But to clarify, the
+> issue can't happen again because we've already waited at least
+> IPC_TIMEOUT jiffies, maybe quite a bit more, so if we get scheduled away
+> again it's a non-issue. If the status is still busy here then it's a
+> timeout guaranteed.
 
-Given the smiley I'll assume you're making a joke. But to clarify, the
-issue can't happen again because we've already waited at least
-IPC_TIMEOUT jiffies, maybe quite a bit more, so if we get scheduled away
-again it's a non-issue. If the status is still busy here then it's a
-timeout guaranteed.
+Got it thanks!
 
->
-> Regardless, I'm fine with this as is but if you make any changes, I
-> would prefer see readl_busy_timeout() used here instead (as was in the
-> previous version).
+> > Regardless, I'm fine with this as is but if you make any changes, I
+> > would prefer see readl_busy_timeout() used here instead (as was in the
+> > previous version).
+> 
+> We can't use readl_busy_timeout() (you mean readl_poll_timeout() right?)
+> because that implements the timeout with timekeeping and we don't know
+> if this is called from suspend paths after timekeeping is suspended or
+> from early boot paths where timekeeping isn't started.
 
-We can't use readl_busy_timeout() (you mean readl_poll_timeout() right?)
-because that implements the timeout with timekeeping and we don't know
-if this is called from suspend paths after timekeeping is suspended or
-from early boot paths where timekeeping isn't started.
+Yes readl_poll_timeout(). :)
 
-We could use readl_poll_timeout_atomic() and then the usleep would be
-changed to udelay. Not sure that is acceptable though to delay 50
-microseconds vs. intentionally schedule away like the usleep call is
-doing.
+I don't think this code is used anymore outside of regular paths. It
+used to be with the Moorestown/Medfield board support code but that's
+gone already. Grepping for the users also don't reveal anything that
+could be using it early at boot.
