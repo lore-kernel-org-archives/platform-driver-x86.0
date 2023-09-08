@@ -2,149 +2,114 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F81EE57C2
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Sep 2023 04:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AECEEB567
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Sep 2023 18:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237432AbjIHE75 (ORCPT
+        id S230464AbjIHSI6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 8 Sep 2023 00:59:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45684 "EHLO
+        Fri, 8 Sep 2023 14:08:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbjIHE75 (ORCPT
+        with ESMTP id S230334AbjIHSIz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 8 Sep 2023 00:59:57 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4850D19AB;
-        Thu,  7 Sep 2023 21:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694149192; x=1725685192;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=frFa2A5SVWE7iimjbT1DhSuiHkk/xjKviFEZ54bN9r0=;
-  b=NtgXqvmSJSUBWZE0DBNCT0bnf84bN80LFJRIzMPBJGseu4LgrZWhHIT5
-   +9UeVeEUJ5eDxiY5x+x//mYrEGvvrx8NUv2W1DtLBL5TJ6cJ23wcl9Drd
-   U919dGkAvaisQzSkiQysltYkRUHIFrCc0HR4nqvsK3DGlsZkeTK7HlVs1
-   1VQpuTByD6NJ3/NAZAhKGeOnnfg/cSdvL8OQG1yFZsVM+503QSZczO94n
-   +C77l38Fm5z8A8PiMbCtsKMUETOzbUpx2YZfoXrNKzwsDp1rzc/ux1wcY
-   iTgOMnqZbXB7L9wIfH9wTGr0HdzBVEV17+47vCuzlyh9pxsAzktyNirN4
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="463939480"
-X-IronPort-AV: E=Sophos;i="6.02,236,1688454000"; 
-   d="scan'208";a="463939480"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 21:59:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="719007615"
-X-IronPort-AV: E=Sophos;i="6.02,236,1688454000"; 
-   d="scan'208";a="719007615"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 07 Sep 2023 21:59:48 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 41E49192; Fri,  8 Sep 2023 07:59:46 +0300 (EEST)
-Date:   Fri, 8 Sep 2023 07:59:46 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-        platform-driver-x86@vger.kernel.org,
+        Fri, 8 Sep 2023 14:08:55 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F17F210B;
+        Fri,  8 Sep 2023 11:08:25 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-99bf3f59905so286402866b.3;
+        Fri, 08 Sep 2023 11:08:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694196434; x=1694801234; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=subAUO9E8mZRv/6RLgXHnMS5iBnCJy0fu3qM36GnA0o=;
+        b=CApMUrWNj1LJz/M+5QH5Q95FFnWo1dONbvDW4lH3AKtSBbHEeuzejFksWR/qleSFFy
+         htLdpgmhGuTXCmPp3FGLiNj8P2at56+neqqiA9W5pJg5K0KBr5aaFaiKQAtjgB3yrnlh
+         QUBsUwDnKo/slFHdzFb6/q8eQF4qgBPtp25Uv/BeojQIoXYiHWPlr3MTh1LeBQUU/Hsq
+         b0aTlVZYu+gDUcrZhEFp45KsO81lhg+K6kkOuh8LJRwBthvIhpANC3uRkFLxw2K38+ed
+         kFMCfMuxrD+zl+XWN7M3AeDvYVn/JAYkyHgKWH9647GOWz9l8XIXLrvlAAisieNMt6IY
+         jCCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694196434; x=1694801234;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=subAUO9E8mZRv/6RLgXHnMS5iBnCJy0fu3qM36GnA0o=;
+        b=KQ2c19MJ8zh6CMIciHxloT6HZoD8gCVnY2yXys1W8CbAQ8YaLIiglBsER4oSFAE/JF
+         thi8lHayvg5aUdePvH6g7XON4qVU70BgQ+ZHovY0kRD82zP4/yzY4JhyI6PqS6p6vztn
+         nCfcVUbmRP65++XvUuVkdbMnNwAD+ZVJbnhasnIpSQTPhk7FTllUpbrkAjAgfqtUjrkl
+         2STfmZ6DyQdKZujHiSJxkWxoCuEj/zGFAzBVEGhgAZEvRDSnv1w6SsxPhM8jFEFFTtKZ
+         bW4LEADhFrenmWCCT/kCRCkLXPbp8JcewSJXKiYhmdTVTNtB1XGKzHKLBFuG1O8Zn3Xt
+         4dpw==
+X-Gm-Message-State: AOJu0YzJ0i/2Vp2HXsY6JPcPCCeL18oP6EDFxsYPGjOb1PeVc7Nea7Io
+        dXTdZ0tMyjXjZ8hOcryWOxxWPbAopgBv+u6k
+X-Google-Smtp-Source: AGHT+IEBdgr1xof7hnEAV6QqzBERHOL9Ak0Vp3bXRIwbgu6y3tDfH9aHIemt2jhAqyAqEOA3aPEmIQ==
+X-Received: by 2002:a17:906:2d0:b0:9a1:bd53:b23 with SMTP id 16-20020a17090602d000b009a1bd530b23mr2467057ejk.14.1694196433411;
+        Fri, 08 Sep 2023 11:07:13 -0700 (PDT)
+Received: from dell.localnet (77-255-201-154.dynamic.inetia.pl. [77.255.201.154])
+        by smtp.gmail.com with ESMTPSA id a5-20020a17090682c500b00993664a9987sm1312081ejy.103.2023.09.08.11.07.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Sep 2023 11:07:12 -0700 (PDT)
+From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Prashant Malani <pmalani@chromium.org>
-Subject: Re: [PATCH v2 1/3] platform/x86: intel_scu_ipc: Check status after
- timeout in busy_loop()
-Message-ID: <20230908045946.GM1599918@black.fi.intel.com>
-References: <20230906180944.2197111-1-swboyd@chromium.org>
- <20230906180944.2197111-2-swboyd@chromium.org>
- <20230907053513.GH1599918@black.fi.intel.com>
- <CAE-0n51Ut296M2ZetuzXGpX32pS11bbWzfcbaFfqNxgSjzafJw@mail.gmail.com>
+        Dipen Patel <dipenp@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFT PATCH 15/21] arm: omap1: ams-delta: stop using gpiochip_find()
+Date:   Fri, 08 Sep 2023 20:07:09 +0200
+Message-ID: <6555932.G0QQBjFxQf@dell>
+In-Reply-To: <CACRpkdaVUPNYVjAi2XsNKVhwmtk2qpVp62Lke4xeDOwhhBXLtg@mail.gmail.com>
+References: <20230905185309.131295-1-brgl@bgdev.pl>
+ <20230905185309.131295-16-brgl@bgdev.pl>
+ <CACRpkdaVUPNYVjAi2XsNKVhwmtk2qpVp62Lke4xeDOwhhBXLtg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAE-0n51Ut296M2ZetuzXGpX32pS11bbWzfcbaFfqNxgSjzafJw@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Sep 07, 2023 at 01:11:17PM -0700, Stephen Boyd wrote:
-> Quoting Mika Westerberg (2023-09-06 22:35:13)
-> > On Wed, Sep 06, 2023 at 11:09:41AM -0700, Stephen Boyd wrote:
-> > > It's possible for the polling loop in busy_loop() to get scheduled away
-> > > for a long time.
-> > >
-> > >   status = ipc_read_status(scu); // status = IPC_STATUS_BUSY
-> > >   <long time scheduled away>
-> > >   if (!(status & IPC_STATUS_BUSY))
-> > >
-> > > If this happens, then the status bit could change while the task is
-> > > scheduled away and this function would never read the status again after
-> > > timing out. Instead, the function will return -ETIMEDOUT when it's
-> > > possible that scheduling didn't work out and the status bit was cleared.
-> > > Bit polling code should always check the bit being polled one more time
-> > > after the timeout in case this happens.
-> > >
-> > > Fix this by reading the status once more after the while loop breaks.
-> > >
-> > > Cc: Prashant Malani <pmalani@chromium.org>
-> > > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > Fixes: e7b7ab3847c9 ("platform/x86: intel_scu_ipc: Sleeping is fine when polling")
-> > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > > ---
-> > >
-> > > This is sufficiently busy so I didn't add any tags from previous round.
-> > >
-> > >  drivers/platform/x86/intel_scu_ipc.c | 11 +++++++----
-> > >  1 file changed, 7 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-> > > index 6851d10d6582..b2a2de22b8ff 100644
-> > > --- a/drivers/platform/x86/intel_scu_ipc.c
-> > > +++ b/drivers/platform/x86/intel_scu_ipc.c
-> > > @@ -232,18 +232,21 @@ static inline u32 ipc_data_readl(struct intel_scu_ipc_dev *scu, u32 offset)
-> > >  static inline int busy_loop(struct intel_scu_ipc_dev *scu)
-> > >  {
-> > >       unsigned long end = jiffies + IPC_TIMEOUT;
-> > > +     u32 status;
-> > >
-> > >       do {
-> > > -             u32 status;
-> > > -
-> > >               status = ipc_read_status(scu);
-> > >               if (!(status & IPC_STATUS_BUSY))
-> > > -                     return (status & IPC_STATUS_ERR) ? -EIO : 0;
-> > > +                     goto not_busy;
-> > >
-> > >               usleep_range(50, 100);
-> > >       } while (time_before(jiffies, end));
-> > >
-> > > -     return -ETIMEDOUT;
-> > > +     status = ipc_read_status(scu);
+Dnia czwartek, 7 wrze=C5=9Bnia 2023 09:31:01 CEST Linus Walleij pisze:
+> On Tue, Sep 5, 2023 at 8:53=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+>=20
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > >
-> > Does the issue happen again if we get scheduled away here for a long
-> > time? ;-)
-> 
-> Given the smiley I'll assume you're making a joke. But to clarify, the
-> issue can't happen again because we've already waited at least
-> IPC_TIMEOUT jiffies, maybe quite a bit more, so if we get scheduled away
-> again it's a non-issue. If the status is still busy here then it's a
-> timeout guaranteed.
+> > gpiochip_find() is going away as it's not hot-unplug safe. This platform
+> > is not affected by any of the related problems as this GPIO controller
+> > cannot really go away but in order to finally remove this function, we
+> > need to convert it to using gpio_device_find() as well.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>=20
+> I was cleaning this one just some merge cycle ago, now it
+> looks even better!
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Got it thanks!
+Acked-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-> > Regardless, I'm fine with this as is but if you make any changes, I
-> > would prefer see readl_busy_timeout() used here instead (as was in the
-> > previous version).
-> 
-> We can't use readl_busy_timeout() (you mean readl_poll_timeout() right?)
-> because that implements the timeout with timekeeping and we don't know
-> if this is called from suspend paths after timekeeping is suspended or
-> from early boot paths where timekeeping isn't started.
+Thanks,
+Janusz
 
-Yes readl_poll_timeout(). :)
+>=20
+> Yours,
+> Linus Walleij
+>=20
 
-I don't think this code is used anymore outside of regular paths. It
-used to be with the Moorestown/Medfield board support code but that's
-gone already. Grepping for the users also don't reveal anything that
-could be using it early at boot.
+
+
+
