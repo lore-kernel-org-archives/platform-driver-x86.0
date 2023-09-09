@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF36EEEB59C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670FDEEB596
 	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Sep 2023 16:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231722AbjIIQZT (ORCPT
+        id S231546AbjIIQZT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Sat, 9 Sep 2023 12:25:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42466 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346373AbjIIOUF (ORCPT
+        with ESMTP id S1346377AbjIIOUN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 9 Sep 2023 10:20:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ED8EE46
-        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Sep 2023 07:18:38 -0700 (PDT)
+        Sat, 9 Sep 2023 10:20:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27BD4CF9
+        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Sep 2023 07:18:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694269117;
+        s=mimecast20190719; t=1694269112;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=V9w02tjgg+rCW2IRt1y+039+nKLy7RT6uNR25PwjTMs=;
-        b=X6kBabCJ12Duh5Nm0JrYkxqc+jfBuU/v+Dl/9qF1S3gcDstywv0W99qQHNwdTCZMdF6v6T
-        s6vcuMf1Wu4BRC8S4jvbTnMY2tjIpByHPjteetoHqMlUhaqQPgLjMkHbYM+Otv7wfyzcrA
-        JPlom63mWJQDI8m3iYdjpZ+5aU1bHE8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-138-diEMnHx0OOSxA39h2iSYQw-1; Sat, 09 Sep 2023 10:18:34 -0400
-X-MC-Unique: diEMnHx0OOSxA39h2iSYQw-1
+        bh=H71Ul7/l9XDQeRiP1W3YTZ1vWpoRPOuryOrX9nxlvNU=;
+        b=eBtxLuk8lb6pplthKmK3fxyIlG7wzTjn2NKRBRzXe63DrpjuYRj471sLizwt9mE0JIEfcZ
+        6irpVwt6UJK0nSLWaNNrFfsG09shd+/Xxzz6KBYJOpUgRBITPgSRn4C2hpyRprz8wlSIG7
+        P9Zplg/QMAN6EkjJklrd7C1cEjgdzuw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-549-RkePu_QCOxaay6fYA0ud4Q-1; Sat, 09 Sep 2023 10:18:29 -0400
+X-MC-Unique: RkePu_QCOxaay6fYA0ud4Q-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C4D9A3803909;
-        Sat,  9 Sep 2023 14:18:33 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 91DBD8631D8;
+        Sat,  9 Sep 2023 14:18:28 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AD4441460FE5;
-        Sat,  9 Sep 2023 14:18:32 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C51514171B6;
+        Sat,  9 Sep 2023 14:18:27 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -47,9 +47,9 @@ To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH 8/8] platform/x86: x86-android-tablets: Drop "linux,power-supply-name" from lenovo_yt3_bq25892_0_props[]
-Date:   Sat,  9 Sep 2023 16:18:16 +0200
-Message-ID: <20230909141816.58358-9-hdegoede@redhat.com>
+Subject: [PATCH 4/8] platform/x86: x86-android-tablets: Remove invalid_aei_gpiochip support
+Date:   Sat,  9 Sep 2023 16:18:12 +0200
+Message-ID: <20230909141816.58358-5-hdegoede@redhat.com>
 In-Reply-To: <20230909141816.58358-1-hdegoede@redhat.com>
 References: <20230909141816.58358-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -59,29 +59,63 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The "linux,power-supply-name" property is a left-over from an earlier
-attempt to allow properties to specify the power_supply class-device name.
+x86_dev_info.invalid_aei_gpiochip is no longer used by any boards
+and the x86-android-tablets code should not use the gpiolib private
+acpi_gpiochip_free_interrupts() function.
 
-The patch to read this property never made it upstream (and is no longer
-necessary). Drop the unused property.
-
+Reported-by: Bartosz Golaszewski <brgl@bgdev.pl>
+Closes: https://lore.kernel.org/platform-driver-x86/20230905185309.131295-12-brgl@bgdev.pl/
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/x86-android-tablets/lenovo.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/platform/x86/x86-android-tablets/core.c   | 15 ---------------
+ .../x86/x86-android-tablets/x86-android-tablets.h |  1 -
+ 2 files changed, 16 deletions(-)
 
-diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
-index 35aa2968d726..5c803cdb5586 100644
---- a/drivers/platform/x86/x86-android-tablets/lenovo.c
-+++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
-@@ -565,7 +565,6 @@ static const struct software_node fg_bq25890_1_supply_node = {
- /* bq25892 charger settings for the flat lipo battery behind the screen */
- static const struct property_entry lenovo_yt3_bq25892_0_props[] = {
- 	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", lenovo_yt3_bq25892_0_suppliers),
--	PROPERTY_ENTRY_STRING("linux,power-supply-name", "bq25892-second-chrg"),
- 	PROPERTY_ENTRY_U32("linux,iinlim-percentage", 40),
- 	PROPERTY_ENTRY_BOOL("linux,skip-reset"),
- 	/* Values taken from Android Factory Image */
+diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
+index 2fd6060a31bb..ab8cf22ac5da 100644
+--- a/drivers/platform/x86/x86-android-tablets/core.c
++++ b/drivers/platform/x86/x86-android-tablets/core.c
+@@ -259,7 +259,6 @@ static __init int x86_android_tablet_init(void)
+ {
+ 	const struct x86_dev_info *dev_info;
+ 	const struct dmi_system_id *id;
+-	struct gpio_chip *chip;
+ 	int i, ret = 0;
+ 
+ 	id = dmi_first_match(x86_android_tablet_ids);
+@@ -268,20 +267,6 @@ static __init int x86_android_tablet_init(void)
+ 
+ 	dev_info = id->driver_data;
+ 
+-	/*
+-	 * The broken DSDTs on these devices often also include broken
+-	 * _AEI (ACPI Event Interrupt) handlers, disable these.
+-	 */
+-	if (dev_info->invalid_aei_gpiochip) {
+-		chip = gpiochip_find(dev_info->invalid_aei_gpiochip,
+-				     gpiochip_find_match_label);
+-		if (!chip) {
+-			pr_err("error cannot find GPIO chip %s\n", dev_info->invalid_aei_gpiochip);
+-			return -ENODEV;
+-		}
+-		acpi_gpiochip_free_interrupts(chip);
+-	}
+-
+ 	/*
+ 	 * Since this runs from module_init() it cannot use -EPROBE_DEFER,
+ 	 * instead pre-load any modules which are listed as requirements.
+diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+index e46e1128acc8..bf97fb84c0d4 100644
+--- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
++++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+@@ -66,7 +66,6 @@ struct x86_gpio_button {
+ };
+ 
+ struct x86_dev_info {
+-	char *invalid_aei_gpiochip;
+ 	const char * const *modules;
+ 	const struct software_node *bat_swnode;
+ 	struct gpiod_lookup_table * const *gpiod_lookup_tables;
 -- 
 2.41.0
 
