@@ -2,117 +2,227 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62721EEB59F
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Sep 2023 16:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC49BEEB594
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Sep 2023 16:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231960AbjIIQZV (ORCPT
+        id S232429AbjIIQZY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 9 Sep 2023 12:25:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34596 "EHLO
+        Sat, 9 Sep 2023 12:25:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346354AbjIIOTf (ORCPT
+        with ESMTP id S1346338AbjIIOT2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 9 Sep 2023 10:19:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A368ECF8
-        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Sep 2023 07:18:32 -0700 (PDT)
+        Sat, 9 Sep 2023 10:19:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1BA4CDD
+        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Sep 2023 07:18:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694269111;
+        s=mimecast20190719; t=1694269080;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=rnxkLsCINqMPfSaGEWxFyft4/YO//SJ+C30Us/G2fno=;
-        b=hJYj3FlvEkIqFOQpX8s0aP9G5aFukEaGx6epB0dnXgI7QD8KSNw8feno3o+T6/wGI9hUpp
-        rk3rnA92Lrm5/Rkf/5YSm6rfX03Y+EHpWVpLS3A/S+ICO21z3S9wyF1gHcGYDrluF8B0o2
-        eGHQR8UZtM7xs1a8vxt2onZeLEyFe8o=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-517-_0qrgjEiO0OCDhaD-gb5pg-1; Sat, 09 Sep 2023 10:18:26 -0400
-X-MC-Unique: _0qrgjEiO0OCDhaD-gb5pg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E43F43C02536;
-        Sat,  9 Sep 2023 14:18:25 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CAF0614171B6;
-        Sat,  9 Sep 2023 14:18:24 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH 2/8] gpiolib: acpi: Add a ignore interrupt quirk for Peaq C1010
-Date:   Sat,  9 Sep 2023 16:18:10 +0200
-Message-ID: <20230909141816.58358-3-hdegoede@redhat.com>
-In-Reply-To: <20230909141816.58358-1-hdegoede@redhat.com>
-References: <20230909141816.58358-1-hdegoede@redhat.com>
+        bh=gxpqjGlWGczKrjdD/KSIdC9Ij7lXDy76wdf60gzXu/U=;
+        b=Z/PY2pGaADOModifMV+C2xxiKWNNX19bLuaBRLj9Tg1vQn+gm1NGPYhni61JTVIu0IOEv+
+        8VZuOZQxpK/uwVQnyrd7l2EeQspBuR3fe9otBkfWQjLZbNXK7qWXRSYbu3rB+yMO+Vobk2
+        gzCuc5oLsPogw2jLL5sOFGKnlqTADdE=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-590-xnG8QH1APOi3Bq5ciPsj3A-1; Sat, 09 Sep 2023 10:17:56 -0400
+X-MC-Unique: xnG8QH1APOi3Bq5ciPsj3A-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-997c891a88dso201066366b.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 09 Sep 2023 07:17:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694269075; x=1694873875;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gxpqjGlWGczKrjdD/KSIdC9Ij7lXDy76wdf60gzXu/U=;
+        b=X3fPz0EQNeYGvSYzhI+JjXYijlEiQR1gmUTWhOmaQax62rkVSewzSz92rcHjG2eVJm
+         5Xkcz9iERJejHlpSoaxOt/wsS/6NcUsLiQ31Hpw6JS6Z1iY+/nbqzxqHYV5IwdNKxMBx
+         Wl8HDZ5/BJPVuxNM68aQ36lkCodcQyJ1IA2Spp41XGfQw6Kyl/xrgRQ5w6kieveJV6P6
+         3NOFh36EtEsgjkpkr6W07Zy/R9v3Smaos7BfzuVZ0g7QVuBx9aoRfyjxGEMoE43MvHAt
+         meFVtx44oLkKNzO6aIIF4qnc4GIsh/y1sUuc5/+s9viymC4bDpyyZLQs5/8LHNuBAdUk
+         yZMg==
+X-Gm-Message-State: AOJu0YyqhdqOpZHeLvAxw7VjCh+a3ZTRORS05ULruns1h7XW7uSgHgNu
+        OEEykswQAE2ggoHNiTeAmbjVdNSU1dY4ILeeKHs9vRo+CqWWrnuS61TkKuJYYMQisfWpW0OpbBS
+        m9M+psYYUKPhAS8e1m4c8gP4CAzJG1IqpuA==
+X-Received: by 2002:a17:906:1099:b0:9a1:bb8f:17d0 with SMTP id u25-20020a170906109900b009a1bb8f17d0mr4501449eju.30.1694269075507;
+        Sat, 09 Sep 2023 07:17:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFMudyVp+zx8RzmnPFLHESTvoKIZa2tIOu9EV9hDpsbWpIlbA1KAhUYJhR+ZESN38YSVQ+qMw==
+X-Received: by 2002:a17:906:1099:b0:9a1:bb8f:17d0 with SMTP id u25-20020a170906109900b009a1bb8f17d0mr4501420eju.30.1694269075146;
+        Sat, 09 Sep 2023 07:17:55 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id i10-20020a170906114a00b00992076f4a01sm2396508eja.190.2023.09.09.07.17.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 09 Sep 2023 07:17:54 -0700 (PDT)
+Message-ID: <173bdafa-08da-7473-6711-61131986eb3c@redhat.com>
+Date:   Sat, 9 Sep 2023 16:17:53 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [RFT PATCH 11/21] platform: x86: android-tablets: don't access
+ GPIOLIB private members
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20230905185309.131295-1-brgl@bgdev.pl>
+ <20230905185309.131295-12-brgl@bgdev.pl>
+ <8f51b4a8-bb9c-4918-61a8-4ab402da1ed0@redhat.com>
+ <CAMRc=Mfmp3Nd5jwNWr=kc8RFO-arFDwEvLxj5Qu9_1OOXR2gHQ@mail.gmail.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAMRc=Mfmp3Nd5jwNWr=kc8RFO-arFDwEvLxj5Qu9_1OOXR2gHQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On the Peaq C1010 2-in-1 INT33FC:00 pin 3 is connected to
-a "dolby" button. At the ACPI level an _AEI event-handler
-is connected which sets an ACPI variable to 1 on both
-edges. This variable can be polled + cleared to 0 using WMI.
+Hi Bart,
 
-Since the variable is set on both edges the WMI interface is pretty
-useless even when polling. So instead of writing a custom WMI
-driver for this the x86-android-tablets code instantiates
-a gpio-keys platform device for the "dolby" button.
+On 9/6/23 16:27, Bartosz Golaszewski wrote:
+> On Wed, Sep 6, 2023 at 3:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Hi Bartosz,
+>>
+>> On 9/5/23 20:52, Bartosz Golaszewski wrote:
+>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>>
+>>> We're slowly removing cases of abuse of the GPIOLIB public API. One of
+>>> the biggest issues is looking up and accessing struct gpio_chip whose
+>>> life-time is tied to the provider and which can disappear from under any
+>>> user at any given moment. We have provided new interfaces that use the
+>>> opaque struct gpio_device which is reference counted and will soon be
+>>> thorougly protected with appropriate locking.
+>>>
+>>> Stop using old interfaces in this driver and switch to safer
+>>> alternatives.
+>>>
+>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>
+>> First of all sorry for the issues this hack-ish kernel module
+>> is causing for cleaning up gpiolib APIs.
+>>
+>> I don't know how close a look you took at the code, so first of
+>> all let me try to briefly explain what this hackish kernel module
+>> is for:
+>>
+>> There are some x86_64/ACPI tablets which shipped with Android as
+>> factory OS. On these tablets the device-specific (BSP style)
+>> kernel has things like the touchscreen driver simply having
+>> a hardcoded I2C bus-number + I2C client address. Combined
+>> with also hardcoded GPIO numbers (using the old number base APIs)
+>> for any GPIOs it needs.
+>>
+>> So the original Android kernels do not need the devices
+>> to be properly described in ACPI and the ACPI tables are
+>> just one big copy and paste job from some BSP which do
+>> not accurately describe the hardware at all.
+>>
+>> x86-android-tablets.ko identifies affected models by their
+>> DMI strings and then manually instantiates things like
+>> i2c-clients for the touchscreen, accelerometer and also
+>> other stuff. Yes this is ugly but it allows mainline kernels
+>> to run pretty well on these devices since other then
+>> the messed up ACPI tables these are pretty standard x86/ACPI
+>> tablets.
+>>
+>> I hope this explains the hacks, now on to the problems
+>> these are causing:
+> 
+> This makes sense! Maybe we'd need a good-old board file setting up all
+> non-described devices using the driver model?
 
-Add an ignore_interrupt quirk for INT33FC:00 pin 3 on the Peaq C1010,
-so that it is not seen as busy when the gpio-keys driver requests it.
+Right, this is pretty much exactly what the x86-android-tablets
+code does. Except that it does it for a bunch of boards in a single
+.ko / driver. There is a lot of commonality between these boards,
+so this allows sharing most of the code.
 
-Note this replaces a hack in x86-android-tablets where it would
-call acpi_gpiochip_free_interrupts() on the INT33FC:00 GPIO
-controller. acpi_gpiochip_free_interrupts() is considered private
-(internal) gpiolib API so x86-android-tablets should stop using it.
+The driver uses DMI matching, with the match's driver_data pointing
+to a description of which devices to instantiate and then the shared
+code takes care of instantiating those.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/gpio/gpiolib-acpi.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+About 90% of the data / code is __init or __initdata so both
+the code to instantiate the devices as well as the per board
+data is free-ed after module_init() has run.
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 80b9650a2424..583ac5da9d41 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -1654,6 +1654,26 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
- 			.ignore_wake = "SYNA1202:00@16",
- 		},
- 	},
-+	{
-+		/*
-+		 * On the Peaq C1010 2-in-1 INT33FC:00 pin 3 is connected to
-+		 * a "dolby" button. At the ACPI level an _AEI event-handler
-+		 * is connected which sets an ACPI variable to 1 on both
-+		 * edges. This variable can be polled + cleared to 0 using
-+		 * WMI. But since the variable is set on both edges the WMI
-+		 * interface is pretty useless even when polling.
-+		 * So instead the x86-android-tablets code instantiates
-+		 * a gpio-keys platform device for it.
-+		 * Ignore the _AEI handler for the pin, so that it is not busy.
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PEAQ"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "PEAQ PMM C1010 MD99187"),
-+		},
-+		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-+			.ignore_interrupt = "INT33FC:00@3",
-+		},
-+	},
- 	{} /* Terminating entry */
- };
- 
--- 
-2.41.0
+<snip>
+
+>> So rather then the above I think what needs to happen here
+>> (and I can hopefully make some time for that this weekend) is:
+>>
+>> 1. Have the x86-android-tablets code instantiate a
+>>    "x86-android-tablets" platform-dev
+>> 2. Have the code generate a gpiod_lookup_table for all GPIOs
+>>    for which it currently uses x86_android_tablet_get_gpiod()
+>>    with the .dev_id set to "x86-android-tablets"
+>> 3. Use regular gpiod_get() on the "x86-android-tablets" pdev
+>>    to get the desc.
+>>
+>> I think this should solve all the issues with
+>> x86_android_tablet_get_gpiod() poking inside
+>> gpiolib external since now it is only using
+>> public gpiolib APIs, right ?
+>>
+>> One question about 2. there are 2 ways to do this:
+>>
+>> i. Have the module_init() function loop over all
+>> x86_dev_info members which will result in calling
+>> x86_android_tablet_get_gpiod() and have it generate
+>> one big gpiod_lookup_table for all GPIOs needed
+>> in one go. At which point x86_android_tablet_get_gpiod()
+>> goes away and can be directly replaced with gpiod_get()
+>> calls on the pdev.
+>>
+>> ii. Keep x86_android_tablet_get_gpiod() and have it
+>> generate a gpiod_lookup_table with just 1 entry for
+>> the GPIO which its caller wants. Register the lookup
+>> table, do the gpiod_get() and then immediately
+>> unregister the lookup table again.
+>>
+>> ii. Would be easier for me to implement, especially
+>> since there is also some custom (board specific)
+>> init code calling x86_android_tablet_get_gpiod()
+>> which would require some special handling for i.
+>>
+>> OTOH I guess some people will consider ii. somewhat
+>> ugly, although AFAICT it is perfectly ok to use
+>> the gpiolib lookup APIs this way.
+>>
+>> Can you please let me known if you are ok with ii,
+>> or if you would prefer me going with solution i. ?
+>>
+> 
+> I am fine with ii. I have recently sent a patch that does exactly that
+> in one of the SPI drivers. It's ugly but it's better than what we have
+> now.
+
+Ok, I have just finished implementing this using the ii. method.
+
+I'll post a patch-series for this for review right after this email.
+
+After that series x86-android-tablets should no longer be a problem
+wrt using any private gpiolib APIs.
+
+Regards,
+
+Hans
+
+
 
