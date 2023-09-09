@@ -2,101 +2,108 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE003EEB571
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  8 Sep 2023 21:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE415EEB59E
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  9 Sep 2023 16:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245683AbjIHVcF (ORCPT
+        id S229535AbjIIQZQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 8 Sep 2023 17:32:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50998 "EHLO
+        Sat, 9 Sep 2023 12:25:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229891AbjIHVcD (ORCPT
+        with ESMTP id S239635AbjIIOT2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 8 Sep 2023 17:32:03 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA3719B6;
-        Fri,  8 Sep 2023 14:31:59 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F758C433C7;
-        Fri,  8 Sep 2023 21:31:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1694208718;
-        bh=jnZW3kJ1q2GcV2pxAvLRxz+0IUuoJxM+MtHeCLvaV3k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rL/hXl1JmyCN2+NX3XFRjO3IBjzj3gm/vyTf/yQM/ms1fYHZLLheiBdkAscyPD4ig
-         xEJBQ/sHZdVG/iM0p8OjYq7bcd79OWbtESi4cnpza8CsO0AlxstTVZg+crAliB0M+u
-         sMtzHFoNhDRydKXF6ghbQDeG3lQZH7cQseD/hGy4=
-Date:   Fri, 8 Sep 2023 22:31:55 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Kalle Valo <kvalo@kernel.org>,
-        quic_jjohnson@quicinc.com, nbd@nbd.name, lorenzo@kernel.org,
-        ryder.lee@mediatek.com, matthias.bgg@gmail.com, kuba@kernel.org,
-        srini.raju@purelifi.com, stf_xl@wp.pl, helmut.schaa@googlemail.com,
-        pkshih@realtek.com, corentin.chary@gmail.com, hdegoede@redhat.com,
-        markgross@kernel.org, johannes.berg@intel.com,
-        alexander@wetzel-home.de, error27@gmail.com,
-        szymon.heidrich@gmail.com, gustavoars@kernel.org, lynxis@fe80.eu,
-        daniel@makrotopia.org, arnd@arndb.de, shayne.chen@mediatek.com,
-        keescook@chromium.org, tglx@linutronix.de, pabeni@redhat.com,
-        rostedt@goodmis.org, jacob.e.keller@intel.com,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org, ath12k@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-staging@lists.linux.dev
-Subject: Re: [PATCH AUTOSEL 6.5 43/45] Fix nomenclature for USB and PCI
- wireless devices
-Message-ID: <2023090838-slurp-tilt-c7c4@gregkh>
-References: <20230908181327.3459042-1-sashal@kernel.org>
- <20230908181327.3459042-43-sashal@kernel.org>
- <0d2ddf90-2334-4d0c-9f63-018c150e06a9@rowland.harvard.edu>
+        Sat, 9 Sep 2023 10:19:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A528CE7
+        for <platform-driver-x86@vger.kernel.org>; Sat,  9 Sep 2023 07:18:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694269108;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HzqZJtWejVodVTPKo9Ws7yQdF9+fdIi5BOKy7A68lHY=;
+        b=aWKVOqMjR9w4exSJFHpPVahKare4Mw7Q/9fTLHtaNpdeGFCA3qZgqEmblYej35eWzj6F4t
+        VhF9MYFUiWZtI2kZCduduQsfhoHqtVvBtf9Rj0tPig+Wog24psGTR5ay2Oa4f3LLjcVPLt
+        3NRW2nwYZQUi08ye8wrfw18/ZJ+QdiU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-202-xSrNr5BuPkOcRXu1YLRzRA-1; Sat, 09 Sep 2023 10:18:25 -0400
+X-MC-Unique: xSrNr5BuPkOcRXu1YLRzRA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 99DBC8ABBC9;
+        Sat,  9 Sep 2023 14:18:24 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8069414171B6;
+        Sat,  9 Sep 2023 14:18:23 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: [PATCH 1/8] gpiolib: acpi: Check if a GPIO is listed in ignore_interrupt earlier
+Date:   Sat,  9 Sep 2023 16:18:09 +0200
+Message-ID: <20230909141816.58358-2-hdegoede@redhat.com>
+In-Reply-To: <20230909141816.58358-1-hdegoede@redhat.com>
+References: <20230909141816.58358-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d2ddf90-2334-4d0c-9f63-018c150e06a9@rowland.harvard.edu>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Sep 08, 2023 at 03:12:26PM -0400, Alan Stern wrote:
-> On Fri, Sep 08, 2023 at 02:13:24PM -0400, Sasha Levin wrote:
-> > From: Alan Stern <stern@rowland.harvard.edu>
-> > 
-> > [ Upstream commit 5d7cf67f72ae34d38e090bdfa673da4aefe4048e ]
-> > 
-> > A mouse that uses a USB connection is called a "USB mouse" device (or
-> > "USB mouse" for short), not a "mouse USB" device.  By analogy, a WiFi
-> > adapter that connects to the host computer via USB is a "USB wireless"
-> > device, not a "wireless USB" device.  (The latter term more properly
-> > refers to a defunct Wireless USB specification, which described a
-> > technology for sending USB protocol messages over an ultra wideband
-> > radio link.)
-> > 
-> > Similarly for a WiFi adapter card that plugs into a PCIe slot: It is a
-> > "PCIe wireless" device, not a "wireless PCIe" device.
-> > 
-> > Rephrase the text in the kernel source where the word ordering is
-> > wrong.
-> > 
-> > Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Kalle Valo <kvalo@kernel.org>
-> > Link: https://lore.kernel.org/r/57da7c80-0e48-41b5-8427-884a02648f55@rowland.harvard.edu
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> 
-> 
-> Is there any real reason to apply this commit to the -stable kernels?
-> I did not mark it that way when it was submitted, and it doesn't fix
-> any bugs.  In fact, aside from updating some module and device
-> description strings, all it does is change a bunch of comments.
-> 
-> Does that really fall under the -stable rules for acceptance?
+In some cases where a broken AEI is present for a GPIO and the GPIO
+is listed in the ignore_interrupt list to avoid the broken event
+handler, the kernel may want to use the GPIO for another purpose.
 
-Not really, this is just documentation, it should be dropped from the
-autosel queues.
+Before this change trying to use such a GPIO for another purpose would
+fail, because the ignore_interrupt list was only checked after
+the acpi_request_own_gpiod() call, causing the GPIO to already be
+claimed even though it is listed in the ignore_interrupt list.
 
-thanks,
+Fix this by moving the ignore_interrupt list to above
+the acpi_request_own_gpiod() call.
 
-greg k-h
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/gpio/gpiolib-acpi.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index 97496c0f9133..80b9650a2424 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -437,6 +437,11 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
+ 	if (!handler)
+ 		return AE_OK;
+ 
++	if (acpi_gpio_in_ignore_list(ignore_interrupt, dev_name(chip->parent), pin)) {
++		dev_info(chip->parent, "Ignoring interrupt on pin %u\n", pin);
++		return AE_OK;
++	}
++
+ 	desc = acpi_request_own_gpiod(chip, agpio, 0, "ACPI:Event");
+ 	if (IS_ERR(desc)) {
+ 		dev_err(chip->parent,
+@@ -461,11 +466,6 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
+ 		goto fail_unlock_irq;
+ 	}
+ 
+-	if (acpi_gpio_in_ignore_list(ignore_interrupt, dev_name(chip->parent), pin)) {
+-		dev_info(chip->parent, "Ignoring interrupt on pin %u\n", pin);
+-		return AE_OK;
+-	}
+-
+ 	event = kzalloc(sizeof(*event), GFP_KERNEL);
+ 	if (!event)
+ 		goto fail_unlock_irq;
+-- 
+2.41.0
+
