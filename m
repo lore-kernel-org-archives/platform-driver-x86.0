@@ -2,63 +2,63 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BD5EE7FF4
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Sep 2023 11:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 148E1EE14D8
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 10 Sep 2023 11:29:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233692AbjIJL1m (ORCPT
+        id S1346636AbjIJL33 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 10 Sep 2023 07:27:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47810 "EHLO
+        Sun, 10 Sep 2023 07:29:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346636AbjIJL1l (ORCPT
+        with ESMTP id S1346089AbjIJL33 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 10 Sep 2023 07:27:41 -0400
+        Sun, 10 Sep 2023 07:29:29 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FDAECD1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 10 Sep 2023 04:26:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A873CD1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 10 Sep 2023 04:28:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694345210;
+        s=mimecast20190719; t=1694345319;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=W3PYjqjeq7yM7eSNtgd7nOml/jYAzHDUEZD1jbwxSyA=;
-        b=XjIl+spaIn2aUu4fZgsTciTXNdDRSLh4gSmna0VOTETEoFzNPw/hNTb68bah84oaGtx5Gf
-        CZPBt9MqoPtAHHmCXYkBXzAQCr9E8WEzqVlxdqGdrxrxVox3QOsWAbdBeOGxEaax3mA49Q
-        d+ysIWZeRQrJoswHPhm+lsAzRP7fXKg=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=DtJY7joP5rMZ4hZmyJv0BTWzcaAlrQTPMl4QnW8+5Gw=;
+        b=ekiaFPdXnXbCTVJrcLBiexvt3coeVhJmOD7MjjM6s069irP4kxtKZrEtfbFZx0Bm+mJiGs
+        MhbfsOrZRbkpLOwcxbMvuhcLZvJMq4i3QXhxd/jyK3+Q4cQMhwMSBS0c8Mx2DYYUQ2oYtP
+        JlO7MVaUHZ9OlSzkiL15RyPSuw3rlf8=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-161-bPqdlgSlNK2r2Jth4HFNGw-1; Sun, 10 Sep 2023 07:26:48 -0400
-X-MC-Unique: bPqdlgSlNK2r2Jth4HFNGw-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2bcba79cedfso39163891fa.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 10 Sep 2023 04:26:48 -0700 (PDT)
+ us-mta-433-NkJSINpDPci_lHrFvRUXGQ-1; Sun, 10 Sep 2023 07:28:38 -0400
+X-MC-Unique: NkJSINpDPci_lHrFvRUXGQ-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-99388334de6so229099966b.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 10 Sep 2023 04:28:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694345207; x=1694950007;
+        d=1e100.net; s=20230601; t=1694345317; x=1694950117;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W3PYjqjeq7yM7eSNtgd7nOml/jYAzHDUEZD1jbwxSyA=;
-        b=cIEBCOTvYnZ+mt9/wP9eyBe4mAh5dxi0T1S37ZGJJRracOO2NkkB7aUQbJyO+LDOMX
-         cj25owV8/bLt58iE2rxIadJjNGYssOg1ac6gdLHgxDM7l+QFvznt9rfdzHmD5l6UDr1N
-         sDq7Z9aNKEmpC0Lhcn9Bgoj94tgy1KJqqnKWBaZONrea1hT1wodUD/Ipww+yM2B7folo
-         HQS1s6Vx8rVFeURVZ86oLXQbleWShXUDUtHUyaicLIYxLgiaKgcxV65CME4nDwYSp3Ih
-         SIus7XgaPJUNTWR6Nw87tagV3X/gmiJ2pIBi4HY49s1IxtQCwI3eKXs4dlI4fdIyX9hQ
-         NtGA==
-X-Gm-Message-State: AOJu0YykP9rhPBA8N82yZTvMC+HPCHta1XmfpPZNWwPeh5P9y8K/E3W4
-        3/4D6oBZ32H8hPrIyLblIRMp1xawFwBtiNew0cUYce4D/KJwv0BjQdw/sjfZ0ps2CIs8CQv6Wno
-        VtfMiAOTmwlBVRQG14D45ewM6OzJ4f1XF1w==
-X-Received: by 2002:a2e:8506:0:b0:2bc:f41a:d9c6 with SMTP id j6-20020a2e8506000000b002bcf41ad9c6mr5491270lji.0.1694345207302;
-        Sun, 10 Sep 2023 04:26:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFnkeY+10UH5lZFbC3lKJLy0rGcFWZC43Cdj2IGF5GLaD3a5BLkpvMlANk1OI6Fj1fzHPt/Fg==
-X-Received: by 2002:a2e:8506:0:b0:2bc:f41a:d9c6 with SMTP id j6-20020a2e8506000000b002bcf41ad9c6mr5491261lji.0.1694345206968;
-        Sun, 10 Sep 2023 04:26:46 -0700 (PDT)
+        bh=DtJY7joP5rMZ4hZmyJv0BTWzcaAlrQTPMl4QnW8+5Gw=;
+        b=VxxKrLhnaJdjmosaygzUT2aUqk4WpRAEN0W8iEgyxSHK9CmB6xGOG7FgJTMdlTggCL
+         QXv4vvBbBPt1TUuy14ZHqzOUKAImzLGyXkm4etW8DVYrJQwieihPitVLuWiMYJA+AAT6
+         HgOz5Ugd4v+9ET4p8hxaamqj9uDaXTWxa5rjc3QKNvX6B1uJTqDHAzn7SYK29GXtyAr2
+         TtLCaQmo+xnVc0Z4kYZqcJWGsR3D/LSOvVxerFd/Vb7WVcAAjrYt0JG4WitcRJh7ALrG
+         kZr+IEcX/hzIYbgtCBjx6UbnMagk8qfG6aDUm2XwEzaQoFSnP/1XY7lqlVGIPxofBos/
+         QH8Q==
+X-Gm-Message-State: AOJu0YzrtABHHAoIpAPDmLYkU5DqlzL9KACpIWXVX4oshbxfpQZ8IMli
+        hHk/msbXSYnmYHVMei3Uzs656QgIBLjSaKjD8fAOPlCxB6BKjA5isMs4XFr2Mfh7bcQ9rAZgRt+
+        Q9g3UEQvSXIv36zs8h5QJcg/Pzm+/83Hg4u2u8EpFnA==
+X-Received: by 2002:a17:907:77c9:b0:9a9:e5bb:edc5 with SMTP id kz9-20020a17090777c900b009a9e5bbedc5mr6525360ejc.65.1694345316930;
+        Sun, 10 Sep 2023 04:28:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFfPgAreIi4AcTewEx7Rreohfe0JGTDJU3IvqbKOB0uvh3a4giSBffifzD0j+gbOCjkQrjKxA==
+X-Received: by 2002:a17:907:77c9:b0:9a9:e5bb:edc5 with SMTP id kz9-20020a17090777c900b009a9e5bbedc5mr6525352ejc.65.1694345316675;
+        Sun, 10 Sep 2023 04:28:36 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id d12-20020a170906344c00b009a5c98fd82asm3641842ejb.81.2023.09.10.04.26.45
+        by smtp.gmail.com with ESMTPSA id ov27-20020a170906fc1b00b00992c92af6f4sm3696906ejb.144.2023.09.10.04.28.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Sep 2023 04:26:46 -0700 (PDT)
-Message-ID: <afda7862-3c36-98d8-43a3-dd67538de923@redhat.com>
-Date:   Sun, 10 Sep 2023 13:26:45 +0200
+        Sun, 10 Sep 2023 04:28:35 -0700 (PDT)
+Message-ID: <b54ee1c8-8d63-f698-4dc9-dfda4b3a3455@redhat.com>
+Date:   Sun, 10 Sep 2023 13:28:35 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
@@ -78,117 +78,16 @@ References: <20230909141816.58358-1-hdegoede@redhat.com>
 From:   Hans de Goede <hdegoede@redhat.com>
 In-Reply-To: <CAHp75Ve888X7xJ0VrQfswaStL8C3SHXjnJV35O2ajZVq6=KfMQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Andy,
+
+I missed 1 remark:
 
 On 9/10/23 10:24, Andy Shevchenko wrote:
-> On Sat, Sep 9, 2023 at 5:18 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Refactor x86_android_tablet_get_gpiod() to no longer use
->> gpiolib private functions like gpiochip_find().
->>
->> As a bonus this allows specifying that the GPIO is active-low,
->> like the /CE (charge enable) pin on the bq25892 charger on
->> the Lenovo Yoga Tablet 3.
-> 
-> The best patch in the series!
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
-> See below a couple of questions.
-> 
-> ...
-> 
->> -int x86_android_tablet_get_gpiod(const char *label, int pin, struct gpio_desc **desc)
->> +int x86_android_tablet_get_gpiod(const char *chip, int pin, const char *con_id,
->> +                                bool active_low, enum gpiod_flags dflags,
->> +                                struct gpio_desc **desc)
->>  {
->> +       struct gpiod_lookup_table *lookup;
->>         struct gpio_desc *gpiod;
->> -       struct gpio_chip *chip;
->>
->> -       chip = gpiochip_find((void *)label, gpiochip_find_match_label);
->> -       if (!chip) {
->> -               pr_err("error cannot find GPIO chip %s\n", label);
->> -               return -ENODEV;
->> -       }
->> +       lookup = kzalloc(struct_size(lookup, table, 2), GFP_KERNEL);
->> +       if (!lookup)
->> +               return -ENOMEM;
->> +
->> +       lookup->dev_id = KBUILD_MODNAME;
->> +       lookup->table[0].key = chip;
->> +       lookup->table[0].chip_hwnum = pin;
->> +       lookup->table[0].con_id = con_id;
->> +       lookup->table[0].flags = active_low ? GPIO_ACTIVE_LOW : GPIO_ACTIVE_HIGH;
->> +
->> +       gpiod_add_lookup_table(lookup);
->> +       gpiod = devm_gpiod_get(&x86_android_tablet_device->dev, con_id, dflags);
->> +       gpiod_remove_lookup_table(lookup);
->> +       kfree(lookup);
->>
->> -       gpiod = gpiochip_get_desc(chip, pin);
->>         if (IS_ERR(gpiod)) {
->> -               pr_err("error %ld getting GPIO %s %d\n", PTR_ERR(gpiod), label, pin);
->> +               pr_err("error %ld getting GPIO %s %d\n", PTR_ERR(gpiod), chip, pin);
->>                 return PTR_ERR(gpiod);
->>         }
-> 
->> -       *desc = gpiod;
->> +       if (desc)
->> +               *desc = gpiod;
-> 
-> Are we expecting that callers may not want the GPIO descriptor out of
-> this function?
-> Sounds a bit weird if so.
-
-Yes specifically the Charge-enable and OTG (Vboost enable) pins on the
-bq25892 charger on the Lenovo Yoga Tab 3 just need to be set to a fixed
-value, so we request the pins with GPIOD_OUT_LOW / _HIGH and then
-leave them at that value.
-
-I think similar stuff may come up later, so it seems nice to be able
-to not have to pass an otherwise unused gpio_desc pointer.
-
-
-> 
->>         return 0;
->>  }
-> 
-> ...
-> 
->>          * The bq25890_charger driver controls these through I2C, but this only
->>          * works if not overridden by the pins. Set these pins here:
->> -        * 1. Set /CE to 0 to allow charging.
-> 
->> +        * 1. Set /CE to 1 to allow charging.
->>          * 2. Set OTG to 0 disable V5 boost output since the 5V boost output of
->>          *    the main "bq25892_1" charger is used when necessary.
-> 
-> Shouldn't we use terminology "active"/"non-active" instead of plain 0
-> and 1 in the above?
-
-Well the flags are called GPIOD_OUT_HIGH / GPIOD_OUT_LOW and
-with gpiod_set_value 0/1 is used. I'm not in favor of adding
-"active"/"non-active" into the mix. That just adds a 3th way to
-say 0/low or 1/high.
-
-Regards,
-
-Hans
-
-
-
-
-> 
->>          */
-> 
-> ...
-> 
 >> -       ret = x86_android_tablet_get_gpiod("INT33FF:02", 22, &gpiod);
 >> +       ret = x86_android_tablet_get_gpiod("INT33FF:02", 22, "bq25892_0_ce",
 >> +                                          true, GPIOD_OUT_HIGH, NULL);
@@ -206,8 +105,14 @@ Hans
 >> +                                          false, GPIOD_OUT_LOW, NULL);
 > 
 > Ditto.
-> 
->>         if (ret < 0)
->>                 return ret;
-> 
+
+Yes I did consider that, but x86_android_tablet_get_gpiod() already followed
+the return-by-reference model and I did not want to add changing that into
+the changes this patch already makes.
+
+Regards,
+
+Hans
+
+
 
