@@ -2,95 +2,120 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE8BCA0ECB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Sep 2023 02:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D166CA0EC8
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Sep 2023 02:13:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237275AbjILCI1 (ORCPT
+        id S235531AbjILCNC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 22:08:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43590 "EHLO
+        Mon, 11 Sep 2023 22:13:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244642AbjILCHR (ORCPT
+        with ESMTP id S235543AbjILCMu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 22:07:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DAFAE1108D1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 18:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694482681;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=bAPz8m/VkDlfUDMl2zD484Yw31orYH7HidP19B5iZ2M=;
-        b=HVS9b8qKMC6lczabx0ELXxzfxg4YtqkTXxvGpMiCov2Wfn7lFXA5ABqfv9PbJTsi790tbA
-        acbTj538EQyRlHar2UMQS/HsP+P1KYchFYPMr3/neWm7QPbkLHJmcIkkDdqBE1cUFyZDW4
-        bT45Fdl8/Azd7UtO1vV5OgQ8mYRRnx8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-398-aeZ12NPdNoKULG9PfZzQ3Q-1; Mon, 11 Sep 2023 17:09:39 -0400
-X-MC-Unique: aeZ12NPdNoKULG9PfZzQ3Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E4C5780379F;
-        Mon, 11 Sep 2023 21:09:37 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C8FA840C2064;
-        Mon, 11 Sep 2023 21:09:36 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH] platform/x86: x86-android-tablets: Add a comment about x86_android_tablet_get_gpiod()
-Date:   Mon, 11 Sep 2023 23:09:28 +0200
-Message-ID: <20230911210928.264908-1-hdegoede@redhat.com>
+        Mon, 11 Sep 2023 22:12:50 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 162B26E89;
+        Mon, 11 Sep 2023 14:24:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694467455; x=1726003455;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HcGBa4u1K5hnQPCpGg0DbVeBeHvuKVebaPsTI8ufq4M=;
+  b=ktyosDzGwoHvH8GCGscLM0uY+67+YM3Y+RpsBZqCHw7fbSLsgOSYwn8t
+   tIgDdtziYCiJBRdj8ZZ3OGm8wm1aRxwbSx9TVmimBYGVyfJBlNMl4xBI2
+   H0s34U8iKZrVyTZ5umf3E/iVzmP3NAKQdeYmo9LS6GyT9vBGonfK2GZYx
+   KpiPZwvpHVsAtSewgll/GEruDUUrlOBk6lORNXd2nq4H3pb2rIgPJ9FVz
+   zYVkUbsQTWWRytFtPcFTA7aAkAjXrylu55/fpmQ0cDu1hVlvPOorIT9Fh
+   nj7LfHMdMaVC95m+/njFfZDkn8ls4cEJS6Lz1w2iqT5xePwXosnncqgz1
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="380908530"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="380908530"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 14:22:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="813546290"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="813546290"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 14:22:41 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qfoMg-008QX4-2Z;
+        Tue, 12 Sep 2023 00:22:38 +0300
+Date:   Tue, 12 Sep 2023 00:22:38 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Prashant Malani <pmalani@chromium.org>
+Subject: Re: [PATCH v3 4/4] platform/x86: intel_scu_ipc: Fail IPC send if
+ still busy
+Message-ID: <ZP+FHs+GBROf0zH8@smile.fi.intel.com>
+References: <20230911193937.302552-1-swboyd@chromium.org>
+ <20230911193937.302552-5-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230911193937.302552-5-swboyd@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add a comment explaining why the special x86_android_tablet_get_gpiod()
-helper is necessary for some of the GPIOs used in the x86-android-tablets;
-and that for normal GPIO lookups this example should not be followed.
+On Mon, Sep 11, 2023 at 12:39:36PM -0700, Stephen Boyd wrote:
+> It's possible for interrupts to get significantly delayed to the point
+> that callers of intel_scu_ipc_dev_command() and friends can call the
+> function once, hit a timeout, and call it again while the interrupt
+> still hasn't been processed. This driver will get seriously confused if
+> the interrupt is finally processed after the second IPC has been sent
+> with ipc_command(). It won't know which IPC has been completed. This
+> could be quite disastrous if calling code assumes something has happened
+> upon return from intel_scu_ipc_dev_simple_command() when it actually
+> hasn't.
+> 
+> Let's avoid this scenario by simply returning -EBUSY in this case.
+> Hopefully higher layers will know to back off or fail gracefully when
+> this happens. It's all highly unlikely anyway, but it's better to be
+> correct here as we have no way to know which IPC the status register is
+> telling us about if we send a second IPC while the previous IPC is still
+> processing.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/x86-android-tablets/core.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+...
 
-diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
-index 8a1f22aaac00..b55957bde034 100644
---- a/drivers/platform/x86/x86-android-tablets/core.c
-+++ b/drivers/platform/x86/x86-android-tablets/core.c
-@@ -24,6 +24,21 @@
- 
- static struct platform_device *x86_android_tablet_device;
- 
-+/*
-+ * This helper allows getting a gpio_desc *before* the actual device consuming
-+ * the GPIO has been instantiated. This function _must_ only be used to handle
-+ * this special case such as e.g. :
-+ *
-+ * 1. Getting an IRQ from a GPIO for i2c_board_info.irq which is passed to
-+ * i2c_client_new() to instantiate i2c_client-s; or
-+ * 2. Calling desc_to_gpio() to get an old style GPIO number for gpio_keys
-+ * platform_data which still uses old style GPIO numbers.
-+ *
-+ * Since the consuming device has not been instatiated yet a dynamic lookup
-+ * is generated using the special x86_android_tablet dev for dev_id.
-+ *
-+ * For normal GPIO lookups a standard static gpiod_lookup_table _must_ be used.
-+ */
- int x86_android_tablet_get_gpiod(const char *chip, int pin, const char *con_id,
- 				 bool active_low, enum gpiod_flags dflags,
- 				 struct gpio_desc **desc)
+> +static struct intel_scu_ipc_dev *intel_scu_ipc_get(struct intel_scu_ipc_dev *scu)
+> +{
+> +	u8 status;
+
+> +	if (!scu)
+> +		scu = ipcdev;
+
+I would write this as
+
+	scu = scu ?: ipcdev;
+
+> +	if (!scu)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	status = ipc_read_status(scu);
+> +	if (status & IPC_STATUS_BUSY) {
+> +		dev_dbg(&scu->dev, "device is busy\n");
+> +		return ERR_PTR(-EBUSY);
+> +	}
+> +
+> +	return scu;
+> +}
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
 -- 
-2.41.0
+With Best Regards,
+Andy Shevchenko
+
 
