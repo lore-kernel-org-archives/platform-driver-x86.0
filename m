@@ -2,101 +2,112 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FB0CA0ECB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D76CA0ECD
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355782AbjIKWCC (ORCPT
+        id S1355823AbjIKWCH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:02:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36602 "EHLO
+        Mon, 11 Sep 2023 18:02:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242656AbjIKQDp (ORCPT
+        with ESMTP id S236272AbjIKKFb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 12:03:45 -0400
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E43A1B6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 09:03:40 -0700 (PDT)
-Received: by mail-oi1-x235.google.com with SMTP id 5614622812f47-3a9f87adfe1so3665537b6e.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 09:03:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694448219; x=1695053019; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UjGgx/qsfESzch376+5oi8LKtc3yIfVpyjdNPeJr0YM=;
-        b=IqgKLwGHB2c+YOvo309pWtvFau9RpYk+a8TJKUlD7mRl2RA4g7IZlH+Owv6dP1BcJe
-         5ifNfwqe9rhbB6utXjARlKAMZwuaLO2FzoSXkEuL530YIbMr9WB2oZfCqknJ+k+4gnc9
-         33CjhoN5Md0sD1cpFVFAS8QbD7IcLE/2qFXZzC8pPLpfO0a6cAw/QXJdchF7S+jPvXWa
-         Bz/nGTX0Ki2RFGSnr/2DlvaTZaIhClNi24FThlEEP2Ky9pJ72MvXMYzJg9XBQpSGz6XM
-         x6qV9tuiWtYpuuHVcEKDOkiN0YzpCN7Eyzv1Cw63e2jX+u2lGjO4b2mLt0B4Kelg33tr
-         4jgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694448219; x=1695053019;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UjGgx/qsfESzch376+5oi8LKtc3yIfVpyjdNPeJr0YM=;
-        b=ET0g0XM8lAOnnu07KlUpaj1c2vKADjCekKetgFATAu38dnOrWPh5PWCCNFELtikivo
-         RCJT2pjtFd8yfJWWYnE5O29dl7dfUJMqCwSni97mQs6VUb9FHZaiGQn/zgUHwaN3jC/x
-         irVLuP6CxGaX9qx/j2hU87aQNQXRmFf1rWFjyY/n6QUDaf1U8yvv7UstAbQGBywDG82t
-         Idj2bFAPxsR/hLGRUNXS6nTxZ8i4qLfI2ui2NMrIEFQxMwNkcpDU5JzspyIVtED5zEaX
-         hhNHCRV0mu/mMnxHuG6IFvcBqKhCrW1P0XjVsk4V8PDfnuMYTZTPTSeIw4w9lRKV0XP9
-         rWLg==
-X-Gm-Message-State: AOJu0YwnTebkPDsa2AD2VdaEtk9wYBYbx1PjYxd0M+a8jvtA1DWhtOWN
-        m2q5qOm6K6JwA3WCNS4pFPGjvwHZAfOFbQff6lOAig==
-X-Google-Smtp-Source: AGHT+IF1yXG5te+VZENGbmsEJ8NJo/z1jgMv5tj0n2Ra074S3+aBtzRPFr249Z8LfT2JGb3cLSR9ZERaLrPdqnXjwtU=
-X-Received: by 2002:a05:6808:a1a:b0:3a7:53a8:aed2 with SMTP id
- n26-20020a0568080a1a00b003a753a8aed2mr10695492oij.7.1694448219432; Mon, 11
- Sep 2023 09:03:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230909141816.58358-1-hdegoede@redhat.com> <20230909141816.58358-7-hdegoede@redhat.com>
- <CAMRc=MfeKirks7N7scu+dh+M1Nf0bNxzC7PE2Q7J4bxgpRnECw@mail.gmail.com>
- <0b1e0312-9144-85ed-666e-a84110b26418@redhat.com> <CAMRc=MfVZCqc-v+5oMkTkhfLvq1pE66E7GykqT2ymxzS_kw83w@mail.gmail.com>
- <01a85a3d-c888-11d8-f47e-be2a26d0cb9d@redhat.com> <CAMRc=MeGRreVVz=tCnEWtvixV+ZNEXXvG5SVRRmmnWG_sawMcg@mail.gmail.com>
- <bf866db7-1231-2fd6-eedf-b287ca4fa1b8@redhat.com> <CAMRc=MdXLBnjFPE8Ac9tFQj6BXEyV6kRyDFNytsdQa++Yk6suw@mail.gmail.com>
- <22698b72-b293-9ad8-908f-f6aee85430d7@redhat.com> <ZP80AKHkUyFP7B06@smile.fi.intel.com>
-In-Reply-To: <ZP80AKHkUyFP7B06@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 11 Sep 2023 18:03:28 +0200
-Message-ID: <CAMRc=MdyZs7bPSnrKJDi388kjKZnA3vHLEa9unqboiSHwNa=Fw@mail.gmail.com>
-Subject: Re: [PATCH 6/8] platform/x86: x86-android-tablets: Stop using gpiolib
- private APIs
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mon, 11 Sep 2023 06:05:31 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85003E68;
+        Mon, 11 Sep 2023 03:05:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694426726; x=1725962726;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=00fLvhiMtv2ZiGvbKRwC5xfsj2n/I3VRQoCUrYTyoPk=;
+  b=jl2GuVQ0iTI0oRz0MkQVdaxATSUIUcHK+EK6YhVdHvcJgr9/D9jaWFjr
+   A0ptRbNEC0ApBO+JtBVMiFnMSCCOsTOZTdk5UD+iQDxVvje4Lqpz5pB08
+   rbtxdHxQWRuoF1DydnelJ+U8SGeQgSrVK5TlZKQNAvEsOZdiVitA0n+9N
+   BCZ7zruRf/ZgTd/SQDmUs9JWYzlhegseMge/UkDSffachRH+IbnEiEuQH
+   rA314T4LTrq4x7K8//h2yN56JKIA85KdDhjqiT+YNGNkrS8mFamlnHS9R
+   oItCnMlJ7jzIoTx5ZmUSpt/lEp46bwjfGZUqYm3xLfnbb5S7XemKSouiq
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10829"; a="363065949"
+X-IronPort-AV: E=Sophos;i="6.02,243,1688454000"; 
+   d="scan'208";a="363065949"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 03:05:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10829"; a="866884962"
+X-IronPort-AV: E=Sophos;i="6.02,243,1688454000"; 
+   d="scan'208";a="866884962"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 03:05:18 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qfdn9-008HnB-00;
+        Mon, 11 Sep 2023 13:05:15 +0300
+Date:   Mon, 11 Sep 2023 13:05:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Dipen Patel <dipenp@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFT PATCH 11/21] platform: x86: android-tablets: don't access
+ GPIOLIB private members
+Message-ID: <ZP7mWk/jx3FZjMih@smile.fi.intel.com>
+References: <20230905185309.131295-1-brgl@bgdev.pl>
+ <20230905185309.131295-12-brgl@bgdev.pl>
+ <8f51b4a8-bb9c-4918-61a8-4ab402da1ed0@redhat.com>
+ <CAMRc=Mfmp3Nd5jwNWr=kc8RFO-arFDwEvLxj5Qu9_1OOXR2gHQ@mail.gmail.com>
+ <173bdafa-08da-7473-6711-61131986eb3c@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <173bdafa-08da-7473-6711-61131986eb3c@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 5:36=E2=80=AFPM Andy Shevchenko <andy@kernel.org> w=
-rote:
->
-> On Mon, Sep 11, 2023 at 04:12:00PM +0200, Hans de Goede wrote:
-> > On 9/11/23 16:04, Bartosz Golaszewski wrote:
->
-> ...
->
-> > >>>>>>>> +       lookup->dev_id =3D KBUILD_MODNAME;
-> > >>>>>>>> +       lookup->table[0].key =3D chip;
-> > >>>>>>>> +       lookup->table[0].chip_hwnum =3D pin;
-> > >>>>>>>> +       lookup->table[0].con_id =3D con_id;
-> > >>>>>>>> +       lookup->table[0].flags =3D active_low ? GPIO_ACTIVE_LO=
-W : GPIO_ACTIVE_HIGH;
->
-> Actually you can use GPIO_LOOKUP() macro here as it provides a compound
-> literal.
->
->         lookup->table[0] =3D GPIO_LOOKUP(...);
->
-> > Therefor I don't want to / cannot change the hashes of the commits,
-> > so a follow-up patch it is.
->
+On Sat, Sep 09, 2023 at 04:17:53PM +0200, Hans de Goede wrote:
+> On 9/6/23 16:27, Bartosz Golaszewski wrote:
+> > On Wed, Sep 6, 2023 at 3:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-Which makes me think, I should have used it in my SPI patch...
+...
 
-Bart
+> > This makes sense! Maybe we'd need a good-old board file setting up all
+> > non-described devices using the driver model?
+> 
+> Right, this is pretty much exactly what the x86-android-tablets
+> code does. Except that it does it for a bunch of boards in a single
+> .ko / driver. There is a lot of commonality between these boards,
+> so this allows sharing most of the code.
+> 
+> The driver uses DMI matching, with the match's driver_data pointing
+> to a description of which devices to instantiate and then the shared
+> code takes care of instantiating those.
+> 
+> About 90% of the data / code is __init or __initdata so both
+> the code to instantiate the devices as well as the per board
+> data is free-ed after module_init() has run.
+
+...which is nicely looked and isolated hack (or quirk if you prefer)
+that I like! Thanks, Hans, for maintaining that!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
