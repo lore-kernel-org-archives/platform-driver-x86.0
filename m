@@ -2,83 +2,352 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C0BCA0ECB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA36CCA0EC3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:06:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238100AbjIKWAn (ORCPT
+        id S1355552AbjIKWAq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:00:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41270 "EHLO
+        Mon, 11 Sep 2023 18:00:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236171AbjIKJwR (ORCPT
+        with ESMTP id S237051AbjIKLzM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 05:52:17 -0400
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E46F0E40
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 02:52:12 -0700 (PDT)
-Received: by mail-ua1-x934.google.com with SMTP id a1e0cc1a2514c-7a5170c78e6so1371202241.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 02:52:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694425932; x=1695030732; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KIn7ppfI5hUpZ9BWxWQzUJmi7tuPomUJZC2PQ3FzTQQ=;
-        b=07YFJQkUeiL3lWFl7abLIGKxeKDPyLSlQvruWtuE0RXA3iHdEPmYRzO+dSTW1yls7P
-         im38IXFacFuIQibFMVCGF/JdCcfW3gVvaehmubYhS3TwiLnxd7mmluFkj2P/PTie7skn
-         q6eDMcNkYgzx6JalgZnSoCfqjxoSpOHs0ukqDQb62PrbF/YcVHB1qcfLsVPzahBvaWW0
-         cf/SnTinPTP07H8iIT1tj//ruT97cgtd7Rj9/i8LHe6+DlpbgxXvER5McsJ9a1Hcjyhy
-         KFI4TPEYhwJDQjO3/76fuF7/Hm2flaeOl1WHskRz+E8v/TbDxu7qFWyBEkIri98v4soq
-         ZfJA==
+        Mon, 11 Sep 2023 07:55:12 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3D199CDD
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:54:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694433260;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LVWw9bbXHSqs2F0ua9xeHB5+WGrOjtmrDi8P4B+JbbQ=;
+        b=RcFB2MpzHooKGLgfI4G8zKO+g4xxWSpKq3ZEOABEzkB+f6XnxC49UqUTA8dXCSznvXWcDy
+        iikhbC6EAl8AtC5SCxwm8AWxpasUtcnNeJG4Zkqfix1jLDySiiAqC0Zn3H81kPJ/uWbqGS
+        zHKalGrI7c/MT6WGS7mAJyskGktwtOI=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-486-CGAInjynPqqDf3aXGm98YA-1; Mon, 11 Sep 2023 07:54:18 -0400
+X-MC-Unique: CGAInjynPqqDf3aXGm98YA-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9aa05c1934aso327306866b.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:54:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694425932; x=1695030732;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KIn7ppfI5hUpZ9BWxWQzUJmi7tuPomUJZC2PQ3FzTQQ=;
-        b=Re0XYD3m6h5/CbYgx48BcO5HHpFa7R6pPrKlP8FUlxnP/+KMp4VQ41q6Q9VEugGZ8F
-         D7foO7WW3/0fclkgZqSLPDTBycwFIEvpRb4Y/ToVfl4U4/nybmOTBTM7CNJmSqLs4CBj
-         Wj7xNBaRf8UJHN2Gxg5GiWC9HiVH9HUqQm3KPihEdO2sFEMK65sSf5BbauCS8OyPz5Hd
-         UMKiH/xqw11JQg4XTfnQRkQqYolzOt95FKseVJlu6V9mFi9McNRh2rV/Lz0J3e+ebCKp
-         VahjUYjUOs+mPMLLOYOfRhAmJ17J0zdeig4LDfizSkcuIzwYO0DEDd/O8n+vHryBHB5q
-         +nrg==
-X-Gm-Message-State: AOJu0Yz1nHAzOAWcl8UABd7qCcz3hKuIF5tZjht6dDxjC/V36PLhJxsu
-        TGJorODNTmM5m/cc3zWvWD/OtPjlpozEsWYsuL8Psw==
-X-Google-Smtp-Source: AGHT+IHibDNcC0W+t+sqyHgZd/i+fSeIzfiyJ4cjrCpSbO2UJ3YBbXCP+TDuS+qow+FJct3Pniq4ec1uXbAZUbmESNQ=
-X-Received: by 2002:a67:e981:0:b0:44e:d6c3:51d6 with SMTP id
- b1-20020a67e981000000b0044ed6c351d6mr7589163vso.14.1694425932088; Mon, 11 Sep
- 2023 02:52:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1694433257; x=1695038057;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LVWw9bbXHSqs2F0ua9xeHB5+WGrOjtmrDi8P4B+JbbQ=;
+        b=iZDZXOfBWThCi0ynk5ibkowM+KL5Cng565peAecoq09k6BA8hOhMjDsodMzKSDeFMx
+         HOQKIlz4UQYX0hsFp1rWysWUY31l3sMK00D9OrnqXNe0n6oT4+BsMw73BlUp4gSlzbLR
+         mQD8M1JR1LYaKgVh3uwD28a9eBVQsvW1xRuEN4qbGiNmxI8l9WRACd2gKZqq9a30ZoPB
+         1wyc02CvaiV6eM6IwONHevoKMSbD5MEYBzLyyLknfepwvxmO8cY2pFAc8ifnOpSEMsFS
+         cTL++OO6Hm1sVwJ5/xDhkw35hZNlvnLLvATSz36n8cvxD1UNVSj6mK6kHhaL1Dc0Mohs
+         kn0w==
+X-Gm-Message-State: AOJu0YxL9Ys22Opz/1tkkKV3mexwGWP+Gu9mCglyyuGM5OcRuEqC5n3o
+        r1iJu79PVfSiSm4Y+CYfYvaXyJ1F5twZ6OEPjXoTyOEVWXsbeHoJLhdQbYYuoZiFgNybzCKOLV9
+        WXONkF35PD3EeuYj03/xItZUbQzbimhd7QA==
+X-Received: by 2002:a17:907:1c94:b0:982:a022:a540 with SMTP id nb20-20020a1709071c9400b00982a022a540mr21214331ejc.11.1694433257588;
+        Mon, 11 Sep 2023 04:54:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFaCxqMst8t2NSozjlJg8HUSqfxw9xDFoywmO9mjxgfLOWCnedevs+7wFPN2zkIXenoYbN0TQ==
+X-Received: by 2002:a17:907:1c94:b0:982:a022:a540 with SMTP id nb20-20020a1709071c9400b00982a022a540mr21214294ejc.11.1694433257165;
+        Mon, 11 Sep 2023 04:54:17 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id a11-20020a1709066d4b00b0099cb0a7098dsm5285867ejt.19.2023.09.11.04.54.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Sep 2023 04:54:16 -0700 (PDT)
+Message-ID: <26abd722-4daa-bc9e-3a5d-a8c8765b5ff7@redhat.com>
+Date:   Mon, 11 Sep 2023 13:54:15 +0200
 MIME-Version: 1.0
-References: <20230909141816.58358-1-hdegoede@redhat.com> <20230909141816.58358-4-hdegoede@redhat.com>
-In-Reply-To: <20230909141816.58358-4-hdegoede@redhat.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 11 Sep 2023 11:52:01 +0200
-Message-ID: <CAMRc=MeErGNWcYmm=T8HXPUoYzOQwjsSZGh9w_ssTffk-ze_zA@mail.gmail.com>
-Subject: Re: [PATCH 3/8] platform/x86: x86-android-tablets: Remove
- invalid_aei_gpiochip from Peaq C1010
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v6 1/1] platform/x86: asus-wmi: add support for ASUS
+ screenpad
+Content-Language: en-US
+To:     "Luke D. Jones" <luke@ljones.dev>
+Cc:     corentin.chary@gmail.com, markgross@kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20230830032237.42987-1-luke@ljones.dev>
+ <20230830032237.42987-2-luke@ljones.dev>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230830032237.42987-2-luke@ljones.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Sep 9, 2023 at 4:18=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
-wrote:
->
-> Remove the invalid_aei_gpiochip setting from the x86_dev_info
-> for the Peaq C1010.
->
-> This is no longer necessary since there now is a quirk to ignore
-> the "dolby" button GPIO in gpiolib_acpi_quirks[] in
-> drivers/gpio/gpiolib-acpi.c .
->
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
+Hi Luke,
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Thank you for the updated patch.
+
+On 8/30/23 05:22, Luke D. Jones wrote:
+> Add support for the WMI methods used to turn off and adjust the
+> brightness of the secondary "screenpad" device found on some high-end
+> ASUS laptops like the GX650P series and others.
+> 
+> There are some small quirks with this device when considering only the
+> raw WMI methods:
+> 1. The Off method can only switch the device off
+> 2. Changing the brightness turns the device back on
+> 3. To turn the device back on the brightness must be > 1
+> 4. When the device is off the brightness can't be changed (so it is
+>    stored by the driver if device is off).
+> 5. Booting with a value of 0 brightness (retained by bios) means the bios
+>    will set a value of >0 <15
+> 6. When the device is off it is "unplugged"
+> 
+> asus_wmi sets the minimum brightness as 20 in general use, and 60 for
+> booting with values <= min.
+> 
+> The ACPI methods are used in a new backlight device named asus_screenpad.
+> 
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> ---
+>  drivers/platform/x86/asus-wmi.c            | 133 +++++++++++++++++++++
+>  drivers/platform/x86/asus-wmi.h            |   1 +
+>  include/linux/platform_data/x86/asus-wmi.h |   4 +
+>  3 files changed, 138 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index f54178d6f780..0b13be703856 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/input/sparse-keymap.h>
+>  #include <linux/kernel.h>
+>  #include <linux/leds.h>
+> +#include <linux/minmax.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+>  #include <linux/pci_hotplug.h>
+> @@ -127,6 +128,10 @@ module_param(fnlock_default, bool, 0444);
+>  #define NVIDIA_TEMP_MIN		75
+>  #define NVIDIA_TEMP_MAX		87
+>  
+> +#define ASUS_SCREENPAD_BRIGHT_MIN 20
+> +#define ASUS_SCREENPAD_BRIGHT_MAX 255
+> +#define ASUS_SCREENPAD_BRIGHT_DEFAULT 60
+> +
+>  static const char * const ashs_ids[] = { "ATK4001", "ATK4002", NULL };
+>  
+>  static int throttle_thermal_policy_write(struct asus_wmi *);
+> @@ -212,6 +217,7 @@ struct asus_wmi {
+>  
+>  	struct input_dev *inputdev;
+>  	struct backlight_device *backlight_device;
+> +	struct backlight_device *screenpad_backlight_device;
+>  	struct platform_device *platform_device;
+>  
+>  	struct led_classdev wlan_led;
+> @@ -3776,6 +3782,124 @@ static int is_display_toggle(int code)
+>  	return 0;
+>  }
+>  
+> +/* Screenpad backlight *******************************************************/
+> +
+> +static int read_screenpad_backlight_power(struct asus_wmi *asus)
+> +{
+> +	int ret;
+> +
+> +	ret = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_SCREENPAD_POWER);
+> +	if (ret < 0)
+> +		return ret;
+> +	/* 1 == powered */
+> +	return ret ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
+> +}
+> +
+> +static int read_screenpad_brightness(struct backlight_device *bd)
+> +{
+> +	struct asus_wmi *asus = bl_get_data(bd);
+> +	u32 retval;
+> +	int err;
+> +
+> +	err = read_screenpad_backlight_power(asus);
+> +	if (err < 0)
+> +		return err;
+> +	/* The device brightness can only be read if powered, so return stored */
+> +	if (err == FB_BLANK_POWERDOWN)
+> +		return asus->driver->screenpad_brightness - ASUS_SCREENPAD_BRIGHT_MIN;
+> +
+> +	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT, &retval);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	return (retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK) - ASUS_SCREENPAD_BRIGHT_MIN;
+> +}
+> +
+> +static int update_screenpad_bl_status(struct backlight_device *bd)
+> +{
+> +	struct asus_wmi *asus = bl_get_data(bd);
+> +	int power, err = 0;
+> +	u32 ctrl_param;
+> +
+> +	power = read_screenpad_backlight_power(asus);
+> +	if (power < 0)
+> +		return power;
+> +
+> +	if (bd->props.power != power) {
+> +		if (power != FB_BLANK_UNBLANK) {
+> +			/* Only brightness > 0 can power it back on */
+> +			ctrl_param = asus->driver->screenpad_brightness - ASUS_SCREENPAD_BRIGHT_MIN;
+> +			err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT,
+> +						    ctrl_param, NULL);
+> +		} else {
+> +			err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
+> +		}
+> +	} else if (power == FB_BLANK_UNBLANK) {
+> +		/* Only set brightness if powered on or we get invalid/unsync state */
+> +		ctrl_param = bd->props.brightness + ASUS_SCREENPAD_BRIGHT_MIN;
+> +		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT, ctrl_param, NULL);
+> +	}
+> +
+> +	/* Ensure brightness is stored to turn back on with */
+> +	if (err == 0)
+> +		asus->driver->screenpad_brightness = bd->props.brightness + ASUS_SCREENPAD_BRIGHT_MIN;
+> +
+> +	return err;
+> +}
+> +
+> +static const struct backlight_ops asus_screenpad_bl_ops = {
+> +	.get_brightness = read_screenpad_brightness,
+> +	.update_status = update_screenpad_bl_status,
+> +	.options = BL_CORE_SUSPENDRESUME,
+> +};
+> +
+> +static int asus_screenpad_init(struct asus_wmi *asus)
+> +{
+> +	struct backlight_device *bd;
+> +	struct backlight_properties props;
+> +	int err, power;
+> +	int brightness = 0;
+> +
+> +	power = read_screenpad_backlight_power(asus);
+> +	if (power < 0)
+> +		return power;
+> +
+> +	if (power != FB_BLANK_POWERDOWN) {
+> +		err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT, &brightness);
+> +		if (err < 0)
+> +			return err;
+> +	}
+> +	/* default to an acceptable min brightness on boot if too low */
+> +	if (brightness < ASUS_SCREENPAD_BRIGHT_MIN)
+> +		brightness = ASUS_SCREENPAD_BRIGHT_DEFAULT;
+> +
+> +	memset(&props, 0, sizeof(struct backlight_properties));
+> +	props.type = BACKLIGHT_RAW; /* ensure this bd is last to be picked */
+> +	props.max_brightness = ASUS_SCREENPAD_BRIGHT_MAX - ASUS_SCREENPAD_BRIGHT_MIN;
+> +	bd = backlight_device_register("asus_screenpad",
+> +				       &asus->platform_device->dev, asus,
+> +				       &asus_screenpad_bl_ops, &props);
+> +	if (IS_ERR(bd)) {
+> +		pr_err("Could not register backlight device\n");
+> +		return PTR_ERR(bd);
+> +	}
+> +
+> +	asus->screenpad_backlight_device = bd;
+> +	asus->driver->screenpad_brightness = brightness;
+> +	bd->props.brightness = brightness;
+
+This should be:
+
+	bd->props.brightness = brightness - ASUS_SCREENPAD_BRIGHT_MIN;
+
+Since this is the value exported to userspace which is down-shited
+by ASUS_SCREENPAD_BRIGHT_MIN to start at 0.
+
+I have fixed this up while merging this:
+
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+> +	bd->props.power = power;
+> +	backlight_update_status(bd);
+> +
+> +	return 0;
+> +}
+> +
+> +static void asus_screenpad_exit(struct asus_wmi *asus)
+> +{
+> +	backlight_device_unregister(asus->screenpad_backlight_device);
+> +
+> +	asus->screenpad_backlight_device = NULL;
+> +}
+> +
+>  /* Fn-lock ********************************************************************/
+>  
+>  static bool asus_wmi_has_fnlock_key(struct asus_wmi *asus)
+> @@ -4431,6 +4555,12 @@ static int asus_wmi_add(struct platform_device *pdev)
+>  	} else if (asus->driver->quirks->wmi_backlight_set_devstate)
+>  		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL);
+>  
+> +	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT)) {
+> +		err = asus_screenpad_init(asus);
+> +		if (err && err != -ENODEV)
+> +			goto fail_screenpad;
+> +	}
+> +
+>  	if (asus_wmi_has_fnlock_key(asus)) {
+>  		asus->fnlock_locked = fnlock_default;
+>  		asus_wmi_fnlock_update(asus);
+> @@ -4454,6 +4584,8 @@ static int asus_wmi_add(struct platform_device *pdev)
+>  	asus_wmi_backlight_exit(asus);
+>  fail_backlight:
+>  	asus_wmi_rfkill_exit(asus);
+> +fail_screenpad:
+> +	asus_screenpad_exit(asus);
+>  fail_rfkill:
+>  	asus_wmi_led_exit(asus);
+>  fail_leds:
+> @@ -4480,6 +4612,7 @@ static int asus_wmi_remove(struct platform_device *device)
+>  	asus = platform_get_drvdata(device);
+>  	wmi_remove_notify_handler(asus->driver->event_guid);
+>  	asus_wmi_backlight_exit(asus);
+> +	asus_screenpad_exit(asus);
+>  	asus_wmi_input_exit(asus);
+>  	asus_wmi_led_exit(asus);
+>  	asus_wmi_rfkill_exit(asus);
+> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+> index a478ebfd34df..5fbdd0eafa02 100644
+> --- a/drivers/platform/x86/asus-wmi.h
+> +++ b/drivers/platform/x86/asus-wmi.h
+> @@ -57,6 +57,7 @@ struct quirk_entry {
+>  struct asus_wmi_driver {
+>  	int			brightness;
+>  	int			panel_power;
+> +	int			screenpad_brightness;
+>  	int			wlan_ctrl_by_user;
+>  
+>  	const char		*name;
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index 16e99a1c37fc..63e630276499 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -58,6 +58,10 @@
+>  #define ASUS_WMI_DEVID_KBD_BACKLIGHT	0x00050021
+>  #define ASUS_WMI_DEVID_LIGHT_SENSOR	0x00050022 /* ?? */
+>  #define ASUS_WMI_DEVID_LIGHTBAR		0x00050025
+> +/* This can only be used to disable the screen, not re-enable */
+> +#define ASUS_WMI_DEVID_SCREENPAD_POWER	0x00050031
+> +/* Writing a brightness re-enables the screen if disabled */
+> +#define ASUS_WMI_DEVID_SCREENPAD_LIGHT	0x00050032
+>  #define ASUS_WMI_DEVID_FAN_BOOST_MODE	0x00110018
+>  #define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY 0x00120075
+>  
+
