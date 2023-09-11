@@ -2,49 +2,49 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D166CA0EC8
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Sep 2023 02:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40984CA0ECD
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Sep 2023 03:10:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235531AbjILCNC (ORCPT
+        id S241961AbjILDKD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 22:13:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37402 "EHLO
+        Mon, 11 Sep 2023 23:10:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235543AbjILCMu (ORCPT
+        with ESMTP id S240773AbjILDJq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 22:12:50 -0400
+        Mon, 11 Sep 2023 23:09:46 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 162B26E89;
-        Mon, 11 Sep 2023 14:24:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29F8B4838A;
+        Mon, 11 Sep 2023 14:21:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694467455; x=1726003455;
+  t=1694467290; x=1726003290;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=HcGBa4u1K5hnQPCpGg0DbVeBeHvuKVebaPsTI8ufq4M=;
-  b=ktyosDzGwoHvH8GCGscLM0uY+67+YM3Y+RpsBZqCHw7fbSLsgOSYwn8t
-   tIgDdtziYCiJBRdj8ZZ3OGm8wm1aRxwbSx9TVmimBYGVyfJBlNMl4xBI2
-   H0s34U8iKZrVyTZ5umf3E/iVzmP3NAKQdeYmo9LS6GyT9vBGonfK2GZYx
-   KpiPZwvpHVsAtSewgll/GEruDUUrlOBk6lORNXd2nq4H3pb2rIgPJ9FVz
-   zYVkUbsQTWWRytFtPcFTA7aAkAjXrylu55/fpmQ0cDu1hVlvPOorIT9Fh
-   nj7LfHMdMaVC95m+/njFfZDkn8ls4cEJS6Lz1w2iqT5xePwXosnncqgz1
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="380908530"
+  bh=KyY0bt2hfAVv84BS0o9R1NkNlZaPTKwHSs6qfsZUiAk=;
+  b=cCaYbKSTWKNo2h2qMm3/Yhd3D0xsADxPNBln8Tw7zIHu4zs2djORQAl/
+   KygbELGfItnGajoHGMknOlWTAtLPI9AMR93DjHmFujV7JoePvXL+359zC
+   Q+z991VvGZwTzjxjgZbbBPDNacpe14kF5SVauqseR03FWuq0VbJm959I9
+   cCFQAXwRt1AtzqaoHXVTcjMzT5Jm0nTvgCIyadjAyc48X2AttLwaXFjp4
+   G2ILuejYxYLObxh6KBT9jM3nCloaDqpk5fuO4GZrl11CcYWOTS7XgIu8e
+   ef0CH6y4Xbcr/J7MiTPL48c4Kea6HTBraTUWra6NYqq/lheCR38IO7Mlv
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="380907811"
 X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="380908530"
+   d="scan'208";a="380907811"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 14:22:44 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 14:19:35 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="813546290"
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="813545721"
 X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="813546290"
+   d="scan'208";a="813545721"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 14:22:41 -0700
+  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 14:19:31 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qfoMg-008QX4-2Z;
-        Tue, 12 Sep 2023 00:22:38 +0300
-Date:   Tue, 12 Sep 2023 00:22:38 +0300
+        id 1qfoJc-008QUx-1r;
+        Tue, 12 Sep 2023 00:19:28 +0300
+Date:   Tue, 12 Sep 2023 00:19:28 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Stephen Boyd <swboyd@chromium.org>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -55,63 +55,37 @@ Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Prashant Malani <pmalani@chromium.org>
-Subject: Re: [PATCH v3 4/4] platform/x86: intel_scu_ipc: Fail IPC send if
- still busy
-Message-ID: <ZP+FHs+GBROf0zH8@smile.fi.intel.com>
+Subject: Re: [PATCH v3 1/4] platform/x86: intel_scu_ipc: Check status after
+ timeout in busy_loop()
+Message-ID: <ZP+EYOkT2kVX2UCi@smile.fi.intel.com>
 References: <20230911193937.302552-1-swboyd@chromium.org>
- <20230911193937.302552-5-swboyd@chromium.org>
+ <20230911193937.302552-2-swboyd@chromium.org>
+ <ZP+D4hlUXhAboFBJ@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230911193937.302552-5-swboyd@chromium.org>
+In-Reply-To: <ZP+D4hlUXhAboFBJ@smile.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 12:39:36PM -0700, Stephen Boyd wrote:
-> It's possible for interrupts to get significantly delayed to the point
-> that callers of intel_scu_ipc_dev_command() and friends can call the
-> function once, hit a timeout, and call it again while the interrupt
-> still hasn't been processed. This driver will get seriously confused if
-> the interrupt is finally processed after the second IPC has been sent
-> with ipc_command(). It won't know which IPC has been completed. This
-> could be quite disastrous if calling code assumes something has happened
-> upon return from intel_scu_ipc_dev_simple_command() when it actually
-> hasn't.
-> 
-> Let's avoid this scenario by simply returning -EBUSY in this case.
-> Hopefully higher layers will know to back off or fail gracefully when
-> this happens. It's all highly unlikely anyway, but it's better to be
-> correct here as we have no way to know which IPC the status register is
-> telling us about if we send a second IPC while the previous IPC is still
-> processing.
+On Tue, Sep 12, 2023 at 12:17:22AM +0300, Andy Shevchenko wrote:
+> On Mon, Sep 11, 2023 at 12:39:33PM -0700, Stephen Boyd wrote:
 
 ...
 
-> +static struct intel_scu_ipc_dev *intel_scu_ipc_get(struct intel_scu_ipc_dev *scu)
-> +{
-> +	u8 status;
+> > +	err = read_poll_timeout(ipc_read_status, status, !(status & IPC_STATUS_BUSY),
+> > +				100, jiffies_to_usecs(IPC_TIMEOUT), false, scu);
+> 
+> Since "false" you probably can utilize readx_poll_timeout().
 
-> +	if (!scu)
-> +		scu = ipcdev;
+...and because only a single parameter taken.
 
-I would write this as
+> > +	if (err)
+> > +		return err;
 
-	scu = scu ?: ipcdev;
-
-> +	if (!scu)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	status = ipc_read_status(scu);
-> +	if (status & IPC_STATUS_BUSY) {
-> +		dev_dbg(&scu->dev, "device is busy\n");
-> +		return ERR_PTR(-EBUSY);
-> +	}
-> +
-> +	return scu;
-> +}
-
+With that,
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
