@@ -2,182 +2,86 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F19CA0EC3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5697CCA0EC6
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 23:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355948AbjIKWC3 (ORCPT
+        id S233665AbjIKXU0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:02:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43838 "EHLO
+        Mon, 11 Sep 2023 19:20:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237440AbjIKMvN (ORCPT
+        with ESMTP id S238947AbjIKVay (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 08:51:13 -0400
-Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA6EE40
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 05:51:09 -0700 (PDT)
-Received: by mail-vk1-xa35.google.com with SMTP id 71dfb90a1353d-4935f2d6815so2752540e0c.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 05:51:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694436668; x=1695041468; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r6UC8FbJRnPQ7ZD0ReOlZPTmyF8Yoq6dUR2p60YXF9I=;
-        b=k7JizPrL8b5nsitOdPvyjHvhWVLWd7yOjRv0J0hYmffNEYbybS+qqC+KWQhpW+nOLU
-         2QBjzbAPVolunq7/sJVOQBBDbBvqdLpgLTgFNSMXymaXniHQenWOTybDSJulTEbuowK/
-         pKuTcT/XMePkR06PvLOeZZyD8dzvYm5NVjDUO59iOY+KHhYlU256uzIuVHhJpplE6VWj
-         G9Rb6ibBKWcz7Kmhvyv0zT6DZq9PBD6SdqcbLvqFpSKsckyWhUMCE/5OHOLVHbMssJnK
-         krcxb2mjMsC+JKKvheIor7mf2CkekNjc4XS051nJy20jKLmfmCyOlpwTUe106lfsE/dX
-         NK0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694436668; x=1695041468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r6UC8FbJRnPQ7ZD0ReOlZPTmyF8Yoq6dUR2p60YXF9I=;
-        b=fTXCw3mKQ9aADUfQIDWWXeivb918sQ1EnDbe5fQM+unVVL715UdbcEsPfPc/BU4jsC
-         PHLGTSDPeT42JG9sZYgCf908LUq7m2SlZ9rLRE52ed1Wgs/OALCh5x89IbYwqLYrpYzT
-         VhTdktgTTQYpglBo6Y6flu3SJt9iQ8mXSsqcVUYb1Bbmn9OqxZYl+/w1goZVArfnqyPr
-         1r7tiUXhxTpmyDUv/D9dH4QdBjZyR5I5YhD92qih3ZbvZC4HBfblfQP2umss4xQDLAcB
-         6W6LMqK6gCW2p+nhwCVIHuo8KaKyYCPfjfLe765VucdhxGjrmAgKXnlt3YxA4314dkcf
-         8WDQ==
-X-Gm-Message-State: AOJu0YzHXqjHUWUmr4cqxRYMEUh0ZxSczj/djpSQQf1vRl9OErklmGa6
-        Ri8Wg+/5tgxCrIS0RDw1F2ktQ0FZRHQWPbWfJxhCiQ==
-X-Google-Smtp-Source: AGHT+IEgFqLrfkfnYxc00t1yJAQxjV1vCpl1FovrLEWk0fRy8zkAgiq/ouRKpLyb/73QkSWuZWaN/UkdCfmWP1WdVGI=
-X-Received: by 2002:a1f:2cd4:0:b0:48e:1463:914e with SMTP id
- s203-20020a1f2cd4000000b0048e1463914emr4025807vks.7.1694436668228; Mon, 11
- Sep 2023 05:51:08 -0700 (PDT)
+        Mon, 11 Sep 2023 17:30:54 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F11244D00;
+        Mon, 11 Sep 2023 14:19:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694467155; x=1726003155;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yGWD+0QAiO0KJK3ZJuw6WyxLl7KFH8YmNMNIBv7XPaU=;
+  b=E+vduMN4j1bZg5zf150SJxXE5lGdvkTws+V9KPel/00cHewkX2NxnvVK
+   uwlC6WdFchK+lACjClRKZFOp6zarlGBQOrS/tYUnskhbY3GyOegh19Dui
+   hG1q7CRfWr+/3PM8puZNnAhg6iRFS6eBnNvMTQaqcVNdz2Cs/gqk5wr2T
+   QgDQ3JVrrqiFIieTH+71t+tlDBA34jWsoCV/WftXZ6q32dP5VleIDNB3j
+   grVwnDMSWo2QLNLwFoI1eOmdfY89vTaogm5ubmDGjAKw3XH3jVN7mqoZe
+   qa/HwfyZ6D0UVFoS1WSM+240hvNawAX2wFYqy3fdGOQnHKN7WTXw0OQiQ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="375544008"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="375544008"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 14:18:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="808961273"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="808961273"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 14:18:36 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qfoIj-008QUP-0D;
+        Tue, 12 Sep 2023 00:18:33 +0300
+Date:   Tue, 12 Sep 2023 00:18:32 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Prashant Malani <pmalani@chromium.org>
+Subject: Re: [PATCH v3 3/4] platform/x86: intel_scu_ipc: Don't override scu
+ in intel_scu_ipc_dev_simple_command()
+Message-ID: <ZP+EKLClR1ldvY4x@smile.fi.intel.com>
+References: <20230911193937.302552-1-swboyd@chromium.org>
+ <20230911193937.302552-4-swboyd@chromium.org>
 MIME-Version: 1.0
-References: <20230909141816.58358-1-hdegoede@redhat.com> <20230909141816.58358-7-hdegoede@redhat.com>
-In-Reply-To: <20230909141816.58358-7-hdegoede@redhat.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 11 Sep 2023 14:50:57 +0200
-Message-ID: <CAMRc=MfeKirks7N7scu+dh+M1Nf0bNxzC7PE2Q7J4bxgpRnECw@mail.gmail.com>
-Subject: Re: [PATCH 6/8] platform/x86: x86-android-tablets: Stop using gpiolib
- private APIs
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230911193937.302552-4-swboyd@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Sep 9, 2023 at 4:18=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
-wrote:
->
-> Refactor x86_android_tablet_get_gpiod() to no longer use
-> gpiolib private functions like gpiochip_find().
->
-> As a bonus this allows specifying that the GPIO is active-low,
-> like the /CE (charge enable) pin on the bq25892 charger on
-> the Lenovo Yoga Tablet 3.
->
-> Reported-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> Closes: https://lore.kernel.org/platform-driver-x86/20230905185309.131295=
--12-brgl@bgdev.pl/
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  .../platform/x86/x86-android-tablets/asus.c   |  1 +
->  .../platform/x86/x86-android-tablets/core.c   | 51 +++++++++++--------
->  .../platform/x86/x86-android-tablets/lenovo.c | 28 +++++-----
->  .../platform/x86/x86-android-tablets/other.c  |  6 +++
->  .../x86-android-tablets/x86-android-tablets.h |  6 ++-
->  5 files changed, 55 insertions(+), 37 deletions(-)
->
-> diff --git a/drivers/platform/x86/x86-android-tablets/asus.c b/drivers/pl=
-atform/x86/x86-android-tablets/asus.c
-> index f9c4083be86d..227afbb51078 100644
-> --- a/drivers/platform/x86/x86-android-tablets/asus.c
-> +++ b/drivers/platform/x86/x86-android-tablets/asus.c
-> @@ -303,6 +303,7 @@ static const struct x86_i2c_client_info asus_tf103c_i=
-2c_clients[] __initconst =3D
->                         .index =3D 28,
->                         .trigger =3D ACPI_EDGE_SENSITIVE,
->                         .polarity =3D ACPI_ACTIVE_LOW,
-> +                       .con_id =3D "atmel_mxt_ts_irq",
->                 },
->         },
->  };
-> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/pl=
-atform/x86/x86-android-tablets/core.c
-> index 3d3101b2848f..673f3a14941b 100644
-> --- a/drivers/platform/x86/x86-android-tablets/core.c
-> +++ b/drivers/platform/x86/x86-android-tablets/core.c
-> @@ -12,7 +12,7 @@
->
->  #include <linux/acpi.h>
->  #include <linux/dmi.h>
-> -#include <linux/gpio/driver.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/gpio/machine.h>
->  #include <linux/irq.h>
->  #include <linux/module.h>
-> @@ -21,35 +21,39 @@
->  #include <linux/string.h>
->
->  #include "x86-android-tablets.h"
-> -/* For gpiochip_get_desc() which is EXPORT_SYMBOL_GPL() */
-> -#include "../../../gpio/gpiolib.h"
-> -#include "../../../gpio/gpiolib-acpi.h"
->
->  static struct platform_device *x86_android_tablet_device;
->
-> -static int gpiochip_find_match_label(struct gpio_chip *gc, void *data)
-> -{
-> -       return gc->label && !strcmp(gc->label, data);
-> -}
-> -
-> -int x86_android_tablet_get_gpiod(const char *label, int pin, struct gpio=
-_desc **desc)
-> +int x86_android_tablet_get_gpiod(const char *chip, int pin, const char *=
-con_id,
-> +                                bool active_low, enum gpiod_flags dflags=
-,
-> +                                struct gpio_desc **desc)
->  {
-> +       struct gpiod_lookup_table *lookup;
->         struct gpio_desc *gpiod;
-> -       struct gpio_chip *chip;
->
-> -       chip =3D gpiochip_find((void *)label, gpiochip_find_match_label);
-> -       if (!chip) {
-> -               pr_err("error cannot find GPIO chip %s\n", label);
-> -               return -ENODEV;
-> -       }
-> +       lookup =3D kzalloc(struct_size(lookup, table, 2), GFP_KERNEL);
-> +       if (!lookup)
-> +               return -ENOMEM;
-> +
-> +       lookup->dev_id =3D KBUILD_MODNAME;
-> +       lookup->table[0].key =3D chip;
-> +       lookup->table[0].chip_hwnum =3D pin;
-> +       lookup->table[0].con_id =3D con_id;
-> +       lookup->table[0].flags =3D active_low ? GPIO_ACTIVE_LOW : GPIO_AC=
-TIVE_HIGH;
-> +
-> +       gpiod_add_lookup_table(lookup);
-> +       gpiod =3D devm_gpiod_get(&x86_android_tablet_device->dev, con_id,=
- dflags);
-> +       gpiod_remove_lookup_table(lookup);
-> +       kfree(lookup);
->
+On Mon, Sep 11, 2023 at 12:39:35PM -0700, Stephen Boyd wrote:
+> Andy discovered this bug during patch review. The 'scu' argument to this
+> function shouldn't be overridden by the function itself. It doesn't make
+> any sense. Looking at the commit history, we see that commit
+> f57fa18583f5 ("platform/x86: intel_scu_ipc: Introduce new SCU IPC API")
+> removed the setting of the scu to ipcdev in other functions, but not
+> this one. That was an oversight. Remove this line so that we stop
+> overriding the scu instance that is used by this function.
 
-Any reason for not creating static lookup tables for GPIOs here?
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Bart
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> -       gpiod =3D gpiochip_get_desc(chip, pin);
->         if (IS_ERR(gpiod)) {
-> -               pr_err("error %ld getting GPIO %s %d\n", PTR_ERR(gpiod), =
-label, pin);
-> +               pr_err("error %ld getting GPIO %s %d\n", PTR_ERR(gpiod), =
-chip, pin);
->                 return PTR_ERR(gpiod);
->         }
->
+
