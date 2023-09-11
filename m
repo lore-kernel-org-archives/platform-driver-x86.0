@@ -2,42 +2,42 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21D2EEB58C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 04:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2735DEEB592
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 04:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233656AbjIKEbt (ORCPT
+        id S232821AbjIKEtH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 00:31:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57588 "EHLO
+        Mon, 11 Sep 2023 00:49:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233495AbjIKEbr (ORCPT
+        with ESMTP id S233550AbjIKEtG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 00:31:47 -0400
+        Mon, 11 Sep 2023 00:49:06 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711F810C;
-        Sun, 10 Sep 2023 21:31:41 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 58BE2C433B9;
-        Mon, 11 Sep 2023 04:31:40 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD25E1B9;
+        Sun, 10 Sep 2023 21:49:01 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 66D55C433B7;
+        Mon, 11 Sep 2023 04:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694406700;
-        bh=zdcZgXW0ruaLVCHmFcQtUtGqAyV2q7CuqMdsj8JHKuo=;
+        s=k20201202; t=1694407740;
+        bh=kwUVSqQQ/Sge1PYW9kN//MmHt2Ab69SCHdA3Ve29GyE=;
         h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=COLJDnyyEjxhCZBFxpK7LIlk1XtdvbEadTmHY9z4p8ki/idJTloI7wpINVoJOl3by
-         uTAkOWhbvR8voDbwNZSWAXynKhe2amo7pFjTN65/RT/UgjUf9WMolSih5tSxL1CJH5
-         fJfQN0885GhuWGN3TAiTL0dp6urQ9wytnuAPc3cVnok1SdrW9Aw9q4Kr8fuX4JbuVn
-         4/O3QhEYGcwsjY2y0RJoMMELYEfBbyS4Nxxmr9lCzUdmw0NcUCz0t7biZ4FIZeBiPH
-         zrVtmDo0ptK8bDfJdJHOb1cHgHoxgE+semYfT3RCWBYU4uza6q7+vIDg+2z8TAm4QP
-         Jex7WtsQb5JNQ==
+        b=dyi+BwWkzgsjZo62bkRL2IbOfCDMehf/HwSktxPpHJ7pMx0PTMysW2Ph4x5OqNjBg
+         JVdMSUUOCGOjnWTszcZ4SJCoqeNJ+0Mh5gKPEAql6lH6JkVlO0nCUt8BMWbpH6zr/O
+         BueHpLvTH4Jsq7S8g6euNMIuRSynxYfOuyZ+hsAk2Zk1BukKu/SOeXPqFW0ct7O+Uu
+         +NJUjcSb/QIqA+xQ6LQRWwDEpyRYq8C7GZ+9qXpMBCwhHpaLW0h4wrlJ3+nQjN6pPJ
+         QYdNqtlo12PbPfseohsnfZKBCOPQvnhZXJSeDJUI0JBEkt+h7iihcTfivKL2S6Kx17
+         QEbPxn5/wAKZA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 456BEE22AFF;
-        Mon, 11 Sep 2023 04:31:40 +0000 (UTC)
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 51D11E1F67D;
+        Mon, 11 Sep 2023 04:49:00 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Subject: Re: [PATCH] platform: Explicitly include correct DT includes
 From:   patchwork-bot+chrome-platform@kernel.org
-Message-Id: <169440670028.22573.1520676346126156762.git-patchwork-notify@kernel.org>
-Date:   Mon, 11 Sep 2023 04:31:40 +0000
+Message-Id: <169440774033.22573.14058799001920178536.git-patchwork-notify@kernel.org>
+Date:   Mon, 11 Sep 2023 04:49:00 +0000
 References: <20230714174909.4062739-1-robh@kernel.org>
 In-Reply-To: <20230714174909.4062739-1-robh@kernel.org>
 To:     Rob Herring <robh@kernel.org>
@@ -51,7 +51,7 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hello:
 
-This patch was applied to chrome-platform/linux.git (for-kernelci)
+This patch was applied to chrome-platform/linux.git (for-next)
 by Hans de Goede <hdegoede@redhat.com>:
 
 On Fri, 14 Jul 2023 11:49:09 -0600 you wrote:
