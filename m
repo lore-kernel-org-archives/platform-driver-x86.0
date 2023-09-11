@@ -2,317 +2,204 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C12CA0EC7
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80734CA0ECD
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:07:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355842AbjIKWCM convert rfc822-to-8bit (ORCPT
+        id S1355865AbjIKWCO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:02:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49576 "EHLO
+        Mon, 11 Sep 2023 18:02:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243983AbjIKSex (ORCPT
+        with ESMTP id S236712AbjIKLPf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 14:34:53 -0400
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15BD3198;
-        Mon, 11 Sep 2023 11:34:49 -0700 (PDT)
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6bf106fb6a0so759115a34.0;
-        Mon, 11 Sep 2023 11:34:49 -0700 (PDT)
+        Mon, 11 Sep 2023 07:15:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E80F4CF0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:14:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694430889;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=duojBTZHxop0mRaPLS+9K2syH9Dx5s0nx5WCTjNJRpo=;
+        b=TUUAawT96L67SjvxVvXYp7nSd8SBOVijSOMJDjBwz559bJYhNeVAuB0ufBypMDF6j7sA8Q
+        c698sLL7DqPMdfQWOCXtcWCOVQPWJQzvpkBPUBskV6vE2Tyh+IMSomNJwYyDd7hXzZs2mX
+        AS53KvzKwYBrjFfdQF6MAH6wdFVKsq0=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-290-ygXGX16pPoGRbLgqabsrRg-1; Mon, 11 Sep 2023 07:14:47 -0400
+X-MC-Unique: ygXGX16pPoGRbLgqabsrRg-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9aa20a75780so90334266b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:14:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694457288; x=1695062088;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0ozIqsa4ll2dstGJiKnp+cx3giqAznmjtqmzWaRuC2Y=;
-        b=u1NFRWSVNljmDDz5OI7n/VdponouHW25zCi0md/BIKPH6/W860SzEU5uqQBvtIhO6d
-         crY8E9fUwGPh/PZ57LdtJx2QiSFKwKxSnx4HuGswRaBfllNt9kFW7jQNEIowR4MJgs/U
-         BW+PAp44fbXCUHykF3ux7DVudE6LfJtd6PIYDG2FD+wjMOSEhmZcKSW5xZoWxIg/idck
-         uXFyy0lm+XhGjgBpnl8UbiirHlXKK8+3wKvgzUWlmHk+BQ+dwqO4XBIy9pSJyCxsFJ30
-         HQrHT7MOhMcvy1GBjUnNlARrBbo34UwvCLxBKUCA8ss8JWTrK1SCr3LoHdv81ZAtGf9d
-         qV1A==
-X-Gm-Message-State: AOJu0YxQS7RQgQEtMonnlG0rsAmht7bT0DznwS/OQyUfeaJeBuNhf7cs
-        bzXa2hko1iCoCt+hwGyQJww3iu0DUDo4RqZhpLA=
-X-Google-Smtp-Source: AGHT+IETfSXiDrOmPCMB2ku2g4cKUUFkv5dF7tlnnSknEk84cwUOYcvU7muL8DylEGougjYynYy0zJ0ORQlzuqz94hM=
-X-Received: by 2002:a05:6808:23ca:b0:3aa:867:c7f0 with SMTP id
- bq10-20020a05680823ca00b003aa0867c7f0mr12781634oib.0.1694457288235; Mon, 11
- Sep 2023 11:34:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1694430886; x=1695035686;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=duojBTZHxop0mRaPLS+9K2syH9Dx5s0nx5WCTjNJRpo=;
+        b=s5mzwffOaUeDnOTPPmaEhxtz5t4jOhXQZ4hBnTSWwTJ03efNwu+xog5YGY0ttms5wb
+         kPMjJ8kKdh0a+7PRM4s2crdlRCvi83ET4O+3BLkituTv2fXKXb1TNDRicQXEL+Djlf9X
+         YAQ9FEcbMD7GkYI9ERPU4g3uM1M+GOVCV5f9+grZ73zSnOfrlTpLxMlinA0fcCpXxqWH
+         YRnMpiu3su3zE3/Od8+5Mmhxzb9djLFleu1sp93EY43ccTT+wzLWjcNdfhOTRKfZBuen
+         ChS8biAhsTT35ESBRes+5ptdv9BMsl7npT67TcRhK2vb7+vy4II7mLFd19VSLRXN/lEJ
+         FYow==
+X-Gm-Message-State: AOJu0YyV4j6VOg5ACh07mhXmXE2AKDiqj3brOym2W6B0F0gSDwgnMoSa
+        CQut9P8es2JC9t0SNtyy2VnCOpk24FO24NouvLDny/QYYb9IMt8z5OV5xNxxKBi03C6EzJ60k1a
+        TEoJS7Xc+lvgke/VmmtuqnYppFWHHP3foiA==
+X-Received: by 2002:a17:906:b08d:b0:99b:ead0:2733 with SMTP id x13-20020a170906b08d00b0099bead02733mr6555437ejy.72.1694430886706;
+        Mon, 11 Sep 2023 04:14:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEgLspzlfyck43uGvgiNYpQdq8tv4OxSuw9s66Frsw+DpaJXREHPBvRX5b057L6YUcDbnR7/g==
+X-Received: by 2002:a17:906:b08d:b0:99b:ead0:2733 with SMTP id x13-20020a170906b08d00b0099bead02733mr6555422ejy.72.1694430886468;
+        Mon, 11 Sep 2023 04:14:46 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id kd27-20020a17090798db00b009a57d30df89sm5202167ejc.132.2023.09.11.04.14.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Sep 2023 04:14:45 -0700 (PDT)
+Message-ID: <a685b317-8b35-ffad-8f7f-2da9a5f6a491@redhat.com>
+Date:   Mon, 11 Sep 2023 13:14:45 +0200
 MIME-Version: 1.0
-References: <20230906184354.45846-1-mario.limonciello@amd.com> <20230906184354.45846-3-mario.limonciello@amd.com>
-In-Reply-To: <20230906184354.45846-3-mario.limonciello@amd.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 11 Sep 2023 20:34:37 +0200
-Message-ID: <CAJZ5v0jgGOPcFMfRObAM1St1KLjZS0tEki4f32Rbr3ZXwFyFzA@mail.gmail.com>
-Subject: Re: [PATCH v17 2/4] PCI: Add support for drivers to register optin or
- veto of D3
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v4 2/3] platform/mellanox: mlxbf-pmc: Fix reading of
+ unprogrammed events
+Content-Language: en-US
+To:     Shravan Kumar Ramani <shravankr@nvidia.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        David Thompson <davthompson@nvidia.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1693917738.git.shravankr@nvidia.com>
+ <04d0213932d32681de1c716b54320ed894e52425.1693917738.git.shravankr@nvidia.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <04d0213932d32681de1c716b54320ed894e52425.1693917738.git.shravankr@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 6, 2023 at 9:16 PM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> changed pci_bridge_d3_possible() so that any vendor's PCIe ports
-> from modern machines (>=2015) are allowed to be put into D3.
->
-> This policy change has worked for most machines, but the behavior
-> is improved with `pcie_port_pm=off` on some others.
->
-> Add support for drivers to register both 'optin' and 'veto' callbacks
-> and a priority which can be used for deciding whether a device should
-> use D3. When drivers register the callbacks, the list is sorted by
-> priority.
->
-> Suggested-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Hi,
+
+On 9/5/23 14:49, Shravan Kumar Ramani wrote:
+> This fix involves 2 changes:
+>  - All event regs have a reset value of 0, which is not a valid
+>    event_number as per the event_list for most blocks and hence seen
+>    as an error. Add a "disable" event with event_number 0 for all blocks.
+> 
+>  - The enable bit for each counter need not be checked before
+>    reading the event info, and hence removed.
+> 
+> Fixes: 1a218d312e65 ("platform/mellanox: mlxbf-pmc: Add Mellanox BlueField PMC driver")
+> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+> Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+> Reviewed-by: David Thompson <davthompson@nvidia.com>
+
+Thank you for your patch, I've applied this patch to my fixes
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
+
+Note it will show up in my fixes branch once I've pushed my
+local branch there, which might take a while.
+
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
+
+Regards,
+
+Hans
+
+
 > ---
->  drivers/pci/pci.c   | 143 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci.h |   9 +++
->  2 files changed, 152 insertions(+)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 59c01d68c6d5..06ab73f58adf 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -21,6 +21,7 @@
->  #include <linux/module.h>
->  #include <linux/spinlock.h>
->  #include <linux/string.h>
-> +#include <linux/list_sort.h>
->  #include <linux/log2.h>
->  #include <linux/logic_pio.h>
->  #include <linux/pm_wakeup.h>
-> @@ -54,6 +55,8 @@ unsigned int pci_pm_d3hot_delay;
->  static void pci_pme_list_scan(struct work_struct *work);
->
->  static LIST_HEAD(pci_pme_list);
-> +static LIST_HEAD(d3_possible_list);
-> +static DEFINE_MUTEX(d3_possible_list_mutex);
->  static DEFINE_MUTEX(pci_pme_list_mutex);
->  static DECLARE_DELAYED_WORK(pci_pme_work, pci_pme_list_scan);
->
-> @@ -161,6 +164,14 @@ static bool pcie_ats_disabled;
->  /* If set, the PCI config space of each device is printed during boot. */
->  bool pci_early_dump;
->
-> +/* Preferences set by a driver for D3 optin/veto */
-> +enum driver_d3_pref {
-> +       D3_PREF_UNSET,  /* Not configured by driver */
-> +       D3_PREF_NONE,   /* Driver does not care */
-> +       D3_PREF_OPTIN,  /* Driver prefers D3 */
-> +       D3_PREF_VETO,   /* Driver vetoes D3 */
-> +};
-> +
->  bool pci_ats_disabled(void)
+>  drivers/platform/mellanox/mlxbf-pmc.c | 27 +++++++--------------------
+>  1 file changed, 7 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+> index 95afcae7b9fa..2d4bbe99959e 100644
+> --- a/drivers/platform/mellanox/mlxbf-pmc.c
+> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
+> @@ -191,6 +191,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_smgen_events[] = {
+>  };
+>  
+>  static const struct mlxbf_pmc_events mlxbf_pmc_trio_events_1[] = {
+> +	{ 0x0, "DISABLE" },
+>  	{ 0xa0, "TPIO_DATA_BEAT" },
+>  	{ 0xa1, "TDMA_DATA_BEAT" },
+>  	{ 0xa2, "MAP_DATA_BEAT" },
+> @@ -214,6 +215,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_trio_events_1[] = {
+>  };
+>  
+>  static const struct mlxbf_pmc_events mlxbf_pmc_trio_events_2[] = {
+> +	{ 0x0, "DISABLE" },
+>  	{ 0xa0, "TPIO_DATA_BEAT" },
+>  	{ 0xa1, "TDMA_DATA_BEAT" },
+>  	{ 0xa2, "MAP_DATA_BEAT" },
+> @@ -246,6 +248,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_trio_events_2[] = {
+>  };
+>  
+>  static const struct mlxbf_pmc_events mlxbf_pmc_ecc_events[] = {
+> +	{ 0x0, "DISABLE" },
+>  	{ 0x100, "ECC_SINGLE_ERROR_CNT" },
+>  	{ 0x104, "ECC_DOUBLE_ERROR_CNT" },
+>  	{ 0x114, "SERR_INJ" },
+> @@ -258,6 +261,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_ecc_events[] = {
+>  };
+>  
+>  static const struct mlxbf_pmc_events mlxbf_pmc_mss_events[] = {
+> +	{ 0x0, "DISABLE" },
+>  	{ 0xc0, "RXREQ_MSS" },
+>  	{ 0xc1, "RXDAT_MSS" },
+>  	{ 0xc2, "TXRSP_MSS" },
+> @@ -265,6 +269,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_mss_events[] = {
+>  };
+>  
+>  static const struct mlxbf_pmc_events mlxbf_pmc_hnf_events[] = {
+> +	{ 0x0, "DISABLE" },
+>  	{ 0x45, "HNF_REQUESTS" },
+>  	{ 0x46, "HNF_REJECTS" },
+>  	{ 0x47, "ALL_BUSY" },
+> @@ -323,6 +328,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_hnf_events[] = {
+>  };
+>  
+>  static const struct mlxbf_pmc_events mlxbf_pmc_hnfnet_events[] = {
+> +	{ 0x0, "DISABLE" },
+>  	{ 0x12, "CDN_REQ" },
+>  	{ 0x13, "DDN_REQ" },
+>  	{ 0x14, "NDN_REQ" },
+> @@ -892,7 +898,7 @@ static int mlxbf_pmc_read_event(int blk_num, uint32_t cnt_num, bool is_l3,
+>  				uint64_t *result)
 >  {
->         return pcie_ats_disabled;
-> @@ -3031,6 +3042,10 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
->                 if (pci_bridge_d3_force)
->                         return true;
->
-> +               /* check for any driver optin of D3 for the bridge */
-> +               if (bridge->driver_d3 == D3_PREF_OPTIN)
-> +                       return true;
-> +
->                 /* Even the oldest 2010 Thunderbolt controller supports D3. */
->                 if (bridge->is_thunderbolt)
->                         return true;
-> @@ -3050,6 +3065,10 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
->                 if (dmi_check_system(bridge_d3_blacklist))
->                         return false;
->
-> +               /* check for any driver veto for D3 for the bridge */
-> +               if (bridge->driver_d3 == D3_PREF_VETO)
-> +                       return false;
-> +
->                 /*
->                  * It should be safe to put PCIe ports from 2015 or newer
->                  * to D3.
-> @@ -3168,6 +3187,130 @@ void pci_d3cold_disable(struct pci_dev *dev)
->  }
->  EXPORT_SYMBOL_GPL(pci_d3cold_disable);
->
-> +static struct pci_dev *pci_get_upstream_port(struct pci_dev *pci_dev)
-> +{
-> +       struct pci_dev *bridge;
-> +
-> +       bridge = pci_upstream_bridge(pci_dev);
-> +       if (!bridge)
-> +               return NULL;
-> +
-> +       if (!pci_is_pcie(bridge))
-> +               return NULL;
-> +
-> +       switch (pci_pcie_type(bridge)) {
-> +       case PCI_EXP_TYPE_ROOT_PORT:
-> +       case PCI_EXP_TYPE_UPSTREAM:
-> +       case PCI_EXP_TYPE_DOWNSTREAM:
-> +               return bridge;
-> +       default:
-> +               break;
-> +       };
-> +
-> +       return NULL;
-> +}
-> +
-> +static void pci_refresh_d3_possible(void)
-> +{
-> +       struct pci_d3_driver_ops *driver;
-> +       struct pci_dev *pci_dev = NULL;
-> +       struct pci_dev *bridge;
-> +
-> +       /* 1st pass: unset any preferences set a previous invocation */
-> +       while ((pci_dev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, pci_dev))) {
-> +               bridge = pci_get_upstream_port(pci_dev);
-> +               if (!bridge)
-> +                       continue;
-> +
-> +               if (bridge->driver_d3 != D3_PREF_UNSET)
-> +                       bridge->driver_d3 = D3_PREF_UNSET;
-> +       }
-> +
-> +       pci_dev = NULL;
-> +
-> +       /* 2nd pass: update the preference and refresh bridge_d3 */
-> +       while ((pci_dev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, pci_dev))) {
-> +               bridge = pci_get_upstream_port(pci_dev);
-> +               if (!bridge)
-> +                       continue;
-> +
-> +               /* don't make multiple passes on the same device */
-> +               if (bridge->driver_d3 != D3_PREF_UNSET)
-> +                       continue;
-> +
-> +               /* the list is pre-sorted by highest priority */
-> +               mutex_lock(&d3_possible_list_mutex);
-> +               list_for_each_entry(driver, &d3_possible_list, list_node) {
-> +                       /* another higher priority driver already set preference */
-> +                       if (bridge->driver_d3 != D3_PREF_UNSET)
-> +                               break;
-> +                       /* check for opt in to D3 */
-> +                       if (driver->optin && driver->optin(bridge))
-> +                               bridge->driver_d3 = D3_PREF_OPTIN;
-> +                       /* check for opt out of D3 */
-> +                       else if (driver->veto && driver->veto(bridge))
-> +                               bridge->driver_d3 = D3_PREF_VETO;
-> +               }
-> +               mutex_unlock(&d3_possible_list_mutex);
-> +
-> +               /* no driver set a preference */
-> +               if (bridge->driver_d3 == D3_PREF_UNSET)
-> +                       bridge->driver_d3 = D3_PREF_NONE;
-> +
-> +               /* update bridge_d3 */
-> +               pci_bridge_d3_update(pci_dev);
-> +       }
-> +}
-> +
-> +static int pci_d3_driver_cmp(void *priv, const struct list_head *_a,
-> +                          const struct list_head *_b)
-> +{
-> +       struct pci_d3_driver_ops *a = container_of(_a, typeof(*a), list_node);
-> +       struct pci_d3_driver_ops *b = container_of(_b, typeof(*b), list_node);
-> +
-> +       if (a->priority < b->priority)
-> +               return -1;
-> +       else if (a->priority > b->priority)
-> +               return 1;
-> +       return 0;
-> +}
-> +
-> +/**
-> + * pci_register_d3_possible_cb - Register a driver callback for checking d3 veto
-> + * @arg: driver provided structure with function pointer and priority
-> + *
-> + * This function can be used by drivers to register a callback that can be
-> + * used to veto a device going into D3.
-> + * Returns 0 on success, error code on failure.
-> + */
-> +int pci_register_d3_possible_cb(struct pci_d3_driver_ops *arg)
-> +{
-> +       mutex_lock(&d3_possible_list_mutex);
-> +       list_add(&arg->list_node, &d3_possible_list);
-> +       list_sort(NULL, &d3_possible_list, pci_d3_driver_cmp);
-> +       mutex_unlock(&d3_possible_list_mutex);
-> +       pci_refresh_d3_possible();
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_register_d3_possible_cb);
-> +
-> +/**
-> + * pci_unregister_d3_possible_cb - Unregister a driver callback for checking d3 veto
-> + * @arg: driver provided structure with function pointer and priority
-> + *
-> + * This function can be used by drivers to unregister a callback that can be
-> + * used to veto a device going into D3.
-> + */
-> +void pci_unregister_d3_possible_cb(struct pci_d3_driver_ops *arg)
-> +{
-> +       mutex_lock(&d3_possible_list_mutex);
-> +       list_del(&arg->list_node);
-> +       list_sort(NULL, &d3_possible_list, pci_d3_driver_cmp);
-> +       mutex_unlock(&d3_possible_list_mutex);
-> +       pci_refresh_d3_possible();
-> +}
-> +EXPORT_SYMBOL_GPL(pci_unregister_d3_possible_cb);
-> +
->  /**
->   * pci_pm_init - Initialize PM functions of given PCI device
->   * @dev: PCI device to handle.
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 8c7c2c3c6c65..863399e78869 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -389,6 +389,7 @@ struct pci_dev {
->                                                    bit manually */
->         unsigned int    d3hot_delay;    /* D3hot->D0 transition time in ms */
->         unsigned int    d3cold_delay;   /* D3cold->D0 transition time in ms */
-> +       unsigned int    driver_d3;      /* Driver D3 request preference */
->
->  #ifdef CONFIG_PCIEASPM
->         struct pcie_link_state  *link_state;    /* ASPM link state */
-> @@ -1404,6 +1405,14 @@ void pci_d3cold_disable(struct pci_dev *dev);
->  bool pcie_relaxed_ordering_enabled(struct pci_dev *dev);
->  void pci_resume_bus(struct pci_bus *bus);
->  void pci_bus_set_current_state(struct pci_bus *bus, pci_power_t state);
-> +struct pci_d3_driver_ops {
-> +       struct list_head list_node;
-> +       int priority;
-> +       bool (*optin)(struct pci_dev *pdev);
-> +       bool (*veto)(struct pci_dev *pdev);
-> +};
-> +int pci_register_d3_possible_cb(struct pci_d3_driver_ops *arg);
-> +void pci_unregister_d3_possible_cb(struct pci_d3_driver_ops *arg);
->
->  /* For use by arch with custom probe code */
->  void set_pcie_port_type(struct pci_dev *pdev);
-> --
+>  	uint32_t perfcfg_offset, perfval_offset;
+> -	uint64_t perfmon_cfg, perfevt, perfctl;
+> +	uint64_t perfmon_cfg, perfevt;
+>  
+>  	if (cnt_num >= pmc->block[blk_num].counters)
+>  		return -EINVAL;
+> @@ -904,25 +910,6 @@ static int mlxbf_pmc_read_event(int blk_num, uint32_t cnt_num, bool is_l3,
+>  	perfval_offset = perfcfg_offset +
+>  			 pmc->block[blk_num].counters * MLXBF_PMC_REG_SIZE;
+>  
+> -	/* Set counter in "read" mode */
+> -	perfmon_cfg = FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_ADDR,
+> -				 MLXBF_PMC_PERFCTL);
+> -	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_STROBE, 1);
+> -	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_WR_R_B, 0);
+> -
+> -	if (mlxbf_pmc_write(pmc->block[blk_num].mmio_base + perfcfg_offset,
+> -			    MLXBF_PMC_WRITE_REG_64, perfmon_cfg))
+> -		return -EFAULT;
+> -
+> -	/* Check if the counter is enabled */
+> -
+> -	if (mlxbf_pmc_read(pmc->block[blk_num].mmio_base + perfval_offset,
+> -			   MLXBF_PMC_READ_REG_64, &perfctl))
+> -		return -EFAULT;
+> -
+> -	if (!FIELD_GET(MLXBF_PMC_PERFCTL_EN0, perfctl))
+> -		return -EINVAL;
+> -
+>  	/* Set counter in "read" mode */
+>  	perfmon_cfg = FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_ADDR,
+>  				 MLXBF_PMC_PERFEVT);
 
-I don't like this too much TBH.  It appears overly complicated to me
-and it totally misses the wakeup vs non-wakeup point I've been talking
-about recently.
-
-IMV, the underlying issue all boils down to the platform firmware
-inadequately describing the behavior of the system to the OS.
-Specifically, had it provided a _S0W returning 0 for the Root Port(s)
-in question, wakeup signaling would have worked (or else there would
-have been a defect in the kernel code to be addressed).  Instead, it
-decided to kind-of guide Windows in the "right" direction through PEP
-constraints which doesn't have the same effect on Linux and honestly
-I'm not even sure if it is a good idea to adjust Linux to that.
-
-It looks to me like the issue could be addressed by a PCI device quirk
-playing the role of a missing _S0W (but slightly more precise, because
-it may distinguish suspend-to-idle from PM-runtime, which _S0W cannot
-do).
