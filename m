@@ -2,112 +2,123 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92E8CA0ECE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BC3CA0EC8
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355886AbjIKWCQ (ORCPT
+        id S1355897AbjIKWCR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:02:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53746 "EHLO
+        Mon, 11 Sep 2023 18:02:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244216AbjIKTjq (ORCPT
+        with ESMTP id S236791AbjIKL0J (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 15:39:46 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 053AD18D
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 12:39:41 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-273ca7ab3f5so3221969a91.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 12:39:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694461180; x=1695065980; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=U3kmuOgV1MqL70eyPKBwPx+gEeRsYvUgeQvC+nXxSq0=;
-        b=ajWJG9I8jbM77iPAy1T/ElAcjr6Ie3c6CY5X34nR6HzWNaL6hvVFx5wynsy+uFYJDe
-         J9NXbTddDvYWnxK9w7wM+4dfSKrmJa3YNxChontaAGSxn+B+t+BLDkZnrxRaioh1wbde
-         bOsrN35eQ274Fn6eXpq+sXR/v3/maILwApqIQ=
+        Mon, 11 Sep 2023 07:26:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0405ACDD
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:25:18 -0700 (PDT)
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-292-EpeDcTNNNSqyMfxNxrkoaw-1; Mon, 11 Sep 2023 07:25:17 -0400
+X-MC-Unique: EpeDcTNNNSqyMfxNxrkoaw-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-94a348facbbso299875166b.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:25:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694461180; x=1695065980;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U3kmuOgV1MqL70eyPKBwPx+gEeRsYvUgeQvC+nXxSq0=;
-        b=AJ5P4uFtRDeH6DJc6qdrBdt9BHbKlV0OPNc2/uBvyC6nbb0eA9zamb86UY980+zQN9
-         mi4Ggjfv+/WUrrnoptE2b1NrnCvXa0JPsoCc/QZXtDsFioCJ2kKxSk4xciW8EU/UsuNp
-         luq6FD7sPUSTtE7nGLeMz8X16X4TlXALKncOI7tS5OjngQaflzyZy2FDOiZcxA9CtZrP
-         GAi+doWl+1Zb5UVAh9DtQ8sSbdFap1Tw/klsmmgPaErZ2V9F8cB6GqSF1rvwRnkwQoFQ
-         30+VLZvca4o32q7aRy6kNCniOA2cEAAXYdx5ec1uxx5JAWdp5scQS8KB0qfvyx04WK+1
-         KSow==
-X-Gm-Message-State: AOJu0YzOUBr+oisNMjViqW6CON0b7H32fffOvmqybhJpEoHYXQgPdDZa
-        k3SKbSMKdHj9Yw4eoE5QXSugAw==
-X-Google-Smtp-Source: AGHT+IE1KCz2PPBtztjQa6r5F5mW8DpeJaFNItpLjTVRsOtt8Oshgk1XrqynXDOck4L9xWpjZ39/nw==
-X-Received: by 2002:a17:90a:7003:b0:273:fa72:ba83 with SMTP id f3-20020a17090a700300b00273fa72ba83mr4056419pjk.47.1694461180415;
-        Mon, 11 Sep 2023 12:39:40 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:11a:201:d487:5e33:6656:3711])
-        by smtp.gmail.com with ESMTPSA id fu8-20020a17090ad18800b00262e485156esm7736543pjb.57.2023.09.11.12.39.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Sep 2023 12:39:39 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-        platform-driver-x86@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Prashant Malani <pmalani@chromium.org>
-Subject: [PATCH v3 0/4] platform/x86: intel_scu_ipc: Timeout fixes
-Date:   Mon, 11 Sep 2023 12:39:32 -0700
-Message-ID: <20230911193937.302552-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
+        d=1e100.net; s=20230601; t=1694431516; x=1695036316;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Iim/K20vnt05KkdZYOYBtAD92BDdr0wfxtmdMEpivQ=;
+        b=np/Bt8Z5GUkx+6tvriiKNla96afCoW3VpcuQV0HnvNMkB9n+sZ8MLM0s085sz2aTCv
+         +okMKfRBG0zttigwWH6zcS/cQqP2HmI+EnO6wwH+sda3pG6F0MqjNbWbTIoKfnfGykEI
+         nbh2wUT+85uyGIHDnlej3oSDm7p94XW+8go3I/lSxjLgI+r24SUZXWGwYZvS/ObqgqWU
+         0XWGt1pW3jNqP1k4Uh2PuyOIACkFqS4CY3wjQfflBhuiBfBBaJrM0khm/DSinxV+g8VG
+         Ly4fJtwSizgpNfC5WY6he9kJW3DrWjg0zgMGvHEvS5k1qbusO71uJFmdCgXZRC/8uHlZ
+         l5EA==
+X-Gm-Message-State: AOJu0YwAI3CRYXqWUZas5EVm0GTFlB1Zxtd2mzIIlWg7EQKrWHm2pmte
+        L/RcoK+qoAEbtuDY+Zmyoi5Rflnk+c2IZUdAYMPVIa6yVvZ0A4iDBXxiSNXouuQoRc7tNpWzqhH
+        6meNfj1t/HhDG+VSljnUmx7MZfSxOTYIE5A==
+X-Received: by 2002:a17:907:a073:b0:9a1:d400:39e5 with SMTP id ia19-20020a170907a07300b009a1d40039e5mr7153725ejc.4.1694431515986;
+        Mon, 11 Sep 2023 04:25:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGRmzBlFjuupO/WhzEW9QA8x/A7Crw88ZDujh/u8xJM8zhdS52wjhVtQr5s2VmPio2T37TxEA==
+X-Received: by 2002:a17:907:a073:b0:9a1:d400:39e5 with SMTP id ia19-20020a170907a07300b009a1d40039e5mr7153710ejc.4.1694431515670;
+        Mon, 11 Sep 2023 04:25:15 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id z20-20020a170906241400b009829d2e892csm5243509eja.15.2023.09.11.04.25.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Sep 2023 04:25:14 -0700 (PDT)
+Message-ID: <f1ac222b-00ce-70cd-2d26-d66bc0b0ef70@redhat.com>
+Date:   Mon, 11 Sep 2023 13:25:14 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 1/2] platform/mellanox: NVSW_SN2201 should depend on ACPI
+Content-Language: en-US
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Michael Shych <michaelsh@nvidia.com>,
+        Wolfram Sang <wsa@kernel.org>
+Cc:     linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1693828363.git.geert+renesas@glider.be>
+ <ec5a4071691ab08d58771b7732a9988e89779268.1693828363.git.geert+renesas@glider.be>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <ec5a4071691ab08d58771b7732a9988e89779268.1693828363.git.geert+renesas@glider.be>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-I recently looked at some crash reports on ChromeOS devices that call
-into this intel_scu_ipc driver. They were hitting timeouts, and it
-certainly looks possible for those timeouts to be triggering because of
-scheduling issues. Once things started going south, the timeouts kept
-coming. Maybe that's because the other side got seriously confused? I
-don't know.
+Hi,
 
-I added some sleeps to these paths to trigger the timeout behavior to
-make sure the code works. Simply sleeping for a long time in busy_loop()
-hits the timeout, which could happen if the system is scheduling lots of
-other things at the time.
+On 9/4/23 14:00, Geert Uytterhoeven wrote:
+> The only probing method supported by the Nvidia SN2201 platform driver
+> is probing through an ACPI match table.  Hence add a dependency on
+> ACPI, to prevent asking the user about this driver when configuring a
+> kernel without ACPI support.
+> 
+> Fixes: 662f24826f954d49 ("platform/mellanox: Add support for new SN2201 system")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I couldn't really test the third patch because forcing a timeout or
-returning immediately wasn't fast enough to trigger the second
-transaction to run into the first one being processed.
+Thank you for your patch, I've applied this patch to my fixes
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
 
-Changes from v2 (https://lore.kernel.org/r/20230906180944.2197111-1-swboyd@chromium.org):
- * Use read_poll_timeout() helper in patch #1 (again)
- * New patch #3 to fix bug pointed out by Andy
- * Consolidate more code into busy check in patch #4
+Note it will show up in my fixes branch once I've pushed my
+local branch there, which might take a while.
 
-Changes from v1 (https://lore.kernel.org/r/20230831011405.3246849-1-swboyd@chromium.org):
- * Don't use read_poll_timeout() helper in patch 1, just add code
- * Rewrite patch 2 to be simpler
- * Make intel_scu_ipc_busy() return -EBUSY when busy
- * Downgrade dev_err() to dev_dbg() in intel_scu_ipc_busy()
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
-Stephen Boyd (4):
-  platform/x86: intel_scu_ipc: Check status after timeout in busy_loop()
-  platform/x86: intel_scu_ipc: Check status upon timeout in
-    ipc_wait_for_interrupt()
-  platform/x86: intel_scu_ipc: Don't override scu in
-    intel_scu_ipc_dev_simple_command()
-  platform/x86: intel_scu_ipc: Fail IPC send if still busy
+Note I'm only picking up PATCH 1/2. I expect 2/2 to be merged
+through the i2c tree.
 
- drivers/platform/x86/intel_scu_ipc.c | 66 +++++++++++++++++-----------
- 1 file changed, 40 insertions(+), 26 deletions(-)
+Regards,
 
-Cc: Prashant Malani <pmalani@chromium.org>
+Hans
 
-base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
--- 
-https://chromeos.dev
+
+
+> ---
+>  drivers/platform/mellanox/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
+> index 382793e73a60a8b3..30b50920b278c94b 100644
+> --- a/drivers/platform/mellanox/Kconfig
+> +++ b/drivers/platform/mellanox/Kconfig
+> @@ -80,8 +80,8 @@ config MLXBF_PMC
+>  
+>  config NVSW_SN2201
+>  	tristate "Nvidia SN2201 platform driver support"
+> -	depends on HWMON
+> -	depends on I2C
+> +	depends on HWMON && I2C
+> +	depends on ACPI || COMPILE_TEST
+>  	select REGMAP_I2C
+>  	help
+>  	  This driver provides support for the Nvidia SN2201 platform.
 
