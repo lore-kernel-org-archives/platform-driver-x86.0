@@ -2,86 +2,79 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60487EE57DF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 05:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE04EE57DF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 08:18:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233894AbjIKFYv (ORCPT
+        id S230097AbjIKISo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 01:24:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56662 "EHLO
+        Mon, 11 Sep 2023 04:18:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbjIKFYv (ORCPT
+        with ESMTP id S229555AbjIKISo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 01:24:51 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CC021AD;
-        Sun, 10 Sep 2023 22:24:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694409887; x=1725945887;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ao1sqJ7hfTfLlekSmtXPP+I4bRpJTUclR32DDyjBDZo=;
-  b=j7DP+dpuO+8s85hbjim+/bcAcb5E+BnbHwxDzxuQ6ohQi2M/dj7zuPeL
-   LjBNYNGzNeMrgAKbMV4sGsM4NGpYr4Vaulkw/JMbhsOQRvT4ld4nbl+z8
-   dxhj4f22H4JqX80f4FVy1ivdpp7h1tLC1+8rPwrFlf4PHF+hkWyXXAhv3
-   COmQ6G65NptZSlTP+WJ/eKmCbHRDT/jYm9tbGRze+qakhmNjauGPG5p7t
-   8t61nC50amzYeqwmYVxlKo7qwjfjedNEKwVRVq7lN4dQM0KadCqGwqArJ
-   SOxwuBQkaJgwsj6XX0en1wthSPUtTgUisNspU+FvjKBtJUvCewAliXePA
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10829"; a="464374851"
-X-IronPort-AV: E=Sophos;i="6.02,243,1688454000"; 
-   d="scan'208";a="464374851"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2023 22:24:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10829"; a="778258600"
-X-IronPort-AV: E=Sophos;i="6.02,243,1688454000"; 
-   d="scan'208";a="778258600"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 10 Sep 2023 22:24:44 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 903F8497; Mon, 11 Sep 2023 08:24:43 +0300 (EEST)
-Date:   Mon, 11 Sep 2023 08:24:43 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+        Mon, 11 Sep 2023 04:18:44 -0400
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C39CBB
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 01:18:30 -0700 (PDT)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-58e6c05f529so40983317b3.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 01:18:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1694420309; x=1695025109; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V3FtP4eYfLciH8NMTppInh1yd0cZJOo0SC9UK5LWqOM=;
+        b=n/Fs+Yw/XZiSsoksmVatDxI/qFr2a96lZEmYxEzOPGRxJQOUTzz8Hn6ajrEIcw4SSZ
+         vKEgH1oeOcYsbAfA9mxrL1ZPxN6DF1Z2r1x/D8B8tH4wALHhPWgIaI6b7VoOjTJcRj/F
+         P0Ns5F1HG8EW1Gf+t9f2z5E9s2AG4B05GcZH7VprhYGhG4LkUIcahPIGk56tx0T/xMi1
+         gmV3/xszPZTU/WI3uQYJS0V9kEWueY94KIbiz2Bn7E0p5K78Wtzl3dibjsPV0L38bt9l
+         nIxcwIcVj2inZ8B7LPuOSgWpgBlMPoKTNwUoYoG+L9E5tnOCmYRIX4r+BkdmDAcpWIDM
+         Xr4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694420309; x=1695025109;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V3FtP4eYfLciH8NMTppInh1yd0cZJOo0SC9UK5LWqOM=;
+        b=B0pT54NUtGw3umMd9poLGonin+CZAKceJ7ftGEqANp//+oLBxggwbCs0Cd8Iq3tGO1
+         usHyg7k3gPT3haW2nGPX+2E7Ou0uJTzbhpbWBfR443cIPQx6inBmQOEoWZXiOY0v4Y7A
+         2UoSwVf8MfB7z61nVFad1k5kJ6fKBVRiv7ry+5mQlGKFuiKhAZz3nqpByY+eL6z8Hv+C
+         +FgcNVa8GI4nJ23BrsyyXHTwITK7/6j9t284ZfAJGQ0MJbhy/yG+Q4TVix7XLFhvQFLA
+         kvXEdCImDOS+TB74WzRIqOV0eBx/2TN5N+CUFTls47obJ4j5z6iKcCANrmgTN4wrvLxr
+         D1tw==
+X-Gm-Message-State: AOJu0YwxwNcuGBZsW0frsCHNStRjz6yMzHoAg2TB/jmIMMFGm05LnVgG
+        Gmp2qT5LZ2zcBSCUsYSbRcxFjlfBMTrPHm7SpZ1Xog==
+X-Google-Smtp-Source: AGHT+IG6UBPsG3ER528i9u+4r8BVScL4ahYE/NA5v/zdBiZoZtNwPxGro0BQJVKq2AZUOGGOK7dxSEsNfSot8t1uxn8=
+X-Received: by 2002:a81:490e:0:b0:583:9e6c:eb69 with SMTP id
+ w14-20020a81490e000000b005839e6ceb69mr9522290ywa.42.1694420309307; Mon, 11
+ Sep 2023 01:18:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230909141816.58358-1-hdegoede@redhat.com>
+In-Reply-To: <20230909141816.58358-1-hdegoede@redhat.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 11 Sep 2023 10:18:18 +0200
+Message-ID: <CACRpkdYOan92797er6==bvTWVrNd5EepYVts5noZvEdwf5AJsg@mail.gmail.com>
+Subject: Re: [PATCH 0/8] x86-android-tablets: Stop using gpiolib private APIs
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
         platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 2/8] gpiolib: acpi: Add a ignore interrupt quirk for Peaq
- C1010
-Message-ID: <20230911052443.GW1599918@black.fi.intel.com>
-References: <20230909141816.58358-1-hdegoede@redhat.com>
- <20230909141816.58358-3-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230909141816.58358-3-hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Sep 09, 2023 at 04:18:10PM +0200, Hans de Goede wrote:
-> On the Peaq C1010 2-in-1 INT33FC:00 pin 3 is connected to
-> a "dolby" button. At the ACPI level an _AEI event-handler
-> is connected which sets an ACPI variable to 1 on both
-> edges. This variable can be polled + cleared to 0 using WMI.
-> 
-> Since the variable is set on both edges the WMI interface is pretty
-> useless even when polling. So instead of writing a custom WMI
-> driver for this the x86-android-tablets code instantiates
-> a gpio-keys platform device for the "dolby" button.
-> 
-> Add an ignore_interrupt quirk for INT33FC:00 pin 3 on the Peaq C1010,
-> so that it is not seen as busy when the gpio-keys driver requests it.
-> 
-> Note this replaces a hack in x86-android-tablets where it would
-> call acpi_gpiochip_free_interrupts() on the INT33FC:00 GPIO
-> controller. acpi_gpiochip_free_interrupts() is considered private
-> (internal) gpiolib API so x86-android-tablets should stop using it.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Sat, Sep 9, 2023 at 4:18=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
+wrote:
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> As promised here is a patch-series to make the x86-android-tablets code
+> stop using gpiolib private APIs.
+
+This looks very helpful to me!
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
