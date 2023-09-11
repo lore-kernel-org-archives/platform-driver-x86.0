@@ -2,204 +2,112 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80734CA0ECD
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92E8CA0ECE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355865AbjIKWCO (ORCPT
+        id S1355886AbjIKWCQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:02:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56026 "EHLO
+        Mon, 11 Sep 2023 18:02:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236712AbjIKLPf (ORCPT
+        with ESMTP id S244216AbjIKTjq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 07:15:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E80F4CF0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:14:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694430889;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=duojBTZHxop0mRaPLS+9K2syH9Dx5s0nx5WCTjNJRpo=;
-        b=TUUAawT96L67SjvxVvXYp7nSd8SBOVijSOMJDjBwz559bJYhNeVAuB0ufBypMDF6j7sA8Q
-        c698sLL7DqPMdfQWOCXtcWCOVQPWJQzvpkBPUBskV6vE2Tyh+IMSomNJwYyDd7hXzZs2mX
-        AS53KvzKwYBrjFfdQF6MAH6wdFVKsq0=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-290-ygXGX16pPoGRbLgqabsrRg-1; Mon, 11 Sep 2023 07:14:47 -0400
-X-MC-Unique: ygXGX16pPoGRbLgqabsrRg-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9aa20a75780so90334266b.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:14:47 -0700 (PDT)
+        Mon, 11 Sep 2023 15:39:46 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 053AD18D
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 12:39:41 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-273ca7ab3f5so3221969a91.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 12:39:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1694461180; x=1695065980; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U3kmuOgV1MqL70eyPKBwPx+gEeRsYvUgeQvC+nXxSq0=;
+        b=ajWJG9I8jbM77iPAy1T/ElAcjr6Ie3c6CY5X34nR6HzWNaL6hvVFx5wynsy+uFYJDe
+         J9NXbTddDvYWnxK9w7wM+4dfSKrmJa3YNxChontaAGSxn+B+t+BLDkZnrxRaioh1wbde
+         bOsrN35eQ274Fn6eXpq+sXR/v3/maILwApqIQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694430886; x=1695035686;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=duojBTZHxop0mRaPLS+9K2syH9Dx5s0nx5WCTjNJRpo=;
-        b=s5mzwffOaUeDnOTPPmaEhxtz5t4jOhXQZ4hBnTSWwTJ03efNwu+xog5YGY0ttms5wb
-         kPMjJ8kKdh0a+7PRM4s2crdlRCvi83ET4O+3BLkituTv2fXKXb1TNDRicQXEL+Djlf9X
-         YAQ9FEcbMD7GkYI9ERPU4g3uM1M+GOVCV5f9+grZ73zSnOfrlTpLxMlinA0fcCpXxqWH
-         YRnMpiu3su3zE3/Od8+5Mmhxzb9djLFleu1sp93EY43ccTT+wzLWjcNdfhOTRKfZBuen
-         ChS8biAhsTT35ESBRes+5ptdv9BMsl7npT67TcRhK2vb7+vy4II7mLFd19VSLRXN/lEJ
-         FYow==
-X-Gm-Message-State: AOJu0YyV4j6VOg5ACh07mhXmXE2AKDiqj3brOym2W6B0F0gSDwgnMoSa
-        CQut9P8es2JC9t0SNtyy2VnCOpk24FO24NouvLDny/QYYb9IMt8z5OV5xNxxKBi03C6EzJ60k1a
-        TEoJS7Xc+lvgke/VmmtuqnYppFWHHP3foiA==
-X-Received: by 2002:a17:906:b08d:b0:99b:ead0:2733 with SMTP id x13-20020a170906b08d00b0099bead02733mr6555437ejy.72.1694430886706;
-        Mon, 11 Sep 2023 04:14:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEgLspzlfyck43uGvgiNYpQdq8tv4OxSuw9s66Frsw+DpaJXREHPBvRX5b057L6YUcDbnR7/g==
-X-Received: by 2002:a17:906:b08d:b0:99b:ead0:2733 with SMTP id x13-20020a170906b08d00b0099bead02733mr6555422ejy.72.1694430886468;
-        Mon, 11 Sep 2023 04:14:46 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id kd27-20020a17090798db00b009a57d30df89sm5202167ejc.132.2023.09.11.04.14.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Sep 2023 04:14:45 -0700 (PDT)
-Message-ID: <a685b317-8b35-ffad-8f7f-2da9a5f6a491@redhat.com>
-Date:   Mon, 11 Sep 2023 13:14:45 +0200
+        d=1e100.net; s=20230601; t=1694461180; x=1695065980;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U3kmuOgV1MqL70eyPKBwPx+gEeRsYvUgeQvC+nXxSq0=;
+        b=AJ5P4uFtRDeH6DJc6qdrBdt9BHbKlV0OPNc2/uBvyC6nbb0eA9zamb86UY980+zQN9
+         mi4Ggjfv+/WUrrnoptE2b1NrnCvXa0JPsoCc/QZXtDsFioCJ2kKxSk4xciW8EU/UsuNp
+         luq6FD7sPUSTtE7nGLeMz8X16X4TlXALKncOI7tS5OjngQaflzyZy2FDOiZcxA9CtZrP
+         GAi+doWl+1Zb5UVAh9DtQ8sSbdFap1Tw/klsmmgPaErZ2V9F8cB6GqSF1rvwRnkwQoFQ
+         30+VLZvca4o32q7aRy6kNCniOA2cEAAXYdx5ec1uxx5JAWdp5scQS8KB0qfvyx04WK+1
+         KSow==
+X-Gm-Message-State: AOJu0YzOUBr+oisNMjViqW6CON0b7H32fffOvmqybhJpEoHYXQgPdDZa
+        k3SKbSMKdHj9Yw4eoE5QXSugAw==
+X-Google-Smtp-Source: AGHT+IE1KCz2PPBtztjQa6r5F5mW8DpeJaFNItpLjTVRsOtt8Oshgk1XrqynXDOck4L9xWpjZ39/nw==
+X-Received: by 2002:a17:90a:7003:b0:273:fa72:ba83 with SMTP id f3-20020a17090a700300b00273fa72ba83mr4056419pjk.47.1694461180415;
+        Mon, 11 Sep 2023 12:39:40 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:11a:201:d487:5e33:6656:3711])
+        by smtp.gmail.com with ESMTPSA id fu8-20020a17090ad18800b00262e485156esm7736543pjb.57.2023.09.11.12.39.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Sep 2023 12:39:39 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Prashant Malani <pmalani@chromium.org>
+Subject: [PATCH v3 0/4] platform/x86: intel_scu_ipc: Timeout fixes
+Date:   Mon, 11 Sep 2023 12:39:32 -0700
+Message-ID: <20230911193937.302552-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v4 2/3] platform/mellanox: mlxbf-pmc: Fix reading of
- unprogrammed events
-Content-Language: en-US
-To:     Shravan Kumar Ramani <shravankr@nvidia.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        David Thompson <davthompson@nvidia.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1693917738.git.shravankr@nvidia.com>
- <04d0213932d32681de1c716b54320ed894e52425.1693917738.git.shravankr@nvidia.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <04d0213932d32681de1c716b54320ed894e52425.1693917738.git.shravankr@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+I recently looked at some crash reports on ChromeOS devices that call
+into this intel_scu_ipc driver. They were hitting timeouts, and it
+certainly looks possible for those timeouts to be triggering because of
+scheduling issues. Once things started going south, the timeouts kept
+coming. Maybe that's because the other side got seriously confused? I
+don't know.
 
-On 9/5/23 14:49, Shravan Kumar Ramani wrote:
-> This fix involves 2 changes:
->  - All event regs have a reset value of 0, which is not a valid
->    event_number as per the event_list for most blocks and hence seen
->    as an error. Add a "disable" event with event_number 0 for all blocks.
-> 
->  - The enable bit for each counter need not be checked before
->    reading the event info, and hence removed.
-> 
-> Fixes: 1a218d312e65 ("platform/mellanox: mlxbf-pmc: Add Mellanox BlueField PMC driver")
-> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-> Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
-> Reviewed-by: David Thompson <davthompson@nvidia.com>
+I added some sleeps to these paths to trigger the timeout behavior to
+make sure the code works. Simply sleeping for a long time in busy_loop()
+hits the timeout, which could happen if the system is scheduling lots of
+other things at the time.
 
-Thank you for your patch, I've applied this patch to my fixes
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
+I couldn't really test the third patch because forcing a timeout or
+returning immediately wasn't fast enough to trigger the second
+transaction to run into the first one being processed.
 
-Note it will show up in my fixes branch once I've pushed my
-local branch there, which might take a while.
+Changes from v2 (https://lore.kernel.org/r/20230906180944.2197111-1-swboyd@chromium.org):
+ * Use read_poll_timeout() helper in patch #1 (again)
+ * New patch #3 to fix bug pointed out by Andy
+ * Consolidate more code into busy check in patch #4
 
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
+Changes from v1 (https://lore.kernel.org/r/20230831011405.3246849-1-swboyd@chromium.org):
+ * Don't use read_poll_timeout() helper in patch 1, just add code
+ * Rewrite patch 2 to be simpler
+ * Make intel_scu_ipc_busy() return -EBUSY when busy
+ * Downgrade dev_err() to dev_dbg() in intel_scu_ipc_busy()
 
-Regards,
+Stephen Boyd (4):
+  platform/x86: intel_scu_ipc: Check status after timeout in busy_loop()
+  platform/x86: intel_scu_ipc: Check status upon timeout in
+    ipc_wait_for_interrupt()
+  platform/x86: intel_scu_ipc: Don't override scu in
+    intel_scu_ipc_dev_simple_command()
+  platform/x86: intel_scu_ipc: Fail IPC send if still busy
 
-Hans
+ drivers/platform/x86/intel_scu_ipc.c | 66 +++++++++++++++++-----------
+ 1 file changed, 40 insertions(+), 26 deletions(-)
 
+Cc: Prashant Malani <pmalani@chromium.org>
 
-> ---
->  drivers/platform/mellanox/mlxbf-pmc.c | 27 +++++++--------------------
->  1 file changed, 7 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
-> index 95afcae7b9fa..2d4bbe99959e 100644
-> --- a/drivers/platform/mellanox/mlxbf-pmc.c
-> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
-> @@ -191,6 +191,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_smgen_events[] = {
->  };
->  
->  static const struct mlxbf_pmc_events mlxbf_pmc_trio_events_1[] = {
-> +	{ 0x0, "DISABLE" },
->  	{ 0xa0, "TPIO_DATA_BEAT" },
->  	{ 0xa1, "TDMA_DATA_BEAT" },
->  	{ 0xa2, "MAP_DATA_BEAT" },
-> @@ -214,6 +215,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_trio_events_1[] = {
->  };
->  
->  static const struct mlxbf_pmc_events mlxbf_pmc_trio_events_2[] = {
-> +	{ 0x0, "DISABLE" },
->  	{ 0xa0, "TPIO_DATA_BEAT" },
->  	{ 0xa1, "TDMA_DATA_BEAT" },
->  	{ 0xa2, "MAP_DATA_BEAT" },
-> @@ -246,6 +248,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_trio_events_2[] = {
->  };
->  
->  static const struct mlxbf_pmc_events mlxbf_pmc_ecc_events[] = {
-> +	{ 0x0, "DISABLE" },
->  	{ 0x100, "ECC_SINGLE_ERROR_CNT" },
->  	{ 0x104, "ECC_DOUBLE_ERROR_CNT" },
->  	{ 0x114, "SERR_INJ" },
-> @@ -258,6 +261,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_ecc_events[] = {
->  };
->  
->  static const struct mlxbf_pmc_events mlxbf_pmc_mss_events[] = {
-> +	{ 0x0, "DISABLE" },
->  	{ 0xc0, "RXREQ_MSS" },
->  	{ 0xc1, "RXDAT_MSS" },
->  	{ 0xc2, "TXRSP_MSS" },
-> @@ -265,6 +269,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_mss_events[] = {
->  };
->  
->  static const struct mlxbf_pmc_events mlxbf_pmc_hnf_events[] = {
-> +	{ 0x0, "DISABLE" },
->  	{ 0x45, "HNF_REQUESTS" },
->  	{ 0x46, "HNF_REJECTS" },
->  	{ 0x47, "ALL_BUSY" },
-> @@ -323,6 +328,7 @@ static const struct mlxbf_pmc_events mlxbf_pmc_hnf_events[] = {
->  };
->  
->  static const struct mlxbf_pmc_events mlxbf_pmc_hnfnet_events[] = {
-> +	{ 0x0, "DISABLE" },
->  	{ 0x12, "CDN_REQ" },
->  	{ 0x13, "DDN_REQ" },
->  	{ 0x14, "NDN_REQ" },
-> @@ -892,7 +898,7 @@ static int mlxbf_pmc_read_event(int blk_num, uint32_t cnt_num, bool is_l3,
->  				uint64_t *result)
->  {
->  	uint32_t perfcfg_offset, perfval_offset;
-> -	uint64_t perfmon_cfg, perfevt, perfctl;
-> +	uint64_t perfmon_cfg, perfevt;
->  
->  	if (cnt_num >= pmc->block[blk_num].counters)
->  		return -EINVAL;
-> @@ -904,25 +910,6 @@ static int mlxbf_pmc_read_event(int blk_num, uint32_t cnt_num, bool is_l3,
->  	perfval_offset = perfcfg_offset +
->  			 pmc->block[blk_num].counters * MLXBF_PMC_REG_SIZE;
->  
-> -	/* Set counter in "read" mode */
-> -	perfmon_cfg = FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_ADDR,
-> -				 MLXBF_PMC_PERFCTL);
-> -	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_STROBE, 1);
-> -	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_WR_R_B, 0);
-> -
-> -	if (mlxbf_pmc_write(pmc->block[blk_num].mmio_base + perfcfg_offset,
-> -			    MLXBF_PMC_WRITE_REG_64, perfmon_cfg))
-> -		return -EFAULT;
-> -
-> -	/* Check if the counter is enabled */
-> -
-> -	if (mlxbf_pmc_read(pmc->block[blk_num].mmio_base + perfval_offset,
-> -			   MLXBF_PMC_READ_REG_64, &perfctl))
-> -		return -EFAULT;
-> -
-> -	if (!FIELD_GET(MLXBF_PMC_PERFCTL_EN0, perfctl))
-> -		return -EINVAL;
-> -
->  	/* Set counter in "read" mode */
->  	perfmon_cfg = FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_ADDR,
->  				 MLXBF_PMC_PERFEVT);
+base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
+-- 
+https://chromeos.dev
 
