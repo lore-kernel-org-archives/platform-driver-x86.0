@@ -2,126 +2,317 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2972CA0EC3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C12CA0EC7
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355880AbjIKWCP (ORCPT
+        id S1355842AbjIKWCM convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:02:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39382 "EHLO
+        Mon, 11 Sep 2023 18:02:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236814AbjIKL14 (ORCPT
+        with ESMTP id S243983AbjIKSex (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 07:27:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E228FCE5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:27:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694431627;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8XU8RLh7grKPuWPmu4OmjyaOM+2R9QefqTD05IQ9xwE=;
-        b=iR0ezwhBeto/eQGsJ6BZgjHeQhygXy6YjrSA9mQr1CWL6esKM2kXZZPETnyT7v8ugLCbmO
-        we7hGnuV65ENcoxg7vPSq5LU2hXpEbbItod5hmVNgcEoZgQD5dU4us3tBfu9vH71aqnF/w
-        3/Qgk4LiD5UlcDL5BGMRLk2hzi0r64c=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-15-dMdnUrJeP-Wc1VEHtRfttg-1; Mon, 11 Sep 2023 07:27:03 -0400
-X-MC-Unique: dMdnUrJeP-Wc1VEHtRfttg-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9ad73eb9668so30494866b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:27:03 -0700 (PDT)
+        Mon, 11 Sep 2023 14:34:53 -0400
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15BD3198;
+        Mon, 11 Sep 2023 11:34:49 -0700 (PDT)
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6bf106fb6a0so759115a34.0;
+        Mon, 11 Sep 2023 11:34:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694431623; x=1695036423;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8XU8RLh7grKPuWPmu4OmjyaOM+2R9QefqTD05IQ9xwE=;
-        b=NhBrCsCPpgLAyffu1ZOzi1DWQhIC3ZGuEJk7EnrOlILCKoGX5JSKbPlb7PMTBXRoo1
-         9pSdLRqf3++fq7c09c/LApMdsT/N3SeNf/WGXSscAyg8o8CXe2FYpHGebtphhEC/DRD3
-         Tx79gCTaORMr5q7gMo6PI7V9QEzDKONc1G7ISHjRUqQDdwchNvAfZhKjLWpSk/P4P4Qo
-         LukVzmKHy7+hX5hyrjsFykss1mf7oEZYgo7raqRYtjgff1htIVjta7sw0pM6OLJFXqZ/
-         lDLuuFjOTINV6RaR6qFVEm9tNHVKchgWoxlvFOgxOX67NzvmSGu9QEaCOwBVD6H9nP0e
-         Skpw==
-X-Gm-Message-State: AOJu0YzNQjEa0pqFVEH6DLE9R69/0HRWSThA8iAJdfW+b6eyPAJ7cQUf
-        hBKlV+CxuHQ8uVlxRQfMiBD4kQSoBfu9Z8BeBpQoMQO9amAAt3qX797o1s8Whmfuc74NxVGA10d
-        O4nMYT/8i5nFbPtAMmTol4qJQBSM4XPMlrw==
-X-Received: by 2002:a17:907:9724:b0:9a5:962c:cb6c with SMTP id jg36-20020a170907972400b009a5962ccb6cmr17846764ejc.31.1694431622919;
-        Mon, 11 Sep 2023 04:27:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFZ/AHu7nLmYgByLaPLMmYUvX4ccy5bwEbWpR+GUk2r/aBtLdPjo047ti0Vrwz7SNb+Q3eH2A==
-X-Received: by 2002:a17:907:9724:b0:9a5:962c:cb6c with SMTP id jg36-20020a170907972400b009a5962ccb6cmr17846740ejc.31.1694431622681;
-        Mon, 11 Sep 2023 04:27:02 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id q24-20020a170906941800b0098921e1b064sm5185543ejx.181.2023.09.11.04.27.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Sep 2023 04:27:02 -0700 (PDT)
-Message-ID: <aa427e7e-374d-facb-883f-0b9b69ce00c0@redhat.com>
-Date:   Mon, 11 Sep 2023 13:27:01 +0200
+        d=1e100.net; s=20230601; t=1694457288; x=1695062088;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0ozIqsa4ll2dstGJiKnp+cx3giqAznmjtqmzWaRuC2Y=;
+        b=u1NFRWSVNljmDDz5OI7n/VdponouHW25zCi0md/BIKPH6/W860SzEU5uqQBvtIhO6d
+         crY8E9fUwGPh/PZ57LdtJx2QiSFKwKxSnx4HuGswRaBfllNt9kFW7jQNEIowR4MJgs/U
+         BW+PAp44fbXCUHykF3ux7DVudE6LfJtd6PIYDG2FD+wjMOSEhmZcKSW5xZoWxIg/idck
+         uXFyy0lm+XhGjgBpnl8UbiirHlXKK8+3wKvgzUWlmHk+BQ+dwqO4XBIy9pSJyCxsFJ30
+         HQrHT7MOhMcvy1GBjUnNlARrBbo34UwvCLxBKUCA8ss8JWTrK1SCr3LoHdv81ZAtGf9d
+         qV1A==
+X-Gm-Message-State: AOJu0YxQS7RQgQEtMonnlG0rsAmht7bT0DznwS/OQyUfeaJeBuNhf7cs
+        bzXa2hko1iCoCt+hwGyQJww3iu0DUDo4RqZhpLA=
+X-Google-Smtp-Source: AGHT+IETfSXiDrOmPCMB2ku2g4cKUUFkv5dF7tlnnSknEk84cwUOYcvU7muL8DylEGougjYynYy0zJ0ORQlzuqz94hM=
+X-Received: by 2002:a05:6808:23ca:b0:3aa:867:c7f0 with SMTP id
+ bq10-20020a05680823ca00b003aa0867c7f0mr12781634oib.0.1694457288235; Mon, 11
+ Sep 2023 11:34:48 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] platform/x86: asus-wmi: Support 2023 ROG X16 tablet mode
-Content-Language: en-US
-To:     "Luke D. Jones" <luke@ljones.dev>
-Cc:     corentin.chary@gmail.com, markgross@kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20230905082813.13470-1-luke@ljones.dev>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230905082813.13470-1-luke@ljones.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230906184354.45846-1-mario.limonciello@amd.com> <20230906184354.45846-3-mario.limonciello@amd.com>
+In-Reply-To: <20230906184354.45846-3-mario.limonciello@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 11 Sep 2023 20:34:37 +0200
+Message-ID: <CAJZ5v0jgGOPcFMfRObAM1St1KLjZS0tEki4f32Rbr3ZXwFyFzA@mail.gmail.com>
+Subject: Re: [PATCH v17 2/4] PCI: Add support for drivers to register optin or
+ veto of D3
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 9/5/23 10:28, Luke D. Jones wrote:
-> Add quirk for ASUS ROG X16 (GV601V, 2023 versions) Flow 2-in-1
-> to enable tablet mode with lid flip (all screen rotations).
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-
-Thank you for your patch, I've applied this patch to my fixes
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
-
-Note it will show up in my fixes branch once I've pushed my
-local branch there, which might take a while.
-
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
-
-Regards,
-
-Hans
-
-
-
+On Wed, Sep 6, 2023 at 9:16 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+> changed pci_bridge_d3_possible() so that any vendor's PCIe ports
+> from modern machines (>=2015) are allowed to be put into D3.
+>
+> This policy change has worked for most machines, but the behavior
+> is improved with `pcie_port_pm=off` on some others.
+>
+> Add support for drivers to register both 'optin' and 'veto' callbacks
+> and a priority which can be used for deciding whether a device should
+> use D3. When drivers register the callbacks, the list is sorted by
+> priority.
+>
+> Suggested-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 > ---
->  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index fdf7da06af30..d85d895fee89 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -478,6 +478,15 @@ static const struct dmi_system_id asus_quirks[] = {
->  		},
->  		.driver_data = &quirk_asus_tablet_mode,
->  	},
-> +	{
-> +		.callback = dmi_matched,
-> +		.ident = "ASUS ROG FLOW X16",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "GV601V"),
-> +		},
-> +		.driver_data = &quirk_asus_tablet_mode,
-> +	},
->  	{
->  		.callback = dmi_matched,
->  		.ident = "ASUS VivoBook E410MA",
+>  drivers/pci/pci.c   | 143 ++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pci.h |   9 +++
+>  2 files changed, 152 insertions(+)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 59c01d68c6d5..06ab73f58adf 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/module.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/string.h>
+> +#include <linux/list_sort.h>
+>  #include <linux/log2.h>
+>  #include <linux/logic_pio.h>
+>  #include <linux/pm_wakeup.h>
+> @@ -54,6 +55,8 @@ unsigned int pci_pm_d3hot_delay;
+>  static void pci_pme_list_scan(struct work_struct *work);
+>
+>  static LIST_HEAD(pci_pme_list);
+> +static LIST_HEAD(d3_possible_list);
+> +static DEFINE_MUTEX(d3_possible_list_mutex);
+>  static DEFINE_MUTEX(pci_pme_list_mutex);
+>  static DECLARE_DELAYED_WORK(pci_pme_work, pci_pme_list_scan);
+>
+> @@ -161,6 +164,14 @@ static bool pcie_ats_disabled;
+>  /* If set, the PCI config space of each device is printed during boot. */
+>  bool pci_early_dump;
+>
+> +/* Preferences set by a driver for D3 optin/veto */
+> +enum driver_d3_pref {
+> +       D3_PREF_UNSET,  /* Not configured by driver */
+> +       D3_PREF_NONE,   /* Driver does not care */
+> +       D3_PREF_OPTIN,  /* Driver prefers D3 */
+> +       D3_PREF_VETO,   /* Driver vetoes D3 */
+> +};
+> +
+>  bool pci_ats_disabled(void)
+>  {
+>         return pcie_ats_disabled;
+> @@ -3031,6 +3042,10 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>                 if (pci_bridge_d3_force)
+>                         return true;
+>
+> +               /* check for any driver optin of D3 for the bridge */
+> +               if (bridge->driver_d3 == D3_PREF_OPTIN)
+> +                       return true;
+> +
+>                 /* Even the oldest 2010 Thunderbolt controller supports D3. */
+>                 if (bridge->is_thunderbolt)
+>                         return true;
+> @@ -3050,6 +3065,10 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>                 if (dmi_check_system(bridge_d3_blacklist))
+>                         return false;
+>
+> +               /* check for any driver veto for D3 for the bridge */
+> +               if (bridge->driver_d3 == D3_PREF_VETO)
+> +                       return false;
+> +
+>                 /*
+>                  * It should be safe to put PCIe ports from 2015 or newer
+>                  * to D3.
+> @@ -3168,6 +3187,130 @@ void pci_d3cold_disable(struct pci_dev *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_d3cold_disable);
+>
+> +static struct pci_dev *pci_get_upstream_port(struct pci_dev *pci_dev)
+> +{
+> +       struct pci_dev *bridge;
+> +
+> +       bridge = pci_upstream_bridge(pci_dev);
+> +       if (!bridge)
+> +               return NULL;
+> +
+> +       if (!pci_is_pcie(bridge))
+> +               return NULL;
+> +
+> +       switch (pci_pcie_type(bridge)) {
+> +       case PCI_EXP_TYPE_ROOT_PORT:
+> +       case PCI_EXP_TYPE_UPSTREAM:
+> +       case PCI_EXP_TYPE_DOWNSTREAM:
+> +               return bridge;
+> +       default:
+> +               break;
+> +       };
+> +
+> +       return NULL;
+> +}
+> +
+> +static void pci_refresh_d3_possible(void)
+> +{
+> +       struct pci_d3_driver_ops *driver;
+> +       struct pci_dev *pci_dev = NULL;
+> +       struct pci_dev *bridge;
+> +
+> +       /* 1st pass: unset any preferences set a previous invocation */
+> +       while ((pci_dev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, pci_dev))) {
+> +               bridge = pci_get_upstream_port(pci_dev);
+> +               if (!bridge)
+> +                       continue;
+> +
+> +               if (bridge->driver_d3 != D3_PREF_UNSET)
+> +                       bridge->driver_d3 = D3_PREF_UNSET;
+> +       }
+> +
+> +       pci_dev = NULL;
+> +
+> +       /* 2nd pass: update the preference and refresh bridge_d3 */
+> +       while ((pci_dev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, pci_dev))) {
+> +               bridge = pci_get_upstream_port(pci_dev);
+> +               if (!bridge)
+> +                       continue;
+> +
+> +               /* don't make multiple passes on the same device */
+> +               if (bridge->driver_d3 != D3_PREF_UNSET)
+> +                       continue;
+> +
+> +               /* the list is pre-sorted by highest priority */
+> +               mutex_lock(&d3_possible_list_mutex);
+> +               list_for_each_entry(driver, &d3_possible_list, list_node) {
+> +                       /* another higher priority driver already set preference */
+> +                       if (bridge->driver_d3 != D3_PREF_UNSET)
+> +                               break;
+> +                       /* check for opt in to D3 */
+> +                       if (driver->optin && driver->optin(bridge))
+> +                               bridge->driver_d3 = D3_PREF_OPTIN;
+> +                       /* check for opt out of D3 */
+> +                       else if (driver->veto && driver->veto(bridge))
+> +                               bridge->driver_d3 = D3_PREF_VETO;
+> +               }
+> +               mutex_unlock(&d3_possible_list_mutex);
+> +
+> +               /* no driver set a preference */
+> +               if (bridge->driver_d3 == D3_PREF_UNSET)
+> +                       bridge->driver_d3 = D3_PREF_NONE;
+> +
+> +               /* update bridge_d3 */
+> +               pci_bridge_d3_update(pci_dev);
+> +       }
+> +}
+> +
+> +static int pci_d3_driver_cmp(void *priv, const struct list_head *_a,
+> +                          const struct list_head *_b)
+> +{
+> +       struct pci_d3_driver_ops *a = container_of(_a, typeof(*a), list_node);
+> +       struct pci_d3_driver_ops *b = container_of(_b, typeof(*b), list_node);
+> +
+> +       if (a->priority < b->priority)
+> +               return -1;
+> +       else if (a->priority > b->priority)
+> +               return 1;
+> +       return 0;
+> +}
+> +
+> +/**
+> + * pci_register_d3_possible_cb - Register a driver callback for checking d3 veto
+> + * @arg: driver provided structure with function pointer and priority
+> + *
+> + * This function can be used by drivers to register a callback that can be
+> + * used to veto a device going into D3.
+> + * Returns 0 on success, error code on failure.
+> + */
+> +int pci_register_d3_possible_cb(struct pci_d3_driver_ops *arg)
+> +{
+> +       mutex_lock(&d3_possible_list_mutex);
+> +       list_add(&arg->list_node, &d3_possible_list);
+> +       list_sort(NULL, &d3_possible_list, pci_d3_driver_cmp);
+> +       mutex_unlock(&d3_possible_list_mutex);
+> +       pci_refresh_d3_possible();
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_register_d3_possible_cb);
+> +
+> +/**
+> + * pci_unregister_d3_possible_cb - Unregister a driver callback for checking d3 veto
+> + * @arg: driver provided structure with function pointer and priority
+> + *
+> + * This function can be used by drivers to unregister a callback that can be
+> + * used to veto a device going into D3.
+> + */
+> +void pci_unregister_d3_possible_cb(struct pci_d3_driver_ops *arg)
+> +{
+> +       mutex_lock(&d3_possible_list_mutex);
+> +       list_del(&arg->list_node);
+> +       list_sort(NULL, &d3_possible_list, pci_d3_driver_cmp);
+> +       mutex_unlock(&d3_possible_list_mutex);
+> +       pci_refresh_d3_possible();
+> +}
+> +EXPORT_SYMBOL_GPL(pci_unregister_d3_possible_cb);
+> +
+>  /**
+>   * pci_pm_init - Initialize PM functions of given PCI device
+>   * @dev: PCI device to handle.
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 8c7c2c3c6c65..863399e78869 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -389,6 +389,7 @@ struct pci_dev {
+>                                                    bit manually */
+>         unsigned int    d3hot_delay;    /* D3hot->D0 transition time in ms */
+>         unsigned int    d3cold_delay;   /* D3cold->D0 transition time in ms */
+> +       unsigned int    driver_d3;      /* Driver D3 request preference */
+>
+>  #ifdef CONFIG_PCIEASPM
+>         struct pcie_link_state  *link_state;    /* ASPM link state */
+> @@ -1404,6 +1405,14 @@ void pci_d3cold_disable(struct pci_dev *dev);
+>  bool pcie_relaxed_ordering_enabled(struct pci_dev *dev);
+>  void pci_resume_bus(struct pci_bus *bus);
+>  void pci_bus_set_current_state(struct pci_bus *bus, pci_power_t state);
+> +struct pci_d3_driver_ops {
+> +       struct list_head list_node;
+> +       int priority;
+> +       bool (*optin)(struct pci_dev *pdev);
+> +       bool (*veto)(struct pci_dev *pdev);
+> +};
+> +int pci_register_d3_possible_cb(struct pci_d3_driver_ops *arg);
+> +void pci_unregister_d3_possible_cb(struct pci_d3_driver_ops *arg);
+>
+>  /* For use by arch with custom probe code */
+>  void set_pcie_port_type(struct pci_dev *pdev);
+> --
 
+I don't like this too much TBH.  It appears overly complicated to me
+and it totally misses the wakeup vs non-wakeup point I've been talking
+about recently.
+
+IMV, the underlying issue all boils down to the platform firmware
+inadequately describing the behavior of the system to the OS.
+Specifically, had it provided a _S0W returning 0 for the Root Port(s)
+in question, wakeup signaling would have worked (or else there would
+have been a defect in the kernel code to be addressed).  Instead, it
+decided to kind-of guide Windows in the "right" direction through PEP
+constraints which doesn't have the same effect on Linux and honestly
+I'm not even sure if it is a good idea to adjust Linux to that.
+
+It looks to me like the issue could be addressed by a PCI device quirk
+playing the role of a missing _S0W (but slightly more precise, because
+it may distinguish suspend-to-idle from PM-runtime, which _S0W cannot
+do).
