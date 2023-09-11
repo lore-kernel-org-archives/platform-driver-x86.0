@@ -2,283 +2,120 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBC6CA0EC3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C27CA0EC9
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:06:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355636AbjIKWBg (ORCPT
+        id S1355655AbjIKWBj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:01:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51708 "EHLO
+        Mon, 11 Sep 2023 18:01:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238798AbjIKOFQ (ORCPT
+        with ESMTP id S244220AbjIKTjs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 10:05:16 -0400
-Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C2F7E4B
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 07:05:09 -0700 (PDT)
-Received: by mail-oi1-x234.google.com with SMTP id 5614622812f47-3a9b41ffe12so3551377b6e.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 07:05:09 -0700 (PDT)
+        Mon, 11 Sep 2023 15:39:48 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0232812A
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 12:39:44 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-26f9521de4cso3379788a91.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 12:39:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694441108; x=1695045908; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1694461183; x=1695065983; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CMUzoM2nvRIzJjPclDRKLCa7rjsT0iIQkBMPh70+kwU=;
-        b=Cr50etxPqqWs5r3HD0NShMKivbaQMKgDeSeyfOVGzvRYMUAm7Gg+ENjqKYinT91Ks/
-         G6iDOceWOT82txvAiFEpKdAmaTMPWuMAfxeQzGKfTD+r/OKAl+kjc18MceJMKQDM6PDi
-         I9+DpbsuYkez5nwGybhFFunx03H0pjbyBFP6nMWtdekggAWvtbquFSY2POzkpJ9C0l8b
-         kkyLLe6k3I9PtjQa4YwNgYQNk3552XAE+I6rY+mp2MKbbhwI/SVjwoLsmBBQkkSnH86o
-         kWaXUkkT0ZVV4Bc251GR1lrVoNZdrV1EgNmGH7N7rmkryIj2BZ8gZr7l26nLBldeQik6
-         92/Q==
+        bh=kZYrHnobXTh0OSmcxOutmTVdFw75ZwDUd6CgfQDQ3MU=;
+        b=jkpQtQkf9CmjnLo2qkfbo+ma1IvYZZrIkQVDU8FeE0rGYwCLnaZ2QYzS8PTcjwpEkk
+         1pVi5tfGDk1WtalnGLnTbYe/2N+3rHKrQd4u/ghEXLcE1/AyKTwPwD/R3JOjTOc77lcQ
+         YWZPU8SZpMWz3iF+GZsj9IikXLe19fEeZYRiI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694441108; x=1695045908;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1694461183; x=1695065983;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CMUzoM2nvRIzJjPclDRKLCa7rjsT0iIQkBMPh70+kwU=;
-        b=PNq3dBD48CqicwictLqypLR5Zw/qtiJNZ+EkRFSFcw/2tWxujIyB7sXzevW7AMunkq
-         ZoAcQ9E8P+6RxFyOT7D6urXNoQdGty1MwGU9AfsP83Ha/VlGatj3pMaRDaVGm18U7CqH
-         QjyBPIjqvUdlcLIk9nu+Wcare/baV15rGrbFn5iwDAbrRpUHb6k1u5yrYIaTvIbfNDen
-         9m1yn+hwNJ8MyWs1l4DdkY7JmpKQK9B5i15N9EQJIlxif9ge+taLdJEsWYgKzjQYjFPc
-         4pNQITEgKpI6BuF36/RvU0Kxz2EZNpS2b3rFAeGgXoxnIRB7ZEsjJifSxt0j3Wgw55IZ
-         AP6g==
-X-Gm-Message-State: AOJu0YyTZz+qnOxE1rf7dQHhHGTyQvY9LAuUg6acWwAfe70aSgJjH9yW
-        YizB8CXhla28nZTBqlBS7iAqRiud/W2aCTift4lXnb6zX/zcrXCS
-X-Google-Smtp-Source: AGHT+IGPc9A/GJXvjTtLdL7ua4zmkHZFQOoTcIpvGP2SRPsH312V77DPtsfFl6v8PPhhUyKgJ5eRdG9FjSVMl1S4kP8=
-X-Received: by 2002:a05:6808:30a0:b0:3a7:88ce:7ac8 with SMTP id
- bl32-20020a05680830a000b003a788ce7ac8mr13391205oib.47.1694441108270; Mon, 11
- Sep 2023 07:05:08 -0700 (PDT)
+        bh=kZYrHnobXTh0OSmcxOutmTVdFw75ZwDUd6CgfQDQ3MU=;
+        b=RzCFpK5iVJ2+/8pZKTutjH49ulhS0heAXjr5gwlcR2ZUraQ27ZEpQvs0CRS+92pnLw
+         aGVj7/kIBPgowUu0T/+5b6kGPjKWqsi6aN9suFEd1V03ox/Ogbh7NI/4atcHvg+gLk85
+         +C+C9v4ytrxEx7pbZiHh9AuTZNwvkL2Oy9K/LCaPlCag+Be7ms2AFV0qfHTogF8PbTkP
+         F3Cjwm09ByuwkQK9FNZbjrz+T5Du6TNcJnDWgF0boZE8RJgTOYYaoNTjQ+QjDv3fzekc
+         GOTZT7fV/ZiZlGrmLnKKU/lHXhXHJ50tGHEyHfgDQfdaJEFta+3RZvmLlSmePQktCm0W
+         jO7A==
+X-Gm-Message-State: AOJu0YwZUb57SsUL6+mDsEr2iXHdRnuW3IMMYWmeM0FwMDojrdkh67bI
+        zsQKEnnE5mrTbMTr0s/uF/PRmw==
+X-Google-Smtp-Source: AGHT+IGOfdGvbw1wwt4Gf9ldbs/gHOpAtrlGyNreNjdfdz8lCBCPYU+3AOX6Bw9QrL5rSH9U2KMdvA==
+X-Received: by 2002:a17:90a:3481:b0:268:557e:1848 with SMTP id p1-20020a17090a348100b00268557e1848mr8154453pjb.2.1694461183460;
+        Mon, 11 Sep 2023 12:39:43 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:11a:201:d487:5e33:6656:3711])
+        by smtp.gmail.com with ESMTPSA id fu8-20020a17090ad18800b00262e485156esm7736543pjb.57.2023.09.11.12.39.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Sep 2023 12:39:42 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Prashant Malani <pmalani@chromium.org>
+Subject: [PATCH v3 2/4] platform/x86: intel_scu_ipc: Check status upon timeout in ipc_wait_for_interrupt()
+Date:   Mon, 11 Sep 2023 12:39:34 -0700
+Message-ID: <20230911193937.302552-3-swboyd@chromium.org>
+X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
+In-Reply-To: <20230911193937.302552-1-swboyd@chromium.org>
+References: <20230911193937.302552-1-swboyd@chromium.org>
 MIME-Version: 1.0
-References: <20230909141816.58358-1-hdegoede@redhat.com> <20230909141816.58358-7-hdegoede@redhat.com>
- <CAMRc=MfeKirks7N7scu+dh+M1Nf0bNxzC7PE2Q7J4bxgpRnECw@mail.gmail.com>
- <0b1e0312-9144-85ed-666e-a84110b26418@redhat.com> <CAMRc=MfVZCqc-v+5oMkTkhfLvq1pE66E7GykqT2ymxzS_kw83w@mail.gmail.com>
- <01a85a3d-c888-11d8-f47e-be2a26d0cb9d@redhat.com> <CAMRc=MeGRreVVz=tCnEWtvixV+ZNEXXvG5SVRRmmnWG_sawMcg@mail.gmail.com>
- <bf866db7-1231-2fd6-eedf-b287ca4fa1b8@redhat.com>
-In-Reply-To: <bf866db7-1231-2fd6-eedf-b287ca4fa1b8@redhat.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 11 Sep 2023 16:04:57 +0200
-Message-ID: <CAMRc=MdXLBnjFPE8Ac9tFQj6BXEyV6kRyDFNytsdQa++Yk6suw@mail.gmail.com>
-Subject: Re: [PATCH 6/8] platform/x86: x86-android-tablets: Stop using gpiolib
- private APIs
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 3:53=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
- wrote:
->
-> Hi Bart,
->
-> On 9/11/23 15:37, Bartosz Golaszewski wrote:
-> > On Mon, Sep 11, 2023 at 3:32=E2=80=AFPM Hans de Goede <hdegoede@redhat.=
-com> wrote:
-> >>
-> >> Hi,
-> >>
-> >> On 9/11/23 15:18, Bartosz Golaszewski wrote:
-> >>> On Mon, Sep 11, 2023 at 3:08=E2=80=AFPM Hans de Goede <hdegoede@redha=
-t.com> wrote:
-> >>>>
-> >>>> Hi,
-> >>>>
-> >>>> On 9/11/23 14:50, Bartosz Golaszewski wrote:
-> >>>>> On Sat, Sep 9, 2023 at 4:18=E2=80=AFPM Hans de Goede <hdegoede@redh=
-at.com> wrote:
-> >>>>>>
-> >>>>>> Refactor x86_android_tablet_get_gpiod() to no longer use
-> >>>>>> gpiolib private functions like gpiochip_find().
-> >>>>>>
-> >>>>>> As a bonus this allows specifying that the GPIO is active-low,
-> >>>>>> like the /CE (charge enable) pin on the bq25892 charger on
-> >>>>>> the Lenovo Yoga Tablet 3.
-> >>>>>>
-> >>>>>> Reported-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> >>>>>> Closes: https://lore.kernel.org/platform-driver-x86/20230905185309=
-.131295-12-brgl@bgdev.pl/
-> >>>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >>>>>> ---
-> >>>>>>  .../platform/x86/x86-android-tablets/asus.c   |  1 +
-> >>>>>>  .../platform/x86/x86-android-tablets/core.c   | 51 +++++++++++---=
------
-> >>>>>>  .../platform/x86/x86-android-tablets/lenovo.c | 28 +++++-----
-> >>>>>>  .../platform/x86/x86-android-tablets/other.c  |  6 +++
-> >>>>>>  .../x86-android-tablets/x86-android-tablets.h |  6 ++-
-> >>>>>>  5 files changed, 55 insertions(+), 37 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/drivers/platform/x86/x86-android-tablets/asus.c b/dri=
-vers/platform/x86/x86-android-tablets/asus.c
-> >>>>>> index f9c4083be86d..227afbb51078 100644
-> >>>>>> --- a/drivers/platform/x86/x86-android-tablets/asus.c
-> >>>>>> +++ b/drivers/platform/x86/x86-android-tablets/asus.c
-> >>>>>> @@ -303,6 +303,7 @@ static const struct x86_i2c_client_info asus_t=
-f103c_i2c_clients[] __initconst =3D
-> >>>>>>                         .index =3D 28,
-> >>>>>>                         .trigger =3D ACPI_EDGE_SENSITIVE,
-> >>>>>>                         .polarity =3D ACPI_ACTIVE_LOW,
-> >>>>>> +                       .con_id =3D "atmel_mxt_ts_irq",
-> >>>>>>                 },
-> >>>>>>         },
-> >>>>>>  };
-> >>>>>> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/dri=
-vers/platform/x86/x86-android-tablets/core.c
-> >>>>>> index 3d3101b2848f..673f3a14941b 100644
-> >>>>>> --- a/drivers/platform/x86/x86-android-tablets/core.c
-> >>>>>> +++ b/drivers/platform/x86/x86-android-tablets/core.c
-> >>>>>> @@ -12,7 +12,7 @@
-> >>>>>>
-> >>>>>>  #include <linux/acpi.h>
-> >>>>>>  #include <linux/dmi.h>
-> >>>>>> -#include <linux/gpio/driver.h>
-> >>>>>> +#include <linux/gpio/consumer.h>
-> >>>>>>  #include <linux/gpio/machine.h>
-> >>>>>>  #include <linux/irq.h>
-> >>>>>>  #include <linux/module.h>
-> >>>>>> @@ -21,35 +21,39 @@
-> >>>>>>  #include <linux/string.h>
-> >>>>>>
-> >>>>>>  #include "x86-android-tablets.h"
-> >>>>>> -/* For gpiochip_get_desc() which is EXPORT_SYMBOL_GPL() */
-> >>>>>> -#include "../../../gpio/gpiolib.h"
-> >>>>>> -#include "../../../gpio/gpiolib-acpi.h"
-> >>>>>>
-> >>>>>>  static struct platform_device *x86_android_tablet_device;
-> >>>>>>
-> >>>>>> -static int gpiochip_find_match_label(struct gpio_chip *gc, void *=
-data)
-> >>>>>> -{
-> >>>>>> -       return gc->label && !strcmp(gc->label, data);
-> >>>>>> -}
-> >>>>>> -
-> >>>>>> -int x86_android_tablet_get_gpiod(const char *label, int pin, stru=
-ct gpio_desc **desc)
-> >>>>>> +int x86_android_tablet_get_gpiod(const char *chip, int pin, const=
- char *con_id,
-> >>>>>> +                                bool active_low, enum gpiod_flags=
- dflags,
-> >>>>>> +                                struct gpio_desc **desc)
-> >>>>>>  {
-> >>>>>> +       struct gpiod_lookup_table *lookup;
-> >>>>>>         struct gpio_desc *gpiod;
-> >>>>>> -       struct gpio_chip *chip;
-> >>>>>>
-> >>>>>> -       chip =3D gpiochip_find((void *)label, gpiochip_find_match_=
-label);
-> >>>>>> -       if (!chip) {
-> >>>>>> -               pr_err("error cannot find GPIO chip %s\n", label);
-> >>>>>> -               return -ENODEV;
-> >>>>>> -       }
-> >>>>>> +       lookup =3D kzalloc(struct_size(lookup, table, 2), GFP_KERN=
-EL);
-> >>>>>> +       if (!lookup)
-> >>>>>> +               return -ENOMEM;
-> >>>>>> +
-> >>>>>> +       lookup->dev_id =3D KBUILD_MODNAME;
-> >>>>>> +       lookup->table[0].key =3D chip;
-> >>>>>> +       lookup->table[0].chip_hwnum =3D pin;
-> >>>>>> +       lookup->table[0].con_id =3D con_id;
-> >>>>>> +       lookup->table[0].flags =3D active_low ? GPIO_ACTIVE_LOW : =
-GPIO_ACTIVE_HIGH;
-> >>>>>> +
-> >>>>>> +       gpiod_add_lookup_table(lookup);
-> >>>>>> +       gpiod =3D devm_gpiod_get(&x86_android_tablet_device->dev, =
-con_id, dflags);
-> >>>>>> +       gpiod_remove_lookup_table(lookup);
-> >>>>>> +       kfree(lookup);
-> >>>>>>
-> >>>>>
-> >>>>> Any reason for not creating static lookup tables for GPIOs here?
-> >>>>
-> >>>> Not sure what you mean with static?
-> >>>>
-> >>>> I guess you mean using global or stack memory instead of kmalloc() ?
-> >>>>
-> >>>> gcc did not like me putting a struct with a variable length array
-> >>>> at the end on the stack, so I went with a kzalloc using the
-> >>>> struct_size() helper for structs with variable length arrays instead=
-.
-> >>>>
-> >>>> Note this only runs once at boot, so the small extra cost of
-> >>>> the malloc + free is not really a big deal here.
-> >>>>
-> >>>> I did not try making it global data as that would make the function
-> >>>> non re-entrant. Not that it is used in a re-entrant way anywhere,
-> >>>> but generally I try to avoid creating code which is not re-entrant.
-> >>>>
-> >>>
-> >>> I meant static-per-compilation-unit.
-> >>
-> >> I see.
-> >>
-> >>> It doesn't have to be a variable
-> >>> length array either. Typically GPIO lookups are static arrays that ar=
-e
-> >>> added once and never removed.
-> >>
-> >> Right.
-> >>
-> >>> The SPI example I posted elsewhere is
-> >>> different as it addresses a device quirk and cannot be generalized
-> >>> like this. How many GPIOs would you need to describe for this
-> >>> use-case? If it's just a few, then I'd go with static lookup tables.
-> >>> If it's way more than disregard this comment.
-> >>
-> >> ATM x86_android_tablet_get_gpiod() gets called for 24 GPIOs,
-> >> so more the just a few.
-> >
-> > For different devices? As in: dev_id would differ? If not then I'd go
-> > with a static table, you can use GPIO_LOOKUP() macro and have one line
-> > per GPIO.
->
-> I know GPIO_LOOKUP() is already used for normal GPIO lookup cases
-> like e.g. a reset pin where the gpiod_get() is done by the i2c_driver
-> for the i2c_client.
->
-> > If there are more devices, then I agree - let's keep dynamic
-> > allocation.
->
-> These are used to lookup GPIOs which the code needs access to *before*
-> instantiating the actual device consuming the GPIO.
->
-> Specifically these GPIOS either become i2c_board_info.irq which is
-> passed to i2c_client_new() to instantiate i2c_client-s; or
-> desc_to_gpio() is called on them for old fashioned platform-data
-> which still uses old style GPIO numbers (gpio_keys platform data).
->
-> Needing these GPIOs before instantiating their actual consumer
-> devices is the whole reason why the code used to call gpiolib
-> private APIs in the first place.
->
-> Note since the consuming device is not instantiated yet there really
-> is no dev_id. Instead the newly added x86_android_tablets
-> platform_device gets used as dev_id so that the code has a device
-> to do the lookups on to remove the gpiolib private API use.
->
-> This trick with using the x86_android_tablets pdev is why the whole
-> lookup is done dynamically.
->
-> > Just please: add a comment why you're doing it this way so that people
-> > don't just copy and paste it elsewhere.
->
-> Ok, I can do a follow-up patch adding a comment above
-> x86_android_tablet_get_gpiod() explaining that it should only
-> be used for GPIOs which are needed before their consumer
-> device has been instantiated.
->
+It's possible for the completion in ipc_wait_for_interrupt() to timeout,
+simply because the interrupt was delayed in being processed. A timeout
+in itself is not an error. This driver should check the status register
+upon a timeout to ensure that scheduling or interrupt processing delays
+don't affect the outcome of the IPC return value.
 
-I'd just fold it into the existing patch but do as you prefer.
+ CPU0                                                   SCU
+ ----                                                   ---
+ ipc_wait_for_interrupt()
+  wait_for_completion_timeout(&scu->cmd_complete)
+  [TIMEOUT]                                             status[IPC_STATUS_BUSY]=0
 
-Bart
+Fix this problem by reading the status bit in all cases, regardless of
+the timeout. If the completion times out, we'll assume the problem was
+that the IPC_STATUS_BUSY bit was still set, but if the status bit is
+cleared in the meantime we know that we hit some scheduling delay and we
+should just check the error bit.
 
-> Regards,
->
-> Hans
->
->
+Cc: Prashant Malani <pmalani@chromium.org>
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: ed12f295bfd5 ("ipc: Added support for IPC interrupt mode")
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ drivers/platform/x86/intel_scu_ipc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index 5a37becc65aa..8be1686e22e9 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -248,10 +248,12 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
+ {
+ 	int status;
+ 
+-	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT))
+-		return -ETIMEDOUT;
++	wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT);
+ 
+ 	status = ipc_read_status(scu);
++	if (status & IPC_STATUS_BUSY)
++		return -ETIMEDOUT;
++
+ 	if (status & IPC_STATUS_ERR)
+ 		return -EIO;
+ 
+-- 
+https://chromeos.dev
+
