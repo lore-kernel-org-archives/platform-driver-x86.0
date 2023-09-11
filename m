@@ -2,145 +2,226 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30307CA0EC9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E2DCA0EC7
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355941AbjIKWC1 (ORCPT
+        id S1355919AbjIKWCZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
+        Mon, 11 Sep 2023 18:02:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244218AbjIKTjr (ORCPT
+        with ESMTP id S237427AbjIKMuC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 15:39:47 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F1CE1B6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 12:39:42 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-53fa455cd94so3427719a12.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 12:39:42 -0700 (PDT)
+        Mon, 11 Sep 2023 08:50:02 -0400
+Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2669E4D
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 05:49:56 -0700 (PDT)
+Received: by mail-vk1-xa2f.google.com with SMTP id 71dfb90a1353d-495cf1bf9f9so658577e0c.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 05:49:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694461182; x=1695065982; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694436596; x=1695041396; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gdCNmE4TQzaUVGYBpjExxVlAWo5NcVTWN45t1mLK2Kw=;
-        b=ogpttftmeuGXskkeyI7t4md+uLYnvUs0J/Pn3eJnYCUi/XytZcLFKUOVj3ijBzWBnO
-         lJlDS1XHOVyvuJSBwO2U8D49Cx1zJ3IJSWBDxs2I/hGrWFvW1G+Q7AhJEaqoDt5mG7Fs
-         QoHCsnruJJxVE7zckenLWst++1VoWlgJV8HGs=
+        bh=mJZ1FZwiFkPljuovGYCrOATIkTG/B1uJPfFfZJohEuw=;
+        b=amV62cb6zjsK3BgqTlvyU5CbPPaAxDgiHXEodGwK8PlpUqgVVVvHhQuMu2ovS8Lf6A
+         OBB2JrG1s7WbWDSsut50VfptuFbrr5xfSFkh8X5XWVaOb/uqJX97jOH+V3IEWtxn3ovg
+         +W2EI3A0jZ0csZuqOfO119WhG/Lh84k++lbVqfjr5Ndp/DMaoDdM5HA7p7eVQhZmE1D/
+         zYshZ/vKJynDkKjd6dxbO3HOBlNvKXni2jWuwdxuj9ULUe5KCqNQJdxk0v1iv8L/vjV5
+         t1KYu5bSS3DAMM5IZ9qtbUBsyXP9P2K9K0RDWe0YSOHO/ui35FuG21necvJHY8YuXwwS
+         HY5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694461182; x=1695065982;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1694436596; x=1695041396;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gdCNmE4TQzaUVGYBpjExxVlAWo5NcVTWN45t1mLK2Kw=;
-        b=wB47RHeNTCPRY3zZq9FgXzCdlSzGdOb3jo0DDV/YsJ4mxpcvEUxpB47bRWen0bwzgy
-         tf9Zc9stApMBU3hD8qQgjaIK+bVi2wk6nSl5YRqWgOS8dvweBFkl5URb6J/GtR8fuCK3
-         XTwFzYqYcpcqL8mqUDxz3P92PCIHNPjh9FnPFbbf3rYedX54rkZ1n6CzzqBLVbs7i5vw
-         zhNXLyFCvXHxUKVA9L37i7wgxKU56jYMc0K3P9xNjwmZmVk/ZKgxVDNTfY6wULDvzCSg
-         9MoaNM+djqhsUrx1UI4wFzxeRWAIBBgqntXn32XT6/yxGmJgZ/sscYmFEQxIx8e8FBpm
-         fW7Q==
-X-Gm-Message-State: AOJu0YyX5nRHxBnaFrFmSJBVg4DLsB0q26wcAxUrOhz9+1t8zmI4XY4x
-        oGpUVnuHls0PsjdZ7S/UIxTmHw==
-X-Google-Smtp-Source: AGHT+IGGvlqWnCd6FgKie+c4RBzySbl2Wtfy49TuNcsKhZkbb20DCZlYeRe7ju+YlMJNU0euA/ADjA==
-X-Received: by 2002:a17:90a:c246:b0:263:ebab:a152 with SMTP id d6-20020a17090ac24600b00263ebaba152mr8240717pjx.19.1694461181946;
-        Mon, 11 Sep 2023 12:39:41 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:11a:201:d487:5e33:6656:3711])
-        by smtp.gmail.com with ESMTPSA id fu8-20020a17090ad18800b00262e485156esm7736543pjb.57.2023.09.11.12.39.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Sep 2023 12:39:41 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-        platform-driver-x86@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Prashant Malani <pmalani@chromium.org>
-Subject: [PATCH v3 1/4] platform/x86: intel_scu_ipc: Check status after timeout in busy_loop()
-Date:   Mon, 11 Sep 2023 12:39:33 -0700
-Message-ID: <20230911193937.302552-2-swboyd@chromium.org>
-X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
-In-Reply-To: <20230911193937.302552-1-swboyd@chromium.org>
-References: <20230911193937.302552-1-swboyd@chromium.org>
+        bh=mJZ1FZwiFkPljuovGYCrOATIkTG/B1uJPfFfZJohEuw=;
+        b=jnC1W9iPlBwPxXALYjmIASNCf8ShHmvva/lERj2KlcfbVa+2sP+29eyQ8RVaCrmqdm
+         CvMUM7eBmb593SjfFF0l/7X4VVn36TtDb7TBregzZHCIO3UTClp6jd/ziYToQCXWp5lS
+         vsXVoRNVYgy2TtW0ohEZ8bzW6MaCh2rDRHXr7rLwmk6qdsqZVKLhhyoPeI4DKmP6z4/K
+         HGLyCpI/Sq/pGO8l9bF+cgCsMUyPu2iynbRIgZj5q/teLf0UpXZEsAKAgeF6sIOzjYJM
+         tXMpStw8Ejcq5g2B9hVpE/GZySEMQ1xk1w1GSgeFVy30/LA60VEOQsjlLRtHcOCOZzKB
+         e0qA==
+X-Gm-Message-State: AOJu0YzYSAv6GarDrkxEC/B+rJnZySo9zQalq1r+6WLo91bCSQFqbwOh
+        2linQMa6C0SLmgo1kUFCBoG0f0g5UHnE9wOU0Wd9nBi65kNHjF6A
+X-Google-Smtp-Source: AGHT+IFCrtVF9FUlezN8ZWtoWSPV7p/2FrBeRPbP47fzBvVOA2broT4NKCJmO8TCIWnhGp8D7wN3K3NpXEYH5P+5oAQ=
+X-Received: by 2002:a05:6122:251f:b0:48f:cd3a:108 with SMTP id
+ cl31-20020a056122251f00b0048fcd3a0108mr6700350vkb.12.1694436595827; Mon, 11
+ Sep 2023 05:49:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230909141816.58358-1-hdegoede@redhat.com> <20230909141816.58358-7-hdegoede@redhat.com>
+ <CAHp75Ve888X7xJ0VrQfswaStL8C3SHXjnJV35O2ajZVq6=KfMQ@mail.gmail.com> <afda7862-3c36-98d8-43a3-dd67538de923@redhat.com>
+In-Reply-To: <afda7862-3c36-98d8-43a3-dd67538de923@redhat.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 11 Sep 2023 14:49:44 +0200
+Message-ID: <CAMRc=MdmzPWeZ7CtFe2b6xZFAges2cD-ckq4vn-+52CG=tVRSA@mail.gmail.com>
+Subject: Re: [PATCH 6/8] platform/x86: x86-android-tablets: Stop using gpiolib
+ private APIs
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-It's possible for the polling loop in busy_loop() to get scheduled away
-for a long time.
+On Sun, Sep 10, 2023 at 1:26=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+>
+> Hi,
+>
+> On 9/10/23 10:24, Andy Shevchenko wrote:
+> > On Sat, Sep 9, 2023 at 5:18=E2=80=AFPM Hans de Goede <hdegoede@redhat.c=
+om> wrote:
+> >>
+> >> Refactor x86_android_tablet_get_gpiod() to no longer use
+> >> gpiolib private functions like gpiochip_find().
+> >>
+> >> As a bonus this allows specifying that the GPIO is active-low,
+> >> like the /CE (charge enable) pin on the bq25892 charger on
+> >> the Lenovo Yoga Tablet 3.
+> >
+> > The best patch in the series!
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> >
+> > See below a couple of questions.
+> >
+> > ...
+> >
+> >> -int x86_android_tablet_get_gpiod(const char *label, int pin, struct g=
+pio_desc **desc)
+> >> +int x86_android_tablet_get_gpiod(const char *chip, int pin, const cha=
+r *con_id,
+> >> +                                bool active_low, enum gpiod_flags dfl=
+ags,
+> >> +                                struct gpio_desc **desc)
+> >>  {
+> >> +       struct gpiod_lookup_table *lookup;
+> >>         struct gpio_desc *gpiod;
+> >> -       struct gpio_chip *chip;
+> >>
+> >> -       chip =3D gpiochip_find((void *)label, gpiochip_find_match_labe=
+l);
+> >> -       if (!chip) {
+> >> -               pr_err("error cannot find GPIO chip %s\n", label);
+> >> -               return -ENODEV;
+> >> -       }
+> >> +       lookup =3D kzalloc(struct_size(lookup, table, 2), GFP_KERNEL);
+> >> +       if (!lookup)
+> >> +               return -ENOMEM;
+> >> +
+> >> +       lookup->dev_id =3D KBUILD_MODNAME;
+> >> +       lookup->table[0].key =3D chip;
+> >> +       lookup->table[0].chip_hwnum =3D pin;
+> >> +       lookup->table[0].con_id =3D con_id;
+> >> +       lookup->table[0].flags =3D active_low ? GPIO_ACTIVE_LOW : GPIO=
+_ACTIVE_HIGH;
+> >> +
+> >> +       gpiod_add_lookup_table(lookup);
+> >> +       gpiod =3D devm_gpiod_get(&x86_android_tablet_device->dev, con_=
+id, dflags);
+> >> +       gpiod_remove_lookup_table(lookup);
+> >> +       kfree(lookup);
+> >>
+> >> -       gpiod =3D gpiochip_get_desc(chip, pin);
+> >>         if (IS_ERR(gpiod)) {
+> >> -               pr_err("error %ld getting GPIO %s %d\n", PTR_ERR(gpiod=
+), label, pin);
+> >> +               pr_err("error %ld getting GPIO %s %d\n", PTR_ERR(gpiod=
+), chip, pin);
+> >>                 return PTR_ERR(gpiod);
+> >>         }
+> >
+> >> -       *desc =3D gpiod;
+> >> +       if (desc)
+> >> +               *desc =3D gpiod;
+> >
+> > Are we expecting that callers may not want the GPIO descriptor out of
+> > this function?
+> > Sounds a bit weird if so.
+>
+> Yes specifically the Charge-enable and OTG (Vboost enable) pins on the
+> bq25892 charger on the Lenovo Yoga Tab 3 just need to be set to a fixed
+> value, so we request the pins with GPIOD_OUT_LOW / _HIGH and then
+> leave them at that value.
+>
 
-  status = ipc_read_status(scu); // status = IPC_STATUS_BUSY
-  <long time scheduled away>
-  if (!(status & IPC_STATUS_BUSY))
+You mean you leak the descriptor? It would warrant either a comment or
+storing the descriptor somewhere and cleaning it up if the device can
+be unbound (I guess it can since the driver can be built as module).
 
-If this happens, then the status bit could change while the task is
-scheduled away and this function would never read the status again after
-timing out. Instead, the function will return -ETIMEDOUT when it's
-possible that scheduling didn't work out and the status bit was cleared.
-Bit polling code should always check the bit being polled one more time
-after the timeout in case this happens.
+Bart
 
-Fix this by reading the status once more after the while loop breaks.
-The read_poll_timeout() macro implements all of this, and it is
-shorter, so use that macro here to consolidate code and fix this.
-
-There were some concerns with using read_poll_timeout() because it uses
-timekeeping, and timekeeping isn't running early on or during the late
-stages of system suspend or early stages of system resume, but an audit
-of the code concluded that this code isn't called during those times so
-it is safe to use the macro.
-
-Cc: Prashant Malani <pmalani@chromium.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Fixes: e7b7ab3847c9 ("platform/x86: intel_scu_ipc: Sleeping is fine when polling")
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/platform/x86/intel_scu_ipc.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 6851d10d6582..5a37becc65aa 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -19,6 +19,7 @@
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/module.h>
- #include <linux/slab.h>
- 
-@@ -231,19 +232,15 @@ static inline u32 ipc_data_readl(struct intel_scu_ipc_dev *scu, u32 offset)
- /* Wait till scu status is busy */
- static inline int busy_loop(struct intel_scu_ipc_dev *scu)
- {
--	unsigned long end = jiffies + IPC_TIMEOUT;
-+	u8 status;
-+	int err;
- 
--	do {
--		u32 status;
-+	err = read_poll_timeout(ipc_read_status, status, !(status & IPC_STATUS_BUSY),
-+				100, jiffies_to_usecs(IPC_TIMEOUT), false, scu);
-+	if (err)
-+		return err;
- 
--		status = ipc_read_status(scu);
--		if (!(status & IPC_STATUS_BUSY))
--			return (status & IPC_STATUS_ERR) ? -EIO : 0;
--
--		usleep_range(50, 100);
--	} while (time_before(jiffies, end));
--
--	return -ETIMEDOUT;
-+	return (status & IPC_STATUS_ERR) ? -EIO : 0;
- }
- 
- /* Wait till ipc ioc interrupt is received or timeout in 10 HZ */
--- 
-https://chromeos.dev
-
+> I think similar stuff may come up later, so it seems nice to be able
+> to not have to pass an otherwise unused gpio_desc pointer.
+>
+>
+> >
+> >>         return 0;
+> >>  }
+> >
+> > ...
+> >
+> >>          * The bq25890_charger driver controls these through I2C, but =
+this only
+> >>          * works if not overridden by the pins. Set these pins here:
+> >> -        * 1. Set /CE to 0 to allow charging.
+> >
+> >> +        * 1. Set /CE to 1 to allow charging.
+> >>          * 2. Set OTG to 0 disable V5 boost output since the 5V boost =
+output of
+> >>          *    the main "bq25892_1" charger is used when necessary.
+> >
+> > Shouldn't we use terminology "active"/"non-active" instead of plain 0
+> > and 1 in the above?
+>
+> Well the flags are called GPIOD_OUT_HIGH / GPIOD_OUT_LOW and
+> with gpiod_set_value 0/1 is used. I'm not in favor of adding
+> "active"/"non-active" into the mix. That just adds a 3th way to
+> say 0/low or 1/high.
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+> >
+> >>          */
+> >
+> > ...
+> >
+> >> -       ret =3D x86_android_tablet_get_gpiod("INT33FF:02", 22, &gpiod)=
+;
+> >> +       ret =3D x86_android_tablet_get_gpiod("INT33FF:02", 22, "bq2589=
+2_0_ce",
+> >> +                                          true, GPIOD_OUT_HIGH, NULL)=
+;
+> >>         if (ret < 0)
+> >>                 return ret;
+> >
+> > Hmm... Maybe better this function to return an error pointer or valid
+> > pointer, and in the code you choose what to do with that?
+> >
+> > ...
+> >
+> >>         /* OTG pin */
+> >> -       ret =3D x86_android_tablet_get_gpiod("INT33FF:03", 19, &gpiod)=
+;
+> >> +       ret =3D x86_android_tablet_get_gpiod("INT33FF:03", 19, "bq2589=
+2_0_otg",
+> >> +                                          false, GPIOD_OUT_LOW, NULL)=
+;
+> >
+> > Ditto.
+> >
+> >>         if (ret < 0)
+> >>                 return ret;
+> >
+>
