@@ -2,99 +2,185 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BC3CA0EC8
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB7DCA0ECD
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355897AbjIKWCR (ORCPT
+        id S1355913AbjIKWCY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:02:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57360 "EHLO
+        Mon, 11 Sep 2023 18:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236791AbjIKL0J (ORCPT
+        with ESMTP id S237687AbjIKNIz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 07:26:09 -0400
+        Mon, 11 Sep 2023 09:08:55 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0405ACDD
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:25:18 -0700 (PDT)
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 12DA3CD7
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 06:08:03 -0700 (PDT)
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-292-EpeDcTNNNSqyMfxNxrkoaw-1; Mon, 11 Sep 2023 07:25:17 -0400
-X-MC-Unique: EpeDcTNNNSqyMfxNxrkoaw-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-94a348facbbso299875166b.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:25:16 -0700 (PDT)
+ us-mta-114-z52vsHIUPIi6xOFuzeQffg-1; Mon, 11 Sep 2023 09:08:00 -0400
+X-MC-Unique: z52vsHIUPIi6xOFuzeQffg-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-4fe565bca92so4724658e87.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 06:08:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694431516; x=1695036316;
+        d=1e100.net; s=20230601; t=1694437679; x=1695042479;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Iim/K20vnt05KkdZYOYBtAD92BDdr0wfxtmdMEpivQ=;
-        b=np/Bt8Z5GUkx+6tvriiKNla96afCoW3VpcuQV0HnvNMkB9n+sZ8MLM0s085sz2aTCv
-         +okMKfRBG0zttigwWH6zcS/cQqP2HmI+EnO6wwH+sda3pG6F0MqjNbWbTIoKfnfGykEI
-         nbh2wUT+85uyGIHDnlej3oSDm7p94XW+8go3I/lSxjLgI+r24SUZXWGwYZvS/ObqgqWU
-         0XWGt1pW3jNqP1k4Uh2PuyOIACkFqS4CY3wjQfflBhuiBfBBaJrM0khm/DSinxV+g8VG
-         Ly4fJtwSizgpNfC5WY6he9kJW3DrWjg0zgMGvHEvS5k1qbusO71uJFmdCgXZRC/8uHlZ
-         l5EA==
-X-Gm-Message-State: AOJu0YwAI3CRYXqWUZas5EVm0GTFlB1Zxtd2mzIIlWg7EQKrWHm2pmte
-        L/RcoK+qoAEbtuDY+Zmyoi5Rflnk+c2IZUdAYMPVIa6yVvZ0A4iDBXxiSNXouuQoRc7tNpWzqhH
-        6meNfj1t/HhDG+VSljnUmx7MZfSxOTYIE5A==
-X-Received: by 2002:a17:907:a073:b0:9a1:d400:39e5 with SMTP id ia19-20020a170907a07300b009a1d40039e5mr7153725ejc.4.1694431515986;
-        Mon, 11 Sep 2023 04:25:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGRmzBlFjuupO/WhzEW9QA8x/A7Crw88ZDujh/u8xJM8zhdS52wjhVtQr5s2VmPio2T37TxEA==
-X-Received: by 2002:a17:907:a073:b0:9a1:d400:39e5 with SMTP id ia19-20020a170907a07300b009a1d40039e5mr7153710ejc.4.1694431515670;
-        Mon, 11 Sep 2023 04:25:15 -0700 (PDT)
+        bh=UbMds+5lzjL/Ue2qSrRd4FXnj9bvG2pM9g941GZzOeA=;
+        b=vzLVdsNvxwh6jJC3p9A3/KaQb9YLs4kkzmfVOIG+3/2wk1CmataMqjexHNCZ91WSuv
+         BOjr8azjAZPcO5qHt82ZwgvAGZrEmYCw8j0M9nvgcADk0pCO+0e5spR55StH56yxLeFJ
+         volha5NpBm0av+HVL9m01vBF6knvl39sK7pEKxK6KJKttPmu1S+9AUjBlIXB0OOBXLgv
+         GE+wSN3zarty/B7PA6YB02NOQr1V13yxNzPln+AflFLPPrlrPtY3GNRMhDiHGEYQ+EA3
+         vWZ5Hmp7CS2KWgU9B9d9Xtwcv8t8T3iSl9NWN+Ddyhjel2UiiVK0Wv+LTjfJtcH2tKOT
+         4x+A==
+X-Gm-Message-State: AOJu0YwDJqpvEJnj85yQQp7bg7RMCWMlwRRIJokbdZl77a0Hj54FKSAQ
+        iWZY6qy5QhsHKnbJ61p02ixrVCejUoBt2wQ8mBEk+r50eIX0NcBz3txLQLFdsCLRs8QmLr1v2Wj
+        /MHgEMbSsON1OkbXvfjjCMrYvY8hUsOpvYw==
+X-Received: by 2002:a05:6512:3602:b0:502:9fce:b6da with SMTP id f2-20020a056512360200b005029fceb6damr6086161lfs.21.1694437678917;
+        Mon, 11 Sep 2023 06:07:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF+n8pYGwuCVSaxiJuH557qRvJDQVa5pqopYogmdd0mnu1QYbL9nqZmcnJOVSyusFnaVtsBvQ==
+X-Received: by 2002:a05:6512:3602:b0:502:9fce:b6da with SMTP id f2-20020a056512360200b005029fceb6damr6086134lfs.21.1694437678516;
+        Mon, 11 Sep 2023 06:07:58 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id z20-20020a170906241400b009829d2e892csm5243509eja.15.2023.09.11.04.25.14
+        by smtp.gmail.com with ESMTPSA id oy26-20020a170907105a00b0099d45ed589csm5315860ejb.125.2023.09.11.06.07.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Sep 2023 04:25:14 -0700 (PDT)
-Message-ID: <f1ac222b-00ce-70cd-2d26-d66bc0b0ef70@redhat.com>
-Date:   Mon, 11 Sep 2023 13:25:14 +0200
+        Mon, 11 Sep 2023 06:07:57 -0700 (PDT)
+Message-ID: <0b1e0312-9144-85ed-666e-a84110b26418@redhat.com>
+Date:   Mon, 11 Sep 2023 15:07:57 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH 1/2] platform/mellanox: NVSW_SN2201 should depend on ACPI
+Subject: Re: [PATCH 6/8] platform/x86: x86-android-tablets: Stop using gpiolib
+ private APIs
 Content-Language: en-US
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Michael Shych <michaelsh@nvidia.com>,
-        Wolfram Sang <wsa@kernel.org>
-Cc:     linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1693828363.git.geert+renesas@glider.be>
- <ec5a4071691ab08d58771b7732a9988e89779268.1693828363.git.geert+renesas@glider.be>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
+References: <20230909141816.58358-1-hdegoede@redhat.com>
+ <20230909141816.58358-7-hdegoede@redhat.com>
+ <CAMRc=MfeKirks7N7scu+dh+M1Nf0bNxzC7PE2Q7J4bxgpRnECw@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ec5a4071691ab08d58771b7732a9988e89779268.1693828363.git.geert+renesas@glider.be>
+In-Reply-To: <CAMRc=MfeKirks7N7scu+dh+M1Nf0bNxzC7PE2Q7J4bxgpRnECw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/4/23 14:00, Geert Uytterhoeven wrote:
-> The only probing method supported by the Nvidia SN2201 platform driver
-> is probing through an ACPI match table.  Hence add a dependency on
-> ACPI, to prevent asking the user about this driver when configuring a
-> kernel without ACPI support.
+On 9/11/23 14:50, Bartosz Golaszewski wrote:
+> On Sat, Sep 9, 2023 at 4:18 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Refactor x86_android_tablet_get_gpiod() to no longer use
+>> gpiolib private functions like gpiochip_find().
+>>
+>> As a bonus this allows specifying that the GPIO is active-low,
+>> like the /CE (charge enable) pin on the bq25892 charger on
+>> the Lenovo Yoga Tablet 3.
+>>
+>> Reported-by: Bartosz Golaszewski <brgl@bgdev.pl>
+>> Closes: https://lore.kernel.org/platform-driver-x86/20230905185309.131295-12-brgl@bgdev.pl/
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>  .../platform/x86/x86-android-tablets/asus.c   |  1 +
+>>  .../platform/x86/x86-android-tablets/core.c   | 51 +++++++++++--------
+>>  .../platform/x86/x86-android-tablets/lenovo.c | 28 +++++-----
+>>  .../platform/x86/x86-android-tablets/other.c  |  6 +++
+>>  .../x86-android-tablets/x86-android-tablets.h |  6 ++-
+>>  5 files changed, 55 insertions(+), 37 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/x86-android-tablets/asus.c b/drivers/platform/x86/x86-android-tablets/asus.c
+>> index f9c4083be86d..227afbb51078 100644
+>> --- a/drivers/platform/x86/x86-android-tablets/asus.c
+>> +++ b/drivers/platform/x86/x86-android-tablets/asus.c
+>> @@ -303,6 +303,7 @@ static const struct x86_i2c_client_info asus_tf103c_i2c_clients[] __initconst =
+>>                         .index = 28,
+>>                         .trigger = ACPI_EDGE_SENSITIVE,
+>>                         .polarity = ACPI_ACTIVE_LOW,
+>> +                       .con_id = "atmel_mxt_ts_irq",
+>>                 },
+>>         },
+>>  };
+>> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
+>> index 3d3101b2848f..673f3a14941b 100644
+>> --- a/drivers/platform/x86/x86-android-tablets/core.c
+>> +++ b/drivers/platform/x86/x86-android-tablets/core.c
+>> @@ -12,7 +12,7 @@
+>>
+>>  #include <linux/acpi.h>
+>>  #include <linux/dmi.h>
+>> -#include <linux/gpio/driver.h>
+>> +#include <linux/gpio/consumer.h>
+>>  #include <linux/gpio/machine.h>
+>>  #include <linux/irq.h>
+>>  #include <linux/module.h>
+>> @@ -21,35 +21,39 @@
+>>  #include <linux/string.h>
+>>
+>>  #include "x86-android-tablets.h"
+>> -/* For gpiochip_get_desc() which is EXPORT_SYMBOL_GPL() */
+>> -#include "../../../gpio/gpiolib.h"
+>> -#include "../../../gpio/gpiolib-acpi.h"
+>>
+>>  static struct platform_device *x86_android_tablet_device;
+>>
+>> -static int gpiochip_find_match_label(struct gpio_chip *gc, void *data)
+>> -{
+>> -       return gc->label && !strcmp(gc->label, data);
+>> -}
+>> -
+>> -int x86_android_tablet_get_gpiod(const char *label, int pin, struct gpio_desc **desc)
+>> +int x86_android_tablet_get_gpiod(const char *chip, int pin, const char *con_id,
+>> +                                bool active_low, enum gpiod_flags dflags,
+>> +                                struct gpio_desc **desc)
+>>  {
+>> +       struct gpiod_lookup_table *lookup;
+>>         struct gpio_desc *gpiod;
+>> -       struct gpio_chip *chip;
+>>
+>> -       chip = gpiochip_find((void *)label, gpiochip_find_match_label);
+>> -       if (!chip) {
+>> -               pr_err("error cannot find GPIO chip %s\n", label);
+>> -               return -ENODEV;
+>> -       }
+>> +       lookup = kzalloc(struct_size(lookup, table, 2), GFP_KERNEL);
+>> +       if (!lookup)
+>> +               return -ENOMEM;
+>> +
+>> +       lookup->dev_id = KBUILD_MODNAME;
+>> +       lookup->table[0].key = chip;
+>> +       lookup->table[0].chip_hwnum = pin;
+>> +       lookup->table[0].con_id = con_id;
+>> +       lookup->table[0].flags = active_low ? GPIO_ACTIVE_LOW : GPIO_ACTIVE_HIGH;
+>> +
+>> +       gpiod_add_lookup_table(lookup);
+>> +       gpiod = devm_gpiod_get(&x86_android_tablet_device->dev, con_id, dflags);
+>> +       gpiod_remove_lookup_table(lookup);
+>> +       kfree(lookup);
+>>
 > 
-> Fixes: 662f24826f954d49 ("platform/mellanox: Add support for new SN2201 system")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Any reason for not creating static lookup tables for GPIOs here?
 
-Thank you for your patch, I've applied this patch to my fixes
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
+Not sure what you mean with static?
 
-Note it will show up in my fixes branch once I've pushed my
-local branch there, which might take a while.
+I guess you mean using global or stack memory instead of kmalloc() ?
 
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
+gcc did not like me putting a struct with a variable length array
+at the end on the stack, so I went with a kzalloc using the
+struct_size() helper for structs with variable length arrays instead.
 
-Note I'm only picking up PATCH 1/2. I expect 2/2 to be merged
-through the i2c tree.
+Note this only runs once at boot, so the small extra cost of
+the malloc + free is not really a big deal here.
+
+I did not try making it global data as that would make the function
+non re-entrant. Not that it is used in a re-entrant way anywhere,
+but generally I try to avoid creating code which is not re-entrant.
 
 Regards,
 
@@ -102,23 +188,13 @@ Hans
 
 
 
-> ---
->  drivers/platform/mellanox/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+
+>> -       gpiod = gpiochip_get_desc(chip, pin);
+>>         if (IS_ERR(gpiod)) {
+>> -               pr_err("error %ld getting GPIO %s %d\n", PTR_ERR(gpiod), label, pin);
+>> +               pr_err("error %ld getting GPIO %s %d\n", PTR_ERR(gpiod), chip, pin);
+>>                 return PTR_ERR(gpiod);
+>>         }
+>>
 > 
-> diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
-> index 382793e73a60a8b3..30b50920b278c94b 100644
-> --- a/drivers/platform/mellanox/Kconfig
-> +++ b/drivers/platform/mellanox/Kconfig
-> @@ -80,8 +80,8 @@ config MLXBF_PMC
->  
->  config NVSW_SN2201
->  	tristate "Nvidia SN2201 platform driver support"
-> -	depends on HWMON
-> -	depends on I2C
-> +	depends on HWMON && I2C
-> +	depends on ACPI || COMPILE_TEST
->  	select REGMAP_I2C
->  	help
->  	  This driver provides support for the Nvidia SN2201 platform.
 
