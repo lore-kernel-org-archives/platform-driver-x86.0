@@ -2,225 +2,110 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCA9CA0EC6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D209CCA0EC8
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241673AbjIKWBB (ORCPT
+        id S236709AbjIKWA6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:01:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51522 "EHLO
+        Mon, 11 Sep 2023 18:00:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238012AbjIKNdO (ORCPT
+        with ESMTP id S236704AbjIKLPM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 09:33:14 -0400
+        Mon, 11 Sep 2023 07:15:12 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 24164125
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 06:32:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E6FF3CDD
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:14:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694439143;
+        s=mimecast20190719; t=1694430859;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=orwoQQ02NKiRDIoIWUPNEoBqnTACek0bhgnmSB5j9TU=;
-        b=CJhFhkj4+TkJ1MgjcWRaW3p6SOgR9WSjMSfvDnuFAiXMA/mO+pByxITWO/Qq5s9Jsd+jUy
-        sZswilomBt+FXdR8hs6UOeqHk2k0XEeMbe5SydRXdHakTf7pE8Drhwk1qUsOmp0gYm3jTV
-        hevP9s1ytU3rEhsch0upxPAL53gRjvM=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=Pgyi8cPnSlJRXjLXjWR86gYQ+47FyiGTRbxn+qkYf94=;
+        b=hjC93WDP4RKQ/hk69JyGSYmnrePEIz13t/6E9r0m03eyo6rDvRAD/ByB3/2L9ReqTxbb5B
+        IHDQgKDzmf7CTBmHfp67044+pizOa5pwomZ7qsltJPem6QZBVmGwrsa2iF9INNgIcWWMgh
+        S2G+6yA6p/gwxsTIxZ6pb1D5rVOzpH4=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-107-lZjbFyQUMZyhnQFIcnuU0g-1; Mon, 11 Sep 2023 09:32:21 -0400
-X-MC-Unique: lZjbFyQUMZyhnQFIcnuU0g-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-9a5944adecbso293183066b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 06:32:21 -0700 (PDT)
+ us-mta-151-NnwM-KUvPiy61xtp3dMSpQ-1; Mon, 11 Sep 2023 07:14:18 -0400
+X-MC-Unique: NnwM-KUvPiy61xtp3dMSpQ-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2be51691dd5so45501651fa.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:14:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694439140; x=1695043940;
+        d=1e100.net; s=20230601; t=1694430857; x=1695035657;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=orwoQQ02NKiRDIoIWUPNEoBqnTACek0bhgnmSB5j9TU=;
-        b=joIHiv9EINTMZks7zlT3nHqAxSMs92Q/3QtKvEx2+RYRU0KM0bsfJLvhp1AKkH3Af6
-         2cKUJC9YrA8jWinsgZd496/OA8+9S6jyWuY/sb4BB3IcgAx07NEiBeCc7o25rV+U2TOZ
-         k56fm3o8OXxSjzxOSygFP8PlICA82fYDaTlioATKYwhWw4agEWCCsEyialZgTSuhjXis
-         DGwu1XmvDbUx/pkzrjEu7er1zB2fsmB6eoMAVpywFF+tD9N0YKWTWcKrdDaQu0AKXPVU
-         I4T7yj5e7bIWUYqXcMjJiVdUPRQyd8ixDHIV+8trNES4fzBSUumFoZtceyfhpGhi3AtX
-         OHZg==
-X-Gm-Message-State: AOJu0YwG9TOLa+w0m01+0pP1oCPGkGYtG/HZlotZvo/jMQvdpEI3a23X
-        iSRE8qmBXSg/u0GFzgrNIA5u29sPqsD4Av4T4dbRLzpcsjhjpBwPLO3DmkYKYHJSEamB1ysANUJ
-        Bbe49EmzrcGvZBMfWSSoe+cV1kKy+plgqLQ==
-X-Received: by 2002:a17:906:8a59:b0:9a9:f2fd:2a2b with SMTP id gx25-20020a1709068a5900b009a9f2fd2a2bmr8307836ejc.73.1694439140427;
-        Mon, 11 Sep 2023 06:32:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGsgf6p4Ks9RJ0CyHdNFHwf/agtk/OlG1wy0yQq0VL8PLRL7G7I4Yd2SpnVhBysAWsViQ0f9w==
-X-Received: by 2002:a17:906:8a59:b0:9a9:f2fd:2a2b with SMTP id gx25-20020a1709068a5900b009a9f2fd2a2bmr8307822ejc.73.1694439140115;
-        Mon, 11 Sep 2023 06:32:20 -0700 (PDT)
+        bh=Pgyi8cPnSlJRXjLXjWR86gYQ+47FyiGTRbxn+qkYf94=;
+        b=Hz1UG0h2JCiUhPS2/D09LT4GM7ha8vjlKbTK9zTDNpWVZsn/I7UTzgtsTYNBdyRfIz
+         Sf2LOSCuFwJrfMC/RL7JBH+SEGycrl1efLJYLJNPv8rQNiyqXcVEUKbMxn+3w3c3u4hN
+         9w+EU/arcGfit5zdpqA/MRAGIs4kgcH1THy0bohbM/2S2jLgP3i9AuMZfpXs83hUJ4iV
+         SIGth1f2Cns4fGy2dq4Ex5pKJpGQGg01SUHa7SgzYvJiOoNqY1kj4T+RyZW53jQ6Lw1v
+         GJoIN1l6tLVIDOPJQGkbow9zImV2EsjC0m+nLneML+clqjNqYwCEQrO5s3ybrxoapKdK
+         Ow6g==
+X-Gm-Message-State: AOJu0YwhHOX2JnCG9OogqQz34kn6dW0DMsc4N9DSzZYP/QODsTVr7LIa
+        sokIDCSPw2o9fT0nd4A/dPZ2OPK4UiXRysBX3fWR6VF8LZz0JjtChyLOi+VSbLlOuAwFYmePMae
+        Dkhdr8dUXXHBcVn7m7wdpEnsTr3YuyBFqeg==
+X-Received: by 2002:a2e:86d9:0:b0:2bc:d8cb:5a13 with SMTP id n25-20020a2e86d9000000b002bcd8cb5a13mr7835147ljj.42.1694430857078;
+        Mon, 11 Sep 2023 04:14:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGBjNk1Ed8h4wPAAHSnv3OnM7Lf9/xEyYkEWPq1tWRCcklr7WQDnnpkgDureN3fGSCToYl9Ug==
+X-Received: by 2002:a2e:86d9:0:b0:2bc:d8cb:5a13 with SMTP id n25-20020a2e86d9000000b002bcd8cb5a13mr7835138ljj.42.1694430856763;
+        Mon, 11 Sep 2023 04:14:16 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id d16-20020a17090694d000b00982be08a9besm5419058ejy.172.2023.09.11.06.32.19
+        by smtp.gmail.com with ESMTPSA id s22-20020a1709064d9600b00988b8ff849csm5203013eju.108.2023.09.11.04.14.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Sep 2023 06:32:19 -0700 (PDT)
-Message-ID: <01a85a3d-c888-11d8-f47e-be2a26d0cb9d@redhat.com>
-Date:   Mon, 11 Sep 2023 15:32:18 +0200
+        Mon, 11 Sep 2023 04:14:16 -0700 (PDT)
+Message-ID: <9a833864-24ac-0ff3-826d-7cb0e0dcb89b@redhat.com>
+Date:   Mon, 11 Sep 2023 13:14:15 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH 6/8] platform/x86: x86-android-tablets: Stop using gpiolib
- private APIs
+Subject: Re: [PATCH v1 0/2] mlxbf-tmfifo: Add some robust fixes
 Content-Language: en-US
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <20230909141816.58358-1-hdegoede@redhat.com>
- <20230909141816.58358-7-hdegoede@redhat.com>
- <CAMRc=MfeKirks7N7scu+dh+M1Nf0bNxzC7PE2Q7J4bxgpRnECw@mail.gmail.com>
- <0b1e0312-9144-85ed-666e-a84110b26418@redhat.com>
- <CAMRc=MfVZCqc-v+5oMkTkhfLvq1pE66E7GykqT2ymxzS_kw83w@mail.gmail.com>
+To:     Liming Sun <limings@nvidia.com>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        David Thompson <davthompson@nvidia.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1693266447.git.limings@nvidia.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAMRc=MfVZCqc-v+5oMkTkhfLvq1pE66E7GykqT2ymxzS_kw83w@mail.gmail.com>
+In-Reply-To: <cover.1693266447.git.limings@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/11/23 15:18, Bartosz Golaszewski wrote:
-> On Mon, Sep 11, 2023 at 3:08 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi,
->>
->> On 9/11/23 14:50, Bartosz Golaszewski wrote:
->>> On Sat, Sep 9, 2023 at 4:18 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>>>
->>>> Refactor x86_android_tablet_get_gpiod() to no longer use
->>>> gpiolib private functions like gpiochip_find().
->>>>
->>>> As a bonus this allows specifying that the GPIO is active-low,
->>>> like the /CE (charge enable) pin on the bq25892 charger on
->>>> the Lenovo Yoga Tablet 3.
->>>>
->>>> Reported-by: Bartosz Golaszewski <brgl@bgdev.pl>
->>>> Closes: https://lore.kernel.org/platform-driver-x86/20230905185309.131295-12-brgl@bgdev.pl/
->>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>> ---
->>>>  .../platform/x86/x86-android-tablets/asus.c   |  1 +
->>>>  .../platform/x86/x86-android-tablets/core.c   | 51 +++++++++++--------
->>>>  .../platform/x86/x86-android-tablets/lenovo.c | 28 +++++-----
->>>>  .../platform/x86/x86-android-tablets/other.c  |  6 +++
->>>>  .../x86-android-tablets/x86-android-tablets.h |  6 ++-
->>>>  5 files changed, 55 insertions(+), 37 deletions(-)
->>>>
->>>> diff --git a/drivers/platform/x86/x86-android-tablets/asus.c b/drivers/platform/x86/x86-android-tablets/asus.c
->>>> index f9c4083be86d..227afbb51078 100644
->>>> --- a/drivers/platform/x86/x86-android-tablets/asus.c
->>>> +++ b/drivers/platform/x86/x86-android-tablets/asus.c
->>>> @@ -303,6 +303,7 @@ static const struct x86_i2c_client_info asus_tf103c_i2c_clients[] __initconst =
->>>>                         .index = 28,
->>>>                         .trigger = ACPI_EDGE_SENSITIVE,
->>>>                         .polarity = ACPI_ACTIVE_LOW,
->>>> +                       .con_id = "atmel_mxt_ts_irq",
->>>>                 },
->>>>         },
->>>>  };
->>>> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
->>>> index 3d3101b2848f..673f3a14941b 100644
->>>> --- a/drivers/platform/x86/x86-android-tablets/core.c
->>>> +++ b/drivers/platform/x86/x86-android-tablets/core.c
->>>> @@ -12,7 +12,7 @@
->>>>
->>>>  #include <linux/acpi.h>
->>>>  #include <linux/dmi.h>
->>>> -#include <linux/gpio/driver.h>
->>>> +#include <linux/gpio/consumer.h>
->>>>  #include <linux/gpio/machine.h>
->>>>  #include <linux/irq.h>
->>>>  #include <linux/module.h>
->>>> @@ -21,35 +21,39 @@
->>>>  #include <linux/string.h>
->>>>
->>>>  #include "x86-android-tablets.h"
->>>> -/* For gpiochip_get_desc() which is EXPORT_SYMBOL_GPL() */
->>>> -#include "../../../gpio/gpiolib.h"
->>>> -#include "../../../gpio/gpiolib-acpi.h"
->>>>
->>>>  static struct platform_device *x86_android_tablet_device;
->>>>
->>>> -static int gpiochip_find_match_label(struct gpio_chip *gc, void *data)
->>>> -{
->>>> -       return gc->label && !strcmp(gc->label, data);
->>>> -}
->>>> -
->>>> -int x86_android_tablet_get_gpiod(const char *label, int pin, struct gpio_desc **desc)
->>>> +int x86_android_tablet_get_gpiod(const char *chip, int pin, const char *con_id,
->>>> +                                bool active_low, enum gpiod_flags dflags,
->>>> +                                struct gpio_desc **desc)
->>>>  {
->>>> +       struct gpiod_lookup_table *lookup;
->>>>         struct gpio_desc *gpiod;
->>>> -       struct gpio_chip *chip;
->>>>
->>>> -       chip = gpiochip_find((void *)label, gpiochip_find_match_label);
->>>> -       if (!chip) {
->>>> -               pr_err("error cannot find GPIO chip %s\n", label);
->>>> -               return -ENODEV;
->>>> -       }
->>>> +       lookup = kzalloc(struct_size(lookup, table, 2), GFP_KERNEL);
->>>> +       if (!lookup)
->>>> +               return -ENOMEM;
->>>> +
->>>> +       lookup->dev_id = KBUILD_MODNAME;
->>>> +       lookup->table[0].key = chip;
->>>> +       lookup->table[0].chip_hwnum = pin;
->>>> +       lookup->table[0].con_id = con_id;
->>>> +       lookup->table[0].flags = active_low ? GPIO_ACTIVE_LOW : GPIO_ACTIVE_HIGH;
->>>> +
->>>> +       gpiod_add_lookup_table(lookup);
->>>> +       gpiod = devm_gpiod_get(&x86_android_tablet_device->dev, con_id, dflags);
->>>> +       gpiod_remove_lookup_table(lookup);
->>>> +       kfree(lookup);
->>>>
->>>
->>> Any reason for not creating static lookup tables for GPIOs here?
->>
->> Not sure what you mean with static?
->>
->> I guess you mean using global or stack memory instead of kmalloc() ?
->>
->> gcc did not like me putting a struct with a variable length array
->> at the end on the stack, so I went with a kzalloc using the
->> struct_size() helper for structs with variable length arrays instead.
->>
->> Note this only runs once at boot, so the small extra cost of
->> the malloc + free is not really a big deal here.
->>
->> I did not try making it global data as that would make the function
->> non re-entrant. Not that it is used in a re-entrant way anywhere,
->> but generally I try to avoid creating code which is not re-entrant.
->>
+On 8/29/23 19:42, Liming Sun wrote:
+> This patch series have two robust fixes for the mlxbf-tmfifo driver
+> syncing up to upstream.
 > 
-> I meant static-per-compilation-unit.
+> Liming Sun (2):
+>   mlxbf-tmfifo: Drop the Rx packet if no more descriptors
+>   mlxbf-tmfifo: Drop jumbo frames
 
-I see.
+Thank you for your patch, I've applied this series to my fixes
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
 
-> It doesn't have to be a variable
-> length array either. Typically GPIO lookups are static arrays that are
-> added once and never removed.
+Note it will show up in my fixes branch once I've pushed my
+local branch there, which might take a while.
 
-Right.
-
-> The SPI example I posted elsewhere is
-> different as it addresses a device quirk and cannot be generalized
-> like this. How many GPIOs would you need to describe for this
-> use-case? If it's just a few, then I'd go with static lookup tables.
-> If it's way more than disregard this comment.
-
-ATM x86_android_tablet_get_gpiod() gets called for 24 GPIOs,
-so more the just a few.
+I will include this series in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
 Regards,
 
 Hans
 
+
+
+> 
+>  drivers/platform/mellanox/mlxbf-tmfifo.c | 87 +++++++++++++++++-------
+>  1 file changed, 63 insertions(+), 24 deletions(-)
+> 
 
