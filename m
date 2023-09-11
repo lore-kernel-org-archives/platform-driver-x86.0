@@ -2,122 +2,110 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E07CCA0EC3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EBCCA0EC7
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355557AbjIKWAu (ORCPT
+        id S238961AbjIKWAy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:00:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44882 "EHLO
+        Mon, 11 Sep 2023 18:00:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236728AbjIKLP5 (ORCPT
+        with ESMTP id S1352967AbjIKVqO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 07:15:57 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 03A8CCDD
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:15:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694430908;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NKHpLK/1F+7Ung4H62+PvTO3aeU4hK38bQgvzhP99xY=;
-        b=Tx2/MLjcLW9ozyGOyR9p3DSfk2ce0EjCgHXSy/9e+k8omE9CnGA6gGrSe+efQtcNrfth8j
-        m3kifJkurVo5mjJqyqHENkMTlOgJjzJ4+qP964bkjee8AiSx+JPnhlH68/56t97PUevom3
-        3u0Da7e6lod43EvJ0F1nOXvxfbWO++Y=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-403-ukcF4A9VN0OWHYCSZrVJ2Q-1; Mon, 11 Sep 2023 07:15:07 -0400
-X-MC-Unique: ukcF4A9VN0OWHYCSZrVJ2Q-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9a65094d873so327664866b.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 04:15:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694430906; x=1695035706;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NKHpLK/1F+7Ung4H62+PvTO3aeU4hK38bQgvzhP99xY=;
-        b=iP36iulxt6DUyyzK1LauIEZ8LQsX7ZhDNa6XoIEhGz+UhtQ2jqSn+5mE/CyxethFC0
-         OtN49N5sUMDxDLxskzlVPwMfGlhswkfRfrnkgKTBKQbgOwgUZLJ49ycyZNO5X2wQq9mU
-         i3kgbmupGetHWP3QrNP2bXLNBUMzHu/SuVAB0Q3r7yMVIaeecZiSe4wex7lQbSu9Tr8B
-         dPimGRO+QVvjsItWSaCHzx1DNmlTZZTeS/HP53fjdTb8CpWWg3SCtiweThZNrOyXP+dP
-         BIR8FNFOW/TjxIBGEeyHw4bflFBalK7xAzHB6Z1EXdMk5lWlkVn5Zq0A8Rc6P6kNHguY
-         SVOQ==
-X-Gm-Message-State: AOJu0YysQ18E0/3fKndKUigeWVi5SAqL5iD0+0GGfBdX80VG2Zf7lVLz
-        8suEi+GJ4Xn0SpLvByX/yoxR82ppHvWXjQZU9MiQWXlR6ZD4ekPeUvH7eWMPFwOKcxSrVZoW3br
-        R9GgPfoZ7M6lR63QVKkpqdhoZAmVPYFvbxNXODqMbBg==
-X-Received: by 2002:a17:906:5307:b0:9aa:20b2:35e7 with SMTP id h7-20020a170906530700b009aa20b235e7mr3501695ejo.9.1694430906248;
-        Mon, 11 Sep 2023 04:15:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFzOJs3bCQUw1AJYelMXONDCh7w6Ao2vLa35tCxdoFi2n1i3pBsgz7Xx2aiczwOSGCAUexSTg==
-X-Received: by 2002:a17:906:5307:b0:9aa:20b2:35e7 with SMTP id h7-20020a170906530700b009aa20b235e7mr3501682ejo.9.1694430905991;
-        Mon, 11 Sep 2023 04:15:05 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id me15-20020a170906aecf00b009a193a5acffsm5127626ejb.121.2023.09.11.04.15.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Sep 2023 04:15:05 -0700 (PDT)
-Message-ID: <646ef8f8-b2a0-09e6-5136-f04e0261f093@redhat.com>
-Date:   Mon, 11 Sep 2023 13:15:04 +0200
+        Mon, 11 Sep 2023 17:46:14 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 083A81DC9E;
+        Mon, 11 Sep 2023 14:18:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694467111; x=1726003111;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OvOywvaVgqf7GXCTK6i+HE3r8bZumInwL/UZ2w6I2+s=;
+  b=Ffr1y9IawzNxbrNNPNUC+BxWY2IAJOk7jVjRR9FBh5H/SMM8Cqfu2qjP
+   r2zTL0iM2+ZtzUjZnIeuZSEOpwGumE+WVGgUOQozSss2ijNJZB+638QfF
+   hWbVFjC+agmu6C4A2iKudbLxmtY0fGnC300/Ipr1CXGDjzCcup6aeUsEP
+   G8vMmPmJKwCTX3TRS9hDnamt5mYHW2pFL0ny0qgkpCqGkI+o0loMvFpZX
+   91YgjU9U2/mWKnOl9iTZNZBhKjV2u/aEWro8zEmmpLx9uAeAVEUb6Q2VP
+   gu0aXtVvjX3/kEd2NBw5eZ3PdITxoCUw7uXGbDBgD9j0dfN8S9LNoK8l8
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="409166246"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="409166246"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 14:17:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="720129941"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="720129941"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 14:17:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qfoHa-008QTA-1i;
+        Tue, 12 Sep 2023 00:17:22 +0300
+Date:   Tue, 12 Sep 2023 00:17:22 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Prashant Malani <pmalani@chromium.org>
+Subject: Re: [PATCH v3 1/4] platform/x86: intel_scu_ipc: Check status after
+ timeout in busy_loop()
+Message-ID: <ZP+D4hlUXhAboFBJ@smile.fi.intel.com>
+References: <20230911193937.302552-1-swboyd@chromium.org>
+ <20230911193937.302552-2-swboyd@chromium.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v1] mlxbf-bootctl: add NET dependency into Kconfig
-Content-Language: en-US
-To:     David Thompson <davthompson@nvidia.com>, markgross@kernel.org,
-        vadimp@nvidia.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-References: <20230905133243.31550-1-davthompson@nvidia.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230905133243.31550-1-davthompson@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230911193937.302552-2-swboyd@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 9/5/23 15:32, David Thompson wrote:
-> The latest version of the mlxbf_bootctl driver utilizes
-> "sysfs_format_mac", and this API is only available if
-> NET is defined in the kernel configuration. This patch
-> changes the mlxbf_bootctl Kconfig to depend on NET.
+On Mon, Sep 11, 2023 at 12:39:33PM -0700, Stephen Boyd wrote:
+> It's possible for the polling loop in busy_loop() to get scheduled away
+> for a long time.
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202309031058.JvwNDBKt-lkp@intel.com/
-> Signed-off-by: David Thompson <davthompson@nvidia.com>
-
-Thank you for your patch, I've applied this patch to my fixes
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
-
-Note it will show up in my fixes branch once I've pushed my
-local branch there, which might take a while.
-
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
-
-Regards,
-
-Hans
-
-
-> ---
->  drivers/platform/mellanox/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+>   status = ipc_read_status(scu); // status = IPC_STATUS_BUSY
+>   <long time scheduled away>
+>   if (!(status & IPC_STATUS_BUSY))
 > 
-> diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
-> index 382793e73a60..e52aea996ca5 100644
-> --- a/drivers/platform/mellanox/Kconfig
-> +++ b/drivers/platform/mellanox/Kconfig
-> @@ -60,6 +60,7 @@ config MLXBF_BOOTCTL
->  	tristate "Mellanox BlueField Firmware Boot Control driver"
->  	depends on ARM64
->  	depends on ACPI
-> +	depends on NET
->  	help
->  	  The Mellanox BlueField firmware implements functionality to
->  	  request swapping the primary and alternate eMMC boot partition,
+> If this happens, then the status bit could change while the task is
+> scheduled away and this function would never read the status again after
+> timing out. Instead, the function will return -ETIMEDOUT when it's
+> possible that scheduling didn't work out and the status bit was cleared.
+> Bit polling code should always check the bit being polled one more time
+> after the timeout in case this happens.
+> 
+> Fix this by reading the status once more after the while loop breaks.
+> The read_poll_timeout() macro implements all of this, and it is
+> shorter, so use that macro here to consolidate code and fix this.
+> 
+> There were some concerns with using read_poll_timeout() because it uses
+> timekeeping, and timekeeping isn't running early on or during the late
+> stages of system suspend or early stages of system resume, but an audit
+> of the code concluded that this code isn't called during those times so
+> it is safe to use the macro.
+
+...
+
+> +	err = read_poll_timeout(ipc_read_status, status, !(status & IPC_STATUS_BUSY),
+> +				100, jiffies_to_usecs(IPC_TIMEOUT), false, scu);
+
+Since "false" you probably can utilize readx_poll_timeout().
+
+> +	if (err)
+> +		return err;
+>  
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
