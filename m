@@ -2,53 +2,63 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160C1CA0EC9
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04ACBCA0ECF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:06:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238012AbjIKWBG (ORCPT
+        id S237941AbjIKWBP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:01:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38310 "EHLO
+        Mon, 11 Sep 2023 18:01:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238331AbjIKNx7 (ORCPT
+        with ESMTP id S239137AbjIKOMy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 09:53:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 67E71CD7
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 06:53:08 -0700 (PDT)
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        Mon, 11 Sep 2023 10:12:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 335F9DE
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 07:12:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694441526;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=A91u6VkBY8rSmCiAClu6h7dzekaFyYH062J2b3f72D8=;
+        b=CIT94Gvgpx8dNCwAqyO8gPcrz+oAfaFCzOjgvYqVHgyZdc5xUogDsZ18J/Ts+3Y9/A9Lqz
+        QbM10U37A5E5OwFSTjnOpAeuqDJ7y7oBmJ+WSg2ev1O9Hmf4+crPSfF+fgV+yY1cm/xo9k
+        ZNpF1D2LFaGs0YZhqFyeM7RcScc4b/Q=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-508-llydJCRBNJihA532c59w1A-1; Mon, 11 Sep 2023 09:53:05 -0400
-X-MC-Unique: llydJCRBNJihA532c59w1A-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-51da39aa6dcso3031249a12.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 06:53:05 -0700 (PDT)
+ us-mta-649-k60oZFLFPe-0Eq0lHpqfOg-1; Mon, 11 Sep 2023 10:12:04 -0400
+X-MC-Unique: k60oZFLFPe-0Eq0lHpqfOg-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2bd1687c5d2so51182401fa.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 07:12:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694440384; x=1695045184;
+        d=1e100.net; s=20230601; t=1694441522; x=1695046322;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qg6YlUOI8SWMLKh1EEZbto+p4X9gGdbAEFMjYUc9RAE=;
-        b=R1zNpA5qYw7x0doX/uptJBBzZ7DF5+qS6Tuy0XNc9x4Gri+zkWBMGAYLKheuetR3sa
-         qepZ/BPs9h4vhSpwPcnjB7dzI1rFL0IdTl3u1a9yA4IEnso0KrgH4l9cw8TZl+Oszo/H
-         sm0RJat3e90z7pFiazVmt+ZJGUydk50B9WFjFlOqsMIkgEgANBWQ1EjALRdRCgAJpNRS
-         RKb6eUn+04w3yAS5ykD0awD8hur3ZBZfOJSkVdKtCV4Iyl/Nrj5+SUwDq0TUQf1nmC94
-         TKdDDtn1lmv2tTrV16vmzKHWonQsUxq3Ac+GWalbksvjBZH0S+bncRpMd+Ub48wBSNjO
-         EUvg==
-X-Gm-Message-State: AOJu0YxiWIx5v7TgKOxTsPaZmik4c/e+IiEdJYsQL5YIpmZcBPy+TK5F
-        qrkkedDVMnuLrq42fG/uEAO1Y6miiqVl8XTBXAAV2KmuV7SOY4RpuP2M1C7QKJIDri7YhkdO5kz
-        7cxGczYI0UPtOUsY0MJ21pHqeNUmDDxTc6w==
-X-Received: by 2002:a17:907:7885:b0:992:c8d7:b66f with SMTP id ku5-20020a170907788500b00992c8d7b66fmr7928150ejc.75.1694440384701;
-        Mon, 11 Sep 2023 06:53:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFxX1pVtv1RhLhs6WDjIX8N4kVOPezxbt3c+IZdoeF36Hl/JizIU5Ix7LmWzVdYQjD2E5napA==
-X-Received: by 2002:a17:907:7885:b0:992:c8d7:b66f with SMTP id ku5-20020a170907788500b00992c8d7b66fmr7928131ejc.75.1694440384341;
-        Mon, 11 Sep 2023 06:53:04 -0700 (PDT)
+        bh=A91u6VkBY8rSmCiAClu6h7dzekaFyYH062J2b3f72D8=;
+        b=hPIRYteRgfSdWcEQO7TBV0mWCWyDbunq01aTz7M/GEu2pa1cuC6tUhlEKdnBoZLrM4
+         Y+JcXe7n/AIsc8EqtT9Rw96txsQJzvpOAqafTdJ23Bhfa5CgDzIwlUOr38y/pTipoZhe
+         ABDLwAbhnhWWfFHSvkEjpbt8bxH3YeTJSsD1Rs1zOFm9S1TByX3Wf7E3huX19/kkVoqp
+         pemZOdh7IYpAugWquuF3352ZZxQC6xlwuEbq8T8ieECrNV/zXaRNbpxmR/E/+XUbgY95
+         nCFlGipQY9sK4FGaaNWfOBnMfVh6HbY9Rqy5iem9YiC72GYGEbXezQ2CL/zg7tpWyl3n
+         AD/Q==
+X-Gm-Message-State: AOJu0YzraIFywXD/ucfxthooARlB8t+acviJQxwdr8cM2N3IId3tmQkx
+        hZjKyk0oQm2lncYjxNS185M0dSz2CAz3aJEjpxhPnnbl05EDTHoAG5gh2/S034V/YRcG1GvK/Rp
+        JDJS1oQcK1QlgfFCKx2k/ggvGBVv5GASIsSUknLuMbQ==
+X-Received: by 2002:a05:6512:555:b0:4ff:9efd:8a9c with SMTP id h21-20020a056512055500b004ff9efd8a9cmr7336265lfl.5.1694441522635;
+        Mon, 11 Sep 2023 07:12:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH8MVztv7slrYQUdZEMnp7uHwmJkTtvnGxUWy2kKF5/04fqALEBj6t2sXZsXS5HZdQ+XgBi0w==
+X-Received: by 2002:a05:6512:555:b0:4ff:9efd:8a9c with SMTP id h21-20020a056512055500b004ff9efd8a9cmr7336234lfl.5.1694441522191;
+        Mon, 11 Sep 2023 07:12:02 -0700 (PDT)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id fx12-20020a170906b74c00b0099ccee57ac2sm5382533ejb.194.2023.09.11.06.53.03
+        by smtp.gmail.com with ESMTPSA id c12-20020aa7c74c000000b0052e2472f884sm4688504eds.21.2023.09.11.07.12.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Sep 2023 06:53:03 -0700 (PDT)
-Message-ID: <bf866db7-1231-2fd6-eedf-b287ca4fa1b8@redhat.com>
-Date:   Mon, 11 Sep 2023 15:53:02 +0200
+        Mon, 11 Sep 2023 07:12:01 -0700 (PDT)
+Message-ID: <22698b72-b293-9ad8-908f-f6aee85430d7@redhat.com>
+Date:   Mon, 11 Sep 2023 16:12:00 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
@@ -68,195 +78,217 @@ References: <20230909141816.58358-1-hdegoede@redhat.com>
  <CAMRc=MfVZCqc-v+5oMkTkhfLvq1pE66E7GykqT2ymxzS_kw83w@mail.gmail.com>
  <01a85a3d-c888-11d8-f47e-be2a26d0cb9d@redhat.com>
  <CAMRc=MeGRreVVz=tCnEWtvixV+ZNEXXvG5SVRRmmnWG_sawMcg@mail.gmail.com>
+ <bf866db7-1231-2fd6-eedf-b287ca4fa1b8@redhat.com>
+ <CAMRc=MdXLBnjFPE8Ac9tFQj6BXEyV6kRyDFNytsdQa++Yk6suw@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAMRc=MeGRreVVz=tCnEWtvixV+ZNEXXvG5SVRRmmnWG_sawMcg@mail.gmail.com>
+In-Reply-To: <CAMRc=MdXLBnjFPE8Ac9tFQj6BXEyV6kRyDFNytsdQa++Yk6suw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Bart,
+Hi,
 
-On 9/11/23 15:37, Bartosz Golaszewski wrote:
-> On Mon, Sep 11, 2023 at 3:32 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On 9/11/23 16:04, Bartosz Golaszewski wrote:
+> On Mon, Sep 11, 2023 at 3:53 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >>
->> Hi,
+>> Hi Bart,
 >>
->> On 9/11/23 15:18, Bartosz Golaszewski wrote:
->>> On Mon, Sep 11, 2023 at 3:08 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>> On 9/11/23 15:37, Bartosz Golaszewski wrote:
+>>> On Mon, Sep 11, 2023 at 3:32 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >>>>
 >>>> Hi,
 >>>>
->>>> On 9/11/23 14:50, Bartosz Golaszewski wrote:
->>>>> On Sat, Sep 9, 2023 at 4:18 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>> On 9/11/23 15:18, Bartosz Golaszewski wrote:
+>>>>> On Mon, Sep 11, 2023 at 3:08 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >>>>>>
->>>>>> Refactor x86_android_tablet_get_gpiod() to no longer use
->>>>>> gpiolib private functions like gpiochip_find().
+>>>>>> Hi,
 >>>>>>
->>>>>> As a bonus this allows specifying that the GPIO is active-low,
->>>>>> like the /CE (charge enable) pin on the bq25892 charger on
->>>>>> the Lenovo Yoga Tablet 3.
+>>>>>> On 9/11/23 14:50, Bartosz Golaszewski wrote:
+>>>>>>> On Sat, Sep 9, 2023 at 4:18 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>>>>>>
+>>>>>>>> Refactor x86_android_tablet_get_gpiod() to no longer use
+>>>>>>>> gpiolib private functions like gpiochip_find().
+>>>>>>>>
+>>>>>>>> As a bonus this allows specifying that the GPIO is active-low,
+>>>>>>>> like the /CE (charge enable) pin on the bq25892 charger on
+>>>>>>>> the Lenovo Yoga Tablet 3.
+>>>>>>>>
+>>>>>>>> Reported-by: Bartosz Golaszewski <brgl@bgdev.pl>
+>>>>>>>> Closes: https://lore.kernel.org/platform-driver-x86/20230905185309.131295-12-brgl@bgdev.pl/
+>>>>>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>>>>>>> ---
+>>>>>>>>  .../platform/x86/x86-android-tablets/asus.c   |  1 +
+>>>>>>>>  .../platform/x86/x86-android-tablets/core.c   | 51 +++++++++++--------
+>>>>>>>>  .../platform/x86/x86-android-tablets/lenovo.c | 28 +++++-----
+>>>>>>>>  .../platform/x86/x86-android-tablets/other.c  |  6 +++
+>>>>>>>>  .../x86-android-tablets/x86-android-tablets.h |  6 ++-
+>>>>>>>>  5 files changed, 55 insertions(+), 37 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/platform/x86/x86-android-tablets/asus.c b/drivers/platform/x86/x86-android-tablets/asus.c
+>>>>>>>> index f9c4083be86d..227afbb51078 100644
+>>>>>>>> --- a/drivers/platform/x86/x86-android-tablets/asus.c
+>>>>>>>> +++ b/drivers/platform/x86/x86-android-tablets/asus.c
+>>>>>>>> @@ -303,6 +303,7 @@ static const struct x86_i2c_client_info asus_tf103c_i2c_clients[] __initconst =
+>>>>>>>>                         .index = 28,
+>>>>>>>>                         .trigger = ACPI_EDGE_SENSITIVE,
+>>>>>>>>                         .polarity = ACPI_ACTIVE_LOW,
+>>>>>>>> +                       .con_id = "atmel_mxt_ts_irq",
+>>>>>>>>                 },
+>>>>>>>>         },
+>>>>>>>>  };
+>>>>>>>> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
+>>>>>>>> index 3d3101b2848f..673f3a14941b 100644
+>>>>>>>> --- a/drivers/platform/x86/x86-android-tablets/core.c
+>>>>>>>> +++ b/drivers/platform/x86/x86-android-tablets/core.c
+>>>>>>>> @@ -12,7 +12,7 @@
+>>>>>>>>
+>>>>>>>>  #include <linux/acpi.h>
+>>>>>>>>  #include <linux/dmi.h>
+>>>>>>>> -#include <linux/gpio/driver.h>
+>>>>>>>> +#include <linux/gpio/consumer.h>
+>>>>>>>>  #include <linux/gpio/machine.h>
+>>>>>>>>  #include <linux/irq.h>
+>>>>>>>>  #include <linux/module.h>
+>>>>>>>> @@ -21,35 +21,39 @@
+>>>>>>>>  #include <linux/string.h>
+>>>>>>>>
+>>>>>>>>  #include "x86-android-tablets.h"
+>>>>>>>> -/* For gpiochip_get_desc() which is EXPORT_SYMBOL_GPL() */
+>>>>>>>> -#include "../../../gpio/gpiolib.h"
+>>>>>>>> -#include "../../../gpio/gpiolib-acpi.h"
+>>>>>>>>
+>>>>>>>>  static struct platform_device *x86_android_tablet_device;
+>>>>>>>>
+>>>>>>>> -static int gpiochip_find_match_label(struct gpio_chip *gc, void *data)
+>>>>>>>> -{
+>>>>>>>> -       return gc->label && !strcmp(gc->label, data);
+>>>>>>>> -}
+>>>>>>>> -
+>>>>>>>> -int x86_android_tablet_get_gpiod(const char *label, int pin, struct gpio_desc **desc)
+>>>>>>>> +int x86_android_tablet_get_gpiod(const char *chip, int pin, const char *con_id,
+>>>>>>>> +                                bool active_low, enum gpiod_flags dflags,
+>>>>>>>> +                                struct gpio_desc **desc)
+>>>>>>>>  {
+>>>>>>>> +       struct gpiod_lookup_table *lookup;
+>>>>>>>>         struct gpio_desc *gpiod;
+>>>>>>>> -       struct gpio_chip *chip;
+>>>>>>>>
+>>>>>>>> -       chip = gpiochip_find((void *)label, gpiochip_find_match_label);
+>>>>>>>> -       if (!chip) {
+>>>>>>>> -               pr_err("error cannot find GPIO chip %s\n", label);
+>>>>>>>> -               return -ENODEV;
+>>>>>>>> -       }
+>>>>>>>> +       lookup = kzalloc(struct_size(lookup, table, 2), GFP_KERNEL);
+>>>>>>>> +       if (!lookup)
+>>>>>>>> +               return -ENOMEM;
+>>>>>>>> +
+>>>>>>>> +       lookup->dev_id = KBUILD_MODNAME;
+>>>>>>>> +       lookup->table[0].key = chip;
+>>>>>>>> +       lookup->table[0].chip_hwnum = pin;
+>>>>>>>> +       lookup->table[0].con_id = con_id;
+>>>>>>>> +       lookup->table[0].flags = active_low ? GPIO_ACTIVE_LOW : GPIO_ACTIVE_HIGH;
+>>>>>>>> +
+>>>>>>>> +       gpiod_add_lookup_table(lookup);
+>>>>>>>> +       gpiod = devm_gpiod_get(&x86_android_tablet_device->dev, con_id, dflags);
+>>>>>>>> +       gpiod_remove_lookup_table(lookup);
+>>>>>>>> +       kfree(lookup);
+>>>>>>>>
+>>>>>>>
+>>>>>>> Any reason for not creating static lookup tables for GPIOs here?
 >>>>>>
->>>>>> Reported-by: Bartosz Golaszewski <brgl@bgdev.pl>
->>>>>> Closes: https://lore.kernel.org/platform-driver-x86/20230905185309.131295-12-brgl@bgdev.pl/
->>>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>>>> ---
->>>>>>  .../platform/x86/x86-android-tablets/asus.c   |  1 +
->>>>>>  .../platform/x86/x86-android-tablets/core.c   | 51 +++++++++++--------
->>>>>>  .../platform/x86/x86-android-tablets/lenovo.c | 28 +++++-----
->>>>>>  .../platform/x86/x86-android-tablets/other.c  |  6 +++
->>>>>>  .../x86-android-tablets/x86-android-tablets.h |  6 ++-
->>>>>>  5 files changed, 55 insertions(+), 37 deletions(-)
+>>>>>> Not sure what you mean with static?
 >>>>>>
->>>>>> diff --git a/drivers/platform/x86/x86-android-tablets/asus.c b/drivers/platform/x86/x86-android-tablets/asus.c
->>>>>> index f9c4083be86d..227afbb51078 100644
->>>>>> --- a/drivers/platform/x86/x86-android-tablets/asus.c
->>>>>> +++ b/drivers/platform/x86/x86-android-tablets/asus.c
->>>>>> @@ -303,6 +303,7 @@ static const struct x86_i2c_client_info asus_tf103c_i2c_clients[] __initconst =
->>>>>>                         .index = 28,
->>>>>>                         .trigger = ACPI_EDGE_SENSITIVE,
->>>>>>                         .polarity = ACPI_ACTIVE_LOW,
->>>>>> +                       .con_id = "atmel_mxt_ts_irq",
->>>>>>                 },
->>>>>>         },
->>>>>>  };
->>>>>> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
->>>>>> index 3d3101b2848f..673f3a14941b 100644
->>>>>> --- a/drivers/platform/x86/x86-android-tablets/core.c
->>>>>> +++ b/drivers/platform/x86/x86-android-tablets/core.c
->>>>>> @@ -12,7 +12,7 @@
+>>>>>> I guess you mean using global or stack memory instead of kmalloc() ?
 >>>>>>
->>>>>>  #include <linux/acpi.h>
->>>>>>  #include <linux/dmi.h>
->>>>>> -#include <linux/gpio/driver.h>
->>>>>> +#include <linux/gpio/consumer.h>
->>>>>>  #include <linux/gpio/machine.h>
->>>>>>  #include <linux/irq.h>
->>>>>>  #include <linux/module.h>
->>>>>> @@ -21,35 +21,39 @@
->>>>>>  #include <linux/string.h>
+>>>>>> gcc did not like me putting a struct with a variable length array
+>>>>>> at the end on the stack, so I went with a kzalloc using the
+>>>>>> struct_size() helper for structs with variable length arrays instead.
 >>>>>>
->>>>>>  #include "x86-android-tablets.h"
->>>>>> -/* For gpiochip_get_desc() which is EXPORT_SYMBOL_GPL() */
->>>>>> -#include "../../../gpio/gpiolib.h"
->>>>>> -#include "../../../gpio/gpiolib-acpi.h"
+>>>>>> Note this only runs once at boot, so the small extra cost of
+>>>>>> the malloc + free is not really a big deal here.
 >>>>>>
->>>>>>  static struct platform_device *x86_android_tablet_device;
->>>>>>
->>>>>> -static int gpiochip_find_match_label(struct gpio_chip *gc, void *data)
->>>>>> -{
->>>>>> -       return gc->label && !strcmp(gc->label, data);
->>>>>> -}
->>>>>> -
->>>>>> -int x86_android_tablet_get_gpiod(const char *label, int pin, struct gpio_desc **desc)
->>>>>> +int x86_android_tablet_get_gpiod(const char *chip, int pin, const char *con_id,
->>>>>> +                                bool active_low, enum gpiod_flags dflags,
->>>>>> +                                struct gpio_desc **desc)
->>>>>>  {
->>>>>> +       struct gpiod_lookup_table *lookup;
->>>>>>         struct gpio_desc *gpiod;
->>>>>> -       struct gpio_chip *chip;
->>>>>>
->>>>>> -       chip = gpiochip_find((void *)label, gpiochip_find_match_label);
->>>>>> -       if (!chip) {
->>>>>> -               pr_err("error cannot find GPIO chip %s\n", label);
->>>>>> -               return -ENODEV;
->>>>>> -       }
->>>>>> +       lookup = kzalloc(struct_size(lookup, table, 2), GFP_KERNEL);
->>>>>> +       if (!lookup)
->>>>>> +               return -ENOMEM;
->>>>>> +
->>>>>> +       lookup->dev_id = KBUILD_MODNAME;
->>>>>> +       lookup->table[0].key = chip;
->>>>>> +       lookup->table[0].chip_hwnum = pin;
->>>>>> +       lookup->table[0].con_id = con_id;
->>>>>> +       lookup->table[0].flags = active_low ? GPIO_ACTIVE_LOW : GPIO_ACTIVE_HIGH;
->>>>>> +
->>>>>> +       gpiod_add_lookup_table(lookup);
->>>>>> +       gpiod = devm_gpiod_get(&x86_android_tablet_device->dev, con_id, dflags);
->>>>>> +       gpiod_remove_lookup_table(lookup);
->>>>>> +       kfree(lookup);
+>>>>>> I did not try making it global data as that would make the function
+>>>>>> non re-entrant. Not that it is used in a re-entrant way anywhere,
+>>>>>> but generally I try to avoid creating code which is not re-entrant.
 >>>>>>
 >>>>>
->>>>> Any reason for not creating static lookup tables for GPIOs here?
+>>>>> I meant static-per-compilation-unit.
 >>>>
->>>> Not sure what you mean with static?
+>>>> I see.
 >>>>
->>>> I guess you mean using global or stack memory instead of kmalloc() ?
+>>>>> It doesn't have to be a variable
+>>>>> length array either. Typically GPIO lookups are static arrays that are
+>>>>> added once and never removed.
 >>>>
->>>> gcc did not like me putting a struct with a variable length array
->>>> at the end on the stack, so I went with a kzalloc using the
->>>> struct_size() helper for structs with variable length arrays instead.
+>>>> Right.
 >>>>
->>>> Note this only runs once at boot, so the small extra cost of
->>>> the malloc + free is not really a big deal here.
+>>>>> The SPI example I posted elsewhere is
+>>>>> different as it addresses a device quirk and cannot be generalized
+>>>>> like this. How many GPIOs would you need to describe for this
+>>>>> use-case? If it's just a few, then I'd go with static lookup tables.
+>>>>> If it's way more than disregard this comment.
 >>>>
->>>> I did not try making it global data as that would make the function
->>>> non re-entrant. Not that it is used in a re-entrant way anywhere,
->>>> but generally I try to avoid creating code which is not re-entrant.
->>>>
+>>>> ATM x86_android_tablet_get_gpiod() gets called for 24 GPIOs,
+>>>> so more the just a few.
 >>>
->>> I meant static-per-compilation-unit.
+>>> For different devices? As in: dev_id would differ? If not then I'd go
+>>> with a static table, you can use GPIO_LOOKUP() macro and have one line
+>>> per GPIO.
 >>
->> I see.
+>> I know GPIO_LOOKUP() is already used for normal GPIO lookup cases
+>> like e.g. a reset pin where the gpiod_get() is done by the i2c_driver
+>> for the i2c_client.
 >>
->>> It doesn't have to be a variable
->>> length array either. Typically GPIO lookups are static arrays that are
->>> added once and never removed.
+>>> If there are more devices, then I agree - let's keep dynamic
+>>> allocation.
 >>
->> Right.
+>> These are used to lookup GPIOs which the code needs access to *before*
+>> instantiating the actual device consuming the GPIO.
 >>
->>> The SPI example I posted elsewhere is
->>> different as it addresses a device quirk and cannot be generalized
->>> like this. How many GPIOs would you need to describe for this
->>> use-case? If it's just a few, then I'd go with static lookup tables.
->>> If it's way more than disregard this comment.
+>> Specifically these GPIOS either become i2c_board_info.irq which is
+>> passed to i2c_client_new() to instantiate i2c_client-s; or
+>> desc_to_gpio() is called on them for old fashioned platform-data
+>> which still uses old style GPIO numbers (gpio_keys platform data).
 >>
->> ATM x86_android_tablet_get_gpiod() gets called for 24 GPIOs,
->> so more the just a few.
+>> Needing these GPIOs before instantiating their actual consumer
+>> devices is the whole reason why the code used to call gpiolib
+>> private APIs in the first place.
+>>
+>> Note since the consuming device is not instantiated yet there really
+>> is no dev_id. Instead the newly added x86_android_tablets
+>> platform_device gets used as dev_id so that the code has a device
+>> to do the lookups on to remove the gpiolib private API use.
+>>
+>> This trick with using the x86_android_tablets pdev is why the whole
+>> lookup is done dynamically.
+>>
+>>> Just please: add a comment why you're doing it this way so that people
+>>> don't just copy and paste it elsewhere.
+>>
+>> Ok, I can do a follow-up patch adding a comment above
+>> x86_android_tablet_get_gpiod() explaining that it should only
+>> be used for GPIOs which are needed before their consumer
+>> device has been instantiated.
+>>
 > 
-> For different devices? As in: dev_id would differ? If not then I'd go
-> with a static table, you can use GPIO_LOOKUP() macro and have one line
-> per GPIO.
+> I'd just fold it into the existing patch but do as you prefer.
 
-I know GPIO_LOOKUP() is already used for normal GPIO lookup cases
-like e.g. a reset pin where the gpiod_get() is done by the i2c_driver
-for the i2c_client.
+After your Acked-by for the first 2 patches this morning I assumed
+you were fine with the entire set, so I've already created a signed tag
+for it.
 
-> If there are more devices, then I agree - let's keep dynamic
-> allocation.
+Therefor I don't want to / cannot change the hashes of the commits,
+so a follow-up patch it is.
 
-These are used to lookup GPIOs which the code needs access to *before*
-instantiating the actual device consuming the GPIO.
+I'll prep a patch adding the comment tomorrow.
 
-Specifically these GPIOS either become i2c_board_info.irq which is
-passed to i2c_client_new() to instantiate i2c_client-s; or
-desc_to_gpio() is called on them for old fashioned platform-data
-which still uses old style GPIO numbers (gpio_keys platform data).
-
-Needing these GPIOs before instantiating their actual consumer
-devices is the whole reason why the code used to call gpiolib
-private APIs in the first place.
-
-Note since the consuming device is not instantiated yet there really
-is no dev_id. Instead the newly added x86_android_tablets
-platform_device gets used as dev_id so that the code has a device
-to do the lookups on to remove the gpiolib private API use.
-
-This trick with using the x86_android_tablets pdev is why the whole
-lookup is done dynamically.
-
-> Just please: add a comment why you're doing it this way so that people
-> don't just copy and paste it elsewhere.
-
-Ok, I can do a follow-up patch adding a comment above
-x86_android_tablet_get_gpiod() explaining that it should only
-be used for GPIOs which are needed before their consumer
-device has been instantiated.
+Note the original signed-tag + pull-req is still fine for coordination
+between the pdx86 code and the GPIO tree. Please let me know if you want
+an updated pull-req which includes the follow-up patch adding the comment.
 
 Regards,
 
 Hans
-
 
