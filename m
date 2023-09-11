@@ -2,103 +2,174 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C072ECA0EC6
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6CBCA0EC7
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Sep 2023 22:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355738AbjIKWBt (ORCPT
+        id S1355770AbjIKWB6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:01:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53810 "EHLO
+        Mon, 11 Sep 2023 18:01:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244225AbjIKTjt (ORCPT
+        with ESMTP id S237847AbjIKNPA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Sep 2023 15:39:49 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77EA618D
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 12:39:45 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-5778fe9d183so520756a12.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 12:39:45 -0700 (PDT)
+        Mon, 11 Sep 2023 09:15:00 -0400
+Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB621E40
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 06:14:54 -0700 (PDT)
+Received: by mail-vs1-xe2c.google.com with SMTP id ada2fe7eead31-44d3a5cd2f9so1717884137.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Sep 2023 06:14:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694461185; x=1695065985; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694438093; x=1695042893; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iZS9exdhsXGWlwAB3PPHAHPTpMkYjkQ66zHV37ZNnIo=;
-        b=VJFdmIKkhv/Q+m+JOoiFKhTBZ+rrK10LCUqGXdzbKbRxyxO8VMsfe8fPD8KOMRWZcf
-         vU251VLuJpCuLwTAwx+e6hWYNi3DA5QOlKgv1LHZqM+kzklQD7DMAFRt5+hB4T2AYork
-         SLJZF2nasOAcgpLboG144l4aqhJkoSBMSfExM=
+        bh=RmHlHXBKieO1ptu2ldznM8ZuZhTbj+/naN6JcvAFLCM=;
+        b=wMbspLXnU4SWJPP2pyiFS+UPFCNPGYLSf7ttzlXYAlHzDhVZW7HVGa2l9NwlellZJE
+         njOC3G16h+joZnmK7I9iIFB+fNBIjy4gsffff7BLFLKycGVnAhDL9SNDPFOKQVtPIyKL
+         KgvKxOKEeCpMKUx+LLmH4Kve69knsX4HPJjf0h5QaVBII8vQBPS4tD0JkrVZaqxhJisA
+         jnYS2/kGs69torDAx8w+jn0ySA4fIvj3s8mGyhCjeMldRAFv4+DiDllCXiYLIuZIky1Y
+         bi34YIU6PyRFd+MPjR5QGvsk+pqn/ffJoDFP2AXXlp/Bu18d3f+Mqsa5qSk/HAHiD5Mj
+         ZPEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694461185; x=1695065985;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1694438093; x=1695042893;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iZS9exdhsXGWlwAB3PPHAHPTpMkYjkQ66zHV37ZNnIo=;
-        b=OzGMsDxufzRPAxojOWWJ0Hb3S54UNsbBmVXLW4TlWWaf+XLhznbTJg40dcp5mP4Ddw
-         GRW6fO+bQjqkdE9NDd6nDktgbQfsu9qGVlarDwmlqnNT2AufhSztiQqc8S5WwGcu3+pB
-         pDD+pzEU96dKbS6XyJ+fG0EKJ61Vqle5wBMl8PBlXzHMDiRvzcCedxpl7IbPf3LGldyt
-         1UJetFBXljPWjorsz4u8WBfvcdYufxhWhhAxkfK8TcHWuY/adieBh2nnQIb0mVSOgKeL
-         Ta0BQwGi3S+wHy4oxzGyAwSphGmrtMAdjzzzlyS2k3vroumG/VmkVU6m5wkpP23xdF1I
-         lRVA==
-X-Gm-Message-State: AOJu0YxcBzcdlQuWj7XDiR23Z799TKMoblvy8hIwXTkMN7hA0uLhGSoR
-        cXTyXeoetknALTPpluAx1F68yQ==
-X-Google-Smtp-Source: AGHT+IE7TogpeCC/K5uuUl78NkURxmB6xAcGOF09QSqED+BJ2qE4ZV0Dxs2vBHRHl4QM+fNIhII6jQ==
-X-Received: by 2002:a17:90b:164e:b0:268:10a3:cea8 with SMTP id il14-20020a17090b164e00b0026810a3cea8mr8146677pjb.9.1694461184937;
-        Mon, 11 Sep 2023 12:39:44 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:11a:201:d487:5e33:6656:3711])
-        by smtp.gmail.com with ESMTPSA id fu8-20020a17090ad18800b00262e485156esm7736543pjb.57.2023.09.11.12.39.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Sep 2023 12:39:44 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-        platform-driver-x86@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Prashant Malani <pmalani@chromium.org>
-Subject: [PATCH v3 3/4] platform/x86: intel_scu_ipc: Don't override scu in intel_scu_ipc_dev_simple_command()
-Date:   Mon, 11 Sep 2023 12:39:35 -0700
-Message-ID: <20230911193937.302552-4-swboyd@chromium.org>
-X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
-In-Reply-To: <20230911193937.302552-1-swboyd@chromium.org>
-References: <20230911193937.302552-1-swboyd@chromium.org>
+        bh=RmHlHXBKieO1ptu2ldznM8ZuZhTbj+/naN6JcvAFLCM=;
+        b=nFg46fElSLeLzlBDdicA4AGY+ycSA7xL48kTCSIK/4GDClnwYovs5wSwwHKcdYm4l4
+         xm3+MTQzC06+otjDpAvjUZx0gB/4olktytNdpY769newC3rN9murXDi+NOH1eAUUA2aE
+         W2OxMtaWFP3cUZ+awjgEyDJQprOTDoWutYWkktXku1Jd13z9nbVREEt/KVQW3pPwyDF2
+         QrHIgIp61PgeosPUbQaeMUO131m5Ntfn9heedVft+n0DynJ+dHjVd+Pqeu4ZQTZkE5EZ
+         tSqPy+crQORicgmM3eJMWp2ocT7XZ+27dSsfbqrNhcWsuBY0ChN3kZ+PeOlGiMz7FUS2
+         2YaA==
+X-Gm-Message-State: AOJu0YxJG24SWDQeJvLEAyTBPiQcz3O88dkhSCC0LAXtYs+8or+lqSaY
+        OThVWUnWO7JBoumiy95jPoN8l4dlFjW/fbfunhy83w==
+X-Google-Smtp-Source: AGHT+IGbBUp7apcBf0Wo94rPuei/uMCOLdfymAUYtbXkWV6tuJHuzpKRqe3xeH+LKJOYB5mMHTLfbCwIf2IHKGe4l8I=
+X-Received: by 2002:a67:fe92:0:b0:44d:5a92:ec45 with SMTP id
+ b18-20020a67fe92000000b0044d5a92ec45mr8588355vsr.23.1694438093755; Mon, 11
+ Sep 2023 06:14:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230905185309.131295-1-brgl@bgdev.pl> <20230905185309.131295-3-brgl@bgdev.pl>
+ <ZPiISpLoVx35PuYc@smile.fi.intel.com>
+In-Reply-To: <ZPiISpLoVx35PuYc@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 11 Sep 2023 15:14:42 +0200
+Message-ID: <CAMRc=MfLGZNmQT55dtrLuqsKbfXjTn7kqOm029oJrOnH002wBw@mail.gmail.com>
+Subject: Re: [PATCH 02/21] gpiolib: provide gpio_device_find()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Andy discovered this bug during patch review. The 'scu' argument to this
-function shouldn't be overridden by the function itself. It doesn't make
-any sense. Looking at the commit history, we see that commit
-f57fa18583f5 ("platform/x86: intel_scu_ipc: Introduce new SCU IPC API")
-removed the setting of the scu to ipcdev in other functions, but not
-this one. That was an oversight. Remove this line so that we stop
-overriding the scu instance that is used by this function.
+On Wed, Sep 6, 2023 at 4:10=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Sep 05, 2023 at 08:52:50PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > gpiochip_find() is wrong and its kernel doc is misleading as the
+> > function doesn't return a reference to the gpio_chip but just a raw
+> > pointer. The chip itself is not guaranteed to stay alive, in fact it ca=
+n
+> > be deleted at any point. Also: other than GPIO drivers themselves,
+> > nobody else has any business accessing gpio_chip structs.
+> >
+> > Provide a new gpio_device_find() function that returns a real reference
+> > to the opaque gpio_device structure that is guaranteed to stay alive fo=
+r
+> > as long as there are active users of it.
+>
+> ...
+>
+> > +/**
+> > + * gpio_device_find() - find a specific GPIO device
+> > + * @data: data to pass to match function
+> > + * @match: Callback function to check gpio_chip
+>
+> > + * Returns:
+> > + * New reference to struct gpio_device.
+>
+> I believe this is wrong location of the Return section.
+> AFAIU how kernel doc uses section markers, this entire description become=
+s
+> a Return(s) section. Have you tried to render man/html/pdf and see this?
+>
 
-Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Closes: https://lore.kernel.org/r/ZPjdZ3xNmBEBvNiS@smile.fi.intel.com
-Cc: Prashant Malani <pmalani@chromium.org>
-Fixes: f57fa18583f5 ("platform/x86: intel_scu_ipc: Introduce new SCU IPC API")
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/platform/x86/intel_scu_ipc.c | 1 -
- 1 file changed, 1 deletion(-)
+Yes, it works just fine. Try for yourself: scripts/kernel-doc -rst
+drivers/gpio/gpiolib.c
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 8be1686e22e9..6958265db29d 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -443,7 +443,6 @@ int intel_scu_ipc_dev_simple_command(struct intel_scu_ipc_dev *scu, int cmd,
- 		mutex_unlock(&ipclock);
- 		return -ENODEV;
- 	}
--	scu = ipcdev;
- 	cmdval = sub << 12 | cmd;
- 	ipc_command(scu, cmdval);
- 	err = intel_scu_ipc_check_status(scu);
--- 
-https://chromeos.dev
+Bart
 
+> > + * Similar to bus_find_device(). It returns a reference to a gpio_devi=
+ce as
+> > + * determined by a user supplied @match callback. The callback should =
+return
+> > + * 0 if the device doesn't match and non-zero if it does. If the callb=
+ack
+> > + * returns non-zero, this function will return to the caller and not i=
+terate
+> > + * over any more gpio_devices.
+> > + *
+> > + * The callback takes the GPIO chip structure as argument. During the =
+execution
+> > + * of the callback function the chip is protected from being freed. TO=
+DO: This
+> > + * actually has yet to be implemented.
+> > + *
+> > + * If the function returns non-NULL, the returned reference must be fr=
+eed by
+> > + * the caller using gpio_device_put().
+> > + */
+> > +struct gpio_device *gpio_device_find(void *data,
+>
+> > +                                  int (*match)(struct gpio_chip *gc,
+> > +                                               void *data))
+>
+> One line?
+> Or maybe a type for it? (gpio_match_fn, for example)
+>
+> > +{
+> > +     struct gpio_device *gdev;
+> > +
+> > +     guard(spinlock_irqsave)(&gpio_lock);
+> > +
+> > +     list_for_each_entry(gdev, &gpio_devices, list) {
+> > +             if (gdev->chip && match(gdev->chip, data))
+> > +                     return gpio_device_get(gdev);
+> > +     }
+> > +
+> > +     return NULL;
+> > +}
+>
+> ...
+>
+> > +struct gpio_device *gpio_device_find(void *data,
+> > +                                  int (*match)(struct gpio_chip *gc,
+> > +                                               void *data));
+>
+> Ditto.
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
