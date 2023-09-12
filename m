@@ -2,119 +2,66 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F233CA0EC3
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Sep 2023 09:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD9EEE3F0D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Sep 2023 18:59:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232880AbjILJML convert rfc822-to-8bit (ORCPT
+        id S236494AbjILS7S (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 12 Sep 2023 05:12:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33174 "EHLO
+        Tue, 12 Sep 2023 14:59:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjILJMK (ORCPT
+        with ESMTP id S237510AbjILS7R (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 12 Sep 2023 05:12:10 -0400
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BED2170D;
-        Tue, 12 Sep 2023 02:12:07 -0700 (PDT)
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5733d11894dso1155639eaf.0;
-        Tue, 12 Sep 2023 02:12:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694509926; x=1695114726;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LnBKGyRSUKcxckQc3XRY6QVkUrcVLqMdIRsgoISjA1s=;
-        b=a6ic7U1j9GLMmGRYt62JbaGNpnUNS/cM4y5wgI6HAO806sZtwcwCLi/bDsa3aUzOrj
-         D3M6uYKNOXkUhcO9/LWgTIlWP5xMBgW8EgRDq6nBwkYKX2dgyAPtgUTm4ImvJMxxRgCZ
-         4Qofg/3HK5GwsRQSpWc8MFpv7VJLYovmAfPQFfoY9W8ENW61bRLMhrkWlm3nMJyQo2mH
-         Ha+vr1PHCkJ3EUsEtCx4TJ0U9jz4jhHMcUI9xRpIGFFGeAWEsHjjtR/ZeD7XEWInZs4z
-         s6VysjLLr33xT64VnxM+mng6Go6oxHGqTnzd+/p5x0ibn35HEh0cL8enWFFp7/4Xop3H
-         vRRA==
-X-Gm-Message-State: AOJu0YyzoL4MEGP84Cox9OxH0yKXLc1Hk+w8hi3D0QDO3MML2lCkXm/p
-        oBJKjOdZ9CsR3wMGSuYVT1fCtzrTHNmMKXLaEBE3bkAtj1M=
-X-Google-Smtp-Source: AGHT+IGGZJyReIDgrMZtiubQRbMwIKbiT4QSpHxhHeKHsqnI25JjR/27HBwLNz1LdOK9tuR5yIy/TSHHfrPL+PDzg7Q=
-X-Received: by 2002:a05:6820:81f:b0:573:3a3b:594b with SMTP id
- bg31-20020a056820081f00b005733a3b594bmr13187897oob.1.1694509926275; Tue, 12
- Sep 2023 02:12:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230906184354.45846-1-mario.limonciello@amd.com>
- <20230906184354.45846-3-mario.limonciello@amd.com> <CAJZ5v0jgGOPcFMfRObAM1St1KLjZS0tEki4f32Rbr3ZXwFyFzA@mail.gmail.com>
- <0cd6648d-21f1-445d-95f6-20f580bbcfd1@amd.com>
-In-Reply-To: <0cd6648d-21f1-445d-95f6-20f580bbcfd1@amd.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 12 Sep 2023 11:11:55 +0200
-Message-ID: <CAJZ5v0h0LN1W5Q6Wp-jSJA4QE4ZGurf8Ye26ST5j6W2P+xHCFg@mail.gmail.com>
-Subject: Re: [PATCH v17 2/4] PCI: Add support for drivers to register optin or
- veto of D3
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Tue, 12 Sep 2023 14:59:17 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F9EF12E;
+        Tue, 12 Sep 2023 11:59:13 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 071CDC433C8;
+        Tue, 12 Sep 2023 18:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694545153;
+        bh=46+8mud3tuYhL6Ai1UkoeYqRFGVX+zodAlJDH9AulEM=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=DdzL8EKBCEenxFCNHpHXWFExO22DF75JP08mlRab1yOBHcyd1rmdAvarEF//cuTvz
+         giEekbRNDOhv0QVBe+v9wciZ0AyXkWoOTj/W/qqC4TGPjjhjgXsJa5a2IPajklSemM
+         qWI7LJkYmpVahoEwRahdrwTWLr5XaTBK00ZltZ0s3wG7b1Awx1wYZnUGEJFQYq40xd
+         N+kNDWzKGvYXrWe0U/vhTzoGgxMzUeL1eG0YlRX4teUe/obSHolIVgntWfj6ELBdSP
+         LH37dSMPqYuRPnJ3s8T/T91v7/UgmBLNQUVwblQBHaHnnNWBjwu/9FOEUrh1xr5gRa
+         h3qQmbsi7ByUg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E7A1FC04DD9;
+        Tue, 12 Sep 2023 18:59:12 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for 6.6-2
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <8474aa33-e3aa-1729-2a66-715c9f883c04@redhat.com>
+References: <8474aa33-e3aa-1729-2a66-715c9f883c04@redhat.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <8474aa33-e3aa-1729-2a66-715c9f883c04@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.6-2
+X-PR-Tracked-Commit-Id: 4106a70ddad57ee6d8f98b81d6f036740c72762b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2c758cef66865310b59959679dbd5d450174d15d
+Message-Id: <169454515294.18467.6387816807987219839.pr-tracker-bot@kernel.org>
+Date:   Tue, 12 Sep 2023 18:59:12 +0000
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 10:23 PM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> On 9/11/2023 13:34, Rafael J. Wysocki wrote:
-> > On Wed, Sep 6, 2023 at 9:16 PM Mario Limonciello
-> > <mario.limonciello@amd.com> wrote:
-> >>
+The pull request you sent on Tue, 12 Sep 2023 10:14:22 +0200:
 
-[cut]
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.6-2
 
-> >
-> > IMV, the underlying issue all boils down to the platform firmware
-> > inadequately describing the behavior of the system to the OS.
-> > Specifically, had it provided a _S0W returning 0 for the Root Port(s)
-> > in question, wakeup signaling would have worked (or else there would
-> > have been a defect in the kernel code to be addressed).
->
-> I think you're right.  I'll try and get BIOS guys to provide a test BIOS
-> to prove this direction is correct.
->
-> It wouldn't help all the machines already in the field but if it can be
-> done without harm to Windows maybe future SoCs could use it.
->
-> > Instead, it
-> > decided to kind-of guide Windows in the "right" direction through PEP
-> > constraints which doesn't have the same effect on Linux and honestly
-> > I'm not even sure if it is a good idea to adjust Linux to that.
-> >
->
-> What is the worry with bringing Linux in this direction (using constraints)?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2c758cef66865310b59959679dbd5d450174d15d
 
-First off, ostensibly the purpose of the constraints is to indicate to
-Windows when it can attempt to put the system into the deepest power
-state.  Specifically, AFAICS, Windows is not expected to do so when
-the current power state of a given device is shallower than the
-relevant constraint.  Consequently, a constraint of D0 means that
-effectively Windows is expected to ignore the given device as far as
-Modern Standby goes.
+Thank you!
 
-In any case, this has no bearing on the behavior of suspend-to-idle in Linux.
-
-Now, there may be other undocumented side-effects of setting a
-constraint of D0 in Windows, but it is generally risky to rely on such
-things.
-
-Second, it is not entirely clear to me whether or not the future
-versions of Windows will continue to use the constraints in the same
-way.
-
-> My main hope is that by generalizing this fundamental difference in how
-> Windows and Linux handle Modern Standby / suspend-to-idle we can avoid
-> other future bugs.
-
-There is a fundamental difference between Modern Standby and
-suspend-to-idle already, as the former is opportunistic and the latter
-is on-demand.  They can both follow the exact same set of rules.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
