@@ -2,143 +2,119 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A80DDCA0ECA
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Sep 2023 08:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F233CA0EC3
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Sep 2023 09:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231918AbjILIPj (ORCPT
+        id S232880AbjILJML convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 12 Sep 2023 04:15:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57952 "EHLO
+        Tue, 12 Sep 2023 05:12:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232565AbjILIPd (ORCPT
+        with ESMTP id S229504AbjILJMK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 12 Sep 2023 04:15:33 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 57D8710DB
-        for <platform-driver-x86@vger.kernel.org>; Tue, 12 Sep 2023 01:14:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694506467;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=hcMbpwJLdrccN4aSTuA2ONg98ojGxj+RElZ5lQn4fPk=;
-        b=A1PmNJxtgKbcjho+1StVJNOlJZNCf83fSf7+f/rNyI3qqErwyBDzA0JOBoUPGMA3hudsMX
-        HrEN8qpi0vksrNRoJKelViEOfm0iWgsetK+CTImqLQkp+pqq9lz8WBIGyxokUIW40JvnBv
-        rsNmv4R+CU7U3y3M2bEc5RsTGLTkL4Q=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-444-TyBq8_hqMhSZZX2aTTebcw-1; Tue, 12 Sep 2023 04:14:25 -0400
-X-MC-Unique: TyBq8_hqMhSZZX2aTTebcw-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-52e423ba416so3540836a12.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 12 Sep 2023 01:14:25 -0700 (PDT)
+        Tue, 12 Sep 2023 05:12:10 -0400
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BED2170D;
+        Tue, 12 Sep 2023 02:12:07 -0700 (PDT)
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5733d11894dso1155639eaf.0;
+        Tue, 12 Sep 2023 02:12:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694506464; x=1695111264;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=hcMbpwJLdrccN4aSTuA2ONg98ojGxj+RElZ5lQn4fPk=;
-        b=O/cPIPpxHTM3oT3zZi3DQsWAnMK07xXtwQRTDXzx+SETPG8Q/Oh5n34WEhC1wtLTIv
-         vSdlb0X2zt1Y9DZqZC9UZDlnoIoynpOfnRGa0d+CYAXQB2LdoPMQ33z0LH9FduC8anER
-         Clu7G+3kw8GFlalO7aqkGRu8WDok0OALJAkNTe4HgzMPVx+IJ7LnkrtcP7Fch5WSRK3r
-         3IX3ZtcewCNL+ZEC5tZw/syG2KcQFUuCEzPW4/iUAbNTKtKs8jFIjaPwsjR2TYaoolaM
-         m5LujjDvip6dKVV8vIGr3CQAtJ97a683wut6hwHViEBTvGmKxXA+AkXrgqce4D1NhI5t
-         VV9A==
-X-Gm-Message-State: AOJu0YyMel2IJwACH8xBwSwJbhO4rzhfpJrYThyLrDCDCroMobBT/0np
-        xpFqV9ihu3CIuxQNn8f+2Fhfx6zVVkp/JoSINmjpGUypSYFFX4FKzxf7cBsJWN+aAEBkUc/oUAg
-        jSZSCmHBP+fQLdSlctidPdHNsZ7A1KAcgQA==
-X-Received: by 2002:aa7:d14e:0:b0:522:2ce0:d80a with SMTP id r14-20020aa7d14e000000b005222ce0d80amr9753603edo.35.1694506464515;
-        Tue, 12 Sep 2023 01:14:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH6W+v66hEhESSBzLOBmNHQuK1MPDzz7iUwjxGH1IfOdm1etCkRKy44fqNYFy7bCo1LOHPFLw==
-X-Received: by 2002:aa7:d14e:0:b0:522:2ce0:d80a with SMTP id r14-20020aa7d14e000000b005222ce0d80amr9753596edo.35.1694506464206;
-        Tue, 12 Sep 2023 01:14:24 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id x14-20020aa7dace000000b005257da6be23sm5602613eds.75.2023.09.12.01.14.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Sep 2023 01:14:23 -0700 (PDT)
-Message-ID: <8474aa33-e3aa-1729-2a66-715c9f883c04@redhat.com>
-Date:   Tue, 12 Sep 2023 10:14:22 +0200
+        d=1e100.net; s=20230601; t=1694509926; x=1695114726;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LnBKGyRSUKcxckQc3XRY6QVkUrcVLqMdIRsgoISjA1s=;
+        b=a6ic7U1j9GLMmGRYt62JbaGNpnUNS/cM4y5wgI6HAO806sZtwcwCLi/bDsa3aUzOrj
+         D3M6uYKNOXkUhcO9/LWgTIlWP5xMBgW8EgRDq6nBwkYKX2dgyAPtgUTm4ImvJMxxRgCZ
+         4Qofg/3HK5GwsRQSpWc8MFpv7VJLYovmAfPQFfoY9W8ENW61bRLMhrkWlm3nMJyQo2mH
+         Ha+vr1PHCkJ3EUsEtCx4TJ0U9jz4jhHMcUI9xRpIGFFGeAWEsHjjtR/ZeD7XEWInZs4z
+         s6VysjLLr33xT64VnxM+mng6Go6oxHGqTnzd+/p5x0ibn35HEh0cL8enWFFp7/4Xop3H
+         vRRA==
+X-Gm-Message-State: AOJu0YyzoL4MEGP84Cox9OxH0yKXLc1Hk+w8hi3D0QDO3MML2lCkXm/p
+        oBJKjOdZ9CsR3wMGSuYVT1fCtzrTHNmMKXLaEBE3bkAtj1M=
+X-Google-Smtp-Source: AGHT+IGGZJyReIDgrMZtiubQRbMwIKbiT4QSpHxhHeKHsqnI25JjR/27HBwLNz1LdOK9tuR5yIy/TSHHfrPL+PDzg7Q=
+X-Received: by 2002:a05:6820:81f:b0:573:3a3b:594b with SMTP id
+ bg31-20020a056820081f00b005733a3b594bmr13187897oob.1.1694509926275; Tue, 12
+ Sep 2023 02:12:06 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 6.6-2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230906184354.45846-1-mario.limonciello@amd.com>
+ <20230906184354.45846-3-mario.limonciello@amd.com> <CAJZ5v0jgGOPcFMfRObAM1St1KLjZS0tEki4f32Rbr3ZXwFyFzA@mail.gmail.com>
+ <0cd6648d-21f1-445d-95f6-20f580bbcfd1@amd.com>
+In-Reply-To: <0cd6648d-21f1-445d-95f6-20f580bbcfd1@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 12 Sep 2023 11:11:55 +0200
+Message-ID: <CAJZ5v0h0LN1W5Q6Wp-jSJA4QE4ZGurf8Ye26ST5j6W2P+xHCFg@mail.gmail.com>
+Subject: Re: [PATCH v17 2/4] PCI: Add support for drivers to register optin or
+ veto of D3
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Linus,
+On Mon, Sep 11, 2023 at 10:23 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> On 9/11/2023 13:34, Rafael J. Wysocki wrote:
+> > On Wed, Sep 6, 2023 at 9:16 PM Mario Limonciello
+> > <mario.limonciello@amd.com> wrote:
+> >>
 
-Here is the first round of fixes for platform-drivers-x86 for 6.6.
+[cut]
 
-Nothing special to report just a few platform/mellanox fixes and
-1 new DMI quirk for asus-wmi.
+> >
+> > IMV, the underlying issue all boils down to the platform firmware
+> > inadequately describing the behavior of the system to the OS.
+> > Specifically, had it provided a _S0W returning 0 for the Root Port(s)
+> > in question, wakeup signaling would have worked (or else there would
+> > have been a defect in the kernel code to be addressed).
+>
+> I think you're right.  I'll try and get BIOS guys to provide a test BIOS
+> to prove this direction is correct.
+>
+> It wouldn't help all the machines already in the field but if it can be
+> done without harm to Windows maybe future SoCs could use it.
+>
+> > Instead, it
+> > decided to kind-of guide Windows in the "right" direction through PEP
+> > constraints which doesn't have the same effect on Linux and honestly
+> > I'm not even sure if it is a good idea to adjust Linux to that.
+> >
+>
+> What is the worry with bringing Linux in this direction (using constraints)?
 
-Regards,
+First off, ostensibly the purpose of the constraints is to indicate to
+Windows when it can attempt to put the system into the deepest power
+state.  Specifically, AFAICS, Windows is not expected to do so when
+the current power state of a given device is shallower than the
+relevant constraint.  Consequently, a constraint of D0 means that
+effectively Windows is expected to ignore the given device as far as
+Modern Standby goes.
 
-Hans
+In any case, this has no bearing on the behavior of suspend-to-idle in Linux.
 
+Now, there may be other undocumented side-effects of setting a
+constraint of D0 in Windows, but it is generally risky to rely on such
+things.
 
-The following changes since commit 0bb80ecc33a8fb5a682236443c1e740d5c917d1d:
+Second, it is not entirely clear to me whether or not the future
+versions of Windows will continue to use the constraints in the same
+way.
 
-  Linux 6.6-rc1 (2023-09-10 16:28:41 -0700)
+> My main hope is that by generalizing this fundamental difference in how
+> Windows and Linux handle Modern Standby / suspend-to-idle we can avoid
+> other future bugs.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.6-2
-
-for you to fetch changes up to 4106a70ddad57ee6d8f98b81d6f036740c72762b:
-
-  platform/x86: asus-wmi: Support 2023 ROG X16 tablet mode (2023-09-11 13:26:13 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.6-2
-
-Highlights
- -  Various platform/mellanox fixes
- -  1 new DMI quirk for asus-wmi
-
-The following is an automated git shortlog grouped by driver:
-
-asus-wmi:
- -  Support 2023 ROG X16 tablet mode
-
-platform/mellanox:
- -  NVSW_SN2201 should depend on ACPI
- -  mlxbf-bootctl: add NET dependency into Kconfig
- -  mlxbf-pmc: Fix reading of unprogrammed events
- -  mlxbf-pmc: Fix potential buffer overflows
- -  mlxbf-tmfifo: Drop jumbo frames
- -  mlxbf-tmfifo: Drop the Rx packet if no more descriptors
-
-----------------------------------------------------------------
-David Thompson (1):
-      platform/mellanox: mlxbf-bootctl: add NET dependency into Kconfig
-
-Geert Uytterhoeven (1):
-      platform/mellanox: NVSW_SN2201 should depend on ACPI
-
-Liming Sun (2):
-      platform/mellanox: mlxbf-tmfifo: Drop the Rx packet if no more descriptors
-      platform/mellanox: mlxbf-tmfifo: Drop jumbo frames
-
-Luke D. Jones (1):
-      platform/x86: asus-wmi: Support 2023 ROG X16 tablet mode
-
-Shravan Kumar Ramani (2):
-      platform/mellanox: mlxbf-pmc: Fix potential buffer overflows
-      platform/mellanox: mlxbf-pmc: Fix reading of unprogrammed events
-
- drivers/platform/mellanox/Kconfig        |  5 +-
- drivers/platform/mellanox/mlxbf-pmc.c    | 41 +++++----------
- drivers/platform/mellanox/mlxbf-tmfifo.c | 90 +++++++++++++++++++++++---------
- drivers/platform/x86/asus-nb-wmi.c       |  9 ++++
- 4 files changed, 92 insertions(+), 53 deletions(-)
-
+There is a fundamental difference between Modern Standby and
+suspend-to-idle already, as the former is opportunistic and the latter
+is on-demand.  They can both follow the exact same set of rules.
