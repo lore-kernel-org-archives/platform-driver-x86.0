@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1DAEDEC52
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 11:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C81AEDEC46
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 11:50:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240546AbjIMLu0 (ORCPT
+        id S240528AbjIMLu2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Sep 2023 07:50:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47140 "EHLO
+        Wed, 13 Sep 2023 07:50:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240536AbjIMLuZ (ORCPT
+        with ESMTP id S240559AbjIMLu1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Sep 2023 07:50:25 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8342C19B4
-        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Sep 2023 04:50:21 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-401d6f6b2e0so5277955e9.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Sep 2023 04:50:21 -0700 (PDT)
+        Wed, 13 Sep 2023 07:50:27 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B565619AD
+        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Sep 2023 04:50:22 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-31fa15f4cc6so3465070f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Sep 2023 04:50:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694605820; x=1695210620; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694605821; x=1695210621; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZfIOoxhDAqFwndjqT4NZlTiK/Oyr/4kFj6yAfQvO5X0=;
-        b=Kt6Dg9PAdyJu64rbRPiB/YQgnFDw/OTAazlhmKFCcQR0Ugv08vQcaaQRM7oBHf1byY
-         47lb+nXanFWkiCncaBrTTF8VjZi41cJk1geT4sZvi0kq3u0PYDxTtTc+ciiSEDfnIx8h
-         MNorN4K13cYToGQvg1ybvkl7Q2ATPTjM0D4VsuLG0fGGQfexm7kfL5yV4l/mbEPLDGAz
-         0pZwtXHiZ3QIl36ugfVsMeFPgFcuD85S8XMxDM/JJrWTBwNWIdnIcNGM9bua0y/ge7eu
-         vVmV6fkE4S3cAoP66fpvhNrc2+Z6Y5hAGD8PIoUqu49BuEjjxpn3rzFQFzLsbVnGtnH3
-         qVvQ==
+        bh=9VygHWUUTxJcwgk20gKLWHe+YEMHPQx8FheNmwIckcQ=;
+        b=it6XWD63NWzmlXIvizvgT6JCD9RWAoAEwGWTLHbrTB9cBevk2KasDN3Hvq/cBcMTci
+         /GZ9Jwaj3xM6j67vzx0Iu70UkpbvB/MQox/v6wEkDAdFf3qXsl/3mZZZtqkS8bp8KuEy
+         QUuoJeTzvYc38TIzguvRl1iCzvgBaQ8W41EclIJ/ZVpEn8pEHkEpd23pjO4K3N3wBM9H
+         DDEOdS9C0jYoGRySHc9yWUKHEIFBjQOkH2f2nmNDbYsVShyXfoHVYa2xVDd4aSE/QwIg
+         D7l1gyjKSb6urjJ+WXeDWMiGHlarDCCQMYTori2ay49npCywVbUYkzZA42ZXGjOj/3X9
+         Vcfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694605820; x=1695210620;
+        d=1e100.net; s=20230601; t=1694605821; x=1695210621;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZfIOoxhDAqFwndjqT4NZlTiK/Oyr/4kFj6yAfQvO5X0=;
-        b=SjAUOlov+Qw+ZFCWZRkeM9p55vuzpBpNY5CjbvLkNnmwi9cB9CKbuMBCvlo9ddotuo
-         kC9kGG4JbQOkDnXtxEHbaYknzJUta4eEiNgnNQMOMdOBS46IVKSJoUokRHIzK87rMQ4W
-         l73R6NX6/6gx+vAgpLbe+Od/1JmtBrdHL3yZgplawhh666gAogjTSO4qkT5MW8mKrkm2
-         zbmJYIoKwPCanTq2LCnv84JrqP+IFN9uG0RRh9accyxtx+fe6lGOvgNCOT8oH1nmHZIZ
-         pkUqffLHr44Vw/aznUvRVyerQnjDSxPjk88Cfm5u+g5lbUNvf/Rn6LOLxEmMTPSF0tda
-         nekg==
-X-Gm-Message-State: AOJu0YwfAHPZGLVQmU0zmjiK9Mr2qSPE3vSVY3EYRZFm0x2qXSyS00Z0
-        Ti1NACwd3u/uEuHHEOKWvQKGiQ==
-X-Google-Smtp-Source: AGHT+IG+tXi5eOBKUfSbBaQCtatc0omt4sm58mllw94JLePpeq53xP2hYKGlGG+xCKfpc+HJfdMuUQ==
-X-Received: by 2002:a5d:5b18:0:b0:31f:cc46:3db9 with SMTP id bx24-20020a5d5b18000000b0031fcc463db9mr1114110wrb.26.1694605820092;
-        Wed, 13 Sep 2023 04:50:20 -0700 (PDT)
+        bh=9VygHWUUTxJcwgk20gKLWHe+YEMHPQx8FheNmwIckcQ=;
+        b=CYL7kKKJ16GwlsTuoQyyhqdjSEUxTFag8tLqAYesJ2wzx8uMYaHEAnNXLaEMre1bNF
+         kr97e8VqYbRQkfHdIcBP2IKXrT5UFRaZgdi55CTusR/PzRPlC3A+vycT4KFPlhq/QUNv
+         AvFkwdqc45r6GlVn/FvejBKvYF3SgnUrnmeVPs/WsH8sSHeSKS9wVCBOqv7E5Hq4o4kk
+         4WXPzRFMHGV8RWwaYmCTUhrS3p0hypnFSF1Vsax+29vuzIEKsl7kHLqpD57oWHkx0s64
+         RDwK67kS0YWUD5ZhV8ce/ZY6XVEXfTFOnXVmpdXNvKG9KDxTO3+BX6fTYepIwjuoSYtY
+         dYew==
+X-Gm-Message-State: AOJu0Yz0isYg9LHrXL3Tt32mhPUIYcHNOMqlyJfEwvNg9RuN/lL9ht8X
+        MOL9Ja+5ySxVmTKPI92o5nPcrw==
+X-Google-Smtp-Source: AGHT+IE8/xUMx2CxEG3cqDJgSjbSA2NWMS00vPEgINZ0yvChOcoxgNUbEbPflHzcyEJln62XxJ5Bpg==
+X-Received: by 2002:a5d:5957:0:b0:314:12c:4322 with SMTP id e23-20020a5d5957000000b00314012c4322mr1948005wri.4.1694605821222;
+        Wed, 13 Sep 2023 04:50:21 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:3b50:bca5:a754:7463])
-        by smtp.gmail.com with ESMTPSA id j14-20020adfd20e000000b0031fc4c31d77sm1932689wrh.88.2023.09.13.04.50.19
+        by smtp.gmail.com with ESMTPSA id j14-20020adfd20e000000b0031fc4c31d77sm1932689wrh.88.2023.09.13.04.50.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Sep 2023 04:50:19 -0700 (PDT)
+        Wed, 13 Sep 2023 04:50:20 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy@kernel.org>,
@@ -68,9 +68,9 @@ Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 2/5] mtd: rawnand: ingenic: use gpiod_set_active_high()
-Date:   Wed, 13 Sep 2023 13:49:58 +0200
-Message-Id: <20230913115001.23183-3-brgl@bgdev.pl>
+Subject: [PATCH 3/5] mmc: slot-gpio: use gpiod_set_active_[low|high]()
+Date:   Wed, 13 Sep 2023 13:49:59 +0200
+Message-Id: <20230913115001.23183-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230913115001.23183-1-brgl@bgdev.pl>
 References: <20230913115001.23183-1-brgl@bgdev.pl>
@@ -82,29 +82,43 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Use the new, less cumbersome interface for setting the GPIO as
-active-high that doesn't require first checking the current state.
+We have new, less cumbersome and clearer interfaces for controlling GPIO
+polarity. Use them in the MMC code.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/mmc/core/slot-gpio.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
-index 6748226b8bd1..c055133c45fe 100644
---- a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
-+++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
-@@ -388,9 +388,8 @@ static int ingenic_nand_init_chip(struct platform_device *pdev,
- 	 * here for older DTs so we can re-use the generic nand_gpio_waitrdy()
- 	 * helper, and be consistent with what other drivers do.
- 	 */
--	if (of_machine_is_compatible("qi,lb60") &&
--	    gpiod_is_active_low(nand->busy_gpio))
--		gpiod_toggle_active_low(nand->busy_gpio);
-+	if (of_machine_is_compatible("qi,lb60"))
-+		gpiod_set_active_high(nand->busy_gpio);
+diff --git a/drivers/mmc/core/slot-gpio.c b/drivers/mmc/core/slot-gpio.c
+index 2a2d949a9344..a6fea6559a5e 100644
+--- a/drivers/mmc/core/slot-gpio.c
++++ b/drivers/mmc/core/slot-gpio.c
+@@ -204,12 +204,11 @@ int mmc_gpiod_request_cd(struct mmc_host *host, const char *con_id,
+ 	}
  
- 	nand->wp_gpio = devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_LOW);
+ 	/* override forces default (active-low) polarity ... */
+-	if (override_active_level && !gpiod_is_active_low(desc))
+-		gpiod_toggle_active_low(desc);
+-
++	if (override_active_level)
++		gpiod_set_active_low(desc);
+ 	/* ... or active-high */
+-	if (host->caps2 & MMC_CAP2_CD_ACTIVE_HIGH)
+-		gpiod_toggle_active_low(desc);
++	else if (host->caps2 & MMC_CAP2_CD_ACTIVE_HIGH)
++		gpiod_set_active_high(desc);
+ 
+ 	ctx->cd_gpio = desc;
+ 
+@@ -256,7 +255,7 @@ int mmc_gpiod_request_ro(struct mmc_host *host, const char *con_id,
+ 	}
+ 
+ 	if (host->caps2 & MMC_CAP2_RO_ACTIVE_HIGH)
+-		gpiod_toggle_active_low(desc);
++		gpiod_set_active_high(desc);
+ 
+ 	ctx->ro_gpio = desc;
  
 -- 
 2.39.2
