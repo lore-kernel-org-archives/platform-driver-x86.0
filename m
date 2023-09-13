@@ -2,103 +2,122 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E12EE020B
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 20:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C622EE0204
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 21:05:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232291AbjIMUXv (ORCPT
+        id S232828AbjIMVF5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Sep 2023 16:23:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60300 "EHLO
+        Wed, 13 Sep 2023 17:05:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232167AbjIMUXu (ORCPT
+        with ESMTP id S232793AbjIMVFz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Sep 2023 16:23:50 -0400
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::221])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A645C1BC8;
-        Wed, 13 Sep 2023 13:23:45 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7AC2E240009;
-        Wed, 13 Sep 2023 20:23:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1694636623;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/dRlWZ4ip0P9gSRRVNtyMvezGlxc/WATurc5AdssgGA=;
-        b=ow2wxZiMqZilFqKiQdViBBKXgJ10OFn4QutLDJ8h5iKbCLUYsMCpLYwz44g75okO+hVLKP
-        fYAPH+Hipn+rJTW6OyvP5lnO3oBKBsUsGvAQ0BEQ0ZfwJwOKn97N+YEPNXgZx+tVi+QEoM
-        UaTSLemyUL/EQjpuVLvEgCyBrWG2xCkxiwdjZycMqoB+iord0lk4UQWV5M7DtX7kEnFaHD
-        kEfNXSKmxUZyO3fmf798qZoTx2rc8/tti4htwWlIYYKUdSMQrJLoPh/6SWJqWoCZYZrgsW
-        a6SKSmbf6HDufOEoQxAp83NCom5LQ0HSbs2RYME0xMhTOK30Q2SNNixNySpdEw==
-Date:   Wed, 13 Sep 2023 22:23:38 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Scally <djrscally@gmail.com>,
+        Wed, 13 Sep 2023 17:05:55 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F3A91BD4;
+        Wed, 13 Sep 2023 14:05:45 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC3BDC433CB;
+        Wed, 13 Sep 2023 21:05:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694639145;
+        bh=LL5FYKc5sc5mqMIzOACAM0sCDQLeDKF/HFS3zAkNTeY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=mqsgIeRcqpFlcKt2tajdTe/FOO+M4p5u/mu4wUmnCceWx04TwBwnN+DSRIrL5NhoE
+         Ph6kxd6IL2d8D7CFgPjFvmIt54H5L/D1zZF8eaAoG4ps3gcc00NlemmzIxhtLwZb74
+         HT6i+mloliVYnscUFfbDW0KlAs1709tjGzzjTIBhlPFCCKYN0x6QGHn2ral7iCdLDP
+         TxpIdE764wJBr6U0Vc4aSDQItvJe2MwKdPql4/s9m+T5ZUH2FvFmpjY2/WqVGmzJ3b
+         f2FSPq/CMyxAatDcpGJOdUN8ilEd2jzYn/o0RddLVy1obmEj568tGRWHvDB61qn7Xl
+         DPfL0Jp7X/AVA==
+Date:   Wed, 13 Sep 2023 16:05:43 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mario Limonciello <mario.limonciello@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/5] mtd: rawnand: ingenic: use gpiod_set_active_high()
-Message-ID: <20230913222338.07d1625b@xps-13>
-In-Reply-To: <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com>
-References: <20230913115001.23183-1-brgl@bgdev.pl>
-        <20230913115001.23183-3-brgl@bgdev.pl>
-        <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
-        <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+        iain@orangesquash.org.uk
+Subject: Re: [PATCH v18 2/2] PCI: Add a quirk for AMD PCIe root ports w/ USB4
+ controllers
+Message-ID: <20230913210543.GA440503@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0hzdNYOLeOoM-4PZMQtr5J93kGA6Gidn_DVbFweMLb8vw@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Andy,
-
-linus.walleij@linaro.org wrote on Wed, 13 Sep 2023 22:12:40 +0200:
-
-> On Wed, Sep 13, 2023 at 10:05=E2=80=AFPM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Wed, Sep 13, 2023 at 2:50=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
-.pl> wrote: =20
-> > >
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > Use the new, less cumbersome interface for setting the GPIO as
-> > > active-high that doesn't require first checking the current state. =20
+On Wed, Sep 13, 2023 at 07:42:05PM +0200, Rafael J. Wysocki wrote:
+> On Wed, Sep 13, 2023 at 6:35 PM Mario Limonciello
+> <mario.limonciello@amd.com> wrote:
 > >
-> > ...
-> > =20
-> > >          * here for older DTs so we can re-use the generic nand_gpio_=
-waitrdy()
-> > >          * helper, and be consistent with what other drivers do.
-> > >          */
-> > > -       if (of_machine_is_compatible("qi,lb60") &&
-> > > -           gpiod_is_active_low(nand->busy_gpio))
-> > > -               gpiod_toggle_active_low(nand->busy_gpio);
-> > > +       if (of_machine_is_compatible("qi,lb60"))
-> > > +               gpiod_set_active_high(nand->busy_gpio); =20
+> > On 9/13/2023 10:40, Bjorn Helgaas wrote:
+> > > On Wed, Sep 13, 2023 at 12:20:14PM +0200, Rafael J. Wysocki wrote:
+> > >> On Wed, Sep 13, 2023 at 6:11 AM Mario Limonciello
+> > >> <mario.limonciello@amd.com> wrote:
+> 
+> [cut]
+> 
+> > >
+> > > Also, do we have some indication that this is specific to Ryzen?  If
+> > > not, I assume this is an ongoing issue, and matching on Device IDs
+> > > just means we'll have to debug the same problem again and add more
+> > > IDs.
 > >
-> > Why not moving this quirk to gpiolib-of.c? =20
->=20
-> That's a better idea here I think, it's clearly a quirk for a
-> buggy device tree.
+> > This is why my earlier attempts (v16 and v17) tried to tie it to
+> > constraints.  These are what the uPEP driver in Windows uses to make the
+> > decision of what power state to put integrated devices like the root
+> > port into.
+> >
+> > In Windows if no uPEP driver is installed "Windows internal policy"
+> > dictates what happens.  If the uPEP driver is installed then it
+> > influences the policy based upon the constraints.
+> >
+> > Rafael had feedback against constraints in v17, which is why I'm back to
+> > a quirk for v18.
+> >
+> > This issue as I've described it is specific to AMD Ryzen.
+> 
+> OK, so a quirk is the way to go IMO, because starting to rely on LPI
+> constraints in general retroactively is almost guaranteed to regress
+> things this way or another.
+> 
+> Whatever is done, it needs to be Ryzen-specific, unless there is
+> evidence that other (and in particular non-AMD) platforms are
+> affected.
+> 
+> > I expect it to be an ongoing issue.  I also expect unless we use
+> > constraints or convince the firmware team to add a _S0W object with a
+> > value of "0" for the sake of Linux that we will be adding IDs every year
+> > to wherever this lands as we reproduce it on newer SoCs.
+> 
+> So maybe the way to go is to make the AMD PMC driver set a flag for
+> Root Ports on suspend or similar.
 
-Agreed, it's just for backward compatibility purposes in a single
-driver. I believe it should stay here.
+I like the quirk approach.  When PMC is involved, the device behavior
+doesn't conform to what it advertised via PME_Support.
 
-Thanks,
-Miqu=C3=A8l
+The v18 quirk isn't connected to PMC at all, so IIUC it avoids
+D3hot/D3cold unnecessarily when amd/pmc is not loaded.
+
+I don't object to avoiding D3hot/D3cold unconditionally.  Presumably
+we *could* save a little power by using them when amd/pci isn't
+loaded, but amd/pci would have to iterate through all PCI devices when
+it loads, save previous state, do the quirk, and then restore the
+previous state on module unload.  And it would have to use notifiers
+or assume no Root Port hotplug.  All sounds kind of complicated.
+
+Maybe it would even be enough to just clear dev->pme_support so we
+know wakeups don't work.  It would be a pretty big benefit if we
+didn't have to add another bit and complicate pci_prepare_to_sleep()
+or pci_target_state().
+
+Bjorn
