@@ -2,113 +2,96 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B244EE01FA
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 17:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D5EEE0200
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 18:37:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231127AbjIMRmV convert rfc822-to-8bit (ORCPT
+        id S229886AbjIMSh7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Sep 2023 13:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48340 "EHLO
+        Wed, 13 Sep 2023 14:37:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230301AbjIMRmV (ORCPT
+        with ESMTP id S229468AbjIMSh6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Sep 2023 13:42:21 -0400
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01BCD1986;
-        Wed, 13 Sep 2023 10:42:16 -0700 (PDT)
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6b9cd6876bbso3726a34.1;
-        Wed, 13 Sep 2023 10:42:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694626936; x=1695231736;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eglByz1BRArlf6Op7aiS6b20Xu4w3YO3B+8nUnzdnhI=;
-        b=dFG+Rc5aO2HGG53viYGPhh1vq73QGfhooS2UYfpopepuganlmUaKXQlHRug+JziaG0
-         ++iDRnu9WJn8y9oDfeFjBOEoSm0amPZowg5XE2rlgRY0a1II6Esx1VZjrGcOLR2oQW2D
-         Tqn1aH17W2T3K/MzfWhWkc085vV0qXI0Pl0ODCdXjhzdmJ9FOhZzRQzSC9P/VNG8pIRe
-         Fr8b8eS5BI4bupIbb7bzK0JaktyMtEGpeIF7qlGsrQ+B47Ea3QTVuvh9paT6k/cAhWwy
-         3JX3eN4jqsKacb0A/M6ZpPHfhoySq/Fx+f1onasXhSdMjWHGHX3IVc0uVb4dKSmNIeuT
-         yNvg==
-X-Gm-Message-State: AOJu0YyGEr5mBu1nF413nenLaBMkVSt6CXuAwqugo9aUN63AV91GYlhq
-        tJB2w29uMgGjOXAHAjIuMh/AfE3MTuggzjYASi7FIyi3
-X-Google-Smtp-Source: AGHT+IGYGqRV1580/wSaJf1sNtkXqBowLvnO2+FeCJVMyhKA6jE/7lKya7uKnQ9tI3efx2Kjqgpmdx2gS8cnEAvBch8=
-X-Received: by 2002:a05:6870:14d6:b0:1bb:724f:2bca with SMTP id
- l22-20020a05687014d600b001bb724f2bcamr3705529oab.1.1694626936155; Wed, 13 Sep
- 2023 10:42:16 -0700 (PDT)
+        Wed, 13 Sep 2023 14:37:58 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B03CA3;
+        Wed, 13 Sep 2023 11:37:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694630274; x=1726166274;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=m9uEFh1PK56Z7q+u6kDbQXw+ZQrWKN8Nj13N/OIjzBY=;
+  b=LFjoIi0OjzDAthx7SjkiIoqaiYawOpx4ea6k200ncvS1DQ4SYjbkzqxc
+   ydRdVwDTGFby8dqyZSR8Q9k5om/Ai04HYqphv8NAdYtDF47Ebo0/cxNQi
+   oCHtXOImJ6Jo5pgzjRiAhlOdgfCHDrQuEMsMFmHjbSKpyrb7YPlGAYjhH
+   s8Zjq3TYDqokXKsOC76ZrBcxvOcBjnwFBZmLYg1IEy6IFzKbuUuRgy/9i
+   x9OHR5wvrHBCZT/VZe54k2zwLKJ8AcLDs8Tl0/T6A+PN0WF5tW3YS/uln
+   oti2sL9YSy9l7EU4RBQw87DoansUkMvJwF5UCDr7MlZssgHiPJHGoh7Ld
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="369019101"
+X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
+   d="scan'208";a="369019101"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:37:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="744238572"
+X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
+   d="scan'208";a="744238572"
+Received: from jithujos.sc.intel.com ([172.25.103.66])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:37:53 -0700
+From:   Jithu Joseph <jithu.joseph@intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        rostedt@goodmis.org, jithu.joseph@intel.com, ashok.raj@intel.com,
+        tony.luck@intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com, pengfei.xu@intel.com
+Subject: [PATCH 00/10] IFS support for GNR and SRF
+Date:   Wed, 13 Sep 2023 11:33:38 -0700
+Message-Id: <20230913183348.1349409-1-jithu.joseph@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20230913154036.GA433234@bhelgaas> <8cd30700-d084-4a55-ab46-6e8db6706aa4@amd.com>
-In-Reply-To: <8cd30700-d084-4a55-ab46-6e8db6706aa4@amd.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 13 Sep 2023 19:42:05 +0200
-Message-ID: <CAJZ5v0hzdNYOLeOoM-4PZMQtr5J93kGA6Gidn_DVbFweMLb8vw@mail.gmail.com>
-Subject: Re: [PATCH v18 2/2] PCI: Add a quirk for AMD PCIe root ports w/ USB4 controllers
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
-        iain@orangesquash.org.uk
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 6:35 PM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> On 9/13/2023 10:40, Bjorn Helgaas wrote:
-> > On Wed, Sep 13, 2023 at 12:20:14PM +0200, Rafael J. Wysocki wrote:
-> >> On Wed, Sep 13, 2023 at 6:11 AM Mario Limonciello
-> >> <mario.limonciello@amd.com> wrote:
+This series adds IFS support for newer CPUs like Granite Rapids(GNR)
+and Sierra Forest(SRF).
 
-[cut]
+There are changes in the IFS image loading and test flow to support
+these new CPUs.
 
-> >
-> > Also, do we have some indication that this is specific to Ryzen?  If
-> > not, I assume this is an ongoing issue, and matching on Device IDs
-> > just means we'll have to debug the same problem again and add more
-> > IDs.
->
-> This is why my earlier attempts (v16 and v17) tried to tie it to
-> constraints.  These are what the uPEP driver in Windows uses to make the
-> decision of what power state to put integrated devices like the root
-> port into.
->
-> In Windows if no uPEP driver is installed "Windows internal policy"
-> dictates what happens.  If the uPEP driver is installed then it
-> influences the policy based upon the constraints.
->
-> Rafael had feedback against constraints in v17, which is why I'm back to
-> a quirk for v18.
->
-> This issue as I've described it is specific to AMD Ryzen.
+Note to reviewers:
+ - patch 01/10 adds a bit definition to arch/x86/.../msr-index.h,
+  hence x86 maintainers are cc-d.
+ - patch 05/10 modifies an existing tracepoint, cc Steven Rostedt
+ - Rest are localized to IFS driver
 
-OK, so a quirk is the way to go IMO, because starting to rely on LPI
-constraints in general retroactively is almost guaranteed to regress
-things this way or another.
+Jithu Joseph (10):
+  platform/x86/intel/ifs: Store IFS generation number
+  platform/x86/intel/ifs: Refactor image loading code
+  platform/x86/intel/ifs: Image loading for new generations
+  platform/x86/intel/ifs: Scan test for new generations
+  trace: platform/x86/intel/ifs: Modify scan trace
+  platform/x86/intel/ifs: Validate image size
+  platform/x86/intel/ifs: Metadata validation for start_chunk
+  platform/x86/intel/ifs: Add new CPU support
+  platform/x86/intel/ifs: Add new error code
+  platform/x86/intel/ifs: ARRAY BIST for Sierra Forest
 
-Whatever is done, it needs to be Ryzen-specific, unless there is
-evidence that other (and in particular non-AMD) platforms are
-affected.
+ arch/x86/include/asm/msr-index.h         |   2 +
+ drivers/platform/x86/intel/ifs/ifs.h     |  47 +++++++
+ include/trace/events/intel_ifs.h         |  16 +--
+ drivers/platform/x86/intel/ifs/core.c    |  14 +-
+ drivers/platform/x86/intel/ifs/load.c    | 159 +++++++++++++++++++++--
+ drivers/platform/x86/intel/ifs/runtest.c |  68 +++++++++-
+ 6 files changed, 273 insertions(+), 33 deletions(-)
 
-> I expect it to be an ongoing issue.  I also expect unless we use
-> constraints or convince the firmware team to add a _S0W object with a
-> value of "0" for the sake of Linux that we will be adding IDs every year
-> to wherever this lands as we reproduce it on newer SoCs.
 
-So maybe the way to go is to make the AMD PMC driver set a flag for
-Root Ports on suspend or similar.
+base-commit: 0bb80ecc33a8fb5a682236443c1e740d5c917d1d
+-- 
+2.25.1
 
-In any case, I think that it would be good to agree on the approach at
-the general level before posting any new patches, because we seem to
-be going back and forth here.
