@@ -2,104 +2,142 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3445ECA5511
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 08:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473E5CA551B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 09:27:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239149AbjIMI5Q (ORCPT
+        id S239315AbjIMJ1M (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Sep 2023 04:57:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52846 "EHLO
+        Wed, 13 Sep 2023 05:27:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238884AbjIMI5P (ORCPT
+        with ESMTP id S239298AbjIMJ1L (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Sep 2023 04:57:15 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14BCBE73;
-        Wed, 13 Sep 2023 01:57:12 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 258B6C433C8;
-        Wed, 13 Sep 2023 08:57:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694595431;
-        bh=llGJetdIb1dUjrzIZCcYNGwpbB9eVWan8YT4tpPq6SI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oh68BCdRZubTrl/ZMiuumqN4cN4http1sVkZ8tCPDwNPcNokpVhMfwbnQw1apVu5Z
-         fCAYZCnxdAP94Yh2lL0KmWE62tnusTgyVF5nrvSjPPdb3g2FufJh/8D3Jmx/B7C7zA
-         knujcquHlKQdnB4YTu1FYcFeTO6Rah1n3/ruwSiBWgyWqXaqvwaXAaYayxHGSF75nS
-         AshOQwcmKaDFTb+flzzrKeDwvWJ/7nYOZBOoiqhh+sSezUyUlwQaj+vzZvDcvrDGEp
-         eIN7hU6qw/dkaxSLbj8H31xF/Jc4aG84oOUmneEb+bESwvO7kmadt+v/vnMOli+2mr
-         UTjYHbI9G76gQ==
-Date:   Wed, 13 Sep 2023 10:57:07 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Andi Shyti <andi.shyti@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Michael Shych <michaelsh@nvidia.com>,
-        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] i2c: I2C_MLXCPLD on ARM64 should depend on ACPI
-Message-ID: <ZQF5Y2crg3TuyHOn@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Michael Shych <michaelsh@nvidia.com>, linux-i2c@vger.kernel.org,
+        Wed, 13 Sep 2023 05:27:11 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B23A199F;
+        Wed, 13 Sep 2023 02:27:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694597228; x=1726133228;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=j/0F9gh51qv3nxHxA3ApGcaoGCNckyw9Qdr3qP/Jtdc=;
+  b=av/nzBxyKRi7oxx+syn9zzn16+3CjqHB05SRFmVisL0gH1ggwezJ2rll
+   AHDhQFhpMrB5J8WzOvJGigAuLlhkA7hM7Mf7u0HXkLz46LehSI95Axa0Z
+   /UA+7IJwDh6i9eGQ38uin4wgJ1YHyPHYe2nb5u6cjB9lYHeEfC34xkN8x
+   UEuC4gvH2xQE5Miycat+WNPplKr4ZhQQYrcqya1o2V34N39ld4ZkV7iZw
+   DBhPJU2Gm2UsLA8lHQRIKhA0Cp4WoB6ez343/DMp0H16Wx82YKehCkFt3
+   QB2y27PlMowt2UW4J12IF+7T1ZwfLzrBYzPeS4aHNkm8VgpC96NrsNkFj
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="464979134"
+X-IronPort-AV: E=Sophos;i="6.02,142,1688454000"; 
+   d="scan'208";a="464979134"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 02:27:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="867717322"
+X-IronPort-AV: E=Sophos;i="6.02,142,1688454000"; 
+   d="scan'208";a="867717322"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 13 Sep 2023 02:27:05 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 3EC918C9; Wed, 13 Sep 2023 12:27:04 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Pearson <mpearson-lenovo@squebb.ca>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1693828363.git.geert+renesas@glider.be>
- <71c8d6d8c2c7ef31040ff5a0266cde0a6b3cd189.1693828363.git.geert+renesas@glider.be>
+Cc:     Mark Pearson <markpearson@lenovo.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 2/2] platform/x86: think-lmi: Use strreplace() to replace a character by nul
+Date:   Wed, 13 Sep 2023 12:27:01 +0300
+Message-Id: <20230913092701.440959-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+In-Reply-To: <20230913092701.440959-1-andriy.shevchenko@linux.intel.com>
+References: <20230913092701.440959-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="SnrQN+jefm+egFHi"
-Content-Disposition: inline
-In-Reply-To: <71c8d6d8c2c7ef31040ff5a0266cde0a6b3cd189.1693828363.git.geert+renesas@glider.be>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+We can replace
+	p = strchrnul(str, '$OLD');
+	*p = '\0';
+with
+	strreplace(str, '$OLD', '\0');
+that does the compatible modification without a need of the temporary variable.
 
---SnrQN+jefm+egFHi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/think-lmi.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
-On Mon, Sep 04, 2023 at 02:00:36PM +0200, Geert Uytterhoeven wrote:
-> The "i2c_mlxcpld" platform device is only instantiated on X86 systems
-> (through drivers/platform/x86/mlx-platform.c), or on ARM64 systems with
-> ACPI (through drivers/platform/mellanox/nvsw-sn2201.c).  Hence further
-> restrict the dependency on ARM64 to ACPI, to prevent asking the user
-> about this driver when configuring an ARM64 kernel without ACPI support.
->=20
-> While at it, document in the Kconfig help text that the driver supports
-> ARM64/ACPI based systems, too.
->=20
-> Fixes: d7cf993f832ad2a4 ("i2c: mlxcpld: Allow driver to run on ARM64 arch=
-itecture")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index 94a3c7a74bc4..2f20fafe7f55 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -198,14 +198,6 @@ static struct think_lmi tlmi_priv;
+ static struct class *fw_attr_class;
+ static DEFINE_MUTEX(tlmi_mutex);
+ 
+-/* ------ Utility functions ------------*/
+-/* Strip out CR if one is present */
+-static void strip_cr(char *str)
+-{
+-	char *p = strchrnul(str, '\n');
+-	*p = '\0';
+-}
+-
+ /* Convert BIOS WMI error string to suitable error code */
+ static int tlmi_errstr_to_err(const char *errstr)
+ {
+@@ -411,7 +403,7 @@ static ssize_t current_password_store(struct kobject *kobj,
+ 
+ 	strscpy(setting->password, buf, setting->maxlen);
+ 	/* Strip out CR if one is present, setting password won't work if it is present */
+-	strip_cr(setting->password);
++	strreplace(setting->password, '\n', '\0');
+ 	return count;
+ }
+ 
+@@ -921,7 +913,7 @@ static ssize_t display_name_show(struct kobject *kobj, struct kobj_attribute *at
+ static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct tlmi_attr_setting *setting = to_tlmi_attr_setting(kobj);
+-	char *item, *value, *p;
++	char *item, *value;
+ 	int ret;
+ 
+ 	ret = tlmi_setting(setting->index, &item, LENOVO_BIOS_SETTING_GUID);
+@@ -934,8 +926,7 @@ static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *a
+ 		ret = -EINVAL;
+ 	else {
+ 		/* On Workstations remove the Options part after the value */
+-		p = strchrnul(value, ';');
+-		*p = '\0';
++		strreplace(value, ';', '\0');
+ 		ret = sysfs_emit(buf, "%s\n", value + 1);
+ 	}
+ 	kfree(item);
+@@ -1418,7 +1409,6 @@ static int tlmi_analyze(void)
+ 	for (i = 0; i < TLMI_SETTINGS_COUNT; ++i) {
+ 		struct tlmi_attr_setting *setting;
+ 		char *item = NULL;
+-		char *p;
+ 
+ 		tlmi_priv.setting[i] = NULL;
+ 		ret = tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GUID);
+@@ -1435,8 +1425,7 @@ static int tlmi_analyze(void)
+ 		strreplace(item, '/', '\\');
+ 
+ 		/* Remove the value part */
+-		p = strchrnul(item, ',');
+-		*p = '\0';
++		strreplace(item, ',', '\0');
+ 
+ 		/* Create a setting entry */
+ 		setting = kzalloc(sizeof(*setting), GFP_KERNEL);
+-- 
+2.40.0.1.gaa8946217a0b
 
-Removed Fixes tag and applied to for-current, thanks!
-
-
---SnrQN+jefm+egFHi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmUBeWMACgkQFA3kzBSg
-KbYmIA//eXo9hXtMmtePqnxWOfzUsnh8OGfXlRbKD4prbAY+1ErvPXDbq81hTrWh
-koefQSU44ey7uuoYHB9L52esYxoaUiRB437FYd7oItNeQY45QHhpSwEVSw20zRg5
-1mOkmRTkQhDnIOy2OqPp07jn81uFHX2TmS0Vd6YQGcT5lpW2R27Rbpn7oPdT1u25
-GElK9zHfKJb4/ueQouEOkb6d1alyRSqsOziibiLMqowpEQK3nNTg3gCxJHO3gM3P
-hhdqcBRrjgdFnAiVYBuubbosu0ouq7NlvjEzI4QKVtS2s5cZA9QIzrBZb7hTtQaj
-Cg+EZhBZs4BXejSM/aMTXEByAwahcFrKjNpuTiNKJoWRXfdor1X5vYCIycm1GaRc
-JT/BhUj5C29AuN6fh95lyoxCS/wNAwHo1b/VR77YJxPzwKDH0//1BzwqeUvTR4z6
-zDkzfVQSU9dvGyRqKg712ptXwSBQnlPa+qNvyNhoh0b4EG8xPIe6iUCIzGX5XfDC
-gE0LZ3cKOQ+HlXsZaKAZA/LyDyIButpfE+l4MGbEd8Rs3s0Ut2Hswb8Pcf8Fies2
-EhubuDfveb780Do1rJem0nx+lg1LIuOJu9Zp+/nH8Q2wOfLudb4e4pkkwRrCjEXD
-9CGrKwO7QSyHT1gVjkTJrQj4WU6QV0zEGoJEwi9HMknjtF9Qn54=
-=LGcb
------END PGP SIGNATURE-----
-
---SnrQN+jefm+egFHi--
