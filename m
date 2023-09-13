@@ -2,124 +2,225 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2532EDEC74
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 15:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF4CEDEC78
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 15:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229592AbjIMPVJ (ORCPT
+        id S229506AbjIMP2b (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Sep 2023 11:21:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54238 "EHLO
+        Wed, 13 Sep 2023 11:28:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236915AbjIMPUu (ORCPT
+        with ESMTP id S229537AbjIMP22 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Sep 2023 11:20:50 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D697219B1;
-        Wed, 13 Sep 2023 08:20:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694618446; x=1726154446;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1LTANdPAE8m2PHoe4hG/3j6oI5p3jyUM3ew3Mdwah6w=;
-  b=jiYKS/gOLBjZh23IsE6wEHnQmcKATipXhTd+3wRmxvqyGFBBn4GsgfQl
-   dXZx9q2Hz9XyuxYc6jEoI6dJ5tFkqLWRXPsEU9+q0l6SHKYf0S1W0f0Qu
-   T6vtLXFITVSVAjiaPucsmqgx3y3whZeoGj9qWafHytLZqhqzsCrrkcVmt
-   ZWcLTEU5ynnmstugP0ONTGA3bVW/4Sf3XVOIEoWnSjhpzAuXPRWPN9hmG
-   0CA0HNcunfYU7VyzwdMGdYs9n66EXnTTFeh9Ui3nHNDC2x04+pDo+5qAg
-   HVSxkHaF/ORVkW4vwLYwvFmfRgXeVtdfEYjpO7Nvookd4Gwjwwf9qQsks
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="363723884"
-X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="363723884"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 08:20:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="814249794"
-X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="814249794"
-Received: from lkp-server02.sh.intel.com (HELO 9ef86b2655e5) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Sep 2023 08:20:11 -0700
-Received: from kbuild by 9ef86b2655e5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qgRez-0000E4-0J;
-        Wed, 13 Sep 2023 15:20:09 +0000
-Date:   Wed, 13 Sep 2023 23:19:47 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-mtd@lists.infradead.org,
-        platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 1/5] gpiolib: provide gpiod_set_active_[low/high]()
-Message-ID: <202309132304.Uw3cYH9C-lkp@intel.com>
-References: <20230913115001.23183-2-brgl@bgdev.pl>
+        Wed, 13 Sep 2023 11:28:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EFAD61724
+        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Sep 2023 08:27:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694618863;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=k6Caracy5xcrqm99gFeC/lMsoNzeMeAxsTyy4jpwbf4=;
+        b=XxoY0WO7l8fiFmIdfjkEc64RMMZcapWStvGIj5zMSvj3qO/YWC9WZE/mf7CTp1VP4EC3+G
+        bu7g9IIiceQGtHCXXQhIQLn6KQtBREA7rXAhl1JzOYZnY8yKL6CLa4PhSKisipHgDyF70O
+        jkx+ZTYzGF1NzScUiAWn1VbPcDJpDW8=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-611-r0-esHBxOvG99vAPhOhL1Q-1; Wed, 13 Sep 2023 11:27:41 -0400
+X-MC-Unique: r0-esHBxOvG99vAPhOhL1Q-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-502a52cae6bso5206771e87.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Sep 2023 08:27:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694618860; x=1695223660;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k6Caracy5xcrqm99gFeC/lMsoNzeMeAxsTyy4jpwbf4=;
+        b=q/yvMzqjlGEyW2oVcaeIeWTJloUZnlJ77e3VjOUdcVHwzjngXLxspNUtxw3Uf3xRHV
+         1q8mfpVNw+4EPJrCT/AQmt8NDJlW4NavI71Kry+btc69QsyhF2tR5vl7JJ1797TFF2y3
+         YJyt6VTyaHOC4LTPgbQEjAmfcx8z6L0Q6+G/VS+vrsd94uyNtxWUAY5Swro16xKPFd3F
+         PpVLSF3ST+DuVa6+DflBDtkQ8EdWVhyeBPfeTlI13r6JszRsdn+MtJMHxWmI10rbMNUi
+         punbfcZcoEsU0fUWIdfMt/mbTZojQfFh9tvwb4/4fbNbI4mi58lJ2Gm9bfdbfNA3vgav
+         Ns2g==
+X-Gm-Message-State: AOJu0YzUgFjCf9lTfBqzKV9dA2jgIDojMx/tJLP0S/AJsHznMTAh+eXe
+        4ddBHCV0SkTbK9WK5/JMUv5Uyq1AA1ixkD5YAT7WeJOQxhsbRo4kfuticcUhuGVh3oH/YxuX+pM
+        49LLd4KSi2zKE7vQ0tsxIB3WQDRPzhlb+o2HiDUPbuA==
+X-Received: by 2002:a05:6512:3f08:b0:500:78ee:4cd7 with SMTP id y8-20020a0565123f0800b0050078ee4cd7mr2737074lfa.23.1694618860069;
+        Wed, 13 Sep 2023 08:27:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHmO/LD7isQGiEj2y+pJoBhK+DVLmxLBBtqmVpRIuZIWnltTiWXezhEDFP0/n0/9/YtAGuP4A==
+X-Received: by 2002:a05:6512:3f08:b0:500:78ee:4cd7 with SMTP id y8-20020a0565123f0800b0050078ee4cd7mr2737055lfa.23.1694618859670;
+        Wed, 13 Sep 2023 08:27:39 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id l15-20020aa7d94f000000b0052338f5b2a4sm7502766eds.86.2023.09.13.08.27.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Sep 2023 08:27:38 -0700 (PDT)
+Message-ID: <912ddb30-136c-b066-aae4-8726f8f8d035@redhat.com>
+Date:   Wed, 13 Sep 2023 17:27:37 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230913115001.23183-2-brgl@bgdev.pl>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2 1/4] platform/x86/amd/hsmp: create plat specific struct
+Content-Language: en-US, nl
+To:     Suma Hegde <Suma.Hegde@amd.com>
+Cc:     platform-driver-x86@vger.kernel.org,
+        Naveen Krishna Chatradhi <nchatrad@amd.com>
+References: <20230906071302.291260-1-Suma.Hegde@amd.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230906071302.291260-1-Suma.Hegde@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Bartosz,
+Hi Suma,
 
-kernel test robot noticed the following build errors:
+Thank you for the patch.
 
-[auto build test ERROR on brgl/gpio/for-next]
-[also build test ERROR on mtd/nand/next linus/master ulf-hansson-mmc-mirror/next v6.6-rc1 next-20230913]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On 9/6/23 09:12, Suma Hegde wrote:
+> From: Suma Hegde <suma.hegde@amd.com>
+> 
+> Having a separate platform device structure helps in future, to
+> contain platform specific variables and other data.
+> 
+> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+> Reviewed-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
+> ---
+> Changes since v1:
+> 1. defined HSMP_CDEV_NAME and HSMP_DEVNODE_NAME macros
+> 
+>  drivers/platform/x86/amd/hsmp.c | 56 +++++++++++++++++++++------------
+>  1 file changed, 36 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
+> index 31382ef52efb..94c65320bdcd 100644
+> --- a/drivers/platform/x86/amd/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp.c
+> @@ -47,9 +47,23 @@
+>  #define HSMP_INDEX_REG		0xc4
+>  #define HSMP_DATA_REG		0xc8
+>  
+> -static struct semaphore *hsmp_sem;
+> +#define HSMP_CDEV_NAME		"hsmp_cdev"
+> +#define HSMP_DEVNODE_NAME	"hsmp"
+>  
+> -static struct miscdevice hsmp_device;
+> +struct hsmp_socket {
+> +	struct semaphore hsmp_sem;
+> +	u16 sock_ind;
+> +};
+> +
+> +struct hsmp_plat_device {
+> +	struct miscdevice hsmp_device;
+> +	struct hsmp_socket *sock;
+> +	struct device *dev;
+> +};
+> +
+> +static u16 num_sockets;
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpiolib-provide-gpiod_set_active_-low-high/20230913-195053
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20230913115001.23183-2-brgl%40bgdev.pl
-patch subject: [PATCH 1/5] gpiolib: provide gpiod_set_active_[low/high]()
-config: s390-allnoconfig (https://download.01.org/0day-ci/archive/20230913/202309132304.Uw3cYH9C-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230913/202309132304.Uw3cYH9C-lkp@intel.com/reproduce)
+Overall this patch looks good to me, but since
+num_sockets indicates the size of the plat_dev.sock array,
+num_sockets should IMHO itself also be part of
+struct hsmp_plat_device.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202309132304.Uw3cYH9C-lkp@intel.com/
+(and all usages of "num_sockets" should then be replaced by
+"plat_dev.num_sockets")
 
-All errors (new ones prefixed by >>):
+Other then that this looks good to me.
 
-   In file included from include/linux/nvmem-provider.h:15,
-                    from include/linux/rtc.h:18,
-                    from include/linux/efi.h:20,
-                    from block/partitions/efi.h:19,
-                    from block/partitions/msdos.c:32:
->> include/linux/gpio/consumer.h:505:1: error: expected ';', ',' or ')' before '{' token
-     505 | {
-         | ^
+Regards,
+
+Hans
 
 
-vim +505 include/linux/gpio/consumer.h
 
-   503	
-   504	static inline void gpiod_set_active_low(struct gpio_desc *desc
- > 505	{
-   506		/* GPIO can never have been requested */
-   507		WARN_ON(desc);
-   508	}
-   509	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+> +
+> +static struct hsmp_plat_device plat_dev;
+>  
+>  static int amd_hsmp_rdwr(struct pci_dev *root, u32 address,
+>  			 u32 *value, bool write)
+> @@ -188,6 +202,7 @@ static int validate_message(struct hsmp_message *msg)
+>  
+>  int hsmp_send_message(struct hsmp_message *msg)
+>  {
+> +	struct hsmp_socket *sock = &plat_dev.sock[msg->sock_ind];
+>  	struct amd_northbridge *nb;
+>  	int ret;
+>  
+> @@ -208,14 +223,13 @@ int hsmp_send_message(struct hsmp_message *msg)
+>  	 * In SMP system timeout of 100 millisecs should
+>  	 * be enough for the previous thread to finish the operation
+>  	 */
+> -	ret = down_timeout(&hsmp_sem[msg->sock_ind],
+> -			   msecs_to_jiffies(HSMP_MSG_TIMEOUT));
+> +	ret = down_timeout(&sock->hsmp_sem, msecs_to_jiffies(HSMP_MSG_TIMEOUT));
+>  	if (ret < 0)
+>  		return ret;
+>  
+>  	ret = __hsmp_send_message(nb->root, msg);
+>  
+> -	up(&hsmp_sem[msg->sock_ind]);
+> +	up(&sock->hsmp_sem);
+>  
+>  	return ret;
+>  }
+> @@ -321,28 +335,31 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
+>  {
+>  	int i;
+>  
+> -	hsmp_sem = devm_kzalloc(&pdev->dev,
+> -				(amd_nb_num() * sizeof(struct semaphore)),
+> -				GFP_KERNEL);
+> -	if (!hsmp_sem)
+> +	plat_dev.sock = devm_kzalloc(&pdev->dev,
+> +				     (num_sockets * sizeof(struct hsmp_socket)),
+> +				     GFP_KERNEL);
+> +	if (!plat_dev.sock)
+>  		return -ENOMEM;
+> +	plat_dev.dev = &pdev->dev;
+>  
+> -	for (i = 0; i < amd_nb_num(); i++)
+> -		sema_init(&hsmp_sem[i], 1);
+> +	for (i = 0; i < num_sockets; i++) {
+> +		sema_init(&plat_dev.sock[i].hsmp_sem, 1);
+> +		plat_dev.sock[i].sock_ind = i;
+> +	}
+>  
+> -	hsmp_device.name	= "hsmp_cdev";
+> -	hsmp_device.minor	= MISC_DYNAMIC_MINOR;
+> -	hsmp_device.fops	= &hsmp_fops;
+> -	hsmp_device.parent	= &pdev->dev;
+> -	hsmp_device.nodename	= "hsmp";
+> -	hsmp_device.mode	= 0644;
+> +	plat_dev.hsmp_device.name	= HSMP_CDEV_NAME;
+> +	plat_dev.hsmp_device.minor	= MISC_DYNAMIC_MINOR;
+> +	plat_dev.hsmp_device.fops	= &hsmp_fops;
+> +	plat_dev.hsmp_device.parent	= &pdev->dev;
+> +	plat_dev.hsmp_device.nodename	= HSMP_DEVNODE_NAME;
+> +	plat_dev.hsmp_device.mode	= 0644;
+>  
+> -	return misc_register(&hsmp_device);
+> +	return misc_register(&plat_dev.hsmp_device);
+>  }
+>  
+>  static void hsmp_pltdrv_remove(struct platform_device *pdev)
+>  {
+> -	misc_deregister(&hsmp_device);
+> +	misc_deregister(&plat_dev.hsmp_device);
+>  }
+>  
+>  static struct platform_driver amd_hsmp_driver = {
+> @@ -358,7 +375,6 @@ static struct platform_device *amd_hsmp_platdev;
+>  static int __init hsmp_plt_init(void)
+>  {
+>  	int ret = -ENODEV;
+> -	u16 num_sockets;
+>  	int i;
+>  
+>  	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD || boot_cpu_data.x86 < 0x19) {
+
