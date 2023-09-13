@@ -2,44 +2,44 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC475EE0207
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80365EE0202
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 18:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231936AbjIMSiE (ORCPT
+        id S231931AbjIMSiC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Sep 2023 14:38:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43130 "EHLO
+        Wed, 13 Sep 2023 14:38:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231918AbjIMSiB (ORCPT
+        with ESMTP id S231897AbjIMSiA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Sep 2023 14:38:01 -0400
+        Wed, 13 Sep 2023 14:38:00 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C58BA3;
-        Wed, 13 Sep 2023 11:37:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A95C11BC6;
+        Wed, 13 Sep 2023 11:37:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694630277; x=1726166277;
+  t=1694630276; x=1726166276;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=27uuSgwznKYWiVr2rzZGk8zPvF6mY8zY3sne3jlCPzw=;
-  b=DWixgxhi9Wc+QQu863a2xfIfb363nxibe+8INkzu0gFUZFgQ70wDmh3X
-   Pl8vH6ho2uuh5E6YIyBHYtxZBAnzIWv2uiaBCwm8Iuy0IABqvg0Y8NAD0
-   MjbCqk1Axs859rylCYxs56pPDGUpH97X9at0VZ6m23yQz15IKx0AmGwPB
-   amOk7X4x+Eo4XEcLT7ORH0flqiuy5McpGsdtST+/VBEXc/+Q79zqL0elg
-   T98mZitDM8wvJbgrHUq57DkDSltjXpcThkHTRhINQCadQx/w/bDtVPrZ4
-   V7+jMi2s6ePiWy6/WjSXH6TTppKsh68ZgUuzzyjC0nedulJGGAPyI9NQn
+  bh=1QD1hfFNbY0dgb7El0Aw5L89YdqnDMRaACvnIzni/zs=;
+  b=KmkCiurjD4OIJKYPCtR1x2bAZOtz1apLafTigQ6XdFkPtp3T0XfrOx/N
+   0cX645alEVU7+tytPxmwZOM1rh0IBUJNlAeZoYPxZ5insLq31iiMlu5T2
+   j6qL+8unc5Kqlti+IH7Kv0PgQKkB6xldueGN5YS/pRWR597H61WgT8+3V
+   gSqdxCrCge8YE43qdeH3WgIJXof9mgEgFQwmCKgO/7b4R0juaJXm4DfI+
+   yANAoRumD4Qc4r3gn3Nv4K+m6l0JjxmT221j0SRnfNFG5I8HAhVQgT0Ha
+   E17oB+vXiKRk2D22tiGm3vTsp0HKGnuytP291bGEgG0zTXyWHiTxHo2Uy
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="369019182"
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="369019171"
 X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="369019182"
+   d="scan'208";a="369019171"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:37:56 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="744238595"
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="744238590"
 X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="744238595"
+   d="scan'208";a="744238590"
 Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:37:56 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:37:55 -0700
 From:   Jithu Joseph <jithu.joseph@intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -48,9 +48,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         tony.luck@intel.com, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
         ravi.v.shankar@intel.com, pengfei.xu@intel.com
-Subject: [PATCH 07/10] platform/x86/intel/ifs: Metadata validation for start_chunk
-Date:   Wed, 13 Sep 2023 11:33:45 -0700
-Message-Id: <20230913183348.1349409-8-jithu.joseph@intel.com>
+Subject: [PATCH 06/10] platform/x86/intel/ifs: Validate image size
+Date:   Wed, 13 Sep 2023 11:33:44 -0700
+Message-Id: <20230913183348.1349409-7-jithu.joseph@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230913183348.1349409-1-jithu.joseph@intel.com>
 References: <20230913183348.1349409-1-jithu.joseph@intel.com>
@@ -60,36 +60,44 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add an additional check to validate IFS image metadata field
-prior to loading the test image.
+Perform additional validation prior to loading IFS image.
 
-If start_chunk is not a multiple of chunks_per_stride error out.
+Error out if the size of the file being loaded doesn't
+match the size specified in the header.
 
 Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Tested-by: Pengfei Xu <pengfei.xu@intel.com>
 ---
- drivers/platform/x86/intel/ifs/load.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/platform/x86/intel/ifs/load.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
-index 778a3b89a24d..88630366a23c 100644
+index e8fb03dd8bcf..778a3b89a24d 100644
 --- a/drivers/platform/x86/intel/ifs/load.c
 +++ b/drivers/platform/x86/intel/ifs/load.c
-@@ -292,6 +292,13 @@ static int validate_ifs_metadata(struct device *dev)
- 		return ret;
+@@ -376,6 +376,7 @@ int ifs_load_firmware(struct device *dev)
+ {
+ 	const struct ifs_test_caps *test = ifs_get_test_caps(dev);
+ 	struct ifs_data *ifsd = ifs_get_data(dev);
++	unsigned int expected_size;
+ 	const struct firmware *fw;
+ 	char scan_path[64];
+ 	int ret = -EINVAL;
+@@ -390,6 +391,13 @@ int ifs_load_firmware(struct device *dev)
+ 		goto done;
  	}
  
-+	if (ifs_meta->chunks_per_stride &&
-+	    (ifs_meta->starting_chunk % ifs_meta->chunks_per_stride)) {
-+		dev_warn(dev, "Starting chunk num %d not a multiple of chunks_per_stride %d\n",
-+			 ifs_meta->starting_chunk, ifs_meta->chunks_per_stride);
-+		return ret;
++	expected_size = ((struct microcode_header_intel *)fw->data)->totalsize;
++	if (fw->size != expected_size) {
++		dev_err(dev, "File size mismatch (expected %d, actual %ld). Corrupted IFS image.\n",
++			expected_size, fw->size);
++		return -EBADFD;
 +	}
 +
- 	return 0;
- }
- 
+ 	ret = image_sanity_check(dev, (struct microcode_header_intel *)fw->data);
+ 	if (ret)
+ 		goto release;
 -- 
 2.25.1
 
