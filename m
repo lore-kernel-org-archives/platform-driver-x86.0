@@ -2,44 +2,44 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 361D5EE0203
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 18:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD206EE0205
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 18:37:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231875AbjIMSiA (ORCPT
+        id S229933AbjIMSiB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Sep 2023 14:38:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43076 "EHLO
+        Wed, 13 Sep 2023 14:38:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229713AbjIMSh7 (ORCPT
+        with ESMTP id S230433AbjIMSh7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Wed, 13 Sep 2023 14:37:59 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11DB7A3;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF9DA3;
         Wed, 13 Sep 2023 11:37:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1694630275; x=1726166275;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=xCxH2O4NnZUcc0zAWHVPgXZ+7sRheSRlMJvoqoWVMlQ=;
-  b=aDY70ni7Dq5ZnccNDiJSseOcbPRryo1PJ8obR1wrVz1j70JoofuRBCUO
-   qBLE+RlfezZVpvc9ctHT+JTtSw/Ub4gWWU4ogSDJRCYCkDChdvZroThVV
-   pzw0VEz1XZp+GZCc2HoOIobk1/ntcqjLfrWy9aFL9Dkbjzr9VTXcQ8cef
-   Dj3T0PXpCNczgMHEIISg4QBSODfFKmEQXrpTTmgJHo4Cj3VRdhr6F01ln
-   6BefbbxxjazaUU2+rp/Tq8oNMSHDC/5Pv18utw/TNvHW7GyGjBnaSWbEr
-   IHqhteh9XDxh+TaKDwqlikAg+8Xsu8wR2j1lDKv9lFyP/Iep5nRBQ7hvY
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="369019122"
+  bh=7jiyu/bEO46k0jXXC149ozOKb3OC/lXOxys31r8AOQ4=;
+  b=UcDrEkDT3xdrOQNdO1It/PixlfB7HUjyEMkl5vulR7pmWhKlIMXEbHLF
+   U24H+EmN/N2/lZSg4nUtSoH632fQQzRzVANxf+F6dGGaqjgiwvhAK2Lib
+   FzLQTieB5a+l+RytnYTW1c2nRQMwKKhocVK4JGK9rvMoEulh5epcis5Ix
+   hLYYat8Umfo4S2lWUlhuLMkLnZhCSWNzN2sCyQFrXRDkrx3vImNmfzpHH
+   Bfg+PNjdNcpPc8x6aYty3akLGDVQlJfxvp3Dx4BF6KaS/T83F+VntNXvF
+   bS7WjljqiRZC9lETcDFvXn9wPKhStLTJa3xIwY/BiZnSFdhGX6TdUJw/s
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="369019143"
 X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="369019122"
+   d="scan'208";a="369019143"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:37:54 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:37:55 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="744238578"
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="744238584"
 X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="744238578"
+   d="scan'208";a="744238584"
 Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:37:54 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:37:55 -0700
 From:   Jithu Joseph <jithu.joseph@intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -48,9 +48,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         tony.luck@intel.com, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
         ravi.v.shankar@intel.com, pengfei.xu@intel.com
-Subject: [PATCH 02/10] platform/x86/intel/ifs: Refactor image loading code
-Date:   Wed, 13 Sep 2023 11:33:40 -0700
-Message-Id: <20230913183348.1349409-3-jithu.joseph@intel.com>
+Subject: [PATCH 04/10] platform/x86/intel/ifs: Scan test for new generations
+Date:   Wed, 13 Sep 2023 11:33:42 -0700
+Message-Id: <20230913183348.1349409-5-jithu.joseph@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230913183348.1349409-1-jithu.joseph@intel.com>
 References: <20230913183348.1349409-1-jithu.joseph@intel.com>
@@ -60,75 +60,111 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-IFS image loading flow is slightly different for newer IFS
-generations.
+Make changes to scan test flow such that MSRs are populated
+appropriately based on the generation supported by hardware.
 
-In preparation for adding support for newer IFS generations,
-refactor portions of existing image loading code for reuse.
+Width of chunk related bitfields is ACTIVATE_SCAN and SCAN_STATUS MSRs
+are different in newer IFS generation compared to gen0.
 
 Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Tested-by: Pengfei Xu <pengfei.xu@intel.com>
 ---
- drivers/platform/x86/intel/ifs/load.c | 31 ++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+ drivers/platform/x86/intel/ifs/ifs.h     | 14 ++++++++++++++
+ drivers/platform/x86/intel/ifs/runtest.c | 23 ++++++++++++++++++-----
+ 2 files changed, 32 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
-index cefd0d886cfd..851c97cc6a6b 100644
---- a/drivers/platform/x86/intel/ifs/load.c
-+++ b/drivers/platform/x86/intel/ifs/load.c
-@@ -80,6 +80,23 @@ static struct metadata_header *find_meta_data(void *ucode, unsigned int meta_typ
- 	return NULL;
- }
+diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+index 886dc74de57d..3265a6d8a6f3 100644
+--- a/drivers/platform/x86/intel/ifs/ifs.h
++++ b/drivers/platform/x86/intel/ifs/ifs.h
+@@ -205,6 +205,12 @@ union ifs_scan {
+ 		u32	delay	:31;
+ 		u32	sigmce	:1;
+ 	};
++	struct {
++		u16	start;
++		u16	stop;
++		u32	delay	:31;
++		u32	sigmce	:1;
++	} gen2;
+ };
  
-+static void hashcopy_err_message(struct device *dev, u32 err_code)
-+{
-+	if (err_code >= ARRAY_SIZE(scan_hash_status))
-+		dev_err(dev, "invalid error code 0x%x for hash copy\n", err_code);
-+	else
-+		dev_err(dev, "Hash copy error : %s\n", scan_hash_status[err_code]);
-+}
+ /* MSR_SCAN_STATUS bit fields */
+@@ -219,6 +225,14 @@ union ifs_status {
+ 		u32	control_error		:1;
+ 		u32	signature_error		:1;
+ 	};
++	struct {
++		u16	chunk_num;
++		u16	chunk_stop_index;
++		u8	error_code;
++		u32	rsvd1			:22;
++		u32	control_error		:1;
++		u32	signature_error		:1;
++	} gen2;
+ };
+ 
+ /* MSR_ARRAY_BIST bit fields */
+diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
+index 1061eb7ec399..4bbab6be2fa2 100644
+--- a/drivers/platform/x86/intel/ifs/runtest.c
++++ b/drivers/platform/x86/intel/ifs/runtest.c
+@@ -171,6 +171,8 @@ static void ifs_test_core(int cpu, struct device *dev)
+ 	union ifs_status status;
+ 	unsigned long timeout;
+ 	struct ifs_data *ifsd;
++	int to_start, to_stop;
++	int status_chunk;
+ 	u64 msrvals[2];
+ 	int retries;
+ 
+@@ -179,13 +181,21 @@ static void ifs_test_core(int cpu, struct device *dev)
+ 	activate.rsvd = 0;
+ 	activate.delay = IFS_THREAD_WAIT;
+ 	activate.sigmce = 0;
+-	activate.start = 0;
+-	activate.stop = ifsd->valid_chunks - 1;
++	to_start = 0;
++	to_stop = ifsd->valid_chunks - 1;
 +
-+static void auth_err_message(struct device *dev, u32 err_code)
-+{
-+	if (err_code >= ARRAY_SIZE(scan_authentication_status))
-+		dev_err(dev, "invalid error code 0x%x for authentication\n", err_code);
-+	else
-+		dev_err(dev, "Chunk authentication error : %s\n",
-+			scan_authentication_status[err_code]);
-+}
-+
- /*
-  * To copy scan hashes and authenticate test chunks, the initiating cpu must point
-  * to the EDX:EAX to the test image in linear address.
-@@ -109,11 +126,7 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
++	if (ifsd->generation) {
++		activate.gen2.start = to_start;
++		activate.gen2.stop = to_stop;
++	} else {
++		activate.start = to_start;
++		activate.stop = to_stop;
++	}
  
- 	if (!hashes_status.valid) {
- 		ifsd->loading_error = true;
--		if (err_code >= ARRAY_SIZE(scan_hash_status)) {
--			dev_err(dev, "invalid error code 0x%x for hash copy\n", err_code);
--			goto done;
--		}
--		dev_err(dev, "Hash copy error : %s", scan_hash_status[err_code]);
-+		hashcopy_err_message(dev, err_code);
- 		goto done;
- 	}
+ 	timeout = jiffies + HZ / 2;
+ 	retries = MAX_IFS_RETRIES;
  
-@@ -133,13 +146,7 @@ static void copy_hashes_authenticate_chunks(struct work_struct *work)
+-	while (activate.start <= activate.stop) {
++	while (to_start <= to_stop) {
+ 		if (time_after(jiffies, timeout)) {
+ 			status.error_code = IFS_SW_TIMEOUT;
+ 			break;
+@@ -202,7 +212,8 @@ static void ifs_test_core(int cpu, struct device *dev)
+ 		if (!can_restart(status))
+ 			break;
  
- 		if (err_code) {
- 			ifsd->loading_error = true;
--			if (err_code >= ARRAY_SIZE(scan_authentication_status)) {
--				dev_err(dev,
--					"invalid error code 0x%x for authentication\n", err_code);
--				goto done;
--			}
--			dev_err(dev, "Chunk authentication error %s\n",
--				scan_authentication_status[err_code]);
-+			auth_err_message(dev, err_code);
- 			goto done;
+-		if (status.chunk_num == activate.start) {
++		status_chunk = ifsd->generation ? status.gen2.chunk_num : status.chunk_num;
++		if (status_chunk == to_start) {
+ 			/* Check for forward progress */
+ 			if (--retries == 0) {
+ 				if (status.error_code == IFS_NO_ERROR)
+@@ -211,7 +222,9 @@ static void ifs_test_core(int cpu, struct device *dev)
+ 			}
+ 		} else {
+ 			retries = MAX_IFS_RETRIES;
+-			activate.start = status.chunk_num;
++			ifsd->generation ? (activate.gen2.start = status_chunk) :
++			 (activate.start = status_chunk);
++			to_start = status_chunk;
  		}
  	}
+ 
 -- 
 2.25.1
 
