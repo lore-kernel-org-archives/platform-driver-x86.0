@@ -2,146 +2,113 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AF9EE01E0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 16:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B244EE01FA
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 17:42:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229637AbjIMQyp (ORCPT
+        id S231127AbjIMRmV convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Sep 2023 12:54:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35568 "EHLO
+        Wed, 13 Sep 2023 13:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229510AbjIMQyo (ORCPT
+        with ESMTP id S230301AbjIMRmV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Sep 2023 12:54:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9B1F1DC
-        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Sep 2023 09:53:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694624031;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EUAQM9nUVDpynXNTWZkPqYipd38tYN+dKS0WVUg2qcc=;
-        b=VeTPCGHIsqZjnHz3UFDpzjbRcws5NXTSViA4/I4m8kj97VyeBZVmtnIhQ4n0pYGJPlerlD
-        lsngGchpti5dYDlomb1y/Yzx+pHLqYd2trsF89m7BuAsEd5rqqngJ0hOnniQhipiW8UycQ
-        Q9P70EydHuY6c8dJJOD1rjGMhI/SX9Q=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-223-NzRyPqkfNfKkuVk4H3cW1A-1; Wed, 13 Sep 2023 12:53:50 -0400
-X-MC-Unique: NzRyPqkfNfKkuVk4H3cW1A-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-502e273ac32so418228e87.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Sep 2023 09:53:49 -0700 (PDT)
+        Wed, 13 Sep 2023 13:42:21 -0400
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01BCD1986;
+        Wed, 13 Sep 2023 10:42:16 -0700 (PDT)
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6b9cd6876bbso3726a34.1;
+        Wed, 13 Sep 2023 10:42:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694624028; x=1695228828;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EUAQM9nUVDpynXNTWZkPqYipd38tYN+dKS0WVUg2qcc=;
-        b=erWsginPQG7dcuPEFsMtvNk0jCrYkG0chiucFMlVGZ+vhG6aZ3U/XYoBmwcW/h5pdd
-         tHuI92fqeVNnpWPJOksQA+aaNAupgdiDIx0KJns++R6dVmkqVSdIjIThMioaSjcF+JaC
-         AOQZu7bBJ9dyzMyxtJG44B6U7BeqttwRKv3RjUO76fgv+je6s7bScbanjjzbvTrhJq2T
-         whw/ES+3PAu4I6r8OvopvxGhc4B/cj+goCRfN42i7353hCY6WS6gLMr4EPZ1em1TH8oM
-         kiX+M/qk1Q6KEXYCo/8TgE0HqEE7/PenzS8lLc47DOqYVZ4KA7h0J4N+eIM9Q15jamH0
-         cPdA==
-X-Gm-Message-State: AOJu0Yxgds+clNXTGKezOd8islicj6hiIub1IwhlMN9b3ZYz2BfznS57
-        AV+lgryefb9SGgsxN7upLVAKS6vxYLFYnJuNUy1/odW64ZMTf5p3n07EG6ZDoWxbxxxtMYTcMG4
-        q+YLFBxuDRDIrBo7cVz+9pbPyBM4YLcmQRg==
-X-Received: by 2002:a05:6512:3050:b0:4fe:49d:6ae2 with SMTP id b16-20020a056512305000b004fe049d6ae2mr3681525lfb.0.1694624028529;
-        Wed, 13 Sep 2023 09:53:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGp8B1gEI/3ZQ9C3N8IdbLVsl6t5HP7MRJGoKh3mgc6mi3ZCeY0JqdjSTaCUnx7fBbgv42XOQ==
-X-Received: by 2002:a05:6512:3050:b0:4fe:49d:6ae2 with SMTP id b16-20020a056512305000b004fe049d6ae2mr3681506lfb.0.1694624028147;
-        Wed, 13 Sep 2023 09:53:48 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id sb5-20020a170906edc500b0099bc0daf3d7sm8758990ejb.182.2023.09.13.09.53.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Sep 2023 09:53:47 -0700 (PDT)
-Message-ID: <50da04e3-5e12-89d3-e3ad-f2ff4533a615@redhat.com>
-Date:   Wed, 13 Sep 2023 18:53:46 +0200
+        d=1e100.net; s=20230601; t=1694626936; x=1695231736;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eglByz1BRArlf6Op7aiS6b20Xu4w3YO3B+8nUnzdnhI=;
+        b=dFG+Rc5aO2HGG53viYGPhh1vq73QGfhooS2UYfpopepuganlmUaKXQlHRug+JziaG0
+         ++iDRnu9WJn8y9oDfeFjBOEoSm0amPZowg5XE2rlgRY0a1II6Esx1VZjrGcOLR2oQW2D
+         Tqn1aH17W2T3K/MzfWhWkc085vV0qXI0Pl0ODCdXjhzdmJ9FOhZzRQzSC9P/VNG8pIRe
+         Fr8b8eS5BI4bupIbb7bzK0JaktyMtEGpeIF7qlGsrQ+B47Ea3QTVuvh9paT6k/cAhWwy
+         3JX3eN4jqsKacb0A/M6ZpPHfhoySq/Fx+f1onasXhSdMjWHGHX3IVc0uVb4dKSmNIeuT
+         yNvg==
+X-Gm-Message-State: AOJu0YyGEr5mBu1nF413nenLaBMkVSt6CXuAwqugo9aUN63AV91GYlhq
+        tJB2w29uMgGjOXAHAjIuMh/AfE3MTuggzjYASi7FIyi3
+X-Google-Smtp-Source: AGHT+IGYGqRV1580/wSaJf1sNtkXqBowLvnO2+FeCJVMyhKA6jE/7lKya7uKnQ9tI3efx2Kjqgpmdx2gS8cnEAvBch8=
+X-Received: by 2002:a05:6870:14d6:b0:1bb:724f:2bca with SMTP id
+ l22-20020a05687014d600b001bb724f2bcamr3705529oab.1.1694626936155; Wed, 13 Sep
+ 2023 10:42:16 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: sysfs interface to auxmac
-To:     Mark Pearson <mpearson-lenovo@squebb.ca>,
-        Fernando Eckhardt Valle <fevalle@ipt.br>,
-        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-References: <20230906195204.4478-1-fevalle@ipt.br>
- <d26d4b15-765b-a444-b740-97f95f2db58d@redhat.com>
- <c05afb18-bca5-4500-877d-d44ef3abc310@app.fastmail.com>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <c05afb18-bca5-4500-877d-d44ef3abc310@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230913154036.GA433234@bhelgaas> <8cd30700-d084-4a55-ab46-6e8db6706aa4@amd.com>
+In-Reply-To: <8cd30700-d084-4a55-ab46-6e8db6706aa4@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 13 Sep 2023 19:42:05 +0200
+Message-ID: <CAJZ5v0hzdNYOLeOoM-4PZMQtr5J93kGA6Gidn_DVbFweMLb8vw@mail.gmail.com>
+Subject: Re: [PATCH v18 2/2] PCI: Add a quirk for AMD PCIe root ports w/ USB4 controllers
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+        iain@orangesquash.org.uk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark, Fernando,
+On Wed, Sep 13, 2023 at 6:35 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> On 9/13/2023 10:40, Bjorn Helgaas wrote:
+> > On Wed, Sep 13, 2023 at 12:20:14PM +0200, Rafael J. Wysocki wrote:
+> >> On Wed, Sep 13, 2023 at 6:11 AM Mario Limonciello
+> >> <mario.limonciello@amd.com> wrote:
 
-On 9/13/23 18:41, Mark Pearson wrote:
-> 
-> 
-> On Wed, Sep 13, 2023, at 11:58 AM, Hans de Goede wrote:
->> Hi Fernando,
->>
->> On 9/6/23 21:52, Fernando Eckhardt Valle wrote:
->>> Newer Thinkpads have a feature called Mac Address Passthrough.
->>> This patch provides a sysfs interface that userspace can use
->>> to get this auxiliary mac address.
->>>
->>> Signed-off-by: Fernando Eckhardt Valle <fevalle@ipt.br>
->>
->> Thank you for your patch. 
->>
->> At a minimum for this patch to be accepted you will need
->> to document the new sysfs interface in:
->>
->> Documentation/admin-guide/laptops/thinkpad-acpi.rst
->>
->> But I wonder if we should export this information to
->> userspace in this way ?
->>
->> The reason why I'm wondering is because mac-address passthrough
->> in case of using e.g. Lenovo Thunderbolt docks is already
->> supported by the kernel by code for this in drivers/net/usb/r8152.c :
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/usb/r8152.c#n1613
->>
->> So I'm wondering if we really need this, is there a planned
->> userspace API consumer of the new sysfs interface ?
->>
->> Or is this only intended as a way for a user to query this, iow
->> is this purely intended for informational purposes ?
->>
-> Hi Hans,
-> 
-> We've previously had strong pushback from the maintainers in the net tree that the MAC passthru should not be done there and should be done in user-space. I'd have to dig up the threads, but there was a preference for it to not be done in the kernel (and some frustrations at having vendor specific changes in the net driver).
-> 
-> We've also seen various timing issues (some related to ME FW doing it's thing) that makes it tricky to handle in the kernel - with added delays being needed leading to patches that can't be accepted.
-> 
-> This approach is one of the steps towards fixing this. Fernando did discuss and review this with me beforehand (apologies - I meant to add a note saying I'd been involved). If you think there is a better approach please let us know, but we figured as this is a Lenovo specific thing it made sense to have it here in thinkpad_acpi.
-> 
-> There will be a consumer (I think it's a script and udev rule) to update the MAC if a passthru-MAC address is provided via the BIOS. This will be open-source, but we haven't really figured out how to release it yet.
-> 
-> Fernando - please correct anything I've gotten wrong!
+[cut]
 
-Ah that is all good to know. That pretty much takes care of
-my objections / answers my questions.
+> >
+> > Also, do we have some indication that this is specific to Ryzen?  If
+> > not, I assume this is an ongoing issue, and matching on Device IDs
+> > just means we'll have to debug the same problem again and add more
+> > IDs.
+>
+> This is why my earlier attempts (v16 and v17) tried to tie it to
+> constraints.  These are what the uPEP driver in Windows uses to make the
+> decision of what power state to put integrated devices like the root
+> port into.
+>
+> In Windows if no uPEP driver is installed "Windows internal policy"
+> dictates what happens.  If the uPEP driver is installed then it
+> influences the policy based upon the constraints.
+>
+> Rafael had feedback against constraints in v17, which is why I'm back to
+> a quirk for v18.
+>
+> This issue as I've described it is specific to AMD Ryzen.
 
-Fernando can you please submit a v2 which:
+OK, so a quirk is the way to go IMO, because starting to rely on LPI
+constraints in general retroactively is almost guaranteed to regress
+things this way or another.
 
-1. Adds documentation as mentioned already
-2. Moves the special handling of "XXXXXXXXXXXX" from show()
-   to init() (writing to auxmac[] in show() is a bit weird,
-   also we only need to do this once, so it is init code)
+Whatever is done, it needs to be Ryzen-specific, unless there is
+evidence that other (and in particular non-AMD) platforms are
+affected.
 
-Regards,
+> I expect it to be an ongoing issue.  I also expect unless we use
+> constraints or convince the firmware team to add a _S0W object with a
+> value of "0" for the sake of Linux that we will be adding IDs every year
+> to wherever this lands as we reproduce it on newer SoCs.
 
-Hans
+So maybe the way to go is to make the AMD PMC driver set a flag for
+Root Ports on suspend or similar.
 
+In any case, I think that it would be good to agree on the approach at
+the general level before posting any new patches, because we seem to
+be going back and forth here.
