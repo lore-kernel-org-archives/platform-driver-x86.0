@@ -2,234 +2,172 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95783CA0ED1
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 03:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D54CA0ED1
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 04:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238233AbjIMDda (ORCPT
+        id S238518AbjIMEKG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 12 Sep 2023 23:33:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42766 "EHLO
+        Wed, 13 Sep 2023 00:10:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235335AbjIMDd3 (ORCPT
+        with ESMTP id S238355AbjIMEJO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 12 Sep 2023 23:33:29 -0400
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF95A170F;
-        Tue, 12 Sep 2023 20:33:24 -0700 (PDT)
-Received: from localhost.localdomain (unknown [10.101.196.174])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 412173F6DC;
-        Wed, 13 Sep 2023 03:33:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1694576002;
-        bh=dz+qkJ0wit/x23gHAwcZT1onOSzyKD/5dld5P2tOo4c=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-        b=qzwUClNERGk7FEL1wJR5yEMaHiW3xG9Bc02H3QqCx4gQWb+D2WxwwjRw+tgxk1l58
-         olUYIN1NBDv+1DokAGF2CmbmNo6vJGijPvfQJ0ot8JUgXpNH896WbvxZ2HKLYzpMgM
-         UymeHuwcGmQ9vvXv3RpEQbPgnfi/3ZWmiLkJu2bdLeHPVRkFGMlQJNxZ3bcMNnchR2
-         dfrEPTcrMIbhBb12W7CeozgyUzKBw50uKnnpUuL+ML7tKC8Ig0Y5URwi4EDLM7rf7v
-         7D4QzFxl99VrK9Hlhw+x1AvEYMseBZCoZ7sHBidg+8cPDC7uDI4AuA7WmNrPQ4ee/I
-         DdGdlVyfi25Yw==
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     sre@kernel.org
-Cc:     Shyam-sundar.S-k@amd.com, mario.limonciello@amd.com,
-        hdegoede@redhat.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] power: supply: core: Use blocking_notifier_call_chain to avoid RCU complaint
-Date:   Wed, 13 Sep 2023 11:32:33 +0800
-Message-Id: <20230913033233.602986-1-kai.heng.feng@canonical.com>
+        Wed, 13 Sep 2023 00:09:14 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2041.outbound.protection.outlook.com [40.107.92.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD7E2A8;
+        Tue, 12 Sep 2023 21:09:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A1NfeAg5xYeUGvzyZMhG27pJShUeJrxbXEoYUS0xMpeyasF0WPNxjRapzqSnkmVthtRkT5ifa7XYXAxkI9veT30bAglma64QO5IB/ZgKZlE9gcrUYw+9aB1N958a+ecv5azROpMj1+2S4ia/yGhCWFozUFWrbV3HHuCXEs7SOeKx01qEzYxkzJcOTZvNiiRwOqyACqPpmdRy6USesrZG9H/02ABFEAgcv5ZF5Xtf7aOWk9LDTYH6PwAUPdKYowisEtOwD46tqYQ9pur/oAdt96f3czerL8zmu2Y4OJVX8cBFN29qHkfekuTYOYN5aU+vpYoCytqtJK7edlimQUlcYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=co05OyDJ5rrh0aNDPlIvWZjbDGN87E+41XO3D6jAviI=;
+ b=OvpiaI3R2pUjmUVMVE37cBIYRlJ31RLNJ/eSRFMQKs/pWRG0jLA8wuiyPxh9+95A5lcsDpHaZ0Udb0b/tKQAsCqOjGDIMws2eyfdem84DuQNEI5GS8DJIvb4XCLV62bEUdmTY7MEWrgy2nimkt9Z5mkszLUCdJOnogUckWueCv30TNA2zxU1AFRDdvVJfZ2QFirNtVGCZTlUn3z243xSoMpKJj+46EoHjj3wL74dCRxvJnj6FE/Y3Kkcxc9nx2hu65u6k0Fqzv32UeVnknxJTm74eloTAjv1cAqFkKpvEs/RpcmqoPEVJoQFPX68wn64iRn02CIux7uGqxr7eOPhmQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
+ is 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com;
+ dmarc=temperror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=co05OyDJ5rrh0aNDPlIvWZjbDGN87E+41XO3D6jAviI=;
+ b=FMy0tV/bfaCofx5mU0WGS3ClzJG7YFTCFmWRB0gGozzSVM8vu14i4v/IrsOTc81mwfwJl8f00GOvaSJW6lIRMPRF4zpJzONSBOqTqVt7WI+1VdAWOjGurirCKVMIaGPgfeZ9LvSQrl8/2wlXCtYh1uM32P20WXLN5PUErFJsWKg=
+Received: from BL1PR13CA0141.namprd13.prod.outlook.com (2603:10b6:208:2bb::26)
+ by BY5PR12MB5016.namprd12.prod.outlook.com (2603:10b6:a03:1c5::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.19; Wed, 13 Sep
+ 2023 04:08:59 +0000
+Received: from BL02EPF0001A107.namprd05.prod.outlook.com
+ (2603:10b6:208:2bb:cafe::b6) by BL1PR13CA0141.outlook.office365.com
+ (2603:10b6:208:2bb::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.17 via Frontend
+ Transport; Wed, 13 Sep 2023 04:08:58 +0000
+X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is
+ 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=temperror action=none header.from=amd.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of amd.com: DNS Timeout)
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF0001A107.mail.protection.outlook.com (10.167.241.136) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6792.19 via Frontend Transport; Wed, 13 Sep 2023 04:08:57 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 12 Sep
+ 2023 23:08:55 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+CC:     Hans de Goede <hdegoede@redhat.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>,
+        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+        <iain@orangesquash.org.uk>,
+        "Mario Limonciello" <mario.limonciello@amd.com>
+Subject: [PATCH v18 0/2] Add quirk for PCIe root port on AMD systems
+Date:   Tue, 12 Sep 2023 23:08:30 -0500
+Message-ID: <20230913040832.114610-1-mario.limonciello@amd.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A107:EE_|BY5PR12MB5016:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7a4b815d-b4e1-462a-8508-08dbb40f26e1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CyZcAsEbGzdU9OIcE8aifkjwbKzCGPYnErJAh9KNw93VwSyosMODZZSGDe+6aG4lK4P+THVqY7nksSjM7v1MvkLGxt/eQA1aJDGOgwDyoUvcYuMen9ySzFJjNb6T1kPi/o1JhOCo5LKzQIT3vFEuT/wjfLp9wCfQxVx2puwyvsgEiX/+V1y+TbmoEyrNG6APCZ2AoUTxEAQ0IJxVqoffS5oMKLjOsEsjdLaKGKt+SNb1NnlOebg1W/iDQz72NE6dp/mK/I6lwsxuwiVfOsY1UIyXWhkIlWXxrElyzgr4fUNmJsBrJPZoOduJKiu+0mOp0bmX9youY7xktGYEA9IBiGut4CLLB505ikbVGIotuQRHThYcXOkobBulOG6hruXMqVO3/ru96HuSrb4pYUp6XnIg56QjfNybim7HRo1YoXoRRhjm3PBvDdljVWckkfBtk5qb1gsNVnc+k+o8JCarVyVNZ0+KlZbVIaSmLrYsIhtmr04sB/syr+u4m3Rvnla8Au2IXZkswp/no4KsJmnF0G6J8x9tq613DrsQ+V4iP2zZPKurxcBIGoRZJaGwoyY0oameGY7Hr5SxCAKWqlVTjbXQvvVoXE3JZvn6AUxlqP3JV6p+bR88pKWSWedAxGs9hHMB6fGW/Tm9wvWOx2gdINrmXycU4yPWHwCPGCfeJa0SNDEn6mi1hlCWWjw97lfwh3tcLnJA8trYaGdA/nU5eMM0hvdBSCVLBRz0SAZ0/6o5bZrNLmSZt4A0nGcpyC82IewD7QnMFQfrm27fJp+XYMSHPE4WRTfjHJEp2//Ajhc=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(376002)(39860400002)(346002)(82310400011)(186009)(451199024)(1800799009)(40470700004)(36840700001)(46966006)(40460700003)(2906002)(63370400001)(63350400001)(316002)(54906003)(36756003)(4326008)(41300700001)(8676002)(8936002)(40480700001)(44832011)(5660300002)(110136005)(70206006)(70586007)(6666004)(7696005)(2616005)(1076003)(426003)(336012)(36860700001)(82740400003)(356005)(16526019)(26005)(81166007)(478600001)(966005)(86362001)(47076005)(83380400001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2023 04:08:57.2567
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a4b815d-b4e1-462a-8508-08dbb40f26e1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BL02EPF0001A107.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB5016
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-AMD PMF driver can cause the following warning:
-[  196.159546] ------------[ cut here ]------------
-[  196.159556] Voluntary context switch within RCU read-side critical secti=
-on!
-[  196.159571] WARNING: CPU: 0 PID: 9 at kernel/rcu/tree_plugin.h:320 rcu_n=
-ote_context_switch+0x43d/0x560
-[  196.159604] Modules linked in: nvme_fabrics ccm rfcomm snd_hda_scodec_cs=
-35l41_spi cmac algif_hash algif_skcipher af_alg bnep joydev btusb btrtl uvc=
-video btintel btbcm videobuf2_vmalloc intel_rapl_msr btmtk videobuf2_memops=
- uvc videobuf2_v4l2 intel_rapl_common binfmt_misc hid_sensor_als snd_sof_am=
-d_vangogh hid_sensor_trigger bluetooth industrialio_triggered_buffer videod=
-ev snd_sof_amd_rembrandt hid_sensor_iio_common amdgpu ecdh_generic kfifo_bu=
-f videobuf2_common hp_wmi kvm_amd sparse_keymap snd_sof_amd_renoir wmi_bmof=
- industrialio ecc mc nls_iso8859_1 kvm snd_sof_amd_acp irqbypass snd_sof_xt=
-ensa_dsp crct10dif_pclmul crc32_pclmul mt7921e snd_sof_pci snd_ctl_led poly=
-val_clmulni mt7921_common polyval_generic snd_sof ghash_clmulni_intel mt792=
-x_lib mt76_connac_lib sha512_ssse3 snd_sof_utils aesni_intel snd_hda_codec_=
-realtek crypto_simd mt76 snd_hda_codec_generic cryptd snd_soc_core snd_hda_=
-codec_hdmi rapl ledtrig_audio input_leds snd_compress i2c_algo_bit drm_ttm_=
-helper mac80211 snd_pci_ps hid_multitouch ttm drm_exec
-[  196.159970]  drm_suballoc_helper snd_rpl_pci_acp6x amdxcp drm_buddy snd_=
-hda_intel snd_acp_pci snd_hda_scodec_cs35l41_i2c serio_raw gpu_sched snd_hd=
-a_scodec_cs35l41 snd_acp_legacy_common snd_intel_dspcfg snd_hda_cs_dsp_ctls=
- snd_hda_codec libarc4 drm_display_helper snd_pci_acp6x cs_dsp snd_hwdep sn=
-d_soc_cs35l41_lib video k10temp snd_pci_acp5x thunderbolt snd_hda_core drm_=
-kms_helper cfg80211 snd_seq snd_rn_pci_acp3x snd_pcm snd_acp_config cec snd=
-_soc_acpi snd_seq_device rc_core ccp snd_pci_acp3x snd_timer snd soundcore =
-wmi amd_pmf platform_profile amd_pmc mac_hid serial_multi_instantiate wirel=
-ess_hotkey hid_sensor_hub sch_fq_codel msr parport_pc ppdev lp parport efi_=
-pstore ip_tables x_tables autofs4 btrfs blake2b_generic raid10 raid456 asyn=
-c_raid6_recov async_memcpy async_pq async_xor async_tx libcrc32c xor raid6_=
-pq raid1 raid0 multipath linear dm_mirror dm_region_hash dm_log cdc_ether u=
-sbnet r8152 mii hid_generic nvme i2c_hid_acpi i2c_hid nvme_core i2c_piix4 x=
-hci_pci amd_sfh drm xhci_pci_renesas nvme_common hid
-[  196.160382] CPU: 0 PID: 9 Comm: kworker/0:1 Not tainted 6.6.0-rc1 #4
-[  196.160397] Hardware name: HP HP EliteBook 845 14 inch G10 Notebook PC/8=
-B6E, BIOS V82 Ver. 01.02.00 08/24/2023
-[  196.160405] Workqueue: events power_supply_changed_work
-[  196.160426] RIP: 0010:rcu_note_context_switch+0x43d/0x560
-[  196.160440] Code: 00 48 89 be 40 08 00 00 48 89 86 48 08 00 00 48 89 10 =
-e9 63 fe ff ff 48 c7 c7 10 e7 b0 9e c6 05 e8 d8 20 02 01 e8 13 0f f3 ff <0f=
-> 0b e9 27 fc ff ff a9 ff ff ff 7f 0f 84 cf fc ff ff 65 48 8b 3c
-[  196.160450] RSP: 0018:ffffc900001878f0 EFLAGS: 00010046
-[  196.160462] RAX: 0000000000000000 RBX: ffff88885e834040 RCX: 00000000000=
-00000
-[  196.160470] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000=
-00000
-[  196.160476] RBP: ffffc90000187910 R08: 0000000000000000 R09: 00000000000=
-00000
-[  196.160482] R10: 0000000000000000 R11: 0000000000000000 R12: 00000000000=
-00000
-[  196.160488] R13: 0000000000000000 R14: ffff888100990000 R15: ffff8881009=
-90000
-[  196.160495] FS:  0000000000000000(0000) GS:ffff88885e800000(0000) knlGS:=
-0000000000000000
-[  196.160504] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  196.160512] CR2: 000055cb053c8246 CR3: 000000013443a000 CR4: 00000000007=
-50ef0
-[  196.160520] PKRU: 55555554
-[  196.160526] Call Trace:
-[  196.160532]  <TASK>
-[  196.160548]  ? show_regs+0x72/0x90
-[  196.160570]  ? rcu_note_context_switch+0x43d/0x560
-[  196.160580]  ? __warn+0x8d/0x160
-[  196.160600]  ? rcu_note_context_switch+0x43d/0x560
-[  196.160613]  ? report_bug+0x1bb/0x1d0
-[  196.160637]  ? handle_bug+0x46/0x90
-[  196.160658]  ? exc_invalid_op+0x19/0x80
-[  196.160675]  ? asm_exc_invalid_op+0x1b/0x20
-[  196.160709]  ? rcu_note_context_switch+0x43d/0x560
-[  196.160727]  __schedule+0xb9/0x15f0
-[  196.160746]  ? srso_alias_return_thunk+0x5/0x7f
-[  196.160765]  ? srso_alias_return_thunk+0x5/0x7f
-[  196.160778]  ? acpi_ns_search_one_scope+0xbe/0x270
-[  196.160806]  schedule+0x68/0x110
-[  196.160820]  schedule_timeout+0x151/0x160
-[  196.160829]  ? srso_alias_return_thunk+0x5/0x7f
-[  196.160842]  ? srso_alias_return_thunk+0x5/0x7f
-[  196.160855]  ? acpi_ns_lookup+0x3c5/0xa90
-[  196.160878]  __down_common+0xff/0x220
-[  196.160905]  __down_timeout+0x16/0x30
-[  196.160920]  down_timeout+0x64/0x70
-[  196.160938]  acpi_os_wait_semaphore+0x85/0x200
-[  196.160959]  acpi_ut_acquire_mutex+0x9e/0x280
-[  196.160979]  acpi_ex_enter_interpreter+0x2d/0xb0
-[  196.160992]  acpi_ns_evaluate+0x2f0/0x5f0
-[  196.161005]  acpi_evaluate_object+0x172/0x490
-[  196.161018]  ? acpi_os_signal_semaphore+0x8a/0xd0
-[  196.161038]  acpi_evaluate_integer+0x52/0xe0
-[  196.161055]  ? kfree+0x79/0x120
-[  196.161071]  ? srso_alias_return_thunk+0x5/0x7f
-[  196.161089]  acpi_ac_get_state.part.0+0x27/0x80
-[  196.161110]  get_ac_property+0x5c/0x70
-[  196.161127]  ? __pfx___power_supply_is_system_supplied+0x10/0x10
-[  196.161146]  __power_supply_is_system_supplied+0x44/0xb0
-[  196.161166]  class_for_each_device+0x124/0x160
-[  196.161184]  ? acpi_ac_get_state.part.0+0x27/0x80
-[  196.161203]  ? srso_alias_return_thunk+0x5/0x7f
-[  196.161223]  power_supply_is_system_supplied+0x3c/0x70
-[  196.161243]  amd_pmf_get_power_source+0xe/0x20 [amd_pmf]
-[  196.161276]  amd_pmf_power_slider_update_event+0x49/0x90 [amd_pmf]
-[  196.161310]  amd_pmf_pwr_src_notify_call+0xe7/0x100 [amd_pmf]
-[  196.161340]  notifier_call_chain+0x5f/0xe0
-[  196.161362]  atomic_notifier_call_chain+0x33/0x60
-[  196.161378]  power_supply_changed_work+0x84/0x110
-[  196.161394]  process_one_work+0x178/0x360
-[  196.161412]  ? __pfx_worker_thread+0x10/0x10
-[  196.161424]  worker_thread+0x307/0x430
-[  196.161440]  ? __pfx_worker_thread+0x10/0x10
-[  196.161451]  kthread+0xf4/0x130
-[  196.161467]  ? __pfx_kthread+0x10/0x10
-[  196.161486]  ret_from_fork+0x43/0x70
-[  196.161502]  ? __pfx_kthread+0x10/0x10
-[  196.161518]  ret_from_fork_asm+0x1b/0x30
-[  196.161558]  </TASK>
-[  196.161562] ---[ end trace 0000000000000000 ]---
+Iain reports that USB devices can't be used to wake a Lenovo Z13
+from suspend. This is because the PCIe root port has been put
+into D3hot and AMD's platform can't handle USB devices waking the
+platform from a hardware sleep state in this case.
 
-Since there's no guarantee that all the callbacks can work in atomic
-context, switch to use blocking_notifier_call_chain to relax the
-constraint.
+The firmware doesn't express this limitation in a way that Linux
+recognizes so this series introduces a quirk for this problem.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/power/supply/power_supply_core.c | 8 ++++----
- include/linux/power_supply.h             | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+Previous submissions:
+* v17 
+  https://lore.kernel.org/platform-driver-x86/20230906184354.45846-1-mario.limonciello@amd.com/
+  This version implemented constraints for the amd-pmc driver and introduced
+  a veto/optin system for the PCI core as suggested by Hans.
+  Rafael suggested not to use the veto/optin system and instead use a quirk.
+* v16
+  https://lore.kernel.org/platform-driver-x86/20230829171212.156688-1-mario.limonciello@amd.com/
+  This version implemented constraints for the amd-pmc driver.
+* v15
+  https://lore.kernel.org/platform-driver-x86/20230828042819.47013-1-mario.limonciello@amd.com/#t
+  This version hardcoded the quirk into amd-pmc driver as part of suspend
+  callback.
+* v14
+  https://lore.kernel.org/linux-pci/20230818193932.27187-1-mario.limonciello@amd.com/
+  https://lore.kernel.org/linux-pci/20230818194007.27410-1-mario.limonciello@amd.com/
+  https://lore.kernel.org/linux-pci/20230818194027.27559-1-mario.limonciello@amd.com/
+  This version implemented constraints exporting and limited the policy for
+  >= 2015 to Intel only. It also added support for constraints optin.
+  V13 was split into multiple parts to make it easier to land. 14.b was
+  merged.
+* v13
+  https://lore.kernel.org/linux-pci/20230818051319.551-1-mario.limonciello@amd.com/
+* v12
+  https://lore.kernel.org/linux-pci/20230816204143.66281-1-mario.limonciello@amd.com/
+* v11
+  https://lore.kernel.org/linux-pci/20230809185453.40916-1-mario.limonciello@amd.com/
+* v10
+  https://lore.kernel.org/linux-pci/20230804210129.5356-1-mario.limonciello@amd.com/
+* v9
+  https://lore.kernel.org/linux-pci/20230804010229.3664-1-mario.limonciello@amd.com/
+* v8
+  https://lore.kernel.org/linux-pci/20230802201013.910-1-mario.limonciello@amd.com/
+* v7
+  https://lore.kernel.org/linux-pci/20230711005325.1499-1-mario.limonciello@amd.com/
+* v6
+  https://lore.kernel.org/linux-pci/20230708214457.1229-1-mario.limonciello@amd.com/
+* v5
+  https://lore.kernel.org/linux-pci/20230530163947.230418-1-mario.limonciello@amd.com/
+* v4
+  https://lore.kernel.org/linux-pci/20230524190726.17012-1-mario.limonciello@amd.com/
+* v3
+  https://lore.kernel.org/linux-pci/20230524152136.1033-1-mario.limonciello@amd.com/
+* v2
+  https://lore.kernel.org/linux-pci/20230517150827.89819-1-mario.limonciello@amd.com/
+* v1
+  https://lore.kernel.org/linux-pci/20230515231515.1440-1-mario.limonciello@amd.com/
+Mario Limonciello (2):
+  PCI: Move the `PCI_CLASS_SERIAL_USB_USB4` definition to common header
+  PCI: Add a quirk for AMD PCIe root ports w/ USB4 controllers
 
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/suppl=
-y/power_supply_core.c
-index 0b69fb7bafd8..416409e2fd6d 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -29,7 +29,7 @@
- struct class *power_supply_class;
- EXPORT_SYMBOL_GPL(power_supply_class);
-=20
--ATOMIC_NOTIFIER_HEAD(power_supply_notifier);
-+BLOCKING_NOTIFIER_HEAD(power_supply_notifier);
- EXPORT_SYMBOL_GPL(power_supply_notifier);
-=20
- static struct device_type power_supply_dev_type;
-@@ -97,7 +97,7 @@ static void power_supply_changed_work(struct work_struct =
-*work)
- 		class_for_each_device(power_supply_class, NULL, psy,
- 				      __power_supply_changed_work);
- 		power_supply_update_leds(psy);
--		atomic_notifier_call_chain(&power_supply_notifier,
-+		blocking_notifier_call_chain(&power_supply_notifier,
- 				PSY_EVENT_PROP_CHANGED, psy);
- 		kobject_uevent(&psy->dev.kobj, KOBJ_CHANGE);
- 		spin_lock_irqsave(&psy->changed_lock, flags);
-@@ -1262,13 +1262,13 @@ static void power_supply_dev_release(struct device =
-*dev)
-=20
- int power_supply_reg_notifier(struct notifier_block *nb)
- {
--	return atomic_notifier_chain_register(&power_supply_notifier, nb);
-+	return blocking_notifier_chain_register(&power_supply_notifier, nb);
- }
- EXPORT_SYMBOL_GPL(power_supply_reg_notifier);
-=20
- void power_supply_unreg_notifier(struct notifier_block *nb)
- {
--	atomic_notifier_chain_unregister(&power_supply_notifier, nb);
-+	blocking_notifier_chain_unregister(&power_supply_notifier, nb);
- }
- EXPORT_SYMBOL_GPL(power_supply_unreg_notifier);
-=20
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index a427f13c757f..85b86768c0b9 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -767,7 +767,7 @@ struct power_supply_battery_info {
- 	int bti_resistance_tolerance;
- };
-=20
--extern struct atomic_notifier_head power_supply_notifier;
-+extern struct blocking_notifier_head power_supply_notifier;
- extern int power_supply_reg_notifier(struct notifier_block *nb);
- extern void power_supply_unreg_notifier(struct notifier_block *nb);
- #if IS_ENABLED(CONFIG_POWER_SUPPLY)
---=20
+ drivers/pci/pci.c         |  5 +++++
+ drivers/pci/quirks.c      | 28 ++++++++++++++++++++++++++++
+ drivers/thunderbolt/nhi.h |  2 --
+ include/linux/pci.h       |  2 ++
+ include/linux/pci_ids.h   |  1 +
+ 5 files changed, 36 insertions(+), 2 deletions(-)
+
+
+base-commit: 0bb80ecc33a8fb5a682236443c1e740d5c917d1d
+-- 
 2.34.1
 
