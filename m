@@ -2,186 +2,124 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D085CEDEC71
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 15:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2532EDEC74
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 15:21:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230254AbjIMPNX (ORCPT
+        id S229592AbjIMPVJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Sep 2023 11:13:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40918 "EHLO
+        Wed, 13 Sep 2023 11:21:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241074AbjIMPNW (ORCPT
+        with ESMTP id S236915AbjIMPUu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Sep 2023 11:13:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 72A29B9
-        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Sep 2023 08:12:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694617952;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Uje044vKCrnPM/zlrRSYe7sHyJsaq71H01/FgvMXUZI=;
-        b=IkYW2CX2lngfd15Q7LWn7hbrGk+JPTFWxfBiS9EJd0QfQ1q+2M8BgbFdlJAYVy0b+Kh9ol
-        8H+F1O0H57PBOdKPNEIv3Pi3uV16OoDdgbLkDxIrmvY821wrk9hi5wl8EOA8eo4XSLLztp
-        5e/SqcXHKy1xMgqZCwbtROnODmgnW3Q=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-93-OeWLzh3LPKO_IFNJqMsY8w-1; Wed, 13 Sep 2023 11:12:31 -0400
-X-MC-Unique: OeWLzh3LPKO_IFNJqMsY8w-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-52c86e441d4so4682601a12.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Sep 2023 08:12:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694617950; x=1695222750;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uje044vKCrnPM/zlrRSYe7sHyJsaq71H01/FgvMXUZI=;
-        b=TAuiFNA7z9prWotTXpWxhzsjl4Jaia7GIdsEvNs835XIUaiVG+9SQsHxTg6xa2mJSO
-         HNn/zzeYTX84pwVX3Rmn4qoHjZVV7ehj1j5nSVX5FlGWNU3U12zt5YfugFFjGPiZYCQC
-         ErN6HrZwgOp97Ue8F7/vQGxTMVq/AC9dlvdrCnloATRFpSRzgapFCAaU9gjPATA3Ocw3
-         WBEI0BmSaumtENmZjMMJax8Gf5Xy/HOWa3Y3tTaaGNoNKMi2xq68SVqQpa3uvXLcnARZ
-         D7LHkrStu1ZDSgSZ0cEysHOg5AEvfsgoXDHzgeqxID/7ku6FaeibdYn8L+xdMuWSSbXg
-         gDvw==
-X-Gm-Message-State: AOJu0Yysd4aJ8f9rubV9DyR/Z41/2xgrnzmi+J0fNxjhHbWCDEgZFThk
-        hgAUX6IgmFCoDyH4IaKiWgT+SHwgZCsMQSYkRYdCwx0uxxrkZmlhO02DvrdVqoune4SDcy8Np9f
-        ARIx6EdQYxqluTQb3fTXVts3aKQlpxdD5Lw==
-X-Received: by 2002:aa7:d84f:0:b0:52e:8973:6482 with SMTP id f15-20020aa7d84f000000b0052e89736482mr2590393eds.6.1694617950039;
-        Wed, 13 Sep 2023 08:12:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF9W94WOA+QNkki6iu4CpuHL6ub+g/xneEY+b2v79vj2GRXp0yOurmJtg+W9pf3JYjgWYoRRg==
-X-Received: by 2002:aa7:d84f:0:b0:52e:8973:6482 with SMTP id f15-20020aa7d84f000000b0052e89736482mr2590367eds.6.1694617949672;
-        Wed, 13 Sep 2023 08:12:29 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id b8-20020aa7cd08000000b0052595b17fd4sm7366564edw.26.2023.09.13.08.12.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Sep 2023 08:12:29 -0700 (PDT)
-Message-ID: <953f2e40-7b0e-27b5-b017-a1ac2175bb47@redhat.com>
-Date:   Wed, 13 Sep 2023 17:12:28 +0200
+        Wed, 13 Sep 2023 11:20:50 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D697219B1;
+        Wed, 13 Sep 2023 08:20:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694618446; x=1726154446;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1LTANdPAE8m2PHoe4hG/3j6oI5p3jyUM3ew3Mdwah6w=;
+  b=jiYKS/gOLBjZh23IsE6wEHnQmcKATipXhTd+3wRmxvqyGFBBn4GsgfQl
+   dXZx9q2Hz9XyuxYc6jEoI6dJ5tFkqLWRXPsEU9+q0l6SHKYf0S1W0f0Qu
+   T6vtLXFITVSVAjiaPucsmqgx3y3whZeoGj9qWafHytLZqhqzsCrrkcVmt
+   ZWcLTEU5ynnmstugP0ONTGA3bVW/4Sf3XVOIEoWnSjhpzAuXPRWPN9hmG
+   0CA0HNcunfYU7VyzwdMGdYs9n66EXnTTFeh9Ui3nHNDC2x04+pDo+5qAg
+   HVSxkHaF/ORVkW4vwLYwvFmfRgXeVtdfEYjpO7Nvookd4Gwjwwf9qQsks
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="363723884"
+X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
+   d="scan'208";a="363723884"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 08:20:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="814249794"
+X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
+   d="scan'208";a="814249794"
+Received: from lkp-server02.sh.intel.com (HELO 9ef86b2655e5) ([10.239.97.151])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Sep 2023 08:20:11 -0700
+Received: from kbuild by 9ef86b2655e5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qgRez-0000E4-0J;
+        Wed, 13 Sep 2023 15:20:09 +0000
+Date:   Wed, 13 Sep 2023 23:19:47 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-mtd@lists.infradead.org,
+        platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 1/5] gpiolib: provide gpiod_set_active_[low/high]()
+Message-ID: <202309132304.Uw3cYH9C-lkp@intel.com>
+References: <20230913115001.23183-2-brgl@bgdev.pl>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3] x86/platform/uv: refactor deprecated strcpy and
- strncpy
-Content-Language: en-US, nl
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Justin Stitt <justinstitt@google.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20230905-strncpy-arch-x86-platform-uv-uv_nmi-v3-1-3efd6798b569@google.com>
- <ZPhsSzHG6YMViOSk@gmail.com>
- <bce762af-0da7-bb5e-1580-b42803c183f6@redhat.com>
- <ZPiH/ds9oeimXDdb@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ZPiH/ds9oeimXDdb@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230913115001.23183-2-brgl@bgdev.pl>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Bartosz,
 
-On 9/6/23 16:09, Ingo Molnar wrote:
-> 
-> * Hans de Goede <hdegoede@redhat.com> wrote:
-> 
->> Hi Ingo,
->>
->> On 9/6/23 14:10, Ingo Molnar wrote:
->>>
->>> * Justin Stitt <justinstitt@google.com> wrote:
->>>
->>>> Both `strncpy` and `strcpy` are deprecated for use on NUL-terminated
->>>> destination strings [1].
->>>>
->>>> We can see that `arg` and `uv_nmi_action` are expected to be
->>>> NUL-terminated strings due to their use within `strcmp()` and format
->>>> strings respectively.
->>>>
->>>> With this in mind, a suitable replacement is `strscpy` [2] due to the
->>>> fact that it guarantees NUL-termination on its destination buffer
->>>> argument which is _not_ the case for `strncpy` or `strcpy`!
->>>>
->>>> In this case, we can drop both the forced NUL-termination and the `... -1` from:
->>>> |       strncpy(arg, val, ACTION_LEN - 1);
->>>> as `strscpy` implicitly has this behavior.
->>>>
->>>> Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
->>>> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
->>>> Link: https://github.com/KSPP/linux/issues/90
->>>> Cc: linux-hardening@vger.kernel.org
->>>> Signed-off-by: Justin Stitt <justinstitt@google.com>
->>>
->>>>  arch/x86/platform/uv/uv_nmi.c | 7 +++----
->>>>  1 file changed, 3 insertions(+), 4 deletions(-)
->>>
->>> Note that this commit is already upstream:
->>>
->>>   1e6f01f72855 ("x86/platform/uv: Refactor code using deprecated strcpy()/strncpy() interfaces to use strscpy()")
->>>
->>> Below is the delta your v3 patch has compared to what is upstream - is it 
->>> really necessary to open code it, instead of using strnchrnul() as your 
->>> original patch did? Am I missing anything here?
->>
->> The new version is a result of a review from my because IMHO:
->>
->> 	strscpy(arg, val, strnchrnul(val, sizeof(arg)-1, '\n') - val + 1);
->>
->> Is really unreadable / really hard to reason about if
->> this is actually correct and does not contain any
->> of by 1 bugs.
->>
->> Note that the diff of v3 compared to the code before v2 landed is
->> actually smaller now and actually matches the subject of:
->> "refactor deprecated strcpy and strncpy"
->>
->> Where as v2 actually touches more code / refactor things
->> which fall outside of a "one change per patch" approach.
->> The:
->>
->> 	p = strchr(arg, '\n');
->> 	if (p)
->> 		*p = '\0';
->>
->> was already there before v2 landed.
->>
->> I also suggested to do a follow up patch to change things to:
->>
->> 	strscpy(arg, val, sizeof(arg));
->> 	p = strchrnul(arg, '\n');
->> 	*p = '\0';
->>
->> Which IMHO is much more readable then what has landed
->> now. But since v2 has already landed I guess the best
->> thing is just to stick with what we have upstream now...
-> 
-> Well, how about we do a delta patch with all the changes
-> you suggested? I'm all for readability.
+kernel test robot noticed the following build errors:
 
-So I started doing this and notices that all the string
-manipulation + parsing done here is really just a DYI
-implementation of sysfs_match_string().
+[auto build test ERROR on brgl/gpio/for-next]
+[also build test ERROR on mtd/nand/next linus/master ulf-hansson-mmc-mirror/next v6.6-rc1 next-20230913]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-So I have prepared a patch to switch to sysfs_match_string(),
-which completely removes the need to make a copy of the val
-string.
+url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpiolib-provide-gpiod_set_active_-low-high/20230913-195053
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+patch link:    https://lore.kernel.org/r/20230913115001.23183-2-brgl%40bgdev.pl
+patch subject: [PATCH 1/5] gpiolib: provide gpiod_set_active_[low/high]()
+config: s390-allnoconfig (https://download.01.org/0day-ci/archive/20230913/202309132304.Uw3cYH9C-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230913/202309132304.Uw3cYH9C-lkp@intel.com/reproduce)
 
-I'll submit the patch right after this email.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309132304.Uw3cYH9C-lkp@intel.com/
 
-Regards,
+All errors (new ones prefixed by >>):
 
-Hans
+   In file included from include/linux/nvmem-provider.h:15,
+                    from include/linux/rtc.h:18,
+                    from include/linux/efi.h:20,
+                    from block/partitions/efi.h:19,
+                    from block/partitions/msdos.c:32:
+>> include/linux/gpio/consumer.h:505:1: error: expected ';', ',' or ')' before '{' token
+     505 | {
+         | ^
 
 
+vim +505 include/linux/gpio/consumer.h
+
+   503	
+   504	static inline void gpiod_set_active_low(struct gpio_desc *desc
+ > 505	{
+   506		/* GPIO can never have been requested */
+   507		WARN_ON(desc);
+   508	}
+   509	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
