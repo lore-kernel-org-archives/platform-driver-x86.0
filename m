@@ -2,61 +2,62 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB6AEE020C
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 20:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF579EE020B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 20:12:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232105AbjIMUF6 (ORCPT
+        id S231328AbjIMUM6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Sep 2023 16:05:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34770 "EHLO
+        Wed, 13 Sep 2023 16:12:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232063AbjIMUF5 (ORCPT
+        with ESMTP id S232029AbjIMUM5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Sep 2023 16:05:57 -0400
-Received: from mail-oo1-xc36.google.com (mail-oo1-xc36.google.com [IPv6:2607:f8b0:4864:20::c36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F21841BC3;
-        Wed, 13 Sep 2023 13:05:53 -0700 (PDT)
-Received: by mail-oo1-xc36.google.com with SMTP id 006d021491bc7-572a7141434so144223eaf.2;
-        Wed, 13 Sep 2023 13:05:53 -0700 (PDT)
+        Wed, 13 Sep 2023 16:12:57 -0400
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D6B1BCB
+        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Sep 2023 13:12:53 -0700 (PDT)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-579de633419so2370217b3.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Sep 2023 13:12:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694635553; x=1695240353; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1694635972; x=1695240772; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mgnusj9WNYseansm6Kr1sUnhgtykfnbfz9TfjOoUKuQ=;
-        b=sg5+CtQlyAZLRAB1atZXHOqxCJhSBMUrLUYpr7pZsxwMqaelYwbMlwGTBHk2F0I2Vi
-         BDrUn96udFImnQhLJZCgSacjwq/LJfKgbypS4RBZqp/M2PoGOrY0DLHtfDYhOU3q4QOr
-         6aR+RxllmvJ4qw2cVjyYBDMQrCibxqPF8jU5vAFG1X0rRxz+ADV5nd17XWvyruGRCLjx
-         jFCCjpSlw/VEuFp5A/LdqA9rbsDkbtU6eHkK4tS7LIsNl3eBzmBkOB47IeP/U3OGCrli
-         rLVWKDC2zv3xwyNrK3VgRvNhb8VbxWLB4WJb9lOIsXXny4VkroyQzUUHZiKaUYSiD+IR
-         s2og==
+        bh=Su1HKHhLigyzqYlZO3Q6GiJPuDvWadoF+8eJgSHSJSM=;
+        b=aiRSgXPbdPszjUbrmOvfo8VAbkCooNj2DlaPadFcfWqONmI1e1Ks9j2Zmtg9KMhvVx
+         PX/x5k/D0b1WEwZtEzWZRkPA8IrfbYHsqP+tjC85HjqExhu7XheGk8CdHWuLCAz3ZOOM
+         VCuoKtlcFasz019GO6zGs8sPXIZkq+03b5o4kMViuZUBPfWD1EkVMI5jbh/AGXOoQe5Y
+         +rHm/yIuaKSCA/OMPD1AyTCabMcwJEvRXFYuODEV110l2EF96r0v5ZHKr67DsB0HExr7
+         FK463fHavC8jhL1xEhQSum117HDUvYlfT7mfteSZTabEAvtcsAgJS/4vcWp6RjQJUIQO
+         KsSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694635553; x=1695240353;
+        d=1e100.net; s=20230601; t=1694635972; x=1695240772;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mgnusj9WNYseansm6Kr1sUnhgtykfnbfz9TfjOoUKuQ=;
-        b=mU6lBT4ngu67aBfmB17Dv7pdDmIGCvRpoyX3Z3aYb0d/tPvvxmW2lIDzzB/nTvKiX+
-         5tgv+N3ve3fTsCnYkIqMrKZwx85mGyGl11Wj4oMptqx33/Firdq6fdL3iZSxFGm5ZifF
-         7/OeEQ2XjjeQXSDF6K6CXApMvkR5MMgtZ1e4hid+tA/n4H+9bJlTZOHvWEC4rM9GIlEJ
-         RHElSLFq9QyZIxznkLCJE26+Pm2OhOfPzxy+PgZUYmvnuMDUMUrYf0BlY4oN/MDdpLIZ
-         2O/DSzLf+Z+rfdZL7tw9RppuoIfoGPRoa795arypEA/butbyK/lSF/cimQPzzmvirzIC
-         G9cQ==
-X-Gm-Message-State: AOJu0Yz9WbjXAWKQBJ2PAITsX/9d/PEeWU5pcYZo5ZvMezQ1jDSB6zqx
-        8HPFoD6pQKLfTTfnHHS3qnD6goRWdIXoBCBIeB8=
-X-Google-Smtp-Source: AGHT+IHLm6apn4O09uKTNNT9VekVtTLxkHf0LthInAJoGoVn7WoUR/7/0i7XlogpEbA/UKANyFR7+IGCoBQWnFUT1bg=
-X-Received: by 2002:a05:6870:90d5:b0:1c1:e6da:f88d with SMTP id
- s21-20020a05687090d500b001c1e6daf88dmr3607766oab.56.1694635553050; Wed, 13
- Sep 2023 13:05:53 -0700 (PDT)
+        bh=Su1HKHhLigyzqYlZO3Q6GiJPuDvWadoF+8eJgSHSJSM=;
+        b=s9AGPhgRNu6Jd6rOKeWIOwLa5zhzmSx5nKBxcFzglx7/aDbm5XNgt+Zn9dJD3KTG2/
+         aAmaCsp98jH/ZzM5Qd7yt1xhdoZ87SilLF1Ijg2Nt5YVBOOsPH9KVQKvQMi60a5bV8z7
+         bvqQDTxYmxGeL8VtPfaoDxyVq1fnWXVxtou3U3kL9qJlCduFR+OSFALOeJAYMYuhGsBA
+         WlFVGAdoa6VfDQSTeBPmmLr9aMJtn6lviqy9PDc+phO5wxBHKo9ZcIIso3P/ELfjvNkb
+         67CZAhI/mqyXt3nusDRbe2KnAqlgAtrv44pIMwoJqM97/4C6DB7J6t7kvyNRpnZqVb8i
+         Ai/w==
+X-Gm-Message-State: AOJu0Yy6vk9epwDdtnWkNZs+2OMaU2WL4UvZ8FOHg3ol72sq3DR9mala
+        eSsInzOKpigdSAfwh+3BO2jhGCAagwjl37mkEjayiw==
+X-Google-Smtp-Source: AGHT+IGNdHiKi9h+VMupJWAnl7lkQjZz2lyGhzlQ4y/m/GOS5wCeU4E04eoE42Ydser353023glv4MnCjnMPMHjH7ys=
+X-Received: by 2002:a25:d246:0:b0:d81:6a54:48f0 with SMTP id
+ j67-20020a25d246000000b00d816a5448f0mr2205331ybg.22.1694635972595; Wed, 13
+ Sep 2023 13:12:52 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230913115001.23183-1-brgl@bgdev.pl> <20230913115001.23183-3-brgl@bgdev.pl>
-In-Reply-To: <20230913115001.23183-3-brgl@bgdev.pl>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 13 Sep 2023 23:05:16 +0300
-Message-ID: <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
+ <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
+In-Reply-To: <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 13 Sep 2023 22:12:40 +0200
+Message-ID: <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com>
 Subject: Re: [PATCH 2/5] mtd: rawnand: ingenic: use gpiod_set_active_high()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Paul Cercueil <paul@crapouillou.net>,
@@ -78,28 +79,32 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 2:50=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Wed, Sep 13, 2023 at 10:05=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Wed, Sep 13, 2023 at 2:50=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+> >
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Use the new, less cumbersome interface for setting the GPIO as
+> > active-high that doesn't require first checking the current state.
 >
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ...
 >
-> Use the new, less cumbersome interface for setting the GPIO as
-> active-high that doesn't require first checking the current state.
+> >          * here for older DTs so we can re-use the generic nand_gpio_wa=
+itrdy()
+> >          * helper, and be consistent with what other drivers do.
+> >          */
+> > -       if (of_machine_is_compatible("qi,lb60") &&
+> > -           gpiod_is_active_low(nand->busy_gpio))
+> > -               gpiod_toggle_active_low(nand->busy_gpio);
+> > +       if (of_machine_is_compatible("qi,lb60"))
+> > +               gpiod_set_active_high(nand->busy_gpio);
+>
+> Why not moving this quirk to gpiolib-of.c?
 
-...
+That's a better idea here I think, it's clearly a quirk for a
+buggy device tree.
 
->          * here for older DTs so we can re-use the generic nand_gpio_wait=
-rdy()
->          * helper, and be consistent with what other drivers do.
->          */
-> -       if (of_machine_is_compatible("qi,lb60") &&
-> -           gpiod_is_active_low(nand->busy_gpio))
-> -               gpiod_toggle_active_low(nand->busy_gpio);
-> +       if (of_machine_is_compatible("qi,lb60"))
-> +               gpiod_set_active_high(nand->busy_gpio);
-
-Why not moving this quirk to gpiolib-of.c?
-
---=20
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
