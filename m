@@ -2,44 +2,44 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80365EE0202
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 18:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB49EE0203
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Sep 2023 18:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231931AbjIMSiC (ORCPT
+        id S232005AbjIMSiM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Sep 2023 14:38:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43122 "EHLO
+        Wed, 13 Sep 2023 14:38:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231897AbjIMSiA (ORCPT
+        with ESMTP id S231924AbjIMSiB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Sep 2023 14:38:00 -0400
+        Wed, 13 Sep 2023 14:38:01 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A95C11BC6;
-        Wed, 13 Sep 2023 11:37:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E763EA3;
+        Wed, 13 Sep 2023 11:37:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694630276; x=1726166276;
+  t=1694630277; x=1726166277;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=1QD1hfFNbY0dgb7El0Aw5L89YdqnDMRaACvnIzni/zs=;
-  b=KmkCiurjD4OIJKYPCtR1x2bAZOtz1apLafTigQ6XdFkPtp3T0XfrOx/N
-   0cX645alEVU7+tytPxmwZOM1rh0IBUJNlAeZoYPxZ5insLq31iiMlu5T2
-   j6qL+8unc5Kqlti+IH7Kv0PgQKkB6xldueGN5YS/pRWR597H61WgT8+3V
-   gSqdxCrCge8YE43qdeH3WgIJXof9mgEgFQwmCKgO/7b4R0juaJXm4DfI+
-   yANAoRumD4Qc4r3gn3Nv4K+m6l0JjxmT221j0SRnfNFG5I8HAhVQgT0Ha
-   E17oB+vXiKRk2D22tiGm3vTsp0HKGnuytP291bGEgG0zTXyWHiTxHo2Uy
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="369019171"
+  bh=xI88hAM69WWRoFYmYgNa2YKj3tBz+3B5FzPZW/C4gzc=;
+  b=f3fC0vmL1vzgRRu8q2gAd2+/f9HiVV3nbItRn5aKArpYKX7Tw76Q1UAz
+   V9diXBYhVt57EQT1X0BYreK5WzGl2EtT2QpTeHMFeXEOB2WnbMH4vgZwW
+   sjXGegrxqEz/j2bsaFgWT/nxLHQ8Bgj7gvqW3bzNlN/8DzqG7DUFQMLpH
+   D8f9Ys7cODwEX+FJljER66uwf75Bi1I42G+BT5EioKLjAiUX7K7ajnZlK
+   DmnQJ1EGH8q6TPyWfk5GhtkpjZX9rz/cBueEWBCdOtFy0lG+4mT2+9elf
+   nTaaTX4mZFQviQz57WV/sYdeejCtqNUPm9b1ICbsS9ugkwY+Eb1O1eI8r
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="369019203"
 X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="369019171"
+   d="scan'208";a="369019203"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:37:56 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:37:57 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="744238590"
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="744238603"
 X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="744238590"
+   d="scan'208";a="744238603"
 Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:37:55 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:37:57 -0700
 From:   Jithu Joseph <jithu.joseph@intel.com>
 To:     hdegoede@redhat.com, markgross@kernel.org
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -48,9 +48,9 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         tony.luck@intel.com, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
         ravi.v.shankar@intel.com, pengfei.xu@intel.com
-Subject: [PATCH 06/10] platform/x86/intel/ifs: Validate image size
-Date:   Wed, 13 Sep 2023 11:33:44 -0700
-Message-Id: <20230913183348.1349409-7-jithu.joseph@intel.com>
+Subject: [PATCH 09/10] platform/x86/intel/ifs: Add new error code
+Date:   Wed, 13 Sep 2023 11:33:47 -0700
+Message-Id: <20230913183348.1349409-10-jithu.joseph@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230913183348.1349409-1-jithu.joseph@intel.com>
 References: <20230913183348.1349409-1-jithu.joseph@intel.com>
@@ -60,44 +60,47 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Perform additional validation prior to loading IFS image.
-
-Error out if the size of the file being loaded doesn't
-match the size specified in the header.
+Make driver aware of a newly added error code so that it can
+provide a more appropriate error message.
 
 Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Tested-by: Pengfei Xu <pengfei.xu@intel.com>
 ---
- drivers/platform/x86/intel/ifs/load.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/platform/x86/intel/ifs/runtest.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
-index e8fb03dd8bcf..778a3b89a24d 100644
---- a/drivers/platform/x86/intel/ifs/load.c
-+++ b/drivers/platform/x86/intel/ifs/load.c
-@@ -376,6 +376,7 @@ int ifs_load_firmware(struct device *dev)
- {
- 	const struct ifs_test_caps *test = ifs_get_test_caps(dev);
- 	struct ifs_data *ifsd = ifs_get_data(dev);
-+	unsigned int expected_size;
- 	const struct firmware *fw;
- 	char scan_path[64];
- 	int ret = -EINVAL;
-@@ -390,6 +391,13 @@ int ifs_load_firmware(struct device *dev)
- 		goto done;
- 	}
+diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
+index ba3f9ad88a82..997d2f07aa0c 100644
+--- a/drivers/platform/x86/intel/ifs/runtest.c
++++ b/drivers/platform/x86/intel/ifs/runtest.c
+@@ -40,6 +40,8 @@ enum ifs_status_err_code {
+ 	IFS_UNASSIGNED_ERROR_CODE		= 7,
+ 	IFS_EXCEED_NUMBER_OF_THREADS_CONCURRENT	= 8,
+ 	IFS_INTERRUPTED_DURING_EXECUTION	= 9,
++	IFS_UNASSIGNED_ERROR_CODE_0xA		= 0xA,
++	IFS_CORRUPTED_CHUNK		= 0xB,
+ };
  
-+	expected_size = ((struct microcode_header_intel *)fw->data)->totalsize;
-+	if (fw->size != expected_size) {
-+		dev_err(dev, "File size mismatch (expected %d, actual %ld). Corrupted IFS image.\n",
-+			expected_size, fw->size);
-+		return -EBADFD;
-+	}
-+
- 	ret = image_sanity_check(dev, (struct microcode_header_intel *)fw->data);
- 	if (ret)
- 		goto release;
+ static const char * const scan_test_status[] = {
+@@ -55,6 +57,8 @@ static const char * const scan_test_status[] = {
+ 	[IFS_EXCEED_NUMBER_OF_THREADS_CONCURRENT] =
+ 	"Exceeded number of Logical Processors (LP) allowed to run Scan-At-Field concurrently",
+ 	[IFS_INTERRUPTED_DURING_EXECUTION] = "Interrupt occurred prior to SCAN start",
++	[IFS_UNASSIGNED_ERROR_CODE_0xA] = "Unassigned error code 0xA",
++	[IFS_CORRUPTED_CHUNK] = "Scan operation aborted due to corrupted image. Try reloading",
+ };
+ 
+ static void message_not_tested(struct device *dev, int cpu, union ifs_status status)
+@@ -123,6 +127,8 @@ static bool can_restart(union ifs_status status)
+ 	case IFS_MISMATCH_ARGUMENTS_BETWEEN_THREADS:
+ 	case IFS_CORE_NOT_CAPABLE_CURRENTLY:
+ 	case IFS_UNASSIGNED_ERROR_CODE:
++	case IFS_UNASSIGNED_ERROR_CODE_0xA:
++	case IFS_CORRUPTED_CHUNK:
+ 		break;
+ 	}
+ 	return false;
 -- 
 2.25.1
 
