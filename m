@@ -2,121 +2,78 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A171EEDE9BC
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Sep 2023 12:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000E7CA553C
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Sep 2023 13:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237770AbjINMcH (ORCPT
+        id S238568AbjINNER (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Sep 2023 08:32:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52708 "EHLO
+        Thu, 14 Sep 2023 09:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230120AbjINMcG (ORCPT
+        with ESMTP id S238848AbjINNEG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Sep 2023 08:32:06 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FAE71FC8;
-        Thu, 14 Sep 2023 05:32:02 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05E30C433C8;
-        Thu, 14 Sep 2023 12:32:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694694722;
-        bh=CTjVxEOmb9/avVAmKzfes/nYuDn39qximLrhdUqj2Cw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ifQstyEOJn6D8AC7SkOULZ/nSJw25eKBJnxTAfVvMyWXPxrqr8KVucPrKV3qE3koW
-         54ML4xqdXKhcTJRz5wdJgHPaSorxCyxI0CPvWdwVvbOnYiW/nNl/e09OqZFpoAyFy2
-         1HO3Q01RSZgnSdEEcIn0Byf3V1UH3q312Mi0nHzCyYGuuzUcTYEskYHi4YcrOAbGVK
-         LHddJZQJzI+omi7DBv6GEugcGXKkOMDr09b+mLPUptMwoXGtdVfqIz8AD+3IUvCS2Z
-         Ih1XcY+vLUBWPohgNfRn4+kB1Dt88SzuqEHlJ4VeTtJEXou6xOLn7UZwOUItgxn/QV
-         I7lnoBhfeSxBw==
-Date:   Thu, 14 Sep 2023 07:32:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
-        iain@orangesquash.org.uk
-Subject: Re: [PATCH v18 2/2] PCI: Add a quirk for AMD PCIe root ports w/ USB4
- controllers
-Message-ID: <20230914123200.GA25154@bhelgaas>
+        Thu, 14 Sep 2023 09:04:06 -0400
+Received: from raptor.dennisbonke.com (vmi485017.contaboserver.net [161.97.139.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C8082136
+        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Sep 2023 06:03:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dennisbonke.com;
+        s=default; t=1694696636;
+        bh=4X8K4dTUdoltVBfdFHdayi5ExakIhj0nvJfI4mFvPT4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HNGjXuU7lfraIYoTjRe/g0AGdUbi6emzkWb4IP73o2iEJaqqMw4O1n5lOIDAA+jKe
+         tVsq3pub4gBFFzvrgLl/aPORRVLSgv3KNZpn4whmX8jnx95KLdt8VBY8JJ9CgfkTPv
+         FGSJv3oY+n38s+AKdGmfHI2P8HYKRjvv9pMIGlketRf25Lc7iT3+7OaOJouJkbyJit
+         lZp+itTfc5T0A7fCjkEk19nTeGAkPvF3SBu643vnRCu+dhz/alVBz5Z/TgwX6niDFO
+         +rf4Eqp7GWBFQ4uHogix4h9tXSda+hPD6TcIcFRb6E+B0muOLfePQTrpXyY1S4jO1b
+         GATEYgaT6/b/Q==
+Received: from DENNIS-MAIN-LAPTOP-SIDUCTION.wireless.hhs.nl (unknown [145.52.166.9])
+        by raptor.dennisbonke.com (Postfix) with ESMTPSA id 95DB9A051C8;
+        Thu, 14 Sep 2023 15:03:56 +0200 (CEST)
+From:   Dennis Bonke <admin@dennisbonke.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     Dennis Bonke <admin@dennisbonke.com>,
+        =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Subject: [PATCH v3] platform/x86: thinkpad_acpi: Take mutex in hotkey_resume
+Date:   Thu, 14 Sep 2023 15:03:56 +0200
+Message-Id: <20230914130356.235912-1-admin@dennisbonke.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230913231829.192842-1-admin@dennisbonke.com>
+References: <20230913231829.192842-1-admin@dennisbonke.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <75e5175e-406e-41dd-90c7-3dc30741897e@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 11:59:00PM -0500, Mario Limonciello wrote:
-> On 9/13/2023 16:16, Mario Limonciello wrote:
-> > On 9/13/2023 16:05, Bjorn Helgaas wrote:
-> > [cut]
-> > > > > I expect it to be an ongoing issue.  I also expect unless we use
-> > > > > constraints or convince the firmware team to add a _S0W object with a
-> > > > > value of "0" for the sake of Linux that we will be adding
-> > > > > IDs every year
-> > > > > to wherever this lands as we reproduce it on newer SoCs.
-> > > > 
-> > > > So maybe the way to go is to make the AMD PMC driver set a flag for
-> > > > Root Ports on suspend or similar.
-> > > 
-> > > I like the quirk approach.  When PMC is involved, the device behavior
-> > > doesn't conform to what it advertised via PME_Support.
-> > > 
-> > > The v18 quirk isn't connected to PMC at all, so IIUC it avoids
-> > > D3hot/D3cold unnecessarily when amd/pmc is not loaded.
-> > 
-> > Technically someone could; but realistically no one will be using these
-> > machines without amd-pmc.
-> > 
-> > The battery life over suspend would be abhorrent.
-> > 
-> > > I don't object to avoiding D3hot/D3cold unconditionally.  Presumably
-> > > we *could* save a little power by using them when amd/pci isn't
-> > > loaded, but amd/pci would have to iterate through all PCI devices when
-> > > it loads, save previous state, do the quirk, and then restore the
-> > > previous state on module unload.  And it would have to use notifiers
-> > > or assume no Root Port hotplug.  All sounds kind of complicated.
-> > 
-> > Yeah this does sound needlessly complicated.
-> > 
-> > > Maybe it would even be enough to just clear dev->pme_support so we
-> > > know wakeups don't work.  It would be a pretty big benefit if we
-> > > didn't have to add another bit and complicate pci_prepare_to_sleep()
-> > > or pci_target_state().
-> > 
-> > I don't think clearing PME support entirely is going to help.  The
-> > reason is that pci_target_state() will fall back to PCI_D3hot when
-> > dev->pme_support is fully cleared.
-> > 
-> > I think that clearing *just the bits* for D3hot and D3cold in PME
-> > support should work though.  I'll test this.
-> 
-> I did confirm this works properly.
-> 
-> > Assuming it works how about if we put the quirk to clear the
-> > D3hot/D3cold PME support bit in
-> > drivers/platform/x86/amd/pmc/pmc-quirks.c?
-> > 
-> > It's still a quirk file and it makes it very clear that this behavior is
-> > caused by what amd-pmc does.
-> 
-> I've got it coded up like this and working, so please let me know if this
-> approach is amenable and I'll drop an updated version.
-> 
-> If you would prefer it to be in pci/quirks.c I believe I can do either.
+hotkey_status_set expects the hotkey_mutex to be held.
+It seems like it was missed here and that gives lockdep
+warnings while resuming.
 
-If the quirk is in a loadable module, as opposed to being built-in,
-does it get applied to the relevant Root Ports when the module is
-loaded?  I didn't look exhaustively, but I don't see a reference to
-pci_fixup_device() in the module load path.
+Fixes: 38831eaf7d4c ("platform/x86: thinkpad_acpi: use lockdep annotations")
+Cc: stable@vger.kernel.org
+Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+Signed-off-by: Dennis Bonke <admin@dennisbonke.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Bjorn
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index d70c89d32534..41584427dc32 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -4116,9 +4116,11 @@ static void hotkey_resume(void)
+ {
+ 	tpacpi_disable_brightness_delay();
+ 
++	mutex_lock(&hotkey_mutex);
+ 	if (hotkey_status_set(true) < 0 ||
+ 	    hotkey_mask_set(hotkey_acpi_mask) < 0)
+ 		pr_err("error while attempting to reset the event firmware interface\n");
++	mutex_unlock(&hotkey_mutex);
+ 
+ 	tpacpi_send_radiosw_update();
+ 	tpacpi_input_send_tabletsw();
+-- 
+2.40.1
+
