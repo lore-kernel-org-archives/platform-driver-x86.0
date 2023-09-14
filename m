@@ -2,130 +2,59 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B01EDE99E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Sep 2023 09:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C0DEDE99F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Sep 2023 10:15:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236956AbjINJaT (ORCPT
+        id S237576AbjINKPu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Sep 2023 05:30:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55090 "EHLO
+        Thu, 14 Sep 2023 06:15:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236861AbjINJaS (ORCPT
+        with ESMTP id S230444AbjINKPt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Sep 2023 05:30:18 -0400
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 424481BEF
-        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Sep 2023 02:30:14 -0700 (PDT)
-Received: by mail-ua1-x934.google.com with SMTP id a1e0cc1a2514c-7a512434bc9so1217266241.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Sep 2023 02:30:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694683813; x=1695288613; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p2ppFbBJ6eSrXngOvBl4Cb6zXMC/U2RNI6NUtLKD4qk=;
-        b=A5qFBXPuNfXapaDc1ES++K3Rar679LuNluYnHoBx4L14PSGbpK9ddRuMsWEoL7+Vee
-         lP3zM0IkQoM8uljFn+F4dbxumEu0ueiQgIq9/W4yvjXJM33GBy2/1L1yjrM4Ln5c1IZH
-         AvjAeo+h+ZuaKdmy0Aklm3m5XRVm0RyOmpTqwzRjoOOvstR1lQrb7r0vCkO3gmp/t5ie
-         l4wOVi6LbbOIoZGzd8Tv1Kim6pHPelF41P8+6SMPS5JV7ghq4kdx3Tftj/XGv/Jdwapd
-         IViDH4k83ORDqoNusi2GSdur//QOznyHDy7gZZR53WsNi0YeTMyYeWlNVgAO0l06PIfc
-         0pZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694683813; x=1695288613;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p2ppFbBJ6eSrXngOvBl4Cb6zXMC/U2RNI6NUtLKD4qk=;
-        b=CUN2k8ygc9MUgsGu5Nz5bIPIc1si32uucz2Jvrp2UwF10yZ1B0fqtNS2iPXgiiRTSc
-         b+qsY5br9HrnURno8f4e/AAqZpUTaX6BExkjFC8+kks94yaB6PiHQMG3u8NUuV/IEEsb
-         25Wwh/hIKAPWOPix3QolF2nD+1gmgiU4/izHL2N7pgWZeLFFLsALZ83eUe8FXemyX3t6
-         0q5lZzuXE3iYbYn970EDOTxUy/EJR7rc3QU0qBmLg7KSos99bGowLdwIS/n6aTC2aglv
-         lVEiPLanbffKs3s3OTjo+p5gnwvuYj1UAk4ygCJnBX0dx8c+xqw6BXbKhWU37MoFt/6v
-         1Lfg==
-X-Gm-Message-State: AOJu0YxWaPG75HWEpfhd12Wtrsjcbtl4pozR90x2ZHT1uVfH/8NsfMcV
-        RL430mMk+RU9Tg4JgIaxfd0EICIqtAPUuLjkvDVAfQ==
-X-Google-Smtp-Source: AGHT+IFdpKc86Ba4+Ce1Kw+37JilCE4JPGPOzMp6WOHfoT2BLvKGNI+DWUjLDVVh+a1NN/cT820cMVMpi35QbT24b9U=
-X-Received: by 2002:a05:6102:3169:b0:450:6ef1:e415 with SMTP id
- l9-20020a056102316900b004506ef1e415mr582724vsm.13.1694683813313; Thu, 14 Sep
- 2023 02:30:13 -0700 (PDT)
+        Thu, 14 Sep 2023 06:15:49 -0400
+Received: from mail.nevisan.pl (mail.nevisan.pl [92.222.190.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC2F11BE3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Sep 2023 03:15:43 -0700 (PDT)
+Received: by mail.nevisan.pl (Postfix, from userid 1002)
+        id 42C8D23D65; Thu, 14 Sep 2023 10:15:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nevisan.pl; s=mail;
+        t=1694686540; bh=exbvoVxelzsX70n1HucpAkYMO+cUzf6L5FuH2oDKoIo=;
+        h=Date:From:To:Subject:From;
+        b=lARQUTT9Mtows05NlP50+ZvPq5h9K2ZpNs4xhv7MSBbYTYc1xbxhoFGHyw/OB59rU
+         PwZxojiA0JhffAKaNpQCB9T3k/nqEeQstcDKRpdpdsneQLRv1xL6eQ1FNMmNw3vUXR
+         zRkotHewppwNHhrKnsyovDddd2S1Iw9mhGJX8qw5QBP2rgvWOFpLV+b8sYYcPBNgNy
+         0aPn8XOI6FwMfE0YWWiFBPJjXV/Y6s+cKYmAs+iAUJRXvWVM2Q999TBR6dLHA44/sn
+         ZrgFh8L53WAmsJEx2uqDF47/n/KhYcU1pA421dUZriakTd6hstXZi3pP0jYpuFEvja
+         t/k6odJ0e+yAQ==
+Received: by mail.nevisan.pl for <platform-driver-x86@vger.kernel.org>; Thu, 14 Sep 2023 10:15:22 GMT
+Message-ID: <20230914094002-0.1.6w.qazm.0.10ingvt2mn@nevisan.pl>
+Date:   Thu, 14 Sep 2023 10:15:22 GMT
+From:   =?UTF-8?Q? "Igor_Czerwi=C5=84ski" ?= <igor.czerwinski@nevisan.pl>
+To:     <platform-driver-x86@vger.kernel.org>
+Subject: =?UTF-8?Q?Pracownik_na_produkcj=C4=99?=
+X-Mailer: mail.nevisan.pl
 MIME-Version: 1.0
-References: <20230913115001.23183-1-brgl@bgdev.pl> <20230913115001.23183-3-brgl@bgdev.pl>
- <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
- <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com>
- <20230913222338.07d1625b@xps-13> <CAHp75Vd2a06rnGCEiJW0reN00amso0RyvgLT516nZiYLYZ-xcQ@mail.gmail.com>
- <4de724a1630eda74f4f304dc224dc981eb3b0875.camel@crapouillou.net>
-In-Reply-To: <4de724a1630eda74f4f304dc224dc981eb3b0875.camel@crapouillou.net>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 14 Sep 2023 11:30:02 +0200
-Message-ID: <CAMRc=MfnPdr66OPSkkjjpZY2VY7wN4WO2uBPbpyExFH0F6e=1Q@mail.gmail.com>
-Subject: Re: [PATCH 2/5] mtd: rawnand: ingenic: use gpiod_set_active_high()
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Sep 14, 2023 at 10:30=E2=80=AFAM Paul Cercueil <paul@crapouillou.ne=
-t> wrote:
->
-> Hi,
->
-> Le jeudi 14 septembre 2023 =C3=A0 10:02 +0300, Andy Shevchenko a =C3=A9cr=
-it :
-> > On Wed, Sep 13, 2023 at 11:23=E2=80=AFPM Miquel Raynal
-> > <miquel.raynal@bootlin.com> wrote:
-> > > linus.walleij@linaro.org wrote on Wed, 13 Sep 2023 22:12:40 +0200:
-> > > > On Wed, Sep 13, 2023 at 10:05=E2=80=AFPM Andy Shevchenko
-> > > > <andy.shevchenko@gmail.com> wrote:
-> > > > > On Wed, Sep 13, 2023 at 2:50=E2=80=AFPM Bartosz Golaszewski
-> > > > > <brgl@bgdev.pl> wrote:
-> >
-> > ...
-> >
-> > > > > Why not moving this quirk to gpiolib-of.c?
-> > > >
-> > > > That's a better idea here I think, it's clearly a quirk for a
-> > > > buggy device tree.
-> > >
-> > > Agreed, it's just for backward compatibility purposes in a single
-> > > driver. I believe it should stay here.
-> >
-> > I believe Linus was for moving.
->
-> Which Linus? Because the one who's also the gpio maintainer just wrote
-> above that it was better to keep it in the driver.
->
+Dzie=C5=84 dobry,
 
-I'm also under the impression that Linus meant moving it to gpiolib-of.c. L=
-et's
+czy potrzebuj=C4=85 Pa=C5=84stwo dodatkowych pracownik=C3=B3w?
 
-Linus: Could you clarify?
+Obs=C5=82ugujemy wiele firm z sektora produkcyjnego, kt=C3=B3re obecnie m=
+aj=C4=85 wzmo=C5=BCone zapotrzebowanie na dodatkowy personel.
 
-Bart
+Tygodniowo zatrudniamy =C5=9Brednio 250 os=C3=B3b, a w naszej bazie znajd=
+uje si=C4=99 tysi=C4=85ce pracownik=C3=B3w z Ukrainy gotowych wesprze=C4=87=
+ Pa=C5=84stwa dzia=C5=82ania.=20
 
-> Cheers,
-> -Paul
->
-> >
-> > gpiolib-of.c contains a lot of quirks, including this one. Calling
-> > these new (or old) APIs for overriding polarity in many cases
-> > shouldn't be needed if were no issues with DT or something like that.
-> >
->
+Je=C5=9Bli potrzebuj=C4=85 Pa=C5=84stwo ludzi gotowych do pracy od zaraz,=
+ prosz=C4=99 o odpowied=C5=BA.
+
+
+Z pozdrowieniami
+Igor Czerwi=C5=84ski
