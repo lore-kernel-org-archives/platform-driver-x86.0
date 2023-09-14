@@ -2,136 +2,107 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773B0CA0EF3
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Sep 2023 05:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F92BEDE988
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Sep 2023 06:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233817AbjINFDn (ORCPT
+        id S235215AbjINGak (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Sep 2023 01:03:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38728 "EHLO
+        Thu, 14 Sep 2023 02:30:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233781AbjINFDm (ORCPT
+        with ESMTP id S233867AbjINGaj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Sep 2023 01:03:42 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63DE51BCA;
-        Wed, 13 Sep 2023 22:03:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-        s=mail; t=1694667816;
-        bh=zaJQ9ZymV5taIz5m4T4i5glZ2wKz2JIJ1ijQFw1ecAY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oS+i8l1oRw5IVtAyeOFJ5jLSSqQfMyauPSiPgXdtawKBKwoqBP+7e/yAxd3fuIKgK
-         YUJ0Vtqrac0UIDasp63PQVwWnGVFrIcu26Jlp4kXXQal8Bm+K1B/0qLHgmERfQKf0n
-         iBf6LR0fMI233OYe2bCrnXXiAlA1sdlZ9275YVZs=
-Date:   Thu, 14 Sep 2023 07:03:35 +0200
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To:     Dennis Bonke <admin@dennisbonke.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Take mutex in hotkey_resume
-Message-ID: <2ef51572-3a41-4088-8630-b474f5b8feae@t-8ch.de>
-References: <20230913231829.192842-1-admin@dennisbonke.com>
- <900bedba-378e-4215-8b88-27dcc6353164@t-8ch.de>
- <b5246c7e2b81afe99bd146dd1209b1971b196a0b.camel@dennisbonke.com>
+        Thu, 14 Sep 2023 02:30:39 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B680E7;
+        Wed, 13 Sep 2023 23:30:35 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-31c65820134so479408f8f.1;
+        Wed, 13 Sep 2023 23:30:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694673034; x=1695277834; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pqrbsszNPWGJmRm+hq+F8aeQwjVZEj8yw2XLI124orQ=;
+        b=PH6lh+0TiA38KVKdfqiL9NuWucs0+Fv+cl2ujYsewf6lpiFCPTEk5kcsWiVLnKN1r1
+         EZRIrzZ/J4Ibn7c9vgQKIYLuhiWy7Eh+b+vIbwwV5S3Ka+QksD1dJ2MJlvWY7lr8AWlD
+         cINkCGum4egXJ1J6ckJnGBPymEAQ6yvsOJnlZNoAgd0P6a1qmDl2QkCeOHMNSJO2JKXX
+         9PNZ6kTQVxwOuiD+6/48qFCV/R+85+YT6zmZ7trbqEnVz+KCpBtnG0ZJxVY5LWtMJgwx
+         mrvJ8lA4Ge5QzQkO5REfBIA6OCVKAWHlu8maT8QOR0cAqQgtSl5vAb2c+Y8ev/hllC56
+         0Jgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694673034; x=1695277834;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pqrbsszNPWGJmRm+hq+F8aeQwjVZEj8yw2XLI124orQ=;
+        b=ecA8o1g/dDpFZjm4Nz2t2ujQwchndSzn+5P0co4XPg6n3ra98vYDVS9mz6iPGjobFo
+         /MkhFo+1EtWjy5xDTAx+pbMq+JAee/qetEODV6VzvFXwGFyFfElkfv54wjtwmInf/Vta
+         adKyawGDHo0j0bRAwCsoc38Cm/4mxfPHN7L6EMofCDPwcqft3NzdDkyKsYQWOsN8ipzr
+         lw1sYQs9Q4p+wYp07AGtmzltsXbAz/DFCyynQHQTTyl7KXi80bds/EYSpR0C6T2DJ24u
+         mfMmmRsomNqGdWX8vEmb110MTuukOJRVtZmQsmmx/dKBjepql07IpZzvkyAXQ8tJ/WuT
+         Mt4g==
+X-Gm-Message-State: AOJu0Yxb3gtIafRA175wAijmCFiA29OP7es0O0d/gp+kEztYqegE3flG
+        bFSTAzwjdy08v8rZQ/ZkMEM=
+X-Google-Smtp-Source: AGHT+IFloPuoVMqwYqNAhjxlxIGlUZ3r6nTexrsPHeVVWQubS4P5bMZvZAOmmO2qUmDhVXXzpFq6fw==
+X-Received: by 2002:a5d:65c6:0:b0:31f:b0ba:f2ce with SMTP id e6-20020a5d65c6000000b0031fb0baf2cemr4008727wrw.9.1694673033297;
+        Wed, 13 Sep 2023 23:30:33 -0700 (PDT)
+Received: from gmail.com (1F2EF048.nat.pool.telekom.hu. [31.46.240.72])
+        by smtp.gmail.com with ESMTPSA id z4-20020a5d4c84000000b003197c7d08ddsm818496wrs.71.2023.09.13.23.30.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Sep 2023 23:30:32 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date:   Thu, 14 Sep 2023 08:30:30 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Justin Stitt <justinstitt@google.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Mike Travis <mike.travis@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] x86/platform/uv: refactor deprecated strcpy and
+ strncpy
+Message-ID: <ZQKohp0plVd4S5St@gmail.com>
+References: <20230905-strncpy-arch-x86-platform-uv-uv_nmi-v3-1-3efd6798b569@google.com>
+ <ZPhsSzHG6YMViOSk@gmail.com>
+ <bce762af-0da7-bb5e-1580-b42803c183f6@redhat.com>
+ <ZPiH/ds9oeimXDdb@gmail.com>
+ <953f2e40-7b0e-27b5-b017-a1ac2175bb47@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b5246c7e2b81afe99bd146dd1209b1971b196a0b.camel@dennisbonke.com>
+In-Reply-To: <953f2e40-7b0e-27b5-b017-a1ac2175bb47@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Dennis,
 
-On 2023-09-14 02:36:44+0200, Dennis Bonke (admin) wrote:
-> On Thu, 2023-09-14 at 01:33 +0200, Thomas Weißschuh wrote:
-> > thanks for the fix!
-> Hello Thomas,
+* Hans de Goede <hdegoede@redhat.com> wrote:
+
+> >> Which IMHO is much more readable then what has landed now. But since 
+> >> v2 has already landed I guess the best thing is just to stick with 
+> >> what we have upstream now...
+> > 
+> > Well, how about we do a delta patch with all the changes you suggested? 
+> > I'm all for readability.
 > 
-> Thank you for the quick review!
-
-The least I can do if somebody else has to clean up my mess :-)
-
-> I apologize for the messy V2 that I seem to have posted.
-> It's my first time working with a mailing list and it seems that something went wrong.
-
-No need to apologize.
-
-
-Some more notes:
-
-You should also CC LKML (linux-kernel@vger.kernel.org) and the
-subsystems maintainers as per MAINTAINERS / get_maintainers.pl on all
-your patches.
-
-And now that I have worked with you on a patch also CC me on new
-revisions.
-
-I can also recommend the usage of the "b4"[0] tool to prepare your
-patches. It takes care of some of the chores.
-
-[0] https://b4.docs.kernel.org/en/latest/
-
-Some more comments below.
-
-> > 
-> > On 2023-09-14 01:18:29+0200, admin@dennisbonke.com wrote:
-> > > From: Dennis Bonke <admin@dennisbonke.com>
-> > > 
-> > > hotkey_status_{set,get} expect the hotkey_mutex to be held.
-> > > It seems like it was missed here and that gives warnings while resuming.
-> > 
-> > Which kind of warnings?
-> > 
-> > If it's from lockdep then it's triggered by hotkey_mask_set() and the
-> > commit message is a bit off.
-> It is indeed from lockdep. I've changed the commit message to reflect your comment.
-
-Thanks!
-
-> > 
-> > Also then the patch needs:
-> > 
-> > Fixes: 38831eaf7d4c ("platform/x86: thinkpad_acpi: use lockdep annotations")
-> > Cc: stable@vger.kernel.org
-> > 
-> > With those:
-> > 
-> > Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
-
-> About those tags, do I add them to the patch? Just double checking
-> before I accidentally CC the stable list with an incorrect patch.
-
-Yes, please add them to the patch.
-The CC stable will only have any effect after your patch is in Linus'
-tree at which point multiple people will have looked at it.
-If an incorrect patch makes it that far it's not your fault.
-
-> > > 
-> > > Signed-off-by: Dennis Bonke <admin@dennisbonke.com>
-> > > ---
-> > >  drivers/platform/x86/thinkpad_acpi.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> > > index d70c89d32534..de5859a5eb0d 100644
-> > > --- a/drivers/platform/x86/thinkpad_acpi.c
-> > > +++ b/drivers/platform/x86/thinkpad_acpi.c
-> > > @@ -4116,9 +4116,11 @@ static void hotkey_resume(void)
-> > >  {
-> > >         tpacpi_disable_brightness_delay();
-> > >  
-> > > +       mutex_lock(&hotkey_mutex)
-> > >         if (hotkey_status_set(true) < 0 ||
-> > >             hotkey_mask_set(hotkey_acpi_mask) < 0)
-> > >                 pr_err("error while attempting to reset the event firmware interface\n");
-> > > +       mutex_unlock(&hotkey_mutex);
-> > >  
-> > >         tpacpi_send_radiosw_update();
-> > >         tpacpi_input_send_tabletsw();
-> > > -- 
-> > > 2.40.1
-> > > 
+> So I started doing this and notices that all the string manipulation + 
+> parsing done here is really just a DYI implementation of 
+> sysfs_match_string().
 > 
+> So I have prepared a patch to switch to sysfs_match_string(), which 
+> completely removes the need to make a copy of the val string.
+> 
+> I'll submit the patch right after this email.
 
-Thomas
+Thank you - that looks a far more thorough cleanup indeed.
+
+	Ingo
