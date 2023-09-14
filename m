@@ -2,107 +2,108 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F92BEDE988
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Sep 2023 06:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BBEEDE983
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Sep 2023 07:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235215AbjINGak (ORCPT
+        id S233039AbjINHDI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Sep 2023 02:30:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46686 "EHLO
+        Thu, 14 Sep 2023 03:03:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233867AbjINGaj (ORCPT
+        with ESMTP id S231876AbjINHDH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Sep 2023 02:30:39 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B680E7;
-        Wed, 13 Sep 2023 23:30:35 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-31c65820134so479408f8f.1;
-        Wed, 13 Sep 2023 23:30:35 -0700 (PDT)
+        Thu, 14 Sep 2023 03:03:07 -0400
+Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 922A2CF3;
+        Thu, 14 Sep 2023 00:03:03 -0700 (PDT)
+Received: by mail-ot1-x32d.google.com with SMTP id 46e09a7af769-6c09f1f9df2so382064a34.2;
+        Thu, 14 Sep 2023 00:03:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694673034; x=1695277834; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pqrbsszNPWGJmRm+hq+F8aeQwjVZEj8yw2XLI124orQ=;
-        b=PH6lh+0TiA38KVKdfqiL9NuWucs0+Fv+cl2ujYsewf6lpiFCPTEk5kcsWiVLnKN1r1
-         EZRIrzZ/J4Ibn7c9vgQKIYLuhiWy7Eh+b+vIbwwV5S3Ka+QksD1dJ2MJlvWY7lr8AWlD
-         cINkCGum4egXJ1J6ckJnGBPymEAQ6yvsOJnlZNoAgd0P6a1qmDl2QkCeOHMNSJO2JKXX
-         9PNZ6kTQVxwOuiD+6/48qFCV/R+85+YT6zmZ7trbqEnVz+KCpBtnG0ZJxVY5LWtMJgwx
-         mrvJ8lA4Ge5QzQkO5REfBIA6OCVKAWHlu8maT8QOR0cAqQgtSl5vAb2c+Y8ev/hllC56
-         0Jgw==
+        d=gmail.com; s=20221208; t=1694674983; x=1695279783; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=30YvJco7VTNawIeVj2mQFLvYk/DMezr2VBhiarmaxjs=;
+        b=n8EGzOKderE5rofXQQ7J3iHup1q3R1LWtDz7EFdCrAFCt5K6Y68/amQBqoHkkYwyaZ
+         UDhYjcUzbXGi6yZ5E5ZKGpBo0calaLrnWev3pICQrstobaF675/tEAMYrtTNhLXjvQwP
+         3Fp7O9JtCriPo4sWSNDQGH1rbRHt+gXGGMdPcthgVt4jZNlp8EphcaSF6Juu4WDpRq3P
+         NM2WJXj13sbFn82dWA5teUJ5QVYOykNOMxik8TAcfo3WkXrENIJt3riK7ggfoJ2735hY
+         gQzMSy1sCc5BBwNVRdKVr+ihEhY1Rr/i/wtEEWw/yGbe1SSAHuoT7MIupcPnhSvYSpN3
+         tJvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694673034; x=1695277834;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1694674983; x=1695279783;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pqrbsszNPWGJmRm+hq+F8aeQwjVZEj8yw2XLI124orQ=;
-        b=ecA8o1g/dDpFZjm4Nz2t2ujQwchndSzn+5P0co4XPg6n3ra98vYDVS9mz6iPGjobFo
-         /MkhFo+1EtWjy5xDTAx+pbMq+JAee/qetEODV6VzvFXwGFyFfElkfv54wjtwmInf/Vta
-         adKyawGDHo0j0bRAwCsoc38Cm/4mxfPHN7L6EMofCDPwcqft3NzdDkyKsYQWOsN8ipzr
-         lw1sYQs9Q4p+wYp07AGtmzltsXbAz/DFCyynQHQTTyl7KXi80bds/EYSpR0C6T2DJ24u
-         mfMmmRsomNqGdWX8vEmb110MTuukOJRVtZmQsmmx/dKBjepql07IpZzvkyAXQ8tJ/WuT
-         Mt4g==
-X-Gm-Message-State: AOJu0Yxb3gtIafRA175wAijmCFiA29OP7es0O0d/gp+kEztYqegE3flG
-        bFSTAzwjdy08v8rZQ/ZkMEM=
-X-Google-Smtp-Source: AGHT+IFloPuoVMqwYqNAhjxlxIGlUZ3r6nTexrsPHeVVWQubS4P5bMZvZAOmmO2qUmDhVXXzpFq6fw==
-X-Received: by 2002:a5d:65c6:0:b0:31f:b0ba:f2ce with SMTP id e6-20020a5d65c6000000b0031fb0baf2cemr4008727wrw.9.1694673033297;
-        Wed, 13 Sep 2023 23:30:33 -0700 (PDT)
-Received: from gmail.com (1F2EF048.nat.pool.telekom.hu. [31.46.240.72])
-        by smtp.gmail.com with ESMTPSA id z4-20020a5d4c84000000b003197c7d08ddsm818496wrs.71.2023.09.13.23.30.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Sep 2023 23:30:32 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date:   Thu, 14 Sep 2023 08:30:30 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Justin Stitt <justinstitt@google.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] x86/platform/uv: refactor deprecated strcpy and
- strncpy
-Message-ID: <ZQKohp0plVd4S5St@gmail.com>
-References: <20230905-strncpy-arch-x86-platform-uv-uv_nmi-v3-1-3efd6798b569@google.com>
- <ZPhsSzHG6YMViOSk@gmail.com>
- <bce762af-0da7-bb5e-1580-b42803c183f6@redhat.com>
- <ZPiH/ds9oeimXDdb@gmail.com>
- <953f2e40-7b0e-27b5-b017-a1ac2175bb47@redhat.com>
+        bh=30YvJco7VTNawIeVj2mQFLvYk/DMezr2VBhiarmaxjs=;
+        b=naXAClTRTMcgMPHQeHEceHb2WA9ubY/bchOxFuolkPpSYHw+XtpiAZouTFbid8RiG0
+         v/uOxdLK6PYpRYXgKpMLSQ52J8sLpuo+6n08NzNsA903hfi/oBwoa1fGh3GyGifpv6wj
+         9xnOFdkyQcnzV/R8Mog8dU32MEHgJN6cVI44We/0ztqnzX0NKfPv7iD1dQ9NSLszyekw
+         gR2GBuEOVKmj9lNkdo9Buc0mtccOyW8ZmfcwKYTUOeDHEo6ZCHRbBoaBGS8brPj45dA1
+         phqItLeJds3xBppk5bMv30KwchdubwcqZRS0TvWaZuDj7f6vKqlwaM8FRANDqpnbsxMf
+         xQcQ==
+X-Gm-Message-State: AOJu0Ywq6ZO1pAYIrspfnfpHaQOODKeWx7lpvBahTylJTS0XaQlkmlQ/
+        p80JpIBEjC0ZCMHCwUGqg8B6uDRRHdMZ5jLKVgg=
+X-Google-Smtp-Source: AGHT+IFwN7KC0MP+yRN7HXC+8WIaA9T071jv684OsNuFmbXU0T8YGXPQiTees4sH/CN6Q5P9OE3eUQ43ejp33Zd91jw=
+X-Received: by 2002:a05:6871:5ca:b0:1d5:a85a:13b6 with SMTP id
+ v10-20020a05687105ca00b001d5a85a13b6mr5395171oan.45.1694674982809; Thu, 14
+ Sep 2023 00:03:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <953f2e40-7b0e-27b5-b017-a1ac2175bb47@redhat.com>
+References: <20230913115001.23183-1-brgl@bgdev.pl> <20230913115001.23183-3-brgl@bgdev.pl>
+ <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
+ <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com> <20230913222338.07d1625b@xps-13>
+In-Reply-To: <20230913222338.07d1625b@xps-13>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 14 Sep 2023 10:02:26 +0300
+Message-ID: <CAHp75Vd2a06rnGCEiJW0reN00amso0RyvgLT516nZiYLYZ-xcQ@mail.gmail.com>
+Subject: Re: [PATCH 2/5] mtd: rawnand: ingenic: use gpiod_set_active_high()
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Wed, Sep 13, 2023 at 11:23=E2=80=AFPM Miquel Raynal
+<miquel.raynal@bootlin.com> wrote:
+> linus.walleij@linaro.org wrote on Wed, 13 Sep 2023 22:12:40 +0200:
+> > On Wed, Sep 13, 2023 at 10:05=E2=80=AFPM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Wed, Sep 13, 2023 at 2:50=E2=80=AFPM Bartosz Golaszewski <brgl@bgd=
+ev.pl> wrote:
 
-* Hans de Goede <hdegoede@redhat.com> wrote:
+...
 
-> >> Which IMHO is much more readable then what has landed now. But since 
-> >> v2 has already landed I guess the best thing is just to stick with 
-> >> what we have upstream now...
-> > 
-> > Well, how about we do a delta patch with all the changes you suggested? 
-> > I'm all for readability.
-> 
-> So I started doing this and notices that all the string manipulation + 
-> parsing done here is really just a DYI implementation of 
-> sysfs_match_string().
-> 
-> So I have prepared a patch to switch to sysfs_match_string(), which 
-> completely removes the need to make a copy of the val string.
-> 
-> I'll submit the patch right after this email.
+> > > Why not moving this quirk to gpiolib-of.c?
+> >
+> > That's a better idea here I think, it's clearly a quirk for a
+> > buggy device tree.
+>
+> Agreed, it's just for backward compatibility purposes in a single
+> driver. I believe it should stay here.
 
-Thank you - that looks a far more thorough cleanup indeed.
+I believe Linus was for moving.
 
-	Ingo
+gpiolib-of.c contains a lot of quirks, including this one. Calling
+these new (or old) APIs for overriding polarity in many cases
+shouldn't be needed if were no issues with DT or something like that.
+
+--=20
+With Best Regards,
+Andy Shevchenko
