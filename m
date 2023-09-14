@@ -2,68 +2,39 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76D8EDE988
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Sep 2023 07:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA07EDE98F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Sep 2023 08:30:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234006AbjINHFE (ORCPT
+        id S236388AbjINIaW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Sep 2023 03:05:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57998 "EHLO
+        Thu, 14 Sep 2023 04:30:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230141AbjINHFD (ORCPT
+        with ESMTP id S235215AbjINIaW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Sep 2023 03:05:03 -0400
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45640BB;
-        Thu, 14 Sep 2023 00:04:59 -0700 (PDT)
-Received: by mail-oi1-x233.google.com with SMTP id 5614622812f47-3aa14d8641cso372872b6e.3;
-        Thu, 14 Sep 2023 00:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694675098; x=1695279898; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kzTdfD0LggvX1uBlCTC2vRtoepMYQzC2yBdB+oN7NDw=;
-        b=pUI10C79RkUXxD/yVaIHXn6IPHQ7bA22lRHxYbPsUjafKbkR9ezty6ly8T+4Z1mdmJ
-         Gc/kGq40vYZjsuTmDkkcSnIydBO7mT33onwziAdbOjnLMjOIl6anQowwRBph26xEULNs
-         nFLz11rXgUDn0IS9f9Ua/n/VLFi5rjhBeRMfkUQ9UrAiSGMq3KyMaylpq9XaDK5y82Ll
-         h4QTC1lZ8Oq6lNEJu5yg3N0PDGH9NhJIIyZdnW4mTSu6XtykSbblS5uZiS4DhDtA+VdN
-         Hsia23aHJxectydeLWFBoICbIUTaO5HZhiTFEne8yHi/pBP4MgM5Te90LL3KJeBl5wHB
-         w9UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694675098; x=1695279898;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kzTdfD0LggvX1uBlCTC2vRtoepMYQzC2yBdB+oN7NDw=;
-        b=J9r8vFwkY7USU2M/wjQRqcCbd2+w7Vd+Hw5hVfzaCALz4jDa2s6mwsJBZxUtJeadnF
-         K+AxuN46FLHgfKdArIQOWhCX8z4XdYPPHcdZqEbSNWYPEeKxMBuGGg2L+ozzplI9+W6a
-         puEub6Xc1tXF+Odgbi4wmSUU80kuB0b7vHX0Ywjk6v0KaRBx+ItiasxhIDPr2TQihVSc
-         fOyvk5c3oxgFKXlSoODDVG6+zUGK6nhEHidezXQRyt0kizZtfZJQIkn81/2Bwud14jZX
-         UqGGCPZA8bSKiQbUVkkzeQ9SamZWrZLDu9wfECTOy8v8ZZddTy138Rpj/lch61vPCDhG
-         rb9g==
-X-Gm-Message-State: AOJu0Yw+7Sp13inJSHZ7zB2XFVZWr21Sjt5Xci/v3Qi/+UM7RQ3Eiypq
-        pCMXU8Q/rejNkDc3WL3G36ze80YFJ+ADwjpvUG4=
-X-Google-Smtp-Source: AGHT+IEzUZhYY4nwIJ6Dlm9qukCO/53xQ9HZuRBayIOhSRBl2gZChNyMJPFJoM0Y2E3e3o3puld+m0KaJ40spNNiqwQ=
-X-Received: by 2002:a05:6870:2397:b0:1c5:56f:ac08 with SMTP id
- e23-20020a056870239700b001c5056fac08mr5612105oap.12.1694675098534; Thu, 14
- Sep 2023 00:04:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230913115001.23183-1-brgl@bgdev.pl> <20230913115001.23183-3-brgl@bgdev.pl>
- <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
- <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com>
- <20230913222338.07d1625b@xps-13> <CAHp75Vd2a06rnGCEiJW0reN00amso0RyvgLT516nZiYLYZ-xcQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vd2a06rnGCEiJW0reN00amso0RyvgLT516nZiYLYZ-xcQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 14 Sep 2023 10:04:22 +0300
-Message-ID: <CAHp75Vdn9a8a-E=RuByNL8B93cNHuusVrqE-RnH4f3+WgxJ22Q@mail.gmail.com>
+        Thu, 14 Sep 2023 04:30:22 -0400
+Received: from aposti.net (aposti.net [89.234.176.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26E4BCD8;
+        Thu, 14 Sep 2023 01:30:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1694680215;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=L3QNlCsd4KrtdLCl8FujpLR9D66KZlMKVr8PFtC9Zj8=;
+        b=tIBeXCzmhsYqsWsjrwpnqguwuBD5fXYC/Eb4uuoG7n3c3EEb7DyvSU4Y9dpM1IUgC0bySP
+        sG97FPryrWMEsDiLl/oJcqji3jRNgnJ6zBwkJCJXtRnpV2RmtcooQ8L6WNXv9o0oMYkE9c
+        SXsy27g2omhA+TmEn9Kgnnz6BYKzv5U=
+Message-ID: <4de724a1630eda74f4f304dc224dc981eb3b0875.camel@crapouillou.net>
 Subject: Re: [PATCH 2/5] mtd: rawnand: ingenic: use gpiod_set_active_high()
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
         Harvey Hunt <harveyhuntnexus@gmail.com>,
         Richard Weinberger <richard@nod.at>,
         Vignesh Raghavendra <vigneshr@ti.com>,
@@ -75,48 +46,54 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date:   Thu, 14 Sep 2023 10:30:13 +0200
+In-Reply-To: <CAHp75Vd2a06rnGCEiJW0reN00amso0RyvgLT516nZiYLYZ-xcQ@mail.gmail.com>
+References: <20230913115001.23183-1-brgl@bgdev.pl>
+         <20230913115001.23183-3-brgl@bgdev.pl>
+         <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
+         <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com>
+         <20230913222338.07d1625b@xps-13>
+         <CAHp75Vd2a06rnGCEiJW0reN00amso0RyvgLT516nZiYLYZ-xcQ@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Sep 14, 2023 at 10:02=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
+Hi,
+
+Le jeudi 14 septembre 2023 =C3=A0 10:02 +0300, Andy Shevchenko a =C3=A9crit=
+=C2=A0:
 > On Wed, Sep 13, 2023 at 11:23=E2=80=AFPM Miquel Raynal
 > <miquel.raynal@bootlin.com> wrote:
-> > linus.walleij@linaro.org wrote on Wed, 13 Sep 2023 22:12:40 +0200:
+> > linus.walleij@linaro.org=C2=A0wrote on Wed, 13 Sep 2023 22:12:40 +0200:
 > > > On Wed, Sep 13, 2023 at 10:05=E2=80=AFPM Andy Shevchenko
 > > > <andy.shevchenko@gmail.com> wrote:
-> > > > On Wed, Sep 13, 2023 at 2:50=E2=80=AFPM Bartosz Golaszewski <brgl@b=
-gdev.pl> wrote:
->
+> > > > On Wed, Sep 13, 2023 at 2:50=E2=80=AFPM Bartosz Golaszewski
+> > > > <brgl@bgdev.pl> wrote:
+>=20
 > ...
->
+>=20
 > > > > Why not moving this quirk to gpiolib-of.c?
-> > >
+> > >=20
 > > > That's a better idea here I think, it's clearly a quirk for a
 > > > buggy device tree.
-> >
+> >=20
 > > Agreed, it's just for backward compatibility purposes in a single
 > > driver. I believe it should stay here.
->
+>=20
 > I believe Linus was for moving.
->
+
+Which Linus? Because the one who's also the gpio maintainer just wrote
+above that it was better to keep it in the driver.
+
+Cheers,
+-Paul
+
+>=20
 > gpiolib-of.c contains a lot of quirks, including this one. Calling
-
-To be clear:
-"including one for the same issue"
-
 > these new (or old) APIs for overriding polarity in many cases
-> shouldn't be needed if there were no issues with DT or something like tha=
-t.
+> shouldn't be needed if were no issues with DT or something like that.
+>=20
 
-To be clear:
-The less we call these APIs from drivers the better. Ideally these
-APIs shouldn't have existed.
-
---=20
-With Best Regards,
-Andy Shevchenko
