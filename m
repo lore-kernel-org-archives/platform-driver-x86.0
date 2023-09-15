@@ -2,45 +2,45 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE6DEE645D
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Sep 2023 13:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901E9EE3F2F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Sep 2023 14:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234718AbjIONtS (ORCPT
+        id S235733AbjIOOrk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Sep 2023 09:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36080 "EHLO
+        Fri, 15 Sep 2023 10:47:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234618AbjIONtQ (ORCPT
+        with ESMTP id S235401AbjIOOrk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Sep 2023 09:49:16 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C9B2121;
-        Fri, 15 Sep 2023 06:49:10 -0700 (PDT)
+        Fri, 15 Sep 2023 10:47:40 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C4F21BE6;
+        Fri, 15 Sep 2023 07:47:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694785750; x=1726321750;
+  t=1694789255; x=1726325255;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=4IcYhwjz5QUsOTeYLbkK5pEmiuhen3zjH9p2Ck1k6DY=;
-  b=AOiHtp/3ToKHmTiTKajWx7K8ccLhvQCyvUOalvJ34iRx04M3K19yMEI3
-   ihhUEyCVWY/laRHPyx9ro+s4lZDuijuy6ieqf12cFvI7RCPIup0pSAnQ3
-   icf8DblxEeLDIoQtet9Jl+2Kiqc4QVjGSfxaoVShzjoG/eJfbu2bmOCCr
-   PtYWtmJU7cOe5jwcpRqZhFQuRXAvGZydGumn2KIwAndgTCv2bquqE86+h
-   ZFjw/yJs+mn9jJFPn7tC/qgE3YtrkaLsO7u16oGp4jUOXtQpEcdX90c7T
-   znqjUagROMzCSZ5mOGky53BZxkeg8+tYCJCl4V+OwZdb7fRvg20bbFJjI
+  bh=RSdffzo1Ydfr8wTOPsJoUEWKUqgBQtx4q1XDTHhuglM=;
+  b=gr2BqvAhnzs1sKFPuJolVLPoSBz5iV+PsWpNX3mkHmOBgEd7+ChD4UfG
+   v6SMaWMobfHOvL4GR3L4oEwil+Lr1SxBTWoPQIeGEtjdp3adVmIGwKwHc
+   APixYkkEwGcKxDW1hkepFURLVdfMxZ4XnU55y2bfluJfd9mba5IqrguOj
+   dFMUODdUe1sp5Fqo5pxnbyb2UDCruAbYEFDNKc+LZOleTpTi+mV+o9GMI
+   Rsmwj9pqItikf3EHl5vjiNRbSTg0R/q5g2pxd/Z9SLXpAoa0OYOUwk9FU
+   Xy5RAJZvN7iEGTtWtWLdJUchqT7HhoIlZEW8iIJ8kx2URTkoE90eu2B7X
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="465613862"
+X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="410202250"
 X-IronPort-AV: E=Sophos;i="6.02,149,1688454000"; 
-   d="scan'208";a="465613862"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 06:49:09 -0700
+   d="scan'208";a="410202250"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 07:45:47 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="694726004"
+X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="774340718"
 X-IronPort-AV: E=Sophos;i="6.02,149,1688454000"; 
-   d="scan'208";a="694726004"
+   d="scan'208";a="774340718"
 Received: from srdoo-mobl1.ger.corp.intel.com ([10.252.38.99])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 06:49:06 -0700
-Date:   Fri, 15 Sep 2023 16:49:04 +0300 (EEST)
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 07:45:44 -0700
+Date:   Fri, 15 Sep 2023 17:45:42 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Stephen Boyd <swboyd@chromium.org>
 cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -52,76 +52,66 @@ cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Prashant Malani <pmalani@chromium.org>
-Subject: Re: [PATCH v4 2/4] platform/x86: intel_scu_ipc: Check status upon
- timeout in ipc_wait_for_interrupt()
-In-Reply-To: <20230913212723.3055315-3-swboyd@chromium.org>
-Message-ID: <2bd9b7e2-a558-305b-bfd9-e64c28b6303d@linux.intel.com>
-References: <20230913212723.3055315-1-swboyd@chromium.org> <20230913212723.3055315-3-swboyd@chromium.org>
+Subject: Re: [PATCH v4 3/4] platform/x86: intel_scu_ipc: Don't override scu
+ in intel_scu_ipc_dev_simple_command()
+In-Reply-To: <20230913212723.3055315-4-swboyd@chromium.org>
+Message-ID: <58e817b0-1872-6ff1-58bb-1aeeb572361@linux.intel.com>
+References: <20230913212723.3055315-1-swboyd@chromium.org> <20230913212723.3055315-4-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323329-769386324-1694789146=:2347"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-769386324-1694789146=:2347
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+
 On Wed, 13 Sep 2023, Stephen Boyd wrote:
 
-> It's possible for the completion in ipc_wait_for_interrupt() to timeout,
-> simply because the interrupt was delayed in being processed. A timeout
-> in itself is not an error. This driver should check the status register
-> upon a timeout to ensure that scheduling or interrupt processing delays
-> don't affect the outcome of the IPC return value.
+> Andy discovered this bug during patch review. The 'scu' argument to this
+> function shouldn't be overridden by the function itself. It doesn't make
+> any sense. Looking at the commit history, we see that commit
+> f57fa18583f5 ("platform/x86: intel_scu_ipc: Introduce new SCU IPC API")
+> removed the setting of the scu to ipcdev in other functions, but not
+> this one. That was an oversight. Remove this line so that we stop
+> overriding the scu instance that is used by this function.
 > 
->  CPU0                                                   SCU
->  ----                                                   ---
->  ipc_wait_for_interrupt()
->   wait_for_completion_timeout(&scu->cmd_complete)
->   [TIMEOUT]                                             status[IPC_STATUS_BUSY]=0
-> 
-> Fix this problem by reading the status bit in all cases, regardless of
-> the timeout. If the completion times out, we'll assume the problem was
-> that the IPC_STATUS_BUSY bit was still set, but if the status bit is
-> cleared in the meantime we know that we hit some scheduling delay and we
-> should just check the error bit.
+> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Closes: https://lore.kernel.org/r/ZPjdZ3xNmBEBvNiS@smile.fi.intel.com
 
-Hi,
+This looks somewhat unusual way to tag it. I'd just drop the Closes tag 
+as the email list is not a bug tracter.
 
-I don't understand the intent here. What prevents IPC_STATUS_BUSY from 
-changing right after you've read it in ipc_read_status(scu)? Doesn't that 
-end you exactly into the same situation where the returned value is stale 
-so I cannot see how this fixes anything, at best it just plays around the 
-race window that seems to still be there after this fix?
+Other than that,
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
 -- 
  i.
 
-
 > Cc: Prashant Malani <pmalani@chromium.org>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Fixes: ed12f295bfd5 ("ipc: Added support for IPC interrupt mode")
+> Fixes: f57fa18583f5 ("platform/x86: intel_scu_ipc: Introduce new SCU IPC API")
 > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  drivers/platform/x86/intel_scu_ipc.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/intel_scu_ipc.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
 > diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-> index 4c774ee8bb1b..299c15312acb 100644
+> index 299c15312acb..3271f81a9c00 100644
 > --- a/drivers/platform/x86/intel_scu_ipc.c
 > +++ b/drivers/platform/x86/intel_scu_ipc.c
-> @@ -248,10 +248,12 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
->  {
->  	int status;
->  
-> -	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT))
-> -		return -ETIMEDOUT;
-> +	wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT);
->  
->  	status = ipc_read_status(scu);
-> +	if (status & IPC_STATUS_BUSY)
-> +		return -ETIMEDOUT;
-> +
->  	if (status & IPC_STATUS_ERR)
->  		return -EIO;
->  
+> @@ -443,7 +443,6 @@ int intel_scu_ipc_dev_simple_command(struct intel_scu_ipc_dev *scu, int cmd,
+>  		mutex_unlock(&ipclock);
+>  		return -ENODEV;
+>  	}
+> -	scu = ipcdev;
+>  	cmdval = sub << 12 | cmd;
+>  	ipc_command(scu, cmdval);
+>  	err = intel_scu_ipc_check_status(scu);
 > 
+--8323329-769386324-1694789146=:2347--
