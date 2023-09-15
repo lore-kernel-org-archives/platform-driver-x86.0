@@ -2,154 +2,253 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 031ADEED600
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Sep 2023 14:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2639DEED617
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Sep 2023 16:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229921AbjIOO6U (ORCPT
+        id S234228AbjIOQXX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Sep 2023 10:58:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34120 "EHLO
+        Fri, 15 Sep 2023 12:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229568AbjIOO6U (ORCPT
+        with ESMTP id S234332AbjIOQWv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Sep 2023 10:58:20 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5305C1BE6;
-        Fri, 15 Sep 2023 07:58:15 -0700 (PDT)
+        Fri, 15 Sep 2023 12:22:51 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ACDFAC;
+        Fri, 15 Sep 2023 09:22:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694789895; x=1726325895;
+  t=1694794966; x=1726330966;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=2z/dkyd5Stib+6LmzNwLg0OjKOGPr/1NjgAbwJkJ+88=;
-  b=AfhE7lNDdF3FlEoqq0xiNx9/fJURdKFkr8i3Rw846Dih00TedPbpqVMz
-   dM6QLshuOVCvrYPLA/UmIFcRHydkMTnysFH4N/70OYinddO4wzWNHqGBv
-   idVF89RQtrhCoPf9fLfqyopXAr7Yqg+ZLLToQzD0My+qW8oiyMjAfdV7n
-   dYPgYA51GGqvFut014hhXfEv6TFinobMtIih653cmXY9Sj5mnpGDEmmBh
-   IH3Z7S0D6fUaBkU/TZcdw+eqr4f33chkdIozWpkN3q307riZfbQjHjE8N
-   3O6Dd6HBvPzN/V/ROKEVfmA9zrN7DdyWqgMXDOr2niwdDc1gaKM4HbgDY
+  bh=pg5Qfsfw4EoHhGK5PwUoF4RZdbDdImVbr3P2mO/lLhU=;
+  b=XDLYtxnNHb8sI4DP4dOSrp7voPG6MSUQtqvMrcAIH7nh1fjCcuQ277ng
+   X+b3Kxgka//bbk7VUVjmGVVimoIk9MyNBFPHTYPMNup21poSY+5vuke3g
+   2SazdlB8TItkjujLId9k/K83fPaiI18QkuZNJpG58PoGk9p8Mtxaqymgw
+   tvn0vRDW5H3wIOsYgAMWC/VIVmSDhosvoEnIWEHni8o9II4zIarUBxWPm
+   UEbCPSg+ihNDj6e7/LWgDz16Iqgjda9eiuXcF3FZJqmvceBXvZ84XW+dE
+   iKzyDrw+lwML75ufM5PhJ5JFz3K521FqhlTVwSqthR7h8RY0q6aeWYvcy
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="410204205"
+X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="383111975"
 X-IronPort-AV: E=Sophos;i="6.02,149,1688454000"; 
-   d="scan'208";a="410204205"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 07:58:13 -0700
+   d="scan'208";a="383111975"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 09:18:38 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="1075826203"
+X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="991892255"
 X-IronPort-AV: E=Sophos;i="6.02,149,1688454000"; 
-   d="scan'208";a="1075826203"
+   d="scan'208";a="991892255"
 Received: from srdoo-mobl1.ger.corp.intel.com ([10.252.38.99])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 07:58:01 -0700
-Date:   Fri, 15 Sep 2023 17:57:59 +0300 (EEST)
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 09:18:34 -0700
+Date:   Fri, 15 Sep 2023 19:18:31 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Fernando Eckhardt Valle <fevalle@ipt.br>
 cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Pearson <mpearson-lenovo@squebb.ca>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Pearson <markpearson@lenovo.com>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v1 2/2] platform/x86: think-lmi: Use strreplace() to
- replace a character by nul
-In-Reply-To: <20230913092701.440959-2-andriy.shevchenko@linux.intel.com>
-Message-ID: <227454d0-e33a-179c-b4df-1f486136ca6@linux.intel.com>
-References: <20230913092701.440959-1-andriy.shevchenko@linux.intel.com> <20230913092701.440959-2-andriy.shevchenko@linux.intel.com>
+        Mark Pearson <mpearson-lenovo@squebb.ca>, corbet@lwn.net,
+        hmh@hmh.eng.br, markgross@kernel.org, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: sysfs interface to
+ auxmac
+In-Reply-To: <20230915123136.4286-1-fevalle@ipt.br>
+Message-ID: <97ac516a-5d9f-f58d-2313-d7d3453f58cb@linux.intel.com>
+References: <20230915123136.4286-1-fevalle@ipt.br>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-2140016275-1694789883=:2347"
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, 15 Sep 2023, Fernando Eckhardt Valle wrote:
 
---8323329-2140016275-1694789883=:2347
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
-On Wed, 13 Sep 2023, Andy Shevchenko wrote:
-
-> We can replace
-> 	p = strchrnul(str, '$OLD');
-> 	*p = '\0';
-> with
-> 	strreplace(str, '$OLD', '\0');
-> that does the compatible modification without a need of the temporary variable.
+> Newer Thinkpads have a feature called Mac Address Passthrough.
+> This patch provides a sysfs interface that userspace can use
+> to get this auxiliary mac address.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Changes in v2:
+> - Added documentation
+> - All handling of the auxmac value is done in the _init function.
+> 
+> Signed-off-by: Fernando Eckhardt Valle <fevalle@ipt.br>
 > ---
->  drivers/platform/x86/think-lmi.c | 19 ++++---------------
->  1 file changed, 4 insertions(+), 15 deletions(-)
+>  .../admin-guide/laptops/thinkpad-acpi.rst     | 20 +++++
+>  drivers/platform/x86/thinkpad_acpi.c          | 78 +++++++++++++++++++
+>  2 files changed, 98 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index 94a3c7a74bc4..2f20fafe7f55 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -198,14 +198,6 @@ static struct think_lmi tlmi_priv;
->  static struct class *fw_attr_class;
->  static DEFINE_MUTEX(tlmi_mutex);
+> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> index e27a1c3f6..6207c363f 100644
+> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> @@ -53,6 +53,7 @@ detailed description):
+>  	- Lap mode sensor
+>  	- Setting keyboard language
+>  	- WWAN Antenna type
+> +	- Auxmac
 >  
-> -/* ------ Utility functions ------------*/
-> -/* Strip out CR if one is present */
-> -static void strip_cr(char *str)
-> -{
-> -	char *p = strchrnul(str, '\n');
-> -	*p = '\0';
-> -}
-> -
->  /* Convert BIOS WMI error string to suitable error code */
->  static int tlmi_errstr_to_err(const char *errstr)
->  {
-> @@ -411,7 +403,7 @@ static ssize_t current_password_store(struct kobject *kobj,
+>  A compatibility table by model and feature is maintained on the web
+>  site, http://ibm-acpi.sf.net/. I appreciate any success or failure
+> @@ -1511,6 +1512,25 @@ Currently 2 antenna types are supported as mentioned below:
+>  The property is read-only. If the platform doesn't have support the sysfs
+>  class is not created.
 >  
->  	strscpy(setting->password, buf, setting->maxlen);
->  	/* Strip out CR if one is present, setting password won't work if it is present */
-> -	strip_cr(setting->password);
-> +	strreplace(setting->password, '\n', '\0');
->  	return count;
->  }
+> +Auxmac
+> +------
+> +
+> +sysfs: auxmac
+> +
+> +Some newer Thinkpads have a feature called MAC Address Passthrough. This
+> +feature is implemented by the system firmware to provide a system unique MAC,
+> +that can override a dock or USB ethernet dongle MAC, when connected to a
+> +network. This property enables user-space to easily determine the MAC address
+> +if the feature is enabled.
+> +
+> +The values of this auxiliary MAC are:
+> +
+> +        cat /sys/devices/platform/thinkpad_acpi/auxmac
+> +
+> +If the feature is disabled, the value will be 'disabled'.
+> +
+> +This property is read-only.
+> +
+>  Adaptive keyboard
+>  -----------------
 >  
-> @@ -921,7 +913,7 @@ static ssize_t display_name_show(struct kobject *kobj, struct kobj_attribute *at
->  static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
->  {
->  	struct tlmi_attr_setting *setting = to_tlmi_attr_setting(kobj);
-> -	char *item, *value, *p;
-> +	char *item, *value;
->  	int ret;
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index d70c89d32..05cc3a1e2 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -10785,6 +10785,79 @@ static struct ibm_struct dprc_driver_data = {
+>  	.name = "dprc",
+>  };
 >  
->  	ret = tlmi_setting(setting->index, &item, LENOVO_BIOS_SETTING_GUID);
-> @@ -934,8 +926,7 @@ static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *a
->  		ret = -EINVAL;
->  	else {
->  		/* On Workstations remove the Options part after the value */
-> -		p = strchrnul(value, ';');
-> -		*p = '\0';
-> +		strreplace(value, ';', '\0');
->  		ret = sysfs_emit(buf, "%s\n", value + 1);
->  	}
->  	kfree(item);
-> @@ -1418,7 +1409,6 @@ static int tlmi_analyze(void)
->  	for (i = 0; i < TLMI_SETTINGS_COUNT; ++i) {
->  		struct tlmi_attr_setting *setting;
->  		char *item = NULL;
-> -		char *p;
->  
->  		tlmi_priv.setting[i] = NULL;
->  		ret = tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GUID);
-> @@ -1435,8 +1425,7 @@ static int tlmi_analyze(void)
->  		strreplace(item, '/', '\\');
->  
->  		/* Remove the value part */
-> -		p = strchrnul(item, ',');
-> -		*p = '\0';
-> +		strreplace(item, ',', '\0');
->  
->  		/* Create a setting entry */
->  		setting = kzalloc(sizeof(*setting), GFP_KERNEL);
-> 
+> +/*
+> + * Auxmac
+> + *
+> + * This auxiliary mac address is enabled in the bios through the
+> + * Mac Address Passthrough feature. In most cases, there are three
+> + * possibilities: Internal Mac, Second Mac, and disabled.
+> + *
+> + */
+> +
+> +#define AUXMAC_LEN 12
+> +#define AUXMAC_START 9
+> +#define AUXMAC_STRLEN 22
+> +static char auxmac[AUXMAC_LEN];
+> +
+> +static int auxmac_init(struct ibm_init_struct *iibm)
+> +{
+> +	acpi_status status;
+> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	union acpi_object *obj;
+> +
+> +	status = acpi_evaluate_object(NULL, "\\MACA", NULL, &buffer);
+> +
+> +	if (ACPI_FAILURE(status))
+> +		return -ENODEV;
+> +
+> +	obj = (union acpi_object *)buffer.pointer;
+> +
+> +	if (obj->type != ACPI_TYPE_STRING || obj->string.length != AUXMAC_STRLEN) {
+> +		pr_info("Invalid buffer for mac addr passthrough.\n");
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+MAC address
+
+> +		goto auxmacinvalid;
+> +	}
+> +
+> +	if (strncmp(obj->string.pointer + 0x8, "#", 1) != 0 ||
+> +	    strncmp(obj->string.pointer + 0x15, "#", 1) != 0) {
+
+Why use strncmp with (..., 1)? These offsets should defines above and not 
+use literals.
+
+> +		pr_info("Invalid header for mac addr passthrough.\n");
+
+MAC address
+
+> +		goto auxmacinvalid;
+> +	}
+> +
+> +	if (strncmp(obj->string.pointer + 0x9, "XXXXXXXXXXXX", AUXMAC_LEN) == 0)
+
+Why you're not using AUXMAC_START here?
+
+It's also bit confusing that some of the offset are hex and some non-hex 
+numbers. 
+
+> +		memcpy(auxmac, "disabled", 9);
+
+Don't use memcpy() for copying a string.
+
+> +	else
+> +		memcpy(auxmac, obj->string.pointer + AUXMAC_START, AUXMAC_LEN);
+
+What about the termination of auxmac? It's given 
+
+> +
+> +	kfree(obj);
+> +	return 0;
+> +
+> +auxmacinvalid:
+> +	kfree(obj);
+> +	memcpy(auxmac, "unavailable", 11);
+
+Again, don't use memcpy() to copy a string. You even got it wrong here 
+compared with the other case where you copied also the zero terminator.
+
+> +	return 0;
+> +}
+> +
+> +static struct ibm_struct auxmac_data = {
+> +	.name = "auxmac",
+> +};
+> +
+> +static ssize_t auxmac_show(struct device *dev,
+> +			   struct device_attribute *attr,
+> +			   char *buf)
+> +{
+> +	return sysfs_emit(buf, "%s\n", auxmac);
+
+This requires proper termination for the string but you didn't ensure it 
+above.
 
 -- 
  i.
 
---8323329-2140016275-1694789883=:2347--
+> +}
+> +static DEVICE_ATTR_RO(auxmac);
+> +
+> +static struct attribute *auxmac_attributes[] = {
+> +	&dev_attr_auxmac.attr,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group auxmac_attr_group = {
+> +	.attrs = auxmac_attributes,
+> +};
+> +
+>  /* --------------------------------------------------------------------- */
+>  
+>  static struct attribute *tpacpi_driver_attributes[] = {
+> @@ -10843,6 +10916,7 @@ static const struct attribute_group *tpacpi_groups[] = {
+>  	&proxsensor_attr_group,
+>  	&kbdlang_attr_group,
+>  	&dprc_attr_group,
+> +	&auxmac_attr_group,
+>  	NULL,
+>  };
+>  
+> @@ -11414,6 +11488,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
+>  		.init = tpacpi_dprc_init,
+>  		.data = &dprc_driver_data,
+>  	},
+> +	{
+> +		.init = auxmac_init,
+> +		.data = &auxmac_data,
+> +	},
+>  };
+>  
+>  static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
+> 
+
