@@ -2,253 +2,141 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2639DEED617
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5591CEED61A
 	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Sep 2023 16:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234228AbjIOQXX (ORCPT
+        id S234664AbjIOQXY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Sep 2023 12:23:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52532 "EHLO
+        Fri, 15 Sep 2023 12:23:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234332AbjIOQWv (ORCPT
+        with ESMTP id S229445AbjIOQWw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Sep 2023 12:22:51 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ACDFAC;
-        Fri, 15 Sep 2023 09:22:46 -0700 (PDT)
+        Fri, 15 Sep 2023 12:22:52 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43254AF;
+        Fri, 15 Sep 2023 09:22:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694794966; x=1726330966;
+  t=1694794967; x=1726330967;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=pg5Qfsfw4EoHhGK5PwUoF4RZdbDdImVbr3P2mO/lLhU=;
-  b=XDLYtxnNHb8sI4DP4dOSrp7voPG6MSUQtqvMrcAIH7nh1fjCcuQ277ng
-   X+b3Kxgka//bbk7VUVjmGVVimoIk9MyNBFPHTYPMNup21poSY+5vuke3g
-   2SazdlB8TItkjujLId9k/K83fPaiI18QkuZNJpG58PoGk9p8Mtxaqymgw
-   tvn0vRDW5H3wIOsYgAMWC/VIVmSDhosvoEnIWEHni8o9II4zIarUBxWPm
-   UEbCPSg+ihNDj6e7/LWgDz16Iqgjda9eiuXcF3FZJqmvceBXvZ84XW+dE
-   iKzyDrw+lwML75ufM5PhJ5JFz3K521FqhlTVwSqthR7h8RY0q6aeWYvcy
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="383111975"
+  bh=gZr9jiChR+PI/11CHpgMrz1spTSHcnF3wv8jDHSpulI=;
+  b=ITi63aVg4C7WDxIpV7PX7EENe6+PJyq0qRUYiw44GUXhtPA6RBibS7Fn
+   uP/eo8yFGuNcVcdJUad8m4NflTbyMLFRfbdNhUK+EJnK9GoXL2qGGEbZ5
+   Lwry5ODgHrhja2XwDMiu8/NSbH2YJSYNdq+JkWUR1WsvR8nOVJSNc95RG
+   VWi1VR+B8TGbL7+GsnfIAJtOJbPBUPVVTkTnGvlAMKsxFscjNiCToUnOf
+   xNxl8SogTQ2kPBerkZh8m54T0CVRGAiViNARPTB0D1J7c4XoiC4kLACHw
+   2bMwAZWmnYHLbDpxow3g7TdyasIDCiM/f7b6q6WRcj8KhMVruV/2ae9S1
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="465647686"
 X-IronPort-AV: E=Sophos;i="6.02,149,1688454000"; 
-   d="scan'208";a="383111975"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 09:18:38 -0700
+   d="scan'208";a="465647686"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 09:22:46 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="991892255"
+X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="888277863"
 X-IronPort-AV: E=Sophos;i="6.02,149,1688454000"; 
-   d="scan'208";a="991892255"
+   d="scan'208";a="888277863"
 Received: from srdoo-mobl1.ger.corp.intel.com ([10.252.38.99])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 09:18:34 -0700
-Date:   Fri, 15 Sep 2023 19:18:31 +0300 (EEST)
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 09:22:07 -0700
+Date:   Fri, 15 Sep 2023 19:22:40 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Fernando Eckhardt Valle <fevalle@ipt.br>
-cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Pearson <mpearson-lenovo@squebb.ca>, corbet@lwn.net,
-        hmh@hmh.eng.br, markgross@kernel.org, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: sysfs interface to
- auxmac
-In-Reply-To: <20230915123136.4286-1-fevalle@ipt.br>
-Message-ID: <97ac516a-5d9f-f58d-2313-d7d3453f58cb@linux.intel.com>
-References: <20230915123136.4286-1-fevalle@ipt.br>
+To:     Jithu Joseph <jithu.joseph@intel.com>
+cc:     hdegoede@redhat.com, markgross@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, rostedt@goodmis.org,
+        ashok.raj@intel.com, tony.luck@intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        patches@lists.linux.dev, ravi.v.shankar@intel.com,
+        pengfei.xu@intel.com
+Subject: Re: [PATCH 01/10] platform/x86/intel/ifs: Store IFS generation
+ number
+In-Reply-To: <20230913183348.1349409-2-jithu.joseph@intel.com>
+Message-ID: <e7f8136d-d07a-1668-2667-d2836c7112a@linux.intel.com>
+References: <20230913183348.1349409-1-jithu.joseph@intel.com> <20230913183348.1349409-2-jithu.joseph@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 15 Sep 2023, Fernando Eckhardt Valle wrote:
+On Wed, 13 Sep 2023, Jithu Joseph wrote:
 
-> Newer Thinkpads have a feature called Mac Address Passthrough.
-> This patch provides a sysfs interface that userspace can use
-> to get this auxiliary mac address.
+> IFS generation number is reported via MSR_INTEGRITY_CAPS.
+
+Please use more characters per line, the limit is 72 characters.
+
+> As IFS support gets added to newer CPUs, some differences
+> are expected during IFS image loading and test flows.
 > 
-> Changes in v2:
-> - Added documentation
-> - All handling of the auxmac value is done in the _init function.
+> Define MSR bitmasks to extract and store the generation in
+> driver data, so that driver can modify its MSR interaction
+> appropriately.
 > 
-> Signed-off-by: Fernando Eckhardt Valle <fevalle@ipt.br>
+> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> Tested-by: Pengfei Xu <pengfei.xu@intel.com>
 > ---
->  .../admin-guide/laptops/thinkpad-acpi.rst     | 20 +++++
->  drivers/platform/x86/thinkpad_acpi.c          | 78 +++++++++++++++++++
->  2 files changed, 98 insertions(+)
+>  arch/x86/include/asm/msr-index.h      | 2 ++
+>  drivers/platform/x86/intel/ifs/ifs.h  | 2 ++
+>  drivers/platform/x86/intel/ifs/core.c | 2 ++
+>  3 files changed, 6 insertions(+)
 > 
-> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> index e27a1c3f6..6207c363f 100644
-> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> @@ -53,6 +53,7 @@ detailed description):
->  	- Lap mode sensor
->  	- Setting keyboard language
->  	- WWAN Antenna type
-> +	- Auxmac
->  
->  A compatibility table by model and feature is maintained on the web
->  site, http://ibm-acpi.sf.net/. I appreciate any success or failure
-> @@ -1511,6 +1512,25 @@ Currently 2 antenna types are supported as mentioned below:
->  The property is read-only. If the platform doesn't have support the sysfs
->  class is not created.
->  
-> +Auxmac
-> +------
-> +
-> +sysfs: auxmac
-> +
-> +Some newer Thinkpads have a feature called MAC Address Passthrough. This
-> +feature is implemented by the system firmware to provide a system unique MAC,
-> +that can override a dock or USB ethernet dongle MAC, when connected to a
-> +network. This property enables user-space to easily determine the MAC address
-> +if the feature is enabled.
-> +
-> +The values of this auxiliary MAC are:
-> +
-> +        cat /sys/devices/platform/thinkpad_acpi/auxmac
-> +
-> +If the feature is disabled, the value will be 'disabled'.
-> +
-> +This property is read-only.
-> +
->  Adaptive keyboard
->  -----------------
->  
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index d70c89d32..05cc3a1e2 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -10785,6 +10785,79 @@ static struct ibm_struct dprc_driver_data = {
->  	.name = "dprc",
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> index 1d111350197f..a71a86a01488 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -222,6 +222,8 @@
+>  #define MSR_INTEGRITY_CAPS_ARRAY_BIST          BIT(MSR_INTEGRITY_CAPS_ARRAY_BIST_BIT)
+>  #define MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT	4
+>  #define MSR_INTEGRITY_CAPS_PERIODIC_BIST	BIT(MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT)
+> +#define MSR_INTEGRITY_CAPS_SAF_GEN_REV_SHIFT	9
+> +#define MSR_INTEGRITY_CAPS_SAF_GEN_REV_MASK	(0x3ull << MSR_INTEGRITY_CAPS_SAF_GEN_REV_SHIFT)
+
+GENMASK_ULL(), don't add _SHIFT at all as FIELD_GET/PREP() will handle 
+it for you.
+
+>  #define MSR_LBR_NHM_FROM		0x00000680
+>  #define MSR_LBR_NHM_TO			0x000006c0
+> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+> index 93191855890f..d666aeed20fc 100644
+> --- a/drivers/platform/x86/intel/ifs/ifs.h
+> +++ b/drivers/platform/x86/intel/ifs/ifs.h
+> @@ -229,6 +229,7 @@ struct ifs_test_caps {
+>   * @status: it holds simple status pass/fail/untested
+>   * @scan_details: opaque scan status code from h/w
+>   * @cur_batch: number indicating the currently loaded test file
+> + * @generation: IFS test generation enumerated by hardware
+>   */
+>  struct ifs_data {
+>  	int	loaded_version;
+> @@ -238,6 +239,7 @@ struct ifs_data {
+>  	int	status;
+>  	u64	scan_details;
+>  	u32	cur_batch;
+> +	u32	generation;
 >  };
 >  
-> +/*
-> + * Auxmac
-> + *
-> + * This auxiliary mac address is enabled in the bios through the
-> + * Mac Address Passthrough feature. In most cases, there are three
-> + * possibilities: Internal Mac, Second Mac, and disabled.
-> + *
-> + */
-> +
-> +#define AUXMAC_LEN 12
-> +#define AUXMAC_START 9
-> +#define AUXMAC_STRLEN 22
-> +static char auxmac[AUXMAC_LEN];
-> +
-> +static int auxmac_init(struct ibm_init_struct *iibm)
-> +{
-> +	acpi_status status;
-> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-> +	union acpi_object *obj;
-> +
-> +	status = acpi_evaluate_object(NULL, "\\MACA", NULL, &buffer);
-> +
-> +	if (ACPI_FAILURE(status))
-> +		return -ENODEV;
-> +
-> +	obj = (union acpi_object *)buffer.pointer;
-> +
-> +	if (obj->type != ACPI_TYPE_STRING || obj->string.length != AUXMAC_STRLEN) {
-> +		pr_info("Invalid buffer for mac addr passthrough.\n");
+>  struct ifs_work {
+> diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
+> index 306f886b52d2..88d84aad9334 100644
+> --- a/drivers/platform/x86/intel/ifs/core.c
+> +++ b/drivers/platform/x86/intel/ifs/core.c
+> @@ -94,6 +94,8 @@ static int __init ifs_init(void)
+>  	for (i = 0; i < IFS_NUMTESTS; i++) {
+>  		if (!(msrval & BIT(ifs_devices[i].test_caps->integrity_cap_bit)))
+>  			continue;
+> +		ifs_devices[i].rw_data.generation = (msrval & MSR_INTEGRITY_CAPS_SAF_GEN_REV_MASK)
+> +							>> MSR_INTEGRITY_CAPS_SAF_GEN_REV_SHIFT;
 
-MAC address
+FIELD_GET(), don't forget to make sure use have the include for it.
 
-> +		goto auxmacinvalid;
-> +	}
-> +
-> +	if (strncmp(obj->string.pointer + 0x8, "#", 1) != 0 ||
-> +	    strncmp(obj->string.pointer + 0x15, "#", 1) != 0) {
-
-Why use strncmp with (..., 1)? These offsets should defines above and not 
-use literals.
-
-> +		pr_info("Invalid header for mac addr passthrough.\n");
-
-MAC address
-
-> +		goto auxmacinvalid;
-> +	}
-> +
-> +	if (strncmp(obj->string.pointer + 0x9, "XXXXXXXXXXXX", AUXMAC_LEN) == 0)
-
-Why you're not using AUXMAC_START here?
-
-It's also bit confusing that some of the offset are hex and some non-hex 
-numbers. 
-
-> +		memcpy(auxmac, "disabled", 9);
-
-Don't use memcpy() for copying a string.
-
-> +	else
-> +		memcpy(auxmac, obj->string.pointer + AUXMAC_START, AUXMAC_LEN);
-
-What about the termination of auxmac? It's given 
-
-> +
-> +	kfree(obj);
-> +	return 0;
-> +
-> +auxmacinvalid:
-> +	kfree(obj);
-> +	memcpy(auxmac, "unavailable", 11);
-
-Again, don't use memcpy() to copy a string. You even got it wrong here 
-compared with the other case where you copied also the zero terminator.
-
-> +	return 0;
-> +}
-> +
-> +static struct ibm_struct auxmac_data = {
-> +	.name = "auxmac",
-> +};
-> +
-> +static ssize_t auxmac_show(struct device *dev,
-> +			   struct device_attribute *attr,
-> +			   char *buf)
-> +{
-> +	return sysfs_emit(buf, "%s\n", auxmac);
-
-This requires proper termination for the string but you didn't ensure it 
-above.
+>  		ret = misc_register(&ifs_devices[i].misc);
+>  		if (ret)
+>  			goto err_exit;
+> 
 
 -- 
  i.
-
-> +}
-> +static DEVICE_ATTR_RO(auxmac);
-> +
-> +static struct attribute *auxmac_attributes[] = {
-> +	&dev_attr_auxmac.attr,
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group auxmac_attr_group = {
-> +	.attrs = auxmac_attributes,
-> +};
-> +
->  /* --------------------------------------------------------------------- */
->  
->  static struct attribute *tpacpi_driver_attributes[] = {
-> @@ -10843,6 +10916,7 @@ static const struct attribute_group *tpacpi_groups[] = {
->  	&proxsensor_attr_group,
->  	&kbdlang_attr_group,
->  	&dprc_attr_group,
-> +	&auxmac_attr_group,
->  	NULL,
->  };
->  
-> @@ -11414,6 +11488,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
->  		.init = tpacpi_dprc_init,
->  		.data = &dprc_driver_data,
->  	},
-> +	{
-> +		.init = auxmac_init,
-> +		.data = &auxmac_data,
-> +	},
->  };
->  
->  static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
-> 
 
