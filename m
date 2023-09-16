@@ -2,83 +2,99 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E726CCD37AA
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Sep 2023 21:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF17FCD37BB
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Sep 2023 11:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237272AbjIOVvK (ORCPT
+        id S239347AbjIPLPP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Sep 2023 17:51:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57226 "EHLO
+        Sat, 16 Sep 2023 07:15:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237309AbjIOVun (ORCPT
+        with ESMTP id S239238AbjIPLOu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Sep 2023 17:50:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C2C8CB8
-        for <platform-driver-x86@vger.kernel.org>; Fri, 15 Sep 2023 14:49:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694814586;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ZL/1Hq1b3b3daVb1Bhc+/op8bOmf0NPB7Nnk/wghOZI=;
-        b=YeVhHY0++gV8Gt8nuxQKzCQj6G4HaXl7niQJNIQdtzVHVdeesZdWJLxPKzUc6cEcX2d7Hg
-        wDj5KyL2z2sF4AbIH3qw5bpjM9eZ/g7YSS7/IGEIc3Q/A6Zv3Bn+rxpHLrYlpe9xYILxjH
-        iDA1N1UjaWooZd9QB36Kzni/UpKExV0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-467-kxei13g2MryGW-uX8V5IiA-1; Fri, 15 Sep 2023 17:49:43 -0400
-X-MC-Unique: kxei13g2MryGW-uX8V5IiA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BBA5A81D88F;
-        Fri, 15 Sep 2023 21:49:42 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 15A9640C6EA8;
-        Fri, 15 Sep 2023 21:49:41 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86: x86-android-tablets: Fix Lenovo Yoga Tablet 2 830F/L vs 1050F/L detection
-Date:   Fri, 15 Sep 2023 23:49:33 +0200
-Message-ID: <20230915214933.62595-1-hdegoede@redhat.com>
+        Sat, 16 Sep 2023 07:14:50 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C53E01A8;
+        Sat, 16 Sep 2023 04:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694862876; x=1726398876;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=6LByGd6BJ/KoBVbB5quf9dys3O4g3Rte15yl6U221g8=;
+  b=MOal2r9zJrpGbYM4CJ1+UPByaY8s6RQuqvymjOTESOkd8LNJ48jKr4Fp
+   w5NAg82U8+b3tLewesd//ihzuCMz2PWIFz+PNn3lSLnTN6SmqixQ9BxES
+   KPLHoPu9zCyrSgCqilkOkt+rAGeARUfBisuSAYhP0lsNRgxBJ14A5j3p5
+   zSiHiDnH7nW3SMI9lkEPzWZ20GVl0ooIQodE/hFjVJ/KQ9AFnQOrRe3hK
+   A5IHNjax3o5rV8XqlHt/8kFnkX750k/c1LwtnGdF+BpbRnYLxl3f46OI7
+   +C6gjT6BbYF/vBwei79z5pmDOyC0RqcIPz4wbhbwh0Y1MU3xf62kxkiKW
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="359655880"
+X-IronPort-AV: E=Sophos;i="6.02,152,1688454000"; 
+   d="scan'208";a="359655880"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2023 04:14:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="869045162"
+X-IronPort-AV: E=Sophos;i="6.02,152,1688454000"; 
+   d="scan'208";a="869045162"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2023 04:14:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qhTFX-0000000Gg9M-2NuF;
+        Sat, 16 Sep 2023 14:14:07 +0300
+Date:   Sat, 16 Sep 2023 14:14:07 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, patches@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Prashant Malani <pmalani@chromium.org>
+Subject: Re: [PATCH v4 3/4] platform/x86: intel_scu_ipc: Don't override scu
+ in intel_scu_ipc_dev_simple_command()
+Message-ID: <ZQWN/xpN2801loCo@smile.fi.intel.com>
+References: <20230913212723.3055315-1-swboyd@chromium.org>
+ <20230913212723.3055315-4-swboyd@chromium.org>
+ <58e817b0-1872-6ff1-58bb-1aeeb572361@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+In-Reply-To: <58e817b0-1872-6ff1-58bb-1aeeb572361@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-gpio_crystalcove pin 10 is already in input mode and passing GPIOD_IN
-when requesting the GPIO changes its pull-up/-down settings causing
-the 830F/L to get misdetected as 1050F/L.
+On Fri, Sep 15, 2023 at 05:45:42PM +0300, Ilpo Järvinen wrote:
+> On Wed, 13 Sep 2023, Stephen Boyd wrote:
+> 
+> > Andy discovered this bug during patch review. The 'scu' argument to this
+> > function shouldn't be overridden by the function itself. It doesn't make
+> > any sense. Looking at the commit history, we see that commit
+> > f57fa18583f5 ("platform/x86: intel_scu_ipc: Introduce new SCU IPC API")
+> > removed the setting of the scu to ipcdev in other functions, but not
+> > this one. That was an oversight. Remove this line so that we stop
+> > overriding the scu instance that is used by this function.
+> > 
+> > Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Closes: https://lore.kernel.org/r/ZPjdZ3xNmBEBvNiS@smile.fi.intel.com
+> 
+> This looks somewhat unusual way to tag it. I'd just drop the Closes tag 
+> as the email list is not a bug tracter.
 
-Switch to using GPIOD_ASIS when requesting the GPIO to fix
-the misdetection.
+This is a new requirement enforced by checkpatch.pl. If commit message has
+the Reported-by: tag it should have Closes: one as well.
 
-Fixes: 4014ae236b1d ("platform/x86: x86-android-tablets: Stop using gpiolib private APIs")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/x86-android-tablets/lenovo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
-index 904290526173..585f10a57810 100644
---- a/drivers/platform/x86/x86-android-tablets/lenovo.c
-+++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
-@@ -454,7 +454,7 @@ static int __init lenovo_yoga_tab2_830_1050_init_touchscreen(void)
- 
- 	/* Use PMIC GPIO 10 bootstrap pin to differentiate 830 vs 1050 */
- 	ret = x86_android_tablet_get_gpiod("gpio_crystalcove", 10, "yoga_bootstrap",
--					   false, GPIOD_IN, &gpiod);
-+					   false, GPIOD_ASIS, &gpiod);
- 	if (ret)
- 		return ret;
- 
 -- 
-2.41.0
+With Best Regards,
+Andy Shevchenko
+
 
