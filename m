@@ -2,104 +2,129 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A42C8C46CA1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Sep 2023 15:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C53CFC46CA1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Sep 2023 15:25:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231623AbjIRPT0 (ORCPT
+        id S230100AbjIRPYq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Sep 2023 11:19:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36936 "EHLO
+        Mon, 18 Sep 2023 11:24:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229816AbjIRPT0 (ORCPT
+        with ESMTP id S241385AbjIRPYp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Sep 2023 11:19:26 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 543C2172B
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Sep 2023 08:18:01 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-530fa34ab80so2827227a12.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Sep 2023 08:18:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google; t=1695050279; x=1695655079; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=P9zireYzfZqPvtmuSRJPvpYJD83Rj6yAr7QXhkyH79c=;
-        b=GFFjoodceEGHsL0oPmkU3LHvjt+cOLyt7b+zW+pVfKhdcMbnznFfprwGOZvTpBzcSE
-         3Rz/q/Ygnsb4HMdM+7qmw0bRvBPjOKlgA/qd9YzaBIg/YbKP45D5H/zVpsMCf13+hf53
-         tTkBLfp7I10j/cvxgF9CJECtv2+Isp7nZHMDY=
+        Mon, 18 Sep 2023 11:24:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68DB01738
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Sep 2023 08:20:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1695050409;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jZcw24QCuQMXb/c4Rnr0TGPs2LNccYyusLrFb0dmUGY=;
+        b=DWfiv7gceNkk2Y2zZAmfchUJvWIUGu8bYSW0Z75tCo19VxbNIxDE6pT548wXr5+CR0zkKB
+        3o3m/VYYQ8QPQzF/ScakIBKJAQO7QBa5h2zJU/1AgWSUqmd/Zs4ienrvQp0eqjD1NJqTU8
+        CyC8pguoqNiMzSJUgj9nUFV8tDFpzWo=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-197-qc37GLUrNTK-79TwiLME8A-1; Mon, 18 Sep 2023 09:19:20 -0400
+X-MC-Unique: qc37GLUrNTK-79TwiLME8A-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-94a355cf318so329799566b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Sep 2023 06:19:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695050279; x=1695655079;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1695043158; x=1695647958;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P9zireYzfZqPvtmuSRJPvpYJD83Rj6yAr7QXhkyH79c=;
-        b=aJ9F6WHQZgHKHwiIkhinp2cG1G6P1NfZY7+VtRpqVo/Mh/Ioxjn7n7LomKUE5ThOqU
-         32LAQZBWjhOPP0tZWxKac4NQhc+C8lKz6jiyg0qAK0mAqG4FLCh7oaYKD5kYDDqinLb7
-         7ckdCBeUV78WsroYy4EO3DQHpPOKFnCEnrmRGYyfkslzUTZuaqy6DF99PjZ1RKCz/sik
-         0XDbJofaPMle0yMOgSXsPFtrXU7/CxaSrO8gF6IgRhVahB3UBuke4uBvXf/tIWQXZBmP
-         xMWuXFyoxYX0lmmwukf1zOjwIkHOm8Tj+LgAabNvIu+0vJwJjg7HrQnDPoLg1O1w7Xvk
-         VjVw==
-X-Gm-Message-State: AOJu0YyMJ40kITMg4SdaC9TvCRCrXnyQj8LPOq2rN4V3E8I55ZgkE8uQ
-        YGe/hjjDLm69m6kCw5nkVqvovvWiMj2BrP9L1w4XrA==
-X-Google-Smtp-Source: AGHT+IG85HoCQwWQ+0t5nMcdQfG4+rFMbC0pjWDcLyJx5ppNu+YRsczWqfK45z60KXWJ0QobOv5rxA==
-X-Received: by 2002:a17:906:fe4a:b0:9a1:e0b1:e919 with SMTP id wz10-20020a170906fe4a00b009a1e0b1e919mr16662172ejb.4.1695048523437;
-        Mon, 18 Sep 2023 07:48:43 -0700 (PDT)
-Received: from [172.16.11.116] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id o15-20020a1709061d4f00b009a1e73f2b4bsm6555817ejh.48.2023.09.18.07.48.42
+        bh=jZcw24QCuQMXb/c4Rnr0TGPs2LNccYyusLrFb0dmUGY=;
+        b=d5apE9yTet/APKfYXAC/g8FnhVC81OiYf3Xu1OmSoI9iZEiKtQxfOca4TwTLXOyz4G
+         7iLAa4esRgb46AkBHa/VfeDbDsMOSnb/bkdjAmc3fPT6Yyg2MtLvrxeCCn0RQ9/5w1Aq
+         1N8ER+YwutGsWarsR+pv6nrLaRg/o8QZORzwPnJTVVypo8jVlwI5h1mVKCtaHNqxIYok
+         SQxLWGvkj7fbEVI8XOuPI9jLNXM1naszIT5YOhkw+MeCYev/yRNBuye7+jlWjWalr5t6
+         rhawuGL1o6x2O2HmBi01e9F0urjGxyc+8oLoFH0N81cut9y33TX6shbSOgA0JblUWPxB
+         TKuQ==
+X-Gm-Message-State: AOJu0YwRNvPRAwkXYB8AVCm4x1XDJVFU4MCP0W2C90wvKy8MLawxvamr
+        NXgacRe/1rbJLV7aYJk9TAQYB09A+tgpiXOummcjZarHBSsZJWLsascBHA+V15A780+jVWvc5wz
+        aHQJ0LgW4AvI3VZxpt38AQYJfQbIADVqLE6NnrUp34w==
+X-Received: by 2002:a17:906:768f:b0:9ad:fb23:21cf with SMTP id o15-20020a170906768f00b009adfb2321cfmr4324079ejm.15.1695043158332;
+        Mon, 18 Sep 2023 06:19:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHhi8aWcEBFbpdG7gGdedS12c+zgnSo2kuVB2V7Z1qWQ1Zc5ciYxnbAAXragmKcsTQcaF6PRA==
+X-Received: by 2002:a17:906:768f:b0:9ad:fb23:21cf with SMTP id o15-20020a170906768f00b009adfb2321cfmr4324060ejm.15.1695043157978;
+        Mon, 18 Sep 2023 06:19:17 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id r20-20020a170906365400b0099bd1a78ef5sm6433713ejb.74.2023.09.18.06.19.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Sep 2023 07:48:42 -0700 (PDT)
-Message-ID: <c6caae28-01fc-2354-6c7a-3f515a0e1402@rasmusvillemoes.dk>
-Date:   Mon, 18 Sep 2023 16:48:40 +0200
+        Mon, 18 Sep 2023 06:19:17 -0700 (PDT)
+Message-ID: <39b7e126-a01d-4c8f-a44c-8f72c292adbe@redhat.com>
+Date:   Mon, 18 Sep 2023 15:19:16 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH v1 2/2] platform/x86: think-lmi: Use strreplace() to
- replace a character by nul
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Pearson <mpearson-lenovo@squebb.ca>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mark Pearson <markpearson@lenovo.com>,
-        Mark Gross <markgross@kernel.org>
-References: <20230913092701.440959-1-andriy.shevchenko@linux.intel.com>
- <20230913092701.440959-2-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US, da
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-In-Reply-To: <20230913092701.440959-2-andriy.shevchenko@linux.intel.com>
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v3] platform/x86: thinkpad_acpi: Take mutex in
+ hotkey_resume
+Content-Language: en-US
+To:     Dennis Bonke <admin@dennisbonke.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>
+References: <20230913231829.192842-1-admin@dennisbonke.com>
+ <20230914130356.235912-1-admin@dennisbonke.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230914130356.235912-1-admin@dennisbonke.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 13/09/2023 11.27, Andy Shevchenko wrote:
+Hi Dennis,
 
-> @@ -921,7 +913,7 @@ static ssize_t display_name_show(struct kobject *kobj, struct kobj_attribute *at
->  static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+On 9/14/23 15:03, Dennis Bonke wrote:
+> hotkey_status_set expects the hotkey_mutex to be held.
+> It seems like it was missed here and that gives lockdep
+> warnings while resuming.
+> 
+> Fixes: 38831eaf7d4c ("platform/x86: thinkpad_acpi: use lockdep annotations")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+> Signed-off-by: Dennis Bonke <admin@dennisbonke.com>
+
+Thank you for your patch, I've applied this patch to my fixes
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
+
+Note I have dropped the "Cc: stable@..." tag, because the patch this fixes
+is not in the last stable release (6.5) so Cc: stable is not necessary.
+ 
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
+
+Regards,
+
+Hans
+
+
+
+
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index d70c89d32534..41584427dc32 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -4116,9 +4116,11 @@ static void hotkey_resume(void)
 >  {
->  	struct tlmi_attr_setting *setting = to_tlmi_attr_setting(kobj);
-> -	char *item, *value, *p;
-> +	char *item, *value;
->  	int ret;
+>  	tpacpi_disable_brightness_delay();
 >  
->  	ret = tlmi_setting(setting->index, &item, LENOVO_BIOS_SETTING_GUID);
-> @@ -934,8 +926,7 @@ static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *a
->  		ret = -EINVAL;
->  	else {
->  		/* On Workstations remove the Options part after the value */
-> -		p = strchrnul(value, ';');
-> -		*p = '\0';
-> +		strreplace(value, ';', '\0');
-
-So how do you know that the string contains at most one ';'? Same for
-all the other replacements. If that's not guaranteed, this is not at all
-equivalent.
-
-Or maybe the result is just used a normal string afterwards, and it
-doesn't matter at all how the content after the first ';' has been mangled?
-
-It's certainly not obvious to me that this is correct, but of course I
-know nothing about this code.
-
-Rasmus
+> +	mutex_lock(&hotkey_mutex);
+>  	if (hotkey_status_set(true) < 0 ||
+>  	    hotkey_mask_set(hotkey_acpi_mask) < 0)
+>  		pr_err("error while attempting to reset the event firmware interface\n");
+> +	mutex_unlock(&hotkey_mutex);
+>  
+>  	tpacpi_send_radiosw_update();
+>  	tpacpi_input_send_tabletsw();
 
