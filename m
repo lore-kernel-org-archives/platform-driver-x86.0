@@ -2,141 +2,86 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B92CD13D9
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Sep 2023 15:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F947C46CA1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Sep 2023 15:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229379AbjIRP1V (ORCPT
+        id S229570AbjIRPkf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Sep 2023 11:27:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55510 "EHLO
+        Mon, 18 Sep 2023 11:40:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231174AbjIRP1E (ORCPT
+        with ESMTP id S229472AbjIRPkb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Sep 2023 11:27:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 319A91BD0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Sep 2023 08:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1695050484;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZJxOEUwKq2KwnFmZk3pOWmt+ygYn9o53lf6vTBXs108=;
-        b=D4Imi09B/fF1/+JxI5wcuD68UmmMSAyj6kg2812w20HxsIDiX7iIGwn/Npj3px8kjvpmlb
-        JkqqgzNk8vTR/tJ5MdzxffiYK7LE/dXhPoFogEdcBfVyAUCIDBn3d5VTh7IUo6lAq/u7Y5
-        XvD59JF+4VuTFvw3d04yPF2UhEuUTFY=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-224-fz-Li2gYNDKVUUExHh72-w-1; Mon, 18 Sep 2023 09:21:05 -0400
-X-MC-Unique: fz-Li2gYNDKVUUExHh72-w-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-50309111618so1879221e87.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Sep 2023 06:21:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695043263; x=1695648063;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZJxOEUwKq2KwnFmZk3pOWmt+ygYn9o53lf6vTBXs108=;
-        b=iFcMPTqywl8twobR+MCC8HmDT3D7fkb+qnMRDMHSjUjkfqH/A2VQsLMN2AA3ZTdCop
-         ei+Z9cXorym581MZL3dpI8BQDdmXDnONrBDtZmsB5VOpWI9aIcxZiiBbFRgWA3Q3FnPw
-         RrDN+8ms6l6NwyMPOUVf1VmFq02Y4bAOM/aASH2p1/vIsbGXADHHEIdE8ivyurQHghO5
-         mUkcQWRLfs18X7uG7Vv/Jt7UPmMIawiXd0w7XHynvd4xt8X9oeFCr6uG9GKXvAID0ijV
-         ptNvqxCwsZAcESfMRx7eALs+vcrdhFfgEwaQVYvOkCjhrztZSk8t7IcIb12UEG/ETTJo
-         cv6A==
-X-Gm-Message-State: AOJu0Yz0EOuLkoht7EGJmOyU9wmY5haROMbMXFE1kOP1oBhUQ7v5UJVO
-        0buEepgDFnRIW5rnN49mGS6T5pHpi2ikFJ0Jp+uI8iyPv278yHkMXlnEOWlNmmjL6RmuDNeHwlw
-        1MlAGIwgQeVYidsxfOPlibbDC2eX7fgapKHe9fO7wdw==
-X-Received: by 2002:a19:7113:0:b0:500:9a45:62f with SMTP id m19-20020a197113000000b005009a45062fmr6427105lfc.8.1695043263248;
-        Mon, 18 Sep 2023 06:21:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEg3y8j6ulHCSsYRNzSopEL/zg2ePatS9CF1ypxa0pAhrRRg0cuUohYCdUZGe8vuUkbYRI1hg==
-X-Received: by 2002:a19:7113:0:b0:500:9a45:62f with SMTP id m19-20020a197113000000b005009a45062fmr6427097lfc.8.1695043262906;
-        Mon, 18 Sep 2023 06:21:02 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id l1-20020a056402028100b0052237dfa82fsm5973258edv.64.2023.09.18.06.21.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Sep 2023 06:21:02 -0700 (PDT)
-Message-ID: <37947c4f-abd1-afeb-ed5e-54e7a3aba28b@redhat.com>
-Date:   Mon, 18 Sep 2023 15:21:01 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 1/1] MAINTAINERS: Add myself into x86 platform driver
- maintainers
-Content-Language: en-US
-To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
+        Mon, 18 Sep 2023 11:40:31 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60AF5272A;
+        Mon, 18 Sep 2023 08:40:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695051627; x=1726587627;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UJy+Gr8DwxN6Yt79AOixDnkfqZv5y9oXSAuQ2/xs+a4=;
+  b=fHsmKqPjcf6ZIhdHGgLkY5QxY12iXb/ZzZ9Rd7y/FahX0o+nAHZCDmYi
+   Yj+iDsV/duUeSJr8vDId7cGADF6DRVeK86+3voByUTXMPAH2r6txXF2gX
+   TKm8MtSprom4KxKDwO1mCU1igH6xvcHhu9hlAzVanDYHIyf/lJx3nrQYm
+   cGCQrlN1PhX5W+h/uk57n9euzlnU0s5rlDTUybnwFr5eOr+vJNfbaRCpO
+   1Lg7D1eu13SgqrD1YWLZU2mfNj63P4VmeOn6x7Dxcq6EEUNfPMlVMrxdd
+   VH7/iwn4FKSv3I5luyAPr6WUNOMGlyE3lrz7fvZcUmS9WKfCDryFe7X0P
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="376969087"
+X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
+   d="scan'208";a="376969087"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 06:50:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="889062962"
+X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
+   d="scan'208";a="889062962"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 06:49:31 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qiEdd-00000009Lhi-1iQG;
+        Mon, 18 Sep 2023 16:50:09 +0300
+Date:   Mon, 18 Sep 2023 16:50:09 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Pearson <mpearson-lenovo@squebb.ca>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20230918102901.17669-1-ilpo.jarvinen@linux.intel.com>
- <20230918102901.17669-2-ilpo.jarvinen@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230918102901.17669-2-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mark Pearson <markpearson@lenovo.com>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v1 1/2] platform/x86: think-lmi: Replace kstrdup() +
+ strreplace() with kstrdup_and_replace()
+Message-ID: <ZQhVkb9XYvjd7GlJ@smile.fi.intel.com>
+References: <20230913092701.440959-1-andriy.shevchenko@linux.intel.com>
+ <77bde3cf-ca94-1cdb-53d8-39df22f8c551@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77bde3cf-ca94-1cdb-53d8-39df22f8c551@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 9/18/23 12:29, Ilpo Järvinen wrote:
-> Hans has been asking for another person to help as the maintainer of
-> the x86 platform driver because Mark has not been able to find time to
-> do that. I got asked for the task and have been reviewing the relevant
-> patches for a while now but lets make it more official by adding the
-> MAINTAINERS entries.
+On Mon, Sep 18, 2023 at 02:30:28PM +0200, Hans de Goede wrote:
+> On 9/13/23 11:27, Andy Shevchenko wrote:
+> > Replace open coded functionalify of kstrdup_and_replace() with a call.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Thank you for the patches, but this one does not apply
+> cleanly.
 
-Thank you for your patch, I've applied this patch to my fixes
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
+`git am -C1 ...` works for me.
 
-Note it will show up in my fixes branch once I've pushed my
-local branch there, which might take a while.
+> Can you please rebase the series on top of my latest review-hans branch ?
 
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
+But fine, no problem, I'm about to send a v2,
 
-Regards,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Hans
-
-
-
-> ---
->  MAINTAINERS | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 90f13281d297..b04cbcec521f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13617,6 +13617,7 @@ F:	drivers/net/ethernet/mellanox/mlxfw/
->  
->  MELLANOX HARDWARE PLATFORM SUPPORT
->  M:	Hans de Goede <hdegoede@redhat.com>
-> +M:	Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->  M:	Mark Gross <markgross@kernel.org>
->  M:	Vadim Pasternak <vadimp@nvidia.com>
->  L:	platform-driver-x86@vger.kernel.org
-> @@ -14211,6 +14212,7 @@ F:	drivers/platform/surface/surface_gpe.c
->  
->  MICROSOFT SURFACE HARDWARE PLATFORM SUPPORT
->  M:	Hans de Goede <hdegoede@redhat.com>
-> +M:	Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->  M:	Mark Gross <markgross@kernel.org>
->  M:	Maximilian Luz <luzmaximilian@gmail.com>
->  L:	platform-driver-x86@vger.kernel.org
-> @@ -23424,6 +23426,7 @@ F:	drivers/platform/x86/x86-android-tablets/
->  
->  X86 PLATFORM DRIVERS
->  M:	Hans de Goede <hdegoede@redhat.com>
-> +M:	Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->  M:	Mark Gross <markgross@kernel.org>
->  L:	platform-driver-x86@vger.kernel.org
->  S:	Maintained
 
