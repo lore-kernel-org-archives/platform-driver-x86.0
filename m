@@ -2,107 +2,233 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0064ECD13D2
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Sep 2023 16:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8D0C46CA1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Sep 2023 16:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229955AbjIRQcH (ORCPT
+        id S229934AbjIRQd6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Sep 2023 12:32:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52580 "EHLO
+        Mon, 18 Sep 2023 12:33:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229960AbjIRQb4 (ORCPT
+        with ESMTP id S229939AbjIRQdc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Sep 2023 12:31:56 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EB4430F1;
-        Mon, 18 Sep 2023 09:29:38 -0700 (PDT)
+        Mon, 18 Sep 2023 12:33:32 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7252C23CF4;
+        Mon, 18 Sep 2023 09:15:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695054577; x=1726590577;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=mUsyv642lSfHpOACGU5mHLtbltxVExA86+s11mm3p3o=;
-  b=gIFbJ5VFhy+/rNqm5hU3RxtTt5l7AKlTUPHc/7/sxcKDaq7RwBX3deuF
-   FUDF0cVsAPGCf1nrhSwERcH5EdhGjoQpa4aviGNw/tpzHp8sweEJcBUXS
-   kL5K9t98X4gXNPku282/DSOYiwAA2fwSV1KcXR6G/QGg7vn46R3l970S8
-   eXsBcPtd0ZGGBuMf54tly0EtL3xPyGRTUGR8w5xeflyBdapaV6Wu6KMWg
-   UC/Yl/5Keo+umXuFkxQwoggY1Sh8J1ELK0++1sJkGZsSGEI6pRCXtova6
-   E+sLVNkKfeTCu8QBSPGqXtXBy96QWYVWKIqOXTy3AbIPrGl7FZ7D1en0/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="443784041"
+  t=1695053702; x=1726589702;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BgwZTNb4fHHTZH2HZ4fYbJ0AKhM9dn5cKYQ9HQrxfxE=;
+  b=cOm4MXJlIPcRv+FXudzI6BIH5g3OOjCXcNSlmHHxi0HMsWjHqWjTd4Ty
+   O0youeCHyPQW8hcgki5ZgzuluwhTHFNh2qEBcUKfbd77k0zRdUaYdZNcT
+   HrHXBr4j4uxFeczVV4K4LnxQjb4od5QthjxMmXRoAyE2fvrFH1pqG2Q2w
+   z3iyB9+vi0XR7t1wxTQsOO0QySNZbw14B87yOlgmMW/0rP9t+B5vCfOVc
+   WZLK07GbQZnVTlhCmmNH/O3dJewNW9Z4qc7pzuhuuxfRiu4iOsamX5mUX
+   sxzp4X1aMfJC/L/JkUau4WnZIE9TcbZYz2nBARJ6TK4yGP+c6qAmWazuG
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="379566472"
 X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="443784041"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 09:29:37 -0700
+   d="scan'208";a="379566472"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 06:58:03 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="861132842"
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="1076597208"
 X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="861132842"
-Received: from nprotaso-mobl1.ccr.corp.intel.com ([10.252.49.156])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 09:29:33 -0700
-Date:   Mon, 18 Sep 2023 19:29:31 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     "Luck, Tony" <tony.luck@intel.com>
-cc:     "Joseph, Jithu" <jithu.joseph@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Xu, Pengfei" <pengfei.xu@intel.com>
-Subject: RE: [PATCH 03/10] platform/x86/intel/ifs: Image loading for new
- generations
-In-Reply-To: <SJ1PR11MB608304A84A2B662C78FDB677FCFBA@SJ1PR11MB6083.namprd11.prod.outlook.com>
-Message-ID: <a02d2957-3ec4-f89c-ebe-474c3987b237@linux.intel.com>
-References: <20230913183348.1349409-1-jithu.joseph@intel.com> <20230913183348.1349409-4-jithu.joseph@intel.com> <ba753b39-1819-35ff-1248-6ce2c2824ae9@linux.intel.com> <e084652a-91a0-0c16-7acb-d51a3d2f7ed5@intel.com> <10fe57c-c926-9de4-be84-21a0f8abab6d@linux.intel.com>
- <SJ1PR11MB6083A4237D928F180B6DB1E1FCFBA@SJ1PR11MB6083.namprd11.prod.outlook.com> <56b486ce-2a6e-c4c7-8bc5-ceeb7119ba1@linux.intel.com> <SJ1PR11MB608304A84A2B662C78FDB677FCFBA@SJ1PR11MB6083.namprd11.prod.outlook.com>
+   d="scan'208";a="1076597208"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 06:58:01 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1qiElC-00000009bSN-37Ah;
+        Mon, 18 Sep 2023 16:57:58 +0300
+Date:   Mon, 18 Sep 2023 16:57:58 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: think-lmi: Add bulk save feature
+Message-ID: <ZQhXZkBHviGOEl-x@smile.fi.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20230906121328.50437-1-mpearson-lenovo@squebb.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230906121328.50437-1-mpearson-lenovo@squebb.ca>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 18 Sep 2023, Luck, Tony wrote:
-
-> > Since you replied, would you happen to have a pointer something that tells 
-> > (in writing) how the bitfields in C are allocated in case of x86_64? I 
-> > spent a bit of time trying to find something but came up nothing.
+On Wed, Sep 06, 2023 at 08:13:14AM -0400, Mark Pearson wrote:
+> On Lenovo platforms there is a limitation in the number of times an
+> attribute can be saved. This is an architectural limitation and it limits
+> the number of attributes that can be modified to 48.
+> A solution for this is instead of the attribute being saved after every
+> modification allow a user to bulk set the attributes and then trigger a
+> final save. This allows unlimited attributes.
 > 
-> Search engines don't seem to be as good as they used to be (or I'm not as
-> good at finding the right query). 
+> This patch introduces a save_settings attribute that can be configured to
+> either single or bulk mode by the user.
+> Single mode is the default but customers who want to avoid the 48
+> attribute limit can enable bulk mode.
 > 
-> There's a bit on page 14 of:
+> Displaying the save_settings attribute will display the enabled mode.
 > 
-> https://refspecs.linuxbase.org/elf/x86_64-abi-0.99.pdf
-> 
-> that says bit fields are allocated right to left (which is a good
-> start). But I thought there was a doc somewhere that gave
-> more detail about alignment of bitfields.
+> When in bulk mode writing 'save' to the save_settings attribute will
+> trigger a save. Once this has been done a reboot is required before more
+> attributes can be modified.
 
-Thanks, appreciated.
+...
 
-In this case it is not just about the bitfield itself nor the bit 
-allocation order but sharing the storage unit with another member, and to 
-further complicate things, members have different alignment requirement 
-too (32-bit aligned u8 followed by u32 bitfield).
+> +Date:		August 2023
+> +KernelVersion:	6.5
 
-The document states: "Bit-fields obey the same size and alignment rules as 
-other structure and union members." which seems to contradict my test 
-that found that the u32 bitfield won't be 32-bit aligned but gets combined 
-with the 32-bit aligned u8. Perhaps it's because the total number of bits 
-still fits to 32 bits so the bitfield doesn't cross the 32-bit boundary 
-even when combined with the preceeding u8.
+This is obviously incorrect (outdated) information.
 
+...
+
+> +static const char * const save_mode_strings[] = {
+> +	[TLMI_SAVE_SINGLE] = "single",
+> +	[TLMI_SAVE_BULK] = "bulk",
+> +	[TLMI_SAVE_SAVE] = "save"
+
+Missing comma.
+
+> +};
+
+...
+
+> +static ssize_t save_settings_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +				  char *buf)
+> +{
+> +	/* Check that setting is valid */
+> +	if (WARN_ON((tlmi_priv.save_mode < TLMI_SAVE_SINGLE) ||
+> +		    (tlmi_priv.save_mode > TLMI_SAVE_BULK)))
+> +		return -EIO;
+> +	return sprintf(buf, "%s\n", save_mode_strings[tlmi_priv.save_mode]);
+
+According to the documentation it must be sysfs_emit() if I'm not missing
+anything here.
+
+> +}
+
+...
+
+> +static ssize_t save_settings_store(struct kobject *kobj, struct kobj_attribute *attr,
+> +				   const char *buf, size_t count)
+> +{
+> +	char *auth_str = NULL;
+> +	int ret = 0;
+> +	int cmd;
+> +
+> +	cmd = sysfs_match_string(save_mode_strings, buf);
+> +
+> +	/* Use lock in case multiple WMI operations needed */
+> +	mutex_lock(&tlmi_mutex);
+> +
+> +	switch (cmd) {
+> +	case TLMI_SAVE_SINGLE:
+> +	case TLMI_SAVE_BULK:
+> +		tlmi_priv.save_mode = cmd;
+> +		goto out;
+> +	case TLMI_SAVE_SAVE:
+> +		/* Check if supported*/
+> +		if ((!tlmi_priv.can_set_bios_settings) ||
+> +		    (tlmi_priv.save_mode == TLMI_SAVE_SINGLE)) {
+> +			ret = -EOPNOTSUPP;
+> +			goto out;
+> +		}
+> +		/* Check there is actually something to save */
+> +		if (!tlmi_priv.save_required) {
+> +			ret = -ENOENT;
+> +			goto out;
+> +		}
+> +		/* Check if certificate authentication is enabled and active */
+> +		if (tlmi_priv.certificate_support && tlmi_priv.pwd_admin->cert_installed) {
+> +			if (!tlmi_priv.pwd_admin->signature ||
+> +			    !tlmi_priv.pwd_admin->save_signature) {
+> +				ret = -EINVAL;
+> +				goto out;
+> +			}
+> +			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
+> +					       tlmi_priv.pwd_admin->save_signature);
+> +			if (ret)
+> +				goto out;
+> +		} else if (tlmi_priv.opcode_support) {
+> +			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+> +				ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
+> +							  tlmi_priv.pwd_admin->password);
+> +				if (ret)
+> +					goto out;
+> +			}
+> +			ret = tlmi_save_bios_settings("");
+> +		} else { /* old non-opcode based authentication method (deprecated) */
+> +			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+> +				auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+> +						     tlmi_priv.pwd_admin->password,
+> +						     encoding_options[tlmi_priv.pwd_admin->encoding],
+> +						     tlmi_priv.pwd_admin->kbdlang);
+> +				if (!auth_str) {
+> +					ret = -ENOMEM;
+> +					goto out;
+> +				}
+> +			}
+> +
+> +			if (auth_str)
+> +				ret = tlmi_save_bios_settings(auth_str);
+> +			else
+> +				ret = tlmi_save_bios_settings("");
+> +		}
+> +		tlmi_priv.save_required = false;
+> +		tlmi_priv.reboot_required = true;
+> +
+> +		if (!ret && !tlmi_priv.pending_changes) {
+> +			tlmi_priv.pending_changes = true;
+> +			/* let userland know it may need to check reboot pending again */
+> +			kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
+> +		}
+> +		break;
+
+> +	default:
+> +		ret = -EINVAL;
+> +	}
+
+Missing break; and actually no need to do this part under the lock, besides
+that it shadows an error code, that said this should be
+
+	cmd = sysfs_match_string(...);
+	if (cmd < 0)
+		return cmd;
+
+
+> +out:
+> +	mutex_unlock(&tlmi_mutex);
+> +	kfree(auth_str);
+> +	return ret ?: count;
+
+You can switch the driver to use cleanup.h at some point.
+
+> +}
+
+...
+
+> +/* There are a limit on the number of WMI operations you can do if you use
+> + * the default implementation of saving on every set. This is due to a
+> + * limitation in EFI variable space used.
+> + * Have a 'bulk save' mode where you can manually trigger the save, and can
+> + * therefore set unlimited variables - for users that need it.
+> + */
+
+/*
+ * This is wrong multi-line comment style. This one
+ * is used solely in net subsystem.
+ */
 
 -- 
- i.
+With Best Regards,
+Andy Shevchenko
+
 
