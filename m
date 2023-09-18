@@ -2,233 +2,197 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8D0C46CA1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Sep 2023 16:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FC3C46CA1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Sep 2023 16:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229934AbjIRQd6 (ORCPT
+        id S229517AbjIRQeS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Sep 2023 12:33:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52744 "EHLO
+        Mon, 18 Sep 2023 12:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229939AbjIRQdc (ORCPT
+        with ESMTP id S230246AbjIRQeA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Sep 2023 12:33:32 -0400
+        Mon, 18 Sep 2023 12:34:00 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7252C23CF4;
-        Mon, 18 Sep 2023 09:15:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE71199FE;
+        Mon, 18 Sep 2023 09:14:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695053702; x=1726589702;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BgwZTNb4fHHTZH2HZ4fYbJ0AKhM9dn5cKYQ9HQrxfxE=;
-  b=cOm4MXJlIPcRv+FXudzI6BIH5g3OOjCXcNSlmHHxi0HMsWjHqWjTd4Ty
-   O0youeCHyPQW8hcgki5ZgzuluwhTHFNh2qEBcUKfbd77k0zRdUaYdZNcT
-   HrHXBr4j4uxFeczVV4K4LnxQjb4od5QthjxMmXRoAyE2fvrFH1pqG2Q2w
-   z3iyB9+vi0XR7t1wxTQsOO0QySNZbw14B87yOlgmMW/0rP9t+B5vCfOVc
-   WZLK07GbQZnVTlhCmmNH/O3dJewNW9Z4qc7pzuhuuxfRiu4iOsamX5mUX
-   sxzp4X1aMfJC/L/JkUau4WnZIE9TcbZYz2nBARJ6TK4yGP+c6qAmWazuG
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="379566472"
+  t=1695053670; x=1726589670;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7q0+gtbfGqVgyGk+Cwd1SLXvZsiPOH5fBdOFQlGjaJU=;
+  b=PmCom6xpPlzdGH4XcSi2e1G+lx4KzaHHtp8ImZDqb1qbgSGYGFxpZVLU
+   S4+tGcHvb2MAzH8CobOpqw5MyNdzlod0ueUSitFFlCymu6AaXpsLCTevL
+   tvtHLGqkFaKv6XNk2ohzonfI0m0WoQjjHXYgH/w5lv59oY0R7xQgJzLhy
+   l6lMsZYB9j5fSHeQdHAMqxjlB/G1o9MWdqdLoXD280HH5pDaVXWLT+6vD
+   2yslC+eb232RBrBTJTS8WGUyzc6wZtwzseMR3pa+5rZrvNuVta2rb3EY9
+   3TwIRAKHOQAdPEEXbEWLl6NFijL4zmewBE5oqXKBmRodDagR6A+L3H/W1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="379564931"
 X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="379566472"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 06:58:03 -0700
+   d="scan'208";a="379564931"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 06:51:22 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="1076597208"
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="775135964"
 X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="1076597208"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 06:58:01 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1qiElC-00000009bSN-37Ah;
-        Mon, 18 Sep 2023 16:57:58 +0300
-Date:   Mon, 18 Sep 2023 16:57:58 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc:     hdegoede@redhat.com, markgross@kernel.org,
+   d="scan'208";a="775135964"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 18 Sep 2023 06:51:19 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 9699118E; Mon, 18 Sep 2023 16:51:18 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Pearson <mpearson-lenovo@squebb.ca>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: think-lmi: Add bulk save feature
-Message-ID: <ZQhXZkBHviGOEl-x@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20230906121328.50437-1-mpearson-lenovo@squebb.ca>
+Cc:     Mark Pearson <markpearson@lenovo.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 1/2] platform/x86: think-lmi: Replace kstrdup() + strreplace() with kstrdup_and_replace()
+Date:   Mon, 18 Sep 2023 16:51:15 +0300
+Message-Id: <20230918135116.1248560-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230906121328.50437-1-mpearson-lenovo@squebb.ca>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 06, 2023 at 08:13:14AM -0400, Mark Pearson wrote:
-> On Lenovo platforms there is a limitation in the number of times an
-> attribute can be saved. This is an architectural limitation and it limits
-> the number of attributes that can be modified to 48.
-> A solution for this is instead of the attribute being saved after every
-> modification allow a user to bulk set the attributes and then trigger a
-> final save. This allows unlimited attributes.
-> 
-> This patch introduces a save_settings attribute that can be configured to
-> either single or bulk mode by the user.
-> Single mode is the default but customers who want to avoid the 48
-> attribute limit can enable bulk mode.
-> 
-> Displaying the save_settings attribute will display the enabled mode.
-> 
-> When in bulk mode writing 'save' to the save_settings attribute will
-> trigger a save. Once this has been done a reboot is required before more
-> attributes can be modified.
+Replace open coded functionalify of kstrdup_and_replace() with a call.
 
-...
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: rebased on top of review-hans (Hans), added tag (Ilpo)
+ drivers/platform/x86/think-lmi.c | 43 +++++++++++---------------------
+ 1 file changed, 15 insertions(+), 28 deletions(-)
 
-> +Date:		August 2023
-> +KernelVersion:	6.5
-
-This is obviously incorrect (outdated) information.
-
-...
-
-> +static const char * const save_mode_strings[] = {
-> +	[TLMI_SAVE_SINGLE] = "single",
-> +	[TLMI_SAVE_BULK] = "bulk",
-> +	[TLMI_SAVE_SAVE] = "save"
-
-Missing comma.
-
-> +};
-
-...
-
-> +static ssize_t save_settings_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +				  char *buf)
-> +{
-> +	/* Check that setting is valid */
-> +	if (WARN_ON((tlmi_priv.save_mode < TLMI_SAVE_SINGLE) ||
-> +		    (tlmi_priv.save_mode > TLMI_SAVE_BULK)))
-> +		return -EIO;
-> +	return sprintf(buf, "%s\n", save_mode_strings[tlmi_priv.save_mode]);
-
-According to the documentation it must be sysfs_emit() if I'm not missing
-anything here.
-
-> +}
-
-...
-
-> +static ssize_t save_settings_store(struct kobject *kobj, struct kobj_attribute *attr,
-> +				   const char *buf, size_t count)
-> +{
-> +	char *auth_str = NULL;
-> +	int ret = 0;
-> +	int cmd;
-> +
-> +	cmd = sysfs_match_string(save_mode_strings, buf);
-> +
-> +	/* Use lock in case multiple WMI operations needed */
-> +	mutex_lock(&tlmi_mutex);
-> +
-> +	switch (cmd) {
-> +	case TLMI_SAVE_SINGLE:
-> +	case TLMI_SAVE_BULK:
-> +		tlmi_priv.save_mode = cmd;
-> +		goto out;
-> +	case TLMI_SAVE_SAVE:
-> +		/* Check if supported*/
-> +		if ((!tlmi_priv.can_set_bios_settings) ||
-> +		    (tlmi_priv.save_mode == TLMI_SAVE_SINGLE)) {
-> +			ret = -EOPNOTSUPP;
-> +			goto out;
-> +		}
-> +		/* Check there is actually something to save */
-> +		if (!tlmi_priv.save_required) {
-> +			ret = -ENOENT;
-> +			goto out;
-> +		}
-> +		/* Check if certificate authentication is enabled and active */
-> +		if (tlmi_priv.certificate_support && tlmi_priv.pwd_admin->cert_installed) {
-> +			if (!tlmi_priv.pwd_admin->signature ||
-> +			    !tlmi_priv.pwd_admin->save_signature) {
-> +				ret = -EINVAL;
-> +				goto out;
-> +			}
-> +			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
-> +					       tlmi_priv.pwd_admin->save_signature);
-> +			if (ret)
-> +				goto out;
-> +		} else if (tlmi_priv.opcode_support) {
-> +			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-> +				ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
-> +							  tlmi_priv.pwd_admin->password);
-> +				if (ret)
-> +					goto out;
-> +			}
-> +			ret = tlmi_save_bios_settings("");
-> +		} else { /* old non-opcode based authentication method (deprecated) */
-> +			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-> +				auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
-> +						     tlmi_priv.pwd_admin->password,
-> +						     encoding_options[tlmi_priv.pwd_admin->encoding],
-> +						     tlmi_priv.pwd_admin->kbdlang);
-> +				if (!auth_str) {
-> +					ret = -ENOMEM;
-> +					goto out;
-> +				}
-> +			}
-> +
-> +			if (auth_str)
-> +				ret = tlmi_save_bios_settings(auth_str);
-> +			else
-> +				ret = tlmi_save_bios_settings("");
-> +		}
-> +		tlmi_priv.save_required = false;
-> +		tlmi_priv.reboot_required = true;
-> +
-> +		if (!ret && !tlmi_priv.pending_changes) {
-> +			tlmi_priv.pending_changes = true;
-> +			/* let userland know it may need to check reboot pending again */
-> +			kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
-> +		}
-> +		break;
-
-> +	default:
-> +		ret = -EINVAL;
-> +	}
-
-Missing break; and actually no need to do this part under the lock, besides
-that it shadows an error code, that said this should be
-
-	cmd = sysfs_match_string(...);
-	if (cmd < 0)
-		return cmd;
-
-
-> +out:
-> +	mutex_unlock(&tlmi_mutex);
-> +	kfree(auth_str);
-> +	return ret ?: count;
-
-You can switch the driver to use cleanup.h at some point.
-
-> +}
-
-...
-
-> +/* There are a limit on the number of WMI operations you can do if you use
-> + * the default implementation of saving on every set. This is due to a
-> + * limitation in EFI variable space used.
-> + * Have a 'bulk save' mode where you can manually trigger the save, and can
-> + * therefore set unlimited variables - for users that need it.
-> + */
-
-/*
- * This is wrong multi-line comment style. This one
- * is used solely in net subsystem.
- */
-
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index f69003c30fa2..4e0d52dc3944 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -15,7 +15,7 @@
+ #include <linux/errno.h>
+ #include <linux/fs.h>
+ #include <linux/mutex.h>
+-#include <linux/string.h>
++#include <linux/string_helpers.h>
+ #include <linux/types.h>
+ #include <linux/dmi.h>
+ #include <linux/wmi.h>
+@@ -432,13 +432,11 @@ static ssize_t new_password_store(struct kobject *kobj,
+ 	if (!tlmi_priv.can_set_bios_password)
+ 		return -EOPNOTSUPP;
+ 
+-	new_pwd = kstrdup(buf, GFP_KERNEL);
++	/* Strip out CR if one is present, setting password won't work if it is present */
++	new_pwd = kstrdup_and_replace(buf, '\n', '\0', GFP_KERNEL);
+ 	if (!new_pwd)
+ 		return -ENOMEM;
+ 
+-	/* Strip out CR if one is present, setting password won't work if it is present */
+-	strip_cr(new_pwd);
+-
+ 	/* Use lock in case multiple WMI operations needed */
+ 	mutex_lock(&tlmi_mutex);
+ 
+@@ -709,13 +707,11 @@ static ssize_t cert_to_password_store(struct kobject *kobj,
+ 	if (!setting->signature || !setting->signature[0])
+ 		return -EACCES;
+ 
+-	passwd = kstrdup(buf, GFP_KERNEL);
++	/* Strip out CR if one is present */
++	passwd = kstrdup_and_replace(buf, '\n', '\0', GFP_KERNEL);
+ 	if (!passwd)
+ 		return -ENOMEM;
+ 
+-	/* Strip out CR if one is present */
+-	strip_cr(passwd);
+-
+ 	/* Format: 'Password,Signature' */
+ 	auth_str = kasprintf(GFP_KERNEL, "%s,%s", passwd, setting->signature);
+ 	if (!auth_str) {
+@@ -765,11 +761,10 @@ static ssize_t certificate_store(struct kobject *kobj,
+ 		return ret ?: count;
+ 	}
+ 
+-	new_cert = kstrdup(buf, GFP_KERNEL);
++	/* Strip out CR if one is present */
++	new_cert = kstrdup_and_replace(buf, '\n', '\0', GFP_KERNEL);
+ 	if (!new_cert)
+ 		return -ENOMEM;
+-	/* Strip out CR if one is present */
+-	strip_cr(new_cert);
+ 
+ 	if (setting->cert_installed) {
+ 		/* Certificate is installed so this is an update */
+@@ -817,13 +812,11 @@ static ssize_t signature_store(struct kobject *kobj,
+ 	if (!tlmi_priv.certificate_support)
+ 		return -EOPNOTSUPP;
+ 
+-	new_signature = kstrdup(buf, GFP_KERNEL);
++	/* Strip out CR if one is present */
++	new_signature = kstrdup_and_replace(buf, '\n', '\0', GFP_KERNEL);
+ 	if (!new_signature)
+ 		return -ENOMEM;
+ 
+-	/* Strip out CR if one is present */
+-	strip_cr(new_signature);
+-
+ 	/* Free any previous signature */
+ 	kfree(setting->signature);
+ 	setting->signature = new_signature;
+@@ -846,13 +839,11 @@ static ssize_t save_signature_store(struct kobject *kobj,
+ 	if (!tlmi_priv.certificate_support)
+ 		return -EOPNOTSUPP;
+ 
+-	new_signature = kstrdup(buf, GFP_KERNEL);
++	/* Strip out CR if one is present */
++	new_signature = kstrdup_and_replace(buf, '\n', '\0', GFP_KERNEL);
+ 	if (!new_signature)
+ 		return -ENOMEM;
+ 
+-	/* Strip out CR if one is present */
+-	strip_cr(new_signature);
+-
+ 	/* Free any previous signature */
+ 	kfree(setting->save_signature);
+ 	setting->save_signature = new_signature;
+@@ -992,13 +983,11 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 	if (tlmi_priv.save_mode == TLMI_SAVE_BULK && tlmi_priv.reboot_required)
+ 		return -EPERM;
+ 
+-	new_setting = kstrdup(buf, GFP_KERNEL);
++	/* Strip out CR if one is present */
++	new_setting = kstrdup_and_replace(buf, '\n', '\0', GFP_KERNEL);
+ 	if (!new_setting)
+ 		return -ENOMEM;
+ 
+-	/* Strip out CR if one is present */
+-	strip_cr(new_setting);
+-
+ 	/* Use lock in case multiple WMI operations needed */
+ 	mutex_lock(&tlmi_mutex);
+ 
+@@ -1279,13 +1268,11 @@ static ssize_t debug_cmd_store(struct kobject *kobj, struct kobj_attribute *attr
+ 	if (!tlmi_priv.can_debug_cmd)
+ 		return -EOPNOTSUPP;
+ 
+-	new_setting = kstrdup(buf, GFP_KERNEL);
++	/* Strip out CR if one is present */
++	new_setting = kstrdup_and_replace(buf, '\n', '\0', GFP_KERNEL);
+ 	if (!new_setting)
+ 		return -ENOMEM;
+ 
+-	/* Strip out CR if one is present */
+-	strip_cr(new_setting);
+-
+ 	if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+ 		auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+ 				tlmi_priv.pwd_admin->password,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.40.0.1.gaa8946217a0b
 
