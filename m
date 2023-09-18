@@ -2,79 +2,117 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185BEC46CA1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Sep 2023 16:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6189CD37B0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Sep 2023 16:42:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230414AbjIRQm3 convert rfc822-to-8bit (ORCPT
+        id S229705AbjIRQmj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Sep 2023 12:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56610 "EHLO
+        Mon, 18 Sep 2023 12:42:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230372AbjIRQmQ (ORCPT
+        with ESMTP id S230004AbjIRQmW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Sep 2023 12:42:16 -0400
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B15D902D
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Sep 2023 09:28:53 -0700 (PDT)
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-        by unirelay01.hostedemail.com (Postfix) with ESMTP id CF3051C9E44;
-        Mon, 18 Sep 2023 16:22:51 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf04.hostedemail.com (Postfix) with ESMTPA id 383CB2002B;
-        Mon, 18 Sep 2023 16:22:48 +0000 (UTC)
-Message-ID: <1bed972eb2fb1dc305e5da9a75542558bbe6e13e.camel@perches.com>
-Subject: Re: [PATCH v2] platform/x86: think-lmi: Add bulk save feature
-From:   Joe Perches <joe@perches.com>
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Pearson <mpearson-lenovo@squebb.ca>, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 18 Sep 2023 09:22:47 -0700
-In-Reply-To: <ZQhg+Hcv4QHGJ3+s@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
-         <20230906121328.50437-1-mpearson-lenovo@squebb.ca>
-         <ZQhXZkBHviGOEl-x@smile.fi.intel.com>
-         <878da778-e183-6ef5-61ce-3a3d059f1a1e@redhat.com>
-         <ZQhg+Hcv4QHGJ3+s@smile.fi.intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        Mon, 18 Sep 2023 12:42:22 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0E574495;
+        Mon, 18 Sep 2023 09:03:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695053009; x=1726589009;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=1fHCLdwNFc+9WgKlHtruvN6B6ijVRNVQjqIxvdsKyPI=;
+  b=FnL9ehieDvRqRo/ncZYymTThU2+f0RPQoBOsKnBPfYInE5eCdQLOUqKO
+   zAGizLBhuQ8dtYXvIKuX7aPWPS5WoGc3ZnSb7tz60oLJ/wHG3DQu5foTU
+   Y5eVUwIUwUzSl+sPZQN8BUMJhlWC/gExxkLaJCgdoQx2Zsm6qTt1cAN31
+   nYr/vXlo85rGds8XqJy78ZUHPIGNXpkc/fHckQ4AndnVxETf/H7F0oSMf
+   ufZ3ghzXmQm8+NggGsmrfo+o1ThaVSX9cT+EJGYcp65CYKB1uo08lj2n1
+   7X8Yedc8Zi2Tf+nZWA+iczUJXXZsDVnkNl4QG7WH6S2KrM6rg0yn9my48
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="370011044"
+X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
+   d="scan'208";a="370011044"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 08:46:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="869597607"
+X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
+   d="scan'208";a="869597607"
+Received: from nprotaso-mobl1.ccr.corp.intel.com ([10.252.49.156])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 08:46:09 -0700
+Date:   Mon, 18 Sep 2023 18:46:06 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     "Luck, Tony" <tony.luck@intel.com>
+cc:     "Joseph, Jithu" <jithu.joseph@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "patches@lists.linux.dev" <patches@lists.linux.dev>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Xu, Pengfei" <pengfei.xu@intel.com>
+Subject: RE: [PATCH 03/10] platform/x86/intel/ifs: Image loading for new
+ generations
+In-Reply-To: <SJ1PR11MB6083A4237D928F180B6DB1E1FCFBA@SJ1PR11MB6083.namprd11.prod.outlook.com>
+Message-ID: <56b486ce-2a6e-c4c7-8bc5-ceeb7119ba1@linux.intel.com>
+References: <20230913183348.1349409-1-jithu.joseph@intel.com> <20230913183348.1349409-4-jithu.joseph@intel.com> <ba753b39-1819-35ff-1248-6ce2c2824ae9@linux.intel.com> <e084652a-91a0-0c16-7acb-d51a3d2f7ed5@intel.com> <10fe57c-c926-9de4-be84-21a0f8abab6d@linux.intel.com>
+ <SJ1PR11MB6083A4237D928F180B6DB1E1FCFBA@SJ1PR11MB6083.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-X-Stat-Signature: zdejjwn5y5o7datxjjyyqneonna6xmfa
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 383CB2002B
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX18IIPdAe/d0R+ZzEM+uijFVzoWhM8KY5sM=
-X-HE-Tag: 1695054168-795019
-X-HE-Meta: U2FsdGVkX19KwzESdQyEVfr0h4yR2WFVwjXCedSSF4nzJW6icAqQ8Shw1ThHdgG+wjzVK2KL/ZymjMsWkDjdwQ+YHjNsw/nB/IwwMTgEzG0gZVNz09x4STXBIyePH7ZXIzME96RXunNzAc54qx8rVGq1IfUs8cn3aZwn3FM3ZLUyQ41im+6SOwGD4svfD2A5oLxA1Ya4RdW8rTM8f/kLGGysev6w6TBJbnzFcT53CbneMp+SgLqcihEw+CB8pmPG1iF1NCOp0DEuT6vvX2aFWxwH9e0HZy3i/4HIfn0uVIdN5YnfyLbvXMWHxTh/PYAv
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2023-09-18 at 17:38 +0300, Andy Shevchenko wrote:
-> On Mon, Sep 18, 2023 at 04:07:53PM +0200, Hans de Goede wrote:
-> > On 9/18/23 15:57, Andy Shevchenko wrote:
-> > > On Wed, Sep 06, 2023 at 08:13:14AM -0400, Mark Pearson wrote:
-> 
-> ...
-> 
-> > > > +/* There are a limit on the number of WMI operations you can do if you use
-> > > > + * the default implementation of saving on every set. This is due to a
-> > > > + * limitation in EFI variable space used.
-> > > > + * Have a 'bulk save' mode where you can manually trigger the save, and can
-> > > > + * therefore set unlimited variables - for users that need it.
-> > > > + */
-> > > 
-> > > /*
-> > >  * This is wrong multi-line comment style. This one
-> > >  * is used solely in net subsystem.
-> > >  */
-> > 
-> > Good catch, Mark can you fix this one too please ?
-> > 
-> > Also I thought that checkpatch.pl used to catch this ?
-> 
-> I don't think it recognizes "net style is only for net related files".
+On Mon, 18 Sep 2023, Luck, Tony wrote:
 
-It doesn't as there are just too many of them.
+> > I think Tony's "proof" is pretty invalid. He doesn't differentiate
+> > HW interface related bitfields from those which are not HW interface 
+> > related (to the extent that in fact most of those bitfields likely are not 
+> > HW interface related).
+> 
+> When I made that comment it was about a patch series that used
+> bitfields to decode the subfields in Intel model specific MSRs.  I
+> think that's true of use in this series too.
 
+But your grep in [1] was not limited to such cases nor to HW interface 
+related ones in general.
+
+What I meant with your proof being invalid is that the argument against
+bitfields have been related to using them with HW interfaces, not just 
+generic use of the bitfields (even if there have been some performance 
+issues in that area as well). Simply grepping through include/ directly is 
+not going to tell anything if the bitfield in question is related to HW 
+interfaces or not.
+
+> I think most of these are for MSR decode. The one mentioned in
+> this thread: "union ifs_scan_hashes_status_gen2 {" definitely is.
+> 
+> Are there any that are not for MSRs? I'd also claim "Intel
+> specific" if there are some decoding parts of the Intel scan
+> file format.
+
+First of all, I already checked myself that the alignment is not 
+incorrect so I don't find it as problematic as I thought it was (I did 
+not even flag all bitfield addition in the patches, just the cases were u8 
+was followed by u32 bitfield which I thought is not going to work because 
+of something I read about this topic some time ago claimed if the type 
+changes the bitfield does not carry over).
+
+Since you replied, would you happen to have a pointer something that tells 
+(in writing) how the bitfields in C are allocated in case of x86_64? I 
+spent a bit of time trying to find something but came up nothing.
+
+
+[1] https://lore.kernel.org/lkml/SJ1PR11MB6083EBD2D2826E0A247AF242FCD19@SJ1PR11MB6083.namprd11.prod.outlook.com/
+
+-- 
+ i.
 
