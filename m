@@ -2,184 +2,144 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D60ECD37B0
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Sep 2023 15:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 168E5CD13D2
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Sep 2023 15:56:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbjIRPxq (ORCPT
+        id S229723AbjIRP5C (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Sep 2023 11:53:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41982 "EHLO
+        Mon, 18 Sep 2023 11:57:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229742AbjIRPxo (ORCPT
+        with ESMTP id S229633AbjIRP5B (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Sep 2023 11:53:44 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A33A199B;
-        Mon, 18 Sep 2023 08:50:51 -0700 (PDT)
+        Mon, 18 Sep 2023 11:57:01 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7A6E270B;
+        Mon, 18 Sep 2023 08:55:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695052251; x=1726588251;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=jEFjrN+icB8dLQqR+ikRsJy0y6nMhUyim2mhjrNnM58=;
-  b=KjovA0v9l5rv3dXQTyLVzUEoCQA9dzcb0LTLTSuPShScHtRxownXsYTH
-   c4tafCXJLgfJa90P5v29lGnXoG+xfAAf0JjXneMWrUK3LCe64sbp3z+Qf
-   2YevEe+nTL9yqWK6NTnHDjjDcG5GOghwCVgAw/w8nIzTxYfS2B08fQRzI
-   djrSI8yqo3Dr/rI3i6fWUFyXy7SjGCrJmbPtC1bJt2qCFLXi6qSazAnro
-   1y2izscOxNBBabKCZB3q2r1al80HVe7IdgZqWSS38PgExH9pQnFoSI6h6
-   bPj1wdewK/AhN5UT+8/1QGzQQPIGtA5Q8qipI3gQyEtC4VDO2k4OiDuLP
+  t=1695052509; x=1726588509;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=9mdSjBgak3X7CxWik+JVulIYQIwZzjIpi9uzcf4feQE=;
+  b=De/fi7BxQvmSa9hdvh/ur5YXcXK6NWnTa/xopyFAQnE433NA5REc+x7i
+   bBldD6snaG9rzkruN5nwxImGHk2T6TorLy2ccS7VXH/ph0knaaTn0Cq2Z
+   aIX8b0Oe2EagY3KMfpLhNkDr2YbwntEykCAu4hqHW6EzOOBLT72vdeYUf
+   L7dJs18sQABeZxQIYk5huaq6dewQT72Q0w3+hvaqfTeTqGUzBxHR5vMHL
+   K1gTT6J2MScuO14YWAFohQV43q7kRqPmyP5zPJD9J1H4hw1NIxZJ4urdB
+   4tQgut5UFoKAw0In/nCLh+REAC3X4b2fdjlmfzE8j1sZOe7g3jflpoIxF
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="359107285"
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="466000301"
 X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="359107285"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 08:25:08 -0700
+   d="scan'208";a="466000301"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 06:26:46 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="992771876"
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="861064597"
 X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="992771876"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 18 Sep 2023 08:25:08 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Mon, 18 Sep 2023 08:25:07 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Mon, 18 Sep 2023 08:25:07 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.44) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Mon, 18 Sep 2023 08:25:07 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hkZgkK0iSUKfFxSzRDKiMvhyPk2Wn6J0u7gIIzfLJHgPkyXV1lg/iBOqkdR7pMKGTT9u0ahKpSmvT+QE2f6w6s/JmZOYQG2sL4Vw/9es4V7+a8Zp2rHAOg7PSNljNMo2EutcbxoSvACnWiz0tqm3Y7Yr5FrvVsOekPEj6BJH9WIOKETObq7s0r89d0KZ+PRthLAIWLhcBtCSMwwhQkL0ZXWSQjzPZ38AALY2cXbX085IRnA2fDQ/QDtJeEqcFfeqxlt5/+z+GOtBv1BXucuDDNSYwZSy0sMKnYtJdADFBeIpSMWMkGHv76QjvMx7rKMC4Ewj5QDqIhA8A0gKkwb55w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/H7a7F4/mmwe65iG16kcTfDwt0zt8pVZeUU6MVXfv6Y=;
- b=CwjbdBfNZ7eHcW+Cri7sD8hYlBN7KbavPx3pZXBJbJimmPs1crRWGhfKiT3Ad8QSzIlXLHa6n1HnHuWyET/OLVrj408CDa/+VBk22cdGDnJ1HVM3MUogJdbwtMjuv1jTPzEG6d3W8VHicubjN20t3s0GeDmuGIbnOby5GU83DaHAcleLjAm5ymJPdpsqete3tupeDia+azCfEQcnuksMYZiulP6aLf5yif3cJZ/GHNGn6PLSfI43YGzm3KAuDLvLU1yLm1VnLzoFWmLK0g9aLH3UbIAerCdgq+eoOaW9X3M9O0gkTlAf1Cd3DpD1xTuk2mYsllct2HW6kgf8KnfHGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
- by DS0PR11MB7383.namprd11.prod.outlook.com (2603:10b6:8:134::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.21; Mon, 18 Sep
- 2023 15:25:04 +0000
-Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
- ([fe80::bbd6:576b:132:74e4]) by SJ1PR11MB6083.namprd11.prod.outlook.com
- ([fe80::bbd6:576b:132:74e4%7]) with mapi id 15.20.6792.026; Mon, 18 Sep 2023
- 15:25:04 +0000
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     =?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>
-CC:     Hans de Goede <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Xu, Pengfei" <pengfei.xu@intel.com>
-Subject: RE: [PATCH 03/10] platform/x86/intel/ifs: Image loading for new
- generations
-Thread-Topic: [PATCH 03/10] platform/x86/intel/ifs: Image loading for new
- generations
-Thread-Index: AQHZ5nFu/bHCYcc4VU+8hY4jAeuNNLAcG4EAgAAJkACABCgaAIAAbJrQ
-Date:   Mon, 18 Sep 2023 15:25:03 +0000
-Message-ID: <SJ1PR11MB6083A4237D928F180B6DB1E1FCFBA@SJ1PR11MB6083.namprd11.prod.outlook.com>
-References: <20230913183348.1349409-1-jithu.joseph@intel.com>
- <20230913183348.1349409-4-jithu.joseph@intel.com>
- <ba753b39-1819-35ff-1248-6ce2c2824ae9@linux.intel.com>
- <e084652a-91a0-0c16-7acb-d51a3d2f7ed5@intel.com>
- <10fe57c-c926-9de4-be84-21a0f8abab6d@linux.intel.com>
-In-Reply-To: <10fe57c-c926-9de4-be84-21a0f8abab6d@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ1PR11MB6083:EE_|DS0PR11MB7383:EE_
-x-ms-office365-filtering-correlation-id: e4bb5220-a9dc-4b0c-f46b-08dbb85b6e98
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cAyf8oo16ay8X/Q6lTYYXjcDOWAxDxJBE3IHYGRYQHAznazzGvwtWR2G4ejjGNxRb/cJeI0e423ICW+6z6aqf7SIu3tW8hQIX0KRw7ZpFU7Gp2Ad0mF1H16WQV569MO8xRA6zYk/YDwurUp3R89sfnBIlmwGlIafLLQOLrC6X2b/UPulMnVBSQefUb5yvKYnCyocmJjodT3mD8xLcs9XDtcH1zpzxfFx0XZ1srzfpG2yDipCqXiAso7H2wNzKAV/PPUkoVxZFdfjU0XA5hWT0BU0pVzujj0Buo8bw4urbUx82rCc6YNxpQ3ov1IZSRuaAhNT01ckHoXgl+6MPmMFbuGxeVTpX/el92clPpe25EkazP1mhLGa/Sz5/u8/6y63q1vZtBrmCQ3w+8MY57tD1USA6WDe8QyGBxFE/qUps9ecp1Wumc3BGSDQ0Rk0xv8dlqWVJLLoYCqLA2qySfvjTjyssw4raerGfxa+SEz/Ru1hfFYF6l1Uw9VKSmFpEswJmn+7AuFaymeCHU85JJYJaOdPHUHnaTj1wljxNwe4GT0T7fEu8kuUytoJOTZvXpGeOdyjK1XzvQxhcTmfD9en+HpG3Pda25KeLRPdeboQo5GIb/Kgj3QBmdgRjhOhdFOB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(136003)(376002)(366004)(39860400002)(186009)(1800799009)(451199024)(9686003)(2906002)(26005)(478600001)(71200400001)(6506007)(7696005)(33656002)(38070700005)(82960400001)(38100700002)(122000001)(55016003)(5660300002)(7416002)(86362001)(8936002)(110136005)(316002)(41300700001)(52536014)(4326008)(76116006)(8676002)(66946007)(6636002)(66556008)(66446008)(64756008)(54906003)(4744005)(66476007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?+kD8TPE6zktKgvGoX6/AUrYt9wf7rXUqdd6n1YQN3mEu17V74flzkg05Nr?=
- =?iso-8859-1?Q?/UGUnu/W77sk8+eJLj8c2OmdXc4k5UiphbzYBHQWDnFSNfZ6orZFI5gNwi?=
- =?iso-8859-1?Q?swbquHLXnVkZHa9oYQLJ3Fu21cPSA+YleynLu7QHgQ5eOQHaHDCfw0uYv5?=
- =?iso-8859-1?Q?mLxm+q3rqVERCyo3MqBAcl1BNFuiSiDOm2Xns7ykmGAZOtKxuZD9l/jkK+?=
- =?iso-8859-1?Q?mH6mF0g2sSgkS4BF58OUBXttMqnI2+kHsKRlSplQ6E/G0KTV4AamW5LhRA?=
- =?iso-8859-1?Q?/ohnh1sCiWPKiP2HRLGJLZYp9CpMFru4NWsngEiHlWzE8BVlZkyKq2aujV?=
- =?iso-8859-1?Q?zRLMsO5tNOp/tFqCTNP8OzGYgCnVUBS919m34sRGZSFvmFXYDRYMolUNMX?=
- =?iso-8859-1?Q?JG6DX+sbJXhtIuuM+JuA1ELCnTB/bPSygDDNgndyuUyNzrdS8Tknv2BWxn?=
- =?iso-8859-1?Q?LE2Yr7F8Z2dNnzmScAZDvDOB04WwcwnzbfzbfGtgO+cwfwtNDAv7nY0BDx?=
- =?iso-8859-1?Q?YV1qcTRjzl6JICMTqUiZx97Mpj/pcduKWZe8j1zmTl5IiXlr9xlAkax8V2?=
- =?iso-8859-1?Q?ZEYB25rpEIyvlSTAAKJ1ZfPv/8F3wDfaSls4lRRbhmu/hFb5EPA/zIH40N?=
- =?iso-8859-1?Q?4WAuRcTrfWFR4ZrenwoYbQdCvdDfStyrgbklZsbP4Y9dadlb7jTkB+tdxK?=
- =?iso-8859-1?Q?Q5VTonTgHtodVJ0eQQuuk0HupjKZquNgW0TQAfwWcgbgC/AVrlHFXo6Hhl?=
- =?iso-8859-1?Q?lVhJC/oWAJB04TBgY5/Jgu+6xD9Bs9boIxYEXv6AptBzGaCvshJqmz7fTe?=
- =?iso-8859-1?Q?VNToXuBkYX11iX7DXlH2RQPTNl3/NlodkKlv/mx3SeC32q/RdekI2dGKJL?=
- =?iso-8859-1?Q?kA++kAQ32DBKZRe4agIqMhJAOgRd7/PPbVhZdvklEyc9a271O2UrsETxcN?=
- =?iso-8859-1?Q?kwtToBRhimYJGhfQlEOn1Y9nmdOtsZv93r3R6vivoRbx9lmr96Jr3l0/g/?=
- =?iso-8859-1?Q?udSLi+/6Zxv9N4LCHi8kFVfJ230aMGO80BhGP2fjrBtZWHm0NsCwo+XULy?=
- =?iso-8859-1?Q?85ExpUaRlqkrid1g10BpVHjNlH+wnnqlYYXtZgN0Az51UOkUCyCarPPxcg?=
- =?iso-8859-1?Q?7uORO0V6cZb+JFpogGrJYvxk/VIJ/eXt2DhU3Cr9eodOvMA5w2gTuorgJB?=
- =?iso-8859-1?Q?isrx/meJ+34cSxbCcp3+C+iF+eEyjqPmy4SyM2oVlz1W1n5AprEGJZM//2?=
- =?iso-8859-1?Q?wZg7pBtnRJEnSGghxOxaxz6ggfjDPc7OqxZQUXws5Sk2jzt/Rl0TXMQ26x?=
- =?iso-8859-1?Q?O06Y5eG9WLu0m31ZAQXy6QY3Qc95nbocmIBklN+/sTms+wF1r4DnYa+wIJ?=
- =?iso-8859-1?Q?28Ez0npq9waWyNtQMS/hrzD7TWDdHcOZ2nMNefrhxhQs3R8fXr18PYtxZz?=
- =?iso-8859-1?Q?3l+u9FKhuxR8SEkpdL/6WLPRA6vErvuuqKKEGmaY/CHpAHH3gvjWQ8dBoe?=
- =?iso-8859-1?Q?GrIsofzZqTxWchS78DNtQx8YH21bssoRaMmGxcCcg97N3C6MipDr9X1xIg?=
- =?iso-8859-1?Q?LtI6fGfBjdPIx2bbGIEVBOot7KZFXWZ9LxHXoZ0O9mNqBXK+tvrpbH+84P?=
- =?iso-8859-1?Q?lO6A5lBFJP3Hiqx/Dtjd/ENfWu+H/fJGnQ?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+   d="scan'208";a="861064597"
+Received: from nprotaso-mobl1.ccr.corp.intel.com ([10.252.49.156])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 06:26:43 -0700
+Date:   Mon, 18 Sep 2023 16:26:41 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+cc:     Stephen Boyd <swboyd@chromium.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, patches@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Prashant Malani <pmalani@chromium.org>
+Subject: Re: [PATCH v4 2/4] platform/x86: intel_scu_ipc: Check status upon
+ timeout in ipc_wait_for_interrupt()
+In-Reply-To: <a0573057-8b93-f6f8-59eb-e8d30ac7035f@redhat.com>
+Message-ID: <f3d06f3d-1dee-54c2-88b9-f33cfb86366@linux.intel.com>
+References: <20230913212723.3055315-1-swboyd@chromium.org> <20230913212723.3055315-3-swboyd@chromium.org> <2bd9b7e2-a558-305b-bfd9-e64c28b6303d@linux.intel.com> <a0573057-8b93-f6f8-59eb-e8d30ac7035f@redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4bb5220-a9dc-4b0c-f46b-08dbb85b6e98
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2023 15:25:03.9791
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aGJWZKRmpQ3lFvgGRmWCr96ExRcily3N1FeM1XktSpirgUpqTkEpPux/xwG+wMOuqUPFEALi+TeZTc9gvJH14A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7383
-X-OriginatorOrg: intel.com
+Content-Type: multipart/mixed; BOUNDARY="8323329-543075989-1695043025=:1832"
+Content-ID: <87977fa8-8a4f-18c8-6c6-1c2f8fd622cb@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-> I think Tony's "proof" is pretty invalid. He doesn't differentiate
-> HW interface related bitfields from those which are not HW interface=20
-> related (to the extent that in fact most of those bitfields likely are no=
-t=20
-> HW interface related).
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-When I made that comment it was about a patch series that used
-bitfields to decode the subfields in Intel model specific MSRs.  I
-think that's true of use in this series too.
+--8323329-543075989-1695043025=:1832
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <d1a9ce37-d373-c568-271f-5872936c1b0@linux.intel.com>
 
-I think most of these are for MSR decode. The one mentioned in
-this thread: "union ifs_scan_hashes_status_gen2 {" definitely is.
+On Mon, 18 Sep 2023, Hans de Goede wrote:
+> On 9/15/23 15:49, Ilpo Järvinen wrote:
+> > On Wed, 13 Sep 2023, Stephen Boyd wrote:
+> > 
+> >> It's possible for the completion in ipc_wait_for_interrupt() to timeout,
+> >> simply because the interrupt was delayed in being processed. A timeout
+> >> in itself is not an error. This driver should check the status register
+> >> upon a timeout to ensure that scheduling or interrupt processing delays
+> >> don't affect the outcome of the IPC return value.
+> >>
+> >>  CPU0                                                   SCU
+> >>  ----                                                   ---
+> >>  ipc_wait_for_interrupt()
+> >>   wait_for_completion_timeout(&scu->cmd_complete)
+> >>   [TIMEOUT]                                             status[IPC_STATUS_BUSY]=0
+> >>
+> >> Fix this problem by reading the status bit in all cases, regardless of
+> >> the timeout. If the completion times out, we'll assume the problem was
+> >> that the IPC_STATUS_BUSY bit was still set, but if the status bit is
+> >> cleared in the meantime we know that we hit some scheduling delay and we
+> >> should just check the error bit.
+> > 
+> > Hi,
+> > 
+> > I don't understand the intent here. What prevents IPC_STATUS_BUSY from 
+> > changing right after you've read it in ipc_read_status(scu)? Doesn't that 
+> > end you exactly into the same situation where the returned value is stale 
+> > so I cannot see how this fixes anything, at best it just plays around the 
+> > race window that seems to still be there after this fix?
+> 
+> As I understand it the problem before was that the function would
+> return -ETIMEDOUT; purely based on wait_for_completion_timeout()
+> without ever actually checking the BUSY bit:
+> 
+> Old code:
+> 
+> 	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT))
+> 		return -ETIMEDOUT;
+> 
+> This allows for a scenario where when the IRQ processing got delayed
+> (on say another core) causing the timeout to trigger,
+> ipc_wait_for_interrupt() would return -ETIMEDOUT even though
+> the BUSY flag was already cleared by the SCU.
+> 
+> This patch adds an explicit check for the BUSY flag after
+> the wait_for_completion(), rather then relying on the
+> wait_for_completion() return value which implies things
+> are still busy.
 
-Are there any that are not for MSRs? I'd also claim "Intel
-specific" if there are some decoding parts of the Intel scan
-file format.
+Oh, I see, it's because the code is waiting for the completion rather than
+the actual condition.
 
--Tony
+> As for "What prevents IPC_STATUS_BUSY from 
+> changing right after you've read it in ipc_read_status(scu)?"
+> 
+> AFAICT in this code path the bit is only ever supposed to go
+> from being set (busy) to unset (not busy), not the other
+> way around since no new commands can be submitted until
+> this function has completed. So that scenario cannot happen.
+
+This is not what I meant.
+
+I meant that if the code has decided to return -ETIMEDOUT, the status bit 
+still change at that point which makes the return value to not match. This 
+race is still there and given the changelog was a bit sparse on what race 
+it was fixing I ended up noticing this detail.
 
 
+-- 
+ i.
+--8323329-543075989-1695043025=:1832--
