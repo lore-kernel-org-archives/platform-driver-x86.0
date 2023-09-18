@@ -2,144 +2,91 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168E5CD13D2
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Sep 2023 15:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA13BCD37B0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Sep 2023 16:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229723AbjIRP5C (ORCPT
+        id S229827AbjIRQBI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Sep 2023 11:57:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42254 "EHLO
+        Mon, 18 Sep 2023 12:01:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229633AbjIRP5B (ORCPT
+        with ESMTP id S229501AbjIRQBD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Sep 2023 11:57:01 -0400
+        Mon, 18 Sep 2023 12:01:03 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7A6E270B;
-        Mon, 18 Sep 2023 08:55:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A071721;
+        Mon, 18 Sep 2023 08:56:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695052509; x=1726588509;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=9mdSjBgak3X7CxWik+JVulIYQIwZzjIpi9uzcf4feQE=;
-  b=De/fi7BxQvmSa9hdvh/ur5YXcXK6NWnTa/xopyFAQnE433NA5REc+x7i
-   bBldD6snaG9rzkruN5nwxImGHk2T6TorLy2ccS7VXH/ph0knaaTn0Cq2Z
-   aIX8b0Oe2EagY3KMfpLhNkDr2YbwntEykCAu4hqHW6EzOOBLT72vdeYUf
-   L7dJs18sQABeZxQIYk5huaq6dewQT72Q0w3+hvaqfTeTqGUzBxHR5vMHL
-   K1gTT6J2MScuO14YWAFohQV43q7kRqPmyP5zPJD9J1H4hw1NIxZJ4urdB
-   4tQgut5UFoKAw0In/nCLh+REAC3X4b2fdjlmfzE8j1sZOe7g3jflpoIxF
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="466000301"
+  t=1695052617; x=1726588617;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zIzeB2BdT2vjYKtzNJ2hkECCW7d4ci7KzVMVss7VAyM=;
+  b=J+ovU/s9kqYrZGIE1v+QMOUe/fuXR/L+YkfbaXyYOjeIi5jTTlgjTtwM
+   Z1Og0YDaYQv1QAKbxs/ajAKC8nf8UJpBZZhsw4quR48xwVKnc5NehJ07L
+   ihMErDUW2hx1JPhyRgUvtlLDkwznsm4nP92XWeIW42Ohnf1YqI0fHTkI2
+   cLLF0lIgknP5wxStGSGFzIS87rgCJKaj47gMMCUmCY5Z4/giobFK+qvGl
+   pv+prBImAa65msx/IRjKpE9l4Y+OiYvCQl75gKnXwFuAWCTRRoAa8hHSk
+   cPneKiuRApXyhWjbtuslf/SOxaKWm2/osO3RsrvhUWKEcHR7cbAIfQyM0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="466020665"
 X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="466000301"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 06:26:46 -0700
+   d="scan'208";a="466020665"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 07:40:02 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="861064597"
+X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="1076611132"
 X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="861064597"
-Received: from nprotaso-mobl1.ccr.corp.intel.com ([10.252.49.156])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 06:26:43 -0700
-Date:   Mon, 18 Sep 2023 16:26:41 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+   d="scan'208";a="1076611132"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 07:39:59 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1qiFPp-0000000AyGm-0Mzp;
+        Mon, 18 Sep 2023 17:39:57 +0300
+Date:   Mon, 18 Sep 2023 17:39:56 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>
-cc:     Stephen Boyd <swboyd@chromium.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, patches@lists.linux.dev,
-        platform-driver-x86@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Prashant Malani <pmalani@chromium.org>
-Subject: Re: [PATCH v4 2/4] platform/x86: intel_scu_ipc: Check status upon
- timeout in ipc_wait_for_interrupt()
-In-Reply-To: <a0573057-8b93-f6f8-59eb-e8d30ac7035f@redhat.com>
-Message-ID: <f3d06f3d-1dee-54c2-88b9-f33cfb86366@linux.intel.com>
-References: <20230913212723.3055315-1-swboyd@chromium.org> <20230913212723.3055315-3-swboyd@chromium.org> <2bd9b7e2-a558-305b-bfd9-e64c28b6303d@linux.intel.com> <a0573057-8b93-f6f8-59eb-e8d30ac7035f@redhat.com>
+Cc:     Mark Pearson <mpearson-lenovo@squebb.ca>, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: think-lmi: Add bulk save feature
+Message-ID: <ZQhhPJsQapKkY39v@smile.fi.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20230906121328.50437-1-mpearson-lenovo@squebb.ca>
+ <ZQhXZkBHviGOEl-x@smile.fi.intel.com>
+ <878da778-e183-6ef5-61ce-3a3d059f1a1e@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-543075989-1695043025=:1832"
-Content-ID: <87977fa8-8a4f-18c8-6c6-1c2f8fd622cb@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <878da778-e183-6ef5-61ce-3a3d059f1a1e@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, Sep 18, 2023 at 04:07:53PM +0200, Hans de Goede wrote:
+> On 9/18/23 15:57, Andy Shevchenko wrote:
+> > On Wed, Sep 06, 2023 at 08:13:14AM -0400, Mark Pearson wrote:
 
---8323329-543075989-1695043025=:1832
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <d1a9ce37-d373-c568-271f-5872936c1b0@linux.intel.com>
+...
 
-On Mon, 18 Sep 2023, Hans de Goede wrote:
-> On 9/15/23 15:49, Ilpo Järvinen wrote:
-> > On Wed, 13 Sep 2023, Stephen Boyd wrote:
+> >> +static const char * const save_mode_strings[] = {
+> >> +	[TLMI_SAVE_SINGLE] = "single",
+> >> +	[TLMI_SAVE_BULK] = "bulk",
+> >> +	[TLMI_SAVE_SAVE] = "save"
 > > 
-> >> It's possible for the completion in ipc_wait_for_interrupt() to timeout,
-> >> simply because the interrupt was delayed in being processed. A timeout
-> >> in itself is not an error. This driver should check the status register
-> >> upon a timeout to ensure that scheduling or interrupt processing delays
-> >> don't affect the outcome of the IPC return value.
-> >>
-> >>  CPU0                                                   SCU
-> >>  ----                                                   ---
-> >>  ipc_wait_for_interrupt()
-> >>   wait_for_completion_timeout(&scu->cmd_complete)
-> >>   [TIMEOUT]                                             status[IPC_STATUS_BUSY]=0
-> >>
-> >> Fix this problem by reading the status bit in all cases, regardless of
-> >> the timeout. If the completion times out, we'll assume the problem was
-> >> that the IPC_STATUS_BUSY bit was still set, but if the status bit is
-> >> cleared in the meantime we know that we hit some scheduling delay and we
-> >> should just check the error bit.
-> > 
-> > Hi,
-> > 
-> > I don't understand the intent here. What prevents IPC_STATUS_BUSY from 
-> > changing right after you've read it in ipc_read_status(scu)? Doesn't that 
-> > end you exactly into the same situation where the returned value is stale 
-> > so I cannot see how this fixes anything, at best it just plays around the 
-> > race window that seems to still be there after this fix?
+> > Missing comma.
 > 
-> As I understand it the problem before was that the function would
-> return -ETIMEDOUT; purely based on wait_for_completion_timeout()
-> without ever actually checking the BUSY bit:
-> 
-> Old code:
-> 
-> 	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT))
-> 		return -ETIMEDOUT;
-> 
-> This allows for a scenario where when the IRQ processing got delayed
-> (on say another core) causing the timeout to trigger,
-> ipc_wait_for_interrupt() would return -ETIMEDOUT even though
-> the BUSY flag was already cleared by the SCU.
-> 
-> This patch adds an explicit check for the BUSY flag after
-> the wait_for_completion(), rather then relying on the
-> wait_for_completion() return value which implies things
-> are still busy.
+> Fixing this retro-actively is not really useful, if we
+> ever need an extra entry we can deal with the churn then.
 
-Oh, I see, it's because the code is waiting for the completion rather than
-the actual condition.
+I agree, but this is to give a comprehensive review as long as I went through
+the entire change.
 
-> As for "What prevents IPC_STATUS_BUSY from 
-> changing right after you've read it in ipc_read_status(scu)?"
-> 
-> AFAICT in this code path the bit is only ever supposed to go
-> from being set (busy) to unset (not busy), not the other
-> way around since no new commands can be submitted until
-> this function has completed. So that scenario cannot happen.
-
-This is not what I meant.
-
-I meant that if the code has decided to return -ETIMEDOUT, the status bit 
-still change at that point which makes the return value to not match. This 
-race is still there and given the changelog was a bit sparse on what race 
-it was fixing I ended up noticing this detail.
-
+> >> +};
 
 -- 
- i.
---8323329-543075989-1695043025=:1832--
+With Best Regards,
+Andy Shevchenko
+
+
