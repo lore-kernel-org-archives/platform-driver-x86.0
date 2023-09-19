@@ -2,298 +2,133 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF37CD54A7
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Sep 2023 08:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A25CD54A9
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Sep 2023 09:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230496AbjISIdw (ORCPT
+        id S229522AbjISJVs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Sep 2023 04:33:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35350 "EHLO
+        Tue, 19 Sep 2023 05:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231428AbjISIdu (ORCPT
+        with ESMTP id S229552AbjISJVr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Sep 2023 04:33:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDC6F132
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Sep 2023 01:32:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1695112378;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DD7OhrfdclwmkqiRSi/2mVzEoaQ6HLto/eRRJjfIyIM=;
-        b=M2K48oKihDcTJi188CCwLiCj8QtbNxUJB21Na6W3Yo1h9U1EdXF7HlJZJ4Fi8rhSPsywnv
-        mWLq2qM23gl5972GWrPAU7xETkJ3CzeQ0LpJVFUJFEJ75137ChF+zxkUESrdQB7z2abjhY
-        5sINTxbTJ/hie0HI9kj48vMgkL22BeY=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-695-iJE9ZsFqM_OUBZp0KuwYNw-1; Tue, 19 Sep 2023 04:32:56 -0400
-X-MC-Unique: iJE9ZsFqM_OUBZp0KuwYNw-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-52a0f6f7a3bso8872094a12.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Sep 2023 01:32:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695112375; x=1695717175;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DD7OhrfdclwmkqiRSi/2mVzEoaQ6HLto/eRRJjfIyIM=;
-        b=de6qXiua4MryySLgy88GBCIx5oqxVFK+tZyKijSkt3hy40wyV3Hj2rfu0uzk9jlr4n
-         GUPR2LmTpem/ng8WDvifqPvF/78Cvxu2sgybv06LUGT7AKIAjv0HIREejBqJuPSTkFnM
-         3eA4NqUplZkQmpj3A29kPpHj69aaNPmvfqMcAkaBQJHAI7Vib9UfFTWc23bBmR6UG46v
-         8YMQUNnEsujeY5arz5r1K1Hrg67bx7JKsosanhpSGTimvPFDrpUGSkuSiZFf8maOPi82
-         i69zRyZ+5WNEuhdF4C7N0WbZgVEHBiAth+1BOw122y9pJSFM8yFPRV06s28nc8U6cOoL
-         jIFw==
-X-Gm-Message-State: AOJu0Yw+f1l3dpj1qcCEbd70mHiHyDzqRk4Yr2mfm3YvEmTZcGvsODob
-        DQcFRvjua3EJ0ffjqpXye8Hp8W7EfYXvnOi5KS3hsIVepGBMKm7V4xAYUJX7jQPSDH4Dc6HGSHQ
-        jk+2eXojriObm5PqCP0jPiKZLuDp2P1H2Xw==
-X-Received: by 2002:a05:6402:354c:b0:530:8b92:b69d with SMTP id f12-20020a056402354c00b005308b92b69dmr2396075edd.10.1695112375568;
-        Tue, 19 Sep 2023 01:32:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGmXDIMG9E0295pWOz+tkg88tAxAa346nT1njIIxhurAcl3MzR8Xh/zMA0Lh+IPatX7lMIrVw==
-X-Received: by 2002:a05:6402:354c:b0:530:8b92:b69d with SMTP id f12-20020a056402354c00b005308b92b69dmr2396055edd.10.1695112375250;
-        Tue, 19 Sep 2023 01:32:55 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id dn22-20020a05640222f600b00532c1dfe8ecsm350447edb.66.2023.09.19.01.32.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Sep 2023 01:32:54 -0700 (PDT)
-Message-ID: <bcdfa891-c821-30b9-e45c-ea4d30bd6b7f@redhat.com>
-Date:   Tue, 19 Sep 2023 10:32:53 +0200
+        Tue, 19 Sep 2023 05:21:47 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80518DA
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Sep 2023 02:21:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hoBbcdHU7bzEQnOcT+c9cmkhihSKWXCJOjLxbER6uVpCnLwU3XQFgSpLUOE1mOKdjqGMeujopNi1ksqdu9yBVwvcrSOi+6vs+LGQJnD08lEKtDbOhSfucyLUY7iwuSl9zgesBFeqAK4fMHrg5FyN3n+D0buN8JjF6gOVd3Bpe63gGdylXb15LHPy1JkBW/1/nIK2t8o2Q8HCqHC/OPTuR2H1VlyU+Vlu26ouM/CdY6LPIfxGr3L2M0Lo3+aH467FH79c7baFhfOX4gvKQ3Um8p3XOtK2U97/TR5jc25Em0Oc3NNMt9IxhwUyBVGgY2bzw/LjHm5H5J5W/tRLRwkS7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Vw/giExdxWXTNErHEpG8cPYf815zOUBr0jq4IaRtwzc=;
+ b=bU3/jJEQagFSwYuDzjl9ZnUO7gp9QhuF6Z/nBQTCS9xDiHwhdPsQDzXd+R4FQuYxv9dekF054EDEVGdbwlAViLe7qx4D+kVM9HiMyzpAkWpjpereiV0qgCN4e9kcekA7Nb2RaJZf7+Bx7MHFlWmMWDU+/5PWaxciniQtSeEoxPFJexRNbZg/AfVazxOgrGA7UCv/KGUf70EsUp+ncSix3soOO0sZUUl7UfIbvaxh2FMUb2CAaY33EQnT7L3V3RHLOdRTtPCe1rCnwiUtjyyEMRHmA+/7R4xGJtga5CfTv6OP4X1E0RDprg1dfDxgPhytD90pHDUkbrajCvo3+XtDAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vw/giExdxWXTNErHEpG8cPYf815zOUBr0jq4IaRtwzc=;
+ b=WROlO2VE9ppU6JdIgjRLe6q0z2RgUIPo8PW0Hqo9HI6+WZrR7/x0AHPPkdWkKYoh5V6+SqPeQ9LGheXi0PWzqRQ0d8sR+wzDmdjT2Us/nAYI2J76oN2MI1IscIPQ58BWOn3eqeTx5qbQbBaF03lzBicaI1uh4D4Z4VCyQmDrCJQ=
+Received: from MW4PR04CA0133.namprd04.prod.outlook.com (2603:10b6:303:84::18)
+ by SN7PR12MB7129.namprd12.prod.outlook.com (2603:10b6:806:2a1::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.26; Tue, 19 Sep
+ 2023 09:21:38 +0000
+Received: from CO1PEPF000044F7.namprd21.prod.outlook.com
+ (2603:10b6:303:84:cafe::34) by MW4PR04CA0133.outlook.office365.com
+ (2603:10b6:303:84::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.27 via Frontend
+ Transport; Tue, 19 Sep 2023 09:21:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044F7.mail.protection.outlook.com (10.167.241.197) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6838.0 via Frontend Transport; Tue, 19 Sep 2023 09:21:38 +0000
+Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 19 Sep
+ 2023 04:21:24 -0500
+From:   Suma Hegde <suma.hegde@amd.com>
+To:     <hdegoede@redhat.com>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        Suma Hegde <suma.hegde@amd.com>,
+        Naveen Krishna Chatradhi <nchatrad@amd.com>
+Subject: [PATCH v3 3/3] platform/x86/amd/hsmp: improve the error log
+Date:   Tue, 19 Sep 2023 09:20:57 +0000
+Message-ID: <20230919092057.2235437-3-suma.hegde@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230919092057.2235437-1-suma.hegde@amd.com>
+References: <20230919092057.2235437-1-suma.hegde@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2] platform/x86: think-lmi: Add bulk save feature
-Content-Language: en-US, nl
-To:     Mark Pearson <mpearson-lenovo@squebb.ca>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     "markgross@kernel.org" <markgross@kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-References: <mpearson-lenovo@squebb.ca>
- <20230906121328.50437-1-mpearson-lenovo@squebb.ca>
- <ZQhXZkBHviGOEl-x@smile.fi.intel.com>
- <878da778-e183-6ef5-61ce-3a3d059f1a1e@redhat.com>
- <bf511687-8b29-42e2-92df-fcbf763cd3a2@app.fastmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <bf511687-8b29-42e2-92df-fcbf763cd3a2@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F7:EE_|SN7PR12MB7129:EE_
+X-MS-Office365-Filtering-Correlation-Id: f827b726-e9ea-49e9-e423-08dbb8f1d3ed
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DxpUoALACz/MfZq9y4tG+9EDDaoKyNLr5XZ+Oeue2FHijU+BrB48OFeRCcuSw0sOPIApkNuTP1/TGFP4ob4cqrXwTTv1YYdiPQ5z1l7GCADQ1ht8zMb4wqYsg8IpBbCP4MlSxBTTKQdznaNcLfanHqdjwLFWjcdY8UKaxzFaia4w4fh/4/nnrdNM0CCFQkSjscEDMurtiu/QQF9x52nxTWFlSl7AtEMfv8o+L9APpB5lUT77UlZ3S+QxMgrtybSx57rNuQ3GRiTMmULRUySJiNVAeFWt2GuDNi5GcEqpPNh9FpFedPRhoxrpcvghL6o+mHDNeWzxvoQte0WT5jmCn/pfOm4hiZOt4+fJhVlic7EFjexksgbABfOkzHByTK3u8FXLdI10ofKp7mbM4VSqBVlvLowlTI30VkhpaMnN9rz7E2dH4dUAn9piYZ1Fi8bM4ymPkt/wYN61ZLmll87apCk/hlpDm6qBcZXZmgyzPDXnN4i5Liccin2tkfV/1KBTVy+14D1K5KOjmsK3etUgLbLMSMglWcK49IEF8WSeoY+bN2Bq5EeQkgwo6aJntXTllXgtXK+Cm9E9jI5o/0L7CognHpwlcGeTuhhd1bBJ//U+hBX7teC2GfOLMVRNZMwg5GzoS332F5MOOBoUf0KVbOjHYHRw+PvLkU8h6ialCM+YM3kWdpzUx84eqD1EcGRMvVcDHOaqmtW4bZN0tbJQlygbQjtRnnjNNYypVYIHmCYHi+b/gug2ioxterNecw6nF0MKUaxsHtdJO40pSRqQEQ==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(39860400002)(376002)(136003)(396003)(451199024)(1800799009)(82310400011)(186009)(40470700004)(36840700001)(46966006)(40460700003)(41300700001)(54906003)(8676002)(40480700001)(4326008)(8936002)(36756003)(5660300002)(316002)(6916009)(44832011)(7696005)(70586007)(6666004)(2616005)(70206006)(1076003)(2906002)(336012)(36860700001)(426003)(86362001)(16526019)(356005)(26005)(81166007)(82740400003)(83380400001)(47076005)(478600001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2023 09:21:38.3863
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f827b726-e9ea-49e9-e423-08dbb8f1d3ed
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000044F7.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7129
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark,
+1. Change print message during platform init to a more meaningful
+   clear message.
+2. Return the error code returned by hsmp_test() itself, rather then
+   returning a common EOPNOTSUPP error.
 
-On 9/18/23 17:23, Mark Pearson wrote:
-> Thanks Andy for the review
-> 
-> On Mon, Sep 18, 2023, at 10:07 AM, Hans de Goede wrote:
->> Hi,
->>
->> On 9/18/23 15:57, Andy Shevchenko wrote:
->>> On Wed, Sep 06, 2023 at 08:13:14AM -0400, Mark Pearson wrote:
->>>> On Lenovo platforms there is a limitation in the number of times an
->>>> attribute can be saved. This is an architectural limitation and it limits
->>>> the number of attributes that can be modified to 48.
->>>> A solution for this is instead of the attribute being saved after every
->>>> modification allow a user to bulk set the attributes and then trigger a
->>>> final save. This allows unlimited attributes.
->>>>
->>>> This patch introduces a save_settings attribute that can be configured to
->>>> either single or bulk mode by the user.
->>>> Single mode is the default but customers who want to avoid the 48
->>>> attribute limit can enable bulk mode.
->>>>
->>>> Displaying the save_settings attribute will display the enabled mode.
->>>>
->>>> When in bulk mode writing 'save' to the save_settings attribute will
->>>> trigger a save. Once this has been done a reboot is required before more
->>>> attributes can be modified.
->>>
->>> ...
->>>
->>>> +Date:		August 2023
->>>> +KernelVersion:	6.5
->>>
->>> This is obviously incorrect (outdated) information.
->>
->> Mark can you please submit a follow up patch fixing this.
-> 
-> So I assume I put 6.6 in here? Or will it be 6.7?
+Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+Reviewed-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
+---
+Changes since v1:
+1. changed commit message
+Changes since v2:
+No change
 
-Yes this should be 6.6 .
+ drivers/platform/x86/amd/hsmp.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-
->>> ...
->>>
->>>> +static const char * const save_mode_strings[] = {
->>>> +	[TLMI_SAVE_SINGLE] = "single",
->>>> +	[TLMI_SAVE_BULK] = "bulk",
->>>> +	[TLMI_SAVE_SAVE] = "save"
->>>
->>> Missing comma.
->>
->> Fixing this retro-actively is not really useful, if we
->> ever need an extra entry we can deal with the churn then.
-> 
-> As I'm making other changes I assume I address this one too.
-
-Please skip fixing / do not fix this one. The goal of having
-a "," after the last (non terminating) entry of an array
-is to avoid getting the last line listed as modified in the diff
-when adding further entries just to add the ','.
-
-So fixing this after the fact is not really useful. If this array
-ever gets an extra entry we can just add the ',' when that happens.
-
-
->>>
->>>> +};
->>>
->>> ...
->>>
->>>> +static ssize_t save_settings_show(struct kobject *kobj, struct kobj_attribute *attr,
->>>> +				  char *buf)
->>>> +{
->>>> +	/* Check that setting is valid */
->>>> +	if (WARN_ON((tlmi_priv.save_mode < TLMI_SAVE_SINGLE) ||
->>>> +		    (tlmi_priv.save_mode > TLMI_SAVE_BULK)))
->>>> +		return -EIO;
->>>> +	return sprintf(buf, "%s\n", save_mode_strings[tlmi_priv.save_mode]);
->>>
->>> According to the documentation it must be sysfs_emit() if I'm not missing
->>> anything here.
->>
->> Yes switching to sysfs_emit() here in the followup patch would be good.
-> 
-> Ack
-> 
->>
->>>
->>>> +}
->>>
->>> ...
->>>
->>>> +static ssize_t save_settings_store(struct kobject *kobj, struct kobj_attribute *attr,
->>>> +				   const char *buf, size_t count)
->>>> +{
->>>> +	char *auth_str = NULL;
->>>> +	int ret = 0;
->>>> +	int cmd;
->>>> +
->>>> +	cmd = sysfs_match_string(save_mode_strings, buf);
->>>> +
->>>> +	/* Use lock in case multiple WMI operations needed */
->>>> +	mutex_lock(&tlmi_mutex);
->>>> +
->>>> +	switch (cmd) {
->>>> +	case TLMI_SAVE_SINGLE:
->>>> +	case TLMI_SAVE_BULK:
->>>> +		tlmi_priv.save_mode = cmd;
->>>> +		goto out;
->>>> +	case TLMI_SAVE_SAVE:
->>>> +		/* Check if supported*/
->>>> +		if ((!tlmi_priv.can_set_bios_settings) ||
->>>> +		    (tlmi_priv.save_mode == TLMI_SAVE_SINGLE)) {
->>>> +			ret = -EOPNOTSUPP;
->>>> +			goto out;
->>>> +		}
->>>> +		/* Check there is actually something to save */
->>>> +		if (!tlmi_priv.save_required) {
->>>> +			ret = -ENOENT;
->>>> +			goto out;
->>>> +		}
->>>> +		/* Check if certificate authentication is enabled and active */
->>>> +		if (tlmi_priv.certificate_support && tlmi_priv.pwd_admin->cert_installed) {
->>>> +			if (!tlmi_priv.pwd_admin->signature ||
->>>> +			    !tlmi_priv.pwd_admin->save_signature) {
->>>> +				ret = -EINVAL;
->>>> +				goto out;
->>>> +			}
->>>> +			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
->>>> +					       tlmi_priv.pwd_admin->save_signature);
->>>> +			if (ret)
->>>> +				goto out;
->>>> +		} else if (tlmi_priv.opcode_support) {
->>>> +			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
->>>> +				ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
->>>> +							  tlmi_priv.pwd_admin->password);
->>>> +				if (ret)
->>>> +					goto out;
->>>> +			}
->>>> +			ret = tlmi_save_bios_settings("");
->>>> +		} else { /* old non-opcode based authentication method (deprecated) */
->>>> +			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
->>>> +				auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
->>>> +						     tlmi_priv.pwd_admin->password,
->>>> +						     encoding_options[tlmi_priv.pwd_admin->encoding],
->>>> +						     tlmi_priv.pwd_admin->kbdlang);
->>>> +				if (!auth_str) {
->>>> +					ret = -ENOMEM;
->>>> +					goto out;
->>>> +				}
->>>> +			}
->>>> +
->>>> +			if (auth_str)
->>>> +				ret = tlmi_save_bios_settings(auth_str);
->>>> +			else
->>>> +				ret = tlmi_save_bios_settings("");
->>>> +		}
->>>> +		tlmi_priv.save_required = false;
->>>> +		tlmi_priv.reboot_required = true;
->>>> +
->>>> +		if (!ret && !tlmi_priv.pending_changes) {
->>>> +			tlmi_priv.pending_changes = true;
->>>> +			/* let userland know it may need to check reboot pending again */
->>>> +			kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
->>>> +		}
->>>> +		break;
->>>
->>>> +	default:
->>>> +		ret = -EINVAL;
->>>> +	}
->>>
->>> Missing break; and actually no need to do this part under the lock, besides
->>> that it shadows an error code, that said this should be
->>>
->>> 	cmd = sysfs_match_string(...);
->>> 	if (cmd < 0)
->>> 		return cmd;
->>>
->>>
->>>> +out:
->>>> +	mutex_unlock(&tlmi_mutex);
->>>> +	kfree(auth_str);
->>>> +	return ret ?: count;
->>>
->>> You can switch the driver to use cleanup.h at some point.
->>>
->>>> +}
->>>
-> 
-> Ack - thanks for the notes.
-> 
->>> ...
->>>
->>>> +/* There are a limit on the number of WMI operations you can do if you use
->>>> + * the default implementation of saving on every set. This is due to a
->>>> + * limitation in EFI variable space used.
->>>> + * Have a 'bulk save' mode where you can manually trigger the save, and can
->>>> + * therefore set unlimited variables - for users that need it.
->>>> + */
->>>
->>> /*
->>>  * This is wrong multi-line comment style. This one
->>>  * is used solely in net subsystem.
->>>  */
->>>
->>
->> Good catch, Mark can you fix this one too please ?
->>
-> Will do - not sure why I did that in the first place (it's a habit from a looong time ago that came back. Sigh).
-
-Regards,
-
-Hans
-
+diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
+index fc6fba18844e..c4d324436a40 100644
+--- a/drivers/platform/x86/amd/hsmp.c
++++ b/drivers/platform/x86/amd/hsmp.c
+@@ -568,10 +568,10 @@ static int __init hsmp_plt_init(void)
+ 	for (i = 0; i < plat_dev.num_sockets; i++) {
+ 		ret = hsmp_test(i, 0xDEADBEEF);
+ 		if (ret) {
+-			pr_err("HSMP is not supported on Fam:%x model:%x\n",
++			pr_err("HSMP test message failed on Fam:%x model:%x\n",
+ 			       boot_cpu_data.x86, boot_cpu_data.x86_model);
+-			pr_err("Or Is HSMP disabled in BIOS ?\n");
+-			return -EOPNOTSUPP;
++			pr_err("Is HSMP disabled in BIOS ?\n");
++			return ret;
+ 		}
+ 	}
+ 
+-- 
+2.25.1
 
