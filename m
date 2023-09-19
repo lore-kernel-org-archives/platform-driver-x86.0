@@ -2,146 +2,298 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89870CD5491
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Sep 2023 07:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF37CD54A7
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Sep 2023 08:33:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231891AbjISHos (ORCPT
+        id S230496AbjISIdw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Sep 2023 03:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59304 "EHLO
+        Tue, 19 Sep 2023 04:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231803AbjISHoj (ORCPT
+        with ESMTP id S231428AbjISIdu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Sep 2023 03:44:39 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D75AFFC;
-        Tue, 19 Sep 2023 00:44:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695109473; x=1726645473;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=DueEHAS4pNn6cHKKxtYpc8Y6eCVUjoxCLg1+H69gZ5U=;
-  b=D5g6Mb5hqm+Ni8czkJ0Jawl3cbAgdYI5a+TSJJNnml1r+qp7CcZIQRPH
-   aF4GP093vzcA4AJ3HAhZgcu7FDGZPR/DPE+Bkxc4sxHGx6uKyrHnZThfg
-   rPtvlivKanANTtgKHv7ITazHsJ+HUHiggMGsQGS8FgBlexkwxA6gWc47H
-   ZipsuC+zgRVXoCj6k0Zg7NE7paMjL82ki/HqbUVna6Anq5LOqoRkWOfKt
-   vXifFu1jYvgt8bZJqpgByDu4Ubt0REcizO/VMtdHj4veI1EVOM5if3YEa
-   5bI4jkHDE3HxuR/6wS3GYlRn2kfz1PKkNlyHkI3HqLW4lkGfuSL0H42kJ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="378774247"
-X-IronPort-AV: E=Sophos;i="6.02,158,1688454000"; 
-   d="scan'208";a="378774247"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 00:44:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="722762868"
-X-IronPort-AV: E=Sophos;i="6.02,158,1688454000"; 
-   d="scan'208";a="722762868"
-Received: from laichele-mobl1.ger.corp.intel.com ([10.252.38.7])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 00:44:21 -0700
-Date:   Tue, 19 Sep 2023 10:44:14 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     "Joseph, Jithu" <jithu.joseph@intel.com>
-cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        rostedt@goodmis.org, ashok.raj@intel.com, tony.luck@intel.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
-        ravi.v.shankar@intel.com, pengfei.xu@intel.com
-Subject: Re: [PATCH 04/10] platform/x86/intel/ifs: Scan test for new
- generations
-In-Reply-To: <5a66a02d-3504-ab5f-5373-789c8789557f@intel.com>
-Message-ID: <d94e516f-6331-2f20-468-bb8c6cf899c4@linux.intel.com>
-References: <20230913183348.1349409-1-jithu.joseph@intel.com> <20230913183348.1349409-5-jithu.joseph@intel.com> <74882e91-f41e-7672-3835-d74f1364bbdd@linux.intel.com> <5a66a02d-3504-ab5f-5373-789c8789557f@intel.com>
+        Tue, 19 Sep 2023 04:33:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDC6F132
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Sep 2023 01:32:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1695112378;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DD7OhrfdclwmkqiRSi/2mVzEoaQ6HLto/eRRJjfIyIM=;
+        b=M2K48oKihDcTJi188CCwLiCj8QtbNxUJB21Na6W3Yo1h9U1EdXF7HlJZJ4Fi8rhSPsywnv
+        mWLq2qM23gl5972GWrPAU7xETkJ3CzeQ0LpJVFUJFEJ75137ChF+zxkUESrdQB7z2abjhY
+        5sINTxbTJ/hie0HI9kj48vMgkL22BeY=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-695-iJE9ZsFqM_OUBZp0KuwYNw-1; Tue, 19 Sep 2023 04:32:56 -0400
+X-MC-Unique: iJE9ZsFqM_OUBZp0KuwYNw-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-52a0f6f7a3bso8872094a12.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Sep 2023 01:32:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695112375; x=1695717175;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DD7OhrfdclwmkqiRSi/2mVzEoaQ6HLto/eRRJjfIyIM=;
+        b=de6qXiua4MryySLgy88GBCIx5oqxVFK+tZyKijSkt3hy40wyV3Hj2rfu0uzk9jlr4n
+         GUPR2LmTpem/ng8WDvifqPvF/78Cvxu2sgybv06LUGT7AKIAjv0HIREejBqJuPSTkFnM
+         3eA4NqUplZkQmpj3A29kPpHj69aaNPmvfqMcAkaBQJHAI7Vib9UfFTWc23bBmR6UG46v
+         8YMQUNnEsujeY5arz5r1K1Hrg67bx7JKsosanhpSGTimvPFDrpUGSkuSiZFf8maOPi82
+         i69zRyZ+5WNEuhdF4C7N0WbZgVEHBiAth+1BOw122y9pJSFM8yFPRV06s28nc8U6cOoL
+         jIFw==
+X-Gm-Message-State: AOJu0Yw+f1l3dpj1qcCEbd70mHiHyDzqRk4Yr2mfm3YvEmTZcGvsODob
+        DQcFRvjua3EJ0ffjqpXye8Hp8W7EfYXvnOi5KS3hsIVepGBMKm7V4xAYUJX7jQPSDH4Dc6HGSHQ
+        jk+2eXojriObm5PqCP0jPiKZLuDp2P1H2Xw==
+X-Received: by 2002:a05:6402:354c:b0:530:8b92:b69d with SMTP id f12-20020a056402354c00b005308b92b69dmr2396075edd.10.1695112375568;
+        Tue, 19 Sep 2023 01:32:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGmXDIMG9E0295pWOz+tkg88tAxAa346nT1njIIxhurAcl3MzR8Xh/zMA0Lh+IPatX7lMIrVw==
+X-Received: by 2002:a05:6402:354c:b0:530:8b92:b69d with SMTP id f12-20020a056402354c00b005308b92b69dmr2396055edd.10.1695112375250;
+        Tue, 19 Sep 2023 01:32:55 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id dn22-20020a05640222f600b00532c1dfe8ecsm350447edb.66.2023.09.19.01.32.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Sep 2023 01:32:54 -0700 (PDT)
+Message-ID: <bcdfa891-c821-30b9-e45c-ea4d30bd6b7f@redhat.com>
+Date:   Tue, 19 Sep 2023 10:32:53 +0200
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-534009368-1695109467=:1920"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2] platform/x86: think-lmi: Add bulk save feature
+Content-Language: en-US, nl
+To:     Mark Pearson <mpearson-lenovo@squebb.ca>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     "markgross@kernel.org" <markgross@kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+References: <mpearson-lenovo@squebb.ca>
+ <20230906121328.50437-1-mpearson-lenovo@squebb.ca>
+ <ZQhXZkBHviGOEl-x@smile.fi.intel.com>
+ <878da778-e183-6ef5-61ce-3a3d059f1a1e@redhat.com>
+ <bf511687-8b29-42e2-92df-fcbf763cd3a2@app.fastmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <bf511687-8b29-42e2-92df-fcbf763cd3a2@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Mark,
 
---8323329-534009368-1695109467=:1920
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-On Fri, 15 Sep 2023, Joseph, Jithu wrote:
-> On 9/15/2023 9:51 AM, Ilpo Järvinen wrote:
-> > On Wed, 13 Sep 2023, Jithu Joseph wrote:
-> > 
-> >> Make changes to scan test flow such that MSRs are populated
-> >> appropriately based on the generation supported by hardware.
-> >>
-> >> Width of chunk related bitfields is ACTIVATE_SCAN and SCAN_STATUS MSRs
-> >> are different in newer IFS generation compared to gen0.
-> >>
-> >> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-> >> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> >> Tested-by: Pengfei Xu <pengfei.xu@intel.com>
-> >> ---
-> >>  drivers/platform/x86/intel/ifs/ifs.h     | 14 ++++++++++++++
-> >>  drivers/platform/x86/intel/ifs/runtest.c | 23 ++++++++++++++++++-----
-> >>  2 files changed, 32 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-> >> index 886dc74de57d..3265a6d8a6f3 100644
-> >> --- a/drivers/platform/x86/intel/ifs/ifs.h
-> >> +++ b/drivers/platform/x86/intel/ifs/ifs.h
-> >> @@ -205,6 +205,12 @@ union ifs_scan {
-> >>  		u32	delay	:31;
-> >>  		u32	sigmce	:1;
-> >>  	};
-> >> +	struct {
-> >> +		u16	start;
-> >> +		u16	stop;
-> >> +		u32	delay	:31;
-> >> +		u32	sigmce	:1;
-> >> +	} gen2;
-> > 
-> > I don't like the way old struct is left without genx naming. It makes the 
-> > code below more confusing as is.
-> > 
+On 9/18/23 17:23, Mark Pearson wrote:
+> Thanks Andy for the review
 > 
-> Given that less than half the fields (2/4 in ifs_scan and 2/5 in ifs_status ) are changing across
-> generations(and rest are common) , I felt the code would be more readable if the common fields are
-> accessed without generation as is done now. 
+> On Mon, Sep 18, 2023, at 10:07 AM, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 9/18/23 15:57, Andy Shevchenko wrote:
+>>> On Wed, Sep 06, 2023 at 08:13:14AM -0400, Mark Pearson wrote:
+>>>> On Lenovo platforms there is a limitation in the number of times an
+>>>> attribute can be saved. This is an architectural limitation and it limits
+>>>> the number of attributes that can be modified to 48.
+>>>> A solution for this is instead of the attribute being saved after every
+>>>> modification allow a user to bulk set the attributes and then trigger a
+>>>> final save. This allows unlimited attributes.
+>>>>
+>>>> This patch introduces a save_settings attribute that can be configured to
+>>>> either single or bulk mode by the user.
+>>>> Single mode is the default but customers who want to avoid the 48
+>>>> attribute limit can enable bulk mode.
+>>>>
+>>>> Displaying the save_settings attribute will display the enabled mode.
+>>>>
+>>>> When in bulk mode writing 'save' to the save_settings attribute will
+>>>> trigger a save. Once this has been done a reboot is required before more
+>>>> attributes can be modified.
+>>>
+>>> ...
+>>>
+>>>> +Date:		August 2023
+>>>> +KernelVersion:	6.5
+>>>
+>>> This is obviously incorrect (outdated) information.
+>>
+>> Mark can you please submit a follow up patch fixing this.
 > 
-> That said I don’t mind changing if you feel strongly about this
+> So I assume I put 6.6 in here? Or will it be 6.7?
 
-I would certainly prefer the generation dependent fields to marked as 
-such. However, it does not say you couldn't have the other fields remain 
-w/o gen.
+Yes this should be 6.6 .
 
-How about this definition (it comes with the added benefit that you 
-cannot accidently use start/stop without specifying gen which guards 
-against one type of bugs):
 
-union ifs_scan {
-        u64     data;
-        struct {
-		union {
-			struct {
-	        	        u8      start;
-        	        	u8      stop;
-	        	        u16     rsvd;
-			} gen0;
-		        struct {
-                		u16     start;
-		                u16     stop;
-			} gen2;
-		};
-                u32     delay   :31;
-                u32     sigmce  :1;
-        };
-};
+>>> ...
+>>>
+>>>> +static const char * const save_mode_strings[] = {
+>>>> +	[TLMI_SAVE_SINGLE] = "single",
+>>>> +	[TLMI_SAVE_BULK] = "bulk",
+>>>> +	[TLMI_SAVE_SAVE] = "save"
+>>>
+>>> Missing comma.
+>>
+>> Fixing this retro-actively is not really useful, if we
+>> ever need an extra entry we can deal with the churn then.
+> 
+> As I'm making other changes I assume I address this one too.
 
-Note that I used start and stop in gen0 without the bitfield that
-seems unnecessary.
+Please skip fixing / do not fix this one. The goal of having
+a "," after the last (non terminating) entry of an array
+is to avoid getting the last line listed as modified in the diff
+when adding further entries just to add the ','.
 
--- 
- i.
+So fixing this after the fact is not really useful. If this array
+ever gets an extra entry we can just add the ',' when that happens.
 
---8323329-534009368-1695109467=:1920--
+
+>>>
+>>>> +};
+>>>
+>>> ...
+>>>
+>>>> +static ssize_t save_settings_show(struct kobject *kobj, struct kobj_attribute *attr,
+>>>> +				  char *buf)
+>>>> +{
+>>>> +	/* Check that setting is valid */
+>>>> +	if (WARN_ON((tlmi_priv.save_mode < TLMI_SAVE_SINGLE) ||
+>>>> +		    (tlmi_priv.save_mode > TLMI_SAVE_BULK)))
+>>>> +		return -EIO;
+>>>> +	return sprintf(buf, "%s\n", save_mode_strings[tlmi_priv.save_mode]);
+>>>
+>>> According to the documentation it must be sysfs_emit() if I'm not missing
+>>> anything here.
+>>
+>> Yes switching to sysfs_emit() here in the followup patch would be good.
+> 
+> Ack
+> 
+>>
+>>>
+>>>> +}
+>>>
+>>> ...
+>>>
+>>>> +static ssize_t save_settings_store(struct kobject *kobj, struct kobj_attribute *attr,
+>>>> +				   const char *buf, size_t count)
+>>>> +{
+>>>> +	char *auth_str = NULL;
+>>>> +	int ret = 0;
+>>>> +	int cmd;
+>>>> +
+>>>> +	cmd = sysfs_match_string(save_mode_strings, buf);
+>>>> +
+>>>> +	/* Use lock in case multiple WMI operations needed */
+>>>> +	mutex_lock(&tlmi_mutex);
+>>>> +
+>>>> +	switch (cmd) {
+>>>> +	case TLMI_SAVE_SINGLE:
+>>>> +	case TLMI_SAVE_BULK:
+>>>> +		tlmi_priv.save_mode = cmd;
+>>>> +		goto out;
+>>>> +	case TLMI_SAVE_SAVE:
+>>>> +		/* Check if supported*/
+>>>> +		if ((!tlmi_priv.can_set_bios_settings) ||
+>>>> +		    (tlmi_priv.save_mode == TLMI_SAVE_SINGLE)) {
+>>>> +			ret = -EOPNOTSUPP;
+>>>> +			goto out;
+>>>> +		}
+>>>> +		/* Check there is actually something to save */
+>>>> +		if (!tlmi_priv.save_required) {
+>>>> +			ret = -ENOENT;
+>>>> +			goto out;
+>>>> +		}
+>>>> +		/* Check if certificate authentication is enabled and active */
+>>>> +		if (tlmi_priv.certificate_support && tlmi_priv.pwd_admin->cert_installed) {
+>>>> +			if (!tlmi_priv.pwd_admin->signature ||
+>>>> +			    !tlmi_priv.pwd_admin->save_signature) {
+>>>> +				ret = -EINVAL;
+>>>> +				goto out;
+>>>> +			}
+>>>> +			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
+>>>> +					       tlmi_priv.pwd_admin->save_signature);
+>>>> +			if (ret)
+>>>> +				goto out;
+>>>> +		} else if (tlmi_priv.opcode_support) {
+>>>> +			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+>>>> +				ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
+>>>> +							  tlmi_priv.pwd_admin->password);
+>>>> +				if (ret)
+>>>> +					goto out;
+>>>> +			}
+>>>> +			ret = tlmi_save_bios_settings("");
+>>>> +		} else { /* old non-opcode based authentication method (deprecated) */
+>>>> +			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+>>>> +				auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+>>>> +						     tlmi_priv.pwd_admin->password,
+>>>> +						     encoding_options[tlmi_priv.pwd_admin->encoding],
+>>>> +						     tlmi_priv.pwd_admin->kbdlang);
+>>>> +				if (!auth_str) {
+>>>> +					ret = -ENOMEM;
+>>>> +					goto out;
+>>>> +				}
+>>>> +			}
+>>>> +
+>>>> +			if (auth_str)
+>>>> +				ret = tlmi_save_bios_settings(auth_str);
+>>>> +			else
+>>>> +				ret = tlmi_save_bios_settings("");
+>>>> +		}
+>>>> +		tlmi_priv.save_required = false;
+>>>> +		tlmi_priv.reboot_required = true;
+>>>> +
+>>>> +		if (!ret && !tlmi_priv.pending_changes) {
+>>>> +			tlmi_priv.pending_changes = true;
+>>>> +			/* let userland know it may need to check reboot pending again */
+>>>> +			kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
+>>>> +		}
+>>>> +		break;
+>>>
+>>>> +	default:
+>>>> +		ret = -EINVAL;
+>>>> +	}
+>>>
+>>> Missing break; and actually no need to do this part under the lock, besides
+>>> that it shadows an error code, that said this should be
+>>>
+>>> 	cmd = sysfs_match_string(...);
+>>> 	if (cmd < 0)
+>>> 		return cmd;
+>>>
+>>>
+>>>> +out:
+>>>> +	mutex_unlock(&tlmi_mutex);
+>>>> +	kfree(auth_str);
+>>>> +	return ret ?: count;
+>>>
+>>> You can switch the driver to use cleanup.h at some point.
+>>>
+>>>> +}
+>>>
+> 
+> Ack - thanks for the notes.
+> 
+>>> ...
+>>>
+>>>> +/* There are a limit on the number of WMI operations you can do if you use
+>>>> + * the default implementation of saving on every set. This is due to a
+>>>> + * limitation in EFI variable space used.
+>>>> + * Have a 'bulk save' mode where you can manually trigger the save, and can
+>>>> + * therefore set unlimited variables - for users that need it.
+>>>> + */
+>>>
+>>> /*
+>>>  * This is wrong multi-line comment style. This one
+>>>  * is used solely in net subsystem.
+>>>  */
+>>>
+>>
+>> Good catch, Mark can you fix this one too please ?
+>>
+> Will do - not sure why I did that in the first place (it's a habit from a looong time ago that came back. Sigh).
+
+Regards,
+
+Hans
+
+
