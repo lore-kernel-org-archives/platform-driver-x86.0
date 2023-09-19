@@ -2,397 +2,245 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FACCD5BC6
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Sep 2023 14:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A070CE79AA
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Sep 2023 16:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232710AbjISOP4 (ORCPT
+        id S230140AbjISQW2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Sep 2023 10:15:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50448 "EHLO
+        Tue, 19 Sep 2023 12:22:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232711AbjISOPv (ORCPT
+        with ESMTP id S230272AbjISQW1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Sep 2023 10:15:51 -0400
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60301EA;
-        Tue, 19 Sep 2023 07:15:40 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 6997E3200992;
-        Tue, 19 Sep 2023 10:15:36 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Tue, 19 Sep 2023 10:15:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-        :cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm3; t=1695132935; x=
-        1695219335; bh=c2BR8ULySFRyiKwfv0oEvqmSu80QI5j1+S7cGKC+Il4=; b=n
-        0r+hVEQw7wJd/AACbHOirP5a5SNjXCBLqWWWuV83/YrOvOTXZmCKzQeMqxhDXRht
-        LTvI3qP51+wbMletcQiJSBMQZA+ZDxn4vWq/01gCLfH+e51KqnVU9w3Qh+EvXOeo
-        g/WZTXKqiPHHOJ1pKcgN8GIYAlIdRd73mIz5asVKSPP+wRZqXf9gNcwtuiSWDB4Q
-        wYeB+9rqocXJtexQeOs8BOsAw0TsSF8JZRnUV9cG2DZ0E9B4HzEdsJJK+HMzlNaz
-        A1Ics1PpH0aV3vE5ic866z3+9I7OfJdsbM20uxEpmuH+z16Rd96WSGRLk6fgpJtK
-        90uTtIQ9sGhHBFj6Qgicg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1695132935; x=
-        1695219335; bh=c2BR8ULySFRyiKwfv0oEvqmSu80QI5j1+S7cGKC+Il4=; b=M
-        rxH7wrZgZ74QLNpwaVwg+eyMtDxifPT/wSmoNMlAXEC3KlYAQ4zDm3rg3eQFVNG/
-        6nAkcEHPuXAcC5Ryn/Sa+xYNBkzsgOqKTxe3k+p4vG/PgN6Rn7MS8hNpTpTYpSSf
-        lEt3OvIopLu4Bmlg36UcMmR8nAzrDl/YWiSMBZSb+pYD7mayJ2/0/jamrRUGDpaA
-        UPlcjp/hZiR4Oi7SwXoPUtif1U5Ph+oqi271/kLCA1UBUsxb3L82U2rBMDrEUQrO
-        NvRkZ8fb36Mkxq7VpAGO3nGcjvnFIjMiUpeQ2xbz84mLUsLPjU/P91RTOtM39pJv
-        kAhFgK4rdh+pU5jPOe6Sg==
-X-ME-Sender: <xms:B60JZfU3knuBi5GS0gkoVh6XIlZ9eb3kboP-tymj7NXFTAmmUc9toQ>
-    <xme:B60JZXkNWk8w-h6Whv6HIrUWAcRpZCcpeN61VD_9XhJMl5dZwHcgH8QqNsMmrGaiq
-    XLlW1cOl2vSDMQwkc8>
-X-ME-Received: <xmr:B60JZbbKXgIEu4u4oY6YtuJYjbU4XZt3Steb3l6QzGgADynHn1QImxsHFWcMaPhtRcgZB5lOFjVFPA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudekuddggeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucgoteeftdduqddtudculdduhedmnecujfgurhephf
-    fvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrhhs
-    ohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggftrf
-    grthhtvghrnhepfedtvdejfeelffevhffgjeejheduteetieeguefgkefhhfegjeduueet
-    hefgvdffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
-X-ME-Proxy: <xmx:B60JZaU_JyV2P_3tf3xYCtRoQEjKFka1bO9vxtjQnkdsaDEDJq04uw>
-    <xmx:B60JZZkbRBNCNT5qpQT4VP4B-Ovi2s66LD9fNU-KTU6098zhbW9_fA>
-    <xmx:B60JZXfSvQQC6veKaQ34XvO8zDYbhJ5OXzbrSz7d-FwD6q4jXlkfxA>
-    <xmx:B60JZSAcq3h1yaOPXwtuHMYQY7k--d9yMkFOwK4WUyovyOr1NwXj5A>
-Feedback-ID: ibe194615:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 19 Sep 2023 10:15:35 -0400 (EDT)
-From:   Mark Pearson <mpearson-lenovo@squebb.ca>
-To:     mpearson-lenovo@squebb.ca
-Cc:     hdegoede@redhat.com, markgross@kernel.org,
-        andriy.shevchenko@intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/x86: think-lmi: Add bulk save feature
-Date:   Tue, 19 Sep 2023 10:15:26 -0400
-Message-ID: <20230919141530.4805-1-mpearson-lenovo@squebb.ca>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <mpearson-lenovo@squebb.ca>
-References: <mpearson-lenovo@squebb.ca>
-MIME-Version: 1.0
+        Tue, 19 Sep 2023 12:22:27 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F6392;
+        Tue, 19 Sep 2023 09:22:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695140541; x=1726676541;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=WgN+QNXzHH9MX6TYItG7yCGk+xi7fBfC1h5Xj7LUPnY=;
+  b=bC+8Ed1+G0NgviJknS+DLzOKIlZUFU6EBihh7H9vbSegqu55YiiNU4MI
+   eq1CWP7exh9gAo63GpXOoSU6oTnUJmoTbdcfhWn30whY6CiiWmAtx47iK
+   EJam/V29+ZtKZ/JHHenfFhLK70XaGb3s8O4rbYhBUa51tnr0Ioc3SB99I
+   Fh0hvzk8S19CB1A/e0i1NbxjlH/mWjb4M9qWDIDU4E0s49VE0nmkPZUV/
+   4aex4gOrFXs/qPylH7g3jaRS3kn0xs7n1PStcAvkFPjIouUpLtuFExt+X
+   UEcLBAx3vII2FjRPUkWJQwyLGGKEz8qgC6zDzlvcMBk/NxrwTNMTQfKtu
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="410916056"
+X-IronPort-AV: E=Sophos;i="6.02,160,1688454000"; 
+   d="scan'208";a="410916056"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 09:22:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="836490947"
+X-IronPort-AV: E=Sophos;i="6.02,160,1688454000"; 
+   d="scan'208";a="836490947"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by FMSMGA003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Sep 2023 09:22:20 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Tue, 19 Sep 2023 09:22:20 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32 via Frontend Transport; Tue, 19 Sep 2023 09:22:20 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.49) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Tue, 19 Sep 2023 09:22:19 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ca9GLJawRkQq2UPvzmHjeZM94B9ayrPzEoM0DmB/bAd0kpBHRnHfFh0CPZpShmsng8GVaSUVGlN0w14ccWFTKNlfApcOx9HoZvmOKra8rETmU+f+uo+61Xg66dUdY71soR0q/KqpRup8Dwigoso+birCc1TSuxzdpYz1pPyzxPG3GuOmlEQEVU/yG1jF6KK7EKCCShRu2CZRTLBkI0yQdsPwq1Lpd1fKohT2zlDmA+0/zgjV3pbZQi1KTQKzPIS+rHkGaeY3LW0MJCXvEN0+EbHFiaP0MZQYKCFOUCzHsqOC8XtGE4QeR3Yal3YG0EbOyyy387mXPksPwIEjmvcwkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/VA0wdEgqCJLFK/yZLCknWziTDxi9m8oruQYll2yyFw=;
+ b=IZnnOaVvp1n3r26mKwHmhSy0ofc3Yk2e+tmkDxtJDVU92TmpjRZ6+ugPiYrID+KuWZ0ucMagB7qCE9i4MdnOxeLMHNVHNn2LDxr6EvlDXnAYYMDTlta7YLNymbjWHXGLH5HY50tK3A2Dgpba3hWzbwJ7dPJEUfWmr1Zl+2uBhhnvvMfzV2UNaZQERhYiZNKuCgK9Y1CKtf7bijfhcDg0tvJr4qeRoenaZTMvpd/l99EyDG1rHXqFN4lf8nG3QWkMkzjEu0R7pqG+skiweRG0VWQpkYbY3pCVVp6HGbcW9lDIrpZSS+GzQ21kuVku0bGn/CDLRGSrzcU/Pm6At3kVyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3768.namprd11.prod.outlook.com (2603:10b6:a03:fa::20)
+ by SA1PR11MB6616.namprd11.prod.outlook.com (2603:10b6:806:257::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.19; Tue, 19 Sep
+ 2023 16:22:15 +0000
+Received: from BYAPR11MB3768.namprd11.prod.outlook.com
+ ([fe80::fca6:a86:a250:ad54]) by BYAPR11MB3768.namprd11.prod.outlook.com
+ ([fe80::fca6:a86:a250:ad54%7]) with mapi id 15.20.6792.026; Tue, 19 Sep 2023
+ 16:22:15 +0000
+Message-ID: <274d2502-4304-b8bd-ca42-5d53c8c778d9@intel.com>
+Date:   Tue, 19 Sep 2023 09:22:12 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 04/10] platform/x86/intel/ifs: Scan test for new
+ generations
+Content-Language: en-US
+To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC:     Hans de Goede <hdegoede@redhat.com>, <markgross@kernel.org>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+        <rostedt@goodmis.org>, <ashok.raj@intel.com>,
+        <tony.luck@intel.com>, LKML <linux-kernel@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <patches@lists.linux.dev>,
+        <ravi.v.shankar@intel.com>, <pengfei.xu@intel.com>
+References: <20230913183348.1349409-1-jithu.joseph@intel.com>
+ <20230913183348.1349409-5-jithu.joseph@intel.com>
+ <74882e91-f41e-7672-3835-d74f1364bbdd@linux.intel.com>
+ <5a66a02d-3504-ab5f-5373-789c8789557f@intel.com>
+ <d94e516f-6331-2f20-468-bb8c6cf899c4@linux.intel.com>
+From:   "Joseph, Jithu" <jithu.joseph@intel.com>
+In-Reply-To: <d94e516f-6331-2f20-468-bb8c6cf899c4@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BYAPR11CA0046.namprd11.prod.outlook.com
+ (2603:10b6:a03:80::23) To BYAPR11MB3768.namprd11.prod.outlook.com
+ (2603:10b6:a03:fa::20)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3768:EE_|SA1PR11MB6616:EE_
+X-MS-Office365-Filtering-Correlation-Id: a5fc75a2-aaa9-4009-8ba7-08dbb92c9636
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: s024lji56cR+rdGhmjbphyJlQ/ANWZ++bjK6ena4s4lC4CKrWMj7hlL8MWdH/cnhy5fq2m84R/CA6Amzgvy4XnS0EtZ75Z54HQYSUG8NRRCfqY9cRvwXHYSuYMz4nO6to4u4ff+HwG6Sv8snXnV9mcmLOkVVqbTdQkmDLfdjff4EK71vFqXxT0XMLG7iP/GR5qRpZNBsxsmQ/XP/gcTnHNBKmjfpouRwe3EZf83W+a0wRq05tXhkIiUiMTEMgVbr3vd0hi32HqbnRQutoNCnJKHRu1xZHQK/FTpR7DafnhmjXPjNCM1IwiQ4KlVAQduicx/uzYEhe18iqiZOoKm761zkCk3ZdY/zFpp/rPER9W4tYgvcZyCRuYrQQYkDiJSXGGGXdfiTtAsMOWIsaKMNwrJMxRjIqTmCTtp2a2V9YjQazLA64KsBrJbLqI1hIutU3SBdPjUEMnkouoW+DeRxSQtzYvkYMgUxHPb93DgreWBCkzQwcJWc2ppdvAiZkWn96+YpCDYCoiDY+PLT3ESG6LcG7siUTzTXm5sY/jUdiseo6pYA8NRlm5eUoPrqAvr2oQE1EL3DreBB7dC8uQNDb5/y3jCVCA4yh2oiBZm3+S+/HvY9Wda2EQkn6QaH4BsiuDL49EHFwhUfyM4K7cKL0w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3768.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(366004)(39860400002)(376002)(396003)(1800799009)(451199024)(186009)(6512007)(2906002)(26005)(83380400001)(2616005)(54906003)(6506007)(316002)(66476007)(6916009)(8676002)(4326008)(8936002)(41300700001)(66946007)(66556008)(6486002)(7416002)(6666004)(53546011)(5660300002)(38100700002)(82960400001)(478600001)(31696002)(36756003)(86362001)(66574015)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MlVzRnRjQ2ljUnM5SjdISE9qSGNFOEpUK2NaOE9HM3Y4ajVoaDBBZEsybnVj?=
+ =?utf-8?B?SDJhejFjUEtTRWNWZHpDNml0WHhjZlZQdXMzTDZabzZXL3VnTnNGWlVVeVFn?=
+ =?utf-8?B?Q21NdFBSaGtuQVErWHI2NXBxa3Z2WnBWSHVyKysyeEIrZWNmZllyVVNYNHA1?=
+ =?utf-8?B?MFRTMUZmSnpJbDhnblBoc3pNcWVJTTBsa0x2bld1THBxbktWamVSRTQ4ajBM?=
+ =?utf-8?B?Ni94YXM3Y3A1SmdVMGFDTnlJZ0szRjNLWFQxcDhtdHBDTXdWa2NIU0Nienoz?=
+ =?utf-8?B?OHdyVVJuQUxVVE1ZRFBOc3dLU3NzWnhMZmYreTlzU3NWZEhxcW50d3NtazAy?=
+ =?utf-8?B?L0phd1pQdW41aDNJaGU3L3BkTm9MakcxbldTZjZ2eHF4VS9hVlUrSHJEdkZP?=
+ =?utf-8?B?dUVHb2NnM1dydVJVTENMdldXTUNHbjlPVmNLTFNxZTJqcHJWd0xTMkVDRjAy?=
+ =?utf-8?B?b0ZXb3c0aUlCMW1aVGh0RkY3TGpHRi9OdTZJQWVEUHYyTDE5SDBDbW1oWWNC?=
+ =?utf-8?B?OFpTRFBJb3dnZkVOSG9raVUwamlyRjR0cVlNUTU2ZFJPYW1yaWdzTExhQS9a?=
+ =?utf-8?B?L0ZtMGtpMTRBa2RHTnBqUnRJQWo4MDBndG80U0JSUVNIK1FPL2dkVTRLNE9i?=
+ =?utf-8?B?K0hSUlMrSHdGY0xBRExmUHhLZUg4SEVXSSt2MmpwcDAyVThCclBKaWF5cmtp?=
+ =?utf-8?B?TUxXeGFUZGJkTWxJT1dGOTRTd3RqYk1kT3RoczNwektjaG1wMTJteC93N09T?=
+ =?utf-8?B?RGRrNTc0bmRyaHpBVU9ZSCtBQXNWdUMwZGNYQ294OXBjeWgzc24yci8yaWZy?=
+ =?utf-8?B?UHFKUTJzQzlBT2wxb2dQZERuTzFDSkpBT21LQVdsR3QvY1RTMmtOR0U5SlFu?=
+ =?utf-8?B?QzRWVWpvNDQ5N1c4N1Rsa3VPSjJDMWJKbzhFeVBxRFBpZFlMdlpQV21yeVRI?=
+ =?utf-8?B?ODVrc3gvajBiMGUwN09lN0ltc1RTb1hPaTdSVGx2Rlo2NllSc2pJdk55N0Uz?=
+ =?utf-8?B?RnpqMHpjOTh6cGlpNzZvZ2lnOWlVTDJ6QldOcDFYMW0vRklQNTlMUmYwVXdX?=
+ =?utf-8?B?N1pFUFVmSGN2T3c2WU9Edlh6MlcxMGUvUDRudWZYdDJYbndLQjI1TEVsNDFH?=
+ =?utf-8?B?V2tFRE1GK1BRSDVOU1pTUU9Tbmk1aXBzL1lWbFMyemhtNlFCbjZpaUtpcFds?=
+ =?utf-8?B?M1RPblgyRE51Z3BpM3VFSXVpZzF5QmdHalFONmJ5enFSRDcwb3dGN2VBZWJB?=
+ =?utf-8?B?VHRDS0dQeTIyVkVFNm1kNysrSFJzYjZzVy9uUk8rWjBqK1g5VHV3Q3Vhd2E4?=
+ =?utf-8?B?WnpBMnNtSUFuRy95WUQ3V21jZzBGMTFlS2p1WWNrTkNLYW1VbGliekhJQms0?=
+ =?utf-8?B?T0RtNTJJMXdheHZ5Wm5CZXVoMGxvVllNLzBrNGZIVGVnTU9qV2huZ0E4WndI?=
+ =?utf-8?B?bHovRXZ0RlB1U0RxYUcxVllXbHJMc2ZLSUFKRS9DaUh1bTFtaFBTd1BiYjY5?=
+ =?utf-8?B?RHpMWnpQR2JodGVINUxCSFpUY2cyTzJSUG1mbjk5M2dLVUt5RnN5UURNczJS?=
+ =?utf-8?B?YUhIelo5N0pEc09STWVzZWpDTWdDcThWWlZkM3NPNVNGSWpFSGZRMUlMWjl2?=
+ =?utf-8?B?NVIwWVhzVGJ4YytNcTlSUDV4cDRRaXJjNDNYci9jOFhHMFpxd0cxTDlvMFlL?=
+ =?utf-8?B?ZHlwTnZERnZRSVdmaml6dk5MKzBpM0R0Qmw1L0RDRTM1VllxejRLZFZPQzZT?=
+ =?utf-8?B?b1VEUmtEREZmcUxHc0hqR0ZCQUNIKzdFU00weWFvQWdrei9OdHJUbkZmWkEx?=
+ =?utf-8?B?dWJuRWwwN0NoTmJWTkJzVkcvamIrbjVaNDZxbStVbUxSOTNseGZuUDZqRW1m?=
+ =?utf-8?B?U3oyUWxCemY4N1VsUGRUMWs5dzAySTg2eGdNSk1DazJLazdXRThJdVFBUUNo?=
+ =?utf-8?B?bEhhbEdMY2E2Wm81OVVVNU1lV2MvR3Rpa2pldFhHd2E0ZG82YXNMQjZhc2Ry?=
+ =?utf-8?B?Y1hjUnFrQ1puWlhQTDR6dEhwYmRraVBXOURBK2VlbkVIT0lhb3lqR2RjV3Np?=
+ =?utf-8?B?cThaQVZmRzFoNzNLRStjamlnOGlpclJXWFdGSTJxM1M0TWdyWTk4SkhjYmd2?=
+ =?utf-8?B?WTRqQUp3d0QrZFBUUWk4cGovL1lwTWFGazdoay9KWFpVYnhuZ25uYm9OUnBo?=
+ =?utf-8?B?Qnc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5fc75a2-aaa9-4009-8ba7-08dbb92c9636
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3768.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2023 16:22:15.4389
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KuzUZEx5dOUUqNuo2WkL7SxzBiy71KwLySCUy0s6HYxT9fJFiS2kw6xDwY8pdz7g8RMMwp9Tv4TogmiGC22rZA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6616
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Lenovo platforms there is a limitation in the number of times an
-attribute can be saved. This is an architectural limitation and it limits
-the number of attributes that can be modified to 48.
-A solution for this is instead of the attribute being saved after every
-modification allow a user to bulk set the attributes and then trigger a
-final save. This allows unlimited attributes.
 
-This patch introduces a save_settings attribute that can be configured to
-either single or bulk mode by the user.
-Single mode is the default but customers who want to avoid the 48
-attribute limit can enable bulk mode.
 
-Displaying the save_settings attribute will display the enabled mode.
+On 9/19/2023 12:44 AM, Ilpo Järvinen wrote:
+> On Fri, 15 Sep 2023, Joseph, Jithu wrote:
+>> On 9/15/2023 9:51 AM, Ilpo Järvinen wrote:
+>>> On Wed, 13 Sep 2023, Jithu Joseph wrote:
+>>>
+>>>> Make changes to scan test flow such that MSRs are populated
+>>>> appropriately based on the generation supported by hardware.
+>>>>
+>>>> Width of chunk related bitfields is ACTIVATE_SCAN and SCAN_STATUS MSRs
+>>>> are different in newer IFS generation compared to gen0.
+>>>>
+>>>> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+>>>> Reviewed-by: Tony Luck <tony.luck@intel.com>
+>>>> Tested-by: Pengfei Xu <pengfei.xu@intel.com>
+>>>> ---
+>>>>  drivers/platform/x86/intel/ifs/ifs.h     | 14 ++++++++++++++
+>>>>  drivers/platform/x86/intel/ifs/runtest.c | 23 ++++++++++++++++++-----
+>>>>  2 files changed, 32 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+>>>> index 886dc74de57d..3265a6d8a6f3 100644
+>>>> --- a/drivers/platform/x86/intel/ifs/ifs.h
+>>>> +++ b/drivers/platform/x86/intel/ifs/ifs.h
+>>>> @@ -205,6 +205,12 @@ union ifs_scan {
+>>>>  		u32	delay	:31;
+>>>>  		u32	sigmce	:1;
+>>>>  	};
+>>>> +	struct {
+>>>> +		u16	start;
+>>>> +		u16	stop;
+>>>> +		u32	delay	:31;
+>>>> +		u32	sigmce	:1;
+>>>> +	} gen2;
+>>>
+>>> I don't like the way old struct is left without genx naming. It makes the 
+>>> code below more confusing as is.
+>>>
+>>
+>> Given that less than half the fields (2/4 in ifs_scan and 2/5 in ifs_status ) are changing across
+>> generations(and rest are common) , I felt the code would be more readable if the common fields are
+>> accessed without generation as is done now. 
+>>
+>> That said I don’t mind changing if you feel strongly about this
+> 
+> I would certainly prefer the generation dependent fields to marked as 
+> such. However, it does not say you couldn't have the other fields remain 
+> w/o gen.
+> 
+> How about this definition (it comes with the added benefit that you 
+> cannot accidently use start/stop without specifying gen which guards 
+> against one type of bugs):
+> 
 
-When in bulk mode writing 'save' to the save_settings attribute will
-trigger a save. Once this has been done a reboot is required before more
-attributes can be modified.
+Yes this looks better. I will adopt this in v2.
 
-Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
----
-Changes in v2:
- - Correct kernel version in documentation
- - Updated to sysfs_emit
- - Clean up code in save_settings_store as recommended
- - Use correct comment formatting
+> union ifs_scan {
+>         u64     data;
+>         struct {
+> 		union {
+> 			struct {
+> 	        	        u8      start;
+>         	        	u8      stop;
+> 	        	        u16     rsvd;
+> 			} gen0;
+> 		        struct {
+>                 		u16     start;
+> 		                u16     stop;
+> 			} gen2;
+> 		};
+>                 u32     delay   :31;
+>                 u32     sigmce  :1;
+>         };
+> };
+> 
+> Note that I used start and stop in gen0 without the bitfield that
+> seems unnecessary.
+> 
 
- .../testing/sysfs-class-firmware-attributes   |  30 ++++
- drivers/platform/x86/think-lmi.c              | 152 ++++++++++++++++--
- drivers/platform/x86/think-lmi.h              |  16 ++
- 3 files changed, 183 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-index f205d39409a3..9c82c7b42ff8 100644
---- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-+++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-@@ -383,6 +383,36 @@ Description:
- 		Note that any changes to this attribute requires a reboot
- 		for changes to take effect.
- 
-+What:		/sys/class/firmware-attributes/*/attributes/save_settings
-+Date:		August 2023
-+KernelVersion:	6.6
-+Contact:	Mark Pearson <mpearson-lenovo@squebb.ca>
-+Description:
-+		On Lenovo platforms there is a limitation in the number of times an attribute can be
-+		saved. This is an architectural limitation and it limits the number of attributes
-+		that can be modified to 48.
-+		A solution for this is instead of the attribute being saved after every modification,
-+		to allow a user to bulk set the attributes, and then trigger a final save. This allows
-+		unlimited attributes.
-+
-+		Read the attribute to check what save mode is enabled (single or bulk).
-+		E.g:
-+		# cat /sys/class/firmware-attributes/thinklmi/attributes/save_settings
-+		single
-+
-+		Write the attribute with 'bulk' to enable bulk save mode.
-+		Write the attribute with 'single' to enable saving, after every attribute set.
-+		The default setting is single mode.
-+		E.g:
-+		# echo bulk > /sys/class/firmware-attributes/thinklmi/attributes/save_settings
-+
-+		When in bulk mode write 'save' to trigger a save of all currently modified attributes.
-+		Note, once a save has been triggered, in bulk mode, attributes can no longer be set and
-+		will return a permissions error. This is to prevent users hitting the 48+ save limitation
-+		(which requires entering the BIOS to clear the error condition)
-+		E.g:
-+		# echo save > /sys/class/firmware-attributes/thinklmi/attributes/save_settings
-+
- What:		/sys/class/firmware-attributes/*/attributes/debug_cmd
- Date:		July 2021
- KernelVersion:	5.14
-diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-index 52d1ce8dfe44..6f9fa80b19fc 100644
---- a/drivers/platform/x86/think-lmi.c
-+++ b/drivers/platform/x86/think-lmi.c
-@@ -985,6 +985,13 @@ static ssize_t current_value_store(struct kobject *kobj,
- 	if (!tlmi_priv.can_set_bios_settings)
- 		return -EOPNOTSUPP;
- 
-+	/*
-+	 * If we are using bulk saves a reboot should be done once save has
-+	 * been called
-+	 */
-+	if (tlmi_priv.save_mode == TLMI_SAVE_BULK && tlmi_priv.reboot_required)
-+		return -EPERM;
-+
- 	new_setting = kstrdup(buf, GFP_KERNEL);
- 	if (!new_setting)
- 		return -ENOMEM;
-@@ -1011,10 +1018,11 @@ static ssize_t current_value_store(struct kobject *kobj,
- 		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTING_CERT_GUID, set_str);
- 		if (ret)
- 			goto out;
--		ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
--				tlmi_priv.pwd_admin->save_signature);
--		if (ret)
--			goto out;
-+		if (tlmi_priv.save_mode == TLMI_SAVE_BULK)
-+			tlmi_priv.save_required = true;
-+		else
-+			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
-+					       tlmi_priv.pwd_admin->save_signature);
- 	} else if (tlmi_priv.opcode_support) {
- 		/*
- 		 * If opcode support is present use that interface.
-@@ -1033,14 +1041,17 @@ static ssize_t current_value_store(struct kobject *kobj,
- 		if (ret)
- 			goto out;
- 
--		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
--			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
--						  tlmi_priv.pwd_admin->password);
--			if (ret)
--				goto out;
-+		if (tlmi_priv.save_mode == TLMI_SAVE_BULK) {
-+			tlmi_priv.save_required = true;
-+		} else {
-+			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-+				ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
-+							  tlmi_priv.pwd_admin->password);
-+				if (ret)
-+					goto out;
-+			}
-+			ret = tlmi_save_bios_settings("");
- 		}
--
--		ret = tlmi_save_bios_settings("");
- 	} else { /* old non-opcode based authentication method (deprecated) */
- 		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
- 			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
-@@ -1068,10 +1079,14 @@ static ssize_t current_value_store(struct kobject *kobj,
- 		if (ret)
- 			goto out;
- 
--		if (auth_str)
--			ret = tlmi_save_bios_settings(auth_str);
--		else
--			ret = tlmi_save_bios_settings("");
-+		if (tlmi_priv.save_mode == TLMI_SAVE_BULK) {
-+			tlmi_priv.save_required = true;
-+		} else {
-+			if (auth_str)
-+				ret = tlmi_save_bios_settings(auth_str);
-+			else
-+				ret = tlmi_save_bios_settings("");
-+		}
- 	}
- 	if (!ret && !tlmi_priv.pending_changes) {
- 		tlmi_priv.pending_changes = true;
-@@ -1152,6 +1167,107 @@ static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *
- 
- static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
- 
-+static const char * const save_mode_strings[] = {
-+	[TLMI_SAVE_SINGLE] = "single",
-+	[TLMI_SAVE_BULK] = "bulk",
-+	[TLMI_SAVE_SAVE] = "save"
-+};
-+
-+static ssize_t save_settings_show(struct kobject *kobj, struct kobj_attribute *attr,
-+				  char *buf)
-+{
-+	/* Check that setting is valid */
-+	if (WARN_ON(tlmi_priv.save_mode < TLMI_SAVE_SINGLE ||
-+		    tlmi_priv.save_mode > TLMI_SAVE_BULK))
-+		return -EIO;
-+	return sysfs_emit(buf, "%s\n", save_mode_strings[tlmi_priv.save_mode]);
-+}
-+
-+static ssize_t save_settings_store(struct kobject *kobj, struct kobj_attribute *attr,
-+				   const char *buf, size_t count)
-+{
-+	char *auth_str = NULL;
-+	int ret = 0;
-+	int cmd;
-+
-+	cmd = sysfs_match_string(save_mode_strings, buf);
-+	if (cmd < 0)
-+		return cmd;
-+
-+	/* Use lock in case multiple WMI operations needed */
-+	mutex_lock(&tlmi_mutex);
-+
-+	switch (cmd) {
-+	case TLMI_SAVE_SINGLE:
-+	case TLMI_SAVE_BULK:
-+		tlmi_priv.save_mode = cmd;
-+		goto out;
-+	case TLMI_SAVE_SAVE:
-+		/* Check if supported*/
-+		if (!tlmi_priv.can_set_bios_settings ||
-+		    tlmi_priv.save_mode == TLMI_SAVE_SINGLE) {
-+			ret = -EOPNOTSUPP;
-+			goto out;
-+		}
-+		/* Check there is actually something to save */
-+		if (!tlmi_priv.save_required) {
-+			ret = -ENOENT;
-+			goto out;
-+		}
-+		/* Check if certificate authentication is enabled and active */
-+		if (tlmi_priv.certificate_support && tlmi_priv.pwd_admin->cert_installed) {
-+			if (!tlmi_priv.pwd_admin->signature ||
-+			    !tlmi_priv.pwd_admin->save_signature) {
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
-+					       tlmi_priv.pwd_admin->save_signature);
-+			if (ret)
-+				goto out;
-+		} else if (tlmi_priv.opcode_support) {
-+			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-+				ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
-+							  tlmi_priv.pwd_admin->password);
-+				if (ret)
-+					goto out;
-+			}
-+			ret = tlmi_save_bios_settings("");
-+		} else { /* old non-opcode based authentication method (deprecated) */
-+			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-+				auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
-+						     tlmi_priv.pwd_admin->password,
-+						     encoding_options[tlmi_priv.pwd_admin->encoding],
-+						     tlmi_priv.pwd_admin->kbdlang);
-+				if (!auth_str) {
-+					ret = -ENOMEM;
-+					goto out;
-+				}
-+			}
-+
-+			if (auth_str)
-+				ret = tlmi_save_bios_settings(auth_str);
-+			else
-+				ret = tlmi_save_bios_settings("");
-+		}
-+		tlmi_priv.save_required = false;
-+		tlmi_priv.reboot_required = true;
-+
-+		if (!ret && !tlmi_priv.pending_changes) {
-+			tlmi_priv.pending_changes = true;
-+			/* let userland know it may need to check reboot pending again */
-+			kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
-+		}
-+		break;
-+	}
-+out:
-+	mutex_unlock(&tlmi_mutex);
-+	kfree(auth_str);
-+	return ret ?: count;
-+}
-+
-+static struct kobj_attribute save_settings = __ATTR_RW(save_settings);
-+
- /* ---- Debug interface--------------------------------------------------------- */
- static ssize_t debug_cmd_store(struct kobject *kobj, struct kobj_attribute *attr,
- 				const char *buf, size_t count)
-@@ -1221,6 +1337,8 @@ static void tlmi_release_attr(void)
- 		}
- 	}
- 	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &pending_reboot.attr);
-+	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &save_settings.attr);
-+
- 	if (tlmi_priv.can_debug_cmd && debug_support)
- 		sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
- 
-@@ -1302,6 +1420,10 @@ static int tlmi_sysfs_init(void)
- 	if (ret)
- 		goto fail_create_attr;
- 
-+	ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &save_settings.attr);
-+	if (ret)
-+		goto fail_create_attr;
-+
- 	if (tlmi_priv.can_debug_cmd && debug_support) {
- 		ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
- 		if (ret)
-diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
-index 4daba6151cd6..e1975ffebeb4 100644
---- a/drivers/platform/x86/think-lmi.h
-+++ b/drivers/platform/x86/think-lmi.h
-@@ -27,6 +27,19 @@ enum level_option {
- 	TLMI_LEVEL_MASTER,
- };
- 
-+/*
-+ * There are a limit on the number of WMI operations you can do if you use
-+ * the default implementation of saving on every set. This is due to a
-+ * limitation in EFI variable space used.
-+ * Have a 'bulk save' mode where you can manually trigger the save, and can
-+ * therefore set unlimited variables - for users that need it.
-+ */
-+enum save_mode {
-+	TLMI_SAVE_SINGLE,
-+	TLMI_SAVE_BULK,
-+	TLMI_SAVE_SAVE,
-+};
-+
- /* password configuration details */
- struct tlmi_pwdcfg_core {
- 	uint32_t password_mode;
-@@ -86,6 +99,9 @@ struct think_lmi {
- 	bool can_debug_cmd;
- 	bool opcode_support;
- 	bool certificate_support;
-+	enum save_mode save_mode;
-+	bool save_required;
-+	bool reboot_required;
- 
- 	struct tlmi_attr_setting *setting[TLMI_SETTINGS_COUNT];
- 	struct device *class_dev;
--- 
-2.41.0
-
+Thanks
+Jithu
