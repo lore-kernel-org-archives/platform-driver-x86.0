@@ -2,494 +2,397 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBDACD5BB9
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Sep 2023 13:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FACCD5BC6
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Sep 2023 14:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231947AbjISNI3 (ORCPT
+        id S232710AbjISOP4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Sep 2023 09:08:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58070 "EHLO
+        Tue, 19 Sep 2023 10:15:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231985AbjISNI2 (ORCPT
+        with ESMTP id S232711AbjISOPv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Sep 2023 09:08:28 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A6E129
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Sep 2023 06:08:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695128900; x=1726664900;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=o0IDmA0n27YTIdX5PSVODQ7GmiZrm5jQgXGbJJyI3x4=;
-  b=K5Ruc7z2cOFXUwYIpukOH/+3HNEu5gRJjsScmhIapPF7QMSeVPJWfDuH
-   QHR3MSnVXLPGvT7jBFvF8L/cFYIxlpmiMP4cDo1krSeYaLl8Jdgh+XZXB
-   9rtgY+WX36QzgFM6DsOtVSym3TWfJk0ant6Hr76nCMjuLnQf9Aq2fb/8V
-   9pjWtkeRUB+3boPy5kxvtwuFpXWd8uHvG0ANPOKejhJGuS4baWHJlDZdM
-   OuIrH1vBQIZTynHnhfWoUF9gHy5f6ZMvuKgsBaXcAI1nS6EuOQInTVu5n
-   oJHZAcCcm9cS0hTNH7RkPQGs/Rzo2PM0cHmoCTeJn5ipkSpSohGKE+2AS
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="410865473"
-X-IronPort-AV: E=Sophos;i="6.02,159,1688454000"; 
-   d="scan'208";a="410865473"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 06:07:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="811723085"
-X-IronPort-AV: E=Sophos;i="6.02,159,1688454000"; 
-   d="scan'208";a="811723085"
-Received: from laichele-mobl1.ger.corp.intel.com ([10.252.38.7])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 06:07:39 -0700
-Date:   Tue, 19 Sep 2023 16:07:38 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Suma Hegde <suma.hegde@amd.com>
-cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org,
-        Naveen Krishna Chatradhi <nchatrad@amd.com>
-Subject: Re: [PATCH v3 2/3] platform/x86/amd/hsmp: add support for metrics
- tbl
-In-Reply-To: <20230919092057.2235437-2-suma.hegde@amd.com>
-Message-ID: <38442217-9629-5fa8-8d36-4eebc6fda4f4@linux.intel.com>
-References: <20230919092057.2235437-1-suma.hegde@amd.com> <20230919092057.2235437-2-suma.hegde@amd.com>
+        Tue, 19 Sep 2023 10:15:51 -0400
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60301EA;
+        Tue, 19 Sep 2023 07:15:40 -0700 (PDT)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 6997E3200992;
+        Tue, 19 Sep 2023 10:15:36 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 19 Sep 2023 10:15:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1695132935; x=
+        1695219335; bh=c2BR8ULySFRyiKwfv0oEvqmSu80QI5j1+S7cGKC+Il4=; b=n
+        0r+hVEQw7wJd/AACbHOirP5a5SNjXCBLqWWWuV83/YrOvOTXZmCKzQeMqxhDXRht
+        LTvI3qP51+wbMletcQiJSBMQZA+ZDxn4vWq/01gCLfH+e51KqnVU9w3Qh+EvXOeo
+        g/WZTXKqiPHHOJ1pKcgN8GIYAlIdRd73mIz5asVKSPP+wRZqXf9gNcwtuiSWDB4Q
+        wYeB+9rqocXJtexQeOs8BOsAw0TsSF8JZRnUV9cG2DZ0E9B4HzEdsJJK+HMzlNaz
+        A1Ics1PpH0aV3vE5ic866z3+9I7OfJdsbM20uxEpmuH+z16Rd96WSGRLk6fgpJtK
+        90uTtIQ9sGhHBFj6Qgicg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1695132935; x=
+        1695219335; bh=c2BR8ULySFRyiKwfv0oEvqmSu80QI5j1+S7cGKC+Il4=; b=M
+        rxH7wrZgZ74QLNpwaVwg+eyMtDxifPT/wSmoNMlAXEC3KlYAQ4zDm3rg3eQFVNG/
+        6nAkcEHPuXAcC5Ryn/Sa+xYNBkzsgOqKTxe3k+p4vG/PgN6Rn7MS8hNpTpTYpSSf
+        lEt3OvIopLu4Bmlg36UcMmR8nAzrDl/YWiSMBZSb+pYD7mayJ2/0/jamrRUGDpaA
+        UPlcjp/hZiR4Oi7SwXoPUtif1U5Ph+oqi271/kLCA1UBUsxb3L82U2rBMDrEUQrO
+        NvRkZ8fb36Mkxq7VpAGO3nGcjvnFIjMiUpeQ2xbz84mLUsLPjU/P91RTOtM39pJv
+        kAhFgK4rdh+pU5jPOe6Sg==
+X-ME-Sender: <xms:B60JZfU3knuBi5GS0gkoVh6XIlZ9eb3kboP-tymj7NXFTAmmUc9toQ>
+    <xme:B60JZXkNWk8w-h6Whv6HIrUWAcRpZCcpeN61VD_9XhJMl5dZwHcgH8QqNsMmrGaiq
+    XLlW1cOl2vSDMQwkc8>
+X-ME-Received: <xmr:B60JZbbKXgIEu4u4oY6YtuJYjbU4XZt3Steb3l6QzGgADynHn1QImxsHFWcMaPhtRcgZB5lOFjVFPA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudekuddggeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucgoteeftdduqddtudculdduhedmnecujfgurhephf
+    fvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrhhs
+    ohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggftrf
+    grthhtvghrnhepfedtvdejfeelffevhffgjeejheduteetieeguefgkefhhfegjeduueet
+    hefgvdffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+X-ME-Proxy: <xmx:B60JZaU_JyV2P_3tf3xYCtRoQEjKFka1bO9vxtjQnkdsaDEDJq04uw>
+    <xmx:B60JZZkbRBNCNT5qpQT4VP4B-Ovi2s66LD9fNU-KTU6098zhbW9_fA>
+    <xmx:B60JZXfSvQQC6veKaQ34XvO8zDYbhJ5OXzbrSz7d-FwD6q4jXlkfxA>
+    <xmx:B60JZSAcq3h1yaOPXwtuHMYQY7k--d9yMkFOwK4WUyovyOr1NwXj5A>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 19 Sep 2023 10:15:35 -0400 (EDT)
+From:   Mark Pearson <mpearson-lenovo@squebb.ca>
+To:     mpearson-lenovo@squebb.ca
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        andriy.shevchenko@intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] platform/x86: think-lmi: Add bulk save feature
+Date:   Tue, 19 Sep 2023 10:15:26 -0400
+Message-ID: <20230919141530.4805-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 19 Sep 2023, Suma Hegde wrote:
+On Lenovo platforms there is a limitation in the number of times an
+attribute can be saved. This is an architectural limitation and it limits
+the number of attributes that can be modified to 48.
+A solution for this is instead of the attribute being saved after every
+modification allow a user to bulk set the attributes and then trigger a
+final save. This allows unlimited attributes.
 
-> AMD MI300 MCM provides GET_METRICS_TABLE message to retrieve
-> all the system management information from SMU.
-> 
-> The metrics table is made available as hexadecimal sysfs binary file
-> under per socket sysfs directory created at
-> /sys/devices/platform/amd_hsmp/socket%d/metrics_bin
-> 
-> Metrics table definitions will be documented as part of Public PPR.
-> The same is defined in the amd_hsmp.h header.
-> 
-> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-> Reviewed-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
-> ---
-> Changes since v1:
-> 1. Remove HSMP_DEVNODE_NAME and HSMP_CDEV_NAME macro definitions in
-> this patch
-> 2. Remove extra space in comments for HSMP_GET_METRIC_TABLE_VER,
->    HSMP_GET_METRIC_TABLE and HSMP_GET_METRIC_TABLE_DRAM_ADDR enum
->    definition in amd_hsmp.h files
-> 3. Change check, count == 0 to !count in hsmp_metric_tbl_read() function
-> 4. Add hsmp_metric_table_visible() function 
-> 5. hsmp_create_metric_tbl_sysfs_file() is renamed as hsmp_init_metric_tbl_bin_attr()
->    and code is also modified slightly
-> 6. Modify hsmp_create_sysfs_file() to use devm_device_add_groups()
-> 7. Change from cleanup label to deregister label
-> 8. Add dev_err print in hsmp_get_tbl_dram_base()
-> 9. Reword "Unable to Failed" in hsmp_get_tbl_dram_base()
-> 10. Add HSMP_GRP_NAME_SIZE and NUM_ATTRS macros
-> 11. Remove sysfs cleanup code in hsmp_pltdrv_remove()
-> 12. Correct ATRR typo error
-> 13. Change sprintf to snprintf
-> 14. Check metrics table support only against HSMP_PROTO_VER6
-> Changes since v2:
-> 1. squash documentation patch into this patch
-> 2. change from num_sockets to plat_dev.num_sockets
-> 
->  Documentation/arch/x86/amd_hsmp.rst  |  16 +++
->  arch/x86/include/uapi/asm/amd_hsmp.h | 109 ++++++++++++++++
->  drivers/platform/x86/amd/hsmp.c      | 180 ++++++++++++++++++++++++++-
->  3 files changed, 302 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
-> index 440e4b645a1c..a4c308784818 100644
-> --- a/Documentation/arch/x86/amd_hsmp.rst
-> +++ b/Documentation/arch/x86/amd_hsmp.rst
-> @@ -41,6 +41,22 @@ In-kernel integration:
->   * Locking across callers is taken care by the driver.
->  
->  
-> +HSMP sysfs interface
-> +====================
-> +
-> +1. Metrics table binary sysfs
-> +
-> +AMD MI300A MCM provides GET_METRICS_TABLE message to retrieve
-> +all the system management information from SMU.
-> +
-> +The metrics table is made available as hexadecimal sysfs binary file
-> +under per socket sysfs directory created at
-> +/sys/devices/platform/amd_hsmp/socket%d/metrics_bin
-> +
-> +Metrics table definitions will be documented as part of Public PPR.
-> +The same is defined in the amd_hsmp.h header.
-> +
-> +
->  An example
->  ==========
->  
+This patch introduces a save_settings attribute that can be configured to
+either single or bulk mode by the user.
+Single mode is the default but customers who want to avoid the 48
+attribute limit can enable bulk mode.
 
-I'd have expected to have the sysfs documentation appear under 
-Documentation/ABI/testing/sysfs-...
+Displaying the save_settings attribute will display the enabled mode.
 
+When in bulk mode writing 'save' to the save_settings attribute will
+trigger a save. Once this has been done a reboot is required before more
+attributes can be modified.
 
-The code change itself seems pretty okay now.
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+Changes in v2:
+ - Correct kernel version in documentation
+ - Updated to sysfs_emit
+ - Clean up code in save_settings_store as recommended
+ - Use correct comment formatting
 
+ .../testing/sysfs-class-firmware-attributes   |  30 ++++
+ drivers/platform/x86/think-lmi.c              | 152 ++++++++++++++++--
+ drivers/platform/x86/think-lmi.h              |  16 ++
+ 3 files changed, 183 insertions(+), 15 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+index f205d39409a3..9c82c7b42ff8 100644
+--- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
++++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+@@ -383,6 +383,36 @@ Description:
+ 		Note that any changes to this attribute requires a reboot
+ 		for changes to take effect.
+ 
++What:		/sys/class/firmware-attributes/*/attributes/save_settings
++Date:		August 2023
++KernelVersion:	6.6
++Contact:	Mark Pearson <mpearson-lenovo@squebb.ca>
++Description:
++		On Lenovo platforms there is a limitation in the number of times an attribute can be
++		saved. This is an architectural limitation and it limits the number of attributes
++		that can be modified to 48.
++		A solution for this is instead of the attribute being saved after every modification,
++		to allow a user to bulk set the attributes, and then trigger a final save. This allows
++		unlimited attributes.
++
++		Read the attribute to check what save mode is enabled (single or bulk).
++		E.g:
++		# cat /sys/class/firmware-attributes/thinklmi/attributes/save_settings
++		single
++
++		Write the attribute with 'bulk' to enable bulk save mode.
++		Write the attribute with 'single' to enable saving, after every attribute set.
++		The default setting is single mode.
++		E.g:
++		# echo bulk > /sys/class/firmware-attributes/thinklmi/attributes/save_settings
++
++		When in bulk mode write 'save' to trigger a save of all currently modified attributes.
++		Note, once a save has been triggered, in bulk mode, attributes can no longer be set and
++		will return a permissions error. This is to prevent users hitting the 48+ save limitation
++		(which requires entering the BIOS to clear the error condition)
++		E.g:
++		# echo save > /sys/class/firmware-attributes/thinklmi/attributes/save_settings
++
+ What:		/sys/class/firmware-attributes/*/attributes/debug_cmd
+ Date:		July 2021
+ KernelVersion:	5.14
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index 52d1ce8dfe44..6f9fa80b19fc 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -985,6 +985,13 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 	if (!tlmi_priv.can_set_bios_settings)
+ 		return -EOPNOTSUPP;
+ 
++	/*
++	 * If we are using bulk saves a reboot should be done once save has
++	 * been called
++	 */
++	if (tlmi_priv.save_mode == TLMI_SAVE_BULK && tlmi_priv.reboot_required)
++		return -EPERM;
++
+ 	new_setting = kstrdup(buf, GFP_KERNEL);
+ 	if (!new_setting)
+ 		return -ENOMEM;
+@@ -1011,10 +1018,11 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTING_CERT_GUID, set_str);
+ 		if (ret)
+ 			goto out;
+-		ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
+-				tlmi_priv.pwd_admin->save_signature);
+-		if (ret)
+-			goto out;
++		if (tlmi_priv.save_mode == TLMI_SAVE_BULK)
++			tlmi_priv.save_required = true;
++		else
++			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
++					       tlmi_priv.pwd_admin->save_signature);
+ 	} else if (tlmi_priv.opcode_support) {
+ 		/*
+ 		 * If opcode support is present use that interface.
+@@ -1033,14 +1041,17 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 		if (ret)
+ 			goto out;
+ 
+-		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+-			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
+-						  tlmi_priv.pwd_admin->password);
+-			if (ret)
+-				goto out;
++		if (tlmi_priv.save_mode == TLMI_SAVE_BULK) {
++			tlmi_priv.save_required = true;
++		} else {
++			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
++				ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
++							  tlmi_priv.pwd_admin->password);
++				if (ret)
++					goto out;
++			}
++			ret = tlmi_save_bios_settings("");
+ 		}
+-
+-		ret = tlmi_save_bios_settings("");
+ 	} else { /* old non-opcode based authentication method (deprecated) */
+ 		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+ 			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+@@ -1068,10 +1079,14 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 		if (ret)
+ 			goto out;
+ 
+-		if (auth_str)
+-			ret = tlmi_save_bios_settings(auth_str);
+-		else
+-			ret = tlmi_save_bios_settings("");
++		if (tlmi_priv.save_mode == TLMI_SAVE_BULK) {
++			tlmi_priv.save_required = true;
++		} else {
++			if (auth_str)
++				ret = tlmi_save_bios_settings(auth_str);
++			else
++				ret = tlmi_save_bios_settings("");
++		}
+ 	}
+ 	if (!ret && !tlmi_priv.pending_changes) {
+ 		tlmi_priv.pending_changes = true;
+@@ -1152,6 +1167,107 @@ static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *
+ 
+ static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
+ 
++static const char * const save_mode_strings[] = {
++	[TLMI_SAVE_SINGLE] = "single",
++	[TLMI_SAVE_BULK] = "bulk",
++	[TLMI_SAVE_SAVE] = "save"
++};
++
++static ssize_t save_settings_show(struct kobject *kobj, struct kobj_attribute *attr,
++				  char *buf)
++{
++	/* Check that setting is valid */
++	if (WARN_ON(tlmi_priv.save_mode < TLMI_SAVE_SINGLE ||
++		    tlmi_priv.save_mode > TLMI_SAVE_BULK))
++		return -EIO;
++	return sysfs_emit(buf, "%s\n", save_mode_strings[tlmi_priv.save_mode]);
++}
++
++static ssize_t save_settings_store(struct kobject *kobj, struct kobj_attribute *attr,
++				   const char *buf, size_t count)
++{
++	char *auth_str = NULL;
++	int ret = 0;
++	int cmd;
++
++	cmd = sysfs_match_string(save_mode_strings, buf);
++	if (cmd < 0)
++		return cmd;
++
++	/* Use lock in case multiple WMI operations needed */
++	mutex_lock(&tlmi_mutex);
++
++	switch (cmd) {
++	case TLMI_SAVE_SINGLE:
++	case TLMI_SAVE_BULK:
++		tlmi_priv.save_mode = cmd;
++		goto out;
++	case TLMI_SAVE_SAVE:
++		/* Check if supported*/
++		if (!tlmi_priv.can_set_bios_settings ||
++		    tlmi_priv.save_mode == TLMI_SAVE_SINGLE) {
++			ret = -EOPNOTSUPP;
++			goto out;
++		}
++		/* Check there is actually something to save */
++		if (!tlmi_priv.save_required) {
++			ret = -ENOENT;
++			goto out;
++		}
++		/* Check if certificate authentication is enabled and active */
++		if (tlmi_priv.certificate_support && tlmi_priv.pwd_admin->cert_installed) {
++			if (!tlmi_priv.pwd_admin->signature ||
++			    !tlmi_priv.pwd_admin->save_signature) {
++				ret = -EINVAL;
++				goto out;
++			}
++			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
++					       tlmi_priv.pwd_admin->save_signature);
++			if (ret)
++				goto out;
++		} else if (tlmi_priv.opcode_support) {
++			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
++				ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
++							  tlmi_priv.pwd_admin->password);
++				if (ret)
++					goto out;
++			}
++			ret = tlmi_save_bios_settings("");
++		} else { /* old non-opcode based authentication method (deprecated) */
++			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
++				auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
++						     tlmi_priv.pwd_admin->password,
++						     encoding_options[tlmi_priv.pwd_admin->encoding],
++						     tlmi_priv.pwd_admin->kbdlang);
++				if (!auth_str) {
++					ret = -ENOMEM;
++					goto out;
++				}
++			}
++
++			if (auth_str)
++				ret = tlmi_save_bios_settings(auth_str);
++			else
++				ret = tlmi_save_bios_settings("");
++		}
++		tlmi_priv.save_required = false;
++		tlmi_priv.reboot_required = true;
++
++		if (!ret && !tlmi_priv.pending_changes) {
++			tlmi_priv.pending_changes = true;
++			/* let userland know it may need to check reboot pending again */
++			kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
++		}
++		break;
++	}
++out:
++	mutex_unlock(&tlmi_mutex);
++	kfree(auth_str);
++	return ret ?: count;
++}
++
++static struct kobj_attribute save_settings = __ATTR_RW(save_settings);
++
+ /* ---- Debug interface--------------------------------------------------------- */
+ static ssize_t debug_cmd_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 				const char *buf, size_t count)
+@@ -1221,6 +1337,8 @@ static void tlmi_release_attr(void)
+ 		}
+ 	}
+ 	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &pending_reboot.attr);
++	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &save_settings.attr);
++
+ 	if (tlmi_priv.can_debug_cmd && debug_support)
+ 		sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
+ 
+@@ -1302,6 +1420,10 @@ static int tlmi_sysfs_init(void)
+ 	if (ret)
+ 		goto fail_create_attr;
+ 
++	ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &save_settings.attr);
++	if (ret)
++		goto fail_create_attr;
++
+ 	if (tlmi_priv.can_debug_cmd && debug_support) {
+ 		ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
+ 		if (ret)
+diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
+index 4daba6151cd6..e1975ffebeb4 100644
+--- a/drivers/platform/x86/think-lmi.h
++++ b/drivers/platform/x86/think-lmi.h
+@@ -27,6 +27,19 @@ enum level_option {
+ 	TLMI_LEVEL_MASTER,
+ };
+ 
++/*
++ * There are a limit on the number of WMI operations you can do if you use
++ * the default implementation of saving on every set. This is due to a
++ * limitation in EFI variable space used.
++ * Have a 'bulk save' mode where you can manually trigger the save, and can
++ * therefore set unlimited variables - for users that need it.
++ */
++enum save_mode {
++	TLMI_SAVE_SINGLE,
++	TLMI_SAVE_BULK,
++	TLMI_SAVE_SAVE,
++};
++
+ /* password configuration details */
+ struct tlmi_pwdcfg_core {
+ 	uint32_t password_mode;
+@@ -86,6 +99,9 @@ struct think_lmi {
+ 	bool can_debug_cmd;
+ 	bool opcode_support;
+ 	bool certificate_support;
++	enum save_mode save_mode;
++	bool save_required;
++	bool reboot_required;
+ 
+ 	struct tlmi_attr_setting *setting[TLMI_SETTINGS_COUNT];
+ 	struct device *class_dev;
 -- 
- i.
+2.41.0
 
-> diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
-> index 769b939444ae..f3479b768fb9 100644
-> --- a/arch/x86/include/uapi/asm/amd_hsmp.h
-> +++ b/arch/x86/include/uapi/asm/amd_hsmp.h
-> @@ -47,6 +47,9 @@ enum hsmp_message_ids {
->  	HSMP_SET_PCI_RATE,		/* 20h Control link rate on PCIe devices */
->  	HSMP_SET_POWER_MODE,		/* 21h Select power efficiency profile policy */
->  	HSMP_SET_PSTATE_MAX_MIN,	/* 22h Set the max and min DF P-State  */
-> +	HSMP_GET_METRIC_TABLE_VER,	/* 23h Get metrics table version */
-> +	HSMP_GET_METRIC_TABLE,		/* 24h Get metrics table */
-> +	HSMP_GET_METRIC_TABLE_DRAM_ADDR,/* 25h Get metrics table dram address */
->  	HSMP_MSG_ID_MAX,
->  };
->  
-> @@ -64,6 +67,14 @@ enum hsmp_msg_type {
->  	HSMP_GET  = 1,
->  };
->  
-> +enum hsmp_proto_versions {
-> +	HSMP_PROTO_VER2	= 2,
-> +	HSMP_PROTO_VER3,
-> +	HSMP_PROTO_VER4,
-> +	HSMP_PROTO_VER5,
-> +	HSMP_PROTO_VER6
-> +};
-> +
->  struct hsmp_msg_desc {
->  	int num_args;
->  	int response_sz;
-> @@ -295,6 +306,104 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[] = {
->  	 * input: args[0] = min df pstate[15:8] + max df pstate[7:0]
->  	 */
->  	{1, 0, HSMP_SET},
-> +
-> +	/*
-> +	 * HSMP_GET_METRIC_TABLE_VER, num_args = 0, response_sz = 1
-> +	 * output: args[0] = metrics table version
-> +	 */
-> +	{0, 1, HSMP_GET},
-> +
-> +	/*
-> +	 * HSMP_GET_METRIC_TABLE, num_args = 0, response_sz = 0
-> +	 */
-> +	{0, 0, HSMP_GET},
-> +
-> +	/*
-> +	 * HSMP_GET_METRIC_TABLE_DRAM_ADDR, num_args = 0, response_sz = 2
-> +	 * output: args[0] = lower 32 bits of the address
-> +	 * output: args[1] = upper 32 bits of the address
-> +	 */
-> +	{0, 2, HSMP_GET},
-> +};
-> +
-> +/* Metrics table for EPYC socket(supported only from proto version 6) */
-> +struct hsmp_metric_table {
-> +	__u32 accumulation_counter;
-> +
-> +	//TEMPERATURE
-> +	__u32 max_socket_temperature;
-> +	__u32 max_vr_temperature;
-> +	__u32 max_hbm_temperature;
-> +	__u64 max_socket_temperature_acc;
-> +	__u64 max_vr_temperature_acc;
-> +	__u64 max_hbm_temperature_acc;
-> +
-> +	//POWER
-> +	__u32 socket_power_limit;
-> +	__u32 max_socket_power_limit;
-> +	__u32 socket_power;
-> +
-> +	//ENERGY
-> +	__u64 timestamp;
-> +	__u64 socket_energy_acc;
-> +	__u64 ccd_energy_acc;
-> +	__u64 xcd_energy_acc;
-> +	__u64 aid_energy_acc;
-> +	__u64 hbm_energy_acc;
-> +
-> +	//FREQUENCY
-> +	__u32 cclk_frequency_limit;
-> +	__u32 gfxclk_frequency_limit;
-> +	__u32 fclk_frequency;
-> +	__u32 uclk_frequency;
-> +	__u32 socclk_frequency[4];
-> +	__u32 vclk_frequency[4];
-> +	__u32 dclk_frequency[4];
-> +	__u32 lclk_frequency[4];
-> +	__u64 gfxclk_frequency_acc[8];
-> +	__u64 cclk_frequency_acc[96];
-> +
-> +	//FREQUENCY RANGE
-> +	__u32 max_cclk_frequency;
-> +	__u32 min_cclk_frequency;
-> +	__u32 max_gfxclk_frequency;
-> +	__u32 min_gfxclk_frequency;
-> +	__u32 fclk_frequency_table[4];
-> +	__u32 uclk_frequency_table[4];
-> +	__u32 socclk_frequency_table[4];
-> +	__u32 vclk_frequency_table[4];
-> +	__u32 dclk_frequency_table[4];
-> +	__u32 lclk_frequency_table[4];
-> +	__u32 max_lclk_dpm_range;
-> +	__u32 min_lclk_dpm_range;
-> +
-> +	//XGMI
-> +	__u32 xgmi_width;
-> +	__u32 xgmi_bitrate;
-> +	__u64 xgmi_read_bandwidth_acc[8];
-> +	__u64 xgmi_write_bandwidth_acc[8];
-> +
-> +	//ACTIVITY
-> +	__u32 socket_c0_residency;
-> +	__u32 socket_gfx_busy;
-> +	__u32 dram_bandwidth_utilization;
-> +	__u64 socket_c0_residency_acc;
-> +	__u64 socket_gfx_busy_acc;
-> +	__u64 dram_bandwidth_acc;
-> +	__u32 max_dram_bandwidth;
-> +	__u64 dram_bandwidth_utilization_acc;
-> +	__u64 pcie_bandwidth_acc[4];
-> +
-> +	//THROTTLERS
-> +	__u32 prochot_residency_acc;
-> +	__u32 ppt_residency_acc;
-> +	__u32 socket_thm_residency_acc;
-> +	__u32 vr_thm_residency_acc;
-> +	__u32 hbm_thm_residency_acc;
-> +	__u32 spare;
-> +
-> +	// New Items at end to maintain driver compatibility
-> +	__u32 gfxclk_frequency[8];
->  };
->  
->  /* Reset to default packing */
-> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
-> index 99727cd705cf..fc6fba18844e 100644
-> --- a/drivers/platform/x86/amd/hsmp.c
-> +++ b/drivers/platform/x86/amd/hsmp.c
-> @@ -20,7 +20,7 @@
->  #include <linux/semaphore.h>
->  
->  #define DRIVER_NAME		"amd_hsmp"
-> -#define DRIVER_VERSION		"1.0"
-> +#define DRIVER_VERSION		"2.0"
->  
->  /* HSMP Status / Error codes */
->  #define HSMP_STATUS_NOT_READY	0x00
-> @@ -51,6 +51,8 @@
->  #define HSMP_DEVNODE_NAME	"hsmp"
->  
->  struct hsmp_socket {
-> +	struct bin_attribute hsmp_attr;
-> +	void __iomem *metric_tbl_addr;
->  	struct semaphore hsmp_sem;
->  	u16 sock_ind;
->  };
-> @@ -59,6 +61,7 @@ struct hsmp_plat_device {
->  	struct miscdevice hsmp_device;
->  	struct hsmp_socket *sock;
->  	struct device *dev;
-> +	u32 proto_ver;
->  	u16 num_sockets;
->  };
->  
-> @@ -330,9 +333,160 @@ static const struct file_operations hsmp_fops = {
->  	.compat_ioctl	= hsmp_ioctl,
->  };
->  
-> +static ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
-> +				    struct bin_attribute *bin_attr, char *buf,
-> +				    loff_t off, size_t count)
-> +{
-> +	struct hsmp_socket *sock = bin_attr->private;
-> +	struct hsmp_message msg = { 0 };
-> +	int ret;
-> +
-> +	if (!count || count > sizeof(struct hsmp_metric_table))
-> +		return 0;
-> +
-> +	msg.msg_id	= HSMP_GET_METRIC_TABLE;
-> +	msg.sock_ind	= sock->sock_ind;
-> +
-> +	ret = hsmp_send_message(&msg);
-> +	if (ret)
-> +		return ret;
-> +	memcpy(buf, sock->metric_tbl_addr, count);
-> +
-> +	return count;
-> +}
-> +
-> +static int hsmp_get_tbl_dram_base(u16 sock_ind)
-> +{
-> +	struct hsmp_socket *sock = &plat_dev.sock[sock_ind];
-> +	struct hsmp_message msg = { 0 };
-> +	phys_addr_t dram_addr;
-> +	int ret;
-> +
-> +	msg.sock_ind	= sock_ind;
-> +	msg.response_sz	= hsmp_msg_desc_table[HSMP_GET_METRIC_TABLE_DRAM_ADDR].response_sz;
-> +	msg.msg_id	= HSMP_GET_METRIC_TABLE_DRAM_ADDR;
-> +
-> +	ret = hsmp_send_message(&msg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * calculate the metric table DRAM address from lower and upper 32 bits
-> +	 * sent from SMU and ioremap it to virtual address.
-> +	 */
-> +	dram_addr = msg.args[0] | ((u64)(msg.args[1]) << 32);
-> +	if (!dram_addr) {
-> +		dev_err(plat_dev.dev, "Invalid dram address for metric table\n");
-> +		return -ENOMEM;
-> +	}
-> +	sock->metric_tbl_addr = devm_ioremap(plat_dev.dev, dram_addr,
-> +					     sizeof(struct hsmp_metric_table));
-> +	if (!sock->metric_tbl_addr) {
-> +		dev_err(plat_dev.dev, "Failed to ioremap metric table addr\n");
-> +		return -ENOMEM;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static umode_t hsmp_metric_table_visible(struct kobject *kobj, struct bin_attribute *battr, int id)
-> +{
-> +	struct hsmp_socket *sock = battr->private;
-> +	int ret;
-> +
-> +	if (plat_dev.proto_ver == HSMP_PROTO_VER6) {
-> +		ret = hsmp_get_tbl_dram_base(sock->sock_ind);
-> +		if (ret)
-> +			return 0;
-> +		return battr->attr.mode;
-> +	} else {
-> +		return 0;
-> +	}
-> +}
-> +
-> +#define HSMP_ATTR_NAME_SIZE	25
-> +#define HSMP_GRP_NAME_SIZE	15
-> +#define NUM_ATTRS		1
-> +static int hsmp_init_metric_tbl_bin_attr(struct bin_attribute **hattrs, int sock_ind)
-> +{
-> +	struct bin_attribute *hattr = &plat_dev.sock[sock_ind].hsmp_attr;
-> +	char *name;
-> +
-> +	sysfs_attr_init(&plat_dev.sock[sock_ind].hsmp_attr);
-> +	name = devm_kzalloc(plat_dev.dev, HSMP_ATTR_NAME_SIZE, GFP_KERNEL);
-> +	if (!name)
-> +		return -ENOMEM;
-> +	snprintf(name, HSMP_ATTR_NAME_SIZE, "metrics_bin");
-> +	hattr->attr.name	= name;
-> +	hattr->attr.mode	= 0444;
-> +	hattr->read		= hsmp_metric_tbl_read;
-> +	hattr->size		= sizeof(struct hsmp_metric_table);
-> +	hattr->private		= &plat_dev.sock[sock_ind];
-> +	hattrs[0]		= hattr;
-> +
-> +	return 0;
-> +}
-> +
-> +static int hsmp_create_sysfs_file(void)
-> +{
-> +	const struct attribute_group **hsmp_attr_grps;
-> +	struct bin_attribute **hsmp_bin_attrs;
-> +	struct attribute_group *attr_grp;
-> +	int ret, i;
-> +
-> +	hsmp_attr_grps = devm_kzalloc(plat_dev.dev, sizeof(struct attribute_group *) *
-> +				      (plat_dev.num_sockets + 1), GFP_KERNEL);
-> +	if (!hsmp_attr_grps)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < plat_dev.num_sockets; i++) {
-> +		attr_grp = devm_kzalloc(plat_dev.dev, sizeof(struct attribute_group), GFP_KERNEL);
-> +		if (!attr_grp)
-> +			return -ENOMEM;
-> +
-> +		attr_grp->name = devm_kzalloc(plat_dev.dev, HSMP_GRP_NAME_SIZE, GFP_KERNEL);
-> +		if (!attr_grp->name)
-> +			return -ENOMEM;
-> +		snprintf((char *)attr_grp->name, HSMP_GRP_NAME_SIZE, "socket%d", i);
-> +
-> +		hsmp_bin_attrs = devm_kzalloc(plat_dev.dev, sizeof(struct bin_attribute *) *
-> +					      (NUM_ATTRS + 1), GFP_KERNEL);
-> +		if (!hsmp_bin_attrs)
-> +			return -ENOMEM;
-> +
-> +		attr_grp->bin_attrs		= hsmp_bin_attrs;
-> +		attr_grp->is_bin_visible	= hsmp_metric_table_visible;
-> +		hsmp_attr_grps[i]		= attr_grp;
-> +
-> +		ret = hsmp_init_metric_tbl_bin_attr(hsmp_bin_attrs, i);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	ret = devm_device_add_groups(plat_dev.dev, hsmp_attr_grps);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int hsmp_cache_proto_ver(void)
-> +{
-> +	struct hsmp_message msg = { 0 };
-> +	int ret;
-> +
-> +	msg.msg_id	= HSMP_GET_PROTO_VER;
-> +	msg.sock_ind	= 0;
-> +	msg.response_sz = hsmp_msg_desc_table[HSMP_GET_PROTO_VER].response_sz;
-> +
-> +	ret = hsmp_send_message(&msg);
-> +	if (!ret)
-> +		plat_dev.proto_ver = msg.args[0];
-> +
-> +	return ret;
-> +}
-> +
->  static int hsmp_pltdrv_probe(struct platform_device *pdev)
->  {
-> -	int i;
-> +	int ret, i;
->  
->  	plat_dev.sock = devm_kzalloc(&pdev->dev,
->  				     (plat_dev.num_sockets * sizeof(struct hsmp_socket)),
-> @@ -353,7 +507,27 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
->  	plat_dev.hsmp_device.nodename	= HSMP_DEVNODE_NAME;
->  	plat_dev.hsmp_device.mode	= 0644;
->  
-> -	return misc_register(&plat_dev.hsmp_device);
-> +	ret = misc_register(&plat_dev.hsmp_device);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = hsmp_cache_proto_ver();
-> +	if (ret) {
-> +		dev_err(plat_dev.dev, "Failed to read HSMP protocol version\n");
-> +		goto deregister;
-> +	}
-> +
-> +	ret = hsmp_create_sysfs_file();
-> +	if (ret) {
-> +		dev_err(plat_dev.dev, "Failed to create sysfs file\n");
-> +		goto deregister;
-> +	}
-> +
-> +	return 0;
-> +
-> +deregister:
-> +	misc_deregister(&plat_dev.hsmp_device);
-> +	return ret;
->  }
->  
->  static void hsmp_pltdrv_remove(struct platform_device *pdev)
-> 
