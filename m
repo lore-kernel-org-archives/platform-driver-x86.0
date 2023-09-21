@@ -2,50 +2,50 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B9DE7D0A7
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Sep 2023 18:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E033E7D0A5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Sep 2023 18:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229500AbjIUSKo (ORCPT
+        id S229948AbjIUSyV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Sep 2023 14:10:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47720 "EHLO
+        Thu, 21 Sep 2023 14:54:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbjIUSKk (ORCPT
+        with ESMTP id S229648AbjIUSyM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Sep 2023 14:10:40 -0400
+        Thu, 21 Sep 2023 14:54:12 -0400
 Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C43D4897F0;
-        Thu, 21 Sep 2023 10:52:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F2B692398;
+        Thu, 21 Sep 2023 10:55:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
         MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=y80U+ROzdWFAGesuJv0fAWCJugjaoZUvkVKbCL8UtRM=; b=J1yh53DeBNARTsqqU8MHBzo9Oa
-        t0+dRp/RaWdqEqR/zlkiuTCdTMvV7LfZBpgaPOo9mz3Ar25SG5iPMKXPJ1Pakv7POYEio6eyu3imp
-        Jue1paSBhwzjv0GVy6aou42CWQp6vSIlPYV8hlPJ5VHamcRnA8qcdTN4cPrFGpVz1BTCn704A78vE
-        WKxVrydWMewhT15+u9bny+bRHgeZaaqgcYNfslcWse8SCYpLZxpj04q12Qq2mZevEQIJk5Ji3lybk
-        draQ9SuAvOjf/F8wS4j1zOR8oS4A/59eybSt0kjrpVaKBQ211JZ5hMg5lAiocOJweLC8GJ5sJOtgz
-        HfWLrfPQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54404)
+        bh=rAUrRXnUzYYs/ew/1+KqF9kOieRZwvt3pCV3uohg47o=; b=vWr3hI5zrx2FBuVlw2/LK0K2+J
+        RpsmBaMqsSd3EBLE9EatFJIs6wU1AuyBFBpv7ZlhQMRpsiHfe9mfdme077m0HBvbhlkF5FvLBvsPP
+        c7gjed8tcT51Qn6sahiTz19sfcwAM3pG1xCNVhx09514YVO/JH1j5Oaa1AjpHBIeuIuARn9EerZ7l
+        E+AqCdBxT8P4SouR5gGlkLRM+efMa0XWs152eUSvVU3McDVVOTvCtX6a2y+8T9qg+TnSW0MN35jcP
+        nPMsXRyYy4krU5S9F1ZlbBMVtUtQCsG8g0jgZAWjKkBoEpEE+Jzuyy8HZLyihMuagq7sJnmcmRfc9
+        BVMXFjyw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:41288)
         by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.96)
         (envelope-from <linux@armlinux.org.uk>)
-        id 1qjKIb-0004k2-1O;
-        Thu, 21 Sep 2023 15:04:57 +0100
+        id 1qjKPl-0004n3-2L;
+        Thu, 21 Sep 2023 15:12:21 +0100
 Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
         (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1qjKIX-0003an-Lu; Thu, 21 Sep 2023 15:04:53 +0100
-Date:   Thu, 21 Sep 2023 15:04:53 +0100
+        id 1qjKPj-0003bq-AL; Thu, 21 Sep 2023 15:12:19 +0100
+Date:   Thu, 21 Sep 2023 15:12:19 +0100
 From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
         David E Box <david.e.box@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
         Jose Abreu <Jose.Abreu@synopsys.com>,
-        Andrew Lunn <andrew@lunn.ch>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
@@ -71,10 +71,6 @@ Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
         Shenwei Wang <shenwei.wang@nxp.com>,
         Andrey Konovalov <andrey.konovalov@linaro.org>,
         Jochen Henneberg <jh@henneberg-systemdesign.com>,
-        David E Box <david.e.box@intel.com>,
-        Andrew Halaney <ahalaney@redhat.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org,
@@ -83,84 +79,47 @@ Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
         Tan Tee Min <tee.min.tan@linux.intel.com>,
         Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
         Lai Peter Jun Ann <jun.ann.lai@intel.com>
-Subject: Re: [PATCH net-next v3 3/5] net: phy: update in-band AN mode when
- changing interface by PHY driver
-Message-ID: <ZQxNhYcusHfrJvxM@shell.armlinux.org.uk>
-References: <20230921121946.3025771-1-yong.liang.choong@linux.intel.com>
- <20230921121946.3025771-4-yong.liang.choong@linux.intel.com>
+Subject: Re: [PATCH net-next v2 0/5] TSN auto negotiation between 1G and 2.5G
+Message-ID: <ZQxPQ9t8/TKcjlo8@shell.armlinux.org.uk>
+References: <20230804084527.2082302-1-yong.liang.choong@linux.intel.com>
+ <5bd05ba2-fd88-4e5c-baed-9971ff917484@lunn.ch>
+ <f9b21a9d-4ae2-1f91-b621-2e27f746f661@linux.intel.com>
+ <37fe9352-ec84-47b8-bb49-9441987ca1b9@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230921121946.3025771-4-yong.liang.choong@linux.intel.com>
+In-Reply-To: <37fe9352-ec84-47b8-bb49-9441987ca1b9@lunn.ch>
 Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Sep 21, 2023 at 08:19:44PM +0800, Choong Yong Liang wrote:
-> As there is a mechanism in PHY drivers to switch the PHY interface
-> between SGMII and 2500BaseX according to link speed. In this case,
-> the in-band AN mode should be switching based on the PHY interface
-> as well, if the PHY interface has been changed/updated by PHY driver.
+On Thu, Sep 21, 2023 at 03:21:00PM +0200, Andrew Lunn wrote:
+> > Hi Andrew,
+> > 
+> > After conducting a comprehensive study, it seems that implementing
+> > out-of-band for all link modes might not be feasible. I may have missed some
+> > key aspects during my analysis.
+> > 
+> > Would you be open to sharing a high-level idea of how we could potentially
+> > make this feasible? Your insights would be greatly appreciated.
 > 
-> For e.g., disable in-band AN in 2500BaseX mode, or enable in-band AN
-> back for SGMII mode (10/100/1000Mbps).
-> 
-> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+> stmmac_mac_link_up() gets passed interface, speed and duplex. That
+> tells you what the PHY has negotiated. Is there anything else you need
+> to know?
 
-This approach is *going* to break existing setups, sorry.
+The problem is... the stmmac driver is utter bollocks - that information
+is *not* passed to the BSP. Instead, stmmac parse and store information
+such as the PHY interface mode at initialisation time. BSPs also re-
+parse and store e.g. the PHY interface mode at initialisation time.
+The driver ignores what it gets from phylink.
 
-> +/**
-> + * phylink_interface_change() - update both cfg_link_an_mode and
-> + * cur_link_an_mode when there is a change in the interface.
-> + * @phydev: pointer to &struct phy_device
-> + *
-> + * When the PHY interface switches between SGMII and 2500BaseX in
-> + * accordance with the link speed, the in-band AN mode should also switch
-> + * based on the PHY interface
-> + */
-> +static void phylink_interface_change(struct phy_device *phydev)
-> +{
-> +	struct phylink *pl = phydev->phylink;
-> +
-> +	if (pl->phy_state.interface != phydev->interface) {
-> +		/* Fallback to the correct AN mode. */
-> +		if (phy_interface_mode_is_8023z(phydev->interface) &&
-> +		    pl->cfg_link_an_mode == MLO_AN_INBAND) {
-> +			pl->cfg_link_an_mode = MLO_AN_PHY;
-> +			pl->cur_link_an_mode = MLO_AN_PHY;
-
-1. Why are you changing both cfg_link_an_mode (configured link AN mode)
-and cur_link_an_mode (current link AN mode) ?
-
-The "configured" link AN mode is supposed to be whatever was configured
-at phylink creation time, and it's never supposed to change. The
-"current" link AN mode can change, but changing that must be followed
-by a major reconfiguration to ensure everything is correctly setup.
-That will happen only because the change to the current link AN mode
-can only happen when pl->phy_state.interface has changed, and the
-change of pl->phy_state.interface triggers the reconfiguration.
-
-2. You force this behaviour on everyone, so now everyone with a SFP
-module that operates in 802.3z mode will be switched out of inband mode
-whether they want that or not. This is likely to cause some breakage.
-
-> +		} else if (pl->config->ovr_an_inband) {
-> +			pl->cfg_link_an_mode = MLO_AN_INBAND;
-> +			pl->cur_link_an_mode = MLO_AN_INBAND;
-
-Here you force inband when not 802.3z mode and ovr_an_inband is set.
-There are SFP modules that do *not* support in-band at all, and this
-will break these modules when combined with a driver that sets
-ovr_an_inband. So more breakage.
-
-Please enumerate the PHY interface modes that you are trying to support
-with this patch set, and indicate whether you want in-band for that
-mode or not, and where the restriction for whether in-band can be used
-comes from (PHY, PCS or MAC) so that it's possible to better understand
-what you're trying to achieve.
-
-Thanks.
+The driver is basically utter crap. That's an area I _had_ patches to
+clean up. I no longer do. stmmac is crap crap crap and will stay crap
+until they become more receptive to patches to fix it, even if the
+patches are not 100% to their liking but are in fact correct. Maybe
+if I ever decide to touch that driver in the future. Which I doubt
+given my recent experience.
 
 -- 
 RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
