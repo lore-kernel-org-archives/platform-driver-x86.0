@@ -2,117 +2,278 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5132E7D0AF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Sep 2023 21:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3E0E7D0B0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Sep 2023 22:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232721AbjIUVRS (ORCPT
+        id S232300AbjIUWPz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Sep 2023 17:17:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44730 "EHLO
+        Thu, 21 Sep 2023 18:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232724AbjIUVQO (ORCPT
+        with ESMTP id S232297AbjIUWP3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Sep 2023 17:16:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D556455AB
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Sep 2023 10:08:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1695316102;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+LqyqkbU582imBQ0YOb/llGiFqNCWpU/CGhegbr1gDs=;
-        b=gGoykdX0geymciGCXnfnoHG/u+rLJvww+Fco4lRxJ5XHEI1lXiI7Ib53klJOMawTMU99u8
-        up7m/HpkIRicHYm3iRPdICuZ90oMPGo8wyWR59zuEPvkjFTwAvesj/hdW9BMD4xtFOZdzU
-        B3Oz5Caxm04clNNmJeS8TNUJXbqIQTU=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-392-HpPKQ0O0OVaJFdAzZLU6IQ-1; Thu, 21 Sep 2023 12:29:09 -0400
-X-MC-Unique: HpPKQ0O0OVaJFdAzZLU6IQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-99388334de6so88006766b.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Sep 2023 09:29:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695313748; x=1695918548;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+LqyqkbU582imBQ0YOb/llGiFqNCWpU/CGhegbr1gDs=;
-        b=S8zHlrLyTgrYFbShoAtoEw7QbQL53qQ3/xwRl1oW0RfPe+y/T2src0/e4ftrZ4Qe6D
-         kbGzNip5Q32VgHs04Rfqbu7iYFEfdl3+s7DVh5gJgQx4xBsykjUpO5DBaUgeAnKHsrhC
-         EeuLzK6AzwKcpjyp6bfZQATM+0e3X7lCdVNAT0H5WTkDk2QAua+/e8CTLXh111HU8jxt
-         KvAlKJbZwbTpgvk1uI6e0HQ69eJmu+yH5OjHPHUhn20IkOEVOjGhFnCQV5LWdMF5kU/e
-         jvMiyVbsjnS2Ws4olkwr0dTD83Yp830R6IaNXKfg4sY8aTgRw7efwx6+p7PEKmxhUCcY
-         7NAw==
-X-Gm-Message-State: AOJu0YwZBgsxU/TJl/ovYgMjsZMdyIxUTcGAeLCYQlyFarIp2CE6QPx+
-        E/lC4xi5WTv5328sHqcTkAEViu9089sXv3PHpF6NmWVOadFLfK77dpLnBp+7x2UFt1LArO3EgmH
-        Gm1IsoJZmlYWk+8+fj8KiVWaflaNsRm+KvUVqP4PJlg==
-X-Received: by 2002:a17:906:768a:b0:99d:e8da:c20b with SMTP id o10-20020a170906768a00b0099de8dac20bmr5289283ejm.24.1695313748006;
-        Thu, 21 Sep 2023 09:29:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEBUNaMVMH7Xly5KzL2uuQK9NXJE4nWiO9ac1dUASm2dC1r1coo5EPy0W2tTRBAHPlwypspQA==
-X-Received: by 2002:a17:906:768a:b0:99d:e8da:c20b with SMTP id o10-20020a170906768a00b0099de8dac20bmr5289269ejm.24.1695313747658;
-        Thu, 21 Sep 2023 09:29:07 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id kt22-20020a170906aad600b0099cf9bf4c98sm1299192ejb.8.2023.09.21.09.29.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Sep 2023 09:29:07 -0700 (PDT)
-Message-ID: <981e9537-16f7-0ffa-edad-b4c90d72bb14@redhat.com>
-Date:   Thu, 21 Sep 2023 18:29:06 +0200
+        Thu, 21 Sep 2023 18:15:29 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41E851F7A;
+        Thu, 21 Sep 2023 10:17:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695316628; x=1726852628;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8OopbPLd2PLuBzWXbD5OoXxEWQBz7+T1Q1+Yh3tIdx8=;
+  b=V95QsCdPjyyhPyUIwK5cZ4f2HYUd5Felu0d6Dgxaw2DhyjMucY9X256P
+   TlgRACOLpCwvuZ2kPVBodQWZBTUlrDIPMAWJUVeAw2H9ezxKbu11RPrJL
+   QEANBhA2tYot3kMXLCEpgcZg4XnUXMDW1HxqbB8MWVbXO92skcBJW+j9d
+   QnEPbvupOsTfNJOdVpol3VfhHfscBsGNelI2W/Z+pDOrSyHOJGz1IbyGW
+   RSf59+s8VXA6PN21b8dKSEno3xOzB/+ud4t49B73Wpo22k7aA07GizZXV
+   vEy8m307alt/nmJYeROC7Kej2qTzL6N45/6m/Jv/hSTcWrqvNhBcaf85g
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="444608195"
+X-IronPort-AV: E=Sophos;i="6.03,165,1694761200"; 
+   d="scan'208";a="444608195"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2023 05:20:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="862441839"
+X-IronPort-AV: E=Sophos;i="6.03,165,1694761200"; 
+   d="scan'208";a="862441839"
+Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.229.33])
+  by fmsmga002.fm.intel.com with ESMTP; 21 Sep 2023 05:20:37 -0700
+From:   Choong Yong Liang <yong.liang.choong@linux.intel.com>
+To:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Wong Vee Khee <veekhee@apple.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Revanth Kumar Uppala <ruppala@nvidia.com>,
+        Shenwei Wang <shenwei.wang@nxp.com>,
+        Andrey Konovalov <andrey.konovalov@linaro.org>,
+        Jochen Henneberg <jh@henneberg-systemdesign.com>
+Cc:     David E Box <david.e.box@intel.com>,
+        Andrew Halaney <ahalaney@redhat.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
+        Tan Tee Min <tee.min.tan@linux.intel.com>,
+        Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+        Lai Peter Jun Ann <jun.ann.lai@intel.com>
+Subject: [PATCH net-next v3 2/5] net: pcs: xpcs: combine C37 SGMII AN and 2500BASEX for Intel mGbE controller
+Date:   Thu, 21 Sep 2023 20:19:43 +0800
+Message-Id: <20230921121946.3025771-3-yong.liang.choong@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230921121946.3025771-1-yong.liang.choong@linux.intel.com>
+References: <20230921121946.3025771-1-yong.liang.choong@linux.intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 1/1] MAINTAINERS: Add x86 platform drivers patchwork
-Content-Language: en-US, nl
-To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230919123948.1583-1-ilpo.jarvinen@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230919123948.1583-1-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Ilpo,
+From: "Tan, Tee Min" <tee.min.tan@linux.intel.com>
 
-On 9/19/23 14:39, Ilpo Järvinen wrote:
-> Add x86 platform drivers patchwork which has been missing from
-> MAINTAINERS.
-> 
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+This commit introduces xpcs_sgmii_2500basex_features[] that combine
+xpcs_sgmii_features[] and xpcs_2500basex_features[] for Intel mGbE
+controller that desire to interchange the speed mode of
+10/100/1000/2500Mbps at runtime.
 
-Thank you for your patch, I've applied this patch to my fixes
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
+Also, we introduce xpcs_config_aneg_c37_sgmii_2500basex() function
+which is called by the xpcs_do_config() with the new AN mode:
+DW_SGMII_2500BASEX, and this new function will proceed next-level
+calling to perform C37 SGMII AN/2500BASEX configuration based on
+the PHY interface updated by PHY driver.
 
-Note it will show up in my fixes branch once I've pushed my
-local branch there, which might take a while.
+Signed-off-by: Tan, Tee Min <tee.min.tan@linux.intel.com>
+Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+---
+ drivers/net/pcs/pcs-xpcs.c   | 72 ++++++++++++++++++++++++++++++------
+ include/linux/pcs/pcs-xpcs.h |  1 +
+ 2 files changed, 62 insertions(+), 11 deletions(-)
 
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
-
-Regards,
-
-Hans
-
-
-
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b04cbcec521f..dbf1668dcd84 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -23430,6 +23430,7 @@ M:	Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->  M:	Mark Gross <markgross@kernel.org>
->  L:	platform-driver-x86@vger.kernel.org
->  S:	Maintained
-> +Q:	https://patchwork.kernel.org/project/platform-driver-x86/list/
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
->  F:	drivers/platform/olpc/
->  F:	drivers/platform/x86/
+diff --git a/drivers/net/pcs/pcs-xpcs.c b/drivers/net/pcs/pcs-xpcs.c
+index 4dbc21f604f2..60d90191677d 100644
+--- a/drivers/net/pcs/pcs-xpcs.c
++++ b/drivers/net/pcs/pcs-xpcs.c
+@@ -104,6 +104,21 @@ static const int xpcs_2500basex_features[] = {
+ 	__ETHTOOL_LINK_MODE_MASK_NBITS,
+ };
+ 
++static const int xpcs_sgmii_2500basex_features[] = {
++	ETHTOOL_LINK_MODE_Pause_BIT,
++	ETHTOOL_LINK_MODE_Asym_Pause_BIT,
++	ETHTOOL_LINK_MODE_Autoneg_BIT,
++	ETHTOOL_LINK_MODE_10baseT_Half_BIT,
++	ETHTOOL_LINK_MODE_10baseT_Full_BIT,
++	ETHTOOL_LINK_MODE_100baseT_Half_BIT,
++	ETHTOOL_LINK_MODE_100baseT_Full_BIT,
++	ETHTOOL_LINK_MODE_1000baseT_Half_BIT,
++	ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
++	ETHTOOL_LINK_MODE_2500baseX_Full_BIT,
++	ETHTOOL_LINK_MODE_2500baseT_Full_BIT,
++	__ETHTOOL_LINK_MODE_MASK_NBITS,
++};
++
+ static const phy_interface_t xpcs_usxgmii_interfaces[] = {
+ 	PHY_INTERFACE_MODE_USXGMII,
+ };
+@@ -133,6 +148,12 @@ static const phy_interface_t xpcs_2500basex_interfaces[] = {
+ 	PHY_INTERFACE_MODE_MAX,
+ };
+ 
++static const phy_interface_t xpcs_sgmii_2500basex_interfaces[] = {
++	PHY_INTERFACE_MODE_SGMII,
++	PHY_INTERFACE_MODE_2500BASEX,
++	PHY_INTERFACE_MODE_MAX,
++};
++
+ enum {
+ 	DW_XPCS_USXGMII,
+ 	DW_XPCS_10GKR,
+@@ -141,6 +162,7 @@ enum {
+ 	DW_XPCS_SGMII,
+ 	DW_XPCS_1000BASEX,
+ 	DW_XPCS_2500BASEX,
++	DW_XPCS_SGMII_2500BASEX,
+ 	DW_XPCS_INTERFACE_MAX,
+ };
+ 
+@@ -290,6 +312,7 @@ static int xpcs_soft_reset(struct dw_xpcs *xpcs,
+ 	case DW_AN_C37_SGMII:
+ 	case DW_2500BASEX:
+ 	case DW_AN_C37_1000BASEX:
++	case DW_SGMII_2500BASEX:
+ 		dev = MDIO_MMD_VEND2;
+ 		break;
+ 	default:
+@@ -748,6 +771,8 @@ static int xpcs_config_aneg_c37_sgmii(struct dw_xpcs *xpcs,
+ 	if (xpcs->dev_flag == DW_DEV_TXGBE)
+ 		ret |= DW_VR_MII_DIG_CTRL1_PHY_MODE_CTRL;
+ 
++	/* Disable 2.5G GMII for SGMII C37 mode */
++	ret &= ~DW_VR_MII_DIG_CTRL1_2G5_EN;
+ 	ret = xpcs_write(xpcs, MDIO_MMD_VEND2, DW_VR_MII_DIG_CTRL1, ret);
+ 	if (ret < 0)
+ 		return ret;
+@@ -848,6 +873,26 @@ static int xpcs_config_2500basex(struct dw_xpcs *xpcs)
+ 	return xpcs_write(xpcs, MDIO_MMD_VEND2, DW_VR_MII_MMD_CTRL, ret);
+ }
+ 
++static int xpcs_config_aneg_c37_sgmii_2500basex(struct dw_xpcs *xpcs,
++						unsigned int neg_mode,
++						phy_interface_t interface)
++{
++	int ret = -EOPNOTSUPP;
++
++	switch (interface) {
++	case PHY_INTERFACE_MODE_SGMII:
++		ret = xpcs_config_aneg_c37_sgmii(xpcs, neg_mode);
++		break;
++	case PHY_INTERFACE_MODE_2500BASEX:
++		ret = xpcs_config_2500basex(xpcs);
++		break;
++	default:
++		break;
++	}
++
++	return ret;
++}
++
+ int xpcs_do_config(struct dw_xpcs *xpcs, phy_interface_t interface,
+ 		   const unsigned long *advertising, unsigned int neg_mode)
+ {
+@@ -890,6 +935,12 @@ int xpcs_do_config(struct dw_xpcs *xpcs, phy_interface_t interface,
+ 		if (ret)
+ 			return ret;
+ 		break;
++	case DW_SGMII_2500BASEX:
++		ret = xpcs_config_aneg_c37_sgmii_2500basex(xpcs, neg_mode,
++							   interface);
++		if (ret)
++			return ret;
++		break;
+ 	default:
+ 		return -1;
+ 	}
+@@ -1114,6 +1165,11 @@ static void xpcs_get_state(struct phylink_pcs *pcs,
+ 		}
+ 		break;
+ 	case DW_AN_C37_SGMII:
++	case DW_SGMII_2500BASEX:
++		/* 2500BASEX is not supported for in-band AN mode. */
++		if (state->interface == PHY_INTERFACE_MODE_2500BASEX)
++			break;
++
+ 		ret = xpcs_get_state_c37_sgmii(xpcs, state);
+ 		if (ret) {
+ 			pr_err("xpcs_get_state_c37_sgmii returned %pe\n",
+@@ -1266,23 +1322,17 @@ static const struct xpcs_compat synopsys_xpcs_compat[DW_XPCS_INTERFACE_MAX] = {
+ 		.num_interfaces = ARRAY_SIZE(xpcs_10gbaser_interfaces),
+ 		.an_mode = DW_10GBASER,
+ 	},
+-	[DW_XPCS_SGMII] = {
+-		.supported = xpcs_sgmii_features,
+-		.interface = xpcs_sgmii_interfaces,
+-		.num_interfaces = ARRAY_SIZE(xpcs_sgmii_interfaces),
+-		.an_mode = DW_AN_C37_SGMII,
+-	},
+ 	[DW_XPCS_1000BASEX] = {
+ 		.supported = xpcs_1000basex_features,
+ 		.interface = xpcs_1000basex_interfaces,
+ 		.num_interfaces = ARRAY_SIZE(xpcs_1000basex_interfaces),
+ 		.an_mode = DW_AN_C37_1000BASEX,
+ 	},
+-	[DW_XPCS_2500BASEX] = {
+-		.supported = xpcs_2500basex_features,
+-		.interface = xpcs_2500basex_interfaces,
+-		.num_interfaces = ARRAY_SIZE(xpcs_2500basex_interfaces),
+-		.an_mode = DW_2500BASEX,
++	[DW_XPCS_SGMII_2500BASEX] = {
++		.supported = xpcs_sgmii_2500basex_features,
++		.interface = xpcs_sgmii_2500basex_interfaces,
++		.num_interfaces = ARRAY_SIZE(xpcs_sgmii_2500basex_features),
++		.an_mode = DW_SGMII_2500BASEX,
+ 	},
+ };
+ 
+diff --git a/include/linux/pcs/pcs-xpcs.h b/include/linux/pcs/pcs-xpcs.h
+index da3a6c30f6d2..f075d2fca54a 100644
+--- a/include/linux/pcs/pcs-xpcs.h
++++ b/include/linux/pcs/pcs-xpcs.h
+@@ -19,6 +19,7 @@
+ #define DW_2500BASEX			3
+ #define DW_AN_C37_1000BASEX		4
+ #define DW_10GBASER			5
++#define DW_SGMII_2500BASEX		6
+ 
+ /* device vendor OUI */
+ #define DW_OUI_WX			0x0018fc80
+-- 
+2.25.1
 
