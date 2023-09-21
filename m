@@ -2,136 +2,197 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 870DEE7D0A2
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Sep 2023 19:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58180E7D0A7
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Sep 2023 20:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231186AbjIUTp1 (ORCPT
+        id S230232AbjIUUAz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Sep 2023 15:45:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34988 "EHLO
+        Thu, 21 Sep 2023 16:00:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231202AbjIUTpL (ORCPT
+        with ESMTP id S231511AbjIUUA2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Sep 2023 15:45:11 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4987A7EA02;
-        Thu, 21 Sep 2023 10:50:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695318647; x=1726854647;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xzUHdYuTPX8UEPkN1RU7vl2/b1DAaw7BomhJXS2mn5U=;
-  b=C1x6IMkzybQYgmnhFfnSwg+lFuiSlzY1GJQk9HodNkYa1ZktK+/YHZf8
-   W2bJECY5Ud5E0lG6KryKrZYdD7i1iZHqFZMUz0aoquzOTcHnMhCme/MSI
-   tizhZQQK+6+qy5XCfivaUwFI6YB0kCDwPg8Yu0XRQvrvRtxTeH7Au7Xmt
-   3Q6/FGLy+13lpm0/tRI75f8Ir51AixXOghoBu6/bPwDxlvNoPoSAO2S1k
-   QiFPVxbVasxcP4+i1SSft6rqUNPdnZQ3nDSJ3Mxfp0Xu6Q3/y62pbtT5O
-   NdJFrOP5679r0BSJohoHDE98baNq+WG8wdJuzRsdKloCGmOrzlMHbAyr3
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="384344978"
-X-IronPort-AV: E=Sophos;i="6.03,165,1694761200"; 
-   d="scan'208";a="384344978"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2023 05:25:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="776399273"
-X-IronPort-AV: E=Sophos;i="6.03,165,1694761200"; 
-   d="scan'208";a="776399273"
-Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.215.240.199]) ([10.215.240.199])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2023 05:25:29 -0700
-Message-ID: <f9b21a9d-4ae2-1f91-b621-2e27f746f661@linux.intel.com>
-Date:   Thu, 21 Sep 2023 20:25:05 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH net-next v2 0/5] TSN auto negotiation between 1G and 2.5G
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
+        Thu, 21 Sep 2023 16:00:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3946658C07
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Sep 2023 10:19:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1695316773;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mYFUdBslfSemlERse4Us5f4NKymG/+Lupcjrt0UUg2s=;
+        b=Hn26/kUwVxoEIfM2R98owlgqEQVRfgNSjsastGbCD6CaNLdWGvs0dbPhDW7PvYwZbFHJoF
+        Fjo0Cbta/E5pN0IZlzxxRCAr9eAsgxjk1hfkqAHLazWvJlUEv2q9MsrlDNOnWEEwuhuARu
+        37mKLPiFGGDX7TYqps/0rnksrPKTIdQ=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-504-z-doGtHoPBqqdIlrrRd-HQ-1; Thu, 21 Sep 2023 10:03:09 -0400
+X-MC-Unique: z-doGtHoPBqqdIlrrRd-HQ-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-9ae686dafedso46169166b.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Sep 2023 07:03:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695304980; x=1695909780;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mYFUdBslfSemlERse4Us5f4NKymG/+Lupcjrt0UUg2s=;
+        b=NRaRR8L/5Cby/q+9bQKDYNOfsZIW41/mjuNJA1upCP7FcTkVxra4Q6Zg+g13WkEIDL
+         ucUAqg9fTh1KKjH3Mwlg5Lo6qOPQRzRaWbGs9tVYJZr3fhHIpDZzCPhLQgiqRf8CCt5W
+         qbfJtOsgWwIYX1KY7m4dWX5ZtSHCGCBL7ovuc6XD/Uj83D+p/IoH90HUocqi1rAojfU+
+         XtobiyLezArxyOZw6639y1BK+mJcqfj07Tk761CgxcpySz2mmQueEIlVXycJ65Jsc3Um
+         r9PNpbIoIlfgf7PDBXK9Xd++5Wub2/CLgGrbEyGFetoZer0mafxbORXngr5BbGZVJkRg
+         N9Yw==
+X-Gm-Message-State: AOJu0YxmKGmCjOJZ6fikvoPBO3gu5c3P6ejnF1n6qQkTGGTXWtOCZJme
+        yg8yFr+p7s/TXvk+nAvO/nC+PC07thGW4bM7tUIofynhBf7Z2YdknK4H80tRiQ6Gdxry0l+Mi3X
+        visMC1KY4Zqmx555ibmIcEGlbqd5z9nLEMg==
+X-Received: by 2002:a17:906:13:b0:9a5:7e63:2e0 with SMTP id 19-20020a170906001300b009a57e6302e0mr5496762eja.30.1695304980532;
+        Thu, 21 Sep 2023 07:03:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEGDrtu0JFw6590Ay/MhiYHIEI6g5Txx1wcLitr4s1+bWtmtSPAeMYJ5QGJ2kmybduZxOWLIA==
+X-Received: by 2002:a17:906:13:b0:9a5:7e63:2e0 with SMTP id 19-20020a170906001300b009a57e6302e0mr5496721eja.30.1695304980143;
+        Thu, 21 Sep 2023 07:03:00 -0700 (PDT)
+Received: from redhat.com ([2.52.150.187])
+        by smtp.gmail.com with ESMTPSA id dt11-20020a170906b78b00b009ae482d70besm1079598ejb.134.2023.09.21.07.02.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Sep 2023 07:02:59 -0700 (PDT)
+Date:   Thu, 21 Sep 2023 10:02:53 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
-        =?UTF-8?Q?Marek_Beh=c3=ban?= <kabel@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Jesper Dangaard Brouer <hawk@kernel.org>,
         John Fastabend <john.fastabend@gmail.com>,
-        Wong Vee Khee <veekhee@apple.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Revanth Kumar Uppala <ruppala@nvidia.com>,
-        Shenwei Wang <shenwei.wang@nxp.com>,
-        Andrey Konovalov <andrey.konovalov@linaro.org>,
-        Jochen Henneberg <jh@henneberg-systemdesign.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
-        Tan Tee Min <tee.min.tan@linux.intel.com>,
-        Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-        Lai Peter Jun Ann <jun.ann.lai@intel.com>
-References: <20230804084527.2082302-1-yong.liang.choong@linux.intel.com>
- <5bd05ba2-fd88-4e5c-baed-9971ff917484@lunn.ch>
-Content-Language: en-US
-From:   Choong Yong Liang <yong.liang.choong@linux.intel.com>
-In-Reply-To: <5bd05ba2-fd88-4e5c-baed-9971ff917484@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, bpf@vger.kernel.org,
+        kangjie.xu@linux.alibaba.com
+Subject: Re: [PATCH v14 30/42] virtio_pci: introduce helper to get/set queue
+ reset
+Message-ID: <20230921100112-mutt-send-email-mst@kernel.org>
+References: <20220801063902.129329-1-xuanzhuo@linux.alibaba.com>
+ <20220801063902.129329-31-xuanzhuo@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220801063902.129329-31-xuanzhuo@linux.alibaba.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-
-
-On 4/8/2023 8:04 pm, Andrew Lunn wrote:
-> On Fri, Aug 04, 2023 at 04:45:22PM +0800, Choong Yong Liang wrote:
->> Intel platforms’ integrated Gigabit Ethernet controllers support
->> 2.5Gbps mode statically using BIOS programming. In the current
->> implementation, the BIOS menu provides an option to select between
->> 10/100/1000Mbps and 2.5Gbps modes. Based on the selection, the BIOS
->> programs the Phase Lock Loop (PLL) registers. The BIOS also read the
->> TSN lane registers from Flexible I/O Adapter (FIA) block and provided
->> 10/100/1000Mbps/2.5Gbps information to the stmmac driver. But
->> auto-negotiation between 10/100/1000Mbps and 2.5Gbps is not allowed.
->> The new proposal is to support auto-negotiation between 10/100/1000Mbps
->> and 2.5Gbps . Auto-negotiation between 10, 100, 1000Mbps will use
->> in-band auto negotiation. Auto-negotiation between 10/100/1000Mbps and
->> 2.5Gbps will work as the following proposed flow, the stmmac driver reads
->> the PHY link status registers then identifies the negotiated speed.
->> Based on the speed stmmac driver will identify TSN lane registers from
->> FIA then send IPC command to the Power Management controller (PMC)
->> through PMC driver/API. PMC will act as a proxy to programs the
->> PLL registers.
+On Mon, Aug 01, 2022 at 02:38:50PM +0800, Xuan Zhuo wrote:
+> Introduce new helpers to implement queue reset and get queue reset
+> status.
 > 
-> Have you considered using out of band for all link modes? You might
-> end up with a cleaner architecture, and not need any phylink/phylib
-> hacks.
+>  https://github.com/oasis-tcs/virtio-spec/issues/124
+>  https://github.com/oasis-tcs/virtio-spec/issues/139
 > 
-> 	Andrew
-Hi Andrew,
+> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> Acked-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  drivers/virtio/virtio_pci_modern_dev.c | 39 ++++++++++++++++++++++++++
+>  include/linux/virtio_pci_modern.h      |  2 ++
+>  2 files changed, 41 insertions(+)
+> 
+> diff --git a/drivers/virtio/virtio_pci_modern_dev.c b/drivers/virtio/virtio_pci_modern_dev.c
+> index fa2a9445bb18..869cb46bef96 100644
+> --- a/drivers/virtio/virtio_pci_modern_dev.c
+> +++ b/drivers/virtio/virtio_pci_modern_dev.c
+> @@ -3,6 +3,7 @@
+>  #include <linux/virtio_pci_modern.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> +#include <linux/delay.h>
+>  
+>  /*
+>   * vp_modern_map_capability - map a part of virtio pci capability
+> @@ -474,6 +475,44 @@ void vp_modern_set_status(struct virtio_pci_modern_device *mdev,
+>  }
+>  EXPORT_SYMBOL_GPL(vp_modern_set_status);
+>  
+> +/*
+> + * vp_modern_get_queue_reset - get the queue reset status
+> + * @mdev: the modern virtio-pci device
+> + * @index: queue index
+> + */
+> +int vp_modern_get_queue_reset(struct virtio_pci_modern_device *mdev, u16 index)
+> +{
+> +	struct virtio_pci_modern_common_cfg __iomem *cfg;
+> +
+> +	cfg = (struct virtio_pci_modern_common_cfg __iomem *)mdev->common;
+> +
+> +	vp_iowrite16(index, &cfg->cfg.queue_select);
+> +	return vp_ioread16(&cfg->queue_reset);
+> +}
+> +EXPORT_SYMBOL_GPL(vp_modern_get_queue_reset);
+> +
 
-After conducting a comprehensive study, it seems that implementing 
-out-of-band for all link modes might not be feasible. I may have missed 
-some key aspects during my analysis.
+Actually, this does not validate that the config structure is big
+enough. So it can access some unrelated memory. Don't know whether
+that's exploitable e.g. for CoCo but not nice, anyway.
+Need to validate the size and disable reset if it's too small.
 
-Would you be open to sharing a high-level idea of how we could potentially 
-make this feasible? Your insights would be greatly appreciated.
 
-By the way, I've submitted a new design that not exposing phylink's AN mode 
-into phylib. Please help review it to determine if it is acceptable.
+> +/*
+> + * vp_modern_set_queue_reset - reset the queue
+> + * @mdev: the modern virtio-pci device
+> + * @index: queue index
+> + */
+> +void vp_modern_set_queue_reset(struct virtio_pci_modern_device *mdev, u16 index)
+> +{
+> +	struct virtio_pci_modern_common_cfg __iomem *cfg;
+> +
+> +	cfg = (struct virtio_pci_modern_common_cfg __iomem *)mdev->common;
+> +
+> +	vp_iowrite16(index, &cfg->cfg.queue_select);
+> +	vp_iowrite16(1, &cfg->queue_reset);
+> +
+> +	while (vp_ioread16(&cfg->queue_reset))
+> +		msleep(1);
+> +
+> +	while (vp_ioread16(&cfg->cfg.queue_enable))
+> +		msleep(1);
+> +}
+> +EXPORT_SYMBOL_GPL(vp_modern_set_queue_reset);
+> +
+>  /*
+>   * vp_modern_queue_vector - set the MSIX vector for a specific virtqueue
+>   * @mdev: the modern virtio-pci device
+> diff --git a/include/linux/virtio_pci_modern.h b/include/linux/virtio_pci_modern.h
+> index 05123b9a606f..c4eeb79b0139 100644
+> --- a/include/linux/virtio_pci_modern.h
+> +++ b/include/linux/virtio_pci_modern.h
+> @@ -113,4 +113,6 @@ void __iomem * vp_modern_map_vq_notify(struct virtio_pci_modern_device *mdev,
+>  				       u16 index, resource_size_t *pa);
+>  int vp_modern_probe(struct virtio_pci_modern_device *mdev);
+>  void vp_modern_remove(struct virtio_pci_modern_device *mdev);
+> +int vp_modern_get_queue_reset(struct virtio_pci_modern_device *mdev, u16 index);
+> +void vp_modern_set_queue_reset(struct virtio_pci_modern_device *mdev, u16 index);
+>  #endif
+> -- 
+> 2.31.0
+
