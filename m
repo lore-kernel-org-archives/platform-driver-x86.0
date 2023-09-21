@@ -2,272 +2,411 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 982F2E71094
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Sep 2023 17:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFF1E71096
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Sep 2023 17:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229566AbjIUREC (ORCPT
+        id S230075AbjIURGX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Sep 2023 13:04:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45276 "EHLO
+        Thu, 21 Sep 2023 13:06:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229985AbjIURDd (ORCPT
+        with ESMTP id S230101AbjIURF6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Sep 2023 13:03:33 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2134.outbound.protection.outlook.com [40.107.92.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2E011736;
-        Thu, 21 Sep 2023 10:02:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bfQdZKXUso/LPoYNWWLoNu/16059cHzbBqZ5s+ir09maYF4TDGU4vlowuso8sP2q++iXE4r1cwf4i9zJKypxVZ49uEorukXo0sIw427lSYMekYiqHjB2SALBWq6VO0SVjoWiRCqKiHEAb0jjtnGOKTBtEdUBl+kUS3hjdLcUnZfvPEH6uHl537hQUM8AfWU/fz2HD2jbIdXadDhnJdGQ4b3Ejne4gXqKUSOk2lY7dUTnzLp/1R6XphgpBD/8a1N90TdVjs5XfBiDP15qDKGstE4ns8QKf09HEyRGxh/HI5iklKtk6d01HkUd+BEmTIG73TpLGXTz5FWoj9YcrHX+Hw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UFCSvvar8qcYQV+9Cnk9e3tXoEGjn7Kfra7vk24FIyg=;
- b=MQpr9WmTm/kEA1mvM4upWasFBNU6az0lNWp+Rle643Rch0r+q8SyebzJrYl0gZEok5Om9ryOGuuCNMaK8DiTyAXMnGNMMtnEpE9gYEgicQWWW2XmNYlmXZXHcy40FEX0W5Pje5CKgwQymQUO9l0Ha1ELBtRQ1rUL23zPkv9ign/RaVWEeIGAVi7CvrA0vIVqDaI3TP0mPRaydmV0txEmPiVnHn/5arBRnIEZ+2ISAegbah7xttj5SSbG9Ae8QjodgPiHJGEUNRywtybOI6DVdQIhCmKNYgS1B8SLUBFeXxZJcCb5thej7Y4jHRtJFw7u41I0HFxUJKQB70iavX7Lpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ipt.br; dmarc=pass action=none header.from=ipt.br; dkim=pass
- header.d=ipt.br; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ipt.br; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UFCSvvar8qcYQV+9Cnk9e3tXoEGjn7Kfra7vk24FIyg=;
- b=RyUYbATucaxXN+ubdqk1OLXtSqOPJIjg1hp+iMwViJC4K68Cc3VLMGxpYahhJEa90bhptWSGvv0QzqQyrXbqzb2lFFPBhNn9FmVejHL5pP0tZTYbGRY3II3MeFaS5dIp5MiZql+yhJnvAWOmESxMD2fUHnkGZ3OsZYV9NG65odE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=ipt.br;
-Received: from CPVP152MB5053.LAMP152.PROD.OUTLOOK.COM (2603:10d6:103:1a4::6)
- by CPVP152MB4863.LAMP152.PROD.OUTLOOK.COM (2603:10d6:103:152::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.21; Thu, 21 Sep
- 2023 14:36:52 +0000
-Received: from CPVP152MB5053.LAMP152.PROD.OUTLOOK.COM
- ([fe80::33a9:1d82:af5d:6419]) by CPVP152MB5053.LAMP152.PROD.OUTLOOK.COM
- ([fe80::33a9:1d82:af5d:6419%6]) with mapi id 15.20.6813.017; Thu, 21 Sep 2023
- 14:36:52 +0000
-From:   Fernando Eckhardt Valle <fevalle@ipt.br>
-To:     hdegoede@redhat.com, mpearson-lenovo@squebb.ca, corbet@lwn.net,
-        hmh@hmh.eng.br, markgross@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v4] platform/x86: thinkpad_acpi: sysfs interface to auxmac
-Date:   Thu, 21 Sep 2023 11:36:22 -0300
-Message-Id: <20230921143622.72387-1-fevalle@ipt.br>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CPXP152CA0015.LAMP152.PROD.OUTLOOK.COM (2603:10d6:103::27)
- To CPVP152MB5053.LAMP152.PROD.OUTLOOK.COM (2603:10d6:103:1a4::6)
+        Thu, 21 Sep 2023 13:05:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB54B1BD1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Sep 2023 10:03:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1695315609;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1Y5SoJ9MH2LvAlChqhtoNZjyaWnLg3jstc/Ac0bYhH0=;
+        b=hv5Y9yC8xFlwvdBuzwNw2TMowbMyijreriRNID5uWrPf7hRnnOg33ELac0+cBaTwwON1SE
+        CeC04dANbiJUGMOtI01Y1V7GluD8Cqjq+pOGakMjU51uhc/YmL4kbUk/zpNxRG5i+hPKm5
+        kPX8L0jShG+4p9pn2Pcp8lhHh1VaBw4=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-50-n5xYPyeYPdaXMRB8KIUJxg-1; Thu, 21 Sep 2023 12:38:32 -0400
+X-MC-Unique: n5xYPyeYPdaXMRB8KIUJxg-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-532eb7faea1so878307a12.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Sep 2023 09:38:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695314309; x=1695919109;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Y5SoJ9MH2LvAlChqhtoNZjyaWnLg3jstc/Ac0bYhH0=;
+        b=a8SQw06qd+iDKPa9iBmkH+n+A5+cQo+HgTkqzG25HQ1BN0SBgOgn4Rm5OH21iUOpDI
+         V0DY14a2qNCLf1DtNRdmH7SdhI79irsjx7PnXxPCfFt6AKFQ8E1MtMO3XZTve0w+HrDb
+         iyGaz9tw9LBlAZnWK2VrA4J3iRkQiNYSxT0dy+HNCr0nKzOlz8MLW4vYWIiYVE8QHAch
+         bxmeKOQg1vnVkvT/vb8h39zDXy3hCJ3rAgpkcNrdHBCY4J7bXM7BvCH2DGxPVmyqJ3vc
+         O1qNroQR47jNS5zhPDUik65MaPjQZw83y3iZvHrlSh3V861yRMAr6RftPoXA107yqWUJ
+         oilw==
+X-Gm-Message-State: AOJu0Yzv6CVO4ryIIbuWG2x3rnDUM/XjJ+AG67Y6fovZTaWXkCpjIk9s
+        M8A2l5LG8YLVGtCyNknF8FQDFklfv3m4YL7eXLfsq1oWaF9tc4fNdc0XssGdE9xrwMtYyK3G+rZ
+        yUOlx0NGyg7PYVtXbxlnDXLd2VYV4p01cmg==
+X-Received: by 2002:a17:907:b12:b0:9a2:225a:8d01 with SMTP id h18-20020a1709070b1200b009a2225a8d01mr5259400ejl.7.1695314309480;
+        Thu, 21 Sep 2023 09:38:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGyWR/oL+0uB2onxR8tUnhpBEiAldf+hdUkM70huhyaqEyRi1C+dLpGym8L7IU2J0iRGAwxZw==
+X-Received: by 2002:a17:907:b12:b0:9a2:225a:8d01 with SMTP id h18-20020a1709070b1200b009a2225a8d01mr5259386ejl.7.1695314309099;
+        Thu, 21 Sep 2023 09:38:29 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id h21-20020a170906591500b0099bd0b5a2bcsm1281356ejq.101.2023.09.21.09.38.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Sep 2023 09:38:28 -0700 (PDT)
+Message-ID: <e29cd141-0f38-e806-51cb-bc82c451b9c4@redhat.com>
+Date:   Thu, 21 Sep 2023 18:38:27 +0200
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CPVP152MB5053:EE_|CPVP152MB4863:EE_
-X-MS-Office365-Filtering-Correlation-Id: d2a51a26-9f1e-4398-836a-08dbbab0321a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VQbKix4Xzk6KP5PDogl0GsZT1sj12FqGDCpnxsPr6fSEgZj086tjTQRgeEalDGirrl+yiLPqBavOPS1jD4nabTOQ1YdjK+ZJnsKERkt+PLiqAr3rj1JXH6EVu+MwmmOtSaxmZ4WmoLOsXIyjBWtSGNCGLY137/ELz8zd8+Vzmm+vpXkDKmIEhBWayMvFIzFZJkiTQ+WaA1yqhfHpUDwR94/sqfSpB2KuIDmEClkMWmggoYx3aQQzlDyA7JrCDGRE90XSY3rGO8t31SWBsH3WKXiaGk5GZaryn+jaOuqVIq7UblnBFHzf5M4X2vRhHjKXIOkvkjgafOf3kNhk/QWys8+KL2qGfX6D+nIAaJobFoPdAzRoSSe7Hkz5WdzeTi4Et/euK382MI6B+JzKTXYSOpLTd193cLinS6Wd0zF9y5stE2V0vzU9eIM4TCG/3hD/QHbLy7kTGG56g7eF7cTXINuh8xvJCH3tm0aofuUI1whzThnLqYnJ6CUsu1cAfWM/FHP66rawazw9VOj+I3Cuzr3ektCr2l9yk/4+hZC3I7M=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CPVP152MB5053.LAMP152.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(39850400004)(376002)(366004)(136003)(346002)(396003)(186009)(1800799009)(451199024)(41320700001)(6666004)(52116002)(6506007)(66476007)(66946007)(66556008)(478600001)(966005)(6486002)(786003)(6512007)(41300700001)(8676002)(8936002)(36756003)(2616005)(5660300002)(1076003)(86362001)(316002)(2906002)(83380400001)(38100700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?0UyBsWoi+8AlSqYbAnYwTVXaDnAtTZ8Ooj5BSlz/U2P0hhbwP5w2AFolynTQ?=
- =?us-ascii?Q?nNgDu4PW2Uc99o9c97XJV73p4TcP+XCMKqmPCpvQn0dkVVPWpbmlfq7lITNe?=
- =?us-ascii?Q?YQQGQ3B9aWWTagK4Hh+5h0HX8oyyl/oIh0GLaip5iBgqGBW32QwApBeN2INj?=
- =?us-ascii?Q?LEknBYWMl4e8f+FTMcMjmEQzfbwkubsB4TBQ/K4Lh8UJTTM8UIfKW1bQ4Wi0?=
- =?us-ascii?Q?65ceYJlgTU6CcJHSBGjZlU6D6IQwA/0LeFsm2UYYviGSW6UMjJoODGaV3l5p?=
- =?us-ascii?Q?m9A/lz28+B2cBiL5reB2Idz8DLbaollH6o+ZsdNaKNls3tzcdnXtChzk4WLH?=
- =?us-ascii?Q?+PMWqircrm9veHktPKAG4e0D0Wqa1Bw2wACTgpkQ2jeX7TJHYN2sRURNmGbX?=
- =?us-ascii?Q?lm4g4jlg4c445qjxnqSHkWVLHGJMD2DI+d3Ltqe9WtgKdOG+LQKEbVdgO6uH?=
- =?us-ascii?Q?wAwXyUXmF8OUlpUjcUICvgPEKy0/R84YEv7J9UVx4DXiQ2oI1JwQRj1/Vhq9?=
- =?us-ascii?Q?A0D908oTAMBuR3wRUFfQz8oJfnByJf5NfxcXceh9CbjnSXUTe/NTQBX8p0UB?=
- =?us-ascii?Q?PAMYVbf55xx/cqwstgOXVy08VMbd4EWbbQL/UP6u94KmPY457btptHZk0SSQ?=
- =?us-ascii?Q?b9ln4kRpncxpfskye4cosIH08TiFc4k4TvVO7fqw0685D6QQ1m+RRNqLoPPa?=
- =?us-ascii?Q?xXk9dLQAuVcwrvgXs8gdCS2onwcof/OX0vqN2yDwYJERvdiB+eVe5z48jcXH?=
- =?us-ascii?Q?EXjmBBecsn4TJP0BUOY9LkMcQ/BLH+8mzfZmyybgDhuq+Dougyz+vTAaXAWf?=
- =?us-ascii?Q?6Sr6ton6m/UC5/VFCnpNYxZZzYMIDM7laM2Wdsq4FcfE6c3hsFWAE4W7jKvl?=
- =?us-ascii?Q?0MPZ0iXwbns2jDb0QmBtQoA4PYbL/isu1V/12HzpEDV5gEpDH6g/2HcLtOu3?=
- =?us-ascii?Q?oKtV79b0yV6JRcz1KevotIlC/aRkuejnELaKpRofSdVTbLbTu/nwBjp7XeOo?=
- =?us-ascii?Q?I+RKcz5+fSU/AwE+tAW42Gxhz5HnREj8cC9iqegfcbrQFksEIC/ODAVphFS9?=
- =?us-ascii?Q?NB1TndTgvu03hwEjovGZSd91j5N9g52qCu+ysOEAR7yd70NBTfva68HocF8P?=
- =?us-ascii?Q?BpWWmSBloRcbRD4NHIQR6qpuUKuW5gBZFQzpoPlkXaIHtYJYK8hpcSfCEUxV?=
- =?us-ascii?Q?13eAdCG0l/5j+HOdKA90gqEnw1M6jbOsYzHJL8kRRfrn4Q9OILPioZRWfvkl?=
- =?us-ascii?Q?i3eyXz2mHFjsuT19/QxMiUiWLdWKfKnhBHP85K+8vMnyUimw7oQLtUmbspsS?=
- =?us-ascii?Q?XLdohEwbo8RWnFoKhvcZVxkgcZj9pQK3cPxxeS6I9cwbBW0KCKe089f8Naht?=
- =?us-ascii?Q?Wpv43qNCw4ZCQPOTVTVEp/VU/hyufQyYNJ+MFW39aSe2m3d9eP0aBAeQNXIp?=
- =?us-ascii?Q?kBx47nVXxDlp224fPLl/WWO9giTvK5CUJUzJyWZ9UD0j9uO1nCfrJTBxamZ3?=
- =?us-ascii?Q?VXfKT8OPplne9wgxbNAmELuZlB5sng/uWZktEhFi2ThaX+leyZoTSXiV53eL?=
- =?us-ascii?Q?hC0Vnn1zlNhc/TGe+b34Yy9Kd2Yeq/om3snTPyIbtrolRKgrGK3LK1o9SxDm?=
- =?us-ascii?Q?5tjKPSy1EoQHTh6ARmP1VSok6gwa68+UBiwHQuFg+pOc?=
-X-OriginatorOrg: ipt.br
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2a51a26-9f1e-4398-836a-08dbbab0321a
-X-MS-Exchange-CrossTenant-AuthSource: CPVP152MB5053.LAMP152.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Sep 2023 14:36:52.4772
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: aab57f47-5b85-4924-8047-691190100bd7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bGRqukusScgEb3rwUkS06Sm8/EkCeIWYvzzeabZ09Bdat3uZjCFZlr3ixqib4TRz
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CPVP152MB4863
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2] platform/x86: think-lmi: Add bulk save feature
+Content-Language: en-US, nl
+To:     Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc:     markgross@kernel.org, andriy.shevchenko@intel.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <mpearson-lenovo@squebb.ca>
+ <20230919141530.4805-1-mpearson-lenovo@squebb.ca>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230919141530.4805-1-mpearson-lenovo@squebb.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Newer Thinkpads have a feature called MAC Address Pass-through.
-This patch provides a sysfs interface that userspace can use
-to get this auxiliary mac address.
+Hi Mark,
 
-Signed-off-by: Fernando Eckhardt Valle <fevalle@ipt.br>
----
-Changes in v4:
-- strscpy() in all string copies.
-Changes in v3:
-- Added null terminator to auxmac string when copying auxiliary
-mac address value.
-Changes in v2:
-- Added documentation.
-- All handling of the auxmac value is done in the _init function.
----
- .../admin-guide/laptops/thinkpad-acpi.rst     | 20 +++++
- drivers/platform/x86/thinkpad_acpi.c          | 79 +++++++++++++++++++
- 2 files changed, 99 insertions(+)
+On 9/19/23 16:15, Mark Pearson wrote:
+> On Lenovo platforms there is a limitation in the number of times an
+> attribute can be saved. This is an architectural limitation and it limits
+> the number of attributes that can be modified to 48.
+> A solution for this is instead of the attribute being saved after every
+> modification allow a user to bulk set the attributes and then trigger a
+> final save. This allows unlimited attributes.
+> 
+> This patch introduces a save_settings attribute that can be configured to
+> either single or bulk mode by the user.
+> Single mode is the default but customers who want to avoid the 48
+> attribute limit can enable bulk mode.
+> 
+> Displaying the save_settings attribute will display the enabled mode.
+> 
+> When in bulk mode writing 'save' to the save_settings attribute will
+> trigger a save. Once this has been done a reboot is required before more
+> attributes can be modified.
+> 
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> ---
+> Changes in v2:
+>  - Correct kernel version in documentation
+>  - Updated to sysfs_emit
+>  - Clean up code in save_settings_store as recommended
+>  - Use correct comment formatting
 
-diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-index e27a1c3f6..98d304010 100644
---- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-+++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-@@ -53,6 +53,7 @@ detailed description):
- 	- Lap mode sensor
- 	- Setting keyboard language
- 	- WWAN Antenna type
-+	- Auxmac
- 
- A compatibility table by model and feature is maintained on the web
- site, http://ibm-acpi.sf.net/. I appreciate any success or failure
-@@ -1511,6 +1512,25 @@ Currently 2 antenna types are supported as mentioned below:
- The property is read-only. If the platform doesn't have support the sysfs
- class is not created.
- 
-+Auxmac
-+------
-+
-+sysfs: auxmac
-+
-+Some newer Thinkpads have a feature called MAC Address Pass-through. This
-+feature is implemented by the system firmware to provide a system unique MAC,
-+that can override a dock or USB ethernet dongle MAC, when connected to a
-+network. This property enables user-space to easily determine the MAC address
-+if the feature is enabled.
-+
-+The values of this auxiliary MAC are:
-+
-+        cat /sys/devices/platform/thinkpad_acpi/auxmac
-+
-+If the feature is disabled, the value will be 'disabled'.
-+
-+This property is read-only.
-+
- Adaptive keyboard
- -----------------
- 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index d70c89d32..f430cc9ed 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -10785,6 +10785,80 @@ static struct ibm_struct dprc_driver_data = {
- 	.name = "dprc",
- };
- 
-+/*
-+ * Auxmac
-+ *
-+ * This auxiliary mac address is enabled in the bios through the
-+ * MAC Address Pass-through feature. In most cases, there are three
-+ * possibilities: Internal Mac, Second Mac, and disabled.
-+ *
-+ */
-+
-+#define AUXMAC_LEN 12
-+#define AUXMAC_START 9
-+#define AUXMAC_STRLEN 22
-+#define AUXMAC_BEGIN_MARKER 8
-+#define AUXMAC_END_MARKER 21
-+
-+static char auxmac[AUXMAC_LEN + 1];
-+
-+static int auxmac_init(struct ibm_init_struct *iibm)
-+{
-+	acpi_status status;
-+	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-+	union acpi_object *obj;
-+
-+	status = acpi_evaluate_object(NULL, "\\MACA", NULL, &buffer);
-+
-+	if (ACPI_FAILURE(status))
-+		return -ENODEV;
-+
-+	obj = buffer.pointer;
-+
-+	if (obj->type != ACPI_TYPE_STRING || obj->string.length != AUXMAC_STRLEN) {
-+		pr_info("Invalid buffer for MAC address pass-through.\n");
-+		strscpy(auxmac, "unavailable", AUXMAC_LEN);
-+		goto auxmacinvalid;
-+	}
-+
-+	if (obj->string.pointer[AUXMAC_BEGIN_MARKER] != '#' ||
-+	    obj->string.pointer[AUXMAC_END_MARKER] != '#') {
-+		pr_info("Invalid header for MAC address pass-through.\n");
-+		strscpy(auxmac, "unavailable", AUXMAC_LEN);
-+		goto auxmacinvalid;
-+	}
-+
-+	if (strncmp(obj->string.pointer + AUXMAC_START, "XXXXXXXXXXXX", AUXMAC_LEN) != 0)
-+		strscpy(auxmac, obj->string.pointer + AUXMAC_START, AUXMAC_LEN + 1);
-+	else
-+		strscpy(auxmac, "disabled", AUXMAC_START);
-+
-+auxmacinvalid:
-+	kfree(obj);
-+	return 0;
-+}
-+
-+static struct ibm_struct auxmac_data = {
-+	.name = "auxmac",
-+};
-+
-+static ssize_t auxmac_show(struct device *dev,
-+			   struct device_attribute *attr,
-+			   char *buf)
-+{
-+	return sysfs_emit(buf, "%s\n", auxmac);
-+}
-+static DEVICE_ATTR_RO(auxmac);
-+
-+static struct attribute *auxmac_attributes[] = {
-+	&dev_attr_auxmac.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group auxmac_attr_group = {
-+	.attrs = auxmac_attributes,
-+};
-+
- /* --------------------------------------------------------------------- */
- 
- static struct attribute *tpacpi_driver_attributes[] = {
-@@ -10843,6 +10917,7 @@ static const struct attribute_group *tpacpi_groups[] = {
- 	&proxsensor_attr_group,
- 	&kbdlang_attr_group,
- 	&dprc_attr_group,
-+	&auxmac_attr_group,
- 	NULL,
- };
- 
-@@ -11414,6 +11489,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
- 		.init = tpacpi_dprc_init,
- 		.data = &dprc_driver_data,
- 	},
-+	{
-+		.init = auxmac_init,
-+		.data = &auxmac_data,
-+	},
- };
- 
- static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
--- 
-2.25.1
+Thank you for the new version, but next time when a patch has
+already been merged please send any fixes as a follow-up /
+separate patch with just the fixes.
+
+I've replaced the original patch with this one now doing
+a forced push to both my review-hans and the for-next
+branch.
+
+Regards,
+
+Hans
+
+
+
+
+
+> 
+>  .../testing/sysfs-class-firmware-attributes   |  30 ++++
+>  drivers/platform/x86/think-lmi.c              | 152 ++++++++++++++++--
+>  drivers/platform/x86/think-lmi.h              |  16 ++
+>  3 files changed, 183 insertions(+), 15 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> index f205d39409a3..9c82c7b42ff8 100644
+> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> @@ -383,6 +383,36 @@ Description:
+>  		Note that any changes to this attribute requires a reboot
+>  		for changes to take effect.
+>  
+> +What:		/sys/class/firmware-attributes/*/attributes/save_settings
+> +Date:		August 2023
+> +KernelVersion:	6.6
+> +Contact:	Mark Pearson <mpearson-lenovo@squebb.ca>
+> +Description:
+> +		On Lenovo platforms there is a limitation in the number of times an attribute can be
+> +		saved. This is an architectural limitation and it limits the number of attributes
+> +		that can be modified to 48.
+> +		A solution for this is instead of the attribute being saved after every modification,
+> +		to allow a user to bulk set the attributes, and then trigger a final save. This allows
+> +		unlimited attributes.
+> +
+> +		Read the attribute to check what save mode is enabled (single or bulk).
+> +		E.g:
+> +		# cat /sys/class/firmware-attributes/thinklmi/attributes/save_settings
+> +		single
+> +
+> +		Write the attribute with 'bulk' to enable bulk save mode.
+> +		Write the attribute with 'single' to enable saving, after every attribute set.
+> +		The default setting is single mode.
+> +		E.g:
+> +		# echo bulk > /sys/class/firmware-attributes/thinklmi/attributes/save_settings
+> +
+> +		When in bulk mode write 'save' to trigger a save of all currently modified attributes.
+> +		Note, once a save has been triggered, in bulk mode, attributes can no longer be set and
+> +		will return a permissions error. This is to prevent users hitting the 48+ save limitation
+> +		(which requires entering the BIOS to clear the error condition)
+> +		E.g:
+> +		# echo save > /sys/class/firmware-attributes/thinklmi/attributes/save_settings
+> +
+>  What:		/sys/class/firmware-attributes/*/attributes/debug_cmd
+>  Date:		July 2021
+>  KernelVersion:	5.14
+> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+> index 52d1ce8dfe44..6f9fa80b19fc 100644
+> --- a/drivers/platform/x86/think-lmi.c
+> +++ b/drivers/platform/x86/think-lmi.c
+> @@ -985,6 +985,13 @@ static ssize_t current_value_store(struct kobject *kobj,
+>  	if (!tlmi_priv.can_set_bios_settings)
+>  		return -EOPNOTSUPP;
+>  
+> +	/*
+> +	 * If we are using bulk saves a reboot should be done once save has
+> +	 * been called
+> +	 */
+> +	if (tlmi_priv.save_mode == TLMI_SAVE_BULK && tlmi_priv.reboot_required)
+> +		return -EPERM;
+> +
+>  	new_setting = kstrdup(buf, GFP_KERNEL);
+>  	if (!new_setting)
+>  		return -ENOMEM;
+> @@ -1011,10 +1018,11 @@ static ssize_t current_value_store(struct kobject *kobj,
+>  		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTING_CERT_GUID, set_str);
+>  		if (ret)
+>  			goto out;
+> -		ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
+> -				tlmi_priv.pwd_admin->save_signature);
+> -		if (ret)
+> -			goto out;
+> +		if (tlmi_priv.save_mode == TLMI_SAVE_BULK)
+> +			tlmi_priv.save_required = true;
+> +		else
+> +			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
+> +					       tlmi_priv.pwd_admin->save_signature);
+>  	} else if (tlmi_priv.opcode_support) {
+>  		/*
+>  		 * If opcode support is present use that interface.
+> @@ -1033,14 +1041,17 @@ static ssize_t current_value_store(struct kobject *kobj,
+>  		if (ret)
+>  			goto out;
+>  
+> -		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+> -			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
+> -						  tlmi_priv.pwd_admin->password);
+> -			if (ret)
+> -				goto out;
+> +		if (tlmi_priv.save_mode == TLMI_SAVE_BULK) {
+> +			tlmi_priv.save_required = true;
+> +		} else {
+> +			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+> +				ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
+> +							  tlmi_priv.pwd_admin->password);
+> +				if (ret)
+> +					goto out;
+> +			}
+> +			ret = tlmi_save_bios_settings("");
+>  		}
+> -
+> -		ret = tlmi_save_bios_settings("");
+>  	} else { /* old non-opcode based authentication method (deprecated) */
+>  		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+>  			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+> @@ -1068,10 +1079,14 @@ static ssize_t current_value_store(struct kobject *kobj,
+>  		if (ret)
+>  			goto out;
+>  
+> -		if (auth_str)
+> -			ret = tlmi_save_bios_settings(auth_str);
+> -		else
+> -			ret = tlmi_save_bios_settings("");
+> +		if (tlmi_priv.save_mode == TLMI_SAVE_BULK) {
+> +			tlmi_priv.save_required = true;
+> +		} else {
+> +			if (auth_str)
+> +				ret = tlmi_save_bios_settings(auth_str);
+> +			else
+> +				ret = tlmi_save_bios_settings("");
+> +		}
+>  	}
+>  	if (!ret && !tlmi_priv.pending_changes) {
+>  		tlmi_priv.pending_changes = true;
+> @@ -1152,6 +1167,107 @@ static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *
+>  
+>  static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
+>  
+> +static const char * const save_mode_strings[] = {
+> +	[TLMI_SAVE_SINGLE] = "single",
+> +	[TLMI_SAVE_BULK] = "bulk",
+> +	[TLMI_SAVE_SAVE] = "save"
+> +};
+> +
+> +static ssize_t save_settings_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +				  char *buf)
+> +{
+> +	/* Check that setting is valid */
+> +	if (WARN_ON(tlmi_priv.save_mode < TLMI_SAVE_SINGLE ||
+> +		    tlmi_priv.save_mode > TLMI_SAVE_BULK))
+> +		return -EIO;
+> +	return sysfs_emit(buf, "%s\n", save_mode_strings[tlmi_priv.save_mode]);
+> +}
+> +
+> +static ssize_t save_settings_store(struct kobject *kobj, struct kobj_attribute *attr,
+> +				   const char *buf, size_t count)
+> +{
+> +	char *auth_str = NULL;
+> +	int ret = 0;
+> +	int cmd;
+> +
+> +	cmd = sysfs_match_string(save_mode_strings, buf);
+> +	if (cmd < 0)
+> +		return cmd;
+> +
+> +	/* Use lock in case multiple WMI operations needed */
+> +	mutex_lock(&tlmi_mutex);
+> +
+> +	switch (cmd) {
+> +	case TLMI_SAVE_SINGLE:
+> +	case TLMI_SAVE_BULK:
+> +		tlmi_priv.save_mode = cmd;
+> +		goto out;
+> +	case TLMI_SAVE_SAVE:
+> +		/* Check if supported*/
+> +		if (!tlmi_priv.can_set_bios_settings ||
+> +		    tlmi_priv.save_mode == TLMI_SAVE_SINGLE) {
+> +			ret = -EOPNOTSUPP;
+> +			goto out;
+> +		}
+> +		/* Check there is actually something to save */
+> +		if (!tlmi_priv.save_required) {
+> +			ret = -ENOENT;
+> +			goto out;
+> +		}
+> +		/* Check if certificate authentication is enabled and active */
+> +		if (tlmi_priv.certificate_support && tlmi_priv.pwd_admin->cert_installed) {
+> +			if (!tlmi_priv.pwd_admin->signature ||
+> +			    !tlmi_priv.pwd_admin->save_signature) {
+> +				ret = -EINVAL;
+> +				goto out;
+> +			}
+> +			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
+> +					       tlmi_priv.pwd_admin->save_signature);
+> +			if (ret)
+> +				goto out;
+> +		} else if (tlmi_priv.opcode_support) {
+> +			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+> +				ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
+> +							  tlmi_priv.pwd_admin->password);
+> +				if (ret)
+> +					goto out;
+> +			}
+> +			ret = tlmi_save_bios_settings("");
+> +		} else { /* old non-opcode based authentication method (deprecated) */
+> +			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+> +				auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+> +						     tlmi_priv.pwd_admin->password,
+> +						     encoding_options[tlmi_priv.pwd_admin->encoding],
+> +						     tlmi_priv.pwd_admin->kbdlang);
+> +				if (!auth_str) {
+> +					ret = -ENOMEM;
+> +					goto out;
+> +				}
+> +			}
+> +
+> +			if (auth_str)
+> +				ret = tlmi_save_bios_settings(auth_str);
+> +			else
+> +				ret = tlmi_save_bios_settings("");
+> +		}
+> +		tlmi_priv.save_required = false;
+> +		tlmi_priv.reboot_required = true;
+> +
+> +		if (!ret && !tlmi_priv.pending_changes) {
+> +			tlmi_priv.pending_changes = true;
+> +			/* let userland know it may need to check reboot pending again */
+> +			kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
+> +		}
+> +		break;
+> +	}
+> +out:
+> +	mutex_unlock(&tlmi_mutex);
+> +	kfree(auth_str);
+> +	return ret ?: count;
+> +}
+> +
+> +static struct kobj_attribute save_settings = __ATTR_RW(save_settings);
+> +
+>  /* ---- Debug interface--------------------------------------------------------- */
+>  static ssize_t debug_cmd_store(struct kobject *kobj, struct kobj_attribute *attr,
+>  				const char *buf, size_t count)
+> @@ -1221,6 +1337,8 @@ static void tlmi_release_attr(void)
+>  		}
+>  	}
+>  	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &pending_reboot.attr);
+> +	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &save_settings.attr);
+> +
+>  	if (tlmi_priv.can_debug_cmd && debug_support)
+>  		sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
+>  
+> @@ -1302,6 +1420,10 @@ static int tlmi_sysfs_init(void)
+>  	if (ret)
+>  		goto fail_create_attr;
+>  
+> +	ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &save_settings.attr);
+> +	if (ret)
+> +		goto fail_create_attr;
+> +
+>  	if (tlmi_priv.can_debug_cmd && debug_support) {
+>  		ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
+>  		if (ret)
+> diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
+> index 4daba6151cd6..e1975ffebeb4 100644
+> --- a/drivers/platform/x86/think-lmi.h
+> +++ b/drivers/platform/x86/think-lmi.h
+> @@ -27,6 +27,19 @@ enum level_option {
+>  	TLMI_LEVEL_MASTER,
+>  };
+>  
+> +/*
+> + * There are a limit on the number of WMI operations you can do if you use
+> + * the default implementation of saving on every set. This is due to a
+> + * limitation in EFI variable space used.
+> + * Have a 'bulk save' mode where you can manually trigger the save, and can
+> + * therefore set unlimited variables - for users that need it.
+> + */
+> +enum save_mode {
+> +	TLMI_SAVE_SINGLE,
+> +	TLMI_SAVE_BULK,
+> +	TLMI_SAVE_SAVE,
+> +};
+> +
+>  /* password configuration details */
+>  struct tlmi_pwdcfg_core {
+>  	uint32_t password_mode;
+> @@ -86,6 +99,9 @@ struct think_lmi {
+>  	bool can_debug_cmd;
+>  	bool opcode_support;
+>  	bool certificate_support;
+> +	enum save_mode save_mode;
+> +	bool save_required;
+> +	bool reboot_required;
+>  
+>  	struct tlmi_attr_setting *setting[TLMI_SETTINGS_COUNT];
+>  	struct device *class_dev;
 
