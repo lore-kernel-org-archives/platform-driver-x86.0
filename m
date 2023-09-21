@@ -2,411 +2,146 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFF1E71096
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Sep 2023 17:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF82BE7D0A2
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Sep 2023 17:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbjIURGX (ORCPT
+        id S230272AbjIURLn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Sep 2023 13:06:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54414 "EHLO
+        Thu, 21 Sep 2023 13:11:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230101AbjIURF6 (ORCPT
+        with ESMTP id S231700AbjIURKp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Sep 2023 13:05:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB54B1BD1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Sep 2023 10:03:31 -0700 (PDT)
+        Thu, 21 Sep 2023 13:10:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2830E83CD
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Sep 2023 10:05:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1695315609;
+        s=mimecast20190719; t=1695315919;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1Y5SoJ9MH2LvAlChqhtoNZjyaWnLg3jstc/Ac0bYhH0=;
-        b=hv5Y9yC8xFlwvdBuzwNw2TMowbMyijreriRNID5uWrPf7hRnnOg33ELac0+cBaTwwON1SE
-        CeC04dANbiJUGMOtI01Y1V7GluD8Cqjq+pOGakMjU51uhc/YmL4kbUk/zpNxRG5i+hPKm5
-        kPX8L0jShG+4p9pn2Pcp8lhHh1VaBw4=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Et32g+8HvIOExJc33zMYGqC3XM2pU+ZYA6hMXlIOOlQ=;
+        b=gna9JrLFxeKp0iJIoO2EEGOCOui5FRd0xWufxtnJPih9V1or2PwcABAJWm0OhzpoKTzfjd
+        VhA+Eu9nQibGSoWTufUBV+qNhB/M1SJoI1RA4na6iIBzKa7lrNBm1AdlpxRbxVFr3P5vfI
+        v5FT1yKy+e+VZFEIeNnvCKBldGiHUOU=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-50-n5xYPyeYPdaXMRB8KIUJxg-1; Thu, 21 Sep 2023 12:38:32 -0400
-X-MC-Unique: n5xYPyeYPdaXMRB8KIUJxg-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-532eb7faea1so878307a12.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Sep 2023 09:38:30 -0700 (PDT)
+ us-mta-49-w4if4zPuNLCuKoamF6YQRw-1; Thu, 21 Sep 2023 12:26:33 -0400
+X-MC-Unique: w4if4zPuNLCuKoamF6YQRw-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-9a621359127so85432666b.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Sep 2023 09:26:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695314309; x=1695919109;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Y5SoJ9MH2LvAlChqhtoNZjyaWnLg3jstc/Ac0bYhH0=;
-        b=a8SQw06qd+iDKPa9iBmkH+n+A5+cQo+HgTkqzG25HQ1BN0SBgOgn4Rm5OH21iUOpDI
-         V0DY14a2qNCLf1DtNRdmH7SdhI79irsjx7PnXxPCfFt6AKFQ8E1MtMO3XZTve0w+HrDb
-         iyGaz9tw9LBlAZnWK2VrA4J3iRkQiNYSxT0dy+HNCr0nKzOlz8MLW4vYWIiYVE8QHAch
-         bxmeKOQg1vnVkvT/vb8h39zDXy3hCJ3rAgpkcNrdHBCY4J7bXM7BvCH2DGxPVmyqJ3vc
-         O1qNroQR47jNS5zhPDUik65MaPjQZw83y3iZvHrlSh3V861yRMAr6RftPoXA107yqWUJ
-         oilw==
-X-Gm-Message-State: AOJu0Yzv6CVO4ryIIbuWG2x3rnDUM/XjJ+AG67Y6fovZTaWXkCpjIk9s
-        M8A2l5LG8YLVGtCyNknF8FQDFklfv3m4YL7eXLfsq1oWaF9tc4fNdc0XssGdE9xrwMtYyK3G+rZ
-        yUOlx0NGyg7PYVtXbxlnDXLd2VYV4p01cmg==
-X-Received: by 2002:a17:907:b12:b0:9a2:225a:8d01 with SMTP id h18-20020a1709070b1200b009a2225a8d01mr5259400ejl.7.1695314309480;
-        Thu, 21 Sep 2023 09:38:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGyWR/oL+0uB2onxR8tUnhpBEiAldf+hdUkM70huhyaqEyRi1C+dLpGym8L7IU2J0iRGAwxZw==
-X-Received: by 2002:a17:907:b12:b0:9a2:225a:8d01 with SMTP id h18-20020a1709070b1200b009a2225a8d01mr5259386ejl.7.1695314309099;
-        Thu, 21 Sep 2023 09:38:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695313592; x=1695918392;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Et32g+8HvIOExJc33zMYGqC3XM2pU+ZYA6hMXlIOOlQ=;
+        b=CQGtFDeR4YeOpbnc8ZsUZuFsq0JQhjCCOrgDYL9gAZSlbF4CjnGtey3EGi4bG7mjsb
+         bsc7wsFZyp9sq7GusMdYR+SjwtWSBZK4NaqQxPHCqSDE13ztorZbPAeWRM2I77J2aGVa
+         u/s1+F36jhHzW3C6RSGSjNw/jt/uhT8pvZNB9+K25kJ9W9UMk6oPPGjy7cvGJItaq0e9
+         CyqFKWXl+PACKybD9VB5QM8mWW8xjbnWdHg5bnZ1NllLINNPPapInTf2Z530VJpoOryx
+         /SXauPkuGOoA8Ej3NbUhwaIe0WP+T0Qs+llHUJmjtSVjNqhOsmI62+/AOGcaEoC8vIpq
+         svtw==
+X-Gm-Message-State: AOJu0Yy61XhUgIp9jmsRmnE+CGNb7H9geyHqNe8duVn5TLEMspKywNSK
+        wT6VVF/7M9cbMPyTMLB6e3M3EteHoD6bdZcgC5v4hU/9+fcyQJ3KPAZYv0LwDX55X6WmUeJjT3M
+        dIC2PTskLkr7GTvJ9T5Kqm95QMIKMSBL+YA==
+X-Received: by 2002:a17:906:20ce:b0:9ae:505d:310b with SMTP id c14-20020a17090620ce00b009ae505d310bmr4361723ejc.39.1695313592337;
+        Thu, 21 Sep 2023 09:26:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF0rucEDMA1Te6aRXpJF3deJOppkRTntaQLrHgtjyHI97WRXh4Z6ohjO6Q3PTrrVbX1xQaGlg==
+X-Received: by 2002:a17:906:20ce:b0:9ae:505d:310b with SMTP id c14-20020a17090620ce00b009ae505d310bmr4361708ejc.39.1695313592044;
+        Thu, 21 Sep 2023 09:26:32 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id h21-20020a170906591500b0099bd0b5a2bcsm1281356ejq.101.2023.09.21.09.38.27
+        by smtp.gmail.com with ESMTPSA id rh27-20020a17090720fb00b009930c80b87csm1301892ejb.142.2023.09.21.09.26.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Sep 2023 09:38:28 -0700 (PDT)
-Message-ID: <e29cd141-0f38-e806-51cb-bc82c451b9c4@redhat.com>
-Date:   Thu, 21 Sep 2023 18:38:27 +0200
+        Thu, 21 Sep 2023 09:26:31 -0700 (PDT)
+Message-ID: <5ffaf4a2-4359-065a-240a-fcfde68c6180@redhat.com>
+Date:   Thu, 21 Sep 2023 18:26:30 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH v2] platform/x86: think-lmi: Add bulk save feature
-Content-Language: en-US, nl
-To:     Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc:     markgross@kernel.org, andriy.shevchenko@intel.com,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <mpearson-lenovo@squebb.ca>
- <20230919141530.4805-1-mpearson-lenovo@squebb.ca>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230919141530.4805-1-mpearson-lenovo@squebb.ca>
+Subject: [GIT PULL] platform-drivers-x86 for 6.6-3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Content-Language: en-US, nl
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark,
+Hi Linus,
 
-On 9/19/23 16:15, Mark Pearson wrote:
-> On Lenovo platforms there is a limitation in the number of times an
-> attribute can be saved. This is an architectural limitation and it limits
-> the number of attributes that can be modified to 48.
-> A solution for this is instead of the attribute being saved after every
-> modification allow a user to bulk set the attributes and then trigger a
-> final save. This allows unlimited attributes.
-> 
-> This patch introduces a save_settings attribute that can be configured to
-> either single or bulk mode by the user.
-> Single mode is the default but customers who want to avoid the 48
-> attribute limit can enable bulk mode.
-> 
-> Displaying the save_settings attribute will display the enabled mode.
-> 
-> When in bulk mode writing 'save' to the save_settings attribute will
-> trigger a save. Once this has been done a reboot is required before more
-> attributes can be modified.
-> 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> ---
-> Changes in v2:
->  - Correct kernel version in documentation
->  - Updated to sysfs_emit
->  - Clean up code in save_settings_store as recommended
->  - Use correct comment formatting
+Here is the second round of fixes for platform-drivers-x86 for 6.6.
 
-Thank you for the new version, but next time when a patch has
-already been merged please send any fixes as a follow-up /
-separate patch with just the fixes.
+The most noteworthy change in here is the addition of Ilpo Järvinen
+as co-maintainer of platform-drivers-x86. Ilpo will be helping me
+with platform-drivers-x86 maintenance going forward and you can
+expect platform-drivers-x86 pull-requests from Ilpo in the future.
 
-I've replaced the original patch with this one now doing
-a forced push to both my review-hans and the for-next
-branch.
+Other then that there is a set of Intel SCU IPC fixes and
+a thinkpad_acpi locking fix.
 
 Regards,
 
 Hans
 
 
+The following changes since commit 4106a70ddad57ee6d8f98b81d6f036740c72762b:
 
+  platform/x86: asus-wmi: Support 2023 ROG X16 tablet mode (2023-09-11 13:26:13 +0200)
 
+are available in the Git repository at:
 
-> 
->  .../testing/sysfs-class-firmware-attributes   |  30 ++++
->  drivers/platform/x86/think-lmi.c              | 152 ++++++++++++++++--
->  drivers/platform/x86/think-lmi.h              |  16 ++
->  3 files changed, 183 insertions(+), 15 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> index f205d39409a3..9c82c7b42ff8 100644
-> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> @@ -383,6 +383,36 @@ Description:
->  		Note that any changes to this attribute requires a reboot
->  		for changes to take effect.
->  
-> +What:		/sys/class/firmware-attributes/*/attributes/save_settings
-> +Date:		August 2023
-> +KernelVersion:	6.6
-> +Contact:	Mark Pearson <mpearson-lenovo@squebb.ca>
-> +Description:
-> +		On Lenovo platforms there is a limitation in the number of times an attribute can be
-> +		saved. This is an architectural limitation and it limits the number of attributes
-> +		that can be modified to 48.
-> +		A solution for this is instead of the attribute being saved after every modification,
-> +		to allow a user to bulk set the attributes, and then trigger a final save. This allows
-> +		unlimited attributes.
-> +
-> +		Read the attribute to check what save mode is enabled (single or bulk).
-> +		E.g:
-> +		# cat /sys/class/firmware-attributes/thinklmi/attributes/save_settings
-> +		single
-> +
-> +		Write the attribute with 'bulk' to enable bulk save mode.
-> +		Write the attribute with 'single' to enable saving, after every attribute set.
-> +		The default setting is single mode.
-> +		E.g:
-> +		# echo bulk > /sys/class/firmware-attributes/thinklmi/attributes/save_settings
-> +
-> +		When in bulk mode write 'save' to trigger a save of all currently modified attributes.
-> +		Note, once a save has been triggered, in bulk mode, attributes can no longer be set and
-> +		will return a permissions error. This is to prevent users hitting the 48+ save limitation
-> +		(which requires entering the BIOS to clear the error condition)
-> +		E.g:
-> +		# echo save > /sys/class/firmware-attributes/thinklmi/attributes/save_settings
-> +
->  What:		/sys/class/firmware-attributes/*/attributes/debug_cmd
->  Date:		July 2021
->  KernelVersion:	5.14
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index 52d1ce8dfe44..6f9fa80b19fc 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -985,6 +985,13 @@ static ssize_t current_value_store(struct kobject *kobj,
->  	if (!tlmi_priv.can_set_bios_settings)
->  		return -EOPNOTSUPP;
->  
-> +	/*
-> +	 * If we are using bulk saves a reboot should be done once save has
-> +	 * been called
-> +	 */
-> +	if (tlmi_priv.save_mode == TLMI_SAVE_BULK && tlmi_priv.reboot_required)
-> +		return -EPERM;
-> +
->  	new_setting = kstrdup(buf, GFP_KERNEL);
->  	if (!new_setting)
->  		return -ENOMEM;
-> @@ -1011,10 +1018,11 @@ static ssize_t current_value_store(struct kobject *kobj,
->  		ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTING_CERT_GUID, set_str);
->  		if (ret)
->  			goto out;
-> -		ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
-> -				tlmi_priv.pwd_admin->save_signature);
-> -		if (ret)
-> -			goto out;
-> +		if (tlmi_priv.save_mode == TLMI_SAVE_BULK)
-> +			tlmi_priv.save_required = true;
-> +		else
-> +			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
-> +					       tlmi_priv.pwd_admin->save_signature);
->  	} else if (tlmi_priv.opcode_support) {
->  		/*
->  		 * If opcode support is present use that interface.
-> @@ -1033,14 +1041,17 @@ static ssize_t current_value_store(struct kobject *kobj,
->  		if (ret)
->  			goto out;
->  
-> -		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-> -			ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
-> -						  tlmi_priv.pwd_admin->password);
-> -			if (ret)
-> -				goto out;
-> +		if (tlmi_priv.save_mode == TLMI_SAVE_BULK) {
-> +			tlmi_priv.save_required = true;
-> +		} else {
-> +			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-> +				ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
-> +							  tlmi_priv.pwd_admin->password);
-> +				if (ret)
-> +					goto out;
-> +			}
-> +			ret = tlmi_save_bios_settings("");
->  		}
-> -
-> -		ret = tlmi_save_bios_settings("");
->  	} else { /* old non-opcode based authentication method (deprecated) */
->  		if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
->  			auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
-> @@ -1068,10 +1079,14 @@ static ssize_t current_value_store(struct kobject *kobj,
->  		if (ret)
->  			goto out;
->  
-> -		if (auth_str)
-> -			ret = tlmi_save_bios_settings(auth_str);
-> -		else
-> -			ret = tlmi_save_bios_settings("");
-> +		if (tlmi_priv.save_mode == TLMI_SAVE_BULK) {
-> +			tlmi_priv.save_required = true;
-> +		} else {
-> +			if (auth_str)
-> +				ret = tlmi_save_bios_settings(auth_str);
-> +			else
-> +				ret = tlmi_save_bios_settings("");
-> +		}
->  	}
->  	if (!ret && !tlmi_priv.pending_changes) {
->  		tlmi_priv.pending_changes = true;
-> @@ -1152,6 +1167,107 @@ static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *
->  
->  static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
->  
-> +static const char * const save_mode_strings[] = {
-> +	[TLMI_SAVE_SINGLE] = "single",
-> +	[TLMI_SAVE_BULK] = "bulk",
-> +	[TLMI_SAVE_SAVE] = "save"
-> +};
-> +
-> +static ssize_t save_settings_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +				  char *buf)
-> +{
-> +	/* Check that setting is valid */
-> +	if (WARN_ON(tlmi_priv.save_mode < TLMI_SAVE_SINGLE ||
-> +		    tlmi_priv.save_mode > TLMI_SAVE_BULK))
-> +		return -EIO;
-> +	return sysfs_emit(buf, "%s\n", save_mode_strings[tlmi_priv.save_mode]);
-> +}
-> +
-> +static ssize_t save_settings_store(struct kobject *kobj, struct kobj_attribute *attr,
-> +				   const char *buf, size_t count)
-> +{
-> +	char *auth_str = NULL;
-> +	int ret = 0;
-> +	int cmd;
-> +
-> +	cmd = sysfs_match_string(save_mode_strings, buf);
-> +	if (cmd < 0)
-> +		return cmd;
-> +
-> +	/* Use lock in case multiple WMI operations needed */
-> +	mutex_lock(&tlmi_mutex);
-> +
-> +	switch (cmd) {
-> +	case TLMI_SAVE_SINGLE:
-> +	case TLMI_SAVE_BULK:
-> +		tlmi_priv.save_mode = cmd;
-> +		goto out;
-> +	case TLMI_SAVE_SAVE:
-> +		/* Check if supported*/
-> +		if (!tlmi_priv.can_set_bios_settings ||
-> +		    tlmi_priv.save_mode == TLMI_SAVE_SINGLE) {
-> +			ret = -EOPNOTSUPP;
-> +			goto out;
-> +		}
-> +		/* Check there is actually something to save */
-> +		if (!tlmi_priv.save_required) {
-> +			ret = -ENOENT;
-> +			goto out;
-> +		}
-> +		/* Check if certificate authentication is enabled and active */
-> +		if (tlmi_priv.certificate_support && tlmi_priv.pwd_admin->cert_installed) {
-> +			if (!tlmi_priv.pwd_admin->signature ||
-> +			    !tlmi_priv.pwd_admin->save_signature) {
-> +				ret = -EINVAL;
-> +				goto out;
-> +			}
-> +			ret = tlmi_simple_call(LENOVO_SAVE_BIOS_SETTING_CERT_GUID,
-> +					       tlmi_priv.pwd_admin->save_signature);
-> +			if (ret)
-> +				goto out;
-> +		} else if (tlmi_priv.opcode_support) {
-> +			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-> +				ret = tlmi_opcode_setting("WmiOpcodePasswordAdmin",
-> +							  tlmi_priv.pwd_admin->password);
-> +				if (ret)
-> +					goto out;
-> +			}
-> +			ret = tlmi_save_bios_settings("");
-> +		} else { /* old non-opcode based authentication method (deprecated) */
-> +			if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-> +				auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
-> +						     tlmi_priv.pwd_admin->password,
-> +						     encoding_options[tlmi_priv.pwd_admin->encoding],
-> +						     tlmi_priv.pwd_admin->kbdlang);
-> +				if (!auth_str) {
-> +					ret = -ENOMEM;
-> +					goto out;
-> +				}
-> +			}
-> +
-> +			if (auth_str)
-> +				ret = tlmi_save_bios_settings(auth_str);
-> +			else
-> +				ret = tlmi_save_bios_settings("");
-> +		}
-> +		tlmi_priv.save_required = false;
-> +		tlmi_priv.reboot_required = true;
-> +
-> +		if (!ret && !tlmi_priv.pending_changes) {
-> +			tlmi_priv.pending_changes = true;
-> +			/* let userland know it may need to check reboot pending again */
-> +			kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
-> +		}
-> +		break;
-> +	}
-> +out:
-> +	mutex_unlock(&tlmi_mutex);
-> +	kfree(auth_str);
-> +	return ret ?: count;
-> +}
-> +
-> +static struct kobj_attribute save_settings = __ATTR_RW(save_settings);
-> +
->  /* ---- Debug interface--------------------------------------------------------- */
->  static ssize_t debug_cmd_store(struct kobject *kobj, struct kobj_attribute *attr,
->  				const char *buf, size_t count)
-> @@ -1221,6 +1337,8 @@ static void tlmi_release_attr(void)
->  		}
->  	}
->  	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &pending_reboot.attr);
-> +	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &save_settings.attr);
-> +
->  	if (tlmi_priv.can_debug_cmd && debug_support)
->  		sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
->  
-> @@ -1302,6 +1420,10 @@ static int tlmi_sysfs_init(void)
->  	if (ret)
->  		goto fail_create_attr;
->  
-> +	ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &save_settings.attr);
-> +	if (ret)
-> +		goto fail_create_attr;
-> +
->  	if (tlmi_priv.can_debug_cmd && debug_support) {
->  		ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
->  		if (ret)
-> diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
-> index 4daba6151cd6..e1975ffebeb4 100644
-> --- a/drivers/platform/x86/think-lmi.h
-> +++ b/drivers/platform/x86/think-lmi.h
-> @@ -27,6 +27,19 @@ enum level_option {
->  	TLMI_LEVEL_MASTER,
->  };
->  
-> +/*
-> + * There are a limit on the number of WMI operations you can do if you use
-> + * the default implementation of saving on every set. This is due to a
-> + * limitation in EFI variable space used.
-> + * Have a 'bulk save' mode where you can manually trigger the save, and can
-> + * therefore set unlimited variables - for users that need it.
-> + */
-> +enum save_mode {
-> +	TLMI_SAVE_SINGLE,
-> +	TLMI_SAVE_BULK,
-> +	TLMI_SAVE_SAVE,
-> +};
-> +
->  /* password configuration details */
->  struct tlmi_pwdcfg_core {
->  	uint32_t password_mode;
-> @@ -86,6 +99,9 @@ struct think_lmi {
->  	bool can_debug_cmd;
->  	bool opcode_support;
->  	bool certificate_support;
-> +	enum save_mode save_mode;
-> +	bool save_required;
-> +	bool reboot_required;
->  
->  	struct tlmi_attr_setting *setting[TLMI_SETTINGS_COUNT];
->  	struct device *class_dev;
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.6-3
+
+for you to fetch changes up to bc3b6f59463ba9f4367a80331213db491766b5a1:
+
+  MAINTAINERS: Add x86 platform drivers patchwork (2023-09-21 18:03:03 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.6-3
+
+Highlights:
+ -  Add Ilpo Järvinen as platform-drivers-x86 co-maintainer
+ -  Set of Intel SCU IPC fixes
+ -  thinkpad_acpi locking fix
+
+The following is an automated git shortlog grouped by driver:
+
+MAINTAINERS:
+ -  Add x86 platform drivers patchwork
+ -  Add myself into x86 platform driver maintainers
+
+intel_scu_ipc:
+ -  Fail IPC send if still busy
+ -  Don't override scu in intel_scu_ipc_dev_simple_command()
+ -  Check status upon timeout in ipc_wait_for_interrupt()
+ -  Check status after timeout in busy_loop()
+
+thinkpad_acpi:
+ -  Take mutex in hotkey_resume
+
+----------------------------------------------------------------
+Dennis Bonke (1):
+      platform/x86: thinkpad_acpi: Take mutex in hotkey_resume
+
+Ilpo Järvinen (2):
+      MAINTAINERS: Add myself into x86 platform driver maintainers
+      MAINTAINERS: Add x86 platform drivers patchwork
+
+Stephen Boyd (4):
+      platform/x86: intel_scu_ipc: Check status after timeout in busy_loop()
+      platform/x86: intel_scu_ipc: Check status upon timeout in ipc_wait_for_interrupt()
+      platform/x86: intel_scu_ipc: Don't override scu in intel_scu_ipc_dev_simple_command()
+      platform/x86: intel_scu_ipc: Fail IPC send if still busy
+
+ MAINTAINERS                          |  4 +++
+ drivers/platform/x86/intel_scu_ipc.c | 66 ++++++++++++++++++++++--------------
+ drivers/platform/x86/thinkpad_acpi.c |  2 ++
+ 3 files changed, 46 insertions(+), 26 deletions(-)
 
