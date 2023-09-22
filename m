@@ -2,239 +2,123 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6739CD484A
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 17:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7813CD484A
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 17:56:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233816AbjIVRzh (ORCPT
+        id S233703AbjIVR40 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 22 Sep 2023 13:55:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52014 "EHLO
+        Fri, 22 Sep 2023 13:56:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233835AbjIVRzN (ORCPT
+        with ESMTP id S233766AbjIVR4G (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 22 Sep 2023 13:55:13 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2089.outbound.protection.outlook.com [40.107.243.89])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D6621F3E;
-        Fri, 22 Sep 2023 10:53:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bnEUX9cYUkZtNAcm2qyJ9AySB8LYlTEy1GH5GyJq6CAKls7VOL00/3FAW8RsJJZDZ6Ss/K3acSf+8j0jZuQr0klGHNQwDkuI8xGe+8zkgPPVmYpP7uxBi+Nuw2KzNAQCVfjQtkQG9ZO+Y+qRFUeXWgx9J532KuLaVx4dSgjmRIJM+lXEaPQH0nFrASg7TQrrTsUUat7BOgY411cMns2ncq1rkY5ku5n5TwRGHxeOY9JRfa7e7CybgyUtF7/FHkqrXtUB1uUJaHVveL/3yZDaHJGHBlKLBQMPHXy48wyxJZ86IdOYlPGoDasK5P4ldFq9MSREJ5xRlXrIXeqVSgkMAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GbQuQvkZfDZ13Sj4SXzVEcaw91G+GkWRwS7S4VyP9ZY=;
- b=ZNkfB7tixK8Uz//vz+IYPw2+tLa2Z6uiSzST6V0LRxKgXsAwu0Tiu8mAdVRbTtGthXmW8xzzYI9Nrc8S8Zh3hWZIMxe0+xnNDMt53ex5YkKjOPdu2IQ075whVggxbyAjEjLYe4SSpJtnahrAew1VKSaRfxKM+Yib0paHE9Ngqr/3tUihoP+KJoMczxUVAucYmJefIiifSF66/71hx+TE67aCQVBFV86IY0zN/GTuQjPHJYO73h3FU3w1RqTHuDgo1dpouPlmY/9v/JG6x2WHx48LVxopsh9VSAXWxoHvF2Y9bqfk6g1hJi0MrmU7+mgRlWNs3P5F2JC+STJ/4nwmqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GbQuQvkZfDZ13Sj4SXzVEcaw91G+GkWRwS7S4VyP9ZY=;
- b=H0DCXoEcloqSPS/31ws0IiWEGnQXAcMe06zbvfS70Wp99z1EV98uBfh2CEgYYZcNXEHtDMoGAWICr5INCYQ4QHpOZ7tH5+Wx/U6/D/9aZTeDPHDDU1AVpRc6JEALGzkraumlNcxwC/+7B6BNmEaMRuwTogm5F4oMWMmCAcbl42M=
-Received: from BYAPR05CA0073.namprd05.prod.outlook.com (2603:10b6:a03:e0::14)
- by SJ0PR12MB5675.namprd12.prod.outlook.com (2603:10b6:a03:42d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.20; Fri, 22 Sep
- 2023 17:53:15 +0000
-Received: from MWH0EPF000971E6.namprd02.prod.outlook.com
- (2603:10b6:a03:e0:cafe::2) by BYAPR05CA0073.outlook.office365.com
- (2603:10b6:a03:e0::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.14 via Frontend
- Transport; Fri, 22 Sep 2023 17:53:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000971E6.mail.protection.outlook.com (10.167.243.74) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6792.20 via Frontend Transport; Fri, 22 Sep 2023 17:53:15 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 22 Sep
- 2023 12:53:07 -0500
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To:     <hdegoede@redhat.com>, <markgross@kernel.org>,
-        <basavaraj.natikar@amd.com>, <jikos@kernel.org>,
-        <benjamin.tissoires@redhat.com>, <alexander.deucher@amd.com>,
-        <christian.koenig@amd.com>, <Xinhui.Pan@amd.com>,
-        <airlied@gmail.com>, <daniel@ffwll.ch>
-CC:     <Patil.Reddy@amd.com>, <mario.limonciello@amd.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-input@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>,
-        "Basavaraj Natikar" <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH 15/15] platform/x86/amd/pmf: Add PMF-AMDSFH interface for ALS
-Date:   Fri, 22 Sep 2023 23:20:56 +0530
-Message-ID: <20230922175056.244940-16-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230922175056.244940-1-Shyam-sundar.S-k@amd.com>
-References: <20230922175056.244940-1-Shyam-sundar.S-k@amd.com>
+        Fri, 22 Sep 2023 13:56:06 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAD841B4
+        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Sep 2023 10:54:23 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-5789de5c677so1885095a12.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Sep 2023 10:54:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1695405262; x=1696010062; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ISP2L+rvg6dxZG1wcmYnXloNsZywrTUtixv49IhJ0I=;
+        b=jIWF4/z4UcLuiRz0wCvniJrPmxP3Z9Xk2oBg1jRX5yU4wYwfGGP/1BJZg2TWhJikah
+         5clKmlgZHGFLNRHpFcSj682t3/0f1EFPjRE1yYxe3GMcAk0BgYOGVSupcP/q3lT7fST8
+         er+emuk5vVib37xngsMQ973oBiMxxSXfF65B0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695405262; x=1696010062;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1ISP2L+rvg6dxZG1wcmYnXloNsZywrTUtixv49IhJ0I=;
+        b=Gz5YbL/euWhZBFJo5zVtLNn7mjJenEwb10vb5DDOscizFluxqIcC8ceFRl6Ia3fuGB
+         rd3qH+LLT5pZGpRRzQkownsWeAubO0kvC4Tyxwo6/ebl1A7tFoUCrF0ByxOfqrPFrWKk
+         uG07C//xvW1FoiNuFbjuYDKRjHz/Q2lVOmc4x+HyoABA+ifKv2Inyo1U1myrRezNlHiN
+         dvx2xUFPLbxYQJO8mbaFOdsE2eM66x9tU918no940NNUAyzejynN3R8szWJtXQHPM0Zx
+         1ptt39uR73KdrTLGgf96DchwXZlSevXvlgIS0JyY7TejAodloahRdSgSIs+8LpSzhFQh
+         XdCA==
+X-Gm-Message-State: AOJu0YzDvhLK4AhluEA8/uWRJL16GZCEhEaC8xBc3ltX+5K4DG+oGgqj
+        JoReomKoZE7I/ekOUdXj+bIi/w==
+X-Google-Smtp-Source: AGHT+IGxW0pO6A2XYuuil33uTylCAIbRaQSzobX5s7nUCpWCckLaGOgJJl/22O16HRisYCP+P0WYhg==
+X-Received: by 2002:a05:6a20:9499:b0:13b:a2c9:922e with SMTP id hs25-20020a056a20949900b0013ba2c9922emr268710pzb.27.1695405262686;
+        Fri, 22 Sep 2023 10:54:22 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id c7-20020aa78c07000000b006878cc942f1sm3457800pfd.54.2023.09.22.10.54.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Sep 2023 10:54:22 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jorge Lopez <jorge.lopez2@hp.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, platform-driver-x86@vger.kernel.org,
+        llvm@lists.linux.dev,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] platform/x86: hp-bioscfg: Annotate struct bios_args with __counted_by
+Date:   Fri, 22 Sep 2023 10:54:21 -0700
+Message-Id: <20230922175420.work.701-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1418; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=kt0VlUdlEwKUKwWP1rv6tofv8fjvexz2uhyfkXWj6p8=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdTMfB+LYH5eKEwcBoqoFlTtLOyMMpn1kR2Sa
+ TizrkR/ooiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UzAAKCRCJcvTf3G3A
+ JsfnD/wN2QM835WwG5VD399xvmpEfqV/waSzTryLMYZxcqIlyuTG4pL75mWspCtqsPuHkcPq/5+
+ dS56aaMDY1kiOZILGtGY/o+GWgizQ0X87eI7vpaVFKNq5aVB81SWua/rKAzQ02ogL1ld6i21Bax
+ iKS3RQ4mhGVuAyMeSzgYg6LVxU7VHCAX1MzNuZBEbxxYYc9ePrN+y0Hkr39IRDtkwVWcx2PaZr+
+ ZPLbM7Gr1c73OWGB0bhxLfHaX1rgfqmB9gXC3lJW/WyMNt2wnbyTplB/202KUySHEVGpzzl7+TK
+ 1cMerBWqiNFK3BmK1tZOZh3L/GUu6t+hXEG1zkNP3sFOGOsRItI8w2yDQEocODb2NVCQZr5t3B+
+ HELziLz9sxbCa7uWd78WEaYlS+jm4KnMPuXwIOm49XG7eeyCEqDz1zHK07JijFrG3CMQkyWttQ/
+ J92lXH7PGL8Jnme0WvdP5OUM1swG3A1kKndnO4G2vXJ464QIOn+OsvQC02MTg4EG2OF2cvXaXuz
+ V7+ZvYpLopVQKGVbWWY5H2WfbsVTdPZQHrTdnHLHVkmL6vLAD8wnzqR4fR9rDCWgCGtAzfNnpDD
+ MMUbIToTezIl9ipPdd7j5G99rxqHhdMNHOS6KM1DGgOhQzpxGIl2uXlE55Wb3yx3OZcsI/MIXov
+ dMn7rbm UmQyK2GQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E6:EE_|SJ0PR12MB5675:EE_
-X-MS-Office365-Filtering-Correlation-Id: a020a714-63fb-42a0-3ee1-08dbbb94cbfa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ig62JesUl7hpBtwm0vMnbgkvtsjKHj43GCbO+t9prcHGiUohKQkS8fDEi2ohA/9kb4etj2I6lD1+nnvFGKVKrEHsmvKi3gzWxfKU4acf5Vqbqj24vI3Q6A9u+KaxYQGg4mT6v6ZQcIwVoN8E7jXnFPm/+CXYfUqeVem8arrYkpSvIzrC9FE6p5W4+zzAG7PwehNqgcKyfP/Nvr6FJcsX9JjtdiLfs+hd5rrQtdph74YVXe+c3PKJwDZWf5TfswUcYPElKFBTitEXtMDHhI+fN3kHoCpjhM4ieO0sFqyshe+oh880RnPPVvIOH13JhsCul3LYd5NE2Gup4BNGNElsfp3uM6CUBSLWdSs8Q5f/nLGiFssCeNHogoAkvdKxvbo7sRqr73wWHVZimWHqwZKWOcX9AeqXhThyfBFBDko1Ns0RIfA0iH2Km0j89gUB2vfTYOFZsRqzIUzDgJhfow1OFXfMQFmBKJ+6UQ0fvnHl4Y93TMv0dmklz+Q5I6Qr5nwrL0ww9b8hpt6bdHoXMmBIDrvGCpXMZwJ7YWCiRWOFufOeTvuwkDtSBBnzF4uX7gKg1QRaMdUwlNu0vH2410CSbtUvh4i08XFpHHpvdMfWeOZ77qUcmFe+4GXjO6j1+tYUpAifbdn/flY7J8OrlC0+2a0bfJAl4ZI9+BmJC8k02cp7Jb/0EK2snPUy7Xo7uiI1goXu0nkxkpfm62K6ZExHMKzZggtGUdwCJ0q0RXlZcdXdGCvji+y+rWWQk/pR3YauXs27HujPlBlLTEepl3iwcwL00A3P/6ye56sEWSaGTmtQvYkIPLZfcp3Z4KebeA9oO9jyK7D81wgS/q3N+lemiA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(136003)(346002)(396003)(39860400002)(186009)(1800799009)(230921699003)(82310400011)(451199024)(36840700001)(40470700004)(46966006)(6666004)(478600001)(7696005)(47076005)(86362001)(921005)(36756003)(81166007)(8936002)(356005)(36860700001)(82740400003)(336012)(426003)(40460700003)(2616005)(16526019)(1076003)(83380400001)(2906002)(7416002)(40480700001)(8676002)(26005)(54906003)(4326008)(5660300002)(110136005)(41300700001)(70586007)(316002)(70206006)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Sep 2023 17:53:15.3067
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a020a714-63fb-42a0-3ee1-08dbbb94cbfa
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: MWH0EPF000971E6.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5675
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Prepare for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+(for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
 
-AMDSFH has information about the Ambient light via the Ambient
-Light Sensor (ALS) which is part of the AMD sensor fusion hub.
-Add PMF and AMDSFH interface to get this information.
+As found with Coccinelle[1], add __counted_by for struct bios_args.
 
-Co-developed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+[1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+
+Cc: Jorge Lopez <jorge.lopez2@hp.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Gross <markgross@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Tom Rix <trix@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: llvm@lists.linux.dev
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/hid/amd-sfh-hid/amd_sfh_common.h      |  1 +
- drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c |  6 ++++++
- .../amd-sfh-hid/sfh1_1/amd_sfh_interface.c    | 20 +++++++++++++++++++
- drivers/platform/x86/amd/pmf/spc.c            |  5 +++++
- include/linux/amd-pmf-io.h                    |  2 ++
- 5 files changed, 34 insertions(+)
+ drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_common.h b/drivers/hid/amd-sfh-hid/amd_sfh_common.h
-index cd57037bf217..a1950bc6e6ce 100644
---- a/drivers/hid/amd-sfh-hid/amd_sfh_common.h
-+++ b/drivers/hid/amd-sfh-hid/amd_sfh_common.h
-@@ -39,6 +39,7 @@ struct amd_mp2_sensor_info {
- 
- struct sfh_dev_status {
- 	bool is_hpd_present;
-+	bool is_als_present;
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c b/drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
+index dea54f35b8b5..4da99cb7218d 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
+@@ -19,7 +19,7 @@ struct bios_args {
+ 	u32 command;
+ 	u32 commandtype;
+ 	u32 datasize;
+-	u8 data[];
++	u8 data[] __counted_by(datasize);
  };
  
- struct amd_mp2_dev {
-diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
-index 9c623456ee12..d8dad39d68b5 100644
---- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
-+++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
-@@ -77,6 +77,9 @@ static int amd_sfh_hid_client_deinit(struct amd_mp2_dev *privdata)
- 		case HPD_IDX:
- 			privdata->dev_en.is_hpd_present = false;
- 			break;
-+		case ALS_IDX:
-+			privdata->dev_en.is_als_present = false;
-+			break;
- 		}
- 
- 		if (cl_data->sensor_sts[i] == SENSOR_ENABLED) {
-@@ -188,6 +191,9 @@ static int amd_sfh1_1_hid_client_init(struct amd_mp2_dev *privdata)
- 			case HPD_IDX:
- 			privdata->dev_en.is_hpd_present = true;
- 				break;
-+			case ALS_IDX:
-+			privdata->dev_en.is_als_present = true;
-+				break;
- 			}
- 		}
- 		dev_dbg(dev, "sid 0x%x (%s) status 0x%x\n",
-diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
-index 63a5bbca5a09..2f8200fc3062 100644
---- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
-+++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
-@@ -94,12 +94,32 @@ static int amd_sfh_hpd_info(u8 *user_present)
- 	return  -ENODEV;
- }
- 
-+static int amd_sfh_als_info(u32 *ambient_light)
-+{
-+	if (emp2 && emp2->dev_en.is_als_present) {
-+		struct sfh_als_data als_data;
-+		void __iomem *sensoraddr;
-+
-+		sensoraddr = emp2->vsbase +
-+			(ALS_IDX * SENSOR_DATA_MEM_SIZE_DEFAULT) +
-+			OFFSET_SENSOR_DATA_DEFAULT;
-+		memcpy_fromio(&als_data, sensoraddr, sizeof(struct sfh_als_data));
-+		*ambient_light = float_to_int(als_data.lux);
-+
-+		return 0;
-+	}
-+
-+	return -ENODEV;
-+}
-+
- int amd_get_sfh_info(struct amd_sfh_info *sfh_info, enum sfh_message_type op)
- {
- 	if (sfh_info) {
- 		switch (op) {
- 		case MT_HPD:
- 			return amd_sfh_hpd_info(&sfh_info->user_present);
-+		case MT_ALS:
-+			return amd_sfh_als_info(&sfh_info->ambient_light);
- 		}
- 	}
- 	return -1;
-diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
-index 97293ae25cf5..8e19b351e76f 100644
---- a/drivers/platform/x86/amd/pmf/spc.c
-+++ b/drivers/platform/x86/amd/pmf/spc.c
-@@ -49,6 +49,7 @@ void amd_pmf_dump_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *
- 			"Connected" : "disconnected/unknown");
- 	dev_dbg(dev->dev, "LID State : %s\n", in->ev_info.lid_state ? "Close" : "Open");
- 	dev_dbg(dev->dev, "User Presence : %s\n", in->ev_info.user_present ? "Present" : "Away");
-+	dev_dbg(dev->dev, "Ambient Light : %d\n", in->ev_info.ambient_light);
- 	dev_dbg(dev->dev, "==== TA inputs END ====\n");
- }
- #else
-@@ -161,6 +162,10 @@ static void amd_pmf_get_sensor_info(struct amd_pmf_dev *dev, struct ta_pmf_enact
- {
- 	struct amd_sfh_info sfh_info;
- 
-+	/* get ALS data */
-+	amd_get_sfh_info(&sfh_info, MT_ALS);
-+	in->ev_info.ambient_light = sfh_info.ambient_light;
-+
- 	/* get HPD data */
- 	amd_get_sfh_info(&sfh_info, MT_HPD);
- 	switch (sfh_info.user_present) {
-diff --git a/include/linux/amd-pmf-io.h b/include/linux/amd-pmf-io.h
-index 4f82973f6ad2..dac0af573a16 100644
---- a/include/linux/amd-pmf-io.h
-+++ b/include/linux/amd-pmf-io.h
-@@ -31,6 +31,7 @@ int amd_pmf_set_gfx_data(struct amd_gpu_pmf_data *pmf);
- /* amd-sfh */
- enum sfh_message_type {
- 	MT_HPD,
-+	MT_ALS,
- };
- 
- enum hpd_info {
-@@ -40,6 +41,7 @@ enum hpd_info {
- };
- 
- struct amd_sfh_info {
-+	u32 ambient_light;
- 	u8 user_present;
- 	/* add future caps below */
- };
+ /**
 -- 
-2.25.1
+2.34.1
 
