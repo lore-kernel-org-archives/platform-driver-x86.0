@@ -2,174 +2,115 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95782CE7A8C
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 21:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A19BCE7A81
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 23:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229944AbjIVVat (ORCPT
+        id S230274AbjIVXaT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 22 Sep 2023 17:30:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42992 "EHLO
+        Fri, 22 Sep 2023 19:30:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229982AbjIVVam (ORCPT
+        with ESMTP id S230203AbjIVXaT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 22 Sep 2023 17:30:42 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B576F7;
-        Fri, 22 Sep 2023 14:30:36 -0700 (PDT)
+        Fri, 22 Sep 2023 19:30:19 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71C881A1;
+        Fri, 22 Sep 2023 16:30:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695418236; x=1726954236;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=tM4JJBMIkXbKSMqXfFcmrOXZSw4Fq/7w/bTUHxLxgmA=;
-  b=S87kNyRaQ8XNDZGJSpizdwIG4Hs9N8xCwl0Ia+pnr1lQWfq0DJt2gzeZ
-   m8dhwx7ltQRYVtmksfC4Nx227NOGr5/zilmP99F3DlbYJJfttf1uMUCCB
-   4s2Ay6vtVnI3ewYAtHK2ZA6J7LutLgyMddQ1uwVKypmOvIoZIwbvPtV0k
-   zCgSR/xvdBpGHVajgWyH4wniETsXZUspteKolHQ0yT5ncocrsF7qtzq02
-   IdVfdz5PKavG0k+twziLQrmJY6KN0jZP4Rb0I5BHnv47ENY80EnCTfyRQ
-   Ly3j3dYwlLPEePKSR5xxxVyu4uvXXVyisxXx1DZ1S2B/1Uui8LKxsa6dM
+  t=1695425413; x=1726961413;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=FgznEb/ZjEtrj+bbsNzpou8xTksYrm7CNJN/7B5bxvQ=;
+  b=ejUnw9t2KKKYhx3bsIks2d0Do8vR38XYsZydow/8AOL4HsYXbSn/A4n+
+   G3/zo2iJDvJw2DU2YR5XfXS8DDrw+Pdt6R1xJq2+e+yh0gf+4n3OiumZF
+   8ADqkFxqZpNH5kVXm8EVGY42mbAtC0AVeoFoYFgyDh/iXjvab6hu4j8aV
+   CTNNQCJboE46WzzQECiyxX7ZvaK0hxA7IP/U3CMXTo931sSn1UydWLqMK
+   GkRltSG0egAemT2uHmfr4aqv9A5mLqwpuppZ419qaYFTD77NBsVD2Rome
+   lVA1KAC5awI/plSbNHtkb8oir1jo4HUsw0R/joap6J7CjhCXKkgGWrtjW
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="371264697"
+X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="411896913"
 X-IronPort-AV: E=Sophos;i="6.03,169,1694761200"; 
-   d="scan'208";a="371264697"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 14:30:33 -0700
+   d="scan'208";a="411896913"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 16:30:11 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="747685327"
+X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="921350821"
 X-IronPort-AV: E=Sophos;i="6.03,169,1694761200"; 
-   d="scan'208";a="747685327"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 14:30:33 -0700
-Received: from debox1-desk4.intel.com (unknown [10.212.188.234])
-        by linux.intel.com (Postfix) with ESMTP id 881D1580BBE;
-        Fri, 22 Sep 2023 14:30:33 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, david.e.box@linux.intel.com,
-        platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
-        rajvi.jingar@linux.intel.com
-Subject: [PATCH 07/11] platform/x86/intel/pmc: Find and register PMC telemetry entries
-Date:   Fri, 22 Sep 2023 14:30:28 -0700
-Message-Id: <20230922213032.1770590-8-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230922213032.1770590-1-david.e.box@linux.intel.com>
-References: <20230922213032.1770590-1-david.e.box@linux.intel.com>
+   d="scan'208";a="921350821"
+Received: from jithujos.sc.intel.com ([172.25.103.66])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 16:30:10 -0700
+From:   Jithu Joseph <jithu.joseph@intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        rostedt@goodmis.org, jithu.joseph@intel.com, ashok.raj@intel.com,
+        tony.luck@intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com, pengfei.xu@intel.com,
+        ilpo.jarvinen@linux.intel.com
+Subject: [PATCH v2 0/9] IFS support for GNR and SRF
+Date:   Fri, 22 Sep 2023 16:25:57 -0700
+Message-Id: <20230922232606.1928026-1-jithu.joseph@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230913183348.1349409-1-jithu.joseph@intel.com>
+References: <20230913183348.1349409-1-jithu.joseph@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The PMC SSRAM device contains counters that are structured in Intel
-Platform Monitoring Technology (PMT) telemetry regions. Look for and
-register these telemetry regions from the driver so that they may be read
-using the Intel PMT ABI.
+Changes in v2
+   Ilpo Jarvinen
+    - Use GENMASK_ULL() / FIELD_GET() for bitops (patch 01)
+    - Avoid mixing u8 type and bitfields in certain MSR structure
+       scenarios (patch03 also suggested by Dave Hansen)
+    - Expand bitfield structures to use consistent genx naming (patch 04)
+    - Replace goto with do / while (patch 03)
+    - general formatting (multiple patches)
+        - remove un-necessary parenthesis
+        - reformat commit message to use whole allowed 72 columns
+        - alignment changes
+    Other change
+     - fold v1 04/10 and 05/10 into v2 patch 04/09 to satisfy build
+        constraints due to consistent genx naming
+v1 submission:
+Link: https://lore.kernel.org/lkml/20230913183348.1349409-1-jithu.joseph@intel.com/
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/Kconfig      |  1 +
- drivers/platform/x86/intel/pmc/core_ssram.c | 52 +++++++++++++++++++++
- 2 files changed, 53 insertions(+)
+This series adds In Field Scan(IFS) support for newer CPUs like Granite
+Rapids(GNR) and Sierra Forest(SRF).
 
-diff --git a/drivers/platform/x86/intel/pmc/Kconfig b/drivers/platform/x86/intel/pmc/Kconfig
-index b526597e4deb..d2f651fbec2c 100644
---- a/drivers/platform/x86/intel/pmc/Kconfig
-+++ b/drivers/platform/x86/intel/pmc/Kconfig
-@@ -7,6 +7,7 @@ config INTEL_PMC_CORE
- 	tristate "Intel PMC Core driver"
- 	depends on PCI
- 	depends on ACPI
-+	depends on INTEL_PMT_TELEMETRY
- 	help
- 	  The Intel Platform Controller Hub for Intel Core SoCs provides access
- 	  to Power Management Controller registers via various interfaces. This
-diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
-index ab5cc07fb177..b2abaf106bc5 100644
---- a/drivers/platform/x86/intel/pmc/core_ssram.c
-+++ b/drivers/platform/x86/intel/pmc/core_ssram.c
-@@ -12,6 +12,8 @@
- #include <linux/io-64-nonatomic-lo-hi.h>
- 
- #include "core.h"
-+#include "../vsec.h"
-+#include "../pmt/telemetry.h"
- 
- #define SSRAM_HDR_SIZE		0x100
- #define SSRAM_PWRM_OFFSET	0x14
-@@ -21,6 +23,49 @@
- #define SSRAM_IOE_OFFSET	0x68
- #define SSRAM_DEVID_OFFSET	0x70
- 
-+static void
-+pmc_add_pmt(struct pmc_dev *pmcdev, u64 ssram_base, void __iomem *ssram)
-+{
-+	struct pci_dev *pcidev = pmcdev->ssram_pcidev;
-+	struct intel_vsec_platform_info info = {};
-+	struct intel_vsec_header *headers[2] = {};
-+	struct intel_vsec_header header;
-+	void __iomem *dvsec;
-+	u32 dvsec_offset;
-+	u32 table, hdr;
-+
-+	ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
-+	if (!ssram)
-+		return;
-+
-+	dvsec_offset = readl(ssram + SSRAM_DVSEC_OFFSET);
-+	iounmap(ssram);
-+
-+	dvsec = ioremap(ssram_base + dvsec_offset, SSRAM_DVSEC_SIZE);
-+	if (!dvsec)
-+		return;
-+
-+	hdr = readl(dvsec + PCI_DVSEC_HEADER1);
-+	header.id = readw(dvsec + PCI_DVSEC_HEADER2);
-+	header.rev = PCI_DVSEC_HEADER1_REV(hdr);
-+	header.length = PCI_DVSEC_HEADER1_LEN(hdr);
-+	header.num_entries = readb(dvsec + INTEL_DVSEC_ENTRIES);
-+	header.entry_size = readb(dvsec + INTEL_DVSEC_SIZE);
-+
-+	table = readl(dvsec + INTEL_DVSEC_TABLE);
-+	header.tbir = INTEL_DVSEC_TABLE_BAR(table);
-+	header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
-+	iounmap(dvsec);
-+
-+	headers[0] = &header;
-+	info.caps = VSEC_CAP_TELEMETRY;
-+	info.headers = headers;
-+	info.base_addr = ssram_base;
-+	info.parent = &pmcdev->pdev->dev;
-+
-+	intel_vsec_register(pcidev, &info);
-+}
-+
- static const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid)
- {
- 	for (; list->map; ++list)
-@@ -97,6 +142,9 @@ pmc_core_get_secondary_pmc(struct pmc_dev *pmcdev, int pmc_idx, u32 offset)
- 	pwrm_base = get_base(secondary_ssram, SSRAM_PWRM_OFFSET);
- 	devid = readw(secondary_ssram + SSRAM_DEVID_OFFSET);
- 
-+	/* Find and register and PMC telemetry entries */
-+	pmc_add_pmt(pmcdev, ssram_base, main_ssram);
-+
- 	map = pmc_core_find_regmap(pmcdev->regmap_list, devid);
- 	if (!map) {
- 		ret = -ENODEV;
-@@ -136,6 +184,9 @@ pmc_core_get_primary_pmc(struct pmc_dev *pmcdev)
- 	pwrm_base = get_base(ssram, SSRAM_PWRM_OFFSET);
- 	devid = readw(ssram + SSRAM_DEVID_OFFSET);
- 
-+	/* Find and register and PMC telemetry entries */
-+	pmc_add_pmt(pmcdev, ssram_base, ssram);
-+
- 	map = pmc_core_find_regmap(pmcdev->regmap_list, devid);
- 	if (!map) {
- 		ret = -ENODEV;
-@@ -182,3 +233,4 @@ int pmc_core_ssram_init(struct pmc_dev *pmcdev)
- 
- 	return ret;
- }
-+MODULE_IMPORT_NS(INTEL_VSEC);
+There are changes in the IFS image loading and test flow to support
+these new CPUs.
+
+Note to reviewers:
+ - patch 01/09 adds a bit mask to arch/x86/.../msr-index.h,
+  hence x86 maintainers are cc-d.
+ - patch 04/09 modifies an existing tracepoint, cc Steven Rostedt
+ - Rest are localized to IFS driver
+
+Jithu Joseph (9):
+  platform/x86/intel/ifs: Store IFS generation number
+  platform/x86/intel/ifs: Refactor image loading code
+  platform/x86/intel/ifs: Gen2 scan image loading
+  platform/x86/intel/ifs: Gen2 Scan test support
+  platform/x86/intel/ifs: Validate image size
+  platform/x86/intel/ifs: Metadata validation for start_chunk
+  platform/x86/intel/ifs: Add new CPU support
+  platform/x86/intel/ifs: Add new error code
+  platform/x86/intel/ifs: ARRAY BIST for Sierra Forest
+
+ arch/x86/include/asm/msr-index.h         |   1 +
+ drivers/platform/x86/intel/ifs/ifs.h     |  61 ++++++++-
+ include/trace/events/intel_ifs.h         |  16 +--
+ drivers/platform/x86/intel/ifs/core.c    |  15 ++-
+ drivers/platform/x86/intel/ifs/load.c    | 158 +++++++++++++++++++++--
+ drivers/platform/x86/intel/ifs/runtest.c |  69 ++++++++--
+ 6 files changed, 280 insertions(+), 40 deletions(-)
+
+
+base-commit: ce9ecca0238b140b88f43859b211c9fdfd8e5b70
 -- 
-2.34.1
+2.25.1
 
