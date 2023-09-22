@@ -2,183 +2,250 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D89A2E7D0BC
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 01:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD42CD4F2B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 08:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230056AbjIVBvQ (ORCPT
+        id S232201AbjIVIwO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Sep 2023 21:51:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34320 "EHLO
+        Fri, 22 Sep 2023 04:52:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjIVBvQ (ORCPT
+        with ESMTP id S231814AbjIVIwN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Sep 2023 21:51:16 -0400
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11D50F1;
-        Thu, 21 Sep 2023 18:51:06 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0Vsa-hC4_1695347462;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0Vsa-hC4_1695347462)
-          by smtp.aliyun-inc.com;
-          Fri, 22 Sep 2023 09:51:04 +0800
-Message-ID: <1695347358.2770545-1-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH v14 30/42] virtio_pci: introduce helper to get/set queue reset
-Date:   Fri, 22 Sep 2023 09:49:18 +0800
-From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org,
-        kangjie.xu@linux.alibaba.com
-References: <20220801063902.129329-1-xuanzhuo@linux.alibaba.com>
- <20220801063902.129329-31-xuanzhuo@linux.alibaba.com>
- <20230921100112-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20230921100112-mutt-send-email-mst@kernel.org>
+        Fri, 22 Sep 2023 04:52:13 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF4A9A9;
+        Fri, 22 Sep 2023 01:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695372727; x=1726908727;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=909qfSZJj9g30Z44iivYF+PQog17rbjHkc3mDJyIeVA=;
+  b=E5gr45hRlzMJEmrraVyRfT/yz9tH4lwuKirPsJ1qB30NsP3+E+0UNmlr
+   3A4lTKprTlDN1i8uUF8JWnzlnAPRzlDjtX9EuzoUMbD7mttr/2RakgYSa
+   Y2fBfJhLZsKA9VpMJETS8gPoKgD+itlejaGnS4koBLcnrr2uJnL2UH8fZ
+   Ouf1Mr2ylIzqQp3qcJphk5ZGXaMVG+4nW9BJSVO2sEVaRcZoQ2eAMtgo0
+   PHoIjU2pu5TV/aBMQq+M0ztBhXca0YzS0V1Jvpm1k0MLvxDqWYiRMbrWW
+   S5lYoUKvWHGwJVI/6Lc5IqPQK+qhuNaUgafnBxwiZOoYdmn3yJeXyAvAB
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10840"; a="447258904"
+X-IronPort-AV: E=Sophos;i="6.03,167,1694761200"; 
+   d="scan'208";a="447258904"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 01:52:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10840"; a="837654871"
+X-IronPort-AV: E=Sophos;i="6.03,167,1694761200"; 
+   d="scan'208";a="837654871"
+Received: from rblanarx-mobl.ger.corp.intel.com ([10.252.52.48])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 01:52:00 -0700
+Date:   Fri, 22 Sep 2023 11:51:54 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Fernando Eckhardt Valle <fevalle@ipt.br>
+cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Pearson <mpearson-lenovo@squebb.ca>, corbet@lwn.net,
+        hmh@hmh.eng.br, markgross@kernel.org, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4] platform/x86: thinkpad_acpi: sysfs interface to
+ auxmac
+In-Reply-To: <20230921143622.72387-1-fevalle@ipt.br>
+Message-ID: <946285e6-6064-4084-a1a7-f5ba7dea3e7d@linux.intel.com>
+References: <20230921143622.72387-1-fevalle@ipt.br>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 21 Sep 2023 10:02:53 -0400, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> On Mon, Aug 01, 2022 at 02:38:50PM +0800, Xuan Zhuo wrote:
-> > Introduce new helpers to implement queue reset and get queue reset
-> > status.
-> >
-> >  https://github.com/oasis-tcs/virtio-spec/issues/124
-> >  https://github.com/oasis-tcs/virtio-spec/issues/139
-> >
-> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > Acked-by: Jason Wang <jasowang@redhat.com>
-> > ---
-> >  drivers/virtio/virtio_pci_modern_dev.c | 39 ++++++++++++++++++++++++++
-> >  include/linux/virtio_pci_modern.h      |  2 ++
-> >  2 files changed, 41 insertions(+)
-> >
-> > diff --git a/drivers/virtio/virtio_pci_modern_dev.c b/drivers/virtio/virtio_pci_modern_dev.c
-> > index fa2a9445bb18..869cb46bef96 100644
-> > --- a/drivers/virtio/virtio_pci_modern_dev.c
-> > +++ b/drivers/virtio/virtio_pci_modern_dev.c
-> > @@ -3,6 +3,7 @@
-> >  #include <linux/virtio_pci_modern.h>
-> >  #include <linux/module.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/delay.h>
-> >
-> >  /*
-> >   * vp_modern_map_capability - map a part of virtio pci capability
-> > @@ -474,6 +475,44 @@ void vp_modern_set_status(struct virtio_pci_modern_device *mdev,
-> >  }
-> >  EXPORT_SYMBOL_GPL(vp_modern_set_status);
-> >
-> > +/*
-> > + * vp_modern_get_queue_reset - get the queue reset status
-> > + * @mdev: the modern virtio-pci device
-> > + * @index: queue index
-> > + */
-> > +int vp_modern_get_queue_reset(struct virtio_pci_modern_device *mdev, u16 index)
-> > +{
-> > +	struct virtio_pci_modern_common_cfg __iomem *cfg;
-> > +
-> > +	cfg = (struct virtio_pci_modern_common_cfg __iomem *)mdev->common;
-> > +
-> > +	vp_iowrite16(index, &cfg->cfg.queue_select);
-> > +	return vp_ioread16(&cfg->queue_reset);
-> > +}
-> > +EXPORT_SYMBOL_GPL(vp_modern_get_queue_reset);
-> > +
->
-> Actually, this does not validate that the config structure is big
-> enough. So it can access some unrelated memory. Don't know whether
-> that's exploitable e.g. for CoCo but not nice, anyway.
-> Need to validate the size and disable reset if it's too small.
+On Thu, 21 Sep 2023, Fernando Eckhardt Valle wrote:
 
+> Newer Thinkpads have a feature called MAC Address Pass-through.
+> This patch provides a sysfs interface that userspace can use
+> to get this auxiliary mac address.
+> 
+> Signed-off-by: Fernando Eckhardt Valle <fevalle@ipt.br>
+> ---
+> Changes in v4:
+> - strscpy() in all string copies.
+> Changes in v3:
+> - Added null terminator to auxmac string when copying auxiliary
+> mac address value.
+> Changes in v2:
+> - Added documentation.
+> - All handling of the auxmac value is done in the _init function.
+> ---
+>  .../admin-guide/laptops/thinkpad-acpi.rst     | 20 +++++
+>  drivers/platform/x86/thinkpad_acpi.c          | 79 +++++++++++++++++++
+>  2 files changed, 99 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> index e27a1c3f6..98d304010 100644
+> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> @@ -53,6 +53,7 @@ detailed description):
+>  	- Lap mode sensor
+>  	- Setting keyboard language
+>  	- WWAN Antenna type
+> +	- Auxmac
+>  
+>  A compatibility table by model and feature is maintained on the web
+>  site, http://ibm-acpi.sf.net/. I appreciate any success or failure
+> @@ -1511,6 +1512,25 @@ Currently 2 antenna types are supported as mentioned below:
+>  The property is read-only. If the platform doesn't have support the sysfs
+>  class is not created.
+>  
+> +Auxmac
+> +------
+> +
+> +sysfs: auxmac
+> +
+> +Some newer Thinkpads have a feature called MAC Address Pass-through. This
+> +feature is implemented by the system firmware to provide a system unique MAC,
+> +that can override a dock or USB ethernet dongle MAC, when connected to a
+> +network. This property enables user-space to easily determine the MAC address
+> +if the feature is enabled.
+> +
+> +The values of this auxiliary MAC are:
+> +
+> +        cat /sys/devices/platform/thinkpad_acpi/auxmac
+> +
+> +If the feature is disabled, the value will be 'disabled'.
+> +
+> +This property is read-only.
+> +
+>  Adaptive keyboard
+>  -----------------
+>  
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index d70c89d32..f430cc9ed 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -10785,6 +10785,80 @@ static struct ibm_struct dprc_driver_data = {
+>  	.name = "dprc",
+>  };
+>  
+> +/*
+> + * Auxmac
+> + *
+> + * This auxiliary mac address is enabled in the bios through the
+> + * MAC Address Pass-through feature. In most cases, there are three
+> + * possibilities: Internal Mac, Second Mac, and disabled.
+> + *
+> + */
+> +
+> +#define AUXMAC_LEN 12
+> +#define AUXMAC_START 9
+> +#define AUXMAC_STRLEN 22
+> +#define AUXMAC_BEGIN_MARKER 8
+> +#define AUXMAC_END_MARKER 21
+> +
+> +static char auxmac[AUXMAC_LEN + 1];
+> +
+> +static int auxmac_init(struct ibm_init_struct *iibm)
+> +{
+> +	acpi_status status;
+> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	union acpi_object *obj;
+> +
+> +	status = acpi_evaluate_object(NULL, "\\MACA", NULL, &buffer);
+> +
+> +	if (ACPI_FAILURE(status))
+> +		return -ENODEV;
+> +
+> +	obj = buffer.pointer;
+> +
+> +	if (obj->type != ACPI_TYPE_STRING || obj->string.length != AUXMAC_STRLEN) {
+> +		pr_info("Invalid buffer for MAC address pass-through.\n");
+> +		strscpy(auxmac, "unavailable", AUXMAC_LEN);
+> +		goto auxmacinvalid;
+> +	}
+> +
+> +	if (obj->string.pointer[AUXMAC_BEGIN_MARKER] != '#' ||
+> +	    obj->string.pointer[AUXMAC_END_MARKER] != '#') {
+> +		pr_info("Invalid header for MAC address pass-through.\n");
+> +		strscpy(auxmac, "unavailable", AUXMAC_LEN);
+> +		goto auxmacinvalid;
+> +	}
+> +
+> +	if (strncmp(obj->string.pointer + AUXMAC_START, "XXXXXXXXXXXX", AUXMAC_LEN) != 0)
+> +		strscpy(auxmac, obj->string.pointer + AUXMAC_START, AUXMAC_LEN + 1);
 
-static int vp_modern_disable_vq_and_reset(struct virtqueue *vq)
-{
-	struct virtio_pci_device *vp_dev = to_vp_device(vq->vdev);
-	struct virtio_pci_modern_device *mdev = &vp_dev->mdev;
-	struct virtio_pci_vq_info *info;
-	unsigned long flags;
+Okay, I wasn't expecting this change as this relies on the nul termination 
+by strscpy() since the original buffer does not have one but the # 
+character there. But I guess it isn't harmful either.
 
-->	if (!virtio_has_feature(vq->vdev, VIRTIO_F_RING_RESET))
-		return -ENOENT;
+> +	else
+> +		strscpy(auxmac, "disabled", AUXMAC_START);
 
-	vp_modern_set_queue_reset(mdev, vq->index);
+AUXMAC_START is an offset ??? It should be AUXMAC_LEN.
 
+> +
+> +auxmacinvalid:
+> +	kfree(obj);
+> +	return 0;
 
-I checked VIRTIO_F_RING_RESET before call this.
+I only now realized there are two gotos to auxmacinvalid. Therefore, I'd 
+do this instead:
 
-Do you mean, we should put the check to this function.
+free:
+	kfree(obj);
+	return 0;
+auxmacinvalid:
+	strscpy(auxmac, "unavailable", AUXMAC_LEN);
+	goto free;
 
+I'm sorry about my incorrect suggestion the last time.
 
-Thanks.
+> +}
+> +
+> +static struct ibm_struct auxmac_data = {
+> +	.name = "auxmac",
+> +};
+> +
+> +static ssize_t auxmac_show(struct device *dev,
+> +			   struct device_attribute *attr,
+> +			   char *buf)
+> +{
+> +	return sysfs_emit(buf, "%s\n", auxmac);
+> +}
+> +static DEVICE_ATTR_RO(auxmac);
+> +
+> +static struct attribute *auxmac_attributes[] = {
+> +	&dev_attr_auxmac.attr,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group auxmac_attr_group = {
+> +	.attrs = auxmac_attributes,
+> +};
+> +
+>  /* --------------------------------------------------------------------- */
+>  
+>  static struct attribute *tpacpi_driver_attributes[] = {
+> @@ -10843,6 +10917,7 @@ static const struct attribute_group *tpacpi_groups[] = {
+>  	&proxsensor_attr_group,
+>  	&kbdlang_attr_group,
+>  	&dprc_attr_group,
+> +	&auxmac_attr_group,
+>  	NULL,
+>  };
+>  
+> @@ -11414,6 +11489,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
+>  		.init = tpacpi_dprc_init,
+>  		.data = &dprc_driver_data,
+>  	},
+> +	{
+> +		.init = auxmac_init,
+> +		.data = &auxmac_data,
+> +	},
+>  };
+>  
+>  static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
+> 
 
+-- 
+ i.
 
-
->
->
-> > +/*
-> > + * vp_modern_set_queue_reset - reset the queue
-> > + * @mdev: the modern virtio-pci device
-> > + * @index: queue index
-> > + */
-> > +void vp_modern_set_queue_reset(struct virtio_pci_modern_device *mdev, u16 index)
-> > +{
-> > +	struct virtio_pci_modern_common_cfg __iomem *cfg;
-> > +
-> > +	cfg = (struct virtio_pci_modern_common_cfg __iomem *)mdev->common;
-> > +
-> > +	vp_iowrite16(index, &cfg->cfg.queue_select);
-> > +	vp_iowrite16(1, &cfg->queue_reset);
-> > +
-> > +	while (vp_ioread16(&cfg->queue_reset))
-> > +		msleep(1);
-> > +
-> > +	while (vp_ioread16(&cfg->cfg.queue_enable))
-> > +		msleep(1);
-> > +}
-> > +EXPORT_SYMBOL_GPL(vp_modern_set_queue_reset);
-> > +
-> >  /*
-> >   * vp_modern_queue_vector - set the MSIX vector for a specific virtqueue
-> >   * @mdev: the modern virtio-pci device
-> > diff --git a/include/linux/virtio_pci_modern.h b/include/linux/virtio_pci_modern.h
-> > index 05123b9a606f..c4eeb79b0139 100644
-> > --- a/include/linux/virtio_pci_modern.h
-> > +++ b/include/linux/virtio_pci_modern.h
-> > @@ -113,4 +113,6 @@ void __iomem * vp_modern_map_vq_notify(struct virtio_pci_modern_device *mdev,
-> >  				       u16 index, resource_size_t *pa);
-> >  int vp_modern_probe(struct virtio_pci_modern_device *mdev);
-> >  void vp_modern_remove(struct virtio_pci_modern_device *mdev);
-> > +int vp_modern_get_queue_reset(struct virtio_pci_modern_device *mdev, u16 index);
-> > +void vp_modern_set_queue_reset(struct virtio_pci_modern_device *mdev, u16 index);
-> >  #endif
-> > --
-> > 2.31.0
->
