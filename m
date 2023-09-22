@@ -2,231 +2,66 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CA1CD4F49
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 10:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDE0CD4846
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 16:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233425AbjIVKri (ORCPT
+        id S232129AbjIVQnO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 22 Sep 2023 06:47:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56160 "EHLO
+        Fri, 22 Sep 2023 12:43:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229664AbjIVKrh (ORCPT
+        with ESMTP id S232297AbjIVQnN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 22 Sep 2023 06:47:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5858AC
-        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Sep 2023 03:46:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1695379609;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=523CLNpg/sOwhLY70FMKKiUkZU7FDspbvgGF4P5huNs=;
-        b=R/3+zw1I4CmUYlj4ZnskQUu1wBU3GX58ODFUN51WjbFaHrz9QM83FiOO3xPTDO3pwwzTZJ
-        BjAzxawDmgO8XV8qAnXXfEAN/y3SMY8H9xXxeA0rz/tTDI9W/SArIDY1TmJaAh5NzodyjN
-        HqWSCrGqxTueEplVObfm4qj+YgsxQiM=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-194-NYB_3BcpMpG2QWSEek1F5g-1; Fri, 22 Sep 2023 06:46:48 -0400
-X-MC-Unique: NYB_3BcpMpG2QWSEek1F5g-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-51da39aa6dcso1344404a12.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Sep 2023 03:46:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695379607; x=1695984407;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=523CLNpg/sOwhLY70FMKKiUkZU7FDspbvgGF4P5huNs=;
-        b=Oi7MIWmt6qWhAqL2ty26ewFu1Wc0J7sFQnhrM8/K6V+frROI4eLF5e6ysz7rxVBOto
-         6eMTSz5HwzN2DAVa1OIXbU539Sb8LJj3yCskXO7Z2yHli1+MbUcXNyBlSWsWgRpTpklV
-         E1C9J6S6e/ACMjpMlPPnMtq0mltk/vncdnDRwXGIKRg4hKa4ucSvpDSrBY1YQcMRC6AH
-         UyXJv0qJd/9a4dMh4ZW3f06U6CJdTDkzpD5Vrw6NmJpDxtJ0u7YAxNC+jHkvYvlKGbXR
-         GBN1pbiTkHpCDn8n46QiISyVTaAnQ3u1MlT0yZM08Y9M8d4b9h7EGh/lEUPFrczbkL+X
-         juIQ==
-X-Gm-Message-State: AOJu0YzwLMHDQ3StjlccK3ZmxuQrpIrFB2daeXBbsjrlfwIrIkVV6j3G
-        2/l81fwJ41Fe/d5bLizmVqnxHyIX+QqZ0gPLG8jq+35iuDel6umFZZ2jQ60v7nJnC7eNrfWaMMB
-        j6jHmQo2gq2mGjitKmITzJ6ZqIz4OdzhYOw==
-X-Received: by 2002:a17:906:41:b0:9ad:e66a:4141 with SMTP id 1-20020a170906004100b009ade66a4141mr7499980ejg.28.1695379607571;
-        Fri, 22 Sep 2023 03:46:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF/7A6BDEm5D1OAZEqbWCsMuJ65vhHu1qiz2aGlCcO2bpN2TOKZRlo73gCToO1Ojpp+az0gQA==
-X-Received: by 2002:a17:906:41:b0:9ad:e66a:4141 with SMTP id 1-20020a170906004100b009ade66a4141mr7499940ejg.28.1695379607265;
-        Fri, 22 Sep 2023 03:46:47 -0700 (PDT)
-Received: from redhat.com ([2.52.150.187])
-        by smtp.gmail.com with ESMTPSA id d26-20020a1709064c5a00b009ad875d12d7sm2528479ejw.210.2023.09.22.03.46.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 03:46:46 -0700 (PDT)
-Date:   Fri, 22 Sep 2023 06:46:39 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev@vger.kernel.org,
+        Fri, 22 Sep 2023 12:43:13 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9210E122;
+        Fri, 22 Sep 2023 09:43:07 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 38AA9C433C9;
+        Fri, 22 Sep 2023 16:43:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695400987;
+        bh=fooMorcn9z1K3m7OoyLvK5ppO77hGJdYG0LZsqgMIaI=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=RSIEAhxVCoeS2j9Rzqw9jp2tHCS6UxVRNjYuRe48tjjybfyLAVUIPPKNU79SBJdPd
+         +cBfo0+TIAL3m/tSXDushBCUtSAESYaN2+s7dVa29eyxZudDGidIu+stbbYfcRv+q3
+         E+zZpviVvHtOhOL2LtoAcCHyXyhMy5ZFqAV9Er7fWUVbtwgWe1/rq4XWArnT9UZgW9
+         Jl71mv9EZ9WhfPYDt3rbwE7n+YzgyeX9rCBPXM6SF4B1zF8MGtHG5nUS1DdUtN+YUe
+         BhXMZpFtHe3MPEUD+ralyphFw69YC1TfQ5S8kcgWuTXEO4spJJmcD5Ch8g2b7EKNgi
+         cw3m/9YNWI+XA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 28BD2C04DD9;
+        Fri, 22 Sep 2023 16:43:07 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for 6.6-3
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <5ffaf4a2-4359-065a-240a-fcfde68c6180@redhat.com>
+References: <5ffaf4a2-4359-065a-240a-fcfde68c6180@redhat.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <5ffaf4a2-4359-065a-240a-fcfde68c6180@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.6-3
+X-PR-Tracked-Commit-Id: bc3b6f59463ba9f4367a80331213db491766b5a1
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3a457d2804d4c7e76cb4492c6787fdfb7203fc7d
+Message-Id: <169540098715.17578.8270823936737311817.pr-tracker-bot@kernel.org>
+Date:   Fri, 22 Sep 2023 16:43:07 +0000
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org,
-        kangjie.xu@linux.alibaba.com
-Subject: Re: [PATCH v14 30/42] virtio_pci: introduce helper to get/set queue
- reset
-Message-ID: <20230922064550-mutt-send-email-mst@kernel.org>
-References: <20220801063902.129329-1-xuanzhuo@linux.alibaba.com>
- <20220801063902.129329-31-xuanzhuo@linux.alibaba.com>
- <20230921100112-mutt-send-email-mst@kernel.org>
- <1695347358.2770545-1-xuanzhuo@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1695347358.2770545-1-xuanzhuo@linux.alibaba.com>
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Sep 22, 2023 at 09:49:18AM +0800, Xuan Zhuo wrote:
-> On Thu, 21 Sep 2023 10:02:53 -0400, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > On Mon, Aug 01, 2022 at 02:38:50PM +0800, Xuan Zhuo wrote:
-> > > Introduce new helpers to implement queue reset and get queue reset
-> > > status.
-> > >
-> > >  https://github.com/oasis-tcs/virtio-spec/issues/124
-> > >  https://github.com/oasis-tcs/virtio-spec/issues/139
-> > >
-> > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > Acked-by: Jason Wang <jasowang@redhat.com>
-> > > ---
-> > >  drivers/virtio/virtio_pci_modern_dev.c | 39 ++++++++++++++++++++++++++
-> > >  include/linux/virtio_pci_modern.h      |  2 ++
-> > >  2 files changed, 41 insertions(+)
-> > >
-> > > diff --git a/drivers/virtio/virtio_pci_modern_dev.c b/drivers/virtio/virtio_pci_modern_dev.c
-> > > index fa2a9445bb18..869cb46bef96 100644
-> > > --- a/drivers/virtio/virtio_pci_modern_dev.c
-> > > +++ b/drivers/virtio/virtio_pci_modern_dev.c
-> > > @@ -3,6 +3,7 @@
-> > >  #include <linux/virtio_pci_modern.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/pci.h>
-> > > +#include <linux/delay.h>
-> > >
-> > >  /*
-> > >   * vp_modern_map_capability - map a part of virtio pci capability
-> > > @@ -474,6 +475,44 @@ void vp_modern_set_status(struct virtio_pci_modern_device *mdev,
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(vp_modern_set_status);
-> > >
-> > > +/*
-> > > + * vp_modern_get_queue_reset - get the queue reset status
-> > > + * @mdev: the modern virtio-pci device
-> > > + * @index: queue index
-> > > + */
-> > > +int vp_modern_get_queue_reset(struct virtio_pci_modern_device *mdev, u16 index)
-> > > +{
-> > > +	struct virtio_pci_modern_common_cfg __iomem *cfg;
-> > > +
-> > > +	cfg = (struct virtio_pci_modern_common_cfg __iomem *)mdev->common;
-> > > +
-> > > +	vp_iowrite16(index, &cfg->cfg.queue_select);
-> > > +	return vp_ioread16(&cfg->queue_reset);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(vp_modern_get_queue_reset);
-> > > +
-> >
-> > Actually, this does not validate that the config structure is big
-> > enough. So it can access some unrelated memory. Don't know whether
-> > that's exploitable e.g. for CoCo but not nice, anyway.
-> > Need to validate the size and disable reset if it's too small.
-> 
-> 
-> static int vp_modern_disable_vq_and_reset(struct virtqueue *vq)
-> {
-> 	struct virtio_pci_device *vp_dev = to_vp_device(vq->vdev);
-> 	struct virtio_pci_modern_device *mdev = &vp_dev->mdev;
-> 	struct virtio_pci_vq_info *info;
-> 	unsigned long flags;
-> 
-> ->	if (!virtio_has_feature(vq->vdev, VIRTIO_F_RING_RESET))
-> 		return -ENOENT;
-> 
-> 	vp_modern_set_queue_reset(mdev, vq->index);
-> 
-> 
-> I checked VIRTIO_F_RING_RESET before call this.
+The pull request you sent on Thu, 21 Sep 2023 18:26:30 +0200:
 
-Yes but the point is that virtio is used with untrusted devices
-(e.g. for SEV/TDX), so you can't really assume config structures
-are in sync with feature bits.
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.6-3
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3a457d2804d4c7e76cb4492c6787fdfb7203fc7d
 
-> Do you mean, we should put the check to this function.
-> 
-> 
-> Thanks.
-> 
-> 
-> 
-> >
-> >
-> > > +/*
-> > > + * vp_modern_set_queue_reset - reset the queue
-> > > + * @mdev: the modern virtio-pci device
-> > > + * @index: queue index
-> > > + */
-> > > +void vp_modern_set_queue_reset(struct virtio_pci_modern_device *mdev, u16 index)
-> > > +{
-> > > +	struct virtio_pci_modern_common_cfg __iomem *cfg;
-> > > +
-> > > +	cfg = (struct virtio_pci_modern_common_cfg __iomem *)mdev->common;
-> > > +
-> > > +	vp_iowrite16(index, &cfg->cfg.queue_select);
-> > > +	vp_iowrite16(1, &cfg->queue_reset);
-> > > +
-> > > +	while (vp_ioread16(&cfg->queue_reset))
-> > > +		msleep(1);
-> > > +
-> > > +	while (vp_ioread16(&cfg->cfg.queue_enable))
-> > > +		msleep(1);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(vp_modern_set_queue_reset);
-> > > +
-> > >  /*
-> > >   * vp_modern_queue_vector - set the MSIX vector for a specific virtqueue
-> > >   * @mdev: the modern virtio-pci device
-> > > diff --git a/include/linux/virtio_pci_modern.h b/include/linux/virtio_pci_modern.h
-> > > index 05123b9a606f..c4eeb79b0139 100644
-> > > --- a/include/linux/virtio_pci_modern.h
-> > > +++ b/include/linux/virtio_pci_modern.h
-> > > @@ -113,4 +113,6 @@ void __iomem * vp_modern_map_vq_notify(struct virtio_pci_modern_device *mdev,
-> > >  				       u16 index, resource_size_t *pa);
-> > >  int vp_modern_probe(struct virtio_pci_modern_device *mdev);
-> > >  void vp_modern_remove(struct virtio_pci_modern_device *mdev);
-> > > +int vp_modern_get_queue_reset(struct virtio_pci_modern_device *mdev, u16 index);
-> > > +void vp_modern_set_queue_reset(struct virtio_pci_modern_device *mdev, u16 index);
-> > >  #endif
-> > > --
-> > > 2.31.0
-> >
+Thank you!
 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
