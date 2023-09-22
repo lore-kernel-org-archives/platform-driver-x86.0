@@ -2,114 +2,218 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4D1CD484A
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 17:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABDFCD4847
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 18:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233984AbjIVR4y (ORCPT
+        id S233868AbjIVSFq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 22 Sep 2023 13:56:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34726 "EHLO
+        Fri, 22 Sep 2023 14:05:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233766AbjIVR41 (ORCPT
+        with ESMTP id S233899AbjIVSFa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 22 Sep 2023 13:56:27 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B77419B7
-        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Sep 2023 10:54:39 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-690fe10b6a4so2268081b3a.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Sep 2023 10:54:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405279; x=1696010079; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IjeaV73hiIttYIrl5ELxFpexeQoEM56r8iWVxqTuQ5U=;
-        b=W363ixgVa4J2Y9YiTdE4wYMnIywCofcwQFgW/2Fg4MvZzMzQW+vJnedJW+BlAKI6fn
-         bvCD+WO086rAd1cag2bjbXyPGUpYZeSpYtLWkT1Z39pt59ZxRhz3G2GdAzhk6iXtVrIG
-         ecU1VO2Rdfr8k2ugjRkCUq+WEWJAtE8MMO/30=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405279; x=1696010079;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IjeaV73hiIttYIrl5ELxFpexeQoEM56r8iWVxqTuQ5U=;
-        b=Ci5vBiJ6EHd2VigdRNRhR2JCYeXTvZvyiUIBUum38j8JpQvIwL5JJfoSN7cJ63bQdA
-         GKJAhgELvTnOLTAOLUC84mS3k84RViAX5prV0QTuEBvjGY3TyXql12VGvZ3b1BOS/9DX
-         ViJVgs+gXB4W0HzN/fC1Ns4eWDxo26iEM2/qiQRS6aMC2V7j4cq7D8B/qYVCecUXCNCE
-         BhX45PTAn9jNDWtJv155JP3ejAJFY6dFt7SnIrcFVi43uN546bY6xVSW/ITpdG3829Wm
-         w0jRqvlWG3HfbzXD5pj9Uez5M/XK1V+uDcheyZPpeMAj195KterxW9Zo4irdPAwCdkTH
-         Hzmw==
-X-Gm-Message-State: AOJu0YzvVTqFQXWmuXrihgopeDHSQ1QvYteMt/V7cMUyLacObwdgFIJ8
-        8KJP0h0CV3MEV33xean2eV3QSQ==
-X-Google-Smtp-Source: AGHT+IHR5DLHlAeeoZk+sHs9Kb4LlO3DRZvk0xSprFEwkdqeU0Cx16wif7KblQwQ5V62iXm93hIcYw==
-X-Received: by 2002:a05:6a00:2e8b:b0:68f:f741:57a1 with SMTP id fd11-20020a056a002e8b00b0068ff74157a1mr213789pfb.7.1695405278835;
-        Fri, 22 Sep 2023 10:54:38 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f15-20020aa78b0f000000b0068fece2c190sm3458942pfd.70.2023.09.22.10.54.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:54:38 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        platform-driver-x86@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] platform/surface: aggregator: Annotate struct ssam_event with __counted_by
-Date:   Fri, 22 Sep 2023 10:54:37 -0700
-Message-Id: <20230922175436.work.031-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Fri, 22 Sep 2023 14:05:30 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2089.outbound.protection.outlook.com [40.107.94.89])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEFE11F1B;
+        Fri, 22 Sep 2023 10:53:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=llr9pIBpWj5mMoayltF6z0STF/bVF5m3SBbkzLAfj5yEbJou78/U3eI2+JuF8xUAMqgRrsjU1MY9L5Ak4ZJgS5cho9m3mn1nIDJGHIAwG2eSRd0BlE5OmWwuvt+Xa5DJtNQPUFXLrx85xOT5GeCHTTghZinelgkkCjMYqVsnNU1TnpxCTn2xl8ea1Li350Wo+7mQ62PNEoLxpZfW9kaSmkP0IcS1FPEoDPjaYR9MyiKNasEowG6qgQiKLcmvdXdm4HAcor8hpW22PqPzYlcWjt1+O3xlcBtULG5tdqcsKacpkogIU00VbN7tsYQvEd5bWoxMdLPB6s03G9DLlE+Cjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OXkbVhQ7IKBoM4wQ6XXY6ozTN/ug3ZSnz4TrGE1a/0E=;
+ b=bFEJ4swtxUY9aU4fE/Kbq/jk7+dP6BhhTFa38OH8AZqghCZEt0AWNlCMMka0P7psZCchIauLy+oJGrr0p93UbfQJZpKe07LfZoqiinIAxFCCt/34g+bFmi00aaj69N7Kqj7SOK+HV2/kdD2k55trgPGkqsfCwTFDvYvo7s+4o8tisLXz3X51CiVZDubDDREXtm11tewr1Bi0gGGivcM2rNqvP7rA44LdGbHQlTRa/8YQwmtCgfP1Am7j4NWD6zwMIAjAZWPAZsxL50cnww+cq3NIZBQzbvZz4MDHQbN+M4EhcIMIGmsS95bGIBqyAMWdoCJ6oS0Xg4O1/9Eteh1y3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OXkbVhQ7IKBoM4wQ6XXY6ozTN/ug3ZSnz4TrGE1a/0E=;
+ b=rf4xfh7Z/KgNlqesUqD4/jNzmAF1Gb9X604kGf/dvGo4e4xhfFBEsTtB3R9fCDLOTL2uUDni1tMbcPhXssxiGRpS2koH3igVKDs+zv6RWV00vuSCf0vmuwPTAVKE6X0SVwIt7eFiXMiiL1x78Ii1cQZDFMhYNlKG0+aFsOzU85E=
+Received: from BY3PR04CA0025.namprd04.prod.outlook.com (2603:10b6:a03:217::30)
+ by CH2PR12MB4860.namprd12.prod.outlook.com (2603:10b6:610:6c::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.23; Fri, 22 Sep
+ 2023 17:53:05 +0000
+Received: from MWH0EPF000971E4.namprd02.prod.outlook.com
+ (2603:10b6:a03:217:cafe::8d) by BY3PR04CA0025.outlook.office365.com
+ (2603:10b6:a03:217::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.31 via Frontend
+ Transport; Fri, 22 Sep 2023 17:53:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MWH0EPF000971E4.mail.protection.outlook.com (10.167.243.72) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6792.20 via Frontend Transport; Fri, 22 Sep 2023 17:53:03 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 22 Sep
+ 2023 12:52:57 -0500
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To:     <hdegoede@redhat.com>, <markgross@kernel.org>,
+        <basavaraj.natikar@amd.com>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>, <alexander.deucher@amd.com>,
+        <christian.koenig@amd.com>, <Xinhui.Pan@amd.com>,
+        <airlied@gmail.com>, <daniel@ffwll.ch>
+CC:     <Patil.Reddy@amd.com>, <mario.limonciello@amd.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-input@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>,
+        "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH 13/15] platform/x86/amd/pmf: Add PMF-AMDGPU set interface
+Date:   Fri, 22 Sep 2023 23:20:54 +0530
+Message-ID: <20230922175056.244940-14-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230922175056.244940-1-Shyam-sundar.S-k@amd.com>
+References: <20230922175056.244940-1-Shyam-sundar.S-k@amd.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1146; i=keescook@chromium.org;
- h=from:subject:message-id; bh=T+Zr3XTl8UeXAf4xTZbY2EHoO0SlibCfAP1NuiNTWSw=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdTdfq2Mz6uuhqmtzfnfg1vj97+JF1Hg/qqop
- +JwlT8D5B6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3U3QAKCRCJcvTf3G3A
- JpoyEACg+ayR4fFaWv6vAB3d2B+WBwdtg4B8DiP1WncRmwCPqBiztrC21miRe7lLEDE2UklgyOx
- PduUHkVhaYeFRLawXsRDLwgFqNXykv5uD28potGGRWp+CJI+jxz7cbwO9d9P4EKNkqZiyIVe1T7
- 0uBJI+D/u69nR22ukFy36hxV5tXpLQvE+fU1RL+aspMbseJ60vj/jcDZ0GSYxMWT0UUPgsSUTLw
- Z6q9BwnLJDgFOpu3iUjPIlfWebKYQSBgSu6UUiyxsqas20/R8nxbHf8eB3QWvLF1YU4AMb5wJX4
- P/1RH2ZzTqV/biVWdGCMqcosrw/dnGRiPL/2jkn7ilNfe4hS265oaBsBi7Ufgsia/5eMRkRILL5
- YClvrIczbBrRyVxhEVjGEyRvtU5tXctwHR4ttx33tlk757l0m5kWBwrffVRwXlJP47Vuj13Lfk2
- 3PCS9WmNPjvSPqd8u/91V+0+QJifuf+8KGd8zW40biiTd3HPHhcXL5ZBBmQqxs6aUq1HayKEu9j
- 52zVqoAm0XHA1s/2cB1xNQoUlF/d910cvrK9gZTAUclWMUdI2JQ6j7b0QlJWDPUhtHU/LaOhbda
- lEi6F8d1IWD/7NGwOStb2so96w7SstbIDfpJiBhm3VuI9qJuOrXoBpG3vKUxPXfSJ4bKZVdHgxX
- tW/IFkU LyR9VPRg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000971E4:EE_|CH2PR12MB4860:EE_
+X-MS-Office365-Filtering-Correlation-Id: 83b0c5f3-fde7-4aa1-3dec-08dbbb94c53d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rWoou7nIAzBwJ0IcSahTzFgrC+/AWpfg9tUzXP43Mv9oDMQbsbhFhcYOJ9skCjCVomSFb0P3v2N/sUc2GXQcYJ/kHYWXX6jDSP8o2A2EXwgmqHeP45H45bzUtQOsdP13fg3i6trc+MaPzdJ5hQRionLFwmXXlcNqamWEHuTzCp9pI/5EY+4tGoDMBLp4YsFDO08WgqzEGoEOH3Y2eiDrmMirvccuooJvPcDU9fgiv2VI0mNBUfXnQ9SDNB2T+PF7xiybKbAcHzxk/XrnGmPT/5u5LIyDsfV1W3UwyghkAmsijKX012HcpvrbWmw06xVJiAeHBiKIeklIyB+JvP8hEEEzaCrx7DCQJQOVt1QvCAxbTppv+TCGGJNIaQ830nDCXOIeWQ7qmaUfVcNQ4aHsEO/OcNw5D4isB84UeG34KnMr9b1lfB9m9/Uzak76Sa5N40TX2uvHN3+KZq9bkh07SRIKyjYTeiyOPwdeQma83AtTDejB+gkroYZEntwkdQxr4Xi90/lngHRlcgcJuG+kAPvJaJOsRz91VsPcEG6J5qDsRTpkyWQaWNVgViieDyLbltNvr530Df+EaMh4DBD/vQIBoJJQXgxk4I5QrX6OyL7XhEZeYgZF/zQr/uw9octQug4YoaTbgjeGitBdJ6zXPsoF9sWGG6ls4OwO9QZ3RMJ+f5tGXWCdTOzC3PzGOpBqsaAeep4vkq7ttaCZUPV2sCc5EVPIGCY0YTkBciNjf4mKFfxgLLXv8vsMOc8ZqzeuSY2CfLlNDFxVsKIw6ZfjSHgSkK96mp2gYIwLuf7PA77DAD5DoPb2875Uz2D9cfG2pr1rtlEjMCGU4Om13oKdOA==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(346002)(39860400002)(376002)(136003)(186009)(230921699003)(1800799009)(451199024)(82310400011)(40470700004)(36840700001)(46966006)(8676002)(8936002)(4326008)(110136005)(5660300002)(7416002)(40460700003)(83380400001)(36860700001)(316002)(16526019)(26005)(7696005)(40480700001)(70206006)(54906003)(70586007)(82740400003)(921005)(356005)(81166007)(6666004)(41300700001)(336012)(86362001)(2616005)(47076005)(426003)(1076003)(478600001)(36756003)(2906002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Sep 2023 17:53:03.3923
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83b0c5f3-fde7-4aa1-3dec-08dbbb94c53d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: MWH0EPF000971E4.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4860
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Prepare for the coming implementation by GCC and Clang of the __counted_by
-attribute. Flexible array members annotated with __counted_by can have
-their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-(for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-functions).
+For the Smart PC Solution to fully work, it has to enact to the actions
+coming from TA. Add the initial code path for set interface to AMDGPU.
 
-As found with Coccinelle[1], add __counted_by for struct ssam_event.
-
-[1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-
-Cc: Maximilian Luz <luzmaximilian@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
- include/linux/surface_aggregator/controller.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c | 21 +++++++++++++++++++++
+ drivers/platform/x86/amd/pmf/pmf.h      |  2 ++
+ drivers/platform/x86/amd/pmf/tee-if.c   | 19 +++++++++++++++++--
+ include/linux/amd-pmf-io.h              |  1 +
+ 4 files changed, 41 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/surface_aggregator/controller.h b/include/linux/surface_aggregator/controller.h
-index cb7980805920..5b67f0f47d80 100644
---- a/include/linux/surface_aggregator/controller.h
-+++ b/include/linux/surface_aggregator/controller.h
-@@ -44,7 +44,7 @@ struct ssam_event {
- 	u8 command_id;
- 	u8 instance_id;
- 	u16 length;
--	u8 data[];
-+	u8 data[] __counted_by(length);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
+index 232d11833ddc..5c567bff0548 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
+@@ -68,3 +68,24 @@ int amd_pmf_get_gfx_data(struct amd_gpu_pmf_data *pmf)
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(amd_pmf_get_gfx_data);
++
++int amd_pmf_set_gfx_data(struct amd_gpu_pmf_data *pmf)
++{
++	struct drm_device *drm_dev = pci_get_drvdata(pmf->gpu_dev);
++	struct amdgpu_device *adev = drm_to_adev(drm_dev);
++	struct backlight_device *bd;
++
++	if (!(adev->flags & AMD_IS_APU)) {
++		DRM_ERROR("PMF-AMDGPU interface not supported\n");
++		return -ENODEV;
++	}
++
++	bd = backlight_device_get_by_type(BACKLIGHT_RAW);
++	if (!bd)
++		return -ENODEV;
++
++	backlight_device_set_brightness(bd, pmf->brightness);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(amd_pmf_set_gfx_data);
+diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+index 9032df4ba48a..ce89cc0daa5a 100644
+--- a/drivers/platform/x86/amd/pmf/pmf.h
++++ b/drivers/platform/x86/amd/pmf/pmf.h
+@@ -73,6 +73,7 @@
+ #define PMF_POLICY_STT_SKINTEMP_APU				7
+ #define PMF_POLICY_STT_SKINTEMP_HS2				8
+ #define PMF_POLICY_SYSTEM_STATE					9
++#define PMF_POLICY_DISPLAY_BRIGHTNESS				12
+ #define PMF_POLICY_P3T						38
+ 
+ /* TA macros */
+@@ -480,6 +481,7 @@ enum ta_pmf_error_type {
  };
  
- /**
+ struct pmf_action_table {
++	unsigned long display_brightness;
+ 	enum system_state system_state;
+ 	unsigned long spl; /* in mW */
+ 	unsigned long sppt; /* in mW */
+diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+index 1608996654e8..eefffff83a4c 100644
+--- a/drivers/platform/x86/amd/pmf/tee-if.c
++++ b/drivers/platform/x86/amd/pmf/tee-if.c
+@@ -79,10 +79,10 @@ static int amd_pmf_update_uevents(struct amd_pmf_dev *dev, u16 event)
+ 	return 0;
+ }
+ 
+-static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_result *out)
++static int amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_result *out)
+ {
+ 	u32 val, event = 0;
+-	int idx;
++	int idx, ret;
+ 
+ 	for (idx = 0; idx < out->actions_count; idx++) {
+ 		val = out->actions_list[idx].value;
+@@ -160,8 +160,23 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+ 				dev->prev_data->system_state = 0;
+ 			}
+ 			break;
++
++		case PMF_POLICY_DISPLAY_BRIGHTNESS:
++			ret = amd_pmf_get_gfx_data(&dev->gfx_data);
++			if (ret)
++				return ret;
++
++			dev->prev_data->display_brightness = dev->gfx_data.brightness;
++			if (dev->prev_data->display_brightness != val) {
++				dev->gfx_data.brightness = val;
++				amd_pmf_set_gfx_data(&dev->gfx_data);
++				dev_dbg(dev->dev, "update DISPLAY_BRIGHTNESS : %d\n", val);
++			}
++			break;
+ 		}
+ 	}
++
++	return 0;
+ }
+ 
+ static int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev)
+diff --git a/include/linux/amd-pmf-io.h b/include/linux/amd-pmf-io.h
+index a2d4af231362..ecae387ddaa6 100644
+--- a/include/linux/amd-pmf-io.h
++++ b/include/linux/amd-pmf-io.h
+@@ -25,4 +25,5 @@ struct amd_gpu_pmf_data {
+ };
+ 
+ int amd_pmf_get_gfx_data(struct amd_gpu_pmf_data *pmf);
++int amd_pmf_set_gfx_data(struct amd_gpu_pmf_data *pmf);
+ #endif
 -- 
-2.34.1
+2.25.1
 
