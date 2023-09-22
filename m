@@ -2,111 +2,162 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16604CE7A81
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 21:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79C8CE7A8A
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 21:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229734AbjIVVaj (ORCPT
+        id S229954AbjIVVal (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 22 Sep 2023 17:30:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60870 "EHLO
+        Fri, 22 Sep 2023 17:30:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229705AbjIVVaj (ORCPT
+        with ESMTP id S229944AbjIVVak (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 22 Sep 2023 17:30:39 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1651BC1;
-        Fri, 22 Sep 2023 14:30:33 -0700 (PDT)
+        Fri, 22 Sep 2023 17:30:40 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFC43C1;
+        Fri, 22 Sep 2023 14:30:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695418233; x=1726954233;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RtVlxEmwkcaWODCTa9GTXfNYnDKymctU0EiDfOU8ZfY=;
-  b=iEuFH0CoxGp4HB0R/gH9QxACf0N6QoMBBJo+Vwdyk1VcF6jXzhFBEI8B
-   RIj1YKf8GhxnThjGZ/GQ9jrbBzp+EfJr4sqkdVTXxfs0XbfNAFxV8KsGj
-   JaxPFJSG/dRpqBxWhCNB731WHYSV4IumG7JPmhev1sy5o58ABX6pNk1tO
-   zQ+qnxrfKcBqDgkEmzKjcMlCksaEzMjVOcAtNlefobJilayyoj2FVeTPS
-   I+mNFYcf1QOstxxebvxnYRv9aksm6Ew8L6gF6a3GkHeMMdRd+lK8fwgAz
-   TPZHiiqqUHF4N4AJawXcmqrLhVoCmUENewnCH0nalQu6VoX4hv2OZHBkj
+  t=1695418234; x=1726954234;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=ShdByvzHZrIatOiiLohtDB7ahuIepttl4FPmXc1tWd0=;
+  b=L2kIgiJAHiWoqzcB+ojIgpaqg5V9hZNZcNXdEm4qW+js73H3Px64mLir
+   xZSiKNvWQs0yJfHUN+bgefWZRU2hoCCFSjVz5bvDGjDoYnZQGujr8mArF
+   sbJhTgMCY72FdyaOMQuj2V/vdTpUMeqvvj7Iwtsrd9ttDLJKOfcBzBKfh
+   RAOt53x1PQoMQR77fAS7jbncgbvfU6PxNKC7RJf9eY0uEgxjkJNoB8K3k
+   RIsT1PcMr3tzMttwrJKT0sqMYftaZ39EwjH7YYO9nePeCYBcJ99RqG26m
+   ud7xhFt6peY5wYfj7SBAOp4WM30dOUD3cK1NRHC3N8YOBQTZ6KLwYUf2o
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="371264685"
+X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="379828421"
 X-IronPort-AV: E=Sophos;i="6.03,169,1694761200"; 
-   d="scan'208";a="371264685"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 14:30:32 -0700
+   d="scan'208";a="379828421"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 14:30:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="747685305"
+X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="813237856"
 X-IronPort-AV: E=Sophos;i="6.03,169,1694761200"; 
-   d="scan'208";a="747685305"
+   d="scan'208";a="813237856"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 14:30:32 -0700
+  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 14:30:34 -0700
 Received: from debox1-desk4.intel.com (unknown [10.212.188.234])
-        by linux.intel.com (Postfix) with ESMTP id 797F2580BBE;
-        Fri, 22 Sep 2023 14:30:32 -0700 (PDT)
+        by linux.intel.com (Postfix) with ESMTP id E98B8580DB2;
+        Fri, 22 Sep 2023 14:30:33 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, david.e.box@linux.intel.com,
         platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
         rajvi.jingar@linux.intel.com
-Subject: [PATCH 00/11] intel_pmc: Add telemetry API to read counters
-Date:   Fri, 22 Sep 2023 14:30:21 -0700
-Message-Id: <20230922213032.1770590-1-david.e.box@linux.intel.com>
+Subject: [PATCH 10/11] platform/x86/intel/pmc: Read low power mode requirements for MTL-M and MTL-P
+Date:   Fri, 22 Sep 2023 14:30:31 -0700
+Message-Id: <20230922213032.1770590-11-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230922213032.1770590-1-david.e.box@linux.intel.com>
+References: <20230922213032.1770590-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On newer Intel silicon, more IP counters are being added in Intel Platform
-Monitoring Technology (PMT) telemetry spaces hosted in MMIO.  There is a
-need for the intel_pmc_core driver and other drivers to access PMT hosted
-telemetry in the kernel using an API. This patchset adds driver APIs to
-allow registering and reading telemetry entries. It makes changes to the
-intel_pmc_core driver to use these interfaces to access the low power mode
-counters that are now exclusively available from PMT.
+From: Xi Pardee <xi.pardee@intel.com>
 
-David E. Box (6):
-  platform/x86/intel/vsec: Add base address field
-  platform/x86/intel/pmt: Add header to struct intel_pmt_entry
-  platform/x86/intel/pmt: telemetry: Export API to read telemetry
-  platform/x86/intel/pmc: Split pmc_core_ssram_get_pmc()
-  platform/x86/intel/pmc: Find and register PMC telemetry entries
-  platform/x86/intel/pmc: Add debug attribute for Die C6 counter
+Add support to read the low power mode requirements for Meteor Lake M and
+Meteor Lake P.
 
-Gayatri Kammela (1):
-  platform/x86/intel/vsec: Add intel_vsec_register
+Signed-off-by: Xi Pardee <xi.pardee@intel.com>
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ drivers/platform/x86/intel/pmc/mtl.c | 39 +++++++++++++++++++++++-----
+ 1 file changed, 33 insertions(+), 6 deletions(-)
 
-Rajvi Jingar (1):
-  platform/x86/intel/pmc: Display LPM requirements for multiple PMCs
-
-Xi Pardee (3):
-  platform/x86:intel/pmc: Move get_low_power_modes function
-  platform/x86/intel/pmc: Retrieve LPM information using Intel PMT
-  platform/x86/intel/pmc: Read low power mode requirements for MTL-M and
-    MTL-P
-
- drivers/platform/x86/intel/pmc/Kconfig      |   1 +
- drivers/platform/x86/intel/pmc/adl.c        |   2 +
- drivers/platform/x86/intel/pmc/cnp.c        |   2 +
- drivers/platform/x86/intel/pmc/core.c       | 191 ++++++++----
- drivers/platform/x86/intel/pmc/core.h       |  10 +-
- drivers/platform/x86/intel/pmc/core_ssram.c | 312 +++++++++++++++++---
- drivers/platform/x86/intel/pmc/icl.c        |  10 +-
- drivers/platform/x86/intel/pmc/mtl.c        |  85 +++++-
- drivers/platform/x86/intel/pmc/spt.c        |  10 +-
- drivers/platform/x86/intel/pmc/tgl.c        |   1 +
- drivers/platform/x86/intel/pmt/class.c      |  43 ++-
- drivers/platform/x86/intel/pmt/class.h      |  30 +-
- drivers/platform/x86/intel/pmt/crashlog.c   |   2 +-
- drivers/platform/x86/intel/pmt/telemetry.c  | 200 ++++++++++++-
- drivers/platform/x86/intel/pmt/telemetry.h  | 129 ++++++++
- drivers/platform/x86/intel/vsec.c           |  68 ++---
- drivers/platform/x86/intel/vsec.h           |  44 ++-
- 17 files changed, 961 insertions(+), 179 deletions(-)
- create mode 100644 drivers/platform/x86/intel/pmt/telemetry.h
-
-
-base-commit: acce85a7dd28eac3858d44230f4c65985d0f271c
+diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+index 780874142a90..c2ac50cfdd51 100644
+--- a/drivers/platform/x86/intel/pmc/mtl.c
++++ b/drivers/platform/x86/intel/pmc/mtl.c
+@@ -11,6 +11,13 @@
+ #include <linux/pci.h>
+ #include "core.h"
+ 
++/* PMC SSRAM PMT Telemetry GUIDS */
++#define SOCP_LPM_REQ_GUID	0x2625030
++#define IOEM_LPM_REQ_GUID	0x4357464
++#define IOEP_LPM_REQ_GUID	0x5077612
++
++static const u8 MTL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
++
+ /*
+  * Die Mapping to Product.
+  * Product SOCDie IOEDie PCHDie
+@@ -465,6 +472,7 @@ const struct pmc_reg_map mtl_socm_reg_map = {
+ 	.lpm_sts = mtl_socm_lpm_maps,
+ 	.lpm_status_offset = MTL_LPM_STATUS_OFFSET,
+ 	.lpm_live_status_offset = MTL_LPM_LIVE_STATUS_OFFSET,
++	.lpm_reg_index = MTL_LPM_REG_INDEX,
+ };
+ 
+ const struct pmc_bit_map mtl_ioep_pfear_map[] = {
+@@ -782,6 +790,13 @@ const struct pmc_reg_map mtl_ioep_reg_map = {
+ 	.ltr_show_sts = mtl_ioep_ltr_show_map,
+ 	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
+ 	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
++	.lpm_num_maps = ADL_LPM_NUM_MAPS,
++	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
++	.lpm_residency_offset = MTL_LPM_RESIDENCY_OFFSET,
++	.lpm_priority_offset = MTL_LPM_PRI_OFFSET,
++	.lpm_en_offset = MTL_LPM_EN_OFFSET,
++	.lpm_sts_latch_en_offset = MTL_LPM_STATUS_LATCH_EN_OFFSET,
++	.lpm_reg_index = MTL_LPM_REG_INDEX,
+ };
+ 
+ const struct pmc_bit_map mtl_ioem_pfear_map[] = {
+@@ -922,6 +937,13 @@ const struct pmc_reg_map mtl_ioem_reg_map = {
+ 	.ltr_show_sts = mtl_ioep_ltr_show_map,
+ 	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
+ 	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
++	.lpm_sts_latch_en_offset = MTL_LPM_STATUS_LATCH_EN_OFFSET,
++	.lpm_num_maps = ADL_LPM_NUM_MAPS,
++	.lpm_priority_offset = MTL_LPM_PRI_OFFSET,
++	.lpm_en_offset = MTL_LPM_EN_OFFSET,
++	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
++	.lpm_residency_offset = MTL_LPM_RESIDENCY_OFFSET,
++	.lpm_reg_index = MTL_LPM_REG_INDEX,
+ };
+ 
+ #define PMC_DEVID_SOCM	0x7e7f
+@@ -929,16 +951,19 @@ const struct pmc_reg_map mtl_ioem_reg_map = {
+ #define PMC_DEVID_IOEM	0x7ebf
+ static struct pmc_info mtl_pmc_info_list[] = {
+ 	{
+-		.devid = PMC_DEVID_SOCM,
+-		.map = &mtl_socm_reg_map,
++		.guid	= SOCP_LPM_REQ_GUID,
++		.devid	= PMC_DEVID_SOCM,
++		.map	= &mtl_socm_reg_map,
+ 	},
+ 	{
+-		.devid = PMC_DEVID_IOEP,
+-		.map = &mtl_ioep_reg_map,
++		.guid	= IOEP_LPM_REQ_GUID,
++		.devid	= PMC_DEVID_IOEP,
++		.map	= &mtl_ioep_reg_map,
+ 	},
+ 	{
+-		.devid = PMC_DEVID_IOEM,
+-		.map = &mtl_ioem_reg_map
++		.guid	= IOEM_LPM_REQ_GUID,
++		.devid	= PMC_DEVID_IOEM,
++		.map	= &mtl_ioem_reg_map
+ 	},
+ 	{}
+ };
+@@ -1012,5 +1037,7 @@ int mtl_core_init(struct pmc_dev *pmcdev)
+ 	dev_dbg(&pmcdev->pdev->dev, "ignoring GBE LTR\n");
+ 	pmc_core_send_ltr_ignore(pmcdev, 3);
+ 
++	ret = pmc_core_ssram_get_lpm_reqs(pmcdev);
++
+ 	return 0;
+ }
 -- 
 2.34.1
 
