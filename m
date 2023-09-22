@@ -2,54 +2,54 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED54CE7A8A
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 21:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2506CE7A89
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 21:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229924AbjIVVap (ORCPT
+        id S230018AbjIVVaq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 22 Sep 2023 17:30:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43006 "EHLO
+        Fri, 22 Sep 2023 17:30:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229984AbjIVVan (ORCPT
+        with ESMTP id S229975AbjIVVam (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 22 Sep 2023 17:30:43 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C15194;
-        Fri, 22 Sep 2023 14:30:37 -0700 (PDT)
+        Fri, 22 Sep 2023 17:30:42 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C63A2136;
+        Fri, 22 Sep 2023 14:30:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695418237; x=1726954237;
+  t=1695418235; x=1726954235;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=z8g8xnqJtSfXvsrjcjZTFejouzzcLQ07FywJr4k7Iy4=;
-  b=A+FIVPgtUfwkYDtCvbWk74496Q4aOA1EdzpX9XMOYzZCVmv8jeMMZcLv
-   FgpdYzpLbMnJ7LOp4aEjwv7Mu3ftnbd56MMD4M+Tp+pFizrFr8DqQzzG3
-   Ek1iTsK8y9mdKLRrq8I67no3c0H+sMejBIEXtdlRfZjAVv+EXSmxyT9Wp
-   StnoYzE5CeurBECzTjDzzEcKVnMXgi2tX0uhnMHRcUMrlbdSKMctfZj0F
-   EjCdh66o7Bao2t7pG28SHWaSwkJXGUuSda2piT/rhdur3ZhBqLPey9dav
-   6KPWH++G+H3DIUgbMA+Fbzt8qKrAuX3wCJbcjAyI6ySx2tp9HwvgxKNuT
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="371264701"
+  bh=WfK7ZHVA2wFzt1NZqESMIwsrJ1vJQnZD6txRV7FIyGI=;
+  b=HfFO9EHJtDBYljpXsGJXFhqUlNEganL/pmOGKbf/juhRfApfV8pOx10u
+   t376+q66TrsLiTpOl7GYLdrmb6mUh70vciPAPXg9783mWJxANOsBcgaBa
+   tK5EcbSFgb7JAqctImFeiOLyX06FuSV2+toJOAslpyduf2jL6ko54SEnr
+   fc6spoViR/CfOn0d/Qk59ru6WWya9+PPw4dJ4z3AnbfOBNcm5impDVXa6
+   hCbVRUqiL7qu6ePHJPeaU5Sv0cOeCABYba9mDPucdFJgoddUj+dyZ4B1H
+   nBluroNBv2Pe0drVZdSZm52UdDzW7LuV8IdYRlNXzIeeqrd0SnuYPeHLu
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="379828423"
 X-IronPort-AV: E=Sophos;i="6.03,169,1694761200"; 
-   d="scan'208";a="371264701"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 14:30:34 -0700
+   d="scan'208";a="379828423"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 14:30:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="747685334"
+X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="813237857"
 X-IronPort-AV: E=Sophos;i="6.03,169,1694761200"; 
-   d="scan'208";a="747685334"
+   d="scan'208";a="813237857"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 14:30:34 -0700
+  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 14:30:34 -0700
 Received: from debox1-desk4.intel.com (unknown [10.212.188.234])
-        by linux.intel.com (Postfix) with ESMTP id C5DA0580BBE;
-        Fri, 22 Sep 2023 14:30:33 -0700 (PDT)
+        by linux.intel.com (Postfix) with ESMTP id 14989580BB9;
+        Fri, 22 Sep 2023 14:30:34 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, david.e.box@linux.intel.com,
         platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
         rajvi.jingar@linux.intel.com
-Subject: [PATCH 09/11] platform/x86/intel/pmc: Retrieve LPM information using Intel PMT
-Date:   Fri, 22 Sep 2023 14:30:30 -0700
-Message-Id: <20230922213032.1770590-10-david.e.box@linux.intel.com>
+Subject: [PATCH 11/11] platform/x86/intel/pmc: Add debug attribute for Die C6 counter
+Date:   Fri, 22 Sep 2023 14:30:32 -0700
+Message-Id: <20230922213032.1770590-12-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230922213032.1770590-1-david.e.box@linux.intel.com>
 References: <20230922213032.1770590-1-david.e.box@linux.intel.com>
@@ -59,198 +59,204 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Xi Pardee <xi.pardee@intel.com>
+Add a "die_c6_us_show" counter in debugs and add support for Meteor Lake.
+Reads the counter value using Intel Platform Monitoring Technology (PMT)
+driver API. This counter is useful for determining the idle residency of
+CPUs in the compute tile.
 
-On supported platforms, the low power mode (LPM) requirements for entering
-each idle substate are described in Platform Monitoring Technology (PMT)
-telemetry entries. Provide a function for platform code to attempt to find
-and read the requirements from the telemetry entries.
-
-Signed-off-by: Xi Pardee <xi.pardee@intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/platform/x86/intel/pmc/core.h       |   3 +
- drivers/platform/x86/intel/pmc/core_ssram.c | 135 ++++++++++++++++++++
- 2 files changed, 138 insertions(+)
+ drivers/platform/x86/intel/pmc/core.c | 55 +++++++++++++++++++++++++++
+ drivers/platform/x86/intel/pmc/core.h |  4 ++
+ drivers/platform/x86/intel/pmc/mtl.c  | 32 ++++++++++++++++
+ 3 files changed, 91 insertions(+)
 
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index df2bcead1723..790ed9481529 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -27,6 +27,7 @@
+ #include <asm/tsc.h>
+ 
+ #include "core.h"
++#include "../pmt/telemetry.h"
+ 
+ /* Maximum number of modes supported by platfoms that has low power mode capability */
+ const char *pmc_lpm_modes[] = {
+@@ -822,6 +823,48 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_req_regs);
+ 
++static unsigned int pmc_core_get_crystal_freq(void)
++{
++	unsigned int eax_denominator, ebx_numerator, ecx_hz, edx;
++
++	if (boot_cpu_data.cpuid_level < 0x15)
++		return 0;
++
++	eax_denominator = ebx_numerator = ecx_hz = edx = 0;
++
++	/* CPUID 15H TSC/Crystal ratio, plus optionally Crystal Hz */
++	cpuid(0x15, &eax_denominator, &ebx_numerator, &ecx_hz, &edx);
++
++	if (ebx_numerator == 0 || eax_denominator == 0)
++		return 0;
++
++	return ecx_hz;
++}
++
++static int pmc_core_die_c6_us_show(struct seq_file *s, void *unused)
++{
++	struct pmc_dev *pmcdev = s->private;
++	u64 die_c6_res, count;
++	int ret;
++
++	if (!pmcdev->crystal_freq) {
++		dev_warn_once(&pmcdev->pdev->dev, "%s: Bad crystal frequency\n",
++			      __func__);
++		return -EINVAL;
++	}
++
++	ret = pmt_telem_read(pmcdev->punit_ep, pmcdev->die_c6_offset,
++			     &count, 1);
++	if (ret)
++		return ret;
++
++	die_c6_res = div64_u64(count * 1000000ULL, pmcdev->crystal_freq);
++	seq_printf(s, "%llu\n", die_c6_res);
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(pmc_core_die_c6_us);
++
+ static int pmc_core_lpm_latch_mode_show(struct seq_file *s, void *unused)
+ {
+ 	struct pmc_dev *pmcdev = s->private;
+@@ -1118,6 +1161,12 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+ 				    pmcdev->dbgfs_dir, pmcdev,
+ 				    &pmc_core_substate_req_regs_fops);
+ 	}
++
++	if (pmcdev->has_die_c6) {
++		debugfs_create_file("die_c6_us_show", 0444,
++				    pmcdev->dbgfs_dir, pmcdev,
++				    &pmc_core_die_c6_us_fops);
++	}
+ }
+ 
+ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+@@ -1212,6 +1261,10 @@ static void pmc_core_clean_structure(struct platform_device *pdev)
+ 		pci_dev_put(pmcdev->ssram_pcidev);
+ 		pci_disable_device(pmcdev->ssram_pcidev);
+ 	}
++
++	if (pmcdev->punit_ep)
++		pmt_telem_unregister_endpoint(pmcdev->punit_ep);
++
+ 	platform_set_drvdata(pdev, NULL);
+ 	mutex_destroy(&pmcdev->lock);
+ }
+@@ -1232,6 +1285,8 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	if (!pmcdev)
+ 		return -ENOMEM;
+ 
++	pmcdev->crystal_freq = pmc_core_get_crystal_freq();
++
+ 	platform_set_drvdata(pdev, pmcdev);
+ 	pmcdev->pdev = pdev;
+ 
 diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index edaa70067e41..85b6f6ae4995 100644
+index 85b6f6ae4995..6d7673145f90 100644
 --- a/drivers/platform/x86/intel/pmc/core.h
 +++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -320,6 +320,7 @@ struct pmc_reg_map {
- 	const u32 lpm_status_offset;
- 	const u32 lpm_live_status_offset;
- 	const u32 etr3_offset;
-+	const u8  *lpm_reg_index;
+@@ -16,6 +16,8 @@
+ #include <linux/bits.h>
+ #include <linux/platform_device.h>
+ 
++struct telem_endpoint;
++
+ #define SLP_S0_RES_COUNTER_MASK			GENMASK(31, 0)
+ 
+ #define PMC_BASE_ADDR_DEFAULT			0xFE000000
+@@ -357,6 +359,7 @@ struct pmc {
+  * @devs:		pointer to an array of pmc pointers
+  * @pdev:		pointer to platform_device struct
+  * @ssram_pcidev:	pointer to pci device struct for the PMC SSRAM
++ * @crystal_freq:	crystal frequency from cpuid
+  * @dbgfs_dir:		path to debugfs interface
+  * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
+  *			used to read MPHY PG and PLL status are available
+@@ -374,6 +377,7 @@ struct pmc_dev {
+ 	struct dentry *dbgfs_dir;
+ 	struct platform_device *pdev;
+ 	struct pci_dev *ssram_pcidev;
++	unsigned int crystal_freq;
+ 	int pmc_xram_read_bit;
+ 	struct mutex lock; /* generic mutex lock for PMC Core */
+ 
+diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+index c2ac50cfdd51..d791d4894c9d 100644
+--- a/drivers/platform/x86/intel/pmc/mtl.c
++++ b/drivers/platform/x86/intel/pmc/mtl.c
+@@ -10,12 +10,17 @@
+ 
+ #include <linux/pci.h>
+ #include "core.h"
++#include "../pmt/telemetry.h"
+ 
+ /* PMC SSRAM PMT Telemetry GUIDS */
+ #define SOCP_LPM_REQ_GUID	0x2625030
+ #define IOEM_LPM_REQ_GUID	0x4357464
+ #define IOEP_LPM_REQ_GUID	0x5077612
+ 
++/* Die C6 from PUNIT telemetry */
++#define MTL_PMT_DMU_DIE_C6_OFFSET	15
++#define MTL_PMT_DMU_GUID		0x1A067102
++
+ static const u8 MTL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
+ 
+ /*
+@@ -968,6 +973,32 @@ static struct pmc_info mtl_pmc_info_list[] = {
+ 	{}
  };
  
- /**
-@@ -329,6 +330,7 @@ struct pmc_reg_map {
-  *			specific attributes
-  */
- struct pmc_info {
-+	u32 guid;
- 	u16 devid;
- 	const struct pmc_reg_map *map;
- };
-@@ -486,6 +488,7 @@ extern const struct pmc_bit_map *mtl_ioem_lpm_maps[];
- extern const struct pmc_reg_map mtl_ioem_reg_map;
- 
- extern void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev);
-+extern int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev);
- extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
- 
- int pmc_core_resume_common(struct pmc_dev *pmcdev);
-diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
-index b2abaf106bc5..a0ce4e8b1b6d 100644
---- a/drivers/platform/x86/intel/pmc/core_ssram.c
-+++ b/drivers/platform/x86/intel/pmc/core_ssram.c
-@@ -23,6 +23,140 @@
- #define SSRAM_IOE_OFFSET	0x68
- #define SSRAM_DEVID_OFFSET	0x70
- 
-+/* PCH query */
-+#define LPM_HEADER_OFFSET	1
-+#define LPM_REG_COUNT		28
-+#define LPM_MODE_OFFSET		1
-+
-+static u32 pmc_core_find_guid(struct pmc_info *list, const struct pmc_reg_map *map)
-+{
-+	for (; list->map; ++list)
-+		if (list->map == map)
-+			return list->guid;
-+
-+	return 0;
-+}
-+
-+static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc)
++static void mtl_punit_pmt_init(struct pmc_dev *pmcdev)
 +{
 +	struct telem_endpoint *ep;
-+	const u8 *lpm_indices;
-+	int num_maps, mode_offset = 0;
-+	int ret, mode, i;
-+	int lpm_size;
-+	u32 guid;
++	struct pci_dev *pcidev;
 +
-+	lpm_indices = pmc->map->lpm_reg_index;
-+	num_maps = pmc->map->lpm_num_maps;
-+	lpm_size = LPM_MAX_NUM_MODES * num_maps;
++	pcidev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(10, 0));
++	if (!pcidev) {
++		dev_err(&pmcdev->pdev->dev, "PUNIT PMT device not found.");
++		return;
++	}
 +
-+	guid = pmc_core_find_guid(pmcdev->regmap_list, pmc->map);
-+	if (!guid)
-+		return -ENXIO;
-+
-+	ep = pmt_telem_find_and_register_endpoint(pmcdev->ssram_pcidev, guid, 0);
++	ep = pmt_telem_find_and_register_endpoint(pcidev, MTL_PMT_DMU_GUID, 0);
 +	if (IS_ERR(ep)) {
-+		dev_dbg(&pmcdev->pdev->dev, "couldn't get telem endpoint %ld",
++		dev_err(&pmcdev->pdev->dev,
++			"pmc_core: couldn't get DMU telem endpoint %ld",
 +			PTR_ERR(ep));
-+		return -EPROBE_DEFER;
++		return;
 +	}
 +
-+	pmc->lpm_req_regs = devm_kzalloc(&pmcdev->pdev->dev,
-+					 lpm_size * sizeof(u32),
-+					 GFP_KERNEL);
-+	if (!pmc->lpm_req_regs) {
-+		ret = -ENOMEM;
-+		goto unregister_ep;
-+	}
++	pci_dev_put(pcidev);
++	pmcdev->punit_ep = ep;
 +
-+	/*
-+	 * PMC Low Power Mode (LPM) requirements table
-+	 *
-+	 * In telemetry space, the LPM table contains a 4 byte header followed
-+	 * by 8 consecutive mode blocks (one for each LPM mode). Each block
-+	 * has a 4 byte header followed by a set of registers that describe the
-+	 * IP state requirements for the given mode. The IP mapping is platform
-+	 * specific but the same for each block, making for easy analysis.
-+	 * Platforms only use a subset of the space to track the requirements
-+	 * for their IPs. Callers provide the requirement registers they use as
-+	 * a list of indices. Each requirement register is associated with an
-+	 * IP map that's maintained by the caller.
-+	 *
-+	 * Header
-+	 * +----+----------------------------+----------------------------+
-+	 * |  0 |      REVISION              |      ENABLED MODES         |
-+	 * +----+--------------+-------------+-------------+--------------+
-+	 *
-+	 * Low Power Mode 0 Block
-+	 * +----+--------------+-------------+-------------+--------------+
-+	 * |  1 |     SUB ID   |     SIZE    |   MAJOR     |   MINOR      |
-+	 * +----+--------------+-------------+-------------+--------------+
-+	 * |  2 |           LPM0 Requirements 0                           |
-+	 * +----+---------------------------------------------------------+
-+	 * |    |                  ...                                    |
-+	 * +----+---------------------------------------------------------+
-+	 * | 29 |           LPM0 Requirements 27                          |
-+	 * +----+---------------------------------------------------------+
-+	 *
-+	 * ...
-+	 *
-+	 * Low Power Mode 7 Block
-+	 * +----+--------------+-------------+-------------+--------------+
-+	 * |    |     SUB ID   |     SIZE    |   MAJOR     |   MINOR      |
-+	 * +----+--------------+-------------+-------------+--------------+
-+	 * | 60 |           LPM7 Requirements 0                           |
-+	 * +----+---------------------------------------------------------+
-+	 * |    |                  ...                                    |
-+	 * +----+---------------------------------------------------------+
-+	 * | 87 |           LPM7 Requirements 27                          |
-+	 * +----+---------------------------------------------------------+
-+	 *
-+	 */
-+	mode_offset = LPM_HEADER_OFFSET + LPM_MODE_OFFSET;
-+	pmc_for_each_mode(i, mode, pmcdev) {
-+		u32 *req_offset = pmc->lpm_req_regs + (mode * num_maps);
-+		int m;
-+
-+		for (m = 0; m < num_maps; m++) {
-+			u8 sample_id = lpm_indices[m] + mode_offset;
-+
-+			ret = pmt_telem_read32(ep, sample_id, req_offset, 1);
-+			if (ret) {
-+				dev_err(&pmcdev->pdev->dev,
-+					"couldn't read Low Power Mode requirements: %d\n", ret);
-+				devm_kfree(&pmcdev->pdev->dev, pmc->lpm_req_regs);
-+				goto unregister_ep;
-+			}
-+			++req_offset;
-+		}
-+		mode_offset += (LPM_REG_COUNT + LPM_MODE_OFFSET);
-+	}
-+
-+unregister_ep:
-+	pmt_telem_unregister_endpoint(ep);
-+
-+	return ret;
++	pmcdev->has_die_c6 = true;
++	pmcdev->die_c6_offset = MTL_PMT_DMU_DIE_C6_OFFSET;
 +}
 +
-+int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev)
-+{
-+	int ret, i;
-+
-+	if (!pmcdev->ssram_pcidev)
-+		return -ENODEV;
-+
-+	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
-+		if (!pmcdev->pmcs[i])
-+			continue;
-+
-+		ret = pmc_core_get_lpm_req(pmcdev, pmcdev->pmcs[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static void
- pmc_add_pmt(struct pmc_dev *pmcdev, u64 ssram_base, void __iomem *ssram)
- {
-@@ -234,3 +368,4 @@ int pmc_core_ssram_init(struct pmc_dev *pmcdev)
- 	return ret;
- }
- MODULE_IMPORT_NS(INTEL_VSEC);
-+MODULE_IMPORT_NS(INTEL_PMT_TELEMETRY);
+ #define MTL_GNA_PCI_DEV	0x7e4c
+ #define MTL_IPU_PCI_DEV	0x7d19
+ #define MTL_VPU_PCI_DEV	0x7d1d
+@@ -1030,6 +1061,7 @@ int mtl_core_init(struct pmc_dev *pmcdev)
+ 	}
+ 
+ 	pmc_core_get_low_power_modes(pmcdev);
++	mtl_punit_pmt_init(pmcdev);
+ 
+ 	/* Due to a hardware limitation, the GBE LTR blocks PC10
+ 	 * when a cable is attached. Tell the PMC to ignore it.
 -- 
 2.34.1
 
