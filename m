@@ -2,278 +2,183 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3E0E7D0B0
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Sep 2023 22:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89A2E7D0BC
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Sep 2023 01:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232300AbjIUWPz (ORCPT
+        id S230056AbjIVBvQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Sep 2023 18:15:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53644 "EHLO
+        Thu, 21 Sep 2023 21:51:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232297AbjIUWP3 (ORCPT
+        with ESMTP id S229458AbjIVBvQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Sep 2023 18:15:29 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41E851F7A;
-        Thu, 21 Sep 2023 10:17:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695316628; x=1726852628;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8OopbPLd2PLuBzWXbD5OoXxEWQBz7+T1Q1+Yh3tIdx8=;
-  b=V95QsCdPjyyhPyUIwK5cZ4f2HYUd5Felu0d6Dgxaw2DhyjMucY9X256P
-   TlgRACOLpCwvuZ2kPVBodQWZBTUlrDIPMAWJUVeAw2H9ezxKbu11RPrJL
-   QEANBhA2tYot3kMXLCEpgcZg4XnUXMDW1HxqbB8MWVbXO92skcBJW+j9d
-   QnEPbvupOsTfNJOdVpol3VfhHfscBsGNelI2W/Z+pDOrSyHOJGz1IbyGW
-   RSf59+s8VXA6PN21b8dKSEno3xOzB/+ud4t49B73Wpo22k7aA07GizZXV
-   vEy8m307alt/nmJYeROC7Kej2qTzL6N45/6m/Jv/hSTcWrqvNhBcaf85g
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="444608195"
-X-IronPort-AV: E=Sophos;i="6.03,165,1694761200"; 
-   d="scan'208";a="444608195"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2023 05:20:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="862441839"
-X-IronPort-AV: E=Sophos;i="6.03,165,1694761200"; 
-   d="scan'208";a="862441839"
-Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.229.33])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Sep 2023 05:20:37 -0700
-From:   Choong Yong Liang <yong.liang.choong@linux.intel.com>
-To:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
+        Thu, 21 Sep 2023 21:51:16 -0400
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11D50F1;
+        Thu, 21 Sep 2023 18:51:06 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0Vsa-hC4_1695347462;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0Vsa-hC4_1695347462)
+          by smtp.aliyun-inc.com;
+          Fri, 22 Sep 2023 09:51:04 +0800
+Message-ID: <1695347358.2770545-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH v14 30/42] virtio_pci: introduce helper to get/set queue reset
+Date:   Fri, 22 Sep 2023 09:49:18 +0800
+From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Jesper Dangaard Brouer <hawk@kernel.org>,
         John Fastabend <john.fastabend@gmail.com>,
-        Wong Vee Khee <veekhee@apple.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Revanth Kumar Uppala <ruppala@nvidia.com>,
-        Shenwei Wang <shenwei.wang@nxp.com>,
-        Andrey Konovalov <andrey.konovalov@linaro.org>,
-        Jochen Henneberg <jh@henneberg-systemdesign.com>
-Cc:     David E Box <david.e.box@intel.com>,
-        Andrew Halaney <ahalaney@redhat.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
-        Tan Tee Min <tee.min.tan@linux.intel.com>,
-        Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-        Lai Peter Jun Ann <jun.ann.lai@intel.com>
-Subject: [PATCH net-next v3 2/5] net: pcs: xpcs: combine C37 SGMII AN and 2500BASEX for Intel mGbE controller
-Date:   Thu, 21 Sep 2023 20:19:43 +0800
-Message-Id: <20230921121946.3025771-3-yong.liang.choong@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230921121946.3025771-1-yong.liang.choong@linux.intel.com>
-References: <20230921121946.3025771-1-yong.liang.choong@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, bpf@vger.kernel.org,
+        kangjie.xu@linux.alibaba.com
+References: <20220801063902.129329-1-xuanzhuo@linux.alibaba.com>
+ <20220801063902.129329-31-xuanzhuo@linux.alibaba.com>
+ <20230921100112-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20230921100112-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: "Tan, Tee Min" <tee.min.tan@linux.intel.com>
+On Thu, 21 Sep 2023 10:02:53 -0400, "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> On Mon, Aug 01, 2022 at 02:38:50PM +0800, Xuan Zhuo wrote:
+> > Introduce new helpers to implement queue reset and get queue reset
+> > status.
+> >
+> >  https://github.com/oasis-tcs/virtio-spec/issues/124
+> >  https://github.com/oasis-tcs/virtio-spec/issues/139
+> >
+> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > Acked-by: Jason Wang <jasowang@redhat.com>
+> > ---
+> >  drivers/virtio/virtio_pci_modern_dev.c | 39 ++++++++++++++++++++++++++
+> >  include/linux/virtio_pci_modern.h      |  2 ++
+> >  2 files changed, 41 insertions(+)
+> >
+> > diff --git a/drivers/virtio/virtio_pci_modern_dev.c b/drivers/virtio/virtio_pci_modern_dev.c
+> > index fa2a9445bb18..869cb46bef96 100644
+> > --- a/drivers/virtio/virtio_pci_modern_dev.c
+> > +++ b/drivers/virtio/virtio_pci_modern_dev.c
+> > @@ -3,6 +3,7 @@
+> >  #include <linux/virtio_pci_modern.h>
+> >  #include <linux/module.h>
+> >  #include <linux/pci.h>
+> > +#include <linux/delay.h>
+> >
+> >  /*
+> >   * vp_modern_map_capability - map a part of virtio pci capability
+> > @@ -474,6 +475,44 @@ void vp_modern_set_status(struct virtio_pci_modern_device *mdev,
+> >  }
+> >  EXPORT_SYMBOL_GPL(vp_modern_set_status);
+> >
+> > +/*
+> > + * vp_modern_get_queue_reset - get the queue reset status
+> > + * @mdev: the modern virtio-pci device
+> > + * @index: queue index
+> > + */
+> > +int vp_modern_get_queue_reset(struct virtio_pci_modern_device *mdev, u16 index)
+> > +{
+> > +	struct virtio_pci_modern_common_cfg __iomem *cfg;
+> > +
+> > +	cfg = (struct virtio_pci_modern_common_cfg __iomem *)mdev->common;
+> > +
+> > +	vp_iowrite16(index, &cfg->cfg.queue_select);
+> > +	return vp_ioread16(&cfg->queue_reset);
+> > +}
+> > +EXPORT_SYMBOL_GPL(vp_modern_get_queue_reset);
+> > +
+>
+> Actually, this does not validate that the config structure is big
+> enough. So it can access some unrelated memory. Don't know whether
+> that's exploitable e.g. for CoCo but not nice, anyway.
+> Need to validate the size and disable reset if it's too small.
 
-This commit introduces xpcs_sgmii_2500basex_features[] that combine
-xpcs_sgmii_features[] and xpcs_2500basex_features[] for Intel mGbE
-controller that desire to interchange the speed mode of
-10/100/1000/2500Mbps at runtime.
 
-Also, we introduce xpcs_config_aneg_c37_sgmii_2500basex() function
-which is called by the xpcs_do_config() with the new AN mode:
-DW_SGMII_2500BASEX, and this new function will proceed next-level
-calling to perform C37 SGMII AN/2500BASEX configuration based on
-the PHY interface updated by PHY driver.
+static int vp_modern_disable_vq_and_reset(struct virtqueue *vq)
+{
+	struct virtio_pci_device *vp_dev = to_vp_device(vq->vdev);
+	struct virtio_pci_modern_device *mdev = &vp_dev->mdev;
+	struct virtio_pci_vq_info *info;
+	unsigned long flags;
 
-Signed-off-by: Tan, Tee Min <tee.min.tan@linux.intel.com>
-Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
----
- drivers/net/pcs/pcs-xpcs.c   | 72 ++++++++++++++++++++++++++++++------
- include/linux/pcs/pcs-xpcs.h |  1 +
- 2 files changed, 62 insertions(+), 11 deletions(-)
+->	if (!virtio_has_feature(vq->vdev, VIRTIO_F_RING_RESET))
+		return -ENOENT;
 
-diff --git a/drivers/net/pcs/pcs-xpcs.c b/drivers/net/pcs/pcs-xpcs.c
-index 4dbc21f604f2..60d90191677d 100644
---- a/drivers/net/pcs/pcs-xpcs.c
-+++ b/drivers/net/pcs/pcs-xpcs.c
-@@ -104,6 +104,21 @@ static const int xpcs_2500basex_features[] = {
- 	__ETHTOOL_LINK_MODE_MASK_NBITS,
- };
- 
-+static const int xpcs_sgmii_2500basex_features[] = {
-+	ETHTOOL_LINK_MODE_Pause_BIT,
-+	ETHTOOL_LINK_MODE_Asym_Pause_BIT,
-+	ETHTOOL_LINK_MODE_Autoneg_BIT,
-+	ETHTOOL_LINK_MODE_10baseT_Half_BIT,
-+	ETHTOOL_LINK_MODE_10baseT_Full_BIT,
-+	ETHTOOL_LINK_MODE_100baseT_Half_BIT,
-+	ETHTOOL_LINK_MODE_100baseT_Full_BIT,
-+	ETHTOOL_LINK_MODE_1000baseT_Half_BIT,
-+	ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
-+	ETHTOOL_LINK_MODE_2500baseX_Full_BIT,
-+	ETHTOOL_LINK_MODE_2500baseT_Full_BIT,
-+	__ETHTOOL_LINK_MODE_MASK_NBITS,
-+};
-+
- static const phy_interface_t xpcs_usxgmii_interfaces[] = {
- 	PHY_INTERFACE_MODE_USXGMII,
- };
-@@ -133,6 +148,12 @@ static const phy_interface_t xpcs_2500basex_interfaces[] = {
- 	PHY_INTERFACE_MODE_MAX,
- };
- 
-+static const phy_interface_t xpcs_sgmii_2500basex_interfaces[] = {
-+	PHY_INTERFACE_MODE_SGMII,
-+	PHY_INTERFACE_MODE_2500BASEX,
-+	PHY_INTERFACE_MODE_MAX,
-+};
-+
- enum {
- 	DW_XPCS_USXGMII,
- 	DW_XPCS_10GKR,
-@@ -141,6 +162,7 @@ enum {
- 	DW_XPCS_SGMII,
- 	DW_XPCS_1000BASEX,
- 	DW_XPCS_2500BASEX,
-+	DW_XPCS_SGMII_2500BASEX,
- 	DW_XPCS_INTERFACE_MAX,
- };
- 
-@@ -290,6 +312,7 @@ static int xpcs_soft_reset(struct dw_xpcs *xpcs,
- 	case DW_AN_C37_SGMII:
- 	case DW_2500BASEX:
- 	case DW_AN_C37_1000BASEX:
-+	case DW_SGMII_2500BASEX:
- 		dev = MDIO_MMD_VEND2;
- 		break;
- 	default:
-@@ -748,6 +771,8 @@ static int xpcs_config_aneg_c37_sgmii(struct dw_xpcs *xpcs,
- 	if (xpcs->dev_flag == DW_DEV_TXGBE)
- 		ret |= DW_VR_MII_DIG_CTRL1_PHY_MODE_CTRL;
- 
-+	/* Disable 2.5G GMII for SGMII C37 mode */
-+	ret &= ~DW_VR_MII_DIG_CTRL1_2G5_EN;
- 	ret = xpcs_write(xpcs, MDIO_MMD_VEND2, DW_VR_MII_DIG_CTRL1, ret);
- 	if (ret < 0)
- 		return ret;
-@@ -848,6 +873,26 @@ static int xpcs_config_2500basex(struct dw_xpcs *xpcs)
- 	return xpcs_write(xpcs, MDIO_MMD_VEND2, DW_VR_MII_MMD_CTRL, ret);
- }
- 
-+static int xpcs_config_aneg_c37_sgmii_2500basex(struct dw_xpcs *xpcs,
-+						unsigned int neg_mode,
-+						phy_interface_t interface)
-+{
-+	int ret = -EOPNOTSUPP;
-+
-+	switch (interface) {
-+	case PHY_INTERFACE_MODE_SGMII:
-+		ret = xpcs_config_aneg_c37_sgmii(xpcs, neg_mode);
-+		break;
-+	case PHY_INTERFACE_MODE_2500BASEX:
-+		ret = xpcs_config_2500basex(xpcs);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
- int xpcs_do_config(struct dw_xpcs *xpcs, phy_interface_t interface,
- 		   const unsigned long *advertising, unsigned int neg_mode)
- {
-@@ -890,6 +935,12 @@ int xpcs_do_config(struct dw_xpcs *xpcs, phy_interface_t interface,
- 		if (ret)
- 			return ret;
- 		break;
-+	case DW_SGMII_2500BASEX:
-+		ret = xpcs_config_aneg_c37_sgmii_2500basex(xpcs, neg_mode,
-+							   interface);
-+		if (ret)
-+			return ret;
-+		break;
- 	default:
- 		return -1;
- 	}
-@@ -1114,6 +1165,11 @@ static void xpcs_get_state(struct phylink_pcs *pcs,
- 		}
- 		break;
- 	case DW_AN_C37_SGMII:
-+	case DW_SGMII_2500BASEX:
-+		/* 2500BASEX is not supported for in-band AN mode. */
-+		if (state->interface == PHY_INTERFACE_MODE_2500BASEX)
-+			break;
-+
- 		ret = xpcs_get_state_c37_sgmii(xpcs, state);
- 		if (ret) {
- 			pr_err("xpcs_get_state_c37_sgmii returned %pe\n",
-@@ -1266,23 +1322,17 @@ static const struct xpcs_compat synopsys_xpcs_compat[DW_XPCS_INTERFACE_MAX] = {
- 		.num_interfaces = ARRAY_SIZE(xpcs_10gbaser_interfaces),
- 		.an_mode = DW_10GBASER,
- 	},
--	[DW_XPCS_SGMII] = {
--		.supported = xpcs_sgmii_features,
--		.interface = xpcs_sgmii_interfaces,
--		.num_interfaces = ARRAY_SIZE(xpcs_sgmii_interfaces),
--		.an_mode = DW_AN_C37_SGMII,
--	},
- 	[DW_XPCS_1000BASEX] = {
- 		.supported = xpcs_1000basex_features,
- 		.interface = xpcs_1000basex_interfaces,
- 		.num_interfaces = ARRAY_SIZE(xpcs_1000basex_interfaces),
- 		.an_mode = DW_AN_C37_1000BASEX,
- 	},
--	[DW_XPCS_2500BASEX] = {
--		.supported = xpcs_2500basex_features,
--		.interface = xpcs_2500basex_interfaces,
--		.num_interfaces = ARRAY_SIZE(xpcs_2500basex_interfaces),
--		.an_mode = DW_2500BASEX,
-+	[DW_XPCS_SGMII_2500BASEX] = {
-+		.supported = xpcs_sgmii_2500basex_features,
-+		.interface = xpcs_sgmii_2500basex_interfaces,
-+		.num_interfaces = ARRAY_SIZE(xpcs_sgmii_2500basex_features),
-+		.an_mode = DW_SGMII_2500BASEX,
- 	},
- };
- 
-diff --git a/include/linux/pcs/pcs-xpcs.h b/include/linux/pcs/pcs-xpcs.h
-index da3a6c30f6d2..f075d2fca54a 100644
---- a/include/linux/pcs/pcs-xpcs.h
-+++ b/include/linux/pcs/pcs-xpcs.h
-@@ -19,6 +19,7 @@
- #define DW_2500BASEX			3
- #define DW_AN_C37_1000BASEX		4
- #define DW_10GBASER			5
-+#define DW_SGMII_2500BASEX		6
- 
- /* device vendor OUI */
- #define DW_OUI_WX			0x0018fc80
--- 
-2.25.1
+	vp_modern_set_queue_reset(mdev, vq->index);
 
+
+I checked VIRTIO_F_RING_RESET before call this.
+
+Do you mean, we should put the check to this function.
+
+
+Thanks.
+
+
+
+>
+>
+> > +/*
+> > + * vp_modern_set_queue_reset - reset the queue
+> > + * @mdev: the modern virtio-pci device
+> > + * @index: queue index
+> > + */
+> > +void vp_modern_set_queue_reset(struct virtio_pci_modern_device *mdev, u16 index)
+> > +{
+> > +	struct virtio_pci_modern_common_cfg __iomem *cfg;
+> > +
+> > +	cfg = (struct virtio_pci_modern_common_cfg __iomem *)mdev->common;
+> > +
+> > +	vp_iowrite16(index, &cfg->cfg.queue_select);
+> > +	vp_iowrite16(1, &cfg->queue_reset);
+> > +
+> > +	while (vp_ioread16(&cfg->queue_reset))
+> > +		msleep(1);
+> > +
+> > +	while (vp_ioread16(&cfg->cfg.queue_enable))
+> > +		msleep(1);
+> > +}
+> > +EXPORT_SYMBOL_GPL(vp_modern_set_queue_reset);
+> > +
+> >  /*
+> >   * vp_modern_queue_vector - set the MSIX vector for a specific virtqueue
+> >   * @mdev: the modern virtio-pci device
+> > diff --git a/include/linux/virtio_pci_modern.h b/include/linux/virtio_pci_modern.h
+> > index 05123b9a606f..c4eeb79b0139 100644
+> > --- a/include/linux/virtio_pci_modern.h
+> > +++ b/include/linux/virtio_pci_modern.h
+> > @@ -113,4 +113,6 @@ void __iomem * vp_modern_map_vq_notify(struct virtio_pci_modern_device *mdev,
+> >  				       u16 index, resource_size_t *pa);
+> >  int vp_modern_probe(struct virtio_pci_modern_device *mdev);
+> >  void vp_modern_remove(struct virtio_pci_modern_device *mdev);
+> > +int vp_modern_get_queue_reset(struct virtio_pci_modern_device *mdev, u16 index);
+> > +void vp_modern_set_queue_reset(struct virtio_pci_modern_device *mdev, u16 index);
+> >  #endif
+> > --
+> > 2.31.0
+>
