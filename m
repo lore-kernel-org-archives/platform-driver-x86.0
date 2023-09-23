@@ -2,155 +2,130 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA74CE7A88
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 23 Sep 2023 17:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2392CE7A8B
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 23 Sep 2023 20:42:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232152AbjIWRl6 (ORCPT
+        id S229541AbjIWUmX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 23 Sep 2023 13:41:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43044 "EHLO
+        Sat, 23 Sep 2023 16:42:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232065AbjIWRlv (ORCPT
+        with ESMTP id S229456AbjIWUmW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 23 Sep 2023 13:41:51 -0400
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1312197;
-        Sat, 23 Sep 2023 10:41:44 -0700 (PDT)
-Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
-        by cmsmtp with ESMTP
-        id jq43qZqYXDKaKk6dUqJfc5; Sat, 23 Sep 2023 17:41:44 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id k6dSq2mYsU8Krk6dTqwOZp; Sat, 23 Sep 2023 17:41:43 +0000
-X-Authority-Analysis: v=2.4 cv=Qt9NYH+d c=1 sm=1 tr=0 ts=650f2357
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=MvuuwTCpAAAA:8 a=JfrnYn6hAAAA:8 a=20KFwNOVAAAA:8 a=QyXUC8HyAAAA:8
- a=VwQbUJbxAAAA:8 a=oGMlB6cnAAAA:8 a=cm27Pg_UAAAA:8 a=HvF037n1xESchLcPDVoA:9
- a=QEXdDO2ut3YA:10 a=dVHiktpip_riXrfdqayU:22 a=1CNFftbPRP8L7MoqJWF3:22
- a=AjGcO6oz07-iQ99wixmX:22 a=NdAtdrkLVvyUPsUoGJp4:22 a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YjjZtI2+QSradkh3So4qn/FdbnNOCtMPTp2Pygw8EE4=; b=Opxzzwvt/5r4akOknMcE72fnag
-        JevNLzQxMTLM72aTbT//SPzUmvGry32+KZJpHh4piA3veLFyGyvuN5h75Wb7FHk6VY1r2X98u0FR0
-        StsUirmtmlSIbuMcOfNiBFd0N7fh9rifwbeZaci1X8NmHdxoN66VlPuAzhW/ChXUdzoAMGAXcbiEw
-        Ud2klQU0q7xqYcTQaXiNVMMzvZz8rTjuQk1i1mY7tJMPNvgkGE6e3ojwJ+5HF5px6pfDVWccxAx2i
-        tm5q0IDMqxuLRkmVmZ5QRc7FKX3KA6XtdAxwyHlDcKTJmFuK8OzzLojWJGLjxeWVGBoYxCye/Pjh9
-        63+glPjA==;
-Received: from [94.239.20.48] (port=43056 helo=[192.168.1.98])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.96)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qjy4P-003c5T-0k;
-        Sat, 23 Sep 2023 03:32:57 -0500
-Message-ID: <b5e1a30e-ee5c-3a76-112c-3a5168d06c55@embeddedor.com>
-Date:   Sat, 23 Sep 2023 10:33:59 -0600
+        Sat, 23 Sep 2023 16:42:22 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBCF3139;
+        Sat, 23 Sep 2023 13:42:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+ t=1695501717; x=1696106517; i=w_armin@gmx.de;
+ bh=v8QTdDa9zizuofuXHY/8uWirblQY/wodxLqL6Wr/bh4=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+ b=nSY+xcav6HcNXj0H+FD9aQOyGVkoM3Y/zPvsuVu/Evk6KcpBNY047gfHG1/6+BjkwD/Sbn/BIFW
+ 1WQFcTz77bkcQAtoMWG+9s4hE5Cv2jQTIVOss6lOCMqAXO35hP0WtzEs/XYRMMMRpXBFkI6wdRdbN
+ 0GUNCXY1nZ6qtlH2oCKF6E2CAARNOVysttimWQF5lrJk7Yk9zzokeHZhPtwCHsHM3ZIPKCXRsOCSB
+ LDBtFvPJOx3CfUONodNc4YKQM7PgxUI7kmMlYk1E68TTYF6qO+uFefeOvbouGySCNawRkNRWYIJeQ
+ TMZjwtfqokrJgGs6LOERyD695Ayrk5rxUUWg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1N1OXZ-1rgoms0Q27-012rgk; Sat, 23 Sep 2023 22:41:57 +0200
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     markpearson@lenovo.com
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: think-lmi: Fix reference leak
+Date:   Sat, 23 Sep 2023 22:41:54 +0200
+Message-Id: <20230923204154.86815-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] x86/platform/uv: Annotate struct uv_rtc_timer_head with
- __counted_by
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>, Steve Wahl <steve.wahl@hpe.com>
-Cc:     Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        platform-driver-x86@vger.kernel.org,
-        Justin Ernst <justin.ernst@hpe.com>,
-        Kyle Meyer <kyle.meyer@hpe.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20230922175151.work.118-kees@kernel.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230922175151.work.118-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 94.239.20.48
-X-Source-L: No
-X-Exim-ID: 1qjy4P-003c5T-0k
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:43056
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPhTWVpEmV3yiU0UIMhsn9b5vKu4feTfk+sYjb26ldSjfVczAacgO64KWQBaBxU1glrGvyZccaiwYuVnwRaoVjZKPKECGywhY7Bq5gXe1lGDAbVx5WOT
- D+Iv2noSO3QzBO/zN1AAOHRJOFWy/Jg2LgAO4EKs1o7VTHO9wMgY+yuy9kJkczUrf5JdSr3Yd7K6c7Z7klzLodJEFEf3lg3V7jnGo66oNzaBj0vB8T5GjdS1
- zU391Pzu1FYEOvXIgj3JrdoHHjT1mv3alMn9JLVeZSjezPLeVZzMvX/GP4KtibYljY2vFg81Nqj77MBKQpdSbQ==
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:A8Y1TadaPlcC7con133CLsGUu8oyqTJZHMLWI4w835xYwWYF1T+
+ VW8PsSkZFtnYgxPQBcjURCv+8unV+t/nr0gyJiMdsyT0KHIcLZf2+CvhAGi1wrd2yJK1spv
+ VhPxoiGFwWN8DU/WmyTvhCjd6/1nB5Brs3vJj502KcsKpw3GLr0EigrQCq6unUH6FePmF9W
+ jSenDXrcaGmyXtWAMVvDA==
+UI-OutboundReport: notjunk:1;M01:P0:QgkEX0nLQlY=;Z0REzsNaj1uN8TD51J9SUaNiQ0e
+ PPB7g+n2S0xea9o+ceBERExF07/vyzaLnoYphOFmAzV7P7ZlolDuYfw0X+NMAlYBWTHAptuHh
+ i6uOGTYrVuCNHZKdB20gOWr9oL2mBsWSsyIk/NkskPg2vpyZDwU5+eVIgNmg+wk0xZkQf5LNb
+ tSdhKBE6MxlgQ4Zk/I8Xa1qimrQSb9r3MwF0PnFJmKCgTw1EPfhY4mrow6ZjDi20lDLAACqXu
+ Uc2NwxceNZdWtYKWU3P9LkA5BGhGvGpU16/OEA35CCQM1B1bkJBL3+3Rfdq1oLXTljzaq4lCF
+ 5eS3PsyC9yT944JzJr+NoI3fHvmjuG/t4jroNhA28SGrK92ouVkJ6WNss1nHq4ee9TFxrYjgZ
+ kiyvwtMa1pH0pMCphncL4xf8IxwG/GdtbaXSCnTadcoe5dxAaOU+nRSkZmLwnVcrmjRhhgM1a
+ JeH7dNkxAPefwuZV2FBrcVAU/ibtqzVRHnu3ktxARHOuhgwqFQHmRotspEBALooZ369fseY80
+ fLzCwvHg1FFfoUVPziY3SP5ND1/S34yyC8UFqP97iuSasxoCAsDIAotWC55seTVF79HObCHCV
+ PHMXMTI76ig+Ge0xVWIuG+OFg/A2BCmOvSr2fCJUQ3UQcaaA9B88taxkI2hkGkc2nPkwG4W45
+ n/9lcZyNq2zypB3Jxbykz56/j7FHiAKiiXcpLA78/Z4Ji3LMTZy5lVwfpc+lohsvmG3qalOrC
+ mH+3KV0iZuqfW6cM2ZKxiu7bQisD1sDnHrpgJoPwIhfY5XYCXdnUTGnQPAgAE35l6LuwkQTW2
+ rBEAgWaLT4RiHaI667hjNEPQvbOtYVvMIzRddbkDbv3+3tskBe31h3RKMvfDnCABkHXXnCfwl
+ Yqp2r0VFMKv0VlbSz6ATmj9ByY4iKrp1FYcStmtzRYz5CIBaOlT7FliWakyN6gKoIh20kJUPJ
+ HXAO00QB9M6VMTENqtzv0FCre2o=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+If a duplicate attribute is found using kset_find_obj(), a reference
+to that attribute is returned which needs to be disposed accordingly
+using kobject_put(). Move the setting name validation into a separate
+function to allow for this change without having to duplicate the
+cleanup code for this setting.
+As a side note, a very similar bug was fixed in
+commit 7295a996fdab ("platform/x86: dell-sysman: Fix reference leak"),
+so it seems that the bug was copied from that driver.
 
+Compile-tested only.
 
-On 9/22/23 11:51, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct uv_rtc_timer_head.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Steve Wahl <steve.wahl@hpe.com>
-> Cc: Mike Travis <mike.travis@hpe.com>
-> Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>
-> Cc: Russ Anderson <russ.anderson@hpe.com>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Andy Shevchenko <andy@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: x86@kernel.org
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: platform-driver-x86@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Fixes: 1bcad8e510b2 ("platform/x86: think-lmi: Fix issues with duplicate a=
+ttributes")
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/think-lmi.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think=
+-lmi.c
+index 4be6f28d4600..3a396b763c49 100644
+=2D-- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -1344,6 +1344,24 @@ static void tlmi_release_attr(void)
+ 	kset_unregister(tlmi_priv.authentication_kset);
+ }
 
-Thanks
--- 
-Gustavo
++static int tlmi_validate_setting_name(struct kset *attribute_kset, char *=
+name)
++{
++	struct kobject *duplicate;
++
++	if (!strcmp(name, "Reserved"))
++		return -EINVAL;
++
++	duplicate =3D kset_find_obj(attribute_kset, name);
++	if (duplicate) {
++		pr_debug("Duplicate attribute name found - %s\n", name);
++		/* kset_find_obj() returns a reference */
++		kobject_put(duplicate);
++		return -EBUSY;
++	}
++
++	return 0;
++}
++
+ static int tlmi_sysfs_init(void)
+ {
+ 	int i, ret;
+@@ -1372,10 +1390,8 @@ static int tlmi_sysfs_init(void)
+ 			continue;
 
-> ---
->   arch/x86/platform/uv/uv_time.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/platform/uv/uv_time.c b/arch/x86/platform/uv/uv_time.c
-> index 54663f3e00cb..ff5afc8a5a41 100644
-> --- a/arch/x86/platform/uv/uv_time.c
-> +++ b/arch/x86/platform/uv/uv_time.c
-> @@ -53,7 +53,7 @@ struct uv_rtc_timer_head {
->   	struct {
->   		int	lcpu;		/* systemwide logical cpu number */
->   		u64	expires;	/* next timer expiration for this cpu */
-> -	} cpu[];
-> +	} cpu[] __counted_by(ncpus);
->   };
->   
->   /*
+ 		/* check for duplicate or reserved values */
+-		if (kset_find_obj(tlmi_priv.attribute_kset, tlmi_priv.setting[i]->displ=
+ay_name) ||
+-		    !strcmp(tlmi_priv.setting[i]->display_name, "Reserved")) {
+-			pr_debug("duplicate or reserved attribute name found - %s\n",
+-				tlmi_priv.setting[i]->display_name);
++		if (tlmi_validate_setting_name(tlmi_priv.attribute_kset,
++					       tlmi_priv.setting[i]->display_name) < 0) {
+ 			kfree(tlmi_priv.setting[i]->possible_values);
+ 			kfree(tlmi_priv.setting[i]);
+ 			tlmi_priv.setting[i] =3D NULL;
+=2D-
+2.39.2
+
