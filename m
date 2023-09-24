@@ -2,109 +2,91 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184F2CE7A88
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 24 Sep 2023 11:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560A6CE7A90
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 24 Sep 2023 13:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229539AbjIXLsh (ORCPT
+        id S230194AbjIXNR0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 24 Sep 2023 07:48:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60366 "EHLO
+        Sun, 24 Sep 2023 09:17:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbjIXLsg (ORCPT
+        with ESMTP id S230147AbjIXNQ6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 24 Sep 2023 07:48:36 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B9DAB;
-        Sun, 24 Sep 2023 04:48:30 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-31dd10c2b8bso4424893f8f.3;
-        Sun, 24 Sep 2023 04:48:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695556108; x=1696160908; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WxrXzUZdFoEnyidf/9NrxADttmtIpVLpZeUKjXRx3Xc=;
-        b=d/3F4pVJ0FAVhgdE/4OOVXpYrOcqUuBz7pY0n6kAiHa76OvP6yraoqn8Fh1ODQRApG
-         0VZDv8J3KYGZWC5kRAe2fJgTMucb5c1ZA2WhE37S/T4DQ4xFHkOah9WqE5dPHMyTXDIr
-         tQFsWiuEbac3VMwg1Gpn8+Mya5NIBfKUoo7a3KfsbzdtzM9UEc4p+U05bpps5LEDsotd
-         woZLZNxgdL7xmiC/SKB5TuekaIxWcUee3xOpRlR35kDE0aJszKo+4bVBe+7plB7VywBR
-         haAY7IfP27J/Zd7v/brfHFRlywJahsugllvNJPGba9/0UMLkG/I+xF4h/dNgRfr/C+jE
-         7WiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695556108; x=1696160908;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WxrXzUZdFoEnyidf/9NrxADttmtIpVLpZeUKjXRx3Xc=;
-        b=Ov6PggbInxjWElvXGrD12O1aFQc93Gi3gjra5cfQTuM2g0eyLeW2Io/SfATZeI07bg
-         o37iRGoz3J4k8R1m2JKaJK2KUI3Czzbk0bdKFCgieQiQccXeOrOnWfOOgagVazzpIa+E
-         uoQ4vOKTQO1eIdhKk1vS7noVmdkXLfSu7iPQ6GaUeL4fQG6rQMt/lkq/hkYk2eS1mM6c
-         oQ+5HQ2g7+8EDJvktvFocDKmuacIdEbRFI0GHAlI7IqtChZ9XYWsvpNOGGHHllL42UlH
-         suSK/0GjCKyuX9zss5e+udgi/iUYRGKRJsQMIRCRUmQF8EWwn4G1yUhCHVFhmMAYTf2F
-         6+Hw==
-X-Gm-Message-State: AOJu0YybE5OIv75is22baUlSY04uLOUmWrXRlnRDFyGqQj3wvyJ5K3vs
-        qeTwvQKv2kavxC7oaiUdXlM=
-X-Google-Smtp-Source: AGHT+IHOtjQZIIOHnfbKyFj8xwTuyrfcKwU5lMGoiETzsAtEMOnLHasDQnbASJEUUyKn9mLJuNGH1A==
-X-Received: by 2002:a05:6000:1819:b0:317:f70b:3156 with SMTP id m25-20020a056000181900b00317f70b3156mr3423806wrh.28.1695556108404;
-        Sun, 24 Sep 2023 04:48:28 -0700 (PDT)
-Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
-        by smtp.gmail.com with ESMTPSA id k10-20020adfd22a000000b0032320a9b010sm1262983wrh.28.2023.09.24.04.48.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 Sep 2023 04:48:27 -0700 (PDT)
-Message-ID: <e326ed06-3f72-4552-a26d-5deae0678409@gmail.com>
-Date:   Sun, 24 Sep 2023 13:48:26 +0200
+        Sun, 24 Sep 2023 09:16:58 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 131AA1B8;
+        Sun, 24 Sep 2023 06:16:20 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB10C433A9;
+        Sun, 24 Sep 2023 13:16:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695561378;
+        bh=gszbO0Lx/8kVOY7YbEReDpylr2edA7MLpqwjKJN//SM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=meLX0W1hbql3JPRT4f45Ju+F4HEomK12wVNlHrcGiIv4RmjGjDVRT//yBrZkhnHq6
+         BCv9I4U0TjQOYFAevAG2Sr3qQpYao9LfXy+r3TYhWSSPaiGSZ9BOjakjTolUtY6WaQ
+         YCGD11tTzVooBVDS46mqXM1/tZoTCiYN9SSGe8kxOdevxMSTS0L5oDtpQYWR4+1TvN
+         aimBxcxqBxg5vB9ft61n595/UFpr6ampFEw1/a2XybTcssBd9/qOzr3X0MkhydJ2jo
+         aq+dMra/fB5oIcLqU5GvrXj98xgNjbycw8atXxTseN4hCYVWrmsEP+eHee7IS+hii7
+         enAsK69ytH3bA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Luke D. Jones" <luke@ljones.dev>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
+        ilpo.jarvinen@linux.intel.com, markgross@kernel.org,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.5 22/41] platform/x86: asus-wmi: Support 2023 ROG X16 tablet mode
+Date:   Sun, 24 Sep 2023 09:15:10 -0400
+Message-Id: <20230924131529.1275335-22-sashal@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230924131529.1275335-1-sashal@kernel.org>
+References: <20230924131529.1275335-1-sashal@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/surface: aggregator: Annotate struct ssam_event
- with __counted_by
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20230922175436.work.031-kees@kernel.org>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <20230922175436.work.031-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.5.5
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 9/22/23 19:54, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct ssam_event.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Maximilian Luz <luzmaximilian@gmail.com>
-> Cc: platform-driver-x86@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->   include/linux/surface_aggregator/controller.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/surface_aggregator/controller.h b/include/linux/surface_aggregator/controller.h
-> index cb7980805920..5b67f0f47d80 100644
-> --- a/include/linux/surface_aggregator/controller.h
-> +++ b/include/linux/surface_aggregator/controller.h
-> @@ -44,7 +44,7 @@ struct ssam_event {
->   	u8 command_id;
->   	u8 instance_id;
->   	u16 length;
-> -	u8 data[];
-> +	u8 data[] __counted_by(length);
->   };
->   
->   /**
+From: "Luke D. Jones" <luke@ljones.dev>
 
-Thanks!
+[ Upstream commit 4106a70ddad57ee6d8f98b81d6f036740c72762b ]
 
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+Add quirk for ASUS ROG X16 (GV601V, 2023 versions) Flow 2-in-1
+to enable tablet mode with lid flip (all screen rotations).
+
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+Link: https://lore.kernel.org/r/20230905082813.13470-1-luke@ljones.dev
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index fdf7da06af306..d85d895fee894 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -478,6 +478,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_tablet_mode,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUS ROG FLOW X16",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GV601V"),
++		},
++		.driver_data = &quirk_asus_tablet_mode,
++	},
+ 	{
+ 		.callback = dmi_matched,
+ 		.ident = "ASUS VivoBook E410MA",
+-- 
+2.40.1
+
