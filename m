@@ -2,32 +2,32 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B68CE7A8D
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 24 Sep 2023 13:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAF8CE7A88
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 24 Sep 2023 13:23:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229821AbjIXNR1 (ORCPT
+        id S230312AbjIXNXv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 24 Sep 2023 09:17:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46044 "EHLO
+        Sun, 24 Sep 2023 09:23:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230153AbjIXNQ7 (ORCPT
+        with ESMTP id S230287AbjIXNXo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 24 Sep 2023 09:16:59 -0400
+        Sun, 24 Sep 2023 09:23:44 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0602C1B4;
-        Sun, 24 Sep 2023 06:16:20 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DAAAC433C7;
-        Sun, 24 Sep 2023 13:16:15 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1DF149F0;
+        Sun, 24 Sep 2023 06:20:09 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7427C433CD;
+        Sun, 24 Sep 2023 13:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695561376;
-        bh=OfNP2Az0qX+Oly80ZesppAT1QNyvdyQFnyCBfhrL83M=;
+        s=k20201202; t=1695561609;
+        bh=i/wCqplhNYxuXH71bm8NSgQ3vKUVgMi0SF4tMJL32o0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KdAq4cbM0hHoL1pDRb4I63IfZrrzQovENvtVLPzbiIVB0pRvavSkMX6IQOKsWHSez
-         0kcnNQ109+fCbDc4CJiTsqGri9lqeuJU0lAWCSO0JgI98Z6ptWaNJDNwLg7qZZIL8t
-         BQ7kM21wY4SKra++t3q6jzNNPJFPzshtXMB2OQwsCsCV5m2QlLcr86QTO86BKo9QQn
-         IybgUtjXrra+IwGjo8coI1ud89SmWIXM5rP70W+qXxVlsutr0jRETbX6z0Z92/pvWH
-         8ope8nH8jed6TgQ9RdEsRgvcUc1TEP1+erAKxkZanN8aVsEUN+dKz874eNVVZt7lWQ
-         wjfKoIrUXe4kw==
+        b=c1KXrj7wegyVSDqeW+WutJjV5OadnHNcOFr+HQzcdh48d/wJKiNWGKyAORoFtjOrO
+         IiffB/LDGPcuRMmoaz0SmKVCXp25O0PrJlzU2JnCgXzLL/wOF4PF+UL3Y7I4jHFaZN
+         fRcaYreks/hI6UISiQi0z6DbnLtyUqELTGZWj91tKouiukdyipST07W9Mo/t3BeVhW
+         Kt5ovLPVEsx72DlncjKOR7pY93NH+2oh78wRjptR7KA+WVni6P5vzkF9u/ER9z2W+G
+         fPscBy8/+DPG+T5TYRxtIouRDt8+jMT44XXNCyKReb9jXE1hSlzEfUtTopDo3rlERC
+         7oGe6ZwbsVzXA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     David Thompson <davthompson@nvidia.com>,
@@ -37,16 +37,16 @@ Cc:     David Thompson <davthompson@nvidia.com>,
         Sasha Levin <sashal@kernel.org>, ilpo.jarvinen@linux.intel.com,
         markgross@kernel.org, vadimp@nvidia.com,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.5 21/41] platform/mellanox: mlxbf-bootctl: add NET dependency into Kconfig
-Date:   Sun, 24 Sep 2023 09:15:09 -0400
-Message-Id: <20230924131529.1275335-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 10/13] platform/mellanox: mlxbf-bootctl: add NET dependency into Kconfig
+Date:   Sun, 24 Sep 2023 09:19:40 -0400
+Message-Id: <20230924131945.1276562-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230924131529.1275335-1-sashal@kernel.org>
-References: <20230924131529.1275335-1-sashal@kernel.org>
+In-Reply-To: <20230924131945.1276562-1-sashal@kernel.org>
+References: <20230924131945.1276562-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.5.5
+X-stable-base: Linux 5.10.197
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -73,10 +73,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
-index 30b50920b278c..f7dfa0e785fd6 100644
+index 916b39dc11bc6..1a11d1a441b53 100644
 --- a/drivers/platform/mellanox/Kconfig
 +++ b/drivers/platform/mellanox/Kconfig
-@@ -60,6 +60,7 @@ config MLXBF_BOOTCTL
+@@ -48,6 +48,7 @@ config MLXBF_BOOTCTL
  	tristate "Mellanox BlueField Firmware Boot Control driver"
  	depends on ARM64
  	depends on ACPI
