@@ -2,94 +2,109 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61943CE79A3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 19:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAEACE79A6
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 21:43:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233344AbjIYTqI (ORCPT
+        id S233476AbjIYVnF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Sep 2023 15:46:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56290 "EHLO
+        Mon, 25 Sep 2023 17:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233350AbjIYTqH (ORCPT
+        with ESMTP id S233471AbjIYVnE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Sep 2023 15:46:07 -0400
+        Mon, 25 Sep 2023 17:43:04 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D2FD107;
-        Mon, 25 Sep 2023 12:46:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE3C7101;
+        Mon, 25 Sep 2023 14:42:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695671161; x=1727207161;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WkBJDf+0BQFmsyRXGKlYUaDaxkBFGdrAtdv4n6cgZco=;
-  b=fUEFhIltdQjKnioggIOvKZDODNd6GPKvkDDdtN9eYqcIh60mIPI90e01
-   +rAs6SwHYOnu8MK461fYDNf8+eNAlPgWtUYd2ucKlynyoOcNCTuxCIt4W
-   M5wBgHdaEO9itPBnpQ07t5wv+XhEAsUaB1wxDHJ5VO6ziPg5x06zpPv4L
-   Wf9u0SqjFXYRzDlbvR5Uw4BdEPUjVC0wS6LnvbkMjUdNYrW/86nCrOsOo
-   01W66ALid+DbtSZH8rzQtWz2kZhzToSjSgEp8vJC4FSl9ljDBTadl3UGw
-   DjbzH+d8BJYG514wPm8ENGYe/ss/UQNXtLRDOzARxqTVhnWVCzJrnuqsx
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="380233040"
+  t=1695678177; x=1727214177;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=snNq+RshksgPyasRZ5b0PQsm78eS6KzqCuWRL3ih9JA=;
+  b=TvKxBLM2KkwbLN/IozG53gr8mldqYGwSmKogLkC5bfeCq+zCNyX1BwPQ
+   mHpIz3bxJqeEZa8+4HeA403Lycd8WWUV5Jd5fupTkZSWFmt5dCT1rPKr+
+   ocYd/uIwOyH/nbn3Y1uZ7H7AHV79Q5DlV/0htJ/lL1k02qr8LeQFcatfZ
+   FRkwD6SzQYKz47DnDPx07j2D7QVS4wVv72xWXAd2tWW3kV7K7D0zZOZF3
+   eZt0aUPoD3RFvzPo4+ERwgq8uIpLq3lzlME20SCGmkrx7qsORmhOCDj/h
+   q92Krk6erXw73FtrKOv120AnjnrMYEZHYg/xnJGasFxufpRuKQKTE4oNc
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="380273459"
 X-IronPort-AV: E=Sophos;i="6.03,176,1694761200"; 
-   d="scan'208";a="380233040"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 12:45:57 -0700
+   d="scan'208";a="380273459"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 14:42:57 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="814114298"
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="838725559"
 X-IronPort-AV: E=Sophos;i="6.03,176,1694761200"; 
-   d="scan'208";a="814114298"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
-  by fmsmga008.fm.intel.com with ESMTP; 25 Sep 2023 12:45:57 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     hdegoede@redhat.com, markgross@kernel.org,
-        ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 3/3] platform/x86: intel_speed_select_if: Remove hardcoded map size
-Date:   Mon, 25 Sep 2023 12:45:55 -0700
-Message-Id: <20230925194555.966743-4-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230925194555.966743-1-srinivas.pandruvada@linux.intel.com>
-References: <20230925194555.966743-1-srinivas.pandruvada@linux.intel.com>
+   d="scan'208";a="838725559"
+Received: from lkp-server02.sh.intel.com (HELO 32c80313467c) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 25 Sep 2023 14:42:53 -0700
+Received: from kbuild by 32c80313467c with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qktLv-00022n-1Q;
+        Mon, 25 Sep 2023 21:42:51 +0000
+Date:   Tue, 26 Sep 2023 05:42:19 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hdegoede@redhat.com,
+        markgross@kernel.org, basavaraj.natikar@amd.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
+        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
+        daniel@ffwll.ch
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        amd-gfx@lists.freedesktop.org, platform-driver-x86@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Patil.Reddy@amd.com,
+        linux-input@vger.kernel.org, mario.limonciello@amd.com
+Subject: Re: [PATCH 08/15] platform/x86/amd/pmf: Add support to update system
+ state
+Message-ID: <202309260515.5XbR6N0g-lkp@intel.com>
+References: <20230922175056.244940-9-Shyam-sundar.S-k@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230922175056.244940-9-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The driver is using 256 as the size while calling devm_ioremap(). The
-maximum offset is already part of struct isst_mmio_range. Use the
-maximum offset (end field of the struct) plus 4 as the map size to remove
-hardcoded value of 256.
+Hi Shyam,
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- drivers/platform/x86/intel/speed_select_if/isst_if_mmio.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel/speed_select_if/isst_if_mmio.c
-index ff49025ec085..be709e0c0c00 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_mmio.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_mmio.c
-@@ -114,13 +114,16 @@ static int isst_if_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- 	pcu_base &= GENMASK(10, 0);
- 	base_addr = (u64)mmio_base << 23 | (u64) pcu_base << 12;
--	punit_dev->punit_mmio = devm_ioremap(&pdev->dev, base_addr, 256);
-+
-+	punit_dev->mmio_range = (struct isst_mmio_range *) ent->driver_data;
-+
-+	punit_dev->punit_mmio = devm_ioremap(&pdev->dev, base_addr,
-+					     punit_dev->mmio_range[1].end + sizeof(u32));
- 	if (!punit_dev->punit_mmio)
- 		return -ENOMEM;
- 
- 	mutex_init(&punit_dev->mutex);
- 	pci_set_drvdata(pdev, punit_dev);
--	punit_dev->mmio_range = (struct isst_mmio_range *) ent->driver_data;
- 
- 	memset(&cb, 0, sizeof(cb));
- 	cb.cmd_size = sizeof(struct isst_if_io_reg);
+[auto build test WARNING on hid/for-next]
+[also build test WARNING on linus/master v6.6-rc3 next-20230925]
+[cannot apply to drm-misc/drm-misc-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Shyam-Sundar-S-K/platform-x86-amd-pmf-Add-PMF-TEE-interface/20230923-015418
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-next
+patch link:    https://lore.kernel.org/r/20230922175056.244940-9-Shyam-sundar.S-k%40amd.com
+patch subject: [PATCH 08/15] platform/x86/amd/pmf: Add support to update system state
+reproduce: (https://download.01.org/0day-ci/archive/20230926/202309260515.5XbR6N0g-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309260515.5XbR6N0g-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> Documentation/admin-guide/pmf.rst:16: WARNING: Unexpected indentation.
+>> Documentation/admin-guide/pmf.rst: WARNING: document isn't included in any toctree
+
+vim +16 Documentation/admin-guide/pmf.rst
+
+    13	
+    14	Please add the following line(s) to
+    15	``/etc/udev/rules.d/99-local.rules``::
+  > 16	        DRIVERS=="amd-pmf", ACTION=="change", ENV{EVENT_ID}=="1", RUN+="/usr/bin/systemctl suspend"
+    17	        DRIVERS=="amd-pmf", ACTION=="change", ENV{EVENT_ID}=="2", RUN+="/usr/bin/systemctl hibernate"
+    18	        DRIVERS=="amd-pmf", ACTION=="change", ENV{EVENT_ID}=="3", RUN+="/bin/loginctl lock-sessions"
+    19	
+
 -- 
-2.41.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
