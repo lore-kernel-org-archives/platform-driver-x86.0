@@ -2,247 +2,287 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2922FCE7A9B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 16:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22CECE7A9D
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 16:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231689AbjIYQM0 (ORCPT
+        id S229788AbjIYQ2F (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Sep 2023 12:12:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41570 "EHLO
+        Mon, 25 Sep 2023 12:28:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233231AbjIYQMY (ORCPT
+        with ESMTP id S229777AbjIYQ2F (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Sep 2023 12:12:24 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA50C0;
-        Mon, 25 Sep 2023 09:12:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695658338; x=1727194338;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=hNcMTkZbalvmyhlxzaoAOJMGTLrrhtTxDpDmXiSeMgg=;
-  b=DDu6BZAf5xM9CEw9Zk5TMBNIfuoglaat4LI9tpL7dkQiwE4k33qavVqa
-   meyu41IT25oqNTka0IamiYEKHcFqJ/5vcmlFd04/x56j8gycBJipmr4T0
-   58/Rxkx0+Vz0eN1SxV9E4MWgB5OHtPNNZwpYHxM6jEEpK2q86Ay//cnYi
-   eNaEfHA1QCLvXZWFgrWtNGXU7JU4oivaGkMmAMp8ZQVvseF4AqSyGBCUW
-   O4CkN9vmuF1rNVVixJMadgTJuE+eE3glZ3POaICAFIUhgvJN0h2lnN9Lz
-   aNqFWv2rOTHbw8rkEOlytSRhL84Sr64L7YaG8VZ6Cs8BI4pK1dcFZ7/JJ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="467577908"
-X-IronPort-AV: E=Sophos;i="6.03,175,1694761200"; 
-   d="scan'208";a="467577908"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 09:08:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="838605487"
-X-IronPort-AV: E=Sophos;i="6.03,175,1694761200"; 
-   d="scan'208";a="838605487"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Sep 2023 09:08:38 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Mon, 25 Sep 2023 09:08:38 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Mon, 25 Sep 2023 09:08:38 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Mon, 25 Sep 2023 09:08:38 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.102)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Mon, 25 Sep 2023 09:08:37 -0700
+        Mon, 25 Sep 2023 12:28:05 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2049.outbound.protection.outlook.com [40.107.220.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BAF6CE;
+        Mon, 25 Sep 2023 09:27:57 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZFqOhSCZXRmYY3/B06IIUHaaQIFB3twemRBHbC3/VcrT5smbnZpGs5258ezDFRJb8+a30lTUxVADJhIDqu9M4oYsV7FJEuMkH9wbXinvII+2XU9rySrQNyL2hZ+IaZHyRBozGjn3zFVQ3+rIwMv2UrxOvUDyy1k3uC7XjnfKQE4Y9mYCjv21tez3X1oEc0xnkpldpxkP6D9n6ansXEVmVTAmMReJm89QKBTkR92QISYUAQGiOnqrLKK7DMBEmGhiWHlKYtjlfSLNta+tvHnN3CeJtb3DaY8cEUGsx9Xz8L1An1L3VyDt5klOk7RwWg4x6UDmmfs6zak3tYZkOPutVg==
+ b=HJ8V4MglDdCE57ap6+X/9pwMp9slN2I19B44sMrPNnoKwTNlyNewMy83109P9ydqbT57IUXqONFS1+vNbf08Bzy/6r3rQ+0cRuX2Nki66tb3SaM/5RWiM0ExEI2wH/hRNU4Vl3hIf8NiHLsK9tIwueReugPc0MHf9icjhjO5/sBPa1nbvtDEZCHUzZTLct3fK2zop++DUD4TGrizvbRCOZq5dtC5C2w4U3runtI3I5fXHgoOytQmZyRli2CFTTaRZcqfgOAZXEysaF1ckHlgSQ8lRFxRPKha8O/Mzm8zTczt5gvQ2wGykaH654fWU4AElEkKjEbEdkINV5y7NL4l+Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WHJzIb8nWUq36eR3bGuMJb6PSvk3pylx/9p02hDKsXM=;
- b=YwWkbwKbQDpQzNJKophacH76fSqPX2mMNIIDzv5nxqzOLu1AH25yPMMeK2eTV4qBY/Bem0OdyE9pjibPSNvmK7FuDsQZp8U/aW3SG5lBWislFQjqpzS6NtvZcTteOBPv/VygmubC7bV4tT4U86tlzR6wJbNtJlp2pDmMiz1nOx54S+hYWmM6zWaib9mm/TmNh6SDR9Z0v0nFb892BNu4CiPguXF0fPJtN4p8RmN13L/mq+AIup7u9t/sYkLnSUu+CfZit6Lzt41nkzu0vlk6ebeFh9Z7eqkQCGEnGaEwqeaXZh3TwAL4pEmmlgIhuFy/TMGtgD+dkxoDLnmYQJMvWg==
+ bh=SoAVKf+6c0hvWOoPCodmE3purmcnxUcGbgrcVS+ew5I=;
+ b=Dpyy68MAfKVISFXaMUmw3c5HIF8V55XiB2sXwvqDPQHeFKRIKLLiUDLZiRz7twCE4PPDuKCzeiwLSEZhWHeX/hU/NhkL/tryDHwLgG2Y50XFna3nrSiwYEKbMUgBPgZZN3DFj8o8wJNxH98LayVXXOfsE6pjvFaDcjR4YkkqFf/ofRdz5yjLUDceVp6NGCuXOvy983Ij8JN3PEFHAU11f/MSJNFPuObQkHVVI0WxYYLUlpyUNqXqDHZJR3MHRe4lc8Grql/lXEXZBaO8EZCzXWq2E+sD3/MFUxxl4VLggUp5IRNNVO6D432LB85cY1v4YtcoPKudYx64zyS8BWLQUQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BYAPR11MB3768.namprd11.prod.outlook.com (2603:10b6:a03:fa::20)
- by IA0PR11MB7789.namprd11.prod.outlook.com (2603:10b6:208:400::11) with
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SoAVKf+6c0hvWOoPCodmE3purmcnxUcGbgrcVS+ew5I=;
+ b=EbH7juE6EG//SJSsZrygzE6mrW5TgFG7uaWky4P4pdRNqCt89G3w5KlMtZYZEhic78GzmZxnEVfhCahq9eC9G2aEFqQzKdOAJ5xvYomwVdtKHCPsu7Ug0e3fl+TPd7AHUCJwZ5FvzzRkB8jDeJxozpEY55FanCxBv7Q44kEDzKE=
+Received: from BL1PR12MB5144.namprd12.prod.outlook.com (2603:10b6:208:316::6)
+ by SN7PR12MB8104.namprd12.prod.outlook.com (2603:10b6:806:35a::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.28; Mon, 25 Sep
- 2023 16:08:36 +0000
-Received: from BYAPR11MB3768.namprd11.prod.outlook.com
- ([fe80::fca6:a86:a250:ad54]) by BYAPR11MB3768.namprd11.prod.outlook.com
- ([fe80::fca6:a86:a250:ad54%7]) with mapi id 15.20.6813.027; Mon, 25 Sep 2023
- 16:08:35 +0000
-Message-ID: <89f48b0a-a6b6-2204-7d96-28ebbe96b18a@intel.com>
-Date:   Mon, 25 Sep 2023 09:08:31 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 4/9] platform/x86/intel/ifs: Gen2 Scan test support
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.23; Mon, 25 Sep
+ 2023 16:27:52 +0000
+Received: from BL1PR12MB5144.namprd12.prod.outlook.com
+ ([fe80::a2bb:870f:8aaa:1ba2]) by BL1PR12MB5144.namprd12.prod.outlook.com
+ ([fe80::a2bb:870f:8aaa:1ba2%6]) with mapi id 15.20.6813.017; Mon, 25 Sep 2023
+ 16:27:52 +0000
+From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
+To:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "Natikar, Basavaraj" <Basavaraj.Natikar@amd.com>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        "airlied@gmail.com" <airlied@gmail.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>
+CC:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Patil Rajesh <Patil.Reddy@amd.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Subject: RE: [PATCH 13/15] platform/x86/amd/pmf: Add PMF-AMDGPU set interface
+Thread-Topic: [PATCH 13/15] platform/x86/amd/pmf: Add PMF-AMDGPU set interface
+Thread-Index: AQHZ7X21jc91/MVWOEyvwgwS3OmQarArvY7g
+Date:   Mon, 25 Sep 2023 16:27:52 +0000
+Message-ID: <BL1PR12MB51442D18C314B1E34B77DE2BF7FCA@BL1PR12MB5144.namprd12.prod.outlook.com>
+References: <20230922175056.244940-1-Shyam-sundar.S-k@amd.com>
+ <20230922175056.244940-14-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20230922175056.244940-14-Shyam-sundar.S-k@amd.com>
+Accept-Language: en-US
 Content-Language: en-US
-To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC:     Hans de Goede <hdegoede@redhat.com>, <markgross@kernel.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-        <rostedt@goodmis.org>, <ashok.raj@intel.com>,
-        <tony.luck@intel.com>, LKML <linux-kernel@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>, <patches@lists.linux.dev>,
-        <ravi.v.shankar@intel.com>, <pengfei.xu@intel.com>
-References: <20230913183348.1349409-1-jithu.joseph@intel.com>
- <20230922232606.1928026-1-jithu.joseph@intel.com>
- <20230922232606.1928026-5-jithu.joseph@intel.com>
- <c390bdaf-ab5c-bf1f-bd64-29e2827d01f@linux.intel.com>
-From:   "Joseph, Jithu" <jithu.joseph@intel.com>
-In-Reply-To: <c390bdaf-ab5c-bf1f-bd64-29e2827d01f@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MW4P223CA0023.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:303:80::28) To BYAPR11MB3768.namprd11.prod.outlook.com
- (2603:10b6:a03:fa::20)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=3c5a584a-fe4a-43ce-9811-b8eb97d1a348;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=0;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP
+ 2.0;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2023-09-25T16:21:07Z;MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL1PR12MB5144:EE_|SN7PR12MB8104:EE_
+x-ms-office365-filtering-correlation-id: 4153ffd5-29fb-42ad-e531-08dbbde45ddf
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: L9zv7FqLYoqryO0YmTL5yGN6Lh1JAwhzIkn75lAEKxEDtx5VV+NMP+IfZoexHK7+Fpbx5uN4pTJ+SN+VbxLtb2sux8g2j+m3HPK6yHM1Ns0f2V09+If3HN10dylzHUL+BHJW3uvOLFOF3SF6nLESEBGYbMbuSsMuAvQLeOmR4E5Sp3Uf0MMFqBzYiwIIkCDR0TRrIwCuZL0B0FzJoQkM/l0am/a2mYDTwjaNlcZ1AY68FAYcPOI9bSAWysWJ8areS9ErPwJdv+6Sues2csUN5xJqFNsBuJ33oqQ9vjVub9IhoFWQ83fGbK5h+40ZbSXevGn5S/+UzDVh/iNxixAqPuurPC570PQy/HYL8ZhjRrA991bepwsuVvSyGPkPL/C8wWx12TIXrmpgG9kbSgIHCf7ONpE9W++ZV913Ui52x9L/3ws0nTceEqrifWOGlNmutNbn157QYYU96LwF5rHY8HYAGWXPMDxr4nAAh0ZloX8XQnj0oRNDwjpI4RAJzSzwyejCymSGvr/cP/x7bTbUpkiYC8Jk4BAmZ802x3gmvUrBEzJ9JM3wzzn/hg7tkIvQPVwI+/5igER5I7Qf3naggaf1Ts21/cYJpwVbUhpyzzMv5+Qk5UIUpKIevnJbxjuHPXn9l3ubOt7D3FvXkXeARQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5144.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(346002)(396003)(366004)(39860400002)(230922051799003)(186009)(1800799009)(451199024)(9686003)(55016003)(122000001)(7696005)(53546011)(6506007)(26005)(71200400001)(921005)(66476007)(66946007)(110136005)(64756008)(8936002)(76116006)(33656002)(66446008)(66556008)(7416002)(2906002)(54906003)(86362001)(8676002)(4326008)(5660300002)(52536014)(38100700002)(41300700001)(316002)(478600001)(83380400001)(38070700005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?n2WS7ax9YUNUa8yddcSLxQjcl+wEhcwXq20mLvM+00lHDWRj2pU87ZoT+CyJ?=
+ =?us-ascii?Q?kbQFvpGW0Fn/WVLHumrxpccTiumEFCrwZ0rZkZQ3933ZKFJkT5wUeFtZVc1A?=
+ =?us-ascii?Q?0eGyrC26/CcMp5QwS7UA0R0uznJJg0jxUYZGzHjpWjYfDio4EYnjOTvKIJKW?=
+ =?us-ascii?Q?uZXhKxUZEPWFIDcD6mGhojWIu/8xezyag4o6FnhUT+tmebgICx7zL769gRlh?=
+ =?us-ascii?Q?BxQJe8YFYDcVCFyMcaoKTeE7VEqWwr5RGgpD8kZb1aum1DI1JW8k2fuzGsZi?=
+ =?us-ascii?Q?uv1AyNEws/x3uTO004slbpA3lkNhI1rr0ndrGDmYpux7HW6toFsQZ0oZ1SlR?=
+ =?us-ascii?Q?wqa6Eh7KIMPZVC7xwRTn2HQ/7XyqcA0hvfBzVBLqCLCy0s2zOKZsdPHceLTr?=
+ =?us-ascii?Q?rx0KY5A1AGvKlalmKQzyHHoD9KUwRp5O2GgMFaBJxgdRTajUuruysjUBMNzi?=
+ =?us-ascii?Q?mTh5jBk3t8JAN/Fz9NcjM8L70xKPc2ncYgAxyBs8wNkPYiMVTY964RT/LRnP?=
+ =?us-ascii?Q?KOdB2AJmyn+nwGabE9eR8xaKoENt+mOZxpBzHW/Gpxtf0JHXP7dyCfXKb+Gn?=
+ =?us-ascii?Q?pph6TscPYXJ3A1yHa2C5MJG/Ix7FshVBrN+XP4JEWTS8aGcRWAonpggdjpVr?=
+ =?us-ascii?Q?cfdUVMyy0IqaR/ZmaDAriwAkcWjvSfKlVxyphbom2zqhCL60npJ4ZS2s+set?=
+ =?us-ascii?Q?VQ3swZaJXSO1IpPBGAVoMf8tsv4JAGaNkcjf7QcXPWGN6NLy0lZuExF9Nr+U?=
+ =?us-ascii?Q?Lyxv4WN92kyn3rkrdsKbWWsoyScJpz7axP3CBUgGU3JsIpVJlYOedhSPk3yy?=
+ =?us-ascii?Q?no4ZkliOW5GZjS2RVxtcJgmhxQC+uuB96tUHPgU8AIJOQwZ9XGn7pRJ+NIUb?=
+ =?us-ascii?Q?GvP1aCer/ckYSPmC+77aiKm5DgxnLhPbUB1RE4u9XOjiaIVMESiV6pBxAKoj?=
+ =?us-ascii?Q?6FKf0uqkZMqACZb2CskgwSmSmoX4QvC5mue+mCv9yjcNsxBKoNOVbzpRj9G8?=
+ =?us-ascii?Q?1kcsrep3yQD+8KsqU09piD1Wwucn/hU2AUO8DHdOa+n5re03FRsMc7H+QPaq?=
+ =?us-ascii?Q?TQ6ne4kSafGfK7MhBjm+bUruQVmzNUYFyLAh4qB1bPJvAeBYfcNdoGvdDK20?=
+ =?us-ascii?Q?fIvajZxGuUsrZpysyua67vBX2W9f/+l+1brbxVjXAsi6Z9ifjXM9gTKLGeQL?=
+ =?us-ascii?Q?rAIM2bTJ2yJ+ht/8OJcbj9k2tNiX30LBHfVJadoNj5H7jshS/Eidk8RfFYnn?=
+ =?us-ascii?Q?1yKFPPU8FOiL0ul4koYe7INNzRAbtXB9NOOEOL+mjlrnJn8lzKMYRZxd2K2X?=
+ =?us-ascii?Q?XcoslV6YL6qjn/q7Wuj85JH14aqNzZyZcExKTi0f1wQOFh4gs3P99NZOV0Pm?=
+ =?us-ascii?Q?bKhvvPsDJo/SYwBzVcvV/lwLiwa4fElr1oXKEpKhjaMt09AqSFEwMYE+6b5k?=
+ =?us-ascii?Q?T8n69Iv6whDxOhcGayJ9xnNIO27HYQvHtPGKX4lzASFACDDqCqdctsWSt+rb?=
+ =?us-ascii?Q?FM6HweL6X6hQWC0dZrJ4YqB6uRmD3DjTa8aZF598jH/2MYUHxnfOWXKqPD4M?=
+ =?us-ascii?Q?8A86doN8m0jL/NzitzA=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3768:EE_|IA0PR11MB7789:EE_
-X-MS-Office365-Filtering-Correlation-Id: f76bd38c-8c14-4f3d-f9bf-08dbbde1ac27
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZOKEFatmM5VuVZlEtUCon00XlyvYPXzOiQ6alieuiZtw9HUN5WQHff0MyPw9MUCpqUzuZk9bjNLrolYUfDNYdRWHICUOTGDVVsb8j5KwiBCpkowbV2Jgp/prpaw+M+t1Qtleb51uOznDijZr4Eu/4B1O55lfl4gp5ALQjgORp/nIih3qPJik46m7TM8/rorLPFiLzAr26FJ//T7ZaeJaleTlwfpIwoCe0ErrijoB+7o1NFQHbhzw5p98ZTMb2d65VSGwXP4m8ROPfv36kYpSpac3B3OUb8yK+GpxOvEDXEFmzJvMmUy+r57JuuONSJ1+//FMSA7txjrbImZTCbJkS/6GsdmC+N7FXLvYpgHoyzKGX/7E6GaAhr74+dLN7JYolWoEgAo7x2jJ+0DtMXrzieNo4xzlmLkRAoqDf0AFRB5uMLaXb55xiQkCGNlPMKL22H1UhI7UGtN90vu2gb1esmluMXuf2E19lt8W1v5pmCVCM8PO2FquAgVTSr9AL2+sPR9+20RYG6Ym4R6jp26iP7Uq9G/Yvd+ThYZvPHLoIVOf1ke5drEU6GzUnXnO1upvH1v0pwS6cCzK0p14MAqLWxXKhA8PsW5vBD4vLlvttCHlfWVX4Uro8iNfO5hz7fFGmEwopX381RFUR9oKPKMEHQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3768.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(396003)(39860400002)(346002)(136003)(230922051799003)(1800799009)(186009)(451199024)(6506007)(6486002)(2906002)(83380400001)(7416002)(82960400001)(38100700002)(6512007)(66946007)(66556008)(66476007)(54906003)(6666004)(26005)(5660300002)(53546011)(66574015)(316002)(41300700001)(6916009)(4326008)(478600001)(8676002)(8936002)(2616005)(31696002)(86362001)(36756003)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VlZiN1ZWQlI3WlRSVE1nbE5DN24vTHZreFRuM2ptUnFkRjBybFppcGZ1V25C?=
- =?utf-8?B?TXdMTzl6b2JRL0p5RnhmMXJ2Q0o5RkVsRE5wRTlrMDBtZm5ReUhaVUdqQWhU?=
- =?utf-8?B?S0N3am1ONGx2L2hZNUFYaEZUVndadTAxQzdpQlVOSGZpNHlJaXA1VWxCS1RY?=
- =?utf-8?B?WDFUZTJXUEtoOE1mbjU5TkkxOWJtMkpHR0pqbXVycjdXdzVVSHdOcHlnVzlB?=
- =?utf-8?B?NEtiNzVkV05GU0RrMysraFRTUExidTlNL2hkVFE0UU9TcmJCNTQ3Vk9EMm1V?=
- =?utf-8?B?NnAwVFR3cHNYdnQ5Vmx4bWhXOEtkSTNoQUFXUmxySWxXT0tLZWpwSzBVU0to?=
- =?utf-8?B?VXRIT3dWK2FhcHVFb01meVlyZ3RUOVQ2N2tUNm50bXFUQWx5a01Vc1ZZWUcr?=
- =?utf-8?B?RzlJcU8wT1ovVXVQN3NKRTRjbWhjVXVadlRJVFYxblRUWE1IMCtOcldiYnl1?=
- =?utf-8?B?UXZxWmVZcUt4WHVyT2k0UWtsZ1BBSENkUTY2TXI1OTlOWVlCamtiZ1lQLzNk?=
- =?utf-8?B?QUhPb2NQTlBDMnBOYnY3Tk95SGtKTHB3Zkg4TC95bTBlbUY2WlNzdUhuZytT?=
- =?utf-8?B?T0tIREZDOFhNRVV3aU8yRW1RamdJTG0rR1pQYVZLektlYStFL0NueWI4b3lW?=
- =?utf-8?B?bXRaTWExaVU0UHY3NGErV3dEMzhycllra0NORkR0MDJQR1VJb1A0cHRtTzNC?=
- =?utf-8?B?bGQ5K3B1N2pVTmdkaUlZM0lZZERhcWp6Rmh5Vitic1lkN1pRZWg3Ym5xbXJ0?=
- =?utf-8?B?aitDZHEzWlhGZUFYNjZyUS9QOUlHb2l6ZkZEYXVZK05IczFXRFJWbXcrTzlh?=
- =?utf-8?B?S1Y1M2ZmY1BqaFZHcklMcVNURGk0K01KR3pwNWxJbzdTZ2xnc0R5YnFCcE92?=
- =?utf-8?B?Zmt0MjdZV1RPd1oxR1E2Y0dHMXFKd3RvWEg2RDlWeFdDWHl3bE5wbjM2a1N0?=
- =?utf-8?B?cVAvOFBHOGlMWi9FWmk3VUpzV0FvRStGS3oxL3B6b3UvellPbmRQdmFzWGx5?=
- =?utf-8?B?MXdyS2Nud0ZhVjJOdkJ4V3oyMERzUkprelV3bG8rK0lLOTdBKzV1ajNIOE1H?=
- =?utf-8?B?UXNXZ3B1Y0JiUXZpeVNLb3hkaEVPbHJMeEozQ2VIS3NxeitSQ1JwQzlSdmYz?=
- =?utf-8?B?cU1MeENaQjZUcGpybUtFMWZpQXp1S1RodVFrWHRsaC9rUUFXL1NUbWNNbXRQ?=
- =?utf-8?B?dVBGM2lSMHc5ZXIvbUZqMzJvQnI3WDk5RGErbEhZUkdDRFh3Q0NKVWdZa1BE?=
- =?utf-8?B?RUo2Z0YwQ3BwV1BITVhCd1VKR0ttTlBSRmNaMGV6U2F0K2FjdzdydHA1NHhh?=
- =?utf-8?B?THNkQ2NYQnEvejZ5TXZaQkhLWGVFMTA0ZkFQdjhlR0NoYlRWWTA1VDg3OTZJ?=
- =?utf-8?B?c2dET1J2cjdqTkJDWDZpT3dWbkJES0JBaGplSEkzdXdISmJxL0Fkb2MxOFEv?=
- =?utf-8?B?dU5CREZkMWxWd1loWUtucXBMNmo4dTV5aGJTUUZmWnhMQmQrVTI5UG9GRUl3?=
- =?utf-8?B?ZzBJL1VLS1BzaURMUGJ3MklMK2F6Wnc2amsyMXV4OWJZZ0dZZkcyRlNjOWxI?=
- =?utf-8?B?eE5SdGJZbG5nM0dReXREd2NsTU9zOUh0SC80aU5ycWJXTnZ2QmE3cm5JaVl1?=
- =?utf-8?B?ZUVLUUxaNS9sSTErb0lxYW1saFBwQlNvMCtvUVFlZDVOVjZPMUk1V1djYTdS?=
- =?utf-8?B?ejZTUWdCSDF4YS9JWXVRMmFxbmhhMFc0U1NoUTZod0c4QUhSS1ZHNmhld3lV?=
- =?utf-8?B?cFVpTWxGSFlMbFM5blFjbG1lWk4xOGlMQnlNRVhkaFR4eGtGaHB5SkY5dzB1?=
- =?utf-8?B?eEFvWExPRVRKWEc1SDJ2ZlRFVzRHNTRTVnlFbWl6R2pQaUt2Qm5NRCtZZlU0?=
- =?utf-8?B?ek1iWTA0YXBnZnh2am9lMlplaVZmZ3RFVHVmTk1hZy9tN2V1d2JFZ2cyQlh0?=
- =?utf-8?B?WVkwQ3JGdkh2ck52MnBMU1FSZ0tXYkRJVnN4aTd4WTVNTC9YSUU5WU1vcW9u?=
- =?utf-8?B?S0xBRE1vTzhXLzdjUW85SnR1SjBHbjFyMUE4SktoUzRXUWRJRS90MWRQYm52?=
- =?utf-8?B?MytRWmMvbXBlMGl3WTA0a0ROTWk4L1pZMjh0djM3cDgvMFRwQlNCbDZZdmMr?=
- =?utf-8?B?dzRqRkJjOEVGNmliOWIzbkdrSzZFYlZqMGhnaUduOGVKQ2Mrai9WR2d2YzVR?=
- =?utf-8?B?WWc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f76bd38c-8c14-4f3d-f9bf-08dbbde1ac27
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3768.namprd11.prod.outlook.com
+X-OriginatorOrg: amd.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2023 16:08:35.8499
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5144.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4153ffd5-29fb-42ad-e531-08dbbde45ddf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2023 16:27:52.7677
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xPHrcXdfVnKrf0+1xMS6AepKqZo9SkmHyOZfjR3kQYVFc1w7KxWasgVu0IE3BTtEWyI3R1CvZVwAp/TZ18BtdA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7789
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anpkwfrYpkDKNbv/Ne4d6Vlyxt1Df1EqDyUitBppkc1CdcZReHfbumcdG7I8inUQZDs2nPpuncx25bUHbW834g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8104
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+[Public]
 
+> -----Original Message-----
+> From: amd-gfx <amd-gfx-bounces@lists.freedesktop.org> On Behalf Of
+> Shyam Sundar S K
+> Sent: Friday, September 22, 2023 1:51 PM
+> To: hdegoede@redhat.com; markgross@kernel.org; Natikar, Basavaraj
+> <Basavaraj.Natikar@amd.com>; jikos@kernel.org;
+> benjamin.tissoires@redhat.com; Deucher, Alexander
+> <Alexander.Deucher@amd.com>; Koenig, Christian
+> <Christian.Koenig@amd.com>; Pan, Xinhui <Xinhui.Pan@amd.com>;
+> airlied@gmail.com; daniel@ffwll.ch
+> Cc: S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com>; amd-
+> gfx@lists.freedesktop.org; platform-driver-x86@vger.kernel.org; dri-
+> devel@lists.freedesktop.org; Patil Rajesh <Patil.Reddy@amd.com>; linux-
+> input@vger.kernel.org; Limonciello, Mario <Mario.Limonciello@amd.com>
+> Subject: [PATCH 13/15] platform/x86/amd/pmf: Add PMF-AMDGPU set
+> interface
+>
+> For the Smart PC Solution to fully work, it has to enact to the actions c=
+oming
+> from TA. Add the initial code path for set interface to AMDGPU.
 
-On 9/25/2023 8:39 AM, Ilpo Järvinen wrote:
-> On Fri, 22 Sep 2023, Jithu Joseph wrote:
-> 
+This seems to be limited to backlight at this point.  What does setting or =
+not setting the backlight level mean for the system when this framework is =
+in place?  What if a user manually changes the backlight level?  Additional=
+ comments below.
 
-...
+>
+> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c | 21
+> +++++++++++++++++++++
+>  drivers/platform/x86/amd/pmf/pmf.h      |  2 ++
+>  drivers/platform/x86/amd/pmf/tee-if.c   | 19 +++++++++++++++++--
+>  include/linux/amd-pmf-io.h              |  1 +
+>  4 files changed, 41 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
+> b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
+> index 232d11833ddc..5c567bff0548 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
+> @@ -68,3 +68,24 @@ int amd_pmf_get_gfx_data(struct amd_gpu_pmf_data
+> *pmf)
+>       return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(amd_pmf_get_gfx_data);
+> +
+> +int amd_pmf_set_gfx_data(struct amd_gpu_pmf_data *pmf) {
+> +     struct drm_device *drm_dev =3D pci_get_drvdata(pmf->gpu_dev);
+> +     struct amdgpu_device *adev =3D drm_to_adev(drm_dev);
+> +     struct backlight_device *bd;
+> +
+> +     if (!(adev->flags & AMD_IS_APU)) {
+> +             DRM_ERROR("PMF-AMDGPU interface not supported\n");
+> +             return -ENODEV;
+> +     }
+> +
+> +     bd =3D backlight_device_get_by_type(BACKLIGHT_RAW);
+> +     if (!bd)
+> +             return -ENODEV;
+> +
+> +     backlight_device_set_brightness(bd, pmf->brightness);
+> +
+> +     return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(amd_pmf_set_gfx_data);
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h
+> b/drivers/platform/x86/amd/pmf/pmf.h
+> index 9032df4ba48a..ce89cc0daa5a 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -73,6 +73,7 @@
+>  #define PMF_POLICY_STT_SKINTEMP_APU                          7
+>  #define PMF_POLICY_STT_SKINTEMP_HS2                          8
+>  #define PMF_POLICY_SYSTEM_STATE                                      9
+> +#define PMF_POLICY_DISPLAY_BRIGHTNESS                                12
+>  #define PMF_POLICY_P3T                                               38
+>
+>  /* TA macros */
+> @@ -480,6 +481,7 @@ enum ta_pmf_error_type {  };
+>
+>  struct pmf_action_table {
+> +     unsigned long display_brightness;
+>       enum system_state system_state;
+>       unsigned long spl; /* in mW */
+>       unsigned long sppt; /* in mW */
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c
+> b/drivers/platform/x86/amd/pmf/tee-if.c
+> index 1608996654e8..eefffff83a4c 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -79,10 +79,10 @@ static int amd_pmf_update_uevents(struct
+> amd_pmf_dev *dev, u16 event)
+>       return 0;
+>  }
+>
+> -static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct
+> ta_pmf_enact_result *out)
+> +static int amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct
+> +ta_pmf_enact_result *out)
+>  {
+>       u32 val, event =3D 0;
+> -     int idx;
+> +     int idx, ret;
+>
+>       for (idx =3D 0; idx < out->actions_count; idx++) {
+>               val =3D out->actions_list[idx].value;
+> @@ -160,8 +160,23 @@ static void amd_pmf_apply_policies(struct
+> amd_pmf_dev *dev, struct ta_pmf_enact_
+>                               dev->prev_data->system_state =3D 0;
+>                       }
+>                       break;
+> +
+> +             case PMF_POLICY_DISPLAY_BRIGHTNESS:
+> +                     ret =3D amd_pmf_get_gfx_data(&dev->gfx_data);
+> +                     if (ret)
+> +                             return ret;
+> +
+> +                     dev->prev_data->display_brightness =3D dev-
+> >gfx_data.brightness;
 
->>  
->> -	activate.rsvd = 0;
->>  	activate.delay = IFS_THREAD_WAIT;
->>  	activate.sigmce = 0;
->> -	activate.start = 0;
->> -	activate.stop = ifsd->valid_chunks - 1;
->> +	to_start = 0;
->> +	to_stop = ifsd->valid_chunks - 1;
->> +
->> +	if (ifsd->generation) {
->> +		activate.gen2.start = to_start;
->> +		activate.gen2.stop = to_stop;
->> +	} else {
->> +		activate.gen0.start = to_start;
->> +		activate.gen0.stop = to_stop;
->> +	}
-> 
-> Is it okay to not do activate.gen0.rsvd = 0 anymore? If you know it is, it 
-> would be nice to record that fact into the changelog so that it can be 
-> found in the history.
+Are we using standardized units for the brightness?  On the GPU side, we al=
+ign with the standard blacklight interface, but internally, the driver has =
+to convert units depending on the type of backlight controller used on the =
+platform.  Presumably PMF does something similar?
 
-I did test on a gen0 to check if there is a problem due to this (and it seemed fine).
-I will make a note in changelog as you suggest
+Alex
 
-> 
->>  
->>  	timeout = jiffies + HZ / 2;
->>  	retries = MAX_IFS_RETRIES;
->>  
->> -	while (activate.start <= activate.stop) {
->> +	while (to_start <= to_stop) {
->>  		if (time_after(jiffies, timeout)) {
->>  			status.error_code = IFS_SW_TIMEOUT;
->>  			break;
->> @@ -196,13 +205,14 @@ static void ifs_test_core(int cpu, struct device *dev)
->>  
->>  		status.data = msrvals[1];
->>  
->> -		trace_ifs_status(cpu, activate, status);
->> +		trace_ifs_status(cpu, to_start, to_stop, status.data);
->>  
->>  		/* Some cases can be retried, give up for others */
->>  		if (!can_restart(status))
->>  			break;
->>  
->> -		if (status.chunk_num == activate.start) {
->> +		status_chunk = ifsd->generation ? status.gen2.chunk_num : status.gen0.chunk_num;
->> +		if (status_chunk == to_start) {
->>  			/* Check for forward progress */
->>  			if (--retries == 0) {
->>  				if (status.error_code == IFS_NO_ERROR)
->> @@ -211,7 +221,9 @@ static void ifs_test_core(int cpu, struct device *dev)
->>  			}
->>  		} else {
->>  			retries = MAX_IFS_RETRIES;
->> -			activate.start = status.chunk_num;
->> +			ifsd->generation ? (activate.gen2.start = status_chunk) :
->> +			(activate.gen0.start = status_chunk);
-> 
-> The alignment of the second line is still not correct but now I notice how 
-> the left-hand side is hidden within those expressions. Just do a normal if 
-> instead so that it is simpler to understand, please.
+> +                     if (dev->prev_data->display_brightness !=3D val) {
+> +                             dev->gfx_data.brightness =3D val;
+> +                             amd_pmf_set_gfx_data(&dev->gfx_data);
+> +                             dev_dbg(dev->dev, "update
+> DISPLAY_BRIGHTNESS : %d\n", val);
+> +                     }
+> +                     break;
+>               }
+>       }
+> +
+> +     return 0;
+>  }
+>
+>  static int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev) diff --git
+> a/include/linux/amd-pmf-io.h b/include/linux/amd-pmf-io.h index
+> a2d4af231362..ecae387ddaa6 100644
+> --- a/include/linux/amd-pmf-io.h
+> +++ b/include/linux/amd-pmf-io.h
+> @@ -25,4 +25,5 @@ struct amd_gpu_pmf_data {  };
+>
+>  int amd_pmf_get_gfx_data(struct amd_gpu_pmf_data *pmf);
+> +int amd_pmf_set_gfx_data(struct amd_gpu_pmf_data *pmf);
+>  #endif
+> --
+> 2.25.1
 
-In v1 the second line was kept 1 space to the right of previous line.  In v2  I kept
-them at the same indent, since your original comment was Misaliged.
-
-I will change these two lines to
-if (ifsd->generation)
-	activate.gen2.start = status_chunk;
-else
-	activate.gen0.start = status_chunk
-
-
-Jithu
