@@ -2,197 +2,227 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20487CD548D
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 18:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0749ACD54BE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 19:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229787AbjIYSxN (ORCPT
+        id S229584AbjIYTmi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Sep 2023 14:53:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45686 "EHLO
+        Mon, 25 Sep 2023 15:42:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232126AbjIYSxM (ORCPT
+        with ESMTP id S229481AbjIYTmi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Sep 2023 14:53:12 -0400
-X-Greylist: delayed 84 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 25 Sep 2023 11:52:20 PDT
-Received: from us-smtp-delivery-162.mimecast.com (us-smtp-delivery-162.mimecast.com [170.10.133.162])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6216BF
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Sep 2023 11:52:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hp.com; s=mimecast20180716;
-        t=1695667939;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qtpcUyuPJOUNQoqxf4liLvpNNYt/cUSFiqIC5bH3+vo=;
-        b=SPom6+QX9RdAh1Gx+BZcSFNrfFh+Zm4bJGZbU04rIj7NVNsztoaln3xx4JkVa2rP5vwo8R
-        ZCRG9/xwN6fumetaYMjkDY0eOIN1Lq3UGy8WLeYadpMmPMr2novgqsIfwYDE50ejGfWWck
-        cpeNfxwd59817uzLjM4hqyD27ByYd/g=
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com
- (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-624-VzN-tcv5Mv2mMfiVMXVYnA-1; Mon, 25 Sep 2023 14:50:49 -0400
-X-MC-Unique: VzN-tcv5Mv2mMfiVMXVYnA-1
-Received: from PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:510:160::10)
- by DM4PR84MB1661.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:8:48::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.30; Mon, 25 Sep
- 2023 18:50:47 +0000
-Received: from PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::fcd9:a00c:8e6:175e]) by PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::fcd9:a00c:8e6:175e%3]) with mapi id 15.20.6813.017; Mon, 25 Sep 2023
- 18:50:47 +0000
-From:   "Lopez, Jorge A (Security)" <jorge.lopez2@hp.com>
-To:     Armin Wolf <W_Armin@gmx.de>,
-        "markpearson@lenovo.com" <markpearson@lenovo.com>
-CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "markgross@kernel.org" <markgross@kernel.org>,
-        "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 2/2] platform/x86: hp-bioscfg: Fix reference leak
-Thread-Topic: [PATCH v4 2/2] platform/x86: hp-bioscfg: Fix reference leak
-Thread-Index: AQHZ77yS7gm+eBVN2kCEcd8lSsLGjLAr4taA
-Date:   Mon, 25 Sep 2023 18:50:47 +0000
-Message-ID: <PH0PR84MB19531F6C3BEF17629E6692DFA8FCA@PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM>
-References: <20230925142819.74525-1-W_Armin@gmx.de>
- <20230925142819.74525-3-W_Armin@gmx.de>
-In-Reply-To: <20230925142819.74525-3-W_Armin@gmx.de>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-bromium-msgid: 5839d27f-ac8d-461a-b3f3-ff0165d776d1
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR84MB1953:EE_|DM4PR84MB1661:EE_
-x-ms-office365-filtering-correlation-id: 3a1a7ca7-57e5-4c4e-411f-08dbbdf85492
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0
-x-microsoft-antispam-message-info: d/gp/I+iHRc6KLR2x9TElmbwiN/4e99/1AfJkAkiLQkeNKlBP5odxo5HuAZiZdqlEO22ONWujuDR5VUQgM4wbr/L0HkfZa03L3MpUbpBC+YU8OSxeSrvCtKQqWnWsmuxpG87aIuTDpsr6vG7bUd4PA2aT6EEsryeJGAtxcT32EpujaFV3vmzntWUYvCc90LN2LeKWt7XWCR+Gh+kE0jjVOeVz9Kc4urL7gUgXm0R9bbBcmZ8Fb6giLDu2jq1UzLleezMVpglxbGALOqEa6qwjy+XVtQ7F7g9NQ4Bp75jC0XyJ64PIk3W/YO9OZ0mVI05B05ss4Z3mPW0s504X30caqrUqDCFlvSYIUJNrnDmBuOgNoEidr0gCksjMCYlEHIjYcMsT9bxIyu1I1y5BEVFjpIMlwBKJlbMwYzbtgwK4/UGU5iIEwBhS/RkQRQBN5QFC7OSqYJzvEBJSDYO6o2Aef7Tbo4gYKzrcJbxISyN4oZybwtjxF31eeeCHSTF1zs+9F+1MJjYzxTNQQjYDVdHJd1GxepwYOaLI4w6pW+l8lX3M+eBPECCDKlNwKfZzRg2/ByE5MYGBwPcO4JlvT2gFRqbsbWPnH1Q8CJKSmtdpdFBmNUPXKZevOaouj75fcTL
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(346002)(136003)(39860400002)(376002)(230922051799003)(1800799009)(186009)(451199024)(26005)(316002)(8936002)(8676002)(54906003)(64756008)(110136005)(4326008)(76116006)(66946007)(66446008)(66476007)(66556008)(9686003)(5660300002)(52536014)(55016003)(41300700001)(71200400001)(86362001)(2906002)(82960400001)(38100700002)(38070700005)(122000001)(478600001)(83380400001)(66574015)(7696005)(6506007)(33656002)(53546011)(55236004);DIR:OUT;SFP:1102
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Z25STWltakxkSmRHZWFmeXdMUllSNWM3Qi9nRlpEeWhML2taMEtmQjA0RnEr?=
- =?utf-8?B?TEo4SkJEZUNoQXJ5bU84M1g4cjNuTVpCK0QxNnRFR3FTYmZmSldDOW1PVXFo?=
- =?utf-8?B?cElUYmJQRlFIaGdGOGM1eUg3VHJwaHNVMDlqRUw5VjNod2k2N1VsZnlCZFpa?=
- =?utf-8?B?c28wamc3VlNTS1piU1ZxcnpKVUg4UEJlMUZDUFBKZm5jV0xGN1ZTb2IyZmhi?=
- =?utf-8?B?YkdMNnRSR0Y2M2ZQZ2VCbWUwQ29MTmQvazJzTStDMEZVM21vQU5Ldk9ML0NX?=
- =?utf-8?B?dWxKcEkwTDFpbjdsbE1odFFWdGl5VHE5WUN3WTlyeWdUNGlGeXlTQUhwVGJn?=
- =?utf-8?B?cURuZ1AwQTNyd0QrcWVpVUhFZk9jSkdNWDFlMk01VHc2WmtYMXg1TFZ3Mm5j?=
- =?utf-8?B?SFlweUFyQVJrL0dWNnlrL2FBSjhhNUUvd2FCUnQ1c09EM1p1eVFFM29RSDc5?=
- =?utf-8?B?TmpBb240Z2FXWGtYdUxNRmd5YlJ3cVE2SXhIOFZLUExWR0xqcjgrVDQvbGxj?=
- =?utf-8?B?blpQaVlLL3A4NG85T1F6eXRNNlAzcTVSRThvc05Bc3U3aG5hamRjbzdRbSta?=
- =?utf-8?B?S01obVEzeUozTHRnUDRzQnZ5a3MwTkxPSUV4NjhlYnR2QlhGdW85K2c0UWU3?=
- =?utf-8?B?cE1LUkJYV1Y1ZUowZGtsWC9FdlFjQkZZb3d5SW1GeElCTWF0K3VRcCtEVnpq?=
- =?utf-8?B?ZWFIMS9FQ29IMlFiR3NBY0N5NVZpb3lFbCtOZ2JFZHg3L204MkdLa2Vhbi94?=
- =?utf-8?B?SmNqVnlUZnJVMmllU2RONjBnN0pQeTl6eW81ekxxUStvcWRoWGljNlQwWkRn?=
- =?utf-8?B?UWJRRkNTNDV6UnFNRnJtN3BhVTNmSGdSVUxnZjFwNmNRbGkxYTdkLzRGZjYy?=
- =?utf-8?B?T21YdkxpbVN3ZkFOQ1V6VG5GSG9rWGxjY1dTaTRYTzRmaW5VUHZOcjE4V2ZK?=
- =?utf-8?B?MzVkQkpVSFg3ZUpwcXlVbWk4V3lQOWovOXQzRFhhdCtVLy95N1oxdGJWNnNI?=
- =?utf-8?B?NVdIbkFSM0RPQWJPSHpicjdYeHZ5aUwxN2Ewa2xEY0ZEaTRHUTNaaGUwL3dV?=
- =?utf-8?B?bHZEWXRXdnpzQmsrMXlTQzcrK0ZiUXVUS1RDdU41TzFSMlVFYTRsb2RBZHA4?=
- =?utf-8?B?N2ZWVHFEcTg0RHBmT3AwUk9ELytVQkdrSmRxTVNvOUJDVXUwQi9CMXljUi8v?=
- =?utf-8?B?eExqQWRPQi9ZSmUrMDhINERuYit6U3hmcStIMXlIbDJld0hSamJVQnJ3MjJi?=
- =?utf-8?B?aTRSSHBtdWdPK3gvemZMM2l6NzlvM0htNXRCNlBOR3BaYWVyejJGU1VDWWNa?=
- =?utf-8?B?cFlBdmlHQWZQZkswUkxsM2p1T1V1V0VvSVlobE5Ubkd0aUt6MmE5SFFZZmdy?=
- =?utf-8?B?ZUVTR3ZEbm9sQ2FXWlFzQVF1UURlZ1FzbkFoQXUyYktPMkxYNWI5d01FQzNY?=
- =?utf-8?B?TjVHSU1ma1ZvMk9mdFllbEFESjNORDU0ODdieVlNR0xvRkhDR25rQ1NXdTNz?=
- =?utf-8?B?WFpISnlZbytqeHJDS1NwMkgrQzQ3dmFwVTFQbmI5YVhYbUdsdS81QTNGdG1I?=
- =?utf-8?B?YTRyRnJudVRUbHlqdk03UjR1U1ZuQ0xaM0Qzc0lJWmNlaFd1VlU3SmQ1VUVP?=
- =?utf-8?B?UklCYkJQb1kydlVrTHZWdWdTL2U1OGdnT0RabUFKemRRL3RGQlhaMmlmb0RK?=
- =?utf-8?B?dUhSWmlEeFlwOFdNa3I0cnI0SG13enM5UHdxVU9FOHhseVZ3dUFsNHdyNTJY?=
- =?utf-8?B?SFpJcFVSZGJxcWVaKzU2YmVxbGFlbm9RRERtZmYyZ0lwa2JMN3RlTklrSGFE?=
- =?utf-8?B?QTRDY1RBNVczQVhmK1BQamphVHRoY0k4SDVERGJGTlB4UndBZnU5a1NLMjRG?=
- =?utf-8?B?Z091Q2ZtNTJxTVlkTGhKWUdEQkFUYmlSMC9BeTFtN2QyZGYyaWh3TU5OMkJZ?=
- =?utf-8?B?TWo1ZGQ1Z2lTaHR5V1hqS2xlM2ROSGZHN0lTK1RrUE04SmFiTlZYeDVsYlI0?=
- =?utf-8?B?Z1Z4UHNmU0o5aUxIRjk2RzFvVThHNmR0TnlKamlablhzbDN4eWhWZmxYa2t6?=
- =?utf-8?B?MmdnN0MzL0NiaVhQQW5pKzJCZFV1Y1VXeTZNTmNlRU81QlVGZlRWQVI4R2RE?=
- =?utf-8?Q?TkpNM1021PAM8KMitBA2W98pM?=
+        Mon, 25 Sep 2023 15:42:38 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 385F3107;
+        Mon, 25 Sep 2023 12:42:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695670951; x=1727206951;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9oM54xEf8dPLMvypihERmumuD5XI/N6GjavUBV+K/xk=;
+  b=ch3BmMRtU7IoVtD2QDPQ5P6XxgRfghTbpaP3oDm5HC+xax5t6SOq6hzI
+   wJb4yV/fmnqpBYWl2LLn6LJDNkiBGBhNT+JFn3cRQNAvpplKkX107K7fm
+   hVDNjAplmhbgYD4vqofCmMg2+ZUWYO1scgX5wME3Wwv5PWAUlmI2dVIbo
+   mPQKYM/S/9jbX7E0KZcB3KJc47LX21ec28iKDLwzNwQEMMSDOALVe4a7S
+   PBrJRFh8rK5TpaKQiMVyGYFuHcXvC1H2PmpMoLapY8J2FEvK05qFZm2zr
+   rcvFA4wHIDQ456sB7riDq+2gg2y0vjX9N7MdcAvu34ibBed8RXDhjruuo
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="445483126"
+X-IronPort-AV: E=Sophos;i="6.03,176,1694761200"; 
+   d="scan'208";a="445483126"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 12:42:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="864069660"
+X-IronPort-AV: E=Sophos;i="6.03,175,1694761200"; 
+   d="scan'208";a="864069660"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
+  by fmsmga002.fm.intel.com with ESMTP; 25 Sep 2023 12:42:30 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org,
+        ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86/intel/tpmi: Add debugfs support for read/write blocked
+Date:   Mon, 25 Sep 2023 12:42:19 -0700
+Message-Id: <20230925194219.966602-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-X-OriginatorOrg: hp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR84MB1953.NAMPRD84.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a1a7ca7-57e5-4c4e-411f-08dbbdf85492
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2023 18:50:47.1088
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: ca7981a2-785a-463d-b82a-3db87dfc3ce6
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dlLpo1rhhWSv0yELB56AFMX0f+HnX008HAbKTJHp0LYlIjtGkHdHYd2lte2CkN1T8PzkegI28MnbBUW0pwDLxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR84MB1661
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: hp.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-UmV2aWV3ZWQtYnk6IEpvcmdlIExvcGV6IDxqb3JnZS5sb3BlejJAaHAuY29tPg0KDQoNCj4gLS0t
-LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXJtaW4gV29sZiA8V19Bcm1pbkBnbXgu
-ZGU+DQo+IFNlbnQ6IE1vbmRheSwgU2VwdGVtYmVyIDI1LCAyMDIzIDk6MjggQU0NCj4gVG86IG1h
-cmtwZWFyc29uQGxlbm92by5jb207IExvcGV6LCBKb3JnZSBBIChTZWN1cml0eSkNCj4gPGpvcmdl
-LmxvcGV6MkBocC5jb20+DQo+IENjOiBoZGVnb2VkZUByZWRoYXQuY29tOyBtYXJrZ3Jvc3NAa2Vy
-bmVsLm9yZzsNCj4gaWxwby5qYXJ2aW5lbkBsaW51eC5pbnRlbC5jb207IHBsYXRmb3JtLWRyaXZl
-ci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZw0K
-PiBTdWJqZWN0OiBbUEFUQ0ggdjQgMi8yXSBwbGF0Zm9ybS94ODY6IGhwLWJpb3NjZmc6IEZpeCBy
-ZWZlcmVuY2UgbGVhaw0KPiANCj4gQ0FVVElPTjogRXh0ZXJuYWwgRW1haWwNCj4gDQo+IElmIGEg
-ZHVwbGljYXRlIGF0dHJpYnV0ZSBpcyBmb3VuZCB1c2luZyBrc2V0X2ZpbmRfb2JqKCksIGEgcmVm
-ZXJlbmNlIHRvIHRoYXQNCj4gYXR0cmlidXRlIGlzIHJldHVybmVkIHdoaWNoIG5lZWRzIHRvIGJl
-IGRpc3Bvc2VkIGFjY29yZGluZ2x5IHVzaW5nIGtvYmplY3RfcHV0KCkuDQo+IFVzZSBrb2JqZWN0
-X3B1dCgpIHRvIGRpc3Bvc2UgdGhlIGR1cGxpY2F0ZSBhdHRyaWJ1dGUgaW4gc3VjaCBhIGNhc2Uu
-DQo+IEFzIGEgc2lkZSBub3RlLCBhIHZlcnkgc2ltaWxhciBidWcgd2FzIGZpeGVkIGluIGNvbW1p
-dCA3Mjk1YTk5NmZkYWINCj4gKCJwbGF0Zm9ybS94ODY6IGRlbGwtc3lzbWFuOiBGaXggcmVmZXJl
-bmNlIGxlYWsiKSwgc28gaXQgc2VlbXMgdGhhdCB0aGUgYnVnIHdhcw0KPiBjb3BpZWQgZnJvbSB0
-aGF0IGRyaXZlci4NCj4gDQo+IENvbXBpbGUtdGVzdGVkIG9ubHkuDQo+IA0KPiBGaXhlczogYTM0
-ZmMzMjliMTg5ICgicGxhdGZvcm0veDg2OiBocC1iaW9zY2ZnOiBiaW9zY2ZnIikNCj4gU3VnZ2Vz
-dGVkLWJ5OiBJbHBvIErDpHJ2aW5lbiA8aWxwby5qYXJ2aW5lbkBsaW51eC5pbnRlbC5jb20+DQo+
-IFJldmlld2VkLWJ5OiBJbHBvIErDpHJ2aW5lbiA8aWxwby5qYXJ2aW5lbkBsaW51eC5pbnRlbC5j
-b20+DQo+IFNpZ25lZC1vZmYtYnk6IEFybWluIFdvbGYgPFdfQXJtaW5AZ214LmRlPg0KPiAtLS0N
-Cj4gQ2huYWdlcyBpbiB2NDoNCj4gLSBmaXggbWlzc2luZyB3aGl0ZXNwYWNlDQo+IC0gYWRkIFJl
-dmlld2VkLWJ5DQo+IENoYW5nZXMgaW4gdjM6DQo+IC0gbm8gY2hhbmdlcw0KPiBDaGFuZ2VzIGlu
-IHYyOg0KPiAtIGFkZCBwYXRjaA0KPiAtLS0NCj4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2hwL2hw
-LWJpb3NjZmcvYmlvc2NmZy5jIHwgMTQgKysrKysrKysrKy0tLS0NCj4gIDEgZmlsZSBjaGFuZ2Vk
-LCAxMCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvcGxhdGZvcm0veDg2L2hwL2hwLWJpb3NjZmcvYmlvc2NmZy5jDQo+IGIvZHJpdmVycy9w
-bGF0Zm9ybS94ODYvaHAvaHAtYmlvc2NmZy9iaW9zY2ZnLmMNCj4gaW5kZXggOGM0ZjllMTJmMDE4
-Li41Nzk4YjQ5ZGRhYmEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2hwL2hw
-LWJpb3NjZmcvYmlvc2NmZy5jDQo+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2hwL2hwLWJp
-b3NjZmcvYmlvc2NmZy5jDQo+IEBAIC02NTksNyArNjU5LDcgQEAgc3RhdGljIGludCBocF9pbml0
-X2Jpb3NfcGFja2FnZV9hdHRyaWJ1dGUoZW51bQ0KPiBocF93bWlfZGF0YV90eXBlIGF0dHJfdHlw
-ZSwNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29uc3QgY2hh
-ciAqZ3VpZCwgaW50IG1pbl9lbGVtZW50cywNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgaW50IGluc3RhbmNlX2lkKSAgew0KPiAtICAgICAgIHN0cnVjdCBrb2Jq
-ZWN0ICphdHRyX25hbWVfa29iajsNCj4gKyAgICAgICBzdHJ1Y3Qga29iamVjdCAqYXR0cl9uYW1l
-X2tvYmosICpkdXBsaWNhdGU7DQo+ICAgICAgICAgdW5pb24gYWNwaV9vYmplY3QgKmVsZW1lbnRz
-Ow0KPiAgICAgICAgIHN0cnVjdCBrc2V0ICp0ZW1wX2tzZXQ7DQo+IA0KPiBAQCAtNzA0LDggKzcw
-NCwxMSBAQCBzdGF0aWMgaW50IGhwX2luaXRfYmlvc19wYWNrYWdlX2F0dHJpYnV0ZShlbnVtDQo+
-IGhwX3dtaV9kYXRhX3R5cGUgYXR0cl90eXBlLA0KPiAgICAgICAgIH0NCj4gDQo+ICAgICAgICAg
-LyogQWxsIGR1cGxpY2F0ZSBhdHRyaWJ1dGVzIGZvdW5kIGFyZSBpZ25vcmVkICovDQo+IC0gICAg
-ICAgaWYgKGtzZXRfZmluZF9vYmoodGVtcF9rc2V0LCBzdHJfdmFsdWUpKSB7DQo+ICsgICAgICAg
-ZHVwbGljYXRlID0ga3NldF9maW5kX29iaih0ZW1wX2tzZXQsIHN0cl92YWx1ZSk7DQo+ICsgICAg
-ICAgaWYgKGR1cGxpY2F0ZSkgew0KPiAgICAgICAgICAgICAgICAgcHJfZGVidWcoIkR1cGxpY2F0
-ZSBhdHRyaWJ1dGUgbmFtZSBmb3VuZCAtICVzXG4iLCBzdHJfdmFsdWUpOw0KPiArICAgICAgICAg
-ICAgICAgLyoga3NldF9maW5kX29iaigpIHJldHVybnMgYSByZWZlcmVuY2UgKi8NCj4gKyAgICAg
-ICAgICAgICAgIGtvYmplY3RfcHV0KGR1cGxpY2F0ZSk7DQo+ICAgICAgICAgICAgICAgICBnb3Rv
-IHBhY2tfYXR0cl9leGl0Ow0KPiAgICAgICAgIH0NCj4gDQo+IEBAIC03NjgsNyArNzcxLDcgQEAg
-c3RhdGljIGludCBocF9pbml0X2Jpb3NfYnVmZmVyX2F0dHJpYnV0ZShlbnVtDQo+IGhwX3dtaV9k
-YXRhX3R5cGUgYXR0cl90eXBlLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIGNvbnN0IGNoYXIgKmd1aWQsIGludCBtaW5fZWxlbWVudHMsDQo+ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50IGluc3RhbmNlX2lkKSAgew0KPiAtICAg
-ICAgIHN0cnVjdCBrb2JqZWN0ICphdHRyX25hbWVfa29iajsNCj4gKyAgICAgICBzdHJ1Y3Qga29i
-amVjdCAqYXR0cl9uYW1lX2tvYmosICpkdXBsaWNhdGU7DQo+ICAgICAgICAgc3RydWN0IGtzZXQg
-KnRlbXBfa3NldDsNCj4gICAgICAgICBjaGFyIHN0cltNQVhfQlVGRl9TSVpFXTsNCj4gDQo+IEBA
-IC03OTQsOCArNzk3LDExIEBAIHN0YXRpYyBpbnQgaHBfaW5pdF9iaW9zX2J1ZmZlcl9hdHRyaWJ1
-dGUoZW51bQ0KPiBocF93bWlfZGF0YV90eXBlIGF0dHJfdHlwZSwNCj4gICAgICAgICAgICAgICAg
-IHRlbXBfa3NldCA9IGJpb3NjZmdfZHJ2Lm1haW5fZGlyX2tzZXQ7DQo+IA0KPiAgICAgICAgIC8q
-IEFsbCBkdXBsaWNhdGUgYXR0cmlidXRlcyBmb3VuZCBhcmUgaWdub3JlZCAqLw0KPiAtICAgICAg
-IGlmIChrc2V0X2ZpbmRfb2JqKHRlbXBfa3NldCwgc3RyKSkgew0KPiArICAgICAgIGR1cGxpY2F0
-ZSA9IGtzZXRfZmluZF9vYmoodGVtcF9rc2V0LCBzdHIpOw0KPiArICAgICAgIGlmIChkdXBsaWNh
-dGUpIHsNCj4gICAgICAgICAgICAgICAgIHByX2RlYnVnKCJEdXBsaWNhdGUgYXR0cmlidXRlIG5h
-bWUgZm91bmQgLSAlc1xuIiwgc3RyKTsNCj4gKyAgICAgICAgICAgICAgIC8qIGtzZXRfZmluZF9v
-YmooKSByZXR1cm5zIGEgcmVmZXJlbmNlICovDQo+ICsgICAgICAgICAgICAgICBrb2JqZWN0X3B1
-dChkdXBsaWNhdGUpOw0KPiAgICAgICAgICAgICAgICAgZ290byBidWZmX2F0dHJfZXhpdDsNCj4g
-ICAgICAgICB9DQo+IA0KPiAtLQ0KPiAyLjM5LjINCg0K
+Display read and write blocked status of each TPMI feature in addition
+to disabled and locked status.
+
+This will require reading of read/write blocked state from the hardware.
+Currently tpmi_read_feature_status(), doesn't provide this state.
+
+Define TPMI feature state as defined in the TPMI spec. Modify the function
+tpmi_read_feature_status() to update full feature state instead of just
+disabled and locked state.
+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ drivers/platform/x86/intel/tpmi.c | 81 +++++++++++++++++++++----------
+ 1 file changed, 56 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
+index 0a95736d97e4..311abcac894a 100644
+--- a/drivers/platform/x86/intel/tpmi.c
++++ b/drivers/platform/x86/intel/tpmi.c
+@@ -143,6 +143,33 @@ struct tpmi_info_header {
+ 	u64 lock:1;
+ } __packed;
+ 
++/**
++ * struct tpmi_feature_state - Structure to read hardware state of a feature
++ * @enabled:	Enable state of a feature, 1: enabled, 0: disabled
++ * @reserved_1:	Reserved for future use
++ * @write_blocked: Writes are blocked means all write operations are ignored
++ * @read_blocked: Reads are blocked means will read 0xFFs
++ * @pcs_select:	Interface used by out of band software, not used in OS
++ * @reserved_2:	Reserved for future use
++ * @id:		TPMI ID of the feature
++ * @reserved_3:	Reserved for future use
++ * @locked:	When set to 1, OS can't change this register.
++ *
++ * The structure is used to read hardware state of a TPMI feature. This
++ * information is used for debug and restricting operations for this feature.
++ */
++struct tpmi_feature_state {
++	u32 enabled:1;
++	u32 reserved_1:3;
++	u32 write_blocked:1;
++	u32 read_blocked:1;
++	u32 pcs_select:1;
++	u32 reserved_2:1;
++	u32 id:8;
++	u32 reserved_3:15;
++	u32 locked:1;
++} __packed;
++
+ /*
+  * List of supported TMPI IDs.
+  * Some TMPI IDs are not used by Linux, so the numbers are not consecutive.
+@@ -202,6 +229,7 @@ EXPORT_SYMBOL_NS_GPL(tpmi_get_resource_at_index, INTEL_TPMI);
+ 
+ #define TPMI_CONTROL_STATUS_OFFSET	0x00
+ #define TPMI_COMMAND_OFFSET		0x08
++#define TMPI_CONTROL_DATA_VAL_OFFSET	0x0c
+ 
+ /*
+  * Spec is calling for max 1 seconds to get ownership at the worst
+@@ -230,7 +258,6 @@ EXPORT_SYMBOL_NS_GPL(tpmi_get_resource_at_index, INTEL_TPMI);
+ 
+ /* TPMI command data registers */
+ #define TMPI_CONTROL_DATA_CMD		GENMASK_ULL(7, 0)
+-#define TMPI_CONTROL_DATA_VAL		GENMASK_ULL(63, 32)
+ #define TPMI_CONTROL_DATA_VAL_FEATURE	GENMASK_ULL(48, 40)
+ 
+ /* Command to send via control interface */
+@@ -240,9 +267,6 @@ EXPORT_SYMBOL_NS_GPL(tpmi_get_resource_at_index, INTEL_TPMI);
+ 
+ #define TPMI_CMD_LEN_MASK		GENMASK_ULL(18, 16)
+ 
+-#define TPMI_STATE_DISABLED		BIT_ULL(0)
+-#define TPMI_STATE_LOCKED		BIT_ULL(31)
+-
+ /* Mutex to complete get feature status without interruption */
+ static DEFINE_MUTEX(tpmi_dev_lock);
+ 
+@@ -256,7 +280,7 @@ static int tpmi_wait_for_owner(struct intel_tpmi_info *tpmi_info, u8 owner)
+ }
+ 
+ static int tpmi_read_feature_status(struct intel_tpmi_info *tpmi_info, int feature_id,
+-				    int *locked, int *disabled)
++				    struct tpmi_feature_state *feature_state)
+ {
+ 	u64 control, data;
+ 	int ret;
+@@ -306,17 +330,8 @@ static int tpmi_read_feature_status(struct intel_tpmi_info *tpmi_info, int featu
+ 	}
+ 
+ 	/* Response is ready */
+-	data = readq(tpmi_info->tpmi_control_mem + TPMI_COMMAND_OFFSET);
+-	data = FIELD_GET(TMPI_CONTROL_DATA_VAL, data);
+-
+-	*disabled = 0;
+-	*locked = 0;
+-
+-	if (!(data & TPMI_STATE_DISABLED))
+-		*disabled = 1;
+-
+-	if (data & TPMI_STATE_LOCKED)
+-		*locked = 1;
++	memcpy_fromio(feature_state, tpmi_info->tpmi_control_mem + TMPI_CONTROL_DATA_VAL_OFFSET,
++		      sizeof(*feature_state));
+ 
+ 	ret = 0;
+ 
+@@ -335,34 +350,50 @@ int tpmi_get_feature_status(struct auxiliary_device *auxdev, int feature_id,
+ {
+ 	struct intel_vsec_device *intel_vsec_dev = dev_to_ivdev(auxdev->dev.parent);
+ 	struct intel_tpmi_info *tpmi_info = auxiliary_get_drvdata(&intel_vsec_dev->auxdev);
++	struct tpmi_feature_state feature_state;
++	int ret;
++
++	ret = tpmi_read_feature_status(tpmi_info, feature_id, &feature_state);
++	if (ret)
++		return ret;
+ 
+-	return tpmi_read_feature_status(tpmi_info, feature_id, locked, disabled);
++	*locked = feature_state.locked;
++	*disabled = !feature_state.enabled;
++
++	return 0;
+ }
+ EXPORT_SYMBOL_NS_GPL(tpmi_get_feature_status, INTEL_TPMI);
+ 
+ static int tpmi_pfs_dbg_show(struct seq_file *s, void *unused)
+ {
+ 	struct intel_tpmi_info *tpmi_info = s->private;
++	int locked, disabled, read_blocked, write_blocked;
++	struct tpmi_feature_state feature_state;
+ 	struct intel_tpmi_pm_feature *pfs;
+-	int locked, disabled, ret, i;
++	int ret, i;
++
+ 
+ 	seq_printf(s, "tpmi PFS start offset 0x:%llx\n", tpmi_info->pfs_start);
+-	seq_puts(s, "tpmi_id\t\tentries\t\tsize\t\tcap_offset\tattribute\tvsec_offset\tlocked\tdisabled\n");
++	seq_puts(s, "tpmi_id\t\tentries\t\tsize\t\tcap_offset\tattribute\tvsec_offset\tlocked\tdisabled\tread_blocked\twrite_blocked\n");
+ 	for (i = 0; i < tpmi_info->feature_count; ++i) {
+ 		pfs = &tpmi_info->tpmi_features[i];
+-		ret = tpmi_read_feature_status(tpmi_info, pfs->pfs_header.tpmi_id, &locked,
+-					       &disabled);
++		ret = tpmi_read_feature_status(tpmi_info, pfs->pfs_header.tpmi_id, &feature_state);
+ 		if (ret) {
+ 			locked = 'U';
+ 			disabled = 'U';
++			read_blocked = 'U';
++			write_blocked = 'U';
+ 		} else {
+-			disabled = disabled ? 'Y' : 'N';
+-			locked = locked ? 'Y' : 'N';
++			disabled = feature_state.enabled ? 'N' : 'Y';
++			locked = feature_state.locked ? 'Y' : 'N';
++			read_blocked = feature_state.read_blocked ? 'Y' : 'N';
++			write_blocked = feature_state.write_blocked ? 'Y' : 'N';
+ 		}
+-		seq_printf(s, "0x%02x\t\t0x%02x\t\t0x%04x\t\t0x%04x\t\t0x%02x\t\t0x%08x\t%c\t%c\n",
++		seq_printf(s, "0x%02x\t\t0x%02x\t\t0x%04x\t\t0x%04x\t\t0x%02x\t\t0x%08x\t%c\t%c\t\t%c\t\t%c\n",
+ 			   pfs->pfs_header.tpmi_id, pfs->pfs_header.num_entries,
+ 			   pfs->pfs_header.entry_size, pfs->pfs_header.cap_offset,
+-			   pfs->pfs_header.attribute, pfs->vsec_offset, locked, disabled);
++			   pfs->pfs_header.attribute, pfs->vsec_offset, locked, disabled,
++			   read_blocked, write_blocked);
+ 	}
+ 
+ 	return 0;
+-- 
+2.41.0
 
