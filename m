@@ -2,134 +2,100 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FB0CE7A81
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 12:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F01CE7A81
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 12:19:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231228AbjIYMAX (ORCPT
+        id S231440AbjIYMTJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Sep 2023 08:00:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46510 "EHLO
+        Mon, 25 Sep 2023 08:19:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230479AbjIYMAW (ORCPT
+        with ESMTP id S231395AbjIYMTJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Sep 2023 08:00:22 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E58DA;
-        Mon, 25 Sep 2023 05:00:15 -0700 (PDT)
+        Mon, 25 Sep 2023 08:19:09 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51BDD11D;
+        Mon, 25 Sep 2023 05:19:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695643216; x=1727179216;
+  t=1695644342; x=1727180342;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=i3bAMHCHVTIFT58YiqClyS+AktS20qC/6LC/sWIT2HI=;
-  b=UjCbHDx00fd5akuw69/Z95Pvcqds8hSLoy09I67tQRdmSICcz8526cZN
-   GicwPE5Ur4k9agzyqeMNc5Q1QDeycR+EH5HrNkaLd0Tot7JOGANaZUf6M
-   axUsBPbZwib7SPTEl+tKXoqQ/GliEW9lhrm6M7lry05Rx0UGEHdJGR1CG
-   /dnCGR16A2AI2zUFfEh3zen5OLwIzOI6Zw/pK8K8d04FrdssVDFOW/GDb
-   5Md+z1iOtB9vHswPNZpiUMZmnaW73jft0u9ritPEKo8awgK6uHp1xRnqO
-   PjuCpGaqgFjbmkbgew4PkzXZh0+H4NqKMOaSWbBnvXOWSGGrPYSNh0tAK
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="360612789"
+  bh=apuZ6KIw6/15l+S9Oovo3skg9jLDHcGg6Hd8Ts4y2co=;
+  b=f3bWwCjGPi+VS/sIOXmxXihxsAS3oVbznC1tmR9/vmQwW5U8m6AbEJO6
+   Oia9kMBK0lfEuGu9cRXUU0aeJdYiTUfRSj5PzqnAm9Zy7mhTNlsIqwVZn
+   o1oAxINhUJ5A0ir59KwFfN1gB1bwZO/V88G+6IN9S61H1Z3GydJlvt4eE
+   XA6nGtgAihShkmMI/uPbbwMrOE7SIfhrPaL0AQ2WjrwFDz150OwivS4eE
+   Gx5hcbtmHa9XfRW5rFrxU6vhUntHfBHl6NoUZOkL4E5YHnYksaFN0YoVU
+   ltH2PTqe9VRjShGHjTtbFJ0OciJvdrA7QNd84yry2wCii6MIdp/rxZzKT
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="383996204"
 X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="360612789"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 05:00:14 -0700
+   d="scan'208";a="383996204"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 05:19:01 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="751645081"
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="748329392"
 X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="751645081"
+   d="scan'208";a="748329392"
 Received: from stamengx-mobl1.ger.corp.intel.com ([10.249.32.149])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 05:00:12 -0700
-Date:   Mon, 25 Sep 2023 15:00:10 +0300 (EEST)
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 05:18:58 -0700
+Date:   Mon, 25 Sep 2023 15:18:56 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Armin Wolf <W_Armin@gmx.de>
-cc:     markpearson@lenovo.com, Hans de Goede <hdegoede@redhat.com>,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: think-lmi: Fix reference leak
-In-Reply-To: <20230923204154.86815-1-W_Armin@gmx.de>
-Message-ID: <7e68e66f-40a2-1ac7-416b-bf63bafa6fe7@linux.intel.com>
-References: <20230923204154.86815-1-W_Armin@gmx.de>
+To:     "Fernando Eckhardt Valle (FIPT)" <fevalle@ipt.br>
+cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Pearson <mpearson-lenovo@squebb.ca>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "hmh@hmh.eng.br" <hmh@hmh.eng.br>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "ibm-acpi-devel@lists.sourceforge.net" 
+        <ibm-acpi-devel@lists.sourceforge.net>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v4] platform/x86: thinkpad_acpi: sysfs interface to
+ auxmac
+In-Reply-To: <CPVP152MB50535F32391251E1AF02FA00D8FFA@CPVP152MB5053.LAMP152.PROD.OUTLOOK.COM>
+Message-ID: <cc894b7-8513-cd0-f59d-7647541da92@linux.intel.com>
+References: <20230921143622.72387-1-fevalle@ipt.br> <946285e6-6064-4084-a1a7-f5ba7dea3e7d@linux.intel.com> <CPVP152MB50535F32391251E1AF02FA00D8FFA@CPVP152MB5053.LAMP152.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1222309367-1695643214=:2147"
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, 22 Sep 2023, Fernando Eckhardt Valle (FIPT) wrote:
 
---8323329-1222309367-1695643214=:2147
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
+> Thanks for the feedback again!
+> 
+> > Okay, I wasn't expecting this change as this relies on the nul termination
+> > by strscpy() since the original buffer does not have one but the #
+> > character there. But I guess it isn't harmful either.
+> Yes, precisely because strscpy() put the 'nul terminator' I thought it 
+> would be ok. In the tests I did, everything always worked fine too.
 
-On Sat, 23 Sep 2023, Armin Wolf wrote:
+It was a bit unorthodox way to take advantage of the way strscpy() works
+but like I said, doesn't look harmful.
 
-> If a duplicate attribute is found using kset_find_obj(), a reference
-> to that attribute is returned which needs to be disposed accordingly
-> using kobject_put(). Move the setting name validation into a separate
-> function to allow for this change without having to duplicate the
-> cleanup code for this setting.
-> As a side note, a very similar bug was fixed in
-> commit 7295a996fdab ("platform/x86: dell-sysman: Fix reference leak"),
-> so it seems that the bug was copied from that driver.
-> 
-> Compile-tested only.
-> 
-> Fixes: 1bcad8e510b2 ("platform/x86: think-lmi: Fix issues with duplicate attributes")
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  drivers/platform/x86/think-lmi.c | 24 ++++++++++++++++++++----
->  1 file changed, 20 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index 4be6f28d4600..3a396b763c49 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -1344,6 +1344,24 @@ static void tlmi_release_attr(void)
->  	kset_unregister(tlmi_priv.authentication_kset);
->  }
-> 
-> +static int tlmi_validate_setting_name(struct kset *attribute_kset, char *name)
-> +{
-> +	struct kobject *duplicate;
-> +
-> +	if (!strcmp(name, "Reserved"))
-> +		return -EINVAL;
-> +
-> +	duplicate = kset_find_obj(attribute_kset, name);
-> +	if (duplicate) {
-> +		pr_debug("Duplicate attribute name found - %s\n", name);
-> +		/* kset_find_obj() returns a reference */
-> +		kobject_put(duplicate);
-> +		return -EBUSY;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int tlmi_sysfs_init(void)
->  {
->  	int i, ret;
-> @@ -1372,10 +1390,8 @@ static int tlmi_sysfs_init(void)
->  			continue;
-> 
->  		/* check for duplicate or reserved values */
-> -		if (kset_find_obj(tlmi_priv.attribute_kset, tlmi_priv.setting[i]->display_name) ||
-> -		    !strcmp(tlmi_priv.setting[i]->display_name, "Reserved")) {
-> -			pr_debug("duplicate or reserved attribute name found - %s\n",
-> -				tlmi_priv.setting[i]->display_name);
-> +		if (tlmi_validate_setting_name(tlmi_priv.attribute_kset,
-> +					       tlmi_priv.setting[i]->display_name) < 0) {
->  			kfree(tlmi_priv.setting[i]->possible_values);
->  			kfree(tlmi_priv.setting[i]);
->  			tlmi_priv.setting[i] = NULL;
+> >  AUXMAC_START is an offset ??? It should be AUXMAC_LEN.
+>
+> I thought that since the string 'disabled' has length 8, then I would 
+> use AUXMAC_START which is defined as 9 , because that way strscpy would 
+> copy the 8 characters of 'disabled' + the nul terminator. Wouldn't that 
+> be correct? Or would it be better to use AUXMAC_LEN which is defined to 
+> 12? 
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+strscpy() is takes the size of the destination:
 
-There seem to be two more of these in hp-bioscfg.
+ * @size: Size of destination buffer
+
+...so please use AUXMAC_LEN.
+
+In anycase, "disabled" as the source is itself nul-terminated so strscpy() 
+won't copy beyond its length.
+
 
 -- 
  i.
 
---8323329-1222309367-1695643214=:2147--
