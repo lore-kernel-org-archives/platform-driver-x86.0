@@ -2,201 +2,123 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC9BCE7A8B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 02:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29820CE7A94
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 02:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230360AbjIYCDz (ORCPT
+        id S229810AbjIYCP0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 24 Sep 2023 22:03:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57428 "EHLO
+        Sun, 24 Sep 2023 22:15:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbjIYCDy (ORCPT
+        with ESMTP id S229561AbjIYCPZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 24 Sep 2023 22:03:54 -0400
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E87BD;
-        Sun, 24 Sep 2023 19:03:45 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0VsjlAa9_1695607420;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VsjlAa9_1695607420)
-          by smtp.aliyun-inc.com;
-          Mon, 25 Sep 2023 10:03:41 +0800
-Message-ID: <1695607353.8416731-1-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH v14 30/42] virtio_pci: introduce helper to get/set queue reset
-Date:   Mon, 25 Sep 2023 10:02:33 +0800
-From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org,
-        kangjie.xu@linux.alibaba.com
-References: <20220801063902.129329-1-xuanzhuo@linux.alibaba.com>
- <20220801063902.129329-31-xuanzhuo@linux.alibaba.com>
- <20230921100112-mutt-send-email-mst@kernel.org>
- <1695347358.2770545-1-xuanzhuo@linux.alibaba.com>
- <20230922064550-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20230922064550-mutt-send-email-mst@kernel.org>
+        Sun, 24 Sep 2023 22:15:25 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B82C7CA;
+        Sun, 24 Sep 2023 19:15:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695608119; x=1727144119;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7aZdRRkcWeWfFBEMkV187rRMQuRi3J4u3B++Qpol+2Q=;
+  b=Fuys4ewZ3de6J6FhBt9kw97x6y5BBSLLXtlfdvyxAaMIX/QhZdnytOLU
+   XNiRD3znJRJ+I4krpK6gFFMwNi+dFtwVmUtV0uWjvFuZv2OVRDE+wacY2
+   UpNsVvqqj8E87MTPt0yPWC57HOwbHDf40rSOKTdfAQ8aM2gU7p+6FWV1d
+   TJ2YHoYFx48KpNKIu+hz+1bjejdug1cETCL1Sa88X/aTrqMbZOZm+1sFW
+   4ZY56f0IwQsT99xZ/EUItbAqvLYPRR/QO9JbmbQvijVEUNDniQSPPisTa
+   Duw0XPOpQ8P8o0g6i519htl1LXbsD1H+Pk01GA7/O+A3PgW3orTMn7/0j
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="366206039"
+X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
+   d="scan'208";a="366206039"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2023 19:15:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="697828919"
+X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
+   d="scan'208";a="697828919"
+Received: from lkp-server02.sh.intel.com (HELO 32c80313467c) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 24 Sep 2023 19:15:15 -0700
+Received: from kbuild by 32c80313467c with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qkb7w-0000m1-2c;
+        Mon, 25 Sep 2023 02:15:12 +0000
+Date:   Mon, 25 Sep 2023 10:14:20 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hdegoede@redhat.com,
+        markgross@kernel.org, basavaraj.natikar@amd.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
+        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
+        daniel@ffwll.ch
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        amd-gfx@lists.freedesktop.org, platform-driver-x86@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Patil.Reddy@amd.com,
+        linux-input@vger.kernel.org, mario.limonciello@amd.com
+Subject: Re: [PATCH 10/15] platform/x86/amd/pmf: Add capability to sideload
+ of policy binary
+Message-ID: <202309251031.awDDkRgS-lkp@intel.com>
+References: <20230922175056.244940-11-Shyam-sundar.S-k@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230922175056.244940-11-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 22 Sep 2023 06:46:39 -0400, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> On Fri, Sep 22, 2023 at 09:49:18AM +0800, Xuan Zhuo wrote:
-> > On Thu, 21 Sep 2023 10:02:53 -0400, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > > On Mon, Aug 01, 2022 at 02:38:50PM +0800, Xuan Zhuo wrote:
-> > > > Introduce new helpers to implement queue reset and get queue reset
-> > > > status.
-> > > >
-> > > >  https://github.com/oasis-tcs/virtio-spec/issues/124
-> > > >  https://github.com/oasis-tcs/virtio-spec/issues/139
-> > > >
-> > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > > Acked-by: Jason Wang <jasowang@redhat.com>
-> > > > ---
-> > > >  drivers/virtio/virtio_pci_modern_dev.c | 39 ++++++++++++++++++++++++++
-> > > >  include/linux/virtio_pci_modern.h      |  2 ++
-> > > >  2 files changed, 41 insertions(+)
-> > > >
-> > > > diff --git a/drivers/virtio/virtio_pci_modern_dev.c b/drivers/virtio/virtio_pci_modern_dev.c
-> > > > index fa2a9445bb18..869cb46bef96 100644
-> > > > --- a/drivers/virtio/virtio_pci_modern_dev.c
-> > > > +++ b/drivers/virtio/virtio_pci_modern_dev.c
-> > > > @@ -3,6 +3,7 @@
-> > > >  #include <linux/virtio_pci_modern.h>
-> > > >  #include <linux/module.h>
-> > > >  #include <linux/pci.h>
-> > > > +#include <linux/delay.h>
-> > > >
-> > > >  /*
-> > > >   * vp_modern_map_capability - map a part of virtio pci capability
-> > > > @@ -474,6 +475,44 @@ void vp_modern_set_status(struct virtio_pci_modern_device *mdev,
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(vp_modern_set_status);
-> > > >
-> > > > +/*
-> > > > + * vp_modern_get_queue_reset - get the queue reset status
-> > > > + * @mdev: the modern virtio-pci device
-> > > > + * @index: queue index
-> > > > + */
-> > > > +int vp_modern_get_queue_reset(struct virtio_pci_modern_device *mdev, u16 index)
-> > > > +{
-> > > > +	struct virtio_pci_modern_common_cfg __iomem *cfg;
-> > > > +
-> > > > +	cfg = (struct virtio_pci_modern_common_cfg __iomem *)mdev->common;
-> > > > +
-> > > > +	vp_iowrite16(index, &cfg->cfg.queue_select);
-> > > > +	return vp_ioread16(&cfg->queue_reset);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(vp_modern_get_queue_reset);
-> > > > +
-> > >
-> > > Actually, this does not validate that the config structure is big
-> > > enough. So it can access some unrelated memory. Don't know whether
-> > > that's exploitable e.g. for CoCo but not nice, anyway.
-> > > Need to validate the size and disable reset if it's too small.
-> >
-> >
-> > static int vp_modern_disable_vq_and_reset(struct virtqueue *vq)
-> > {
-> > 	struct virtio_pci_device *vp_dev = to_vp_device(vq->vdev);
-> > 	struct virtio_pci_modern_device *mdev = &vp_dev->mdev;
-> > 	struct virtio_pci_vq_info *info;
-> > 	unsigned long flags;
-> >
-> > ->	if (!virtio_has_feature(vq->vdev, VIRTIO_F_RING_RESET))
-> > 		return -ENOENT;
-> >
-> > 	vp_modern_set_queue_reset(mdev, vq->index);
-> >
-> >
-> > I checked VIRTIO_F_RING_RESET before call this.
->
-> Yes but the point is that virtio is used with untrusted devices
-> (e.g. for SEV/TDX), so you can't really assume config structures
-> are in sync with feature bits.
+Hi Shyam,
 
-I see.
+kernel test robot noticed the following build warnings:
 
-I will post a patch to check the length of the common cfg.
+[auto build test WARNING on hid/for-next]
+[also build test WARNING on linus/master v6.6-rc3 next-20230921]
+[cannot apply to drm-misc/drm-misc-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Thanks.
+url:    https://github.com/intel-lab-lkp/linux/commits/Shyam-Sundar-S-K/platform-x86-amd-pmf-Add-PMF-TEE-interface/20230923-015418
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-next
+patch link:    https://lore.kernel.org/r/20230922175056.244940-11-Shyam-sundar.S-k%40amd.com
+patch subject: [PATCH 10/15] platform/x86/amd/pmf: Add capability to sideload of policy binary
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20230925/202309251031.awDDkRgS-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230925/202309251031.awDDkRgS-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309251031.awDDkRgS-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/platform/x86/amd/pmf/tee-if.c:305:5: warning: no previous prototype for 'amd_pmf_open_pb' [-Wmissing-prototypes]
+     305 | int amd_pmf_open_pb(struct amd_pmf_dev *dev, struct dentry *debugfs_root)
+         |     ^~~~~~~~~~~~~~~
 
 
->
->
-> > Do you mean, we should put the check to this function.
-> >
-> >
-> > Thanks.
-> >
-> >
-> >
-> > >
-> > >
-> > > > +/*
-> > > > + * vp_modern_set_queue_reset - reset the queue
-> > > > + * @mdev: the modern virtio-pci device
-> > > > + * @index: queue index
-> > > > + */
-> > > > +void vp_modern_set_queue_reset(struct virtio_pci_modern_device *mdev, u16 index)
-> > > > +{
-> > > > +	struct virtio_pci_modern_common_cfg __iomem *cfg;
-> > > > +
-> > > > +	cfg = (struct virtio_pci_modern_common_cfg __iomem *)mdev->common;
-> > > > +
-> > > > +	vp_iowrite16(index, &cfg->cfg.queue_select);
-> > > > +	vp_iowrite16(1, &cfg->queue_reset);
-> > > > +
-> > > > +	while (vp_ioread16(&cfg->queue_reset))
-> > > > +		msleep(1);
-> > > > +
-> > > > +	while (vp_ioread16(&cfg->cfg.queue_enable))
-> > > > +		msleep(1);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(vp_modern_set_queue_reset);
-> > > > +
-> > > >  /*
-> > > >   * vp_modern_queue_vector - set the MSIX vector for a specific virtqueue
-> > > >   * @mdev: the modern virtio-pci device
-> > > > diff --git a/include/linux/virtio_pci_modern.h b/include/linux/virtio_pci_modern.h
-> > > > index 05123b9a606f..c4eeb79b0139 100644
-> > > > --- a/include/linux/virtio_pci_modern.h
-> > > > +++ b/include/linux/virtio_pci_modern.h
-> > > > @@ -113,4 +113,6 @@ void __iomem * vp_modern_map_vq_notify(struct virtio_pci_modern_device *mdev,
-> > > >  				       u16 index, resource_size_t *pa);
-> > > >  int vp_modern_probe(struct virtio_pci_modern_device *mdev);
-> > > >  void vp_modern_remove(struct virtio_pci_modern_device *mdev);
-> > > > +int vp_modern_get_queue_reset(struct virtio_pci_modern_device *mdev, u16 index);
-> > > > +void vp_modern_set_queue_reset(struct virtio_pci_modern_device *mdev, u16 index);
-> > > >  #endif
-> > > > --
-> > > > 2.31.0
-> > >
->
+vim +/amd_pmf_open_pb +305 drivers/platform/x86/amd/pmf/tee-if.c
+
+   304	
+ > 305	int amd_pmf_open_pb(struct amd_pmf_dev *dev, struct dentry *debugfs_root)
+   306	{
+   307		struct dentry *file = NULL;
+   308	
+   309		dev->esbin = debugfs_create_dir("pb", debugfs_root);
+   310		if (IS_ERR(dev->esbin))
+   311			return -EINVAL;
+   312	
+   313		file = debugfs_create_file("update_policy", 0644, dev->esbin, dev, &pb_fops);
+   314		if (!file)
+   315			return -EINVAL;
+   316	
+   317		return 0;
+   318	}
+   319	#endif
+   320	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
