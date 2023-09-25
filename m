@@ -2,109 +2,86 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D16CE7A96
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 12:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EB8CE7A97
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 13:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230120AbjIYM6d (ORCPT
+        id S231706AbjIYN00 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Sep 2023 08:58:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34878 "EHLO
+        Mon, 25 Sep 2023 09:26:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230448AbjIYM6d (ORCPT
+        with ESMTP id S231502AbjIYN00 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Sep 2023 08:58:33 -0400
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E72139F;
-        Mon, 25 Sep 2023 05:58:26 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 5FE005C270B;
-        Mon, 25 Sep 2023 08:58:26 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Mon, 25 Sep 2023 08:58:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm3; t=1695646706; x=1695733106; bh=y1
-        AEv3cc3cMi4BLcmac96MLhAomJwW8QvnSJb6BHLcI=; b=YxUpn7F+SmUNRBTjG+
-        oiViwCwDFakxI2XXkyJbyvIXfEYIrnZeUUIaSeqLw9k+hOJfkhP67urzx9CFSy+g
-        urHtOtujHLDKO/aWzz8AV20OGMJ+10/ehRNqYFoMeAzKMFRijNH9XkvGh4EEpeUr
-        WezKo6xoVPL1EUWVYM1AEQNZdYoDpgPi+5omhEJ3PfTenAweXotZ09P7yg9n9WEP
-        99wuetXM4RhrX6TqQN8QeuQT7tnifYI4qSTPiubFf21aDn6029X4jA/PpTCc2frW
-        iXFzut1WuaUf/iQAFbk2lTVotsS4K/pMRfBKS6+dy7vE6UESYUmVlwmCVsaIMDD0
-        Uj6A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1695646706; x=1695733106; bh=y1AEv3cc3cMi4
-        BLcmac96MLhAomJwW8QvnSJb6BHLcI=; b=SchpavSlrqIowzfBBdc5+HLXjlXQQ
-        4dr1FVlLqUv64h6Bkg9sMYWjxmTEGJVAGylSEvlnGWVZ/H7RWTdrxSR7POrWY6Vr
-        mCbcfka733KdZw/3CTfLKP2z+JKQOkyIsKcIKmjN/Gh6njxPyKP0+Bl1LZoHGqkn
-        0SfXtyIvI3QU8NxwbdO2EuzaihnQrfI1Bd5vb5wM3Yy1iS8USkzbohhvzdMh3Q7O
-        2iHsbEl4UwWRsEwVPhI8PNUKnr5iM5ZpJdIG+X3FD0Gzg0vyS3j3Ddn1ploHntH3
-        D+7SWj+w3XhxaRFH9tUNRoCV5jdz661EfHlK/SAa/PVsZ0n2rDcTxN5yw==
-X-ME-Sender: <xms:8oMRZe6fONCSJJKfe3nIw8LOr-xgU8TGc18H91JBwR_GofC94nL3HQ>
-    <xme:8oMRZX4IKqOFV0oEgKKc42TCS7U8uMKO-zgBELUEFjY7VahmkotjYg6qwZWcFNwiC
-    PoyTtBK4xFARzp9ktM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudelgedgheekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
-    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
-    drtggrqeenucggtffrrghtthgvrhhnpeeiueefjeeiveetuddvkeetfeeltdevffevudeh
-    ffefjedufedvieejgedugeekhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:8oMRZdcpD0xDPpQ4eRdKahNmD-VBV6oLDrsmo2WEVgXafFP4zf4X5w>
-    <xmx:8oMRZbJmI0sQurK2ydIaVma-u8q93g1qjTB0G8cq0M1GmexG6Mic_Q>
-    <xmx:8oMRZSJqshB2blJf-vX7uSGDHolgxklCwYN8EOvMkTCXcNJou-Zdxg>
-    <xmx:8oMRZa_c5bKLGCmvIkPRqGBbsZWI1zhjKJrPvm9Uq-UeG_JSWHgk1A>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 31451C6008B; Mon, 25 Sep 2023 08:58:26 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-761-gece9e40c48-fm-20230913.001-gece9e40c
+        Mon, 25 Sep 2023 09:26:26 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1835310C;
+        Mon, 25 Sep 2023 06:26:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+ t=1695648360; x=1696253160; i=w_armin@gmx.de;
+ bh=CWO8T4kiHhHdhar2QuYz55rr18W5ysgSFVePDmC1eZ8=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+ b=aBfYQ1zpfObwLt+5ekrDOvB/Dv27w9AVbx2zo2W/wXbMUM246hJ6PMDoqBbZqshDHEA+VD7H40q
+ TjaBbFrYidlBQK9bpO8KZ1MzMD5TZgDNzd1iZPwpixM+Tjh4oSZA5ERMi1Aw8PGN+U2k0IJ20Bcj4
+ wsNi32eAlD1H+/1w85NEoRdu6xgoNiLg+z7qlMQIsUTrhGCXSzp8FLMSG+m0owaVZsqq1J+BhVUCS
+ Q1Ob1ur2w7CZw0jzX7gRt0JJI3fLDeqqE9vYDQZ7TPaqnuW4kuDdlrzwSZKS7YZdpLcpuXPdX3sZg
+ kruyXMNUtYQvEbHM8qI5kku9tyG3zvoRmQUg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MYNJq-1r7Qug31hS-00VSiI; Mon, 25 Sep 2023 15:26:00 +0200
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     markpearson@lenovo.com, jorge.lopez2@hp.com
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] platform/x86: Fix reference leaks
+Date:   Mon, 25 Sep 2023 15:25:55 +0200
+Message-Id: <20230925132557.72138-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Message-Id: <4cca22df-c809-493a-a207-9b6095adbbc4@app.fastmail.com>
-In-Reply-To: <74ad10fa-f0f6-f80f-7db3-fb01aae6f2d5@redhat.com>
-References: <047d3c51-0a9e-4c3e-beef-625a7aa4f3c3@kernel.org>
- <505264f5-cbbb-4ffe-a3e4-93d2397e80da@kernel.org>
- <beeab87b-820a-475a-b0c6-99b1b8e491ea@kernel.org>
- <207922c7-7a56-499b-bbfd-9e8d6a0a06df@kernel.org>
- <74ad10fa-f0f6-f80f-7db3-fb01aae6f2d5@redhat.com>
-Date:   Mon, 25 Sep 2023 08:58:05 -0400
-From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To:     "Hans de Goede" <hdegoede@redhat.com>,
-        "Jiri Slaby" <jirislaby@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Len Brown" <lenb@kernel.org>,
-        "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>
-Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "Linux kernel mailing list" <linux-kernel@vger.kernel.org>
-Subject: Re: WARNING at drivers/acpi/platform_profile.c:74 in platform_profile_show()
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:7FmSj3nS+XlU+rDvkBXxainT36sX+Ho08oJaa0Wq6xDY6/6br84
+ u0J5WUC4TCk/vP6Rl9lNeQbhP2rDi2QgzzrbI4m5MZuSAGX/Ujar9F7pGNOFNtwSCgjM30a
+ 4c2qUfRwOciRilNOTZEbNpE2iYp3LtDOsw3vQSdiwsmrIc5rhZsYSDRqxhf28MbXpjpkiIe
+ LIiswUzi/sJ2mqSFoHObg==
+UI-OutboundReport: notjunk:1;M01:P0:ZUpRUpSbieA=;TbYe6f7OzcniIxKI0D41j4KjZDz
+ V0mZBDxzFNiObY2lY1wyke6KokUeO9mIDXEAOFTkGdNCmEUjE2SE4+ND/Jnw+OQkucIyM5YAZ
+ CS2zkPs2TonyFRPRPDrWXIlxg/gqMfD1uD21v9kDV7S706LzHb8UBxc2n+qBOKIT603Q6K2Fd
+ 5haxl+NtLXRFgaKTvXqIT4HJfWZVsCEz3CYXoEKczUnd3SmvpIq7fzQ2Euz4+mAWdii9rNmTD
+ 313hGRYufQTGSaC+m4d1jFZ6MilLcvW4ubew+l3g1DLDf4aojn4POIev1Nt4plqMWLVOqYblQ
+ +uEN7Z/ghHzbvG1a+6dG34c2D0h0aTCoelgg4TaalfBbwOgx92vKuGOxX/r72WbrfhbAqmZ0l
+ jZfldeti57HJUFXwPQaVwVuwRRbJWkiBxbBNgsGrMrfo/gWi0yfwUV9ujbvTPiIShkK6yYDGV
+ bxyUol18uSJWy6D+UA0ib+VYqldDz/3jekpvHM0hPsU3wl6nNJgWBXfBTelF5mvVonFv68OLY
+ jdwfp4tzIsSozSDKpBKEh5T+TVqKCZsJIIvBv346WolaLT3vQGyi6aftVACfdrCCyNeLPR5/l
+ ILz2STHiqpe7w9bcfjgDITFIHXrBka4ONozT+OPzjjVUL6VsA1oj4XfrDpBPBF5eQnBgmR1fw
+ FR5/7PROR/iFojz1VBNCdUvbPaq3nnAhYiSehlTHdRbtOe832iG1I1ZPmDi8vj+YIQTZxe05T
+ e7wEVnqbR5F/XUAVeJGTV44KitdQ4fjPmlk2Pg0bcP3GliLz95wDUae5Sh17Hd3xdxM8vwHwN
+ /92xNZurZQbPcaPk6+1fy/PHcy27Lp5K56TKLAZ/UjrP8157kG2OLueOXr2xZQwI4VPPRYarA
+ dFZtKi7fDswWscp6q2zwfW03eYXCS5PVRVVeQdWEF4NzJZLVFq0ah7Gkp00RNq9ZBz7+l2Icc
+ 1BvfJC1NyhUUFY38pg0LTnG/mMY=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans
+If a duplicate attribute is found using kset_find_obj(), a reference
+to that attribute is returned which needs to be disposed accordingly
+using kobject_put(). This issue likely first appeared inside the
+dell-wmi-sysman driver, see
+commit 7295a996fdab ("platform/x86: dell-sysman: Fix reference leak").
+However, it also seems that the bug was copied from this driver into
+the think-lmi and hp-bioscfg drivers. Maybe a more abstract
+fw_attr_class could prevent such issues in the future by abstracting
+away the kobject handling?
 
-On Mon, Sep 25, 2023, at 4:57 AM, Hans de Goede wrote:
-<snip>
->
-> Mark, can you please take a look at this (it is a thinkpad_acpi dytc issue)?
-Ack
+Armin Wolf (2):
+  platform/x86: think-lmi: Fix reference leak
+  platform/x86: hp-bioscfg: Fix reference leak
 
-<snip>
-> Regards,
->
-> Hans
->
-> p.s.
->
-> Mark, maybe should add you to the MAINTAINERS section for thinkpad_acpi ?
-Happy to do so if that makes sense and is OK with everyone. 
-I assume I just push a patch proposing that change, or is there some nomination process?
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 14 ++++++++----
+ drivers/platform/x86/think-lmi.c             | 24 ++++++++++++++++----
+ 2 files changed, 30 insertions(+), 8 deletions(-)
+
+=2D-
+2.39.2
+
