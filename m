@@ -2,149 +2,148 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2BCCE7A81
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 14:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D7DCE7A95
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 15:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232335AbjIYO2y (ORCPT
+        id S232556AbjIYPIv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Sep 2023 10:28:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48004 "EHLO
+        Mon, 25 Sep 2023 11:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232310AbjIYO2x (ORCPT
+        with ESMTP id S232674AbjIYPIt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Sep 2023 10:28:53 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1864F115;
-        Mon, 25 Sep 2023 07:28:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
- t=1695652108; x=1696256908; i=w_armin@gmx.de;
- bh=BSN1lAPim3C7cFgrpEJfQYsSVYTrivCGYVKBfhFk7K4=;
- h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
- b=PneQQp95etoJT0cI/lUkkdbdDS2YbbaG1CO9D7QV0IU4nO1BCrDhkP2O9AeU33OvgVzE5yyxwi8
- 1bwg/xrYFERdwtV7EZfpJJYDN5vEpR0lnBsX0OOf8a6CfWSErdgQSiClVwx2vcgt3wnNQo8goQ863
- ZETctxIA3qNLjE3CXe0hFSY0Ouo8/+M/ietCGIR8s+A/6bSd3H7Bm+jRSc282HYz7UTSj2RLl0zvl
- q5zmFe850NJ8VCY7QEw0LQTAeLQbMZtoOnv3DvupJkoRAxwZxvr2iGoF7wn2OZUtb2I+jh2wGaEE8
- 3jClp/1av/tOUdef9Bp7Y4Elt+wxFQciQ7ig==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1N0G1n-1rYTU43x4B-00xLCm; Mon, 25 Sep 2023 16:28:28 +0200
-From:   Armin Wolf <W_Armin@gmx.de>
-To:     markpearson@lenovo.com, jorge.lopez2@hp.com
-Cc:     hdegoede@redhat.com, markgross@kernel.org,
-        ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] platform/x86: hp-bioscfg: Fix reference leak
-Date:   Mon, 25 Sep 2023 16:28:19 +0200
-Message-Id: <20230925142819.74525-3-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230925142819.74525-1-W_Armin@gmx.de>
-References: <20230925142819.74525-1-W_Armin@gmx.de>
+        Mon, 25 Sep 2023 11:08:49 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C492120;
+        Mon, 25 Sep 2023 08:08:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695654523; x=1727190523;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=xqajMAeo9FklI77B0Q+uzt8n4v+u75LktqHbw8btNgM=;
+  b=cQXeQZ9r2bvdusu/erE0OEq6A7QuVsVY7iraBF2H9GVF3u+YS86VaeRO
+   pspcJyMv2eFc4fdQwgqTFFllplbA/AFPce5z9IYjCPkIhxTJId0bf4r2h
+   G225Xa6Q/rxQ94F2e66VzkabDmJGSd8pnuZkvU9z6QyAhnKH3yfkWo0v7
+   VTvW6Fq+VmOn7zEZfzYhOEbVtOByApj0Qmt5QCT3VojJh86t+LHW4Ih5E
+   2vVUhnkmULLahH1HwHVlpdXkuN7UfBVN0Itek9rWhbKUldPzogScJcEYn
+   /yR43nFEMgMYn99pH1buThc6CipYWRey9MT9jMfkkg3NCWcnD5ww/QMba
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="371596723"
+X-IronPort-AV: E=Sophos;i="6.03,175,1694761200"; 
+   d="scan'208";a="371596723"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 08:08:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="814007768"
+X-IronPort-AV: E=Sophos;i="6.03,175,1694761200"; 
+   d="scan'208";a="814007768"
+Received: from stamengx-mobl1.ger.corp.intel.com ([10.249.32.149])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 08:08:26 -0700
+Date:   Mon, 25 Sep 2023 18:08:24 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Jithu Joseph <jithu.joseph@intel.com>
+cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        rostedt@goodmis.org, ashok.raj@intel.com, tony.luck@intel.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com, pengfei.xu@intel.com
+Subject: Re: [PATCH v2 1/9] platform/x86/intel/ifs: Store IFS generation
+ number
+In-Reply-To: <20230922232606.1928026-2-jithu.joseph@intel.com>
+Message-ID: <9c405d3c-3376-5a35-3a4a-62b59f764043@linux.intel.com>
+References: <20230913183348.1349409-1-jithu.joseph@intel.com> <20230922232606.1928026-1-jithu.joseph@intel.com> <20230922232606.1928026-2-jithu.joseph@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:QdZMaBWIEMhEI+i7SEL5ArqLK9URNCHAxIOTsXjqOlzpvSUz9km
- vbaY8ghXMed0iu5rxDL9ouEOMM/DLstv5fHVcBzhX99DFG8zQ8htGneYUeDh3wX30qDOfld
- 6SNS2P0BTwEySdtXy5x1JBGwCiuP5+qnjJh2Tc1sl/CBCmP3z/lo1HFGiVjIQfkc/CLx5ko
- D+W7QkBzPnX4hbEJshnOw==
-UI-OutboundReport: notjunk:1;M01:P0:fI+oM7hxZKA=;5hnQkW9m/NydIG2Vt70g4KBQKkv
- FyLbbdAuhWVox7ScpJWKA1qxOztjSJdp/rJJ35LdJNdmmNDM8nLBmIMoWfWr+weCoW+GY/S4m
- iN66ACs/WFF1Cl6aky+d4znv85uLnngAT3daGUdt1wlqK2RjLQNUtAPSKssrnR4ko3JEx8Qu1
- fPyWkFgp5imCLCufw+UEsXjNc3U8SCB9TLKKmZ1LDBi52rgWGtHd1Q9DRV0Bj6ZiFlRujH+we
- ZZy3oVY3fO5ZmjP+A9KB93IL72a2Um9VuKP36Avs19c5HJlq/4iz6OkqS7yo5Wz0/CZGdIN4F
- BvnrZgzt4oJ0bVGtL6VmVAM4mV4VS0x+nhfWI+X29HOnaJrcfu26te8A3mYE1SL9Fzt575S/h
- 5ay65zostYwEUAwZqql6B6EZiBW4R1bsxMgqW3uDNssVnWsa4Cn/Fxz4PRAcIysUbw9cN0y60
- vm9pulmIm6dLh1kX2her98qnNzXsLjssfT0TY37WVsbFUfsPD85LgpV37mMUKd7QnNpvHVMlF
- 2peef/UzrDs22ADUmbirADBmyOJrZHvKbHp0XBYU1idHE/zB545l6Kz8bALKnM/dbaBzVbDn0
- tUZHaFo1q3lf3+MXuqwhrjX4si/yDtwZOGW7KCmZH9bqwKwXz8wNKziKAZj4XsudhlUZG2ZnG
- 0F95VyqhWFcU1d0e4hm1tBivz5+m69hRZ7+rfiWur9lgOin2e2fNWBOYAvrlX4RBczTfeEzjn
- ISa4PU6i4chLtQIu5t/ggviOLo/9qJFsF7ana2KbooAZQt4UXH5N8W8OCf9wC2jX+P402MdVW
- aSE3f3DTbTqJ0WzZvig+Zml8X5CVXD3OYRUxYCO6tieLonQVbSYZT9Qw1JP317crf77h+ijxt
- V5FpHxozIjLtXLYKhnbFJ6DBmn0dZvOLBv6rKJ9VSJ8RQeGyA7y48tiYc5oc4rqINEecY/U31
- wsfviDSraNzts6wduymF+m3Le18=
+Content-Type: multipart/mixed; boundary="8323329-2019316765-1695654510=:2147"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-If a duplicate attribute is found using kset_find_obj(), a reference
-to that attribute is returned which needs to be disposed accordingly
-using kobject_put(). Use kobject_put() to dispose the duplicate
-attribute in such a case.
-As a side note, a very similar bug was fixed in
-commit 7295a996fdab ("platform/x86: dell-sysman: Fix reference leak"),
-so it seems that the bug was copied from that driver.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Compile-tested only.
+--8323329-2019316765-1695654510=:2147
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
 
-Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
-Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
-Chnages in v4:
-- fix missing whitespace
-- add Reviewed-by
-Changes in v3:
-- no changes
-Changes in v2:
-- add patch
-=2D--
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+On Fri, 22 Sep 2023, Jithu Joseph wrote:
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platfo=
-rm/x86/hp/hp-bioscfg/bioscfg.c
-index 8c4f9e12f018..5798b49ddaba 100644
-=2D-- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-@@ -659,7 +659,7 @@ static int hp_init_bios_package_attribute(enum hp_wmi_=
-data_type attr_type,
- 					  const char *guid, int min_elements,
- 					  int instance_id)
- {
--	struct kobject *attr_name_kobj;
-+	struct kobject *attr_name_kobj, *duplicate;
- 	union acpi_object *elements;
- 	struct kset *temp_kset;
+> IFS generation number is reported via MSR_INTEGRITY_CAPS.  As IFS
+> support gets added to newer CPUs, some differences are expected during
+> IFS image loading and test flows.
+> 
+> Define MSR bitmasks to extract and store the generation in driver data,
+> so that driver can modify its MSR interaction appropriately.
+> 
+> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> Tested-by: Pengfei Xu <pengfei.xu@intel.com>
+> ---
+>  arch/x86/include/asm/msr-index.h      | 1 +
+>  drivers/platform/x86/intel/ifs/ifs.h  | 2 ++
+>  drivers/platform/x86/intel/ifs/core.c | 3 +++
+>  3 files changed, 6 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> index 1d111350197f..838e5a013a07 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -222,6 +222,7 @@
+>  #define MSR_INTEGRITY_CAPS_ARRAY_BIST          BIT(MSR_INTEGRITY_CAPS_ARRAY_BIST_BIT)
+>  #define MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT	4
+>  #define MSR_INTEGRITY_CAPS_PERIODIC_BIST	BIT(MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT)
+> +#define MSR_INTEGRITY_CAPS_SAF_GEN_MASK	GENMASK_ULL(10, 9)
+>  
+>  #define MSR_LBR_NHM_FROM		0x00000680
+>  #define MSR_LBR_NHM_TO			0x000006c0
+> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+> index 93191855890f..d666aeed20fc 100644
+> --- a/drivers/platform/x86/intel/ifs/ifs.h
+> +++ b/drivers/platform/x86/intel/ifs/ifs.h
+> @@ -229,6 +229,7 @@ struct ifs_test_caps {
+>   * @status: it holds simple status pass/fail/untested
+>   * @scan_details: opaque scan status code from h/w
+>   * @cur_batch: number indicating the currently loaded test file
+> + * @generation: IFS test generation enumerated by hardware
+>   */
+>  struct ifs_data {
+>  	int	loaded_version;
+> @@ -238,6 +239,7 @@ struct ifs_data {
+>  	int	status;
+>  	u64	scan_details;
+>  	u32	cur_batch;
+> +	u32	generation;
+>  };
+>  
+>  struct ifs_work {
+> diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
+> index 306f886b52d2..4ff2aa4b484b 100644
+> --- a/drivers/platform/x86/intel/ifs/core.c
+> +++ b/drivers/platform/x86/intel/ifs/core.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright(c) 2022 Intel Corporation. */
+>  
+> +#include <linux/bitfield.h>
+>  #include <linux/module.h>
+>  #include <linux/kdev_t.h>
+>  #include <linux/semaphore.h>
+> @@ -94,6 +95,8 @@ static int __init ifs_init(void)
+>  	for (i = 0; i < IFS_NUMTESTS; i++) {
+>  		if (!(msrval & BIT(ifs_devices[i].test_caps->integrity_cap_bit)))
+>  			continue;
+> +		ifs_devices[i].rw_data.generation = FIELD_GET(MSR_INTEGRITY_CAPS_SAF_GEN_MASK,
+> +							      msrval);
+>  		ret = misc_register(&ifs_devices[i].misc);
+>  		if (ret)
+>  			goto err_exit;
+> 
 
-@@ -704,8 +704,11 @@ static int hp_init_bios_package_attribute(enum hp_wmi=
-_data_type attr_type,
- 	}
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
- 	/* All duplicate attributes found are ignored */
--	if (kset_find_obj(temp_kset, str_value)) {
-+	duplicate =3D kset_find_obj(temp_kset, str_value);
-+	if (duplicate) {
- 		pr_debug("Duplicate attribute name found - %s\n", str_value);
-+		/* kset_find_obj() returns a reference */
-+		kobject_put(duplicate);
- 		goto pack_attr_exit;
- 	}
+-- 
+ i.
 
-@@ -768,7 +771,7 @@ static int hp_init_bios_buffer_attribute(enum hp_wmi_d=
-ata_type attr_type,
- 					 const char *guid, int min_elements,
- 					 int instance_id)
- {
--	struct kobject *attr_name_kobj;
-+	struct kobject *attr_name_kobj, *duplicate;
- 	struct kset *temp_kset;
- 	char str[MAX_BUFF_SIZE];
-
-@@ -794,8 +797,11 @@ static int hp_init_bios_buffer_attribute(enum hp_wmi_=
-data_type attr_type,
- 		temp_kset =3D bioscfg_drv.main_dir_kset;
-
- 	/* All duplicate attributes found are ignored */
--	if (kset_find_obj(temp_kset, str)) {
-+	duplicate =3D kset_find_obj(temp_kset, str);
-+	if (duplicate) {
- 		pr_debug("Duplicate attribute name found - %s\n", str);
-+		/* kset_find_obj() returns a reference */
-+		kobject_put(duplicate);
- 		goto buff_attr_exit;
- 	}
-
-=2D-
-2.39.2
-
+--8323329-2019316765-1695654510=:2147--
