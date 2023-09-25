@@ -2,85 +2,144 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F46CE7A81
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 13:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D361ACE7A94
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 13:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230263AbjIYN3J (ORCPT
+        id S231773AbjIYN3Q (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Sep 2023 09:29:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56030 "EHLO
+        Mon, 25 Sep 2023 09:29:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230284AbjIYN3H (ORCPT
+        with ESMTP id S231742AbjIYN3M (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Sep 2023 09:29:07 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9357FB8;
-        Mon, 25 Sep 2023 06:29:00 -0700 (PDT)
+        Mon, 25 Sep 2023 09:29:12 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DA81FF;
+        Mon, 25 Sep 2023 06:29:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
- t=1695648526; x=1696253326; i=w_armin@gmx.de;
- bh=CWO8T4kiHhHdhar2QuYz55rr18W5ysgSFVePDmC1eZ8=;
- h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
- b=sL1I9+tADoTgQB47LpGqIxPbZ1mT64+8GmfGijLH2bwNW7xFC/r2JaQExdWDQqN6DIIi3YWC/eg
- PKDBhadhqtQsjwzMYyrq5vUoDY7FLNNiDdq0GErYRGBD+nh0dcY+KnyMd53pZuWqbmhncNi1pVbXf
- sc/uzkCrPJ7tgs3H2c7jvVd9uvYEytmTXJxfyOsyxow7hmpwGBXzrEMAKWNpTdWYpWXBuSGMgIzbU
- YUEaeL7fhfDnDeQ3vH3ptB9xj/Apm2kpn4m0p47DGNt4lbIfHhP6BPVCbdA5i/uLZFcEZVoTAiKXN
- xWNUc0Ww0HAq28tenY6dWPvuYR2o2FZT4SgA==
+ t=1695648530; x=1696253330; i=w_armin@gmx.de;
+ bh=RvUmrJpI8L7JM1w0AgZ8nzrY2l+SMzgiJ9T5DMWjVFU=;
+ h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+ b=gS1bxp5eWBF+smPOfnh75xFR/dlXq5911ngC83XvuGbJXg6fr+wLlF1YKjnSNtbZfidkBSsm00O
+ lMrczo5fq9cSzWonBwVB6OtLdqjacEfmEX4ov+smDKRjD6LiIAjMZLhZoYG66nA5+LsV7AUnwmtc8
+ eIKCr01/vDaYOwRRjTX2zX9h4aIHUrhUHrSevZsyJNhCYT7Ecrvd2UeuGz21Q9JiGdDtAD2uCfX5R
+ JU89oIiV7WJIMIqNyCkggTYQpZ4anFBEtJVeuiAHBh4HvPzjX8FbPst7LohkflfbdmIFxPIFRszYN
+ hMu6JW/q6yuAErL3jspB7bMB1AaA+leazJ/g==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
  (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1Mel3n-1rKekt2tyn-00aiz1; Mon, 25 Sep 2023 15:28:46 +0200
+ 1Mzhj9-1rWpz11ziz-00vg5V; Mon, 25 Sep 2023 15:28:50 +0200
 From:   Armin Wolf <W_Armin@gmx.de>
 To:     markpearson@lenovo.com, jorge.lopez2@hp.com
 Cc:     hdegoede@redhat.com, markgross@kernel.org,
         ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/2] platform/x86: Fix reference leaks
-Date:   Mon, 25 Sep 2023 15:28:42 +0200
-Message-Id: <20230925132844.72479-1-W_Armin@gmx.de>
+Subject: [PATCH v3 2/2] platform/x86: hp-bioscfg: Fix reference leak
+Date:   Mon, 25 Sep 2023 15:28:44 +0200
+Message-Id: <20230925132844.72479-3-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230925132844.72479-1-W_Armin@gmx.de>
+References: <20230925132844.72479-1-W_Armin@gmx.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:tnhX8hNAv2gwyG/OIoIMe5O4n1Cf+tiVydD5wfd3+zTfSVCp2At
- xuUJfvOzk1I2mzUmKYv3ni96HN0gsInyOOw+zKWEP5t+tt9O0j2r9aNNR6920/ztwSqk03O
- KkoZHSfk2X9Qu2Tvz8OYHjEBXDbA4Yh2QG0kC8U2vw2qvkJocd9e/fWTMUThW6o9kClDGvv
- csV0fgBoDgLb+VBA9IeQA==
-UI-OutboundReport: notjunk:1;M01:P0:HhaFlpIL7gg=;afsaFn/AJccQrwOI/JVAxafSbnW
- VcfkMswN4NZV9V6W2VvjvHr5qKL0SOovqTQd/8FhW9y6Ho8qGCYpcpHixd8512cMZ7zKFNqqs
- CgEEH1SbMuf1f2CUHya/EKZQxA6qSXWC5juGAmEJSWULdhDD3X1UWjSWgssbAMZsmfiqNW3xg
- koy4jZkRgMfPYC3vDLvv19C9671tdNLcxDUqq+mrqv+BQjDwFX0DLSBcW1RxWJgAp2/YmrYJl
- 2D3T1ct48Hc8U8E2ovBi5iPSFt3jOyJPgoghhabkrC/FaOZ/vqIkRrcZSgUiebEL8+xe1CNYh
- xTQ9EzvoFCTlemBi7vbDcWvshT79ZW1DH6Zfpq4HHLXBuQqhRHwR+5PWNLerMOBLk6D6/qc0i
- wkcgd/gU4ph0/oFXx7PWKT/UBuDt0ekLX8C9nhdITTpa10bv1uc9BV6kSvf40kbZDjkh9qLYK
- AGBEP0q59Fs6uIZb2OIJ4Hc1K73RdZRZUbrMBwJ/noSHczAQZRBbrdK58LsHDbto+Tpmh3WeY
- CaZt9KNVtjKx+eCHbrG1fxnk5pm1tVhiB2HYBNldxQEhUFFC5u0Wov40ryzFl9DTp/pDXNChC
- 5QJDOqrH0jOXxRHQ0v+H7gU1v4Jeop5wC3DXKipOVS6G0OpgPXYlt0K2mlCdwnCKUI4Dyb7Cm
- ydJDQi8O6Y6VHEslhLgvhlItXtHw2gQTA4iuu3DuDmePD6YjpJrbwJ6kh5AL4Hc4O8/AHgatM
- mzcn3P5AlFfmdeVMYklKfUvPXlGYvFi0JP1ARbH26cPArjuSLPitvTIur76NO1aIIgOR33E7w
- JLhIFjo7fcPzPRib9Mw8EILijM5iQkRPAWxR5UFyR0qi0GOsmgCl8dUIAH9zooslbP1uri1vY
- eTWhTWnCU8szt+47F8mhtdqG8zhYHbFN2BRfA9KmpACQTBTbqpnezTFtd6lUMDvuk7I1Cj/BS
- uGcDGcyLjoofe09fir4RHTxPJ0M=
+X-Provags-ID: V03:K1:wVU/vvnTaXPRlpfetkvvBU2Zdlhe7jV9e10G0/ZGWrqbbgyNtvq
+ xBekzlXdpOcCqQ4svJlyU7WBVJfvZngztNMS7F1S86nR/UfyLv38j5tESdmMycIkM6fWyii
+ YxG2nsTzhk0I4vmeeYrw3/dkXnRKT0gAC8CFHpIOjbaHrrVK+wwJM6CMJKy+quAwjJJTEYr
+ NyCrdTA3QvcrlK8cRvs1g==
+UI-OutboundReport: notjunk:1;M01:P0:GSnf9eeADtg=;xxaEpJW0WiO5EqPgGDnYGCQtVB1
+ uZH1P6q+Xxm4wDcREARAx0vv26BpbuIEnbuTF7A7iQ6e46nLOhrtWgX6GJdUMlXOwryxXQRyp
+ WVcV69dY3vpi1ovGv52qqZyf2uvIlHpibtVzvCvlw6KtooVEKDhHrZqJhB+jgM938r9Kr5N1A
+ sk6ZQXrBmcWVVUymCA0KRb/D+ewtPltJjv9NHxh2pEJTWLq3OgTXJklydXJJ+xP/SFmV5jOuB
+ DVVS2mTZHJyC/LdTAJIzRTaeOYGKDe8OXW2k8EF8wr6XfLC+4RHHTEEG9bqqGYDsh/0cUnT9R
+ 3QSw4Xy2mbfhqsNbiYkpiG0DTYZyM5+StoSdLn47t3aWODgI8b7h0FJxcxmCVaZW5fbm8LEnZ
+ VHNytsetZoezoAFy9KaNu943mKl9r6gbYM04WqW9hXukCMalPME21O2ujKTFQMBMI+ZRwrl5N
+ rVfm6GNEHgHADSuE99ThTR6by6xY3XHscHVAWiZfMl7NdRIjehueLpWHX6G4ECe2nNsOSYEVI
+ D65sUHpmduvDXU2TlimHKzR7o/ganM2W7JxXEq4sPdN+RwguDCa7uoeqfevLYZ4EKGCQ5rmvj
+ WW7ldrvehSgndoX6ViqXxEUQxLUaEAo+ASBJfuvvYugCHlnz07pwybwion3ZGr7WRK/Ce7I5Y
+ DBJ5nfmAcyhPWCIbmjRTYAhXIUyrME5vI9EP3g/0JIP7X9E92nmOjx9dzp4WeZnfjjeci4EvR
+ Twsrd/Mhtzf/gJ3dB+18Htog9F638lrKuGurBaeiEmMbza8ciBokjMQVZgxCGXCJcQ+fRvTK6
+ Lv64Ckf6VdqrcoJMniZOE2BI5OyluM9fr7IbdX9CFlJqk/fQGSz7b9+DpBhgRcwcbsqdoq9or
+ b8s4UFfxMNDmm3oYpOBB9hwQ3HgB5KGtVd4bPCDwIibWg/E6LpzDhd3bdQK9DyblVuP1Dzu4Z
+ ZceKSw8oiPWEYRULD1K3KXTc0pM=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 If a duplicate attribute is found using kset_find_obj(), a reference
 to that attribute is returned which needs to be disposed accordingly
-using kobject_put(). This issue likely first appeared inside the
-dell-wmi-sysman driver, see
-commit 7295a996fdab ("platform/x86: dell-sysman: Fix reference leak").
-However, it also seems that the bug was copied from this driver into
-the think-lmi and hp-bioscfg drivers. Maybe a more abstract
-fw_attr_class could prevent such issues in the future by abstracting
-away the kobject handling?
+using kobject_put(). Use kobject_put() to dispose the duplicate
+attribute in such a case.
+As a side note, a very similar bug was fixed in
+commit 7295a996fdab ("platform/x86: dell-sysman: Fix reference leak"),
+so it seems that the bug was copied from that driver.
 
-Armin Wolf (2):
-  platform/x86: think-lmi: Fix reference leak
-  platform/x86: hp-bioscfg: Fix reference leak
+Compile-tested only.
 
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 14 ++++++++----
- drivers/platform/x86/think-lmi.c             | 24 ++++++++++++++++----
- 2 files changed, 30 insertions(+), 8 deletions(-)
+Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
+Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Changes in v3:
+- no changes
+Changes in v2:
+- add patch
+=2D--
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platfo=
+rm/x86/hp/hp-bioscfg/bioscfg.c
+index 8c4f9e12f018..0c83e66f8d0b 100644
+=2D-- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+@@ -659,7 +659,7 @@ static int hp_init_bios_package_attribute(enum hp_wmi_=
+data_type attr_type,
+ 					  const char *guid, int min_elements,
+ 					  int instance_id)
+ {
+-	struct kobject *attr_name_kobj;
++	struct kobject *attr_name_kobj, *duplicate;
+ 	union acpi_object *elements;
+ 	struct kset *temp_kset;
+
+@@ -704,8 +704,11 @@ static int hp_init_bios_package_attribute(enum hp_wmi=
+_data_type attr_type,
+ 	}
+
+ 	/* All duplicate attributes found are ignored */
+-	if (kset_find_obj(temp_kset, str_value)) {
++	duplicate =3D kset_find_obj(temp_kset, str_value);
++	if (duplicate) {
+ 		pr_debug("Duplicate attribute name found - %s\n", str_value);
++		/* kset_find_obj() returns a reference */
++		kobject_put(duplicate);
+ 		goto pack_attr_exit;
+ 	}
+
+@@ -768,7 +771,7 @@ static int hp_init_bios_buffer_attribute(enum hp_wmi_d=
+ata_type attr_type,
+ 					 const char *guid, int min_elements,
+ 					 int instance_id)
+ {
+-	struct kobject *attr_name_kobj;
++	struct kobject *attr_name_kobj, *duplicate;
+ 	struct kset *temp_kset;
+ 	char str[MAX_BUFF_SIZE];
+
+@@ -794,8 +797,11 @@ static int hp_init_bios_buffer_attribute(enum hp_wmi_=
+data_type attr_type,
+ 		temp_kset =3D bioscfg_drv.main_dir_kset;
+
+ 	/* All duplicate attributes found are ignored */
+-	if (kset_find_obj(temp_kset, str)) {
++	duplicate =3D kset_find_obj(temp_kset, str);
++	if (duplicate) {
+ 		pr_debug("Duplicate attribute name found - %s\n", str);
++		/*kset_find_obj() returns a reference */
++		kobject_put(duplicate);
+ 		goto buff_attr_exit;
+ 	}
 
 =2D-
 2.39.2
