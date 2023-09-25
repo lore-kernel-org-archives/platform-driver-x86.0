@@ -2,139 +2,152 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AEFCE7A81
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 13:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED53CE7A94
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 13:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231794AbjIYN3R (ORCPT
+        id S230284AbjIYNin (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Sep 2023 09:29:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56026 "EHLO
+        Mon, 25 Sep 2023 09:38:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230284AbjIYN3O (ORCPT
+        with ESMTP id S230263AbjIYNim (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Sep 2023 09:29:14 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01DD910E;
-        Mon, 25 Sep 2023 06:29:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
- t=1695648529; x=1696253329; i=w_armin@gmx.de;
- bh=RDTGeRg8m+ex27ocQe6qZsyvm1iCvXo28qa08fOWNpg=;
- h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
- b=DZdUHsv5crvlVJFTTrkY9MfX+IbjoaHe0C3vAVj2EW5VIst6ZdXcVhNJDk5Im9vPvYt+77oHNzJ
- c1r+OcTL8S6b9h+YOxyQrA6k6jV2tCMUAS8M8ppwqbCiNUxMEwtSpRXFcLnzmMc3nDtt+2mpdJ2ux
- 4OFVdGHf0gbUBnQFQ2kuasbpFv+pQsMSp02ZLfoqytydGWyER/4QocBB0QWweTQNAz6fyT0Au7VVe
- 7+Ruu73mGWpALy8z5TIGcgSoPf2lCl1KnruX4sH8tqgcRPjtSKB8EwcqGhRpAS/mCz5R0jpDgrb2W
- RhokTrLhRzyOtPNEiTbPJadFHRyQ5U8pmTVw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MBm1U-1qwtfZ0BCO-00CAir; Mon, 25 Sep 2023 15:28:49 +0200
-From:   Armin Wolf <W_Armin@gmx.de>
-To:     markpearson@lenovo.com, jorge.lopez2@hp.com
-Cc:     hdegoede@redhat.com, markgross@kernel.org,
-        ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/2] platform/x86: think-lmi: Fix reference leak
-Date:   Mon, 25 Sep 2023 15:28:43 +0200
-Message-Id: <20230925132844.72479-2-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230925132844.72479-1-W_Armin@gmx.de>
-References: <20230925132844.72479-1-W_Armin@gmx.de>
+        Mon, 25 Sep 2023 09:38:42 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC944B3;
+        Mon, 25 Sep 2023 06:38:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695649115; x=1727185115;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=tzL5UPIxLNg3ierRGxOkkjvUg6OsD7TX5sjo2ZMUfTE=;
+  b=kimFoxizp+Pxjggbcm2MqiokSZ+yCJLxViSdWlYazJCmDPNy/S1TxgRv
+   xxg2HlwIBFGKhgpQNOUvgC3VjKL06zZjTU1XqknaM5PvYcOemfC6RAKd+
+   kQ0f+4Cxno/AzvJZ5dO7XNZGzwQ5S3bPAl+PD91D0CMuI5x7i7lrQ+m90
+   isf9iLpcio3xSNyqSYq1jluzI/qyLNhjUmGvWV51z2lSK7C7BR7U3r22m
+   15pfixGeR8iSvt9xqVcRtVw6iiFBUtn+tgM0dvFeN8uJ/7b47RjNPkZ24
+   fhSUfPkEIiVD6LRZVPYx6vaf/xS6Vrjf4ddfzRmGxOG8Z2tbdPIjWy7I2
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="385079374"
+X-IronPort-AV: E=Sophos;i="6.03,175,1694761200"; 
+   d="scan'208";a="385079374"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 06:38:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="777650757"
+X-IronPort-AV: E=Sophos;i="6.03,175,1694761200"; 
+   d="scan'208";a="777650757"
+Received: from stamengx-mobl1.ger.corp.intel.com ([10.249.32.149])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 06:38:32 -0700
+Date:   Mon, 25 Sep 2023 16:38:30 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Armin Wolf <W_Armin@gmx.de>
+cc:     markpearson@lenovo.com, jorge.lopez2@hp.com,
+        Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] platform/x86: hp-bioscfg: Fix reference leak
+In-Reply-To: <20230925132844.72479-3-W_Armin@gmx.de>
+Message-ID: <eaabc245-bf5a-b4a0-f319-1e1c4f02d7a@linux.intel.com>
+References: <20230925132844.72479-1-W_Armin@gmx.de> <20230925132844.72479-3-W_Armin@gmx.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:f8bun32Dbxt8C5XhmyOMmc0eZElWdHxIhVgx1/DLOtGjEPENrAn
- 7RbawcWQuYm/dHl6Bp4tjUV0BuEWA79RoFEGdXdcSjBOMit2zztBEjmvVIb8R6OtyRL8oqx
- cMZnMpf6EIl8A69vYOSi7yCmbMdfiAQBDBqViQRHI74oaHyj8iLROrGVniAPw5ffPaTvpwN
- d1ZKlZkiFFAQuWQjjUYDg==
-UI-OutboundReport: notjunk:1;M01:P0:ZUToJMOjej4=;whp+qgCHvgDB5g9yWRRyqv4536Z
- Lh5m2+vMP0w4w/tT4gTNohXUPoRm92tZsKx47ZtafcqaLAdB/+9ruOls/vuhQ/pLxKRi4lSdz
- iLn1JIoxYxLgE79Ue1TjkJFyINxBJJAYxLmmGfQZl42Mr5CIlz2teJSiQt46GgdNqeFZChym7
- ORXwWkqg9LZhX/NMP+tFSG6bI5ws45vwMygW/ThIFN4K9lH42ysxDSmaac7eR52ty1QxpMlTq
- xLkyjiyUuzY58tpRsFCvBrnBiY9C1G2PiqNPz9hs7Dvtyel4OmzhvrYZuVvqZtXDubPXPQ3VQ
- 5LALlYBDDLCiT1UN5RdzeZwoqHx5JklUH1uL+rNJmqvaV3H0NIifv4Xu0iBY57CfePU+AkDI+
- U4f99lojc8Ez4dBxPyahIOVTJnaPM5laOfkEHBjOlR75yOsyjZgcMaSHYbfeJkbGJ4fEAnHFA
- xFzsAzBXg92Lr5isjaj+sS7NJj0WfPl2aK+H2vxZxa2jWvS6aWUK4sjY5e9VkUip+90hP9Gre
- 0xGVgM8Vqwn/evA0902vuo4+BNvYAvqB9PSIM3+BfFecCVQmQKGcga/NuLbdzw6tgGTIBmyFJ
- IEb1FUY0Dl6lNfjpdyPN9OLzKKbJx0KFSRde6VjD1enc1metUzRWw7ZEqGKJbJ+py+qGPvjY+
- qzhEw9S61SvpVgEFsfCOQIyo07tMcW6ikNf5L4TD3a+rZEg+7W+uis4O6m16aYZdCmrCBWOtP
- s6L5gLCCkuTMqxzNos5ZGASXsb8YyPGDck/WsX3Rnt3ZXHJegaz+WtXxcBh4C9pa+8kbFZaZI
- JYUtVtOzaZgvwIkm/ZXv8IDu8f+RiTjoJI2PobTQc27qYERJbUD9CIfKciGHnEgoG9Rl+XBE7
- 9A2G4njOFTSW78QTg2kpzMjFm7lfK4Tu794XXIdCVVusEJV6hsqk17953pqZokz6G4BcHKg6Y
- WFloDY2CrnNEHyIxE/V7QNtpbsQ=
+Content-Type: multipart/mixed; boundary="8323329-1596787364-1695649114=:2147"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-If a duplicate attribute is found using kset_find_obj(), a reference
-to that attribute is returned which needs to be disposed accordingly
-using kobject_put(). Move the setting name validation into a separate
-function to allow for this change without having to duplicate the
-cleanup code for this setting.
-As a side note, a very similar bug was fixed in
-commit 7295a996fdab ("platform/x86: dell-sysman: Fix reference leak"),
-so it seems that the bug was copied from that driver.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Compile-tested only.
+--8323329-1596787364-1695649114=:2147
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-Fixes: 1bcad8e510b2 ("platform/x86: think-lmi: Fix issues with duplicate a=
-ttributes")
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
-Changes in v3:
-- add Reviewed-by
-Changes in v2:
-- no changes
-=2D--
- drivers/platform/x86/think-lmi.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+On Mon, 25 Sep 2023, Armin Wolf wrote:
 
-diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think=
--lmi.c
-index 4be6f28d4600..3a396b763c49 100644
-=2D-- a/drivers/platform/x86/think-lmi.c
-+++ b/drivers/platform/x86/think-lmi.c
-@@ -1344,6 +1344,24 @@ static void tlmi_release_attr(void)
- 	kset_unregister(tlmi_priv.authentication_kset);
- }
+> If a duplicate attribute is found using kset_find_obj(), a reference
+> to that attribute is returned which needs to be disposed accordingly
+> using kobject_put(). Use kobject_put() to dispose the duplicate
+> attribute in such a case.
+> As a side note, a very similar bug was fixed in
+> commit 7295a996fdab ("platform/x86: dell-sysman: Fix reference leak"),
+> so it seems that the bug was copied from that driver.
+> 
+> Compile-tested only.
+> 
+> Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
+> Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+> Changes in v3:
+> - no changes
+> Changes in v2:
+> - add patch
+> ---
+>  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> index 8c4f9e12f018..0c83e66f8d0b 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> @@ -659,7 +659,7 @@ static int hp_init_bios_package_attribute(enum hp_wmi_data_type attr_type,
+>  					  const char *guid, int min_elements,
+>  					  int instance_id)
+>  {
+> -	struct kobject *attr_name_kobj;
+> +	struct kobject *attr_name_kobj, *duplicate;
+>  	union acpi_object *elements;
+>  	struct kset *temp_kset;
+> 
+> @@ -704,8 +704,11 @@ static int hp_init_bios_package_attribute(enum hp_wmi_data_type attr_type,
+>  	}
+> 
+>  	/* All duplicate attributes found are ignored */
+> -	if (kset_find_obj(temp_kset, str_value)) {
+> +	duplicate = kset_find_obj(temp_kset, str_value);
+> +	if (duplicate) {
+>  		pr_debug("Duplicate attribute name found - %s\n", str_value);
+> +		/* kset_find_obj() returns a reference */
+> +		kobject_put(duplicate);
+>  		goto pack_attr_exit;
+>  	}
+> 
+> @@ -768,7 +771,7 @@ static int hp_init_bios_buffer_attribute(enum hp_wmi_data_type attr_type,
+>  					 const char *guid, int min_elements,
+>  					 int instance_id)
+>  {
+> -	struct kobject *attr_name_kobj;
+> +	struct kobject *attr_name_kobj, *duplicate;
+>  	struct kset *temp_kset;
+>  	char str[MAX_BUFF_SIZE];
+> 
+> @@ -794,8 +797,11 @@ static int hp_init_bios_buffer_attribute(enum hp_wmi_data_type attr_type,
+>  		temp_kset = bioscfg_drv.main_dir_kset;
+> 
+>  	/* All duplicate attributes found are ignored */
+> -	if (kset_find_obj(temp_kset, str)) {
+> +	duplicate = kset_find_obj(temp_kset, str);
+> +	if (duplicate) {
+>  		pr_debug("Duplicate attribute name found - %s\n", str);
+> +		/*kset_find_obj() returns a reference */
 
-+static int tlmi_validate_setting_name(struct kset *attribute_kset, char *=
-name)
-+{
-+	struct kobject *duplicate;
-+
-+	if (!strcmp(name, "Reserved"))
-+		return -EINVAL;
-+
-+	duplicate =3D kset_find_obj(attribute_kset, name);
-+	if (duplicate) {
-+		pr_debug("Duplicate attribute name found - %s\n", name);
-+		/* kset_find_obj() returns a reference */
-+		kobject_put(duplicate);
-+		return -EBUSY;
-+	}
-+
-+	return 0;
-+}
-+
- static int tlmi_sysfs_init(void)
- {
- 	int i, ret;
-@@ -1372,10 +1390,8 @@ static int tlmi_sysfs_init(void)
- 			continue;
+Thanks. Whitespace is missing here.
 
- 		/* check for duplicate or reserved values */
--		if (kset_find_obj(tlmi_priv.attribute_kset, tlmi_priv.setting[i]->displ=
-ay_name) ||
--		    !strcmp(tlmi_priv.setting[i]->display_name, "Reserved")) {
--			pr_debug("duplicate or reserved attribute name found - %s\n",
--				tlmi_priv.setting[i]->display_name);
-+		if (tlmi_validate_setting_name(tlmi_priv.attribute_kset,
-+					       tlmi_priv.setting[i]->display_name) < 0) {
- 			kfree(tlmi_priv.setting[i]->possible_values);
- 			kfree(tlmi_priv.setting[i]);
- 			tlmi_priv.setting[i] =3D NULL;
-=2D-
-2.39.2
+Other than that, 
 
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+> +		kobject_put(duplicate);
+>  		goto buff_attr_exit;
+>  	}
+> 
+> --
+> 2.39.2
+> 
+
+-- 
+ i.
+
+--8323329-1596787364-1695649114=:2147--
