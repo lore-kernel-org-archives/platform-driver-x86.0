@@ -2,54 +2,54 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEA3E7E649
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 15:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445E2E7E644
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 16:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235131AbjIZP5G (ORCPT
+        id S229519AbjIZQFf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Sep 2023 11:57:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46430 "EHLO
+        Tue, 26 Sep 2023 12:05:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235149AbjIZP5G (ORCPT
+        with ESMTP id S229601AbjIZQFe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Sep 2023 11:57:06 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 937C211F;
-        Tue, 26 Sep 2023 08:56:59 -0700 (PDT)
+        Tue, 26 Sep 2023 12:05:34 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29CFFFB;
+        Tue, 26 Sep 2023 09:05:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695743819; x=1727279819;
+  t=1695744328; x=1727280328;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=o04UZaiPAW8CtWqG5r0zg6d8eGqesbuNB7DpA4lF29E=;
-  b=Hs+AbrTPn3csWecsx74grsQy/P2cLrljQRU2ghwnk5oE7Et2X3gSDZae
-   paWFQecPuDKqnFi8oWCN3r4T3RPrDopcWNCRbaERiAODZfc2isU1aoE+q
-   DTKcp/Yj8kfJYs4eIsK+cv9dm5p2AjAumVBnxdeqwiGzHyeCX4jaA09bl
-   z/LTicMveIezkpgCDgyA/t9ybx50Xxc+J56aiggKP6Gm+HhVta+L+456M
-   5lvBFPTyjUycK4z3vL5KX76h47lQlAJ6jYgn7hFjPnU9Hu5ZfKbqPSz8V
-   hPBjyEQXRzVxa9giiwwZv7hDu6EfYUVh0sQbw+jQtWNyFudxCYfp1g/jQ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="371932462"
+  bh=3XLZRLic49mM1/96yZCR+aYRctRL43Q3/WxuTRHYK+M=;
+  b=WnZbaAM9URGqQPL7cTCC+b4NN0N44eDl0WfdfVOCdeOuZIePtxBwpQC4
+   wnig4Rj+Y3hMlsppN1UlzuVHKRshi0YBJ5rqxxUTWwyyxDmJ1i8CaLjep
+   8vhU7MK+KFG0iHNvHIlcpDjkRLQ3Piiz7iPJ1bzc//jHV42j21ubJ2sA3
+   SWTPfYfbfRe1s/HRMtj8xjqMMS+kALlO8S6RnSEJQ1WV3ide4LKUk1Tte
+   pWklDWK5rPm4kJQNB2SWp1rON+BIm3FodD2NhcwGggTupuM8RdfHNUrKX
+   Jaar5zz+GMXlszbIv0RvDDRuPh+PZDZiD3VZ69w3xYw48xVmEo8N2mye5
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="445732787"
 X-IronPort-AV: E=Sophos;i="6.03,178,1694761200"; 
-   d="scan'208";a="371932462"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 08:56:59 -0700
+   d="scan'208";a="445732787"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 09:04:41 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="864451283"
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="752230168"
 X-IronPort-AV: E=Sophos;i="6.03,178,1694761200"; 
-   d="scan'208";a="864451283"
+   d="scan'208";a="752230168"
 Received: from hhalmen-mobl.ger.corp.intel.com ([10.251.219.207])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 08:56:57 -0700
-Date:   Tue, 26 Sep 2023 18:56:54 +0300 (EEST)
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 09:03:51 -0700
+Date:   Tue, 26 Sep 2023 19:03:49 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     "David E. Box" <david.e.box@linux.intel.com>
 cc:     LKML <linux-kernel@vger.kernel.org>,
         platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com
-Subject: Re: [PATCH 05/11] platform/x86:intel/pmc: Move get_low_power_modes
- function
-In-Reply-To: <20230922213032.1770590-6-david.e.box@linux.intel.com>
-Message-ID: <a790e9e7-2748-5d2f-a035-20ef42ca87a2@linux.intel.com>
-References: <20230922213032.1770590-1-david.e.box@linux.intel.com> <20230922213032.1770590-6-david.e.box@linux.intel.com>
+Subject: Re: [PATCH 10/11] platform/x86/intel/pmc: Read low power mode
+ requirements for MTL-M and MTL-P
+In-Reply-To: <20230922213032.1770590-11-david.e.box@linux.intel.com>
+Message-ID: <a2f52dca-ffaf-31b0-c281-48fc193e6552@linux.intel.com>
+References: <20230922213032.1770590-1-david.e.box@linux.intel.com> <20230922213032.1770590-11-david.e.box@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
@@ -60,174 +60,108 @@ On Fri, 22 Sep 2023, David E. Box wrote:
 
 > From: Xi Pardee <xi.pardee@intel.com>
 > 
-> Some platforms will have a need to retrieve the low power modes as part of
-> their driver initialization. As such, make the function global and call it
-> from the platform specific init code.
+> Add support to read the low power mode requirements for Meteor Lake M and
+> Meteor Lake P.
+> 
+> Signed-off-by: Xi Pardee <xi.pardee@intel.com>
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/mtl.c | 39 +++++++++++++++++++++++-----
+>  1 file changed, 33 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+> index 780874142a90..c2ac50cfdd51 100644
+> --- a/drivers/platform/x86/intel/pmc/mtl.c
+> +++ b/drivers/platform/x86/intel/pmc/mtl.c
+> @@ -11,6 +11,13 @@
+>  #include <linux/pci.h>
+>  #include "core.h"
+>  
+> +/* PMC SSRAM PMT Telemetry GUIDS */
+> +#define SOCP_LPM_REQ_GUID	0x2625030
+> +#define IOEM_LPM_REQ_GUID	0x4357464
+> +#define IOEP_LPM_REQ_GUID	0x5077612
+> +
+> +static const u8 MTL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
+> +
+>  /*
+>   * Die Mapping to Product.
+>   * Product SOCDie IOEDie PCHDie
+> @@ -465,6 +472,7 @@ const struct pmc_reg_map mtl_socm_reg_map = {
+>  	.lpm_sts = mtl_socm_lpm_maps,
+>  	.lpm_status_offset = MTL_LPM_STATUS_OFFSET,
+>  	.lpm_live_status_offset = MTL_LPM_LIVE_STATUS_OFFSET,
+> +	.lpm_reg_index = MTL_LPM_REG_INDEX,
+>  };
+>  
+>  const struct pmc_bit_map mtl_ioep_pfear_map[] = {
+> @@ -782,6 +790,13 @@ const struct pmc_reg_map mtl_ioep_reg_map = {
+>  	.ltr_show_sts = mtl_ioep_ltr_show_map,
+>  	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
+>  	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
+> +	.lpm_num_maps = ADL_LPM_NUM_MAPS,
+> +	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
+> +	.lpm_residency_offset = MTL_LPM_RESIDENCY_OFFSET,
+> +	.lpm_priority_offset = MTL_LPM_PRI_OFFSET,
+> +	.lpm_en_offset = MTL_LPM_EN_OFFSET,
+> +	.lpm_sts_latch_en_offset = MTL_LPM_STATUS_LATCH_EN_OFFSET,
+> +	.lpm_reg_index = MTL_LPM_REG_INDEX,
+>  };
+>  
+>  const struct pmc_bit_map mtl_ioem_pfear_map[] = {
+> @@ -922,6 +937,13 @@ const struct pmc_reg_map mtl_ioem_reg_map = {
+>  	.ltr_show_sts = mtl_ioep_ltr_show_map,
+>  	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
+>  	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
+> +	.lpm_sts_latch_en_offset = MTL_LPM_STATUS_LATCH_EN_OFFSET,
+> +	.lpm_num_maps = ADL_LPM_NUM_MAPS,
+> +	.lpm_priority_offset = MTL_LPM_PRI_OFFSET,
+> +	.lpm_en_offset = MTL_LPM_EN_OFFSET,
+> +	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
+> +	.lpm_residency_offset = MTL_LPM_RESIDENCY_OFFSET,
+> +	.lpm_reg_index = MTL_LPM_REG_INDEX,
+>  };
+>  
+>  #define PMC_DEVID_SOCM	0x7e7f
+> @@ -929,16 +951,19 @@ const struct pmc_reg_map mtl_ioem_reg_map = {
+>  #define PMC_DEVID_IOEM	0x7ebf
+>  static struct pmc_info mtl_pmc_info_list[] = {
+>  	{
+> -		.devid = PMC_DEVID_SOCM,
+> -		.map = &mtl_socm_reg_map,
+> +		.guid	= SOCP_LPM_REQ_GUID,
+> +		.devid	= PMC_DEVID_SOCM,
+> +		.map	= &mtl_socm_reg_map,
+>  	},
+>  	{
+> -		.devid = PMC_DEVID_IOEP,
+> -		.map = &mtl_ioep_reg_map,
+> +		.guid	= IOEP_LPM_REQ_GUID,
+> +		.devid	= PMC_DEVID_IOEP,
+> +		.map	= &mtl_ioep_reg_map,
+>  	},
+>  	{
+> -		.devid = PMC_DEVID_IOEM,
+> -		.map = &mtl_ioem_reg_map
+> +		.guid	= IOEM_LPM_REQ_GUID,
+> +		.devid	= PMC_DEVID_IOEM,
+> +		.map	= &mtl_ioem_reg_map
+>  	},
+>  	{}
+>  };
+> @@ -1012,5 +1037,7 @@ int mtl_core_init(struct pmc_dev *pmcdev)
+>  	dev_dbg(&pmcdev->pdev->dev, "ignoring GBE LTR\n");
+>  	pmc_core_send_ltr_ignore(pmcdev, 3);
+>  
+> +	ret = pmc_core_ssram_get_lpm_reqs(pmcdev);
+> +
 
-What is the real justification for this change, I don't think it's clearly 
-stated above?
+Unused return value??
+
+>  	return 0;
+>  }
+> 
 
 -- 
  i.
 
-> Signed-off-by: Xi Pardee <xi.pardee@intel.com>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  drivers/platform/x86/intel/pmc/adl.c  |  2 ++
->  drivers/platform/x86/intel/pmc/cnp.c  |  2 ++
->  drivers/platform/x86/intel/pmc/core.c |  7 +++----
->  drivers/platform/x86/intel/pmc/core.h |  1 +
->  drivers/platform/x86/intel/pmc/icl.c  | 10 +++++++++-
->  drivers/platform/x86/intel/pmc/mtl.c  |  4 +++-
->  drivers/platform/x86/intel/pmc/spt.c  | 10 +++++++++-
->  drivers/platform/x86/intel/pmc/tgl.c  |  1 +
->  8 files changed, 30 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/adl.c b/drivers/platform/x86/intel/pmc/adl.c
-> index 5006008e01be..64c492391ede 100644
-> --- a/drivers/platform/x86/intel/pmc/adl.c
-> +++ b/drivers/platform/x86/intel/pmc/adl.c
-> @@ -319,6 +319,8 @@ int adl_core_init(struct pmc_dev *pmcdev)
->  	if (ret)
->  		return ret;
->  
-> +	pmc_core_get_low_power_modes(pmcdev);
-> +
->  	/* Due to a hardware limitation, the GBE LTR blocks PC10
->  	 * when a cable is attached. Tell the PMC to ignore it.
->  	 */
-> diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
-> index 420aaa1d7c76..59298f184d0e 100644
-> --- a/drivers/platform/x86/intel/pmc/cnp.c
-> +++ b/drivers/platform/x86/intel/pmc/cnp.c
-> @@ -214,6 +214,8 @@ int cnp_core_init(struct pmc_dev *pmcdev)
->  	if (ret)
->  		return ret;
->  
-> +	pmc_core_get_low_power_modes(pmcdev);
-> +
->  	/* Due to a hardware limitation, the GBE LTR blocks PC10
->  	 * when a cable is attached. Tell the PMC to ignore it.
->  	 */
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-> index 5a36b3f77bc5..e58c8cc286a3 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -966,9 +966,8 @@ static bool pmc_core_pri_verify(u32 lpm_pri, u8 *mode_order)
->  	return true;
->  }
->  
-> -static void pmc_core_get_low_power_modes(struct platform_device *pdev)
-> +void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
->  {
-> -	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
->  	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
->  	u8 pri_order[LPM_MAX_NUM_MODES] = LPM_DEFAULT_PRI;
->  	u8 mode_order[LPM_MAX_NUM_MODES];
-> @@ -1000,7 +999,8 @@ static void pmc_core_get_low_power_modes(struct platform_device *pdev)
->  		for (mode = 0; mode < LPM_MAX_NUM_MODES; mode++)
->  			pri_order[mode_order[mode]] = mode;
->  	else
-> -		dev_warn(&pdev->dev, "Assuming a default substate order for this platform\n");
-> +		dev_warn(&pmcdev->pdev->dev,
-> +			 "Assuming a default substate order for this platform\n");
->  
->  	/*
->  	 * Loop through all modes from lowest to highest priority,
-> @@ -1250,7 +1250,6 @@ static int pmc_core_probe(struct platform_device *pdev)
->  	}
->  
->  	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(primary_pmc);
-> -	pmc_core_get_low_power_modes(pdev);
->  	pmc_core_do_dmi_quirks(primary_pmc);
->  
->  	pmc_core_dbgfs_register(pmcdev);
-> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-> index 0729f593c6a7..ccf24e0f5e50 100644
-> --- a/drivers/platform/x86/intel/pmc/core.h
-> +++ b/drivers/platform/x86/intel/pmc/core.h
-> @@ -490,6 +490,7 @@ extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
->  
->  int pmc_core_resume_common(struct pmc_dev *pmcdev);
->  int get_primary_reg_base(struct pmc *pmc);
-> +extern void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev);
->  
->  extern void pmc_core_ssram_init(struct pmc_dev *pmcdev);
->  
-> diff --git a/drivers/platform/x86/intel/pmc/icl.c b/drivers/platform/x86/intel/pmc/icl.c
-> index d08e3174230d..71b0fd6cb7d8 100644
-> --- a/drivers/platform/x86/intel/pmc/icl.c
-> +++ b/drivers/platform/x86/intel/pmc/icl.c
-> @@ -53,7 +53,15 @@ const struct pmc_reg_map icl_reg_map = {
->  int icl_core_init(struct pmc_dev *pmcdev)
->  {
->  	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
-> +	int ret;
->  
->  	pmc->map = &icl_reg_map;
-> -	return get_primary_reg_base(pmc);
-> +
-> +	ret = get_primary_reg_base(pmc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pmc_core_get_low_power_modes(pmcdev);
-> +
-> +	return ret;
->  }
-> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-> index 2204bc666980..c3b5f4fe01d1 100644
-> --- a/drivers/platform/x86/intel/pmc/mtl.c
-> +++ b/drivers/platform/x86/intel/pmc/mtl.c
-> @@ -985,7 +985,7 @@ static int mtl_resume(struct pmc_dev *pmcdev)
->  int mtl_core_init(struct pmc_dev *pmcdev)
->  {
->  	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
-> -	int ret = 0;
-> +	int ret;
->  
->  	mtl_d3_fixup();
->  
-> @@ -1002,6 +1002,8 @@ int mtl_core_init(struct pmc_dev *pmcdev)
->  			return ret;
->  	}
->  
-> +	pmc_core_get_low_power_modes(pmcdev);
-> +
->  	/* Due to a hardware limitation, the GBE LTR blocks PC10
->  	 * when a cable is attached. Tell the PMC to ignore it.
->  	 */
-> diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
-> index 4b6f5cbda16c..ab993a69e33e 100644
-> --- a/drivers/platform/x86/intel/pmc/spt.c
-> +++ b/drivers/platform/x86/intel/pmc/spt.c
-> @@ -137,7 +137,15 @@ const struct pmc_reg_map spt_reg_map = {
->  int spt_core_init(struct pmc_dev *pmcdev)
->  {
->  	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
-> +	int ret;
->  
->  	pmc->map = &spt_reg_map;
-> -	return get_primary_reg_base(pmc);
-> +
-> +	ret = get_primary_reg_base(pmc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pmc_core_get_low_power_modes(pmcdev);
-> +
-> +	return ret;
->  }
-> diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
-> index 2449940102db..d5f1d2223c5a 100644
-> --- a/drivers/platform/x86/intel/pmc/tgl.c
-> +++ b/drivers/platform/x86/intel/pmc/tgl.c
-> @@ -263,6 +263,7 @@ int tgl_core_init(struct pmc_dev *pmcdev)
->  	if (ret)
->  		return ret;
->  
-> +	pmc_core_get_low_power_modes(pmcdev);
->  	pmc_core_get_tgl_lpm_reqs(pmcdev->pdev);
->  	/* Due to a hardware limitation, the GBE LTR blocks PC10
->  	 * when a cable is attached. Tell the PMC to ignore it.
-> 
