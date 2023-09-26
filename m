@@ -2,75 +2,83 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A81DE7E65A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 19:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0490E7E65D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 19:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbjIZTTb (ORCPT
+        id S229853AbjIZTXA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Sep 2023 15:19:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34634 "EHLO
+        Tue, 26 Sep 2023 15:23:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229880AbjIZTTa (ORCPT
+        with ESMTP id S235522AbjIZTW7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Sep 2023 15:19:30 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B64A121;
-        Tue, 26 Sep 2023 12:19:22 -0700 (PDT)
+        Tue, 26 Sep 2023 15:22:59 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7483E192;
+        Tue, 26 Sep 2023 12:22:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695755962; x=1727291962;
+  t=1695756173; x=1727292173;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=RDDnn0RT8BTf+SkiJ/qZGTe7ct79exdI/f5yk+XuDgY=;
-  b=kQ+56MTWbovkcjFsEEAKWNEmeNyLKX2qTfo4g3QCvjH5w1JemvMNZSP+
-   bj26T2UiPYtRnoeBW1K/TsjDYLXE+QSjKwr6gFb0A5omJdO3BtvS5B3yB
-   O4Dem4Sg93AYUa8V/U6+paDGErYbxrtExoWCd0JgF2YlEyQVzPRKKhu4z
-   uf0H0lozbLgOPKdrqBKpBLbu47KeQaPoX1YDaTo39ygDqU7gB37OAfFwX
-   c5/Nv7jN5vJZxHAu6LyCabHtlj6W8e3vEGpVo8OLcLPn+hJ36FFJ+1KIv
-   dHxZpF9cMa/7F/o9fktcbsSwS5DgGyo62IrJYrI8znEA6aWrFxGl97PcE
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="380520293"
+  bh=tlhQ45iZYHZ8Hm8Kzdj8LITXLLm2eTGdDO0Sb7N4hUw=;
+  b=BlXn+iAqYYWDsZtPkMP5MMw5UfGxKmdpxcW+rubqPlRGI1X0xC7zQY+k
+   5waZygRa75KHxjK1jN92Ik+Y3qEvs//kbeeP1iVvrxscjv0RcNyN8GTBR
+   2PFhiF4MV4esnWs8DZ2YKh5GY2rM0G9GvGThXfeY53b7+k367OX9eenuO
+   jReluQBwGC8Akdmy7I9R00+dSL9MT5XvFUZpt0GeANT9nXGeOamB8MN/N
+   Xt42JiRVJ5Sp6vWKXntASpHBlGjxbEMguvfyT3jCDdute4hM/ZsuKLaqe
+   lTqBOZZfhf54fRLryeLAFfyljsXvMWwj9kzRN5O9YgpJn6IV5Yz2ISpaU
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="378930648"
 X-IronPort-AV: E=Sophos;i="6.03,178,1694761200"; 
-   d="scan'208";a="380520293"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 12:19:21 -0700
+   d="scan'208";a="378930648"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 12:22:52 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="814590213"
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="864509026"
 X-IronPort-AV: E=Sophos;i="6.03,178,1694761200"; 
-   d="scan'208";a="814590213"
+   d="scan'208";a="864509026"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 12:19:19 -0700
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 12:22:39 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qlDaX-00000000hOR-0B2j;
-        Tue, 26 Sep 2023 22:19:17 +0300
-Date:   Tue, 26 Sep 2023 22:19:16 +0300
+        id 1qlDdl-00000000hR1-01Jq;
+        Tue, 26 Sep 2023 22:22:37 +0300
+Date:   Tue, 26 Sep 2023 22:22:36 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Cc:     hdegoede@redhat.com, markgross@kernel.org,
         ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] platform/x86: intel_speed_select_if: Remove
- hardcoded map size
-Message-ID: <ZRMutFhiZ0lIjoeC@smile.fi.intel.com>
-References: <20230926175349.989618-1-srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: intel_speed_select_if: Use
+ devm_ioremap_resource
+Message-ID: <ZRMvfL+BqacV/Y+D@smile.fi.intel.com>
+References: <20230926175840.989732-1-srinivas.pandruvada@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230926175349.989618-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20230926175840.989732-1-srinivas.pandruvada@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 10:53:49AM -0700, Srinivas Pandruvada wrote:
-> The driver is using 256 as the size while calling devm_ioremap(). The
-> maximum offset can be obtained from isst_mmio_range. Add a field "size"
-> to the isst_mmio_range and use it instead of hardcoding.
+On Tue, Sep 26, 2023 at 10:58:40AM -0700, Srinivas Pandruvada wrote:
+> Replace devm_ioremap() with devm_ioremap_resource() by defining a
+> resource.
 > 
 > No functional impact is expected.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Resource(s) will be monitored via resource management framework.
+Dunno if this will affect functionality of a code.
+
+> Suggested-by: Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+Andy
+
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+
+Reviewed-by: From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
 With Best Regards,
