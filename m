@@ -2,109 +2,150 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAEACE79A6
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Sep 2023 21:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5E1E8181D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 05:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233476AbjIYVnF (ORCPT
+        id S233170AbjIZFkX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Sep 2023 17:43:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36414 "EHLO
+        Tue, 26 Sep 2023 01:40:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233471AbjIYVnE (ORCPT
+        with ESMTP id S229461AbjIZFkW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Sep 2023 17:43:04 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE3C7101;
-        Mon, 25 Sep 2023 14:42:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695678177; x=1727214177;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=snNq+RshksgPyasRZ5b0PQsm78eS6KzqCuWRL3ih9JA=;
-  b=TvKxBLM2KkwbLN/IozG53gr8mldqYGwSmKogLkC5bfeCq+zCNyX1BwPQ
-   mHpIz3bxJqeEZa8+4HeA403Lycd8WWUV5Jd5fupTkZSWFmt5dCT1rPKr+
-   ocYd/uIwOyH/nbn3Y1uZ7H7AHV79Q5DlV/0htJ/lL1k02qr8LeQFcatfZ
-   FRkwD6SzQYKz47DnDPx07j2D7QVS4wVv72xWXAd2tWW3kV7K7D0zZOZF3
-   eZt0aUPoD3RFvzPo4+ERwgq8uIpLq3lzlME20SCGmkrx7qsORmhOCDj/h
-   q92Krk6erXw73FtrKOv120AnjnrMYEZHYg/xnJGasFxufpRuKQKTE4oNc
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="380273459"
-X-IronPort-AV: E=Sophos;i="6.03,176,1694761200"; 
-   d="scan'208";a="380273459"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 14:42:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="838725559"
-X-IronPort-AV: E=Sophos;i="6.03,176,1694761200"; 
-   d="scan'208";a="838725559"
-Received: from lkp-server02.sh.intel.com (HELO 32c80313467c) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 25 Sep 2023 14:42:53 -0700
-Received: from kbuild by 32c80313467c with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qktLv-00022n-1Q;
-        Mon, 25 Sep 2023 21:42:51 +0000
-Date:   Tue, 26 Sep 2023 05:42:19 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hdegoede@redhat.com,
-        markgross@kernel.org, basavaraj.natikar@amd.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
-        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
-        daniel@ffwll.ch
-Cc:     oe-kbuild-all@lists.linux.dev,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        amd-gfx@lists.freedesktop.org, platform-driver-x86@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Patil.Reddy@amd.com,
-        linux-input@vger.kernel.org, mario.limonciello@amd.com
-Subject: Re: [PATCH 08/15] platform/x86/amd/pmf: Add support to update system
- state
-Message-ID: <202309260515.5XbR6N0g-lkp@intel.com>
-References: <20230922175056.244940-9-Shyam-sundar.S-k@amd.com>
+        Tue, 26 Sep 2023 01:40:22 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D11DD7;
+        Mon, 25 Sep 2023 22:40:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=yJdqhIQUoxN3D+nrxuHC+beu2HfHdtlmGmJ8QrD3jjA=; b=3C72IN311QgUJmOTBwHef3jvHz
+        D/6BWxPdut/DNXGkeSlXZ5ZFTHHaghz591pozsAi89KC69RMYc7+wQXZU91pjgzzaBq9R6v93Q8og
+        8Lv5oamM4/cnxE7dg9deHjEazP0epHw3nQU2fYD12B0jaKPR1AT33Y7BiEqtERsNluYAteFHPkERK
+        PggJVW3Ok6D6beS2/uN+UKelEhbYBlZWvTVMKJi7BiDavEObfvWSvlamr+SpfjSXV9ykd/w6XXEmJ
+        OdQ0JrKMnY2DotAehJVemHy37Fb3eiPPD1uzq9KZKaID2gP+tQ/AgB5yOLpRyJ9/FM0Hp/Q38N45M
+        oIrtqaKQ==;
+Received: from [50.53.46.231] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1ql0nu-00FdT0-0M;
+        Tue, 26 Sep 2023 05:40:14 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        kernel test robot <lkp@intel.com>,
+        Liming Sun <lsun@mellanox.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/mellanox: tmfifo: fix kernel-doc warnings
+Date:   Mon, 25 Sep 2023 22:40:11 -0700
+Message-ID: <20230926054013.11450-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230922175056.244940-9-Shyam-sundar.S-k@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Shyam,
+Fix kernel-doc notation for structs and struct members to prevent
+these warnings:
 
-kernel test robot noticed the following build warnings:
+mlxbf-tmfifo.c:73: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_vring '
+mlxbf-tmfifo.c:128: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_vdev '
+mlxbf-tmfifo.c:146: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_irq_info '
+mlxbf-tmfifo.c:158: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_io '
+mlxbf-tmfifo.c:182: warning: cannot understand function prototype: 'struct mlxbf_tmfifo '
+mlxbf-tmfifo.c:208: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_msg_hdr '
+mlxbf-tmfifo.c:138: warning: Function parameter or member 'config' not described in 'mlxbf_tmfifo_vdev'
+mlxbf-tmfifo.c:212: warning: Function parameter or member 'unused' not described in 'mlxbf_tmfifo_msg_hdr'
 
-[auto build test WARNING on hid/for-next]
-[also build test WARNING on linus/master v6.6-rc3 next-20230925]
-[cannot apply to drm-misc/drm-misc-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Fixes: 1357dfd7261f ("platform/mellanox: Add TmFifo driver for Mellanox BlueField Soc")
+Fixes: bc05ea63b394 ("platform/mellanox: Add BlueField-3 support in the tmfifo driver")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: lore.kernel.org/r/202309252330.saRU491h-lkp@intel.com
+Cc: Liming Sun <lsun@mellanox.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Mark Gross <markgross@kernel.org>
+Cc: Vadim Pasternak <vadimp@nvidia.com>
+Cc: platform-driver-x86@vger.kernel.org
+---
+ drivers/platform/mellanox/mlxbf-tmfifo.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Shyam-Sundar-S-K/platform-x86-amd-pmf-Add-PMF-TEE-interface/20230923-015418
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-next
-patch link:    https://lore.kernel.org/r/20230922175056.244940-9-Shyam-sundar.S-k%40amd.com
-patch subject: [PATCH 08/15] platform/x86/amd/pmf: Add support to update system state
-reproduce: (https://download.01.org/0day-ci/archive/20230926/202309260515.5XbR6N0g-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202309260515.5XbR6N0g-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> Documentation/admin-guide/pmf.rst:16: WARNING: Unexpected indentation.
->> Documentation/admin-guide/pmf.rst: WARNING: document isn't included in any toctree
-
-vim +16 Documentation/admin-guide/pmf.rst
-
-    13	
-    14	Please add the following line(s) to
-    15	``/etc/udev/rules.d/99-local.rules``::
-  > 16	        DRIVERS=="amd-pmf", ACTION=="change", ENV{EVENT_ID}=="1", RUN+="/usr/bin/systemctl suspend"
-    17	        DRIVERS=="amd-pmf", ACTION=="change", ENV{EVENT_ID}=="2", RUN+="/usr/bin/systemctl hibernate"
-    18	        DRIVERS=="amd-pmf", ACTION=="change", ENV{EVENT_ID}=="3", RUN+="/bin/loginctl lock-sessions"
-    19	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff -- a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -53,7 +53,7 @@
+ struct mlxbf_tmfifo;
+ 
+ /**
+- * mlxbf_tmfifo_vring - Structure of the TmFifo virtual ring
++ * struct mlxbf_tmfifo_vring - Structure of the TmFifo virtual ring
+  * @va: virtual address of the ring
+  * @dma: dma address of the ring
+  * @vq: pointer to the virtio virtqueue
+@@ -113,12 +113,13 @@ enum {
+ };
+ 
+ /**
+- * mlxbf_tmfifo_vdev - Structure of the TmFifo virtual device
++ * struct mlxbf_tmfifo_vdev - Structure of the TmFifo virtual device
+  * @vdev: virtio device, in which the vdev.id.device field has the
+  *        VIRTIO_ID_xxx id to distinguish the virtual device.
+  * @status: status of the device
+  * @features: supported features of the device
+  * @vrings: array of tmfifo vrings of this device
++ * @config: non-anonymous union for cons and net
+  * @config.cons: virtual console config -
+  *               select if vdev.id.device is VIRTIO_ID_CONSOLE
+  * @config.net: virtual network config -
+@@ -138,7 +139,7 @@ struct mlxbf_tmfifo_vdev {
+ };
+ 
+ /**
+- * mlxbf_tmfifo_irq_info - Structure of the interrupt information
++ * struct mlxbf_tmfifo_irq_info - Structure of the interrupt information
+  * @fifo: pointer to the tmfifo structure
+  * @irq: interrupt number
+  * @index: index into the interrupt array
+@@ -150,7 +151,7 @@ struct mlxbf_tmfifo_irq_info {
+ };
+ 
+ /**
+- * mlxbf_tmfifo_io - Structure of the TmFifo IO resource (for both rx & tx)
++ * struct mlxbf_tmfifo_io - Structure of the TmFifo IO resource (for both rx & tx)
+  * @ctl: control register offset (TMFIFO_RX_CTL / TMFIFO_TX_CTL)
+  * @sts: status register offset (TMFIFO_RX_STS / TMFIFO_TX_STS)
+  * @data: data register offset (TMFIFO_RX_DATA / TMFIFO_TX_DATA)
+@@ -162,7 +163,7 @@ struct mlxbf_tmfifo_io {
+ };
+ 
+ /**
+- * mlxbf_tmfifo - Structure of the TmFifo
++ * struct mlxbf_tmfifo - Structure of the TmFifo
+  * @vdev: array of the virtual devices running over the TmFifo
+  * @lock: lock to protect the TmFifo access
+  * @res0: mapped resource block 0
+@@ -198,7 +199,7 @@ struct mlxbf_tmfifo {
+ };
+ 
+ /**
+- * mlxbf_tmfifo_msg_hdr - Structure of the TmFifo message header
++ * struct mlxbf_tmfifo_msg_hdr - Structure of the TmFifo message header
+  * @type: message type
+  * @len: payload length in network byte order. Messages sent into the FIFO
+  *       will be read by the other side as data stream in the same byte order.
+@@ -208,6 +209,7 @@ struct mlxbf_tmfifo {
+ struct mlxbf_tmfifo_msg_hdr {
+ 	u8 type;
+ 	__be16 len;
++	/* private: */
+ 	u8 unused[5];
+ } __packed __aligned(sizeof(u64));
+ 
