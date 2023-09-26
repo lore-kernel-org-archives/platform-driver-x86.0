@@ -2,230 +2,347 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439D8E7D27B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 10:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C926E7D27D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 10:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231509AbjIZKgi (ORCPT
+        id S234459AbjIZKwO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Sep 2023 06:36:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53376 "EHLO
+        Tue, 26 Sep 2023 06:52:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231932AbjIZKgh (ORCPT
+        with ESMTP id S234383AbjIZKwN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Sep 2023 06:36:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E091BE9
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Sep 2023 03:35:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1695724542;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IN3gjXP/ulM4+M4Osvjbx+CJvR8HzZe/I6zVYXrFanI=;
-        b=QWhP+Nn9JdBPR6dMiaRZrordaQhXo60tZC/aLFaBF080fwk7sH1fuq4DbeTYU/XN3tOsnx
-        iDbyFUELSwd7usBUeX6QzF55ac2CoumKxKpTNboJ6zPrM+Gxzt714uhhgbviDm0OTnCPLq
-        HK9ryH3TnTOvQH7TUogku4vGcnenJ9Q=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-548-s-Avz9d0OgqIbYQ5MB3cwA-1; Tue, 26 Sep 2023 06:35:41 -0400
-X-MC-Unique: s-Avz9d0OgqIbYQ5MB3cwA-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2c136b9d66aso108424131fa.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Sep 2023 03:35:41 -0700 (PDT)
+        Tue, 26 Sep 2023 06:52:13 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C544101;
+        Tue, 26 Sep 2023 03:52:06 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2c00e1d4c08so140701011fa.3;
+        Tue, 26 Sep 2023 03:52:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695725524; x=1696330324; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qddpFrAbHgrI9I4qDNwU5xvTVB3IzX2OJ7vgquZmuOo=;
+        b=G5DX5P9tUuot3RfDnk0qHZISEPCusSa3V0VhwUFFIhzx7+RN528sS8zZHHJip3cSXd
+         pRi/s12ewGNBV0Zi2T/EzGCjJKYdQQFd2Und8ynmmyzqzRn6Hq4ob+VUyK7AOLxEszCj
+         7TtDjhPMdi37fW5VszTFRrgbvEO30Sh4xbtbmObbUE4KyyC88oicoFs2vooj8B/cl1JU
+         FD3ZB5+6ub6eKDBhU6+f+zRA7rrVjnzLaFWT/ZXfFn1JGWwOs3+EpyZ/98xRLSk6n8Rb
+         LIJ/TAAmcd8V2ZaQjcOH01YC4j3T+b+mb7gJcr2pH7fTpiNDGQBKErBFTpgN9Qe7K/JS
+         Bgcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695724540; x=1696329340;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IN3gjXP/ulM4+M4Osvjbx+CJvR8HzZe/I6zVYXrFanI=;
-        b=dwrNTVUColUY0DBlmj39ayfdZ3oAb6wMFgYTD/JYw2PsSlTmgClxw1GsBTSqr4GGrZ
-         lttmi0u1nfEwGjIEfkej0Ey/4HNi3OP4U6vCyuTENYJdniuB+Ri56sdeSnb4dMHSLWMJ
-         CiIGb+W8GNcAADdahwzOo2FMp8fsDnqTUJr8seR2FI1HQaATgyFBPMdNFLpDcwPoy/1f
-         bK6pBPzAwoq6O1U2gejRZ9DTevVfnDNR2rkMMKw57NMJfRSEO/C52iVXF1cWPKcqQYVs
-         PraD4NQSX2jgDz6YxzGdSAO/K+RzKoaAI9EYmCXZFHYRQJbVrI63nXM0lY5iLaM70bl/
-         FPnw==
-X-Gm-Message-State: AOJu0YwjZSVpf7F1LxAzfNzdCMVZoeYzHJd0PkUfwAKqJ4scGlY52KLh
-        k36Z30Cd8BJELNqlFAOr7j8D9143mymtnNNg7NdqWV5rybuQ83HfM7+MjFS78YL8ObyuwueCuXe
-        OSDnKaLWKbKnyJqY/SBTM2URW5IfLQhHyXg==
-X-Received: by 2002:a05:6512:3d21:b0:503:655:12e7 with SMTP id d33-20020a0565123d2100b00503065512e7mr10393183lfv.62.1695724539858;
-        Tue, 26 Sep 2023 03:35:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGn3ozsYpRq6AuJvRaLBGJ3+5/IVA5BsFnkHEF6nwZAP0ixv8ZfQALU7T1Ot7RrjwRGez4gGg==
-X-Received: by 2002:a05:6512:3d21:b0:503:655:12e7 with SMTP id d33-20020a0565123d2100b00503065512e7mr10393157lfv.62.1695724539418;
-        Tue, 26 Sep 2023 03:35:39 -0700 (PDT)
-Received: from [192.168.1.217] ([109.37.154.108])
-        by smtp.gmail.com with ESMTPSA id c19-20020a056402121300b0052e9b50dafdsm6556318edw.33.2023.09.26.03.35.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Sep 2023 03:35:38 -0700 (PDT)
-Message-ID: <2e201a3b-d75f-916d-5135-b084ad5da23e@redhat.com>
-Date:   Tue, 26 Sep 2023 12:35:35 +0200
+        d=1e100.net; s=20230601; t=1695725524; x=1696330324;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qddpFrAbHgrI9I4qDNwU5xvTVB3IzX2OJ7vgquZmuOo=;
+        b=Ti/PnraOPbq5VSQ6WzhhBDqHP14yGwmvpUG7Gp3wOUv0HjjLuwTSjVeD3beyMNUAU9
+         sPouadXcRGfY7rAIyHqRdHKmGyz246m1jMZ6QcW75X45fZN5zwHa1ue98nkpi2A76vrW
+         Do89KQGUS5EtB942vEBoL2CKpzCIQh4YToY/BXRvU4R7onmp798SnyMnGMAUHdRAM5DE
+         wnn14bO97PcJJyHOCaFZPko2phytBILxCCyaXd4KOi5Y9c/FvTplVFMMqHO8V0XPIsyM
+         6TfDl37BgnuqaAHSn5VPlX9Q/JPIluVhHmy3GCD+tXthfpZdoI5yit9neNCmCMLX+x4R
+         6OOQ==
+X-Gm-Message-State: AOJu0Yxskg5uKoqNFCbdlKjZgnp9GiVn23Pwj24/Aa+BMpB9/qLrFsjj
+        d9oiRDK8f+erTI3nnLs85QgkUlGkye5ZbQ==
+X-Google-Smtp-Source: AGHT+IHSoFKqX0fg4X/60v5LLHrytvVwsD0oPAsS9XDYQtQ0atkHkPuaXxm6c3eyVBDTG5qsh0EXbA==
+X-Received: by 2002:a2e:be89:0:b0:2c1:522a:8e1b with SMTP id a9-20020a2ebe89000000b002c1522a8e1bmr7697238ljr.51.1695725523667;
+        Tue, 26 Sep 2023 03:52:03 -0700 (PDT)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id f4-20020a2e6a04000000b002b95eb96ab7sm2575327ljc.18.2023.09.26.03.52.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Sep 2023 03:52:03 -0700 (PDT)
+Date:   Tue, 26 Sep 2023 13:51:59 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Wong Vee Khee <veekhee@apple.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Revanth Kumar Uppala <ruppala@nvidia.com>,
+        Shenwei Wang <shenwei.wang@nxp.com>,
+        Andrey Konovalov <andrey.konovalov@linaro.org>,
+        Jochen Henneberg <jh@henneberg-systemdesign.com>,
+        David E Box <david.e.box@intel.com>,
+        Andrew Halaney <ahalaney@redhat.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
+        Tan Tee Min <tee.min.tan@linux.intel.com>,
+        Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+        Lai Peter Jun Ann <jun.ann.lai@intel.com>
+Subject: Re: [PATCH net-next v3 2/5] net: pcs: xpcs: combine C37 SGMII AN and
+ 2500BASEX for Intel mGbE controller
+Message-ID: <ogrj3h65cpzmrtbv3antnxht5ebrxzzex4snj6oeqxzdtsvqeh@a5tq5ozokjr5>
+References: <20230921121946.3025771-1-yong.liang.choong@linux.intel.com>
+ <20230921121946.3025771-3-yong.liang.choong@linux.intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 13/15] platform/x86/amd/pmf: Add PMF-AMDGPU set interface
-Content-Language: en-US
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org,
-        basavaraj.natikar@amd.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
-        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
-        daniel@ffwll.ch
-Cc:     Patil.Reddy@amd.com, mario.limonciello@amd.com,
-        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-References: <20230922175056.244940-1-Shyam-sundar.S-k@amd.com>
- <20230922175056.244940-14-Shyam-sundar.S-k@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230922175056.244940-14-Shyam-sundar.S-k@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230921121946.3025771-3-yong.liang.choong@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Choong
 
-On 9/22/23 19:50, Shyam Sundar S K wrote:
-> For the Smart PC Solution to fully work, it has to enact to the actions
-> coming from TA. Add the initial code path for set interface to AMDGPU.
+On Thu, Sep 21, 2023 at 08:19:43PM +0800, Choong Yong Liang wrote:
+> From: "Tan, Tee Min" <tee.min.tan@linux.intel.com>
 > 
-> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> This commit introduces xpcs_sgmii_2500basex_features[] that combine
+> xpcs_sgmii_features[] and xpcs_2500basex_features[] for Intel mGbE
+> controller that desire to interchange the speed mode of
+> 10/100/1000/2500Mbps at runtime.
+> 
+> Also, we introduce xpcs_config_aneg_c37_sgmii_2500basex() function
+> which is called by the xpcs_do_config() with the new AN mode:
+> DW_SGMII_2500BASEX, and this new function will proceed next-level
+> calling to perform C37 SGMII AN/2500BASEX configuration based on
+> the PHY interface updated by PHY driver.
+
+Why do you even need all of those changes? Please thoroughly justify
+because ... (see below)
+
+> 
+> Signed-off-by: Tan, Tee Min <tee.min.tan@linux.intel.com>
+> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
 > ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c | 21 +++++++++++++++++++++
->  drivers/platform/x86/amd/pmf/pmf.h      |  2 ++
->  drivers/platform/x86/amd/pmf/tee-if.c   | 19 +++++++++++++++++--
->  include/linux/amd-pmf-io.h              |  1 +
->  4 files changed, 41 insertions(+), 2 deletions(-)
+>  drivers/net/pcs/pcs-xpcs.c   | 72 ++++++++++++++++++++++++++++++------
+>  include/linux/pcs/pcs-xpcs.h |  1 +
+>  2 files changed, 62 insertions(+), 11 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
-> index 232d11833ddc..5c567bff0548 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
-> @@ -68,3 +68,24 @@ int amd_pmf_get_gfx_data(struct amd_gpu_pmf_data *pmf)
->  	return 0;
+> diff --git a/drivers/net/pcs/pcs-xpcs.c b/drivers/net/pcs/pcs-xpcs.c
+> index 4dbc21f604f2..60d90191677d 100644
+> --- a/drivers/net/pcs/pcs-xpcs.c
+> +++ b/drivers/net/pcs/pcs-xpcs.c
+> @@ -104,6 +104,21 @@ static const int xpcs_2500basex_features[] = {
+>  	__ETHTOOL_LINK_MODE_MASK_NBITS,
+>  };
+>  
+
+> +static const int xpcs_sgmii_2500basex_features[] = {
+> +	ETHTOOL_LINK_MODE_Pause_BIT,
+> +	ETHTOOL_LINK_MODE_Asym_Pause_BIT,
+> +	ETHTOOL_LINK_MODE_Autoneg_BIT,
+> +	ETHTOOL_LINK_MODE_10baseT_Half_BIT,
+> +	ETHTOOL_LINK_MODE_10baseT_Full_BIT,
+> +	ETHTOOL_LINK_MODE_100baseT_Half_BIT,
+> +	ETHTOOL_LINK_MODE_100baseT_Full_BIT,
+> +	ETHTOOL_LINK_MODE_1000baseT_Half_BIT,
+> +	ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
+> +	ETHTOOL_LINK_MODE_2500baseX_Full_BIT,
+> +	ETHTOOL_LINK_MODE_2500baseT_Full_BIT,
+> +	__ETHTOOL_LINK_MODE_MASK_NBITS,
+> +};
+> +
+>  static const phy_interface_t xpcs_usxgmii_interfaces[] = {
+>  	PHY_INTERFACE_MODE_USXGMII,
+>  };
+> @@ -133,6 +148,12 @@ static const phy_interface_t xpcs_2500basex_interfaces[] = {
+>  	PHY_INTERFACE_MODE_MAX,
+>  };
+>  
+> +static const phy_interface_t xpcs_sgmii_2500basex_interfaces[] = {
+> +	PHY_INTERFACE_MODE_SGMII,
+> +	PHY_INTERFACE_MODE_2500BASEX,
+> +	PHY_INTERFACE_MODE_MAX,
+> +};
+> +
+
+... these are just a combination of the
+xpcs_sgmii_features[]/xpcs_sgmii_interfaces[] and
+xpcs_2500basex_features[]/xpcs_2500basex_interfaces[] data which are
+already supported by the generic DW XPCS code. All of these features
+and interfaces are checked in the xpcs_create() method and then get to
+be combined in the framework of the xpcs_validate() and
+xpcs_get_interfaces() functions. And ...
+
+>  enum {
+>  	DW_XPCS_USXGMII,
+>  	DW_XPCS_10GKR,
+> @@ -141,6 +162,7 @@ enum {
+>  	DW_XPCS_SGMII,
+>  	DW_XPCS_1000BASEX,
+>  	DW_XPCS_2500BASEX,
+> +	DW_XPCS_SGMII_2500BASEX,
+>  	DW_XPCS_INTERFACE_MAX,
+>  };
+>  
+> @@ -290,6 +312,7 @@ static int xpcs_soft_reset(struct dw_xpcs *xpcs,
+>  	case DW_AN_C37_SGMII:
+>  	case DW_2500BASEX:
+>  	case DW_AN_C37_1000BASEX:
+> +	case DW_SGMII_2500BASEX:
+>  		dev = MDIO_MMD_VEND2;
+>  		break;
+>  	default:
+> @@ -748,6 +771,8 @@ static int xpcs_config_aneg_c37_sgmii(struct dw_xpcs *xpcs,
+>  	if (xpcs->dev_flag == DW_DEV_TXGBE)
+>  		ret |= DW_VR_MII_DIG_CTRL1_PHY_MODE_CTRL;
+>  
+
+> +	/* Disable 2.5G GMII for SGMII C37 mode */
+> +	ret &= ~DW_VR_MII_DIG_CTRL1_2G5_EN;
+
+* This is the only specific change in this patch. But it can be
+* applied independently from the rest of the changes. Although I agree
+* with Russel, it must be double checked since may cause regressions
+* on the other platforms.
+
+>  	ret = xpcs_write(xpcs, MDIO_MMD_VEND2, DW_VR_MII_DIG_CTRL1, ret);
+>  	if (ret < 0)
+>  		return ret;
+> @@ -848,6 +873,26 @@ static int xpcs_config_2500basex(struct dw_xpcs *xpcs)
+>  	return xpcs_write(xpcs, MDIO_MMD_VEND2, DW_VR_MII_MMD_CTRL, ret);
 >  }
->  EXPORT_SYMBOL_GPL(amd_pmf_get_gfx_data);
-> +
-> +int amd_pmf_set_gfx_data(struct amd_gpu_pmf_data *pmf)
+>  
+
+> +static int xpcs_config_aneg_c37_sgmii_2500basex(struct dw_xpcs *xpcs,
+> +						unsigned int neg_mode,
+> +						phy_interface_t interface)
 > +{
-> +	struct drm_device *drm_dev = pci_get_drvdata(pmf->gpu_dev);
-> +	struct amdgpu_device *adev = drm_to_adev(drm_dev);
-> +	struct backlight_device *bd;
+> +	int ret = -EOPNOTSUPP;
 > +
-> +	if (!(adev->flags & AMD_IS_APU)) {
-> +		DRM_ERROR("PMF-AMDGPU interface not supported\n");
-> +		return -ENODEV;
+> +	switch (interface) {
+> +	case PHY_INTERFACE_MODE_SGMII:
+> +		ret = xpcs_config_aneg_c37_sgmii(xpcs, neg_mode);
+> +		break;
+> +	case PHY_INTERFACE_MODE_2500BASEX:
+> +		ret = xpcs_config_2500basex(xpcs);
+> +		break;
+> +	default:
+> +		break;
 > +	}
 > +
-> +	bd = backlight_device_get_by_type(BACKLIGHT_RAW);
-> +	if (!bd)
-> +		return -ENODEV;
-
-This assumes that the backlight is always controller by the amdgpu's
-native backlight driver, but it might e.g. also be handled by
-eacpi-video or by nvidia_wmi_ec_backlight (when using an AMD APU +
-nvidia dgpu).
-
-For now what should be done here is to call acpi_video_get_backlight_type()
-and then translate the return value from this into a backlight-type:
-
-        acpi_backlight_video		-> BACKLIGHT_FIRMWARE
-        acpi_backlight_vendor,		-> BACKLIGHT_PLATFORM
-        acpi_backlight_native,		-> BACKLIGHT_RAW
-        acpi_backlight_nvidia_wmi_ec,	-> BACKLIGHT_FIRMWARE
-        acpi_backlight_apple_gmux,	-> BACKLIGHT_PLATFORM
-
-Also I'm worried about probe order here, this code currently assumes
-that the GPU or other backlight driver has loaded before this runs,
-which is not necessarily the case.
-
-I think that if the backlight_device_get_by_type() fails this
-should be retried say every 10 seconds from some delayed workqueue
-for at least a couple of minutes after boot.
-
-Regards,
-
-Hans
-
-
-
-
-> +
-> +	backlight_device_set_brightness(bd, pmf->brightness);
-> +
-> +	return 0;
+> +	return ret;
 > +}
-> +EXPORT_SYMBOL_GPL(amd_pmf_set_gfx_data);
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 9032df4ba48a..ce89cc0daa5a 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -73,6 +73,7 @@
->  #define PMF_POLICY_STT_SKINTEMP_APU				7
->  #define PMF_POLICY_STT_SKINTEMP_HS2				8
->  #define PMF_POLICY_SYSTEM_STATE					9
-> +#define PMF_POLICY_DISPLAY_BRIGHTNESS				12
->  #define PMF_POLICY_P3T						38
->  
->  /* TA macros */
-> @@ -480,6 +481,7 @@ enum ta_pmf_error_type {
->  };
->  
->  struct pmf_action_table {
-> +	unsigned long display_brightness;
->  	enum system_state system_state;
->  	unsigned long spl; /* in mW */
->  	unsigned long sppt; /* in mW */
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> index 1608996654e8..eefffff83a4c 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -79,10 +79,10 @@ static int amd_pmf_update_uevents(struct amd_pmf_dev *dev, u16 event)
->  	return 0;
->  }
->  
-> -static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_result *out)
-> +static int amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_result *out)
->  {
->  	u32 val, event = 0;
-> -	int idx;
-> +	int idx, ret;
->  
->  	for (idx = 0; idx < out->actions_count; idx++) {
->  		val = out->actions_list[idx].value;
-> @@ -160,8 +160,23 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
->  				dev->prev_data->system_state = 0;
->  			}
->  			break;
 > +
-> +		case PMF_POLICY_DISPLAY_BRIGHTNESS:
-> +			ret = amd_pmf_get_gfx_data(&dev->gfx_data);
-> +			if (ret)
-> +				return ret;
-> +
-> +			dev->prev_data->display_brightness = dev->gfx_data.brightness;
-> +			if (dev->prev_data->display_brightness != val) {
-> +				dev->gfx_data.brightness = val;
-> +				amd_pmf_set_gfx_data(&dev->gfx_data);
-> +				dev_dbg(dev->dev, "update DISPLAY_BRIGHTNESS : %d\n", val);
-> +			}
-> +			break;
->  		}
->  	}
-> +
-> +	return 0;
->  }
->  
->  static int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev)
-> diff --git a/include/linux/amd-pmf-io.h b/include/linux/amd-pmf-io.h
-> index a2d4af231362..ecae387ddaa6 100644
-> --- a/include/linux/amd-pmf-io.h
-> +++ b/include/linux/amd-pmf-io.h
-> @@ -25,4 +25,5 @@ struct amd_gpu_pmf_data {
->  };
->  
->  int amd_pmf_get_gfx_data(struct amd_gpu_pmf_data *pmf);
-> +int amd_pmf_set_gfx_data(struct amd_gpu_pmf_data *pmf);
->  #endif
 
+... this is just a copy of the code which is already available in xpcs_do_config():
+
+<        compat = xpcs_find_compat(xpcs->id, interface);
+<        if (!compat)
+<                return -ENODEV;
+<
+<        switch (compat->an_mode) {
+< ...
+<        case DW_AN_C37_SGMII:
+<                ret = xpcs_config_aneg_c37_sgmii(xpcs, neg_mode);
+<                if (ret)
+<                        return ret;
+<                break;
+< ...
+<        case DW_2500BASEX:
+<                ret = xpcs_config_2500basex(xpcs);
+<                if (ret)
+<                        return ret;
+<                break;
+
+So based on the passed interface xpcs_find_compat() will find a proper
+compat descriptor, which an_mode field will be then utilized to call
+the respective config method. Thus, unless I miss something, basically
+you won't need any of the changes below and the most of the changes
+above reducing the patch to just a few lines.
+
+-Serge(y)
+
+>  int xpcs_do_config(struct dw_xpcs *xpcs, phy_interface_t interface,
+>  		   const unsigned long *advertising, unsigned int neg_mode)
+>  {
+> @@ -890,6 +935,12 @@ int xpcs_do_config(struct dw_xpcs *xpcs, phy_interface_t interface,
+>  		if (ret)
+>  			return ret;
+>  		break;
+> +	case DW_SGMII_2500BASEX:
+> +		ret = xpcs_config_aneg_c37_sgmii_2500basex(xpcs, neg_mode,
+> +							   interface);
+> +		if (ret)
+> +			return ret;
+> +		break;
+>  	default:
+>  		return -1;
+>  	}
+> @@ -1114,6 +1165,11 @@ static void xpcs_get_state(struct phylink_pcs *pcs,
+>  		}
+>  		break;
+>  	case DW_AN_C37_SGMII:
+> +	case DW_SGMII_2500BASEX:
+> +		/* 2500BASEX is not supported for in-band AN mode. */
+> +		if (state->interface == PHY_INTERFACE_MODE_2500BASEX)
+> +			break;
+> +
+>  		ret = xpcs_get_state_c37_sgmii(xpcs, state);
+>  		if (ret) {
+>  			pr_err("xpcs_get_state_c37_sgmii returned %pe\n",
+> @@ -1266,23 +1322,17 @@ static const struct xpcs_compat synopsys_xpcs_compat[DW_XPCS_INTERFACE_MAX] = {
+>  		.num_interfaces = ARRAY_SIZE(xpcs_10gbaser_interfaces),
+>  		.an_mode = DW_10GBASER,
+>  	},
+> -	[DW_XPCS_SGMII] = {
+> -		.supported = xpcs_sgmii_features,
+> -		.interface = xpcs_sgmii_interfaces,
+> -		.num_interfaces = ARRAY_SIZE(xpcs_sgmii_interfaces),
+> -		.an_mode = DW_AN_C37_SGMII,
+> -	},
+>  	[DW_XPCS_1000BASEX] = {
+>  		.supported = xpcs_1000basex_features,
+>  		.interface = xpcs_1000basex_interfaces,
+>  		.num_interfaces = ARRAY_SIZE(xpcs_1000basex_interfaces),
+>  		.an_mode = DW_AN_C37_1000BASEX,
+>  	},
+> -	[DW_XPCS_2500BASEX] = {
+> -		.supported = xpcs_2500basex_features,
+> -		.interface = xpcs_2500basex_interfaces,
+> -		.num_interfaces = ARRAY_SIZE(xpcs_2500basex_interfaces),
+> -		.an_mode = DW_2500BASEX,
+> +	[DW_XPCS_SGMII_2500BASEX] = {
+> +		.supported = xpcs_sgmii_2500basex_features,
+> +		.interface = xpcs_sgmii_2500basex_interfaces,
+> +		.num_interfaces = ARRAY_SIZE(xpcs_sgmii_2500basex_features),
+> +		.an_mode = DW_SGMII_2500BASEX,
+>  	},
+>  };
+>  
+> diff --git a/include/linux/pcs/pcs-xpcs.h b/include/linux/pcs/pcs-xpcs.h
+> index da3a6c30f6d2..f075d2fca54a 100644
+> --- a/include/linux/pcs/pcs-xpcs.h
+> +++ b/include/linux/pcs/pcs-xpcs.h
+> @@ -19,6 +19,7 @@
+>  #define DW_2500BASEX			3
+>  #define DW_AN_C37_1000BASEX		4
+>  #define DW_10GBASER			5
+> +#define DW_SGMII_2500BASEX		6
+>  
+>  /* device vendor OUI */
+>  #define DW_OUI_WX			0x0018fc80
+> -- 
+> 2.25.1
+> 
+> 
