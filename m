@@ -2,205 +2,161 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCE6E7E643
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 14:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA7AE7E649
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 14:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234928AbjIZOoR (ORCPT
+        id S234995AbjIZPAB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Sep 2023 10:44:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51190 "EHLO
+        Tue, 26 Sep 2023 11:00:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234659AbjIZOoR (ORCPT
+        with ESMTP id S234984AbjIZPAA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Sep 2023 10:44:17 -0400
-X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 26 Sep 2023 07:44:10 PDT
-Received: from mgamail.intel.com (unknown [192.198.163.63])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54870E6;
-        Tue, 26 Sep 2023 07:44:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695739450; x=1727275450;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=coFPVS3IwCW4LMVf38mdpTFnzhd1Ni1jp/jusMYzufQ=;
-  b=f3oxVBZriVqZcWUmUT9ahCnqfou6FmXp8yYl13W5Dj9QFZMwCYC8iGr6
-   bwys1NOLgHrTrozdsifThYCkZhsyjfL1ONSozC/OW6vFfrihEa4DFN9Nd
-   fHJPSl9bDBRdVMzAbuvun6MTsnqtjmRiztQkdBHR/0qjWQfkxSSBRTEDF
-   FKd3AmvFinphPxyZABivQdXefxDK25Ujq508YQqlOF5+b8dMt4RSdOPoC
-   N+c8tk0zZlD7ONjnAcdlksstwxC2xsDykmsdy8fZKJJOx5EfFvUumQ3/d
-   F1m1b36hih9rs0gF2WkacqiY+MCSaIL3XWEw7EE1fQ9MWWbd2CEVGDkko
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="3163823"
-X-IronPort-AV: E=Sophos;i="6.03,178,1694761200"; 
-   d="scan'208";a="3163823"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 07:43:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="748835766"
-X-IronPort-AV: E=Sophos;i="6.03,178,1694761200"; 
-   d="scan'208";a="748835766"
-Received: from hhalmen-mobl.ger.corp.intel.com ([10.251.219.207])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 07:43:06 -0700
-Date:   Tue, 26 Sep 2023 17:43:03 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com
-Subject: Re: [PATCH 03/11] platform/x86/intel/pmt: Add header to struct
- intel_pmt_entry
-In-Reply-To: <20230922213032.1770590-4-david.e.box@linux.intel.com>
-Message-ID: <fb605dba-f3d3-dff2-95d5-a2b4e92ab0c5@linux.intel.com>
-References: <20230922213032.1770590-1-david.e.box@linux.intel.com> <20230922213032.1770590-4-david.e.box@linux.intel.com>
+        Tue, 26 Sep 2023 11:00:00 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD19121
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Sep 2023 07:59:53 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-32157c8e4c7so8902305f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Sep 2023 07:59:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695740392; x=1696345192; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9JlgJB8QI0EX98WcT+eE7uEPjq//nnV5NSDnPP83OC4=;
+        b=QOEf7hjuT0l4WBz4752PrDciv1tUKsPuy3vsqzwR9P3r+SvYiiQdiyqoxcOBCU2nEz
+         oCqKbDgvbwDt1BPuIRea7SAXZIOk5ArBt+X+BZi9X710A+OXLUblvhMY+QKvB4dzBgED
+         5TJ8MmN/L17oHo3FAk+xHPw+2OVXrxopLQPHKblC3uKs2clOEGDnJCUUvk3fCPxYYGoz
+         fGGgYnO8bzNMbkjkReuRg5uJrmQrDFV/z1qB0UrHb9PWBns9UaH0yN8MZsh1zMloJNjH
+         W1i9N0eZ+t60v3O97ArAgo/5gryTKaWbM9f8S47DyV7NtPKLOibDBO974ENjIyFBmPIL
+         sdaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695740392; x=1696345192;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9JlgJB8QI0EX98WcT+eE7uEPjq//nnV5NSDnPP83OC4=;
+        b=VD5uog5ILhqiY1E19sWfv6Q2PHjOmq7fKie+iHTvndZCtsZZXNjQ2nOM1P/aV8T6oj
+         8fi5sEVr+tiOVm4xtvSBj3J5JR3OnYN11OQTnjhhEfrFZcUeFSiHsh7r2rVn5P7lCLVt
+         paCtReMDM6ouiX7DzU4rLmfFciVFxdC1ksa5DUyJMZJlO56YnUELrS/BMMsR5GyKUBXx
+         s/32w7qETXJh1GokLzApgB/4cJonxB5tB5qODLdmlz7HxoIBgj9pkRyPWgHL793AG82A
+         5SqVPEK08+PGIC/grU8zlnr7TkHY33RdvwsFHpB6pFbC17PU8Wk836MZ+Giym24QAZEq
+         t69Q==
+X-Gm-Message-State: AOJu0YxGv2sL1fszNjQbEIE8S8L3j42uCKtUhIpxdfQDtYzfbckd6oBi
+        WeV9JjzqLUKGirKqzCXBd7ZN5A==
+X-Google-Smtp-Source: AGHT+IEry51pvRXcR/Bg3Ovg+pDmNC+cZF8nAceS0yECUnNz+7mE5ZPaS3ORz3jPT6CvosswbIBsEA==
+X-Received: by 2002:a5d:658b:0:b0:321:708d:3374 with SMTP id q11-20020a5d658b000000b00321708d3374mr8387415wru.3.1695740392138;
+        Tue, 26 Sep 2023 07:59:52 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:686:c497:30b1:d2b9])
+        by smtp.gmail.com with ESMTPSA id s2-20020a5d5102000000b0031f82743e25sm14871634wrt.67.2023.09.26.07.59.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Sep 2023 07:59:51 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [RFT PATCH 1/4] platform/x86: int3472: provide a helper for getting GPIOs from lookups
+Date:   Tue, 26 Sep 2023 16:59:40 +0200
+Message-Id: <20230926145943.42814-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230926145943.42814-1-brgl@bgdev.pl>
+References: <20230926145943.42814-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-681903352-1695739387=:1894"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
---8323329-681903352-1695739387=:1894
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
+gpiod_toggle_active_low() should have never existed in the first place
+and once it was added, it should have never been used outside the MMC
+slot code.
 
-On Fri, 22 Sep 2023, David E. Box wrote:
+Stop using it in the int3472 driver and use temporary lookup tables
+instead. First: add a helper wrapping the common code in one function.
 
-> The PMT header is passed to several functions. Instead, store the header in
-> struct intel_pmt_entry which is also passed to these functions and shorten
-> the argument list. This simplifies the calls in preparation for later
-> changes.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  drivers/platform/x86/intel/pmt/class.c     |  8 +++-----
->  drivers/platform/x86/intel/pmt/class.h     | 16 ++++++++--------
->  drivers/platform/x86/intel/pmt/crashlog.c  |  2 +-
->  drivers/platform/x86/intel/pmt/telemetry.c |  2 +-
->  4 files changed, 13 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-> index 32608baaa56c..142a24e3727d 100644
-> --- a/drivers/platform/x86/intel/pmt/class.c
-> +++ b/drivers/platform/x86/intel/pmt/class.c
-> @@ -159,12 +159,12 @@ static struct class intel_pmt_class = {
->  };
->  
->  static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
-> -				    struct intel_pmt_header *header,
->  				    struct intel_vsec_device *ivdev,
->  				    struct resource *disc_res)
->  {
->  	struct pci_dev *pci_dev = ivdev->pcidev;
->  	struct device *dev = &ivdev->auxdev.dev;
-> +	struct intel_pmt_header *header = &entry->header;
->  	u8 bir;
->  
->  	/*
-> @@ -313,7 +313,6 @@ int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespa
->  			 struct intel_vsec_device *intel_vsec_dev, int idx)
->  {
->  	struct device *dev = &intel_vsec_dev->auxdev.dev;
-> -	struct intel_pmt_header header;
->  	struct resource	*disc_res;
->  	int ret;
->  
-> @@ -323,16 +322,15 @@ int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespa
->  	if (IS_ERR(entry->disc_table))
->  		return PTR_ERR(entry->disc_table);
->  
-> -	ret = ns->pmt_header_decode(entry, &header, dev);
-> +	ret = ns->pmt_header_decode(entry, dev);
->  	if (ret)
->  		return ret;
->  
-> -	ret = intel_pmt_populate_entry(entry, &header, intel_vsec_dev, disc_res);
-> +	ret = intel_pmt_populate_entry(entry, intel_vsec_dev, disc_res);
->  	if (ret)
->  		return ret;
->  
->  	return intel_pmt_dev_register(entry, ns, dev);
-> -
->  }
->  EXPORT_SYMBOL_NS_GPL(intel_pmt_dev_create, INTEL_PMT);
->  
-> diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
-> index db11d58867ce..e477a19f6700 100644
-> --- a/drivers/platform/x86/intel/pmt/class.h
-> +++ b/drivers/platform/x86/intel/pmt/class.h
-> @@ -18,7 +18,15 @@
->  #define GET_BIR(v)		((v) & GENMASK(2, 0))
->  #define GET_ADDRESS(v)		((v) & GENMASK(31, 3))
->  
-> +struct intel_pmt_header {
-> +	u32	base_offset;
-> +	u32	size;
-> +	u32	guid;
-> +	u8	access_type;
-> +};
-> +
->  struct intel_pmt_entry {
-> +	struct intel_pmt_header	header;
->  	struct bin_attribute	pmt_bin_attr;
->  	struct kobject		*kobj;
->  	void __iomem		*disc_table;
-> @@ -29,19 +37,11 @@ struct intel_pmt_entry {
->  	int			devid;
->  };
->  
-> -struct intel_pmt_header {
-> -	u32	base_offset;
-> -	u32	size;
-> -	u32	guid;
-> -	u8	access_type;
-> -};
-> -
->  struct intel_pmt_namespace {
->  	const char *name;
->  	struct xarray *xa;
->  	const struct attribute_group *attr_grp;
->  	int (*pmt_header_decode)(struct intel_pmt_entry *entry,
-> -				 struct intel_pmt_header *header,
->  				 struct device *dev);
->  };
->  
-> diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
-> index bbb3d61d09f4..4014c02cafdb 100644
-> --- a/drivers/platform/x86/intel/pmt/crashlog.c
-> +++ b/drivers/platform/x86/intel/pmt/crashlog.c
-> @@ -223,10 +223,10 @@ static const struct attribute_group pmt_crashlog_group = {
->  };
->  
->  static int pmt_crashlog_header_decode(struct intel_pmt_entry *entry,
-> -				      struct intel_pmt_header *header,
->  				      struct device *dev)
->  {
->  	void __iomem *disc_table = entry->disc_table;
-> +	struct intel_pmt_header *header = &entry->header;
->  	struct crashlog_entry *crashlog;
->  
->  	if (!pmt_crashlog_supported(entry))
-> diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
-> index 39cbc87cc28a..f86080e8bebd 100644
-> --- a/drivers/platform/x86/intel/pmt/telemetry.c
-> +++ b/drivers/platform/x86/intel/pmt/telemetry.c
-> @@ -58,10 +58,10 @@ static bool pmt_telem_region_overlaps(struct intel_pmt_entry *entry,
->  }
->  
->  static int pmt_telem_header_decode(struct intel_pmt_entry *entry,
-> -				   struct intel_pmt_header *header,
->  				   struct device *dev)
->  {
->  	void __iomem *disc_table = entry->disc_table;
-> +	struct intel_pmt_header *header = &entry->header;
->  
->  	if (pmt_telem_region_overlaps(entry, dev))
->  		return 1;
-> 
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/platform/x86/intel/int3472/common.c | 29 +++++++++++++++++++++
+ drivers/platform/x86/intel/int3472/common.h |  9 +++++++
+ 2 files changed, 38 insertions(+)
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-
+diff --git a/drivers/platform/x86/intel/int3472/common.c b/drivers/platform/x86/intel/int3472/common.c
+index 9db2bb0bbba4..61a8240ed6db 100644
+--- a/drivers/platform/x86/intel/int3472/common.c
++++ b/drivers/platform/x86/intel/int3472/common.c
+@@ -2,6 +2,10 @@
+ /* Author: Dan Scally <djrscally@gmail.com> */
+ 
+ #include <linux/acpi.h>
++#include <linux/cleanup.h>
++#include <linux/device.h>
++#include <linux/gpio/machine.h>
++#include <linux/overflow.h>
+ #include <linux/slab.h>
+ 
+ #include "common.h"
+@@ -80,3 +84,28 @@ int skl_int3472_get_sensor_adev_and_name(struct device *dev,
+ 
+ 	return ret;
+ }
++
++/* This should *really* only be used when there's no other way... */
++struct gpio_desc *
++skl_int3472_gpiod_get_from_temp_lookup(struct device *dev,
++				       const char *chip_label, u16 hwnum,
++				       const char *con_id,
++				       enum gpio_lookup_flags lflags,
++				       enum gpiod_flags rflags)
++{
++	struct gpio_desc *desc;
++
++	struct gpiod_lookup_table *lookup __free(kfree) =
++			kzalloc(struct_size(lookup, table, 1), GFP_KERNEL);
++	if (!lookup)
++		return ERR_PTR(-ENOMEM);
++
++	lookup->dev_id = dev_name(dev);
++	lookup->table[0] = GPIO_LOOKUP(chip_label, hwnum, con_id, lflags);
++
++	gpiod_add_lookup_table(lookup);
++
++	desc = gpiod_get(dev, con_id, rflags);
++	gpiod_remove_lookup_table(lookup);
++	return desc;
++}
+diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
+index 9f29baa13860..85ef9b630044 100644
+--- a/drivers/platform/x86/intel/int3472/common.h
++++ b/drivers/platform/x86/intel/int3472/common.h
+@@ -5,6 +5,8 @@
+ #define _INTEL_SKL_INT3472_H
+ 
+ #include <linux/clk-provider.h>
++#include <linux/device.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/gpio/machine.h>
+ #include <linux/leds.h>
+ #include <linux/regulator/driver.h>
+@@ -129,4 +131,11 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472,
+ 			      struct acpi_resource_gpio *agpio, u32 polarity);
+ void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472);
+ 
++struct gpio_desc *
++skl_int3472_gpiod_get_from_temp_lookup(struct device *dev,
++				       const char *chip_label, u16 hwnum,
++				       const char *con_id,
++				       enum gpio_lookup_flags lflags,
++				       enum gpiod_flags rflags);
++
+ #endif
 -- 
- i.
+2.39.2
 
---8323329-681903352-1695739387=:1894--
