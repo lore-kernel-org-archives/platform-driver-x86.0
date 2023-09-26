@@ -2,517 +2,302 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B409BE7D27D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 10:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C92F8E7E620
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 11:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234468AbjIZKzi (ORCPT
+        id S231178AbjIZLQ1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Sep 2023 06:55:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50618 "EHLO
+        Tue, 26 Sep 2023 07:16:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234140AbjIZKzh (ORCPT
+        with ESMTP id S229556AbjIZLQ0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Sep 2023 06:55:37 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2C81B4;
-        Tue, 26 Sep 2023 03:55:28 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-5046bf37daeso4153394e87.1;
-        Tue, 26 Sep 2023 03:55:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695725727; x=1696330527; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kpePqAMioqxjRNMfNyIrj61HiAgQI5WC8UYz3TP3LQ8=;
-        b=fj+43TOZnuf2oQq9dTIUg2FIaWoTDdYnShNbEU8+rulq6HEbIhwO1zkLADdAt++id5
-         NOOW9NmqIowwa+2K+9ad1aIulf4J+rNWzazQz+zpi6Wwe+TcJX7d7ZoA128kepHibQcQ
-         qlrVnydGqJ3WYD+Lt2MX32E5m1zdN2FIYJuKsXkg2Mk3h+pNnZ9wyDJuqGuSTmYJ22av
-         zv0fzXwEIme5zq0u/5lchzGhB1XisOAnD9Ev44I4NkcF4bnxPNQYKWfOnt2oizZYuDeV
-         68zkR/vi0wDzic1eipmzv6EJe/YCnRWX8334Woz6IBuHjqJNDxl+wchR30M3KLbfUJRX
-         wUag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695725727; x=1696330527;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kpePqAMioqxjRNMfNyIrj61HiAgQI5WC8UYz3TP3LQ8=;
-        b=pBzw280qzMnPo+Uf26+jdIadYRrgzFfwGG54Mp8fkU2fSxr0y2H9Ut78/TylfxFW6M
-         ByLMf8fE7aJ8ezzm8mEPs+1Yi+43WAolCtHImQPlUhRJofGUQdr6OiFsMmvZ64Gf969G
-         XEwitmO5d80Ebd50+TJxqk4IyIC1KQV/z79ufBeHqDBOh8A0pdJm0P8ToHN/A0KbkYcw
-         LVRotWx4YkVzj3+pomHVKN/aZju6BeQko0dtBHIal0HxoE+3c0FQRXidCuD3SxbY+U/D
-         YdT6twnOOymxidcEErubYUj0IF3hRoqsJ+kkn666dyln9+eVxBKKLSoqLIiwnQzokGgG
-         m/bA==
-X-Gm-Message-State: AOJu0Yytuw8k7ozNNT8N6MHQVitpMhy3GCk/O6XK747OU4crFQRsIfsi
-        BlrcbD31utAmfnfXEpzN95M=
-X-Google-Smtp-Source: AGHT+IF9rFU8L68FwfQv0yF56O5i0OMCeZbC/lQYuynKLKJlZdoikJidpWWCSmmDA/zCfmu1buNa8g==
-X-Received: by 2002:a19:5e51:0:b0:503:317b:8b7c with SMTP id z17-20020a195e51000000b00503317b8b7cmr6371420lfi.9.1695725726803;
-        Tue, 26 Sep 2023 03:55:26 -0700 (PDT)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id x26-20020a19f61a000000b00500b561285bsm2184694lfe.292.2023.09.26.03.55.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Sep 2023 03:55:26 -0700 (PDT)
-Date:   Tue, 26 Sep 2023 13:55:23 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Wong Vee Khee <veekhee@apple.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Revanth Kumar Uppala <ruppala@nvidia.com>,
-        Shenwei Wang <shenwei.wang@nxp.com>,
-        Andrey Konovalov <andrey.konovalov@linaro.org>,
-        Jochen Henneberg <jh@henneberg-systemdesign.com>,
-        David E Box <david.e.box@intel.com>,
-        Andrew Halaney <ahalaney@redhat.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
-        Tan Tee Min <tee.min.tan@linux.intel.com>,
-        Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-        Lai Peter Jun Ann <jun.ann.lai@intel.com>
-Subject: Re: [PATCH net-next v3 4/5] net: stmmac: enable Intel mGbE 1G/2.5G
- auto-negotiation support
-Message-ID: <jmq54bskx4zd75ay4kf5pcdo6wnz72pxzfo5ivevleef4scucr@uw4fkfs64f3c>
-References: <20230921121946.3025771-1-yong.liang.choong@linux.intel.com>
- <20230921121946.3025771-5-yong.liang.choong@linux.intel.com>
+        Tue, 26 Sep 2023 07:16:26 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2058.outbound.protection.outlook.com [40.107.223.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47DC2E5;
+        Tue, 26 Sep 2023 04:16:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=inubOcd97XPrVGOLURbafzLbcweihH30KRyvHdvGL6SrSWK7jrwyjZxA8Mbl8WutdIrlD/KHz3pojrrKRQRISRPMG1jIh7IVSp0wqCiNoe5L1U/bXH07dcR8p4oGokoqqUQYguh2eNmfP7PS0Ds+R0dD027kMAcO5Khm+fJu20CpDztKANE7ja5OcOrIEu3FdUFRp46k2AqtFiIU5+BlfjAxOnbpinKfonUhrV7Lq/s9TpRKsedCd9bSxelL2dF5GpuSAl2DrWwBMNba3ykCguz1kC6WZMPYKS3Bsj2aLZdqDsTA8NQZbOY7BBc2BnevwwfUQP46f2fNMGWDQt0LIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wlJeIo+eTgo/VDlD8hcMGmUyp0y4+Lv2X7OLS+FXucg=;
+ b=JuKFG0C4nzjTfLbg3cnF6VAZx+xU0rRE4V6pnvdvSLRLUo/naF7JOl4urxjruVWBu0Ks6S/l/dZ/ERAabVs+s4r0807uhzGybhjwblaO4lopXr7Ciph00SiUO2jhrQPnW+E0P5HAqRnECqktVP/5ZrTfBidukL5OXAmjnhQqLFXA6OiKNBKeZN8Oj/K56hGAMRAD1yz+3weLG+aGvGwAbA8+linedGfvxH8/95lubm11cggtzX8HyUjpfGBPlA6TDccV8bST425kofs+Vton7SLD9u23WbYmY0YSEP+OO0JApT+c8WxftJtp0jZ3HKSer7WBZE8UjeBw35d0y0g3mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wlJeIo+eTgo/VDlD8hcMGmUyp0y4+Lv2X7OLS+FXucg=;
+ b=KKE5aOmJSyYPjVFzzH7GswS8iPiKAnmNlWmX1Tztk2SS4nwxIkbRG61Xj09C9Ltz8SXiBn7/7amZWL5j17PgpBUHyWIss2FE2DnW/Yyw+Gkt8NAseBTZIBnw22D41VCargiyBhDC4j9FUZx+8l3+qrUx6acBUFCFL3cVlY/lOLE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
+ by CY8PR12MB8364.namprd12.prod.outlook.com (2603:10b6:930:7f::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.21; Tue, 26 Sep
+ 2023 11:16:17 +0000
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::19d3:7b27:a6fc:95c5]) by BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::19d3:7b27:a6fc:95c5%4]) with mapi id 15.20.6813.027; Tue, 26 Sep 2023
+ 11:16:16 +0000
+Message-ID: <9419f86e-5502-439a-8f11-e5ad07357529@amd.com>
+Date:   Tue, 26 Sep 2023 16:45:58 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 13/15] platform/x86/amd/pmf: Add PMF-AMDGPU set interface
+To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "markgross@kernel.org" <markgross@kernel.org>,
+        "Natikar, Basavaraj" <Basavaraj.Natikar@amd.com>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        "airlied@gmail.com" <airlied@gmail.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>
+Cc:     "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Patil Rajesh <Patil.Reddy@amd.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "Limonciello, Mario" <Mario.Limonciello@amd.com>
+References: <20230922175056.244940-1-Shyam-sundar.S-k@amd.com>
+ <20230922175056.244940-14-Shyam-sundar.S-k@amd.com>
+ <BL1PR12MB51442D18C314B1E34B77DE2BF7FCA@BL1PR12MB5144.namprd12.prod.outlook.com>
+Content-Language: en-US
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+In-Reply-To: <BL1PR12MB51442D18C314B1E34B77DE2BF7FCA@BL1PR12MB5144.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0161.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:c8::17) To BL1PR12MB5176.namprd12.prod.outlook.com
+ (2603:10b6:208:311::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230921121946.3025771-5-yong.liang.choong@linux.intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|CY8PR12MB8364:EE_
+X-MS-Office365-Filtering-Correlation-Id: fea12f76-aceb-426a-9de7-08dbbe82005b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: i19+ICAMNa2fcv0SbxmyM8CpDvrCb2DHvh7Pjjn5TiTD+svjqwOjqr4EnuNIoea3Uc2H6teq4lHBI1Nz3Y129Zwq4SugwwxKsY5hYwpVyrqJAOiTIuof7dkQ0yElnIZnyVvQ4k5AGUBfDu/omptqUsw7QsAXZ4ucIka09XUs0SzYqWk4n7KqVrLu1GrNGXo+NMNTy+efoSkYOAxdgFexVhavUbkkPZuYtfeRhagKlu0wDPqIyx6wRqaCLuyeJ0CqfcXXJFy3K/lbcE6FQdZg/BGIOG0mH5ZVQ6XBvsjg2a/UKxCxc8a6NoSTt5vrZ0q0qpbcuIp21Q2v39vVWHnfbV7ggfQ+ulqcj6eXQzxiZoYeZEAX5iGMLk95fAG2KGL8wmwNi1KwYZzJSXaX9T+tkEsl8N7V8cpU2HwSAmSNJ4LV5+aiKKuPrkNIKinH0seIQn6stv9Sz18OhpuR2BHE3uWFsd7PtY9Jz4iA2BXrP+j24H48qJmCioZQuuejeUs8Epv1VLkaOjHnNjO+KcrTuOgNVFnq41OfDYcUSZUMKlo4tRg/Ixv1zHcdO1qWAbEV9hvtqpJO3WxVGKBZjQZEpx30qenef+xQiuJgqoI3avePIap+/ChhUcSRocu5UF/mJQu+u/RaZKAs3yOh5KlipxiInnqRICLNxyhkkgG/aFk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(346002)(366004)(376002)(396003)(230922051799003)(451199024)(1800799009)(186009)(31686004)(6666004)(53546011)(6506007)(6486002)(478600001)(38100700002)(921005)(86362001)(31696002)(2906002)(7416002)(41300700001)(83380400001)(6512007)(2616005)(26005)(36756003)(54906003)(66556008)(66476007)(110136005)(5660300002)(316002)(66946007)(8676002)(4326008)(8936002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZWQ5RXlqanppTnFWandMY041RkVKZDlmelBIWWE1NFNOWklMVGp2Q2RjVDBH?=
+ =?utf-8?B?TlN2bkN3TXpvYzJiMkVLRmJvNVVWUGtYYStVZ2MyTkhxdXFQNS9xZGU3cmwr?=
+ =?utf-8?B?NUM2MW50M0MyL3A4ekhUQk4zREgrbXJGWWY4aXhkQlRmcjV3c1N1VWcvMGVD?=
+ =?utf-8?B?d0FlY2lHR0N1SWE0azdPNFpZTmFadTdrOS9HT2ZuU21CRFNjYWJCTStwYWEx?=
+ =?utf-8?B?VkNWMmJlTjIySVFPZW45QmpEZEZaQklTODduRS90S0grVUpDZlA1SktKQWRJ?=
+ =?utf-8?B?OVNPcnZ4d3poc3JYd0V3dlRRTVVleXA1WFRiOXAyQjJHL2cxVDQxZ1FYQjN0?=
+ =?utf-8?B?QkNlT25QUUhEVHgxNDVzUk1lK25wVW0wVDcwbloyS0ptd2FodkJUYUg2RlVT?=
+ =?utf-8?B?TFNTVWx2TjEvMTh6YVFVVGhYbTJBRFJKWG8xVlhUVFBiZzB1U3NBUUFmTkFr?=
+ =?utf-8?B?MVQ4ZkdEd2U0NGY0MkhZTlJoYy9mUjhBSnlCbERLM1MvNU82RnFFM2l3dTZT?=
+ =?utf-8?B?eXpockhHenFrNVhTay81ekhGMXBMU1ZWcmgyOTZMRzdCazB5OHBubzZQdWkx?=
+ =?utf-8?B?MFNYODBJRFM0NnFOZzByZXEzVnprL3hQTFdMRXdJcEQ5VlZ0K1ZzeWlrMHFW?=
+ =?utf-8?B?Nnp0Mk0velM0N0VQdmpSZXFmVnNHWnlZV3hOZjFnK1cwdWlYOGJqYmhYdysy?=
+ =?utf-8?B?VTBtajJWR2xTcDVvUWRZSk1mL0syZ3FKeDNneUpralR1VmZHUlBYaHpWRHZK?=
+ =?utf-8?B?UXlaMzdoVS9OUXJ0VUlUcVM2VmYxdmZJQkRhaW1TbEpReDVOY0dMbHpoUStD?=
+ =?utf-8?B?QmlsR3AvNkw1MWxnMjNrNzNiRjBHRWg2NVoyUXVBK0h3RVlDd05EMHRCOVFu?=
+ =?utf-8?B?WE5aNG8rUTZ5RmwxR0dhekVNUlZjRURrWEpObVUxOUhxNHhlWko4Y1RUVk9z?=
+ =?utf-8?B?T0xYZERqSWhzUnRxblQvWGhsMnNwVlBaY0l2MjhFdHVHaE1SUVJiVmdMT1hk?=
+ =?utf-8?B?QXV2NVd1aFJwK242MTl3NTBhb2VUL2ZmMjJ2bzVrZnMxMkp4WXRHU1BpUEph?=
+ =?utf-8?B?bGhzVDA2cE5WTm1HUW1LbGxMb0VQQ3RnNmE3NkhwZDYvQk13OXJKbWRUT1lQ?=
+ =?utf-8?B?M2tCd1R1STJEM3pWbWdORUxqNVdPU25BbExvUElzRzdRYTNFUnZyQTk2dEth?=
+ =?utf-8?B?RFVUZllveitSZHM5NGN5TTBudDhRQ2RWL3ArMWF2VG1tTSs4WEI5a0FOTlB4?=
+ =?utf-8?B?Y1UvS0N5QUc3RFBmWGs4MEh1UzJvY3NGaUxvSnlUNUk4K0lIeHhadXJkbXh6?=
+ =?utf-8?B?NGhrcEJEZGh5UWx2WWpoeVYzeGdrWmU5YWZYQ0UwT2lPYVZUVmczYk9RSmto?=
+ =?utf-8?B?dCt2UWtNZU9qVWZUdGJRdEhmK1lNSzg0ekZwMjRZV1l2UkxibGRSUmlMQUpq?=
+ =?utf-8?B?VWRkMlBvVWc0aGltTllMb1FySjgySlJndU9DVHo2K2RXY1d2dEFkdUltSmEy?=
+ =?utf-8?B?UUdlUDRISVpNT3F0bE5sTy95UjlwNnlYRERwTlZ6Q3REUXpvNmQ0bzRjYlQz?=
+ =?utf-8?B?YW1zYU9wbEpmRE5DMTZRVUpvbmhpV3BSQ0FLM3l6TUo0Qk1xWVhONUpzQVBP?=
+ =?utf-8?B?WjVQeEZ5ajJNc1IzTkVaVDJyVnpqc1RjMmIwbmpuWnVYeGV4TldLbitjcnR3?=
+ =?utf-8?B?T3NIMjh2WFBrcWdTQ0RzcDhmTGJOaWw1QUp6YUdzVXREelhsUVBFYVMvTHZ4?=
+ =?utf-8?B?SnM4NXp5WGJTaGF2aGpQL0p3Ym5Db2l4R2p1RWhhd1g2L0h3UnVCTnNMY1pa?=
+ =?utf-8?B?ZlFCVDBIVGNFa1RHQy9rT2ZKVGlQaGk3K3NjNGtBVndGSVkxSzFSV09NalNT?=
+ =?utf-8?B?OGZnclRwQmM3eExVa2dVRjFzbzhGZHQ2UnpFeE1qWkg3MktCZUZEYUpuWW9v?=
+ =?utf-8?B?TUJOZStDZ0NzMXJxM1I0THAzUGNkRWJSS25BTlBaa0I0MkdCSzFxVkRIeWY3?=
+ =?utf-8?B?WEcwelFDS3Jva2V6VnB6SFpTVUZDa21iajRIUm1zRTVJMmZYVDJpNTR2c1Z0?=
+ =?utf-8?B?QXl4Y1J5RHdtSnlXVlZ4SlJhbmUvTDlieWxaYzFlSkdDWnFPd0tUb2wzZ3Fo?=
+ =?utf-8?Q?CS1n4icCzHNLeU4s9di6CMcG2?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fea12f76-aceb-426a-9de7-08dbbe82005b
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2023 11:16:16.7274
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: smlSos0t+IClGTqVIt2bbImHGNOA6F4rTBaYM7hrWXJVbI4EKJZoWMLTVfWTLiAtAY1JerU4mfztSoET4r0Zqg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8364
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Sep 21, 2023 at 08:19:45PM +0800, Choong Yong Liang wrote:
-> From: "Tan, Tee Min" <tee.min.tan@linux.intel.com>
-> 
-> Initially, Intel mGbE was only able to configure the overclocking of 2.5
-> times clock rate to enable 2.5Gbps in the BIOS during boot time. Kernel
-> driver had no access to modify the clock rate for 1G/2.5G mode at runtime.
-> 
-> Now, this patch enables the runtime 1G/2.5G auto-negotiation support to
-> gets rid of the dependency on BIOS to change the 1G/2.5G clock rate.
-> 
-> This patch adds several new functions below:-
-> - intel_tsn_interface_is_available(): This new function reads FIA lane
->   ownership registers and common lane registers through IPC commands
->   to know which lane the mGbE port is assigned to.
-> - stmmac_mac_prepare(): To obtain the latest PHY interface from phylink
->   during initialization and call intel_config_serdes() to proceed with
->   SERDES configuration.
-> - intel_config_serdes(): To configure the SERDES based on the assigned
->   lane and latest PHY interface, it sends IPC command to the PMC through
->   PMC driver/API. The PMC acts as a proxy for R/W on behalf of the driver.
-> - intel_set_reg_access(): Set the register access to the available TSN
->   interface.
-> 
-> Signed-off-by: Tan, Tee Min <tee.min.tan@linux.intel.com>
-> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/Kconfig   |   1 +
->  .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 134 +++++++++++++++++-
->  .../net/ethernet/stmicro/stmmac/dwmac-intel.h |  79 +++++++++++
->  .../net/ethernet/stmicro/stmmac/stmmac_main.c |  20 +++
->  include/linux/stmmac.h                        |   1 +
->  5 files changed, 231 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> index a2b9e289aa36..4340efd9bd50 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> @@ -273,6 +273,7 @@ config DWMAC_INTEL
->  	default X86
->  	depends on X86 && STMMAC_ETH && PCI
->  	depends on COMMON_CLK
-> +	select INTEL_PMC_IPC
->  	help
->  	  This selects the Intel platform specific bus support for the
->  	  stmmac driver. This driver is used for Intel Quark/EHL/TGL.
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-> index a3a249c63598..a211f42914a2 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-> @@ -5,6 +5,7 @@
->  #include <linux/clk-provider.h>
->  #include <linux/pci.h>
->  #include <linux/dmi.h>
-> +#include <linux/platform_data/x86/intel_pmc_ipc.h>
->  #include "dwmac-intel.h"
->  #include "dwmac4.h"
->  #include "stmmac.h"
-> @@ -14,6 +15,9 @@ struct intel_priv_data {
->  	int mdio_adhoc_addr;	/* mdio address for serdes & etc */
->  	unsigned long crossts_adj;
->  	bool is_pse;
-> +	const int *tsn_lane_registers;
-> +	int max_tsn_lane_registers;
-> +	int pid_modphy;
->  };
->  
->  /* This struct is used to associate PCI Function of MAC controller on a board,
-> @@ -93,7 +97,7 @@ static int intel_serdes_powerup(struct net_device *ndev, void *priv_data)
->  	data &= ~SERDES_RATE_MASK;
->  	data &= ~SERDES_PCLK_MASK;
->  
-> -	if (priv->plat->max_speed == 2500)
-> +	if (priv->plat->phy_interface == PHY_INTERFACE_MODE_2500BASEX)
->  		data |= SERDES_RATE_PCIE_GEN2 << SERDES_RATE_PCIE_SHIFT |
->  			SERDES_PCLK_37p5MHZ << SERDES_PCLK_SHIFT;
->  	else
-> @@ -414,6 +418,106 @@ static void intel_mgbe_pse_crossts_adj(struct intel_priv_data *intel_priv,
->  	}
->  }
->  
-> +#if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
-> +static bool intel_tsn_interface_is_available(struct net_device *ndev,
-> +					     struct intel_priv_data *intel_priv)
-> +{
-> +	struct stmmac_priv *priv = netdev_priv(ndev);
-> +	struct pmc_ipc_cmd tmp = {0};
-> +	u32 rbuf[4] = {0};
-> +	int ret, i, j;
-> +
-> +	if (priv->plat->serdes_powerup) {
-> +		tmp.cmd = IPC_SOC_REGISTER_ACCESS;
-> +		tmp.sub_cmd = IPC_SOC_SUB_CMD_READ;
-> +
-> +		for (i = 0; i < 5; i++) {
-> +			tmp.wbuf[0] = R_PCH_FIA_15_PCR_LOS1_REG_BASE + i;
-> +
-> +			ret = intel_pmc_ipc(&tmp, rbuf);
-> +			if (ret < 0) {
-> +				netdev_info(priv->dev,
-> +					    "Failed to read from PMC.\n");
-> +				return false;
-> +			}
-> +
-> +			for (j = 0; j <= intel_priv->max_tsn_lane_registers; j++)
-> +				if ((rbuf[0] >>
-> +				    (4 * (intel_priv->tsn_lane_registers[j] % 8)) &
-> +				     B_PCH_FIA_PCR_L0O) == 0xB)
-> +					return true;
-> +		}
-> +	}
-> +	return false;
-> +}
-> +
-> +static int intel_set_reg_access(const struct pmc_serdes_regs *regs, int max_regs)
-> +{
-> +	int ret = 0, i;
-> +
-> +	for (i = 0; i < max_regs; i++) {
-> +		struct pmc_ipc_cmd tmp = {0};
-> +		u32 buf[4] = {0};
-> +
-> +		tmp.cmd = IPC_SOC_REGISTER_ACCESS;
-> +		tmp.sub_cmd = IPC_SOC_SUB_CMD_WRITE;
-> +		tmp.wbuf[0] = (u32)regs[i].index;
-> +		tmp.wbuf[1] = regs[i].val;
-> +
-> +		ret = intel_pmc_ipc(&tmp, buf);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int intel_config_serdes(struct net_device *ndev, void *intel_data)
-> +{
-> +	struct intel_priv_data *intel_priv = intel_data;
-> +	struct stmmac_priv *priv = netdev_priv(ndev);
-> +	int ret = 0;
-> +
-> +	if (!intel_tsn_interface_is_available(ndev, intel_priv)) {
-> +		netdev_info(priv->dev,
-> +			    "No TSN interface available to set the registers.\n");
-> +		goto pmc_read_error;
-> +	}
-> +
-> +	if (intel_priv->pid_modphy == PID_MODPHY1) {
-> +		if (priv->plat->phy_interface == PHY_INTERFACE_MODE_2500BASEX) {
-> +			ret = intel_set_reg_access(pid_modphy1_2p5g_regs,
-> +						   ARRAY_SIZE(pid_modphy1_2p5g_regs));
-> +		} else {
-> +			ret = intel_set_reg_access(pid_modphy1_1g_regs,
-> +						   ARRAY_SIZE(pid_modphy1_1g_regs));
-> +		}
-> +	} else {
-> +		if (priv->plat->phy_interface == PHY_INTERFACE_MODE_2500BASEX) {
-> +			ret = intel_set_reg_access(pid_modphy3_2p5g_regs,
-> +						   ARRAY_SIZE(pid_modphy3_2p5g_regs));
-> +		} else {
-> +			ret = intel_set_reg_access(pid_modphy3_1g_regs,
-> +						   ARRAY_SIZE(pid_modphy3_1g_regs));
-> +		}
-> +	}
-> +
-> +	if (ret < 0)
-> +		goto pmc_read_error;
-> +
-> +pmc_read_error:
-> +	intel_serdes_powerdown(ndev, intel_priv);
-> +	intel_serdes_powerup(ndev, intel_priv);
-> +
-> +	return ret;
-> +}
-> +#else
-> +static int intel_config_serdes(struct net_device *ndev, void *intel_data)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +#endif /* CONFIG_INTEL_PMC_IPC */
-> +
->  static void common_default_data(struct plat_stmmacenet_data *plat)
->  {
->  	plat->clk_csr = 2;	/* clk_csr_i = 20-35MHz & MDC = clk_csr_i/16 */
-> @@ -624,6 +728,8 @@ static int intel_mgbe_common_data(struct pci_dev *pdev,
->  static int ehl_common_data(struct pci_dev *pdev,
->  			   struct plat_stmmacenet_data *plat)
->  {
-> +	struct intel_priv_data *intel_priv = plat->bsp_priv;
-> +
->  	plat->rx_queues_to_use = 8;
->  	plat->tx_queues_to_use = 8;
->  	plat->flags |= STMMAC_FLAG_USE_PHY_WOL;
-> @@ -639,20 +745,28 @@ static int ehl_common_data(struct pci_dev *pdev,
->  	plat->safety_feat_cfg->prtyen = 0;
->  	plat->safety_feat_cfg->tmouten = 0;
->  
-> +	intel_priv->tsn_lane_registers = ehl_tsn_lane_registers;
-> +	intel_priv->max_tsn_lane_registers = ARRAY_SIZE(ehl_tsn_lane_registers);
-> +
->  	return intel_mgbe_common_data(pdev, plat);
->  }
->  
->  static int ehl_sgmii_data(struct pci_dev *pdev,
->  			  struct plat_stmmacenet_data *plat)
->  {
-> +	struct intel_priv_data *intel_priv = plat->bsp_priv;
-> +
->  	plat->bus_id = 1;
->  	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
-> -	plat->speed_mode_2500 = intel_speed_mode_2500;
-> +	plat->max_speed = SPEED_2500;
->  	plat->serdes_powerup = intel_serdes_powerup;
->  	plat->serdes_powerdown = intel_serdes_powerdown;
-> +	plat->config_serdes = intel_config_serdes;
->  
->  	plat->clk_ptp_rate = 204800000;
->  
-> +	intel_priv->pid_modphy = PID_MODPHY3;
-> +
->  	return ehl_common_data(pdev, plat);
->  }
->  
-> @@ -705,10 +819,16 @@ static struct stmmac_pci_info ehl_pse0_rgmii1g_info = {
->  static int ehl_pse0_sgmii1g_data(struct pci_dev *pdev,
->  				 struct plat_stmmacenet_data *plat)
->  {
-> +	struct intel_priv_data *intel_priv = plat->bsp_priv;
-> +
->  	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
-> -	plat->speed_mode_2500 = intel_speed_mode_2500;
-> +	plat->max_speed = SPEED_2500;
->  	plat->serdes_powerup = intel_serdes_powerup;
->  	plat->serdes_powerdown = intel_serdes_powerdown;
-> +	plat->config_serdes = intel_config_serdes;
-> +
-> +	intel_priv->pid_modphy = PID_MODPHY1;
-> +
->  	return ehl_pse0_common_data(pdev, plat);
->  }
->  
-> @@ -746,10 +866,16 @@ static struct stmmac_pci_info ehl_pse1_rgmii1g_info = {
->  static int ehl_pse1_sgmii1g_data(struct pci_dev *pdev,
->  				 struct plat_stmmacenet_data *plat)
->  {
-> +	struct intel_priv_data *intel_priv = plat->bsp_priv;
-> +
->  	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
-> -	plat->speed_mode_2500 = intel_speed_mode_2500;
-> +	plat->max_speed = SPEED_2500;
->  	plat->serdes_powerup = intel_serdes_powerup;
->  	plat->serdes_powerdown = intel_serdes_powerdown;
-> +	plat->config_serdes = intel_config_serdes;
-> +
-> +	intel_priv->pid_modphy = PID_MODPHY1;
-> +
->  	return ehl_pse1_common_data(pdev, plat);
->  }
->  
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-> index 0a37987478c1..093eed977ab0 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-> @@ -50,4 +50,83 @@
->  #define PCH_PTP_CLK_FREQ_19_2MHZ	(GMAC_GPO0)
->  #define PCH_PTP_CLK_FREQ_200MHZ		(0)
->  
-> +#define	PID_MODPHY1 0xAA
-> +#define	PID_MODPHY3 0xA8
-> +
-> +#if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
-> +struct pmc_serdes_regs {
-> +	u8 index;
-> +	u32 val;
-> +};
-> +
-> +/* Modphy Register index */
-> +#define R_PCH_FIA_15_PCR_LOS1_REG_BASE			8
-> +#define R_PCH_FIA_15_PCR_LOS2_REG_BASE			9
-> +#define R_PCH_FIA_15_PCR_LOS3_REG_BASE			10
-> +#define R_PCH_FIA_15_PCR_LOS4_REG_BASE			11
-> +#define R_PCH_FIA_15_PCR_LOS5_REG_BASE			12
-> +#define B_PCH_FIA_PCR_L0O				GENMASK(3, 0)
-> +#define PID_MODPHY1_B_MODPHY_PCR_LCPLL_DWORD0		13
-> +#define PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD2		14
-> +#define PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD7		15
-> +#define PID_MODPHY1_N_MODPHY_PCR_LPPLL_DWORD10		16
-> +#define PID_MODPHY1_N_MODPHY_PCR_CMN_ANA_DWORD30	17
-> +#define PID_MODPHY3_B_MODPHY_PCR_LCPLL_DWORD0		18
-> +#define PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD2		19
-> +#define PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD7		20
-> +#define PID_MODPHY3_N_MODPHY_PCR_LPPLL_DWORD10		21
-> +#define PID_MODPHY3_N_MODPHY_PCR_CMN_ANA_DWORD30	22
-> +
-> +#define B_MODPHY_PCR_LCPLL_DWORD0_1G		0x46AAAA41
-> +#define N_MODPHY_PCR_LCPLL_DWORD2_1G		0x00000139
-> +#define N_MODPHY_PCR_LCPLL_DWORD7_1G		0x002A0003
-> +#define N_MODPHY_PCR_LPPLL_DWORD10_1G		0x00170008
-> +#define N_MODPHY_PCR_CMN_ANA_DWORD30_1G		0x0000D4AC
-> +#define B_MODPHY_PCR_LCPLL_DWORD0_2P5G		0x58555551
-> +#define N_MODPHY_PCR_LCPLL_DWORD2_2P5G		0x0000012D
-> +#define N_MODPHY_PCR_LCPLL_DWORD7_2P5G		0x001F0003
-> +#define N_MODPHY_PCR_LPPLL_DWORD10_2P5G		0x00170008
-> +#define N_MODPHY_PCR_CMN_ANA_DWORD30_2P5G	0x8200ACAC
-> +
-> +static const struct pmc_serdes_regs pid_modphy3_1g_regs[] = {
-> +	{ PID_MODPHY3_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_1G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_1G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_1G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_1G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_1G },
-> +	{}
-> +};
-> +
-> +static const struct pmc_serdes_regs pid_modphy3_2p5g_regs[] = {
-> +	{ PID_MODPHY3_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_2P5G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_2P5G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_2P5G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_2P5G },
-> +	{ PID_MODPHY3_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_2P5G },
-> +	{}
-> +};
-> +
-> +static const struct pmc_serdes_regs pid_modphy1_1g_regs[] = {
-> +	{ PID_MODPHY1_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_1G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_1G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_1G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_1G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_1G },
-> +	{}
-> +};
-> +
-> +static const struct pmc_serdes_regs pid_modphy1_2p5g_regs[] = {
-> +	{ PID_MODPHY1_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_2P5G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_2P5G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_2P5G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_2P5G },
-> +	{ PID_MODPHY1_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_2P5G },
-> +	{}
-> +};
-> +
-> +static const int ehl_tsn_lane_registers[] = {7, 8, 9, 10, 11};
-> +#else
-> +static const int ehl_tsn_lane_registers[] = {};
-> +#endif /* CONFIG_INTEL_PMC_IPC */
-> +
->  #endif /* __DWMAC_INTEL_H__ */
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> index 9201ed778ebc..75765cf52cd1 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> @@ -1103,11 +1103,31 @@ static void stmmac_mac_link_up(struct phylink_config *config,
->  		stmmac_hwtstamp_correct_latency(priv, priv);
->  }
->  
 
-> +#if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
-> +static int stmmac_mac_prepare(struct phylink_config *config, unsigned int mode,
-> +			      phy_interface_t interface)
-> +{
-> +	struct net_device *ndev = to_net_dev(config->dev);
-> +	struct stmmac_priv *priv = netdev_priv(ndev);
-> +	int ret = 0;
-> +
-> +	priv->plat->phy_interface = interface;
-> +
-> +	if (priv->plat->config_serdes)
-> +		ret = priv->plat->config_serdes(ndev, priv->plat->bsp_priv);
-> +
-> +	return ret;
-> +}
-> +#endif
-> +
->  static const struct phylink_mac_ops stmmac_phylink_mac_ops = {
->  	.mac_select_pcs = stmmac_mac_select_pcs,
->  	.mac_config = stmmac_mac_config,
->  	.mac_link_down = stmmac_mac_link_down,
->  	.mac_link_up = stmmac_mac_link_up,
-> +#if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
-> +	.mac_prepare = stmmac_mac_prepare,
-> +#endif
 
-Please no for the platform-specific ifdef's in the generic code.
-STMMAC driver is already overwhelmed with clumsy solutions. Let's not
-add another one.
-
--Serge(y)
-
->  };
->  
->  /**
-> diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-> index c0079a7574ae..aa7d4d96391c 100644
-> --- a/include/linux/stmmac.h
-> +++ b/include/linux/stmmac.h
-> @@ -275,6 +275,7 @@ struct plat_stmmacenet_data {
->  	int (*serdes_powerup)(struct net_device *ndev, void *priv);
->  	void (*serdes_powerdown)(struct net_device *ndev, void *priv);
->  	void (*speed_mode_2500)(struct net_device *ndev, void *priv);
-> +	int (*config_serdes)(struct net_device *ndev, void *priv);
->  	void (*ptp_clk_freq_config)(struct stmmac_priv *priv);
->  	int (*init)(struct platform_device *pdev, void *priv);
->  	void (*exit)(struct platform_device *pdev, void *priv);
-> -- 
-> 2.25.1
+On 9/25/2023 9:57 PM, Deucher, Alexander wrote:
+> [Public]
 > 
+>> -----Original Message-----
+>> From: amd-gfx <amd-gfx-bounces@lists.freedesktop.org> On Behalf Of
+>> Shyam Sundar S K
+>> Sent: Friday, September 22, 2023 1:51 PM
+>> To: hdegoede@redhat.com; markgross@kernel.org; Natikar, Basavaraj
+>> <Basavaraj.Natikar@amd.com>; jikos@kernel.org;
+>> benjamin.tissoires@redhat.com; Deucher, Alexander
+>> <Alexander.Deucher@amd.com>; Koenig, Christian
+>> <Christian.Koenig@amd.com>; Pan, Xinhui <Xinhui.Pan@amd.com>;
+>> airlied@gmail.com; daniel@ffwll.ch
+>> Cc: S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com>; amd-
+>> gfx@lists.freedesktop.org; platform-driver-x86@vger.kernel.org; dri-
+>> devel@lists.freedesktop.org; Patil Rajesh <Patil.Reddy@amd.com>; linux-
+>> input@vger.kernel.org; Limonciello, Mario <Mario.Limonciello@amd.com>
+>> Subject: [PATCH 13/15] platform/x86/amd/pmf: Add PMF-AMDGPU set
+>> interface
+>>
+>> For the Smart PC Solution to fully work, it has to enact to the actions coming
+>> from TA. Add the initial code path for set interface to AMDGPU.
+> 
+> This seems to be limited to backlight at this point.  What does setting or not setting the backlight level mean for the system when this framework is in place?  What if a user manually changes the backlight level?  Additional comments below.
+
+The unit here is nits that varies from 0 to 255. User can manually
+update the backlight but if there is an action from the TA to update
+the backlight, PMF driver would send a request to GPU driver to update
+the backlight to the updated value (in nits)
+
+At this point, yes. PMF is using to PMF-GPU interface to set
+backlight, but there are additional things to be added in future. This
+patch builds the initial plumbing for that.
+
+> 
+>>
+>> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> ---
+>>  drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c | 21
+>> +++++++++++++++++++++
+>>  drivers/platform/x86/amd/pmf/pmf.h      |  2 ++
+>>  drivers/platform/x86/amd/pmf/tee-if.c   | 19 +++++++++++++++++--
+>>  include/linux/amd-pmf-io.h              |  1 +
+>>  4 files changed, 41 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
+>> b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
+>> index 232d11833ddc..5c567bff0548 100644
+>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
+>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
+>> @@ -68,3 +68,24 @@ int amd_pmf_get_gfx_data(struct amd_gpu_pmf_data
+>> *pmf)
+>>       return 0;
+>>  }
+>>  EXPORT_SYMBOL_GPL(amd_pmf_get_gfx_data);
+>> +
+>> +int amd_pmf_set_gfx_data(struct amd_gpu_pmf_data *pmf) {
+>> +     struct drm_device *drm_dev = pci_get_drvdata(pmf->gpu_dev);
+>> +     struct amdgpu_device *adev = drm_to_adev(drm_dev);
+>> +     struct backlight_device *bd;
+>> +
+>> +     if (!(adev->flags & AMD_IS_APU)) {
+>> +             DRM_ERROR("PMF-AMDGPU interface not supported\n");
+>> +             return -ENODEV;
+>> +     }
+>> +
+>> +     bd = backlight_device_get_by_type(BACKLIGHT_RAW);
+>> +     if (!bd)
+>> +             return -ENODEV;
+>> +
+>> +     backlight_device_set_brightness(bd, pmf->brightness);
+>> +
+>> +     return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(amd_pmf_set_gfx_data);
+>> diff --git a/drivers/platform/x86/amd/pmf/pmf.h
+>> b/drivers/platform/x86/amd/pmf/pmf.h
+>> index 9032df4ba48a..ce89cc0daa5a 100644
+>> --- a/drivers/platform/x86/amd/pmf/pmf.h
+>> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+>> @@ -73,6 +73,7 @@
+>>  #define PMF_POLICY_STT_SKINTEMP_APU                          7
+>>  #define PMF_POLICY_STT_SKINTEMP_HS2                          8
+>>  #define PMF_POLICY_SYSTEM_STATE                                      9
+>> +#define PMF_POLICY_DISPLAY_BRIGHTNESS                                12
+>>  #define PMF_POLICY_P3T                                               38
+>>
+>>  /* TA macros */
+>> @@ -480,6 +481,7 @@ enum ta_pmf_error_type {  };
+>>
+>>  struct pmf_action_table {
+>> +     unsigned long display_brightness;
+>>       enum system_state system_state;
+>>       unsigned long spl; /* in mW */
+>>       unsigned long sppt; /* in mW */
+>> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c
+>> b/drivers/platform/x86/amd/pmf/tee-if.c
+>> index 1608996654e8..eefffff83a4c 100644
+>> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+>> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+>> @@ -79,10 +79,10 @@ static int amd_pmf_update_uevents(struct
+>> amd_pmf_dev *dev, u16 event)
+>>       return 0;
+>>  }
+>>
+>> -static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct
+>> ta_pmf_enact_result *out)
+>> +static int amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct
+>> +ta_pmf_enact_result *out)
+>>  {
+>>       u32 val, event = 0;
+>> -     int idx;
+>> +     int idx, ret;
+>>
+>>       for (idx = 0; idx < out->actions_count; idx++) {
+>>               val = out->actions_list[idx].value;
+>> @@ -160,8 +160,23 @@ static void amd_pmf_apply_policies(struct
+>> amd_pmf_dev *dev, struct ta_pmf_enact_
+>>                               dev->prev_data->system_state = 0;
+>>                       }
+>>                       break;
+>> +
+>> +             case PMF_POLICY_DISPLAY_BRIGHTNESS:
+>> +                     ret = amd_pmf_get_gfx_data(&dev->gfx_data);
+>> +                     if (ret)
+>> +                             return ret;
+>> +
+>> +                     dev->prev_data->display_brightness = dev-
+>>> gfx_data.brightness;
+> 
+> Are we using standardized units for the brightness?  On the GPU side, we align with the standard blacklight interface, but internally, the driver has to convert units depending on the type of backlight controller used on the platform.  Presumably PMF does something similar?
+
+Yes its the standard nits. There is no conversion needed.
+
+> 
+> Alex
+> 
+>> +                     if (dev->prev_data->display_brightness != val) {
+>> +                             dev->gfx_data.brightness = val;
+>> +                             amd_pmf_set_gfx_data(&dev->gfx_data);
+>> +                             dev_dbg(dev->dev, "update
+>> DISPLAY_BRIGHTNESS : %d\n", val);
+>> +                     }
+>> +                     break;
+>>               }
+>>       }
+>> +
+>> +     return 0;
+>>  }
+>>
+>>  static int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev) diff --git
+>> a/include/linux/amd-pmf-io.h b/include/linux/amd-pmf-io.h index
+>> a2d4af231362..ecae387ddaa6 100644
+>> --- a/include/linux/amd-pmf-io.h
+>> +++ b/include/linux/amd-pmf-io.h
+>> @@ -25,4 +25,5 @@ struct amd_gpu_pmf_data {  };
+>>
+>>  int amd_pmf_get_gfx_data(struct amd_gpu_pmf_data *pmf);
+>> +int amd_pmf_set_gfx_data(struct amd_gpu_pmf_data *pmf);
+>>  #endif
+>> --
+>> 2.25.1
 > 
