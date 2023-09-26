@@ -2,275 +2,95 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB11E7E62E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 12:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6084E7E631
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 13:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234722AbjIZM5c (ORCPT
+        id S234764AbjIZNFQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Sep 2023 08:57:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45558 "EHLO
+        Tue, 26 Sep 2023 09:05:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234736AbjIZM51 (ORCPT
+        with ESMTP id S229604AbjIZNFQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Sep 2023 08:57:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B876F10C
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Sep 2023 05:56:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1695732993;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UkUBWVUpOckdloB7nvyn6S4lYeiAg6HkW3tcCGhfEaA=;
-        b=XFjE5YXHN05yxYvTH+oo/ucBO+4uHoy07u6dexMRAnQnXSMMfEIZzFkGG02sLk/qPLteR5
-        mT3tjUtmsM84RmB3mNQS9RFDOGZyUWsqMIhesHPBxUV9EHgjUmRhty5O2dMjJ8VQZHZZQZ
-        Qajy5EGlKkWF5YOSsk0uKAi+Ev5/a2U=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-695-LHWifWYzPFysuXyANoyb6w-1; Tue, 26 Sep 2023 08:56:32 -0400
-X-MC-Unique: LHWifWYzPFysuXyANoyb6w-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-99bebfada8cso729059066b.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Sep 2023 05:56:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695732991; x=1696337791;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UkUBWVUpOckdloB7nvyn6S4lYeiAg6HkW3tcCGhfEaA=;
-        b=Z9LPqdhjerFdA3fv5/Cj3AZQepyIckJtD3S4kyqsMbB3WddH+4y7zZ+9M8sXQwrnJZ
-         wCfsxjYAFy73Mj+FWAgGknRioGIsX38LCCc8wn5O0wHRnWl2NbgZIk7Qdqa+kWzojxDL
-         NpaUTM8cd0hH3OIrY+8wK1iNc4mBnji3nPHZZLK3DSYFDMelPBMSxkUbuG0u18TCuUQ7
-         VZTk/NiwTtnSyeomSRFabrKekaX+PRch8kZebFzgiWGkGE6Hn+kGiG2Yqe5q455tyztN
-         4hm7Hpf3ZAYPgY3hYK7gFkzZgH6ZoK0RnXGr/81bdbjbjfjeC8rWg0Q2DUdI9aRSELzd
-         7a0g==
-X-Gm-Message-State: AOJu0YwDZd/D7W2fFcJZJ984hehimf8i9VN9iCkRejUig1u3M3gqwnej
-        QMjCgFwe3P4GuAZ2e3gPGK/5mSz/rTkImMxIfsTjQEXiOchqxJNtObAP3H60UDOss7pEcPL5rof
-        HbRvaJMygqlxcTRLCYjH7X6EZqJ+Wu4p9Cg==
-X-Received: by 2002:a17:906:5182:b0:9ae:7088:6e5d with SMTP id y2-20020a170906518200b009ae70886e5dmr8609853ejk.3.1695732991316;
-        Tue, 26 Sep 2023 05:56:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFlKMkjWc/6E/rOck6ptJGST/s1rC6uMsZziOzioVqLhJ/fEha6iiUPqIHhbUDWGuzvICiu2w==
-X-Received: by 2002:a17:906:5182:b0:9ae:7088:6e5d with SMTP id y2-20020a170906518200b009ae70886e5dmr8609829ejk.3.1695732990967;
-        Tue, 26 Sep 2023 05:56:30 -0700 (PDT)
-Received: from [192.168.1.217] ([109.36.138.247])
-        by smtp.gmail.com with ESMTPSA id t2-20020a17090616c200b0099d45ed589csm7672502ejd.125.2023.09.26.05.56.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Sep 2023 05:56:30 -0700 (PDT)
-Message-ID: <6c047e17-66b0-c3ff-1b4e-4478663619a4@redhat.com>
-Date:   Tue, 26 Sep 2023 14:56:26 +0200
+        Tue, 26 Sep 2023 09:05:16 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38E1710A;
+        Tue, 26 Sep 2023 06:05:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695733509; x=1727269509;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=lh+ZilKT0ef/kVO/l7TEDxIiQ8PxnmVHRhAjg11qOtA=;
+  b=LOjNuxa1QIteHLFUkODXM2M56CNT0ADrLsphG0znLpTSG49wsVXx+Fll
+   D3AYGTh+zqLQbQ/NrHeFUWYh6kwpiKTz6i+xSxaSjhYeJlYGW/0wz49gh
+   h8UpcaR2qyWQ0WmDzJ1V0ZJ4K/Gl4+AUUm6NYQcPb9wZJ1bxTGDuhYB38
+   jaH6MkqMtbTJuH98FlawjnLm884Qut8EQX7rjqfhcrocDrQf/46XnUTal
+   wQek2zf02gWEdvzF8dws/cTv6LTZIkCxJO/gemYBzAyN8ojKPkrJfHiTv
+   RiphwBjsbAs3cT24fOLlCPh5x795/jx+KYmkxTX/6x/1e43ACmvDhJmKP
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="448055560"
+X-IronPort-AV: E=Sophos;i="6.03,177,1694761200"; 
+   d="scan'208";a="448055560"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 06:05:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="922409488"
+X-IronPort-AV: E=Sophos;i="6.03,177,1694761200"; 
+   d="scan'208";a="922409488"
+Received: from hongy-mobl.ger.corp.intel.com (HELO localhost) ([10.252.41.3])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 06:05:02 -0700
+From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Jorge Lopez <jorge.lopez2@hp.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, platform-driver-x86@vger.kernel.org,
+        llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+In-Reply-To: <20230922175420.work.701-kees@kernel.org>
+References: <20230922175420.work.701-kees@kernel.org>
+Subject: Re: [PATCH] platform/x86: hp-bioscfg: Annotate struct bios_args
+ with __counted_by
+Message-Id: <169573349919.5370.3618409484678821521.b4-ty@linux.intel.com>
+Date:   Tue, 26 Sep 2023 16:04:59 +0300
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 13/15] platform/x86/amd/pmf: Add PMF-AMDGPU set interface
-Content-Language: en-US
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org,
-        basavaraj.natikar@amd.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
-        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
-        daniel@ffwll.ch
-Cc:     Patil.Reddy@amd.com, mario.limonciello@amd.com,
-        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-References: <20230922175056.244940-1-Shyam-sundar.S-k@amd.com>
- <20230922175056.244940-14-Shyam-sundar.S-k@amd.com>
- <2e201a3b-d75f-916d-5135-b084ad5da23e@redhat.com>
- <437fbd5c-386f-4609-a350-77f61c8aaa0c@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <437fbd5c-386f-4609-a350-77f61c8aaa0c@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Fri, 22 Sep 2023 10:54:21 -0700, Kees Cook wrote:
 
-On 9/26/23 13:24, Shyam Sundar S K wrote:
-> Hi Hans,
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> On 9/26/2023 4:05 PM, Hans de Goede wrote:
->> Hi,
->>
->> On 9/22/23 19:50, Shyam Sundar S K wrote:
->>> For the Smart PC Solution to fully work, it has to enact to the actions
->>> coming from TA. Add the initial code path for set interface to AMDGPU.
->>>
->>> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->>> ---
->>>  drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c | 21 +++++++++++++++++++++
->>>  drivers/platform/x86/amd/pmf/pmf.h      |  2 ++
->>>  drivers/platform/x86/amd/pmf/tee-if.c   | 19 +++++++++++++++++--
->>>  include/linux/amd-pmf-io.h              |  1 +
->>>  4 files changed, 41 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
->>> index 232d11833ddc..5c567bff0548 100644
->>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
->>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
->>> @@ -68,3 +68,24 @@ int amd_pmf_get_gfx_data(struct amd_gpu_pmf_data *pmf)
->>>  	return 0;
->>>  }
->>>  EXPORT_SYMBOL_GPL(amd_pmf_get_gfx_data);
->>> +
->>> +int amd_pmf_set_gfx_data(struct amd_gpu_pmf_data *pmf)
->>> +{
->>> +	struct drm_device *drm_dev = pci_get_drvdata(pmf->gpu_dev);
->>> +	struct amdgpu_device *adev = drm_to_adev(drm_dev);
->>> +	struct backlight_device *bd;
->>> +
->>> +	if (!(adev->flags & AMD_IS_APU)) {
->>> +		DRM_ERROR("PMF-AMDGPU interface not supported\n");
->>> +		return -ENODEV;
->>> +	}
->>> +
->>> +	bd = backlight_device_get_by_type(BACKLIGHT_RAW);
->>> +	if (!bd)
->>> +		return -ENODEV;
->>
->> This assumes that the backlight is always controller by the amdgpu's
->> native backlight driver, but it might e.g. also be handled by
->> eacpi-video or by nvidia_wmi_ec_backlight (when using an AMD APU +
->> nvidia dgpu).
+> As found with Coccinelle[1], add __counted_by for struct bios_args.
 > 
-> PMF is meant for AMD APUs(atleast for now) and the _HID will only be
-> made visible if its AMD laptop. So using amdgpu's native BACKLIGHT_RAW
-> should be safe, right?
-
-Users can pass say acpi_backlight=video and use the acpi_video
-driver for backlight control instead of the native GPU backlight
-control.
-
-> 
->>
->> For now what should be done here is to call acpi_video_get_backlight_type()
->> and then translate the return value from this into a backlight-type:
->>
->>         acpi_backlight_video		-> BACKLIGHT_FIRMWARE
->>         acpi_backlight_vendor,		-> BACKLIGHT_PLATFORM
->>         acpi_backlight_native,		-> BACKLIGHT_RAW
->>         acpi_backlight_nvidia_wmi_ec,	-> BACKLIGHT_FIRMWARE
->>         acpi_backlight_apple_gmux,	-> BACKLIGHT_PLATFORM
->>
-> 
-> I can add this change in the v2, do you insist on this?
-
-Insist is a strong word, but I think that it is a good idea to have
-this. Evenutally it looks like this code will need to either integrate with
-the drm drivers lot more; or the drm core needs to export some special
-hooks for this which the PMF code can then call.
-
-Actually thinking more about this, I think that the right thing to do
-here is make some code register brightness control as a cooling device
-(which I think is already done in some cases) and then have the PMF
-code use the cooling-device APIs for this.
-
-IMHO that would be a much cleaner solution then this hack.
-
-Regards,
-
-Hans
+> [...]
 
 
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
 
-> 
-> Thanks,
-> Shyam
-> 
->> Also I'm worried about probe order here, this code currently assumes
->> that the GPU or other backlight driver has loaded before this runs,
->> which is not necessarily the case.
->>
->> I think that if the backlight_device_get_by_type() fails this
->> should be retried say every 10 seconds from some delayed workqueue
->> for at least a couple of minutes after boot.
->>
->> Regards,
->>
->> Hans
->>
->>
->>
->>
->>> +
->>> +	backlight_device_set_brightness(bd, pmf->brightness);
->>> +
->>> +	return 0;
->>> +}
->>> +EXPORT_SYMBOL_GPL(amd_pmf_set_gfx_data);
->>> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
->>> index 9032df4ba48a..ce89cc0daa5a 100644
->>> --- a/drivers/platform/x86/amd/pmf/pmf.h
->>> +++ b/drivers/platform/x86/amd/pmf/pmf.h
->>> @@ -73,6 +73,7 @@
->>>  #define PMF_POLICY_STT_SKINTEMP_APU				7
->>>  #define PMF_POLICY_STT_SKINTEMP_HS2				8
->>>  #define PMF_POLICY_SYSTEM_STATE					9
->>> +#define PMF_POLICY_DISPLAY_BRIGHTNESS				12
->>>  #define PMF_POLICY_P3T						38
->>>  
->>>  /* TA macros */
->>> @@ -480,6 +481,7 @@ enum ta_pmf_error_type {
->>>  };
->>>  
->>>  struct pmf_action_table {
->>> +	unsigned long display_brightness;
->>>  	enum system_state system_state;
->>>  	unsigned long spl; /* in mW */
->>>  	unsigned long sppt; /* in mW */
->>> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
->>> index 1608996654e8..eefffff83a4c 100644
->>> --- a/drivers/platform/x86/amd/pmf/tee-if.c
->>> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
->>> @@ -79,10 +79,10 @@ static int amd_pmf_update_uevents(struct amd_pmf_dev *dev, u16 event)
->>>  	return 0;
->>>  }
->>>  
->>> -static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_result *out)
->>> +static int amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_result *out)
->>>  {
->>>  	u32 val, event = 0;
->>> -	int idx;
->>> +	int idx, ret;
->>>  
->>>  	for (idx = 0; idx < out->actions_count; idx++) {
->>>  		val = out->actions_list[idx].value;
->>> @@ -160,8 +160,23 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
->>>  				dev->prev_data->system_state = 0;
->>>  			}
->>>  			break;
->>> +
->>> +		case PMF_POLICY_DISPLAY_BRIGHTNESS:
->>> +			ret = amd_pmf_get_gfx_data(&dev->gfx_data);
->>> +			if (ret)
->>> +				return ret;
->>> +
->>> +			dev->prev_data->display_brightness = dev->gfx_data.brightness;
->>> +			if (dev->prev_data->display_brightness != val) {
->>> +				dev->gfx_data.brightness = val;
->>> +				amd_pmf_set_gfx_data(&dev->gfx_data);
->>> +				dev_dbg(dev->dev, "update DISPLAY_BRIGHTNESS : %d\n", val);
->>> +			}
->>> +			break;
->>>  		}
->>>  	}
->>> +
->>> +	return 0;
->>>  }
->>>  
->>>  static int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev)
->>> diff --git a/include/linux/amd-pmf-io.h b/include/linux/amd-pmf-io.h
->>> index a2d4af231362..ecae387ddaa6 100644
->>> --- a/include/linux/amd-pmf-io.h
->>> +++ b/include/linux/amd-pmf-io.h
->>> @@ -25,4 +25,5 @@ struct amd_gpu_pmf_data {
->>>  };
->>>  
->>>  int amd_pmf_get_gfx_data(struct amd_gpu_pmf_data *pmf);
->>> +int amd_pmf_set_gfx_data(struct amd_gpu_pmf_data *pmf);
->>>  #endif
->>
-> 
+Once I've run some tests on the review-ilpo branch the patches
+there will be added to the platform-drivers-x86/for-next branch
+and eventually will be included in the pdx86 pull-request to
+Linus for the next merge-window.
+
+The list of commits applied:
+[1/1] platform/x86: hp-bioscfg: Annotate struct bios_args with __counted_by
+      commit: 55ec81f7517fad09135f65552cea0a3ee84fff30
+
+--
+ i.
 
