@@ -2,55 +2,54 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2E6E7E64D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 14:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5720E7E648
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 14:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229841AbjIZPAC (ORCPT
+        id S235001AbjIZPAC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Tue, 26 Sep 2023 11:00:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45388 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234992AbjIZPAB (ORCPT
+        with ESMTP id S234910AbjIZPAA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Sep 2023 11:00:01 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A82BB8E
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Sep 2023 07:59:54 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-3214d4ecd39so7686169f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Sep 2023 07:59:54 -0700 (PDT)
+        Tue, 26 Sep 2023 11:00:00 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBBD411D
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Sep 2023 07:59:52 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-31c5cac3ae2so8731218f8f.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Sep 2023 07:59:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695740393; x=1696345193; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LOR2X/AoUnTx42nPhZDbyArkpmdX3bsMYj2lZRsFUms=;
-        b=zOZwMSAXHjeLQGWcL2Uhltnz2hlI7XNV9ewI0AYTJIyufx2fw5+odUKZX3SF3OdVo2
-         UlQEE0zam+rMuUY+dmj78myXlrMmWSkfn37NQb+yQn2yRzuAYt1mHQeX69fRpj3LWgoq
-         DnRkDh1CFa3VtNEjAJi12cVCeQPSzMIuLFEBnrWlbPdaoXkN0akjsISOdCiNgMPoHRLF
-         r7kNO0MescDjiY5P31lLEnDKROy/OtDt6ZI8ox9V10HkOMJPo00rSnEjLYDdN9ij1f9G
-         l36r3oZGDy/tqplSiP6d6VejCSKVhHopDn8QC2mOJlzpGtJlbgtq+H3NJEoLoy5x/ooi
-         jU0Q==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695740391; x=1696345191; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vfLYtgRnxIhfGIuZ3AuQPnmd6mF7Zk5St0BXq4vGsIQ=;
+        b=TLzw53xlfCA4B2yyekGcmN2Gow3tYsMQZDMag7APmsRKZLKRwPcuPoc7Xfm9pZ1N8A
+         i8XZ6fbmgckGNwnl/tB/4I5ppkDl4KZpStL4Xiv9ChBKbHtPW+I1ipHDcBULsm4XLdE3
+         aBu2drv72zmlMLQSx51xCIobXP2ySCWI7bFE7fqUuQCm41h1B3nTdBqVBLZk+3Wqr9TQ
+         UQcxODnyP08mnU+n1WxUthfrUHGcjCBdV14jAzYfqloN4c3Y2vLkGRyoEGR/WlHc5Kh+
+         TuNVFJ7KMX7DuFMdygi7a54VJGyS0URP4mSdyyDhwbZ4H+ipRDjnQ5o8xw/GHYglb4jt
+         R8xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695740393; x=1696345193;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LOR2X/AoUnTx42nPhZDbyArkpmdX3bsMYj2lZRsFUms=;
-        b=YoCRWgcy/1XP8/gUNukI5wtQyQhF8zxapk1oN3wInu56R0QAks8xr/SDBf+j1SaMqT
-         ugHSgxJRZjni3esiw8idVq3LZu4azvwAq6zaizpY+eq05e5sLYkMVzokDOh755I7B7of
-         xraeT5xV72G2R7tLSLfvjFUyv29ItG4R2887h3Ltum3D9QG463m+7qpBDiyVH2ZDywYd
-         fvUFbVmPn+HytCGQu/IbBbEAX3G4MXpoaamUsfNzIrRfDjJMG6v2wPr6inVkIk3hFfOI
-         uDfz9fMmGJp0S0eJEmHNsj9MvHn2eOndeG+cvvDqD4nawI51UHcppIy23rui6jNGe6Ua
-         0jPQ==
-X-Gm-Message-State: AOJu0YxBMIQqQ1IYYtFOlFSGHP3uOct7/+g5aPRYG/PrRueUvyysVYba
-        zlVyZbjR/CpiiDRUraJCKR4M3Q==
-X-Google-Smtp-Source: AGHT+IFvuYKk7b6vwmISUaGLDlo/gV93nTCl+wOrw03xkUp5qRrel4E8uHLcxNK3RPdoDpL8HMIuqw==
-X-Received: by 2002:adf:f044:0:b0:319:7134:a3cf with SMTP id t4-20020adff044000000b003197134a3cfmr9483453wro.31.1695740393042;
-        Tue, 26 Sep 2023 07:59:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695740391; x=1696345191;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vfLYtgRnxIhfGIuZ3AuQPnmd6mF7Zk5St0BXq4vGsIQ=;
+        b=qeq5j1urUo50Gb+tyIFZD5PCe9MnU7tENFM/oGeSiY28I1a9wNqsgxqV8HJCDcMYso
+         mlWEGb4HM/lq1ARqGLC63Fpdg5IbwUDI7aD1/Hkq2GO13Ne1pGF1Gf/RFMYz2FD2f/Fd
+         YWmAwrPjGXyFSz6lULbRhhWObS0GG8yCAPkYz3CX/SRSBJKRAQl5k4rtAYrkVtKltxo6
+         K0k906AIKo3XfrARJZKB7mPqnip9xt+HN2wQhmTI8INXJdDL3Mecgg7nLxVdiSdsxwLD
+         Sf0xGEkFCNwrhNVBWkeHuVDz3SlPZMB9JjP2XukXt03xbDrmMBhxnPrYgYJL8ETttrOZ
+         JtqA==
+X-Gm-Message-State: AOJu0YwDqut2n6SLm1CzxEfDIO/p5lp3mOPEd9MQ9YJJy2nhwANHyUyL
+        d8kWwWxPQ0Hz3xwaYxn8/qjUCQ==
+X-Google-Smtp-Source: AGHT+IHPHclId6kylza566id26/po9Ed756snf6AMpJqfTNPum1ErtRmJjfjJVGvOnVFQwtK5zDvsw==
+X-Received: by 2002:a5d:44ca:0:b0:31f:d52a:82af with SMTP id z10-20020a5d44ca000000b0031fd52a82afmr8678818wrr.49.1695740391015;
+        Tue, 26 Sep 2023 07:59:51 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:686:c497:30b1:d2b9])
-        by smtp.gmail.com with ESMTPSA id s2-20020a5d5102000000b0031f82743e25sm14871634wrt.67.2023.09.26.07.59.52
+        by smtp.gmail.com with ESMTPSA id s2-20020a5d5102000000b0031f82743e25sm14871634wrt.67.2023.09.26.07.59.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Sep 2023 07:59:52 -0700 (PDT)
+        Tue, 26 Sep 2023 07:59:50 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -61,12 +60,10 @@ To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
 Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [RFT PATCH 2/4] platform/x86: int3472: led: don't use gpiod_toggle_active_low()
-Date:   Tue, 26 Sep 2023 16:59:41 +0200
-Message-Id: <20230926145943.42814-3-brgl@bgdev.pl>
+Subject: [RFT PATCH 0/4] platform/x86: int3472: don't use gpiod_toggle_active_low()
+Date:   Tue, 26 Sep 2023 16:59:39 +0200
+Message-Id: <20230926145943.42814-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230926145943.42814-1-brgl@bgdev.pl>
-References: <20230926145943.42814-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -75,41 +72,28 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Instead of acpi_get_and_request_gpiod() + gpiod_toggle_active_low(), use
-temporary lookup tables with appropriate lookup flags.
+gpiod_toggle_active_low() is a badly designed API that should have never
+been used elsewhere then in the MMC code. And even there we should find
+a better solution.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/platform/x86/intel/int3472/led.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+Replace the uses of it in the int3472 driver with the good old temporary
+lookup table trick. This is not very pretty either but it's the lesser
+evil.
 
-diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
-index bca1ce7d0d0c..62e0cd5207a7 100644
---- a/drivers/platform/x86/intel/int3472/led.c
-+++ b/drivers/platform/x86/intel/int3472/led.c
-@@ -25,18 +25,14 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472,
- 	if (int3472->pled.classdev.dev)
- 		return -EBUSY;
- 
--	int3472->pled.gpio = acpi_get_and_request_gpiod(path, agpio->pin_table[0],
--							     "int3472,privacy-led");
-+	int3472->pled.gpio = skl_int3472_gpiod_get_from_temp_lookup(
-+				int3472->dev, path, agpio->pin_table[0],
-+				"int3472,privacy-led", polarity,
-+				GPIOD_OUT_LOW);
- 	if (IS_ERR(int3472->pled.gpio))
- 		return dev_err_probe(int3472->dev, PTR_ERR(int3472->pled.gpio),
- 				     "getting privacy LED GPIO\n");
- 
--	if (polarity == GPIO_ACTIVE_LOW)
--		gpiod_toggle_active_low(int3472->pled.gpio);
--
--	/* Ensure the pin is in output mode and non-active state */
--	gpiod_direction_output(int3472->pled.gpio, 0);
--
- 	/* Generate the name, replacing the ':' in the ACPI devname with '_' */
- 	snprintf(int3472->pled.name, sizeof(int3472->pled.name),
- 		 "%s::privacy_led", acpi_dev_name(int3472->sensor));
+Bartosz Golaszewski (4):
+  platform/x86: int3472: provide a helper for getting GPIOs from lookups
+  platform/x86: int3472: led: don't use gpiod_toggle_active_low()
+  platform/x86: int3472: clk_and_regulator: use GPIO lookup tables
+  gpio: acpi: remove acpi_get_and_request_gpiod()
+
+ drivers/gpio/gpiolib-acpi.c                   | 28 ------------------
+ .../x86/intel/int3472/clk_and_regulator.c     | 22 ++++++--------
+ drivers/platform/x86/intel/int3472/common.c   | 29 +++++++++++++++++++
+ drivers/platform/x86/intel/int3472/common.h   |  9 ++++++
+ drivers/platform/x86/intel/int3472/led.c      | 12 +++-----
+ include/linux/gpio/consumer.h                 |  8 -----
+ 6 files changed, 51 insertions(+), 57 deletions(-)
+
 -- 
 2.39.2
 
