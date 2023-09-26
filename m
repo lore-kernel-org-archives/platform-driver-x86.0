@@ -2,60 +2,58 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6084E7E631
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 13:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D74CE7E633
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 13:05:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234764AbjIZNFQ (ORCPT
+        id S234789AbjIZNF0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Sep 2023 09:05:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58724 "EHLO
+        Tue, 26 Sep 2023 09:05:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229604AbjIZNFQ (ORCPT
+        with ESMTP id S234782AbjIZNFY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Sep 2023 09:05:16 -0400
+        Tue, 26 Sep 2023 09:05:24 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38E1710A;
-        Tue, 26 Sep 2023 06:05:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EFE4F3;
+        Tue, 26 Sep 2023 06:05:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695733509; x=1727269509;
+  t=1695733518; x=1727269518;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=lh+ZilKT0ef/kVO/l7TEDxIiQ8PxnmVHRhAjg11qOtA=;
-  b=LOjNuxa1QIteHLFUkODXM2M56CNT0ADrLsphG0znLpTSG49wsVXx+Fll
-   D3AYGTh+zqLQbQ/NrHeFUWYh6kwpiKTz6i+xSxaSjhYeJlYGW/0wz49gh
-   h8UpcaR2qyWQ0WmDzJ1V0ZJ4K/Gl4+AUUm6NYQcPb9wZJ1bxTGDuhYB38
-   jaH6MkqMtbTJuH98FlawjnLm884Qut8EQX7rjqfhcrocDrQf/46XnUTal
-   wQek2zf02gWEdvzF8dws/cTv6LTZIkCxJO/gemYBzAyN8ojKPkrJfHiTv
-   RiphwBjsbAs3cT24fOLlCPh5x795/jx+KYmkxTX/6x/1e43ACmvDhJmKP
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="448055560"
+  bh=FmbKCqSsz0kqTsakPv8EB8BnPpBLaPEGLkuj5LldCX8=;
+  b=n2FTKXNsD4VcQuW/7woIiQB8CBUHmagBUXGWf6PltQpjzRz9RYUr73M2
+   k3xFB2A8GiuAkR6Q9S6KQd+Ep/TFk1jpNHGoo31fCnLTrRT39I8Fo8h4p
+   2Wcyct+52Wuug5qZzHN2ixRMmqI/72ERV/1Ng5RkHgmAIdbBuYiScr783
+   pNklhXhKOhXXuyjON+tpOgZfUkQMY/zGPjgmiyDscbjQaFnpD/ZUk/YKd
+   qZrMMWFrWG1u91NZo2JDSqH4IZH0dFqmLue9NOlnKGAuzznOzqPqdDB3B
+   udFHXBJk3uitTEIGecGgK+wYL7gb4VvJbWnAa4teyHHtlIiXMzs4ohkMy
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="448055579"
 X-IronPort-AV: E=Sophos;i="6.03,177,1694761200"; 
-   d="scan'208";a="448055560"
+   d="scan'208";a="448055579"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 06:05:08 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 06:05:17 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="922409488"
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="922409490"
 X-IronPort-AV: E=Sophos;i="6.03,177,1694761200"; 
-   d="scan'208";a="922409488"
+   d="scan'208";a="922409490"
 Received: from hongy-mobl.ger.corp.intel.com (HELO localhost) ([10.252.41.3])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 06:05:02 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 06:05:12 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Jorge Lopez <jorge.lopez2@hp.com>,
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
         Kees Cook <keescook@chromium.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
+Cc:     platform-driver-x86@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, platform-driver-x86@vger.kernel.org,
-        llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-In-Reply-To: <20230922175420.work.701-kees@kernel.org>
-References: <20230922175420.work.701-kees@kernel.org>
-Subject: Re: [PATCH] platform/x86: hp-bioscfg: Annotate struct bios_args
- with __counted_by
-Message-Id: <169573349919.5370.3618409484678821521.b4-ty@linux.intel.com>
-Date:   Tue, 26 Sep 2023 16:04:59 +0300
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+In-Reply-To: <20230922175436.work.031-kees@kernel.org>
+References: <20230922175436.work.031-kees@kernel.org>
+Subject: Re: [PATCH] platform/surface: aggregator: Annotate struct
+ ssam_event with __counted_by
+Message-Id: <169573350863.5370.3148602716407027239.b4-ty@linux.intel.com>
+Date:   Tue, 26 Sep 2023 16:05:08 +0300
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -64,7 +62,7 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 22 Sep 2023 10:54:21 -0700, Kees Cook wrote:
+On Fri, 22 Sep 2023 10:54:37 -0700, Kees Cook wrote:
 
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
@@ -72,7 +70,7 @@ On Fri, 22 Sep 2023 10:54:21 -0700, Kees Cook wrote:
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct bios_args.
+> As found with Coccinelle[1], add __counted_by for struct ssam_event.
 > 
 > [...]
 
@@ -88,8 +86,8 @@ and eventually will be included in the pdx86 pull-request to
 Linus for the next merge-window.
 
 The list of commits applied:
-[1/1] platform/x86: hp-bioscfg: Annotate struct bios_args with __counted_by
-      commit: 55ec81f7517fad09135f65552cea0a3ee84fff30
+[1/1] platform/surface: aggregator: Annotate struct ssam_event with __counted_by
+      commit: 9cf63f3a33e929f7eca36409914b8c12102b9984
 
 --
  i.
