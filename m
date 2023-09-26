@@ -2,115 +2,90 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13D9E7E644
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 15:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5232CE7E649
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 15:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231243AbjIZPX1 (ORCPT
+        id S234936AbjIZPZ7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Sep 2023 11:23:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38940 "EHLO
+        Tue, 26 Sep 2023 11:25:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229732AbjIZPX1 (ORCPT
+        with ESMTP id S230467AbjIZPZ4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Sep 2023 11:23:27 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E42C910A;
-        Tue, 26 Sep 2023 08:23:20 -0700 (PDT)
+        Tue, 26 Sep 2023 11:25:56 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C854719F;
+        Tue, 26 Sep 2023 08:25:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695741800; x=1727277800;
+  t=1695741947; x=1727277947;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=IxX9oSdDKpmtGZK8qvc/vCzSVX/ryfcoY7TfJCkjJ90=;
-  b=QWJm7IqEYFV1J8DIr3/5mxlFai/iW1+tblaKv4Gvbbt9qFtZEuW/ZG3h
-   WDBN21z7s8suxyXYqI5OmXZ3LG8o63OB6ajbTW5jJyWuGSAXuUqUZbH54
-   TsOPFpIW8d/W5J7xoducKrB6ZRNRqA822SAc6qt2T6K6uLV0p0UJN4l4i
-   zDPw1KrcL7uwrrbc0z8RMr1JatGnBqVxS2yfqsO2cDvMjbsvAOTLqc6bj
-   GZJZ8V65BVjj4F7G66pFaw/w78/4GFc/Kar1P20ajg6jXeMmcWQv44/5n
-   685nbRNOe54x4FI3xOcOtj567gLhw1GlyULtmI3lKd84aEljAC0ygZkcb
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="385438462"
+   mime-version:in-reply-to;
+  bh=0vO3V74pLbxic9FFO7VML2YcaNM9LDDY8ad/I/959DY=;
+  b=jok1+y8w+QGgrcHn4h7xIxXjmSWzv1bTRaMvgY0NE/BgEFPGg1HVCiZ6
+   7Xrv8lJgZh9FQOZ0n1fg01U69FVJz4iJoXkX7XY2pE82Exqvqr6KyhR3I
+   KR3IpNyyHFeeYDnoALSOOUeo4a7N39XSl1NtmFy8uleOcXjP7A2F0E/8a
+   aivIojmi9l1Ip/iMBN5plCoW+ujEghnzYm2yed7uViewmwgwyD91FayUW
+   1mpILUd2vlOiqbuPSMa2xHxqnMmI89ojlsGgmyfxH+4WesKirroTkGcs9
+   0d9XP8TNL8fZIy8HOh/sye6cs15TJ/zu/qATiN9c3G/L6X7T5ejAzTOMQ
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="361842886"
 X-IronPort-AV: E=Sophos;i="6.03,178,1694761200"; 
-   d="scan'208";a="385438462"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 08:23:20 -0700
+   d="scan'208";a="361842886"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 08:25:47 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="814519207"
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="819061642"
 X-IronPort-AV: E=Sophos;i="6.03,178,1694761200"; 
-   d="scan'208";a="814519207"
+   d="scan'208";a="819061642"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 08:23:17 -0700
+  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 08:25:44 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ql9u4-00000000eI6-3CZ5;
-        Tue, 26 Sep 2023 18:23:12 +0300
-Date:   Tue, 26 Sep 2023 18:23:12 +0300
+        id 1ql9wS-00000000eJg-3zdT;
+        Tue, 26 Sep 2023 18:25:40 +0300
+Date:   Tue, 26 Sep 2023 18:25:40 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     hdegoede@redhat.com, markgross@kernel.org,
-        ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] platform/x86: intel_speed_select_if: Remove
- hardcoded map size
-Message-ID: <ZRL3YAX8pl9L4ell@smile.fi.intel.com>
-References: <20230925194555.966743-1-srinivas.pandruvada@linux.intel.com>
- <20230925194555.966743-4-srinivas.pandruvada@linux.intel.com>
- <ZRLZmDmIkOo0YVz6@smile.fi.intel.com>
- <9cab732f92d529d76b9e40f91ede1460320f1da4.camel@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFT PATCH 1/4] platform/x86: int3472: provide a helper for
+ getting GPIOs from lookups
+Message-ID: <ZRL39PPuXJqnHpkN@smile.fi.intel.com>
+References: <20230926145943.42814-1-brgl@bgdev.pl>
+ <20230926145943.42814-2-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9cab732f92d529d76b9e40f91ede1460320f1da4.camel@linux.intel.com>
+In-Reply-To: <20230926145943.42814-2-brgl@bgdev.pl>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 08:04:46AM -0700, srinivas pandruvada wrote:
-> On Tue, 2023-09-26 at 16:16 +0300, Andy Shevchenko wrote:
-> > On Mon, Sep 25, 2023 at 12:45:55PM -0700, Srinivas Pandruvada wrote:
-> > > The driver is using 256 as the size while calling devm_ioremap().
-> > > The
-> > > maximum offset is already part of struct isst_mmio_range. Use the
-> > > maximum offset (end field of the struct) plus 4 as the map size to
-> > > remove
-> > > hardcoded value of 256.
+On Tue, Sep 26, 2023 at 04:59:40PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> gpiod_toggle_active_low() should have never existed in the first place
+> and once it was added, it should have never been used outside the MMC
+> slot code.
+> 
+> Stop using it in the int3472 driver and use temporary lookup tables
+> instead. First: add a helper wrapping the common code in one function.
+
+>  #include <linux/clk-provider.h>
 
 ...
 
-> > > +       punit_dev->mmio_range = (struct isst_mmio_range *) ent-
-> > > >driver_data;
-> > > +
-> > > +       punit_dev->punit_mmio = devm_ioremap(&pdev->dev, base_addr,
-> > > +                                            punit_dev-
-> > > >mmio_range[1].end + sizeof(u32));
-> > 
-> > Can we rather fix the mmio_range driver data to have end be actually
-> > not the
-> > offset of the last dword? (Better maybe to keep length there.)
-> > 
-> We can. But that has to be separate patch on top as there are other
-> places this range is used.
+> +#include <linux/device.h>
 
-Still you can add a third member for now and then clean up it later as it's all
-in one file.
-
-...
-
-> > With help of
-> > 
-> >         struct resource r;
-> >         ...
-> >         r = DEFINE_RES_MEM(base_addr, mmio_range.beg +
-> > mmio_range.len);
-> > 
-> > you can switch to devm_ioremap_resource() API.
-> What is the advantage of creating a resource and then call
-> devm_ioremap_resource()?
-
-It manages resource via global resource management and also prints an error
-messages in case of errors.
+No need to have this in the header, use forward declaration instead.
 
 -- 
 With Best Regards,
