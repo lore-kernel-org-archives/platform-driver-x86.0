@@ -2,180 +2,281 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A41BE7E64B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 16:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B4DE7E650
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 16:42:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234935AbjIZQTI (ORCPT
+        id S235311AbjIZQnA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Sep 2023 12:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49766 "EHLO
+        Tue, 26 Sep 2023 12:43:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233309AbjIZQTH (ORCPT
+        with ESMTP id S235283AbjIZQm7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Sep 2023 12:19:07 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A84EB;
-        Tue, 26 Sep 2023 09:19:00 -0700 (PDT)
+        Tue, 26 Sep 2023 12:42:59 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1206DBF;
+        Tue, 26 Sep 2023 09:42:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695745140; x=1727281140;
+  t=1695746573; x=1727282573;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=ATDp29asW+amdSOP7sAM78HFxFX7RJ83JjLVpk3qsZQ=;
-  b=Cn1x8242qmUWQoyOkWveP/7ZRsvk3NivNPe6yC2rwrazDa1ZDlhbj2GE
-   Enl/dXEjSxhjHaikYQTDHgTUaF/bAGRPaSDibn50F2xL91Bu+MN4V3faI
-   Vl9q7J3HEE7t2s06sZSy6xqhNcykQGqX8YF983q/JkGRMFOYGHJBFLqcB
-   LeIqc8EqkH/lCup6co82JUEzRR+yFtg103aGN1tDiN6B6taiCjXbO9sbf
-   InvY9vFuKI8SoDSWFC2KmPxiA1Q0QY6cQdm0Vzihwh9FOGBZy0xx//cjK
-   iEa4YNW27drKSnYgRt3pvZJ09EXdmA8gEopnlMTPHxZ+ucF59dcLYlIcx
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="378884817"
+  bh=CnqTju9waJ27u9EJI4wwOu6Bv5zzEI0lbmM/4/wsm1k=;
+  b=XTwO9FK75Jcyy5zBzECbFcQ3D3i0ckWP90qsmR85kA9T2ZrjIO9CAfOY
+   xaEFH7SMQybWNKsiqV/be25ctDw8xH7+Vcq+Zk5Zu/uEOcv8PBKaYyCMT
+   NmnfaoPlBiJXiT59WFKBv9Lu430lz2pLRPKMdvQXiD9c2c/3Hl2ucr3NF
+   KUael/3JZxqL8w2uBB9YyUxxGNj/HEXBkco0VhzGqI7QCQ6ur+wTl2MHi
+   28DSRLJ+nDa68BLRLEGqCxYZViqmlCq8JetWgUUkt/TV7tIxDdOlQKENW
+   HyartGwzKOEKI2s41/F52Q9ZggRMqDffR2HrjHC3VOopFpdtO9UbC3ZvF
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="380481636"
 X-IronPort-AV: E=Sophos;i="6.03,178,1694761200"; 
-   d="scan'208";a="378884817"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 09:18:59 -0700
+   d="scan'208";a="380481636"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 09:42:52 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="995854941"
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="1079768272"
 X-IronPort-AV: E=Sophos;i="6.03,178,1694761200"; 
-   d="scan'208";a="995854941"
+   d="scan'208";a="1079768272"
 Received: from hhalmen-mobl.ger.corp.intel.com ([10.251.219.207])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 09:18:56 -0700
-Date:   Tue, 26 Sep 2023 19:18:53 +0300 (EEST)
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 09:42:48 -0700
+Date:   Tue, 26 Sep 2023 19:42:45 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Liming Sun <lsun@mellanox.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/mellanox: tmfifo: fix kernel-doc warnings
-In-Reply-To: <20230926054013.11450-1-rdunlap@infradead.org>
-Message-ID: <7b57bf9d-b024-b435-54ca-6ab5916197a1@linux.intel.com>
-References: <20230926054013.11450-1-rdunlap@infradead.org>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        basavaraj.natikar@amd.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
+        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
+        daniel@ffwll.ch, Patil.Reddy@amd.com, mario.limonciello@amd.com,
+        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 01/15] platform/x86/amd/pmf: Add PMF TEE interface
+In-Reply-To: <20230922175056.244940-2-Shyam-sundar.S-k@amd.com>
+Message-ID: <f0fae1c2-1dce-3a9d-6d48-299e90b4942@linux.intel.com>
+References: <20230922175056.244940-1-Shyam-sundar.S-k@amd.com> <20230922175056.244940-2-Shyam-sundar.S-k@amd.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-2105164461-1695745138=:1894"
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, 22 Sep 2023, Shyam Sundar S K wrote:
 
---8323329-2105164461-1695745138=:1894
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-On Mon, 25 Sep 2023, Randy Dunlap wrote:
-
-> Fix kernel-doc notation for structs and struct members to prevent
-> these warnings:
+> AMD PMF driver loads the PMF TA (Trusted Application) into the AMD
+> ASP's (AMD Security Processor) TEE (Trusted Execution Environment).
 > 
-> mlxbf-tmfifo.c:73: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_vring '
-> mlxbf-tmfifo.c:128: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_vdev '
-> mlxbf-tmfifo.c:146: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_irq_info '
-> mlxbf-tmfifo.c:158: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_io '
-> mlxbf-tmfifo.c:182: warning: cannot understand function prototype: 'struct mlxbf_tmfifo '
-> mlxbf-tmfifo.c:208: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_msg_hdr '
-> mlxbf-tmfifo.c:138: warning: Function parameter or member 'config' not described in 'mlxbf_tmfifo_vdev'
-> mlxbf-tmfifo.c:212: warning: Function parameter or member 'unused' not described in 'mlxbf_tmfifo_msg_hdr'
+> PMF Trusted Application is a secured firmware placed under
+> /lib/firmware/amdtee gets loaded only when the TEE environment is
+> initialized. Add the initial code path to build these pipes.
 > 
-> Fixes: 1357dfd7261f ("platform/mellanox: Add TmFifo driver for Mellanox BlueField Soc")
-> Fixes: bc05ea63b394 ("platform/mellanox: Add BlueField-3 support in the tmfifo driver")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: lore.kernel.org/r/202309252330.saRU491h-lkp@intel.com
-> Cc: Liming Sun <lsun@mellanox.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Cc: Mark Gross <markgross@kernel.org>
-> Cc: Vadim Pasternak <vadimp@nvidia.com>
-> Cc: platform-driver-x86@vger.kernel.org
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 > ---
->  drivers/platform/mellanox/mlxbf-tmfifo.c |   14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
+>  drivers/platform/x86/amd/pmf/Makefile |   3 +-
+>  drivers/platform/x86/amd/pmf/core.c   |  11 ++-
+>  drivers/platform/x86/amd/pmf/pmf.h    |  16 ++++
+>  drivers/platform/x86/amd/pmf/tee-if.c | 106 ++++++++++++++++++++++++++
+>  4 files changed, 132 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/platform/x86/amd/pmf/tee-if.c
 > 
-> diff -- a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-> --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-> +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-> @@ -53,7 +53,7 @@
->  struct mlxbf_tmfifo;
+> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
+> index fdededf54392..d2746ee7369f 100644
+> --- a/drivers/platform/x86/amd/pmf/Makefile
+> +++ b/drivers/platform/x86/amd/pmf/Makefile
+> @@ -6,4 +6,5 @@
 >  
->  /**
-> - * mlxbf_tmfifo_vring - Structure of the TmFifo virtual ring
-> + * struct mlxbf_tmfifo_vring - Structure of the TmFifo virtual ring
->   * @va: virtual address of the ring
->   * @dma: dma address of the ring
->   * @vq: pointer to the virtio virtqueue
-> @@ -113,12 +113,13 @@ enum {
+>  obj-$(CONFIG_AMD_PMF) += amd-pmf.o
+>  amd-pmf-objs := core.o acpi.o sps.o \
+> -		auto-mode.o cnqf.o
+> +		auto-mode.o cnqf.o \
+> +		tee-if.o
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index 78ed3ee22555..68f1389dda3e 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -309,8 +309,11 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
+>  		dev_dbg(dev->dev, "SPS enabled and Platform Profiles registered\n");
+>  	}
+>  
+> -	/* Enable Auto Mode */
+> -	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+> +	if (amd_pmf_init_smart_pc(dev)) {
+> +		/* Enable Smart PC Solution builder */
+> +		dev_dbg(dev->dev, "Smart PC Solution Enabled\n");
+> +	} else if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+> +		/* Enable Auto Mode */
+>  		amd_pmf_init_auto_mode(dev);
+>  		dev_dbg(dev->dev, "Auto Mode Init done\n");
+>  	} else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC) ||
+> @@ -330,7 +333,9 @@ static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
+>  		amd_pmf_deinit_sps(dev);
+>  	}
+>  
+> -	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+> +	if (dev->smart_pc_enabled) {
+> +		amd_pmf_deinit_smart_pc(dev);
+> +	} else if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+>  		amd_pmf_deinit_auto_mode(dev);
+>  	} else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC) ||
+>  			  is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_DC)) {
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index deba88e6e4c8..02460c2a31ea 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -179,6 +179,12 @@ struct amd_pmf_dev {
+>  	bool cnqf_enabled;
+>  	bool cnqf_supported;
+>  	struct notifier_block pwr_src_notifier;
+> +	/* Smart PC solution builder */
+> +	struct tee_context *tee_ctx;
+> +	struct tee_shm *fw_shm_pool;
+> +	u32 session_id;
+> +	void *shbuf;
+> +	bool smart_pc_enabled;
 >  };
 >  
->  /**
-> - * mlxbf_tmfifo_vdev - Structure of the TmFifo virtual device
-> + * struct mlxbf_tmfifo_vdev - Structure of the TmFifo virtual device
->   * @vdev: virtio device, in which the vdev.id.device field has the
->   *        VIRTIO_ID_xxx id to distinguish the virtual device.
->   * @status: status of the device
->   * @features: supported features of the device
->   * @vrings: array of tmfifo vrings of this device
-> + * @config: non-anonymous union for cons and net
+>  struct apmf_sps_prop_granular {
+> @@ -389,6 +395,13 @@ struct apmf_dyn_slider_output {
+>  	struct apmf_cnqf_power_set ps[APMF_CNQF_MAX];
+>  } __packed;
+>  
+> +struct ta_pmf_shared_memory {
+> +	int command_id;
+> +	int resp_id;
+> +	u32 pmf_result;
+> +	u32 if_version;
+> +};
+> +
+>  /* Core Layer */
+>  int apmf_acpi_init(struct amd_pmf_dev *pmf_dev);
+>  void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev);
+> @@ -433,4 +446,7 @@ void amd_pmf_deinit_cnqf(struct amd_pmf_dev *dev);
+>  int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_lapsed_ms);
+>  extern const struct attribute_group cnqf_feature_attribute_group;
+>  
+> +/* Smart PC builder Layer*/
+> +int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev);
+> +void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev);
+>  #endif /* PMF_H */
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> new file mode 100644
+> index 000000000000..b48340edbf44
+> --- /dev/null
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -0,0 +1,106 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * AMD Platform Management Framework Driver - TEE Interface
+> + *
+> + * Copyright (c) 2023, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> + */
+> +
+> +#include <linux/tee_drv.h>
+> +#include <linux/uuid.h>
+> +#include "pmf.h"
+> +
+> +#define MAX_TEE_PARAM	4
+> +static const uuid_t amd_pmf_ta_uuid = UUID_INIT(0x6fd93b77, 0x3fb8, 0x524d,
+> +						0xb1, 0x2d, 0xc5, 0x29, 0xb1, 0x3d, 0x85, 0x43);
+> +
+> +static int amd_pmf_amdtee_ta_match(struct tee_ioctl_version_data *ver, const void *data)
+> +{
+> +	return ver->impl_id == TEE_IMPL_ID_AMDTEE;
+> +}
+> +
+> +static int amd_pmf_ta_open_session(struct tee_context *ctx, u32 *id)
+> +{
+> +	struct tee_ioctl_open_session_arg sess_arg = {};
+> +	int rc;
+> +
+> +	export_uuid(sess_arg.uuid, &amd_pmf_ta_uuid);
+> +	sess_arg.clnt_login = TEE_IOCTL_LOGIN_PUBLIC;
+> +	sess_arg.num_params = 0;
+> +
+> +	rc = tee_client_open_session(ctx, &sess_arg, NULL);
+> +	if (rc < 0 || sess_arg.ret != 0) {
+> +		pr_err("%s: tee_client_open_session failed err:%#x, ret:%#x\n",
+> +		       __func__, sess_arg.ret, rc);
 
-I wonder what information this adds? It's not documenting anything else 
-than C syntax, IMO.
-
-Would it be possible to make kerneldoc not give warning from a named union 
-which is already fully documented?
+Don't print function names but meaningful messages (no __func__ nor 
+manually added function names). I didn't make the others, please take care 
+of them all, thank you.
 
 -- 
  i.
 
->   * @config.cons: virtual console config -
->   *               select if vdev.id.device is VIRTIO_ID_CONSOLE
->   * @config.net: virtual network config -
-> @@ -138,7 +139,7 @@ struct mlxbf_tmfifo_vdev {
->  };
->  
->  /**
-> - * mlxbf_tmfifo_irq_info - Structure of the interrupt information
-> + * struct mlxbf_tmfifo_irq_info - Structure of the interrupt information
->   * @fifo: pointer to the tmfifo structure
->   * @irq: interrupt number
->   * @index: index into the interrupt array
-> @@ -150,7 +151,7 @@ struct mlxbf_tmfifo_irq_info {
->  };
->  
->  /**
-> - * mlxbf_tmfifo_io - Structure of the TmFifo IO resource (for both rx & tx)
-> + * struct mlxbf_tmfifo_io - Structure of the TmFifo IO resource (for both rx & tx)
->   * @ctl: control register offset (TMFIFO_RX_CTL / TMFIFO_TX_CTL)
->   * @sts: status register offset (TMFIFO_RX_STS / TMFIFO_TX_STS)
->   * @data: data register offset (TMFIFO_RX_DATA / TMFIFO_TX_DATA)
-> @@ -162,7 +163,7 @@ struct mlxbf_tmfifo_io {
->  };
->  
->  /**
-> - * mlxbf_tmfifo - Structure of the TmFifo
-> + * struct mlxbf_tmfifo - Structure of the TmFifo
->   * @vdev: array of the virtual devices running over the TmFifo
->   * @lock: lock to protect the TmFifo access
->   * @res0: mapped resource block 0
-> @@ -198,7 +199,7 @@ struct mlxbf_tmfifo {
->  };
->  
->  /**
-> - * mlxbf_tmfifo_msg_hdr - Structure of the TmFifo message header
-> + * struct mlxbf_tmfifo_msg_hdr - Structure of the TmFifo message header
->   * @type: message type
->   * @len: payload length in network byte order. Messages sent into the FIFO
->   *       will be read by the other side as data stream in the same byte order.
-> @@ -208,6 +209,7 @@ struct mlxbf_tmfifo {
->  struct mlxbf_tmfifo_msg_hdr {
->  	u8 type;
->  	__be16 len;
-> +	/* private: */
->  	u8 unused[5];
->  } __packed __aligned(sizeof(u64));
->  
+
+> +		rc = -EINVAL;
+> +	} else {
+> +		*id = sess_arg.session;
+> +	}
+> +
+> +	return rc;
+> +}
+> +
+> +static int amd_pmf_tee_init(struct amd_pmf_dev *dev)
+> +{
+> +	int ret;
+> +	u32 size;
+> +
+> +	/* Open context with TEE driver */
+> +	dev->tee_ctx = tee_client_open_context(NULL, amd_pmf_amdtee_ta_match, NULL, NULL);
+> +	if (IS_ERR(dev->tee_ctx)) {
+> +		dev_err(dev->dev, "%s: tee_client_open_context failed\n", __func__);
+> +		return PTR_ERR(dev->tee_ctx);
+> +	}
+> +
+> +	/* Open session with PMF Trusted App */
+> +	ret = amd_pmf_ta_open_session(dev->tee_ctx, &dev->session_id);
+> +	if (ret) {
+> +		dev_err(dev->dev, "%s: amd_pmf_ta_open_session failed(%d)\n", __func__, ret);
+> +		ret = -EINVAL;
+> +		goto out_ctx;
+> +	}
+> +
+> +	size = sizeof(struct ta_pmf_shared_memory);
+> +	dev->fw_shm_pool = tee_shm_alloc_kernel_buf(dev->tee_ctx, size);
+> +	if (IS_ERR(dev->fw_shm_pool)) {
+> +		dev_err(dev->dev, "%s: tee_shm_alloc_kernel_buf failed\n", __func__);
+> +		ret = PTR_ERR(dev->fw_shm_pool);
+> +		goto out_sess;
+> +	}
+> +
+> +	dev->shbuf = tee_shm_get_va(dev->fw_shm_pool, 0);
+> +	dev_dbg(dev->dev, "TEE init done\n");
+> +
+> +	return 0;
+> +
+> +out_sess:
+> +	tee_client_close_session(dev->tee_ctx, dev->session_id);
+> +out_ctx:
+> +	tee_client_close_context(dev->tee_ctx);
+> +
+> +	return ret;
+> +}
+> +
+> +static void amd_pmf_tee_deinit(struct amd_pmf_dev *dev)
+> +{
+> +	/* Free the shared memory pool */
+> +	tee_shm_free(dev->fw_shm_pool);
+> +
+> +	/* close the existing session with PMF TA*/
+> +	tee_client_close_session(dev->tee_ctx, dev->session_id);
+> +
+> +	/* close the context with TEE driver */
+> +	tee_client_close_context(dev->tee_ctx);
+> +}
+> +
+> +int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+> +{
+> +	return amd_pmf_tee_init(dev);
+> +}
+> +
+> +void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev)
+> +{
+> +	amd_pmf_tee_deinit(dev);
+> +}
 > 
---8323329-2105164461-1695745138=:1894--
