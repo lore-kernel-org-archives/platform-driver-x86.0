@@ -2,97 +2,230 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0FDE7D277
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 10:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439D8E7D27B
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 10:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229845AbjIZKcR (ORCPT
+        id S231509AbjIZKgi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Sep 2023 06:32:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33840 "EHLO
+        Tue, 26 Sep 2023 06:36:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjIZKcQ (ORCPT
+        with ESMTP id S231932AbjIZKgh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Sep 2023 06:32:16 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FD06BF
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Sep 2023 03:32:10 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0ECB3C433C8
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Sep 2023 10:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695724330;
-        bh=3ZxK4c78mYlP2mLUppeSVUwZD5gcYZcWdu9mdAnvtAk=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=bOrzVjaE3qKEY3hdgHfKSoJ88xP4wYUn3yG6o1L3poyv3UrWj5mqgS2HTUtULx8py
-         FrTx//U/gvyuW0MbxaQnjF8iM7xQeVd8VAz/GWQHn2VwV1gHBdI12xNBWGk7FU4CZh
-         JxliPw5e/VeYIuROp7cvEQNs535uUxWwSVd/s7nzQwxudLgzr7QXbNY26YlkPFlbem
-         V3WqmsURbHovwXJPQnu0Y6R/xKSCDKsK3Ft2AExMHGBRVmtrjN8ihOcPQ8KjjG48LX
-         LhJQwycGiWyWjOPGsTM9Fp/vUIwW5LeCm897CvTrXT7Vgvy3flZdAYAxg4n7Ip3lLQ
-         JuNMcy8CzEE3Q==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id E1D70C4332E; Tue, 26 Sep 2023 10:32:09 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 217947] WARNING at drivers/acpi/platform_profile.c:74 in
- platform_profile_show()
-Date:   Tue, 26 Sep 2023 10:32:09 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jirislaby@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-217947-215701-xB8yJNopPk@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-217947-215701@https.bugzilla.kernel.org/>
-References: <bug-217947-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 26 Sep 2023 06:36:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E091BE9
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Sep 2023 03:35:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1695724542;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IN3gjXP/ulM4+M4Osvjbx+CJvR8HzZe/I6zVYXrFanI=;
+        b=QWhP+Nn9JdBPR6dMiaRZrordaQhXo60tZC/aLFaBF080fwk7sH1fuq4DbeTYU/XN3tOsnx
+        iDbyFUELSwd7usBUeX6QzF55ac2CoumKxKpTNboJ6zPrM+Gxzt714uhhgbviDm0OTnCPLq
+        HK9ryH3TnTOvQH7TUogku4vGcnenJ9Q=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-548-s-Avz9d0OgqIbYQ5MB3cwA-1; Tue, 26 Sep 2023 06:35:41 -0400
+X-MC-Unique: s-Avz9d0OgqIbYQ5MB3cwA-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2c136b9d66aso108424131fa.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Sep 2023 03:35:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695724540; x=1696329340;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IN3gjXP/ulM4+M4Osvjbx+CJvR8HzZe/I6zVYXrFanI=;
+        b=dwrNTVUColUY0DBlmj39ayfdZ3oAb6wMFgYTD/JYw2PsSlTmgClxw1GsBTSqr4GGrZ
+         lttmi0u1nfEwGjIEfkej0Ey/4HNi3OP4U6vCyuTENYJdniuB+Ri56sdeSnb4dMHSLWMJ
+         CiIGb+W8GNcAADdahwzOo2FMp8fsDnqTUJr8seR2FI1HQaATgyFBPMdNFLpDcwPoy/1f
+         bK6pBPzAwoq6O1U2gejRZ9DTevVfnDNR2rkMMKw57NMJfRSEO/C52iVXF1cWPKcqQYVs
+         PraD4NQSX2jgDz6YxzGdSAO/K+RzKoaAI9EYmCXZFHYRQJbVrI63nXM0lY5iLaM70bl/
+         FPnw==
+X-Gm-Message-State: AOJu0YwjZSVpf7F1LxAzfNzdCMVZoeYzHJd0PkUfwAKqJ4scGlY52KLh
+        k36Z30Cd8BJELNqlFAOr7j8D9143mymtnNNg7NdqWV5rybuQ83HfM7+MjFS78YL8ObyuwueCuXe
+        OSDnKaLWKbKnyJqY/SBTM2URW5IfLQhHyXg==
+X-Received: by 2002:a05:6512:3d21:b0:503:655:12e7 with SMTP id d33-20020a0565123d2100b00503065512e7mr10393183lfv.62.1695724539858;
+        Tue, 26 Sep 2023 03:35:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGn3ozsYpRq6AuJvRaLBGJ3+5/IVA5BsFnkHEF6nwZAP0ixv8ZfQALU7T1Ot7RrjwRGez4gGg==
+X-Received: by 2002:a05:6512:3d21:b0:503:655:12e7 with SMTP id d33-20020a0565123d2100b00503065512e7mr10393157lfv.62.1695724539418;
+        Tue, 26 Sep 2023 03:35:39 -0700 (PDT)
+Received: from [192.168.1.217] ([109.37.154.108])
+        by smtp.gmail.com with ESMTPSA id c19-20020a056402121300b0052e9b50dafdsm6556318edw.33.2023.09.26.03.35.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Sep 2023 03:35:38 -0700 (PDT)
+Message-ID: <2e201a3b-d75f-916d-5135-b084ad5da23e@redhat.com>
+Date:   Tue, 26 Sep 2023 12:35:35 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 13/15] platform/x86/amd/pmf: Add PMF-AMDGPU set interface
+Content-Language: en-US
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org,
+        basavaraj.natikar@amd.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
+        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
+        daniel@ffwll.ch
+Cc:     Patil.Reddy@amd.com, mario.limonciello@amd.com,
+        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+References: <20230922175056.244940-1-Shyam-sundar.S-k@amd.com>
+ <20230922175056.244940-14-Shyam-sundar.S-k@amd.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230922175056.244940-14-Shyam-sundar.S-k@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D217947
+Hi,
 
---- Comment #4 from Jiri Slaby (jirislaby@gmail.com) ---
-(In reply to Jiri Slaby from comment #3)
-> > As a quick test could you try adding:
-> >=20
-> >  /* Check if we are PSC mode, or have AMT enabled */
-> >  funcmode =3D (output >> DYTC_GET_FUNCTION_BIT) & 0xF;
-> > +if (funcmode =3D=3D DYTC_FUNCTION_STD)
-> > +  funcmode =3D DYTC_FUNCTION_PSC;
-> >=20
-> > To see if it behaves correctly please?
->=20
-> Will try.
+On 9/22/23 19:50, Shyam Sundar S K wrote:
+> For the Smart PC Solution to fully work, it has to enact to the actions
+> coming from TA. Add the initial code path for set interface to AMDGPU.
+> 
+> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c | 21 +++++++++++++++++++++
+>  drivers/platform/x86/amd/pmf/pmf.h      |  2 ++
+>  drivers/platform/x86/amd/pmf/tee-if.c   | 19 +++++++++++++++++--
+>  include/linux/amd-pmf-io.h              |  1 +
+>  4 files changed, 41 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
+> index 232d11833ddc..5c567bff0548 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmf.c
+> @@ -68,3 +68,24 @@ int amd_pmf_get_gfx_data(struct amd_gpu_pmf_data *pmf)
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(amd_pmf_get_gfx_data);
+> +
+> +int amd_pmf_set_gfx_data(struct amd_gpu_pmf_data *pmf)
+> +{
+> +	struct drm_device *drm_dev = pci_get_drvdata(pmf->gpu_dev);
+> +	struct amdgpu_device *adev = drm_to_adev(drm_dev);
+> +	struct backlight_device *bd;
+> +
+> +	if (!(adev->flags & AMD_IS_APU)) {
+> +		DRM_ERROR("PMF-AMDGPU interface not supported\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	bd = backlight_device_get_by_type(BACKLIGHT_RAW);
+> +	if (!bd)
+> +		return -ENODEV;
 
-It only changes the error to EINVAL. 0xf is not handled as a correct state =
-in
-PSC.
+This assumes that the backlight is always controller by the amdgpu's
+native backlight driver, but it might e.g. also be handled by
+eacpi-video or by nvidia_wmi_ec_backlight (when using an AMD APU +
+nvidia dgpu).
 
-BTW the first (bad) log:
-thinkpad_acpi: dytc_profile_refresh: err=3D-22 mmc=3D0 psc=3D1 mmc_get=3D0 =
-funcmode=3D13
-output=3D0x1f001 perfmode=3D15
+For now what should be done here is to call acpi_video_get_backlight_type()
+and then translate the return value from this into a backlight-type:
 
-subsequent refreshes (good):
-thinkpad_acpi: dytc_profile_refresh: err=3D0 mmc=3D0 psc=3D1 mmc_get=3D0 fu=
-ncmode=3D13
-output=3D0x20013d01 perfmode=3D3
+        acpi_backlight_video		-> BACKLIGHT_FIRMWARE
+        acpi_backlight_vendor,		-> BACKLIGHT_PLATFORM
+        acpi_backlight_native,		-> BACKLIGHT_RAW
+        acpi_backlight_nvidia_wmi_ec,	-> BACKLIGHT_FIRMWARE
+        acpi_backlight_apple_gmux,	-> BACKLIGHT_PLATFORM
 
---=20
-You may reply to this email to add a comment.
+Also I'm worried about probe order here, this code currently assumes
+that the GPU or other backlight driver has loaded before this runs,
+which is not necessarily the case.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+I think that if the backlight_device_get_by_type() fails this
+should be retried say every 10 seconds from some delayed workqueue
+for at least a couple of minutes after boot.
+
+Regards,
+
+Hans
+
+
+
+
+> +
+> +	backlight_device_set_brightness(bd, pmf->brightness);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(amd_pmf_set_gfx_data);
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index 9032df4ba48a..ce89cc0daa5a 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -73,6 +73,7 @@
+>  #define PMF_POLICY_STT_SKINTEMP_APU				7
+>  #define PMF_POLICY_STT_SKINTEMP_HS2				8
+>  #define PMF_POLICY_SYSTEM_STATE					9
+> +#define PMF_POLICY_DISPLAY_BRIGHTNESS				12
+>  #define PMF_POLICY_P3T						38
+>  
+>  /* TA macros */
+> @@ -480,6 +481,7 @@ enum ta_pmf_error_type {
+>  };
+>  
+>  struct pmf_action_table {
+> +	unsigned long display_brightness;
+>  	enum system_state system_state;
+>  	unsigned long spl; /* in mW */
+>  	unsigned long sppt; /* in mW */
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index 1608996654e8..eefffff83a4c 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -79,10 +79,10 @@ static int amd_pmf_update_uevents(struct amd_pmf_dev *dev, u16 event)
+>  	return 0;
+>  }
+>  
+> -static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_result *out)
+> +static int amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_result *out)
+>  {
+>  	u32 val, event = 0;
+> -	int idx;
+> +	int idx, ret;
+>  
+>  	for (idx = 0; idx < out->actions_count; idx++) {
+>  		val = out->actions_list[idx].value;
+> @@ -160,8 +160,23 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+>  				dev->prev_data->system_state = 0;
+>  			}
+>  			break;
+> +
+> +		case PMF_POLICY_DISPLAY_BRIGHTNESS:
+> +			ret = amd_pmf_get_gfx_data(&dev->gfx_data);
+> +			if (ret)
+> +				return ret;
+> +
+> +			dev->prev_data->display_brightness = dev->gfx_data.brightness;
+> +			if (dev->prev_data->display_brightness != val) {
+> +				dev->gfx_data.brightness = val;
+> +				amd_pmf_set_gfx_data(&dev->gfx_data);
+> +				dev_dbg(dev->dev, "update DISPLAY_BRIGHTNESS : %d\n", val);
+> +			}
+> +			break;
+>  		}
+>  	}
+> +
+> +	return 0;
+>  }
+>  
+>  static int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev)
+> diff --git a/include/linux/amd-pmf-io.h b/include/linux/amd-pmf-io.h
+> index a2d4af231362..ecae387ddaa6 100644
+> --- a/include/linux/amd-pmf-io.h
+> +++ b/include/linux/amd-pmf-io.h
+> @@ -25,4 +25,5 @@ struct amd_gpu_pmf_data {
+>  };
+>  
+>  int amd_pmf_get_gfx_data(struct amd_gpu_pmf_data *pmf);
+> +int amd_pmf_set_gfx_data(struct amd_gpu_pmf_data *pmf);
+>  #endif
+
