@@ -2,271 +2,180 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A93E7E64A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 16:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A41BE7E64B
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Sep 2023 16:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234928AbjIZQMv (ORCPT
+        id S234935AbjIZQTI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Sep 2023 12:12:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39466 "EHLO
+        Tue, 26 Sep 2023 12:19:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229513AbjIZQMv (ORCPT
+        with ESMTP id S233309AbjIZQTH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Sep 2023 12:12:51 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5200895;
-        Tue, 26 Sep 2023 09:12:44 -0700 (PDT)
+        Tue, 26 Sep 2023 12:19:07 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A84EB;
+        Tue, 26 Sep 2023 09:19:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695744764; x=1727280764;
+  t=1695745140; x=1727281140;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=hOPvrFuM7xzfXjh3YgK8hIYzaOkz35/zwI6nSX4tg+Q=;
-  b=ZlWt+aM7u64wc7rBMEKJH3rqLeTXypdUslo1bcsENKKlxV6+MFRVP5j6
-   YwngRbgqIbXWQBcIdbPnHzmzEiZtTabSXbZWVqx401KjHuY6A5854U1X0
-   xAOnGViBgKq8Weve9OE4C0RlcFrgaB8YzfgFBB4D5srsWwrrfw/HdXOnM
-   nmUrVkrQu1n+FUcgLkZql+RRfRTh5JknMQLWpqvesP4onenMBl0l+/iIW
-   y9nXXl9mjH9NPw3SOOehGlxAij2+L6TFhK7GmJqC7VjNiH5XlX9oA5cpF
-   SOfH3uQzSLSwv8rWdgPLvh+JniUAWKEq24REhNkafGFLJ8+cHafV3xdZT
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="448097710"
+  bh=ATDp29asW+amdSOP7sAM78HFxFX7RJ83JjLVpk3qsZQ=;
+  b=Cn1x8242qmUWQoyOkWveP/7ZRsvk3NivNPe6yC2rwrazDa1ZDlhbj2GE
+   Enl/dXEjSxhjHaikYQTDHgTUaF/bAGRPaSDibn50F2xL91Bu+MN4V3faI
+   Vl9q7J3HEE7t2s06sZSy6xqhNcykQGqX8YF983q/JkGRMFOYGHJBFLqcB
+   LeIqc8EqkH/lCup6co82JUEzRR+yFtg103aGN1tDiN6B6taiCjXbO9sbf
+   InvY9vFuKI8SoDSWFC2KmPxiA1Q0QY6cQdm0Vzihwh9FOGBZy0xx//cjK
+   iEa4YNW27drKSnYgRt3pvZJ09EXdmA8gEopnlMTPHxZ+ucF59dcLYlIcx
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="378884817"
 X-IronPort-AV: E=Sophos;i="6.03,178,1694761200"; 
-   d="scan'208";a="448097710"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 09:11:47 -0700
+   d="scan'208";a="378884817"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 09:18:59 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="819079424"
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="995854941"
 X-IronPort-AV: E=Sophos;i="6.03,178,1694761200"; 
-   d="scan'208";a="819079424"
+   d="scan'208";a="995854941"
 Received: from hhalmen-mobl.ger.corp.intel.com ([10.251.219.207])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 09:11:45 -0700
-Date:   Tue, 26 Sep 2023 19:11:43 +0300 (EEST)
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 09:18:56 -0700
+Date:   Tue, 26 Sep 2023 19:18:53 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        ilpo.jarvinen@linux.intel.com, rajvi.jingar@linux.intel.com
-Subject: Re: [PATCH 11/11] platform/x86/intel/pmc: Add debug attribute for
- Die C6 counter
-In-Reply-To: <20230922213032.1770590-12-david.e.box@linux.intel.com>
-Message-ID: <65178530-1635-61c7-f7e2-ff3fb4d584d@linux.intel.com>
-References: <20230922213032.1770590-1-david.e.box@linux.intel.com> <20230922213032.1770590-12-david.e.box@linux.intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Liming Sun <lsun@mellanox.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/mellanox: tmfifo: fix kernel-doc warnings
+In-Reply-To: <20230926054013.11450-1-rdunlap@infradead.org>
+Message-ID: <7b57bf9d-b024-b435-54ca-6ab5916197a1@linux.intel.com>
+References: <20230926054013.11450-1-rdunlap@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323329-2105164461-1695745138=:1894"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 22 Sep 2023, David E. Box wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Add a "die_c6_us_show" counter in debugs and add support for Meteor Lake.
-> Reads the counter value using Intel Platform Monitoring Technology (PMT)
-> driver API. This counter is useful for determining the idle residency of
-> CPUs in the compute tile.
+--8323329-2105164461-1695745138=:1894
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+
+On Mon, 25 Sep 2023, Randy Dunlap wrote:
+
+> Fix kernel-doc notation for structs and struct members to prevent
+> these warnings:
 > 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> mlxbf-tmfifo.c:73: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_vring '
+> mlxbf-tmfifo.c:128: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_vdev '
+> mlxbf-tmfifo.c:146: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_irq_info '
+> mlxbf-tmfifo.c:158: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_io '
+> mlxbf-tmfifo.c:182: warning: cannot understand function prototype: 'struct mlxbf_tmfifo '
+> mlxbf-tmfifo.c:208: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_msg_hdr '
+> mlxbf-tmfifo.c:138: warning: Function parameter or member 'config' not described in 'mlxbf_tmfifo_vdev'
+> mlxbf-tmfifo.c:212: warning: Function parameter or member 'unused' not described in 'mlxbf_tmfifo_msg_hdr'
+> 
+> Fixes: 1357dfd7261f ("platform/mellanox: Add TmFifo driver for Mellanox BlueField Soc")
+> Fixes: bc05ea63b394 ("platform/mellanox: Add BlueField-3 support in the tmfifo driver")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: lore.kernel.org/r/202309252330.saRU491h-lkp@intel.com
+> Cc: Liming Sun <lsun@mellanox.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: Mark Gross <markgross@kernel.org>
+> Cc: Vadim Pasternak <vadimp@nvidia.com>
+> Cc: platform-driver-x86@vger.kernel.org
 > ---
->  drivers/platform/x86/intel/pmc/core.c | 55 +++++++++++++++++++++++++++
->  drivers/platform/x86/intel/pmc/core.h |  4 ++
->  drivers/platform/x86/intel/pmc/mtl.c  | 32 ++++++++++++++++
->  3 files changed, 91 insertions(+)
+>  drivers/platform/mellanox/mlxbf-tmfifo.c |   14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-> index df2bcead1723..790ed9481529 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -27,6 +27,7 @@
->  #include <asm/tsc.h>
+> diff -- a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
+> +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> @@ -53,7 +53,7 @@
+>  struct mlxbf_tmfifo;
 >  
->  #include "core.h"
-> +#include "../pmt/telemetry.h"
->  
->  /* Maximum number of modes supported by platfoms that has low power mode capability */
->  const char *pmc_lpm_modes[] = {
-> @@ -822,6 +823,48 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
->  }
->  DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_req_regs);
->  
-> +static unsigned int pmc_core_get_crystal_freq(void)
-> +{
-> +	unsigned int eax_denominator, ebx_numerator, ecx_hz, edx;
-> +
-> +	if (boot_cpu_data.cpuid_level < 0x15)
-> +		return 0;
-> +
-> +	eax_denominator = ebx_numerator = ecx_hz = edx = 0;
-> +
-> +	/* CPUID 15H TSC/Crystal ratio, plus optionally Crystal Hz */
-> +	cpuid(0x15, &eax_denominator, &ebx_numerator, &ecx_hz, &edx);
-> +
-> +	if (ebx_numerator == 0 || eax_denominator == 0)
-> +		return 0;
-> +
-> +	return ecx_hz;
-> +}
-> +
-> +static int pmc_core_die_c6_us_show(struct seq_file *s, void *unused)
-> +{
-> +	struct pmc_dev *pmcdev = s->private;
-> +	u64 die_c6_res, count;
-> +	int ret;
-> +
-> +	if (!pmcdev->crystal_freq) {
-> +		dev_warn_once(&pmcdev->pdev->dev, "%s: Bad crystal frequency\n",
-> +			      __func__);
-
-Don't use __func__.
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = pmt_telem_read(pmcdev->punit_ep, pmcdev->die_c6_offset,
-> +			     &count, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	die_c6_res = div64_u64(count * 1000000ULL, pmcdev->crystal_freq);
-
-HZ_PER_MHZ ?
-
-> +	seq_printf(s, "%llu\n", die_c6_res);
-> +
-> +	return 0;
-> +}
-> +DEFINE_SHOW_ATTRIBUTE(pmc_core_die_c6_us);
-> +
->  static int pmc_core_lpm_latch_mode_show(struct seq_file *s, void *unused)
->  {
->  	struct pmc_dev *pmcdev = s->private;
-> @@ -1118,6 +1161,12 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
->  				    pmcdev->dbgfs_dir, pmcdev,
->  				    &pmc_core_substate_req_regs_fops);
->  	}
-> +
-> +	if (pmcdev->has_die_c6) {
-> +		debugfs_create_file("die_c6_us_show", 0444,
-> +				    pmcdev->dbgfs_dir, pmcdev,
-> +				    &pmc_core_die_c6_us_fops);
-> +	}
->  }
->  
->  static const struct x86_cpu_id intel_pmc_core_ids[] = {
-> @@ -1212,6 +1261,10 @@ static void pmc_core_clean_structure(struct platform_device *pdev)
->  		pci_dev_put(pmcdev->ssram_pcidev);
->  		pci_disable_device(pmcdev->ssram_pcidev);
->  	}
-> +
-> +	if (pmcdev->punit_ep)
-> +		pmt_telem_unregister_endpoint(pmcdev->punit_ep);
-> +
->  	platform_set_drvdata(pdev, NULL);
->  	mutex_destroy(&pmcdev->lock);
->  }
-> @@ -1232,6 +1285,8 @@ static int pmc_core_probe(struct platform_device *pdev)
->  	if (!pmcdev)
->  		return -ENOMEM;
->  
-> +	pmcdev->crystal_freq = pmc_core_get_crystal_freq();
-> +
->  	platform_set_drvdata(pdev, pmcdev);
->  	pmcdev->pdev = pdev;
->  
-> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-> index 85b6f6ae4995..6d7673145f90 100644
-> --- a/drivers/platform/x86/intel/pmc/core.h
-> +++ b/drivers/platform/x86/intel/pmc/core.h
-> @@ -16,6 +16,8 @@
->  #include <linux/bits.h>
->  #include <linux/platform_device.h>
->  
-> +struct telem_endpoint;
-> +
->  #define SLP_S0_RES_COUNTER_MASK			GENMASK(31, 0)
->  
->  #define PMC_BASE_ADDR_DEFAULT			0xFE000000
-> @@ -357,6 +359,7 @@ struct pmc {
->   * @devs:		pointer to an array of pmc pointers
->   * @pdev:		pointer to platform_device struct
->   * @ssram_pcidev:	pointer to pci device struct for the PMC SSRAM
-> + * @crystal_freq:	crystal frequency from cpuid
->   * @dbgfs_dir:		path to debugfs interface
->   * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
->   *			used to read MPHY PG and PLL status are available
-> @@ -374,6 +377,7 @@ struct pmc_dev {
->  	struct dentry *dbgfs_dir;
->  	struct platform_device *pdev;
->  	struct pci_dev *ssram_pcidev;
-> +	unsigned int crystal_freq;
->  	int pmc_xram_read_bit;
->  	struct mutex lock; /* generic mutex lock for PMC Core */
->  
-> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-> index c2ac50cfdd51..d791d4894c9d 100644
-> --- a/drivers/platform/x86/intel/pmc/mtl.c
-> +++ b/drivers/platform/x86/intel/pmc/mtl.c
-> @@ -10,12 +10,17 @@
->  
->  #include <linux/pci.h>
->  #include "core.h"
-> +#include "../pmt/telemetry.h"
->  
->  /* PMC SSRAM PMT Telemetry GUIDS */
->  #define SOCP_LPM_REQ_GUID	0x2625030
->  #define IOEM_LPM_REQ_GUID	0x4357464
->  #define IOEP_LPM_REQ_GUID	0x5077612
->  
-> +/* Die C6 from PUNIT telemetry */
-> +#define MTL_PMT_DMU_DIE_C6_OFFSET	15
-> +#define MTL_PMT_DMU_GUID		0x1A067102
-> +
->  static const u8 MTL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
->  
->  /*
-> @@ -968,6 +973,32 @@ static struct pmc_info mtl_pmc_info_list[] = {
->  	{}
+>  /**
+> - * mlxbf_tmfifo_vring - Structure of the TmFifo virtual ring
+> + * struct mlxbf_tmfifo_vring - Structure of the TmFifo virtual ring
+>   * @va: virtual address of the ring
+>   * @dma: dma address of the ring
+>   * @vq: pointer to the virtio virtqueue
+> @@ -113,12 +113,13 @@ enum {
 >  };
 >  
-> +static void mtl_punit_pmt_init(struct pmc_dev *pmcdev)
-> +{
-> +	struct telem_endpoint *ep;
-> +	struct pci_dev *pcidev;
-> +
-> +	pcidev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(10, 0));
-> +	if (!pcidev) {
-> +		dev_err(&pmcdev->pdev->dev, "PUNIT PMT device not found.");
-> +		return;
-> +	}
-> +
-> +	ep = pmt_telem_find_and_register_endpoint(pcidev, MTL_PMT_DMU_GUID, 0);
-> +	if (IS_ERR(ep)) {
-> +		dev_err(&pmcdev->pdev->dev,
-> +			"pmc_core: couldn't get DMU telem endpoint %ld",
+>  /**
+> - * mlxbf_tmfifo_vdev - Structure of the TmFifo virtual device
+> + * struct mlxbf_tmfifo_vdev - Structure of the TmFifo virtual device
+>   * @vdev: virtio device, in which the vdev.id.device field has the
+>   *        VIRTIO_ID_xxx id to distinguish the virtual device.
+>   * @status: status of the device
+>   * @features: supported features of the device
+>   * @vrings: array of tmfifo vrings of this device
+> + * @config: non-anonymous union for cons and net
 
-Missing \n from this and the previous dev_err().
+I wonder what information this adds? It's not documenting anything else 
+than C syntax, IMO.
 
-> +			PTR_ERR(ep));
-> +		return;
-> +	}
-> +
-> +	pci_dev_put(pcidev);
-> +	pmcdev->punit_ep = ep;
-> +
-> +	pmcdev->has_die_c6 = true;
-> +	pmcdev->die_c6_offset = MTL_PMT_DMU_DIE_C6_OFFSET;
-> +}
-> +
->  #define MTL_GNA_PCI_DEV	0x7e4c
->  #define MTL_IPU_PCI_DEV	0x7d19
->  #define MTL_VPU_PCI_DEV	0x7d1d
-> @@ -1030,6 +1061,7 @@ int mtl_core_init(struct pmc_dev *pmcdev)
->  	}
->  
->  	pmc_core_get_low_power_modes(pmcdev);
-> +	mtl_punit_pmt_init(pmcdev);
->  
->  	/* Due to a hardware limitation, the GBE LTR blocks PC10
->  	 * when a cable is attached. Tell the PMC to ignore it.
-> 
+Would it be possible to make kerneldoc not give warning from a named union 
+which is already fully documented?
 
 -- 
  i.
 
+>   * @config.cons: virtual console config -
+>   *               select if vdev.id.device is VIRTIO_ID_CONSOLE
+>   * @config.net: virtual network config -
+> @@ -138,7 +139,7 @@ struct mlxbf_tmfifo_vdev {
+>  };
+>  
+>  /**
+> - * mlxbf_tmfifo_irq_info - Structure of the interrupt information
+> + * struct mlxbf_tmfifo_irq_info - Structure of the interrupt information
+>   * @fifo: pointer to the tmfifo structure
+>   * @irq: interrupt number
+>   * @index: index into the interrupt array
+> @@ -150,7 +151,7 @@ struct mlxbf_tmfifo_irq_info {
+>  };
+>  
+>  /**
+> - * mlxbf_tmfifo_io - Structure of the TmFifo IO resource (for both rx & tx)
+> + * struct mlxbf_tmfifo_io - Structure of the TmFifo IO resource (for both rx & tx)
+>   * @ctl: control register offset (TMFIFO_RX_CTL / TMFIFO_TX_CTL)
+>   * @sts: status register offset (TMFIFO_RX_STS / TMFIFO_TX_STS)
+>   * @data: data register offset (TMFIFO_RX_DATA / TMFIFO_TX_DATA)
+> @@ -162,7 +163,7 @@ struct mlxbf_tmfifo_io {
+>  };
+>  
+>  /**
+> - * mlxbf_tmfifo - Structure of the TmFifo
+> + * struct mlxbf_tmfifo - Structure of the TmFifo
+>   * @vdev: array of the virtual devices running over the TmFifo
+>   * @lock: lock to protect the TmFifo access
+>   * @res0: mapped resource block 0
+> @@ -198,7 +199,7 @@ struct mlxbf_tmfifo {
+>  };
+>  
+>  /**
+> - * mlxbf_tmfifo_msg_hdr - Structure of the TmFifo message header
+> + * struct mlxbf_tmfifo_msg_hdr - Structure of the TmFifo message header
+>   * @type: message type
+>   * @len: payload length in network byte order. Messages sent into the FIFO
+>   *       will be read by the other side as data stream in the same byte order.
+> @@ -208,6 +209,7 @@ struct mlxbf_tmfifo {
+>  struct mlxbf_tmfifo_msg_hdr {
+>  	u8 type;
+>  	__be16 len;
+> +	/* private: */
+>  	u8 unused[5];
+>  } __packed __aligned(sizeof(u64));
+>  
+> 
+--8323329-2105164461-1695745138=:1894--
