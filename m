@@ -2,218 +2,304 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38754E7F14E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Sep 2023 13:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD8BE80A8A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Sep 2023 13:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231909AbjI0NSn (ORCPT
+        id S231766AbjI0Ncp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Sep 2023 09:18:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35442 "EHLO
+        Wed, 27 Sep 2023 09:32:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231854AbjI0NSj (ORCPT
+        with ESMTP id S230037AbjI0Nco (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Sep 2023 09:18:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A1C136
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Sep 2023 06:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1695820673;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3bwPqaSphrGy3IZbd7qFF8174I53rtWlv8Z5kNQYDxg=;
-        b=VZ4OjjKwWFo5cJu38W1KOYL2tHlPmJrHXRQeE2Tn4xAG2qc2ToceMO/qDaO1GISGOFgpUY
-        8ItgQgaUT0j+Nlz2AP1Gv4+AQLoKLHZlvDp2Zbp775xuBIybOVpa3czxFOBSAnSa47DV3i
-        C+Yn3vjJBYp9OFfnEQDKuKwzEl4f69Q=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-73-aYwtMe-1Numq5qsg4y5Mfg-1; Wed, 27 Sep 2023 09:17:51 -0400
-X-MC-Unique: aYwtMe-1Numq5qsg4y5Mfg-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9a9f282713fso927059666b.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Sep 2023 06:17:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695820670; x=1696425470;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3bwPqaSphrGy3IZbd7qFF8174I53rtWlv8Z5kNQYDxg=;
-        b=NlHi+tIIA56JcT0zhjntrCrCQH73b3GRLbalCmSC9JOqWkGKvV3JQIOVsaDbodmBMW
-         49u7xx1AsDlW/ITBEs3HFiPdV9lEd0XmRd+C6wlC8ntDfBxA2bl/ZahUwCqUGm25rJ0d
-         HyBEbJtK9usdaq0nLcPT3kqwckFjEFQA/HwV2JQgalC9auvSf2vzBpyicl3vZ/eYvZ4K
-         l0dPCsramMvynWMtaM22apNpDAkpnOXnNbumZJ25AYvmi64JfGxYlrePwaIUju7BflbI
-         qzU1UoDhsAWZ1hHGTBzRBPmMXDeyHH7Wa37visVJle+4qgZ66lFtD+GR89Fny87x4hEY
-         lp8A==
-X-Gm-Message-State: AOJu0YwpZb6ijEzJ0DhKd16Euzr4/0q/e1iZq7APa+JZd+VXS2rhbnfU
-        shJPRZpEPUrHqAAltfu5PArm7CKHKlOcSxn/IcKDAcBxw5aDld/sDNm6ch0nqqG0WmkIlM1Ci72
-        VxlfLxON8LzNe0HxDi1Pnp9L99aULsdHWsA==
-X-Received: by 2002:a17:907:780b:b0:9ae:6355:afe9 with SMTP id la11-20020a170907780b00b009ae6355afe9mr1834012ejc.52.1695820670355;
-        Wed, 27 Sep 2023 06:17:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEcFMBgnkkkfPmnZduR/RzERo1iFJANN51tYfOFZOeu6D+NKkAerFz89yTzT+NcrTqRmW4q9w==
-X-Received: by 2002:a17:907:780b:b0:9ae:6355:afe9 with SMTP id la11-20020a170907780b00b009ae6355afe9mr1833987ejc.52.1695820669960;
-        Wed, 27 Sep 2023 06:17:49 -0700 (PDT)
-Received: from [192.168.1.217] ([109.36.155.235])
-        by smtp.gmail.com with ESMTPSA id vw7-20020a170907058700b009b27d4153cfsm2583163ejb.176.2023.09.27.06.17.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Sep 2023 06:17:49 -0700 (PDT)
-Message-ID: <681ddbf9-baeb-9876-8615-5ec8a4b6c368@redhat.com>
-Date:   Wed, 27 Sep 2023 15:17:45 +0200
+        Wed, 27 Sep 2023 09:32:44 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAA97126;
+        Wed, 27 Sep 2023 06:32:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695821562; x=1727357562;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=WyQnbln/qxn77GjZ28iQ/c1Bwlx9s8zdHAg3jaa7e+k=;
+  b=Koh0DVWx8rKjXMoIHoiy1NFQmXnYYMzl+fq/sTUQMg7cWnmJSQguTMYR
+   H8r2Ow7GUxzqh01qrQx45Bvy9w9J/CIImq4tF3Z/WmLXnYwu94VqkLotN
+   FzE2AZktCvHVrxqqpIRnHpAl0yl4mW1V3tZkLvli8TLiPRDBgkx+S5lq5
+   GRd7F9SzpbL1I8iHXM30XiiJhgGQBzNfCg285PHhVb4Q5jru0qphV+6tz
+   wQb2hpNWSlxity7UFW5L0VDLYViKp1HkZdKG3wJcCo7twiiXEditBOt1+
+   7y1nA1JkbaPHnTQt/0Iig0FApiiZZgHalZM26RDbczsgIv1g+utRSt7bz
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="381726694"
+X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
+   d="scan'208";a="381726694"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 06:32:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="742711409"
+X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
+   d="scan'208";a="742711409"
+Received: from clkuhl-mobl.amr.corp.intel.com ([10.252.53.225])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 06:32:36 -0700
+Date:   Wed, 27 Sep 2023 16:32:34 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc:     hdegoede@redhat.com, markgross@kernel.org,
+        Basavaraj Natikar <basavaraj.natikar@amd.com>,
+        jikos@kernel.org, benjamin.tissoires@redhat.com,
+        alexander.deucher@amd.com, christian.koenig@amd.com,
+        Xinhui.Pan@amd.com, airlied@gmail.com, daniel@ffwll.ch,
+        Patil.Reddy@amd.com, mario.limonciello@amd.com,
+        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 14/15] platform/x86/amd/pmf: Add PMF-AMDSFH interface
+ for HPD
+In-Reply-To: <20230922175056.244940-15-Shyam-sundar.S-k@amd.com>
+Message-ID: <aa85b6d6-6113-337d-5de3-77fd53d7387@linux.intel.com>
+References: <20230922175056.244940-1-Shyam-sundar.S-k@amd.com> <20230922175056.244940-15-Shyam-sundar.S-k@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [RFT PATCH 2/4] platform/x86: int3472: led: don't use
- gpiod_toggle_active_low()
-Content-Language: en-US
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Mark Gross <markgross@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20230926145943.42814-1-brgl@bgdev.pl>
- <20230926145943.42814-3-brgl@bgdev.pl>
- <2b5db794-c00f-e9f5-c0c9-4c5fb4df0802@redhat.com>
- <CAMRc=MeSK-ZReyt4556Dik4GwgtitD-NBgVE0swe=4i+5gBLwA@mail.gmail.com>
- <3f8760f8-ae8c-c0b0-19d7-76fbbf5d25de@redhat.com>
-In-Reply-To: <3f8760f8-ae8c-c0b0-19d7-76fbbf5d25de@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Again,
+On Fri, 22 Sep 2023, Shyam Sundar S K wrote:
 
-On 9/27/23 15:08, Hans de Goede wrote:
-> Hi Bart,
+> From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 > 
-> On 9/27/23 12:44, Bartosz Golaszewski wrote:
->> On Wed, Sep 27, 2023 at 11:40 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>>
->>> Hi,
->>>
->>> On 9/26/23 16:59, Bartosz Golaszewski wrote:
->>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>>
->>>> Instead of acpi_get_and_request_gpiod() + gpiod_toggle_active_low(), use
->>>> temporary lookup tables with appropriate lookup flags.
->>>>
->>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>> ---
->>>>  drivers/platform/x86/intel/int3472/led.c | 12 ++++--------
->>>>  1 file changed, 4 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
->>>> index bca1ce7d0d0c..62e0cd5207a7 100644
->>>> --- a/drivers/platform/x86/intel/int3472/led.c
->>>> +++ b/drivers/platform/x86/intel/int3472/led.c
->>>> @@ -25,18 +25,14 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472,
->>>>       if (int3472->pled.classdev.dev)
->>>>               return -EBUSY;
->>>>
->>>> -     int3472->pled.gpio = acpi_get_and_request_gpiod(path, agpio->pin_table[0],
->>>> -                                                          "int3472,privacy-led");
->>>> +     int3472->pled.gpio = skl_int3472_gpiod_get_from_temp_lookup(
->>>> +                             int3472->dev, path, agpio->pin_table[0],
->>>> +                             "int3472,privacy-led", polarity,
->>>> +                             GPIOD_OUT_LOW);
->>>
->>> Yeah so this is not going to work, path here is an ACPI device path, e.g.
->>> on my laptop (which actually uses the INT3472 glue code) the path-s of
->>> the 2 GPIO controllers are: `\_SB_.GPI0` resp `\_SB_.PC00.XHCI.RHUB.HS08.VGPO`
->>>
->>> Where as skl_int3472_gpiod_get_from_temp_lookup() stores the passed in path
->>> in  gpiod_lookup_table.table[0].key, which is the dev_name() of the GPIO
->>> controller's parent dev which are `INTC1055:00` resp. `INTC1096:00` .
->>>
->>> So we are going to need to add some code to INT3472 to go from path to
->>> a correct value for gpiod_lookup_table.table[0].key which means partly
->>> reproducing most of acpi_get_gpiod:
->>>
->>>         struct gpio_chip *chip;
->>>         acpi_handle handle;
->>>         acpi_status status;
->>>
->>>         status = acpi_get_handle(NULL, path, &handle);
->>>         if (ACPI_FAILURE(status))
->>>                 return ERR_PTR(-ENODEV);
->>>
->>>         chip = gpiochip_find(handle, acpi_gpiochip_find);
->>>         if (!chip)
->>>                 return ERR_PTR(-EPROBE_DEFER);
->>>
->>> And then get the key from the chip. Which means using gpiochip_find
->>> in the int3472 code now, which does not sound like an improvement.
->>>
->>> I think that was is needed instead is adding an active_low flag
->>> to acpi_get_and_request_gpiod() and then have that directly
->>> set the active-low flag on the returned desc.
->>>
->>
->> Ultimately I'd like everyone to use gpiod_get() for getting
->> descriptors but for now I get it's enough. Are you find with this
->> being done in a single patch across GPIO and this driver?
+> AMDSFH has information about the User presence information via the Human
+> Presence Detection (HPD) sensor which is part of the AMD sensor fusion hub.
+> Add PMF and AMDSFH interface to get this information.
 > 
-> Yes doing this in a single patch is fine.
+> Co-developed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> ---
+>  drivers/hid/amd-sfh-hid/amd_sfh_common.h      |  5 ++++
+>  drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_desc.c |  2 +-
+>  drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c | 11 ++++++++
+>  .../amd-sfh-hid/sfh1_1/amd_sfh_interface.c    | 28 +++++++++++++++++++
+>  .../amd-sfh-hid/sfh1_1/amd_sfh_interface.h    |  1 +
+>  drivers/platform/x86/amd/pmf/spc.c            | 21 ++++++++++++++
+>  include/linux/amd-pmf-io.h                    | 22 ++++++++++++++-
+>  7 files changed, 88 insertions(+), 2 deletions(-)
 > 
-> Also I'm fine with merging such a patch through the gpio tree .
+> diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_common.h b/drivers/hid/amd-sfh-hid/amd_sfh_common.h
+> index 2643bb14fee2..cd57037bf217 100644
+> --- a/drivers/hid/amd-sfh-hid/amd_sfh_common.h
+> +++ b/drivers/hid/amd-sfh-hid/amd_sfh_common.h
+> @@ -37,6 +37,10 @@ struct amd_mp2_sensor_info {
+>  	dma_addr_t dma_address;
+>  };
+>  
+> +struct sfh_dev_status {
+> +	bool is_hpd_present;
+> +};
+> +
+>  struct amd_mp2_dev {
+>  	struct pci_dev *pdev;
+>  	struct amdtp_cl_data *cl_data;
+> @@ -47,6 +51,7 @@ struct amd_mp2_dev {
+>  	struct amd_input_data in_data;
+>  	/* mp2 active control status */
+>  	u32 mp2_acs;
+> +	struct sfh_dev_status dev_en;
+>  };
+>  
+>  struct amd_mp2_ops {
+> diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_desc.c b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_desc.c
+> index 06bdcf072d10..d7467c41ad3b 100644
+> --- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_desc.c
+> +++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_desc.c
+> @@ -132,7 +132,7 @@ static void get_common_inputs(struct common_input_property *common, int report_i
+>  	common->event_type = HID_USAGE_SENSOR_EVENT_DATA_UPDATED_ENUM;
+>  }
+>  
+> -static int float_to_int(u32 flt32_val)
+> +int float_to_int(u32 flt32_val)
 
-So thinking about this more I realized that the int3472 code already
-generates GPIO lookups for the sensor device for some
-(powerdown, reset) GPIOs, it only needs the gpio_desc for
-the case where the GPIO is turned into a regulator, clock or led.
+This is way too generic name to be exposed by a driver, add proper 
+prefix for it to make sure it never hits a compile problem.
 
-Since the int3472 code is already generating lookups it already
-has a way to go from path to a lookup "key":
+>  {
+>  	int fraction, shift, mantissa, sign, exp, zeropre;
+>  
+> diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
+> index e9c6413af24a..9c623456ee12 100644
+> --- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
+> +++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
+> @@ -73,6 +73,12 @@ static int amd_sfh_hid_client_deinit(struct amd_mp2_dev *privdata)
+>  	int i, status;
+>  
+>  	for (i = 0; i < cl_data->num_hid_devices; i++) {
+> +		switch (cl_data->sensor_idx[i]) {
+> +		case HPD_IDX:
+> +			privdata->dev_en.is_hpd_present = false;
+> +			break;
+> +		}
+> +
+>  		if (cl_data->sensor_sts[i] == SENSOR_ENABLED) {
+>  			privdata->mp2_ops->stop(privdata, cl_data->sensor_idx[i]);
+>  			status = amd_sfh_wait_for_response
+> @@ -178,6 +184,11 @@ static int amd_sfh1_1_hid_client_init(struct amd_mp2_dev *privdata)
+>  			rc = amdtp_hid_probe(i, cl_data);
+>  			if (rc)
+>  				goto cleanup;
+> +			switch (cl_data->sensor_idx[i]) {
+> +			case HPD_IDX:
+> +			privdata->dev_en.is_hpd_present = true;
+> +				break;
+> +			}
+>  		}
+>  		dev_dbg(dev, "sid 0x%x (%s) status 0x%x\n",
+>  			cl_data->sensor_idx[i], get_sensor_name(cl_data->sensor_idx[i]),
+> diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
+> index 4f81ef2d4f56..63a5bbca5a09 100644
+> --- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
+> +++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
+> @@ -7,11 +7,14 @@
+>   *
+>   * Author: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+>   */
+> +#include <linux/amd-pmf-io.h>
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+>  #include <linux/iopoll.h>
+>  
+>  #include "amd_sfh_interface.h"
+>  
+> +static struct amd_mp2_dev *emp2;
+> +
+>  static int amd_sfh_wait_response(struct amd_mp2_dev *mp2, u8 sid, u32 cmd_id)
+>  {
+>  	struct sfh_cmd_response cmd_resp;
+> @@ -76,4 +79,29 @@ static struct amd_mp2_ops amd_sfh_ops = {
+>  void sfh_interface_init(struct amd_mp2_dev *mp2)
+>  {
+>  	mp2->mp2_ops = &amd_sfh_ops;
+> +	emp2 = mp2;
+> +}
+> +
+> +static int amd_sfh_hpd_info(u8 *user_present)
+> +{
+> +	if (emp2 && emp2->dev_en.is_hpd_present) {
+> +		struct hpd_status hpdstatus;
+> +
+> +		hpdstatus.val = readl(emp2->mmio + AMD_C2P_MSG(4));
+> +		*user_present = hpdstatus.shpd.presence;
+> +		return 0;
+> +	}
+> +	return  -ENODEV;
+> +}
+> +
+> +int amd_get_sfh_info(struct amd_sfh_info *sfh_info, enum sfh_message_type op)
+> +{
+> +	if (sfh_info) {
+> +		switch (op) {
+> +		case MT_HPD:
+> +			return amd_sfh_hpd_info(&sfh_info->user_present);
+> +		}
+> +	}
+> +	return -1;
+>  }
+> +EXPORT_SYMBOL_GPL(amd_get_sfh_info);
+> diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.h b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.h
+> index 9d31d5b510eb..8a36386e6bce 100644
+> --- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.h
+> +++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.h
+> @@ -149,6 +149,7 @@ struct hpd_status {
+>  	};
+>  };
+>  
+> +int float_to_int(u32 flt32_val);
+>  void sfh_interface_init(struct amd_mp2_dev *mp2);
+>  void amd_sfh1_1_set_desc_ops(struct amd_mp2_ops *mp2_ops);
+>  #endif
+> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
+> index 5f3ab1ce09d2..97293ae25cf5 100644
+> --- a/drivers/platform/x86/amd/pmf/spc.c
+> +++ b/drivers/platform/x86/amd/pmf/spc.c
+> @@ -48,6 +48,7 @@ void amd_pmf_dump_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *
+>  	dev_dbg(dev->dev, "Primary Display State : %s\n", in->ev_info.display_state ?
+>  			"Connected" : "disconnected/unknown");
+>  	dev_dbg(dev->dev, "LID State : %s\n", in->ev_info.lid_state ? "Close" : "Open");
+> +	dev_dbg(dev->dev, "User Presence : %s\n", in->ev_info.user_present ? "Present" : "Away");
+>  	dev_dbg(dev->dev, "==== TA inputs END ====\n");
+>  }
+>  #else
+> @@ -156,6 +157,25 @@ static void amd_pmf_get_gpu_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_ta
+>  	in->ev_info.display_state = dev->gfx_data.con_status[0];
+>  }
+>  
+> +static void amd_pmf_get_sensor_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in)
+> +{
+> +	struct amd_sfh_info sfh_info;
+> +
+> +	/* get HPD data */
+> +	amd_get_sfh_info(&sfh_info, MT_HPD);
+> +	switch (sfh_info.user_present) {
+> +	case SFH_NOT_DETECTED:
+> +		in->ev_info.user_present = 0xff; /* assume no sensors connected */
+> +		break;
+> +	case SFH_USER_PRESENT:
+> +		in->ev_info.user_present = 1;
+> +		break;
+> +	case SFH_USER_AWAY:
+> +		in->ev_info.user_present = 0;
+> +		break;
+> +	}
+> +}
+> +
+>  void amd_pmf_populate_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in)
+>  {
+>  	/* TA side lid open is 1 and close is 0, hence the ! here */
+> @@ -165,4 +185,5 @@ void amd_pmf_populate_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_tab
+>  	amd_pmf_get_battery_info(dev, in);
+>  	amd_pmf_get_slider_info(dev, in);
+>  	amd_pmf_get_gpu_info(dev, in);
+> +	amd_pmf_get_sensor_info(dev, in);
+>  }
+> diff --git a/include/linux/amd-pmf-io.h b/include/linux/amd-pmf-io.h
+> index ecae387ddaa6..4f82973f6ad2 100644
+> --- a/include/linux/amd-pmf-io.h
+> +++ b/include/linux/amd-pmf-io.h
+> @@ -5,7 +5,8 @@
+>   * Copyright (c) 2023, Advanced Micro Devices, Inc.
+>   * All Rights Reserved.
+>   *
+> - * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> + *          Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+>   */
+>  
+>  #ifndef AMD_PMF_IO_H
+> @@ -26,4 +27,23 @@ struct amd_gpu_pmf_data {
+>  
+>  int amd_pmf_get_gfx_data(struct amd_gpu_pmf_data *pmf);
+>  int amd_pmf_set_gfx_data(struct amd_gpu_pmf_data *pmf);
+> +
+> +/* amd-sfh */
+> +enum sfh_message_type {
+> +	MT_HPD,
+> +};
+> +
+> +enum hpd_info {
+> +	SFH_NOT_DETECTED,
+> +	SFH_USER_PRESENT,
+> +	SFH_USER_AWAY
+> +};
+> +
+> +struct amd_sfh_info {
+> +	u8 user_present;
+> +	/* add future caps below */
 
-        status = acpi_get_handle(NULL, path, &handle);
-        if (ACPI_FAILURE(status))
-                return -EINVAL;
+Remove the comment?
 
-        adev = acpi_fetch_acpi_dev(handle);
-        if (!adev)
-                return -ENODEV;
+> +};
+> +
+> +int amd_get_sfh_info(struct amd_sfh_info *sfh_info, enum sfh_message_type op);
+> +
+>  #endif
+> 
 
-        table_entry->key = acpi_dev_name(adev);
-
-So we can get the key without needing to call gpio_find_chip()
-
-So I do believe that the temp lookup approach should actually
-work. I'm currently traveling, so no promises but I should
-be able to rework your series in something which actually
-works and which will:
-
-1. Stop using gpiod_toggle_active_low()
-2. Allow dropping acpi_get_and_request_gpiod()
-
-So no need for a patch to add an active-low parameter to
-acpi_get_and_request_gpiod(), sorry about the noise.
-
-Regards,
-
-Hans
-
-
-
-
->>>>       if (IS_ERR(int3472->pled.gpio))
->>>>               return dev_err_probe(int3472->dev, PTR_ERR(int3472->pled.gpio),
->>>>                                    "getting privacy LED GPIO\n");
->>>>
->>>> -     if (polarity == GPIO_ACTIVE_LOW)
->>>> -             gpiod_toggle_active_low(int3472->pled.gpio);
->>>> -
->>>> -     /* Ensure the pin is in output mode and non-active state */
->>>> -     gpiod_direction_output(int3472->pled.gpio, 0);
->>>> -
->>>>       /* Generate the name, replacing the ':' in the ACPI devname with '_' */
->>>>       snprintf(int3472->pled.name, sizeof(int3472->pled.name),
->>>>                "%s::privacy_led", acpi_dev_name(int3472->sensor));
->>>
->>
+-- 
+ i.
 
