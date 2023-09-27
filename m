@@ -2,33 +2,33 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E31E810A5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Sep 2023 08:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E423E810A4
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Sep 2023 08:11:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230222AbjI0ILU (ORCPT
+        id S230270AbjI0ILY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Sep 2023 04:11:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33056 "EHLO
+        Wed, 27 Sep 2023 04:11:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230155AbjI0ILC (ORCPT
+        with ESMTP id S230225AbjI0ILC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Wed, 27 Sep 2023 04:11:02 -0400
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 398F9191
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Sep 2023 01:10:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 110BCB3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Sep 2023 01:10:57 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qlPdC-00085h-5f; Wed, 27 Sep 2023 10:10:50 +0200
+        id 1qlPdB-00084H-Vo; Wed, 27 Sep 2023 10:10:49 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qlPdB-009I7p-DJ; Wed, 27 Sep 2023 10:10:49 +0200
+        id 1qlPdA-009I7h-W5; Wed, 27 Sep 2023 10:10:49 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qlPdB-005BR8-40; Wed, 27 Sep 2023 10:10:49 +0200
+        id 1qlPdA-005BR0-Mr; Wed, 27 Sep 2023 10:10:48 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Hans de Goede <hdegoede@redhat.com>,
@@ -37,15 +37,15 @@ To:     Hans de Goede <hdegoede@redhat.com>,
         Vadim Pasternak <vadimp@nvidia.com>
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel@pengutronix.de
-Subject: [PATCH 17/27] platform/mellanox: mlxreg-io: Convert to platform remove callback returning void
-Date:   Wed, 27 Sep 2023 10:10:30 +0200
-Message-Id: <20230927081040.2198742-18-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 15/27] platform/mellanox: mlxbf-tmfifo: Convert to platform remove callback returning void
+Date:   Wed, 27 Sep 2023 10:10:28 +0200
+Message-Id: <20230927081040.2198742-16-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230927081040.2198742-1-u.kleine-koenig@pengutronix.de>
 References: <20230927081040.2198742-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1748; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=W1A4okYNik1VMgJpJLoBZFEE+DlDZ2qN4h6QATaBCC4=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlE+Nxthg5Ec1AQ5v355kFCMJJ81EwvWpNdy6Ea fI7RfQySLyJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZRPjcQAKCRCPgPtYfRL+ Tg/qB/wJX8G3HE0qqXOb9ERJi68xtzC2i1a+W9RDR+4APiDhliH6rE7GesPvO/MumZIkUOuoviU gPDp9kYrqTBTiseLDrlp4InyXLXouMtVlmgN4Cvuuj6FpVhiW22T0pYdODxXmcrNPSnvYrqGrLF mB6tqWZnfiB/pvKbja0YrVQhrfminKhUgBlKSF2jGjky2VLwgyqgw6E34Kwfuf7iIk8ghivGUh1 K3cxZmsZ5l1P2pNUtwFTJE92rejSB5ojYAyKsMwBOaJP/qm0oQvYIUz7/FajJTyfwbywO1jJ9nk oJqOUqu4ZT0UCZjzmjozuS9cW2VJyoBp7WiygWy4sIp/TquW
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1870; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=CxjrzFzEkM6O7z80cNwT5EXT0bqldk5XDjLUTnuR0Y0=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlE+NuMm1KeBgObA5wqP/oMc1QGazphFC29+aTn seP42tD4gqJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZRPjbgAKCRCPgPtYfRL+ TjIwB/4xndkYpQ+BvWFG8bVLBguRWGmAkFUJDqI5N74Z2ObmukEKyraFnnmO1r1lJ2ii9Nk2lnn X8s7u/n9zMb41hlp5UfsvtmoW1yN2xj69NFrf0GL+7xtzlEHzdTgkSPQbT1nxfLIOzgfJlQiVzJ iONvs33bN909TfnUw0Ecg1J1X9kLNSCvMM5g97kzdJVqMPzTcvSRy8beyb/rA3yXWrUYVqmz7Yr qYvPnxl5RmgTAHmednfhLnZTYXJNO5jlMQU9IAaNiRwr7LrnXo/wy88P2/Y5IkYrIk31EktNflg tt95oGMo2opbb9SjOW7YpYGafkmHQXbcbFboYwjA23AcBh74
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -71,37 +71,37 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/platform/mellanox/mlxreg-io.c | 6 ++----
+ drivers/platform/mellanox/mlxbf-tmfifo.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/mellanox/mlxreg-io.c b/drivers/platform/mellanox/mlxreg-io.c
-index 83ba037408cd..ee7bd623ba44 100644
---- a/drivers/platform/mellanox/mlxreg-io.c
-+++ b/drivers/platform/mellanox/mlxreg-io.c
-@@ -263,13 +263,11 @@ static int mlxreg_io_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index f3696a54a2bd..69729ba8f505 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -1361,13 +1361,11 @@ static int mlxbf_tmfifo_probe(struct platform_device *pdev)
  }
  
--static int mlxreg_io_remove(struct platform_device *pdev)
-+static void mlxreg_io_remove(struct platform_device *pdev)
+ /* Device remove function. */
+-static int mlxbf_tmfifo_remove(struct platform_device *pdev)
++static void mlxbf_tmfifo_remove(struct platform_device *pdev)
  {
- 	struct mlxreg_io_priv_data *priv = dev_get_drvdata(&pdev->dev);
+ 	struct mlxbf_tmfifo *fifo = platform_get_drvdata(pdev);
  
- 	mutex_destroy(&priv->io_lock);
+ 	mlxbf_tmfifo_cleanup(fifo);
 -
 -	return 0;
  }
  
- static struct platform_driver mlxreg_io_driver = {
-@@ -277,7 +275,7 @@ static struct platform_driver mlxreg_io_driver = {
- 	    .name = "mlxreg-io",
- 	},
- 	.probe = mlxreg_io_probe,
--	.remove = mlxreg_io_remove,
-+	.remove_new = mlxreg_io_remove,
- };
+ static const struct acpi_device_id mlxbf_tmfifo_acpi_match[] = {
+@@ -1378,7 +1376,7 @@ MODULE_DEVICE_TABLE(acpi, mlxbf_tmfifo_acpi_match);
  
- module_platform_driver(mlxreg_io_driver);
+ static struct platform_driver mlxbf_tmfifo_driver = {
+ 	.probe = mlxbf_tmfifo_probe,
+-	.remove = mlxbf_tmfifo_remove,
++	.remove_new = mlxbf_tmfifo_remove,
+ 	.driver = {
+ 		.name = "bf-tmfifo",
+ 		.acpi_match_table = mlxbf_tmfifo_acpi_match,
 -- 
 2.40.1
 
