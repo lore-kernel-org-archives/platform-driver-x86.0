@@ -2,105 +2,87 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE49E810D0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Sep 2023 11:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7F0E810D2
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Sep 2023 11:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231339AbjI0LSW (ORCPT
+        id S231468AbjI0L2e (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Sep 2023 07:18:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43270 "EHLO
+        Wed, 27 Sep 2023 07:28:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231318AbjI0LSW (ORCPT
+        with ESMTP id S231611AbjI0L2T (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Sep 2023 07:18:22 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 582ABF3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Sep 2023 04:18:21 -0700 (PDT)
+        Wed, 27 Sep 2023 07:28:19 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED3D4CFB;
+        Wed, 27 Sep 2023 04:28:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695813501; x=1727349501;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=5OplL1mGsn9IR0TN6PjaGlyXGrDdnv0g+pSzRetv/RM=;
-  b=VDsgGDuUFU2E1RkCDciSGvBGD72BEmeS/KzA2RqVcoUdlGiij4GwhW5C
-   ILrpBUuvUyvce04LMflhLc9yFpvW+oJKrw8sQvTL5yOjZTnMq3JLxlpwo
-   OSZoZRtUrL+LEnY26UYHzc8t3qe0ioPhtjqJ5qlx8+F5gJOv/cCmPhu8y
-   J1ewk+FLaw2zXdNuZPqPrqLQGV+XkG7HfzPr0y2XxRIzQ5+e6GgBjWIg3
-   RfyhNovEK43tFo4BlKnA4C0IgDYktft9/A/xiGUqFl0/fVHlWwIRFnPyJ
-   PPIGiTdXx4yo218mqHQz45X9zoKdbvFUOtrWA8pO86bjuevni9Ddn2xPT
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="385655335"
+  t=1695814092; x=1727350092;
+  h=from:to:in-reply-to:references:subject:message-id:date:
+   mime-version:content-transfer-encoding;
+  bh=uFGitsElrhMRHDkmcqIiTAhrwAa+OQv1/O5WTCTxAck=;
+  b=fk/AIaAWfzQ7U35eOfY1qGLU8+CVx1lX4qk5jC0fe/2/mZjGVno9V308
+   N/JrNyOD6cbHuGlKlqrfuIn2qOv3/qNBRE3Et0WRm/44wUlNvsA5yTP2w
+   wJyESY3yGis0T23ZXD3CkgWbtOcqbNzDsbvs0Bp0bAQEnjxoHDAhNhQbE
+   uZ+e+5mPDm4SCWM5T0bl9jey6Z+2CSSnSxxU3zzifB5vk1GZSsLxfEGJZ
+   awv4ccisM+McbjONWewE/ai2ry54P8gqdVHxSnScyPuAYpiLbDf0O12j3
+   75qxw+EAYYWv2eFf7VKBCXbrj8Pv1OM9OdX6npPwe9louy/x0TE0ndgoH
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="468084279"
 X-IronPort-AV: E=Sophos;i="6.03,179,1694761200"; 
-   d="scan'208";a="385655335"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 04:18:20 -0700
+   d="scan'208";a="468084279"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 04:28:12 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="864791645"
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="996111025"
 X-IronPort-AV: E=Sophos;i="6.03,179,1694761200"; 
-   d="scan'208";a="864791645"
-Received: from clkuhl-mobl.amr.corp.intel.com (HELO idecesar-mobl.ger.corp.intel.com) ([10.252.53.225])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 04:18:18 -0700
-Date:   Wed, 27 Sep 2023 14:18:16 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Suma Hegde <suma.hegde@amd.com>
-cc:     Hans de Goede <hdegoede@redhat.com>,
+   d="scan'208";a="996111025"
+Received: from pjfarr-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.32.193])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 04:26:53 -0700
+From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     hdegoede@redhat.com, mpearson-lenovo@squebb.ca, corbet@lwn.net,
+        hmh@hmh.eng.br, markgross@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org,
-        Naveen Krishna Chatradhi <nchatrad@amd.com>
-Subject: Re: [PATCH v3 1/3] platform/x86/amd/hsmp: create plat specific
- struct
-In-Reply-To: <169573351745.5370.1730064995365398437.b4-ty@linux.intel.com>
-Message-ID: <339fc252-4f46-171a-1b20-088c0651015@linux.intel.com>
-References: <20230919092057.2235437-1-suma.hegde@amd.com> <169573351745.5370.1730064995365398437.b4-ty@linux.intel.com>
+        Fernando Eckhardt Valle <fevalle@ipt.br>
+In-Reply-To: <20230926202144.5906-1-fevalle@ipt.br>
+References: <20230926202144.5906-1-fevalle@ipt.br>
+Subject: Re: [PATCH v6] platform/x86: thinkpad_acpi: sysfs interface to
+ auxmac
+Message-Id: <169581394434.329979.16556041128440048227.b4-ty@linux.intel.com>
+Date:   Wed, 27 Sep 2023 14:25:44 +0300
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1966354900-1695813500=:1756"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 26 Sep 2023 17:21:44 -0300, Fernando Eckhardt Valle wrote:
 
---8323329-1966354900-1695813500=:1756
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-On Tue, 26 Sep 2023, Ilpo Järvinen wrote:
-
-> On Tue, 19 Sep 2023 09:20:55 +0000, Suma Hegde wrote:
-> 
-> > Having a separate platform device structure helps in future, to
-> > contain platform specific variables and other data.
-> > 
-> > 
+> Newer Thinkpads have a feature called MAC Address Pass-through.
+> This patch provides a sysfs interface that userspace can use
+> to get this auxiliary mac address.
 > 
 > 
-> Thank you for your contribution, it has been applied to my local
-> review-ilpo branch. Note it will show up in the public
-> platform-drivers-x86/review-ilpo branch only once I've pushed my
-> local branch there, which might take a while.
-> 
-> Once I've run some tests on the review-ilpo branch the patches
-> there will be added to the platform-drivers-x86/for-next branch
-> and eventually will be included in the pdx86 pull-request to
-> Linus for the next merge-window.
-> 
-> The list of commits applied:
-> [1/3] platform/x86/amd/hsmp: create plat specific struct
->       commit: 6448b90731aabbfb0e351b11be37af94c157dda4
-> [2/3] platform/x86/amd/hsmp: add support for metrics tbl
->       commit: 0f21042c11c7fa9053d5af1797f5a9380579f4dd
 
-This ended up breaking the build and for some reason lkp had not caught it
-(probably didn't build the series at all since the build fails already 
-with allyesconfig).
 
-I'll fix this in review-ilpo branch for you but please try to build test 
-in the future to add a little bit of redundancy into build testing.
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
 
-> [3/3] platform/x86/amd/hsmp: improve the error log
->       commit: bd2b5ff0df3da9b75e684d99cd5b1ed4e74e24db
+Once I've run some tests on the review-ilpo branch the patches
+there will be added to the platform-drivers-x86/for-next branch
+and eventually will be included in the pdx86 pull-request to
+Linus for the next merge-window.
 
--- 
+The list of commits applied:
+[1/1] platform/x86: thinkpad_acpi: sysfs interface to auxmac
+      commit: e17b4df0af1c21b767067b42c227d24d61b3ad15
+
+--
  i.
 
---8323329-1966354900-1695813500=:1756--
