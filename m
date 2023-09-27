@@ -2,179 +2,270 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B767BE810A3
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Sep 2023 08:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F05E810A2
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Sep 2023 08:22:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230353AbjI0ILz (ORCPT
+        id S229527AbjI0IVX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Sep 2023 04:11:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38416 "EHLO
+        Wed, 27 Sep 2023 04:21:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230367AbjI0IL2 (ORCPT
+        with ESMTP id S229583AbjI0IVU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Sep 2023 04:11:28 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF8CB10D5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Sep 2023 01:11:12 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qlPdB-0007vG-BZ; Wed, 27 Sep 2023 10:10:49 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qlPd8-009I6o-6t; Wed, 27 Sep 2023 10:10:46 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qlPd7-005BQ3-RS; Wed, 27 Sep 2023 10:10:45 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Benson Leung <bleung@chromium.org>,
-        Tzung-Bi Shih <tzungbi@kernel.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Zhengkang Huang <zkhuang@hust.edu.cn>,
-        Dongliang Mu <dzm91@hust.edu.cn>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Xing Tong Wu <xingtong.wu@siemens.com>,
-        Tobias Schaffner <tobias.schaffner@siemens.com>
-Cc:     chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH 00/27] platform: Convert to platform remove callback returning void
-Date:   Wed, 27 Sep 2023 10:10:13 +0200
-Message-Id: <20230927081040.2198742-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.40.1
+        Wed, 27 Sep 2023 04:21:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D77173B
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Sep 2023 01:20:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1695802821;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nh0BWH1XX7JQsmjVNfOjalMhaCob29LiZjHUox/R18A=;
+        b=c2wXFDC3DAk0cPHtPiP995gHxT3qW5+oRDBWCWN7MwfugSwAUIEAfx3DUJO0+LT3OSlpvA
+        39biC0c7E4nCDzXBTe5TNGAublH2NHHaXE+QXaIvE2Jtl0F50jicFqdW8CTQmkoF2E2/5G
+        YvI1te52ArrrUidGPxqd15riZKPVagw=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-568-G_8U6ISPNMOWPnUagI5QNA-1; Wed, 27 Sep 2023 04:20:19 -0400
+X-MC-Unique: G_8U6ISPNMOWPnUagI5QNA-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9b282c72954so527404666b.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Sep 2023 01:20:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695802818; x=1696407618;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nh0BWH1XX7JQsmjVNfOjalMhaCob29LiZjHUox/R18A=;
+        b=WwyspRHo/u8C0rRr/OPTPnKSGM4DV06oSRW7/lZPFHFjnjN/+sZqark/9IQqeKqJ9M
+         Jfh4hI6PDdVSrq7X8MPPe+QKK/FDT30cS2LCH45lumRrouf0Rsgarek6TD52lAdzOprm
+         I0OfVUu/qPhwiPNwV546pIZCnampLLxFniovzsQbHGZ8HsqebSwGJclBNdPQa8NbuMoX
+         JJonbjugFmA7NWfQg+AHuQoBWDJkdEDhixXDmTZikaq/bv3ATldPoNUh4dsG/KnW73Lm
+         v29HAnj4nlbBuTJPzCjor5uDk3WLQVx97TsdapVjsMDHUSmlr8/ImlNgWx5YJ9zEeKbS
+         4U2g==
+X-Gm-Message-State: AOJu0YwWjJb4yCke0moBeT8n5rOTesIgLl4WDqUDIvJQ8xXWpnDfhgJN
+        0bQtpF58kHyPwhxLc82ejytYYKXfPaYfnVZCbQ0t/7A3t0rnS2s5aym6SB1IzR/FG3XIFJb94Kl
+        3sYpn2sml1EnDAFyhLkyweEwI4P6Fu+xILw==
+X-Received: by 2002:a17:906:c146:b0:99c:f47a:2354 with SMTP id dp6-20020a170906c14600b0099cf47a2354mr1654124ejc.70.1695802818412;
+        Wed, 27 Sep 2023 01:20:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHRaX85SW7v6jhyJbH1wJL8pktImvOz6Hwr6M7Pe/t0MYC/z282lBUQYLjuZtY3mowLCltWLQ==
+X-Received: by 2002:a17:906:c146:b0:99c:f47a:2354 with SMTP id dp6-20020a170906c14600b0099cf47a2354mr1654105ejc.70.1695802818095;
+        Wed, 27 Sep 2023 01:20:18 -0700 (PDT)
+Received: from [192.168.1.217] ([109.36.155.235])
+        by smtp.gmail.com with ESMTPSA id jx14-20020a170906ca4e00b0099caf5bed64sm8916651ejb.57.2023.09.27.01.20.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Sep 2023 01:20:17 -0700 (PDT)
+Message-ID: <28e32f47-76c6-c28c-5da8-37e2202c2594@redhat.com>
+Date:   Wed, 27 Sep 2023 10:20:14 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v6] platform/x86: thinkpad_acpi: sysfs interface to auxmac
+Content-Language: en-US
+To:     Fernando Eckhardt Valle <fevalle@ipt.br>,
+        ilpo.jarvinen@linux.intel.com, mpearson-lenovo@squebb.ca,
+        corbet@lwn.net, hmh@hmh.eng.br, markgross@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+References: <20230926202144.5906-1-fevalle@ipt.br>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230926202144.5906-1-fevalle@ipt.br>
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5634; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=CkQYBvT+RjYSeuBxLifLnQnCV7loC85YyRlSkgTCnoo=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlE+Nc3ySxbkAMbVir3avLWIvv+j8dE/y7LWJhR q1HA1yTUjGJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZRPjXAAKCRCPgPtYfRL+ Tr9SCACAy5RNt5WC7iGAFgRqNKrSMNzc/TR6DesoaU1qa/jKzgVteCTh9l0RUVxtF+JPAijQ+qt nbRYV/s2aVt7Eb2Mmp9nrwAG5xIez5JPiNSU9ud2G7w4LSiyC/8Z9iBFMmIWAd4DDF7dMxux4mK xR2ZthSLehKdDqQM+8POgCjhtNshR/2wvuDjyfXOb8aWU6JmFhjqw434KsrKcnOiQIZ2+hUhA7g I+PFaZit3oXXflxc2vSXPtkjSuWUhrToUi2r2vqIRsxisYGqBI5NUUev1TBIBVxRWAsf//kFhI6 tz187eQfss+315FtoaibLT+oER3Jp+pYuu9gfjpyydc/n0yQ
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hello,
+Hi,
 
-this series converts all platform drivers below drivers/platform to use
-.remove_new(). The motivation is to get rid of an integer return code
-that is (mostly) ignored by the platform driver core and error prone on
-the driver side.
+On 9/26/23 22:21, Fernando Eckhardt Valle wrote:
+> Newer Thinkpads have a feature called MAC Address Pass-through.
+> This patch provides a sysfs interface that userspace can use
+> to get this auxiliary mac address.
+> 
+> Signed-off-by: Fernando Eckhardt Valle <fevalle@ipt.br>
+> ---
+> Changes in v6:
+> - New adjustment to the strcpy() offset.
+> - Added is_visible attribute.
+> Changes in v5:
+> - Repeated code deleted.
+> - Adjusted offset of a strscpy().
+> Changes in v4:
+> - strscpy() in all string copies.
+> Changes in v3:
+> - Added null terminator to auxmac string when copying auxiliary
+> mac address value.
+> Changes in v2:
+> - Added documentation.
+> - All handling of the auxmac value is done in the _init function.
 
-See commit 5c5a7680e67b ("platform: Provide a remove callback that
-returns no value") for an extended explanation and the eventual goal.
+Thanks, this looks good to me now:
 
-As there is no single maintainer team for drivers/platform, I suggest
-the individual maintainers to pick up "their" patches. The only
-inter-dependency in this series is that the patches #24 - #27 depend on
-#23. Otherwise there are no inter-dependencies, so that should work
-fine. As there are still quite a few drivers to convert in other areas
-than drivers/platform, I'm happy about every patch that makes it in and
-there is no need for further coordination. So even if there is a merge
-conflict with one patch until you apply or a subject prefix is
-suboptimal, please don't let you stop by negative feedback for other
-patches (unless it applies to "your" patches, too, of course).
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Best regards and thanks for considering,
-Uwe
+Regards,
 
-Uwe Kleine-König (27):
-  platform/chrome: cros_ec_chardev: Convert to platform remove callback
-    returning void
-  platform/chrome: cros_ec_debugfs: Convert to platform remove callback
-    returning void
-  platform/chrome: cros_ec_lightbar: Convert to platform remove callback
-    returning void
-  platform/chrome: cros_ec_lpc: Convert to platform remove callback
-    returning void
-  platform/chrome: cros_ec_sysfs: Convert to platform remove callback
-    returning void
-  platform/chrome: cros_ec_vbc: Convert to platform remove callback
-    returning void
-  platform/chrome: cros_typec_switch: Convert to platform remove
-    callback returning void
-  platform/chrome: cros_usbpd_logger: Convert to platform remove
-    callback returning void
-  platform/chrome: cros_usbpd_notify: Convert to platform remove
-    callback returning void
-  platform/chrome/wilco_ec: core: Convert to platform remove callback
-    returning void
-  platform/chrome/wilco_ec: debugfs: Convert to platform remove callback
-    returning void
-  platform/chrome/wilco_ec: telemetry: Convert to platform remove
-    callback returning void
-  platform/goldfish: goldfish_pipe: Convert to platform remove callback
-    returning void
-  platform/mellanox: mlxbf-bootctl: Convert to platform remove callback
-    returning void
-  platform/mellanox: mlxbf-tmfifo: Convert to platform remove callback
-    returning void
-  platform/mellanox: mlxreg-hotplug: Convert to platform remove callback
-    returning void
-  platform/mellanox: mlxreg-io: Convert to platform remove callback
-    returning void
-  platform/mellanox: mlxreg-lc: Convert to platform remove callback
-    returning void
-  platform/mellanox: nvsw-sn2201: Convert to platform remove callback
-    returning void
-  platform/x86/intel: bytcrc_pwrsrc: Convert to platform remove callback
-    returning void
-  platform/x86: mlx-platform: Convert to platform remove callback
-    returning void
-  platform/x86: sel3350-platform: Convert to platform remove callback
-    returning void
-  platform/x86/siemens: simatic-ipc-batt: Simplify
-    simatic_ipc_batt_remove()
-  platform/x86/siemens: simatic-ipc-batt: Convert to platform remove
-    callback returning void
-  platform/x86/siemens: simatic-ipc-batt-apollolake: Convert to platform
-    remove callback returning void
-  platform/x86/siemens: simatic-ipc-batt-elkhartlake: Convert to
-    platform remove callback returning void
-  platform/x86/siemens: simatic-ipc-batt-f7188x: Convert to platform
-    remove callback returning void
+Hans
 
- drivers/platform/chrome/cros_ec_chardev.c            |  6 ++----
- drivers/platform/chrome/cros_ec_debugfs.c            |  6 ++----
- drivers/platform/chrome/cros_ec_lightbar.c           |  6 ++----
- drivers/platform/chrome/cros_ec_lpc.c                |  6 ++----
- drivers/platform/chrome/cros_ec_sysfs.c              |  6 ++----
- drivers/platform/chrome/cros_ec_vbc.c                |  6 ++----
- drivers/platform/chrome/cros_typec_switch.c          |  5 ++---
- drivers/platform/chrome/cros_usbpd_logger.c          |  6 ++----
- drivers/platform/chrome/cros_usbpd_notify.c          | 12 ++++--------
- drivers/platform/chrome/wilco_ec/core.c              |  5 ++---
- drivers/platform/chrome/wilco_ec/debugfs.c           |  6 ++----
- drivers/platform/chrome/wilco_ec/telemetry.c         |  6 ++----
- drivers/platform/goldfish/goldfish_pipe.c            |  5 ++---
- drivers/platform/mellanox/mlxbf-bootctl.c            |  6 ++----
- drivers/platform/mellanox/mlxbf-tmfifo.c             |  6 ++----
- drivers/platform/mellanox/mlxreg-hotplug.c           |  6 ++----
- drivers/platform/mellanox/mlxreg-io.c                |  6 ++----
- drivers/platform/mellanox/mlxreg-lc.c                |  8 +++-----
- drivers/platform/mellanox/nvsw-sn2201.c              |  6 ++----
- drivers/platform/x86/intel/bytcrc_pwrsrc.c           |  5 ++---
- drivers/platform/x86/mlx-platform.c                  |  5 ++---
- drivers/platform/x86/sel3350-platform.c              |  6 ++----
- .../x86/siemens/simatic-ipc-batt-apollolake.c        |  6 +++---
- .../x86/siemens/simatic-ipc-batt-elkhartlake.c       |  6 +++---
- .../platform/x86/siemens/simatic-ipc-batt-f7188x.c   |  6 +++---
- drivers/platform/x86/siemens/simatic-ipc-batt.c      |  9 ++++-----
- drivers/platform/x86/siemens/simatic-ipc-batt.h      |  4 ++--
- 27 files changed, 62 insertions(+), 104 deletions(-)
 
-base-commit: 18030226a48de1fbfabf4ae16aaa2695a484254f
--- 
-2.40.1
+> ---
+>  .../admin-guide/laptops/thinkpad-acpi.rst     | 20 +++++
+>  drivers/platform/x86/thinkpad_acpi.c          | 88 +++++++++++++++++++
+>  2 files changed, 108 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> index e27a1c3f6..98d304010 100644
+> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> @@ -53,6 +53,7 @@ detailed description):
+>  	- Lap mode sensor
+>  	- Setting keyboard language
+>  	- WWAN Antenna type
+> +	- Auxmac
+>  
+>  A compatibility table by model and feature is maintained on the web
+>  site, http://ibm-acpi.sf.net/. I appreciate any success or failure
+> @@ -1511,6 +1512,25 @@ Currently 2 antenna types are supported as mentioned below:
+>  The property is read-only. If the platform doesn't have support the sysfs
+>  class is not created.
+>  
+> +Auxmac
+> +------
+> +
+> +sysfs: auxmac
+> +
+> +Some newer Thinkpads have a feature called MAC Address Pass-through. This
+> +feature is implemented by the system firmware to provide a system unique MAC,
+> +that can override a dock or USB ethernet dongle MAC, when connected to a
+> +network. This property enables user-space to easily determine the MAC address
+> +if the feature is enabled.
+> +
+> +The values of this auxiliary MAC are:
+> +
+> +        cat /sys/devices/platform/thinkpad_acpi/auxmac
+> +
+> +If the feature is disabled, the value will be 'disabled'.
+> +
+> +This property is read-only.
+> +
+>  Adaptive keyboard
+>  -----------------
+>  
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index d70c89d32..9c19624a7 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -10785,6 +10785,89 @@ static struct ibm_struct dprc_driver_data = {
+>  	.name = "dprc",
+>  };
+>  
+> +/*
+> + * Auxmac
+> + *
+> + * This auxiliary mac address is enabled in the bios through the
+> + * MAC Address Pass-through feature. In most cases, there are three
+> + * possibilities: Internal Mac, Second Mac, and disabled.
+> + *
+> + */
+> +
+> +#define AUXMAC_LEN 12
+> +#define AUXMAC_START 9
+> +#define AUXMAC_STRLEN 22
+> +#define AUXMAC_BEGIN_MARKER 8
+> +#define AUXMAC_END_MARKER 21
+> +
+> +static char auxmac[AUXMAC_LEN + 1];
+> +
+> +static int auxmac_init(struct ibm_init_struct *iibm)
+> +{
+> +	acpi_status status;
+> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	union acpi_object *obj;
+> +
+> +	status = acpi_evaluate_object(NULL, "\\MACA", NULL, &buffer);
+> +
+> +	if (ACPI_FAILURE(status))
+> +		return -ENODEV;
+> +
+> +	obj = buffer.pointer;
+> +
+> +	if (obj->type != ACPI_TYPE_STRING || obj->string.length != AUXMAC_STRLEN) {
+> +		pr_info("Invalid buffer for MAC address pass-through.\n");
+> +		goto auxmacinvalid;
+> +	}
+> +
+> +	if (obj->string.pointer[AUXMAC_BEGIN_MARKER] != '#' ||
+> +	    obj->string.pointer[AUXMAC_END_MARKER] != '#') {
+> +		pr_info("Invalid header for MAC address pass-through.\n");
+> +		goto auxmacinvalid;
+> +	}
+> +
+> +	if (strncmp(obj->string.pointer + AUXMAC_START, "XXXXXXXXXXXX", AUXMAC_LEN) != 0)
+> +		strscpy(auxmac, obj->string.pointer + AUXMAC_START, sizeof(auxmac));
+> +	else
+> +		strscpy(auxmac, "disabled", sizeof(auxmac));
+> +
+> +free:
+> +	kfree(obj);
+> +	return 0;
+> +
+> +auxmacinvalid:
+> +	strscpy(auxmac, "unavailable", sizeof(auxmac));
+> +	goto free;
+> +}
+> +
+> +static struct ibm_struct auxmac_data = {
+> +	.name = "auxmac",
+> +};
+> +
+> +static ssize_t auxmac_show(struct device *dev,
+> +			   struct device_attribute *attr,
+> +			   char *buf)
+> +{
+> +	return sysfs_emit(buf, "%s\n", auxmac);
+> +}
+> +static DEVICE_ATTR_RO(auxmac);
+> +
+> +static umode_t auxmac_attr_is_visible(struct kobject *kobj,
+> +				      struct attribute *attr, int n)
+> +{
+> +	return auxmac[0] == 0 ? 0 : attr->mode;
+> +}
+> +
+> +static struct attribute *auxmac_attributes[] = {
+> +	&dev_attr_auxmac.attr,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group auxmac_attr_group = {
+> +	.is_visible = auxmac_attr_is_visible,
+> +	.attrs = auxmac_attributes,
+> +};
+> +
+>  /* --------------------------------------------------------------------- */
+>  
+>  static struct attribute *tpacpi_driver_attributes[] = {
+> @@ -10843,6 +10926,7 @@ static const struct attribute_group *tpacpi_groups[] = {
+>  	&proxsensor_attr_group,
+>  	&kbdlang_attr_group,
+>  	&dprc_attr_group,
+> +	&auxmac_attr_group,
+>  	NULL,
+>  };
+>  
+> @@ -11414,6 +11498,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
+>  		.init = tpacpi_dprc_init,
+>  		.data = &dprc_driver_data,
+>  	},
+> +	{
+> +		.init = auxmac_init,
+> +		.data = &auxmac_data,
+> +	},
+>  };
+>  
+>  static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
 
