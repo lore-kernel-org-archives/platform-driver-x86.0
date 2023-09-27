@@ -2,50 +2,52 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0361E810A3
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Sep 2023 08:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86795E810A4
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Sep 2023 08:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230268AbjI0ILJ (ORCPT
+        id S230300AbjI0ILT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Sep 2023 04:11:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33040 "EHLO
+        Wed, 27 Sep 2023 04:11:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230215AbjI0ILB (ORCPT
+        with ESMTP id S230220AbjI0ILB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Wed, 27 Sep 2023 04:11:01 -0400
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8238FCDA
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB0FCD6
         for <platform-driver-x86@vger.kernel.org>; Wed, 27 Sep 2023 01:10:57 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qlPdC-00084s-5c; Wed, 27 Sep 2023 10:10:50 +0200
+        id 1qlPdD-0008AS-W5; Wed, 27 Sep 2023 10:10:52 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qlPdB-009I7k-6e; Wed, 27 Sep 2023 10:10:49 +0200
+        id 1qlPdD-009I8R-Dx; Wed, 27 Sep 2023 10:10:51 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qlPdA-005BR4-Tm; Wed, 27 Sep 2023 10:10:48 +0200
+        id 1qlPdD-005BRi-4g; Wed, 27 Sep 2023 10:10:51 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Hans de Goede <hdegoede@redhat.com>,
+To:     Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
+        Xing Tong Wu <xingtong.wu@siemens.com>,
+        Tobias Schaffner <tobias.schaffner@siemens.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>
+        Mark Gross <markgross@kernel.org>
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel@pengutronix.de
-Subject: [PATCH 16/27] platform/mellanox: mlxreg-hotplug: Convert to platform remove callback returning void
-Date:   Wed, 27 Sep 2023 10:10:29 +0200
-Message-Id: <20230927081040.2198742-17-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 26/27] platform/x86/siemens: simatic-ipc-batt-elkhartlake: Convert to platform remove callback returning void
+Date:   Wed, 27 Sep 2023 10:10:39 +0200
+Message-Id: <20230927081040.2198742-27-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230927081040.2198742-1-u.kleine-koenig@pengutronix.de>
 References: <20230927081040.2198742-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1906; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=E1EtfCdvL5BCirg1ur2IQNU7vZ4qAkjOL+kP2gKTw5k=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlE+NwG78MBx7tIkqC0uEqWcAFKkqlNa6mtOqO4 7ZcwyBcivqJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZRPjcAAKCRCPgPtYfRL+ TueMB/9v6Xjw8xEB+p3Dh7cgTDM6mL9o/iJBzTm8P8CT94rpzvYE60KNf23G/De+bVPcqLc9e1L bnNli0nmcvP9RtX6OF12QVH/lTzK3x+ewvATcCyrBICqj2df1ltRMgQsRcIX6F3KzGBkFx/XddR UxMQ002pmDF1TUPn8YT/8ZFctwqzryeOzHMaM43Z0ai1BLU4c8G9PGer71+B8s6XX1FjJ8BykOa SxVron71EW1qP+ak5bSYRcCFfh/39pMKMYAqXDhDSoeSJo/VhI9P+zJZGFrNCmz/gz7pvYeF1e7 Z3tE2I16yy/r1BnVuTAXeoW+ahEo/rZaQ1s42A0UuavgpDPL
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2000; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=atKDlgH5RJpKWqL6VwqbwRwC4qoK6wHDECsivGMaAKw=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlE+N7B83ZmEZGbV1cN3PT09dXprrKhuV4blhZP s19OFSZpM2JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZRPjewAKCRCPgPtYfRL+ TslTB/47Z6/d9rro1h89YQz4mgs2/rhQEbsr8CzoF1mhAUWVk3qJxwDREL+8WcUcRH1Hvkuxous E/FCzpKFOFHlKjZkeDgSvFZy0WUr9Ci96pIS/IR5zqzc3KmhVCgCgmKa+lwc6x1LKI2JAjXanvL Jk7xNsvu32oQsC2rOhUiktn3F1FDmK+/4WV4xLLZY7X16HdDnJlh5ykzy0rwMzveHzyZ+XYx1yo 5FHvjvhg/nBFcH8mcuMtJ9emPl6D+Puz2cJXKQvkcpJdAyJyYgwyfnOtwDwxr2g1vjz/DTZ9Yt/ /XecXtw7nkfFLete3YlLL/bF1v/CHvu8jYIlH/+HAGsAKntZ
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -71,39 +73,35 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/platform/mellanox/mlxreg-hotplug.c | 6 ++----
+ drivers/platform/x86/siemens/simatic-ipc-batt-elkhartlake.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index eb5ad35274dd..5c022b258f91 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -786,15 +786,13 @@ static int mlxreg_hotplug_probe(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/drivers/platform/x86/siemens/simatic-ipc-batt-elkhartlake.c b/drivers/platform/x86/siemens/simatic-ipc-batt-elkhartlake.c
+index 9e08c659f27d..a7676f224075 100644
+--- a/drivers/platform/x86/siemens/simatic-ipc-batt-elkhartlake.c
++++ b/drivers/platform/x86/siemens/simatic-ipc-batt-elkhartlake.c
+@@ -25,11 +25,9 @@ static struct gpiod_lookup_table simatic_ipc_batt_gpio_table_bx_21a = {
+ 	},
+ };
  
--static int mlxreg_hotplug_remove(struct platform_device *pdev)
-+static void mlxreg_hotplug_remove(struct platform_device *pdev)
+-static int simatic_ipc_batt_elkhartlake_remove(struct platform_device *pdev)
++static void simatic_ipc_batt_elkhartlake_remove(struct platform_device *pdev)
  {
- 	struct mlxreg_hotplug_priv_data *priv = dev_get_drvdata(&pdev->dev);
- 
- 	/* Clean interrupts setup. */
- 	mlxreg_hotplug_unset_irq(priv);
- 	devm_free_irq(&pdev->dev, priv->irq, priv);
+ 	simatic_ipc_batt_remove(pdev, &simatic_ipc_batt_gpio_table_bx_21a);
 -
 -	return 0;
  }
  
- static struct platform_driver mlxreg_hotplug_driver = {
-@@ -802,7 +800,7 @@ static struct platform_driver mlxreg_hotplug_driver = {
- 		.name = "mlxreg-hotplug",
- 	},
- 	.probe = mlxreg_hotplug_probe,
--	.remove = mlxreg_hotplug_remove,
-+	.remove_new = mlxreg_hotplug_remove,
- };
+ static int simatic_ipc_batt_elkhartlake_probe(struct platform_device *pdev)
+@@ -39,7 +37,7 @@ static int simatic_ipc_batt_elkhartlake_probe(struct platform_device *pdev)
  
- module_platform_driver(mlxreg_hotplug_driver);
+ static struct platform_driver simatic_ipc_batt_driver = {
+ 	.probe = simatic_ipc_batt_elkhartlake_probe,
+-	.remove = simatic_ipc_batt_elkhartlake_remove,
++	.remove_new = simatic_ipc_batt_elkhartlake_remove,
+ 	.driver = {
+ 		.name = KBUILD_MODNAME,
+ 	},
 -- 
 2.40.1
 
