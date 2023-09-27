@@ -2,119 +2,151 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA15E810B1
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Sep 2023 09:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67293E810B1
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Sep 2023 09:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230198AbjI0JPD (ORCPT
+        id S230203AbjI0JTH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Sep 2023 05:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58056 "EHLO
+        Wed, 27 Sep 2023 05:19:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230163AbjI0JPA (ORCPT
+        with ESMTP id S230146AbjI0JTH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Sep 2023 05:15:00 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9279EF4
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Sep 2023 02:14:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1695806053;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T/bCjD93zGx7k6DS0sd/nFhrwYQMV95Gpv7IoiMJVN0=;
-        b=KicycVgGKik6XvnQQ5XFbQdLay1nLpKXKfiuaw8ZkUuDd/JKJ5NXZZCW6eSQXmC0ew1r7M
-        6iqAVCtXpVLBSUFcBG740wFngq12dwDILP+uyxlOGKFJgawnpmpqxSxJzMta2J/PvQpOPZ
-        Q/GG+qAUTSujqZe1eCJfTABfCLSGK9Q=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-637-jX6aeiJpPM6SNkx3jDBbiA-1; Wed, 27 Sep 2023 05:14:11 -0400
-X-MC-Unique: jX6aeiJpPM6SNkx3jDBbiA-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9ae12311183so910733766b.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Sep 2023 02:14:11 -0700 (PDT)
+        Wed, 27 Sep 2023 05:19:07 -0400
+Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E68C97
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Sep 2023 02:19:05 -0700 (PDT)
+Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-493542a25dfso3707282e0c.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Sep 2023 02:19:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695806344; x=1696411144; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+oxXoE551jD1Vp4hrRaFI77nAKLuOgm5/lU4CohMTWs=;
+        b=OgA6B6jGQjN5kjxjiC7WDGyOX6Y0Kg+5Z2tWVTaPi3p8Uz5EDtJu0UHgXmHTNjYUNp
+         ZqUoGXzjRpPoYivb4drZSClBRbXQbsGYC8EQbPlGTedDmWVNZ0URs14/cRxKtxYbvSOT
+         mQF4Ia3W8GZgBZsLlSes/HkSzaI/C29emcsggOIIZuvpTaLmr248QS2memGppfK3ha6m
+         gJlcvdIytkTQfNoJj6uBUvxPp5Oa4rNJ24tJvY1VxNhf6aVMfEuOVLGkamW16cKfWopa
+         0U3aZU6xkCkAyh+Sx8p/+1QF8mVb5i6oNavN6nl+hjqDQUyHlEvKcGdWR+xKW8kPBRQj
+         3+TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695806048; x=1696410848;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T/bCjD93zGx7k6DS0sd/nFhrwYQMV95Gpv7IoiMJVN0=;
-        b=IOhQwfjwOYgD8NGBGq+F7+h6pnqfvFwJIzGp3tPlip2CVPbjadmSXuJ+FkIrCZsWcx
-         L5arQnF+6DEJqiUsLykcsk0N0E1FYVfYn4xoTdKZkYLSGV7hlm32VJvaue486f7KeOec
-         FC7cqmiW2X8LPb20Z/9CW1L2BcymNPpKZoRc3/cHRgXotFa9HzIs8Znfl09DpaniDhGK
-         a0WwZs0cdbbr7mPoQ9V34VQsK2Cq2LnpqrvWX0JO/RB/v49RE7vwWi7xHtQ2CM+dZBnb
-         f7SiWtvfaJjHm9lHWlc9w32ZlTWxBXG6RZVdUzuoYlTfLtCj/TJZDs7HQcSoJnll+NHi
-         lmcA==
-X-Gm-Message-State: AOJu0YyDWGvsJzvWhsSB/7GlXblfN/bXC42O5CYEHhsV9iswEb60HYZH
-        9IuEDuXyy2brQRFif1vEnngoL6AgJJfjLaAv+zel03Nmj1jciuPwY7fPAYzGOzPE2zuSjfWO3Ll
-        Xa9n3zC4Y/J3oNf1l2Ydu7+NESRpQ5ytFR/aOatJaCw==
-X-Received: by 2002:a17:907:1ca1:b0:9a1:bd33:4389 with SMTP id nb33-20020a1709071ca100b009a1bd334389mr1744701ejc.74.1695806048725;
-        Wed, 27 Sep 2023 02:14:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHBja2h6H4iNhc0j95Q0ZZoVn1HywvIdObcsejBA4MbQ5G7O+fTuE/uCPp8hyYYFBBIWF65Tg==
-X-Received: by 2002:a17:907:1ca1:b0:9a1:bd33:4389 with SMTP id nb33-20020a1709071ca100b009a1bd334389mr1744683ejc.74.1695806048395;
-        Wed, 27 Sep 2023 02:14:08 -0700 (PDT)
-Received: from [192.168.1.217] ([109.36.155.235])
-        by smtp.gmail.com with ESMTPSA id e8-20020a170906374800b009920e9a3a73sm8972076ejc.115.2023.09.27.02.14.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Sep 2023 02:14:06 -0700 (PDT)
-Message-ID: <adf04176-273d-e365-f765-f84c4e4f6a11@redhat.com>
-Date:   Wed, 27 Sep 2023 11:14:03 +0200
+        d=1e100.net; s=20230601; t=1695806344; x=1696411144;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+oxXoE551jD1Vp4hrRaFI77nAKLuOgm5/lU4CohMTWs=;
+        b=he8tW3Fo+qwtmFppKpkp3a6zY3mihn5oK6YpdrGoq5a2PaUblOV/SXjMyHm3oRqitX
+         WSCvLBk2rEVJEMTVWqM/J15blbjuwtcpwAkjORSCvaRAqqI01dVPkTgbaZXLCi0N5bEd
+         QBHWGb7JUaLhlnck0r81e8ir+EaolQwaF2lmUCAhirYyMhI87rw/97L1lkXNGdnKK+W8
+         0VpiesvyQ3wfkSQ9YJqQc+2h6Qo3EWCx5Lxd0Xmg1JjDGdRroxqRqURgEk68HEEfVWvf
+         5Ln4Mw1GLpukow29pu6g3U8u0EJh3cibimwXpWf7yPim4EAX28mxg3H9oe2O8Jqb5l5I
+         /ABA==
+X-Gm-Message-State: AOJu0YzUmhRHqhc5ilxF7yrONzrPn5S85Pnr4xNLVzpPYl5iWhXJ3w6S
+        GHIzTaoy3aas9QHp9CEqRS5+7NXP3//2WlNM465hpg==
+X-Google-Smtp-Source: AGHT+IF6M3tOfTHL3XxyE+L48RNem3W4+F+j0auKA4FqmctObb8Tp1rG43ef/qTf18NK+lStH5ynfhstqZcuddkecoI=
+X-Received: by 2002:a1f:e182:0:b0:495:d846:ebc0 with SMTP id
+ y124-20020a1fe182000000b00495d846ebc0mr1126427vkg.16.1695806344676; Wed, 27
+ Sep 2023 02:19:04 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [RFT PATCH 2/4] platform/x86: int3472: led: don't use
- gpiod_toggle_active_low()
-Content-Language: en-US
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20230926145943.42814-1-brgl@bgdev.pl> <ffb5b1a8-a4fa-f794-afc8-52eed4420a5c@redhat.com>
+ <CAMRc=MeoRRzc+JHCSyOqYb2t5p6GMLdA5wX_-uq15O3tdzC1mQ@mail.gmail.com> <181dd873-90eb-0db2-03a6-0809c9e3d835@redhat.com>
+In-Reply-To: <181dd873-90eb-0db2-03a6-0809c9e3d835@redhat.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 27 Sep 2023 11:18:53 +0200
+Message-ID: <CAMRc=McGTizah7fPjWEer4mioQnOPZeFm-eBsrLxP0=7bM1-UQ@mail.gmail.com>
+Subject: Re: [RFT PATCH 0/4] platform/x86: int3472: don't use gpiod_toggle_active_low()
+To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Daniel Scally <djrscally@gmail.com>,
         Mark Gross <markgross@kernel.org>, linux-gpio@vger.kernel.org,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20230926145943.42814-1-brgl@bgdev.pl>
- <20230926145943.42814-3-brgl@bgdev.pl> <ZRL4PYeX21bwCPR0@smile.fi.intel.com>
- <CAMRc=Mf7P4sWdhgTV+jVD8HEVpxbSuGK8JjJb5Q9djCkKUeUcg@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAMRc=Mf7P4sWdhgTV+jVD8HEVpxbSuGK8JjJb5Q9djCkKUeUcg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-HI,
+On Wed, Sep 27, 2023 at 11:02=E2=80=AFAM Hans de Goede <hdegoede@redhat.com=
+> wrote:
+>
+> Hi Bartosz,
+>
+> On 9/27/23 10:48, Bartosz Golaszewski wrote:
+> > On Wed, Sep 27, 2023 at 10:38=E2=80=AFAM Hans de Goede <hdegoede@redhat=
+.com> wrote:
+> >>
+> >> Hi Bartosz,
+> >>
+> >> On 9/26/23 16:59, Bartosz Golaszewski wrote:
+> >>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>>
+> >>> gpiod_toggle_active_low() is a badly designed API that should have ne=
+ver
+> >>> been used elsewhere then in the MMC code. And even there we should fi=
+nd
+> >>> a better solution.
+> >>>
+> >>> Replace the uses of it in the int3472 driver with the good old tempor=
+ary
+> >>> lookup table trick. This is not very pretty either but it's the lesse=
+r
+> >>> evil.
+> >>
+> >> I saw your previous proposal which added a new api to directly set
+> >> the active_low flag, rather then toggle it.
+> >>
+> >> I intended to reply to that thread to say that I liked that approach,
+> >> but I don't remember if I actually did reply.
+> >>
+> >> I wonder what made you abandon the new function to directly set
+> >> the active-low flag on a gpio_desc?
+> >>
+> >> For the int3472 code that would work pretty well and it would
+> >> be much cleaner then the temp gpio-lookup approach.
+> >>
+> >
+> > You did reply, yes. Under one of the other patches Linus W stated that
+> > first: adding the ability for consumers to toggle the polarity was
+> > added to handle the MMC slot quirk, then it was used unknowingly to
+> > GPIO maintainers in other places (including this driver). I then
+> > acknowledged the fact that it should have never existed in the first
+> > place as this is HW description and should be defined in ACPI, DT or
+> > lookup flags.
+>
+> I see and I understand.
+>
+> > I'm not sure why this information needs to be hard-coded in the driver
+> > in int3472_get_func_and_polarity() but maybe it could be pulled into
+> > gpiolib-acpi.c with other quirks?
+>
+> The problem is that for camera sensors Intel uses this special
+> INT3472 ACPI device with a custom _DSM to list GPIOs, with the _DSM
+> returning an u32 and one of the bits in the u32 is the polarity.
+>
+> We really do not want to deal with this Intel camera team hack
+> inside gpiolib-acpi and I can understand why you and Linus W
+> want to get rid of functions which allow drivers to meddle
+> with a gpio_desc's active-low flag.
+>
+> So using a temporary gpio-lookup in the int3472 code as
+> you are proposing is the best (least bad) thing to do
+> here then.
+>
+> I'll try to make some time to test this sometime
+> the coming days.
+>
+> Other then the discussion we just had is there any specific
+> reason why this should be considered a RFC / why this would
+> not be ready for merging?  (I still need to review these,
+> but lets assume that goes well)
+>
 
-On 9/27/23 09:02, Bartosz Golaszewski wrote:
-> On Tue, Sep 26, 2023 at 5:27 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
->>
->> On Tue, Sep 26, 2023 at 04:59:41PM +0200, Bartosz Golaszewski wrote:
->>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>
->>> Instead of acpi_get_and_request_gpiod() + gpiod_toggle_active_low(), use
->>> temporary lookup tables with appropriate lookup flags.
->>
->> ...
->>
->>> +     int3472->pled.gpio = skl_int3472_gpiod_get_from_temp_lookup(
->>> +                             int3472->dev, path, agpio->pin_table[0],
->>> +                             "int3472,privacy-led", polarity,
->>> +                             GPIOD_OUT_LOW);
->>
->> Personally I found this style weird. I prefer to have longer line over
->> the split on the parentheses.
->>
-> 
-> I in turn prefer this one. Checkpatch doesn't complain either way so
-> I'll leave it to the maintainers of this driver to decide.
+This is not an RFC but rather RFT - Request For Testing. I don't have
+any HW to test those with so I only built it.
 
-I'm fine with keeping this as is, using longer lines does not seem to make
-things better here.
-
-Regards,
-
-Hans
-
+Bart
