@@ -2,234 +2,111 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA85E80ABE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Sep 2023 18:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A956FCE7B08
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Sep 2023 18:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231945AbjI1SB4 (ORCPT
+        id S231406AbjI1SkR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Sep 2023 14:01:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45200 "EHLO
+        Thu, 28 Sep 2023 14:40:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230291AbjI1SBv (ORCPT
+        with ESMTP id S231976AbjI1SkQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Sep 2023 14:01:51 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D841A2;
-        Thu, 28 Sep 2023 11:01:49 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6C1DC433C7;
-        Thu, 28 Sep 2023 18:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695924109;
-        bh=EAdPFsmHcyWayc69u1pNQGVN/Od37LMkwOOQtSvFBiM=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=bfK28RLdLGgKZCUgDzeWTBKaqWs6brrGRaSyPdFXskOVm0On6PlLojE5M/xCgEEY5
-         grpUMo2uaqDtijMvKbHWfOGFJG+vQA/tkSyBcl6qHWL3dn3aU/KYO5L4q/l83Nz1PF
-         rjm7ECl0slpI4oU4YRq3Il4iqcNMzLzfgVWdoz5lG6ZAiTp3N12KGI95ZvFcFMlTR+
-         jbG318WOr9JpuRBEryTb1XBxjEr4Jw9k8E4/FfV1BqWFd1k5jtZEs5n6naq0zoe6ze
-         HRJ/cpQFseJro5/YEKgl8SVwodWHkLRLpC8H6rkjRLoCIio3JUF68vh6UiBMp7cQEp
-         W7opbVnaB1VbA==
-Message-ID: <00ca2e3997cc86401f7fb65d936fe5403abd5627.camel@kernel.org>
-Subject: Re: [PATCH 87/87] fs: move i_blocks up a few places in struct inode
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        David Sterba <dsterba@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>, Jeremy Kerr <jk@ozlabs.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?ISO-8859-1?Q?Hj=F8nnev=E5g?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Carlos Llamas <cmllamas@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Mattia Dongili <malattia@linux.it>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Brad Warrum <bwarrum@linux.ibm.com>,
-        Ritu Agarwal <rituagar@linux.ibm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Sterba <dsterba@suse.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Ian Kent <raven@themaw.net>,
-        Luis de Bethencourt <luisbg@kernel.org>,
-        Salah Triki <salah.triki@gmail.com>,
-        "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Jan Kara <jack@suse.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Christoph Hellwig <hch@infradead.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <muchun.song@linux.dev>, Jan Kara <jack@suse.cz>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Dave Kleikamp <shaggy@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Bob Copeland <me@bobcopeland.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Anders Larsen <al@alarsen.net>,
-        Steve French <sfrench@samba.org>,
-        Paulo Alcantara <pc@manguebit.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Evgeniy Dushistov <dushistov@mail.ru>,
-        Chandan Babu R <chandan.babu@oracle.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        John Johansen <john.johansen@canonical.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, v9fs@lists.linux.dev,
-        linux-afs@lists.infradead.org, autofs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        codalist@coda.cs.cmu.edu, linux-efi@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, gfs2@lists.linux.dev,
-        linux-um@lists.infradead.org, linux-mtd@lists.infradead.org,
-        jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-        linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
-        linux-unionfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org,
-        linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org
-Date:   Thu, 28 Sep 2023 14:01:33 -0400
-In-Reply-To: <CAHk-=wij_42Q9WHY898r-gugmT5c-1JJKRh3C+nTUd1hc1aeqQ@mail.gmail.com>
-References: <20230928110554.34758-1-jlayton@kernel.org>
-         <20230928110554.34758-3-jlayton@kernel.org>
-         <CAHk-=wij_42Q9WHY898r-gugmT5c-1JJKRh3C+nTUd1hc1aeqQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        Thu, 28 Sep 2023 14:40:16 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 965D411F
+        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Sep 2023 11:40:13 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-59c268676a9so163838787b3.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Sep 2023 11:40:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1695926412; x=1696531212; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y95bvgZdeDdsBCYjefAKBMoB3y5noRiDCdm/BR1RHRI=;
+        b=YiNrvilf3OjZrgklSJXf16yJ+b+yHoByVR5EyE7zT6qfm9MYUUnn2Kt64rGzyK7Q/X
+         UqNoSqAiaoqRUt7ju4alkfR44Z77BELWSQ2DUE7+ZgVDl7dlBicJpp+vDc1QMaqNTcVw
+         DU/zyL58ZPoY3KE/Vjs3nFcO/GL75heiZZAA8fLOKMSmMrKesjq+Qsi5c6pk+i9GWKB3
+         Qc1UEkbHum5PBhbuGVUzHhYLudnBEmdOe9bsUQkJfWvRNPiZjYo5EjlKKyAeQTC5FrAz
+         vJT0d9btmkIQ1qGyJ62y39/GQS4N+QnoySQ3PX+9KNX2n95AvFrKmULToW0rLWETVtYr
+         niuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695926412; x=1696531212;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y95bvgZdeDdsBCYjefAKBMoB3y5noRiDCdm/BR1RHRI=;
+        b=dPBMczZRhNj8PYQPiTVbE8iLgl/Ph3MX3MjSWsbPxOtOC7YzV3mlW+00e/AxCkVrG/
+         Ld3K86LKp/4ZQUYQRcjD5XFimh+wbL0ciyM1XKEZBopmFVaFBnCUyidJ/yE40lqFZ3yL
+         fPOIltunYcPcvpBq0kUJRkXRRMXeoL3u+iq6FeGDhdbL/HiIXhuKmJDSYTx4xM9p/Bos
+         IWcMBzOY8e3lm7NrclILC//lhE7Jor6v7uXqVwgU0pZb31R+jfFv7JAuWxyOqBu5IYP3
+         mZhcxSYLo2Mw7TEmIL/FqzBrv6UMdmBfMWusOH+X728nTsvS9nrRNII2t86uZV0SiXCL
+         bQ7Q==
+X-Gm-Message-State: AOJu0Yw4LFN4JkjU8fMJZX3W0GCWzgM9AuWNlAhCys0OSQmduIbJ7Z6U
+        EIb5qFNADoaSqvdDsAwNPWLbJIyA3yz6qQbAyUw8uw==
+X-Google-Smtp-Source: AGHT+IEStuY1jaSYpbOeINbGsBAxa0XDn+/8B2qloC+Mkxuq1vgTpNjjiaenDAt/S2ypr6HWq4hm9r+CIRrUYbmmqkI=
+X-Received: by 2002:a0d:d410:0:b0:59b:c847:bce0 with SMTP id
+ w16-20020a0dd410000000b0059bc847bce0mr2110790ywd.42.1695926412719; Thu, 28
+ Sep 2023 11:40:12 -0700 (PDT)
 MIME-Version: 1.0
+References: <20230926145943.42814-1-brgl@bgdev.pl> <e6817d30-b443-1a73-efae-84415604b19f@redhat.com>
+In-Reply-To: <e6817d30-b443-1a73-efae-84415604b19f@redhat.com>
+From:   Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date:   Thu, 28 Sep 2023 20:40:01 +0200
+Message-ID: <CACMJSetWH=Z5ubHb33W0mYvpqkU7vv=nKNBSa9eLmAi94NyrgA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] platform/x86: int3472: don't use gpiod_toggle_active_low()
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Mark Gross <markgross@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 2023-09-28 at 10:41 -0700, Linus Torvalds wrote:
-> On Thu, 28 Sept 2023 at 04:06, Jeff Layton <jlayton@kernel.org> wrote:
-> >=20
-> > Move i_blocks up above the i_lock, which moves the new 4 byte hole to
-> > just after the timestamps, without changing the size of the structure.
->=20
-> I'm sure others have mentioned this, but 'struct inode' is marked with
-> __randomize_layout, so the actual layout may end up being very
-> different.
->=20
-> I'm personally not convinced the whole structure randomization is
-> worth it - it's easy enough to figure out for any distro kernel since
-> the seed has to be the same across machines for modules to work, so
-> even if the seed isn't "public", any layout is bound to be fairly
-> easily discoverable.
->=20
-> So the whole randomization only really works for private kernel
-> builds, and it adds this kind of pain where "optimizing" the structure
-> layout is kind of pointless depending on various options.
->=20
-> I certainly *hope* no distro enables that pointless thing, but it's a wor=
-ry.
->=20
+On Thu, 28 Sept 2023 at 14:40, Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi All,
+>
+> Here is a v2 of Bartosz' "don't use gpiod_toggle_active_low()" series.
+>
+> New in v2:
+> - Rework to deal with ACPI path vs gpiod_lookup.key differences:
+>   acpi_get_handle(path) -> acpi_fetch_acpi_dev(handle) -> acpi_dev_name(adev)
+>
+> Regards,
+>
+> Hans
+>
+>
+> Bartosz Golaszewski (2):
+>   platform/x86: int3472: Add new
+>     skl_int3472_gpiod_get_from_temp_lookup() helper
+>   gpio: acpi: remove acpi_get_and_request_gpiod()
+>
+> Hans de Goede (3):
+>   platform/x86: int3472: Add new skl_int3472_fill_gpiod_lookup() helper
+>   platform/x86: int3472: Stop using gpiod_toggle_active_low()
+>   platform/x86: int3472: Switch to devm_get_gpiod()
+>
+>  drivers/gpio/gpiolib-acpi.c                   |  28 -----
+>  .../x86/intel/int3472/clk_and_regulator.c     |  54 ++--------
+>  drivers/platform/x86/intel/int3472/common.h   |   7 +-
+>  drivers/platform/x86/intel/int3472/discrete.c | 101 ++++++++++++++----
+>  drivers/platform/x86/intel/int3472/led.c      |  24 +----
+>  include/linux/gpio/consumer.h                 |   8 --
+>  6 files changed, 93 insertions(+), 129 deletions(-)
+>
+> --
+> 2.41.0
+>
 
-I've never enabled struct randomization and don't know anyone who does.
-I figure if you turn that on, you get to keep all of the pieces when you
-start seeing weird performance problems.
+Thanks Hans, this looks good to me. I'd let it sit on the list for a
+week. After that, do you want to take patches 1-4 and provide me with
+another tag?
 
-I think that we have to optimize for that being disabled. Even without
-that though, turning on and off options can change the layout...and then
-there are different arches, etc.
-
-I'm using a config derived from the Fedora x86_64 kernel images and hope
-that represents a reasonably common configuration. The only conditional
-members before the timestamps are based on CONFIG_FS_POSIX_ACL and
-CONFIG_SECURITY, which are almost always turned on with most distros.
---=20
-Jeff Layton <jlayton@kernel.org>
+Bart
