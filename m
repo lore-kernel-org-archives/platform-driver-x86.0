@@ -2,162 +2,247 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC69E732CA
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Sep 2023 12:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDB2E732E7
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Sep 2023 15:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232569AbjI1Mqs (ORCPT
+        id S232201AbjI1Psr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Sep 2023 08:46:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43098 "EHLO
+        Thu, 28 Sep 2023 11:48:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232574AbjI1Mqq (ORCPT
+        with ESMTP id S231821AbjI1Psm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Sep 2023 08:46:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A9A19F
-        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Sep 2023 05:45:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1695905156;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ACdKckhs2IGUtv5AveDwU/IL9fYWvBeI2aPkdMd1dhI=;
-        b=Mb0DhrS2dQCLHBuvdSxJLORbSDm5z8iWjnlATXhNvf0yEY76hYDh5FrZsW5MlfitvqPn+s
-        ZJzzlOhLxhmu5FEVgJ0kcKPc/TMOm5tS8me8fAhJ8L9yMyjUR00sj+c8qXBgzg4gpppc2I
-        DDHQE5ItkCDZXAIoVrRlPkWAFNPVinU=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-518-ceOEExNQMjmQgp2DQcUqhg-1; Thu, 28 Sep 2023 08:45:55 -0400
-X-MC-Unique: ceOEExNQMjmQgp2DQcUqhg-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9ae686dafedso1099013766b.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Sep 2023 05:45:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695905154; x=1696509954;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ACdKckhs2IGUtv5AveDwU/IL9fYWvBeI2aPkdMd1dhI=;
-        b=Sq+feQPabVcPpo//gHf551OB3bVmGvQC+o7pzRbEhZQvOW6K5S25s8tO/M6Sx74iU/
-         1d/UDXiy9GG4wvmOsoLg9SIQ8rIcwr/5d/yA66llMOKmZOErzzGfWro3lsnEiuf4cP3e
-         r7iHC0ht7yZzCRc2P+90e7LP2jrcNtz3KWpNn6aIuf/1YmcZ//8riiDUyBj/3O1Uh3HY
-         giJRGQXGRhi556Rc1REu9TFrGrumdj0alWzjjhqPmwgE8WurMHyOlUHgyMcls4YOTbnH
-         0mHxfs/891a+nZhoN8ZPvCY6vbonH2U93sCrnrrCNmXWcwM6CXwCHMftHywVyVgTtZry
-         IfZg==
-X-Gm-Message-State: AOJu0YwYconGNNLmCgZ4r7XCU+qf9BnmfBHoEtwltYtU6x8+7PAl7gxg
-        7o3iV3Lhi44g6CQP7k4d5iff55M9tSkx+dijUxvjtvgOWbM2MNmzNRp7Rk0te9coMbhfXqxQjOG
-        Bb0Po4YPaHOAOv/xhmKrPSh4JRCHwVxu2/A==
-X-Received: by 2002:a17:906:3150:b0:9ae:696c:2c43 with SMTP id e16-20020a170906315000b009ae696c2c43mr1183234eje.28.1695905154397;
-        Thu, 28 Sep 2023 05:45:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHQnYwpJz4FRm5OEctCUqntpuOgB3RgSDa5zxu4Q3oNPpnc3WMFQcTzGCzOVBYL6EaWeUHW8A==
-X-Received: by 2002:a17:906:3150:b0:9ae:696c:2c43 with SMTP id e16-20020a170906315000b009ae696c2c43mr1183223eje.28.1695905154189;
-        Thu, 28 Sep 2023 05:45:54 -0700 (PDT)
-Received: from [192.168.1.217] ([109.36.138.103])
-        by smtp.gmail.com with ESMTPSA id lw13-20020a170906bccd00b0098884f86e41sm10683387ejb.123.2023.09.28.05.45.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Sep 2023 05:45:53 -0700 (PDT)
-Message-ID: <93be52fc-fa87-423f-dde2-1b0b758ab632@redhat.com>
-Date:   Thu, 28 Sep 2023 14:45:51 +0200
+        Thu, 28 Sep 2023 11:48:42 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9BD0EB;
+        Thu, 28 Sep 2023 08:48:39 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 4F0615C0DBB;
+        Thu, 28 Sep 2023 11:48:39 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 28 Sep 2023 11:48:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1695916119; x=1696002519; bh=AE
+        M/fDbI9O0BImAELzI+hfXsnObtdXB3nh8ZZCXXqn0=; b=rYRrfUWcGURzZi2Kx3
+        x77+TyShR9Sib8UhEkjRsEvF3DnYBPdVY6rzWwYeuhr4tdntul3oHtfVUF/z6EV2
+        heYFaG3+Ohoslr/oEpgzvbQj8Ap/BO0Uo8fukRIGEYSG2EFeIuADh6kTnG/e/ZnK
+        WKoyOI7jTOa1WvXs1EnNIde2dL42+ityLyFsYeIVnenJ8nJu5KRjOGJhaF2H5eLA
+        4Rc3nmIeAUGsRgwN8l/vUa6uyPahwW8/lYYQtjTd1GdPmcRjEc4yki4fcm3o+0bg
+        CM1ceI9x2XAIhPoWvIWcG7Pse0IJVI89HVvLU8Sx5WjoReHRv+R8kwtcD43rgTqO
+        1Txg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1695916119; x=1696002519; bh=AEM/fDbI9O0BI
+        mAELzI+hfXsnObtdXB3nh8ZZCXXqn0=; b=SVhvpMNNu2832r96OQM+NAupTyZUu
+        9ApC30lDjAFYMGWGRYhGk9Ktw4UV75/4wX1D/NFDsHe0J/F4WGv8mVpKtbEtvn7p
+        Rmjsr58zIcRx0QQa/XsGbKIRMC4kmp2y+lV4iGP4YPyx6mdJFfcRgxpTGWbUkYul
+        fg2q9Uk1M3TSIwSOpuuTWD6z9oXV7akZjN8oooViePicLGd71ehHsuxX95jowg+t
+        sIH70F+Njj7J5uzvO8LCP4IepniwS53HFBN7DFlHjczusBIIb6hJ6o+OFnMH7yBO
+        ef+exyTTPsXWvxZc+NE+84UqAYqQq2LcMfq4tomSwJikU7iHJ9es8eYXA==
+X-ME-Sender: <xms:VqAVZTp80fxHAbyOrOLozy8oSIIHqQ8-uQi65BHGMCHFY2uP19KKDw>
+    <xme:VqAVZdocPPRCkDqLMsDAsTzMnCL_hi_3AeWHiaLGnH49qHHA2EbULHHp32fE-IqJO
+    LKNp0MKQfoi5rOEkGs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrtddtgdeifecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
+    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:VqAVZQN93Juw9XiE898XRfbgEHqEl2cwevHPLOiPOvmsMuT6V2Wjwg>
+    <xmx:VqAVZW5Y2ZL47jAZLy1P_hatPiBd5qOL0KmpEAGxRBZoBCe3-Rqhfw>
+    <xmx:VqAVZS4_qfE88pGkCU7hjxlJPieMhGBt0fgKWeWdE9tfpBrYfI6xdw>
+    <xmx:V6AVZa6XYaRu-pt9bUmgxdeIF3j6xxqNhfjqV2pVTPKFlHygW6TLhA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id BE4B9B60089; Thu, 28 Sep 2023 11:48:38 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-958-g1b1b911df8-fm-20230927.002-g1b1b911d
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: [PATCH v2 5/5] gpio: acpi: remove acpi_get_and_request_gpiod()
-Content-Language: en-US
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20230926145943.42814-1-brgl@bgdev.pl>
- <e6817d30-b443-1a73-efae-84415604b19f@redhat.com>
-In-Reply-To: <e6817d30-b443-1a73-efae-84415604b19f@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Message-Id: <6020d6e7-b187-4abb-bf38-dc09d8bd0f6d@app.fastmail.com>
+In-Reply-To: <20230928110554.34758-2-jlayton@kernel.org>
+References: <20230928110554.34758-1-jlayton@kernel.org>
+ <20230928110554.34758-2-jlayton@kernel.org>
+Date:   Thu, 28 Sep 2023 11:48:16 -0400
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Jeff Layton" <jlayton@kernel.org>,
+        "Alexander Viro" <viro@zeniv.linux.org.uk>,
+        "Christian Brauner" <brauner@kernel.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "David Sterba" <dsterba@suse.cz>,
+        "Amir Goldstein" <amir73il@gmail.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Kees Cook" <keescook@chromium.org>, "Jeremy Kerr" <jk@ozlabs.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "Nicholas Piggin" <npiggin@gmail.com>,
+        "Christophe Leroy" <christophe.leroy@csgroup.eu>,
+        "Heiko Carstens" <hca@linux.ibm.com>,
+        "Vasily Gorbik" <gor@linux.ibm.com>,
+        "Alexander Gordeev" <agordeev@linux.ibm.com>,
+        "Christian Borntraeger" <borntraeger@linux.ibm.com>,
+        "Sven Schnelle" <svens@linux.ibm.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+        "Todd Kjos" <tkjos@android.com>,
+        "Martijn Coenen" <maco@android.com>,
+        "Joel Fernandes" <joel@joelfernandes.org>,
+        "Carlos Llamas" <cmllamas@google.com>,
+        "Suren Baghdasaryan" <surenb@google.com>,
+        "Mattia Dongili" <malattia@linux.it>,
+        "Dennis Dalessandro" <dennis.dalessandro@cornelisnetworks.com>,
+        "Jason Gunthorpe" <jgg@ziepe.ca>,
+        "Leon Romanovsky" <leon@kernel.org>,
+        "Brad Warrum" <bwarrum@linux.ibm.com>,
+        "Ritu Agarwal" <rituagar@linux.ibm.com>,
+        "Hans de Goede" <hdegoede@redhat.com>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        "Mark Gross" <markgross@kernel.org>,
+        "Jiri Slaby" <jirislaby@kernel.org>,
+        "Eric Van Hensbergen" <ericvh@kernel.org>,
+        "Latchesar Ionkov" <lucho@ionkov.net>,
+        "Dominique Martinet" <asmadeus@codewreck.org>,
+        "Christian Schoenebeck" <linux_oss@crudebyte.com>,
+        "David Sterba" <dsterba@suse.com>,
+        "David Howells" <dhowells@redhat.com>,
+        "Marc Dionne" <marc.dionne@auristor.com>,
+        "Ian Kent" <raven@themaw.net>,
+        "Luis de Bethencourt" <luisbg@kernel.org>,
+        "Salah Triki" <salah.triki@gmail.com>,
+        "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+        "Chris Mason" <clm@fb.com>, "Josef Bacik" <josef@toxicpanda.com>,
+        "Xiubo Li" <xiubli@redhat.com>,
+        "Ilya Dryomov" <idryomov@gmail.com>,
+        "Jan Harkes" <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+        "Joel Becker" <jlbec@evilplan.org>,
+        "Christoph Hellwig" <hch@lst.de>,
+        "Nicolas Pitre" <nico@fluxnic.net>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "Ard Biesheuvel" <ardb@kernel.org>, "Gao Xiang" <xiang@kernel.org>,
+        "Chao Yu" <chao@kernel.org>, "Yue Hu" <huyue2@coolpad.com>,
+        "Jeffle Xu" <jefflexu@linux.alibaba.com>,
+        "Namjae Jeon" <linkinjeon@kernel.org>,
+        "Sungjong Seo" <sj1557.seo@samsung.com>,
+        "Jan Kara" <jack@suse.com>,
+        "Andreas Dilger" <adilger.kernel@dilger.ca>,
+        "Jaegeuk Kim" <jaegeuk@kernel.org>,
+        "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        "Miklos Szeredi" <miklos@szeredi.hu>,
+        "Bob Peterson" <rpeterso@redhat.com>,
+        "Andreas Gruenbacher" <agruenba@redhat.com>,
+        "Richard Weinberger" <richard@nod.at>,
+        "Anton Ivanov" <anton.ivanov@cambridgegreys.com>,
+        "Johannes Berg" <johannes@sipsolutions.net>,
+        "Mikulas Patocka" <mikulas@artax.karlin.mff.cuni.cz>,
+        "Mike Kravetz" <mike.kravetz@oracle.com>,
+        "Muchun Song" <muchun.song@linux.dev>, "Jan Kara" <jack@suse.cz>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        "Dave Kleikamp" <shaggy@kernel.org>, "Tejun Heo" <tj@kernel.org>,
+        "Trond Myklebust" <trond.myklebust@hammerspace.com>,
+        "Anna Schumaker" <anna@kernel.org>,
+        "Chuck Lever" <chuck.lever@oracle.com>,
+        "Neil Brown" <neilb@suse.de>,
+        "Olga Kornievskaia" <kolga@netapp.com>,
+        "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+        "Ryusuke Konishi" <konishi.ryusuke@gmail.com>,
+        "Anton Altaparmakov" <anton@tuxera.com>,
+        "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
+        "Mark Fasheh" <mark@fasheh.com>,
+        "Joseph Qi" <joseph.qi@linux.alibaba.com>,
+        "Bob Copeland" <me@bobcopeland.com>,
+        "Mike Marshall" <hubcap@omnibond.com>,
+        "Martin Brandenburg" <martin@omnibond.com>,
+        "Luis Chamberlain" <mcgrof@kernel.org>,
+        "Iurii Zaikin" <yzaikin@google.com>,
+        "Tony Luck" <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        "Anders Larsen" <al@alarsen.net>,
+        "Steve French" <sfrench@samba.org>,
+        "Paulo Alcantara" <pc@manguebit.com>,
+        "Ronnie Sahlberg" <lsahlber@redhat.com>,
+        "Shyam Prasad N" <sprasad@microsoft.com>,
+        "Sergey Senozhatsky" <senozhatsky@chromium.org>,
+        "Phillip Lougher" <phillip@squashfs.org.uk>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        "Masami Hiramatsu" <mhiramat@kernel.org>,
+        "Evgeniy Dushistov" <dushistov@mail.ru>,
+        "Chandan Babu R" <chandan.babu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        "Damien Le Moal" <dlemoal@kernel.org>,
+        "Naohiro Aota" <naohiro.aota@wdc.com>,
+        "Johannes Thumshirn" <jth@kernel.org>,
+        "Alexei Starovoitov" <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        "Andrii Nakryiko" <andrii@kernel.org>,
+        "Martin KaFai Lau" <martin.lau@linux.dev>,
+        "Song Liu" <song@kernel.org>,
+        "Yonghong Song" <yonghong.song@linux.dev>,
+        "John Fastabend" <john.fastabend@gmail.com>,
+        "KP Singh" <kpsingh@kernel.org>,
+        "Stanislav Fomichev" <sdf@google.com>,
+        "Hao Luo" <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>,
+        "Hugh Dickins" <hughd@google.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        "Paolo Abeni" <pabeni@redhat.com>,
+        "John Johansen" <john.johansen@canonical.com>,
+        "Paul Moore" <paul@paul-moore.com>,
+        "James Morris" <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Stephen Smalley" <stephen.smalley.work@gmail.com>,
+        "Eric Paris" <eparis@parisplace.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, v9fs@lists.linux.dev,
+        linux-afs@lists.infradead.org, autofs@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        codalist@coda.cs.cmu.edu, linux-efi@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, gfs2@lists.linux.dev,
+        linux-um@lists.infradead.org, linux-mtd@lists.infradead.org,
+        jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
+        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+        linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
+        linux-unionfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+        reiserfs-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org,
+        linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        bpf@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org
+Subject: Re: [PATCH 86/87] fs: switch timespec64 fields in inode to discrete integers
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-With no more users, we can remove acpi_get_and_request_gpiod().
+On Thu, Sep 28, 2023, at 07:05, Jeff Layton wrote:
+> This shaves 8 bytes off struct inode, according to pahole.
+>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Link: https://lore.kernel.org/r/20230926145943.42814-5-brgl@bgdev.pl
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/gpio/gpiolib-acpi.c   | 28 ----------------------------
- include/linux/gpio/consumer.h |  8 --------
- 2 files changed, 36 deletions(-)
+FWIW, this is similar to the approach that Deepa suggested
+back in 2016:
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 17a86bdd9609..89ff93f3b579 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -158,34 +158,6 @@ static struct gpio_desc *acpi_get_gpiod(char *path, unsigned int pin)
- 	return gpiochip_get_desc(chip, pin);
- }
- 
--/**
-- * acpi_get_and_request_gpiod - Translate ACPI GPIO pin to GPIO descriptor and
-- *                              hold a refcount to the GPIO device.
-- * @path:      ACPI GPIO controller full path name, (e.g. "\\_SB.GPO1")
-- * @pin:       ACPI GPIO pin number (0-based, controller-relative)
-- * @label:     Label to pass to gpiod_request()
-- *
-- * This function is a simple pass-through to acpi_get_gpiod(), except that
-- * as it is intended for use outside of the GPIO layer (in a similar fashion to
-- * gpiod_get_index() for example) it also holds a reference to the GPIO device.
-- */
--struct gpio_desc *acpi_get_and_request_gpiod(char *path, unsigned int pin, char *label)
--{
--	struct gpio_desc *gpio;
--	int ret;
--
--	gpio = acpi_get_gpiod(path, pin);
--	if (IS_ERR(gpio))
--		return gpio;
--
--	ret = gpiod_request(gpio, label);
--	if (ret)
--		return ERR_PTR(ret);
--
--	return gpio;
--}
--EXPORT_SYMBOL_GPL(acpi_get_and_request_gpiod);
--
- static irqreturn_t acpi_gpio_irq_handler(int irq, void *data)
- {
- 	struct acpi_gpio_event *event = data;
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index 1c4385a00f88..9d1f598b8971 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -614,8 +614,6 @@ void acpi_dev_remove_driver_gpios(struct acpi_device *adev);
- int devm_acpi_dev_add_driver_gpios(struct device *dev,
- 				   const struct acpi_gpio_mapping *gpios);
- 
--struct gpio_desc *acpi_get_and_request_gpiod(char *path, unsigned int pin, char *label);
--
- #else  /* CONFIG_GPIOLIB && CONFIG_ACPI */
- 
- #include <linux/err.h>
-@@ -633,12 +631,6 @@ static inline int devm_acpi_dev_add_driver_gpios(struct device *dev,
- 	return -ENXIO;
- }
- 
--static inline struct gpio_desc *acpi_get_and_request_gpiod(char *path, unsigned int pin,
--							   char *label)
--{
--	return ERR_PTR(-ENOSYS);
--}
--
- #endif /* CONFIG_GPIOLIB && CONFIG_ACPI */
- 
- 
--- 
-2.41.0
+https://lore.kernel.org/lkml/1452144972-15802-3-git-send-email-deepa.kernel@gmail.com/
 
+It was NaKed at the time because of the added complexity,
+though it would have been much easier to do it then,
+as we had to touch all the timespec references anyway.
+
+The approach still seems ok to me, but I'm not sure it's worth
+doing it now if we didn't do it then.
+
+     Arnd
