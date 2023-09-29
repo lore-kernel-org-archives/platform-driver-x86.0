@@ -2,64 +2,64 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A114E80ABE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Sep 2023 11:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DBFE80ABE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Sep 2023 11:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232779AbjI2LeR (ORCPT
+        id S233009AbjI2Le5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 29 Sep 2023 07:34:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57652 "EHLO
+        Fri, 29 Sep 2023 07:34:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbjI2LeQ (ORCPT
+        with ESMTP id S232748AbjI2Lev (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 29 Sep 2023 07:34:16 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B504AE7
-        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Sep 2023 04:34:13 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-2c189dabcc3so46439681fa.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Sep 2023 04:34:13 -0700 (PDT)
+        Fri, 29 Sep 2023 07:34:51 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 761B51AA
+        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Sep 2023 04:34:49 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2bff776fe0bso226618861fa.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Sep 2023 04:34:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695987252; x=1696592052; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1695987287; x=1696592087; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZxjJlriY4wlKuLA1aZtjYB2eC7WoH6OiaT1kMbOS83I=;
-        b=GcnoK4uMbjKpUh+6li6hLZ1D0U7dcDiaoJtGg/ehgtRjmLO6Ty+eOXae4aHCS34B6q
-         48aAleLzlA+AVrT+oiYMYD2xbQXiFYh6NxD/SWe0lw2Lt+XxNSjpmQ8g3VZNmsU/9rFR
-         axDHC6i4D6K+fwklKDHJM6EHtpCjC9fQ/gsCkoS3KtfID1sXwPNJJgAES4AKx7tdNXvc
-         cHT0tjkvNfciAFc48cga6SD5y62N+jA9EL2UwK2aBtTJsXMBFqUjDbFnlnodIPjXTARq
-         ukayBxPfRNugOayInPmwHZM5Ir3RbLXmB6TaozRM5F0yV2XnlBkcseqjuezzKu1YozlM
-         nBAQ==
+        bh=tgvBkNFX7DT832/YRa5MRZRs/u0vIhnj3FqFWmb5VjY=;
+        b=GKOJOCP8KjU94/6+LzcauapVbqOar2A/mn+cKvoQhehmhLBNcF51tEQLquO3j/J/6g
+         Mt8YLHRzIgmqgnoF7IXXvn04qEy1+hspO1rHAmG//EKlYi7H1pWz5EiPtFwhqoLEEQaG
+         EJdfn2IwQOwSOWqkaeKmkrchFBEBFXx4Ld5Flsac6UutA7LUe1vP9opTvWORnpts7c4I
+         wf1pdkn/fS451Zv9qqRgiBQQ0y+z0HI050LpZQRGfic5+9RKTKi0X3b3HKyuhhZ0QCsV
+         yKQHsQeQemaMdf2sg6YD2g9bxtu0rkHuAraviQ4SZDfnD+M4Mqml2NwcrNnz2X/eUSer
+         rdFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695987252; x=1696592052;
+        d=1e100.net; s=20230601; t=1695987287; x=1696592087;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZxjJlriY4wlKuLA1aZtjYB2eC7WoH6OiaT1kMbOS83I=;
-        b=k5io3q3SIZ/Bx/d+QZhwEc3nCzlV96feW7uwLCUlMx4W0FxfClEk7ZJCsGrzmWCf9g
-         MiMeFKSHaVBjG614bKrSGXeoivyg/EfoD8fNvAmSJWTm7KKy6LmwzSN98yws+ieKc7KG
-         bRYd/0oN3FrwejdXpmXgmcCx25f37sg0LDMlZe+onnPFwJlYTMLTIJMsPE6SYzFQaSEk
-         KeHm4swBpRVj8GGeous1MAcggFIx+breFeqw0BQfK7k6897i1sstrHbjGGB95nDSMa/W
-         SglMKzmiLYL2We5azoknAd5zyGJBNn1X8Q+6SisjAunNcXoMWzYke3AKpvQyZX8OtbP+
-         lGtQ==
-X-Gm-Message-State: AOJu0YyzvQp9HGBMzmrFoLzk2bTNiJwVtsQ1V3yyYZ2qoNeV13+6dCme
-        cRGngjBQI6f0Zz+VGQmWwTuA/FiUsDo=
-X-Google-Smtp-Source: AGHT+IHsko0GWIYJQU24uv6Pfvl1ZhS5E5Pdea/V5fHzZz7xCFyTStqwFB9BS8JaMx6YlYee6whXEw==
-X-Received: by 2002:a05:6512:449:b0:504:2970:da62 with SMTP id y9-20020a056512044900b005042970da62mr3220028lfk.64.1695987250641;
-        Fri, 29 Sep 2023 04:34:10 -0700 (PDT)
+        bh=tgvBkNFX7DT832/YRa5MRZRs/u0vIhnj3FqFWmb5VjY=;
+        b=WCNwX3nHfHcKodSYvQYfs1Kzi4U6xqE4ZrnZMJMGbuaTVDKTWxFcASn0ZX2CDRQfHz
+         OEFg02LX/ugTCJQ2qS4STSQJs5hdZVnbqBs5kP2JxxoO08D38UGTp6jsak4hl2JyT0LV
+         YnftHVNDXMtHUe4XK3XWnUr6LFc3uhWFbF4cpa1WuCPZmqHvyHbsLU1NWgPlIHFChg9P
+         YTkhUx+gAAHjjHwrTWORs/tgkp57/KArlOCxx+V3vTrIb71QZo1wUAADy8COoPkYk6Ny
+         vKoi0n1H6zMsSOgPK44b8Rk9XRJwBPdombxAOv9hW4oC3fDj19tgQlk+TqOJJtNVvMEX
+         BLLA==
+X-Gm-Message-State: AOJu0YxiO7QmgzlMB3H8cWNyfb7RZpMKgJpYZ2TxVZe4EVV0G9IU7199
+        VFzNjwPlbvCX4T+Lo9K9tTX91XMs+AI=
+X-Google-Smtp-Source: AGHT+IG4+Q0rbwQLI29OOqc8C+UIce+tZsZ+d2WLVb3bQzOntCVYKM1tWjGCQgk1ZQAiDBvsqb9qqg==
+X-Received: by 2002:a05:6512:3c87:b0:4f9:5426:6622 with SMTP id h7-20020a0565123c8700b004f954266622mr3617974lfv.69.1695987287282;
+        Fri, 29 Sep 2023 04:34:47 -0700 (PDT)
 Received: from localhost.localdomain ([31.173.85.123])
-        by smtp.gmail.com with ESMTPSA id l23-20020a19c217000000b00501c77ad909sm3471315lfc.208.2023.09.29.04.34.09
+        by smtp.gmail.com with ESMTPSA id l23-20020a19c217000000b00501c77ad909sm3471315lfc.208.2023.09.29.04.34.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Sep 2023 04:34:10 -0700 (PDT)
+        Fri, 29 Sep 2023 04:34:47 -0700 (PDT)
 From:   Nikita Kravets <teackot@gmail.com>
 To:     platform-driver-x86@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Nikita Kravets <teackot@gmail.com>,
         Aakash Singh <mail@singhaakash.dev>,
         Jose Angel Pastrana <japp0005@red.ujaen.es>
-Subject: [PATCH 1/2] platform/x86: msi-ec: Fix the 3rd config
-Date:   Fri, 29 Sep 2023 14:31:49 +0300
-Message-ID: <20230929113149.587436-3-teackot@gmail.com>
+Subject: [PATCH 2/2] platform/x86: msi-ec: Add more EC configs
+Date:   Fri, 29 Sep 2023 14:31:51 +0300
+Message-ID: <20230929113149.587436-5-teackot@gmail.com>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20230929113149.587436-1-teackot@gmail.com>
 References: <20230929113149.587436-1-teackot@gmail.com>
@@ -69,134 +69,501 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Fix the charge control address of CONF3 and remove an incorrect firmware
-version which turned out to be a BIOS firmware and not an EC firmware.
-
-This patch also renames fn_super_swap to fn_win_swap for consistency
-with the downstream version of the driver.
+This patch adds configurations for new EC firmware from the downstream
+version of the driver.
 
 Cc: Aakash Singh <mail@singhaakash.dev>
 Cc: Jose Angel Pastrana <japp0005@red.ujaen.es>
 Signed-off-by: Nikita Kravets <teackot@gmail.com>
 ---
- drivers/platform/x86/msi-ec.c | 19 +++++++++----------
- drivers/platform/x86/msi-ec.h |  4 ++--
- 2 files changed, 11 insertions(+), 12 deletions(-)
+ drivers/platform/x86/msi-ec.c | 467 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 467 insertions(+)
 
 diff --git a/drivers/platform/x86/msi-ec.c b/drivers/platform/x86/msi-ec.c
-index f26a3121092f..3074aee878c1 100644
+index 3074aee878c1..f19504dbf164 100644
 --- a/drivers/platform/x86/msi-ec.c
 +++ b/drivers/platform/x86/msi-ec.c
-@@ -58,7 +58,7 @@ static struct msi_ec_conf CONF0 __initdata = {
- 		.block_address = 0x2f,
- 		.bit           = 1,
+@@ -667,6 +667,467 @@ static struct msi_ec_conf CONF7 __initdata = {
  	},
--	.fn_super_swap = {
-+	.fn_win_swap = {
- 		.address = 0xbf,
- 		.bit     = 4,
- 	},
-@@ -138,7 +138,7 @@ static struct msi_ec_conf CONF1 __initdata = {
- 		.block_address = 0x2f,
- 		.bit           = 1,
- 	},
--	.fn_super_swap = {
-+	.fn_win_swap = {
- 		.address = 0xbf,
- 		.bit     = 4,
- 	},
-@@ -215,7 +215,7 @@ static struct msi_ec_conf CONF2 __initdata = {
- 		.block_address = 0x2f,
- 		.bit           = 1,
- 	},
--	.fn_super_swap = {
-+	.fn_win_swap = {
- 		.address = 0xe8,
- 		.bit     = 4,
- 	},
-@@ -276,14 +276,13 @@ static struct msi_ec_conf CONF2 __initdata = {
+ };
  
- static const char * const ALLOWED_FW_3[] __initconst = {
- 	"1592EMS1.111",
--	"E1592IMS.10C",
++static const char * const ALLOWED_FW_8[] __initconst = {
++	"14F1EMS1.115",
++	NULL
++};
++
++static struct msi_ec_conf CONF8 __initdata = {
++	.allowed_fw = ALLOWED_FW_8,
++	.charge_control = {
++		.address      = 0xd7,
++		.offset_start = 0x8a,
++		.offset_end   = 0x80,
++		.range_min    = 0x8a,
++		.range_max    = 0xe4,
++	},
++	.webcam = {
++		.address       = 0x2e,
++		.block_address = MSI_EC_ADDR_UNSUPP,
++		.bit           = 1,
++	},
++	.fn_win_swap = {
++		.address = 0xe8,
++		.bit     = 4,
++	},
++	.cooler_boost = {
++		.address = 0x98,
++		.bit     = 7,
++	},
++	.shift_mode = {
++		.address = 0xd2,
++		.modes = {
++			{ SM_ECO_NAME,     0xc2 },
++			{ SM_COMFORT_NAME, 0xc1 },
++			{ SM_SPORT_NAME,   0xc0 },
++			MSI_EC_MODE_NULL
++		},
++	},
++	.super_battery = {
++		.address = 0xeb,
++		.mask    = 0x0f,
++	},
++	.fan_mode = {
++		.address = 0xd4,
++		.modes = {
++			{ FM_AUTO_NAME,     0x0d },
++			{ FM_SILENT_NAME,   0x1d },
++			{ FM_BASIC_NAME,    0x4d },
++			MSI_EC_MODE_NULL
++		},
++	},
++	.cpu = {
++		.rt_temp_address       = 0x68,
++		.rt_fan_speed_address  = 0x71,
++		.rt_fan_speed_base_min = 0x19,
++		.rt_fan_speed_base_max = 0x37,
++		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
++		.bs_fan_speed_base_min = 0x00,
++		.bs_fan_speed_base_max = 0x0f,
++	},
++	.gpu = {
++		.rt_temp_address      = MSI_EC_ADDR_UNKNOWN,
++		.rt_fan_speed_address = MSI_EC_ADDR_UNKNOWN,
++	},
++	.leds = {
++		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
++		.mute_led_address    = 0x2d,
++		.bit                 = 1,
++	},
++	.kbd_bl = {
++		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN, // ?
++		.bl_modes         = { 0x00, 0x08 }, // ?
++		.max_mode         = 1, // ?
++		.bl_state_address = MSI_EC_ADDR_UNSUPP, // not functional
++		.state_base_value = 0x80,
++		.max_state        = 3,
++	},
++};
++
++static const char * const ALLOWED_FW_9[] __initconst = {
++	"14JKEMS1.104",
++	NULL
++};
++
++static struct msi_ec_conf CONF9 __initdata = {
++	.allowed_fw = ALLOWED_FW_9,
++	.charge_control = {
++		.address      = 0xef,
++		.offset_start = 0x8a,
++		.offset_end   = 0x80,
++		.range_min    = 0x8a,
++		.range_max    = 0xe4,
++	},
++	.webcam = {
++		.address       = 0x2e,
++		.block_address = 0x2f,
++		.bit           = 1,
++	},
++	.fn_win_swap = {
++		.address = 0xbf,
++		.bit     = 4,
++	},
++	.cooler_boost = {
++		.address = 0x98,
++		.bit     = 7,
++	},
++	.shift_mode = {
++		.address = 0xf2,
++		.modes = {
++			{ SM_ECO_NAME,     0xc2 },
++			{ SM_COMFORT_NAME, 0xc1 },
++			{ SM_SPORT_NAME,   0xc0 },
++			MSI_EC_MODE_NULL
++		},
++	},
++	.super_battery = {
++		.address = MSI_EC_ADDR_UNSUPP, // unsupported or enabled by ECO shift
++		.mask    = 0x0f,
++	},
++	.fan_mode = {
++		.address = 0xf4,
++		.modes = {
++			{ FM_AUTO_NAME,     0x0d },
++			{ FM_SILENT_NAME,   0x1d },
++			{ FM_ADVANCED_NAME, 0x8d },
++			MSI_EC_MODE_NULL
++		},
++	},
++	.cpu = {
++		.rt_temp_address       = 0x68,
++		.rt_fan_speed_address  = 0x71,
++		.rt_fan_speed_base_min = 0x00,
++		.rt_fan_speed_base_max = 0x96,
++		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
++		.bs_fan_speed_base_min = 0x00,
++		.bs_fan_speed_base_max = 0x0f,
++	},
++	.gpu = {
++		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
++		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
++	},
++	.leds = {
++		.micmute_led_address = 0x2b,
++		.mute_led_address    = 0x2c,
++		.bit                 = 2,
++	},
++	.kbd_bl = {
++		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // not presented in MSI app
++		.bl_modes         = { 0x00, 0x08 },
++		.max_mode         = 1,
++		.bl_state_address = 0xf3,
++		.state_base_value = 0x80,
++		.max_state        = 3,
++	},
++};
++
++static const char * const ALLOWED_FW_10[] __initconst = {
++	"1582EMS1.107", // GF66 11UC
++	NULL
++};
++
++static struct msi_ec_conf CONF10 __initdata = {
++	.allowed_fw = ALLOWED_FW_10,
++	.charge_control = {
++		.address      = 0xd7,
++		.offset_start = 0x8a,
++		.offset_end   = 0x80,
++		.range_min    = 0x8a,
++		.range_max    = 0xe4,
++	},
++	.webcam = {
++		.address       = 0x2e,
++		.block_address = 0x2f,
++		.bit           = 1,
++	},
++	.fn_win_swap = {
++		.address = MSI_EC_ADDR_UNSUPP,
++		.bit     = 4,
++	},
++	.cooler_boost = {
++		.address = 0x98,
++		.bit     = 7,
++	},
++	.shift_mode = {
++		.address = 0xd2,
++		.modes = {
++			{ SM_ECO_NAME,     0xc2 },
++			{ SM_COMFORT_NAME, 0xc1 },
++			{ SM_SPORT_NAME,   0xc0 },
++			{ SM_TURBO_NAME,   0xc4 },
++			MSI_EC_MODE_NULL
++		},
++	},
++	.super_battery = {
++		.address = 0xe5,
++		.mask    = 0x0f,
++	},
++	.fan_mode = {
++		.address = 0xd4,
++		.modes = {
++			{ FM_AUTO_NAME,     0x0d },
++			{ FM_SILENT_NAME,   0x1d },
++			{ FM_ADVANCED_NAME, 0x8d },
++			MSI_EC_MODE_NULL
++		},
++	},
++	.cpu = {
++		.rt_temp_address       = 0x68,
++		.rt_fan_speed_address  = 0x71, // ?
++		.rt_fan_speed_base_min = 0x19,
++		.rt_fan_speed_base_max = 0x37,
++		.bs_fan_speed_address  = MSI_EC_ADDR_UNKNOWN, // ?
++		.bs_fan_speed_base_min = 0x00,
++		.bs_fan_speed_base_max = 0x0f,
++	},
++	.gpu = {
++		.rt_temp_address      = 0x80,
++		.rt_fan_speed_address = 0x89,
++	},
++	.leds = {
++		.micmute_led_address = 0x2c,
++		.mute_led_address    = 0x2d,
++		.bit                 = 1,
++	},
++	.kbd_bl = {
++		.bl_mode_address  = 0x2c,
++		.bl_modes         = { 0x00, 0x08 },
++		.max_mode         = 1,
++		.bl_state_address = 0xd3,
++		.state_base_value = 0x80,
++		.max_state        = 3,
++	},
++};
++
++static const char * const ALLOWED_FW_11[] __initconst = {
++	"16S6EMS1.111", // Prestige 15 a11scx
++	"1552EMS1.115", // Modern 15 a11m
++	NULL
++};
++
++static struct msi_ec_conf CONF11 __initdata = {
++	.allowed_fw = ALLOWED_FW_11,
++	.charge_control = {
++		.address      = 0xd7,
++		.offset_start = 0x8a,
++		.offset_end   = 0x80,
++		.range_min    = 0x8a,
++		.range_max    = 0xe4,
++	},
++	.webcam = {
++		.address       = 0x2e,
++		.block_address = MSI_EC_ADDR_UNKNOWN,
++		.bit           = 1,
++	},
++	.fn_win_swap = {
++		.address = 0xe8,
++		.bit     = 4,
++	},
++	.cooler_boost = {
++		.address = 0x98,
++		.bit     = 7,
++	},
++	.shift_mode = {
++		.address = 0xd2,
++		.modes = {
++			{ SM_ECO_NAME,     0xc2 },
++			{ SM_COMFORT_NAME, 0xc1 },
++			{ SM_SPORT_NAME,   0xc0 },
++			MSI_EC_MODE_NULL
++		},
++	},
++	.super_battery = {
++		.address = 0xeb,
++		.mask = 0x0f,
++	},
++	.fan_mode = {
++		.address = 0xd4,
++		.modes = {
++			{ FM_AUTO_NAME,     0x0d },
++			{ FM_SILENT_NAME,   0x1d },
++			{ FM_ADVANCED_NAME, 0x4d },
++			MSI_EC_MODE_NULL
++		},
++	},
++	.cpu = {
++		.rt_temp_address       = 0x68,
++		.rt_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
++		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
++	},
++	.gpu = {
++		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
++		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
++	},
++	.leds = {
++		.micmute_led_address = 0x2c,
++		.mute_led_address    = 0x2d,
++		.bit                 = 1,
++	},
++	.kbd_bl = {
++		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
++		.bl_modes         = {}, // ?
++		.max_mode         = 1, // ?
++		.bl_state_address = 0xd3,
++		.state_base_value = 0x80,
++		.max_state        = 3,
++	},
++};
++
++static const char * const ALLOWED_FW_12[] __initconst = {
++	"16R6EMS1.104", // GF63 Thin 11UC
++	NULL
++};
++
++static struct msi_ec_conf CONF12 __initdata = {
++	.allowed_fw = ALLOWED_FW_12,
++	.charge_control = {
++		.address      = 0xd7,
++		.offset_start = 0x8a,
++		.offset_end   = 0x80,
++		.range_min    = 0x8a,
++		.range_max    = 0xe4,
++	},
++	.webcam = {
++		.address       = 0x2e,
++		.block_address = 0x2f,
++		.bit           = 1,
++	},
++	.fn_win_swap = {
++		.address = 0xe8,
++		.bit     = 4,
++	},
++	.cooler_boost = {
++		.address = 0x98,
++		.bit     = 7,
++	},
++	.shift_mode = {
++		.address = 0xd2,
++		.modes = {
++			{ SM_ECO_NAME,     0xc2 },
++			{ SM_COMFORT_NAME, 0xc1 },
++			{ SM_SPORT_NAME,   0xc0 },
++			{ SM_TURBO_NAME,   0xc4 },
++			MSI_EC_MODE_NULL
++		},
++	},
++	.super_battery = {
++		.address = MSI_EC_ADDR_UNSUPP, // 0xeb
++		.mask    = 0x0f, // 00, 0f
++	},
++	.fan_mode = {
++		.address = 0xd4,
++		.modes = {
++			{ FM_AUTO_NAME,     0x0d },
++			{ FM_SILENT_NAME,   0x1d },
++			{ FM_ADVANCED_NAME, 0x8d },
++			MSI_EC_MODE_NULL
++		},
++	},
++	.cpu = {
++		.rt_temp_address       = 0x68,
++		.rt_fan_speed_address  = 0x71,
++		.rt_fan_speed_base_min = 0x19,
++		.rt_fan_speed_base_max = 0x37,
++		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
++		.bs_fan_speed_base_min = 0x00,
++		.bs_fan_speed_base_max = 0x0f,
++	},
++	.gpu = {
++		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
++		.rt_fan_speed_address = 0x89,
++	},
++	.leds = {
++		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
++		.mute_led_address    = 0x2d,
++		.bit                 = 1,
++	},
++	.kbd_bl = {
++		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
++		.bl_modes         = { 0x00, 0x08 },
++		.max_mode         = 1,
++		.bl_state_address = 0xd3,
++		.state_base_value = 0x80,
++		.max_state        = 3,
++	},
++};
++
++static const char * const ALLOWED_FW_13[] __initconst = {
++	"1594EMS1.109", // MSI Prestige 16 Studio A13VE
++	NULL
++};
++
++static struct msi_ec_conf CONF13 __initdata = {
++	.allowed_fw = ALLOWED_FW_13,
++	.charge_control = {
++		.address      = 0xd7,
++		.offset_start = 0x8a,
++		.offset_end   = 0x80,
++		.range_min    = 0x8a,
++		.range_max    = 0xe4,
++	},
++	.webcam = {
++		.address       = 0x2e,
++		.block_address = 0x2f,
++		.bit           = 1,
++	},
++	.fn_win_swap = {
++		.address = 0xe8,
++		.bit     = 4, // 0x00-0x10
++	},
++	.cooler_boost = {
++		.address = 0x98,
++		.bit     = 7,
++	},
++	.shift_mode = {
++		.address = 0xd2,
++		.modes = {
++			{ SM_ECO_NAME,     0xc2 }, // super battery
++			{ SM_COMFORT_NAME, 0xc1 }, // balanced
++			{ SM_TURBO_NAME,   0xc4 }, // extreme
++			MSI_EC_MODE_NULL
++		},
++	},
++	.super_battery = {
++		.address = MSI_EC_ADDR_UNSUPP,
++		.mask    = 0x0f, // 00, 0f
++	},
++	.fan_mode = {
++		.address = 0xd4,
++		.modes = {
++			{ FM_AUTO_NAME,     0x0d },
++			{ FM_SILENT_NAME,   0x1d },
++			{ FM_ADVANCED_NAME, 0x8d },
++			MSI_EC_MODE_NULL
++		},
++	},
++	.cpu = {
++		.rt_temp_address       = 0x68,
++		.rt_fan_speed_address  = 0x71, // 0x0-0x96
++		.rt_fan_speed_base_min = 0x00,
++		.rt_fan_speed_base_max = 0x96,
++		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
++		.bs_fan_speed_base_min = 0x00,
++		.bs_fan_speed_base_max = 0x0f,
++	},
++	.gpu = {
++		.rt_temp_address      = 0x80,
++		.rt_fan_speed_address = 0x89,
++	},
++	.leds = {
++		.micmute_led_address = 0x2c,
++		.mute_led_address    = 0x2d,
++		.bit                 = 1,
++	},
++	.kbd_bl = {
++		.bl_mode_address  = 0x2c, // KB auto turn off
++		.bl_modes         = { 0x00, 0x08 }, // always on; off after 10 sec
++		.max_mode         = 1,
++		.bl_state_address = 0xd3,
++		.state_base_value = 0x80,
++		.max_state        = 3,
++	},
++};
++
+ static struct msi_ec_conf *CONFIGS[] __initdata = {
+ 	&CONF0,
+ 	&CONF1,
+@@ -676,6 +1137,12 @@ static struct msi_ec_conf *CONFIGS[] __initdata = {
+ 	&CONF5,
+ 	&CONF6,
+ 	&CONF7,
++	&CONF8,
++	&CONF9,
++	&CONF10,
++	&CONF11,
++	&CONF12,
++	&CONF13,
  	NULL
  };
  
- static struct msi_ec_conf CONF3 __initdata = {
- 	.allowed_fw = ALLOWED_FW_3,
- 	.charge_control = {
--		.address      = 0xef,
-+		.address      = 0xd7,
- 		.offset_start = 0x8a,
- 		.offset_end   = 0x80,
- 		.range_min    = 0x8a,
-@@ -294,7 +293,7 @@ static struct msi_ec_conf CONF3 __initdata = {
- 		.block_address = 0x2f,
- 		.bit           = 1,
- 	},
--	.fn_super_swap = {
-+	.fn_win_swap = {
- 		.address = 0xe8,
- 		.bit     = 4,
- 	},
-@@ -372,7 +371,7 @@ static struct msi_ec_conf CONF4 __initdata = {
- 		.block_address = 0x2f,
- 		.bit           = 1,
- 	},
--	.fn_super_swap = {
-+	.fn_win_swap = {
- 		.address = MSI_EC_ADDR_UNKNOWN, // supported, but unknown
- 		.bit     = 4,
- 	},
-@@ -451,7 +450,7 @@ static struct msi_ec_conf CONF5 __initdata = {
- 		.block_address = 0x2f,
- 		.bit           = 1,
- 	},
--	.fn_super_swap = { // todo: reverse
-+	.fn_win_swap = { // todo: reverse
- 		.address = 0xbf,
- 		.bit     = 4,
- 	},
-@@ -529,7 +528,7 @@ static struct msi_ec_conf CONF6 __initdata = {
- 		.block_address = MSI_EC_ADDR_UNSUPP,
- 		.bit           = 1,
- 	},
--	.fn_super_swap = {
-+	.fn_win_swap = {
- 		.address = 0xbf, // todo: reverse
- 		.bit     = 4,
- 	},
-@@ -609,7 +608,7 @@ static struct msi_ec_conf CONF7 __initdata = {
- 		.block_address = MSI_EC_ADDR_UNSUPP,
- 		.bit           = 1,
- 	},
--	.fn_super_swap = {
-+	.fn_win_swap = {
- 		.address = 0xbf, // needs testing
- 		.bit     = 4,
- 	},
-diff --git a/drivers/platform/x86/msi-ec.h b/drivers/platform/x86/msi-ec.h
-index be3533dc9cc6..086351217505 100644
---- a/drivers/platform/x86/msi-ec.h
-+++ b/drivers/platform/x86/msi-ec.h
-@@ -40,7 +40,7 @@ struct msi_ec_webcam_conf {
- 	int bit;
- };
- 
--struct msi_ec_fn_super_swap_conf {
-+struct msi_ec_fn_win_swap_conf {
- 	int address;
- 	int bit;
- };
-@@ -108,7 +108,7 @@ struct msi_ec_conf {
- 
- 	struct msi_ec_charge_control_conf charge_control;
- 	struct msi_ec_webcam_conf         webcam;
--	struct msi_ec_fn_super_swap_conf  fn_super_swap;
-+	struct msi_ec_fn_win_swap_conf    fn_win_swap;
- 	struct msi_ec_cooler_boost_conf   cooler_boost;
- 	struct msi_ec_shift_mode_conf     shift_mode;
- 	struct msi_ec_super_battery_conf  super_battery;
 -- 
 2.42.0
 
