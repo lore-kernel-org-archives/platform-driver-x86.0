@@ -2,135 +2,123 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0328E71D3D
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Sep 2023 14:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52540E71D3F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Sep 2023 14:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233276AbjI2OVj (ORCPT
+        id S233051AbjI2O2t (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 29 Sep 2023 10:21:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50074 "EHLO
+        Fri, 29 Sep 2023 10:28:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233454AbjI2OVd (ORCPT
+        with ESMTP id S233272AbjI2O2s (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 29 Sep 2023 10:21:33 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE85DB;
-        Fri, 29 Sep 2023 07:21:31 -0700 (PDT)
+        Fri, 29 Sep 2023 10:28:48 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02C9D1A8;
+        Fri, 29 Sep 2023 07:28:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695997291; x=1727533291;
+  t=1695997726; x=1727533726;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=YLWrl7KU2ghuHqMWHl0Ai0ZSxj6kqlnsHwadzBYe/54=;
-  b=ASw0O87mwd9rb3U/4qn4Cji9Lj2d0VX92NWTMCHD1jU9TlbHk5Thb3ww
-   0V+iI5V2gxczpBot9l3PNWp5UaMoSt1P701lL7fe/S7MESGzDxDd9A3Ci
-   w2cIeojcj8G9KCXOLpSpSIIPzX4mLUs9S+chY2ZJ18jQdxq+tbP3lcqGy
-   gYrwKbnPuzDDZVxzdJBqNyxiLtEWohuvF4Selpzml/rspdveiDkqq3En9
-   3s8k7q1G85w3+tz55RRyAGOPlfmN1DvLeGpoWQkcy2dt2CKE9Lw54FE/Y
-   5h5sjAzlAwjh3L9hHpZXZeuDEK7KC7yaBZZOzb9hHf+xyDVpzfiHk6tUm
+  bh=1RxjXye0R/OFzvZCBxNj3WdfKsZ8Zg44PK6IpmnAhq8=;
+  b=FUO6a5blYt8so4/TV+EXaqzSkFGfVIi/zPXGqH25exS5LRUl7LYAZM/N
+   2jhpBhwYvn1f7OTk+U3RsooY44k78srWMpIi0tSKiLW6x71usy3QduRS6
+   EOAI/aBhH3H/OcnD6koK3iTwvm9mnPBkHvErj0NwbGG3d8Jn6GublPaMX
+   6xDaE2ZaG46RMWNuQgKXvtwG3Lcvbx/Wb1XL+R+2Pgvw/RltDfcX8BvP7
+   UVig2jqXBk4OzGjjM0LbX379lut9i+T3UKkvOZcETIDi4XGh7t/L9a6FT
+   nihXQIgbiZTaps9d9+I8R9xhFJfoHGUj703dfKruy0XUF1lQ4NsodAJom
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="367365274"
+X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="381195815"
 X-IronPort-AV: E=Sophos;i="6.03,187,1694761200"; 
-   d="scan'208";a="367365274"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 07:21:30 -0700
+   d="scan'208";a="381195815"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 07:28:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="743454993"
+X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="893427174"
 X-IronPort-AV: E=Sophos;i="6.03,187,1694761200"; 
-   d="scan'208";a="743454993"
+   d="scan'208";a="893427174"
 Received: from smorozov-mobl1.ger.corp.intel.com ([10.252.52.167])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 07:21:28 -0700
-Date:   Fri, 29 Sep 2023 17:21:25 +0300 (EEST)
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 07:27:30 -0700
+Date:   Fri, 29 Sep 2023 17:28:41 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         platform-driver-x86@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] platform/x86: intel_speed_select_if: Remove
- hardcoded map size
-In-Reply-To: <20230926175349.989618-1-srinivas.pandruvada@linux.intel.com>
-Message-ID: <44e9e292-694d-727e-858-328d22c5d11@linux.intel.com>
-References: <20230926175349.989618-1-srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH 2/3] platform/x86: ISST : Check major minor version
+In-Reply-To: <20230925194338.966639-3-srinivas.pandruvada@linux.intel.com>
+Message-ID: <f82fcfc9-eb41-56cb-93e1-abf9cf7413@linux.intel.com>
+References: <20230925194338.966639-1-srinivas.pandruvada@linux.intel.com> <20230925194338.966639-3-srinivas.pandruvada@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1948979147-1695997290=:1989"
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, 25 Sep 2023, Srinivas Pandruvada wrote:
 
---8323329-1948979147-1695997290=:1989
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
-On Tue, 26 Sep 2023, Srinivas Pandruvada wrote:
-
-> The driver is using 256 as the size while calling devm_ioremap(). The
-> maximum offset can be obtained from isst_mmio_range. Add a field "size"
-> to the isst_mmio_range and use it instead of hardcoding.
+> Parse major and minor version number from the version field. If there
+> is a mismatch for major version, exit from further processing for that
+> domain.
 > 
-> No functional impact is expected.
+> If there is mismatch in minor version, driver continue to process with
+> an error message.
+
+This sentence sounds odd.
+
+> Minor version change doesn't change offsets and bit
+> structures of TPMI fields.
 > 
 > Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 > ---
-> Changes:
-> As per Andy's comments pre calculate size
+>  .../x86/intel/speed_select_if/isst_tpmi_core.c   | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
 > 
->  .../x86/intel/speed_select_if/isst_if_mmio.c     | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel/speed_select_if/isst_if_mmio.c
-> index ff49025ec085..13e068c77d50 100644
-> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_mmio.c
-> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_mmio.c
-> @@ -18,16 +18,17 @@
->  struct isst_mmio_range {
->  	int beg;
->  	int end;
-> +	int size;
->  };
+> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> index 63faa2ea8327..37f17e229419 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> @@ -30,7 +30,8 @@
+>  #include "isst_if_common.h"
 >  
->  static struct isst_mmio_range mmio_range_devid_0[] = {
-> -	{0x04, 0x14},
-> -	{0x20, 0xD0},
-> +	{0x04, 0x14, 0x18},
-> +	{0x20, 0xD0, 0xD4},
->  };
+>  /* Supported SST hardware version by this driver */
+> -#define ISST_HEADER_VERSION		1
+> +#define ISST_MAJOR_VERSION	0
+> +#define ISST_MINOR_VERSION	1
 >  
->  static struct isst_mmio_range mmio_range_devid_1[] = {
-> -	{0x04, 0x14},
-> -	{0x20, 0x11C},
-> +	{0x04, 0x14, 0x18},
-> +	{0x20, 0x11C, 0x120},
->  };
+>  /*
+>   * Used to indicate if value read from MMIO needs to get multiplied
+> @@ -352,12 +353,19 @@ static int sst_main(struct auxiliary_device *auxdev, struct tpmi_per_power_domai
+>  	pd_info->sst_header.cp_offset *= 8;
+>  	pd_info->sst_header.pp_offset *= 8;
 >  
->  struct isst_if_device {
-> @@ -114,13 +115,16 @@ static int isst_if_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  
->  	pcu_base &= GENMASK(10, 0);
->  	base_addr = (u64)mmio_base << 23 | (u64) pcu_base << 12;
-> -	punit_dev->punit_mmio = devm_ioremap(&pdev->dev, base_addr, 256);
+> -	if (pd_info->sst_header.interface_version != ISST_HEADER_VERSION) {
+> -		dev_err(&auxdev->dev, "SST: Unsupported version:%x\n",
+> -			pd_info->sst_header.interface_version);
+> +	if (pd_info->sst_header.interface_version == TPMI_VERSION_INVALID)
+> +		return -ENODEV;
 > +
-> +	punit_dev->mmio_range = (struct isst_mmio_range *) ent->driver_data;
-> +
-> +	punit_dev->punit_mmio = devm_ioremap(&pdev->dev, base_addr,
-> +					     punit_dev->mmio_range[1].size);
->  	if (!punit_dev->punit_mmio)
->  		return -ENOMEM;
+> +	if (TPMI_MAJOR_VERSION(pd_info->sst_header.interface_version) != ISST_MAJOR_VERSION) {
+> +		dev_err(&auxdev->dev, "SST: Unsupported major version:%lx\n",
+> +			TPMI_MAJOR_VERSION(pd_info->sst_header.interface_version));
+>  		return -ENODEV;
+>  	}
 >  
->  	mutex_init(&punit_dev->mutex);
->  	pci_set_drvdata(pdev, punit_dev);
-> -	punit_dev->mmio_range = (struct isst_mmio_range *) ent->driver_data;
->  
->  	memset(&cb, 0, sizeof(cb));
->  	cb.cmd_size = sizeof(struct isst_if_io_reg);
-> 
+> +	if (TPMI_MINOR_VERSION(pd_info->sst_header.interface_version) != ISST_MINOR_VERSION)
+> +		dev_err(&auxdev->dev, "SST: Ignore: Unsupported minor version:%lx\n",
+> +			TPMI_MINOR_VERSION(pd_info->sst_header.interface_version));
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Why is this dev_err(), wouldn't dev_info() be more appropriate since 
+after this patch it's no longer an error?
+
+> +
+>  	/* Read SST CP Header */
+>  	*((u64 *)&pd_info->cp_header) = readq(pd_info->sst_base + pd_info->sst_header.cp_offset);
+>  
+> 
 
 -- 
  i.
 
---8323329-1948979147-1695997290=:1989--
