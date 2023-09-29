@@ -2,87 +2,201 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5857AE7F154
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Sep 2023 11:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A114E80ABE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 29 Sep 2023 11:34:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232803AbjI2Lc5 (ORCPT
+        id S232779AbjI2LeR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 29 Sep 2023 07:32:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58996 "EHLO
+        Fri, 29 Sep 2023 07:34:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229687AbjI2Lc5 (ORCPT
+        with ESMTP id S229508AbjI2LeQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 29 Sep 2023 07:32:57 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB81DE
-        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Sep 2023 04:32:53 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-5041cc983f9so22164983e87.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Sep 2023 04:32:53 -0700 (PDT)
+        Fri, 29 Sep 2023 07:34:16 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B504AE7
+        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Sep 2023 04:34:13 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-2c189dabcc3so46439681fa.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Sep 2023 04:34:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695987171; x=1696591971; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LTKwNWsLtH3P5OiCMjIf1WhtdlxvdJ9kgp2R6+i59kA=;
-        b=aL/etJcvc6ED8AeE0rnndkUmxIS2BKw6M0X5M28oa9coX1STH9cal3f4Ua61y0OnRF
-         IXzYYYv8RbqDNfHeqTUiGkWULPJWCc7ejxJzLxt8vF1nrJTNhKTArzsffMuBTT1ydzZ5
-         s4l/muCZ9hkpJbZ3kdo7cIRapnZvpJrv9qa84s6Y1JFMGdR1em1Lryb4aP3TOFZvCIpi
-         sGs7e2Ddp0SYZ/h0W+xUq/74Jp28PEwxv60PANDZORLacz+uWtJwA3aXuZ7dpdd1U7vG
-         PT9jWOY0s0uPZfKWdD5tjdAu1Ux6klMdZ7/QluuZiux1p8ScYuc4URqhf83SokxzAhNV
-         sXdw==
+        d=gmail.com; s=20230601; t=1695987252; x=1696592052; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZxjJlriY4wlKuLA1aZtjYB2eC7WoH6OiaT1kMbOS83I=;
+        b=GcnoK4uMbjKpUh+6li6hLZ1D0U7dcDiaoJtGg/ehgtRjmLO6Ty+eOXae4aHCS34B6q
+         48aAleLzlA+AVrT+oiYMYD2xbQXiFYh6NxD/SWe0lw2Lt+XxNSjpmQ8g3VZNmsU/9rFR
+         axDHC6i4D6K+fwklKDHJM6EHtpCjC9fQ/gsCkoS3KtfID1sXwPNJJgAES4AKx7tdNXvc
+         cHT0tjkvNfciAFc48cga6SD5y62N+jA9EL2UwK2aBtTJsXMBFqUjDbFnlnodIPjXTARq
+         ukayBxPfRNugOayInPmwHZM5Ir3RbLXmB6TaozRM5F0yV2XnlBkcseqjuezzKu1YozlM
+         nBAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695987171; x=1696591971;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LTKwNWsLtH3P5OiCMjIf1WhtdlxvdJ9kgp2R6+i59kA=;
-        b=u2YI0qcq8sLUoHVYaqJzn/WEjQ5KovBulpk2BYn52OICLlkUGKKV3sR2k8qXm1p6Um
-         uWUFteCmFkSxBVbGesJyPgB2oCst3/6uh08XJ1YxMi+OasqPSCc8JFp53kyGuxGTvY1w
-         0LkEcPIRiQrYO27pArFF/jyKlz+2wh0nNtSJC2l9V+bAaJTVB5fgMFXOF1Opfu2BcfGR
-         n04MMpkOLvYinj+n/Xar30W/eeM4vJrEOHjMAEhs587+J3eZOB6nwKK/Ri7bxy/47dfM
-         RFu1EYtt1f3YmlVIIVB3jU+XynS1bHtTaoAiQba3PN/6K2AqcrhGp+zHe25kBPRpch3T
-         tfnw==
-X-Gm-Message-State: AOJu0YyrbA+tXDCrivGrk8hg7QAgBpWvrYL03VylDumpGlS82RGOucoR
-        VCRTGHhwKNzy6KGxGLfbc/ulWn0IVWo=
-X-Google-Smtp-Source: AGHT+IFFHc16qAW5rNAw9KG+ttq5zh5vxzpQ6SXuK5qCNL8fqRwLyYpTSBpzZzmZM5XawEqzkNIuUg==
-X-Received: by 2002:a05:6512:743:b0:503:3753:9db9 with SMTP id c3-20020a056512074300b0050337539db9mr3072712lfs.35.1695987171354;
-        Fri, 29 Sep 2023 04:32:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695987252; x=1696592052;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZxjJlriY4wlKuLA1aZtjYB2eC7WoH6OiaT1kMbOS83I=;
+        b=k5io3q3SIZ/Bx/d+QZhwEc3nCzlV96feW7uwLCUlMx4W0FxfClEk7ZJCsGrzmWCf9g
+         MiMeFKSHaVBjG614bKrSGXeoivyg/EfoD8fNvAmSJWTm7KKy6LmwzSN98yws+ieKc7KG
+         bRYd/0oN3FrwejdXpmXgmcCx25f37sg0LDMlZe+onnPFwJlYTMLTIJMsPE6SYzFQaSEk
+         KeHm4swBpRVj8GGeous1MAcggFIx+breFeqw0BQfK7k6897i1sstrHbjGGB95nDSMa/W
+         SglMKzmiLYL2We5azoknAd5zyGJBNn1X8Q+6SisjAunNcXoMWzYke3AKpvQyZX8OtbP+
+         lGtQ==
+X-Gm-Message-State: AOJu0YyzvQp9HGBMzmrFoLzk2bTNiJwVtsQ1V3yyYZ2qoNeV13+6dCme
+        cRGngjBQI6f0Zz+VGQmWwTuA/FiUsDo=
+X-Google-Smtp-Source: AGHT+IHsko0GWIYJQU24uv6Pfvl1ZhS5E5Pdea/V5fHzZz7xCFyTStqwFB9BS8JaMx6YlYee6whXEw==
+X-Received: by 2002:a05:6512:449:b0:504:2970:da62 with SMTP id y9-20020a056512044900b005042970da62mr3220028lfk.64.1695987250641;
+        Fri, 29 Sep 2023 04:34:10 -0700 (PDT)
 Received: from localhost.localdomain ([31.173.85.123])
-        by smtp.gmail.com with ESMTPSA id l23-20020a19c217000000b00501c77ad909sm3471315lfc.208.2023.09.29.04.32.50
+        by smtp.gmail.com with ESMTPSA id l23-20020a19c217000000b00501c77ad909sm3471315lfc.208.2023.09.29.04.34.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Sep 2023 04:32:51 -0700 (PDT)
+        Fri, 29 Sep 2023 04:34:10 -0700 (PDT)
 From:   Nikita Kravets <teackot@gmail.com>
 To:     platform-driver-x86@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Nikita Kravets <teackot@gmail.com>,
         Aakash Singh <mail@singhaakash.dev>,
         Jose Angel Pastrana <japp0005@red.ujaen.es>
-Subject: [PATCH 0/2] platform/x86: msi-ec: add and fix EC configs
-Date:   Fri, 29 Sep 2023 14:31:47 +0300
-Message-ID: <20230929113149.587436-1-teackot@gmail.com>
+Subject: [PATCH 1/2] platform/x86: msi-ec: Fix the 3rd config
+Date:   Fri, 29 Sep 2023 14:31:49 +0300
+Message-ID: <20230929113149.587436-3-teackot@gmail.com>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20230929113149.587436-1-teackot@gmail.com>
+References: <20230929113149.587436-1-teackot@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi!
+Fix the charge control address of CONF3 and remove an incorrect firmware
+version which turned out to be a BIOS firmware and not an EC firmware.
 
-This patch series adds EC configs for more firmware (patch 2)
-and fixes a couple of issues with an existing configuration (patch 1)
-in the msi-ec driver.
+This patch also renames fn_super_swap to fn_win_swap for consistency
+with the downstream version of the driver.
 
 Cc: Aakash Singh <mail@singhaakash.dev>
 Cc: Jose Angel Pastrana <japp0005@red.ujaen.es>
+Signed-off-by: Nikita Kravets <teackot@gmail.com>
+---
+ drivers/platform/x86/msi-ec.c | 19 +++++++++----------
+ drivers/platform/x86/msi-ec.h |  4 ++--
+ 2 files changed, 11 insertions(+), 12 deletions(-)
 
-Nikita Kravets (2):
-  platform/x86: msi-ec: Fix the 3rd config
-  platform/x86: msi-ec: Add more EC configs
-
- drivers/platform/x86/msi-ec.c | 486 +++++++++++++++++++++++++++++++++-
- drivers/platform/x86/msi-ec.h |   4 +-
- 2 files changed, 478 insertions(+), 12 deletions(-)
-
+diff --git a/drivers/platform/x86/msi-ec.c b/drivers/platform/x86/msi-ec.c
+index f26a3121092f..3074aee878c1 100644
+--- a/drivers/platform/x86/msi-ec.c
++++ b/drivers/platform/x86/msi-ec.c
+@@ -58,7 +58,7 @@ static struct msi_ec_conf CONF0 __initdata = {
+ 		.block_address = 0x2f,
+ 		.bit           = 1,
+ 	},
+-	.fn_super_swap = {
++	.fn_win_swap = {
+ 		.address = 0xbf,
+ 		.bit     = 4,
+ 	},
+@@ -138,7 +138,7 @@ static struct msi_ec_conf CONF1 __initdata = {
+ 		.block_address = 0x2f,
+ 		.bit           = 1,
+ 	},
+-	.fn_super_swap = {
++	.fn_win_swap = {
+ 		.address = 0xbf,
+ 		.bit     = 4,
+ 	},
+@@ -215,7 +215,7 @@ static struct msi_ec_conf CONF2 __initdata = {
+ 		.block_address = 0x2f,
+ 		.bit           = 1,
+ 	},
+-	.fn_super_swap = {
++	.fn_win_swap = {
+ 		.address = 0xe8,
+ 		.bit     = 4,
+ 	},
+@@ -276,14 +276,13 @@ static struct msi_ec_conf CONF2 __initdata = {
+ 
+ static const char * const ALLOWED_FW_3[] __initconst = {
+ 	"1592EMS1.111",
+-	"E1592IMS.10C",
+ 	NULL
+ };
+ 
+ static struct msi_ec_conf CONF3 __initdata = {
+ 	.allowed_fw = ALLOWED_FW_3,
+ 	.charge_control = {
+-		.address      = 0xef,
++		.address      = 0xd7,
+ 		.offset_start = 0x8a,
+ 		.offset_end   = 0x80,
+ 		.range_min    = 0x8a,
+@@ -294,7 +293,7 @@ static struct msi_ec_conf CONF3 __initdata = {
+ 		.block_address = 0x2f,
+ 		.bit           = 1,
+ 	},
+-	.fn_super_swap = {
++	.fn_win_swap = {
+ 		.address = 0xe8,
+ 		.bit     = 4,
+ 	},
+@@ -372,7 +371,7 @@ static struct msi_ec_conf CONF4 __initdata = {
+ 		.block_address = 0x2f,
+ 		.bit           = 1,
+ 	},
+-	.fn_super_swap = {
++	.fn_win_swap = {
+ 		.address = MSI_EC_ADDR_UNKNOWN, // supported, but unknown
+ 		.bit     = 4,
+ 	},
+@@ -451,7 +450,7 @@ static struct msi_ec_conf CONF5 __initdata = {
+ 		.block_address = 0x2f,
+ 		.bit           = 1,
+ 	},
+-	.fn_super_swap = { // todo: reverse
++	.fn_win_swap = { // todo: reverse
+ 		.address = 0xbf,
+ 		.bit     = 4,
+ 	},
+@@ -529,7 +528,7 @@ static struct msi_ec_conf CONF6 __initdata = {
+ 		.block_address = MSI_EC_ADDR_UNSUPP,
+ 		.bit           = 1,
+ 	},
+-	.fn_super_swap = {
++	.fn_win_swap = {
+ 		.address = 0xbf, // todo: reverse
+ 		.bit     = 4,
+ 	},
+@@ -609,7 +608,7 @@ static struct msi_ec_conf CONF7 __initdata = {
+ 		.block_address = MSI_EC_ADDR_UNSUPP,
+ 		.bit           = 1,
+ 	},
+-	.fn_super_swap = {
++	.fn_win_swap = {
+ 		.address = 0xbf, // needs testing
+ 		.bit     = 4,
+ 	},
+diff --git a/drivers/platform/x86/msi-ec.h b/drivers/platform/x86/msi-ec.h
+index be3533dc9cc6..086351217505 100644
+--- a/drivers/platform/x86/msi-ec.h
++++ b/drivers/platform/x86/msi-ec.h
+@@ -40,7 +40,7 @@ struct msi_ec_webcam_conf {
+ 	int bit;
+ };
+ 
+-struct msi_ec_fn_super_swap_conf {
++struct msi_ec_fn_win_swap_conf {
+ 	int address;
+ 	int bit;
+ };
+@@ -108,7 +108,7 @@ struct msi_ec_conf {
+ 
+ 	struct msi_ec_charge_control_conf charge_control;
+ 	struct msi_ec_webcam_conf         webcam;
+-	struct msi_ec_fn_super_swap_conf  fn_super_swap;
++	struct msi_ec_fn_win_swap_conf    fn_win_swap;
+ 	struct msi_ec_cooler_boost_conf   cooler_boost;
+ 	struct msi_ec_shift_mode_conf     shift_mode;
+ 	struct msi_ec_super_battery_conf  super_battery;
 -- 
 2.42.0
 
