@@ -2,89 +2,140 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256C0E748E9
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  1 Oct 2023 09:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEE1E748E9
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  1 Oct 2023 09:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234692AbjJAJRe (ORCPT
+        id S234717AbjJAJ3n (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 1 Oct 2023 05:17:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45850 "EHLO
+        Sun, 1 Oct 2023 05:29:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234641AbjJAJRd (ORCPT
+        with ESMTP id S234660AbjJAJ3m (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 1 Oct 2023 05:17:33 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABCFBAC;
-        Sun,  1 Oct 2023 02:17:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696151852; x=1727687852;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=oCG7jOCcU3wYWkbsh+OYQxwNNnSBA4Q4h2ZKv3nOzPc=;
-  b=aXtbdmGLtkeGyjApW/PIsk2xTx/vX1GH/cOUVyE6Vuy5AhV6TTcdEYgf
-   9Dn0BOXqQhTGtQHCUI0fzD2NODr5oxsx4RBWg9dLhWvlvVJPZKuWEQnxz
-   wu5IxQ0nRyzt9miK6BAJ/oIRd1uhOHsddlAVFOZJPC/TbqcQhosXzCgZB
-   cl+gagjWGZsZbhiBqsztiDnPSrwQWFnMtTS+JURali5FDXdlh3j5x66IB
-   qPVg61tlTTpPdkYR04CgNXcLelk5UZc7iu+0flYb4R3lExASdgioGRgbI
-   /Hi91i2Wl4hTc4Ku2niq8p6hGjVKY6k4a1PkhBse+UllWWWZa7wFwt/wu
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10849"; a="4084909"
-X-IronPort-AV: E=Sophos;i="6.03,191,1694761200"; 
-   d="scan'208";a="4084909"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2023 02:17:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10849"; a="924002428"
-X-IronPort-AV: E=Sophos;i="6.03,191,1694761200"; 
-   d="scan'208";a="924002428"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2023 02:17:28 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qmsZp-00000001rVH-16dD;
-        Sun, 01 Oct 2023 12:17:25 +0300
-Date:   Sun, 1 Oct 2023 12:17:24 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Mark Gross <markgross@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 0/5] platform/x86: int3472: don't use
- gpiod_toggle_active_low()
-Message-ID: <ZRk5JNUZt2JzTszJ@smile.fi.intel.com>
-References: <20230926145943.42814-1-brgl@bgdev.pl>
- <e6817d30-b443-1a73-efae-84415604b19f@redhat.com>
+        Sun, 1 Oct 2023 05:29:42 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B473C6
+        for <platform-driver-x86@vger.kernel.org>; Sun,  1 Oct 2023 02:28:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1696152533;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=E7Zr1R8jrlALAOJwvEmr7pLCLH18EKSd3ED95EZwXq0=;
+        b=Q5zrOxQfHGld6BtTrI0Dq/YQ85mV+LMd0oZdPy7LAbU3HGLZ3b4YpTjikcEMoGycxF7pll
+        coeU5t0DlGN3jv9UbuPt2faEEvALPQSUJqVUcffwbLBLPdJIRUOk6zIjwOH+x47v3vpR2T
+        eX+S7ylC1s+WlkajIJkdrniIndzfUEU=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-65-QbKPGe_FN2Wc5QC0BZ39qA-1; Sun, 01 Oct 2023 05:28:45 -0400
+X-MC-Unique: QbKPGe_FN2Wc5QC0BZ39qA-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3231fceb811so9142740f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Oct 2023 02:28:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696152525; x=1696757325;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E7Zr1R8jrlALAOJwvEmr7pLCLH18EKSd3ED95EZwXq0=;
+        b=SGPVOVvSowPmzJXbVwi626WtLTq2j0w+5l0+Sz2AoxF5BkWJeupAp2gU7ohr24rc28
+         Jp6eSBQag4Y1lVjNz+Tu338/OuLDr8A3RloDn3X8nLujbYRTqMF7E+gcqspc8XlVtLGB
+         M9frmRYn9u9Zm0MvZCqheLR2DzXs/e9mnp7qYysKAoMVLwX+PYnu6BDe2wQx0C31h2aK
+         S5tRiHVbMSqMNCelpsp3o4MyHMWeDw9IN66IkVM3BcCk0nuHTEve7VZF+spuXDYhys9V
+         CpA9c6p1hkJ2yTjccwalNsc6TEku8Ve0NtpFxYgzsUrE3pXo6taGm2IwaWJxmUbwnnzy
+         sYkw==
+X-Gm-Message-State: AOJu0YwmwF65Dp+9U3LUwqJ+TeL85SiGuyv9ewFRhBACuMZoPtZgsRNz
+        YlQ4uMQmnZ4I6KyIyPY5nM3LsHTwgEDt8EeJ4yEgd+4DDkId0yDztoJvfcSySJoeFNx9DPve0TD
+        GYA6shNTkBtvW75GCuTkQKHne4K5+Uscexw==
+X-Received: by 2002:adf:fd03:0:b0:31f:a16a:aecd with SMTP id e3-20020adffd03000000b0031fa16aaecdmr7889228wrr.68.1696152524839;
+        Sun, 01 Oct 2023 02:28:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFxhDc5+mcsVBArMqi9G588XHKKoqzdCxadNOYKAWWhGWvnJVdKwOK6bot1fRvbZo8D9u4mZA==
+X-Received: by 2002:adf:fd03:0:b0:31f:a16a:aecd with SMTP id e3-20020adffd03000000b0031fa16aaecdmr7889220wrr.68.1696152524532;
+        Sun, 01 Oct 2023 02:28:44 -0700 (PDT)
+Received: from [10.10.158.202] ([213.144.205.82])
+        by smtp.gmail.com with ESMTPSA id p17-20020a5d68d1000000b003217cbab88bsm6750330wrw.16.2023.10.01.02.28.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Oct 2023 02:28:43 -0700 (PDT)
+Message-ID: <132feb67-c147-7ee6-b337-385e11786ec6@redhat.com>
+Date:   Sun, 1 Oct 2023 11:28:43 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e6817d30-b443-1a73-efae-84415604b19f@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: PROBLEM: asus_nb_wmi sends KEY_BRIGHTNESSDOWN on pressing CAPS
+ Lock and PrntScrn on Zenbook S 13 UX5304VA
+Content-Language: en-US
+To:     James John <me@donjajo.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
+References: <a2c441fe-457e-44cf-a146-0ecd86b037cf@donjajo.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <a2c441fe-457e-44cf-a146-0ecd86b037cf@donjajo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Sep 28, 2023 at 02:40:03PM +0200, Hans de Goede wrote:
-> Hi All,
+Hi James,
+
+On 10/1/23 10:11, James John wrote:
+> Hello,
 > 
-> Here is a v2 of Bartosz' "don't use gpiod_toggle_active_low()" series.
+> First of all, thank you very much for the work you do with maintaining these drivers and supporting systems. It is not an easy one.
 > 
-> New in v2:
-> - Rework to deal with ACPI path vs gpiod_lookup.key differences:
->   acpi_get_handle(path) -> acpi_fetch_acpi_dev(handle) -> acpi_dev_name(adev)
+> I have debugged this bug down to the asus_nb_wmi module. When I disable this module, the problem goes away, but then other hotkeys are not recognized. Attached is a debug event from libinput, where I pressed the capslock twice
+> 
+> I have tried to dabble around with asus-nb-wmi.c codes to see if I could fix it by luck, by adding UX5304VA to `static const struct dmi_system_id asus_quirks[]` but to no avail. And I have a very little knowledge of what "quirks" are.
+> 
+> I have attached some information regarding my hardware and kernel. I will be available to provide any more information that might be needed to resolve this.
+> 
+> A related open thread: https://bbs.archlinux.org/viewtopic.php?pid=2123716
 
-Code-wise LGTM,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+First of all lets confirm that the KEY_BRIGHTNESSDOWN events are really coming from asus_nb_wmi.
 
-But please fix tags here and there...
+Please install evtest and then run "sudo evtest" and then select the "Asus WMI hotkeys" device
+by typing its number followed by enter.
 
--- 
-With Best Regards,
-Andy Shevchenko
+After this reproduce the bug and see if the log shows KEY_BRIGHTNESSDOWN.
 
+Since you said you tried playing around with the quirks, I assume you can build
+your own kernel, please let me know if that is wrong.
+
+If this confirms the KEY_BRIGHTNESSDOWN events are coming from the "Asus WMI hotkeys" device,
+then please edit /lib/udev/hwdb.d/60-keyboard.hwdb
+
+And search for "Asus WMI hotkeys", this should find this section:
+
+evdev:name:Asus WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+evdev:name:Eee PC WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+evdev:name:Asus Laptop extra buttons:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+ KEYBOARD_KEY_6b=f21                                    # Touchpad Toggle
+ KEYBOARD_KEY_7c=f20                                    # Remap micmute to f20
+
+Change this to:
+
+evdev:name:Asus WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+evdev:name:Eee PC WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+evdev:name:Asus Laptop extra buttons:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+ KEYBOARD_KEY_6b=f21                                    # Touchpad Toggle
+ KEYBOARD_KEY_7c=f20                                    # Remap micmute to f20
+ KEYBOARD_KEY_20=unknown
+
+And then run "sudo udevadm hwdb --update" followed by "sudo udevadm trigger",
+that should filter out the spurious keypresses.
+
+If that helps, please run:
+
+cat /sys/class/dmi/id/modalias
+
+So that a proper DMI based quirk to only to the filtering on your model
+can be written.
+
+Regards,
+
+Hans
 
