@@ -2,126 +2,86 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE29E748F0
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  1 Oct 2023 01:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBA5E748ED
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  1 Oct 2023 06:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234080AbjJABIK (ORCPT
+        id S233629AbjJAG23 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 30 Sep 2023 21:08:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42362 "EHLO
+        Sun, 1 Oct 2023 02:28:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231989AbjJABIJ (ORCPT
+        with ESMTP id S233320AbjJAG23 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 30 Sep 2023 21:08:09 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B859D3;
-        Sat, 30 Sep 2023 18:08:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=C60Ncv2vQB/DJw8skCHwr3eVbL772Jn31RAnGa36VLA=; b=GMfctbW1Rzk/Rs2dC0cOIpycOt
-        xNUjrBSOyNCycybZ6jBXYPcTz7F7lLzLWwKx/qN+KfK734FjcsJMwH12JouUUQBOtLEgJbzyuXz1r
-        QP4CqU3nJTvcqNQ59DOdNeDeBs/s5Dac25zNNaLSZf6lyPhDBWiz0yL6q+5cjNXoWv/aKp6++l4Rd
-        Y6xrAQD/aJVWoBuGq0vhlGALsd7sb6Q/p3RekDPR6k42qEhp1/3JfPojk/ejvufd0FTVdA8aUAUdy
-        L6nzBkG49ptbemg+wnlStwhKuRyjCKBRlxB0ykc1E9+4G0avYqDdK0BRBc3SV9Sfy+rc2wKvLseJC
-        QqgdBsdQ==;
-Received: from [2603:3004:644:9100::a64a]
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qmkwE-000QhJ-3w; Sun, 01 Oct 2023 01:08:02 +0000
-Message-ID: <7f62045b-aac1-498f-8f5a-6b94b4b5a096@infradead.org>
-Date:   Sat, 30 Sep 2023 18:07:55 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/mellanox: tmfifo: fix kernel-doc warnings
-To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Liming Sun <lsun@mellanox.com>,
+        Sun, 1 Oct 2023 02:28:29 -0400
+X-Greylist: delayed 450 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 30 Sep 2023 23:28:26 PDT
+Received: from smtp.smtpout.orange.fr (smtp-15.smtpout.orange.fr [80.12.242.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8EB41BD
+        for <platform-driver-x86@vger.kernel.org>; Sat, 30 Sep 2023 23:28:26 -0700 (PDT)
+Received: from pop-os.home ([86.243.2.178])
+        by smtp.orange.fr with ESMTPA
+        id mpoyqui9X615Bmpozqjj2L; Sun, 01 Oct 2023 08:20:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+        s=t20230301; t=1696141254;
+        bh=8VNyDNwvUj63WBSAVLx12j5A3luCQB3hSbdx06sW9dw=;
+        h=From:To:Cc:Subject:Date;
+        b=mZm6LI0qG50vdg0Uro8unjFDDj9mH+yKMAUMUQ2ocIobQyTbRkztvejkhx/9rI3jz
+         Hl+ODEgwKZFYvl2X6ERvzj7iv6gsRXKfwqvRnDZw62N5+E+DI3QJp0tunDcRjQoYFO
+         BRzMlDyHaol3lIdT0vaFhd6689GkUMYJa55fCjYYRB8Swp0U96eOtqnpaZJb77WxAL
+         VZ/fJgqABRSSxmUCSls5JP5lA12rFNbDMJfl0/1I6f/28qBUjGUSWKKjpcuZXr95Vw
+         esFvOZH7PFjQ8dgbdYYUjcbkFIZUDtrr6GszNWIzglg7UzEtixuwXls4uoB1WipZWT
+         Mzl7W0rvq7JXQ==
+X-ME-Helo: pop-os.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 01 Oct 2023 08:20:54 +0200
+X-ME-IP: 86.243.2.178
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Vadim Pasternak <vadimp@nvidia.com>,
         Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        platform-driver-x86@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-References: <20230926054013.11450-1-rdunlap@infradead.org>
- <7b57bf9d-b024-b435-54ca-6ab5916197a1@linux.intel.com>
-Content-Language: en-US
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <7b57bf9d-b024-b435-54ca-6ab5916197a1@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+        Michael Shych <michaelsh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform: mellanox: Fix a resource leak in an error handling path in mlxplat_probe()
+Date:   Sun,  1 Oct 2023 08:20:51 +0200
+Message-Id: <8bd0a7944f0f4f1342333eaf8d92d8e9d5623110.1696141233.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+If an error occurs after a successful mlxplat_i2c_main_init(),
+mlxplat_i2c_main_exit() should be called to free some resources.
 
-On 9/26/23 09:18, Ilpo Järvinen wrote:
-> On Mon, 25 Sep 2023, Randy Dunlap wrote:
-> 
->> Fix kernel-doc notation for structs and struct members to prevent
->> these warnings:
->>
->> mlxbf-tmfifo.c:73: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_vring '
->> mlxbf-tmfifo.c:128: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_vdev '
->> mlxbf-tmfifo.c:146: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_irq_info '
->> mlxbf-tmfifo.c:158: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_io '
->> mlxbf-tmfifo.c:182: warning: cannot understand function prototype: 'struct mlxbf_tmfifo '
->> mlxbf-tmfifo.c:208: warning: cannot understand function prototype: 'struct mlxbf_tmfifo_msg_hdr '
->> mlxbf-tmfifo.c:138: warning: Function parameter or member 'config' not described in 'mlxbf_tmfifo_vdev'
->> mlxbf-tmfifo.c:212: warning: Function parameter or member 'unused' not described in 'mlxbf_tmfifo_msg_hdr'
->>
->> Fixes: 1357dfd7261f ("platform/mellanox: Add TmFifo driver for Mellanox BlueField Soc")
->> Fixes: bc05ea63b394 ("platform/mellanox: Add BlueField-3 support in the tmfifo driver")
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Reported-by: kernel test robot <lkp@intel.com>
->> Closes: lore.kernel.org/r/202309252330.saRU491h-lkp@intel.com
->> Cc: Liming Sun <lsun@mellanox.com>
->> Cc: Hans de Goede <hdegoede@redhat.com>
->> Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->> Cc: Mark Gross <markgross@kernel.org>
->> Cc: Vadim Pasternak <vadimp@nvidia.com>
->> Cc: platform-driver-x86@vger.kernel.org
->> ---
->>  drivers/platform/mellanox/mlxbf-tmfifo.c |   14 ++++++++------
->>  1 file changed, 8 insertions(+), 6 deletions(-)
->>
->> diff -- a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
->> --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
->> +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
->> @@ -53,7 +53,7 @@
->>  struct mlxbf_tmfifo;
->>  
->>  /**
->> - * mlxbf_tmfifo_vring - Structure of the TmFifo virtual ring
->> + * struct mlxbf_tmfifo_vring - Structure of the TmFifo virtual ring
->>   * @va: virtual address of the ring
->>   * @dma: dma address of the ring
->>   * @vq: pointer to the virtio virtqueue
->> @@ -113,12 +113,13 @@ enum {
->>  };
->>  
->>  /**
->> - * mlxbf_tmfifo_vdev - Structure of the TmFifo virtual device
->> + * struct mlxbf_tmfifo_vdev - Structure of the TmFifo virtual device
->>   * @vdev: virtio device, in which the vdev.id.device field has the
->>   *        VIRTIO_ID_xxx id to distinguish the virtual device.
->>   * @status: status of the device
->>   * @features: supported features of the device
->>   * @vrings: array of tmfifo vrings of this device
->> + * @config: non-anonymous union for cons and net
-> 
-> I wonder what information this adds? It's not documenting anything else 
-> than C syntax, IMO.
-> 
-> Would it be possible to make kerneldoc not give warning from a named union 
-> which is already fully documented?
+Add the missing call, as already done in the remove function.
 
-I don't know. Maybe.
-I have no idea if anyone has ever looked into doing that.
+Fixes: 158cd8320776 ("platform: mellanox: Split logic in init and exit flow")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+This patch is based on comparison between functions called in the remove
+function and the error handling path of the probe.
 
-I'm adding Mauro since he did the nested struct/union kernel-doc code.
+For some reason, the way the code is written and function names are
+puzzling to me. So Review with care!
+---
+ drivers/platform/x86/mlx-platform.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-~Randy
-
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 3d96dbf79a72..64701b63336e 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -6598,6 +6598,7 @@ static int mlxplat_probe(struct platform_device *pdev)
+ fail_register_reboot_notifier:
+ fail_regcache_sync:
+ 	mlxplat_pre_exit(priv);
++	mlxplat_i2c_main_exit(priv);
+ fail_mlxplat_i2c_main_init:
+ fail_regmap_write:
+ fail_alloc:
+-- 
+2.34.1
 
