@@ -2,84 +2,90 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6619CE7849A
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Oct 2023 13:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3C5E7849A
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Oct 2023 13:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236163AbjJBN32 (ORCPT
+        id S237588AbjJBNt7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 2 Oct 2023 09:29:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49560 "EHLO
+        Mon, 2 Oct 2023 09:49:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236717AbjJBN32 (ORCPT
+        with ESMTP id S237587AbjJBNtv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 2 Oct 2023 09:29:28 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DAAC91;
-        Mon,  2 Oct 2023 06:29:24 -0700 (PDT)
+        Mon, 2 Oct 2023 09:49:51 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65004CEE;
+        Mon,  2 Oct 2023 06:49:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696253364; x=1727789364;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=B7swZqJPsQnx7pSuZcqhUugl9ZqzOIU+1dxcdDC++ko=;
-  b=GbY4N6wFjACljWiKz6bte/8OgC8CDNsNj51TAh+Bx4QkCmkuLaBCgMj2
-   9Pffnk/n1jytlts9axu4vjk5X9ElJY9p9TKtMx02PreX8Qv0q/oARxyRt
-   XXsg0u0zhlLT2BuJYyKElqBEMNEdICz9eQI0DzgHiQn61RhvRFG2T+SIO
-   WgSo/usoU67yHjNeg8lx+k2O+ilBrVYi+lFua/4ir2zRoY9Y3SGThGZbj
-   gdMKTvkELH6k7gzBjJrmvo6z9GI1dGdBlKVEIX2hXmB9f/tQQhH2aPZnF
-   La3gz6dnce1XEIj1EI5fa04+YbBpJpC8It9Gr/r0VTPCL/Hz9b5dCx8Eb
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="379921949"
+  t=1696254582; x=1727790582;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Su9edFeqwR1xBkCn8pqPpx4sRmMM7jyFUxO5eDIlZyo=;
+  b=agErhDqUw7WVHL8z2hUWdvyuwLz6y4VbiFcfibEZli1YA/JP0fC+qKHx
+   Ri8A61YFTtbVXUbHPqIf7lNDXw23q78FU1t4JEp+zUqx8Y7URUy877PE+
+   qW/uXedbO79zKIWZP3pnhv9yCWl2g5N70MQcW35L2MosAKmLyilKTiPhK
+   f3V34DK15OgFMLSJXxtLcpefUiRQzCI4au6u4zsb76Pyg2Ok1cYtUc9q3
+   lnUIteiKyLfqbTa0kSL5No3GKe3HextsIgiiZw1cEqpwczB19lHWNSqXA
+   cgHBj6jZE2YmAVi4z3QKPFL3DPCNZxJRaqpIqvJIcA2bxKeYfq2iP0zF+
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="382551891"
 X-IronPort-AV: E=Sophos;i="6.03,194,1694761200"; 
-   d="scan'208";a="379921949"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2023 06:19:46 -0700
+   d="scan'208";a="382551891"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2023 06:49:09 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="754046550"
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="874361212"
 X-IronPort-AV: E=Sophos;i="6.03,194,1694761200"; 
-   d="scan'208";a="754046550"
-Received: from spandruv-desk.jf.intel.com (HELO spandruv-desk.amr.corp.intel.com) ([10.54.75.14])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2023 06:19:46 -0700
-Message-ID: <103cf828dee54804f55764a6e91cab6f96d62283.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86/intel-uncore-freq: Conditionally create
- attribute for read frequency
-From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+   d="scan'208";a="874361212"
+Received: from roliveir-mobl1.ger.corp.intel.com ([10.251.222.16])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2023 06:49:07 -0700
+Date:   Mon, 2 Oct 2023 16:49:04 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         platform-driver-x86@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>
-Date:   Mon, 02 Oct 2023 06:19:45 -0700
-In-Reply-To: <d725871b-12a0-c2c0-6323-1b7e3a705937@linux.intel.com>
-References: <20231002115622.1588852-1-srinivas.pandruvada@linux.intel.com>
-         <d725871b-12a0-c2c0-6323-1b7e3a705937@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-3.fc36) 
+Subject: Re: [PATCH 2/3] platform/x86: ISST : Check major minor version
+In-Reply-To: <72a2766bc7bb4f9d6b3d5f2ff114f0af1b6646a4.camel@linux.intel.com>
+Message-ID: <45625e9e-997b-eba1-413a-43a7d835feb@linux.intel.com>
+References: <20230925194338.966639-1-srinivas.pandruvada@linux.intel.com>  <20230925194338.966639-3-srinivas.pandruvada@linux.intel.com>  <f82fcfc9-eb41-56cb-93e1-abf9cf7413@linux.intel.com> <72a2766bc7bb4f9d6b3d5f2ff114f0af1b6646a4.camel@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323329-558354592-1696254548=:2459"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2023-10-02 at 15:01 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Mon, 2 Oct 2023, Srinivas Pandruvada wrote:
->=20
-> > When the current uncore frequency can't be read, don't create
-> > attribute
-> > "current_freq_khz" as any read will fail later. Some user space
-> > applications like turbostat fail to continue with the failure. So,
-> > check
-> > error during attribute creation.
-> >=20
-> > Signed-off-by: Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com>
->=20
-> Should there be a Fixes tag?
-Although it can happen when some processor not provide. There is one
-obvious one, which I can add.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks,
-Srinivas
+--8323329-558354592-1696254548=:2459
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
->=20
+On Sat, 30 Sep 2023, srinivas pandruvada wrote:
 
+> On Fri, 2023-09-29 at 17:28 +0300, Ilpo Järvinen wrote:
+> > On Mon, 25 Sep 2023, Srinivas Pandruvada wrote:
+> > 
+> > > Parse major and minor version number from the version field. If
+> > > there
+> > > is a mismatch for major version, exit from further processing for
+> > > that
+> > > domain.
+> > > 
+> > > If there is mismatch in minor version, driver continue to process
+> > > with
+> > > an error message.
+> > 
+> > This sentence sounds odd.
+> What is the suggestion here?
+
+These things sound wrong: It should be "continues" but I also find "to 
+process" odd when lacking what it processes.
+
+-- 
+ i.
+
+--8323329-558354592-1696254548=:2459--
