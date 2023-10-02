@@ -2,87 +2,102 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98E7E748E9
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  1 Oct 2023 16:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C60BE784A6
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Oct 2023 03:08:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235183AbjJAQJY (ORCPT
+        id S235417AbjJBDAc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 1 Oct 2023 12:09:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39440 "EHLO
+        Sun, 1 Oct 2023 23:00:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235155AbjJAQJX (ORCPT
+        with ESMTP id S234028AbjJBDAb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 1 Oct 2023 12:09:23 -0400
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 846EFDA
-        for <platform-driver-x86@vger.kernel.org>; Sun,  1 Oct 2023 09:09:21 -0700 (PDT)
-Received: from eig-obgw-5006a.ext.cloudfilter.net ([10.0.29.179])
-        by cmsmtp with ESMTP
-        id mwJvqMJp5NWIemz0Sqv7Sh; Sun, 01 Oct 2023 16:09:20 +0000
-Received: from shared083.arvixe.com ([143.95.229.40])
-        by cmsmtp with ESMTPS
-        id mz0SqFRf6TB25mz0SqaaPc; Sun, 01 Oct 2023 16:09:20 +0000
-X-Authority-Analysis: v=2.4 cv=Wbkf1mtX c=1 sm=1 tr=0 ts=651999b0
- a=GmS1SBToaRoMP0YkDtvSoA==:117 a=GmS1SBToaRoMP0YkDtvSoA==:17
- a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=--C6PtRGR58A:10
- a=6olLXnvbMdqt_GmFzjwA:9 a=QEXdDO2ut3YA:10
-Received: from [41.66.218.188] (port=43520 helo=[192.168.1.28])
-        by shared083.arvixe.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <me@donjajo.com>)
-        id 1qmz0R-003hsE-75; Sun, 01 Oct 2023 11:09:19 -0500
-Message-ID: <58ba87f3-32eb-4916-8e94-383c327812c6@donjajo.com>
-Date:   Sun, 1 Oct 2023 15:09:14 +0000
+        Sun, 1 Oct 2023 23:00:31 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2378BA;
+        Sun,  1 Oct 2023 20:00:28 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4E24DC433C9;
+        Mon,  2 Oct 2023 03:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696215628;
+        bh=FLmuE+PPEGAv2iGMtU1eXSNUT5ya0cp/4+njJxMDSbA=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=o5h3QlHyDbbMhwgUGSkiqsAFavTnUxqIcW/G1wkHH0/oVI6X0ufnEch8MN53Vpq08
+         eYWGjA1l58LW47L+XU6QvH7aQ1LwM0UFe6XneDxPEO+y3myaNtDxft9m3m4lclNr8d
+         u+iGfm4/38DOOHUS7LyUz4uTlHjf6unQH6sZ8TJ/1uSW0rUPcHd7pccV4hkfiyJM2j
+         Zg8VR1wTe7gmnaflGzvAtiL/jElkl5yYm4X4b0pJwsufth62eb3x81geIpfqfIO0Cq
+         tgym5V/2+wJz4/DA3H37vTCcczI9uIL+2rXJ2TfkJnwuZyluz2wGDn/3eI+qL+6Hxm
+         JFFxe+p4uNkPw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 31B70C395C5;
+        Mon,  2 Oct 2023 03:00:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PROBLEM: asus_nb_wmi sends KEY_BRIGHTNESSDOWN on pressing CAPS
- Lock and PrntScrn on Zenbook S 13 UX5304VA
-From:   James John <me@donjajo.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <a2c441fe-457e-44cf-a146-0ecd86b037cf@donjajo.com>
- <132feb67-c147-7ee6-b337-385e11786ec6@redhat.com>
- <146cb960-406b-4456-94ce-ad6ed3f330ad@donjajo.com>
- <d70f7d35-6458-437d-f68f-47291ce74a1e@redhat.com>
- <90a7309e-4a76-4dff-8259-9975dd3ed8b1@donjajo.com>
- <c98cbd94-9f2e-4af4-ad86-91a95471fc57@donjajo.com>
-Content-Language: en-US
-In-Reply-To: <c98cbd94-9f2e-4af4-ad86-91a95471fc57@donjajo.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - shared083.arvixe.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - donjajo.com
-X-BWhitelist: no
-X-Source-IP: 41.66.218.188
-X-Source-L: No
-X-Exim-ID: 1qmz0R-003hsE-75
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.28]) [41.66.218.188]:43520
-X-Source-Auth: me@donjajo.com
-X-Email-Count: 3
-X-Org:  HG=asoshared_arvixe;ORG=aso;
-X-Source-Cap: b3h5aG9scmU7b3h5aG9scmU7c2hhcmVkMDgzLmFydml4ZS5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOhBmOrqD744pbxoNr2Ba/GhMYdD5PklLhPk7Fu/zT4C/uuZUDxFrI93ODcyM3zrwYqympwx9ZGvhPHFs/7jI0hzxiRN5U+eLkdJeKuxuhtUExu4dRit
- 0ENiDFWKkc2zURjs/UxjmZ+o+z6cyVm9Sc/qmzcJcjt8KwRS9Jf5733zDi7H+wLZI9ah6jGOKbjzm7CY+vhln6JnLUtNJGsxdxQ=
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 00/27] platform: Convert to platform remove callback returning
+ void
+From:   patchwork-bot+chrome-platform@kernel.org
+Message-Id: <169621562819.8096.2360185583269694735.git-patchwork-notify@kernel.org>
+Date:   Mon, 02 Oct 2023 03:00:28 +0000
+References: <20230927081040.2198742-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20230927081040.2198742-1-u.kleine-koenig@pengutronix.de>
+To:     =?utf-8?q?Uwe_Kleine-K=C3=B6nig_=3Cu=2Ekleine-koenig=40pengutronix=2Ede=3E?=@ci.codeaurora.org
+Cc:     bleung@chromium.org, tzungbi@kernel.org, pmalani@chromium.org,
+        groeck@chromium.org, briannorris@chromium.org, zkhuang@hust.edu.cn,
+        dzm91@hust.edu.cn, gregkh@linuxfoundation.org, hdegoede@redhat.com,
+        ilpo.jarvinen@linux.intel.com, markgross@kernel.org,
+        vadimp@nvidia.com, gerd.haeussler.ext@siemens.com,
+        xingtong.wu@siemens.com, tobias.schaffner@siemens.com,
+        chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, kernel@pengutronix.de
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
- > hot keys are still working except that the LED notification light on 
-Mute Hotkey (F9) is no longer turning up on mute.
+Hello:
 
-Kindly ignore above. It is back working after a reboot.
+This series was applied to chrome-platform/linux.git (for-next)
+by Tzung-Bi Shih <tzungbi@kernel.org>:
 
-On 01/10/2023 14:18, James John wrote:
-> hot keys are still working except that the LED notification light on 
-> Mute Hotkey (F9) is no longer turning up on mute. 
+On Wed, 27 Sep 2023 10:10:13 +0200 you wrote:
+> Hello,
+> 
+> this series converts all platform drivers below drivers/platform to use
+> .remove_new(). The motivation is to get rid of an integer return code
+> that is (mostly) ignored by the platform driver core and error prone on
+> the driver side.
+> 
+> [...]
+
+Here is the summary with links:
+  - [01/27] platform/chrome: cros_ec_chardev: Convert to platform remove callback returning void
+    https://git.kernel.org/chrome-platform/c/f04410e7be65
+  - [02/27] platform/chrome: cros_ec_debugfs: Convert to platform remove callback returning void
+    https://git.kernel.org/chrome-platform/c/f366fa0064ef
+  - [03/27] platform/chrome: cros_ec_lightbar: Convert to platform remove callback returning void
+    https://git.kernel.org/chrome-platform/c/fa45583c3133
+  - [04/27] platform/chrome: cros_ec_lpc: Convert to platform remove callback returning void
+    https://git.kernel.org/chrome-platform/c/e02944e85169
+  - [05/27] platform/chrome: cros_ec_sysfs: Convert to platform remove callback returning void
+    https://git.kernel.org/chrome-platform/c/6478e302409a
+  - [06/27] platform/chrome: cros_ec_vbc: Convert to platform remove callback returning void
+    https://git.kernel.org/chrome-platform/c/58b15196b0ef
+  - [07/27] platform/chrome: cros_typec_switch: Convert to platform remove callback returning void
+    https://git.kernel.org/chrome-platform/c/ea4bad2badb7
+  - [08/27] platform/chrome: cros_usbpd_logger: Convert to platform remove callback returning void
+    https://git.kernel.org/chrome-platform/c/b6c1fea83550
+  - [09/27] platform/chrome: cros_usbpd_notify: Convert to platform remove callback returning void
+    https://git.kernel.org/chrome-platform/c/b98362be7c92
+  - [10/27] platform/chrome/wilco_ec: core: Convert to platform remove callback returning void
+    https://git.kernel.org/chrome-platform/c/48648504e488
+  - [11/27] platform/chrome/wilco_ec: debugfs: Convert to platform remove callback returning void
+    https://git.kernel.org/chrome-platform/c/1fca58f347d8
+  - [12/27] platform/chrome/wilco_ec: telemetry: Convert to platform remove callback returning void
+    https://git.kernel.org/chrome-platform/c/7396a5b980fd
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
