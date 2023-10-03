@@ -2,42 +2,42 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D742E776C4
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Oct 2023 18:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3627BE75459
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Oct 2023 18:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232182AbjJCSt0 (ORCPT
+        id S232160AbjJCSta (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Oct 2023 14:49:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36364 "EHLO
+        Tue, 3 Oct 2023 14:49:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232143AbjJCStZ (ORCPT
+        with ESMTP id S232185AbjJCSt0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Oct 2023 14:49:25 -0400
+        Tue, 3 Oct 2023 14:49:26 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E95AF;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD4FEB0;
         Tue,  3 Oct 2023 11:49:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1696358962; x=1727894962;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4gtDwlyRMPjMakfQV2TP11BN397Sa0+Y1SbuUIeH4uU=;
-  b=moA2ZdPk44tAsFaud9YeIVkK7VTtg+0EK3FJaWGXREepsuAA8vi5b1yL
-   rdBtnIVvdvxpcMUcOuBgf8a39mBd3le/8bmIs5y3hvDQnYwduxwT3MQzq
-   ywm79nTv7XI2qwJsG/AGomDmrXLptNEYwDNuV98no+NTFRwS5C/m14LC7
-   KxF4ZiS8lSB063ey3vIMrG/TRRy3kdiTist/eGpcXyxs04+Z5qCZF6o+Y
-   B7x6u7uQDSYpWkwgBlcwVuMSmEJrsqnqCyK9DluvKrTCQIFAoBTI/DfFx
-   usK46W1rMczTuLUy5IIwEvHRAkppGJqzErDgWzhRfZNVOT5qD2PVwBevs
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="363221953"
+  bh=tHSeNTya9+mTDl4DHH37n15KCaDe9pZn/vwT9v6EpB4=;
+  b=mSO29+RVGrjWxFY9It48AR/nIKnjTDoXXEbzpG8rR4qaEmMBktjt/DS+
+   tDG44bzeVrxSEkWrpperk3N/gsaEraJax+BITM1pAQefQ3QEd8R6WYb73
+   HxYaVUEuqKkk9S3GUh7o3zJc9Th7KkXbwHb99zexYoPNzLjcZo2j10aiU
+   lFdq3DG7fPAT9EwPYnDIPl65CaXQlApnwdThxsuHafe4VDvUOfkbcHiPA
+   Ye++/8L3EG40e6CnJwh+HiJXNTet+UYmYgWArj6/A6ne+brxOpqmd/dFs
+   NGeIhXJGRScQnhiyS/04N1BWRQBigtLY7gh4FWMPvgVdh+fk9eqm+I8Uh
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="363221961"
 X-IronPort-AV: E=Sophos;i="6.03,198,1694761200"; 
-   d="scan'208";a="363221953"
+   d="scan'208";a="363221961"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 11:49:21 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="700814541"
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="700814545"
 X-IronPort-AV: E=Sophos;i="6.03,198,1694761200"; 
-   d="scan'208";a="700814541"
+   d="scan'208";a="700814545"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
   by orsmga003.jf.intel.com with ESMTP; 03 Oct 2023 11:49:20 -0700
 From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
@@ -45,9 +45,9 @@ To:     hdegoede@redhat.com, markgross@kernel.org,
         ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v2 1/3] platform/x86/intel/tpmi: Add defines to get version information
-Date:   Tue,  3 Oct 2023 11:49:14 -0700
-Message-Id: <20231003184916.1860084-2-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v2 3/3] platform/x86/intel-uncore-freq: Ignore minor version change
+Date:   Tue,  3 Oct 2023 11:49:16 -0700
+Message-Id: <20231003184916.1860084-4-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231003184916.1860084-1-srinivas.pandruvada@linux.intel.com>
 References: <20231003184916.1860084-1-srinivas.pandruvada@linux.intel.com>
@@ -57,35 +57,74 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add defines to get major and minor version from a TPMI version field
-value. This will avoid code duplication to convert in every feature
-driver. Also add define for invalid version field.
+The hardware definition of every TPMI feature contains a major and minor
+version. When there is a change in the MMIO offset or change in the
+definition of a field, hardware will change major version. For addition
+of new fields without modifying existing MMIO offsets or fields, only the
+minor version is changed.
+
+Driver is developed to support uncore frequency control (UFS) for a major
+and minor version. If the hardware changes major version, since offsets
+and definitions are changed, driver cannot continue to provide UFS
+interface to users. Driver can still function with minor version change
+as it will just miss the new functionality added by the hardware.
+
+The current implementation logs information message and skips adding
+uncore sysfs entry for a resource for any version mismatch. Check major
+and minor version mismatch for every valid resource and fail on any major
+version mismatch by logging an error message. A valid resource has a
+version which is not 0xFF.
+
+If there is mismatch with the minor version, continue with a log message.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
-v2:
-No change
+v2
+- Commit description and header change
+- Change log levels exit on any major version mismatch
 
- include/linux/intel_tpmi.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../uncore-frequency/uncore-frequency-tpmi.c   | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/intel_tpmi.h b/include/linux/intel_tpmi.h
-index 04d937ad4dc4..ee07393445f9 100644
---- a/include/linux/intel_tpmi.h
-+++ b/include/linux/intel_tpmi.h
-@@ -6,6 +6,12 @@
- #ifndef _INTEL_TPMI_H_
- #define _INTEL_TPMI_H_
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+index 7d0a67f8b517..4fb790552c47 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+@@ -28,7 +28,8 @@
  
-+#include <linux/bitfield.h>
+ #include "uncore-frequency-common.h"
+ 
+-#define	UNCORE_HEADER_VERSION		1
++#define	UNCORE_MAJOR_VERSION		0
++#define	UNCORE_MINOR_VERSION		1
+ #define UNCORE_HEADER_INDEX		0
+ #define UNCORE_FABRIC_CLUSTER_OFFSET	8
+ 
+@@ -302,12 +303,21 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
+ 		/* Check for version and skip this resource if there is mismatch */
+ 		header = readq(pd_info->uncore_base);
+ 		pd_info->ufs_header_ver = header & UNCORE_VERSION_MASK;
+-		if (pd_info->ufs_header_ver != UNCORE_HEADER_VERSION) {
+-			dev_info(&auxdev->dev, "Uncore: Unsupported version:%d\n",
+-				pd_info->ufs_header_ver);
 +
-+#define TPMI_VERSION_INVALID	0xff
-+#define TPMI_MINOR_VERSION(val)	FIELD_GET(GENMASK(4, 0), val)
-+#define TPMI_MAJOR_VERSION(val)	FIELD_GET(GENMASK(7, 5), val)
++		if (pd_info->ufs_header_ver == TPMI_VERSION_INVALID)
+ 			continue;
 +
- /**
-  * struct intel_tpmi_plat_info - Platform information for a TPMI device instance
-  * @package_id:	CPU Package id
++		if (TPMI_MAJOR_VERSION(pd_info->ufs_header_ver) != UNCORE_MAJOR_VERSION) {
++			dev_err(&auxdev->dev, "Uncore: Unsupported major version:%lx\n",
++				TPMI_MAJOR_VERSION(pd_info->ufs_header_ver));
++			ret = -ENODEV;
++			goto remove_clusters;
+ 		}
+ 
++		if (TPMI_MINOR_VERSION(pd_info->ufs_header_ver) != UNCORE_MINOR_VERSION)
++			dev_info(&auxdev->dev, "Uncore: Ignore: Unsupported minor version:%lx\n",
++				 TPMI_MINOR_VERSION(pd_info->ufs_header_ver));
++
+ 		/* Get Cluster ID Mask */
+ 		cluster_mask = FIELD_GET(UNCORE_LOCAL_FABRIC_CLUSTER_ID_MASK, header);
+ 		if (!cluster_mask) {
 -- 
 2.41.0
 
