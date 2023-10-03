@@ -2,61 +2,139 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3D7E75433
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Oct 2023 08:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE3AE75426
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Oct 2023 12:05:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239567AbjJCIYA (ORCPT
+        id S231998AbjJCMF4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Oct 2023 04:24:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36254 "EHLO
+        Tue, 3 Oct 2023 08:05:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239610AbjJCIXv (ORCPT
+        with ESMTP id S231946AbjJCMFz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Oct 2023 04:23:51 -0400
-Received: from mail.corebizinsight.com (mail.corebizinsight.com [217.61.112.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE4B059F6
-        for <platform-driver-x86@vger.kernel.org>; Tue,  3 Oct 2023 01:11:53 -0700 (PDT)
-Received: by mail.corebizinsight.com (Postfix, from userid 1002)
-        id 6B06E82F72; Tue,  3 Oct 2023 10:10:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=corebizinsight.com;
-        s=mail; t=1696320648;
-        bh=CEmchsDu5Oe+RNHCZSBmKSgMOuy1xnO2dydqkEjt3Qs=;
-        h=Date:From:To:Subject:From;
-        b=cwpfPhkka8Y2bkVDnOXr4oIwyZYLjX2W/TsfO67CLPwtn635LGGtMzjR33rDGW9ID
-         9dqL3GtIfrz7kbYJ5RjF5gH7erXHOX1+v7BDeVFF+Vb7l+0mpq9jdu3McroYdQSBUI
-         lJlGfEwHUUQWT8c+NRbZ51wqrRg9n5rjyjH+4ZpwU/v6t5YyggHGKHOpQcibkC8VDt
-         Po9aFhmUn9enBLWojYpN5MLoXNb05ofdnCcqE8bQz1fFlOQUkKXCSOtrYdWEMVlHI4
-         jfCV6sYfVVGQoXwA4sDxnKvHSjSXocw41CkSod/A6XT3MkRvnjG7sExRlHsX7DcEXD
-         2BE2brCiP4bKA==
-Received: by mail.corebizinsight.com for <platform-driver-x86@vger.kernel.org>; Tue,  3 Oct 2023 08:10:34 GMT
-Message-ID: <20231003084500-0.1.16.5641.0.m8eppmkp0m@corebizinsight.com>
-Date:   Tue,  3 Oct 2023 08:10:34 GMT
-From:   "Jakub Kovarik" <jakub.kovarik@corebizinsight.com>
-To:     <platform-driver-x86@vger.kernel.org>
-Subject: =?UTF-8?Q?Pros=C3=ADm_kontaktujte?=
-X-Mailer: mail.corebizinsight.com
+        Tue, 3 Oct 2023 08:05:55 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65665B0;
+        Tue,  3 Oct 2023 05:05:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696334752; x=1727870752;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=2FVL6oK6St+5P80WJ+yzirfeEardVkYw1NDRImd/gVM=;
+  b=hy6FhSqVPGJW2GTaOqs59afYeTh+sNqjm09T7xMNL7Xt/FD6CSW/YF1a
+   N2Jmni6DBeC6CR1tXVa0epbhNAVS8WJIteMt1KOBFNHnHTxmBHuitkDZQ
+   zruieOvmqBhJ5ZyZTfwW8ugs3E8ta40rRpkke5g0UV1BX4dMh3t4JA82a
+   2DKo/MWOAHocUENldcgBIm7c19wzwEUJsQtEiWAZUWLDbTznAQo+OxL4W
+   vDI3AWaqUZ+/oRPwlffxQ4CnIUd8pqfH80s8zlfp1aqG0N/PKE5pyZOIT
+   4ytUG9PCxoJ+XAWapjPjjJomKbC7xLDhtvJ5jUy/iCQaWn4PTsAsUC048
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="449347037"
+X-IronPort-AV: E=Sophos;i="6.03,197,1694761200"; 
+   d="scan'208";a="449347037"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 05:05:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="727589592"
+X-IronPort-AV: E=Sophos;i="6.03,197,1694761200"; 
+   d="scan'208";a="727589592"
+Received: from tciutacu-mobl.ger.corp.intel.com (HELO rrabie-mobl.amr.corp.intel.com) ([10.252.40.114])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 05:05:47 -0700
+Date:   Tue, 3 Oct 2023 15:05:45 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+cc:     Vadim Pasternak <vadimp@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Michael Shych <michaelsh@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform: mellanox: Fix a resource leak in an error
+ handling path in mlxplat_probe()
+In-Reply-To: <8bd0a7944f0f4f1342333eaf8d92d8e9d5623110.1696141233.git.christophe.jaillet@wanadoo.fr>
+Message-ID: <7d966897-56b5-4a53-3b75-dd90072e17@linux.intel.com>
+References: <8bd0a7944f0f4f1342333eaf8d92d8e9d5623110.1696141233.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Dobr=C3=A9 r=C3=A1no,
+On Sun, 1 Oct 2023, Christophe JAILLET wrote:
 
-Je mo=C5=BEn=C3=A9 s v=C3=A1mi nav=C3=A1zat spolupr=C3=A1ci?
+> If an error occurs after a successful mlxplat_i2c_main_init(),
+> mlxplat_i2c_main_exit() should be called to free some resources.
+> 
+> Add the missing call, as already done in the remove function.
+> 
+> Fixes: 158cd8320776 ("platform: mellanox: Split logic in init and exit flow")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> This patch is based on comparison between functions called in the remove
+> function and the error handling path of the probe.
+> 
+> For some reason, the way the code is written and function names are
+> puzzling to me.
 
-R=C3=A1d si promluv=C3=ADm s osobou zab=C3=BDvaj=C3=ADc=C3=AD se prodejn=C3=
-=AD =C4=8Dinnost=C3=AD.
+Indeed, pre/post are mixed up for init/exit variants which makes 
+everything very confusing and the call to mlxplat_post_init() is buried 
+deep into the call chain.
 
-Pom=C3=A1h=C3=A1me efektivn=C4=9B z=C3=ADsk=C3=A1vat nov=C3=A9 z=C3=A1kaz=
-n=C3=ADky.
+These would seem better names for the init/deinit with proper pairing:
 
-Nevahejte me kontaktovat.
+- ..._logicdev_init/deinit for FPGA/CPLD init.
+- ..._mainbus_init/deinit
+- perhaps the rest could be just ..._platdevs_reg/unreg
 
-V p=C5=99=C3=ADpad=C4=9B z=C3=A1jmu V=C3=A1s bude kontaktovat n=C3=A1=C5=A1=
- anglicky mluv=C3=ADc=C3=AD z=C3=A1stupce.
+Those alone would make it much easier to follow.
+
+In addition,
+- mlxplat_i2c_mux_complition_notify() looks just useless call chain level
+  and should be removed (it also has a typo in its name).
+- Maybe ..._platdev_reg() (currently mlxplat_post_init()) should be called 
+  directly from mainbus_init() or even from .probe() and not from the
+  mux topo init.
+
+> So Review with care!
+
+It does not look complete as also mlxplat_i2c_main_init() lacks rollback 
+it should do it mlxplat_i2c_mux_topology_init() failed.
+
+Since currently mlxplat_i2c_main_init() is what ultimately calls 
+mlxplat_post_init() deep down in the call chain (unless the call to it 
+gets moved out from there), it would be appropriate for 
+mlxplat_i2c_main_exit() to do/call the cleanup.  And neither .probe() nor 
+.remove() should call mlxplat_pre_exit() directly in that case.
+
+So two alternative ways forward for the fix before all the renaming:
+
+1) Move mlxplat_post_init() call out of its current place into .probe() 
+   and make the rollback path there to match that.
+2) Do cleanup properly in mlxplat_i2c_main_init() and 
+   mlxplat_i2c_main_exit().
+
+I'd prefer 1) because it's much simpler to follow the init logic when the 
+init components are not hidden deep into the call chain.
+
+-- 
+ i.
 
 
-Pozdravy
-Jakub Kovarik
+> ---
+>  drivers/platform/x86/mlx-platform.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+> index 3d96dbf79a72..64701b63336e 100644
+> --- a/drivers/platform/x86/mlx-platform.c
+> +++ b/drivers/platform/x86/mlx-platform.c
+> @@ -6598,6 +6598,7 @@ static int mlxplat_probe(struct platform_device *pdev)
+>  fail_register_reboot_notifier:
+>  fail_regcache_sync:
+>  	mlxplat_pre_exit(priv);
+> +	mlxplat_i2c_main_exit(priv);
+>  fail_mlxplat_i2c_main_init:
+>  fail_regmap_write:
+>  fail_alloc:
+> 
