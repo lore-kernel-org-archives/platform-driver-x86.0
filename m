@@ -2,107 +2,77 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20372E7AD6E
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Oct 2023 15:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A762E7AD77
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Oct 2023 16:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231321AbjJCPN0 (ORCPT
+        id S240432AbjJCQcl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Oct 2023 11:13:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58254 "EHLO
+        Tue, 3 Oct 2023 12:32:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230511AbjJCPNZ (ORCPT
+        with ESMTP id S231592AbjJCQck (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Oct 2023 11:13:25 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61CF7A1;
-        Tue,  3 Oct 2023 08:13:22 -0700 (PDT)
+        Tue, 3 Oct 2023 12:32:40 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0BF1AF;
+        Tue,  3 Oct 2023 09:32:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696346002; x=1727882002;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=JyQ+b2l4HyqGplvW8pMX1Xx0aY+GgEvR6svKIcK2blk=;
-  b=PDOv3TVU1KmaGm7Yo5iiCkmfzkbJ+ERb2ztw163LIo/SFEh9CRV7QPog
-   PO+3EOhT3ZV0qDg1s6E0LM5oTf4BhzDkaLwGEIomQeNG3bHcTY8MNC9tE
-   dtPFFpLecF0iin/NQ+A1ooyEU7qrBHVujxT/q84c2WxCQerhNVL0Tkp+w
-   xUJrjxloU5hrwE9VYEG/fnRXu8K4agECjaFZKsO0jGXyzp7KdxIZnV6eA
-   9jwW33utrRFNkZwgVl3x0+foKXW8XUjkTWBV1PQt/IkQMZ6Lwy0i1ZNtw
-   r57Xwv6OciumQ0IUfcAbjZh1XR/2OTwSJTW6NYIr+oTJdKEYgU1REf2Al
+  t=1696350757; x=1727886757;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=N5+XInekXK/3jlx2mlTDtiQAjBZc8FbJO7CCLm/0Lpc=;
+  b=hl5qvzEPy9fiUGxMlerxvT1N+fVHr+v4795MYg6aCnxDphK5pZPlfq6m
+   FbpE5OSzYi1ORfn4ox74XraURW83jQZVQDu5KeSQSeauJ6IoNzBEKqXJ8
+   Hefh1YD7hhrL5rQ4X38F15CP/GeNTET5Pen7AyAnsIv+TkCo0FGTs1Apk
+   6CZc1FSebUbGT+etbNmakFuSjOK2jR1G0rEZOsipqgrpzpjPf5Ta84/+/
+   VlEh5cCW7CDIEILG+j80as44gOCOLaE19fa9fVrbja08aNX3c3g17TxE4
+   9DN7ZB7JZLvV21RNkVt4AVqYiNCJuzkd8f777GomUZ3/u28+cSwsyXN0i
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="362267989"
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="381799116"
 X-IronPort-AV: E=Sophos;i="6.03,197,1694761200"; 
-   d="scan'208";a="362267989"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 08:13:21 -0700
+   d="scan'208";a="381799116"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 09:32:37 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="780332107"
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="1082069879"
 X-IronPort-AV: E=Sophos;i="6.03,197,1694761200"; 
-   d="scan'208";a="780332107"
-Received: from spandruv-desk.jf.intel.com (HELO spandruv-desk.amr.corp.intel.com) ([10.54.75.14])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 08:13:21 -0700
-Message-ID: <ab0ab04980b07e2893d9672b96311230ac981e40.camel@linux.intel.com>
-Subject: Re: [UPDATE][PATCH] platform/x86/intel-uncore-freq: Conditionally
- create attribute for read frequency
-From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Tue, 03 Oct 2023 08:13:21 -0700
-In-Reply-To: <6c59be5-1ff1-d0b1-5960-3789fe10c692@linux.intel.com>
-References: <20231002131817.1590966-1-srinivas.pandruvada@linux.intel.com>
-         <6c59be5-1ff1-d0b1-5960-3789fe10c692@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-3.fc36) 
+   d="scan'208";a="1082069879"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
+  by fmsmga005.fm.intel.com with ESMTP; 03 Oct 2023 09:32:36 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org,
+        ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v2 0/4] Minor SST optimizations
+Date:   Tue,  3 Oct 2023 09:32:30 -0700
+Message-Id: <20231003163234.1856669-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi llPo,
+Contains some minor changes to use SST for non dynamic use cases
+for display purpose and remove hardcoded size for map.
 
-On Tue, 2023-10-03 at 16:10 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Mon, 2 Oct 2023, Srinivas Pandruvada wrote:
->=20
-> > When the current uncore frequency can't be read, don't create
-> > attribute
-> > "current_freq_khz" as any read will fail later. Some user space
-> > applications like turbostat fail to continue with the failure. So,
-> > check
-> > error during attribute creation.
-> >=20
-> > Fixes: 8a54e2253e4c ("platform/x86/intel-uncore-freq: Uncore
-> > frequency control via TPMI")
->=20
-> Hi,
->=20
-> Thanks for the update but that commit id looks bogus, or where the
-> value=20
-> is used w/o error check?
+v2
+Update commit description, no code change
+Added a new patch which was independent before
 
-commit 8a54e2253e4c25e5b61c9a9bee157bb52da5d432
-Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Date:   Thu Apr 20 15:05:14 2023 -0700
+Srinivas Pandruvada (4):
+  platform/x86: ISST: Use fuse enabled mask instead of allowed levels
+  platform/x86: ISST: Allow level 0 to be not present
+  platform/x86: intel_speed_select_if: Remove hardcoded map size
+  platform/x86: intel_speed_select_if: Use devm_ioremap_resource
 
-    platform/x86/intel-uncore-freq: Uncore frequency control via TPMI
+ .../x86/intel/speed_select_if/isst_if_mmio.c  | 21 ++++++++++++-------
+ .../intel/speed_select_if/isst_tpmi_core.c    |  5 +----
+ 2 files changed, 14 insertions(+), 12 deletions(-)
 
-
-This is the commit exposed the issue. This is not the commit which
-changed the code in question.=20
-
-
-I can add also
-Fixes: dbce412a7733 ("platform/x86/intel-uncore-freq: Split common and
-enumeration part")
-
-But the change even before that as this commit just reorganized code
-but because of change of folders, that will look like correct commit.
-
-
-Thanks,
-Srinivas
-
-
+-- 
+2.41.0
 
