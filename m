@@ -2,139 +2,112 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE3AE75426
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Oct 2023 12:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B1BE75458
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Oct 2023 13:10:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231998AbjJCMF4 (ORCPT
+        id S234090AbjJCNKX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Oct 2023 08:05:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60532 "EHLO
+        Tue, 3 Oct 2023 09:10:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231946AbjJCMFz (ORCPT
+        with ESMTP id S232177AbjJCNKW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Oct 2023 08:05:55 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65665B0;
-        Tue,  3 Oct 2023 05:05:52 -0700 (PDT)
+        Tue, 3 Oct 2023 09:10:22 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A2AFA1;
+        Tue,  3 Oct 2023 06:10:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696334752; x=1727870752;
+  t=1696338619; x=1727874619;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=2FVL6oK6St+5P80WJ+yzirfeEardVkYw1NDRImd/gVM=;
-  b=hy6FhSqVPGJW2GTaOqs59afYeTh+sNqjm09T7xMNL7Xt/FD6CSW/YF1a
-   N2Jmni6DBeC6CR1tXVa0epbhNAVS8WJIteMt1KOBFNHnHTxmBHuitkDZQ
-   zruieOvmqBhJ5ZyZTfwW8ugs3E8ta40rRpkke5g0UV1BX4dMh3t4JA82a
-   2DKo/MWOAHocUENldcgBIm7c19wzwEUJsQtEiWAZUWLDbTznAQo+OxL4W
-   vDI3AWaqUZ+/oRPwlffxQ4CnIUd8pqfH80s8zlfp1aqG0N/PKE5pyZOIT
-   4ytUG9PCxoJ+XAWapjPjjJomKbC7xLDhtvJ5jUy/iCQaWn4PTsAsUC048
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="449347037"
+  bh=sJ1wI9sackoBCbiYI9JY9yIefb7w0Ym5PLbqs6h94l4=;
+  b=BLDXq5/5o4BlzUq98EPtD0VtloKIGfQY+0IVivbGuqDaNhUZ4x7LuRFU
+   ydZqerJfeeE5CaxZjlBxk3G673v8+EL5fYoZKxOXRPY88XYu5rUqNws5Z
+   53RsKyWX7E/oHMn2OS5Dn2++c57oV4+MqynRYC9/Xu9j6pHVJKNaWJwcC
+   mmOSGYaC0LpzlZsr4CIkkLztk9mnGZyJqUfhXYtqhxiT2N6fXXZ4voZwT
+   QWiw/KDh9wrTW8cAQ0sdsHjoL/+5MZbkBpGgCp3lwfwLwt7y6BfvicTqZ
+   rA+jrIlJ1G1jAybn/Isqod3V/GMDUmlIEOHv5Z3QAFkC8BVnFgkUnOrVp
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="447027709"
 X-IronPort-AV: E=Sophos;i="6.03,197,1694761200"; 
-   d="scan'208";a="449347037"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 05:05:51 -0700
+   d="scan'208";a="447027709"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 06:10:18 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="727589592"
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="998018510"
 X-IronPort-AV: E=Sophos;i="6.03,197,1694761200"; 
-   d="scan'208";a="727589592"
-Received: from tciutacu-mobl.ger.corp.intel.com (HELO rrabie-mobl.amr.corp.intel.com) ([10.252.40.114])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 05:05:47 -0700
-Date:   Tue, 3 Oct 2023 15:05:45 +0300 (EEST)
+   d="scan'208";a="998018510"
+Received: from tciutacu-mobl.ger.corp.intel.com ([10.252.40.114])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 06:10:15 -0700
+Date:   Tue, 3 Oct 2023 16:10:13 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-cc:     Vadim Pasternak <vadimp@nvidia.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Michael Shych <michaelsh@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform: mellanox: Fix a resource leak in an error
- handling path in mlxplat_probe()
-In-Reply-To: <8bd0a7944f0f4f1342333eaf8d92d8e9d5623110.1696141233.git.christophe.jaillet@wanadoo.fr>
-Message-ID: <7d966897-56b5-4a53-3b75-dd90072e17@linux.intel.com>
-References: <8bd0a7944f0f4f1342333eaf8d92d8e9d5623110.1696141233.git.christophe.jaillet@wanadoo.fr>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [UPDATE][PATCH] platform/x86/intel-uncore-freq: Conditionally
+ create attribute for read frequency
+In-Reply-To: <20231002131817.1590966-1-srinivas.pandruvada@linux.intel.com>
+Message-ID: <6c59be5-1ff1-d0b1-5960-3789fe10c692@linux.intel.com>
+References: <20231002131817.1590966-1-srinivas.pandruvada@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, 1 Oct 2023, Christophe JAILLET wrote:
+On Mon, 2 Oct 2023, Srinivas Pandruvada wrote:
 
-> If an error occurs after a successful mlxplat_i2c_main_init(),
-> mlxplat_i2c_main_exit() should be called to free some resources.
+> When the current uncore frequency can't be read, don't create attribute
+> "current_freq_khz" as any read will fail later. Some user space
+> applications like turbostat fail to continue with the failure. So, check
+> error during attribute creation.
 > 
-> Add the missing call, as already done in the remove function.
-> 
-> Fixes: 158cd8320776 ("platform: mellanox: Split logic in init and exit flow")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> This patch is based on comparison between functions called in the remove
-> function and the error handling path of the probe.
-> 
-> For some reason, the way the code is written and function names are
-> puzzling to me.
+> Fixes: 8a54e2253e4c ("platform/x86/intel-uncore-freq: Uncore frequency control via TPMI")
 
-Indeed, pre/post are mixed up for init/exit variants which makes 
-everything very confusing and the call to mlxplat_post_init() is buried 
-deep into the call chain.
+Hi,
 
-These would seem better names for the init/deinit with proper pairing:
-
-- ..._logicdev_init/deinit for FPGA/CPLD init.
-- ..._mainbus_init/deinit
-- perhaps the rest could be just ..._platdevs_reg/unreg
-
-Those alone would make it much easier to follow.
-
-In addition,
-- mlxplat_i2c_mux_complition_notify() looks just useless call chain level
-  and should be removed (it also has a typo in its name).
-- Maybe ..._platdev_reg() (currently mlxplat_post_init()) should be called 
-  directly from mainbus_init() or even from .probe() and not from the
-  mux topo init.
-
-> So Review with care!
-
-It does not look complete as also mlxplat_i2c_main_init() lacks rollback 
-it should do it mlxplat_i2c_mux_topology_init() failed.
-
-Since currently mlxplat_i2c_main_init() is what ultimately calls 
-mlxplat_post_init() deep down in the call chain (unless the call to it 
-gets moved out from there), it would be appropriate for 
-mlxplat_i2c_main_exit() to do/call the cleanup.  And neither .probe() nor 
-.remove() should call mlxplat_pre_exit() directly in that case.
-
-So two alternative ways forward for the fix before all the renaming:
-
-1) Move mlxplat_post_init() call out of its current place into .probe() 
-   and make the rollback path there to match that.
-2) Do cleanup properly in mlxplat_i2c_main_init() and 
-   mlxplat_i2c_main_exit().
-
-I'd prefer 1) because it's much simpler to follow the init logic when the 
-init components are not hidden deep into the call chain.
+Thanks for the update but that commit id looks bogus, or where the value 
+is used w/o error check?
 
 -- 
  i.
 
 
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 > ---
->  drivers/platform/x86/mlx-platform.c | 1 +
->  1 file changed, 1 insertion(+)
+> update
+> - Added Fixes tag
 > 
-> diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-> index 3d96dbf79a72..64701b63336e 100644
-> --- a/drivers/platform/x86/mlx-platform.c
-> +++ b/drivers/platform/x86/mlx-platform.c
-> @@ -6598,6 +6598,7 @@ static int mlxplat_probe(struct platform_device *pdev)
->  fail_register_reboot_notifier:
->  fail_regcache_sync:
->  	mlxplat_pre_exit(priv);
-> +	mlxplat_i2c_main_exit(priv);
->  fail_mlxplat_i2c_main_init:
->  fail_regmap_write:
->  fail_alloc:
+>  .../x86/intel/uncore-frequency/uncore-frequency-common.c  | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
+> index 1152deaa0078..33ab207493e3 100644
+> --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
+> +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
+> @@ -176,7 +176,7 @@ show_uncore_data(initial_max_freq_khz);
+>  
+>  static int create_attr_group(struct uncore_data *data, char *name)
+>  {
+> -	int ret, index = 0;
+> +	int ret, freq, index = 0;
+>  
+>  	init_attribute_rw(max_freq_khz);
+>  	init_attribute_rw(min_freq_khz);
+> @@ -197,7 +197,11 @@ static int create_attr_group(struct uncore_data *data, char *name)
+>  	data->uncore_attrs[index++] = &data->min_freq_khz_dev_attr.attr;
+>  	data->uncore_attrs[index++] = &data->initial_min_freq_khz_dev_attr.attr;
+>  	data->uncore_attrs[index++] = &data->initial_max_freq_khz_dev_attr.attr;
+> -	data->uncore_attrs[index++] = &data->current_freq_khz_dev_attr.attr;
+> +
+> +	ret = uncore_read_freq(data, &freq);
+> +	if (!ret)
+> +		data->uncore_attrs[index++] = &data->current_freq_khz_dev_attr.attr;
+> +
+>  	data->uncore_attrs[index] = NULL;
+>  
+>  	data->uncore_attr_group.name = name;
 > 
