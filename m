@@ -2,112 +2,148 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C50E7B5FB
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 12:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D14AE7B5F9
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 12:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233178AbjJDMBO (ORCPT
+        id S232919AbjJDMDK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 Oct 2023 08:01:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55904 "EHLO
+        Wed, 4 Oct 2023 08:03:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233083AbjJDMBO (ORCPT
+        with ESMTP id S232912AbjJDMDJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Oct 2023 08:01:14 -0400
-Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D85ED3
-        for <platform-driver-x86@vger.kernel.org>; Wed,  4 Oct 2023 05:01:10 -0700 (PDT)
-Received: by mail-vs1-xe31.google.com with SMTP id ada2fe7eead31-45289425da1so890337137.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Oct 2023 05:01:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696420869; x=1697025669; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5VxF9d0mojGG7o4cVpSUHCY76AoqXAbBRiV4n80jKEw=;
-        b=oHwv6/DPYak/DiW3035/fi4o8vRulpJFL0nXAb1L5f5gW1bFQLIyz8cbFCYnMHUseq
-         8x9SmHPE79FkiEj1M7fKZX3HEpq2T7M9fzoC720BtQVXC5zw8PsjPWRMPzK/ZCQ6/nhJ
-         7MYHuApyLSVuLlJL7NaJ1dM2Q0R7TcVaEXQvH8YZSqHKKW6Sf7mUv6leK8FRU3rgHxVl
-         S1ETvyihTnfD0chxYCSydvEmqQx1RJVPrNzRZPoHNiTTtYU5giP8d33q1Aisrjq3Viyx
-         ajhhPkb+txsnhHvKJvp7PH+lbVkPjUQpwaYmMVgrFq0Ts+E/q/01c/zTSj+tCi47R95Y
-         bzbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696420869; x=1697025669;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5VxF9d0mojGG7o4cVpSUHCY76AoqXAbBRiV4n80jKEw=;
-        b=vsZaBrNfmzF0AdY5ad7fxE9ba/aEc9GOksW7EF6EZDjWx9ET8tTYgL4ngu+dV34BMC
-         aJsmzwCgfomCiBiZvAkCVQh2Nw1ZoiRtPsBC0tEypJ6f/aIvRdWUmacUCDTaW/3PcU5D
-         zr2V6irluYSXOTuwh1XyNXJEaSIm8ATD/hNcamoiQMF3lrYVcfjQ8MGMYFCXq+PTDX24
-         /qY6FVGK2zUpzSzITyXeLSB9onQ3NbmRRY5grAGhxeLcgNKdSBuf2yjn0R/SOBrdzZRJ
-         JCCuq2Wd+Lko/FNGVv+A6kW1D+w8h++gcFbWLDX+a84u2yeQPkpKiFDK3aNcgpiJhAP7
-         TVvw==
-X-Gm-Message-State: AOJu0YxP1lXh1IEUSkB8zM0qbI+p7u13f6uoxoBolaKT4uWE+w/Gqe12
-        +6JfQnwsZ/6wNZcCVVwlIyIY5WJmVrfIDT+w7t3B9A==
-X-Google-Smtp-Source: AGHT+IEx3AgtVmbiogi6y/J2HxxHzWhr7s02jCF0ZQyoHV8FsEEVFDac4kKEaiIaQ5/oedvf5e19/1rxUgniaHEkusM=
-X-Received: by 2002:a67:efc8:0:b0:44e:9afe:c5b9 with SMTP id
- s8-20020a67efc8000000b0044e9afec5b9mr1545555vsp.23.1696420869527; Wed, 04 Oct
- 2023 05:01:09 -0700 (PDT)
+        Wed, 4 Oct 2023 08:03:09 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09442A1;
+        Wed,  4 Oct 2023 05:03:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696420986; x=1727956986;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=COkxRDA3NTjhwUlXdXz6fmnuuZh/DzTb7V6k+Dxbo2E=;
+  b=jxKvVY/YyBXpGdqKBgbhT8DoLMH8kER6G+h0aGwaNwUOEn+hVnaB8Ebk
+   JtTukbFgn8DrpVT/y0M9y1zdqMGaCuWmyH9lPsrIJM6YjkTq9OzYG5fhN
+   U0OvBHC3gqKS17fmxvZd6IcT/txS4G6Gj2rrwsXuAMh9RlG1g/c70uNJ1
+   99ILrcUKJimcretPCmkDVA3CDdHEJ7/8lRkDnlAZ1r1rx+t06qCHB9UWO
+   SEzwWgRN8bFtEzeWQmUo9nkdcxAlTC4Hb9L94k03LEX+GcCxc4PjPlhyj
+   I1wQcSIH4E7v+nNQfFRYacvhcpr1C93MhrUd9rrQirqOTcicxX0Zs4B9l
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="382012542"
+X-IronPort-AV: E=Sophos;i="6.03,200,1694761200"; 
+   d="scan'208";a="382012542"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 05:03:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="727978775"
+X-IronPort-AV: E=Sophos;i="6.03,200,1694761200"; 
+   d="scan'208";a="727978775"
+Received: from cyrillet-mobl.ger.corp.intel.com ([10.252.55.203])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 05:03:00 -0700
+Date:   Wed, 4 Oct 2023 15:02:58 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        basavaraj.natikar@amd.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
+        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
+        daniel@ffwll.ch, Patil.Reddy@amd.com, mario.limonciello@amd.com,
+        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2 02/16] platform/x86/amd/pmf: Add support PMF-TA
+ interaction
+In-Reply-To: <20230930083715.2050863-3-Shyam-sundar.S-k@amd.com>
+Message-ID: <454df7c3-b796-952b-a4d3-a79b6d55433@linux.intel.com>
+References: <20230930083715.2050863-1-Shyam-sundar.S-k@amd.com> <20230930083715.2050863-3-Shyam-sundar.S-k@amd.com>
 MIME-Version: 1.0
-References: <20230905185309.131295-1-brgl@bgdev.pl> <20230905185309.131295-15-brgl@bgdev.pl>
- <CACRpkda9=VULj4Cy_sit-UpUQnVEbS-RJKAeULVCw8ZCRTq1sw@mail.gmail.com>
-In-Reply-To: <CACRpkda9=VULj4Cy_sit-UpUQnVEbS-RJKAeULVCw8ZCRTq1sw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 4 Oct 2023 14:00:58 +0200
-Message-ID: <CAMRc=MdTk1B4MEh9C624Upm_EcaQgJd9OU-AGfU0G-DU1+qk6A@mail.gmail.com>
-Subject: Re: [RFT PATCH 14/21] hte: tegra194: don't access struct gpio_chip
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Dipen Patel <dipenp@nvidia.com>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
-        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Sep 7, 2023 at 9:28=E2=80=AFAM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
->
-> On Tue, Sep 5, 2023 at 8:53=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Using struct gpio_chip is not safe as it will disappear if the
-> > underlying driver is unbound for any reason. Switch to using reference
-> > counted struct gpio_device and its dedicated accessors.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> As Andy points out add <linux/cleanup.h>, with that fixed:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> I think this can be merged into the gpio tree after leaving some
-> slack for the HTE maintainer to look at it, things look so much
-> better after this.
->
-> Yours,
-> Linus Walleij
+On Sat, 30 Sep 2023, Shyam Sundar S K wrote:
 
-Dipen,
+> PMF TA (Trusted Application) loads via the TEE environment into the
+> AMD ASP.
+> 
+> PMF-TA supports two commands:
+> 1) Init: Initialize the TA with the PMF Smart PC policy binary and
+> start the policy engine. A policy is a combination of inputs and
+> outputs, where;
+>  - the inputs are the changing dynamics of the system like the user
+>    behaviour, system heuristics etc.
+>  - the outputs, which are the actions to be set on the system which
+>    lead to better power management and enhanced user experience.
+> 
+> PMF driver acts as a central manager in this case to supply the
+> inputs required to the TA (either by getting the information from
+> the other kernel subsystems or from userland)
+> 
+> 2) Enact: Enact the output actions from the TA. The action could be
+> applying a new thermal limit to boost/throttle the power limits or
+> change system behavior.
+> 
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>  drivers/platform/x86/amd/pmf/pmf.h    | 10 +++
+>  drivers/platform/x86/amd/pmf/tee-if.c | 97 ++++++++++++++++++++++++++-
+>  2 files changed, 106 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index 02460c2a31ea..e0837799f521 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -59,6 +59,9 @@
+>  #define ARG_NONE 0
+>  #define AVG_SAMPLE_SIZE 3
+>  
+> +/* TA macros */
+> +#define PMF_TA_IF_VERSION_MAJOR				1
+> +
+>  /* AMD PMF BIOS interfaces */
+>  struct apmf_verify_interface {
+>  	u16 size;
+> @@ -184,6 +187,7 @@ struct amd_pmf_dev {
+>  	struct tee_shm *fw_shm_pool;
+>  	u32 session_id;
+>  	void *shbuf;
+> +	struct delayed_work pb_work;
+>  	bool smart_pc_enabled;
+>  };
+>  
+> @@ -395,6 +399,12 @@ struct apmf_dyn_slider_output {
+>  	struct apmf_cnqf_power_set ps[APMF_CNQF_MAX];
+>  } __packed;
+>  
+> +/* cmd ids for TA communication */
+> +enum ta_pmf_command {
+> +	TA_PMF_COMMAND_POLICY_BUILDER_INITIALIZE,
+> +	TA_PMF_COMMAND_POLICY_BUILDER_ENACT_POLICIES,
+> +};
+> +
+>  struct ta_pmf_shared_memory {
+>  	int command_id;
+>  	int resp_id;
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index 4db80ca59a11..1b3985cd7c08 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -13,9 +13,96 @@
+>  #include "pmf.h"
+>  
+>  #define MAX_TEE_PARAM	4
+> +
+> +/* Policy binary actions sampling frequency (in ms) */
+> +static int pb_actions_ms = 1000;
 
-if you could give this patch a test and possibly ack it for me to take
-it through the GPIO tree (or go the immutable tag from HTE route) then
-it would be great. This is the last user of gpiochip_find() treewide,
-so with it we could remove it entirely for v6.7.
+MSEC_PER_SEC (from #include <linux/time.h>, don't include the vdso one).
 
-Bart
+> +#ifdef CONFIG_AMD_PMF_DEBUG
+> +module_param(pb_actions_ms, int, 0644);
+> +MODULE_PARM_DESC(pb_actions_ms, "Policy binary actions sampling frequency (default = 1000ms)");
+> +#endif
+
+-- 
+ i.
+
