@@ -2,53 +2,53 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3858EE8FDC4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5853DE8FDC8
 	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 02:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240647AbjJDCCk (ORCPT
+        id S240800AbjJDCC3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Oct 2023 22:02:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43000 "EHLO
+        Tue, 3 Oct 2023 22:02:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240992AbjJDCCj (ORCPT
+        with ESMTP id S240677AbjJDCC2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Oct 2023 22:02:39 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33183DA;
-        Tue,  3 Oct 2023 19:02:35 -0700 (PDT)
+        Tue, 3 Oct 2023 22:02:28 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 915D8AB;
+        Tue,  3 Oct 2023 19:02:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696384956; x=1727920956;
+  t=1696384945; x=1727920945;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=kybFOdQBSnJfzmsSI4DdnlKj3rqQZE+fkrrxVtulqwo=;
-  b=BzwvMj/3WQOo9369tUbOM8A7AsAfZOqQ9e8ZQD0wsOwlVMFB0FCY4WBk
-   gjwqBS6IATiVe8QhfGS0FQEoz5ZxymrBZpW+iifh1mLJ2HJI6U/zmqmoc
-   WrIZBnDeeGfpqolyRyNlZO3U883UOFOX9EbkZuATECrM0jjkuHVmXjvsK
-   KdJxuWgOGspoz65XYPNNUGTkHQK1sCbEAhUOmrr7G7Pa2d9BBC1MyN9dh
-   A7jtsLwc1rpCaEFmIPIkoZcyLCaxsTZJ91QEesoR2kzCNurgbBS0CfEpG
-   LWTnU+m+C9VUnaGF9QqVBQVj3GLBTux3ZvjJtEtxs5xkVgUI7vidw8CWn
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="1625860"
+  bh=8t2doQA3W76ejo9Q3QbatitHE5eEQv3iv9E0a1M+xEk=;
+  b=ZG/tiCbuVaKqe6iI+ueqfYzk6GgZZqrP+IVTjeRpb5adG78t6+YLnm1k
+   7/qNq68FhsjLL6/2WBeHTH+QVuHLV4OcsGCJS1Lrep3yc/o5OFCEm7dtR
+   2ryvaMWWaslF1QE70PjlSMfdsYovqIWlbvHQsz/sbP/WMvmqYqzkxMs5S
+   lDHbaoTSe/6nPJc37/hVm80eLoRx2hwGHH6zLIrUwVIVnw9af2eT7b90A
+   GgKwh3TBTZ7XC6AjN2rVv2Y6YwwqQOZSz1r7fOCKQuAV87voHKa5tEIB1
+   APFBt52S6Gjx24616HSIAb8SC6J/XkcLkaVdTJrgwBJu/UWzbGNUIq6kq
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="413947551"
 X-IronPort-AV: E=Sophos;i="6.03,199,1694761200"; 
-   d="scan'208";a="1625860"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 19:02:23 -0700
+   d="scan'208";a="413947551"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 19:02:24 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="700926287"
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="841596680"
 X-IronPort-AV: E=Sophos;i="6.03,199,1694761200"; 
-   d="scan'208";a="700926287"
+   d="scan'208";a="841596680"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 19:02:22 -0700
+  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 19:02:23 -0700
 Received: from debox1-desk4.intel.com (unknown [10.209.24.172])
-        by linux.intel.com (Postfix) with ESMTP id 7DE5C580CBC;
-        Tue,  3 Oct 2023 19:02:22 -0700 (PDT)
+        by linux.intel.com (Postfix) with ESMTP id 7B6A8580D99;
+        Tue,  3 Oct 2023 19:02:23 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         ilpo.jarvinen@linux.intel.com, rajvi.jingar@linux.intel.com
-Subject: [PATCH V2 01/13] platform/x86/intel/vsec: Move structures to header
-Date:   Tue,  3 Oct 2023 19:02:10 -0700
-Message-Id: <20231004020222.193445-2-david.e.box@linux.intel.com>
+Subject: [PATCH V2 10/13] platform/x86/intel/pmc: Display LPM requirements for multiple PMCs
+Date:   Tue,  3 Oct 2023 19:02:19 -0700
+Message-Id: <20231004020222.193445-11-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231004020222.193445-1-david.e.box@linux.intel.com>
 References: <20231004020222.193445-1-david.e.box@linux.intel.com>
@@ -58,121 +58,170 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In preparation for exporting an API to register Intel Vendor Specific
-Extended Capabilities (VSEC) from other drivers, move needed structures to
-the header file.
+From: Rajvi Jingar <rajvi.jingar@linux.intel.com>
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Update the substate_requirements attribute to display the requirements for
+all the PMCs on a package.
+
+Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
 ---
-V2 - New patch splitting previous PATCH 1
+V2 - no change
 
- drivers/platform/x86/intel/vsec.c | 35 ------------------------------
- drivers/platform/x86/intel/vsec.h | 36 +++++++++++++++++++++++++++++++
- 2 files changed, 36 insertions(+), 35 deletions(-)
+ drivers/platform/x86/intel/pmc/core.c | 129 ++++++++++++++------------
+ 1 file changed, 71 insertions(+), 58 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index c1f9e4471b28..e82a009be630 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -24,13 +24,6 @@
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index e58c8cc286a3..df2bcead1723 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -728,7 +728,7 @@ static int pmc_core_substate_l_sts_regs_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_l_sts_regs);
  
- #include "vsec.h"
- 
--/* Intel DVSEC offsets */
--#define INTEL_DVSEC_ENTRIES		0xA
--#define INTEL_DVSEC_SIZE		0xB
--#define INTEL_DVSEC_TABLE		0xC
--#define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
--#define INTEL_DVSEC_TABLE_OFFSET(x)	((x) & GENMASK(31, 3))
--#define TABLE_OFFSET_SHIFT		3
- #define PMT_XA_START			0
- #define PMT_XA_MAX			INT_MAX
- #define PMT_XA_LIMIT			XA_LIMIT(PMT_XA_START, PMT_XA_MAX)
-@@ -39,34 +32,6 @@ static DEFINE_IDA(intel_vsec_ida);
- static DEFINE_IDA(intel_vsec_sdsi_ida);
- static DEFINE_XARRAY_ALLOC(auxdev_array);
- 
--/**
-- * struct intel_vsec_header - Common fields of Intel VSEC and DVSEC registers.
-- * @rev:         Revision ID of the VSEC/DVSEC register space
-- * @length:      Length of the VSEC/DVSEC register space
-- * @id:          ID of the feature
-- * @num_entries: Number of instances of the feature
-- * @entry_size:  Size of the discovery table for each feature
-- * @tbir:        BAR containing the discovery tables
-- * @offset:      BAR offset of start of the first discovery table
-- */
--struct intel_vsec_header {
--	u8	rev;
--	u16	length;
--	u16	id;
--	u8	num_entries;
--	u8	entry_size;
--	u8	tbir;
--	u32	offset;
--};
--
--enum intel_vsec_id {
--	VSEC_ID_TELEMETRY	= 2,
--	VSEC_ID_WATCHER		= 3,
--	VSEC_ID_CRASHLOG	= 4,
--	VSEC_ID_SDSI		= 65,
--	VSEC_ID_TPMI		= 66,
--};
--
- static const char *intel_vsec_name(enum intel_vsec_id id)
+-static void pmc_core_substate_req_header_show(struct seq_file *s)
++static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index)
  {
- 	switch (id) {
-diff --git a/drivers/platform/x86/intel/vsec.h b/drivers/platform/x86/intel/vsec.h
-index 0fd042c171ba..8900cb95afd3 100644
---- a/drivers/platform/x86/intel/vsec.h
-+++ b/drivers/platform/x86/intel/vsec.h
-@@ -11,9 +11,45 @@
- #define VSEC_CAP_SDSI		BIT(3)
- #define VSEC_CAP_TPMI		BIT(4)
- 
-+/* Intel DVSEC offsets */
-+#define INTEL_DVSEC_ENTRIES		0xA
-+#define INTEL_DVSEC_SIZE		0xB
-+#define INTEL_DVSEC_TABLE		0xC
-+#define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
-+#define INTEL_DVSEC_TABLE_OFFSET(x)	((x) & GENMASK(31, 3))
-+#define TABLE_OFFSET_SHIFT		3
+ 	struct pmc_dev *pmcdev = s->private;
+ 	int i, mode;
+@@ -743,68 +743,81 @@ static void pmc_core_substate_req_header_show(struct seq_file *s)
+ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+ {
+ 	struct pmc_dev *pmcdev = s->private;
+-	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+-	const struct pmc_bit_map **maps = pmc->map->lpm_sts;
+-	const struct pmc_bit_map *map;
+-	const int num_maps = pmc->map->lpm_num_maps;
+-	u32 sts_offset = pmc->map->lpm_status_offset;
+-	u32 *lpm_req_regs = pmc->lpm_req_regs;
+-	int mp;
+-
+-	/* Display the header */
+-	pmc_core_substate_req_header_show(s);
+-
+-	/* Loop over maps */
+-	for (mp = 0; mp < num_maps; mp++) {
+-		u32 req_mask = 0;
+-		u32 lpm_status;
+-		int mode, idx, i, len = 32;
+-
+-		/*
+-		 * Capture the requirements and create a mask so that we only
+-		 * show an element if it's required for at least one of the
+-		 * enabled low power modes
+-		 */
+-		pmc_for_each_mode(idx, mode, pmcdev)
+-			req_mask |= lpm_req_regs[mp + (mode * num_maps)];
+-
+-		/* Get the last latched status for this map */
+-		lpm_status = pmc_core_reg_read(pmc, sts_offset + (mp * 4));
+-
+-		/*  Loop over elements in this map */
+-		map = maps[mp];
+-		for (i = 0; map[i].name && i < len; i++) {
+-			u32 bit_mask = map[i].bit_mask;
+-
+-			if (!(bit_mask & req_mask))
+-				/*
+-				 * Not required for any enabled states
+-				 * so don't display
+-				 */
+-				continue;
+-
+-			/* Display the element name in the first column */
+-			seq_printf(s, "%30s |", map[i].name);
+-
+-			/* Loop over the enabled states and display if required */
+-			pmc_for_each_mode(idx, mode, pmcdev) {
+-				if (lpm_req_regs[mp + (mode * num_maps)] & bit_mask)
+-					seq_printf(s, " %9s |",
+-						   "Required");
++	u32 sts_offset;
++	u32 *lpm_req_regs;
++	int num_maps, mp, pmc_index;
 +
- struct pci_dev;
- struct resource;
- 
-+enum intel_vsec_id {
-+	VSEC_ID_TELEMETRY	= 2,
-+	VSEC_ID_WATCHER		= 3,
-+	VSEC_ID_CRASHLOG	= 4,
-+	VSEC_ID_SDSI		= 65,
-+	VSEC_ID_TPMI		= 66,
-+};
++	for (pmc_index = 0; pmc_index < ARRAY_SIZE(pmcdev->pmcs); ++pmc_index) {
++		struct pmc *pmc = pmcdev->pmcs[pmc_index];
++		const struct pmc_bit_map **maps;
 +
-+/**
-+ * struct intel_vsec_header - Common fields of Intel VSEC and DVSEC registers.
-+ * @rev:         Revision ID of the VSEC/DVSEC register space
-+ * @length:      Length of the VSEC/DVSEC register space
-+ * @id:          ID of the feature
-+ * @num_entries: Number of instances of the feature
-+ * @entry_size:  Size of the discovery table for each feature
-+ * @tbir:        BAR containing the discovery tables
-+ * @offset:      BAR offset of start of the first discovery table
-+ */
-+struct intel_vsec_header {
-+	u8	rev;
-+	u16	length;
-+	u16	id;
-+	u8	num_entries;
-+	u8	entry_size;
-+	u8	tbir;
-+	u32	offset;
-+};
++		if (!pmc)
++			continue;
 +
- enum intel_vsec_quirks {
- 	/* Watcher feature not supported */
- 	VSEC_QUIRK_NO_WATCHER	= BIT(0),
++		maps = pmc->map->lpm_sts;
++		num_maps = pmc->map->lpm_num_maps;
++		sts_offset = pmc->map->lpm_status_offset;
++		lpm_req_regs = pmc->lpm_req_regs;
++
++		if (!lpm_req_regs)
++			continue;
++
++		/* Display the header */
++		pmc_core_substate_req_header_show(s, pmc_index);
++
++		/* Loop over maps */
++		for (mp = 0; mp < num_maps; mp++) {
++			u32 req_mask = 0;
++			u32 lpm_status;
++			const struct pmc_bit_map *map;
++			int mode, idx, i, len = 32;
++
++			/*
++			 * Capture the requirements and create a mask so that we only
++			 * show an element if it's required for at least one of the
++			 * enabled low power modes
++			 */
++			pmc_for_each_mode(idx, mode, pmcdev)
++				req_mask |= lpm_req_regs[mp + (mode * num_maps)];
++
++			/* Get the last latched status for this map */
++			lpm_status = pmc_core_reg_read(pmc, sts_offset + (mp * 4));
++
++			/*  Loop over elements in this map */
++			map = maps[mp];
++			for (i = 0; map[i].name && i < len; i++) {
++				u32 bit_mask = map[i].bit_mask;
++
++				if (!(bit_mask & req_mask)) {
++					/*
++					 * Not required for any enabled states
++					 * so don't display
++					 */
++					continue;
++				}
++
++				/* Display the element name in the first column */
++				seq_printf(s, "pmc%d: %26s |", pmc_index, map[i].name);
++
++				/* Loop over the enabled states and display if required */
++				pmc_for_each_mode(idx, mode, pmcdev) {
++					if (lpm_req_regs[mp + (mode * num_maps)] & bit_mask)
++						seq_printf(s, " %9s |",
++							   "Required");
++					else
++						seq_printf(s, " %9s |", " ");
++				}
++
++				/* In Status column, show the last captured state of this agent */
++				if (lpm_status & bit_mask)
++					seq_printf(s, " %9s |", "Yes");
+ 				else
+ 					seq_printf(s, " %9s |", " ");
++
++				seq_puts(s, "\n");
+ 			}
+-
+-			/* In Status column, show the last captured state of this agent */
+-			if (lpm_status & bit_mask)
+-				seq_printf(s, " %9s |", "Yes");
+-			else
+-				seq_printf(s, " %9s |", " ");
+-
+-			seq_puts(s, "\n");
+ 		}
+ 	}
+-
+ 	return 0;
+ }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_req_regs);
 -- 
 2.34.1
 
