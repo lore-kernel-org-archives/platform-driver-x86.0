@@ -2,121 +2,94 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57365E7B60C
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 12:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DC8E7B60F
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 13:00:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233193AbjJDMtR (ORCPT
+        id S242462AbjJDNAI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 Oct 2023 08:49:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40888 "EHLO
+        Wed, 4 Oct 2023 09:00:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242397AbjJDMtQ (ORCPT
+        with ESMTP id S233110AbjJDNAH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Oct 2023 08:49:16 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B6ABA1;
-        Wed,  4 Oct 2023 05:49:13 -0700 (PDT)
+        Wed, 4 Oct 2023 09:00:07 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D99A7A1;
+        Wed,  4 Oct 2023 06:00:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696423753; x=1727959753;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=rj9ckGhx7qabhBsJN6ooilfTGh5kM2iDQp2HkYAkZJ8=;
-  b=QXCqHaMXFRX9hVTA4t7BmmaMO5+0WSqb/xq4nkAv7g2qL3HlGaAu32Xn
-   pp4P8735OeUEm7i8490FIsjVYPCWnWg2J+YfzsRN6/+UBHMJ9DEjncjbT
-   00oqYD+GTx5NahCBPdTfdId1uSCEc0v2swHZqvbQLKgwV13vfZ4ve8emb
-   RGzJ38ivipEwLQIGd/pgDMVcOOrZjB6s3EqVmMb970jlasxGq7HZpVwEW
-   tGniqnv0x8bY5nndXtdiOVVztwnehKh+0Fkugz6CJqy3V96mgbG21pRDr
-   +DxqoOOBJQA51TOCKnOBpo45NedvxDVR3lREslu25HAsg1o2zRl05mY92
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="469431263"
+  t=1696424403; x=1727960403;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Br4t2HHSaW2VwBYRDMtIOXQjAAIRvE4Iyn1UXUJf9Mw=;
+  b=XVhaUK5VPdGmk+4vXHKtsJzrQyzmCEri1Vhr+nNomYYkaSXFe+3YT93J
+   0tmPbyuAB+FPYncvajjxa2W/xj1mI0t1vD3cxUYyHg34R1XYeCkgPXw91
+   wwQ9iDrNTuugkYlryT09XVtewTpCuo4YQIAWTPBXF0Ps29NG4XWMH0Z1u
+   00/8/PbshdhUBeUx5IYn+AwBRCd1FYCeFjje4HEazYk0NmO5nTiPKgA0o
+   3oRWk5+RXcszQ1+ucG8J1wB9TV8IxcQsXrrJ2rzCwytDlI/sbdRoYvDIm
+   4QaWe2CIwYnpdCvyHi2gQbWAgFBWeNrV1sJY7bjNseCZJ/jdH49B6fYUv
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="363429523"
 X-IronPort-AV: E=Sophos;i="6.03,200,1694761200"; 
-   d="scan'208";a="469431263"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 05:49:12 -0700
+   d="scan'208";a="363429523"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 06:00:03 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="817083231"
+X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="780767763"
 X-IronPort-AV: E=Sophos;i="6.03,200,1694761200"; 
-   d="scan'208";a="817083231"
-Received: from cyrillet-mobl.ger.corp.intel.com ([10.252.55.203])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 05:49:08 -0700
-Date:   Wed, 4 Oct 2023 15:49:05 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
-        basavaraj.natikar@amd.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
-        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
-        daniel@ffwll.ch, Patil.Reddy@amd.com, mario.limonciello@amd.com,
-        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v2 12/16] platform/x86/amd/pmf: Add PMF-AMDGPU get
- interface
-In-Reply-To: <20230930083715.2050863-13-Shyam-sundar.S-k@amd.com>
-Message-ID: <e7b33961-23bb-cb8-2941-ced3f0cf2620@linux.intel.com>
-References: <20230930083715.2050863-1-Shyam-sundar.S-k@amd.com> <20230930083715.2050863-13-Shyam-sundar.S-k@amd.com>
+   d="scan'208";a="780767763"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 06:00:00 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qo1Tq-00000002m9b-0kKx;
+        Wed, 04 Oct 2023 15:59:58 +0300
+Date:   Wed, 4 Oct 2023 15:59:57 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] platform/x86/intel/tpmi: Add defines to get
+ version information
+Message-ID: <ZR1hzZ4KNZqElGGH@smile.fi.intel.com>
+References: <20231003184916.1860084-1-srinivas.pandruvada@linux.intel.com>
+ <20231003184916.1860084-2-srinivas.pandruvada@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231003184916.1860084-2-srinivas.pandruvada@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, 30 Sep 2023, Shyam Sundar S K wrote:
+On Tue, Oct 03, 2023 at 11:49:14AM -0700, Srinivas Pandruvada wrote:
+> Add defines to get major and minor version from a TPMI version field
+> value. This will avoid code duplication to convert in every feature
+> driver. Also add define for invalid version field.
 
-> In order to provide GPU inputs to TA for the Smart PC solution to work, we
-> need to have interface between the PMF driver and the AMDGPU driver.
-> 
-> Add the initial code path for get interface from AMDGPU.
-> 
-> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+...
 
-> @@ -355,6 +356,21 @@ static int amd_pmf_get_bios_buffer(struct amd_pmf_dev *dev)
->  	return amd_pmf_start_policy_engine(dev);
->  }
->  
-> +static int amd_pmf_get_gpu_handle(struct pci_dev *pdev, void *data)
-> +{
-> +	struct amd_pmf_dev *dev = data;
-> +
-> +	if (pdev->vendor == PCI_VENDOR_ID_ATI && pdev->devfn == 0) {
-> +		/* get the amdgpu handle from the pci root after walking through the pci bus */
+> +#define TPMI_VERSION_INVALID	0xff
 
-I can see from the code that you assign to amdgpu handle so this comment 
-added no information.
+I would make it clearer with (GENMASK(7, 5) | GENMASK(4, 0))
+or even with specific masks defined and used in both cases:
+#def
 
-It doesn't really answer at all why you're doing this second step. Based 
-on the give parameters to pci_get_device(), it looks as if you're asking 
-for the same device you already have in pdev to be searched to you.
+#define TPMI_MINVER_MASK	GENMASK(4, 0)
+#define TPMI_MAJVER_MASK	GENMASK(7, 5)
 
-> +		dev->gfx_data.gpu_dev = pci_get_device(pdev->vendor, pdev->device, NULL);
-> +		if (dev->gfx_data.gpu_dev) {
-> +			pci_dev_put(pdev);
-> +			return 1; /* stop walking */
-> +		}
-> +	}
-> +	return 0; /* continue walking */
-> +}
-> +
->  static int amd_pmf_amdtee_ta_match(struct tee_ioctl_version_data *ver, const void *data)
->  {
->  	return ver->impl_id == TEE_IMPL_ID_AMDTEE;
-> @@ -451,6 +467,15 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  	INIT_DELAYED_WORK(&dev->pb_work, amd_pmf_invoke_cmd);
->  	amd_pmf_set_dram_addr(dev);
->  	amd_pmf_get_bios_buffer(dev);
-> +
-> +	/* get amdgpu handle */
-> +	pci_walk_bus(dev->root->bus, amd_pmf_get_gpu_handle, dev);
-> +	if (!dev->gfx_data.gpu_dev)
-> +		dev_err(dev->dev, "GPU handle not found!\n");
-> +
-> +	if (!amd_pmf_gpu_init(&dev->gfx_data))
-> +		dev->gfx_data.gpu_dev_en = true;
-> +
+#define TPMI_VERSION_INVALID	(TPMI_MINVER_MASK | TPMI_MAJVER_MASK)
 
+#define TPMI_MINOR_VERSION(val)	FIELD_GET(TPMI_MINVER_MASK, val)
+#define TPMI_MAJOR_VERSION(val)	FIELD_GET(TPMI_MAJVER_MASK, val)
+
+> +#define TPMI_MINOR_VERSION(val)	FIELD_GET(GENMASK(4, 0), val)
+> +#define TPMI_MAJOR_VERSION(val)	FIELD_GET(GENMASK(7, 5), val)
 
 -- 
- i.
+With Best Regards,
+Andy Shevchenko
+
 
