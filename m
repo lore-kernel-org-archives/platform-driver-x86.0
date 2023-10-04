@@ -2,167 +2,98 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 685F2E7B5EF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 11:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2417E7B5EE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 11:17:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233041AbjJDLDf (ORCPT
+        id S232784AbjJDLRW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 Oct 2023 07:03:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37734 "EHLO
+        Wed, 4 Oct 2023 07:17:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241213AbjJDLDe (ORCPT
+        with ESMTP id S232519AbjJDLRW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Oct 2023 07:03:34 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8792EB0;
-        Wed,  4 Oct 2023 04:03:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696417411; x=1727953411;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=9wFZDTVPfxaaXT4OzZ8Ud4lOXKjaifdovN0viPzCpTM=;
-  b=ZRGCo8+O+N9b8lL9rDmpklmH6F2le+xo1McaVkjZEnGxx6m1AxVFPvui
-   5NzMX7wAWOZWN7hfLXiGaSPvHtb9ZhfdQoONagZiYjhNe25mUU66dQ9tN
-   ECsaFRYTOldapldL9oTrHWVOZoxkDdFoScwbmqedtU2PoRWY2/omt8nC2
-   IndxmTqNDeNHfS0v2UCgrPWYBQUDijmShFdECsW+0VV7ktEOmPeuHAltg
-   mTez9Q2rZLb+fVG5A7rfqeJu/1Jgp5kvYDBFshI5TU8WAzzowDcEWmGVN
-   Gfh8yYxOMloViAQudSl9KDaeLUMI3OorxZRekEKA0l1Fa4SeSZo0d/bpc
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="363399255"
-X-IronPort-AV: E=Sophos;i="6.03,200,1694761200"; 
-   d="scan'208";a="363399255"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 04:03:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="998416391"
-X-IronPort-AV: E=Sophos;i="6.03,200,1694761200"; 
-   d="scan'208";a="998416391"
-Received: from cyrillet-mobl.ger.corp.intel.com ([10.252.55.203])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 04:03:26 -0700
-Date:   Wed, 4 Oct 2023 14:03:24 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
-        basavaraj.natikar@amd.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
-        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
-        daniel@ffwll.ch, Patil.Reddy@amd.com, mario.limonciello@amd.com,
-        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v2 03/16] platform/x86/amd/pmf: Change return type of
- amd_pmf_set_dram_addr()
-In-Reply-To: <20230930083715.2050863-4-Shyam-sundar.S-k@amd.com>
-Message-ID: <567055c-d8cc-1f4b-4fc6-758cb52b2c75@linux.intel.com>
-References: <20230930083715.2050863-1-Shyam-sundar.S-k@amd.com> <20230930083715.2050863-4-Shyam-sundar.S-k@amd.com>
+        Wed, 4 Oct 2023 07:17:22 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 525B0B8
+        for <platform-driver-x86@vger.kernel.org>; Wed,  4 Oct 2023 04:17:18 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qnzsL-00060R-8k; Wed, 04 Oct 2023 13:17:09 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qnzsK-00B18J-5p; Wed, 04 Oct 2023 13:17:08 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qnzsJ-008wZF-Sd; Wed, 04 Oct 2023 13:17:07 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH] platform/x86: hp-wmi:: Mark driver struct with __refdata to prevent section mismatch warning
+Date:   Wed,  4 Oct 2023 13:16:24 +0200
+Message-Id: <20231004111624.2667753-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1634; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=f8W1iIrP5rI4rBYoQ7SZQAD9FsGirksLT61bOCoG8MI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlHUmH0JPWYPUOK3OSrU9SdYWflZuhcghjWVKH4 zXQnLaOwQiJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZR1JhwAKCRCPgPtYfRL+ TggvCAC0ZTi4PM+i0sau4iHFKH2ROfR5yvVyvOmgd72vOMiDPqXtlA8xpjpNeAUswzcII0Hsq6U FoXmzOCrV+cYZ3Uwr5vGjtlJGOewDoLRRQEXmjw7ZfEK6OneEkN8S9Cc0KRjfcZ4nKxk6DdH4NN HMwJn2xiZCz4QhJ0iHT/hRXUTNgp+cxsBOgpurF7S89hzFidP64d4by1kgob8UvazgjgRKy8yoJ RbZ3f8OS3xsGutQD1rd8yzStHfouPsr7V8rbgGnzfgbo6j0UI4T0nGqH3glrLd6n+ko9dBSHnTP dYneErgnJsv+WbMGLt888MD6GxY7A9DoiYLnWi69MzIFwzxB
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, 30 Sep 2023, Shyam Sundar S K wrote:
+As described in the added code comment, a reference to .exit.text is ok
+for drivers registered via module_platform_driver_probe(). Make this
+explicit to prevent a section mismatch warning:
 
-> In the current code, the metrics table information was required only
-> for auto-mode or CnQF at a given time. Hence keeping the return type
-> of amd_pmf_set_dram_addr() as static made sense.
-> 
-> But with the addition of Smart PC builder feature, the metrics table
-> information has to be shared by the Smart PC also and this feature
-> resides outside of core.c.
-> 
-> To make amd_pmf_set_dram_addr() visible outside of core.c make it
-> as a non-static function and move the allocation of memory for
-> metrics table from amd_pmf_init_metrics_table() to amd_pmf_set_dram_addr()
-> as amd_pmf_set_dram_addr() is the common function to set the DRAM
-> address.
-> 
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
->  drivers/platform/x86/amd/pmf/core.c | 26 ++++++++++++++++++--------
->  drivers/platform/x86/amd/pmf/pmf.h  |  1 +
->  2 files changed, 19 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> index 68f1389dda3e..678dce4fea08 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -251,29 +251,35 @@ static const struct pci_device_id pmf_pci_ids[] = {
->  	{ }
->  };
->  
-> -static void amd_pmf_set_dram_addr(struct amd_pmf_dev *dev)
-> +int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev)
->  {
->  	u64 phys_addr;
->  	u32 hi, low;
->  
-> +	/* Get Metrics Table Address */
-> +	dev->buf = kzalloc(sizeof(dev->m_table), GFP_KERNEL);
-> +	if (!dev->buf)
-> +		return -ENOMEM;
-> +
->  	phys_addr = virt_to_phys(dev->buf);
->  	hi = phys_addr >> 32;
->  	low = phys_addr & GENMASK(31, 0);
->  
->  	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_HIGH, 0, hi, NULL);
->  	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_LOW, 0, low, NULL);
-> +
-> +	return 0;
->  }
->  
->  int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
->  {
-> -	/* Get Metrics Table Address */
-> -	dev->buf = kzalloc(sizeof(dev->m_table), GFP_KERNEL);
-> -	if (!dev->buf)
-> -		return -ENOMEM;
-> +	int ret;
->  
->  	INIT_DELAYED_WORK(&dev->work_buffer, amd_pmf_get_metrics);
->  
-> -	amd_pmf_set_dram_addr(dev);
-> +	ret = amd_pmf_set_dram_addr(dev);
-> +	if (ret)
-> +		return ret;
->  
->  	/*
->  	 * Start collecting the metrics data after a small delay
-> @@ -287,9 +293,13 @@ int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
->  static int amd_pmf_resume_handler(struct device *dev)
->  {
->  	struct amd_pmf_dev *pdev = dev_get_drvdata(dev);
-> +	int ret;
->  
-> -	if (pdev->buf)
-> -		amd_pmf_set_dram_addr(pdev);
-> +	if (pdev->buf) {
-> +		ret = amd_pmf_set_dram_addr(pdev);
+	WARNING: modpost: drivers/platform/x86/hp/hp-wmi: section mismatch in reference: hp_wmi_driver+0x8 (section: .data) -> hp_wmi_bios_remove (section: .exit.text)
 
-Won't this now leak the previous ->buf?
+Fixes: c165b80cfecc ("hp-wmi: fix handling of platform device")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
-> +		if (ret)
-> +			return ret;
-> +	}
->  
->  	return 0;
->  }
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index e0837799f521..3930b8ed8333 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -421,6 +421,7 @@ int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev);
->  int amd_pmf_get_power_source(void);
->  int apmf_install_handler(struct amd_pmf_dev *pmf_dev);
->  int apmf_os_power_slider_update(struct amd_pmf_dev *dev, u8 flag);
-> +int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev);
->  
->  /* SPS Layer */
->  int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
-> 
+the mentioned section mismatch warning only happens for W=1 builds on
+trees that contain f177cd0c15fc ("modpost: Don't let "driver"s reference
+.exit.*").
 
+Best regards
+Uwe
+
+ drivers/platform/x86/hp/hp-wmi.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index e76e5458db35..8ebb7be52ee7 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -1548,7 +1548,13 @@ static const struct dev_pm_ops hp_wmi_pm_ops = {
+ 	.restore  = hp_wmi_resume_handler,
+ };
+ 
+-static struct platform_driver hp_wmi_driver = {
++/*
++ * hp_wmi_bios_remove() lives in .exit.text. For drivers registered via
++ * module_platform_driver_probe() this is ok because they cannot get unbound at
++ * runtime. So mark the driver struct with __refdata to prevent modpost
++ * triggering a section mismatch warning.
++ */
++static struct platform_driver hp_wmi_driver __refdata = {
+ 	.driver = {
+ 		.name = "hp-wmi",
+ 		.pm = &hp_wmi_pm_ops,
+
+base-commit: 6465e260f48790807eef06b583b38ca9789b6072
 -- 
- i.
+2.39.2
 
