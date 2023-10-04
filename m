@@ -2,205 +2,171 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F9DE7B5F5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 11:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62ECE7B5FB
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 11:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233335AbjJDL1Z (ORCPT
+        id S232936AbjJDL7t (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 Oct 2023 07:27:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54186 "EHLO
+        Wed, 4 Oct 2023 07:59:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229754AbjJDL1Z (ORCPT
+        with ESMTP id S233040AbjJDL7s (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Oct 2023 07:27:25 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC790B0;
-        Wed,  4 Oct 2023 04:27:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696418841; x=1727954841;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=230HfQm2a9UxErUBnPosyTWv+y7iJw7e5Hn3qf1hWZ4=;
-  b=ksri94kZicFo3We2rpmLIxVrGqbwzf9xGy3AfhW2s03LFwmBAyE9edn2
-   NMqSM5DzYjywyKLRbErD5n+hrnduYaaIS3uNgCbsJ/CTE3PJgoXZCNyoQ
-   JQT69u6pzX4AHmRByqZP27wWtujzC6oHCjgq8HKRyd6+Y7n4sMlJt4DYb
-   rwrL49e5iSwi8ezRIFelc99SqM/R+UjtHi4QNlI+56/iqkDViiJuCSehz
-   WPEzkpsENCYCLGpboJ3fn8KcH7OIFmy8V3jel9kod9B0tDhGlTxj3ZagS
-   rdMCBwlMPVvBebkUqR94SIx/qXYOWvWuFTKT7//0MlzMb5kz7ti/L0xWL
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="469410127"
-X-IronPort-AV: E=Sophos;i="6.03,200,1694761200"; 
-   d="scan'208";a="469410127"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 04:27:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="925092479"
-X-IronPort-AV: E=Sophos;i="6.03,200,1694761200"; 
-   d="scan'208";a="925092479"
-Received: from cyrillet-mobl.ger.corp.intel.com ([10.252.55.203])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 04:27:16 -0700
-Date:   Wed, 4 Oct 2023 14:27:14 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
-        basavaraj.natikar@amd.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
-        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
-        daniel@ffwll.ch, Patil.Reddy@amd.com, mario.limonciello@amd.com,
-        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v2 01/16] platform/x86/amd/pmf: Add PMF TEE interface
-In-Reply-To: <20230930083715.2050863-2-Shyam-sundar.S-k@amd.com>
-Message-ID: <43ccea61-c826-72f7-768-7e6a9fd274e@linux.intel.com>
-References: <20230930083715.2050863-1-Shyam-sundar.S-k@amd.com> <20230930083715.2050863-2-Shyam-sundar.S-k@amd.com>
+        Wed, 4 Oct 2023 07:59:48 -0400
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02599A9
+        for <platform-driver-x86@vger.kernel.org>; Wed,  4 Oct 2023 04:59:43 -0700 (PDT)
+Received: by mail-vs1-xe2e.google.com with SMTP id ada2fe7eead31-4529d1238a9so1024191137.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Oct 2023 04:59:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696420782; x=1697025582; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6AACATPPHgIuz8FxZ7eCyvrDEuOEhlDx+Kvd4JOYuOA=;
+        b=mAQOrt8gTZi0vq7sO1Xt+yd+As6o+i0usTWDB+j7z0PqkPrl5peGoHXfK+Mr/tWL9G
+         FHtVkskJtcJbXsyxZ+V04CiyWyZgEo/WNozbtjd/7sjL5/f+iagaILqHbv8TJaFtlfVL
+         P9PPfqJ5pV489Cz0iNVmumBfhlYlbRC5/WnnxDUfjSpnw+A2pC7hmFGVy4pzKIjhYfCB
+         Ai7ymdGxKduCjHdvM4J7LvVkrdgcBUNMI5GVj0YxqFq4mIJAhVHbrlt4n+fCGQLtvMTN
+         7JIbIsOPRF5yMci2nmdSF8FN82PecXEaZ13QnRAXiaM3Eiq9Q8zxtfqkQSjBeDJ9VMig
+         22Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696420782; x=1697025582;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6AACATPPHgIuz8FxZ7eCyvrDEuOEhlDx+Kvd4JOYuOA=;
+        b=LutvJiyT24EkJNLez0uTzMtQ3Mot6BkbvcOI0AXmQJgGJt1W3eJNJgyq5f1oS+FgPp
+         Npnmt1eDx23gYJJZAAKu50Gb2vN+oa6MhEJrC7slgdG3jWaGuQGtf+5/pdRNF5dl/tRw
+         jOybKX2wU2he8PO8z43g6f7+X+5HHsP7lGDTNuCHpf3xfL9EhQJQL5EX8JlzvRApEYLt
+         PKIoSxoikRjxc50cEw1b+XrETY08nP50/FNuDGJITQoeNtqb1UgD3AADsfPLFOBF1mup
+         TFrbF7EcjZwEWxy51dULKO13qZ2lNaD08wUT0G048/HrkP9YdkhKwCcrHAA+dExDmYmu
+         6f7Q==
+X-Gm-Message-State: AOJu0Yy/JZR62xll/XX3nCZ46rFyYJaMU7XIiscZ8+he475A7kgLuvZB
+        vCucte8hX5ORd0gfPOAy/wwLgnHKYl7HVyQNMXG0GA==
+X-Google-Smtp-Source: AGHT+IHumK2wxKHooMcCivaS2pM5etsFaTr9cIpwm6I5vcIaNG/mZmLCE1Sz7hn/phh+XU0GX2azNlHCgSET25mhNNk=
+X-Received: by 2002:a67:e3ab:0:b0:452:5798:64bd with SMTP id
+ j11-20020a67e3ab000000b00452579864bdmr1197006vsm.35.1696420782057; Wed, 04
+ Oct 2023 04:59:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20230905185309.131295-1-brgl@bgdev.pl> <20230905185309.131295-16-brgl@bgdev.pl>
+In-Reply-To: <20230905185309.131295-16-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 4 Oct 2023 13:59:31 +0200
+Message-ID: <CAMRc=MeBKovkC-VbvWNJWk_UjU4FGguEW7gy=L-2saA7kiPijQ@mail.gmail.com>
+Subject: Re: [RFT PATCH 15/21] arm: omap1: ams-delta: stop using gpiochip_find()
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, 30 Sep 2023, Shyam Sundar S K wrote:
-
-> AMD PMF driver loads the PMF TA (Trusted Application) into the AMD
-> ASP's (AMD Security Processor) TEE (Trusted Execution Environment).
-> 
-> PMF Trusted Application is a secured firmware placed under
-> /lib/firmware/amdtee gets loaded only when the TEE environment is
-> initialized. Add the initial code path to build these pipes.
-> 
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+On Tue, Sep 5, 2023 at 8:53=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> gpiochip_find() is going away as it's not hot-unplug safe. This platform
+> is not affected by any of the related problems as this GPIO controller
+> cannot really go away but in order to finally remove this function, we
+> need to convert it to using gpio_device_find() as well.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
->  drivers/platform/x86/amd/pmf/Makefile |   3 +-
->  drivers/platform/x86/amd/pmf/core.c   |  11 ++-
->  drivers/platform/x86/amd/pmf/pmf.h    |  16 ++++
->  drivers/platform/x86/amd/pmf/tee-if.c | 112 ++++++++++++++++++++++++++
->  4 files changed, 138 insertions(+), 4 deletions(-)
->  create mode 100644 drivers/platform/x86/amd/pmf/tee-if.c
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
-> index fdededf54392..d2746ee7369f 100644
-> --- a/drivers/platform/x86/amd/pmf/Makefile
-> +++ b/drivers/platform/x86/amd/pmf/Makefile
-> @@ -6,4 +6,5 @@
->  
->  obj-$(CONFIG_AMD_PMF) += amd-pmf.o
->  amd-pmf-objs := core.o acpi.o sps.o \
-> -		auto-mode.o cnqf.o
-> +		auto-mode.o cnqf.o \
-> +		tee-if.o
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> index 78ed3ee22555..68f1389dda3e 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -309,8 +309,11 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
->  		dev_dbg(dev->dev, "SPS enabled and Platform Profiles registered\n");
->  	}
->  
-> -	/* Enable Auto Mode */
-> -	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
-> +	if (amd_pmf_init_smart_pc(dev)) {
-> +		/* Enable Smart PC Solution builder */
-> +		dev_dbg(dev->dev, "Smart PC Solution Enabled\n");
-> +	} else if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
-> +		/* Enable Auto Mode */
->  		amd_pmf_init_auto_mode(dev);
->  		dev_dbg(dev->dev, "Auto Mode Init done\n");
->  	} else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC) ||
-> @@ -330,7 +333,9 @@ static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
->  		amd_pmf_deinit_sps(dev);
->  	}
->  
-> -	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
-> +	if (dev->smart_pc_enabled) {
-> +		amd_pmf_deinit_smart_pc(dev);
-> +	} else if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
->  		amd_pmf_deinit_auto_mode(dev);
->  	} else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC) ||
->  			  is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_DC)) {
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index deba88e6e4c8..02460c2a31ea 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -179,6 +179,12 @@ struct amd_pmf_dev {
->  	bool cnqf_enabled;
->  	bool cnqf_supported;
->  	struct notifier_block pwr_src_notifier;
-> +	/* Smart PC solution builder */
-> +	struct tee_context *tee_ctx;
-> +	struct tee_shm *fw_shm_pool;
-> +	u32 session_id;
-> +	void *shbuf;
-> +	bool smart_pc_enabled;
+>  arch/arm/mach-omap1/board-ams-delta.c | 36 +++++++++++++--------------
+>  1 file changed, 17 insertions(+), 19 deletions(-)
+>
+> diff --git a/arch/arm/mach-omap1/board-ams-delta.c b/arch/arm/mach-omap1/=
+board-ams-delta.c
+> index 9808cd27e2cf..a28ea6ac1eba 100644
+> --- a/arch/arm/mach-omap1/board-ams-delta.c
+> +++ b/arch/arm/mach-omap1/board-ams-delta.c
+> @@ -560,22 +560,6 @@ static struct gpiod_lookup_table *ams_delta_gpio_tab=
+les[] __initdata =3D {
+>         &ams_delta_nand_gpio_table,
 >  };
->  
->  struct apmf_sps_prop_granular {
-> @@ -389,6 +395,13 @@ struct apmf_dyn_slider_output {
->  	struct apmf_cnqf_power_set ps[APMF_CNQF_MAX];
->  } __packed;
->  
-> +struct ta_pmf_shared_memory {
-> +	int command_id;
-> +	int resp_id;
-> +	u32 pmf_result;
-> +	u32 if_version;
-> +};
+>
+> -/*
+> - * Some drivers may not use GPIO lookup tables but need to be provided
+> - * with GPIO numbers.  The same applies to GPIO based IRQ lines - some
+> - * drivers may even not use GPIO layer but expect just IRQ numbers.
+> - * We could either define GPIO lookup tables then use them on behalf
+> - * of those devices, or we can use GPIO driver level methods for
+> - * identification of GPIO and IRQ numbers. For the purpose of the latter=
+,
+> - * defina a helper function which identifies GPIO chips by their labels.
+> - */
+> -static int gpiochip_match_by_label(struct gpio_chip *chip, void *data)
+> -{
+> -       char *label =3D data;
+> -
+> -       return !strcmp(label, chip->label);
+> -}
+> -
+>  static struct gpiod_hog ams_delta_gpio_hogs[] =3D {
+>         GPIO_HOG(LATCH2_LABEL, LATCH2_PIN_KEYBRD_DATAOUT, "keybrd_dataout=
+",
+>                  GPIO_ACTIVE_HIGH, GPIOD_OUT_LOW),
+> @@ -615,14 +599,28 @@ static void __init modem_assign_irq(struct gpio_chi=
+p *chip)
+>   */
+>  static void __init omap_gpio_deps_init(void)
+>  {
+> +       struct gpio_device *gdev;
+>         struct gpio_chip *chip;
+>
+> -       chip =3D gpiochip_find(OMAP_GPIO_LABEL, gpiochip_match_by_label);
+> -       if (!chip) {
+> -               pr_err("%s: OMAP GPIO chip not found\n", __func__);
+> +       /*
+> +        * Some drivers may not use GPIO lookup tables but need to be pro=
+vided
+> +        * with GPIO numbers. The same applies to GPIO based IRQ lines - =
+some
+> +        * drivers may even not use GPIO layer but expect just IRQ number=
+s.
+> +        * We could either define GPIO lookup tables then use them on beh=
+alf
+> +        * of those devices, or we can use GPIO driver level methods for
+> +        * identification of GPIO and IRQ numbers.
+> +        *
+> +        * This reference will be leaked but that's alright as this devic=
+e
+> +        * never goes down.
+> +        */
+> +       gdev =3D gpio_device_find_by_label(OMAP_GPIO_LABEL);
+> +       if (!gdev) {
+> +               pr_err("%s: OMAP GPIO device not found\n", __func__);
+>                 return;
+>         }
+>
+> +       chip =3D gpio_device_get_chip(gdev);
 > +
->  /* Core Layer */
->  int apmf_acpi_init(struct amd_pmf_dev *pmf_dev);
->  void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev);
-> @@ -433,4 +446,7 @@ void amd_pmf_deinit_cnqf(struct amd_pmf_dev *dev);
->  int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_lapsed_ms);
->  extern const struct attribute_group cnqf_feature_attribute_group;
->  
-> +/* Smart PC builder Layer*/
-> +int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev);
-> +void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev);
->  #endif /* PMF_H */
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> new file mode 100644
-> index 000000000000..4db80ca59a11
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -0,0 +1,112 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * AMD Platform Management Framework Driver - TEE Interface
-> + *
-> + * Copyright (c) 2023, Advanced Micro Devices, Inc.
-> + * All Rights Reserved.
-> + *
-> + * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> + */
-> +
-> +#include <linux/tee_drv.h>
-> +#include <linux/uuid.h>
-> +#include "pmf.h"
-> +
-> +#define MAX_TEE_PARAM	4
-> +static const uuid_t amd_pmf_ta_uuid = UUID_INIT(0x6fd93b77, 0x3fb8, 0x524d,
-> +						0xb1, 0x2d, 0xc5, 0x29, 0xb1, 0x3d, 0x85, 0x43);
-> +
-> +static int amd_pmf_amdtee_ta_match(struct tee_ioctl_version_data *ver, const void *data)
-> +{
-> +	return ver->impl_id == TEE_IMPL_ID_AMDTEE;
-> +}
-> +
-> +static int amd_pmf_ta_open_session(struct tee_context *ctx, u32 *id)
-> +{
-> +	struct tee_ioctl_open_session_arg sess_arg = {};
-> +	int rc;
-> +
-> +	export_uuid(sess_arg.uuid, &amd_pmf_ta_uuid);
-> +	sess_arg.clnt_login = TEE_IOCTL_LOGIN_PUBLIC;
-> +	sess_arg.num_params = 0;
-> +
-> +	rc = tee_client_open_session(ctx, &sess_arg, NULL);
+>         /*
+>          * Start with FIQ initialization as it may have to request
+>          * and release successfully each OMAP GPIO pin in turn.
+> --
+> 2.39.2
+>
 
-This will probably fail build if CONFIG_TEE is not set as nothing 
-is added here to require it?
+Patch applied, thanks!
 
--- 
- i.
-
+Bart
