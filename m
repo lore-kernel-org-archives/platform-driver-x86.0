@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03ABDE7C4E4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260FEE7C4E3
 	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 16:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243316AbjJDQYZ (ORCPT
+        id S243344AbjJDQYZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Wed, 4 Oct 2023 12:24:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52150 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243287AbjJDQYY (ORCPT
+        with ESMTP id S243290AbjJDQYY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Wed, 4 Oct 2023 12:24:24 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F0EA7
-        for <platform-driver-x86@vger.kernel.org>; Wed,  4 Oct 2023 09:23:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D9CAD7
+        for <platform-driver-x86@vger.kernel.org>; Wed,  4 Oct 2023 09:23:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1696436615;
+        s=mimecast20190719; t=1696436618;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=AxlB9jGPDkVTrNs+dLX6hYItM8N/DBvuylNLWowa8UI=;
-        b=ckMYw570O1yjcynXWyrMd/hdKb5lcEORKf7WLiIdV7zHt55sk8nzDlhzftegfrnOKYRiLX
-        skiRyphMARiYInLbmoLPzfJfxn2jehRICkwXJYWu4G9F0sKrBeqRzpjnZqxpNCnMfqVefD
-        UX9LK7IzRE2enecsTQtzsc9ullvx7C4=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-393-kczh6-UgOn2uLNeDCCXT6w-1; Wed, 04 Oct 2023 12:23:30 -0400
-X-MC-Unique: kczh6-UgOn2uLNeDCCXT6w-1
+        bh=EDAbJtC3kcIoy3rYY6n3QxcRo3gjBVP/HkKRIxL6zt8=;
+        b=UWYZXBEDp+QS5RJJso9873+bSEKljPzYOqHjhEVikiD0XxCy8ctVfeYp+QVAEyf10FENs8
+        wFNCNC8neILVgInkVGXqZCFH9XbkSou3XVWLJLWgz7DeooAr0cppl6IygIzhOLdbwjHKzl
+        BBJDumzTx1MEkp7gmfq5NC5PgG91nNI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-287-HD7C8yVVPK-Az9-tXUum6Q-1; Wed, 04 Oct 2023 12:23:35 -0400
+X-MC-Unique: HD7C8yVVPK-Az9-tXUum6Q-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A71B11C04B58;
-        Wed,  4 Oct 2023 16:23:29 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9A55718811A7;
+        Wed,  4 Oct 2023 16:23:34 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.89])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3AD8A40C2015;
-        Wed,  4 Oct 2023 16:23:28 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E07340C2015;
+        Wed,  4 Oct 2023 16:23:33 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -50,9 +50,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org,
         Daniel Scally <djrscally@gmail.com>,
         linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH v3 1/5] platform/x86: int3472: Add new skl_int3472_fill_gpiod_lookup() helper
-Date:   Wed,  4 Oct 2023 18:23:13 +0200
-Message-ID: <20231004162317.163488-2-hdegoede@redhat.com>
+Subject: [PATCH v3 4/5] platform/x86: int3472: Switch to devm_get_gpiod()
+Date:   Wed,  4 Oct 2023 18:23:16 +0200
+Message-ID: <20231004162317.163488-5-hdegoede@redhat.com>
 In-Reply-To: <20231004162317.163488-1-hdegoede@redhat.com>
 References: <20231004162317.163488-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -62,79 +62,126 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add a new skl_int3472_fill_gpiod_lookup() helper.
-
-This is a preparation patch for removing usage of the deprecated
-gpiod_toggle_active_low() and acpi_get_and_request_gpiod() functions.
+Switch to devm_get_gpiod() for discrete GPIOs for clks / regulators / LEDs
+and let devm do the cleanup for us.
 
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/intel/int3472/discrete.c | 32 +++++++++++++------
- 1 file changed, 22 insertions(+), 10 deletions(-)
+ .../x86/intel/int3472/clk_and_regulator.c     | 23 ++++---------------
+ drivers/platform/x86/intel/int3472/discrete.c |  2 +-
+ drivers/platform/x86/intel/int3472/led.c      |  7 +-----
+ 3 files changed, 6 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index e33c2d75975c..351ecf047944 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -52,21 +52,15 @@ static void skl_int3472_log_sensor_module_name(struct int3472_discrete_device *i
- 	}
+diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+index 459f96c04ca1..16e36ac0a7b4 100644
+--- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
++++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+@@ -177,10 +177,8 @@ int skl_int3472_register_gpio_clock(struct int3472_discrete_device *int3472,
+ 
+ 	init.name = kasprintf(GFP_KERNEL, "%s-clk",
+ 			      acpi_dev_name(int3472->adev));
+-	if (!init.name) {
+-		ret = -ENOMEM;
+-		goto out_put_gpio;
+-	}
++	if (!init.name)
++		return -ENOMEM;
+ 
+ 	int3472->clock.frequency = skl_int3472_get_clk_frequency(int3472);
+ 
+@@ -206,8 +204,6 @@ int skl_int3472_register_gpio_clock(struct int3472_discrete_device *int3472,
+ 	clk_unregister(int3472->clock.clk);
+ out_free_init_name:
+ 	kfree(init.name);
+-out_put_gpio:
+-	gpiod_put(int3472->clock.ena_gpio);
+ 
+ 	return ret;
+ }
+@@ -219,7 +215,6 @@ void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472)
+ 
+ 	clkdev_drop(int3472->clock.cl);
+ 	clk_unregister(int3472->clock.clk);
+-	gpiod_put(int3472->clock.ena_gpio);
  }
  
--static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int3472,
--					  struct acpi_resource_gpio *agpio,
--					  const char *func, u32 polarity)
-+static int skl_int3472_fill_gpiod_lookup(struct gpiod_lookup *table_entry,
-+					 struct acpi_resource_gpio *agpio,
-+					 const char *func, u32 polarity)
- {
- 	char *path = agpio->resource_source.string_ptr;
--	struct gpiod_lookup *table_entry;
- 	struct acpi_device *adev;
- 	acpi_handle handle;
- 	acpi_status status;
+ /*
+@@ -266,7 +261,7 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
+ 	struct regulator_config cfg = { };
+ 	const char *second_sensor = NULL;
+ 	const struct dmi_system_id *id;
+-	int i, j, ret;
++	int i, j;
  
--	if (int3472->n_sensor_gpios >= INT3472_MAX_SENSOR_GPIOS) {
--		dev_warn(int3472->dev, "Too many GPIOs mapped\n");
--		return -EINVAL;
+ 	id = dmi_first_match(skl_int3472_regulator_second_sensor);
+ 	if (id)
+@@ -309,21 +304,11 @@ int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
+ 	int3472->regulator.rdev = regulator_register(int3472->dev,
+ 						     &int3472->regulator.rdesc,
+ 						     &cfg);
+-	if (IS_ERR(int3472->regulator.rdev)) {
+-		ret = PTR_ERR(int3472->regulator.rdev);
+-		goto err_free_gpio;
 -	}
+ 
+-	return 0;
 -
- 	status = acpi_get_handle(NULL, path, &handle);
- 	if (ACPI_FAILURE(status))
- 		return -EINVAL;
-@@ -75,13 +69,31 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
- 	if (!adev)
- 		return -ENODEV;
+-err_free_gpio:
+-	gpiod_put(int3472->regulator.gpio);
+-
+-	return ret;
++	return PTR_ERR_OR_ZERO(int3472->regulator.rdev);
+ }
  
--	table_entry = &int3472->gpios.table[int3472->n_sensor_gpios];
- 	table_entry->key = acpi_dev_name(adev);
- 	table_entry->chip_hwnum = agpio->pin_table[0];
- 	table_entry->con_id = func;
- 	table_entry->idx = 0;
- 	table_entry->flags = polarity;
+ void skl_int3472_unregister_regulator(struct int3472_discrete_device *int3472)
+ {
+ 	regulator_unregister(int3472->regulator.rdev);
+-	gpiod_put(int3472->regulator.gpio);
+ }
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index 0bc7cbefd9ae..07b302e09340 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -119,7 +119,7 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
+ 		return ERR_PTR(ret);
  
-+	return 0;
-+}
-+
-+static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int3472,
-+					  struct acpi_resource_gpio *agpio,
-+					  const char *func, u32 polarity)
-+{
-+	int ret;
-+
-+	if (int3472->n_sensor_gpios >= INT3472_MAX_SENSOR_GPIOS) {
-+		dev_warn(int3472->dev, "Too many GPIOs mapped\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = skl_int3472_fill_gpiod_lookup(&int3472->gpios.table[int3472->n_sensor_gpios],
-+					    agpio, func, polarity);
-+	if (ret)
+ 	gpiod_add_lookup_table(lookup);
+-	desc = gpiod_get(int3472->dev, func, GPIOD_OUT_LOW);
++	desc = devm_gpiod_get(int3472->dev, func, GPIOD_OUT_LOW);
+ 	gpiod_remove_lookup_table(lookup);
+ 
+ 	return desc;
+diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
+index 476cd637fc51..9cbed694e2ca 100644
+--- a/drivers/platform/x86/intel/int3472/led.c
++++ b/drivers/platform/x86/intel/int3472/led.c
+@@ -39,7 +39,7 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gp
+ 
+ 	ret = led_classdev_register(int3472->dev, &int3472->pled.classdev);
+ 	if (ret)
+-		goto err_free_gpio;
 +		return ret;
-+
- 	int3472->n_sensor_gpios++;
+ 
+ 	int3472->pled.lookup.provider = int3472->pled.name;
+ 	int3472->pled.lookup.dev_id = int3472->sensor_name;
+@@ -47,10 +47,6 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472, struct gp
+ 	led_add_lookup(&int3472->pled.lookup);
  
  	return 0;
+-
+-err_free_gpio:
+-	gpiod_put(int3472->pled.gpio);
+-	return ret;
+ }
+ 
+ void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472)
+@@ -60,5 +56,4 @@ void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472)
+ 
+ 	led_remove_lookup(&int3472->pled.lookup);
+ 	led_classdev_unregister(&int3472->pled.classdev);
+-	gpiod_put(int3472->pled.gpio);
+ }
 -- 
 2.41.0
 
