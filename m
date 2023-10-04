@@ -2,117 +2,120 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648D4E7B5E1
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 09:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47003E7B5E3
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 09:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241780AbjJDJq7 (ORCPT
+        id S232877AbjJDJ4i (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 Oct 2023 05:46:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35524 "EHLO
+        Wed, 4 Oct 2023 05:56:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232904AbjJDJq6 (ORCPT
+        with ESMTP id S241774AbjJDJ4h (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Oct 2023 05:46:58 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F586A7;
-        Wed,  4 Oct 2023 02:46:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696412815; x=1727948815;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=n1lhfxc/wP5roOkvPQmjjy/QM7cgipKqKy8XywFw8h8=;
-  b=EadL71nBlYV4cMO+jWihQowkOGvpKgVgh+cSsB0x8fuk6Ph7GScQnwQp
-   7htftLEDT0H3dAjZ9fn1HZaW5MVU4q9wOr95Li7TMytdsbn8WRPxw2Y7y
-   2t4QiRH7ARp2bhEZkkJ/llJrRZFqUbuBx1edHbdxqT60d7iH1aNtXFNNt
-   nAs4cVTNQnE+4XFvueaDLO6nNYMEfIUS3J8HyXJRfwKSCyjkJoI8RvNza
-   /IFk2Oi6qnh95ii49OGzQ8SVGZIMiDZ4pOJGZGEeCV/qt54ZZ5YrlK17D
-   pnJa1pnsxbrEyGO9ESgaA/qLlgtvUrUMNn976OsrQ1Ru17fBbMHZqiL8w
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="447290952"
-X-IronPort-AV: E=Sophos;i="6.03,199,1694761200"; 
-   d="scan'208";a="447290952"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 02:46:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="894861717"
-X-IronPort-AV: E=Sophos;i="6.03,199,1694761200"; 
-   d="scan'208";a="894861717"
-Received: from cyrillet-mobl.ger.corp.intel.com ([10.252.55.203])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 02:45:26 -0700
-Date:   Wed, 4 Oct 2023 12:46:49 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-cc:     =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [UPDATE][PATCH] platform/x86/intel-uncore-freq: Conditionally
- create attribute for read frequency
-In-Reply-To: <ab0ab04980b07e2893d9672b96311230ac981e40.camel@linux.intel.com>
-Message-ID: <b7fd5b52-9d91-cfe-e011-522160947115@linux.intel.com>
-References: <20231002131817.1590966-1-srinivas.pandruvada@linux.intel.com>  <6c59be5-1ff1-d0b1-5960-3789fe10c692@linux.intel.com> <ab0ab04980b07e2893d9672b96311230ac981e40.camel@linux.intel.com>
+        Wed, 4 Oct 2023 05:56:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B2439E
+        for <platform-driver-x86@vger.kernel.org>; Wed,  4 Oct 2023 02:55:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1696413349;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4X/b1d2pkgLp5p3YIRE7ps+4IziH+AFeELkbhS8aDOo=;
+        b=Pu2HBPFiZ42PwcW8wOsNguuU9rRVepiYpLbzinIuKctf9dazFZlJTMxAEJeHu3eSYmXicF
+        P1DHkhHm/YkVxNWhNDeizwmkkngmxfO+Y/647etkWyTsqDd4n98dCW+qyuWVPuqKDn+C6g
+        43WGMhwS2ScI+1E19E4Jnd0P4lQlduo=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-333-OXievD88O9q34EQf2GzR_Q-1; Wed, 04 Oct 2023 05:55:42 -0400
+X-MC-Unique: OXievD88O9q34EQf2GzR_Q-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5346626c1c5so1609207a12.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Oct 2023 02:55:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696413341; x=1697018141;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4X/b1d2pkgLp5p3YIRE7ps+4IziH+AFeELkbhS8aDOo=;
+        b=ZE6tW+1P4TKW/NCyUDoSGzo4Ku7yeTUw94hQyhuNzcMaHR8QScf1zz4RtowLI3e8iP
+         OuA3eY3JnGX+7K548xLJoCla+Bgk0f8Kkoa/I1CHXQ13SjOTGIUFN0qCXTr0VM2O9pDi
+         u6vXmyayR23s35foO9MtsGnwqk71ZWC+/OhCZ5OJhwGuewYUMOPG9O60Lo7tHvvrlcyV
+         FZl6OZH1dIwV/0tHhacnknhbeM2KTkb19vUs+UT5lrLjWy2SGMbfs7RR0XL+Z/ekud9g
+         MDX9EK8kR9xa/IeDct0OBqJ2seeBE8BO9KF/EsmJhzTwYRpaGT6PhMvr/DlTvCE72rDN
+         1uzQ==
+X-Gm-Message-State: AOJu0Yz3vNLS3eDkf8KzQVW0ZZHVCMfD/U2xNe1t8hrGZOJnT/BYP5tZ
+        dTv4/vQSLrE+zsxk6IBoP2Qc4wG7RgwUvykt3Ekuu7tAXyWQ28KmR/8FnfebpetkeVPxsLpO7+C
+        v/5ZmAzhH7wpPUllR+Xkbcggos/d3PfopUQ==
+X-Received: by 2002:a17:906:3282:b0:9a5:846d:d81f with SMTP id 2-20020a170906328200b009a5846dd81fmr1434592ejw.17.1696413340906;
+        Wed, 04 Oct 2023 02:55:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG4NJH4WV0usT3nmC3sZlXOvlzpHK2MaHCMZaLc9JRwL4fNL5dxmTSxCV4ADpMGmpxFMMnJpw==
+X-Received: by 2002:a17:906:3282:b0:9a5:846d:d81f with SMTP id 2-20020a170906328200b009a5846dd81fmr1434578ejw.17.1696413340630;
+        Wed, 04 Oct 2023 02:55:40 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id i7-20020a1709063c4700b0098884f86e41sm2494828ejg.123.2023.10.04.02.55.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Oct 2023 02:55:40 -0700 (PDT)
+Message-ID: <52413aa9-054a-d0db-e240-bdddd31f3d79@redhat.com>
+Date:   Wed, 4 Oct 2023 11:55:39 +0200
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-667317560-1696412813=:1931"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v4 0/2] platform/x86: Fix reference leaks
+Content-Language: en-US, nl
+To:     Armin Wolf <W_Armin@gmx.de>, markpearson@lenovo.com,
+        jorge.lopez2@hp.com
+Cc:     markgross@kernel.org, ilpo.jarvinen@linux.intel.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230925142819.74525-1-W_Armin@gmx.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230925142819.74525-1-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323329-667317560-1696412813=:1931
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+On 9/25/23 16:28, Armin Wolf wrote:
+> If a duplicate attribute is found using kset_find_obj(), a reference
+> to that attribute is returned which needs to be disposed accordingly
+> using kobject_put(). This issue likely first appeared inside the
+> dell-wmi-sysman driver, see
+> commit 7295a996fdab ("platform/x86: dell-sysman: Fix reference leak").
+> However, it also seems that the bug was copied from this driver into
+> the think-lmi and hp-bioscfg drivers. Maybe a more abstract
+> fw_attr_class could prevent such issues in the future by abstracting
+> away the kobject handling?
+> 
+> Armin Wolf (2):
+>   platform/x86: think-lmi: Fix reference leak
+>   platform/x86: hp-bioscfg: Fix reference leak
 
-On Tue, 3 Oct 2023, srinivas pandruvada wrote:
-> On Tue, 2023-10-03 at 16:10 +0300, Ilpo Järvinen wrote:
-> > On Mon, 2 Oct 2023, Srinivas Pandruvada wrote:
-> > 
-> > > When the current uncore frequency can't be read, don't create
-> > > attribute
-> > > "current_freq_khz" as any read will fail later. Some user space
-> > > applications like turbostat fail to continue with the failure. So,
-> > > check
-> > > error during attribute creation.
-> > > 
-> > > Fixes: 8a54e2253e4c ("platform/x86/intel-uncore-freq: Uncore
-> > > frequency control via TPMI")
-> > 
-> > Hi,
-> > 
-> > Thanks for the update but that commit id looks bogus, or where the
-> > value 
-> > is used w/o error check?
-> 
-> commit 8a54e2253e4c25e5b61c9a9bee157bb52da5d432
-> Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Date:   Thu Apr 20 15:05:14 2023 -0700
-> 
->     platform/x86/intel-uncore-freq: Uncore frequency control via TPMI
-> 
-> 
-> This is the commit exposed the issue. This is not the commit which
-> changed the code in question. 
-> 
-> 
-> I can add also
-> Fixes: dbce412a7733 ("platform/x86/intel-uncore-freq: Split common and
-> enumeration part")
-> 
-> But the change even before that as this commit just reorganized code
-> but because of change of folders, that will look like correct commit.
+Thank you for your patch/series, I've applied this patch
+(series) to the pdx86 fixes branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=fixes
 
-I never thought dbce412a7733 is being fixed here, it's just a refactor 
-moving code around like you say.
+Note it will show up in the pdx86 fixes branch once I've pushed
+my local branch there, which might take a while.
 
-But how about 414eef27283a ("platform/x86/intel/uncore-freq: Display 
-uncore current frequency") which actually adds the code line you're now 
-fixing. What was broken before it? All I see is the one call in
-show_perf_status_freq_khz() but that's checking for errors.
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
--- 
- i.
+Regards,
 
---8323329-667317560-1696412813=:1931--
+Hans
+
+
+
+
+>  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 14 ++++++++----
+>  drivers/platform/x86/think-lmi.c             | 24 ++++++++++++++++----
+>  2 files changed, 30 insertions(+), 8 deletions(-)
+> 
+> --
+> 2.39.2
+> 
+
