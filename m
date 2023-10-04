@@ -2,82 +2,152 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9682EE8FDD5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 07:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21C4E8FDD9
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 07:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232801AbjJDH1S (ORCPT
+        id S241516AbjJDHob (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 Oct 2023 03:27:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59740 "EHLO
+        Wed, 4 Oct 2023 03:44:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232754AbjJDH1R (ORCPT
+        with ESMTP id S232761AbjJDHoa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Oct 2023 03:27:17 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A134D98;
-        Wed,  4 Oct 2023 00:27:14 -0700 (PDT)
+        Wed, 4 Oct 2023 03:44:30 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3201EA7;
+        Wed,  4 Oct 2023 00:44:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696404434; x=1727940434;
+  t=1696405467; x=1727941467;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=V5M0fMU7wG1YRJZZkM4lact4hO+apBUwNfEeYUbRINo=;
-  b=NX9rqMgAp4pC2ndkyU7cCBn7VOutb5X5qWTM/xp0yN3db1+RvAUwJ5OA
-   5S/e4tLV5iqNdehjogxHEiBHp+YP4G+2YuzoykZO49aiHqW1vbd0dtY3k
-   aLakba6RoyvIvyRyt5uY7M9BGN/6jGvKZ0qv4Q3iSECmYdYgkBqgO4KaL
-   VZGGer7FsB1trTlZ30g2Mg93xK83ytSUQ1QDCCLISSVg8GD873rt93tdS
-   Gbrse5IiwpXMJgTQfXQUY+PcgngJZduW7OZgT6DMMqYYjlNuNy4Epgx5u
-   o4uI4IvjD6QXQXbjWdTHsSJCHwubCS33nssp82BsLcKhSmOKBAT4EtUbj
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="380365655"
+  bh=HKyMyXXmNZTLZ/sWs9XnApS+uswItVk7HgUN/6QRBRI=;
+  b=QJnpiGmQnIGaY1PwhAZU8mAnpeqNhCppbmq51OG8zQBIeXw1/5RIrvyf
+   fh6DmaOrR0z70fhzpcYy9fxzKf7slp8nIHYai/42mgeDyP+1OzpLPTLiY
+   RebEtSFPMe3mNtA3kjOaTUHux5IIUKjmP35uIDPc2joxweZJgH9ELc/+L
+   q1xs4CglYcSZCEQeJ7gOiFh13fddURbf9vxPyTMrXkSQ+CJPAwZzZP2hJ
+   hbaOyY4cNkCQE8WXxNCwhlzKoIGU0IYuSgIMixJcgryrk06CDo2sJos3r
+   c/tW3QHGvLLDId8IXSti4IzYhWivjPOIfgnIUivy4wobhscm4dCcR94YI
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="447262713"
 X-IronPort-AV: E=Sophos;i="6.03,199,1694761200"; 
-   d="scan'208";a="380365655"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 00:27:14 -0700
+   d="scan'208";a="447262713"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 00:44:26 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="751179848"
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="924990196"
 X-IronPort-AV: E=Sophos;i="6.03,199,1694761200"; 
-   d="scan'208";a="751179848"
+   d="scan'208";a="924990196"
 Received: from cyrillet-mobl.ger.corp.intel.com ([10.252.55.203])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 00:27:12 -0700
-Date:   Wed, 4 Oct 2023 10:27:09 +0300 (EEST)
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 00:44:25 -0700
+Date:   Wed, 4 Oct 2023 10:44:23 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     "David E. Box" <david.e.box@linux.intel.com>
 cc:     LKML <linux-kernel@vger.kernel.org>,
         platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com
-Subject: Re: [PATCH V2 02/13] platform/x86/intel/vsec: remove platform_info
- from vsec device structure
-In-Reply-To: <20231004020222.193445-3-david.e.box@linux.intel.com>
-Message-ID: <90104c5-a561-b1ab-d50-937793696fbf@linux.intel.com>
-References: <20231004020222.193445-1-david.e.box@linux.intel.com> <20231004020222.193445-3-david.e.box@linux.intel.com>
+Subject: Re: [PATCH V2 03/13] platform/x86/intel/vsec: Add
+ intel_vsec_register
+In-Reply-To: <20231004020222.193445-4-david.e.box@linux.intel.com>
+Message-ID: <3ae9ceaf-21f9-96c5-89a7-118e4c7340f8@linux.intel.com>
+References: <20231004020222.193445-1-david.e.box@linux.intel.com> <20231004020222.193445-4-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1293017714-1696404433=:1931"
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1293017714-1696404433=:1931
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
 On Tue, 3 Oct 2023, David E. Box wrote:
 
-> In preparation for exporting an API to register Intel Vendor Specific
-> Extended Capabilities (VSEC) from other drivers, remove the pointer to
-> platform_info from intel_vsec_device. This prevents a potential page fault
-> when auxiliary drivers probe and attempt to dereference this pointer to
-> access the needed quirks field. Instead, just add the quirks to
-> intel_vsec_device.
+> From: Gayatri Kammela <gayatri.kammela@linux.intel.com>
 > 
+> Add and export intel_vsec_register() to allow the registration of Intel
+> extended capabilities from other drivers. Add check to look for memory
+> conflicts before registering a new capability. Add a parent field to
+> intel_vsec_platform_info to allow specifying the parent device for
+> device managed cleanup.
+> 
+> Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
 > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 > ---
 > V2 - New patch splitting previous PATCH 1
+> 
+>  drivers/platform/x86/intel/vsec.c | 21 ++++++++++++++++++++-
+>  drivers/platform/x86/intel/vsec.h |  4 ++++
+>  2 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+> index b14eba545770..c5d0202068cf 100644
+> --- a/drivers/platform/x86/intel/vsec.c
+> +++ b/drivers/platform/x86/intel/vsec.c
+> @@ -188,6 +188,15 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
+>  			     header->offset + i * (header->entry_size * sizeof(u32));
+>  		tmp->end = tmp->start + (header->entry_size * sizeof(u32)) - 1;
+>  		tmp->flags = IORESOURCE_MEM;
+> +
+> +		/* Check resource is not in use */
+> +		if (!request_mem_region(tmp->start, resource_size(tmp), "")) {
+> +			kfree(res);
+> +			kfree(intel_vsec_dev);
+> +			return -EBUSY;
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Convert this function to do proper rollback as there's already
+kfree(intel_vsec_dev) above this one, or better yet, use the new cleanup 
+thing if you know how to use it.
 
 -- 
  i.
---8323329-1293017714-1696404433=:1931--
+
+
+> +		}
+> +
+> +		release_mem_region(tmp->start, resource_size(tmp));
+>  	}
+>  
+>  	intel_vsec_dev->pcidev = pdev;
+> @@ -200,7 +209,7 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
+>  	else
+>  		intel_vsec_dev->ida = &intel_vsec_ida;
+>  
+> -	return intel_vsec_add_aux(pdev, NULL, intel_vsec_dev,
+> +	return intel_vsec_add_aux(pdev, info->parent, intel_vsec_dev,
+>  				  intel_vsec_name(header->id));
+>  }
+>  
+> @@ -318,6 +327,16 @@ static bool intel_vsec_walk_vsec(struct pci_dev *pdev,
+>  	return have_devices;
+>  }
+>  
+> +void intel_vsec_register(struct pci_dev *pdev,
+> +			 struct intel_vsec_platform_info *info)
+> +{
+> +	if (!pdev || !info)
+> +		return;
+> +
+> +	intel_vsec_walk_header(pdev, info);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(intel_vsec_register, INTEL_VSEC);
+> +
+>  static int intel_vsec_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	struct intel_vsec_platform_info *info;
+> diff --git a/drivers/platform/x86/intel/vsec.h b/drivers/platform/x86/intel/vsec.h
+> index d3fefba3e623..a15fda2fcd28 100644
+> --- a/drivers/platform/x86/intel/vsec.h
+> +++ b/drivers/platform/x86/intel/vsec.h
+> @@ -69,6 +69,7 @@ enum intel_vsec_quirks {
+>  
+>  /* Platform specific data */
+>  struct intel_vsec_platform_info {
+> +	struct device *parent;
+>  	struct intel_vsec_header **headers;
+>  	unsigned long caps;
+>  	unsigned long quirks;
+> @@ -98,4 +99,7 @@ static inline struct intel_vsec_device *auxdev_to_ivdev(struct auxiliary_device
+>  {
+>  	return container_of(auxdev, struct intel_vsec_device, auxdev);
+>  }
+> +
+> +void intel_vsec_register(struct pci_dev *pdev,
+> +			 struct intel_vsec_platform_info *info);
+>  #endif
+> 
