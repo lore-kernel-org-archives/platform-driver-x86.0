@@ -2,54 +2,56 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2D3E8FDC3
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 02:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8201E8FDC4
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 02:02:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241239AbjJDCC7 (ORCPT
+        id S241137AbjJDCC7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Tue, 3 Oct 2023 22:02:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39224 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241041AbjJDCCz (ORCPT
+        with ESMTP id S241163AbjJDCC4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Oct 2023 22:02:55 -0400
+        Tue, 3 Oct 2023 22:02:56 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69BFDCE;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C38BFE;
         Tue,  3 Oct 2023 19:02:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1696384961; x=1727920961;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=C32fXhOHrOdnQibV0Vp/v0wM36M4oPsGHuFMplkjBYo=;
-  b=IRSsg2bRmuvaKkiXZRvx+wQphWnPPViyIbVbT/SAODZTbpqCmK+c5WVE
-   v1+54uKGkTwygz+elB/qEgHJK2Ai2iGWfJFE/t1CSTGfqc3pdIM8Z6u0Y
-   /Xb4ZuKIFVsZEUgkZQTUpnGo9Tg5hBYCaEmWH30T4DLVC2BjE5Ll7hT67
-   3UKOYlIC3HEuaDMnG6bVXoM69WKRrmNRXxMwU5QLuBzMOVCdB0jTKzrD9
-   6kBwEuaH+gVJ5i1SzPiBhlfGg1yJEenzHutlCK5zeyY/xCKDxZRcalOoF
-   yRvTzyttK2YlhrHB7xtLz+mP1O8w8d9H0EQHudy3Zfb9SBbczxxRlozd+
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="1625859"
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=4wX77hCDNVTTHoQnVjWd5lAjIcxjPgZI1SXolQ9A6nk=;
+  b=JtMFu+cd9xuibeGJ9pkKLkpjX/UDJ/C4WQXhhiKuYNel33w8tj/NvN0M
+   PKZoqdmjmhGUNKJ2dXlrSR6yOW04qKc02ujWE1+Udme5AqJ/K9N+NYrj6
+   1KTIQkllbq1crczj+KWkvUxvOPY+sW3hBmsijTDYwveYRL3eHPGSkX1Jd
+   4MHNExBJW/c8XGenQ0jAFYazBdmZXGjQys6/lDEI3AnEcWuXQLXsKNgyg
+   vteXiKpphmtUdLhCVOSHlp9j2zBPhZyxpmotKtSAjY1QObCOr+H1i3uuK
+   lgMsGi0FdD21h9OJ8csi0GA4kSnZrvkyVGnjESuBxgetoAxUKwESbeSoM
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="1625864"
 X-IronPort-AV: E=Sophos;i="6.03,199,1694761200"; 
-   d="scan'208";a="1625859"
+   d="scan'208";a="1625864"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 19:02:23 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="700926284"
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="700926296"
 X-IronPort-AV: E=Sophos;i="6.03,199,1694761200"; 
-   d="scan'208";a="700926284"
+   d="scan'208";a="700926296"
 Received: from linux.intel.com ([10.54.29.200])
   by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 19:02:22 -0700
 Received: from debox1-desk4.intel.com (unknown [10.209.24.172])
-        by linux.intel.com (Postfix) with ESMTP id 6280D580C73;
+        by linux.intel.com (Postfix) with ESMTP id CC648580CBC;
         Tue,  3 Oct 2023 19:02:22 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         ilpo.jarvinen@linux.intel.com, rajvi.jingar@linux.intel.com
-Subject: [PATCH V2 00/13] intel_pmc: Add telemetry API to read counters
-Date:   Tue,  3 Oct 2023 19:02:09 -0700
-Message-Id: <20231004020222.193445-1-david.e.box@linux.intel.com>
+Subject: [PATCH V2 04/13] platform/x86/intel/vsec: Add base address field
+Date:   Tue,  3 Oct 2023 19:02:13 -0700
+Message-Id: <20231004020222.193445-5-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231004020222.193445-1-david.e.box@linux.intel.com>
+References: <20231004020222.193445-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -57,60 +59,122 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On newer Intel silicon, more IP counters are being added in Intel Platform
-Monitoring Technology (PMT) telemetry spaces hosted in MMIO.  There is a
-need for the intel_pmc_core driver and other drivers to access PMT hosted
-telemetry in the kernel using an API. This patchset adds driver APIs to
-allow registering and reading telemetry entries. It makes changes to the
-intel_pmc_core driver to use these interfaces to access the low power mode
-counters that are now exclusively available from PMT.
+Some devices may emulate PCI VSEC capabilities in MMIO. In such cases the
+BAR is not readable from a config space. Provide a field for drivers to
+indicate the base address to be used.
 
-David E. Box (8):
-  platform/x86/intel/vsec: Move structures to header
-  platform/x86/intel/vsec: remove platform_info from vsec device
-    structure
-  platform/x86/intel/vsec: Add base address field
-  platform/x86/intel/pmt: Add header to struct intel_pmt_entry
-  platform/x86/intel/pmt: telemetry: Export API to read telemetry
-  platform/x86/intel/pmc: Split pmc_core_ssram_get_pmc()
-  platform/x86/intel/pmc: Find and register PMC telemetry entries
-  platform/x86/intel/pmc: Add debug attribute for Die C6 counter
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+V2 - no change
 
-Gayatri Kammela (1):
-  platform/x86/intel/vsec: Add intel_vsec_register
+ drivers/platform/x86/intel/pmt/class.c | 14 +++++++++++---
+ drivers/platform/x86/intel/vsec.c      | 10 ++++++++--
+ drivers/platform/x86/intel/vsec.h      |  2 ++
+ 3 files changed, 21 insertions(+), 5 deletions(-)
 
-Rajvi Jingar (1):
-  platform/x86/intel/pmc: Display LPM requirements for multiple PMCs
-
-Xi Pardee (3):
-  platform/x86:intel/pmc: Call pmc_get_low_power_modes from platform
-    init
-  platform/x86/intel/pmc: Retrieve LPM information using Intel PMT
-  platform/x86/intel/pmc: Read low power mode requirements for MTL-M and
-    MTL-P
-
- drivers/platform/x86/intel/pmc/Kconfig      |   1 +
- drivers/platform/x86/intel/pmc/adl.c        |   2 +
- drivers/platform/x86/intel/pmc/cnp.c        |   2 +
- drivers/platform/x86/intel/pmc/core.c       | 191 ++++++++----
- drivers/platform/x86/intel/pmc/core.h       |  10 +-
- drivers/platform/x86/intel/pmc/core_ssram.c | 312 +++++++++++++++++---
- drivers/platform/x86/intel/pmc/icl.c        |  10 +-
- drivers/platform/x86/intel/pmc/mtl.c        |  87 +++++-
- drivers/platform/x86/intel/pmc/spt.c        |  10 +-
- drivers/platform/x86/intel/pmc/tgl.c        |   1 +
- drivers/platform/x86/intel/pmt/class.c      |  43 ++-
- drivers/platform/x86/intel/pmt/class.h      |  30 +-
- drivers/platform/x86/intel/pmt/crashlog.c   |   2 +-
- drivers/platform/x86/intel/pmt/telemetry.c  | 200 ++++++++++++-
- drivers/platform/x86/intel/pmt/telemetry.h  | 129 ++++++++
- drivers/platform/x86/intel/vsec.c           |  68 ++---
- drivers/platform/x86/intel/vsec.h           |  44 ++-
- 17 files changed, 962 insertions(+), 180 deletions(-)
- create mode 100644 drivers/platform/x86/intel/pmt/telemetry.h
-
-
-base-commit: acce85a7dd28eac3858d44230f4c65985d0f271c
+diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
+index 2ad91d2fd954..32608baaa56c 100644
+--- a/drivers/platform/x86/intel/pmt/class.c
++++ b/drivers/platform/x86/intel/pmt/class.c
+@@ -160,10 +160,11 @@ static struct class intel_pmt_class = {
+ 
+ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
+ 				    struct intel_pmt_header *header,
+-				    struct device *dev,
++				    struct intel_vsec_device *ivdev,
+ 				    struct resource *disc_res)
+ {
+-	struct pci_dev *pci_dev = to_pci_dev(dev->parent);
++	struct pci_dev *pci_dev = ivdev->pcidev;
++	struct device *dev = &ivdev->auxdev.dev;
+ 	u8 bir;
+ 
+ 	/*
+@@ -215,6 +216,13 @@ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
+ 
+ 		break;
+ 	case ACCESS_BARID:
++		/* Use the provided base address if it exists */
++		if (ivdev->base_addr) {
++			entry->base_addr = ivdev->base_addr +
++				   GET_ADDRESS(header->base_offset);
++			break;
++		}
++
+ 		/*
+ 		 * If another BAR was specified then the base offset
+ 		 * represents the offset within that BAR. SO retrieve the
+@@ -319,7 +327,7 @@ int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespa
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = intel_pmt_populate_entry(entry, &header, dev, disc_res);
++	ret = intel_pmt_populate_entry(entry, &header, intel_vsec_dev, disc_res);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+index c5d0202068cf..e0dd64dec9eb 100644
+--- a/drivers/platform/x86/intel/vsec.c
++++ b/drivers/platform/x86/intel/vsec.c
+@@ -150,6 +150,7 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
+ 	struct intel_vsec_device *intel_vsec_dev;
+ 	struct resource *res, *tmp;
+ 	unsigned long quirks = info->quirks;
++	u64 base_addr;
+ 	int i;
+ 
+ 	if (!intel_vsec_supported(header->id, info->caps))
+@@ -178,14 +179,18 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
+ 	if (quirks & VSEC_QUIRK_TABLE_SHIFT)
+ 		header->offset >>= TABLE_OFFSET_SHIFT;
+ 
++	if (info->base_addr)
++		base_addr = info->base_addr;
++	else
++		base_addr = pdev->resource[header->tbir].start;
++
+ 	/*
+ 	 * The DVSEC/VSEC contains the starting offset and count for a block of
+ 	 * discovery tables. Create a resource array of these tables to the
+ 	 * auxiliary device driver.
+ 	 */
+ 	for (i = 0, tmp = res; i < header->num_entries; i++, tmp++) {
+-		tmp->start = pdev->resource[header->tbir].start +
+-			     header->offset + i * (header->entry_size * sizeof(u32));
++		tmp->start = base_addr + header->offset + i * (header->entry_size * sizeof(u32));
+ 		tmp->end = tmp->start + (header->entry_size * sizeof(u32)) - 1;
+ 		tmp->flags = IORESOURCE_MEM;
+ 
+@@ -203,6 +208,7 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
+ 	intel_vsec_dev->resource = res;
+ 	intel_vsec_dev->num_resources = header->num_entries;
+ 	intel_vsec_dev->quirks = info->quirks;
++	intel_vsec_dev->base_addr = info->base_addr;
+ 
+ 	if (header->id == VSEC_ID_SDSI)
+ 		intel_vsec_dev->ida = &intel_vsec_sdsi_ida;
+diff --git a/drivers/platform/x86/intel/vsec.h b/drivers/platform/x86/intel/vsec.h
+index a15fda2fcd28..78848e2329fb 100644
+--- a/drivers/platform/x86/intel/vsec.h
++++ b/drivers/platform/x86/intel/vsec.h
+@@ -73,6 +73,7 @@ struct intel_vsec_platform_info {
+ 	struct intel_vsec_header **headers;
+ 	unsigned long caps;
+ 	unsigned long quirks;
++	u64 base_addr;
+ };
+ 
+ struct intel_vsec_device {
+@@ -84,6 +85,7 @@ struct intel_vsec_device {
+ 	void *priv_data;
+ 	size_t priv_data_size;
+ 	unsigned long quirks;
++	u64 base_addr;
+ };
+ 
+ int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
 -- 
 2.34.1
 
