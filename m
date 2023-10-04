@@ -2,98 +2,205 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2417E7B5EE
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 11:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F9DE7B5F5
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 11:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232784AbjJDLRW (ORCPT
+        id S233335AbjJDL1Z (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 Oct 2023 07:17:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52654 "EHLO
+        Wed, 4 Oct 2023 07:27:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232519AbjJDLRW (ORCPT
+        with ESMTP id S229754AbjJDL1Z (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Oct 2023 07:17:22 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 525B0B8
-        for <platform-driver-x86@vger.kernel.org>; Wed,  4 Oct 2023 04:17:18 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qnzsL-00060R-8k; Wed, 04 Oct 2023 13:17:09 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qnzsK-00B18J-5p; Wed, 04 Oct 2023 13:17:08 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qnzsJ-008wZF-Sd; Wed, 04 Oct 2023 13:17:07 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH] platform/x86: hp-wmi:: Mark driver struct with __refdata to prevent section mismatch warning
-Date:   Wed,  4 Oct 2023 13:16:24 +0200
-Message-Id: <20231004111624.2667753-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.40.1
+        Wed, 4 Oct 2023 07:27:25 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC790B0;
+        Wed,  4 Oct 2023 04:27:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696418841; x=1727954841;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=230HfQm2a9UxErUBnPosyTWv+y7iJw7e5Hn3qf1hWZ4=;
+  b=ksri94kZicFo3We2rpmLIxVrGqbwzf9xGy3AfhW2s03LFwmBAyE9edn2
+   NMqSM5DzYjywyKLRbErD5n+hrnduYaaIS3uNgCbsJ/CTE3PJgoXZCNyoQ
+   JQT69u6pzX4AHmRByqZP27wWtujzC6oHCjgq8HKRyd6+Y7n4sMlJt4DYb
+   rwrL49e5iSwi8ezRIFelc99SqM/R+UjtHi4QNlI+56/iqkDViiJuCSehz
+   WPEzkpsENCYCLGpboJ3fn8KcH7OIFmy8V3jel9kod9B0tDhGlTxj3ZagS
+   rdMCBwlMPVvBebkUqR94SIx/qXYOWvWuFTKT7//0MlzMb5kz7ti/L0xWL
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="469410127"
+X-IronPort-AV: E=Sophos;i="6.03,200,1694761200"; 
+   d="scan'208";a="469410127"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 04:27:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="925092479"
+X-IronPort-AV: E=Sophos;i="6.03,200,1694761200"; 
+   d="scan'208";a="925092479"
+Received: from cyrillet-mobl.ger.corp.intel.com ([10.252.55.203])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 04:27:16 -0700
+Date:   Wed, 4 Oct 2023 14:27:14 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        basavaraj.natikar@amd.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
+        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
+        daniel@ffwll.ch, Patil.Reddy@amd.com, mario.limonciello@amd.com,
+        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2 01/16] platform/x86/amd/pmf: Add PMF TEE interface
+In-Reply-To: <20230930083715.2050863-2-Shyam-sundar.S-k@amd.com>
+Message-ID: <43ccea61-c826-72f7-768-7e6a9fd274e@linux.intel.com>
+References: <20230930083715.2050863-1-Shyam-sundar.S-k@amd.com> <20230930083715.2050863-2-Shyam-sundar.S-k@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1634; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=f8W1iIrP5rI4rBYoQ7SZQAD9FsGirksLT61bOCoG8MI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlHUmH0JPWYPUOK3OSrU9SdYWflZuhcghjWVKH4 zXQnLaOwQiJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZR1JhwAKCRCPgPtYfRL+ TggvCAC0ZTi4PM+i0sau4iHFKH2ROfR5yvVyvOmgd72vOMiDPqXtlA8xpjpNeAUswzcII0Hsq6U FoXmzOCrV+cYZ3Uwr5vGjtlJGOewDoLRRQEXmjw7ZfEK6OneEkN8S9Cc0KRjfcZ4nKxk6DdH4NN HMwJn2xiZCz4QhJ0iHT/hRXUTNgp+cxsBOgpurF7S89hzFidP64d4by1kgob8UvazgjgRKy8yoJ RbZ3f8OS3xsGutQD1rd8yzStHfouPsr7V8rbgGnzfgbo6j0UI4T0nGqH3glrLd6n+ko9dBSHnTP dYneErgnJsv+WbMGLt888MD6GxY7A9DoiYLnWi69MzIFwzxB
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-As described in the added code comment, a reference to .exit.text is ok
-for drivers registered via module_platform_driver_probe(). Make this
-explicit to prevent a section mismatch warning:
+On Sat, 30 Sep 2023, Shyam Sundar S K wrote:
 
-	WARNING: modpost: drivers/platform/x86/hp/hp-wmi: section mismatch in reference: hp_wmi_driver+0x8 (section: .data) -> hp_wmi_bios_remove (section: .exit.text)
+> AMD PMF driver loads the PMF TA (Trusted Application) into the AMD
+> ASP's (AMD Security Processor) TEE (Trusted Execution Environment).
+> 
+> PMF Trusted Application is a secured firmware placed under
+> /lib/firmware/amdtee gets loaded only when the TEE environment is
+> initialized. Add the initial code path to build these pipes.
+> 
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>  drivers/platform/x86/amd/pmf/Makefile |   3 +-
+>  drivers/platform/x86/amd/pmf/core.c   |  11 ++-
+>  drivers/platform/x86/amd/pmf/pmf.h    |  16 ++++
+>  drivers/platform/x86/amd/pmf/tee-if.c | 112 ++++++++++++++++++++++++++
+>  4 files changed, 138 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/platform/x86/amd/pmf/tee-if.c
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
+> index fdededf54392..d2746ee7369f 100644
+> --- a/drivers/platform/x86/amd/pmf/Makefile
+> +++ b/drivers/platform/x86/amd/pmf/Makefile
+> @@ -6,4 +6,5 @@
+>  
+>  obj-$(CONFIG_AMD_PMF) += amd-pmf.o
+>  amd-pmf-objs := core.o acpi.o sps.o \
+> -		auto-mode.o cnqf.o
+> +		auto-mode.o cnqf.o \
+> +		tee-if.o
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index 78ed3ee22555..68f1389dda3e 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -309,8 +309,11 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
+>  		dev_dbg(dev->dev, "SPS enabled and Platform Profiles registered\n");
+>  	}
+>  
+> -	/* Enable Auto Mode */
+> -	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+> +	if (amd_pmf_init_smart_pc(dev)) {
+> +		/* Enable Smart PC Solution builder */
+> +		dev_dbg(dev->dev, "Smart PC Solution Enabled\n");
+> +	} else if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+> +		/* Enable Auto Mode */
+>  		amd_pmf_init_auto_mode(dev);
+>  		dev_dbg(dev->dev, "Auto Mode Init done\n");
+>  	} else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC) ||
+> @@ -330,7 +333,9 @@ static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
+>  		amd_pmf_deinit_sps(dev);
+>  	}
+>  
+> -	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+> +	if (dev->smart_pc_enabled) {
+> +		amd_pmf_deinit_smart_pc(dev);
+> +	} else if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+>  		amd_pmf_deinit_auto_mode(dev);
+>  	} else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC) ||
+>  			  is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_DC)) {
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index deba88e6e4c8..02460c2a31ea 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -179,6 +179,12 @@ struct amd_pmf_dev {
+>  	bool cnqf_enabled;
+>  	bool cnqf_supported;
+>  	struct notifier_block pwr_src_notifier;
+> +	/* Smart PC solution builder */
+> +	struct tee_context *tee_ctx;
+> +	struct tee_shm *fw_shm_pool;
+> +	u32 session_id;
+> +	void *shbuf;
+> +	bool smart_pc_enabled;
+>  };
+>  
+>  struct apmf_sps_prop_granular {
+> @@ -389,6 +395,13 @@ struct apmf_dyn_slider_output {
+>  	struct apmf_cnqf_power_set ps[APMF_CNQF_MAX];
+>  } __packed;
+>  
+> +struct ta_pmf_shared_memory {
+> +	int command_id;
+> +	int resp_id;
+> +	u32 pmf_result;
+> +	u32 if_version;
+> +};
+> +
+>  /* Core Layer */
+>  int apmf_acpi_init(struct amd_pmf_dev *pmf_dev);
+>  void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev);
+> @@ -433,4 +446,7 @@ void amd_pmf_deinit_cnqf(struct amd_pmf_dev *dev);
+>  int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_lapsed_ms);
+>  extern const struct attribute_group cnqf_feature_attribute_group;
+>  
+> +/* Smart PC builder Layer*/
+> +int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev);
+> +void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev);
+>  #endif /* PMF_H */
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> new file mode 100644
+> index 000000000000..4db80ca59a11
+> --- /dev/null
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -0,0 +1,112 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * AMD Platform Management Framework Driver - TEE Interface
+> + *
+> + * Copyright (c) 2023, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> + */
+> +
+> +#include <linux/tee_drv.h>
+> +#include <linux/uuid.h>
+> +#include "pmf.h"
+> +
+> +#define MAX_TEE_PARAM	4
+> +static const uuid_t amd_pmf_ta_uuid = UUID_INIT(0x6fd93b77, 0x3fb8, 0x524d,
+> +						0xb1, 0x2d, 0xc5, 0x29, 0xb1, 0x3d, 0x85, 0x43);
+> +
+> +static int amd_pmf_amdtee_ta_match(struct tee_ioctl_version_data *ver, const void *data)
+> +{
+> +	return ver->impl_id == TEE_IMPL_ID_AMDTEE;
+> +}
+> +
+> +static int amd_pmf_ta_open_session(struct tee_context *ctx, u32 *id)
+> +{
+> +	struct tee_ioctl_open_session_arg sess_arg = {};
+> +	int rc;
+> +
+> +	export_uuid(sess_arg.uuid, &amd_pmf_ta_uuid);
+> +	sess_arg.clnt_login = TEE_IOCTL_LOGIN_PUBLIC;
+> +	sess_arg.num_params = 0;
+> +
+> +	rc = tee_client_open_session(ctx, &sess_arg, NULL);
 
-Fixes: c165b80cfecc ("hp-wmi: fix handling of platform device")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Hello,
+This will probably fail build if CONFIG_TEE is not set as nothing 
+is added here to require it?
 
-the mentioned section mismatch warning only happens for W=1 builds on
-trees that contain f177cd0c15fc ("modpost: Don't let "driver"s reference
-.exit.*").
-
-Best regards
-Uwe
-
- drivers/platform/x86/hp/hp-wmi.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index e76e5458db35..8ebb7be52ee7 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -1548,7 +1548,13 @@ static const struct dev_pm_ops hp_wmi_pm_ops = {
- 	.restore  = hp_wmi_resume_handler,
- };
- 
--static struct platform_driver hp_wmi_driver = {
-+/*
-+ * hp_wmi_bios_remove() lives in .exit.text. For drivers registered via
-+ * module_platform_driver_probe() this is ok because they cannot get unbound at
-+ * runtime. So mark the driver struct with __refdata to prevent modpost
-+ * triggering a section mismatch warning.
-+ */
-+static struct platform_driver hp_wmi_driver __refdata = {
- 	.driver = {
- 		.name = "hp-wmi",
- 		.pm = &hp_wmi_pm_ops,
-
-base-commit: 6465e260f48790807eef06b583b38ca9789b6072
 -- 
-2.39.2
+ i.
 
