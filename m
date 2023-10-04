@@ -2,53 +2,53 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E6BE8FDC5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3858EE8FDC4
 	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Oct 2023 02:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240586AbjJDCC3 (ORCPT
+        id S240647AbjJDCCk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Oct 2023 22:02:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58692 "EHLO
+        Tue, 3 Oct 2023 22:02:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240715AbjJDCC2 (ORCPT
+        with ESMTP id S240992AbjJDCCj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Oct 2023 22:02:28 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B76BA7;
-        Tue,  3 Oct 2023 19:02:25 -0700 (PDT)
+        Tue, 3 Oct 2023 22:02:39 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33183DA;
+        Tue,  3 Oct 2023 19:02:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696384945; x=1727920945;
+  t=1696384956; x=1727920956;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=PGmAHpcZ/3xlkBDMrGBHKlFQ7UOs9q+mJoPrNimoQDs=;
-  b=Zvs3GR0wFSixdyWnMA4aDoobMi8gbfHHU+lBsXtd4dUQUC5hCHgmGSMr
-   e/Kml+RLP7gTzX+yJWNtqKth0et74gElmg+xrBA6oGC+fysoDVzkn319a
-   X+vCur/h6jxS7J9KvhuEIxL7VMrXPlIOL4Pbs1cw6PW+4ENvZ11gXhxuh
-   EsehGh/6h0GtfVRDbzdwWFkWNN6ziZ9tRraVGXpAY4nIodol1y03RlweR
-   xEADQ9DfZuzcE4J1q4RlIxL2ObTAPqDaiG58jdINCdHmrx4bmLarTSM80
-   7X/nqobRk9LhgcCRgcofqI1B6F/dUkmXvDzwWJMPA6p8xhxHKEjDvNxfS
+  bh=kybFOdQBSnJfzmsSI4DdnlKj3rqQZE+fkrrxVtulqwo=;
+  b=BzwvMj/3WQOo9369tUbOM8A7AsAfZOqQ9e8ZQD0wsOwlVMFB0FCY4WBk
+   gjwqBS6IATiVe8QhfGS0FQEoz5ZxymrBZpW+iifh1mLJ2HJI6U/zmqmoc
+   WrIZBnDeeGfpqolyRyNlZO3U883UOFOX9EbkZuATECrM0jjkuHVmXjvsK
+   KdJxuWgOGspoz65XYPNNUGTkHQK1sCbEAhUOmrr7G7Pa2d9BBC1MyN9dh
+   A7jtsLwc1rpCaEFmIPIkoZcyLCaxsTZJ91QEesoR2kzCNurgbBS0CfEpG
+   LWTnU+m+C9VUnaGF9QqVBQVj3GLBTux3ZvjJtEtxs5xkVgUI7vidw8CWn
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="413947549"
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="1625860"
 X-IronPort-AV: E=Sophos;i="6.03,199,1694761200"; 
-   d="scan'208";a="413947549"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 19:02:23 -0700
+   d="scan'208";a="1625860"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 19:02:23 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="841596676"
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="700926287"
 X-IronPort-AV: E=Sophos;i="6.03,199,1694761200"; 
-   d="scan'208";a="841596676"
+   d="scan'208";a="700926287"
 Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 19:02:23 -0700
+  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 19:02:22 -0700
 Received: from debox1-desk4.intel.com (unknown [10.209.24.172])
-        by linux.intel.com (Postfix) with ESMTP id 27CC7580C73;
-        Tue,  3 Oct 2023 19:02:23 -0700 (PDT)
+        by linux.intel.com (Postfix) with ESMTP id 7DE5C580CBC;
+        Tue,  3 Oct 2023 19:02:22 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         ilpo.jarvinen@linux.intel.com, rajvi.jingar@linux.intel.com
-Subject: [PATCH V2 07/13] platform/x86:intel/pmc: Call pmc_get_low_power_modes from platform init
-Date:   Tue,  3 Oct 2023 19:02:16 -0700
-Message-Id: <20231004020222.193445-8-david.e.box@linux.intel.com>
+Subject: [PATCH V2 01/13] platform/x86/intel/vsec: Move structures to header
+Date:   Tue,  3 Oct 2023 19:02:10 -0700
+Message-Id: <20231004020222.193445-2-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231004020222.193445-1-david.e.box@linux.intel.com>
 References: <20231004020222.193445-1-david.e.box@linux.intel.com>
@@ -58,176 +58,121 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Xi Pardee <xi.pardee@intel.com>
+In preparation for exporting an API to register Intel Vendor Specific
+Extended Capabilities (VSEC) from other drivers, move needed structures to
+the header file.
 
-In order to setup a table of low power mode requirements for Meteor Lake,
-pmc_core_get_low_power_modes() will need to be run from platform init code
-so that the enabled modes are known, allowing the use of the
-pmc_for_each_mode helper. Make the function global and call it from the
-platform init code.
-
-Signed-off-by: Xi Pardee <xi.pardee@intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
-V2 - Added clearer explanation for the change in the changelog
+V2 - New patch splitting previous PATCH 1
 
- drivers/platform/x86/intel/pmc/adl.c  |  2 ++
- drivers/platform/x86/intel/pmc/cnp.c  |  2 ++
- drivers/platform/x86/intel/pmc/core.c |  7 +++----
- drivers/platform/x86/intel/pmc/core.h |  1 +
- drivers/platform/x86/intel/pmc/icl.c  | 10 +++++++++-
- drivers/platform/x86/intel/pmc/mtl.c  |  4 +++-
- drivers/platform/x86/intel/pmc/spt.c  | 10 +++++++++-
- drivers/platform/x86/intel/pmc/tgl.c  |  1 +
- 8 files changed, 30 insertions(+), 7 deletions(-)
+ drivers/platform/x86/intel/vsec.c | 35 ------------------------------
+ drivers/platform/x86/intel/vsec.h | 36 +++++++++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/pmc/adl.c b/drivers/platform/x86/intel/pmc/adl.c
-index 5006008e01be..64c492391ede 100644
---- a/drivers/platform/x86/intel/pmc/adl.c
-+++ b/drivers/platform/x86/intel/pmc/adl.c
-@@ -319,6 +319,8 @@ int adl_core_init(struct pmc_dev *pmcdev)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+index c1f9e4471b28..e82a009be630 100644
+--- a/drivers/platform/x86/intel/vsec.c
++++ b/drivers/platform/x86/intel/vsec.c
+@@ -24,13 +24,6 @@
  
-+	pmc_core_get_low_power_modes(pmcdev);
-+
- 	/* Due to a hardware limitation, the GBE LTR blocks PC10
- 	 * when a cable is attached. Tell the PMC to ignore it.
- 	 */
-diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
-index 420aaa1d7c76..59298f184d0e 100644
---- a/drivers/platform/x86/intel/pmc/cnp.c
-+++ b/drivers/platform/x86/intel/pmc/cnp.c
-@@ -214,6 +214,8 @@ int cnp_core_init(struct pmc_dev *pmcdev)
- 	if (ret)
- 		return ret;
+ #include "vsec.h"
  
-+	pmc_core_get_low_power_modes(pmcdev);
-+
- 	/* Due to a hardware limitation, the GBE LTR blocks PC10
- 	 * when a cable is attached. Tell the PMC to ignore it.
- 	 */
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 5a36b3f77bc5..e58c8cc286a3 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -966,9 +966,8 @@ static bool pmc_core_pri_verify(u32 lpm_pri, u8 *mode_order)
- 	return true;
- }
+-/* Intel DVSEC offsets */
+-#define INTEL_DVSEC_ENTRIES		0xA
+-#define INTEL_DVSEC_SIZE		0xB
+-#define INTEL_DVSEC_TABLE		0xC
+-#define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
+-#define INTEL_DVSEC_TABLE_OFFSET(x)	((x) & GENMASK(31, 3))
+-#define TABLE_OFFSET_SHIFT		3
+ #define PMT_XA_START			0
+ #define PMT_XA_MAX			INT_MAX
+ #define PMT_XA_LIMIT			XA_LIMIT(PMT_XA_START, PMT_XA_MAX)
+@@ -39,34 +32,6 @@ static DEFINE_IDA(intel_vsec_ida);
+ static DEFINE_IDA(intel_vsec_sdsi_ida);
+ static DEFINE_XARRAY_ALLOC(auxdev_array);
  
--static void pmc_core_get_low_power_modes(struct platform_device *pdev)
-+void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
+-/**
+- * struct intel_vsec_header - Common fields of Intel VSEC and DVSEC registers.
+- * @rev:         Revision ID of the VSEC/DVSEC register space
+- * @length:      Length of the VSEC/DVSEC register space
+- * @id:          ID of the feature
+- * @num_entries: Number of instances of the feature
+- * @entry_size:  Size of the discovery table for each feature
+- * @tbir:        BAR containing the discovery tables
+- * @offset:      BAR offset of start of the first discovery table
+- */
+-struct intel_vsec_header {
+-	u8	rev;
+-	u16	length;
+-	u16	id;
+-	u8	num_entries;
+-	u8	entry_size;
+-	u8	tbir;
+-	u32	offset;
+-};
+-
+-enum intel_vsec_id {
+-	VSEC_ID_TELEMETRY	= 2,
+-	VSEC_ID_WATCHER		= 3,
+-	VSEC_ID_CRASHLOG	= 4,
+-	VSEC_ID_SDSI		= 65,
+-	VSEC_ID_TPMI		= 66,
+-};
+-
+ static const char *intel_vsec_name(enum intel_vsec_id id)
  {
--	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
- 	u8 pri_order[LPM_MAX_NUM_MODES] = LPM_DEFAULT_PRI;
- 	u8 mode_order[LPM_MAX_NUM_MODES];
-@@ -1000,7 +999,8 @@ static void pmc_core_get_low_power_modes(struct platform_device *pdev)
- 		for (mode = 0; mode < LPM_MAX_NUM_MODES; mode++)
- 			pri_order[mode_order[mode]] = mode;
- 	else
--		dev_warn(&pdev->dev, "Assuming a default substate order for this platform\n");
-+		dev_warn(&pmcdev->pdev->dev,
-+			 "Assuming a default substate order for this platform\n");
+ 	switch (id) {
+diff --git a/drivers/platform/x86/intel/vsec.h b/drivers/platform/x86/intel/vsec.h
+index 0fd042c171ba..8900cb95afd3 100644
+--- a/drivers/platform/x86/intel/vsec.h
++++ b/drivers/platform/x86/intel/vsec.h
+@@ -11,9 +11,45 @@
+ #define VSEC_CAP_SDSI		BIT(3)
+ #define VSEC_CAP_TPMI		BIT(4)
  
- 	/*
- 	 * Loop through all modes from lowest to highest priority,
-@@ -1250,7 +1250,6 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	}
- 
- 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(primary_pmc);
--	pmc_core_get_low_power_modes(pdev);
- 	pmc_core_do_dmi_quirks(primary_pmc);
- 
- 	pmc_core_dbgfs_register(pmcdev);
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 0729f593c6a7..ccf24e0f5e50 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -490,6 +490,7 @@ extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
- 
- int pmc_core_resume_common(struct pmc_dev *pmcdev);
- int get_primary_reg_base(struct pmc *pmc);
-+extern void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev);
- 
- extern void pmc_core_ssram_init(struct pmc_dev *pmcdev);
- 
-diff --git a/drivers/platform/x86/intel/pmc/icl.c b/drivers/platform/x86/intel/pmc/icl.c
-index d08e3174230d..71b0fd6cb7d8 100644
---- a/drivers/platform/x86/intel/pmc/icl.c
-+++ b/drivers/platform/x86/intel/pmc/icl.c
-@@ -53,7 +53,15 @@ const struct pmc_reg_map icl_reg_map = {
- int icl_core_init(struct pmc_dev *pmcdev)
- {
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
-+	int ret;
- 
- 	pmc->map = &icl_reg_map;
--	return get_primary_reg_base(pmc);
++/* Intel DVSEC offsets */
++#define INTEL_DVSEC_ENTRIES		0xA
++#define INTEL_DVSEC_SIZE		0xB
++#define INTEL_DVSEC_TABLE		0xC
++#define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
++#define INTEL_DVSEC_TABLE_OFFSET(x)	((x) & GENMASK(31, 3))
++#define TABLE_OFFSET_SHIFT		3
 +
-+	ret = get_primary_reg_base(pmc);
-+	if (ret)
-+		return ret;
-+
-+	pmc_core_get_low_power_modes(pmcdev);
-+
-+	return ret;
- }
-diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-index 2204bc666980..c3b5f4fe01d1 100644
---- a/drivers/platform/x86/intel/pmc/mtl.c
-+++ b/drivers/platform/x86/intel/pmc/mtl.c
-@@ -985,7 +985,7 @@ static int mtl_resume(struct pmc_dev *pmcdev)
- int mtl_core_init(struct pmc_dev *pmcdev)
- {
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
--	int ret = 0;
-+	int ret;
+ struct pci_dev;
+ struct resource;
  
- 	mtl_d3_fixup();
- 
-@@ -1002,6 +1002,8 @@ int mtl_core_init(struct pmc_dev *pmcdev)
- 			return ret;
- 	}
- 
-+	pmc_core_get_low_power_modes(pmcdev);
++enum intel_vsec_id {
++	VSEC_ID_TELEMETRY	= 2,
++	VSEC_ID_WATCHER		= 3,
++	VSEC_ID_CRASHLOG	= 4,
++	VSEC_ID_SDSI		= 65,
++	VSEC_ID_TPMI		= 66,
++};
 +
- 	/* Due to a hardware limitation, the GBE LTR blocks PC10
- 	 * when a cable is attached. Tell the PMC to ignore it.
- 	 */
-diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
-index 4b6f5cbda16c..ab993a69e33e 100644
---- a/drivers/platform/x86/intel/pmc/spt.c
-+++ b/drivers/platform/x86/intel/pmc/spt.c
-@@ -137,7 +137,15 @@ const struct pmc_reg_map spt_reg_map = {
- int spt_core_init(struct pmc_dev *pmcdev)
- {
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
-+	int ret;
- 
- 	pmc->map = &spt_reg_map;
--	return get_primary_reg_base(pmc);
++/**
++ * struct intel_vsec_header - Common fields of Intel VSEC and DVSEC registers.
++ * @rev:         Revision ID of the VSEC/DVSEC register space
++ * @length:      Length of the VSEC/DVSEC register space
++ * @id:          ID of the feature
++ * @num_entries: Number of instances of the feature
++ * @entry_size:  Size of the discovery table for each feature
++ * @tbir:        BAR containing the discovery tables
++ * @offset:      BAR offset of start of the first discovery table
++ */
++struct intel_vsec_header {
++	u8	rev;
++	u16	length;
++	u16	id;
++	u8	num_entries;
++	u8	entry_size;
++	u8	tbir;
++	u32	offset;
++};
 +
-+	ret = get_primary_reg_base(pmc);
-+	if (ret)
-+		return ret;
-+
-+	pmc_core_get_low_power_modes(pmcdev);
-+
-+	return ret;
- }
-diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
-index 2449940102db..d5f1d2223c5a 100644
---- a/drivers/platform/x86/intel/pmc/tgl.c
-+++ b/drivers/platform/x86/intel/pmc/tgl.c
-@@ -263,6 +263,7 @@ int tgl_core_init(struct pmc_dev *pmcdev)
- 	if (ret)
- 		return ret;
- 
-+	pmc_core_get_low_power_modes(pmcdev);
- 	pmc_core_get_tgl_lpm_reqs(pmcdev->pdev);
- 	/* Due to a hardware limitation, the GBE LTR blocks PC10
- 	 * when a cable is attached. Tell the PMC to ignore it.
+ enum intel_vsec_quirks {
+ 	/* Watcher feature not supported */
+ 	VSEC_QUIRK_NO_WATCHER	= BIT(0),
 -- 
 2.34.1
 
