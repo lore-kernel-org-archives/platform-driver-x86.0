@@ -2,145 +2,94 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A35E9270D
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Oct 2023 15:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC20E92716
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Oct 2023 16:02:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236335AbjJEP6b (ORCPT
+        id S234398AbjJEQCp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 Oct 2023 11:58:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50754 "EHLO
+        Thu, 5 Oct 2023 12:02:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237178AbjJEP5g (ORCPT
+        with ESMTP id S237812AbjJEQB1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2023 11:57:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60BF057EC3
-        for <platform-driver-x86@vger.kernel.org>; Thu,  5 Oct 2023 07:06:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1696514762;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=H+dL1KNRLmzSbL5JPUc0aKfIeaA78X3WrQS6IGVzbKs=;
-        b=E8dEfBpxl0qhLBZX3LLR0IY7bek8WgGA3fDVfcmdCd6k1emXNuodWfFyTKLpp+yvr2T0Ee
-        7Ragxa4J/MuRxZLQDQ1/ga3sbvtDAvgBsttdTvaFKbTsWhpl1qWtjvkm2WvpgyNTQjDWFa
-        dcSFmu9QgNJB5SYDkMw3oNHnopDmoig=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-623-cMcnZu9-MWSCZ34xaYruvg-1; Thu, 05 Oct 2023 03:03:24 -0400
-X-MC-Unique: cMcnZu9-MWSCZ34xaYruvg-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9ae686dafedso56469066b.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Oct 2023 00:03:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696489402; x=1697094202;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H+dL1KNRLmzSbL5JPUc0aKfIeaA78X3WrQS6IGVzbKs=;
-        b=Xof8Z7OL04BjuFAcZqii24Z0mCn+OHFm7OMflxfqbQQRna7yI7Q3BgL5vDXyKnmSiB
-         9NpijoNBb9AxNboRhF6iT0HYFQIyNtUIjqNkhmySFPgPVs19Tlyk4vTLpneh+w69h7cz
-         YqXe7GFAd9Bhm0rfRByLJzLPec0Mvp5VCeotZU3fnYFG8ibBPtNBKonREell45QMiRm6
-         WK/6pSh92c10GiHB8JLgaTvDvsVEJeIrNx+shhGHTZxD2ZYQDX2OaYChFoW/huiZzjGW
-         8ToZygv4fqT8ytXmPafFRsE8pkG96LaI7UyGHetCCfS8qW39QFo3to5cxxl9+L73JCkv
-         erSg==
-X-Gm-Message-State: AOJu0YyCMFjw3lvGnZPmLVL9nxZ9nIeyzrPLjsbBVw2chH4DDfFvNdSJ
-        uVNl6wwxLI3nJJcett4eUft3dago0M9MTUan5iIMhIbfVMbIydWJPc9tCX1iu2aNYXcVY1Uz6AB
-        1KL18StZp3CoW8MPbyATst4MCDhDuXLcbZj01A/TbRw==
-X-Received: by 2002:a17:907:760f:b0:9ad:78b7:29ea with SMTP id jx15-20020a170907760f00b009ad78b729eamr4046562ejc.44.1696489402707;
-        Thu, 05 Oct 2023 00:03:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG1Rc1hKtAv9AbyjDBdjArCvg7E8aI+Ubhssmr7NRq4YBr1jS0x6lbR/m9GaK/OyCzetgeJbg==
-X-Received: by 2002:a17:907:760f:b0:9ad:78b7:29ea with SMTP id jx15-20020a170907760f00b009ad78b729eamr4046544ejc.44.1696489402388;
-        Thu, 05 Oct 2023 00:03:22 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id o6-20020a17090611c600b009ad875d12d7sm644357eja.210.2023.10.05.00.03.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Oct 2023 00:03:21 -0700 (PDT)
-Message-ID: <e84bc80e-1fd9-f07b-526a-b4eb4780ea9b@redhat.com>
-Date:   Thu, 5 Oct 2023 09:03:20 +0200
+        Thu, 5 Oct 2023 12:01:27 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62544270F;
+        Thu,  5 Oct 2023 06:50:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696513855; x=1728049855;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=BFr4H6MozJ7QEfc0QO/jO0A3h1tNpq51OwhnmLN17pY=;
+  b=WpM6FGW7Mn2RnTJ/LLGPLp6yOpohZbxwTrAX93vPPlgKWOAXjGE+VFrM
+   /WwnG/Qv3Kw/sd5/bMz0nMGR2Wp1AhM+dCEEef54SwccHD9rfEg2y5d3k
+   TUpNy8IZ1kFCBYtfZ6CitNURiKrCjYYONalpEqMeb3c6dMSvrNO6CvQgX
+   7/EvvbOIThJxXqCSlmSVqT6lYYY8V6DLAPpcRcZbQmOMFH7Z+ZJmB+h63
+   mpPXV9nbRO9YdAslepqxwXJpRe7xbwbvsK75wD8h3vDewoP3x38DWX9Sm
+   7xhvPMH+2WgE5D8eQhuHkpVJbO2O7rKyJmMOmwnS5bhGXG8UzlI2gNEdW
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="368538983"
+X-IronPort-AV: E=Sophos;i="6.03,202,1694761200"; 
+   d="scan'208";a="368538983"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 03:51:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="781204465"
+X-IronPort-AV: E=Sophos;i="6.03,202,1694761200"; 
+   d="scan'208";a="781204465"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO ijarvine-mobl2.mshome.net) ([10.237.66.45])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 03:51:31 -0700
+Date:   Thu, 5 Oct 2023 13:51:29 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     "Joseph, Jithu" <jithu.joseph@intel.com>
+cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        rostedt@goodmis.org, ashok.raj@intel.com, tony.luck@intel.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com, pengfei.xu@intel.com
+Subject: Re: [PATCH v3 0/9] IFS support for GNR and SRF
+In-Reply-To: <19a7d055-bb19-f3e3-1447-7238d14a2138@intel.com>
+Message-ID: <41f82af1-d08d-8f6-e642-93abf8531fc8@linux.intel.com>
+References: <20230922232606.1928026-1-jithu.joseph@intel.com> <20230929202436.2850388-1-jithu.joseph@intel.com> <19a7d055-bb19-f3e3-1447-7238d14a2138@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [UPDATE][PATCH] platform/x86/intel-uncore-freq: Conditionally
- create attribute for read frequency
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        markgross@kernel.org, ilpo.jarvinen@linux.intel.com,
-        andriy.shevchenko@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231004181915.1887913-1-srinivas.pandruvada@linux.intel.com>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20231004181915.1887913-1-srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Srinivas,
-
-On 10/4/23 20:19, Srinivas Pandruvada wrote:
-> When the current uncore frequency can't be read, don't create attribute
-> "current_freq_khz" as any read will fail later. Some user space
-> applications like turbostat fail to continue with the failure. So, check
-> error during attribute creation.
-> 
-> Fixes: 414eef27283a ("platform/x86/intel/uncore-freq: Display uncore current frequency")
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
-> Added fixes tag which added current_freq_khz. But after this
-> tag there is reorg of code, so need manual backport for some versions.
-> I will separately submit to stable trees after merge.
-
-Can you for future updated patches please use the ususal [PATCH v2],
-[PATCH v3], etc. prefix ?
-
-Also please document the changes per version after the cutline, e.g. :
-
-```
----
-Changes in v2:
-- Added fixes tag which added current_freq_khz. Note after this
-  tag there is reorg of code, so need manual backport for some versions.
-  I will separately submit to stable trees after merge.
-```
-
-Regards,
-
-Hans
-
-
-
+On Wed, 4 Oct 2023, Joseph, Jithu wrote:
 
 > 
->  .../x86/intel/uncore-frequency/uncore-frequency-common.c  | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-> index 1152deaa0078..33ab207493e3 100644
-> --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-> +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-> @@ -176,7 +176,7 @@ show_uncore_data(initial_max_freq_khz);
->  
->  static int create_attr_group(struct uncore_data *data, char *name)
->  {
-> -	int ret, index = 0;
-> +	int ret, freq, index = 0;
->  
->  	init_attribute_rw(max_freq_khz);
->  	init_attribute_rw(min_freq_khz);
-> @@ -197,7 +197,11 @@ static int create_attr_group(struct uncore_data *data, char *name)
->  	data->uncore_attrs[index++] = &data->min_freq_khz_dev_attr.attr;
->  	data->uncore_attrs[index++] = &data->initial_min_freq_khz_dev_attr.attr;
->  	data->uncore_attrs[index++] = &data->initial_max_freq_khz_dev_attr.attr;
-> -	data->uncore_attrs[index++] = &data->current_freq_khz_dev_attr.attr;
-> +
-> +	ret = uncore_read_freq(data, &freq);
-> +	if (!ret)
-> +		data->uncore_attrs[index++] = &data->current_freq_khz_dev_attr.attr;
-> +
->  	data->uncore_attrs[index] = NULL;
->  
->  	data->uncore_attr_group.name = name;
+> On 9/29/2023 1:24 PM, Jithu Joseph wrote:
+> > Changes in v3
+> >    Ilpo Jarvinen
+> >     - Added Reviewed-by tags wherever provided
+> >     - In function validate_ifs_metadata() (patch 6)
+> >         - Add != 0 to next line for clarity
+> >     - In function ifs_load_firmware() (patch 5)
+> >         - return -EINVAL instead of -BADFD
+> >     - In function ifs_test_core() (patch 4)
+> >         - initialize activate.gen0.rsvd = 0
+> >         - use if instead of conditional operator
+> >     - alignment change in ifs_scan_hashes_status_gen2 (patch 3)
+> > 
+> 
+> Since the suggested changes from v3 are minimal, I am sending just the 3 modified patches
+> in this v3 thread itself.
+> 
+> Hans let me know if you want me to send a v4.
+
+I'm taking care of 6.7 cycle (or begun from -rc3 onwards to be precise), 
+not Hans.
+
+Please send a full v4 please because I want to give lkp an opportunity to 
+test the whole series (even if I think the patches look okay).
+
+
+-- 
+ i.
 
