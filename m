@@ -2,231 +2,167 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24F7E92715
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Oct 2023 14:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D364E9271D
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Oct 2023 15:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238040AbjJEOnd (ORCPT
+        id S234209AbjJEPvt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 Oct 2023 10:43:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53030 "EHLO
+        Thu, 5 Oct 2023 11:51:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238270AbjJEOkF (ORCPT
+        with ESMTP id S233852AbjJEPu5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2023 10:40:05 -0400
-Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71F31712
-        for <platform-driver-x86@vger.kernel.org>; Thu,  5 Oct 2023 06:48:43 -0700 (PDT)
-Received: by mail-vk1-xa33.google.com with SMTP id 71dfb90a1353d-49d0d90a7ddso421019e0c.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Oct 2023 06:48:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696513722; x=1697118522; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gHY/ZQQzp7Eh1tubbFWWOn2NxVKU0m/orXkn9/Odof0=;
-        b=c1xWPf3/mvf8/i/TrzUZOuGMDYM91CxU4gozBvzeOu2ANTQu3NigwJHRxAYRlObQqp
-         mGf1s0ZoZDZNFUmlPKqBXHnqYT7LXulZN9+sfdJJmqJCFjEgs92Vk0yBa3G/q8oMJ+QZ
-         Zb9QHMuDZbGpMOJo6qUE14TZZBs7zp8GACSN4MIQ877omaJeiqg49MfpeuVURa5DIQUW
-         hH6U04Vo1CtUk7GClCSandDXKRDybCuxZFCy9bdFwGUHJ4UA8Yjqn71+CRQadgPARLBf
-         +1wfv4PZ3iKh2/U6NgKpv95dm+FfiACztMxZUqS0ZZtENf16EiKUaqeRGxGMO2p+1EHd
-         dc8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696513722; x=1697118522;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gHY/ZQQzp7Eh1tubbFWWOn2NxVKU0m/orXkn9/Odof0=;
-        b=i+2erNmDSJTgjHhmekogZKARZ7yIH6P1xIB2E+iezCo6p8zvvcAw+sLq6jOk/vKhzX
-         Q4ei2XUiHJTrJUcSDLAxS68vZlnZ4URAZIU4bvtKkGX1L8qYPR2djtUrzDn2noZFAZ7V
-         PhpufA/ajGUhPZysP3hPKdBWorolIb1w7ouLL8Rh03DZL+3zlCwyE8HefcdjOyjCt9xg
-         6J90UQ8gi/MdPBHkgLO64Oj+7QENn7OhyNY0QvrXbH9G4yxdceO7VM05x2P2/tJnOGw2
-         Rm8Oix9xh1ZA6OWdaiVBnMCWvFTpj4v7OHIthzgnhlVtbwkACI1yxs2OsNLdi+UppFd6
-         KEfA==
-X-Gm-Message-State: AOJu0Yxg7Yl23Fp/Bf66cMqpsLBmtdmcTj61ofres8iPmibruUb1TlAe
-        DovGVciISqaBhVapp8dezTDbOlOfhfcxJOoxZ6QKaA==
-X-Google-Smtp-Source: AGHT+IEs24zy6ibJecOnCN0EfrO6wFAW3J5eW9qxeqqcBUsb4ootHwEPnzV2453v5/6B/ux1FD3fv13iIIuy1J493K0=
-X-Received: by 2002:a1f:e2c3:0:b0:49c:37a1:2358 with SMTP id
- z186-20020a1fe2c3000000b0049c37a12358mr4560513vkg.14.1696513722632; Thu, 05
- Oct 2023 06:48:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230905185309.131295-1-brgl@bgdev.pl> <20230905185309.131295-15-brgl@bgdev.pl>
- <CACRpkda9=VULj4Cy_sit-UpUQnVEbS-RJKAeULVCw8ZCRTq1sw@mail.gmail.com>
- <CAMRc=MdTk1B4MEh9C624Upm_EcaQgJd9OU-AGfU0G-DU1+qk6A@mail.gmail.com>
- <36b17290-c643-8d8e-e82b-49afa6b34fbb@nvidia.com> <3624e973-d09a-d211-c6d0-d0ffb8c20c4b@nvidia.com>
- <90b5f887-8af4-a80d-ea4d-cf2199752de4@nvidia.com> <0e7cae42-0b81-c038-8beb-49102feea8a6@nvidia.com>
-In-Reply-To: <0e7cae42-0b81-c038-8beb-49102feea8a6@nvidia.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 5 Oct 2023 15:48:31 +0200
-Message-ID: <CAMRc=McSG6qajxt6P3vWQEeT63Pk5tggD05pUoMD1zd5ApZxgA@mail.gmail.com>
-Subject: Re: [RFT PATCH 14/21] hte: tegra194: don't access struct gpio_chip
-To:     Dipen Patel <dipenp@nvidia.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
-        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+        Thu, 5 Oct 2023 11:50:57 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CFD84C1F;
+        Thu,  5 Oct 2023 07:08:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696514895; x=1728050895;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=0Tq9eA/QxMDW3W69me2+EdhY679btO9W9v2DGaUbaQ0=;
+  b=Gc6bGUI5yI1wR49tZxHGe1b9389CjxZYTl0NcxKx+94mO4ZQbg0mDwzQ
+   4j6r6j/CSQig6x1FzH+GWbw7d05W7hfTaKTjaXBDDNOk8K1cGzda/gYsZ
+   B0+wAEOuEMcoVbCMukDtpvkdTSqgK0l/JaOgKHruHVLTr2Fm3F9zgX8Qn
+   tasm/YceIAPX2B6o7ueHCQa6MEoaJFlBsyhby7oiDqSKEyJFIl8Ks2gih
+   qNcAHcnvjy25xK59GfJhlWvEFeCLY5fn77tPeo3Xqk/wOryJQIKqnawvN
+   57ZxWPbjJG8SmB96jyfb+aCdCTaZ4u7pCkfHUV7Rp1rmJoFfk4ggmT193
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="380784670"
+X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
+   d="scan'208";a="380784670"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 07:07:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="842402965"
+X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
+   d="scan'208";a="842402965"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.212.218.87])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 07:07:59 -0700
+Message-ID: <5dda866185a286e61f949a48e04ff1ea6b3a5b03.camel@linux.intel.com>
+Subject: Re: [UPDATE][PATCH] platform/x86/intel-uncore-freq: Conditionally
+ create attribute for read frequency
+From:   srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 05 Oct 2023 07:07:58 -0700
+In-Reply-To: <e84bc80e-1fd9-f07b-526a-b4eb4780ea9b@redhat.com>
+References: <20231004181915.1887913-1-srinivas.pandruvada@linux.intel.com>
+         <e84bc80e-1fd9-f07b-526a-b4eb4780ea9b@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Oct 5, 2023 at 1:52=E2=80=AFAM Dipen Patel <dipenp@nvidia.com> wrot=
-e:
->
-> On 10/4/23 3:54 PM, Dipen Patel wrote:
-> > On 10/4/23 1:33 PM, Dipen Patel wrote:
-> >> On 10/4/23 1:30 PM, Dipen Patel wrote:
-> >>> On 10/4/23 5:00 AM, Bartosz Golaszewski wrote:
-> >>>> On Thu, Sep 7, 2023 at 9:28=E2=80=AFAM Linus Walleij <linus.walleij@=
-linaro.org> wrote:
-> >>>>>
-> >>>>> On Tue, Sep 5, 2023 at 8:53=E2=80=AFPM Bartosz Golaszewski <brgl@bg=
-dev.pl> wrote:
-> >>>>>
-> >>>>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >>>>>>
-> >>>>>> Using struct gpio_chip is not safe as it will disappear if the
-> >>>>>> underlying driver is unbound for any reason. Switch to using refer=
-ence
-> >>>>>> counted struct gpio_device and its dedicated accessors.
-> >>>>>>
-> >>>>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org=
->
-> >>>>>
-> >>>>> As Andy points out add <linux/cleanup.h>, with that fixed:
-> >>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >>>>>
-> >>>>> I think this can be merged into the gpio tree after leaving some
-> >>>>> slack for the HTE maintainer to look at it, things look so much
-> >>>>> better after this.
-> >>>>>
-> >>>>> Yours,
-> >>>>> Linus Walleij
-> >>>>
-> >>>> Dipen,
-> >>>>
-> >>>> if you could give this patch a test and possibly ack it for me to ta=
-ke
-> >>>> it through the GPIO tree (or go the immutable tag from HTE route) th=
-en
-> >>>> it would be great. This is the last user of gpiochip_find() treewide=
-,
-> >>>> so with it we could remove it entirely for v6.7.
-> >>>
-> >>> Progress so far for the RFT...
-> >>>
-> >>> I tried applying the patch series on 6.6-rc1 and it did not apply cle=
-anly,
-> >>> some patches I needed to manually apply and correct. With all this, i=
-t failed
-> >>> compilation at some spi/spi-bcm2835 driver. I disabled that and was a=
-ble to
-> >>> compile. I thought I should let you know this part.
-> >>>
-> >>> Now, I tried to test the hte and it seems to fail finding the gpio de=
-vice,
-> >>> roughly around this place [1]. I thought it would be your patch serie=
-s so
-> >>> tried to just use 6.6rc1 without your patches and it still failed at =
-the
-> >>> same place. I have to trace back now from which kernel version it bro=
-ke.
-> >>
-> >> [1].
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/pateldipen1984/linux.g=
-it/tree/drivers/hte/hte-tegra194.c?h=3Dfor-next#n781
-> >>
-> >> of course with your patches it would fail for the gdev instead of the =
-chip.
-> >
-> > Small update:
-> >
-> > I put some debugging prints in the gpio match function in the hte-tegra=
-194.c as
-> > below:
-> >
-> > static int tegra_gpiochip_match(struct gpio_chip *chip, void *data)
-> >  {
-> > +       struct device_node *node =3D data;
-> > +       struct fwnode_handle *fw =3D of_node_to_fwnode(data);
-> > +       if (!fw || !chip->fwnode)
-> > +               pr_err("dipen patel: fw is null\n");
-> >
-> > -       pr_err("%s:%d\n", __func__, __LINE__);
-> > +       pr_err("dipen patel, %s:%d: %s, %s, %s, match?:%d, fwnode name:=
-%s\n",
-> > __func__, __LINE__, chip->label, node->name, node->full_name, (chip->fw=
-node =3D=3D
-> > fw), fw->dev->init_name);
-> >         return chip->fwnode =3D=3D of_node_to_fwnode(data);
-> >  }
-> >
-> > The output of the printfs looks like below:
-> > [    3.955194] dipen patel: fw is null -----> this message started appe=
-aring
-> > when I added !chip->fwnode test in the if condition line.
-> >
-> > [    3.958864] dipen patel, tegra_gpiochip_match:689: tegra234-gpio, gp=
-io,
-> > gpio@c2f0000, match?:0, fwnode name:(null)
-> >
-> > I conclude that chip->fwnode is empty. Any idea in which conditions tha=
-t node
-> > would be empty?
->
-> sorry for spamming, one last message before I sign off for the day....
->
-> Seems, adding below in the tegra gpio driver resolved the issue I am faci=
-ng, I
-> was able to verify your patch series.
->
-> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-> index d87dd06db40d..a56c159d7136 100644
-> --- a/drivers/gpio/gpio-tegra186.c
-> +++ b/drivers/gpio/gpio-tegra186.c
-> @@ -989,6 +989,8 @@ static int tegra186_gpio_probe(struct platform_device=
- *pdev)
->                 offset +=3D port->pins;
->         }
->
-> +       gpio->gpio.fwnode =3D of_node_to_fwnode(pdev->dev.of_node);
-> +
->         return devm_gpiochip_add_data(&pdev->dev, &gpio->gpio, gpio);
->  }
->
-> Now, few follow up questions:
-> 1) is this the correct way of setting the chip fwnode in the gpio driver?
+Hi Hans,
 
-You shouldn't need this. This driver already does:
 
-    gpio->gpio.parent =3D &pdev->dev;
+On Thu, 2023-10-05 at 09:03 +0200, Hans de Goede wrote:
+> Hi Srinivas,
+>=20
+> On 10/4/23 20:19, Srinivas Pandruvada wrote:
+> > When the current uncore frequency can't be read, don't create
+> > attribute
+> > "current_freq_khz" as any read will fail later. Some user space
+> > applications like turbostat fail to continue with the failure. So,
+> > check
+> > error during attribute creation.
+> >=20
+> > Fixes: 414eef27283a ("platform/x86/intel/uncore-freq: Display
+> > uncore current frequency")
+> > Signed-off-by: Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com>
+> > ---
+> > Added fixes tag which added current_freq_khz. But after this
+> > tag there is reorg of code, so need manual backport for some
+> > versions.
+> > I will separately submit to stable trees after merge.
+>=20
+> Can you for future updated patches please use the ususal [PATCH v2],
+> [PATCH v3], etc. prefix ?
+>=20
+Sorry about this. I usually do with code change. But will keep in mind.
 
-so fwnode should be assigned in gpiochip_add_data_with_key(). Can you
-check why this doesn't happen?
+Thanks,
+Srinivas
 
-Bart
 
-> 2) Or should I use something else in hte matching function instead of fwn=
-ode so
-> to avoid adding above line in the gpio driver?
->
-> >
-> >>>
-> >>>>
-> >>>> Bart
-> >>>
-> >>
-> >
->
+> Also please document the changes per version after the cutline, e.g.
+> :
+>=20
+> ```
+> ---
+> Changes in v2:
+> - Added fixes tag which added current_freq_khz. Note after this
+> =C2=A0 tag there is reorg of code, so need manual backport for some
+> versions.
+> =C2=A0 I will separately submit to stable trees after merge.
+> ```
+>=20
+> Regards,
+>=20
+> Hans
+>=20
+>=20
+>=20
+>=20
+> >=20
+> > =C2=A0.../x86/intel/uncore-frequency/uncore-frequency-common.c=C2=A0 | =
+8
+> > ++++++--
+> > =C2=A01 file changed, 6 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
+> > frequency-common.c b/drivers/platform/x86/intel/uncore-
+> > frequency/uncore-frequency-common.c
+> > index 1152deaa0078..33ab207493e3 100644
+> > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> > common.c
+> > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> > common.c
+> > @@ -176,7 +176,7 @@ show_uncore_data(initial_max_freq_khz);
+> > =C2=A0
+> > =C2=A0static int create_attr_group(struct uncore_data *data, char *name=
+)
+> > =C2=A0{
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int ret, index =3D 0;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int ret, freq, index =3D 0;
+> > =C2=A0
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0init_attribute_rw(max_f=
+req_khz);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0init_attribute_rw(min_f=
+req_khz);
+> > @@ -197,7 +197,11 @@ static int create_attr_group(struct
+> > uncore_data *data, char *name)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0data->uncore_attrs[inde=
+x++] =3D &data-
+> > >min_freq_khz_dev_attr.attr;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0data->uncore_attrs[inde=
+x++] =3D &data-
+> > >initial_min_freq_khz_dev_attr.attr;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0data->uncore_attrs[inde=
+x++] =3D &data-
+> > >initial_max_freq_khz_dev_attr.attr;
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0data->uncore_attrs[index++] =
+=3D &data-
+> > >current_freq_khz_dev_attr.attr;
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret =3D uncore_read_freq(dat=
+a, &freq);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!ret)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0data->uncore_attrs[index++] =3D &data-
+> > >current_freq_khz_dev_attr.attr;
+> > +
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0data->uncore_attrs[inde=
+x] =3D NULL;
+> > =C2=A0
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0data->uncore_attr_group=
+.name =3D name;
+>=20
+
