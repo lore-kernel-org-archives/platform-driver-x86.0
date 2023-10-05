@@ -2,286 +2,141 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A294DE92737
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Oct 2023 19:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0A9E92731
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Oct 2023 19:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231614AbjJETrV (ORCPT
+        id S229500AbjJETzr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 Oct 2023 15:47:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38242 "EHLO
+        Thu, 5 Oct 2023 15:55:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231337AbjJETrU (ORCPT
+        with ESMTP id S229437AbjJETzq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2023 15:47:20 -0400
-Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0205E8
-        for <platform-driver-x86@vger.kernel.org>; Thu,  5 Oct 2023 12:47:17 -0700 (PDT)
-Received: by mail-ua1-x92e.google.com with SMTP id a1e0cc1a2514c-7b07548b085so572821241.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Oct 2023 12:47:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696535237; x=1697140037; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fLJjywY8LzZjMJ4Ua1HVIFQQKdDKE5FDxSdi//HT1kY=;
-        b=ksipxG7GnTOnJHPTocs8DMa8TTDqe/zqjzlUHoZDTh7o/xP6ti8SfoVP/KqS449Oi+
-         eesDdbM6FsviLCj5O99A5fsw1Y7vXgjWerHoRpBgSSe/5cMkINWDoNfwxTTrX1YFuYs3
-         DBqfPfBbcJrSxvEo94EgRtHOQoY83qsbr5F206p1T2R5QfspgYWvQG0Oci8y+DxZNzej
-         aJmN4hvekDQ33cONcYGoK/g2wJrjlGfjHgz2uFxMYhQZG7DLEyyIp6ZuCCewW1I1G2rh
-         7ZXl39+SlYPgLqq5k0C27L73YNerFgs/cs+GTuX+r7VAXLHQOvHjz/jtIp6ZInH321Mb
-         kIRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696535237; x=1697140037;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fLJjywY8LzZjMJ4Ua1HVIFQQKdDKE5FDxSdi//HT1kY=;
-        b=YSxiAIT0rujI1F3x9Gy6FGWlK5cSsW7/SYtND2oqa/BdGKAaBuBp05aumoYm16X9u8
-         2lAYDn/Vz3m2NnxcDI9Gq6qG3DFOZELzdJcmtftKH/dWWbOnL3k2YEbjIszcXtxpPkIw
-         DaJebldi2SYRf1NdWLmL7HT9MD3rUu6FsU6uzs2m1ahnpu3Gg6iQyN9j3i1VVoxEGSSe
-         960pZQMg+0wPVMvJL/5Pyo4eBnxnK6f5RHT6CS3SY7rpGW3QrDM3TkXpXPNF72zy1kga
-         NCcb61C2V90IelrC0s8R1BqRRB7qUOchSEb2qAUOpm5cVZP0tKEGuRR+2z+UkE85Yum7
-         CI7A==
-X-Gm-Message-State: AOJu0YxjlNgmb5RIUwRFWG27H0i0NZuFIbhOQoPQqG/D8K7Rv5RGrjYT
-        /s0eTNo74C8Zi5ZPioYSjTBT/5LqQXY8pqWSRyGEVg==
-X-Google-Smtp-Source: AGHT+IGeCrpg8IFyQIUwf3s5xsWyEwFqrBJpZnT7s4icsTYPD3Db8KtwxkcdehXnz4szYazm/HNmJ5jwZdPOio+yInU=
-X-Received: by 2002:a67:f65a:0:b0:44d:3f96:6c61 with SMTP id
- u26-20020a67f65a000000b0044d3f966c61mr6494546vso.30.1696535235393; Thu, 05
- Oct 2023 12:47:15 -0700 (PDT)
+        Thu, 5 Oct 2023 15:55:46 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B0EADB;
+        Thu,  5 Oct 2023 12:55:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696535745; x=1728071745;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=xRdIGrMu0iispDmD5LNO95ypugEOWAVy/AAjlhz/WJk=;
+  b=ewnuJ5s1vr/K9hw94XHL39wd1FtEB8uWccgSDO0ww0qi6R0QXZ7oq/b+
+   7dO/1pktjRC62+XgwbEx3CQPp6ksmdZQf0Or7iuuQEHNKBWLoytKkAeq0
+   WvdlMxVsox1+MHJ/jARH5CcCLjaI3Lw01c1RPmBztlE+KKaylYEthGavY
+   zLFqepHC7B9ukBE1e09VX72MG+9HpLzDYuYhHwc285SDBCG/cmbslfkst
+   eHTj+xxP1fut9xvJkSnOjskp56CoQumWl2gEFZ3PCA9VWfhPHZyZpaKTv
+   +Sbq1Bl5FUPTOjM6CcDxNiOFiUwEz0EAdYem9q4gvZun4VqCSTGi9X7a+
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="386432534"
+X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
+   d="scan'208";a="386432534"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 12:55:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="755600113"
+X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
+   d="scan'208";a="755600113"
+Received: from jithujos.sc.intel.com ([172.25.103.66])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 12:55:43 -0700
+From:   Jithu Joseph <jithu.joseph@intel.com>
+To:     ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
+        markgross@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        rostedt@goodmis.org, jithu.joseph@intel.com, ashok.raj@intel.com,
+        tony.luck@intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+        ravi.v.shankar@intel.com, pengfei.xu@intel.com
+Subject: [PATCH v4 0/9] IFS support for GNR and SRF
+Date:   Thu,  5 Oct 2023 12:51:28 -0700
+Message-Id: <20231005195137.3117166-1-jithu.joseph@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230929202436.2850388-1-jithu.joseph@intel.com>
+References: <20230929202436.2850388-1-jithu.joseph@intel.com>
 MIME-Version: 1.0
-References: <20230905185309.131295-1-brgl@bgdev.pl> <20230905185309.131295-15-brgl@bgdev.pl>
- <CACRpkda9=VULj4Cy_sit-UpUQnVEbS-RJKAeULVCw8ZCRTq1sw@mail.gmail.com>
- <CAMRc=MdTk1B4MEh9C624Upm_EcaQgJd9OU-AGfU0G-DU1+qk6A@mail.gmail.com>
- <36b17290-c643-8d8e-e82b-49afa6b34fbb@nvidia.com> <3624e973-d09a-d211-c6d0-d0ffb8c20c4b@nvidia.com>
- <90b5f887-8af4-a80d-ea4d-cf2199752de4@nvidia.com> <0e7cae42-0b81-c038-8beb-49102feea8a6@nvidia.com>
- <CAMRc=McSG6qajxt6P3vWQEeT63Pk5tggD05pUoMD1zd5ApZxgA@mail.gmail.com>
- <647d3b52-1daf-175d-d5c2-45653dd2604c@nvidia.com> <CAMRc=Mc_+LxcbV+=KPwAh4DinJAAetHrK+W3jbNp4AZBzg63TA@mail.gmail.com>
- <b0f37601-39d6-618e-fa16-3b1c9e7c0e2c@nvidia.com>
-In-Reply-To: <b0f37601-39d6-618e-fa16-3b1c9e7c0e2c@nvidia.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 5 Oct 2023 21:47:04 +0200
-Message-ID: <CAMRc=MdKg8cOvNFw3ay-0XVCagWE7ArS7HgPZk-YrmeDJ4c4cw@mail.gmail.com>
-Subject: Re: [RFT PATCH 14/21] hte: tegra194: don't access struct gpio_chip
-To:     Dipen Patel <dipenp@nvidia.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
-        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Oct 5, 2023 at 9:43=E2=80=AFPM Dipen Patel <dipenp@nvidia.com> wrot=
-e:
->
-> On 10/5/23 12:05 PM, Bartosz Golaszewski wrote:
-> > On Thu, Oct 5, 2023 at 8:12=E2=80=AFPM Dipen Patel <dipenp@nvidia.com> =
-wrote:
-> >>
-> >> On 10/5/23 6:48 AM, Bartosz Golaszewski wrote:
-> >>> On Thu, Oct 5, 2023 at 1:52=E2=80=AFAM Dipen Patel <dipenp@nvidia.com=
-> wrote:
-> >>>>
-> >>>> On 10/4/23 3:54 PM, Dipen Patel wrote:
-> >>>>> On 10/4/23 1:33 PM, Dipen Patel wrote:
-> >>>>>> On 10/4/23 1:30 PM, Dipen Patel wrote:
-> >>>>>>> On 10/4/23 5:00 AM, Bartosz Golaszewski wrote:
-> >>>>>>>> On Thu, Sep 7, 2023 at 9:28=E2=80=AFAM Linus Walleij <linus.wall=
-eij@linaro.org> wrote:
-> >>>>>>>>>
-> >>>>>>>>> On Tue, Sep 5, 2023 at 8:53=E2=80=AFPM Bartosz Golaszewski <brg=
-l@bgdev.pl> wrote:
-> >>>>>>>>>
-> >>>>>>>>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >>>>>>>>>>
-> >>>>>>>>>> Using struct gpio_chip is not safe as it will disappear if the
-> >>>>>>>>>> underlying driver is unbound for any reason. Switch to using r=
-eference
-> >>>>>>>>>> counted struct gpio_device and its dedicated accessors.
-> >>>>>>>>>>
-> >>>>>>>>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro=
-.org>
-> >>>>>>>>>
-> >>>>>>>>> As Andy points out add <linux/cleanup.h>, with that fixed:
-> >>>>>>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >>>>>>>>>
-> >>>>>>>>> I think this can be merged into the gpio tree after leaving som=
-e
-> >>>>>>>>> slack for the HTE maintainer to look at it, things look so much
-> >>>>>>>>> better after this.
-> >>>>>>>>>
-> >>>>>>>>> Yours,
-> >>>>>>>>> Linus Walleij
-> >>>>>>>>
-> >>>>>>>> Dipen,
-> >>>>>>>>
-> >>>>>>>> if you could give this patch a test and possibly ack it for me t=
-o take
-> >>>>>>>> it through the GPIO tree (or go the immutable tag from HTE route=
-) then
-> >>>>>>>> it would be great. This is the last user of gpiochip_find() tree=
-wide,
-> >>>>>>>> so with it we could remove it entirely for v6.7.
-> >>>>>>>
-> >>>>>>> Progress so far for the RFT...
-> >>>>>>>
-> >>>>>>> I tried applying the patch series on 6.6-rc1 and it did not apply=
- cleanly,
-> >>>>>>> some patches I needed to manually apply and correct. With all thi=
-s, it failed
-> >>>>>>> compilation at some spi/spi-bcm2835 driver. I disabled that and w=
-as able to
-> >>>>>>> compile. I thought I should let you know this part.
-> >>>>>>>
-> >>>>>>> Now, I tried to test the hte and it seems to fail finding the gpi=
-o device,
-> >>>>>>> roughly around this place [1]. I thought it would be your patch s=
-eries so
-> >>>>>>> tried to just use 6.6rc1 without your patches and it still failed=
- at the
-> >>>>>>> same place. I have to trace back now from which kernel version it=
- broke.
-> >>>>>>
-> >>>>>> [1].
-> >>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/pateldipen1984/lin=
-ux.git/tree/drivers/hte/hte-tegra194.c?h=3Dfor-next#n781
-> >>>>>>
-> >>>>>> of course with your patches it would fail for the gdev instead of =
-the chip.
-> >>>>>
-> >>>>> Small update:
-> >>>>>
-> >>>>> I put some debugging prints in the gpio match function in the hte-t=
-egra194.c as
-> >>>>> below:
-> >>>>>
-> >>>>> static int tegra_gpiochip_match(struct gpio_chip *chip, void *data)
-> >>>>>  {
-> >>>>> +       struct device_node *node =3D data;
-> >>>>> +       struct fwnode_handle *fw =3D of_node_to_fwnode(data);
-> >>>>> +       if (!fw || !chip->fwnode)
-> >>>>> +               pr_err("dipen patel: fw is null\n");
-> >>>>>
-> >>>>> -       pr_err("%s:%d\n", __func__, __LINE__);
-> >>>>> +       pr_err("dipen patel, %s:%d: %s, %s, %s, match?:%d, fwnode n=
-ame:%s\n",
-> >>>>> __func__, __LINE__, chip->label, node->name, node->full_name, (chip=
-->fwnode =3D=3D
-> >>>>> fw), fw->dev->init_name);
-> >>>>>         return chip->fwnode =3D=3D of_node_to_fwnode(data);
-> >>>>>  }
-> >>>>>
-> >>>>> The output of the printfs looks like below:
-> >>>>> [    3.955194] dipen patel: fw is null -----> this message started =
-appearing
-> >>>>> when I added !chip->fwnode test in the if condition line.
-> >>>>>
-> >>>>> [    3.958864] dipen patel, tegra_gpiochip_match:689: tegra234-gpio=
-, gpio,
-> >>>>> gpio@c2f0000, match?:0, fwnode name:(null)
-> >>>>>
-> >>>>> I conclude that chip->fwnode is empty. Any idea in which conditions=
- that node
-> >>>>> would be empty?
-> >>>>
-> >>>> sorry for spamming, one last message before I sign off for the day..=
-..
-> >>>>
-> >>>> Seems, adding below in the tegra gpio driver resolved the issue I am=
- facing, I
-> >>>> was able to verify your patch series.
-> >>>>
-> >>>> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra1=
-86.c
-> >>>> index d87dd06db40d..a56c159d7136 100644
-> >>>> --- a/drivers/gpio/gpio-tegra186.c
-> >>>> +++ b/drivers/gpio/gpio-tegra186.c
-> >>>> @@ -989,6 +989,8 @@ static int tegra186_gpio_probe(struct platform_d=
-evice *pdev)
-> >>>>                 offset +=3D port->pins;
-> >>>>         }
-> >>>>
-> >>>> +       gpio->gpio.fwnode =3D of_node_to_fwnode(pdev->dev.of_node);
-> >>>> +
-> >>>>         return devm_gpiochip_add_data(&pdev->dev, &gpio->gpio, gpio)=
-;
-> >>>>  }
-> >>>>
-> >>>> Now, few follow up questions:
-> >>>> 1) is this the correct way of setting the chip fwnode in the gpio dr=
-iver?
-> >>>
-> >>> You shouldn't need this. This driver already does:
-> >>>
-> >>>     gpio->gpio.parent =3D &pdev->dev;
-> >>>
-> >>> so fwnode should be assigned in gpiochip_add_data_with_key(). Can you
-> >>> check why this doesn't happen?
-> >>
-> >> I do not see anywhere chip->fwnode being set in the gpiochip_add_* fun=
-ction.
-> >> The only reference I see is here [1]. Does it mean I need to change my=
- match
-> >> function from:
-> >>
-> >> chip->fwnode =3D=3D of_node_to_fwnode(data)
-> >>
-> >> to:
-> >> dev_fwnode(chip->parent) =3D=3D of_node_to_fwnode(data)?
-> >
-> > No! chip->fwnode is only used to let GPIOLIB know which fwnode to
-> > assign to the GPIO device (struct gpio_device).
-> What do you suggest I should use for the match as I do not see chip->fwno=
-de
-> being set?
->
+Changes in v4
+   Ilpo Järvinen
+    - Changed the dev_err/warn printk format specifiers to more
+       appropriate ones (patch 5, 6)
+    - Add defines for array generation (patch 9)
 
-Andy, Linus,
+v3 submission
+Link: https://lore.kernel.org/lkml/20230929202436.2850388-1-jithu.joseph@intel.com/
 
-Do you think it makes sense to make gpiochip_add_data_with_key()
-assign the chip's fwnode if it's not set by the caller (and instead
-taken from the parent device) for this particular use-case?
+Changes in v3
+   Ilpo Järvinen
+    - Added Reviewed-by tags wherever provided
+    - In function validate_ifs_metadata() (patch 6)
+        - Add != 0 to next line for clarity
+    - In function ifs_load_firmware() (patch 5)
+        - return -EINVAL instead of -BADFD
+    - In function ifs_test_core() (patch 4)
+        - initialize activate.gen0.rsvd = 0
+        - use if instead of conditional operator
+    - alignment change in ifs_scan_hashes_status_gen2 (patch 3)
 
-I think it's fine but wanted to run it by you.
+v2 submission
+Link: https://lore.kernel.org/lkml/20230922232606.1928026-1-jithu.joseph@intel.com/
 
-Bart
+Changes in v2
+   Ilpo Järvinen
+    - Use GENMASK_ULL() / FIELD_GET() for bitops (patch 01)
+    - Avoid mixing u8 type and bitfields in certain MSR structure
+       scenarios (patch03 also suggested by Dave Hansen)
+    - Expand bitfield structures to use consistent genx naming (patch 04)
+    - Replace goto with do / while (patch 03)
+    - general formatting (multiple patches)
+        - remove un-necessary parenthesis
+        - reformat commit message to use whole allowed 72 columns
+        - alignment changes
+    Other change
+     - fold v1 04/10 and 05/10 into v2 patch 04/09 to satisfy build
+        constraints due to consistent genx naming
 
-> >
-> > Bart
-> >
-> >>
-> >> [1]:
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/drivers/gpio/gpiolib.c?h=3Dv6.6-rc1#n767
-> >>
-> >>>
-> >>> Bart
-> >>>
-> >>>> 2) Or should I use something else in hte matching function instead o=
-f fwnode so
-> >>>> to avoid adding above line in the gpio driver?
-> >>>>
-> >>>>>
-> >>>>>>>
-> >>>>>>>>
-> >>>>>>>> Bart
-> >>>>>>>
-> >>>>>>
-> >>>>>
-> >>>>
-> >>
->
+v1 submission:
+Link: https://lore.kernel.org/lkml/20230913183348.1349409-1-jithu.joseph@intel.com/
+
+This series adds In Field Scan(IFS) support for newer CPUs like Granite
+Rapids(GNR) and Sierra Forest(SRF).
+
+There are changes in the IFS image loading and test flow to support
+these new CPUs.
+
+Note to reviewers:
+ - patch 1/9 adds a bit mask to arch/x86/.../msr-index.h,
+  hence x86 maintainers are cc-d.
+ - patch 4/9 modifies an existing tracepoint, cc Steven Rostedt
+ - Rest are localized to IFS driver
+
+Jithu Joseph (9):
+  platform/x86/intel/ifs: Store IFS generation number
+  platform/x86/intel/ifs: Refactor image loading code
+  platform/x86/intel/ifs: Gen2 scan image loading
+  platform/x86/intel/ifs: Gen2 Scan test support
+  platform/x86/intel/ifs: Validate image size
+  platform/x86/intel/ifs: Metadata validation for start_chunk
+  platform/x86/intel/ifs: Add new CPU support
+  platform/x86/intel/ifs: Add new error code
+  platform/x86/intel/ifs: ARRAY BIST for Sierra Forest
+
+ arch/x86/include/asm/msr-index.h         |   1 +
+ drivers/platform/x86/intel/ifs/ifs.h     |  64 ++++++++-
+ include/trace/events/intel_ifs.h         |  16 +--
+ drivers/platform/x86/intel/ifs/core.c    |  15 ++-
+ drivers/platform/x86/intel/ifs/load.c    | 158 +++++++++++++++++++++--
+ drivers/platform/x86/intel/ifs/runtest.c |  72 +++++++++--
+ 6 files changed, 286 insertions(+), 40 deletions(-)
+
+
+base-commit: 8a749fd1a8720d4619c91c8b6e7528c0a355c0aa
+-- 
+2.25.1
+
