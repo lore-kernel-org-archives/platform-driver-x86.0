@@ -2,44 +2,44 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 937FAE92734
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE4EE92737
 	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Oct 2023 19:55:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231886AbjJETzy (ORCPT
+        id S231904AbjJETzz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 Oct 2023 15:55:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41286 "EHLO
+        Thu, 5 Oct 2023 15:55:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231828AbjJETzt (ORCPT
+        with ESMTP id S231826AbjJETzt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Thu, 5 Oct 2023 15:55:49 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2F50E8;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89FE7E4;
         Thu,  5 Oct 2023 12:55:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696535749; x=1728071749;
+  t=1696535748; x=1728071748;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=QMn5zpNP8+ffHcP9eBj+rXkV8aG9ATI7kUf+LVAcPHo=;
-  b=fd42rx4u0SehggpgZ+MxmRhqMCWlJkvoPkJzReImALVsTcF5PnQIjOym
-   fw+LZb5DLIgS3Sj+FszX+j3StV73Wsq+DSPR9j1m9NZsFPT1ObhK4s4mz
-   Gv4JEG40ARlGDnPUOvO+nx6zUHVwyt4Cbp8akvsILE0FVW/83MF9pg8/Z
-   ObzeNFs1zzY+2qIBkJBW82zLIfS+tq/d35fTAI3ni3+4Ls9JnaglNZHqN
-   zxQJQfLbhcI2wL4lGyGI1ytZcIZ8LdyBB0RI3xXVT8xQLrZkU+zb7pSkh
-   bPUPIPFAoUgX9/k8H1wi8EdLrR3Ls8ZDlBGxohvjUXPrv9oSQ8n0nF5la
+  bh=c8ofPZQg6aJ0kE1jG7f82ai6elYHrz7FK0oJN2MLVaE=;
+  b=jIc4cO85FueHQbBzM29gzhyT1d4/lz8b+8bhOdyMD9y2q/lbXxVE/5is
+   gOfSg3xWqqMJWkmyYMVsHAASknpzhJSQ9no0olE9eV7dnWKO6aSGro8Ke
+   xp7yVkgMfQgoh4+vjYHwlPT3YZ3n2M3ltLmBce7vWRr8s0pZ2Hr5od5CX
+   N9jo7+q3Sxiw+flqAlPO2sPZp1as/tA9eUdUqVV94gNUTtcRIGC1U1ygX
+   8VpBtPxIYof/OyU5LFI01cMCQU5XouKSCR/IOGq0UM9A7tXEgUnPE0+KX
+   /54IzNOxFaK9J+GmvCzxK20kvsFyRh4T5TdS8LD/BI8L1QrEuWgFfHxqx
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="386432585"
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="386432605"
 X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="386432585"
+   d="scan'208";a="386432605"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 12:55:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="755600134"
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="755600141"
 X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="755600134"
+   d="scan'208";a="755600141"
 Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 12:55:44 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 12:55:45 -0700
 From:   Jithu Joseph <jithu.joseph@intel.com>
 To:     ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
         markgross@kernel.org
@@ -49,49 +49,62 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         tony.luck@intel.com, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
         ravi.v.shankar@intel.com, pengfei.xu@intel.com
-Subject: [PATCH v4 6/9] platform/x86/intel/ifs: Metadata validation for start_chunk
-Date:   Thu,  5 Oct 2023 12:51:34 -0700
-Message-Id: <20231005195137.3117166-7-jithu.joseph@intel.com>
+Subject: [PATCH v4 8/9] platform/x86/intel/ifs: Add new error code
+Date:   Thu,  5 Oct 2023 12:51:36 -0700
+Message-Id: <20231005195137.3117166-9-jithu.joseph@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20231005195137.3117166-1-jithu.joseph@intel.com>
 References: <20230929202436.2850388-1-jithu.joseph@intel.com>
  <20231005195137.3117166-1-jithu.joseph@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add an additional check to validate IFS image metadata field prior to
-loading the test image.
-
-If start_chunk is not a multiple of chunks_per_stride error out.
+Make driver aware of a newly added error code so that it can provide a
+more appropriate error message.
 
 Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Tested-by: Pengfei Xu <pengfei.xu@intel.com>
 ---
- drivers/platform/x86/intel/ifs/load.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/platform/x86/intel/ifs/runtest.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
-index 582f1801aaaa..959b1878cae6 100644
---- a/drivers/platform/x86/intel/ifs/load.c
-+++ b/drivers/platform/x86/intel/ifs/load.c
-@@ -291,6 +291,13 @@ static int validate_ifs_metadata(struct device *dev)
- 		return ret;
+diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
+index 925c30c79011..4fe544d79946 100644
+--- a/drivers/platform/x86/intel/ifs/runtest.c
++++ b/drivers/platform/x86/intel/ifs/runtest.c
+@@ -40,6 +40,8 @@ enum ifs_status_err_code {
+ 	IFS_UNASSIGNED_ERROR_CODE		= 7,
+ 	IFS_EXCEED_NUMBER_OF_THREADS_CONCURRENT	= 8,
+ 	IFS_INTERRUPTED_DURING_EXECUTION	= 9,
++	IFS_UNASSIGNED_ERROR_CODE_0xA		= 0xA,
++	IFS_CORRUPTED_CHUNK		= 0xB,
+ };
+ 
+ static const char * const scan_test_status[] = {
+@@ -55,6 +57,8 @@ static const char * const scan_test_status[] = {
+ 	[IFS_EXCEED_NUMBER_OF_THREADS_CONCURRENT] =
+ 	"Exceeded number of Logical Processors (LP) allowed to run Scan-At-Field concurrently",
+ 	[IFS_INTERRUPTED_DURING_EXECUTION] = "Interrupt occurred prior to SCAN start",
++	[IFS_UNASSIGNED_ERROR_CODE_0xA] = "Unassigned error code 0xA",
++	[IFS_CORRUPTED_CHUNK] = "Scan operation aborted due to corrupted image. Try reloading",
+ };
+ 
+ static void message_not_tested(struct device *dev, int cpu, union ifs_status status)
+@@ -123,6 +127,8 @@ static bool can_restart(union ifs_status status)
+ 	case IFS_MISMATCH_ARGUMENTS_BETWEEN_THREADS:
+ 	case IFS_CORE_NOT_CAPABLE_CURRENTLY:
+ 	case IFS_UNASSIGNED_ERROR_CODE:
++	case IFS_UNASSIGNED_ERROR_CODE_0xA:
++	case IFS_CORRUPTED_CHUNK:
+ 		break;
  	}
- 
-+	if (ifs_meta->chunks_per_stride &&
-+	    (ifs_meta->starting_chunk % ifs_meta->chunks_per_stride != 0)) {
-+		dev_warn(dev, "Starting chunk num %u not a multiple of chunks_per_stride %u\n",
-+			 ifs_meta->starting_chunk, ifs_meta->chunks_per_stride);
-+		return ret;
-+	}
-+
- 	return 0;
- }
- 
+ 	return false;
 -- 
 2.25.1
 
