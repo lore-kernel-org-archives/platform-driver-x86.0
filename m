@@ -2,27 +2,27 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E88E9370C
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Oct 2023 13:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FFFE92704
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Oct 2023 13:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230134AbjJEN4C (ORCPT
+        id S231721AbjJEN4k (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 Oct 2023 09:56:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58274 "EHLO
+        Thu, 5 Oct 2023 09:56:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244040AbjJENu7 (ORCPT
+        with ESMTP id S240657AbjJENyz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2023 09:50:59 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on20604.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eaa::604])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 054E483DF
-        for <platform-driver-x86@vger.kernel.org>; Thu,  5 Oct 2023 00:57:20 -0700 (PDT)
+        Thu, 5 Oct 2023 09:54:55 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on20631.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eaa::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 167D5261AA;
+        Thu,  5 Oct 2023 05:18:29 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DIyfN3w+vxrooBCsEbVB/YJX6nNVACw/yCbGk/PTiFMJ0xbaQ+VAbeELikRukV5ccLmqMNQe/TsOWUycgWZJ5WKSeAZlwinRZxV1h2XyXjqT4s/P8TAbQen8Oh4fkNrkFVf4t+Z6324dyuDoLt8VnxyqdT6dfVNi+jj0gS/gckjqUWE/0cKXa4toJDvWB9Q5Cmv3Eeq60f6C5rcMNHkILQtWW99HMhkB0q8B4YZW+QiIjqcaSi/80j4z7xWtHdG575Sk87biPCHIWUacY1mMyQ84Skxq9hGKSa01j/5EOvkD/BbmEF9poAKw1/YMcLTHOlcoO4wnXRz8cOnd8R5UNQ==
+ b=BdgWLuqnaWyR8SetD+KAHA5y1l6oEH7mYXb3pffjkes9lVfut1lhQ+hgyRkR6lWW6EQx+b6WP5FObUOAXHST4ErKNNTWhn5IuPf0YTsQfabNEvdpexZcypBsazRzoe8brQ29Z6/5CNzAzn8j2AWQtrEQesYGQtbaxhSsvkpHiAS4q+B3/NCF6wwMVRSknJXewQKshK60LMnaIe4Q7bfOXs6Tjz5SMK+i7uf4OKKAdM2fMPf5PB3sH13pICluxkAxnVhtWdOIciZZzGsiUA4RUwV/ZG++mS8BKq+KuxJF+uK9e58e9URaZkPi9DLacTCjvjFnoutXkinMm4TQcm4rPA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Tod4HBy3gYhfo7gdRswQ+ygZSS106o4wAJ8obdh3+wQ=;
- b=Em+NEV58Bqy797gh5kTkNFrb3ZkTviSCzY16KU/PuxB0L/wK2UTCLgzpApSoWL1lSp1/yN4p3yBVDXAPZ0b6Wd+VMHQqsHN8rPFUmpto82cXAsSM0H2mrE8zNfgRzC0zWeOae/9xh4JALQeMlKXiW5vdIslliKKoHIh87JE6bKe+Jb3vPpWBEbFVdCI0ohHfFO6jeNE20eeQm6LcFvpFgN+0aYC0nYDWtvoXQmcX9E410mI0GFFG/WVv7LHyQTr6bCqsPIuCwM0pTNrW/Szn/mTE4wB0yMmpxOxfSO/7lXU1v3OLTEt/TUFe8acb2CVzDuh037SZVE+AfvBWyITHqw==
+ bh=f8pCM4h7jsIVZQAzLcbu7enq4yK8XeBa+NTzQJlpjT8=;
+ b=Ygw4FCjFDXtHB20H2laQVQjhmoso0rz8bn9iV3z4fGOISdSO+fhnIoGdUcuIyUUOL+sGAXyB3qQtzlkmcjultSjLw4U6Pavy4LNM0U5DXS0R7S9E/7I4jm+D2eHVJ31jRp+ZGyaYwCilvGBK4lOqnroH8H2pgAA9o4xtN4b+f1Lov7g/YnpsNZ/iCnrNOF56TKcAySQs4EoNUQIMM2N9v9j+z1q0XFt3DWfMIER7xrUQyjV20Sw1hZSfx5BMRps44frOgHuwXsQUftBBgbzCThLZg8jh5Qd6O20/qrN/BVAGz7dhJe1XX9ZffAFUj815kRyw9abqWGHpEf4A5U1TLA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
@@ -30,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tod4HBy3gYhfo7gdRswQ+ygZSS106o4wAJ8obdh3+wQ=;
- b=Cbok2TaVczhkas4lkz9NL4U7eZaChNU82qCrv2DUYmtzwmcdFwsDHzxkdmuFI/tcLt6C8N/fGpkVospOeVJDt6lXBXfQhBiScEY4Q2lTltSlBHlxacgjzEbk9jGi/y67Go5n8s5L4TRgbM76BRKD7WDTmqG7Q8qkVHe5x/JnOLePWsC7EgWZBzvsUPuEerU6XxeSoafeoyFXCV+6Kq0UAknoCB9njxE9WcANAXZWf/JdFgAcdW5G1lXmLWSLOtG0XKU0D3FGzRIRKhCFNCOANFpdqz1cQf9q/R6L7OgXClNF0RanGhb1eh8QLCbC/m2py4rpA7FOmnAN5HEOyaLI+g==
-Received: from SJ0PR03CA0133.namprd03.prod.outlook.com (2603:10b6:a03:33c::18)
- by CH3PR12MB8710.namprd12.prod.outlook.com (2603:10b6:610:173::15) with
+ bh=f8pCM4h7jsIVZQAzLcbu7enq4yK8XeBa+NTzQJlpjT8=;
+ b=cKNtycylcJsQWaw8Xab43joCcXkInaRpvbB1sWR4HZ2TGh5cnQytGg8ZSdQzNxEq1GShS12KvyLPi8WNcFh2i2MXTY9d5vJ0zAHNwB9/ItaylA3OetSyax2jXCYniWB1It0Zq7BpKyhGqlb02uYKAZY672ZZEXZVHyvApNIn+trh85ouMciiMxiLp/XvaH1uj6mnD7t6JLoCUrJblCvM1ATUn/gO3ZOCKpbyHk0R8sUip2cSfdF/sV2uLRcy88XpX6OPvdqWTmkqvu2WXLNKl3ZNH3Xcqq1x3W15Zc6i34UpWOxoIRtByLuVg6mV34OmgWz/ddqO+90GE14amjf5SA==
+Received: from CY5PR22CA0080.namprd22.prod.outlook.com (2603:10b6:930:80::19)
+ by CY8PR12MB7434.namprd12.prod.outlook.com (2603:10b6:930:52::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.33; Thu, 5 Oct
- 2023 07:57:04 +0000
-Received: from MWH0EPF000989E5.namprd02.prod.outlook.com
- (2603:10b6:a03:33c:cafe::1c) by SJ0PR03CA0133.outlook.office365.com
- (2603:10b6:a03:33c::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.26 via Frontend
- Transport; Thu, 5 Oct 2023 07:57:03 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.35; Thu, 5 Oct
+ 2023 12:18:12 +0000
+Received: from CY4PEPF0000FCBE.namprd03.prod.outlook.com
+ (2603:10b6:930:80:cafe::bb) by CY5PR22CA0080.outlook.office365.com
+ (2603:10b6:930:80::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.34 via Frontend
+ Transport; Thu, 5 Oct 2023 12:18:12 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -49,105 +49,88 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.117.160 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
 Received: from mail.nvidia.com (216.228.117.160) by
- MWH0EPF000989E5.mail.protection.outlook.com (10.167.241.132) with Microsoft
+ CY4PEPF0000FCBE.mail.protection.outlook.com (10.167.242.100) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6838.14 via Frontend Transport; Thu, 5 Oct 2023 07:57:03 +0000
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ 15.20.6838.22 via Frontend Transport; Thu, 5 Oct 2023 12:18:12 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
  (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 5 Oct 2023
- 00:56:44 -0700
-Received: from r-build-bsp-02.mtr.labs.mlnx (10.126.231.35) by
- rnnvmail202.nvidia.com (10.129.68.7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.41; Thu, 5 Oct 2023 00:56:42 -0700
-From:   Vadim Pasternak <vadimp@nvidia.com>
-To:     <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
-CC:     <christophe.jaillet@wanadoo.fr>,
+ 05:18:06 -0700
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 5 Oct 2023
+ 05:18:06 -0700
+Received: from vdi.nvidia.com (10.127.8.12) by mail.nvidia.com (10.129.68.9)
+ with Microsoft SMTP Server id 15.2.986.41 via Frontend Transport; Thu, 5 Oct
+ 2023 05:18:05 -0700
+From:   Liming Sun <limings@nvidia.com>
+To:     Vadim Pasternak <vadimp@nvidia.com>,
+        David Thompson <davthompson@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Dan Carpenter <dan.carpenter@linaro.org>
+CC:     Liming Sun <limings@nvidia.com>,
         <platform-driver-x86@vger.kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>
-Subject: [PATCH platform 2/3] platform: mellanox: Fix misspelling error in routine name
-Date:   Thu, 5 Oct 2023 07:56:15 +0000
-Message-ID: <20231005075616.42777-3-vadimp@nvidia.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20231005075616.42777-1-vadimp@nvidia.com>
-References: <20231005075616.42777-1-vadimp@nvidia.com>
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a warning message
+Date:   Thu, 5 Oct 2023 08:18:01 -0400
+Message-ID: <bb8bc77e6ecc2287fc9110cfa08caa48eb2a0385.1696508228.git.limings@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Originating-IP: [10.126.231.35]
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail202.nvidia.com (10.129.68.7)
+X-NV-OnPremToCloud: ExternallySecured
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000989E5:EE_|CH3PR12MB8710:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8d3e2d21-3cdf-429d-1ffd-08dbc578a979
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCBE:EE_|CY8PR12MB7434:EE_
+X-MS-Office365-Filtering-Correlation-Id: ce18e61d-7d77-4706-baaf-08dbc59d251d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9mZTKOdd2qBmYsjVPBrHZIjzmNHIkMOrvkFgQbNIjszHUryQlMcPwc60INyxNb3+rl/XdWU4Tn/qv+yNoiF9O/YPhY6m1IqRk9t9jx7wcisVdxYdkb575Act+imSNaTRAWAk43CDPjc4lusHGtArRkqXnd7IRSqOWH70CFQD4iz5S5m7RP68FHNOtOhXYCsuvEJHpw08AO48vMkMY0kfzmAYAvT4zKFcNSeaVGpJeVwvbcAysYVbgt0NgVE5uYdL8pbUARfxwbhe/MsSzZGXJN2LS0MV8yZuZFwyau4VRToCDat+WPxedJsvCBB2SuT9JnbWyWRvONo1aCOHVTT2KZamWjJU2lRGmZu3MN3FZp1qFXQ0Zg0p2GC6oF7unRkPWSWMOU4t+/ParKwyBDAXuxCC2A47Op4eps1diIiN+KugysXawKi0ggtgpza459O2hzIE9q57fP0mxErU0X27wpzp4XI/tQy+BYYuAJ6fnjIxfBUBMMwEV502x1nWTqFhRKaIlXeZY7pZQvy4ZuEoDTMqfFpES03gtZXxsk/Ncx7CihhlwrxIJy8+xir3gGU5Si7dLC939aI/T3Z08k+enjdmW1RwPA2/CLK1FtQdVjuMaLbSV28cnaOS4QHHXzR0CTGbj5MrMedy64yZaA63XZqWyWrXGQkGs6HSoygQD0lZs2hMXp7SYt6qk/mEsIh9jQVkb9ClXPEUyL4kMH8H+jhbOVowdAaXIXIpaROgBr4DE+/o6B/WZh+JW3A9w0Wz
-X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(39860400002)(346002)(396003)(376002)(230922051799003)(451199024)(82310400011)(186009)(1800799009)(64100799003)(36840700001)(46966006)(40470700004)(41300700001)(1076003)(107886003)(110136005)(70586007)(6666004)(2616005)(70206006)(316002)(54906003)(8676002)(4326008)(16526019)(8936002)(5660300002)(26005)(336012)(478600001)(426003)(40460700003)(2906002)(83380400001)(47076005)(82740400003)(7636003)(356005)(36860700001)(36756003)(40480700001)(86362001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: ccBVT5j9N2hkj5fabTY339HyJ545sDr9wyYtQQcfm4wHXTKt6vPEDQMMvxix1c4ikiqT4ZiKJU7cYWNeWtKrh2nd4d5mfm3f2HMM9FlrdsgtlnI2jFZ3B5DxRIrnFjeCffMg+f9UDHNtHsocu2DyQU7jfMKAGXMNSAmqG8gI9JU2aHGuCPzJJbKQIGL7+yrP/3snS4vrNPB0N5w95/fOu4ODyRxCsHn4PFIay1tJBj2/SaxhD2ohbKy0x5F26+jKe/52b6ZLlCUmyEQxKn1wVlfua12eFe3fjF0bfzNs9dpSBpVVrLEZoPiiE7lczbpCSvTCGGz2h+ryF78N0Fu8fwvWhWRC1+k6eczqoyCOSdzxwZgWaQSykHXBp1wT1vgWwx5p789lFheXl8G1smJOnOCz1Fv564mtJw+eZQXqkINVK5IeGfl6sh5ufFtBnXGYUDBfDKFenCi4/4E3ElHro2MQ00gFqgfarVYSMOBpkp3sdnxVpJup2Yip6Wmk2TVD/2PGfDzLqdaRl7YMy+CNJe3H+0/mPfFQyh7Y0oUYz4vQIACoVoIDGilvEB5YMfAj3yczFgU2cz1YfOs6SKDnABtuMciLKRbVmnujkGw1V0vzg0rI2kpRmtLMSglL+6tgm07s1oIq6d3vvU93X/ZE616rtIa0qXWWfNEPls3QPpEZ8JJvDF+OHX9TZLzQJ4yF1A9MKr4bUjML/M27NK9hLEe9XDrODOwUrtyeqgE5kJF7RTHdnlaQyIRRt7WoEokG
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(376002)(346002)(136003)(39860400002)(396003)(230922051799003)(186009)(64100799003)(1800799009)(82310400011)(451199024)(40470700004)(36840700001)(46966006)(6666004)(40460700003)(2616005)(36860700001)(36756003)(47076005)(2906002)(86362001)(82740400003)(54906003)(478600001)(356005)(7636003)(4326008)(41300700001)(83380400001)(8936002)(70206006)(26005)(336012)(70586007)(7696005)(40480700001)(316002)(8676002)(426003)(5660300002)(110136005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Oct 2023 07:57:03.1685
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Oct 2023 12:18:12.4893
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d3e2d21-3cdf-429d-1ffd-08dbc578a979
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce18e61d-7d77-4706-baaf-08dbc59d251d
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: MWH0EPF000989E5.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000FCBE.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8710
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7434
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Change mlxplat_i2c_main_complition_notify() to
-mlxplat_i2c_main_completion_notify().
+This commit fixes the smatch static checker warning in
+mlxbf_tmfifo_rxtx_word() which complains data not initialized at
+line 634 when IS_VRING_DROP() is TRUE. This is not a real bug since
+line 634 is for Tx while IS_VRING_DROP() is only set for Rx. So there
+is no case that line 634 is executed when IS_VRING_DROP() is TRUE.
 
-Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
+This commit initializes the local data variable to avoid unnecessary
+confusion to those static analyzing tools.
+
+Signed-off-by: Liming Sun <limings@nvidia.com>
 ---
- drivers/platform/x86/mlx-platform.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/platform/mellanox/mlxbf-tmfifo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index a2ffe4157df1..5b4e57c37f2c 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -368,7 +368,7 @@ struct mlxplat_priv {
- };
- 
- static struct platform_device *mlxplat_dev;
--static int mlxplat_i2c_main_complition_notify(void *handle, int id);
-+static int mlxplat_i2c_main_completion_notify(void *handle, int id);
- static void __iomem *i2c_bridge_addr, *jtag_bridge_addr;
- 
- /* Regions for LPC I2C controller and LPC base register space */
-@@ -384,7 +384,7 @@ static const struct resource mlxplat_lpc_resources[] = {
- 
- /* Platform systems default i2c data */
- static struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_i2c_default_data = {
--	.completion_notify = mlxplat_i2c_main_complition_notify,
-+	.completion_notify = mlxplat_i2c_main_completion_notify,
- };
- 
- /* Platform i2c next generation systems data */
-@@ -409,7 +409,7 @@ static struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_i2c_ng_data = {
- 	.mask = MLXPLAT_CPLD_AGGR_MASK_COMEX,
- 	.cell_low = MLXPLAT_CPLD_LPC_REG_AGGRCO_OFFSET,
- 	.mask_low = MLXPLAT_CPLD_LOW_AGGR_MASK_I2C,
--	.completion_notify = mlxplat_i2c_main_complition_notify,
-+	.completion_notify = mlxplat_i2c_main_completion_notify,
- };
- 
- /* Platform default channels */
-@@ -6471,7 +6471,7 @@ static void mlxplat_i2c_mux_topology_exit(struct mlxplat_priv *priv)
- 	}
- }
- 
--static int mlxplat_i2c_main_complition_notify(void *handle, int id)
-+static int mlxplat_i2c_main_completion_notify(void *handle, int id)
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index f3696a54a2bd..ccc4b51d3379 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -595,8 +595,8 @@ static void mlxbf_tmfifo_rxtx_word(struct mlxbf_tmfifo_vring *vring,
  {
- 	struct mlxplat_priv *priv = handle;
+ 	struct virtio_device *vdev = vring->vq->vdev;
+ 	struct mlxbf_tmfifo *fifo = vring->fifo;
++	u64 data = 0;
+ 	void *addr;
+-	u64 data;
  
+ 	/* Get the buffer address of this desc. */
+ 	addr = phys_to_virt(virtio64_to_cpu(vdev, desc->addr));
 -- 
-2.20.1
+2.30.1
 
