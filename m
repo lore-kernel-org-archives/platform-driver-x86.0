@@ -2,60 +2,59 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597BAE9272B
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Oct 2023 19:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB2CE9272B
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Oct 2023 19:24:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230420AbjJETVu (ORCPT
+        id S231142AbjJETYM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 Oct 2023 15:21:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39262 "EHLO
+        Thu, 5 Oct 2023 15:24:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229734AbjJETVu (ORCPT
+        with ESMTP id S231224AbjJETYL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Oct 2023 15:21:50 -0400
-Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C5EE98
-        for <platform-driver-x86@vger.kernel.org>; Thu,  5 Oct 2023 12:21:49 -0700 (PDT)
-Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-49d0ae5ec2fso552072e0c.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Oct 2023 12:21:49 -0700 (PDT)
+        Thu, 5 Oct 2023 15:24:11 -0400
+Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89600E7
+        for <platform-driver-x86@vger.kernel.org>; Thu,  5 Oct 2023 12:24:09 -0700 (PDT)
+Received: by mail-ua1-x936.google.com with SMTP id a1e0cc1a2514c-79df12ff0f0so561337241.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Oct 2023 12:24:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696533708; x=1697138508; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696533848; x=1697138648; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HZ5nQ4FX57Hz3jHKgT06APZP5qfOfB/HcB4dGGZFKGk=;
-        b=sb3BxPRBdVbf4n78JGnQp4Cov5mT93ycCokCfiPi3K7hfUM1rO/mChlpRPVYz070v7
-         TTf1k/jIAnroFR0kET4wmBC2EKhRwAoks83VDVzaISXHbQMx/3kbFFJGIxDF3WctzgNQ
-         M6FIJV3fBqBLl0G1EXDngJmYM10WGcWXT7Nm2iqZNyYSImtGO359PYoU1rYz5CeX0k3t
-         iLzf0F3AsMZPLmp91rymVKgnDtWxXwO5aW5IqWNPPi/s9JDq2AbtTQ0RnpJfsvlYwVC8
-         fuSUbmweDT0uRFjCPE2e2Cn56WR/mHUqqCXxjJwv3fYLQ8oh77PXZVFbGQ1i1pCukmBS
-         Zt2A==
+        bh=kJIBjdHm1ElO0Q/5Tg/KzhsnCInNf6ArioOkVClacUM=;
+        b=DjqUBS1ZNqUaUwBp5v/sxIwfbA8cjule898WmFKphi1uUpN4iHbnTholmhcKeTMNDL
+         Idd7xXoUv7pzS/q7Z70ZQpRRsvPhAC2JJ9WELCjTg5QjGQ1Jp21ONCY9e0GiVkM92sq9
+         FvoYkVFiE2XjhVo8WUSpGO4VqYySoMpgi2qEL2MHTdPbRvQBGqcNQX3/24iF36+rk2x+
+         3WELdSEb3TXI5N4HOOdxBYA2C43iA+puqbiyg8XJhjJVQg1zwuX07gXVj/Hr59OiMd+N
+         JwXnsA1eXFG/9elj6A672kC88QO6BsnmX2Ony4634+iXmCCXpyc+GNUbG2FIjDNASkj2
+         catw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696533708; x=1697138508;
+        d=1e100.net; s=20230601; t=1696533848; x=1697138648;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HZ5nQ4FX57Hz3jHKgT06APZP5qfOfB/HcB4dGGZFKGk=;
-        b=RrC0DrOiQEiHU9tqgAUBi2WLd6GTLrH/ZS/5J5aJiOPYtfmxNq5DjrwS3HGLZpIqo8
-         J1KxwhtQXH+bTK5p36BOElvzmBWbPVpMMmqQrfsrzoAguLl6FDkkB+SvsmxF42LpeoOs
-         fecAjOa6xA+ubwt7cMEcdgAY6EP/YHhg7TrwcLYbMhFBSrQP19xqoOLZNfaaOIBtDjXO
-         du341z9lF8V/yz2qbjc58NFvhUCFf01BpCEHK0Wtvn/6JAAbQM3dtR1LzImBKHRDFoNx
-         qVuxmkMEd38BfgC0N4CSdrN364/HUGJOgYmhJ38DfXPLoQQqZSq5oLL+n7xsJJnPK1Lu
-         hnbQ==
-X-Gm-Message-State: AOJu0YyhtaZfkEC7o0LvrVLbsicsyiEJ9i2R2GJz+LfQZSd4jgRqUnNI
-        eg3/EmuSctHm48HGNUY+xprdnCfumnoZ1yzZZUcPJQ==
-X-Google-Smtp-Source: AGHT+IEwJl8lGnEeNibTIJXnkxtfJKixGZtnbqP5Q2WvwRFKjN9RjUnT2M2rYumDdBDVZ9T6bp8HXCnRHzv/w+QXEA8=
-X-Received: by 2002:a1f:df01:0:b0:486:e696:c69a with SMTP id
- w1-20020a1fdf01000000b00486e696c69amr5398458vkg.16.1696533708218; Thu, 05 Oct
- 2023 12:21:48 -0700 (PDT)
+        bh=kJIBjdHm1ElO0Q/5Tg/KzhsnCInNf6ArioOkVClacUM=;
+        b=VkMvbrsO0mMtTvS5gvBJ2embCnvMXIz3EjD3otPqou3kPmsSIrTNlClKTaZZu9ygFc
+         3+F7TXbt9ogbdAewgVqPQamHhgQGpqClSviB71vjZcEkymTGQAbGsyKYfbiGS8ohioKj
+         YM4zw5oGLEHKgfGMPFrVqSn42p3RN9RhcyhHf4zyqU0akHesbcw0i5C6R8dTrmqWtFp3
+         wa79BYVCvu+LC3M0hIusAorZ1b3FXcCBq+Bj8cG1TACjZyA1IkKKitt8rJmIPZUxW5RC
+         pKue0pkEJY5MkxuMPp8+PmSibX1xPTW9I473KLPkF2MWE3iuHFUsf16a+mAJgDcJg876
+         XV0A==
+X-Gm-Message-State: AOJu0Yz2A0rbAzP6Pi7SLY+1Vqio1YL2aQj049r2v776aCO7S+7JDYe2
+        CFFaHkWkT3PsoHTg/E/dmdw1eCoSzv8sF5Uq3gW0Hq1FQ5lYOD+/2Ec=
+X-Google-Smtp-Source: AGHT+IGh0duTgq7OsXC+XkKGS9kNsK8dFunWxtrrnDWf7uvEm2UFTdjxGkSLPPX416q5NVUUBUMe2HS8FIujKIqUyzg=
+X-Received: by 2002:a67:f252:0:b0:454:6fb8:9d4e with SMTP id
+ y18-20020a67f252000000b004546fb89d4emr6450286vsm.25.1696533848483; Thu, 05
+ Oct 2023 12:24:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231004162317.163488-1-hdegoede@redhat.com> <20231004162317.163488-2-hdegoede@redhat.com>
-In-Reply-To: <20231004162317.163488-2-hdegoede@redhat.com>
+References: <20231004162317.163488-1-hdegoede@redhat.com> <20231004162317.163488-5-hdegoede@redhat.com>
+In-Reply-To: <20231004162317.163488-5-hdegoede@redhat.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 5 Oct 2023 21:21:37 +0200
-Message-ID: <CAMRc=Membo2qcYGHLSNXCCk0Bvnd=pjXP_hUVP_x72DttCXUhg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] platform/x86: int3472: Add new skl_int3472_fill_gpiod_lookup()
- helper
+Date:   Thu, 5 Oct 2023 21:23:57 +0200
+Message-ID: <CAMRc=Me-g+qG7-_0r0b-6bXDie5AFDNC-WVp+fo3LDrStP5NVw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] platform/x86: int3472: Switch to devm_get_gpiod()
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -74,89 +73,144 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 On Wed, Oct 4, 2023 at 6:23=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
 wrote:
 >
-> Add a new skl_int3472_fill_gpiod_lookup() helper.
->
-> This is a preparation patch for removing usage of the deprecated
-> gpiod_toggle_active_low() and acpi_get_and_request_gpiod() functions.
+> Switch to devm_get_gpiod() for discrete GPIOs for clks / regulators / LED=
+s
+> and let devm do the cleanup for us.
 >
 > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/platform/x86/intel/int3472/discrete.c | 32 +++++++++++++------
->  1 file changed, 22 insertions(+), 10 deletions(-)
+>  .../x86/intel/int3472/clk_and_regulator.c     | 23 ++++---------------
+>  drivers/platform/x86/intel/int3472/discrete.c |  2 +-
+>  drivers/platform/x86/intel/int3472/led.c      |  7 +-----
+>  3 files changed, 6 insertions(+), 26 deletions(-)
 >
-> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/plat=
-form/x86/intel/int3472/discrete.c
-> index e33c2d75975c..351ecf047944 100644
-> --- a/drivers/platform/x86/intel/int3472/discrete.c
-> +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> @@ -52,21 +52,15 @@ static void skl_int3472_log_sensor_module_name(struct=
- int3472_discrete_device *i
->         }
+> diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/dri=
+vers/platform/x86/intel/int3472/clk_and_regulator.c
+> index 459f96c04ca1..16e36ac0a7b4 100644
+> --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+> +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+> @@ -177,10 +177,8 @@ int skl_int3472_register_gpio_clock(struct int3472_d=
+iscrete_device *int3472,
+>
+>         init.name =3D kasprintf(GFP_KERNEL, "%s-clk",
+>                               acpi_dev_name(int3472->adev));
+> -       if (!init.name) {
+> -               ret =3D -ENOMEM;
+> -               goto out_put_gpio;
+> -       }
+> +       if (!init.name)
+> +               return -ENOMEM;
+>
+>         int3472->clock.frequency =3D skl_int3472_get_clk_frequency(int347=
+2);
+>
+> @@ -206,8 +204,6 @@ int skl_int3472_register_gpio_clock(struct int3472_di=
+screte_device *int3472,
+>         clk_unregister(int3472->clock.clk);
+>  out_free_init_name:
+>         kfree(init.name);
+> -out_put_gpio:
+> -       gpiod_put(int3472->clock.ena_gpio);
+>
+>         return ret;
+>  }
+> @@ -219,7 +215,6 @@ void skl_int3472_unregister_clock(struct int3472_disc=
+rete_device *int3472)
+>
+>         clkdev_drop(int3472->clock.cl);
+>         clk_unregister(int3472->clock.clk);
+> -       gpiod_put(int3472->clock.ena_gpio);
 >  }
 >
-> -static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device=
- *int3472,
-> -                                         struct acpi_resource_gpio *agpi=
-o,
-> -                                         const char *func, u32 polarity)
-> +static int skl_int3472_fill_gpiod_lookup(struct gpiod_lookup *table_entr=
-y,
-> +                                        struct acpi_resource_gpio *agpio=
-,
-> +                                        const char *func, u32 polarity)
->  {
->         char *path =3D agpio->resource_source.string_ptr;
-> -       struct gpiod_lookup *table_entry;
->         struct acpi_device *adev;
->         acpi_handle handle;
->         acpi_status status;
+>  /*
+> @@ -266,7 +261,7 @@ int skl_int3472_register_regulator(struct int3472_dis=
+crete_device *int3472,
+>         struct regulator_config cfg =3D { };
+>         const char *second_sensor =3D NULL;
+>         const struct dmi_system_id *id;
+> -       int i, j, ret;
+> +       int i, j;
 >
-> -       if (int3472->n_sensor_gpios >=3D INT3472_MAX_SENSOR_GPIOS) {
-> -               dev_warn(int3472->dev, "Too many GPIOs mapped\n");
-> -               return -EINVAL;
+>         id =3D dmi_first_match(skl_int3472_regulator_second_sensor);
+>         if (id)
+> @@ -309,21 +304,11 @@ int skl_int3472_register_regulator(struct int3472_d=
+iscrete_device *int3472,
+>         int3472->regulator.rdev =3D regulator_register(int3472->dev,
+>                                                      &int3472->regulator.=
+rdesc,
+>                                                      &cfg);
+> -       if (IS_ERR(int3472->regulator.rdev)) {
+> -               ret =3D PTR_ERR(int3472->regulator.rdev);
+> -               goto err_free_gpio;
 > -       }
+>
+> -       return 0;
 > -
->         status =3D acpi_get_handle(NULL, path, &handle);
->         if (ACPI_FAILURE(status))
->                 return -EINVAL;
-> @@ -75,13 +69,31 @@ static int skl_int3472_map_gpio_to_sensor(struct int3=
-472_discrete_device *int347
->         if (!adev)
->                 return -ENODEV;
+> -err_free_gpio:
+> -       gpiod_put(int3472->regulator.gpio);
+> -
+> -       return ret;
+> +       return PTR_ERR_OR_ZERO(int3472->regulator.rdev);
+>  }
 >
-> -       table_entry =3D &int3472->gpios.table[int3472->n_sensor_gpios];
->         table_entry->key =3D acpi_dev_name(adev);
->         table_entry->chip_hwnum =3D agpio->pin_table[0];
->         table_entry->con_id =3D func;
->         table_entry->idx =3D 0;
->         table_entry->flags =3D polarity;
+>  void skl_int3472_unregister_regulator(struct int3472_discrete_device *in=
+t3472)
+>  {
+>         regulator_unregister(int3472->regulator.rdev);
+> -       gpiod_put(int3472->regulator.gpio);
+>  }
+> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/plat=
+form/x86/intel/int3472/discrete.c
+> index 0bc7cbefd9ae..07b302e09340 100644
+> --- a/drivers/platform/x86/intel/int3472/discrete.c
+> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> @@ -119,7 +119,7 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472=
+_discrete_device *int3472,
+>                 return ERR_PTR(ret);
 >
-> +       return 0;
-> +}
-> +
-> +static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device=
- *int3472,
-> +                                         struct acpi_resource_gpio *agpi=
-o,
-> +                                         const char *func, u32 polarity)
-> +{
-> +       int ret;
-> +
-> +       if (int3472->n_sensor_gpios >=3D INT3472_MAX_SENSOR_GPIOS) {
-> +               dev_warn(int3472->dev, "Too many GPIOs mapped\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       ret =3D skl_int3472_fill_gpiod_lookup(&int3472->gpios.table[int34=
-72->n_sensor_gpios],
-> +                                           agpio, func, polarity);
-> +       if (ret)
+>         gpiod_add_lookup_table(lookup);
+> -       desc =3D gpiod_get(int3472->dev, func, GPIOD_OUT_LOW);
+> +       desc =3D devm_gpiod_get(int3472->dev, func, GPIOD_OUT_LOW);
+>         gpiod_remove_lookup_table(lookup);
+>
+>         return desc;
+> diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/=
+x86/intel/int3472/led.c
+> index 476cd637fc51..9cbed694e2ca 100644
+> --- a/drivers/platform/x86/intel/int3472/led.c
+> +++ b/drivers/platform/x86/intel/int3472/led.c
+> @@ -39,7 +39,7 @@ int skl_int3472_register_pled(struct int3472_discrete_d=
+evice *int3472, struct gp
+>
+>         ret =3D led_classdev_register(int3472->dev, &int3472->pled.classd=
+ev);
+>         if (ret)
+> -               goto err_free_gpio;
 > +               return ret;
-> +
->         int3472->n_sensor_gpios++;
+>
+>         int3472->pled.lookup.provider =3D int3472->pled.name;
+>         int3472->pled.lookup.dev_id =3D int3472->sensor_name;
+> @@ -47,10 +47,6 @@ int skl_int3472_register_pled(struct int3472_discrete_=
+device *int3472, struct gp
+>         led_add_lookup(&int3472->pled.lookup);
 >
 >         return 0;
+> -
+> -err_free_gpio:
+> -       gpiod_put(int3472->pled.gpio);
+> -       return ret;
+>  }
+>
+>  void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472=
+)
+> @@ -60,5 +56,4 @@ void skl_int3472_unregister_pled(struct int3472_discret=
+e_device *int3472)
+>
+>         led_remove_lookup(&int3472->pled.lookup);
+>         led_classdev_unregister(&int3472->pled.classdev);
+> -       gpiod_put(int3472->pled.gpio);
+>  }
 > --
 > 2.41.0
 >
