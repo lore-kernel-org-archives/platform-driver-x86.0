@@ -2,83 +2,99 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51758E81E04
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Oct 2023 14:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358CBE81E06
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Oct 2023 15:09:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230158AbjJFOzo (ORCPT
+        id S230265AbjJFPJ3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 Oct 2023 10:55:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34908 "EHLO
+        Fri, 6 Oct 2023 11:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232506AbjJFOzn (ORCPT
+        with ESMTP id S230223AbjJFPJ2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 Oct 2023 10:55:43 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44158F
-        for <platform-driver-x86@vger.kernel.org>; Fri,  6 Oct 2023 07:55:42 -0700 (PDT)
+        Fri, 6 Oct 2023 11:09:28 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49748A6;
+        Fri,  6 Oct 2023 08:09:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696604142; x=1728140142;
+  t=1696604967; x=1728140967;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=3T4VAuH/h5ow20mDcWbZtlnRJppUqHnckI9h5+d819U=;
-  b=OtJ1bW/zeXDXND3xT+dLpiZjUycOScBtkosVqpfDPi19LaqWk/0mtcxT
-   YZeyV3Zscdp+6zN2Pnv639X5bG/TJlfabrYktZ8x4yY4xRhV0WcyVyjbe
-   Pj0hxwHJ12a2hj/abwXHajUQClO3fJmNste5iOnukM6f+HbZPcfhlFiRc
-   +Eq34l2RuoI8zIhvFpuGMLDKlOqs2QAb9HmoKvBnvaKDkz4uHxHb43uwm
-   Sl5cygMk3904p/2Sn1EZLnmW4CmKfZh25DpLccYhCTJefXl+ZkC9Zmq52
-   BExLBolJInOF5lfzy7XqgqcqPdoQFxWDuyEPDF9q1eXDi7lI26o3YwcsL
+  bh=oZWHLp8rEbbCuhuo4sc/OR17bG/f9b7o8I+6W2ItdkM=;
+  b=ZGzXUDqlMyRqPMaKABqK4ZmtcgbiJKN8MwSiKb1LUpE3re2+6yb3SSx4
+   33YbsiwkAgY4LIK2CiHCeXR4K10W6lQ76bKGrN3f1W5kmAr56mYBbBT5T
+   u0rUR24CvN61apj7hHmo/AOq+qM3n3MnPcDwm+rMYuiYxHl/z3+zTkOeP
+   LWKA/VlD+MxC3ATv0RRdVB0nKKq/GfrEWTXeiWLDYecJwIScIzL45YLBE
+   Xw7QC1IR2WyaLUDaOaRjUttatlyGHmX5gitFC4EnOkxnquiYxTY0/M198
+   +yoMw19nC51+2KIkuRE634Ea7CBvuMKoBtcK0N01UdFQ/9bMn7XyL/ZWh
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="381044693"
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="368843482"
 X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="381044693"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 07:55:32 -0700
+   d="scan'208";a="368843482"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 08:09:15 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="999349100"
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="875960494"
 X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="999349100"
+   d="scan'208";a="875960494"
 Received: from srab-mobl1.ger.corp.intel.com ([10.252.43.69])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 07:55:31 -0700
-Date:   Fri, 6 Oct 2023 17:55:28 +0300 (EEST)
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 08:09:13 -0700
+Date:   Fri, 6 Oct 2023 18:09:11 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Vadim Pasternak <vadimp@nvidia.com>
-cc:     Hans de Goede <hdegoede@redhat.com>, christophe.jaillet@wanadoo.fr,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH platform 0/3] platform/x86: Add fixes and amendments for
- init()/exit() flows
-In-Reply-To: <20231005075616.42777-1-vadimp@nvidia.com>
-Message-ID: <c2aa7fdd-fa8a-9fac-7b4e-a09fe821aabc@linux.intel.com>
-References: <20231005075616.42777-1-vadimp@nvidia.com>
+To:     srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [UPDATE][PATCH] platform/x86/intel-uncore-freq: Conditionally
+ create attribute for read frequency
+In-Reply-To: <5dda866185a286e61f949a48e04ff1ea6b3a5b03.camel@linux.intel.com>
+Message-ID: <cf4b9dd-de19-67a4-b980-fa7662d14a1@linux.intel.com>
+References: <20231004181915.1887913-1-srinivas.pandruvada@linux.intel.com>  <e84bc80e-1fd9-f07b-526a-b4eb4780ea9b@redhat.com> <5dda866185a286e61f949a48e04ff1ea6b3a5b03.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323329-192677936-1696604955=:3530"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 5 Oct 2023, Vadim Pasternak wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> The patchset:
-> - Fixes memory leak in error handling flow.
-> - Add cosmetic changes - misspelling fix, better naming/
-> 
-> Patches #1: Fixes memory leak issue.
-> Patch #2: Fix misspelling.
-> Patches #3: Renames few routines for better naming convention.
-> 
-> Vadim Pasternak (3):
->   platform: mellanox: Fix a resource leak in an error handling path in
->     probing flow
->   platform: mellanox: Fix misspelling error in routine name
->   platform: mellanox: Rename some init()/exit() functions for consistent
->     naming
+--8323329-192677936-1696604955=:3530
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-Thanks for the patches. I've applied these into 
-platform-drivers-x86-mellanox-init branch and merged that into 
-review-ilpo. (I decided to reorder the patches 2 and 3 though as it felt 
-more logical ordering.)
+On Thu, 5 Oct 2023, srinivas pandruvada wrote:
+> On Thu, 2023-10-05 at 09:03 +0200, Hans de Goede wrote:
+> > Hi Srinivas,
+> > 
+> > On 10/4/23 20:19, Srinivas Pandruvada wrote:
+> > > When the current uncore frequency can't be read, don't create
+> > > attribute
+> > > "current_freq_khz" as any read will fail later. Some user space
+> > > applications like turbostat fail to continue with the failure. So,
+> > > check
+> > > error during attribute creation.
+> > > 
+> > > Fixes: 414eef27283a ("platform/x86/intel/uncore-freq: Display
+> > > uncore current frequency")
+> > > Signed-off-by: Srinivas Pandruvada
+> > > <srinivas.pandruvada@linux.intel.com>
+> > > ---
+> > > Added fixes tag which added current_freq_khz. But after this
+> > > tag there is reorg of code, so need manual backport for some
+> > > versions.
+> > > I will separately submit to stable trees after merge.
+> > 
+> > Can you for future updated patches please use the ususal [PATCH v2],
+> > [PATCH v3], etc. prefix ?
+> > 
+> Sorry about this. I usually do with code change. But will keep in mind.
 
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
 -- 
  i.
 
+--8323329-192677936-1696604955=:3530--
