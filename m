@@ -2,157 +2,96 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22667E81DE9
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Oct 2023 12:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8747E81DF9
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Oct 2023 13:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232172AbjJFMyf (ORCPT
+        id S232339AbjJFNWD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 Oct 2023 08:54:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38090 "EHLO
+        Fri, 6 Oct 2023 09:22:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232239AbjJFMye (ORCPT
+        with ESMTP id S232341AbjJFNWC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 Oct 2023 08:54:34 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4089183
-        for <platform-driver-x86@vger.kernel.org>; Fri,  6 Oct 2023 05:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1696596824;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XaTEH053q8cUtCye7N5f4d4bRSpHU+o411y77RvZJbg=;
-        b=e/a9zZ1FnSprj4eWaHeZc5MsqO573uKP3kdXKHNdOPU8eW4ctGoTNehk57jxAyBmPH8Pon
-        kJonGDcBx2v/i/+54DRmzkLWQugTY+VSOYaRvnGveLjXKki7pi+smu9yVhQxVg3I7nofWi
-        MkXViG8TjOvBaLnAGUt36Rt/fVK/Cvk=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-538-bhqi1HyLP4mYrMed3SwetA-1; Fri, 06 Oct 2023 08:53:42 -0400
-X-MC-Unique: bhqi1HyLP4mYrMed3SwetA-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-521da4c99d4so1867770a12.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 06 Oct 2023 05:53:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696596822; x=1697201622;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XaTEH053q8cUtCye7N5f4d4bRSpHU+o411y77RvZJbg=;
-        b=qwIO1WJ1NKORMb3VXwRYJYrDB11+TDFdrJ8zdK4LpQWAKOnxl8Wt286mUbALAZPsFB
-         4URC1GeJLUXpzym2n6ThsQzK5422gNaCo1qw1301o2fI3mjVRBRtGbfGIancocuuWT4L
-         r+G9LPHJrMfDoU95IWX1OXhStTgnVCf8pD+sziBbgsZ4CgY8dAdSZSC8wW0glS32xb/W
-         WIyB8ZDdn37ZGS97rNssN7juxULuC/npOCS6wQcGRz6BB1gnpGl4XSSBvYo+zATRCN6b
-         JB81ZosLrTAqu7nMrqaro4NXXucxKzYmP5teIVhpeqMkPBmoQ3HxeKBkQjlPsSr3uV6w
-         edYQ==
-X-Gm-Message-State: AOJu0YxiuJodvokZXKK5KgSqZFzGlkbD8ZqTxP31lOFVsI7DLUvUweZi
-        UHNxmMHYqfJw4UkC3yFD/TtzDeEk5hgsnMbpClkIT88IhJSDC8zFo6kvhVwhDksKT/+ydh7ENhc
-        fnxxqCvS+AYpsvUjenfSvEwMkB3jKwOziwQ==
-X-Received: by 2002:a05:6402:43cf:b0:531:3c4e:98bc with SMTP id p15-20020a05640243cf00b005313c4e98bcmr7730854edc.8.1696596821820;
-        Fri, 06 Oct 2023 05:53:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEPXIYKOlxJK58qDW09UXDiZQQeSzU+/6bfXRuDRXaUXGlzvo/Az6gCwlXoR0lUFLQLMfCryA==
-X-Received: by 2002:a05:6402:43cf:b0:531:3c4e:98bc with SMTP id p15-20020a05640243cf00b005313c4e98bcmr7730838edc.8.1696596821460;
-        Fri, 06 Oct 2023 05:53:41 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id w24-20020a50fa98000000b00532bec5f768sm2524786edr.95.2023.10.06.05.53.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Oct 2023 05:53:40 -0700 (PDT)
-Message-ID: <35467b21-941f-c829-1ad8-b4e7319dbc04@redhat.com>
-Date:   Fri, 6 Oct 2023 14:53:39 +0200
+        Fri, 6 Oct 2023 09:22:02 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B450A9E
+        for <platform-driver-x86@vger.kernel.org>; Fri,  6 Oct 2023 06:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696598519; x=1728134519;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=M4NP2lpJz4kBk0+GKkQOQiooarNaJaF9O43yPt39ww4=;
+  b=U7+WtZp5YfTK85mxdr/liYTBbMTZncq6Pim9IdA5eZFbh04UGumScCIN
+   8r3wpJtQwT2ZBt3AMWsh9bWA7dfVD3Ym1Sn2K850KG/6XKawP6C3elY9j
+   LCfBkUBIwdFl2DMpnum9hykElw/MjoqUTOiYDuhBAn2qxa4sORyjEifAr
+   71igM3+SkOkpmkHJanUgSJKG3CBzrxKwbF4On4Zav8Adh4ezDw/hjcnbu
+   6Vg++Dpc6G8egF87/tz/QgKquEhjP9BK/kEOc+Mi/HZt/JxUSi4PswJP+
+   ozKKLVp7GWRpkL4iOVt5U/bJa05rsVm2zdFrFTnmvGA10OslPZQylqgpd
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="383640349"
+X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
+   d="scan'208";a="383640349"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 06:21:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="781655999"
+X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
+   d="scan'208";a="781655999"
+Received: from srab-mobl1.ger.corp.intel.com ([10.252.43.69])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 06:21:56 -0700
+Date:   Fri, 6 Oct 2023 16:21:54 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Suma Hegde <suma.hegde@amd.com>
+cc:     platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Naveen Krishna Chatradhi <nchatrad@amd.com>
+Subject: Re: [PATCH v4 2/3] platform/x86/amd/hsmp: add support for metrics
+ tbl
+In-Reply-To: <20231005053932.149497-2-suma.hegde@amd.com>
+Message-ID: <d3b1aeb1-b86e-7df5-1b69-3e7d9ed9caaf@linux.intel.com>
+References: <20231005053932.149497-1-suma.hegde@amd.com> <20231005053932.149497-2-suma.hegde@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a warning
- message
-Content-Language: en-US, nl
-To:     Liming Sun <limings@nvidia.com>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        David Thompson <davthompson@nvidia.com>,
-        Mark Gross <markgross@kernel.org>,
-        Dan Carpenter <dan.carpenter@linaro.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <bb8bc77e6ecc2287fc9110cfa08caa48eb2a0385.1696508228.git.limings@nvidia.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <bb8bc77e6ecc2287fc9110cfa08caa48eb2a0385.1696508228.git.limings@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Liming,
+On Thu, 5 Oct 2023, Suma Hegde wrote:
 
-On 10/5/23 14:18, Liming Sun wrote:
-> This commit fixes the smatch static checker warning in
-> mlxbf_tmfifo_rxtx_word() which complains data not initialized at
-> line 634 when IS_VRING_DROP() is TRUE. This is not a real bug since
-> line 634 is for Tx while IS_VRING_DROP() is only set for Rx. So there
-> is no case that line 634 is executed when IS_VRING_DROP() is TRUE.
+> AMD MI300 MCM provides GET_METRICS_TABLE message to retrieve
+> all the system management information from SMU.
 > 
-> This commit initializes the local data variable to avoid unnecessary
-> confusion to those static analyzing tools.
+> The metrics table is made available as hexadecimal sysfs binary file
+> under per socket sysfs directory created at
+> /sys/devices/platform/amd_hsmp/socket%d/metrics_bin
 > 
-> Signed-off-by: Liming Sun <limings@nvidia.com>
-> ---
->  drivers/platform/mellanox/mlxbf-tmfifo.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Metrics table definitions will be documented as part of Public PPR.
+> The same is defined in the amd_hsmp.h header.
 > 
-> diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-> index f3696a54a2bd..ccc4b51d3379 100644
-> --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-> +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-> @@ -595,8 +595,8 @@ static void mlxbf_tmfifo_rxtx_word(struct mlxbf_tmfifo_vring *vring,
->  {
->  	struct virtio_device *vdev = vring->vq->vdev;
->  	struct mlxbf_tmfifo *fifo = vring->fifo;
-> +	u64 data = 0;
->  	void *addr;
-> -	u64 data;
->  
->  	/* Get the buffer address of this desc. */
->  	addr = phys_to_virt(virtio64_to_cpu(vdev, desc->addr));
+> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+> Reviewed-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
 
 
-This will fix the warning but not the issue at hand. As Dan pointed
-out in his original bug report, the issue is that after:
+> +static int hsmp_create_sysfs_interface(void)
+> +{
+> +	const struct attribute_group **hsmp_attr_grps;
+> +	struct bin_attribute **hsmp_bin_attrs;
+> +	struct attribute_group *attr_grp;
+> +	int ret;
+> +	u8 i;
+> +
+> +	hsmp_attr_grps = devm_kzalloc(plat_dev.dev, sizeof(struct attribute_group *) *
+> +				      (plat_dev.num_sockets + 1), GFP_KERNEL);
+> +	if (!hsmp_attr_grps)
+> +		return -ENOMEM;
+> +
+> +	/* Create a sysfs directory for each socket */
+> +	for (i = 0; i < plat_dev.num_sockets; i++) {
 
-78034cbece79 ("platform/mellanox: mlxbf-tmfifo: Drop the Rx packet if no descriptors")
+The change for i to u8 seems not very wise given num_sockets still is u16
+as it can turn this into an infinite loop.
 
-We now have this IS_VRING_DROP() check in the path, which despite
-the subject writeq(data, fifo->tx.data);is currently being applied to both rx and tx vring-s
-and when this returns true the memcpy from the ring to &data
-will not happen, but the code will still do:
-
-writeq(data, fifo->tx.data);
-
-So you may have silenced the warning now, but you will still write
-data not coming from the vring to transmit. The only difference
-is you are now guaranteed to write all zeroes.
-
-Note another older issue is that if you hit the not enough space
-path:
-
-       } else {
-                /* Leftover bytes. */
-                if (!IS_VRING_DROP(vring)) {
-                        if (is_rx)
-                                memcpy(addr + vring->cur_len, &data,
-                                       len - vring->cur_len);
-                        else
-                                memcpy(&data, addr + vring->cur_len,
-                                       len - vring->cur_len);
-                }
-                vring->cur_len = len;
-        }
-
-Then even if IS_VRING_DROP() returns true you are only initializing some bytes of the 8 bytes data variable and the other bytes will stay at whatever random value they had before and you end up writing this random bytes when doing:
-
-writeq(data, fifo->tx.data);
-
-Regards,
-
-Hans
-
-
-
+-- 
+ i.
 
