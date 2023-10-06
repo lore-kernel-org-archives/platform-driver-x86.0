@@ -2,72 +2,95 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D195E81E1B
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Oct 2023 17:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1049E81E1F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Oct 2023 17:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233019AbjJFRdO (ORCPT
+        id S233088AbjJFR4f (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 Oct 2023 13:33:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51154 "EHLO
+        Fri, 6 Oct 2023 13:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232774AbjJFRdN (ORCPT
+        with ESMTP id S232927AbjJFR4e (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 Oct 2023 13:33:13 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D44AD
-        for <platform-driver-x86@vger.kernel.org>; Fri,  6 Oct 2023 10:33:12 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-9a58dbd5daeso434400766b.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 06 Oct 2023 10:33:12 -0700 (PDT)
+        Fri, 6 Oct 2023 13:56:34 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D49B8BE
+        for <platform-driver-x86@vger.kernel.org>; Fri,  6 Oct 2023 10:56:32 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2c28e35752cso30019611fa.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 06 Oct 2023 10:56:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696613591; x=1697218391; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1bSF4KB8Zm6SMCrn3wNPPhJbOr4da0gwDqApegVShCo=;
-        b=DFrHmmi7GRYrBO6aN9n4GmreGzHfQjgLZfXaHttEu5v8+IwIm4Pvx6dsf292nuovNw
-         e8NA066Jcz4R0jDDvtClQF5L42nWwl8DKiwmR2X7x5eEhDBrr33fvHcXtL6QAlMb9d4i
-         XjS1xQim/LEHm99WjFEybfEJYEC3r5U9IxDe+6VHSSmWATva1uCo9TcqS1bU5hDIoXDd
-         0pVZccfakPyfHHTbAHjqtHP+CO+bQsKY5i+UhfdWCK1r0FNiiwzdD6sAiIG/+pZ9CXrI
-         BNLy0gSdO0/VtdxiUQvQ+oE4T2gkH9k3s9Kr/9Un/htjBuUCCabQ6cZQpC4wrrUMqCG4
-         MM+Q==
+        d=gmail.com; s=20230601; t=1696614990; x=1697219790; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/url4rR0ruvRNM0Ooo8mo6QoRq5VVVX7tUSuJsufO6E=;
+        b=SyVB1kXiqdnW5El5VUerHxhaw+NLec2rvXvzXQz/u1R5rks+2/wx/GSEP1RIGymAG8
+         lDchuXF4OHYdPMuk9+fEY/h/FtoG1YEkQOdL8G13kZr0qOYMzQC/OcWWHkxucGtN6UPh
+         HVi55jdoWKIWPQp01+x/8yp8Ux1H5AS/VSJpO6Rc00tb/w6CDb8VwWUrKKysHJz1Xc4o
+         SI3wjqVxRHDLHexilKJGW6XFpTWSG2ZfuoMr1TnpmoJ6lrxUiVLPCQcgCZivixN6L6eU
+         WGKoiLx5Yl5NL6wvH/5s5OxOnlrzLITivp8UX/lZCj36i+0X/aJvesK0dowE28XgzY3C
+         jQEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696613591; x=1697218391;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1696614990; x=1697219790;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1bSF4KB8Zm6SMCrn3wNPPhJbOr4da0gwDqApegVShCo=;
-        b=QBxLKxqVZLJ3OmLXww30csFRDzaJbVmaCzIgSU/DzLNys1eelv1ZsueBp39rEpilsd
-         GA2owYWIN/sqSPJJFv63QP2mdXaEvGeUsfaMB2vjfKmN8dxweEJGigbdfqn/G2YTrcKe
-         aAA7tFk+L0sfKKdK5iNObiH4ZpN74Pku4J2pIJdB7SZ6wXnKugXupqGCj15yht453J2B
-         hheNV/lBZ0gvlCVnx16TP3S+kU9m9Dn1549ltzGGZkJ6kDao3ZYNQtPVzxBXyo1tMZwD
-         osR5o6QQGrvaLnlFRbXfWrI27Rk0Wxb4FsmDWNdTMXWRedbFkJHre7Qbws6xF+J2PEOM
-         aNeA==
-X-Gm-Message-State: AOJu0YwVw9GdXgwyMCXPfmpw909PVJDbhGNx8mF6z3wQxXjbWfROTYI5
-        sx0bJvDP8t3mChfkZ+jU0+fsLAO7B3VMMUVrtSAowN4K
-X-Google-Smtp-Source: AGHT+IEn/eSjm1NGrIK3wyhDWuE9Msx0LtKkMVq47HUeJFgLelzzETfIl8R5fropoAwJBbyvtlozS0lTFQOLd26bJt4=
-X-Received: by 2002:a17:906:208:b0:9ae:2f33:4ad0 with SMTP id
- 8-20020a170906020800b009ae2f334ad0mr7610754ejd.71.1696613590539; Fri, 06 Oct
- 2023 10:33:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230929113149.587436-1-teackot@gmail.com> <20230929113149.587436-3-teackot@gmail.com>
- <b7bfc6a9-1dcc-89a8-c8a8-515d56faf35@linux.intel.com> <575ef025-8d1a-98f8-dfba-e8f3cde019c0@redhat.com>
-In-Reply-To: <575ef025-8d1a-98f8-dfba-e8f3cde019c0@redhat.com>
+        bh=/url4rR0ruvRNM0Ooo8mo6QoRq5VVVX7tUSuJsufO6E=;
+        b=Yhsv4/otaumY81cSsCo89YWhVYcMdcz7sWXKB4Kt8hcDUzR6xjBEVpQ18U71PmSnj4
+         tQRR+pZOeev6xprtpB08zBlBB/c68L6M2SwRmz+RSgP7NX5P7Tzl6DH8p8kaEG5XG7y9
+         QDGeQvXvCFt/57S2v1nV9c8nMd3Kve82p6qOTspwGR1j7Ds19dsZVbqH6SWjRfXq8iZa
+         +CRaXfZksD9FzFdeBt8l6XIt2gqO4QEf0BJJMzMMoqJL8gCweEeHUKzeXs7iHgdx1ta6
+         L6FwlgUSKT9mpIqIyD5iFTwTR9/fVHxPw1ZvaTKC6wq4EYrH+LI0yyvzqxOqB7veg1rM
+         HvBw==
+X-Gm-Message-State: AOJu0YxZUp8wvz6ik5mbrs9enPKjgMHNNFBBH49EdKG6vr0IbMKlm4Rf
+        Exyfqyx26LCp0JyK1Xk5Qk4SgMvjcuw=
+X-Google-Smtp-Source: AGHT+IFvDykzD5sNnyuVfa3pumX/fWGK8BgxZk0qcKPaHDXg9vO6AuWXEYwoqkPWRh1sZtX4h6VnVA==
+X-Received: by 2002:a05:6512:3603:b0:4f3:9136:9cd0 with SMTP id f3-20020a056512360300b004f391369cd0mr6133325lfs.44.1696614990318;
+        Fri, 06 Oct 2023 10:56:30 -0700 (PDT)
+Received: from localhost.localdomain ([81.177.126.202])
+        by smtp.gmail.com with ESMTPSA id g9-20020a19ee09000000b00500d1a72734sm379050lfb.130.2023.10.06.10.56.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Oct 2023 10:56:30 -0700 (PDT)
 From:   Nikita Kravets <teackot@gmail.com>
-Date:   Fri, 6 Oct 2023 20:32:59 +0300
-Message-ID: <CAPXvF04zr4XL2FvVhEjWLQkRAwpv85jr4wo1DWskZoCjc3Q9-Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86: msi-ec: Fix the 3rd config
-To:     Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     platform-driver-x86@vger.kernel.org,
+To:     platform-driver-x86@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Nikita Kravets <teackot@gmail.com>,
         Aakash Singh <mail@singhaakash.dev>,
         Jose Angel Pastrana <japp0005@red.ujaen.es>
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v2 0/3] platform/x86: msi-ec: add and fix EC configs
+Date:   Fri,  6 Oct 2023 20:53:51 +0300
+Message-ID: <20231006175352.1753017-3-teackot@gmail.com>
+X-Mailer: git-send-email 2.42.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi!
 
-Thank you for the comments, I will send a modified patch series soon!
+This patch series adds EC configs for more firmware (patch 3),
+fixes a couple of issues with an existing configuration (patch 1),
+and renames a struct field for consistency with downstream (patch 2)
+in the msi-ec driver.
 
-Regards,
-Nikita
+Cc: Aakash Singh <mail@singhaakash.dev>
+Cc: Jose Angel Pastrana <japp0005@red.ujaen.es>
+---
+Changes in v2:
+- Add a Fixes tag
+- Split the first patch into two
+
+
+Nikita Kravets (3):
+  platform/x86: msi-ec: Fix the 3rd config
+  platform/x86: msi-ec: rename fn_super_swap
+  platform/x86: msi-ec: Add more EC configs
+
+ drivers/platform/x86/msi-ec.c | 486 +++++++++++++++++++++++++++++++++-
+ drivers/platform/x86/msi-ec.h |   4 +-
+ 2 files changed, 478 insertions(+), 12 deletions(-)
+
+-- 
+2.42.0
+
