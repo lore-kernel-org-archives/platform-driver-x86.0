@@ -2,569 +2,174 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2840E81E1B
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Oct 2023 17:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDFDE94100
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Oct 2023 18:58:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233055AbjJFR7A (ORCPT
+        id S233306AbjJFS6d (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 Oct 2023 13:59:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48082 "EHLO
+        Fri, 6 Oct 2023 14:58:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233179AbjJFR6y (ORCPT
+        with ESMTP id S233295AbjJFS6c (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 Oct 2023 13:58:54 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54AD6C6
-        for <platform-driver-x86@vger.kernel.org>; Fri,  6 Oct 2023 10:58:51 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-5046bf37daeso3128996e87.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 06 Oct 2023 10:58:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696615130; x=1697219930; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tgvBkNFX7DT832/YRa5MRZRs/u0vIhnj3FqFWmb5VjY=;
-        b=EUC/ra4CNZSXyhDELTPBakt6cr4oLP9oEsluTiyOx8k544rt1St44dLIwdOEjKTwTE
-         VAuI+ynr3KQV5TfvyX7X3nvo6M9i/MLnOJoJ/xalFouI3uxZounyF4uB4HmNdMujfFZd
-         2HYf40llXQLfSjxYgihcpnRsOURGsOFPLCubjtINPgooOiX1tzQaX6qLltx4QY25GjAQ
-         532LieTVMR3Ai8I2aVVrIZ9gDsy8K33lJMsVNDCvU4KOxrzcIbkr93mbYYxUdJSbSVmJ
-         oCxzKDDe8gDNhA3olEzvEh6m9PTXun8MHVeJ1JCe6Xzn3NhfNKmzC3g9e2c+HdSyS9bg
-         /yvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696615130; x=1697219930;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tgvBkNFX7DT832/YRa5MRZRs/u0vIhnj3FqFWmb5VjY=;
-        b=LJo4fOCXCqauIM2uPYnFerDeJj9ShW+z3vR3WqosPHmxWHBJHzTH5eU61hgg/l/rzP
-         u1r30M4HkH3uoNoCa/cnXn5Ozm3mSrNpMUFVei6wUmHaPfwHgaCr7jJFkeweL75731Jf
-         bLGJGV3K8qANVCKgY4qzekH3IrMws4YGDkamZuOGbiXblL3841pCxIFl+LezIaYvFLE/
-         nSQNZAJ9JItgrWvlP0rr7zjoqOT5/tl+8Lwy+mek8FKC5bXSJckQzB+5Fjh5qF2CdSqR
-         0DMwqWECrn7GTG2NfrEeh3/1EtTggMFpR7GouW8yNwoiFNSvLeiFCu8U8fWjzjkui2k4
-         hbSg==
-X-Gm-Message-State: AOJu0YyjHxx1YdDF54ez2Xzi2PMIIBg/QXAXFXzZkCZUgMV/8HHlS6o1
-        4asfPgsDwaX4wBXmZ8mjLzSZP575zsk=
-X-Google-Smtp-Source: AGHT+IF9EnljeAdI/A2tY1xe1Ybb/zpA2MhWALrZIgMRIWm8fuYd6abGQEIztYOtDDLNsjbc544sVg==
-X-Received: by 2002:a19:6414:0:b0:4fb:8435:3efc with SMTP id y20-20020a196414000000b004fb84353efcmr6827934lfb.16.1696615129505;
-        Fri, 06 Oct 2023 10:58:49 -0700 (PDT)
-Received: from localhost.localdomain ([81.177.126.202])
-        by smtp.gmail.com with ESMTPSA id g9-20020a19ee09000000b00500d1a72734sm379050lfb.130.2023.10.06.10.58.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 10:58:49 -0700 (PDT)
-From:   Nikita Kravets <teackot@gmail.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Nikita Kravets <teackot@gmail.com>,
-        Aakash Singh <mail@singhaakash.dev>,
-        Jose Angel Pastrana <japp0005@red.ujaen.es>
-Subject: [PATCH v2 3/3] platform/x86: msi-ec: Add more EC configs
-Date:   Fri,  6 Oct 2023 20:53:57 +0300
-Message-ID: <20231006175352.1753017-9-teackot@gmail.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231006175352.1753017-3-teackot@gmail.com>
-References: <20231006175352.1753017-3-teackot@gmail.com>
+        Fri, 6 Oct 2023 14:58:32 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13D4095;
+        Fri,  6 Oct 2023 11:58:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696618711; x=1728154711;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ymqImOnv0wl2htFtjpK9gz4sQkzAgOOPROIzfULzwbM=;
+  b=LFb+E+PiZpAlxV4XgZ+3YqUyzCy3ffzjOzdKEuxrHkHwW6PS1L12otzj
+   Qbelmv4OfBBVz1n7XOS7/7bpCGDfOL1uybhv7vj3iC9jWAjuBUaaD94/4
+   we+SyaImcipst+G54931qdkwh2bnT5HPTfp8AvexmUEvGFj8Cq6EYJsWT
+   jmZPaDMbtUWoY98JqrTP3Dp0TNb1DPqZ8AGmjiBcx2i29WMWzjb3B+Dso
+   R7z6UX1IapmoqUSK7e/brKxNxjcBaw7xU/O+W04uSmQy1MsaV2uHHLJv1
+   xjDJAgPfynOMRv8TC30XUw8f4hoCAdDGzy1G8doDm2sxqw0bbtqW2KgmX
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="381092073"
+X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
+   d="scan'208";a="381092073"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 11:58:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="787479120"
+X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
+   d="scan'208";a="787479120"
+Received: from lkp-server01.sh.intel.com (HELO 8a3a91ad4240) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 06 Oct 2023 11:58:27 -0700
+Received: from kbuild by 8a3a91ad4240 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qoq1p-0003YH-1m;
+        Fri, 06 Oct 2023 18:58:25 +0000
+Date:   Sat, 7 Oct 2023 02:57:58 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>,
+        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH v2 1/1] platform/x86: xo15-ebook: Replace open coded
+ acpi_match_device()
+Message-ID: <202310070210.fA8JzLkG-lkp@intel.com>
+References: <20231006153152.3502912-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231006153152.3502912-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This patch adds configurations for new EC firmware from the downstream
-version of the driver.
+Hi Andy,
 
-Cc: Aakash Singh <mail@singhaakash.dev>
-Cc: Jose Angel Pastrana <japp0005@red.ujaen.es>
-Signed-off-by: Nikita Kravets <teackot@gmail.com>
----
- drivers/platform/x86/msi-ec.c | 467 ++++++++++++++++++++++++++++++++++
- 1 file changed, 467 insertions(+)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/platform/x86/msi-ec.c b/drivers/platform/x86/msi-ec.c
-index 3074aee878c1..f19504dbf164 100644
---- a/drivers/platform/x86/msi-ec.c
-+++ b/drivers/platform/x86/msi-ec.c
-@@ -667,6 +667,467 @@ static struct msi_ec_conf CONF7 __initdata = {
- 	},
- };
- 
-+static const char * const ALLOWED_FW_8[] __initconst = {
-+	"14F1EMS1.115",
-+	NULL
-+};
-+
-+static struct msi_ec_conf CONF8 __initdata = {
-+	.allowed_fw = ALLOWED_FW_8,
-+	.charge_control = {
-+		.address      = 0xd7,
-+		.offset_start = 0x8a,
-+		.offset_end   = 0x80,
-+		.range_min    = 0x8a,
-+		.range_max    = 0xe4,
-+	},
-+	.webcam = {
-+		.address       = 0x2e,
-+		.block_address = MSI_EC_ADDR_UNSUPP,
-+		.bit           = 1,
-+	},
-+	.fn_win_swap = {
-+		.address = 0xe8,
-+		.bit     = 4,
-+	},
-+	.cooler_boost = {
-+		.address = 0x98,
-+		.bit     = 7,
-+	},
-+	.shift_mode = {
-+		.address = 0xd2,
-+		.modes = {
-+			{ SM_ECO_NAME,     0xc2 },
-+			{ SM_COMFORT_NAME, 0xc1 },
-+			{ SM_SPORT_NAME,   0xc0 },
-+			MSI_EC_MODE_NULL
-+		},
-+	},
-+	.super_battery = {
-+		.address = 0xeb,
-+		.mask    = 0x0f,
-+	},
-+	.fan_mode = {
-+		.address = 0xd4,
-+		.modes = {
-+			{ FM_AUTO_NAME,     0x0d },
-+			{ FM_SILENT_NAME,   0x1d },
-+			{ FM_BASIC_NAME,    0x4d },
-+			MSI_EC_MODE_NULL
-+		},
-+	},
-+	.cpu = {
-+		.rt_temp_address       = 0x68,
-+		.rt_fan_speed_address  = 0x71,
-+		.rt_fan_speed_base_min = 0x19,
-+		.rt_fan_speed_base_max = 0x37,
-+		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
-+		.bs_fan_speed_base_min = 0x00,
-+		.bs_fan_speed_base_max = 0x0f,
-+	},
-+	.gpu = {
-+		.rt_temp_address      = MSI_EC_ADDR_UNKNOWN,
-+		.rt_fan_speed_address = MSI_EC_ADDR_UNKNOWN,
-+	},
-+	.leds = {
-+		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
-+		.mute_led_address    = 0x2d,
-+		.bit                 = 1,
-+	},
-+	.kbd_bl = {
-+		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN, // ?
-+		.bl_modes         = { 0x00, 0x08 }, // ?
-+		.max_mode         = 1, // ?
-+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // not functional
-+		.state_base_value = 0x80,
-+		.max_state        = 3,
-+	},
-+};
-+
-+static const char * const ALLOWED_FW_9[] __initconst = {
-+	"14JKEMS1.104",
-+	NULL
-+};
-+
-+static struct msi_ec_conf CONF9 __initdata = {
-+	.allowed_fw = ALLOWED_FW_9,
-+	.charge_control = {
-+		.address      = 0xef,
-+		.offset_start = 0x8a,
-+		.offset_end   = 0x80,
-+		.range_min    = 0x8a,
-+		.range_max    = 0xe4,
-+	},
-+	.webcam = {
-+		.address       = 0x2e,
-+		.block_address = 0x2f,
-+		.bit           = 1,
-+	},
-+	.fn_win_swap = {
-+		.address = 0xbf,
-+		.bit     = 4,
-+	},
-+	.cooler_boost = {
-+		.address = 0x98,
-+		.bit     = 7,
-+	},
-+	.shift_mode = {
-+		.address = 0xf2,
-+		.modes = {
-+			{ SM_ECO_NAME,     0xc2 },
-+			{ SM_COMFORT_NAME, 0xc1 },
-+			{ SM_SPORT_NAME,   0xc0 },
-+			MSI_EC_MODE_NULL
-+		},
-+	},
-+	.super_battery = {
-+		.address = MSI_EC_ADDR_UNSUPP, // unsupported or enabled by ECO shift
-+		.mask    = 0x0f,
-+	},
-+	.fan_mode = {
-+		.address = 0xf4,
-+		.modes = {
-+			{ FM_AUTO_NAME,     0x0d },
-+			{ FM_SILENT_NAME,   0x1d },
-+			{ FM_ADVANCED_NAME, 0x8d },
-+			MSI_EC_MODE_NULL
-+		},
-+	},
-+	.cpu = {
-+		.rt_temp_address       = 0x68,
-+		.rt_fan_speed_address  = 0x71,
-+		.rt_fan_speed_base_min = 0x00,
-+		.rt_fan_speed_base_max = 0x96,
-+		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
-+		.bs_fan_speed_base_min = 0x00,
-+		.bs_fan_speed_base_max = 0x0f,
-+	},
-+	.gpu = {
-+		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
-+		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
-+	},
-+	.leds = {
-+		.micmute_led_address = 0x2b,
-+		.mute_led_address    = 0x2c,
-+		.bit                 = 2,
-+	},
-+	.kbd_bl = {
-+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // not presented in MSI app
-+		.bl_modes         = { 0x00, 0x08 },
-+		.max_mode         = 1,
-+		.bl_state_address = 0xf3,
-+		.state_base_value = 0x80,
-+		.max_state        = 3,
-+	},
-+};
-+
-+static const char * const ALLOWED_FW_10[] __initconst = {
-+	"1582EMS1.107", // GF66 11UC
-+	NULL
-+};
-+
-+static struct msi_ec_conf CONF10 __initdata = {
-+	.allowed_fw = ALLOWED_FW_10,
-+	.charge_control = {
-+		.address      = 0xd7,
-+		.offset_start = 0x8a,
-+		.offset_end   = 0x80,
-+		.range_min    = 0x8a,
-+		.range_max    = 0xe4,
-+	},
-+	.webcam = {
-+		.address       = 0x2e,
-+		.block_address = 0x2f,
-+		.bit           = 1,
-+	},
-+	.fn_win_swap = {
-+		.address = MSI_EC_ADDR_UNSUPP,
-+		.bit     = 4,
-+	},
-+	.cooler_boost = {
-+		.address = 0x98,
-+		.bit     = 7,
-+	},
-+	.shift_mode = {
-+		.address = 0xd2,
-+		.modes = {
-+			{ SM_ECO_NAME,     0xc2 },
-+			{ SM_COMFORT_NAME, 0xc1 },
-+			{ SM_SPORT_NAME,   0xc0 },
-+			{ SM_TURBO_NAME,   0xc4 },
-+			MSI_EC_MODE_NULL
-+		},
-+	},
-+	.super_battery = {
-+		.address = 0xe5,
-+		.mask    = 0x0f,
-+	},
-+	.fan_mode = {
-+		.address = 0xd4,
-+		.modes = {
-+			{ FM_AUTO_NAME,     0x0d },
-+			{ FM_SILENT_NAME,   0x1d },
-+			{ FM_ADVANCED_NAME, 0x8d },
-+			MSI_EC_MODE_NULL
-+		},
-+	},
-+	.cpu = {
-+		.rt_temp_address       = 0x68,
-+		.rt_fan_speed_address  = 0x71, // ?
-+		.rt_fan_speed_base_min = 0x19,
-+		.rt_fan_speed_base_max = 0x37,
-+		.bs_fan_speed_address  = MSI_EC_ADDR_UNKNOWN, // ?
-+		.bs_fan_speed_base_min = 0x00,
-+		.bs_fan_speed_base_max = 0x0f,
-+	},
-+	.gpu = {
-+		.rt_temp_address      = 0x80,
-+		.rt_fan_speed_address = 0x89,
-+	},
-+	.leds = {
-+		.micmute_led_address = 0x2c,
-+		.mute_led_address    = 0x2d,
-+		.bit                 = 1,
-+	},
-+	.kbd_bl = {
-+		.bl_mode_address  = 0x2c,
-+		.bl_modes         = { 0x00, 0x08 },
-+		.max_mode         = 1,
-+		.bl_state_address = 0xd3,
-+		.state_base_value = 0x80,
-+		.max_state        = 3,
-+	},
-+};
-+
-+static const char * const ALLOWED_FW_11[] __initconst = {
-+	"16S6EMS1.111", // Prestige 15 a11scx
-+	"1552EMS1.115", // Modern 15 a11m
-+	NULL
-+};
-+
-+static struct msi_ec_conf CONF11 __initdata = {
-+	.allowed_fw = ALLOWED_FW_11,
-+	.charge_control = {
-+		.address      = 0xd7,
-+		.offset_start = 0x8a,
-+		.offset_end   = 0x80,
-+		.range_min    = 0x8a,
-+		.range_max    = 0xe4,
-+	},
-+	.webcam = {
-+		.address       = 0x2e,
-+		.block_address = MSI_EC_ADDR_UNKNOWN,
-+		.bit           = 1,
-+	},
-+	.fn_win_swap = {
-+		.address = 0xe8,
-+		.bit     = 4,
-+	},
-+	.cooler_boost = {
-+		.address = 0x98,
-+		.bit     = 7,
-+	},
-+	.shift_mode = {
-+		.address = 0xd2,
-+		.modes = {
-+			{ SM_ECO_NAME,     0xc2 },
-+			{ SM_COMFORT_NAME, 0xc1 },
-+			{ SM_SPORT_NAME,   0xc0 },
-+			MSI_EC_MODE_NULL
-+		},
-+	},
-+	.super_battery = {
-+		.address = 0xeb,
-+		.mask = 0x0f,
-+	},
-+	.fan_mode = {
-+		.address = 0xd4,
-+		.modes = {
-+			{ FM_AUTO_NAME,     0x0d },
-+			{ FM_SILENT_NAME,   0x1d },
-+			{ FM_ADVANCED_NAME, 0x4d },
-+			MSI_EC_MODE_NULL
-+		},
-+	},
-+	.cpu = {
-+		.rt_temp_address       = 0x68,
-+		.rt_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
-+		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
-+	},
-+	.gpu = {
-+		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
-+		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
-+	},
-+	.leds = {
-+		.micmute_led_address = 0x2c,
-+		.mute_led_address    = 0x2d,
-+		.bit                 = 1,
-+	},
-+	.kbd_bl = {
-+		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
-+		.bl_modes         = {}, // ?
-+		.max_mode         = 1, // ?
-+		.bl_state_address = 0xd3,
-+		.state_base_value = 0x80,
-+		.max_state        = 3,
-+	},
-+};
-+
-+static const char * const ALLOWED_FW_12[] __initconst = {
-+	"16R6EMS1.104", // GF63 Thin 11UC
-+	NULL
-+};
-+
-+static struct msi_ec_conf CONF12 __initdata = {
-+	.allowed_fw = ALLOWED_FW_12,
-+	.charge_control = {
-+		.address      = 0xd7,
-+		.offset_start = 0x8a,
-+		.offset_end   = 0x80,
-+		.range_min    = 0x8a,
-+		.range_max    = 0xe4,
-+	},
-+	.webcam = {
-+		.address       = 0x2e,
-+		.block_address = 0x2f,
-+		.bit           = 1,
-+	},
-+	.fn_win_swap = {
-+		.address = 0xe8,
-+		.bit     = 4,
-+	},
-+	.cooler_boost = {
-+		.address = 0x98,
-+		.bit     = 7,
-+	},
-+	.shift_mode = {
-+		.address = 0xd2,
-+		.modes = {
-+			{ SM_ECO_NAME,     0xc2 },
-+			{ SM_COMFORT_NAME, 0xc1 },
-+			{ SM_SPORT_NAME,   0xc0 },
-+			{ SM_TURBO_NAME,   0xc4 },
-+			MSI_EC_MODE_NULL
-+		},
-+	},
-+	.super_battery = {
-+		.address = MSI_EC_ADDR_UNSUPP, // 0xeb
-+		.mask    = 0x0f, // 00, 0f
-+	},
-+	.fan_mode = {
-+		.address = 0xd4,
-+		.modes = {
-+			{ FM_AUTO_NAME,     0x0d },
-+			{ FM_SILENT_NAME,   0x1d },
-+			{ FM_ADVANCED_NAME, 0x8d },
-+			MSI_EC_MODE_NULL
-+		},
-+	},
-+	.cpu = {
-+		.rt_temp_address       = 0x68,
-+		.rt_fan_speed_address  = 0x71,
-+		.rt_fan_speed_base_min = 0x19,
-+		.rt_fan_speed_base_max = 0x37,
-+		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
-+		.bs_fan_speed_base_min = 0x00,
-+		.bs_fan_speed_base_max = 0x0f,
-+	},
-+	.gpu = {
-+		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
-+		.rt_fan_speed_address = 0x89,
-+	},
-+	.leds = {
-+		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
-+		.mute_led_address    = 0x2d,
-+		.bit                 = 1,
-+	},
-+	.kbd_bl = {
-+		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
-+		.bl_modes         = { 0x00, 0x08 },
-+		.max_mode         = 1,
-+		.bl_state_address = 0xd3,
-+		.state_base_value = 0x80,
-+		.max_state        = 3,
-+	},
-+};
-+
-+static const char * const ALLOWED_FW_13[] __initconst = {
-+	"1594EMS1.109", // MSI Prestige 16 Studio A13VE
-+	NULL
-+};
-+
-+static struct msi_ec_conf CONF13 __initdata = {
-+	.allowed_fw = ALLOWED_FW_13,
-+	.charge_control = {
-+		.address      = 0xd7,
-+		.offset_start = 0x8a,
-+		.offset_end   = 0x80,
-+		.range_min    = 0x8a,
-+		.range_max    = 0xe4,
-+	},
-+	.webcam = {
-+		.address       = 0x2e,
-+		.block_address = 0x2f,
-+		.bit           = 1,
-+	},
-+	.fn_win_swap = {
-+		.address = 0xe8,
-+		.bit     = 4, // 0x00-0x10
-+	},
-+	.cooler_boost = {
-+		.address = 0x98,
-+		.bit     = 7,
-+	},
-+	.shift_mode = {
-+		.address = 0xd2,
-+		.modes = {
-+			{ SM_ECO_NAME,     0xc2 }, // super battery
-+			{ SM_COMFORT_NAME, 0xc1 }, // balanced
-+			{ SM_TURBO_NAME,   0xc4 }, // extreme
-+			MSI_EC_MODE_NULL
-+		},
-+	},
-+	.super_battery = {
-+		.address = MSI_EC_ADDR_UNSUPP,
-+		.mask    = 0x0f, // 00, 0f
-+	},
-+	.fan_mode = {
-+		.address = 0xd4,
-+		.modes = {
-+			{ FM_AUTO_NAME,     0x0d },
-+			{ FM_SILENT_NAME,   0x1d },
-+			{ FM_ADVANCED_NAME, 0x8d },
-+			MSI_EC_MODE_NULL
-+		},
-+	},
-+	.cpu = {
-+		.rt_temp_address       = 0x68,
-+		.rt_fan_speed_address  = 0x71, // 0x0-0x96
-+		.rt_fan_speed_base_min = 0x00,
-+		.rt_fan_speed_base_max = 0x96,
-+		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
-+		.bs_fan_speed_base_min = 0x00,
-+		.bs_fan_speed_base_max = 0x0f,
-+	},
-+	.gpu = {
-+		.rt_temp_address      = 0x80,
-+		.rt_fan_speed_address = 0x89,
-+	},
-+	.leds = {
-+		.micmute_led_address = 0x2c,
-+		.mute_led_address    = 0x2d,
-+		.bit                 = 1,
-+	},
-+	.kbd_bl = {
-+		.bl_mode_address  = 0x2c, // KB auto turn off
-+		.bl_modes         = { 0x00, 0x08 }, // always on; off after 10 sec
-+		.max_mode         = 1,
-+		.bl_state_address = 0xd3,
-+		.state_base_value = 0x80,
-+		.max_state        = 3,
-+	},
-+};
-+
- static struct msi_ec_conf *CONFIGS[] __initdata = {
- 	&CONF0,
- 	&CONF1,
-@@ -676,6 +1137,12 @@ static struct msi_ec_conf *CONFIGS[] __initdata = {
- 	&CONF5,
- 	&CONF6,
- 	&CONF7,
-+	&CONF8,
-+	&CONF9,
-+	&CONF10,
-+	&CONF11,
-+	&CONF12,
-+	&CONF13,
- 	NULL
- };
- 
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.6-rc4 next-20231006]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/platform-x86-xo15-ebook-Replace-open-coded-acpi_match_device/20231006-233327
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20231006153152.3502912-1-andriy.shevchenko%40linux.intel.com
+patch subject: [PATCH v2 1/1] platform/x86: xo15-ebook: Replace open coded acpi_match_device()
+config: i386-buildonly-randconfig-003-20231007 (https://download.01.org/0day-ci/archive/20231007/202310070210.fA8JzLkG-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231007/202310070210.fA8JzLkG-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310070210.fA8JzLkG-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/platform/x86/xo15-ebook.c: In function 'ebook_switch_add':
+>> drivers/platform/x86/xo15-ebook.c:105:50: error: passing argument 2 of 'acpi_match_device' from incompatible pointer type [-Werror=incompatible-pointer-types]
+     105 |         id = acpi_match_device(ebook_device_ids, device);
+         |                                                  ^~~~~~
+         |                                                  |
+         |                                                  struct acpi_device *
+   In file included from drivers/platform/x86/xo15-ebook.c:17:
+   include/linux/acpi.h:712:69: note: expected 'const struct device *' but argument is of type 'struct acpi_device *'
+     712 |                                                const struct device *dev);
+         |                                                ~~~~~~~~~~~~~~~~~~~~~^~~
+   cc1: some warnings being treated as errors
+
+
+vim +/acpi_match_device +105 drivers/platform/x86/xo15-ebook.c
+
+    81	
+    82	static int ebook_switch_add(struct acpi_device *device)
+    83	{
+    84		const struct acpi_device_id *id;
+    85		struct ebook_switch *button;
+    86		struct input_dev *input;
+    87		char *name, *class;
+    88		int error;
+    89	
+    90		button = kzalloc(sizeof(struct ebook_switch), GFP_KERNEL);
+    91		if (!button)
+    92			return -ENOMEM;
+    93	
+    94		device->driver_data = button;
+    95	
+    96		button->input = input = input_allocate_device();
+    97		if (!input) {
+    98			error = -ENOMEM;
+    99			goto err_free_button;
+   100		}
+   101	
+   102		name = acpi_device_name(device);
+   103		class = acpi_device_class(device);
+   104	
+ > 105		id = acpi_match_device(ebook_device_ids, device);
+   106		if (!id) {
+   107			dev_err(&device->dev, "Unsupported hid\n");
+   108			error = -ENODEV;
+   109			goto err_free_input;
+   110		}
+   111	
+   112		strcpy(name, XO15_EBOOK_DEVICE_NAME);
+   113		sprintf(class, "%s/%s", XO15_EBOOK_CLASS, XO15_EBOOK_SUBCLASS);
+   114	
+   115		snprintf(button->phys, sizeof(button->phys), "%s/button/input0", id->id);
+   116	
+   117		input->name = name;
+   118		input->phys = button->phys;
+   119		input->id.bustype = BUS_HOST;
+   120		input->dev.parent = &device->dev;
+   121	
+   122		input->evbit[0] = BIT_MASK(EV_SW);
+   123		set_bit(SW_TABLET_MODE, input->swbit);
+   124	
+   125		error = input_register_device(input);
+   126		if (error)
+   127			goto err_free_input;
+   128	
+   129		ebook_send_state(device);
+   130	
+   131		if (device->wakeup.flags.valid) {
+   132			/* Button's GPE is run-wake GPE */
+   133			acpi_enable_gpe(device->wakeup.gpe_device,
+   134					device->wakeup.gpe_number);
+   135			device_set_wakeup_enable(&device->dev, true);
+   136		}
+   137	
+   138		return 0;
+   139	
+   140	 err_free_input:
+   141		input_free_device(input);
+   142	 err_free_button:
+   143		kfree(button);
+   144		return error;
+   145	}
+   146	
+
 -- 
-2.42.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
