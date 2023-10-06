@@ -2,99 +2,66 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BC3E81E10
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Oct 2023 15:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2E8E81E17
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Oct 2023 16:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232895AbjJFPyB (ORCPT
+        id S232619AbjJFQO2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 Oct 2023 11:54:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41890 "EHLO
+        Fri, 6 Oct 2023 12:14:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232502AbjJFPyA (ORCPT
+        with ESMTP id S232550AbjJFQO1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 Oct 2023 11:54:00 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08511A6;
-        Fri,  6 Oct 2023 08:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696607639; x=1728143639;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=T5padUABpr+rZPmgSty+LxTkQr1WULnszt8+VvtZGdQ=;
-  b=ZhMxeCjgRkw33Vpnt3ZhoSafHIGidsOy8mZuqimVPN5StDdZ3gbdTVRN
-   pQsbajBvQAiCpfw7THLGko33sq2kQ7p7r8+HOmsWTHXAr8znCLSg3S5GT
-   irn2q+qcU740GUuMucoCBZ5nRHRFYDzYaWw9bsypmNSateyclYLBrikoc
-   5Mqettckw70WPbSN3hsdBoXIrKaArlcosq9wIy8TsC5JVUqjLZlxOce1r
-   jtDpjzpE+EfVT9N9giN2zBDB+ZzZrva6nZQ5aXYrwXx1ErUzRr5nq4Uxx
-   thT3krsj3yRTqoanZFfeWqi2FY3dYks4tv0v1Y0BzjewtWOcoynh1yVi9
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="386602078"
-X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="386602078"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 08:53:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="875980608"
-X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="875980608"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 06 Oct 2023 08:53:55 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id D1946430; Fri,  6 Oct 2023 18:53:53 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@gmail.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>
-Subject: [PATCH v3 1/1] platform/x86: asus-wireless: Replace open coded acpi_match_device()
-Date:   Fri,  6 Oct 2023 18:53:51 +0300
-Message-Id: <20231006155351.3503665-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 6 Oct 2023 12:14:27 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04C1CAD;
+        Fri,  6 Oct 2023 09:14:26 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A3EFDC433CC;
+        Fri,  6 Oct 2023 16:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696608865;
+        bh=Kta9wxTkyFzWfR3wZJUaDd9Fi3SDudhkhLe3lx2zP/0=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=RvIzdazoCFlIFKA0pduBNaS6meWF0uy+pmePNXpFH8i8pS/iZsZcMv3dBFdKdVI+7
+         k7xwwgCqyYcqCOTONMbFa5un+MTkjQ/KociGGMefdX94tu6DFBGE2fBAysYOV/S79j
+         SW8VNZNmqyp4KxhVts2da2mir+qS+6VkUQW6P99kNlp9ZPIOItpUV+qqEiE6r5py/4
+         H/VWZ2iVAE0DGSKY5ILupcZTkfFOHb3LYZl++/ZNBc5UC3P5r0YRE4Ke/knx6MdOKZ
+         lT2lGEDmYQqKeRzvgxycH1GNsNH++bvaBI/JS7dt93lUTn+Zax05QVhmpspygk+/LL
+         oTGlT5FHmDSAg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 91744E632D2;
+        Fri,  6 Oct 2023 16:14:25 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for 6.6-4
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <41cdbbf9-f270-d6ba-8c8e-5f06cc264b93@redhat.com>
+References: <41cdbbf9-f270-d6ba-8c8e-5f06cc264b93@redhat.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <41cdbbf9-f270-d6ba-8c8e-5f06cc264b93@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.6-4
+X-PR-Tracked-Commit-Id: 5b44abbc39ca15df80d0da4756078c98c831090f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a5e0a4b11c4adbe6ab2c0aa6c8b1d59d0fccf56a
+Message-Id: <169660886559.6012.4360845420804261906.pr-tracker-bot@kernel.org>
+Date:   Fri, 06 Oct 2023 16:14:25 +0000
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Replace open coded acpi_match_device() in asus_wireless_add().
+The pull request you sent on Fri, 6 Oct 2023 17:40:28 +0200:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v3: rewrote error path logic (Hans)
-v2: fixed compilation error
- drivers/platform/x86/asus-wireless.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.6-4
 
-diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/x86/asus-wireless.c
-index abf01e00b799..1a571efa02eb 100644
---- a/drivers/platform/x86/asus-wireless.c
-+++ b/drivers/platform/x86/asus-wireless.c
-@@ -148,16 +148,12 @@ static int asus_wireless_add(struct acpi_device *adev)
- 	if (err)
- 		return err;
- 
--	for (id = device_ids; id->id[0]; id++) {
--		if (!strcmp((char *) id->id, acpi_device_hid(adev))) {
--			data->hswc_params =
--				(const struct hswc_params *)id->driver_data;
--			break;
--		}
--	}
--	if (!data->hswc_params)
-+	id = acpi_match_device(device_ids, adev);
-+	if (!id)
- 		return 0;
- 
-+	data->hswc_params = (const struct hswc_params *)id->driver_data;
-+
- 	data->wq = create_singlethread_workqueue("asus_wireless_workqueue");
- 	if (!data->wq)
- 		return -ENOMEM;
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a5e0a4b11c4adbe6ab2c0aa6c8b1d59d0fccf56a
+
+Thank you!
+
 -- 
-2.40.0.1.gaa8946217a0b
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
