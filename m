@@ -2,120 +2,136 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB02E95A67
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  7 Oct 2023 23:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3466BE95A66
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  7 Oct 2023 23:40:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344282AbjJGXkJ (ORCPT
+        id S1344292AbjJGXkJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Sat, 7 Oct 2023 19:40:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51114 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344168AbjJGXkB (ORCPT
+        with ESMTP id S1344264AbjJGXkH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 7 Oct 2023 19:40:01 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35DA5BC;
+        Sat, 7 Oct 2023 19:40:07 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DFC9F4;
         Sat,  7 Oct 2023 16:39:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
- t=1696721988; x=1697326788; i=w_armin@gmx.de;
- bh=x1THz+UVadBgvASSd3DL2MDkUZ8jlzu8RvUsxEiUFV8=;
+ t=1696721987; x=1697326787; i=w_armin@gmx.de;
+ bh=mQwZ7HovL0XAV0BMMBNTr9Ft336d/JL1LOfzD0c2oJs=;
  h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
- b=rU1wAa3tVgT30N8/cR8PZLhZWEpjOfJbrBuNuhwUTGr+YfxqEGbEN+YxCqAsZDVd94MwA1GUMw3
- CbpJBBm6kUqecNafhKAYl0McvJvecS0YElXEbZN8AeUW6bIE+ynRxE/mZAtpg/6vdrvumk1schRDd
- T6nyDdcbJuEnAN8xrFjmarBHI17PEHiRa3O9mDjnfDoXVXyPRyoFoQRUf6feygtRm7TwDjn8xzjAj
- GYlgcAICnQyifet23I5E2CHj9chCLTiNcQOJKBz/L+9/7/KqAkkdyw4OdiHDbAO2z1GTgIkObwUcR
- Pakz6Jow12GV0gdvm6LzcMHI960v7aO1UlBA==
+ b=GpUofq/aXvm6L4Hol4uEH/q4j0fHDgrqI8pj72Q2icXcTlhE1R534hZ/ykfRRD5vdxsHpiJEbZN
+ zrkdEo36wSr6p9ivNdE7d6Skh/WGBI29MN9BqRzMkaqMHHfFc0cHo0nrM+AYcwJHly9Uzb17ivPbO
+ Za4rA7ksQsW5ucR8QDsjBx4UgTkGghG5b/+XiNn2mcfvqJoc0WkXjOiwfTagmaSUOaWVsCc9EaAAc
+ i0JI1ufGCgW8YLxDICYkVFink/XsAw71lPBoeCWRvCSgFTMRGwNi4WstiOJIYWDp7g3kI2uOZ3pGc
+ YMCYNBi1Vu1jb5nREVjIU2HtNA4aCIGK3g9g==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MIx3I-1r9XqA1yxO-00KU5C; Sun, 08 Oct 2023 01:39:48 +0200
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1Mw9UK-1rgxRn13BM-00s8P5; Sun, 08 Oct 2023 01:39:47 +0200
 From:   Armin Wolf <W_Armin@gmx.de>
 To:     hdegoede@redhat.com, markgross@kernel.org,
         ilpo.jarvinen@linux.intel.com
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] platform/x86: wmi: Fix opening of char device
-Date:   Sun,  8 Oct 2023 01:39:32 +0200
-Message-Id: <20231007233933.72121-6-W_Armin@gmx.de>
+Subject: [PATCH 4/6] platform/x86: wmi: Fix probe failure when failing to register WMI devices
+Date:   Sun,  8 Oct 2023 01:39:31 +0200
+Message-Id: <20231007233933.72121-5-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231007233933.72121-1-W_Armin@gmx.de>
 References: <20231007233933.72121-1-W_Armin@gmx.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mOK/zZxrBq1zuij9wGiY+7APjMNgMMyQ07Txqx8cpnsGO6OYvYn
- mYROyP8H0cW/DJz4i8b8ovoVjiXgxeLe1RR0grNqslMdKcEzu6yVk9DSachTlA0L9Bd1MU5
- cOTXnC+TG1xXM+1iD6k9nL0kCfAbGiy6I6o55AmtA0WY8Z61SZNE5P/FuD+wmhZvK84X3b+
- 4usD3ZVlvqhDvuXJDIasA==
-UI-OutboundReport: notjunk:1;M01:P0:qdfl4deJgvc=;pZDGz6DqR3H/O/ZZWbkPaHrYWUq
- 4cfteMYsbvM+NZLJwcCsWxCjo/o+RCP78D7FlFB6bjdCYz6tCABvmaFsxW2EvPwpmtXDSoVCw
- wZB8Z6z2FmCqBPxnSC+21bapGdgPIs+PvGTth5uGxOVeZRSdZdK+mbp40U+6cHCP4fguzjiMV
- tCadcHqKBUi5n4Zl9zQyZsvKw3bKYMeKwC1APEU0wV6PhVJtZA1BRYkvfObFOw6mL54pqCOUK
- QO73RkmsTSMLgv3b7hgFD4PIDONNNp2uoIbFxvKKPCGLWIIdeIWKASarWS/zsT0LXgs9XFV3c
- uLv8LGGYAu6rpGJKPSdmXzruT7KlPY8uoM3wZujLwUN4oKSBSLcljDLUFFJry95I/l0Jm02cy
- XU/Mok23ZsGxQ0GU1dEajkJEYx5w+qsvs6pjvoQ5KltjO7hw6RbG7Gr9DGZBripKBTOG2dm0e
- 51P88KxL7fF2uy43QQZtV6FDgzeFWONOksrrIXJTsYs2Pn3SZbghvhihGkIIDSHB5QWvkNW53
- 7/IUwVoI8dcrOiX4nH/b472cyhR08zDwhR6JfeWty/3qFAuuStTJzb2RNzjIcId69nk79KNI2
- ocA1UGEuIKdJ6InU5qDmSMwimGyncJiVM8wbdLo6blf4D1+LWoIFNAdhXxMgaq/iveOgPj0EH
- jxfhLNX07/VdTOm3VcNEJRocHjG9D2rUoaFULFBt0n9SXV21/PscWL69DI1cxih64K9IiYcJz
- iC5SWBfW5uFOXHphy5HmFUfXju5/UYF/c0rykg5ZhWGqhPyJeVpj6kXDYiibiXEAOYJzbP2hr
- YYcedjapxJigb7zks3/YSb7QfHClzae1mhNpTEH+G0eiuC2PHffBjzEdKQny+wkPYYTAfPDkz
- SqibBjj7YOLgcdnWLf1uQf//tNiseZrYLi6mCbl8bylq6VgpEXJI02T3dYq67kYkjiYufNd/b
- LXLL6M8V571ROLAjtEHrkFfAkPY=
+X-Provags-ID: V03:K1:9P7xsS13HCRdXoo2mkDLbWm2pkjVkLOF1PVs64A7a7WDKEt49k2
+ TtQBFf7YKQUTV/arre+n6fRGfFSg3SXd1I33HiTOF55GR59moVQRjU31jN2HZJ++9qa7ZXF
+ GD8HvpMUTrJD7my4E+brtcWXlPEyvRDKjarGc2uiIKnXOH2EUxcIFsk3vWUCmyEXOXaNPxI
+ gG5yfLXll/59vPUqK3rkg==
+UI-OutboundReport: notjunk:1;M01:P0:sEpCZUQHoqs=;nEHA27N2QBChWwPVv4zSmSsNhE+
+ 9qtFprUpplMHJSSlqS/J02RX+lQp1GRSjbai40YPGxB8Se7uJ0g7whgIlSmiwB6THC9xsN6c/
+ he6JLCgTbfZxddNMKOaCq5scXkBqxHj63ari2SVSMpz2nJD1DTUDkArRa6RxUdWZo+YEzZxRj
+ S6O+JZYYcvWUBHbULnXROqEodKNEVLMBtN+Bjw6BH5qvzX885x58ipvkXD4g9cfl28Tr7voet
+ fzQWaC6abngd4GA04TiBAktyLcO5nDFPJPzMvLMLm+6qoOYhvLv1rVEjswO4es5eakdqW5pca
+ fdsNWlq60ttfO1BzGanPwuODsojwVlq0p+iqrm8On+H4r9Z+OwesS/UyRmrZgnM63fye3kVTg
+ 1xa1QzCSreg+h/ShRijUmdR8PZS9Yfx7J9aPSxKYMimc57qOUJgIyXMM8wEdaYmlc1c2Zc5q4
+ gzO8WBodkSVKWBH15Gty3dZI/v6WTaue5hPLBi5wSOXBvMT1kSnb/joJrAEusWGIyN0UT0zx2
+ yjF5oeNPoGV7Tl1UpGvuDipmdWThTU4JTahkFlRLE3kVUvEvtPCv8iqUiDLBzoOlii94Ua3Cn
+ C1aDchuz4x10xVUFRBjvdsCtq9diCUmwK+/Rmj96M0DmxIN7PhRZw17QO9X16vEEA590dDj65
+ h8axTHurVGIaAqnKCwIKJL8iODQx/9EI2Tus846l9HzhT1Fq4a4Rq6b5cSZPJWhFzJ9nOyYmN
+ GZ4ZOjp3rd1rQW3noE5AtlNaFPMP3KAZDxctYj8ON/dPvsPFvk78FoGxy22uZZ5YTsL74IRd6
+ fz9NUljTnTF3JLFGJAvAGQq0K4jBMbjiPVdc01rNEuP9BiBQZvX8OHMXCjktXYLC7zMcuv+oF
+ ABX7ClrIaunjwbcA6fZEphxq9bvRCJc7+7tlQebuD0TNA59FGSPZ8vKd6W06CIMr44c6LUD7b
+ 0109KGht1T4nNtFifjbK1kZdBMI=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Since commit fa1f68db6ca7 ("drivers: misc: pass miscdevice pointer via
-file private data"), the miscdevice stores a pointer to itself inside
-filp->private_data, which means that private_data will not be NULL when
-wmi_char_open() is called. This might cause memory corruption should
-wmi_char_open() be unable to find its driver, something which can happen
-when the associated WMI device is deleted in wmi_free_devices().
-Fix this by using the miscdevice pointer to retrieve the WMI device data
-associated with a char device using container_of(). This also avoids
-wmi_char_open() picking a wrong WMI device bound to a driver with the
-same name as the original driver.
+When a WMI device besides the first one somehow fails to register, retval
+is returned while still containing a negative error code. This causes the
+ACPI device failing to probe, leaving behind zombie WMI devices leading
+to various errors later.
+Fix this by handling the single error path separately and return 0 after
+trying to register all WMI devices. Also continue to register WMI devices
+even if some fail to allocate.
 
-Fixes: 44b6b7661132 ("platform/x86: wmi: create userspace interface for dr=
-ivers")
+Fixes: 6ee50aaa9a20 ("platform/x86: wmi: Instantiate all devices before ad=
+ding them")
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/wmi.c | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
+ drivers/platform/x86/wmi.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index ab24ea9ffc9a..6b3b2fe464d2 100644
+index e3984801883a..ab24ea9ffc9a 100644
 =2D-- a/drivers/platform/x86/wmi.c
 +++ b/drivers/platform/x86/wmi.c
-@@ -958,21 +958,13 @@ static int wmi_dev_match(struct device *dev, struct =
-device_driver *driver)
- }
- static int wmi_char_open(struct inode *inode, struct file *filp)
- {
--	const char *driver_name =3D filp->f_path.dentry->d_iname;
--	struct wmi_block *wblock;
--	struct wmi_block *next;
--
--	list_for_each_entry_safe(wblock, next, &wmi_block_list, list) {
--		if (!wblock->dev.dev.driver)
--			continue;
--		if (strcmp(driver_name, wblock->dev.dev.driver->name) =3D=3D 0) {
--			filp->private_data =3D wblock;
+@@ -1338,8 +1338,8 @@ static int parse_wdg(struct device *wmi_bus_dev, str=
+uct platform_device *pdev)
+ 	struct wmi_block *wblock;
+ 	union acpi_object *obj;
+ 	acpi_status status;
+-	int retval =3D 0;
+ 	u32 i, total;
++	int retval;
+
+ 	status =3D acpi_evaluate_object(device->handle, "_WDG", NULL, &out);
+ 	if (ACPI_FAILURE(status))
+@@ -1350,8 +1350,8 @@ static int parse_wdg(struct device *wmi_bus_dev, str=
+uct platform_device *pdev)
+ 		return -ENXIO;
+
+ 	if (obj->type !=3D ACPI_TYPE_BUFFER) {
+-		retval =3D -ENXIO;
+-		goto out_free_pointer;
++		kfree(obj);
++		return -ENXIO;
+ 	}
+
+ 	gblock =3D (const struct guid_block *)obj->buffer.pointer;
+@@ -1366,8 +1366,8 @@ static int parse_wdg(struct device *wmi_bus_dev, str=
+uct platform_device *pdev)
+
+ 		wblock =3D kzalloc(sizeof(*wblock), GFP_KERNEL);
+ 		if (!wblock) {
+-			retval =3D -ENOMEM;
 -			break;
--		}
--	}
-+	/*
-+	 * The miscdevice already stores a pointer to itself
-+	 * inside filp->private_data
-+	 */
-+	struct wmi_block *wblock =3D container_of(filp->private_data, struct wmi=
-_block, char_dev);
++			dev_err(wmi_bus_dev, "Failed to allocate %pUL\n", &gblock[i].guid);
++			continue;
+ 		}
 
--	if (!filp->private_data)
--		return -ENODEV;
-+	filp->private_data =3D wblock;
+ 		wblock->acpi_device =3D device;
+@@ -1398,9 +1398,9 @@ static int parse_wdg(struct device *wmi_bus_dev, str=
+uct platform_device *pdev)
+ 		}
+ 	}
 
- 	return nonseekable_open(inode, filp);
+-out_free_pointer:
+-	kfree(out.pointer);
+-	return retval;
++	kfree(obj);
++
++	return 0;
  }
+
+ /*
 =2D-
 2.39.2
 
