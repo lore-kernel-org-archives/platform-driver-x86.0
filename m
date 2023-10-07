@@ -2,103 +2,82 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB4EE936FB
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  7 Oct 2023 08:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F32E9371B
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  7 Oct 2023 08:22:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234126AbjJGIMj (ORCPT
+        id S234152AbjJGIWp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 7 Oct 2023 04:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45670 "EHLO
+        Sat, 7 Oct 2023 04:22:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230011AbjJGIMi (ORCPT
+        with ESMTP id S234151AbjJGIWn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 7 Oct 2023 04:12:38 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6C3EA6;
-        Sat,  7 Oct 2023 01:12:36 -0700 (PDT)
+        Sat, 7 Oct 2023 04:22:43 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EDB7C6;
+        Sat,  7 Oct 2023 01:22:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696666356; x=1728202356;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MthAMNSAvqVlqmjaZAPKyZLE+PvlZ9m2aggOFYe4Cq4=;
-  b=aHp8ehL+BZhmfEF/iJc3rmxK9zwWCu3UGTAiLXlvOs1gbI8lCnZOM5zU
-   vqfcZb4SJZ7nMYI2OZQhdCN629MakGM89lLhYY5T1BriBxe5Z25NgQzf9
-   QPDGzw4/75ST5Tt+k6nZBZqrVOtAxT6SvUThtFhEMACWbuCR/kfssF7H+
-   akWVD7t4/tVn5evyoKSp1G723JqUAXEoy3XNkG7rMwtOiVQUAc4Cjw9iU
-   NRGIIudcmMKxC6YplYF9m4e5agxv8r28fOJKdOpA2AM0WTsCrxH8ZvFkk
-   KKQPjfimB3zFfNtp3y8/u5FHYs7OAV5K6HhM6oZo2mrFF6iLFq2zr98wS
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="381177737"
+  t=1696666962; x=1728202962;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+8aWLmkJylVCOSQ1wVPHKjVmB9sGn5bVfNw0aUfUtJs=;
+  b=Xen3/0As9JcsnPyPj7C8W6vDaUStcgvz6stjYagbpOgYhpxUFA3vzxjd
+   gdD4A0GPosJiNb0We7AKGqiw3j+tm80+Ic9JGJuhmd5VOwsv244jSbLEF
+   nebR4H+eCisc5Vd/wf13CQHUcO/gTLt2D9qfzJcxtcxbWuPwQH9mXUHY+
+   UytAj5npRBKo2tTQ/y7KDFXjXHy7CbG8WDqIxfWa53UaEgJYU61X/4gFA
+   J0ZfpCtXiQD9t8jwOU2KTM3aWOhP/d667xwtB+7VvHP3e0O6CsSr7djub
+   Qoi9VXWt/s6frDy2VIPRXwO3GzXWjYG4UOOMmvC73sVIC3q/tLsT+TjRN
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="383787482"
 X-IronPort-AV: E=Sophos;i="6.03,205,1694761200"; 
-   d="scan'208";a="381177737"
+   d="scan'208";a="383787482"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2023 01:12:36 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2023 01:22:41 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="729123789"
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="729125687"
 X-IronPort-AV: E=Sophos;i="6.03,205,1694761200"; 
-   d="scan'208";a="729123789"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 07 Oct 2023 01:12:33 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 3D5CD456; Sat,  7 Oct 2023 11:12:32 +0300 (EEST)
+   d="scan'208";a="729125687"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2023 01:22:39 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qp2a3-00000003YHp-3OqR;
+        Sat, 07 Oct 2023 11:22:35 +0300
+Date:   Sat, 7 Oct 2023 11:22:35 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@gmail.com>,
+To:     Hao Yao <hao.yao@intel.com>
+Cc:     Dan Scally <dan.scally@ideasonboard.com>, djrscally@gmail.com,
         Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>
-Subject: [PATCH v4 1/1] platform/x86: asus-wireless: Replace open coded acpi_match_device()
-Date:   Sat,  7 Oct 2023 11:12:30 +0300
-Message-Id: <20231007081230.3555681-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+        Sakari Ailus <sakari.ailus@intel.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: int3472: Add strobe GPIO function
+Message-ID: <ZSEVSy122qTWwvdy@smile.fi.intel.com>
+References: <20231007021309.9332-1-hao.yao@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231007021309.9332-1-hao.yao@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Replace open coded acpi_match_device() in asus_wireless_add().
+On Sat, Oct 07, 2023 at 10:13:09AM +0800, Hao Yao wrote:
+> Strobe pin is used for Lattice MIPI aggregator to control the LED
+> so it can be handled together with privacy LED.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+Thinking about this more, I am not now sure that this is a good approach.
+The idea behind the STROBE LED is that is used for flash light and should
+not be like on/off state, but rather the (quite) short pulse.
 
-v4: used proper API, added tag (Hans)
-v3: rewrote error path logic (Hans)
-v2: fixed compilation error
+Combining these two together may even overheat the real strobe LED if used.
 
- drivers/platform/x86/asus-wireless.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+That said, is that platform using strobe GPIO for the privacy LED for real?!
 
-diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/x86/asus-wireless.c
-index abf01e00b799..41227bf95878 100644
---- a/drivers/platform/x86/asus-wireless.c
-+++ b/drivers/platform/x86/asus-wireless.c
-@@ -148,16 +148,12 @@ static int asus_wireless_add(struct acpi_device *adev)
- 	if (err)
- 		return err;
- 
--	for (id = device_ids; id->id[0]; id++) {
--		if (!strcmp((char *) id->id, acpi_device_hid(adev))) {
--			data->hswc_params =
--				(const struct hswc_params *)id->driver_data;
--			break;
--		}
--	}
--	if (!data->hswc_params)
-+	id = acpi_match_acpi_device(device_ids, adev);
-+	if (!id)
- 		return 0;
- 
-+	data->hswc_params = (const struct hswc_params *)id->driver_data;
-+
- 	data->wq = create_singlethread_workqueue("asus_wireless_workqueue");
- 	if (!data->wq)
- 		return -ENOMEM;
 -- 
-2.40.0.1.gaa8946217a0b
+With Best Regards,
+Andy Shevchenko
+
 
