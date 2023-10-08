@@ -2,176 +2,288 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F4FE95A85
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  7 Oct 2023 23:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9581FE95A82
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  8 Oct 2023 09:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344268AbjJGXkL (ORCPT
+        id S1344459AbjJHJWX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 7 Oct 2023 19:40:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34904 "EHLO
+        Sun, 8 Oct 2023 05:22:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344273AbjJGXkJ (ORCPT
+        with ESMTP id S230441AbjJHJWW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 7 Oct 2023 19:40:09 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A289107;
-        Sat,  7 Oct 2023 16:40:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
- t=1696721983; x=1697326783; i=w_armin@gmx.de;
- bh=Y/qUsDiDdVUWMFMwXVZBHFFUAPNEIq2aEjhb47CVHzI=;
- h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
- b=rgbhVzcKBhZVzUQ7AR+KSY4IWWHkGmELyTK7wZawN0e43WjPwsT0/mGr0PPv0WeeEPuAR7Ft46g
- O44PKUWQOQAAexBewMYrbrhQ+eiCaPMwCkMmi/tlYGRoxIANs1/qqu1yIuz7yeHhmyOHy3p33UMEV
- 3f8cHPpX3kbfUHPcBqHjuweruywfLtST1C4ue2eC+F5y+TTyOxcKx98JaSLItmGfRE/UZUPrdS12u
- 47mrvghSJvwZ0uOK9A5YkpqDkX1YLWbUmaL+jAjsIDlvg6n7qcLgPcJwCcSey32k6vObyKCfK2iHn
- Q05mbeFEympJIhCNudI4i9GrWbCeIejdJzDQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MxUnz-1rmCGd3f1F-00xvNG; Sun, 08 Oct 2023 01:39:42 +0200
-From:   Armin Wolf <W_Armin@gmx.de>
-To:     hdegoede@redhat.com, markgross@kernel.org,
-        ilpo.jarvinen@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] platform/x86: wmi: Decouple probe deferring from wmi_block_list
-Date:   Sun,  8 Oct 2023 01:39:29 +0200
-Message-Id: <20231007233933.72121-3-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231007233933.72121-1-W_Armin@gmx.de>
-References: <20231007233933.72121-1-W_Armin@gmx.de>
+        Sun, 8 Oct 2023 05:22:22 -0400
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C16DAB;
+        Sun,  8 Oct 2023 02:22:18 -0700 (PDT)
+X-UUID: 949b143830a5436bab682c79ba3f840e-20231008
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.32,REQID:432d4775-cef0-4e0d-bf09-34630c82924a,IP:5,U
+        RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+        ON:release,TS:-15
+X-CID-INFO: VERSION:1.1.32,REQID:432d4775-cef0-4e0d-bf09-34630c82924a,IP:5,URL
+        :0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+        :release,TS:-15
+X-CID-META: VersionHash:5f78ec9,CLOUDID:d40691f0-9a6e-4c39-b73e-f2bc08ca3dc5,B
+        ulkID:231008172207O5IEME2I,BulkQuantity:0,Recheck:0,SF:19|44|38|24|17|102,
+        TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
+        ,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 949b143830a5436bab682c79ba3f840e-20231008
+X-User: aichao@kylinos.cn
+Received: from localhost.localdomain [(112.64.161.44)] by mailgw
+        (envelope-from <aichao@kylinos.cn>)
+        (Generic MTA)
+        with ESMTP id 1423811136; Sun, 08 Oct 2023 17:22:04 +0800
+From:   Ai Chao <aichao@kylinos.cn>
+To:     hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+        markgross@kernel.org
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH] platform/x86: support to store/show powermode for Inspur
+Date:   Sun,  8 Oct 2023 17:21:49 +0800
+Message-Id: <20231008092149.967239-1-aichao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:flITnas8bY7wHEIbBweiIIBp7vUh6aH6WVAyzKsZgXSytqzEHnw
- ZHSXLk3gD6SBWYtjSNEIjkTm+BqVdrCdsKBjlxHdTmFPJ+S0dmOBWk9d8VXpYN5DjyXKApJ
- FgEWkmqa67JMzNUbKiBfeO7ZCmflxeKaCq+9vtV+GvfwedoFmTdfBevPuOKLXzqD5QAuX83
- qNR6OBV88KGpcnPCdhnDQ==
-UI-OutboundReport: notjunk:1;M01:P0:qxGLR2kVk5U=;htd33az+9hkprs0VwE8zAIpbw2m
- gTFQnOOhni7Axcehcdvb7L0J/4cqx6tMudTKUY9ifLENnyfQlU+RyB/BDfQ8Q57oxg9/88KZG
- 3pGWCyNVECBfvpAJd6ks3k+2KPqBwFkCFsCKlVdY72O0EexKfPssw1cVha7/7S4HnKzoFogaX
- Zc4F2vhM63LRcGZfI6oUfu+ork8no3wd7+NqNKGdzO9LT+ej48ghzrdXo3hHQMX1K5YyPw9Ig
- 19xNJGzDgEJU+1N0DsRVY5Pdx4nlIKalSD9UYFOAC4SKd2vC5UIr5VAYTaR0EJeElGSXjRHyO
- mO0cBnRbDpxJ1X+feAiwAdwHZ7wxHCc5R7JoSGDXjKhQV5/XuyiTNXFXESKShVDf1tHqLiMlJ
- DWGPqE+PBHp0Jvcu91sqWTXjD5SXS3M+EkUlG+E8GZBSnWgrQGYwEcMemfjNOQvGZGb3JD0dL
- pUjZaRMh41vr61upUKOCkYzYnR0CfvbP2s7OMX+CiHc1a1buV/Qj4mmHoB2vOXCQvuybZvuql
- 8PU8PbZh99UP9qQv4HUyWxIwP6R6/JDGuPrFs+zJBqrq1y4RZu0QQP9XZH1oFEKHZI4ljCpR5
- uCBmGOiKS1aMqDFIuWESffTdu60P/9m6ItV4hUn5IFCzYGMDt3HxL2McrdhyXr9X7VMYAj3AO
- zNnKsG3kdLOJx7dPPseoSbtFmvHiQS/sUPgUUyCitXM40y9ZGj0skVmk5PeFrOIMxFn7qgsRi
- XYd3UTedX0DjqxNV4keD0ecSRHRLgw7dTHgqX9ZTAle0MYXVgnuwNLAfWVvZ4njL/xI6U4/fR
- JILDiPjs7x8uTUIactdVoKKpYOKaLfTRQ0tYejLkbUKOsUqMxaP6cJH3HlWlkb6KTRy5o0j69
- ychnR8QXggk/zROiQ3EMPJ1jpfFIJO2SVoi7YSqFQWkXld8+atMxyu6pDYlbL8ir9QQ8+eSzh
- BDvjQqy4DcI2ikg7iRU4fA/LoXU=
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Many aggregate WMI drivers do not use -EPROBE_DEFER when they
-cannot find a WMI device during probe, instead they require
-all WMI devices associated with an platform device to become
-available at once. This is currently achieved by adding those
-WMI devices to the wmi_block_list before they are registered,
-which is then used by the deprecated GUID-based functions to
-search for WMI devices.
-Replace this approach with a device link which defers probing
-of the WMI device until the associated platform device has finished
-probing (and has registered all WMI devices). New aggregate WMI
-drivers should not rely on this behaviour.
+Support to store/show powermode for Inspur.
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/wmi.c | 39 +++++++++++++++++++++++++-------------
- 1 file changed, 26 insertions(+), 13 deletions(-)
+Signed-off-by: Ai Chao <aichao@kylinos.cn>
+---
+ drivers/platform/x86/Kconfig      |  11 ++
+ drivers/platform/x86/Makefile     |   3 +
+ drivers/platform/x86/inspur-wmi.c | 180 ++++++++++++++++++++++++++++++
+ 3 files changed, 194 insertions(+)
+ create mode 100644 drivers/platform/x86/inspur-wmi.c
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index a78ddd83cda0..1dbef16acdeb 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -1221,6 +1221,26 @@ static int wmi_create_device(struct device *wmi_bus=
-_dev,
- 	return 0;
- }
-
-+static int wmi_add_device(struct platform_device *pdev, struct wmi_device=
- *wdev)
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 2a1070543391..9e565ee01a9f 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -988,6 +988,17 @@ config TOUCHSCREEN_DMI
+ 	  the OS-image for the device. This option supplies the missing info.
+ 	  Enable this for x86 tablets with Silead or Chipone touchscreens.
+ 
++config INSPUR_WMI
++	tristate "Inspur WMI hotkeys driver"
++	depends on ACPI_WMI
++	depends on INPUT
++	help
++	This driver provides support for Inspur WMI hotkeys.
++	It's support to store/show powermode.
++
++	To compile this driver as a module, choose M here: the module
++	will be called inspur-wmi.
++
+ source "drivers/platform/x86/x86-android-tablets/Kconfig"
+ 
+ config FW_ATTR_CLASS
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index b457de5abf7d..9285c252757e 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -98,6 +98,9 @@ obj-$(CONFIG_TOSHIBA_WMI)	+= toshiba-wmi.o
+ # before toshiba_acpi initializes
+ obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
+ 
++# Inspur
++obj-$(CONFIG_INSPUR_WMI)	+= inspur-wmi.o
++
+ # Laptop drivers
+ obj-$(CONFIG_ACPI_CMPC)		+= classmate-laptop.o
+ obj-$(CONFIG_COMPAL_LAPTOP)	+= compal-laptop.o
+diff --git a/drivers/platform/x86/inspur-wmi.c b/drivers/platform/x86/inspur-wmi.c
+new file mode 100644
+index 000000000000..6c4d722e98dc
+--- /dev/null
++++ b/drivers/platform/x86/inspur-wmi.c
+@@ -0,0 +1,180 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  Inspur WMI hotkeys
++ *
++ *  Copyright (C) 2018	      Ai Chao <aichao@kylinos.cn>
++ */
++
++#include <linux/acpi.h>
++#include <linux/device.h>
++#include <linux/input.h>
++#include <linux/module.h>
++#include <linux/wmi.h>
++
++#define WMI_INSPUR_POWERMODE_EVENT_GUID "854FA5AC-58C7-451D-AAB1-57D6F4E6DDD4"
++#define WMI_INSPUR_POWERMODE_BIOS_GUID "596C31E3-332D-43C9-AEE9-585493284F5D"
++
++enum inspur_wmi_method_ids {
++	INSPUR_WMI_GET_POWERMODE = 0x02,
++	INSPUR_WMI_SET_POWERMODE = 0x03,
++};
++
++struct inspur_wmi_priv {
++	struct input_dev *idev;
++};
++
++static int inspur_wmi_perform_query(char *guid,
++		enum inspur_wmi_method_ids query_id,
++		void *buffer, size_t insize, size_t outsize)
 +{
-+	struct device_link *link;
++	union acpi_object *obj;
++	int ret = 0;
++	u32 wmi_outsize;
++	struct acpi_buffer input = { insize, buffer};
++	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
 +
-+	/*
-+	 * Many aggregate WMI drivers do not use -EPROBE_DEFER when they
-+	 * are unable to find a WMI device during probe, instead they require
-+	 * all WMI devices associated with an platform device to become availabl=
-e
-+	 * at once. This device link thus prevents WMI drivers from probing unti=
-l
-+	 * the associated platform device has finished probing (and has register=
-ed
-+	 * all discovered WMI devices).
-+	 */
++	wmi_evaluate_method(guid, 0, query_id, &input, &output);
 +
-+	link =3D device_link_add(&wdev->dev, &pdev->dev, DL_FLAG_AUTOREMOVE_SUPP=
-LIER);
-+	if (!link)
++	obj = output.pointer;
++	if (!obj)
 +		return -EINVAL;
 +
-+	return device_add(&wdev->dev);
++	if (obj->type != ACPI_TYPE_BUFFER) {
++		ret = -EINVAL;
++		goto out_free;
++	}
++
++	/* Ignore output data of zero size */
++	if (!outsize)
++		goto out_free;
++
++	wmi_outsize = min_t(size_t, outsize, obj->buffer.length);
++	memcpy(buffer, obj->buffer.pointer, wmi_outsize);
++
++out_free:
++	kfree(obj);
++	return ret;
 +}
 +
- static void wmi_free_devices(struct acpi_device *device)
- {
- 	struct wmi_block *wblock, *next;
-@@ -1263,11 +1283,12 @@ static bool guid_already_parsed_for_legacy(struct =
-acpi_device *device, const gui
- /*
-  * Parse the _WDG method for the GUID data blocks
-  */
--static int parse_wdg(struct device *wmi_bus_dev, struct acpi_device *devi=
-ce)
-+static int parse_wdg(struct device *wmi_bus_dev, struct platform_device *=
-pdev)
- {
-+	struct acpi_device *device =3D ACPI_COMPANION(&pdev->dev);
- 	struct acpi_buffer out =3D {ACPI_ALLOCATE_BUFFER, NULL};
- 	const struct guid_block *gblock;
--	struct wmi_block *wblock, *next;
-+	struct wmi_block *wblock;
- 	union acpi_object *obj;
- 	acpi_status status;
- 	int retval =3D 0;
-@@ -1317,22 +1338,14 @@ static int parse_wdg(struct device *wmi_bus_dev, s=
-truct acpi_device *device)
- 			wblock->handler =3D wmi_notify_debug;
- 			wmi_method_enable(wblock, true);
- 		}
--	}
-
--	/*
--	 * Now that all of the devices are created, add them to the
--	 * device tree and probe subdrivers.
--	 */
--	list_for_each_entry_safe(wblock, next, &wmi_block_list, list) {
--		if (wblock->acpi_device !=3D device)
--			continue;
--
--		retval =3D device_add(&wblock->dev.dev);
-+		retval =3D wmi_add_device(pdev, &wblock->dev);
- 		if (retval) {
- 			dev_err(wmi_bus_dev, "failed to register %pUL\n",
- 				&wblock->gblock.guid);
- 			if (debug_event)
- 				wmi_method_enable(wblock, false);
++static ssize_t powermode_store(struct device *dev,
++		struct device_attribute *attr,
++		const char *buf, size_t count)
++{
++	int ret, mode;
 +
- 			list_del(&wblock->list);
- 			put_device(&wblock->dev.dev);
- 		}
-@@ -1487,7 +1500,7 @@ static int acpi_wmi_probe(struct platform_device *de=
-vice)
- 	}
- 	dev_set_drvdata(&device->dev, wmi_bus_dev);
-
--	error =3D parse_wdg(wmi_bus_dev, acpi_device);
-+	error =3D parse_wdg(wmi_bus_dev, device);
- 	if (error) {
- 		pr_err("Failed to parse WDG method\n");
- 		goto err_remove_busdev;
-=2D-
-2.39.2
++	ret = kstrtoint(buf, 0, &mode);
++	if (ret)
++		return ret;
++
++	inspur_wmi_perform_query(WMI_INSPUR_POWERMODE_BIOS_GUID,
++			INSPUR_WMI_SET_POWERMODE,
++			&mode, sizeof(mode), sizeof(mode));
++
++	return count;
++}
++
++
++static ssize_t powermode_show(struct device *dev,
++		struct device_attribute *attr,
++		char *buf)
++{
++	int mode = 0;
++	u8 ret;
++	u8 *ret_code;
++
++	inspur_wmi_perform_query(WMI_INSPUR_POWERMODE_BIOS_GUID,
++			INSPUR_WMI_GET_POWERMODE,
++			&mode, sizeof(mode), sizeof(mode));
++	/*
++	 *Byte [0]: Return code, 0x0 No error, 0x01 Error
++	 *Byte [1]: Power Mode
++	 */
++	ret_code = (u8 *)(&mode);
++	ret = ret_code[1];
++
++	return sprintf(buf, "%u\n", ret);
++}
++
++DEVICE_ATTR_RW(powermode);
++
++static struct attribute *inspur_wmi_attrs[] = {
++	&dev_attr_powermode.attr,
++	NULL,
++};
++
++static const struct attribute_group inspur_wmi_group = {
++	.attrs = inspur_wmi_attrs,
++};
++
++const struct attribute_group *inspur_wmi_groups[] = {
++	&inspur_wmi_group,
++	NULL,
++};
++
++static void inspur_wmi_notify(struct wmi_device *wdev,
++		union acpi_object *obj)
++{
++	//to do
++}
++
++static int inspur_wmi_input_setup(struct wmi_device *wdev)
++{
++	struct inspur_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
++
++	priv->idev = devm_input_allocate_device(&wdev->dev);
++	if (!priv->idev)
++		return -ENOMEM;
++
++	priv->idev->name = "Inspur WMI hotkeys";
++	priv->idev->phys = "wmi/input0";
++	priv->idev->id.bustype = BUS_HOST;
++	priv->idev->dev.parent = &wdev->dev;
++
++	return input_register_device(priv->idev);
++}
++
++static int inspur_wmi_probe(struct wmi_device *wdev, const void *context)
++{
++	struct inspur_wmi_priv *priv;
++	int err;
++
++	priv = devm_kzalloc(&wdev->dev, sizeof(struct inspur_wmi_priv),
++			GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	dev_set_drvdata(&wdev->dev, priv);
++
++	err = inspur_wmi_input_setup(wdev);
++	return err;
++}
++
++static void inspur_wmi_remove(struct wmi_device *wdev)
++{
++	struct inspur_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
++
++	input_unregister_device(priv->idev);
++}
++
++static const struct wmi_device_id inspur_wmi_id_table[] = {
++	{ .guid_string = WMI_INSPUR_POWERMODE_EVENT_GUID },
++	{  }
++};
++
++static struct wmi_driver inspur_wmi_driver = {
++	.driver = {
++		.name = "inspur-wmi",
++		.dev_groups = inspur_wmi_groups,
++	},
++	.id_table = inspur_wmi_id_table,
++	.probe = inspur_wmi_probe,
++	.notify = inspur_wmi_notify,
++	.remove = inspur_wmi_remove,
++};
++
++module_wmi_driver(inspur_wmi_driver);
++
++MODULE_DEVICE_TABLE(wmi, inspur_wmi_id_table);
++MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
++MODULE_DESCRIPTION("Inspur WMI hotkeys");
++MODULE_LICENSE("GPL");
+-- 
+2.25.1
 
