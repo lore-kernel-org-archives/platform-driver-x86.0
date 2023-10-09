@@ -2,76 +2,77 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B4AE95A91
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Oct 2023 14:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D55E95A91
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Oct 2023 14:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346526AbjJIOBG (ORCPT
+        id S1346512AbjJIOBW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 9 Oct 2023 10:01:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45212 "EHLO
+        Mon, 9 Oct 2023 10:01:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346585AbjJIOBF (ORCPT
+        with ESMTP id S1346443AbjJIOBV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 Oct 2023 10:01:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 054BF91
-        for <platform-driver-x86@vger.kernel.org>; Mon,  9 Oct 2023 07:00:22 -0700 (PDT)
+        Mon, 9 Oct 2023 10:01:21 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D8B94
+        for <platform-driver-x86@vger.kernel.org>; Mon,  9 Oct 2023 07:00:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1696860022;
+        s=mimecast20190719; t=1696860029;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LDBSTWa+mJU5UiubbU+HvR/HKYvFWz38Y0DdV64uBm8=;
-        b=KG/6eNL519Hf1AcSY5rAavEeZ56aLK8K9xbFUQ4/lYhaacSd1w+uJcTiCbJW+l7IQbN7CY
-        1oH6CpG13Qu5HPAHEMGgDQdoinqPRc6jS0liQSq1PAYM9FSQxqTNbghE2OvXWm4XiiJnnN
-        HbddfV8HGfFJrGf0Zk+MZUBOD1noYJM=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=xoYu2Ebu9s7k/ajtoJDHuXJ0cucCWZAR2d/KGxaoJC4=;
+        b=Qbb01l3OFNF44w3uchuKhDEP8RlbMMBdGBGx+aq+Fv0X7bZthJYo1QAtn1yanKRx82JJjG
+        Pbstla2iHAoV55XUNMek450hQEcMImSV2cj5cr09eGVtFqdbd+B9EK3VK0JTGMtpyfO4Pv
+        vlf5zbRa+SWekhQ3vCjDmFIbXd0he8E=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-484-q9xS8QUTNsqi_NE_ek_GNQ-1; Mon, 09 Oct 2023 10:00:20 -0400
-X-MC-Unique: q9xS8QUTNsqi_NE_ek_GNQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-99388334de6so386233966b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Oct 2023 07:00:19 -0700 (PDT)
+ us-mta-369-F_8ZsI4qP5SDSJhkkIttTA-1; Mon, 09 Oct 2023 10:00:28 -0400
+X-MC-Unique: F_8ZsI4qP5SDSJhkkIttTA-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-326f05ed8f9so3377998f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Oct 2023 07:00:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696860018; x=1697464818;
+        d=1e100.net; s=20230601; t=1696860026; x=1697464826;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LDBSTWa+mJU5UiubbU+HvR/HKYvFWz38Y0DdV64uBm8=;
-        b=xJEcnfX7eSkk9jyZkBMn409hsN9CkFbdVmcGfCZaUhLAYVbYCLl2IpKQM92wQ9AkSW
-         4CX5PixaBzcLkGPIFGrVV6qOWX9gJnbXMm9nOtwipTXqzTa4RJb6YZVqs3SGBD+tW/kP
-         70N5noaItfL06iOVqN5ZyBV3dhnfi3eOCeGOa74bcyqfiS65itUGDGWres89rHQbUp1v
-         Iw0716zvxpkyCs4+rGgy3zifz6k+js6pp61CDNF3MjfGPg62j5ny2Kq65/fkJqbIDyY0
-         ZAlm9jWCUI1kxeN9bdd5Db4d0dNP4Q0BUxScs4QAiTb7W7RZyRgDdx6S4sJeBNymR/rm
-         BTnA==
-X-Gm-Message-State: AOJu0YwTQYhqhFUcL5CVLVI6YTS3QR96HOaP5oRFGWZYjOkqRo3mTb09
-        Ubdt5N6cv3glh/qzLacwq1mflEGHBzLRjfqLtnnAH+KGxEDqDKwOlk8ChrSeCBEWnoyEpdkv3yB
-        PhIMMT/1F1oEUqG7oTPQTGlSiFhY+D/FraA==
-X-Received: by 2002:a17:906:30cd:b0:9ad:e20f:142f with SMTP id b13-20020a17090630cd00b009ade20f142fmr13288572ejb.22.1696860018315;
-        Mon, 09 Oct 2023 07:00:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF79+T17Lemf7ZpPzQdfcbtx9mZ4tseYcMIZsDW1tIJWZpSWfINjzqghlDvr5Fhc4TTsTmrqA==
-X-Received: by 2002:a17:906:30cd:b0:9ad:e20f:142f with SMTP id b13-20020a17090630cd00b009ade20f142fmr13288556ejb.22.1696860017947;
-        Mon, 09 Oct 2023 07:00:17 -0700 (PDT)
+        bh=xoYu2Ebu9s7k/ajtoJDHuXJ0cucCWZAR2d/KGxaoJC4=;
+        b=L5zF7BbHVt11ZyC/sbrc3Q1LQe2dz9MWrTqLD/c1MHUeAE4BFrHk7JGQxdBXbgSn3D
+         9BhsVDReAH1XctfbbtWqRivR+DuUE58nBwMX53iz2yKejAs/0w/3Sx+czy+eI9CX6Ao9
+         V7IM/UkixQVZt4XL4NK5mqQ0ty4Wxe+4+hzXZySuYtfp3VwFhdxSFIMq6VkrbL0Ww+T6
+         mJ92vPkkwTZBXebN6q+3VkzVCb3Tv0TqFgrCJvwrlA08DdXbkzQ61hkC+GkL/H4XgNSk
+         oi3Mqn3YERLzGU7YQLCvKpDyK4b8mAVgf7QbBhUwscCZQ/6miTIixCR5XWhiujMtC+SM
+         +ppA==
+X-Gm-Message-State: AOJu0YxmCb1wc2vqAB4smw3qZiS3B+CagkcW+hlz+2kSQxWvjVJ3kq3o
+        4J6x7oxdVlaCU8Y4Y8Q4ET7MuGZfJOkxYSG1rM4h2ox1QFK4kIEhJXv2wOwIMwhEb4xASKUDoNY
+        kN+7JZ8zFo/d9VpUClyKtG8IMSlK8MkM+2NcQs+bg4A==
+X-Received: by 2002:a5d:4e49:0:b0:322:5d58:99c1 with SMTP id r9-20020a5d4e49000000b003225d5899c1mr13470805wrt.10.1696860026033;
+        Mon, 09 Oct 2023 07:00:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE8VUHVZ5EBiMOCuq/2fk+hTU3dgSCUVp/b+e92XS9w0Kg8RmTFtr31VWpIHzrjdx2WF/KtvA==
+X-Received: by 2002:a5d:4e49:0:b0:322:5d58:99c1 with SMTP id r9-20020a5d4e49000000b003225d5899c1mr13470784wrt.10.1696860025684;
+        Mon, 09 Oct 2023 07:00:25 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id h24-20020a1709063b5800b009b285351817sm6823277ejf.116.2023.10.09.07.00.17
+        by smtp.gmail.com with ESMTPSA id f13-20020a05640214cd00b0053821dbd4dasm6042631edx.22.2023.10.09.07.00.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Oct 2023 07:00:17 -0700 (PDT)
-Message-ID: <c0cfa05c-83f0-33fe-daa7-0486dd231616@redhat.com>
-Date:   Mon, 9 Oct 2023 16:00:16 +0200
+        Mon, 09 Oct 2023 07:00:25 -0700 (PDT)
+Message-ID: <b076d3cf-66be-ec99-941a-f450234f5093@redhat.com>
+Date:   Mon, 9 Oct 2023 16:00:24 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH v6 1/3] platform/x86/amd/pmc: Use flex array when calling
- amd_pmc_stb_debugfs_open_v2()
+Subject: Re: [PATCH v6 2/3] platform/x86/amd/pmc: Handle overflow cases where
+ the num_samples range is higher
 Content-Language: en-US, nl
 To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
         ilpo.jarvinen@linux.intel.com, markgross@kernel.org
 Cc:     Sanket.Goswami@amd.com, mario.limonciello@amd.com,
         platform-driver-x86@vger.kernel.org
 References: <20231009134307.21001-1-Shyam-sundar.S-k@amd.com>
+ <20231009134307.21001-2-Shyam-sundar.S-k@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20231009134307.21001-1-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20231009134307.21001-2-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -81,16 +82,30 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 10/9/23 15:43, Shyam Sundar S K wrote:
-> Currently in amd_pmc_stb_debugfs_open_v2() the buffer size is assumed to
-> be fixed and a second call to amd_pmc_stb_debugfs_open_v2() may race with
-> a process holding open another fd. This could change "fsize" to a
-> bigger size causing an out of bounds read.
+> In amd_pmc_stb_debugfs_open_v2(), the stb buffer is created based on the
+> num_samples and the read/write pointer offset. This holds good when the
+> num_samples reported by PMFW is less than S2D_TELEMETRY_BYTES_MAX; where
+> the stb buffer gets filled from 0th position until
+> S2D_TELEMETRY_BYTES_MAX - 1 based on the read/write pointer offset.
 > 
-> Instead create a struct with a flexarray to solve this.
+> But when the num_samples exceeds the S2D_TELEMETRY_BYTES_MAX, the current
+> code does not handle it well as it does not account for the cases where
+> the stb buffer has to filled up as a circular buffer.
+> 
+> Handle this scenario into two cases, where first memcpy will have the
+> samples from location:
+> (num_samples % S2D_TELEMETRY_BYTES_MAX) - (S2D_TELEMETRY_BYTES_MAX - 1)
+> and next memcpy will have the newest ones i.e.
+> 0 - (num_samples % S2D_TELEMETRY_BYTES_MAX - 1)
 > 
 > Suggested-by: Hans de Goede <hdegoede@redhat.com>
 > Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+> v5->v6:
+>  - Make changes as per Hans on v5
+>  - based on review-ilpo branch
+
 
 Thanks, patch looks good to me now:
 
@@ -104,97 +119,57 @@ Hans
 
 
 
-
-> ---
-> v6:
-> - Handle release buffer case as per Hans remarks
-> - based on review-ilpo branch
 > 
-> v5:
-> - new patch based on comments in v4 from Hans.
-> - based on review-ilpo branch
+> v4->v5:
+>  - Fix exisiting code problems when reading stb buffer as a circular data
+>  - based on review-ilpo branch
 > 
->  drivers/platform/x86/amd/pmc/pmc.c | 30 ++++++++++++++++++------------
->  1 file changed, 18 insertions(+), 12 deletions(-)
+> v3->v4:
+>  - Update code branches and commit-msg as per Ilpo's remark.
+> 
+> v2->v3:
+>  - no change
+> 
+> v1->v2:
+>  - rebase to 'review-hans' branch
+>  - drop 2/4 of v1
+>    (https://patchwork.kernel.org/project/platform-driver-x86/list/?series=775324&state=%2A&archive=both)
+> 
+>  drivers/platform/x86/amd/pmc/pmc.c | 19 +++++++++++++------
+>  1 file changed, 13 insertions(+), 6 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-> index c92dd5077a16..fdc1e104c437 100644
+> index fdc1e104c437..e0b5d9de473a 100644
 > --- a/drivers/platform/x86/amd/pmc/pmc.c
 > +++ b/drivers/platform/x86/amd/pmc/pmc.c
-> @@ -122,6 +122,11 @@ enum s2d_arg {
->  	S2D_DRAM_SIZE,
->  };
+> @@ -276,16 +276,23 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
 >  
-> +struct amd_pmc_stb_v2_data {
-> +	size_t size;
-> +	u8 data[] __counted_by(size);
-> +};
-> +
->  struct amd_pmc_bit_map {
->  	const char *name;
->  	u32 bit_mask;
-> @@ -239,7 +244,8 @@ static const struct file_operations amd_pmc_stb_debugfs_fops = {
->  static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
->  {
->  	struct amd_pmc_dev *dev = filp->f_inode->i_private;
-> -	u32 *buf, fsize, num_samples, val, stb_rdptr_offset = 0;
-> +	u32 fsize, num_samples, val, stb_rdptr_offset = 0;
-> +	struct amd_pmc_stb_v2_data *flex_arr;
->  	int ret;
+>  	flex_arr->size = fsize;
 >  
->  	/* Write dummy postcode while reading the STB buffer */
-> @@ -247,10 +253,6 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
->  	if (ret)
->  		dev_err(dev->dev, "error writing to STB: %d\n", ret);
->  
-> -	buf = kzalloc(S2D_TELEMETRY_BYTES_MAX, GFP_KERNEL);
-> -	if (!buf)
-> -		return -ENOMEM;
-> -
->  	/* Spill to DRAM num_samples uses separate SMU message port */
->  	dev->msg_port = 1;
->  
-> @@ -264,10 +266,16 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
->  	dev->msg_port = 0;
->  	if (ret) {
->  		dev_err(dev->dev, "error: S2D_NUM_SAMPLES not supported : %d\n", ret);
-> -		kfree(buf);
->  		return ret;
->  	}
->  
-> +	fsize = (num_samples > S2D_TELEMETRY_BYTES_MAX) ? S2D_TELEMETRY_BYTES_MAX : num_samples;
-> +	flex_arr = kmalloc(struct_size(flex_arr, data, fsize), GFP_KERNEL);
-> +	if (!flex_arr)
-> +		return -ENOMEM;
-> +
-> +	flex_arr->size = fsize;
-> +
->  	/* Start capturing data from the last push location */
+> -	/* Start capturing data from the last push location */
+> +	/*
+> +	 * Start capturing data from the last push location.
+> +	 * This is for general cases, where the stb limits
+> +	 * are meant for standard usage.
+> +	 */
 >  	if (num_samples > S2D_TELEMETRY_BYTES_MAX) {
->  		fsize  = S2D_TELEMETRY_BYTES_MAX;
-> @@ -277,8 +285,8 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
->  		stb_rdptr_offset = 0;
+> -		fsize  = S2D_TELEMETRY_BYTES_MAX;
+> -		stb_rdptr_offset = num_samples - fsize;
+> +		/* First read oldest data starting 1 behind last write till end of ringbuffer */
+> +		stb_rdptr_offset = num_samples % S2D_TELEMETRY_BYTES_MAX;
+> +		fsize = S2D_TELEMETRY_BYTES_MAX - stb_rdptr_offset;
+> +
+> +		memcpy_fromio(flex_arr->data, dev->stb_virt_addr + stb_rdptr_offset, fsize);
+> +		/* Second copy the newer samples from offset 0 - last write */
+> +		memcpy_fromio(flex_arr->data + fsize, dev->stb_virt_addr, stb_rdptr_offset);
+>  	} else {
+> -		fsize = num_samples;
+> -		stb_rdptr_offset = 0;
+> +		memcpy_fromio(flex_arr->data, dev->stb_virt_addr, fsize);
 >  	}
 >  
-> -	memcpy_fromio(buf, dev->stb_virt_addr + stb_rdptr_offset, fsize);
-> -	filp->private_data = buf;
-> +	memcpy_fromio(flex_arr->data, dev->stb_virt_addr + stb_rdptr_offset, fsize);
-> +	filp->private_data = flex_arr;
+> -	memcpy_fromio(flex_arr->data, dev->stb_virt_addr + stb_rdptr_offset, fsize);
+>  	filp->private_data = flex_arr;
 >  
 >  	return 0;
->  }
-> @@ -286,11 +294,9 @@ static int amd_pmc_stb_debugfs_open_v2(struct inode *inode, struct file *filp)
->  static ssize_t amd_pmc_stb_debugfs_read_v2(struct file *filp, char __user *buf, size_t size,
->  					   loff_t *pos)
->  {
-> -	if (!filp->private_data)
-> -		return -EINVAL;
-> +	struct amd_pmc_stb_v2_data *data = filp->private_data;
->  
-> -	return simple_read_from_buffer(buf, size, pos, filp->private_data,
-> -					S2D_TELEMETRY_BYTES_MAX);
-> +	return simple_read_from_buffer(buf, size, pos, data->data, data->size);
->  }
->  
->  static int amd_pmc_stb_debugfs_release_v2(struct inode *inode, struct file *filp)
 
