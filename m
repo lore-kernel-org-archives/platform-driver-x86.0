@@ -2,322 +2,228 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECACCD6114
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Oct 2023 17:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16548CD612D
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Oct 2023 19:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233250AbjJIRql (ORCPT
+        id S1378416AbjJIT2j (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 9 Oct 2023 13:46:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47016 "EHLO
+        Mon, 9 Oct 2023 15:28:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234587AbjJIRqj (ORCPT
+        with ESMTP id S1378405AbjJIT2i (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 Oct 2023 13:46:39 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2089.outbound.protection.outlook.com [40.107.94.89])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C6A2AF;
-        Mon,  9 Oct 2023 10:46:37 -0700 (PDT)
+        Mon, 9 Oct 2023 15:28:38 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B0AE6;
+        Mon,  9 Oct 2023 12:28:35 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RCxovDdVrXyk/nnCBcoJhzBnPWn9vDMfCwpyaKsf2TMeRCxhp++6Vtehd7KMtAFMCJ5mXVEuwtwqAHgHWe5/Hlt65A9Rj5aWEiSBAYGJv5kNnNhCrfiBe+d7dXhErapj2ozNF+m2ktc/uiHu6YM0ASBEiMIFFHqZoDGqh9ZkS8NKl7cvEu6uOGOUxWFRVNIrPl1/TLoSTlBvIOtQ0IjQRo4rBGalWzgUWqgezqYY+U6dJ4suhljrO4cdE+peqFbGvHMdxp16OQhNhyAab3RAsgbnt0tVaw2GI7cPMRsy647FhU0u76VELwl/u3IfKB5p0pX43h2GOZTJPft3qq/rBA==
+ b=P5GwiJJze55Pjzowq0oXrGe/6b9XHeoYPcLL70Hixdy1AKR3Vm2q12BCJK6ChQ1GdBE9Qwv+AHMOBrVmkt0Y4/yQYDEE3z80OfL6oI3zQZhLIz+8oJ2YXUA1Da6lC2JOwpQB3P6vNk4cj9qbBWQaSbv0BoFbo1k3hmPyizWJBeVte7e1LmhlHLksnLs16tYIEItoIJNzz1caZd4vtna5qDNPTOnEp5O2c5AeqEgYujWdUs+/bDSg37/fmIB6BAwAk7/nQvjCwRpUw5IVohrXVkbEI9p9D89ek/4PQn12S6u8lHpEMIj+/eHTca3/itYNSSns6hS+QuvnPUP0K8nKaA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hgPoizulzTeD8xeGBXMrepjQQEusDby8l0YcbpWXQI0=;
- b=fWlR9XOFjr4We3sJ5r8X/90M5bUprzRvZlGK9oLbI6X3c7UzkpfoRyMefqX8x5aXQTlqP7OahuBhyPoYQ6soi7OSbQp8hcdrUmZxlonFvFTeHGCETRh/te++rlzsDjsOUlAKgUveFaQZ0q3y/eB4pVQY9n//4X3FtBpA6EsykAFHKNqiAO1f7mDZh3m6ZuG2axz3lsr0huMTwJS15k0kR24Z5FSWsz2VRRyCsXIChB9F1rFBgG9hB06Q1By/zF0ub3RD/4hQ37daf5n7GfsKsIxVX7w2BlDo/Xi/Jw47LnqklVVu0IjViTJTEFttxlMSUHTdua2v8cxSIpK+MR5NKg==
+ bh=AZDlauZTiGzUbui3mxIaUEU4A2vbkRvNoBUbEjd9Epg=;
+ b=JI2zXPbQSetaFwqt6/zjMtKI+zFrEFuTwcgVqwrGdrRlYFp46rGT5IbZVwByTmEOrlorcmXAvIXLqsUURFlAH3ZaVZZAUIWpqgwG08sXo2y2go8atzjmVnPDCwOdH5sUJ7lO/vYVrNwJDfqdb8qsB4Us8u9RJH+g9EFiXA5qDLDdc4SBnG4k3E7/cn0yYzvll6dG/1lRbrxNfV82h4mYnPaPgnO0kcxoqnzn2EvuXKvq+I2msOGbNGqlKqdp0iQcRqGs+JnFcK7xMPUss1EgjI+u/Pq+4xOhwAAU+M5TJFkIHT8CAWa1R2D8auZwxUTcJPjLSGu9xzCK59Ipkx6nxA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hgPoizulzTeD8xeGBXMrepjQQEusDby8l0YcbpWXQI0=;
- b=lCTbUt0TOmd2byJ98tsN5/jKhcwGH9qMtpIetHrFgv9GboH0KCH7gYr0q60XZOGWSs8/uFkXS94dD1IY1/oeMD8Y2t0GbN0w3Wi6GOxj4iqM50U1rPHTfwz5EYX/Oj7lbsbUkLVV0bnzuSaeEJVRbZ7CNuC6N8nTLRlF9JY06bo8o/fOMROW6cYYyTpNGGNXFHEZjCbK+10X5N6t9NShWRBzYOrn5W2k2RVHlObMAF40IQDfsDoK6iu5q4WeX1zuNzrDJMcMO8LtxGIepaTo/loAJpY4MDb8dm71cebmevlRFaMKhbPaNdAyzaSsjy3gjS/d7LHq9w5Ts/g7GqMCag==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA1PR12MB6604.namprd12.prod.outlook.com (2603:10b6:208:3a0::7)
- by DS7PR12MB8323.namprd12.prod.outlook.com (2603:10b6:8:da::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6863.36; Mon, 9 Oct 2023 17:46:33 +0000
-Received: from IA1PR12MB6604.namprd12.prod.outlook.com
- ([fe80::8814:146:e28e:6eea]) by IA1PR12MB6604.namprd12.prod.outlook.com
- ([fe80::8814:146:e28e:6eea%4]) with mapi id 15.20.6863.032; Mon, 9 Oct 2023
- 17:46:33 +0000
-Message-ID: <b3ea777a-9471-0458-af2b-32a2adef4dec@nvidia.com>
-Date:   Mon, 9 Oct 2023 10:46:28 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-Subject: Re: [RFT PATCH 14/21] hte: tegra194: don't access struct gpio_chip
-Content-Language: en-US
-From:   Dipen Patel <dipenp@nvidia.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+ bh=AZDlauZTiGzUbui3mxIaUEU4A2vbkRvNoBUbEjd9Epg=;
+ b=HZD/UUI5Y4QjGF4/s3qxdkjoMH3LjKLJCoHONf7FTj8YNitGYB16E6CA8P0eNJ+FpLQznWRaltnkfZEZFR12mTGiTJsgLRCbBxsU0gm9TGAnWbpLRJrLJfyAWXFDLEcFDZ5CctYSUUe9NsYYQGoT9Jfv2DlGhB/6iqmFA2E0e24CV+Enu3t333uj3IQDPKbWvXiX6fOcWZnG0DivBTs/UndG2SfrthWI5v557aF/9m/Oil7jVRaBkHJEp7sxClY0nLWRCCG+18WnZxBfBPmKNmnOzEHBHAuhrTsTBYcocqyAChFua+MDdA2ynMbZFIIXyK8Ab2BEnaZ+04SKB3FHDQ==
+Received: from BN9PR12MB5068.namprd12.prod.outlook.com (2603:10b6:408:135::21)
+ by MN0PR12MB5979.namprd12.prod.outlook.com (2603:10b6:208:37e::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.38; Mon, 9 Oct
+ 2023 19:28:32 +0000
+Received: from BN9PR12MB5068.namprd12.prod.outlook.com
+ ([fe80::e00:7275:f848:ae4b]) by BN9PR12MB5068.namprd12.prod.outlook.com
+ ([fe80::e00:7275:f848:ae4b%3]) with mapi id 15.20.6863.032; Mon, 9 Oct 2023
+ 19:28:32 +0000
+From:   Liming Sun <limings@nvidia.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        David Thompson <davthompson@nvidia.com>,
         Mark Gross <markgross@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
-        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20230905185309.131295-1-brgl@bgdev.pl>
- <20230905185309.131295-15-brgl@bgdev.pl>
- <CACRpkda9=VULj4Cy_sit-UpUQnVEbS-RJKAeULVCw8ZCRTq1sw@mail.gmail.com>
- <CAMRc=MdTk1B4MEh9C624Upm_EcaQgJd9OU-AGfU0G-DU1+qk6A@mail.gmail.com>
- <36b17290-c643-8d8e-e82b-49afa6b34fbb@nvidia.com>
- <3624e973-d09a-d211-c6d0-d0ffb8c20c4b@nvidia.com>
- <90b5f887-8af4-a80d-ea4d-cf2199752de4@nvidia.com>
- <0e7cae42-0b81-c038-8beb-49102feea8a6@nvidia.com>
- <CAMRc=McSG6qajxt6P3vWQEeT63Pk5tggD05pUoMD1zd5ApZxgA@mail.gmail.com>
- <647d3b52-1daf-175d-d5c2-45653dd2604c@nvidia.com>
- <CAMRc=Mc_+LxcbV+=KPwAh4DinJAAetHrK+W3jbNp4AZBzg63TA@mail.gmail.com>
- <b0f37601-39d6-618e-fa16-3b1c9e7c0e2c@nvidia.com>
- <CAMRc=MfSGY691-sFhx8GeP43g0xGk1JzNa=9q5oemQoHHAM-5Q@mail.gmail.com>
- <3a54df71-d5cc-f538-75b8-f2193e27d65b@nvidia.com>
-In-Reply-To: <3a54df71-d5cc-f538-75b8-f2193e27d65b@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR03CA0275.namprd03.prod.outlook.com
- (2603:10b6:a03:39e::10) To IA1PR12MB6604.namprd12.prod.outlook.com
- (2603:10b6:208:3a0::7)
+        Dan Carpenter <dan.carpenter@linaro.org>
+CC:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a warning
+ message
+Thread-Topic: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a warning
+ message
+Thread-Index: AQHZ94YFlBkdvRjGj0Cl1AIVKIdf4LA8uTSAgAAv4sCAABbRgIAE3Beg
+Date:   Mon, 9 Oct 2023 19:28:32 +0000
+Message-ID: <BN9PR12MB5068173E789479AA99FDF725D3CEA@BN9PR12MB5068.namprd12.prod.outlook.com>
+References: <bb8bc77e6ecc2287fc9110cfa08caa48eb2a0385.1696508228.git.limings@nvidia.com>
+ <35467b21-941f-c829-1ad8-b4e7319dbc04@redhat.com>
+ <BN9PR12MB50687C00EDAFC2B1A058E1E3D3C9A@BN9PR12MB5068.namprd12.prod.outlook.com>
+ <4d40eacb-382a-f0e9-2dcd-9f9e8c7ca9fd@redhat.com>
+In-Reply-To: <4d40eacb-382a-f0e9-2dcd-9f9e8c7ca9fd@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR12MB5068:EE_|MN0PR12MB5979:EE_
+x-ms-office365-filtering-correlation-id: 9e28f720-b9d0-45db-52db-08dbc8fdec59
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ln1PLI/zi86BwRzRKoOpCamPsgQQgLWm1nQ5XJoPbyiU5pTW2imoiP/vGjjNzxfD7NoE2j6PR5zcGLV0ycXHQOqPnOCbVwbyBfQkUdrf6k0qRqbV6xKPEc1sUI+LaTzjeMOpMss+VUw9ebg+wnNrCK9KSSQ31+OYE8nvA9aCbgOZLHcpnutob/ItYDsqd+5xM8cL4yhKULHjYC6iVLx+anrMCA0RGsZGl9vGThusjFpkOM40aOo3BaM0OXeKsOnBYUqj70vbH7yfJuSGPC03fzWoSk1y66lu+JoU8sqVZeRZwxGnMCJiYZW+u9wqde9wLXaY4NgbjOhUQHrjW/BPfiiKs/mHGZr2d3ifh9P6IFT2qMsvFE4abQwE85ChnlHpxCkDULshj8R9M0+lbxTgqvKU69IdBezPXx4MFyNqd8N3dd0N42aWpMDFrez2ZcA9SLRLVlIOXlj7fGmxt5e2aYzAk2xuNmMtmXmWWG1dILbAfJVZ787yDFAD0TJfYD5bdMRD/HCxbE4TeSZxpSnrMfWgPUyZWlrppBdWiboyARvLbJ5mr1t8ctu+1Lkr3zbbyyE0rCE2JPsCT4g4GaxiCcWG72Kb75buFxCxS8w2x84OgNcC6dEpzQWMEBEqd4yN
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5068.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(376002)(39860400002)(366004)(396003)(230922051799003)(186009)(1800799009)(451199024)(64100799003)(15650500001)(55016003)(86362001)(2906002)(8676002)(8936002)(41300700001)(4326008)(52536014)(5660300002)(33656002)(26005)(38100700002)(38070700005)(9686003)(122000001)(7696005)(6506007)(83380400001)(53546011)(478600001)(316002)(71200400001)(54906003)(66946007)(66556008)(66476007)(66446008)(64756008)(110136005)(76116006);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?QWZoZGl5MzFUaitpakhybXJOd0o1cjFOSHhFeFJGY004aW50a2IvY3hmeGJM?=
+ =?utf-8?B?NWRuWi94cUpRTFo4Qk5BTEpJaXJob0VqY3JCRVJTZkx4aEFudjNzUXFzcUhm?=
+ =?utf-8?B?TzIwL1ZsTkx3UWcwL2R1TDFMUVd4NFFGWVF5Zzk2UkhGd1Fqc1BpOXNHM0c3?=
+ =?utf-8?B?N3M3RHBhVFcxWTdzbDlkS0VoQjU0dDVjenZXSUQrUWZXTnpXbDhpMnFDMjJi?=
+ =?utf-8?B?L2ZPZlpEZHZwczFQMGF1NFhvcXZScGt3ZDFpT2gyK1M5aHFhemQvVlFjc0gx?=
+ =?utf-8?B?Y0dJVzExb0lPUHhyV1hsMTRyOGttQlRTWVBZU3RNeDQ1VG9PWEpiZVBGTFFt?=
+ =?utf-8?B?LytzWm5NNitvbmJ2MnYyZ1FjZnFDZHRPTUtreVk5NWExcUcxdFl1eWhXdWVl?=
+ =?utf-8?B?WnpISkJKby9NMXdwVWxzUUNYZGRBN24rMnkxR0xSRW9Yc1U3N0JPUnl6NlZX?=
+ =?utf-8?B?QWxSNzkrR1BDTzJ2Rm9mclQvSU5BeTZKRnFneEV2SktQRDNnbkpuYW1PK0E4?=
+ =?utf-8?B?UVFaeGZXUUQvaTFyRE55NXhvZ1doZ0dLRmtUdDhETytnVmo1YlpZSFhmNnAv?=
+ =?utf-8?B?cnQyaXZVdERjYnV2SGtlZ3o4d2NvWlp2NDdrWEJIUzM0Q3Zpd3VCd0dlbDQ4?=
+ =?utf-8?B?TGErQ2VubUMzNG16UFpaREplRDFtSnErMUZLS2pMQmZxYkxWU29BOVFvRmZ0?=
+ =?utf-8?B?NUxJWE5CRWZTWlYrYWN1Q1IrQWdLbnljb1FPUnFBdWhVdzBFME9xajA4aHA3?=
+ =?utf-8?B?dHA5QzRPcjhpbDhidFE3L0JtdkZqWjZLZ1laT0xGTkhDdHE5SXBEV1k4cVcy?=
+ =?utf-8?B?VHB6WE1ScGFhSng3S2VUWEpHanN1Rm93QytlVWJlRklzYjlvNFJ0elVMc2pr?=
+ =?utf-8?B?RVdBVmIyUGhZS0FVRkM3dHpIcGJpakRCRXgwbVlBYzFOY0p3REErRndCeFlZ?=
+ =?utf-8?B?M3Q0by9Nc21ub054YmFMbmZ5R1JpdnNhZzI4WHZvb3RTSGw4TTd0MUVHdG5o?=
+ =?utf-8?B?bzRGMTFpZHliaXhrVjZyeHBscWsrREVBZmlLWUpFN2VtajI4OFZvNHR0OFVU?=
+ =?utf-8?B?RWg1NlVtdU5lTnA4TlVxU01TcGFwMW1HUGYybk9FN3hMNlVDTlhPUFZ5bjhi?=
+ =?utf-8?B?N3hqZ3YwcG9tOVVBQytuOWkrejVDQlozK2VMakRxL1RsQm9ITU1qSzdPbFRm?=
+ =?utf-8?B?cTRtZkpuZ09VZGlxbnhEa2dHdmFqbHh3VGNnZWk3K21OdExsVVNBMUNwa1BC?=
+ =?utf-8?B?ZTg1cjMwbVdQNGRieXpnYlBtMEM5cHpraTRlZ1d6V1ZZK2N0SnJQRm92UU5x?=
+ =?utf-8?B?b3JEM0I3WDBiaWtZNWV0Um5jQVZIN3dDVmdUVnRZZXNFMTZyT2txNUVHUUhJ?=
+ =?utf-8?B?akxHVTAycnd1N1JWcm1hanEvYWw1SXZRL0xVL0ZjbFR0QzRRSVdzWWNzbzIr?=
+ =?utf-8?B?TWVKaEtGZWZJaDM3UjA0MHNJcUowdVZ1NDZLVmNtcG10RWl1eDlxZzdRbmZm?=
+ =?utf-8?B?R3BmdjMxUktQenRQR0I4RytzMCtuamN2SG14bXVmVjloakExR2ZMVlBLWlpK?=
+ =?utf-8?B?dUdNdW5RMXAyTG5uSTd4blRHcTA3YnBLdC9iU2J4Yzdobk5BWW5IUklOMkJr?=
+ =?utf-8?B?a3dEVTF5TUZzV3hqalExZG1xSG4xakJLbFpta3RjU0kvUHAvWVBsOW4rbG5L?=
+ =?utf-8?B?QWxKeEx6QU1XTUFGcVMxc21DVDdSRTQ0OEFzaldYdUt6a1dTblRBNmg0UTdO?=
+ =?utf-8?B?UVdXZ21NN3BTY3lwVUQ3QURsbmQzWUc2Z0dFZnlUMHo3VmY5ZUF3bkt4clJF?=
+ =?utf-8?B?RFl3THNsU3NrN0xCV2ZTdm9udlJCVUFMbDVyZHovY0kxdzhQdVY0RTB2VU5D?=
+ =?utf-8?B?TG9yOWNobUJLdlhCanJlUnF3Qy81TmxLdUlTU2Z0NkpHTWc5WExxWE5Bdis3?=
+ =?utf-8?B?Qy95RE1YRGpBMEczUFRJRmpyK0VOZlJ5TW5wajBsSkphNGRwQXphK29FK2Y5?=
+ =?utf-8?B?UEZWUmVoQkhmREJzU29TWVpOUjRNWGpiQnZqdHVrd3dTQ1MxanV1aGkzKzZp?=
+ =?utf-8?B?Vnc5VWtlUkcrbnp0aElQVW5WNTdKL1VVcnFSOGFrY2Ztbklxa1A0Q2Rwa0d2?=
+ =?utf-8?Q?+vVE=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6604:EE_|DS7PR12MB8323:EE_
-X-MS-Office365-Filtering-Correlation-Id: dfc6035b-2f15-4580-0a16-08dbc8efad37
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MHuVX08q9G4/93LkdqaSox1tWdPt2kcptrlkzhM6/f0kozPZ61bC4CMrYxjxNZmwUeCw7RVCD8KzanJtbBW9z8Pujo6oiPv055dyW9B6HlF9+RcEZ6UmuHtWyUnmDMcZoZ9Kp8kZOCzx9xO1VXg4J8kSLxm8XhAnbpE0A8Q3aQUsM5bYetMtMVNPiDp4RsX7qD/lL/g3mLt9hmjX4JUuFnHzia9PiY/2VRNLFlbEkfNkZNqAlG3sePL0ePuMbeDMmTvqM0s0S9rkEDZbJGXk59VORPjSm4RnSEGtuVPJVeVDLzHr+qFJUZYsk4XCuLWw1NJMGidTsZ+8juvZ9222ypEByw74HIU64im+ERXa1SlNFRyhkwpWr64EBzwrKtBvvQl3/MDPwh8/LnJLE9FTQcsBDoWscu4G4L8Ozu4HygSbGSPr6QN5nUAjTcgcRXdYSsRwiil9a9hFmfhaMYz5bzEgYaxZCEY4eTvYIkXlfEy4XLKPJoEpPo4p5F3mz22lBypwLJ273zWz7B25B4OVq9pTFk9AwnXeCDeYQwMoGmEygKJk2vwXi4+bp+JWF0Fl6brjWfzSxF0y3RFhnDg5rLUBYFjH1fjXsTNDjJpSqcBZoDuIekQ+hPM6DwxV/Bs4oUOSKc7lfTlcUupUPzJpBnA+F3jbGDcmOZxxQQup5dB0MHUV0cV309hcoP5ebYlH
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6604.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(39860400002)(376002)(136003)(346002)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(2906002)(6506007)(53546011)(83380400001)(2616005)(7416002)(26005)(66476007)(316002)(54906003)(6916009)(66946007)(66556008)(8936002)(4326008)(5660300002)(41300700001)(6666004)(966005)(478600001)(6512007)(6486002)(8676002)(36756003)(38100700002)(86362001)(31696002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bFN5UHZGN3A1MkFiWDYrK3p2bUU3ODBvNjJydCtNSGF5cnU0NVpJcHBacGNp?=
- =?utf-8?B?bXBSck1ianhQaUVlUWdjMnlDT2JRMUlMQktEUC91U0REcGw3R3lJeDJqaWlx?=
- =?utf-8?B?My91UVhBRmZiTHA1Vi9vLzZReHVpYmU1dFpXYUNJMzJxeVFiOElQbFMxa2xl?=
- =?utf-8?B?Y3ZRaVBmNjJGcldTeTBYdDFDU2hNcXEzMFo3Q0J3MC94NU1NSHMrZGlobDJU?=
- =?utf-8?B?V1hsbThxVDNrR0hNaXRzN0h3MTZjUEkrQzJpbHN4dHFrTUcvUVFyc1ZrQm1j?=
- =?utf-8?B?aGNHTjJoZnIxTFYwb2YyWGIzZllqNmViWDIyb0dSSmd2cmV0SWtLZHZ5Y1M1?=
- =?utf-8?B?ZXYwclZzTDk2NWtpbGtaOGVtdVJaZ3haSzFnWFByYVZOMXpBWTdDSklaeEJ6?=
- =?utf-8?B?Mm1OdjVONG4ySG9XU09OamJURyt6dzBtT05UQzBVcVNZcnI3ZDErbmNKZkNz?=
- =?utf-8?B?SkVQbFJSTGF4aThvaGFnbTJlemtYVjVIUWJKWDhFNUNEbFY4eEIwbEFmQXpZ?=
- =?utf-8?B?cVh0RWlGbGdZVEljYWI0WDdoN0xScndVWmh4bXZmcGJ0YXpPdjRTaGtCNVQx?=
- =?utf-8?B?L2hnSHJSVHFRK2xIc0dKK3ZmVUFKbzdnYmNDb2RJS0JqWVJDTHp5N3FJK0FR?=
- =?utf-8?B?WlhoRi8xeVY1OHd0VWVQQXl6MTZHb2RYTEhaRjBmVERXcGV4eVcreDVrc213?=
- =?utf-8?B?YU5ReVZ4RERaQzNZTXh1SlBnd1dxUE5aNXJ3RzVZdDRjN2NPaUtKazQrTTZV?=
- =?utf-8?B?elZOQURuSFQ3b0lIN1FoVDJUTXYrMU5kbnVuUUl2bXJvTzVMT3dyVXd1RWFr?=
- =?utf-8?B?bFdOczN6TjhEZkxpTHlRRUZCRUpvQVNEdzV0WFRnRkI5amI4VFVzd3FXZ051?=
- =?utf-8?B?TklRT3JLZTB5MGM3akVrZkRyT2ZxbmMyTmV3SkNEOUU4NXNpQkt3MHRkRlhX?=
- =?utf-8?B?VmgvZWU4dm1oaHB2ZnZZbDkxai9weXl2bDVjQmliZzRzL2ZuT3hFNTBiZ1ZR?=
- =?utf-8?B?cWtEaWQ4UHlmRXlBRjFQN2xwWFpNWVRRajlXWG5wWEwxd1A0cmhkK3RnWUpQ?=
- =?utf-8?B?NWt5TytqTk5yeDAwRCtHZGJPYmFMbFlLM2JNWWhtVXdjVW4zUmxVWUtyUStO?=
- =?utf-8?B?RDNXeEwwNlRyaWNtRjZ5MzZXMHV3ZUZadEs5YWxyak56aXlLR3BpY0tDUkhP?=
- =?utf-8?B?RmtYMS9OZXl4TkNSdXpNeDJYanJoV1ppNWJnaVNyd2tmNUIrVTdRMVBsUnFw?=
- =?utf-8?B?aVZsUnVhTFl2R2pQTDJOUjByNVVOVGQ0aXRkWXRiTGh4RTROVVIzakdBWGtX?=
- =?utf-8?B?Mk5Mb2U1WVo3dTZiQzJONHY5T2dEdUNkNmlWNDdaVUVlMUMrYTFPZ0J3dWh0?=
- =?utf-8?B?TEgvc0tuaTVkcm9nMkFuR0tzaEJXMll1a3NhK0dkSHhaTDlXN0d0d1NLR0xx?=
- =?utf-8?B?OXJSZFg3WWxQMWVvYnVlaUxwTWQvNGEycEM4VkRMZUZCa2VHN3cwTEJaMS9D?=
- =?utf-8?B?RzhjS1lvWEJZWGM0OG41NEN1UFpzajQ5ZW9TVWJ4R2J2ZTNlalhKRHBYTHhN?=
- =?utf-8?B?ZkJjb040ZDVkbzQ2QzhKdzhkZUI4ZGRDckRwd3FlZVdTVDJSTzE5VTU5SVlx?=
- =?utf-8?B?Q0o4RjVIWUp2NlljS1RIdmRXUXR4VmloV2VGamVaSnF1dTNYKzd6ZTFUSjIz?=
- =?utf-8?B?TWlVNnNuYmJjdk1iMW9TVURrRktjVzVzNExleDdIQ05PR2JjWHVnVktmRGVy?=
- =?utf-8?B?c1hxcmFDWktzRUpGU2ZlL1RaNGJQOTZ1UDMyL1lFb24ya2F5TEJKdVZ5Z0NW?=
- =?utf-8?B?SmtTZU5XRjBNT0NSdjFPaGRBTFIvbnNEWUdsUTFKWk14dlB2QlZ4WUpxV2RC?=
- =?utf-8?B?bzI5aE5YYVNmL1AvZVBlZkl4SEVNRllWWjBjZ2pEVlIxLzZ1T0hnajNWY2JC?=
- =?utf-8?B?L3RySk5xVUdFc1Rsb2UxRWduWkxHcjE1REdHMDJNdUtiK1BLOE9NR1E1bXNt?=
- =?utf-8?B?M0t5b0dKc0lBSjFSeDd2NmkrbFZSMkI3S0tQNnU4YUVwTThaa09VQkE4VEhB?=
- =?utf-8?B?UEZTcy96YTVvOEMxRlhseHJMVG5ZaDBycTgrQjh1eWkrRzJpc1FDa3RQbUxG?=
- =?utf-8?Q?gwXee6et4NSSGsJfDzyvwBmc+?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dfc6035b-2f15-4580-0a16-08dbc8efad37
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6604.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2023 17:46:33.4220
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5068.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e28f720-b9d0-45db-52db-08dbc8fdec59
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Oct 2023 19:28:32.0478
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /E0s9DozjuZtUT6tZrNsgiOJAvhQaiTm4qbG3mafOWcx7tz4mRZe9weGXp3SQHvsJfUiKFjC+i/ums9glf1Udg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8323
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hwtgx8k6mtugHgvb7ckD5qR/3kbUAYyvgoKnksjnRmCRmVRaL6JspgngKF19r13SYcCDZTIfG6HvWPs0yyfh5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5979
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 10/9/23 9:34 AM, Dipen Patel wrote:
-> On 10/8/23 11:48 PM, Bartosz Golaszewski wrote:
->> On Thu, Oct 5, 2023 at 9:43 PM Dipen Patel <dipenp@nvidia.com> wrote:
->>>
->>> On 10/5/23 12:05 PM, Bartosz Golaszewski wrote:
->>>> On Thu, Oct 5, 2023 at 8:12 PM Dipen Patel <dipenp@nvidia.com> wrote:
->>>>>
->>>>> On 10/5/23 6:48 AM, Bartosz Golaszewski wrote:
->>>>>> On Thu, Oct 5, 2023 at 1:52 AM Dipen Patel <dipenp@nvidia.com> wrote:
->>>>>>>
->>>>>>> On 10/4/23 3:54 PM, Dipen Patel wrote:
->>>>>>>> On 10/4/23 1:33 PM, Dipen Patel wrote:
->>>>>>>>> On 10/4/23 1:30 PM, Dipen Patel wrote:
->>>>>>>>>> On 10/4/23 5:00 AM, Bartosz Golaszewski wrote:
->>>>>>>>>>> On Thu, Sep 7, 2023 at 9:28 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->>>>>>>>>>>>
->>>>>>>>>>>> On Tue, Sep 5, 2023 at 8:53 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->>>>>>>>>>>>
->>>>>>>>>>>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>>>>>>>>>>>
->>>>>>>>>>>>> Using struct gpio_chip is not safe as it will disappear if the
->>>>>>>>>>>>> underlying driver is unbound for any reason. Switch to using reference
->>>>>>>>>>>>> counted struct gpio_device and its dedicated accessors.
->>>>>>>>>>>>>
->>>>>>>>>>>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>>>>>>>>>>
->>>>>>>>>>>> As Andy points out add <linux/cleanup.h>, with that fixed:
->>>>>>>>>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>>>>>>>>>>>
->>>>>>>>>>>> I think this can be merged into the gpio tree after leaving some
->>>>>>>>>>>> slack for the HTE maintainer to look at it, things look so much
->>>>>>>>>>>> better after this.
->>>>>>>>>>>>
->>>>>>>>>>>> Yours,
->>>>>>>>>>>> Linus Walleij
->>>>>>>>>>>
->>>>>>>>>>> Dipen,
->>>>>>>>>>>
->>>>>>>>>>> if you could give this patch a test and possibly ack it for me to take
->>>>>>>>>>> it through the GPIO tree (or go the immutable tag from HTE route) then
->>>>>>>>>>> it would be great. This is the last user of gpiochip_find() treewide,
->>>>>>>>>>> so with it we could remove it entirely for v6.7.
->>>>>>>>>>
->>>>>>>>>> Progress so far for the RFT...
->>>>>>>>>>
->>>>>>>>>> I tried applying the patch series on 6.6-rc1 and it did not apply cleanly,
->>>>>>>>>> some patches I needed to manually apply and correct. With all this, it failed
->>>>>>>>>> compilation at some spi/spi-bcm2835 driver. I disabled that and was able to
->>>>>>>>>> compile. I thought I should let you know this part.
->>>>>>>>>>
->>>>>>>>>> Now, I tried to test the hte and it seems to fail finding the gpio device,
->>>>>>>>>> roughly around this place [1]. I thought it would be your patch series so
->>>>>>>>>> tried to just use 6.6rc1 without your patches and it still failed at the
->>>>>>>>>> same place. I have to trace back now from which kernel version it broke.
->>>>>>>>>
->>>>>>>>> [1].
->>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/pateldipen1984/linux.git/tree/drivers/hte/hte-tegra194.c?h=for-next#n781
->>>>>>>>>
->>>>>>>>> of course with your patches it would fail for the gdev instead of the chip.
->>>>>>>>
->>>>>>>> Small update:
->>>>>>>>
->>>>>>>> I put some debugging prints in the gpio match function in the hte-tegra194.c as
->>>>>>>> below:
->>>>>>>>
->>>>>>>> static int tegra_gpiochip_match(struct gpio_chip *chip, void *data)
->>>>>>>>  {
->>>>>>>> +       struct device_node *node = data;
->>>>>>>> +       struct fwnode_handle *fw = of_node_to_fwnode(data);
->>>>>>>> +       if (!fw || !chip->fwnode)
->>>>>>>> +               pr_err("dipen patel: fw is null\n");
->>>>>>>>
->>>>>>>> -       pr_err("%s:%d\n", __func__, __LINE__);
->>>>>>>> +       pr_err("dipen patel, %s:%d: %s, %s, %s, match?:%d, fwnode name:%s\n",
->>>>>>>> __func__, __LINE__, chip->label, node->name, node->full_name, (chip->fwnode ==
->>>>>>>> fw), fw->dev->init_name);
->>>>>>>>         return chip->fwnode == of_node_to_fwnode(data);
->>>>>>>>  }
->>>>>>>>
->>>>>>>> The output of the printfs looks like below:
->>>>>>>> [    3.955194] dipen patel: fw is null -----> this message started appearing
->>>>>>>> when I added !chip->fwnode test in the if condition line.
->>>>>>>>
->>>>>>>> [    3.958864] dipen patel, tegra_gpiochip_match:689: tegra234-gpio, gpio,
->>>>>>>> gpio@c2f0000, match?:0, fwnode name:(null)
->>>>>>>>
->>>>>>>> I conclude that chip->fwnode is empty. Any idea in which conditions that node
->>>>>>>> would be empty?
->>>>>>>
->>>>>>> sorry for spamming, one last message before I sign off for the day....
->>>>>>>
->>>>>>> Seems, adding below in the tegra gpio driver resolved the issue I am facing, I
->>>>>>> was able to verify your patch series.
->>>>>>>
->>>>>>> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
->>>>>>> index d87dd06db40d..a56c159d7136 100644
->>>>>>> --- a/drivers/gpio/gpio-tegra186.c
->>>>>>> +++ b/drivers/gpio/gpio-tegra186.c
->>>>>>> @@ -989,6 +989,8 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
->>>>>>>                 offset += port->pins;
->>>>>>>         }
->>>>>>>
->>>>>>> +       gpio->gpio.fwnode = of_node_to_fwnode(pdev->dev.of_node);
->>>>>>> +
->>>>>>>         return devm_gpiochip_add_data(&pdev->dev, &gpio->gpio, gpio);
->>>>>>>  }
->>>>>>>
->>>>>>> Now, few follow up questions:
->>>>>>> 1) is this the correct way of setting the chip fwnode in the gpio driver?
->>>>>>
->>>>>> You shouldn't need this. This driver already does:
->>>>>>
->>>>>>     gpio->gpio.parent = &pdev->dev;
->>>>>>
->>>>>> so fwnode should be assigned in gpiochip_add_data_with_key(). Can you
->>>>>> check why this doesn't happen?
->>>>>
->>>>> I do not see anywhere chip->fwnode being set in the gpiochip_add_* function.
->>>>> The only reference I see is here [1]. Does it mean I need to change my match
->>>>> function from:
->>>>>
->>>>> chip->fwnode == of_node_to_fwnode(data)
->>>>>
->>>>> to:
->>>>> dev_fwnode(chip->parent) == of_node_to_fwnode(data)?
->>>>
->>>> No! chip->fwnode is only used to let GPIOLIB know which fwnode to
->>>> assign to the GPIO device (struct gpio_device).
->>> What do you suggest I should use for the match as I do not see chip->fwnode
->>> being set?
->>>
->>
->> This is most likely going to be a longer discussion. I suggest that in
->> the meantime you just assign the gc->fwnode pointer explicitly from
->> the platform device in the tegra GPIO driver and use it in the lookup
->> function. Note that this is NOT wrong or a hack. It's just that most
->> devices don't need to be looked up using gpio_device_find().
-> 
-> Sure, at the same time, I am also find to use any other method/s.
-
-(Correction) I am also fine*
-
-With patch
-https://patchwork.ozlabs.org/project/linux-gpio/patch/20231009173858.723686-1-dipenp@nvidia.com/
-
-Tested-by: Dipen Patel <dipenp@nvidia.com>
-
->>
->> Bart
->>
->>>>
->>>> Bart
->>>>
->>>>>
->>>>> [1]:
->>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpio/gpiolib.c?h=v6.6-rc1#n767
->>>>>
->>>>>>
->>>>>> Bart
->>>>>>
->>>>>>> 2) Or should I use something else in hte matching function instead of fwnode so
->>>>>>> to avoid adding above line in the gpio driver?
->>>>>>>
->>>>>>>>
->>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> Bart
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>
->>>>>>>
->>>>>
->>>
-> 
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGFucyBkZSBHb2VkZSA8
+aGRlZ29lZGVAcmVkaGF0LmNvbT4NCj4gU2VudDogRnJpZGF5LCBPY3RvYmVyIDYsIDIwMjMgMTow
+NyBQTQ0KPiBUbzogTGltaW5nIFN1biA8bGltaW5nc0BudmlkaWEuY29tPjsgVmFkaW0gUGFzdGVy
+bmFrDQo+IDx2YWRpbXBAbnZpZGlhLmNvbT47IERhdmlkIFRob21wc29uIDxkYXZ0aG9tcHNvbkBu
+dmlkaWEuY29tPjsgTWFyaw0KPiBHcm9zcyA8bWFya2dyb3NzQGtlcm5lbC5vcmc+OyBEYW4gQ2Fy
+cGVudGVyIDxkYW4uY2FycGVudGVyQGxpbmFyby5vcmc+DQo+IENjOiBwbGF0Zm9ybS1kcml2ZXIt
+eDg2QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJq
+ZWN0OiBSZTogW1BBVENIIHYxIDEvMV0gcGxhdGZvcm0vbWVsbGFub3g6IG1seGJmLXRtZmlmbzog
+Rml4IGEgd2FybmluZw0KPiBtZXNzYWdlDQo+IA0KPiBIaSBMaW1pbmcsDQo+IA0KPiBPbiAxMC82
+LzIzIDE3OjUwLCBMaW1pbmcgU3VuIHdyb3RlOg0KPiA+IFRoYW5rcyBIYW5zLg0KPiA+DQo+ID4g
+QmVsb3cgaXMgdGhlIGxvZ2ljOg0KPiA+DQo+ID4gSVNfVlJJTkdfRFJPUCgpIGlzIE9OTFkgc2V0
+IHRvIFRSVUUgZm9yIFJ4LCB3aGljaCBpcyBkb25lIGluIHR3byBwbGFjZXM6DQo+ID4gTGluZSA2
+OTY6ICAqZGVzYyA9ICZ2cmluZy0+ZHJvcF9kZXNjOw0KPiA+IExpbmUgNzQyOiBkZXNjID0gJnZy
+aW5nLT5kcm9wX2Rlc2M7DQo+ID4NCj4gPiBTbyBsaW5lIDYzNCBiZWxvdyB3aWxsIG5ldmVyIGhh
+cHBlbiB3aGVuIElTX1ZSSU5HX0RST1AoKSBpcyBUUlVFIGR1ZSB0aGUNCj4gY2hlY2tpbmcgb2Yg
+bGluZSA2MzMuDQo+ID4gNjMzICAgICAgICAgaWYgKCFpc19yeCkNCj4gPiAgNjM0ICAgICAgICAg
+ICAgICAgICB3cml0ZXEoZGF0YSwgZmlmby0+dHguZGF0YSk7DQo+ID4NCj4gPiBQbGVhc2UgY29y
+cmVjdCBtZSBpZiBpdCdzIG15IG1pc3VuZGVyc3RhbmRpbmcuDQo+IA0KPiBJZiBJU19WUklOR19E
+Uk9QKCkgaXMgT05MWSBzZXQgdG8gVFJVRSBmb3IgUngsIHRoZW4gaXQNCj4gc2hvdWxkIHNpbXBs
+eSAqbm90KiBiZSBjaGVja2VkICphdCBhbGwqIGluIHRoZSB0eCBwYXRocy4NCg0KSVNfVlJJTkdf
+RFJPUCgpIGl0c2VsZiBpcyBhY3R1YWxseSBub3QgY2hlY2tlZCBpbiB0aGUgVHggcGF0aC4gIEl0
+IGlzIHRoZSAiISBJU19WUklOR19EUk9QKCkiIHRoYXQgY2hlY2tzIHRoZSBSeC9UeCwgc29tZXRo
+aW5nIGxpa2U6DQoNCmlmICghSVNfVlJJTkdfRFJPUCh2cmluZykpIHsNCglpZiAoaXNfcngpDQoJ
+CS4uLg0KCWVsc2UNCgkJLi4uDQp9DQoNClRoZSByZWFzb24gaXMgdGhhdCBJIHRob3VnaHQgd2Ug
+bWlnaHQgcmV1c2UgdGhlICcgSVNfVlJJTkdfRFJPUCcgZm9yIFR4IGxhdGVyLg0KDQpIb3dldmVy
+LCBpZiB0aGUgbG9naWMgbG9va3MgY29uZnVzaW5nLCBJIGNvdWxkIHJldmlzZSBpdCB0byBzb21l
+dGhpbmcgbGlrZToNCg0KaWYgKGlzX3J4KSB7DQoJaWYgKCFJU19WUklOR19EUk9QKHZyaW5nKSkg
+DQoJCS4uLg0KfSBlbHNlIHsNCgkJLi4uDQp9DQoNClRoYW5rcy4NCj4gDQo+IEp1c3Qgc2V0dGlu
+ZyBkYXRhID0gMCBpcyBzaW1wbHkgcGFwZXJpbmcgb3ZlciB0aGUgd2FybmluZw0KPiB3aXRob3V0
+IGFjdHVhbGx5IGZpeGluZyBhbnl0aGluZy4NCj4gDQo+IFJlZ2FyZHMsDQo+IA0KPiBIYW5zDQo+
+IA0KPiANCj4gDQo+IA0KPiA+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9t
+OiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPg0KPiA+PiBTZW50OiBGcmlkYXks
+IE9jdG9iZXIgNiwgMjAyMyA4OjU0IEFNDQo+ID4+IFRvOiBMaW1pbmcgU3VuIDxsaW1pbmdzQG52
+aWRpYS5jb20+OyBWYWRpbSBQYXN0ZXJuYWsNCj4gPj4gPHZhZGltcEBudmlkaWEuY29tPjsgRGF2
+aWQgVGhvbXBzb24gPGRhdnRob21wc29uQG52aWRpYS5jb20+Ow0KPiBNYXJrDQo+ID4+IEdyb3Nz
+IDxtYXJrZ3Jvc3NAa2VybmVsLm9yZz47IERhbiBDYXJwZW50ZXIgPGRhbi5jYXJwZW50ZXJAbGlu
+YXJvLm9yZz4NCj4gPj4gQ2M6IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjEg
+MS8xXSBwbGF0Zm9ybS9tZWxsYW5veDogbWx4YmYtdG1maWZvOiBGaXggYSB3YXJuaW5nDQo+ID4+
+IG1lc3NhZ2UNCj4gPj4NCj4gPj4gSGkgTGltaW5nLA0KPiA+Pg0KPiA+PiBPbiAxMC81LzIzIDE0
+OjE4LCBMaW1pbmcgU3VuIHdyb3RlOg0KPiA+Pj4gVGhpcyBjb21taXQgZml4ZXMgdGhlIHNtYXRj
+aCBzdGF0aWMgY2hlY2tlciB3YXJuaW5nIGluDQo+ID4+PiBtbHhiZl90bWZpZm9fcnh0eF93b3Jk
+KCkgd2hpY2ggY29tcGxhaW5zIGRhdGEgbm90IGluaXRpYWxpemVkIGF0DQo+ID4+PiBsaW5lIDYz
+NCB3aGVuIElTX1ZSSU5HX0RST1AoKSBpcyBUUlVFLiBUaGlzIGlzIG5vdCBhIHJlYWwgYnVnIHNp
+bmNlDQo+ID4+PiBsaW5lIDYzNCBpcyBmb3IgVHggd2hpbGUgSVNfVlJJTkdfRFJPUCgpIGlzIG9u
+bHkgc2V0IGZvciBSeC4gU28gdGhlcmUNCj4gPj4+IGlzIG5vIGNhc2UgdGhhdCBsaW5lIDYzNCBp
+cyBleGVjdXRlZCB3aGVuIElTX1ZSSU5HX0RST1AoKSBpcyBUUlVFLg0KPiA+Pj4NCj4gPj4+IFRo
+aXMgY29tbWl0IGluaXRpYWxpemVzIHRoZSBsb2NhbCBkYXRhIHZhcmlhYmxlIHRvIGF2b2lkIHVu
+bmVjZXNzYXJ5DQo+ID4+PiBjb25mdXNpb24gdG8gdGhvc2Ugc3RhdGljIGFuYWx5emluZyB0b29s
+cy4NCj4gPj4+DQo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBMaW1pbmcgU3VuIDxsaW1pbmdzQG52aWRp
+YS5jb20+DQo+ID4+PiAtLS0NCj4gPj4+ICBkcml2ZXJzL3BsYXRmb3JtL21lbGxhbm94L21seGJm
+LXRtZmlmby5jIHwgMiArLQ0KPiA+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwg
+MSBkZWxldGlvbigtKQ0KPiA+Pj4NCj4gPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3Jt
+L21lbGxhbm94L21seGJmLXRtZmlmby5jDQo+ID4+IGIvZHJpdmVycy9wbGF0Zm9ybS9tZWxsYW5v
+eC9tbHhiZi10bWZpZm8uYw0KPiA+Pj4gaW5kZXggZjM2OTZhNTRhMmJkLi5jY2M0YjUxZDMzNzkg
+MTAwNjQ0DQo+ID4+PiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL21lbGxhbm94L21seGJmLXRtZmlm
+by5jDQo+ID4+PiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL21lbGxhbm94L21seGJmLXRtZmlmby5j
+DQo+ID4+PiBAQCAtNTk1LDggKzU5NSw4IEBAIHN0YXRpYyB2b2lkIG1seGJmX3RtZmlmb19yeHR4
+X3dvcmQoc3RydWN0DQo+ID4+IG1seGJmX3RtZmlmb192cmluZyAqdnJpbmcsDQo+ID4+PiAgew0K
+PiA+Pj4gIAlzdHJ1Y3QgdmlydGlvX2RldmljZSAqdmRldiA9IHZyaW5nLT52cS0+dmRldjsNCj4g
+Pj4+ICAJc3RydWN0IG1seGJmX3RtZmlmbyAqZmlmbyA9IHZyaW5nLT5maWZvOw0KPiA+Pj4gKwl1
+NjQgZGF0YSA9IDA7DQo+ID4+PiAgCXZvaWQgKmFkZHI7DQo+ID4+PiAtCXU2NCBkYXRhOw0KPiA+
+Pj4NCj4gPj4+ICAJLyogR2V0IHRoZSBidWZmZXIgYWRkcmVzcyBvZiB0aGlzIGRlc2MuICovDQo+
+ID4+PiAgCWFkZHIgPSBwaHlzX3RvX3ZpcnQodmlydGlvNjRfdG9fY3B1KHZkZXYsIGRlc2MtPmFk
+ZHIpKTsNCj4gPj4NCj4gPj4NCj4gPj4gVGhpcyB3aWxsIGZpeCB0aGUgd2FybmluZyBidXQgbm90
+IHRoZSBpc3N1ZSBhdCBoYW5kLiBBcyBEYW4gcG9pbnRlZA0KPiA+PiBvdXQgaW4gaGlzIG9yaWdp
+bmFsIGJ1ZyByZXBvcnQsIHRoZSBpc3N1ZSBpcyB0aGF0IGFmdGVyOg0KPiA+Pg0KPiA+PiA3ODAz
+NGNiZWNlNzkgKCJwbGF0Zm9ybS9tZWxsYW5veDogbWx4YmYtdG1maWZvOiBEcm9wIHRoZSBSeCBw
+YWNrZXQgaWYgbm8NCj4gPj4gZGVzY3JpcHRvcnMiKQ0KPiA+Pg0KPiA+PiBXZSBub3cgaGF2ZSB0
+aGlzIElTX1ZSSU5HX0RST1AoKSBjaGVjayBpbiB0aGUgcGF0aCwgd2hpY2ggZGVzcGl0ZQ0KPiA+
+PiB0aGUgc3ViamVjdCB3cml0ZXEoZGF0YSwgZmlmby0+dHguZGF0YSk7aXMgY3VycmVudGx5IGJl
+aW5nIGFwcGxpZWQgdG8gYm90aCByeA0KPiBhbmQNCj4gPj4gdHggdnJpbmctcw0KPiA+PiBhbmQg
+d2hlbiB0aGlzIHJldHVybnMgdHJ1ZSB0aGUgbWVtY3B5IGZyb20gdGhlIHJpbmcgdG8gJmRhdGEN
+Cj4gPj4gd2lsbCBub3QgaGFwcGVuLCBidXQgdGhlIGNvZGUgd2lsbCBzdGlsbCBkbzoNCj4gPj4N
+Cj4gPj4gd3JpdGVxKGRhdGEsIGZpZm8tPnR4LmRhdGEpOw0KPiA+Pg0KPiA+PiBTbyB5b3UgbWF5
+IGhhdmUgc2lsZW5jZWQgdGhlIHdhcm5pbmcgbm93LCBidXQgeW91IHdpbGwgc3RpbGwgd3JpdGUN
+Cj4gPj4gZGF0YSBub3QgY29taW5nIGZyb20gdGhlIHZyaW5nIHRvIHRyYW5zbWl0LiBUaGUgb25s
+eSBkaWZmZXJlbmNlDQo+ID4+IGlzIHlvdSBhcmUgbm93IGd1YXJhbnRlZWQgdG8gd3JpdGUgYWxs
+IHplcm9lcy4NCj4gPj4NCj4gPj4gTm90ZSBhbm90aGVyIG9sZGVyIGlzc3VlIGlzIHRoYXQgaWYg
+eW91IGhpdCB0aGUgbm90IGVub3VnaCBzcGFjZQ0KPiA+PiBwYXRoOg0KPiA+Pg0KPiA+PiAgICAg
+ICAgfSBlbHNlIHsNCj4gPj4gICAgICAgICAgICAgICAgIC8qIExlZnRvdmVyIGJ5dGVzLiAqLw0K
+PiA+PiAgICAgICAgICAgICAgICAgaWYgKCFJU19WUklOR19EUk9QKHZyaW5nKSkgew0KPiA+PiAg
+ICAgICAgICAgICAgICAgICAgICAgICBpZiAoaXNfcngpDQo+ID4+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgbWVtY3B5KGFkZHIgKyB2cmluZy0+Y3VyX2xlbiwgJmRhdGEsDQo+ID4+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxlbiAtIHZyaW5nLT5jdXJf
+bGVuKTsNCj4gPj4gICAgICAgICAgICAgICAgICAgICAgICAgZWxzZQ0KPiA+PiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIG1lbWNweSgmZGF0YSwgYWRkciArIHZyaW5nLT5jdXJfbGVu
+LA0KPiA+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsZW4gLSB2cmlu
+Zy0+Y3VyX2xlbik7DQo+ID4+ICAgICAgICAgICAgICAgICB9DQo+ID4+ICAgICAgICAgICAgICAg
+ICB2cmluZy0+Y3VyX2xlbiA9IGxlbjsNCj4gPj4gICAgICAgICB9DQo+ID4+DQo+ID4+IFRoZW4g
+ZXZlbiBpZiBJU19WUklOR19EUk9QKCkgcmV0dXJucyB0cnVlIHlvdSBhcmUgb25seSBpbml0aWFs
+aXppbmcgc29tZQ0KPiBieXRlcw0KPiA+PiBvZiB0aGUgOCBieXRlcyBkYXRhIHZhcmlhYmxlIGFu
+ZCB0aGUgb3RoZXIgYnl0ZXMgd2lsbCBzdGF5IGF0IHdoYXRldmVyDQo+IHJhbmRvbQ0KPiA+PiB2
+YWx1ZSB0aGV5IGhhZCBiZWZvcmUgYW5kIHlvdSBlbmQgdXAgd3JpdGluZyB0aGlzIHJhbmRvbSBi
+eXRlcyB3aGVuDQo+IGRvaW5nOg0KPiA+Pg0KPiA+PiB3cml0ZXEoZGF0YSwgZmlmby0+dHguZGF0
+YSk7DQo+ID4+DQo+ID4+IFJlZ2FyZHMsDQo+ID4+DQo+ID4+IEhhbnMNCj4gPj4NCj4gPj4NCj4g
+Pj4NCj4gPg0KDQo=
