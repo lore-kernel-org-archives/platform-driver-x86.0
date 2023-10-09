@@ -2,376 +2,380 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DE8E95A67
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  8 Oct 2023 18:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B91E95A8E
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Oct 2023 04:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229945AbjJHSle (ORCPT
+        id S1345049AbjJIE6f (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 8 Oct 2023 14:41:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53920 "EHLO
+        Mon, 9 Oct 2023 00:58:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234265AbjJHSld (ORCPT
+        with ESMTP id S1345035AbjJIE6f (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 8 Oct 2023 14:41:33 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB3E4C6;
-        Sun,  8 Oct 2023 11:41:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
- t=1696790472; x=1697395272; i=w_armin@gmx.de;
- bh=sz8J85AskNMinqsJofP0YVLXBsq3gB71ah+SNjP6zFo=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=VU4kWBjjS3b9mm+TWrXwGCFFzPjA4kZHUniUrWcSiO8Rn/RZc3TKyL85AQcnhjvxHAfZbFh5Cku
- kR9HLAcBpI76xghmemlm/sS24tUI3hLkC5vAzkH8VU90b7CLQqM2Al6OwMqk40fafgfHFE8uLfLPF
- 8K5GdIeyxjS0hdPVZlJr2NjFixtuReteSZDjgAmuglpUzej98PvIS/o5Ut4VKQkP8NME9OTGn7TMw
- TpG+h2sVNwMxA+3X6GGO9AXZRHFWHL45lPhv/BzZlpwE5GDAPPeIdB5jFzjrwF441Mrmb1OdKHvw0
- kWyDQX6Ao2rOcYJeVHBcCf1MDBhe8t3lumoA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M26vL-1qs2cY3lgv-002Xwk; Sun, 08
- Oct 2023 20:41:11 +0200
-Message-ID: <247119aa-651f-4320-8522-971e2a6e4054@gmx.de>
-Date:   Sun, 8 Oct 2023 20:41:07 +0200
-MIME-Version: 1.0
+        Mon, 9 Oct 2023 00:58:35 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2061.outbound.protection.outlook.com [40.107.244.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07674A4;
+        Sun,  8 Oct 2023 21:58:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mfXwyT1/o7np+8wTayZ/97u9bzhrN/HbJUYyuN/lkTT+PGSLj1pdRNFaYTVuvLCSx/2CBCp3QdylWDFGy3Br5fbyl7iUX2z1QaeDmdCQyGLCuEH7maPEi1hcyV6WY+N7VwhrgsAR1gfuPTdS6HD8AdyMifUCoFv4cnt9rYtBfNaw6EyAGunYkEuZR4Ma5k9ZJfgju+44viycBoiOh1tNcMedTNcGxl220hCd5EEsAA1pFtLvI7QX016oO1p8ltfRUScde2qVJWsiOlbepsRB+P72IxWzoAplY70SCBh6SOInG2kW12GSd3nrzAsISXd1ePVts5iOYOivkGqLzalEjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xOGeVEtvtdpuFsQ/tTfQeE7E0+jAxHpxRNgZNCrCk8s=;
+ b=JiqiqfVXacNArAFGUvuPN6gl4aa9zFN3hGis6BBj/165zqvP7WNW5aaOoRe72yjQqSUokQ7YF4kqX2pWZbgnifTieVa3PvMm+9erMq8D/zxWUrkTxQ2g/jtv5ny1Iv4zbRPdar/WBXlsRARWrHvmsGoOZbY10PbAkOkd1yPaFbdP4q4vFd5nxP9R2VnMmOeULA8zGQLIczAmuBOLIqOqW9m6LWmObTLjcTJD8P347zRTCJXFbMaNQb/Y1kyJXhZT/hL8/FbI2ij/vW1Ha2jtI6fXuZy+S+WNZPO0vhKa8b7j9x8yPjlAuDa/Flw/HiRsTOCuM8BQNt6Yi/zYjUeoQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xOGeVEtvtdpuFsQ/tTfQeE7E0+jAxHpxRNgZNCrCk8s=;
+ b=K3Ad8IMhRnpeVhix5StyxclqfHs0vvc9YBr1fhbklNqEDjZZ2eqosv8FQ/tThF6F8xvaT1c690dFmMD6cZEiTmKmdQnKPxriUeRW0iafPMUgkCWeHd/LIAFF2ZhvTlOY3n6TkRhrlK5MfiUidlvuLoccBb2ImdmaGrnfCw5fqDM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
+ by DM4PR12MB5962.namprd12.prod.outlook.com (2603:10b6:8:69::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6838.41; Mon, 9 Oct 2023 04:58:30 +0000
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::19d3:7b27:a6fc:95c5]) by BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::19d3:7b27:a6fc:95c5%4]) with mapi id 15.20.6863.032; Mon, 9 Oct 2023
+ 04:58:30 +0000
+Message-ID: <01eef1b0-8695-4284-8a4a-973826f2c3cc@amd.com>
+Date:   Mon, 9 Oct 2023 10:28:16 +0530
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: support to store/show powermode for Inspur
-To:     Ai Chao <aichao@kylinos.cn>, hdegoede@redhat.com,
-        ilpo.jarvinen@linux.intel.com, markgross@kernel.org
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20231008092149.967239-1-aichao@kylinos.cn>
+Subject: Re: [PATCH v2 01/16] platform/x86/amd/pmf: Add PMF TEE interface
 Content-Language: en-US
-From:   Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20231008092149.967239-1-aichao@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:0QOTPdnYCx06R7s7cDg1KnOXOLOPMdEerVopKQ9hgGquJqixOay
- JHkEniGar/jrvdlf8DGGmWfeo+GmxFbAkOv32wZBLtyPknRFVEjqRCHFHjNknJnBT0SA0k9
- 2jgpiZYhCbcPheqshkrPJnSQMLysGIYQ/OsNJ2rtUAE8BLVzfP3S8Mu7s2alzEyUuA3dPmt
- sW5ekTTyGMv9K9ofPYL6w==
-UI-OutboundReport: notjunk:1;M01:P0:2/V7JAdwNY4=;DfFvQvYoYiAb6luN5JcpTWBwBzw
- wVa02vtkhaZeZRnBtE/BcgEr4JFuL74xzfTE2Vxs+CEiax8XK+en388VwzVoxNM8j/1tOTBLa
- Zj5/k+QLF03iaZeW78B1b0iYqWBdg9H4pPHqD+D724z3BAy6bNfx4wJHHaZcOO2tblHm7/J99
- TwxX2VqZycX09+dxC39MwAW72wnSL6bJMAOvPx820ELr2PPnvr1eg43FCK4uIVlwQtCMxtU0V
- EmYf0JVmjoepwn38OB7ZuKagScha2LyKnIpGRPYjMcSvx1vptCe67Foxcwle1xg0Ia19vfKkf
- x/mNTV28g6ZAzD1pFRiZC5r5n732tUjD3w1jeDFPYvjXAMl1kzUVClm0UXwWTaaoigHf2upxl
- sPyhpO/2lXX/k2UPTnW5CZa6x8SJ6Gdb1I5M5+wuZn+kh/aE4P7QyP/Igk68tWISOMPAgUZh2
- xHvtgiTbqeG/6Zz17NXQ53yZUa/WOmcgviGPByXXp21nff/73K8dvDRnHT3sQPsc1XkByRcsX
- qRa8sDENWraFgHkpgSPeLyjcQVGEy8UDOvKrbm0caIcF5gZSNeuzsi4GNQfvqSctovxPZYdkS
- bI3H479J7EMy0Le3tGk86D0XNuPpe+oQJinFWcU9pL/dgsNp0/ZMhRqQAFxvxGs+Dr2oPYlWq
- iaZ1c2vWRhWPZvOHOTUjhPU88DV5Mzd1/eHht9uktfK8ti+ETDISEkP40tJG3gZnQN3UP84SC
- vIKSka2kMLSliW3S5pZ5uSNZO52/miEc8xTjW0BzxAu8g4M4IBHR7WmprKA6baftiJ1NME7SN
- kM7xQ7gj6Qp0/MkkZjOmXHPJkG/dOtXOsJiNjQenBVx2nbxW17LObA2plysK6gtomtlOhRQJ2
- CWWYHKpuwNZ5ReCfIk3W0+wtz/gjY77dWwDJHugrM7NRUcDySzAIW2PPjsp2ANCm3RiLlTuAW
- 4e7PHP/M1Mteanxtk8L/NUCnL+8=
+To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        basavaraj.natikar@amd.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
+        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
+        daniel@ffwll.ch, Patil.Reddy@amd.com, mario.limonciello@amd.com,
+        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+References: <20230930083715.2050863-1-Shyam-sundar.S-k@amd.com>
+ <20230930083715.2050863-2-Shyam-sundar.S-k@amd.com>
+ <584aebd-5c89-d085-275-bb79f93429f@linux.intel.com>
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+In-Reply-To: <584aebd-5c89-d085-275-bb79f93429f@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN2PR01CA0202.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:e9::10) To BL1PR12MB5176.namprd12.prod.outlook.com
+ (2603:10b6:208:311::19)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|DM4PR12MB5962:EE_
+X-MS-Office365-Filtering-Correlation-Id: a759797a-2f18-4d4a-2b29-08dbc8846122
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 9jlfldgE53epjKJ5TjPYrYGyjYKbTBPM0IbcHajoSoKuqGTy+1dxbngHn+H9DOeA0j22SeT/kg9nvFeuspOXkLvMtkvY4iZeqqNbR2HWQ6FyV4qevjGgl6acXftDvbhbzUTPBMVMCKsV4Qp9md/5sW2PRyCq0nWpJHQvWIc3TgRsuYAkZY5eiMSUflU9DX+31lKGG1N6/e8GyHoRo8HZvaB10YH5+Pw+pYyVAIYAmuq3AYjujJ1s4//TQF9KkfO5K11L3S5rwdMi70CQz3Eb4koRCUosPBiTp2Yh+fRPWMIFdig2Y4UqwoRbB0ZouQ2c5c13EQ1Cz4XhDz+oGiJ04iaF0FQZMefxaYPqKyNYNHxRfElr0Rr/tWYMpwYrZxQLa9lJnc9NUlBPF6K0dhQWR99E0er3i0WNJxj3vfZ2h8X+U0oA+hBo9ZY0UaPNie3bWjSSIOkw+wBE6+fHsSUDk0/vzmXaXd6JWPi5P7IAPf4WANWNBLfh4meIfKm6j8S+nEpqoSvAg8c5UOm4DhZ000GoSCAit78AGfBo4vZLs66AYMPmD7DUgzmSrXj4IruyTd7C7f+OckdrTwXu7r3fqNp7XXNapSye8dwRUqklY9p7lTs8+P4UO/cblFKpRbp0Dm+Pq/U4/a7lDRsP9/8mpA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(366004)(396003)(346002)(376002)(230922051799003)(451199024)(1800799009)(186009)(64100799003)(6512007)(53546011)(2616005)(478600001)(6506007)(6486002)(6666004)(26005)(2906002)(83380400001)(7416002)(66574015)(5660300002)(66946007)(66556008)(66476007)(4326008)(8676002)(41300700001)(316002)(8936002)(6916009)(36756003)(31696002)(86362001)(38100700002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?T3BrVWlIYVRlSUZ2MGhleFNScGtIWHUzUDhLdzF5a2ZZUFhDU0NQRytBdG4z?=
+ =?utf-8?B?SkVrbWtaWis3Z1dBeHRnakVxQzhlYTZWdHJESisrV2Z1RjdLaG9xRVFOSk5r?=
+ =?utf-8?B?bVgwOVRIdldnYkxWMWxHdkhEaUhlN1NTYVo1WFpqV3lIUS96WUtnNlROM3FW?=
+ =?utf-8?B?OGNlVitPMmRJQWFyUXpoSFN5MmFzbWUxSjBmUnNxRlpud2FkUWxlUHBKYmJL?=
+ =?utf-8?B?UmllSWdKa2M4U0c3ZmozQTh3aFk0MG93bm9xRWZ0TkcyNFZ4dHN5YnFraFdQ?=
+ =?utf-8?B?REZhUnpHdEdhY2hnTUMwdjZ6b1ZHWDJTUC9FcnpsTURPUUpCM0c4bTIraDZ0?=
+ =?utf-8?B?M0tEVFdkaGx0VU11SnRuR0pYazE2a0R5aTg0S0VVbDlDdXQvMDF6ZWhVS2lq?=
+ =?utf-8?B?VG13b1c3V2NLQlJrakpFRXlUNm5VeDBodVVpaGFVSUJFRUQ0ZlNiTmJjUDVi?=
+ =?utf-8?B?U0dZVUpXSERLR3FlMjRhcVhGMDhKVUoyYmRtQUVvdTloRFBJeGdtbytncUZT?=
+ =?utf-8?B?QXE3ZVoyOUFZdi9WaTBpTjYxcDhXc1k1eGZxQy9lVHpZSkhIUC9IeGlleHFB?=
+ =?utf-8?B?aUpjTlFQajJQbEpvdEZLQmoxSS9KU01mTlp1OW5kQ2Y1SGpkQjZpYVp0Z2ZO?=
+ =?utf-8?B?aVB5Z2JsS3I5VU8zM1ZncFRmWCs5QUZ5SngzTG5VWHY1ZnVQZ2dGR24zNjh2?=
+ =?utf-8?B?UzhNbzFlZytOYkdDanMxYTNVR0hsVDJkVGcwUndSeGxraFlIVm1qTXhrZ1FP?=
+ =?utf-8?B?V3RvRmJBdnBjdVpYYVgwdkN4YzBsanIzeENxOXA5UlVyb2x3QTBaaGNGNmZJ?=
+ =?utf-8?B?RG5aSXFVazdWMXRIVWhtc3Fha055ZERhZ1lkOFpseWM0dVg4WlA5eFlIT2JB?=
+ =?utf-8?B?amZjQURvdjRmWC9yeW0yZDdnTzVMQlYyVU5pbllYSzB3eGtFU1ZGYVNwU0x1?=
+ =?utf-8?B?RTlhYWZvYjcxZUo0bUN4cktiZXg5V0U5cW9QU2o2UTlVWi91N3FLRUhMRTA4?=
+ =?utf-8?B?SWN6V251cHFoK1Zxd1J2QXR5RUR0VmFJVjFIZlFpZGdyYVlUazlES0dPeHBw?=
+ =?utf-8?B?Zkd2eWNQallFOW5aQnUzaVU2ajNhTlVmZzh3WlRKWFFocW5ZWkhQTW9TTGph?=
+ =?utf-8?B?ZDBVa2YyL2pKWnpqL3QvanVYRkdpRHlTZElsNjY0by9FTGFqVGJpMlBocVpt?=
+ =?utf-8?B?RWlyOVhFOXlWNXh1MVUxSDExM3BNWDVvb1g0Sjc3eVpUSUVFcHIzQTI2R2ky?=
+ =?utf-8?B?VzJFbVA5VS9nOENpUHJub3NtTXlGUHBDbXBCVnB2UEJYL01uenRTdUROVkFm?=
+ =?utf-8?B?a0t4cVoxRzRpbHZieWltbkFVL2trd1d4YklJV2duazJCczBValVlRmZaOGR5?=
+ =?utf-8?B?SFdvRHJiZHFmY01waGJoTVFBa1NKeUJlT3owTFJTY0VOaEIyVlpSNUFGWXF1?=
+ =?utf-8?B?ZExmNlFYeC9OLzZLZ3pJWjhLZUFuOWdoWkhhMWxveXExcDFVaWd4ZS9Hb3o5?=
+ =?utf-8?B?cGFXQWxtUlB0UlRMQXlhczNLb3VkWXZEenZaelo0V0hKR2EwYlJzY01TRTNS?=
+ =?utf-8?B?ZUhHbWxUZlhHN05XazhxV2hnT3lkcFZTcDhMYkVva1Z3bFBHN1dVOVE5R3Q1?=
+ =?utf-8?B?ZTJMMS80RUxYb0pPY05aUmt3dVpvSm92eElMMVJvd2QxM1paNVh1bTllYUxM?=
+ =?utf-8?B?YWtvbCtDTjdlZ2l4MU04eTZqK0N0UGZZOStpb1VlZWhoTnQ1elFtNnhTUW9E?=
+ =?utf-8?B?Q0dzSkh6WkNOMlhsUnB4L1J3dDJXWnFyM2NmTDdhQlRLbFlUVWRPMWxYQXVQ?=
+ =?utf-8?B?c2lpNk5Fb0MzclBkS29MaVpVNVZGOVB1V3hlbXh5YjJhUUFtY0pmcWxRRU1r?=
+ =?utf-8?B?OFVKVENGUGM3c3hDMkd1NkJheVdYdzhyZUQ5RmZ1VG5JL2xsSm9jeHJlTkhY?=
+ =?utf-8?B?SDJWdnZXWC9YTFhRZVFnU0lrVEhNY3hoY1pRSjZ2VER6YkorYytneUQxRWdT?=
+ =?utf-8?B?Z1BYUi9CRE9TY0gyY1hUaEpHM2VFYmNqZHhIYTBSdFo3aWgvSUJqQ1ZqMm8x?=
+ =?utf-8?B?YUhRNkdNY2VUbmZTaGpjNEN5L2V6WGllY2JEUVRWMEg4Sy94ZlR0QW5TUndj?=
+ =?utf-8?Q?zlkUKsTKe85PuaK5HO4pGBGcS?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a759797a-2f18-4d4a-2b29-08dbc8846122
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2023 04:58:29.7369
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ii0UvTA6RtPzdwpK1FJXTbfvv5avD1jGTMbl06enedJ1zW+f5L+tCvu9xVcAiM60UaAiuqR1auYLApSpPo9NOg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5962
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 08.10.23 um 11:21 schrieb Ai Chao:
 
-> Support to store/show powermode for Inspur.
->
-> Signed-off-by: Ai Chao <aichao@kylinos.cn>
-> ---
->   drivers/platform/x86/Kconfig      |  11 ++
->   drivers/platform/x86/Makefile     |   3 +
->   drivers/platform/x86/inspur-wmi.c | 180 ++++++++++++++++++++++++++++++
->   3 files changed, 194 insertions(+)
->   create mode 100644 drivers/platform/x86/inspur-wmi.c
->
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 2a1070543391..9e565ee01a9f 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -988,6 +988,17 @@ config TOUCHSCREEN_DMI
->   	  the OS-image for the device. This option supplies the missing info.
->   	  Enable this for x86 tablets with Silead or Chipone touchscreens.
->
-> +config INSPUR_WMI
-> +	tristate "Inspur WMI hotkeys driver"
-> +	depends on ACPI_WMI
-> +	depends on INPUT
-> +	help
-> +	This driver provides support for Inspur WMI hotkeys.
-> +	It's support to store/show powermode.
-> +
 
-Maybe "It supports to change the power mode."? A short explanation that th=
-is power mode
-does would also be helpful here.
+On 10/4/2023 4:20 PM, Ilpo Järvinen wrote:
+> On Sat, 30 Sep 2023, Shyam Sundar S K wrote:
+> 
+>> AMD PMF driver loads the PMF TA (Trusted Application) into the AMD
+>> ASP's (AMD Security Processor) TEE (Trusted Execution Environment).
+>>
+>> PMF Trusted Application is a secured firmware placed under
+>> /lib/firmware/amdtee gets loaded only when the TEE environment is
+>> initialized. Add the initial code path to build these pipes.
+>>
+>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> ---
+>>  drivers/platform/x86/amd/pmf/Makefile |   3 +-
+>>  drivers/platform/x86/amd/pmf/core.c   |  11 ++-
+>>  drivers/platform/x86/amd/pmf/pmf.h    |  16 ++++
+>>  drivers/platform/x86/amd/pmf/tee-if.c | 112 ++++++++++++++++++++++++++
+>>  4 files changed, 138 insertions(+), 4 deletions(-)
+>>  create mode 100644 drivers/platform/x86/amd/pmf/tee-if.c
+>>
+>> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
+>> index fdededf54392..d2746ee7369f 100644
+>> --- a/drivers/platform/x86/amd/pmf/Makefile
+>> +++ b/drivers/platform/x86/amd/pmf/Makefile
+>> @@ -6,4 +6,5 @@
+>>  
+>>  obj-$(CONFIG_AMD_PMF) += amd-pmf.o
+>>  amd-pmf-objs := core.o acpi.o sps.o \
+>> -		auto-mode.o cnqf.o
+>> +		auto-mode.o cnqf.o \
+>> +		tee-if.o
+>> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+>> index 78ed3ee22555..68f1389dda3e 100644
+>> --- a/drivers/platform/x86/amd/pmf/core.c
+>> +++ b/drivers/platform/x86/amd/pmf/core.c
+>> @@ -309,8 +309,11 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
+>>  		dev_dbg(dev->dev, "SPS enabled and Platform Profiles registered\n");
+>>  	}
+>>  
+>> -	/* Enable Auto Mode */
+>> -	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+>> +	if (amd_pmf_init_smart_pc(dev)) {
+>> +		/* Enable Smart PC Solution builder */
+>> +		dev_dbg(dev->dev, "Smart PC Solution Enabled\n");
+>> +	} else if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+>> +		/* Enable Auto Mode */
+> 
+> I'm pretty certain neither of these two comments add any information to 
+> what's readily visible from the code itself so they can be dropped.
+> 
+>>  		amd_pmf_init_auto_mode(dev);
+>>  		dev_dbg(dev->dev, "Auto Mode Init done\n");
+>>  	} else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC) ||
+>> @@ -330,7 +333,9 @@ static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
+>>  		amd_pmf_deinit_sps(dev);
+>>  	}
+>>  
+>> -	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+>> +	if (dev->smart_pc_enabled) {
+>> +		amd_pmf_deinit_smart_pc(dev);
+>> +	} else if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+>>  		amd_pmf_deinit_auto_mode(dev);
+>>  	} else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC) ||
+>>  			  is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_DC)) {
+>> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+>> index deba88e6e4c8..02460c2a31ea 100644
+>> --- a/drivers/platform/x86/amd/pmf/pmf.h
+>> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+>> @@ -179,6 +179,12 @@ struct amd_pmf_dev {
+>>  	bool cnqf_enabled;
+>>  	bool cnqf_supported;
+>>  	struct notifier_block pwr_src_notifier;
+>> +	/* Smart PC solution builder */
+>> +	struct tee_context *tee_ctx;
+>> +	struct tee_shm *fw_shm_pool;
+>> +	u32 session_id;
+>> +	void *shbuf;
+>> +	bool smart_pc_enabled;
+>>  };
+>>  
+>>  struct apmf_sps_prop_granular {
+>> @@ -389,6 +395,13 @@ struct apmf_dyn_slider_output {
+>>  	struct apmf_cnqf_power_set ps[APMF_CNQF_MAX];
+>>  } __packed;
+>>  
+>> +struct ta_pmf_shared_memory {
+>> +	int command_id;
+>> +	int resp_id;
+>> +	u32 pmf_result;
+>> +	u32 if_version;
+>> +};
+>> +
+>>  /* Core Layer */
+>>  int apmf_acpi_init(struct amd_pmf_dev *pmf_dev);
+>>  void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev);
+>> @@ -433,4 +446,7 @@ void amd_pmf_deinit_cnqf(struct amd_pmf_dev *dev);
+>>  int amd_pmf_trans_cnqf(struct amd_pmf_dev *dev, int socket_power, ktime_t time_lapsed_ms);
+>>  extern const struct attribute_group cnqf_feature_attribute_group;
+>>  
+>> +/* Smart PC builder Layer*/
+> 
+> Missing space.
+> 
+>> +int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev);
+>> +void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev);
+>>  #endif /* PMF_H */
+>> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+>> new file mode 100644
+>> index 000000000000..4db80ca59a11
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+>> @@ -0,0 +1,112 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * AMD Platform Management Framework Driver - TEE Interface
+>> + *
+>> + * Copyright (c) 2023, Advanced Micro Devices, Inc.
+>> + * All Rights Reserved.
+>> + *
+>> + * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> + */
+>> +
+>> +#include <linux/tee_drv.h>
+>> +#include <linux/uuid.h>
+>> +#include "pmf.h"
+>> +
+>> +#define MAX_TEE_PARAM	4
+>> +static const uuid_t amd_pmf_ta_uuid = UUID_INIT(0x6fd93b77, 0x3fb8, 0x524d,
+>> +						0xb1, 0x2d, 0xc5, 0x29, 0xb1, 0x3d, 0x85, 0x43);
+>> +
+>> +static int amd_pmf_amdtee_ta_match(struct tee_ioctl_version_data *ver, const void *data)
+>> +{
+>> +	return ver->impl_id == TEE_IMPL_ID_AMDTEE;
+>> +}
+>> +
+>> +static int amd_pmf_ta_open_session(struct tee_context *ctx, u32 *id)
+>> +{
+>> +	struct tee_ioctl_open_session_arg sess_arg = {};
+>> +	int rc;
+>> +
+>> +	export_uuid(sess_arg.uuid, &amd_pmf_ta_uuid);
+>> +	sess_arg.clnt_login = TEE_IOCTL_LOGIN_PUBLIC;
+>> +	sess_arg.num_params = 0;
+>> +
+>> +	rc = tee_client_open_session(ctx, &sess_arg, NULL);
+>> +	if (rc < 0 || sess_arg.ret != 0) {
+>> +		pr_err("Failed to open TEE session err:%#x, ret:%#x\n", sess_arg.ret, rc);
+> 
+> Print normal -Exx error codes as %d, not %x (rc). I don't know what would 
+> be best to do with sess_arg.ret, TEEC_ERROR_* look like errnos (negative 
+> values) manually converted into u32.
 
-> +	To compile this driver as a module, choose M here: the module
-> +	will be called inspur-wmi.
-> +
->   source "drivers/platform/x86/x86-android-tablets/Kconfig"
->
->   config FW_ATTR_CLASS
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
-le
-> index b457de5abf7d..9285c252757e 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -98,6 +98,9 @@ obj-$(CONFIG_TOSHIBA_WMI)	+=3D toshiba-wmi.o
->   # before toshiba_acpi initializes
->   obj-$(CONFIG_ACPI_TOSHIBA)	+=3D toshiba_acpi.o
->
-> +# Inspur
-> +obj-$(CONFIG_INSPUR_WMI)	+=3D inspur-wmi.o
-> +
->   # Laptop drivers
->   obj-$(CONFIG_ACPI_CMPC)		+=3D classmate-laptop.o
->   obj-$(CONFIG_COMPAL_LAPTOP)	+=3D compal-laptop.o
-> diff --git a/drivers/platform/x86/inspur-wmi.c b/drivers/platform/x86/in=
-spur-wmi.c
-> new file mode 100644
-> index 000000000000..6c4d722e98dc
-> --- /dev/null
-> +++ b/drivers/platform/x86/inspur-wmi.c
-> @@ -0,0 +1,180 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + *  Inspur WMI hotkeys
-> + *
-> + *  Copyright (C) 2018	      Ai Chao <aichao@kylinos.cn>
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/input.h>
-> +#include <linux/module.h>
-> +#include <linux/wmi.h>
-> +
-> +#define WMI_INSPUR_POWERMODE_EVENT_GUID "854FA5AC-58C7-451D-AAB1-57D6F4=
-E6DDD4"
-> +#define WMI_INSPUR_POWERMODE_BIOS_GUID "596C31E3-332D-43C9-AEE9-5854932=
-84F5D"
-> +
-> +enum inspur_wmi_method_ids {
-> +	INSPUR_WMI_GET_POWERMODE =3D 0x02,
-> +	INSPUR_WMI_SET_POWERMODE =3D 0x03,
-> +};
-> +
-> +struct inspur_wmi_priv {
-> +	struct input_dev *idev;
-> +};
-> +
-> +static int inspur_wmi_perform_query(char *guid,
-> +		enum inspur_wmi_method_ids query_id,
-> +		void *buffer, size_t insize, size_t outsize)
-> +{
-> +	union acpi_object *obj;
-> +	int ret =3D 0;
-> +	u32 wmi_outsize;
-> +	struct acpi_buffer input =3D { insize, buffer};
-> +	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> +
-> +	wmi_evaluate_method(guid, 0, query_id, &input, &output);
-> +
+in drivers/tee/amdtee/amdtee_private.h, all the TEEC_* are hex. So
+sess_arg.ret can remain %x? rc I have changed to %d.
 
-Please use wmidev_evaluate_method() instead of the deprecated GUID-based i=
-nterface.
-And check the return value of this function.
-
-> +	obj =3D output.pointer;
-> +	if (!obj)
-> +		return -EINVAL;
-> +
-> +	if (obj->type !=3D ACPI_TYPE_BUFFER) {
-> +		ret =3D -EINVAL;
-> +		goto out_free;
-> +	}
-> +
-> +	/* Ignore output data of zero size */
-> +	if (!outsize)
-> +		goto out_free;
-> +
-> +	wmi_outsize =3D min_t(size_t, outsize, obj->buffer.length);
-
-Please return an error if the size of the returned buffer does not match t=
-he size
-requested by the caller. Otherwise the caller might process bogus values i=
-f the buffer size
-is smaller than requested.
-
-> +	memcpy(buffer, obj->buffer.pointer, wmi_outsize);
-> +
-> +out_free:
-> +	kfree(obj);
-> +	return ret;
-> +}
-> +
-> +static ssize_t powermode_store(struct device *dev,
-> +		struct device_attribute *attr,
-> +		const char *buf, size_t count)
-> +{
-> +	int ret, mode;
-> +
-> +	ret =3D kstrtoint(buf, 0, &mode);
-> +	if (ret)
-> +		return ret;
-> +
-> +	inspur_wmi_perform_query(WMI_INSPUR_POWERMODE_BIOS_GUID,
-> +			INSPUR_WMI_SET_POWERMODE,
-> +			&mode, sizeof(mode), sizeof(mode));
-
-Maybe use a fixed-width integer like u32 here? Also the return value of
-inspur_wmi_perform_query() should be checked.
-
-> +
-> +	return count;
-> +}
-> +
-> +
-> +static ssize_t powermode_show(struct device *dev,
-> +		struct device_attribute *attr,
-> +		char *buf)
-> +{
-> +	int mode =3D 0;
-> +	u8 ret;
-> +	u8 *ret_code;
-> +
-> +	inspur_wmi_perform_query(WMI_INSPUR_POWERMODE_BIOS_GUID,
-> +			INSPUR_WMI_GET_POWERMODE,
-> +			&mode, sizeof(mode), sizeof(mode));
-
-Same as above.
-
-> +	/*
-> +	 *Byte [0]: Return code, 0x0 No error, 0x01 Error
-> +	 *Byte [1]: Power Mode
-> +	 */
-> +	ret_code =3D (u8 *)(&mode);
-> +	ret =3D ret_code[1];
-
-Please check ret_code[0] for 0x01, and return an appropriate error code in=
- such a case.
-
-> +
-> +	return sprintf(buf, "%u\n", ret);
-> +}
-> +
-> +DEVICE_ATTR_RW(powermode);
-
-Please make this static.
-
-> +
-> +static struct attribute *inspur_wmi_attrs[] =3D {
-> +	&dev_attr_powermode.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group inspur_wmi_group =3D {
-> +	.attrs =3D inspur_wmi_attrs,
-> +};
-> +
-> +const struct attribute_group *inspur_wmi_groups[] =3D {
-> +	&inspur_wmi_group,
-> +	NULL,
-> +};
-
-Same as above
-
-> +
-> +static void inspur_wmi_notify(struct wmi_device *wdev,
-> +		union acpi_object *obj)
-> +{
-> +	//to do
-
-Please insert something like "dev_notice(&wdev->dev, "Unknown WMI event: %=
-u\n", event)" here
-so people can find out the necessary hotkey events.
-
-> +}
-> +
-> +static int inspur_wmi_input_setup(struct wmi_device *wdev)
-> +{
-> +	struct inspur_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
-> +
-> +	priv->idev =3D devm_input_allocate_device(&wdev->dev);
-> +	if (!priv->idev)
-> +		return -ENOMEM;
-> +
-> +	priv->idev->name =3D "Inspur WMI hotkeys";
-> +	priv->idev->phys =3D "wmi/input0";
-> +	priv->idev->id.bustype =3D BUS_HOST;
-> +	priv->idev->dev.parent =3D &wdev->dev;
-> +
-> +	return input_register_device(priv->idev);
-> +}
-> +
-> +static int inspur_wmi_probe(struct wmi_device *wdev, const void *contex=
-t)
-> +{
-> +	struct inspur_wmi_priv *priv;
-> +	int err;
-> +
-> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(struct inspur_wmi_priv),
-> +			GFP_KERNEL);
-
-Please use "sizeof(*priv)" instead of "sizeof(struct inspur_wmi_priv)".
-Also the alignment should match open parenthesis, please run "checkpatch -=
--strict".
-
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	dev_set_drvdata(&wdev->dev, priv);
-> +
-> +	err =3D inspur_wmi_input_setup(wdev);
-> +	return err;
-
-The variable "err" can be omitted, just do "return inspur_wmi_input_setup(=
-...)"
-
-> +}
-> +
-> +static void inspur_wmi_remove(struct wmi_device *wdev)
-> +{
-> +	struct inspur_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
-> +
-> +	input_unregister_device(priv->idev);
-
-The kerneldoc comment for devm_input_allocate_device() says:
-
-"Managed input devices do not need to be explicitly unregistered or freed =
-as it will be done
-automatically when owner device unbinds from its driver (or binding fails)=
-."
-
-Please drop inspur_wmi_remove().
-
-> +}
-> +
-> +static const struct wmi_device_id inspur_wmi_id_table[] =3D {
-> +	{ .guid_string =3D WMI_INSPUR_POWERMODE_EVENT_GUID },
-> +	{  }
-> +};
-
-Can you share the bmof buffer describing this WMI device? Currently, both =
-WMI GUIDs seem
-to be independent from each other, so it would make more sense to create t=
-wo separate WMI drivers.
-The first driver would continue to handle the hotkey events, while the sec=
-ond drivers allows to change
-the power mode.
+Rest all I will address in v3.
 
 Thanks,
-Armin Wolf
-
-> +
-> +static struct wmi_driver inspur_wmi_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "inspur-wmi",
-> +		.dev_groups =3D inspur_wmi_groups,
-> +	},
-> +	.id_table =3D inspur_wmi_id_table,
-> +	.probe =3D inspur_wmi_probe,
-> +	.notify =3D inspur_wmi_notify,
-> +	.remove =3D inspur_wmi_remove,
-> +};
-> +
-> +module_wmi_driver(inspur_wmi_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, inspur_wmi_id_table);
-> +MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-> +MODULE_DESCRIPTION("Inspur WMI hotkeys");
-> +MODULE_LICENSE("GPL");
+Shyam
+> 
+>> +		rc = -EINVAL;
+> 
+> If rc < 0, I think you should just pass the error code on.
+> 
+>> +	} else {
+>> +		*id = sess_arg.session;
+>> +	}
+>> +
+>> +	return rc;
+>> +}
+>> +
+>> +static int amd_pmf_tee_init(struct amd_pmf_dev *dev)
+>> +{
+>> +	int ret;
+>> +	u32 size;
+>> +
+>> +	/* Open context with TEE driver */
+> 
+> Too obvious comment to stay, it's what the code already says on the next 
+> line so there's little point to repeat something this obvious in the 
+> comments.
+> 
+>> +	dev->tee_ctx = tee_client_open_context(NULL, amd_pmf_amdtee_ta_match, NULL, NULL);
+>> +	if (IS_ERR(dev->tee_ctx)) {
+>> +		dev_err(dev->dev, "Failed to open TEE context\n");
+>> +		return PTR_ERR(dev->tee_ctx);
+>> +	}
+>> +
+>> +	/* Open session with PMF Trusted App */
+> 
+> Remove this one too.
+> 
+>> +	ret = amd_pmf_ta_open_session(dev->tee_ctx, &dev->session_id);
+>> +	if (ret) {
+>> +		dev_err(dev->dev, "Failed to open TA session (%d)\n", ret);
+>> +		ret = -EINVAL;
+>> +		goto out_ctx;
+>> +	}
+>> +
+>> +	size = sizeof(struct ta_pmf_shared_memory);
+>> +	dev->fw_shm_pool = tee_shm_alloc_kernel_buf(dev->tee_ctx, size);
+>> +	if (IS_ERR(dev->fw_shm_pool)) {
+>> +		dev_err(dev->dev, "Failed to alloc TEE shared memory\n");
+>> +		ret = PTR_ERR(dev->fw_shm_pool);
+>> +		goto out_sess;
+>> +	}
+>> +
+>> +	dev->shbuf = tee_shm_get_va(dev->fw_shm_pool, 0);
+>> +	if (IS_ERR(dev->shbuf)) {
+>> +		dev_err(dev->dev, "Failed to get TEE virtual address\n");
+>> +		ret = PTR_ERR(dev->shbuf);
+>> +		goto out_shm;
+>> +	}
+>> +	dev_dbg(dev->dev, "TEE init done\n");
+>> +
+>> +	return 0;
+>> +
+>> +out_shm:
+>> +	tee_shm_free(dev->fw_shm_pool);
+>> +out_sess:
+>> +	tee_client_close_session(dev->tee_ctx, dev->session_id);
+>> +out_ctx:
+>> +	tee_client_close_context(dev->tee_ctx);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void amd_pmf_tee_deinit(struct amd_pmf_dev *dev)
+>> +{
+>> +	/* Free the shared memory pool */
+>> +	tee_shm_free(dev->fw_shm_pool);
+>> +
+>> +	/* close the existing session with PMF TA*/
+> 
+> Missing space.
+> 
+>> +	tee_client_close_session(dev->tee_ctx, dev->session_id);
+>> +
+>> +	/* close the context with TEE driver */
+>> +	tee_client_close_context(dev->tee_ctx);
+>> +}
+>> +
+>> +int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>> +{
+>> +	return amd_pmf_tee_init(dev);
+>> +}
+>> +
+>> +void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev)
+>> +{
+>> +	amd_pmf_tee_deinit(dev);
+>> +}
+>>
+> 
