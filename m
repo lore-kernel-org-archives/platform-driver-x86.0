@@ -2,110 +2,78 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B5FE95A8E
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Oct 2023 11:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B05E95A8E
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Oct 2023 11:39:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346266AbjJILdN (ORCPT
+        id S1346266AbjJILjf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 9 Oct 2023 07:33:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38836 "EHLO
+        Mon, 9 Oct 2023 07:39:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346230AbjJILdM (ORCPT
+        with ESMTP id S1346230AbjJILjf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 Oct 2023 07:33:12 -0400
+        Mon, 9 Oct 2023 07:39:35 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E3199;
-        Mon,  9 Oct 2023 04:33:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 104559E
+        for <platform-driver-x86@vger.kernel.org>; Mon,  9 Oct 2023 04:39:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696851191; x=1728387191;
+  t=1696851574; x=1728387574;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=ddLtdcg2C5atzq5XJFTEOQpB6YaN3zWAVzub313Cm60=;
-  b=Yh9qetHc6NJvt8358Ov0ByITYvnQhqq3ocHciRDS/uVQllgz2WQFZIE+
-   2x3p1ttYpSpPfBSS4+Rhgk8KDWoo9oR7cxygyYPcdR7gxl6lRSkS85i2B
-   ziEXkStkNDtXbxq4H1HEKQff5dJlu9ooziTRZETJ4sX7EzMC3u1np2aFW
-   N+Flc3Sj8kCjKKPemjJ8rs3wZ6BwLU4jIIP9wOQzYvENCDIIE93VI0pne
-   EawgQsDO54J8DuvcQmYI0hcaSrtQmXFr3LjWIGQB3uv9BujocFMO7EjvD
-   Cw7IfF6AUp2C/yDsKXo9WH02Dabxaw8/8eNggp55m57Fivwus9BoF7ZeX
+  bh=WkSKNdzWrdstQ/maVAhO8GxxrCQZ9R79ykpJUOnwFDw=;
+  b=mmRXwDoASWMpcPLapM+2FrA55pDyuqx0NXOx+TDIFmit6IVorzIVabCZ
+   rNP9tgt7TGeCfubcdLeVmn5W3A2q/bmFwwzqCkGI6dleuVpB29apWtK8c
+   7URdnsRqcXCy/K6WbeRHxHNPniRoB/FNxpFniRia+s+C2NHgper5+6w/x
+   VPAeXWlmrEMOteEtzclV6J5NZ5ClHfyrTo3+tniRpstZbLjQUgwfOopku
+   XYGRQkj7QUyeCpP0BW9irAmzCVkDnlMQ1XeS8f2+FWdr9wdV6idfiAX1A
+   iogGLzl7xB12qU2wkrIaJVx5zkIwVjWkPlTtkBtKEps6IDc0XYtIZf+rV
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10857"; a="386965747"
+X-IronPort-AV: E=McAfee;i="6600,9927,10857"; a="386966441"
 X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
-   d="scan'208";a="386965747"
+   d="scan'208";a="386966441"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 04:33:10 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 04:39:32 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10857"; a="1000173633"
+X-IronPort-AV: E=McAfee;i="6600,9927,10857"; a="1000174588"
 X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
-   d="scan'208";a="1000173633"
+   d="scan'208";a="1000174588"
 Received: from lshebash-mobl3.ccr.corp.intel.com ([10.252.57.254])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 04:33:08 -0700
-Date:   Mon, 9 Oct 2023 14:33:05 +0300 (EEST)
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 04:39:30 -0700
+Date:   Mon, 9 Oct 2023 14:39:28 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-cc:     acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        =?ISO-8859-15?Q?Jo=E3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>,
+To:     Nikita Kravets <teackot@gmail.com>
+cc:     platform-driver-x86@vger.kernel.org,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v4 1/1] platform/x86: asus-wireless: Replace open coded
- acpi_match_device()
-In-Reply-To: <20231007081230.3555681-1-andriy.shevchenko@linux.intel.com>
-Message-ID: <73edfbd6-7119-7fb1-2e10-ac1546e1d4e@linux.intel.com>
-References: <20231007081230.3555681-1-andriy.shevchenko@linux.intel.com>
+        Aakash Singh <mail@singhaakash.dev>,
+        Jose Angel Pastrana <japp0005@red.ujaen.es>
+Subject: Re: [PATCH v2 2/3] platform/x86: msi-ec: rename fn_super_swap
+In-Reply-To: <20231006175352.1753017-7-teackot@gmail.com>
+Message-ID: <c70f59e-5a8c-ae8e-21d7-dc99662e85e1@linux.intel.com>
+References: <20231006175352.1753017-3-teackot@gmail.com> <20231006175352.1753017-7-teackot@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, 7 Oct 2023, Andy Shevchenko wrote:
+On Fri, 6 Oct 2023, Nikita Kravets wrote:
 
-> Replace open coded acpi_match_device() in asus_wireless_add().
+> This patch renames fn_super_swap to fn_win_swap for consistency
+> with the downstream version of the driver. Renaming the field to
+> fn_super_swap in the downstream driver would require modifying several
+> branches that are yet to be merged into the main branch, so I decided
+> to do it here instead.
+> 
+> Cc: Aakash Singh <mail@singhaakash.dev>
+> Cc: Jose Angel Pastrana <japp0005@red.ujaen.es>
+> Signed-off-by: Nikita Kravets <teackot@gmail.com>
 
-Could you update this and shortlog too to match the patch (the same 
-applies also to the other similar patch you've inflight).
+Applied this particular patch (2/3) to my local review-ilpo branch.
+
+Hans will take care of applying the fix in 1/3.
+
 
 -- 
  i.
-
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> 
-> v4: used proper API, added tag (Hans)
-> v3: rewrote error path logic (Hans)
-> v2: fixed compilation error
-> 
->  drivers/platform/x86/asus-wireless.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/x86/asus-wireless.c
-> index abf01e00b799..41227bf95878 100644
-> --- a/drivers/platform/x86/asus-wireless.c
-> +++ b/drivers/platform/x86/asus-wireless.c
-> @@ -148,16 +148,12 @@ static int asus_wireless_add(struct acpi_device *adev)
->  	if (err)
->  		return err;
->  
-> -	for (id = device_ids; id->id[0]; id++) {
-> -		if (!strcmp((char *) id->id, acpi_device_hid(adev))) {
-> -			data->hswc_params =
-> -				(const struct hswc_params *)id->driver_data;
-> -			break;
-> -		}
-> -	}
-> -	if (!data->hswc_params)
-> +	id = acpi_match_acpi_device(device_ids, adev);
-> +	if (!id)
->  		return 0;
->  
-> +	data->hswc_params = (const struct hswc_params *)id->driver_data;
-> +
->  	data->wq = create_singlethread_workqueue("asus_wireless_workqueue");
->  	if (!data->wq)
->  		return -ENOMEM;
-> 
 
