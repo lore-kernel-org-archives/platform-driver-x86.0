@@ -2,226 +2,254 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AC0CD68F8
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Oct 2023 07:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3588CD68FC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Oct 2023 08:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1442609AbjJJHyO (ORCPT
+        id S233250AbjJJIGx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Oct 2023 03:54:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56630 "EHLO
+        Tue, 10 Oct 2023 04:06:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442635AbjJJHyK (ORCPT
+        with ESMTP id S234666AbjJJIGv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Oct 2023 03:54:10 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99CCCC4;
-        Tue, 10 Oct 2023 00:54:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696924445; x=1728460445;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=XckaF1xsqIUt67kmRX05FiGkJv6OWk/maetsOFTF52M=;
-  b=J5UWHeXZdmSuuzC7b80QY/tzWTOg3CQKAADnSGqQDJIGDYnHY4zFfgVf
-   SusRHzzPt4F/bZIYBhQncrflHWgiRbCoEjRx/Zo9jK2ovpuxNt7lBnEhJ
-   5SYr0Q8oPQejm6kW1osVixb4XEIJ1fPc2Gny86csTEeZ1JvaA/lT5ArEY
-   p/m7X1YOgqwAAmFxGbJ9/SgLLqov5n7hxcmMPuptwel/fXOOnxBqAkgtH
-   YUmeXt2+pKSzDUrJtsJhSwTNb1FDndtTYiL6AQn68VBWcgL9g9ndCExYW
-   PORvvc88OILE0rKPmklWsR6bZddqH1L+zKDB+o6mS/1heTQW8e1vLtOwd
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="450829698"
-X-IronPort-AV: E=Sophos;i="6.03,212,1694761200"; 
-   d="scan'208";a="450829698"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 00:54:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="1084679019"
-X-IronPort-AV: E=Sophos;i="6.03,212,1694761200"; 
-   d="scan'208";a="1084679019"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Oct 2023 00:54:04 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Tue, 10 Oct 2023 00:54:03 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Tue, 10 Oct 2023 00:54:03 -0700
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.41) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Tue, 10 Oct 2023 00:54:03 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kJVcV3iA5KFr75tM25uXoCawIO74vVESSBj0XZJmsv0Zec/c12tCJkCrwpI2FBj4Q7ApYsUZ7UsXaQQZ+fPwvveGP263Qu/vXcLkFStE/OYr8SaS4bSCrc/HJUnEzkN49NVMbr6Imd60AakvrTDLsom7jMvif8WXm2N2ltfYxETskWMPmyFchNzrHuMiT5LRddo9m+i62f8o2IW5fuWvQqKNX4MjirofJ6Y4Jg2P+jYLcoDgiYe7cuYrhQhcebEhLWie0fO4etoSpXlWskHg6olbLOxljXdg+23tBDmi8G1jaPUazESXeQWvXV2UnfCJCdt6i0djJw0KumA2kvPiYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3gGhbfZMypm/smom7NV7TEeoEXwWhUOHsb3l4lqE5oo=;
- b=TMfJEN/oWMJLxB4+hbjnG9jw1w4qzxdPK45ltsmVPowXDjjSg+SPqrFjdx/sp+Wwi8N8BQhyouRFzoxZWW33qoOcr8Grhr4HLj6+eJhTdFVIPOdPFILPOiSOAr/yQTRRSqFGXG8kzkhUkrCK48DgIVdplE//QZEF1VMVYV+0s9TIKVmn7dxqN+a2N41JOeYYWmIiAvAxbJiUUsLANW3jxCQgeRziuQV6mhqGq9uzKVER6mBmMRCItHRj9/sJnvWeSSPL2YzXT/ybtFigibuFOi0KLX86Z1hA6HnFU98qWunhmnW/exKLc0+cXHb03wn9mtvXfHQt18tmMahTZ7vG+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BY5PR11MB4071.namprd11.prod.outlook.com (2603:10b6:a03:18c::28)
- by CY8PR11MB7921.namprd11.prod.outlook.com (2603:10b6:930:7d::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.37; Tue, 10 Oct
- 2023 07:54:00 +0000
-Received: from BY5PR11MB4071.namprd11.prod.outlook.com
- ([fe80::a9f5:29c8:2288:ea98]) by BY5PR11MB4071.namprd11.prod.outlook.com
- ([fe80::a9f5:29c8:2288:ea98%4]) with mapi id 15.20.6863.032; Tue, 10 Oct 2023
- 07:53:59 +0000
-Message-ID: <57379273-c290-4a69-893d-b40c25023148@intel.com>
-Date:   Tue, 10 Oct 2023 15:53:50 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: int3472: Add handshake GPIO function
-Content-Language: en-US
-To:     Bingbu Cao <bingbu.cao@linux.intel.com>,
-        Dan Scally <dan.scally@ideasonboard.com>,
-        <djrscally@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
-        Sakari Ailus <sakari.ailus@intel.com>
-CC:     Bingbu Cao <bingbu.cao@intel.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-media@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20231007021225.9240-1-hao.yao@intel.com>
- <38c9ff1c-8d3b-8675-9780-2bb6c87ba815@linux.intel.com>
-From:   Hao Yao <hao.yao@intel.com>
-In-Reply-To: <38c9ff1c-8d3b-8675-9780-2bb6c87ba815@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: KL1PR01CA0107.apcprd01.prod.exchangelabs.com
- (2603:1096:820:3::23) To BY5PR11MB4071.namprd11.prod.outlook.com
- (2603:10b6:a03:18c::28)
+        Tue, 10 Oct 2023 04:06:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99CB4A4
+        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Oct 2023 01:06:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1696925164;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oAoZNnsMqf6ibxM9UKgZuYsgwg5xu1HQ4/dUYo68IBU=;
+        b=HIdJBSFAH1bJlEixjp6LVsoHp2pEBoINxtuSWBBM/JeqYrW2cEbra5M+m0gPc59NMxXGnT
+        aYD7RRnE31CyB6iYrMLuu6eArEMlG+cFjq4ukoJ7CPMxdoEpV4Ltk6NhioneQRlsCOzsYf
+        EX1KxsPWbeWVFc0nTUGJh+XtvNXOGWY=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-577-oz_6x5qVMHSnPRIYewffrw-1; Tue, 10 Oct 2023 04:05:53 -0400
+X-MC-Unique: oz_6x5qVMHSnPRIYewffrw-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-50daa85e940so4158221a12.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Oct 2023 01:05:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696925152; x=1697529952;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oAoZNnsMqf6ibxM9UKgZuYsgwg5xu1HQ4/dUYo68IBU=;
+        b=ddu6K5HEmuryjgbjHiVwYtx8CsRkIgjU1PdPmUE40etKmwcB3fSB1nuZFVJdrsSC3d
+         iroIHUSisjxX5DHVZJ4HDustXUT2y3g2IrNbhhT6imKuwSxoAPI9zo+Bly98qVNOsqIl
+         mxVct/DcTrywzAnjmJuqk4OLFUxX14k/jRicqzNCYzDVX6AFeKdbE1T2dYsfNb7cibSD
+         NycbHGbJbOpSAbeJv5146mAAd634Q4uqXWM6o6Px6puZ8UJhVNPG/nurXStFapAyPuG7
+         Q1aBqGCHAiesxlRVR9gh8T8cykwsxJX/PFmnnoGx6Y8savYMWrw5tNeneCb+PGRjVRNR
+         7m2A==
+X-Gm-Message-State: AOJu0YxX7Wm7SSj1JadgxbRKw7qie9DXmIhAQslmaO+CjublYRXeSVxP
+        iFMMQr9iyfPikJ5VIYNqiEfa85lweN7cYTTH2g1RHH8N3Xvb+jGn0JtP18TtyRQYXd4msNDlWOy
+        RGzJNuHTZr5jpNy4AVpBJXhK5ETmPgZCBsg==
+X-Received: by 2002:aa7:c695:0:b0:523:4acb:7f41 with SMTP id n21-20020aa7c695000000b005234acb7f41mr15780534edq.14.1696925152339;
+        Tue, 10 Oct 2023 01:05:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEyz82T3KxCKYgiZWNJGywJFDer5OqpoNQK67Hr3i4D+6vucMVSywNntIrm8HfPL0P3IjQ9Yg==
+X-Received: by 2002:aa7:c695:0:b0:523:4acb:7f41 with SMTP id n21-20020aa7c695000000b005234acb7f41mr15780515edq.14.1696925151981;
+        Tue, 10 Oct 2023 01:05:51 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id l16-20020a056402125000b00536159c6c45sm7141882edw.15.2023.10.10.01.05.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Oct 2023 01:05:51 -0700 (PDT)
+Message-ID: <81fb9a8a-0cb4-7799-7f47-603d88e08659@redhat.com>
+Date:   Tue, 10 Oct 2023 10:05:50 +0200
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR11MB4071:EE_|CY8PR11MB7921:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19fa5196-ff15-45d9-319f-08dbc9660fbd
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Om/E9tIxlMz1lfuzCvHj18TRbWHNA15i/l7MHsWyhdrbW3GtW6sEbTexxxLIIdVJNgkKFsqcUwjDlW0/QZFTJiNIiFqcE/4xUoKWFph3CB13Cy3sAej45RrdBtL2Ks74y+j8Ckn+KtQpEVqc0mNaNDklKRyMEB8MsT6xWmHOM5AvrEWZQ/EMKv7C5q7Leoi/NHr1pOJFJ75O5HYiYRGrDNcTia3c8nVlkvlCcQgwBZvtuHLu81helUpVXMtQg3hYRveH/Cp0ztaFNccCGl1EXdoFpKXC9xpX+70uVBSFtPtmBOFVypPeHWnxGjZKzkL0+uxCa1UQuTemFRLOtA4Q/SIEcx6NtyTZjA8yM6Y87HQEIqH8K1LWSOa0Or1U5x0DRQ64jd1OaMx2Y9ohot8So0KXSzMuFDinT5yILXlm5v8zVxQuCyMX7H8qf8HpI+50TMPd4d4ebdtsg4IE31+ZDQcgnFwAJyVSMhIaTX/kRYo6O3sgRClIOW/iBHz/hu2NwhvuBGn1GSgqrGgS8rZFFujaEW0qHOLmWdN8PcA4p5ySW/p/nLiNpi0n18ufW5poXXUxGejMuXAJyA565ww28n70qrpI8KrHITjvqAuunIDoJdkgiZTrIoowysaIzpYbDE+HLmy2B5wRaUZCC29eqA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4071.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(396003)(366004)(136003)(39860400002)(230922051799003)(451199024)(1800799009)(186009)(64100799003)(31696002)(82960400001)(86362001)(38100700002)(36756003)(31686004)(66899024)(2906002)(6512007)(6486002)(478600001)(41300700001)(8936002)(53546011)(4326008)(5660300002)(44832011)(6506007)(8676002)(6666004)(2616005)(83380400001)(6636002)(66476007)(66556008)(66946007)(110136005)(54906003)(316002)(26005)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TjUrS2VwNllva2d1NWNLWFZHU2pQb0piSkQ3Zk5uS3ZxZGlLaG9yWlMwWUc5?=
- =?utf-8?B?YWhpdGd4cmtFV1JOZ09PU2h5Z3JEaTBnYUhVblBnMWtYU0c3UjNNdlVSbzJY?=
- =?utf-8?B?QzQwSUdBYzh5UnlQZzZLU2lNWjVaT3hzZnJZbk5LNTlWUjRaaXNCWERLOVht?=
- =?utf-8?B?M0F4MENic2VCUDYrZnp1QlM5QXZJZnF0R3p0ZFpoalZOOWtzaEJIUlJPSFh6?=
- =?utf-8?B?UTQ1L2ltZDRMd3AvcUg5THRrb20xdDFGU2hEV0lKU3BMNStrZERUZlZGMmxC?=
- =?utf-8?B?K0x5NHJjdDA0MktiM00xR0paTGhsN3JKU1ZLdVE5Mm9zMFNXN1QvQTRLN0Zm?=
- =?utf-8?B?RnNPN1h0bmNhUkQzeDkwYmdwaWlSekZtQjJ1U29QWXBGWUxZamNuT3l1blRL?=
- =?utf-8?B?YmdrODZpOGNNU1R6Q0s4cEZKMkVWcDRtbG9iL3lidlNxSzV2cnVkUm9IQmpX?=
- =?utf-8?B?YUVtMEg1a3cvaFNLM1dON0JZTUpqblJKclpFeE9yME51aDREQTBXUFVPUnI4?=
- =?utf-8?B?WjhPQTl4VzBhRFdSeUVuUUwxNkhzZWJoUXF5ZkJwUVJDRjJRZm5hbDdEemdr?=
- =?utf-8?B?d1BwRzI4bU9SMXVwZEpCWGtycHA2SEdLWmhNV3gxem52NmdySXBHYVZLVzI0?=
- =?utf-8?B?M1dZaHdNWTVEUmFEWEMwOFlpUThJWmVyQm5SUlFzZitoY1Bnd08zRWZUdFoz?=
- =?utf-8?B?ZW1qU3VyT0lVczRDclZCS3dEcW5NaExQZ050ZnJ5YkF3dExncWd2N3hDcDF3?=
- =?utf-8?B?L3FNM2sxa1I1VWpzTVZpWlVxMnFVSnNnSkUvRGN3ZEVJSmN0U3h0YnhJSzRQ?=
- =?utf-8?B?QXZ0R2pXRCtqT2dBT3BQR3VrYThTb3JVMmRLV28zLzBVdW00Ny9DVzZmOWtG?=
- =?utf-8?B?YkRYd2R5Tk1DZzNidi9DZWVuOXdidTZhbFFTd0JkdTI4T3psdzVRdkRzVXVW?=
- =?utf-8?B?THFSLzI0S3VKOWdGUEhMbnFsUFpuK1VkdncybjExZzhvdUdsLzRvQmxlaWN3?=
- =?utf-8?B?TmxiaFBXUGwyckQ4a3c0bGlGSWk4a0dzYjg2emFYWXI0dEdKTkIvV1NOd0JM?=
- =?utf-8?B?VjZVNXFpMnROaHB3RE9UT0U5VVJ0Y0dMMC9VMFlvRlVKaTBsbmtIZ0lCRXlx?=
- =?utf-8?B?UE03UG1wTnpDTW1uTHVpYjBsSnRBQmpIVEh2SHpodHYvSzBBYy9xcjYwc1hE?=
- =?utf-8?B?UDBBUG01VUhPVU9JaXhpY2RTRVhSdUFXMzRqREV1a1Y3Nm9tbk94SmlpYjE4?=
- =?utf-8?B?ajQ5TEYxcWVVUnFuOGxKaHZ3QmpvbnZaTU9FQThNYUljWkkrRDJnNUJyTGJ2?=
- =?utf-8?B?a0RhVFpwRmRNaHFqNDRrTTR2bTlwVHdvR1lseVZTcFFwRTBQS1R6RFZCY3VC?=
- =?utf-8?B?d1c0akhueEwxZ1NsVW5pM0JhNE1HWUt3SDRKOWk0d0xpWU1HSE9iTDJJS0ZE?=
- =?utf-8?B?MzNwM3JKLzZkU1g0L2pBZG9Lbk1LSUFSWmRQWWlHdG5aUnBldHNTSFJKdlVI?=
- =?utf-8?B?UTNsUWJFaUNlbnZuOTg1NXMwVFhzV2dxanRWNmw1SDFLa3RVSk10Z013dnVS?=
- =?utf-8?B?L29CRjNCTFNmanR6bmdiMTdHaVVyak13WHdlekR3c0VObVg5aTJSaWU0TmZH?=
- =?utf-8?B?ZExFQ2JwbUlsanhkMHVMUThYQ2pYdW10MUhuSHFaaVJjYUhtM0NVMytMbmp0?=
- =?utf-8?B?djNWYmtDTnlYVGtVYVp3OG9Bb21US0NxUXg1VWRadWYxc0FBS0NTaE1FVlZo?=
- =?utf-8?B?c0R0dXc1aFg2QzA5TUFKQ2xFUmhpL2w0QmZmY2RKRFFrVHV6VDJqdHdLT0lR?=
- =?utf-8?B?SS8wcDg0UWNjVmtWWlNudjJNbjhsUmlpdGV4dS8rWVNUVFQwWEIxQ2k2T2lX?=
- =?utf-8?B?RmVoeGhVdnBxTEFPREdCOGt0eEtadWhLWGJsR0lLeHJoTjdzVlp6MzJJbXFy?=
- =?utf-8?B?SDlGeXJUbjZTdjlOczNWWkErOE15TmhCNXJTMU1VelAzcFNMc3Nja0txeElM?=
- =?utf-8?B?S0JybzVMTVl2cCtSSUtyeHdZLzhRSlQzeG9zWS9MUVF1cW9JRkxFS2tCTXdW?=
- =?utf-8?B?SzAyTUFSR1RiK2VUTkMxY2VydHJZc1RGZURCWjdUSGQzbG5sZDZRbFUwcmc2?=
- =?utf-8?Q?j1oGnBJZjxdSOvLz3e4WVbYBm?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19fa5196-ff15-45d9-319f-08dbc9660fbd
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4071.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2023 07:53:59.3753
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NJBXT0ErQ1SdNL3aUShAXYqMSrrIdXCp3WCUZJZrZNCmfwwkKlW2crPlI8rpHadPyTrvKVqv6d+kEjF1tCbeWw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7921
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a warning
+ message
+To:     Liming Sun <limings@nvidia.com>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        David Thompson <davthompson@nvidia.com>,
+        Mark Gross <markgross@kernel.org>,
+        Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <bb8bc77e6ecc2287fc9110cfa08caa48eb2a0385.1696508228.git.limings@nvidia.com>
+ <35467b21-941f-c829-1ad8-b4e7319dbc04@redhat.com>
+ <BN9PR12MB50687C00EDAFC2B1A058E1E3D3C9A@BN9PR12MB5068.namprd12.prod.outlook.com>
+ <4d40eacb-382a-f0e9-2dcd-9f9e8c7ca9fd@redhat.com>
+ <BN9PR12MB5068173E789479AA99FDF725D3CEA@BN9PR12MB5068.namprd12.prod.outlook.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <BN9PR12MB5068173E789479AA99FDF725D3CEA@BN9PR12MB5068.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thank you Bingbu,
+Hi,
 
-On 2023/10/10 15:17, Bingbu Cao wrote:
-> Hao,
+On 10/9/23 21:28, Liming Sun wrote:
 > 
-> On 10/7/23 10:12 AM, Hao Yao wrote:
->> Handshake pin is used for Lattice MIPI aggregator to enable the
->> camera sensor. After pulled up, recommend to wail ~250ms to get
->> everything ready.
 > 
-> Is the delay for specific camera or requirement from Lattice.
-> 250ms is bad for camera.
-> 
-
-Actually the handshake pin is used by both Altek M1 and Lattice chips. 
-As far as I know, Altek M1 required ~250ms delay while recently Lattice 
-team told me they don't need delay. However I don't know if there were 
-any devices using Altek M1.
-
+>> -----Original Message-----
+>> From: Hans de Goede <hdegoede@redhat.com>
+>> Sent: Friday, October 6, 2023 1:07 PM
+>> To: Liming Sun <limings@nvidia.com>; Vadim Pasternak
+>> <vadimp@nvidia.com>; David Thompson <davthompson@nvidia.com>; Mark
+>> Gross <markgross@kernel.org>; Dan Carpenter <dan.carpenter@linaro.org>
+>> Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org
+>> Subject: Re: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a warning
+>> message
 >>
->> Signed-off-by: Hao Yao <hao.yao@intel.com>
->> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->> ---
->>   drivers/platform/x86/intel/int3472/common.h   | 1 +
->>   drivers/platform/x86/intel/int3472/discrete.c | 5 +++++
->>   2 files changed, 6 insertions(+)
+>> Hi Liming,
 >>
->> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
->> index 655ae3ec0593..3ad4c72afb45 100644
->> --- a/drivers/platform/x86/intel/int3472/common.h
->> +++ b/drivers/platform/x86/intel/int3472/common.h
->> @@ -23,6 +23,7 @@
->>   #define INT3472_GPIO_TYPE_POWER_ENABLE				0x0b
->>   #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
->>   #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
->> +#define INT3472_GPIO_TYPE_HANDSHAKE				0x12
->>   
->>   #define INT3472_PDEV_MAX_NAME_LEN				23
->>   #define INT3472_MAX_SENSOR_GPIOS				3
->> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
->> index b644ce65c990..4753161b4080 100644
->> --- a/drivers/platform/x86/intel/int3472/discrete.c
->> +++ b/drivers/platform/x86/intel/int3472/discrete.c
->> @@ -111,6 +111,10 @@ static void int3472_get_func_and_polarity(u8 type, const char **func, u32 *polar
->>   		*func = "power-enable";
->>   		*polarity = GPIO_ACTIVE_HIGH;
->>   		break;
->> +	case INT3472_GPIO_TYPE_HANDSHAKE:
->> +		*func = "handshake";
->> +		*polarity = GPIO_ACTIVE_HIGH;
->> +		break;
->>   	default:
->>   		*func = "unknown";
->>   		*polarity = GPIO_ACTIVE_HIGH;
->> @@ -201,6 +205,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->>   	switch (type) {
->>   	case INT3472_GPIO_TYPE_RESET:
->>   	case INT3472_GPIO_TYPE_POWERDOWN:
->> +	case INT3472_GPIO_TYPE_HANDSHAKE:
->>   		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, func, polarity);
->>   		if (ret)
->>   			err_msg = "Failed to map GPIO pin to sensor\n";
+>> On 10/6/23 17:50, Liming Sun wrote:
+>>> Thanks Hans.
+>>>
+>>> Below is the logic:
+>>>
+>>> IS_VRING_DROP() is ONLY set to TRUE for Rx, which is done in two places:
+>>> Line 696:  *desc = &vring->drop_desc;
+>>> Line 742: desc = &vring->drop_desc;
+>>>
+>>> So line 634 below will never happen when IS_VRING_DROP() is TRUE due the
+>> checking of line 633.
+>>> 633         if (!is_rx)
+>>>  634                 writeq(data, fifo->tx.data);
+>>>
+>>> Please correct me if it's my misunderstanding.
 >>
+>> If IS_VRING_DROP() is ONLY set to TRUE for Rx, then it
+>> should simply *not* be checked *at all* in the tx paths.
+> 
+> IS_VRING_DROP() itself is actually not checked in the Tx path.  It is the "! IS_VRING_DROP()" that checks the Rx/Tx, something like:
+> 
+> if (!IS_VRING_DROP(vring)) {
+> 	if (is_rx)
+> 		...
+> 	else
+> 		...
+> }
+> 
+> The reason is that I thought we might reuse the ' IS_VRING_DROP' for Tx later.
+> 
+> However, if the logic looks confusing, I could revise it to something like:
+> 
+> if (is_rx) {
+> 	if (!IS_VRING_DROP(vring)) 
+> 		...
+> } else {
+> 		...
+> }
+
+Yes please revise the log to look like this, this should also
+fix the warning without needing to initialize data to 0.
+
+Since now in the tx path you are guaranteed to first fill
+data before sending it.
+
+Regards,
+
+Hans
+
+
+
+>>>> -----Original Message-----
+>>>> From: Hans de Goede <hdegoede@redhat.com>
+>>>> Sent: Friday, October 6, 2023 8:54 AM
+>>>> To: Liming Sun <limings@nvidia.com>; Vadim Pasternak
+>>>> <vadimp@nvidia.com>; David Thompson <davthompson@nvidia.com>;
+>> Mark
+>>>> Gross <markgross@kernel.org>; Dan Carpenter <dan.carpenter@linaro.org>
+>>>> Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org
+>>>> Subject: Re: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a warning
+>>>> message
+>>>>
+>>>> Hi Liming,
+>>>>
+>>>> On 10/5/23 14:18, Liming Sun wrote:
+>>>>> This commit fixes the smatch static checker warning in
+>>>>> mlxbf_tmfifo_rxtx_word() which complains data not initialized at
+>>>>> line 634 when IS_VRING_DROP() is TRUE. This is not a real bug since
+>>>>> line 634 is for Tx while IS_VRING_DROP() is only set for Rx. So there
+>>>>> is no case that line 634 is executed when IS_VRING_DROP() is TRUE.
+>>>>>
+>>>>> This commit initializes the local data variable to avoid unnecessary
+>>>>> confusion to those static analyzing tools.
+>>>>>
+>>>>> Signed-off-by: Liming Sun <limings@nvidia.com>
+>>>>> ---
+>>>>>  drivers/platform/mellanox/mlxbf-tmfifo.c | 2 +-
+>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c
+>>>> b/drivers/platform/mellanox/mlxbf-tmfifo.c
+>>>>> index f3696a54a2bd..ccc4b51d3379 100644
+>>>>> --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
+>>>>> +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+>>>>> @@ -595,8 +595,8 @@ static void mlxbf_tmfifo_rxtx_word(struct
+>>>> mlxbf_tmfifo_vring *vring,
+>>>>>  {
+>>>>>  	struct virtio_device *vdev = vring->vq->vdev;
+>>>>>  	struct mlxbf_tmfifo *fifo = vring->fifo;
+>>>>> +	u64 data = 0;
+>>>>>  	void *addr;
+>>>>> -	u64 data;
+>>>>>
+>>>>>  	/* Get the buffer address of this desc. */
+>>>>>  	addr = phys_to_virt(virtio64_to_cpu(vdev, desc->addr));
+>>>>
+>>>>
+>>>> This will fix the warning but not the issue at hand. As Dan pointed
+>>>> out in his original bug report, the issue is that after:
+>>>>
+>>>> 78034cbece79 ("platform/mellanox: mlxbf-tmfifo: Drop the Rx packet if no
+>>>> descriptors")
+>>>>
+>>>> We now have this IS_VRING_DROP() check in the path, which despite
+>>>> the subject writeq(data, fifo->tx.data);is currently being applied to both rx
+>> and
+>>>> tx vring-s
+>>>> and when this returns true the memcpy from the ring to &data
+>>>> will not happen, but the code will still do:
+>>>>
+>>>> writeq(data, fifo->tx.data);
+>>>>
+>>>> So you may have silenced the warning now, but you will still write
+>>>> data not coming from the vring to transmit. The only difference
+>>>> is you are now guaranteed to write all zeroes.
+>>>>
+>>>> Note another older issue is that if you hit the not enough space
+>>>> path:
+>>>>
+>>>>        } else {
+>>>>                 /* Leftover bytes. */
+>>>>                 if (!IS_VRING_DROP(vring)) {
+>>>>                         if (is_rx)
+>>>>                                 memcpy(addr + vring->cur_len, &data,
+>>>>                                        len - vring->cur_len);
+>>>>                         else
+>>>>                                 memcpy(&data, addr + vring->cur_len,
+>>>>                                        len - vring->cur_len);
+>>>>                 }
+>>>>                 vring->cur_len = len;
+>>>>         }
+>>>>
+>>>> Then even if IS_VRING_DROP() returns true you are only initializing some
+>> bytes
+>>>> of the 8 bytes data variable and the other bytes will stay at whatever
+>> random
+>>>> value they had before and you end up writing this random bytes when
+>> doing:
+>>>>
+>>>> writeq(data, fifo->tx.data);
+>>>>
+>>>> Regards,
+>>>>
+>>>> Hans
+>>>>
+>>>>
+>>>>
+>>>
 > 
 
-
-Best Regards,
-Hao Yao
