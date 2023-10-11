@@ -2,277 +2,196 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C75CCD6E59
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Oct 2023 10:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364BCCD6E64
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Oct 2023 12:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234809AbjJKKqG (ORCPT
+        id S234887AbjJKMln (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 Oct 2023 06:46:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48852 "EHLO
+        Wed, 11 Oct 2023 08:41:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229750AbjJKKqE (ORCPT
+        with ESMTP id S234829AbjJKMlm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 Oct 2023 06:46:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3D4F94
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Oct 2023 03:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1697021114;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yj5xwBjv1h+ic48+l3R5m7xRb8ThhzdIARG/DY3B/6w=;
-        b=MRc+PIGlfzgCvlm8/GhNJJRxHCbNFHQh+VPoCaTcGs/0VaKG/vmDgjGdJuombf+KAfdjeQ
-        2/qA55bUr7neVpHKIZlaq77ANqanLc5NtZ4SfsBwUK4xMv4Ni9SI1RHPbvnns0WsO6HUXC
-        AFi7aiFVBDBvbdGxKJ0K9WQ3X5jSWas=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-646--mmeclkAOcKmwlnkDVmTYg-1; Wed, 11 Oct 2023 06:45:03 -0400
-X-MC-Unique: -mmeclkAOcKmwlnkDVmTYg-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-5047e8f812bso6452073e87.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Oct 2023 03:45:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697021102; x=1697625902;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yj5xwBjv1h+ic48+l3R5m7xRb8ThhzdIARG/DY3B/6w=;
-        b=oMnNe/zj+Yau1O0OacobaMFxGhxL+aY41E0voipZ5x6HBnVhSHvxg2imBH/JtBdZ66
-         7sqO8xN7VYY408wIROka8ABArQnJBYkSGLr84oCjZRq1B8tHQUw/NfzmG4SDsB2PC4yg
-         bPmqB4iSMTCnmy/+2fhAW/mXpubBdXrsaSjRcgt2VYUBQC8Oac7c7lHg45j0ZjldFIss
-         6cKF+Tdn9iy2TgMVV6kTUPq/u0+Jbq3mmZvEN1cGghsL1935T6iI7jGbj4rT02N1Ep2G
-         89NuYUGCOYLdjp+neFleFsh8lBX5D4FPBGnY0f4ILhc4V1aPpeEC1jkUDp1OaMHZv0K/
-         6rog==
-X-Gm-Message-State: AOJu0Yw76lxH4/ClyoM6OdxiuAVPKwTz8TOQj4eclwgCW9lfehTMabC9
-        VbfJk333pMqZGj2bdXMNvnFeQLptEq65K0a2uWDbvueA33lD9xXgDCwFH03VBpwMFt9rcyTZbps
-        Fm7MQKW5OZ/ylcuXUFoZFJ2EGxYOLM9K+rg==
-X-Received: by 2002:a05:6512:e96:b0:500:b3fe:916e with SMTP id bi22-20020a0565120e9600b00500b3fe916emr23312863lfb.2.1697021102125;
-        Wed, 11 Oct 2023 03:45:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFo62scKmACFvigbJFZMhBZlSVMMIRgbDqivvy3TfLWmlA8CD/40NQGVCsniihy4vQeKJ0Qdw==
-X-Received: by 2002:a05:6512:e96:b0:500:b3fe:916e with SMTP id bi22-20020a0565120e9600b00500b3fe916emr23312844lfb.2.1697021101712;
-        Wed, 11 Oct 2023 03:45:01 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id n10-20020aa7c78a000000b00535204ffdb4sm8797259eds.72.2023.10.11.03.45.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Oct 2023 03:45:00 -0700 (PDT)
-Message-ID: <39b5f902-3a7e-fc04-254e-776bf61f57e2@redhat.com>
-Date:   Wed, 11 Oct 2023 12:44:59 +0200
+        Wed, 11 Oct 2023 08:41:42 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A8AAF
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Oct 2023 05:41:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697028100; x=1728564100;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=CEoO4UgnjKgyfFdpVRzjx6GI0UUkXWEcf0lK/sSduRc=;
+  b=e5rDD4tPXJ4ovLsfLTH821LHcrEeiiXZbyN9V53yF+6ddVnXzgtxYT9y
+   x+Ja6mqV13SPcM6nRh0OwHPVeUG8cwg5GfyNvRC+Sl+b4zWtHP3OvKa5R
+   bpeFTtH4WE1DPGbOCX/ag0RyQgTEgChcblUvicaY4OqIHppeZ+j2s23R3
+   UiORhs4SfPebUPEy5DTC6FS2UMgX4eMl58c87LiQxb2VPH2ogyO07tkpb
+   Jibg/jX2iOfCB3naL2s0V7skaWTgQIYE+fcw7DQJBsbmiNhYI0QcgVkE9
+   IERo0OhgMTtqz/NIi+AM38RNN1pK4CQint8hWL0erjHPoAiFvjuqxbHTX
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="381896268"
+X-IronPort-AV: E=Sophos;i="6.03,216,1694761200"; 
+   d="scan'208";a="381896268"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 05:41:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="824154818"
+X-IronPort-AV: E=Sophos;i="6.03,216,1694761200"; 
+   d="scan'208";a="824154818"
+Received: from opipikin-mobl2.ger.corp.intel.com (HELO sdodaev-mobl.ger.corp.intel.com) ([10.252.57.154])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 05:41:38 -0700
+Date:   Wed, 11 Oct 2023 15:41:36 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Nikita Kravets <teackot@gmail.com>
+cc:     platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Aakash Singh <mail@singhaakash.dev>,
+        Jose Angel Pastrana <japp0005@red.ujaen.es>
+Subject: Re: [PATCH 2/5] platform/x86: msi-ec: Add fw version and release
+ date attributes
+In-Reply-To: <20231010172037.611063-7-teackot@gmail.com>
+Message-ID: <974c5-8032-28e0-fd2f-9fbc9d413e4b@linux.intel.com>
+References: <20231010172037.611063-3-teackot@gmail.com> <20231010172037.611063-7-teackot@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: PROBLEM: asus_nb_wmi sends KEY_BRIGHTNESSDOWN on pressing CAPS
- Lock and PrntScrn on Zenbook S 13 UX5304VA
-Content-Language: en-US, nl
-To:     James John <me@donjajo.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <a2c441fe-457e-44cf-a146-0ecd86b037cf@donjajo.com>
- <132feb67-c147-7ee6-b337-385e11786ec6@redhat.com>
- <146cb960-406b-4456-94ce-ad6ed3f330ad@donjajo.com>
- <d70f7d35-6458-437d-f68f-47291ce74a1e@redhat.com>
- <90a7309e-4a76-4dff-8259-9975dd3ed8b1@donjajo.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <90a7309e-4a76-4dff-8259-9975dd3ed8b1@donjajo.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Tue, 10 Oct 2023, Nikita Kravets wrote:
 
-On 10/1/23 16:16, James John wrote:
-> Hello Han,
+> Create a root attribute group and add the first platform device
+> attributes: firmware version and firmware release date. Firmware
+> version attribute uses an already present ec_get_firmware_version()
+> function. Both features are present on all supported laptops.
 > 
-> Thank you. I applied the patch and I have the inputs attached here.
+> Cc: Aakash Singh <mail@singhaakash.dev>
+> Cc: Jose Angel Pastrana <japp0005@red.ujaen.es>
+> Signed-off-by: Nikita Kravets <teackot@gmail.com>
+> ---
+>  drivers/platform/x86/msi-ec.c | 67 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 66 insertions(+), 1 deletion(-)
 > 
-> After setting the hwdb filter, all the hot keys are still working except that the LED notification light on Mute Hotkey (F9) is no longer turning up on mute.
-> 
-> The Screen Capture, Disable Camera, and MyASUS buttons are not mapped yet. I believe the Screen Capture button should map to PrntScrn button, and MyASUS with Disable Camera unmapped, obviously. I also have the codes in the attached log.
-> 
-> Screen Capture button is KEY_UNKNOWN to evtest.
-> 
-> Don't hesitate to let me know if you need anything else.
+> diff --git a/drivers/platform/x86/msi-ec.c b/drivers/platform/x86/msi-ec.c
+> index 12c559c9eac4..772b230fb47e 100644
+> --- a/drivers/platform/x86/msi-ec.c
+> +++ b/drivers/platform/x86/msi-ec.c
+> @@ -818,17 +818,82 @@ static struct acpi_battery_hook battery_hook = {
+>  	.name = MSI_EC_DRIVER_NAME,
+>  };
+>  
+> +/*
+> + * Sysfs platform device attributes
+> + */
+> +
+> +static ssize_t fw_version_show(struct device *device,
+> +			       struct device_attribute *attr, char *buf)
+> +{
+> +	u8 rdata[MSI_EC_FW_VERSION_LENGTH + 1];
+> +	int result;
+> +
+> +	result = ec_get_firmware_version(rdata);
+> +	if (result < 0)
+> +		return result;
+> +
+> +	return sysfs_emit(buf, "%s\n", rdata);
+> +}
+> +
+> +static ssize_t fw_release_date_show(struct device *device,
+> +				    struct device_attribute *attr, char *buf)
+> +{
+> +	u8 rdate[MSI_EC_FW_DATE_LENGTH + 1];
+> +	u8 rtime[MSI_EC_FW_TIME_LENGTH + 1];
+> +	int result;
+> +	int year, month, day, hour, minute, second;
+> +
+> +	memset(rdate, 0, MSI_EC_FW_DATE_LENGTH + 1);
 
-Sorry for being slow to respond (I was out sick for a week).
+sizeof(*rdate) is safer so please use it.
 
-I think I know what is going on here but I'm not sure how to fix it yet.
-I'll get back to you.
+> +	result = ec_read_seq(MSI_EC_FW_DATE_ADDRESS,
+> +			     rdate,
+> +			     MSI_EC_FW_DATE_LENGTH);
+> +	if (result < 0)
+> +		return result;
+> +
+> +	result = sscanf(rdate, "%02d%02d%04d", &month, &day, &year);
 
-Some more questions to clarify things:
+There fields would naturally be %u and unsigned but see the other comment 
+below before doing this change.
 
-1. in your log you write:
+> +	if (result != 3)
+> +		return -EINVAL;
 
-BACKLIGHT BUTTON
-[17299.166313] asus_wmi: raw event code 0x2e
-[17299.166370] asus_wmi: raw event code 0xffffffffffffffff
-[17302.386607] asus_wmi: raw event code 0x2e
-[17302.386663] asus_wmi: raw event code 0xffffffffffffffff
+EINVAL should be returned if the input was invalid but here the data 
+itself is not okay so some other errno would be better.
 
-BACKLIGHT UP BUTTON
-[17332.080632] asus_wmi: raw event code 0x2f
-[17332.080727] asus_wmi: raw event code 0xffffffffffffffff
-[17332.497118] asus_wmi: raw event code 0x2f
-[17332.497192] asus_wmi: raw event code 0xffffffffffffffff
+> +	memset(rtime, 0, MSI_EC_FW_TIME_LENGTH + 1);
 
-I assume that the first "BACKLIGHT BUTTON" is the backlight DOWN button ?
+sizeof() like above.
 
+> +	result = ec_read_seq(MSI_EC_FW_TIME_ADDRESS,
+> +			     rtime,
+> +			     MSI_EC_FW_TIME_LENGTH);
+> +	if (result < 0)
+> +		return result;
+> +
+> +	result = sscanf(rtime, "%02d:%02d:%02d", &hour, &minute, &second);
+> +	if (result != 3)
+> +		return -EINVAL;
 
-2. Can you please run:
+Ditto.
 
-sudo evtest and then select the "ACPI video bus" (or something
-similar) device and see if that reports brightness up/down
-keypresses?  And then do the same thing for the 
-"Asus WMI hotkeys" device ? I expect the Asus WMI hotkeys
-device to only report brightness up keypresses (after my
-hwdb "fix") while I expect brightness-up events to get
-reported twice, by both the "ACPI video bus" device and
-the "Asus WMI hotkeys" device.
+> +
+> +	return sysfs_emit(buf, "%04d/%02d/%02d %02d:%02d:%02d\n", year, month, day,
+> +			  hour, minute, second);
 
-Can you confirm this? This also means that brightness
-up will take bigger steps (2 steps per keypress) then
-brightness down, right ?
+It would be kind of nice to use %pt formatting here instead of custom
+datetime format, however, it would either require converting to time64_t 
+or using struct rtc_time. The latter would naturally have the right fields 
+but they're not unsigned so my comment above about %u is not going to work 
+well with it.
 
-3. Please run:
+I'm also a bit unsure whether it's appropriate to use that struct outside 
+of rtc realm. vsprintf.c seems to convert time64_t into rtc_time before 
+printing though.
 
-sudo acpidump -o acpidump.txt
+Hans, do you have any idea about the struct rtc_time?
 
-and send me a private email with acpidump.txt attached.
+> +}
+> +
+> +static DEVICE_ATTR_RO(fw_version);
+> +static DEVICE_ATTR_RO(fw_release_date);
+> +
+> +static struct attribute *msi_root_attrs[] = {
+> +	&dev_attr_fw_version.attr,
+> +	&dev_attr_fw_release_date.attr,
+> +	NULL
+> +};
+> +
+> +static struct attribute_group msi_root_group = {
+> +	.attrs = msi_root_attrs,
+> +};
+> +
+>  /*
+>   * Sysfs platform driver
+>   */
+>  
+>  static int msi_platform_probe(struct platform_device *pdev)
+>  {
+> -	return 0;
+> +	return sysfs_create_group(&pdev->dev.kobj, &msi_root_group);
+>  }
+>  
+>  static int msi_platform_remove(struct platform_device *pdev)
+>  {
+> +	sysfs_remove_group(&pdev->dev.kobj, &msi_root_group);
+>  	return 0;
+>  }
 
-Regards,
+Don't handle add/remove but put the attribute group pointer into the 
+platform_driver.driver instead.
 
-Hans
-
-
-
-
-
-
-> On 01/10/2023 13:45, Hans de Goede wrote:
->> Hi James,
->>
->> On 10/1/23 10:46, James John wrote:
->>> Hello Han,
->>>
->>> Thank you very much for this detailed steps. I was able to reproduce this with "evtest" and everything went okay.
->>>
->>> After editing /lib/udev/hwdb.d/60-keyboarrd.hwdb as you specified, the problem has been fixed, which I believe should revert on reboot?
->> No this will fix it until /lib/udev/hwdb.d/60-keyboarrd.hwdb gets overwritten by your
->> package-manager the next time the systemd packages get updated.
->>
->>> This is the content of /sys/class/dmi/id/modalias
->>>
->>> dmi:bvnAmericanMegatrendsInternational,LLC.:bvrUX5304VA.304:bd05/16/2023:br5.27:svnASUSTeKCOMPUTERINC.:pnZenbookS13UX5304VA_UX5304VA:pvr1.0:rvnASUSTeKCOMPUTERINC.:rnUX5304VA:rvr1.0:cvnASUSTeKCOMPUTERINC.:ct10:cvr1.0:sku:
->> Thanks.
->>
->> Looking at:
->> https://bbs.archlinux.org/viewtopic.php?pid=2123716
->>
->> I see that at least one other model Asus laptop is affected too. So rather then
->> adding a more specific hwdb rule for your model I would like to try and find
->> the root cause of these 0x20 event code events when pressing capslock
->> on your laptop.
->>
->>> Yes, I built my kernel. I wish I could parse this and write a proper quirk.
->> Good, I've written a small kernel patch to get to the bottom of this (attached)
->> can you please build a kernel with this. Then boot into this kernel and
->> then run dmesg -w
->>
->> When you now press capslock you should see log lines show up which contain
->> "raw event code 0x..."
->>
->> Please let me know what these lines show when pressing capslock.
->>
->> Please also let me know what these lines show when pressing other
->> hotkeys which are handled by asus-nb-wmi (you can re-run "sudo evtest"
->> to check which keys that are).
->>
->> I think the issue might be that the asus-wmi code is filtering out
->> the higher bits of the value, which causes some new events to
->> get mapped as just 0x20 instead of some-higher-bits + 0x20.
->>
->> Also I'm wondering if everything else works as it should,
->> e.g. does changing the brightness with the brightness hotkeys
->> still work after setting up the hwdb filtering ?
->>
->> And does the lid-switch (suspend the machine when the lid is closed)
->> work ?
->>
->>
->>> Also, I don't know if this is related; the hotkeys should be enabled by default. Fn key should be for Function keys. But in the current state, it is reversed.
->> This is laptop models specific and not really controlled by Linux,
->> sometimes you can change the default in the BIOS. Or sometimes you
->> can change the default by pressing Fn + Esc.
->>
->> Regards,
->>
->> Hans
->>
->>
->>
->>
->>> On 01/10/2023 09:28, Hans de Goede wrote:
->>>> Hi James,
->>>>
->>>> On 10/1/23 10:11, James John wrote:
->>>>> Hello,
->>>>>
->>>>> First of all, thank you very much for the work you do with maintaining these drivers and supporting systems. It is not an easy one.
->>>>>
->>>>> I have debugged this bug down to the asus_nb_wmi module. When I disable this module, the problem goes away, but then other hotkeys are not recognized. Attached is a debug event from libinput, where I pressed the capslock twice
->>>>>
->>>>> I have tried to dabble around with asus-nb-wmi.c codes to see if I could fix it by luck, by adding UX5304VA to `static const struct dmi_system_id asus_quirks[]` but to no avail. And I have a very little knowledge of what "quirks" are.
->>>>>
->>>>> I have attached some information regarding my hardware and kernel. I will be available to provide any more information that might be needed to resolve this.
->>>>>
->>>>> A related open thread: https://bbs.archlinux.org/viewtopic.php?pid=2123716
->>>> First of all lets confirm that the KEY_BRIGHTNESSDOWN events are really coming from asus_nb_wmi.
->>>>
->>>> Please install evtest and then run "sudo evtest" and then select the "Asus WMI hotkeys" device
->>>> by typing its number followed by enter.
->>>>
->>>> After this reproduce the bug and see if the log shows KEY_BRIGHTNESSDOWN.
->>>>
->>>> Since you said you tried playing around with the quirks, I assume you can build
->>>> your own kernel, please let me know if that is wrong.
->>>>
->>>> If this confirms the KEY_BRIGHTNESSDOWN events are coming from the "Asus WMI hotkeys" device,
->>>> then please edit /lib/udev/hwdb.d/60-keyboard.hwdb
->>>>
->>>> And search for "Asus WMI hotkeys", this should find this section:
->>>>
->>>> evdev:name:Asus WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
->>>> evdev:name:Eee PC WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
->>>> evdev:name:Asus Laptop extra buttons:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
->>>>    KEYBOARD_KEY_6b=f21                                    # Touchpad Toggle
->>>>    KEYBOARD_KEY_7c=f20                                    # Remap micmute to f20
->>>>
->>>> Change this to:
->>>>
->>>> evdev:name:Asus WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
->>>> evdev:name:Eee PC WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
->>>> evdev:name:Asus Laptop extra buttons:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
->>>>    KEYBOARD_KEY_6b=f21                                    # Touchpad Toggle
->>>>    KEYBOARD_KEY_7c=f20                                    # Remap micmute to f20
->>>>    KEYBOARD_KEY_20=unknown
->>>>
->>>> And then run "sudo udevadm hwdb --update" followed by "sudo udevadm trigger",
->>>> that should filter out the spurious keypresses.
->>>>
->>>> If that helps, please run:
->>>>
->>>> cat /sys/class/dmi/id/modalias
->>>>
->>>> So that a proper DMI based quirk to only to the filtering on your model
->>>> can be written.
->>>>
->>>> Regards,
->>>>
->>>> Hans
->>>>
+-- 
+ i.
 
