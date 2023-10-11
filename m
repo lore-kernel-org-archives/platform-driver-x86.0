@@ -2,77 +2,75 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B4DCD6E53
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Oct 2023 09:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1312CD6E55
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Oct 2023 09:25:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230496AbjJKJXX (ORCPT
+        id S231346AbjJKJZy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 Oct 2023 05:23:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38322 "EHLO
+        Wed, 11 Oct 2023 05:25:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230351AbjJKJXV (ORCPT
+        with ESMTP id S231888AbjJKJZn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 Oct 2023 05:23:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64BB691
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Oct 2023 02:22:34 -0700 (PDT)
+        Wed, 11 Oct 2023 05:25:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 015F6A7
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Oct 2023 02:24:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1697016153;
+        s=mimecast20190719; t=1697016299;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RxJHJUn63z3IJzWto9lPYxX7e40eR/pdovecj6uC/Z4=;
-        b=A+mGje8gYJKdV/I+xBeAUtMvEYM+n0ZQzg2bxk/V9fABJodlD0RiSUNd9EBVG9WqECvi6/
-        e+IQ4UFR6d+W1R2b7O1fDNaKqBiU4hX9pUG3uOLvWMhDIGrGo/EBxJ68GS6fi0EJ+T2Xfr
-        0tvVFt4sQyzY4zE8RomA6JD8S2KnRBE=
+        bh=uPzSn9vWUnaVXWODF2M9d9VKpxpX+zUA3E9w940+qqs=;
+        b=Ut3VJ9S732US2xhbM63ca0knNiGuyJTyR1HO8CnF4RjbqWyy84AoFoS9SKTkHqVjmUUJ2F
+        SGOEcalKNKmLA6PkQ+tKrglbmF1VAQWZhHJGpfsLb7R0YrYKOvQPESTiKUDmfRBBd32ES9
+        /SQ4dihFKEFGFv14od0Er2PkQ8xWCJo=
 Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
  [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-460-TaJgdYmMPPKeUF7ZI3DGDQ-1; Wed, 11 Oct 2023 05:22:32 -0400
-X-MC-Unique: TaJgdYmMPPKeUF7ZI3DGDQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-99c8bbc902eso531239766b.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Oct 2023 02:22:32 -0700 (PDT)
+ us-mta-135-c5omvKvSPoOml5I6h7R_xw-1; Wed, 11 Oct 2023 05:24:55 -0400
+X-MC-Unique: c5omvKvSPoOml5I6h7R_xw-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9adad8f306fso495809866b.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Oct 2023 02:24:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697016151; x=1697620951;
+        d=1e100.net; s=20230601; t=1697016294; x=1697621094;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RxJHJUn63z3IJzWto9lPYxX7e40eR/pdovecj6uC/Z4=;
-        b=dMZmNlkF0Eefborevcq7HpLg+vjKEBOVqvzgIEzIgP3LHVL8yy4iSsLRsUmKT4b7VL
-         /2uCVXdaT4IXtLACYp3ljjVNjQv6n2Fu/JpYCj5tqCGk7SlEIYfMzXU/wBPEniFVxtBa
-         A7cU7vSgO4cko+vU70gS+fwIHvLpsNUNAzp6/zRO+ydgwjGRnJAD0vLdDyenw53kuym4
-         /v4Uh7d7aFqLRCvjD5jxtsSL0eFB1mPFLx2tVbQyrwNag/U8aRSi0AXEYZcEFBl8iZKG
-         a8yTuf8Maq/5ansqYvBs6+pfKphF3nrZ4Sj64iGo7WhKQrl69hW12/jF0f0kSF06tArY
-         2bvw==
-X-Gm-Message-State: AOJu0YwwLKhGFYh6xjrKU3Ffiub4Wf52igQtF1DPSSKfuopPQMixwWiS
-        XErN8BNehAlBTuNovx55T8gveY308XsLWgtMmyZ7qEvAKD8al7Vusx1Cigw6/Rsa5T+LP6thzX+
-        rmJBJrzneZ8jI7SbG3XX75JW90y3H/pZALXJM6wVn+g==
-X-Received: by 2002:a17:906:c801:b0:9ae:961a:de7f with SMTP id cx1-20020a170906c80100b009ae961ade7fmr15216406ejb.30.1697016151079;
-        Wed, 11 Oct 2023 02:22:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGR5dViA7KavRhQo3Fw/3LFpOgpqXA/54ymk49+EWv6Q+AyuXhX1odfLM/vG0zRW69lAgdA3Q==
-X-Received: by 2002:a17:906:c801:b0:9ae:961a:de7f with SMTP id cx1-20020a170906c80100b009ae961ade7fmr15216394ejb.30.1697016150742;
-        Wed, 11 Oct 2023 02:22:30 -0700 (PDT)
+        bh=uPzSn9vWUnaVXWODF2M9d9VKpxpX+zUA3E9w940+qqs=;
+        b=QsMqn5ZqGTzKAmnfyBLcqaaem6lff5CBIKFnwIiiPf2ujfJhPKX/Z/NhwBjZuZVW1L
+         /YBLQKzwo8wE9xgfNdj+S8Z7TKADWncqvbjcpoHwI/Nw5wc+8N55VcYD0SglbXJ33jD9
+         xuY21rWKHk0NvkRsgHPJbsuSWM4CnozvXydi2g4NZJ1mauxuRHKqbgecbECF4MTCEx1g
+         jdn7fqCRgfU4elEutgtks0q1g9b/B1wEH4ZUBp26A3rXjlmvij6ziMFd0Bf0Brda4Njf
+         huqeQLHt1ocz74V44ZDTbxRYs184C4lEMmVsd+3ITL5+miwwM7hNPlo6MZnGlwJU6edf
+         g4Hg==
+X-Gm-Message-State: AOJu0YwGbMsQR7D8g3YHVslKunHcxuEcw9eadt9Yan123fFxsRiKvb26
+        I9JluAmaU8cZhzgZSvoiofEWiwpRId28GFW6aL5atWkwZCzCMJ/u2v29sfz/KRUAfoFwBFm9mS3
+        tMNHmyD5XZZuW0bVXLwErjlCTPLQzbfQeAA==
+X-Received: by 2002:a17:906:3ca1:b0:9b7:37de:6009 with SMTP id b1-20020a1709063ca100b009b737de6009mr16799533ejh.3.1697016294356;
+        Wed, 11 Oct 2023 02:24:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEHEzAlF5ztKmPbqb8Vn9ObdjP3Pt9FndCDWt0Qvblb1kl6soDHXxru4h911Wj1TWMzGAdqkA==
+X-Received: by 2002:a17:906:3ca1:b0:9b7:37de:6009 with SMTP id b1-20020a1709063ca100b009b737de6009mr16799514ejh.3.1697016293958;
+        Wed, 11 Oct 2023 02:24:53 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id h16-20020a17090619d000b00997e99a662bsm9472611ejd.20.2023.10.11.02.22.29
+        by smtp.gmail.com with ESMTPSA id u16-20020a1709064ad000b009ae54585aebsm9387446ejt.89.2023.10.11.02.24.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Oct 2023 02:22:30 -0700 (PDT)
-Message-ID: <b3b6044e-c614-3709-64cf-81edf000764d@redhat.com>
-Date:   Wed, 11 Oct 2023 11:22:29 +0200
+        Wed, 11 Oct 2023 02:24:53 -0700 (PDT)
+Message-ID: <4301d3af-4cb6-dd2e-4fbd-8c8ee96b7400@redhat.com>
+Date:   Wed, 11 Oct 2023 11:24:52 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH v2 1/3] platform/x86: msi-ec: Fix the 3rd config
+Subject: Re: [PATCH 1/6] platform/x86: wmi: Update MAINTAINERS entry
 Content-Language: en-US, nl
-To:     Nikita Kravets <teackot@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Aakash Singh <mail@singhaakash.dev>,
-        Jose Angel Pastrana <japp0005@red.ujaen.es>
-References: <20231006175352.1753017-3-teackot@gmail.com>
- <20231006175352.1753017-5-teackot@gmail.com>
+To:     Armin Wolf <W_Armin@gmx.de>, markgross@kernel.org,
+        ilpo.jarvinen@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231007233933.72121-1-W_Armin@gmx.de>
+ <20231007233933.72121-2-W_Armin@gmx.de>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20231006175352.1753017-5-teackot@gmail.com>
+In-Reply-To: <20231007233933.72121-2-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -81,14 +79,15 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 10/6/23 19:53, Nikita Kravets wrote:
-> Fix the charge control address of CONF3 and remove an incorrect firmware
-> version which turned out to be a BIOS firmware and not an EC firmware.
+On 10/8/23 01:39, Armin Wolf wrote:
+> Since 2011, the WMI subsystem is marked as orphaned,
+> which means that a important part of platform support
+> for modern notebooks and even desktops is receiving
+> not enough maintenance.
+> So i decided to take over the maintenance of the WMI
+> subsystem.
 > 
-> Fixes: 392cacf2aa10 ("platform/x86: Add new msi-ec driver")
-> Cc: Aakash Singh <mail@singhaakash.dev>
-> Cc: Jose Angel Pastrana <japp0005@red.ujaen.es>
-> Signed-off-by: Nikita Kravets <teackot@gmail.com>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 
 Thank you for your patch/series, I've applied this patch
 (series) to the pdx86 fixes branch:
@@ -108,27 +107,25 @@ Hans
 
 
 > ---
->  drivers/platform/x86/msi-ec.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  MAINTAINERS | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/msi-ec.c b/drivers/platform/x86/msi-ec.c
-> index f26a3121092f..492eb383ee7a 100644
-> --- a/drivers/platform/x86/msi-ec.c
-> +++ b/drivers/platform/x86/msi-ec.c
-> @@ -276,14 +276,13 @@ static struct msi_ec_conf CONF2 __initdata = {
->  
->  static const char * const ALLOWED_FW_3[] __initconst = {
->  	"1592EMS1.111",
-> -	"E1592IMS.10C",
->  	NULL
->  };
->  
->  static struct msi_ec_conf CONF3 __initdata = {
->  	.allowed_fw = ALLOWED_FW_3,
->  	.charge_control = {
-> -		.address      = 0xef,
-> +		.address      = 0xd7,
->  		.offset_start = 0x8a,
->  		.offset_end   = 0x80,
->  		.range_min    = 0x8a,
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 90f13281d297..ba309dea6e4e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -378,8 +378,9 @@ F:	drivers/acpi/viot.c
+>  F:	include/linux/acpi_viot.h
+> 
+>  ACPI WMI DRIVER
+> +M:	Armin Wolf <W_Armin@gmx.de>
+>  L:	platform-driver-x86@vger.kernel.org
+> -S:	Orphan
+> +S:	Maintained
+>  F:	Documentation/driver-api/wmi.rst
+>  F:	Documentation/wmi/
+>  F:	drivers/platform/x86/wmi.c
+> --
+> 2.39.2
+> 
 
