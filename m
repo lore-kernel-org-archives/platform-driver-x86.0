@@ -2,192 +2,198 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E07CDB465
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Oct 2023 02:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1498CDB46E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Oct 2023 02:38:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235279AbjJLCiy (ORCPT
+        id S235283AbjJLCi4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 Oct 2023 22:38:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59264 "EHLO
+        Wed, 11 Oct 2023 22:38:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376738AbjJLCiq (ORCPT
+        with ESMTP id S1376685AbjJLCiq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Wed, 11 Oct 2023 22:38:46 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5EDCA9;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EAE3B6;
         Wed, 11 Oct 2023 19:38:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697078325; x=1728614325;
+  t=1697078324; x=1728614324;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=UD0nNSwyIv4IWeehjiEni1fHYTZyMVgwi/kofK50zJE=;
-  b=ZuIHGRmJ/U1q22Dnl9T/S3vOzZp9jZCoTTuVjD1VBRBN5WhKjDCBueuk
-   im3+QGQGrmWQiR4/0UjDyLJkYTokfanPscqzQerUC2otT6gMCFfk/T4uj
-   IZc3vlesVON+xFfngqxAVnq5D19NJyRLZk9TNjEeyOrhdfjkcyi9iachl
-   KuAsJqNupnRRngMrH7jTlIsOgiR/CEsSPCB56dS5gGfxTmTr6hb7AShYR
-   /1edjFIA9JU2fPVe85kGGLbRNNeSiKEC/ZZdUEv2pbWluyKo/vhts+AIu
-   suKnqL2gb1wxRA+/KVkAcmDzBAa78a/UfMY+/99h0RytxphZNe3X5wzaZ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="3402628"
+  bh=li3+HBcLfyqaB5i1kzrDK0rUdYK4HddNZ3J91qCSsyA=;
+  b=VCF8ET/cgcSJuwntkK8FpbxXub1PRyp9ic+EEmzWB/Pq6Iib+CzvY0/U
+   dweyvMVL5NuFqInHC+gu49/t4R+Ima9t9hxEG+mXcfCSvHZ0FiagUt3Wo
+   fdU6HoyK8tTlWa10XNvPfhVcy2LtD8tBl5cMzilT2Yf1LsaYWr4zye5Rb
+   WDgt4lOzr9Qf6Gvp7vvHKoBqlPktKTEC1w5TwgYeMcoKWR48UKVskFybR
+   ecpThg5aYBWDzhn08HtvkT6Xa2uDhY/qT0IWDHYjtwTqxQOLKz0n5uoQK
+   eFErVfJpTcVDxuqhhNLx3wi5aJWe6oWThxYVtfD83fLC0dhEC1qsjJK5X
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="3402626"
 X-IronPort-AV: E=Sophos;i="6.03,217,1694761200"; 
-   d="scan'208";a="3402628"
+   d="scan'208";a="3402626"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 19:38:42 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="783507864"
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="783507863"
 X-IronPort-AV: E=Sophos;i="6.03,217,1694761200"; 
-   d="scan'208";a="783507864"
+   d="scan'208";a="783507863"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 19:38:42 -0700
+  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 19:38:41 -0700
 Received: from debox1-desk4.intel.com (unknown [10.209.105.238])
-        by linux.intel.com (Postfix) with ESMTP id F3DA3580E33;
+        by linux.intel.com (Postfix) with ESMTP id 8B458580D79;
         Wed, 11 Oct 2023 19:38:41 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         ilpo.jarvinen@linux.intel.com, rajvi.jingar@linux.intel.com
-Subject: [PATCH V3 09/16] platform/x86/intel/pmc: Allow pmc_core_ssram_init to fail
-Date:   Wed, 11 Oct 2023 19:38:33 -0700
-Message-Id: <20231012023840.3845703-10-david.e.box@linux.intel.com>
+Subject: [PATCH V3 06/16] platform/x86/intel/pmt: Add header to struct intel_pmt_entry
+Date:   Wed, 11 Oct 2023 19:38:30 -0700
+Message-Id: <20231012023840.3845703-7-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231012023840.3845703-1-david.e.box@linux.intel.com>
 References: <20231012023840.3845703-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Currently, if the PMC SSRAM initialization fails, no error is returned and
-the only indication is that a PMC device has not been created.  Instead,
-allow an error to be returned and handled directly by the caller.
+The PMT header is passed to several functions. Instead, store the header in
+struct intel_pmt_entry which is also passed to these functions and shorten
+the argument list. This simplifies the calls in preparation for later
+changes.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
-V3 - New patch split from V2 PATCH 9
-   - Add dev_warn on pmc_core_ssram_init fail
+V3 - No change
 
- drivers/platform/x86/intel/pmc/core.h       |  2 +-
- drivers/platform/x86/intel/pmc/core.h       |  2 +-
- drivers/platform/x86/intel/pmc/core_ssram.c | 21 +++++++++++++--------
- drivers/platform/x86/intel/pmc/mtl.c        | 12 ++++++++----
- 3 files changed, 22 insertions(+), 13 deletions(-)
+V2 - No change
 
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index ccf24e0f5e50..edaa70067e41 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -492,7 +492,7 @@ int pmc_core_resume_common(struct pmc_dev *pmcdev);
- int get_primary_reg_base(struct pmc *pmc);
- extern void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev);
+ drivers/platform/x86/intel/pmt/class.c     |  8 +++-----
+ drivers/platform/x86/intel/pmt/class.h     | 16 ++++++++--------
+ drivers/platform/x86/intel/pmt/crashlog.c  |  2 +-
+ drivers/platform/x86/intel/pmt/telemetry.c |  2 +-
+ 4 files changed, 13 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
+index 32608baaa56c..142a24e3727d 100644
+--- a/drivers/platform/x86/intel/pmt/class.c
++++ b/drivers/platform/x86/intel/pmt/class.c
+@@ -159,12 +159,12 @@ static struct class intel_pmt_class = {
+ };
  
--extern void pmc_core_ssram_init(struct pmc_dev *pmcdev);
-+extern int pmc_core_ssram_init(struct pmc_dev *pmcdev);
- 
- int spt_core_init(struct pmc_dev *pmcdev);
- int cnp_core_init(struct pmc_dev *pmcdev);
-diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
-index 13fa16f0d52e..815950713e25 100644
---- a/drivers/platform/x86/intel/pmc/core_ssram.c
-+++ b/drivers/platform/x86/intel/pmc/core_ssram.c
-@@ -35,20 +35,20 @@ static inline u64 get_base(void __iomem *addr, u32 offset)
- 	return lo_hi_readq(addr + offset) & GENMASK_ULL(63, 3);
- }
- 
--static void
-+static int
- pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
- 		 const struct pmc_reg_map *reg_map, int pmc_index)
+ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
+-				    struct intel_pmt_header *header,
+ 				    struct intel_vsec_device *ivdev,
+ 				    struct resource *disc_res)
  {
- 	struct pmc *pmc = pmcdev->pmcs[pmc_index];
+ 	struct pci_dev *pci_dev = ivdev->pcidev;
+ 	struct device *dev = &ivdev->auxdev.dev;
++	struct intel_pmt_header *header = &entry->header;
+ 	u8 bir;
  
- 	if (!pwrm_base)
--		return;
-+		return -ENODEV;
- 
- 	/* Memory for primary PMC has been allocated in core.c */
- 	if (!pmc) {
- 		pmc = devm_kzalloc(&pmcdev->pdev->dev, sizeof(*pmc), GFP_KERNEL);
- 		if (!pmc)
--			return;
-+			return -ENOMEM;
- 	}
- 
- 	pmc->map = reg_map;
-@@ -57,10 +57,12 @@ pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
- 
- 	if (!pmc->regbase) {
- 		devm_kfree(&pmcdev->pdev->dev, pmc);
--		return;
-+		return -ENOMEM;
- 	}
- 
- 	pmcdev->pmcs[pmc_index] = pmc;
-+
-+	return 0;
- }
- 
- static void
-@@ -96,7 +98,7 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, void __iomem *ssram, u32 offset,
- 		iounmap(ssram);
- }
- 
--void pmc_core_ssram_init(struct pmc_dev *pmcdev)
-+int pmc_core_ssram_init(struct pmc_dev *pmcdev)
+ 	/*
+@@ -313,7 +313,6 @@ int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespa
+ 			 struct intel_vsec_device *intel_vsec_dev, int idx)
  {
- 	void __iomem *ssram;
- 	struct pci_dev *pcidev;
-@@ -105,7 +107,7 @@ void pmc_core_ssram_init(struct pmc_dev *pmcdev)
+ 	struct device *dev = &intel_vsec_dev->auxdev.dev;
+-	struct intel_pmt_header header;
+ 	struct resource	*disc_res;
+ 	int ret;
  
- 	pcidev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(20, 2));
- 	if (!pcidev)
--		goto out;
-+		return -ENODEV;
+@@ -323,16 +322,15 @@ int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespa
+ 	if (IS_ERR(entry->disc_table))
+ 		return PTR_ERR(entry->disc_table);
  
- 	ret = pcim_enable_device(pcidev);
+-	ret = ns->pmt_header_decode(entry, &header, dev);
++	ret = ns->pmt_header_decode(entry, dev);
  	if (ret)
-@@ -123,11 +125,14 @@ void pmc_core_ssram_init(struct pmc_dev *pmcdev)
- 	pmc_core_ssram_get_pmc(pmcdev, ssram, SSRAM_PCH_OFFSET, PMC_IDX_PCH);
+ 		return ret;
  
- 	iounmap(ssram);
--out:
--	return;
-+
-+	return 0;
+-	ret = intel_pmt_populate_entry(entry, &header, intel_vsec_dev, disc_res);
++	ret = intel_pmt_populate_entry(entry, intel_vsec_dev, disc_res);
+ 	if (ret)
+ 		return ret;
  
- disable_dev:
-+	pmcdev->ssram_pcidev = NULL;
- 	pci_disable_device(pcidev);
- release_dev:
- 	pci_dev_put(pcidev);
-+
-+	return ret;
- }
-diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-index c3b5f4fe01d1..d1d3d33fb4b8 100644
---- a/drivers/platform/x86/intel/pmc/mtl.c
-+++ b/drivers/platform/x86/intel/pmc/mtl.c
-@@ -990,12 +990,16 @@ int mtl_core_init(struct pmc_dev *pmcdev)
- 	mtl_d3_fixup();
- 
- 	pmcdev->resume = mtl_resume;
+ 	return intel_pmt_dev_register(entry, ns, dev);
 -
- 	pmcdev->regmap_list = mtl_pmc_info_list;
--	pmc_core_ssram_init(pmcdev);
+ }
+ EXPORT_SYMBOL_NS_GPL(intel_pmt_dev_create, INTEL_PMT);
  
--	/* If regbase not assigned, set map and discover using legacy method */
--	if (!pmc->regbase) {
-+	/*
-+	 * If ssram init fails use legacy method to at least get the
-+	 * primary PMC
-+	 */
-+	ret = pmc_core_ssram_init(pmcdev);
-+	if (ret) {
-+		dev_warn(&pmcdev->pdev->dev,
-+			 "ssram init failed, %d, using legacy init\n", ret);
- 		pmc->map = &mtl_socm_reg_map;
- 		ret = get_primary_reg_base(pmc);
- 		if (ret)
+diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
+index db11d58867ce..e477a19f6700 100644
+--- a/drivers/platform/x86/intel/pmt/class.h
++++ b/drivers/platform/x86/intel/pmt/class.h
+@@ -18,7 +18,15 @@
+ #define GET_BIR(v)		((v) & GENMASK(2, 0))
+ #define GET_ADDRESS(v)		((v) & GENMASK(31, 3))
+ 
++struct intel_pmt_header {
++	u32	base_offset;
++	u32	size;
++	u32	guid;
++	u8	access_type;
++};
++
+ struct intel_pmt_entry {
++	struct intel_pmt_header	header;
+ 	struct bin_attribute	pmt_bin_attr;
+ 	struct kobject		*kobj;
+ 	void __iomem		*disc_table;
+@@ -29,19 +37,11 @@ struct intel_pmt_entry {
+ 	int			devid;
+ };
+ 
+-struct intel_pmt_header {
+-	u32	base_offset;
+-	u32	size;
+-	u32	guid;
+-	u8	access_type;
+-};
+-
+ struct intel_pmt_namespace {
+ 	const char *name;
+ 	struct xarray *xa;
+ 	const struct attribute_group *attr_grp;
+ 	int (*pmt_header_decode)(struct intel_pmt_entry *entry,
+-				 struct intel_pmt_header *header,
+ 				 struct device *dev);
+ };
+ 
+diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
+index bbb3d61d09f4..4014c02cafdb 100644
+--- a/drivers/platform/x86/intel/pmt/crashlog.c
++++ b/drivers/platform/x86/intel/pmt/crashlog.c
+@@ -223,10 +223,10 @@ static const struct attribute_group pmt_crashlog_group = {
+ };
+ 
+ static int pmt_crashlog_header_decode(struct intel_pmt_entry *entry,
+-				      struct intel_pmt_header *header,
+ 				      struct device *dev)
+ {
+ 	void __iomem *disc_table = entry->disc_table;
++	struct intel_pmt_header *header = &entry->header;
+ 	struct crashlog_entry *crashlog;
+ 
+ 	if (!pmt_crashlog_supported(entry))
+diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
+index 39cbc87cc28a..f86080e8bebd 100644
+--- a/drivers/platform/x86/intel/pmt/telemetry.c
++++ b/drivers/platform/x86/intel/pmt/telemetry.c
+@@ -58,10 +58,10 @@ static bool pmt_telem_region_overlaps(struct intel_pmt_entry *entry,
+ }
+ 
+ static int pmt_telem_header_decode(struct intel_pmt_entry *entry,
+-				   struct intel_pmt_header *header,
+ 				   struct device *dev)
+ {
+ 	void __iomem *disc_table = entry->disc_table;
++	struct intel_pmt_header *header = &entry->header;
+ 
+ 	if (pmt_telem_region_overlaps(entry, dev))
+ 		return 1;
 -- 
 2.34.1
 
