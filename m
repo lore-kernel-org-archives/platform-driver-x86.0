@@ -2,83 +2,87 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3949ECDB46E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Oct 2023 14:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26DCCDB47E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Oct 2023 14:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233710AbjJLOMO (ORCPT
+        id S235570AbjJLOMe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 12 Oct 2023 10:12:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40970 "EHLO
+        Thu, 12 Oct 2023 10:12:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234008AbjJLOMN (ORCPT
+        with ESMTP id S234008AbjJLOMd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 Oct 2023 10:12:13 -0400
+        Thu, 12 Oct 2023 10:12:33 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A6EBB8
-        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Oct 2023 07:12:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A7F7B7;
+        Thu, 12 Oct 2023 07:12:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697119932; x=1728655932;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ygQAs4yOCyYAtiyrVlNzmhUaY0B4YIE06sEWsgUYS1Y=;
-  b=HCVocUNnJrT/kBSe3qfRF3vXMuvS829j31807IUZh1fuuVL+L3H0fPHK
-   GBFcEr+RlBFi8MlQCg79e+Dz/VeVdtAHVtB3bi8H7OKw3xAs9nX5Y/kG7
-   DOCcHsw/Vsroc8rtXWuMzxPDDwjbulOncyinYXHdiX2FcM6+I9t3RrXbC
-   yC/yddc3GhrLFDsj6qUhdMWyTTo7vjHpMxM4dpqh3F4C4d7CLRhAfJRTN
-   yM8yeqYWcHnN6kbX0lyJuREmrhOGotutt9rPnFjghFKLsrc8PhPEbw6kB
-   54yJ2yIrKGab6SIJTPmnMMFTQHjyrPXtOXZwpiBZznOrnmSqkVhhA8chK
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="365198291"
+  t=1697119952; x=1728655952;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=Up5cYfavqLKRXxPm/TxO87Jjez9cVRJpervZ2yVh8tU=;
+  b=Nl7oEHdVysWbkRwhmlJp/t8AQ5j1wghc7BR5WvuzNL/CsQt1v9KiQTGz
+   CdR7d5h6IixUq4g9jH3bTCGnxG/GDNojne88pZBLuV1a6dKuY7hQFmdjY
+   3A/UsT4uCNLdL8LCIOETooDCfd9YLJtKo/5pseK6BNMywRMJHP5ER4gcS
+   44OxN1uP4yE/2TkuV/jPIUs9psDJgqkQiAZDZuCfMs9hkMFCH2/ZQ7Y3d
+   o6vQunf+zDL678bg82CTrfCvsBH2Qla1e3lauEYLkRMX5nzuCENJoAm1U
+   AX2k5xYnEmKxU5ADhMDBMSIdmvEn/AR5NwY4YFGTLalxe2c9u1+NKrQBx
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="365198375"
 X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="365198291"
+   d="scan'208";a="365198375"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 07:12:08 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 07:12:32 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="1001555010"
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="1001555047"
 X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="1001555010"
-Received: from asroczyn-mobl.ger.corp.intel.com ([10.249.36.107])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 07:12:06 -0700
-Date:   Thu, 12 Oct 2023 17:12:04 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Suma Hegde <suma.hegde@amd.com>
-cc:     platform-driver-x86@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Naveen Krishna Chatradhi <nchatrad@amd.com>
-Subject: Re: [PATCH v5 2/3] platform/x86/amd/hsmp: add support for metrics
- tbl
-In-Reply-To: <20231010120310.3464066-2-suma.hegde@amd.com>
-Message-ID: <502950d-de51-85d4-1957-94ce7b99243a@linux.intel.com>
-References: <20231010120310.3464066-1-suma.hegde@amd.com> <20231010120310.3464066-2-suma.hegde@amd.com>
+   d="scan'208";a="1001555047"
+Received: from nesterov-mobl.ger.corp.intel.com (HELO localhost) ([10.249.36.132])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 07:12:29 -0700
+From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mark Gross <markgross@kernel.org>
+In-Reply-To: <20231010133936.3891996-1-andriy.shevchenko@linux.intel.com>
+References: <20231010133936.3891996-1-andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 1/1] platform/x86: xo15-ebook: Replace open coded
+ acpi_match_acpi_device()
+Message-Id: <169711994332.7227.17924543281934961417.b4-ty@linux.intel.com>
+Date:   Thu, 12 Oct 2023 17:12:23 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 10 Oct 2023, Suma Hegde wrote:
+On Tue, 10 Oct 2023 16:39:36 +0300, Andy Shevchenko wrote:
 
-> AMD MI300 MCM provides GET_METRICS_TABLE message to retrieve
-> all the system management information from SMU.
+> Replace open coded acpi_match_acpi_device() in ebook_switch_add().
 > 
-> The metrics table is made available as hexadecimal sysfs binary file
-> under per socket sysfs directory created at
-> /sys/devices/platform/amd_hsmp/socket%d/metrics_bin
+> Note, while it is a bit longer it is more robust in case
+> more IDs will be added.
 > 
-> Metrics table definitions will be documented as part of Public PPR.
-> The same is defined in the amd_hsmp.h header.
 > 
-> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-> Reviewed-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
-
-I've applied this series to review-ilpo branch. In this patch 2/3 I made 
-the following tweaks:
-
-- lseek -> lseek()
-- dram -> DRAM in dev_err()
-- Added a period to terminate a documentation sentence
 
 
--- 
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on the review-ilpo branch the patches
+there will be added to the platform-drivers-x86/for-next branch
+and eventually will be included in the pdx86 pull-request to
+Linus for the next merge-window.
+
+The list of commits applied:
+[1/1] platform/x86: xo15-ebook: Replace open coded acpi_match_acpi_device()
+      commit: 39789590cff4043d81774d03777dabf7ba263176
+
+--
  i.
+
