@@ -2,53 +2,54 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E996CDB482
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Oct 2023 14:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33545CDB47E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Oct 2023 15:02:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378597AbjJLOq5 (ORCPT
+        id S231290AbjJLPCB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 12 Oct 2023 10:46:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48142 "EHLO
+        Thu, 12 Oct 2023 11:02:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378887AbjJLOq4 (ORCPT
+        with ESMTP id S230471AbjJLPCB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 Oct 2023 10:46:56 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0031DC9;
-        Thu, 12 Oct 2023 07:46:54 -0700 (PDT)
+        Thu, 12 Oct 2023 11:02:01 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52FB90;
+        Thu, 12 Oct 2023 08:01:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697122015; x=1728658015;
+  t=1697122919; x=1728658919;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=4rvTgMVM5nKGOGCNlkMh5wCDk9d3vDveiDXE4mFhScU=;
-  b=L+1CpnNMMK3uX4MeXfHlFWVk3IkezKEnuW7ypT2zHD1Q1wDVf2h3PMik
-   zDhscCvh5vQnxrokTiQWeuC6SV5w46/KGA5pF2p3ydb0sJRgc/BquttrU
-   RBm+g4S7vL6VzgYhY5GVlYtxxZWZYUvnLyI1eMhRV5rRQvSaL9KYq2qtR
-   IYi/tZDMXYdG8fW23G5BVU8DZktHVOjYrkggIMlIiBtndT9Vm7DUTJWk8
-   49cn8k3F9Ug1uEJ9D0CPK2tsDHESd1luvW18FYoSerT4HseXpV0kq8pe4
-   xg2Xhl8yg7ktppWzYclsXDKtvweeHPCxjkX3s0yBosuJY/tvteW0AszpO
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="383793018"
+  bh=dLXAThUg4mC4xwb/QLYtkIGsnVYBumf2JaYAcch2EPg=;
+  b=gB4TKwezdaobVFOz5v64ZK6d+dlTx/BN04/jt+ArUzoOZodShpnsBPgK
+   teZJra2kaA1Q+QkarwpA75BhluOtWoCfC6CHYSQzRmOEWMJrDZnyF+1hT
+   y6u3/X6F+jK2VcEPAVvEFuU3oONQ6AC2osr1E36/zsQ5szDJifEgTLR5Y
+   rGL+HwWP7uDOj70FGSVT3WD6eH23Q+smYpivyNgmH0gk+v9nizENAu+5E
+   V2eMJajShNQMdvBkcaltOM7AVoa4OsNsn86IfRo/T9fL1D+EaHMAMhZG2
+   OjnZAVagspZBofkGD5I0+0hQEcsgqWKOlmLfAk50+qSnkfuC6B1C2d5Tj
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="449131765"
 X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="383793018"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 07:46:54 -0700
+   d="scan'208";a="449131765"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 08:01:29 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="1001563054"
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="747908047"
 X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="1001563054"
+   d="scan'208";a="747908047"
 Received: from asroczyn-mobl.ger.corp.intel.com ([10.249.36.107])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 07:46:52 -0700
-Date:   Thu, 12 Oct 2023 17:46:49 +0300 (EEST)
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 08:01:26 -0700
+Date:   Thu, 12 Oct 2023 18:01:24 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     "David E. Box" <david.e.box@linux.intel.com>
 cc:     LKML <linux-kernel@vger.kernel.org>,
         platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com
-Subject: Re: [PATCH V3 03/16] platform/x86/intel/vsec: Use cleanup.h
-In-Reply-To: <20231012023840.3845703-4-david.e.box@linux.intel.com>
-Message-ID: <114e1cc4-f129-b6cd-a83b-7d822cde178@linux.intel.com>
-References: <20231012023840.3845703-1-david.e.box@linux.intel.com> <20231012023840.3845703-4-david.e.box@linux.intel.com>
+Subject: Re: [PATCH V3 09/16] platform/x86/intel/pmc: Allow pmc_core_ssram_init
+ to fail
+In-Reply-To: <20231012023840.3845703-10-david.e.box@linux.intel.com>
+Message-ID: <ac7be397-bc9-a135-9498-72dfa1fe456d@linux.intel.com>
+References: <20231012023840.3845703-1-david.e.box@linux.intel.com> <20231012023840.3845703-10-david.e.box@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
@@ -57,70 +58,145 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Wed, 11 Oct 2023, David E. Box wrote:
 
-> Use cleanup.h helpers to handle cleanup of resources in
-> intel_vsec_add_dev() after failures.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
-> V3 - New patch.
-> 
->  drivers/platform/x86/intel/vsec.c | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-> index 15866b7d3117..f03ab89ab7c0 100644
-> --- a/drivers/platform/x86/intel/vsec.c
-> +++ b/drivers/platform/x86/intel/vsec.c
-> @@ -15,6 +15,7 @@
->  
->  #include <linux/auxiliary_bus.h>
->  #include <linux/bits.h>
-> +#include <linux/cleanup.h>
->  #include <linux/delay.h>
->  #include <linux/kernel.h>
->  #include <linux/idr.h>
-> @@ -155,10 +156,10 @@ EXPORT_SYMBOL_NS_GPL(intel_vsec_add_aux, INTEL_VSEC);
->  static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *header,
->  			      struct intel_vsec_platform_info *info)
->  {
-> -	struct intel_vsec_device *intel_vsec_dev;
-> +	struct intel_vsec_device __free(kfree) *intel_vsec_dev = NULL;
->  	struct resource *res, *tmp;
->  	unsigned long quirks = info->quirks;
-> -	int i;
-> +	int ret, i;
->  
->  	if (!intel_vsec_supported(header->id, info->caps))
->  		return -EINVAL;
-> @@ -178,10 +179,8 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
->  		return -ENOMEM;
->  
->  	res = kcalloc(header->num_entries, sizeof(*res), GFP_KERNEL);
-> -	if (!res) {
-> -		kfree(intel_vsec_dev);
-> +	if (!res)
->  		return -ENOMEM;
-> -	}
->  
->  	if (quirks & VSEC_QUIRK_TABLE_SHIFT)
->  		header->offset >>= TABLE_OFFSET_SHIFT;
-> @@ -208,8 +207,12 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
->  	else
->  		intel_vsec_dev->ida = &intel_vsec_ida;
->  
-> -	return intel_vsec_add_aux(pdev, NULL, intel_vsec_dev,
-> -				  intel_vsec_name(header->id));
-> +	ret = intel_vsec_add_aux(pdev, NULL, intel_vsec_dev,
-> +				 intel_vsec_name(header->id));
-> +
-> +	no_free_ptr(intel_vsec_dev);
-> +
-> +	return ret;
+> Currently, if the PMC SSRAM initialization fails, no error is returned and
+> the only indication is that a PMC device has not been created.  Instead,
+> allow an error to be returned and handled directly by the caller.
 
-So if intel_vsec_add_aux() returned an error, intel_vsec_dev won't be 
-freed because of the call call to no_free_ptr() before return. I that's 
-not what you intended?
+You might have a good reason for it but why isn't the call into 
+pmc_core_pmc_add() changed in this patch to take the error value into 
+account?
+
+(I vaguely remember this was probably discussed in the context of some 
+earlier patch touching this area that it was about the other code dealing 
+with NULLs or something like that).
 
 -- 
  i.
 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+> V3 - New patch split from V2 PATCH 9
+>    - Add dev_warn on pmc_core_ssram_init fail
+> 
+>  drivers/platform/x86/intel/pmc/core.h       |  2 +-
+>  drivers/platform/x86/intel/pmc/core.h       |  2 +-
+>  drivers/platform/x86/intel/pmc/core_ssram.c | 21 +++++++++++++--------
+>  drivers/platform/x86/intel/pmc/mtl.c        | 12 ++++++++----
+>  3 files changed, 22 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+> index ccf24e0f5e50..edaa70067e41 100644
+> --- a/drivers/platform/x86/intel/pmc/core.h
+> +++ b/drivers/platform/x86/intel/pmc/core.h
+> @@ -492,7 +492,7 @@ int pmc_core_resume_common(struct pmc_dev *pmcdev);
+>  int get_primary_reg_base(struct pmc *pmc);
+>  extern void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev);
+>  
+> -extern void pmc_core_ssram_init(struct pmc_dev *pmcdev);
+> +extern int pmc_core_ssram_init(struct pmc_dev *pmcdev);
+>  
+>  int spt_core_init(struct pmc_dev *pmcdev);
+>  int cnp_core_init(struct pmc_dev *pmcdev);
+> diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
+> index 13fa16f0d52e..815950713e25 100644
+> --- a/drivers/platform/x86/intel/pmc/core_ssram.c
+> +++ b/drivers/platform/x86/intel/pmc/core_ssram.c
+> @@ -35,20 +35,20 @@ static inline u64 get_base(void __iomem *addr, u32 offset)
+>  	return lo_hi_readq(addr + offset) & GENMASK_ULL(63, 3);
+>  }
+>  
+> -static void
+> +static int
+>  pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
+>  		 const struct pmc_reg_map *reg_map, int pmc_index)
+>  {
+>  	struct pmc *pmc = pmcdev->pmcs[pmc_index];
+>  
+>  	if (!pwrm_base)
+> -		return;
+> +		return -ENODEV;
+>  
+>  	/* Memory for primary PMC has been allocated in core.c */
+>  	if (!pmc) {
+>  		pmc = devm_kzalloc(&pmcdev->pdev->dev, sizeof(*pmc), GFP_KERNEL);
+>  		if (!pmc)
+> -			return;
+> +			return -ENOMEM;
+>  	}
+>  
+>  	pmc->map = reg_map;
+> @@ -57,10 +57,12 @@ pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
+>  
+>  	if (!pmc->regbase) {
+>  		devm_kfree(&pmcdev->pdev->dev, pmc);
+> -		return;
+> +		return -ENOMEM;
+>  	}
+>  
+>  	pmcdev->pmcs[pmc_index] = pmc;
+> +
+> +	return 0;
+>  }
+>  
+>  static void
+> @@ -96,7 +98,7 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, void __iomem *ssram, u32 offset,
+>  		iounmap(ssram);
+>  }
+>  
+> -void pmc_core_ssram_init(struct pmc_dev *pmcdev)
+> +int pmc_core_ssram_init(struct pmc_dev *pmcdev)
+>  {
+>  	void __iomem *ssram;
+>  	struct pci_dev *pcidev;
+> @@ -105,7 +107,7 @@ void pmc_core_ssram_init(struct pmc_dev *pmcdev)
+>  
+>  	pcidev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(20, 2));
+>  	if (!pcidev)
+> -		goto out;
+> +		return -ENODEV;
+>  
+>  	ret = pcim_enable_device(pcidev);
+>  	if (ret)
+> @@ -123,11 +125,14 @@ void pmc_core_ssram_init(struct pmc_dev *pmcdev)
+>  	pmc_core_ssram_get_pmc(pmcdev, ssram, SSRAM_PCH_OFFSET, PMC_IDX_PCH);
+>  
+>  	iounmap(ssram);
+> -out:
+> -	return;
+> +
+> +	return 0;
+>  
+>  disable_dev:
+> +	pmcdev->ssram_pcidev = NULL;
+>  	pci_disable_device(pcidev);
+>  release_dev:
+>  	pci_dev_put(pcidev);
+> +
+> +	return ret;
+>  }
+> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+> index c3b5f4fe01d1..d1d3d33fb4b8 100644
+> --- a/drivers/platform/x86/intel/pmc/mtl.c
+> +++ b/drivers/platform/x86/intel/pmc/mtl.c
+> @@ -990,12 +990,16 @@ int mtl_core_init(struct pmc_dev *pmcdev)
+>  	mtl_d3_fixup();
+>  
+>  	pmcdev->resume = mtl_resume;
+> -
+>  	pmcdev->regmap_list = mtl_pmc_info_list;
+> -	pmc_core_ssram_init(pmcdev);
+>  
+> -	/* If regbase not assigned, set map and discover using legacy method */
+> -	if (!pmc->regbase) {
+> +	/*
+> +	 * If ssram init fails use legacy method to at least get the
+> +	 * primary PMC
+> +	 */
+> +	ret = pmc_core_ssram_init(pmcdev);
+> +	if (ret) {
+> +		dev_warn(&pmcdev->pdev->dev,
+> +			 "ssram init failed, %d, using legacy init\n", ret);
+>  		pmc->map = &mtl_socm_reg_map;
+>  		ret = get_primary_reg_base(pmc);
+>  		if (ret)
+> 
