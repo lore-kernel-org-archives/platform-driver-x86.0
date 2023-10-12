@@ -2,87 +2,125 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC31CDB46E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Oct 2023 14:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E996CDB482
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Oct 2023 14:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235736AbjJLOMq (ORCPT
+        id S1378597AbjJLOq5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 12 Oct 2023 10:12:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48060 "EHLO
+        Thu, 12 Oct 2023 10:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235741AbjJLOMp (ORCPT
+        with ESMTP id S1378887AbjJLOq4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 Oct 2023 10:12:45 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0358FD3;
-        Thu, 12 Oct 2023 07:12:42 -0700 (PDT)
+        Thu, 12 Oct 2023 10:46:56 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0031DC9;
+        Thu, 12 Oct 2023 07:46:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697119963; x=1728655963;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=BkdmDpJuvdPA6uNP1YwON3CZnfQ7UiyWykOwjXTxAtU=;
-  b=F67S1Y5i4ztojdOieGL7JY7P9/p6WsTcWsp6Armt71gf81gbGq0tl3jX
-   TrV/TrlXdAUejsMBt0ahgSa9ZGAg9FGwByUJb/DFcGccH+aDNS+NkuKo0
-   pC8pI6O/7C1WjTQ6iGuzfGz0eH62O8gb+EDxBFUtTby1srX/a1cZxav3b
-   bIM/QkFmxw0FIKTuXn7kt/e6hWMwWBvtt2Yx3BWqepiEqCBw4nC3vp59h
-   U8tmrOnF3ETejv7w4Oe+4isCdHe8DW1icyWLybe4vxXkZnuywAaizZGh3
-   mfa8KPvfksLmMW9LVOjok38bzRDFGyN0VHTW5S4OIG10mQ7ut5EBGKVSf
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="6485083"
+  t=1697122015; x=1728658015;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=4rvTgMVM5nKGOGCNlkMh5wCDk9d3vDveiDXE4mFhScU=;
+  b=L+1CpnNMMK3uX4MeXfHlFWVk3IkezKEnuW7ypT2zHD1Q1wDVf2h3PMik
+   zDhscCvh5vQnxrokTiQWeuC6SV5w46/KGA5pF2p3ydb0sJRgc/BquttrU
+   RBm+g4S7vL6VzgYhY5GVlYtxxZWZYUvnLyI1eMhRV5rRQvSaL9KYq2qtR
+   IYi/tZDMXYdG8fW23G5BVU8DZktHVOjYrkggIMlIiBtndT9Vm7DUTJWk8
+   49cn8k3F9Ug1uEJ9D0CPK2tsDHESd1luvW18FYoSerT4HseXpV0kq8pe4
+   xg2Xhl8yg7ktppWzYclsXDKtvweeHPCxjkX3s0yBosuJY/tvteW0AszpO
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="383793018"
 X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="6485083"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 07:12:41 -0700
+   d="scan'208";a="383793018"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 07:46:54 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="789430632"
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="1001563054"
 X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
-   d="scan'208";a="789430632"
-Received: from nesterov-mobl.ger.corp.intel.com (HELO localhost) ([10.249.36.132])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 07:12:37 -0700
-From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     =?utf-8?q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Mark Gross <markgross@kernel.org>
-In-Reply-To: <20231010134019.3892062-1-andriy.shevchenko@linux.intel.com>
-References: <20231010134019.3892062-1-andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 1/1] platform/x86: asus-wireless: Replace open coded
- acpi_match_acpi_device()
-Message-Id: <169711995148.7227.4791108652615935564.b4-ty@linux.intel.com>
-Date:   Thu, 12 Oct 2023 17:12:31 +0300
+   d="scan'208";a="1001563054"
+Received: from asroczyn-mobl.ger.corp.intel.com ([10.249.36.107])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 07:46:52 -0700
+Date:   Thu, 12 Oct 2023 17:46:49 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com
+Subject: Re: [PATCH V3 03/16] platform/x86/intel/vsec: Use cleanup.h
+In-Reply-To: <20231012023840.3845703-4-david.e.box@linux.intel.com>
+Message-ID: <114e1cc4-f129-b6cd-a83b-7d822cde178@linux.intel.com>
+References: <20231012023840.3845703-1-david.e.box@linux.intel.com> <20231012023840.3845703-4-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 10 Oct 2023 16:40:19 +0300, Andy Shevchenko wrote:
+On Wed, 11 Oct 2023, David E. Box wrote:
 
-> Replace open coded acpi_match_acpi_device() in asus_wireless_add().
+> Use cleanup.h helpers to handle cleanup of resources in
+> intel_vsec_add_dev() after failures.
 > 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+> V3 - New patch.
 > 
+>  drivers/platform/x86/intel/vsec.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+> index 15866b7d3117..f03ab89ab7c0 100644
+> --- a/drivers/platform/x86/intel/vsec.c
+> +++ b/drivers/platform/x86/intel/vsec.c
+> @@ -15,6 +15,7 @@
+>  
+>  #include <linux/auxiliary_bus.h>
+>  #include <linux/bits.h>
+> +#include <linux/cleanup.h>
+>  #include <linux/delay.h>
+>  #include <linux/kernel.h>
+>  #include <linux/idr.h>
+> @@ -155,10 +156,10 @@ EXPORT_SYMBOL_NS_GPL(intel_vsec_add_aux, INTEL_VSEC);
+>  static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *header,
+>  			      struct intel_vsec_platform_info *info)
+>  {
+> -	struct intel_vsec_device *intel_vsec_dev;
+> +	struct intel_vsec_device __free(kfree) *intel_vsec_dev = NULL;
+>  	struct resource *res, *tmp;
+>  	unsigned long quirks = info->quirks;
+> -	int i;
+> +	int ret, i;
+>  
+>  	if (!intel_vsec_supported(header->id, info->caps))
+>  		return -EINVAL;
+> @@ -178,10 +179,8 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
+>  		return -ENOMEM;
+>  
+>  	res = kcalloc(header->num_entries, sizeof(*res), GFP_KERNEL);
+> -	if (!res) {
+> -		kfree(intel_vsec_dev);
+> +	if (!res)
+>  		return -ENOMEM;
+> -	}
+>  
+>  	if (quirks & VSEC_QUIRK_TABLE_SHIFT)
+>  		header->offset >>= TABLE_OFFSET_SHIFT;
+> @@ -208,8 +207,12 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
+>  	else
+>  		intel_vsec_dev->ida = &intel_vsec_ida;
+>  
+> -	return intel_vsec_add_aux(pdev, NULL, intel_vsec_dev,
+> -				  intel_vsec_name(header->id));
+> +	ret = intel_vsec_add_aux(pdev, NULL, intel_vsec_dev,
+> +				 intel_vsec_name(header->id));
+> +
+> +	no_free_ptr(intel_vsec_dev);
+> +
+> +	return ret;
 
+So if intel_vsec_add_aux() returned an error, intel_vsec_dev won't be 
+freed because of the call call to no_free_ptr() before return. I that's 
+not what you intended?
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on the review-ilpo branch the patches
-there will be added to the platform-drivers-x86/for-next branch
-and eventually will be included in the pdx86 pull-request to
-Linus for the next merge-window.
-
-The list of commits applied:
-[1/1] platform/x86: asus-wireless: Replace open coded acpi_match_acpi_device()
-      commit: 5a026767275ef0ba6d7aba37629d9ec638aabb7d
-
---
+-- 
  i.
 
