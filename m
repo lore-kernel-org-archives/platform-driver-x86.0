@@ -2,103 +2,79 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA8BCDB47E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Oct 2023 16:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03ACFCDB47E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Oct 2023 18:14:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231402AbjJMQ1w (ORCPT
+        id S231458AbjJMSO6 convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Oct 2023 12:27:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58110 "EHLO
+        Fri, 13 Oct 2023 14:14:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231880AbjJMQ1e (ORCPT
+        with ESMTP id S231450AbjJMSOz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Oct 2023 12:27:34 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D87A5EE;
-        Fri, 13 Oct 2023 09:25:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
- t=1697214245; x=1697819045; i=w_armin@gmx.de;
- bh=CVQm8LoNgvVfXdiZgWsMZAe2kCFpRmb9gu9VWobI3Ak=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=rS5HIDc29yY5lvCJRzumFM3VDPqoh2g5WTfNa4ZnWya1uPjNmJ5RN8FDYvNXaYX2sSnDLpHjmhZ
- x56uPaYzpC/KxcMsVFzfq7vS5KkFmprjown2xJBIKDepRduox/17f/mYHbP4OgNrAkDoYIbA0L8Hu
- eXnlYwi4tRkhUrmbkrNj5v94EdZ7CmcXoq7EMkVCvndF5e2pDVIC8dWn/44DhOKAHQNJryEr8bojA
- Cu+IrGfkoRObdSAmQpZjaGY21QTVm3f2Q4qBBOkez1FEnxOaYfAr/H+DM5qPReDuN4MKWkELddwwd
- HIT0QFJ6t5bZ5WSsT1eBrqffS3s2MmhcDHwQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MvK0R-1rhvXg1Wsr-00rHe1; Fri, 13
- Oct 2023 18:24:05 +0200
-Message-ID: <896d6ea7-f258-46f3-aed8-80c0a372e7e1@gmx.de>
-Date:   Fri, 13 Oct 2023 18:24:04 +0200
+        Fri, 13 Oct 2023 14:14:55 -0400
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 096F2BE;
+        Fri, 13 Oct 2023 11:14:53 -0700 (PDT)
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+        by unirelay04.hostedemail.com (Postfix) with ESMTP id 49C3C1A049A;
+        Fri, 13 Oct 2023 18:14:51 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf05.hostedemail.com (Postfix) with ESMTPA id 356972000D;
+        Fri, 13 Oct 2023 18:14:48 +0000 (UTC)
+Message-ID: <8fe01b6d8c558f11fe51f9da5fbfea6708766096.camel@perches.com>
+Subject: Re: [PATCH V3 03/16] platform/x86/intel/vsec: Use cleanup.h
+From:   Joe Perches <joe@perches.com>
+To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     kernel test robot <lkp@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com,
+        oe-kbuild-all@lists.linux.dev,
+        "David E. Box" <david.e.box@linux.intel.com>
+Date:   Fri, 13 Oct 2023 11:14:47 -0700
+In-Reply-To: <b93a3e8-2d15-256a-4172-a22ef17dde9@linux.intel.com>
+References: <20231012023840.3845703-4-david.e.box@linux.intel.com>
+         <202310121314.3Xpqom2w-lkp@intel.com>
+         <6ed4cd5ae37a054d4780c8fa519dc83396b15c14.camel@linux.intel.com>
+         <b93a3e8-2d15-256a-4172-a22ef17dde9@linux.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] platform/x86: wmi: Fix probe failure when failing to
- register WMI devices
-To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20231007233933.72121-1-W_Armin@gmx.de>
- <20231007233933.72121-5-W_Armin@gmx.de>
- <6fc5eacc-15e7-8de4-a031-d57ae27568bd@linux.intel.com>
-Content-Language: en-US
-From:   Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <6fc5eacc-15e7-8de4-a031-d57ae27568bd@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:EK+Efva867AZQd/pngXuCRoMSWCKsbU3BZ2LoSxyFTtKI/9Ls/8
- 7AESfO8NSY++2ZAJxEcZqfc7Y+WulVTqN/u5egAVKNQNXbA2jhEaWQTlsp0tpnB+nqQ5bCE
- i/+QsgFg7L4qF6HjoH5vz0RI8CnaQW3xVnYlAcKHtDITKPOTs9AsctbLu9jAAduVPE1Vdux
- l8jCLhe9NsWwhcY4TIPdA==
-UI-OutboundReport: notjunk:1;M01:P0:yL7P5dpsr1Q=;FI74T1kRVwujr3ewrZDRZyodviQ
- hp8cED04DUAs6M5zJc3Bx+H/L8EGLJlXjUWCDJORwHyVK20GCH9kSY+3ABJ7URoUrXvXhsNjt
- 6sOK+vvmOYusms6mhEd4IB+E1CWelQlprVm2xcmKJHSQd9TRa0w0d9CpLlJN+P7+6bwXjEOQ0
- O/BrAIw2k2Xi5X0aNYkWWcixM4Ds6GgG5QwtaO534eAcB0IzyyhmJTgfcAaLMQ5Y9XKlzq94K
- I1tai+SvuqkrNNdUBvnSpdo1BjhJ7epn2fh+yP9P+DalGmw1Dgg8KRG/TMk4+IUMXM7otv5OC
- WPkxXRUOFJKs1dfh33ADF+bA+yHRGarZH+dlbP+xpvtV0+UrRE6oEfdvyhPMIMZtc06zYmZbH
- /ZfRFRi/xV0sXptqsAJ3UxoBLAIdB13rDQoy345qlX2qzf2+kqZSYTB0QMyEnnacvKBIuDcwx
- aPbN/glVgxQlEcw+49Cn2KCYXmoUT/TCSZpAsJlNEJtVSwgoPkGLvg9yoXLNLJtlxHX+zNHZS
- vAk93QHf0udxj8fpIruiIwWjH8uV2GBe+fgtoNI424Bcl5pWHo/U9VaJmDuL30rlVBpzqnkGO
- v4NL8369UTZ3EXk/W+El1TFLpLFcHR3z2kdt54SDfuy6eIP4ulN0jUD8t5gVhe9ZIwR4cm2eO
- n8cggNNF1ZqLaDUKBc2R4rAtJHZCkCU8NFKKy0xD14no8qIgyfsadaYhepu4IMhZI2xWbnb8q
- XlvI5LKIIrNZ/1bFaYc3lyFGQFdev8C/lPzaKyjhRTF8FqAWK5W3qPfhtVkV3v9d2D5iAM8bO
- O0syXu1mbEoKjfd9YpCkCn6SSXu0YbuyHrT2FtjzrA6PGAgX7OOHmMyna8Z0wHq4r4NCansq0
- petLHZJ1t7P6YYfY8xq6gk3zgbQBIEURYD4E0wufqASVNm2Mp5YL9ohe6jdXGeuXczAsMYLF1
- UFJj/lHVJ2pj9FVgL66pdRK0o7Y=
+X-Stat-Signature: o9zcgdw1y1fgp6xy6gb8fekmn1x9as14
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 356972000D
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX18nHPnJ1vURdIr6pxxE1KB9tF+YP2o1//s=
+X-HE-Tag: 1697220888-186884
+X-HE-Meta: U2FsdGVkX1/hWUvWt8vocjfvVrr5UnQAFVwrnmCEk+jm/esDnm+pfCGdCrUr/BcCexY6B0aXm/jP652/07TTyFbYRTv9qvgq6LrCL3hHnovO+6QXnaqgS3N4V91mfenpQNrEVFEmbKSo4NhPHz/byuazrDguvyhSPCsv/BjKNRITO0Ze2RCJilmsQND74dl26G3QyQnXY5MGVYW59IlWkW9m2mqNKp8gPsbmmTzl1J1GuFaOmNmADTujEjc4iLZzfffMHE2fet2guXsLJ762ZMeSwV8yq01wrVTYaGKcHPUQsW/jpAQy5YsDvCDSc4Tn
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 12.10.23 um 18:32 schrieb Ilpo J=C3=A4rvinen:
+On Fri, 2023-10-13 at 13:39 +0300, Ilpo Järvinen wrote:
+> Hi,
+> 
+> I added checkpatch people, please check what looks a false positive below.
 
-> On Sun, 8 Oct 2023, Armin Wolf wrote:
->
->> When a WMI device besides the first one somehow fails to register, retv=
-al
->> is returned while still containing a negative error code. This causes t=
-he
->> ACPI device failing to probe, leaving behind zombie WMI devices leading
->> to various errors later.
->> Fix this by handling the single error path separately and return 0 afte=
-r
->> trying to register all WMI devices. Also continue to register WMI devic=
-es
->> even if some fail to allocate.
-> I think the usual approach would be to unroll all registerations done so
-> far when an error occurs while registering n devices.
+Yeah, thanks I guess.
+The __free uses are very new.
+I'll play around with adding it to $Attributes
+and see what happens.
 
-I agree, however the surrounding code unrolls only the WMI device registra=
-tion,
-so i kept it that way. After all, this patch focuses on fixing the "zombie=
-" WMI devices
-problem, so changing the code to unroll all registrations should be done i=
-n a separate
-patch IMHO.
 
-Armin Wolf
-
-> Do you Hans have something to add what would be the best course of actio=
-n
-> here?
->
+> On Thu, 12 Oct 2023, David E. Box wrote:
+> > On Thu, 2023-10-12 at 13:25 +0800, kernel test robot wrote:
+> > > kernel test robot noticed the following build warnings:
+> > > # many are suggestions rather than must-fix
+[]
+> > > ERROR:SPACING: need consistent spacing around '*' (ctx:WxV)
+> > > #31: FILE: drivers/platform/x86/intel/vsec.c:159:
+> > > +       struct intel_vsec_device __free(kfree) *intel_vsec_dev = NULL;
+> > 
+> > These looks like false positives.
+> 
+> I agree. If I interpret the error message right checkpatch seems to think
+> that's a multiplication which is not the case here.
