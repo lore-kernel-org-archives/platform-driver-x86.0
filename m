@@ -2,101 +2,294 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD87CDB47E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Oct 2023 11:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE7ECDB483
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Oct 2023 12:08:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230175AbjJMLg1 (ORCPT
+        id S229900AbjJMMI3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Oct 2023 07:36:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33326 "EHLO
+        Fri, 13 Oct 2023 08:08:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229721AbjJMLgZ (ORCPT
+        with ESMTP id S231224AbjJMMI3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Oct 2023 07:36:25 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3136FB7;
-        Fri, 13 Oct 2023 04:36:24 -0700 (PDT)
+        Fri, 13 Oct 2023 08:08:29 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBA47BE;
+        Fri, 13 Oct 2023 05:08:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697196984; x=1728732984;
+  t=1697198906; x=1728734906;
   h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=Vxe8rTuXOh+Ra8l89LvKXu5K+G+sM1HLDgzbp0QfsI0=;
-  b=Z+t2bYUknDe3kxiQBvBDqzsklR/8xzZ8wNwIkEluUA124+cI4fdPPtma
-   2yB3ks2a3IqXNEMOPfMf2lDxL5k29ysqZvw5ISibhgsJ2P2wwCa5Am2vv
-   xesA7RKW9pXoOipsLpjHamUJPF6Y6Kopt1WaKh3wonMsS3lUb2c7pEyrT
-   zs0bmknMkjBsp1WhQpTUfjMLeR6bNS3ZbqYroLI33nSKEJWZxqpyDYc/a
-   ItfKumqi27kp1QmkwSuBjEXu04cv8N+74eH5AwdpYpiXrz8NGw4yT+Mvd
-   ukoW8vMgIUgQhh8QkPiz/8MeXR1/nm/zfOws+Fgj1cd6uPmTsKXwu27g1
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="416216396"
+   references:mime-version;
+  bh=OSw6l43ir41hu+uAu44wskdYdJS8SB0MXqT78SOJiMM=;
+  b=lFzTNPDTpmBOjPUKgiXmiNfEyLFy6DusivzO5AX4Cbu6shaIWkhlldc3
+   TQlUMY1rGwidq6va99BfmgXhlsEsYFzd1gr919bp38X55a52J9V5ELQyR
+   KzbiRyof3F4D+aGdIPSnIK2U8WEPumfMRt4k8f8K9UrR5whwepoB/ovML
+   /nrlYvTxFBgWz+FMb6EMIkZ5cA1o+6cbxAQBQ8rO82SltvKh4J5pd6hQM
+   byZMPcCYzW560jXVBfDc3jmhRlsMHZYpRpSsqWP1BlmWNETwmS6xFKmh6
+   QUGC/lz3oH9JX7sHkyt0opvsKo8vGKqbXVeA2C5kJV6zKWn8p6N4tKCYX
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="449358148"
 X-IronPort-AV: E=Sophos;i="6.03,222,1694761200"; 
-   d="scan'208";a="416216396"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 04:36:23 -0700
+   d="scan'208";a="449358148"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 05:08:26 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="820590424"
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="784133205"
 X-IronPort-AV: E=Sophos;i="6.03,222,1694761200"; 
-   d="scan'208";a="820590424"
-Received: from ttmerile-mobl1.ger.corp.intel.com (HELO rploss-MOBL.ger.corp.intel.com) ([10.249.37.202])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 04:36:21 -0700
-Date:   Fri, 13 Oct 2023 14:36:19 +0300 (EEST)
+   d="scan'208";a="784133205"
+Received: from ttmerile-mobl1.ger.corp.intel.com ([10.249.37.202])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 05:08:22 -0700
+Date:   Fri, 13 Oct 2023 15:08:19 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-cc:     =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com
-Subject: Re: [PATCH V3 09/16] platform/x86/intel/pmc: Allow pmc_core_ssram_init
- to fail
-In-Reply-To: <7f2fd7a054912960c6599e4a62e2095d1567aab8.camel@linux.intel.com>
-Message-ID: <92594f48-fa9-59d4-e2b7-f5f83ded0ea@linux.intel.com>
-References: <20231012023840.3845703-1-david.e.box@linux.intel.com>  <20231012023840.3845703-10-david.e.box@linux.intel.com>  <ac7be397-bc9-a135-9498-72dfa1fe456d@linux.intel.com> <7f2fd7a054912960c6599e4a62e2095d1567aab8.camel@linux.intel.com>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        basavaraj.natikar@amd.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
+        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
+        daniel@ffwll.ch, Patil.Reddy@amd.com, mario.limonciello@amd.com,
+        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v3 06/16] platform/x86/amd/pmf: Add support to get inputs
+ from other subsystems
+In-Reply-To: <20231010125917.138225-7-Shyam-sundar.S-k@amd.com>
+Message-ID: <6bb2eab3-f683-f7cf-1c49-391e20c6e1ca@linux.intel.com>
+References: <20231010125917.138225-1-Shyam-sundar.S-k@amd.com> <20231010125917.138225-7-Shyam-sundar.S-k@amd.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-729097219-1697196785=:2026"
-Content-ID: <940e91-6884-23c1-d36b-d17dc5a55f7c@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 10 Oct 2023, Shyam Sundar S K wrote:
 
---8323329-729097219-1697196785=:2026
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <9a57b987-57a3-2aa9-d42d-c48449944d9@linux.intel.com>
-
-On Thu, 12 Oct 2023, David E. Box wrote:
-
-> On Thu, 2023-10-12 at 18:01 +0300, Ilpo Järvinen wrote:
-> > On Wed, 11 Oct 2023, David E. Box wrote:
-> > 
-> > > Currently, if the PMC SSRAM initialization fails, no error is returned and
-> > > the only indication is that a PMC device has not been created.  Instead,
-> > > allow an error to be returned and handled directly by the caller.
-> > 
-> > You might have a good reason for it but why isn't the call into 
-> > pmc_core_pmc_add() changed in this patch to take the error value into 
-> > account?
+> PMF driver sends changing inputs from each subystem to TA for evaluating
+> the conditions in the policy binary.
 > 
-> Good catch. The return value of pmc_core_pmc_add() is first used in the next
-> patch but should be used here.
+> Add initial support of plumbing in the PMF driver for Smart PC to get
+> information from other subsystems in the kernel.
 > 
-> > 
-> > (I vaguely remember this was probably discussed in the context of some 
-> > earlier patch touching this area that it was about the other code dealing 
-> > with NULLs or something like that).
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>  drivers/platform/x86/amd/pmf/Makefile |   2 +-
+>  drivers/platform/x86/amd/pmf/pmf.h    |  18 ++++
+>  drivers/platform/x86/amd/pmf/spc.c    | 119 ++++++++++++++++++++++++++
+>  drivers/platform/x86/amd/pmf/tee-if.c |   3 +
+>  4 files changed, 141 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/platform/x86/amd/pmf/spc.c
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
+> index d2746ee7369f..6b26e48ce8ad 100644
+> --- a/drivers/platform/x86/amd/pmf/Makefile
+> +++ b/drivers/platform/x86/amd/pmf/Makefile
+> @@ -7,4 +7,4 @@
+>  obj-$(CONFIG_AMD_PMF) += amd-pmf.o
+>  amd-pmf-objs := core.o acpi.o sps.o \
+>  		auto-mode.o cnqf.o \
+> -		tee-if.o
+> +		tee-if.o spc.o
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index 51c0e17f7720..88ee3c705913 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -150,6 +150,21 @@ struct smu_pmf_metrics {
+>  	u16 infra_gfx_maxfreq; /* in MHz */
+>  	u16 skin_temp; /* in centi-Celsius */
+>  	u16 device_state;
+> +	u16 curtemp; /* in centi-Celsius */
+> +	u16 filter_alpha_value;
+> +	u16 avg_gfx_clkfrequency;
+> +	u16 avg_fclk_frequency;
+> +	u16 avg_gfx_activity;
+> +	u16 avg_socclk_frequency;
+> +	u16 avg_vclk_frequency;
+> +	u16 avg_vcn_activity;
+> +	u16 avg_dram_reads;
+> +	u16 avg_dram_writes;
+> +	u16 avg_socket_power;
+> +	u16 avg_core_power[2];
+> +	u16 avg_core_c0residency[16];
+> +	u16 spare1;
+> +	u32 metrics_counter;
+>  } __packed;
+>  
+>  enum amd_stt_skin_temp {
+> @@ -596,4 +611,7 @@ extern const struct attribute_group cnqf_feature_attribute_group;
+>  int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev);
+>  void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev);
+>  int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev);
+> +
+> +/* Smart PC - TA interfaces */
+> +void amd_pmf_populate_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in);
+>  #endif /* PMF_H */
+> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
+> new file mode 100644
+> index 000000000000..91a7f1da911c
+> --- /dev/null
+> +++ b/drivers/platform/x86/amd/pmf/spc.c
+> @@ -0,0 +1,119 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * AMD Platform Management Framework Driver - Smart PC Capabilities
+> + *
+> + * Copyright (c) 2023, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> + *          Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> + */
+> +
+> +#include <acpi/button.h>
+> +#include <linux/power_supply.h>
+> +#include <linux/units.h>
+> +#include "pmf.h"
+> +
+> +static void amd_pmf_get_smu_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in)
+> +{
+> +	u16 max, avg = 0;
+> +	int i;
+> +
+> +	memset(dev->buf, 0, sizeof(dev->m_table));
+> +	amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, 0, 7, NULL);
+> +	memcpy(&dev->m_table, dev->buf, sizeof(dev->m_table));
+> +
+> +	in->ev_info.socket_power = dev->m_table.apu_power + dev->m_table.dgpu_power;
+> +	in->ev_info.skin_temperature = dev->m_table.skin_temp;
+> +
+> +	/* Get the avg and max C0 residency of all the cores */
+> +	max = dev->m_table.avg_core_c0residency[0];
+> +	for (i = 0; i < ARRAY_SIZE(dev->m_table.avg_core_c0residency); i++) {
+> +		avg += dev->m_table.avg_core_c0residency[i];
+> +		if (dev->m_table.avg_core_c0residency[i] > max)
+> +			max = dev->m_table.avg_core_c0residency[i];
+> +	}
+> +
+> +	in->ev_info.avg_c0residency = avg / ARRAY_SIZE(dev->m_table.avg_core_c0residency);
 
-Okay but please also take into consideration what I tried to imply above:
+Not saying the current is wrong and the difference might be 
+insignificantly small... But you might want to consider using 
+DIV_ROUND_CLOSEST() instead of the truncating divide (I'm not sure which 
+is the best here so I leave it up to you).
 
-Since you are doing what looks a major logic change in the next patch, it 
-might be okay to _not use_ that return value until then if you e.g., need 
-to add lots of rollback that isn't there already to the code that is going 
-away anyway in the next patch. (After all, returning an error code from a 
-function that was void previously isn't going to magically break the old
-calling code).
+> +	in->ev_info.max_c0residency = max;
+> +	in->ev_info.gfx_busy = dev->m_table.avg_gfx_activity;
+> +}
+> +
+> +static const char * const pmf_battery_supply_name[] = {
+> +	"BATT",
+> +	"BAT0",
+> +};
+> +
+> +static int amd_pmf_get_battery_prop(enum power_supply_property prop)
+> +{
+> +	union power_supply_propval value;
+> +	struct power_supply *psy;
+> +	int i, ret = -EINVAL;
 
+Unnecessary to initialize ret here.
+
+> +	for (i = 0; i < ARRAY_SIZE(pmf_battery_supply_name); i++) {
+> +		psy = power_supply_get_by_name(pmf_battery_supply_name[i]);
+> +		if (!psy)
+> +			continue;
+> +
+> +		ret = power_supply_get_property(psy, prop, &value);
+> +		if (ret) {
+> +			power_supply_put(psy);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return value.intval;
+> +}
+> +
+> +static int amd_pmf_get_battery_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in)
+> +{
+> +	int val;
+> +
+> +	val = amd_pmf_get_battery_prop(POWER_SUPPLY_PROP_PRESENT);
+> +	if (val != 1)
+> +		return -EINVAL;
+
+If amd_pmf_get_battery_prop() returns an error code, it would be better to 
+pass that on instead of inventing another code. It's probably better to 
+split the if into two checks to cover both cases.
+
+For val >= 0 but not 1, -ENODEV might be better justified than -EINVAL 
+because it doesn't look like input parameters are invalid here.
 
 -- 
  i.
---8323329-729097219-1697196785=:2026--
+
+
+> +	in->ev_info.bat_percentage = amd_pmf_get_battery_prop(POWER_SUPPLY_PROP_CAPACITY);
+> +	/* all values in mWh metrics */
+> +	in->ev_info.bat_design = amd_pmf_get_battery_prop(POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN) /
+> +		MILLIWATT_PER_WATT;
+> +	in->ev_info.full_charge_capacity = amd_pmf_get_battery_prop(POWER_SUPPLY_PROP_ENERGY_FULL) /
+> +		MILLIWATT_PER_WATT;
+> +	in->ev_info.drain_rate = amd_pmf_get_battery_prop(POWER_SUPPLY_PROP_POWER_NOW) /
+> +		MILLIWATT_PER_WATT;
+> +
+> +	return 0;
+> +}
+> +
+> +static int amd_pmf_get_slider_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in)
+> +{
+> +	int val;
+> +
+> +	switch (dev->current_profile) {
+> +	case PLATFORM_PROFILE_PERFORMANCE:
+> +		val = TA_BEST_PERFORMANCE;
+> +		break;
+> +	case PLATFORM_PROFILE_BALANCED:
+> +		val = TA_BETTER_PERFORMANCE;
+> +		break;
+> +	case PLATFORM_PROFILE_LOW_POWER:
+> +		val = TA_BEST_BATTERY;
+> +		break;
+> +	default:
+> +		dev_err(dev->dev, "Unknown Platform Profile.\n");
+> +		return -EOPNOTSUPP;
+> +	}
+> +	in->ev_info.power_slider = val;
+> +
+> +	return 0;
+> +}
+> +
+> +void amd_pmf_populate_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in)
+> +{
+> +	/* TA side lid open is 1 and close is 0, hence the ! here */
+> +	in->ev_info.lid_state = !acpi_lid_open();
+> +	in->ev_info.power_source = amd_pmf_get_power_source();
+> +	amd_pmf_get_smu_info(dev, in);
+> +	amd_pmf_get_battery_info(dev, in);
+> +	amd_pmf_get_slider_info(dev, in);
+> +}
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index 38f02676261d..277103e4346d 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -113,6 +113,7 @@ static int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev)
+>  {
+>  	struct ta_pmf_shared_memory *ta_sm = NULL;
+>  	struct ta_pmf_enact_result *out = NULL;
+> +	struct ta_pmf_enact_table *in = NULL;
+>  	struct tee_param param[MAX_TEE_PARAM];
+>  	struct tee_ioctl_invoke_arg arg;
+>  	int ret = 0;
+> @@ -123,11 +124,13 @@ static int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev)
+>  	memset(dev->shbuf, 0, dev->policy_sz);
+>  	ta_sm = dev->shbuf;
+>  	out = &ta_sm->pmf_output.policy_apply_table;
+> +	in = &ta_sm->pmf_input.enact_table;
+>  
+>  	memset(ta_sm, 0, sizeof(*ta_sm));
+>  	ta_sm->command_id = TA_PMF_COMMAND_POLICY_BUILDER_ENACT_POLICIES;
+>  	ta_sm->if_version = PMF_TA_IF_VERSION_MAJOR;
+>  
+> +	amd_pmf_populate_ta_inputs(dev, in);
+>  	amd_pmf_prepare_args(dev, TA_PMF_COMMAND_POLICY_BUILDER_ENACT_POLICIES, &arg, param);
+>  
+>  	ret = tee_client_invoke_func(dev->tee_ctx, &arg, param);
+> 
