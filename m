@@ -2,58 +2,113 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8260CDB482
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Oct 2023 08:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B319CDB482
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Oct 2023 10:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229986AbjJMIRD (ORCPT
+        id S230215AbjJMKkL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Oct 2023 04:17:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60604 "EHLO
+        Fri, 13 Oct 2023 06:40:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229998AbjJMIRC (ORCPT
+        with ESMTP id S230292AbjJMKkK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Oct 2023 04:17:02 -0400
-Received: from mail.businessedgeexperts.pl (mail.businessedgeexperts.pl [217.61.112.221])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 719F7BE
-        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Oct 2023 01:16:58 -0700 (PDT)
-Received: by mail.businessedgeexperts.pl (Postfix, from userid 1002)
-        id 6ED118C813; Fri, 13 Oct 2023 10:12:05 +0200 (CEST)
+        Fri, 13 Oct 2023 06:40:10 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD51012E;
+        Fri, 13 Oct 2023 03:39:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=businessedgeexperts.pl; s=mail; t=1697184782;
-        bh=P9r7sT10htPYPGviZnqOoHz61JP2UuizFY0ZEodA4mA=;
-        h=Date:From:To:Subject:From;
-        b=nawH3lehoJrzH8OqfDaIvqqWO0r06m6TumG4WhHeQ2Orrlo8thIQ1mWJ7r4QOkWU2
-         8bTmkvTcU7UVn4qoi/KAuupcuJoinS0xRgkVemwJ/4QRly87V5Y7pTlF72opRWnwxL
-         oWGMjRwKbO/ulYz7wOfGCA11XplzfI5UqBT8tK46+SiSmvm/GGc3SmKtNhKWCLCMP1
-         5VVQXDygfjTz/HUE7hoEUBUOUZoWej7uYRY1jCXQrFnc4m5aw9/1zLjF0TIjd+wl7v
-         Ii6UR8fiLoehBUO44WMsI4sOoa4kFONnSqcdjBAtImKqjW8xe6dOIB4hjkpjIZeX1a
-         PLrJRYNYRVlaA==
-Received: by mail.businessedgeexperts.pl for <platform-driver-x86@vger.kernel.org>; Fri, 13 Oct 2023 08:11:01 GMT
-Message-ID: <20231013084501-0.1.37.loem.0.76r01144hl@businessedgeexperts.pl>
-Date:   Fri, 13 Oct 2023 08:11:01 GMT
-From:   "Maciej Przybylski" <maciej.przybylski@businessedgeexperts.pl>
-To:     <platform-driver-x86@vger.kernel.org>
-Subject: =?UTF-8?Q?Prosz=C4=99_o_kontakt?=
-X-Mailer: mail.businessedgeexperts.pl
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697193591; x=1728729591;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=EdUkyxDquqHULFKo1sZtr/htjjNPhFh4HnnBYrB4zq0=;
+  b=RgKqENDrjNQ6YiG3Ug3iNPVPOu8eIv2/DiRGPLHt8OrqgdPb0YVVzoXz
+   ZBh1SwfnFuMG/cyMp9crdGDmODisXv5jST6suS8VM5W3h+61/L4Ay9hRV
+   EzBaD8FPZs4Yp/gcHwiO0OqMY7UYeVn6wtWsOX1hKqvdClA6tu+x4Si7q
+   /S0kwzqbSNAoIypwZup6s9HuW/kSqCvU2AAEjCcyzsYiI1vTFCiJ2FYsE
+   yMcBFrvH7/18IfePRV/nVS8kuh58xg+zuEV2r6HmuelwKmqQ6dhT6G1vQ
+   aewTDEKLvxNhmtbCrZeZBthJzGP2VGbu2Fcrk4mENRQM+kVWE2MPkZANb
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="388003210"
+X-IronPort-AV: E=Sophos;i="6.03,221,1694761200"; 
+   d="scan'208";a="388003210"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 03:39:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="871022922"
+X-IronPort-AV: E=Sophos;i="6.03,221,1694761200"; 
+   d="scan'208";a="871022922"
+Received: from ttmerile-mobl1.ger.corp.intel.com ([10.249.37.202])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 03:39:47 -0700
+Date:   Fri, 13 Oct 2023 13:39:45 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+cc:     kernel test robot <lkp@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com,
+        oe-kbuild-all@lists.linux.dev,
+        "David E. Box" <david.e.box@linux.intel.com>
+Subject: Re: [PATCH V3 03/16] platform/x86/intel/vsec: Use cleanup.h
+In-Reply-To: <6ed4cd5ae37a054d4780c8fa519dc83396b15c14.camel@linux.intel.com>
+Message-ID: <b93a3e8-2d15-256a-4172-a22ef17dde9@linux.intel.com>
+References: <20231012023840.3845703-4-david.e.box@linux.intel.com>  <202310121314.3Xpqom2w-lkp@intel.com> <6ed4cd5ae37a054d4780c8fa519dc83396b15c14.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323329-1029817949-1697193589=:2026"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Dzie=C5=84 dobry,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Czy jest mo=C5=BCliwo=C5=9B=C4=87 nawi=C4=85zania wsp=C3=B3=C5=82pracy z =
-Pa=C5=84stwem?
+--8323329-1029817949-1697193589=:2026
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-Z ch=C4=99ci=C4=85 porozmawiam z osob=C4=85 zajmuj=C4=85c=C4=85 si=C4=99 =
-dzia=C5=82aniami zwi=C4=85zanymi ze sprzeda=C5=BC=C4=85.
+Hi,
 
-Pomagamy skutecznie pozyskiwa=C4=87 nowych klient=C3=B3w.
+I added checkpatch people, please check what looks a false positive below.
 
-Zapraszam do kontaktu.
+On Thu, 12 Oct 2023, David E. Box wrote:
 
+> On Thu, 2023-10-12 at 13:25 +0800, kernel test robot wrote:
+> > Hi David,
+> > 
+> > kernel test robot noticed the following build warnings:
+> > 
+> > [auto build test WARNING on acce85a7dd28eac3858d44230f4c65985d0f271c]
+> > 
+> > url:   
+> > https://github.com/intel-lab-lkp/linux/commits/David-E-Box/platform-x86-intel-vsec-Move-structures-to-header/20231012-104217
+> > base:   acce85a7dd28eac3858d44230f4c65985d0f271c
+> > patch link:   
+> > https://lore.kernel.org/r/20231012023840.3845703-4-david.e.box%40linux.intel.com
+> > patch subject: [PATCH V3 03/16] platform/x86/intel/vsec: Use cleanup.h
+> > reproduce:
+> > (https://download.01.org/0day-ci/archive/20231012/202310121314.3Xpqom2w-lkp@in
+> > tel.com/reproduce)
+> > 
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version
+> > of
+> > the same patch/commit), kindly add following tags
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Closes:
+> > > https://lore.kernel.org/oe-kbuild-all/202310121314.3Xpqom2w-lkp@intel.com/
+> > 
+> > # many are suggestions rather than must-fix
+> > 
+> > ERROR:SPACING: need consistent spacing around '*' (ctx:WxV)
+> > #31: FILE: drivers/platform/x86/intel/vsec.c:159:
+> > +       struct intel_vsec_device __free(kfree) *intel_vsec_dev = NULL;
+> 
+> These looks like false positives.
 
-Pozdrawiam
-Maciej Przybylski
+I agree. If I interpret the error message right checkpatch seems to think
+that's a multiplication which is not the case here.
+
+-- 
+ i.
+
+--8323329-1029817949-1697193589=:2026--
