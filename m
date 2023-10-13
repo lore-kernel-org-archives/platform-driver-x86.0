@@ -2,79 +2,213 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03ACFCDB47E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Oct 2023 18:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91543CDB47E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Oct 2023 22:16:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231458AbjJMSO6 convert rfc822-to-8bit (ORCPT
+        id S229679AbjJMWQL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Oct 2023 14:14:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58424 "EHLO
+        Fri, 13 Oct 2023 18:16:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231450AbjJMSOz (ORCPT
+        with ESMTP id S229830AbjJMWQL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Oct 2023 14:14:55 -0400
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 096F2BE;
-        Fri, 13 Oct 2023 11:14:53 -0700 (PDT)
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-        by unirelay04.hostedemail.com (Postfix) with ESMTP id 49C3C1A049A;
-        Fri, 13 Oct 2023 18:14:51 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf05.hostedemail.com (Postfix) with ESMTPA id 356972000D;
-        Fri, 13 Oct 2023 18:14:48 +0000 (UTC)
-Message-ID: <8fe01b6d8c558f11fe51f9da5fbfea6708766096.camel@perches.com>
+        Fri, 13 Oct 2023 18:16:11 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC0BC2;
+        Fri, 13 Oct 2023 15:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697235370; x=1728771370;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=MZOWfH1PAK2h89+1m5wg+GI+vWQsVXrKmtOPocFipGg=;
+  b=LDRMy0RjppZqFN1h0jFKM92aaOruDa38uq5lKDw/B/K283lh0o6GB/cY
+   ARU7f6NkmhTv8zzszA7bi4CSJJ2FkfJFoJxNvF9AR200KBs9Ie4yuTF1G
+   prcreav1RA1eMCAmljEbVWQlSVaqU/VOVv0gsNB6YcxU4nY+Qcv/N5tkV
+   9UElzt+2lS4tEDJvqYuan449YrDag8Z5W72uXit5Sbt0wcXFY4olaTs6r
+   vT5tvjiL1nHcvzeLS9YEzpyoXzvnZjgKyxNBJs1rncjrLuPcdVQvrRm9g
+   hvgso0P9xbRfB0a+euqDkjNwzet1DkiP+DraNojeWD5uOve3rpoXY0/B3
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="471507608"
+X-IronPort-AV: E=Sophos;i="6.03,223,1694761200"; 
+   d="scan'208";a="471507608"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 15:16:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="754865755"
+X-IronPort-AV: E=Sophos;i="6.03,223,1694761200"; 
+   d="scan'208";a="754865755"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 15:16:08 -0700
+Received: from jmloza-mobl.amr.corp.intel.com (unknown [10.212.236.32])
+        by linux.intel.com (Postfix) with ESMTP id 89D34580BF0;
+        Fri, 13 Oct 2023 15:16:08 -0700 (PDT)
+Message-ID: <ec4ba6b6d05c2b6ca34009f40e84f65801a8104b.camel@linux.intel.com>
 Subject: Re: [PATCH V3 03/16] platform/x86/intel/vsec: Use cleanup.h
-From:   Joe Perches <joe@perches.com>
-To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Dwaipayan Ray <dwaipayanray1@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com,
-        oe-kbuild-all@lists.linux.dev,
-        "David E. Box" <david.e.box@linux.intel.com>
-Date:   Fri, 13 Oct 2023 11:14:47 -0700
-In-Reply-To: <b93a3e8-2d15-256a-4172-a22ef17dde9@linux.intel.com>
-References: <20231012023840.3845703-4-david.e.box@linux.intel.com>
-         <202310121314.3Xpqom2w-lkp@intel.com>
-         <6ed4cd5ae37a054d4780c8fa519dc83396b15c14.camel@linux.intel.com>
-         <b93a3e8-2d15-256a-4172-a22ef17dde9@linux.intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com
+Date:   Fri, 13 Oct 2023 15:16:08 -0700
+In-Reply-To: <4315a8db-16fe-7421-c482-5aede4d5cdd@linux.intel.com>
+References: <20231012023840.3845703-1-david.e.box@linux.intel.com>
+          <20231012023840.3845703-4-david.e.box@linux.intel.com>
+          <114e1cc4-f129-b6cd-a83b-7d822cde178@linux.intel.com>
+         <fcd4ae3492b8bf08ec637a3405228efd2913921d.camel@linux.intel.com>
+         <4315a8db-16fe-7421-c482-5aede4d5cdd@linux.intel.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 MIME-Version: 1.0
-X-Stat-Signature: o9zcgdw1y1fgp6xy6gb8fekmn1x9as14
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 356972000D
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX18nHPnJ1vURdIr6pxxE1KB9tF+YP2o1//s=
-X-HE-Tag: 1697220888-186884
-X-HE-Meta: U2FsdGVkX1/hWUvWt8vocjfvVrr5UnQAFVwrnmCEk+jm/esDnm+pfCGdCrUr/BcCexY6B0aXm/jP652/07TTyFbYRTv9qvgq6LrCL3hHnovO+6QXnaqgS3N4V91mfenpQNrEVFEmbKSo4NhPHz/byuazrDguvyhSPCsv/BjKNRITO0Ze2RCJilmsQND74dl26G3QyQnXY5MGVYW59IlWkW9m2mqNKp8gPsbmmTzl1J1GuFaOmNmADTujEjc4iLZzfffMHE2fet2guXsLJ762ZMeSwV8yq01wrVTYaGKcHPUQsW/jpAQy5YsDvCDSc4Tn
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 2023-10-13 at 13:39 +0300, Ilpo Järvinen wrote:
-> Hi,
-> 
-> I added checkpatch people, please check what looks a false positive below.
-
-Yeah, thanks I guess.
-The __free uses are very new.
-I'll play around with adding it to $Attributes
-and see what happens.
-
-
+On Fri, 2023-10-13 at 13:54 +0300, Ilpo J=C3=A4rvinen wrote:
 > On Thu, 12 Oct 2023, David E. Box wrote:
-> > On Thu, 2023-10-12 at 13:25 +0800, kernel test robot wrote:
-> > > kernel test robot noticed the following build warnings:
-> > > # many are suggestions rather than must-fix
-[]
-> > > ERROR:SPACING: need consistent spacing around '*' (ctx:WxV)
-> > > #31: FILE: drivers/platform/x86/intel/vsec.c:159:
-> > > +       struct intel_vsec_device __free(kfree) *intel_vsec_dev = NULL;
-> > 
-> > These looks like false positives.
-> 
-> I agree. If I interpret the error message right checkpatch seems to think
-> that's a multiplication which is not the case here.
+>=20
+> > On Thu, 2023-10-12 at 17:46 +0300, Ilpo J=C3=A4rvinen wrote:
+> > > On Wed, 11 Oct 2023, David E. Box wrote:
+> > >=20
+> > > > Use cleanup.h helpers to handle cleanup of resources in
+> > > > intel_vsec_add_dev() after failures.
+> > > >=20
+> > > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > > > ---
+> > > > V3 - New patch.
+> > > >=20
+> > > > =C2=A0drivers/platform/x86/intel/vsec.c | 17 ++++++++++-------
+> > > > =C2=A01 file changed, 10 insertions(+), 7 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/platform/x86/intel/vsec.c
+> > > > b/drivers/platform/x86/intel/vsec.c
+> > > > index 15866b7d3117..f03ab89ab7c0 100644
+> > > > --- a/drivers/platform/x86/intel/vsec.c
+> > > > +++ b/drivers/platform/x86/intel/vsec.c
+> > > > @@ -15,6 +15,7 @@
+> > > > =C2=A0
+> > > > =C2=A0#include <linux/auxiliary_bus.h>
+> > > > =C2=A0#include <linux/bits.h>
+> > > > +#include <linux/cleanup.h>
+> > > > =C2=A0#include <linux/delay.h>
+> > > > =C2=A0#include <linux/kernel.h>
+> > > > =C2=A0#include <linux/idr.h>
+> > > > @@ -155,10 +156,10 @@ EXPORT_SYMBOL_NS_GPL(intel_vsec_add_aux,
+> > > > INTEL_VSEC);
+> > > > =C2=A0static int intel_vsec_add_dev(struct pci_dev *pdev, struct
+> > > > intel_vsec_header *header,
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct intel_vsec_platform_info *info)
+> > > > =C2=A0{
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct intel_vsec_device=
+ *intel_vsec_dev;
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct intel_vsec_device=
+ __free(kfree) *intel_vsec_dev =3D NULL;
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct resource *re=
+s, *tmp;
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unsigned long quirk=
+s =3D info->quirks;
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int i;
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int ret, i;
+> > > > =C2=A0
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!intel_vsec_sup=
+ported(header->id, info->caps))
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return -EINVAL;
+> > > > @@ -178,10 +179,8 @@ static int intel_vsec_add_dev(struct pci_dev *=
+pdev,
+> > > > struct intel_vsec_header *he
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return -ENOMEM;
+> > > > =C2=A0
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0res =3D kcalloc(hea=
+der->num_entries, sizeof(*res), GFP_KERNEL);
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!res) {
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0kfree(intel_vsec_dev);
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!res)
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return -ENOMEM;
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> > > > =C2=A0
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (quirks & VSEC_Q=
+UIRK_TABLE_SHIFT)
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0header->offset >>=3D TABLE_OFFSET_SHIFT;
+> > > > @@ -208,8 +207,12 @@ static int intel_vsec_add_dev(struct pci_dev *=
+pdev,
+> > > > struct intel_vsec_header *he
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0else
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0intel_vsec_dev->ida =3D &intel_vsec_ida;
+> > > > =C2=A0
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return intel_vsec_add_au=
+x(pdev, NULL, intel_vsec_dev,
+> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 intel_vsec_name(header-=
+>id));
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret =3D intel_vsec_add_a=
+ux(pdev, NULL, intel_vsec_dev,
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 intel_vsec_name(header->id));
+> > > > +
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0no_free_ptr(intel_vsec_d=
+ev);
+> > > > +
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return ret;
+> > >=20
+> > > So if intel_vsec_add_aux() returned an error, intel_vsec_dev won't be=
+=20
+> > > freed because of the call call to no_free_ptr() before return. I that=
+'s=20
+> > > not what you intended?
+> >=20
+> > It will have been freed if intel_vsec_add_aux() fails. It's a little me=
+ssy.
+> > That
+> > function creates the auxdev and assigns the release function which will=
+ free
+> > intel_vsec_dev when the device is removed. But there are failure points=
+ that
+> > will also invoke the release function. Because of this, for all the fai=
+lure
+> > points in that function we free intel_vsec_dev so that it's state doesn=
+'t
+> > need
+> > to be questioned here. This happens explicitly if the failure is before
+> > auxiliary_device_init(), or through the release function invoked by
+> > auxiliary_device_uninit() if after.
+>=20
+> Oh, that's really convoluted and no wonder I missed it completely. It=20
+> might even be that using cleanup.h here isn't really worth it. I know=20
+> I pushed you into that direction but I didn't realize all the complexity
+> at that point.
+>=20
+> If you still want to keep using cleanup.h, it would perhaps be less=20
+> dangerous if you change the code such that no_free_ptr() for
+> intel_vsec_dev and the resource (in 4/16, that's a similar case, isn't=
+=20
+> it?)
+
+yes
+
+>  are before the intel_vsec_add_aux() call (and I'd also add a comment=20
+> to explain that freeing them is now responsability of=20
+> intel_vsec_add_aux()). That way, we don't leave a trap into there where=
+=20
+> somebody happily adds another no_free_ptr() to the same group and it=20
+> causes a mem leak.
+
+Sure. After the comment I'd just do this then still the value is still need=
+ed,
+
+	ret =3D intel_vsec_add_aux(pdev, NULL, no_free_ptr(intel_vsec_dev),
+                                 intel_vsec_name(header->id));
+
+David
+
