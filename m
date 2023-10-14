@@ -2,43 +2,43 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5967BCDB474
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Oct 2023 20:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE50CDB465
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Oct 2023 20:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231987AbjJNUyP (ORCPT
+        id S231495AbjJNUyU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 14 Oct 2023 16:54:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58048 "EHLO
+        Sat, 14 Oct 2023 16:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233300AbjJNUyO (ORCPT
+        with ESMTP id S233300AbjJNUyT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 14 Oct 2023 16:54:14 -0400
+        Sat, 14 Oct 2023 16:54:19 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97121E0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Oct 2023 13:53:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A19CE5
+        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Oct 2023 13:53:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1697316805;
+        s=mimecast20190719; t=1697316816;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RDU841zmqN4EViFwHwGtrWm81faZ2V8ThMs0U5gsSfg=;
-        b=Lh35WxfQXf7Xi1vNZa34VEsinQE2lZoddmhGCsyoqPTydZ8b+CrJQo+TD/qvFivLJEzA0v
-        ibjN6LBGLwotBgfxdKCai4TZeffMpXOlkHh69sOTvy8MbroeMtTEik4E+1MQmztDokul4y
-        O8NP05xv4K+RLJQs6D5thP97ekZEDuA=
+        bh=NuWj4wrV9zaKh/jpJVFwSK8WbIq3siZjo2RbPjHRdzM=;
+        b=MCVkpQHjoC4PuRWX71PeCrC1ZWL7Ka9m9se17xmA7JIjMe3kEDh1KFEbHpR10btF+0DH6K
+        IGbYDfP08Xm+uEYfcyKaQ6jFhewIJsdlwn9h/if1MqtoWCTfPp7Uuu9OZk4bN1NYqU14++
+        OEzP+Zrl8dlA7YBMhi3VulxiaiDS9jA=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-355-boqgT2qmMUu5cyR4pnJ96g-1; Sat, 14 Oct 2023 16:53:19 -0400
-X-MC-Unique: boqgT2qmMUu5cyR4pnJ96g-1
+ us-mta-569-aqyFZdt0NLumMmZvRSgGWQ-1; Sat, 14 Oct 2023 16:53:21 -0400
+X-MC-Unique: aqyFZdt0NLumMmZvRSgGWQ-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0D4A21C0634B;
-        Sat, 14 Oct 2023 20:53:19 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 72CE43806723;
+        Sat, 14 Oct 2023 20:53:20 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.192.6])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D110325C0;
-        Sat, 14 Oct 2023 20:53:17 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 44B6D25C0;
+        Sat, 14 Oct 2023 20:53:19 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     "Rafael J . Wysocki" <rafael@kernel.org>,
         =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -46,9 +46,9 @@ To:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Mark Brown <broonie@kernel.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: [PATCH 2/4] ACPI: scan: Add LNXVIDEO HID to ignore_serial_bus_ids[]
-Date:   Sat, 14 Oct 2023 22:53:12 +0200
-Message-ID: <20231014205314.59333-3-hdegoede@redhat.com>
+Subject: [PATCH 3/4] platform/x86: x86-android-tablets: Add support for SPI device instantiation
+Date:   Sat, 14 Oct 2023 22:53:13 +0200
+Message-ID: <20231014205314.59333-4-hdegoede@redhat.com>
 In-Reply-To: <20231014205314.59333-1-hdegoede@redhat.com>
 References: <20231014205314.59333-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -58,47 +58,150 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The I2C-core already has filtering to skip i2c_client instantiation for
-LNXVIDEO acpi_device-s with I2cSerialBus resources, since LNXVIDEO devices
-are not i2c_client-s and are handled by the acpi_video driver.
-
-This filtering was added to i2c-core-acpi.c in commit 3a4991a9864c ("i2c:
-acpi: Do not create i2c-clients for LNXVIDEO ACPI devices").
-
-Now a similar problem has shown up where the SPI-core is instantiating
-an unwanted SPI-device for a SpiSerialBus resource under a LNXVIDEO
-acpi_device. On a Lenovo Yoga Tab 3 YT3-X90F this unwanted SPI-device
-instanstantiation causes the SPI-device instanstantiation for the WM5102
-audio codec to fail with:
-
-[   21.988441] pxa2xx-spi 8086228E:00: chipselect 0 already in use
-
-Instead of duplicating the I2C-core filtering in the SPI-core code, push
-the filtering of SerialBus resources under LNXVIDEO acpi_device-s up into
-the ACPI-core by adding the LNXVIDEO HID to ignore_serial_bus_ids[].
-
-Note the filtering in the I2C-core i2c_acpi_do_lookup() function is still
-necessary because this not only impacts i2c_client instantiation but it
-also makes the I2C-core ignore the I2cSerialBus resource when checking what
-the maximum speed is the I2C bus supports, which is still necessary.
+Some x86 Android tablets have SPI devices which are not properly described
+in their DSDT. Add support for instantiating SPI devices.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/acpi/scan.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../platform/x86/x86-android-tablets/core.c   | 62 +++++++++++++++++++
+ .../x86-android-tablets/x86-android-tablets.h |  9 +++
+ 2 files changed, 71 insertions(+)
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 691d4b7686ee..4b6faa2350f5 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -1727,6 +1727,7 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
- 	 * Some ACPI devs contain SerialBus resources even though they are not
- 	 * attached to a serial bus at all.
- 	 */
-+		{ACPI_VIDEO_HID, },
- 		{"MSHW0028", },
- 	/*
- 	 * HIDs of device with an UartSerialBusV2 resource for which userspace
+diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
+index b55957bde034..6a5975ac3286 100644
+--- a/drivers/platform/x86/x86-android-tablets/core.c
++++ b/drivers/platform/x86/x86-android-tablets/core.c
+@@ -141,9 +141,11 @@ int x86_acpi_irq_helper_get(const struct x86_acpi_irq_data *data)
+ }
+ 
+ static int i2c_client_count;
++static int spi_dev_count;
+ static int pdev_count;
+ static int serdev_count;
+ static struct i2c_client **i2c_clients;
++static struct spi_device **spi_devs;
+ static struct platform_device **pdevs;
+ static struct serdev_device **serdevs;
+ static struct gpio_keys_button *buttons;
+@@ -185,6 +187,46 @@ static __init int x86_instantiate_i2c_client(const struct x86_dev_info *dev_info
+ 	return 0;
+ }
+ 
++static __init int x86_instantiate_spi_dev(const struct x86_dev_info *dev_info, int idx)
++{
++	const struct x86_spi_dev_info *spi_dev_info = &dev_info->spi_dev_info[idx];
++	struct spi_board_info board_info = spi_dev_info->board_info;
++	struct spi_controller *controller;
++	struct acpi_device *adev;
++	acpi_handle handle;
++	acpi_status status;
++
++	board_info.irq = x86_acpi_irq_helper_get(&spi_dev_info->irq_data);
++	if (board_info.irq < 0)
++		return board_info.irq;
++
++	status = acpi_get_handle(NULL, spi_dev_info->ctrl_path, &handle);
++	if (ACPI_FAILURE(status)) {
++		pr_err("Error could not get %s handle\n", spi_dev_info->ctrl_path);
++		return -ENODEV;
++	}
++
++	adev = acpi_fetch_acpi_dev(handle);
++	if (!adev) {
++		pr_err("Error could not get adev for %s\n", spi_dev_info->ctrl_path);
++		return -ENODEV;
++	}
++
++	controller = acpi_spi_find_controller_by_adev(adev);
++	if (!controller) {
++		pr_err("Error could not get SPI controller for %s\n", spi_dev_info->ctrl_path);
++		return -ENODEV;
++	}
++
++	spi_devs[idx] = spi_new_device(controller, &board_info);
++	put_device(&controller->dev);
++	if (IS_ERR(spi_devs[idx]))
++		return dev_err_probe(&controller->dev, PTR_ERR(spi_devs[idx]),
++				     "creating SPI-device %d\n", idx);
++
++	return 0;
++}
++
+ static __init int x86_instantiate_serdev(const struct x86_serdev_info *info, int idx)
+ {
+ 	struct acpi_device *ctrl_adev, *serdev_adev;
+@@ -263,6 +305,11 @@ static void x86_android_tablet_remove(struct platform_device *pdev)
+ 	kfree(pdevs);
+ 	kfree(buttons);
+ 
++	for (i = 0; i < spi_dev_count; i++)
++		spi_unregister_device(spi_devs[i]);
++
++	kfree(spi_devs);
++
+ 	for (i = 0; i < i2c_client_count; i++)
+ 		i2c_unregister_device(i2c_clients[i]);
+ 
+@@ -333,6 +380,21 @@ static __init int x86_android_tablet_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	spi_devs = kcalloc(dev_info->spi_dev_count, sizeof(*spi_devs), GFP_KERNEL);
++	if (!spi_devs) {
++		x86_android_tablet_remove(pdev);
++		return -ENOMEM;
++	}
++
++	spi_dev_count = dev_info->spi_dev_count;
++	for (i = 0; i < spi_dev_count; i++) {
++		ret = x86_instantiate_spi_dev(dev_info, i);
++		if (ret < 0) {
++			x86_android_tablet_remove(pdev);
++			return ret;
++		}
++	}
++
+ 	/* + 1 to make space for (optional) gpio_keys_button pdev */
+ 	pdevs = kcalloc(dev_info->pdev_count + 1, sizeof(*pdevs), GFP_KERNEL);
+ 	if (!pdevs) {
+diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+index 9d2fb7fded6d..49fed9410adb 100644
+--- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
++++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+@@ -14,6 +14,7 @@
+ #include <linux/gpio_keys.h>
+ #include <linux/i2c.h>
+ #include <linux/irqdomain_defs.h>
++#include <linux/spi/spi.h>
+ 
+ struct gpio_desc;
+ struct gpiod_lookup_table;
+@@ -48,6 +49,12 @@ struct x86_i2c_client_info {
+ 	struct x86_acpi_irq_data irq_data;
+ };
+ 
++struct x86_spi_dev_info {
++	struct spi_board_info board_info;
++	char *ctrl_path;
++	struct x86_acpi_irq_data irq_data;
++};
++
+ struct x86_serdev_info {
+ 	const char *ctrl_hid;
+ 	const char *ctrl_uid;
+@@ -72,10 +79,12 @@ struct x86_dev_info {
+ 	const struct software_node *bat_swnode;
+ 	struct gpiod_lookup_table * const *gpiod_lookup_tables;
+ 	const struct x86_i2c_client_info *i2c_client_info;
++	const struct x86_spi_dev_info *spi_dev_info;
+ 	const struct platform_device_info *pdev_info;
+ 	const struct x86_serdev_info *serdev_info;
+ 	const struct x86_gpio_button *gpio_button;
+ 	int i2c_client_count;
++	int spi_dev_count;
+ 	int pdev_count;
+ 	int serdev_count;
+ 	int gpio_button_count;
 -- 
 2.41.0
 
