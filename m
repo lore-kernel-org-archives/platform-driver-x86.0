@@ -2,42 +2,43 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF54CDB465
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Oct 2023 20:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F47CDB465
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Oct 2023 20:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232759AbjJNUyB (ORCPT
+        id S233305AbjJNUyN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 14 Oct 2023 16:54:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35012 "EHLO
+        Sat, 14 Oct 2023 16:54:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231987AbjJNUyB (ORCPT
+        with ESMTP id S230371AbjJNUyM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 14 Oct 2023 16:54:01 -0400
+        Sat, 14 Oct 2023 16:54:12 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE6B1CE
-        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Oct 2023 13:53:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5288DD
+        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Oct 2023 13:53:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1697316801;
+        s=mimecast20190719; t=1697316804;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Yj/0QNYZsOIhUSH3tNxwgd4vsbyRiEDoe3GvHn5M7WI=;
-        b=Kefc+nJPqe6B0IjbtoXAL+ZfvGYjlYgEdqkVLDCnE0xzNek/Ph2TY3G/nuL9w5JVAqKjoN
-        87KfXAoUj2VgY54kvMzL+YTHx1qqZ23XIINfevncqq3J0NRgFD7xIsxkpk8ogWahOgIH30
-        MW57O5oBxYl5Bce+2pJPxlQIXcCbfSQ=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nVXuRZ43Xjf843BgeSpJhYSd1chgRygz5RuSbmD9+7Q=;
+        b=GHoP/OmOhWK1VCxxwQkfi2z4OH288/6S0RpVMuBBsktRXIHiHpVu5RffsEbhJ2aVdYFUSY
+        V04qWTi9Y8bIdz58YjBqiEoJkojS/kpd+eL8/InhL0o3qqAKg2h9HZhBLndFWL6SnILwfB
+        sLWniIDpKBLV8LSdYVqdaxJ3vqvCbNQ=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-333-ZYCTH57ZMvqLWKf6ZEAWTQ-1; Sat, 14 Oct 2023 16:53:16 -0400
-X-MC-Unique: ZYCTH57ZMvqLWKf6ZEAWTQ-1
+ us-mta-581-f_G26kRvMhqO5SmTNSEseQ-1; Sat, 14 Oct 2023 16:53:22 -0400
+X-MC-Unique: f_G26kRvMhqO5SmTNSEseQ-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 322A9946DC1;
-        Sat, 14 Oct 2023 20:53:16 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DC32C185A78E;
+        Sat, 14 Oct 2023 20:53:21 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.192.6])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F06D125C0;
-        Sat, 14 Oct 2023 20:53:14 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AB1B425C0;
+        Sat, 14 Oct 2023 20:53:20 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     "Rafael J . Wysocki" <rafael@kernel.org>,
         =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -45,9 +46,11 @@ To:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Mark Brown <broonie@kernel.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: [PATCH 0/4] spi/ACPI: Add support for SPI WM5102 coded on Lenovo YT3-X90
-Date:   Sat, 14 Oct 2023 22:53:10 +0200
-Message-ID: <20231014205314.59333-1-hdegoede@redhat.com>
+Subject: [PATCH 4/4] platform/x86: x86-android-tablets: Add audio codec info for Lenovo Yoga Tab 3 Pro YT3-X90F
+Date:   Sat, 14 Oct 2023 22:53:14 +0200
+Message-ID: <20231014205314.59333-5-hdegoede@redhat.com>
+In-Reply-To: <20231014205314.59333-1-hdegoede@redhat.com>
+References: <20231014205314.59333-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
@@ -55,45 +58,148 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi All,
+The SPI attached WM5102 codec on the Lenovo Yoga Tab 3 Pro YT3-X90F
+is not described in the ACPI tables.
 
-Here is a patch series to fix audio on the Lenovo YT3-X90 x86 Android
-tablet.
+Add info to instantiate the SPI device for the codec manually.
 
-This series takes care of instantiating the SPI device for the codec,
-to make things fully work there also are some sound/soc/intel/boards
-changes necessary which I'm still working on.
-
-The reason to post this initial series now is to get at least
-the first patch merged before the next merge window so that
-the rest of the series can easily be merged after the next
-merge window without needing coordination between subsystem trees.
-
-Mark can you please pickup patch 1/4 for the 6.7 merge-windows?
-then I can queue up patches 3+4 for the 6.8 merge-window once
-6.7-rc1 is released.
-
-Regards,
-
-Hans
-
-
-Hans de Goede (4):
-  spi: Export acpi_spi_find_controller_by_adev()
-  ACPI: scan: Add LNXVIDEO HID to ignore_serial_bus_ids[]
-  platform/x86: x86-android-tablets: Add support for SPI device
-    instantiation
-  platform/x86: x86-android-tablets: Add audio codec info for Lenovo
-    Yoga Tab 3 Pro YT3-X90F
-
- drivers/acpi/scan.c                           |  1 +
- .../platform/x86/x86-android-tablets/core.c   | 62 ++++++++++++
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
  .../platform/x86/x86-android-tablets/lenovo.c | 99 +++++++++++++++++++
- .../x86-android-tablets/x86-android-tablets.h |  9 ++
- drivers/spi/spi.c                             |  5 +-
- include/linux/spi/spi.h                       |  1 +
- 6 files changed, 174 insertions(+), 3 deletions(-)
+ 1 file changed, 99 insertions(+)
 
+diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
+index 585f10a57810..d5d815940ce1 100644
+--- a/drivers/platform/x86/x86-android-tablets/lenovo.c
++++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
+@@ -12,6 +12,8 @@
+ 
+ #include <linux/efi.h>
+ #include <linux/gpio/machine.h>
++#include <linux/mfd/arizona/pdata.h>
++#include <linux/mfd/arizona/registers.h>
+ #include <linux/mfd/intel_soc_pmic.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/pinctrl/machine.h>
+@@ -677,6 +679,89 @@ static const struct x86_i2c_client_info lenovo_yt3_i2c_clients[] __initconst = {
+ 	}
+ };
+ 
++/*
++ * The AOSP 3.5 mm Headset: Accessory Specification gives the following values:
++ * Function A Play/Pause:           0 ohm
++ * Function D Voice assistant:    135 ohm
++ * Function B Volume Up           240 ohm
++ * Function C Volume Down         470 ohm
++ * Minimum Mic DC resistance     1000 ohm
++ * Minimum Ear speaker impedance   16 ohm
++ * Note the first max value below must be less then the min. speaker impedance,
++ * to allow CTIA/OMTP detection to work. The other max values are the closest
++ * value from extcon-arizona.c:arizona_micd_levels halfway 2 button resistances.
++ */
++static const struct arizona_micd_range arizona_micd_aosp_ranges[] = {
++	{ .max =  11, .key = KEY_PLAYPAUSE },
++	{ .max = 186, .key = KEY_VOICECOMMAND },
++	{ .max = 348, .key = KEY_VOLUMEUP },
++	{ .max = 752, .key = KEY_VOLUMEDOWN },
++};
++
++/* YT3 WM5102 arizona_micd_config comes from Android kernel sources */
++static struct arizona_micd_config lenovo_yt3_wm5102_micd_config[]={
++	{ 0, 1, 0 },
++	{ ARIZONA_ACCDET_SRC, 2, 1 },
++};
++
++static struct arizona_pdata lenovo_yt3_wm5102_pdata = {
++	.irq_flags = IRQF_TRIGGER_LOW,
++	.micd_detect_debounce = 200,
++	.micd_ranges = arizona_micd_aosp_ranges,
++	.num_micd_ranges = ARRAY_SIZE(arizona_micd_aosp_ranges),
++	.hpdet_channel = ARIZONA_ACCDET_MODE_HPL,
++
++	/* Below settings come from Android kernel sources */
++	.micd_bias_start_time = 1,
++	.micd_rate = 6,
++	.micd_force_micbias = 1,
++	.micd_configs = lenovo_yt3_wm5102_micd_config,
++	.num_micd_configs = ARRAY_SIZE(lenovo_yt3_wm5102_micd_config),
++        .micbias={
++           [0]={ /*MICBIAS1*/
++                 .mV =2800 ,
++                 .ext_cap=1,
++                 .discharge =1 ,
++                 .soft_start =0,
++                 .bypass =0,
++           },
++           [1]={ /*MICBIAS2*/
++                 .mV =2800 ,
++                 .ext_cap=1,
++                 .discharge =1 ,
++                 .soft_start =0,
++                 .bypass =0,
++           },
++           [2]={ /*MICBIAS3*/
++                 .mV =2800 ,
++                 .ext_cap=1,
++                 .discharge =1 ,
++                 .soft_start =0,
++                 .bypass =0,
++           },
++        },
++};
++
++static const struct x86_spi_dev_info lenovo_yt3_spi_devs[] __initconst = {
++	{
++		/* WM5102 codec */
++		.board_info = {
++			.modalias = "wm5102",
++			.platform_data = &lenovo_yt3_wm5102_pdata,
++			.max_speed_hz = 5000000,
++		},
++		.ctrl_path = "\\_SB_.PCI0.SPI1",
++		.irq_data = {
++			.type = X86_ACPI_IRQ_TYPE_GPIOINT,
++			.chip = "INT33FF:00",
++			.index = 91,
++			.trigger = ACPI_LEVEL_SENSITIVE,
++			.polarity = ACPI_ACTIVE_LOW,
++			.con_id = "wm5102_irq",
++		},
++	}
++};
++
+ static int __init lenovo_yt3_init(void)
+ {
+ 	int ret;
+@@ -720,14 +805,28 @@ static struct gpiod_lookup_table lenovo_yt3_hideep_gpios = {
+ 	},
+ };
+ 
++static struct gpiod_lookup_table lenovo_yt3_wm5102_gpios = {
++	.dev_id = "spi1.0",
++	.table = {
++		GPIO_LOOKUP("INT33FF:00", 75, "wlf,spkvdd-ena", GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP("INT33FF:00", 81, "wlf,ldoena", GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP("INT33FF:00", 82, "reset", GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP("arizona", 2, "wlf,micd-pol", GPIO_ACTIVE_HIGH),
++		{ }
++	},
++};
++
+ static struct gpiod_lookup_table * const lenovo_yt3_gpios[] = {
+ 	&lenovo_yt3_hideep_gpios,
++	&lenovo_yt3_wm5102_gpios,
+ 	NULL
+ };
+ 
+ const struct x86_dev_info lenovo_yt3_info __initconst = {
+ 	.i2c_client_info = lenovo_yt3_i2c_clients,
+ 	.i2c_client_count = ARRAY_SIZE(lenovo_yt3_i2c_clients),
++	.spi_dev_info = lenovo_yt3_spi_devs,
++	.spi_dev_count = ARRAY_SIZE(lenovo_yt3_spi_devs),
+ 	.gpiod_lookup_tables = lenovo_yt3_gpios,
+ 	.init = lenovo_yt3_init,
+ };
 -- 
 2.41.0
 
