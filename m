@@ -2,330 +2,191 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909B1CDB47E
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Oct 2023 03:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE92DCDB482
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Oct 2023 04:16:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229958AbjJND3D (ORCPT
+        id S232793AbjJNEQ4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Oct 2023 23:29:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46508 "EHLO
+        Sat, 14 Oct 2023 00:16:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229518AbjJND3C (ORCPT
+        with ESMTP id S232717AbjJNEQ4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Oct 2023 23:29:02 -0400
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F9BFC0;
-        Fri, 13 Oct 2023 20:28:58 -0700 (PDT)
-X-UUID: bb6b3defdbf7419c90c7d3bc44c3da64-20231014
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.32,REQID:c558d7f0-915c-41bc-b38f-8bca20620a3b,IP:5,U
-        RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-        ION:release,TS:-35
-X-CID-INFO: VERSION:1.1.32,REQID:c558d7f0-915c-41bc-b38f-8bca20620a3b,IP:5,URL
-        :0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-        N:release,TS:-35
-X-CID-META: VersionHash:5f78ec9,CLOUDID:7cd51bc4-1e57-4345-9d31-31ad9818b39f,B
-        ulkID:231014112849SB64LA8R,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
-        02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
-        L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
-X-UUID: bb6b3defdbf7419c90c7d3bc44c3da64-20231014
-X-User: aichao@kylinos.cn
-Received: from localhost.localdomain [(112.64.161.44)] by mailgw
-        (envelope-from <aichao@kylinos.cn>)
-        (Generic MTA)
-        with ESMTP id 2130785070; Sat, 14 Oct 2023 11:28:47 +0800
-From:   Ai Chao <aichao@kylinos.cn>
-To:     hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
-        markgross@kernel.org
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Ai Chao <aichao@kylinos.cn>
-Subject: [PATCH v2] platform/x86: support to store/show powermode value for Inspur
-Date:   Sat, 14 Oct 2023 11:28:44 +0800
-Message-Id: <20231014032844.3823198-1-aichao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+        Sat, 14 Oct 2023 00:16:56 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E459C9;
+        Fri, 13 Oct 2023 21:16:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697257013; x=1728793013;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3r/8q1XI29rdQEGxNz6p37DXj12l7HnDpzLdqMNJSFQ=;
+  b=Ic+oSLGSYoooh68Tgq/GmeQ+Xz0iixsJEMmLAl8GyCUgYxcbZkOh8CCW
+   RtIbF69VFc0koG9S3kad9oy2MS+7ngFrh8xpNTKK+54BAyKFvaxAcI1pO
+   zmCnGq7RhW0kwibBkzckopTAKbTGRisZB0Ii3FKVxiun+TwqzCgSZ6Bkb
+   vHWYJxfZD3d5O71AF1C3Tv4BHxbT/eBr2Jb+86AHjDweP+6/6QfL/svUN
+   Y44dAXonlS+w2pxYIGtwhNE6M2r5eJDTaqHXGJq0DbD2NybvbWvjQjrOx
+   KXcYMTQyyItBQHkIs6/aQkwc6dubl+jdSjAnI8u/BbGHlO6DxU9/lmlt0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="416363941"
+X-IronPort-AV: E=Sophos;i="6.03,224,1694761200"; 
+   d="scan'208";a="416363941"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 21:16:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="871354127"
+X-IronPort-AV: E=Sophos;i="6.03,224,1694761200"; 
+   d="scan'208";a="871354127"
+Received: from lkp-server02.sh.intel.com (HELO f64821696465) ([10.239.97.151])
+  by fmsmga002.fm.intel.com with ESMTP; 13 Oct 2023 21:16:48 -0700
+Received: from kbuild by f64821696465 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qrW50-0005ge-0O;
+        Sat, 14 Oct 2023 04:16:46 +0000
+Date:   Sat, 14 Oct 2023 12:16:15 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hdegoede@redhat.com,
+        markgross@kernel.org, ilpo.jarvinen@linux.intel.com,
+        basavaraj.natikar@amd.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
+        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
+        daniel@ffwll.ch
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        amd-gfx@lists.freedesktop.org, platform-driver-x86@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Patil.Reddy@amd.com,
+        linux-input@vger.kernel.org, mario.limonciello@amd.com
+Subject: Re: [PATCH v3 09/16] platform/x86/amd/pmf: Add facility to dump TA
+ inputs
+Message-ID: <202310141247.22Coajca-lkp@intel.com>
+References: <20231010125917.138225-10-Shyam-sundar.S-k@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231010125917.138225-10-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Support to store/show powermode value for Inspur by WMI interface.
-This driver provides support for Inspur WMI hotkeys. User used Fn+Q to
-change the power mode. If desktop applications receive hotkey(Fn+Q)
-event, then it get the currently power mode and change the power mode.
-The desktop applications modify brightness and cpufreq based on
-power mode.
+Hi Shyam,
 
-change for v2
-- Remove Event GUID, remove inspur_wmi_notify and inspur_wmi_notify.
-- Add more explanation.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Ai Chao <aichao@kylinos.cn>
----
- drivers/platform/x86/Kconfig      |  14 ++
- drivers/platform/x86/Makefile     |   3 +
- drivers/platform/x86/inspur-wmi.c | 210 ++++++++++++++++++++++++++++++
- 3 files changed, 227 insertions(+)
- create mode 100644 drivers/platform/x86/inspur-wmi.c
+[auto build test WARNING on hid/for-next]
+[also build test WARNING on drm-misc/drm-misc-next linus/master v6.6-rc5 next-20231013]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 2a1070543391..fa2a4335c83d 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -988,6 +988,20 @@ config TOUCHSCREEN_DMI
- 	  the OS-image for the device. This option supplies the missing info.
- 	  Enable this for x86 tablets with Silead or Chipone touchscreens.
- 
-+config INSPUR_WMI
-+	tristate "Inspur WMI hotkeys driver"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	help
-+	This driver provides support for Inspur WMI hotkeys.
-+	User used Fn+Q to change the power mode. If desktop applications
-+	receive hotkeys(Fn+Q) event, then it get the currently power mode
-+	and change the power mode. The desktop applications modify brightness
-+	and cpufreq based on power mode.
-+
-+	To compile this driver as a module, choose M here: the module
-+	will be called inspur-wmi.
-+
- source "drivers/platform/x86/x86-android-tablets/Kconfig"
- 
- config FW_ATTR_CLASS
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index b457de5abf7d..9285c252757e 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -98,6 +98,9 @@ obj-$(CONFIG_TOSHIBA_WMI)	+= toshiba-wmi.o
- # before toshiba_acpi initializes
- obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
- 
-+# Inspur
-+obj-$(CONFIG_INSPUR_WMI)	+= inspur-wmi.o
-+
- # Laptop drivers
- obj-$(CONFIG_ACPI_CMPC)		+= classmate-laptop.o
- obj-$(CONFIG_COMPAL_LAPTOP)	+= compal-laptop.o
-diff --git a/drivers/platform/x86/inspur-wmi.c b/drivers/platform/x86/inspur-wmi.c
-new file mode 100644
-index 000000000000..ef6cfd87f074
---- /dev/null
-+++ b/drivers/platform/x86/inspur-wmi.c
-@@ -0,0 +1,210 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Inspur WMI hotkeys
-+ *
-+ *  Copyright (C) 2018	      Ai Chao <aichao@kylinos.cn>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/input.h>
-+#include <linux/module.h>
-+#include <linux/wmi.h>
-+
-+#define WMI_INSPUR_POWERMODE_BIOS_GUID "596C31E3-332D-43C9-AEE9-585493284F5D"
-+
-+enum inspur_wmi_method_ids {
-+	INSPUR_WMI_GET_POWERMODE = 0x02,
-+	INSPUR_WMI_SET_POWERMODE = 0x03,
-+};
-+
-+struct inspur_wmi_priv {
-+	struct input_dev *idev;
-+	struct wmi_device *wdev;
-+};
-+
-+static int inspur_wmi_perform_query(struct wmi_device *wdev,
-+				    enum inspur_wmi_method_ids query_id,
-+				    void *buffer, size_t insize,
-+				    size_t outsize)
-+{
-+	union acpi_object *obj;
-+	acpi_status status;
-+	int ret = 0;
-+	struct acpi_buffer input = { insize, buffer};
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+
-+	status = wmidev_evaluate_method(wdev, 0, query_id, &input, &output);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(&wdev->dev, "EC Powermode control failed: %s\n",
-+			acpi_format_exception(status));
-+		return -EIO;
-+	}
-+
-+	obj = output.pointer;
-+	if (!obj)
-+		return -EINVAL;
-+
-+	if (obj->type != ACPI_TYPE_BUFFER) {
-+		ret = -EINVAL;
-+		goto out_free;
-+	}
-+
-+	/* Ignore output data of zero size */
-+	if (!outsize)
-+		goto out_free;
-+
-+	if (obj->buffer.length != outsize) {
-+		ret = -EINVAL;
-+		goto out_free;
-+	}
-+
-+	memcpy(buffer, obj->buffer.pointer, obj->buffer.length);
-+
-+out_free:
-+	kfree(obj);
-+	return ret;
-+}
-+
-+/**
-+ * Set Power Mode to EC RAM. If Power Mode value greater than 0x3,
-+ * return error
-+ * Method ID: 0x3
-+ * Arg: 4 Bytes
-+ * Byte [0]: Power Mode:
-+ *         0x0: Balance Mode
-+ *         0x1: Performance Mode
-+ *         0x2: Power Saver Mode
-+ * Return Value: 4 Bytes
-+ * Byte [0]: Return Code
-+ *         0x0: No Error
-+ *         0x1: Error
-+ */
-+static ssize_t powermode_store(struct device *dev,
-+			       struct device_attribute *attr,
-+			       const char *buf, size_t count)
-+{
-+	struct inspur_wmi_priv *priv = dev_get_drvdata(dev);
-+	int ret;
-+	u32 mode;
-+	u8 *ret_code;
-+
-+	ret = kstrtoint(buf, 0, &mode);
-+	if (ret)
-+		return ret;
-+
-+	ret = inspur_wmi_perform_query(priv->wdev,
-+				       INSPUR_WMI_SET_POWERMODE,
-+				       &mode, sizeof(mode), sizeof(mode));
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	ret_code = (u8 *)(&mode);
-+	if (ret_code[0])
-+		return -EBADRQC;
-+
-+	return count;
-+}
-+
-+/**
-+ * Get Power Mode from EC RAM, If Power Mode value greater than 0x3,
-+ * return error
-+ * Method ID: 0x2
-+ * Return Value: 4 Bytes
-+ * Byte [0]: Return Code
-+ *         0x0: No Error
-+ *         0x1: Error
-+ * Byte [1]: Power Mode
-+ *         0x0: Balance Mode
-+ *         0x1: Performance Mode
-+ *         0x2: Power Saver Mode
-+ */
-+static ssize_t powermode_show(struct device *dev,
-+			      struct device_attribute *attr,
-+			      char *buf)
-+{
-+	struct inspur_wmi_priv *priv = dev_get_drvdata(dev);
-+	u32 mode = 0;
-+	int ret;
-+	u8 *ret_code;
-+
-+	ret = inspur_wmi_perform_query(priv->wdev,
-+				       INSPUR_WMI_GET_POWERMODE,
-+				       &mode, sizeof(mode), sizeof(mode));
-+	if (ret < 0)
-+		return ret;
-+
-+	ret_code = (u8 *)(&mode);
-+	if (ret_code[0])
-+		return -EBADRQC;
-+
-+	return sprintf(buf, "%u\n", ret_code[1]);
-+}
-+
-+static DEVICE_ATTR_RW(powermode);
-+
-+static struct attribute *inspur_wmi_attrs[] = {
-+	&dev_attr_powermode.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group inspur_wmi_group = {
-+	.attrs = inspur_wmi_attrs,
-+};
-+
-+static const struct attribute_group *inspur_wmi_groups[] = {
-+	&inspur_wmi_group,
-+	NULL,
-+};
-+
-+static int inspur_wmi_input_setup(struct wmi_device *wdev)
-+{
-+	struct inspur_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-+
-+	priv->idev = devm_input_allocate_device(&wdev->dev);
-+	if (!priv->idev)
-+		return -ENOMEM;
-+
-+	priv->idev->name = "Inspur WMI hotkeys";
-+	priv->idev->phys = "wmi/input0";
-+	priv->idev->id.bustype = BUS_HOST;
-+	priv->idev->dev.parent = &wdev->dev;
-+
-+	return input_register_device(priv->idev);
-+}
-+
-+static int inspur_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct inspur_wmi_priv *priv;
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->wdev = wdev;
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	return inspur_wmi_input_setup(wdev);
-+}
-+
-+static const struct wmi_device_id inspur_wmi_id_table[] = {
-+	{ .guid_string = WMI_INSPUR_POWERMODE_BIOS_GUID },
-+	{  }
-+};
-+
-+static struct wmi_driver inspur_wmi_driver = {
-+	.driver = {
-+		.name = "inspur-wmi",
-+		.dev_groups = inspur_wmi_groups,
-+	},
-+	.id_table = inspur_wmi_id_table,
-+	.probe = inspur_wmi_probe,
-+};
-+
-+module_wmi_driver(inspur_wmi_driver);
-+
-+MODULE_DEVICE_TABLE(wmi, inspur_wmi_id_table);
-+MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-+MODULE_DESCRIPTION("Inspur WMI hotkeys");
-+MODULE_LICENSE("GPL");
+url:    https://github.com/intel-lab-lkp/linux/commits/Shyam-Sundar-S-K/platform-x86-amd-pmf-Add-PMF-TEE-interface/20231010-210347
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-next
+patch link:    https://lore.kernel.org/r/20231010125917.138225-10-Shyam-sundar.S-k%40amd.com
+patch subject: [PATCH v3 09/16] platform/x86/amd/pmf: Add facility to dump TA inputs
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20231014/202310141247.22Coajca-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231014/202310141247.22Coajca-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310141247.22Coajca-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/linux/printk.h:564,
+                    from include/linux/kernel.h:30,
+                    from arch/x86/include/asm/percpu.h:27,
+                    from arch/x86/include/asm/preempt.h:6,
+                    from include/linux/preempt.h:79,
+                    from include/linux/spinlock.h:56,
+                    from include/linux/mmzone.h:8,
+                    from include/linux/gfp.h:7,
+                    from include/linux/slab.h:16,
+                    from include/linux/resource_ext.h:11,
+                    from include/linux/acpi.h:13,
+                    from drivers/platform/x86/amd/pmf/pmf.h:14,
+                    from drivers/platform/x86/amd/pmf/sps.c:11:
+   drivers/platform/x86/amd/pmf/sps.c: In function 'amd_pmf_dump_sps_defaults':
+   drivers/platform/x86/amd/pmf/sps.c:50:65: error: implicit declaration of function 'source_as_str' [-Werror=implicit-function-declaration]
+      50 |                         pr_debug("--- Source:%s Mode:%s ---\n", source_as_str(i), slider_as_str(j));
+         |                                                                 ^~~~~~~~~~~~~
+   include/linux/dynamic_debug.h:224:29: note: in definition of macro '__dynamic_func_call_cls'
+     224 |                 func(&id, ##__VA_ARGS__);                       \
+         |                             ^~~~~~~~~~~
+   include/linux/dynamic_debug.h:250:9: note: in expansion of macro '_dynamic_func_call_cls'
+     250 |         _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dynamic_debug.h:269:9: note: in expansion of macro '_dynamic_func_call'
+     269 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/linux/printk.h:579:9: note: in expansion of macro 'dynamic_pr_debug'
+     579 |         dynamic_pr_debug(fmt, ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~~
+   drivers/platform/x86/amd/pmf/sps.c:50:25: note: in expansion of macro 'pr_debug'
+      50 |                         pr_debug("--- Source:%s Mode:%s ---\n", source_as_str(i), slider_as_str(j));
+         |                         ^~~~~~~~
+>> drivers/platform/x86/amd/pmf/sps.c:50:34: warning: format '%s' expects argument of type 'char *', but argument 3 has type 'int' [-Wformat=]
+      50 |                         pr_debug("--- Source:%s Mode:%s ---\n", source_as_str(i), slider_as_str(j));
+         |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/printk.h:345:21: note: in definition of macro 'pr_fmt'
+     345 | #define pr_fmt(fmt) fmt
+         |                     ^~~
+   include/linux/dynamic_debug.h:248:9: note: in expansion of macro '__dynamic_func_call_cls'
+     248 |         __dynamic_func_call_cls(__UNIQUE_ID(ddebug), cls, fmt, func, ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dynamic_debug.h:250:9: note: in expansion of macro '_dynamic_func_call_cls'
+     250 |         _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dynamic_debug.h:269:9: note: in expansion of macro '_dynamic_func_call'
+     269 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
+         |         ^~~~~~~~~~~~~~~~~~
+   include/linux/printk.h:579:9: note: in expansion of macro 'dynamic_pr_debug'
+     579 |         dynamic_pr_debug(fmt, ##__VA_ARGS__)
+         |         ^~~~~~~~~~~~~~~~
+   drivers/platform/x86/amd/pmf/sps.c:50:25: note: in expansion of macro 'pr_debug'
+      50 |                         pr_debug("--- Source:%s Mode:%s ---\n", source_as_str(i), slider_as_str(j));
+         |                         ^~~~~~~~
+   drivers/platform/x86/amd/pmf/sps.c:50:47: note: format string is defined here
+      50 |                         pr_debug("--- Source:%s Mode:%s ---\n", source_as_str(i), slider_as_str(j));
+         |                                              ~^
+         |                                               |
+         |                                               char *
+         |                                              %d
+   cc1: some warnings being treated as errors
+
+
+vim +50 drivers/platform/x86/amd/pmf/sps.c
+
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  41  
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  42  static void amd_pmf_dump_sps_defaults(struct amd_pmf_static_slider_granular *data)
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  43  {
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  44  	int i, j;
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  45  
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  46  	pr_debug("Static Slider Data - BEGIN\n");
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  47  
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  48  	for (i = 0; i < POWER_SOURCE_MAX; i++) {
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  49  		for (j = 0; j < POWER_MODE_MAX; j++) {
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10 @50  			pr_debug("--- Source:%s Mode:%s ---\n", source_as_str(i), slider_as_str(j));
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  51  			pr_debug("SPL: %u mW\n", data->prop[i][j].spl);
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  52  			pr_debug("SPPT: %u mW\n", data->prop[i][j].sppt);
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  53  			pr_debug("SPPT_ApuOnly: %u mW\n", data->prop[i][j].sppt_apu_only);
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  54  			pr_debug("FPPT: %u mW\n", data->prop[i][j].fppt);
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  55  			pr_debug("STTMinLimit: %u mW\n", data->prop[i][j].stt_min);
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  56  			pr_debug("STT_SkinTempLimit_APU: %u C\n",
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  57  				 data->prop[i][j].stt_skin_temp[STT_TEMP_APU]);
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  58  			pr_debug("STT_SkinTempLimit_HS2: %u C\n",
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  59  				 data->prop[i][j].stt_skin_temp[STT_TEMP_HS2]);
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  60  		}
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  61  	}
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  62  
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  63  	pr_debug("Static Slider Data - END\n");
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  64  }
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  65  #else
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  66  static void amd_pmf_dump_sps_defaults(struct amd_pmf_static_slider_granular *data) {}
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  67  #endif
+a82ebb3d800d7b Shyam Sundar S K 2023-05-10  68  
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
