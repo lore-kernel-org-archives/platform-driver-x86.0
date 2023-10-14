@@ -2,191 +2,98 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE92DCDB482
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Oct 2023 04:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF54CDB465
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Oct 2023 20:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232793AbjJNEQ4 (ORCPT
+        id S232759AbjJNUyB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 14 Oct 2023 00:16:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50648 "EHLO
+        Sat, 14 Oct 2023 16:54:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232717AbjJNEQ4 (ORCPT
+        with ESMTP id S231987AbjJNUyB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 14 Oct 2023 00:16:56 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E459C9;
-        Fri, 13 Oct 2023 21:16:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697257013; x=1728793013;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3r/8q1XI29rdQEGxNz6p37DXj12l7HnDpzLdqMNJSFQ=;
-  b=Ic+oSLGSYoooh68Tgq/GmeQ+Xz0iixsJEMmLAl8GyCUgYxcbZkOh8CCW
-   RtIbF69VFc0koG9S3kad9oy2MS+7ngFrh8xpNTKK+54BAyKFvaxAcI1pO
-   zmCnGq7RhW0kwibBkzckopTAKbTGRisZB0Ii3FKVxiun+TwqzCgSZ6Bkb
-   vHWYJxfZD3d5O71AF1C3Tv4BHxbT/eBr2Jb+86AHjDweP+6/6QfL/svUN
-   Y44dAXonlS+w2pxYIGtwhNE6M2r5eJDTaqHXGJq0DbD2NybvbWvjQjrOx
-   KXcYMTQyyItBQHkIs6/aQkwc6dubl+jdSjAnI8u/BbGHlO6DxU9/lmlt0
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="416363941"
-X-IronPort-AV: E=Sophos;i="6.03,224,1694761200"; 
-   d="scan'208";a="416363941"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 21:16:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="871354127"
-X-IronPort-AV: E=Sophos;i="6.03,224,1694761200"; 
-   d="scan'208";a="871354127"
-Received: from lkp-server02.sh.intel.com (HELO f64821696465) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 13 Oct 2023 21:16:48 -0700
-Received: from kbuild by f64821696465 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qrW50-0005ge-0O;
-        Sat, 14 Oct 2023 04:16:46 +0000
-Date:   Sat, 14 Oct 2023 12:16:15 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hdegoede@redhat.com,
-        markgross@kernel.org, ilpo.jarvinen@linux.intel.com,
-        basavaraj.natikar@amd.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
-        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
-        daniel@ffwll.ch
-Cc:     oe-kbuild-all@lists.linux.dev,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        amd-gfx@lists.freedesktop.org, platform-driver-x86@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Patil.Reddy@amd.com,
-        linux-input@vger.kernel.org, mario.limonciello@amd.com
-Subject: Re: [PATCH v3 09/16] platform/x86/amd/pmf: Add facility to dump TA
- inputs
-Message-ID: <202310141247.22Coajca-lkp@intel.com>
-References: <20231010125917.138225-10-Shyam-sundar.S-k@amd.com>
+        Sat, 14 Oct 2023 16:54:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE6B1CE
+        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Oct 2023 13:53:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1697316801;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Yj/0QNYZsOIhUSH3tNxwgd4vsbyRiEDoe3GvHn5M7WI=;
+        b=Kefc+nJPqe6B0IjbtoXAL+ZfvGYjlYgEdqkVLDCnE0xzNek/Ph2TY3G/nuL9w5JVAqKjoN
+        87KfXAoUj2VgY54kvMzL+YTHx1qqZ23XIINfevncqq3J0NRgFD7xIsxkpk8ogWahOgIH30
+        MW57O5oBxYl5Bce+2pJPxlQIXcCbfSQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-333-ZYCTH57ZMvqLWKf6ZEAWTQ-1; Sat, 14 Oct 2023 16:53:16 -0400
+X-MC-Unique: ZYCTH57ZMvqLWKf6ZEAWTQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 322A9946DC1;
+        Sat, 14 Oct 2023 20:53:16 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.6])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F06D125C0;
+        Sat, 14 Oct 2023 20:53:14 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: [PATCH 0/4] spi/ACPI: Add support for SPI WM5102 coded on Lenovo YT3-X90
+Date:   Sat, 14 Oct 2023 22:53:10 +0200
+Message-ID: <20231014205314.59333-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231010125917.138225-10-Shyam-sundar.S-k@amd.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Shyam,
+Hi All,
 
-kernel test robot noticed the following build warnings:
+Here is a patch series to fix audio on the Lenovo YT3-X90 x86 Android
+tablet.
 
-[auto build test WARNING on hid/for-next]
-[also build test WARNING on drm-misc/drm-misc-next linus/master v6.6-rc5 next-20231013]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This series takes care of instantiating the SPI device for the codec,
+to make things fully work there also are some sound/soc/intel/boards
+changes necessary which I'm still working on.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Shyam-Sundar-S-K/platform-x86-amd-pmf-Add-PMF-TEE-interface/20231010-210347
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-next
-patch link:    https://lore.kernel.org/r/20231010125917.138225-10-Shyam-sundar.S-k%40amd.com
-patch subject: [PATCH v3 09/16] platform/x86/amd/pmf: Add facility to dump TA inputs
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20231014/202310141247.22Coajca-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231014/202310141247.22Coajca-lkp@intel.com/reproduce)
+The reason to post this initial series now is to get at least
+the first patch merged before the next merge window so that
+the rest of the series can easily be merged after the next
+merge window without needing coordination between subsystem trees.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202310141247.22Coajca-lkp@intel.com/
+Mark can you please pickup patch 1/4 for the 6.7 merge-windows?
+then I can queue up patches 3+4 for the 6.8 merge-window once
+6.7-rc1 is released.
 
-All warnings (new ones prefixed by >>):
+Regards,
 
-   In file included from include/linux/printk.h:564,
-                    from include/linux/kernel.h:30,
-                    from arch/x86/include/asm/percpu.h:27,
-                    from arch/x86/include/asm/preempt.h:6,
-                    from include/linux/preempt.h:79,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from include/linux/slab.h:16,
-                    from include/linux/resource_ext.h:11,
-                    from include/linux/acpi.h:13,
-                    from drivers/platform/x86/amd/pmf/pmf.h:14,
-                    from drivers/platform/x86/amd/pmf/sps.c:11:
-   drivers/platform/x86/amd/pmf/sps.c: In function 'amd_pmf_dump_sps_defaults':
-   drivers/platform/x86/amd/pmf/sps.c:50:65: error: implicit declaration of function 'source_as_str' [-Werror=implicit-function-declaration]
-      50 |                         pr_debug("--- Source:%s Mode:%s ---\n", source_as_str(i), slider_as_str(j));
-         |                                                                 ^~~~~~~~~~~~~
-   include/linux/dynamic_debug.h:224:29: note: in definition of macro '__dynamic_func_call_cls'
-     224 |                 func(&id, ##__VA_ARGS__);                       \
-         |                             ^~~~~~~~~~~
-   include/linux/dynamic_debug.h:250:9: note: in expansion of macro '_dynamic_func_call_cls'
-     250 |         _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/dynamic_debug.h:269:9: note: in expansion of macro '_dynamic_func_call'
-     269 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/linux/printk.h:579:9: note: in expansion of macro 'dynamic_pr_debug'
-     579 |         dynamic_pr_debug(fmt, ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~~~~
-   drivers/platform/x86/amd/pmf/sps.c:50:25: note: in expansion of macro 'pr_debug'
-      50 |                         pr_debug("--- Source:%s Mode:%s ---\n", source_as_str(i), slider_as_str(j));
-         |                         ^~~~~~~~
->> drivers/platform/x86/amd/pmf/sps.c:50:34: warning: format '%s' expects argument of type 'char *', but argument 3 has type 'int' [-Wformat=]
-      50 |                         pr_debug("--- Source:%s Mode:%s ---\n", source_as_str(i), slider_as_str(j));
-         |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/printk.h:345:21: note: in definition of macro 'pr_fmt'
-     345 | #define pr_fmt(fmt) fmt
-         |                     ^~~
-   include/linux/dynamic_debug.h:248:9: note: in expansion of macro '__dynamic_func_call_cls'
-     248 |         __dynamic_func_call_cls(__UNIQUE_ID(ddebug), cls, fmt, func, ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/dynamic_debug.h:250:9: note: in expansion of macro '_dynamic_func_call_cls'
-     250 |         _dynamic_func_call_cls(_DPRINTK_CLASS_DFLT, fmt, func, ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/dynamic_debug.h:269:9: note: in expansion of macro '_dynamic_func_call'
-     269 |         _dynamic_func_call(fmt, __dynamic_pr_debug,             \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/linux/printk.h:579:9: note: in expansion of macro 'dynamic_pr_debug'
-     579 |         dynamic_pr_debug(fmt, ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~~~~
-   drivers/platform/x86/amd/pmf/sps.c:50:25: note: in expansion of macro 'pr_debug'
-      50 |                         pr_debug("--- Source:%s Mode:%s ---\n", source_as_str(i), slider_as_str(j));
-         |                         ^~~~~~~~
-   drivers/platform/x86/amd/pmf/sps.c:50:47: note: format string is defined here
-      50 |                         pr_debug("--- Source:%s Mode:%s ---\n", source_as_str(i), slider_as_str(j));
-         |                                              ~^
-         |                                               |
-         |                                               char *
-         |                                              %d
-   cc1: some warnings being treated as errors
+Hans
 
 
-vim +50 drivers/platform/x86/amd/pmf/sps.c
+Hans de Goede (4):
+  spi: Export acpi_spi_find_controller_by_adev()
+  ACPI: scan: Add LNXVIDEO HID to ignore_serial_bus_ids[]
+  platform/x86: x86-android-tablets: Add support for SPI device
+    instantiation
+  platform/x86: x86-android-tablets: Add audio codec info for Lenovo
+    Yoga Tab 3 Pro YT3-X90F
 
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  41  
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  42  static void amd_pmf_dump_sps_defaults(struct amd_pmf_static_slider_granular *data)
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  43  {
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  44  	int i, j;
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  45  
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  46  	pr_debug("Static Slider Data - BEGIN\n");
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  47  
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  48  	for (i = 0; i < POWER_SOURCE_MAX; i++) {
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  49  		for (j = 0; j < POWER_MODE_MAX; j++) {
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10 @50  			pr_debug("--- Source:%s Mode:%s ---\n", source_as_str(i), slider_as_str(j));
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  51  			pr_debug("SPL: %u mW\n", data->prop[i][j].spl);
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  52  			pr_debug("SPPT: %u mW\n", data->prop[i][j].sppt);
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  53  			pr_debug("SPPT_ApuOnly: %u mW\n", data->prop[i][j].sppt_apu_only);
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  54  			pr_debug("FPPT: %u mW\n", data->prop[i][j].fppt);
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  55  			pr_debug("STTMinLimit: %u mW\n", data->prop[i][j].stt_min);
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  56  			pr_debug("STT_SkinTempLimit_APU: %u C\n",
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  57  				 data->prop[i][j].stt_skin_temp[STT_TEMP_APU]);
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  58  			pr_debug("STT_SkinTempLimit_HS2: %u C\n",
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  59  				 data->prop[i][j].stt_skin_temp[STT_TEMP_HS2]);
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  60  		}
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  61  	}
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  62  
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  63  	pr_debug("Static Slider Data - END\n");
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  64  }
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  65  #else
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  66  static void amd_pmf_dump_sps_defaults(struct amd_pmf_static_slider_granular *data) {}
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  67  #endif
-a82ebb3d800d7b Shyam Sundar S K 2023-05-10  68  
+ drivers/acpi/scan.c                           |  1 +
+ .../platform/x86/x86-android-tablets/core.c   | 62 ++++++++++++
+ .../platform/x86/x86-android-tablets/lenovo.c | 99 +++++++++++++++++++
+ .../x86-android-tablets/x86-android-tablets.h |  9 ++
+ drivers/spi/spi.c                             |  5 +-
+ include/linux/spi/spi.h                       |  1 +
+ 6 files changed, 174 insertions(+), 3 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.41.0
+
