@@ -2,98 +2,240 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06A6CDB465
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Oct 2023 23:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A21CDB47E
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 15 Oct 2023 09:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229867AbjJNXzK (ORCPT
+        id S229648AbjJOJQp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 14 Oct 2023 19:55:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43194 "EHLO
+        Sun, 15 Oct 2023 05:16:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229555AbjJNXzI (ORCPT
+        with ESMTP id S229561AbjJOJQo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 14 Oct 2023 19:55:08 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F11D6;
-        Sat, 14 Oct 2023 16:55:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
- t=1697327694; x=1697932494; i=w_armin@gmx.de;
- bh=uY1qGoG8DwXFR3cJbwf2SefSXj8ENFekh4CpHmySjb8=;
- h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
- b=Ukw1aZ0SfePqoMPzWyxHx54LHOp8AfXe+fTlJXs+Zrx3Ir6hFucjeeyZeNdWy592mOLscE1e3DQ
- pp7/aXsCG4uWgzY0NaU3/Tb710bjOR8FDBgXBmAXLxmQE3n14yoBeCM2a0VdKA8vi9oZvNoHDquOE
- r93llIjrvbUN35yWy4jBJ3r7QN4QfyaLEfGJME86tccVzcklI5PPRjMz4hpDlyLU386zFmD5HnTQr
- kNg75PlsoRxF+Mjt2FPOIfttkmIWzoUW/fZLJeJ0sCqmOdT+nKBljJLRG8GlrM6CgV9ybje346oFY
- rUc90WhdPsIvISBI8CVCd41RfsyBB9UdRKog==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1Md6Mj-1rQK4b29cx-00aA3U; Sun, 15 Oct 2023 01:54:54 +0200
-From:   Armin Wolf <W_Armin@gmx.de>
-To:     luzmaximilian@gmail.com
-Cc:     hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/surface: platform_profile: Propagate error if profile registration fails
-Date:   Sun, 15 Oct 2023 01:54:49 +0200
-Message-Id: <20231014235449.288702-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
+        Sun, 15 Oct 2023 05:16:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 069C1D8
+        for <platform-driver-x86@vger.kernel.org>; Sun, 15 Oct 2023 02:15:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1697361352;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=U6GHnZPE9tqaUE7IUXr8Kjm0FNAiXOJNmp9dZGcG/hI=;
+        b=ZeefL86DBCa0enANs32DFrsgHi3BzoJemK/Nrhb70zOHP0fIDc8fMlT2XCOAOcO2L0GFKn
+        Lw7bg7jLjNdwtlDj/oFqOlNlZ83BlSfL5Wim3wKSa+aDnmULthUG3BH7qb0ctAY+KVmQKu
+        1ltTtiKSUfhX2nVxIfk/zb25pCTmUEs=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-152-xoF7JPp_OFeL9G7azjSHgQ-1; Sun, 15 Oct 2023 05:15:50 -0400
+X-MC-Unique: xoF7JPp_OFeL9G7azjSHgQ-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9ba247e03aeso237091766b.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 15 Oct 2023 02:15:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697361349; x=1697966149;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=U6GHnZPE9tqaUE7IUXr8Kjm0FNAiXOJNmp9dZGcG/hI=;
+        b=NF1qoHYS2zRJ5p/DKh/y/Zb8RmQqCFOHwHyraNJ65Cfws6cwjLFdUHnaBNFrsedhaq
+         m8TgsdVopidCbbKaLcZjB+UxDuqs0Gx9pg3bm2VM2VZ2IvadzX/9czvEI1tJYHRTdw2E
+         bx2U5iY9vNIik0xRtS3zaVYOlf7Jktt/65Aqm+3+9RIRGTvUX3RFLIpl8Kb/Ga5hcosf
+         bsyg25h2SWfv+3s3rKyiLSRH6xw6FtFo4bz/ey6Wyeu+FiVnT1vzbZYduTE8dOlGOA85
+         b7TrGNjWNK+qzJoREJylSQk1xLLINGW5zeWlaLW/vivoqh5zj2/ATfaQsUDOy6BdJane
+         5ILw==
+X-Gm-Message-State: AOJu0YwAqDKDZWucWo1NHanFz5EV4MQOY4r/htah5XgE4JC2FNAA9j0M
+        aHvMxEzU3W/zC8ElQbIK5cNCVcOvKXtRrR3OrkHCeeRdJFpxXbzA/ZhT0pTycTa825heMcaO2Xc
+        9NnHneC9pvoycA/U/z2jA5VQSGeRB+T/cCw==
+X-Received: by 2002:a17:907:94cb:b0:9c3:8242:e665 with SMTP id dn11-20020a17090794cb00b009c38242e665mr621935ejc.8.1697361349001;
+        Sun, 15 Oct 2023 02:15:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHqiav65BAH59PFNrCGQmrRuqmpL/4GwmkL4TGEakPFwgpPBWODuKzPJ2GvjbRfyr0QlkIXpQ==
+X-Received: by 2002:a17:907:94cb:b0:9c3:8242:e665 with SMTP id dn11-20020a17090794cb00b009c38242e665mr621916ejc.8.1697361348594;
+        Sun, 15 Oct 2023 02:15:48 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id ks18-20020a170906f85200b009a193a5acffsm2010141ejb.121.2023.10.15.02.15.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Oct 2023 02:15:47 -0700 (PDT)
+Message-ID: <65cb8c8c-1a07-922b-db7a-dba54afc76b6@redhat.com>
+Date:   Sun, 15 Oct 2023 11:15:47 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fU8eaK1m1iymygKkDa8Hz3tq9Mg7u0521PfqbJU6QT0M+m8K41r
- IcyMMHXhHj00Xbz4+3V2fpt/J7cRwHBQSM2Pf5d/YQR4TgcEtnZwSC+imj33MUWXZ7PzmZq
- N9fE69Rgjbx/DRejbqf6pZp8UMKITJ81lNw+54c9YCU5dmBqnoYqyU1+e1YH3LCeAluULEb
- GvCrZ0QvVJeeBDr5RBbfw==
-UI-OutboundReport: notjunk:1;M01:P0:wVRyekn5niE=;jdOiFptFGN+BO4VYEP5/YtL/NZB
- mzurxIHF2ZDPE7g+SwfbXU2+iT5KQq4EP0DqejkwbY1eSmVlRWGGkkSChzqfsQU+p/2veJxtd
- doMxz750tpAD/nlHtDJTfKDj/ZmHTPIn/G72OgVVJc6mtwt9bMQp7thfxMmOiTAt38pPr4bYY
- OF+6Y9s3gLNNtF7OtpuliTAws5whrgM2Zs6oO6E9GYWW454j3LdCFhMfFA7dPiMaMsIlktDML
- G+BPzidwZHPkBAeIH+QOBwVKn8LcOzLfUiumgJFXMiNrPZWKkKdNsQxALjzQvor8KFdXDyLwk
- U77iOSLSSR8bQLeuqjCHIDp44vPIUF/I/F98z3xI8HpQbSQdZ/SqmI3G4T40oE81WswNT9iZq
- vBx1dBLZC4twUdFHDMG26OHZxXepKcCJaIfACv5g+coWTSmUHnXP7wdqdQh1CuVO3nJCZMoL0
- 6GuYOnmO8u05fFqTmXEHjNi8Qk2pzDjVAEsRVKm5/8iHGQwDKumcmD+rw8lUF2+gRAzx8UxL0
- f+5biIM4K+Y1mbU5dO9ADNAYHijviAPaUqplZy/4Qg65Rkuh+wHLUI/oe26qFaDyg5Ff+++ce
- M0N5MfMe6wbOPtCQFgEeFk6+txx5n7ZktG6uRcS0HtRVferZ1pFKUj30qD2jb9xEZqZVuoRfH
- yOafC8bfxQ7CYH6panCLNLgaGePWLqoNdgQAT0p8BwWiHM2Jh5bVLZVrDzWUrJThjaK/wpQBT
- K8aPTdmn1sDjgAtKVtHQZVQ8AA2dTf3WkFLEqsv2lBlXLdZ2LwdaElaAb+MOWnvmyoO3vhU3l
- Pu5IJw8QWYS3wfFHBt/FBfliIZTKCFPV53R5yImBA3VP387wsMuCb1+IuSFS/iaOtRm1eCp6r
- NmAzIt9svf+zpKUKGkDmhPw/XyFqJfZ/uoXqb3Zjy45UwARop9D/w1Wf7rsiy5GudxzIKk+ZA
- hT3qYuCKXWhhMMOC5Z0Yh5hfYFs=
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 4/4] platform/x86: x86-android-tablets: Add audio codec
+ info for Lenovo Yoga Tab 3 Pro YT3-X90F
+To:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-spi@vger.kernel.org
+References: <20231014205314.59333-1-hdegoede@redhat.com>
+ <20231014205314.59333-5-hdegoede@redhat.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20231014205314.59333-5-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-If platform_profile_register() fails, the driver does not propagate
-the error, but instead probes successfully. This means when the driver
-unbinds, the a warning might be issued by platform_profile_remove().
+Hi,
 
-Fix this by propagating the error back to the caller of
-surface_platform_profile_probe().
+On 10/14/23 22:53, Hans de Goede wrote:
+> The SPI attached WM5102 codec on the Lenovo Yoga Tab 3 Pro YT3-X90F
+> is not described in the ACPI tables.
+> 
+> Add info to instantiate the SPI device for the codec manually.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  .../platform/x86/x86-android-tablets/lenovo.c | 99 +++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
+> index 585f10a57810..d5d815940ce1 100644
+> --- a/drivers/platform/x86/x86-android-tablets/lenovo.c
+> +++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
+> @@ -12,6 +12,8 @@
+>  
+>  #include <linux/efi.h>
+>  #include <linux/gpio/machine.h>
+> +#include <linux/mfd/arizona/pdata.h>
+> +#include <linux/mfd/arizona/registers.h>
+>  #include <linux/mfd/intel_soc_pmic.h>
+>  #include <linux/pinctrl/consumer.h>
+>  #include <linux/pinctrl/machine.h>
+> @@ -677,6 +679,89 @@ static const struct x86_i2c_client_info lenovo_yt3_i2c_clients[] __initconst = {
+>  	}
+>  };
+>  
+> +/*
+> + * The AOSP 3.5 mm Headset: Accessory Specification gives the following values:
+> + * Function A Play/Pause:           0 ohm
+> + * Function D Voice assistant:    135 ohm
+> + * Function B Volume Up           240 ohm
+> + * Function C Volume Down         470 ohm
+> + * Minimum Mic DC resistance     1000 ohm
+> + * Minimum Ear speaker impedance   16 ohm
+> + * Note the first max value below must be less then the min. speaker impedance,
+> + * to allow CTIA/OMTP detection to work. The other max values are the closest
+> + * value from extcon-arizona.c:arizona_micd_levels halfway 2 button resistances.
+> + */
+> +static const struct arizona_micd_range arizona_micd_aosp_ranges[] = {
+> +	{ .max =  11, .key = KEY_PLAYPAUSE },
+> +	{ .max = 186, .key = KEY_VOICECOMMAND },
+> +	{ .max = 348, .key = KEY_VOLUMEUP },
+> +	{ .max = 752, .key = KEY_VOLUMEDOWN },
+> +};
+> +
+> +/* YT3 WM5102 arizona_micd_config comes from Android kernel sources */
+> +static struct arizona_micd_config lenovo_yt3_wm5102_micd_config[]={
+> +	{ 0, 1, 0 },
+> +	{ ARIZONA_ACCDET_SRC, 2, 1 },
+> +};
+> +
+> +static struct arizona_pdata lenovo_yt3_wm5102_pdata = {
+> +	.irq_flags = IRQF_TRIGGER_LOW,
+> +	.micd_detect_debounce = 200,
+> +	.micd_ranges = arizona_micd_aosp_ranges,
+> +	.num_micd_ranges = ARRAY_SIZE(arizona_micd_aosp_ranges),
+> +	.hpdet_channel = ARIZONA_ACCDET_MODE_HPL,
+> +
+> +	/* Below settings come from Android kernel sources */
+> +	.micd_bias_start_time = 1,
+> +	.micd_rate = 6,
+> +	.micd_force_micbias = 1,
+> +	.micd_configs = lenovo_yt3_wm5102_micd_config,
+> +	.num_micd_configs = ARRAY_SIZE(lenovo_yt3_wm5102_micd_config),
+> +        .micbias={
+> +           [0]={ /*MICBIAS1*/
+> +                 .mV =2800 ,
+> +                 .ext_cap=1,
+> +                 .discharge =1 ,
+> +                 .soft_start =0,
+> +                 .bypass =0,
+> +           },
 
-Compile-tested only.
+Note I messed up the indentation here (spaces instead of tabs)
+when copy pasting this from one terminal to another,
+I'll go and fix this up locally.
 
-Fixes: b78b4982d763 ("platform/surface: Add platform profile driver")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/surface/surface_platform_profile.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Regards,
 
-diff --git a/drivers/platform/surface/surface_platform_profile.c b/drivers=
-/platform/surface/surface_platform_profile.c
-index f433a13c3689..a5a3941b3f43 100644
-=2D-- a/drivers/platform/surface/surface_platform_profile.c
-+++ b/drivers/platform/surface/surface_platform_profile.c
-@@ -159,8 +159,7 @@ static int surface_platform_profile_probe(struct ssam_=
-device *sdev)
- 	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, tpd->handler.choices);
- 	set_bit(PLATFORM_PROFILE_PERFORMANCE, tpd->handler.choices);
+Hans
 
--	platform_profile_register(&tpd->handler);
--	return 0;
-+	return platform_profile_register(&tpd->handler);
- }
 
- static void surface_platform_profile_remove(struct ssam_device *sdev)
-=2D-
-2.39.2
+
+
+> +           [1]={ /*MICBIAS2*/
+> +                 .mV =2800 ,
+> +                 .ext_cap=1,
+> +                 .discharge =1 ,
+> +                 .soft_start =0,
+> +                 .bypass =0,
+> +           },
+> +           [2]={ /*MICBIAS3*/
+> +                 .mV =2800 ,
+> +                 .ext_cap=1,
+> +                 .discharge =1 ,
+> +                 .soft_start =0,
+> +                 .bypass =0,
+> +           },
+> +        },
+> +};
+> +
+> +static const struct x86_spi_dev_info lenovo_yt3_spi_devs[] __initconst = {
+> +	{
+> +		/* WM5102 codec */
+> +		.board_info = {
+> +			.modalias = "wm5102",
+> +			.platform_data = &lenovo_yt3_wm5102_pdata,
+> +			.max_speed_hz = 5000000,
+> +		},
+> +		.ctrl_path = "\\_SB_.PCI0.SPI1",
+> +		.irq_data = {
+> +			.type = X86_ACPI_IRQ_TYPE_GPIOINT,
+> +			.chip = "INT33FF:00",
+> +			.index = 91,
+> +			.trigger = ACPI_LEVEL_SENSITIVE,
+> +			.polarity = ACPI_ACTIVE_LOW,
+> +			.con_id = "wm5102_irq",
+> +		},
+> +	}
+> +};
+> +
+>  static int __init lenovo_yt3_init(void)
+>  {
+>  	int ret;
+> @@ -720,14 +805,28 @@ static struct gpiod_lookup_table lenovo_yt3_hideep_gpios = {
+>  	},
+>  };
+>  
+> +static struct gpiod_lookup_table lenovo_yt3_wm5102_gpios = {
+> +	.dev_id = "spi1.0",
+> +	.table = {
+> +		GPIO_LOOKUP("INT33FF:00", 75, "wlf,spkvdd-ena", GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP("INT33FF:00", 81, "wlf,ldoena", GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP("INT33FF:00", 82, "reset", GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP("arizona", 2, "wlf,micd-pol", GPIO_ACTIVE_HIGH),
+> +		{ }
+> +	},
+> +};
+> +
+>  static struct gpiod_lookup_table * const lenovo_yt3_gpios[] = {
+>  	&lenovo_yt3_hideep_gpios,
+> +	&lenovo_yt3_wm5102_gpios,
+>  	NULL
+>  };
+>  
+>  const struct x86_dev_info lenovo_yt3_info __initconst = {
+>  	.i2c_client_info = lenovo_yt3_i2c_clients,
+>  	.i2c_client_count = ARRAY_SIZE(lenovo_yt3_i2c_clients),
+> +	.spi_dev_info = lenovo_yt3_spi_devs,
+> +	.spi_dev_count = ARRAY_SIZE(lenovo_yt3_spi_devs),
+>  	.gpiod_lookup_tables = lenovo_yt3_gpios,
+>  	.init = lenovo_yt3_init,
+>  };
 
