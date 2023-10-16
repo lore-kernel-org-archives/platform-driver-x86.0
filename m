@@ -2,88 +2,100 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FE2CDB465
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Oct 2023 17:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A6BCDB465
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Oct 2023 18:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231597AbjJPRTm (ORCPT
+        id S229459AbjJPS3q (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Oct 2023 13:19:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46200 "EHLO
+        Mon, 16 Oct 2023 14:29:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231478AbjJPRTm (ORCPT
+        with ESMTP id S231678AbjJPS3q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Oct 2023 13:19:42 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 026C683;
-        Mon, 16 Oct 2023 10:19:41 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EAF3C433C7;
-        Mon, 16 Oct 2023 17:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697476780;
-        bh=A+l5AGsWFvAwh5Ck0PIKp7u9WxupnnFBmOjdmaSf/xY=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=m0988/uZMwOxxrh5UofWNdMGE2dCFE6/wauhysHd8WQR9LFa7vw658CJLl+r2sibS
-         kD+/mekQPc4Hsk+ocBQ4H7C31pt6TtFDollYyd0C4o//UkyCfFhA65IjZirqHofArS
-         mYQlNtGFm4Xz9kfC6VT3hjBcaAmz7XNqRLhzgTP4Syg5o+Ltu7HA6TFLuw93ohJSj9
-         IB7UzzEkL1kWyc6WRKi2Oc7U5ibxfclH04cHZMUrIT3+XDbjMvIJvHgTyKJuN0iMps
-         6hd23cZJkq3NJDI0QdDMwStgjtUN3L8vBV/i6X6BI084x1ssA+HTNjiJ9Q1N4ioDlk
-         gpNw1f1DfTnqQ==
-From:   Mark Brown <broonie@kernel.org>
-To:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-spi@vger.kernel.org
-In-Reply-To: <20231014205314.59333-1-hdegoede@redhat.com>
-References: <20231014205314.59333-1-hdegoede@redhat.com>
-Subject: Re: (subset) [PATCH 0/4] spi/ACPI: Add support for SPI WM5102
- coded on Lenovo YT3-X90
-Message-Id: <169747677888.71661.12773488493424407339.b4-ty@kernel.org>
-Date:   Mon, 16 Oct 2023 18:19:38 +0100
+        Mon, 16 Oct 2023 14:29:46 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DE50A2;
+        Mon, 16 Oct 2023 11:29:44 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-692c02adeefso3422177b3a.3;
+        Mon, 16 Oct 2023 11:29:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697480984; x=1698085784; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JjHsQBZguJmg5VUaxhHmSJkmwaoPV8XzNp+2kxO9i1A=;
+        b=R3zQ4EEALMi2YI9lVaHgi+z5C9WN4E49/wXKi+EwHnUFCMc8GGOHFqTWl51J7IiORX
+         7dhj/P0RFUgJ755/YaNvt46lqVOi0sdGoehuIfSftFdtF7GjJtiWB091xUWvNBQ6kaSN
+         skEkyzrsmJUTG0Apf+IsCfhjVBN3+ptec8Zmwgj+wghc+myvbQxjDjxs733Evo1BEk2o
+         5naDr9CyeWRHm8ggvCBrdJbjRhgwxKl/Lq4+gngTCw463iD5CPf67xd2DTW2v1SFV/Lk
+         L8UE/9o1Xx2RtpyHpZNICAg6G67pUb60aQg1URgDxt8VXJR3AyhJy/hPahOXB/h/6czC
+         C5qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697480984; x=1698085784;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JjHsQBZguJmg5VUaxhHmSJkmwaoPV8XzNp+2kxO9i1A=;
+        b=mgKQkRJffEuyeqDiLTN0Vk1zxipH8yyefyC6zDLklJ+0+Ntb3aHKGj2GG0Nx6Y7WyZ
+         0k2sU7nrlz+vShc3etSNYq/afdIrMRpBJF+/lyvWQEyY/pblYsOTF/YDipt6w1it1K7P
+         XvwJlTkk1J4Td7kEBIKVZBTy+zEtCoZTeQVwoVnmEe2Qn+3jDR7akj8PMLesfEsoEOdQ
+         O+xwjI3Dotr4nkvBIajAvohAKcz3aND/f4CY0xRfUgYKcP5HaUwnD/lHI25dsWiOzPly
+         9uAp4Pp7Mb9ZF4KH73b3wO4IfQsOJ0fClufe66lgbF7m8K5j95gdbwEl2x4/cUNMlxiJ
+         Lvwg==
+X-Gm-Message-State: AOJu0YzhsqJhxELdqFdffBQvB08LXhpZafaXTYLLa4F/2ISKDoaJKHP6
+        4NueLrzei9y5YDp7Omfd84c=
+X-Google-Smtp-Source: AGHT+IFZEg5xAk1ZmYp3GRROoasA68Dv9NYl8hDbMXgzL2h184umSXsYNgNS+151sy+zwC6/69sJkg==
+X-Received: by 2002:a05:6a20:d41d:b0:15a:836:7239 with SMTP id il29-20020a056a20d41d00b0015a08367239mr28055416pzb.11.1697480983734;
+        Mon, 16 Oct 2023 11:29:43 -0700 (PDT)
+Received: from policorp.cardumecowork.local ([177.91.232.53])
+        by smtp.gmail.com with ESMTPSA id 5-20020a170902e9c500b001acae9734c0sm8712826plk.266.2023.10.16.11.29.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Oct 2023 11:29:43 -0700 (PDT)
+From:   Edson Juliano Drosdeck <edson.drosdeck@gmail.com>
+To:     jlee@suse.com
+Cc:     hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, edson.drosdeck@gmail.com
+Subject: [PATCH] platform/x86: acer-wmi: Remove void function return
+Date:   Mon, 16 Oct 2023 15:29:10 -0300
+Message-Id: <20231016182910.3344-1-edson.drosdeck@gmail.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-0438c
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, 14 Oct 2023 22:53:10 +0200, Hans de Goede wrote:
-> Here is a patch series to fix audio on the Lenovo YT3-X90 x86 Android
-> tablet.
-> 
-> This series takes care of instantiating the SPI device for the codec,
-> to make things fully work there also are some sound/soc/intel/boards
-> changes necessary which I'm still working on.
-> 
-> [...]
+Adhere to Linux kernel coding style.
 
-Applied to
+Reported by checkpatch:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+WARNING: void function return statements are not generally useful
 
-Thanks!
+Signed-off-by: Edson Juliano Drosdeck <edson.drosdeck@gmail.com>
+---
+ drivers/platform/x86/acer-wmi.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-[1/4] spi: Export acpi_spi_find_controller_by_adev()
-      commit: a8ecbc54165fca767e75a82372a7be3810c667cf
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 377a0becd1a1..0e472aa9bf41 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -1922,7 +1922,6 @@ static void acer_rfkill_exit(void)
+ 		rfkill_unregister(threeg_rfkill);
+ 		rfkill_destroy(threeg_rfkill);
+ 	}
+-	return;
+ }
+ 
+ static void acer_wmi_notify(u32 value, void *context)
+@@ -2517,7 +2516,6 @@ static void __exit acer_wmi_exit(void)
+ 	platform_driver_unregister(&acer_platform_driver);
+ 
+ 	pr_info("Acer Laptop WMI Extras unloaded\n");
+-	return;
+ }
+ 
+ module_init(acer_wmi_init);
+-- 
+2.39.2
 
