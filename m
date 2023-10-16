@@ -2,111 +2,86 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E386CDB47E
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 15 Oct 2023 19:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D062CCDB465
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Oct 2023 08:13:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230248AbjJOTGR (ORCPT
+        id S232511AbjJPINr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 15 Oct 2023 15:06:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53238 "EHLO
+        Mon, 16 Oct 2023 04:13:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230222AbjJOTGQ (ORCPT
+        with ESMTP id S231795AbjJPINp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 15 Oct 2023 15:06:16 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC3F8A9;
-        Sun, 15 Oct 2023 12:06:14 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-3296b3f03e5so3334421f8f.2;
-        Sun, 15 Oct 2023 12:06:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697396773; x=1698001573; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B9VbccHDwDWP6ln//+3ptokIcB5CKr1YyKD+T3cRcQY=;
-        b=VXutTTnHyfFo+D9vyKtfjVdqqGWG1BTQhqMnk6ZhDGl1qqrbXjhwhKdgQuuaOoza/u
-         NIVhV3zZCkXdSW1OC4Vw6aH7+pPnxvdi89kgiCWWCK6P43E53xeCfYdNkXD0BzS95dfM
-         +FggdveQNtBlKUlfQT65HdsXlyKMBPbTnWfDISu5NeUtR+YgFAFFXEpKdjK/nGzUBK5/
-         JPf9Xyv+2S2xgU/dcK2FT74bNRGdvmow6tMGH7ef86TWPrrgi5rJHLTWWXhr6UDdV97k
-         +wJ2wztdTJC9mu6YXz/1fXPO0ybddUKiSOS2HWDcHbkm3vmCds7jR1OGbal29+hdbdlX
-         rnUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697396773; x=1698001573;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B9VbccHDwDWP6ln//+3ptokIcB5CKr1YyKD+T3cRcQY=;
-        b=syNx8PeLvc1bCDd2M0EqJp+FcgWEbIlXwCY2em0ua03sVz9NycQ8HcTj6LEHDEcatN
-         kE/Mwm0Y/JEmWh086ACghOV8wrknOr05KNtLjF48i1oh3RUxMXYxnSMXC8+FGnJfEapr
-         oS7WwWdb86NtA2Coh2FtG4d7c2ICOoONMRruIqcFc2plOmvDdCA1LK1SS9Pa2oH+e0ow
-         VMAu/sbfzeHsnoKuVSpxLMmwwQre2XCwUU4zlc5mgTbKmsYVMghb5Op8fY0N1+NZ3Nd2
-         Xbk6/vyO1sGUtFsALdbXQlqB0CDdbLdDmeHLcBAXvvMggZoBl9T91CNIIWf1Y5NB5l/3
-         ewJg==
-X-Gm-Message-State: AOJu0Yz8BzHKdBRBAHx1KhfBEMB/tUlvC2SyIOoKI5jHB/kBkKH0zWG/
-        xVsNaJqhfTsqOpX2h6PTvQY=
-X-Google-Smtp-Source: AGHT+IEFwd3n4TVDQTDQIwpJJAC/+Lyu1bfhOuOd3mScnEmvGhMgt5sseD0legYG62vc5gHLhL1ZOA==
-X-Received: by 2002:a05:6000:114d:b0:324:8502:6355 with SMTP id d13-20020a056000114d00b0032485026355mr26491973wrx.46.1697396772824;
-        Sun, 15 Oct 2023 12:06:12 -0700 (PDT)
-Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
-        by smtp.gmail.com with ESMTPSA id p13-20020a5d68cd000000b0031ae8d86af4sm25535850wrw.103.2023.10.15.12.06.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Oct 2023 12:06:12 -0700 (PDT)
-Message-ID: <fad1d01f-0ae4-4d82-afff-64a53dd4767c@gmail.com>
-Date:   Sun, 15 Oct 2023 21:06:11 +0200
+        Mon, 16 Oct 2023 04:13:45 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36235EA;
+        Mon, 16 Oct 2023 01:13:44 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="389332440"
+X-IronPort-AV: E=Sophos;i="6.03,228,1694761200"; 
+   d="scan'208";a="389332440"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 01:13:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="749210426"
+X-IronPort-AV: E=Sophos;i="6.03,228,1694761200"; 
+   d="scan'208";a="749210426"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 01:13:41 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC2)
+        (envelope-from <andy@kernel.org>)
+        id 1qsIjK-00000005xJM-42Nn;
+        Mon, 16 Oct 2023 11:13:38 +0300
+Date:   Mon, 16 Oct 2023 11:13:38 +0300
+From:   Andy Shevchenko <andy@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 4/4] platform/x86: x86-android-tablets: Add audio codec
+ info for Lenovo Yoga Tab 3 Pro YT3-X90F
+Message-ID: <ZSzwslha2aUGod7A@smile.fi.intel.com>
+References: <20231014205314.59333-1-hdegoede@redhat.com>
+ <20231014205314.59333-5-hdegoede@redhat.com>
+ <65cb8c8c-1a07-922b-db7a-dba54afc76b6@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/surface: platform_profile: Propagate error if
- profile registration fails
-Content-Language: en-US
-To:     Armin Wolf <W_Armin@gmx.de>
-Cc:     hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20231014235449.288702-1-W_Armin@gmx.de>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <20231014235449.288702-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65cb8c8c-1a07-922b-db7a-dba54afc76b6@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 10/15/23 01:54, Armin Wolf wrote:
-> If platform_profile_register() fails, the driver does not propagate
-> the error, but instead probes successfully. This means when the driver
-> unbinds, the a warning might be issued by platform_profile_remove().
-> 
-> Fix this by propagating the error back to the caller of
-> surface_platform_profile_probe().
-> 
-> Compile-tested only.
-> 
-> Fixes: b78b4982d763 ("platform/surface: Add platform profile driver")
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+On Sun, Oct 15, 2023 at 11:15:47AM +0200, Hans de Goede wrote:
+> On 10/14/23 22:53, Hans de Goede wrote:
 
-Thanks! Works fine on my Surface Book 2.
+> > +        .micbias={
+> > +           [0]={ /*MICBIAS1*/
 
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
-Tested-by: Maximilian Luz <luzmaximilian@gmail.com>
+Talking about spaces, how about
 
-> ---
->   drivers/platform/surface/surface_platform_profile.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
+        .micbias = {
+           [0] = { / *MICBIAS1 */
+                 .mV = 2800 ,
+                 .ext_cap = 1,
+                 .discharge = 1 ,
+                 .soft_start = 0,
+                 .bypass = 0,
+
+> > +                 .mV =2800 ,
+> > +                 .ext_cap=1,
+> > +                 .discharge =1 ,
+> > +                 .soft_start =0,
+> > +                 .bypass =0,
+> > +           },
 > 
-> diff --git a/drivers/platform/surface/surface_platform_profile.c b/drivers/platform/surface/surface_platform_profile.c
-> index f433a13c3689..a5a3941b3f43 100644
-> --- a/drivers/platform/surface/surface_platform_profile.c
-> +++ b/drivers/platform/surface/surface_platform_profile.c
-> @@ -159,8 +159,7 @@ static int surface_platform_profile_probe(struct ssam_device *sdev)
->   	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, tpd->handler.choices);
->   	set_bit(PLATFORM_PROFILE_PERFORMANCE, tpd->handler.choices);
-> 
-> -	platform_profile_register(&tpd->handler);
-> -	return 0;
-> +	return platform_profile_register(&tpd->handler);
->   }
-> 
->   static void surface_platform_profile_remove(struct ssam_device *sdev)
-> --
-> 2.39.2
-> 
+> Note I messed up the indentation here (spaces instead of tabs)
+> when copy pasting this from one terminal to another,
+> I'll go and fix this up locally.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
