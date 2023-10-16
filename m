@@ -2,110 +2,147 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B81DCDB482
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Oct 2023 08:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48151CDB465
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Oct 2023 12:02:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232649AbjJPI7u (ORCPT
+        id S229621AbjJPMCr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Oct 2023 04:59:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57302 "EHLO
+        Mon, 16 Oct 2023 08:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbjJPI7t (ORCPT
+        with ESMTP id S229459AbjJPMCq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Oct 2023 04:59:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 434FDB4
-        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Oct 2023 01:59:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1697446742;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ciQpvb8toJic6WpPKRE/AeagKH9fiYHBE+ZhRFvm5DI=;
-        b=FfPK1IHrcNB5z0o4VtyDdqQGAuIbIXF4WMS6qKslnE28Vq4cZP2i9r8MYc+NLP5dj59Abn
-        YhdMgugdG0EZkJWwkoB2/s/YbodxgnS/QSISGo6yUdP/WjRaOljlu5FhnSUaNL5LiRSZjH
-        LcyqhV0C+XEXYZSl3/agilkI1YTyEGA=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-383-LhWdR_9TObO7YCv_Khpnww-1; Mon, 16 Oct 2023 04:59:00 -0400
-X-MC-Unique: LhWdR_9TObO7YCv_Khpnww-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-99bca0b9234so101431766b.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Oct 2023 01:59:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697446739; x=1698051539;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ciQpvb8toJic6WpPKRE/AeagKH9fiYHBE+ZhRFvm5DI=;
-        b=oRhW/+hbNeyCw6mqsgRmd/HJ4lSP87B51BYuJk1MYe1EjkpdvYPK8CxqPUe7nSF4gD
-         kJtTyMsq8SFdMXxsRjFcTQ6L7pl+DvMVqxY4HNGe3bKi4K4wsXy2K0rN+IbcHD/IobKD
-         gb4kvx4sRxZG/MZFUuB34EKtV5abobt4KGI7GpJ9GgRedPjlmZIBTnzbRyQ8MPcK3j0a
-         0S69ftHmYiGjPJd7gjxZixZdNyAppRMFH62DtxPX97rwfc/G/2i+OpX+iacDhYbUIH6s
-         xpiyf2pZ+52lD8c2P5gWbBzIomuuSSbfdi5cQwnWZBDphPBHtHkzmq3hDYqF8xfYisj5
-         nIiA==
-X-Gm-Message-State: AOJu0Yy4c6EmNSHeHIRYwe5vU2zTKakrZl7cUF8wpecu6nxBBpVVQ39M
-        C2Mq/xSJnbEp0v/56950LDXVQz77geb9E9j5wEhrSq232eMNfzimHG7d4OyNOoLVORiBN/gV9CS
-        FU92DOA27PKhRXFFXXvpC8mIA9043DOJ0hg==
-X-Received: by 2002:a17:907:1c25:b0:9bf:b022:dc7 with SMTP id nc37-20020a1709071c2500b009bfb0220dc7mr3798573ejc.48.1697446739777;
-        Mon, 16 Oct 2023 01:58:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE0iTatvUyost5Hu3jUWmmtCCHZ34EkgvvWD43IwKXRJbTUeU4xoMjyb1HS9ASazaT5JYUKpg==
-X-Received: by 2002:a17:907:1c25:b0:9bf:b022:dc7 with SMTP id nc37-20020a1709071c2500b009bfb0220dc7mr3798561ejc.48.1697446739511;
-        Mon, 16 Oct 2023 01:58:59 -0700 (PDT)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id g7-20020a170906198700b00992b8d56f3asm3616538ejd.105.2023.10.16.01.58.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Oct 2023 01:58:59 -0700 (PDT)
-Message-ID: <de3145e8-3d76-63af-e018-26b7ad1aca75@redhat.com>
-Date:   Mon, 16 Oct 2023 10:58:57 +0200
+        Mon, 16 Oct 2023 08:02:46 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38FA38E;
+        Mon, 16 Oct 2023 05:02:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697457765; x=1728993765;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=9wBAwblOcESjCmTbr8Caj3TkfpSkEK5pDQLiHfV30+E=;
+  b=kFwyKI9Mefy7jyWh+w4/J9nkV7n0ZPeygvOaHsLaaeT/3YK2m27EJQc1
+   cUY7u0bYIkJ0qyAiKR6YgqbyQM71nyc2ga+0Zp6Fl06OyKtZwqillWOY3
+   3gbQn2T2oMkwxkBW0Odm4ZL++B2K4bIZp1QSCRVMN6SSnw9tuCMU9Wk5O
+   ZotLsx2pyGqcCGARgCfDNj5E2fZVI+7BRX497s+BE1cdoT5G2OH9cp2ID
+   t9/YNnbiZTrcaiswfZ7qZF117NBMksvYt/NOGX7ODnmCW0Kf6wJ0G/+Rd
+   fELeigEGUFp4DjbPB60n+r5bUkE41uZv9pkaVYxy769Q0bNwjMSE9fDSC
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="384380103"
+X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
+   d="scan'208";a="384380103"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 05:02:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="705592080"
+X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
+   d="scan'208";a="705592080"
+Received: from rhaeussl-mobl.ger.corp.intel.com (HELO bhoerz-mobl1.ger.corp.intel.com) ([10.252.59.103])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 05:02:26 -0700
+Date:   Mon, 16 Oct 2023 15:02:24 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com
+Subject: Re: [PATCH V3 03/16] platform/x86/intel/vsec: Use cleanup.h
+In-Reply-To: <ec4ba6b6d05c2b6ca34009f40e84f65801a8104b.camel@linux.intel.com>
+Message-ID: <2bf861c9-456a-cf42-9777-1641f6ab87b5@linux.intel.com>
+References: <20231012023840.3845703-1-david.e.box@linux.intel.com>   <20231012023840.3845703-4-david.e.box@linux.intel.com>   <114e1cc4-f129-b6cd-a83b-7d822cde178@linux.intel.com>  <fcd4ae3492b8bf08ec637a3405228efd2913921d.camel@linux.intel.com> 
+ <4315a8db-16fe-7421-c482-5aede4d5cdd@linux.intel.com> <ec4ba6b6d05c2b6ca34009f40e84f65801a8104b.camel@linux.intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 4/4] platform/x86: x86-android-tablets: Add audio codec
- info for Lenovo Yoga Tab 3 Pro YT3-X90F
-Content-Language: en-US
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-spi@vger.kernel.org
-References: <20231014205314.59333-1-hdegoede@redhat.com>
- <20231014205314.59333-5-hdegoede@redhat.com>
- <65cb8c8c-1a07-922b-db7a-dba54afc76b6@redhat.com>
- <ZSzwslha2aUGod7A@smile.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ZSzwslha2aUGod7A@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323329-1110351866-1697457747=:1986"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 10/16/23 10:13, Andy Shevchenko wrote:
-> On Sun, Oct 15, 2023 at 11:15:47AM +0200, Hans de Goede wrote:
->> On 10/14/23 22:53, Hans de Goede wrote:
+--8323329-1110351866-1697457747=:1986
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+
+On Fri, 13 Oct 2023, David E. Box wrote:
+
+> On Fri, 2023-10-13 at 13:54 +0300, Ilpo Järvinen wrote:
+> > On Thu, 12 Oct 2023, David E. Box wrote:
+> > 
+> > > On Thu, 2023-10-12 at 17:46 +0300, Ilpo Järvinen wrote:
+> > > > On Wed, 11 Oct 2023, David E. Box wrote:
+> > > > 
+> > > > > Use cleanup.h helpers to handle cleanup of resources in
+> > > > > intel_vsec_add_dev() after failures.
+> > > > > 
+> > > > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > > > > ---
+
+
+> > > > > @@ -208,8 +207,12 @@ static int intel_vsec_add_dev(struct pci_dev *pdev,
+> > > > > struct intel_vsec_header *he
+> > > > >         else
+> > > > >                 intel_vsec_dev->ida = &intel_vsec_ida;
+> > > > >  
+> > > > > -       return intel_vsec_add_aux(pdev, NULL, intel_vsec_dev,
+> > > > > -                                 intel_vsec_name(header->id));
+> > > > > +       ret = intel_vsec_add_aux(pdev, NULL, intel_vsec_dev,
+> > > > > +                                intel_vsec_name(header->id));
+> > > > > +
+> > > > > +       no_free_ptr(intel_vsec_dev);
+> > > > > +
+> > > > > +       return ret;
+> > > > 
+> > > > So if intel_vsec_add_aux() returned an error, intel_vsec_dev won't be 
+> > > > freed because of the call call to no_free_ptr() before return. I that's 
+> > > > not what you intended?
+> > > 
+> > > It will have been freed if intel_vsec_add_aux() fails. It's a little messy.
+> > > That
+> > > function creates the auxdev and assigns the release function which will free
+> > > intel_vsec_dev when the device is removed. But there are failure points that
+> > > will also invoke the release function. Because of this, for all the failure
+> > > points in that function we free intel_vsec_dev so that it's state doesn't
+> > > need
+> > > to be questioned here. This happens explicitly if the failure is before
+> > > auxiliary_device_init(), or through the release function invoked by
+> > > auxiliary_device_uninit() if after.
+> > 
+> > Oh, that's really convoluted and no wonder I missed it completely. It 
+> > might even be that using cleanup.h here isn't really worth it. I know 
+> > I pushed you into that direction but I didn't realize all the complexity
+> > at that point.
+
+...
+> >  are before the intel_vsec_add_aux() call (and I'd also add a comment 
+> > to explain that freeing them is now responsability of 
+> > intel_vsec_add_aux()). That way, we don't leave a trap into there where 
+> > somebody happily adds another no_free_ptr() to the same group and it 
+> > causes a mem leak.
 > 
->>> +        .micbias={
->>> +           [0]={ /*MICBIAS1*/
+> Sure. After the comment I'd just do this then still the value is still needed,
 > 
-> Talking about spaces, how about
-> 
->         .micbias = {
->            [0] = { / *MICBIAS1 */
->                  .mV = 2800 ,
->                  .ext_cap = 1,
->                  .discharge = 1 ,
->                  .soft_start = 0,
->                  .bypass = 0,
+> 	ret = intel_vsec_add_aux(pdev, NULL, no_free_ptr(intel_vsec_dev),
+>                                  intel_vsec_name(header->id));
 
-Ack, I already have it like this locally now. Also using only
-tabs, there is plenty of width to just indent the "[0] = { ..."
-with a tab too.
+True, I realized later that the variable gets NULLed because of how 
+no_free_ptr() works so no_free_ptr() has to be within the call itself, but 
+that's actually much better than my initial suggestion!
 
-Regards,
+So I think the best we can get out of this is along the lines of (with the 
+subsequent change with res too):
 
-Hans
+	/* Pass the ownership of intel_vsec_dev and resource within it to intel_vsec_add_aux() */
+	no_free_ptr(res);
+	return intel_vsec_add_aux(pdev, info->parent, no_free_ptr(intel_vsec_dev), 
+				  intel_vsec_name(header->id));
 
+That seems the least trappiest and actually nicely documents who is 
+responsible for what. To contrast the earlier, this feels very elegant,
+the perceived complexity related to intel_vsec_add_aux() no longer feels 
+tricky at all so we end up solving also that problem better than the 
+original.
+
+-- 
+ i.
+
+--8323329-1110351866-1697457747=:1986--
