@@ -2,242 +2,466 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B0DCDB474
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Oct 2023 08:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836D9CDB474
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Oct 2023 08:51:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234766AbjJQIvV (ORCPT
+        id S234145AbjJQIvd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Oct 2023 04:51:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48232 "EHLO
+        Tue, 17 Oct 2023 04:51:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234680AbjJQIvQ (ORCPT
+        with ESMTP id S234693AbjJQIvb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Oct 2023 04:51:16 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E17A593
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Oct 2023 01:50:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1697532633;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fR+vpqNMFr3xyDY37l8hKbjL6Vti0s+yHONs0fDemtc=;
-        b=DOgst3p0PTLMy1WXlizF6W08nv+UZ5JmGiNf9c31NkdXhPDmz4JWRue3vExZSD4Yo3MvHb
-        i2gV6eM7stkYJxSv5WkSSBlRh5pKbqCRHll0y6q+D/wVsoZlQlmbksuk21zBCH0XYOYuHj
-        cytivxazJ/HXDwmn6JDzsgsy3GKEFEc=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-265-KugdY6qjN1iDUt4hMNBsGA-1; Tue, 17 Oct 2023 04:50:21 -0400
-X-MC-Unique: KugdY6qjN1iDUt4hMNBsGA-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-53e169d2e80so4015810a12.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Oct 2023 01:50:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697532620; x=1698137420;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fR+vpqNMFr3xyDY37l8hKbjL6Vti0s+yHONs0fDemtc=;
-        b=uYCarhArERVaY0BkgUDhoW30JwN8MK5XWJym3gRBtHcx9OahBwteTBrMN5XEQS2ayb
-         QZE66d7HaAbxh5g859IJWsmX+XqJEks19tJebVx2wadDyVKG8Ju+sjr/2Ezh6LZ5mH9V
-         KphY7aaZCm16gBazV1yf78YFok1FveF+2EGCiwXvBagM+yY2SskgxcEKH3dQaBipMZBl
-         781lNwnAF2g8itD81SEGqnhoRNI037rY/Vxpm+RMLy+9dCm8q3kqopHqCzVblLaeMB0V
-         aKD7bJqwjrQy1bn4nVoxzT0exjIxO9BKy+u8CylbV5K/MJG0buEiefvXpV7yUCzBFCnu
-         YsaA==
-X-Gm-Message-State: AOJu0YwybJMv20ue8XVUR1QYkV+ebnpQOAu2MOolwN3O+dS99rmaqKzC
-        YIdzB+3LhYd1lwnX1yDSaHMZaCfoRRx9o7D+uGSmE6rqQR4pUcRAha3KRqKOgFATx8qUe/efFIi
-        CyyoXxnhFuadFrLd9xDh+BnmyHwv5jhUVuTtEdCikRQ==
-X-Received: by 2002:aa7:c6d7:0:b0:522:4dd0:de72 with SMTP id b23-20020aa7c6d7000000b005224dd0de72mr1071848eds.27.1697532620449;
-        Tue, 17 Oct 2023 01:50:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGWQWMoBLurhT1REe+0nHnTFiVxDNpebwSrTWyOgEcuY4J15YaywyXL2nYEBr/2gur4tULYdA==
-X-Received: by 2002:aa7:c6d7:0:b0:522:4dd0:de72 with SMTP id b23-20020aa7c6d7000000b005224dd0de72mr1071831eds.27.1697532620012;
-        Tue, 17 Oct 2023 01:50:20 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a10-20020a50858a000000b005346925a474sm787265edh.43.2023.10.17.01.50.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Oct 2023 01:50:19 -0700 (PDT)
-Message-ID: <938c83c4-973d-ac23-bfb6-53c63c153d81@redhat.com>
-Date:   Tue, 17 Oct 2023 10:50:18 +0200
+        Tue, 17 Oct 2023 04:51:31 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE69B93;
+        Tue, 17 Oct 2023 01:51:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697532689; x=1729068689;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=I2U51BeL5fBNZOAKAWZm9O4BjdxUwlVA5UXcv34xKTA=;
+  b=mZwtl0UG2+/Zzs0GbHaDoovXf6zCfaa5lOsFpZoxBRxG6kSH3WyERGCP
+   9E4cOr0aE7DCbEOBk1pJSpo/J7KIGolPk6lhKf4PCasUX1SSC7bE3yq1S
+   msb89ka5IU5gB6vWFXpmNa2QXl7qACq5yzxjHau81V7Y5TEdLouvtHZJI
+   gLzQ1TSwMGV3yYWBGH75fgrsg0W0g1CZmo6fsDWUhwHxJW8ZQRnQ/zD/X
+   2Yxn/vC9T9zCis9q7kV+T8gBzMNjfVPGH2/DElijDs1qEHQzrG6nkOL1K
+   GkOKfL5XGO/u4T1JRc4qCbc7sA1jkNNA4yta1DvgRaL+KYsTBXwZvt+VL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10865"; a="4336709"
+X-IronPort-AV: E=Sophos;i="6.03,231,1694761200"; 
+   d="scan'208";a="4336709"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 01:51:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10865"; a="879747289"
+X-IronPort-AV: E=Sophos;i="6.03,231,1694761200"; 
+   d="scan'208";a="879747289"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.252.44.24])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 01:51:23 -0700
+Date:   Tue, 17 Oct 2023 11:51:20 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Ma Jun <Jun.Ma2@amd.com>
+cc:     amd-gfx@lists.freedesktop.org, lenb@kernel.org,
+        johannes@sipsolutions.net, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        alexander.deucher@amd.com, Lijo.Lazar@amd.com,
+        mario.limonciello@amd.com, majun@amd.com, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Evan Quan <quanliangl@hotmail.com>
+Subject: Re: [PATCH v12 6/9] drm/amd/pm: setup the framework to support Wifi
+ RFI mitigation feature
+In-Reply-To: <20231017025358.1773598-7-Jun.Ma2@amd.com>
+Message-ID: <7583aaca-d7ad-c05b-731f-f7f0b345872b@linux.intel.com>
+References: <20231017025358.1773598-1-Jun.Ma2@amd.com> <20231017025358.1773598-7-Jun.Ma2@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: PROBLEM: asus_nb_wmi sends KEY_BRIGHTNESSDOWN on pressing CAPS
- Lock and PrntScrn on Zenbook S 13 UX5304VA
-To:     James John <me@donjajo.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <a2c441fe-457e-44cf-a146-0ecd86b037cf@donjajo.com>
- <132feb67-c147-7ee6-b337-385e11786ec6@redhat.com>
- <146cb960-406b-4456-94ce-ad6ed3f330ad@donjajo.com>
- <d70f7d35-6458-437d-f68f-47291ce74a1e@redhat.com>
- <90a7309e-4a76-4dff-8259-9975dd3ed8b1@donjajo.com>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <90a7309e-4a76-4dff-8259-9975dd3ed8b1@donjajo.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323329-949281964-1697532687=:2358"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi James,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 10/1/23 16:16, James John wrote:
-> Hello Hans,
+--8323329-949281964-1697532687=:2358
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+
+On Tue, 17 Oct 2023, Ma Jun wrote:
+
+> From: Evan Quan <quanliangl@hotmail.com>
 > 
-> Thank you. I applied the patch and I have the inputs attached here.
+> With WBRF feature supported, as a driver responding to the frequencies,
+> amdgpu driver is able to do shadow pstate switching to mitigate possible
+> interference(between its (G-)DDR memory clocks and local radio module
+> frequency bands used by Wifi 6/6e/7).
 > 
-> After setting the hwdb filter, all the hot keys are still working except that the LED notification light on Mute Hotkey (F9) is no longer turning up on mute.
+> Signed-off-by: Evan Quan <quanliangl@hotmail.com>
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Ma Jun <Jun.Ma2@amd.com>
+> --
+> v1->v2:
+>   - update the prompt for feature support(Lijo)
+> v8->v9:
+>   - update parameter document for smu_wbrf_event_handler(Simon)
+> v9->v10:
+> v10->v11:
+>  - correct the logics for wbrf range sorting(Lijo)
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu.h           |   2 +
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c       |  17 ++
+>  drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c     | 195 ++++++++++++++++++
+>  drivers/gpu/drm/amd/pm/swsmu/inc/amdgpu_smu.h |  23 +++
+>  drivers/gpu/drm/amd/pm/swsmu/smu_internal.h   |   3 +
+>  5 files changed, 240 insertions(+)
 > 
-> The Screen Capture, Disable Camera, and MyASUS buttons are not mapped yet. I believe the Screen Capture button should map to PrntScrn button, and MyASUS with Disable Camera unmapped, obviously. I also have the codes in the attached log.
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+> index 6dc950c1b689..11a19384df56 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
+> @@ -247,6 +247,8 @@ extern int amdgpu_sg_display;
+>  
+>  extern int amdgpu_user_partt_mode;
+>  
+> +extern int amdgpu_wbrf;
+> +
+>  #define AMDGPU_VM_MAX_NUM_CTX			4096
+>  #define AMDGPU_SG_THRESHOLD			(256*1024*1024)
+>  #define AMDGPU_WAIT_IDLE_TIMEOUT_IN_MS	        3000
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> index 0593ef8fe0a6..1c574bd3b60d 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+> @@ -195,6 +195,7 @@ int amdgpu_use_xgmi_p2p = 1;
+>  int amdgpu_vcnfw_log;
+>  int amdgpu_sg_display = -1; /* auto */
+>  int amdgpu_user_partt_mode = AMDGPU_AUTO_COMPUTE_PARTITION_MODE;
+> +int amdgpu_wbrf = -1;
+>  
+>  static void amdgpu_drv_delayed_reset_work_handler(struct work_struct *work);
+>  
+> @@ -981,6 +982,22 @@ module_param_named(user_partt_mode, amdgpu_user_partt_mode, uint, 0444);
+>  module_param(enforce_isolation, bool, 0444);
+>  MODULE_PARM_DESC(enforce_isolation, "enforce process isolation between graphics and compute . enforce_isolation = on");
+>  
+> +/**
+> + * DOC: wbrf (int)
+> + * Enable Wifi RFI interference mitigation feature.
+> + * Due to electrical and mechanical constraints there may be likely interference of
+> + * relatively high-powered harmonics of the (G-)DDR memory clocks with local radio
+> + * module frequency bands used by Wifi 6/6e/7. To mitigate the possible RFI interference,
+> + * with this feature enabled, PMFW will use either “shadowed P-State” or “P-State” based
+> + * on active list of frequencies in-use (to be avoided) as part of initial setting or
+> + * P-state transition. However, there may be potential performance impact with this
+> + * feature enabled.
+> + * (0 = disabled, 1 = enabled, -1 = auto (default setting, will be enabled if supported))
+> + */
+> +MODULE_PARM_DESC(wbrf,
+> +	"Enable Wifi RFI interference mitigation (0 = disabled, 1 = enabled, -1 = auto(default)");
+> +module_param_named(wbrf, amdgpu_wbrf, int, 0444);
+> +
+>  /* These devices are not supported by amdgpu.
+>   * They are supported by the mach64, r128, radeon drivers
+>   */
+> diff --git a/drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c b/drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c
+> index 222af2fae745..d52cd7ed2868 100644
+> --- a/drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c
+> +++ b/drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c
+> @@ -1228,6 +1228,174 @@ static int smu_get_thermal_temperature_range(struct smu_context *smu)
+>  	return ret;
+>  }
+>  
+> +/**
+> + * smu_wbrf_handle_exclusion_ranges - consume the wbrf exclusion ranges
+> + *
+> + * @smu: smu_context pointer
+> + *
+> + * Retrieve the wbrf exclusion ranges and send them to PMFW for proper handling.
+> + * Returns 0 on success, error on failure.
+> + */
+> +static int smu_wbrf_handle_exclusion_ranges(struct smu_context *smu)
+> +{
+> +	struct wbrf_ranges_in_out wbrf_exclusion = {0};
+> +	struct freq_band_range *wifi_bands = wbrf_exclusion.band_list;
+> +	struct amdgpu_device *adev = smu->adev;
+> +	uint32_t num_of_wbrf_ranges = MAX_NUM_OF_WBRF_RANGES;
+> +	uint64_t start, end;
+> +	int ret, i, j;
+> +
+> +	ret = amd_wbrf_retrieve_freq_band(adev->dev, &wbrf_exclusion);
+> +	if (ret) {
+> +		dev_err(adev->dev, "Failed to retrieve exclusion ranges!\n");
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * The exclusion ranges array we got might be filled with holes and duplicate
+> +	 * entries. For example:
+> +	 * {(2400, 2500), (0, 0), (6882, 6962), (2400, 2500), (0, 0), (6117, 6189), (0, 0)...}
+> +	 * We need to do some sortups to eliminate those holes and duplicate entries.
+> +	 * Expected output: {(2400, 2500), (6117, 6189), (6882, 6962), (0, 0)...}
+> +	 */
+> +	for (i = 0; i < num_of_wbrf_ranges; i++) {
+> +		start = wifi_bands[i].start;
+> +		end = wifi_bands[i].end;
+> +
+> +		/* get the last valid entry to fill the intermediate hole */
+> +		if (!start && !end) {
+> +			for (j = num_of_wbrf_ranges - 1; j > i; j--)
+> +				if (wifi_bands[j].start &&
+> +				    wifi_bands[j].end)
+> +					break;
+> +
+> +			/* no valid entry left */
+> +			if (j <= i)
+> +				break;
+> +
+> +			start = wifi_bands[i].start = wifi_bands[j].start;
+> +			end = wifi_bands[i].end = wifi_bands[j].end;
+> +			wifi_bands[j].start = 0;
+> +			wifi_bands[j].end = 0;
+> +			num_of_wbrf_ranges = j;
+> +		}
+
+Wouldn't it be easier and less error-prone to just sort them and then do 
+the duplicate removal after that?
+
+> +		/* eliminate duplicate entries */
+> +		for (j = i + 1; j < num_of_wbrf_ranges; j++) {
+> +			if ((wifi_bands[j].start == start) &&
+> +			     (wifi_bands[j].end == end)) {
+> +				wifi_bands[j].start = 0;
+> +				wifi_bands[j].end = 0;
+> +			}
+> +		}
+> +	}
+> +
+> +	/* Send the sorted wifi_bands to PMFW */
+> +	ret = smu_set_wbrf_exclusion_ranges(smu, wifi_bands);
+> +	/* Give it another chance */
+
+This sounds very vague comment. What "it", what "another chance" ??
+
+> +	if (unlikely(ret == -EBUSY)) {
+> +		mdelay(5);
+
+Magic delay without name, please add a define for it.
+
+> +		ret = smu_set_wbrf_exclusion_ranges(smu, wifi_bands);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * smu_wbrf_event_handler - handle notify events
+> + *
+> + * @nb: notifier block
+> + * @action: event type
+> + * @_arg: event data
+> + *
+> + * Calls relevant amdgpu function in response to wbrf event
+> + * notification from kernel.
+> + */
+> +static int smu_wbrf_event_handler(struct notifier_block *nb,
+> +				  unsigned long action, void *_arg)
+> +{
+> +	struct smu_context *smu = container_of(nb, struct smu_context,
+> +					       wbrf_notifier);
+> +
+> +	switch (action) {
+> +	case WBRF_CHANGED:
+> +		smu_wbrf_handle_exclusion_ranges(smu);
+> +		break;
+> +	default:
+> +		return NOTIFY_DONE;
+> +	};
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+> +/**
+> + * smu_wbrf_support_check - check wbrf support
+> + *
+> + * @smu: smu_context pointer
+> + *
+> + * Verifies the ACPI interface whether wbrf is supported.
+> + */
+> +static void smu_wbrf_support_check(struct smu_context *smu)
+> +{
+> +	struct amdgpu_device *adev = smu->adev;
+> +
+> +	smu->wbrf_supported = smu_is_asic_wbrf_supported(smu) &&
+> +			      !!amdgpu_wbrf &&
+
+Unnecessary !!.
+
+> +			      acpi_amd_wbrf_supported_consumer(adev->dev);
+> +
+> +	if (smu->wbrf_supported)
+> +		dev_info(adev->dev, "RF interference mitigation is supported\n");
+> +}
+> +
+> +/**
+> + * smu_wbrf_init - init driver wbrf support
+> + *
+> + * @smu: smu_context pointer
+> + *
+> + * Verifies the AMD ACPI interfaces and registers with the wbrf
+> + * notifier chain if wbrf feature is supported.
+> + * Returns 0 on success, error on failure.
+> + */
+> +static int smu_wbrf_init(struct smu_context *smu)
+> +{
+> +	struct amdgpu_device *adev = smu->adev;
+> +	int ret;
+> +
+> +	if (!smu->wbrf_supported)
+> +		return 0;
+> +
+> +	smu->wbrf_notifier.notifier_call = smu_wbrf_event_handler;
+> +	ret = amd_wbrf_register_notifier(&smu->wbrf_notifier);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * Some wifiband exclusion ranges may be already there
+> +	 * before our driver loaded. To make sure our driver
+> +	 * is awared of those exclusion ranges.
+> +	 */
+> +	ret = smu_wbrf_handle_exclusion_ranges(smu);
+> +	if (ret)
+> +		dev_err(adev->dev, "Failed to handle wbrf exclusion ranges\n");
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * smu_wbrf_fini - tear down driver wbrf support
+> + *
+> + * @smu: smu_context pointer
+> + *
+> + * Unregisters with the wbrf notifier chain.
+> + */
+> +static void smu_wbrf_fini(struct smu_context *smu)
+> +{
+> +	if (!smu->wbrf_supported)
+> +		return;
+> +
+> +	amd_wbrf_unregister_notifier(&smu->wbrf_notifier);
+> +}
+> +
+>  static int smu_smc_hw_setup(struct smu_context *smu)
+>  {
+>  	struct smu_feature *feature = &smu->smu_feature;
+> @@ -1320,6 +1488,15 @@ static int smu_smc_hw_setup(struct smu_context *smu)
+>  	if (ret)
+>  		return ret;
+>  
+> +	/* Enable UclkShadow on wbrf supported */
+> +	if (smu->wbrf_supported) {
+> +		ret = smu_enable_uclk_shadow(smu, true);
+> +		if (ret) {
+> +			dev_err(adev->dev, "Failed to enable UclkShadow feature to support wbrf!\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	/*
+>  	 * With SCPM enabled, these actions(and relevant messages) are
+>  	 * not needed and permitted.
+> @@ -1416,6 +1593,15 @@ static int smu_smc_hw_setup(struct smu_context *smu)
+>  	 */
+>  	ret = smu_set_min_dcef_deep_sleep(smu,
+>  					  smu->smu_table.boot_values.dcefclk / 100);
+> +	if (ret) {
+> +		dev_err(adev->dev, "Error setting min deepsleep dcefclk\n");
+> +		return ret;
+> +	}
+> +
+> +	/* Init wbrf support. Properly setup the notifier */
+> +	ret = smu_wbrf_init(smu);
+> +	if (ret)
+> +		dev_err(adev->dev, "Error during wbrf init call\n");
+>  
+>  	return ret;
+>  }
+> @@ -1471,6 +1657,13 @@ static int smu_hw_init(void *handle)
+>  		return ret;
+>  	}
+>  
+> +	/*
+> +	 * Check whether wbrf is supported. This needs to be done
+> +	 * before SMU setup starts since part of SMU configuration
+> +	 * relies on this.
+> +	 */
+> +	smu_wbrf_support_check(smu);
+> +
+>  	if (smu->is_apu) {
+>  		ret = smu_set_gfx_imu_enable(smu);
+>  		if (ret)
+> @@ -1623,6 +1816,8 @@ static int smu_smc_hw_cleanup(struct smu_context *smu)
+>  	struct amdgpu_device *adev = smu->adev;
+>  	int ret = 0;
+>  
+> +	smu_wbrf_fini(smu);
+> +
+>  	cancel_work_sync(&smu->throttling_logging_work);
+>  	cancel_work_sync(&smu->interrupt_work);
+>  
+> diff --git a/drivers/gpu/drm/amd/pm/swsmu/inc/amdgpu_smu.h b/drivers/gpu/drm/amd/pm/swsmu/inc/amdgpu_smu.h
+> index 6e2069dcb6b9..39c1620d68c9 100644
+> --- a/drivers/gpu/drm/amd/pm/swsmu/inc/amdgpu_smu.h
+> +++ b/drivers/gpu/drm/amd/pm/swsmu/inc/amdgpu_smu.h
+> @@ -22,6 +22,8 @@
+>  #ifndef __AMDGPU_SMU_H__
+>  #define __AMDGPU_SMU_H__
+>  
+> +#include <linux/acpi_amd_wbrf.h>
+> +
+>  #include "amdgpu.h"
+>  #include "kgd_pp_interface.h"
+>  #include "dm_pp_interface.h"
+> @@ -575,6 +577,10 @@ struct smu_context
+>  	u32 debug_resp_reg;
+>  
+>  	struct delayed_work		swctf_delayed_work;
+> +
+> +	/* data structures for wbrf feature support */
+> +	bool				wbrf_supported;
+> +	struct notifier_block		wbrf_notifier;
+>  };
+>  
+>  struct i2c_adapter;
+> @@ -1356,6 +1362,23 @@ struct pptable_funcs {
+>  	 * @init_pptable_microcode: Prepare the pptable microcode to upload via PSP
+>  	 */
+>  	int (*init_pptable_microcode)(struct smu_context *smu);
+> +
+> +	/**
+> +	 * @is_asic_wbrf_supported: check whether PMFW supports the wbrf feature
+> +	 */
+> +	bool (*is_asic_wbrf_supported)(struct smu_context *smu);
+> +
+> +	/**
+> +	 * @enable_uclk_shadow: Enable the uclk shadow feature on wbrf supported
+> +	 */
+> +	int (*enable_uclk_shadow)(struct smu_context *smu,
+> +				  bool enablement);
+
+Fit to one line. Please go through all your patches and fix all 
+prematurely split lines.
+
+Perhaps "enable" is enough, I don't know why you use "enablement".
+
+> +
+> +	/**
+> +	 * @set_wbrf_exclusion_ranges: notify SMU the wifi bands occupied
+> +	 */
+> +	int (*set_wbrf_exclusion_ranges)(struct smu_context *smu,
+> +					 struct freq_band_range *exclusion_ranges);
+>  };
+>  
+>  typedef enum {
+> diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu_internal.h b/drivers/gpu/drm/amd/pm/swsmu/smu_internal.h
+> index ceb13c838067..aa64c7cdf3c9 100644
+> --- a/drivers/gpu/drm/amd/pm/swsmu/smu_internal.h
+> +++ b/drivers/gpu/drm/amd/pm/swsmu/smu_internal.h
+> @@ -97,6 +97,9 @@
+>  #define smu_get_default_config_table_settings(smu, config_table)	smu_ppt_funcs(get_default_config_table_settings, -EOPNOTSUPP, smu, config_table)
+>  #define smu_set_config_table(smu, config_table)				smu_ppt_funcs(set_config_table, -EOPNOTSUPP, smu, config_table)
+>  #define smu_init_pptable_microcode(smu)					smu_ppt_funcs(init_pptable_microcode, 0, smu)
+> +#define smu_is_asic_wbrf_supported(smu)					smu_ppt_funcs(is_asic_wbrf_supported, false, smu)
+> +#define smu_enable_uclk_shadow(smu, enablement)				smu_ppt_funcs(enable_uclk_shadow, 0, smu, enablement)
+> +#define smu_set_wbrf_exclusion_ranges(smu, freq_band_range)		smu_ppt_funcs(set_wbrf_exclusion_ranges, -EOPNOTSUPP, smu, freq_band_range)
+>  
+>  #endif
+>  #endif
 > 
-> Screen Capture button is KEY_UNKNOWN to evtest.
 
-So I missed the Screen Capture button so far.
-I believe that the 0x2a code should be mapped to
-KEY_SELECTIVE_SCREENSHOT (to differentiate it from
-the printscreen key, this is also used on other laptops
-for similar buttons).
+-- 
+ i.
 
-I'm going to send out a RFC series of 3 patches,
-the 2 patches which I send earlier + a patch to
-add a mapping for this. I'll Cc you on this.
-
-Please give this series a try (after removing the hwdb
-change).
-
-Regards,
-
-Hans
-
-
-
-
-
-> On 01/10/2023 13:45, Hans de Goede wrote:
->> Hi James,
->>
->> On 10/1/23 10:46, James John wrote:
->>> Hello Han,
->>>
->>> Thank you very much for this detailed steps. I was able to reproduce this with "evtest" and everything went okay.
->>>
->>> After editing /lib/udev/hwdb.d/60-keyboarrd.hwdb as you specified, the problem has been fixed, which I believe should revert on reboot?
->> No this will fix it until /lib/udev/hwdb.d/60-keyboarrd.hwdb gets overwritten by your
->> package-manager the next time the systemd packages get updated.
->>
->>> This is the content of /sys/class/dmi/id/modalias
->>>
->>> dmi:bvnAmericanMegatrendsInternational,LLC.:bvrUX5304VA.304:bd05/16/2023:br5.27:svnASUSTeKCOMPUTERINC.:pnZenbookS13UX5304VA_UX5304VA:pvr1.0:rvnASUSTeKCOMPUTERINC.:rnUX5304VA:rvr1.0:cvnASUSTeKCOMPUTERINC.:ct10:cvr1.0:sku:
->> Thanks.
->>
->> Looking at:
->> https://bbs.archlinux.org/viewtopic.php?pid=2123716
->>
->> I see that at least one other model Asus laptop is affected too. So rather then
->> adding a more specific hwdb rule for your model I would like to try and find
->> the root cause of these 0x20 event code events when pressing capslock
->> on your laptop.
->>
->>> Yes, I built my kernel. I wish I could parse this and write a proper quirk.
->> Good, I've written a small kernel patch to get to the bottom of this (attached)
->> can you please build a kernel with this. Then boot into this kernel and
->> then run dmesg -w
->>
->> When you now press capslock you should see log lines show up which contain
->> "raw event code 0x..."
->>
->> Please let me know what these lines show when pressing capslock.
->>
->> Please also let me know what these lines show when pressing other
->> hotkeys which are handled by asus-nb-wmi (you can re-run "sudo evtest"
->> to check which keys that are).
->>
->> I think the issue might be that the asus-wmi code is filtering out
->> the higher bits of the value, which causes some new events to
->> get mapped as just 0x20 instead of some-higher-bits + 0x20.
->>
->> Also I'm wondering if everything else works as it should,
->> e.g. does changing the brightness with the brightness hotkeys
->> still work after setting up the hwdb filtering ?
->>
->> And does the lid-switch (suspend the machine when the lid is closed)
->> work ?
->>
->>
->>> Also, I don't know if this is related; the hotkeys should be enabled by default. Fn key should be for Function keys. But in the current state, it is reversed.
->> This is laptop models specific and not really controlled by Linux,
->> sometimes you can change the default in the BIOS. Or sometimes you
->> can change the default by pressing Fn + Esc.
->>
->> Regards,
->>
->> Hans
->>
->>
->>
->>
->>> On 01/10/2023 09:28, Hans de Goede wrote:
->>>> Hi James,
->>>>
->>>> On 10/1/23 10:11, James John wrote:
->>>>> Hello,
->>>>>
->>>>> First of all, thank you very much for the work you do with maintaining these drivers and supporting systems. It is not an easy one.
->>>>>
->>>>> I have debugged this bug down to the asus_nb_wmi module. When I disable this module, the problem goes away, but then other hotkeys are not recognized. Attached is a debug event from libinput, where I pressed the capslock twice
->>>>>
->>>>> I have tried to dabble around with asus-nb-wmi.c codes to see if I could fix it by luck, by adding UX5304VA to `static const struct dmi_system_id asus_quirks[]` but to no avail. And I have a very little knowledge of what "quirks" are.
->>>>>
->>>>> I have attached some information regarding my hardware and kernel. I will be available to provide any more information that might be needed to resolve this.
->>>>>
->>>>> A related open thread: https://bbs.archlinux.org/viewtopic.php?pid=2123716
->>>> First of all lets confirm that the KEY_BRIGHTNESSDOWN events are really coming from asus_nb_wmi.
->>>>
->>>> Please install evtest and then run "sudo evtest" and then select the "Asus WMI hotkeys" device
->>>> by typing its number followed by enter.
->>>>
->>>> After this reproduce the bug and see if the log shows KEY_BRIGHTNESSDOWN.
->>>>
->>>> Since you said you tried playing around with the quirks, I assume you can build
->>>> your own kernel, please let me know if that is wrong.
->>>>
->>>> If this confirms the KEY_BRIGHTNESSDOWN events are coming from the "Asus WMI hotkeys" device,
->>>> then please edit /lib/udev/hwdb.d/60-keyboard.hwdb
->>>>
->>>> And search for "Asus WMI hotkeys", this should find this section:
->>>>
->>>> evdev:name:Asus WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
->>>> evdev:name:Eee PC WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
->>>> evdev:name:Asus Laptop extra buttons:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
->>>>    KEYBOARD_KEY_6b=f21                                    # Touchpad Toggle
->>>>    KEYBOARD_KEY_7c=f20                                    # Remap micmute to f20
->>>>
->>>> Change this to:
->>>>
->>>> evdev:name:Asus WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
->>>> evdev:name:Eee PC WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
->>>> evdev:name:Asus Laptop extra buttons:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
->>>>    KEYBOARD_KEY_6b=f21                                    # Touchpad Toggle
->>>>    KEYBOARD_KEY_7c=f20                                    # Remap micmute to f20
->>>>    KEYBOARD_KEY_20=unknown
->>>>
->>>> And then run "sudo udevadm hwdb --update" followed by "sudo udevadm trigger",
->>>> that should filter out the spurious keypresses.
->>>>
->>>> If that helps, please run:
->>>>
->>>> cat /sys/class/dmi/id/modalias
->>>>
->>>> So that a proper DMI based quirk to only to the filtering on your model
->>>> can be written.
->>>>
->>>> Regards,
->>>>
->>>> Hans
->>>>
-
+--8323329-949281964-1697532687=:2358--
