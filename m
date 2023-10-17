@@ -2,730 +2,242 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BE4CDB474
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Oct 2023 08:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B0DCDB474
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Oct 2023 08:51:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234650AbjJQIg5 (ORCPT
+        id S234766AbjJQIvV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Oct 2023 04:36:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41558 "EHLO
+        Tue, 17 Oct 2023 04:51:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232134AbjJQIg4 (ORCPT
+        with ESMTP id S234680AbjJQIvQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Oct 2023 04:36:56 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62A1C93;
-        Tue, 17 Oct 2023 01:36:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697531814; x=1729067814;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ocRXQhWpshvCj6nMCwRrbc51nb1YlbYX/CXa3eWjmF0=;
-  b=oHpwyUTKiPSDlvFsRckHhNtk/OrtWpF79MgXbG8KYOYIhudbR+I41o3z
-   6lKqw/MAuBHbxpw2cNHdfAHaYW/uaOfadDXUA6/rCMKInRm+ZYgJDQZ7h
-   4nLs5Zz91OwczyophIfz8sao2ayrj7p+OA292p7D/HH/dpQG2W2FzqFy0
-   4E1VhC6kZHBkjyK0bItmN7l+Kufi6R8FGbIUjgH6glQkLAkrN7cGEKtS9
-   xuK81agPj6ilxL0cRYFWh7HpHMUCspNOln2uUbXYFt9MWYzcTce2n6v1C
-   Hl9BT3EmAtqgK5xlNuxkkAEdBbceLdCBdgFoB/rSHFm0Wq//WHZYQFgbT
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10865"; a="365991519"
-X-IronPort-AV: E=Sophos;i="6.03,231,1694761200"; 
-   d="scan'208";a="365991519"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 01:36:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10865"; a="846735842"
-X-IronPort-AV: E=Sophos;i="6.03,231,1694761200"; 
-   d="scan'208";a="846735842"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.252.44.24])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 01:36:49 -0700
-Date:   Tue, 17 Oct 2023 11:36:43 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Ma Jun <Jun.Ma2@amd.com>
-cc:     amd-gfx@lists.freedesktop.org, lenb@kernel.org,
-        johannes@sipsolutions.net, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        alexander.deucher@amd.com, Lijo.Lazar@amd.com,
-        mario.limonciello@amd.com, majun@amd.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Evan Quan <quanliangl@hotmail.com>
-Subject: Re: [PATCH v12 2/9] platform/x86/amd: Add support for AMD ACPI based
- Wifi band RFI mitigation feature
-In-Reply-To: <20231017025358.1773598-3-Jun.Ma2@amd.com>
-Message-ID: <cfcd3b1-6fe2-ac4d-8aa0-8c1992e0cbc0@linux.intel.com>
-References: <20231017025358.1773598-1-Jun.Ma2@amd.com> <20231017025358.1773598-3-Jun.Ma2@amd.com>
+        Tue, 17 Oct 2023 04:51:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E17A593
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Oct 2023 01:50:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1697532633;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fR+vpqNMFr3xyDY37l8hKbjL6Vti0s+yHONs0fDemtc=;
+        b=DOgst3p0PTLMy1WXlizF6W08nv+UZ5JmGiNf9c31NkdXhPDmz4JWRue3vExZSD4Yo3MvHb
+        i2gV6eM7stkYJxSv5WkSSBlRh5pKbqCRHll0y6q+D/wVsoZlQlmbksuk21zBCH0XYOYuHj
+        cytivxazJ/HXDwmn6JDzsgsy3GKEFEc=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-265-KugdY6qjN1iDUt4hMNBsGA-1; Tue, 17 Oct 2023 04:50:21 -0400
+X-MC-Unique: KugdY6qjN1iDUt4hMNBsGA-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-53e169d2e80so4015810a12.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Oct 2023 01:50:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697532620; x=1698137420;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fR+vpqNMFr3xyDY37l8hKbjL6Vti0s+yHONs0fDemtc=;
+        b=uYCarhArERVaY0BkgUDhoW30JwN8MK5XWJym3gRBtHcx9OahBwteTBrMN5XEQS2ayb
+         QZE66d7HaAbxh5g859IJWsmX+XqJEks19tJebVx2wadDyVKG8Ju+sjr/2Ezh6LZ5mH9V
+         KphY7aaZCm16gBazV1yf78YFok1FveF+2EGCiwXvBagM+yY2SskgxcEKH3dQaBipMZBl
+         781lNwnAF2g8itD81SEGqnhoRNI037rY/Vxpm+RMLy+9dCm8q3kqopHqCzVblLaeMB0V
+         aKD7bJqwjrQy1bn4nVoxzT0exjIxO9BKy+u8CylbV5K/MJG0buEiefvXpV7yUCzBFCnu
+         YsaA==
+X-Gm-Message-State: AOJu0YwybJMv20ue8XVUR1QYkV+ebnpQOAu2MOolwN3O+dS99rmaqKzC
+        YIdzB+3LhYd1lwnX1yDSaHMZaCfoRRx9o7D+uGSmE6rqQR4pUcRAha3KRqKOgFATx8qUe/efFIi
+        CyyoXxnhFuadFrLd9xDh+BnmyHwv5jhUVuTtEdCikRQ==
+X-Received: by 2002:aa7:c6d7:0:b0:522:4dd0:de72 with SMTP id b23-20020aa7c6d7000000b005224dd0de72mr1071848eds.27.1697532620449;
+        Tue, 17 Oct 2023 01:50:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGWQWMoBLurhT1REe+0nHnTFiVxDNpebwSrTWyOgEcuY4J15YaywyXL2nYEBr/2gur4tULYdA==
+X-Received: by 2002:aa7:c6d7:0:b0:522:4dd0:de72 with SMTP id b23-20020aa7c6d7000000b005224dd0de72mr1071831eds.27.1697532620012;
+        Tue, 17 Oct 2023 01:50:20 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a10-20020a50858a000000b005346925a474sm787265edh.43.2023.10.17.01.50.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Oct 2023 01:50:19 -0700 (PDT)
+Message-ID: <938c83c4-973d-ac23-bfb6-53c63c153d81@redhat.com>
+Date:   Tue, 17 Oct 2023 10:50:18 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: PROBLEM: asus_nb_wmi sends KEY_BRIGHTNESSDOWN on pressing CAPS
+ Lock and PrntScrn on Zenbook S 13 UX5304VA
+To:     James John <me@donjajo.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
+References: <a2c441fe-457e-44cf-a146-0ecd86b037cf@donjajo.com>
+ <132feb67-c147-7ee6-b337-385e11786ec6@redhat.com>
+ <146cb960-406b-4456-94ce-ad6ed3f330ad@donjajo.com>
+ <d70f7d35-6458-437d-f68f-47291ce74a1e@redhat.com>
+ <90a7309e-4a76-4dff-8259-9975dd3ed8b1@donjajo.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <90a7309e-4a76-4dff-8259-9975dd3ed8b1@donjajo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 17 Oct 2023, Ma Jun wrote:
+Hi James,
 
-> Due to electrical and mechanical constraints in certain platform designs
-> there may be likely interference of relatively high-powered harmonics of
-> the (G-)DDR memory clocks with local radio module frequency bands used
-> by Wifi 6/6e/7.
+On 10/1/23 16:16, James John wrote:
+> Hello Hans,
 > 
-> To mitigate this, AMD has introduced a mechanism that devices can use to
-> notify active use of particular frequencies so that other devices can make
-> relative internal adjustments as necessary to avoid this resonance.
+> Thank you. I applied the patch and I have the inputs attached here.
 > 
-> Co-Developed-by: Evan Quan <quanliangl@hotmail.com>
-> Signed-off-by: Evan Quan <quanliangl@hotmail.com>
-> Signed-off-by: Ma Jun <Jun.Ma2@amd.com>
+> After setting the hwdb filter, all the hot keys are still working except that the LED notification light on Mute Hotkey (F9) is no longer turning up on mute.
 > 
-> --
-> v11:
->  - fix typo(Simon)
-> v12:
->  - Fix the code (Rafael)
->  - Move amd_wbrf.c to drivers/platform/x86/amd/wbrf.c
->  - Updated Evan's email because he's no longer at AMD.Thanks
-> for his work in earlier versions.
-> ---
->  drivers/platform/x86/amd/Kconfig  |  15 ++
->  drivers/platform/x86/amd/Makefile |   1 +
->  drivers/platform/x86/amd/wbrf.c   | 402 ++++++++++++++++++++++++++++++
->  include/linux/acpi_amd_wbrf.h     | 101 ++++++++
->  4 files changed, 519 insertions(+)
->  create mode 100644 drivers/platform/x86/amd/wbrf.c
->  create mode 100644 include/linux/acpi_amd_wbrf.h
+> The Screen Capture, Disable Camera, and MyASUS buttons are not mapped yet. I believe the Screen Capture button should map to PrntScrn button, and MyASUS with Disable Camera unmapped, obviously. I also have the codes in the attached log.
 > 
-> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-> index d9685aef0887..fa5a978a2d22 100644
-> --- a/drivers/platform/x86/amd/Kconfig
-> +++ b/drivers/platform/x86/amd/Kconfig
-> @@ -32,3 +32,18 @@ config AMD_HSMP
->  
->  	  If you choose to compile this driver as a module the module will be
->  	  called amd_hsmp.
-> +
-> +config AMD_WBRF
-> +	bool "AMD Wifi RF Band mitigations (WBRF)"
-> +	depends on ACPI
-> +	default n
-> +	help
-> +	  WBRF(Wifi Band RFI mitigation) mechanism allows Wifi drivers
-> +	  to notify the frequencies they are using so that other hardware
-> +	  can be reconfigured to avoid harmonic conflicts.
-> +
-> +	  AMD provides an ACPI based mechanism to support WBRF on platform with
-> +	  appropriate underlying support.
-> +
-> +	  This mechanism will only be activated on platforms that advertise a
-> +	  need for it.
-> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-> index 65732f0a3913..62b98b048b17 100644
-> --- a/drivers/platform/x86/amd/Makefile
-> +++ b/drivers/platform/x86/amd/Makefile
-> @@ -9,3 +9,4 @@ obj-$(CONFIG_AMD_PMC)		+= amd-pmc.o
->  amd_hsmp-y			:= hsmp.o
->  obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
->  obj-$(CONFIG_AMD_PMF)		+= pmf/
-> +obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
-> diff --git a/drivers/platform/x86/amd/wbrf.c b/drivers/platform/x86/amd/wbrf.c
-> new file mode 100644
-> index 000000000000..fb414564f576
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/wbrf.c
-> @@ -0,0 +1,402 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Wifi Frequency Band Manage Interface
-> + * Copyright (C) 2023 Advanced Micro Devices
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/acpi_amd_wbrf.h>
-> +
-> +#define ACPI_AMD_WBRF_METHOD	"\\WBRF"
-> +
-> +/*
-> + * Functions bit vector for WBRF method
-> + *
-> + * Bit 0: WBRF supported.
-> + * Bit 1: Function 1 (Add / Remove frequency) is supported.
-> + * Bit 2: Function 2 (Get frequency list) is supported.
-> + */
-> +#define WBRF_ENABLED		0x0
-> +#define WBRF_RECORD			0x1
-> +#define WBRF_RETRIEVE		0x2
-> +
-> +#define WBRF_REVISION		0x1
-> +
-> +/*
-> + * The data structure used for WBRF_RETRIEVE is not naturally aligned.
-> + * And unfortunately the design has been settled down.
-> + */
-> +struct amd_wbrf_ranges_out {
-> +	u32			num_of_ranges;
-> +	struct freq_band_range	band_list[MAX_NUM_OF_WBRF_RANGES];
-> +} __packed;
-> +
-> +static const guid_t wifi_acpi_dsm_guid =
-> +	GUID_INIT(0x7b7656cf, 0xdc3d, 0x4c1c,
-> +		  0x83, 0xe9, 0x66, 0xe7, 0x21, 0xde, 0x30, 0x70);
-> +
-> +/*
-> + * Used to notify consumer (amdgpu driver currently) about
-> + * the wifi frequency is change.
-> + */
-> +static BLOCKING_NOTIFIER_HEAD(wbrf_chain_head);
-> +
-> +static int wbrf_record(struct acpi_device *adev, uint8_t action,
-> +		       struct wbrf_ranges_in_out *in)
-> +{
-> +	union acpi_object argv4;
-> +	union acpi_object *tmp;
-> +	union acpi_object *obj;
-> +	u32 num_of_ranges = 0;
-> +	u32 num_of_elements;
-> +	u32 arg_idx = 0;
-> +	u32 loop_idx;
-> +	int ret;
-> +
-> +	if (!in)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * The num_of_ranges value in the "in" object supplied by
-> +	 * the caller is required to be equal to the number of
-> +	 * entries in the band_list array in there.
-> +	 */
-> +	for (loop_idx = 0; loop_idx < ARRAY_SIZE(in->band_list);
-> +	     loop_idx++)
+> Screen Capture button is KEY_UNKNOWN to evtest.
 
-This fits easily to one line.
+So I missed the Screen Capture button so far.
+I believe that the 0x2a code should be mapped to
+KEY_SELECTIVE_SCREENSHOT (to differentiate it from
+the printscreen key, this is also used on other laptops
+for similar buttons).
 
-What extra information loop_idx provides over the usual i? I see zero 
-extra value, only extra characters.
+I'm going to send out a RFC series of 3 patches,
+the 2 patches which I send earlier + a patch to
+add a mapping for this. I'll Cc you on this.
 
-> +		if (in->band_list[loop_idx].start &&
-> +		    in->band_list[loop_idx].end)
+Please give this series a try (after removing the hwdb
+change).
 
-One line.
+Regards,
 
-> +			num_of_ranges++;
-> +
-> +	if (num_of_ranges != in->num_of_ranges)
-> +		return -EINVAL;
+Hans
 
-Can't you just exit in the loop directly?
 
-Seriously, this v12 of your series and nobody has noticed any of these?
 
-> +
-> +	/*
-> +	 * Every input frequency band comes with two end points(start/end)
-> +	 * and each is accounted as an element. Meanwhile the range count
-> +	 * and action type are accounted as an element each.
-> +	 * So, the total element count = 2 * num_of_ranges + 1 + 1.
-> +	 */
-> +	num_of_elements = 2 * num_of_ranges + 2;
-> +
-> +	tmp = kcalloc(num_of_elements, sizeof(*tmp), GFP_KERNEL);
-> +	if (!tmp)
-> +		return -ENOMEM;
-> +
-> +	argv4.package.type = ACPI_TYPE_PACKAGE;
-> +	argv4.package.count = num_of_elements;
-> +	argv4.package.elements = tmp;
-> +
-> +	/* save the number of ranges*/
-> +	tmp[0].integer.type = ACPI_TYPE_INTEGER;
-> +	tmp[0].integer.value = num_of_ranges;
-> +
-> +	/* save the action(WBRF_RECORD_ADD/REMOVE/RETRIEVE) */
-> +	tmp[1].integer.type = ACPI_TYPE_INTEGER;
-> +	tmp[1].integer.value = action;
-> +
-> +	arg_idx = 2;
-> +	for (loop_idx = 0; loop_idx < ARRAY_SIZE(in->band_list);
-> +	     loop_idx++) {
 
-Ditto.
 
-> +		if (!in->band_list[loop_idx].start ||
-> +		    !in->band_list[loop_idx].end)
-> +			continue;
-> +
-> +		tmp[arg_idx].integer.type = ACPI_TYPE_INTEGER;
-> +		tmp[arg_idx++].integer.value = in->band_list[loop_idx].start;
-> +		tmp[arg_idx].integer.type = ACPI_TYPE_INTEGER;
-> +		tmp[arg_idx++].integer.value = in->band_list[loop_idx].end;
-> +	}
-> +
-> +	obj = acpi_evaluate_dsm(adev->handle, &wifi_acpi_dsm_guid,
-> +				WBRF_REVISION, WBRF_RECORD, &argv4);
-> +
-> +	if (!obj)
-> +		return -EINVAL;
-> +
-> +	if (obj->type != ACPI_TYPE_INTEGER) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	ret = obj->integer.value;
-> +	if (ret)
-> +		ret = -EINVAL;
-> +
-> +out:
-> +	ACPI_FREE(obj);
-> +
-> +	kfree(tmp);
-
-Remove the newline between ACPI_FREE and kfree.
-
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * acpi_amd_wbrf_add_remove - add or remove the frequency band the device is using
-> + *
-> + * @dev: device pointer
-> + * @action: remove or add the frequency band into bios
-> + * @in: input structure containing the frequency band the device is using
-> + *
-> + * Broadcast to other consumers the frequency band the device starts
-> + * to use. Underneath the surface the information is cached into an
-> + * internal buffer first. Then a notification is sent to all those
-> + * registered consumers. So then they can retrieve that buffer to
-> + * know the latest active frequency bands. Consumers that haven't
-> + * yet been registered can retrieve the information from the cache
-> + * when they register.
-> + *
-> + * Return:
-> + * 0 for success add/remove wifi frequency band.
-> + * Returns a negative error code for failure.
-> + */
-> +int acpi_amd_wbrf_add_remove(struct device *dev, uint8_t action,
-> +							struct wbrf_ranges_in_out *in)
-> +{
-> +	struct acpi_device *adev = ACPI_COMPANION(dev);
-> +	int ret;
-> +
-> +	if (!adev)
-> +		return -ENODEV;
-
-To make this much easier to read, put the assignment right before it's 
-error handling, like this (it's 1 line more but much easier to follow):
-
-	adev = ACPI_COMPANION(dev);
-	if (!adev)
-		return -ENODEV;
-
-> +
-> +	ret = wbrf_record(adev, action, in);
-> +	if (ret)
-> +		return ret;
-> +
-> +	blocking_notifier_call_chain(&wbrf_chain_head,
-> +				     WBRF_CHANGED,
-> +				     NULL);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_amd_wbrf_add_remove);
-> +
-> +static bool acpi_amd_wbrf_supported_system(void)
-> +{
-> +	acpi_status status;
-> +	acpi_handle handle;
-> +
-> +	status = acpi_get_handle(NULL, ACPI_AMD_WBRF_METHOD, &handle);
-> +
-> +	return ACPI_SUCCESS(status);
-> +}
-> +
-> +/**
-> + * acpi_amd_wbrf_supported_producer - determine if the WBRF can be enabled
-> + *                                    for the device as a producer
-> + *
-> + * @dev: device pointer
-> + *
-> + * Check if the platform equipped with necessary implementations to
-> + * support WBRF for the device as a producer.
-> + *
-> + * Return:
-> + * true if WBRF is supported, otherwise returns false
-> + */
-> +bool acpi_amd_wbrf_supported_producer(struct device *dev)
-> +{
-> +	struct acpi_device *adev = ACPI_COMPANION(dev);
-> +
-> +	if (!adev)
-> +		return false;
-
-Ditto.
-
-> +
-> +	if (!acpi_amd_wbrf_supported_system())
-> +		return false;
-> +
-> +
-> +	return acpi_check_dsm(adev->handle, &wifi_acpi_dsm_guid,
-> +			      WBRF_REVISION,
-> +			      BIT(WBRF_RECORD));
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_amd_wbrf_supported_producer);
-> +
-> +static union acpi_object *
-> +acpi_evaluate_wbrf(acpi_handle handle, u64 rev, u64 func)
-> +{
-> +	acpi_status ret;
-> +	struct acpi_buffer buf = {ACPI_ALLOCATE_BUFFER, NULL};
-> +	union acpi_object params[4];
-> +	struct acpi_object_list input = {
-> +		.count = 4,
-> +		.pointer = params,
-> +	};
-> +
-> +	params[0].type = ACPI_TYPE_INTEGER;
-> +	params[0].integer.value = rev;
-> +	params[1].type = ACPI_TYPE_INTEGER;
-> +	params[1].integer.value = func;
-> +	params[2].type = ACPI_TYPE_PACKAGE;
-> +	params[2].package.count = 0;
-> +	params[2].package.elements = NULL;
-> +	params[3].type = ACPI_TYPE_STRING;
-> +	params[3].string.length = 0;
-> +	params[3].string.pointer = NULL;
-> +
-> +	ret = acpi_evaluate_object(handle, "WBRF", &input, &buf);
-> +	if (ACPI_FAILURE(ret))
-> +		return NULL;
-> +
-> +	return buf.pointer;
-> +}
-> +
-> +static bool check_acpi_wbrf(acpi_handle handle, u64 rev, u64 funcs)
-> +{
-> +	int i;
-> +	u64 mask = 0;
-> +	union acpi_object *obj;
-> +
-> +	if (funcs == 0)
-> +		return false;
-> +
-> +	obj = acpi_evaluate_wbrf(handle, rev, 0);
-> +	if (!obj)
-> +		return false;
-> +
-> +	if (obj->type != ACPI_TYPE_BUFFER)
-> +		return false;
-> +
-> +	/*
-> +	 * Bit vector providing supported functions information.
-> +	 * Each bit marks support for one specific function of the WBRF method.
-> +	 */
-> +	for (i = 0; i < obj->buffer.length && i < 8; i++)
-> +		mask |= (u64)obj->buffer.pointer[i] << i * 8;
-> +
-> +	ACPI_FREE(obj);
-> +
-> +	if ((mask & BIT(WBRF_ENABLED)) && (mask & funcs) == funcs)
-> +		return true;
-> +
-> +	return false;
-
-You can directly return the condition's value, no need to wrap it into if.
-
-> +}
-> +
-> +/**
-> + * acpi_amd_wbrf_supported_consumer - determine if the WBRF can be enabled
-> + *                                    for the device as a consumer
-> + *
-> + * @dev: device pointer
-> + *
-> + * Determine if the platform equipped with necessary implementations to
-> + * support WBRF for the device as a consumer.
-> + *
-> + * Return:
-> + * true if WBRF is supported, otherwise returns false.
-> + */
-> +bool acpi_amd_wbrf_supported_consumer(struct device *dev)
-> +{
-> +	struct acpi_device *adev = ACPI_COMPANION(dev);
-> +
-> +	if (!adev)
-> +		return false;
-
-Group call + its error handling together.
-
-> +
-> +	if (!acpi_amd_wbrf_supported_system())
-> +		return false;
-> +
-> +	return check_acpi_wbrf(adev->handle,
-> +			       WBRF_REVISION,
-> +			       BIT(WBRF_RETRIEVE));
-
-Fits one line.
-
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_amd_wbrf_supported_consumer);
-> +
-> +/**
-> + * amd_wbrf_retrieve_freq_band - retrieve current active frequency
-> + *                                     bands
-> + *
-> + * @dev: device pointer
-> + * @out: output structure containing all the active frequency bands
-> + *
-> + * Retrieve the current active frequency bands which were broadcasted
-> + * by other producers. The consumer who calls this API should take
-> + * proper actions if any of the frequency band may cause RFI with its
-> + * own frequency band used.
-> + *
-> + * Return:
-> + * 0 for getting wifi freq band successfully.
-> + * Returns a negative error code for failure.
-> + */
-> +int amd_wbrf_retrieve_freq_band(struct device *dev,
-> +				      struct wbrf_ranges_in_out *out)
-> +{
-> +	struct acpi_device *adev = ACPI_COMPANION(dev);
-> +	struct amd_wbrf_ranges_out acpi_out = {0};
-> +	union acpi_object *obj;
-> +	int ret = 0;
-> +
-> +	if (!adev)
-> +		return -ENODEV;
-> +
-> +	obj = acpi_evaluate_wbrf(adev->handle,
-> +				 WBRF_REVISION,
-> +				 WBRF_RETRIEVE);
-
-One line.
-
-I'm now very confused what those constants actually mean, since you 
-seem to sometimes use them with BIT() and sometimes not.
-
-How can I know while reviewing each is done correctly? The only difference 
-I can quickly pick up is "func" vs "funcs" in the argument name given 
-to the function (which of course lacked documentation what it expects
-to be given to it)?!?
-
-> +	if (!obj)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * The return buffer is with variable length and the format below:
-> +	 * number_of_entries(1 DWORD):       Number of entries
-> +	 * start_freq of 1st entry(1 QWORD): Start frequency of the 1st entry
-> +	 * end_freq of 1st entry(1 QWORD):   End frequency of the 1st entry
-> +	 * ...
-> +	 * ...
-> +	 * start_freq of the last entry(1 QWORD)
-> +	 * end_freq of the last entry(1 QWORD)
-> +	 *
-> +	 * Thus the buffer length is determined by the number of entries.
-> +	 * - For zero entry scenario, the buffer length will be 4 bytes.
-> +	 * - For one entry scenario, the buffer length will be 20 bytes.
-> +	 */
-> +	if (obj->buffer.length > sizeof(acpi_out) ||
-> +	    obj->buffer.length < 4) {
-
-One line.
-
-Use in_range().
-
-> +		dev_err(dev, "Wrong sized WBRT information");
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +	memcpy(&acpi_out, obj->buffer.pointer, obj->buffer.length);
-> +
-> +	out->num_of_ranges = acpi_out.num_of_ranges;
-> +	memcpy(out->band_list, acpi_out.band_list, sizeof(acpi_out.band_list));
-> +
-> +out:
-> +	ACPI_FREE(obj);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(amd_wbrf_retrieve_freq_band);
-> +
-> +/**
-> + * amd_wbrf_register_notifier - register for notifications of frequency
-> + *                                   band update
-> + *
-> + * @nb: driver notifier block
-> + *
-> + * The consumer should register itself via this API so that it can get
-> + * notified on the frequency band updates from other producers.
-> + *
-> + * Return:
-> + * 0 for registering a consumer driver successfully.
-> + * Returns a negative error code for failure.
-> + */
-> +int amd_wbrf_register_notifier(struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_register(&wbrf_chain_head, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(amd_wbrf_register_notifier);
-> +
-> +/**
-> + * amd_wbrf_unregister_notifier - unregister for notifications of
-> + *                                     frequency band update
-> + *
-> + * @nb: driver notifier block
-> + *
-> + * The consumer should call this API when it is longer interested with
-> + * the frequency band updates from other producers. Usually, this should
-> + * be performed during driver cleanup.
-> + *
-> + * Return:
-> + * 0 for unregistering a consumer driver.
-> + * Returns a negative error code for failure.
-> + */
-> +int amd_wbrf_unregister_notifier(struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_unregister(&wbrf_chain_head, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(amd_wbrf_unregister_notifier);
-> diff --git a/include/linux/acpi_amd_wbrf.h b/include/linux/acpi_amd_wbrf.h
-> new file mode 100644
-> index 000000000000..298779807312
-> --- /dev/null
-> +++ b/include/linux/acpi_amd_wbrf.h
-> @@ -0,0 +1,101 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Wifi Band Exclusion Interface (AMD ACPI Implementation)
-> + * Copyright (C) 2023 Advanced Micro Devices
-> + */
-> +
-> +#ifndef _ACPI_AMD_WBRF_H
-> +#define _ACPI_AMD_WBRF_H
-> +
-> +#include <linux/device.h>
-> +#include <linux/notifier.h>
-> +
-> +/*
-> + * The maximum number of frequency band ranges
-> + */
-
-No need to use multi-line comment.
-
-> +#define MAX_NUM_OF_WBRF_RANGES		11
-> +
-> +/* Record actions */
-> +#define WBRF_RECORD_ADD		0x0
-> +#define WBRF_RECORD_REMOVE	0x1
-> +
-> +/*
-> + * A freq_band_range is defined as a wifi frequency band with start
-> + * and end frequency point specified(in Hz). And a valid range should
-
-Lacking space.
-
-> + * have its start and end frequency point filled with non-zero values.
-> + * Meanwhile, the maximum number of wbrf ranges is limited as
-> + * `MAX_NUM_OF_WBRF_RANGES`.
-
-Use kerneldoc compatible syntax %MAX_NUM_OF_WBRF_RANGES instead (no need 
-to mark it).
-
-To me it seems with small effort, you could convert these into proper 
-kerneldoc for both this and the next struct...
-
-> + */
-> +
-> +struct freq_band_range {
-> +	u64		start;
-> +	u64		end;
-> +};
-> +
-> +struct wbrf_ranges_in_out {
-> +	u64			num_of_ranges;
-> +	struct freq_band_range	band_list[MAX_NUM_OF_WBRF_RANGES];
-> +};
-> +
-> +/*
-> + * The notification types for the consumers are defined as below.
-> + * The consumers may need to take different actions in response to
-> + * different notifications.
-> + * WBRF_CHANGED: there was some frequency band updates. The consumers
-> + *               should retrieve the latest active frequency bands.
-
-Make formatting compatible with kerneldoc.
-
-> + */
-> +enum wbrf_notifier_actions {
-> +	WBRF_CHANGED,
-> +};
-> +
-> +#if IS_ENABLED(CONFIG_AMD_WBRF)
-> +bool acpi_amd_wbrf_supported_producer(struct device *dev);
-> +int acpi_amd_wbrf_add_remove(struct device *dev, uint8_t action,
-> +							struct wbrf_ranges_in_out *in);
-
-Fix alignment.
-
-> +bool acpi_amd_wbrf_supported_consumer(struct device *dev);
-> +int amd_wbrf_retrieve_freq_band(struct device *dev,
-> +				      struct wbrf_ranges_in_out *out);
-
-Fix alignment.
-
-Optionally, you could put these definitions on a single lines since 
-they're <100 chars so that they'd have better greppablity.
-
-> +int amd_wbrf_register_notifier(struct notifier_block *nb);
-> +int amd_wbrf_unregister_notifier(struct notifier_block *nb);
-> +#else
-> +static inline
-> +bool acpi_amd_wbrf_supported_consumer(struct device *dev)
-> +{
-> +	return false;
-> +}
-> +static inline
-> +int acpi_amd_wbrf_remove_exclusion(struct device *dev,
-> +				   struct wbrf_ranges_in_out *in)
-> +{
-> +	return -ENODEV;
-> +}
-> +static inline
-> +int acpi_amd_wbrf_add_exclusion(struct device *dev,
-> +				struct wbrf_ranges_in_out *in)
-> +{
-> +	return -ENODEV;
-> +}
-> +static inline
-> +bool acpi_amd_wbrf_supported_producer(struct device *dev)
-> +{
-> +	return false;
-> +}
-> +static inline
-> +int amd_wbrf_retrieve_freq_band(struct device *dev,
-> +				      struct wbrf_ranges_in_out *out)
-
-Another case of inconsistent alignment.
-
--- 
- i.
-
-> +{
-> +	return -ENODEV;
-> +}
-> +static inline
-> +int amd_wbrf_register_notifier(struct notifier_block *nb)
-> +{
-> +	return -ENODEV;
-> +}
-> +static inline
-> +int amd_wbrf_unregister_notifier(struct notifier_block *nb)
-> +{
-> +	return -ENODEV;
-> +}
-> +#endif /* CONFIG_AMD_WBRF */
-> +
-> +#endif /* _ACPI_AMD_WBRF_H */
+> On 01/10/2023 13:45, Hans de Goede wrote:
+>> Hi James,
+>>
+>> On 10/1/23 10:46, James John wrote:
+>>> Hello Han,
+>>>
+>>> Thank you very much for this detailed steps. I was able to reproduce this with "evtest" and everything went okay.
+>>>
+>>> After editing /lib/udev/hwdb.d/60-keyboarrd.hwdb as you specified, the problem has been fixed, which I believe should revert on reboot?
+>> No this will fix it until /lib/udev/hwdb.d/60-keyboarrd.hwdb gets overwritten by your
+>> package-manager the next time the systemd packages get updated.
+>>
+>>> This is the content of /sys/class/dmi/id/modalias
+>>>
+>>> dmi:bvnAmericanMegatrendsInternational,LLC.:bvrUX5304VA.304:bd05/16/2023:br5.27:svnASUSTeKCOMPUTERINC.:pnZenbookS13UX5304VA_UX5304VA:pvr1.0:rvnASUSTeKCOMPUTERINC.:rnUX5304VA:rvr1.0:cvnASUSTeKCOMPUTERINC.:ct10:cvr1.0:sku:
+>> Thanks.
+>>
+>> Looking at:
+>> https://bbs.archlinux.org/viewtopic.php?pid=2123716
+>>
+>> I see that at least one other model Asus laptop is affected too. So rather then
+>> adding a more specific hwdb rule for your model I would like to try and find
+>> the root cause of these 0x20 event code events when pressing capslock
+>> on your laptop.
+>>
+>>> Yes, I built my kernel. I wish I could parse this and write a proper quirk.
+>> Good, I've written a small kernel patch to get to the bottom of this (attached)
+>> can you please build a kernel with this. Then boot into this kernel and
+>> then run dmesg -w
+>>
+>> When you now press capslock you should see log lines show up which contain
+>> "raw event code 0x..."
+>>
+>> Please let me know what these lines show when pressing capslock.
+>>
+>> Please also let me know what these lines show when pressing other
+>> hotkeys which are handled by asus-nb-wmi (you can re-run "sudo evtest"
+>> to check which keys that are).
+>>
+>> I think the issue might be that the asus-wmi code is filtering out
+>> the higher bits of the value, which causes some new events to
+>> get mapped as just 0x20 instead of some-higher-bits + 0x20.
+>>
+>> Also I'm wondering if everything else works as it should,
+>> e.g. does changing the brightness with the brightness hotkeys
+>> still work after setting up the hwdb filtering ?
+>>
+>> And does the lid-switch (suspend the machine when the lid is closed)
+>> work ?
+>>
+>>
+>>> Also, I don't know if this is related; the hotkeys should be enabled by default. Fn key should be for Function keys. But in the current state, it is reversed.
+>> This is laptop models specific and not really controlled by Linux,
+>> sometimes you can change the default in the BIOS. Or sometimes you
+>> can change the default by pressing Fn + Esc.
+>>
+>> Regards,
+>>
+>> Hans
+>>
+>>
+>>
+>>
+>>> On 01/10/2023 09:28, Hans de Goede wrote:
+>>>> Hi James,
+>>>>
+>>>> On 10/1/23 10:11, James John wrote:
+>>>>> Hello,
+>>>>>
+>>>>> First of all, thank you very much for the work you do with maintaining these drivers and supporting systems. It is not an easy one.
+>>>>>
+>>>>> I have debugged this bug down to the asus_nb_wmi module. When I disable this module, the problem goes away, but then other hotkeys are not recognized. Attached is a debug event from libinput, where I pressed the capslock twice
+>>>>>
+>>>>> I have tried to dabble around with asus-nb-wmi.c codes to see if I could fix it by luck, by adding UX5304VA to `static const struct dmi_system_id asus_quirks[]` but to no avail. And I have a very little knowledge of what "quirks" are.
+>>>>>
+>>>>> I have attached some information regarding my hardware and kernel. I will be available to provide any more information that might be needed to resolve this.
+>>>>>
+>>>>> A related open thread: https://bbs.archlinux.org/viewtopic.php?pid=2123716
+>>>> First of all lets confirm that the KEY_BRIGHTNESSDOWN events are really coming from asus_nb_wmi.
+>>>>
+>>>> Please install evtest and then run "sudo evtest" and then select the "Asus WMI hotkeys" device
+>>>> by typing its number followed by enter.
+>>>>
+>>>> After this reproduce the bug and see if the log shows KEY_BRIGHTNESSDOWN.
+>>>>
+>>>> Since you said you tried playing around with the quirks, I assume you can build
+>>>> your own kernel, please let me know if that is wrong.
+>>>>
+>>>> If this confirms the KEY_BRIGHTNESSDOWN events are coming from the "Asus WMI hotkeys" device,
+>>>> then please edit /lib/udev/hwdb.d/60-keyboard.hwdb
+>>>>
+>>>> And search for "Asus WMI hotkeys", this should find this section:
+>>>>
+>>>> evdev:name:Asus WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+>>>> evdev:name:Eee PC WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+>>>> evdev:name:Asus Laptop extra buttons:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+>>>>    KEYBOARD_KEY_6b=f21                                    # Touchpad Toggle
+>>>>    KEYBOARD_KEY_7c=f20                                    # Remap micmute to f20
+>>>>
+>>>> Change this to:
+>>>>
+>>>> evdev:name:Asus WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+>>>> evdev:name:Eee PC WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+>>>> evdev:name:Asus Laptop extra buttons:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+>>>>    KEYBOARD_KEY_6b=f21                                    # Touchpad Toggle
+>>>>    KEYBOARD_KEY_7c=f20                                    # Remap micmute to f20
+>>>>    KEYBOARD_KEY_20=unknown
+>>>>
+>>>> And then run "sudo udevadm hwdb --update" followed by "sudo udevadm trigger",
+>>>> that should filter out the spurious keypresses.
+>>>>
+>>>> If that helps, please run:
+>>>>
+>>>> cat /sys/class/dmi/id/modalias
+>>>>
+>>>> So that a proper DMI based quirk to only to the filtering on your model
+>>>> can be written.
+>>>>
+>>>> Regards,
+>>>>
+>>>> Hans
+>>>>
 
