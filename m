@@ -2,193 +2,479 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2196FCDB482
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Oct 2023 22:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A851ECDB474
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Oct 2023 00:19:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234843AbjJQWGc (ORCPT
+        id S229459AbjJRATL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Oct 2023 18:06:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49192 "EHLO
+        Tue, 17 Oct 2023 20:19:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234922AbjJQWGb (ORCPT
+        with ESMTP id S229446AbjJRATL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Oct 2023 18:06:31 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E05CF9
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Oct 2023 15:06:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697580389; x=1729116389;
-  h=from:to:cc:subject:date:message-id:content-id:
-   content-transfer-encoding:mime-version;
-  bh=05L5qg/IsVvE+Lr2Gm+4kSebWIUMwZWCk1v9QL2SsP4=;
-  b=FY3C9+ADCZdpAD7qjtvkBpVV0uYH0rtu53lOyGSG+cseQheWLAKoklc0
-   F1zVj+MAiXJnPA/oMPPs1UGhcRgB4xpkMKCmp/Zii78TqRRH4gCOpzyz1
-   QgpCdQ7kYb5OuK4aqgEfW/hM1z4y8si584xV2JjZlnNJjVhrAS46ssvTv
-   hFmA8HlccZxCHRpMzTQJcFfYA5HebT0hDBa3wzVJHGeeu69V8HgLUkGK6
-   Y1GK3H6O+HoCLDuDbMgKOloZd0Ld3s9rKP+q4ciggIn629jmF1jzg9x2w
-   9E/nA53ZiXz2wmEXgC9bbRvRgi0jQcift8i/vR47OpFrV9w5xrtTnOxDw
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="389763602"
-X-IronPort-AV: E=Sophos;i="6.03,233,1694761200"; 
-   d="scan'208";a="389763602"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 15:06:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="749834483"
-X-IronPort-AV: E=Sophos;i="6.03,233,1694761200"; 
-   d="scan'208";a="749834483"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 17 Oct 2023 15:06:08 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Tue, 17 Oct 2023 15:06:08 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Tue, 17 Oct 2023 15:06:08 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.169)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Tue, 17 Oct 2023 15:06:07 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=es4o8/8h/+XEkdPMapaLihv/N3gw6Q52HWaLEgmThvTZLhcCv9cTcnhZ+4ZwSDDWhcFdODudLQzwnYwEmeV8rzG3U8jQlbiuFUsATrqIp/MV1I2aTqbPQSUtsDJrCgdY4SMrP5sU19opiJiOA50etsQoH3iC4KOnrOD6HSQqTaWXIlMacarWhtjwNqm+Bu7NerApZEP0CKSo7qEF4MmAS0jUXf2G1sqgJo6smElJioox+xVq9ExslvG3YrKGLjDeNdvASS7wsO9RzkG8d68sBGuE6snWpQM6VBGciItLkuN+s4+x5geivtOviQmjOBHeFoOKOVKbWGoA6hpkCDQ+iw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=05L5qg/IsVvE+Lr2Gm+4kSebWIUMwZWCk1v9QL2SsP4=;
- b=UX6XLq50XbSQh9fgflps0xnmm4yZJlqoAbeuYfWzb0xMvi/+UyymmLChVtOcn6AMamGu8Ez/clmfxjAPnbRBkK86RMLU6L5bA19IIo4g+BgrAPJyiNi22ipooXoRX299XGDfo+8utNWSH8HgF+cDsr2MmicVBZkz0FRp1o4RG8Bf/AZ8fKfJWAf292kAWklhVdcq8wNzYscY8WdEMVHWoVlXr7y6xFayCzILRvsvx9oz8AvFrEpkkQ1+481yXPBcj4DlJ5G7+L6wcRoEuvrJSYme9pc2h47J9BGtC7sIRNFjqa2MDWBvp4OpcexUbqQlmT7gnU2vlip523pEpXWtfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DM8PR11MB5592.namprd11.prod.outlook.com (2603:10b6:8:35::6) by
- MW5PR11MB5788.namprd11.prod.outlook.com (2603:10b6:303:198::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.35; Tue, 17 Oct
- 2023 22:06:04 +0000
-Received: from DM8PR11MB5592.namprd11.prod.outlook.com
- ([fe80::3c56:2e9f:2454:cd41]) by DM8PR11MB5592.namprd11.prod.outlook.com
- ([fe80::3c56:2e9f:2454:cd41%3]) with mapi id 15.20.6886.034; Tue, 17 Oct 2023
- 22:06:04 +0000
-From:   "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
-To:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>
-CC:     "srinivas.pandruvada@linux.intel.com" 
-        <srinivas.pandruvada@linux.intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Subject: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
- 6.7-rc1
-Thread-Topic: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
- 6.7-rc1
-Thread-Index: AQHaAUYfe+/F/2fStEeBusHyNzLFgw==
-Date:   Tue, 17 Oct 2023 22:06:04 +0000
-Message-ID: <8680ce83af5ed5268bb05d87c579a42a1eeb97b4.camel@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.48.4 (3.48.4-1.fc38) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR11MB5592:EE_|MW5PR11MB5788:EE_
-x-ms-office365-filtering-correlation-id: 3fe0e18d-d88b-4b0a-3389-08dbcf5d41db
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CmIZGfRdl+4G/1o5XiCe/XtYv4WfbDTDmPPXpqwYLSo6oL6Yh6An2FmXBI8u0RKTpzDQ7wEctvaa0OHQrH9kWIQv+lkgGrUbrliuzfF0GYUygnqBvKpwe7wFXHgTej+c6Rba+RUQ1RbRdqHKlGefgVqRvpDJofr5Jgo0Jq2X7+HIg8tiL8Xx8rN2y/NijB4pHSdJ5I3RMuzuPTiN+UFrs33KLQfL7i+fAywspYr1CoHQU6GU+TK+vlo9OwbKBptdoJyVm1WmbzYJw6cHrsEeHrbgg5M7tqqlT7YyAWm3wbh6+po54meAWOfEp4hDHlgB5wPf2s6Ou03XJwRLxH8MsnWgMrpGTDO5d5/rP5wRBVtQjYWZsCKWvWOB3SSvqKZg8sc6ZvjFJiuOEOHnMjX27tfC+Qu6NSmDyvhhSGnpqmW9Obf+Ma3/l5BektHIPECF4LDJe3ijih8HIjHsPKEu2pZX+SJ0oAywcVPotihiJNqNv/EwWokjXQWvlDkDy4vSbZ1IX2viL0CiHmdRl0hcS3fJChpbO2hC08lMKr06lr/2AidF2hr7NpqD3D+KlKcFg/ZhzkYp/JLv8osFYo3SLqPdfJhjne8n5rDSP45AA9Oe82COfsVN6BUDYZJAepGYMS1u+kiHJL7vKa+5Ap2Gkw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5592.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(39860400002)(366004)(396003)(136003)(230922051799003)(64100799003)(186009)(1800799009)(451199024)(6506007)(83380400001)(122000001)(26005)(82960400001)(6512007)(38070700005)(38100700002)(4001150100001)(2906002)(86362001)(8936002)(6486002)(4326008)(8676002)(71200400001)(66476007)(36756003)(110136005)(54906003)(76116006)(316002)(66946007)(66446008)(64756008)(66556008)(91956017)(41300700001)(5660300002)(2616005)(478600001)(966005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NGhQSmd3bEZjY1I4QjhDQzZXY2tJYkRqdVRQNjMwSFJQQTdvY3l2Z3FTMGVF?=
- =?utf-8?B?N2lCclZrMXBpNkljMlN2b2Z2Q010YVBhZlMyZ1RmQUMzdjVIU3pKeWJ6NHhY?=
- =?utf-8?B?NDdrVE4xYURRL2xQNzZ0QWZYcFF5RkNkUVliTGVETm5Wc3dHQVVGeEIyVUZh?=
- =?utf-8?B?Y0Y3U1g2eVUrWExRRjRjNUc1R3hISm93NENYbVoxVzE3cEFFODNzUTZHQkFD?=
- =?utf-8?B?RXpxUmlOY0hPT1kySk1BMHRGdFR1d1IvWnpXOVhjVVlQb2tSU1RKaWJMRThV?=
- =?utf-8?B?d1plVndwbk95WHhCYVJaVUluYjY2aGZYeUVpM0FydnNRVUNGSVJ1cUZUbGM3?=
- =?utf-8?B?L0laSElwRkhDOVNFcktCeWlUcDBtd2hlVCtYcDBlZGsyMHZuQ2MzVDB5SUww?=
- =?utf-8?B?cElEQXBWeUdVcHQxcjFiODNMQmR5czViMkFuNXdjOHYyVUluQnFhcm9GTUhY?=
- =?utf-8?B?Qm1IN1BzZXRpUmk2MEtBc3dodnlPeDE2WDd2NzFONEhjNzR4WEJ3bnhVeVlh?=
- =?utf-8?B?QVVSSURlTUljUVJscnI1Z1pTSG1ZcEliQWIxYXRvS2VDMGxNTGkxdnhEM2VV?=
- =?utf-8?B?emZJUG9LQWo4Vll6ZTFPdWluYUwzRC8xUUdLMTBTdCtrOVZzYVArVitaSDJh?=
- =?utf-8?B?Nzd2b3pwcUlnam5OODVvRUR6akNXNWVvNVN2NHordHdtYncyeTdsTjNycGVx?=
- =?utf-8?B?TDMzUHlkZ3ZaM0YrQlJTOGk5RWUrNjFzVDMvTG1OZ0ltOGtCbHNSSGxqenIv?=
- =?utf-8?B?OXJ6ZXREVXB5ckd5Zndjb1FWamhMR0lXcHBoTXFBcTFtTlduelFPRXl0eWZE?=
- =?utf-8?B?eXJNTWZMcnA0Qlp4VWtDRXd6NlNCd2xVOHdqNm84MmpPN09pcTZmaDB6b3ds?=
- =?utf-8?B?UjB2SU5nQytTbDZZY05yRUQ1NTVVT2pmNGxJQWRCdTZmRXo1TUpmbnpJN0tP?=
- =?utf-8?B?UFl3TERNYzV1U3dLSWVNNE40aHgxS3hhOEsvc2M5a1A5QkljZmZJRndMMDF6?=
- =?utf-8?B?QWhjekNLWk9WakdybE93bFluMVZyWllIYTJmeVVGei9vNGE5THRCdlVKRHk1?=
- =?utf-8?B?YkF4dDFXcUJIc2luQ1hDNjZCM3c0RmdsUmVvZDk4bXJTb2UranN2bDVTQ21i?=
- =?utf-8?B?QUJleHZXTmZQNGVVdmlXOVJCZmlqelBuUHB1cmR1aGNObUNWY1NmSnp5VjBD?=
- =?utf-8?B?VmhYU0tzTzhGeERZbmFBakt5N25LL1RiTGcxbUo3eUs2ZWZlcGlWckNxUWlv?=
- =?utf-8?B?QzkzWkhTcU1jY3U3emRtcjY3ekkxckhyM3FxdkxXZDd2YmpqRVBRVCt0QU5k?=
- =?utf-8?B?eGhuZG82bTJCMy9LYklnRHgzdStDS1RQU0liSVVEKzNFYzliYVRRb1VlWGh5?=
- =?utf-8?B?Rm5QSVlDbXZBdjJreTJRbGRSRGRReEQva0NCU3FUNm0vNytJbERzMGhlOU5E?=
- =?utf-8?B?RHE3T1Z5OVlRUFJyellyR280WFhGSEhBQ2cxU2NMbjRyOWFCc1ZUczRVcEdn?=
- =?utf-8?B?ZEZOS0RPeDUxck55alFJc1dUeGRVNWx5NEs5WEVkdzdBK09pSklxS2tGejI4?=
- =?utf-8?B?WkJLU1VPV1Rnd0pKTDlua1NzWUlrU25jRDZrTUtORTlHeTFYV3UzeHhXUHNm?=
- =?utf-8?B?MmFoUko3Mzk1NjZScVNid2xPUU1FNjhzL3Y0M0MwREtGMGlrQ3BSNk1YcXhS?=
- =?utf-8?B?dG05bzJacmp0M2YvQTNWVVFrTVNZTTA5UUdZUE5WRmZUN1RoV1JneTkwS3Jh?=
- =?utf-8?B?cUMvUEVGNDBGbzY3V21aNHVTMXh0ME5nL01mVnJXcmZwRGpjMHUreHd2SXh3?=
- =?utf-8?B?akxDTWVtcnczVEZ2bWJtWWtmSllSWXhKV01hYWhkczJHT3FMWFB6c1RBWlVQ?=
- =?utf-8?B?VG5kZ1NvcVJ4NGMxV2R2RzZBemU1czdKR2tpdk93WXkzWnE4dzM2L0daTEVo?=
- =?utf-8?B?YS81UkRGbHFzZzV5SmhQdzZMTkoyZndBeEJ0U2VGM0NXNk1NSjRwWmJtcHE5?=
- =?utf-8?B?S2F5Nzh6eCtFNThKN0JBTnZkb21MbDY0MlJWZTlSU0xseXFBS0RIaFdoZjRO?=
- =?utf-8?B?OGk3UWErRlcyMGh6ZHNIMG04RTdkWHBZc1dSeVE2ZlFpeE56UXloWG5PU1Vv?=
- =?utf-8?B?RGwyU213UTJ5MlpYNFlVejFZbVhuejR6UkJyTFBmSVk0NnZQMWVVK05DMUtU?=
- =?utf-8?Q?he2T3jWVwu28uoUbhsVj+SQ=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D66F7C5C42239D46AE7831CCC596D6BD@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 17 Oct 2023 20:19:11 -0400
+X-Greylist: delayed 91 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 17 Oct 2023 17:19:05 PDT
+Received: from omta37.uswest2.a.cloudfilter.net (omta37.uswest2.a.cloudfilter.net [35.89.44.36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FC259F
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Oct 2023 17:19:05 -0700 (PDT)
+Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
+        by cmsmtp with ESMTPS
+        id sX4VqqOKE2A3ssuFiqg8QQ; Wed, 18 Oct 2023 00:17:34 +0000
+Received: from shared083.arvixe.com ([143.95.229.40])
+        by cmsmtp with ESMTPS
+        id suFhq7Ht324gKsuFiq9qNO; Wed, 18 Oct 2023 00:17:34 +0000
+X-Authority-Analysis: v=2.4 cv=fOQqYLWe c=1 sm=1 tr=0 ts=652f241e
+ a=GmS1SBToaRoMP0YkDtvSoA==:117 a=GmS1SBToaRoMP0YkDtvSoA==:17
+ a=bhdUkHdE2iEA:10 a=--C6PtRGR58A:10 a=Br9LfDWDAAAA:8 a=Qd5ZInFqQxoc_DCkrDoA:9
+ a=7xhl_xkYUFzfw9z2:21 a=Zk8DA_qPyZ6MZGUn:21 a=QEXdDO2ut3YA:10
+ a=TRW-o2S9CEoA:10 a=OsUonXv-ptgA:10 a=jRPC9tqfqjmi2Q9XY2UA:9
+ a=CDSaX9IuIzn3pvfP:21 a=KRYhrpjcpIRdb_oiJp4A:9 a=gR_RJRYUad_6_ruzA8cR:22
+Received: from [143.95.229.40] (port=30246 helo=shared083.arvixe.com)
+        by shared083.arvixe.com with esmtpa (Exim 4.96.1)
+        (envelope-from <me@donjajo.com>)
+        id 1qsuFh-003rHN-0d;
+        Tue, 17 Oct 2023 19:17:33 -0500
+Received: from [41.66.218.188]
+ by shared083.arvixe.com
+ with HTTP (HTTP/1.1 POST); Tue, 17 Oct 2023 19:17:32 -0500
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5592.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3fe0e18d-d88b-4b0a-3389-08dbcf5d41db
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2023 22:06:04.6640
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7NjOc6KnEfQJeqQ1mE8cRPsOQg9Z/twyYJ09qpUn1uHwD7auY4pUoXj3JD+3vBoQcASYu7Iyy0ShD/sSCBrIrN5IYa/nTMfSeR46KY8BS3k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR11MB5788
-X-OriginatorOrg: intel.com
+Date:   Tue, 17 Oct 2023 19:17:32 -0500
+From:   me@donjajo.com
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvin?= =?UTF-8?Q?en?= 
+        <ilpo.jarvinen@linux.intel.com>, Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: PROBLEM: asus_nb_wmi sends KEY_BRIGHTNESSDOWN on pressing CAPS
+ Lock and PrntScrn on Zenbook S 13 UX5304VA
+In-Reply-To: <938c83c4-973d-ac23-bfb6-53c63c153d81@redhat.com>
+References: <a2c441fe-457e-44cf-a146-0ecd86b037cf@donjajo.com>
+ <132feb67-c147-7ee6-b337-385e11786ec6@redhat.com>
+ <146cb960-406b-4456-94ce-ad6ed3f330ad@donjajo.com>
+ <d70f7d35-6458-437d-f68f-47291ce74a1e@redhat.com>
+ <90a7309e-4a76-4dff-8259-9975dd3ed8b1@donjajo.com>
+ <938c83c4-973d-ac23-bfb6-53c63c153d81@redhat.com>
+User-Agent: Roundcube Webmail/1.6.0
+Message-ID: <6c97dc9e9cfea6e18c59d717e5973255@donjajo.com>
+X-Sender: me@donjajo.com
+Content-Type: multipart/mixed;
+ boundary="=_520c7d88f4c6099c929b99f4c94291d9"
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - shared083.arvixe.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - donjajo.com
+X-BWhitelist: no
+X-Source-IP: 143.95.229.40
+X-Source-L: No
+X-Exim-ID: 1qsuFh-003rHN-0d
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (shared083.arvixe.com) [143.95.229.40]:30246
+X-Source-Auth: me@donjajo.com
+X-Email-Count: 6
+X-Org:  HG=asoshared_arvixe;ORG=aso;
+X-Source-Cap: b3h5aG9scmU7b3h5aG9scmU7c2hhcmVkMDgzLmFydml4ZS5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfFUIGd+xoEKC+rTU9CMGOifs3hsVakUW7GaUhVy40RUdXWf+QKzZxOy+jJzgHy/ogl5TZFxH7eGRMNeadCvsPGSyTnDm4HkEneYmr1xP1okRsci1Ixo1
+ xyH6TmOPYiTBfyqCNXW4jG7fR02oizvjPcxhRGPpPx7CplBA3D6KjAyxtKqLvpTNjCq4GGlUhdQ2yjvoO3m5gIdkyFnNpEFbBC4=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-SGkgSGFucywNCg0KUHVsbCByZXF1ZXN0IGZvciBJbnRlbCBTcGVlZCBTZWxlY3QgdmVyc2lvbiB2
-MS4xOC4NCg0KU3VtbWFyeSBvZiBjaGFuZ2VzOg0KLSBDUFUgMCBob3RwbHVnIHN1cHBvcnQgaXMg
-ZGVwcmVjYXRlZCBpbiB0aGUgdXBzdHJlYW0ga2VybmVsLiBUaGlzDQpjYXVzZXMgZmFpbHVyZXMg
-ZHVyaW5nIGxldmVsIGNoYW5nZSBmb3Igc2V2ZXJhbCBjdXN0b21lcnMuIFNvLCBhZGQgYQ0Kc2ls
-ZW50IHdvcmthcm91bmQgdG8gdXNlIENncm91cCB2Miwgd2l0aG91dCB1c2VyIG9wdGlvbi4NCi0g
-SW5jcmVhc2UgbnVtYmVyIG9mIENQVXMgaW4gYSBzaW5nbGUgcmVxdWVzdA0KLSBGaXggdHVyYm8g
-bW9kZSBlbmFibGUvZGlzYWJsZSBpc3N1ZQ0KLSBFcnJvciBoYW5kbGluZyBmb3IgaW52YWxpZCBp
-bnB1dCBvcHRpb25zDQoNClRoZSBiYXNlIGJyYW5jaCBmb3IgdGhlc2UgY2hhbmdlcw0KaHR0cHM6
-Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvcGR4ODYvcGxhdGZvcm0t
-ZHJpdmVycy14ODYuZ2l0DQpicmFuY2g6IHJldmlldy1oYW5zDQoNCg0KVGhlIGZvbGxvd2luZyBj
-aGFuZ2VzIHNpbmNlIGNvbW1pdA0KNmNiOWM4NjM3YzY3MjU4NGQ0OTE1NTU5MDAxMDIwMjM3ODQw
-YWNiYToNCg0KICBwbGF0Zm9ybS94ODY6IHRoaW5rLWxtaTogVXNlIHN0cnJlcGxhY2UoKSB0byBy
-ZXBsYWNlIGEgY2hhcmFjdGVyIGJ5DQpudWwgKDIwMjMtMDktMjEgMTg6MzE6MTkgKzAyMDApDQoN
-CmFyZSBhdmFpbGFibGUgaW4gdGhlIEdpdCByZXBvc2l0b3J5IGF0Og0KDQogIGh0dHBzOi8vZ2l0
-aHViLmNvbS9zcGFuZHJ1dmFkYS9saW51eC1rZXJuZWwuZ2l0IGludGVsLXNzdA0KDQpmb3IgeW91
-IHRvIGZldGNoIGNoYW5nZXMgdXAgdG8NCmE1OTBlZDYyMjY5YTA0OWE3MjQ4NGNlNjE3ZmUyZjM0
-ZTJkYTY2Y2Y6DQoNCiAgdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVjdDogdjEuMTgg
-cmVsZWFzZSAoMjAyMy0xMC0xNw0KMTQ6NTQ6NDQgLTA3MDApDQoNCi0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NClNyaW5pdmFz
-IFBhbmRydXZhZGEgKDgpOg0KICAgICAgdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVj
-dDogU2FuaXRpemUgaW50ZWdlciBhcmd1bWVudHMNCiAgICAgIHRvb2xzL3Bvd2VyL3g4Ni9pbnRl
-bC1zcGVlZC1zZWxlY3Q6IFVwZGF0ZSBoZWxwIGZvciBUUkwNCiAgICAgIHRvb2xzL3Bvd2VyL3g4
-Ni9pbnRlbC1zcGVlZC1zZWxlY3Q6IHR1cmJvLW1vZGUgZW5hYmxlIGRpc2FibGUNCnN3YXBwZWQN
-CiAgICAgIHRvb2xzL3Bvd2VyL3g4Ni9pbnRlbC1zcGVlZC1zZWxlY3Q6IE5vIFRSTCBmb3Igbm9u
-IGNvbXB1dGUNCmRvbWFpbnMNCiAgICAgIHRvb2xzL3Bvd2VyL3g4Ni9pbnRlbC1zcGVlZC1zZWxl
-Y3Q6IERpc3BsYXkgZXJyb3IgZm9yIGNvcmUtcG93ZXINCnN1cHBvcnQNCiAgICAgIHRvb2xzL3Bv
-d2VyL3g4Ni9pbnRlbC1zcGVlZC1zZWxlY3Q6IEluY3JlYXNlIG1heCBDUFVzIGluIG9uZQ0KcmVx
-dWVzdA0KICAgICAgdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVjdDogVXNlIGNncm91
-cCBpc29sYXRlIGZvciBDUFUgMA0KICAgICAgdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNl
-bGVjdDogdjEuMTggcmVsZWFzZQ0KDQogdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVj
-dC9pc3N0LWNvbmZpZy5jIHwgMjEzDQorKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-LS0tLS0tLS0tLQ0KIHRvb2xzL3Bvd2VyL3g4Ni9pbnRlbC1zcGVlZC1zZWxlY3QvaXNzdC1kYWVt
-b24uYyB8ICAgMyArLQ0KIHRvb2xzL3Bvd2VyL3g4Ni9pbnRlbC1zcGVlZC1zZWxlY3QvaXNzdC5o
-ICAgICAgICB8ICAgMyArLQ0KIDMgZmlsZXMgY2hhbmdlZCwgMTY4IGluc2VydGlvbnMoKyksIDUx
-IGRlbGV0aW9ucygtKQ0KDQpUaGFua3MsDQpTcmluaXZhcw0K
+--=_520c7d88f4c6099c929b99f4c94291d9
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+
+Hi Hans,
+
+I hope you are feeling better now.
+Thank you so much for your support in resolving this.
+
+> I assume that the first "BACKLIGHT BUTTON" is the backlight DOWN button 
+> ?
+Yes. Correct.
+
+
+> 2. Can you please run:
+> 
+> sudo evtest and then select the "ACPI video bus" (or something
+> similar) device and see if that reports brightness up/down
+> keypresses?  And then do the same thing for the
+> "Asus WMI hotkeys" device ? I expect the Asus WMI hotkeys
+> device to only report brightness up keypresses (after my
+> hwdb "fix") while I expect brightness-up events to get
+> reported twice, by both the "ACPI video bus" device and
+> the "Asus WMI hotkeys" device.
+Done and attached.
+
+> Can you confirm this? This also means that brightness
+> up will take bigger steps (2 steps per keypress) then
+> brightness down, right ?
+I am not sure I understand what you mean here. But I have attached the 
+output here
+
+> 3. Please run:
+> 
+> sudo acpidump -o acpidump.txt
+> 
+> and send me a private email with acpidump.txt attached.
+Sent
+
+
+> 4. Please with the kernel with the debug patch press brightness-up / 
+> -down repeatedly,
+> I assume this does actually change the brightness ?
+Yes
+
+> Then look in dmesg and check that it consistently reports 0x2e
+> for brightness-down presses and 0x2f for brightness-up presses
+> independent of the brightness level being high or low when
+> pressing the key.  Please confirm this behaves as expected.
+Yes.brightness-down reports 0x2e while brightness-up reports 0x2f
+
+
+> 5.1 capslock and printscreen now lead to: "Unknown key code 0x.."
+> messages in dmesg.
+Yes, printscreen and caps lock now responds with:
+
+CAPS LOCK
+[  122.965660] asus_wmi: raw event code 0x2c
+[  122.965705] asus_wmi: Unknown key code 0x2c
+[  122.965730] asus_wmi: raw event code 0xffffffffffffffff
+
+PRTSCRN
+[  126.066419] asus_wmi: raw event code 0x2b
+[  126.066439] asus_wmi: Unknown key code 0x2b
+[  126.066451] asus_wmi: raw event code 0xffffffffffffffff
+
+
+> 5.2 running evtest on "Asus WMI hotkeys" shows brightness
+> up and down presses when pressing the brightness keys.
+Yes
+
+Event: time 1697586223.014528, type 4 (EV_MSC), code 4 (MSC_SCAN), value 
+2e
+Event: time 1697586223.014528, type 1 (EV_KEY), code 224 
+(KEY_BRIGHTNESSDOWN), value 1
+Event: time 1697586223.014528, -------------- SYN_REPORT ------------
+Event: time 1697586223.014547, type 1 (EV_KEY), code 224 
+(KEY_BRIGHTNESSDOWN), value 0
+Event: time 1697586223.014547, -------------- SYN_REPORT ------------
+Event: time 1697586223.714462, type 4 (EV_MSC), code 4 (MSC_SCAN), value 
+2f
+Event: time 1697586223.714462, type 1 (EV_KEY), code 225 
+(KEY_BRIGHTNESSUP), value 1
+Event: time 1697586223.714462, -------------- SYN_REPORT ------------
+Event: time 1697586223.714471, type 1 (EV_KEY), code 225 
+(KEY_BRIGHTNESSUP), value 0
+Event: time 1697586223.714471, -------------- SYN_REPORT ------------
+
+
+After applying your patch, it seems to have fixed the issue!
+
+On 2023-10-17 03:50, Hans de Goede wrote:
+> Hi James,
+> 
+> On 10/1/23 16:16, James John wrote:
+>> Hello Hans,
+>> 
+>> Thank you. I applied the patch and I have the inputs attached here.
+>> 
+>> After setting the hwdb filter, all the hot keys are still working 
+>> except that the LED notification light on Mute Hotkey (F9) is no 
+>> longer turning up on mute.
+>> 
+>> The Screen Capture, Disable Camera, and MyASUS buttons are not mapped 
+>> yet. I believe the Screen Capture button should map to PrntScrn 
+>> button, and MyASUS with Disable Camera unmapped, obviously. I also 
+>> have the codes in the attached log.
+>> 
+>> Screen Capture button is KEY_UNKNOWN to evtest.
+> 
+> So I missed the Screen Capture button so far.
+> I believe that the 0x2a code should be mapped to
+> KEY_SELECTIVE_SCREENSHOT (to differentiate it from
+> the printscreen key, this is also used on other laptops
+> for similar buttons).
+> 
+> I'm going to send out a RFC series of 3 patches,
+> the 2 patches which I send earlier + a patch to
+> add a mapping for this. I'll Cc you on this.
+> 
+> Please give this series a try (after removing the hwdb
+> change).
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> 
+> 
+>> On 01/10/2023 13:45, Hans de Goede wrote:
+>>> Hi James,
+>>> 
+>>> On 10/1/23 10:46, James John wrote:
+>>>> Hello Han,
+>>>> 
+>>>> Thank you very much for this detailed steps. I was able to reproduce 
+>>>> this with "evtest" and everything went okay.
+>>>> 
+>>>> After editing /lib/udev/hwdb.d/60-keyboarrd.hwdb as you specified, 
+>>>> the problem has been fixed, which I believe should revert on reboot?
+>>> No this will fix it until /lib/udev/hwdb.d/60-keyboarrd.hwdb gets 
+>>> overwritten by your
+>>> package-manager the next time the systemd packages get updated.
+>>> 
+>>>> This is the content of /sys/class/dmi/id/modalias
+>>>> 
+>>>> dmi:bvnAmericanMegatrendsInternational,LLC.:bvrUX5304VA.304:bd05/16/2023:br5.27:svnASUSTeKCOMPUTERINC.:pnZenbookS13UX5304VA_UX5304VA:pvr1.0:rvnASUSTeKCOMPUTERINC.:rnUX5304VA:rvr1.0:cvnASUSTeKCOMPUTERINC.:ct10:cvr1.0:sku:
+>>> Thanks.
+>>> 
+>>> Looking at:
+>>> https://bbs.archlinux.org/viewtopic.php?pid=2123716
+>>> 
+>>> I see that at least one other model Asus laptop is affected too. So 
+>>> rather then
+>>> adding a more specific hwdb rule for your model I would like to try 
+>>> and find
+>>> the root cause of these 0x20 event code events when pressing capslock
+>>> on your laptop.
+>>> 
+>>>> Yes, I built my kernel. I wish I could parse this and write a proper 
+>>>> quirk.
+>>> Good, I've written a small kernel patch to get to the bottom of this 
+>>> (attached)
+>>> can you please build a kernel with this. Then boot into this kernel 
+>>> and
+>>> then run dmesg -w
+>>> 
+>>> When you now press capslock you should see log lines show up which 
+>>> contain
+>>> "raw event code 0x..."
+>>> 
+>>> Please let me know what these lines show when pressing capslock.
+>>> 
+>>> Please also let me know what these lines show when pressing other
+>>> hotkeys which are handled by asus-nb-wmi (you can re-run "sudo 
+>>> evtest"
+>>> to check which keys that are).
+>>> 
+>>> I think the issue might be that the asus-wmi code is filtering out
+>>> the higher bits of the value, which causes some new events to
+>>> get mapped as just 0x20 instead of some-higher-bits + 0x20.
+>>> 
+>>> Also I'm wondering if everything else works as it should,
+>>> e.g. does changing the brightness with the brightness hotkeys
+>>> still work after setting up the hwdb filtering ?
+>>> 
+>>> And does the lid-switch (suspend the machine when the lid is closed)
+>>> work ?
+>>> 
+>>> 
+>>>> Also, I don't know if this is related; the hotkeys should be enabled 
+>>>> by default. Fn key should be for Function keys. But in the current 
+>>>> state, it is reversed.
+>>> This is laptop models specific and not really controlled by Linux,
+>>> sometimes you can change the default in the BIOS. Or sometimes you
+>>> can change the default by pressing Fn + Esc.
+>>> 
+>>> Regards,
+>>> 
+>>> Hans
+>>> 
+>>> 
+>>> 
+>>> 
+>>>> On 01/10/2023 09:28, Hans de Goede wrote:
+>>>>> Hi James,
+>>>>> 
+>>>>> On 10/1/23 10:11, James John wrote:
+>>>>>> Hello,
+>>>>>> 
+>>>>>> First of all, thank you very much for the work you do with 
+>>>>>> maintaining these drivers and supporting systems. It is not an 
+>>>>>> easy one.
+>>>>>> 
+>>>>>> I have debugged this bug down to the asus_nb_wmi module. When I 
+>>>>>> disable this module, the problem goes away, but then other hotkeys 
+>>>>>> are not recognized. Attached is a debug event from libinput, where 
+>>>>>> I pressed the capslock twice
+>>>>>> 
+>>>>>> I have tried to dabble around with asus-nb-wmi.c codes to see if I 
+>>>>>> could fix it by luck, by adding UX5304VA to `static const struct 
+>>>>>> dmi_system_id asus_quirks[]` but to no avail. And I have a very 
+>>>>>> little knowledge of what "quirks" are.
+>>>>>> 
+>>>>>> I have attached some information regarding my hardware and kernel. 
+>>>>>> I will be available to provide any more information that might be 
+>>>>>> needed to resolve this.
+>>>>>> 
+>>>>>> A related open thread: 
+>>>>>> https://bbs.archlinux.org/viewtopic.php?pid=2123716
+>>>>> First of all lets confirm that the KEY_BRIGHTNESSDOWN events are 
+>>>>> really coming from asus_nb_wmi.
+>>>>> 
+>>>>> Please install evtest and then run "sudo evtest" and then select 
+>>>>> the "Asus WMI hotkeys" device
+>>>>> by typing its number followed by enter.
+>>>>> 
+>>>>> After this reproduce the bug and see if the log shows 
+>>>>> KEY_BRIGHTNESSDOWN.
+>>>>> 
+>>>>> Since you said you tried playing around with the quirks, I assume 
+>>>>> you can build
+>>>>> your own kernel, please let me know if that is wrong.
+>>>>> 
+>>>>> If this confirms the KEY_BRIGHTNESSDOWN events are coming from the 
+>>>>> "Asus WMI hotkeys" device,
+>>>>> then please edit /lib/udev/hwdb.d/60-keyboard.hwdb
+>>>>> 
+>>>>> And search for "Asus WMI hotkeys", this should find this section:
+>>>>> 
+>>>>> evdev:name:Asus WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+>>>>> evdev:name:Eee PC WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+>>>>> evdev:name:Asus Laptop extra 
+>>>>> buttons:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+>>>>>    KEYBOARD_KEY_6b=f21                                    # 
+>>>>> Touchpad Toggle
+>>>>>    KEYBOARD_KEY_7c=f20                                    # Remap 
+>>>>> micmute to f20
+>>>>> 
+>>>>> Change this to:
+>>>>> 
+>>>>> evdev:name:Asus WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+>>>>> evdev:name:Eee PC WMI hotkeys:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+>>>>> evdev:name:Asus Laptop extra 
+>>>>> buttons:dmi:bvn*:bvr*:bd*:svnASUS*:pn*:*
+>>>>>    KEYBOARD_KEY_6b=f21                                    # 
+>>>>> Touchpad Toggle
+>>>>>    KEYBOARD_KEY_7c=f20                                    # Remap 
+>>>>> micmute to f20
+>>>>>    KEYBOARD_KEY_20=unknown
+>>>>> 
+>>>>> And then run "sudo udevadm hwdb --update" followed by "sudo udevadm 
+>>>>> trigger",
+>>>>> that should filter out the spurious keypresses.
+>>>>> 
+>>>>> If that helps, please run:
+>>>>> 
+>>>>> cat /sys/class/dmi/id/modalias
+>>>>> 
+>>>>> So that a proper DMI based quirk to only to the filtering on your 
+>>>>> model
+>>>>> can be written.
+>>>>> 
+>>>>> Regards,
+>>>>> 
+>>>>> Hans
+>>>>> 
+
+--=_520c7d88f4c6099c929b99f4c94291d9
+Content-Transfer-Encoding: base64
+Content-Type: text/plain;
+ name=evtest-asus-wmi.txt
+Content-Disposition: attachment;
+ filename=evtest-asus-wmi.txt;
+ size=3047
+
+SW5wdXQgZHJpdmVyIHZlcnNpb24gaXMgMS4wLjEKSW5wdXQgZGV2aWNlIElEOiBidXMgMHgxOSB2
+ZW5kb3IgMHgwIHByb2R1Y3QgMHgwIHZlcnNpb24gMHgwCklucHV0IGRldmljZSBuYW1lOiAiQXN1
+cyBXTUkgaG90a2V5cyIKU3VwcG9ydGVkIGV2ZW50czoKICBFdmVudCB0eXBlIDAgKEVWX1NZTikK
+ICBFdmVudCB0eXBlIDEgKEVWX0tFWSkKICAgIEV2ZW50IGNvZGUgMTEzIChLRVlfTVVURSkKICAg
+IEV2ZW50IGNvZGUgMTE0IChLRVlfVk9MVU1FRE9XTikKICAgIEV2ZW50IGNvZGUgMTE1IChLRVlf
+Vk9MVU1FVVApCiAgICBFdmVudCBjb2RlIDE0MCAoS0VZX0NBTEMpCiAgICBFdmVudCBjb2RlIDE0
+OCAoS0VZX1BST0cxKQogICAgRXZlbnQgY29kZSAxNDkgKEtFWV9QUk9HMikKICAgIEV2ZW50IGNv
+ZGUgMTUwIChLRVlfV1dXKQogICAgRXZlbnQgY29kZSAxNTIgKEtFWV9TQ1JFRU5MT0NLKQogICAg
+RXZlbnQgY29kZSAxNjMgKEtFWV9ORVhUU09ORykKICAgIEV2ZW50IGNvZGUgMTY0IChLRVlfUExB
+WVBBVVNFKQogICAgRXZlbnQgY29kZSAxNjUgKEtFWV9QUkVWSU9VU1NPTkcpCiAgICBFdmVudCBj
+b2RlIDE2NiAoS0VZX1NUT1BDRCkKICAgIEV2ZW50IGNvZGUgMTY5IChLRVlfUEhPTkUpCiAgICBF
+dmVudCBjb2RlIDE4MyAoS0VZX0YxMykKICAgIEV2ZW50IGNvZGUgMTg1IChLRVlfRjE1KQogICAg
+RXZlbnQgY29kZSAxOTAgKEtFWV9GMjApCiAgICBFdmVudCBjb2RlIDE5MSAoS0VZX0YyMSkKICAg
+IEV2ZW50IGNvZGUgMjAyIChLRVlfUFJPRzMpCiAgICBFdmVudCBjb2RlIDIwMyAoS0VZX1BST0c0
+KQogICAgRXZlbnQgY29kZSAyMTIgKEtFWV9DQU1FUkEpCiAgICBFdmVudCBjb2RlIDIxNSAoS0VZ
+X0VNQUlMKQogICAgRXZlbnQgY29kZSAyMjUgKEtFWV9CUklHSFRORVNTVVApCiAgICBFdmVudCBj
+b2RlIDIyNiAoS0VZX01FRElBKQogICAgRXZlbnQgY29kZSAyMjcgKEtFWV9TV0lUQ0hWSURFT01P
+REUpCiAgICBFdmVudCBjb2RlIDIyOSAoS0VZX0tCRElMTFVNRE9XTikKICAgIEV2ZW50IGNvZGUg
+MjMwIChLRVlfS0JESUxMVU1VUCkKICAgIEV2ZW50IGNvZGUgMjM3IChLRVlfQkxVRVRPT1RIKQog
+ICAgRXZlbnQgY29kZSAyMzggKEtFWV9XTEFOKQogICAgRXZlbnQgY29kZSAyNDAgKEtFWV9VTktO
+T1dOKQogICAgRXZlbnQgY29kZSAyNDcgKEtFWV9SRktJTEwpCiAgICBFdmVudCBjb2RlIDQ3MCAo
+S0VZX0ZOX0Y1KQogICAgRXZlbnQgY29kZSA1MzEgKEtFWV9UT1VDSFBBRF9PTikKICAgIEV2ZW50
+IGNvZGUgNTYwIChLRVlfQUxTX1RPR0dMRSkKICBFdmVudCB0eXBlIDQgKEVWX01TQykKICAgIEV2
+ZW50IGNvZGUgNCAoTVNDX1NDQU4pCktleSByZXBlYXQgaGFuZGxpbmc6CiAgUmVwZWF0IHR5cGUg
+MjAgKEVWX1JFUCkKICAgIFJlcGVhdCBjb2RlIDAgKFJFUF9ERUxBWSkKICAgICAgVmFsdWUgICAg
+MjUwCiAgICBSZXBlYXQgY29kZSAxIChSRVBfUEVSSU9EKQogICAgICBWYWx1ZSAgICAgMzMKUHJv
+cGVydGllczoKVGVzdGluZyAuLi4gKGludGVycnVwdCB0byBleGl0KQpFdmVudDogdGltZSAxNjk3
+NTgzMjM2Ljk3NTY2MSwgdHlwZSA0IChFVl9NU0MpLCBjb2RlIDQgKE1TQ19TQ0FOKSwgdmFsdWUg
+MjAKRXZlbnQ6IHRpbWUgMTY5NzU4MzIzNi45NzU2NjEsIHR5cGUgMSAoRVZfS0VZKSwgY29kZSAy
+NDAgKEtFWV9VTktOT1dOKSwgdmFsdWUgMQpFdmVudDogdGltZSAxNjk3NTgzMjM2Ljk3NTY2MSwg
+LS0tLS0tLS0tLS0tLS0gU1lOX1JFUE9SVCAtLS0tLS0tLS0tLS0KRXZlbnQ6IHRpbWUgMTY5NzU4
+MzIzNi45NzU2NzQsIHR5cGUgMSAoRVZfS0VZKSwgY29kZSAyNDAgKEtFWV9VTktOT1dOKSwgdmFs
+dWUgMApFdmVudDogdGltZSAxNjk3NTgzMjM2Ljk3NTY3NCwgLS0tLS0tLS0tLS0tLS0gU1lOX1JF
+UE9SVCAtLS0tLS0tLS0tLS0KRXZlbnQ6IHRpbWUgMTY5NzU4MzIzOC40MTMwMTgsIHR5cGUgNCAo
+RVZfTVNDKSwgY29kZSA0IChNU0NfU0NBTiksIHZhbHVlIDJmCkV2ZW50OiB0aW1lIDE2OTc1ODMy
+MzguNDEzMDE4LCB0eXBlIDEgKEVWX0tFWSksIGNvZGUgMjI1IChLRVlfQlJJR0hUTkVTU1VQKSwg
+dmFsdWUgMQpFdmVudDogdGltZSAxNjk3NTgzMjM4LjQxMzAxOCwgLS0tLS0tLS0tLS0tLS0gU1lO
+X1JFUE9SVCAtLS0tLS0tLS0tLS0KRXZlbnQ6IHRpbWUgMTY5NzU4MzIzOC40MTMwMzYsIHR5cGUg
+MSAoRVZfS0VZKSwgY29kZSAyMjUgKEtFWV9CUklHSFRORVNTVVApLCB2YWx1ZSAwCkV2ZW50OiB0
+aW1lIDE2OTc1ODMyMzguNDEzMDM2LCAtLS0tLS0tLS0tLS0tLSBTWU5fUkVQT1JUIC0tLS0tLS0t
+LS0tLQpFdmVudDogdGltZSAxNjk3NTgzMjM5LjQ3MjIyNiwgdHlwZSA0IChFVl9NU0MpLCBjb2Rl
+IDQgKE1TQ19TQ0FOKSwgdmFsdWUgMjAKRXZlbnQ6IHRpbWUgMTY5NzU4MzIzOS40NzIyMjYsIHR5
+cGUgMSAoRVZfS0VZKSwgY29kZSAyNDAgKEtFWV9VTktOT1dOKSwgdmFsdWUgMQpFdmVudDogdGlt
+ZSAxNjk3NTgzMjM5LjQ3MjIyNiwgLS0tLS0tLS0tLS0tLS0gU1lOX1JFUE9SVCAtLS0tLS0tLS0t
+LS0KRXZlbnQ6IHRpbWUgMTY5NzU4MzIzOS40NzIyMzcsIHR5cGUgMSAoRVZfS0VZKSwgY29kZSAy
+NDAgKEtFWV9VTktOT1dOKSwgdmFsdWUgMApFdmVudDogdGltZSAxNjk3NTgzMjM5LjQ3MjIzNywg
+LS0tLS0tLS0tLS0tLS0gU1lOX1JFUE9SVCAtLS0tLS0tLS0tLS0KRXZlbnQ6IHRpbWUgMTY5NzU4
+MzI0MS41OTk1MDAsIHR5cGUgNCAoRVZfTVNDKSwgY29kZSA0IChNU0NfU0NBTiksIHZhbHVlIDJm
+CkV2ZW50OiB0aW1lIDE2OTc1ODMyNDEuNTk5NTAwLCB0eXBlIDEgKEVWX0tFWSksIGNvZGUgMjI1
+IChLRVlfQlJJR0hUTkVTU1VQKSwgdmFsdWUgMQpFdmVudDogdGltZSAxNjk3NTgzMjQxLjU5OTUw
+MCwgLS0tLS0tLS0tLS0tLS0gU1lOX1JFUE9SVCAtLS0tLS0tLS0tLS0KRXZlbnQ6IHRpbWUgMTY5
+NzU4MzI0MS41OTk1MTEsIHR5cGUgMSAoRVZfS0VZKSwgY29kZSAyMjUgKEtFWV9CUklHSFRORVNT
+VVApLCB2YWx1ZSAwCkV2ZW50OiB0aW1lIDE2OTc1ODMyNDEuNTk5NTExLCAtLS0tLS0tLS0tLS0t
+LSBTWU5fUkVQT1JUIC0tLS0tLS0tLS0tLQo=
+--=_520c7d88f4c6099c929b99f4c94291d9
+Content-Transfer-Encoding: base64
+Content-Type: text/plain;
+ name=evtest-video-bus.txt
+Content-Disposition: attachment;
+ filename=evtest-video-bus.txt;
+ size=1791
+
+SW5wdXQgZHJpdmVyIHZlcnNpb24gaXMgMS4wLjEKSW5wdXQgZGV2aWNlIElEOiBidXMgMHgxOSB2
+ZW5kb3IgMHgwIHByb2R1Y3QgMHg2IHZlcnNpb24gMHgwCklucHV0IGRldmljZSBuYW1lOiAiVmlk
+ZW8gQnVzIgpTdXBwb3J0ZWQgZXZlbnRzOgogIEV2ZW50IHR5cGUgMCAoRVZfU1lOKQogIEV2ZW50
+IHR5cGUgMSAoRVZfS0VZKQogICAgRXZlbnQgY29kZSAyMjQgKEtFWV9CUklHSFRORVNTRE9XTikK
+ICAgIEV2ZW50IGNvZGUgMjI1IChLRVlfQlJJR0hUTkVTU1VQKQogICAgRXZlbnQgY29kZSAyMjcg
+KEtFWV9TV0lUQ0hWSURFT01PREUpCiAgICBFdmVudCBjb2RlIDI0MSAoS0VZX1ZJREVPX05FWFQp
+CiAgICBFdmVudCBjb2RlIDI0MiAoS0VZX1ZJREVPX1BSRVYpCiAgICBFdmVudCBjb2RlIDI0MyAo
+S0VZX0JSSUdIVE5FU1NfQ1lDTEUpCiAgICBFdmVudCBjb2RlIDI0NCAoS0VZX0JSSUdIVE5FU1Nf
+WkVSTykKICAgIEV2ZW50IGNvZGUgMjQ1IChLRVlfRElTUExBWV9PRkYpClByb3BlcnRpZXM6ClRl
+c3RpbmcgLi4uIChpbnRlcnJ1cHQgdG8gZXhpdCkKRXZlbnQ6IHRpbWUgMTY5NzU4MzA2MS42OTUy
+ODUsIHR5cGUgMSAoRVZfS0VZKSwgY29kZSAyMjQgKEtFWV9CUklHSFRORVNTRE9XTiksIHZhbHVl
+IDEKRXZlbnQ6IHRpbWUgMTY5NzU4MzA2MS42OTUyODUsIC0tLS0tLS0tLS0tLS0tIFNZTl9SRVBP
+UlQgLS0tLS0tLS0tLS0tCkV2ZW50OiB0aW1lIDE2OTc1ODMwNjEuNjk1MzAzLCB0eXBlIDEgKEVW
+X0tFWSksIGNvZGUgMjI0IChLRVlfQlJJR0hUTkVTU0RPV04pLCB2YWx1ZSAwCkV2ZW50OiB0aW1l
+IDE2OTc1ODMwNjEuNjk1MzAzLCAtLS0tLS0tLS0tLS0tLSBTWU5fUkVQT1JUIC0tLS0tLS0tLS0t
+LQpFdmVudDogdGltZSAxNjk3NTgzMDYyLjkzNTIzMywgdHlwZSAxIChFVl9LRVkpLCBjb2RlIDIy
+NSAoS0VZX0JSSUdIVE5FU1NVUCksIHZhbHVlIDEKRXZlbnQ6IHRpbWUgMTY5NzU4MzA2Mi45MzUy
+MzMsIC0tLS0tLS0tLS0tLS0tIFNZTl9SRVBPUlQgLS0tLS0tLS0tLS0tCkV2ZW50OiB0aW1lIDE2
+OTc1ODMwNjIuOTM1MjQ4LCB0eXBlIDEgKEVWX0tFWSksIGNvZGUgMjI1IChLRVlfQlJJR0hUTkVT
+U1VQKSwgdmFsdWUgMApFdmVudDogdGltZSAxNjk3NTgzMDYyLjkzNTI0OCwgLS0tLS0tLS0tLS0t
+LS0gU1lOX1JFUE9SVCAtLS0tLS0tLS0tLS0KRXZlbnQ6IHRpbWUgMTY5NzU4MzA2NS4xNjkzNDQs
+IHR5cGUgMSAoRVZfS0VZKSwgY29kZSAyMjQgKEtFWV9CUklHSFRORVNTRE9XTiksIHZhbHVlIDEK
+RXZlbnQ6IHRpbWUgMTY5NzU4MzA2NS4xNjkzNDQsIC0tLS0tLS0tLS0tLS0tIFNZTl9SRVBPUlQg
+LS0tLS0tLS0tLS0tCkV2ZW50OiB0aW1lIDE2OTc1ODMwNjUuMTY5MzY0LCB0eXBlIDEgKEVWX0tF
+WSksIGNvZGUgMjI0IChLRVlfQlJJR0hUTkVTU0RPV04pLCB2YWx1ZSAwCkV2ZW50OiB0aW1lIDE2
+OTc1ODMwNjUuMTY5MzY0LCAtLS0tLS0tLS0tLS0tLSBTWU5fUkVQT1JUIC0tLS0tLS0tLS0tLQpF
+dmVudDogdGltZSAxNjk3NTgzMDY1Ljc0ODgzMywgdHlwZSAxIChFVl9LRVkpLCBjb2RlIDIyNSAo
+S0VZX0JSSUdIVE5FU1NVUCksIHZhbHVlIDEKRXZlbnQ6IHRpbWUgMTY5NzU4MzA2NS43NDg4MzMs
+IC0tLS0tLS0tLS0tLS0tIFNZTl9SRVBPUlQgLS0tLS0tLS0tLS0tCkV2ZW50OiB0aW1lIDE2OTc1
+ODMwNjUuNzQ4ODYzLCB0eXBlIDEgKEVWX0tFWSksIGNvZGUgMjI1IChLRVlfQlJJR0hUTkVTU1VQ
+KSwgdmFsdWUgMApFdmVudDogdGltZSAxNjk3NTgzMDY1Ljc0ODg2MywgLS0tLS0tLS0tLS0tLS0g
+U1lOX1JFUE9SVCAtLS0tLS0tLS0tLS0K
+--=_520c7d88f4c6099c929b99f4c94291d9--
