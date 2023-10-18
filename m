@@ -2,52 +2,52 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2132ECDB484
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Oct 2023 23:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB82CDB486
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Oct 2023 23:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231991AbjJRXQa (ORCPT
+        id S232124AbjJRXQd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Oct 2023 19:16:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46920 "EHLO
+        Wed, 18 Oct 2023 19:16:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbjJRXQ1 (ORCPT
+        with ESMTP id S231892AbjJRXQ3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Oct 2023 19:16:27 -0400
+        Wed, 18 Oct 2023 19:16:29 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19F8AFA;
-        Wed, 18 Oct 2023 16:16:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A7F3114;
+        Wed, 18 Oct 2023 16:16:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697670986; x=1729206986;
+  t=1697670987; x=1729206987;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=b3ObO4EfOULwbuB8mxuqr4dM8GA79pmoneHuGsijQgs=;
-  b=duYqtVL4qimfgCvrb6gqPNp/8CZOXovGtmoWKk+xL66y4S2bgG5yHZvG
-   Sl02Biu/xt5ZtENDxHT2oyBsGzyplZ63p7i0sEDrnRygzlImj8X251/xE
-   1M8Pq2M0ajV0wUKfrunn78ZnSBXESYCYCnO6RDlopT1fUh5u0VtN4V1ts
-   dDJ6T1rMCWjiJ77FW7FTToDQhM1jPAX9D7jMfGVnnyIj/8QofrHF7B9xM
-   KKM/cCvzlZ+OgZHt/VX/WUijiRZrGOdojR9egxUH3abfhcxDpxZRs0nd1
-   swK3pq8py/Br/7ZZgz+SCZazR5W9qCRctseCfR4CUnzpcIELeTwOCzxyw
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="385013043"
+  bh=8VCt8DV17STK54jZDrIDZt6imOWcwv6hpZq/h5+2FW4=;
+  b=D58wi+BUCFQdUm+Fg5yCjwOupkS+CuVHgm0cdvD14hPOiFBaQQUt9S7M
+   9T4+EVNYvDi+V+J5VAqSxvoP4hCYeq1WCy5VMPm1WPB9wASTCWk7+nZNo
+   +WWlr+tAhAMQV3d6H9MjShxFWSgp+pJ1VoJi2KK8bupcS35qGQ5PDHl17
+   BHsT4J18Ub3ao0tjLq6a7wjWqgboMRW7g7+QityhiBrVoTm8xTfL04XJk
+   P53Ja1sNbmEhbt2LlHLYs2dbjtHlOCOHfaMB//oKa/0BWsXDVfyJE/EXU
+   PyZAYQVP3LpM9OIpt5UZatR6IgT6MPH0Fq1j/jZvM1cuW13kgC6Bzp/1X
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="385013050"
 X-IronPort-AV: E=Sophos;i="6.03,236,1694761200"; 
-   d="scan'208";a="385013043"
+   d="scan'208";a="385013050"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 16:16:25 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 16:16:27 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.03,236,1694761200"; 
-   d="scan'208";a="4730728"
+   d="scan'208";a="4730735"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 16:16:28 -0700
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 16:16:30 -0700
 Received: from debox1-desk4.lan (unknown [10.209.71.91])
-        by linux.intel.com (Postfix) with ESMTP id 35798580DAE;
-        Wed, 18 Oct 2023 16:16:25 -0700 (PDT)
+        by linux.intel.com (Postfix) with ESMTP id 7F929580DAE;
+        Wed, 18 Oct 2023 16:16:26 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         ilpo.jarvinen@linux.intel.com, rajvi.jingar@linux.intel.com
-Subject: [PATCH V4 05/17] platform/x86/intel/vsec: Add base address field
-Date:   Wed, 18 Oct 2023 16:16:12 -0700
-Message-Id: <20231018231624.1044633-6-david.e.box@linux.intel.com>
+Subject: [PATCH V4 15/17] platform/x86/intel/pmc: Read low power mode requirements for MTL-M and MTL-P
+Date:   Wed, 18 Oct 2023 16:16:22 -0700
+Message-Id: <20231018231624.1044633-16-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231018231624.1044633-1-david.e.box@linux.intel.com>
 References: <20231018231624.1044633-1-david.e.box@linux.intel.com>
@@ -58,126 +58,111 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Some devices may emulate PCI VSEC capabilities in MMIO. In such cases the
-BAR is not readable from a config space. Provide a field for drivers to
-indicate the base address to be used.
+From: Xi Pardee <xi.pardee@intel.com>
 
+Add support to read the low power mode requirements for Meteor Lake M and
+Meteor Lake P.
+
+Signed-off-by: Xi Pardee <xi.pardee@intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
-V4 - No change
+V4 - no change
 
-V3 - No change
+V3 - directly return value from pmc_core_ssram_get_lpm_reqs()
 
-V2 - No change
+V2 - fixed unused return value
 
- drivers/platform/x86/intel/pmt/class.c | 14 +++++++++++---
- drivers/platform/x86/intel/vsec.c      | 10 ++++++++--
- drivers/platform/x86/intel/vsec.h      |  2 ++
- 3 files changed, 21 insertions(+), 5 deletions(-)
+ drivers/platform/x86/intel/pmc/mtl.c | 39 +++++++++++++++++++++++-----
+ 1 file changed, 32 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-index 2ad91d2fd954..32608baaa56c 100644
---- a/drivers/platform/x86/intel/pmt/class.c
-+++ b/drivers/platform/x86/intel/pmt/class.c
-@@ -160,10 +160,11 @@ static struct class intel_pmt_class = {
+diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+index d1d3d33fb4b8..7ceeae507f4c 100644
+--- a/drivers/platform/x86/intel/pmc/mtl.c
++++ b/drivers/platform/x86/intel/pmc/mtl.c
+@@ -11,6 +11,13 @@
+ #include <linux/pci.h>
+ #include "core.h"
  
- static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
- 				    struct intel_pmt_header *header,
--				    struct device *dev,
-+				    struct intel_vsec_device *ivdev,
- 				    struct resource *disc_res)
- {
--	struct pci_dev *pci_dev = to_pci_dev(dev->parent);
-+	struct pci_dev *pci_dev = ivdev->pcidev;
-+	struct device *dev = &ivdev->auxdev.dev;
- 	u8 bir;
- 
- 	/*
-@@ -215,6 +216,13 @@ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
- 
- 		break;
- 	case ACCESS_BARID:
-+		/* Use the provided base address if it exists */
-+		if (ivdev->base_addr) {
-+			entry->base_addr = ivdev->base_addr +
-+				   GET_ADDRESS(header->base_offset);
-+			break;
-+		}
++/* PMC SSRAM PMT Telemetry GUIDS */
++#define SOCP_LPM_REQ_GUID	0x2625030
++#define IOEM_LPM_REQ_GUID	0x4357464
++#define IOEP_LPM_REQ_GUID	0x5077612
 +
- 		/*
- 		 * If another BAR was specified then the base offset
- 		 * represents the offset within that BAR. SO retrieve the
-@@ -319,7 +327,7 @@ int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespa
- 	if (ret)
- 		return ret;
- 
--	ret = intel_pmt_populate_entry(entry, &header, dev, disc_res);
-+	ret = intel_pmt_populate_entry(entry, &header, intel_vsec_dev, disc_res);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index 638dfde6a9e2..1e19bfe8e87e 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -152,6 +152,7 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
- 	struct resource __free(kfree) *res = NULL;
- 	struct resource *tmp;
- 	unsigned long quirks = info->quirks;
-+	u64 base_addr;
- 	int ret, i;
- 
- 	if (!intel_vsec_supported(header->id, info->caps))
-@@ -178,14 +179,18 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
- 	if (quirks & VSEC_QUIRK_TABLE_SHIFT)
- 		header->offset >>= TABLE_OFFSET_SHIFT;
- 
-+	if (info->base_addr)
-+		base_addr = info->base_addr;
-+	else
-+		base_addr = pdev->resource[header->tbir].start;
++static const u8 MTL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
 +
- 	/*
- 	 * The DVSEC/VSEC contains the starting offset and count for a block of
- 	 * discovery tables. Create a resource array of these tables to the
- 	 * auxiliary device driver.
- 	 */
- 	for (i = 0, tmp = res; i < header->num_entries; i++, tmp++) {
--		tmp->start = pdev->resource[header->tbir].start +
--			     header->offset + i * (header->entry_size * sizeof(u32));
-+		tmp->start = base_addr + header->offset + i * (header->entry_size * sizeof(u32));
- 		tmp->end = tmp->start + (header->entry_size * sizeof(u32)) - 1;
- 		tmp->flags = IORESOURCE_MEM;
- 
-@@ -200,6 +205,7 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
- 	intel_vsec_dev->resource = res;
- 	intel_vsec_dev->num_resources = header->num_entries;
- 	intel_vsec_dev->quirks = info->quirks;
-+	intel_vsec_dev->base_addr = info->base_addr;
- 
- 	if (header->id == VSEC_ID_SDSI)
- 		intel_vsec_dev->ida = &intel_vsec_sdsi_ida;
-diff --git a/drivers/platform/x86/intel/vsec.h b/drivers/platform/x86/intel/vsec.h
-index a15fda2fcd28..78848e2329fb 100644
---- a/drivers/platform/x86/intel/vsec.h
-+++ b/drivers/platform/x86/intel/vsec.h
-@@ -73,6 +73,7 @@ struct intel_vsec_platform_info {
- 	struct intel_vsec_header **headers;
- 	unsigned long caps;
- 	unsigned long quirks;
-+	u64 base_addr;
+ /*
+  * Die Mapping to Product.
+  * Product SOCDie IOEDie PCHDie
+@@ -465,6 +472,7 @@ const struct pmc_reg_map mtl_socm_reg_map = {
+ 	.lpm_sts = mtl_socm_lpm_maps,
+ 	.lpm_status_offset = MTL_LPM_STATUS_OFFSET,
+ 	.lpm_live_status_offset = MTL_LPM_LIVE_STATUS_OFFSET,
++	.lpm_reg_index = MTL_LPM_REG_INDEX,
  };
  
- struct intel_vsec_device {
-@@ -84,6 +85,7 @@ struct intel_vsec_device {
- 	void *priv_data;
- 	size_t priv_data_size;
- 	unsigned long quirks;
-+	u64 base_addr;
+ const struct pmc_bit_map mtl_ioep_pfear_map[] = {
+@@ -782,6 +790,13 @@ const struct pmc_reg_map mtl_ioep_reg_map = {
+ 	.ltr_show_sts = mtl_ioep_ltr_show_map,
+ 	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
+ 	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
++	.lpm_num_maps = ADL_LPM_NUM_MAPS,
++	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
++	.lpm_residency_offset = MTL_LPM_RESIDENCY_OFFSET,
++	.lpm_priority_offset = MTL_LPM_PRI_OFFSET,
++	.lpm_en_offset = MTL_LPM_EN_OFFSET,
++	.lpm_sts_latch_en_offset = MTL_LPM_STATUS_LATCH_EN_OFFSET,
++	.lpm_reg_index = MTL_LPM_REG_INDEX,
  };
  
- int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
+ const struct pmc_bit_map mtl_ioem_pfear_map[] = {
+@@ -922,6 +937,13 @@ const struct pmc_reg_map mtl_ioem_reg_map = {
+ 	.ltr_show_sts = mtl_ioep_ltr_show_map,
+ 	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
+ 	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
++	.lpm_sts_latch_en_offset = MTL_LPM_STATUS_LATCH_EN_OFFSET,
++	.lpm_num_maps = ADL_LPM_NUM_MAPS,
++	.lpm_priority_offset = MTL_LPM_PRI_OFFSET,
++	.lpm_en_offset = MTL_LPM_EN_OFFSET,
++	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
++	.lpm_residency_offset = MTL_LPM_RESIDENCY_OFFSET,
++	.lpm_reg_index = MTL_LPM_REG_INDEX,
+ };
+ 
+ #define PMC_DEVID_SOCM	0x7e7f
+@@ -929,16 +951,19 @@ const struct pmc_reg_map mtl_ioem_reg_map = {
+ #define PMC_DEVID_IOEM	0x7ebf
+ static struct pmc_info mtl_pmc_info_list[] = {
+ 	{
+-		.devid = PMC_DEVID_SOCM,
+-		.map = &mtl_socm_reg_map,
++		.guid	= SOCP_LPM_REQ_GUID,
++		.devid	= PMC_DEVID_SOCM,
++		.map	= &mtl_socm_reg_map,
+ 	},
+ 	{
+-		.devid = PMC_DEVID_IOEP,
+-		.map = &mtl_ioep_reg_map,
++		.guid	= IOEP_LPM_REQ_GUID,
++		.devid	= PMC_DEVID_IOEP,
++		.map	= &mtl_ioep_reg_map,
+ 	},
+ 	{
+-		.devid = PMC_DEVID_IOEM,
+-		.map = &mtl_ioem_reg_map
++		.guid	= IOEM_LPM_REQ_GUID,
++		.devid	= PMC_DEVID_IOEM,
++		.map	= &mtl_ioem_reg_map
+ 	},
+ 	{}
+ };
+@@ -1014,5 +1039,5 @@ int mtl_core_init(struct pmc_dev *pmcdev)
+ 	dev_dbg(&pmcdev->pdev->dev, "ignoring GBE LTR\n");
+ 	pmc_core_send_ltr_ignore(pmcdev, 3);
+ 
+-	return 0;
++	return pmc_core_ssram_get_lpm_reqs(pmcdev);
+ }
 -- 
 2.34.1
 
