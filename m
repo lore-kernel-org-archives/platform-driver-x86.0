@@ -2,53 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F08ECDB47E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Oct 2023 23:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB8CCDB483
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Oct 2023 23:16:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232331AbjJRXQj (ORCPT
+        id S232169AbjJRXQk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Oct 2023 19:16:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32936 "EHLO
+        Wed, 18 Oct 2023 19:16:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232038AbjJRXQa (ORCPT
+        with ESMTP id S232042AbjJRXQa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Wed, 18 Oct 2023 19:16:30 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79094122;
-        Wed, 18 Oct 2023 16:16:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C77D113;
+        Wed, 18 Oct 2023 16:16:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697670988; x=1729206988;
+  t=1697670989; x=1729206989;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=SRiQmcemV99xAyE7uUs5trskOK6f0eJHUEH5s5W5r3A=;
-  b=JDFvczbcacbycpMjBCjDQN6pzN11m3xw2JvTKBjzK/hngbN1IrKsGHEv
-   FsoRZg6+7s6dJCyJMIK/TmowCaqDR9Ms+soeBPpxAH8vjl004N+b/op47
-   ZNCZiGtP17Zz9cAOG4xfnv2zDi9P+vXKQvS6Ni1rdoXxnE57Hr1nI3Lla
-   B/uRVM6r5A0axzpAGskwj4A8K0/L/7QQFiXHwVGKYpOayDet+0LqSIWjb
-   duc7LrQ71FlLxHrJsqhmTytGxU7DnNncBw53riLTlr9cvNW6eekZ4+6Be
-   B8dDdqBuMvQIXhbkzolSDZWXY0TTYdzKIYYLVZ993eDqnjrtTx8fyJvC7
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="452605958"
+  bh=GIPMSMLcNSd70raoeZwCxjNvumcHnXvuwgkKfWU6OdQ=;
+  b=XO5yM3YtmIUNCneEOiNYb6ZijDJOhQJp68s2OJwXBKvd0l9+O18bPLUS
+   xWvwOVMDrRvY11TO0DwNe+d0XaRAQ964W/q1/heZzBYoNXFzm/NFpkBBP
+   83RXhPlrTpXQ4ePmmeP5XkJo0m+IAmIXXFZcDRGaoIHKP+xYnlDDO4vce
+   yOZrx17B25sShSdY589HOvET5zf2pIM7y7jWH6WtcFPvfPAZ5ah6O0qM4
+   td/HN1uG26xciwZ5ct/axiXkiamOnOB7XJnFKcgoq4K8GOOJviafpZfsF
+   B6OLpCxxDFx3ZG+U+QwMczsMYLbBp8bDQPRqCgDEgQeBlZ4TCjwGAdk8/
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="452605961"
 X-IronPort-AV: E=Sophos;i="6.03,236,1694761200"; 
-   d="scan'208";a="452605958"
+   d="scan'208";a="452605961"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 16:16:25 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 16:16:26 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="756782175"
+X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="756782183"
 X-IronPort-AV: E=Sophos;i="6.03,236,1694761200"; 
-   d="scan'208";a="756782175"
+   d="scan'208";a="756782183"
 Received: from linux.intel.com ([10.54.29.200])
   by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 16:16:25 -0700
 Received: from debox1-desk4.lan (unknown [10.209.71.91])
-        by linux.intel.com (Postfix) with ESMTP id 8D493580E39;
+        by linux.intel.com (Postfix) with ESMTP id C5BFA580DD0;
         Wed, 18 Oct 2023 16:16:25 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        ilpo.jarvinen@linux.intel.com, rajvi.jingar@linux.intel.com
-Subject: [PATCH V4 08/17] platform/x86:intel/pmc: Call pmc_get_low_power_modes from platform init
-Date:   Wed, 18 Oct 2023 16:16:15 -0700
-Message-Id: <20231018231624.1044633-9-david.e.box@linux.intel.com>
+        dave.hansen@linux.intel.com, arnd@arndb.de, peterz@infradead.org,
+        aleksander.lobakin@intel.com, ilpo.jarvinen@linux.intel.com,
+        rajvi.jingar@linux.intel.com
+Subject: [PATCH V4 10/17] linux/io.h: iounmap/ioport_unmap cleanup.h support
+Date:   Wed, 18 Oct 2023 16:16:17 -0700
+Message-Id: <20231018231624.1044633-11-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231018231624.1044633-1-david.e.box@linux.intel.com>
 References: <20231018231624.1044633-1-david.e.box@linux.intel.com>
@@ -59,181 +61,38 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Xi Pardee <xi.pardee@intel.com>
+Add auto-release cleanups for ioumap and ioport_unmap.
 
-In order to setup a table of low power mode requirements for Meteor Lake,
-pmc_core_get_low_power_modes() will need to be run from platform init code
-so that the enabled modes are known, allowing the use of the
-pmc_for_each_mode helper. Make the function global and call it from the
-platform init code.
-
-Signed-off-by: Xi Pardee <xi.pardee@intel.com>
+Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
-V4 - No change
+V4 - New patch
 
-V3 - No change
+ include/linux/io.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-V2 - Added clearer explanation for the change in the changelog
-
- drivers/platform/x86/intel/pmc/adl.c  |  2 ++
- drivers/platform/x86/intel/pmc/cnp.c  |  2 ++
- drivers/platform/x86/intel/pmc/core.c |  7 +++----
- drivers/platform/x86/intel/pmc/core.h |  1 +
- drivers/platform/x86/intel/pmc/icl.c  | 10 +++++++++-
- drivers/platform/x86/intel/pmc/mtl.c  |  4 +++-
- drivers/platform/x86/intel/pmc/spt.c  | 10 +++++++++-
- drivers/platform/x86/intel/pmc/tgl.c  |  1 +
- 8 files changed, 30 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/pmc/adl.c b/drivers/platform/x86/intel/pmc/adl.c
-index 5006008e01be..64c492391ede 100644
---- a/drivers/platform/x86/intel/pmc/adl.c
-+++ b/drivers/platform/x86/intel/pmc/adl.c
-@@ -319,6 +319,8 @@ int adl_core_init(struct pmc_dev *pmcdev)
- 	if (ret)
- 		return ret;
+diff --git a/include/linux/io.h b/include/linux/io.h
+index 7304f2a69960..1488832c4ad2 100644
+--- a/include/linux/io.h
++++ b/include/linux/io.h
+@@ -6,6 +6,7 @@
+ #ifndef _LINUX_IO_H
+ #define _LINUX_IO_H
  
-+	pmc_core_get_low_power_modes(pmcdev);
++#include <linux/cleanup.h>
+ #include <linux/types.h>
+ #include <linux/init.h>
+ #include <linux/bug.h>
+@@ -20,6 +21,9 @@ __visible void __iowrite32_copy(void __iomem *to, const void *from, size_t count
+ void __ioread32_copy(void *to, const void __iomem *from, size_t count);
+ void __iowrite64_copy(void __iomem *to, const void *from, size_t count);
+ 
++DEFINE_FREE(iounmap, void __iomem *, iounmap(_T));
++DEFINE_FREE(ioport_unmap, void __iomem *, ioport_unmap(_T));
 +
- 	/* Due to a hardware limitation, the GBE LTR blocks PC10
- 	 * when a cable is attached. Tell the PMC to ignore it.
- 	 */
-diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
-index 420aaa1d7c76..59298f184d0e 100644
---- a/drivers/platform/x86/intel/pmc/cnp.c
-+++ b/drivers/platform/x86/intel/pmc/cnp.c
-@@ -214,6 +214,8 @@ int cnp_core_init(struct pmc_dev *pmcdev)
- 	if (ret)
- 		return ret;
- 
-+	pmc_core_get_low_power_modes(pmcdev);
-+
- 	/* Due to a hardware limitation, the GBE LTR blocks PC10
- 	 * when a cable is attached. Tell the PMC to ignore it.
- 	 */
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 84c175b9721a..3894119d61b0 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -966,9 +966,8 @@ static bool pmc_core_pri_verify(u32 lpm_pri, u8 *mode_order)
- 	return true;
- }
- 
--static void pmc_core_get_low_power_modes(struct platform_device *pdev)
-+void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
- {
--	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
- 	u8 pri_order[LPM_MAX_NUM_MODES] = LPM_DEFAULT_PRI;
- 	u8 mode_order[LPM_MAX_NUM_MODES];
-@@ -1000,7 +999,8 @@ static void pmc_core_get_low_power_modes(struct platform_device *pdev)
- 		for (mode = 0; mode < LPM_MAX_NUM_MODES; mode++)
- 			pri_order[mode_order[mode]] = mode;
- 	else
--		dev_warn(&pdev->dev, "Assuming a default substate order for this platform\n");
-+		dev_warn(&pmcdev->pdev->dev,
-+			 "Assuming a default substate order for this platform\n");
- 
- 	/*
- 	 * Loop through all modes from lowest to highest priority,
-@@ -1250,7 +1250,6 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	}
- 
- 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(primary_pmc);
--	pmc_core_get_low_power_modes(pdev);
- 	pmc_core_do_dmi_quirks(primary_pmc);
- 
- 	pmc_core_dbgfs_register(pmcdev);
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 0729f593c6a7..ccf24e0f5e50 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -490,6 +490,7 @@ extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
- 
- int pmc_core_resume_common(struct pmc_dev *pmcdev);
- int get_primary_reg_base(struct pmc *pmc);
-+extern void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev);
- 
- extern void pmc_core_ssram_init(struct pmc_dev *pmcdev);
- 
-diff --git a/drivers/platform/x86/intel/pmc/icl.c b/drivers/platform/x86/intel/pmc/icl.c
-index d08e3174230d..71b0fd6cb7d8 100644
---- a/drivers/platform/x86/intel/pmc/icl.c
-+++ b/drivers/platform/x86/intel/pmc/icl.c
-@@ -53,7 +53,15 @@ const struct pmc_reg_map icl_reg_map = {
- int icl_core_init(struct pmc_dev *pmcdev)
- {
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
-+	int ret;
- 
- 	pmc->map = &icl_reg_map;
--	return get_primary_reg_base(pmc);
-+
-+	ret = get_primary_reg_base(pmc);
-+	if (ret)
-+		return ret;
-+
-+	pmc_core_get_low_power_modes(pmcdev);
-+
-+	return ret;
- }
-diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-index 2204bc666980..c3b5f4fe01d1 100644
---- a/drivers/platform/x86/intel/pmc/mtl.c
-+++ b/drivers/platform/x86/intel/pmc/mtl.c
-@@ -985,7 +985,7 @@ static int mtl_resume(struct pmc_dev *pmcdev)
- int mtl_core_init(struct pmc_dev *pmcdev)
- {
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
--	int ret = 0;
-+	int ret;
- 
- 	mtl_d3_fixup();
- 
-@@ -1002,6 +1002,8 @@ int mtl_core_init(struct pmc_dev *pmcdev)
- 			return ret;
- 	}
- 
-+	pmc_core_get_low_power_modes(pmcdev);
-+
- 	/* Due to a hardware limitation, the GBE LTR blocks PC10
- 	 * when a cable is attached. Tell the PMC to ignore it.
- 	 */
-diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
-index 4b6f5cbda16c..ab993a69e33e 100644
---- a/drivers/platform/x86/intel/pmc/spt.c
-+++ b/drivers/platform/x86/intel/pmc/spt.c
-@@ -137,7 +137,15 @@ const struct pmc_reg_map spt_reg_map = {
- int spt_core_init(struct pmc_dev *pmcdev)
- {
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
-+	int ret;
- 
- 	pmc->map = &spt_reg_map;
--	return get_primary_reg_base(pmc);
-+
-+	ret = get_primary_reg_base(pmc);
-+	if (ret)
-+		return ret;
-+
-+	pmc_core_get_low_power_modes(pmcdev);
-+
-+	return ret;
- }
-diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
-index 2449940102db..d5f1d2223c5a 100644
---- a/drivers/platform/x86/intel/pmc/tgl.c
-+++ b/drivers/platform/x86/intel/pmc/tgl.c
-@@ -263,6 +263,7 @@ int tgl_core_init(struct pmc_dev *pmcdev)
- 	if (ret)
- 		return ret;
- 
-+	pmc_core_get_low_power_modes(pmcdev);
- 	pmc_core_get_tgl_lpm_reqs(pmcdev->pdev);
- 	/* Due to a hardware limitation, the GBE LTR blocks PC10
- 	 * when a cable is attached. Tell the PMC to ignore it.
+ #ifdef CONFIG_MMU
+ int ioremap_page_range(unsigned long addr, unsigned long end,
+ 		       phys_addr_t phys_addr, pgprot_t prot);
 -- 
 2.34.1
 
