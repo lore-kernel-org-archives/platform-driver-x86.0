@@ -2,269 +2,119 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1AFCDB482
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Oct 2023 19:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41501CDB47E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Oct 2023 23:16:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231167AbjJRTgx (ORCPT
+        id S231586AbjJRXQ1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Oct 2023 15:36:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60088 "EHLO
+        Wed, 18 Oct 2023 19:16:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbjJRTgw (ORCPT
+        with ESMTP id S229894AbjJRXQ0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Oct 2023 15:36:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF353114
-        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Oct 2023 12:36:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1697657764;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=p74xZf+yvMFgKaF5SGRiPer5Qi122Y2wywp4B5ZGZis=;
-        b=SNOqATd3LFD1M6oVYBnZ3CPcgRDceDsgvfJ7GRINKcNC2d3lqIuH2RjnYsTPH7KbFsCJje
-        eYbVZ91TBFzlp9XMSuhvepcOceTYYBC50tvca/Z44yZnf26JvVyw3G3pDQXRMvAcw7deLa
-        7goljOmadQ2fmbQ31pSPUCdixYxsnJQ=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-592-mXKpMXfgPwmW5ocOljAJbw-1; Wed, 18 Oct 2023 15:35:50 -0400
-X-MC-Unique: mXKpMXfgPwmW5ocOljAJbw-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9b65c46bca8so237141866b.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Oct 2023 12:35:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697657749; x=1698262549;
-        h=in-reply-to:from:content-language:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=p74xZf+yvMFgKaF5SGRiPer5Qi122Y2wywp4B5ZGZis=;
-        b=wOuYGyf1K1EWkWhzPkDoyfsoBr+MnzWwGc8+0+iZ70VdObocT0QtblFvqiDGN/skRI
-         bTK2EoRzzh6adMCllCxfdSGSIbt7lPyWAEgGCCenfyU6jjSe5uxVzkDdt2l3ZMZ6Dkf5
-         bTAnmbt2YNB/CqP7lTiq8rgeVuJHAkZKMTdp7GQ3dOcC/rXtZXntNC5k3GmtsQ/+tBPC
-         uH7nUBwKXiLTzjk72pAhSq+cYbzqoO/twLMwqikioX8roFPnJ/PbglUjF1gKAybCz+nB
-         OXT/tInlQUDaCrQ4YE+vS3+qFM+mmTX/j6G395ho8Tjz6ccvpkKwfSdDnMMV5UYSVQzt
-         PEew==
-X-Gm-Message-State: AOJu0YxmNKxAqMWsWQBBI1zhyu5lJzcOuN7JdZxNNVH/Avx4UEb7LQ5w
-        JvPoSbZ+kr/iJAjOA7XeXizFhzUl9ZqNUGUkJKi7UzSsmRszAc6hw35hz2J4U6kCCMCxtxHjvSA
-        /sd3zyBxVBVJhc9LWY/6Hgqqah3VQrQM+4A==
-X-Received: by 2002:a17:907:a089:b0:9ad:e4e1:1476 with SMTP id hu9-20020a170907a08900b009ade4e11476mr157982ejc.77.1697657749451;
-        Wed, 18 Oct 2023 12:35:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHdQdPeTCK4i+cbcQKdHK2u/0dTKH9zU5i7ZCkooSVzDd3KiVk1qnMXkhWod2d2h7wau8SekA==
-X-Received: by 2002:a17:907:a089:b0:9ad:e4e1:1476 with SMTP id hu9-20020a170907a08900b009ade4e11476mr157970ejc.77.1697657749094;
-        Wed, 18 Oct 2023 12:35:49 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id le3-20020a170907170300b009c70b392051sm2214715ejc.100.2023.10.18.12.35.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Oct 2023 12:35:48 -0700 (PDT)
-Content-Type: multipart/mixed; boundary="------------QZBWEzaD2g02goSPTYlOO0mq"
-Message-ID: <d8c5c530-9eea-5acb-f7f7-7f7af56e700d@redhat.com>
-Date:   Wed, 18 Oct 2023 21:35:47 +0200
+        Wed, 18 Oct 2023 19:16:26 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 330A3111;
+        Wed, 18 Oct 2023 16:16:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697670985; x=1729206985;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rZatTB+1jNamJ3WtWSkSc/lrxyn+zX3WBu9B82X0GL4=;
+  b=TZTw7ZTGpDHhctMYkR9Ntq+A9hlbbjyzwsvX4Di8PR4Jf7Th06IY9yBU
+   PSAXwH6MRVemMikmSaroU6b9yL2Qlq3UP6fU0QQ1IVDz/PHv6p3WYmsNW
+   67muXNmBr77aoK32oGgJFZjOJnNsZcGXzakdbZIrquc44crdCqHmEDo2i
+   ecR5BY9DC1iVwKzCjBNF8nHHisAM2X5xZD0mnjql/gQ9ANPkg/xEq+hPv
+   jfbBh/YUelVFmxB42w8HOvOpVhmR+BAlr+MpOniH5eqYvuhJBIJGk08dC
+   pvpFjLOgt89BYxTShL33yejVuNzKG//Zhj6uZKJMNMe8AkqGy4CseJGiA
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="385013039"
+X-IronPort-AV: E=Sophos;i="6.03,236,1694761200"; 
+   d="scan'208";a="385013039"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 16:16:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.03,236,1694761200"; 
+   d="scan'208";a="4730725"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 16:16:28 -0700
+Received: from debox1-desk4.lan (unknown [10.209.71.91])
+        by linux.intel.com (Postfix) with ESMTP id 985AD580DD0;
+        Wed, 18 Oct 2023 16:16:24 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        ilpo.jarvinen@linux.intel.com, rajvi.jingar@linux.intel.com
+Subject: [PATCH V4 00/17] intel_pmc: Add telemetry API to read counters
+Date:   Wed, 18 Oct 2023 16:16:07 -0700
+Message-Id: <20231018231624.1044633-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: PROBLEM: asus_nb_wmi sends KEY_BRIGHTNESSDOWN on pressing CAPS
- Lock and PrntScrn on Zenbook S 13 UX5304VA
-To:     me@donjajo.com
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <a2c441fe-457e-44cf-a146-0ecd86b037cf@donjajo.com>
- <132feb67-c147-7ee6-b337-385e11786ec6@redhat.com>
- <146cb960-406b-4456-94ce-ad6ed3f330ad@donjajo.com>
- <d70f7d35-6458-437d-f68f-47291ce74a1e@redhat.com>
- <90a7309e-4a76-4dff-8259-9975dd3ed8b1@donjajo.com>
- <938c83c4-973d-ac23-bfb6-53c63c153d81@redhat.com>
- <6c97dc9e9cfea6e18c59d717e5973255@donjajo.com>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <6c97dc9e9cfea6e18c59d717e5973255@donjajo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------QZBWEzaD2g02goSPTYlOO0mq
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+On newer Intel silicon, more IP counters are being added in Intel Platform
+Monitoring Technology (PMT) telemetry spaces hosted in MMIO.  There is a
+need for the intel_pmc_core driver and other drivers to access PMT hosted
+telemetry in the kernel using an API. This patchset adds driver APIs to
+allow registering and reading telemetry entries. It makes changes to the
+intel_pmc_core driver to use these interfaces to access the low power mode
+counters that are now exclusively available from PMT.
 
-Hi James,
+David E. Box (12):
+  platform/x86/intel/vsec: Move structures to header
+  platform/x86/intel/vsec: remove platform_info from vsec device
+    structure
+  platform/x86/intel/vsec: Use cleanup.h
+  platform/x86/intel/vsec: Add base address field
+  platform/x86/intel/pmt: Add header to struct intel_pmt_entry
+  platform/x86/intel/pmt: telemetry: Export API to read telemetry
+  platform/x86/intel/pmc: Allow pmc_core_ssram_init to fail
+  linux/io.h: iounmap/ioport_unmap cleanup.h support
+  platform/x86/intel/pmc: Split pmc_core_ssram_get_pmc()
+  platform/x86/intel/pmc: Find and register PMC telemetry entries
+  platform/x86/intel/pmc: Add debug attribute for Die C6 counter
+  platform/x86/intel/pmc: Show Die C6 counter on Meteor Lake
 
-On 10/18/23 02:17, me@donjajo.com wrote:
-> Hi Hans,
-> 
-> I hope you are feeling better now.
-> Thank you so much for your support in resolving this.
-> 
->> I assume that the first "BACKLIGHT BUTTON" is the backlight DOWN button ?
-> Yes. Correct.
-> 
-> 
->> 2. Can you please run:
->>
->> sudo evtest and then select the "ACPI video bus" (or something
->> similar) device and see if that reports brightness up/down
->> keypresses?  And then do the same thing for the
->> "Asus WMI hotkeys" device ? I expect the Asus WMI hotkeys
->> device to only report brightness up keypresses (after my
->> hwdb "fix") while I expect brightness-up events to get
->> reported twice, by both the "ACPI video bus" device and
->> the "Asus WMI hotkeys" device.
-> Done and attached.
-> 
->> Can you confirm this? This also means that brightness
->> up will take bigger steps (2 steps per keypress) then
->> brightness down, right ?
-> I am not sure I understand what you mean here. But I have attached the output here
+Gayatri Kammela (1):
+  platform/x86/intel/vsec: Add intel_vsec_register
 
-The 2 evtest logs show that each brightness up/down keypress
-gets reported twice, once by the "ACPI video bus" device and
-once bythe "Asus WMI hotkeys" device.
+Rajvi Jingar (1):
+  platform/x86/intel/pmc: Display LPM requirements for multiple PMCs
 
-This means that in e.g. GNOME the brightness will move
-up / down by 2 steps for each step, reducing the amount
-of steps from 20 to 10, or iow making each step twice
-as big. Especially at the low end of the brightness
-scale this may be an issue since steeping by 5% there
-can already make a big difference and this double
-key press reporting now changes this into stepping
-by 10% at a time.
+Xi Pardee (3):
+  platform/x86:intel/pmc: Call pmc_get_low_power_modes from platform
+    init
+  platform/x86/intel/pmc: Retrieve LPM information using Intel PMT
+  platform/x86/intel/pmc: Read low power mode requirements for MTL-M and
+    MTL-P
 
-> After applying your patch, it seems to have fixed the issue!
+ drivers/platform/x86/intel/pmc/Kconfig      |   1 +
+ drivers/platform/x86/intel/pmc/adl.c        |   2 +
+ drivers/platform/x86/intel/pmc/cnp.c        |   2 +
+ drivers/platform/x86/intel/pmc/core.c       | 191 +++++++++----
+ drivers/platform/x86/intel/pmc/core.h       |  10 +-
+ drivers/platform/x86/intel/pmc/core_ssram.c | 297 +++++++++++++++++---
+ drivers/platform/x86/intel/pmc/icl.c        |  10 +-
+ drivers/platform/x86/intel/pmc/mtl.c        |  87 +++++-
+ drivers/platform/x86/intel/pmc/spt.c        |  10 +-
+ drivers/platform/x86/intel/pmc/tgl.c        |   1 +
+ drivers/platform/x86/intel/pmt/class.c      |  43 ++-
+ drivers/platform/x86/intel/pmt/class.h      |  30 +-
+ drivers/platform/x86/intel/pmt/crashlog.c   |   2 +-
+ drivers/platform/x86/intel/pmt/telemetry.c  | 193 ++++++++++++-
+ drivers/platform/x86/intel/pmt/telemetry.h  | 126 +++++++++
+ drivers/platform/x86/intel/vsec.c           |  85 +++---
+ drivers/platform/x86/intel/vsec.h           |  44 ++-
+ include/linux/io.h                          |   4 +
+ 18 files changed, 949 insertions(+), 189 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/pmt/telemetry.h
 
-Thank you for all the testing and other then the double
-keypress issue + the unknown code messages everything
-now looks good!
 
-I have applied 2 more patches the first one fixes the
-unknown code messages and adds a mapping for the
-"Screen Capture" hotkey. The second test filters out
-the duplicate (duplicate with the "ACPI video bus")
-brightness up/down events.
-
-It would be great if you can add these on top of
-the previous 2 patches and then run one last
-test for me:
-
-Run evtest on the "Asus WMI hotkeys" device this should now:
-
-1. Show no output for capslock / printscreen
-
-2. Show KEY_SELECTIVE_SCREENSHOT events for the
-   "Screen Capture" hotkey.
-
-3. Show no output for brightness up/down,
-   yet brightness up/down should still work since
-   these are also reported by the "ACPI video bus"
-
-It would be great if you can confirm for each of these
-that this behaves as expected with the 2 extra patches
-applied on top of the previous patches.
-
-Regards,
-
-Hans
-
---------------QZBWEzaD2g02goSPTYlOO0mq
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-platform-x86-asus-wmi-Map-0x2a-code-Ignore-0x2b-and-.patch"
-Content-Disposition: attachment;
- filename*0="0001-platform-x86-asus-wmi-Map-0x2a-code-Ignore-0x2b-and-.pa";
- filename*1="tch"
-Content-Transfer-Encoding: base64
-
-RnJvbSBhMjUzM2JkNTczZWI3YTc2MjMwNmU4M2Q5OWY2MjRjYmFiYWQ3ZDE5IE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQu
-Y29tPgpEYXRlOiBUdWUsIDE3IE9jdCAyMDIzIDEwOjM1OjE0ICswMjAwClN1YmplY3Q6IFtQ
-QVRDSCAxLzJdIHBsYXRmb3JtL3g4NjogYXN1cy13bWk6IE1hcCAweDJhIGNvZGUsIElnbm9y
-ZSAweDJiIGFuZAogMHgyYyBldmVudHMKCk5ld2VyIEFzdXMgbGFwdG9wcyBzZW5kIHRoZSBm
-b2xsb3dpbmcgbmV3IFdNSSBldmVudCBjb2RlcyB3aGVuIHNvbWUKb2YgdGhlIEYxIC0gRjEy
-ICJtZWRpYSIgaG90a2V5cyBhcmUgcHJlc3NlZDoKCjB4MmEgU2NyZWVuIENhcHR1cmUKMHgy
-YiBQcmludFNjcmVlbgoweDJjIENhcHNMb2NrCgpNYXAgMHgyYSB0byBLRVlfU0VMRUNUSVZF
-X1NDUkVFTlNIT1QgbWlycm9yaW5nIGhvdyBzaW1pbGFyIGhvdGtleXMKYXJlIG1hcHBlZCBv
-biBvdGhlciBsYXB0b3BzLgoKUHJpbnRTY3JlZW0gYW5kIENhcHNMb2NrIGFyZSBhbHNvIHJl
-cG9ydGVkIGFzIG5vcm1hbCBQUy8yIGtleWJvYXJkIGV2ZW50cywKbWFwIHRoZXNlIGV2ZW50
-IGNvZGVzIHRvIEtFX0lHTk9SRSB0byBhdm9pZCAiVW5rbm93biBrZXkgY29kZSAweCV4XG4i
-IGxvZwptZXNzYWdlcy4KClJlcG9ydGVkLWJ5OiBKYW1lcyBKb2huIDxtZUBkb25qYWpvLmNv
-bT4KQ2xvc2VzOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9wbGF0Zm9ybS1kcml2ZXIteDg2
-L2EyYzQ0MWZlLTQ1N2UtNDRjZi1hMTQ2LTBlY2Q4NmIwMzdjZkBkb25qYWpvLmNvbS8KQ2xv
-c2VzOiBodHRwczovL2Jicy5hcmNobGludXgub3JnL3ZpZXd0b3BpYy5waHA/cGlkPTIxMjM3
-MTYKU2lnbmVkLW9mZi1ieTogSGFucyBkZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4K
-LS0tCiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9hc3VzLW5iLXdtaS5jIHwgMyArKysKIDEgZmls
-ZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRm
-b3JtL3g4Ni9hc3VzLW5iLXdtaS5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvYXN1cy1uYi13
-bWkuYwppbmRleCBkODVkODk1ZmVlODkuLmRmMWRiNTRkNGUxOCAxMDA2NDQKLS0tIGEvZHJp
-dmVycy9wbGF0Zm9ybS94ODYvYXN1cy1uYi13bWkuYworKysgYi9kcml2ZXJzL3BsYXRmb3Jt
-L3g4Ni9hc3VzLW5iLXdtaS5jCkBAIC01MzEsNiArNTMxLDkgQEAgc3RhdGljIHZvaWQgYXN1
-c19uYl93bWlfcXVpcmtzKHN0cnVjdCBhc3VzX3dtaV9kcml2ZXIgKmRyaXZlcikKIHN0YXRp
-YyBjb25zdCBzdHJ1Y3Qga2V5X2VudHJ5IGFzdXNfbmJfd21pX2tleW1hcFtdID0gewogCXsg
-S0VfS0VZLCBBU1VTX1dNSV9CUk5fRE9XTiwgeyBLRVlfQlJJR0hUTkVTU0RPV04gfSB9LAog
-CXsgS0VfS0VZLCBBU1VTX1dNSV9CUk5fVVAsIHsgS0VZX0JSSUdIVE5FU1NVUCB9IH0sCisJ
-eyBLRV9LRVksIDB4MmEsIHsgS0VZX1NFTEVDVElWRV9TQ1JFRU5TSE9UIH0gfSwKKwl7IEtF
-X0lHTk9SRSwgMHgyYiwgfSwgLyogUHJpbnRTY3JlZW4gKGFsc28gc2VuZCB2aWEgUFMvMikg
-b24gbmV3ZXIgbW9kZWxzICovCisJeyBLRV9JR05PUkUsIDB4MmMsIH0sIC8qIENhcHNMb2Nr
-IChhbHNvIHNlbmQgdmlhIFBTLzIpIG9uIG5ld2VyIG1vZGVscyAqLwogCXsgS0VfS0VZLCAw
-eDMwLCB7IEtFWV9WT0xVTUVVUCB9IH0sCiAJeyBLRV9LRVksIDB4MzEsIHsgS0VZX1ZPTFVN
-RURPV04gfSB9LAogCXsgS0VfS0VZLCAweDMyLCB7IEtFWV9NVVRFIH0gfSwKLS0gCjIuNDEu
-MAoK
---------------QZBWEzaD2g02goSPTYlOO0mq
-Content-Type: text/x-patch; charset=UTF-8;
- name="0002-platform-x86-asus-wmi-Do-not-report-brightness-up-do.patch"
-Content-Disposition: attachment;
- filename*0="0002-platform-x86-asus-wmi-Do-not-report-brightness-up-do.pa";
- filename*1="tch"
-Content-Transfer-Encoding: base64
-
-RnJvbSBlYzAxY2FjYWY2OGZjMDBjMWQ1ZmZmZDJjZThlMGJkMDNkMjc1M2JkIE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQu
-Y29tPgpEYXRlOiBXZWQsIDE4IE9jdCAyMDIzIDExOjQ3OjI4ICswMjAwClN1YmplY3Q6IFtQ
-QVRDSCAyLzJdIHBsYXRmb3JtL3g4NjogYXN1cy13bWk6IERvIG5vdCByZXBvcnQgYnJpZ2h0
-bmVzcyB1cC9kb3duCiBrZXlzIHdoZW4gYWxzbyByZXBvcnRlZCBieSBhY3BpX3ZpZGVvCgpG
-b3IgYSBsb25nIHRpbWUgbm93IHRoZSBhY3BpX3ZpZGVvIGRyaXZlciByZXBvcnRzIGV2ZGV2
-IGJyaWdodG5lc3MgdXAvZG93bgprZXkgZXZlbnRzIGZvciB0aGUgYnJpZ2h0bmVzcyBob3Rr
-ZXlzIG9uIG1vc3QgKG5vbiBhbmNpZW50KSBsYXB0b3BzLgoKYXN1cy13bWkgYWxzbyByZXBv
-cnRzIGV2ZGV2IGJyaWdodG5lc3MgdXAvZG93biBrZXkgZXZlbnRzIGZvciB0aGVzZQprZXlz
-IGxlYWRpbmcgdG8gZWFjaCBwcmVzcyBiZWluZyByZXBvcnRlZCB0d2ljZSBhbmQgZS5nLiBH
-Tk9NRSBpbmNyZWFzaW5nCnRoZSBicmlnaHRuZXNzIGJ5IDIgc3RlcHMgaW5zdGVhZCBvZiAx
-IHN0ZXAuCgpVc2UgdGhlIGFjcGlfdmlkZW9faGFuZGxlc19icmlnaHRuZXNzX2tleV9wcmVz
-c2VzKCkgaGVscGVyIHRvIGRldGVjdCBpZgphY3BpX3ZpZGVvIGlzIHJlcG9ydGluZyBicmln
-aHRuZXNzIGtleS1wcmVzc2VzIGFuZCBpZiBpdCBpcyB0aGVuIGRvbid0CnJlcG9ydCB0aGUg
-c2FtZSBldmVudHMgYWxzbyBmcm9tIHRoZSBhc3VzLXdtaSBkcml2ZXIuCgpOb3RlIHRoZXJl
-IGlzIGEgY2hhbmNlIHRoYXQgdGhpcyBtYXkgbGVhZCB0byByZWdyZXNzaW9ucyB3aGVyZQp0
-aGUgYnJpZ2h0bmVzcyBob3RrZXlzIHN0b3Agd29ya2luZyBiZWNhdXNlIHRoZXkgYXJlIG5v
-dCBhY3R1YWxseQpyZXBvcnRlZCBieSB0aGUgYWNwaV92aWRlbyBkcml2ZXIuIFVuZm9ydHVu
-YXRlbHkgdGhlIG9ubHkgd2F5IHRvCmZpbmQgb3V0IGlmIHRoaXMgaXMgYSBwcm9ibGVtIGlz
-IHRvIHRyeS4KClRvIGF0IGxlYXN0IGF2b2lkIHJlZ3Jlc3Npb25zIG9uIG9sZCBodyB1c2lu
-ZyB0aGUgZWVlcGMtd21pIGRyaXZlciwKaW1wbGVtZW50IHRoaXMgYXMgYSBrZXkgZmlsdGVy
-IGluIGFzdXMtbmItd21pIHNvIHRoYXQgdGhlIGVlZXBjLXdtaQpkcml2ZXIgaXMgbm90IGFm
-ZmVjdGVkLgoKUmVwb3J0ZWQtYnk6IEphbWVzIEpvaG4gPG1lQGRvbmpham8uY29tPgpDbG9z
-ZXM6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BsYXRmb3JtLWRyaXZlci14ODYvYTJjNDQx
-ZmUtNDU3ZS00NGNmLWExNDYtMGVjZDg2YjAzN2NmQGRvbmpham8uY29tLwpTaWduZWQtb2Zm
-LWJ5OiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPgotLS0KIGRyaXZlcnMv
-cGxhdGZvcm0veDg2L2FzdXMtbmItd21pLmMgfCAxNiArKysrKysrKysrKysrKysrCiAxIGZp
-bGUgY2hhbmdlZCwgMTYgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxh
-dGZvcm0veDg2L2FzdXMtbmItd21pLmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9hc3VzLW5i
-LXdtaS5jCmluZGV4IGRmMWRiNTRkNGUxOC4uOWFhMTIyNmU3NGU2IDEwMDY0NAotLS0gYS9k
-cml2ZXJzL3BsYXRmb3JtL3g4Ni9hc3VzLW5iLXdtaS5jCisrKyBiL2RyaXZlcnMvcGxhdGZv
-cm0veDg2L2FzdXMtbmItd21pLmMKQEAgLTE2LDYgKzE2LDggQEAKICNpbmNsdWRlIDxsaW51
-eC9kbWkuaD4KICNpbmNsdWRlIDxsaW51eC9pODA0Mi5oPgogCisjaW5jbHVkZSA8YWNwaS92
-aWRlby5oPgorCiAjaW5jbHVkZSAiYXN1cy13bWkuaCIKIAogI2RlZmluZQlBU1VTX05CX1dN
-SV9GSUxFCSJhc3VzLW5iLXdtaSIKQEAgLTYwNiw2ICs2MDgsMTkgQEAgc3RhdGljIGNvbnN0
-IHN0cnVjdCBrZXlfZW50cnkgYXN1c19uYl93bWlfa2V5bWFwW10gPSB7CiAJeyBLRV9FTkQs
-IDB9LAogfTsKIAorc3RhdGljIHZvaWQgYXN1c19uYl93bWlfa2V5X2ZpbHRlcihzdHJ1Y3Qg
-YXN1c193bWlfZHJpdmVyICphc3VzX3dtaSwgaW50ICpjb2RlLAorCQkJCSAgIHVuc2lnbmVk
-IGludCAqdmFsdWUsIGJvb2wgKmF1dG9yZWxlYXNlKQoreworCXN3aXRjaCAoKmNvZGUpIHsK
-KwljYXNlIEFTVVNfV01JX0JSTl9ET1dOOgorCWNhc2UgQVNVU19XTUlfQlJOX1VQOgorCQlp
-ZiAoYWNwaV92aWRlb19oYW5kbGVzX2JyaWdodG5lc3Nfa2V5X3ByZXNzZXMoKSkKKwkJCSpj
-b2RlID0gQVNVU19XTUlfS0VZX0lHTk9SRTsKKworCQlicmVhazsKKwl9Cit9CisKIHN0YXRp
-YyBzdHJ1Y3QgYXN1c193bWlfZHJpdmVyIGFzdXNfbmJfd21pX2RyaXZlciA9IHsKIAkubmFt
-ZSA9IEFTVVNfTkJfV01JX0ZJTEUsCiAJLm93bmVyID0gVEhJU19NT0RVTEUsCkBAIC02MTQs
-NiArNjI5LDcgQEAgc3RhdGljIHN0cnVjdCBhc3VzX3dtaV9kcml2ZXIgYXN1c19uYl93bWlf
-ZHJpdmVyID0gewogCS5pbnB1dF9uYW1lID0gIkFzdXMgV01JIGhvdGtleXMiLAogCS5pbnB1
-dF9waHlzID0gQVNVU19OQl9XTUlfRklMRSAiL2lucHV0MCIsCiAJLmRldGVjdF9xdWlya3Mg
-PSBhc3VzX25iX3dtaV9xdWlya3MsCisJLmtleV9maWx0ZXIgPSBhc3VzX25iX3dtaV9rZXlf
-ZmlsdGVyLAogfTsKIAogCi0tIAoyLjQxLjAKCg==
-
---------------QZBWEzaD2g02goSPTYlOO0mq--
+base-commit: 3f720b21ec5af466e50e99dc517af267b67d248c
+-- 
+2.34.1
 
