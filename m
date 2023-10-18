@@ -2,148 +2,200 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F815CDB484
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Oct 2023 23:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247D8CDB485
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Oct 2023 23:16:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232250AbjJRXQh (ORCPT
+        id S232272AbjJRXQi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Oct 2023 19:16:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46920 "EHLO
+        Wed, 18 Oct 2023 19:16:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231950AbjJRXQ3 (ORCPT
+        with ESMTP id S231984AbjJRXQa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Oct 2023 19:16:29 -0400
+        Wed, 18 Oct 2023 19:16:30 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2974120;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030C8121;
         Wed, 18 Oct 2023 16:16:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1697670987; x=1729206987;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=KSylYx0UQ9DgMlzj3RLD7AwXVdDAFTSKjST/Me0QoTI=;
-  b=MgnqIIDzfXwjbMEJ24QPTV8RuxHudKSe/b7JOTKXsO5p/nBmSsTuV6AF
-   y4hOJWj1JMbFDt4hv/0AHPgPkcPD3icE3IZYbo1pD3j6ZDilBn96rCBrV
-   wZV3PXCT3+zsSoPVdF7O8D2fF53bi4+EqvOL4VkCnxiyAcnXl5yEg3Hgy
-   5A5aXU8EZCdk5wXAYhbMc5owDfa1LEAfMCZuxHBR2dsOnwPlPZRwVuEul
-   B1kmocuFdcqJYk1YZ/nVgOLvWcxVb+GqBG0TVTXLN1wAb7ad1+iD2jxVV
-   d6cHekmCOMazYJ77EHBXFvgw5/XyKUF9s2oAs8pRxDD/k8BXeIUqZrMUH
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="452605955"
+  bh=p5ztckKHu6DHKZF6FlfrwxP7NWNq4pJFfIG0FrOJ2cE=;
+  b=fhXUaD0qvsAcqmpSHZGKCV59S+lM6cQINT3xo27bz3uPf13w5YF0wPNc
+   40J5nPKEhFIIGpih0ClJWw8O6yBfXTnQvJSCRjjiEIcXOBIYiSIrbJTOg
+   X55yQBkFDZITHdfS851Kz8BiABoXz14xizwZ8pFPux8m+rxNPOJIDO+3c
+   leq1oFiFW6zuEIxf7o6x029mdVyC9qyp7pKoY+UtoAsbrWk1pBj4X+SY/
+   3I/fYB3xbNjZm5+KvsVFgS/FH752kCzZ7sudP7OMC+zLpoxAtFLUUYSp7
+   +s942ueg35qQH14SOvBh0Nc+/jdm32dX/wx9260hLfGDD5myoSPzG1Vc2
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="452605957"
 X-IronPort-AV: E=Sophos;i="6.03,236,1694761200"; 
-   d="scan'208";a="452605955"
+   d="scan'208";a="452605957"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 16:16:25 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="756782171"
+X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="756782172"
 X-IronPort-AV: E=Sophos;i="6.03,236,1694761200"; 
-   d="scan'208";a="756782171"
+   d="scan'208";a="756782172"
 Received: from linux.intel.com ([10.54.29.200])
   by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 16:16:25 -0700
 Received: from debox1-desk4.lan (unknown [10.209.71.91])
-        by linux.intel.com (Postfix) with ESMTP id 16CF6580DD0;
+        by linux.intel.com (Postfix) with ESMTP id 50744580DD4;
         Wed, 18 Oct 2023 16:16:25 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         ilpo.jarvinen@linux.intel.com, rajvi.jingar@linux.intel.com
-Subject: [PATCH V4 04/17] platform/x86/intel/vsec: Add intel_vsec_register
-Date:   Wed, 18 Oct 2023 16:16:11 -0700
-Message-Id: <20231018231624.1044633-5-david.e.box@linux.intel.com>
+Subject: [PATCH V4 06/17] platform/x86/intel/pmt: Add header to struct intel_pmt_entry
+Date:   Wed, 18 Oct 2023 16:16:13 -0700
+Message-Id: <20231018231624.1044633-7-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231018231624.1044633-1-david.e.box@linux.intel.com>
 References: <20231018231624.1044633-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Gayatri Kammela <gayatri.kammela@linux.intel.com>
+The PMT header is passed to several functions. Instead, store the header in
+struct intel_pmt_entry which is also passed to these functions and shorten
+the argument list. This simplifies the calls in preparation for later
+changes.
 
-Add and export intel_vsec_register() to allow the registration of Intel
-extended capabilities from other drivers. Add check to look for memory
-conflicts before registering a new capability. Add a parent field to
-intel_vsec_platform_info to allow specifying the parent device for
-device managed cleanup.
-
-Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
-V4 - Move res cleanup to previous patch
+V4 - No change
 
-V3 - Replace kfree on request_mem_region fail with use of cleanup.h helper.
+V3 - No change
 
-V2 - New patch splitting previous PATCH 1
+V2 - No change
 
- drivers/platform/x86/intel/vsec.c | 19 +++++++++++++++++--
- drivers/platform/x86/intel/vsec.h |  4 ++++
- 2 files changed, 21 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel/pmt/class.c     |  8 +++-----
+ drivers/platform/x86/intel/pmt/class.h     | 16 ++++++++--------
+ drivers/platform/x86/intel/pmt/crashlog.c  |  2 +-
+ drivers/platform/x86/intel/pmt/telemetry.c |  2 +-
+ 4 files changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index 28191313d515..638dfde6a9e2 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -188,6 +188,12 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
- 			     header->offset + i * (header->entry_size * sizeof(u32));
- 		tmp->end = tmp->start + (header->entry_size * sizeof(u32)) - 1;
- 		tmp->flags = IORESOURCE_MEM;
-+
-+		/* Check resource is not in use */
-+		if (!request_mem_region(tmp->start, resource_size(tmp), ""))
-+			return -EBUSY;
-+
-+		release_mem_region(tmp->start, resource_size(tmp));
- 	}
+diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
+index 32608baaa56c..142a24e3727d 100644
+--- a/drivers/platform/x86/intel/pmt/class.c
++++ b/drivers/platform/x86/intel/pmt/class.c
+@@ -159,12 +159,12 @@ static struct class intel_pmt_class = {
+ };
  
- 	intel_vsec_dev->pcidev = pdev;
-@@ -205,9 +211,8 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
- 	 * intel_vsec_add_aux()
- 	 */
- 	no_free_ptr(res);
--	ret = intel_vsec_add_aux(pdev, NULL, no_free_ptr(intel_vsec_dev),
-+	ret = intel_vsec_add_aux(pdev, info->parent, no_free_ptr(intel_vsec_dev),
- 				 intel_vsec_name(header->id));
+ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
+-				    struct intel_pmt_header *header,
+ 				    struct intel_vsec_device *ivdev,
+ 				    struct resource *disc_res)
+ {
+ 	struct pci_dev *pci_dev = ivdev->pcidev;
+ 	struct device *dev = &ivdev->auxdev.dev;
++	struct intel_pmt_header *header = &entry->header;
+ 	u8 bir;
+ 
+ 	/*
+@@ -313,7 +313,6 @@ int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespa
+ 			 struct intel_vsec_device *intel_vsec_dev, int idx)
+ {
+ 	struct device *dev = &intel_vsec_dev->auxdev.dev;
+-	struct intel_pmt_header header;
+ 	struct resource	*disc_res;
+ 	int ret;
+ 
+@@ -323,16 +322,15 @@ int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespa
+ 	if (IS_ERR(entry->disc_table))
+ 		return PTR_ERR(entry->disc_table);
+ 
+-	ret = ns->pmt_header_decode(entry, &header, dev);
++	ret = ns->pmt_header_decode(entry, dev);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = intel_pmt_populate_entry(entry, &header, intel_vsec_dev, disc_res);
++	ret = intel_pmt_populate_entry(entry, intel_vsec_dev, disc_res);
+ 	if (ret)
+ 		return ret;
+ 
+ 	return intel_pmt_dev_register(entry, ns, dev);
 -
- 	return ret;
  }
+ EXPORT_SYMBOL_NS_GPL(intel_pmt_dev_create, INTEL_PMT);
  
-@@ -325,6 +330,16 @@ static bool intel_vsec_walk_vsec(struct pci_dev *pdev,
- 	return have_devices;
- }
+diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
+index db11d58867ce..e477a19f6700 100644
+--- a/drivers/platform/x86/intel/pmt/class.h
++++ b/drivers/platform/x86/intel/pmt/class.h
+@@ -18,7 +18,15 @@
+ #define GET_BIR(v)		((v) & GENMASK(2, 0))
+ #define GET_ADDRESS(v)		((v) & GENMASK(31, 3))
  
-+void intel_vsec_register(struct pci_dev *pdev,
-+			 struct intel_vsec_platform_info *info)
-+{
-+	if (!pdev || !info)
-+		return;
++struct intel_pmt_header {
++	u32	base_offset;
++	u32	size;
++	u32	guid;
++	u8	access_type;
++};
 +
-+	intel_vsec_walk_header(pdev, info);
-+}
-+EXPORT_SYMBOL_NS_GPL(intel_vsec_register, INTEL_VSEC);
-+
- static int intel_vsec_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ struct intel_pmt_entry {
++	struct intel_pmt_header	header;
+ 	struct bin_attribute	pmt_bin_attr;
+ 	struct kobject		*kobj;
+ 	void __iomem		*disc_table;
+@@ -29,19 +37,11 @@ struct intel_pmt_entry {
+ 	int			devid;
+ };
+ 
+-struct intel_pmt_header {
+-	u32	base_offset;
+-	u32	size;
+-	u32	guid;
+-	u8	access_type;
+-};
+-
+ struct intel_pmt_namespace {
+ 	const char *name;
+ 	struct xarray *xa;
+ 	const struct attribute_group *attr_grp;
+ 	int (*pmt_header_decode)(struct intel_pmt_entry *entry,
+-				 struct intel_pmt_header *header,
+ 				 struct device *dev);
+ };
+ 
+diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
+index bbb3d61d09f4..4014c02cafdb 100644
+--- a/drivers/platform/x86/intel/pmt/crashlog.c
++++ b/drivers/platform/x86/intel/pmt/crashlog.c
+@@ -223,10 +223,10 @@ static const struct attribute_group pmt_crashlog_group = {
+ };
+ 
+ static int pmt_crashlog_header_decode(struct intel_pmt_entry *entry,
+-				      struct intel_pmt_header *header,
+ 				      struct device *dev)
  {
- 	struct intel_vsec_platform_info *info;
-diff --git a/drivers/platform/x86/intel/vsec.h b/drivers/platform/x86/intel/vsec.h
-index d3fefba3e623..a15fda2fcd28 100644
---- a/drivers/platform/x86/intel/vsec.h
-+++ b/drivers/platform/x86/intel/vsec.h
-@@ -69,6 +69,7 @@ enum intel_vsec_quirks {
+ 	void __iomem *disc_table = entry->disc_table;
++	struct intel_pmt_header *header = &entry->header;
+ 	struct crashlog_entry *crashlog;
  
- /* Platform specific data */
- struct intel_vsec_platform_info {
-+	struct device *parent;
- 	struct intel_vsec_header **headers;
- 	unsigned long caps;
- 	unsigned long quirks;
-@@ -98,4 +99,7 @@ static inline struct intel_vsec_device *auxdev_to_ivdev(struct auxiliary_device
- {
- 	return container_of(auxdev, struct intel_vsec_device, auxdev);
+ 	if (!pmt_crashlog_supported(entry))
+diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
+index 39cbc87cc28a..f86080e8bebd 100644
+--- a/drivers/platform/x86/intel/pmt/telemetry.c
++++ b/drivers/platform/x86/intel/pmt/telemetry.c
+@@ -58,10 +58,10 @@ static bool pmt_telem_region_overlaps(struct intel_pmt_entry *entry,
  }
-+
-+void intel_vsec_register(struct pci_dev *pdev,
-+			 struct intel_vsec_platform_info *info);
- #endif
+ 
+ static int pmt_telem_header_decode(struct intel_pmt_entry *entry,
+-				   struct intel_pmt_header *header,
+ 				   struct device *dev)
+ {
+ 	void __iomem *disc_table = entry->disc_table;
++	struct intel_pmt_header *header = &entry->header;
+ 
+ 	if (pmt_telem_region_overlaps(entry, dev))
+ 		return 1;
 -- 
 2.34.1
 
