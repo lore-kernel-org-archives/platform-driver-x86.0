@@ -2,388 +2,174 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B98CDB47E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Oct 2023 14:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E32CDB48B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Oct 2023 15:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235173AbjJROiA (ORCPT
+        id S1344763AbjJRPqE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Oct 2023 10:38:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47594 "EHLO
+        Wed, 18 Oct 2023 11:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235178AbjJROhr (ORCPT
+        with ESMTP id S232207AbjJROpT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Oct 2023 10:37:47 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3501C1733;
-        Wed, 18 Oct 2023 07:36:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
- t=1697639776; x=1698244576; i=w_armin@gmx.de;
- bh=5pqqWh4ZfBgHGygFfC0tANO58OsoMGGYFc57UxQqDGk=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=OtR9BKvxalYGz16ki2a6goUHpWRzNxkl4ZwTtXdpIBCZoy6UxZGh2NG3VMUvPbbvDieaShwOBFz
- XAauwXOVR7MpSQoX5962PvcHpHOGWDinpEaeZnB64PvurOJY4CdHyphqsRybEvcNtkVWaGroT+kRm
- /Fv5b36Cf765ybIPcwuyUzugMQsx72oH6fjteXextwtII7jHJk5XQlmxNVen5SNFshCRxttbdLGTc
- AupscC3i6N8HH/ggYapOux1Sx6NFmgxaiB4X1yuCBGUeo0KhMJcYjBrQBoVbes/aUyCobadVP/Yp2
- RSMM86k745zeO2PcaaagdohX10UytJzrlNTA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MNKlu-1rCJTO395O-00Onl0; Wed, 18
- Oct 2023 16:36:16 +0200
-Message-ID: <7dd892f9-c193-40e8-9041-daefd6383674@gmx.de>
-Date:   Wed, 18 Oct 2023 16:36:15 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] platform/x86: inspur-wmi: Add platform profile support
-To:     =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
-        Ai Chao <aichao@kylinos.cn>
-Cc:     hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
-        markgross@kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-References: <20231018080014.536047-1-aichao@kylinos.cn>
- <1d2e147d-8d93-4467-ac7c-199bfd887348@t-8ch.de>
+        Wed, 18 Oct 2023 10:45:19 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C838A94
+        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Oct 2023 07:45:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697640317; x=1729176317;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=j0HvSoAFzcGRdPy28+52FIMa94Yb2Hxg2Z1afvCndOc=;
+  b=KsepBZ7UQLCMYuIb12fOhjt2MoIt21Vr3h+VNyeM8Y6PtpBiFgKmq5po
+   DEOHirWr+3khniMRpzBII1M1KXt5KMFAl+7CveUoJ74s7VXnTUJORLi0r
+   gTHWGdOO3wyzD11g1LRwoaT9gRRM8USADEqiVWiZq2Pnyiwz3WB6IVoBc
+   rTuYdchI3AoNrO2rp214b6Kv0sgj1HN+ykg+80jZPviB1fVobZhtabJVP
+   9Q4lbwcjaXnBzNTxV+iuft7OdJKwURdFDg+H9Wd1nnMUxeqGFqB7XSUPW
+   x265F1zzSaI5us97ppBAhMdV73ShgHavZjEj+XrWY9e89Rbh0WbSTpC9l
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="472253216"
+X-IronPort-AV: E=Sophos;i="6.03,235,1694761200"; 
+   d="scan'208";a="472253216"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 07:45:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="785952379"
+X-IronPort-AV: E=Sophos;i="6.03,235,1694761200"; 
+   d="scan'208";a="785952379"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 18 Oct 2023 07:45:17 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Wed, 18 Oct 2023 07:45:17 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32 via Frontend Transport; Wed, 18 Oct 2023 07:45:17 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.41) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Wed, 18 Oct 2023 07:45:15 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MPNk2Dx72G95erf/xpFSrFh4FOweY8LycnyMV6JbRGp9SlBr6qy+ig06+2uRkjaQET6KReFT6xCvbuAgoAt6IlauA1cCFs7/+opvpHzYitCQbr7SafhPmJCBcH/u3BWRhLfM3zpS41UsERdjVdgnBg71+ZhvcqUY0qpF0SG4ZdbpwhzTfc+SEfCXwITpcy6AM9OF6xj1b/cHSn4a2n7t34CciJu4DzdEap4ls2TyXF2ZfVzPmFMhnUGfV4XBzrsZrACkrFxb7NmcWSCQyLgcx6P8qq0byy5D+XZEoaPMkxRRtXemAWNZO2FQFjqy644FOqypwF8wwy7Cq30dyY6NHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j0HvSoAFzcGRdPy28+52FIMa94Yb2Hxg2Z1afvCndOc=;
+ b=lb2F2YI968vUuh7tHXUt8Wpq2vtC3K4s8LpebP28tuNehaaO12QNBzBC23Ql6hQh1RZmynz8vsKRF5KPaSIoF81GS4MJDiFCzfV1wN3vvdGsz8lkFude8enEBeGWGmWNJco4ysyrNxWfsVDwcoMwo3VoTQvcFdhtvkYDg3/vpTlygKnhfPDKZnjyJmtp6KU6BFUCMyKmrAIggsn6m3Sr8wkJQTSCYu8SyUwaJ0CVjwGdezXDDbw7dDZ3U16Kwjs3QMWNoMsJ0oHZ+whe8cl2dsuf0o/twm1JQ5Vl/7rSUCe1kFaIMlSCAqkqOnYzAnpdTzCjm5EvzX6PDYgAEHEsgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM8PR11MB5592.namprd11.prod.outlook.com (2603:10b6:8:35::6) by
+ IA1PR11MB7891.namprd11.prod.outlook.com (2603:10b6:208:3fa::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6907.23; Wed, 18 Oct 2023 14:45:13 +0000
+Received: from DM8PR11MB5592.namprd11.prod.outlook.com
+ ([fe80::3c56:2e9f:2454:cd41]) by DM8PR11MB5592.namprd11.prod.outlook.com
+ ([fe80::3c56:2e9f:2454:cd41%3]) with mapi id 15.20.6907.022; Wed, 18 Oct 2023
+ 14:45:13 +0000
+From:   "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+To:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>
+CC:     "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 6.7-rc1
+Thread-Topic: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 6.7-rc1
+Thread-Index: AQHaAUYfe+/F/2fStEeBusHyNzLFg7BPkggAgAAHVYCAAAd8AA==
+Date:   Wed, 18 Oct 2023 14:45:13 +0000
+Message-ID: <bb46e987d42006576bc8503144efc81130597974.camel@intel.com>
+References: <8680ce83af5ed5268bb05d87c579a42a1eeb97b4.camel@intel.com>
+         <c5c44896-9460-1e5f-51d1-ef8fca040011@redhat.com>
+         <e64d9868-34b4-a7ae-dde2-3ea7bdef96b0@linux.intel.com>
+In-Reply-To: <e64d9868-34b4-a7ae-dde2-3ea7bdef96b0@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-From:   Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <1d2e147d-8d93-4467-ac7c-199bfd887348@t-8ch.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:BBM93MqXxughSEy3y9am+doNb3mmRDe20+gZtHnaFi7iUW1o+5Y
- VK0MJZwNs9DFRK7feLwhcJkFj6vS9MZk5IsvKy0ouWj5rma0j8dtRM1XsgusS7uUoKmpqq5
- ZtiLvKFIoxAfPjJV8/ELqDDIsXeBH7fc4/8vh+DmBxfKwNczyn5yCTD7O53RHYRd/Fucj+4
- ueG8hC73K6BDNcSnYyDJQ==
-UI-OutboundReport: notjunk:1;M01:P0:Xuk7LvM6HCU=;Nc0+6E+Cx3HQSTFwRWDCoCLI0jC
- NvkOnSE73DBjVKho4TefHOKXqWGmrk7SMngwGmOn0ugCT+qEMXZTYwrePwcQbzw9qJNV8tbk1
- fb3BS9+LvY5f5zk26vljkzfnm90ptmbo+gDGP51sG2Lg1ot9zDOrjauEGUSoxTSuVFno/GisJ
- ciHycBP2wxjs8DBiVSuRuVzdh2tbq8869qQq6/5KqhR1ohBigXKO66cC5jz6Wm3RvwfuAzE/j
- u3xfoOrUu/aNB08TYNZELRxMb1Jj6Ki9yg8CIKGjfyX0vOXuSP7iqdqiyuIww+y9v3y56IiGr
- BOEGIJ0QMHPuwZ0TzcVZW7Gi5pdW6ZcLFf7m3H3eZCfJfzhZjOR+gdqo9k175YwgzSNZyY5e4
- 9yonJgX1pO2lnFqFAjkwPdn3IGc88tNFHcR/2aY4Mg7GDdsWsu0Pas5B8yiwJWMh6gjMazB9L
- 6T81JbUlvjUgRwqdaK/TYR/2FJ33aWmHzAYohHShwct2BA1fVFJxkcxldmPdPda6nekqQCVOY
- 8kjUKtt/qTVgJjNwpQrSyKtyEGRk9y1Lr50lz9tE09DBSCRwxPry1eJ9Ho2xIjFQBmNGRNg5v
- P/qdA+VF38Dap9Kh/Sr9EMbpVB1yH9L+0BwnSKe8zafS7ZpgJjSsgtOGDY4VMRwff9K/zjVNk
- xBS3X2glJP1iQt4n5HO7eThu0fpYEO9hwXAg1dejY+u6f10D9MDZAqsWa96Fxe30lEzA+e/Oj
- 98+BfYH9zVZ8jLhXHwNKRo7/v1NbYK2vQpF2vFWiM0bwViNbkwPUzt/e4FXZk8YSceA0pjsET
- 4DURrQybZmhTYth1kPuovTNKd5ypJ+VxP1I1t4Dz0onN/4imGwzcmnYrYugR8F1qcDCkgCfx5
- 302BsF8f9kzivMwqMJJLzxgSmoJ5fXjLnNQxK+/04CwypGvSYltiganFvMBdVc9ScbNkoWp2u
- hzHeGzma4lWizoOl6vcjWjxup2g=
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR11MB5592:EE_|IA1PR11MB7891:EE_
+x-ms-office365-filtering-correlation-id: e274c0a0-ae58-4954-f92c-08dbcfe8d614
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ENW7YynKMXjl3HWIxrazM3vgAROQiyYOXBFxl08xfXdyZjEDpjHvoWKXx9Y0UAFl6y+b+eeAluFZTICRhvp5l+eNy8m0m00T9u0T5JF68BtpK9/7rP+lla3apicWWnTABqQThnZ9EZ3epKg7trTbBZ/lKLbGFyf8gAjBIuS+tqmHCXMXK0nST2N95oTmkDbs+8n/tL9mQSwp79Sku+/6EJzbZRtfXeFs7n/dGhWVWjSkjNo7cBpGHpc9qGUm4TD3EeCogNoK8TiY37QitvQgTWNkOvwavr//FOo/NtpKUqsZj6oIt+wUNZWevV0b3RxwmLzp+lgMIe0c+1jxtbhPhZScR7eBhpztvmXvJ9qYNtbEsVzm42uBMeAIOCOk7h5Lc6kLSdJNEXX9YTOab9eB9cypaUuBTLlPpG7nU6CKFtRI2DdDz9K9R2EzIiiHK1tnaiA/6hbn75ANwwM+sqSYIJUcMsj1QAfSAB1w9pWmRMx2PfesqBZRqUIh1qOuntblXCUS3RkVzB5ecDuidatCuGLIUSsZl2fg0TF3JD3yekCZw38cToT9NbIlyMDqpcDL0KX2OQ1oAAKrFBoaa3b4QQpGJ9PwSsuaic7EZn45gyQXDvlomEEsu+ESrHq36t5Q
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5592.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(366004)(136003)(376002)(346002)(396003)(230922051799003)(451199024)(1800799009)(64100799003)(186009)(38100700002)(478600001)(5660300002)(6486002)(66946007)(76116006)(91956017)(110136005)(83380400001)(66556008)(4326008)(8676002)(8936002)(71200400001)(86362001)(4744005)(2906002)(41300700001)(53546011)(6506007)(38070700005)(54906003)(64756008)(66446008)(66476007)(316002)(4001150100001)(6512007)(2616005)(122000001)(26005)(66574015)(36756003)(82960400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?dFkwKzlZYnhQQkdGK0Y4dWo1R2I2d2JJdjdvU0ZvSGxlWkxOVWdTcEJxdEcr?=
+ =?utf-8?B?UXhLRGFLQVB3cVAwR1B3eG1taWRrZWJiTjMyTnlHYWY2bEZ2MjdtelkyQjM3?=
+ =?utf-8?B?MElkRW1icFkvRnFYNXdDOFlVcmdVT1NzMUtQYVlEUU4xOWhJckRtVklRUXE3?=
+ =?utf-8?B?MXBKb2twTEtNbmtnK3Zrekw4by9ONFc3UVRuYjBRakYwQW5yNjB6b2k3VG52?=
+ =?utf-8?B?ZmJXbEVJMzNnRVMzMXJDejhOK0wybkdpVDRSMlJ1cTRtRmtZM2dCaEVySmU1?=
+ =?utf-8?B?QzlWbzNpN2gvWnFyQUw4RmlOQlpvL25jaHdGbC8xQWdnOUR4SUNtZFJWRTNo?=
+ =?utf-8?B?MGYyZ3F6ZWx2WERJRVZROVlGVmozOHJ2cnZad2NkcDVoQW9JQm1DQTNzUlA5?=
+ =?utf-8?B?TW9pbnJmYzhVaGd0RXpBVkM4bEtPekJudUJXdkc1MklScDFPbm95aTRhdTJ2?=
+ =?utf-8?B?YkxaN2ZlaGRKaE9RMFZqMmhwa0t6bXZpKzlaSjJxMU9oSFFVeGNyY1dhUnND?=
+ =?utf-8?B?RExMTDBlTGk3czZLSmI0TTUxS3lDRkZEWmwybzRVSlQ4YXJKd1JnY1RsZmRj?=
+ =?utf-8?B?eGlWSElZVzJrcHNYKzNySEdCU3BTdGhNano3Q0Q5WWd1cExDOTNBMkpBSm5W?=
+ =?utf-8?B?Uzc5VXBFcGFmZzhwd1p4S25vZjBjaHZlSFlGZjVjZ3BwanpOMkJjOUJ3WWFK?=
+ =?utf-8?B?OEVPcXFnYlJrblhYTzE1bWQvNWVKeVFoM2FKeDB3VXlsZEpVVXdnVTJrSWNP?=
+ =?utf-8?B?U0ZZa04rSkcrL3IrSXUwWC9ySzdJWHNGZG5nNEl5VmJWSU51a2F0VHlzRVRa?=
+ =?utf-8?B?SWozTG90b242SEMvdlowc1ArUFdjQjVPZEZyVFcxWDg2L3JHWU5ndGJTell2?=
+ =?utf-8?B?ZmMxSkJrK3F2b2pwcVVZL0VmU2hRaE85ZlUyK2Y3cXhVaU8raXpCL2hCTVR4?=
+ =?utf-8?B?b0NMdlFsaFpOSE11ODBJbmNiUDJEUm1sQzFnMW5kc0dIN3JNc05VQnJuY3pX?=
+ =?utf-8?B?dnRvZjRXME9SZ240ZWNlemxWTFhjQXg3aFNxM1hhWlY2TzFwRzg4bkhvMTQ2?=
+ =?utf-8?B?ZWkvSm8ra08ydjRydHFMNGVoK1pCc2hTbUloYWVNZVFNd2V5SnhpVFFwcVdi?=
+ =?utf-8?B?OGZtUmorZTQyVlpOMUFrY2tHY3VhbHJWdEN4RUUwcTVRQ1BDLzI1cUZGRjF2?=
+ =?utf-8?B?UityZ0luY2R5bTM5Wjh3Q2tnTXhOc2gwVGxSMUl4TGNvRitpQXBrU1dyZnRV?=
+ =?utf-8?B?UENwZ3lYNUJOTy9heVRRNnZ0UUUydHBmcnMydmpGTGg2aVdOdkQxNHl2NFd2?=
+ =?utf-8?B?MmVUd3J6a2NDZEVVdVdDVlowTEI4ZXU1R0d1UVVHVU96ZUc0Y09pOWdZaGRs?=
+ =?utf-8?B?QkQ5amttc3ZEMFBoR3hHa0FmajlVVmUxdFMwMHBUeFpkaDlDZ0FDSE8yZlJh?=
+ =?utf-8?B?Y0ZpNkR0QXNvN0ZBNkhrcFFYZXBnRlNLVXhPNWlWb0VpR0dlbklSRFRFd0wr?=
+ =?utf-8?B?WFFYc2RwdHRESHlvTFlkUm9nQVo1Tk1wQkRFUE1JYTU3NGNJRlFmMisvWmM0?=
+ =?utf-8?B?MTExWUQ4K29VamxOaGtHOCtiTUM1dDBrckk4ajFDRUlXaTB1WDVDcUZiWUwx?=
+ =?utf-8?B?UlJJRzI1a2tFQU5acGJjZi9CWXRnaEpWNU9vbkcxK1pKbFRpdUhPZklmYXFx?=
+ =?utf-8?B?WUxteHloR3ozemQ4b0xMRG1HRFBmYTVkNmVEbkZqemFrT3Q3YmpkMkZDNGxD?=
+ =?utf-8?B?WFUxWVhPbCt5MW1aYk9zZnJ4aTRjajRpeVFiZ0JlUlRrTElXT0xMMmE3RTZI?=
+ =?utf-8?B?QmlMVUx1RWVuRXBtc0Z0Y25ablduVzIzaUdDdHg2NHByOEpONjBkVW9GZDdr?=
+ =?utf-8?B?V2YzdDhTcWIwWkZpNWhzcWVBcnV2ZGZRV0dzSHp3NDRsT0o1NDZsUFlxd2F1?=
+ =?utf-8?B?WmlBOXdtNUpsNkdmZG01VGQyK1ZUMkdsSXY3U1NQUFFCd3g5NGg5b2dXM25y?=
+ =?utf-8?B?YWhYdGh1dCtlaFJwbm0wRkl2UGViY1dTcGtDL3pHVjNIN2UvSVpYUnloTEpI?=
+ =?utf-8?B?Z2V0RmM0OGNZeG96R29uL1RkN29zRGNVdGl5YVMveDNSaUNZN3Ava0VvZXVs?=
+ =?utf-8?B?ODBiendyU2Q0MkJRWWxlZ1U5M3UzL29KOHR2c2JkSU51eHlSNzNXWnNxaFRv?=
+ =?utf-8?Q?4rLy3kqQGVRD/4tKYUbhUZw=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F31830B6E1B2AC43911A349666D171BD@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5592.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e274c0a0-ae58-4954-f92c-08dbcfe8d614
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Oct 2023 14:45:13.4047
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dwtQ/dW869Wg9oYjTHmvPuBOs+8/bsZovrv17UTw5ayxYwzQaNn+BUYw+4h2rv4mpwHtQcGdkgZo/aAYzbOLF6bzUL07d2Uvrw35PMv44s8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7891
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 18.10.23 um 15:38 schrieb Thomas Wei=C3=9Fschuh:
-
-> On 2023-10-18 16:00:14+0800, Ai Chao wrote:
->> Add support for Inspur platforms to used the platform profile feature.
->>
->> This will allow users to determine and control the platform modes
->> between low-power, balanced and performance modes.
->>
->> change for v3
->> - Remove input device
->> - Using the platform profile interface
->>
->> change for v2
->> - Remove Event GUID, remove inspur_wmi_notify and inspur_wmi_notify.
->> - Add more explanation.
->>
->> Signed-off-by: Ai Chao <aichao@kylinos.cn>
->> ---
->>   drivers/platform/x86/Kconfig      |  10 ++
->>   drivers/platform/x86/Makefile     |   3 +
->>   drivers/platform/x86/inspur-wmi.c | 215 +++++++++++++++++++++++++++++=
-+
->>   3 files changed, 228 insertions(+)
->>   create mode 100644 drivers/platform/x86/inspur-wmi.c
->>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
-g
->> index 2a1070543391..d7bd27c53751 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -988,6 +988,16 @@ config TOUCHSCREEN_DMI
->>   	  the OS-image for the device. This option supplies the missing info=
-.
->>   	  Enable this for x86 tablets with Silead or Chipone touchscreens.
->>
->> +config INSPUR_WMI
->> +	tristate "Inspur WMI platform profile driver"
->> +	depends on ACPI_WMI
->> +	help
->> +	This will allow users to determine and control the platform modes
->> +	between low-power, balanced and performance modes.
->> +
->> +	To compile this driver as a module, choose M here: the module
->> +	will be called inspur-wmi.
->> +
->>   source "drivers/platform/x86/x86-android-tablets/Kconfig"
->>
->>   config FW_ATTR_CLASS
->> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makef=
-ile
->> index b457de5abf7d..9285c252757e 100644
->> --- a/drivers/platform/x86/Makefile
->> +++ b/drivers/platform/x86/Makefile
->> @@ -98,6 +98,9 @@ obj-$(CONFIG_TOSHIBA_WMI)	+=3D toshiba-wmi.o
->>   # before toshiba_acpi initializes
->>   obj-$(CONFIG_ACPI_TOSHIBA)	+=3D toshiba_acpi.o
->>
->> +# Inspur
->> +obj-$(CONFIG_INSPUR_WMI)	+=3D inspur-wmi.o
->> +
->>   # Laptop drivers
->>   obj-$(CONFIG_ACPI_CMPC)		+=3D classmate-laptop.o
->>   obj-$(CONFIG_COMPAL_LAPTOP)	+=3D compal-laptop.o
->> diff --git a/drivers/platform/x86/inspur-wmi.c b/drivers/platform/x86/i=
-nspur-wmi.c
->> new file mode 100644
->> index 000000000000..d0c5ae2e3fcb
->> --- /dev/null
->> +++ b/drivers/platform/x86/inspur-wmi.c
->> @@ -0,0 +1,215 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + *  Inspur WMI power mode
->> + *
->> + *  Copyright (C) 2018	      Ai Chao <aichao@kylinos.cn>
->> + */
->> +
->> +#include <linux/acpi.h>
->> +#include <linux/device.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_profile.h>
->> +#include <linux/wmi.h>
->> +
->> +#define WMI_INSPUR_POWERMODE_BIOS_GUID "596C31E3-332D-43C9-AEE9-585493=
-284F5D"
->> +
->> +enum inspur_wmi_method_ids {
->> +	INSPUR_WMI_GET_POWERMODE =3D 0x02,
->> +	INSPUR_WMI_SET_POWERMODE =3D 0x03,
->> +};
->> +
->> +/**
->> + * Power Mode:
->> + *           0x0: Balance Mode
->> + *           0x1: Performance Mode
->> + *           0x2: Power Saver Mode
->> + */
->> +enum inspur_tmp_profile {
->> +	INSPUR_TMP_PROFILE_BALANCE	=3D 0,
->> +	INSPUR_TMP_PROFILE_PERFORMANCE	=3D 1,
->> +	INSPUR_TMP_PROFILE_POWERSAVE	=3D 2,
->> +};
->> +
->> +struct inspur_wmi_priv {
->> +	struct wmi_device *wdev;
->> +	struct platform_profile_handler handler;
->> +};
->> +
->> +static int inspur_wmi_perform_query(struct wmi_device *wdev,
->> +				    enum inspur_wmi_method_ids query_id,
->> +				    void *buffer, size_t insize,
->> +				    size_t outsize)
->> +{
->> +	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
->> +	struct acpi_buffer input =3D { insize, buffer};
->> +	union acpi_object *obj;
->> +	acpi_status status;
->> +	int ret =3D 0;
->> +
->> +	status =3D wmidev_evaluate_method(wdev, 0, query_id, &input, &output)=
-;
->> +	if (ACPI_FAILURE(status)) {
->> +		dev_err(&wdev->dev, "EC Powermode control failed: %s\n",
->> +			acpi_format_exception(status));
->> +		return -EIO;
->> +	}
->> +
->> +	obj =3D output.pointer;
->> +	if (!obj)
->> +		return -EINVAL;
->> +
->> +	if (obj->type !=3D ACPI_TYPE_BUFFER ||
->> +	    obj->buffer.length !=3D outsize) {
->> +		ret =3D -EINVAL;
->> +		goto out_free;
->> +	}
->> +
->> +	memcpy(buffer, obj->buffer.pointer, obj->buffer.length);
->> +
->> +out_free:
->> +	kfree(obj);
->> +	return ret;
->> +}
->> +
->> +/**
->> + * Set Power Mode to EC RAM. If Power Mode value greater than 0x3,
->> + * return error
->> + * Method ID: 0x3
->> + * Arg: 4 Bytes
->> + * Byte [0]: Power Mode:
->> + *         0x0: Balance Mode
->> + *         0x1: Performance Mode
->> + *         0x2: Power Saver Mode
->> + * Return Value: 4 Bytes
->> + * Byte [0]: Return Code
->> + *         0x0: No Error
->> + *         0x1: Error
->> + */
->> +static int inspur_platform_profile_set(struct platform_profile_handler=
- *pprof,
->> +				       enum platform_profile_option profile)
->> +{
->> +	struct inspur_wmi_priv *priv =3D container_of(pprof, struct inspur_wm=
-i_priv,
->> +						    handler);
->> +	u8 ret_code[4] =3D {0, 0, 0, 0};
->> +	int ret;
->> +
->> +	switch (profile) {
->> +	case PLATFORM_PROFILE_BALANCED:
->> +		ret_code[0] =3D INSPUR_TMP_PROFILE_BALANCE;
->> +		break;
->> +	case PLATFORM_PROFILE_PERFORMANCE:
->> +		ret_code[0] =3D INSPUR_TMP_PROFILE_PERFORMANCE;
->> +		break;
->> +	case PLATFORM_PROFILE_LOW_POWER:
->> +		ret_code[0] =3D INSPUR_TMP_PROFILE_POWERSAVE;
->> +		break;
->> +	default:
->> +		return -EOPNOTSUPP;
->> +	}
->> +
->> +	ret =3D inspur_wmi_perform_query(priv->wdev, INSPUR_WMI_SET_POWERMODE=
-,
->> +				       ret_code, sizeof(ret_code),
->> +				       sizeof(ret_code));
->> +
->> +	if (ret < 0)
->> +		return ret;
->> +	else if (ret_code[0])
->> +		return -EBADRQC;
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * Get Power Mode from EC RAM, If Power Mode value greater than 0x3,
->> + * return error
->> + * Method ID: 0x2
->> + * Return Value: 4 Bytes
->> + * Byte [0]: Return Code
->> + *         0x0: No Error
->> + *         0x1: Error
->> + * Byte [1]: Power Mode
->> + *         0x0: Balance Mode
->> + *         0x1: Performance Mode
->> + *         0x2: Power Saver Mode
->> + */
->> +static int inspur_platform_profile_get(struct platform_profile_handler=
- *pprof,
->> +				       enum platform_profile_option *profile)
->> +{
->> +	struct inspur_wmi_priv *priv =3D container_of(pprof, struct inspur_wm=
-i_priv,
->> +						    handler);
->> +	u8 ret_code[4] =3D {0, 0, 0, 0};
->> +	int ret;
->> +
->> +	ret =3D inspur_wmi_perform_query(priv->wdev, INSPUR_WMI_GET_POWERMODE=
-,
->> +				       &ret_code, sizeof(ret_code),
->> +				       sizeof(ret_code));
->> +	if (ret < 0)
->> +		return ret;
->> +	else if (ret_code[0])
->> +		return -EBADRQC;
->> +
->> +	switch (ret_code[1]) {
->> +	case INSPUR_TMP_PROFILE_BALANCE:
->> +		*profile =3D PLATFORM_PROFILE_BALANCED;
->> +		break;
->> +	case INSPUR_TMP_PROFILE_PERFORMANCE:
->> +		*profile =3D PLATFORM_PROFILE_PERFORMANCE;
->> +		break;
->> +	case INSPUR_TMP_PROFILE_POWERSAVE:
->> +		*profile =3D PLATFORM_PROFILE_LOW_POWER;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int inspur_wmi_probe(struct wmi_device *wdev, const void *conte=
-xt)
->> +{
->> +	struct inspur_wmi_priv *priv;
->> +
->> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
->> +	if (!priv)
->> +		return -ENOMEM;
->> +
->> +	priv->wdev =3D wdev;
->> +	dev_set_drvdata(&wdev->dev, priv);
->> +
->> +	priv->handler.profile_get =3D inspur_platform_profile_get;
->> +	priv->handler.profile_set =3D inspur_platform_profile_set;
->> +
->> +	set_bit(PLATFORM_PROFILE_LOW_POWER, priv->handler.choices);
->> +	set_bit(PLATFORM_PROFILE_BALANCED, priv->handler.choices);
->> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, priv->handler.choices);
->> +
->> +	platform_profile_register(&priv->handler);
->> +	return 0;
->> +}
->> +
->> +static void inspur_wmi_remove(struct wmi_device *wdev)
->> +{
->> +	platform_profile_remove();
->> +}
->> +
->> +static const struct wmi_device_id inspur_wmi_id_table[] =3D {
->> +	{ .guid_string =3D WMI_INSPUR_POWERMODE_BIOS_GUID },
->> +	{  }
->> +};
->> +
->> +MODULE_DEVICE_TABLE(wmi, inspur_wmi_id_table);
->> +
->> +static struct wmi_driver inspur_wmi_driver =3D {
->> +	.driver =3D {
->> +		.name =3D "inspur-wmi",
->> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
-> Seems unnecessary.
-> The docs say this should be used for "slow" devices.
-> But the probe function here doesn't really do anything.
-
-The reason why i prefer drivers to enable asynchronous probing is that
-without enabling it by default, asynchronous probing wont have any chance
-of becoming the default someday.
-
-Additionally, the WMI core might call some ACPI methods when probing an
-WMI device, and those can be quite slow. By enabling asynchronous probing,
-we avoid any slowdowns in such a case.
-
-Armin Wolf
-
->> +	},
->> +	.id_table =3D inspur_wmi_id_table,
->> +	.probe =3D inspur_wmi_probe,
->> +	.remove =3D inspur_wmi_remove,
->> +};
->> +
->> +module_wmi_driver(inspur_wmi_driver);
->> +
->> +MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
->> +MODULE_DESCRIPTION("Inspur WMI hotkeys");
-> There is no more hotkey functionality left.
-> Kconfig says "Inspur WMI platform profile driver",
-> should also be used here.
->
-> If you are also going to submit the hotkey driver it may make sense to
-> call this one inspur-wmi-platform-profile, or something similar unique.
->
->> +MODULE_LICENSE("GPL");
->> --
->> 2.25.1
->>
+T24gV2VkLCAyMDIzLTEwLTE4IGF0IDE3OjE4ICswMzAwLCBJbHBvIErDpHJ2aW5lbiB3cm90ZToN
+Cj4gT24gV2VkLCAxOCBPY3QgMjAyMywgSGFucyBkZSBHb2VkZSB3cm90ZToNCj4gPiBPbiAxMC8x
+OC8yMyAwMDowNiwgUGFuZHJ1dmFkYSwgU3Jpbml2YXMgd3JvdGU6DQo+ID4gPiANCj4gPiA+IFB1
+bGwgcmVxdWVzdCBmb3IgSW50ZWwgU3BlZWQgU2VsZWN0IHZlcnNpb24gdjEuMTguDQo+ID4gDQo+
+ID4gVGhhbmtzLCBub3RlIEknbSBjby1tYWludGFpbmluZyB0aGUgcGR4ODYgc3Vic3lzIHdpdGgg
+SWxwbw0KPiA+IG5vdyB0aGUgcGxhbiBpcyB0aGF0IHdlIGFsdGVybmF0ZSBtZXJnaW5nIHBhdGNo
+ZXMgbGVhZGluZyB1cCB0bw0KPiA+IHRoZSBuZXh0IG1lcmdlLXdpbmRvdy4gSWxwbyBpcyB0YWtp
+bmcgY2FyZSBvZiBtZXJnaW5nIHN0dWZmIGZvcg0KPiA+IHRoZSA2LjcgbWVyZ2Utd2luZG93LiBG
+b3IgZnV0dXJlIGludGVsLXNwZWVkLXNlbGVjdCBwdWxsLXJlcXMgaXQNCj4gPiBpcyBwcm9iYWJs
+eSBlYXNpZXN0IHRvIGp1c3Qgc2VuZCBpdCB0byB0aGUgYm90aCBvZiB1cy4NCj4gPiANCj4gPiBJ
+bHBvLCBjYW4geW91IHRha2UgY2FyZSBvZiBtZXJnaW5nIHRoaXMgPw0KPiANCj4gSXQncyBub3cg
+bWVyZ2VkIGludG8gcmV2aWV3LWlscG8sIHRoYW5rIHlvdSBhbGwhDQpUaGFua3MuDQoNCi1Tcmlu
+aXZhcw0KPiANCg0K
