@@ -2,212 +2,107 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F330CDB47E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Oct 2023 10:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA66CCDB47E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Oct 2023 11:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229702AbjJRKWH (ORCPT
+        id S230096AbjJRLBX convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Oct 2023 06:22:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41214 "EHLO
+        Wed, 18 Oct 2023 07:01:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbjJRKWG (ORCPT
+        with ESMTP id S230075AbjJRLBV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Oct 2023 06:22:06 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 230E3B0;
-        Wed, 18 Oct 2023 03:22:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697624525; x=1729160525;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=xDWK7EvYYMm8tp0hVJ/TwEDbQjIuQxVbahjC4hZ+APw=;
-  b=KBDOMq7d77KX2Ivh8kwfgbKr5HLzuw7ANk2C42KrfelnP5AAcZ+esRQ1
-   Pzb3RQ3OXr3EADBiH/ROzPRD996OVYc94sdrO9R5XligQu4mEuLNWe+rC
-   ejU/Ag3y26uWV2r/+YLZhFjt4+o778P9KhmCweKALMIYe5StEYhuthBmu
-   QYR9mPFYZj/TCoDloP9WTtxs+Moc/Oh3iny55aTYDQvzWhT97jKd7md9/
-   ppHYAmHU4nPmfoZXVtbV+NTv9CbdNLSh2rcVGLU9bC8AaAJON3ZIxb8ij
-   Ynd98PdOg5NICIm5c3X00/vh5mI1++46vOXAC2/kHyOS7rB5aVD1Xhki0
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="384865058"
-X-IronPort-AV: E=Sophos;i="6.03,234,1694761200"; 
-   d="scan'208";a="384865058"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 03:22:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="756537906"
-X-IronPort-AV: E=Sophos;i="6.03,234,1694761200"; 
-   d="scan'208";a="756537906"
-Received: from gruberda-mobl1.ger.corp.intel.com ([10.252.62.52])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 03:21:59 -0700
-Date:   Wed, 18 Oct 2023 13:21:57 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
-        basavaraj.natikar@amd.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, alexander.deucher@amd.com,
-        christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
-        daniel@ffwll.ch, Patil.Reddy@amd.com, mario.limonciello@amd.com,
-        platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v4 11/17] platform/x86/amd/pmf: Add capability to sideload
- of policy binary
-In-Reply-To: <20231018070241.2041529-12-Shyam-sundar.S-k@amd.com>
-Message-ID: <c6be6d40-f8d7-a4f-91c6-967ff920a44@linux.intel.com>
-References: <20231018070241.2041529-1-Shyam-sundar.S-k@amd.com> <20231018070241.2041529-12-Shyam-sundar.S-k@amd.com>
+        Wed, 18 Oct 2023 07:01:21 -0400
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 238DDB0;
+        Wed, 18 Oct 2023 04:01:18 -0700 (PDT)
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-57de3096e25so1373547eaf.1;
+        Wed, 18 Oct 2023 04:01:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697626877; x=1698231677;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4lcRiI20ZuywZkKh3K94fi7hRo3xDvC91w21Xu89tDA=;
+        b=dn4rfb1Mp7uPUofEAZ5GmVb1ga56RXZNg7toM06+wYdFOMpqdZiLfFSLq8veFEL0QU
+         pJCUf7C3c+N+k9OAJFZAToB/pi+T7juhyZCi8FhHkZwHWZj3lN0ffVFAlAEnjTiQg2WU
+         AupPazNs81lvH5WMw0rMfiFpompFBK2V8X9pY93Trv/xl2OPs6R58uEwjttJriwaMIpX
+         4msoiLWaBUe9l5mzNV/ktloR4L05TtPTCFOzPY+kog4Lylo4aCuVp6rxLyyKMeQLNMRk
+         oo91/HNPJWj5Qtrs9LLklNssBswlu9Q6pg1tbs5aW3ATVWjND5//3cYKbGsQCOnaFEiO
+         hzeg==
+X-Gm-Message-State: AOJu0Yz7eL2Yg4W3Un9XQE+2nP4RtwHuU4YBWEO7XLB7ajKtI45Qgjni
+        nntuUM1qr0IB5OLUn2R++BC8wGlivXSTMM35kt4=
+X-Google-Smtp-Source: AGHT+IHKOXhEkpSOf/2bcSgi0F90xtejN4EPHb5JRiEY94jWF8NzmelIVAVzgSKoWTFssRg5klRal1SEwtMLeZzZ3qs=
+X-Received: by 2002:a4a:ee94:0:b0:581:5990:dbb8 with SMTP id
+ dk20-20020a4aee94000000b005815990dbb8mr4871904oob.0.1697626877296; Wed, 18
+ Oct 2023 04:01:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20231014205314.59333-1-hdegoede@redhat.com> <20231014205314.59333-3-hdegoede@redhat.com>
+In-Reply-To: <20231014205314.59333-3-hdegoede@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 18 Oct 2023 13:01:06 +0200
+Message-ID: <CAJZ5v0i1b4wKj=1bhvtD385OSRMKzzd8bL68am4HZtgV2JtZ=A@mail.gmail.com>
+Subject: Re: [PATCH 2/4] ACPI: scan: Add LNXVIDEO HID to ignore_serial_bus_ids[]
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Brown <broonie@kernel.org>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 18 Oct 2023, Shyam Sundar S K wrote:
+On Sat, Oct 14, 2023 at 10:53 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> The I2C-core already has filtering to skip i2c_client instantiation for
+> LNXVIDEO acpi_device-s with I2cSerialBus resources, since LNXVIDEO devices
+> are not i2c_client-s and are handled by the acpi_video driver.
+>
+> This filtering was added to i2c-core-acpi.c in commit 3a4991a9864c ("i2c:
+> acpi: Do not create i2c-clients for LNXVIDEO ACPI devices").
+>
+> Now a similar problem has shown up where the SPI-core is instantiating
+> an unwanted SPI-device for a SpiSerialBus resource under a LNXVIDEO
+> acpi_device. On a Lenovo Yoga Tab 3 YT3-X90F this unwanted SPI-device
+> instanstantiation causes the SPI-device instanstantiation for the WM5102
+> audio codec to fail with:
+>
+> [   21.988441] pxa2xx-spi 8086228E:00: chipselect 0 already in use
+>
+> Instead of duplicating the I2C-core filtering in the SPI-core code, push
+> the filtering of SerialBus resources under LNXVIDEO acpi_device-s up into
+> the ACPI-core by adding the LNXVIDEO HID to ignore_serial_bus_ids[].
+>
+> Note the filtering in the I2C-core i2c_acpi_do_lookup() function is still
+> necessary because this not only impacts i2c_client instantiation but it
+> also makes the I2C-core ignore the I2cSerialBus resource when checking what
+> the maximum speed is the I2C bus supports, which is still necessary.
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-> A policy binary is OS agnostic, and the same policies are expected to work
-> across the OSes.  At times it becomes difficult to debug when the policies
-> inside the policy binaries starts to misbehave. Add a way to sideload such
-> policies independently to debug them via a debugfs entry.
-> 
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+and please feel free to route it along with the rest of the series.
+
 > ---
->  drivers/platform/x86/amd/pmf/pmf.h    |  1 +
->  drivers/platform/x86/amd/pmf/tee-if.c | 67 +++++++++++++++++++++++++++
->  2 files changed, 68 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 593930519039..8712299ad52b 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -219,6 +219,7 @@ struct amd_pmf_dev {
->  	bool cnqf_supported;
->  	struct notifier_block pwr_src_notifier;
->  	/* Smart PC solution builder */
-> +	struct dentry *esbin;
->  	unsigned char *policy_buf;
->  	u32 policy_sz;
->  	struct tee_context *tee_ctx;
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> index 0eba258f4040..6c4ce22ba518 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -8,6 +8,7 @@
->   * Author: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
->   */
->  
-> +#include <linux/debugfs.h>
->  #include <linux/tee_drv.h>
->  #include <linux/uuid.h>
->  #include "pmf.h"
-> @@ -16,9 +17,14 @@
->  
->  /* Policy binary actions sampling frequency (in ms) */
->  static int pb_actions_ms = MSEC_PER_SEC;
-> +/* Sideload policy binaries to debug policy failures */
-> +static bool pb_side_load;
-> +
->  #ifdef CONFIG_AMD_PMF_DEBUG
->  module_param(pb_actions_ms, int, 0644);
->  MODULE_PARM_DESC(pb_actions_ms, "Policy binary actions sampling frequency (default = 1000ms)");
-> +module_param(pb_side_load, bool, 0444);
-> +MODULE_PARM_DESC(pb_side_load, "Sideload policy binaries debug policy failures");
->  #endif
->  
->  static const uuid_t amd_pmf_ta_uuid = UUID_INIT(0x6fd93b77, 0x3fb8, 0x524d,
-> @@ -269,6 +275,61 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_AMD_PMF_DEBUG
-> +static ssize_t amd_pmf_get_pb_data(struct file *filp, const char __user *buf,
-> +				   size_t length, loff_t *pos)
-> +{
-> +	struct amd_pmf_dev *dev = filp->private_data;
-> +	int ret;
-> +
-> +	/* Policy binary size cannot exceed POLICY_BUF_MAX_SZ */
-> +	if (length > POLICY_BUF_MAX_SZ || length == 0)
-> +		return -EINVAL;
-> +
-> +	dev->policy_sz = length;
-> +	if (copy_from_user(dev->policy_buf, buf, dev->policy_sz))
-> +		return -EFAULT;
-> +
-> +	ret = amd_pmf_start_policy_engine(dev);
-> +	if (ret)
-> +		return -EINVAL;
-> +
-> +	return length;
-> +}
-> +
-> +static const struct file_operations pb_fops = {
-> +	.write = amd_pmf_get_pb_data,
-> +	.open = simple_open,
-> +};
-> +
-> +static int amd_pmf_open_pb(struct amd_pmf_dev *dev, struct dentry *debugfs_root)
-> +{
-> +	struct dentry *file = NULL;
-> +
-> +	dev->esbin = debugfs_create_dir("pb", debugfs_root);
-> +	if (IS_ERR(dev->esbin))
-> +		return -EINVAL;
-> +
-> +	file = debugfs_create_file("update_policy", 0644, dev->esbin, dev, &pb_fops);
-> +	if (!file)
-
-debugfs_create_file() returns ERR_PTR() on errors. I don't actually know 
-if NULL even needs to be checked or if it'd return errno in that case 
-because the usually custom is to just ignore debugfs_create_file() 
-return value.
-
-Why is this function returning int anyway? It's not checked by the caller 
-so why bother when all it does is deal with debugfs for which the normal 
-approach is to ignore the errors.
-
--- 
- i.
-
-
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static void amd_pmf_remove_pb(struct amd_pmf_dev *dev)
-> +{
-> +	debugfs_remove_recursive(dev->esbin);
-> +}
-> +#else
-> +static int amd_pmf_open_pb(struct amd_pmf_dev *dev, struct dentry *debugfs_root)
-> +{
-> +	return 0;
-> +}
-> +
-> +static void amd_pmf_remove_pb(struct amd_pmf_dev *dev) {}
-> +#endif
-> +
->  static int amd_pmf_get_bios_buffer(struct amd_pmf_dev *dev)
->  {
->  	dev->policy_buf = kzalloc(dev->policy_sz, GFP_KERNEL);
-> @@ -281,6 +342,9 @@ static int amd_pmf_get_bios_buffer(struct amd_pmf_dev *dev)
->  
->  	memcpy(dev->policy_buf, dev->policy_base, dev->policy_sz);
->  
-> +	if (pb_side_load)
-> +		amd_pmf_open_pb(dev, dev->dbgfs_dir);
-> +
->  	return amd_pmf_start_policy_engine(dev);
->  }
->  
-> @@ -382,6 +446,9 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  
->  void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev)
->  {
-> +	if (pb_side_load)
-> +		amd_pmf_remove_pb(dev);
-> +
->  	kfree(dev->prev_data);
->  	kfree(dev->policy_buf);
->  	cancel_delayed_work_sync(&dev->pb_work);
-> 
+>  drivers/acpi/scan.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 691d4b7686ee..4b6faa2350f5 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -1727,6 +1727,7 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
+>          * Some ACPI devs contain SerialBus resources even though they are not
+>          * attached to a serial bus at all.
+>          */
+> +               {ACPI_VIDEO_HID, },
+>                 {"MSHW0028", },
+>         /*
+>          * HIDs of device with an UartSerialBusV2 resource for which userspace
+> --
+> 2.41.0
+>
