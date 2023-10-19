@@ -2,332 +2,193 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00171CDB47E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Oct 2023 03:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEA3CDB465
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Oct 2023 06:17:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231470AbjJSDF7 (ORCPT
+        id S232733AbjJSGRd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Oct 2023 23:05:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55710 "EHLO
+        Thu, 19 Oct 2023 02:17:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232492AbjJSDF6 (ORCPT
+        with ESMTP id S232057AbjJSGRc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Oct 2023 23:05:58 -0400
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBE349F;
-        Wed, 18 Oct 2023 20:05:55 -0700 (PDT)
-X-UUID: 58ad13f757eb40448adcceab124fda2c-20231019
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.32,REQID:5ab4bded-b106-4a26-a538-407c74f03a00,IP:15,
-        URL:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
-        TION:release,TS:20
-X-CID-INFO: VERSION:1.1.32,REQID:5ab4bded-b106-4a26-a538-407c74f03a00,IP:15,UR
-        L:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-        ON:release,TS:20
-X-CID-META: VersionHash:5f78ec9,CLOUDID:b4a01ac0-14cc-44ca-b657-2d2783296e72,B
-        ulkID:231019110546LRCLYHZO,BulkQuantity:0,Recheck:0,SF:19|44|66|38|24|17|1
-        02,TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL
-        :0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-UUID: 58ad13f757eb40448adcceab124fda2c-20231019
-X-User: aichao@kylinos.cn
-Received: from localhost.localdomain [(112.64.161.44)] by mailgw
-        (envelope-from <aichao@kylinos.cn>)
-        (Generic MTA)
-        with ESMTP id 104807895; Thu, 19 Oct 2023 11:05:43 +0800
-From:   Ai Chao <aichao@kylinos.cn>
-To:     hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
-        markgross@kernel.org
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Ai Chao <aichao@kylinos.cn>
-Subject: [PATCH v4] platform/x86: inspur-wmi: Add platform profile support
-Date:   Thu, 19 Oct 2023 11:05:34 +0800
-Message-Id: <20231019030534.157971-1-aichao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+        Thu, 19 Oct 2023 02:17:32 -0400
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2055.outbound.protection.outlook.com [40.107.101.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE1A0BE;
+        Wed, 18 Oct 2023 23:17:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lIiZTC8SUCZUuqu0tpLuReSNlmWb1y4B7u+5RAvtv1D2eVptQUEF0MWj3Z/g3kGy0/jttu5EsyTdayERkwgkH1yO/q5GcR91kUxrNPmJ8zSLOXhA3PXzETHfpEbJruMLMpUI0dY+z1e6jqM7mfwrZHpeLXO+/atoacbuTcTUxPrcEn9NLYwejfhqaai9hby6aY/S3E8dosoVoRKJ7nRm/Da8UXV1j4g1cBznzuFRJuPMaYgeuVPJihLDILmTUxVLLaqF3rq6qTwrMMBlCRoRTM+qq8y5E1E4mYYdmyruIcfWDBghLIFqRqb3E6nuecxzrCK42+8cnT5BmYXbjrPWDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cBqT9M2T6hc5bLw1aqb0YQoiwrwBpKLwAnvUhAfWy8g=;
+ b=W2KhIdmjCAn6cwbW3CFSzJkUeaOfsc+1LXp/MzLhNt+YI1zPpLY+HrvzeB8lwqHUPUlQBbdr/fotk3SEaGO7WG7c5kuDrHqxOZFFx5dpqhIBRCkHbws0jM6SMILyScleqLDR6HwZ+ussooq/OzXTS7tj7Pyix6PNfvKFiaeJYKuhNX+YwddVQdFP/kmopuYTYldCyFdVHkzKCBco3OPtdjzrUs2O1Gx21L6ZGmZDDzmmHzgpYX9B8xYpwVllOP/jmmq0RjpWLiUsbSTN+FbTjNef1JEL0YxAPCU1wjCQCwoB0+stj9Rwvewf0PPSEr80WyUYQR0Nq/vvSYEoM/qiRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cBqT9M2T6hc5bLw1aqb0YQoiwrwBpKLwAnvUhAfWy8g=;
+ b=35iKzvkzgI9992OSfHS2FRca8buagfQy9pSWUtc8PUpG+Eru+fxSt/JWfNNWxOI7IAqo5DRYdmk5TuByaJ5OIuMgIwKgArTQJdebnSgq6XTU+Vk7aCje9XAJsREpc2mvz05Ea8f7UGRQjuMs1PYKO7N/wD9eLW14h5z1O57fHWs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6351.namprd12.prod.outlook.com (2603:10b6:8:a2::6) by
+ CY5PR12MB6624.namprd12.prod.outlook.com (2603:10b6:930:40::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6907.21; Thu, 19 Oct 2023 06:17:27 +0000
+Received: from DM4PR12MB6351.namprd12.prod.outlook.com
+ ([fe80::4ead:d69:799a:281e]) by DM4PR12MB6351.namprd12.prod.outlook.com
+ ([fe80::4ead:d69:799a:281e%5]) with mapi id 15.20.6886.034; Thu, 19 Oct 2023
+ 06:17:27 +0000
+Message-ID: <5f85eb72-3f34-4006-85ca-2a2181113008@amd.com>
+Date:   Thu, 19 Oct 2023 14:17:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Cc:     majun@amd.com, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v12 0/9] Enable Wifi RFI interference mitigation feature
+ support
+To:     Ma Jun <Jun.Ma2@amd.com>, amd-gfx@lists.freedesktop.org,
+        lenb@kernel.org, johannes@sipsolutions.net, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        alexander.deucher@amd.com, Lijo.Lazar@amd.com,
+        mario.limonciello@amd.com
+References: <20231017025358.1773598-1-Jun.Ma2@amd.com>
+Content-Language: en-US
+From:   "Ma, Jun" <majun@amd.com>
+In-Reply-To: <20231017025358.1773598-1-Jun.Ma2@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR02CA0030.apcprd02.prod.outlook.com
+ (2603:1096:3:18::18) To DM4PR12MB6351.namprd12.prod.outlook.com
+ (2603:10b6:8:a2::6)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6351:EE_|CY5PR12MB6624:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9b615315-c40e-4d10-ff8b-08dbd06b10f7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ii/tGh10VP9UnPb2VjGTclKf5AICZQUkYGgCjJiiGpBQc6BjUibPyx9Zq5Mx3HTdEi4gYZSD42H/0nP3D6ihNto6rTULo+aY4YvxepRdwz9cf3QfJFzuuxvDiOj/g6BIFpDyne+N8706DmGT2r/50JaPn6oxEyi5+E7YCxZFJ1EyuOKuXOy7mQjOzCSWQf4dOiJwSaGUezzahoIey9hqEZZQRZQFYXXrR9g1Kk8UgHwrx5CrOeDWO2Cloxb/knUuBqRlAEP+xIvwIhkiJF5QZbYfYGXBoweLpTuASgvNW04SKOW98kwnCpuQWKbN+hbrSuUrsG+Q1uc7hWxMy2/c+aLwOVWH3FK+2Q92W/jnSfH+B5X7At8RCDDPXRHo2RoPK66Uig1lthSKVSrSSoSwO5vNyC6yDu5rWLsfpVmBXMQ2OWySKhf56fkh+i/gd5sZFPiQdaAL0NSCF+WssRcVKEO2bSRsyEEaXYsrcJYZ6r210FdIYNBah+WhQcqYCW4q5MRcd6s8wIpuzjUX2yMICzmFFLwKp/oXTo2hjQ42SE+WjTJnL9vmnt2PgzeaYrXQ/Gk+c7f2Vth0I+8H/UYRKSDuWFe0AA2DFgaeAtkaI5r4EEqwknHMsyyWiWJMzKhF7OWWvWkXI9R8IDCpX1uPCOoOFQx6mh8+Em9novH0THA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6351.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(366004)(39860400002)(376002)(346002)(230922051799003)(186009)(64100799003)(1800799009)(451199024)(36756003)(31686004)(66476007)(6636002)(66556008)(31696002)(38100700002)(921005)(53546011)(316002)(6666004)(26005)(2616005)(83380400001)(6512007)(6506007)(66946007)(4326008)(8936002)(478600001)(8676002)(2906002)(7416002)(5660300002)(6486002)(41300700001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NzErOVMrdFJib1FUTFZRR0xDMGRpTW16Tk1lUnEyL1FOSng3TTRmeGd4WFpj?=
+ =?utf-8?B?eG1aTE0yL283aXJJZWVQNGdDUG5QUEE5Y1Q5OFU3amIzN0YwN0FHdXkvenpZ?=
+ =?utf-8?B?MGxVQ3c3RXU2YnJHd1UyQWU5VnZYYUEza1Rkc25VbkJYMHZMakhYdXhwUXRy?=
+ =?utf-8?B?dmhPSnNYMkNIWmhBMFBOL1RmU1N6Qk9aS3F5b3k5Um1yYmtrQXB2eGxNcU5a?=
+ =?utf-8?B?Ukt0clJFYTZnZXFxL2RFWG9CRmxDQnRIMjlIU0hXQzY0SEZNaUpjT2xYMDZ4?=
+ =?utf-8?B?aURDZWtJSENrMXZLYVlGakYrTURzYmRQYzU2WmRjSEJ6Q3gzV2d0ZkhjdFQ1?=
+ =?utf-8?B?TmVyYkNsZ29BQ25LRnVidm9pZldMSWlGY1pFd29VN2pMVDNSdlFSUTErRCt0?=
+ =?utf-8?B?WXZxY0toclFOZFVtbXJWaFJJNldJLzBUNDNqOFpKZS8xTjdITVFIRHBydlFH?=
+ =?utf-8?B?MklpSVhQUHoxVTNpSXNWNU4rbHBWUmhDdEgzNjViYzFERDVFSEV1a3RQOXJF?=
+ =?utf-8?B?cTlJOFdXM2NPa1FSVGpZWitialVrTENlRGsrclJvMnU2NW5qZnBWZEJpR25R?=
+ =?utf-8?B?QXlDSEQreXA2YW56OFkwYTJkU2RxT25YNjBIUVVCM2UzVHVrU2RldXYyRmxv?=
+ =?utf-8?B?RDU0d0c4d1pVWGNiRm5POXJ4a2xHZy9xTVpMeVNTZy9OK1AyalAxZ3VxUHNZ?=
+ =?utf-8?B?M013VlRaNmlDN3YvKzZFYkZCcFJFMnFTMnB4cVFGeWRodCtKWnFQMWUydmhW?=
+ =?utf-8?B?eS95Qzd4MDBXL2IrVkVlb2VKNXlzUlRkQnB6M1hDcVNackh1RVhxWTVhRGQ5?=
+ =?utf-8?B?S0V3UHV2VHkzcHdYVW9ZcjBBazVncWJ3VEU1ZE9OdEROd2wzUU8zY05lbmxB?=
+ =?utf-8?B?R1JyR2pLcGk4d2g1YWROcVVMcGE0ZVdheVB1NzNQNWE5TEhQT1F1NzlXQ1Bp?=
+ =?utf-8?B?U0F1OXNWMUw5bW9tSkpZalFMSU1JTkdnQWIrVEJkQ2pDaXFzbUJwQ2gxcklM?=
+ =?utf-8?B?MldMOVlIczl5QS9HeElWZmFUeWFsNEhUM1hDQXUzZGJBZW8xTU4zTnh1ekhN?=
+ =?utf-8?B?TWNWNlptam96bnZtNnJoT09FRFpHQ09neThNYzIreHdOZStmbUoydnJoQjBh?=
+ =?utf-8?B?K2h2RUYvdUo0dlZqdW0vZjFac3gzSE5HcG0yMjlYQnpnOUN5ZjU4V00yRjJV?=
+ =?utf-8?B?NVVyTnNwZUJzZTYyczRISlJqNUE1MGcyZWVaV0RVQXFhMkgwUnY3cU16VThp?=
+ =?utf-8?B?aWtUSFVxSEtEaWdlbFNiV3pFcVJaaGtocE9TUmwrNnBSOS8wdjd3MXhKU09r?=
+ =?utf-8?B?MzVGeXFMSjNONDBPdUVpdXFRUFo5N0lab1lTQUhManMvSGZXVnJMa00xMHhQ?=
+ =?utf-8?B?V3pSRkdIZ0JLZVpidGNUaVFoNHB2bHpkL0NoMXlEY1NQWWdZUThqVmtIMGly?=
+ =?utf-8?B?T0tPTkhodG5NQk9yNDhac05uWVBXTktTSTdjbTlGQnUrSnZoKzRUZ1Rrd25V?=
+ =?utf-8?B?bmtQclZESGpkOE5OQkYwNThMR0l4OXlCT2dmTHRFR3FjcGdnRStsNFlNQ3lM?=
+ =?utf-8?B?ZEhUTDZ1ODQxeE1uNjkwMDhKVDQyQzd4ZjZIaDdFUjdPYThadjlicFRFZXdH?=
+ =?utf-8?B?emhsTUVQeVpUdUtFeVFEMDhSTzdvZ0JYaytoWUhFRC9vUHNDTWdjOVYxcTBu?=
+ =?utf-8?B?dGRhMjBTSDBZZFVFdFdGODZSbkJ2T0JjR0gwdjArdlowNFRPSlNpM2hGckx3?=
+ =?utf-8?B?YkxoQmlDTkxxNmFiZ1Z1ZTFnTXlUeWcxM2dBVGh1aHpiZDBLb3YxeG8zL2ZE?=
+ =?utf-8?B?SU00ak1CbmRuODFqSVNQL2VoVElDZmZLSjUvK3FySFlZQ2pTdUVyTkdNWFEv?=
+ =?utf-8?B?R1ZwRWk4dC9nbTViUXIrSUVVamNMSi9Xd0s0NmsxWVFlUXMzVU9kdGFPSnUr?=
+ =?utf-8?B?dFRpZk4yTzZVNFpBSGI5TG5OSHBaSzRVYm9BMGlTNENiY3lLM29WU3lkWDh1?=
+ =?utf-8?B?cG94NmFOL2h1TkxLSW9helc0Q1ZEbzNIajBldGlIbngwc2NjSlNBWjYycmtY?=
+ =?utf-8?B?ejdFTG4yek9CODBJS0pmZzZuVGo5dzVac0t2dHg1NFdEaUNuMTEyalcvRHNy?=
+ =?utf-8?Q?W+ZWdbQWlmK9a/0CM6ApDJuBd?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b615315-c40e-4d10-ff8b-08dbd06b10f7
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6351.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2023 06:17:27.0476
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4H7oxub/tPvGJovCWG0BtUXh6ypfXoyVox79Ye9oFsd9VBLguZySFA74kWpLkINC
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6624
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add support for Inspur platforms to used the platform profile feature.
+ping...
+Any other comments?
 
-This will allow users to determine and control the platform modes
-between low-power, balanced and performance modes.
+Regards,
+Ma Jun
 
-Signed-off-by: Ai Chao <aichao@kylinos.cn>
----
-
-v4: Add select ACPI_PLATFORM_PROFILE
-v3: Remove input device, using the platform profile interface
-v2: Remove Event GUID, remove inspur_wmi_notify and inspur_wmi_notify.
-
- drivers/platform/x86/Kconfig      |  11 ++
- drivers/platform/x86/Makefile     |   3 +
- drivers/platform/x86/inspur-wmi.c | 216 ++++++++++++++++++++++++++++++
- 3 files changed, 230 insertions(+)
- create mode 100644 drivers/platform/x86/inspur-wmi.c
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 2a1070543391..44f371876170 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -988,6 +988,17 @@ config TOUCHSCREEN_DMI
- 	  the OS-image for the device. This option supplies the missing info.
- 	  Enable this for x86 tablets with Silead or Chipone touchscreens.
- 
-+config INSPUR_WMI
-+	tristate "Inspur WMI platform profile driver"
-+	depends on ACPI_WMI
-+	select ACPI_PLATFORM_PROFILE
-+	help
-+	This will allow users to determine and control the platform modes
-+	between low-power, balanced and performance modes.
-+
-+	To compile this driver as a module, choose M here: the module
-+	will be called inspur-wmi.
-+
- source "drivers/platform/x86/x86-android-tablets/Kconfig"
- 
- config FW_ATTR_CLASS
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index b457de5abf7d..9285c252757e 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -98,6 +98,9 @@ obj-$(CONFIG_TOSHIBA_WMI)	+= toshiba-wmi.o
- # before toshiba_acpi initializes
- obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
- 
-+# Inspur
-+obj-$(CONFIG_INSPUR_WMI)	+= inspur-wmi.o
-+
- # Laptop drivers
- obj-$(CONFIG_ACPI_CMPC)		+= classmate-laptop.o
- obj-$(CONFIG_COMPAL_LAPTOP)	+= compal-laptop.o
-diff --git a/drivers/platform/x86/inspur-wmi.c b/drivers/platform/x86/inspur-wmi.c
-new file mode 100644
-index 000000000000..243f31dd162c
---- /dev/null
-+++ b/drivers/platform/x86/inspur-wmi.c
-@@ -0,0 +1,216 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Inspur WMI power mode
-+ *
-+ *  Copyright (C) 2018	      Ai Chao <aichao@kylinos.cn>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/platform_profile.h>
-+#include <linux/wmi.h>
-+
-+#define WMI_INSPUR_POWERMODE_BIOS_GUID "596C31E3-332D-43C9-AEE9-585493284F5D"
-+
-+enum inspur_wmi_method_ids {
-+	INSPUR_WMI_GET_POWERMODE = 0x02,
-+	INSPUR_WMI_SET_POWERMODE = 0x03,
-+};
-+
-+/**
-+ * Power Mode:
-+ *           0x0: Balance Mode
-+ *           0x1: Performance Mode
-+ *           0x2: Power Saver Mode
-+ */
-+enum inspur_tmp_profile {
-+	INSPUR_TMP_PROFILE_BALANCE	= 0,
-+	INSPUR_TMP_PROFILE_PERFORMANCE	= 1,
-+	INSPUR_TMP_PROFILE_POWERSAVE	= 2,
-+};
-+
-+struct inspur_wmi_priv {
-+	struct wmi_device *wdev;
-+	struct platform_profile_handler handler;
-+};
-+
-+static int inspur_wmi_perform_query(struct wmi_device *wdev,
-+				    enum inspur_wmi_method_ids query_id,
-+				    void *buffer, size_t insize,
-+				    size_t outsize)
-+{
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	struct acpi_buffer input = { insize, buffer};
-+	union acpi_object *obj;
-+	acpi_status status;
-+	int ret = 0;
-+
-+	status = wmidev_evaluate_method(wdev, 0, query_id, &input, &output);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(&wdev->dev, "EC Powermode control failed: %s\n",
-+			acpi_format_exception(status));
-+		return -EIO;
-+	}
-+
-+	obj = output.pointer;
-+	if (!obj)
-+		return -EINVAL;
-+
-+	if (obj->type != ACPI_TYPE_BUFFER ||
-+	    obj->buffer.length != outsize) {
-+		ret = -EINVAL;
-+		goto out_free;
-+	}
-+
-+	memcpy(buffer, obj->buffer.pointer, obj->buffer.length);
-+
-+out_free:
-+	kfree(obj);
-+	return ret;
-+}
-+
-+/**
-+ * Set Power Mode to EC RAM. If Power Mode value greater than 0x3,
-+ * return error
-+ * Method ID: 0x3
-+ * Arg: 4 Bytes
-+ * Byte [0]: Power Mode:
-+ *         0x0: Balance Mode
-+ *         0x1: Performance Mode
-+ *         0x2: Power Saver Mode
-+ * Return Value: 4 Bytes
-+ * Byte [0]: Return Code
-+ *         0x0: No Error
-+ *         0x1: Error
-+ */
-+static int inspur_platform_profile_set(struct platform_profile_handler *pprof,
-+				       enum platform_profile_option profile)
-+{
-+	struct inspur_wmi_priv *priv = container_of(pprof, struct inspur_wmi_priv,
-+						    handler);
-+	u8 ret_code[4] = {0, 0, 0, 0};
-+	int ret;
-+
-+	switch (profile) {
-+	case PLATFORM_PROFILE_BALANCED:
-+		ret_code[0] = INSPUR_TMP_PROFILE_BALANCE;
-+		break;
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		ret_code[0] = INSPUR_TMP_PROFILE_PERFORMANCE;
-+		break;
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		ret_code[0] = INSPUR_TMP_PROFILE_POWERSAVE;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	ret = inspur_wmi_perform_query(priv->wdev, INSPUR_WMI_SET_POWERMODE,
-+				       ret_code, sizeof(ret_code),
-+				       sizeof(ret_code));
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret_code[0])
-+		return -EBADRQC;
-+
-+	return 0;
-+}
-+
-+/**
-+ * Get Power Mode from EC RAM, If Power Mode value greater than 0x3,
-+ * return error
-+ * Method ID: 0x2
-+ * Return Value: 4 Bytes
-+ * Byte [0]: Return Code
-+ *         0x0: No Error
-+ *         0x1: Error
-+ * Byte [1]: Power Mode
-+ *         0x0: Balance Mode
-+ *         0x1: Performance Mode
-+ *         0x2: Power Saver Mode
-+ */
-+static int inspur_platform_profile_get(struct platform_profile_handler *pprof,
-+				       enum platform_profile_option *profile)
-+{
-+	struct inspur_wmi_priv *priv = container_of(pprof, struct inspur_wmi_priv,
-+						    handler);
-+	u8 ret_code[4] = {0, 0, 0, 0};
-+	int ret;
-+
-+	ret = inspur_wmi_perform_query(priv->wdev, INSPUR_WMI_GET_POWERMODE,
-+				       &ret_code, sizeof(ret_code),
-+				       sizeof(ret_code));
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret_code[0])
-+		return -EBADRQC;
-+
-+	switch (ret_code[1]) {
-+	case INSPUR_TMP_PROFILE_BALANCE:
-+		*profile = PLATFORM_PROFILE_BALANCED;
-+		break;
-+	case INSPUR_TMP_PROFILE_PERFORMANCE:
-+		*profile = PLATFORM_PROFILE_PERFORMANCE;
-+		break;
-+	case INSPUR_TMP_PROFILE_POWERSAVE:
-+		*profile = PLATFORM_PROFILE_LOW_POWER;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int inspur_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct inspur_wmi_priv *priv;
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->wdev = wdev;
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	priv->handler.profile_get = inspur_platform_profile_get;
-+	priv->handler.profile_set = inspur_platform_profile_set;
-+
-+	set_bit(PLATFORM_PROFILE_LOW_POWER, priv->handler.choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED, priv->handler.choices);
-+	set_bit(PLATFORM_PROFILE_PERFORMANCE, priv->handler.choices);
-+
-+	return platform_profile_register(&priv->handler);
-+}
-+
-+static void inspur_wmi_remove(struct wmi_device *wdev)
-+{
-+	platform_profile_remove();
-+}
-+
-+static const struct wmi_device_id inspur_wmi_id_table[] = {
-+	{ .guid_string = WMI_INSPUR_POWERMODE_BIOS_GUID },
-+	{  }
-+};
-+
-+MODULE_DEVICE_TABLE(wmi, inspur_wmi_id_table);
-+
-+static struct wmi_driver inspur_wmi_driver = {
-+	.driver = {
-+		.name = "inspur-wmi",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.id_table = inspur_wmi_id_table,
-+	.probe = inspur_wmi_probe,
-+	.remove = inspur_wmi_remove,
-+};
-+
-+module_wmi_driver(inspur_wmi_driver);
-+
-+MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-+MODULE_DESCRIPTION("Inspur WMI Platform Profile");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
-
+On 10/17/2023 10:53 AM, Ma Jun wrote:
+> Due to electrical and mechanical constraints in certain platform designs there
+> may be likely interference of relatively high-powered harmonics of the (G-)DDR
+> memory clocks with local radio module frequency bands used by Wifi 6/6e/7. To
+> mitigate possible RFI interference we introuduced WBRF(Wifi Band RFI mitigation Feature).
+> Producers can advertise the frequencies in use and consumers can use this information
+> to avoid using these frequencies for sensitive features.
+> 
+> The whole patch set is based on Linux 6.5.0. With some brief introductions
+> as below:
+> Patch1:      Document about WBRF
+> Patch2:      Core functionality setup for WBRF feature support
+> Patch3 - 4:  Bring WBRF support to wifi subsystem.
+> Patch5 - 9:  Bring WBRF support to AMD graphics driver.
+> 
+> Evan Quan (7):
+>   cfg80211: expose nl80211_chan_width_to_mhz for wide sharing
+>   wifi: mac80211: Add support for WBRF features
+>   drm/amd/pm: update driver_if and ppsmc headers for coming wbrf feature
+>   drm/amd/pm: setup the framework to support Wifi RFI mitigation feature
+>   drm/amd/pm: add flood detection for wbrf events
+>   drm/amd/pm: enable Wifi RFI mitigation feature support for SMU13.0.0
+>   drm/amd/pm: enable Wifi RFI mitigation feature support for SMU13.0.7
+> 
+> Ma Jun (2):
+>   Documentation/driver-api: Add document about WBRF mechanism
+>   platform/x86/amd: Add support for AMD ACPI based Wifi band RFI
+>     mitigation feature
+> 
+>  Documentation/driver-api/wbrf.rst             |  71 +++
+>  drivers/gpu/drm/amd/amdgpu/amdgpu.h           |   2 +
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c       |  17 +
+>  drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c     | 214 +++++++++
+>  drivers/gpu/drm/amd/pm/swsmu/inc/amdgpu_smu.h |  33 ++
+>  .../inc/pmfw_if/smu13_driver_if_v13_0_0.h     |  14 +-
+>  .../inc/pmfw_if/smu13_driver_if_v13_0_7.h     |  14 +-
+>  .../pm/swsmu/inc/pmfw_if/smu_v13_0_0_ppsmc.h  |   3 +-
+>  .../pm/swsmu/inc/pmfw_if/smu_v13_0_7_ppsmc.h  |   3 +-
+>  drivers/gpu/drm/amd/pm/swsmu/inc/smu_types.h  |   3 +-
+>  drivers/gpu/drm/amd/pm/swsmu/inc/smu_v13_0.h  |   3 +
+>  .../gpu/drm/amd/pm/swsmu/smu13/smu_v13_0.c    |   9 +
+>  .../drm/amd/pm/swsmu/smu13/smu_v13_0_0_ppt.c  |  60 +++
+>  .../drm/amd/pm/swsmu/smu13/smu_v13_0_7_ppt.c  |  59 +++
+>  drivers/gpu/drm/amd/pm/swsmu/smu_internal.h   |   3 +
+>  drivers/platform/x86/amd/Kconfig              |  15 +
+>  drivers/platform/x86/amd/Makefile             |   1 +
+>  drivers/platform/x86/amd/wbrf.c               | 422 ++++++++++++++++++
+>  include/linux/acpi_amd_wbrf.h                 | 101 +++++
+>  include/linux/ieee80211.h                     |   1 +
+>  include/net/cfg80211.h                        |   8 +
+>  net/mac80211/Makefile                         |   2 +
+>  net/mac80211/chan.c                           |   9 +
+>  net/mac80211/ieee80211_i.h                    |   9 +
+>  net/mac80211/main.c                           |   2 +
+>  net/mac80211/wbrf.c                           | 105 +++++
+>  net/wireless/chan.c                           |   3 +-
+>  27 files changed, 1180 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/driver-api/wbrf.rst
+>  create mode 100644 drivers/platform/x86/amd/wbrf.c
+>  create mode 100644 include/linux/acpi_amd_wbrf.h
+>  create mode 100644 net/mac80211/wbrf.c
+> 
