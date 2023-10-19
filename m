@@ -2,92 +2,363 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA01CDB465
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Oct 2023 13:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B40CDB465
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Oct 2023 14:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345795AbjJSNv4 (ORCPT
+        id S1345912AbjJSOCj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 Oct 2023 09:51:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54882 "EHLO
+        Thu, 19 Oct 2023 10:02:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345774AbjJSNvz (ORCPT
+        with ESMTP id S1345856AbjJSOCh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Oct 2023 09:51:55 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7929B9B;
-        Thu, 19 Oct 2023 06:51:52 -0700 (PDT)
+        Thu, 19 Oct 2023 10:02:37 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C51E713A;
+        Thu, 19 Oct 2023 07:02:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1697723485; x=1698328285; i=w_armin@gmx.de;
-        bh=AxltyYmFHaymahO+4+pGheB+ct+TZ7Uc/Q3HcmAQ28w=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=TpAgjHZNerr30oSXW9odupHfYqOyzpcTTylA5GZdPCoQxg723mOm/enu/+NbzYpz
-         7Iq7OtCWCk9w4K8XPUuxB2YY2D4xJlZ6E8zugUt8sNfubK6z99YMqu/krMuVDho/h
-         14b9Mn84oCbwdd6nPWW1RhEH+/tlAk/a2xC6WLPrjLATPVXw9t7ych08O+I9GhW/l
-         pe2geY7+8lHgYJXkF2WldbFf1oLS0y0M3Srh8orjQfcGq+xtFhWQ1PeB5DzjvUNRZ
-         bczhgrsO/vHRuuHMSpAG3Q1rN03Z/WIkWR5oiWky7WIImSJW0HP9mH4Sn4XSYM/nQ
-         TiD31H/SdrcuBysQQA==
+        t=1697724122; x=1698328922; i=w_armin@gmx.de;
+        bh=XLz4MkuJggEFcvdCwWamftCG3XlaaH0oc/PILjfXK8A=;
+        h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+         In-Reply-To;
+        b=YRghujgjROHxwZrenKMdCRGbpRablV+RpQQgh675Pcg9ow1RzLzy4t9wcU9N534Z
+         VqxR6DTGd16Mrl8UM5BJPVRwJSaT1ZPNZrFzJgxnPbBjHU62pWVkKzJmRzH8Xttom
+         FT9eQs9q934LEi18RJoqTtwS6Pt8TxHhAzxY71Z3V36FzBzvadwSVbeULp7FrojtM
+         Crv8YXS8Q3kcrynqbdpaycBOwJ19jsR03nMiAGJH0+C169ttr24kLws1eMcrJJsLi
+         ZYCJ1ALtPISFPQNfBlIMn1K09KTmAHPnutVguZT8+mGBMn70KH6nBeU3jqVWSeEoL
+         NUViJjVtSlBFHqLM2g==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MdvmY-1rUSPS20ZS-00b3j5; Thu, 19 Oct 2023 15:51:24 +0200
-From:   Armin Wolf <W_Armin@gmx.de>
-To:     naveenkrishna.chatradhi@amd.com, carlos.bilbao@amd.com
-Cc:     hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86/amd/hsmp: Fix iomem handling
-Date:   Thu, 19 Oct 2023 15:51:22 +0200
-Message-Id: <20231019135122.21774-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MJmKh-1rD4uh10Q5-00KBoN; Thu, 19
+ Oct 2023 16:02:02 +0200
+Message-ID: <5af4ecf5-1be8-4c61-b30f-f36590f51423@gmx.de>
+Date:   Thu, 19 Oct 2023 16:02:00 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] platform/x86: inspur-wmi: Add platform profile support
+To:     Ai Chao <aichao@kylinos.cn>, hdegoede@redhat.com,
+        ilpo.jarvinen@linux.intel.com, markgross@kernel.org
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20231019030534.157971-1-aichao@kylinos.cn>
+Content-Language: en-US
+From:   Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20231019030534.157971-1-aichao@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:YSzIdPZ1K/kTuZ6D+lnJIC7iviBFVYhoLVUKouTZNBO4YXyhq/o
- 0BerRQS13EMJ1MqKY5ZGjTSXhZxvCbCp8q9qEw2NT2G3xFB3gOI3puxHGKZQ4FITX0giT+p
- WUNfRrlQfbn+1oVxJ8f9Q84HDnUm/YlA4XLuYiNdU+DVh0xuvW64l0ZzXhRY8bHyj37OqOV
- 27JgN3kVCo5vtIay69wow==
-UI-OutboundReport: notjunk:1;M01:P0:QxefclDEr/8=;EXIQQAbNvfU7ZWdsarCUokZIjbp
- OCtv9V4HEvbcs2Q00/0G87U1lDZk5cyeE+JvSWFxPbqiL+WxJHz6//QaoJVJPQlboihEu75vh
- D9WdnFKtMyo9ZLAC/vjzvQySryUUghxQARkQm+m0MhIh3CJXixPeN+W3Uznjc3WJMxVtpunxX
- l7XweQZ009hi3HyEaZ4kysOAgUwllJxZRl/SDCwzYjfqtI0/eoC8oi2KfOX94Y2oeoyEdIzeL
- EKZCgPbhYYz02wPsFm0lfSPwjoNy6+WX0y51SWa4KHEBrwQv2Vomk0Eoi4rYtctXE2fbIuQ8g
- 3FV6f8MImJmVddHeoU+Rbyl1KrWI/J5eOo8A9Bo32AHHjUmZq9Nzse3UCiRa0Ozf0HbN1wmH6
- U22LUvduqTLK0aoWchSn7kicLgdTrNkBoc++pWcz5Yq7VCTS4l84DDvztqub9E0lsYsbCK5pA
- tO7cgkmnSwWVh10+0arQokVXds163KNv0kAjpPRODlGL9XY6HQASI80GkOplbrnzLyEE2k88O
- fT+4tVvUSfMVW4dQ7XIqtFu87P+Ao11rKKK//ek28O6PG62rGgnGYEusCZgYuEZUYacvcuLCz
- Apdb81V8LfwFHijvLprqoy6pvtPLLf+QgmTUsWwS64IAebKqEAceHuTvkKw1VjeVNj9tJnGfd
- Aoy3IlOnHkD5AePePRN94NkfXG38PsR301M+yW+jnqAykJVI/4BRcfpn6c7T281A09qyS6+6m
- SR4gGJ5GzqnvrSviLiAYdeVq2SIRn01WHjH+0k/LDduYFHLYPsh2jjTjA4QJdYrfeCVw+P+RF
- Uf
+X-Provags-ID: V03:K1:VpTXpww+60Qs8keKdCfaiTWSa9zOd0PnrssA5f4T4VtOIFFDhFb
+ cGmACBTTACREt9i5rpn210nRSXYdLK8cprQft/Qwko0Y2R8zy+Q6gAqsSo+ZFDIC7cHBLFk
+ fWh5oAyn/YvuPx+CuYieXxkyVIeIDuVfJL2zkZt1q+mJ7qtS7vroO4CY/NpQItwSljLU3EH
+ dcUV1CmrYq9WdNHRnHDTA==
+UI-OutboundReport: notjunk:1;M01:P0:5ODjVv6fxhE=;DNmBgsBOr9xmoRZ87jV6TMHclqw
+ ZDt3VuS/GRUjOESMV19Ybfs8JwMfI+vDJbC2KgczBnrt3hX3HdIaqG6uuoQdnXsJvcv3AXXxc
+ Y73rRvp38OG6N4bUeuIZMAS9QkXKPGRMcUDqYKC8ut5wCAP3cECjzLd5IiD1fLOq0WDyIID58
+ RbML6sj9WmyJfiV15BW+dvG8LgBXrnOgbU7WwyOYvK/Nbrz63YXjJFLApPg4stYle/Hb6g0lF
+ L5XNTNW0NxpXN847T9eklU+yv+elbjGdxF8nftv1FUksyp6YJW1PyYvRgq19XxPGHzckuOqL8
+ TrhjxBrUPXhF+lxa2i+pDylW0yQlhhFsEybw36hF5kw4Z1psIDGicV4OY4l5pEReDlI/dWP6v
+ DdN3ZSiZVGoOiB4cXgN1M8On5P5uZD8t3PDZAIj8xCdWRMmE+I5s0YSpD1w75aMZqi+Q1vsup
+ rp7XVLdMVN4XFE6QpirGJwaI3dcz3+cEGH0z8Y2VV2QZx96rsgSU+fvagSdp3d6/VRu1fbja1
+ /os3T/iz6ro4e3LXSXVVX2fqw0TrjISlEpHUnASnawcLneQCKLoUVvFJGbZXYqqibgRivY2xz
+ NRJtEsFaNxPO3ZCXFdlzAHBOQ8+8prJNQ0NqXSvfZxle05/xJTiMYWQoSxqmhrrtrtOt3l8N/
+ +zugTWmw/tj7NeodP4gBuHYNb39lt30YiKq3yJAPYntkt2/ulQgQo6aB8AlZr6TiTUldOHkbF
+ SkyNDvSWwSbEjvErASs3vEBWroQi0SnO+PaBAfnibS7lBwCcvVGS5T5S4qliHstrtsTJuKZN9
+ CEqyakhotns+CDEfGbwcG6EuKj8vvr+uy7YDOR6fjHvdpLmXqKsT5ELHXNH92mnq9HBiP9P2l
+ pHD0cOv0aHq71jVGVYsc43Js9+58uM2q4Y9F8TvsjVFkhm6zRXk0+DsXNMwbUf315CBfUB9jT
+ QuP/aQpmELDtTxnIaLD/hIQs+8A=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Since the metrics table is marked as io memory,
-use memcpy_fromio() when copying its contents.
+Am 19.10.23 um 05:05 schrieb Ai Chao:
 
-Compile-tested only.
+> Add support for Inspur platforms to used the platform profile feature.
+>
+> This will allow users to determine and control the platform modes
+> between low-power, balanced and performance modes.
+>
+> Signed-off-by: Ai Chao <aichao@kylinos.cn>
+> ---
+>
+> v4: Add select ACPI_PLATFORM_PROFILE
+> v3: Remove input device, using the platform profile interface
+> v2: Remove Event GUID, remove inspur_wmi_notify and inspur_wmi_notify.
+>
+>   drivers/platform/x86/Kconfig      |  11 ++
+>   drivers/platform/x86/Makefile     |   3 +
+>   drivers/platform/x86/inspur-wmi.c | 216 ++++++++++++++++++++++++++++++
+>   3 files changed, 230 insertions(+)
+>   create mode 100644 drivers/platform/x86/inspur-wmi.c
 
-Fixes: 5150542b8ec5 ("platform/x86/amd/hsmp: add support for metrics tbl")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/amd/hsmp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I agree with Thomas Wei=C3=9Fschuh that the driver name is a bit too gener=
+ic, assuming
+the WMI hotkey driver will appear sometime too.
+Other than that, the driver seems good.
 
-diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hs=
-mp.c
-index b056a5c8654a..b55d80e29139 100644
-=2D-- a/drivers/platform/x86/amd/hsmp.c
-+++ b/drivers/platform/x86/amd/hsmp.c
-@@ -362,7 +362,7 @@ static ssize_t hsmp_metric_tbl_read(struct file *filp,=
- struct kobject *kobj,
- 	ret =3D hsmp_send_message(&msg);
- 	if (ret)
- 		return ret;
--	memcpy(buf, sock->metric_tbl_addr, bin_attr->size);
-+	memcpy_fromio(buf, sock->metric_tbl_addr, bin_attr->size);
+Armin Wolf
 
- 	return bin_attr->size;
- }
-=2D-
-2.39.2
-
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 2a1070543391..44f371876170 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -988,6 +988,17 @@ config TOUCHSCREEN_DMI
+>   	  the OS-image for the device. This option supplies the missing info.
+>   	  Enable this for x86 tablets with Silead or Chipone touchscreens.
+>
+> +config INSPUR_WMI
+> +	tristate "Inspur WMI platform profile driver"
+> +	depends on ACPI_WMI
+> +	select ACPI_PLATFORM_PROFILE
+> +	help
+> +	This will allow users to determine and control the platform modes
+> +	between low-power, balanced and performance modes.
+> +
+> +	To compile this driver as a module, choose M here: the module
+> +	will be called inspur-wmi.
+> +
+>   source "drivers/platform/x86/x86-android-tablets/Kconfig"
+>
+>   config FW_ATTR_CLASS
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
+le
+> index b457de5abf7d..9285c252757e 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -98,6 +98,9 @@ obj-$(CONFIG_TOSHIBA_WMI)	+=3D toshiba-wmi.o
+>   # before toshiba_acpi initializes
+>   obj-$(CONFIG_ACPI_TOSHIBA)	+=3D toshiba_acpi.o
+>
+> +# Inspur
+> +obj-$(CONFIG_INSPUR_WMI)	+=3D inspur-wmi.o
+> +
+>   # Laptop drivers
+>   obj-$(CONFIG_ACPI_CMPC)		+=3D classmate-laptop.o
+>   obj-$(CONFIG_COMPAL_LAPTOP)	+=3D compal-laptop.o
+> diff --git a/drivers/platform/x86/inspur-wmi.c b/drivers/platform/x86/in=
+spur-wmi.c
+> new file mode 100644
+> index 000000000000..243f31dd162c
+> --- /dev/null
+> +++ b/drivers/platform/x86/inspur-wmi.c
+> @@ -0,0 +1,216 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + *  Inspur WMI power mode
+> + *
+> + *  Copyright (C) 2018	      Ai Chao <aichao@kylinos.cn>
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_profile.h>
+> +#include <linux/wmi.h>
+> +
+> +#define WMI_INSPUR_POWERMODE_BIOS_GUID "596C31E3-332D-43C9-AEE9-5854932=
+84F5D"
+> +
+> +enum inspur_wmi_method_ids {
+> +	INSPUR_WMI_GET_POWERMODE =3D 0x02,
+> +	INSPUR_WMI_SET_POWERMODE =3D 0x03,
+> +};
+> +
+> +/**
+> + * Power Mode:
+> + *           0x0: Balance Mode
+> + *           0x1: Performance Mode
+> + *           0x2: Power Saver Mode
+> + */
+> +enum inspur_tmp_profile {
+> +	INSPUR_TMP_PROFILE_BALANCE	=3D 0,
+> +	INSPUR_TMP_PROFILE_PERFORMANCE	=3D 1,
+> +	INSPUR_TMP_PROFILE_POWERSAVE	=3D 2,
+> +};
+> +
+> +struct inspur_wmi_priv {
+> +	struct wmi_device *wdev;
+> +	struct platform_profile_handler handler;
+> +};
+> +
+> +static int inspur_wmi_perform_query(struct wmi_device *wdev,
+> +				    enum inspur_wmi_method_ids query_id,
+> +				    void *buffer, size_t insize,
+> +				    size_t outsize)
+> +{
+> +	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
+> +	struct acpi_buffer input =3D { insize, buffer};
+> +	union acpi_object *obj;
+> +	acpi_status status;
+> +	int ret =3D 0;
+> +
+> +	status =3D wmidev_evaluate_method(wdev, 0, query_id, &input, &output);
+> +	if (ACPI_FAILURE(status)) {
+> +		dev_err(&wdev->dev, "EC Powermode control failed: %s\n",
+> +			acpi_format_exception(status));
+> +		return -EIO;
+> +	}
+> +
+> +	obj =3D output.pointer;
+> +	if (!obj)
+> +		return -EINVAL;
+> +
+> +	if (obj->type !=3D ACPI_TYPE_BUFFER ||
+> +	    obj->buffer.length !=3D outsize) {
+> +		ret =3D -EINVAL;
+> +		goto out_free;
+> +	}
+> +
+> +	memcpy(buffer, obj->buffer.pointer, obj->buffer.length);
+> +
+> +out_free:
+> +	kfree(obj);
+> +	return ret;
+> +}
+> +
+> +/**
+> + * Set Power Mode to EC RAM. If Power Mode value greater than 0x3,
+> + * return error
+> + * Method ID: 0x3
+> + * Arg: 4 Bytes
+> + * Byte [0]: Power Mode:
+> + *         0x0: Balance Mode
+> + *         0x1: Performance Mode
+> + *         0x2: Power Saver Mode
+> + * Return Value: 4 Bytes
+> + * Byte [0]: Return Code
+> + *         0x0: No Error
+> + *         0x1: Error
+> + */
+> +static int inspur_platform_profile_set(struct platform_profile_handler =
+*pprof,
+> +				       enum platform_profile_option profile)
+> +{
+> +	struct inspur_wmi_priv *priv =3D container_of(pprof, struct inspur_wmi=
+_priv,
+> +						    handler);
+> +	u8 ret_code[4] =3D {0, 0, 0, 0};
+> +	int ret;
+> +
+> +	switch (profile) {
+> +	case PLATFORM_PROFILE_BALANCED:
+> +		ret_code[0] =3D INSPUR_TMP_PROFILE_BALANCE;
+> +		break;
+> +	case PLATFORM_PROFILE_PERFORMANCE:
+> +		ret_code[0] =3D INSPUR_TMP_PROFILE_PERFORMANCE;
+> +		break;
+> +	case PLATFORM_PROFILE_LOW_POWER:
+> +		ret_code[0] =3D INSPUR_TMP_PROFILE_POWERSAVE;
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	ret =3D inspur_wmi_perform_query(priv->wdev, INSPUR_WMI_SET_POWERMODE,
+> +				       ret_code, sizeof(ret_code),
+> +				       sizeof(ret_code));
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (ret_code[0])
+> +		return -EBADRQC;
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * Get Power Mode from EC RAM, If Power Mode value greater than 0x3,
+> + * return error
+> + * Method ID: 0x2
+> + * Return Value: 4 Bytes
+> + * Byte [0]: Return Code
+> + *         0x0: No Error
+> + *         0x1: Error
+> + * Byte [1]: Power Mode
+> + *         0x0: Balance Mode
+> + *         0x1: Performance Mode
+> + *         0x2: Power Saver Mode
+> + */
+> +static int inspur_platform_profile_get(struct platform_profile_handler =
+*pprof,
+> +				       enum platform_profile_option *profile)
+> +{
+> +	struct inspur_wmi_priv *priv =3D container_of(pprof, struct inspur_wmi=
+_priv,
+> +						    handler);
+> +	u8 ret_code[4] =3D {0, 0, 0, 0};
+> +	int ret;
+> +
+> +	ret =3D inspur_wmi_perform_query(priv->wdev, INSPUR_WMI_GET_POWERMODE,
+> +				       &ret_code, sizeof(ret_code),
+> +				       sizeof(ret_code));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (ret_code[0])
+> +		return -EBADRQC;
+> +
+> +	switch (ret_code[1]) {
+> +	case INSPUR_TMP_PROFILE_BALANCE:
+> +		*profile =3D PLATFORM_PROFILE_BALANCED;
+> +		break;
+> +	case INSPUR_TMP_PROFILE_PERFORMANCE:
+> +		*profile =3D PLATFORM_PROFILE_PERFORMANCE;
+> +		break;
+> +	case INSPUR_TMP_PROFILE_POWERSAVE:
+> +		*profile =3D PLATFORM_PROFILE_LOW_POWER;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int inspur_wmi_probe(struct wmi_device *wdev, const void *contex=
+t)
+> +{
+> +	struct inspur_wmi_priv *priv;
+> +
+> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->wdev =3D wdev;
+> +	dev_set_drvdata(&wdev->dev, priv);
+> +
+> +	priv->handler.profile_get =3D inspur_platform_profile_get;
+> +	priv->handler.profile_set =3D inspur_platform_profile_set;
+> +
+> +	set_bit(PLATFORM_PROFILE_LOW_POWER, priv->handler.choices);
+> +	set_bit(PLATFORM_PROFILE_BALANCED, priv->handler.choices);
+> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, priv->handler.choices);
+> +
+> +	return platform_profile_register(&priv->handler);
+> +}
+> +
+> +static void inspur_wmi_remove(struct wmi_device *wdev)
+> +{
+> +	platform_profile_remove();
+> +}
+> +
+> +static const struct wmi_device_id inspur_wmi_id_table[] =3D {
+> +	{ .guid_string =3D WMI_INSPUR_POWERMODE_BIOS_GUID },
+> +	{  }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(wmi, inspur_wmi_id_table);
+> +
+> +static struct wmi_driver inspur_wmi_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "inspur-wmi",
+> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table =3D inspur_wmi_id_table,
+> +	.probe =3D inspur_wmi_probe,
+> +	.remove =3D inspur_wmi_remove,
+> +};
+> +
+> +module_wmi_driver(inspur_wmi_driver);
+> +
+> +MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
+> +MODULE_DESCRIPTION("Inspur WMI Platform Profile");
+> +MODULE_LICENSE("GPL");
