@@ -2,211 +2,94 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6FDCDB483
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Oct 2023 23:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A88CDB47E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Oct 2023 01:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232340AbjJRXQu (ORCPT
+        id S229456AbjJSBEm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Oct 2023 19:16:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32994 "EHLO
+        Wed, 18 Oct 2023 21:04:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232318AbjJRXQj (ORCPT
+        with ESMTP id S229891AbjJSBEl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Oct 2023 19:16:39 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 789FF136;
-        Wed, 18 Oct 2023 16:16:32 -0700 (PDT)
+        Wed, 18 Oct 2023 21:04:41 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2AFAB8;
+        Wed, 18 Oct 2023 18:04:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697670992; x=1729206992;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=3zz5AcoL5IAp0ttTUW0PcDAMVgqrixh3C+GqFODX6yU=;
-  b=Vg6JLtOsnMEkyeTVrj+8lPbQQCFzYHz5U2HIRsOVUKyyeT+bMYqUnGiX
-   bINgVNARUsAyL/Fw6y+04xaLyEDUE51+B/mkX7TCKin10MDuePPC4WUzb
-   lDNt+fHa6+rg+erkthb0g3mHaIFhSo3FGtJfQxR/BbkvlJJI2TIcXQ7Af
-   XNxxtJzKHYIIrBc3BaQqA+xLklc9i+RwANd/3fDGWDOHt8v1Nlztyx6Vp
-   IwyguaO2upTleSU3POSzimIdyJWUNSDOJYEWfuLM2olCjnGNhkMy+apGP
-   0js2oO9vMhXDtsgF6+bbhg9kcQhNo0cYURUzPt4dR/LhTuB1Bh06a//so
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="452605967"
+  t=1697677480; x=1729213480;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6D17xD20qVz7TuhP7QTPURn0gJ9gWhdd39tmiAP+AJk=;
+  b=gjRT/NHgNs+dFccT1BLuyoYBzLoq1eG85AMlRTnyWYi8juWrGXTYn/6R
+   4lwDv7yY+bb9C5vYTAqr66LzDkkkNR9NviUQc0CfJ9L33TIIEzfZIeFxW
+   GC6R1Qmq29G5SWH8WeGL/RFYgVBNPKCJ1n6OUFTa6zG85f8vnYrwK1+wN
+   OGXBECAuPXohvxvYAy40LVUKJmSj2HdsNPwxKEbx7xjjZRvXJoEFShQuB
+   bhXI46BYt5xEBUdk7aImOfjfRrDILcmWi6ibzsqhPxpVJqnsHjC/G9ZUI
+   fkPc8BWY5zV1Dt2pWZB3mR2H5d7MaLo3CN2y+RjaGjgPqTl89cK3MmFWb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="417257820"
 X-IronPort-AV: E=Sophos;i="6.03,236,1694761200"; 
-   d="scan'208";a="452605967"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 16:16:26 -0700
+   d="scan'208";a="417257820"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 18:04:40 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="756782187"
+X-IronPort-AV: E=McAfee;i="6600,9927,10867"; a="791818880"
 X-IronPort-AV: E=Sophos;i="6.03,236,1694761200"; 
-   d="scan'208";a="756782187"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 16:16:26 -0700
-Received: from debox1-desk4.lan (unknown [10.209.71.91])
-        by linux.intel.com (Postfix) with ESMTP id 9F008580DD0;
-        Wed, 18 Oct 2023 16:16:26 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+   d="scan'208";a="791818880"
+Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 18 Oct 2023 18:04:38 -0700
+Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qtHSl-0001MW-1w;
+        Thu, 19 Oct 2023 01:04:35 +0000
+Date:   Thu, 19 Oct 2023 09:03:51 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "David E. Box" <david.e.box@linux.intel.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         ilpo.jarvinen@linux.intel.com, rajvi.jingar@linux.intel.com
-Subject: [PATCH V4 16/17] platform/x86/intel/pmc: Add debug attribute for Die C6 counter
-Date:   Wed, 18 Oct 2023 16:16:23 -0700
-Message-Id: <20231018231624.1044633-17-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231018231624.1044633-1-david.e.box@linux.intel.com>
-References: <20231018231624.1044633-1-david.e.box@linux.intel.com>
+Cc:     oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH V4 03/17] platform/x86/intel/vsec: Use cleanup.h
+Message-ID: <202310190857.Vc2mlWmN-lkp@intel.com>
+References: <20231018231624.1044633-4-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231018231624.1044633-4-david.e.box@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add a "die_c6_us_show" debugfs attribute.  Reads the counter value using
-Intel Platform Monitoring Technology (PMT) driver API. This counter is
-useful for determining the idle residency of CPUs in the compute tile.
+Hi David,
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
-V4 - no change
+kernel test robot noticed the following build warnings:
 
-V3 - Split previous PATCH V2 13. Separates implementation (this patch) from
-     platform specific use (next patch)
+[auto build test WARNING on 3f720b21ec5af466e50e99dc517af267b67d248c]
 
-V2 - Remove use of __func__
-   - Use HZ_PER_MHZ
-   - Fix missing newlines in printks
+url:    https://github.com/intel-lab-lkp/linux/commits/David-E-Box/platform-x86-intel-vsec-Move-structures-to-header/20231019-071914
+base:   3f720b21ec5af466e50e99dc517af267b67d248c
+patch link:    https://lore.kernel.org/r/20231018231624.1044633-4-david.e.box%40linux.intel.com
+patch subject: [PATCH V4 03/17] platform/x86/intel/vsec: Use cleanup.h
+reproduce: (https://download.01.org/0day-ci/archive/20231019/202310190857.Vc2mlWmN-lkp@intel.com/reproduce)
 
- drivers/platform/x86/intel/pmc/core.c | 55 +++++++++++++++++++++++++++
- drivers/platform/x86/intel/pmc/core.h |  4 ++
- 2 files changed, 59 insertions(+)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310190857.Vc2mlWmN-lkp@intel.com/
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index fcb0dc702aea..02f3e909cf22 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -20,6 +20,7 @@
- #include <linux/pci.h>
- #include <linux/slab.h>
- #include <linux/suspend.h>
-+#include <linux/units.h>
- 
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
-@@ -27,6 +28,7 @@
- #include <asm/tsc.h>
- 
- #include "core.h"
-+#include "../pmt/telemetry.h"
- 
- /* Maximum number of modes supported by platfoms that has low power mode capability */
- const char *pmc_lpm_modes[] = {
-@@ -822,6 +824,47 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
- }
- DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_req_regs);
- 
-+static unsigned int pmc_core_get_crystal_freq(void)
-+{
-+	unsigned int eax_denominator, ebx_numerator, ecx_hz, edx;
-+
-+	if (boot_cpu_data.cpuid_level < 0x15)
-+		return 0;
-+
-+	eax_denominator = ebx_numerator = ecx_hz = edx = 0;
-+
-+	/* CPUID 15H TSC/Crystal ratio, plus optionally Crystal Hz */
-+	cpuid(0x15, &eax_denominator, &ebx_numerator, &ecx_hz, &edx);
-+
-+	if (ebx_numerator == 0 || eax_denominator == 0)
-+		return 0;
-+
-+	return ecx_hz;
-+}
-+
-+static int pmc_core_die_c6_us_show(struct seq_file *s, void *unused)
-+{
-+	struct pmc_dev *pmcdev = s->private;
-+	u64 die_c6_res, count;
-+	int ret;
-+
-+	if (!pmcdev->crystal_freq) {
-+		dev_warn_once(&pmcdev->pdev->dev, "Bad crystal frequency\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = pmt_telem_read(pmcdev->punit_ep, pmcdev->die_c6_offset,
-+			     &count, 1);
-+	if (ret)
-+		return ret;
-+
-+	die_c6_res = div64_u64(count * HZ_PER_MHZ, pmcdev->crystal_freq);
-+	seq_printf(s, "%llu\n", die_c6_res);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(pmc_core_die_c6_us);
-+
- static int pmc_core_lpm_latch_mode_show(struct seq_file *s, void *unused)
- {
- 	struct pmc_dev *pmcdev = s->private;
-@@ -1118,6 +1161,12 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
- 				    pmcdev->dbgfs_dir, pmcdev,
- 				    &pmc_core_substate_req_regs_fops);
- 	}
-+
-+	if (pmcdev->has_die_c6) {
-+		debugfs_create_file("die_c6_us_show", 0444,
-+				    pmcdev->dbgfs_dir, pmcdev,
-+				    &pmc_core_die_c6_us_fops);
-+	}
- }
- 
- static const struct x86_cpu_id intel_pmc_core_ids[] = {
-@@ -1212,6 +1261,10 @@ static void pmc_core_clean_structure(struct platform_device *pdev)
- 		pci_dev_put(pmcdev->ssram_pcidev);
- 		pci_disable_device(pmcdev->ssram_pcidev);
- 	}
-+
-+	if (pmcdev->punit_ep)
-+		pmt_telem_unregister_endpoint(pmcdev->punit_ep);
-+
- 	platform_set_drvdata(pdev, NULL);
- 	mutex_destroy(&pmcdev->lock);
- }
-@@ -1232,6 +1285,8 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	if (!pmcdev)
- 		return -ENOMEM;
- 
-+	pmcdev->crystal_freq = pmc_core_get_crystal_freq();
-+
- 	platform_set_drvdata(pdev, pmcdev);
- 	pmcdev->pdev = pdev;
- 
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 85b6f6ae4995..6d7673145f90 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -16,6 +16,8 @@
- #include <linux/bits.h>
- #include <linux/platform_device.h>
- 
-+struct telem_endpoint;
-+
- #define SLP_S0_RES_COUNTER_MASK			GENMASK(31, 0)
- 
- #define PMC_BASE_ADDR_DEFAULT			0xFE000000
-@@ -357,6 +359,7 @@ struct pmc {
-  * @devs:		pointer to an array of pmc pointers
-  * @pdev:		pointer to platform_device struct
-  * @ssram_pcidev:	pointer to pci device struct for the PMC SSRAM
-+ * @crystal_freq:	crystal frequency from cpuid
-  * @dbgfs_dir:		path to debugfs interface
-  * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
-  *			used to read MPHY PG and PLL status are available
-@@ -374,6 +377,7 @@ struct pmc_dev {
- 	struct dentry *dbgfs_dir;
- 	struct platform_device *pdev;
- 	struct pci_dev *ssram_pcidev;
-+	unsigned int crystal_freq;
- 	int pmc_xram_read_bit;
- 	struct mutex lock; /* generic mutex lock for PMC Core */
- 
+# many are suggestions rather than must-fix
+
+ERROR:SPACING: need consistent spacing around '*' (ctx:WxV)
+#32: FILE: drivers/platform/x86/intel/vsec.c:151:
++	struct intel_vsec_device __free(kfree) *intel_vsec_dev = NULL;
+ 	                                       ^
+
+ERROR:SPACING: need consistent spacing around '*' (ctx:WxV)
+#33: FILE: drivers/platform/x86/intel/vsec.c:152:
++	struct resource __free(kfree) *res = NULL;
+ 	                              ^
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
