@@ -2,138 +2,137 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB55CDB474
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Oct 2023 17:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0540C004C0
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Oct 2023 19:35:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377713AbjJTRzW (ORCPT
+        id S229886AbjJTTfz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 20 Oct 2023 13:55:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49190 "EHLO
+        Fri, 20 Oct 2023 15:35:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjJTRzV (ORCPT
+        with ESMTP id S230010AbjJTTfx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 20 Oct 2023 13:55:21 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFAD3C0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Oct 2023 10:55:19 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1ca3a54d2c4so8983705ad.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Oct 2023 10:55:19 -0700 (PDT)
+        Fri, 20 Oct 2023 15:35:53 -0400
+Received: from mail-oi1-x249.google.com (mail-oi1-x249.google.com [IPv6:2607:f8b0:4864:20::249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D42D6E
+        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Oct 2023 12:35:45 -0700 (PDT)
+Received: by mail-oi1-x249.google.com with SMTP id 5614622812f47-3af609cb0bdso1667326b6e.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Oct 2023 12:35:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697824519; x=1698429319; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cXRPLR5ycOJvFtuZ89e+XHsnah9sAcEBlf+8VSirbq0=;
-        b=T4326qkqiPLK4BUDNkBl/nfQhS+63u3EdY6EiKH65sl7xu2OUG08H1w/c6UftGK2XH
-         oxtmvQryWpjGPjCbAXAcAtpDaKy1RnCoJu4BLthwEnQm+NnDJOLCXoEyDejGccSzGwHH
-         svDc6MfAcXIOo/HapPNIx2khDhY9o1P9Raw30=
+        d=google.com; s=20230601; t=1697830544; x=1698435344; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9+iAGOL8fBcRKregm2UatJBSjxVyGVTi97qzrD87J/M=;
+        b=aRyQvAni2EHDC0yRsExYndr00a4pAr2Rtc9NCVfSzpCdgmvO5I5cL6jHXAntyhyxL2
+         FI9KRSEINv+Hs6h/g1KbBbbso/zbisELGQolS1SFa35WUNcqQ2iZ9dnMyQAqQ1/QUCF7
+         klwPq5O8MSJFKEYZ0DM3XcZwQh3+MzdWqiLmcC1ojS+1CtCn1Xw7Mek462kLySxhoc4h
+         FehbPwXpxTs61coqrVJ9RGMalTRWJN0Ymdl4kSyOZGeAJpjLzdsOzlUIta2TRhogRJve
+         +P1QXvrg5VOCNk4mHO7U2CSk6Zhiezr8zxVyhIj8LTgfHtEwoGataffKbvaUqYufSGtR
+         eGhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697824519; x=1698429319;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cXRPLR5ycOJvFtuZ89e+XHsnah9sAcEBlf+8VSirbq0=;
-        b=U1Oz2PHIu78Dw+Juvd6uoQCUx8nyfhoI7EPxuuSd8aWZkEJc3205WARfMq61b/7LlC
-         AjMIOGlK2ls5Mil+1OD2qQMikjBes0g/Jwx8lJUD0LHnLqLvjOzPKUu1r07UQOR0qP5r
-         Fwt7Tn/Jk+ujud3stxDnJyDtXUo/4jxqSw651Ylmdm8QGBdzkrlTS9hUMefRFq8evMJ7
-         cMiAh4Snm7nW1QuHGOTmHt3PxJexwqfRmoOpFBS21X9Ln1ZQTkGtnQOON0cGqyXTgttq
-         i2YWkodi1iRwAVz8Oa0VJWKBtkVv/5/Q2RZse/p7x+JnfyQxAp5FYy+YtI1R9Q34+Wut
-         v2/g==
-X-Gm-Message-State: AOJu0YzZK6z2fY1494ER9Kp4+AP4vcbYfpY3ZCDVrOuXcPdRL7FTL3/i
-        9q8/LN51wo08nh9OVFhjgcc53w==
-X-Google-Smtp-Source: AGHT+IFWeCE7pBLBYDxNiZ5IjEZJN60R7GHKuWzvVUgG84ddCDT/Art1ECJOGqO0zTkIY662eP+Fzg==
-X-Received: by 2002:a17:902:f342:b0:1ca:7669:fbb0 with SMTP id q2-20020a170902f34200b001ca7669fbb0mr2281625ple.49.1697824519227;
-        Fri, 20 Oct 2023 10:55:19 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i13-20020a170902eb4d00b001c9b384731esm1796558pli.270.2023.10.20.10.55.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Oct 2023 10:55:18 -0700 (PDT)
-Date:   Fri, 20 Oct 2023 10:55:17 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: replace deprecated strncpy
- with memcpy
-Message-ID: <202310201054.C82BF91@keescook>
-References: <20231020-strncpy-drivers-platform-x86-thinkpad_acpi-c-v1-1-312f2e33034f@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231020-strncpy-drivers-platform-x86-thinkpad_acpi-c-v1-1-312f2e33034f@google.com>
+        d=1e100.net; s=20230601; t=1697830544; x=1698435344;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9+iAGOL8fBcRKregm2UatJBSjxVyGVTi97qzrD87J/M=;
+        b=rhSx7rHbRb+7gF4TkbIJMoorJa/EeyHvG0yXGeTLAJt/KWS1Lo+fKOqC56k9dmQMCe
+         yFNiwSLfzWiWuWV42V/knncfK/W7GzdAzNp565VqiUfQ7OULHEweFzElDSeOVsQu3nzL
+         1eYs7T/8OolRWG+IweEgNCBkz4xUaPcj6JI7fLiWUZjUgH8iqBTb/GxHVXlhTuSisalJ
+         rYIp3hsRSgUokK0lgb+FeC/fxSbtsB4Vptk42YziGpC8al6aVEFn4nv5Er10Uu32s8kA
+         U21PaZ26ahMVq67FUKgJEpnnLaNPu7YvgvtvbEWsBCVtRAQYwwsrBFZd0MrxdOtrsRyB
+         a70g==
+X-Gm-Message-State: AOJu0Ywt5SmGgeMAHva1+XJQhDGGOsuK71FMhc6ysZCFrACqkwyQ+a6W
+        wu+i/CFPhr3TGdgocY4yGDv5QGwcnYMYvgNfxQ==
+X-Google-Smtp-Source: AGHT+IHZQUY9baCehYvzXAaS7x9nNF6uHCQ2/74bV2qdNWPoNwNQLv1R/Hn9zc2YRsn/RnRPDVOTLR2TZ+Z8Sxp5Ag==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6808:448f:b0:3ad:da36:1dd6 with
+ SMTP id eq15-20020a056808448f00b003adda361dd6mr1891601oib.1.1697830544173;
+ Fri, 20 Oct 2023 12:35:44 -0700 (PDT)
+Date:   Fri, 20 Oct 2023 19:35:43 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAI7WMmUC/x2N0QrCMAwAf2Xk2UBXJwx/RUTaLNOAdCWp0zL27
+ ys+Hfdyt4GxChtcuw2UVzFZUpP+1AG9QnoyytQcvPPn3nmHVjRRrjiprKyGefmyon1yftcGnQP xI4ZSWCsSRkfjEN0lkB+hRbPyLL//8Hbf9wN9+HSXgAAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697830543; l=2313;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=zmP6Agkd7BUv41JUTgaRBkw1r6Q9BZkiPWT2tLR0LAQ=; b=qUt1cyoTbXs6qmJVgPAXz5mbtcGQzIOLTkM7z8UR/GVWZ8gVAAzFiOhg9+1gcHscXS/bles5K
+ Hd71E9a1vbbDBn24xeS1hMCC89N3IDNnw1W+pJJ4CZNXEiLH5v1sOMH
+X-Mailer: b4 0.12.3
+Message-ID: <20231020-strncpy-drivers-power-supply-surface_battery-c-v1-1-cabaea50e667@google.com>
+Subject: [PATCH] platform/surface: aggregator: replace deprecated strncpy with strscpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Oct 20, 2023 at 05:52:43PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous
-> interfaces.
-> 
-> We expect ec_fw_string to be NUL-terminated based on its use with format
-> strings in thinkpad_acpi.c:
-> 11241 | pr_notice("ThinkPad firmware release %s doesn't match the known patterns\n",
-> 11242 |     ec_fw_string);
-> 
-> Moreover, NUL-padding is not required since ec_fw_string is explicitly
-> zero-initialized:
-> 11185 | char ec_fw_string[18] = {0};
-> 
-> When carefully copying bytes from one buffer to another in
-> pre-determined blocks (like what's happening here with dmi_data):
-> 
-> |       static void find_new_ec_fwstr(const struct dmi_header *dm, void *private)
-> |       {
-> |       	char *ec_fw_string = (char *) private;
-> |       	const char *dmi_data = (const char *)dm;
-> |       	/*
-> |       	 * ThinkPad Embedded Controller Program Table on newer models
-> |       	 *
-> |       	 * Offset |  Name                | Width  | Description
-> |       	 * ----------------------------------------------------
-> |       	 *  0x00  | Type                 | BYTE   | 0x8C
-> |       	 *  0x01  | Length               | BYTE   |
-> |       	 *  0x02  | Handle               | WORD   | Varies
-> |       	 *  0x04  | Signature            | BYTEx6 | ASCII for "LENOVO"
-> |       	 *  0x0A  | OEM struct offset    | BYTE   | 0x0B
-> |       	 *  0x0B  | OEM struct number    | BYTE   | 0x07, for this structure
-> |       	 *  0x0C  | OEM struct revision  | BYTE   | 0x01, for this format
-> |       	 *  0x0D  | ECP version ID       | STR ID |
-> |       	 *  0x0E  | ECP release date     | STR ID |
-> |       	 */
-> |
-> |       	/* Return if data structure not match */
-> |       	if (dm->type != 140 || dm->length < 0x0F ||
-> |       	memcmp(dmi_data + 4, "LENOVO", 6) != 0 ||
-> |       	dmi_data[0x0A] != 0x0B || dmi_data[0x0B] != 0x07 ||
-> |       	dmi_data[0x0C] != 0x01)
-> |       		return;
-> |
-> |       	/* fwstr is the first 8byte string  */
-> |       	strncpy(ec_fw_string, dmi_data + 0x0F, 8);
-> 
-> ... we shouldn't be using a C string api. Let's instead use memcpy() as
-> this more properly relays the intended behavior.
-> 
-> Do note that ec_fw_string will still end up being NUL-terminated since
-> we are memcpy'ing only 8 bytes into a buffer full of 18 zeroes. There's
-> still some trailing NUL-bytes there. To ensure this behavior, let's add
-> a BUILD_BUG_ON checking the length leaves space for at least one
-> trailing NUL-byte.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-This looks like the best choice given how this code is designed. The
-"char *private" prototype is weird since there's only one user, but
-okay. :P
+We expect bat->name to be NUL-terminated based on its usage with
+strcmp():
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+power_supply_core.c:
+445: return strcmp(psy->desc->name, name) == 0;
 
--- 
-Kees Cook
+... and also by the manual `... - 1` for the length argument of the
+original strncpy() invocation.
+
+Furthermore, no NUL-padding is needed as bat is zero-allocated before
+calling spwr_battery_init():
+826: bat = devm_kzalloc(&sdev->dev, sizeof(*bat), GFP_KERNEL);
+827: if (!bat)
+828:   return -ENOMEM;
+829:
+830: spwr_battery_init(bat, sdev, p->registry, p->name);
+
+... this means any further NUL-byte assignments (like the ones that
+strncpy() does) are redundant.
+
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
+
+Let's also opt to use the more idiomatic strscpy() usage of:
+(dest, src, sizeof(dest)).
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
+
+Found with: $ rg "strncpy\("
+---
+ drivers/power/supply/surface_battery.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/power/supply/surface_battery.c b/drivers/power/supply/surface_battery.c
+index 19d2f8834e56..196d290dc596 100644
+--- a/drivers/power/supply/surface_battery.c
++++ b/drivers/power/supply/surface_battery.c
+@@ -722,7 +722,7 @@ static void spwr_battery_init(struct spwr_battery_device *bat, struct ssam_devic
+ 			      struct ssam_event_registry registry, const char *name)
+ {
+ 	mutex_init(&bat->lock);
+-	strncpy(bat->name, name, ARRAY_SIZE(bat->name) - 1);
++	strscpy(bat->name, name, sizeof(bat->name));
+ 
+ 	bat->sdev = sdev;
+ 
+
+---
+base-commit: bb55d7f7f7445abcc8db50e6a65d4315e79f75c7
+change-id: 20231020-strncpy-drivers-power-supply-surface_battery-c-b0c84b05ac28
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
