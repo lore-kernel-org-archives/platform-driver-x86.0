@@ -2,143 +2,97 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F47CC0032E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Oct 2023 19:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F92C0032E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Oct 2023 21:10:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbjJTTqQ (ORCPT
+        id S229664AbjJTVKZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 20 Oct 2023 15:46:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45572 "EHLO
+        Fri, 20 Oct 2023 17:10:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229723AbjJTTqP (ORCPT
+        with ESMTP id S229473AbjJTVKX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 20 Oct 2023 15:46:15 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86EC9D5E
-        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Oct 2023 12:46:12 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9ab7badadeso1548926276.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Oct 2023 12:46:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697831171; x=1698435971; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VY26jasGvoK52ErKJqQiLhyEvSJKvdG2hTJjnfxEGsM=;
-        b=ZNgOLavC8fzTZrLtjT8LABBsjAACnBHp8y++tiCif+Z3Xa6VKsWJsEIrSBnRbITeXn
-         oMbBpSVzGVD0q7C72jAGMelMWToILzy7pf8Q9Q564+4fxxTDSFVBINmfMaUuboZXNsT0
-         JbE2r02Kxv2O9H33zAgHz+SVQji/wWScrIAt9gRvcJXHQVWvRqVD5CQT2OMLcUGC9o+R
-         QU0Rn0o1WXno6dXr8FgSCfV+6Fnevy7xPkSei+SAFQolzfraAOarhyaJmsIzc70RFq4i
-         ICVRtqjt6NgYwWQRKVKF2yA2ZT8Aob+bviA5ZwxBvo1agAOUoFSge7x5kyRWcQ9TlMBJ
-         Gkaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697831171; x=1698435971;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VY26jasGvoK52ErKJqQiLhyEvSJKvdG2hTJjnfxEGsM=;
-        b=emES7yqzLC6+AVsF3pvgmzBKLNLoIcjVsLww6As0oHoL3gZHrvpQwS7JacpPzVCBij
-         +2EXU6XDnSNmT7ORrS86r8D3YlMNSHCaN1e31drH4dI+M1WY/MA51tXvifPfdy7dwlox
-         8xBt/RLQWPYVJdTDIRrFP1QMJNHBxw7jgWfCsCcosxVa17fXuRed88Pyu2UfYU/rtWyF
-         OKKXcgNDK8r29U+LkuO+WkPTsGnbV9RJ30pttbvR8MvWH+r7dNmZ2dMhjh09MEvTq4Fm
-         YLlLt5cZBdeqLIwIRJoX+9oT9FkNTkvEMk3jP3pXSj4seCnztkz/xCnh3z+jn8qIUBdX
-         CDcg==
-X-Gm-Message-State: AOJu0Yxyl5lqf7Z0PyRa/YKf+2x2/2QBsFPswiNnmMs3g3u8HZ3SCdXU
-        vJLp+P8qq7s/9Go4CizVaU0iTq0KCE6KDbqtmg==
-X-Google-Smtp-Source: AGHT+IG97zohXV8c60rF/wNzxWx2VFDqrZjuW/RKQVsOoHrGomIA9J+a4stpEs9Ol6SfQRsZL3Blf2RTmc7HiEy5xQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:5008:0:b0:d77:f7c3:37db with SMTP
- id e8-20020a255008000000b00d77f7c337dbmr57402ybb.8.1697831171763; Fri, 20 Oct
- 2023 12:46:11 -0700 (PDT)
-Date:   Fri, 20 Oct 2023 19:46:11 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAALZMmUC/x2NUQrCQAxEr1LybWB3LUW9iojUbbYGZBuSWi2ld
- zf4NbyBN7OBkTIZXJoNlBY2nqpDPDSQn30dCXlwhhTSMYYU0GatWVYclBdSQ5k+pGhvkdfqoaX PdHdVR68ztl13TqE8YmlP4KOiVPj7P7ze9v0H31wQnoAAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697831170; l=2331;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=MoENqRWLCZfJlaomoU9I/5Gv5zHSfuvBj5Ts109QtOo=; b=AGIAqvvph99TN7o26x2Jna1GEQQbXsXDNhvBOWVmAJ4nDa1gz+pDDw6NLF4IDqEqLdmoBb7dh
- eSFv7SOqwvQDEk2QPNb16gHfi0TAPdg5TkfUSc3zf/NMuwfjv7hn8ew
-X-Mailer: b4 0.12.3
-Message-ID: <20231020-strncpy-drivers-power-supply-surface_charger-c-v1-1-93ddbf668e10@google.com>
-Subject: [PATCH] power: supply: surface-charger: replace deprecated strncpy
- with strscpy
-From:   Justin Stitt <justinstitt@google.com>
-To:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>
-Cc:     linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 20 Oct 2023 17:10:23 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 889C8D6A;
+        Fri, 20 Oct 2023 14:10:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1697836208; x=1698441008; i=w_armin@gmx.de;
+        bh=3ddrfE6JYEXsgMVAp506yioBhbR2EzhTXBgPYYk895Y=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=ca+xZL1RxmSQO/AvPpqr6zzsV7cXoHLzyB3/6f9qzhIBC7Gf9Nx4+ur6zCrMkrde
+         geQmjydg9zFqEgKi2yrm//fwQsyyKW9+UOHlYOm1p2sdFEhRYiYKEq1HnskNFVzRv
+         bvYcnOOeXBTx5BZNJhL0nOmmmnt+cPJZNdzQNEb9IWI5GcBUPYiE9IMopDSim5+oC
+         F8fkCY9pxLfCGEvTajyMPx3bazX1ogmfPX/GDljNbskfpc5IKX8dBZJJuioGs1TIN
+         cZMDzVrqTKQyjJrq4+ykGmCsdFEDHsyCIB2CIhJfo3k3+mcWvgZWJUoK+7PxRGCNY
+         p/aNXA/qd4x6LoIXcw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MUXtY-1r2dw81wZ6-00QSwM; Fri, 20 Oct 2023 23:10:08 +0200
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+        markgross@kernel.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] Preparations for fixing WMI reprobing issue
+Date:   Fri, 20 Oct 2023 23:10:00 +0200
+Message-Id: <20231020211005.38216-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:yqf1x4joDwJxtIBBEMwVWJLx2/qsuDYHJS4xhkx73cUb5eMXU+L
+ pkmGl14m2BCyGsOZabdZeXtq/2qvatBs8s7PnA/8TidAiNu4ECNvfrxzDf8jUsV0TIIp/t+
+ 0kzWAstzInErActQzJLAohgXW1wYxYvI72K1N8FxwJF26hGR1u5wBNG38o8kpTKz/eUL573
+ eixuA+D0qj8ci2PuhRxFQ==
+UI-OutboundReport: notjunk:1;M01:P0:fl0Pk1VwYRI=;OeWuR771DoPOx5HhSkVJ4dPxIbd
+ 7gS2UU56UwMb0gfSpFR39odEOg7ED15u0q/wi8NTxeu21sA7iOVnWTfUgxIuTXdh7ggEQVTsT
+ mbg1UH0FrjjLvK5uFYNLWt0TeKUvRbvwkqXP1s6OIc7+udoXhuoWbqEu5MMnRXl+dJG5q220p
+ zlbUnscHuFPODBJTrOeu9gbQPRW1DY+5aRyjmjfcxBHxtes7Acxw7gDvl5eieiDU2yohYDXoC
+ CGcIC/QqyuCrP2G2YeRvDygJnEZYc+kh1lmADrCA/kUnPNvaR3n1ex2ri56qh7KUnxYuK5s9D
+ ebNH5sYyd8S1NRby629pcr4JClE6N0oe8oJ8oNkkmOC9fbs4ikQGUjvIlHkUFiodUPmO91lrb
+ jONGLTqEu1KTo9PsMfQyMY6/n+LuiktmSEij2lKf3+y2yPfn5SRMD+QiN8w3rKk0C3oQj/csG
+ EKOTJDDQN+VmG5APXnBuZlj/TsyonZFgfCUEwgkcjo7jR2j0PK497ALOyR9fdvoOq1EaLInlj
+ rMGqqA0Stm39vzWKy/q7nC6io6Df15Ywq8nj7zYrBZx2sK0uqxTXTAae+StyY+YfIuFoDUQCy
+ tDi/djhCoPrPLI7I+afcAlYi/PBbmDGTndc1P7CvkqSsp6miCwW97+syKyksjq/jS55bZSl7T
+ MWItnReNiD+xks/vuDlbcY3C7S9LR5yTpZTYTmdTQKvdkuU5dLMAHffmby2XebHz9gjE+BxCU
+ 1ktQ0fhuypcshTtucBPLmUpwL2bxEvbUH/PzmjaWtThopez41oQEbetWrm7bslB2OcyDTsciy
+ Xi1kG5osC0AzmKrb+mPc7jQ49dTKpHxSVaGH7GKue/dOY3fuou7dQvHjxh7EYz7p98qWkdI8W
+ McbBVmNslfh4OwLKHxxVYefCQmI0OS24FossPyNChrojJCOvmzwCDfUoHCVwsgxrGmnY+xsm/
+ oWENDnkeb7px+kbOm0nAke60FDM=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+This patch series contains preparations for fixing the WMI reprobing
+issue discussed here:
 
-We expect ac->name to be NUL-terminated based on its usage with format
-strings:
+https://lkml.kernel.org/1252c8fb-8d5f-98ad-b24a-5fabec2e1c8b@gmx.de
 
-surface_charger.c:
-190: ac->psy_desc.name = ac->name;
+It mainly aims to decouple some parts of the WMI subsystem from the
+wmi_block_list, which is going to get replaced in the future. It also
+fixes some issues, like a probe failure when failing to register WMI
+devices and a potential issue when opening the wmi char device.
 
-...
+The changes where tested on a Dell Inspiron 3505, a Lenovo E51-80,
+a Acer Aspire E1-731 and a Asus PRIME B650-Plus motherboard and appear
+to work, but additional feedback especially on the third patch
+is appreciated.
 
-power_supply_core.c:
-174: dev_dbg(&psy->dev, "%s: Found supply : %s\n",
-175:   psy->desc->name, epsy->desc->name);
+Changes since v2:
+- Drop already merged first patch
+- break the paragraphs of the second patch with an empty line
 
-Moreover, NUL-padding is not required as ac is already zero-allocated
-before being passed to spwr_ac_init():
+Armin Wolf (5):
+  platform/x86: wmi: Decouple probe deferring from wmi_block_list
+  platform/x86: wmi: Fix refcounting of WMI devices in legacy functions
+  platform/x86: wmi: Fix probe failure when failing to register WMI
+    devices
+  platform/x86: wmi: Fix opening of char device
+  platform/x86: wmi: Decouple WMI device removal from wmi_block_list
 
-surface_charger.c:
-240: ac = devm_kzalloc(&sdev->dev, sizeof(*ac), GFP_KERNEL);
-241: if (!ac)
-242:   return -ENOMEM;
-243:
-244: spwr_ac_init(ac, sdev, p->registry, p->name);
+ drivers/platform/x86/wmi.c | 263 ++++++++++++++++++++++---------------
+ 1 file changed, 157 insertions(+), 106 deletions(-)
 
-... this means any future NUL-byte assignments (like the ones that
-strncpy() does) are redundant.
-
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
-
-Let's also opt for the more idiomatic strscpy() usage of:
-(dest, src, sizeof(dest))
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
-
-Found with: $ rg "strncpy\("
----
- drivers/power/supply/surface_charger.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/power/supply/surface_charger.c b/drivers/power/supply/surface_charger.c
-index cabdd8da12d0..7a6c62d6f883 100644
---- a/drivers/power/supply/surface_charger.c
-+++ b/drivers/power/supply/surface_charger.c
-@@ -175,7 +175,7 @@ static void spwr_ac_init(struct spwr_ac_device *ac, struct ssam_device *sdev,
- 			 struct ssam_event_registry registry, const char *name)
- {
- 	mutex_init(&ac->lock);
--	strncpy(ac->name, name, ARRAY_SIZE(ac->name) - 1);
-+	strscpy(ac->name, name, sizeof(ac->name));
- 
- 	ac->sdev = sdev;
- 
-
----
-base-commit: bb55d7f7f7445abcc8db50e6a65d4315e79f75c7
-change-id: 20231020-strncpy-drivers-power-supply-surface_charger-c-466920fb1f48
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+=2D-
+2.39.2
 
