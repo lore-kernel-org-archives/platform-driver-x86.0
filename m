@@ -2,63 +2,65 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0540C004C0
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Oct 2023 19:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C68DC0032E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Oct 2023 19:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbjJTTfz (ORCPT
+        id S230264AbjJTTjc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 20 Oct 2023 15:35:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37930 "EHLO
+        Fri, 20 Oct 2023 15:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230010AbjJTTfx (ORCPT
+        with ESMTP id S230026AbjJTTjX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 20 Oct 2023 15:35:53 -0400
-Received: from mail-oi1-x249.google.com (mail-oi1-x249.google.com [IPv6:2607:f8b0:4864:20::249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D42D6E
-        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Oct 2023 12:35:45 -0700 (PDT)
-Received: by mail-oi1-x249.google.com with SMTP id 5614622812f47-3af609cb0bdso1667326b6e.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Oct 2023 12:35:45 -0700 (PDT)
+        Fri, 20 Oct 2023 15:39:23 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE7D0170C
+        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Oct 2023 12:39:07 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a7aa161b2fso15501937b3.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Oct 2023 12:39:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697830544; x=1698435344; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697830746; x=1698435546; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=9+iAGOL8fBcRKregm2UatJBSjxVyGVTi97qzrD87J/M=;
-        b=aRyQvAni2EHDC0yRsExYndr00a4pAr2Rtc9NCVfSzpCdgmvO5I5cL6jHXAntyhyxL2
-         FI9KRSEINv+Hs6h/g1KbBbbso/zbisELGQolS1SFa35WUNcqQ2iZ9dnMyQAqQ1/QUCF7
-         klwPq5O8MSJFKEYZ0DM3XcZwQh3+MzdWqiLmcC1ojS+1CtCn1Xw7Mek462kLySxhoc4h
-         FehbPwXpxTs61coqrVJ9RGMalTRWJN0Ymdl4kSyOZGeAJpjLzdsOzlUIta2TRhogRJve
-         +P1QXvrg5VOCNk4mHO7U2CSk6Zhiezr8zxVyhIj8LTgfHtEwoGataffKbvaUqYufSGtR
-         eGhg==
+        bh=ApgtBIwM/UT3SKqY+L+66VIK2kG5whPiTDfo769iKqE=;
+        b=fymZahB42Jt7DJG2f/jHR8IofMHwz/ta/5lRINoFiRseWXr7Pr8dG5ADbn1Ht5M7NW
+         eHTiu6zByuTlWMnSER7itpHo3wMFefGGeTg77XLxOxr/LGqqhUVlc2JJmbh4pAkSYMv6
+         cU19bMgVNtkHao5tny5U35qlnW38QKSX67XlFR0C23HGAgkAfwcTynMulRCQp0UiFKd2
+         tG589/4x0MN+/0bINH502AMfhROlGJ+liX6+Bg5Vy/DOXnQaRJed+2sCSTeglFyBa3Eh
+         OX4BC74mayd3MYNkRt8xhSU9VkiOlZ7v2o7sd89LE0slvkQFrwXSxpJejQ15OLwzvMZO
+         U7Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697830544; x=1698435344;
+        d=1e100.net; s=20230601; t=1697830746; x=1698435546;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=9+iAGOL8fBcRKregm2UatJBSjxVyGVTi97qzrD87J/M=;
-        b=rhSx7rHbRb+7gF4TkbIJMoorJa/EeyHvG0yXGeTLAJt/KWS1Lo+fKOqC56k9dmQMCe
-         yFNiwSLfzWiWuWV42V/knncfK/W7GzdAzNp565VqiUfQ7OULHEweFzElDSeOVsQu3nzL
-         1eYs7T/8OolRWG+IweEgNCBkz4xUaPcj6JI7fLiWUZjUgH8iqBTb/GxHVXlhTuSisalJ
-         rYIp3hsRSgUokK0lgb+FeC/fxSbtsB4Vptk42YziGpC8al6aVEFn4nv5Er10Uu32s8kA
-         U21PaZ26ahMVq67FUKgJEpnnLaNPu7YvgvtvbEWsBCVtRAQYwwsrBFZd0MrxdOtrsRyB
-         a70g==
-X-Gm-Message-State: AOJu0Ywt5SmGgeMAHva1+XJQhDGGOsuK71FMhc6ysZCFrACqkwyQ+a6W
-        wu+i/CFPhr3TGdgocY4yGDv5QGwcnYMYvgNfxQ==
-X-Google-Smtp-Source: AGHT+IHZQUY9baCehYvzXAaS7x9nNF6uHCQ2/74bV2qdNWPoNwNQLv1R/Hn9zc2YRsn/RnRPDVOTLR2TZ+Z8Sxp5Ag==
+        bh=ApgtBIwM/UT3SKqY+L+66VIK2kG5whPiTDfo769iKqE=;
+        b=sfmvRZ4o5OO/x5R1rcl8ltIvHr3k6YJ3Q6NqJpFD+iNUeEEirMhgQ3aZwG8uzeGawX
+         2XarkJ55uvTIArjCpCkRgkMR1YMcHygKzJVQmTSI26ETZUUDs8wxAQrgfBYas/EPfP0l
+         33jtePJKZSqWwPnZHBkOwp7/1WP4e8zT0+09kG2JeWvW+UNaFwpsTW7+RLeZw9Dw/JiB
+         AZcrOx6lo1xID3CIXZ0HTFAq6RQirhiQepLmjc6KOeyzE4/7BIeLYBArkMYM9GL5OwnI
+         9z+nt+8WdRV77XzXGrVq91cUM9fj/kPY6P4hqU2/7WFATo5x7DUzmOpbNLU1Cubca5ch
+         58eg==
+X-Gm-Message-State: AOJu0YyOpTsc6ZwCfGuCB3mtVxUOJrnVwvO90Bw1/OsPT7ZTOEL+cz76
+        j5VvYKS1UI1isekxZegNrzJLzF3MAv1hP1b8LA==
+X-Google-Smtp-Source: AGHT+IEMURRd+a5veV8jdamkf3IjKiUnn+FpVD4h6z8O/r3QLS9fPuSYUe8nhXkO+H6BxwqrGYE3SZBBG6MGCUhKZQ==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6808:448f:b0:3ad:da36:1dd6 with
- SMTP id eq15-20020a056808448f00b003adda361dd6mr1891601oib.1.1697830544173;
- Fri, 20 Oct 2023 12:35:44 -0700 (PDT)
-Date:   Fri, 20 Oct 2023 19:35:43 +0000
+ (user=justinstitt job=sendgmr) by 2002:a81:6cc3:0:b0:5a7:de61:4d9b with SMTP
+ id h186-20020a816cc3000000b005a7de614d9bmr72471ywc.3.1697830746201; Fri, 20
+ Oct 2023 12:39:06 -0700 (PDT)
+Date:   Fri, 20 Oct 2023 19:39:02 +0000
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAI7WMmUC/x2N0QrCMAwAf2Xk2UBXJwx/RUTaLNOAdCWp0zL27
- ys+Hfdyt4GxChtcuw2UVzFZUpP+1AG9QnoyytQcvPPn3nmHVjRRrjiprKyGefmyon1yftcGnQP xI4ZSWCsSRkfjEN0lkB+hRbPyLL//8Hbf9wN9+HSXgAAAAA==
+X-B4-Tracking: v=1; b=H4sIAFbXMmUC/52NQQ7CIBBFr9KwdgygrY0r72EaA3TaktRCBkRJ0
+ 7uLPYKrn/cX760sIFkM7FqtjDDZYN1SQB4qZia1jAi2L8wklyfBJYcQaTE+Q082IQXw7o0E4eX
+ 9nMvQoAw+tIoRKYMBzU171rxWRrasSD3hYD978N4VnmyIjvLeT+L3/p1KAgQYpRWqmmPTXG6jc +OMR+OerNu27QtczP977QAAAA==
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697830543; l=2313;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697830745; l=2480;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=zmP6Agkd7BUv41JUTgaRBkw1r6Q9BZkiPWT2tLR0LAQ=; b=qUt1cyoTbXs6qmJVgPAXz5mbtcGQzIOLTkM7z8UR/GVWZ8gVAAzFiOhg9+1gcHscXS/bles5K
- Hd71E9a1vbbDBn24xeS1hMCC89N3IDNnw1W+pJJ4CZNXEiLH5v1sOMH
+ bh=zP2JAHf39kTI56frJ1mycRlDlgI+x3V8U7lKpy4JwDA=; b=8lnCfGuxm7KfO7JWZvnLM0jkO3KfBDK4t51JJ/oInHUz0BAWOE3mpSG3NT20U8vZ+oT5gyPB3
+ 3MX1Z5PX6faDN9OI7yXoH0OvrjC02jZhH08FqCPvJOVLwOuem7lHeCP
 X-Mailer: b4 0.12.3
-Message-ID: <20231020-strncpy-drivers-power-supply-surface_battery-c-v1-1-cabaea50e667@google.com>
-Subject: [PATCH] platform/surface: aggregator: replace deprecated strncpy with strscpy
+Message-ID: <20231020-strncpy-drivers-power-supply-surface_battery-c-v2-1-29ed16b2caf1@google.com>
+Subject: [PATCH v2] power: supply: surface_battery: replace deprecated strncpy
+ with strscpy
 From:   Justin Stitt <justinstitt@google.com>
 To:     Maximilian Luz <luzmaximilian@gmail.com>,
         Sebastian Reichel <sre@kernel.org>
@@ -106,6 +108,10 @@ Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v2:
+- fix subject line
+- Link to v1: https://lore.kernel.org/r/20231020-strncpy-drivers-power-supply-surface_battery-c-v1-1-cabaea50e667@google.com
 ---
 Note: build-tested only.
 
