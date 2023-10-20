@@ -2,138 +2,137 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950FAC00A8F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Oct 2023 21:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DE6C001DF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Oct 2023 21:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230430AbjJTVK3 (ORCPT
+        id S229603AbjJTVKa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 20 Oct 2023 17:10:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48930 "EHLO
+        Fri, 20 Oct 2023 17:10:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230318AbjJTVK1 (ORCPT
+        with ESMTP id S230306AbjJTVK1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 20 Oct 2023 17:10:27 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBA4FD68;
-        Fri, 20 Oct 2023 14:10:24 -0700 (PDT)
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 576F8112;
+        Fri, 20 Oct 2023 14:10:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1697836213; x=1698441013; i=w_armin@gmx.de;
-        bh=mQwZ7HovL0XAV0BMMBNTr9Ft336d/JL1LOfzD0c2oJs=;
+        t=1697836215; x=1698441015; i=w_armin@gmx.de;
+        bh=kFgVOLW+XKGG9Dulheyn+xrEGtWuwccHJv/X261e87w=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
          References;
-        b=Eh/dJbbsnRvIaOb/QLKYI3GmINne3a2xuiYHq0DnFEeiRyeVXFKSVIH5KFTL36NL
-         YhCkhm4rb9bpQKtdF4VhUw1u4xfoJHS61lIpHA4LhdXdifi4zLhBBrx5GQAEZKZxJ
-         3i/TNQjYfYrfWgkOZLRIY9vPLNqhxL/zLKnwmui4TwgE8b6gamhjPjSR1NxEz1Az3
-         QNNpDYZVucwLuOk0RjHFPuhZ0I07uHPsh0ZK3k79EhOKgGFyY3K6hFok0xalXCbc9
-         Vd9xuzZsanyFIXCXmLSk25A07/CpbaFfgB2JzyXvOpP6wvKSNB46L54z3KHcC9G+O
-         irYXG4blPWRoojIkoA==
+        b=oF08p2AQTIHOWJIgWlit3N2rt74aIraiIs3Uvwq76EKVcbfe68jdrNqqZB/khtPV
+         1qcBcKKT6UA3XUw33wddSnHcbn5Cp86+amTqBwAHOph/g6PUMEz5uGPLKROm123J3
+         0nn7Uq6ogQuVNRrAHz6wUwH4Z+BRqvv0IuH7NdrviHGadPPTjUBZ+AR5JFoqJ7EeY
+         L2Ks0l+VMJ01X+D+Xx+4mp8rgZXDJ92/YmqI5OjdZ/jSJISbFJ24oyHKUjGyyGSb+
+         22yevMiDwsK9I/IJbFEa8U4ToYtnFXC9zvIuI1XBzuOOJ+pVf2aXjqU+U9pHrfDLt
+         PmXLHwoWtIRen6SDQw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MCbEf-1qkqCl3eN9-009exu; Fri, 20 Oct 2023 23:10:12 +0200
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MORAa-1r9pkH05gU-00Pz4b; Fri, 20 Oct 2023 23:10:15 +0200
 From:   Armin Wolf <W_Armin@gmx.de>
 To:     hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
         markgross@kernel.org
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/5] platform/x86: wmi: Fix probe failure when failing to register WMI devices
-Date:   Fri, 20 Oct 2023 23:10:03 +0200
-Message-Id: <20231020211005.38216-4-W_Armin@gmx.de>
+Subject: [PATCH v2 5/5] platform/x86: wmi: Decouple WMI device removal from wmi_block_list
+Date:   Fri, 20 Oct 2023 23:10:05 +0200
+Message-Id: <20231020211005.38216-6-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231020211005.38216-1-W_Armin@gmx.de>
 References: <20231020211005.38216-1-W_Armin@gmx.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:K8Pj/GqNVdzXRi5ZvkOjbKr+5ZLjUujG7t6fVgbkc3m717NSP6V
- Y18A7m5/H1ElSS70TACGg0s4+zszPRBQdNBmlSu0yntNwkakCl+vkswZ37THoqauK53Njnz
- /M7Bg9mj/7UtKKdoM4//HwY0UWMURUUPyaWGdbuu9iMyUxHJUCO01yvvfvMYKjwQN7loDml
- 8XDfdskdYda4YvnAV/BaQ==
-UI-OutboundReport: notjunk:1;M01:P0:drImnaOOQ28=;AA/Bxy6dHJnX38U588CRcqYdFvo
- /jRkmv+JeN8SLIm4kh3GrVJAbSRyVKOBXH5rZP1EUYIKjo9Ew9rtrrZ8Xq0dTNAClLUAcYPMc
- 15uDjz66NLlLeba6LnOkydhmnz0NpZoyuR9U65hNEs/Nv+lF6USmavIXk9X90W0T+4e29nKA+
- pPwaQKJNnIhibLU/IG6zcIVZzIrGR9Zsa57t3G7o208+UeN/3+InO3gvi5OIsz8NwkI83XKZ6
- iWSwyvB67f/MrAZC1Bu6jsk/ZB3O3K3PUWZhWEGruED4U2Cqm/v3U/2WeF1jsKg8mDi1r9eFN
- PNpt89hteaJMaB4UT5uG17PA3pOkykCp1V3xOBdO9+zNJ1odVYa+0ss3qyXgXkSvwQacWnHmd
- 0yXKxuh64CCjfwVvXMM1Y0TtNKkw8Bx3q0cY7YGTI10OqHdzvPtswozKz/0IsyQe+++uvTRvt
- 7iCR0xMLnFTO0THocJShK2apS9uNfCuip/ADLzuzN4ssllLIN2trWFNrQ1ljqvid94AnZHhvg
- 4QikppiZspfFHJgxfYKNsDgEAOP1xq+pfGx2mZWmax/0W9MOXMu893F/twuDiaOSDTYc9JOK7
- slGnwqaaFCiFwxeREF8TFd7GaqwRF/7uY7dI5RM4NaOT04eOf/e3jonbtGY7em0DDREc+9wxs
- 0IPZHIobq9f255Ipt1tWX70EDB39we3NzzxTvDSpmVXowfwLl+3flcA4xt7W3cWdBQ9B7kaZS
- iHNtOjI3MAs/Vlhj2OjEQN+ZjcK/R915Fi9OyDaQuobHi/lPv8W03HKqmM2Lt4qUQnLXNHLZ0
- t/WujHUiHtTuIaH5Wzv561NSywc8t59TMa6zGv7rho7ZpHVtBec7G3OD+jqq0KmZa9eX5NRuk
- rRqAAgBikONjg0qlaeM01CRubWhUDPUHjOk9BxoEkKauQ3bVROT4gFT56myYBegwMH5vPM6Ah
- jqLnp+HT3Zyh7/KvZmcsj469OOA=
+X-Provags-ID: V03:K1:upUz/s9hYkGaaetVpAZiTov/Dp6BZHRY9u7NNsKYG7ZsPneSYaN
+ kME8qFo2oFWNV1icG+l8vgEWvmCLw+N9F/U9yhDgCOx9N8ajPePy5lBbyFo/CcfwlczOeS+
+ 9Y+moiM3hwxCZvXpyqjgC3zf8Bn1M3r5AFSxUWuoTDcj3xGZMRn1OKZeXZWQ2G5gi29w3Bw
+ tReZ3vESZ9jJESGeFeMCg==
+UI-OutboundReport: notjunk:1;M01:P0:uRYRACoYQNg=;xJ5zlELhxwZnziIgQaehFu6ytf2
+ HQ0FxqEdXu93Z51O0juNh54QHy1xunaclvigTJ5UgUGlO6I85mafj1t1YebP0Enfi2lZH3/WA
+ ofXjOKaIvfNM6VseXzheZLYXkreZUplT3n951nJDs1UNdZXtifS1F8v/nWGa709+1NfJUqrIp
+ f89xcxz6L8kBB2fw8HhjZRgqbNxBTE+c1KLEsMG4ISxMUP87yHyBhwlQvxqDd+1SieVQVdNtE
+ TJP+gkVTqLYEgFbU5T29i5pvn9lDNEKaiFbIoXWLjUFx7ZF0qb77wuO1Ffvvj0O57oiProqI0
+ dJUjbxGAAnOJhxUME+Dvu/4bCWrVXscf6zLmNJHkcN+PMUifbow5HFblT92DrwR991tNZNf62
+ 1OHoxdR6yNZNXO9g/7Q4tRfDIUJyc3tjVRvy7X8c/F0vNarIkWtms20XiT5orqrxsTabnyCCi
+ SOXJFnbVChsHaAMIsvUbmW7/7X3V0Pk6dwa2Dg6M04TtLsfEUYA5u293MQNjLAvZvbCS6tZGh
+ dM4h4LP7u0q/DxF8tY9r0Lq4d4iL2vQ9zanJATo5LBm76AAOaLimYCHOSznsLiirbvCaXXbus
+ yVwodVY2fSVAPTuNkkVfz0UadAAyZdqv0h5o/PDoWO2odsgK/h2oAHZPpM64TRlX+8NYDcQho
+ aS9KlBzDtu8u1fx1eYvXQ1rKlxMBQSYM4DrX2TySoQSVkntjt6UMTpqZETJ2JvSCLB3Y8bABQ
+ js/dcukxoHGnrtiebHokoghBFiYC1H4DHwwQmwK5rt6TpyWx5lReUoHUE0AUA+Vo94GmoI0Vo
+ pNo90t1URQO1xS7wfkAEdaW3pdyQsuPB7qnRjpKmyg/MF/Oa3M3YsQKSsrKFskwtvUMkZt098
+ S2fkks0mwQYsqszg0n9Rj0Zjraask6IR0fha7HlAU0/C7Z5qNClYPkUwW2QLxAhFkcJ5k7nBx
+ 92vDKjSAAYpAwnlJhtJjFjuRMak=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-When a WMI device besides the first one somehow fails to register, retval
-is returned while still containing a negative error code. This causes the
-ACPI device failing to probe, leaving behind zombie WMI devices leading
-to various errors later.
-Fix this by handling the single error path separately and return 0 after
-trying to register all WMI devices. Also continue to register WMI devices
-even if some fail to allocate.
+Use device_for_each_child_reverse() to find and unregister WMI devices
+belonging to a WMI bus device instead of iterating thru the entire
+wmi_block_list.
 
-Fixes: 6ee50aaa9a20 ("platform/x86: wmi: Instantiate all devices before ad=
-ding them")
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/wmi.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/platform/x86/wmi.c | 29 ++++++++++++++---------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index e3984801883a..ab24ea9ffc9a 100644
+index 6b3b2fe464d2..5c27b4aa9690 100644
 =2D-- a/drivers/platform/x86/wmi.c
 +++ b/drivers/platform/x86/wmi.c
-@@ -1338,8 +1338,8 @@ static int parse_wdg(struct device *wmi_bus_dev, str=
-uct platform_device *pdev)
- 	struct wmi_block *wblock;
- 	union acpi_object *obj;
- 	acpi_status status;
--	int retval =3D 0;
- 	u32 i, total;
-+	int retval;
-
- 	status =3D acpi_evaluate_object(device->handle, "_WDG", NULL, &out);
- 	if (ACPI_FAILURE(status))
-@@ -1350,8 +1350,8 @@ static int parse_wdg(struct device *wmi_bus_dev, str=
-uct platform_device *pdev)
- 		return -ENXIO;
-
- 	if (obj->type !=3D ACPI_TYPE_BUFFER) {
--		retval =3D -ENXIO;
--		goto out_free_pointer;
-+		kfree(obj);
-+		return -ENXIO;
- 	}
-
- 	gblock =3D (const struct guid_block *)obj->buffer.pointer;
-@@ -1366,8 +1366,8 @@ static int parse_wdg(struct device *wmi_bus_dev, str=
-uct platform_device *pdev)
-
- 		wblock =3D kzalloc(sizeof(*wblock), GFP_KERNEL);
- 		if (!wblock) {
--			retval =3D -ENOMEM;
--			break;
-+			dev_err(wmi_bus_dev, "Failed to allocate %pUL\n", &gblock[i].guid);
-+			continue;
- 		}
-
- 		wblock->acpi_device =3D device;
-@@ -1398,9 +1398,9 @@ static int parse_wdg(struct device *wmi_bus_dev, str=
-uct platform_device *pdev)
- 		}
- 	}
-
--out_free_pointer:
--	kfree(out.pointer);
--	return retval;
-+	kfree(obj);
-+
-+	return 0;
+@@ -1280,19 +1280,6 @@ static int wmi_add_device(struct platform_device *p=
+dev, struct wmi_device *wdev)
+ 	return device_add(&wdev->dev);
  }
 
- /*
+-static void wmi_free_devices(struct acpi_device *device)
+-{
+-	struct wmi_block *wblock, *next;
+-
+-	/* Delete devices for all the GUIDs */
+-	list_for_each_entry_safe(wblock, next, &wmi_block_list, list) {
+-		if (wblock->acpi_device =3D=3D device) {
+-			list_del(&wblock->list);
+-			device_unregister(&wblock->dev.dev);
+-		}
+-	}
+-}
+-
+ static bool guid_already_parsed_for_legacy(struct acpi_device *device, co=
+nst guid_t *guid)
+ {
+ 	struct wmi_block *wblock;
+@@ -1487,16 +1474,28 @@ static void acpi_wmi_notify_handler(acpi_handle ha=
+ndle, u32 event,
+ 		event, 0);
+ }
+
++static int wmi_remove_device(struct device *dev, void *data)
++{
++	struct wmi_block *wblock =3D dev_to_wblock(dev);
++
++	list_del(&wblock->list);
++	device_unregister(dev);
++
++	return 0;
++}
++
+ static void acpi_wmi_remove(struct platform_device *device)
+ {
+ 	struct acpi_device *acpi_device =3D ACPI_COMPANION(&device->dev);
++	struct device *wmi_bus_device =3D dev_get_drvdata(&device->dev);
+
+ 	acpi_remove_notify_handler(acpi_device->handle, ACPI_ALL_NOTIFY,
+ 				   acpi_wmi_notify_handler);
+ 	acpi_remove_address_space_handler(acpi_device->handle,
+ 				ACPI_ADR_SPACE_EC, &acpi_wmi_ec_space_handler);
+-	wmi_free_devices(acpi_device);
+-	device_unregister(dev_get_drvdata(&device->dev));
++
++	device_for_each_child_reverse(wmi_bus_device, NULL, wmi_remove_device);
++	device_unregister(wmi_bus_device);
+ }
+
+ static int acpi_wmi_probe(struct platform_device *device)
 =2D-
 2.39.2
 
