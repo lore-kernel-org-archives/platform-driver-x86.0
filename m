@@ -2,67 +2,209 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67187C07545
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 21 Oct 2023 17:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBA1C0032E
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 21 Oct 2023 20:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231997AbjJUR5V (ORCPT
+        id S229633AbjJUU4J (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 21 Oct 2023 13:57:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48462 "EHLO
+        Sat, 21 Oct 2023 16:56:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231936AbjJUR5T (ORCPT
+        with ESMTP id S229478AbjJUU4I (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 21 Oct 2023 13:57:19 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04297D61;
-        Sat, 21 Oct 2023 10:57:12 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A038BC433C9;
-        Sat, 21 Oct 2023 17:57:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697911031;
-        bh=LGQlCRTI+vRY2OarQLfo/9MacXicOfhnwyY3bQJOUqI=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=JuEbzapjrLOe3k5Tz7BG1bxiO+rIU0EH3rTaaPCnKBguPH0cZlGgSALFYogbHr5dn
-         ktaW4LSKeADhD4y4o3kTpIAYih/KduBSHiYz//lIWbm104hlHbKnwNLHD49lG9A+lE
-         dkt4wBpWJ4FIrIW8BoJ5Ox3W+Z9vA8fJs51WCyDXizFaiJK9DoFhwsPj1Vn8ZjWQNy
-         IjL3K49viTkT0bJiOBc8Wf48n8QEdKeqoy4+yRpuvv26vrgqNuCxn1EIO2JvEWocJz
-         uRqWXvyw5OoRCQllaZkde5xBv1nP7oC12krZlgPA7J/DfTQghi5rKR4nQzS6gljQ+0
-         YDOzYdGJmjIdQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8A4B9C04DD9;
-        Sat, 21 Oct 2023 17:57:11 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for 6.6-5
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <bc630929-8352-5548-07ec-1de7ccc150e8@redhat.com>
-References: <bc630929-8352-5548-07ec-1de7ccc150e8@redhat.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <bc630929-8352-5548-07ec-1de7ccc150e8@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.6-5
-X-PR-Tracked-Commit-Id: 99c09c985e5973c8f0ad976ebae069548dd86f12
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f51de61ce7cf27202fe1357b6c35a39a98ecd9cf
-Message-Id: <169791103156.24251.2134261181125641463.pr-tracker-bot@kernel.org>
-Date:   Sat, 21 Oct 2023 17:57:11 +0000
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Armin Wolf <W_Armin@gmx.de>
+        Sat, 21 Oct 2023 16:56:08 -0400
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DA6E1A3;
+        Sat, 21 Oct 2023 13:56:02 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 377D93200995;
+        Sat, 21 Oct 2023 16:55:59 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute3.internal (MEProxy); Sat, 21 Oct 2023 16:56:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1697921758; x=1698008158; bh=i5
+        0b4X8nAfPZABtna9BGpqBGkzaOmZqB3f12UN+ORdM=; b=VpK/fqtTPOiRmbbsr+
+        vcgd7X/4963eUrqgVoGMsVVaUV5mhCIxBq8tIJYI8zbHQcIgaWEnN15FViO+KQe+
+        ASszKBNnZce6eZA1h4lcKiEXSaEZs7zOSgitgM4zTzR3Hmn01Adt2OKmXQ9oYW9o
+        d+D3v2H1q7dSXRn2yDUw6fGM7OxWRpmY+VVJ3rZW8F/e4LZ0XeIRUMLkVjS1wPlD
+        u4doJjU7OuT2PBJaj1YDLo/7sgmaQUZfCHRWn1Y/HSEvPW3Kflj1vzTTsYfsH8hA
+        zWis5gcNdXOvHpFpXPIe8UeMQXF0TDqwsvc1ZszjhzlYkocEP0u2TJO1Xwf876IE
+        YMfQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1697921758; x=1698008158; bh=i50b4X8nAfPZA
+        Btna9BGpqBGkzaOmZqB3f12UN+ORdM=; b=rBasE/89wXAspGcMdRP9ZeBV3Nbea
+        C0GMp+7gyoiJFiV727faLmtyHObr9JRcFgrPp8PqFaQks7Yo6GMi2YdhRjRI8cva
+        OKut8Zgx6GHbZHb2D5ObyrN/7HntYNSKS/SPY/oPOKfBhAZCRGV7mSHZeQu3Fa8Y
+        fd7uDzP5J8TlK1jITQFPpC8l/8p208ncQDZaWmNZj34PByoG29rkB77PIveVxlLk
+        PQMst0vrC63w9y31gnXtQS9UgbT1FH0zG3b5uWE7cgds1ygm+BbvRbc+YSMWznWQ
+        xOYQ9xoXBKChjv5LBS/BewLEbaCaa/kzGIUaXYzkIeOjugUwMUCmBx5sQ==
+X-ME-Sender: <xms:3To0ZZcIAyZExmOaYCVswLJVpzr461COVbSZxwOIU4s5nM8hMteiUA>
+    <xme:3To0ZXNuLA6iWSCGf2u2Rl0ohdPEKBVz-nhC7Cb478mbGXEwH38_C284aAYw9ZlSO
+    JLnzLCmDovaldtew0g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrkedtgdduhedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
+    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
+    drtggrqeenucggtffrrghtthgvrhhnpeehueeiieefiedutdduffffudevveevteehuedv
+    vedtheevgeevkedvkeetueelfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhgih
+    hthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:3To0ZSixincJXeZiVb7iDKFbuNO9NMI3BYKs-b5wK7CYua2Q-2TunQ>
+    <xmx:3To0ZS_K-sbFry1iXiq_zI6zRcfcqDWiFRvij-4uKRDbkPrrth89Dw>
+    <xmx:3To0ZVsUBmxEI-8tgQ_KRb7fxtUt4ljwj9EL16EXBdmF3HjC1SOHsA>
+    <xmx:3jo0ZZjBr9yZJdRSN-SYXQLl88j0Xw3SvdBbp86KGFP-j_yEz7uXyA>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 65879C6008B; Sat, 21 Oct 2023 16:55:57 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1048-g9229b632c5-fm-20231019.001-g9229b632
+MIME-Version: 1.0
+Message-Id: <c0410813-d8cc-4609-92ba-ec41d107e99d@app.fastmail.com>
+In-Reply-To: <20231020-strncpy-drivers-platform-x86-thinkpad_acpi-c-v1-1-312f2e33034f@google.com>
+References: <20231020-strncpy-drivers-platform-x86-thinkpad_acpi-c-v1-1-312f2e33034f@google.com>
+Date:   Sat, 21 Oct 2023 16:55:37 -0400
+From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To:     "Justin Stitt" <justinstitt@google.com>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+        "Hans de Goede" <hdegoede@redhat.com>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        "markgross@kernel.org" <markgross@kernel.org>
+Cc:     ibm-acpi-devel@lists.sourceforge.net,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: replace deprecated strncpy with
+ memcpy
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The pull request you sent on Sat, 21 Oct 2023 11:38:43 +0200:
+On Fri, Oct 20, 2023, at 1:52 PM, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous
+> interfaces.
+>
+> We expect ec_fw_string to be NUL-terminated based on its use with format
+> strings in thinkpad_acpi.c:
+> 11241 | pr_notice("ThinkPad firmware release %s doesn't match the known 
+> patterns\n",
+> 11242 |     ec_fw_string);
+>
+> Moreover, NUL-padding is not required since ec_fw_string is explicitly
+> zero-initialized:
+> 11185 | char ec_fw_string[18] = {0};
+>
+> When carefully copying bytes from one buffer to another in
+> pre-determined blocks (like what's happening here with dmi_data):
+>
+> |       static void find_new_ec_fwstr(const struct dmi_header *dm, void 
+> *private)
+> |       {
+> |       	char *ec_fw_string = (char *) private;
+> |       	const char *dmi_data = (const char *)dm;
+> |       	/*
+> |       	 * ThinkPad Embedded Controller Program Table on newer models
+> |       	 *
+> |       	 * Offset |  Name                | Width  | Description
+> |       	 * ----------------------------------------------------
+> |       	 *  0x00  | Type                 | BYTE   | 0x8C
+> |       	 *  0x01  | Length               | BYTE   |
+> |       	 *  0x02  | Handle               | WORD   | Varies
+> |       	 *  0x04  | Signature            | BYTEx6 | ASCII for "LENOVO"
+> |       	 *  0x0A  | OEM struct offset    | BYTE   | 0x0B
+> |       	 *  0x0B  | OEM struct number    | BYTE   | 0x07, for this 
+> structure
+> |       	 *  0x0C  | OEM struct revision  | BYTE   | 0x01, for this 
+> format
+> |       	 *  0x0D  | ECP version ID       | STR ID |
+> |       	 *  0x0E  | ECP release date     | STR ID |
+> |       	 */
+> |
+> |       	/* Return if data structure not match */
+> |       	if (dm->type != 140 || dm->length < 0x0F ||
+> |       	memcmp(dmi_data + 4, "LENOVO", 6) != 0 ||
+> |       	dmi_data[0x0A] != 0x0B || dmi_data[0x0B] != 0x07 ||
+> |       	dmi_data[0x0C] != 0x01)
+> |       		return;
+> |
+> |       	/* fwstr is the first 8byte string  */
+> |       	strncpy(ec_fw_string, dmi_data + 0x0F, 8);
+>
+> ... we shouldn't be using a C string api. Let's instead use memcpy() as
+> this more properly relays the intended behavior.
+>
+> Do note that ec_fw_string will still end up being NUL-terminated since
+> we are memcpy'ing only 8 bytes into a buffer full of 18 zeroes. There's
+> still some trailing NUL-bytes there. To ensure this behavior, let's add
+> a BUILD_BUG_ON checking the length leaves space for at least one
+> trailing NUL-byte.
+>
+> Link: 
+> https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings 
+> [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
+>
+> Found with: $ rg "strncpy\("
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c 
+> b/drivers/platform/x86/thinkpad_acpi.c
+> index 41584427dc32..bd9e06f5b860 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -11144,6 +11144,8 @@ static char __init tpacpi_parse_fw_id(const 
+> char * const s,
+>  	return '\0';
+>  }
+> 
+> +#define EC_FW_STRING_LEN 18
+> +
+>  static void find_new_ec_fwstr(const struct dmi_header *dm, void 
+> *private)
+>  {
+>  	char *ec_fw_string = (char *) private;
+> @@ -11172,7 +11174,8 @@ static void find_new_ec_fwstr(const struct 
+> dmi_header *dm, void *private)
+>  		return;
+> 
+>  	/* fwstr is the first 8byte string  */
+> -	strncpy(ec_fw_string, dmi_data + 0x0F, 8);
+> +	BUILD_BUG_ON(EC_FW_STRING_LEN <= 8);
+> +	memcpy(ec_fw_string, dmi_data + 0x0F, 8);
+>  }
+> 
+>  /* returns 0 - probe ok, or < 0 - probe error.
+> @@ -11182,7 +11185,7 @@ static int __must_check __init get_thinkpad_model_data(
+>  						struct thinkpad_id_data *tp)
+>  {
+>  	const struct dmi_device *dev = NULL;
+> -	char ec_fw_string[18] = {0};
+> +	char ec_fw_string[EC_FW_STRING_LEN] = {0};
+>  	char const *s;
+>  	char t;
+> 
+>
+> ---
+> base-commit: dab3e01664eaddae965699f1fec776609db0ea9d
+> change-id: 20231019-strncpy-drivers-platform-x86-thinkpad_acpi-c-7a733d087ef7
+>
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.6-5
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f51de61ce7cf27202fe1357b6c35a39a98ecd9cf
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Looks good to me.
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
