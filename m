@@ -2,209 +2,171 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBA1C0032E
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 21 Oct 2023 20:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA25C25B43
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 22 Oct 2023 10:46:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbjJUU4J (ORCPT
+        id S231830AbjJVKq3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 21 Oct 2023 16:56:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45496 "EHLO
+        Sun, 22 Oct 2023 06:46:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbjJUU4I (ORCPT
+        with ESMTP id S229472AbjJVKq1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 21 Oct 2023 16:56:08 -0400
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DA6E1A3;
-        Sat, 21 Oct 2023 13:56:02 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 377D93200995;
-        Sat, 21 Oct 2023 16:55:59 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute3.internal (MEProxy); Sat, 21 Oct 2023 16:56:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm1; t=1697921758; x=1698008158; bh=i5
-        0b4X8nAfPZABtna9BGpqBGkzaOmZqB3f12UN+ORdM=; b=VpK/fqtTPOiRmbbsr+
-        vcgd7X/4963eUrqgVoGMsVVaUV5mhCIxBq8tIJYI8zbHQcIgaWEnN15FViO+KQe+
-        ASszKBNnZce6eZA1h4lcKiEXSaEZs7zOSgitgM4zTzR3Hmn01Adt2OKmXQ9oYW9o
-        d+D3v2H1q7dSXRn2yDUw6fGM7OxWRpmY+VVJ3rZW8F/e4LZ0XeIRUMLkVjS1wPlD
-        u4doJjU7OuT2PBJaj1YDLo/7sgmaQUZfCHRWn1Y/HSEvPW3Kflj1vzTTsYfsH8hA
-        zWis5gcNdXOvHpFpXPIe8UeMQXF0TDqwsvc1ZszjhzlYkocEP0u2TJO1Xwf876IE
-        YMfQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1697921758; x=1698008158; bh=i50b4X8nAfPZA
-        Btna9BGpqBGkzaOmZqB3f12UN+ORdM=; b=rBasE/89wXAspGcMdRP9ZeBV3Nbea
-        C0GMp+7gyoiJFiV727faLmtyHObr9JRcFgrPp8PqFaQks7Yo6GMi2YdhRjRI8cva
-        OKut8Zgx6GHbZHb2D5ObyrN/7HntYNSKS/SPY/oPOKfBhAZCRGV7mSHZeQu3Fa8Y
-        fd7uDzP5J8TlK1jITQFPpC8l/8p208ncQDZaWmNZj34PByoG29rkB77PIveVxlLk
-        PQMst0vrC63w9y31gnXtQS9UgbT1FH0zG3b5uWE7cgds1ygm+BbvRbc+YSMWznWQ
-        xOYQ9xoXBKChjv5LBS/BewLEbaCaa/kzGIUaXYzkIeOjugUwMUCmBx5sQ==
-X-ME-Sender: <xms:3To0ZZcIAyZExmOaYCVswLJVpzr461COVbSZxwOIU4s5nM8hMteiUA>
-    <xme:3To0ZXNuLA6iWSCGf2u2Rl0ohdPEKBVz-nhC7Cb478mbGXEwH38_C284aAYw9ZlSO
-    JLnzLCmDovaldtew0g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrkedtgdduhedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
-    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
-    drtggrqeenucggtffrrghtthgvrhhnpeehueeiieefiedutdduffffudevveevteehuedv
-    vedtheevgeevkedvkeetueelfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhgih
-    hthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:3To0ZSixincJXeZiVb7iDKFbuNO9NMI3BYKs-b5wK7CYua2Q-2TunQ>
-    <xmx:3To0ZS_K-sbFry1iXiq_zI6zRcfcqDWiFRvij-4uKRDbkPrrth89Dw>
-    <xmx:3To0ZVsUBmxEI-8tgQ_KRb7fxtUt4ljwj9EL16EXBdmF3HjC1SOHsA>
-    <xmx:3jo0ZZjBr9yZJdRSN-SYXQLl88j0Xw3SvdBbp86KGFP-j_yEz7uXyA>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 65879C6008B; Sat, 21 Oct 2023 16:55:57 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1048-g9229b632c5-fm-20231019.001-g9229b632
+        Sun, 22 Oct 2023 06:46:27 -0400
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 971B0A7;
+        Sun, 22 Oct 2023 03:46:25 -0700 (PDT)
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id D8A1B1000C2; Sun, 22 Oct 2023 11:46:22 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+        t=1697971582; bh=M7VN2YhQWSJtc+cSbcBrFFqz4ksGBErewDtODBR+VmQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PnkeoM8N5hx3qaBdVrilN+IynCjwmnKapSBqWSB45BWsAOSWpe9KHkQL7YRUItROr
+         uFFPdvWk5lPhVQZxkVPRIaXgmqXs5imsVOrfbNzr5SBcKWaRO5NjsdhW+dKKt0doQr
+         3DAVaG99NhZHD/hnZrszsAFvfJtR67PqtTFmJoYnWTftElP9OkThhD2tWRha7fvs8a
+         uxartmlQT+FrRCB22IFFzoAVGTPJxSFN0LoAu+pErhIX/fOe4iEuwaiS1+SInLIjX5
+         FNm6tT+kFdl8LjG7e2h3VQmVvNxQ5cWMhDZanSX1IXvB61OLWDZ1uWOfUk78WcLfaV
+         kudis//kekD/A==
+Date:   Sun, 22 Oct 2023 11:46:22 +0100
+From:   Sean Young <sean@mess.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-media@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Helge Deller <deller@gmx.de>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] pwm: make it possible to apply pwm changes in
+ atomic context
+Message-ID: <ZTT9fvEF+lqfzGJ/@gofer.mess.org>
+References: <cover.1697534024.git.sean@mess.org>
+ <a7fcd19938d5422abc59c968ff7b3d5c275577ed.1697534024.git.sean@mess.org>
+ <90728c06-4c6c-b3d2-4723-c24711be2fa5@redhat.com>
+ <20231019105118.64gdzzixwqrztjir@pengutronix.de>
+ <01a505ac-320f-3819-a58d-2b82c1bf2a86@redhat.com>
 MIME-Version: 1.0
-Message-Id: <c0410813-d8cc-4609-92ba-ec41d107e99d@app.fastmail.com>
-In-Reply-To: <20231020-strncpy-drivers-platform-x86-thinkpad_acpi-c-v1-1-312f2e33034f@google.com>
-References: <20231020-strncpy-drivers-platform-x86-thinkpad_acpi-c-v1-1-312f2e33034f@google.com>
-Date:   Sat, 21 Oct 2023 16:55:37 -0400
-From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To:     "Justin Stitt" <justinstitt@google.com>,
-        "Kees Cook" <keescook@chromium.org>,
-        "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
-        "Hans de Goede" <hdegoede@redhat.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        "markgross@kernel.org" <markgross@kernel.org>
-Cc:     ibm-acpi-devel@lists.sourceforge.net,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: replace deprecated strncpy with
- memcpy
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <01a505ac-320f-3819-a58d-2b82c1bf2a86@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Oct 20, 2023, at 1:52 PM, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous
-> interfaces.
->
-> We expect ec_fw_string to be NUL-terminated based on its use with format
-> strings in thinkpad_acpi.c:
-> 11241 | pr_notice("ThinkPad firmware release %s doesn't match the known 
-> patterns\n",
-> 11242 |     ec_fw_string);
->
-> Moreover, NUL-padding is not required since ec_fw_string is explicitly
-> zero-initialized:
-> 11185 | char ec_fw_string[18] = {0};
->
-> When carefully copying bytes from one buffer to another in
-> pre-determined blocks (like what's happening here with dmi_data):
->
-> |       static void find_new_ec_fwstr(const struct dmi_header *dm, void 
-> *private)
-> |       {
-> |       	char *ec_fw_string = (char *) private;
-> |       	const char *dmi_data = (const char *)dm;
-> |       	/*
-> |       	 * ThinkPad Embedded Controller Program Table on newer models
-> |       	 *
-> |       	 * Offset |  Name                | Width  | Description
-> |       	 * ----------------------------------------------------
-> |       	 *  0x00  | Type                 | BYTE   | 0x8C
-> |       	 *  0x01  | Length               | BYTE   |
-> |       	 *  0x02  | Handle               | WORD   | Varies
-> |       	 *  0x04  | Signature            | BYTEx6 | ASCII for "LENOVO"
-> |       	 *  0x0A  | OEM struct offset    | BYTE   | 0x0B
-> |       	 *  0x0B  | OEM struct number    | BYTE   | 0x07, for this 
-> structure
-> |       	 *  0x0C  | OEM struct revision  | BYTE   | 0x01, for this 
-> format
-> |       	 *  0x0D  | ECP version ID       | STR ID |
-> |       	 *  0x0E  | ECP release date     | STR ID |
-> |       	 */
-> |
-> |       	/* Return if data structure not match */
-> |       	if (dm->type != 140 || dm->length < 0x0F ||
-> |       	memcmp(dmi_data + 4, "LENOVO", 6) != 0 ||
-> |       	dmi_data[0x0A] != 0x0B || dmi_data[0x0B] != 0x07 ||
-> |       	dmi_data[0x0C] != 0x01)
-> |       		return;
-> |
-> |       	/* fwstr is the first 8byte string  */
-> |       	strncpy(ec_fw_string, dmi_data + 0x0F, 8);
->
-> ... we shouldn't be using a C string api. Let's instead use memcpy() as
-> this more properly relays the intended behavior.
->
-> Do note that ec_fw_string will still end up being NUL-terminated since
-> we are memcpy'ing only 8 bytes into a buffer full of 18 zeroes. There's
-> still some trailing NUL-bytes there. To ensure this behavior, let's add
-> a BUILD_BUG_ON checking the length leaves space for at least one
-> trailing NUL-byte.
->
-> Link: 
-> https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings 
-> [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
->
-> Found with: $ rg "strncpy\("
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c 
-> b/drivers/platform/x86/thinkpad_acpi.c
-> index 41584427dc32..bd9e06f5b860 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -11144,6 +11144,8 @@ static char __init tpacpi_parse_fw_id(const 
-> char * const s,
->  	return '\0';
->  }
-> 
-> +#define EC_FW_STRING_LEN 18
-> +
->  static void find_new_ec_fwstr(const struct dmi_header *dm, void 
-> *private)
->  {
->  	char *ec_fw_string = (char *) private;
-> @@ -11172,7 +11174,8 @@ static void find_new_ec_fwstr(const struct 
-> dmi_header *dm, void *private)
->  		return;
-> 
->  	/* fwstr is the first 8byte string  */
-> -	strncpy(ec_fw_string, dmi_data + 0x0F, 8);
-> +	BUILD_BUG_ON(EC_FW_STRING_LEN <= 8);
-> +	memcpy(ec_fw_string, dmi_data + 0x0F, 8);
->  }
-> 
->  /* returns 0 - probe ok, or < 0 - probe error.
-> @@ -11182,7 +11185,7 @@ static int __must_check __init get_thinkpad_model_data(
->  						struct thinkpad_id_data *tp)
->  {
->  	const struct dmi_device *dev = NULL;
-> -	char ec_fw_string[18] = {0};
-> +	char ec_fw_string[EC_FW_STRING_LEN] = {0};
->  	char const *s;
->  	char t;
-> 
->
-> ---
-> base-commit: dab3e01664eaddae965699f1fec776609db0ea9d
-> change-id: 20231019-strncpy-drivers-platform-x86-thinkpad_acpi-c-7a733d087ef7
->
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
+Hi Hans,
 
-Looks good to me.
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+On Sat, Oct 21, 2023 at 11:08:22AM +0200, Hans de Goede wrote:
+> On 10/19/23 12:51, Uwe Kleine-König wrote:
+> > On Wed, Oct 18, 2023 at 03:57:48PM +0200, Hans de Goede wrote:
+> >> On 10/17/23 11:17, Sean Young wrote:
+> >>> Some drivers require sleeping, for example if the pwm device is connected
+> >>> over i2c. The pwm-ir-tx requires precise timing, and sleeping causes havoc
+> >>> with the generated IR signal when sleeping occurs.
+> >>>
+> >>> This patch makes it possible to use pwm when the driver does not sleep,
+> >>> by introducing the pwm_can_sleep() function.
+> >>>
+> >>> Signed-off-by: Sean Young <sean@mess.org>
+> >>
+> >> I have no objection to this patch by itself, but it seems a bit
+> >> of unnecessary churn to change all current callers of pwm_apply_state()
+> >> to a new API.
+> > 
+> > The idea is to improve the semantic of the function name, see
+> > https://lore.kernel.org/linux-pwm/20231013180449.mcdmklbsz2rlymzz@pengutronix.de
+> > for more context.
+> 
+> Hmm, so the argument here is that the GPIO API has this, but GPIOs
+> generally speaking can be set atomically, so there not being able
+> to set it atomically is special.
+> 
+> OTOH we have many many many other kernel functions which may sleep
+> and we don't all postfix them with _can_sleep.
+> 
+> And for PWM controllers pwm_apply_state is IMHO sorta expected to
+> sleep. Many of these are attached over I2C so things will sleep,
+> others have a handshake to wait for the current dutycycle to
+> end before you can apply a second change on top of an earlier
+> change during the current dutycycle which often also involves
+> sleeping.
+> 
+> So the natural/expeected thing for pwm_apply_state() is to sleep
+> and thus it does not need a postfix for this IMHO.
+
+Most pwm drivers look like they can be made to work in atomic context,
+I think. Like you say this is not the case for all of them. Whatever
+we choose to be the default for pwm_apply_state(), we should have a
+clear function name for the alternative. This is essentially why
+pam_apply_cansleep() was picked.
+
+The alternative to pwm_apply_cansleep() is to have a function name
+which implies it can be used from atomic context. However, 
+pwm_apply_atomic() is not great because the "atomic" could be
+confused with the PWM atomic API, not the kernel process/atomic
+context.
+
+So what should the non-sleeping function be called then? 
+ - pwm_apply_cannotsleep() 
+ - pwm_apply_nosleep()
+ - pwm_apply_nonsleeping()
+ - pwm_apply_atomic_context()
+
+> > I think it's very subjective if you consider this
+> > churn or not.
+> 
+> I consider it churn because I don't think adding a postfix
+> for what is the default/expected behavior is a good idea
+> (with GPIOs not sleeping is the expected behavior).
+> 
+> I agree that this is very subjective and very much goes
+> into the territory of bikeshedding. So please consider
+> the above my 2 cents on this and lets leave it at that.
+
+You have a valid point. Let's focus on having descriptive function names.
+
+> > While it's nice to have every caller converted in a single
+> > step, I'd go for
+> > 
+> > 	#define pwm_apply_state(pwm, state) pwm_apply_cansleep(pwm, state)
+> > 
+> > , keep that macro for a while and convert all users step by step. This
+> > way we don't needlessly break oot code and the changes to convert to the
+> > new API can go via their usual trees without time pressure.
+> 
+> I don't think there are enough users of pwm_apply_state() to warrant
+> such an exercise.
+> 
+> So if people want to move ahead with the _can_sleep postfix addition
+> (still not a fan) here is my acked-by for the drivers/platform/x86
+> changes, for merging this through the PWM tree in a single commit:
+> 
+> Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+Thanks,
+
+Sean
