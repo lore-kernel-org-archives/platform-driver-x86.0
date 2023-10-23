@@ -2,153 +2,94 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C810CDB474
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Oct 2023 13:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8374FCDB474
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Oct 2023 14:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230335AbjJWNeZ (ORCPT
+        id S231277AbjJWODC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Oct 2023 09:34:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36314 "EHLO
+        Mon, 23 Oct 2023 10:03:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229986AbjJWNeY (ORCPT
+        with ESMTP id S230250AbjJWODA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Oct 2023 09:34:24 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B715E4
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Oct 2023 06:34:21 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-40837ebba42so24381465e9.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Oct 2023 06:34:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698068060; x=1698672860; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ufOU/q/Ep1kAY17X99uhm7aprCNDlkkpHRrj3TivtTs=;
-        b=sDrgsBPE4bZH4M/PKfy4fQVZVgIVp8rCzYqRM+ZnS7bqcF40tY2FyVgTLRDmGICji+
-         gnXeF5b3difY7SUw0rJoX/AfumLTEYKR8uhgw6vWHVtWYliETIT25l6qf3O4b+oy3PKZ
-         YNKVFnxYFVVpY3R80WZP6nKHg/5gOKOlYv1kUojlwVdRTBKwR0el+6GKUlUXIp+dzxUT
-         wcigzZPhsroIZHW2ZgNwxsjNiVODQ+TyMwqp6eE3KM7vxG1WD7EwkXexfpjlKS8EVIpU
-         f1qv4zivizP49ofivbaVDeBo0HCaF/xpIOB6llezMy+4D+OtzpgUgtyJF/FLPNWjY6yi
-         LsiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698068060; x=1698672860;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ufOU/q/Ep1kAY17X99uhm7aprCNDlkkpHRrj3TivtTs=;
-        b=UpF7MmrsvXWIDrQiffFTWc1popp1GSUM0jFWgdRseQSUDrQkUXZVoPs9fG+gSnyjt5
-         xrVbqf+CG9cbVg+SJLCRxG/ajh0Q2g/xxRX+HWe/UYsyj7AdwGLz+gBAXiPwCF6EskqF
-         rkU7EpALQTXfB42kQCpeoh2h6f5Lk7qmLdy/gxJkDFJBbpMcjrBzUqLXRcelkpTmplS+
-         Gh27+ZVeaDT1kvTFk1N2m40lrazFfYg64oJmdqQe44NIzA2NtfzibwfVfzzU26P59ago
-         UYb+BJH+nW5vkfUoWGBan9UGGNWIZri6a0U91auBDrITXo0gA6Kk4ZIt5wvNef4WFlk4
-         L7YA==
-X-Gm-Message-State: AOJu0YxlozlY3ysXm+uuFFOuskKQvSHlkpltTOh6dyM6ZSkaOLfyes9S
-        t1tWnqK5uzVbSCY3z+L1EVl5H5NyJYkZaoc/OEOLNg==
-X-Google-Smtp-Source: AGHT+IHwl+E4YFajmY7IWxRpWgtSmDl22RT8PM7nnOAmIYDUhgS2AbK4FuptOkLbmHVvg59kegsf/Q==
-X-Received: by 2002:a05:600c:35c5:b0:405:4002:825a with SMTP id r5-20020a05600c35c500b004054002825amr7494266wmq.13.1698068059941;
-        Mon, 23 Oct 2023 06:34:19 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id 1-20020a05600c028100b004077219aed5sm14125564wmk.6.2023.10.23.06.34.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Oct 2023 06:34:19 -0700 (PDT)
-Date:   Mon, 23 Oct 2023 14:34:17 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sean Young <sean@mess.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-media@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mon, 23 Oct 2023 10:03:00 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA56BD7E;
+        Mon, 23 Oct 2023 07:02:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698069779; x=1729605779;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=mco6F5pM3N+y18qY9xYdMZMN9NeQCPYRSl/IX3kb2Ao=;
+  b=Bk+3Po7Di5GinIZIPQwzeomEVwpa/EFY00TJCZ6izpQuObOfmitdndhe
+   Bq/KZR6yzt2wfCJe2OZUq3CMfqHe5Nu0WsFOTBPRbEVqXklY9Z+JyAtUU
+   HS6WydezU8sqBA9k48wCInGPzhYy1YtSWAk9zRJzrAPas5TBW9Oe1bLgY
+   IoENuRja0qjWf/ur4sgySMpWtv5W+6fZtQ2VqeRyUfgE9h5p2atm0SjHz
+   1eq6TUwquyWRDmAF17P6knB1/Tru3oFRGiIqIudOCdizgFmOaywOGGShI
+   1msTKm5ZRQUAkd4ncTyWlRHPJJI0KUJY68JgZ2GOgentQj2IUrR5ufraw
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="384042936"
+X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
+   d="scan'208";a="384042936"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 07:02:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="793143088"
+X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
+   d="scan'208";a="793143088"
+Received: from spididi-mobl3.gar.corp.intel.com (HELO localhost) ([10.249.40.91])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 07:02:33 -0700
+From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <markgross@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Helge Deller <deller@gmx.de>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] pwm: make it possible to apply pwm changes in
- atomic context
-Message-ID: <20231023133417.GE49511@aspen.lan>
-References: <cover.1697534024.git.sean@mess.org>
- <a7fcd19938d5422abc59c968ff7b3d5c275577ed.1697534024.git.sean@mess.org>
- <90728c06-4c6c-b3d2-4723-c24711be2fa5@redhat.com>
- <20231019105118.64gdzzixwqrztjir@pengutronix.de>
- <01a505ac-320f-3819-a58d-2b82c1bf2a86@redhat.com>
- <ZTT9fvEF+lqfzGJ/@gofer.mess.org>
+        Justin Stitt <justinstitt@google.com>
+Cc:     ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20231020-strncpy-drivers-platform-x86-thinkpad_acpi-c-v1-1-312f2e33034f@google.com>
+References: <20231020-strncpy-drivers-platform-x86-thinkpad_acpi-c-v1-1-312f2e33034f@google.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: replace deprecated
+ strncpy with memcpy
+Message-Id: <169806974784.2853.7847788147335527279.b4-ty@linux.intel.com>
+Date:   Mon, 23 Oct 2023 17:02:27 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZTT9fvEF+lqfzGJ/@gofer.mess.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Oct 22, 2023 at 11:46:22AM +0100, Sean Young wrote:
-> Hi Hans,
->
-> On Sat, Oct 21, 2023 at 11:08:22AM +0200, Hans de Goede wrote:
-> > On 10/19/23 12:51, Uwe Kleine-König wrote:
-> > > On Wed, Oct 18, 2023 at 03:57:48PM +0200, Hans de Goede wrote:
-> > >> On 10/17/23 11:17, Sean Young wrote:
-> > > I think it's very subjective if you consider this
-> > > churn or not.
-> >
-> > I consider it churn because I don't think adding a postfix
-> > for what is the default/expected behavior is a good idea
-> > (with GPIOs not sleeping is the expected behavior).
-> >
-> > I agree that this is very subjective and very much goes
-> > into the territory of bikeshedding. So please consider
-> > the above my 2 cents on this and lets leave it at that.
->
-> You have a valid point. Let's focus on having descriptive function names.
+On Fri, 20 Oct 2023 17:52:43 +0000, Justin Stitt wrote:
 
-For a couple of days I've been trying to resist the bikeshedding (esp.
-given the changes to backlight are tiny) so I'll try to keep it as
-brief as I can:
-
-1. I dislike the do_it() and do_it_cansleep() pairing. It is
-   difficult to detect when a client driver calls do_it() by mistake.
-   In fact a latent bug of this nature can only be detected by runtime
-   testing with the small number of PWMs that do not support
-   configuration from an atomic context.
-
-   In contrast do_it() and do_it_atomic()[*] means that although
-   incorrectly calling do_it() from an atomic context can be pretty
-   catastrophic it is also trivially detected (with any PWM driver)
-   simply by running with CONFIG_DEBUG_ATOMIC_SLEEP.
-
-   No objections (beyond churn) to fully spelt out pairings such as
-   do_it_cansleep() and do_it_atomic()[*]!
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous
+> interfaces.
+> 
+> We expect ec_fw_string to be NUL-terminated based on its use with format
+> strings in thinkpad_acpi.c:
+> 11241 | pr_notice("ThinkPad firmware release %s doesn't match the known patterns\n",
+> 11242 |     ec_fw_string);
+> 
+> [...]
 
 
-2. If there is an API rename can we make sure the patch contains no
-   other changes (e.g. don't introduce any new API in the same patch).
-   Seperating renames makes the patches easier to review!
-   It makes each one smaller and easier to review!
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
 
+Once I've run some tests on the review-ilpo branch the patches
+there will be added to the platform-drivers-x86/for-next branch
+and eventually will be included in the pdx86 pull-request to
+Linus for the next merge-window.
 
-Daniel.
+The list of commits applied:
+[1/1] platform/x86: thinkpad_acpi: replace deprecated strncpy with memcpy
+      commit: 942a4a61b64e182d756a1a5776aa500d3b3d862f
 
+--
+ i.
 
-[*] or do_it_nosleep()... etc.
