@@ -2,244 +2,272 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E9FC001E0
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Oct 2023 16:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2755AC004C0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Oct 2023 16:20:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232058AbjJWQPm (ORCPT
+        id S232058AbjJWQUP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Oct 2023 12:15:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45384 "EHLO
+        Mon, 23 Oct 2023 12:20:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233494AbjJWQPl (ORCPT
+        with ESMTP id S233740AbjJWQUF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Oct 2023 12:15:41 -0400
+        Mon, 23 Oct 2023 12:20:05 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19EDA10E;
-        Mon, 23 Oct 2023 09:15:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3CF910C1;
+        Mon, 23 Oct 2023 09:20:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698077739; x=1729613739;
+  t=1698078003; x=1729614003;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=DxxNhBXgQp4ZWfJVx10BBIGtzohOy5sWX4vR/cTpJFE=;
-  b=A77BxqvYQGZc9InKhrFT/PGTYtOXHY+JEeYe3+3g0HU/Be8zzZCzU6lw
-   bBRQEbScbI044Rl6ATH0gkvR+QQlGDnUmWjbYZXiCrr4Qac+vPx66j68M
-   RJQgrRiPNl2raIQwNl3MFaa6UVR361FoDlGQxw/j9HDp/h5eeOaPJhpu9
-   XVR0zzhM0OYDcaMgyqqAD403s3rgJqwJEg3D0o2Y1NwA29qqLcoXeKsnH
-   UzEq8yaQPgR5gUmovtGfKC1EKEXEeNwYR1V/KecfHJA9UxCwlFvpPlWGA
-   X07T/9x4NYGzPY7CzK0VXsuzhbO1kvb5JRYNsqWt4TDGrUhl7vIJpbMj/
+  bh=0D3CVXkekRtSzI4lr010y+kTIzI/lk882TXt0PNNIrU=;
+  b=NHcOgifmj3Tr49e+zDes/SXa1bXR73a9OHZo9fVETba6N1+3EPcXCqY3
+   XZToFVOA5N2Hif4nIdPmj186hWqHr9pjfTSsyF9W1khYJoUrJlJcYUE2x
+   oEbxXUhUIoJTxA6EJLoVUv5UjCHDlrL9EPQ47Cp2YnwY4EXzDrhPh+cXy
+   FoN2njWeo6ZH1t8aW6eIiaDLQ12YRm19UKEhwISATIuD/qGI3Kl+XYAac
+   lk1Fxl/iNyjxGWjV3pJuCVgnd9EGOqVr8ThDqfvfT3X/LtGxboy/mOKIU
+   Xe2UyHy2AbuHs3ycrYP7zOaG0ewvL05ceHptVIZAi2372yBKaanIzeQTp
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="389721528"
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="389722555"
 X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
-   d="scan'208";a="389721528"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 09:15:38 -0700
+   d="scan'208";a="389722555"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 09:20:03 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="751679802"
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="734721455"
 X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
-   d="scan'208";a="751679802"
+   d="scan'208";a="734721455"
 Received: from foliveix-mobl5.amr.corp.intel.com ([10.251.211.194])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 09:15:37 -0700
-Date:   Mon, 23 Oct 2023 19:15:34 +0300 (EEST)
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 09:20:01 -0700
+Date:   Mon, 23 Oct 2023 19:19:58 +0300 (EEST)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     "David E. Box" <david.e.box@linux.intel.com>
 cc:     LKML <linux-kernel@vger.kernel.org>,
         platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com
-Subject: Re: [PATCH V4 13/17] platform/x86/intel/pmc: Display LPM requirements
- for multiple PMCs
-In-Reply-To: <20231018231624.1044633-14-david.e.box@linux.intel.com>
-Message-ID: <78f6742-af1e-4a33-a52a-b01dd69847d1@linux.intel.com>
-References: <20231018231624.1044633-1-david.e.box@linux.intel.com> <20231018231624.1044633-14-david.e.box@linux.intel.com>
+Subject: Re: [PATCH V4 14/17] platform/x86/intel/pmc: Retrieve LPM information
+ using Intel PMT
+In-Reply-To: <20231018231624.1044633-15-david.e.box@linux.intel.com>
+Message-ID: <8bf3d9ae-2ece-3ee6-474d-4d89fc6bd430@linux.intel.com>
+References: <20231018231624.1044633-1-david.e.box@linux.intel.com> <20231018231624.1044633-15-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323329-1315727662-1698078002=:1721"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-1315727662-1698078002=:1721
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+
 On Wed, 18 Oct 2023, David E. Box wrote:
 
-> From: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+> From: Xi Pardee <xi.pardee@intel.com>
 > 
-> Update the substate_requirements attribute to display the requirements for
-> all the PMCs on a package.
+> On supported platforms, the low power mode (LPM) requirements for entering
+> each idle substate are described in Platform Monitoring Technology (PMT)
+> telemetry entries. Provide a function for platform code to attempt to find
+> and read the requirements from the telemetry entries.
 > 
-> Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+> Signed-off-by: Xi Pardee <xi.pardee@intel.com>
 > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 > ---
-> V4 - No change
+> V4 - no change
 > 
-> V3 - Add missing submitter signoff
+> V3 - no change
 > 
-> V2 - no change
+> V2 - remove extra parens
 > 
->  drivers/platform/x86/intel/pmc/core.c | 129 ++++++++++++++------------
->  1 file changed, 71 insertions(+), 58 deletions(-)
+>  drivers/platform/x86/intel/pmc/core.h       |   3 +
+>  drivers/platform/x86/intel/pmc/core_ssram.c | 135 ++++++++++++++++++++
+>  2 files changed, 138 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-> index 3894119d61b0..fcb0dc702aea 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -728,7 +728,7 @@ static int pmc_core_substate_l_sts_regs_show(struct seq_file *s, void *unused)
->  }
->  DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_l_sts_regs);
+> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+> index edaa70067e41..85b6f6ae4995 100644
+> --- a/drivers/platform/x86/intel/pmc/core.h
+> +++ b/drivers/platform/x86/intel/pmc/core.h
+> @@ -320,6 +320,7 @@ struct pmc_reg_map {
+>  	const u32 lpm_status_offset;
+>  	const u32 lpm_live_status_offset;
+>  	const u32 etr3_offset;
+> +	const u8  *lpm_reg_index;
+>  };
 >  
-> -static void pmc_core_substate_req_header_show(struct seq_file *s)
-> +static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index)
->  {
->  	struct pmc_dev *pmcdev = s->private;
->  	int i, mode;
-> @@ -743,68 +743,81 @@ static void pmc_core_substate_req_header_show(struct seq_file *s)
->  static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
->  {
->  	struct pmc_dev *pmcdev = s->private;
-> -	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
-> -	const struct pmc_bit_map **maps = pmc->map->lpm_sts;
-> -	const struct pmc_bit_map *map;
-> -	const int num_maps = pmc->map->lpm_num_maps;
-> -	u32 sts_offset = pmc->map->lpm_status_offset;
-> -	u32 *lpm_req_regs = pmc->lpm_req_regs;
-> -	int mp;
-> -
-> -	/* Display the header */
-> -	pmc_core_substate_req_header_show(s);
-> -
-> -	/* Loop over maps */
-> -	for (mp = 0; mp < num_maps; mp++) {
-> -		u32 req_mask = 0;
-> -		u32 lpm_status;
-> -		int mode, idx, i, len = 32;
-> -
-> -		/*
-> -		 * Capture the requirements and create a mask so that we only
-> -		 * show an element if it's required for at least one of the
-> -		 * enabled low power modes
-> -		 */
-> -		pmc_for_each_mode(idx, mode, pmcdev)
-> -			req_mask |= lpm_req_regs[mp + (mode * num_maps)];
-> -
-> -		/* Get the last latched status for this map */
-> -		lpm_status = pmc_core_reg_read(pmc, sts_offset + (mp * 4));
-> -
-> -		/*  Loop over elements in this map */
-> -		map = maps[mp];
-> -		for (i = 0; map[i].name && i < len; i++) {
-> -			u32 bit_mask = map[i].bit_mask;
-> -
-> -			if (!(bit_mask & req_mask))
-> -				/*
-> -				 * Not required for any enabled states
-> -				 * so don't display
-> -				 */
-> -				continue;
-> -
-> -			/* Display the element name in the first column */
-> -			seq_printf(s, "%30s |", map[i].name);
-> -
-> -			/* Loop over the enabled states and display if required */
-> -			pmc_for_each_mode(idx, mode, pmcdev) {
-> -				if (lpm_req_regs[mp + (mode * num_maps)] & bit_mask)
-> -					seq_printf(s, " %9s |",
-> -						   "Required");
-> +	u32 sts_offset;
-> +	u32 *lpm_req_regs;
-> +	int num_maps, mp, pmc_index;
+>  /**
+> @@ -329,6 +330,7 @@ struct pmc_reg_map {
+>   *			specific attributes
+>   */
+>  struct pmc_info {
+> +	u32 guid;
+>  	u16 devid;
+>  	const struct pmc_reg_map *map;
+>  };
+> @@ -486,6 +488,7 @@ extern const struct pmc_bit_map *mtl_ioem_lpm_maps[];
+>  extern const struct pmc_reg_map mtl_ioem_reg_map;
+>  
+>  extern void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev);
+> +extern int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev);
+>  extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
+>  
+>  int pmc_core_resume_common(struct pmc_dev *pmcdev);
+> diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
+> index 936aa0d5f452..f007964156bc 100644
+> --- a/drivers/platform/x86/intel/pmc/core_ssram.c
+> +++ b/drivers/platform/x86/intel/pmc/core_ssram.c
+> @@ -24,6 +24,140 @@
+>  #define SSRAM_IOE_OFFSET	0x68
+>  #define SSRAM_DEVID_OFFSET	0x70
+>  
+> +/* PCH query */
+> +#define LPM_HEADER_OFFSET	1
+> +#define LPM_REG_COUNT		28
+> +#define LPM_MODE_OFFSET		1
 > +
-> +	for (pmc_index = 0; pmc_index < ARRAY_SIZE(pmcdev->pmcs); ++pmc_index) {
-> +		struct pmc *pmc = pmcdev->pmcs[pmc_index];
-> +		const struct pmc_bit_map **maps;
+> +static u32 pmc_core_find_guid(struct pmc_info *list, const struct pmc_reg_map *map)
+> +{
+> +	for (; list->map; ++list)
+> +		if (list->map == map)
+> +			return list->guid;
 > +
-> +		if (!pmc)
+> +	return 0;
+> +}
+> +
+> +static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc)
+> +{
+> +	struct telem_endpoint *ep;
+> +	const u8 *lpm_indices;
+> +	int num_maps, mode_offset = 0;
+> +	int ret, mode, i;
+> +	int lpm_size;
+> +	u32 guid;
+> +
+> +	lpm_indices = pmc->map->lpm_reg_index;
+> +	num_maps = pmc->map->lpm_num_maps;
+> +	lpm_size = LPM_MAX_NUM_MODES * num_maps;
+> +
+> +	guid = pmc_core_find_guid(pmcdev->regmap_list, pmc->map);
+> +	if (!guid)
+> +		return -ENXIO;
+> +
+> +	ep = pmt_telem_find_and_register_endpoint(pmcdev->ssram_pcidev, guid, 0);
+> +	if (IS_ERR(ep)) {
+> +		dev_dbg(&pmcdev->pdev->dev, "couldn't get telem endpoint %ld",
+> +			PTR_ERR(ep));
+> +		return -EPROBE_DEFER;
+> +	}
+> +
+> +	pmc->lpm_req_regs = devm_kzalloc(&pmcdev->pdev->dev,
+> +					 lpm_size * sizeof(u32),
+> +					 GFP_KERNEL);
+> +	if (!pmc->lpm_req_regs) {
+> +		ret = -ENOMEM;
+> +		goto unregister_ep;
+> +	}
+> +
+> +	/*
+> +	 * PMC Low Power Mode (LPM) table
+> +	 *
+> +	 * In telemetry space, the LPM table contains a 4 byte header followed
+> +	 * by 8 consecutive mode blocks (one for each LPM mode). Each block
+> +	 * has a 4 byte header followed by a set of registers that describe the
+> +	 * IP state requirements for the given mode. The IP mapping is platform
+> +	 * specific but the same for each block, making for easy analysis.
+> +	 * Platforms only use a subset of the space to track the requirements
+> +	 * for their IPs. Callers provide the requirement registers they use as
+> +	 * a list of indices. Each requirement register is associated with an
+> +	 * IP map that's maintained by the caller.
+> +	 *
+> +	 * Header
+> +	 * +----+----------------------------+----------------------------+
+> +	 * |  0 |      REVISION              |      ENABLED MODES         |
+> +	 * +----+--------------+-------------+-------------+--------------+
+> +	 *
+> +	 * Low Power Mode 0 Block
+> +	 * +----+--------------+-------------+-------------+--------------+
+> +	 * |  1 |     SUB ID   |     SIZE    |   MAJOR     |   MINOR      |
+> +	 * +----+--------------+-------------+-------------+--------------+
+> +	 * |  2 |           LPM0 Requirements 0                           |
+> +	 * +----+---------------------------------------------------------+
+> +	 * |    |                  ...                                    |
+> +	 * +----+---------------------------------------------------------+
+> +	 * | 29 |           LPM0 Requirements 27                          |
+> +	 * +----+---------------------------------------------------------+
+> +	 *
+> +	 * ...
+> +	 *
+> +	 * Low Power Mode 7 Block
+> +	 * +----+--------------+-------------+-------------+--------------+
+> +	 * |    |     SUB ID   |     SIZE    |   MAJOR     |   MINOR      |
+> +	 * +----+--------------+-------------+-------------+--------------+
+> +	 * | 60 |           LPM7 Requirements 0                           |
+> +	 * +----+---------------------------------------------------------+
+> +	 * |    |                  ...                                    |
+> +	 * +----+---------------------------------------------------------+
+> +	 * | 87 |           LPM7 Requirements 27                          |
+> +	 * +----+---------------------------------------------------------+
+> +	 *
+> +	 */
+> +	mode_offset = LPM_HEADER_OFFSET + LPM_MODE_OFFSET;
+> +	pmc_for_each_mode(i, mode, pmcdev) {
+> +		u32 *req_offset = pmc->lpm_req_regs + (mode * num_maps);
+> +		int m;
+> +
+> +		for (m = 0; m < num_maps; m++) {
+> +			u8 sample_id = lpm_indices[m] + mode_offset;
+> +
+> +			ret = pmt_telem_read32(ep, sample_id, req_offset, 1);
+> +			if (ret) {
+> +				dev_err(&pmcdev->pdev->dev,
+> +					"couldn't read Low Power Mode requirements: %d\n", ret);
+> +				devm_kfree(&pmcdev->pdev->dev, pmc->lpm_req_regs);
+> +				goto unregister_ep;
+> +			}
+> +			++req_offset;
+> +		}
+> +		mode_offset += LPM_REG_COUNT + LPM_MODE_OFFSET;
+> +	}
+> +
+> +unregister_ep:
+> +	pmt_telem_unregister_endpoint(ep);
+> +
+> +	return ret;
+> +}
+> +
+> +int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev)
+> +{
+> +	int ret, i;
+> +
+> +	if (!pmcdev->ssram_pcidev)
+> +		return -ENODEV;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
+> +		if (!pmcdev->pmcs[i])
 > +			continue;
 > +
-> +		maps = pmc->map->lpm_sts;
-> +		num_maps = pmc->map->lpm_num_maps;
-> +		sts_offset = pmc->map->lpm_status_offset;
-> +		lpm_req_regs = pmc->lpm_req_regs;
+> +		ret = pmc_core_get_lpm_req(pmcdev, pmcdev->pmcs[i]);
+> +		if (ret)
+> +			return ret;
+> +	}
 > +
-> +		if (!lpm_req_regs)
-> +			continue;
+> +	return 0;
+> +}
 > +
-> +		/* Display the header */
-> +		pmc_core_substate_req_header_show(s, pmc_index);
-> +
-> +		/* Loop over maps */
-> +		for (mp = 0; mp < num_maps; mp++) {
-> +			u32 req_mask = 0;
-> +			u32 lpm_status;
-> +			const struct pmc_bit_map *map;
-> +			int mode, idx, i, len = 32;
-> +
-> +			/*
-> +			 * Capture the requirements and create a mask so that we only
-> +			 * show an element if it's required for at least one of the
-> +			 * enabled low power modes
-> +			 */
-> +			pmc_for_each_mode(idx, mode, pmcdev)
-> +				req_mask |= lpm_req_regs[mp + (mode * num_maps)];
-> +
-> +			/* Get the last latched status for this map */
-> +			lpm_status = pmc_core_reg_read(pmc, sts_offset + (mp * 4));
-> +
-> +			/*  Loop over elements in this map */
-> +			map = maps[mp];
-> +			for (i = 0; map[i].name && i < len; i++) {
-> +				u32 bit_mask = map[i].bit_mask;
-> +
-> +				if (!(bit_mask & req_mask)) {
-> +					/*
-> +					 * Not required for any enabled states
-> +					 * so don't display
-> +					 */
-> +					continue;
-> +				}
-> +
-> +				/* Display the element name in the first column */
-> +				seq_printf(s, "pmc%d: %26s |", pmc_index, map[i].name);
-> +
-> +				/* Loop over the enabled states and display if required */
-> +				pmc_for_each_mode(idx, mode, pmcdev) {
-> +					if (lpm_req_regs[mp + (mode * num_maps)] & bit_mask)
-> +						seq_printf(s, " %9s |",
-> +							   "Required");
-> +					else
-> +						seq_printf(s, " %9s |", " ");
+>  static void
+>  pmc_add_pmt(struct pmc_dev *pmcdev, u64 ssram_base, void __iomem *ssram)
+>  {
+> @@ -215,3 +349,4 @@ int pmc_core_ssram_init(struct pmc_dev *pmcdev)
+>  	return ret;
+>  }
+>  MODULE_IMPORT_NS(INTEL_VSEC);
+> +MODULE_IMPORT_NS(INTEL_PMT_TELEMETRY);
+> 
 
-It would be better to not branch like this but alter param instead:
-
-					bool required = lpm_req_regs[...
-
-					seq_printf(s, " %9s |",
-						   required ? "Required" : " ");
-
-> +				}
-> +
-> +				/* In Status column, show the last captured state of this agent */
-> +				if (lpm_status & bit_mask)
-> +					seq_printf(s, " %9s |", "Yes");
->  				else
->  					seq_printf(s, " %9s |", " ");
-
-Likewise here although I know this comes from the original.
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
 -- 
  i.
 
-
-> +
-> +				seq_puts(s, "\n");
->  			}
-> -
-> -			/* In Status column, show the last captured state of this agent */
-> -			if (lpm_status & bit_mask)
-> -				seq_printf(s, " %9s |", "Yes");
-> -			else
-> -				seq_printf(s, " %9s |", " ");
-> -
-> -			seq_puts(s, "\n");
->  		}
->  	}
-> -
->  	return 0;
->  }
->  DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_req_regs);
-> 
+--8323329-1315727662-1698078002=:1721--
