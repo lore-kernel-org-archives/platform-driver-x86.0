@@ -2,147 +2,113 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 371EFC004C0
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Oct 2023 16:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65617C00A8F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Oct 2023 00:07:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229544AbjJWQg3 (ORCPT
+        id S229568AbjJXAHa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Oct 2023 12:36:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42220 "EHLO
+        Mon, 23 Oct 2023 20:07:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229844AbjJWQg2 (ORCPT
+        with ESMTP id S229679AbjJXAH3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Oct 2023 12:36:28 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8077810C;
-        Mon, 23 Oct 2023 09:36:26 -0700 (PDT)
+        Mon, 23 Oct 2023 20:07:29 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6509110;
+        Mon, 23 Oct 2023 17:07:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698078986; x=1729614986;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=i/u7kftTWyTjIcq5vo8cCREYxCwW/oDTjuLPZTrW3UA=;
-  b=mC+BMTxQjSQ0TRwWJWn0SiwnZm2I5yUj1ntgikECOR9/DJtGRFrPOZej
-   ux0dd/nwBeENuCElMpLSzTUlvR/iUOfuuXwz4Iu9LJsT2Vjo4tb30dlNR
-   Jyn1xaCcNc+WmedkfST7jEHfYPW4ijB7I6uXT7zvPecQhjBi+ygk1JpwH
-   wCqnTtj6hqVZ79dxomm+ApdnaDZnIwbRfY2TdOvnGNg0LUaC6zYTEd2w4
-   szg4zs2o02lEpROP+71yNKAqN8cLdIrKbeN05UEgcXmSDFVK7CjFDQ18B
-   uygBZ9F215L9v/loxGdelMkfJrCTPxt0ZwbGScjGiV1wbX7c/uu70WEAQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="371947430"
+  t=1698106047; x=1729642047;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NrjV4WGvbvWR86sSD3Ua1QhLRp1hvz/gEx/hUAAe/8U=;
+  b=U1GE9vi47lhBEYm9XwQhLw5ZIczUjJyYkrF43WrZAX3wE1TAp4cbk3DB
+   cz8OOczQtezSqeyUkN1fXm5Mcvip0OLjlWaxpwAgHNUdiKC8K+Ltyt3bd
+   ZSZAVAUBJymqbrj+CmpO4jUS+GXS5t+th4T/9WGknKcKxOEZvNX0IAylZ
+   UD2GVif38Dw87HmcBB/zXX5CE9/sbGRiBqR6Ln8sLYNxduTNLexsB6qCn
+   +fLwe/0LuScdeNqAJAZ3fnzaMPzg76/ibCaQ4GBndGmaDM2ApxeLQU6Jx
+   zhcjaFzmIq1TfFtAPUpDdqjpOAyqJakY8/bjjcDIRU3EjGXJEg2ItKy0i
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="386762742"
 X-IronPort-AV: E=Sophos;i="6.03,246,1694761200"; 
-   d="scan'208";a="371947430"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 09:33:52 -0700
+   d="scan'208";a="386762742"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 17:07:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
-   d="scan'208";a="5875975"
-Received: from foliveix-mobl5.amr.corp.intel.com ([10.251.211.194])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 09:32:35 -0700
-Date:   Mon, 23 Oct 2023 19:33:48 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com
-Subject: Re: [PATCH V4 17/17] platform/x86/intel/pmc: Show Die C6 counter on
- Meteor Lake
-In-Reply-To: <20231018231624.1044633-18-david.e.box@linux.intel.com>
-Message-ID: <6a9af1f1-f6a7-511-8b7f-4955f5df6cf4@linux.intel.com>
-References: <20231018231624.1044633-1-david.e.box@linux.intel.com> <20231018231624.1044633-18-david.e.box@linux.intel.com>
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="881938260"
+X-IronPort-AV: E=Sophos;i="6.03,246,1694761200"; 
+   d="scan'208";a="881938260"
+Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 23 Oct 2023 17:07:25 -0700
+Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qv4x8-0007OX-2q;
+        Tue, 24 Oct 2023 00:07:22 +0000
+Date:   Tue, 24 Oct 2023 08:07:03 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Ai Chao <aichao@kylinos.cn>, hdegoede@redhat.com,
+        ilpo.jarvinen@linux.intel.com, markgross@kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, Ai Chao <aichao@kylinos.cn>
+Subject: Re: [PATCH v4] platform/x86: inspur-wmi: Add platform profile support
+Message-ID: <202310240736.pU47RVwI-lkp@intel.com>
+References: <20231019030534.157971-1-aichao@kylinos.cn>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-667986227-1698078832=:1721"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231019030534.157971-1-aichao@kylinos.cn>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Ai,
 
---8323329-667986227-1698078832=:1721
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
+kernel test robot noticed the following build warnings:
 
-On Wed, 18 Oct 2023, David E. Box wrote:
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.6-rc7 next-20231023]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> Expose the Die C6 counter on Meteor Lake.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
-> V4 - no change
-> 
-> V3 - Split PATCH V2 13. Separates implementation (previous patch)
->      from platform specific use (this patch)
-> 
->  drivers/platform/x86/intel/pmc/mtl.c | 32 ++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-> index 7ceeae507f4c..38c2f946ec23 100644
-> --- a/drivers/platform/x86/intel/pmc/mtl.c
-> +++ b/drivers/platform/x86/intel/pmc/mtl.c
-> @@ -10,12 +10,17 @@
->  
->  #include <linux/pci.h>
->  #include "core.h"
-> +#include "../pmt/telemetry.h"
->  
->  /* PMC SSRAM PMT Telemetry GUIDS */
->  #define SOCP_LPM_REQ_GUID	0x2625030
->  #define IOEM_LPM_REQ_GUID	0x4357464
->  #define IOEP_LPM_REQ_GUID	0x5077612
->  
-> +/* Die C6 from PUNIT telemetry */
-> +#define MTL_PMT_DMU_DIE_C6_OFFSET	15
-> +#define MTL_PMT_DMU_GUID		0x1A067102
-> +
->  static const u8 MTL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
->  
->  /*
-> @@ -968,6 +973,32 @@ static struct pmc_info mtl_pmc_info_list[] = {
->  	{}
->  };
->  
-> +static void mtl_punit_pmt_init(struct pmc_dev *pmcdev)
-> +{
-> +	struct telem_endpoint *ep;
-> +	struct pci_dev *pcidev;
-> +
-> +	pcidev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(10, 0));
-> +	if (!pcidev) {
-> +		dev_err(&pmcdev->pdev->dev, "PUNIT PMT device not found.\n");
-> +		return;
-> +	}
-> +
-> +	ep = pmt_telem_find_and_register_endpoint(pcidev, MTL_PMT_DMU_GUID, 0);
-> +	if (IS_ERR(ep)) {
-> +		dev_err(&pmcdev->pdev->dev,
-> +			"pmc_core: couldn't get DMU telem endpoint, %ld\n",
-> +			PTR_ERR(ep));
-> +		return;
-> +	}
-> +
-> +	pci_dev_put(pcidev);
-> +	pmcdev->punit_ep = ep;
-> +
-> +	pmcdev->has_die_c6 = true;
-> +	pmcdev->die_c6_offset = MTL_PMT_DMU_DIE_C6_OFFSET;
-> +}
-> +
->  #define MTL_GNA_PCI_DEV	0x7e4c
->  #define MTL_IPU_PCI_DEV	0x7d19
->  #define MTL_VPU_PCI_DEV	0x7d1d
-> @@ -1032,6 +1063,7 @@ int mtl_core_init(struct pmc_dev *pmcdev)
->  	}
->  
->  	pmc_core_get_low_power_modes(pmcdev);
-> +	mtl_punit_pmt_init(pmcdev);
->  
->  	/* Due to a hardware limitation, the GBE LTR blocks PC10
->  	 * when a cable is attached. Tell the PMC to ignore it.
+url:    https://github.com/intel-lab-lkp/linux/commits/Ai-Chao/platform-x86-inspur-wmi-Add-platform-profile-support/20231019-110800
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20231019030534.157971-1-aichao%40kylinos.cn
+patch subject: [PATCH v4] platform/x86: inspur-wmi: Add platform profile support
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20231024/202310240736.pU47RVwI-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231024/202310240736.pU47RVwI-lkp@intel.com/reproduce)
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310240736.pU47RVwI-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/platform/x86/inspur-wmi.c:27: warning: cannot understand function prototype: 'enum inspur_tmp_profile '
+   drivers/platform/x86/inspur-wmi.c:74: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+    * Set Power Mode to EC RAM. If Power Mode value greater than 0x3,
+   drivers/platform/x86/inspur-wmi.c:123: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+    * Get Power Mode from EC RAM, If Power Mode value greater than 0x3,
+
+
+vim +27 drivers/platform/x86/inspur-wmi.c
+
+    20	
+    21	/**
+    22	 * Power Mode:
+    23	 *           0x0: Balance Mode
+    24	 *           0x1: Performance Mode
+    25	 *           0x2: Power Saver Mode
+    26	 */
+  > 27	enum inspur_tmp_profile {
+    28		INSPUR_TMP_PROFILE_BALANCE	= 0,
+    29		INSPUR_TMP_PROFILE_PERFORMANCE	= 1,
+    30		INSPUR_TMP_PROFILE_POWERSAVE	= 2,
+    31	};
+    32	
 
 -- 
- i.
-
---8323329-667986227-1698078832=:1721--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
