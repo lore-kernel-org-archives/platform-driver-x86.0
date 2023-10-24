@@ -2,147 +2,89 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A416C00A8F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Oct 2023 05:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B25FC00A8F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Oct 2023 19:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232129AbjJXFQH convert rfc822-to-8bit (ORCPT
+        id S234910AbjJXTKN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Oct 2023 01:16:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55856 "EHLO
+        Tue, 24 Oct 2023 15:10:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229688AbjJXFQG (ORCPT
+        with ESMTP id S234903AbjJXTKN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Oct 2023 01:16:06 -0400
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF872E5;
-        Mon, 23 Oct 2023 22:16:00 -0700 (PDT)
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-        by unirelay09.hostedemail.com (Postfix) with ESMTP id 11ACD80D4B;
-        Tue, 24 Oct 2023 05:15:59 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf05.hostedemail.com (Postfix) with ESMTPA id 453B520016;
-        Tue, 24 Oct 2023 05:15:56 +0000 (UTC)
-Message-ID: <d3ca8db7c045909c9fff6bc3e96a7b8de1b05f8d.camel@perches.com>
-Subject: Re: [PATCH V3 03/16] platform/x86/intel/vsec: Use cleanup.h
-From:   Joe Perches <joe@perches.com>
-To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        Dwaipayan Ray <dwaipayanray1@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com,
-        oe-kbuild-all@lists.linux.dev,
-        "David E. Box" <david.e.box@linux.intel.com>
-Date:   Mon, 23 Oct 2023 22:15:55 -0700
-In-Reply-To: <8fe01b6d8c558f11fe51f9da5fbfea6708766096.camel@perches.com>
-References: <20231012023840.3845703-4-david.e.box@linux.intel.com>
-         <202310121314.3Xpqom2w-lkp@intel.com>
-         <6ed4cd5ae37a054d4780c8fa519dc83396b15c14.camel@linux.intel.com>
-         <b93a3e8-2d15-256a-4172-a22ef17dde9@linux.intel.com>
-         <8fe01b6d8c558f11fe51f9da5fbfea6708766096.camel@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        Tue, 24 Oct 2023 15:10:13 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3B2F10CE
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Oct 2023 12:10:10 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-507adc3381cso7083355e87.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Oct 2023 12:10:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698174609; x=1698779409; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=j4pI7mazYiEShW5GLJfRC8i43h0ofXrudDoicrGM/OY=;
+        b=KkAf/iOZZAgPf4xzDcFrzCkPmlhvpaKK9oKO+7a3FjPwH1pINau+7R/sz5q4ZrudMI
+         ExYLgLmOYhH/TV/pZnRq1MUC+YXsETJGrMDjSUsdohJmoAfcOf6Vvbwl6SXNpmE1Tkir
+         neU5dcUizrJEOD56dsd+t3SLBM0HnCeML+5iycDnZrsyjyxwWYNNQzFpjKeTInUMoUDX
+         r5jcSKprir7mU2uJqwhQrXdEoAT3IWVQ4xkLjMHK/MIswSQn+DdjszPKok1Yg+BWsfPl
+         T8aczmEKN327JDrZwf51gnW88+p+S3W3NAA1XDxLhTS5zzJaiHuTOhoEPscn64+z43ke
+         5d/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698174609; x=1698779409;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j4pI7mazYiEShW5GLJfRC8i43h0ofXrudDoicrGM/OY=;
+        b=NzUWkr8dCOfmQCAS89+Y8kRappEiVgtSsC/0t5yFatcrCrYYfdArpM6tyU/EKCLcXQ
+         ILTya/A0BxuQXpII+6AtFxMbgUqD3LEE7AC9hB48fBxejTmoC86oVuUmY/gjwpcstbkQ
+         BxrUQCgVt6Ml84T+GmXS5k6e99eP6zCNXbcYyIDDg9kKuDVeKPWQZDFvmm8+SsCLWoRl
+         0PYY39HuB/ueK+Tw0CKQ5vyC8z8tjU3HSDPZXbrCn/7EQ9lFoC2Nzryg2KJWjwVTRbMb
+         3mVwCixiBODAB4B/M3Hm8OrtecNvsxvlyym/uMmtY2D55G7r1MOQmjuVlWlLGTz9A1xJ
+         a88g==
+X-Gm-Message-State: AOJu0YxPm8R40Pa9j/MnwMTJPNCDC0wi+EYNd/um/QOj5hoxIdJjG/Kd
+        IeK6/jz5etMZEDi+xuJTktY=
+X-Google-Smtp-Source: AGHT+IECs0semidy4+/dkDjYCq+1gdymHKuT034zbcY7knE7pn0q9KWPYx/LLckW1TCGIjwDg9Vhmw==
+X-Received: by 2002:ac2:5f8b:0:b0:4fe:af1:c3ae with SMTP id r11-20020ac25f8b000000b004fe0af1c3aemr8221385lfe.15.1698174608536;
+        Tue, 24 Oct 2023 12:10:08 -0700 (PDT)
+Received: from x120e.. (88-112-224-212.elisa-laajakaista.fi. [88.112.224.212])
+        by smtp.gmail.com with ESMTPSA id a23-20020a194f57000000b004fce9e8c390sm2271860lfk.63.2023.10.24.12.10.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Oct 2023 12:10:08 -0700 (PDT)
+From:   Olli Asikainen <olli.asikainen@gmail.com>
+To:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Olli Asikainen <olli.asikainen@gmail.com>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Add battery quirk for Thinkpad X120e
+Date:   Tue, 24 Oct 2023 22:09:21 +0300
+Message-ID: <20231024190922.2742-1-olli.asikainen@gmail.com>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-X-Stat-Signature: 1bu1s17ue3tkzt64cfiuxtcbzt5z6u8e
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 453B520016
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1/BfWXPPjomueLq0tjzk7VysEFwj8EnymI=
-X-HE-Tag: 1698124556-615886
-X-HE-Meta: U2FsdGVkX1//oFGP91jE454ZqW93elOfmFLV5PdCnnVL2xiBGMydJs+EJJuBAZfq5QcLGfl7aC7XlHwBywypIJ6VXRY+i1EjpIOwVCNZDpe7Qo9hP1J/pame0gzvpmg+ltYZChg8PntfwLWtLaqHxnEiMb/1e1RIYbfuJdej79NBykaUk0yzMuUhD7wzeJ0CdtLAFISGa/s3Fc8LyYdr5mVRPFziKQzzwMAjAftj6z7rHJS94nRne+fG9YQ2CWP5kUoOaMZoLDNYW5/cP6YQge2OMC60Y0+XOy8jOt2jFX20U6b36Fo04H3SVxyDz9wZ
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 2023-10-13 at 11:14 -0700, Joe Perches wrote:
-> On Fri, 2023-10-13 at 13:39 +0300, Ilpo Järvinen wrote:
-> > Hi,
-> > 
-> > I added checkpatch people, please check what looks a false positive below.
-> 
-> Yeah, thanks I guess.
-> The __free uses are very new.
-> I'll play around with adding it to $Attributes
-> and see what happens.
-> 
-> 
-> > On Thu, 12 Oct 2023, David E. Box wrote:
-> > > On Thu, 2023-10-12 at 13:25 +0800, kernel test robot wrote:
-> > > > kernel test robot noticed the following build warnings:
-> > > > # many are suggestions rather than must-fix
-> []
-> > > > ERROR:SPACING: need consistent spacing around '*' (ctx:WxV)
-> > > > #31: FILE: drivers/platform/x86/intel/vsec.c:159:
-> > > > +       struct intel_vsec_device __free(kfree) *intel_vsec_dev = NULL;
-> > > .
-> > > These looks like false positives.
-> > 
-> > I agree. If I interpret the error message right checkpatch seems to think
-> > that's a multiplication which is not the case here.
+Thinkpad X120e also needs this battery quirk.
 
-So __free is an odd $Attribute as it takes an argument.
-I've added it along with the other odd $Attribute __alloc_size
-to another variable called $ArgAttribute and $Attribute.
-
-Oddly, I don't understand why perl does not perform
-the elimination using
-
-	$foo =~ s/\b$ArgAttribute\b//g;
-
-but does do the elimination using
-
-	$foo =~ s/\b$ArgAttribute//g;
-
-maybe something to do with the closing parenthesis in the match.
-
-So now there is a separate substitution for this in a test.
-
-Comments?
-
+Signed-off-by: Olli Asikainen <olli.asikainen@gmail.com>
 ---
- scripts/checkpatch.pl | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 25fdb7fda1128..501383fa31c55 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -488,9 +488,14 @@ our $InitAttributeConst = qr{$InitAttributePrefix(?:initconst\b)};
- our $InitAttributeInit = qr{$InitAttributePrefix(?:init\b)};
- our $InitAttribute = qr{$InitAttributeData|$InitAttributeConst|$InitAttributeInit};
- 
-+our $ArgAttribute = qr{(?x:
-+			__alloc_size\s*\(\s*\d+\s*(?:,\s*\d+\s*)?\)|
-+			__free\s*\(\s*\w+\s*\)
-+)};
-+
- # Notes to $Attribute:
- # We need \b after 'init' otherwise 'initconst' will cause a false positive in a check
--our $Attribute	= qr{
-+our $Attribute	= qr{(?x:
- 			const|
- 			volatile|
- 			__percpu|
-@@ -516,8 +521,8 @@ our $Attribute	= qr{
- 			____cacheline_aligned_in_smp|
- 			____cacheline_internodealigned_in_smp|
- 			__weak|
--			__alloc_size\s*\(\s*\d+\s*(?:,\s*\d+\s*)?\)
--		  }x;
-+			$ArgAttribute
-+		  )};
- our $Modifier;
- our $Inline	= qr{inline|__always_inline|noinline|__inline|__inline__};
- our $Member	= qr{->$Ident|\.$Ident|\[[^]]*\]};
-@@ -4091,6 +4096,9 @@ sub process {
- 			# remove $Attribute/$Sparse uses to simplify comparisons
- 			$sl =~ s/\b(?:$Attribute|$Sparse)\b//g;
- 			$pl =~ s/\b(?:$Attribute|$Sparse)\b//g;
-+			$sl =~ s/\b(?:$ArgAttribute)//g;
-+			$pl =~ s/\b(?:$ArgAttribute)//g;
-+
- 			if (($pl =~ /^\+\s+$Declare\s*$Ident\s*[=,;:\[]/ ||
- 			# function pointer declarations
- 			     $pl =~ /^\+\s+$Declare\s*\(\s*\*\s*$Ident\s*\)\s*[=,;:\[\(]/ ||
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 41584427dc32..a46fc417cb20 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -9816,6 +9816,7 @@ static const struct tpacpi_quirk battery_quirk_table[] __initconst = {
+ 	 * Individual addressing is broken on models that expose the
+ 	 * primary battery as BAT1.
+ 	 */
++	TPACPI_Q_LNV('8', 'F', true),       /* Thinkpad X120e */
+ 	TPACPI_Q_LNV('J', '7', true),       /* B5400 */
+ 	TPACPI_Q_LNV('J', 'I', true),       /* Thinkpad 11e */
+ 	TPACPI_Q_LNV3('R', '0', 'B', true), /* Thinkpad 11e gen 3 */
+-- 
+2.42.0
 
