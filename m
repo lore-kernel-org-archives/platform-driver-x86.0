@@ -2,89 +2,166 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B25FC00A8F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Oct 2023 19:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AF3C25B48
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Oct 2023 23:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234910AbjJXTKN (ORCPT
+        id S1344586AbjJXXZI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Oct 2023 15:10:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60638 "EHLO
+        Tue, 24 Oct 2023 19:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234903AbjJXTKN (ORCPT
+        with ESMTP id S1344484AbjJXXZI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Oct 2023 15:10:13 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3B2F10CE
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Oct 2023 12:10:10 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-507adc3381cso7083355e87.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Oct 2023 12:10:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698174609; x=1698779409; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=j4pI7mazYiEShW5GLJfRC8i43h0ofXrudDoicrGM/OY=;
-        b=KkAf/iOZZAgPf4xzDcFrzCkPmlhvpaKK9oKO+7a3FjPwH1pINau+7R/sz5q4ZrudMI
-         ExYLgLmOYhH/TV/pZnRq1MUC+YXsETJGrMDjSUsdohJmoAfcOf6Vvbwl6SXNpmE1Tkir
-         neU5dcUizrJEOD56dsd+t3SLBM0HnCeML+5iycDnZrsyjyxwWYNNQzFpjKeTInUMoUDX
-         r5jcSKprir7mU2uJqwhQrXdEoAT3IWVQ4xkLjMHK/MIswSQn+DdjszPKok1Yg+BWsfPl
-         T8aczmEKN327JDrZwf51gnW88+p+S3W3NAA1XDxLhTS5zzJaiHuTOhoEPscn64+z43ke
-         5d/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698174609; x=1698779409;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j4pI7mazYiEShW5GLJfRC8i43h0ofXrudDoicrGM/OY=;
-        b=NzUWkr8dCOfmQCAS89+Y8kRappEiVgtSsC/0t5yFatcrCrYYfdArpM6tyU/EKCLcXQ
-         ILTya/A0BxuQXpII+6AtFxMbgUqD3LEE7AC9hB48fBxejTmoC86oVuUmY/gjwpcstbkQ
-         BxrUQCgVt6Ml84T+GmXS5k6e99eP6zCNXbcYyIDDg9kKuDVeKPWQZDFvmm8+SsCLWoRl
-         0PYY39HuB/ueK+Tw0CKQ5vyC8z8tjU3HSDPZXbrCn/7EQ9lFoC2Nzryg2KJWjwVTRbMb
-         3mVwCixiBODAB4B/M3Hm8OrtecNvsxvlyym/uMmtY2D55G7r1MOQmjuVlWlLGTz9A1xJ
-         a88g==
-X-Gm-Message-State: AOJu0YxPm8R40Pa9j/MnwMTJPNCDC0wi+EYNd/um/QOj5hoxIdJjG/Kd
-        IeK6/jz5etMZEDi+xuJTktY=
-X-Google-Smtp-Source: AGHT+IECs0semidy4+/dkDjYCq+1gdymHKuT034zbcY7knE7pn0q9KWPYx/LLckW1TCGIjwDg9Vhmw==
-X-Received: by 2002:ac2:5f8b:0:b0:4fe:af1:c3ae with SMTP id r11-20020ac25f8b000000b004fe0af1c3aemr8221385lfe.15.1698174608536;
-        Tue, 24 Oct 2023 12:10:08 -0700 (PDT)
-Received: from x120e.. (88-112-224-212.elisa-laajakaista.fi. [88.112.224.212])
-        by smtp.gmail.com with ESMTPSA id a23-20020a194f57000000b004fce9e8c390sm2271860lfk.63.2023.10.24.12.10.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 12:10:08 -0700 (PDT)
-From:   Olli Asikainen <olli.asikainen@gmail.com>
-To:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        Olli Asikainen <olli.asikainen@gmail.com>
-Subject: [PATCH] platform/x86: thinkpad_acpi: Add battery quirk for Thinkpad X120e
-Date:   Tue, 24 Oct 2023 22:09:21 +0300
-Message-ID: <20231024190922.2742-1-olli.asikainen@gmail.com>
-X-Mailer: git-send-email 2.42.0
+        Tue, 24 Oct 2023 19:25:08 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F76A10C6;
+        Tue, 24 Oct 2023 16:25:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698189906; x=1729725906;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=OLLJooS+8n7LDKiiInrVKA7Yk055RdtAlDwuIfffYcY=;
+  b=OKNFdCzkzEQmU0y4t/seleAE6SJ6MdZUjVLKRvHcKk8Bl0PRFCIe7gjM
+   tZufLxH4Uu4WLl1yM2afw5EoO7eijry7KokegBMF9n1T8ov+JerCubA63
+   Pe9NgfeNh5FjXYsKa90ZukbuJe2sYXpPkN1gSgZ3mnxnKO7jHQOmF3ULx
+   2s4GpDypGCplPk63rOo84aHBsgmdKoj966qptte068E2i55D8TcQmuk3H
+   QNK9x3ch6OsXZzlPLTpAES+M0n4MQUZISRHYPeK9vFXS1SPQawy0v9LhE
+   PGw1LiNj9Ym91UUn96JhWfxs+Zs9TBqe43uZv0GCWcnGMzar72VsqWw2m
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10873"; a="372254620"
+X-IronPort-AV: E=Sophos;i="6.03,249,1694761200"; 
+   d="scan'208";a="372254620"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2023 16:25:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10873"; a="824470723"
+X-IronPort-AV: E=Sophos;i="6.03,249,1694761200"; 
+   d="scan'208";a="824470723"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2023 16:25:05 -0700
+Received: from [10.54.75.156] (debox1-desk1.jf.intel.com [10.54.75.156])
+        by linux.intel.com (Postfix) with ESMTP id 12A10580C99;
+        Tue, 24 Oct 2023 16:25:05 -0700 (PDT)
+Message-ID: <3c79dce512877c593b7d09337ae659223ba0a00d.camel@linux.intel.com>
+Subject: Re: [PATCH V4 04/17] platform/x86/intel/vsec: Add
+ intel_vsec_register
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com
+Date:   Tue, 24 Oct 2023 16:25:05 -0700
+In-Reply-To: <991521f5-73c1-81f3-f721-15aac9c1d035@linux.intel.com>
+References: <20231018231624.1044633-1-david.e.box@linux.intel.com>
+         <20231018231624.1044633-5-david.e.box@linux.intel.com>
+         <991521f5-73c1-81f3-f721-15aac9c1d035@linux.intel.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thinkpad X120e also needs this battery quirk.
+On Mon, 2023-10-23 at 18:21 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Wed, 18 Oct 2023, David E. Box wrote:
+>=20
+> Use () in the shortlog after the function name.
+>=20
+> > From: Gayatri Kammela <gayatri.kammela@linux.intel.com>
+> >=20
+> > Add and export intel_vsec_register() to allow the registration of Intel
+> > extended capabilities from other drivers. Add check to look for memory
+> > conflicts before registering a new capability. Add a parent field to
+> > intel_vsec_platform_info to allow specifying the parent device for
+> > device managed cleanup.
+>=20
+> While reviewing this patch, I couldn't understand why the parent is never=
+=20
+> assigned with anything?
 
-Signed-off-by: Olli Asikainen <olli.asikainen@gmail.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 1 +
- 1 file changed, 1 insertion(+)
+That's because ...
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 41584427dc32..a46fc417cb20 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -9816,6 +9816,7 @@ static const struct tpacpi_quirk battery_quirk_table[] __initconst = {
- 	 * Individual addressing is broken on models that expose the
- 	 * primary battery as BAT1.
- 	 */
-+	TPACPI_Q_LNV('8', 'F', true),       /* Thinkpad X120e */
- 	TPACPI_Q_LNV('J', '7', true),       /* B5400 */
- 	TPACPI_Q_LNV('J', 'I', true),       /* Thinkpad 11e */
- 	TPACPI_Q_LNV3('R', '0', 'B', true), /* Thinkpad 11e gen 3 */
--- 
-2.42.0
+>=20
+> > Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > ---
+> > V4 - Move res cleanup to previous patch
+> >=20
+> > V3 - Replace kfree on request_mem_region fail with use of cleanup.h hel=
+per.
+> >=20
+> > V2 - New patch splitting previous PATCH 1
+> >=20
+> > =C2=A0drivers/platform/x86/intel/vsec.c | 19 +++++++++++++++++--
+> > =C2=A0drivers/platform/x86/intel/vsec.h |=C2=A0 4 ++++
+> > =C2=A02 files changed, 21 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/intel/vsec.c
+> > b/drivers/platform/x86/intel/vsec.c
+> > index 28191313d515..638dfde6a9e2 100644
+> > --- a/drivers/platform/x86/intel/vsec.c
+> > +++ b/drivers/platform/x86/intel/vsec.c
+> > @@ -188,6 +188,12 @@ static int intel_vsec_add_dev(struct pci_dev *pdev=
+,
+> > struct intel_vsec_header *he
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 header->offset + i * (header->entry_size *
+> > sizeof(u32));
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0tmp->end =3D tmp->start + (header->entry_size * =
+sizeof(u32)) -
+> > 1;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0tmp->flags =3D IORESOURCE_MEM;
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0/* Check resource is not in use */
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0if (!request_mem_region(tmp->start, resource_size(tmp)=
+, ""))
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return=
+ -EBUSY;
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0release_mem_region(tmp->start, resource_size(tmp));
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> > =C2=A0
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0intel_vsec_dev->pcidev =
+=3D pdev;
+> > @@ -205,9 +211,8 @@ static int intel_vsec_add_dev(struct pci_dev *pdev,
+> > struct intel_vsec_header *he
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * intel_vsec_add_aux()
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0no_free_ptr(res);
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret =3D intel_vsec_add_aux(p=
+dev, NULL, no_free_ptr(intel_vsec_dev),
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret =3D intel_vsec_add_aux(p=
+dev, info->parent,
+> > no_free_ptr(intel_vsec_dev),
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 intel_vsec_name(header->id=
+));
+
+... for devices probed by this driver, intel_vsec_add_aux() will assign the
+probe device as the parent if the argument is NULL. Originally this functio=
+n
+didn't have an argument for parent. It was added when this function was exp=
+orted
+for use by the tpmi driver which needed to specify its own parent. Users of
+intel_vsec_register() need to do the same. I suppose for clarity this drive=
+r
+could set it as well and we can remove the NULL check.
+
+David
+
+> > -
+>=20
+> Extra newline change.
+>=20
 
