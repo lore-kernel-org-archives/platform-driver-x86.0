@@ -2,118 +2,81 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E34C25B6B
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Oct 2023 17:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE4DC25B67
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Oct 2023 17:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231838AbjJZRK7 (ORCPT
+        id S1345228AbjJZRVq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 26 Oct 2023 13:10:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36846 "EHLO
+        Thu, 26 Oct 2023 13:21:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231795AbjJZRK6 (ORCPT
+        with ESMTP id S229668AbjJZRVp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 Oct 2023 13:10:58 -0400
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B67291;
-        Thu, 26 Oct 2023 10:10:55 -0700 (PDT)
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.2.0)
- id aa76c98fa7cf63df; Thu, 26 Oct 2023 19:10:53 +0200
-Received: from kreacher.localnet (unknown [195.136.19.94])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by cloudserver094114.home.pl (Postfix) with ESMTPSA id 2337C6673DC;
-        Thu, 26 Oct 2023 19:10:53 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH 0/4] Add support for drivers to decide bridge D3 policy
-Date:   Thu, 26 Oct 2023 19:10:52 +0200
-Message-ID: <4534521.LvFx2qVVIh@kreacher>
-In-Reply-To: <b992caec-68f9-4ad0-afe3-99f83d73232d@amd.com>
-References: <20231025020546.504-1-mario.limonciello@amd.com> <5735975.DvuYhMxLoT@kreacher> <b992caec-68f9-4ad0-afe3-99f83d73232d@amd.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+        Thu, 26 Oct 2023 13:21:45 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A14B11AA
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Oct 2023 10:21:42 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 29EE0C433C8
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Oct 2023 17:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698340902;
+        bh=lcUiU0+4xZH12WNunapcGsCOxSOcTnSZDwNRPLFOadA=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=V+/2dDC435c9ABH/CqU36MVcP8fBVSw+3HAtovhsTWsFdmOfUjeUOR/sXrs2Iac+X
+         k0wX09bddOMg9Re/dS0s4BFxHmQ/yxS0YD5nBBxAwc+LmAipFesUwpi1ec3lLpsnmV
+         xFEZrWTMed+FBykZwXud8uKOOdYWc74dkYl+hPOD1vQs1X+WKGcSF3PrtweajdnRuC
+         YOSaFPinPYIJ+/t5BEK+60JqwI157GvbTH3ZO6u0wOEbzhrTzLsgjHsdMU0LJNvTRf
+         g5n+HBBKRVr41Vt1q2P20LbkN5waUtUpXDhdzrJWc4RcI+VBaMEyrizE2p4zYcxWKF
+         tPVrHkL5sc1/Q==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 0895AC4332E; Thu, 26 Oct 2023 17:21:41 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 217947] WARNING at drivers/acpi/platform_profile.c:74 in
+ platform_profile_show()
+Date:   Thu, 26 Oct 2023 17:21:41 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: mpearson-lenovo@squebb.ca
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-217947-215701-rCDunHdONY@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-217947-215701@https.bugzilla.kernel.org/>
+References: <bug-217947-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvkedrledvgdduuddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepfeduudeutdeugfelffduieegiedtueefledvjeegffdttefhhffhtefhleejgfetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrghrihhordhlihhmohhntghivghllhhosegrmhgu
- rdgtohhmpdhrtghpthhtohepufhhhigrmhdqshhunhgurghrrdfuqdhksegrmhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=9 Fuz1=9 Fuz2=9
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thursday, October 26, 2023 7:06:13 PM CEST Mario Limonciello wrote:
-> On 10/26/2023 12:04, Rafael J. Wysocki wrote:
-> > On Wednesday, October 25, 2023 4:05:42 AM CEST Mario Limonciello wrote:
-> >> The policy for whether PCI bridges are allowed to select D3 is dictated
-> >> by empirical results that are enumerated into pci_bridge_d3_possible().
-> >>
-> >> In Windows this behaves differently in that Windows internal policy is
-> >> not used for devices when a power engine plugin driver provided by the
-> >> SOC vendor is installed.  This driver is used to decide the policy in
-> >> those cases.
-> >>
-> >> This series implements a system that lets drivers register such a policy
-> >> control as well. It isn't activated for any SOCs by default.
-> >>
-> >> This is heavily leveraged from the work in [1]
-> >>
-> >> [1] https://lore.kernel.org/platform-driver-x86/20230906184354.45846-1-mario.limonciello@amd.com/
-> >>
-> >> RFC v1->PATCH v1
-> >>   * Simplify the logic, use pci_d3cold_enable()/pci_d3cold_disable() functions
-> >>   * Roll https://lore.kernel.org/linux-pci/20231004144731.158342-1-mario.limonciello@amd.com/ into series
-> >>   * Updates for some typos
-> >>   * Re-order series.  Patches 1 and 2 can potentially apply to PCI tree, 3 and 4 to platform-x86 tree.
-> >>
-> >> Mario Limonciello (4):
-> >>    PCI: Make d3cold_allowed sysfs attribute read only
-> >>    PCI: Refresh root ports in pci_bridge_d3_update()
-> >>    ACPI: x86: s2idle: Export symbol for fetching constraints for module
-> >>      use
-> >>    platform/x86/amd: pmc: Add support for using constraints to decide D3
-> >>      policy
-> >>
-> >>   Documentation/ABI/testing/sysfs-bus-pci |  4 +-
-> >>   drivers/acpi/x86/s2idle.c               |  1 +
-> >>   drivers/pci/pci-acpi.c                  |  2 +-
-> >>   drivers/pci/pci-sysfs.c                 | 14 +-----
-> >>   drivers/pci/pci.c                       | 12 ++++--
-> >>   drivers/platform/x86/amd/pmc/pmc.c      | 57 +++++++++++++++++++++++++
-> >>   include/linux/pci.h                     |  1 -
-> >>   7 files changed, 72 insertions(+), 19 deletions(-)
-> > 
-> > Any chance to CC this series to linux-pm and linux-acpi?
-> > 
-> > 
-> > 
-> > 
-> 
-> Sure if it needs to spin again I'll send it to those lists as well.
-> 
-> Here's a lore link for you for now though if you want to respond to the 
-> other patches.
-> 
-> https://lore.kernel.org/platform-driver-x86/0cd6648d-21f1-445d-95f6-20f580bbcfd1@amd.com/T/
+https://bugzilla.kernel.org/show_bug.cgi?id=3D217947
 
-Thanks, but I'm not the only person on linux-acpi and linux-pm
-that may be interested in these changes.
+--- Comment #10 from Mark Pearson (mpearson-lenovo@squebb.ca) ---
+Thanks for the ping - I had completely forgotten about this one.
 
-Also please note that the material is related to ACPI and PM, so
-quite relevant for those lists.
+I'll check on the status. My notes (internal ticket LO-2242) say we're wait=
+ing
+on the FW team for a fix, they did do one version but it didn't work. I've =
+no
+idea why it's taking so long.
 
+Mark
 
+--=20
+You may reply to this email to add a comment.
 
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
