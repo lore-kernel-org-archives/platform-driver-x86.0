@@ -2,81 +2,173 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE4DC25B67
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Oct 2023 17:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA78C25B48
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Oct 2023 20:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345228AbjJZRVq (ORCPT
+        id S229501AbjJZU2w (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 26 Oct 2023 13:21:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56026 "EHLO
+        Thu, 26 Oct 2023 16:28:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229668AbjJZRVp (ORCPT
+        with ESMTP id S230152AbjJZU2v (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 Oct 2023 13:21:45 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A14B11AA
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Oct 2023 10:21:42 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 29EE0C433C8
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Oct 2023 17:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698340902;
-        bh=lcUiU0+4xZH12WNunapcGsCOxSOcTnSZDwNRPLFOadA=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=V+/2dDC435c9ABH/CqU36MVcP8fBVSw+3HAtovhsTWsFdmOfUjeUOR/sXrs2Iac+X
-         k0wX09bddOMg9Re/dS0s4BFxHmQ/yxS0YD5nBBxAwc+LmAipFesUwpi1ec3lLpsnmV
-         xFEZrWTMed+FBykZwXud8uKOOdYWc74dkYl+hPOD1vQs1X+WKGcSF3PrtweajdnRuC
-         YOSaFPinPYIJ+/t5BEK+60JqwI157GvbTH3ZO6u0wOEbzhrTzLsgjHsdMU0LJNvTRf
-         g5n+HBBKRVr41Vt1q2P20LbkN5waUtUpXDhdzrJWc4RcI+VBaMEyrizE2p4zYcxWKF
-         tPVrHkL5sc1/Q==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 0895AC4332E; Thu, 26 Oct 2023 17:21:41 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 217947] WARNING at drivers/acpi/platform_profile.c:74 in
- platform_profile_show()
-Date:   Thu, 26 Oct 2023 17:21:41 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mpearson-lenovo@squebb.ca
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-217947-215701-rCDunHdONY@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-217947-215701@https.bugzilla.kernel.org/>
-References: <bug-217947-215701@https.bugzilla.kernel.org/>
+        Thu, 26 Oct 2023 16:28:51 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E76B1B3;
+        Thu, 26 Oct 2023 13:28:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698352128; x=1729888128;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=7h41g2NVJaGtrJRiTEHT62ZBUML4ZQfLIzT/Xayg0ug=;
+  b=UASP/O8DyMAo85r19+Oygm9kujjj8cIoTIiVhV97bKBmgb+AeN2i8h6A
+   YtizFXmyIuEP6LhMBsBknDwbFWjqv+Y2cI0I0WRxxaHNjRtGZ2nVQpQeU
+   R7eJP5VknEPgevf4NBxM5Tyn789RBqRAc35GBAGS54eQurRRkfdNVjnmL
+   siGG3n3ouo2yz5409ETcQctX/jmPXa6pENVEdwj055xDNGivEtZj4J2Mo
+   M5Z63MQz7rYqylcDSX68QBuap7I+PSYYKhL8iI5vDVkhJOtCCBq5lCUk6
+   bxJTDXrMM6vz2hHIHh1zryH7OLUu0JOIHI5UB6SCG/vRWpa5tlR4HpC0G
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10875"; a="391518893"
+X-IronPort-AV: E=Sophos;i="6.03,254,1694761200"; 
+   d="scan'208";a="391518893"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2023 13:28:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10875"; a="759354038"
+X-IronPort-AV: E=Sophos;i="6.03,254,1694761200"; 
+   d="scan'208";a="759354038"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2023 13:28:47 -0700
+Received: from [10.54.75.156] (debox1-desk1.jf.intel.com [10.54.75.156])
+        by linux.intel.com (Postfix) with ESMTP id 807A7580E30;
+        Thu, 26 Oct 2023 13:28:47 -0700 (PDT)
+Message-ID: <d159f0a78dc50d8e9bcbf4e4afcc1aaa3ee5bea8.camel@linux.intel.com>
+Subject: Re: [PATCH V4 16/17] platform/x86/intel/pmc: Add debug attribute
+ for Die C6 counter
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com
+Date:   Thu, 26 Oct 2023 13:28:47 -0700
+In-Reply-To: <5990e2f6-d1c3-875c-b660-ae42e48ca75@linux.intel.com>
+References: <20231018231624.1044633-1-david.e.box@linux.intel.com>
+         <20231018231624.1044633-17-david.e.box@linux.intel.com>
+         <5990e2f6-d1c3-875c-b660-ae42e48ca75@linux.intel.com>
+Organization: David E. Box
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D217947
+T24gTW9uLCAyMDIzLTEwLTIzIGF0IDE5OjMxICswMzAwLCBJbHBvIErDpHJ2aW5lbiB3cm90ZToK
+PiBPbiBXZWQsIDE4IE9jdCAyMDIzLCBEYXZpZCBFLiBCb3ggd3JvdGU6Cj4gCj4gPiBBZGQgYSAi
+ZGllX2M2X3VzX3Nob3ciIGRlYnVnZnMgYXR0cmlidXRlLsKgIFJlYWRzIHRoZSBjb3VudGVyIHZh
+bHVlIHVzaW5nCj4gPiBJbnRlbCBQbGF0Zm9ybSBNb25pdG9yaW5nIFRlY2hub2xvZ3kgKFBNVCkg
+ZHJpdmVyIEFQSS4gVGhpcyBjb3VudGVyIGlzCj4gPiB1c2VmdWwgZm9yIGRldGVybWluaW5nIHRo
+ZSBpZGxlIHJlc2lkZW5jeSBvZiBDUFVzIGluIHRoZSBjb21wdXRlIHRpbGUuCj4gPiAKPiA+IFNp
+Z25lZC1vZmYtYnk6IERhdmlkIEUuIEJveCA8ZGF2aWQuZS5ib3hAbGludXguaW50ZWwuY29tPgo+
+ID4gLS0tCj4gPiBWNCAtIG5vIGNoYW5nZQo+ID4gCj4gPiBWMyAtIFNwbGl0IHByZXZpb3VzIFBB
+VENIIFYyIDEzLiBTZXBhcmF0ZXMgaW1wbGVtZW50YXRpb24gKHRoaXMgcGF0Y2gpIGZyb20KPiA+
+IMKgwqDCoMKgIHBsYXRmb3JtIHNwZWNpZmljIHVzZSAobmV4dCBwYXRjaCkKPiA+IAo+ID4gVjIg
+LSBSZW1vdmUgdXNlIG9mIF9fZnVuY19fCj4gPiDCoMKgIC0gVXNlIEhaX1BFUl9NSFoKPiA+IMKg
+wqAgLSBGaXggbWlzc2luZyBuZXdsaW5lcyBpbiBwcmludGtzCj4gPiAKPiA+IMKgZHJpdmVycy9w
+bGF0Zm9ybS94ODYvaW50ZWwvcG1jL2NvcmUuYyB8IDU1ICsrKysrKysrKysrKysrKysrKysrKysr
+KysrKwo+ID4gwqBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9wbWMvY29yZS5oIHzCoCA0ICsr
+Cj4gPiDCoDIgZmlsZXMgY2hhbmdlZCwgNTkgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvcG1jL2NvcmUuYwo+ID4gYi9kcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9pbnRlbC9wbWMvY29yZS5jCj4gPiBpbmRleCBmY2IwZGM3MDJhZWEuLjAy
+ZjNlOTA5Y2YyMiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3Bt
+Yy9jb3JlLmMKPiA+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3BtYy9jb3JlLmMK
+PiA+IEBAIC0yMCw2ICsyMCw3IEBACj4gPiDCoCNpbmNsdWRlIDxsaW51eC9wY2kuaD4KPiA+IMKg
+I2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KPiA+IMKgI2luY2x1ZGUgPGxpbnV4L3N1c3BlbmQuaD4K
+PiA+ICsjaW5jbHVkZSA8bGludXgvdW5pdHMuaD4KPiA+IMKgCj4gPiDCoCNpbmNsdWRlIDxhc20v
+Y3B1X2RldmljZV9pZC5oPgo+ID4gwqAjaW5jbHVkZSA8YXNtL2ludGVsLWZhbWlseS5oPgo+ID4g
+QEAgLTI3LDYgKzI4LDcgQEAKPiA+IMKgI2luY2x1ZGUgPGFzbS90c2MuaD4KPiA+IMKgCj4gPiDC
+oCNpbmNsdWRlICJjb3JlLmgiCj4gPiArI2luY2x1ZGUgIi4uL3BtdC90ZWxlbWV0cnkuaCIKPiA+
+IMKgCj4gPiDCoC8qIE1heGltdW0gbnVtYmVyIG9mIG1vZGVzIHN1cHBvcnRlZCBieSBwbGF0Zm9t
+cyB0aGF0IGhhcyBsb3cgcG93ZXIgbW9kZQo+ID4gY2FwYWJpbGl0eSAqLwo+ID4gwqBjb25zdCBj
+aGFyICpwbWNfbHBtX21vZGVzW10gPSB7Cj4gPiBAQCAtODIyLDYgKzgyNCw0NyBAQCBzdGF0aWMg
+aW50IHBtY19jb3JlX3N1YnN0YXRlX3JlcV9yZWdzX3Nob3coc3RydWN0Cj4gPiBzZXFfZmlsZSAq
+cywgdm9pZCAqdW51c2VkKQo+ID4gwqB9Cj4gPiDCoERFRklORV9TSE9XX0FUVFJJQlVURShwbWNf
+Y29yZV9zdWJzdGF0ZV9yZXFfcmVncyk7Cj4gPiDCoAo+ID4gK3N0YXRpYyB1bnNpZ25lZCBpbnQg
+cG1jX2NvcmVfZ2V0X2NyeXN0YWxfZnJlcSh2b2lkKQo+ID4gK3sKPiA+ICvCoMKgwqDCoMKgwqDC
+oHVuc2lnbmVkIGludCBlYXhfZGVub21pbmF0b3IsIGVieF9udW1lcmF0b3IsIGVjeF9oeiwgZWR4
+Owo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgaWYgKGJvb3RfY3B1X2RhdGEuY3B1aWRfbGV2ZWwg
+PCAweDE1KQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAwOwo+ID4g
+Kwo+ID4gK8KgwqDCoMKgwqDCoMKgZWF4X2Rlbm9taW5hdG9yID0gZWJ4X251bWVyYXRvciA9IGVj
+eF9oeiA9IGVkeCA9IDA7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqAvKiBDUFVJRCAxNUggVFND
+L0NyeXN0YWwgcmF0aW8sIHBsdXMgb3B0aW9uYWxseSBDcnlzdGFsIEh6ICovCj4gPiArwqDCoMKg
+wqDCoMKgwqBjcHVpZCgweDE1LCAmZWF4X2Rlbm9taW5hdG9yLCAmZWJ4X251bWVyYXRvciwgJmVj
+eF9oeiwgJmVkeCk7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqBpZiAoZWJ4X251bWVyYXRvciA9
+PSAwIHx8IGVheF9kZW5vbWluYXRvciA9PSAwKQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoHJldHVybiAwOwo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuIGVjeF9oejsK
+PiA+ICt9Cj4gPiArCj4gPiArc3RhdGljIGludCBwbWNfY29yZV9kaWVfYzZfdXNfc2hvdyhzdHJ1
+Y3Qgc2VxX2ZpbGUgKnMsIHZvaWQgKnVudXNlZCkKPiA+ICt7Cj4gPiArwqDCoMKgwqDCoMKgwqBz
+dHJ1Y3QgcG1jX2RldiAqcG1jZGV2ID0gcy0+cHJpdmF0ZTsKPiA+ICvCoMKgwqDCoMKgwqDCoHU2
+NCBkaWVfYzZfcmVzLCBjb3VudDsKPiA+ICvCoMKgwqDCoMKgwqDCoGludCByZXQ7Cj4gPiArCj4g
+PiArwqDCoMKgwqDCoMKgwqBpZiAoIXBtY2Rldi0+Y3J5c3RhbF9mcmVxKSB7Cj4gPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGV2X3dhcm5fb25jZSgmcG1jZGV2LT5wZGV2LT5kZXYs
+ICJCYWQgY3J5c3RhbAo+ID4gZnJlcXVlbmN5XG4iKTsKPiAKPiBJc24ndCBpdCBtb3JlIGxpa2Ug
+Y3J5c3RhbCBmcmVxdWVuY3kgaXMgbm90IHByb3ZpZGVkIHJhdGhlciB0aGFuIGJhZCAKPiBmcmVx
+dWVuY3k/Cj4gCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIC1FSU5W
+QUw7Cj4gCj4gLUVJTlZBTCBpcyBub3QgZ29vZCB2YWx1ZSB0byByZXR1cm4gaGVyZSBzaW5jZSB0
+aGVyZSB3YXMgbm90aGluZyB3cm9uZyAKPiB3aXRoIHRoZSBpbnB1dC4gTWF5YmUgLUVOWElPIHdv
+dWxkIGJlIGJldHRlci4KCldpbGwgbWFrZSB0aGVzZSBjaGFuZ2VzLgoKPiAKPiA+ICvCoMKgwqDC
+oMKgwqDCoH0KPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoHJldCA9IHBtdF90ZWxlbV9yZWFkKHBt
+Y2Rldi0+cHVuaXRfZXAsIHBtY2Rldi0+ZGllX2M2X29mZnNldCwKPiA+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgJmNvdW50LCAxKTsKPiA+
+ICvCoMKgwqDCoMKgwqDCoGlmIChyZXQpCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgcmV0dXJuIHJldDsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoGRpZV9jNl9yZXMgPSBkaXY2
+NF91NjQoY291bnQgKiBIWl9QRVJfTUhaLCBwbWNkZXYtPmNyeXN0YWxfZnJlcSk7Cj4gPiArwqDC
+oMKgwqDCoMKgwqBzZXFfcHJpbnRmKHMsICIlbGx1XG4iLCBkaWVfYzZfcmVzKTsKPiA+ICsKPiA+
+ICvCoMKgwqDCoMKgwqDCoHJldHVybiAwOwo+ID4gK30KPiA+ICtERUZJTkVfU0hPV19BVFRSSUJV
+VEUocG1jX2NvcmVfZGllX2M2X3VzKTsKPiA+ICsKPiA+IMKgc3RhdGljIGludCBwbWNfY29yZV9s
+cG1fbGF0Y2hfbW9kZV9zaG93KHN0cnVjdCBzZXFfZmlsZSAqcywgdm9pZCAqdW51c2VkKQo+ID4g
+wqB7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IHBtY19kZXYgKnBtY2RldiA9IHMtPnByaXZh
+dGU7Cj4gPiBAQCAtMTExOCw2ICsxMTYxLDEyIEBAIHN0YXRpYyB2b2lkIHBtY19jb3JlX2RiZ2Zz
+X3JlZ2lzdGVyKHN0cnVjdCBwbWNfZGV2Cj4gPiAqcG1jZGV2KQo+ID4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBw
+bWNkZXYtPmRiZ2ZzX2RpciwgcG1jZGV2LAo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAmcG1jX2NvcmVfc3Vi
+c3RhdGVfcmVxX3JlZ3NfZm9wcyk7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgfQo+ID4gKwo+ID4gK8Kg
+wqDCoMKgwqDCoMKgaWYgKHBtY2Rldi0+aGFzX2RpZV9jNikgewo+ID4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoGRlYnVnZnNfY3JlYXRlX2ZpbGUoImRpZV9jNl91c19zaG93IiwgMDQ0
+NCwKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCBwbWNkZXYtPmRiZ2ZzX2RpciwgcG1jZGV2LAo+ID4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgICZwbWNfY29yZV9kaWVfYzZfdXNfZm9wcyk7Cj4gPiArwqDCoMKgwqDCoMKgwqB9Cj4g
+PiDCoH0KPiA+IMKgCj4gPiDCoHN0YXRpYyBjb25zdCBzdHJ1Y3QgeDg2X2NwdV9pZCBpbnRlbF9w
+bWNfY29yZV9pZHNbXSA9IHsKPiA+IEBAIC0xMjEyLDYgKzEyNjEsMTAgQEAgc3RhdGljIHZvaWQg
+cG1jX2NvcmVfY2xlYW5fc3RydWN0dXJlKHN0cnVjdAo+ID4gcGxhdGZvcm1fZGV2aWNlICpwZGV2
+KQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwY2lfZGV2X3B1dChwbWNkZXYt
+PnNzcmFtX3BjaWRldik7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHBjaV9k
+aXNhYmxlX2RldmljZShwbWNkZXYtPnNzcmFtX3BjaWRldik7Cj4gPiDCoMKgwqDCoMKgwqDCoMKg
+fQo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgaWYgKHBtY2Rldi0+cHVuaXRfZXApCgouLi4KCj4g
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcG10X3RlbGVtX3VucmVnaXN0ZXJfZW5k
+cG9pbnQocG1jZGV2LT5wdW5pdF9lcCk7Cj4gPiArCj4gPiDCoMKgwqDCoMKgwqDCoMKgcGxhdGZv
+cm1fc2V0X2RydmRhdGEocGRldiwgTlVMTCk7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgbXV0ZXhfZGVz
+dHJveSgmcG1jZGV2LT5sb2NrKTsKPiA+IMKgfQo+ID4gQEAgLTEyMzIsNiArMTI4NSw4IEBAIHN0
+YXRpYyBpbnQgcG1jX2NvcmVfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQo+ID4gKnBkZXYp
+Cj4gPiDCoMKgwqDCoMKgwqDCoMKgaWYgKCFwbWNkZXYpCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoHJldHVybiAtRU5PTUVNOwo+ID4gwqAKPiA+ICvCoMKgwqDCoMKgwqDCoHBt
+Y2Rldi0+Y3J5c3RhbF9mcmVxID0gcG1jX2NvcmVfZ2V0X2NyeXN0YWxfZnJlcSgpOwo+ID4gKwo+
+ID4gwqDCoMKgwqDCoMKgwqDCoHBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIHBtY2Rldik7Cj4g
+PiDCoMKgwqDCoMKgwqDCoMKgcG1jZGV2LT5wZGV2ID0gcGRldjsKPiA+IMKgCj4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvcG1jL2NvcmUuaAo+ID4gYi9kcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9pbnRlbC9wbWMvY29yZS5oCj4gPiBpbmRleCA4NWI2ZjZhZTQ5OTUuLjZk
+NzY3MzE0NWY5MCAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3Bt
+Yy9jb3JlLmgKPiA+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3BtYy9jb3JlLmgK
+PiA+IEBAIC0xNiw2ICsxNiw4IEBACj4gPiDCoCNpbmNsdWRlIDxsaW51eC9iaXRzLmg+Cj4gPiDC
+oCNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KPiA+IMKgCj4gPiArc3RydWN0IHRl
+bGVtX2VuZHBvaW50Owo+ID4gKwo+IAo+IFRoaXMgc2VlbXMgdW5yZWxhdGVkIHRvIHRoZSBwYXRj
+aC4KClRoaXMgd2FzIG1pc3Npbmcgd2hlbiAic3RydWN0IHRlbGVtX2VuZHBvaW50ICpwdW5pdF9l
+cCIgd2FzIGRlY2xhcmVkIGluIHRoaXMKaGVhZGVyIGluIGFuIGVhcmxpZXIgcGF0Y2ggdGhhdCB3
+ZW50IHVwc3RyZWFtLiBCdXQgcHVuaXRfZXAgZG9lcyBub3QgZ2V0IHVzZWQKeWV0IHVudGlsIHRo
+aXMgcGF0Y2ggYXMgc2hvd24gYWJvdmUuIFdpbGwgY2xhcmlmeSBpbiB0aGUgY2hhbmdlbG9nLgoK
+RGF2aWQKCj4gCgo=
 
---- Comment #10 from Mark Pearson (mpearson-lenovo@squebb.ca) ---
-Thanks for the ping - I had completely forgotten about this one.
-
-I'll check on the status. My notes (internal ticket LO-2242) say we're wait=
-ing
-on the FW team for a fix, they did do one version but it didn't work. I've =
-no
-idea why it's taking so long.
-
-Mark
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
