@@ -2,42 +2,40 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41388C00144
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Oct 2023 23:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706A4C4167B
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Oct 2023 23:05:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231730AbjJ2XFP (ORCPT
+        id S231418AbjJ2XFV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 29 Oct 2023 19:05:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54750 "EHLO
+        Sun, 29 Oct 2023 19:05:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231731AbjJ2XEh (ORCPT
+        with ESMTP id S232434AbjJ2XEY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 29 Oct 2023 19:04:37 -0400
+        Sun, 29 Oct 2023 19:04:24 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A16F4EE3;
-        Sun, 29 Oct 2023 16:00:10 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57722C116B5;
-        Sun, 29 Oct 2023 22:58:53 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F3D649C5;
+        Sun, 29 Oct 2023 16:00:07 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 695C7C116AF;
+        Sun, 29 Oct 2023 22:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698620334;
-        bh=zU+lIRouFZQEutZDW0zkHy3oOu3eFvjDeDjEihVxilw=;
+        s=k20201202; t=1698620323;
+        bh=+fquCF2L/2oZkAaBOfHHvRsQJQ6bsGAbQLrcRdEpmqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CGaxBZgwyzxl3DY/68mdHXTPFvWbafnBjCHtPfDB7vYyOpITHpRrrlxmA9Wqx45tV
-         ag2tL7QJgaBBmmMZ0dVsbwR9LP5cjAN6uZgYLHaW41+Rt0p5Vp5Os6faLqVRJ+E+6e
-         p8llglLk6AtKR+yhYTD+KRKkiGfpqEnAb/g2gTMg51XY1UjQO0+pD2DiSMb1zM7vZt
-         qqDXGGx0APsMtiX7IQ02J3VIq1YW+9uBZVuFMFuSXS9GczSd1FdqqbqsnNjVSKBLrJ
-         Ka6D/cacVE2kTICiVd3Pmx7hNUqwBICdAnDbiG0/WWHKsL1tmEwXtaJAyVJnF36IV/
-         VYnOcWYxnC1bw==
+        b=A6oDJURTxNzWUCv3kUu2UBks56wP8AStKluob8RdWDHuav2d/Oi0idVPZpEhE0HnB
+         Fa7zaD5B+RqNBWcjkkgNsr7+0UgqGgg+vG7cK3Bkubo/5n18tANkjYSEsLQcOE6ras
+         aHWO3PiXr7V5b1p1GnoJJwNGfiTuyT6ZENX+htD1U8XCZYfAW2DHdA8rYmO7BH3+ML
+         r9OLXszrrn1KCKb8oMuOrrk3LCf5ADBftdXtsHDkhyu6zFFFg87BKW/ibWgP5xmNGL
+         BmEWEApiqxWL7xmnom0rlRwg18iazFME14adeh/+m91jKQZ+PCViNhyXP9a8yb9GZU
+         PF37Qq/0BS+Vg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liming Sun <limings@nvidia.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+Cc:     Hans de Goede <hdegoede@redhat.com>, James John <me@donjajo.com>,
         Sasha Levin <sashal@kernel.org>, ilpo.jarvinen@linux.intel.com,
-        markgross@kernel.org, vadimp@nvidia.com,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 36/39] platform/mellanox: mlxbf-tmfifo: Fix a warning message
-Date:   Sun, 29 Oct 2023 18:57:08 -0400
-Message-ID: <20231029225740.790936-36-sashal@kernel.org>
+        markgross@kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 32/39] platform/x86: asus-wmi: Change ASUS_WMI_BRN_DOWN code from 0x20 to 0x2e
+Date:   Sun, 29 Oct 2023 18:57:04 -0400
+Message-ID: <20231029225740.790936-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20231029225740.790936-1-sashal@kernel.org>
 References: <20231029225740.790936-1-sashal@kernel.org>
@@ -50,63 +48,69 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Liming Sun <limings@nvidia.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 99c09c985e5973c8f0ad976ebae069548dd86f12 ]
+[ Upstream commit f37cc2fc277b371fc491890afb7d8a26e36bb3a1 ]
 
-This commit fixes the smatch static checker warning in function
-mlxbf_tmfifo_rxtx_word() which complains data not initialized at
-line 634 when IS_VRING_DROP() is TRUE.
+Older Asus laptops change the backlight level themselves and then send
+WMI events with different codes for different backlight levels.
 
-Signed-off-by: Liming Sun <limings@nvidia.com>
-Link: https://lore.kernel.org/r/20231012230235.219861-1-limings@nvidia.com
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+The asus-wmi.c code maps the entire range of codes reported on
+brightness down keypresses to an internal ASUS_WMI_BRN_DOWN code:
+
+define NOTIFY_BRNUP_MIN                0x11
+define NOTIFY_BRNUP_MAX                0x1f
+define NOTIFY_BRNDOWN_MIN              0x20
+define NOTIFY_BRNDOWN_MAX              0x2e
+
+        if (code >= NOTIFY_BRNUP_MIN && code <= NOTIFY_BRNUP_MAX)
+                code = ASUS_WMI_BRN_UP;
+        else if (code >= NOTIFY_BRNDOWN_MIN && code <= NOTIFY_BRNDOWN_MAX)
+                code = ASUS_WMI_BRN_DOWN;
+
+Before this commit all the NOTIFY_BRNDOWN_MIN - NOTIFY_BRNDOWN_MAX
+aka 0x20 - 0x2e events were mapped to 0x20.
+
+This mapping is causing issues on new laptop models which actually
+send 0x2b events for printscreen presses and 0x2c events for
+capslock presses, which get translated into spurious brightness-down
+presses.
+
+The plan is disable the 0x11-0x2e special mapping on laptops
+where asus-wmi does not register a backlight-device to avoid
+the spurious brightness-down keypresses. New laptops always send
+0x2e for brightness-down presses, change the special internal
+ASUS_WMI_BRN_DOWN value from 0x20 to 0x2e to match this in
+preparation for fixing the spurious brightness-down presses.
+
+This change does not have any functional impact since all
+of 0x20 - 0x2e is mapped to ASUS_WMI_BRN_DOWN first and only
+then checked against the keymap code and the new 0x2e
+value is still in the 0x20 - 0x2e range.
+
+Reported-by: James John <me@donjajo.com>
+Closes: https://lore.kernel.org/platform-driver-x86/a2c441fe-457e-44cf-a146-0ecd86b037cf@donjajo.com/
+Closes: https://bbs.archlinux.org/viewtopic.php?pid=2123716
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20231017090725.38163-2-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/mellanox/mlxbf-tmfifo.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/platform/x86/asus-wmi.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-index a04ff89a7ec44..9925a6d94affc 100644
---- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -588,24 +588,25 @@ static void mlxbf_tmfifo_rxtx_word(struct mlxbf_tmfifo_vring *vring,
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index a478ebfd34dfa..fc41d1b1bb7f8 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -18,7 +18,7 @@
+ #include <linux/i8042.h>
  
- 	if (vring->cur_len + sizeof(u64) <= len) {
- 		/* The whole word. */
--		if (!IS_VRING_DROP(vring)) {
--			if (is_rx)
-+		if (is_rx) {
-+			if (!IS_VRING_DROP(vring))
- 				memcpy(addr + vring->cur_len, &data,
- 				       sizeof(u64));
--			else
--				memcpy(&data, addr + vring->cur_len,
--				       sizeof(u64));
-+		} else {
-+			memcpy(&data, addr + vring->cur_len,
-+			       sizeof(u64));
- 		}
- 		vring->cur_len += sizeof(u64);
- 	} else {
- 		/* Leftover bytes. */
--		if (!IS_VRING_DROP(vring)) {
--			if (is_rx)
-+		if (is_rx) {
-+			if (!IS_VRING_DROP(vring))
- 				memcpy(addr + vring->cur_len, &data,
- 				       len - vring->cur_len);
--			else
--				memcpy(&data, addr + vring->cur_len,
--				       len - vring->cur_len);
-+		} else {
-+			data = 0;
-+			memcpy(&data, addr + vring->cur_len,
-+			       len - vring->cur_len);
- 		}
- 		vring->cur_len = len;
- 	}
+ #define ASUS_WMI_KEY_IGNORE (-1)
+-#define ASUS_WMI_BRN_DOWN	0x20
++#define ASUS_WMI_BRN_DOWN	0x2e
+ #define ASUS_WMI_BRN_UP		0x2f
+ 
+ struct module;
 -- 
 2.42.0
 
