@@ -2,32 +2,32 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F39CC4167D
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Oct 2023 23:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BC7C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Oct 2023 23:29:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232501AbjJ2X2s (ORCPT
+        id S232458AbjJ2X3Y (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 29 Oct 2023 19:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
+        Sun, 29 Oct 2023 19:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232518AbjJ2X21 (ORCPT
+        with ESMTP id S232701AbjJ2X3A (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 29 Oct 2023 19:28:27 -0400
+        Sun, 29 Oct 2023 19:29:00 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 422243AA4;
-        Sun, 29 Oct 2023 15:57:46 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B907FC43397;
-        Sun, 29 Oct 2023 22:56:52 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7254B4EC8;
+        Sun, 29 Oct 2023 15:59:57 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCAB7C433BF;
+        Sun, 29 Oct 2023 22:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698620213;
-        bh=JswOhBccnJVHYL3Ugue3yIYUuKXzrFLIxu2iPaihh8U=;
+        s=k20201202; t=1698620396;
+        bh=jAIfNifqe2z8ziVnBMk+N12P2tUWRkRMPU0k3y6OM0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EfAgQXTlgtvuCceC2zoMnzDeqRZ2/uG14/00i6n67U142jZvVLXfr7Hzn2FMTOUva
-         cRAheIAv6IpaiN5bqTkfuyZtRL1QdIkOrD55vCSkZwnuQem2TqCY0SwQA5u+GEGu/K
-         mqYP8R4Pf6gEGAVKoSVSR0EMn3unX9wI0H2CVhfEHu7siPhrulzFP2dmthrDrk/100
-         xkACDdezFjrkUA1BnnJRqQCla0pXJevZN4w72AObgZ6LgT7quN7Nwt5LxW+kbn/eSL
-         csPIDT2Nw7Ju01KrM4+4YtQTElr0dOBaBGwAnVZA7Qf8d4B74EfmZrCQx3ybcD7g1I
-         rV42lf+HV2xhQ==
+        b=pnoNYp3Gg3/bdl+fYPbWod0CU/wH07t55CMATR2z3OpPuclP8lGDEPWBSw5LZ3oXq
+         SxOVtoP7oaGZE+4seW0/TeGiutsIrbhxmVpZ9aUlqg9kOKFgzmq7GZXbltH51Tzri6
+         BhWpEUrSolIoiAkwAK1ClDXysdQujXWZsMQvRM2E796ayF0Kq9YwpnFE58DhzJENlF
+         CuIGf05kKkbQgcWPQIzwOdKVM5MPQ+uQgzjwcJlCndgYwWrn0WrNaNLKAedZU+abg9
+         DrCdURVIif+s4IUDhzaBXlKk94iDuAViQxQy995W2yShiSVch3bHeYLmzDLbgMAFmT
+         +L6fkyCiCvhvQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>, James John <me@donjajo.com>,
@@ -35,16 +35,16 @@ Cc:     Hans de Goede <hdegoede@redhat.com>, James John <me@donjajo.com>,
         ilpo.jarvinen@linux.intel.com, markgross@kernel.org,
         acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.5 46/52] platform/x86: asus-wmi: Map 0x2a code, Ignore 0x2b and 0x2c events
-Date:   Sun, 29 Oct 2023 18:53:33 -0400
-Message-ID: <20231029225441.789781-46-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 25/28] platform/x86: asus-wmi: Map 0x2a code, Ignore 0x2b and 0x2c events
+Date:   Sun, 29 Oct 2023 18:59:00 -0400
+Message-ID: <20231029225916.791798-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231029225441.789781-1-sashal@kernel.org>
-References: <20231029225441.789781-1-sashal@kernel.org>
+In-Reply-To: <20231029225916.791798-1-sashal@kernel.org>
+References: <20231029225916.791798-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.5.9
+X-stable-base: Linux 5.15.137
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -79,10 +79,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+)
 
 diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index d85d895fee894..df1db54d4e183 100644
+index 2c43801a18a28..59ca3dab59e10 100644
 --- a/drivers/platform/x86/asus-nb-wmi.c
 +++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -531,6 +531,9 @@ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
+@@ -518,6 +518,9 @@ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
  static const struct key_entry asus_nb_wmi_keymap[] = {
  	{ KE_KEY, ASUS_WMI_BRN_DOWN, { KEY_BRIGHTNESSDOWN } },
  	{ KE_KEY, ASUS_WMI_BRN_UP, { KEY_BRIGHTNESSUP } },
