@@ -2,47 +2,47 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7440C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Oct 2023 23:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D840DC41535
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Oct 2023 23:28:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231860AbjJ2XZR (ORCPT
+        id S232418AbjJ2X2Z (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 29 Oct 2023 19:25:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60170 "EHLO
+        Sun, 29 Oct 2023 19:28:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231848AbjJ2XZG (ORCPT
+        with ESMTP id S232107AbjJ2X2I (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 29 Oct 2023 19:25:06 -0400
+        Sun, 29 Oct 2023 19:28:08 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C75DFA5E4;
-        Sun, 29 Oct 2023 16:03:26 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59751C43395;
-        Sun, 29 Oct 2023 23:01:58 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13AE53A97;
+        Sun, 29 Oct 2023 15:57:42 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EB78C433BA;
+        Sun, 29 Oct 2023 22:56:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698620519;
-        bh=BTr13UlPX8BoRn4CQ9hLi6BmAeZL2LKy87Zh/UHkVTA=;
+        s=k20201202; t=1698620210;
+        bh=+fquCF2L/2oZkAaBOfHHvRsQJQ6bsGAbQLrcRdEpmqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bdWpoCOvkMg+8EToNAeFC29y1O8KryiycsSVrVmoAWurZZtRVMJuUHdaQI6GQp3zE
-         ddZ0haaSWrpvINk30UHu4Z5MgESBET+XrCGvsvfrIo8zVDG2yhK5EQJwR9RNR2/eqQ
-         GGGrg1nbRE/VogoQ6/5C2vypa5yfGIgTYKMIi4tkHsEJEFgpr6TB2I1WD4PdH27N3D
-         xnnOuPgF96aMNvPt8wjemcPfeJNuKRA4UMTG11ZcbB+DrZrwi2fQhV56Gsj+JxnLEm
-         rPhgcRUYRInkDfY+WNq4/j31XQWFo+aKG62whruOSRwwi3fc9VuemRhADpF6NjRDYm
-         3ndfafOi1ssmA==
+        b=FVrHYJ5ndc3hj9IVybMvgIvmZoD4KGUsQ6jzpZ1HzJUfUTgnjJcuOWRYWXt9CwRxG
+         PV2YPWUsoibXiN8/MO3eUX4/O6hUD5rtBtwaVEx8nAHTtcHyQFZBXn8WWclClHrcjt
+         vjj6nzHjVdDmm31M7Gu3d8vJKxQE2hpG1isJlpILjdtD4GILnB/iejJZKJ1uqloERY
+         SUkY6BGD9hxr0DSTR7P6BptJnGwCGdBeU3WyrYYEC4FNFAz5HSrvi3fDk0ZY/KsqlU
+         jhYozaWL4fyZER4hDh4tAyE2P4swIppU2TV4L0OGEakYggCsBKnHeVxLnqfa4F7OVb
+         /r89RKwCV+fGw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>, James John <me@donjajo.com>,
         Sasha Levin <sashal@kernel.org>, ilpo.jarvinen@linux.intel.com,
         markgross@kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 11/12] platform/x86: asus-wmi: Change ASUS_WMI_BRN_DOWN code from 0x20 to 0x2e
-Date:   Sun, 29 Oct 2023 19:01:24 -0400
-Message-ID: <20231029230135.793281-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.5 44/52] platform/x86: asus-wmi: Change ASUS_WMI_BRN_DOWN code from 0x20 to 0x2e
+Date:   Sun, 29 Oct 2023 18:53:31 -0400
+Message-ID: <20231029225441.789781-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231029230135.793281-1-sashal@kernel.org>
-References: <20231029230135.793281-1-sashal@kernel.org>
+In-Reply-To: <20231029225441.789781-1-sashal@kernel.org>
+References: <20231029225441.789781-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.297
+X-stable-base: Linux 6.5.9
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -99,10 +99,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 57a79bddb2861..95612878a841f 100644
+index a478ebfd34dfa..fc41d1b1bb7f8 100644
 --- a/drivers/platform/x86/asus-wmi.h
 +++ b/drivers/platform/x86/asus-wmi.h
-@@ -31,7 +31,7 @@
+@@ -18,7 +18,7 @@
  #include <linux/i8042.h>
  
  #define ASUS_WMI_KEY_IGNORE (-1)
