@@ -2,140 +2,111 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D904C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Oct 2023 23:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE85C4167B
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Oct 2023 23:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230526AbjJ2XGB (ORCPT
+        id S232122AbjJ2XGT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 29 Oct 2023 19:06:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44058 "EHLO
+        Sun, 29 Oct 2023 19:06:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231740AbjJ2XFc (ORCPT
+        with ESMTP id S231991AbjJ2XFq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 29 Oct 2023 19:05:32 -0400
+        Sun, 29 Oct 2023 19:05:46 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04FFC4EDF;
-        Sun, 29 Oct 2023 16:00:09 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B22D8C116B6;
-        Sun, 29 Oct 2023 22:58:43 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 982136A7D;
+        Sun, 29 Oct 2023 16:01:39 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DC51C433C7;
+        Sun, 29 Oct 2023 22:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698620324;
-        bh=YFNScGxu+18uiY4iOdufLVHPjXSLXWg2Vyy0awY3L6g=;
+        s=k20201202; t=1698620398;
+        bh=QjzhNeZ1skYvKCj+5xx8iOynDv8Qdyy8qRRAcFnICec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tbAybc3FencUDTyd1nisdZZ+Goc5EONXrlyGI1uJ7GpCfnsYwxSiuKoC+Hg+XCdpw
-         oB4rI/fbEZSZpqHSyKOrtPeMJi6Xv5prTbOPgNwlcoRnf9+9sjqTvJirdkD7oOp1Pe
-         KU6txfZdJSCwrT/XWhbuo47CFHCmIhAmk3hNZXyJKN0aRL45tb3G1nzB46xfJr6joj
-         HywuTATwl8/cQ32pzqXTYrnJ2wS1gDHoPOrVcVZbrxfCR4wzmq6QXzpTZRDEkoTPWB
-         F65MbM0h79F2TpEb09Ki/9errFG9cuxPS8mY73638HbFGOU4nlnuNOCYxyOQ32uAiD
-         EgF22h/x8fBDQ==
+        b=PeZrj9lzDGo5U80kENxUpC83mC0Q2VCG+EcQUTsSQk+Pgvf1eVNh+lW/dlWODxM7w
+         C+OxGNg9iSKgDuSfcX3mXMuv2EUFc5LdCOhIYViWCYLZQdoABYvnnoP/u1F/lzTNhQ
+         DZoeUZtQdCoxfwaPbZOPKz/CPYZE/3L64ANyZJqzNiubMgkQIoFBVERm9/HU8P2aQg
+         LibKNK7On90rxOX88fBZU/lwvDqh6gJ/lDH/pGI8fkFr2kDxC/K4hD+OvFuac6D7mt
+         NR8LgbpoCPIx0e54zEJ2RJwpEG4fffspJOdWFvq0cdx4vAmJ5bVee1hVkh4gksRVG1
+         GLtw36NNAFFaw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>, James John <me@donjajo.com>,
-        Sasha Levin <sashal@kernel.org>, corentin.chary@gmail.com,
-        ilpo.jarvinen@linux.intel.com, markgross@kernel.org,
-        acpi4asus-user@lists.sourceforge.net,
+Cc:     Liming Sun <limings@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, ilpo.jarvinen@linux.intel.com,
+        markgross@kernel.org, vadimp@nvidia.com,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 33/39] platform/x86: asus-wmi: Only map brightness codes when using asus-wmi backlight control
-Date:   Sun, 29 Oct 2023 18:57:05 -0400
-Message-ID: <20231029225740.790936-33-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 26/28] platform/mellanox: mlxbf-tmfifo: Fix a warning message
+Date:   Sun, 29 Oct 2023 18:59:01 -0400
+Message-ID: <20231029225916.791798-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231029225740.790936-1-sashal@kernel.org>
-References: <20231029225740.790936-1-sashal@kernel.org>
+In-Reply-To: <20231029225916.791798-1-sashal@kernel.org>
+References: <20231029225916.791798-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.60
+X-stable-base: Linux 5.15.137
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Liming Sun <limings@nvidia.com>
 
-[ Upstream commit a5b92be2482e5f9ef30be4e4cda12ed484381493 ]
+[ Upstream commit 99c09c985e5973c8f0ad976ebae069548dd86f12 ]
 
-Older Asus laptops change the backlight level themselves and then send
-WMI events with different codes for different backlight levels.
+This commit fixes the smatch static checker warning in function
+mlxbf_tmfifo_rxtx_word() which complains data not initialized at
+line 634 when IS_VRING_DROP() is TRUE.
 
-The asus-wmi.c code maps the entire range of codes reported on
-brightness down keypresses to an internal ASUS_WMI_BRN_DOWN code:
-
-define NOTIFY_BRNUP_MIN                0x11
-define NOTIFY_BRNUP_MAX                0x1f
-define NOTIFY_BRNDOWN_MIN              0x20
-define NOTIFY_BRNDOWN_MAX              0x2e
-
-        if (code >= NOTIFY_BRNUP_MIN && code <= NOTIFY_BRNUP_MAX)
-                code = ASUS_WMI_BRN_UP;
-        else if (code >= NOTIFY_BRNDOWN_MIN && code <= NOTIFY_BRNDOWN_MAX)
-                code = ASUS_WMI_BRN_DOWN;
-
-This mapping is causing issues on new laptop models which actually
-send 0x2b events for printscreen presses and 0x2c events for
-capslock presses, which get translated into spurious brightness-down
-presses.
-
-This mapping is really only necessary when asus-wmi has registered
-a backlight-device for backlight control. In this case the mapping
-was used to decide to filter out the keypresss since in this case
-the firmware has already modified the brightness itself and instead
-of reporting a keypress asus-wmi will just report the new brightness
-value to userspace.
-
-OTOH when the firmware does not adjust the brightness itself then
-it seems to always report 0x2e for brightness-down presses and
-0x2f for brightness up presses independent of the actual brightness
-level. So in this case the mapping of the code is not necessary
-and this translation actually leads to spurious brightness-down
-presses being send to userspace when pressing printscreen or capslock.
-
-Modify asus_wmi_handle_event_code() to only do the mapping
-when using asus-wmi backlight control to fix the spurious
-brightness-down presses.
-
-Reported-by: James John <me@donjajo.com>
-Closes: https://lore.kernel.org/platform-driver-x86/a2c441fe-457e-44cf-a146-0ecd86b037cf@donjajo.com/
-Closes: https://bbs.archlinux.org/viewtopic.php?pid=2123716
+Signed-off-by: Liming Sun <limings@nvidia.com>
+Link: https://lore.kernel.org/r/20231012230235.219861-1-limings@nvidia.com
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20231017090725.38163-3-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-wmi.c | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
+ drivers/platform/mellanox/mlxbf-tmfifo.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 36effe04c6f33..49dd55b8e8faf 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -3268,7 +3268,6 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- {
- 	unsigned int key_value = 1;
- 	bool autorelease = 1;
--	int orig_code = code;
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index 194f3205e5597..767f4406e55f1 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -588,24 +588,25 @@ static void mlxbf_tmfifo_rxtx_word(struct mlxbf_tmfifo_vring *vring,
  
- 	if (asus->driver->key_filter) {
- 		asus->driver->key_filter(asus->driver, &code, &key_value,
-@@ -3277,16 +3276,10 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- 			return;
+ 	if (vring->cur_len + sizeof(u64) <= len) {
+ 		/* The whole word. */
+-		if (!IS_VRING_DROP(vring)) {
+-			if (is_rx)
++		if (is_rx) {
++			if (!IS_VRING_DROP(vring))
+ 				memcpy(addr + vring->cur_len, &data,
+ 				       sizeof(u64));
+-			else
+-				memcpy(&data, addr + vring->cur_len,
+-				       sizeof(u64));
++		} else {
++			memcpy(&data, addr + vring->cur_len,
++			       sizeof(u64));
+ 		}
+ 		vring->cur_len += sizeof(u64);
+ 	} else {
+ 		/* Leftover bytes. */
+-		if (!IS_VRING_DROP(vring)) {
+-			if (is_rx)
++		if (is_rx) {
++			if (!IS_VRING_DROP(vring))
+ 				memcpy(addr + vring->cur_len, &data,
+ 				       len - vring->cur_len);
+-			else
+-				memcpy(&data, addr + vring->cur_len,
+-				       len - vring->cur_len);
++		} else {
++			data = 0;
++			memcpy(&data, addr + vring->cur_len,
++			       len - vring->cur_len);
+ 		}
+ 		vring->cur_len = len;
  	}
- 
--	if (code >= NOTIFY_BRNUP_MIN && code <= NOTIFY_BRNUP_MAX)
--		code = ASUS_WMI_BRN_UP;
--	else if (code >= NOTIFY_BRNDOWN_MIN && code <= NOTIFY_BRNDOWN_MAX)
--		code = ASUS_WMI_BRN_DOWN;
--
--	if (code == ASUS_WMI_BRN_DOWN || code == ASUS_WMI_BRN_UP) {
--		if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
--			asus_wmi_backlight_notify(asus, orig_code);
--			return;
--		}
-+	if (acpi_video_get_backlight_type() == acpi_backlight_vendor &&
-+	    code >= NOTIFY_BRNUP_MIN && code <= NOTIFY_BRNDOWN_MAX) {
-+		asus_wmi_backlight_notify(asus, code);
-+		return;
- 	}
- 
- 	if (code == NOTIFY_KBD_BRTUP) {
 -- 
 2.42.0
 
