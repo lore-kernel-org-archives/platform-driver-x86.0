@@ -2,32 +2,32 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE85C4167B
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Oct 2023 23:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE6AC4167B
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Oct 2023 23:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232122AbjJ2XGT (ORCPT
+        id S231666AbjJ2XHV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 29 Oct 2023 19:06:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43924 "EHLO
+        Sun, 29 Oct 2023 19:07:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231991AbjJ2XFq (ORCPT
+        with ESMTP id S231993AbjJ2XGy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 29 Oct 2023 19:05:46 -0400
+        Sun, 29 Oct 2023 19:06:54 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 982136A7D;
-        Sun, 29 Oct 2023 16:01:39 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DC51C433C7;
-        Sun, 29 Oct 2023 22:59:57 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8C5B1705;
+        Sun, 29 Oct 2023 16:01:23 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5CA4C433BD;
+        Sun, 29 Oct 2023 23:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698620398;
+        s=k20201202; t=1698620483;
         bh=QjzhNeZ1skYvKCj+5xx8iOynDv8Qdyy8qRRAcFnICec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PeZrj9lzDGo5U80kENxUpC83mC0Q2VCG+EcQUTsSQk+Pgvf1eVNh+lW/dlWODxM7w
-         C+OxGNg9iSKgDuSfcX3mXMuv2EUFc5LdCOhIYViWCYLZQdoABYvnnoP/u1F/lzTNhQ
-         DZoeUZtQdCoxfwaPbZOPKz/CPYZE/3L64ANyZJqzNiubMgkQIoFBVERm9/HU8P2aQg
-         LibKNK7On90rxOX88fBZU/lwvDqh6gJ/lDH/pGI8fkFr2kDxC/K4hD+OvFuac6D7mt
-         NR8LgbpoCPIx0e54zEJ2RJwpEG4fffspJOdWFvq0cdx4vAmJ5bVee1hVkh4gksRVG1
-         GLtw36NNAFFaw==
+        b=Stll2NvXvEZ/dsWgaAeKHHv9U41v86pFwO/aS47rZHo6sp3kVXC8ZbmuxIbnUlvl3
+         C6Zm78LAuN3WWuQXWmRTDp5OgOvnw7Fo1JSXPSnoOEsomjsmQJlxwIvNUZo6vVnfQQ
+         6AlnbopJ8PxWNCRcskaqATHKUlGlRyEU6cS7Xl9XrSFJDaaN/cvMjzMPiFJbwke/uY
+         DRcIFjRtPg/LY0Cgl5Kl7ikoVSbAoqzTeliI/rIbbkFuOQLXTp/8HM6TVVgR2tBdoB
+         K8gLAX9CIML56uTzcNAk29OR4K5aNZaXM7WfKkUDi/O4sQt+WoneElYNxdN96rGXgn
+         AfhpWA5l7+xHQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Liming Sun <limings@nvidia.com>,
@@ -35,16 +35,16 @@ Cc:     Liming Sun <limings@nvidia.com>,
         Sasha Levin <sashal@kernel.org>, ilpo.jarvinen@linux.intel.com,
         markgross@kernel.org, vadimp@nvidia.com,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 26/28] platform/mellanox: mlxbf-tmfifo: Fix a warning message
-Date:   Sun, 29 Oct 2023 18:59:01 -0400
-Message-ID: <20231029225916.791798-26-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 13/13] platform/mellanox: mlxbf-tmfifo: Fix a warning message
+Date:   Sun, 29 Oct 2023 19:00:46 -0400
+Message-ID: <20231029230057.792930-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231029225916.791798-1-sashal@kernel.org>
-References: <20231029225916.791798-1-sashal@kernel.org>
+In-Reply-To: <20231029230057.792930-1-sashal@kernel.org>
+References: <20231029230057.792930-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.137
+X-stable-base: Linux 5.4.259
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
