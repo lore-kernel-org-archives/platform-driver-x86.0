@@ -2,61 +2,118 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B6BC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Oct 2023 08:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92673C4167D
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Oct 2023 09:24:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231467AbjJ3Iqw (ORCPT
+        id S232212AbjJ3JYn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 30 Oct 2023 04:46:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60666 "EHLO
+        Mon, 30 Oct 2023 05:24:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbjJ3Iqw (ORCPT
+        with ESMTP id S230477AbjJ3JYm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 30 Oct 2023 04:46:52 -0400
-Received: from mail.craftedscape.pl (mail.craftedscape.pl [92.222.190.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C7FA9D
-        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Oct 2023 01:46:48 -0700 (PDT)
-Received: by mail.craftedscape.pl (Postfix, from userid 1002)
-        id 2E6FE23299; Mon, 30 Oct 2023 08:46:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=craftedscape.pl;
-        s=mail; t=1698655585;
-        bh=exbvoVxelzsX70n1HucpAkYMO+cUzf6L5FuH2oDKoIo=;
-        h=Date:From:To:Subject:From;
-        b=PgUgTLxWBm8RZ4/XVk6OS2o/ZMpg5hw9uttgZnaxTtTu3XTg63mdt2QZKEUrgSn1Z
-         N9Omma9t6Ri3gvTgupK3+is0WYe6ldfqWhbwLBO4ToeB453iUv8yXtGV+eSdnUqwKD
-         c1sHR+UwWXFrSXgNB0U53PxGeYyf1bakE3IQwryGW9XY+OberR2oh8rLr626zm9if5
-         G1IHagQRjGM+WjjXWZu5iD+JaHDy33FdLwjvGh/eaUhWLq6wLNnkU78OgEkIhAW3bt
-         i9ewveMj9KjmAkkh2AuHXLfRQWC9dqLrb78/DkVJVU1a7cP6apLmAdFHTn/VZ2bA92
-         YgeMpQMHdD8Zw==
-Received: by mail.craftedscape.pl for <platform-driver-x86@vger.kernel.org>; Mon, 30 Oct 2023 08:46:10 GMT
-Message-ID: <20231030074500-0.1.7s.t7k9.0.7m752l2cro@craftedscape.pl>
-Date:   Mon, 30 Oct 2023 08:46:10 GMT
-From:   =?UTF-8?Q? "Igor_Czerwi=C5=84ski" ?= 
-        <igor.czerwinski@craftedscape.pl>
-To:     <platform-driver-x86@vger.kernel.org>
-Subject: =?UTF-8?Q?Pracownik_na_produkcj=C4=99?=
-X-Mailer: mail.craftedscape.pl
+        Mon, 30 Oct 2023 05:24:42 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA4AA7;
+        Mon, 30 Oct 2023 02:24:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698657880; x=1730193880;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=PzE2WjM3liPGYO4o8GBic2JxQGQnXqgby3fh52nVXJs=;
+  b=ZyQF/E7jh92Gm5qSZWfhxFK5qzB6Cy3bAmEM/bh7kXNkXxnvrE/2qw5s
+   KaT1XuX+LXv3dRNJ4RwRK90h4rDrzQyXF6Se/lNWcuZAXtXUMIOgyPYGr
+   9eGk6hBoCk4orm1qzdLJNXgrG0yKGi0DCPtdTF1LtdrbVzBmRv6sH2ogX
+   STkVvhLDJLjq3gFpUJUel6wrBPE2QK34afRsc7xb0iKl4r7SUZ3syC5GC
+   xYBOyaiA9FNujfKxb1DxLEBvuHib5c2qbz0HcBDwDONByxahHKFpRAj0q
+   p+OSZ9rVniUytYcy3bqX4tphKjkZQIfGL6qgp89/2NgXr0XU4lfgQmM5q
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10878"; a="373090942"
+X-IronPort-AV: E=Sophos;i="6.03,263,1694761200"; 
+   d="scan'208";a="373090942"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2023 02:24:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10878"; a="710050263"
+X-IronPort-AV: E=Sophos;i="6.03,263,1694761200"; 
+   d="scan'208";a="710050263"
+Received: from sgruszka-mobl.ger.corp.intel.com ([10.252.50.181])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2023 02:24:36 -0700
+Date:   Mon, 30 Oct 2023 11:24:30 +0200 (EET)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Mark Hasemeyer <markhas@chromium.org>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Sanket Goswami <Sanket.Goswami@amd.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v1] platform/x86/amd/pmc: Get smu version before reading
+ dram size
+In-Reply-To: <20231027212916.1035991-1-markhas@chromium.org>
+Message-ID: <2b8335a7-4b9b-825-c1b8-84158aaf2c42@linux.intel.com>
+References: <20231027212916.1035991-1-markhas@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Dzie=C5=84 dobry,
+On Fri, 27 Oct 2023, Mark Hasemeyer wrote:
 
-czy potrzebuj=C4=85 Pa=C5=84stwo dodatkowych pracownik=C3=B3w?
+> Calls to amd_pmc_get_dram_size can fail because the function assumes smu
 
-Obs=C5=82ugujemy wiele firm z sektora produkcyjnego, kt=C3=B3re obecnie m=
-aj=C4=85 wzmo=C5=BCone zapotrzebowanie na dodatkowy personel.
+Always use () after function names, thank you.
 
-Tygodniowo zatrudniamy =C5=9Brednio 250 os=C3=B3b, a w naszej bazie znajd=
-uje si=C4=99 tysi=C4=85ce pracownik=C3=B3w z Ukrainy gotowych wesprze=C4=87=
- Pa=C5=84stwa dzia=C5=82ania.=20
+> version information has already been read when it hasn't. The smu
+> version is lazily read as opposed to being read at probe because it is
+> slow and increases boot time.
+> 
+> Read the smu version information if it has not been read yet.
+> 
+> Link: https://lore.kernel.org/all/a3ee6577-d521-6d18-0a15-2f97d6f8ac3a@amd.com/
+> Fixes: be8325fb3d8c ("platform/x86/amd: pmc: Get STB DRAM size from PMFW")
+> Cc: stable@vger.kernel.org # 6.5.x
+> 
+> Signed-off-by: Mark Hasemeyer <markhas@chromium.org>
+> ---
+> 
+>  drivers/platform/x86/amd/pmc/pmc.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+> index cd6ac04c1468..f668eddbc5d5 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+> @@ -970,6 +970,11 @@ static int amd_pmc_get_dram_size(struct amd_pmc_dev *dev)
+>  
+>  	switch (dev->cpu_id) {
+>  	case AMD_CPU_ID_YC:
+> +		if (!dev->major) {
+> +			ret = amd_pmc_get_smu_version(dev);
+> +			if (ret)
+> +				goto err_dram_size;
+> +		}
+>  		if (!(dev->major > 90 || (dev->major == 90 && dev->minor > 39))) {
+>  			ret = -EINVAL;
+>  			goto err_dram_size;
+> 
 
-Je=C5=9Bli potrzebuj=C4=85 Pa=C5=84stwo ludzi gotowych do pracy od zaraz,=
- prosz=C4=99 o odpowied=C5=BA.
+Hi,
+
+Thank you for your patch. This has already come up but no acceptable patch 
+has emerged since. Please see this thread for what needs to be done if you 
+want to provide one (or maybe Shyam already has one which has just not 
+been sent out yet):
+
+https://lore.kernel.org/platform-driver-x86/3b224c62-a1d8-41bd-aced-5825f5f20e66@amd.com/
+
+(Since this dram size is on an init path that always needs SMU version, 
+the SMU version can just be called by the init unconditonally rather than 
+adding more of this lazy initialization everywhere).
 
 
-Z pozdrowieniami
-Igor Czerwi=C5=84ski
+-- 
+ i.
+
