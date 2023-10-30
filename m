@@ -2,115 +2,161 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E059C4708E
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Oct 2023 23:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D15EC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 30 Oct 2023 07:19:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231483AbjJ2Xfz (ORCPT
+        id S231695AbjJ3HTY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 29 Oct 2023 19:35:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35132 "EHLO
+        Mon, 30 Oct 2023 03:19:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232374AbjJ2XIK (ORCPT
+        with ESMTP id S231649AbjJ3HTX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 29 Oct 2023 19:08:10 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F250AD2F;
-        Sun, 29 Oct 2023 16:03:33 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CFFCC433BD;
-        Sun, 29 Oct 2023 23:02:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698620556;
-        bh=BTr13UlPX8BoRn4CQ9hLi6BmAeZL2LKy87Zh/UHkVTA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mpw2ByFQO4Gc1Mv6Sv7zwronvc1G2EoZ0cFGQHlEtPhswR6ZhQuPHFy1gquH6X06w
-         m+fxQU3UB1qAiaH0pa5NjDbG/LckwfOUA6CBcYw0C+ez6o6EDJR9rN6FbjTwQe8giC
-         xHjPEDpj02j40WNkFRzJ5jFa2FaFDGGTNEl001Qtr333XSZw3ULwoTVVj8g9JtWPbD
-         BwyA0uZNndyENe37BMhCSYOE+udfL6nuONqDMrje1yoZ0Vvc62qQq3tcq5Cn0MQiTG
-         U1D1tXcUZBQ7K+lhyfxOYrlCSDeDpOYjdHe2wpVzQa8kUIYG+8bjWT31nav2rq/Jcx
-         99ImM6m2IXXZQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>, James John <me@donjajo.com>,
-        Sasha Levin <sashal@kernel.org>, ilpo.jarvinen@linux.intel.com,
-        markgross@kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 11/11] platform/x86: asus-wmi: Change ASUS_WMI_BRN_DOWN code from 0x20 to 0x2e
-Date:   Sun, 29 Oct 2023 19:02:02 -0400
-Message-ID: <20231029230213.793581-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231029230213.793581-1-sashal@kernel.org>
-References: <20231029230213.793581-1-sashal@kernel.org>
+        Mon, 30 Oct 2023 03:19:23 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2082.outbound.protection.outlook.com [40.107.94.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79E32C0;
+        Mon, 30 Oct 2023 00:19:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NyS1wfX2uQ05U3gwIBfg+mRv5LUk1PBFUF17e5rd5tzhDCZPXlmRikVHvGo+oaTKHU+RUB88fMp93duAsisHrkMew5HOz3wR7ox2BREJS83WTPFnn32pJ1BB54INpNoc1hE4nOBkLSYg6gNGprxMw7JrupYQ+teXDBVAy4fVIi3b1ENLx+wVXO6PH9OgLwJc7vlu6EeFprvo2pVQNmCM+gVGzEros+9fendm1cVBVWz8sa2PH3JlOjktbgLBecf8VyHeMxDTNWRM1asWR2geNe6rYhmuoul6RyCJZl6vC2WtbSuXqLzB0f6HvGnWaVfXUn8f6W/rBzCc1TaCQ7ftRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ficDW/UdS1g8onjGk6s36wMQbZpacvfUUEiEsh8QtZs=;
+ b=JhkvBacrBWCJdTFN5/glVTPQ3RcpHDnqjVDpu0YjjNQ4H+XX4OeP1u9ui5ydsSu9PnnO7z7b8mEwTVrGtyCHklnKFJhQxvw4bfJ9JM9AwYUfLc8gHIs9y6vX07lo3ejWyQ5AaGnWx4X4bY3d2awO9Gq2nrr7TfKoMWARsZYT8ZSCyBkyGAbO62JJ2Obpk8k08xdg6FXCtVf7WjhibR3LtaBm5DG61kMgYhJHCxJbIcQIdpizh7NylwkQpUQPqnuQyjc5khL03/p/d8YywdotY0fUr6LUstO2iaDLSRyfXAIGZleWRLh43xcMDIldwQbTksIteKxbiG+n7cnIqqcYPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ficDW/UdS1g8onjGk6s36wMQbZpacvfUUEiEsh8QtZs=;
+ b=MJ7IsDv+T40tTRu3BOKb9OXkOUo/bA9RffwNmxggZQVhts6l+hAJZJA3RCLdDa7bzUR1mAhPRHAUeGun8izUrqsWMePqYy18q9WDKUnQtK9DP3ugdCT/HjRZ+kQyG7tdERtrwOHO/Mbs/zEPk/poyqUiVGc+VQTTl5lb5YPrU8c=
+Received: from CH2PR05CA0014.namprd05.prod.outlook.com (2603:10b6:610::27) by
+ PH7PR12MB6492.namprd12.prod.outlook.com (2603:10b6:510:1f3::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.28; Mon, 30 Oct
+ 2023 07:19:16 +0000
+Received: from DS3PEPF000099DB.namprd04.prod.outlook.com
+ (2603:10b6:610:0:cafe::97) by CH2PR05CA0014.outlook.office365.com
+ (2603:10b6:610::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.15 via Frontend
+ Transport; Mon, 30 Oct 2023 07:19:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF000099DB.mail.protection.outlook.com (10.167.17.197) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6933.15 via Frontend Transport; Mon, 30 Oct 2023 07:19:16 +0000
+Received: from compile-server.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Mon, 30 Oct
+ 2023 02:19:11 -0500
+From:   Ma Jun <Jun.Ma2@amd.com>
+To:     <amd-gfx@lists.freedesktop.org>, <lenb@kernel.org>,
+        <johannes@sipsolutions.net>, <davem@davemloft.net>,
+        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+        <alexander.deucher@amd.com>, <Lijo.Lazar@amd.com>,
+        <mario.limonciello@amd.com>, <netdev@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>
+CC:     <majun@amd.com>, Ma Jun <Jun.Ma2@amd.com>
+Subject: [Patch v13 0/9] Enable Wifi RFI interference mitigation feature support
+Date:   Mon, 30 Oct 2023 15:18:23 +0800
+Message-ID: <20231030071832.2217118-1-Jun.Ma2@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.14.328
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099DB:EE_|PH7PR12MB6492:EE_
+X-MS-Office365-Filtering-Correlation-Id: c274aa00-5a4a-4739-698a-08dbd918866f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vm+6UrLZK/6/FnGVDLIxa5as7/B/QeZT9aNGMXhNuM6luTUdddoTGAFzN5ivV6s8+YbMZiLDu+ZZYO+unyIEM5MxJjiA9ZZ5vaetIkQhIUzOMA8h6iO3ixrmvm60u/Bj4GZnz1ctfyqxQNqhprlDKQvByOabtB1GtcXqtiljpkCJ9TC0lyb/Y2h6Oyygg50bBjjqMKH5uR+Fjyv4/yrZ0HEHYX3q9Z/Y44r6zybiNKeZwJTwvpVyDC/G4RkG3CKrl7Zj2Sz+ZfssNgr3HPoif8FwgzruTrTTj4Ah0Xtdktu8PKsPnDwIkGgc/cNHbZVN6xAEF39o8phX0uAewmthgWdLiI/px1snJXiwY128YqgeHM8kQO7vH3NGI95oas+DrlraoI2ZHyL+h4cND5EcP0xORZ5rfjh5VUs+KIsupS5N0b/BlrFZkR3VtZljVbQLgOu8YZgeLXVhrVCpa6ghJXtVcNvKEdzpRF2MJTlFhpRENAK3AHrZTUcWnM9WhqzRysvXUS0Vbph7MSjxmn8CJRvmKKcAssQxFoC9yjlEAj6wZottIx7FM9i9bJ701HVcafSAyrgczAxpPV8AoGiuEFfXl4qH9WLStt+6BmFkSABKRddeHsHI9t3zZrPFiqfYsLJPENF3bVPiS+S/g6ww2xofmDTg8z9b+7/x3ZukoFBeA6qNe5eaKjOKuLkAnnD2y5v89IUF3WvDBhoHCOJ0E84XJI2VZScGDWy+QZBBkecX4kujCCMdfm+vD7sER3CaKo52uouPYmSUNtKqDR/m2GwKQjKKJfVi4iBJPDobcOA=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(376002)(346002)(39860400002)(136003)(230922051799003)(82310400011)(64100799003)(1800799009)(186009)(451199024)(36840700001)(40470700004)(46966006)(40480700001)(40460700003)(36860700001)(54906003)(356005)(47076005)(81166007)(82740400003)(316002)(6666004)(7696005)(478600001)(110136005)(83380400001)(70206006)(2616005)(70586007)(336012)(426003)(1076003)(16526019)(26005)(5660300002)(41300700001)(2906002)(7416002)(8676002)(8936002)(4326008)(86362001)(36756003)(921008)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Oct 2023 07:19:16.0166
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c274aa00-5a4a-4739-698a-08dbd918866f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DS3PEPF000099DB.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6492
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+Due to electrical and mechanical constraints in certain platform designs there
+may be likely interference of relatively high-powered harmonics of the (G-)DDR
+memory clocks with local radio module frequency bands used by Wifi 6/6e/7. To
+mitigate possible RFI interference we introuduced WBRF(Wifi Band RFI mitigation Feature).
+Producers can advertise the frequencies in use and consumers can use this information
+to avoid using these frequencies for sensitive features.
 
-[ Upstream commit f37cc2fc277b371fc491890afb7d8a26e36bb3a1 ]
+The whole patch set is based on Linux 6.6.0-rc6. With some brief introductions
+as below:
+Patch1:      Document about WBRF
+Patch2:      Core functionality setup for WBRF feature support
+Patch3 - 4:  Bring WBRF support to wifi subsystem.
+Patch5 - 9:  Bring WBRF support to AMD graphics driver.
 
-Older Asus laptops change the backlight level themselves and then send
-WMI events with different codes for different backlight levels.
+Evan Quan (6):
+  cfg80211: expose nl80211_chan_width_to_mhz for wide sharing
+  wifi: mac80211: Add support for WBRF features
+  drm/amd/pm: update driver_if and ppsmc headers for coming wbrf feature
+  drm/amd/pm: setup the framework to support Wifi RFI mitigation feature
+  drm/amd/pm: add flood detection for wbrf events
+  drm/amd/pm: enable Wifi RFI mitigation feature support for SMU13.0.7
 
-The asus-wmi.c code maps the entire range of codes reported on
-brightness down keypresses to an internal ASUS_WMI_BRN_DOWN code:
+Ma Jun (3):
+  Documentation/driver-api: Add document about WBRF mechanism
+  platform/x86/amd: Add support for AMD ACPI based Wifi band RFI
+    mitigation feature
+  drm/amd/pm: enable Wifi RFI mitigation feature support for SMU13.0.0
 
-define NOTIFY_BRNUP_MIN                0x11
-define NOTIFY_BRNUP_MAX                0x1f
-define NOTIFY_BRNDOWN_MIN              0x20
-define NOTIFY_BRNDOWN_MAX              0x2e
+ Documentation/driver-api/wbrf.rst             |  76 ++++
+ drivers/gpu/drm/amd/amdgpu/amdgpu.h           |   2 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c       |  17 +
+ drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c     | 208 +++++++++
+ drivers/gpu/drm/amd/pm/swsmu/inc/amdgpu_smu.h |  42 ++
+ .../inc/pmfw_if/smu13_driver_if_v13_0_0.h     |   3 +-
+ .../inc/pmfw_if/smu13_driver_if_v13_0_7.h     |   3 +-
+ .../pm/swsmu/inc/pmfw_if/smu_v13_0_0_ppsmc.h  |   5 +-
+ .../pm/swsmu/inc/pmfw_if/smu_v13_0_7_ppsmc.h  |   3 +-
+ drivers/gpu/drm/amd/pm/swsmu/inc/smu_types.h  |   3 +-
+ drivers/gpu/drm/amd/pm/swsmu/inc/smu_v13_0.h  |   4 +
+ .../gpu/drm/amd/pm/swsmu/smu13/smu_v13_0.c    |  48 ++
+ .../drm/amd/pm/swsmu/smu13/smu_v13_0_0_ppt.c  |  22 +
+ .../drm/amd/pm/swsmu/smu13/smu_v13_0_7_ppt.c  |  13 +
+ drivers/gpu/drm/amd/pm/swsmu/smu_internal.h   |   3 +
+ drivers/platform/x86/amd/Kconfig              |  15 +
+ drivers/platform/x86/amd/Makefile             |   1 +
+ drivers/platform/x86/amd/wbrf.c               | 413 ++++++++++++++++++
+ include/linux/acpi_amd_wbrf.h                 |  94 ++++
+ include/net/cfg80211.h                        |   9 +
+ net/mac80211/Makefile                         |   2 +
+ net/mac80211/chan.c                           |   9 +
+ net/mac80211/ieee80211_i.h                    |   7 +
+ net/mac80211/main.c                           |   2 +
+ net/mac80211/wbrf.c                           |  95 ++++
+ net/wireless/chan.c                           |   3 +-
+ 26 files changed, 1094 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/driver-api/wbrf.rst
+ create mode 100644 drivers/platform/x86/amd/wbrf.c
+ create mode 100644 include/linux/acpi_amd_wbrf.h
+ create mode 100644 net/mac80211/wbrf.c
 
-        if (code >= NOTIFY_BRNUP_MIN && code <= NOTIFY_BRNUP_MAX)
-                code = ASUS_WMI_BRN_UP;
-        else if (code >= NOTIFY_BRNDOWN_MIN && code <= NOTIFY_BRNDOWN_MAX)
-                code = ASUS_WMI_BRN_DOWN;
-
-Before this commit all the NOTIFY_BRNDOWN_MIN - NOTIFY_BRNDOWN_MAX
-aka 0x20 - 0x2e events were mapped to 0x20.
-
-This mapping is causing issues on new laptop models which actually
-send 0x2b events for printscreen presses and 0x2c events for
-capslock presses, which get translated into spurious brightness-down
-presses.
-
-The plan is disable the 0x11-0x2e special mapping on laptops
-where asus-wmi does not register a backlight-device to avoid
-the spurious brightness-down keypresses. New laptops always send
-0x2e for brightness-down presses, change the special internal
-ASUS_WMI_BRN_DOWN value from 0x20 to 0x2e to match this in
-preparation for fixing the spurious brightness-down presses.
-
-This change does not have any functional impact since all
-of 0x20 - 0x2e is mapped to ASUS_WMI_BRN_DOWN first and only
-then checked against the keymap code and the new 0x2e
-value is still in the 0x20 - 0x2e range.
-
-Reported-by: James John <me@donjajo.com>
-Closes: https://lore.kernel.org/platform-driver-x86/a2c441fe-457e-44cf-a146-0ecd86b037cf@donjajo.com/
-Closes: https://bbs.archlinux.org/viewtopic.php?pid=2123716
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20231017090725.38163-2-hdegoede@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/asus-wmi.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 57a79bddb2861..95612878a841f 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -31,7 +31,7 @@
- #include <linux/i8042.h>
- 
- #define ASUS_WMI_KEY_IGNORE (-1)
--#define ASUS_WMI_BRN_DOWN	0x20
-+#define ASUS_WMI_BRN_DOWN	0x2e
- #define ASUS_WMI_BRN_UP		0x2f
- 
- struct module;
 -- 
-2.42.0
+2.34.1
 
