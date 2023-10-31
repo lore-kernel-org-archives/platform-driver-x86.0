@@ -2,72 +2,73 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0C1C4167B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 31 Oct 2023 15:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E61C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 31 Oct 2023 15:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344810AbjJaPUU (ORCPT
+        id S232376AbjJaPt0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 31 Oct 2023 11:20:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58958 "EHLO
+        Tue, 31 Oct 2023 11:49:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344793AbjJaPUQ (ORCPT
+        with ESMTP id S231131AbjJaPtZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 31 Oct 2023 11:20:16 -0400
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B5D41988
-        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Oct 2023 08:17:51 -0700 (PDT)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5a7c95b8d14so50666237b3.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Oct 2023 08:17:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1698765469; x=1699370269; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=VVokwlv4EgWjfwIfgjLNp6YdLR04B4foMomExEIuPtI=;
-        b=dTlsYB7yCQNNPbKwCCL7jw3O6wasKIAfV4n7FQFi9wahbvoHBxC7N4N8IksVeS8QXu
-         On+TNwr9yuyA2yMd+PrD5YpY8Ztto6aLskVthdgEVdOJyqpipbu8wREZ1VvLWCDmLt99
-         so4dOIzPB6yOqXsDSeDqjzmnmB/Oab2bd61qs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698765469; x=1699370269;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VVokwlv4EgWjfwIfgjLNp6YdLR04B4foMomExEIuPtI=;
-        b=F6dah9E6hTuj2t1UFWkLlM5hW/GTVZ+MhnkLz9SDCxIhL95G3SxtI55o8rLAy5HzK3
-         lSczg1HZv1jzu2FKPCeht86yI3fUMb0rehqEZCqx4jc4IYtr5AklaoIt3ogIMH7qMZNU
-         Gld2mMcG41rWj2C8OZ7QbkrfUbbr/G9VbPoVB1innDjST+HcsYvwtyUqC5oAVM4H24oN
-         f+SsvxSkOxiPUUdLYMjuNa/BGNl46nCAmfNegPCiRW5gxEYfp3RbQdH8ROz3ggsggr5q
-         m0ij3bwUq+2GOLvbFetSMPCsr0V1r1w1qPHzU8mEhwGwNprdyCgs2406gOfjjpE8GJQl
-         syiA==
-X-Gm-Message-State: AOJu0Yz6ArijvLsYlDoHgDe7mBHA5YcvM1RpZuW4lm0JB3vkkthM1Qx4
-        yaA4+ZTkCq/T8hy4eMdW+bzzpzIDQD/YpssmI2LYmA==
-X-Google-Smtp-Source: AGHT+IFKe4YagDmd1at7aanmi7ofKqUh3QCjbP4e2+xwuTZh0DNpik9W7OCq/p43vUvMc8UXHS7bf1HSWfY/9U03/HA=
-X-Received: by 2002:a81:b143:0:b0:5a7:c72b:812 with SMTP id
- p64-20020a81b143000000b005a7c72b0812mr10331369ywh.17.1698765469004; Tue, 31
- Oct 2023 08:17:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20231027212916.1035991-1-markhas@chromium.org>
- <2b8335a7-4b9b-825-c1b8-84158aaf2c42@linux.intel.com> <CANg-bXCcNPjmQC9vgd1JJcV4QoruhhbeEg8o=S9K-22kb746kQ@mail.gmail.com>
- <8f1b5075-6b12-4fa8-a173-804d4657415e@amd.com>
-In-Reply-To: <8f1b5075-6b12-4fa8-a173-804d4657415e@amd.com>
-From:   Mark Hasemeyer <markhas@chromium.org>
-Date:   Tue, 31 Oct 2023 09:17:37 -0600
-Message-ID: <CANg-bXA8zSJkO_rgDQCwEFxsFyXHO6Ad2eYwV2xGdxL_vCh04A@mail.gmail.com>
-Subject: Re: [PATCH v1] platform/x86/amd/pmc: Get smu version before reading
- dram size
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Sanket Goswami <Sanket.Goswami@amd.com>,
-        platform-driver-x86@vger.kernel.org
+        Tue, 31 Oct 2023 11:49:25 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00E238F
+        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Oct 2023 08:49:23 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9B53FC433C7
+        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Oct 2023 15:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698767363;
+        bh=NdzIHqA7pVcWp40e0vJPZMN0mLAes8rXN909V52fEYA=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=nrkqXsxUdL4eh5/ZIMOZ5cpCSGw0MgaREntuV5N9hU17KilLPN6SUQ1AMD1NHCd59
+         drHwfUmiHW/LAEQqo8MLZxU30KrHd27c1ha6USB0hUHG+h38no+vnchgFxMWc2V6PT
+         sXI5sDC666kQoG/Glm2aiwJYyWtIetnJZTfsoqJljQAWHD4xv1Aq9M/NCigDwEAJnj
+         DoLpIIHnTK96mQEYPrFmhDhBWX3KrstzWlHxBebKO9YclXKCH+IsY97HnTgk1PbZ4M
+         8RRofwb/nF7kblIUQwIcbB7dQx8/a0kO8b/ErvhBG//xckGzJXUVa7NbV+JTdkao3u
+         J23JuUVHZLT1A==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 8B37AC53BD0; Tue, 31 Oct 2023 15:49:23 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 218092] Laptop hanging on black screen, when suspended and woke
+ up!
+Date:   Tue, 31 Oct 2023 15:49:23 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218092-215701-qs2t6osWQA@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218092-215701@https.bugzilla.kernel.org/>
+References: <bug-218092-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-> I have a patch in place that should address the problem you are
-> mentioning. I will send that out next Monday after some tests.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218092
 
-Great, thanks Shyam! I'll hold off on pushing a patch implementing
-what Mario suggested.
+--- Comment #2 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+Also; please add a full dmesg and your dmidecode output.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
