@@ -2,73 +2,72 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A597AC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 31 Oct 2023 13:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0C1C4167B
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 31 Oct 2023 15:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344432AbjJaNC4 (ORCPT
+        id S1344810AbjJaPUU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 31 Oct 2023 09:02:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56738 "EHLO
+        Tue, 31 Oct 2023 11:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344434AbjJaNCy (ORCPT
+        with ESMTP id S1344793AbjJaPUQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 31 Oct 2023 09:02:54 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70DF7B7
-        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Oct 2023 06:02:52 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 93F2DC433B6
-        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Oct 2023 13:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698757371;
-        bh=PclzS65HNrklTUXMWiNukN5LcHawYpiRydderPDOum8=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Pw1p8iqiTGfvZJJTW8DAna8+wfCTRErFj8K7yU+ztIR1dZWolJkvko3PWxI84tpwc
-         TfnNXcgekK2LcccyfCccwhYSMXOgehiRf4OAvXpVSaEpN9UFIMrjAwuRbWtUt4wmSu
-         qLRwA7C8pJj92e28vRW1DgSdDJZmti4pqYFIpRZirCbs0k1EFtKMzPTF6bUKzBO5KY
-         0XTvtaHKSLfhPQkNW6h/XXX+9RtGNfLixq9s4MSY0OCZVpME01FQvP24H6YsenYmZW
-         mKntVB5+VoJ/JUdXlSTmJ2iA++26TX66JjC5mQil/SWdeDNRSvoBfjlG2MABGmAg8W
-         WB4jSB86sjY2A==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 814CCC53BD0; Tue, 31 Oct 2023 13:02:51 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 218092] Laptop hanging on black screen, when suspended and woke
- up!
-Date:   Tue, 31 Oct 2023 13:02:51 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218092-215701-2qqjTCBruh@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218092-215701@https.bugzilla.kernel.org/>
-References: <bug-218092-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 31 Oct 2023 11:20:16 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B5D41988
+        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Oct 2023 08:17:51 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5a7c95b8d14so50666237b3.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 31 Oct 2023 08:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1698765469; x=1699370269; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VVokwlv4EgWjfwIfgjLNp6YdLR04B4foMomExEIuPtI=;
+        b=dTlsYB7yCQNNPbKwCCL7jw3O6wasKIAfV4n7FQFi9wahbvoHBxC7N4N8IksVeS8QXu
+         On+TNwr9yuyA2yMd+PrD5YpY8Ztto6aLskVthdgEVdOJyqpipbu8wREZ1VvLWCDmLt99
+         so4dOIzPB6yOqXsDSeDqjzmnmB/Oab2bd61qs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698765469; x=1699370269;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VVokwlv4EgWjfwIfgjLNp6YdLR04B4foMomExEIuPtI=;
+        b=F6dah9E6hTuj2t1UFWkLlM5hW/GTVZ+MhnkLz9SDCxIhL95G3SxtI55o8rLAy5HzK3
+         lSczg1HZv1jzu2FKPCeht86yI3fUMb0rehqEZCqx4jc4IYtr5AklaoIt3ogIMH7qMZNU
+         Gld2mMcG41rWj2C8OZ7QbkrfUbbr/G9VbPoVB1innDjST+HcsYvwtyUqC5oAVM4H24oN
+         f+SsvxSkOxiPUUdLYMjuNa/BGNl46nCAmfNegPCiRW5gxEYfp3RbQdH8ROz3ggsggr5q
+         m0ij3bwUq+2GOLvbFetSMPCsr0V1r1w1qPHzU8mEhwGwNprdyCgs2406gOfjjpE8GJQl
+         syiA==
+X-Gm-Message-State: AOJu0Yz6ArijvLsYlDoHgDe7mBHA5YcvM1RpZuW4lm0JB3vkkthM1Qx4
+        yaA4+ZTkCq/T8hy4eMdW+bzzpzIDQD/YpssmI2LYmA==
+X-Google-Smtp-Source: AGHT+IFKe4YagDmd1at7aanmi7ofKqUh3QCjbP4e2+xwuTZh0DNpik9W7OCq/p43vUvMc8UXHS7bf1HSWfY/9U03/HA=
+X-Received: by 2002:a81:b143:0:b0:5a7:c72b:812 with SMTP id
+ p64-20020a81b143000000b005a7c72b0812mr10331369ywh.17.1698765469004; Tue, 31
+ Oct 2023 08:17:49 -0700 (PDT)
 MIME-Version: 1.0
+References: <20231027212916.1035991-1-markhas@chromium.org>
+ <2b8335a7-4b9b-825-c1b8-84158aaf2c42@linux.intel.com> <CANg-bXCcNPjmQC9vgd1JJcV4QoruhhbeEg8o=S9K-22kb746kQ@mail.gmail.com>
+ <8f1b5075-6b12-4fa8-a173-804d4657415e@amd.com>
+In-Reply-To: <8f1b5075-6b12-4fa8-a173-804d4657415e@amd.com>
+From:   Mark Hasemeyer <markhas@chromium.org>
+Date:   Tue, 31 Oct 2023 09:17:37 -0600
+Message-ID: <CANg-bXA8zSJkO_rgDQCwEFxsFyXHO6Ad2eYwV2xGdxL_vCh04A@mail.gmail.com>
+Subject: Re: [PATCH v1] platform/x86/amd/pmc: Get smu version before reading
+ dram size
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Sanket Goswami <Sanket.Goswami@amd.com>,
+        platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218092
+> I have a patch in place that should address the problem you are
+> mentioning. I will send that out next Monday after some tests.
 
---- Comment #1 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-Have you already updated your BIOS to the latest BIOS?
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Great, thanks Shyam! I'll hold off on pushing a patch implementing
+what Mario suggested.
