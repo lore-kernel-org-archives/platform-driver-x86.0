@@ -2,39 +2,39 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C300C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Nov 2023 09:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1E8C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  1 Nov 2023 09:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233046AbjKAJLS (ORCPT
+        id S232624AbjKAJL7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 1 Nov 2023 05:11:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56914 "EHLO
+        Wed, 1 Nov 2023 05:11:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232624AbjKAJLR (ORCPT
+        with ESMTP id S233146AbjKAJL7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 1 Nov 2023 05:11:17 -0400
+        Wed, 1 Nov 2023 05:11:59 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A00B8FD
-        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Nov 2023 02:11:14 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3DAD9C433C7
-        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Nov 2023 09:11:14 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF41125
+        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Nov 2023 02:11:52 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6FBB7C433C7
+        for <platform-driver-x86@vger.kernel.org>; Wed,  1 Nov 2023 09:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698829874;
-        bh=X03GF3HvJVO6u93ztcqD95bTNtIXJ7jqFZVauwLIp1k=;
+        s=k20201202; t=1698829912;
+        bh=pS9KX0LZyKSMbqxOfbZBk5zgQLZsdkWj4wrOXvsfHDU=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=qR4nZLL8SI9DZ6jxqeC+qiaypR5wrl8AsxqINd2XLfr/X9A/M531vOJTu8i95Eh9N
-         Oht2GYrPTvRcOCMvDDDVtnLmlff1KpUkoMtDQFBLFYobUYvzczaVejrMP0n5URWtbG
-         dhRVvqF9jIZNdSJ80ZscitAX3c6kYgrlbpoVBFiVZtDoeJavzTfwYllkCDbHURSnZh
-         0LeVXm+TEDZ03NM/OFYFAM7Eh/0sLkM5ilfIHMv1j4oZJnHoaXv2vbNc9iZY6hdPK3
-         W7pLa1Mki8dDUEq7u1k3xHyLJue38KBkwUdJlfphonJY1om/VWAoW337Of8G98PBwD
-         huWRrefsW0vxQ==
+        b=EJazm4xOVZPUXj+n50U1bc+orRQzxnaRokKvRMXeaiAi8ET7y9bGmOwytiCKTCvjp
+         +wUWAEWdLuugcs/nEJIjAeDM9Sc5XPyW3pbiZNZp4kAInQJmibeQwuvea6cCZ+SEgn
+         RFMHjukWXqSwzPIqU6SeE6e7lsArNJ3aYrrcQXxMq3xdYcDDvKZYbzTDSnnLqPCHKL
+         NmikFuXMu9hnyQicexf6HKIPJSrHAHsET5psZMiRjoKiGUeCSMej6qPdHsZhhdP65j
+         WtVqGKh9DXkMAREGt9Ea282QIUH+QqRl52UCDhxt+Eju0dEfrUOjDAedzsWGQiT/Ya
+         NeVpZTcimEL4w==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 1FA69C4332E; Wed,  1 Nov 2023 09:11:14 +0000 (UTC)
+        id 5FA79C4332E; Wed,  1 Nov 2023 09:11:52 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 218092] Laptop hanging on black screen, when suspended and woke
  up!
-Date:   Wed, 01 Nov 2023 09:11:13 +0000
+Date:   Wed, 01 Nov 2023 09:11:52 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -50,7 +50,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218092-215701-SRQThjgTnm@https.bugzilla.kernel.org/>
+Message-ID: <bug-218092-215701-Z9PWw5IsWH@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218092-215701@https.bugzilla.kernel.org/>
 References: <bug-218092-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,10 +64,8 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218092
 
---- Comment #14 from Ertugrul Uyar (ertugruluyar.personal@gmail.com) ---
-When my laptop booting, there is no grub screen, it's loading immediately. I
-think, I should change something to show this screen or press a button. Am I
-right? And I also have to remove amd_iommu=3Doff from my grub conf too.
+--- Comment #15 from Ertugrul Uyar (ertugruluyar.personal@gmail.com) ---
+Is there a instructions for the kernel patch?
 
 --=20
 You may reply to this email to add a comment.
