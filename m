@@ -2,100 +2,108 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C393C41535
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Nov 2023 04:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5888C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Nov 2023 04:30:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348467AbjKBEac (ORCPT
+        id S1348478AbjKBEah (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Nov 2023 00:30:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47868 "EHLO
+        Thu, 2 Nov 2023 00:30:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348454AbjKBEab (ORCPT
+        with ESMTP id S1348475AbjKBEaf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Nov 2023 00:30:31 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFAA3DC;
-        Wed,  1 Nov 2023 21:30:25 -0700 (PDT)
+        Thu, 2 Nov 2023 00:30:35 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC7B9DE;
+        Wed,  1 Nov 2023 21:30:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1698899407; x=1699504207; i=w_armin@gmx.de;
-        bh=hiCnCOOKWqIILjoanAScpgqs9mhmW2+u8CmTFsuuU28=;
+        t=1698899412; x=1699504212; i=w_armin@gmx.de;
+        bh=HfgLBfuhdhyyVQd0Svg8PK5e8u/Fu2fbuxkzO+iKCZw=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
          References;
-        b=naalsUcRbrnoQi3Aoy2bY4ZYVgwLl2laFZSWa2Jgc4Yp9kfatwQzO1ozrrGnJFYq
-         9p86IU5KYcCZAnmfqGOWLGvHOKQ0zFzLQs9jNvyIQBHkhp0+hTPo8AFXD80KaMJWy
-         uXQvhhJG7av5R6CxOLKjp7suCTbq1Sh9B6Z/toyEyqX6mk23/SVT/de4/7tNQSufp
-         woUM83976i/1GIRylAvsTtBPQwxSaofXapvH0V4iA67D+mu/YWDmthaQhE2aIJOo8
-         K5FSY7rBM7YCYJiIkWczSg+VrglkA73U+KEcm7erCbfIOAIp5P0Dg5sog/FDLYjwd
-         ba4gMuHPUSgPX6ZIPQ==
+        b=BEhBPV1PjET98tn5jLKug9mLBkZmcDA7+PMDtVIkRkOGLoeNPSsJ27/iTdmo+PkG
+         8Oph2/8AbCXEVOCOJ/M6deoCqV0Fl9FIoX7YNO8IYos84+MS2q0dSwlyTuUfsN55a
+         TY4Bu+ENa4CIGSP6jN08BP1tpjtFfxvuURTj4sBL75GBKymuQLGqD4Y7pSsA/I3AG
+         yWHYP3b5lXyOKpqnf9p1NJhlfT52M21jBTFgJncu0jgnf5qHw0YvjfFt/L6P+HGut
+         HVcjmF0fVMsRB23AqvKw6He91nAZN6pNq56du13L54h0EBUwvJDvHbbnUBKmudMx2
+         /r+Jaih2C9qLMHtCaA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1N49lJ-1rOhXK1UtV-0104sp; Thu, 02 Nov 2023 05:30:07 +0100
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1N79yQ-1rWhLs0jwy-017TvD; Thu, 02 Nov 2023 05:30:12 +0100
 From:   Armin Wolf <W_Armin@gmx.de>
 To:     jithu.joseph@intel.com, maurice.ma@intel.com, hdegoede@redhat.com,
         markgross@kernel.org, ilpo.jarvinen@linux.intel.com
 Cc:     Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] platform/x86: wmi: Add to_wmi_device() helper macro
-Date:   Thu,  2 Nov 2023 05:29:57 +0100
-Message-Id: <20231102042959.11816-2-W_Armin@gmx.de>
+Subject: [PATCH 4/4] platform/x86/intel/wmi: thunderbolt: Use bus-based WMI interface
+Date:   Thu,  2 Nov 2023 05:29:59 +0100
+Message-Id: <20231102042959.11816-4-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231102042959.11816-1-W_Armin@gmx.de>
 References: <20231102042959.11816-1-W_Armin@gmx.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:dXH4wpvIg0gTmaf5/YM921ChFWiWve+0jtvCzuS1MvLPWeT6n38
- iblE/GhPGuyuLOj9qyDxHuklktXeQ6+aSDoD0Gm5Cgd80M81bJToHS4MUx48oxwN0HALVzZ
- /3q4geFP8xjXoDJ5a0rli162yPeQ0OD6pzLYExvLEGmVf3X9Yvp7bTtYO8MRZ8bvKXsvRLm
- R+TuFUKSdvI1RDOJt+weA==
-UI-OutboundReport: notjunk:1;M01:P0:trv4r8aoRJM=;CBGUIJImpu+EV61NDFRnVqdB7Yg
- fXVnPix1GTkEo7pQDYciSthxq6sOHPIOHZJr6DIrqeLnEZ0LHfzxcWBEwAvDCT7HEXG4qmjQI
- kURO2PNLt9/wWMaoiQPVe89PrkrmuVUtJYGqHG7bckVBoS0rgueLPuXxFsIW2wp8XgdKQQFUb
- QvuxewWJV8VI+aey1aGHMlvbG/Lh/p/6dsvk7Q22z+txGOuSlSf9ylUioeFRg8DHeIFBc7O+R
- 4iXKSQ1uqdSOQgH7V5tzpI24Z7KQ30u1WDtpxHxcaBcU5xplcEdWe/A7gJ3/cOZul9bOwPYdA
- UOmVgmqsCYVb4sdfjwLJZSt83Gv0gw2A8+FgQ99/Za9iWJuVRR3avxzm3GVmEYGMHjwyrWgR6
- ZIDnFRNBVvaT5EBCoE53j4XhG/V/qKga1Wih7wpjNGc5VMnwrTWxhuEHO2EZZ4HUu+DLXsGkO
- uplKtkUOx+QDwMujYeIN9Y7Ieq5OmBFkA04HQ1TL+Xa4+xBnJWbQNVarkliGeCMq052fltVkw
- dmcREbGPEo96fe5OEO9CEdrQoklbaAT/P0Kv9DqwqY0VfMwbweMNKfJ+lJbXMS33S6644rCHm
- ZW/h7P5INb+DWzYNpc4U+3XaLEEHHuIV09NULy5Z0tFY9X94IUvLsqcmlT2+ldoVado8mvvoE
- nxcY4Mm1W+aah4ycxsk1L1x5PwxNCbOB+oIdlzwLuvERQohbt8gdTujvxqJ7f2NxFmOaBsQNn
- mxe6f8Xu4d51I8+bCWxf1roJ+kS0nepbuYdzu/QDib/O9PoacQFCCo8JoOnB3CGqrzZpenhgT
- T9EISt77CIvtIPI6teD8dbZSDJ7ziRTTt8Xp3nwZAWhzbKwqoeIv0D14TkKv5WHNYPklSCD73
- AjlXpDxZI+Ay5yD99ymipQqqcHFsZeY2Mo8L0EHhWHG8tLfRQ/7xQfW4Ukp/6fNwC4e0QUUU2
- qUj7+U1wE6qJGj/oSd9D0VSCtrg=
+X-Provags-ID: V03:K1:5RSM1K8nSQI5KQV5exXrYTjw7yWqWGkTtWBczPDi6Xf2u9bc61A
+ /NWyhxMGt7PG+6HXbBZ60xUOqGRokci4QMJ4dBIRxM7eoHn7KpMYQ9P3TlczIsmF27IqKw8
+ 0RyJjb9xuVVw3r+6JKgce1GfCvedRKHUqHna+mjOy/dDDiuZNdJtN0Vqz0FniTf0hYkwU5J
+ EX0Ob65RIJamWQLziYkuw==
+UI-OutboundReport: notjunk:1;M01:P0:kNuQK5NYFiA=;7ViY7jBwB04uscd59ANqsIWbWMz
+ xWyD5XGkMDQwE3e7qd5bWTgFAYF91fQLJPAj+5oiKoeLjPbDliy/H86LlbDHN3dyXEEZtHRpI
+ c8RKPhYQv+akAA9OCSF+NcX6AeOcOl3vgMj8+iRS19zxCQ3Cy0jWauMWuDqcrrkOPe04lkf55
+ x41YyRE5c/xPFp8G2aIt0OcKeRd/EWPxPnXBlTqap5j2XGAudXlVagqLXkUQ9l9ONxiRDObU0
+ cqO8rxTTEdNiNvBCFAd15nxvS8OrBhTKSpsRPwIBAGwEiW8LjohoGSMtjjUtk7+KVioVxJUNC
+ LibEReIpTTUVOg73yctFOCKcgVLVdfDhuZvI0PB8VgUaViecB1JjmbGz9d/2TzqDo/AqUCBfu
+ 8Hjvp9SjOF8Mw4jUZZ7tXgwhjQmy78Q8BAQ3xTDkBbCmiIBUbGCL5ZyxVovp5MnO/xEGuBFPO
+ BLg55qi8JsQTYVKEWGstMAuLK/iy2cvA4qvQ8r6qkZaNnf7mP+Ty1EBZ+YIX/yqcqAuBYGpp0
+ 2b9/QrBX+XTYoheYaGmSoi39FmsvrEyChD1c+dSZk17TjB0Kc3SPlVNIej59Am4NAdWTxKoxa
+ hMJBWpNF+Y8cc5OyVYYkBPw68tpidUcn+PqGDZPwOvpj4G5llrcmLXvzJ7nh2MwmGXudOVKGE
+ WxvassnEtnNUOGxYTH3+v+hYY42f+M3AM4jko7H23DsOXIs4r53m3nJuixwL7Pq4o0RRAZFnE
+ 8PxXC9y2al6LnZ57C8Rf0S0rkOas5jAQ7Buo7o4eMf72ifdramRtaXd53tFsOGCmh6r0otfFP
+ lm
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add a helper macro for WMI drivers to cast a device to
-the corresponding WMI device. This should replace some
-boilerplate code.
+Currently, the driver still uses the legacy GUID-based interface
+to invoke WMI methods. Use the modern bus-based interface instead.
+
+Tested on a Lenovo E51-80.
 
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- include/linux/wmi.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/platform/x86/intel/wmi/thunderbolt.c | 3 +--
+ drivers/platform/x86/wmi.c                   | 1 +
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index 207544968268..8a643c39fcce 100644
-=2D-- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -27,6 +27,14 @@ struct wmi_device {
- 	bool setable;
+diff --git a/drivers/platform/x86/intel/wmi/thunderbolt.c b/drivers/platfo=
+rm/x86/intel/wmi/thunderbolt.c
+index fc333ff82d1e..e2ad3f46f356 100644
+=2D-- a/drivers/platform/x86/intel/wmi/thunderbolt.c
++++ b/drivers/platform/x86/intel/wmi/thunderbolt.c
+@@ -32,8 +32,7 @@ static ssize_t force_power_store(struct device *dev,
+ 	mode =3D hex_to_bin(buf[0]);
+ 	dev_dbg(dev, "force_power: storing %#x\n", mode);
+ 	if (mode =3D=3D 0 || mode =3D=3D 1) {
+-		status =3D wmi_evaluate_method(INTEL_WMI_THUNDERBOLT_GUID, 0, 1,
+-					     &input, NULL);
++		status =3D wmidev_evaluate_method(to_wmi_device(dev), 0, 1, &input, NUL=
+L);
+ 		if (ACPI_FAILURE(status)) {
+ 			dev_dbg(dev, "force_power: failed to evaluate ACPI method\n");
+ 			return -ENODEV;
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 4c4effc883ae..58e7d5d535ba 100644
+=2D-- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -107,6 +107,7 @@ static const char * const allow_duplicates[] =3D {
+ 	"05901221-D566-11D1-B2F0-00A0C9062910",	/* wmi-bmof */
+ 	"8A42EA14-4F2A-FD45-6422-0087F7A7E608",	/* dell-wmi-ddv */
+ 	"44FADEB1-B204-40F2-8581-394BBDC1B651",	/* intel-wmi-sbl-fw-update */
++	"86CCFD48-205E-4A77-9C48-2021CBEDE341",	/* intel-wmi-thunderbold */
+ 	NULL
  };
 
-+/**
-+ * to_wmi_device() - Helper macro to cast a device to a wmi_device
-+ * @device: device struct
-+ *
-+ * Cast a struct device to a struct wmi_device.
-+ */
-+#define to_wmi_device(device)	container_of(device, struct wmi_device, dev=
-)
-+
- extern acpi_status wmidev_evaluate_method(struct wmi_device *wdev,
- 					  u8 instance, u32 method_id,
- 					  const struct acpi_buffer *in,
 =2D-
 2.39.2
 
