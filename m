@@ -2,100 +2,143 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D998FC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Nov 2023 12:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B17C4167B
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Nov 2023 12:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346424AbjKBMYW (ORCPT
+        id S234376AbjKBM1p (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Nov 2023 08:24:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35588 "EHLO
+        Thu, 2 Nov 2023 08:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229806AbjKBMYW (ORCPT
+        with ESMTP id S234302AbjKBM1o (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Nov 2023 08:24:22 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F612112;
-        Thu,  2 Nov 2023 05:24:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698927854; x=1730463854;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=Hn3HxLIchr3g7rx6JvOiqgfPvzN/KUrJgEv9IL8moEQ=;
-  b=Zu2OGUilRUEJA+Te4WPvqSffFzvSwG0MsE2OEIZKbXvJWnq4n2MeAu6g
-   pARWg1MBBo6D2UGGFtjclSrRT9FSdURMqMxRoWSj9lo9LjE1P1CY8iah8
-   mrRZZudvj5oR3He03L9b4rfbIwq6hmHgkwE0s1eWeJeUrffnkNmzLEVN9
-   cjcAYC0H5oA/OH7b35txgJ5Fxtl+9Id3KHnpwj5S+2zt1zeoTEEnFNMtT
-   vK22KWoR7WxQr+3YBA8hN4422lKgFoM7RiGNPvl4Jf9ARoZhiVbfx9H77
-   +o/BTEp/OHL5K8dqg/spGrGKgA6ZJrvOZxkwofnTnsDKM+kRwcYYe5STf
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="7340674"
-X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
-   d="scan'208";a="7340674"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 05:24:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
-   d="scan'208";a="2523649"
-Received: from sdsadara-mobl.ger.corp.intel.com ([10.251.215.6])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 05:24:09 -0700
-Date:   Thu, 2 Nov 2023 14:24:06 +0200 (EET)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Johannes Berg <johannes@sipsolutions.net>
-cc:     Ma Jun <Jun.Ma2@amd.com>, amd-gfx@lists.freedesktop.org,
-        lenb@kernel.org, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, alexander.deucher@amd.com,
-        Lijo.Lazar@amd.com, mario.limonciello@amd.com,
-        Netdev <netdev@vger.kernel.org>, linux-wireless@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, majun@amd.com,
-        Evan Quan <quanliangl@hotmail.com>
-Subject: Re: [Patch v13 4/9] wifi: mac80211: Add support for WBRF features
-In-Reply-To: <b080757463a1f55a38484e3ea39fd3697e98409e.camel@sipsolutions.net>
-Message-ID: <e42c5484-d66-e41a-8b2e-a1fa4495ce2@linux.intel.com>
-References: <20231030071832.2217118-1-Jun.Ma2@amd.com>  <20231030071832.2217118-5-Jun.Ma2@amd.com>  <5b8ea81c-dd4c-7f2a-c862-b9a0aab16044@linux.intel.com> <b080757463a1f55a38484e3ea39fd3697e98409e.camel@sipsolutions.net>
+        Thu, 2 Nov 2023 08:27:44 -0400
+X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 02 Nov 2023 05:27:34 PDT
+Received: from esa6.hc3370-68.iphmx.com (esa6.hc3370-68.iphmx.com [216.71.155.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC9D112;
+        Thu,  2 Nov 2023 05:27:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1698928055;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=SOa8sX/Ie2qKItHbC8xOcneJFIOfk23Ogyua++a0w4w=;
+  b=OFoPDU7xzZyj/MvOWi3+d+lpirnYnG0h31b7D+cOG8C7jt4iels+ETEL
+   IV1oJKWK0Hr1Un12GyMHqwXv3y+7Gh8ZNbsMp9mkltbLVos5bpQi0NVji
+   W8TbdRY6ncdH86YPtr0sSiRnzuRqsme9w3Upn9xo/Gmi824yDchRkSGKz
+   k=;
+X-CSE-ConnectionGUID: pNIzOpSTTbaXx/hvRfdv1w==
+X-CSE-MsgGUID: BpbD5vabTnSNIjuRbaZWVQ==
+Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+X-SBRS: 4.0
+X-MesageID: 126596381
+X-Ironport-Server: esa6.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.159.70
+X-Policy: $RELAYED
+X-ThreatScanner-Verdict: Negative
+IronPort-Data: A9a23:gJjK3qp7QmFwiY0gQfooSElf0/teBmJ/YxIvgKrLsJaIsI4StFCzt
+ garIBnXMq2CNjPyet1zPoqx8EoPvsTQyNdmSQVlpSk2Qn8RpZuZCYyVIHmrMnLJJKUvbq7FA
+ +Y2MYCccZ9uHhcwgj/3b9ANeFEljfngqoLUUbOCYmYpA1Y8FE/NsDo788YhmIlknNOlNA2Ev
+ NL2sqX3NUSsnjV5KQr40YrawP9UlKq04GhwUmAWP6gR5waHzyNNUPrzGInqR5fGatgMdgKFb
+ 76rIIGRpgvx4xorA9W5pbf3GmVirmn6ZFXmZtJ+AsBOszAazsAA+v9T2Mk0MC+7vw6hjdFpo
+ OihgLTrIesf0g8gr8xGO/VQO3kW0aSrY9YrK1Dn2SCY5xWun3cBX5yCpaz5VGEV0r8fPI1Ay
+ RAXACgrTwKkn9mK/LiyevkrhtoZIsX1ZZxK7xmMzRmBZRonaZXKQqGM7t5ExjYgwMtJGJ4yZ
+ eJAN2ApNk6ZJUQSaxFIUPrSn8/x7pX7WxRepEiYuuwc5G/LwRYq+LPsLMDUapqBQsA9ckOw/
+ ziYojWnWUFDXDCZ4RCd+F7xmObFoSXAfqMQCYey/8xVvmTGkwT/DzVJDADm8JFVkHWWWM13L
+ 00S5zpopq83nGSxSdP9dx61uniJulgbQdU4O+ki6QyXw67V+AexBWUeSDNFLts8u6ceRTUrx
+ 1aPkMHBAD1kqrqOTnyBsLyTqFuaOjkOBWoDbjUDVgwL/5/op4Rbph7CRctiOKu0hcfyAjb+3
+ 3aBqy1Wr64PgNAGkbqy/VTvgyqh4JPOS2Yd5RTTUySg4xJ0fqalf4Hu4l/ehd5MLYOYUkOA+
+ mMFhcGY7esOJZGVmWqGR+BlNKu0/O3DOTvQjER0GJ8J9yygvXWkeOh44ixlOEZvdMsefyT1S
+ E/LtEVa45o7FGv6M4d0bpi3BsBsyrLvffz9UvnIYN1UZ919bg6Z8TsrdR7O937inVJqkqwlP
+ 5qfN8G2Ah4yDaVh0SrzX+wc+aEkyzp4xm7JQ53/iRO93tK2YH+TVKdAMEqWY/onxL2LrR+T8
+ NtFMcaOjRJFX4XWaDH/+IoSIFZaa3Q2bbj6otJaMO6KJBFrHkklCvnM0fUgfZBom+JekeKg1
+ nGlU2dK2Ub4nzvMLgDiQnVibrzodYxyoXIyIWonOlPA83IjbIKg5a4EX5QwerYj+apoyvscZ
+ +UKf9WoBvVJVyjd/DIcfd/xoeRKeAqrjBiSFyujbiI2c5NpS0rO4NCMVgLp+DgmDyy5r8Iyr
+ rSskATBTvIrQwVkEdaTa/+1yV61lWYSlfg0XEbSJNRXPkL2/+BCNCHwyPs2PukPJA/Fyz/c0
+ ByZaSr0vsGU/dVzqoOQw/nZ/sH2S4OSA3a2AUHDy5ekEjHhwlapyL9QF+aWRz7RSjrrrfDKi
+ fpu8x3sDBEWtA8U4tosQug3kP5WC8jH/eEAklo+dJnfRxH7Uuk+fyPuMdxn7/UVntdkVR2Kt
+ lVjEzWwEZ6OIsrhWGUJPgsjYf/rORo8wWKKsq1dzKkX/kZKEFu7vaZ6ZULkZNR1ducdDW/c6
+ b5JVDQqwwK+kAE2Fd2NkzpZ8W+BRlRZDfR35s9BXtG12lN7or2nXXA7InaoiKxjlv0VbxJ0S
+ tNqrPGqa0tgKrrqLCNoSCmlMRt1jpUSohFapGI/y6CysoOd3JcfhUQBmQnbuywJln2rJcovY
+ Dk0X6C0TI3SlwpVaD9rBjD1QVkYWk3DpCQcCTIhzQXkcqVhbUSVREVVBApH1BlxH750FtSDw
+ Iyl9Q==
+IronPort-HdrOrdr: A9a23:t96daaPaoXi8YsBcTmyjsMiBIKoaSvp037Dk7SFMoHtuA6qlfq
+ GV7ZMmPHrP4gr5N0tMpTntAsW9qDbnhP1ICWd4B8bfYOCkghrUEGlahbGSvAEIYheOiNK1t5
+ 0BT0EOMqyVMbEgt7eC3ODQKb9Jq+VvsprY59s2qU0DcegAUdAE0+4WMGim+2RNNXh7LKt8Op
+ qAx9ZN4wGtcW4Qaa2AdwM4dtmGid3XtY7sJSULDR4/6AWIkFqTmcXHOind8BcCci9FhYwv+2
+ jdkwD/++GKvvyhxgXHvlWjnKh+qZ/OysZjGMfJsMQTJzn24zzYHLhJVrGZoTAzqPyu7lEx+e
+ O80ysdAw==
+X-Talos-CUID: 9a23:PQz+v20pJbdTWQTsAXS8ZLxfAuYEYFrF90vsKUaIGSFpVoebRUHJ5/Yx
+X-Talos-MUID: 9a23:tEDSUQsAOipBZjk9982nriloGJp26q6SDnsrsJcbgcONBxNOAmLI
+X-IronPort-AV: E=Sophos;i="6.03,271,1694750400"; 
+   d="scan'208";a="126596381"
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: [PATCH 0/3] x86/apic: Misc pruning
+Date:   Thu, 2 Nov 2023 12:26:18 +0000
+Message-ID: <20231102-x86-apic-v1-0-bf049a2a0ed6@citrix.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-387861400-1698927329=:2124"
-Content-ID: <8f10c3aa-da5e-8e6-b212-dcb8f7f64325@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGqVQ2UC/x3MQQqAIBBA0avIrBvQEUK6SrQQnWo2JgohiHdPW
+ j74/A6Vi3CFTXUo/EqVJ02YRUG4fboYJU4DabLGaMLmVvRZAjoXg2XPVluCmefCp7R/tR9jfBw
+ p+fhaAAAA
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Steve Wahl <steve.wahl@hpe.com>,
+        Justin Ernst <justin.ernst@hpe.com>,
+        Kyle Meyer <kyle.meyer@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        "Russ Anderson" <russ.anderson@hpe.com>,
+        Darren Hart <dvhart@infradead.org>,
+        "Andy Shevchenko" <andy@infradead.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "Dexuan Cui" <decui@microsoft.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-hyperv@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>
+X-Mailer: b4 0.12.4
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Seriously, this work started out trying to fix a buggy comment.  It
+escalated somewhat...  Perform some simple tidying.
 
---8323329-387861400-1698927329=:2124
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <163c94a-bfac-2984-64c1-1c2281e27410@linux.intel.com>
+P.S. I'm trialing `b4 prep` to send this series.  I've got some notes
+already; others welcome too.
 
-On Thu, 2 Nov 2023, Johannes Berg wrote:
-> On Thu, 2023-11-02 at 13:55 +0200, Ilpo Järvinen wrote:
-> 
-> > > +static void get_chan_freq_boundary(u32 center_freq, u32 bandwidth, u64 *start, u64 *end)
-> > > +{
-> > > +	bandwidth = MHZ_TO_KHZ(bandwidth);
-> > > +	center_freq = MHZ_TO_KHZ(center_freq);
-> > 
-> > Please use include/linux/units.h ones for these too.
-> 
-> Now we're feature creeping though - this has existed for *years* in the
-> wireless stack with many instances? We can convert them over, I guess,
-> but not sure that makes much sense here - we'd want to add such macros
-> to units.h, but ... moving them can be independent of this patch?
+Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
+---
+Andrew Cooper (3):
+      x86/apic: Drop apic::delivery_mode
+      x86/apic: Drop enum apic_delivery_modes
+      x86/apic: Drop struct local_apic
 
-What new macros you're talking about? Nothing new needs to be added 
-as there's already KHZ_PER_MHZ so these would just be:
+ arch/x86/include/asm/apic.h           |   2 -
+ arch/x86/include/asm/apicdef.h        | 276 +---------------------------------
+ arch/x86/kernel/apic/apic_flat_64.c   |   2 -
+ arch/x86/kernel/apic/apic_noop.c      |   1 -
+ arch/x86/kernel/apic/apic_numachip.c  |   2 -
+ arch/x86/kernel/apic/bigsmp_32.c      |   1 -
+ arch/x86/kernel/apic/probe_32.c       |   1 -
+ arch/x86/kernel/apic/x2apic_cluster.c |   1 -
+ arch/x86/kernel/apic/x2apic_phys.c    |   1 -
+ arch/x86/kernel/apic/x2apic_uv_x.c    |   1 -
+ arch/x86/platform/uv/uv_irq.c         |   2 +-
+ drivers/pci/controller/pci-hyperv.c   |   7 -
+ 12 files changed, 8 insertions(+), 289 deletions(-)
+---
+base-commit: b56ebe7c896dc78b5865ec2c4b1dae3c93537517
+change-id: 20231102-x86-apic-88dc3eae3032
 
-	bandwidth *= KHZ_PER_MHZ;
-	center_freq *= KHZ_PER_MHZ;
-
-Everything can of course be postponed by the argument that some 
-subsystem specific mechanism has been there before the generic one
-but the end of that road won't be pretty... What I was trying to do
-here was to point out the new stuff introduced by this series into the 
-direction of the generic thing.
-
+Best regards,
 -- 
- i.
---8323329-387861400-1698927329=:2124--
+Andrew Cooper <andrew.cooper3@citrix.com>
+
