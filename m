@@ -2,96 +2,237 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB12C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Nov 2023 07:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D890C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Nov 2023 11:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233756AbjKBHY3 (ORCPT
+        id S1344832AbjKBLz3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Nov 2023 03:24:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33232 "EHLO
+        Thu, 2 Nov 2023 07:55:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234177AbjKBHY2 (ORCPT
+        with ESMTP id S229789AbjKBLz2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Nov 2023 03:24:28 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C92012F
-        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Nov 2023 00:24:26 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DBC41C433C7
-        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Nov 2023 07:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698909865;
-        bh=cskYCTIPPKrMhx3k1rijtdEYxMMhI9uIm42fFML6nTU=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=XfzsZfn890qKh67NBSyYLDCd2vCr+mTh/y+LNFoLAYiVSiotPVA0FYusTpj+xKTjy
-         2CMujFDXFZiT81MNWgtCE5FuJRJsqnhy6/OidwaFLC/iGthTdNisfph08FIr7gCmtv
-         8hsmCEbXtlSu+luiTuGvTKJYyJrQ8oJJA0SMJaFp4A0ZN6FeEx9Yl14g2NPw4l8wFT
-         wtr240gnQwoiN1MfT400KqGqSHBSnW7nTOqWs0NOuMLPDKzub6L3CsBEMseyoC7QjE
-         sJbVN6xJuA9eAeUifh/p7v0d2hD29BLbHUFzREmOJSQyh67SkRa8Dk/MtiPVCSXw+J
-         GY6UMUDMnq6Qg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id C5178C4332E; Thu,  2 Nov 2023 07:24:25 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 218092] Laptop hanging on black screen, when suspended and woke
- up!
-Date:   Thu, 02 Nov 2023 07:24:25 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: ertugruluyar.personal@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218092-215701-SZghjH6lOL@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218092-215701@https.bugzilla.kernel.org/>
-References: <bug-218092-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Thu, 2 Nov 2023 07:55:28 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB836C2;
+        Thu,  2 Nov 2023 04:55:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698926122; x=1730462122;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=LN2zsFLqmMKh/7dbnLz+vFNRTOnaAK8H94eqPAfKQj4=;
+  b=F8E3VKITOsdg61omRXWQ/NIqn93FhfKdal8/ypjm6RviE3ROXFgX4zck
+   9iv6Sf5gcq2jT+nYsr7/L95FclqdSf2D+83aJSZAwzqnlZchBSHW7rvR7
+   2gfg8uLlKsvQ0ZwqOGLQ/WSDff/p/u0QVZR9CCDkVHIRR/P2lVQhpggSr
+   tjV74QpJDzJbIAgpBRunhwSgDGfDZoIYV1wtNQPcPKMF2qVIrQm1rbGPQ
+   1igAQkcm5HeFotWu8+hu30Pd7dDZv9NA818YI8eIaseU8X0buy8VAoJlR
+   vHglcWYSOmUD/r/MfLv4XeEYmb/Iq1MUvE6dosCDiFyUhdyi69WApY6qm
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="455176350"
+X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
+   d="scan'208";a="455176350"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 04:55:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="904988180"
+X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
+   d="scan'208";a="904988180"
+Received: from sdsadara-mobl.ger.corp.intel.com ([10.251.215.6])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 04:55:17 -0700
+Date:   Thu, 2 Nov 2023 13:55:11 +0200 (EET)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Ma Jun <Jun.Ma2@amd.com>
+cc:     amd-gfx@lists.freedesktop.org, lenb@kernel.org,
+        johannes@sipsolutions.net, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        alexander.deucher@amd.com, Lijo.Lazar@amd.com,
+        mario.limonciello@amd.com, Netdev <netdev@vger.kernel.org>,
+        linux-wireless@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, majun@amd.com,
+        Evan Quan <quanliangl@hotmail.com>
+Subject: Re: [Patch v13 4/9] wifi: mac80211: Add support for WBRF features
+In-Reply-To: <20231030071832.2217118-5-Jun.Ma2@amd.com>
+Message-ID: <5b8ea81c-dd4c-7f2a-c862-b9a0aab16044@linux.intel.com>
+References: <20231030071832.2217118-1-Jun.Ma2@amd.com> <20231030071832.2217118-5-Jun.Ma2@amd.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218092
+On Mon, 30 Oct 2023, Ma Jun wrote:
 
---- Comment #23 from Ertugrul Uyar (ertugruluyar.personal@gmail.com) ---
-(In reply to Mario Limonciello (AMD) from comment #16)
-> 8) Copy your existing kernel config from /boot to the file .config in the
-> kernel directory.
+> From: Evan Quan <quanliangl@hotmail.com>
+> 
+> To support the WBRF mechanism, Wifi adapters utilized in the system must
+> register the frequencies in use (or unregister those frequencies no longer
+> used) via the dedicated calls. So that, other drivers responding to the
+> frequencies can take proper actions to mitigate possible interference.
+> 
+> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Co-developed-by: Evan Quan <quanliangl@hotmail.com>
+> Signed-off-by: Evan Quan <quanliangl@hotmail.com>
+> Signed-off-by: Ma Jun <Jun.Ma2@amd.com>
+> --
+> v1->v2:
+>   - place the new added member(`wbrf_supported`) in
+>     ieee80211_local(Johannes)
+>   - handle chandefs change scenario properly(Johannes)
+>   - some minor fixes around code sharing and possible invalid input
+>     checks(Johannes)
+> v2->v3:
+>   - drop unnecessary input checks and intermediate APIs(Mario)
+>   - Separate some mac80211 common code(Mario, Johannes)
+> v3->v4:
+>   - some minor fixes around return values(Johannes)
+> v9->v10:
+>   - get ranges_in->num_of_ranges set and passed in(Johannes)
+> v12:
+>   - use acpi_amd_wbrf_add_remove to replace the acpi_amd_wbrf_add_exclusion
+>     acpi_amd_wbrf_remove_exclusion
+> v13:
+>   - Fix the format issue (IIpo Jarvinen)
+>   - Remove KHZ_TO_HZ and use HZ_PER_KHZ in linux/units.h (IIpo Jarvinen)
+> ---
+>  net/mac80211/Makefile      |  2 +
+>  net/mac80211/chan.c        |  9 ++++
+>  net/mac80211/ieee80211_i.h |  7 +++
+>  net/mac80211/main.c        |  2 +
+>  net/mac80211/wbrf.c        | 95 ++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 115 insertions(+)
+>  create mode 100644 net/mac80211/wbrf.c
+> 
+> diff --git a/net/mac80211/Makefile b/net/mac80211/Makefile
+> index b8de44da1fb8..d46c36f55fd3 100644
+> --- a/net/mac80211/Makefile
+> +++ b/net/mac80211/Makefile
+> @@ -65,4 +65,6 @@ rc80211_minstrel-$(CONFIG_MAC80211_DEBUGFS) += \
+>  
+>  mac80211-$(CONFIG_MAC80211_RC_MINSTREL) += $(rc80211_minstrel-y)
+>  
+> +mac80211-y += wbrf.o
+> +
+>  ccflags-y += -DDEBUG
+> diff --git a/net/mac80211/chan.c b/net/mac80211/chan.c
+> index 68952752b599..458469c224ae 100644
+> --- a/net/mac80211/chan.c
+> +++ b/net/mac80211/chan.c
+> @@ -506,11 +506,16 @@ static void _ieee80211_change_chanctx(struct ieee80211_local *local,
+>  
+>  	WARN_ON(!cfg80211_chandef_compatible(&ctx->conf.def, chandef));
+>  
+> +	ieee80211_remove_wbrf(local, &ctx->conf.def);
+> +
+>  	ctx->conf.def = *chandef;
+>  
+>  	/* check if min chanctx also changed */
+>  	changed = IEEE80211_CHANCTX_CHANGE_WIDTH |
+>  		  _ieee80211_recalc_chanctx_min_def(local, ctx, rsvd_for);
+> +
+> +	ieee80211_add_wbrf(local, &ctx->conf.def);
+> +
+>  	drv_change_chanctx(local, ctx, changed);
+>  
+>  	if (!local->use_chanctx) {
+> @@ -668,6 +673,8 @@ static int ieee80211_add_chanctx(struct ieee80211_local *local,
+>  	lockdep_assert_held(&local->mtx);
+>  	lockdep_assert_held(&local->chanctx_mtx);
+>  
+> +	ieee80211_add_wbrf(local, &ctx->conf.def);
+> +
+>  	if (!local->use_chanctx)
+>  		local->hw.conf.radar_enabled = ctx->conf.radar_enabled;
+>  
+> @@ -748,6 +755,8 @@ static void ieee80211_del_chanctx(struct ieee80211_local *local,
+>  	}
+>  
+>  	ieee80211_recalc_idle(local);
+> +
+> +	ieee80211_remove_wbrf(local, &ctx->conf.def);
+>  }
+>  
+>  static void ieee80211_free_chanctx(struct ieee80211_local *local,
+> diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
+> index 98ef1fe1226e..1172554bd831 100644
+> --- a/net/mac80211/ieee80211_i.h
+> +++ b/net/mac80211/ieee80211_i.h
+> @@ -1600,6 +1600,8 @@ struct ieee80211_local {
+>  
+>  	/* extended capabilities provided by mac80211 */
+>  	u8 ext_capa[8];
+> +
+> +	bool wbrf_supported;
+>  };
+>  
+>  static inline struct ieee80211_sub_if_data *
+> @@ -2637,4 +2639,9 @@ ieee80211_eht_cap_ie_to_sta_eht_cap(struct ieee80211_sub_if_data *sdata,
+>  				    const struct ieee80211_eht_cap_elem *eht_cap_ie_elem,
+>  				    u8 eht_cap_len,
+>  				    struct link_sta_info *link_sta);
+> +
+> +void ieee80211_check_wbrf_support(struct ieee80211_local *local);
+> +void ieee80211_add_wbrf(struct ieee80211_local *local, struct cfg80211_chan_def *chandef);
+> +void ieee80211_remove_wbrf(struct ieee80211_local *local, struct cfg80211_chan_def *chandef);
+> +
+>  #endif /* IEEE80211_I_H */
+> diff --git a/net/mac80211/main.c b/net/mac80211/main.c
+> index 24315d7b3126..b20bdaac84db 100644
+> --- a/net/mac80211/main.c
+> +++ b/net/mac80211/main.c
+> @@ -1396,6 +1396,8 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
+>  	debugfs_hw_add(local);
+>  	rate_control_add_debugfs(local);
+>  
+> +	ieee80211_check_wbrf_support(local);
+> +
+>  	rtnl_lock();
+>  	wiphy_lock(hw->wiphy);
+>  
+> diff --git a/net/mac80211/wbrf.c b/net/mac80211/wbrf.c
+> new file mode 100644
+> index 000000000000..ca3f30b58476
+> --- /dev/null
+> +++ b/net/mac80211/wbrf.c
+> @@ -0,0 +1,95 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Wifi Band Exclusion Interface for WLAN
+> + * Copyright (C) 2023 Advanced Micro Devices
+> + *
+> + */
+> +
+> +#include <linux/acpi_amd_wbrf.h>
+> +#include <linux/units.h>
+> +#include <net/cfg80211.h>
+> +#include "ieee80211_i.h"
+> +
+> +void ieee80211_check_wbrf_support(struct ieee80211_local *local)
+> +{
+> +	struct wiphy *wiphy = local->hw.wiphy;
+> +	struct device *dev;
+> +
+> +	if (!wiphy)
+> +		return;
+> +
+> +	dev = wiphy->dev.parent;
+> +	if (!dev)
+> +		return;
+> +
+> +	local->wbrf_supported = acpi_amd_wbrf_supported_producer(dev);
+> +	dev_dbg(dev, "WBRF is %s supported\n",
+> +		local->wbrf_supported ? "" : "not");
+> +}
+> +
+> +static void get_chan_freq_boundary(u32 center_freq, u32 bandwidth, u64 *start, u64 *end)
+> +{
+> +	bandwidth = MHZ_TO_KHZ(bandwidth);
+> +	center_freq = MHZ_TO_KHZ(center_freq);
 
+Please use include/linux/units.h ones for these too.
 
-There is no file that has extension .config in linux.6.6/kernel folder or
-linux6.6. folder. There is a linux-6.6/kernel/configs/ folder. In
-linux-6.6/kernel/configs/ folder:
-debug.config
-kvm_quest.config
-nopm.config
-rust.config
-tiny-base.config
-tiny.config
-x86_debug.config
-xen.config
+-- 
+ i.
 
-
-Also, for this: "Copy your existing kernel config from /boot to the file
-.config in the kernel directory."
-Should I copy /boot/config-6.5.0-10006-tuxedo file or copy
-config-6.5.0-10006-tuxedo file's content to the file's content .config in t=
-he
-kernel directory?
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
