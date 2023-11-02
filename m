@@ -2,104 +2,80 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F40DC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Nov 2023 13:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B116C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Nov 2023 13:27:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234916AbjKBNE4 (ORCPT
+        id S1347457AbjKBN1E (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Nov 2023 09:04:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53208 "EHLO
+        Thu, 2 Nov 2023 09:27:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234905AbjKBNEz (ORCPT
+        with ESMTP id S1347433AbjKBN1D (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Nov 2023 09:04:55 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:242:246e::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6067E193;
-        Thu,  2 Nov 2023 06:04:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-        Resent-Cc:Resent-Message-ID; bh=lhnHvgPTUerCavcKvy4VoFNn9k17Ymmjx4Tbd3bshik=;
-        t=1698930289; x=1700139889; b=axIh+OQs/8lt1/eCYxHEd6sdY68CsoLKtnX3H8kQwIL2R9T
-        zrcHkoQiiL6mQPu8UReBO+NoXxOSaafybY8xtaCYh2PIlqJtOHavjMqBB/WFNzlyFVWTJDvKYqz6H
-        ZnpD8tIKRq69VUxxGGwxF6EQI06974EwMFdxkTVPCvro3Ksfsav0Nmq/Z9DFqQkl0Gwj4R/OT1nkd
-        ThcikbeZ6oRrjaof0DHOmaonV/KtEVxVHtQ7GuRhUWrxw1youZF98Gd+VcYRJ1ir7Ar5DEhu1lVJs
-        WGfYlaDWfTtJokAS8YbUfi4qADPzC+rrH5y5ttw/y8JL3+h3BxAxfEtUP9oWj8LA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.97-RC1)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1qyXNL-0000000BJWz-3w9i;
-        Thu, 02 Nov 2023 14:04:44 +0100
-Message-ID: <d0d35561b80b873d9f78c9ca4ad304b6e0f16cb2.camel@sipsolutions.net>
-Subject: Re: [Patch v13 4/9] wifi: mac80211: Add support for WBRF features
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     Ma Jun <Jun.Ma2@amd.com>, amd-gfx@lists.freedesktop.org,
-        lenb@kernel.org, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, alexander.deucher@amd.com,
-        Lijo.Lazar@amd.com, mario.limonciello@amd.com,
-        Netdev <netdev@vger.kernel.org>, linux-wireless@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, majun@amd.com,
-        Evan Quan <quanliangl@hotmail.com>
-Date:   Thu, 02 Nov 2023 14:04:42 +0100
-In-Reply-To: <e42c5484-d66-e41a-8b2e-a1fa4495ce2@linux.intel.com>
-References: <20231030071832.2217118-1-Jun.Ma2@amd.com>
-          <20231030071832.2217118-5-Jun.Ma2@amd.com>
-          <5b8ea81c-dd4c-7f2a-c862-b9a0aab16044@linux.intel.com>
-         <b080757463a1f55a38484e3ea39fd3697e98409e.camel@sipsolutions.net>
-         <e42c5484-d66-e41a-8b2e-a1fa4495ce2@linux.intel.com>
+        Thu, 2 Nov 2023 09:27:03 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CFE2187
+        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Nov 2023 06:27:01 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 19CE1C433C7
+        for <platform-driver-x86@vger.kernel.org>; Thu,  2 Nov 2023 13:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698931621;
+        bh=MMM5rnCafi9pWygHEfkB8Fhtgalymyp5uMo5y6wyoDE=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=fnS2lJB+egwUD6B0RUagatu6UFHnfm9vnzxdrcJI4I+sMXcOOt/CLxYfUBRar8DR3
+         l3pksgqn2xw1zyPPmZPsK/mmCcGfhravxkDp1XQcbqmNk5BUvTW77BBVu+AN/M/Ib0
+         4tQTZ+J5CzkOC6C8G2z9bUsm1tdqcLEi3SDCKFVhcL79kEIDBBVvPZiLPEAYUD1smf
+         4uAUKkLwT/hx/MkAWRPtZ7wuSZyU5GxOEtkQnt7u/R3vk80ZqeORXmSGcl3lJgKZwN
+         M94GA6jhGpIi0Y2roeBBqM0uW77EtWqXEAW+irwbuyp/AXHpQgENc/nLGA6UPnRAeD
+         7+gmv3NJ06byw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 01BCDC53BD0; Thu,  2 Nov 2023 13:27:01 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 218092] Laptop hanging on black screen, when suspended and woke
+ up!
+Date:   Thu, 02 Nov 2023 13:27:00 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218092-215701-RY7BCVZ3Wk@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218092-215701@https.bugzilla.kernel.org/>
+References: <bug-218092-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 2023-11-02 at 14:24 +0200, Ilpo J=C3=A4rvinen wrote:
-> On Thu, 2 Nov 2023, Johannes Berg wrote:
-> > On Thu, 2023-11-02 at 13:55 +0200, Ilpo J=C3=A4rvinen wrote:
-> >=20
-> > > > +static void get_chan_freq_boundary(u32 center_freq, u32 bandwidth,=
- u64 *start, u64 *end)
-> > > > +{
-> > > > +	bandwidth =3D MHZ_TO_KHZ(bandwidth);
-> > > > +	center_freq =3D MHZ_TO_KHZ(center_freq);
-> > >=20
-> > > Please use include/linux/units.h ones for these too.
-> >=20
-> > Now we're feature creeping though - this has existed for *years* in the
-> > wireless stack with many instances? We can convert them over, I guess,
-> > but not sure that makes much sense here - we'd want to add such macros
-> > to units.h, but ... moving them can be independent of this patch?
->=20
-> What new macros you're talking about?=C2=A0
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218092
 
-Sorry, I got confused - for some reason I was pretty sure something here
-was already being added to units.h in this patchset.
+--- Comment #24 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+The reason to copy the config is to give you a shortcut to have the same co=
+nfig
+you're already using without having to learn the entire kernel config system
+and what your system actually needs.  It's literally the filename ".config"=
+.=20
+So:
 
-> Nothing new needs to be added=20
-> as there's already KHZ_PER_MHZ so these would just be:
->=20
-> 	bandwidth *=3D KHZ_PER_MHZ;
-> 	center_freq *=3D KHZ_PER_MHZ;
+# cp /boot/config-6.5.0-10006-tuxedo .config
 
-Sure, and in this case that's probably pretty much equivalent. But
-having a MHZ_TO_KHZ() macro isn't inherently *bad*, and I'm not sure
-you're objection to it on anything other than "it's not defined in
-units.h".
+--=20
+You may reply to this email to add a comment.
 
-> Everything can of course be postponed by the argument that some=20
-> subsystem specific mechanism has been there before the generic one
-> but the end of that road won't be pretty... What I was trying to do
-> here was to point out the new stuff introduced by this series into the=
-=20
-> direction of the generic thing.
-
-I just think that the better course of action would be to eventually
-move MHZ_TO_KHZ() to units.h ...
-
-johannes
+You are receiving this mail because:
+You are watching the assignee of the bug.=
