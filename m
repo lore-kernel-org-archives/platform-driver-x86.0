@@ -2,199 +2,113 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764EFC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Nov 2023 18:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6778AC41535
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Nov 2023 18:26:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344020AbjKCS0F (ORCPT
+        id S234003AbjKCS0F (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Fri, 3 Nov 2023 14:26:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42130 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343919AbjKCS0E (ORCPT
+        with ESMTP id S1343926AbjKCS0E (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 3 Nov 2023 14:26:04 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17E2BD4D;
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C28C1D42;
         Fri,  3 Nov 2023 11:25:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1699035934; x=1699640734; i=w_armin@gmx.de;
-        bh=87/6Z3GDCuuONgRARk2VNGy0KZIfFryJJ5Sgbd/1RO0=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=WVyd9C4jYmsIHwQrA80qciR8Y1qyAO1meHf226IrXYGv6j0OwnQ35DbAJLLtebc3
-         XAsZNwrd55nutucwFIqViZi4gVrmRtrKGMToTkqwz6N3bSiEk5CwqNjydgnaO7gEc
-         1XLtlMDbiGXNRsUGnzoF0+X7BfhI2Ug4Jjbq8rqfwjH5aESmKIHayvURyylJmG4GT
-         YOHFmYgnEejbQ4wYPZFk95iz1B1uIc/1lmjEZkGk/bMpHNfKR7Qb0bmiim7UPyszq
-         LCKYUtuzx42FXHMHBIDxE1+031AZ7Kux6+34CyYxFXXijQ5Dnt3T49lY5RXA0M1dU
-         cC9LiIxrRtXsIP2UQA==
+        t=1699035941; x=1699640741; i=w_armin@gmx.de;
+        bh=Z5dAMbcnBQxUiQr+2i6K8kI0C37Gu0hZctzXQKi7oBo=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
+         References;
+        b=ThsaoY8nA4byoh7XPEfkZCVloF+sGNgsvqofk/YhOBFGJbVQI7rXh9DFgKwObkAD
+         Bho5ihwj6+blZnLHt34Dnyu3AXwom/+A3LCuJg2S1+L1E+Pr6rzA81riMG7cJXG1A
+         27QBt79AvMhRRghaCn4LVsxAQcSWbDYFJ+p0C8h79qoSADEXxCTOAvMZyinSDyU2v
+         GAnSHCH6gaQUA/3YkzJ0UQBep+nAvO3QsZ+yMvyLbf22yOLjDDSv/TA3LJJlvAs+0
+         XSAijv8B/7zczN0c8VjHvBcu8Iom5CT7YkssBebUUPOK+C4NWDHyKbwKKIVyurj8A
+         xuXmdZzmjKSxqTyACQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
  (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1Mk0Ne-1rjGyc13VY-00kT1u; Fri, 03 Nov 2023 19:25:34 +0100
+ 1MRCOE-1qkjnl1plk-00N6Rq; Fri, 03 Nov 2023 19:25:41 +0100
 From:   Armin Wolf <W_Armin@gmx.de>
 To:     jithu.joseph@intel.com, hdegoede@redhat.com, markgross@kernel.org,
         ilpo.jarvinen@linux.intel.com
 Cc:     Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/4] platform/x86: wmi: Add wmidev_block_set()
-Date:   Fri,  3 Nov 2023 19:25:23 +0100
-Message-Id: <20231103182526.3524-1-W_Armin@gmx.de>
+Subject: [PATCH v2 4/4] platform/x86/intel/wmi: thunderbolt: Use bus-based WMI interface
+Date:   Fri,  3 Nov 2023 19:25:26 +0100
+Message-Id: <20231103182526.3524-4-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20231103182526.3524-1-W_Armin@gmx.de>
+References: <20231103182526.3524-1-W_Armin@gmx.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rYZiZr8I1iEnWabFYZyuNzae7HyUJaA7e66F4OBa48ofukr5/Oi
- nRfeyeFC/gbwhksR/SFJgys6/wZ80EvppQMKtnfwipXNK+pCLhP1ukbo1f7ihp5WD+AexMC
- VhjAXu82Nky9+8jYOCx+34bPe/7pxWKHXEXoMOTeDBsaAqkpodD32sn4SDRzlthtXafmqmd
- ZF8UxaNkHHzp6OUP7No3g==
-UI-OutboundReport: notjunk:1;M01:P0:AO80qY1xqck=;mwIb49Y7ZM/H3DhA3/huyU3Llpb
- y2Qxn7rrnlSrtySjpWGH/NolzUUnPP4OcVF5YvVjg8AGkCND8++dQgqwf3Ns+aTtlsvaTqx3w
- 64WKB7dnprdlpsT5cwtG3XrawLA4LE8ppWlTHAYzNOvvf3q41KeZxFiFCC6+B0XymXpYjZxLY
- ot1EiK4+x+LAsyEy8K+Ms1ktdGMHOdMqrWFhUbMy9Mhn+6skBS4VcaV8Mu1Rlokbyn+Sqt/tP
- ULOpGeWYWvMXmLK5W2vh9k/ynWGl6Ex2Hbp3crPjsLnYxO6LQrRwmKKTLwXXta3f3KzQJ62dK
- Tw25PgdKsEMDrakJRf3/zk+mkP+/UNhxHIWqDBRRxpILFk8qKx9vF6oV0NLUNWnv1hfmDDeod
- /qgv6jrPjEfV8iTMbvnj8dA9hV8dlfx9WV9Ka4Te5IoMFrjHqL5DiggjDbiCTD8NJNhRzg3tg
- sHgqFcM+27xj8O3TH/5CsafICilY3o06nKYBKjSjuO9WtuQSIyXyLwkJqaXmrlByQeBuoIFkI
- 1tfOuVR9Xv0DQ1FjLa5vmoDHPiOXv4UgV0nPA2iLdoLgL3CSQSFpmzvH1cpDE16H8NARfgDee
- rc/SZl1+nEpoUxNsb5Uie6Uy5v9EXKDEJw0cfB9QO4IsGAJRwxdiyNyfht0EhwliQOCQV2XDU
- d26bCmxy2LU5nlf+UEjyZldFIWoT27b9A+4vp+DaiLesbZpCvAlZZeplQU5oEXxZiVGplz4xV
- azshg5yxA6yRI5UlnIaoYroBgKbVy+BsxojC1g5tNZITK6imJ5SjdLkqkKdfWl+dEhLh/Be6+
- ccdMWPFNsXJEQtbAdxFvdWFVVt5mZCVemC2n+38RhLiLsOKfJT+iq2nJMwYyhk9HvUjZ52pG7
- t+AnTSl56yttvs3Nw4Qay//2CKWfBRHX7vUNYi/ZiS2mjl7+zqdVrEvHS35z/n1f5fN0B6zuC
- GZCLjbVs7tzuM3n3Bq9aCOITGaQ=
+X-Provags-ID: V03:K1:gaIKG+CePLf19X+gUNd0+a0OakueDvCLal+nVnqDeKTwBqsF3mo
+ H9iqgnsMgP8xf1zU4A/kkw4FaI79FkDsOyO3xoqai8a8P6inHGY7tfFSIZ3uESqLVyaZ5dz
+ SMx33Darc9YVcmAm0025UD8P+ioywLZXqLzzalRXAykfjKaJ/UIjTNfgIMRL6to07k0MQAm
+ ofKa2ZmvG1o8sB1XPg+yQ==
+UI-OutboundReport: notjunk:1;M01:P0:q8UMX7KAnko=;4OSPvC/EVc8P4XuVJXRiDEyNCdx
+ 8QvXoSv3IXtwguCojCI51nzg1QG605jASOAec/CafX/7v/IcMtmuvJlLW5fvU3k7ro5AwOqQW
+ GKozNSCkOXcaIPfzkmoU6NWv7xhD6S7ynZGLjxqPMrcROc/lrUEANZ7QsHg9TVKUzsOHltFfF
+ ZCHpJO35lgTGp6FD/7XLrILJxgaIMUwaVb9VRI4Ofk8C+DY3PFyQAN4qDuuOMf/Kh3eiuxRih
+ mjVKWSeDIxfO+PC0NwYWo0k90yxJz2rsoBy5UgYcgfBLs6lqWhR0pckwTNNvewivVcpBaTC4Q
+ DJUY7PVFkc57dyVaWMEcciN/afh9eGbtOZqdBM44hqBVOUWZIAo+GfWDhfld2QIYfD8KTbniw
+ GEFhcWcqC5UPdd1XPAQgokRzAf/YVG/aTFD+xldRHOEeRiw1bsoq4RYqsPxefluc+U0B7ez0+
+ NcXsNFkwfedlEOAXYIo1FfPOa44V9IxtZwY0X1p4MMt16V1XQ1QyY0Y24d8fSX6pjBjiv0iFO
+ rpT6EKyljV82tTYTKetCJfs1YruX84PJaJXzYfarOPcIH65pTDp1/jACSdWNliMeBW/M+5iGh
+ Z0lm5Jw7xRJGoMojUQlWhIKNExme+YL1m60jXXVRjHrrbPAA0V/jA7SI95ClTffnpF7WSgt2h
+ e2iHI8uBW63TCTwj44/5e75vbL6NOgfU9eqBr62ow1jh1ZzEJVESbiPCKB1iLqEzySdbDuENB
+ x9TntJS160+QyjwSpfRu1sw895GEqqf3cxSrCejtfb0TWhlGhR80Wm5HwnDnjSo7qJQIpucSY
+ 4zYey2bQMyNNhn1hMhznliRwlZrhq0wiJaLOMdXhfqz4uAJ8M4Tk3ILXLr4bBOBxm6AP6vbrM
+ 4i4ycZ+A+mf+bsWMMqIaQCpXyuslp7M91NZUOd1LxKrtGmqltUlco8BdxrsC3fFwC0BNALg3W
+ XwV+nj15MIj5ETQRVsDp8kYQtNk=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Currently, WMI drivers have to use the deprecated GUID-based
-interface when setting data blocks. This prevents those
-drivers from fully moving away from this interface.
+Currently, the driver still uses the legacy GUID-based interface
+to invoke WMI methods. Use the modern bus-based interface instead.
 
-Provide wmidev_block_set() so drivers using wmi_set_block() can
-fully migrate to the modern bus-based interface.
-
-Tested with a custom SSDT from the Intel Slim Bootloader project.
+Tested on a Lenovo E51-80.
 
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
 Changes in v2:
-- applies on pdx86/for-next
+- fix spelling issue
 =2D--
- drivers/platform/x86/wmi.c | 64 ++++++++++++++++++++------------------
- include/linux/wmi.h        |  2 ++
- 2 files changed, 36 insertions(+), 30 deletions(-)
+ drivers/platform/x86/intel/wmi/thunderbolt.c | 3 +--
+ drivers/platform/x86/wmi.c                   | 1 +
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/platform/x86/intel/wmi/thunderbolt.c b/drivers/platfo=
+rm/x86/intel/wmi/thunderbolt.c
+index fc333ff82d1e..e2ad3f46f356 100644
+=2D-- a/drivers/platform/x86/intel/wmi/thunderbolt.c
++++ b/drivers/platform/x86/intel/wmi/thunderbolt.c
+@@ -32,8 +32,7 @@ static ssize_t force_power_store(struct device *dev,
+ 	mode =3D hex_to_bin(buf[0]);
+ 	dev_dbg(dev, "force_power: storing %#x\n", mode);
+ 	if (mode =3D=3D 0 || mode =3D=3D 1) {
+-		status =3D wmi_evaluate_method(INTEL_WMI_THUNDERBOLT_GUID, 0, 1,
+-					     &input, NULL);
++		status =3D wmidev_evaluate_method(to_wmi_device(dev), 0, 1, &input, NUL=
+L);
+ 		if (ACPI_FAILURE(status)) {
+ 			dev_dbg(dev, "force_power: failed to evaluate ACPI method\n");
+ 			return -ENODEV;
 diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 5c27b4aa9690..9d9a050e7086 100644
+index 4c4effc883ae..cb7e74f2b009 100644
 =2D-- a/drivers/platform/x86/wmi.c
 +++ b/drivers/platform/x86/wmi.c
-@@ -536,41 +536,50 @@ EXPORT_SYMBOL_GPL(wmidev_block_query);
-  *
-  * Return: acpi_status signaling success or error.
-  */
--acpi_status wmi_set_block(const char *guid_string, u8 instance,
--			  const struct acpi_buffer *in)
-+acpi_status wmi_set_block(const char *guid_string, u8 instance, const str=
-uct acpi_buffer *in)
- {
--	struct wmi_block *wblock;
--	struct guid_block *block;
- 	struct wmi_device *wdev;
--	acpi_handle handle;
--	struct acpi_object_list input;
--	union acpi_object params[2];
--	char method[WMI_ACPI_METHOD_NAME_SIZE];
- 	acpi_status status;
+@@ -107,6 +107,7 @@ static const char * const allow_duplicates[] =3D {
+ 	"05901221-D566-11D1-B2F0-00A0C9062910",	/* wmi-bmof */
+ 	"8A42EA14-4F2A-FD45-6422-0087F7A7E608",	/* dell-wmi-ddv */
+ 	"44FADEB1-B204-40F2-8581-394BBDC1B651",	/* intel-wmi-sbl-fw-update */
++	"86CCFD48-205E-4A77-9C48-2021CBEDE341",	/* intel-wmi-thunderbolt */
+ 	NULL
+ };
 
--	if (!in)
--		return AE_BAD_DATA;
--
- 	wdev =3D wmi_find_device_by_guid(guid_string);
- 	if (IS_ERR(wdev))
- 		return AE_ERROR;
-
--	wblock =3D container_of(wdev, struct wmi_block, dev);
--	block =3D &wblock->gblock;
--	handle =3D wblock->acpi_device->handle;
-+	status =3D  wmidev_block_set(wdev, instance, in);
-+	wmi_device_put(wdev);
-
--	if (block->instance_count <=3D instance) {
--		status =3D AE_BAD_PARAMETER;
-+	return status;
-+}
-+EXPORT_SYMBOL_GPL(wmi_set_block);
-
--		goto err_wdev_put;
--	}
-+/**
-+ * wmidev_block_set - Write to a WMI block
-+ * @wdev: A wmi bus device from a driver
-+ * @instance: Instance index
-+ * @in: Buffer containing new values for the data block
-+ *
-+ * Write contents of the input buffer to an ACPI-WMI data block.
-+ *
-+ * Return: acpi_status signaling success or error.
-+ */
-+acpi_status wmidev_block_set(struct wmi_device *wdev, u8 instance, const =
-struct acpi_buffer *in)
-+{
-+	struct wmi_block *wblock =3D container_of(wdev, struct wmi_block, dev);
-+	acpi_handle handle =3D wblock->acpi_device->handle;
-+	struct guid_block *block =3D &wblock->gblock;
-+	char method[WMI_ACPI_METHOD_NAME_SIZE];
-+	struct acpi_object_list input;
-+	union acpi_object params[2];
-
--	/* Check GUID is a data block */
--	if (block->flags & (ACPI_WMI_EVENT | ACPI_WMI_METHOD)) {
--		status =3D AE_ERROR;
-+	if (!in)
-+		return AE_BAD_DATA;
-
--		goto err_wdev_put;
--	}
-+	if (block->instance_count <=3D instance)
-+		return AE_BAD_PARAMETER;
-+
-+	/* Check GUID is a data block */
-+	if (block->flags & (ACPI_WMI_EVENT | ACPI_WMI_METHOD))
-+		return AE_ERROR;
-
- 	input.count =3D 2;
- 	input.pointer =3D params;
-@@ -582,14 +591,9 @@ acpi_status wmi_set_block(const char *guid_string, u8=
- instance,
-
- 	get_acpi_method_name(wblock, 'S', method);
-
--	status =3D acpi_evaluate_object(handle, method, &input, NULL);
--
--err_wdev_put:
--	wmi_device_put(wdev);
--
--	return status;
-+	return acpi_evaluate_object(handle, method, &input, NULL);
- }
--EXPORT_SYMBOL_GPL(wmi_set_block);
-+EXPORT_SYMBOL_GPL(wmidev_block_set);
-
- static void wmi_dump_wdg(const struct guid_block *g)
- {
-diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index 763bd382cf2d..207544968268 100644
-=2D-- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -35,6 +35,8 @@ extern acpi_status wmidev_evaluate_method(struct wmi_dev=
-ice *wdev,
- extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
- 					     u8 instance);
-
-+acpi_status wmidev_block_set(struct wmi_device *wdev, u8 instance, const =
-struct acpi_buffer *in);
-+
- u8 wmidev_instance_count(struct wmi_device *wdev);
-
- extern int set_required_buffer_size(struct wmi_device *wdev, u64 length);
 =2D-
 2.39.2
 
