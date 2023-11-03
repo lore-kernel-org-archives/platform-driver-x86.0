@@ -2,85 +2,100 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06CFC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Nov 2023 16:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4DAC4167B
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Nov 2023 18:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234387AbjKCQcA (ORCPT
+        id S233774AbjKCS0D (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 3 Nov 2023 12:32:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58504 "EHLO
+        Fri, 3 Nov 2023 14:26:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234342AbjKCQcA (ORCPT
+        with ESMTP id S230197AbjKCS0C (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Nov 2023 12:32:00 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D63FA1BC
-        for <platform-driver-x86@vger.kernel.org>; Fri,  3 Nov 2023 09:31:53 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6C521C433C7
-        for <platform-driver-x86@vger.kernel.org>; Fri,  3 Nov 2023 16:31:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699029113;
-        bh=Zg9LudCYK+l/R86iJ0Tv+/pbPXxrKsjG92zcyfH7bB4=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=asbQqU07/EBC7NDPf0AwYtYipv6EyCuT8m2dK9csauB7c247MyTdj7xqTOgQ0V9FE
-         DFHwrhUSUzztX8pDxjT3IyUhOE2QLx/1Tzdm9tYMpauI+s2cr3OWbsIiepCqjdGZ+3
-         8tRvdEVBK8F1LNpMgdCMUs8tA+JekVGK8Z+Sn0bjiSzf5/ab9wAFQQuOW5Da+WEW7l
-         9C2pdnbX95Z8rm4KFZDAhE+89X/U68IlKadjwtfbrPylBdo8tkaJplbPk7/59fXxYE
-         TqiBQAQcMkak3PRyZvJQ+TWBr6Y4Gm+XoZHd2bXRmvo68MEgTFNYcz9D8I9EnU6kOT
-         ZIequt0gxMeBg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 586D8C53BD0; Fri,  3 Nov 2023 16:31:53 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 218092] Laptop hanging on black screen, when suspended and woke
- up!
-Date:   Fri, 03 Nov 2023 16:31:53 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: IOMMU
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_iommu@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: component assigned_to
-Message-ID: <bug-218092-215701-KJVU1tUjiX@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218092-215701@https.bugzilla.kernel.org/>
-References: <bug-218092-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Fri, 3 Nov 2023 14:26:02 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCFFADB;
+        Fri,  3 Nov 2023 11:25:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1699035937; x=1699640737; i=w_armin@gmx.de;
+        bh=hiCnCOOKWqIILjoanAScpgqs9mhmW2+u8CmTFsuuU28=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
+         References;
+        b=coOIzkaskke9x2oOgAc4ojEArjK4zBTvrYLpVRlaVmBogTuiDw3K4kMW6blb45gR
+         LfCnZ0WLVQIUA72FiS/cnw/P/BOtggQMEFj8lVL4VIRL+DG7mD4Mezhx7UALcw2T5
+         fbemK1if9hdkuffXn/2LK9yJfgo+5UJ5JpeJsuRgVAUPxzuGAnWCh/z5BdPn8AnyT
+         hbtP7w/prFWynPRuxAKxcgOEAY+vtQTPPZGS3zUKWjVMcbovdJrWc630vecvOSoQ2
+         oi+xFFpEY3alCXfMhzQ1OpC+ifX+6jbrlYgwevFausjv9usRBtzEDiDw9Dl9QJiMQ
+         9kTEHcmfN/3FHffFdA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MRTNF-1qkSge0r6D-00NTe3; Fri, 03 Nov 2023 19:25:37 +0100
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     jithu.joseph@intel.com, hdegoede@redhat.com, markgross@kernel.org,
+        ilpo.jarvinen@linux.intel.com
+Cc:     Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/4] platform/x86: wmi: Add to_wmi_device() helper macro
+Date:   Fri,  3 Nov 2023 19:25:24 +0100
+Message-Id: <20231103182526.3524-2-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20231103182526.3524-1-W_Armin@gmx.de>
+References: <20231103182526.3524-1-W_Armin@gmx.de>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0S7BbTpeJT+4D3IwH/pRnPOjucHCYPH7RioZYdCtRxfEMPTGfhL
+ NTg7O1A1UYY55pTlA5fXWLPE1jA+pMKTr/4GYWCmlxaxvfbyD14EBh2F7/JbcG1LCdAPtm1
+ 2n85OZlO/MFqk4f3RkK/S/VFml89lDCUcNTps0h0CJ2/yAwQ1rF6cPvgKcNmCczrCG7zyfK
+ k+0Dk72aggCHZzLzMEY0g==
+UI-OutboundReport: notjunk:1;M01:P0:Wu5YK0gbzBk=;KtHcJ2UYtV1bxLFTY5euXSbs/aV
+ 0M2DXBDjG89ALay+PagTJhggeKsAF9WyRKL8yQZ/13AKNOvixD+lnNF/TEulTqU5/D9votmJc
+ R66PvgBw1onQtGXOsLusgxVuYC5/q3IhBrEgZcRKdPwfBmuYrZIodhJNGTBcNCyRx3VSooLnp
+ 4Rin2qba8F+8gxtF+D7Pc0R64bjgEuGm5cg9cnwLGeObXvQVgg6P35Q9EfN0M95d1mLMam6BI
+ 6pgAPdxosrdjueCyR5UiHwzqCg5/+Aa3CWgCuL3AMIbF7wR9Vb8EDryWmH2P0crHiGlRU3DOx
+ rzsDWhsHyOHuMS7+Gp0AbossLPdnZbyyeli8S8upQurGaw3xbLj0efluGrHhRfckIdFGa4zHv
+ aj3HeZ8+U85P3mssUjnz24L3IEB3LW2jc9kXcW6XM2EBa7se0cWbF1kxMVYgb9SmTNz5sT1er
+ se9zimfqptibOzHEWSzZAvRqoR/aKgKyV11GRvsFAajQ5QbFJKorEyavPoSW+DEJtzbO3M8W0
+ rzoHVyKyGQoVO6i6E4EwziqpsGVTDTTBIDqSFCGFeOOvyz5h33a/uUV8w56jp4QckasSuK4Rd
+ mSHgZNON3kFpE0E+VmYvDPiO0g8o75reiO2UEhSxb8zHRolJIjECSQwexsKyynLYWW2lPWsOr
+ tw8jlH4iAknbxlXmw+i8VFBg5NCQsBSaPtKKB2QL42FXpHeJoaiOQBtlqkDM+5JxAXp/rurSy
+ +652ouP/YHcqGJnxQy1DVA/xwxsQSXDbDdQvX/BLAzJX5Co8Thye9Opp0K9IPtSWNENjGt2VC
+ JPJc+G7Te9Rx7YlFI0hr146s3trsbFY60TyNq9MqFH0lfl0luCpemcRjYt/+FUbhQwuFGg4A3
+ pLPum3QXyayhHhZTWR30I1rsd+OhIWstfdTlgAJqNzP1w9V1dKLDbzeFrP/xQtY3fDdftGsNC
+ 5/Trmkr2yqEfUE5Uqk961U/dwho=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218092
+Add a helper macro for WMI drivers to cast a device to
+the corresponding WMI device. This should replace some
+boilerplate code.
 
-Mario Limonciello (AMD) (mario.limonciello@amd.com) changed:
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ include/linux/wmi.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-          Component|Platform_x86                |IOMMU
-           Assignee|drivers_platform_x86@kernel |drivers_iommu@kernel-bugs.k
-                   |-bugs.osdl.org              |ernel.org
+diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+index 207544968268..8a643c39fcce 100644
+=2D-- a/include/linux/wmi.h
++++ b/include/linux/wmi.h
+@@ -27,6 +27,14 @@ struct wmi_device {
+ 	bool setable;
+ };
 
---- Comment #55 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-No; if the BIOS doesn't support it you won't be able to do it in Linux.
++/**
++ * to_wmi_device() - Helper macro to cast a device to a wmi_device
++ * @device: device struct
++ *
++ * Cast a struct device to a struct wmi_device.
++ */
++#define to_wmi_device(device)	container_of(device, struct wmi_device, dev=
+)
++
+ extern acpi_status wmidev_evaluate_method(struct wmi_device *wdev,
+ 					  u8 instance, u32 method_id,
+ 					  const struct acpi_buffer *in,
+=2D-
+2.39.2
 
-For now I suggest you keep using the kernel command line option that turns =
-off
-the IOMMU.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
