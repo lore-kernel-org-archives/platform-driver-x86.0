@@ -2,192 +2,157 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544E3C4167D
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Nov 2023 19:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11D1C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Nov 2023 19:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234266AbjKCTjM (ORCPT
+        id S234424AbjKCT6H (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 3 Nov 2023 15:39:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40086 "EHLO
+        Fri, 3 Nov 2023 15:58:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234418AbjKCTjL (ORCPT
+        with ESMTP id S229689AbjKCT6G (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 3 Nov 2023 15:39:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CF9AD44
-        for <platform-driver-x86@vger.kernel.org>; Fri,  3 Nov 2023 12:38:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1699040307;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=18fxGFPyEfYX6zujRVQDCVGp1gVPnAg8xcOJqGUDNpU=;
-        b=WEkItedecRds0qOcBxKgV+BlXanqPNvIhVM5BPB+KWD42h5LD+wCXlA7+0afMHD2HRzct6
-        aw1oH+KuwFhmX5ToyHwMeCo/q/KLiUER6Ujmq6O+OslgxjzVLMGrjuMrAeY9wibNMVIyYB
-        tK+yddk4hNYtAkEd+AB9NeOH7Z9pGw8=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-321-5tDprt97PG6ZhMvmM3Lf2A-1; Fri, 03 Nov 2023 15:38:26 -0400
-X-MC-Unique: 5tDprt97PG6ZhMvmM3Lf2A-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-543f1c6dcaeso1831468a12.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Nov 2023 12:38:26 -0700 (PDT)
+        Fri, 3 Nov 2023 15:58:06 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283BCD60
+        for <platform-driver-x86@vger.kernel.org>; Fri,  3 Nov 2023 12:58:04 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-32da7ac5c4fso1435100f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Nov 2023 12:58:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1699041482; x=1699646282; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :content-language:subject:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=MlAYVTxuFVZszmr56JftepezulXm/ah7K4A5+ws0xCo=;
+        b=RjQmfpyBPu5oiyyTODdw6HLUskYtY5bh0GPHThVhDT9igjSN0Q/7PBRlun5uWWKZbk
+         RwJneo3r7dbE26K8Vle6JeRPZXsQk7YOzcg6a50pXjwpHq1MBE1Mc2tFX1VKsKMxGkHo
+         +GrkVaoptFnxZ3GsWdWCL7ORpS5rjsURa8dxs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699040305; x=1699645105;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=18fxGFPyEfYX6zujRVQDCVGp1gVPnAg8xcOJqGUDNpU=;
-        b=hLJjGoog6DNI2ESfkwT30ELmFkU7tHGj0Q81huyhP+pFjp7pE9eBLqH2e6yyBNPnLh
-         wOZ+A8H+FhSJlePfOceC2LqkgWGqlmva3o2EbvqDU0CxlF4rhUOzT4Sq4/7ZMT1AkcbP
-         nTTVS6wyRx2qi+rPfw9gPbmXbCtT8KEg4B1sQxKHPvvY9AiuNXCf7l8Qkkza2aDGxhAu
-         lKNCTbtM4bRPRZG7AFN2bOATDARcE7+8ti+EqNlYq9OfDEOrwWkVGdILH6vjyScjElLV
-         eRvK2PNEZ8qoH06qKTfvLrETdlqmNWMqbbUsHJpR2iTmCE5OwU8BngYMjWntM7lmhg+9
-         Qbdg==
-X-Gm-Message-State: AOJu0Yw7FMyGrJ8IzYlyveruuibGG9Qt5VqiN13TbJS3s30KLosMhexE
-        uZPmbwVp5LvaaYcsKjpxmAqSJZNEV1cDyKh9sA8U29WpxqrI414NjrrUoZ5ia8abRh6OSJRNqL8
-        6RmrkmPAVzC4cSjYWLKwWDG4qYHSz2ss8Tw==
-X-Received: by 2002:a17:907:3da1:b0:9b7:37de:6009 with SMTP id he33-20020a1709073da100b009b737de6009mr8119036ejc.3.1699040305104;
-        Fri, 03 Nov 2023 12:38:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH2EgYFYkxhAFVhtUcYX07z+ZAHa6gRCnHShMvlzepM1PxNvaeqEAxxrCtaSa8ojD2/gCJsUw==
-X-Received: by 2002:a17:907:3da1:b0:9b7:37de:6009 with SMTP id he33-20020a1709073da100b009b737de6009mr8119007ejc.3.1699040304766;
-        Fri, 03 Nov 2023 12:38:24 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? ([2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id lk22-20020a170906cb1600b0099d804da2e9sm1220533ejb.225.2023.11.03.12.38.23
+        d=1e100.net; s=20230601; t=1699041482; x=1699646282;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :content-language:subject:from:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MlAYVTxuFVZszmr56JftepezulXm/ah7K4A5+ws0xCo=;
+        b=XzEAjuvVmFwKU7a6pgjcr2zJAeNJDyI11qlDfX3ddVbcRZxh9qi9FNdXhB1MazgmlM
+         MDq329T6kQjB/ROqq4qkY7hXqeryA80UslWc2kwrLtAl8QLRBvG2Fu4q//6GgGo1Do7D
+         /2HC/uCSj6PxGxINHJD3WfWmt+sqNWLBGAyw2CJ0R7c+cNAGXFRlwGvdY8Vrpy3mWYrW
+         gREKej+4O/olVH2AkTgiPyMaEdhtzm9AHwm31l3kZMVm4Cu0JJgjUeFKyN5fQTbKTaup
+         zy17g0PO8XFFFVbKT6VNn+WDfxsoKVBnNyzbhr+GP3QKWSSEOi+19VHqy1pmLdRa1xXp
+         aYtw==
+X-Gm-Message-State: AOJu0YzzJd8xRrFvO5xpNLmXtHXjwP3L7qjyLunRb4mDleMBMdFiihe4
+        hZO0aZOU7YGpolQ1nbNO00pkgA==
+X-Google-Smtp-Source: AGHT+IFXn0wSzMGa4J/3NfGoCOaJF6BuKn4x5YfFXf7S1uYocVAZiN65PZMunSPCAppQGb/thq/OWQ==
+X-Received: by 2002:a5d:64e3:0:b0:32f:7c15:b95a with SMTP id g3-20020a5d64e3000000b0032f7c15b95amr15231021wri.46.1699041482459;
+        Fri, 03 Nov 2023 12:58:02 -0700 (PDT)
+Received: from [192.168.1.10] (host-92-26-107-252.as13285.net. [92.26.107.252])
+        by smtp.gmail.com with ESMTPSA id z2-20020a5d6402000000b0032d9caeab0fsm2627178wru.77.2023.11.03.12.58.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Nov 2023 12:38:24 -0700 (PDT)
-Message-ID: <d6466210-fdb7-e9e2-68bb-551b263f439d@redhat.com>
-Date:   Fri, 3 Nov 2023 20:38:20 +0100
+        Fri, 03 Nov 2023 12:58:02 -0700 (PDT)
+Message-ID: <36462e78-8014-4415-bc47-86fbb46d028b@citrix.com>
+Date:   Fri, 3 Nov 2023 19:58:01 +0000
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 6/9] PCI: Rename is_thunderbolt to is_tunneled
-Content-Language: en-US, nl
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>
-Cc:     Danilo Krummrich <dakr@redhat.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Xinhui Pan <Xinhui.Pan@amd.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        =?UTF-8?Q?Marek_Beh=c3=ban?= <kabel@kernel.org>,
-        "Maciej W . Rozycki" <macro@orcam.me.uk>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>
-References: <20231103190758.82911-1-mario.limonciello@amd.com>
- <20231103190758.82911-7-mario.limonciello@amd.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20231103190758.82911-7-mario.limonciello@amd.com>
+User-Agent: Mozilla Thunderbird
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Notes on BAD_APICID, Was: [PATCH 0/3] x86/apic: Misc pruning
+Content-Language: en-GB
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Steve Wahl <steve.wahl@hpe.com>,
+        Justin Ernst <justin.ernst@hpe.com>,
+        Kyle Meyer <kyle.meyer@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20231102-x86-apic-v1-0-bf049a2a0ed6@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <20231102-x86-apic-v1-0-bf049a2a0ed6@citrix.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On 02/11/2023 12:26 pm, Andrew Cooper wrote:
+> Seriously, this work started out trying to fix a buggy comment.  It
+> escalated somewhat...  Perform some simple tidying.
 
-On 11/3/23 20:07, Mario Limonciello wrote:
-> The `is_thunderbolt` bit has been used to indicate that a PCIe device
-> contained the Intel VSEC which is used by various parts of the kernel
-> to change behavior. To later allow usage with USB4 controllers as well,
-> rename this to `is_tunneled`.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Another dodgy construct spotted while doing this work is
 
-Here is my ack for the trivial drivers/platform/x86/apple-gmux.c change:
+#ifdef CONFIG_X86_32
+ #define BAD_APICID 0xFFu
+#else
+ #define BAD_APICID 0xFFFFu
+#endif
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
+considering that both of those "bad" values are legal APIC IDs in an
+x2APIC system.
 
-Bjorn, feel free to route this through the PCI tree.
+The majority use is as a sentential (of varying types - int, u16
+mostly), although the uses for NUM_APIC_CLUSTERS, and
+safe_smp_processor_id() look suspect.
 
-Regards,
+In particular, safe_smp_processor_id() *will* malfunction on some legal
+CPUs, and needs to use -1 (32 bits wide) to spot the intended error case
+of a bad xAPIC mapping.
 
-Hans
+However, it's use in amd_pmu_cpu_starting() from topology_die_id() looks
+broken.  Partly because the error handling is (only) a WARN_ON_ONCE(),
+and also because nb->nb_id's sentinel value is -1 of type int.
 
+I suspect there's a lot of cleaning to be done here too.
 
-
-
-> ---
->  drivers/pci/pci.c                 | 2 +-
->  drivers/pci/probe.c               | 2 +-
->  drivers/platform/x86/apple-gmux.c | 2 +-
->  include/linux/pci.h               | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 59c01d68c6d5..d9aa5a39f585 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3032,7 +3032,7 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
->  			return true;
->  
->  		/* Even the oldest 2010 Thunderbolt controller supports D3. */
-> -		if (bridge->is_thunderbolt)
-> +		if (bridge->is_tunneled)
->  			return true;
->  
->  		/* Platform might know better if the bridge supports D3 */
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 795534589b98..518413d15402 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1597,7 +1597,7 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
->  	/* Is the device part of a Thunderbolt controller? */
->  	vsec = pci_find_vsec_capability(dev, PCI_VENDOR_ID_INTEL, PCI_VSEC_ID_INTEL_TBT);
->  	if (vsec)
-> -		dev->is_thunderbolt = 1;
-> +		dev->is_tunneled = 1;
->  }
->  
->  static void set_pcie_untrusted(struct pci_dev *dev)
-> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-> index 1417e230edbd..20315aa4463a 100644
-> --- a/drivers/platform/x86/apple-gmux.c
-> +++ b/drivers/platform/x86/apple-gmux.c
-> @@ -774,7 +774,7 @@ static int gmux_resume(struct device *dev)
->  
->  static int is_thunderbolt(struct device *dev, void *data)
->  {
-> -	return to_pci_dev(dev)->is_thunderbolt;
-> +	return to_pci_dev(dev)->is_tunneled;
->  }
->  
->  static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 439c2dac8a3e..b1724f25fb02 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -440,7 +440,7 @@ struct pci_dev {
->  	unsigned int	is_virtfn:1;
->  	unsigned int	is_hotplug_bridge:1;
->  	unsigned int	shpc_managed:1;		/* SHPC owned by shpchp */
-> -	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
-> +	unsigned int	is_tunneled:1;		/* Tunneled TBT or USB4 link */
->  	unsigned int	no_command_complete:1;	/* No command completion */
->  	/*
->  	 * Devices marked being untrusted are the ones that can potentially
-
+~Andrew
