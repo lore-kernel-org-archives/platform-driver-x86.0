@@ -2,81 +2,121 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E06C4167B
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  2 Nov 2023 19:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554FDC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  3 Nov 2023 07:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233257AbjKBT4d (ORCPT
+        id S1344310AbjKCHQc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 2 Nov 2023 15:56:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44730 "EHLO
+        Fri, 3 Nov 2023 03:16:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjKBT4c (ORCPT
+        with ESMTP id S1344260AbjKCHQb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 2 Nov 2023 15:56:32 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 113A2DC;
-        Thu,  2 Nov 2023 12:56:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698954987; x=1730490987;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=FTY8ezB7env8X5diZ4Ygl4jXcg2DMQYtnvOr7ER/FP0=;
-  b=AVNCC3cKGUxl/hJy1odHcP1VdYODQ2lymzcEjaYcUPS8Io7KHshUmguE
-   K1JOUVbR9aq4AeHDUoQil0zHYoTCKfkGQq3PuifXSZjCByxQaH4nneary
-   ptMpwBZ9qgJth85gpja9lKNc7HKTWKT8ueauiECdSTWyZHcv1doDX1y9S
-   5jNdCQ7vFUQrAklDKTZ/NgjpKk6UCmG96ClGCDiMeX4MFfNWloo1WXgIN
-   1OSSuNwrHPDtp4exR8SNunkZ+6xbSqcrzEuJZM4VP+ZAVXGYHuyinElXp
-   19GCxsD5DghCe0pvoUWwLDrndn/DRywUcJT7pmu7ufO0vuQtwkeE+qkbl
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10882"; a="10333148"
-X-IronPort-AV: E=Sophos;i="6.03,272,1694761200"; 
-   d="scan'208";a="10333148"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 12:56:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10882"; a="796372475"
-X-IronPort-AV: E=Sophos;i="6.03,272,1694761200"; 
-   d="scan'208";a="796372475"
-Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 12:56:25 -0700
-From:   Jithu Joseph <jithu.joseph@intel.com>
-To:     ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
-        markgross@kernel.org
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        jithu.joseph@intel.com
-Subject: [PATCH 1/1] MAINTAINERS: Remove stale entry for SBL platform driver
-Date:   Thu,  2 Nov 2023 12:52:18 -0700
-Message-Id: <20231102195218.143440-1-jithu.joseph@intel.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 3 Nov 2023 03:16:31 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2304211B
+        for <platform-driver-x86@vger.kernel.org>; Fri,  3 Nov 2023 00:16:25 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BEC01C433C8
+        for <platform-driver-x86@vger.kernel.org>; Fri,  3 Nov 2023 07:16:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698995784;
+        bh=hNTeaUdToy7DsJcZzuxQcpAmrLHmiVQI5esQeFG3baU=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=VLyxAmRShykIOHs1BgsE9M9Nc673iTY1vde47VXWEcrSjDPDY2teWGQvyzo5VfBM7
+         Qs4z476mg13LIdtBOa/E84oF31gWU4EUo4xlu1vd4G5WMx4MAlQFztpGrsXC14qhRS
+         ysClulIflyB6W8TbW02zOR1pSIUVfY0nFNmymjoQW/7oM6USJUqOobA+C8fD4aT3a6
+         qB7186g5TbvJstMhJnX0yCi3R3tywUUN5uGnuB0HSoSm6vmfnm0Skx/UOt6htJGBMg
+         GcTJnYZmjULZfNSiQjGnRn54UMXK5tYb/bM23zq8RKtNJzGb6aRKUC4A2op6fJ2nNF
+         j+s2xjKlScgZA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 9FBA0C4332E; Fri,  3 Nov 2023 07:16:24 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 218092] Laptop hanging on black screen, when suspended and woke
+ up!
+Date:   Fri, 03 Nov 2023 07:16:24 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: ertugruluyar.personal@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218092-215701-9R4neosxK8@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218092-215701@https.bugzilla.kernel.org/>
+References: <bug-218092-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Maurice is no longer with Intel and his e-mail address is no longer
-active. Remove the stale entry from Slim boot loader section.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218092
 
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
----
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+--- Comment #43 from Ertugrul Uyar (ertugruluyar.personal@gmail.com) ---
+I don't know what happened exactly but it's building .deb files now. I d=C4=
+=B1d this
+things:
+https://github.com/openssl/openssl/issues/20293#issuecomment-1461877599 -->=
+ I
+did make modules then make modules_sign. make modules_sign give error and I=
+ did
+this: https://askubuntu.com/a/1178467
+then, to create signature, I think, click the link:
+https://superuser.com/a/1322832 --> In this, I did this:=20
+"In your linux kernel root folder that you're compiling go to the certs fol=
+der
+and run:"
+openssl req -new -nodes -utf8 -sha512 -days 36500 -batch -x509 -config
+x509.genkey -outform DER -out signing_key.x509 -keyout signing_key.pem
+Then I tried this: "make modules_sign" and "make modules_install" and get
+error, so I decided to disable module signing:
+https://stackoverflow.com/questions/29806414/how-to-disable-kernel-module-s=
+igning-in-linux
+but I didn't change the value from this UI. So I manually change .config fi=
+le:
+CONFIG_MODULE_SIG=3Dn
+CONFIG_MODULE_SIG_ALL=3Dn
+I was change this and copy to linux6.6/ folder and then run "make -j$(nproc)
+bindeb-pkg" then I checked the .config file while is building. In the .conf=
+ig
+file that used for last building:=20
+CONFIG_MODULE_SIG=3Dy
+# CONFIG_MODULE_SIG_ALL is not set
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dd5de540ec0b..747ab2913ed6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10869,7 +10869,6 @@ F:	drivers/net/wireless/intel/iwlwifi/
- 
- INTEL WMI SLIM BOOTLOADER (SBL) FIRMWARE UPDATE DRIVER
- M:	Jithu Joseph <jithu.joseph@intel.com>
--R:	Maurice Ma <maurice.ma@intel.com>
- S:	Maintained
- W:	https://slimbootloader.github.io/security/firmware-update.html
- F:	drivers/platform/x86/intel/wmi/sbl-fw-update.c
+NOW, I have this .deb file. How I am gonna install this, do I have to use
+command or I just click and open with KDE Discover. And which file should I
+install?
+-----
+dpkg-deb: building package 'linux-image-6.6.0' in
+'../linux-image-6.6.0_6.6.0-6_amd64.deb'.
+dpkg-deb: building package 'linux-libc-dev' in
+'../linux-libc-dev_6.6.0-6_amd64.deb'.
+dpkg-deb: building package 'linux-headers-6.6.0' in
+'../linux-headers-6.6.0_6.6.0-6_amd64.deb'.
+dpkg-deb: building package 'linux-image-6.6.0-dbg' in
+'../linux-image-6.6.0-dbg_6.6.0-6_amd64.deb'.
+ dpkg-genbuildinfo --build=3Dbinary -O../linux-upstream_6.6.0-6_amd64.build=
+info
+ dpkg-genchanges --build=3Dbinary -O../linux-upstream_6.6.0-6_amd64.changes
+dpkg-genchanges: info: binary-only upload (no source code included)
+ dpkg-source --after-build .
+dpkg-buildpackage: info: binary-only upload (no source included)
+-----
 
-base-commit: ffc253263a1375a65fa6c9f62a893e9767fbebfa
--- 
-2.25.1
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
