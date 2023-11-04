@@ -2,95 +2,121 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DE7C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Nov 2023 10:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31156C4167B
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Nov 2023 15:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231671AbjKDKWB (ORCPT
+        id S229729AbjKDP4e (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Nov 2023 06:22:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48874 "EHLO
+        Sat, 4 Nov 2023 11:56:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjKDKWA (ORCPT
+        with ESMTP id S229491AbjKDP4d (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Nov 2023 06:22:00 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79267D44;
-        Sat,  4 Nov 2023 03:21:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699093318; x=1730629318;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=emg2xa7Wz0DXz6//3gwEvIkyuahnQ3WpkSUAQpBFaek=;
-  b=NksP0BoEKywQwrllKARUu08NIMZYCiZ2IKGOA6JMY+fMKKrSaSvI0/dD
-   pto9mjLedrZZA1WxJGWvMJl/Y12hXzz+fQ8jQQpyL+6YXJtfwWINeE31v
-   0eZxKcItv8gFMxyJKA1dcHgHkSvS7teDkwY8867YsCXeWfCubXRMeslcQ
-   Tnm5FFqDwnpUX7UF1ZQeAQzDCBLaO3Voq7SGqzlgq+UtD5IpzxVSnWRCT
-   Fxwm4FSiG4Y68g5m1VG+Lu9DmsTXp3TAj6h18BBiiiCpiqiyjh4yqbgb3
-   mfAIB6p9prhXfZ5JkQx9+fglkcb/+lI5IC0lTLthokWMRX2xg2yyxSfe5
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10883"; a="386250286"
-X-IronPort-AV: E=Sophos;i="6.03,276,1694761200"; 
-   d="scan'208";a="386250286"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2023 03:21:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10883"; a="711759849"
-X-IronPort-AV: E=Sophos;i="6.03,276,1694761200"; 
-   d="scan'208";a="711759849"
-Received: from lkp-server01.sh.intel.com (HELO 17d9e85e5079) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 04 Nov 2023 03:21:50 -0700
-Received: from kbuild by 17d9e85e5079 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qzDml-0003lw-2R;
-        Sat, 04 Nov 2023 10:21:47 +0000
-Date:   Sat, 4 Nov 2023 18:21:15 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Henry Shi <henryshi2018@gmail.com>, hbshi69@hotmail.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        hdegoede@redhat.com, markgross@kernel.org, jdelvare@suse.com,
-        linux@roeck-us.net, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, hb_shi2003@yahoo.com,
-        henrys@silicom-usa.com, wenw@silicom-usa.com
-Subject: Re: [PATCH v10] platform/x86: Add Silicom Platform Driver
-Message-ID: <202311041804.4fQDRw0E-lkp@intel.com>
-References: <20231027203836.25936-1-henryshi2018@gmail.com>
+        Sat, 4 Nov 2023 11:56:33 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F90D19D;
+        Sat,  4 Nov 2023 08:56:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1699113364; x=1699718164; i=w_armin@gmx.de;
+        bh=W7K72Gws5VcOYX9dxJOCuIlMoX8ancV6sQsAZoNeQgI=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=g1iy8eCsYmfyxa48ePqTvcxK4zLq37Nz7xyU+RzXvHTwBy80LL+D8t+qJSDHb0Z4
+         QTCK9dcbdYHix59rYQJ8EnD+9PMUmJl1b1GZ3eFKIC3ZYA0LRkA/At5COrJC0o4bw
+         m68wxvHHsS70U8umILPhK+awU/Mu3WXaSNT/BYZQepuC8F2HJKcHxpHB1akEG42jq
+         euAVmZ+n6+xD0JJfbAq/UEmQSdsB/NW0im/SoVku9ag1xDRw96UIlqN8qjxD4FnHA
+         OOnOHrClPK6xa/NhOGqfPIiNGBGzQg/xKtb3mMc50dLPSPiFdZeB0TLRA405Lldsu
+         XeGotR6zRERQGra6dQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MF3DW-1rEg9L3Iro-00FTK4; Sat, 04 Nov 2023 16:56:03 +0100
+From:   Armin Wolf <W_Armin@gmx.de>
+To:     pali@kernel.org
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        ilpo.jarvinen@linux.intel.com, jdelvare@suse.com,
+        linux@roeck-us.net, platform-driver-x86@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/9] hwmon: (dell-smm) Add support for WMI SMM interface
+Date:   Sat,  4 Nov 2023 16:55:50 +0100
+Message-Id: <20231104155559.11842-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231027203836.25936-1-henryshi2018@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:le8Ec2oo0n0/vHFqYI6WavwtGaLWDZPviYaaHjAkv3QFzijsAfc
+ 2vl41Jvm/lYcsvXSFIblDfakzj3Y+FFguyvE+yw9FqxWTtzzqyFEbSCizIamLuy2NqQAIOQ
+ OtdO3PU32BXqrc5UV83ecUS3LVJ5yFS1LDPLn/i9tUTRmF0T/ByucLOGkKw+rIhVH3aOLPg
+ sOVeplc+PFuhNxb59dOPw==
+UI-OutboundReport: notjunk:1;M01:P0:MnMC3M5/0io=;FyjBixMPg3mNEraLyhp31i19Oc/
+ 1vc+UWOjveUIYBrzoqwO89Nq0y33a/CWkKQ0OO+DXQbiWqvwlue13ujlbu872EyIexae9Vgic
+ KMpNZ0gZtQcdpOpJuq6rM1nwUKgvZgVAA0Y5pfS7OXNR168+2phL1Z0FmM3vFWDl4E7L7EcDP
+ 8C3YUlYr0VXCWjpxA8GgkJ8jtdxIpIuClrewyLY89ce0IMx5XrbTRnFkS8xQ5E2BxL41rPSXy
+ diO328YqkbQN0GOqLb7h85Y3HCBTIcJWSuEbqypD50ZmJwAxKIeTupRLy+aQdoXztU6FwK1uA
+ rHJF0W+MhKN283SbVwsGHq+qrpJcGnWnJbtizhxZPDqQVpi6YbyJnYwBzVo2UJkoTCS0xbeeF
+ yv6qYYc0//Y7iTNG2PHa9Hd0f1tXJFzb4/zM/Wbx9wP4VlUqLb0mDvgKEK+ZHTtmP/eF3O367
+ GGJ3Q10HYGLpY7CY3TMWUhgMp3QUijpA3WXeAjugEIEXo2R8C38ymXY5ZSetDoInNGzMP9v1j
+ +r1jjI0i+xQyF2c7wWeifLzw9Zt4rg/GuNtnjsAOJ5kuNh8f2qe5IHDzf6BqhCi1oP5vX//rf
+ vdFsQ+SjEfvcsDVVzYI19odfyHyn8UWQN3NFf0tc5WPmgA8qsLu9EVq7LcoQQwLMsr6EYR5vc
+ SwqWYD4DFz0+kvAsq2NMdPkfKslZZbADrDulR/CTnEmIpRILz/U0nPhf40EliKdT/V7OYI56h
+ RZ9lT6owY+atcAodESvtKpZHch7gIRDu3WI41hCB5Lf284W+VBv5uLLHjCyW5uCiJ5mRIHdSr
+ IOXPcCPXyClBpngSelQT/WuiOZE+9sq5R5Y5IOEV6gLErOUhvpojfnbjAmXWf5I1ieojdSfOb
+ oD+oUlayVz+0zjc7HMI/1TQBXnOtgc8L1kk3Wmb7OpM36iSc6WkugZmMoLCB7hA9WpcTR75a6
+ VlVL/mnZdmGKfdzmkS1QtlqlBxo=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Henry,
+This patch series adds support for an alternative SMM calling
+backend to the dell-smm-hwmon driver. The reason for this is
+that on some modern machines, the legacy SMM calling interface
+does not work anymore and the SMM handler can be called over
+ACPI WMI instead.
 
-kernel test robot noticed the following build warnings:
+The first four patches prepare the driver by allowing to
+specify different SMM calling backends, and by moving most of
+the DMI handling into i8k_init() so that the DMI tables can
+keep their __initconst attributes (the WMI SMM backend driver
+does not probe at module init time). The fifth patch does some
+minor cleanup, while the next three patches implement the new
+WMI SMM calling backend. The last patch adds the machine of
+the user who requested and tested the changes to the fan control
+whitelist.
 
-[auto build test WARNING on tip/master]
-[also build test WARNING on linus/master tip/auto-latest v6.6 next-20231103]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+If the driver does not detect the legacy SMM interface, either
+because the machine is not whitelisted or because the SMM handler
+does not react, it registers an WMI driver which will then bound
+to the WMI SMM interface and do the remaining initialization.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Henry-Shi/platform-x86-Add-Silicom-Platform-Driver/20231028-043932
-base:   tip/master
-patch link:    https://lore.kernel.org/r/20231027203836.25936-1-henryshi2018%40gmail.com
-patch subject: [PATCH v10] platform/x86: Add Silicom Platform Driver
-reproduce: (https://download.01.org/0day-ci/archive/20231104/202311041804.4fQDRw0E-lkp@intel.com/reproduce)
+The deprecated procfs interface is not supported when using the
+WMI SMM calling backend for the following reason: the WMI driver
+can potentially be instantiated multiple times while the deprectated
+procfs interface cannot. This should not cause any regressions
+because on machines supporting only the WMI SMM interface, the
+driver would, until now, not load anyway.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311041804.4fQDRw0E-lkp@intel.com/
+All patches where tested on a Dell Inspiron 3505 and a Dell
+OptiPlex 7000.
 
-All warnings (new ones prefixed by >>):
+Changes since v1:
+- Cc platform driver maintainers
+- Fix formating inside documentation
 
->> Warning: file ./Documentation/ABI/testing/sysfs-platform-silicom#18:
->> Warning: /sys/devices/platform/silicom-platform/hwmon/hwmon1/ is defined 4 times:  ./Documentation/ABI/testing/sysfs-platform-silicom:28  ./Documentation/ABI/testing/sysfs-platform-silicom:37  ./Documentation/ABI/testing/sysfs-platform-silicom:46  ./Documentation/ABI/testing/sysfs-platform-silicom:55
+Armin Wolf (9):
+  hwmon: (dell-smm) Prepare for multiple SMM calling backends
+  hwmon: (dell-smm) Move blacklist handling to module init
+  hwmon: (dell-smm) Move whitelist handling to module init
+  hwmon: (dell-smm) Move DMI config handling to module init
+  hwmon: (dell-smm) Move config entries out of i8k_dmi_table
+  hwmon: (dell-smm) Introduce helper function for data init
+  hwmon: (dell-smm) Add support for WMI SMM interface
+  hwmon: (dell-smm) Document the WMI SMM interface
+  hwmon: (dell-smm) Add Optiplex 7000 to fan control whitelist
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+ Documentation/hwmon/dell-smm-hwmon.rst |  38 +-
+ drivers/hwmon/Kconfig                  |   1 +
+ drivers/hwmon/dell-smm-hwmon.c         | 569 +++++++++++++++++--------
+ drivers/platform/x86/wmi.c             |   1 +
+ 4 files changed, 419 insertions(+), 190 deletions(-)
+
+=2D-
+2.39.2
+
