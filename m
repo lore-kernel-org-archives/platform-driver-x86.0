@@ -2,100 +2,101 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B60C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Nov 2023 19:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80C9C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Nov 2023 20:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230438AbjKDTPK (ORCPT
+        id S229733AbjKDU7P (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Nov 2023 15:15:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37156 "EHLO
+        Sat, 4 Nov 2023 16:59:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbjKDTPJ (ORCPT
+        with ESMTP id S229522AbjKDU7P (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Nov 2023 15:15:09 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47F16184;
-        Sat,  4 Nov 2023 12:15:07 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1699125305;
+        Sat, 4 Nov 2023 16:59:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92D15D65
+        for <platform-driver-x86@vger.kernel.org>; Sat,  4 Nov 2023 13:58:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1699131513;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=suKMvEgpuhoGUbP+4tESEE8+sFAwazwFRcyQQ47TAp8=;
-        b=KOgUc8TBTlGJbGau9Z3d2XFNHnbaV3/Vq0rXQcaCY1aURhF/v4cyUzCFEhqp85vWoG6Joq
-        0d7DpCG9dbOOtsOXddUhJMsb+1R+wzuyMusQi+4QkO57jMRvUD6kNSjtW/Pk8grk04e5Yo
-        XBAQyhGOPCvApQpr4aWbnrHRJYvlFxgiZFOVAkdxFKK2VyjBtFKlgVSo35ek1DGjcrAQ72
-        B7SPAhTINcQFb2kkrSjYwKjSyWWC0Ny6SEWzdpmksUvI7dsaMn9KzY/QINOMpKlv+2uCe+
-        iOwpZdHAsWF0a7bAt9EvPMGgK3lunCEBGWMC0n4zA0Q+WMINT+9bfPCkLvm+/Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1699125305;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=suKMvEgpuhoGUbP+4tESEE8+sFAwazwFRcyQQ47TAp8=;
-        b=faeoCbbeppsGNw83MdHX58s8enkY0xujcI9KPXCX1T3y1dlXmZ+X/turBtJpwl5wtiYbGB
-        IytHyx3J+2ajgLCg==
-To:     Andrew Cooper <andrew.cooper3@citrix.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Steve Wahl <steve.wahl@hpe.com>,
-        Justin Ernst <justin.ernst@hpe.com>,
-        Kyle Meyer <kyle.meyer@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: Notes on BAD_APICID, Was: [PATCH 0/3] x86/apic: Misc pruning
-In-Reply-To: <36462e78-8014-4415-bc47-86fbb46d028b@citrix.com>
-References: <20231102-x86-apic-v1-0-bf049a2a0ed6@citrix.com>
- <36462e78-8014-4415-bc47-86fbb46d028b@citrix.com>
-Date:   Sat, 04 Nov 2023 20:15:05 +0100
-Message-ID: <87zfztib46.ffs@tglx>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=9MYSylF7D63mQeDYGWMad8OtfBIPbXBCIH5nkZWYNMk=;
+        b=XcfQFSqXNjaXrw9JYyKwtCw1HJlA+QfBT8lJ5Gs3Gi21EbZ+601saAulUhAI6df/0gxcfT
+        x4IRgHKqNbAorLyKbRraM+aDryV7KOIuPYzvW1Uz8wNMVKAzkDc1wvycr3G7fNvK/XgRgz
+        ytBtMZALw8EmOyNg5R00LdQ0SUmOG/0=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-466-DN1gPslPMmyhVjfTkCU1ug-1; Sat,
+ 04 Nov 2023 16:58:30 -0400
+X-MC-Unique: DN1gPslPMmyhVjfTkCU1ug-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6564D38117EB;
+        Sat,  4 Nov 2023 20:58:30 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 63A462026D4C;
+        Sat,  4 Nov 2023 20:58:29 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH v2 1/4] ACPI: scan: Add LNXVIDEO HID to ignore_serial_bus_ids[]
+Date:   Sat,  4 Nov 2023 21:58:25 +0100
+Message-ID: <20231104205828.63139-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Nov 03 2023 at 19:58, Andrew Cooper wrote:
-> On 02/11/2023 12:26 pm, Andrew Cooper wrote:
-> Another dodgy construct spotted while doing this work is
->
-> #ifdef CONFIG_X86_32
-> =C2=A0#define BAD_APICID 0xFFu
-> #else
-> =C2=A0#define BAD_APICID 0xFFFFu
-> #endif
->
-> considering that both of those "bad" values are legal APIC IDs in an
-> x2APIC system.
->
-> The majority use is as a sentential (of varying types - int, u16
-> mostly), although the uses for NUM_APIC_CLUSTERS, and
-> safe_smp_processor_id() look suspect.
->
-> In particular, safe_smp_processor_id() *will* malfunction on some legal
-> CPUs, and needs to use -1 (32 bits wide) to spot the intended error case
-> of a bad xAPIC mapping.
->
-> However, it's use in amd_pmu_cpu_starting() from topology_die_id() looks
-> broken.=C2=A0 Partly because the error handling is (only) a WARN_ON_ONCE(=
-),
-> and also because nb->nb_id's sentinel value is -1 of type int.
->
-> I suspect there's a lot of cleaning to be done here too.
+The I2C-core already has filtering to skip i2c_client instantiation for
+LNXVIDEO acpi_device-s with I2cSerialBus resources, since LNXVIDEO devices
+are not i2c_client-s and are handled by the acpi_video driver.
 
-Sigh...
+This filtering was added to i2c-core-acpi.c in commit 3a4991a9864c ("i2c:
+acpi: Do not create i2c-clients for LNXVIDEO ACPI devices").
+
+Now a similar problem has shown up where the SPI-core is instantiating
+an unwanted SPI-device for a SpiSerialBus resource under a LNXVIDEO
+acpi_device. On a Lenovo Yoga Tab 3 YT3-X90F this unwanted SPI-device
+instanstantiation causes the SPI-device instanstantiation for the WM5102
+audio codec to fail with:
+
+[   21.988441] pxa2xx-spi 8086228E:00: chipselect 0 already in use
+
+Instead of duplicating the I2C-core filtering in the SPI-core code, push
+the filtering of SerialBus resources under LNXVIDEO acpi_device-s up into
+the ACPI-core by adding the LNXVIDEO HID to ignore_serial_bus_ids[].
+
+Note the filtering in the I2C-core i2c_acpi_do_lookup() function is still
+necessary because this not only impacts i2c_client instantiation but it
+also makes the I2C-core ignore the I2cSerialBus resource when checking what
+the maximum speed is the I2C bus supports, which is still necessary.
+
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/acpi/scan.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 691d4b7686ee..4b6faa2350f5 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -1727,6 +1727,7 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
+ 	 * Some ACPI devs contain SerialBus resources even though they are not
+ 	 * attached to a serial bus at all.
+ 	 */
++		{ACPI_VIDEO_HID, },
+ 		{"MSHW0028", },
+ 	/*
+ 	 * HIDs of device with an UartSerialBusV2 resource for which userspace
+-- 
+2.41.0
+
