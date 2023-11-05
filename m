@@ -2,66 +2,91 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E77C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  4 Nov 2023 21:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C71EC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  5 Nov 2023 17:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229548AbjKDVCe (ORCPT
+        id S229470AbjKERkE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 4 Nov 2023 17:02:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51914 "EHLO
+        Sun, 5 Nov 2023 12:40:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229802AbjKDVBq (ORCPT
+        with ESMTP id S229445AbjKERj6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 4 Nov 2023 17:01:46 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2787BD66;
-        Sat,  4 Nov 2023 14:01:44 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A247C433C7;
-        Sat,  4 Nov 2023 21:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699131703;
-        bh=+7byfA4Ppk8N0k1bYP3EJZinN4mfeQq879uiQ9hGw84=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Yvbs/6PjuCp11yK49p0WYF++z2pGVaebkm3vOm2YVUF89Vjs8LcU5FDCX6TYHJxbL
-         UmyN9plXwI8cLdG+YqSuTZ42Evt+zG3M8RUPpBRwtf5g/xEQ+iB10zYjE1op4a2vsh
-         NJeZFUWLDtzuU3wuhjwEp48rgZRnKMgNPnNoGLY7ZfCm0Z6Y85M04MZJJzmlz/AdAo
-         AOOGONMhnMB8TyqDLmtz7qGBTlGeHMXMA0HIKSVyWHGxvejLaycwWs/K28C2doM0ag
-         xrBa0DaJsm0cHB1m6zyY7khisnc1nL8ox65kSEAyTzM6qMZ7x6hl9jDciPziZ24WxB
-         aEpCd4JJQnjPg==
-Date:   Sat, 4 Nov 2023 17:01:42 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>
-Cc:     stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>, sre@kernel.org,
-        Shyam-sundar.S-k@amd.com, mario.limonciello@amd.com,
-        hdegoede@redhat.com, markgross@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Backport of commit "power: supply: core: Use
- blocking_notifier_call_chain to avoid RCU complaint")
-Message-ID: <ZUaxNuhxWabM6zx4@sashalap>
-References: <20230913033233.602986-1-kai.heng.feng@canonical.com>
- <ff242a4c-8c84-485f-a100-0317eaa1544b@t-8ch.de>
+        Sun, 5 Nov 2023 12:39:58 -0500
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FEE3CA;
+        Sun,  5 Nov 2023 09:39:49 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id D5BCE300002D8;
+        Sun,  5 Nov 2023 18:39:46 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id BDB26473E23; Sun,  5 Nov 2023 18:39:46 +0100 (CET)
+Date:   Sun, 5 Nov 2023 18:39:46 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Danilo Krummrich <dakr@redhat.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Xinhui Pan <Xinhui.Pan@amd.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        "Maciej W . Rozycki" <macro@orcam.me.uk>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH v2 6/9] PCI: Rename is_thunderbolt to is_tunneled
+Message-ID: <20231105173946.GA31955@wunner.de>
+References: <20231103190758.82911-1-mario.limonciello@amd.com>
+ <20231103190758.82911-7-mario.limonciello@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ff242a4c-8c84-485f-a100-0317eaa1544b@t-8ch.de>
+In-Reply-To: <20231103190758.82911-7-mario.limonciello@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Nov 03, 2023 at 08:33:45PM +0100, Thomas Weißschuh wrote:
->Dear stable team,
->
->I would like to propose the commit
->bbaa6ffa5b6c ("power: supply: core: Use blocking_notifier_call_chain to avoid RCU complaint")
->from mainline for inclusion into the stable kernels.
->
->The commit fixes a RCU violation as indicated in its commit message.
+On Fri, Nov 03, 2023 at 02:07:55PM -0500, Mario Limonciello wrote:
+> The `is_thunderbolt` bit has been used to indicate that a PCIe device
+> contained the Intel VSEC which is used by various parts of the kernel
+> to change behavior. To later allow usage with USB4 controllers as well,
+> rename this to `is_tunneled`.
 
-Queued up, thanks!
+This doesn't seem to make sense.  is_thunderbolt indicates that a device
+is part of a Thunderbolt controller.  See the code comment:
 
--- 
+> -	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
+
+A Thunderbolt controller is not necessarily tunneled.  The PCIe switch,
+NHI and XHCI of the Thunderbolt host controller are not tunneled at all.
+
 Thanks,
-Sasha
+
+Lukas
