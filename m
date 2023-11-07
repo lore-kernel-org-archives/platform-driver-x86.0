@@ -2,57 +2,83 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF600C4167B
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Nov 2023 09:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F77C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Nov 2023 12:10:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233866AbjKGJUd (ORCPT
+        id S234198AbjKGMKH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Nov 2023 04:20:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37376 "EHLO
+        Tue, 7 Nov 2023 07:10:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233948AbjKGJUX (ORCPT
+        with ESMTP id S234393AbjKGMJd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Nov 2023 04:20:23 -0500
-X-Greylist: delayed 556 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 07 Nov 2023 01:10:20 PST
-Received: from mail.bizsol24.pl (mail.bizsol24.pl [54.37.225.206])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6806D78
-        for <platform-driver-x86@vger.kernel.org>; Tue,  7 Nov 2023 01:10:20 -0800 (PST)
-Received: by mail.bizsol24.pl (Postfix, from userid 1002)
-        id 5774E22E32; Tue,  7 Nov 2023 09:00:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bizsol24.pl; s=mail;
-        t=1699347633; bh=d55UyU8laiaLHh5U2p+RIDANJZxJNDyVt7NzHVaPzBY=;
-        h=Date:From:To:Subject:From;
-        b=EcjBe5VDSZ1aKP50qYJAgDy8WApj8gNRiNsAzhHtxiBV7Wa6UOzqWB885wyoocM6p
-         dJjpx+VmO8268RYT39AQDn39eXdSlf/c2g0aAkfnheTc9iDRPtJYP1qqjlBypJ97dr
-         tyHSVfRhkuhnpg3e9H8f87em0DtNHI28Hg/ib/q9fpEH9mwBJlk/AYbYyZuFqEjtrL
-         8ttzVBTSDOMMJpDvbbylcFnd/FrKOw0QfiJPCWWlb+hpP8bKhSphOByvPvhTRuqwv/
-         Hyxy6K2sHVjJOCLPdM15OuYG8DbtQMKHQXlrWTf3otG7/QOEGM3jGaaHIxKakOuzi2
-         3w73A8JI8d/DA==
-Received: by mail.bizsol24.pl for <platform-driver-x86@vger.kernel.org>; Tue,  7 Nov 2023 09:00:26 GMT
-Message-ID: <20231107074500-0.1.9d.2m00c.0.enodnxxh64@bizsol24.pl>
-Date:   Tue,  7 Nov 2023 09:00:26 GMT
-From:   "Ewa Szymkiewicz" <ewa.szymkiewicz@bizsol24.pl>
-To:     <platform-driver-x86@vger.kernel.org>
-Subject: =?UTF-8?Q?Udzia=C5=82_w_post=C4=99powaniu?=
-X-Mailer: mail.bizsol24.pl
+        Tue, 7 Nov 2023 07:09:33 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0175326AF;
+        Tue,  7 Nov 2023 04:08:42 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFFDEC433AD;
+        Tue,  7 Nov 2023 12:08:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699358922;
+        bh=9/f2sa0pPtUV4PxCaPXsZERjMwRfcOO7kdIrN8w8YXs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rCy5B7oJn8NxEGEhjURKRfJ6jaFcSdEnrG6e0L3eAbrUuzpXoAMANAfO07lb/swK4
+         7Aa+mcUwR+jNJN/7sV+6f591LNBx5nqQLGH4IoOmVAEmrG5iR1DO8D//dk5WmmNw26
+         aSIysnvETWGFVqJDAnt/dJOlq3pp8qpxuHIqZJ71diNbz7i5I43GsaOX2A8UkXkL7K
+         HdFNtsNlxzciv3WGVyrgH8vX1F1Lg0E40nCp478T165Zc44NJNJVRUQb71kBDYezp0
+         6Ybxl9hF93X4eOS18Yrkfu9J1Habmc8IinbQxP1P+33mbh5EdSQE6Mit+S2rEVgUFd
+         LzZfApy0r7jow==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Olli Asikainen <olli.asikainen@gmail.com>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, hmh@hmh.eng.br,
+        hdegoede@redhat.com, markgross@kernel.org,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 31/31] platform/x86: thinkpad_acpi: Add battery quirk for Thinkpad X120e
+Date:   Tue,  7 Nov 2023 07:06:18 -0500
+Message-ID: <20231107120704.3756327-31-sashal@kernel.org>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231107120704.3756327-1-sashal@kernel.org>
+References: <20231107120704.3756327-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Dzie=C5=84 dobry,
+From: Olli Asikainen <olli.asikainen@gmail.com>
 
-czy odnotowuj=C4=85 Pa=C5=84stwo zaleg=C5=82e p=C5=82atno=C5=9Bci od Klie=
-nt=C3=B3w?
+[ Upstream commit 916646758aea81a143ce89103910f715ed923346 ]
 
-Pomagamy wszystkim przedsi=C4=99biorcom, kt=C3=B3rzy szukaj=C4=85 gwaranc=
-ji bezpiecze=C5=84stwa i p=C5=82ynno=C5=9Bci finansowej.
+Thinkpad X120e also needs this battery quirk.
 
-B=C4=99d=C4=99 wdzi=C4=99czna za informacj=C4=99 czy s=C4=85 Pa=C5=84stwo=
- zainteresowani odzyskaniem swoich nale=C5=BCno=C5=9Bci.
+Signed-off-by: Olli Asikainen <olli.asikainen@gmail.com>
+Link: https://lore.kernel.org/r/20231024190922.2742-1-olli.asikainen@gmail.com
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 41584427dc323..a46fc417cb200 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -9816,6 +9816,7 @@ static const struct tpacpi_quirk battery_quirk_table[] __initconst = {
+ 	 * Individual addressing is broken on models that expose the
+ 	 * primary battery as BAT1.
+ 	 */
++	TPACPI_Q_LNV('8', 'F', true),       /* Thinkpad X120e */
+ 	TPACPI_Q_LNV('J', '7', true),       /* B5400 */
+ 	TPACPI_Q_LNV('J', 'I', true),       /* Thinkpad 11e */
+ 	TPACPI_Q_LNV3('R', '0', 'B', true), /* Thinkpad 11e gen 3 */
+-- 
+2.42.0
 
-Z powa=C5=BCaniem
-Ewa Szymkiewicz
