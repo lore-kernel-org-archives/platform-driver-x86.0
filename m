@@ -2,32 +2,32 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C80C0018C
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Nov 2023 12:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F149CC4708E
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  7 Nov 2023 12:28:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234650AbjKGM2B (ORCPT
+        id S234305AbjKGM26 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 7 Nov 2023 07:28:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36406 "EHLO
+        Tue, 7 Nov 2023 07:28:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234522AbjKGM1n (ORCPT
+        with ESMTP id S234236AbjKGM2s (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 7 Nov 2023 07:27:43 -0500
+        Tue, 7 Nov 2023 07:28:48 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E511BD5;
-        Tue,  7 Nov 2023 04:12:51 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E426C433CC;
-        Tue,  7 Nov 2023 12:12:50 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D9F610D2;
+        Tue,  7 Nov 2023 04:10:46 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49DB9C43395;
+        Tue,  7 Nov 2023 12:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699359171;
-        bh=G1LZmW0uj2wl31zbRTfBEtzBFB1PwJzMm9gk0a9oPXQ=;
+        s=k20201202; t=1699359046;
+        bh=DmmQYiuRtDL3w9tDkClWDx/jA1i/khpGIyX3phtTh5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U4BIOuVi+yLap5lcEcbQUBxO+hEGPe7D87+csNmdDe1KDIJu75zZJrii4O6u30MOX
-         z//VyTSJ/xj35NdT5xGJkJkKqzj/VYXy9aaRccp1XSTsMiELK5mJ0g8cLAr5/eNwPm
-         7IxqmrZs7HyqgTSbfw34HDA8V/yNktBE97KsX89R+KRhsSANoJDW8kDbscG9NUgBOa
-         yr2V3oIDoOWdtr+9Yk0jfQVS/0EOQ4NFDdfh4VUx2wt2weVtd2TX3MpE+Ug07WW6eX
-         h10NYUVXurY3L7JaR9RL7XpfdMxzheAGCM+NiaoE+MUP0ltz+hG6D0hNlYtZcJCWds
-         tf5+4gh1ctGoQ==
+        b=I6xo2WZmTAY/1pHMVgDZzYjZ77DDtagpiyUineMF4opf+aoFWVYUked0HV8CKpj2W
+         h/OMXY+BOX6KFufz/1TrVKAJQFc7RK486jXcVNjrHXsqUFYkEasPGeNY4CstQHx5MC
+         2HhIIMsQSIv60lo9vcV3QIcUNSdSgW8DAdnZr7YlKSDYelSoEOP181lvq5T5+ws2wI
+         UFAa3gWsCu2JEgKTIQp4bKCVqyQGjS99QUCQkjz27ygms2JYlynvPIyX78x8WusjbY
+         SVPlwCFxF5Vjd3RYK0kNLAIqWL+NtK604GHOQHt1/LwsV10MyHD9324aY3nzUuIyTv
+         wJj+4Wg4+AURw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Olli Asikainen <olli.asikainen@gmail.com>,
@@ -36,17 +36,17 @@ Cc:     Olli Asikainen <olli.asikainen@gmail.com>,
         hdegoede@redhat.com, markgross@kernel.org,
         ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 11/11] platform/x86: thinkpad_acpi: Add battery quirk for Thinkpad X120e
-Date:   Tue,  7 Nov 2023 07:12:26 -0500
-Message-ID: <20231107121230.3758617-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.5 30/30] platform/x86: thinkpad_acpi: Add battery quirk for Thinkpad X120e
+Date:   Tue,  7 Nov 2023 07:08:45 -0500
+Message-ID: <20231107120922.3757126-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231107121230.3758617-1-sashal@kernel.org>
-References: <20231107121230.3758617-1-sashal@kernel.org>
+In-Reply-To: <20231107120922.3757126-1-sashal@kernel.org>
+References: <20231107120922.3757126-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.199
+X-stable-base: Linux 6.5.10
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -68,10 +68,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index d8d241344d22d..00ca996b4d4b9 100644
+index ad460417f901a..4b13d3e704bf3 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -9718,6 +9718,7 @@ static const struct tpacpi_quirk battery_quirk_table[] __initconst = {
+@@ -9810,6 +9810,7 @@ static const struct tpacpi_quirk battery_quirk_table[] __initconst = {
  	 * Individual addressing is broken on models that expose the
  	 * primary battery as BAT1.
  	 */
