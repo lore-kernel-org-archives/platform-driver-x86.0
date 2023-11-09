@@ -2,328 +2,147 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA970C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Nov 2023 02:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C9DC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  9 Nov 2023 06:17:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230444AbjKICPv (ORCPT
+        id S229697AbjKIGRq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 8 Nov 2023 21:15:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58356 "EHLO
+        Thu, 9 Nov 2023 01:17:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbjKICPv (ORCPT
+        with ESMTP id S229566AbjKIGRq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 8 Nov 2023 21:15:51 -0500
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D33E258A;
-        Wed,  8 Nov 2023 18:15:47 -0800 (PST)
-X-UUID: 8739326502294a5fad8c55e220542760-20231109
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.32,REQID:a2cfd39c-a3ee-4365-99b1-400db34b9b81,IP:15,
-        URL:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
-        TION:release,TS:20
-X-CID-INFO: VERSION:1.1.32,REQID:a2cfd39c-a3ee-4365-99b1-400db34b9b81,IP:15,UR
-        L:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-        ON:release,TS:20
-X-CID-META: VersionHash:5f78ec9,CLOUDID:93a17072-1bd3-4f48-b671-ada88705968c,B
-        ulkID:231109101538PRFLZAPZ,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
-        02,TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL
-        :0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 8739326502294a5fad8c55e220542760-20231109
-X-User: aichao@kylinos.cn
-Received: from localhost.localdomain [(112.64.161.44)] by mailgw
-        (envelope-from <aichao@kylinos.cn>)
-        (Generic MTA)
-        with ESMTP id 554709454; Thu, 09 Nov 2023 10:15:35 +0800
-From:   Ai Chao <aichao@kylinos.cn>
-To:     hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
-        markgross@kernel.org
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Ai Chao <aichao@kylinos.cn>
-Subject: [PATCH v6] platform/x86: inspur-platform-profile: Add platform profile support
-Date:   Thu,  9 Nov 2023 10:15:33 +0800
-Message-Id: <20231109021533.62939-1-aichao@kylinos.cn>
+        Thu, 9 Nov 2023 01:17:46 -0500
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2075.outbound.protection.outlook.com [40.107.220.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE7AA26A0
+        for <platform-driver-x86@vger.kernel.org>; Wed,  8 Nov 2023 22:17:43 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JbLcnN9q3HrL/Ka6QoOThr8kvh2d/5phAuQzw26fcyISBAi70/wPHBadp85OjlizoE6Wry9bWiDG7H9dR2p1rQI0ahfiXbC3OAO+XqEOtUfKppxZd+I+JpSQ/P8ueEF0pHayRVGiH1HtJzmok7n5pUhuG7VZFMHz/tdiV8a8zCdbaAn1hPPptuGeMRDx+YDlm1VgfGk1NKZN6naUgeZJOMXPW4ZqfzIXtIftWCeFL8mq91Pxlpbpwk96rSwuq2XqGQ6jIU8va5Ge6GlWAyYmest4ICqG6Zpd9Ox84j5Uu4hhAd75msLhg5nEgobUkYpu4G01yi8BaEp3R1BRfpjGwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/27Y7k2eK8HMk9jUQKDpaZe246nUZOZm9a5FBUlmqGU=;
+ b=kEbXNPP2N08aglbPPWgl+Swb2Jy1OTq8k+A4O1fXlBIVm8te3aIYzZQiyIE4cWt33g7L8oFbFf7oSIpcmUoNEcww28Ta+bK2E7roEd1BjUW3TJl9Z0xIDCPuQ+/E/TsvGWuUe76jvrFlOtZ+4X64YcDgm0UMUVUkxoi8zJOZwXCez0JLWrhBY9gGWfI1Nf/2zIVNjVLRiN9oeuynebnUQ5wFgN1766B2miSoFEBAPDT+gPxOyGR8ucZxgL1+5077aj0S4iznxANStFLxzuUU8KUNuN78ezRDgkNpHwy8y9Opx/YuJQBaji7BNcuEE0k8SHNk8aPQae2IvG+nV9LFpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/27Y7k2eK8HMk9jUQKDpaZe246nUZOZm9a5FBUlmqGU=;
+ b=mEYqYvbDNVI5W/a5pP8GP7qyrxlndFdAKwCG3xJJ1hl98thbctNGavKsSZ/kk5pMvZnkCJTR3tNBy/KJprsibLWgAII1hmqwgdmX70ZKO/Bfkm4bpRa8RuU/Fi+kcv0FCRCiT17c7dMp5wbtAD86wXQTjrc3Pu1n9ANhYHxg3FI=
+Received: from CY5PR04CA0023.namprd04.prod.outlook.com (2603:10b6:930:1e::30)
+ by IA1PR12MB6260.namprd12.prod.outlook.com (2603:10b6:208:3e4::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.28; Thu, 9 Nov
+ 2023 06:17:41 +0000
+Received: from CY4PEPF0000EE31.namprd05.prod.outlook.com
+ (2603:10b6:930:1e:cafe::42) by CY5PR04CA0023.outlook.office365.com
+ (2603:10b6:930:1e::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.19 via Frontend
+ Transport; Thu, 9 Nov 2023 06:17:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EE31.mail.protection.outlook.com (10.167.242.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6977.16 via Frontend Transport; Thu, 9 Nov 2023 06:17:40 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Thu, 9 Nov
+ 2023 00:17:37 -0600
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To:     <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
+        <markgross@kernel.org>
+CC:     <Sanket.Goswami@amd.com>, <mario.limonciello@amd.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Mark Hasemeyer <markhas@chromium.org>
+Subject: [PATCH v2] platform/x86/amd/pmc: adjust amd_pmc_get_dram_size() behavior
+Date:   Thu, 9 Nov 2023 11:47:09 +0530
+Message-ID: <20231109061709.2964246-1-Shyam-sundar.S-k@amd.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE31:EE_|IA1PR12MB6260:EE_
+X-MS-Office365-Filtering-Correlation-Id: ca4b1ff6-c7d1-4bb2-570f-08dbe0eb9417
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nKzQSFO71XsJ4UBcigqxaPIBwPlctSnhUwOy5Is3Q/OJ+IoN8qIZyVTGzTKoiPXIoahx4M0KRM4l8lv5P6kKtF4pJkpMWgdKkpCauZZprE7y8Zb2U7teS/IKlruyibvXsswtALum67eEpW18IQz5k9vSbpqsB6TV5RtIMShvuwpiTn/2H40wixGqen4dS7reXn0JIMXU8yrXKI4yRIJh/hp7opr4fveWwX13ABsuqRR18PiB0Bc1MbsAv4JmjZ4790UkPpsQpp4GZQdaK+7HOe6ppiMZvrEfKl48WrqLR1TMSk8RHS19w1K17xCP/AeE2ggc6EkXnP3n9553G5bom3/NJhjmvX/3l6Qae83TehYpiHJHG/5ilMGGevPi0Gh0zH/isJZAwxfwsVmR8bvL8qpvwL+cjU8FHfIjmfBBsiM0yHQn6vkvY3A0USYFmMP45TcKO7tGv9PxKK6KdTbiSueua2TmipTnHkXMG/QDeXZaofWZqvh7HsfaDNTnMrJHiQ1gyBQ/odwizhbzYJB0kmlCAcRtHYVYIk8uLeWM+6o1y+wYzOofVi2uCxYaPohcXDBTpIZgiEDzu9jpW/+ZhMGseVtlQYca2pjNIESbEzoUGVe7UwnE8rEvA+uLSYIYTwDhqcpUtiJpichTXCwa07vWvAopJEIFmH4OJ5NZAzL7y5wI+xom93amgwJJgHb/WUH69h7ArOn/PRYyDEkCBRPfRHuJdgCKrAEy/VCc2FPEbmnXMsdonqTL8Kcj+/bJeELJgnn2QjojaTsKv9Z4oA==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(39860400002)(346002)(396003)(376002)(230922051799003)(1800799009)(451199024)(64100799003)(82310400011)(186009)(36840700001)(40470700004)(46966006)(40480700001)(40460700003)(36756003)(316002)(8936002)(426003)(8676002)(83380400001)(4326008)(16526019)(26005)(54906003)(1076003)(110136005)(70206006)(70586007)(5660300002)(41300700001)(478600001)(2616005)(966005)(6666004)(7696005)(36860700001)(2906002)(336012)(82740400003)(81166007)(86362001)(47076005)(356005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2023 06:17:40.8457
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca4b1ff6-c7d1-4bb2-570f-08dbe0eb9417
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000EE31.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6260
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add support for Inspur platforms to used the platform profile feature.
+After talking to the PMFW team, its understood that the "get dram size"
+mbox command would only be supported on specific platforms (like Mendocino)
+and not all. So adjust the behavior of amd_pmc_get_dram_size() function
+such that,
 
-This will allow users to determine and control the platform modes
-between low-power, balanced and performance modes.
+- if that's Rembrandt or Mendocino and the underlying PMFW knows how
+to execute the "get dram size" command it shall give the custom dram size.
 
-Signed-off-by: Ai Chao <aichao@kylinos.cn>
+- if the underlying FW does not report the dram size, we just proceed
+further and assign the default dram size.
+
+Cc: Mark Hasemeyer <markhas@chromium.org>
+Link: https://lore.kernel.org/platform-driver-x86/3b224c62-a1d8-41bd-aced-5825f5f20e66@amd.com/
+Fixes: be8325fb3d8c ("platform/x86/amd: pmc: Get STB DRAM size from PMFW")
+Suggested-by: Sanket Goswami <Sanket.Goswami@amd.com>
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
 
-v6: Remove comment for inspur_tmp_profile
-v5: Rename inspur-wmi to inspur_platform_profile
-v4: Add select ACPI_PLATFORM_PROFILE
-v3: Remove input device, using the platform profile interface
-v2: Remove Event GUID, remove inspur_wmi_notify and inspur_wmi_notify.
+v2:
+- Based on review-ilpo branch
+- Drop calling get smu version from probe.
 
- drivers/platform/x86/Kconfig                  |  11 +
- drivers/platform/x86/Makefile                 |   3 +
- .../platform/x86/inspur_platform_profile.c    | 210 ++++++++++++++++++
- 3 files changed, 224 insertions(+)
- create mode 100644 drivers/platform/x86/inspur_platform_profile.c
+ drivers/platform/x86/amd/pmc/pmc.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 2a1070543391..7e69fdaccdd5 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -988,6 +988,17 @@ config TOUCHSCREEN_DMI
- 	  the OS-image for the device. This option supplies the missing info.
- 	  Enable this for x86 tablets with Silead or Chipone touchscreens.
+diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+index cd6ac04c1468..501c72c7d34c 100644
+--- a/drivers/platform/x86/amd/pmc/pmc.c
++++ b/drivers/platform/x86/amd/pmc/pmc.c
+@@ -968,17 +968,8 @@ static int amd_pmc_get_dram_size(struct amd_pmc_dev *dev)
+ {
+ 	int ret;
  
-+config INSPUR_PLATFORM_PROFILE
-+	tristate "Inspur WMI platform profile driver"
-+	depends on ACPI_WMI
-+	select ACPI_PLATFORM_PROFILE
-+	help
-+	This will allow users to determine and control the platform modes
-+	between low-power, balanced and performance modes.
-+
-+	To compile this driver as a module, choose M here: the module
-+	will be called inspur-platform-profile.
-+
- source "drivers/platform/x86/x86-android-tablets/Kconfig"
+-	switch (dev->cpu_id) {
+-	case AMD_CPU_ID_YC:
+-		if (!(dev->major > 90 || (dev->major == 90 && dev->minor > 39))) {
+-			ret = -EINVAL;
+-			goto err_dram_size;
+-		}
+-		break;
+-	default:
+-		ret = -EINVAL;
++	if (dev->cpu_id != AMD_CPU_ID_YC)
+ 		goto err_dram_size;
+-	}
  
- config FW_ATTR_CLASS
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index b457de5abf7d..c7a18e95ad8c 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -98,6 +98,9 @@ obj-$(CONFIG_TOSHIBA_WMI)	+= toshiba-wmi.o
- # before toshiba_acpi initializes
- obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
- 
-+# Inspur
-+obj-$(CONFIG_INSPUR_PLATFORM_PROFILE)	+= inspur_platform_profile.o
-+
- # Laptop drivers
- obj-$(CONFIG_ACPI_CMPC)		+= classmate-laptop.o
- obj-$(CONFIG_COMPAL_LAPTOP)	+= compal-laptop.o
-diff --git a/drivers/platform/x86/inspur_platform_profile.c b/drivers/platform/x86/inspur_platform_profile.c
-new file mode 100644
-index 000000000000..3fe1afe96191
---- /dev/null
-+++ b/drivers/platform/x86/inspur_platform_profile.c
-@@ -0,0 +1,210 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Inspur WMI Platform Profile
-+ *
-+ *  Copyright (C) 2018	      Ai Chao <aichao@kylinos.cn>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/platform_profile.h>
-+#include <linux/wmi.h>
-+
-+#define WMI_INSPUR_POWERMODE_BIOS_GUID "596C31E3-332D-43C9-AEE9-585493284F5D"
-+
-+enum inspur_wmi_method_ids {
-+	INSPUR_WMI_GET_POWERMODE = 0x02,
-+	INSPUR_WMI_SET_POWERMODE = 0x03,
-+};
-+
-+enum inspur_tmp_profile {
-+	INSPUR_TMP_PROFILE_BALANCE	= 0,
-+	INSPUR_TMP_PROFILE_PERFORMANCE	= 1,
-+	INSPUR_TMP_PROFILE_POWERSAVE	= 2,
-+};
-+
-+struct inspur_wmi_priv {
-+	struct wmi_device *wdev;
-+	struct platform_profile_handler handler;
-+};
-+
-+static int inspur_wmi_perform_query(struct wmi_device *wdev,
-+				    enum inspur_wmi_method_ids query_id,
-+				    void *buffer, size_t insize,
-+				    size_t outsize)
-+{
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	struct acpi_buffer input = { insize, buffer};
-+	union acpi_object *obj;
-+	acpi_status status;
-+	int ret = 0;
-+
-+	status = wmidev_evaluate_method(wdev, 0, query_id, &input, &output);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(&wdev->dev, "EC Powermode control failed: %s\n",
-+			acpi_format_exception(status));
-+		return -EIO;
-+	}
-+
-+	obj = output.pointer;
-+	if (!obj)
-+		return -EINVAL;
-+
-+	if (obj->type != ACPI_TYPE_BUFFER ||
-+	    obj->buffer.length != outsize) {
-+		ret = -EINVAL;
-+		goto out_free;
-+	}
-+
-+	memcpy(buffer, obj->buffer.pointer, obj->buffer.length);
-+
-+out_free:
-+	kfree(obj);
-+	return ret;
-+}
-+
-+/*
-+ * Set Power Mode to EC RAM. If Power Mode value greater than 0x3,
-+ * return error
-+ * Method ID: 0x3
-+ * Arg: 4 Bytes
-+ * Byte [0]: Power Mode:
-+ *         0x0: Balance Mode
-+ *         0x1: Performance Mode
-+ *         0x2: Power Saver Mode
-+ * Return Value: 4 Bytes
-+ * Byte [0]: Return Code
-+ *         0x0: No Error
-+ *         0x1: Error
-+ */
-+static int inspur_platform_profile_set(struct platform_profile_handler *pprof,
-+				       enum platform_profile_option profile)
-+{
-+	struct inspur_wmi_priv *priv = container_of(pprof, struct inspur_wmi_priv,
-+						    handler);
-+	u8 ret_code[4] = {0, 0, 0, 0};
-+	int ret;
-+
-+	switch (profile) {
-+	case PLATFORM_PROFILE_BALANCED:
-+		ret_code[0] = INSPUR_TMP_PROFILE_BALANCE;
-+		break;
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		ret_code[0] = INSPUR_TMP_PROFILE_PERFORMANCE;
-+		break;
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		ret_code[0] = INSPUR_TMP_PROFILE_POWERSAVE;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	ret = inspur_wmi_perform_query(priv->wdev, INSPUR_WMI_SET_POWERMODE,
-+				       ret_code, sizeof(ret_code),
-+				       sizeof(ret_code));
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret_code[0])
-+		return -EBADRQC;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Get Power Mode from EC RAM, If Power Mode value greater than 0x3,
-+ * return error
-+ * Method ID: 0x2
-+ * Return Value: 4 Bytes
-+ * Byte [0]: Return Code
-+ *         0x0: No Error
-+ *         0x1: Error
-+ * Byte [1]: Power Mode
-+ *         0x0: Balance Mode
-+ *         0x1: Performance Mode
-+ *         0x2: Power Saver Mode
-+ */
-+static int inspur_platform_profile_get(struct platform_profile_handler *pprof,
-+				       enum platform_profile_option *profile)
-+{
-+	struct inspur_wmi_priv *priv = container_of(pprof, struct inspur_wmi_priv,
-+						    handler);
-+	u8 ret_code[4] = {0, 0, 0, 0};
-+	int ret;
-+
-+	ret = inspur_wmi_perform_query(priv->wdev, INSPUR_WMI_GET_POWERMODE,
-+				       &ret_code, sizeof(ret_code),
-+				       sizeof(ret_code));
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret_code[0])
-+		return -EBADRQC;
-+
-+	switch (ret_code[1]) {
-+	case INSPUR_TMP_PROFILE_BALANCE:
-+		*profile = PLATFORM_PROFILE_BALANCED;
-+		break;
-+	case INSPUR_TMP_PROFILE_PERFORMANCE:
-+		*profile = PLATFORM_PROFILE_PERFORMANCE;
-+		break;
-+	case INSPUR_TMP_PROFILE_POWERSAVE:
-+		*profile = PLATFORM_PROFILE_LOW_POWER;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int inspur_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct inspur_wmi_priv *priv;
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->wdev = wdev;
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	priv->handler.profile_get = inspur_platform_profile_get;
-+	priv->handler.profile_set = inspur_platform_profile_set;
-+
-+	set_bit(PLATFORM_PROFILE_LOW_POWER, priv->handler.choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED, priv->handler.choices);
-+	set_bit(PLATFORM_PROFILE_PERFORMANCE, priv->handler.choices);
-+
-+	return platform_profile_register(&priv->handler);
-+}
-+
-+static void inspur_wmi_remove(struct wmi_device *wdev)
-+{
-+	platform_profile_remove();
-+}
-+
-+static const struct wmi_device_id inspur_wmi_id_table[] = {
-+	{ .guid_string = WMI_INSPUR_POWERMODE_BIOS_GUID },
-+	{  }
-+};
-+
-+MODULE_DEVICE_TABLE(wmi, inspur_wmi_id_table);
-+
-+static struct wmi_driver inspur_wmi_driver = {
-+	.driver = {
-+		.name = "inspur-wmi-platform-profile",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.id_table = inspur_wmi_id_table,
-+	.probe = inspur_wmi_probe,
-+	.remove = inspur_wmi_remove,
-+};
-+
-+module_wmi_driver(inspur_wmi_driver);
-+
-+MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-+MODULE_DESCRIPTION("Platform Profile Support for Inspur");
-+MODULE_LICENSE("GPL");
+ 	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->s2d_msg_id, true);
+ 	if (ret || !dev->dram_size)
 -- 
 2.25.1
 
