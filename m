@@ -2,45 +2,45 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10084C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Nov 2023 20:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC27C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Nov 2023 20:51:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235755AbjKJU02 (ORCPT
+        id S1346078AbjKJUvv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Nov 2023 15:26:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55514 "EHLO
+        Fri, 10 Nov 2023 15:51:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235192AbjKJU01 (ORCPT
+        with ESMTP id S236058AbjKJUvi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Nov 2023 15:26:27 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3023E39CC6;
-        Fri, 10 Nov 2023 06:46:04 -0800 (PST)
+        Fri, 10 Nov 2023 15:51:38 -0500
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C62C438EB7;
+        Fri, 10 Nov 2023 06:31:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699627564; x=1731163564;
+  t=1699626666; x=1731162666;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=5DefA1jGiMB0jC/ObGqDHilaH2y2s05XvqizrJc9Z+w=;
-  b=XywdbUIZFn1R69UbBsp/sr/9wbwbBp28WW1It6EgvGGJMOwQqyt47rtn
-   TqCB0V5/yDmeBTS6SaP8pGYIxa19owl5fDU7rh7yt1PeuXWVFSL+bJTfM
-   5rL3l4l99lbnG+qnPkpNLAAHlkhYiTNt2l86XvcLwpE0TQBJQ/I1FqIJg
-   fwG2HTDAF8/+gTsY16KM6urjRJdOdJFc7K63bFwDJICqTd1tkw1HYj1fc
-   mMsMXIXUtIUaugC2WOpm9n6ala3CVMV3ZcRM3/wzTtnrb56gvpmHCkNHH
-   3A3ozCvbTEj3mtS/PjsVbxjwkSXx0mZRf3Fjaplj6MUuBAC2ujxWeen5C
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10890"; a="3177023"
+  bh=7NuM5fAT3PCHwl6MWpbbqZ8vteA/eqDSWAwQNqdHwZI=;
+  b=b1Bi6E2/STBwiNak7oori9WSpc4tYAY/GGAZSHSLIUg7crp/YpvsDtC3
+   LMXQ5eVj87YnxiY3/L/AFGJV8JmttaC5tu3FmfmAldIx5v3E11hfn+Nw9
+   7zzdSkgWIkLW+ARUM/+xZovY3tXCCx1TIkVFJ5P3gWBe5OhLc2idk2bPW
+   MofnJGJpVJHdBNYj2+GpUNx1bisjyrocXOQxHom3Zahqlj8//HKOfi9g0
+   x4izerJUrRBXcJWeXV1o1sHqoUKdRNk1lVsi0ePGuDkFbrve72Nwn+NFc
+   LsHm16KouKuO86u1Xmr7Ay1FZI4qHbIoJkA22UhgBwLAG0PChylMbSt4f
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10890"; a="393063053"
 X-IronPort-AV: E=Sophos;i="6.03,291,1694761200"; 
-   d="scan'208";a="3177023"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2023 06:46:04 -0800
+   d="scan'208";a="393063053"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2023 06:31:06 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10890"; a="792870541"
+X-IronPort-AV: E=McAfee;i="6600,9927,10890"; a="829661968"
 X-IronPort-AV: E=Sophos;i="6.03,291,1694761200"; 
-   d="scan'208";a="792870541"
-Received: from joudin-mobl2.ger.corp.intel.com ([10.252.38.36])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2023 06:46:00 -0800
-Date:   Fri, 10 Nov 2023 16:45:57 +0200 (EET)
+   d="scan'208";a="829661968"
+Received: from joudin-mobl2.ger.corp.intel.com (HELO mciobota-mobl.ger.corp.intel.com) ([10.252.38.36])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2023 06:31:02 -0800
+Date:   Fri, 10 Nov 2023 16:31:00 +0200 (EET)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
 cc:     Jorge Lopez <jorge.lopez2@hp.com>,
@@ -54,13 +54,20 @@ cc:     Jorge Lopez <jorge.lopez2@hp.com>,
 Subject: Re: [PATCH v2 1/4] platform/x86: hp-bioscfg: Remove unused obj in
  hp_add_other_attributes()
 In-Reply-To: <20231110142921.3398072-1-harshit.m.mogalapalli@oracle.com>
-Message-ID: <8bfac7ad-1934-cbb4-2e78-dde532bf7df6@linux.intel.com>
+Message-ID: <fc59edba-1a19-77e2-e1f-4b342eeab40@linux.intel.com>
 References: <20231110142921.3398072-1-harshit.m.mogalapalli@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323329-1728740189-1699626665=:1596"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-1728740189-1699626665=:1596
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
 
 On Fri, 10 Nov 2023, Harshit Mogalapalli wrote:
 
@@ -69,13 +76,6 @@ On Fri, 10 Nov 2023, Harshit Mogalapalli wrote:
 > 
 > Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
 > ---
-
-Please make this the last patch of the series since the others are true 
-fixes and this is just a (useful!) cleanup.
-
--- 
- i.
-
 >  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 2 --
 >  1 file changed, 2 deletions(-)
 > 
@@ -165,5 +165,10 @@ fixes and this is just a (useful!) cleanup.
 > -	kfree(obj);
 >  	return ret;
 >  }
->  
-> 
+
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+-- 
+ i.
+
+--8323329-1728740189-1699626665=:1596--
