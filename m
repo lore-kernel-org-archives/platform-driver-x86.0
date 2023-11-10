@@ -2,57 +2,62 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEEBC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Nov 2023 17:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6082C05054
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Nov 2023 17:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234556AbjKJRyt (ORCPT
+        id S229532AbjKJR4q (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Nov 2023 12:54:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50746 "EHLO
+        Fri, 10 Nov 2023 12:56:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229942AbjKJRx3 (ORCPT
+        with ESMTP id S229899AbjKJR4P (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Nov 2023 12:53:29 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CB1EA7515;
-        Fri, 10 Nov 2023 05:22:15 -0800 (PST)
+        Fri, 10 Nov 2023 12:56:15 -0500
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 250A338EBF;
+        Fri, 10 Nov 2023 06:35:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699622535; x=1731158535;
+  t=1699626913; x=1731162913;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=uDZGP2f6h/WZzzSya/mjS46j44Y1shWREjmM3+7CtIE=;
-  b=GCp8w7kTSWVtfpgx19/FFHdjFSmyKIjEu1O0eNqgMllvHXn8nJzCUrSE
-   tdKCvpJrzw8dLxtNMcV6WhZgWDj0JwumT37BglyiPMh0hTnv5RsfU2+mN
-   aNfqPFSaf1C06BbtP42zx7p1Mo/ICQRsVL/CXLX5XoWlSE33TA8DCaJf9
-   1J3yQzfcW8IWluUSP0wqV1hPT49ysI4IAUrXytPvbbGEEMreW5mMCwsiB
-   Nh8Ea61/ihu9dp4TeRKY8EwytaeoSdiEHh5CnaKMYjLmf3mp/aHxikA4y
-   Ivseo6BIafvxJjxE/Ym0WrutD7NmBWyNKNTPcl2eCPDMDWg6rHaxI7tO5
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="3168021"
+  bh=uo06VXUB/vf5aOi2Yd+6utwASdeGhe7osoEmsxnb6cM=;
+  b=TpK99T54Gk6MrDn9+6PrQKX7Z5gvV8gMgQA2ycn243zcFyXq5AilwFzc
+   Bqu80dqzbQshq1vMA5IJXCP7Zgzi91Qjm1IQUqQjSj2wqKuxt7lOTGL5h
+   F+cK7cu8QV6HBN9quLWZF9ZoNKtd6yuOQ5oi4AUXzF72r5csMPpsXve/e
+   Kf1hQ6q2zuXM2KPaGthmeFKDB7iTbtfxEYCFMzvx7fJK4DXp30zX9JbaO
+   sLKYX2r/tP9lP88Pwkc/mtDa4C/FsOq94XhoB0NH0ym251fjnpE8iEoJR
+   cGZBYZpdjlITqJZmsHVEux5fs3qdiqaR0VpFwiwFNqCcnTn8zaiDP6OKh
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10890"; a="11739533"
 X-IronPort-AV: E=Sophos;i="6.03,291,1694761200"; 
-   d="scan'208";a="3168021"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2023 05:22:15 -0800
+   d="scan'208";a="11739533"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2023 06:35:13 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10890"; a="880979315"
 X-IronPort-AV: E=Sophos;i="6.03,291,1694761200"; 
-   d="scan'208";a="11869178"
-Received: from joudin-mobl2.ger.corp.intel.com ([10.252.38.36])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2023 05:22:13 -0800
-Date:   Fri, 10 Nov 2023 15:22:10 +0200 (EET)
+   d="scan'208";a="880979315"
+Received: from joudin-mobl2.ger.corp.intel.com (HELO mciobota-mobl.ger.corp.intel.com) ([10.252.38.36])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2023 06:35:09 -0800
+Date:   Fri, 10 Nov 2023 16:35:07 +0200 (EET)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     =?ISO-2022-JP?Q?=1B$BghD6=1B=28J?= <aichao@kylinos.cn>
-cc:     Hans de Goede <hdegoede@redhat.com>,
-        markgross <markgross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        platform-driver-x86 <platform-driver-x86@vger.kernel.org>
-Subject: Re: Re: [PATCH v6] platform/x86: inspur-platform-profile: Add platform
- profile support
-In-Reply-To: <12tjevo53d-12w3aii8qy@nsmail7.0.0--kylin--1>
-Message-ID: <207247d-ffd0-2d22-48f-fcbfe12b1d1c@linux.intel.com>
-References: fad13328-4246-3659-a887-2dd5ead262f2@linux.intel.com <12tjevo53d-12w3aii8qy@nsmail7.0.0--kylin--1>
+To:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+cc:     Jorge Lopez <jorge.lopez2@hp.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>,
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, dan.carpenter@linaro.org,
+        kernel-janitors@vger.kernel.org, error27@gmail.com,
+        vegard.nossum@oracle.com, darren.kenny@oracle.com
+Subject: Re: [PATCH v2 3/4] platform/x86: hp-bioscfg: move mutex_lock down
+ in hp_add_other_attributes()
+In-Reply-To: <20231110142921.3398072-3-harshit.m.mogalapalli@oracle.com>
+Message-ID: <8ebcdb8-e1a-11ce-c42b-e73bdf55a58@linux.intel.com>
+References: <20231110142921.3398072-1-harshit.m.mogalapalli@oracle.com> <20231110142921.3398072-3-harshit.m.mogalapalli@oracle.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-215195145-1699622534=:1596"
+Content-Type: multipart/mixed; boundary="8323329-782047625-1699626912=:1596"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -60,89 +65,122 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-215195145-1699622534=:1596
+--8323329-782047625-1699626912=:1596
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
 
-On Fri, 10 Nov 2023, 艾超 wrote:
+On Fri, 10 Nov 2023, Harshit Mogalapalli wrote:
 
->     I'm sorry, receive a mail from  kernel test robot<lkp@intel.com> , that:
->
-> > kernel test robot noticed the following build warnings:
-> 
-> > [auto build test WARNING on linus/master]
-> > [also build test WARNING on v6.6]
-> > [cannot apply to next-20231102]
-> > [If your patch is applied to the wrong git tree, kindly drop us a note.
+> attr_name_kobj's memory allocation is done with mutex_lock held, this
 
-I'm aware of those, which is why I fixed those /** -> /* while I applied 
-your patch so that problem has already been taken care of!
+Please use () with function names.
 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new
-> version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot
-> > | Closes:
-> https://lore.kernel.org/oe-kbuild-all/202311021547.KTmJVY2O-lkp@intel.com/
-> 
->  
-> 
-> > All warnings (new ones prefixed by >>):
-> 
-> > >  drivers/platform/x86/inspur_platform_profile.c:27: warning: cannot
-> understand function prototype: 'enum  inspur_tmp_profile '
-> > drivers/platform/x86/inspur_platform_profile.c:74: warning: This comment
-> starts with '/**', but isn't a kernel-doc comment. Refer
-> Documentation/doc-guide/kernel-doc.rst
-> > * Set Power Mode to EC RAM. If Power Mode value greater than 0x3,
-> > drivers/platform/x86/inspur_platform_profile.c:123: warning: This comment
-> starts with '/**', but isn't a kernel-doc comment. Refer
-> Documentation/doc-guide/kernel-doc.rst
-> >  * Get Power Mode from EC RAM, If Power Mode value greater than 0x3,
-> 
-> >  vim +27 drivers/platform/x86/inspur_platform_profile.c
-> 
->  
-> 
->  And I forget to add "Reported-by: kernel test robot" in this patch.
+> probably is not needed.
 
-I know the message from lkp sounds like that (and it is slightly 
-confusing) but it is to be added only when you're fixing code that has 
-already made into a maintainer tree.
+Just remove probably.
 
-If one is submitting entirely new code and lkp finds and issue, one is not 
-supposed to add that reported by even if the message tells you to do so. I 
-hope this clears any confusion you might have about when it's needed.
+> Move the mutex_lock downward so we need not unlock when allocation
+> fails.
+
+Move allocation outside of mutex_lock() so unlock is not needed when
+allocation fails.
+
+The code change looks fine.
 
 -- 
  i.
 
-> On Thu, 9 Nov 2023, Ai Chao wrote:
+> Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+> ---
+>  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
 > 
-> > Add support for Inspur platforms to used the platform profile feature.
-> >
-> > This will allow users to determine and control the platform modes
-> > between low-power, balanced and performance modes.
-> >
-> > Signed-off-by: Ai Chao
-> > ---
-> >
-> > v6: Remove comment for inspur_tmp_profile
-> > v5: Rename inspur-wmi to inspur_platform_profile
-> > v4: Add select ACPI_PLATFORM_PROFILE
-> > v3: Remove input device, using the platform profile interface
-> > v2: Remove Event GUID, remove inspur_wmi_notify and inspur_wmi_notify.
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> index 3b735b071a01..351d782f3e96 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> @@ -575,77 +575,75 @@ static void release_attributes_data(void)
+>  /**
+>   * hp_add_other_attributes() - Initialize HP custom attributes not
+>   * reported by BIOS and required to support Secure Platform and Sure
+>   * Start.
+>   *
+>   * @attr_type: Custom HP attribute not reported by BIOS
+>   *
+>   * Initialize all 2 types of attributes: Platform and Sure Start
+>   * object.  Populates each attribute types respective properties
+>   * under sysfs files.
+>   *
+>   * Returns zero(0) if successful. Otherwise, a negative value.
+>   */
+>  static int hp_add_other_attributes(int attr_type)
+>  {
+>  	struct kobject *attr_name_kobj;
+>  	int ret;
+>  	char *attr_name;
+>  
+> -	mutex_lock(&bioscfg_drv.mutex);
+> -
+>  	attr_name_kobj = kzalloc(sizeof(*attr_name_kobj), GFP_KERNEL);
+> -	if (!attr_name_kobj) {
+> -		ret = -ENOMEM;
+> -		goto err_other_attr_init;
+> -	}
+> +	if (!attr_name_kobj)
+> +		return -ENOMEM;
+> +
+> +	mutex_lock(&bioscfg_drv.mutex);
+>  
+>  	/* Check if attribute type is supported */
+>  	switch (attr_type) {
+>  	case HPWMI_SECURE_PLATFORM_TYPE:
+>  		attr_name_kobj->kset = bioscfg_drv.authentication_dir_kset;
+>  		attr_name = SPM_STR;
+>  		break;
+>  
+>  	case HPWMI_SURE_START_TYPE:
+>  		attr_name_kobj->kset = bioscfg_drv.main_dir_kset;
+>  		attr_name = SURE_START_STR;
+>  		break;
+>  
+>  	default:
+>  		pr_err("Error: Unknown attr_type: %d\n", attr_type);
+>  		ret = -EINVAL;
+>  		goto err_other_attr_init;
+>  	}
+>  
+>  	ret = kobject_init_and_add(attr_name_kobj, &attr_name_ktype,
+>  				   NULL, "%s", attr_name);
+>  	if (ret) {
+>  		pr_err("Error encountered [%d]\n", ret);
+>  		kobject_put(attr_name_kobj);
+>  		goto err_other_attr_init;
+>  	}
+>  
+>  	/* Populate attribute data */
+>  	switch (attr_type) {
+>  	case HPWMI_SECURE_PLATFORM_TYPE:
+>  		ret = hp_populate_secure_platform_data(attr_name_kobj);
+>  		break;
+>  
+>  	case HPWMI_SURE_START_TYPE:
+>  		ret = hp_populate_sure_start_data(attr_name_kobj);
+>  		break;
+>  
+>  	default:
+>  		ret = -EINVAL;
+>  	}
+>  
+>  	if (ret)
+>  		goto err_other_attr_init;
+>  
+>  	mutex_unlock(&bioscfg_drv.mutex);
+>  	return 0;
+>  
+>  err_other_attr_init:
+>  	mutex_unlock(&bioscfg_drv.mutex);
+>  	return ret;
+>  }
 > 
-> Hi,
-> 
-> I already took your v5 and it has since made also into Linus' tree.
-> 
-> If you want to make further changes to the driver, place them as
-> incremental changes on top of what's already included, thank you.
-> 
-> --
-> i.
-> 
-> 
-> 
---8323329-215195145-1699622534=:1596--
+--8323329-782047625-1699626912=:1596--
