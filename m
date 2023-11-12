@@ -2,85 +2,107 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 301EFC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Nov 2023 07:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EDBC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Nov 2023 15:31:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229599AbjKLHvz (ORCPT
+        id S231546AbjKLPbe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 12 Nov 2023 02:51:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40022 "EHLO
+        Sun, 12 Nov 2023 10:31:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229548AbjKLHvz (ORCPT
+        with ESMTP id S231542AbjKLPbd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 12 Nov 2023 02:51:55 -0500
-X-Greylist: delayed 451 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 11 Nov 2023 23:51:52 PST
-Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 79C272D59
-        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Nov 2023 23:51:52 -0800 (PST)
-Received: from pop-os.home ([86.243.2.178])
-        by smtp.orange.fr with ESMTPA
-        id 258kraxZkSnL0258kru9kF; Sun, 12 Nov 2023 08:44:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-        s=t20230301; t=1699775060;
-        bh=CMJ7mtbkQ6wr2X7EyGA8oyEfbM3Nf5YejXN8k/sc2Rw=;
-        h=From:To:Cc:Subject:Date;
-        b=ersE2zY+Kx3K9M/oDZf/q2qmZMRggYKp7QWd9xNoylpaz16so9XmICfsr/zPUKeKY
-         S0qRxmbdBHCHwWbc/mxfzJ6H+0XJtRb6jeRafZ6A5Ge7FQfHJZFJdbIs62JNplMPRG
-         ur+wLFZyn4k7hhL+2mS3wzTLnXfl2E0Qg4nfvGaNVE7OmT1dIjcmRuOIlGJFJKvXZL
-         1ZB44QWXHDqZSQcVWnaNTuhCEEvOj452lDib40/Sp4w1QoznsFBfe726kUG44yy2nW
-         jxVmCAXxlRmD6ATPfV9CghnQ6G8GhFAn2zBgn3POK1SY2Tsu0Sy2AaTmTzl0z6+5RP
-         R9+27WG5NGlWg==
-X-ME-Helo: pop-os.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 12 Nov 2023 08:44:20 +0100
-X-ME-IP: 86.243.2.178
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     Hans de Goede <hdegoede@redhat.com>,
+        Sun, 12 Nov 2023 10:31:33 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 213122D62;
+        Sun, 12 Nov 2023 07:31:30 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-32f78dcf036so2735308f8f.0;
+        Sun, 12 Nov 2023 07:31:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699803088; x=1700407888; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=obRWuxKD/5egh3mY1N2w+/+ozAFkQxS5SU7QX1mWWT8=;
+        b=iZ/Pq3rDjleX2+KRroxutHIQFWdJx+nBaUBmRpslJatB9Shy3Fvnxu2kOYX8fRGOVx
+         bN/GvVJf4FvmRZQSD8YIqBDUx51YtyZ0BFw3k4mTeS+ZuObqzJi2RaxnVnG1PyoxFrHt
+         JgAyHUFy3QUBiMEXRp5FwUDad+CenMI4N0HvQ/qJxOjSAXDJPt/qfjgVw5eTMv0dqdQL
+         JbqIpkagIKioBOpTZq3TCIfUBH3GALRwzeidXmAIqIMQKuAtoQbAJIlgvx9M6FNnqq+T
+         RiVJC1PJPCfXXtsPqmIOiNVFN1ySFYo5KJ6cEDBQkX4rSTEi0zch+HG6gNpqZqfVBsgE
+         24rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699803088; x=1700407888;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=obRWuxKD/5egh3mY1N2w+/+ozAFkQxS5SU7QX1mWWT8=;
+        b=sou7iUARRCjersmYe/5OAkJllN+VAR7G/YRRVP35ad12NwO88+pIKs0t54rM3itPZF
+         r4HCQBjBGHFaQSyCwtvC86MNP0MUsCFTX71XowBF5WQbb3I2ss8frpGFJ4erdhoGtAm5
+         7RPsHYoo0SGOg1iGoBwgyt5Tu+umQQehZzREBOjvdGBm1nb6ccOw/Dybff7M6w/G0xln
+         pXB4XiKYHH77VNCHzkWqyd0z4e+RMHwFZXYknqYwrPTWAXr8ur6y2AsTb0Bmj97Hrvya
+         1yTvto9k4qIhlaV+lJ0XGpsvykpApvTjACqqrl2AvZDANWiqZlmEidnUjFrvLvltOcnn
+         PWRQ==
+X-Gm-Message-State: AOJu0YyIaiB7FmL/1gqsUquRegffRD83r5jwQ78e811w1+pRx9r92pKi
+        PmrRZcuj1IHWDLkstsJK10TPO4XEAMuROw==
+X-Google-Smtp-Source: AGHT+IGfotbB3DLf0OlhknXd+Y4emP/hgPDqbDD6hpxGQBA7lZHIiQCoe/i6pTKYI+hJ02oSlQhd4A==
+X-Received: by 2002:a05:6000:795:b0:32f:8b1c:106d with SMTP id bu21-20020a056000079500b0032f8b1c106dmr8285059wrb.10.1699803088077;
+        Sun, 12 Nov 2023 07:31:28 -0800 (PST)
+Received: from localhost.localdomain ([109.175.193.90])
+        by smtp.gmail.com with ESMTPSA id fl14-20020a05600c0b8e00b004080f0376a0sm5287551wmb.42.2023.11.12.07.31.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Nov 2023 07:31:27 -0800 (PST)
+From:   Stuart Hayhurst <stuart.a.hayhurst@gmail.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     Stuart Hayhurst <stuart.a.hayhurst@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Gross <markgross@kernel.org>,
         =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86/dell: alienware-wmi: Use kasprintf()
-Date:   Sun, 12 Nov 2023 08:44:15 +0100
-Message-Id: <f2b2c9e5d80550e480a627c1b2139d5cc9472ffa.1699775015.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.34.1
+        Hans de Goede <hdegoede@redhat.com>,
+        Ike Panhc <ike.pan@canonical.com>
+Subject: [PATCH] platform/x86: ideapad-laptop: Set max_brightness before using it
+Date:   Sun, 12 Nov 2023 15:27:53 +0000
+Message-ID: <20231112152851.17687-2-stuart.a.hayhurst@gmail.com>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Use kasprintf() instead of hand writing it.
-This saves the need of an intermediate buffer.
+max_brightness would be used in ideapad_kbd_bl_brightness_get() before it was
+set, causing ideapad_kbd_bl_brightness_get() to return -EINVAL sometimes
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Stuart Hayhurst <stuart.a.hayhurst@gmail.com>
 ---
- drivers/platform/x86/dell/alienware-wmi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/platform/x86/ideapad-laptop.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
-index a9477e5432e4..f5ee62ce1753 100644
---- a/drivers/platform/x86/dell/alienware-wmi.c
-+++ b/drivers/platform/x86/dell/alienware-wmi.c
-@@ -429,7 +429,6 @@ static DEVICE_ATTR(lighting_control_state, 0644, show_control_state,
- static int alienware_zone_init(struct platform_device *dev)
- {
- 	u8 zone;
--	char buffer[10];
- 	char *name;
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index ac037540acfc..88eefccb6ed2 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1425,18 +1425,17 @@ static int ideapad_kbd_bl_init(struct ideapad_private *priv)
+ 	if (WARN_ON(priv->kbd_bl.initialized))
+ 		return -EEXIST;
  
- 	if (interface == WMAX) {
-@@ -466,8 +465,7 @@ static int alienware_zone_init(struct platform_device *dev)
- 		return -ENOMEM;
+-	brightness = ideapad_kbd_bl_brightness_get(priv);
+-	if (brightness < 0)
+-		return brightness;
+-
+-	priv->kbd_bl.last_brightness = brightness;
+-
+ 	if (ideapad_kbd_bl_check_tristate(priv->kbd_bl.type)) {
+ 		priv->kbd_bl.led.max_brightness = 2;
+ 	} else {
+ 		priv->kbd_bl.led.max_brightness = 1;
+ 	}
  
- 	for (zone = 0; zone < quirks->num_zones; zone++) {
--		sprintf(buffer, "zone%02hhX", zone);
--		name = kstrdup(buffer, GFP_KERNEL);
-+		name = kasprintf(GFP_KERNEL, "zone%02hhX", zone);
- 		if (name == NULL)
- 			return 1;
- 		sysfs_attr_init(&zone_dev_attrs[zone].attr);
++	brightness = ideapad_kbd_bl_brightness_get(priv);
++	if (brightness < 0)
++		return brightness;
++
++	priv->kbd_bl.last_brightness = brightness;
+ 	priv->kbd_bl.led.name                    = "platform::" LED_FUNCTION_KBD_BACKLIGHT;
+ 	priv->kbd_bl.led.brightness_get          = ideapad_kbd_bl_led_cdev_brightness_get;
+ 	priv->kbd_bl.led.brightness_set_blocking = ideapad_kbd_bl_led_cdev_brightness_set;
 -- 
-2.34.1
+2.42.0
 
