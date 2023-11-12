@@ -2,173 +2,85 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC27C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 10 Nov 2023 20:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301EFC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 12 Nov 2023 07:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346078AbjKJUvv (ORCPT
+        id S229599AbjKLHvz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 10 Nov 2023 15:51:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44920 "EHLO
+        Sun, 12 Nov 2023 02:51:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236058AbjKJUvi (ORCPT
+        with ESMTP id S229548AbjKLHvz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 10 Nov 2023 15:51:38 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C62C438EB7;
-        Fri, 10 Nov 2023 06:31:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699626666; x=1731162666;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=7NuM5fAT3PCHwl6MWpbbqZ8vteA/eqDSWAwQNqdHwZI=;
-  b=b1Bi6E2/STBwiNak7oori9WSpc4tYAY/GGAZSHSLIUg7crp/YpvsDtC3
-   LMXQ5eVj87YnxiY3/L/AFGJV8JmttaC5tu3FmfmAldIx5v3E11hfn+Nw9
-   7zzdSkgWIkLW+ARUM/+xZovY3tXCCx1TIkVFJ5P3gWBe5OhLc2idk2bPW
-   MofnJGJpVJHdBNYj2+GpUNx1bisjyrocXOQxHom3Zahqlj8//HKOfi9g0
-   x4izerJUrRBXcJWeXV1o1sHqoUKdRNk1lVsi0ePGuDkFbrve72Nwn+NFc
-   LsHm16KouKuO86u1Xmr7Ay1FZI4qHbIoJkA22UhgBwLAG0PChylMbSt4f
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10890"; a="393063053"
-X-IronPort-AV: E=Sophos;i="6.03,291,1694761200"; 
-   d="scan'208";a="393063053"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2023 06:31:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10890"; a="829661968"
-X-IronPort-AV: E=Sophos;i="6.03,291,1694761200"; 
-   d="scan'208";a="829661968"
-Received: from joudin-mobl2.ger.corp.intel.com (HELO mciobota-mobl.ger.corp.intel.com) ([10.252.38.36])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2023 06:31:02 -0800
-Date:   Fri, 10 Nov 2023 16:31:00 +0200 (EET)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-cc:     Jorge Lopez <jorge.lopez2@hp.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>,
-        platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, dan.carpenter@linaro.org,
-        kernel-janitors@vger.kernel.org, error27@gmail.com,
-        vegard.nossum@oracle.com, darren.kenny@oracle.com
-Subject: Re: [PATCH v2 1/4] platform/x86: hp-bioscfg: Remove unused obj in
- hp_add_other_attributes()
-In-Reply-To: <20231110142921.3398072-1-harshit.m.mogalapalli@oracle.com>
-Message-ID: <fc59edba-1a19-77e2-e1f-4b342eeab40@linux.intel.com>
-References: <20231110142921.3398072-1-harshit.m.mogalapalli@oracle.com>
+        Sun, 12 Nov 2023 02:51:55 -0500
+X-Greylist: delayed 451 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 11 Nov 2023 23:51:52 PST
+Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 79C272D59
+        for <platform-driver-x86@vger.kernel.org>; Sat, 11 Nov 2023 23:51:52 -0800 (PST)
+Received: from pop-os.home ([86.243.2.178])
+        by smtp.orange.fr with ESMTPA
+        id 258kraxZkSnL0258kru9kF; Sun, 12 Nov 2023 08:44:20 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+        s=t20230301; t=1699775060;
+        bh=CMJ7mtbkQ6wr2X7EyGA8oyEfbM3Nf5YejXN8k/sc2Rw=;
+        h=From:To:Cc:Subject:Date;
+        b=ersE2zY+Kx3K9M/oDZf/q2qmZMRggYKp7QWd9xNoylpaz16so9XmICfsr/zPUKeKY
+         S0qRxmbdBHCHwWbc/mxfzJ6H+0XJtRb6jeRafZ6A5Ge7FQfHJZFJdbIs62JNplMPRG
+         ur+wLFZyn4k7hhL+2mS3wzTLnXfl2E0Qg4nfvGaNVE7OmT1dIjcmRuOIlGJFJKvXZL
+         1ZB44QWXHDqZSQcVWnaNTuhCEEvOj452lDib40/Sp4w1QoznsFBfe726kUG44yy2nW
+         jxVmCAXxlRmD6ATPfV9CghnQ6G8GhFAn2zBgn3POK1SY2Tsu0Sy2AaTmTzl0z6+5RP
+         R9+27WG5NGlWg==
+X-ME-Helo: pop-os.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 12 Nov 2023 08:44:20 +0100
+X-ME-IP: 86.243.2.178
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86/dell: alienware-wmi: Use kasprintf()
+Date:   Sun, 12 Nov 2023 08:44:15 +0100
+Message-Id: <f2b2c9e5d80550e480a627c1b2139d5cc9472ffa.1699775015.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1728740189-1699626665=:1596"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Use kasprintf() instead of hand writing it.
+This saves the need of an intermediate buffer.
 
---8323329-1728740189-1699626665=:1596
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/platform/x86/dell/alienware-wmi.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-On Fri, 10 Nov 2023, Harshit Mogalapalli wrote:
-
-> acpi_object *obj is unused in this function, so delete it, also
-> delete a unnecessary kfree(obj);
-> 
-> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-> ---
->  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> index 5798b49ddaba..0b563582d90d 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> @@ -575,82 +575,80 @@ static void release_attributes_data(void)
->  /**
->   * hp_add_other_attributes() - Initialize HP custom attributes not
->   * reported by BIOS and required to support Secure Platform and Sure
->   * Start.
->   *
->   * @attr_type: Custom HP attribute not reported by BIOS
->   *
->   * Initialize all 2 types of attributes: Platform and Sure Start
->   * object.  Populates each attribute types respective properties
->   * under sysfs files.
->   *
->   * Returns zero(0) if successful. Otherwise, a negative value.
->   */
->  static int hp_add_other_attributes(int attr_type)
->  {
->  	struct kobject *attr_name_kobj;
-> -	union acpi_object *obj = NULL;
->  	int ret;
->  	char *attr_name;
->  
->  	mutex_lock(&bioscfg_drv.mutex);
->  
->  	attr_name_kobj = kzalloc(sizeof(*attr_name_kobj), GFP_KERNEL);
->  	if (!attr_name_kobj) {
->  		ret = -ENOMEM;
->  		goto err_other_attr_init;
->  	}
->  
->  	/* Check if attribute type is supported */
->  	switch (attr_type) {
->  	case HPWMI_SECURE_PLATFORM_TYPE:
->  		attr_name_kobj->kset = bioscfg_drv.authentication_dir_kset;
->  		attr_name = SPM_STR;
->  		break;
->  
->  	case HPWMI_SURE_START_TYPE:
->  		attr_name_kobj->kset = bioscfg_drv.main_dir_kset;
->  		attr_name = SURE_START_STR;
->  		break;
->  
->  	default:
->  		pr_err("Error: Unknown attr_type: %d\n", attr_type);
->  		ret = -EINVAL;
->  		goto err_other_attr_init;
->  	}
->  
->  	ret = kobject_init_and_add(attr_name_kobj, &attr_name_ktype,
->  				   NULL, "%s", attr_name);
->  	if (ret) {
->  		pr_err("Error encountered [%d]\n", ret);
->  		kobject_put(attr_name_kobj);
->  		goto err_other_attr_init;
->  	}
->  
->  	/* Populate attribute data */
->  	switch (attr_type) {
->  	case HPWMI_SECURE_PLATFORM_TYPE:
->  		ret = hp_populate_secure_platform_data(attr_name_kobj);
->  		if (ret)
->  			goto err_other_attr_init;
->  		break;
->  
->  	case HPWMI_SURE_START_TYPE:
->  		ret = hp_populate_sure_start_data(attr_name_kobj);
->  		if (ret)
->  			goto err_other_attr_init;
->  		break;
->  
->  	default:
->  		ret = -EINVAL;
->  		goto err_other_attr_init;
->  	}
->  
->  	mutex_unlock(&bioscfg_drv.mutex);
->  	return 0;
->  
->  err_other_attr_init:
->  	mutex_unlock(&bioscfg_drv.mutex);
-> -	kfree(obj);
->  	return ret;
->  }
-
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-
+diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+index a9477e5432e4..f5ee62ce1753 100644
+--- a/drivers/platform/x86/dell/alienware-wmi.c
++++ b/drivers/platform/x86/dell/alienware-wmi.c
+@@ -429,7 +429,6 @@ static DEVICE_ATTR(lighting_control_state, 0644, show_control_state,
+ static int alienware_zone_init(struct platform_device *dev)
+ {
+ 	u8 zone;
+-	char buffer[10];
+ 	char *name;
+ 
+ 	if (interface == WMAX) {
+@@ -466,8 +465,7 @@ static int alienware_zone_init(struct platform_device *dev)
+ 		return -ENOMEM;
+ 
+ 	for (zone = 0; zone < quirks->num_zones; zone++) {
+-		sprintf(buffer, "zone%02hhX", zone);
+-		name = kstrdup(buffer, GFP_KERNEL);
++		name = kasprintf(GFP_KERNEL, "zone%02hhX", zone);
+ 		if (name == NULL)
+ 			return 1;
+ 		sysfs_attr_init(&zone_dev_attrs[zone].attr);
 -- 
- i.
+2.34.1
 
---8323329-1728740189-1699626665=:1596--
