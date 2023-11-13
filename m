@@ -2,129 +2,114 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA9CC4167B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 20:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC63C4167D
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 20:40:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229715AbjKMUSV (ORCPT
+        id S229924AbjKMUku (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Nov 2023 15:18:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53602 "EHLO
+        Mon, 13 Nov 2023 15:40:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229511AbjKMUSU (ORCPT
+        with ESMTP id S229880AbjKMUkt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Nov 2023 15:18:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E47C310F4
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 12:17:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1699906673;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WHG7y6RDisjgRBKsr9b5mVEL+3CBXjyGr1DFkZoWxFc=;
-        b=Fa4C9zHVmYcMfklVQNaakmUcesKqOn/xaHmqhieaypDnfnUGY2zeyUVkes9kUBBD/xFnkL
-        BTxZxHNt4eEkoNu8dnxt22LUbgaFuljwCbtGyPYMNvhG2IoFoluJIlDUHA5EtzmPmNDoTF
-        MbvlulgiLjzbCKBat7PBDmk6u/K5iSM=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-423-Nj_3inJWPNuf7R4-MoVqhw-1; Mon, 13 Nov 2023 15:17:51 -0500
-X-MC-Unique: Nj_3inJWPNuf7R4-MoVqhw-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-547359e70aaso962913a12.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 12:17:51 -0800 (PST)
+        Mon, 13 Nov 2023 15:40:49 -0500
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9A3DD57;
+        Mon, 13 Nov 2023 12:40:46 -0800 (PST)
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3b6ce6fac81so2030644b6e.1;
+        Mon, 13 Nov 2023 12:40:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699906670; x=1700511470;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WHG7y6RDisjgRBKsr9b5mVEL+3CBXjyGr1DFkZoWxFc=;
-        b=aKoDUxmlYw/akqNjfjxe6wskQsMn/ri+8xB3lanMKffxW0rU/GPwMq6ClFQSrY9Ncv
-         W92tfoAUzOTTYBL94VJgzgZI/bezA7w9kYjISHomz2zDAd34OJdQC8FBqi0aUCo5jvb9
-         v/GXkuhILMOqOwwkxbLVBpY7IdjLgALxiJ8j1BqyQEpI7PJBVECiAQZle4IPTPVN/9PU
-         bxh/2H2QsqLx7HzaQwUBjQOwbSsSs65TKhwOc8fPCpSs0FyD3LF0N73Y2BhEI7dcZn2G
-         B9K2TlqL4VTFmEi0DKY8On7wmAUvtR76eiQ4M+E2qZ/Mt0D5jLKyxeihiGceKe9y8Tp/
-         u0Mg==
-X-Gm-Message-State: AOJu0YwygneLlwosCZ40nrXcT0aAw3UFJF7zUf4uRCaLGPTa96rpgBsD
-        +/4WHYGgMcMDZt2Ew7DMcyrdJ49P09/lXjV8BMnGlx15bbPI6hLonuPTFLZB/3WFrKlV/o+NqWU
-        KUKmaQYRGgDf4rsXhARCmQpDbPeYTacfcZZmWEV480Q==
-X-Received: by 2002:aa7:d555:0:b0:546:d0b7:f4e4 with SMTP id u21-20020aa7d555000000b00546d0b7f4e4mr5720416edr.8.1699906670247;
-        Mon, 13 Nov 2023 12:17:50 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHJ31+bJ3bnZRU8DicZJd+AsZ1d8QMmiId8Sfli7YEux00xVSQkU/oZU9dAgygaDj14tUz0kA==
-X-Received: by 2002:aa7:d555:0:b0:546:d0b7:f4e4 with SMTP id u21-20020aa7d555000000b00546d0b7f4e4mr5720398edr.8.1699906669927;
-        Mon, 13 Nov 2023 12:17:49 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id d22-20020a50cd56000000b0054719a2a0cdsm3696000edj.16.2023.11.13.12.17.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Nov 2023 12:17:49 -0800 (PST)
-Message-ID: <8c25dfec-b0ca-4e2f-964a-5ae62452e141@redhat.com>
-Date:   Mon, 13 Nov 2023 21:17:48 +0100
+        d=1e100.net; s=20230601; t=1699908046; x=1700512846;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zlUyGqF8YFfY+SBOA/cyr6ZOVZJ7c/K2t3V+uvFzoZo=;
+        b=O3QbQ5AIEem6KzcyB8c7fodmhY2Ztze6NXpTr1eO5CHCswrYhNCAfRZ2JyNoXtlAho
+         GBrGYar232rLRx4cWIhIXLGx6+/47fn+2IVVVPcgjlINt1waoKErfkRrHjuVuGOcgbg9
+         xVE7vtgZIfTKm8Olys17DjhUqb9ZwOhv9mPM78bgLbiXmiz4nRFeqI312BVZuR05zTqA
+         TUDRiT1eIimSvYvpwP7OS20OrvWlt1mXB4FUWaKSn9Z7EYDg+VJDEm1hJ3Y6hUg/4gQV
+         3AMaOqsOSCnwWRKIi1oUC02dOV6xR/4A2oi+pdV2E+1JlRI7RdFS+8rix9SYUQtfEZ/2
+         Mgvw==
+X-Gm-Message-State: AOJu0YwRercYPCzD+WWirE4cZp2wWQvezkoCXKlN/+TaJMUjK2x3Fn2y
+        NaYw+wFJ6YW7BzvdiuMyUzCVjEGLmQ==
+X-Google-Smtp-Source: AGHT+IHBzTJq+oL6GFdaOVxFk4/Ftg8k5iAgT1Ifs85gnVEKM22ESG9dmEHGWLJWa+sT6dWirBhxpw==
+X-Received: by 2002:a05:6808:210f:b0:3b2:dc66:21a9 with SMTP id r15-20020a056808210f00b003b2dc6621a9mr10510321oiw.28.1699908046076;
+        Mon, 13 Nov 2023 12:40:46 -0800 (PST)
+Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id l5-20020a056808020500b003b2f3fb081csm902881oie.51.2023.11.13.12.40.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Nov 2023 12:40:45 -0800 (PST)
+Received: (nullmailer pid 38665 invoked by uid 1000);
+        Mon, 13 Nov 2023 20:40:42 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/9] hwmon: (dell-smm) Add support for WMI SMM
- interface
-To:     Armin Wolf <W_Armin@gmx.de>, pali@kernel.org
-Cc:     markgross@kernel.org, ilpo.jarvinen@linux.intel.com,
-        jdelvare@suse.com, linux@roeck-us.net,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20231106064351.42347-1-W_Armin@gmx.de>
- <3ec0496d-3b89-46f5-9faf-9fcce78f6b38@gmx.de>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <3ec0496d-3b89-46f5-9faf-9fcce78f6b38@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From:   Rob Herring <robh@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org
+In-Reply-To: <20231113145328.42575-2-dmitry.baryshkov@linaro.org>
+References: <20231113145328.42575-1-dmitry.baryshkov@linaro.org>
+ <20231113145328.42575-2-dmitry.baryshkov@linaro.org>
+Message-Id: <169990801021.37946.4455016402393368576.robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: connector: usb: add altmodes
+ description
+Date:   Mon, 13 Nov 2023 14:40:42 -0600
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Armin,
 
-On 11/13/23 20:55, Armin Wolf wrote:
-> Am 06.11.23 um 07:43 schrieb Armin Wolf:
+On Mon, 13 Nov 2023 16:33:07 +0200, Dmitry Baryshkov wrote:
+> Add description of the USB-C AltModes supported on the particular USB-C
+> connector. This is required for devices like Qualcomm Robotics RB5,
+> which have no other way to express alternative modes supported by the
+> hardware platform.
 > 
->> This patch series adds support for an alternative SMM calling
->> backend to the dell-smm-hwmon driver. The reason for this is
->> that on some modern machines, the legacy SMM calling interface
->> does not work anymore and the SMM handler can be called over
->> ACPI WMI instead.
->>
->> The first four patches prepare the driver by allowing to
->> specify different SMM calling backends, and by moving most of
->> the DMI handling into i8k_init() so that the DMI tables can
->> keep their __initconst attributes (the WMI SMM backend driver
->> does not probe at module init time). The fifth patch does some
->> minor cleanup, while the next three patches implement the new
->> WMI SMM calling backend. The last patch adds the machine of
->> the user who requested and tested the changes to the fan control
->> whitelist.
->>
->> If the driver does not detect the legacy SMM interface, either
->> because the machine is not whitelisted or because the SMM handler
->> does not react, it registers an WMI driver which will then bound
->> to the WMI SMM interface and do the remaining initialization.
->>
->> The deprecated procfs interface is not supported when using the
->> WMI SMM calling backend for the following reason: the WMI driver
->> can potentially be instantiated multiple times while the deprectated
->> procfs interface cannot. This should not cause any regressions
->> because on machines supporting only the WMI SMM interface, the
->> driver would, until now, not load anyway.
->>
->> All patches where tested on a Dell Inspiron 3505 and a Dell
->> OptiPlex 7000.
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  .../bindings/connector/usb-connector.yaml     | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
 > 
-> Any thoughts on this?
 
-I was waiting for the merge window to close before
-reviewing / merging patches for the next cycle.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-I plan to review and hopefully merge this and your
-other series sometime this week.
+yamllint warnings/errors:
 
-Regards,
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/connector/usb-connector.yaml: $defs:altmodes-list: 'anyOf' conditional failed, one must be fixed:
+	'descrption' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'dependentRequired', 'dependentSchemas', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
+	'type' was expected
+	hint: $defs entries must contain schemas
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
 
-Hans
+doc reference errors (make refcheckdocs):
 
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20231113145328.42575-2-dmitry.baryshkov@linaro.org
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
