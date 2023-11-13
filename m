@@ -2,118 +2,190 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1A5C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 16:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028C4C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 16:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229903AbjKMQoj (ORCPT
+        id S229873AbjKMQzJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Nov 2023 11:44:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39430 "EHLO
+        Mon, 13 Nov 2023 11:55:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229511AbjKMQoj (ORCPT
+        with ESMTP id S229511AbjKMQzI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Nov 2023 11:44:39 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FA1FD53;
-        Mon, 13 Nov 2023 08:44:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699893876; x=1731429876;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=38xyA1hoInxlMYX/sULzWuQ/eDkx63Ca3OYIXvdtBvE=;
-  b=lUx5luUVATokApnjabxG760tjOmcKv8G09n4SNNFoFkbEZxxWvQku8RQ
-   YsZ0s8Jij1u86oGrUGe8RoGBk47KkEuYUhMQ9O8m5hfhXPNxsg5oNBS+X
-   ugEz0zWEU1UVSyN6EsGZ5QnjWvksTTuLsh2z5t72V3UEjHC39YvK8eKz0
-   1Lj+W7BdkJDffhK0BYozx2jCb96icEIqDHMrgtBfPOUkYMGEfWlDUci5i
-   19Dgo4u0y3G3EK5czRfMs6hVntld5Bf03S/qbqAm2mia/17gu4SmQUZyD
-   zXe3oyuzIWLAcT38Y1oSo9cLMJeWFEo1oXdH/G/ltif/F7obS1KkaakwM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="393329742"
-X-IronPort-AV: E=Sophos;i="6.03,299,1694761200"; 
-   d="scan'208";a="393329742"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2023 08:44:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="887966790"
-X-IronPort-AV: E=Sophos;i="6.03,299,1694761200"; 
-   d="scan'208";a="887966790"
-Received: from alexdsou-mobl3.gar.corp.intel.com ([10.249.44.83])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2023 08:44:31 -0800
-Date:   Mon, 13 Nov 2023 18:44:28 +0200 (EET)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Dan Carpenter <dan.carpenter@linaro.org>
-cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-        Jorge Lopez <jorge.lopez2@hp.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>,
-        platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, error27@gmail.com,
-        vegard.nossum@oracle.com, darren.kenny@oracle.com,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 4/4] platform/x86: hp-bioscfg: Fix error handling in
- hp_add_other_attributes()
-In-Reply-To: <bd9e80db-a80f-44d1-bcb9-a14ec0abc64f@suswa.mountain>
-Message-ID: <24d6b879-6874-22f7-c8e6-90f3f0968d9f@linux.intel.com>
-References: <20231110142921.3398072-1-harshit.m.mogalapalli@oracle.com> <20231110142921.3398072-4-harshit.m.mogalapalli@oracle.com> <211e6c1e-9bfa-ac29-b6ba-e198c4f36688@linux.intel.com> <fb97e3ea-1bee-4d7d-a8d4-dd76107f75ef@oracle.com>
- <1b58df2d-b444-ddb7-7533-9911d35f8f7@linux.intel.com> <c3b821fb-5df1-4c58-99bc-f3e99a6d1d94@oracle.com> <a0b5d36a-aad8-eaf5-7241-85d1c874ff8@linux.intel.com> <bd9e80db-a80f-44d1-bcb9-a14ec0abc64f@suswa.mountain>
+        Mon, 13 Nov 2023 11:55:08 -0500
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5945D73;
+        Mon, 13 Nov 2023 08:55:04 -0800 (PST)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 72BF35C020C;
+        Mon, 13 Nov 2023 11:55:02 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Mon, 13 Nov 2023 11:55:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm1; t=1699894502; x=
+        1699980902; bh=4nE4dUxYqdoe8QHwz0M06hubKIFptkAxqfhEejltdOs=; b=e
+        pNEY1q9ENltwLtFJDHhFkZb4EYkpnBlfK+dfBc0Ym9N9kj+4mBaTDu9uoZbnIp5+
+        XEZwtYKwZC631ioYurMjRPmePcQCY+w8Qu+S5syYcL/XYbUoDbjUjKgwLSiQid4b
+        +GbgOEvittuByugR1UOHwxAsNtKhhPt9Pt0kNPPaPYD+q/qHoGCpPoUDNtMvoiXo
+        Fnye7a4wbSu9tN7lP1r5T7FAclyKEtKXqCUlDTaQE5PpQkSyLgQeWMJqUy971x6G
+        IMA95RBy+W8le87b1/TcObhxW7vo7rWM6uyBbEcBae9Dl3Qz402lTGUR23HDJH53
+        zFmFjXercrZA7HEKbyMlQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1699894502; x=
+        1699980902; bh=4nE4dUxYqdoe8QHwz0M06hubKIFptkAxqfhEejltdOs=; b=B
+        VXWqpGHbNJoTofNZEb43l23Hr6kXGkONbMXPM2Zez1d0rQ1lX3CSk5PKv60Xga13
+        yvmD8RTSnwhcofSIiexxPh7GoaQmSwlEQMz6yNuBepPHI9bwbzpRvsSx58OwRCLd
+        x9o7XzbUlQw6DJqYpGn0xoTA9tUdatnrRpn1qd2OUrPpj99tRHdndYYRRt4aOsdS
+        dh+9M/BuX18Nd1hezPhm2RZ93/lv4zx7lDqEY4Ue0aEBKgOy1E7LfbDBWq/JIu+x
+        sHA6F2wEQN2zFrvND6bnKOdANi5cCDaULcAsUVJqpuyBQp+x4m7BRmIAFV8lgDwe
+        h4KPQpagjj+TQX9qomOgw==
+X-ME-Sender: <xms:5lRSZT32p3ftJeLgsAe_U8Bh0loKOzJ_Ukha1tXgGDRoTqOt4-YQUw>
+    <xme:5lRSZSHC8AdWL1tVIaBLzC_zdOojp_497VvTPZsPcOIjnBIeSPsb-S8Jq-hqccY-L
+    DsvSijDeybIo5DLNRc>
+X-ME-Received: <xmr:5lRSZT6muDtKDafYze-K2ZYifb-hTDqZ75i6GzM71Xxk_Ov1JBLn-gjsKOROGUj4fb4NoN-fbtfwPmk2>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudeftddgledvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucgoteeftdduqddtudculdduhedmnecujfgurhephf
+    fvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrhhs
+    ohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggftrf
+    grthhtvghrnhepfedtvdejfeelffevhffgjeejheduteetieeguefgkefhhfegjeduueet
+    hefgvdffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+X-ME-Proxy: <xmx:5lRSZY3oBZ3FaRuboYKU-1iRES4qrqBU9RUq0rPot7hNM9md60owdA>
+    <xmx:5lRSZWF2sg6UHHLzeOeSR-fiHGD9pYvI3dJ7o0Uyq8_RgQQAT0C74Q>
+    <xmx:5lRSZZ8pqlhuRZwfqcjrqmRn8_rP7BmR0m3BruVuM8bqmBlyj1fJgA>
+    <xmx:5lRSZTOEg4vU5UHMzE8JfHnYYh_a4ZXsdZlO-CULJQe0f8VCPaUFeA>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 13 Nov 2023 11:55:01 -0500 (EST)
+From:   Mark Pearson <mpearson-lenovo@squebb.ca>
+To:     mpearson-lenovo@squebb.ca
+Cc:     platform-driver-x86@vger.kernel.org, hdegoede@redhat.com,
+        ilpo.jarvinen@linux.intel.com,
+        ibm-acpi-devel@lists.sourceforge.net, mario.limonciello@amd.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] platform/x86: Add support for improved performance mode
+Date:   Mon, 13 Nov 2023 11:54:33 -0500
+Message-ID: <20231113165453.6335-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1784220200-1699893875=:1867"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Some new Thinkpads have a new improved performance mode available.
+Add support to make this mode usable.
 
---8323329-1784220200-1699893875=:1867
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+To avoid having to create a new profile, just use the improved performance
+mode in place of the existing performance mode, when available.
 
-On Mon, 13 Nov 2023, Dan Carpenter wrote:
+Tested on P14s AMD G4 AMD.
 
-> On Mon, Nov 13, 2023 at 04:15:50PM +0200, Ilpo Järvinen wrote:
-> > This relates to the 2nd problem (missing kobject_put()) and will be 
-> > covered by the other patch. Don't try to solve this in the first patch
-> > at all!
-> > 
-> > There are two indepedent problems:
-> > - Before kobject_init_and_add(), kfree() is missing
-> > - After kobject_init_and_add(), kobject_put() is missing
-> 
-> It's the same problem, though. The attr_name_kobj is leaked on all the
-> error paths. 
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+Changes in v2: updated implementation for DYTC_UP_SUPPORT define
+Changes in v3: 
+ - Add in missing BIT for define, somehow lost in previous commit
+ - Cosmetic clean-ups
 
-I'll have politely disagree beyond that the symptoms are indeed about the 
-same, the problem is clearly different like you immediately admit even 
-yourself by stating this: ;-)
+ drivers/platform/x86/thinkpad_acpi.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-> It's just that it needs to be freed different ways depending on where 
-> you are.
-
-...And that's because "it" actually changed in between so the problem 
-became a different one.
-
-> To me splitting it up makes it harder to review
-
-This has already been proven incorrect in the context of this patch so 
-your argument is rather weak... While reviewing it I clearly noted that 
-the different way of handling things was not properly covered, and that 
-was because what needs to be "freed" was changed by 
-kobject_init_and_add(). If one would have done them separately, each 
-commit message would have been more to the point and it would have been 
-simpler to review which is exactly the opposite to your claim. But I guess 
-we'll end up disagreing on this too :-).
-
-> and I would not allow it in Staging. You can't fix half the problem.
-
-I don't have that strong opinion on this so Harshit please follow what 
-Dan is suggesting, just fix the changelog to clearly cover both cases.
-
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index ad460417f901..3a9d2cc71b6a 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -10136,6 +10136,7 @@ static struct ibm_struct proxsensor_driver_data = {
+ 
+ #define DYTC_CMD_SET          1 /* To enable/disable IC function mode */
+ #define DYTC_CMD_MMC_GET      8 /* To get current MMC function and mode */
++#define DYTC_CMD_UP_CAP     0xA /* To get Ultra-performance capability */
+ #define DYTC_CMD_RESET    0x1ff /* To reset back to default */
+ 
+ #define DYTC_CMD_FUNC_CAP     3 /* To get DYTC capabilities */
+@@ -10152,6 +10153,7 @@ static struct ibm_struct proxsensor_driver_data = {
+ 
+ #define DYTC_FUNCTION_STD     0  /* Function = 0, standard mode */
+ #define DYTC_FUNCTION_CQL     1  /* Function = 1, lap mode */
++#define DYTC_FUNCTION_TMS     9  /* Function = 9, TMS mode */
+ #define DYTC_FUNCTION_MMC     11 /* Function = 11, MMC mode */
+ #define DYTC_FUNCTION_PSC     13 /* Function = 13, PSC mode */
+ #define DYTC_FUNCTION_AMT     15 /* Function = 15, AMT mode */
+@@ -10163,11 +10165,14 @@ static struct ibm_struct proxsensor_driver_data = {
+ #define DYTC_MODE_MMC_LOWPOWER 3  /* Low power mode */
+ #define DYTC_MODE_MMC_BALANCE  0xF  /* Default mode aka balanced */
+ #define DYTC_MODE_MMC_DEFAULT  0  /* Default mode from MMC_GET, aka balanced */
++#define DYTC_NOMODE            0xF  /* When Function does not have a mode */
+ 
+ #define DYTC_MODE_PSC_LOWPOWER 3  /* Low power mode */
+ #define DYTC_MODE_PSC_BALANCE  5  /* Default mode aka balanced */
+ #define DYTC_MODE_PSC_PERFORM  7  /* High power mode aka performance */
+ 
++#define DYTC_UP_SUPPORT    BIT(8)  /* Ultra-performance (TMS) mode support */
++
+ #define DYTC_ERR_MASK       0xF  /* Bits 0-3 in cmd result are the error result */
+ #define DYTC_ERR_SUCCESS      1  /* CMD completed successful */
+ 
+@@ -10185,6 +10190,7 @@ static enum platform_profile_option dytc_current_profile;
+ static atomic_t dytc_ignore_event = ATOMIC_INIT(0);
+ static DEFINE_MUTEX(dytc_mutex);
+ static int dytc_capabilities;
++static bool dytc_ultraperf_cap;
+ static bool dytc_mmc_get_available;
+ static int profile_force;
+ 
+@@ -10355,6 +10361,17 @@ static int dytc_profile_set(struct platform_profile_handler *pprof,
+ 	if (err)
+ 		goto unlock;
+ 
++	/* Set TMS mode appropriately (enable for performance), if available */
++	if (dytc_ultraperf_cap) {
++		int cmd;
++
++		cmd = DYTC_SET_COMMAND(DYTC_FUNCTION_TMS, DYTC_NOMODE,
++				       profile == PLATFORM_PROFILE_PERFORMANCE);
++		err = dytc_command(cmd, &output);
++		if (err)
++			return err;
++	}
++
+ 	if (dytc_capabilities & BIT(DYTC_FC_MMC)) {
+ 		if (profile == PLATFORM_PROFILE_BALANCED) {
+ 			/*
+@@ -10429,6 +10446,7 @@ static struct platform_profile_handler dytc_profile = {
+ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+ {
+ 	int err, output;
++	int cmd;
+ 
+ 	/* Setup supported modes */
+ 	set_bit(PLATFORM_PROFILE_LOW_POWER, dytc_profile.choices);
+@@ -10484,6 +10502,16 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+ 		dbg_printk(TPACPI_DBG_INIT, "No DYTC support available\n");
+ 		return -ENODEV;
+ 	}
++	err = dytc_command(DYTC_CMD_UP_CAP, &output);
++	dytc_ultraperf_cap = output & DYTC_UP_SUPPORT;
++	if (dytc_ultraperf_cap) {
++		pr_debug("TMS is supported\n");
++		/* Disable TMS by default - only use with performance mode */
++		cmd = DYTC_SET_COMMAND(DYTC_FUNCTION_TMS, DYTC_NOMODE, 0);
++		err = dytc_command(cmd, &output);
++		if (err)
++			return err;
++	}
+ 
+ 	dbg_printk(TPACPI_DBG_INIT,
+ 			"DYTC version %d: thermal mode available\n", dytc_version);
 -- 
- i.
+2.41.0
 
---8323329-1784220200-1699893875=:1867--
