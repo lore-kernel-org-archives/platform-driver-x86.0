@@ -2,54 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59650C4167D
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 14:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CAEC41535
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 14:53:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230466AbjKMOxf (ORCPT
+        id S231139AbjKMOxh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Nov 2023 09:53:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60698 "EHLO
+        Mon, 13 Nov 2023 09:53:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230231AbjKMOxe (ORCPT
+        with ESMTP id S230422AbjKMOxg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Nov 2023 09:53:34 -0500
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FC9B1728
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 06:53:31 -0800 (PST)
-Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-507f1c29f25so6118362e87.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 06:53:31 -0800 (PST)
+        Mon, 13 Nov 2023 09:53:36 -0500
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37C021711
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 06:53:33 -0800 (PST)
+Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-507a62d4788so6439709e87.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 06:53:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699887209; x=1700492009; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h53jKEflW3e/C/cuKnWnlAqCfzD5OxoKB9wqj+QaJ9E=;
-        b=cQQEoaJQpUIvNyXM+Zrt7QDmVvZDwUD8AFvXeaYQQ8b4HwbhKu3leLBD9ewNjEoGDu
-         Ijyd0LNohIvYFtJ4pU5tPSQOGGwHzKy6fDni5vaLKtjwSyNq/2pmfDmMnlrLOhCvJzBU
-         VYInYRckRoBNMBLOCC18Si2dDsipo+YVfz4JcaqncesHZO7piwq5599fsqTslSS5djI5
-         f4kTwpDtSXTWHm3YUo51NTWLvtN7MWNTwi9my/sxPERKvhWOYbp45zPpz2flx3Swla3i
-         Hj2RcbfJOR95hZuV58etrbURfCXB60AjU/huMfwTHORNsbt0mljHqEorCqN4FXW3P4lP
-         J8Dg==
+        d=linaro.org; s=google; t=1699887211; x=1700492011; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3mRz0RhXvXEDvxsQyGFzA2Dam68j7hbTQ8jEDNkV7Cw=;
+        b=dx8NiN0PKia3f3DOJGnqv/Xwu0qJwQaVxU6+sxmyNfKiCq0Hcvi9ac4pGJjkACPQFR
+         TPZX/2gNlO685kkohl42SddBsEh5Q2mldIPPX+w+rKbAZMrVyJDI5slY3P+B5zGZK4KA
+         VbX871XJEiiGtXWRRjJcidOb4FTAvA8ymcwRZOBVj+n0MWDYTPgHo8pzUhvzr1FZuWvp
+         lciz2SGH9sgl0zoouh2dfC6aUNFccMckVrFJykR3n1+kxH/Hs5Kz5Xa2DwfrTbRiHm8e
+         ++1mIv+zPzxAA4CpbP3KY6dbUzk1F0nc2/ilQ8aToDFRiLe+anZoBmEtemXwCue68vRo
+         yCVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699887209; x=1700492009;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h53jKEflW3e/C/cuKnWnlAqCfzD5OxoKB9wqj+QaJ9E=;
-        b=eoHzKm5y22n8QTIQmBG0ArgSFAnR42R9Vqg53/DistGHqxPZD9MhFK3caA647/AFFr
-         iRU0shDWRwTBx5bx71zCyH9HNOZVUjODyn5/cMKZtXTrWs+CZho2Iin7hEoxCK/+ZA84
-         A3N3rEenFxyjhPrSnG0WWiGOIBdr2BN8DBG/cZsMUeLy1mujulALqBZ7eYkrTTaXgd/u
-         xXaaCD0Bvaa1/jzsFYmdbI0q+ekQDsWG77layOUiGfxtJQcpWbCDSedKwWFIe0Ob0Oql
-         7P4ZhZlBvIOM/fSo5FNlGiuDQTr4LocmA7ed8WI9fFpQVuIqVncFyrblfKOMTInO+gWX
-         YsVw==
-X-Gm-Message-State: AOJu0YwBnPoRS2/C/gYt/FWpYZ9h1KsPynqhbzwqLm+mIJGRob+lYgfL
-        keKLLGE/0raauM3R5qBSAshqAA==
-X-Google-Smtp-Source: AGHT+IEfWdXO8U4PcYgb7/pI01WDceQuQrzLOIYLYfOMG5ddcS10/Cscv2kajtCO4iZUCZ+f2JiyYA==
-X-Received: by 2002:ac2:5def:0:b0:509:f45c:fae6 with SMTP id z15-20020ac25def000000b00509f45cfae6mr4757338lfq.10.1699887209584;
-        Mon, 13 Nov 2023 06:53:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1699887211; x=1700492011;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3mRz0RhXvXEDvxsQyGFzA2Dam68j7hbTQ8jEDNkV7Cw=;
+        b=jAy8oTPqMZAqtBLVtrf1aTs9+kJGdnXyCKwWRANE9EZqxU+L8UyhBu+jmiLE3t6ccH
+         9DUwAFP9zk7RItVIIlwyvT3Gn5ZVanOdbKuuWnvse0L+MJUGH+OlsqbiT9tFQU1cSnPa
+         n74beiLaenZhx+7Ayr5/5rsXYtLNI4mJgGs0CJbFiittwt2aAnWMOsHVVmeGE5rqMh94
+         8W12CMTciJ56LfDGZsu/HgezKUc+s6Pk9j3BK71cvoB7FuqwFhfXEpWo6zY3jpTnFUpn
+         dYII5I0ioWNRP3uQfUJqCEEhmA2JWzPfs6wXAS5hYyTFvZtBbpfKPmMSkt9On2/Mr6oQ
+         TsgA==
+X-Gm-Message-State: AOJu0Yy9nE/EGLiH9h4ZGclj62CKZRxcuWjHzsEsq4lMqjCDQVx+Z+im
+        /UHT3gCT3IOPjx320AaYN5o6PA==
+X-Google-Smtp-Source: AGHT+IGexvXHE9m92iJ8rHBEKfIRIdYbC12J7VLNjDkZ8FPbr7i6C9RDxa06fLL1FfG1wxc/8RUEZA==
+X-Received: by 2002:a19:2d4b:0:b0:507:9787:6776 with SMTP id t11-20020a192d4b000000b0050797876776mr4929444lft.5.1699887210818;
+        Mon, 13 Nov 2023 06:53:30 -0800 (PST)
 Received: from eriador.lan (dzdqv0yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a0db:1f00::8a5])
-        by smtp.gmail.com with ESMTPSA id x24-20020ac24898000000b0050794b05c8asm991429lfc.42.2023.11.13.06.53.28
+        by smtp.gmail.com with ESMTPSA id x24-20020ac24898000000b0050794b05c8asm991429lfc.42.2023.11.13.06.53.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Nov 2023 06:53:28 -0800 (PST)
+        Mon, 13 Nov 2023 06:53:29 -0800 (PST)
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -65,37 +66,88 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         linux-usb@vger.kernel.org
-Subject: [PATCH 0/3] dt-bindings: connector: usb: provide bindings for altmodes
-Date:   Mon, 13 Nov 2023 16:33:06 +0200
-Message-ID: <20231113145328.42575-1-dmitry.baryshkov@linaro.org>
+Subject: [PATCH 1/3] dt-bindings: connector: usb: add altmodes description
+Date:   Mon, 13 Nov 2023 16:33:07 +0200
+Message-ID: <20231113145328.42575-2-dmitry.baryshkov@linaro.org>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231113145328.42575-1-dmitry.baryshkov@linaro.org>
+References: <20231113145328.42575-1-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In some cases we need a way to specify USB-C AltModes that can be
-supportd on the particular USB-C connector. For example, x86 INT33FE
-driver does this by populating fwnode properties internally. For the
-Qualcomm Robotics RB5 platform (and several similar devices which use
-Qualcomm PMIC TCPM) we have to put this information to the DT.
+Add description of the USB-C AltModes supported on the particular USB-C
+connector. This is required for devices like Qualcomm Robotics RB5,
+which have no other way to express alternative modes supported by the
+hardware platform.
 
-Provide the DT bindings for this kind of information and while we are at
-it, change svid property to be 16-bit unsigned integer instead of a
-simple u32.
-
-Dmitry Baryshkov (3):
-  dt-bindings: connector: usb: add altmodes description
-  usb: typec: change altmode SVID to u16 entry
-  arm64: dts: qcom: qrb5165-rb5: use u16 for DP altmode svid
-
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
  .../bindings/connector/usb-connector.yaml     | 35 +++++++++++++++++++
- arch/arm64/boot/dts/qcom/qrb5165-rb5.dts      |  2 +-
- drivers/platform/x86/intel/chtwc_int33fe.c    |  2 +-
- drivers/usb/typec/class.c                     |  5 +--
- 4 files changed, 40 insertions(+), 4 deletions(-)
+ 1 file changed, 35 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+index 7c8a3e8430d3..9922622abf51 100644
+--- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
++++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+@@ -14,6 +14,30 @@ description:
+   of a USB interface controller or a separate node when it is attached to both
+   MUX and USB interface controller.
+ 
++$defs:
++  altmode-desc:
++    type: object
++    description:
++      A single USB-C Alternative Mode as supported by the USB-C connector logic.
++    properties:
++      svid:
++        $ref: /schemas/types.yaml#/definitions/uint16
++        description: Unique value assigned by USB-IF to the Vendor / AltMode.
++      vdo:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: VDO returned by Discover Modes USB PD command.
++
++  altmodes-list:
++    descrption: List of Alternative Modes supported by the schematics on the
++      particular device. This is only necessary if there are no other means to
++      discover supported alternative modes (e.g. through the UCSI firmware
++      interface).
++
++    patternProperties:
++      "^[a-z][a-z0-9]*$":
++        $ref: "#/$defs/altmode-desc"
++        unevaluatedProperties: false
++
+ properties:
+   compatible:
+     oneOf:
+@@ -171,6 +195,10 @@ properties:
+       offer the power, Capability Mismatch is set. Required for power sink and
+       power dual role.
+ 
++  altmodes:
++    $ref: "#/$defs/altmodes-list"
++    unevaluatedProperties: false
++
+   port:
+     $ref: /schemas/graph.yaml#/properties/port
+     description: OF graph bindings modeling a data bus to the connector, e.g.
+@@ -289,6 +317,13 @@ examples:
+             compatible = "usb-c-connector";
+             label = "USB-C";
+ 
++            altmodes {
++                displayport {
++                    svid = /bits/ 16 <0xff01>;
++                    vdo = <0x00001c46>;
++                };
++            };
++
+             ports {
+                 #address-cells = <1>;
+                 #size-cells = <0>;
 -- 
 2.42.0
 
