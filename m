@@ -2,175 +2,129 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E39C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 20:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA9CC4167B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 20:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230436AbjKMUIh (ORCPT
+        id S229715AbjKMUSV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Nov 2023 15:08:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34524 "EHLO
+        Mon, 13 Nov 2023 15:18:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231911AbjKMUIf (ORCPT
+        with ESMTP id S229511AbjKMUSU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Nov 2023 15:08:35 -0500
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 591A1D73;
-        Mon, 13 Nov 2023 12:08:32 -0800 (PST)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ADHiQqF005408;
-        Mon, 13 Nov 2023 20:08:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-03-30;
- bh=XDtSBsTn2b+kLXz7T7QRWj63RVMlaoXCIevLvCLxJ70=;
- b=LJdy6XDIxi9TQ4h7uls8OEJ8nZkTlBTV0t8QxzSz0UWVUdzi+ePBs3mC2qgZbHgtK3tv
- Kee3+NCOD1hLXE73bNBY7qEz69/YXnJOv1sUFS4KpyYwJZCHteDSbysgEGqKi1M6DhYH
- 2aR6c3vfNKAZ3PO1Ma42wXwlaQdd5QjIBfUIA4OcXzLacNRfZ6gpdPrdMFKLBys4qUzp
- ERtra5gwVg9+IGtD8zvtez9N9eRnF9Juvmes1wEBmcDHfnoi8Fy3J7or9OsewsT4vfNY
- 3SLHdaHRHyyz33p+vPWFlLhP5uZg+34r8CaOzjr4LXvXxnxFCE58/+C0+t45jvMuJVqQ Wg== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ua2n3bmf8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Nov 2023 20:08:24 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3ADJBbRj029773;
-        Mon, 13 Nov 2023 20:08:22 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3uaxqqe9h3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Nov 2023 20:08:22 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3ADK7jMb026381;
-        Mon, 13 Nov 2023 20:08:19 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3uaxqqe8vg-4;
-        Mon, 13 Nov 2023 20:08:19 +0000
-From:   Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-To:     Jorge Lopez <jorge.lopez2@hp.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org,
-        error27@gmail.com, vegard.nossum@oracle.com,
-        harshit.m.mogalapalli@oracle.com
-Subject: [PATCH v4 4/4] platform/x86: hp-bioscfg: Remove unused obj in hp_add_other_attributes()
-Date:   Mon, 13 Nov 2023 12:07:40 -0800
-Message-ID: <20231113200742.3593548-4-harshit.m.mogalapalli@oracle.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231113200742.3593548-1-harshit.m.mogalapalli@oracle.com>
-References: <20231113200742.3593548-1-harshit.m.mogalapalli@oracle.com>
+        Mon, 13 Nov 2023 15:18:20 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E47C310F4
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 12:17:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1699906673;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WHG7y6RDisjgRBKsr9b5mVEL+3CBXjyGr1DFkZoWxFc=;
+        b=Fa4C9zHVmYcMfklVQNaakmUcesKqOn/xaHmqhieaypDnfnUGY2zeyUVkes9kUBBD/xFnkL
+        BTxZxHNt4eEkoNu8dnxt22LUbgaFuljwCbtGyPYMNvhG2IoFoluJIlDUHA5EtzmPmNDoTF
+        MbvlulgiLjzbCKBat7PBDmk6u/K5iSM=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-423-Nj_3inJWPNuf7R4-MoVqhw-1; Mon, 13 Nov 2023 15:17:51 -0500
+X-MC-Unique: Nj_3inJWPNuf7R4-MoVqhw-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-547359e70aaso962913a12.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 12:17:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699906670; x=1700511470;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WHG7y6RDisjgRBKsr9b5mVEL+3CBXjyGr1DFkZoWxFc=;
+        b=aKoDUxmlYw/akqNjfjxe6wskQsMn/ri+8xB3lanMKffxW0rU/GPwMq6ClFQSrY9Ncv
+         W92tfoAUzOTTYBL94VJgzgZI/bezA7w9kYjISHomz2zDAd34OJdQC8FBqi0aUCo5jvb9
+         v/GXkuhILMOqOwwkxbLVBpY7IdjLgALxiJ8j1BqyQEpI7PJBVECiAQZle4IPTPVN/9PU
+         bxh/2H2QsqLx7HzaQwUBjQOwbSsSs65TKhwOc8fPCpSs0FyD3LF0N73Y2BhEI7dcZn2G
+         B9K2TlqL4VTFmEi0DKY8On7wmAUvtR76eiQ4M+E2qZ/Mt0D5jLKyxeihiGceKe9y8Tp/
+         u0Mg==
+X-Gm-Message-State: AOJu0YwygneLlwosCZ40nrXcT0aAw3UFJF7zUf4uRCaLGPTa96rpgBsD
+        +/4WHYGgMcMDZt2Ew7DMcyrdJ49P09/lXjV8BMnGlx15bbPI6hLonuPTFLZB/3WFrKlV/o+NqWU
+        KUKmaQYRGgDf4rsXhARCmQpDbPeYTacfcZZmWEV480Q==
+X-Received: by 2002:aa7:d555:0:b0:546:d0b7:f4e4 with SMTP id u21-20020aa7d555000000b00546d0b7f4e4mr5720416edr.8.1699906670247;
+        Mon, 13 Nov 2023 12:17:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHJ31+bJ3bnZRU8DicZJd+AsZ1d8QMmiId8Sfli7YEux00xVSQkU/oZU9dAgygaDj14tUz0kA==
+X-Received: by 2002:aa7:d555:0:b0:546:d0b7:f4e4 with SMTP id u21-20020aa7d555000000b00546d0b7f4e4mr5720398edr.8.1699906669927;
+        Mon, 13 Nov 2023 12:17:49 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id d22-20020a50cd56000000b0054719a2a0cdsm3696000edj.16.2023.11.13.12.17.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Nov 2023 12:17:49 -0800 (PST)
+Message-ID: <8c25dfec-b0ca-4e2f-964a-5ae62452e141@redhat.com>
+Date:   Mon, 13 Nov 2023 21:17:48 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/9] hwmon: (dell-smm) Add support for WMI SMM
+ interface
+To:     Armin Wolf <W_Armin@gmx.de>, pali@kernel.org
+Cc:     markgross@kernel.org, ilpo.jarvinen@linux.intel.com,
+        jdelvare@suse.com, linux@roeck-us.net,
+        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20231106064351.42347-1-W_Armin@gmx.de>
+ <3ec0496d-3b89-46f5-9faf-9fcce78f6b38@gmx.de>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <3ec0496d-3b89-46f5-9faf-9fcce78f6b38@gmx.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-13_11,2023-11-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
- definitions=main-2311130160
-X-Proofpoint-GUID: tTpdJjZZ50TmSNtiiGd8B6eNI1NPnQc0
-X-Proofpoint-ORIG-GUID: tTpdJjZZ50TmSNtiiGd8B6eNI1NPnQc0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-acpi_object *obj is unused in this function, so delete it, also
-delete a unnecessary kfree(obj);
+Hi Armin,
 
-Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 2 --
- 1 file changed, 2 deletions(-)
+On 11/13/23 20:55, Armin Wolf wrote:
+> Am 06.11.23 um 07:43 schrieb Armin Wolf:
+> 
+>> This patch series adds support for an alternative SMM calling
+>> backend to the dell-smm-hwmon driver. The reason for this is
+>> that on some modern machines, the legacy SMM calling interface
+>> does not work anymore and the SMM handler can be called over
+>> ACPI WMI instead.
+>>
+>> The first four patches prepare the driver by allowing to
+>> specify different SMM calling backends, and by moving most of
+>> the DMI handling into i8k_init() so that the DMI tables can
+>> keep their __initconst attributes (the WMI SMM backend driver
+>> does not probe at module init time). The fifth patch does some
+>> minor cleanup, while the next three patches implement the new
+>> WMI SMM calling backend. The last patch adds the machine of
+>> the user who requested and tested the changes to the fan control
+>> whitelist.
+>>
+>> If the driver does not detect the legacy SMM interface, either
+>> because the machine is not whitelisted or because the SMM handler
+>> does not react, it registers an WMI driver which will then bound
+>> to the WMI SMM interface and do the remaining initialization.
+>>
+>> The deprecated procfs interface is not supported when using the
+>> WMI SMM calling backend for the following reason: the WMI driver
+>> can potentially be instantiated multiple times while the deprectated
+>> procfs interface cannot. This should not cause any regressions
+>> because on machines supporting only the WMI SMM interface, the
+>> driver would, until now, not load anyway.
+>>
+>> All patches where tested on a Dell Inspiron 3505 and a Dell
+>> OptiPlex 7000.
+> 
+> Any thoughts on this?
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-index 6ddca857cc4d..8c9f4f3227fc 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-@@ -575,80 +575,78 @@ static void release_attributes_data(void)
- /**
-  * hp_add_other_attributes() - Initialize HP custom attributes not
-  * reported by BIOS and required to support Secure Platform and Sure
-  * Start.
-  *
-  * @attr_type: Custom HP attribute not reported by BIOS
-  *
-  * Initialize all 2 types of attributes: Platform and Sure Start
-  * object.  Populates each attribute types respective properties
-  * under sysfs files.
-  *
-  * Returns zero(0) if successful. Otherwise, a negative value.
-  */
- static int hp_add_other_attributes(int attr_type)
- {
- 	struct kobject *attr_name_kobj;
--	union acpi_object *obj = NULL;
- 	int ret;
- 	char *attr_name;
- 
- 	attr_name_kobj = kzalloc(sizeof(*attr_name_kobj), GFP_KERNEL);
- 	if (!attr_name_kobj)
- 		return -ENOMEM;
- 
- 	mutex_lock(&bioscfg_drv.mutex);
- 
- 	/* Check if attribute type is supported */
- 	switch (attr_type) {
- 	case HPWMI_SECURE_PLATFORM_TYPE:
- 		attr_name_kobj->kset = bioscfg_drv.authentication_dir_kset;
- 		attr_name = SPM_STR;
- 		break;
- 
- 	case HPWMI_SURE_START_TYPE:
- 		attr_name_kobj->kset = bioscfg_drv.main_dir_kset;
- 		attr_name = SURE_START_STR;
- 		break;
- 
- 	default:
- 		pr_err("Error: Unknown attr_type: %d\n", attr_type);
- 		ret = -EINVAL;
- 		kfree(attr_name_kobj);
- 		goto unlock_drv_mutex;
- 	}
- 
- 	ret = kobject_init_and_add(attr_name_kobj, &attr_name_ktype,
- 				   NULL, "%s", attr_name);
- 	if (ret) {
- 		pr_err("Error encountered [%d]\n", ret);
- 		goto err_other_attr_init;
- 	}
- 
- 	/* Populate attribute data */
- 	switch (attr_type) {
- 	case HPWMI_SECURE_PLATFORM_TYPE:
- 		ret = hp_populate_secure_platform_data(attr_name_kobj);
- 		break;
- 
- 	case HPWMI_SURE_START_TYPE:
- 		ret = hp_populate_sure_start_data(attr_name_kobj);
- 		break;
- 
- 	default:
- 		ret = -EINVAL;
- 	}
- 
- 	if (ret)
- 		goto err_other_attr_init;
- 
- 	mutex_unlock(&bioscfg_drv.mutex);
- 	return 0;
- 
- err_other_attr_init:
- 	kobject_put(attr_name_kobj);
- unlock_drv_mutex:
- 	mutex_unlock(&bioscfg_drv.mutex);
--	kfree(obj);
- 	return ret;
- }
- 
--- 
-2.42.0
+I was waiting for the merge window to close before
+reviewing / merging patches for the next cycle.
+
+I plan to review and hopefully merge this and your
+other series sometime this week.
+
+Regards,
+
+Hans
+
 
