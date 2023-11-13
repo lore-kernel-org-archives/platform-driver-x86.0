@@ -2,54 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 629ECC4167D
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 22:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA752C072A2
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 22:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231834AbjKMWPg (ORCPT
+        id S231893AbjKMWPj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Nov 2023 17:15:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38678 "EHLO
+        Mon, 13 Nov 2023 17:15:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231799AbjKMWPf (ORCPT
+        with ESMTP id S231802AbjKMWPg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Nov 2023 17:15:35 -0500
+        Mon, 13 Nov 2023 17:15:36 -0500
 Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C8AD7E
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 14:15:31 -0800 (PST)
-Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-507adc3381cso6615495e87.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 14:15:31 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B73D171C
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 14:15:33 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-5098e423ba2so7107692e87.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 14:15:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699913729; x=1700518529; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CavqYbpJDhm0OKuh4STOsXUdXIvRsCGtB4InVaES23I=;
-        b=FofDm00yUf4ACJaFKDl1isGSOwGscsQjQksuo3C2m7L/cNffYutXe0yKjSbAPlUso6
-         NRSK5C4L4RLoZ9tAIauzhYmdfoNIp67bHquMTQj2HoymtXyq4aR74nGWSh2O52LEbWyK
-         rMLQuESuU4KhTZ28c/ViiMF3xrGuxk2Zh3UD+9cGlwZRk4wHWil9i4TBi77SUXm8neZM
-         QVDlHKz6l8tYBLr5b1LJuckYABKSq7hYojEEs0pE4vKNdukBhKyEGrwvQX74AkaVuy+b
-         FOsYFxn1oXQ6vglRCFibiTjZU7h/d2ANe+5jhYr7g0kLea/us6SlAUMtPNx9JPuhUxod
-         /s0A==
+        d=linaro.org; s=google; t=1699913731; x=1700518531; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RBpcWEbnLvBhiTJXnEVisEI+IX+1EldtrM+V5goA5pE=;
+        b=C3fUERUe051TpKigfOA1CLAL8o0/6V4MvehicDZ/xRQGY4AMAtsnKA0tqa4zbAj2ST
+         OGq/3Ev7Q8yove2G4kp2rSTHqy5iei71niSaAr6LkENIUSm9ntxKLDKjR67+vr6PFz7z
+         DYq4nftOEgmsUdCzjth0Bb6OfGRtd6QZtoPCk8PNbDEw7DgMrNz9xHjpzJdLZuG5ZPoM
+         fHge0EoI6jR3P2oPn7VKtHUVtwSBu5P0YozIfwIiVin/xmgJ0Jr2Gkk6lH06C/2iZva1
+         9RNz5U8GREVOwTl8V385xx7s8CNeziisE7U1C4Jf7s9y+VO1E1RHJPvOO2RHQgDIG89N
+         2OOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699913729; x=1700518529;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CavqYbpJDhm0OKuh4STOsXUdXIvRsCGtB4InVaES23I=;
-        b=vMH0KkwG1I0KIUEwmm9d8nEc6nxHNTvgoCU/GjWVo5YtZZhTBaL/gGG1hGpBQDBvhU
-         sn0sCgVrYknY2gJPpTXeA3J4a5rAlOPEmCm6dRochPXJbzGkcJ+VItqDgvbG2bSxGMJH
-         VRRrrEN2Y9/AG7G4ICSXMJVPLtR3KgH2rUpjbbH+7MjXwvz2991XwdJJf75IcZCS8ogN
-         f33+i0ZreGCB8MiVJnJIOnDxlwfqH8NL0bYSo5kRuoubMY0Ur97bsxb86AVmTtsQdJJf
-         50Ye41OoH8aMtLuUEI6bLppsNC/7Sq9IESL3m7phMdMizzCdmxux4Rn7pqPrCKFEB6F3
-         z3OQ==
-X-Gm-Message-State: AOJu0YwrarSVbnsyH1KyO1Bp/M5qq3Suu1XzksA86x9guj9OgDGqRZk9
-        7R5pYyDQhFWaX32DGt7nYv1yRg==
-X-Google-Smtp-Source: AGHT+IGReEDcnEERO89WQ2VhevAyWOeYn9OJtVWGTf7awX8F6nWP1bv1VZ+A0hyce6bKbkbjmUVZ5g==
-X-Received: by 2002:a05:6512:1087:b0:507:b7db:1deb with SMTP id j7-20020a056512108700b00507b7db1debmr6898125lfg.38.1699913729380;
-        Mon, 13 Nov 2023 14:15:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1699913731; x=1700518531;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RBpcWEbnLvBhiTJXnEVisEI+IX+1EldtrM+V5goA5pE=;
+        b=vzeFiMzfsRRe15ewHzawMgop1L7176nuSxyPLxdAJteq1SgAfKJBSpedIu47mYk8sz
+         FFT31GYZVW5M1MO+wRGJHqGnlK2omY9vsFsuRXb1NMf59UXlMUjzTTx1qJlx6GPKYF+l
+         IpRB25MzWn09AwVBbx5mvWeHsyqv2zVA8x/GeINMhdBFZfkNKLntD2QYCGgMSbRKBpif
+         obVu6zZzH1ppRrktB1hkq+dwLVFuL+3ARxD/D7kU37uqXULaNC4/4vZ0DtLwCh13kB1v
+         p2AbwVQz00m1WWQmGGHRRpmg9o6JFOwsynK0egZ1xqMxBWOG2vydNmj5WSuGXNfhXvli
+         b9Mw==
+X-Gm-Message-State: AOJu0YyNS7RfvfRk1Wp8lYR7DXivZJvmoSgtgaZvIVtkEPw2HCyfeFYp
+        +vkxll+1oWqi4SwJ/YN4QBVO+A==
+X-Google-Smtp-Source: AGHT+IHQbV5ZIba5W01SlsPywbGGgoTu+lpQzTg0BrFlbBULoEcH9FtrHnaOQ4FVIbIgR8tMUcsxNQ==
+X-Received: by 2002:a05:6512:291:b0:500:d970:6541 with SMTP id j17-20020a056512029100b00500d9706541mr4969377lfp.39.1699913731320;
+        Mon, 13 Nov 2023 14:15:31 -0800 (PST)
 Received: from eriador.lan (dzdqv0yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a0db:1f00::8a5])
-        by smtp.gmail.com with ESMTPSA id w8-20020a0565120b0800b00507f18af7e0sm1097578lfu.4.2023.11.13.14.15.28
+        by smtp.gmail.com with ESMTPSA id w8-20020a0565120b0800b00507f18af7e0sm1097578lfu.4.2023.11.13.14.15.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Nov 2023 14:15:28 -0800 (PST)
+        Mon, 13 Nov 2023 14:15:30 -0800 (PST)
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -65,46 +66,66 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         linux-usb@vger.kernel.org
-Subject: [PATCH v2 0/3] dt-bindings: connector: usb: provide bindings for altmodes
-Date:   Tue, 14 Nov 2023 00:13:26 +0200
-Message-ID: <20231113221528.749481-1-dmitry.baryshkov@linaro.org>
+Subject: [PATCH v2 2/3] usb: typec: change altmode SVID to u16 entry
+Date:   Tue, 14 Nov 2023 00:13:28 +0200
+Message-ID: <20231113221528.749481-3-dmitry.baryshkov@linaro.org>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231113221528.749481-1-dmitry.baryshkov@linaro.org>
+References: <20231113221528.749481-1-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In some cases we need a way to specify USB-C AltModes that can be
-supportd on the particular USB-C connector. For example, x86 INT33FE
-driver does this by populating fwnode properties internally. For the
-Qualcomm Robotics RB5 platform (and several similar devices which use
-Qualcomm PMIC TCPM) we have to put this information to the DT.
+As stated in the changelog for the commit 7b458a4c5d73 ("usb: typec: Add
+typec_port_register_altmodes()"), the code should be adjusted according
+to the AltMode bindings. As the SVID is 16 bits wide (according to the
+USB PD Spec), use fwnode_property_read_u16() to read it.
 
-Provide the DT bindings for this kind of information and while we are at
-it, change svid property to be 16-bit unsigned integer instead of a
-simple u32.
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ drivers/platform/x86/intel/chtwc_int33fe.c | 2 +-
+ drivers/usb/typec/class.c                  | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-NOTE: usage of u16 is not compatible with the recenty extended
-qcom/qrb5165-rb5.dts DT file. I'm looking for the guidance from DT and
-USB maintainers whether to retain u32 usage or it's better to switch to
-u16.
-
-Changes since v1:
-- Added type:object and fixed 'description' string in the altmodes-list
-  definition.
-
-Dmitry Baryshkov (3):
-  dt-bindings: connector: usb: add altmodes description
-  usb: typec: change altmode SVID to u16 entry
-  arm64: dts: qcom: qrb5165-rb5: use u16 for DP altmode svid
-
- .../bindings/connector/usb-connector.yaml     | 36 +++++++++++++++++++
- arch/arm64/boot/dts/qcom/qrb5165-rb5.dts      |  2 +-
- drivers/platform/x86/intel/chtwc_int33fe.c    |  2 +-
- drivers/usb/typec/class.c                     |  5 +--
- 4 files changed, 41 insertions(+), 4 deletions(-)
-
+diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platform/x86/intel/chtwc_int33fe.c
+index 848baecc1bb0..93f75ba1dafd 100644
+--- a/drivers/platform/x86/intel/chtwc_int33fe.c
++++ b/drivers/platform/x86/intel/chtwc_int33fe.c
+@@ -136,7 +136,7 @@ static const struct software_node altmodes_node = {
+ };
+ 
+ static const struct property_entry dp_altmode_properties[] = {
+-	PROPERTY_ENTRY_U32("svid", 0xff01),
++	PROPERTY_ENTRY_U16("svid", 0xff01),
+ 	PROPERTY_ENTRY_U32("vdo", 0x0c0086),
+ 	{ }
+ };
+diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+index 6ec2a94e6fad..4251d44137b6 100644
+--- a/drivers/usb/typec/class.c
++++ b/drivers/usb/typec/class.c
+@@ -2238,7 +2238,8 @@ void typec_port_register_altmodes(struct typec_port *port,
+ 	struct typec_altmode_desc desc;
+ 	struct typec_altmode *alt;
+ 	size_t index = 0;
+-	u32 svid, vdo;
++	u16 svid;
++	u32 vdo;
+ 	int ret;
+ 
+ 	altmodes_node = device_get_named_child_node(&port->dev, "altmodes");
+@@ -2246,7 +2247,7 @@ void typec_port_register_altmodes(struct typec_port *port,
+ 		return; /* No altmodes specified */
+ 
+ 	fwnode_for_each_child_node(altmodes_node, child) {
+-		ret = fwnode_property_read_u32(child, "svid", &svid);
++		ret = fwnode_property_read_u16(child, "svid", &svid);
+ 		if (ret) {
+ 			dev_err(&port->dev, "Error reading svid for altmode %s\n",
+ 				fwnode_get_name(child));
 -- 
 2.42.0
 
