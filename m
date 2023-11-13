@@ -2,118 +2,156 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3418C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 14:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64356C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 14:15:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229691AbjKMOAi (ORCPT
+        id S230216AbjKMOQA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Nov 2023 09:00:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55518 "EHLO
+        Mon, 13 Nov 2023 09:16:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbjKMOAh (ORCPT
+        with ESMTP id S230106AbjKMOP7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Nov 2023 09:00:37 -0500
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29301D4C;
-        Mon, 13 Nov 2023 06:00:34 -0800 (PST)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 951165C0197;
-        Mon, 13 Nov 2023 09:00:33 -0500 (EST)
-Received: from imap52 ([10.202.2.102])
-  by compute3.internal (MEProxy); Mon, 13 Nov 2023 09:00:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-        :cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm1; t=
-        1699884033; x=1699970433; bh=VHi4AcLP1FDKeL87EkRURIskb7aetmZpaGy
-        D5PsyTw4=; b=UKHbwcnuM/BZH8xYYa01WFOkHvkc0Ykh+riEPbcRNA4Ue6MEqgg
-        Yngz1rptFsb2T1SGQTDOrhFlGMREQzDv1jsVqwl+fkinpQhPK85oU6SM6w+gRFfK
-        4bkEuGB8MBTWMkiGf3QQ1uoAR2fDICfXaQYJJhKtAwb7ZGoJPBKloiC7GK66Uq80
-        oaAWWkyERR6iDEZfGMevzJ3akjdRb7SLA21K47fKjkAjlGMaea34fm1HllX6RtKO
-        WBrCaFK5d2+ZuSkBs3qj9r3MnD+RLsap2hJriXNDyLaayHsIX0QJABVphYUFatFI
-        bvoWpA89qNtFTai+RVKZkf5rboWy86Z5wqg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-        1699884033; x=1699970433; bh=VHi4AcLP1FDKeL87EkRURIskb7aetmZpaGy
-        D5PsyTw4=; b=h8PcPdtouGcX3pGAqzjnnhYdawg1vKxyv6p7zvDS2vR6ZGJYYJS
-        R8ltnI3/eZFkmO6Y1fCJSu00gKLEsVnWwM++O5DkxmNS5CqQ+R85e3wOhUF09lyS
-        L7Xn3yJg9bGlntMfayO80f+hWkTKtDfALgJOkh3tWc1M0AhvGE1Bvb8RuSefZd0x
-        EshqCGYtPFCUwIng185hZYDNTSMftwDr+W7dFEyH7vbIPnhNn0fWUeCvJGOXgUNL
-        ffxN+B0trJz75vaqhCglsfDWv+uL/cRyRj+LGUlKUqxhRZKz+fcm4wxlxCLCC/UB
-        RALIp6KbvW9OWlr75Ykx+aqobVXo4KJFbxA==
-X-ME-Sender: <xms:_ytSZX4V_aVb4SgcDRcz6_nIDlDLvj203gd2cO4HsyEdwgveWNkpwg>
-    <xme:_ytSZc52L2ruNEkwyuss0fZUTcLQEgYc7bRcLMnMBvPlu6Dm1yLh82ESndTU0xI6A
-    pn4Mgxi5UkT5ciKOUY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudeftddgheeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfo
-    rghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsg
-    gsrdgtrgeqnecuggftrfgrthhtvghrnhephfefgedufeetgfetlefgkefgvdejleelvefg
-    hfejfffhtdeitdejfeekvdeugfeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgt
-    rg
-X-ME-Proxy: <xmx:ACxSZecBO_wERmCSDE5ojDm3bJ3MKcmn6Thw91YWL9pT4HLnNjzOLw>
-    <xmx:ACxSZYLFrMAC_fSRKepvrcLPfxsjJCvaTilPdg9ywR-sMW5XrChNYA>
-    <xmx:ACxSZbKoHk8tD2kOz6crp3vsj0HxmEfEXgqfuo3Fo0IgPVRDmBFVAA>
-    <xmx:ASxSZT2pEed5RqwJt1orGOA0hml5A9qyqy_TvRV2Btzr8hQL53ibsQ>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id C1861C6008B; Mon, 13 Nov 2023 09:00:31 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1108-g3a29173c6d-fm-20231031.005-g3a29173c
+        Mon, 13 Nov 2023 09:15:59 -0500
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69844D4C;
+        Mon, 13 Nov 2023 06:15:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699884956; x=1731420956;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=4SqTZZ5GG3sF0sw3M3TuugAIG+MCZs94RA4pLur6IGc=;
+  b=HaPAEa+S3s0cN7LKO6Zha3EyBPvfvh5jDUYRUt4eegy2GhGwzCfUwKOD
+   kXLQ/ckL2pVBwSvZFBmRmyiP5zYOSb7y/ZFRPGZR5bePiMYS3THqAAgeC
+   96N/wn7J64wwvqLMQwQp1i+Tz0HClcZq3RY6Zek0if1NhqXsMgdPwnFyc
+   k7/9vRhKfI+gL1mL6Ycdjbti258o5O8r/E2We3tZ5BbPCvzew/eJnE/f0
+   scXhXOGVGTcau5qW/NJk0RNPXKpGy1XO8FdUsPGgIbgOXSVCE0eRsJ7Le
+   uOZwf5SQVkHgOpwJzKXeYzkQ9siG4vRyHFaYeIrS41i+f+1uUsRz5NRQL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="370639790"
+X-IronPort-AV: E=Sophos;i="6.03,299,1694761200"; 
+   d="scan'208";a="370639790"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2023 06:15:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="908059342"
+X-IronPort-AV: E=Sophos;i="6.03,299,1694761200"; 
+   d="scan'208";a="908059342"
+Received: from alexdsou-mobl3.gar.corp.intel.com ([10.249.44.83])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2023 06:15:52 -0800
+Date:   Mon, 13 Nov 2023 16:15:50 +0200 (EET)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+cc:     Jorge Lopez <jorge.lopez2@hp.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>,
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, dan.carpenter@linaro.org,
+        kernel-janitors@vger.kernel.org, error27@gmail.com,
+        vegard.nossum@oracle.com, darren.kenny@oracle.com,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2 4/4] platform/x86: hp-bioscfg: Fix error handling in
+ hp_add_other_attributes()
+In-Reply-To: <c3b821fb-5df1-4c58-99bc-f3e99a6d1d94@oracle.com>
+Message-ID: <a0b5d36a-aad8-eaf5-7241-85d1c874ff8@linux.intel.com>
+References: <20231110142921.3398072-1-harshit.m.mogalapalli@oracle.com> <20231110142921.3398072-4-harshit.m.mogalapalli@oracle.com> <211e6c1e-9bfa-ac29-b6ba-e198c4f36688@linux.intel.com> <fb97e3ea-1bee-4d7d-a8d4-dd76107f75ef@oracle.com>
+ <1b58df2d-b444-ddb7-7533-9911d35f8f7@linux.intel.com> <c3b821fb-5df1-4c58-99bc-f3e99a6d1d94@oracle.com>
 MIME-Version: 1.0
-Message-Id: <b3167aca-032d-4ec4-b438-38416a5d8a10@app.fastmail.com>
-In-Reply-To: <abecd774-30a4-f11b-e1f-dcae9f1cf7df@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20231108162039.13737-1-mpearson-lenovo@squebb.ca>
- <8b29ab8-fef4-8a60-e6c5-447f31f144a7@linux.intel.com>
- <14312000-6369-4669-bcc9-4fa2abb5a98f@app.fastmail.com>
- <abecd774-30a4-f11b-e1f-dcae9f1cf7df@linux.intel.com>
-Date:   Mon, 13 Nov 2023 09:00:09 -0500
-From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "Hans de Goede" <hdegoede@redhat.com>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        "Limonciello, Mario" <mario.limonciello@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: Add support for improved performance mode
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; BOUNDARY="8323329-195486519-1699884748=:1867"
+Content-ID: <9520be49-c073-1c2a-1df5-151267569738@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Ilpo
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Fri, Nov 10, 2023, at 7:37 AM, Ilpo J=C3=A4rvinen wrote:
-> On Thu, 9 Nov 2023, Mark Pearson wrote:
->> On Thu, Nov 9, 2023, at 5:10 AM, Ilpo J=C3=A4rvinen wrote:
->> > On Wed, 8 Nov 2023, Mark Pearson wrote:
-<snip>
->>=20
->> >
->> > Looking into the driver a bit more, there are a few other defines w=
-hich=20
->> > could also move BIT() from the code into defines. Please tell if yo=
-u're=20
->> > going to look at those because if not, I might try to make the patc=
-hes.
->>=20
->> Happy to look at doing that as I'm playing around with this driver an=
-yway.
->
-> Okay, thanks.
->
-Just a quick note - I pushed v2 for this patch, and I'll tackle the othe=
-r BIT changes separately (rather than adding it as part of a series). Lo=
-oking through the code I wanted to spend more time on that piece - I'm n=
-ot ignoring it :)
+--8323329-195486519-1699884748=:1867
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <1eb3726-567f-368d-4d40-4419ba68c94f@linux.intel.com>
 
-Mark
+On Mon, 13 Nov 2023, Harshit Mogalapalli wrote:
+> On 13/11/23 7:01 pm, Ilpo Järvinen wrote:
+> > On Sat, 11 Nov 2023, Harshit Mogalapalli wrote:
+> > > On 10/11/23 8:14 pm, Ilpo Järvinen wrote:
+> > > > On Fri, 10 Nov 2023, Harshit Mogalapalli wrote:
+> > > > 
+> > > 
+> > > Thanks for the review.
+> > > 
+> > > > This changelog needs to be rewritten, it contains multiple errors. I
+> > > > suppose even this patch could be split into two but I'll not be too
+> > > > picky
+> > > > here if you insist on fixing them in the same patch.
+> > > > 
+> > > 
+> > > Any thoughts on how to split this into two patches ?
+> > > 
+> > > I thought of fixing memory leak in separate patch, but that would add more
+> > > code which should be removed when we move kobject_put() to the end.
+> > 
+> Thanks for the suggestions.
+> 
+> > I meant that in the first patch you fix add the missing kfree(). Then in
+> > the second one, you correct kobject_put() + play with goto labels. There's
+> > no extra code that needs to be added and then removed AFAICT.
+> > 
+> 
+> This is the problem I am trying to explain:
+> 
+> Let us say we do memory leak fixing in first patch:
+> 
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> index 351d782f3e96..7f29a746210e 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> @@ -612,6 +612,7 @@ static int hp_add_other_attributes(int attr_type)
+>         default:
+>                 pr_err("Error: Unknown attr_type: %d\n", attr_type);
+>                 ret = -EINVAL;
+> +               kfree(attr_name_kobj);
+>                 goto err_other_attr_init;
+>         }
+> 
+> @@ -637,8 +638,10 @@ static int hp_add_other_attributes(int attr_type)
+>                 ret = -EINVAL;
+>         }
+> 
+> -       if (ret)
+> +       if (ret) {
+> +               kfree(attr_name_kobj); ///// [1]
+
+This relates to the 2nd problem (missing kobject_put()) and will be 
+covered by the other patch. Don't try to solve this in the first patch
+at all!
+
+There are two indepedent problems:
+- Before kobject_init_and_add(), kfree() is missing
+- After kobject_init_and_add(), kobject_put() is missing
+
+Solve each in own patch and don't mix the solutions.
+
+I know both patches are needed to solve _both_ problems so it's fine to 
+have "still broken" intermediate state as long as you didn't make things 
+worse in the first patch which you didn't.
+
+>                 goto err_other_attr_init;
+> +       }
+> 
+>         mutex_unlock(&bioscfg_drv.mutex);
+>         return 0;
+> 
+> Now when we want to move kobject_put() to goto label in next patch,
+> we should remove the kfree [1], as kobject_put() already does a kfree().
+> 
+> If that sounds okay, I will split this into two patches, (first one, only
+> fixing memory leak; and second one fixing missing kobject_put() calls on error
+> paths)
+
+-- 
+ i.
+--8323329-195486519-1699884748=:1867--
