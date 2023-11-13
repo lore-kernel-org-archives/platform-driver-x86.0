@@ -2,102 +2,141 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD59C4332F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 16:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033C1C4167B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 16:08:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231419AbjKMQBN (ORCPT
+        id S231454AbjKMQIm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Nov 2023 11:01:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39516 "EHLO
+        Mon, 13 Nov 2023 11:08:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231295AbjKMQBM (ORCPT
+        with ESMTP id S231435AbjKMQIm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Nov 2023 11:01:12 -0500
-Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9657B1711
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 08:01:07 -0800 (PST)
-Received: by mail-qv1-xf2a.google.com with SMTP id 6a1803df08f44-66fa16092c0so28368786d6.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 08:01:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699891266; x=1700496066; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Qoo4HeqyB8XJlWsHMhO4dBiMIsId95k48Rfp0Zw5T3s=;
-        b=c1iFOr9Tf5P/IiChw+9CHyFh3TPN/IwvTuYeJ0wp323FBnklPygAmCY0YIZVHhDQ1r
-         ZxKpTBNLPDpk/EdIHk35UZ/ObgxvnUDRrnXFb6Jr2HjcBM3NNg4LaYBk6aTK5IaNZZ8I
-         AHqHGENhQK8h9CVNhY0cvyFWPJd6yZhQMuiYDKXa86gzVl1TN8NzCT1I03B8p4+aUc+4
-         1FmRIVMbhD6O9Ey9XWE4nKXPuRutEU/UyC4KVUVhTZ0g+uDPsvpXi3Jmy3uDUQoUVRjf
-         tozwJmXqVOL927wzy4w49tDmOfaN4mmMSxaf67duGUDEe94dDSE8tQvNa66myU4+g9xw
-         W5KA==
+        Mon, 13 Nov 2023 11:08:42 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2915A10EC
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 08:07:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1699891669;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pAkyWuAlP3WRAhkP+++lmx+mwvKY3DtmoscUolCQlDI=;
+        b=S8wS8HR28knBtVFcSPiGXyREKrrMviYRASH4lIe+6B4CnaG4WGtk1JWuXFy+59BxIhYyBQ
+        U+8E9U5S9Cn0hjNGwNHYMjQ7mTcsw+x/DQ/TJ2eiKHnk775CTPhTlbEAlCgp18gNyJEggg
+        C/5ITgjV89reE3utK23i0WoqgreZ4Tw=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-550-EqJN5ZFgMEOEjRFm897QVA-1; Mon, 13 Nov 2023 11:07:47 -0500
+X-MC-Unique: EqJN5ZFgMEOEjRFm897QVA-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-53ee9f409a9so3142034a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Nov 2023 08:07:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699891266; x=1700496066;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1699891666; x=1700496466;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qoo4HeqyB8XJlWsHMhO4dBiMIsId95k48Rfp0Zw5T3s=;
-        b=vxKw03iwMKBZsWOuC1lnOVqBdYtpaPFxJu1PxNkL90QDOEumwkM2UfZql0UkJpO4u5
-         ugp7UeJeRw9CxU4/ISbZoYznFZB+A0ph+zOosLOLoisqihgVyP9s9gj1EEDtJvzJKBGf
-         dXFx3barLkBu1j2uIzKhvcwz71PiqUGg804epEhzA4IQxhe389l2zMNBdjWtKMh+BY5T
-         zUe1UEYwjqXJKOVV4pT1vSz3e9OkycTuh3+BSQy8bxkkj6Or/2+gcTPYFAlgCSG1wDhX
-         nOG5PIf2qx6tX8Yl1+61nnqMCljLEv76FMRtWYQfVT/DnZBklzJppgIwpHH+VyFmfV5m
-         vSCQ==
-X-Gm-Message-State: AOJu0YzyiHcxySy5Kx7vouCinddpXPfmQdbsXe/NDoRYcMWd/CGD+cG0
-        RPmQ36pACM8O5mX1HebV55vcJA==
-X-Google-Smtp-Source: AGHT+IG5zJ5b6dVPypoKcfuICu/un+SYe6KNcnPElYEe5tHaxVY9lQoNx4dz5v0y9ZW2DHWkXiOg7w==
-X-Received: by 2002:a05:6214:a94:b0:66f:bb58:c150 with SMTP id ev20-20020a0562140a9400b0066fbb58c150mr7312476qvb.56.1699891266772;
-        Mon, 13 Nov 2023 08:01:06 -0800 (PST)
-Received: from localhost ([12.186.190.2])
-        by smtp.gmail.com with ESMTPSA id cy20-20020a05621418d400b00670e7ae4964sm2153685qvb.91.2023.11.13.08.01.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Nov 2023 08:01:06 -0800 (PST)
-Date:   Mon, 13 Nov 2023 19:01:04 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-        Jorge Lopez <jorge.lopez2@hp.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-        platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, error27@gmail.com,
-        vegard.nossum@oracle.com, darren.kenny@oracle.com,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 4/4] platform/x86: hp-bioscfg: Fix error handling in
- hp_add_other_attributes()
-Message-ID: <bd9e80db-a80f-44d1-bcb9-a14ec0abc64f@suswa.mountain>
-References: <20231110142921.3398072-1-harshit.m.mogalapalli@oracle.com>
- <20231110142921.3398072-4-harshit.m.mogalapalli@oracle.com>
- <211e6c1e-9bfa-ac29-b6ba-e198c4f36688@linux.intel.com>
- <fb97e3ea-1bee-4d7d-a8d4-dd76107f75ef@oracle.com>
- <1b58df2d-b444-ddb7-7533-9911d35f8f7@linux.intel.com>
- <c3b821fb-5df1-4c58-99bc-f3e99a6d1d94@oracle.com>
- <a0b5d36a-aad8-eaf5-7241-85d1c874ff8@linux.intel.com>
+        bh=pAkyWuAlP3WRAhkP+++lmx+mwvKY3DtmoscUolCQlDI=;
+        b=S/YTRCoBN4u2F2K3eZo+PjV5OCgPfLIiYcDVrbY8UFuweptaGCcFJXys8FHgx79d6v
+         1qyYu8ZMUbEOEbp05QfIrtfKaB1Qka2lvKCw8dpWJOF5noUo0Xnx+UQMwZCXgptXZ3PK
+         5dDEJfpl78GOuN/HS3jtKqxfQs8D8q5+GHBHtFgMEOkudXOHcM+3KWSHWUArErV3FT+y
+         pCS1v+6wp3pXXqIBzjf1IHcIZa4LT+rr+wFNTRh4ufSC4ffk0zl8jmoSX2Zzf4mbsUl4
+         xSvIxKJjKvqzVYx36QEOKMaqbQjLwh7WvP5c9zn4dnEC64No1+HbpF1n+r1KBbwDll3j
+         /AmA==
+X-Gm-Message-State: AOJu0YxCVazjXDtsJ6mApwT3B3hfWw2c7iqQu9Wu9d8stsUcyAu4Y1r4
+        kDvuqSRaPKBDJWDkv5HucYMP3NT//8zMHrr+qVXNguTuyEYHD+UupAFjeXT6+gpIzUVJg1Pht3D
+        GCe8ZOmQHF7iwVt/5vOaq7SYkOyQAroNE2g==
+X-Received: by 2002:a17:906:b1b:b0:9ae:5370:81d5 with SMTP id u27-20020a1709060b1b00b009ae537081d5mr4359526ejg.41.1699891666714;
+        Mon, 13 Nov 2023 08:07:46 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEGTihF/62EKU+Wtiz2v06QtymYDdd3hPfvECCV8zFTiBRYk2GSvIbvrQVO+5wZ5S1Ntj5ooA==
+X-Received: by 2002:a17:906:b1b:b0:9ae:5370:81d5 with SMTP id u27-20020a1709060b1b00b009ae537081d5mr4359512ejg.41.1699891666435;
+        Mon, 13 Nov 2023 08:07:46 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id um27-20020a170906cf9b00b009de467a25d5sm4272281ejb.13.2023.11.13.08.07.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Nov 2023 08:07:45 -0800 (PST)
+Message-ID: <ae5131e3-b282-437d-9a80-ae8b697eea3c@redhat.com>
+Date:   Mon, 13 Nov 2023 17:07:44 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a0b5d36a-aad8-eaf5-7241-85d1c874ff8@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] dt-bindings: connector: usb: provide bindings for
+ altmodes
+Content-Language: en-US, nl
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-usb@vger.kernel.org
+References: <20231113145328.42575-1-dmitry.baryshkov@linaro.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20231113145328.42575-1-dmitry.baryshkov@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Nov 13, 2023 at 04:15:50PM +0200, Ilpo Järvinen wrote:
-> This relates to the 2nd problem (missing kobject_put()) and will be 
-> covered by the other patch. Don't try to solve this in the first patch
-> at all!
+Hi Dmitry,
+
+On 11/13/23 15:33, Dmitry Baryshkov wrote:
+> In some cases we need a way to specify USB-C AltModes that can be
+> supportd on the particular USB-C connector. For example, x86 INT33FE
+> driver does this by populating fwnode properties internally. For the
+> Qualcomm Robotics RB5 platform (and several similar devices which use
+> Qualcomm PMIC TCPM) we have to put this information to the DT.
 > 
-> There are two indepedent problems:
-> - Before kobject_init_and_add(), kfree() is missing
-> - After kobject_init_and_add(), kobject_put() is missing
+> Provide the DT bindings for this kind of information and while we are at
+> it, change svid property to be 16-bit unsigned integer instead of a
+> simple u32.
 
-It's the same problem, though.  The attr_name_kobj is leaked on all the
-error paths.  It's just that it needs to be freed different ways
-depending on where you are.  To me splitting it up makes it harder to
-review and I would not allow it in Staging.  You can't fix half the
-problem.
+Thank you for your patches. I'm fine with this, one remark though:
 
-regards,
-dan carpenter
+Since at least the existing arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
+is already using this I'm not sure of changing the svid property to
+an u16 is really a good idea from devicetree compatibility pov ?
+
+Also the whole 16 bit property notation in the dts files seems
+less readable to me. So to me this seems more of something
+which one would use when having a significantly sized array
+of u16-s since then it will result in space-saving in the dtb.
+
+In this case I personally think it is fine to leave this
+as an u32.
+
+With all that said, I'm fine either way.
+
+Here is my ack for routing the drivers/platform/x86/intel/chtwc_int33fe.c
+bits through whatever tree is best to get this upstream:
+
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
+
+> Dmitry Baryshkov (3):
+>   dt-bindings: connector: usb: add altmodes description
+>   usb: typec: change altmode SVID to u16 entry
+>   arm64: dts: qcom: qrb5165-rb5: use u16 for DP altmode svid
+> 
+>  .../bindings/connector/usb-connector.yaml     | 35 +++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/qrb5165-rb5.dts      |  2 +-
+>  drivers/platform/x86/intel/chtwc_int33fe.c    |  2 +-
+>  drivers/usb/typec/class.c                     |  5 +--
+>  4 files changed, 40 insertions(+), 4 deletions(-)
+> 
 
