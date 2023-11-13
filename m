@@ -2,49 +2,49 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F13D8C4167B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 20:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E70C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 13 Nov 2023 20:08:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231671AbjKMUIE (ORCPT
+        id S231937AbjKMUIO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 13 Nov 2023 15:08:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45516 "EHLO
+        Mon, 13 Nov 2023 15:08:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229816AbjKMUIC (ORCPT
+        with ESMTP id S231787AbjKMUIM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 13 Nov 2023 15:08:02 -0500
+        Mon, 13 Nov 2023 15:08:12 -0500
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D1F0D7E;
-        Mon, 13 Nov 2023 12:07:58 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0C3C10F4;
+        Mon, 13 Nov 2023 12:08:05 -0800 (PST)
 Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ADHit5N019625;
-        Mon, 13 Nov 2023 20:07:48 GMT
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ADHipwW019571;
+        Mon, 13 Nov 2023 20:07:53 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type :
+ subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2023-03-30;
- bh=+7eunD0OTU2yjHAOkU5WnoPs83gQX3uVzrbb3I5v9cs=;
- b=w77SsOuICMsJa6wr+X+N7k4P1k/uyHf9K7LOD2hU3LKQK6mIwqSYosOhvMbkoTqaGRnl
- v3Q/OBs2IYkVPxiEMq7qm+oxenaZUkRyAHAy/cCryrnU7ZIBbYkvGF9bAcz6wo1ld74c
- YNKS+Ln63MLxKjd8Lewlj/UsXjH9bobZEuBv48IBBUWd7QcogRM3p47cNtZZxpL3TXON
- s47yiIZqz7Mf8Clzw4o69BjPxlbMDK2nBNsgsXLFcodBALW0cNGYFPVZR8GRDYfC2KK+
- DspEjtzKNv+huQJdaSCXczrFQgVwy2Qbq5fu1AUsyaBJ9ez0d0zyJLm5GpHM+QX7qeoj pg== 
+ bh=wRDNb5kwLbA9iZoe1kAxP+fQShQcH6es5bJIqUJvS3g=;
+ b=KhsOWGOjCaym6P4itiKotXonHl2TFZkKcYBWtXFg+NYW0OZOkAM+D87j9NJOSaniuARK
+ Mf78OshxIUXjCCiX7nQfx3eusV5/UFeuBCQLhJ+0vwFMBIzKk0M17oqop1LPZnF1RvwK
+ bOSPCp6kaG99Im3KYz2WgoudUqAv5vX8BmVh3NzkBs2jjFMdqhi7Zhp70azZwGazKpBj
+ f86j9fmyQIqtXFUP/n93dxC75qBWdhJDyVszZsBI2xu3bFrYBgqz14mbx6y1o4ZrAxZy
+ jDbfyp4WQa3V3K3YA2oj42XOG6qsCyr3FnKE7vThNyu4H+cNr/9DD0zuuCxebjTetfmr rA== 
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ua2m2bn3t-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ua2m2bn40-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Nov 2023 20:07:47 +0000
+        Mon, 13 Nov 2023 20:07:53 +0000
 Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3ADIsDvf029856;
-        Mon, 13 Nov 2023 20:07:46 GMT
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3ADIs0QQ029926;
+        Mon, 13 Nov 2023 20:07:52 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3uaxqqe8wp-1
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3uaxqqe90n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Nov 2023 20:07:46 +0000
+        Mon, 13 Nov 2023 20:07:52 +0000
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3ADK7jMV026381;
-        Mon, 13 Nov 2023 20:07:45 GMT
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3ADK7jMZ026381;
+        Mon, 13 Nov 2023 20:07:51 GMT
 Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3uaxqqe8vg-1;
-        Mon, 13 Nov 2023 20:07:45 +0000
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3uaxqqe8vg-3;
+        Mon, 13 Nov 2023 20:07:51 +0000
 From:   Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
 To:     Jorge Lopez <jorge.lopez2@hp.com>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -54,13 +54,14 @@ To:     Jorge Lopez <jorge.lopez2@hp.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org,
         error27@gmail.com, vegard.nossum@oracle.com,
-        harshit.m.mogalapalli@oracle.com
-Subject: [PATCH v4 1/4] platform/x86: hp-bioscfg: Simplify return check in hp_add_other_attributes()
-Date:   Mon, 13 Nov 2023 12:07:37 -0800
-Message-ID: <20231113200742.3593548-1-harshit.m.mogalapalli@oracle.com>
+        harshit.m.mogalapalli@oracle.com, kernel test robot <lkp@intel.com>
+Subject: [PATCH v4 3/4] platform/x86: hp-bioscfg: Fix error handling in hp_add_other_attributes()
+Date:   Mon, 13 Nov 2023 12:07:39 -0800
+Message-ID: <20231113200742.3593548-3-harshit.m.mogalapalli@oracle.com>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231113200742.3593548-1-harshit.m.mogalapalli@oracle.com>
+References: <20231113200742.3593548-1-harshit.m.mogalapalli@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
@@ -69,28 +70,45 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxsc
  suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
  definitions=main-2311130159
-X-Proofpoint-GUID: kDMwqjScWbYKHuT5TS74-DMazetyI6Hx
-X-Proofpoint-ORIG-GUID: kDMwqjScWbYKHuT5TS74-DMazetyI6Hx
+X-Proofpoint-GUID: 8vncgvzQNdwgDn8i-l236l5OQyNMstFQ
+X-Proofpoint-ORIG-GUID: 8vncgvzQNdwgDn8i-l236l5OQyNMstFQ
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-All cases in switch-case have a same goto on error, move the return
-check out of the switch. This is a cleanup.
+'attr_name_kobj' is allocated using kzalloc, but on all the error paths
+it is not freed, hence we have a memory leak.
 
+Fix the error path before kobject_init_and_add() by adding kfree().
+
+kobject_put() must be always called after passing the object to
+kobject_init_and_add(). Only the error path which is immediately next
+to kobject_init_and_add() calls kobject_put() and not any other error
+path after it.
+
+Fix the error handling after kobject_init_and_add() by moving the
+kobject_put() into the goto label err_other_attr_init that is already
+used by all the error paths after kobject_init_and_add().
+
+Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <error27@gmail.com>
+Closes: https://lore.kernel.org/r/202309201412.on0VXJGo-lkp@intel.com/
 Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
-v3->v4: Add R.B from Ilpo
+This is based on static analysis, only compile tested.
+
+v3->v4: Add more explicit statement on how we are fixing it, suggested
+by Ilpo
 ---
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-index 5798b49ddaba..10676e1abc28 100644
+index a3599498c4e8..6ddca857cc4d 100644
 --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
 +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-@@ -575,81 +575,79 @@ static void release_attributes_data(void)
+@@ -575,77 +575,79 @@ static void release_attributes_data(void)
  /**
   * hp_add_other_attributes() - Initialize HP custom attributes not
   * reported by BIOS and required to support Secure Platform and Sure
@@ -111,13 +129,11 @@ index 5798b49ddaba..10676e1abc28 100644
  	int ret;
  	char *attr_name;
  
- 	mutex_lock(&bioscfg_drv.mutex);
- 
  	attr_name_kobj = kzalloc(sizeof(*attr_name_kobj), GFP_KERNEL);
- 	if (!attr_name_kobj) {
- 		ret = -ENOMEM;
- 		goto err_other_attr_init;
- 	}
+ 	if (!attr_name_kobj)
+ 		return -ENOMEM;
+ 
+ 	mutex_lock(&bioscfg_drv.mutex);
  
  	/* Check if attribute type is supported */
  	switch (attr_type) {
@@ -134,14 +150,16 @@ index 5798b49ddaba..10676e1abc28 100644
  	default:
  		pr_err("Error: Unknown attr_type: %d\n", attr_type);
  		ret = -EINVAL;
- 		goto err_other_attr_init;
+-		goto err_other_attr_init;
++		kfree(attr_name_kobj);
++		goto unlock_drv_mutex;
  	}
  
  	ret = kobject_init_and_add(attr_name_kobj, &attr_name_ktype,
  				   NULL, "%s", attr_name);
  	if (ret) {
  		pr_err("Error encountered [%d]\n", ret);
- 		kobject_put(attr_name_kobj);
+-		kobject_put(attr_name_kobj);
  		goto err_other_attr_init;
  	}
  
@@ -149,28 +167,25 @@ index 5798b49ddaba..10676e1abc28 100644
  	switch (attr_type) {
  	case HPWMI_SECURE_PLATFORM_TYPE:
  		ret = hp_populate_secure_platform_data(attr_name_kobj);
--		if (ret)
--			goto err_other_attr_init;
  		break;
  
  	case HPWMI_SURE_START_TYPE:
  		ret = hp_populate_sure_start_data(attr_name_kobj);
--		if (ret)
--			goto err_other_attr_init;
  		break;
  
  	default:
  		ret = -EINVAL;
--		goto err_other_attr_init;
  	}
  
-+	if (ret)
-+		goto err_other_attr_init;
-+
+ 	if (ret)
+ 		goto err_other_attr_init;
+ 
  	mutex_unlock(&bioscfg_drv.mutex);
  	return 0;
  
  err_other_attr_init:
++	kobject_put(attr_name_kobj);
++unlock_drv_mutex:
  	mutex_unlock(&bioscfg_drv.mutex);
  	kfree(obj);
  	return ret;
