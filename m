@@ -2,130 +2,81 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728BBC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Nov 2023 12:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172A6C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Nov 2023 12:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229798AbjKNMoJ (ORCPT
+        id S231656AbjKNMsT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Nov 2023 07:44:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48050 "EHLO
+        Tue, 14 Nov 2023 07:48:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231447AbjKNMoI (ORCPT
+        with ESMTP id S229441AbjKNMsT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Nov 2023 07:44:08 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD367198
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Nov 2023 04:44:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1699965844;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ix8jzUm8kKsvjeA/9wvH9vgqBJk06pyG8tZ3W2P8ymo=;
-        b=cS0oZpo7VuMXBUg/8Qkp5+drK91dFOf1OVlnR4Jb1817kVaZK+0HLUggbgYoPYUd2wnXhv
-        CsP7jFCuDHVeGuradlThCodJLIuhHVeRMxZvL6oXwpkexDjxlKxTj7espGwdbOv0o6PbdN
-        Hxv6bTZkVAQJgkZw9lKseeVc8Cyuyq0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-538-WKpOxRHwN3GC-49GxGIIlg-1; Tue, 14 Nov 2023 07:44:02 -0500
-X-MC-Unique: WKpOxRHwN3GC-49GxGIIlg-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-9e15f05c3ceso390804766b.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Nov 2023 04:44:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699965841; x=1700570641;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ix8jzUm8kKsvjeA/9wvH9vgqBJk06pyG8tZ3W2P8ymo=;
-        b=CzInHZbJKbzATH7zGNjZTsrGjTNzw2jy9MTaQstedmtH/EkR6zps8t5103sW2N6BWL
-         vwxcVMic38cSR7DzXCC1Tsa8LBmKE8aNMuR59wbH2A1rD63Z2Zs2Cz4kXg3JmllEk4A5
-         SaOJA2ABy/11qX3FJSAaBlg2eR1BtLQcyfPgm2odIRDhVnwKg3gC5KWxxXhd1Wgc8/6r
-         ylYb2+VTTH0xhwZtHtIinpbvRTmIDAVqq2OP3gwV0jD0YqFe0ComlTdbLPvTTkYR/J3E
-         uxKKmexs5fA3DAZ4tffFFOhEsyeNUDD+J7eIadpAztpK2HfThr5AP76UpBMp8zwD6vPg
-         nZ7w==
-X-Gm-Message-State: AOJu0Yy/6a+6OYP1gkn+RH1f232Nt/Y2il5miPwst4Zj8nj7dh2W02t7
-        jVrB6bymTy0cLyOy0c1Q2u3R7GrAGJX0t3gO6PaBVU7u6Zkm8kUvxTSjex5d+GvKBgHnGJiPX99
-        59KgLR9Oul10NbxYT93jP8M3rWHPdTZxehQ==
-X-Received: by 2002:a17:907:98e:b0:9ba:fe6:225 with SMTP id bf14-20020a170907098e00b009ba0fe60225mr8852204ejc.55.1699965841454;
-        Tue, 14 Nov 2023 04:44:01 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEiiu2pOUMDooVpl8+wE4QxGVP90caAP8s/9uHkOVMA0bdTVHsINaHFoVvuXKygRp4mX3y3/A==
-X-Received: by 2002:a17:907:98e:b0:9ba:fe6:225 with SMTP id bf14-20020a170907098e00b009ba0fe60225mr8852191ejc.55.1699965841178;
-        Tue, 14 Nov 2023 04:44:01 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id s4-20020a170906168400b009aa292a2df2sm5465278ejd.217.2023.11.14.04.43.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Nov 2023 04:44:00 -0800 (PST)
-Message-ID: <b3d2f6aa-4dc4-4570-9c00-54b7211fb851@redhat.com>
-Date:   Tue, 14 Nov 2023 13:43:59 +0100
+        Tue, 14 Nov 2023 07:48:19 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DF0D188
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Nov 2023 04:48:16 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 08365C433C7
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Nov 2023 12:48:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699966096;
+        bh=Y/VBvtN2JeOrqxNSjCR0BSmVJPtnfbNzvBs+DlvJBqc=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=HmF1Zp1j6PfZzY88LAtv1jDcNaPCHg1im4rqCz1fodCbrPkA8oMKT8jzZrVnpurql
+         L787dW4PKtr79dFUgFQ5Sh0UDNoy++rTN3HUlW3TpIcxtZjB5TlZLAE551TO9C1hPd
+         txGnbvykvUpJMTfd9U5cbEYvzSzMzpdd0ucE2arY/gTpXiH6psY04Uplx4niaKfah/
+         mpc1VlFiFU0iHtr4pH1tME5/DW4d9cLpQ2Lp5J6sls9aj+bIfmcC2VHIaqNksofzKi
+         4DLfEp4OQyg8s0evdxdwbw2U7FoWqx2+GInfh7AX9bdVAwIqfi5MptJDMQtFBBOy5L
+         1Oxd1ZuoTwLww==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id EA295C4332E; Tue, 14 Nov 2023 12:48:15 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 218143] platform/x86/intel/pmc: regression found in commit
+ 804951203aa541ad6720c9726c173d18aeb3ab6b
+Date:   Tue, 14 Nov 2023 12:48:15 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc component assigned_to product
+Message-ID: <bug-218143-215701-Hsh69GHMdb@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218143-215701@https.bugzilla.kernel.org/>
+References: <bug-218143-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] platform/x86: hp-bioscfg: Fix error handling in
- hp_add_other_attributes()
-Content-Language: en-US, nl
-To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Cc:     Jorge Lopez <jorge.lopez2@hp.com>,
-        Mark Gross <markgross@kernel.org>,
-        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, dan.carpenter@linaro.org,
-        kernel-janitors@vger.kernel.org, error27@gmail.com,
-        vegard.nossum@oracle.com, kernel test robot <lkp@intel.com>
-References: <20231113200742.3593548-1-harshit.m.mogalapalli@oracle.com>
- <20231113200742.3593548-3-harshit.m.mogalapalli@oracle.com>
- <36e7a170-bd87-4462-fc6b-eec446fbb551@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <36e7a170-bd87-4462-fc6b-eec446fbb551@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Ilpo,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218143
 
-On 11/14/23 11:31, Ilpo Järvinen wrote:
-> On Mon, 13 Nov 2023, Harshit Mogalapalli wrote:
-> 
->> 'attr_name_kobj' is allocated using kzalloc, but on all the error paths
->> it is not freed, hence we have a memory leak.
->>
->> Fix the error path before kobject_init_and_add() by adding kfree().
->>
->> kobject_put() must be always called after passing the object to
->> kobject_init_and_add(). Only the error path which is immediately next
->> to kobject_init_and_add() calls kobject_put() and not any other error
->> path after it.
->>
->> Fix the error handling after kobject_init_and_add() by moving the
->> kobject_put() into the goto label err_other_attr_init that is already
->> used by all the error paths after kobject_init_and_add().
->>
->> Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
->> Reported-by: kernel test robot <lkp@intel.com>
->> Reported-by: Dan Carpenter <error27@gmail.com>
->> Closes: https://lore.kernel.org/r/202309201412.on0VXJGo-lkp@intel.com/
->> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
->> ---
->> This is based on static analysis, only compile tested.
->>
->> v3->v4: Add more explicit statement on how we are fixing it, suggested
->> by Ilpo
-> 
-> Thanks a lot, this looks fine too now.
-> 
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Hans de Goede (jwrdegoede@fedoraproject.org) changed:
 
-Thank you for reviewing this series. I believe that it is best
-to submit this as fixes for the current cycle.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |jwrdegoede@fedoraproject.or
+                   |                            |g
+          Component|Other                       |Platform_x86
+           Assignee|rjw@rjwysocki.net           |drivers_platform_x86@kernel
+                   |                            |-bugs.osdl.org
+            Product|Power Management            |Drivers
 
-Under the assumption that you agree with this I've delegated
-these 4 patches to you (Ilpo) in patchwork.
+--=20
+You may reply to this email to add a comment.
 
-Regards,
-
-Hans
-
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
