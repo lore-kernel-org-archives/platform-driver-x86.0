@@ -2,120 +2,130 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2E9C4167B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Nov 2023 11:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 728BBC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Nov 2023 12:44:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232085AbjKNLrz (ORCPT
+        id S229798AbjKNMoJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Nov 2023 06:47:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60122 "EHLO
+        Tue, 14 Nov 2023 07:44:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjKNLry (ORCPT
+        with ESMTP id S231447AbjKNMoI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Nov 2023 06:47:54 -0500
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2F2BE8;
-        Tue, 14 Nov 2023 03:47:51 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-32da7ac5c4fso3489296f8f.1;
-        Tue, 14 Nov 2023 03:47:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699962470; x=1700567270; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0hu5vq24I9HjUM0WRdZZtyBTXIAl9KFFFfWHDwaNX2E=;
-        b=knMJs3MZ+BgvY8+6q0WeLfmi7uUaDZNTjuxdXbDHc7bIc4xgMGbwEjuxnC7NB2DjFu
-         2YiBjEg+pcZLcnXJbkGbO+o3Ql84ASfNgE4SpIi0TGj6kZfU1A+z9vU6j9YYECrNWEWO
-         QMzHcrRorJHLxU2pXztMOvG2S2Y8UWY0V+lJTYQNHPi67DRbl1/I/qNX/y1h+qH/czns
-         WAqQaV1SEuxHO9GQHu4ilFdgI/Lp2ZJTZ5K6YvHD58A5iCCWeQnpk6Ev9/UZ0Sg8p5wC
-         BdUfFK2E5R0gKpJLNycC0+Fj78Sumx8ZApIyQOj/J36Bz/fTqrRT48bSdM4hSBuuuGIW
-         nOQQ==
+        Tue, 14 Nov 2023 07:44:08 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD367198
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Nov 2023 04:44:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1699965844;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ix8jzUm8kKsvjeA/9wvH9vgqBJk06pyG8tZ3W2P8ymo=;
+        b=cS0oZpo7VuMXBUg/8Qkp5+drK91dFOf1OVlnR4Jb1817kVaZK+0HLUggbgYoPYUd2wnXhv
+        CsP7jFCuDHVeGuradlThCodJLIuhHVeRMxZvL6oXwpkexDjxlKxTj7espGwdbOv0o6PbdN
+        Hxv6bTZkVAQJgkZw9lKseeVc8Cyuyq0=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-538-WKpOxRHwN3GC-49GxGIIlg-1; Tue, 14 Nov 2023 07:44:02 -0500
+X-MC-Unique: WKpOxRHwN3GC-49GxGIIlg-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-9e15f05c3ceso390804766b.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Nov 2023 04:44:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699962470; x=1700567270;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0hu5vq24I9HjUM0WRdZZtyBTXIAl9KFFFfWHDwaNX2E=;
-        b=VfDwIGHUUrcuNZrmE6oKWkFr+ACh8xeE3bo1nKE6aCEYXWHrKHWXT42owIkwQC6n4E
-         pU3RIrPfB9I06kgnr8t7W15ghPxb/ao/s91fdfDbmlOGwFme27Ozqk0JidUjRK8NNw/u
-         YSB2vCjMJHPBZ2u/4GjIjutLiX4gtOw2K8WqRad2FGKwzPwiKnBeopPUQowwFbEP8SZt
-         JEJZk1OWri5jWNvbjR4T352hCUJ+WWLAOp0CskgEhuwiUURgWTDy22o2YCQN9fK32YG/
-         VL26L1HZgwe1aWrD/tyzguCHOtkS5FUczjXsFDFrxwPNFWd1AGIVaiJPbm+UsCyaE610
-         j3gA==
-X-Gm-Message-State: AOJu0Yx5Fb4Pii2am/FTF2zr2b4s4hB5lr2Ccj4vQu2UWV4HQodvW1yt
-        Opb5w328iZFs6h5/Oal0VnYH2iSfAXcQBg==
-X-Google-Smtp-Source: AGHT+IHEXwCzVTnk45oIZFh5O1og+XH+srcD5DBeMWWurI7hJDH2hur7wR+yXMTvjmt9Ge8duCv7gg==
-X-Received: by 2002:a5d:6d82:0:b0:331:34c1:771 with SMTP id l2-20020a5d6d82000000b0033134c10771mr8300212wrs.50.1699962469636;
-        Tue, 14 Nov 2023 03:47:49 -0800 (PST)
-Received: from localhost.localdomain ([109.175.193.89])
-        by smtp.gmail.com with ESMTPSA id t16-20020adfe450000000b0032dbf6bf7a2sm7628958wrm.97.2023.11.14.03.47.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Nov 2023 03:47:49 -0800 (PST)
-From:   Stuart Hayhurst <stuart.a.hayhurst@gmail.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     Stuart Hayhurst <stuart.a.hayhurst@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Gross <markgross@kernel.org>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ike Panhc <ike.pan@canonical.com>, stable@vger.kernel.org
-Subject: [PATCH v2] platform/x86: ideapad-laptop: Set max_brightness before using it
-Date:   Tue, 14 Nov 2023 11:38:08 +0000
-Message-ID: <20231114114055.6220-2-stuart.a.hayhurst@gmail.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <9f46c613-63c2-4bc7-b938-7c9ea862a55e@linux.intel.com>
-References: <9f46c613-63c2-4bc7-b938-7c9ea862a55e@linux.intel.com>
+        d=1e100.net; s=20230601; t=1699965841; x=1700570641;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ix8jzUm8kKsvjeA/9wvH9vgqBJk06pyG8tZ3W2P8ymo=;
+        b=CzInHZbJKbzATH7zGNjZTsrGjTNzw2jy9MTaQstedmtH/EkR6zps8t5103sW2N6BWL
+         vwxcVMic38cSR7DzXCC1Tsa8LBmKE8aNMuR59wbH2A1rD63Z2Zs2Cz4kXg3JmllEk4A5
+         SaOJA2ABy/11qX3FJSAaBlg2eR1BtLQcyfPgm2odIRDhVnwKg3gC5KWxxXhd1Wgc8/6r
+         ylYb2+VTTH0xhwZtHtIinpbvRTmIDAVqq2OP3gwV0jD0YqFe0ComlTdbLPvTTkYR/J3E
+         uxKKmexs5fA3DAZ4tffFFOhEsyeNUDD+J7eIadpAztpK2HfThr5AP76UpBMp8zwD6vPg
+         nZ7w==
+X-Gm-Message-State: AOJu0Yy/6a+6OYP1gkn+RH1f232Nt/Y2il5miPwst4Zj8nj7dh2W02t7
+        jVrB6bymTy0cLyOy0c1Q2u3R7GrAGJX0t3gO6PaBVU7u6Zkm8kUvxTSjex5d+GvKBgHnGJiPX99
+        59KgLR9Oul10NbxYT93jP8M3rWHPdTZxehQ==
+X-Received: by 2002:a17:907:98e:b0:9ba:fe6:225 with SMTP id bf14-20020a170907098e00b009ba0fe60225mr8852204ejc.55.1699965841454;
+        Tue, 14 Nov 2023 04:44:01 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEiiu2pOUMDooVpl8+wE4QxGVP90caAP8s/9uHkOVMA0bdTVHsINaHFoVvuXKygRp4mX3y3/A==
+X-Received: by 2002:a17:907:98e:b0:9ba:fe6:225 with SMTP id bf14-20020a170907098e00b009ba0fe60225mr8852191ejc.55.1699965841178;
+        Tue, 14 Nov 2023 04:44:01 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id s4-20020a170906168400b009aa292a2df2sm5465278ejd.217.2023.11.14.04.43.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Nov 2023 04:44:00 -0800 (PST)
+Message-ID: <b3d2f6aa-4dc4-4570-9c00-54b7211fb851@redhat.com>
+Date:   Tue, 14 Nov 2023 13:43:59 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/4] platform/x86: hp-bioscfg: Fix error handling in
+ hp_add_other_attributes()
+Content-Language: en-US, nl
+To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Cc:     Jorge Lopez <jorge.lopez2@hp.com>,
+        Mark Gross <markgross@kernel.org>,
+        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, dan.carpenter@linaro.org,
+        kernel-janitors@vger.kernel.org, error27@gmail.com,
+        vegard.nossum@oracle.com, kernel test robot <lkp@intel.com>
+References: <20231113200742.3593548-1-harshit.m.mogalapalli@oracle.com>
+ <20231113200742.3593548-3-harshit.m.mogalapalli@oracle.com>
+ <36e7a170-bd87-4462-fc6b-eec446fbb551@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <36e7a170-bd87-4462-fc6b-eec446fbb551@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-max_brightness is used in ideapad_kbd_bl_brightness_get() before it's set,
-causing ideapad_kbd_bl_brightness_get() to return -EINVAL sometimes
+Hi Ilpo,
 
-Fixes: ecaa1867b524 ("platform/x86: ideapad-laptop: Add support for keyboard backlights using KBLC ACPI symbol")
-Signed-off-by: Stuart Hayhurst <stuart.a.hayhurst@gmail.com>
-Cc: stable@vger.kernel.org
----
+On 11/14/23 11:31, Ilpo Järvinen wrote:
+> On Mon, 13 Nov 2023, Harshit Mogalapalli wrote:
+> 
+>> 'attr_name_kobj' is allocated using kzalloc, but on all the error paths
+>> it is not freed, hence we have a memory leak.
+>>
+>> Fix the error path before kobject_init_and_add() by adding kfree().
+>>
+>> kobject_put() must be always called after passing the object to
+>> kobject_init_and_add(). Only the error path which is immediately next
+>> to kobject_init_and_add() calls kobject_put() and not any other error
+>> path after it.
+>>
+>> Fix the error handling after kobject_init_and_add() by moving the
+>> kobject_put() into the goto label err_other_attr_init that is already
+>> used by all the error paths after kobject_init_and_add().
+>>
+>> Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Reported-by: Dan Carpenter <error27@gmail.com>
+>> Closes: https://lore.kernel.org/r/202309201412.on0VXJGo-lkp@intel.com/
+>> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+>> ---
+>> This is based on static analysis, only compile tested.
+>>
+>> v3->v4: Add more explicit statement on how we are fixing it, suggested
+>> by Ilpo
+> 
+> Thanks a lot, this looks fine too now.
+> 
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Sorry if I messed up the stable cc bit, I have no idea how that process works
+Thank you for reviewing this series. I believe that it is best
+to submit this as fixes for the current cycle.
 
-v1 -> v2:
- - Fix commit message
- - Add missing tags
+Under the assumption that you agree with this I've delegated
+these 4 patches to you (Ilpo) in patchwork.
 
----
- drivers/platform/x86/ideapad-laptop.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+Regards,
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index ac037540acfc..88eefccb6ed2 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -1425,18 +1425,17 @@ static int ideapad_kbd_bl_init(struct ideapad_private *priv)
- 	if (WARN_ON(priv->kbd_bl.initialized))
- 		return -EEXIST;
- 
--	brightness = ideapad_kbd_bl_brightness_get(priv);
--	if (brightness < 0)
--		return brightness;
--
--	priv->kbd_bl.last_brightness = brightness;
--
- 	if (ideapad_kbd_bl_check_tristate(priv->kbd_bl.type)) {
- 		priv->kbd_bl.led.max_brightness = 2;
- 	} else {
- 		priv->kbd_bl.led.max_brightness = 1;
- 	}
- 
-+	brightness = ideapad_kbd_bl_brightness_get(priv);
-+	if (brightness < 0)
-+		return brightness;
-+
-+	priv->kbd_bl.last_brightness = brightness;
- 	priv->kbd_bl.led.name                    = "platform::" LED_FUNCTION_KBD_BACKLIGHT;
- 	priv->kbd_bl.led.brightness_get          = ideapad_kbd_bl_led_cdev_brightness_get;
- 	priv->kbd_bl.led.brightness_set_blocking = ideapad_kbd_bl_led_cdev_brightness_set;
--- 
-2.42.0
+Hans
+
 
