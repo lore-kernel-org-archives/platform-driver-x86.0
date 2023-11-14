@@ -2,101 +2,85 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBE6C4167D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Nov 2023 11:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E29B6C4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Nov 2023 11:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232752AbjKNLlr (ORCPT
+        id S232627AbjKNLqt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Nov 2023 06:41:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54784 "EHLO
+        Tue, 14 Nov 2023 06:46:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232748AbjKNLlh (ORCPT
+        with ESMTP id S232062AbjKNLqs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Nov 2023 06:41:37 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA5841AC;
-        Tue, 14 Nov 2023 03:32:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699961535; x=1731497535;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=JTzcwCtdnMiga/o5pFKTO6FZ9pdO84nmnA+h3IRlPOg=;
-  b=KFRNe8YNLdwG2ZO54UwlCsQHW8VCrWQl6X/U6zGCmsqih4v6lcyV8CZR
-   KuPMyVQ7+o0a0VOF1MD0jqkVvFc3bs6XvcScY+YlY7yruaII5qnPwXNot
-   815pj4ymPXgmve+4RF4iyKXPsiwnmXfCItP4LpDc6ZwQ8OsGHLYt+qsOn
-   3jc0H+zE8Fjkaz6u9QkNL5PeqCNTJT5uLP7wMhOpMgeEE0AVWfrhWAsoa
-   XSJJwdRw7+fn+QmItA82ON4tSdLOyPkg0DCKXziXX5afQFRCQ0tv6R6ma
-   xUq6km09PbrCsBPw/LppOPlimN9P+BQcNr/fpVXk2h9rKjpgumCbQBVqd
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="3696837"
-X-IronPort-AV: E=Sophos;i="6.03,301,1694761200"; 
-   d="scan'208";a="3696837"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 03:32:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="938052041"
-X-IronPort-AV: E=Sophos;i="6.03,301,1694761200"; 
-   d="scan'208";a="938052041"
-Received: from rauhjoha-mobl2.ger.corp.intel.com ([10.251.217.194])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 03:32:05 -0800
-Date:   Tue, 14 Nov 2023 13:32:03 +0200 (EET)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Steve Wahl <steve.wahl@hpe.com>
-cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Justin Ernst <justin.ernst@hpe.com>,
-        Kyle Meyer <kyle.meyer@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/3] x86/apic: Drop struct local_apic
-In-Reply-To: <ZUVVJkpGg4hoF/Hs@swahl-home.5wahls.com>
-Message-ID: <e427fc2a-1b4-9cbc-636-9790406199d9@linux.intel.com>
-References: <20231102-x86-apic-v1-0-bf049a2a0ed6@citrix.com> <20231102-x86-apic-v1-3-bf049a2a0ed6@citrix.com> <ZUVVJkpGg4hoF/Hs@swahl-home.5wahls.com>
+        Tue, 14 Nov 2023 06:46:48 -0500
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3499DD
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Nov 2023 03:46:45 -0800 (PST)
+Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2c523ac38fbso70911411fa.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Nov 2023 03:46:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699962404; x=1700567204; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OFhM0E+h8ohPV7kVwOuXleQYhHht94CPPD7eCkca6oE=;
+        b=XBbi0UOV4iTxP7h0xWhL4pOo/zHfOLQ2PdtW6f/2GI2WP+bkNGoQYnWW7D/vqCJd+j
+         NOeLwFmCLBqhR/lUCsVl4/hpE0sUDD5vHYzdNV/13OI37+KlVdN9juyS7E2LFkWHbMs3
+         3i6MAY2JlLndQAN6WL8X+C8GwIhEJgt6TSHFPcsSTHnDjj8labNVBh750w6iVOcX4Twz
+         JWKcv7C5XCr0+w5fVuJm+T5DI4fkj9D9sUkPn9NI97vBN+QZIx+DIntUVgilTSYFb15Y
+         +iqc+5ffFKul6VVVgISsFoS9Q4GAVrcDXM5chBCcVs8b6VdRo+xO/smex34Rp5Q/Ygu5
+         yk9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699962404; x=1700567204;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OFhM0E+h8ohPV7kVwOuXleQYhHht94CPPD7eCkca6oE=;
+        b=BL5pTjGwHL+kdCgLdZ/Ja7OTir8ukmzkCpBizzNMs+Tgy2czjwVrSfd7f3Em0yM3mW
+         tonXBCy4fIHwCybssV2DHkRvyKSDhjgQVzlLlTKd1lDR9vzxKliKFwTArMuzgb8gJnS7
+         YmF2kQx61XJb5OTOdqsV+YdHXcOPuGeTK+BBW2iIZdz1G+PhQ1jE2vXIPpKnU3DBS0eG
+         c7S4aQmPMWEtxhobWpgpgVDMXDVLzoXFCiqo5N4XaBTS0m/DbzMAnTUAqXwRogvM1M3a
+         7wRQfO0HHyh8h7VYkIE5fQvfCyflcPykS1AM3HmdqU2TMMxYximKTFM1goMBxDS+Fayf
+         w2Hg==
+X-Gm-Message-State: AOJu0YyyaGNmdrMfkEFgUpCzsYWo2mIO9KOnkobOLDheotT2v5SKkb9G
+        Jaq9zA5pC1USI14caEnwbm6WXVFdRIZM
+X-Google-Smtp-Source: AGHT+IF/p62ra7ip7uAbGq8F6yRDYRY1XIVu+UXFKlEhVLz/yhsxrpjBeIHl0/lB5RPGQzABhvR4sA==
+X-Received: by 2002:a2e:9645:0:b0:2c6:ee98:de85 with SMTP id z5-20020a2e9645000000b002c6ee98de85mr1422062ljh.23.1699962403582;
+        Tue, 14 Nov 2023 03:46:43 -0800 (PST)
+Received: from octinomon (202.51.199.146.dyn.plus.net. [146.199.51.202])
+        by smtp.gmail.com with ESMTPSA id u11-20020a05600c138b00b003fefaf299b6sm11182671wmf.38.2023.11.14.03.46.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Nov 2023 03:46:43 -0800 (PST)
+Date:   Tue, 14 Nov 2023 11:46:41 +0000
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 2/3] platform/mellanox: mlxbf-tmfifo: Remove unnecessary
+ bool conversion
+Message-ID: <ZVNeIfRoxkrPnM-q@octinomon>
+References: <ZUWIIKbz4vukl8qb@octinomon>
+ <42dad56-f73a-cfcf-eedb-60412eb6a7e4@linux.intel.com>
+ <9c345f3-872-a15e-6adb-2d39ca999b@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9c345f3-872-a15e-6adb-2d39ca999b@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 3 Nov 2023, Steve Wahl wrote:
-
-> On Thu, Nov 02, 2023 at 12:26:21PM +0000, Andrew Cooper wrote:
-> > This type predates recorded history in tglx/history.git, making it older
-> > than Feb 5th 2002.
-> > 
-> > This structure is literally old enough to drink in most juristictions in
-> > the world, and has not been used once in that time.
-> > 
-> > Lay it to rest in /dev/null.
-> > 
-> > Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
-> > ---
-> > There is perhaps something to be said for the longevity of the comment.
-> > "Not terribly well tested" certainly hasn't bitrotted in all this time.
+> Hi again,
 > 
->    :-)  !!!
+> I also realized right after send the reply that this is marked as 2/3 but 
+> the other two patches didn't make it into lore archives (nor into 
+> patchwork, I think).
 > 
-> Reveiewed-by: Steve Wahl <steve.wahl@hpe.com>
+> -- 
+>  i.
+Hello
 
-There's a typo in your tag (and it was copy-pasted to all patches of this
-series).
+My bad, I sent three patches but they were all to completely different drivers/subsystems with completely different warning fixes.
+I am still coming back to start sending patches after years maybe. I will from now on do patch series for one particular driver only then go to next. 
 
--- 
- i.
-
+Thanks for replying.
+Jules
