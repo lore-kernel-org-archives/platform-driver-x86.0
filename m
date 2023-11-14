@@ -2,115 +2,78 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC0CC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Nov 2023 12:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A80EC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Nov 2023 13:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233167AbjKNMxz (ORCPT
+        id S229504AbjKNNtM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Nov 2023 07:53:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39130 "EHLO
+        Tue, 14 Nov 2023 08:49:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233082AbjKNMxt (ORCPT
+        with ESMTP id S229521AbjKNNtM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Nov 2023 07:53:49 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C79F11A4;
-        Tue, 14 Nov 2023 04:53:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699966425; x=1731502425;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Kz92UTQM38hm45Yzql0q2iZjHJv9ZJ5h/3LRMWYuIVo=;
-  b=C+ZuNEcHAh2Q0ik6rgjrMfBn8Sp8iGCAGNQHBDiC/miGPnjPg5jkaemT
-   tt+L/BsgF7TCE27ZD1VNZnjhhiQgYBfylWIVO553PZ2E9lPL3oWPQuhwD
-   WXFJp/M3SpdDE0Mh5IA5DxmYYrVhTebA8feDJFqC05t053tmlVrrTXVDp
-   stZ+nMUVBL4mqoIo0se1m/oVRffLjW7PhwBtvOVF8/U2Y3Ybh/AMR+eQQ
-   f6jKzrBnBxFSkqYCwhJUopLjJ+VC/2NpIBGHljhFoBrRaMjRf6yUWD3YN
-   fvjIL7UAUY68ik3EQq0Bu5vWqLS/FoCTyQlm80ZYfiBhgEgsM/IxUeBgs
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="12193723"
-X-IronPort-AV: E=Sophos;i="6.03,302,1694761200"; 
-   d="scan'208";a="12193723"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 04:53:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="908352573"
-X-IronPort-AV: E=Sophos;i="6.03,302,1694761200"; 
-   d="scan'208";a="908352573"
-Received: from rauhjoha-mobl2.ger.corp.intel.com ([10.251.217.194])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 04:53:42 -0800
-Date:   Tue, 14 Nov 2023 14:53:39 +0200 (EET)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-        Jorge Lopez <jorge.lopez2@hp.com>,
-        Mark Gross <markgross@kernel.org>,
-        =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>,
-        platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, dan.carpenter@linaro.org,
-        kernel-janitors@vger.kernel.org, error27@gmail.com,
-        vegard.nossum@oracle.com, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v4 3/4] platform/x86: hp-bioscfg: Fix error handling in
- hp_add_other_attributes()
-In-Reply-To: <b3d2f6aa-4dc4-4570-9c00-54b7211fb851@redhat.com>
-Message-ID: <7884dff1-c2b9-8b8a-8ca-7a5cb28530f7@linux.intel.com>
-References: <20231113200742.3593548-1-harshit.m.mogalapalli@oracle.com> <20231113200742.3593548-3-harshit.m.mogalapalli@oracle.com> <36e7a170-bd87-4462-fc6b-eec446fbb551@linux.intel.com> <b3d2f6aa-4dc4-4570-9c00-54b7211fb851@redhat.com>
+        Tue, 14 Nov 2023 08:49:12 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E8A01A1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Nov 2023 05:49:09 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 98578C433C9
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Nov 2023 13:49:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699969748;
+        bh=peaE98/BbgG2vDtmXa399mmsOxFyr0rPZdJtKJccpJQ=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=A3LNZ98zamc9feuuOIBMW5yN4EeNqp0lma1VJK9bEwotZBcyOp81ogsvI3i5V+YU9
+         JLfAcjQsJOHW+o1x2Nw352e6LNC89MIZt0sjAkFJFtgkla4z+NMBdxiOv+E03Dw27a
+         agwPnvrch/ngjolE/270A7eOZZ0sP33VJV8//SFHxwxHBoQZit6AiJiTHyiMuXElOn
+         rH298dGYgE6/A2PWeToa8OpgqVoA3ukzTZWELRLTPXvgU32dKCFGXOt76rzRVPktY1
+         nQlOzu0Er3HGf5FB9/K1EebOB0cubv67+Z/3U6bkva9a8OiXLbXxCeLaM1ptarXhY4
+         tFZTyyhiLVWuQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 7018FC4332E; Tue, 14 Nov 2023 13:49:08 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 218143] platform/x86/intel/pmc: regression found in commit
+ 804951203aa541ad6720c9726c173d18aeb3ab6b
+Date:   Tue, 14 Nov 2023 13:49:08 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: jahutchinson99@googlemail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cf_bisect_commit cf_regression
+Message-ID: <bug-218143-215701-M1hGEK9b9a@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218143-215701@https.bugzilla.kernel.org/>
+References: <bug-218143-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-2073173931-1699966424=:1748"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218143
 
---8323329-2073173931-1699966424=:1748
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+James (jahutchinson99@googlemail.com) changed:
 
-On Tue, 14 Nov 2023, Hans de Goede wrote:
-> On 11/14/23 11:31, Ilpo Järvinen wrote:
-> > On Mon, 13 Nov 2023, Harshit Mogalapalli wrote:
-> > 
-> >> 'attr_name_kobj' is allocated using kzalloc, but on all the error paths
-> >> it is not freed, hence we have a memory leak.
-> >>
-> >> Fix the error path before kobject_init_and_add() by adding kfree().
-> >>
-> >> kobject_put() must be always called after passing the object to
-> >> kobject_init_and_add(). Only the error path which is immediately next
-> >> to kobject_init_and_add() calls kobject_put() and not any other error
-> >> path after it.
-> >>
-> >> Fix the error handling after kobject_init_and_add() by moving the
-> >> kobject_put() into the goto label err_other_attr_init that is already
-> >> used by all the error paths after kobject_init_and_add().
-> >>
-> >> Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
-> >> Reported-by: kernel test robot <lkp@intel.com>
-> >> Reported-by: Dan Carpenter <error27@gmail.com>
-> >> Closes: https://lore.kernel.org/r/202309201412.on0VXJGo-lkp@intel.com/
-> >> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-> >> ---
-> >> This is based on static analysis, only compile tested.
-> >>
-> >> v3->v4: Add more explicit statement on how we are fixing it, suggested
-> >> by Ilpo
-> > 
-> > Thanks a lot, this looks fine too now.
-> > 
-> > Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> 
-> Thank you for reviewing this series. I believe that it is best
-> to submit this as fixes for the current cycle.
-> 
-> Under the assumption that you agree with this I've delegated
-> these 4 patches to you (Ilpo) in patchwork.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Bisected commit-id|                            |804951203aa541ad6720c9726c1
+                   |                            |73d18aeb3ab6b
+         Regression|No                          |Yes
 
-Yes, I'll take care of it later this week.
+--=20
+You may reply to this email to add a comment.
 
--- 
- i.
-
---8323329-2073173931-1699966424=:1748--
+You are receiving this mail because:
+You are watching the assignee of the bug.=
