@@ -2,87 +2,101 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9125AC4332F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Nov 2023 11:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBE6C4167D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Nov 2023 11:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232813AbjKNLLL (ORCPT
+        id S232752AbjKNLlr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Nov 2023 06:11:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39224 "EHLO
+        Tue, 14 Nov 2023 06:41:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjKNLLL (ORCPT
+        with ESMTP id S232748AbjKNLlh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Nov 2023 06:11:11 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E4A9191
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Nov 2023 03:11:08 -0800 (PST)
+        Tue, 14 Nov 2023 06:41:37 -0500
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA5841AC;
+        Tue, 14 Nov 2023 03:32:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699960268; x=1731496268;
+  t=1699961535; x=1731497535;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=JTx5vNWjwHsNEpeN46mOBGm24hMnJycXVOQXwsEoLCI=;
-  b=R5YSkdR77n7lnKiXrTYP1AdcPuzp+UIdkzjh1+kau4iftKzjbD3Crfst
-   q3eeLMk2aeP7o099pnm3hmX/CnQGc7aZ8m7ii/Q1F/qLk/haqlOuzApX9
-   lfKd1ATOvikMUYeJ5ew6D7LnjBNU+Rbdq6hKm8+j+fYU3uAODbM+duwt0
-   PoydP34qd5klXLcuZMPPLjZR8i0Jcb7Q7ggjp/6+zpglHvZ5HVztO/oFu
-   fMP1G5xtLfUvrn3GAvUALv0MABYDyJ0R7e/IE3E6ePHpCYs0kUWyIv2D9
-   Ut+B0U+ucrOCWn4VRK8fcLTNX9zsWW898aj/cHqZZenyaOXud+3XTv+Ih
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="421732539"
+  bh=JTzcwCtdnMiga/o5pFKTO6FZ9pdO84nmnA+h3IRlPOg=;
+  b=KFRNe8YNLdwG2ZO54UwlCsQHW8VCrWQl6X/U6zGCmsqih4v6lcyV8CZR
+   KuPMyVQ7+o0a0VOF1MD0jqkVvFc3bs6XvcScY+YlY7yruaII5qnPwXNot
+   815pj4ymPXgmve+4RF4iyKXPsiwnmXfCItP4LpDc6ZwQ8OsGHLYt+qsOn
+   3jc0H+zE8Fjkaz6u9QkNL5PeqCNTJT5uLP7wMhOpMgeEE0AVWfrhWAsoa
+   XSJJwdRw7+fn+QmItA82ON4tSdLOyPkg0DCKXziXX5afQFRCQ0tv6R6ma
+   xUq6km09PbrCsBPw/LppOPlimN9P+BQcNr/fpVXk2h9rKjpgumCbQBVqd
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="3696837"
 X-IronPort-AV: E=Sophos;i="6.03,301,1694761200"; 
-   d="scan'208";a="421732539"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 03:11:07 -0800
+   d="scan'208";a="3696837"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 03:32:12 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="938052041"
 X-IronPort-AV: E=Sophos;i="6.03,301,1694761200"; 
-   d="scan'208";a="5989895"
+   d="scan'208";a="938052041"
 Received: from rauhjoha-mobl2.ger.corp.intel.com ([10.251.217.194])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 03:11:06 -0800
-Date:   Tue, 14 Nov 2023 13:11:03 +0200 (EET)
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 03:32:05 -0800
+Date:   Tue, 14 Nov 2023 13:32:03 +0200 (EET)
 From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Jules Irenge <jbi.octave@gmail.com>
-cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
-        vadimp@nvidia.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 2/3] platform/mellanox: mlxbf-tmfifo: Remove unnecessary
- bool conversion
-In-Reply-To: <42dad56-f73a-cfcf-eedb-60412eb6a7e4@linux.intel.com>
-Message-ID: <9c345f3-872-a15e-6adb-2d39ca999b@linux.intel.com>
-References: <ZUWIIKbz4vukl8qb@octinomon> <42dad56-f73a-cfcf-eedb-60412eb6a7e4@linux.intel.com>
+To:     Steve Wahl <steve.wahl@hpe.com>
+cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Justin Ernst <justin.ernst@hpe.com>,
+        Kyle Meyer <kyle.meyer@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 3/3] x86/apic: Drop struct local_apic
+In-Reply-To: <ZUVVJkpGg4hoF/Hs@swahl-home.5wahls.com>
+Message-ID: <e427fc2a-1b4-9cbc-636-9790406199d9@linux.intel.com>
+References: <20231102-x86-apic-v1-0-bf049a2a0ed6@citrix.com> <20231102-x86-apic-v1-3-bf049a2a0ed6@citrix.com> <ZUVVJkpGg4hoF/Hs@swahl-home.5wahls.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-2003022363-1699960267=:1748"
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, 3 Nov 2023, Steve Wahl wrote:
 
---8323329-2003022363-1699960267=:1748
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
-On Tue, 14 Nov 2023, Ilpo Järvinen wrote:
-
-> On Fri, 3 Nov 2023, Jules Irenge wrote:
-> 
-> > This commit fixes coccinelle warning in macro function
-> > IS_VRING_DROP() which complains conversion to bool not needed here.
+> On Thu, Nov 02, 2023 at 12:26:21PM +0000, Andrew Cooper wrote:
+> > This type predates recorded history in tglx/history.git, making it older
+> > than Feb 5th 2002.
 > > 
-> > Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> > This structure is literally old enough to drink in most juristictions in
+> > the world, and has not been used once in that time.
+> > 
+> > Lay it to rest in /dev/null.
+> > 
+> > Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
+> > ---
+> > There is perhaps something to be said for the longevity of the comment.
+> > "Not terribly well tested" certainly hasn't bitrotted in all this time.
 > 
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+>    :-)  !!!
 > 
-> Not an end of the world but just in case you have it stored somewhere, my 
-> email address was lacking the first letter in your post.
+> Reveiewed-by: Steve Wahl <steve.wahl@hpe.com>
 
-Hi again,
-
-I also realized right after send the reply that this is marked as 2/3 but 
-the other two patches didn't make it into lore archives (nor into 
-patchwork, I think).
+There's a typo in your tag (and it was copy-pasted to all patches of this
+series).
 
 -- 
  i.
 
---8323329-2003022363-1699960267=:1748--
