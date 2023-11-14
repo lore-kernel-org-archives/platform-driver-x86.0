@@ -2,106 +2,123 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E72C4167B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Nov 2023 11:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAABC4332F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 14 Nov 2023 11:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232576AbjKNLEw (ORCPT
+        id S229861AbjKNLIw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 14 Nov 2023 06:04:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54640 "EHLO
+        Tue, 14 Nov 2023 06:08:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230434AbjKNLEv (ORCPT
+        with ESMTP id S229441AbjKNLIw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 14 Nov 2023 06:04:51 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BAE7D1;
-        Tue, 14 Nov 2023 03:04:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699959888; x=1731495888;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=mqCGEy7uTwKe0+FeG0SsxohxV9po8hZxqERtyxa4cXE=;
-  b=ZztuliG5vR8yVVY0ztGccWcSW04Atpu2/6KwYN7PE8KNm7cet71lY4N5
-   9bApN9OXWHBjCnc+zt0XKOjugQhqBPxzT/mU8DwT+7qgWALt6W2JLjykz
-   fhauHvuh55Ar3dwexPD/Ij0+aoRm8ng8/xCnzWClN05WUYaq4HGYqcvGw
-   DeysqIsVekQhMQxyu6NVxfpfxxpMn82FxUgn7PBplzVzgukjieW5yweqz
-   GktKcNaOQkOWQ1pkciYZZCgzth81TZi5s6QHX94GD1/tmdYfrQKPPZmLw
-   Xa//JhStkKOuPSCSCcWvYfN+eGFgo1ID1XT8I5Of9Xwq/oZiGkwqbUNmu
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="3691333"
-X-IronPort-AV: E=Sophos;i="6.03,301,1694761200"; 
-   d="scan'208";a="3691333"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 03:04:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="938047042"
-X-IronPort-AV: E=Sophos;i="6.03,301,1694761200"; 
-   d="scan'208";a="938047042"
-Received: from rauhjoha-mobl2.ger.corp.intel.com ([10.251.217.194])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 03:04:45 -0800
-Date:   Tue, 14 Nov 2023 13:04:43 +0200 (EET)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Dell.Client.Kernel@dell.com,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86/dell: alienware-wmi: Use kasprintf()
-In-Reply-To: <f2b2c9e5d80550e480a627c1b2139d5cc9472ffa.1699775015.git.christophe.jaillet@wanadoo.fr>
-Message-ID: <78d8b4c-9053-5256-66b6-18b17dd2e9f9@linux.intel.com>
-References: <f2b2c9e5d80550e480a627c1b2139d5cc9472ffa.1699775015.git.christophe.jaillet@wanadoo.fr>
+        Tue, 14 Nov 2023 06:08:52 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3F68D9;
+        Tue, 14 Nov 2023 03:08:48 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-54553e4888bso8205288a12.2;
+        Tue, 14 Nov 2023 03:08:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1699960127; x=1700564927; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qzs3uuTisLyxpNk0sFPtfWNx5rmtQhYXvAqVvctScpQ=;
+        b=hG6P/4RJO59CZGs2YWXIcCQsNji5FGNFAdkc38eGb0LOIIer4kJV/Pl78sZt22C23I
+         RsbW+L4fj1INyZKlwsX85sqc/fdbLH0TtLNiBYhCb6ubn1h4LYyF0+pqhJHboZCs1mis
+         vEI08eHy5QrcCRxbhkLxIB4aNuSiUGM3j1ogd/mZ/YPgW6giRkQjd46su+UdqGvEsIl5
+         orgElOHfzAt0QjK9iBE1cddjSEJzq0c1g74vtzIZufWiP20w8L84UA/BJDAmiPbdpJ3h
+         Uj2KmOwITc1JyWzmvbHSzeykjwYGN+ta5ku38h4OTA1hedb6caAxLCxQLLzgc1fMpNuJ
+         I6YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699960127; x=1700564927;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Qzs3uuTisLyxpNk0sFPtfWNx5rmtQhYXvAqVvctScpQ=;
+        b=uS8UD58nILEhy8B/lnoQzSHPjfqiq0qYmMqJJ/yKdPsUJK7ZV0kFSWyyP3nqWEYpPS
+         zklKMeahM9sJrFwt8R2Ux/B8tuuYv3wP9C/qU0LvKKRnLmRpWKVEmTMXowVlrPGDE1Sx
+         KbaEDmmqwte6KqeyBFzfhwrX1/WvkzfJX2IfNcLpO/cXs4sFrGElO1rot5uILlWViBkF
+         cgtIeIIZG5kFMJvf6W+6c16pXdNkipesJB5PqEMdySE38y3LqOmL9e1xB44QJfKvsMA/
+         O9oOOaNtw6OaCoiokaHz5GpqYxoj4dyZaAx++DHdLFC5CQ2NZJZ19yk3cFRi0GiHBTY3
+         iRFQ==
+X-Gm-Message-State: AOJu0YyQycl7HALi4RaUflrPtfP+3q9bdA+XJ4iAKWxRegkdUyw9NjJb
+        KNY/c3qSYFg0D/vt2OYk6g/WqdKv4O9rlg/4RL4F6zuffK8=
+X-Google-Smtp-Source: AGHT+IEmG8ogdTgM+rzKuvJKTvA6JmjQFCcEhPhvWKRyEQhn+7fJFh68XJKVnZ5KSpYJDxpQpOFVtJtegbCvfQGEepI=
+X-Received: by 2002:aa7:d809:0:b0:530:7ceb:33c with SMTP id
+ v9-20020aa7d809000000b005307ceb033cmr6925369edq.4.1699960127073; Tue, 14 Nov
+ 2023 03:08:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-153308950-1699959887=:1748"
+References: <CAD+OKUp=MA6VahvoM0cXgrM1uSwGtqaTV80-+x2VBLgN1RPzag@mail.gmail.com>
+ <MW3PR11MB4522629E00039943AA0C6E9EA1B3A@MW3PR11MB4522.namprd11.prod.outlook.com>
+In-Reply-To: <MW3PR11MB4522629E00039943AA0C6E9EA1B3A@MW3PR11MB4522.namprd11.prod.outlook.com>
+From:   James Hutchinson <jahutchinson99@googlemail.com>
+Date:   Tue, 14 Nov 2023 11:08:35 +0000
+Message-ID: <CAD+OKUqg-Bp0_+kgaWNRhAx8nG8Ep=kY8CDp08+dvaVg=R3b2Q@mail.gmail.com>
+Subject: Re: platform/x86/intel/pmc: regression found in commit 804951203aa541ad6720c9726c173d18aeb3ab6b
+To:     "Box, David E" <david.e.box@intel.com>
+Cc:     "Pardee, Xi" <xi.pardee@intel.com>,
+        rajneesh bhardwaj <irenic.rajneesh@gmail.com>,
+        "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+No problems - have logged this in Bugzilla as #218143:
 
---8323329-153308950-1699959887=:1748
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
+https://bugzilla.kernel.org/show_bug.cgi?id=218143
 
-On Sun, 12 Nov 2023, Christophe JAILLET wrote:
+Regards,
+James.
 
-> Use kasprintf() instead of hand writing it.
-> This saves the need of an intermediate buffer.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-
--- 
- i.
-
-> ---
->  drivers/platform/x86/dell/alienware-wmi.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
-> index a9477e5432e4..f5ee62ce1753 100644
-> --- a/drivers/platform/x86/dell/alienware-wmi.c
-> +++ b/drivers/platform/x86/dell/alienware-wmi.c
-> @@ -429,7 +429,6 @@ static DEVICE_ATTR(lighting_control_state, 0644, show_control_state,
->  static int alienware_zone_init(struct platform_device *dev)
->  {
->  	u8 zone;
-> -	char buffer[10];
->  	char *name;
->  
->  	if (interface == WMAX) {
-> @@ -466,8 +465,7 @@ static int alienware_zone_init(struct platform_device *dev)
->  		return -ENOMEM;
->  
->  	for (zone = 0; zone < quirks->num_zones; zone++) {
-> -		sprintf(buffer, "zone%02hhX", zone);
-> -		name = kstrdup(buffer, GFP_KERNEL);
-> +		name = kasprintf(GFP_KERNEL, "zone%02hhX", zone);
->  		if (name == NULL)
->  			return 1;
->  		sysfs_attr_init(&zone_dev_attrs[zone].attr);
-> 
---8323329-153308950-1699959887=:1748--
+On Mon, 13 Nov 2023 at 18:04, Box, David E <david.e.box@intel.com> wrote:
+>
+> Hi James,
+>
+> Can you file a bug at https://bugzilla.kernel.org/ under Power Management? Let us know what the bug number is. Thanks.
+>
+> David
+> ________________________________
+> From: James Hutchinson <jahutchinson99@googlemail.com>
+> Sent: Monday, November 13, 2023 7:42 AM
+> To: Pardee, Xi <xi.pardee@intel.com>; rajneesh bhardwaj <irenic.rajneesh@gmail.com>; Box, David E <david.e.box@intel.com>; ilpo.jarvinen@linux.intel.com <ilpo.jarvinen@linux.intel.com>; hdegoede@redhat.com <hdegoede@redhat.com>
+> Cc: platform-driver-x86@vger.kernel.org <platform-driver-x86@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
+> Subject: platform/x86/intel/pmc: regression found in commit 804951203aa541ad6720c9726c173d18aeb3ab6b
+>
+> Running here on an Intel NUC 8i3BEH Coffee Lake machine under Arch Linux.
+>
+> Connected to this machine I have 4x USB DVB Cards (2xDVBSky S960
+> DVB-S2 adapters & 2xGeniatech T230 DVB-T2 adapters), and I stream TV
+> Channels around the house via Tvheadend.
+>
+> Since linux kernel v6.5 onwards I noticed a bad performance regression
+> whereby the streams are basically unstable. There are tons of
+> continuity errors in the Tvheadend logfile, and the picture and sound
+> are badly broken up as though the system is throttled or does not have
+> the bandwidth to cope with the streams.
+>
+> Sometimes the stream will work for a minute or so after reboot, before
+> then becoming unstable, and then seems to remain unstable until the
+> next cold reboot.
+>
+> I dropped back to v6.1 LTS (where everything is fine) and re-tested
+> following the release of v6.6...
+> ...the problem had not gone away so I performed a git bisect to
+> identify the culprit and found this to be:
+>
+> 804951203aa541ad6720c9726c173d18aeb3ab6b: platform/x86:intel/pmc:
+> Combine core_init() and core_configure()
+>
+> I can work around the issue by either reverting this commit or by
+> disabling CONFIG_INTEL_PMC_CORE and rebuilding the kernel manually,
+> either of which results in perfect DVB streaming once more.
+>
+> Happy to test any potential patches or otherwise provide further
+> information as required.
+>
+>
+> James.
