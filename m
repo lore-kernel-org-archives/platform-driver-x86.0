@@ -2,82 +2,98 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC634C07548
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Nov 2023 12:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36514C072A2
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Nov 2023 16:17:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343807AbjKOMtE (ORCPT
+        id S229620AbjKOQRY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Nov 2023 07:49:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51624 "EHLO
+        Wed, 15 Nov 2023 11:17:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343723AbjKOMtD (ORCPT
+        with ESMTP id S229585AbjKOQRY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Nov 2023 07:49:03 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2299411F;
-        Wed, 15 Nov 2023 04:49:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700052540; x=1731588540;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=SF+1geNN0bIT4JrgyKR8RRkZ5elaJ520dBZaV+2ASAI=;
-  b=kdty0HuSUeuFkLhcuzZGs44v6Mcz4+QrA3eFXVqo1vzbBwhlVezj/b5m
-   VQmc+pb0hG2g+Htr5ccL6OFPqz7daUc6a3qr+gxByB6TVAMHmfbbPIbKy
-   h/rAAX2vWj575MIV4OVq7BUb2OLt8MW86vleId7fwa04YJQbSBymOZvM9
-   7dFXYl/5R25gAm5s4eEWDz4rwarlnNCuCeMzJoq6qMBB5Ia1QJN7WI0W6
-   79NvrHVk/PcVYJDI95jQgVulyl/3V5L/mDTiGClmHKkPMvKb5WuZpfcnU
-   cyorIyCaw7nQi4XmSX/Rnu+C21dOLDsvtARJS7S++unrbjGD3bp3tZQ4B
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="393726212"
-X-IronPort-AV: E=Sophos;i="6.03,305,1694761200"; 
-   d="scan'208";a="393726212"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2023 04:48:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="1012250245"
-X-IronPort-AV: E=Sophos;i="6.03,305,1694761200"; 
-   d="scan'208";a="1012250245"
-Received: from rkhristx-mobl.ger.corp.intel.com (HELO localhost) ([10.252.38.217])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2023 04:48:56 -0800
-From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     platform-driver-x86@vger.kernel.org,
-        Stuart Hayhurst <stuart.a.hayhurst@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ike Panhc <ike.pan@canonical.com>, stable@vger.kernel.org
-In-Reply-To: <20231114114055.6220-2-stuart.a.hayhurst@gmail.com>
-References: <9f46c613-63c2-4bc7-b938-7c9ea862a55e@linux.intel.com>
- <20231114114055.6220-2-stuart.a.hayhurst@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: ideapad-laptop: Set max_brightness
- before using it
-Message-Id: <170005252425.3220.12662660184359784558.b4-ty@linux.intel.com>
-Date:   Wed, 15 Nov 2023 14:48:44 +0200
+        Wed, 15 Nov 2023 11:17:24 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66DA6D5
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Nov 2023 08:17:20 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-50a6ff9881fso8780714e87.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Nov 2023 08:17:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1700065038; x=1700669838; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3qRdRIQB+SyLD/2SSSnhRbTBC1T+kT3kqoQQAJb6ZGk=;
+        b=tyUzCfXUfjuyWxENabaWJnV2OSyvqNR7EAWA0zT2WntfZHI3s6xG04BXO/R8sk/+YD
+         MXsDRtoBW2LdtRzcmpIk/h/N9xBOCTRkC6sdyqv+pcMpwCWHI8RpfNKosESC9/ca/q1T
+         /mV5SXOA5FvbpJ7WCnt74/AjFRRi1SGDG3deh979EwjPtLFfjpVWCDj3vdD3F6bNhZE8
+         Y+yBlGGVcPbx3gEjSH2NvfnM1WQF5W6jm/9FdhGandDK5j7w1DNn1xFx3okl1Thzft/7
+         XAXqHup/En7RKolTYnwn328dVHmm+2BK/1oHwFX3Z9qqr/bV/yWaUAAruY3OgnZ0LCIB
+         nZhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700065038; x=1700669838;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3qRdRIQB+SyLD/2SSSnhRbTBC1T+kT3kqoQQAJb6ZGk=;
+        b=JjzsYoXJezxWj6IN7BZNXT5QKCYGmEJQpq7uu3AaENSz2qXfrEy7KuyH5VeDvyJ5M0
+         wU90gCxCp3b7uQijDHkVb8XmJRwF2K4HSEvpxfo4x8eJgZ2LvA7FQJpXJJy/0MA2gaPz
+         WGy0HpKNUS2ZoAYidx1bjrX5oL+v4YlM3DnYZXQNphpfkqp+IoEB8S1bXcaMAauhJdo0
+         wymyCvsDW9FXJ86PVKj1m12C5QLIwwmWiyyTT7SJg2/UJ+x8ngh4UI2MFRQjeVmAB5eU
+         A0gluba5FJD1sR4mkAM10KqK9C4Z28VRY9mkIxDeLpWOZlZ4k4d21/VxYvCbtvxKy+mh
+         DaWg==
+X-Gm-Message-State: AOJu0YxbUaTKZ11t8N/ujz/KzkP/qA/jcPsbuzRzAm3KQJqUukLjOikM
+        4ehH2Cx1hZgoCTB3ZuPShwpHhg==
+X-Google-Smtp-Source: AGHT+IGDqUKQj8i4ksmCvgTifMSpJYI6UUhnm2dFhWerlnxd1hBxKHSzpcMr+i8toBc2SR9Oy0cD/w==
+X-Received: by 2002:ac2:43a3:0:b0:509:3bba:e8a with SMTP id t3-20020ac243a3000000b005093bba0e8amr8552355lfl.39.1700065038548;
+        Wed, 15 Nov 2023 08:17:18 -0800 (PST)
+Received: from [172.30.204.150] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id x17-20020ac24891000000b00507962dd2aesm1692517lfc.207.2023.11.15.08.17.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Nov 2023 08:17:18 -0800 (PST)
+Message-ID: <1df726c4-745c-4b41-be04-d3081525210d@linaro.org>
+Date:   Wed, 15 Nov 2023 17:17:16 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: qrb5165-rb5: use u16 for DP
+ altmode svid
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-usb@vger.kernel.org
+References: <20231113221528.749481-1-dmitry.baryshkov@linaro.org>
+ <20231113221528.749481-4-dmitry.baryshkov@linaro.org>
+Content-Language: en-US
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20231113221528.749481-4-dmitry.baryshkov@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 14 Nov 2023 11:38:08 +0000, Stuart Hayhurst wrote:
 
-> max_brightness is used in ideapad_kbd_bl_brightness_get() before it's set,
-> causing ideapad_kbd_bl_brightness_get() to return -EINVAL sometimes
+
+On 11/13/23 23:13, Dmitry Baryshkov wrote:
+> Follow the bindings and use 16-bit value for AltMode SVID instead of
+> using the full u32.
 > 
-> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+Fixes: b3dea914127e ("arm64: dts: qcom: qrb5165-rb5: enable DP altmode")
 
+(because it was previously not compliant with bindings)
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-The list of commits applied:
-[1/1] platform/x86: ideapad-laptop: Set max_brightness before using it
-      commit: 7a3c36eef9a5d13b16aa954da54224c9c6bed339
-
---
- i.
-
+Konrad
