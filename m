@@ -2,127 +2,153 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB07C07548
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Nov 2023 07:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C31C07548
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Nov 2023 08:45:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234651AbjKOH13 (ORCPT
+        id S234687AbjKOIp6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Nov 2023 02:27:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59876 "EHLO
+        Wed, 15 Nov 2023 03:45:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234648AbjKOH12 (ORCPT
+        with ESMTP id S234651AbjKOIp5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Nov 2023 02:27:28 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F418E;
-        Tue, 14 Nov 2023 23:27:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700033243; x=1731569243;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CVjv4ZrpGDJbz1IrUPzrrK9YuYaL0aZL0iiRA1BpOhQ=;
-  b=MC/G7xp5dXyn/r1I/bX8hWEJMe8OCrmnf8fCf44PqgNoRwBwTx/45u7r
-   39au94ODFUdIVHvofCB55hMEaiuve9rb5XlPJTnxkP1AvjIV3JqQCboDf
-   UQ3h2ZkQ52O2gVUlhC9vq+RkPxNAM+8nPcZTLbpgx4V0yMxohu/9KOvIC
-   xrZFx5WGLeO3CdQXS3BOdyiyHXFM1qFc1Yn2OW65AlNBv782/GP9ITh/T
-   4u8uOf6qMzphbI3u+z2wtZnZ20Cq2iEsYF9o33BaG5ExXOUzv1NrIKig0
-   r3IGtVy7k/Sg4qPzWAHCXgqWmPzfyiMUm5jFxnOChVplrEF1PkSSp9tHs
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="390624057"
-X-IronPort-AV: E=Sophos;i="6.03,304,1694761200"; 
-   d="scan'208";a="390624057"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 23:27:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="714800758"
-X-IronPort-AV: E=Sophos;i="6.03,304,1694761200"; 
-   d="scan'208";a="714800758"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by orsmga003.jf.intel.com with SMTP; 14 Nov 2023 23:27:17 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 15 Nov 2023 09:27:16 +0200
-Date:   Wed, 15 Nov 2023 09:27:16 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] usb: typec: change altmode SVID to u16 entry
-Message-ID: <ZVRy1L5JEN3Nda81@kuha.fi.intel.com>
-References: <20231113221528.749481-1-dmitry.baryshkov@linaro.org>
- <20231113221528.749481-3-dmitry.baryshkov@linaro.org>
+        Wed, 15 Nov 2023 03:45:57 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D18110E
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Nov 2023 00:45:54 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DF9CEC433C8
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Nov 2023 08:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1700037953;
+        bh=Xfaao9T9X1/6OxbMInKFLNeyt04BaKuHO+sZH7uzUZg=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=ZLqESVemzGtbRVH7gM48WWzm+85FRPW3HQV5rqp3yce8r/Lvgod2lHcwvSndkGg5w
+         tXv5O8WsOUFfCmf07CMCRwQucoLkqfPMJuBY/8QSJVBh6r6siiy7oik7ahEGgcF000
+         BlmCqTkztZDMvAHlMq8qBjIqYAnowe4+PSQ6JC3U2ki9wzAXhrtVm9shh3ZPsoRPwO
+         dK4JWWczXpYf2sF0SBAUMlO0TN4xTCK2EbdwDsDo+PzGArJnzOkvfyfORz0pfE/vff
+         fTcO9zxW/DgxCFL24wIo3ClFv6wLawlgPtmyvXRcLKJgFiB5NgrjeAPm6Q7fA2Uv4q
+         9/zMHjSe+iLiQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id C1264C4332E; Wed, 15 Nov 2023 08:45:53 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 218143] platform/x86/intel/pmc: regression found in commit
+ 804951203aa541ad6720c9726c173d18aeb3ab6b
+Date:   Wed, 15 Nov 2023 08:45:53 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: jahutchinson99@googlemail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218143-215701-J0X71azty4@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218143-215701@https.bugzilla.kernel.org/>
+References: <bug-218143-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231113221528.749481-3-dmitry.baryshkov@linaro.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 14, 2023 at 12:13:28AM +0200, Dmitry Baryshkov wrote:
-> As stated in the changelog for the commit 7b458a4c5d73 ("usb: typec: Add
-> typec_port_register_altmodes()"), the code should be adjusted according
-> to the AltMode bindings. As the SVID is 16 bits wide (according to the
-> USB PD Spec), use fwnode_property_read_u16() to read it.
-> 
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218143
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+--- Comment #2 from James (jahutchinson99@googlemail.com) ---
+Hi David,
 
-> ---
->  drivers/platform/x86/intel/chtwc_int33fe.c | 2 +-
->  drivers/usb/typec/class.c                  | 5 +++--
->  2 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platform/x86/intel/chtwc_int33fe.c
-> index 848baecc1bb0..93f75ba1dafd 100644
-> --- a/drivers/platform/x86/intel/chtwc_int33fe.c
-> +++ b/drivers/platform/x86/intel/chtwc_int33fe.c
-> @@ -136,7 +136,7 @@ static const struct software_node altmodes_node = {
->  };
->  
->  static const struct property_entry dp_altmode_properties[] = {
-> -	PROPERTY_ENTRY_U32("svid", 0xff01),
-> +	PROPERTY_ENTRY_U16("svid", 0xff01),
->  	PROPERTY_ENTRY_U32("vdo", 0x0c0086),
->  	{ }
->  };
-> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> index 6ec2a94e6fad..4251d44137b6 100644
-> --- a/drivers/usb/typec/class.c
-> +++ b/drivers/usb/typec/class.c
-> @@ -2238,7 +2238,8 @@ void typec_port_register_altmodes(struct typec_port *port,
->  	struct typec_altmode_desc desc;
->  	struct typec_altmode *alt;
->  	size_t index = 0;
-> -	u32 svid, vdo;
-> +	u16 svid;
-> +	u32 vdo;
->  	int ret;
->  
->  	altmodes_node = device_get_named_child_node(&port->dev, "altmodes");
-> @@ -2246,7 +2247,7 @@ void typec_port_register_altmodes(struct typec_port *port,
->  		return; /* No altmodes specified */
->  
->  	fwnode_for_each_child_node(altmodes_node, child) {
-> -		ret = fwnode_property_read_u32(child, "svid", &svid);
-> +		ret = fwnode_property_read_u16(child, "svid", &svid);
->  		if (ret) {
->  			dev_err(&port->dev, "Error reading svid for altmode %s\n",
->  				fwnode_get_name(child));
-> -- 
-> 2.42.0
+I've been testing your patch for removing GBE LTR ignore and it works perfe=
+ctly
+on my Intel NUC 8i3BEH.
 
--- 
-heikki
+The CPU on NUC 8i3BEH is as follows:
+
+$ lscpu
+
+Architecture:            x86_64
+  CPU op-mode(s):        32-bit, 64-bit
+  Address sizes:         39 bits physical, 48 bits virtual
+  Byte Order:            Little Endian
+CPU(s):                  4
+  On-line CPU(s) list:   0-3
+Vendor ID:               GenuineIntel
+  Model name:            Intel(R) Core(TM) i3-8109U CPU @ 3.00GHz
+    CPU family:          6
+    Model:               142
+    Thread(s) per core:  2
+    Core(s) per socket:  2
+    Socket(s):           1
+    Stepping:            10
+    CPU(s) scaling MHz:  100%
+    CPU max MHz:         3000.0000
+    CPU min MHz:         400.0000
+    BogoMIPS:            6000.00
+    Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr p=
+ge
+mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall =
+nx
+pdpe1gb rdtscp lm con
+                         stant_tsc art arch_perfmon pebs bts rep_good nopl
+xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl =
+vmx
+est tm2 ssse3 sdbg fma
+                         cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe pop=
+cnt
+tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch
+cpuid_fault epb pti ssbd ib
+                         rs ibpb stibp tpr_shadow flexpriority ept vpid ept=
+_ad
+fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap
+clflushopt intel_pt xsave
+                         opt xsavec xgetbv1 xsaves dtherm arat pln pts hwp
+hwp_notify hwp_act_window hwp_epp vnmi md_clear flush_l1d arch_capabilities
+Virtualization features:
+  Virtualization:        VT-x
+Caches (sum of all):
+  L1d:                   64 KiB (2 instances)
+  L1i:                   64 KiB (2 instances)
+  L2:                    512 KiB (2 instances)
+  L3:                    4 MiB (1 instance)
+NUMA:
+  NUMA node(s):          1
+  NUMA node0 CPU(s):     0-3
+Vulnerabilities:
+  Gather data sampling:  Mitigation; Microcode
+  Itlb multihit:         KVM: Mitigation: VMX disabled
+  L1tf:                  Mitigation; PTE Inversion; VMX conditional cache
+flushes, SMT vulnerable
+  Mds:                   Mitigation; Clear CPU buffers; SMT vulnerable
+  Meltdown:              Mitigation; PTI
+  Mmio stale data:       Mitigation; Clear CPU buffers; SMT vulnerable
+  Retbleed:              Mitigation; IBRS
+  Spec rstack overflow:  Not affected
+  Spec store bypass:     Mitigation; Speculative Store Bypass disabled via
+prctl
+  Spectre v1:            Mitigation; usercopy/swapgs barriers and __user
+pointer sanitization
+  Spectre v2:            Mitigation; IBRS, IBPB conditional, STIBP conditio=
+nal,
+RSB filling, PBRSB-eIBRS Not affected
+  Srbds:                 Mitigation; Microcode
+  Tsx async abort:       Not affected
+
+Do let me know if there's anything else you need me to test/verify.
+
+Regards,
+James.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
