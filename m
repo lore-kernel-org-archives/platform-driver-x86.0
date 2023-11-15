@@ -2,153 +2,76 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C31C07548
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Nov 2023 08:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85B0C07548
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 15 Nov 2023 12:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234687AbjKOIp6 (ORCPT
+        id S234922AbjKOM3a (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 15 Nov 2023 03:45:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35716 "EHLO
+        Wed, 15 Nov 2023 07:29:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234651AbjKOIp5 (ORCPT
+        with ESMTP id S234916AbjKOM3a (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 15 Nov 2023 03:45:57 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D18110E
-        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Nov 2023 00:45:54 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DF9CEC433C8
-        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Nov 2023 08:45:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1700037953;
-        bh=Xfaao9T9X1/6OxbMInKFLNeyt04BaKuHO+sZH7uzUZg=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=ZLqESVemzGtbRVH7gM48WWzm+85FRPW3HQV5rqp3yce8r/Lvgod2lHcwvSndkGg5w
-         tXv5O8WsOUFfCmf07CMCRwQucoLkqfPMJuBY/8QSJVBh6r6siiy7oik7ahEGgcF000
-         BlmCqTkztZDMvAHlMq8qBjIqYAnowe4+PSQ6JC3U2ki9wzAXhrtVm9shh3ZPsoRPwO
-         dK4JWWczXpYf2sF0SBAUMlO0TN4xTCK2EbdwDsDo+PzGArJnzOkvfyfORz0pfE/vff
-         fTcO9zxW/DgxCFL24wIo3ClFv6wLawlgPtmyvXRcLKJgFiB5NgrjeAPm6Q7fA2Uv4q
-         9/zMHjSe+iLiQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id C1264C4332E; Wed, 15 Nov 2023 08:45:53 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 218143] platform/x86/intel/pmc: regression found in commit
- 804951203aa541ad6720c9726c173d18aeb3ab6b
-Date:   Wed, 15 Nov 2023 08:45:53 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: jahutchinson99@googlemail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218143-215701-J0X71azty4@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218143-215701@https.bugzilla.kernel.org/>
-References: <bug-218143-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 15 Nov 2023 07:29:30 -0500
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F77ECE;
+        Wed, 15 Nov 2023 04:29:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700051367; x=1731587367;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=um309kyfbNVDejyVO3Dw51hvTyxGySUqOJwGhc+Zllk=;
+  b=Bnqw28y6GsHuuiZcg8GGyiaCmTxXQljg55/iwbCKJm1S27gNYdIDTWDt
+   68fWhjuRXFZZmGdNym8A64g8YQ9ZdF0nj2i2Niz66JO9HYnW3i7oLjVPQ
+   d9pYCagjPr9AS9jRO0/EAM3RdjQiaxbemqDUNkWrBu/KQZ7pBa1myLNJm
+   3PSft1qdXgCkUxqbhX4SWF1/91mSI0wWFNDqH20cyafDLnY+t2wognoaS
+   vPec+gSKtUgpzfZTYyjYNc8mLIFVg7NGmFPaHCq4cuYmCV8uVh3QGlSh7
+   Z49140tZNIs5q04tSG/iOg55eqOVJW+lHFU4lK82QS3inJlwfrpxdx2Qs
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="390664331"
+X-IronPort-AV: E=Sophos;i="6.03,304,1694761200"; 
+   d="scan'208";a="390664331"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2023 04:29:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="1096428915"
+X-IronPort-AV: E=Sophos;i="6.03,304,1694761200"; 
+   d="scan'208";a="1096428915"
+Received: from rkhristx-mobl.ger.corp.intel.com (HELO localhost) ([10.252.38.217])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2023 04:29:24 -0800
+From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     hdegoede@redhat.com, markgross@kernel.org,
+        Jithu Joseph <jithu.joseph@intel.com>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20231102195218.143440-1-jithu.joseph@intel.com>
+References: <20231102195218.143440-1-jithu.joseph@intel.com>
+Subject: Re: [PATCH 1/1] MAINTAINERS: Remove stale entry for SBL platform driver
+Message-Id: <170005132163.1943.1988654330717878554.b4-ty@linux.intel.com>
+Date:   Wed, 15 Nov 2023 14:28:41 +0200
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218143
+On Thu, 02 Nov 2023 12:52:18 -0700, Jithu Joseph wrote:
 
---- Comment #2 from James (jahutchinson99@googlemail.com) ---
-Hi David,
+> Maurice is no longer with Intel and his e-mail address is no longer
+> active. Remove the stale entry from Slim boot loader section.
+> 
+> 
 
-I've been testing your patch for removing GBE LTR ignore and it works perfe=
-ctly
-on my Intel NUC 8i3BEH.
 
-The CPU on NUC 8i3BEH is as follows:
+Thank you for your contribution, it has been applied to my local
+fixes branch. Note it will show up in the public
+platform-drivers-x86/fixes branch only once I've pushed my
+local branch there, which might take a while.
 
-$ lscpu
+The list of commits applied:
+[1/1] MAINTAINERS: Remove stale entry for SBL platform driver
+      commit: 9fadd4509966e375952f31ae954ab5eae76f90fe
 
-Architecture:            x86_64
-  CPU op-mode(s):        32-bit, 64-bit
-  Address sizes:         39 bits physical, 48 bits virtual
-  Byte Order:            Little Endian
-CPU(s):                  4
-  On-line CPU(s) list:   0-3
-Vendor ID:               GenuineIntel
-  Model name:            Intel(R) Core(TM) i3-8109U CPU @ 3.00GHz
-    CPU family:          6
-    Model:               142
-    Thread(s) per core:  2
-    Core(s) per socket:  2
-    Socket(s):           1
-    Stepping:            10
-    CPU(s) scaling MHz:  100%
-    CPU max MHz:         3000.0000
-    CPU min MHz:         400.0000
-    BogoMIPS:            6000.00
-    Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr p=
-ge
-mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall =
-nx
-pdpe1gb rdtscp lm con
-                         stant_tsc art arch_perfmon pebs bts rep_good nopl
-xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl =
-vmx
-est tm2 ssse3 sdbg fma
-                         cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe pop=
-cnt
-tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch
-cpuid_fault epb pti ssbd ib
-                         rs ibpb stibp tpr_shadow flexpriority ept vpid ept=
-_ad
-fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap
-clflushopt intel_pt xsave
-                         opt xsavec xgetbv1 xsaves dtherm arat pln pts hwp
-hwp_notify hwp_act_window hwp_epp vnmi md_clear flush_l1d arch_capabilities
-Virtualization features:
-  Virtualization:        VT-x
-Caches (sum of all):
-  L1d:                   64 KiB (2 instances)
-  L1i:                   64 KiB (2 instances)
-  L2:                    512 KiB (2 instances)
-  L3:                    4 MiB (1 instance)
-NUMA:
-  NUMA node(s):          1
-  NUMA node0 CPU(s):     0-3
-Vulnerabilities:
-  Gather data sampling:  Mitigation; Microcode
-  Itlb multihit:         KVM: Mitigation: VMX disabled
-  L1tf:                  Mitigation; PTE Inversion; VMX conditional cache
-flushes, SMT vulnerable
-  Mds:                   Mitigation; Clear CPU buffers; SMT vulnerable
-  Meltdown:              Mitigation; PTI
-  Mmio stale data:       Mitigation; Clear CPU buffers; SMT vulnerable
-  Retbleed:              Mitigation; IBRS
-  Spec rstack overflow:  Not affected
-  Spec store bypass:     Mitigation; Speculative Store Bypass disabled via
-prctl
-  Spectre v1:            Mitigation; usercopy/swapgs barriers and __user
-pointer sanitization
-  Spectre v2:            Mitigation; IBRS, IBPB conditional, STIBP conditio=
-nal,
-RSB filling, PBRSB-eIBRS Not affected
-  Srbds:                 Mitigation; Microcode
-  Tsx async abort:       Not affected
-
-Do let me know if there's anything else you need me to test/verify.
-
-Regards,
-James.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+--
+ i.
