@@ -2,175 +2,207 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E26C197A0
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Nov 2023 07:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605A6C197A0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Nov 2023 07:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229997AbjKPHWE (ORCPT
+        id S230075AbjKPH3e (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Nov 2023 02:22:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43016 "EHLO
+        Thu, 16 Nov 2023 02:29:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229984AbjKPHWE (ORCPT
+        with ESMTP id S229919AbjKPH3c (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Nov 2023 02:22:04 -0500
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2057.outbound.protection.outlook.com [40.107.237.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A434ADD
-        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Nov 2023 23:21:59 -0800 (PST)
+        Thu, 16 Nov 2023 02:29:32 -0500
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2066.outbound.protection.outlook.com [40.107.102.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02313DD
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Nov 2023 23:29:29 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f4xIJAFYsDP/Rv2J/a7Z+aiBByr44T5LjAGphGtT3wyVUSEaNpaXbdrFLioQQoYi7VmNPtH0zNK5Y8Ie+v1tTW/R43OjsAefeypVlp6+rdLaBI/kNrx/NRigVLP8QwsVPiUlehn9n+CPkUHrXAhGe8S9Pi7xo+6sAmWsWIzXPY1s/ZDTN3DD6ObHZ4pcrmUA6LRekGwC3A75tVZ308eSDTLR/z/twbR/t1LhgUFHh0o4CJCU++B95gQWzy/mB3qcPcMe+XPqKznS8y0idqQiJ9CkEmSWjFyod3AfK25ftJ91vKlFv+CdjkvpgGv/l6FP5KL4M4qgzwyB567Mgzy0DA==
+ b=McFtWnFjXeUttDxiQsnE9z09B8JKljbgbpeLGxQR7OUPXcZW+0vTzRsjOpgiRrGP441nLCi7yzRi6SFd62ofaOSDo+m+rJYEH8sCSkGit87IQ50B1Xxa9VKBhasOd8WCzC8UXLn28TLpx6PDOkBGLb5oqbaWm3YdMzUqQH6nzTYTNXCmd9/ZT4l1GVSypglAX6E5Zbfk3LcEoH/JttYLpEAPTN8OGA8nN6f7jcA1m9x3nprPC8VeeWVfcI/ZEZkhpRlc9aQXOrQtLRs2FIYu6qrczZVlbjeiSaZDnGzJskjf6MpngMzXE1XikSaT4+BbDmYZr6Y27zAueBxCBb+ZVA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OUJwUu/clVBbAzut47GnB9/d0XzutuX6HEEJdZUbVZo=;
- b=fEouwPbs7gir9N/EVkFemPEmkkAdGks/ZzlPOTVG+8sFEX/ze6pE37eV4ckPbVty4z9ifGWtiPDTMsneGp6fXbaO5kKwoxcFK3n9/BtYVjBdF5/SflnGEqjBnrSnzXqQs5oaoQiEZh/k1LhPbD/C7d0mciElNszDGY1vUZr43kXy6vbRVRtu1YMhg8O9OOJpXmwB77hW2hgn1XoNPFVOawLrZM6Vt/GEA3YxhNWzungWqyGfe00UZ7widQcyIc16lqD7xwXFHDdWpgjY1aKbmGHQsDoNMpdWtmT1lGQ2VTkGmSsDQqnCq+Lt43wUT0WuN6grLiGhH7tvrbYv8u/ahQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
+ bh=s1TyAjGHNaWJhXbEfuVBis/eGGXGe/EFCmZ5d+cTLAY=;
+ b=JcG1wVlQw2oNFqId6+UKX/mebIOqKEGr8B0IY1ul+mn1XqAeq8J0PbGcm2DeF4lyIgGm+txBEFPKFH5J0Xr9Tg03fnv1mMageqgEON/LaAwpY8fh9e2nmsQj0EtU1fcerIZZY79HIMFnCl5rkF6h7WZ074TxxX3YrCqJfYZbxbSIsKlQtTl154jQtpQ6pwU7LSGW7YTjoZ/7n+tOweo0YzbAblBNFMVLHaxahJtvM2P8i3uLyJFzVrNoph3x5xomxzy+XnbVuEwMcvlDj/L6sNj7touboWr2nWQdYpVpcuPSgF96+YtuBqWLGqyI+8FY/odAV+SZvmDJZO3L/dgUDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OUJwUu/clVBbAzut47GnB9/d0XzutuX6HEEJdZUbVZo=;
- b=Jl6FTTP8RdHJcUYISr8MC5K6UE4xukjYbL+uRrkKv+l32ZajLeeCS/B7x7HnVL1HXenhTRUEstq/ThwTwfkxUbejyuP80l9JIzVoG9CqV2NCp7CYvAfmqbOWlayEbrPHeEEYkL9ElHu2qHuunUfz4jv/Doc3oFMmgBNyQOUOa1g=
-Received: from CY5PR14CA0025.namprd14.prod.outlook.com (2603:10b6:930:2::6) by
- DM4PR12MB5166.namprd12.prod.outlook.com (2603:10b6:5:395::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7002.20; Thu, 16 Nov 2023 07:21:57 +0000
-Received: from CY4PEPF0000FCBF.namprd03.prod.outlook.com
- (2603:10b6:930:2:cafe::59) by CY5PR14CA0025.outlook.office365.com
- (2603:10b6:930:2::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.20 via Frontend
- Transport; Thu, 16 Nov 2023 07:21:57 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000FCBF.mail.protection.outlook.com (10.167.242.101) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7002.20 via Frontend Transport; Thu, 16 Nov 2023 07:21:56 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Thu, 16 Nov
- 2023 01:21:54 -0600
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To:     <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
-        <markgross@kernel.org>
-CC:     <Sanket.Goswami@amd.com>, <mario.limonciello@amd.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ bh=s1TyAjGHNaWJhXbEfuVBis/eGGXGe/EFCmZ5d+cTLAY=;
+ b=cgIA9BPlqW6oGceEaidjezKt/Jt6/2wPTYPKptRJM7qn4GIVEDIjrUu0CEX9mAG9W45DXfa/zlzyZgJV17NsoXMuM473a0K1cvNTbAU+JRyDt13pfT3vxz63C+GnIAn9cCHYUm9J2gbOdVCaoVBhDocLZ+q1SgFEiSc4g6DYr+A=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
+ by CH3PR12MB9148.namprd12.prod.outlook.com (2603:10b6:610:19d::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.21; Thu, 16 Nov
+ 2023 07:29:26 +0000
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ef5c:c073:d1f9:e649]) by BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ef5c:c073:d1f9:e649%5]) with mapi id 15.20.7002.021; Thu, 16 Nov 2023
+ 07:29:26 +0000
+Message-ID: <7d0cb268-3115-4c79-b611-611c6314d369@amd.com>
+Date:   Thu, 16 Nov 2023 12:59:18 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86/amd/pmc: adjust amd_pmc_get_dram_size()
+ behavior
+To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
+        Sanket.Goswami@amd.com, mario.limonciello@amd.com,
+        platform-driver-x86@vger.kernel.org,
         Mark Hasemeyer <markhas@chromium.org>
-Subject: [PATCH v3] platform/x86/amd/pmc: adjust getting DRAM size behavior
-Date:   Thu, 16 Nov 2023 12:51:24 +0530
-Message-ID: <20231116072124.3370008-1-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
+References: <20231109061709.2964246-1-Shyam-sundar.S-k@amd.com>
+ <a7435bf5-4465-5835-9595-ab453c8f125c@linux.intel.com>
+Content-Language: en-US
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+In-Reply-To: <a7435bf5-4465-5835-9595-ab453c8f125c@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
+X-ClientProxiedBy: PN2PR01CA0038.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:22::13) To BL1PR12MB5176.namprd12.prod.outlook.com
+ (2603:10b6:208:311::19)
+MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCBF:EE_|DM4PR12MB5166:EE_
-X-MS-Office365-Filtering-Correlation-Id: eddf270f-fd05-41f0-1ab8-08dbe674b767
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|CH3PR12MB9148:EE_
+X-MS-Office365-Filtering-Correlation-Id: c4be0ab5-b84d-4031-b9de-08dbe675c332
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AvLGdGFN3h29DtHd7j1gstwecvlJFMzKhSS5ggNu/TUGTQN2IF2owjjTCKziYBSJ3G0qWxfOhVLaC+3BYlaPMM8r05kWgdmBhBrkdBBGJPeERhOaPuEVRcxZqhJdmpWjBcMW74EEoenEw3V8RfsrHjYcBx2mRp0sx/RKqVbl6SsygQpZYOw1xNbg5a52fViPF/z3gYX7e7nk/cfcDTRXlbIuVDRe9v5gmXO9AnLsiv/NAiAYyPqpvi4dyIV6fBiuAr/ocRJFtIDa+3CcFyft8RblCcApspP09/EaP00rmw3lG62oHVEwl6Q2ov5TxhG0cm+AE+tQsp+rmX8q64p0LMNM+fk/+ELnBBE8AqjG7OluuNAl5Lq49Gd+I94nZKzUW9qBZ8PUT6ZKPWRvHrDpB14IrJX2Fly6aOGwQQYsQcgtMconTRXfUDogXOypAW3whp9ydV0kR153AN+0y/bSg9cTwInQlPKz69y8KgK8q5P1GmqnKJf0/igrI+b5RFs04YhtnbneJCRTG5eC5wqngxZ7SnHK3kPparUIHj1+PHkI6S8iadGNcnFZaq5m3MbmP38rKvznKxFaLB+ylOP9OFutyBW45r5iK0v/TZ08PdFD9/jnhFbzM67Cm5pyFEXZdF41/kSlduvEcfCHVZ3Myzt5nv3X4FVjnZmA7lPJFIgLWIe79Ek32Im8EF7yMfOxBP/X1x8uNYz5LsQrQyaAOeUeZkj0AONBXizwUhA2aIaosArX3UAqbDfmXaRqxz4uoiDX0EDe8w5EbvsfQoaKlg==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(376002)(136003)(396003)(346002)(230922051799003)(186009)(64100799003)(451199024)(1800799009)(82310400011)(40470700004)(36840700001)(46966006)(478600001)(966005)(2616005)(2906002)(5660300002)(40460700003)(7696005)(86362001)(8936002)(8676002)(4326008)(70586007)(6666004)(110136005)(70206006)(54906003)(316002)(36860700001)(41300700001)(47076005)(82740400003)(83380400001)(356005)(16526019)(36756003)(40480700001)(81166007)(426003)(26005)(336012)(1076003)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 6ozOZ95jLo3Wn6fDMgKoATjJJL4TJ+VbbKJIFl+lstAYzCRCyxcy8U90odZPZmFc2IlTfdG1mLhO/cAlMjaYfd5av+k1ObrEJ4UUw9hxMxrUgMtx5Jacx0+3n0zhTTxkAme4t4Z9eDnGL1j1OlKv6cy6duhQ0LRWqVUYeOE6bBJx8qeEFoYUOFIVfEIjTQMzHUqoHtDx093oLVs+ZlrmrGTbE6wU3ADeh4FUns5/EXvcJUn7jgXbuzrWoq5KHDEmtrI7Z3Du8iUNbbZa0k1N686FJzFcAOyObTnzzM3eCuKbH45ilq7oQbTpe8fKR/8w14bHoLt97Vt8y7HkQAJJuBpiOp+OITSiVvPJjJxAHCpI6uIbNosjpuGsZpBXj1Ob7T5bE4VqrctXvnQjZs0Ym5ZXVMRzKe0AhXHQeOSoq9op8bV8O6TW23uKnc5pJNn0eFIcWaQplZj6xhuwjRJieXo/C9vzN4H9Vfkz0Krhhs4bD6UUgpjYAnZUCAzN235czJAQo6PoctlQL6q0SxBwViah5MyRDMm4irCmKkIAKaECyLjlXyAP/AFOOa//C+Qfol9TUvW8e/ofg9mhBZNqHzBCU1wRNqHSQQYG0LBpdPS21AbqzPAmUZrlUKMILmSDhqHget2tKsZZd3ebgi4Gvg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(376002)(136003)(366004)(396003)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(38100700002)(31686004)(83380400001)(2616005)(36756003)(6512007)(53546011)(6506007)(26005)(6666004)(478600001)(966005)(6486002)(86362001)(5660300002)(41300700001)(66946007)(66476007)(54906003)(66556008)(316002)(6916009)(8676002)(8936002)(4326008)(31696002)(2906002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cStGZklJc3VSWDhFaE5TdlV6MEdTWlF5K2JNeW8wemNVUVdhMTNnejg1Vmw3?=
+ =?utf-8?B?OTdkcW1Rc0RFSDdXUUp3MEJaVkozQ0JJN0dobEpLNkNaWmhNM1FFUmVtWmh2?=
+ =?utf-8?B?QnhJd21OTVZrQVpsWVJCNS9mbURqMnMwZlBjUnZZRndVTEtTaEhyOEFFRndy?=
+ =?utf-8?B?VFRXa2FtbklJOHBLcFdXbU82ZjRXcys1K3pkaTRUdkZ3akJEK2NLdUVuN2sv?=
+ =?utf-8?B?cnJ5U1dqRmpkZ2VicFE0Z29OcmJMT29vYXNQcE5VZVBDQm9nYmVTdk9vV0hV?=
+ =?utf-8?B?NnNCMFlVT1lTRjNHMkZaOXoyWWUyaTFKOUtWVFUxcjYxUnZ3R2JyOWRObUE5?=
+ =?utf-8?B?ZGFLOG1VRGdwaU9pTjNXbTJMb1pYejhoeExiSktXekJEQWJQYkZLUmVvZFND?=
+ =?utf-8?B?cFdncmZYejJ5SnpFZFRIZzVacWJJMEQ4VnRWV2R4ZWhwanZoYmYrNTZrQWdV?=
+ =?utf-8?B?OFprTFlDTXhjTUJwZWNtb2NiQkw4bXpQME1CRzcxaXZHTmJHT2R2YWM4UXFH?=
+ =?utf-8?B?RnYvcVVDYnl0WUJZTm1GaEt2RnhQRXR3Ym1jMGRCaFkvckh2QkVaMENMMDA0?=
+ =?utf-8?B?ZE8yM1dRZjRpdkJGRWhQTUxKWW5GNU8rQTZqcldsNDlvNGhxaXFxVCsxK3Rj?=
+ =?utf-8?B?QklGSmx0WVpaOVZXenN2SzgwMlYrMGpwL2d3bFVvNWVvZ2taR3NyUjZTK3ky?=
+ =?utf-8?B?TklzWDlVNXEwMHpTT3NmdlkvVkljRnhlb21aeG12N2VReVIvSFU2YnI3Zy9t?=
+ =?utf-8?B?R1ZJM2hUQ0JpZGljSklsa2d5Y3dtQm5wWjNYK0Q1SHN1Q0EvV1FMbFBlVTBV?=
+ =?utf-8?B?UGJLWWJrRHM3S2lUQkxxM3pRZDBuY2FJdldmSWNLS0pWUVl5b29kbS96ZWov?=
+ =?utf-8?B?MHdOVy9sSHZhZjVxcTNoc3NHNHZUMmpiU3V3TGJxVUFsaWJiV1JnVjJUWk8z?=
+ =?utf-8?B?VExURFEydDBPcXJPVHJqYllYbDF0Q1R2b1VQekZsZUJiYVZVQTRocHpSV3JE?=
+ =?utf-8?B?RFBJSVl2YTN4aGtVQlE3SE5QTXRoQjFOd2ZWaDFxV0JpbHM1WHEwd1ZHUHp1?=
+ =?utf-8?B?WmE5c2pKRk1WeTlaME1aemtiTUdONklXRHpOaVB3ZXJvdWxGbHRvYm95UHQ0?=
+ =?utf-8?B?Q0x3cmxET1NhNmZTd2wrMUlpWXpyN3FoZitKOUZMRFpCNFV5cEtHWkg4ZU54?=
+ =?utf-8?B?UzVkWUZIOHdkcTJvY0hBV0lMc3ppZmhZRUVLS2FvRlp6elprN3RDaEhlT2pn?=
+ =?utf-8?B?UzRyUnVZbitPVkVQTUJPei9CMHQ3cFZYWmNDaHVudmVJQWRaM3h0WG56UTVi?=
+ =?utf-8?B?SCt0cEVmUVY0WExyT3JSbng2a0gzRG1Yb3QwSTdnYUMzVDJBQlFIVSsrdUlq?=
+ =?utf-8?B?TXE3QjdWL1RtVDYxUTUxenFWeUlhZHVmMmZsRTRlNnc2ZzNGYkl1MERPa0Z0?=
+ =?utf-8?B?aDEyUE12Q0pZN1NESjhvOFdHSVIybVVpKzlCWWxTcjNuL2JTQnNOUExpZHc1?=
+ =?utf-8?B?Z1JrNERTdVpRVWRvRnJ6Z1Npemk3ekdRQkdSQm83WUpldWlPZTNJVWI1V0NM?=
+ =?utf-8?B?YjdpQmJjVmtvWm4ySG0zMDFxL0ZJaXg3QWNQODVlcXFFU00zUWdxTWgzRTc5?=
+ =?utf-8?B?UG9QRzNZcWYwcVRLVVQ0b0FhMlozbFI3b2VqTjd1Q29mL2R4cDJrQ2gxSzE1?=
+ =?utf-8?B?M3dsTmpqNWQ4dXdHV0tHVGdTa1F1Y2Y3bm5YelluL2UrZlpSMDJuV2RtZXdh?=
+ =?utf-8?B?SGVLU3IrRjBZL3A2NUxueUNYejBnVnd5ZytIUURyazF4TzhXZkJBSWZSNjZk?=
+ =?utf-8?B?bmtsRkZ3a3AydzdGQXFKQVJwSGlBMXZXcmpqd1ZwMmV5b2lJd24xb29sZmxH?=
+ =?utf-8?B?ZjdkQmM2akpWWUxwVlFwOThUSWc3d3pLTWIxZTJnTmhMRmJvQ1BidExSeXNw?=
+ =?utf-8?B?UEtBak10d3FuaytvQjhWcjZneTEvdDNaYnh2cU1lYm5rcDR0b1g1T28xQzU0?=
+ =?utf-8?B?Y0J6Zm5kQ1VaRmgzZHBzWmJ6YU9QY3VQUjJXeXVxM1lFQVNRczE3SjNuYVZr?=
+ =?utf-8?B?MSttTnRCc0tUNDF4RmR0Nk92cXErVFhraWVSN00xK1BlWTcxU1hlSlc3QWQ5?=
+ =?utf-8?Q?ET8ped8cRSqylVMWXv2/9ACAl?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2023 07:21:56.9545
+X-MS-Exchange-CrossTenant-Network-Message-Id: c4be0ab5-b84d-4031-b9de-08dbe675c332
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2023 07:29:26.6618
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: eddf270f-fd05-41f0-1ab8-08dbe674b767
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000FCBF.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5166
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PQJYJe2Xn7frCcGeMr+xNVfZqDn2HRDhdXetHeaS7hN5890kR86Yn3R+b+VFq9VlSLBgzgT9nX/JpBrQ+KrCyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9148
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-After talking to the PMFW team, its understood that the "get dram size"
-mbox command would only be supported on specific platforms (like Mendocino)
-and not all. So, adjust getting DRAM size behavior such that,
+Hi Mark, Ilpo,
 
-- if that's Rembrandt or Mendocino and the underlying PMFW knows how
-to execute the "get dram size" command it shall give the custom dram size.
+Apologies for the delay
 
-- if the underlying FW does not report the dram size, we just proceed
-further and assign the default dram size.
+On 11/13/2023 6:40 PM, Ilpo Järvinen wrote:
+> On Thu, 9 Nov 2023, Shyam Sundar S K wrote:
+> 
+>> After talking to the PMFW team, its understood that the "get dram size"
+>> mbox command would only be supported on specific platforms (like Mendocino)
+>> and not all. So adjust the behavior of amd_pmc_get_dram_size() function
+>> such that,
+>>
+>> - if that's Rembrandt or Mendocino and the underlying PMFW knows how
+>> to execute the "get dram size" command it shall give the custom dram size.
+>>
+>> - if the underlying FW does not report the dram size, we just proceed
+>> further and assign the default dram size.
+> 
+> This commit message lacks the description of the problem we have the Fixes 
+> tag for. Please explain also that problem as it's very much related.
+> 
+>> Cc: Mark Hasemeyer <markhas@chromium.org>
+> 
+> Mark, does this patch solve the issue for you?
+> 
+>> Link: https://lore.kernel.org/platform-driver-x86/3b224c62-a1d8-41bd-aced-5825f5f20e66@amd.com/
+>> Fixes: be8325fb3d8c ("platform/x86/amd: pmc: Get STB DRAM size from PMFW")
+>> Suggested-by: Sanket Goswami <Sanket.Goswami@amd.com>
+>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> ---
+>>
+>> v2:
+>> - Based on review-ilpo branch
+>> - Drop calling get smu version from probe.
+>>
+>>  drivers/platform/x86/amd/pmc/pmc.c | 11 +----------
+>>  1 file changed, 1 insertion(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+>> index cd6ac04c1468..501c72c7d34c 100644
+>> --- a/drivers/platform/x86/amd/pmc/pmc.c
+>> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+>> @@ -968,17 +968,8 @@ static int amd_pmc_get_dram_size(struct amd_pmc_dev *dev)
+>>  {
+>>  	int ret;
+>>  
+>> -	switch (dev->cpu_id) {
+>> -	case AMD_CPU_ID_YC:
+>> -		if (!(dev->major > 90 || (dev->major == 90 && dev->minor > 39))) {
+>> -			ret = -EINVAL;
+>> -			goto err_dram_size;
+>> -		}
+>> -		break;
+>> -	default:
+>> -		ret = -EINVAL;
+>> +	if (dev->cpu_id != AMD_CPU_ID_YC)
+>>  		goto err_dram_size;
+> 
+> This now ends up returning uninitialized ret variable. I'd have expected 
+> compiler to warn you about it...??
+> 
+> It also still prints the dev_err() after jumping to the label. If we know 
+> dram size not supported, dev_err is not really correct level (I'd say 
+> dev_dbg at most but better would be to not print anything, IMO).
+> 
+> Thinking it more though, it would make more sense to initialize the 
+> default dram_size within this function to make it easier to track the code 
+> + call this function amd_pmc_init_dram_size() and make it void since its 
+> return value is not really used for anything else than setting the default
+> dram_size.
 
-Cc: Mark Hasemeyer <markhas@chromium.org>
-Link: https://lore.kernel.org/platform-driver-x86/3b224c62-a1d8-41bd-aced-5825f5f20e66@amd.com/
-Fixes: be8325fb3d8c ("platform/x86/amd: pmc: Get STB DRAM size from PMFW")
-Suggested-by: Sanket Goswami <Sanket.Goswami@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
-v3:
-- Based on review-ilpo branch
-- Remove amd_pmc_get_dram_size() function
-- Remove prints that are noisy
+I have sent a simplified version now. Can you please take a look.
 
-v2:
-- Based on review-ilpo branch
-- Drop calling get smu version from probe.
+Thanks,
+Shyam
 
- drivers/platform/x86/amd/pmc/pmc.c | 31 ++----------------------------
- 1 file changed, 2 insertions(+), 29 deletions(-)
-
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index cd6ac04c1468..c3104714b480 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -964,33 +964,6 @@ static const struct pci_device_id pmc_pci_ids[] = {
- 	{ }
- };
- 
--static int amd_pmc_get_dram_size(struct amd_pmc_dev *dev)
--{
--	int ret;
--
--	switch (dev->cpu_id) {
--	case AMD_CPU_ID_YC:
--		if (!(dev->major > 90 || (dev->major == 90 && dev->minor > 39))) {
--			ret = -EINVAL;
--			goto err_dram_size;
--		}
--		break;
--	default:
--		ret = -EINVAL;
--		goto err_dram_size;
--	}
--
--	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->s2d_msg_id, true);
--	if (ret || !dev->dram_size)
--		goto err_dram_size;
--
--	return 0;
--
--err_dram_size:
--	dev_err(dev->dev, "DRAM size command not supported for this platform\n");
--	return ret;
--}
--
- static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
- {
- 	u32 phys_addr_low, phys_addr_hi;
-@@ -1009,8 +982,8 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
- 		return -EIO;
- 
- 	/* Get DRAM size */
--	ret = amd_pmc_get_dram_size(dev);
--	if (ret)
-+	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->s2d_msg_id, true);
-+	if (ret || !dev->dram_size)
- 		dev->dram_size = S2D_TELEMETRY_DRAMBYTES_MAX;
- 
- 	/* Get STB DRAM address */
--- 
-2.25.1
-
+> 
+>> -	}
+>>  
+>>  	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->s2d_msg_id, true);
+>>  	if (ret || !dev->dram_size)
+>>
+> 
+> 
