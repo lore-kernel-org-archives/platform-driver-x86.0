@@ -2,155 +2,101 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB05FC54FB9
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Nov 2023 10:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35325C197A0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Nov 2023 12:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234970AbjKPKdr (ORCPT
+        id S230371AbjKPMkq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Nov 2023 05:33:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47792 "EHLO
+        Thu, 16 Nov 2023 07:40:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235408AbjKPKdn (ORCPT
+        with ESMTP id S230315AbjKPMkp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Nov 2023 05:33:43 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E37AAD56
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Nov 2023 02:33:39 -0800 (PST)
+        Thu, 16 Nov 2023 07:40:45 -0500
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB7DD8;
+        Thu, 16 Nov 2023 04:40:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700130819; x=1731666819;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=+F99CeUl9asowk04nqV9QvO4S3kd0sjyxQuOe4lsJ0Q=;
-  b=FhpfAgwbbHqYyCApZnC00QFDjQ3YhwHAtfJZBpn3FSHQUg/CTMDaq3Bb
-   r2THLdwrnM970AkGzPEZoLl4/PLIlBhUWOXZhGxisQOSWxYUvmvoshr5B
-   3HLjtvr/B4PzOnS/Vc3/rANO4kFVS7aTbWbedW9XrR+7A1w485UP03dSU
-   jRQ/7jNelN4wxwGdP8XR6r7QNrSo3W/6h0AtaxZ3dInBtsh7+p5wDOV59
-   ZksEe/m/Q8emjjhFpt8ZOnwFot0KrS4YessxWcdTSsgtsMlaCHXMR+/vz
-   kWMfCKjAZjOgCD9NK4AaqPALzQ01SaMLWjVgcA/O+6JBVM58z9aU32MWk
+  t=1700138442; x=1731674442;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=o7i5pDIu8W1NKuPRmvouUT6+/JBgfYe8Hd8a+RRcWvM=;
+  b=UpkFwsgLf985ma6LHALk/uvrSiED6Et4y3c+Je4V29r1xVfxIhwgdrE3
+   AeA/70slLtKUza8peGM6FJXMNU6VzqQrkGDfncFKY98Zej6nL5uUEV/P9
+   wsyqsClYrgtLdYRAhgnbIvx8zTQQdCa3G8VGbRrcV95WMDa6DifhMghfq
+   X6Vt7b9EquyBDBaFEabLKPM2e/ESEUayIBl5Jtv2/ezR7b63znLLjM9Sl
+   2RTc5vgJz1G6NSZakeBNf0PktcENQiXHEByhPdxAIluH35VNHig45/H3W
+   cuzb0NB8uHOIS3yUZj+m+oTP40NPwEDhbZnFplrGynHn8zAq+azadw1JB
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10895"; a="388228239"
-X-IronPort-AV: E=Sophos;i="6.03,308,1694761200"; 
-   d="scan'208";a="388228239"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 02:33:39 -0800
+X-IronPort-AV: E=McAfee;i="6600,9927,10895"; a="370437791"
+X-IronPort-AV: E=Sophos;i="6.04,308,1695711600"; 
+   d="scan'208";a="370437791"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 04:40:40 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.03,308,1694761200"; 
-   d="scan'208";a="6689040"
-Received: from jhsteyn-mobl1.ger.corp.intel.com ([10.252.40.9])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 02:33:38 -0800
-Date:   Thu, 16 Nov 2023 12:33:32 +0200 (EET)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
-        Sanket.Goswami@amd.com, mario.limonciello@amd.com,
-        platform-driver-x86@vger.kernel.org,
-        Mark Hasemeyer <markhas@chromium.org>
-Subject: Re: [PATCH v3] platform/x86/amd/pmc: adjust getting DRAM size
- behavior
-In-Reply-To: <20231116072124.3370008-1-Shyam-sundar.S-k@amd.com>
-Message-ID: <b7fb9851-4f4c-b7b8-9e61-8d3a116c079@linux.intel.com>
-References: <20231116072124.3370008-1-Shyam-sundar.S-k@amd.com>
+X-IronPort-AV: E=McAfee;i="6600,9927,10895"; a="1096773125"
+X-IronPort-AV: E=Sophos;i="6.04,308,1695711600"; 
+   d="scan'208";a="1096773125"
+Received: from lkp-server02.sh.intel.com (HELO b8de5498638e) ([10.239.97.151])
+  by fmsmga005.fm.intel.com with ESMTP; 16 Nov 2023 04:40:34 -0800
+Received: from kbuild by b8de5498638e with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1r3bfb-0001ej-2t;
+        Thu, 16 Nov 2023 12:40:31 +0000
+Date:   Thu, 16 Nov 2023 20:39:55 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Henry Shi <henryshi2018@gmail.com>, hbshi69@hotmail.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        hdegoede@redhat.com, markgross@kernel.org, jdelvare@suse.com,
+        linux@roeck-us.net, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org
+Cc:     Paul Gazzillo <paul@pgazz.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        oe-kbuild-all@lists.linux.dev, hb_shi2003@yahoo.com,
+        henrys@silicom-usa.com, wenw@silicom-usa.com
+Subject: Re: [PATCH v12] platform/x86: Add Silicom Platform Driver
+Message-ID: <202311162035.fmFBbRzs-lkp@intel.com>
+References: <20231113210216.30237-1-henryshi2018@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231113210216.30237-1-henryshi2018@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 16 Nov 2023, Shyam Sundar S K wrote:
+Hi Henry,
 
-> After talking to the PMFW team, its understood that the "get dram size"
-> mbox command would only be supported on specific platforms (like Mendocino)
-> and not all. So, adjust getting DRAM size behavior such that,
-> 
-> - if that's Rembrandt or Mendocino and the underlying PMFW knows how
-> to execute the "get dram size" command it shall give the custom dram size.
-> 
-> - if the underlying FW does not report the dram size, we just proceed
-> further and assign the default dram size.
+kernel test robot noticed the following build warnings:
 
-Hi,
+[auto build test WARNING on tip/master]
+[also build test WARNING on linus/master tip/auto-latest v6.7-rc1 next-20231116]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-This still talks only about the solution but I gave you a specific 
-instruction to include the description of the problem that warrants
-Fixes tag. :-(
+url:    https://github.com/intel-lab-lkp/linux/commits/Henry-Shi/platform-x86-Add-Silicom-Platform-Driver/20231114-050431
+base:   tip/master
+patch link:    https://lore.kernel.org/r/20231113210216.30237-1-henryshi2018%40gmail.com
+patch subject: [PATCH v12] platform/x86: Add Silicom Platform Driver
+config: i386-kismet-CONFIG_LEDS_CLASS_MULTICOLOR-CONFIG_SILICOM_PLATFORM-0-0 (https://download.01.org/0day-ci/archive/20231116/202311162035.fmFBbRzs-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20231116/202311162035.fmFBbRzs-lkp@intel.com/reproduce)
 
-So please include something along the lines you had in v1 to describe how 
-the current code fails because the version numbers are not initialized.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311162035.fmFBbRzs-lkp@intel.com/
 
-> Cc: Mark Hasemeyer <markhas@chromium.org>
-
-Promote Mark to Reported-by.
-
-Codewise, this is seems fine and is IMO nice simplification.
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for LEDS_CLASS_MULTICOLOR when selected by SILICOM_PLATFORM
+   
+   WARNING: unmet direct dependencies detected for LEDS_CLASS_MULTICOLOR
+     Depends on [n]: NEW_LEDS [=n] && LEDS_CLASS [=n]
+     Selected by [y]:
+     - SILICOM_PLATFORM [=y] && X86_PLATFORM_DEVICES [=y] && HWMON [=y]
 
 -- 
- i.
-
-> Link: https://lore.kernel.org/platform-driver-x86/3b224c62-a1d8-41bd-aced-5825f5f20e66@amd.com/
-> Fixes: be8325fb3d8c ("platform/x86/amd: pmc: Get STB DRAM size from PMFW")
-> Suggested-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
-> v3:
-> - Based on review-ilpo branch
-> - Remove amd_pmc_get_dram_size() function
-> - Remove prints that are noisy
-> 
-> v2:
-> - Based on review-ilpo branch
-> - Drop calling get smu version from probe.
-> 
->  drivers/platform/x86/amd/pmc/pmc.c | 31 ++----------------------------
->  1 file changed, 2 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-> index cd6ac04c1468..c3104714b480 100644
-> --- a/drivers/platform/x86/amd/pmc/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc/pmc.c
-> @@ -964,33 +964,6 @@ static const struct pci_device_id pmc_pci_ids[] = {
->  	{ }
->  };
->  
-> -static int amd_pmc_get_dram_size(struct amd_pmc_dev *dev)
-> -{
-> -	int ret;
-> -
-> -	switch (dev->cpu_id) {
-> -	case AMD_CPU_ID_YC:
-> -		if (!(dev->major > 90 || (dev->major == 90 && dev->minor > 39))) {
-> -			ret = -EINVAL;
-> -			goto err_dram_size;
-> -		}
-> -		break;
-> -	default:
-> -		ret = -EINVAL;
-> -		goto err_dram_size;
-> -	}
-> -
-> -	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->s2d_msg_id, true);
-> -	if (ret || !dev->dram_size)
-> -		goto err_dram_size;
-> -
-> -	return 0;
-> -
-> -err_dram_size:
-> -	dev_err(dev->dev, "DRAM size command not supported for this platform\n");
-> -	return ret;
-> -}
-> -
->  static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
->  {
->  	u32 phys_addr_low, phys_addr_hi;
-> @@ -1009,8 +982,8 @@ static int amd_pmc_s2d_init(struct amd_pmc_dev *dev)
->  		return -EIO;
->  
->  	/* Get DRAM size */
-> -	ret = amd_pmc_get_dram_size(dev);
-> -	if (ret)
-> +	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->s2d_msg_id, true);
-> +	if (ret || !dev->dram_size)
->  		dev->dram_size = S2D_TELEMETRY_DRAMBYTES_MAX;
->  
->  	/* Get STB DRAM address */
-> 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
