@@ -2,101 +2,116 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35325C197A0
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Nov 2023 12:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7256C54FB9
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 16 Nov 2023 13:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230371AbjKPMkq (ORCPT
+        id S1345189AbjKPNiV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 16 Nov 2023 07:40:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59680 "EHLO
+        Thu, 16 Nov 2023 08:38:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230315AbjKPMkp (ORCPT
+        with ESMTP id S1344962AbjKPNiV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 16 Nov 2023 07:40:45 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB7DD8;
-        Thu, 16 Nov 2023 04:40:42 -0800 (PST)
+        Thu, 16 Nov 2023 08:38:21 -0500
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17CA99C;
+        Thu, 16 Nov 2023 05:38:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700138442; x=1731674442;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=o7i5pDIu8W1NKuPRmvouUT6+/JBgfYe8Hd8a+RRcWvM=;
-  b=UpkFwsgLf985ma6LHALk/uvrSiED6Et4y3c+Je4V29r1xVfxIhwgdrE3
-   AeA/70slLtKUza8peGM6FJXMNU6VzqQrkGDfncFKY98Zej6nL5uUEV/P9
-   wsyqsClYrgtLdYRAhgnbIvx8zTQQdCa3G8VGbRrcV95WMDa6DifhMghfq
-   X6Vt7b9EquyBDBaFEabLKPM2e/ESEUayIBl5Jtv2/ezR7b63znLLjM9Sl
-   2RTc5vgJz1G6NSZakeBNf0PktcENQiXHEByhPdxAIluH35VNHig45/H3W
-   cuzb0NB8uHOIS3yUZj+m+oTP40NPwEDhbZnFplrGynHn8zAq+azadw1JB
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10895"; a="370437791"
+  t=1700141898; x=1731677898;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=4XUvWNRQgRglkQHuzWKzQgMQJ4YYwlfuTIUE8Uup+I0=;
+  b=ckjIskC2OhyYznJtyTBy7M+TFqTSIA2hdo8WAOKCtLcMzcYI+WJdYiyl
+   V4cHTfyclxXF7DADnhdC2AJWPqStFOB5YUJTBhnzVKRE+Xz+MwYZU6WIg
+   za+vmd39FhT0jZzySoOiWIPqw0FWfTY3GW0JFbqtOqRkBAAMBl/88ML4I
+   t384IDJWrom6O9yZqhS2Cl5BhzfwZbtLV21qsoOG8gHkHpJYsTuvNsnP0
+   sP8VRrQXHKzAJhjBvhrFr2nXwXPoz/pUQh9NdhZcETsG5iaLhI4zBDi0L
+   HMdbu01KY/waUULZRsuXFLIYPbDacoxQNl+utfV4+BteASj1+fryptNh9
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10895"; a="455381008"
 X-IronPort-AV: E=Sophos;i="6.04,308,1695711600"; 
-   d="scan'208";a="370437791"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 04:40:40 -0800
+   d="scan'208";a="455381008"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 05:38:17 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10895"; a="1096773125"
+X-IronPort-AV: E=McAfee;i="6600,9927,10895"; a="856005354"
 X-IronPort-AV: E=Sophos;i="6.04,308,1695711600"; 
-   d="scan'208";a="1096773125"
-Received: from lkp-server02.sh.intel.com (HELO b8de5498638e) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 16 Nov 2023 04:40:34 -0800
-Received: from kbuild by b8de5498638e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1r3bfb-0001ej-2t;
-        Thu, 16 Nov 2023 12:40:31 +0000
-Date:   Thu, 16 Nov 2023 20:39:55 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Henry Shi <henryshi2018@gmail.com>, hbshi69@hotmail.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        hdegoede@redhat.com, markgross@kernel.org, jdelvare@suse.com,
-        linux@roeck-us.net, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org
-Cc:     Paul Gazzillo <paul@pgazz.com>,
-        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-        oe-kbuild-all@lists.linux.dev, hb_shi2003@yahoo.com,
-        henrys@silicom-usa.com, wenw@silicom-usa.com
-Subject: Re: [PATCH v12] platform/x86: Add Silicom Platform Driver
-Message-ID: <202311162035.fmFBbRzs-lkp@intel.com>
-References: <20231113210216.30237-1-henryshi2018@gmail.com>
+   d="scan'208";a="856005354"
+Received: from jhsteyn-mobl1.ger.corp.intel.com ([10.252.40.9])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 05:38:15 -0800
+Date:   Thu, 16 Nov 2023 15:38:13 +0200 (EET)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Armin Wolf <W_Armin@gmx.de>
+cc:     jithu.joseph@intel.com, Hans de Goede <hdegoede@redhat.com>,
+        markgross@kernel.org, Dell.Client.Kernel@dell.com,
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/4] platform/x86/intel/wmi: thunderbolt: Use bus-based
+ WMI interface
+In-Reply-To: <20231103182526.3524-4-W_Armin@gmx.de>
+Message-ID: <da657e8-d692-c1ad-9016-bcaabb30c37d@linux.intel.com>
+References: <20231103182526.3524-1-W_Armin@gmx.de> <20231103182526.3524-4-W_Armin@gmx.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231113210216.30237-1-henryshi2018@gmail.com>
+Content-Type: multipart/mixed; boundary="8323329-454726224-1700141896=:1886"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Henry,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-kernel test robot noticed the following build warnings:
+--8323329-454726224-1700141896=:1886
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
 
-[auto build test WARNING on tip/master]
-[also build test WARNING on linus/master tip/auto-latest v6.7-rc1 next-20231116]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On Fri, 3 Nov 2023, Armin Wolf wrote:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Henry-Shi/platform-x86-Add-Silicom-Platform-Driver/20231114-050431
-base:   tip/master
-patch link:    https://lore.kernel.org/r/20231113210216.30237-1-henryshi2018%40gmail.com
-patch subject: [PATCH v12] platform/x86: Add Silicom Platform Driver
-config: i386-kismet-CONFIG_LEDS_CLASS_MULTICOLOR-CONFIG_SILICOM_PLATFORM-0-0 (https://download.01.org/0day-ci/archive/20231116/202311162035.fmFBbRzs-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20231116/202311162035.fmFBbRzs-lkp@intel.com/reproduce)
+> Currently, the driver still uses the legacy GUID-based interface
+> to invoke WMI methods. Use the modern bus-based interface instead.
+> 
+> Tested on a Lenovo E51-80.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+> Changes in v2:
+> - fix spelling issue
+> ---
+>  drivers/platform/x86/intel/wmi/thunderbolt.c | 3 +--
+>  drivers/platform/x86/wmi.c                   | 1 +
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/wmi/thunderbolt.c b/drivers/platform/x86/intel/wmi/thunderbolt.c
+> index fc333ff82d1e..e2ad3f46f356 100644
+> --- a/drivers/platform/x86/intel/wmi/thunderbolt.c
+> +++ b/drivers/platform/x86/intel/wmi/thunderbolt.c
+> @@ -32,8 +32,7 @@ static ssize_t force_power_store(struct device *dev,
+>  	mode = hex_to_bin(buf[0]);
+>  	dev_dbg(dev, "force_power: storing %#x\n", mode);
+>  	if (mode == 0 || mode == 1) {
+> -		status = wmi_evaluate_method(INTEL_WMI_THUNDERBOLT_GUID, 0, 1,
+> -					     &input, NULL);
+> +		status = wmidev_evaluate_method(to_wmi_device(dev), 0, 1, &input, NULL);
+>  		if (ACPI_FAILURE(status)) {
+>  			dev_dbg(dev, "force_power: failed to evaluate ACPI method\n");
+>  			return -ENODEV;
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index 4c4effc883ae..cb7e74f2b009 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -107,6 +107,7 @@ static const char * const allow_duplicates[] = {
+>  	"05901221-D566-11D1-B2F0-00A0C9062910",	/* wmi-bmof */
+>  	"8A42EA14-4F2A-FD45-6422-0087F7A7E608",	/* dell-wmi-ddv */
+>  	"44FADEB1-B204-40F2-8581-394BBDC1B651",	/* intel-wmi-sbl-fw-update */
+> +	"86CCFD48-205E-4A77-9C48-2021CBEDE341",	/* intel-wmi-thunderbolt */
+>  	NULL
+>  };
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311162035.fmFBbRzs-lkp@intel.com/
+For the entire series:
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for LEDS_CLASS_MULTICOLOR when selected by SILICOM_PLATFORM
-   
-   WARNING: unmet direct dependencies detected for LEDS_CLASS_MULTICOLOR
-     Depends on [n]: NEW_LEDS [=n] && LEDS_CLASS [=n]
-     Selected by [y]:
-     - SILICOM_PLATFORM [=y] && X86_PLATFORM_DEVICES [=y] && HWMON [=y]
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+ i.
+
+--8323329-454726224-1700141896=:1886--
