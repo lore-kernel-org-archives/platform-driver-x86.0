@@ -2,284 +2,174 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9964AC072A2
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Nov 2023 22:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19556C072A2
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 17 Nov 2023 22:52:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345242AbjKQWcV (ORCPT
+        id S230383AbjKQWwu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 17 Nov 2023 17:32:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33130 "EHLO
+        Fri, 17 Nov 2023 17:52:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230379AbjKQWcU (ORCPT
+        with ESMTP id S230379AbjKQWwt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 17 Nov 2023 17:32:20 -0500
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3C34D50;
-        Fri, 17 Nov 2023 14:32:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1700260308; x=1700865108; i=w_armin@gmx.de;
-        bh=PsXYnaI2T53D8H5qrzK8vpKaHF+HAJvZZKNrV4eU6Lg=;
-        h=X-UI-Sender-Class:Date:Subject:To:References:Cc:From:
-         In-Reply-To;
-        b=rajSrZ4VMg32ZBgBbGdvf1a7Zpp1KuAjel3h7f5hAMxGKdX+JPUPmftN4SGVoOTM
-         Rm/wBUNQOrCJzQ+fdjYyjrvZKwo4eO8HNgoIy+gWMpUMFbJT5nc9jDOtrl8Rv8V52
-         15f1yocifhuY95HKXMDxNFMI8rT3coPlcLc89dFk7VSswBThQcAeirvV0+fwT8gPs
-         Ums8hkqVC6jxBqag5zQAG1N6eMTzDDR0lUNjtJaSMNRe+1zSfUUr8H5JIdHmUwl+i
-         8YDrDO5IzW9m3ZzL3TzbTEkWADIt6CsGKXLWXB5RJvOKSXAfEp5gOC4N2SAqjxgU6
-         uZxnpJN5K/zhhuU/Dw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MEm6F-1r9rsV0055-00GGKM; Fri, 17
- Nov 2023 23:31:48 +0100
-Message-ID: <80f66f8f-84a7-4992-8d9d-e12f16915490@gmx.de>
-Date:   Fri, 17 Nov 2023 23:31:46 +0100
-MIME-Version: 1.0
+        Fri, 17 Nov 2023 17:52:49 -0500
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2067.outbound.protection.outlook.com [40.107.223.67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC196D5B;
+        Fri, 17 Nov 2023 14:52:44 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GigUaw4OTwcYQIvvP0WCN/akFjvyzIsLX6o8rITLhWZLNwR7H1AO6w/y4ithhpzWde28rtMP2RvTAC0p/jdDdEekwAZTl3KgxKRkJhtcU1/5lFrKJVxgvCxSvCX+X4jzadOyMPS2MmhayvzdA7M0PNUaNEGJxIqRnpN99EmnTxqEuIs7jt29suht6mqIm7TIPf6Wjmu5/5gS6rGnRmZHXzjZy+F+xh641KP+ZFFQwFDPE4/+KJybL06+O68iTQC7Bt/L7V0a2ehIP75v2EzrArB05eQHGFJXom/nxsSVGCIaim9KWUZDsbJmwLiCWIEE4UJA7uxgCJT43E04w+k2TA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/tHXnvzwOq0+C/yCrkza35aoWIvaEYhjTXlAYk60smY=;
+ b=k5A/pBC5qaM9e6ZJcegmncH9sZ6rvHx+OFuYddTPDUA2D1EA332VN0fwSNk+6KFXGpuzmxntphOOfL4Ue70Mx5EiOhXYnd9IDhO2C87Lfs+2gOQ8/AgRaxN6P5YRjrPZPpWcnyptUouBOlvk0i4YpB63GdkZf6Dq0V4Pl61nnaEOJrhmZeIC5sHXOfUzdvpn6DXyQkYHTNiGNN91ZQpgyqKcwIgSH2N0IgXBzFTQA/PKCBAw6A1eSeXEn9L6omLFYra/9KsPHeYVczeeDNgG1MnADqtchK1jSn0zROXfzvvTwriYehwU5MmsQPWW2RX1YV5utUXTiVIBb2DwTI9AYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/tHXnvzwOq0+C/yCrkza35aoWIvaEYhjTXlAYk60smY=;
+ b=JERJC2uSKNvD++zfFyfFNYBQFd76LS+AIxYMrAhrxIppiHm5GZzHIsBDvxSMNWj0QqUFoRSvQG/zAcLgYvHV2rRAEHy6cqG/8Eb59sdhlUAjG4cnAXJ4jJLah2Bnx9l+IgoNiicPcv+3ykCnBQS83XYmdGd3kCQ3hQZOYcScqPg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by BL1PR12MB5189.namprd12.prod.outlook.com (2603:10b6:208:308::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.23; Fri, 17 Nov
+ 2023 22:52:39 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::83d7:9c4f:4d9b:1f2a]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::83d7:9c4f:4d9b:1f2a%5]) with mapi id 15.20.7002.019; Fri, 17 Nov 2023
+ 22:52:39 +0000
+Message-ID: <1503b02e-ca3f-4dc6-86f7-90b9136e73bb@amd.com>
+Date:   Fri, 17 Nov 2023 16:52:35 -0600
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/9] hwmon: (dell-smm) Add support for WMI SMM
- interface
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-References: <20231106064351.42347-1-W_Armin@gmx.de>
- <20231106064351.42347-8-W_Armin@gmx.de>
- <20231114141259.culmdxsoa3hduudm@pali>
+Subject: Re: [PATCH v5 09/17] platform/x86/amd/pmf: Make source_as_str() as
+ non-static
 Content-Language: en-US
-Cc:     jdelvare@suse.com, Guenter Roeck <linux@roeck-us.net>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, markgross@kernel.org
-From:   Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20231114141259.culmdxsoa3hduudm@pali>
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hdegoede@redhat.com,
+        markgross@kernel.org, ilpo.jarvinen@linux.intel.com,
+        basavaraj.natikar@amd.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com
+Cc:     Patil.Reddy@amd.com, platform-driver-x86@vger.kernel.org,
+        linux-input@vger.kernel.org
+References: <20231117080747.3643990-1-Shyam-sundar.S-k@amd.com>
+ <20231117080747.3643990-10-Shyam-sundar.S-k@amd.com>
+From:   Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20231117080747.3643990-10-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:VhacByqGV0UnBketf8qhmFBkP8EkzaasOtoEfFHKn40Gq5Qph5x
- DRFuRkfNLQ8KtrydvQPHGaLphHvZG1ia8p7e1P1odFhHbrEluMfpIREgGarYSAElzxPaBlV
- ruc0goc8jugRLzLNERnWQowQy/41PnhQik2VvymVjlZLDp/TP3WJbnuqCT9HSfggX/GWaDZ
- hjgSWkd5MEHcR/h8oQXgg==
-UI-OutboundReport: notjunk:1;M01:P0:nrnFH7bXO5Q=;nolmpfcMndYQZx+qFq+UCI4dnOj
- 5kknALJAzPZoc28If+vy+vqPSd6HK+OQHkytdY7h5dHkkRs90yGD0VNLAYEieZYtlihw86dFx
- /xYTZ1J6V5y/2Ex0p8auq6k6+WqnNHqkIlZid/jnSirSOgA4luqnIIvQ2BMQh3bV5V8Sh7UvQ
- ZYolpcvCcgJ8Y42dWDheG+kVaTUnGzv0AFIYekITioOCTNZWEvPmYtDT7AKsBBj+/IFwV8LO5
- n5weuu2ktRNqGIk06TEBY9zc8C7n7guPpv8HZWYmfa+aNlFaKtR+QP6QvriJ//ppWtGXkejsO
- GQLaSmObZ9OK1n34DiTxI/9YLLAv9dmNgF7pfFamSTV+VjCLeLZLbQmwIK+misZuTMuhRU7gv
- mf+ieEabQx2H064CWipUt9UaJllI2506i6E55JVPbpvC1fgMHLKnSvaGWAQTH4dAxyTiSAhVI
- GG3an/pUcNVcd4BiaVscxfKrKS0Q/JLF3WzY+pu4Pm3cXZY6LFLtchpddzA1zTaFZSyBh+81z
- hwFEK6hYhlUoLsS5tUfVGybtVlm7+duhERjnkCpn5Im+OZFbe5JWBWl2JLHvAH2EfqI/7B7Tr
- nSHuiPBrdy3Le7FuY/SLlho92faVTN/jecW5vb7sQSHIGkMABEZ4bJnmE79o+edtIn2n/lPHn
- 3cMPIkNTWh26qbfxLoNkhhyAwaqE3/H5w5D7rUYvQSGA9BkYON8xMGffCcmpVg06BJnzFlRBw
- Q9wOjWM4bErbEacLm38MSpBTfglB5XbAmSAJkecSOOERyGovo2THrHEa9gEmJxlS6RyS1UpsV
- BSt3JW5bNhDG7qTT2/TIlGj/N2pt+RkxRKeNmffiQAkYP0UthC3iXuwQA+JyBfQdEIc8Xi9Og
- 4HhAZ/rZ2trHQy1/xhoA7FIJ83+7ROiD3WE1tFOOXSl1vz62Hu/YTKnv81+UY9xeikasf0MlM
- WIq0KgBk2rlYz+6nfzDRrHa4vRQ=
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1P222CA0020.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:22c::21) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|BL1PR12MB5189:EE_
+X-MS-Office365-Filtering-Correlation-Id: dc7f4862-56af-4352-6e4e-08dbe7bfe619
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7OLtWCxpBMYWbp84Ku5E0NUmwCT3BPLGTjY03xid8GZuSiER6LaUu5fiOP4XDqL9CsxkDoa+Wt1jQZnYrT4odMLzZw1Ejj2CgOBQF0IvR7vLVEys2n/VWBakvd41JjMHwHQHm+LvUWDgvvYW1q0Uf6P1VsVhPd3tVl5BQequouYME9RpSwV5bQaV8wdW2Om7z8oKGRGp4hlSJgZg00hp/e1Qnw1AD+ZkN0XGvhLl+ObdmMu+iBe3CJTDuY4yr/VvMqBGNiXbOqj6sZOgUAfKqmulOPWhNcu/REtL921r94uDG27aU+1Y6Q0obt/US1ipFNZscNW3drg6c0bQqbUeziyPhHHsZ+8sVkjJKbbRV764FDmSAKD8AdwrRCGArCQhBRsvfSCXbeemBfD0+Y2LHo8F10NCkrg8WKyGXbAygzdGJKgBe2wnkZ0ZTnXpCIVWoasesZsnL+OMgRyZ4J/vFDuHoqOVm5ql0ZyZ/6KzpULSpVd5Va2F9izdeWfKsZfqXv6Uu67WlZShHmssj95/sVFIrRuemCd6xzmd5lKW3ExqzbL9Z1BEiNlawWl5kb+yFgGrXXN9/91/JrofgtzyF0m/Zdwnkn69ZLa8u5rwTh/d2Jpr5qWp9Ccz0UxUqbe4b02U9+wCAOZhBvnAcvZ5vQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(366004)(136003)(39860400002)(396003)(230922051799003)(64100799003)(186009)(451199024)(1800799009)(8936002)(31686004)(8676002)(4326008)(5660300002)(66556008)(66476007)(44832011)(66946007)(316002)(478600001)(6486002)(83380400001)(31696002)(86362001)(2906002)(26005)(6506007)(53546011)(2616005)(41300700001)(36756003)(6512007)(38100700002)(6666004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ai9tdENvZVFtV29Rd1ZtYm10RjYydzcveDZWVnE3QmJwZU9CdjNQdTN6U2Jv?=
+ =?utf-8?B?encyNmhxOHo4cVBrMWh4VGdWUG1OY0dCYjNhVmQwNWZtK0lWa1ZrUks5Wkxi?=
+ =?utf-8?B?VC9mRVhzSW5NeS9jS3Y4dEtDR2pMcXU4YVVxQ29aT0pmQi9xRWlnNytCNFpk?=
+ =?utf-8?B?VmY0ZEZHeHNrU3ZINGk4elkxVjBqZ3RvazR0bUhGbDZkMHVYNDNsZGpma3B1?=
+ =?utf-8?B?aEpzWXoxM3V4bGFKN0JWbGtuRkVKaXE1Qi9Zd0FkN0tiQVdheWJhS0V6Z2hG?=
+ =?utf-8?B?b09zM0NteGZOUytMTFVrRlBmdDFuZjB0K0FxQlhwWGFXbGJXVTBhUVgwRkhk?=
+ =?utf-8?B?UlBReW80MjY4eVdKcnBsRVhsU2NubHEzZ1ZETXlPRDJBOVdoN0FOdEFHNlpV?=
+ =?utf-8?B?aVppcUtqV2FTV29hSzJKYUdqaTMzdTdiOGFOVk5vcUcwa2JaTnJSY0dzUUdY?=
+ =?utf-8?B?OUNTOUhJcmg0bXdmWHhKQjlPYXBnWG5qRWdJb2ZmQU5zUTBzNTc5TW1hbk9G?=
+ =?utf-8?B?TFRjRmtVazFUVFNMUzBla0xBdkM3cWFYVmtFam5SbXN4L2JJZitFZHJSSHhN?=
+ =?utf-8?B?RDltdU5YakxLb0VOeHBDRExJaWQ4VzJtVEtiZGZWZEdWWlIxcW9ObjQvdFhw?=
+ =?utf-8?B?Z0I1SDFLK2NUN3BKem9LZEhGSG1IZW5pbHhGTHp6VzRaUStlTXh2S05CdFRR?=
+ =?utf-8?B?VHVPaWNKM1hBRk95N2VTR2pXZHZlNEVoOVo2SlFkYjA2UStFMmI2Y3FCb2Ux?=
+ =?utf-8?B?L0U4RUM4Q3A4NFlyUTZLS0Z2V3NkQ2FjSjI5aG02Q3dyQks3QWNZckZ5YVg1?=
+ =?utf-8?B?ZW5hMEpGTlFvb0VaL2Ryd3VMdWpwOGN1R01RdlNFNit5ZVpaU1d1OEJUR1Zt?=
+ =?utf-8?B?ZGRGMFdpVVB3bmRSbVNQbXMrMHg3Z1N1WUk4bk9uSFRLVXlyVnhzTXNkT0U1?=
+ =?utf-8?B?TWplNGVYUTNhU3FiSUJTcWhHbFBWcCs3Rldna0lzNnRuZzdHWi9vcUZlM0Zt?=
+ =?utf-8?B?MXp1cmJjbXE5NVhjUldxaERzSjA1VVNzbjJ1Q1pYTjVVWkxtb3Erd2VCcTU2?=
+ =?utf-8?B?R0xnRkNTTW1qZGNYZGw3WVRlS2V5bGpkT3F6aTR6TUFNVEFSSWE0NlFkQTds?=
+ =?utf-8?B?L0NGN1N4d3VsZUhsWEFENGxQZVhhejFwTlI3ZFFGdzFBdTVTRmlLWjltOW5S?=
+ =?utf-8?B?aFRZSWE4MnFNNmtqb3gxZUR0ZSszMmRCN0hvQWN5SnBkdy9QSHMwa2xEd0o4?=
+ =?utf-8?B?VG1JZUR4dHRBdWUzU1QwTXNLcnEzR0lxYmZ4WDR0c1dwdkhiNGhjVTVTaEhS?=
+ =?utf-8?B?UTF3NlYzeFFUMW03RnNIUHVENVhmVmpSWGRKNkVYa3pVM244eFJPaHJlb1hz?=
+ =?utf-8?B?OERPTWFNUmVqaEI4TCtjd1haU2YzRGY2QVFId1JCRkcvcGNOWElRa3FPSENK?=
+ =?utf-8?B?cHhqTFdrWUo0NVZwVUxxL3lnOGgvSW1uclRFeHhSVy9RV2FRUnNNeVNSZXZq?=
+ =?utf-8?B?QWlhSUdyWWFRVkNCWDBib0wrbTFKTThDUGx2d2VvMDlLd1ZURmhtT2VVMzZM?=
+ =?utf-8?B?dDI4R1JnTTRCNWtERzJLbmJwdzJVWTZBWjlRSWVhQ0RuUTZOcW9iNnJ6dlFC?=
+ =?utf-8?B?UVNCU0F5bzFFaUtZN204M3NwUE9ndFlySDRqdGN4MnNhZXBHM0MrSlBHdjRU?=
+ =?utf-8?B?bmVWY3ZucDVNcGVLMVdhckNHSjZnZUlUeVZrTXF2emtMUWh6OXM0QzJQYzN6?=
+ =?utf-8?B?QzBPd3FlZE5KQWVVSWx2NXNUUHZCNXJ6TVJhSkRZNmlkenp0eGVBY2N0Slgz?=
+ =?utf-8?B?SVpHUis0NU1PclpxUTluQUJiT2pqWFBKTTVNa1R0YjZIY2FBSm5YRW5YY3dM?=
+ =?utf-8?B?RTUrQmF2OUJRZnlkM0lTUVdRVk9KOXBXWFhJUURxOVBkSjcrOUVhTU1paGlL?=
+ =?utf-8?B?NjJIL1JEcStFbitJZ1dYcHRIOTBubzRtWFRtclQzTDFkVis2dnlic0kxZDVX?=
+ =?utf-8?B?UVVXeEN1cEJ3L0wyRFd1WHI4SURmVnZwWG5yK3dJVURkbmxWUVNCSDZTaDI1?=
+ =?utf-8?B?dHZoSi9CYUFyK0x1R3hnVTFPMk1TaTlnTjNKQTZETE92eWg3bm1IU25zUlhW?=
+ =?utf-8?Q?HcEzjzAkT2JIbyl6DCehXfkKv?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc7f4862-56af-4352-6e4e-08dbe7bfe619
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2023 22:52:38.9926
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XmGTPcy/P4P+3H/YoYc0XSCSnxQbWk8yVJUJjZQYAdiBkrYKIUBYv5r9jce4lrLs3j6JJCHqcGfSScKA6ishow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5189
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 14.11.23 um 15:12 schrieb Pali Roh=C3=A1r:
+On 11/17/2023 02:07, Shyam Sundar S K wrote:
+> Add amd_pmf prefix to source_as_str() function, so that the function name
+> does not look generic. As this is a helper function make it as non-static
+> so that it can be reused across multiple PMF features.
+> 
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 
-> On Monday 06 November 2023 07:43:49 Armin Wolf wrote:
->> Some Dell machines like the Dell Optiplex 7000 do not support
->> the legacy SMM interface, but instead expect all SMM calls
->> to be issued over a special WMI interface.
->> Add support for this interface so users can control the fans
->> on those machines.
->>
->> Tested-by: <serverror@serverror.com>
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->> ---
->>   drivers/hwmon/Kconfig          |   1 +
->>   drivers/hwmon/dell-smm-hwmon.c | 198 +++++++++++++++++++++++++++++---=
--
->>   drivers/platform/x86/wmi.c     |   1 +
->>   3 files changed, 181 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
->> index cf27523eed5a..76cb05db1dcf 100644
->> --- a/drivers/hwmon/Kconfig
->> +++ b/drivers/hwmon/Kconfig
->> @@ -512,6 +512,7 @@ config SENSORS_DS1621
->>
->>   config SENSORS_DELL_SMM
->>   	tristate "Dell laptop SMM BIOS hwmon driver"
->> +	depends on ACPI_WMI
->>   	depends on X86
->>   	imply THERMAL
->>   	help
->> diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hw=
-mon.c
->> index 2547b09929e6..d1bcfd447bb0 100644
->> --- a/drivers/hwmon/dell-smm-hwmon.c
->> +++ b/drivers/hwmon/dell-smm-hwmon.c
->> @@ -12,6 +12,7 @@
->>
->>   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->>
->> +#include <linux/acpi.h>
->>   #include <linux/capability.h>
->>   #include <linux/cpu.h>
->>   #include <linux/ctype.h>
->> @@ -34,8 +35,10 @@
->>   #include <linux/thermal.h>
->>   #include <linux/types.h>
->>   #include <linux/uaccess.h>
->> +#include <linux/wmi.h>
->>
->>   #include <linux/i8k.h>
->> +#include <asm/unaligned.h>
->>
->>   #define I8K_SMM_FN_STATUS	0x0025
->>   #define I8K_SMM_POWER_STATUS	0x0069
->> @@ -66,6 +69,9 @@
->>   #define I8K_POWER_AC		0x05
->>   #define I8K_POWER_BATTERY	0x01
->>
->> +#define DELL_SMM_WMI_GUID	"F1DDEE52-063C-4784-A11E-8A06684B9B01"
->> +#define DELL_SMM_LEGACY_EXECUTE	0x1
->> +
->>   #define DELL_SMM_NO_TEMP	10
->>   #define DELL_SMM_NO_FANS	3
->>
->> @@ -219,6 +225,102 @@ static const struct dell_smm_ops i8k_smm_ops =3D =
-{
->>   	.smm_call =3D i8k_smm_call,
->>   };
->>
->> +/*
->> + * Call the System Management Mode BIOS over WMI.
->> + */
->> +static int wmi_parse_register(u8 *buffer, u32 length, int *reg)
->> +{
->> +	__le32 value;
->> +	u32 reg_size;
->> +
->> +	if (length <=3D sizeof(reg_size))
->> +		return -ENODATA;
->> +
->> +	reg_size =3D get_unaligned_le32(buffer);
->> +	if (!reg_size || reg_size > sizeof(value))
->> +		return -ENOMSG;
->> +
->> +	if (length < sizeof(reg_size) + reg_size)
->> +		return -ENODATA;
->> +
->> +	memcpy_and_pad(&value, sizeof(value), buffer + sizeof(reg_size), reg_=
-size, 0);
-> Hello! In one of the patches in this patch series you changed type of
-> register from unsigned 32 bit integer to signed 32 bit integers. I'm not
-> sure if this change is really intended and what is the real reason for
-> it (because there is no explanation for it in the commit message). But
-> this memcpy_and_pad would not work correctly for signed negative values
-> because it is the highest bit which indicates negative number.
->
-> In my opinion, numbers and registers are unsigned. But if you have
-> figure out that they has to be treated as signed with possible negative
-> values then this fact has to be somehow handled.
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 
-That change was by mistake, i will send an updated patch series once Hans
-has finished his review.
+> ---
+>   drivers/platform/x86/amd/pmf/pmf.h | 1 +
+>   drivers/platform/x86/amd/pmf/sps.c | 5 +++--
+>   2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index fb9ce2593236..216a9f795436 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -600,6 +600,7 @@ int apmf_get_static_slider_granular(struct amd_pmf_dev *pdev,
+>   				    struct apmf_static_slider_granular_output *output);
+>   bool is_pprof_balanced(struct amd_pmf_dev *pmf);
+>   int amd_pmf_power_slider_update_event(struct amd_pmf_dev *dev);
+> +const char *amd_pmf_source_as_str(unsigned int state);
+>   
+>   
+>   int apmf_update_fan_idx(struct amd_pmf_dev *pdev, bool manual, u32 idx);
+> diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
+> index a70e67749be3..33e23e25c8b1 100644
+> --- a/drivers/platform/x86/amd/pmf/sps.c
+> +++ b/drivers/platform/x86/amd/pmf/sps.c
+> @@ -27,7 +27,7 @@ static const char *slider_as_str(unsigned int state)
+>   	}
+>   }
+>   
+> -static const char *source_as_str(unsigned int state)
+> +const char *amd_pmf_source_as_str(unsigned int state)
+>   {
+>   	switch (state) {
+>   	case POWER_SOURCE_AC:
+> @@ -47,7 +47,8 @@ static void amd_pmf_dump_sps_defaults(struct amd_pmf_static_slider_granular *dat
+>   
+>   	for (i = 0; i < POWER_SOURCE_MAX; i++) {
+>   		for (j = 0; j < POWER_MODE_MAX; j++) {
+> -			pr_debug("--- Source:%s Mode:%s ---\n", source_as_str(i), slider_as_str(j));
+> +			pr_debug("--- Source:%s Mode:%s ---\n", amd_pmf_source_as_str(i),
+> +				 slider_as_str(j));
+>   			pr_debug("SPL: %u mW\n", data->prop[i][j].spl);
+>   			pr_debug("SPPT: %u mW\n", data->prop[i][j].sppt);
+>   			pr_debug("SPPT_ApuOnly: %u mW\n", data->prop[i][j].sppt_apu_only);
 
->> +	*reg =3D le32_to_cpu(value);
->> +
->> +	return (int)(reg_size + sizeof(reg_size));
->> +}
->> +
->> +static int wmi_parse_response(u8 *buffer, u32 length, struct smm_regs =
-*regs)
->> +{
->> +	int *registers[] =3D {
->> +		&regs->eax,
->> +		&regs->ebx,
->> +		&regs->ecx,
->> +		&regs->edx
->> +	};
->> +	u32 offset =3D 0;
->> +	int ret, i;
->> +
->> +	for (i =3D 0; i < ARRAY_SIZE(registers); i++) {
->> +		if (offset >=3D length)
->> +			return -ENODATA;
->> +
->> +		ret =3D wmi_parse_register(buffer + offset, length - offset, registe=
-rs[i]);
->> +		if (ret < 0)
->> +			return ret;
->> +
->> +		offset +=3D ret;
->> +	}
->> +
->> +	if (offset !=3D length)
->> +		return -ENOMSG;
->> +
->> +	return 0;
->> +}
->> +
->> +static int wmi_smm_call(struct device *dev, struct smm_regs *regs)
->> +{
->> +	struct wmi_device *wdev =3D container_of(dev, struct wmi_device, dev)=
-;
->> +	struct acpi_buffer out =3D { ACPI_ALLOCATE_BUFFER, NULL };
->> +	u32 wmi_payload[] =3D {
->> +		sizeof(regs->eax),
->> +		regs->eax,
->> +		sizeof(regs->ebx),
->> +		regs->ebx,
->> +		sizeof(regs->ecx),
->> +		regs->ecx,
->> +		sizeof(regs->edx),
->> +		regs->edx
->> +	};
->> +	const struct acpi_buffer in =3D {
->> +		.length =3D sizeof(wmi_payload),
->> +		.pointer =3D &wmi_payload,
->> +	};
->> +	union acpi_object *obj;
->> +	acpi_status status;
->> +	int ret;
->> +
->> +	status =3D wmidev_evaluate_method(wdev, 0x0, DELL_SMM_LEGACY_EXECUTE,=
- &in, &out);
->> +	if (ACPI_FAILURE(status))
->> +		return -EIO;
->> +
->> +	obj =3D out.pointer;
->> +	if (!obj)
->> +		return -ENODATA;
->> +
->> +	if (obj->type !=3D ACPI_TYPE_BUFFER) {
->> +		ret =3D -ENOMSG;
->> +
->> +		goto err_free;
->> +	}
->> +
->> +	ret =3D wmi_parse_response(obj->buffer.pointer, obj->buffer.length, r=
-egs);
->> +
->> +err_free:
->> +	kfree(obj);
->> +
->> +	return ret;
->> +}
->> +
-> ...
->> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
->> index a78ddd83cda0..0b3e63c21d26 100644
->> --- a/drivers/platform/x86/wmi.c
->> +++ b/drivers/platform/x86/wmi.c
->> @@ -106,6 +106,7 @@ MODULE_DEVICE_TABLE(acpi, wmi_device_ids);
->>   static const char * const allow_duplicates[] =3D {
->>   	"05901221-D566-11D1-B2F0-00A0C9062910",	/* wmi-bmof */
->>   	"8A42EA14-4F2A-FD45-6422-0087F7A7E608",	/* dell-wmi-ddv */
->> +	"F1DDEE52-063C-4784-A11E-8A06684B9B01", /* dell-smm-hwmon */
-> Here you used space instead of TAB after the comma.
-
-You are right, i will fix this in the updated patch series.
-
-Thanks,
-Armin Wolf
-
->>   	NULL
->>   };
->>
->> --
->> 2.39.2
->>
