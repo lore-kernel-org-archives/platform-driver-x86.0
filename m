@@ -2,134 +2,147 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06A6C54E76
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Nov 2023 08:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD74CC197A0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Nov 2023 10:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232025AbjKTID1 (ORCPT
+        id S232562AbjKTKNw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Nov 2023 03:03:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55154 "EHLO
+        Mon, 20 Nov 2023 05:13:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231961AbjKTID0 (ORCPT
+        with ESMTP id S232305AbjKTKNv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Nov 2023 03:03:26 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B60BC0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Nov 2023 00:03:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700467403; x=1732003403;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=0SqRL0VegtYZlKqTsjA1tKidVnwi0IJRMCUIZUqHCE0=;
-  b=mOfMuAU3+u4yJZydN5pjg3mqW4Hm/tksdbjRYkJolJ0nA6JH45J1dYON
-   YhoMJDKHQIIYx+NB+Ylxd6oWWFuui6sErg3oW76T2l2K/hPJPXUzBknt8
-   yM1N4nfIkrNqji5fC4lqPuyUCYlG2tYwuxBbmiuAtBNXXJ5YhgAtGxfd9
-   UN06iLlv3dSp5D3p9xZ5i8oZN68/XjV9tcGdwnbEkg73OD7YYXdbXp1D8
-   vD3zwbzpZ8w7c+oH59Aw+Z97wMtOGBEY7bGYKEX5gGvoU1goG4gjg+ZFj
-   5S7Ble6qUbjwOSQpEmFyk7YAULZ0Vab68A48cis8onCYjfMgH7iCmnVnY
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10899"; a="391356313"
-X-IronPort-AV: E=Sophos;i="6.04,213,1695711600"; 
-   d="scan'208";a="391356313"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2023 00:03:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10899"; a="889849243"
-X-IronPort-AV: E=Sophos;i="6.04,213,1695711600"; 
-   d="scan'208";a="889849243"
-Received: from akeren-mobl.ger.corp.intel.com ([10.252.40.26])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2023 00:03:19 -0800
-Date:   Mon, 20 Nov 2023 10:03:13 +0200 (EET)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
-        Sanket.Goswami@amd.com, mario.limonciello@amd.com,
-        platform-driver-x86@vger.kernel.org,
-        Mark Hasemeyer <markhas@chromium.org>
-Subject: Re: [PATCH v4] platform/x86/amd/pmc: adjust getting DRAM size
- behavior
-In-Reply-To: <1405ce97-f1c4-4c56-abff-385554f9efe9@amd.com>
-Message-ID: <d5b83819-8384-1acf-cd1c-1a52ba982939@linux.intel.com>
-References: <20231116170121.3372222-1-Shyam-sundar.S-k@amd.com> <282b53e9-8247-a4cc-307c-7d4f1a924683@linux.intel.com> <1405ce97-f1c4-4c56-abff-385554f9efe9@amd.com>
+        Mon, 20 Nov 2023 05:13:51 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA063A2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Nov 2023 02:13:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1700475225;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+8Cf8BKeV0pkEdGP4/x58exYBD4GzFePWhGzA/67l48=;
+        b=MeeHBYlSXLrdIu6C+rGaPlWYwl2mTOEbBUfVRwZl6KYOIt/wtrh/D2Q4Uj8zoyC8LDUH+w
+        U44hccvDNAnrzZBTKIu3ZkvX3E6XENpuXmAVqU6EpNjuKcbPiYbbfAr0gK3ebiFn3mpeTX
+        P6zEnoStxy+fBXmvt9/jyadv59qT0aE=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-511-XzwrUF_dNRqM04jdKIzaow-1; Mon, 20 Nov 2023 05:13:43 -0500
+X-MC-Unique: XzwrUF_dNRqM04jdKIzaow-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-542fe446d45so3254371a12.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Nov 2023 02:13:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700475223; x=1701080023;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+8Cf8BKeV0pkEdGP4/x58exYBD4GzFePWhGzA/67l48=;
+        b=blaQOQLll1SacWJSgKaqMmaziT1H6r3p0rQ3GK5wiK/fRuQVt1DYdzCrEnwWYpMm1e
+         3fVAw9drr0UJ7ycIG40Y8E1uHbWcfmEILG6Vwrqp7FDjoSm3Ei5WCuy4oegV35L2lEHm
+         2g3TAQz1pwINDgqsQGgkH9hUbc6oY8WHnJt2AfnQQz76FiHjy7GsCGF4upW4Q5o4LEr9
+         N9Npj4z6NnWpNlx4OOuIV4CYsS0CmSKqH4mQzgkyoq7yjmIVoR1g+PRGXRQfjj8ioBah
+         oVLceHUNkz1w27rB9LbrLj9VB6xnxGb5DLJh6io14pNXIpn92fpm0VwEntESrTH0TQIV
+         wBfw==
+X-Gm-Message-State: AOJu0Yyyze2GQgCw1zFTgHs8hkGE6+Ar9sHzQ/HybXgDYD4MGRE6ZSEt
+        Kkw0ypci75Zzfb9bRXhIYxxUrosnu1mUCs6OCk2mXMsPvzNjE8r90mx1vntvLUXuzsbfDUxQnIY
+        GReKI/XFiamUFu4U4kmlannGuPR9VDk/TyA==
+X-Received: by 2002:a17:906:5199:b0:9fb:4b:343e with SMTP id y25-20020a170906519900b009fb004b343emr4151857ejk.11.1700475222891;
+        Mon, 20 Nov 2023 02:13:42 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGSBH+yx2NmpNYiWxm4OlzWiAMg4nzp9ipXurOvFoirK1V/ViSG8EiKO8IMspR4zBvdndBBZA==
+X-Received: by 2002:a17:906:5199:b0:9fb:4b:343e with SMTP id y25-20020a170906519900b009fb004b343emr4151837ejk.11.1700475222556;
+        Mon, 20 Nov 2023 02:13:42 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id s2-20020a1709066c8200b009e656ce2930sm3712141ejr.60.2023.11.20.02.13.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Nov 2023 02:13:41 -0800 (PST)
+Message-ID: <32a73a9d-812c-47b5-9de7-95c77ce028b5@redhat.com>
+Date:   Mon, 20 Nov 2023 11:13:41 +0100
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-592770997-1700466800=:2032"
-Content-ID: <ba61c1f1-4f28-fa24-e032-3e63b6583383@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] Add support for drivers to decide bridge D3 policy
+Content-Language: en-US, nl
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+References: <20231025020546.504-1-mario.limonciello@amd.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20231025020546.504-1-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323329-592770997-1700466800=:2032
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <744dd62f-e5ff-6843-febc-f991e3c7db9d@linux.intel.com>
-
-On Mon, 20 Nov 2023, Shyam Sundar S K wrote:
-> On 11/17/2023 3:41 PM, Ilpo Järvinen wrote:
-> > On Thu, 16 Nov 2023, Shyam Sundar S K wrote:
-> > 
-> >> amd_pmc_get_dram_size() is used to get the DRAM size information. But in
-> >> the current code, mailbox command to get the DRAM size info is sent based
-> >> on the values of dev->major and dev->minor.
-> >>
-> >> But dev->major and dev->minor will have either junk or zero assigned to
-> >> them until at least once a call to amd_pmc_get_smu_version() is made which
-> >> ideally populates dev->major and dev->minor.
-> >>
-> >> Ideally to suffice this, adding a amd_pmc_get_smu_version() call to
-> >> amd_pmc_get_dram_size() would solve, but that has a downside of elevating
-> >> the boot times.
-> >>
-> >> After talking to the PMFW team, its understood that the "get dram size"
-> >> mbox command would only be supported on specific platforms (like Mendocino)
-> >> and not all. So, adjust getting DRAM size behavior such that,
-> >>
-> >> - if that's Rembrandt or Mendocino and the underlying PMFW knows how
-> >> to execute the "get dram size" command it shall give the custom dram size.
-> >>
-> >> - if the underlying FW does not report the dram size, we just proceed
-> >> further and assign the default dram size.
-> >>
-> >> Simplest way to address this is to remove amd_pmc_get_dram_size() function
-> >> and directly call the "get dram size" command in the amd_pmc_s2d_init().
-> >>
-> >> Reported-by: Mark Hasemeyer <markhas@chromium.org>
-> >> Closes: https://lore.kernel.org/platform-driver-x86/3b224c62-a1d8-41bd-aced-5825f5f20e66@amd.com/
-> >> Fixes: be8325fb3d8c ("platform/x86/amd: pmc: Get STB DRAM size from PMFW")
-> >> Suggested-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> >> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> >> ---
-> >> v4:
-> >> - Based on review-ilpo branch (tip commit: 94ace9eda882)
-> >> - Add Mark as "Reported-by:"
-> >> - Add more commit log notes.
-> > 
-> > Thank, applied now to review-ilpo branch. I had to reflow your commit 
-> > message because the lines were too long (try to remain within 72 
-> > characters in the future). I also made other minor adjustments to the 
-> > commit message.
+On 10/25/23 04:05, Mario Limonciello wrote:
+> The policy for whether PCI bridges are allowed to select D3 is dictated
+> by empirical results that are enumerated into pci_bridge_d3_possible().
 > 
-> Thank you for the rewords :-)
+> In Windows this behaves differently in that Windows internal policy is
+> not used for devices when a power engine plugin driver provided by the
+> SOC vendor is installed.  This driver is used to decide the policy in
+> those cases.
 > 
-> on the commit message part, you prefer 72 or 75 characters?
-> Because I did use, checkpatch with "--strict" and did not find it
-> complaining.
+> This series implements a system that lets drivers register such a policy
+> control as well. It isn't activated for any SOCs by default.
+
+I must admit that I've lost track of the status of this series...
+
+With that said patch 4/4 looks good to me and I believe that
+if this series gets accepted it will be best to send 4/4
+upstream together with the rest through some other tree
+then the the pdx86 tree.
+
+So here is my ack for sending a future version of patch 4/4
+("platform/x86/amd: pmc: Add support for using constraints
+to decide D3 policy") upstream through another subsystem tree:
+
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
+
+
+
+> This is heavily leveraged from the work in [1]
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/checkpatch.pl?h=v6.7-rc2#n3275
+> [1] https://lore.kernel.org/platform-driver-x86/20230906184354.45846-1-mario.limonciello@amd.com/
+> 
+> RFC v1->PATCH v1
+>  * Simplify the logic, use pci_d3cold_enable()/pci_d3cold_disable() functions
+>  * Roll https://lore.kernel.org/linux-pci/20231004144731.158342-1-mario.limonciello@amd.com/ into series
+>  * Updates for some typos
+>  * Re-order series.  Patches 1 and 2 can potentially apply to PCI tree, 3 and 4 to platform-x86 tree.
+> 
+> Mario Limonciello (4):
+>   PCI: Make d3cold_allowed sysfs attribute read only
+>   PCI: Refresh root ports in pci_bridge_d3_update()
+>   ACPI: x86: s2idle: Export symbol for fetching constraints for module
+>     use
+>   platform/x86/amd: pmc: Add support for using constraints to decide D3
+>     policy
+> 
+>  Documentation/ABI/testing/sysfs-bus-pci |  4 +-
+>  drivers/acpi/x86/s2idle.c               |  1 +
+>  drivers/pci/pci-acpi.c                  |  2 +-
+>  drivers/pci/pci-sysfs.c                 | 14 +-----
+>  drivers/pci/pci.c                       | 12 ++++--
+>  drivers/platform/x86/amd/pmc/pmc.c      | 57 +++++++++++++++++++++++++
+>  include/linux/pci.h                     |  1 -
+>  7 files changed, 72 insertions(+), 19 deletions(-)
+> 
 
-I'd have said 72 characters but since you now pointed out checkpatch seems 
-to have only a slightly higher limit we can go along with that 75 
-characters. I think that 72 char limit is derived from 80-2*4 (4 char wide 
-margins on both sides on 80 char wide terminal). Be aware though some 
-other maintainers do require 72 chars.
-
-And obviously for URLs (or other stuff) that should be kept on a single 
-line, you have the license to break that limit even if checkpatch would 
-complain but I guess you knew that :-).
-
--- 
- i.
---8323329-592770997-1700466800=:2032--
