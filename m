@@ -2,44 +2,44 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35ED2C5AD4C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Nov 2023 15:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C4BC2BB3F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Nov 2023 15:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232186AbjKTPm7 (ORCPT
+        id S233712AbjKTPnB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Nov 2023 10:42:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33942 "EHLO
+        Mon, 20 Nov 2023 10:43:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234174AbjKTPm6 (ORCPT
+        with ESMTP id S233944AbjKTPnB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Nov 2023 10:42:58 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B35F7A7
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Nov 2023 07:42:54 -0800 (PST)
+        Mon, 20 Nov 2023 10:43:01 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1AFFA0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Nov 2023 07:42:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1700494974;
+        s=mimecast20190719; t=1700494976;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Jsgm5ps5x7tKOZ1oQcj5XpQmYvGY7oMZgxKw75gYUeY=;
-        b=FaHXbwku5Qnjtc7bqJ1HfhTuRmANs/kVpsRb5uA0V0tggkncQxcMpTCVj+b7T3harknT1I
-        UjZdsQieMXZ79Sd0dwbmayjk+oaLPj95OW024d8L9UYa+sTp/rMznIMx2tE8X0YF9nkOrv
-        wENefz1ULwauJe0vLOF4NL4znQYEjuU=
+        bh=I2oVjMGny6N0gcThe2HmIhPxJ2rXJ/79sQYzpj9m2lU=;
+        b=B+ATsT/LGGSU14nXMDIBgH8yiDpUQIWzl23jmpN3P3IOiJZUMZQAKYXuZ1lSutQ6c1jxFI
+        iFW2LsmIhgF/MGb0Qu4Ko45LMX6437FCN0De4AXvGxsXuOIkhnrs9ZHI54DIRTjFYuYM14
+        71RQt5BgaFVqsERYzClC2eBSG9zESVY=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-357-JAmfRkPuOEGCLEAgaLmkPQ-1; Mon, 20 Nov 2023 10:42:47 -0500
-X-MC-Unique: JAmfRkPuOEGCLEAgaLmkPQ-1
+ us-mta-662-yKaCvjLWM-SZJa2bjFDAMw-1; Mon, 20 Nov 2023 10:42:50 -0500
+X-MC-Unique: yKaCvjLWM-SZJa2bjFDAMw-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0AEB1811E7E;
-        Mon, 20 Nov 2023 15:42:47 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1A395811E86;
+        Mon, 20 Nov 2023 15:42:50 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.193.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D3D210F44;
-        Mon, 20 Nov 2023 15:42:45 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 098A810F44;
+        Mon, 20 Nov 2023 15:42:48 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
@@ -48,11 +48,10 @@ To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Kai Heng Feng <kai.heng.feng@canonical.com>,
         acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        Oleksij Rempel <linux@rempel-privat.de>
-Subject: [PATCH 1/3] platform/x86: asus-wmi: Move i8042 filter install to shared asus-wmi code
-Date:   Mon, 20 Nov 2023 16:42:33 +0100
-Message-ID: <20231120154235.610808-2-hdegoede@redhat.com>
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 3/3] platform/x86: asus-wmi: Filter Volume key presses if also reported via atkbd
+Date:   Mon, 20 Nov 2023 16:42:35 +0100
+Message-ID: <20231120154235.610808-4-hdegoede@redhat.com>
 In-Reply-To: <20231120154235.610808-1-hdegoede@redhat.com>
 References: <20231120154235.610808-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -62,97 +61,72 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-asus-nb-wmi calls i8042_install_filter() in some cases, but it never
-calls i8042_remove_filter(). This means that a dangling pointer to
-the filter function is left after rmmod leading to crashes.
+Use the i8042-filter to check if Volume key presses are also reported
+via atkbd and if yes then filter out the WMI events to avoid reporting
+each key-press twice.
 
-Fix this by moving the i8042-filter installation to the shared
-asus-wmi code and also remove it from the shared code on driver unbind.
+Note depending on in which order the PS/2 data vs the WMI event are
+handled the first volume key press may still be reported twice. This is
+a compromise versus DMI quirks (unmaintainable) or other more complex
+solutions.
 
-Fixes: b5643539b825 ("platform/x86: asus-wmi: Filter buggy scan codes on ASUS Q500A")
-Cc: Oleksij Rempel <linux@rempel-privat.de>
+Closes: https://bbs.archlinux.org/viewtopic.php?pid=2128536#p2128536
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/Kconfig       |  2 +-
- drivers/platform/x86/asus-nb-wmi.c | 11 -----------
- drivers/platform/x86/asus-wmi.c    |  8 ++++++++
- 3 files changed, 9 insertions(+), 12 deletions(-)
+ drivers/platform/x86/asus-nb-wmi.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 7e69fdaccdd5..c94f31a5c6a3 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -263,6 +263,7 @@ config ASUS_WMI
- 	depends on RFKILL || RFKILL = n
- 	depends on HOTPLUG_PCI
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
-+	depends on SERIO_I8042 || SERIO_I8042 = n
- 	select INPUT_SPARSEKMAP
- 	select LEDS_CLASS
- 	select NEW_LEDS
-@@ -279,7 +280,6 @@ config ASUS_WMI
- config ASUS_NB_WMI
- 	tristate "Asus Notebook WMI Driver"
- 	depends on ASUS_WMI
--	depends on SERIO_I8042 || SERIO_I8042 = n
- 	help
- 	  This is a driver for newer Asus notebooks. It adds extra features
- 	  like wireless radio and bluetooth control, leds, hotkeys, backlight...
 diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 9aa1226e74e6..ff794387581d 100644
+index 16241556f6fb..fceffe2082ec 100644
 --- a/drivers/platform/x86/asus-nb-wmi.c
 +++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -503,8 +503,6 @@ static const struct dmi_system_id asus_quirks[] = {
+@@ -48,9 +48,11 @@ module_param(tablet_mode_sw, uint, 0444);
+ MODULE_PARM_DESC(tablet_mode_sw, "Tablet mode detect: -1:auto 0:disable 1:kbd-dock 2:lid-flip 3:lid-flip-rog");
  
- static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
+ static struct quirk_entry *quirks;
++static bool atkbd_reports_vol_keys;
+ 
+ static bool asus_i8042_filter(unsigned char data, unsigned char str, struct serio *port)
  {
--	int ret;
--
- 	quirks = &quirk_asus_unknown;
- 	dmi_check_system(asus_quirks);
++	static bool extended_e0;
+ 	static bool extended_e1;
  
-@@ -519,15 +517,6 @@ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
- 
- 	if (tablet_mode_sw != -1)
- 		quirks->tablet_switch_mode = tablet_mode_sw;
--
--	if (quirks->i8042_filter) {
--		ret = i8042_install_filter(quirks->i8042_filter);
--		if (ret) {
--			pr_warn("Unable to install key filter\n");
--			return;
--		}
--		pr_info("Using i8042 filter function for receiving events\n");
--	}
- }
- 
- static const struct key_entry asus_nb_wmi_keymap[] = {
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 6a79f16233ab..53e25cb467d7 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -4567,6 +4567,12 @@ static int asus_wmi_add(struct platform_device *pdev)
- 		goto fail_wmi_handler;
+ 	if (str & I8042_STR_AUXDATA)
+@@ -68,6 +70,20 @@ static bool asus_i8042_filter(unsigned char data, unsigned char str, struct seri
+ 		}
  	}
  
-+	if (asus->driver->quirks->i8042_filter) {
-+		err = i8042_install_filter(asus->driver->quirks->i8042_filter);
-+		if (err)
-+			pr_warn("Unable to install key filter - %d\n", err);
++	if (data == 0xe0) {
++		extended_e0 = true;
++	} else if (extended_e0) {
++		extended_e0 = false;
++
++		switch (data & 0x7f) {
++		case 0x20: /* e0 20 / e0 a0, Volume Mute press / release */
++		case 0x2e: /* e0 2e / e0 ae, Volume Down press / release */
++		case 0x30: /* e0 30 / e0 b0, Volume Up press / release */
++			atkbd_reports_vol_keys = true;
++			break;
++		}
 +	}
 +
- 	asus_wmi_battery_init(asus);
+ 	return false;
+ }
  
- 	asus_wmi_debugfs_init(asus);
-@@ -4603,6 +4609,8 @@ static int asus_wmi_remove(struct platform_device *device)
- 	struct asus_wmi *asus;
+@@ -608,6 +624,13 @@ static void asus_nb_wmi_key_filter(struct asus_wmi_driver *asus_wmi, int *code,
+ 		if (acpi_video_handles_brightness_key_presses())
+ 			*code = ASUS_WMI_KEY_IGNORE;
  
- 	asus = platform_get_drvdata(device);
-+	if (asus->driver->quirks->i8042_filter)
-+		i8042_remove_filter(asus->driver->quirks->i8042_filter);
- 	wmi_remove_notify_handler(asus->driver->event_guid);
- 	asus_wmi_backlight_exit(asus);
- 	asus_screenpad_exit(asus);
++		break;
++	case 0x30: /* Volume Up */
++	case 0x31: /* Volume Down */
++	case 0x32: /* Volume Mute */
++		if (atkbd_reports_vol_keys)
++			*code = ASUS_WMI_KEY_IGNORE;
++
+ 		break;
+ 	}
+ }
 -- 
 2.41.0
 
