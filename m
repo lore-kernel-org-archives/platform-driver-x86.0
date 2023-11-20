@@ -2,170 +2,244 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335B4C54FB9
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Nov 2023 20:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06063C2BB3F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Nov 2023 21:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230203AbjKTULd (ORCPT
+        id S230170AbjKTVaP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Nov 2023 15:11:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38310 "EHLO
+        Mon, 20 Nov 2023 16:30:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230007AbjKTULb (ORCPT
+        with ESMTP id S229529AbjKTVaP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Nov 2023 15:11:31 -0500
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2078.outbound.protection.outlook.com [40.107.212.78])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 562EECD;
-        Mon, 20 Nov 2023 12:11:27 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U2qFeR7Jsewb9eS5asjNPgL+mXwn357/XZhQt6cfHW48uYvWkeRf95o/rEE/OghJwBxJbvYgBYFXedptBVyIRWXC3lGCz2aQ0DWDfh87n9QD6yMDzXIguoEh2Ew8B9abfszv3jlzY367iffYV3FcMy793SC8Cw4iGDHHKDhLU6p0xATBHm3lO/lUf76L8PyTv4oXptq7DqN7oKhZBI7DWMTNiKj389QOXn0zn/Wgi52a14WhDOtR+iWjAqIFFvUkFCP9yWDTujsdgD2QOiHM4Cu6OT4K0D/n7DAJq1cSGEXN1mVAbTtMjXhcML1ycKy1UDkjZHadwPC7b3yWe8vXJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dRyA/YMhwTzstrIDwn29fVagzssMEOha8d9vf84Qjps=;
- b=gIbbgO2+sjf/cnle9k7xpn/x98EkMhEwYpglOByQLhubG4PxEzh2mqETYciuOjlW5Kp+tu6on2OUJnLoERjL2ZdfgwEiSWKCwSEOMR9u5iNVg3DYfqRCtIUFGbk3Y378TEBc87c0jzSQJrNd2KsaUGU9/QH9lIxmo6HChOXey/vCFnXKfiHxAAikzKYmUXE7paEh01z4+hhOJeJNJdRUncFyeTxD/OtSfFEy2aL9/mvspGrhFujHgyXKr6pVIMyc3sMD2YP/TDlbV5H8QVhTSSe7ijE8gTgfaQaxFWR+i2CQpLzSMKyfCruTaqMXc6b22V2D8ALB6NtfBfDzzuaZnQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dRyA/YMhwTzstrIDwn29fVagzssMEOha8d9vf84Qjps=;
- b=IbQ0WDq9GRjlwUrEqGHqdxi2dmlmNvpOdiJ7vUaMU38p5tO4YjZFnb2JHLCxh+yXgUzsoNe158Z3ktJ9cDbZiOs4RDKOMzjedsqEvJZv6CL6d30/nX/Zp8TNw6ALXzaC7ErBiqacqVOshxmtnn3i8EYbZCKv2M+br7IpIXo0aAxS2+WM3nbPfQ0gRDAiiMFLleCTfG+QdO9ATLROmHJHitmMnjmsR3Fvhibx5BFdHZ3qFg8nJtFfP/0mY96Cl/+JNn1XWx9I+frlgDZsU8Oshtb0yc0TKVNgzuMqS0tX6hlDNY1/QDVp0SJ8plKgJPs+hkk/a7gOPPUfyY2mt1GXBQ==
-Received: from CY5P221CA0062.NAMP221.PROD.OUTLOOK.COM (2603:10b6:930:4::34) by
- SJ2PR12MB7896.namprd12.prod.outlook.com (2603:10b6:a03:4c6::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7002.26; Mon, 20 Nov 2023 20:11:24 +0000
-Received: from CY4PEPF0000E9D1.namprd03.prod.outlook.com
- (2603:10b6:930:4:cafe::dd) by CY5P221CA0062.outlook.office365.com
- (2603:10b6:930:4::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.26 via Frontend
- Transport; Mon, 20 Nov 2023 20:11:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CY4PEPF0000E9D1.mail.protection.outlook.com (10.167.241.144) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7025.12 via Frontend Transport; Mon, 20 Nov 2023 20:11:24 +0000
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 20 Nov
- 2023 12:11:12 -0800
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail202.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 20 Nov
- 2023 12:11:12 -0800
-Received: from vdi.nvidia.com (10.127.8.9) by mail.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server id 15.2.986.41 via Frontend Transport; Mon, 20 Nov
- 2023 12:11:11 -0800
-From:   David Thompson <davthompson@nvidia.com>
-To:     <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
-        <markgross@kernel.org>, <vadimp@nvidia.com>,
-        <platform-driver-x86@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <kblaiech@nvidia.com>,
-        David Thompson <davthompson@nvidia.com>
-Subject: [PATCH v1] mlxbf-bootctl: check the secure boot development mode status bit
-Date:   Mon, 20 Nov 2023 15:11:09 -0500
-Message-ID: <20231120201109.3435-1-davthompson@nvidia.com>
-X-Mailer: git-send-email 2.30.1
+        Mon, 20 Nov 2023 16:30:15 -0500
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E9ECD;
+        Mon, 20 Nov 2023 13:30:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1700515792; x=1701120592; i=w_armin@gmx.de;
+        bh=MBFtfZvwqMvy+UFHwM+JQ/gvlSJjJXWpeGnzAD21e2I=;
+        h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+         In-Reply-To;
+        b=rFEGZiN+4Cjlje5zYwAlJCyHudK/cfPBfuTJy8a+k6nY2rEfkQztf0EFazZwAZFP
+         h7cDOW7rtmKWYuj+ntvKCoT+WlB5+PjZN2XxSfnfIjG2FT8bxcnXKkhr+3REdFLKP
+         C9WUeU8LrJpOv4+8pRdKeCLOOaGUQ5A3y6ZdK8co3KRZ+C8qGKg2YmjS6dlv2f8SL
+         d7nMaYIyXDarIRkG/sTG+g7CyxfH4fuz/TgQ+grG+q+bIywlU6QkVyWNaJgII4L8Q
+         Vkw6Ldgjbb6cCMMIvRHeanslMxY2NdX65xLrVd/RIEldwhZom1wlSR+ZpRtUuiOhD
+         acMsXgqMktdQHyUDSQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MBDj4-1rCMJy0Dvi-00CfGz; Mon, 20
+ Nov 2023 22:29:52 +0100
+Message-ID: <4512f55b-8dce-40b0-a207-7c3463ca4e01@gmx.de>
+Date:   Mon, 20 Nov 2023 22:29:50 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D1:EE_|SJ2PR12MB7896:EE_
-X-MS-Office365-Filtering-Correlation-Id: 26012adb-537d-4a29-9f6f-08dbea04dece
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oes7epbeD9pEzzBDQX0SaOkR3iiWWxajQhJA07AojJa1aLKMi2Zc2S/oHF5YGua+xJCRMI9C0cnDa3HZw32P8brz4qxrz/xJM1lXpvo5mZkJ2dD0kDa78/yRIfdltdN7qJhgRq5FjKQTn4RiMdkrdWGcwzPH4meyUQoQXjdQRjQQt54W51aCFtP7zUl12FXMEx2u2zeOD55HOxEwMWhsWKlKUQ3j/1oudxjfadDIFOakzyxY4T9EpkrxO0rakZdG5jhGKMe4v+IW83DungPNisI7ygARX4GJr4eBpOEKtt/okSEeSuHeG7XEO6pyZtPKpaA89Nz9EwYols8FXKGr/AOqIHcnbUqy64bzkoycmyaXGNcEhbj0yPM06aQXZNZpZQ5ggrxmEfyQ4514DTh/x5qZ98y/k6MfGT2DqFDuZGBAxOcdowUdbLM2s2xw0kosAaimtr+8+A1FSrJ7YiyslpyFLUSxu7yjVHuO86Kp5wNWwRWxe6Dp+J8YHQg42AmwNYq2krJh7r7SynD2b+b0ZE5zncmWDDNuPhRe2304YJex2Xfoo1UNfHOrNYXkxgDGdK+KCte8BIJNo9JNw9bAyQ55y998ndpOYm+j7ZWfGhPz0U0NiDuKKpOHfbUAqLy4w6bWNDbQhUnI8PwTT8SWBcsGxilC8zOUYaTl2i4OTdLHeM9b8PiR++7r31ZeDHDq4uoY/xqzPpbBvaS0ahePUm3q8e+30fML+Qp4SmIJ9//6ryfR07yZowHLGAj4jaFL
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(346002)(376002)(39860400002)(396003)(136003)(230922051799003)(451199024)(186009)(64100799003)(82310400011)(1800799012)(36840700001)(46966006)(40470700004)(82740400003)(83380400001)(426003)(336012)(36756003)(86362001)(40460700003)(36860700001)(47076005)(7636003)(356005)(70206006)(41300700001)(70586007)(110136005)(54906003)(8676002)(316002)(8936002)(4326008)(5660300002)(2906002)(1076003)(40480700001)(7696005)(2616005)(107886003)(26005)(478600001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2023 20:11:24.0346
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26012adb-537d-4a29-9f6f-08dbea04dece
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000E9D1.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7896
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] platform/x86: wmi: Add wmidev_block_set()
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>, jithu.joseph@intel.com,
+        markgross@kernel.org, ilpo.jarvinen@linux.intel.com
+Cc:     Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20231103182526.3524-1-W_Armin@gmx.de>
+ <4eb8e035-26f1-44e6-ae32-61d843c61f13@redhat.com>
+From:   Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <4eb8e035-26f1-44e6-ae32-61d843c61f13@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:ZX+IkWGdT7MGRB6uOQq3mabLrYDspwDXef3MskS3BFYnoih0L5R
+ wU4PmmVrFHwJXwDf1Rr0lY0mT3zQmetFRe/5JArNi/aTiTo7/95Dh9rcQQ/0OFdggthnBoT
+ +6dlEzCF1iI7HBy76F/4foaV1eAjaVG8LXyeAbhUSBNqLkLNzLICrW/HihM95n0O74s4N8f
+ WOEx912uJMxtQtB63/pwQ==
+UI-OutboundReport: notjunk:1;M01:P0:zYzwr6bAKuE=;ZMY5Zx+InrqPDrT8LoFtEiuz9e0
+ YXlc0FxHeuFjebm1bv+eRR7Ioa40hL7W5UVLPkWQ4WjhQQKoo0XCYZRFjffxVgsrlg447MidV
+ o9mgr6fl7q5TAQHpY/nYowut+AQ+2RTXaMEf/f4cp+gBWV3fIboLl3fArEjEcP3J4vzS8x2yj
+ TdMqATjXD9JPulcEM+5W7gXYqqFCrGXc9/iYHGN8zAPp4gMnOeQN1nM+rbBd3MwUqC0ejPeMI
+ LuUo3IOCG8A6T6SSPhazJZe4oxp8290SNtRYwPFTy0bcp6Jey6gnEnYHPAMyv9SHLNkERfYMx
+ FIlUqTdjAPbCm6B9kDAoBaD+6JW5uVmEDsO/UlSBEjB5P1bH5bJalKP6bbF2GhCjP5vHuKngA
+ X+40M49z/cMwH32G6lzfxr0F1nOhl9qaVT9//oHB2yZNKpm3Odnccdi7MPl3zgtd+8NHzndDG
+ 6BA4lrm+0saqnembzP98fX9OjSkM2CXDaotTGK8b18hWZjjcoz4JptVMR6pilgoDHz31TPlXO
+ 8GjkHqBw+9Hmq/ENJhCANNaYolEtCy2Q8qDaUXCzEdxGnrLBoWS+isnBXwBYrShzuz4IKZkeE
+ Y7FxpW9mo8Qjxe6LaoYasM8ePCsKIC4kGteUaW5dv2WrPph9ovQxWOpShwD41DZmUyOumIntU
+ 6VqRJ6yq2Atumy/0KADG13V6gB9k4n6gcUXuEBqaCcmwMTwcrmjen9rP8byAIa/uL1XF+p8ts
+ 4Lml1fBCVZw6NUwhMk7AlptIBvDwubpcDnMEGIwK7gF8dxiYzFftfEewFGZuKdnwBwKX2Isc3
+ 7oCvDHS049gk+JgB4Csj29nH8JMV0ZLdG7GGk3ZymOAJIFuajl6Is4pEih6OeMwiOcDtXU9zx
+ 24xa1T0LpPMvL3Gq8nl1GpCmOt409y36ONg1LDX1fya+D7Nich6aDb08K5ZylslDOT1P4e6tq
+ p+Li2R3gn4BOhWnml2BUomzRKDo=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-If the secure boot is enabled with the development key, then print
-it to the output buffer when lifecycle_state_show() is invoked.
+Am 20.11.23 um 13:00 schrieb Hans de Goede:
 
-Fixes: 79e29cb8fbc5c ("platform/mellanox: Add bootctl driver for Mellanox BlueField Soc")
-Reviewed-by: Khalil Blaiech <kblaiech@nvidia.com>
-Signed-off-by: David Thompson <davthompson@nvidia.com>
----
- drivers/platform/mellanox/mlxbf-bootctl.c | 24 +++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+> Hi Armin,
+>
+> On 11/3/23 19:25, Armin Wolf wrote:
+>> Currently, WMI drivers have to use the deprecated GUID-based
+>> interface when setting data blocks. This prevents those
+>> drivers from fully moving away from this interface.
+>>
+>> Provide wmidev_block_set() so drivers using wmi_set_block() can
+>> fully migrate to the modern bus-based interface.
+>>
+>> Tested with a custom SSDT from the Intel Slim Bootloader project.
+>>
+>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> Thank you for your patch-series, I've applied the series to my
+> review-hans branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+>
+> One thing which I noticed during review of patch 3/4 is that
+> some WMI drivers might benefit from having a wmidev_block_query_typed()
+> similar to how we have a acpi_evaluate_dsm_typed() which takes an
+> ACPI type and returns a NULL pointer instead of a wrongly typed
+> ACPI object when the type does not match. Specifically this
+> would allow dropping the return obj type checking from
+> sbl-fw-update.c : get_fwu_request() .
+>
+> Now adding a wmidev_block_query_typed() wrapper around
+> wmidev_block_query () just for this is not really a win,
+> but it might be useful in the future ? Anyways just an idea.
+>
+> Regards,
+>
+> Hans
 
-diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
-index 1ac7dab22c63..ed22908d79b9 100644
---- a/drivers/platform/mellanox/mlxbf-bootctl.c
-+++ b/drivers/platform/mellanox/mlxbf-bootctl.c
-@@ -20,6 +20,7 @@
- 
- #define MLXBF_BOOTCTL_SB_SECURE_MASK		0x03
- #define MLXBF_BOOTCTL_SB_TEST_MASK		0x0c
-+#define MLXBF_BOOTCTL_SB_DEV_MASK		0x10
- 
- #define MLXBF_SB_KEY_NUM			4
- 
-@@ -40,11 +41,18 @@ static struct mlxbf_bootctl_name boot_names[] = {
- 	{ MLXBF_BOOTCTL_NONE, "none" },
- };
- 
-+enum {
-+	MLXBF_BOOTCTL_SB_LIFECYCLE_PRODUCTION = 0,
-+	MLXBF_BOOTCTL_SB_LIFECYCLE_GA_SECURE = 1,
-+	MLXBF_BOOTCTL_SB_LIFECYCLE_GA_NON_SECURE = 2,
-+	MLXBF_BOOTCTL_SB_LIFECYCLE_RMA = 3
-+};
-+
- static const char * const mlxbf_bootctl_lifecycle_states[] = {
--	[0] = "Production",
--	[1] = "GA Secured",
--	[2] = "GA Non-Secured",
--	[3] = "RMA",
-+	[MLXBF_BOOTCTL_SB_LIFECYCLE_PRODUCTION] = "Production",
-+	[MLXBF_BOOTCTL_SB_LIFECYCLE_GA_SECURE] = "GA Secured",
-+	[MLXBF_BOOTCTL_SB_LIFECYCLE_GA_NON_SECURE] = "GA Non-Secured",
-+	[MLXBF_BOOTCTL_SB_LIFECYCLE_RMA] = "RMA",
- };
- 
- /* Log header format. */
-@@ -254,8 +262,9 @@ static ssize_t lifecycle_state_show(struct device *dev,
- 	if (lc_state < 0)
- 		return lc_state;
- 
--	lc_state &=
--		MLXBF_BOOTCTL_SB_TEST_MASK | MLXBF_BOOTCTL_SB_SECURE_MASK;
-+	lc_state &= (MLXBF_BOOTCTL_SB_TEST_MASK |
-+		     MLXBF_BOOTCTL_SB_SECURE_MASK |
-+		     MLXBF_BOOTCTL_SB_DEV_MASK);
- 
- 	/*
- 	 * If the test bits are set, we specify that the current state may be
-@@ -266,6 +275,9 @@ static ssize_t lifecycle_state_show(struct device *dev,
- 
- 		return sprintf(buf, "%s(test)\n",
- 			       mlxbf_bootctl_lifecycle_states[lc_state]);
-+	} else if ((lc_state & MLXBF_BOOTCTL_SB_SECURE_MASK) == MLXBF_BOOTCTL_SB_LIFECYCLE_GA_SECURE
-+		   && (lc_state & MLXBF_BOOTCTL_SB_DEV_MASK)) {
-+		return sprintf(buf, "Secured (development)\n");
- 	}
- 
- 	return sprintf(buf, "%s\n", mlxbf_bootctl_lifecycle_states[lc_state]);
--- 
-2.30.1
+Good idea, i am already working one something similar:
 
+The ACPI-WMI mapper on Windows translates the ACPI object into an standard WMI buffer, see
+https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/driver-defined-wmi-data-items for details.
+
+This "normalization" of the buffer content is necessary since for example WMI strings can
+be expressed either thru an ACPI string or thru an utf16 ACPI buffer. Such a problem already
+affected the HP WMI sensor driver, and i am planning to solve this with an new API.
+This API would decouple WMI drivers from the ACPI subsystem.
+
+However i am currently busy cleaning up the WMI subsystem (suspend fixes come next), so
+it might take some time. But i have it on my (increasingly long) list.
+
+Thanks,
+Armin Wolf
+
+>
+>
+>
+>> ---
+>> Changes in v2:
+>> - applies on pdx86/for-next
+>> ---
+>>   drivers/platform/x86/wmi.c | 64 ++++++++++++++++++++------------------
+>>   include/linux/wmi.h        |  2 ++
+>>   2 files changed, 36 insertions(+), 30 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+>> index 5c27b4aa9690..9d9a050e7086 100644
+>> --- a/drivers/platform/x86/wmi.c
+>> +++ b/drivers/platform/x86/wmi.c
+>> @@ -536,41 +536,50 @@ EXPORT_SYMBOL_GPL(wmidev_block_query);
+>>    *
+>>    * Return: acpi_status signaling success or error.
+>>    */
+>> -acpi_status wmi_set_block(const char *guid_string, u8 instance,
+>> -			  const struct acpi_buffer *in)
+>> +acpi_status wmi_set_block(const char *guid_string, u8 instance, const struct acpi_buffer *in)
+>>   {
+>> -	struct wmi_block *wblock;
+>> -	struct guid_block *block;
+>>   	struct wmi_device *wdev;
+>> -	acpi_handle handle;
+>> -	struct acpi_object_list input;
+>> -	union acpi_object params[2];
+>> -	char method[WMI_ACPI_METHOD_NAME_SIZE];
+>>   	acpi_status status;
+>>
+>> -	if (!in)
+>> -		return AE_BAD_DATA;
+>> -
+>>   	wdev = wmi_find_device_by_guid(guid_string);
+>>   	if (IS_ERR(wdev))
+>>   		return AE_ERROR;
+>>
+>> -	wblock = container_of(wdev, struct wmi_block, dev);
+>> -	block = &wblock->gblock;
+>> -	handle = wblock->acpi_device->handle;
+>> +	status =  wmidev_block_set(wdev, instance, in);
+>> +	wmi_device_put(wdev);
+>>
+>> -	if (block->instance_count <= instance) {
+>> -		status = AE_BAD_PARAMETER;
+>> +	return status;
+>> +}
+>> +EXPORT_SYMBOL_GPL(wmi_set_block);
+>>
+>> -		goto err_wdev_put;
+>> -	}
+>> +/**
+>> + * wmidev_block_set - Write to a WMI block
+>> + * @wdev: A wmi bus device from a driver
+>> + * @instance: Instance index
+>> + * @in: Buffer containing new values for the data block
+>> + *
+>> + * Write contents of the input buffer to an ACPI-WMI data block.
+>> + *
+>> + * Return: acpi_status signaling success or error.
+>> + */
+>> +acpi_status wmidev_block_set(struct wmi_device *wdev, u8 instance, const struct acpi_buffer *in)
+>> +{
+>> +	struct wmi_block *wblock = container_of(wdev, struct wmi_block, dev);
+>> +	acpi_handle handle = wblock->acpi_device->handle;
+>> +	struct guid_block *block = &wblock->gblock;
+>> +	char method[WMI_ACPI_METHOD_NAME_SIZE];
+>> +	struct acpi_object_list input;
+>> +	union acpi_object params[2];
+>>
+>> -	/* Check GUID is a data block */
+>> -	if (block->flags & (ACPI_WMI_EVENT | ACPI_WMI_METHOD)) {
+>> -		status = AE_ERROR;
+>> +	if (!in)
+>> +		return AE_BAD_DATA;
+>>
+>> -		goto err_wdev_put;
+>> -	}
+>> +	if (block->instance_count <= instance)
+>> +		return AE_BAD_PARAMETER;
+>> +
+>> +	/* Check GUID is a data block */
+>> +	if (block->flags & (ACPI_WMI_EVENT | ACPI_WMI_METHOD))
+>> +		return AE_ERROR;
+>>
+>>   	input.count = 2;
+>>   	input.pointer = params;
+>> @@ -582,14 +591,9 @@ acpi_status wmi_set_block(const char *guid_string, u8 instance,
+>>
+>>   	get_acpi_method_name(wblock, 'S', method);
+>>
+>> -	status = acpi_evaluate_object(handle, method, &input, NULL);
+>> -
+>> -err_wdev_put:
+>> -	wmi_device_put(wdev);
+>> -
+>> -	return status;
+>> +	return acpi_evaluate_object(handle, method, &input, NULL);
+>>   }
+>> -EXPORT_SYMBOL_GPL(wmi_set_block);
+>> +EXPORT_SYMBOL_GPL(wmidev_block_set);
+>>
+>>   static void wmi_dump_wdg(const struct guid_block *g)
+>>   {
+>> diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+>> index 763bd382cf2d..207544968268 100644
+>> --- a/include/linux/wmi.h
+>> +++ b/include/linux/wmi.h
+>> @@ -35,6 +35,8 @@ extern acpi_status wmidev_evaluate_method(struct wmi_device *wdev,
+>>   extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
+>>   					     u8 instance);
+>>
+>> +acpi_status wmidev_block_set(struct wmi_device *wdev, u8 instance, const struct acpi_buffer *in);
+>> +
+>>   u8 wmidev_instance_count(struct wmi_device *wdev);
+>>
+>>   extern int set_required_buffer_size(struct wmi_device *wdev, u64 length);
+>> --
+>> 2.39.2
+>>
