@@ -2,98 +2,80 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B6DC2BB3F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Nov 2023 15:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BC3C2BB3F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Nov 2023 16:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234387AbjKTPqL (ORCPT
+        id S229697AbjKTQ2e (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Nov 2023 10:46:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42478 "EHLO
+        Mon, 20 Nov 2023 11:28:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234193AbjKTPqG (ORCPT
+        with ESMTP id S229457AbjKTQ2d (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Nov 2023 10:46:06 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E5B4124
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Nov 2023 07:46:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1700495161;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=zYkfGH+lvFJicSUirn6ZCs6LFQLpxYQLC0xruAs8y+I=;
-        b=ihAxygXGcBhqtvbGmDohj0V5gLnO4Q8oqTHB91KwSQ5KwYWwVJBMR7wussuxjndI+9XnBl
-        5AjJTvr4NQ/qx9squxW2zwuduNJtK29S59HmsQjHSY69xh+UXx08b7SJDXKCV3xdfdcz/r
-        hT9Dzg1NLw9THTIEj/NhHNf1t9sKOTQ=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-310-WpYuqkFJPWOP6pudMBR-dQ-1; Mon,
- 20 Nov 2023 10:45:58 -0500
-X-MC-Unique: WpYuqkFJPWOP6pudMBR-dQ-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C0EA12803022;
-        Mon, 20 Nov 2023 15:45:57 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.193.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0896C492BE0;
-        Mon, 20 Nov 2023 15:45:56 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Drop Mark Gross as maintainer for x86 platform drivers
-Date:   Mon, 20 Nov 2023 16:45:45 +0100
-Message-ID: <20231120154548.611041-1-hdegoede@redhat.com>
+        Mon, 20 Nov 2023 11:28:33 -0500
+Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C77909E
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Nov 2023 08:28:28 -0800 (PST)
+Received: by mail-qk1-x736.google.com with SMTP id af79cd13be357-77897c4ac1fso304980985a.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Nov 2023 08:28:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700497708; x=1701102508; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SoEE83J5zqiXR9b9VDBnDTxQ/CW+PgfZ81uJ0uOUoQg=;
+        b=CdivwS+nVfK3wp264PiLvAVRIy0igtqyX3ycMpk5VNMrNKZkSbBmpKPsoblmtRW2ng
+         kSSKPgGkP9kJaR4HENqDtSJG58QlmvtdY8nRIBAsjcDTG2V2OtdHIkJ3zAlkOxGwwPz/
+         bG8/9cisNxMvQMX0F2HZL5VHJGdgAMWu0LiA4zjT1Hn3nQdzM/2eqEVCZbu5EprbBI77
+         IkPHsOwxR9/s8dvzTpgHjJu4h1Lq8Le/6MygJ7Hwlr4HAaPzs/44JSM5EUXRH2iOA5ul
+         kOUU/1DDzc8K2PyHzRJREUHq1j5t8O1AYEXMt94x71lOX+LDY7gFZJwtUGZQAGbFwpa7
+         6TIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700497708; x=1701102508;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SoEE83J5zqiXR9b9VDBnDTxQ/CW+PgfZ81uJ0uOUoQg=;
+        b=IrC9jLn/6Li+4LXKTPKSaJGsyd+5MNO8mRCIToeXgiquA1QtnMp+L/UBdcHQmJr3Xt
+         ekbtVFnY7T08HlibaPwn6uStY6pRi6GwVuC23tuEb6GsunXk46LTGmm0ALZdHZba7969
+         ZtwXf4Al9ugeg9MmUnRGjPdMK0G5mAYSipg4lsRi0qAPNWl+KiDCaB2illTESnk0kJ28
+         RjyYFIf8aXQXd+dizj1+1T8/S7ezpRajRYu0VlHqj8oQXf4//twZD45RkGoVrGS2UGTg
+         FWgLlFxHGpPHCZ9WPWRyUFlV6RM/wp6BRgyAILhSCTBZkVgBSBEVhZXVQop95MQngEiX
+         +33w==
+X-Gm-Message-State: AOJu0YxVr1soIkAvJrKSJE7CI/sR5X8jurrlZZg4E2rihr5Drq7QNwpR
+        1A18S6E4eyS4wuXzGqLHvY56yYhTlxDreuaALoQ53YiUSN4=
+X-Google-Smtp-Source: AGHT+IE39nVDcr8gSEHGX46ddKFuAJ/1mUy3hy5eQANWrYN0KgQBclkxabCrwoZ5UmDzoiexHwD2BF8tsN5StxOZCXo=
+X-Received: by 2002:a05:6214:621:b0:66d:36fb:474d with SMTP id
+ a1-20020a056214062100b0066d36fb474dmr9227401qvx.1.1700497707849; Mon, 20 Nov
+ 2023 08:28:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+References: <20231120154548.611041-1-hdegoede@redhat.com>
+In-Reply-To: <20231120154548.611041-1-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 20 Nov 2023 18:27:50 +0200
+Message-ID: <CAHp75VeUZBkkJO73beYPnAWKpSdPWa+6RzpS7ksyxuUgR5aS1w@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Drop Mark Gross as maintainer for x86
+ platform drivers
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Mark has not really been active as maintainer for x86 platform drivers
-lately, drop Mark from the MAINTAINERS entries for drivers/platform/x86,
-drivers/platform/mellanox and drivers/platform/surface.
+On Mon, Nov 20, 2023 at 5:46=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+>
+> Mark has not really been active as maintainer for x86 platform drivers
+> lately, drop Mark from the MAINTAINERS entries for drivers/platform/x86,
+> drivers/platform/mellanox and drivers/platform/surface.
 
-Cc: Mark Gross <markgross@kernel.org>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- MAINTAINERS | 3 ---
- 1 file changed, 3 deletions(-)
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bc97cdf6d682..af0ea6feb3b0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13788,7 +13788,6 @@ F:	drivers/net/ethernet/mellanox/mlxfw/
- MELLANOX HARDWARE PLATFORM SUPPORT
- M:	Hans de Goede <hdegoede@redhat.com>
- M:	Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
--M:	Mark Gross <markgross@kernel.org>
- M:	Vadim Pasternak <vadimp@nvidia.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Supported
-@@ -14397,7 +14396,6 @@ F:	drivers/platform/surface/surface_gpe.c
- MICROSOFT SURFACE HARDWARE PLATFORM SUPPORT
- M:	Hans de Goede <hdegoede@redhat.com>
- M:	Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
--M:	Mark Gross <markgross@kernel.org>
- M:	Maximilian Luz <luzmaximilian@gmail.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
-@@ -23674,7 +23672,6 @@ F:	drivers/platform/x86/x86-android-tablets/
- X86 PLATFORM DRIVERS
- M:	Hans de Goede <hdegoede@redhat.com>
- M:	Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
--M:	Mark Gross <markgross@kernel.org>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- Q:	https://patchwork.kernel.org/project/platform-driver-x86/list/
--- 
-2.41.0
-
+--=20
+With Best Regards,
+Andy Shevchenko
