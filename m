@@ -2,55 +2,55 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDA3C54E76
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Nov 2023 22:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F70C5AE5C
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 20 Nov 2023 22:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232502AbjKTWt3 (ORCPT
+        id S232079AbjKTWta (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 20 Nov 2023 17:49:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32900 "EHLO
+        Mon, 20 Nov 2023 17:49:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229825AbjKTWt2 (ORCPT
+        with ESMTP id S232629AbjKTWt3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 20 Nov 2023 17:49:28 -0500
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE877F9
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Nov 2023 14:49:24 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-507adc3381cso6394007e87.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Nov 2023 14:49:24 -0800 (PST)
+        Mon, 20 Nov 2023 17:49:29 -0500
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA4BFF5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Nov 2023 14:49:25 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-507bd64814fso6890396e87.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Nov 2023 14:49:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700520563; x=1701125363; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1700520564; x=1701125364; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8esms7qjDsIwHkmFPq5izCGww9P1bMAldhJOLTVxrVo=;
-        b=WgESDd+1HNeprrMOVztoWh8lTIrh7SUDPLUEIENJlpvrcTBmvQS+zDUU4rTB7gA8fS
-         fCUign0iYqVb1MPuzCU/UXi0IG83wkDBkDJqq3dDBvaJtmLDwO6X0Yb5p+aEK0hYlOST
-         NLJguGfgISiDE/uWI8Zw7vhOuedrN8F1oVCCL3KSdbt8Z7y/8aP6mONrvp4jbj48d/Oy
-         13oMWwNH5hKhobU8yAHgzdUxzN6KzUHnIeM5C4HZlOCzjXtpZZHRVF3WrFpLTAs7GHpz
-         YiG+IG+BukIk1vRIcNAbaWuXOVqgO3poStTzV1da8Pi3S+IhM2pbg3iefPIbFWvPH2md
-         YqoA==
+        bh=7w3IPGNvRYti0737C04DV640y8lLrN0zZWGxZvPfBuQ=;
+        b=M4w6FHVX3LRUMRClON2OC7B5vpY/nKiTmNJrkxPFvvIBoz89qgubpOUxrk0oJgvSLu
+         VyJr2k/b7HlVaSOYMFwtGuwK1wLYbl7K3AsOXkAMeblID7QfTA/2QBCoxh8ABE0k22TS
+         MMYIaKOw1EsXEZZrM8YOwGzI2HyVk3qOxS5AtHZZcA1QssoJLboXBsxe9crtZWhD37UD
+         GUSDO4QJXumQWyv1bueA3fwR9lyOjamhjK8xFynenM+WUpuP2DsHICtExWD0l9JLoDGv
+         q+b3rJZihnY7M5Jbrk//Fj6bI1B+I4qQbc09ju7hzSH6ErMc6P0rkp9zdv3pP0l+lm9E
+         OZHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700520563; x=1701125363;
+        d=1e100.net; s=20230601; t=1700520564; x=1701125364;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8esms7qjDsIwHkmFPq5izCGww9P1bMAldhJOLTVxrVo=;
-        b=Dki0fbcKzS0eSEgNUDG8FmNiRuzQ67kwcxnfPww2fPRhmTStKzhWAI3jZ90OiCZ3iu
-         Onms2+N14isLEHRmA4g3+V5J3XS64dq4e0I5qNfIGk4XLLK5dRLl02LUcZTcT2V7PfK8
-         47sGmyvTbYhyXzzfwQgTTqd8bmOlxvJuB6EvQ3QFUOAUFJprcMZnk0YkL4UmDtvHimSp
-         Au3lT/S1/FsRBbOz51GBqTtekO54ab09FxCR2uj6bCYC4rvHTa304HjvOCzTuqNOFJtI
-         BF/uNy0MYL+ckmT6a9cM1ElaHzdBIIz0iuqYgkwVnXFtkfKQgbqsJeDcwRRmL5Cko2zF
-         b4Lw==
-X-Gm-Message-State: AOJu0YxJJSk8PERRPOSzFilyyQ47SruLx9jNfzLjMKtRwPeYlHNM7KQj
-        119sbWNLIuwXyHdkGU39YmPV6g==
-X-Google-Smtp-Source: AGHT+IFSlei+njl+21Vg/SeVwhKhBCNtO5ycJO62MX4mCxIWXcMcNVTMVgx9fUPcaQOpdGDSgNXKtw==
-X-Received: by 2002:a05:6512:41e:b0:509:31e6:1de5 with SMTP id u30-20020a056512041e00b0050931e61de5mr5826985lfk.47.1700520563147;
-        Mon, 20 Nov 2023 14:49:23 -0800 (PST)
+        bh=7w3IPGNvRYti0737C04DV640y8lLrN0zZWGxZvPfBuQ=;
+        b=TJKyrfzvSlKqkuxq0QZK2wAzZpbhUV5u/Dx+eQZRo6utk8NdVbM+BmTVc5RoWmzW55
+         MSJSLnfOjItv4mXqZFkxVU8UTVt5d1CsUzU33tXXqJVhHucMJiW/qc7Tb4WOnAxuJlqh
+         e5+Njz8pKobdDGyX1HutdnU6sDlQqM/0uugJX+CBxzAT7wXO1J4yGxCKGFc4C8wjn3KJ
+         dRV7ufBj8naJ39AFSKhpZLSxZZl5R2n851PHKNiH/garhfHo5BUTlotyqUowRz95ger9
+         vz3IgNQ3oon/SbeZzlMLjyVjx+dpV9yTkvKM/S17eprE98CvD9pRKEr6ZW0qynEU+lyX
+         oHfg==
+X-Gm-Message-State: AOJu0YyBdCIFgS7Idt/W9O6kcibx3XdICiaBv1eWTNVczKApuDKi1its
+        Ad0OXJyHL2HgB6oNlHsiFDGNYA==
+X-Google-Smtp-Source: AGHT+IFD8UwHvlZIXLl531QOdo6XgS1ewvLFiSPtvmWi8CMmPCZ9J2HRygNxOeDgJlm3R/0ER3Qymw==
+X-Received: by 2002:ac2:549c:0:b0:509:46ff:6e57 with SMTP id t28-20020ac2549c000000b0050946ff6e57mr6342427lfk.8.1700520564046;
+        Mon, 20 Nov 2023 14:49:24 -0800 (PST)
 Received: from eriador.lan (dzdqv0yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a0db:1f00::8a5])
-        by smtp.gmail.com with ESMTPSA id c26-20020ac25f7a000000b00503189d8b8csm1297756lfc.198.2023.11.20.14.49.22
+        by smtp.gmail.com with ESMTPSA id c26-20020ac25f7a000000b00503189d8b8csm1297756lfc.198.2023.11.20.14.49.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Nov 2023 14:49:22 -0800 (PST)
+        Mon, 20 Nov 2023 14:49:23 -0800 (PST)
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -66,9 +66,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         linux-usb@vger.kernel.org
-Subject: [PATCH v3 2/3] usb: typec: change altmode SVID to u16 entry
-Date:   Tue, 21 Nov 2023 00:00:19 +0200
-Message-ID: <20231120224919.2293730-3-dmitry.baryshkov@linaro.org>
+Subject: [PATCH v3 3/3] arm64: dts: qcom: qrb5165-rb5: use u16 for DP altmode svid
+Date:   Tue, 21 Nov 2023 00:00:20 +0200
+Message-ID: <20231120224919.2293730-4-dmitry.baryshkov@linaro.org>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20231120224919.2293730-1-dmitry.baryshkov@linaro.org>
 References: <20231120224919.2293730-1-dmitry.baryshkov@linaro.org>
@@ -78,55 +78,29 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-As stated in the changelog for the commit 7b458a4c5d73 ("usb: typec: Add
-typec_port_register_altmodes()"), the code should be adjusted according
-to the AltMode bindings. As the SVID is 16 bits wide (according to the
-USB PD Spec), use fwnode_property_read_u16() to read it.
+Follow the bindings and use 16-bit value for AltMode SVID instead of
+using the full u32.
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Fixes: b3dea914127e ("arm64: dts: qcom: qrb5165-rb5: enable DP altmode")
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/platform/x86/intel/chtwc_int33fe.c | 2 +-
- drivers/usb/typec/class.c                  | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/qcom/qrb5165-rb5.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platform/x86/intel/chtwc_int33fe.c
-index 848baecc1bb0..93f75ba1dafd 100644
---- a/drivers/platform/x86/intel/chtwc_int33fe.c
-+++ b/drivers/platform/x86/intel/chtwc_int33fe.c
-@@ -136,7 +136,7 @@ static const struct software_node altmodes_node = {
- };
+diff --git a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
+index c8cd40a462a3..88b37ceb13ed 100644
+--- a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
++++ b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
+@@ -1425,7 +1425,7 @@ PDO_FIXED_USB_COMM |
  
- static const struct property_entry dp_altmode_properties[] = {
--	PROPERTY_ENTRY_U32("svid", 0xff01),
-+	PROPERTY_ENTRY_U16("svid", 0xff01),
- 	PROPERTY_ENTRY_U32("vdo", 0x0c0086),
- 	{ }
- };
-diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-index 6ec2a94e6fad..4251d44137b6 100644
---- a/drivers/usb/typec/class.c
-+++ b/drivers/usb/typec/class.c
-@@ -2238,7 +2238,8 @@ void typec_port_register_altmodes(struct typec_port *port,
- 	struct typec_altmode_desc desc;
- 	struct typec_altmode *alt;
- 	size_t index = 0;
--	u32 svid, vdo;
-+	u16 svid;
-+	u32 vdo;
- 	int ret;
- 
- 	altmodes_node = device_get_named_child_node(&port->dev, "altmodes");
-@@ -2246,7 +2247,7 @@ void typec_port_register_altmodes(struct typec_port *port,
- 		return; /* No altmodes specified */
- 
- 	fwnode_for_each_child_node(altmodes_node, child) {
--		ret = fwnode_property_read_u32(child, "svid", &svid);
-+		ret = fwnode_property_read_u16(child, "svid", &svid);
- 		if (ret) {
- 			dev_err(&port->dev, "Error reading svid for altmode %s\n",
- 				fwnode_get_name(child));
+ 		altmodes {
+ 			displayport {
+-				svid = <0xff01>;
++				svid = /bits/ 16 <0xff01>;
+ 				vdo = <0x00001c46>;
+ 			};
+ 		};
 -- 
 2.42.0
 
