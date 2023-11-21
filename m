@@ -2,64 +2,61 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38814C5ACB3
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Nov 2023 08:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF07C54FB9
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Nov 2023 09:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229492AbjKUIbY (ORCPT
+        id S229454AbjKUJUJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Nov 2023 03:31:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36580 "EHLO
+        Tue, 21 Nov 2023 04:20:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjKUIbW (ORCPT
+        with ESMTP id S230371AbjKUJUI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Nov 2023 03:31:22 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C8210C
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Nov 2023 00:31:17 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id ffacd0b85a97d-32dc9ff4a8fso3353946f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Nov 2023 00:31:17 -0800 (PST)
+        Tue, 21 Nov 2023 04:20:08 -0500
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F547100
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Nov 2023 01:20:03 -0800 (PST)
+Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-da41acaea52so4971876276.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Nov 2023 01:20:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700555476; x=1701160276; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=V/QOtsmaqlzgGjCUu+xt1WANXOlyntzSOJlutnjqOuc=;
-        b=cKWlwqg8XjAaje5O5D9oU53QWxYiRkj5k3Z9M4Noc2gbNVhxPm5rQmEL3RpzA0rkxv
-         aramY2t05ikusdnq+23aZ57M+HBDD5u5s9+qv4DzLEQ9DO7WYHNprlwNi1Xf0Tw9djpT
-         kcbF9Bx0AfcAFUwIKi3pYvcChDnJHeglCzMASikdKGInzxHS6uqM5XJl0mIctNyvRTlx
-         GLDJ4+P4EEIgu1H6TKsO2Q1GbvKgt/BHdzvgTyOrt7nhewScuhuNzLd8XVMeDtYBzJPh
-         WZXaWf5na5sz5uZItFxfhFrSZ9UEnNBeOPFAsRj717uca9DarG/++6DHXildrBiZbgHU
-         gPKw==
+        d=linaro.org; s=google; t=1700558402; x=1701163202; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=e0GnsYSjmMnnlfj2CWEXFz1CqUs2uGzKvSRcvkw5bjs=;
+        b=JCKgJlqfNrr/Kd0IbU4DXNllY54+Wjs3TBNKIPViw27VRn7QzfehGURVE/BCq6khIH
+         SRFGCXovd0ZCX5fdajIY4jn2R6KVA2Yx193y33q8+SX8Iw7mv5yK/Y47Iu4Ybdi1yG0R
+         pL9ySpMhZLFXOtY8CaqreGe9URFLWEKvUmQlsB7/OXAR8nOQtyp5H96H4lg7XfnDlbEG
+         h9LoMTmNnROteLbb/WjWYHDRpOjYq+nTt4yRyB+ljOP0SCfBvO29CC+nyAhX6hGNlDu0
+         VOARcusWCH3R6sdUGQ2na0xqZOItV+Y9E3deHI94trQ3mYYOsvdXFAv31d0ORwlxGzRT
+         7nFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700555476; x=1701160276;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V/QOtsmaqlzgGjCUu+xt1WANXOlyntzSOJlutnjqOuc=;
-        b=tijPhs6fVPTZhE/G4dw335tbE6Q4IJte11ScvpiB/j60GEXkJMrXfzak+Sx7CNyYOg
-         HhwhuKyubpCCPGYV/7HdSDm/zzlMEj8HlIZ7G3S0Ivfl4DVvKtH6PdkpPqCwL91FsUsC
-         OKr0/2iAMeQUxocsHCIN0B7Dl91aPKGfGNAYl3ZsLN5R29QkV5CllzgTXTNwm8TWcIPA
-         vJGReXVr9sp59ufD2QWMW3P/4X03Z187qoE73GnyRINO8cuKBWQER9UcUwkh9lImOl26
-         EEsgdLBEO+HPCYi25KeatRmYFXxMvEWkInMmDR9bwlhN75e67mA+6tdFYeWHlVxKeY18
-         gmNw==
-X-Gm-Message-State: AOJu0Yx+3oRnilcw8TgiCQLsIbjWlkr1nlJCDKj8sSI1ur+c1c2QirUT
-        dNqo0Mj0G4G07EwfLGX7iu4YZg==
-X-Google-Smtp-Source: AGHT+IHQPUosDvN3LpE4x8XFLUPSM7lD7RaiPCM/CQBqqYuteWIAVwvAlcpT9jXLdpFBcFVodCUr9g==
-X-Received: by 2002:a5d:61d2:0:b0:32f:7b99:2ed with SMTP id q18-20020a5d61d2000000b0032f7b9902edmr6971328wrv.22.1700555476083;
-        Tue, 21 Nov 2023 00:31:16 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.11])
-        by smtp.gmail.com with ESMTPSA id dh18-20020a0560000a9200b00332cb1bcd01sm3955187wrb.86.2023.11.21.00.31.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Nov 2023 00:31:15 -0800 (PST)
-Message-ID: <ac3f3304-6dcd-470a-907c-32a63d3c39cf@linaro.org>
-Date:   Tue, 21 Nov 2023 09:31:13 +0100
+        d=1e100.net; s=20230601; t=1700558402; x=1701163202;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e0GnsYSjmMnnlfj2CWEXFz1CqUs2uGzKvSRcvkw5bjs=;
+        b=JKJx6PFOdCsCn5JmBG7toQQeuF74dw/fudtfrnNoufsQPvNApJHwHLr0viACr1ejH/
+         M2hWIU7ApUoC/rxanUYz7Lx5vHmqdwZCYsh9dO9yq8TVTF6IBPpeXsMNREUQ/BUfOT6+
+         pnDDLNIiva86C3F+xX/2S56KQ4AKQ79lFhw5VQWuGXDMf1eX6EXteJqlRqcXBpPK952B
+         E5xfpsMUHWVaIEavsWZav/155sSqSG5vgImnEfIfgeb9CWJbY9qbvQCN4+nU1S9Ly1cE
+         zKyDRpd0h+G1FuFUywXIaL4ZMy+jm9dMdY39WAVZUT75+8nTeh3wRKRZWmh0+78/zqSE
+         DX9A==
+X-Gm-Message-State: AOJu0YwlXD7G6blPyBiaTHCj2F11plEFPSNGwRRBgbaf+IR0JvoPknAj
+        MVH97N4e0uKmH/TpmjfK1WSd2z3BXTRODBgo74WzNg==
+X-Google-Smtp-Source: AGHT+IGGKp46rrXxTxtTOtiXmo2Li35FgNeYDd8e5HO6aCQZjqPditR2ptVz6cb2AzXxBDV7hw/hT+XOKdph+CuSf5Y=
+X-Received: by 2002:a25:ae03:0:b0:db0:2161:5950 with SMTP id
+ a3-20020a25ae03000000b00db021615950mr10361703ybj.63.1700558402174; Tue, 21
+ Nov 2023 01:20:02 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] dt-bindings: connector: usb: add altmodes
- description
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <20231120224919.2293730-1-dmitry.baryshkov@linaro.org>
+ <20231120224919.2293730-2-dmitry.baryshkov@linaro.org> <ac3f3304-6dcd-470a-907c-32a63d3c39cf@linaro.org>
+In-Reply-To: <ac3f3304-6dcd-470a-907c-32a63d3c39cf@linaro.org>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Tue, 21 Nov 2023 11:19:50 +0200
+Message-ID: <CAA8EJppOGsc1+iw-YB9FBEm2UPpyAB_4cQg94Ob4swPzXheQ7A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: connector: usb: add altmodes description
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
         Andy Gross <agross@kernel.org>,
@@ -69,98 +66,62 @@ To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
         =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Mark Gross <markgross@kernel.org>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         linux-usb@vger.kernel.org
-References: <20231120224919.2293730-1-dmitry.baryshkov@linaro.org>
- <20231120224919.2293730-2-dmitry.baryshkov@linaro.org>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231120224919.2293730-2-dmitry.baryshkov@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 20/11/2023 23:00, Dmitry Baryshkov wrote:
-> Add description of the USB-C AltModes supported on the particular USB-C
-> connector. This is required for devices like Qualcomm Robotics RB5,
-> which have no other way to express alternative modes supported by the
-> hardware platform.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  .../bindings/connector/usb-connector.yaml     | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> index 7c8a3e8430d3..c1aaac861d9d 100644
-> --- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> @@ -171,6 +171,28 @@ properties:
->        offer the power, Capability Mismatch is set. Required for power sink and
->        power dual role.
->  
-> +  altmodes:
-> +    type: object
-> +    description: List of Alternative Modes supported by the schematics on the
-> +      particular device. This is only necessary if there are no other means to
-> +      discover supported alternative modes (e.g. through the UCSI firmware
-> +      interface).
-> +
-> +    patternProperties:
-> +      "^(displayport)$":
+On Tue, 21 Nov 2023 at 10:31, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 20/11/2023 23:00, Dmitry Baryshkov wrote:
+> > Add description of the USB-C AltModes supported on the particular USB-C
+> > connector. This is required for devices like Qualcomm Robotics RB5,
+> > which have no other way to express alternative modes supported by the
+> > hardware platform.
+> >
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> >  .../bindings/connector/usb-connector.yaml     | 29 +++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> > index 7c8a3e8430d3..c1aaac861d9d 100644
+> > --- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> > +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> > @@ -171,6 +171,28 @@ properties:
+> >        offer the power, Capability Mismatch is set. Required for power sink and
+> >        power dual role.
+> >
+> > +  altmodes:
+> > +    type: object
+> > +    description: List of Alternative Modes supported by the schematics on the
+> > +      particular device. This is only necessary if there are no other means to
+> > +      discover supported alternative modes (e.g. through the UCSI firmware
+> > +      interface).
+> > +
+> > +    patternProperties:
+> > +      "^(displayport)$":
+>
+> This is just a property, so should be under "properties:".
 
-This is just a property, so should be under "properties:".
+Having it under properties would make adding new altmodes harder.
 
-The rest looks good to me, but I don't know USB that much to judge.
+Inherently it should become something like
+"^(displayport|virtuallink|thunderbolt)$".
 
-Best regards,
-Krzysztof
+>
+> The rest looks good to me, but I don't know USB that much to judge.
+>
+> Best regards,
+> Krzysztof
+>
 
+
+-- 
+With best wishes
+Dmitry
