@@ -2,185 +2,89 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F0DC61D85
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Nov 2023 16:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A0FC61D90
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Nov 2023 19:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229524AbjKUQMx (ORCPT
+        id S229513AbjKUT7H (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Nov 2023 11:12:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51556 "EHLO
+        Tue, 21 Nov 2023 14:59:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230335AbjKUQMv (ORCPT
+        with ESMTP id S229514AbjKUT7G (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Nov 2023 11:12:51 -0500
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2061.outbound.protection.outlook.com [40.107.212.61])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 564C5194;
-        Tue, 21 Nov 2023 08:12:46 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W2LaqQAiMyVQqkdoobCUPSkB3EFixSYA8J39PpLcGZ3zqCIPF/tfxmpJWzaTOS5Z356OAjNmZi4ImGkAfZS77iREvSHUoS1P8LBkt1BQZSB3fH4AjldIv7rfR3lP5FxyMgmFiLsVFpt36tWcRIumGko927FbXndrJKPPZ2Wx8Xla0epqFp00JZfrz76FBNu9o/xNh3l5IFfZODcvyw4sbgwbu3svueYjAh5nk4x3JJs+CkHu8AJ3G0Nf94WltrLL8Q37ZQbM8fOh4uTO5MJyeih7oFWWXyfDl/7uxtTn8S/0pVwGZQ0c/RPSPZhDyvBsOERb8NQIezs7rx5eIBbIJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9pYo85pVw5O1P/XQHOBKCYeEOj55GPP2cmWTy8vaOsE=;
- b=EbNZPDQVsYYXI5J5vUG+GnHCt5Q+ZvR3QxQ3ukhoRQdD3ymC7y9jipR10SL+AUwRN76O3CWweE3nnFQ7MYaAu3Jafz80SEyTqSZM/fSor/eXqLFDYffGyw+sP5fdXSfbmlxTcOWH5PLuk51Dxb3VbXk/NBri/Vqjrm2HG82Uak1aYjCUq2zE1/ors5vK+cukSQWGFDr/za87KzLgSMVljBg9YSAEySJPL6GGCm8MG0n98/FOLWG/Qv7Sk2QqUnH0cIZUYd663m3pkgpcg0qEKAyfitrjxgS/gKzzOFk3kAAQlS0eeD3YOHygrXUZE07YNiqs2EJdLAAht/lCERXD9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9pYo85pVw5O1P/XQHOBKCYeEOj55GPP2cmWTy8vaOsE=;
- b=YcKvC6q0Wend6peQAq6nbcSGiRtDuYagjNk/TgFdrjDjvtTqmw4PjJEEpvGXCCdCXs9ozdL3CLXz7uuNLQNattLEnbEKCKaot9Pqe5Ecc+xAcacNedAfdktzs6Ai6cMSZJpHsM0ppe1TSKbHIszFzMndnYpDT9cdcN0FOLNVlb/37gX+iNTNWM/wWWysLgYUrt8+rTorIQ6ElEJ31Tvy4DmLFeNRjDq5WbYlBahpPJALFWl503+Rdu9KH5o6bWltP+N8w7uxMqWFuvpoddoaOfsdcpa74Waj6mVKgMPsgJlutl3ufmxFTRTuOF1IlfvsHrmSiQDe51OkYclaNvT+5w==
-Received: from PH8PR02CA0005.namprd02.prod.outlook.com (2603:10b6:510:2d0::13)
- by CH2PR12MB4327.namprd12.prod.outlook.com (2603:10b6:610:7d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.18; Tue, 21 Nov
- 2023 16:12:41 +0000
-Received: from SA2PEPF000015CB.namprd03.prod.outlook.com
- (2603:10b6:510:2d0:cafe::88) by PH8PR02CA0005.outlook.office365.com
- (2603:10b6:510:2d0::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.28 via Frontend
- Transport; Tue, 21 Nov 2023 16:12:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SA2PEPF000015CB.mail.protection.outlook.com (10.167.241.201) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7025.12 via Frontend Transport; Tue, 21 Nov 2023 16:12:40 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 21 Nov
- 2023 08:12:19 -0800
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 21 Nov
- 2023 08:12:19 -0800
-Received: from vdi.nvidia.com (10.127.8.9) by mail.nvidia.com (10.129.68.7)
- with Microsoft SMTP Server id 15.2.986.41 via Frontend Transport; Tue, 21 Nov
- 2023 08:12:18 -0800
-From:   David Thompson <davthompson@nvidia.com>
-To:     <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
-        <markgross@kernel.org>, <vadimp@nvidia.com>,
-        <platform-driver-x86@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <kblaiech@nvidia.com>,
-        David Thompson <davthompson@nvidia.com>
-Subject: [PATCH v2] mlxbf-bootctl: correctly identify secure boot with development keys
-Date:   Tue, 21 Nov 2023 11:12:16 -0500
-Message-ID: <20231121161216.3803-1-davthompson@nvidia.com>
-X-Mailer: git-send-email 2.30.1
+        Tue, 21 Nov 2023 14:59:06 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D46D1A1;
+        Tue, 21 Nov 2023 11:59:03 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1cf57430104so22804485ad.1;
+        Tue, 21 Nov 2023 11:59:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700596743; x=1701201543; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ksp0gscyzTzv7gMh3uW3pYf1M1qB9WxVG6lkj3p63HM=;
+        b=CM/mZjknIViX/zgRQ/yXGDzpVhg+HWiDybYc5GLlGGoExlAx644XNHKHvdmtCXDJF1
+         GLVHFDuB+rQ+kh1UgT3RZeGZCaq+gxBAKxJ1I1vOae30TSOqSf+GtAwq2cDD+61j5wdC
+         yYffl/wiWFge62NhZP0PK0YyurtIStWIukA29FeqqvO6FSoGx1icXotk7sRguNFfZCR/
+         dL2CUKp8nY4OvrzC8zhUDErmCzM4d8zfdxy40moKnxzgSr5s5f8whrfjmUgTFuxT5L0e
+         X0mP2WJ3DmEYmYt5AO9508yXHobhp99hB7ydE6Kyl1cgEEMXZ+2GE4qNXMVKiCN1O/vA
+         VsVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700596743; x=1701201543;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ksp0gscyzTzv7gMh3uW3pYf1M1qB9WxVG6lkj3p63HM=;
+        b=hDPczU8bnTjaNv8TjHJ4eoznx6BU7aai1x0YR2mvkU0Upggx67KDwH2b+cWO5F+YS1
+         Q3ArVihlaKfaVkSZIR8uCNxNS7UugHnNt2zqb0jTmMMiQjnDNvjcc9H4O0uSJQTpv9O7
+         S4nkJRyxdomq4IoJLsZkV08NOkdjDWECAqr+Bvc/w1pZp44+gxIxU3G6784nCMOnNAWG
+         NwrFKPkTp2GSXZlvrUgFabnhTBVsx51JMZMN6LYhdw3CLEt+hgEKWPZnO/+h7Q0bT1AX
+         6YnJ66IdiGZLBKGxycVxVQzdJaP0HN8dbkrKqI3mEyamCdzWR0LlQByUp/kr6cd9uThT
+         bRQQ==
+X-Gm-Message-State: AOJu0YyhdPAgukZL+9cBVyHKwVUg86WhtmXhPhX3I+qtGHYwNQ0th2ic
+        emqv8NLYKbijPntocznzG9o=
+X-Google-Smtp-Source: AGHT+IFQpNt6hsKsku/HQD+vPEIpWTeUotmIGn0u0JP+YIjmbDjqW2tJTUIerT5z8sVEwPDtXCmAZA==
+X-Received: by 2002:a17:902:e88f:b0:1ce:654a:81ef with SMTP id w15-20020a170902e88f00b001ce654a81efmr217635plg.18.1700596742968;
+        Tue, 21 Nov 2023 11:59:02 -0800 (PST)
+Received: from localhost.localdomain ([110.46.146.116])
+        by smtp.gmail.com with ESMTPSA id u4-20020a17090282c400b001cc615e6850sm8310732plz.90.2023.11.21.11.59.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Nov 2023 11:59:02 -0800 (PST)
+From:   SungHwan Jung <onenowy@gmail.com>
+To:     "Lee, Chun-Yi" <jlee@suse.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     SungHwan Jung <onenowy@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Add support for Acer Predator PHN16-71
+Date:   Wed, 22 Nov 2023 04:58:14 +0900
+Message-ID: <20231121195817.18128-1-onenowy@gmail.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015CB:EE_|CH2PR12MB4327:EE_
-X-MS-Office365-Filtering-Correlation-Id: c86b6580-de93-4445-3eff-08dbeaacafdf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HaHcs7GRyllaWzYs8VEDSHCU1nV/HXBmRWgDE87+BoYPxQcFMDXJ0rakWEMeEiGuIIl0FfovV4q+6Y8fGqkULivKitAUKBt7871xDstmKWyEKGWkDR58yvwioabNM4dxavVyeBZXVwEGOWCttP/Kw0gPOMwhKWbX9C3tHMPM4BGlnndL+1MhPoWuFkEtBZ/BwleyYXNJwbAhLkKo0ByH6BiLVA7BK63sHJAUnf25pxyjo8uGA7mLvX3Y/FrMBpvWQt/fQybC/VuGstyyXzw6A9fju1IbqZnUqkHeiaxVt4zoI4JDHWpidBKh0r9vH84ewa19e42LvJlSpJVGa+ZlliMzVtBxg4rwDxmBeJpXPQU8EpO/uJ/pAfYJBBLg8Put2R6p325JXqZZK3OCHDrhl6GNxeztrdE1Pv32X2RFhzkELK3G9M3sJOCcnwtAq2blBcjNpLRvDFvPtaqApIz0IzQw78YEGSJTW1aC7XK+KnVYJHtKgcaU4oNzq4bMzTucs1n1VFOKVosxB9vK653BFY08TEq0gRJRMq5xW37JvkFCaRzWFei7cu+ff5A5y+Z9kHdNyXpRlvHAt/+RZiBh6Oeh15HN+WR33ZBd3mvvfDQdNJ0mAfFdzAv6EYYUr8buO/ii+IZzM9RDWZnP7pqVXGaRXIcflYW0o0XPPT6lQeyBwzIWJV88ATxS7laCK76wV5SEmYRfozCfxhdnbvepmmBNeMYLB7pRmo5XtAsUa4Yglq4vn0AG/RIw2J2tZvJh
-X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(376002)(396003)(346002)(39860400002)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(82310400011)(36840700001)(46966006)(40470700004)(36860700001)(40480700001)(7696005)(478600001)(82740400003)(26005)(8936002)(4326008)(8676002)(2616005)(426003)(336012)(110136005)(70206006)(70586007)(54906003)(356005)(7636003)(83380400001)(47076005)(107886003)(316002)(1076003)(5660300002)(2906002)(40460700003)(41300700001)(86362001)(36756003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2023 16:12:40.7568
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c86b6580-de93-4445-3eff-08dbeaacafdf
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: SA2PEPF000015CB.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4327
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The secure boot state of the BlueField SoC is represented by two bits:
-                0 = production state
-                1 = secure boot enabled
-                2 = non-secure (secure boot disabled)
-                3 = RMA state
-There is also a single bit to indicate whether production keys or
-development keys are being used when secure boot is enabled.
+This series of patches adds support for Acer Predator PHN16-71 in acer-wmi
+including platform profile, (thermal) mode key and fan speed monitoring.
 
-The current logic in "lifecycle_state_show()" does not handle the case
-where the SoC is configured for secure boot and is using development
-keys. This patch updates the logic in "lifecycle_state_show()" to
-support this combination and properly report this state.
+The acer-wmi driver already includes fan control and turbo mode support
+for gaming laptops that use predator sense app (version 3), but PHN16-71
+operates in different way with new predator sense (version 4).
+To distinguish from implementation for previous model, new implementation
+for this device is marked with "v4".
 
-Fixes: 79e29cb8fbc5c ("platform/mellanox: Add bootctl driver for Mellanox BlueField Soc")
-Reviewed-by: Khalil Blaiech <kblaiech@nvidia.com>
-Signed-off-by: David Thompson <davthompson@nvidia.com>
----
-v1->v2
-a) commit message was expanded and re-worded for clarity
-b) replaced use of hardcoded 0x10 with BIT(4) for MLXBF_BOOTCTL_SB_DEV_MASK
----
- drivers/platform/mellanox/mlxbf-bootctl.c | 24 +++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+SungHwan Jung (2):
+  platform/x86: acer-wmi: Add platform profile and mode key support for
+    Predator PHN16-71
+  platform/x86: acer-wmi: add fan speed monitoring for  Predator
+    PHN16-71
 
-diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
-index 1ac7dab22c63..13c62a97a6f7 100644
---- a/drivers/platform/mellanox/mlxbf-bootctl.c
-+++ b/drivers/platform/mellanox/mlxbf-bootctl.c
-@@ -20,6 +20,7 @@
- 
- #define MLXBF_BOOTCTL_SB_SECURE_MASK		0x03
- #define MLXBF_BOOTCTL_SB_TEST_MASK		0x0c
-+#define MLXBF_BOOTCTL_SB_DEV_MASK		BIT(4)
- 
- #define MLXBF_SB_KEY_NUM			4
- 
-@@ -40,11 +41,18 @@ static struct mlxbf_bootctl_name boot_names[] = {
- 	{ MLXBF_BOOTCTL_NONE, "none" },
- };
- 
-+enum {
-+	MLXBF_BOOTCTL_SB_LIFECYCLE_PRODUCTION = 0,
-+	MLXBF_BOOTCTL_SB_LIFECYCLE_GA_SECURE = 1,
-+	MLXBF_BOOTCTL_SB_LIFECYCLE_GA_NON_SECURE = 2,
-+	MLXBF_BOOTCTL_SB_LIFECYCLE_RMA = 3
-+};
-+
- static const char * const mlxbf_bootctl_lifecycle_states[] = {
--	[0] = "Production",
--	[1] = "GA Secured",
--	[2] = "GA Non-Secured",
--	[3] = "RMA",
-+	[MLXBF_BOOTCTL_SB_LIFECYCLE_PRODUCTION] = "Production",
-+	[MLXBF_BOOTCTL_SB_LIFECYCLE_GA_SECURE] = "GA Secured",
-+	[MLXBF_BOOTCTL_SB_LIFECYCLE_GA_NON_SECURE] = "GA Non-Secured",
-+	[MLXBF_BOOTCTL_SB_LIFECYCLE_RMA] = "RMA",
- };
- 
- /* Log header format. */
-@@ -254,8 +262,9 @@ static ssize_t lifecycle_state_show(struct device *dev,
- 	if (lc_state < 0)
- 		return lc_state;
- 
--	lc_state &=
--		MLXBF_BOOTCTL_SB_TEST_MASK | MLXBF_BOOTCTL_SB_SECURE_MASK;
-+	lc_state &= (MLXBF_BOOTCTL_SB_TEST_MASK |
-+		     MLXBF_BOOTCTL_SB_SECURE_MASK |
-+		     MLXBF_BOOTCTL_SB_DEV_MASK);
- 
- 	/*
- 	 * If the test bits are set, we specify that the current state may be
-@@ -266,6 +275,9 @@ static ssize_t lifecycle_state_show(struct device *dev,
- 
- 		return sprintf(buf, "%s(test)\n",
- 			       mlxbf_bootctl_lifecycle_states[lc_state]);
-+	} else if ((lc_state & MLXBF_BOOTCTL_SB_SECURE_MASK) == MLXBF_BOOTCTL_SB_LIFECYCLE_GA_SECURE
-+		   && (lc_state & MLXBF_BOOTCTL_SB_DEV_MASK)) {
-+		return sprintf(buf, "Secured (development)\n");
- 	}
- 
- 	return sprintf(buf, "%s\n", mlxbf_bootctl_lifecycle_states[lc_state]);
+ drivers/platform/x86/acer-wmi.c | 367 +++++++++++++++++++++++++++++++-
+ 1 file changed, 366 insertions(+), 1 deletion(-)
+
 -- 
-2.30.1
+2.43.0
 
