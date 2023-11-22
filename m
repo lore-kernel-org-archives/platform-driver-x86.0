@@ -2,103 +2,91 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D910C61D90
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 21 Nov 2023 20:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE46C61D92
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Nov 2023 06:56:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229597AbjKUUcA (ORCPT
+        id S229955AbjKVG4c (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 21 Nov 2023 15:32:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59802 "EHLO
+        Wed, 22 Nov 2023 01:56:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234371AbjKUUbu (ORCPT
+        with ESMTP id S229931AbjKVG4b (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 21 Nov 2023 15:31:50 -0500
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0491BEB
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Nov 2023 12:29:28 -0800 (PST)
-Received: by mail-lf1-x144.google.com with SMTP id 2adb3069b0e04-507bd19eac8so7903234e87.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Nov 2023 12:29:28 -0800 (PST)
+        Wed, 22 Nov 2023 01:56:31 -0500
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F5D619D;
+        Tue, 21 Nov 2023 22:56:28 -0800 (PST)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1ce95f96edcso30481615ad.0;
+        Tue, 21 Nov 2023 22:56:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700598567; x=1701203367; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1700636188; x=1701240988; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=d/YPc2+7OX5cSuooAWCFK/zXbyQQcMjUtmvaEdzyH0I=;
-        b=Ps59Aw4+pnOcsZnMWAupwEZBkEGtOXOiqJs7dXAa0Xypq1i2WYq5D5dTNEV2ruU6Zb
-         TjdhhYjxAih+QC5k1G74Z+aBFVXE+0ZG1HpigJN4sTGg3ME9cbX/bV8ex7QTP6d4OfSI
-         OfIrvgvr39fH0A9tNv5wzLXgPlRh1OymF2XC7DVajXY2+0fPQnT6+z0b+J1hp9Pe5RWV
-         qG+kFdoP2rL/oMXCL0LGGOSKMgPfwT1KTJqp/B3VMB6AnsnEuNXkjXUy/R+ZmtPEf/0I
-         8lwee+yJjKHYmdWn3TbSI2qSYWU9arIN5AY9DeXbeyr+AN/QlGLfI0pL0cs0uGilEH+s
-         EJxA==
+        bh=ZfCjvC2TiWoEcnFFsAker1RGmc2mHOdv8vnoegXp8pA=;
+        b=VLzm8hXWhrTGzMGG15zNvafELtMzKowuk/4vkj7qyxoL2ktyRF2XLJOYK7PtWMMvUB
+         1T9AXpZDTvhUXlfkRqeWes3CGGPTp7VUvjzMNd/bKEBrm5BAYhsZ8FIyBKwuRXWo0kiU
+         ZWuoKRhh06XaQNcKXKq4hVdUHAtPC7zPqGL5QN1A86TYY1MPG12C/zG6nC8WE4pAmVVZ
+         Bp0i4R3Bbv46z0nDVxmEBxwVmuay4Pc4MXdHBQZEkrsUm/LsOfcqAYcyPIQqFd2HjCER
+         t1KeYBJFBhe0YcGkJT/dW4P4NiQi5LLeO30tG7g1CCw9l/do8A+1HSPGbuf8ztRZWSSu
+         UEmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700598567; x=1701203367;
+        d=1e100.net; s=20230601; t=1700636188; x=1701240988;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=d/YPc2+7OX5cSuooAWCFK/zXbyQQcMjUtmvaEdzyH0I=;
-        b=fXBHVk/J5ebmWMZumhZPY8u0/GQb3LuVs/NzoPfbD2R5f7uluxb6oVfPqzV9zUnalW
-         0qCDS1oWR5rBU+5CM1ujbmW8Id1nnziNwa9KrmpYvUdU26oouBrrlzo60u71+2dbdNzj
-         +rs4Rw+VbBQ4w8T1J9PVbwtLpI54rsK67HsBeIBWyeir6iYbzQytpTXiKC0Oib+RxuzF
-         5IydSiCU1Nt+BjBNQTILhWrIldaIf1ua6Q+/KDx2KcAbFf79Zt7dq00E+L1P/DkcdBEz
-         xsFZsogkOajoLkl7ja2DCSuCy46izr46kYZ3zt27FMQXOnGNsYKC1DcrEPELhgB4BNST
-         G8bg==
-X-Gm-Message-State: AOJu0Yx91gkKWKwSYqvXtEtk2QwuuVZueYSOyMfS082sKKYKrw2gf6Z3
-        YfJZKYDb2pmi0WLrd+Ip2og5DA==
-X-Google-Smtp-Source: AGHT+IH+lx0/QyDiMn/bUpTX/WV0RizOFIs7Tn8KJMsGYobLA7HMgbfKSNb2zVaPAad4qhxkMJIPVQ==
-X-Received: by 2002:ac2:5e73:0:b0:507:a383:fe18 with SMTP id a19-20020ac25e73000000b00507a383fe18mr190070lfr.40.1700598566624;
-        Tue, 21 Nov 2023 12:29:26 -0800 (PST)
-Received: from eriador.lan (dzdqv0yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a0db:1f00::8a5])
-        by smtp.gmail.com with ESMTPSA id h4-20020a056512350400b0050ab6112af2sm286287lfs.65.2023.11.21.12.29.25
+        bh=ZfCjvC2TiWoEcnFFsAker1RGmc2mHOdv8vnoegXp8pA=;
+        b=AXB7AlmLtqtV6TKGyzPv7I5D6VjpzV5eYmEbiJf7xDID+RTJaOLn6oc/JQ0iUUBwVK
+         SaTV93Vpf0imyKOpo+P1gZahKkAWO+6dzfBLyCOUi785EkWsYFRTspyYpmmQ4Pah/k/v
+         wq4Wy0FjACsgwfYjEXEVmr9BYF9wI7j8Zo2nwAT4rX4h0298fvtbqBuQSVVp+Rd6OPjt
+         rbUjV2L0r6hhU7Q2JAvaLnS6iZhWIfDuAOoKKHaeqWyn+2FdCpHOfeNIbTE75fDarphq
+         CzTU9w7fIUPqnYI4XM1oaGTw/AzZqMF49fKj0swsddHvm8PlV1ZLRpm4/a9V8Qe5s3tB
+         tOaw==
+X-Gm-Message-State: AOJu0YxnT79KXLaUs/1fljbgbSi5hlGKRri8M4bgvA2hkhCRoI6lZ50f
+        j6+3SctAHg4OsSND8JQ+I2w=
+X-Google-Smtp-Source: AGHT+IHyXD7cyOCyvFGffOiU+mxSyt3lsfgKaW4XR9Jc9UyG9//r+jDsqpOFjPxfu1EICvKOAMdEFg==
+X-Received: by 2002:a17:903:41c1:b0:1cc:665d:f818 with SMTP id u1-20020a17090341c100b001cc665df818mr1280698ple.68.1700636187631;
+        Tue, 21 Nov 2023 22:56:27 -0800 (PST)
+Received: from localhost.localdomain ([110.46.146.116])
+        by smtp.gmail.com with ESMTPSA id x15-20020a170902820f00b001cf51972586sm701175pln.292.2023.11.21.22.56.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Nov 2023 12:29:26 -0800 (PST)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Tue, 21 Nov 2023 22:56:27 -0800 (PST)
+From:   SungHwan Jung <onenowy@gmail.com>
+To:     "Lee, Chun-Yi" <jlee@suse.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH v2 0/2] usb: typec: tcpm: Handle Accessory Modes
-Date:   Tue, 21 Nov 2023 22:26:58 +0200
-Message-ID: <20231121202925.2481471-1-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.42.0
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     SungHwan Jung <onenowy@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] Add support for Acer Predator PHN16-71
+Date:   Wed, 22 Nov 2023 15:55:31 +0900
+Message-ID: <20231122065534.3668-1-onenowy@gmail.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In addition to Alternative Modes (see [1]), some of the TCPM-backed
-boards (e.g. Qualcomm SM8150-HDK) can support USB-C Accessory Modes
-(e.g. the Analog Audio). Add bindings and driver support for parsing
-this kind of information.
+This series of patches adds support for Acer Predator PHN16-71 in acer-wmi
+including platform profile, (thermal) mode key and fan speed monitoring.
 
-Note, while it might make sense to put accessory-mode-audio and -debug
-handling to typec_get_fw_cap(), I decided against it. Several existing
-drivers use this function, while providing AccMode caps based on some
-internal logic.
+The acer-wmi driver already includes fan control and turbo mode support
+for gaming laptops that use predator sense app (version 3), but PHN16-71
+operates in different way with new predator sense (version 4).
+To distinguish from implementation for previous model, new implementation
+for this device is marked with "v4".
 
-[1] https://lore.kernel.org/linux-usb/20231120224919.2293730-1-dmitry.baryshkov@linaro.org/
+Changes in v2:
+- fix typo
+- remove redundant "if" statement
 
-Changes since v1:
+SungHwan Jung (2):
+  platform/x86: acer-wmi: Add platform profile and mode key support for
+    Predator PHN16-71
+  platform/x86: acer-wmi: add fan speed monitoring for Predator PHN16-71
 
-- Initialised the `mode' variable to 0 (Sergei Shtylyov)
-
-Dmitry Baryshkov (2):
-  dt-bindings: connector: usb: add accessory mode description
-  usb: typec: tcpm: Parse Accessory Mode information
-
- .../devicetree/bindings/connector/usb-connector.yaml | 12 ++++++++++++
- drivers/usb/typec/tcpm/tcpm.c                        |  9 +++++++++
- 2 files changed, 21 insertions(+)
+ drivers/platform/x86/acer-wmi.c | 364 +++++++++++++++++++++++++++++++-
+ 1 file changed, 363 insertions(+), 1 deletion(-)
 
 -- 
-2.42.0
+2.43.0
 
