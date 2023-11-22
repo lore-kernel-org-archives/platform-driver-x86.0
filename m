@@ -2,236 +2,94 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D42DC61D97
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Nov 2023 18:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AA9C61D9B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Nov 2023 19:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231410AbjKVSHK (ORCPT
+        id S231354AbjKVTo7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Nov 2023 13:07:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50136 "EHLO
+        Wed, 22 Nov 2023 14:44:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230510AbjKVSHJ (ORCPT
+        with ESMTP id S230377AbjKVTo6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Nov 2023 13:07:09 -0500
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AAB51B3;
-        Wed, 22 Nov 2023 10:07:05 -0800 (PST)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 12BDD3200AE3;
-        Wed, 22 Nov 2023 13:07:03 -0500 (EST)
-Received: from imap52 ([10.202.2.102])
-  by compute3.internal (MEProxy); Wed, 22 Nov 2023 13:07:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-        :cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
-        1700676423; x=1700762823; bh=D3ODkAsZ40xdTxpV02osQJ56S329xCPjg4P
-        uzXonPT8=; b=rIMm0JKEtDtYeRFuAtCwmycbz4njOMNfIW23uySwhBBTcgmJR/r
-        AR+UJCpo7Q9ur5wf8eoUFJNIahu1d+3HSwGuEtXzaKGrNZPi+xjiVpLpiQ2nk2nP
-        C7U3mwoOQgrzIirWiY7JXIuQUG8+mrLSEekw5yUmlW9Nz+A8OA962yedsQAVoQbd
-        jIAOv/uOjGqbFa5jdJcxf6nDEGXjDrNbh5dCsZmVEVlEb0PeyagLqNXZYuHRFbUv
-        fpf32CfGsopjwIAozrGdK6iuYVrdqs5QdJBC/o62ixE1t+9vSvUn3PE5OxcYMKsZ
-        qAk1nbIe9f7wTWZDjve1PbwovAxDQ8mx6Xg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-        1700676423; x=1700762823; bh=D3ODkAsZ40xdTxpV02osQJ56S329xCPjg4P
-        uzXonPT8=; b=JACtxRnkKYxyYX30Adu06DCNvVH2Mjyj6fpTSCGppQ79jB5Y3oC
-        ctDQvIUUGx73Behb7A+QOPtNBaDC8rRE7ubGpBl3fJqlgt8WmNviswUFMoH/qYfo
-        mcg0V9bWWfkZGvkN/c6W27IICta2VLxH61xyubvplK3T0+bDZBuX23aRSKShhT4a
-        3YWBlq8iUnTlWg4R00iA+y2TgFqSWbY/FeonmG/lz8IY3bmVuagMwPQxYmsdSAp9
-        1Ory5lgWR5dQsOJ8eYOSYv7FQcUmNvwOF+ZNffGvwhV/lHB6n4KQmTbzncjcTlZ7
-        Tpk+eTVlmOM/i8DnFWm/ecXWhdC7G91i/5g==
-X-ME-Sender: <xms:RkNeZSpFBrPPnTqDyY_Uy71xdp38iKlZyJZieUnxyh13SI7oJITpEA>
-    <xme:RkNeZQpLfVKoQuqD7CAf0bWxcV4M9_DFJw3GQdG-d6na0JIEP4qEF0FfXn-c-ifjl
-    eF8CTvZX_MGjjSl9HI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudehuddguddtiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedf
-    ofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvg
-    gssgdrtggrqeenucggtffrrghtthgvrhhnpefhfeegudeftefgteelgfekgfdvjeelleev
-    gffhjeffhfdtiedtjeefkedvuefgkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdr
-    tggr
-X-ME-Proxy: <xmx:RkNeZXNHXIFh6b6urMMVEvt-Ckhv7Dh0vpAgHbZDulWidyMAzVycJQ>
-    <xmx:RkNeZR4qY9k00S4ioYA_h6mxfBzXbho-Tiny2iHEgmfaNWVhp_277w>
-    <xmx:RkNeZR6n-7qqnpKuUxav7dBlOs9hFHe7nYtQKHjcPLnW9LqmeMR2cQ>
-    <xmx:R0NeZbkIiCcbMNb-aV5MHw_uAqwJ4VjGsFDMXBtHQAnW11OZO_734g>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 629ADC6008B; Wed, 22 Nov 2023 13:07:02 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1234-gac66594aae-fm-20231122.001-gac66594a
-MIME-Version: 1.0
-Message-Id: <ca976ed9-24c5-4c2f-95bf-3deaf1ad0dbc@app.fastmail.com>
-In-Reply-To: <36bb8aaf-643c-4736-abe5-e5a911f24aa1@app.fastmail.com>
+        Wed, 22 Nov 2023 14:44:58 -0500
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4DAF12A;
+        Wed, 22 Nov 2023 11:44:54 -0800 (PST)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2c5071165d5so2127161fa.0;
+        Wed, 22 Nov 2023 11:44:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700682293; x=1701287093;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=khlJpqJuft4n03C9Ho0HlV0suFMRaRR1X49QgmayVfk=;
+        b=gziyusxaJDPfsF8+YY8x1HP8OhHTGzpeBbYyDAqUgsZMfVTgI75UfqiZs6hWs9qP5D
+         EVNbMcIQmzj/bTbZfboK6iDA0AZHE5BEA250QfyAnltHAqmAvxMAFd8YALgsEp4x/Uks
+         YX5SPDck8XFMkKovO8z7iBYTJlm7fUF6xr+e1XaX1CitXMZdhqBnBI9IzrGOA3niwxOf
+         fDMVwrX/s+6U7uBoiWO/JxfZDK1r2L2Gl09FLI/MnQ7zx0e3urqkDuvOso3S/wKyIrDo
+         mqMxlkV6MPN8t/4Q3Dr4qFPHvT8iHNYuFLuiULZwaSeDZoFKZsquFP/j/SxecCShHGnx
+         TtGA==
+X-Gm-Message-State: AOJu0Ywnpe5W8X8thj255BCKn9zCjW36UMznBj+qcPwqqcCJoAu8FZYu
+        /M6Tk4RnVj0JJzFj0yYQPwc=
+X-Google-Smtp-Source: AGHT+IGheHILyDckW8QssKhbkJMO8M91VBHHMt4W/vvsMCACmfCVHwxUhNbE7Fk09r2WsQQlfCi5PQ==
+X-Received: by 2002:a05:651c:1047:b0:2c8:8813:2e7b with SMTP id x7-20020a05651c104700b002c888132e7bmr2380549ljm.2.1700682292637;
+        Wed, 22 Nov 2023 11:44:52 -0800 (PST)
+Received: from gmail.com ([2a02:c7c:5b4b:e600:751f:437c:bb5f:eda2])
+        by smtp.gmail.com with ESMTPSA id e17-20020a05600c4e5100b004077219aed5sm436545wmq.6.2023.11.22.11.44.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Nov 2023 11:44:52 -0800 (PST)
+Date:   Wed, 22 Nov 2023 11:44:53 -0800
+From:   Breno Leitao <leitao@debian.org>
+To:     Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc:     platform-driver-x86@vger.kernel.org, hdegoede@redhat.com,
+        ilpo.jarvinen@linux.intel.com,
+        ibm-acpi-devel@lists.sourceforge.net, mario.limonciello@amd.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] platform/x86: Add support for improved performance
+ mode
+Message-ID: <20231122194453.GA497690@gmail.com>
 References: <mpearson-lenovo@squebb.ca>
  <20231113165453.6335-1-mpearson-lenovo@squebb.ca>
- <c8a025e-2da2-693f-aa94-679aba79827b@linux.intel.com>
- <36bb8aaf-643c-4736-abe5-e5a911f24aa1@app.fastmail.com>
-Date:   Wed, 22 Nov 2023 13:06:42 -0500
-From:   "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "Hans de Goede" <hdegoede@redhat.com>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        "Limonciello, Mario" <mario.limonciello@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] platform/x86: Add support for improved performance mode
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231113165453.6335-1-mpearson-lenovo@squebb.ca>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Mon, Nov 13, 2023 at 11:54:33AM -0500, Mark Pearson wrote:
+> @@ -10355,6 +10361,17 @@ static int dytc_profile_set(struct platform_profile_handler *pprof,
+>  	if (err)
+>  		goto unlock;
+>  
+> +	/* Set TMS mode appropriately (enable for performance), if available */
+> +	if (dytc_ultraperf_cap) {
+> +		int cmd;
+> +
+> +		cmd = DYTC_SET_COMMAND(DYTC_FUNCTION_TMS, DYTC_NOMODE,
+> +				       profile == PLATFORM_PROFILE_PERFORMANCE);
+> +		err = dytc_command(cmd, &output);
+> +		if (err)
+> +			return err;
+
+Aren't you returning holding the 'dytc_mutex' mutex?
+
+From what I understand, in the first line of this function you get the lock,
+and release later, at the exit, so, returning without releasing the lock might
+be dangerous. Here is a summary of how I read this function with your change:
 
 
-On Mon, Nov 13, 2023, at 12:15 PM, Mark Pearson wrote:
-> Thanks Ilpo,
->
-> On Mon, Nov 13, 2023, at 11:59 AM, Ilpo J=C3=A4rvinen wrote:
->> On Mon, 13 Nov 2023, Mark Pearson wrote:
->>
->>> Some new Thinkpads have a new improved performance mode available.
->>> Add support to make this mode usable.
->>>=20
->>> To avoid having to create a new profile, just use the improved perfo=
-rmance
->>> mode in place of the existing performance mode, when available.
->>>=20
->>> Tested on P14s AMD G4 AMD.
->>>=20
->>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->>> ---
->>> Changes in v2: updated implementation for DYTC_UP_SUPPORT define
->>> Changes in v3:=20
->>>  - Add in missing BIT for define, somehow lost in previous commit
->>>  - Cosmetic clean-ups
->>>=20
->>>  drivers/platform/x86/thinkpad_acpi.c | 28 +++++++++++++++++++++++++=
-+++
->>>  1 file changed, 28 insertions(+)
->>>=20
->>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform=
-/x86/thinkpad_acpi.c
->>> index ad460417f901..3a9d2cc71b6a 100644
->>> --- a/drivers/platform/x86/thinkpad_acpi.c
->>> +++ b/drivers/platform/x86/thinkpad_acpi.c
->>> @@ -10136,6 +10136,7 @@ static struct ibm_struct proxsensor_driver_d=
-ata =3D {
->>> =20
->>>  #define DYTC_CMD_SET          1 /* To enable/disable IC function mo=
-de */
->>>  #define DYTC_CMD_MMC_GET      8 /* To get current MMC function and =
-mode */
->>> +#define DYTC_CMD_UP_CAP     0xA /* To get Ultra-performance capabil=
-ity */
->>>  #define DYTC_CMD_RESET    0x1ff /* To reset back to default */
->>> =20
->>>  #define DYTC_CMD_FUNC_CAP     3 /* To get DYTC capabilities */
->>> @@ -10152,6 +10153,7 @@ static struct ibm_struct proxsensor_driver_d=
-ata =3D {
->>> =20
->>>  #define DYTC_FUNCTION_STD     0  /* Function =3D 0, standard mode */
->>>  #define DYTC_FUNCTION_CQL     1  /* Function =3D 1, lap mode */
->>> +#define DYTC_FUNCTION_TMS     9  /* Function =3D 9, TMS mode */
->>>  #define DYTC_FUNCTION_MMC     11 /* Function =3D 11, MMC mode */
->>>  #define DYTC_FUNCTION_PSC     13 /* Function =3D 13, PSC mode */
->>>  #define DYTC_FUNCTION_AMT     15 /* Function =3D 15, AMT mode */
->>> @@ -10163,11 +10165,14 @@ static struct ibm_struct proxsensor_driver=
-_data =3D {
->>>  #define DYTC_MODE_MMC_LOWPOWER 3  /* Low power mode */
->>>  #define DYTC_MODE_MMC_BALANCE  0xF  /* Default mode aka balanced */
->>>  #define DYTC_MODE_MMC_DEFAULT  0  /* Default mode from MMC_GET, aka=
- balanced */
->>> +#define DYTC_NOMODE            0xF  /* When Function does not have =
-a mode */
->>> =20
->>>  #define DYTC_MODE_PSC_LOWPOWER 3  /* Low power mode */
->>>  #define DYTC_MODE_PSC_BALANCE  5  /* Default mode aka balanced */
->>>  #define DYTC_MODE_PSC_PERFORM  7  /* High power mode aka performanc=
-e */
->>> =20
->>> +#define DYTC_UP_SUPPORT    BIT(8)  /* Ultra-performance (TMS) mode =
-support */
->>> +
->>>  #define DYTC_ERR_MASK       0xF  /* Bits 0-3 in cmd result are the =
-error result */
->>>  #define DYTC_ERR_SUCCESS      1  /* CMD completed successful */
->>> =20
->>> @@ -10185,6 +10190,7 @@ static enum platform_profile_option dytc_cur=
-rent_profile;
->>>  static atomic_t dytc_ignore_event =3D ATOMIC_INIT(0);
->>>  static DEFINE_MUTEX(dytc_mutex);
->>>  static int dytc_capabilities;
->>> +static bool dytc_ultraperf_cap;
->>>  static bool dytc_mmc_get_available;
->>>  static int profile_force;
->>> =20
->>> @@ -10355,6 +10361,17 @@ static int dytc_profile_set(struct platform=
-_profile_handler *pprof,
->>>  	if (err)
->>>  		goto unlock;
->>> =20
->>> +	/* Set TMS mode appropriately (enable for performance), if availab=
-le */
->>> +	if (dytc_ultraperf_cap) {
->>> +		int cmd;
->>> +
->>> +		cmd =3D DYTC_SET_COMMAND(DYTC_FUNCTION_TMS, DYTC_NOMODE,
->>> +				       profile =3D=3D PLATFORM_PROFILE_PERFORMANCE);
->>> +		err =3D dytc_command(cmd, &output);
->>> +		if (err)
->>> +			return err;
->>> +	}
->>> +
->>>  	if (dytc_capabilities & BIT(DYTC_FC_MMC)) {
->>>  		if (profile =3D=3D PLATFORM_PROFILE_BALANCED) {
->>>  			/*
->>> @@ -10429,6 +10446,7 @@ static struct platform_profile_handler dytc_=
-profile =3D {
->>>  static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
->>>  {
->>>  	int err, output;
->>> +	int cmd;
->>> =20
->>>  	/* Setup supported modes */
->>>  	set_bit(PLATFORM_PROFILE_LOW_POWER, dytc_profile.choices);
->>> @@ -10484,6 +10502,16 @@ static int tpacpi_dytc_profile_init(struct =
-ibm_init_struct *iibm)
->>>  		dbg_printk(TPACPI_DBG_INIT, "No DYTC support available\n");
->>>  		return -ENODEV;
->>>  	}
->>> +	err =3D dytc_command(DYTC_CMD_UP_CAP, &output);
->>
->> Hmm, are you missing error handling here?
->>
-> Doh....yes, it should check that. My bad.
->
-> I'll hold off a day or two on the next patch so I'm not spamming the=20
-> list in case there is other feedback, and do a fix for that.=20
-> I don't want the driver to error out on this - but it shouldn't check=20
-> (and potentially enable) the feature if that register read fails. I=20
-> will go and double check on some older platforms too as a sanity check.
->
-> Thanks for the review.
+	mutex_lock_interruptible(&dytc_mutex);
+	...
+	err = dytc_command(cmd, &output);
+	if (err)
+		return err;
 
-Just an update, as it's taking me longer to get what I thought would be =
-the final version of this patch done.
+unlock:
+	mutex_unlock(&dytc_mutex);
+	return err;
 
-I did some regression testing on other platforms, as a sanity check, and=
- found on the Z16 G1 that it is reporting this feature as supported, but=
- unfortunately it doesn't work (it switches to low power mode)
 
-This is a FW issue so I'm asking the FW team for clarification on why I'=
-m seeing this, why it isn't working, and how to fix it.=20
-This is going to take some time unfortunately, so this patch will be del=
-ayed a bit. Apologies to anybody waiting for this improvement.
-
-Thanks
-Mark
+I think "goto unlock" might solve it.
