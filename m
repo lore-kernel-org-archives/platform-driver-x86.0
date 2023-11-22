@@ -2,176 +2,108 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BD5C61D9B
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Nov 2023 10:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0152EC61D97
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 22 Nov 2023 12:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230225AbjKVKtX (ORCPT
+        id S1343932AbjKVMC7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 22 Nov 2023 05:49:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37318 "EHLO
+        Wed, 22 Nov 2023 07:02:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229714AbjKVKtX (ORCPT
+        with ESMTP id S1343917AbjKVMC6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 22 Nov 2023 05:49:23 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DC09B2;
-        Wed, 22 Nov 2023 02:49:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700650159; x=1732186159;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=0rSQb2urA603nTz22RYSdrYHdTMQYrctow0hPn/0OOA=;
-  b=SU+VH6pcsmCjjVbSHHCYd0qHi2cX7ciqeVkTfVCbWzgMZR3Ke8ouBwgi
-   Fek8YASuu/TtiWdgXWn30gD9+5553J0sHnkFHH867hWH9SL5+AjidbGwK
-   uRsvqDn26q4/h4WTVkhU4gyodf71OTHJJ/xz+mXgU3gJa0lbuJ9i9PpNQ
-   rXv83MydiMZ/33fSq8Dmb0+UUESTh5FPfiLJ/2VearIKekgHz0qK9Wi6l
-   mkWC7qFrRD8mOruv6rzu3YM4b8xpsFWrtTsWFrIUH595kOWtSbXFxP0Eh
-   +afCZc/kJYhFEOKTWTLVwNVIn2Atzsawi8k9gcl10zm1H2gtwGD01PEt+
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="458526033"
-X-IronPort-AV: E=Sophos;i="6.04,218,1695711600"; 
-   d="scan'208";a="458526033"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 02:49:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="1098353877"
-X-IronPort-AV: E=Sophos;i="6.04,218,1695711600"; 
-   d="scan'208";a="1098353877"
-Received: from johannes-ivm.ger.corp.intel.com ([10.249.47.139])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 02:49:15 -0800
-Date:   Wed, 22 Nov 2023 12:49:13 +0200 (EET)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     David Thompson <davthompson@nvidia.com>
-cc:     Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org,
-        vadimp@nvidia.com, platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, kblaiech@nvidia.com
-Subject: Re: [PATCH v2] mlxbf-bootctl: correctly identify secure boot with
- development keys
-In-Reply-To: <20231121161216.3803-1-davthompson@nvidia.com>
-Message-ID: <1967c625-6d63-badd-6b2c-fe7267bfeb@linux.intel.com>
-References: <20231121161216.3803-1-davthompson@nvidia.com>
+        Wed, 22 Nov 2023 07:02:58 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 446C791
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Nov 2023 04:02:55 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E4151C433CC
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Nov 2023 12:02:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1700654574;
+        bh=beEJbyiefj3rhCxASaWpTq0qQ13OeOwB2I2PsTBfNQs=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=q3oV31tuHkvlj42lU+YRVYTPptEsA9hRhjwcCeU94VCPJ9yuoaFtleb0KmPCTG5lJ
+         uwVxcaATXbFivcB7qP2SMBTszWHAUz3e3bectyW12+F0bN4Jced6yQ4ZbAVPrOIPmG
+         enodo8hJm0nCASFI6iVtlsl9plNYGMRAWjMFv5ssQVBharpo675W94t7G/LHE7TItT
+         lfRiRt3y3Pg753Odnz6Ieb8Gzq466jCZo2XEtvgStfSY933x3DRxeLXimUHDC9uLx+
+         uaY2M2jUm5zc0lOxjG7xBBQpGoAAlCyx5ugEavnDjVDSw6v5kX9rDJi4+66/Y6vDe4
+         G9UVJJnmXTjhw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id CEC31C53BD5; Wed, 22 Nov 2023 12:02:54 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 203191] The fan speed reports to 65535, despite the fan is
+ stopped
+Date:   Wed, 22 Nov 2023 12:02:54 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: antony.gelberg@gmail.com
+X-Bugzilla-Status: NEEDINFO
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-203191-215701-knCu768C0k@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-203191-215701@https.bugzilla.kernel.org/>
+References: <bug-203191-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 21 Nov 2023, David Thompson wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D203191
 
-> The secure boot state of the BlueField SoC is represented by two bits:
->                 0 = production state
->                 1 = secure boot enabled
->                 2 = non-secure (secure boot disabled)
->                 3 = RMA state
-> There is also a single bit to indicate whether production keys or
-> development keys are being used when secure boot is enabled.
+antony.gelberg@gmail.com changed:
 
-Thanks for the extra details but there are more bits that come into play 
-here and you mention anything about them. More about this below with the 
-relevant code.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |antony.gelberg@gmail.com
 
-> The current logic in "lifecycle_state_show()" does not handle the case
-> where the SoC is configured for secure boot and is using development
-> keys.
+--- Comment #16 from antony.gelberg@gmail.com ---
+Did anyone get anywhere with this? Suffering as well, P14s gen 2, Ubuntu 22=
+.04
+LTS, kernel 5.14.0-1048-oem, latest BIOS N34ET57W (1.57).
 
-This still doesn't state why the current state is a problem. That is, why
-"GA Secured" is a problem.
+Not using thinkfan, laptop has always been pretty reliable for the last cou=
+ple
+of years; this is a recent-ish problem for me, having to reboot every few h=
+ours
+is painful.
 
-> This patch updates the logic in "lifecycle_state_show()" to
-> support this combination and properly report this state.
-> 
-> Fixes: 79e29cb8fbc5c ("platform/mellanox: Add bootctl driver for Mellanox BlueField Soc")
-> Reviewed-by: Khalil Blaiech <kblaiech@nvidia.com>
-> Signed-off-by: David Thompson <davthompson@nvidia.com>
-> ---
-> v1->v2
-> a) commit message was expanded and re-worded for clarity
-> b) replaced use of hardcoded 0x10 with BIT(4) for MLXBF_BOOTCTL_SB_DEV_MASK
-> ---
->  drivers/platform/mellanox/mlxbf-bootctl.c | 24 +++++++++++++++++------
->  1 file changed, 18 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
-> index 1ac7dab22c63..13c62a97a6f7 100644
-> --- a/drivers/platform/mellanox/mlxbf-bootctl.c
-> +++ b/drivers/platform/mellanox/mlxbf-bootctl.c
-> @@ -20,6 +20,7 @@
->  
->  #define MLXBF_BOOTCTL_SB_SECURE_MASK		0x03
->  #define MLXBF_BOOTCTL_SB_TEST_MASK		0x0c
-> +#define MLXBF_BOOTCTL_SB_DEV_MASK		BIT(4)
+Am considering a warranty repair but will be inconvenient to be without lap=
+top
+and unsure if it is a hardware problem.
 
-You only covered MLXBF_BOOTCTL_SB_SECURE_MASK and 
-MLXBF_BOOTCTL_SB_DEV_MASK in your description above, is that correct?
+Has anyone noticed anything in the system logs at all? I added a fan speed
+indicator in my XFCE panel to check (usually when I'm like hmm, the laptop =
+is
+running slowly then I look at the fan speed and it's 65535).
 
->  #define MLXBF_SB_KEY_NUM			4
->  
-> @@ -40,11 +41,18 @@ static struct mlxbf_bootctl_name boot_names[] = {
->  	{ MLXBF_BOOTCTL_NONE, "none" },
->  };
->  
-> +enum {
-> +	MLXBF_BOOTCTL_SB_LIFECYCLE_PRODUCTION = 0,
-> +	MLXBF_BOOTCTL_SB_LIFECYCLE_GA_SECURE = 1,
-> +	MLXBF_BOOTCTL_SB_LIFECYCLE_GA_NON_SECURE = 2,
-> +	MLXBF_BOOTCTL_SB_LIFECYCLE_RMA = 3
-> +};
-> +
->  static const char * const mlxbf_bootctl_lifecycle_states[] = {
-> -	[0] = "Production",
-> -	[1] = "GA Secured",
-> -	[2] = "GA Non-Secured",
-> -	[3] = "RMA",
-> +	[MLXBF_BOOTCTL_SB_LIFECYCLE_PRODUCTION] = "Production",
-> +	[MLXBF_BOOTCTL_SB_LIFECYCLE_GA_SECURE] = "GA Secured",
-> +	[MLXBF_BOOTCTL_SB_LIFECYCLE_GA_NON_SECURE] = "GA Non-Secured",
-> +	[MLXBF_BOOTCTL_SB_LIFECYCLE_RMA] = "RMA",
->  };
->  
->  /* Log header format. */
-> @@ -254,8 +262,9 @@ static ssize_t lifecycle_state_show(struct device *dev,
->  	if (lc_state < 0)
->  		return lc_state;
->  
-> -	lc_state &=
-> -		MLXBF_BOOTCTL_SB_TEST_MASK | MLXBF_BOOTCTL_SB_SECURE_MASK;
-> +	lc_state &= (MLXBF_BOOTCTL_SB_TEST_MASK |
-> +		     MLXBF_BOOTCTL_SB_SECURE_MASK |
-> +		     MLXBF_BOOTCTL_SB_DEV_MASK);
->  
-> @@ -266,6 +275,9 @@ static ssize_t lifecycle_state_show(struct device *dev,
+Also, often, I'll hear the fan struggling to start running like brr brr, th=
+en
+sometimes it runs normally (2000-4000 RPM on average) but most times it's 6=
+5535
+and a heating CPU.
 
-I'm quoting some extra code not fully visible in the contexts:
+Also, when I reboot, I get the BIOS Fan Error screen and the laptop powers =
+off.
+Then I power it back on and things run normally for x hours.
 
-        /*
-         * If the test bits are set, we specify that the current state may be
-         * due to using the test bits.
-         */
-        if (lc_state & MLXBF_BOOTCTL_SB_TEST_MASK) {
-                lc_state &= MLXBF_BOOTCTL_SB_SECURE_MASK;
+The bug is in NEEDINFO but what info is needed?
 
-Here what is output also depends on MLXBF_BOOTCTL_SB_TEST_MASK, right?
-And those bits even takes precedence over the code you're adding into 
-else if branch. So your description in commit message seems quite 
-inadequate to me.
+--=20
+You may reply to this email to add a comment.
 
-Note that you've also added an out-of-bound accesses here since only 
-MLXBF_BOOTCTL_SB_SECURE_MASK gets cleared from lc_state:
-
->  
->  		return sprintf(buf, "%s(test)\n",
->  			       mlxbf_bootctl_lifecycle_states[lc_state]);
-> +	} else if ((lc_state & MLXBF_BOOTCTL_SB_SECURE_MASK) == MLXBF_BOOTCTL_SB_LIFECYCLE_GA_SECURE
-> +		   && (lc_state & MLXBF_BOOTCTL_SB_DEV_MASK)) {
-> +		return sprintf(buf, "Secured (development)\n");
->  	}
->  
->  	return sprintf(buf, "%s\n", mlxbf_bootctl_lifecycle_states[lc_state]);
-
-Here's another potential out-of-bound access if the holes in the above if 
-logic aligns.
-
--- 
- i.
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
