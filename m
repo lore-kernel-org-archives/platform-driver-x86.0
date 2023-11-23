@@ -1,43 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n+PF/yaw"
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3C12101;
-	Thu, 23 Nov 2023 03:51:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KPCa8c/7"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 159741AE
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Nov 2023 04:41:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700740281; x=1732276281;
+  t=1700743265; x=1732279265;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=c3bcXnDOVlFpX+Ph2RovZJ6+TK7ouwTaIB2jo3XHN/U=;
-  b=n+PF/yawXEWT6jfPikm7QikRKdmiJUTzP+E1xzGNLfgsq1HKSX+qoS2G
-   8YzZxnVNiEmRx6P5utIjr0qSuZS1QBnWI0RNCSx2+NRQ2W3VQ3oJWMf9P
-   C+RBbiy0q+xp+xI6wNaCoVP2trxhzXXEVdjErveX1cAsBigHikB2wAGtv
-   UCB958D7sCMT0gQfl/p/ytEV3sCokp+6OE04IOFckHp+Q9dcvITgxFM2H
-   06ZdztVbjPBarvJJUDp9/qw5LvH9kLfK1WtQiUXMECNcOpiheMjwfj/30
-   5aArmYUZ3xBru4lN6Oj8u8f/HGtuFJTZ6y1wboQDUYs2pCFsAczTQddQ1
+  bh=lTID3XRfNb1ugzyJ7po1mt6wqJaTqh35sWCWWiIryCo=;
+  b=KPCa8c/7+Z+mr358Nu8QQYVw+UgghsqX0xKTep1aDyg2aSaJK2MHqOR+
+   nCTD7j6DS+DxdgvCmHvDra1JmlBu8AEjNp0W9qZJudBgK53NF5EO9TBkf
+   hl7keMv+kV6zqM3dsxY/9IDbSBtuBeEgeoyRDPEgKWmG5oz511NjYODfs
+   lBkVce8uH2ZiZsSkKZH1HtegOM7zrvXsOQH4iDuLnR2Tz3Qs+Q4xiokOq
+   aMa7RT78cXwYvF2WUFX/N4BtQuaDACGcFUNWAmLpmW70zg5NPYn7PD0v6
+   JwrAn8gvvZrT44P3u6uFn1p5H9hf2+HUSm4Jr3EtNxXj+X5hiyZROeqSH
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="10929854"
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="391138266"
 X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="scan'208";a="10929854"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 03:51:21 -0800
+   d="scan'208";a="391138266"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 04:41:04 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="884978549"
 X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="scan'208";a="15632384"
+   d="scan'208";a="884978549"
 Received: from mstrobel-mobl.ger.corp.intel.com ([10.252.40.70])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 03:51:18 -0800
-Date: Thu, 23 Nov 2023 13:51:15 +0200 (EET)
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 04:41:02 -0800
+Date: Thu, 23 Nov 2023 14:41:00 +0200 (EET)
 From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: SungHwan Jung <onenowy@gmail.com>
-cc: lkp@intel.com, Hans de Goede <hdegoede@redhat.com>, jdelvare@suse.com, 
-    jlee@suse.com, linux-hwmon@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux@roeck-us.net, 
-    oe-kbuild-all@lists.linux.dev, platform-driver-x86@vger.kernel.org
-Subject: Re: Re: [PATCH v2 2/2] platform/x86: acer-wmi: add fan speed monitoring
- for Predator PHN16-71
-In-Reply-To: <20231123055323.417287-1-onenowy@gmail.com>
-Message-ID: <24bf6134-4111-87bc-1e4d-a84b2fb67443@linux.intel.com>
-References: <202311230750.psygl1ot-lkp@intel.com> <20231123055323.417287-1-onenowy@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>
+cc: Andy Shevchenko <andy@kernel.org>, 
+    Corentin Chary <corentin.chary@gmail.com>, 
+    "Luke D . Jones" <luke@ljones.dev>, 
+    Kai Heng Feng <kai.heng.feng@canonical.com>, 
+    acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 0/3] platform/x86: asus-wmi: Filter Volume key presses
+ if also reported via atkbd
+In-Reply-To: <20231120154235.610808-1-hdegoede@redhat.com>
+Message-ID: <f7b5df27-497b-de99-35e2-913a1640b48d@linux.intel.com>
+References: <20231120154235.610808-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -46,14 +48,27 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 23 Nov 2023, SungHwan Jung wrote:
+On Mon, 20 Nov 2023, Hans de Goede wrote:
 
-> It is caused by dependency on hwmon. Setting both hwmon and acer-wmi as
-> module (or in-kernel) in config fixes this error.
+> An issue where volume keypresses get reported through both the atkbd
+> and the asus-wmi interface has been reported here:
+> 
+> https://bbs.archlinux.org/viewtopic.php?pid=2128536#p2128536
+> 
+> This series addresses this. Unfortunately the reporter has fallen
+> quiet and has not confirmed that this fixes things, but the fix
+> is straight forward enough that there should be little doubt
+> that it works.
+> 
+> Ilpo, the first patch in this series is a straight forward bugfix,
+> can you merge this into the fixes branch ?
+> 
+> I guess the rest of the series is a bugfix too, but since this
+> is untested I'm not sure what to do wrt fixes vs for-next,
+> what do you think ?
 
-Then you should add
-	depends on HWMON
-into the Kconfig in the next version of this patch.
+I just took them all into review-ilpo and will propagate them to fixes.
+I don't think putting them into for-next wins that much here.
 
 -- 
  i.
