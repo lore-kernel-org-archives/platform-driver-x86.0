@@ -1,43 +1,43 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i/XQeJ4e"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GlsNJb0m"
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8A3D47;
-	Wed, 22 Nov 2023 20:03:59 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F4ED49;
+	Wed, 22 Nov 2023 20:04:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700712239; x=1732248239;
+  t=1700712240; x=1732248240;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=Ltp9pFsXpEJvKVQ/IjHhhBng6W1R3Ebovhq8AQGiZRc=;
-  b=i/XQeJ4erXV5bi4dr5XIN9eaPii77VTOG3RagN+KxtsRwvhhnlysDytG
-   ljrlr9e5Lt3+Naf5RFrZvQS17LmA6a/rgoMkbKQeC57e/cg+6R7fgwLod
-   kSqZPm1uD5pJtHsShEX+qgvMAMRVzR2uOSbqoqJfY5qnI5G4sEr/VSg2h
-   SiKECemd7yu6KR4FyZ4QclgDfXA6ZJ8LdK2+6AG3UyK/lzez1Afn60kwA
-   jd3QJilEZ2mNlmWG53HGHBnCG0IWS3XtLmywHy0HbZxnQ2fY3leQXEtiX
-   M+sEbHCVscsHoRb7iTpCJD7yNTQgzme7lIW3cS38zTK44G5imhQO8spQo
+  bh=HDNtUtHtlpXuPd68Eb4FPjR3XEuwrw3TEP0vEY5p49w=;
+  b=GlsNJb0mRdNhNgGHBfe4yu9MtvIIy9EYeoFSMxWSa/IdKXsE4GUCKKBX
+   KAlggv+5nY5Vge2bom7TO+u7BrELQhukhha4/P7EJ/QBSlSZKMEu6sfsi
+   To+vfGs0oqxv5GUircg6x1DvDTupX3bQk4drkCTWL35HzeMWwk375CNIl
+   Nt73NnThGl/9u5FmU+LAOybpII7s1A4idYXBk1hhjzk3xJpny+qZ9SbD6
+   vvENKEVMq+9Ry/gKD2o0TuIxJDMiJYNcLj6gjgSXcqM8WDlcRG5x/NgrJ
+   JILl6PWSUjxvwMdKCNItxRGCL195S8m/ZqsFGIgcunq2Be6IvZDg5VXje
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="389347948"
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="389347949"
 X-IronPort-AV: E=Sophos;i="6.04,220,1695711600"; 
-   d="scan'208";a="389347948"
+   d="scan'208";a="389347949"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:56 -0800
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:57 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="801925657"
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="801925658"
 X-IronPort-AV: E=Sophos;i="6.04,220,1695711600"; 
-   d="scan'208";a="801925657"
+   d="scan'208";a="801925658"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:56 -0800
+  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:57 -0800
 Received: from debox1-desk4.lan (snpatel1-mobl.amr.corp.intel.com [10.209.89.91])
-	by linux.intel.com (Postfix) with ESMTP id 8C472580D81;
-	Wed, 22 Nov 2023 20:03:56 -0800 (PST)
+	by linux.intel.com (Postfix) with ESMTP id 2F951580DB4;
+	Wed, 22 Nov 2023 20:03:57 -0800 (PST)
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	ilpo.jarvinen@linux.intel.com,
 	rajvi.jingar@linux.intel.com
-Subject: [PATCH V5 10/20] platform/x86:intel/pmc: Call pmc_get_low_power_modes from platform init
-Date: Wed, 22 Nov 2023 20:03:45 -0800
-Message-Id: <20231123040355.82139-11-david.e.box@linux.intel.com>
+Subject: [PATCH V5 15/20] platform/x86/intel/pmc: Find and register PMC telemetry entries
+Date: Wed, 22 Nov 2023 20:03:50 -0800
+Message-Id: <20231123040355.82139-16-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231123040355.82139-1-david.e.box@linux.intel.com>
 References: <20231123040355.82139-1-david.e.box@linux.intel.com>
@@ -50,183 +50,116 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Xi Pardee <xi.pardee@intel.com>
+The PMC SSRAM device contains counters that are structured in Intel
+Platform Monitoring Technology (PMT) telemetry regions. Look for and
+register these telemetry regions from the driver so that they may be read
+using the Intel PMT ABI.
 
-In order to setup a table of low power mode requirements for Meteor Lake,
-pmc_core_get_low_power_modes() will need to be run from platform init code
-so that the enabled modes are known, allowing the use of the
-pmc_for_each_mode helper. Make the function global and call it from the
-platform init code.
-
-Signed-off-by: Xi Pardee <xi.pardee@intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
-V5 - No change
+V5 - no change
 
-V4 - No change
+V4 - no change
 
-V3 - No change
+V3 - no change
 
-V2 - Added clearer explanation for the change in the changelog
+V2 - no change
 
- drivers/platform/x86/intel/pmc/adl.c  |  2 ++
- drivers/platform/x86/intel/pmc/cnp.c  |  2 ++
- drivers/platform/x86/intel/pmc/core.c |  7 +++----
- drivers/platform/x86/intel/pmc/core.h |  1 +
- drivers/platform/x86/intel/pmc/icl.c  | 10 +++++++++-
- drivers/platform/x86/intel/pmc/mtl.c  |  4 +++-
- drivers/platform/x86/intel/pmc/spt.c  | 10 +++++++++-
- drivers/platform/x86/intel/pmc/tgl.c  |  1 +
- 8 files changed, 30 insertions(+), 7 deletions(-)
+ drivers/platform/x86/intel/pmc/Kconfig      |  1 +
+ drivers/platform/x86/intel/pmc/core_ssram.c | 49 +++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/pmc/adl.c b/drivers/platform/x86/intel/pmc/adl.c
-index 5006008e01be..64c492391ede 100644
---- a/drivers/platform/x86/intel/pmc/adl.c
-+++ b/drivers/platform/x86/intel/pmc/adl.c
-@@ -319,6 +319,8 @@ int adl_core_init(struct pmc_dev *pmcdev)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/platform/x86/intel/pmc/Kconfig b/drivers/platform/x86/intel/pmc/Kconfig
+index b526597e4deb..d2f651fbec2c 100644
+--- a/drivers/platform/x86/intel/pmc/Kconfig
++++ b/drivers/platform/x86/intel/pmc/Kconfig
+@@ -7,6 +7,7 @@ config INTEL_PMC_CORE
+ 	tristate "Intel PMC Core driver"
+ 	depends on PCI
+ 	depends on ACPI
++	depends on INTEL_PMT_TELEMETRY
+ 	help
+ 	  The Intel Platform Controller Hub for Intel Core SoCs provides access
+ 	  to Power Management Controller registers via various interfaces. This
+diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
+index cb44394d88ce..a18e3a2e90fe 100644
+--- a/drivers/platform/x86/intel/pmc/core_ssram.c
++++ b/drivers/platform/x86/intel/pmc/core_ssram.c
+@@ -13,6 +13,8 @@
+ #include <linux/io-64-nonatomic-lo-hi.h>
  
-+	pmc_core_get_low_power_modes(pmcdev);
-+
- 	/* Due to a hardware limitation, the GBE LTR blocks PC10
- 	 * when a cable is attached. Tell the PMC to ignore it.
- 	 */
-diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
-index 420aaa1d7c76..59298f184d0e 100644
---- a/drivers/platform/x86/intel/pmc/cnp.c
-+++ b/drivers/platform/x86/intel/pmc/cnp.c
-@@ -214,6 +214,8 @@ int cnp_core_init(struct pmc_dev *pmcdev)
- 	if (ret)
- 		return ret;
+ #include "core.h"
++#include "../vsec.h"
++#include "../pmt/telemetry.h"
  
-+	pmc_core_get_low_power_modes(pmcdev);
+ #define SSRAM_HDR_SIZE		0x100
+ #define SSRAM_PWRM_OFFSET	0x14
+@@ -22,6 +24,49 @@
+ #define SSRAM_IOE_OFFSET	0x68
+ #define SSRAM_DEVID_OFFSET	0x70
+ 
++static void
++pmc_add_pmt(struct pmc_dev *pmcdev, u64 ssram_base, void __iomem *ssram)
++{
++	struct pci_dev *pcidev = pmcdev->ssram_pcidev;
++	struct intel_vsec_platform_info info = {};
++	struct intel_vsec_header *headers[2] = {};
++	struct intel_vsec_header header;
++	void __iomem *dvsec;
++	u32 dvsec_offset;
++	u32 table, hdr;
 +
- 	/* Due to a hardware limitation, the GBE LTR blocks PC10
- 	 * when a cable is attached. Tell the PMC to ignore it.
- 	 */
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 84c175b9721a..3894119d61b0 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -966,9 +966,8 @@ static bool pmc_core_pri_verify(u32 lpm_pri, u8 *mode_order)
- 	return true;
++	ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
++	if (!ssram)
++		return;
++
++	dvsec_offset = readl(ssram + SSRAM_DVSEC_OFFSET);
++	iounmap(ssram);
++
++	dvsec = ioremap(ssram_base + dvsec_offset, SSRAM_DVSEC_SIZE);
++	if (!dvsec)
++		return;
++
++	hdr = readl(dvsec + PCI_DVSEC_HEADER1);
++	header.id = readw(dvsec + PCI_DVSEC_HEADER2);
++	header.rev = PCI_DVSEC_HEADER1_REV(hdr);
++	header.length = PCI_DVSEC_HEADER1_LEN(hdr);
++	header.num_entries = readb(dvsec + INTEL_DVSEC_ENTRIES);
++	header.entry_size = readb(dvsec + INTEL_DVSEC_SIZE);
++
++	table = readl(dvsec + INTEL_DVSEC_TABLE);
++	header.tbir = INTEL_DVSEC_TABLE_BAR(table);
++	header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
++	iounmap(dvsec);
++
++	headers[0] = &header;
++	info.caps = VSEC_CAP_TELEMETRY;
++	info.headers = headers;
++	info.base_addr = ssram_base;
++	info.parent = &pmcdev->pdev->dev;
++
++	intel_vsec_register(pcidev, &info);
++}
++
+ static const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid)
+ {
+ 	for (; list->map; ++list)
+@@ -99,6 +144,9 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pmc_idx, u32 offset)
+ 	pwrm_base = get_base(ssram, SSRAM_PWRM_OFFSET);
+ 	devid = readw(ssram + SSRAM_DEVID_OFFSET);
+ 
++	/* Find and register and PMC telemetry entries */
++	pmc_add_pmt(pmcdev, ssram_base, ssram);
++
+ 	map = pmc_core_find_regmap(pmcdev->regmap_list, devid);
+ 	if (!map)
+ 		return -ENODEV;
+@@ -138,3 +186,4 @@ int pmc_core_ssram_init(struct pmc_dev *pmcdev)
+ 
+ 	return ret;
  }
- 
--static void pmc_core_get_low_power_modes(struct platform_device *pdev)
-+void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
- {
--	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
- 	u8 pri_order[LPM_MAX_NUM_MODES] = LPM_DEFAULT_PRI;
- 	u8 mode_order[LPM_MAX_NUM_MODES];
-@@ -1000,7 +999,8 @@ static void pmc_core_get_low_power_modes(struct platform_device *pdev)
- 		for (mode = 0; mode < LPM_MAX_NUM_MODES; mode++)
- 			pri_order[mode_order[mode]] = mode;
- 	else
--		dev_warn(&pdev->dev, "Assuming a default substate order for this platform\n");
-+		dev_warn(&pmcdev->pdev->dev,
-+			 "Assuming a default substate order for this platform\n");
- 
- 	/*
- 	 * Loop through all modes from lowest to highest priority,
-@@ -1250,7 +1250,6 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	}
- 
- 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(primary_pmc);
--	pmc_core_get_low_power_modes(pdev);
- 	pmc_core_do_dmi_quirks(primary_pmc);
- 
- 	pmc_core_dbgfs_register(pmcdev);
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 0729f593c6a7..ccf24e0f5e50 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -490,6 +490,7 @@ extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
- 
- int pmc_core_resume_common(struct pmc_dev *pmcdev);
- int get_primary_reg_base(struct pmc *pmc);
-+extern void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev);
- 
- extern void pmc_core_ssram_init(struct pmc_dev *pmcdev);
- 
-diff --git a/drivers/platform/x86/intel/pmc/icl.c b/drivers/platform/x86/intel/pmc/icl.c
-index d08e3174230d..71b0fd6cb7d8 100644
---- a/drivers/platform/x86/intel/pmc/icl.c
-+++ b/drivers/platform/x86/intel/pmc/icl.c
-@@ -53,7 +53,15 @@ const struct pmc_reg_map icl_reg_map = {
- int icl_core_init(struct pmc_dev *pmcdev)
- {
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
-+	int ret;
- 
- 	pmc->map = &icl_reg_map;
--	return get_primary_reg_base(pmc);
-+
-+	ret = get_primary_reg_base(pmc);
-+	if (ret)
-+		return ret;
-+
-+	pmc_core_get_low_power_modes(pmcdev);
-+
-+	return ret;
- }
-diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-index 2204bc666980..c3b5f4fe01d1 100644
---- a/drivers/platform/x86/intel/pmc/mtl.c
-+++ b/drivers/platform/x86/intel/pmc/mtl.c
-@@ -985,7 +985,7 @@ static int mtl_resume(struct pmc_dev *pmcdev)
- int mtl_core_init(struct pmc_dev *pmcdev)
- {
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
--	int ret = 0;
-+	int ret;
- 
- 	mtl_d3_fixup();
- 
-@@ -1002,6 +1002,8 @@ int mtl_core_init(struct pmc_dev *pmcdev)
- 			return ret;
- 	}
- 
-+	pmc_core_get_low_power_modes(pmcdev);
-+
- 	/* Due to a hardware limitation, the GBE LTR blocks PC10
- 	 * when a cable is attached. Tell the PMC to ignore it.
- 	 */
-diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
-index 4b6f5cbda16c..ab993a69e33e 100644
---- a/drivers/platform/x86/intel/pmc/spt.c
-+++ b/drivers/platform/x86/intel/pmc/spt.c
-@@ -137,7 +137,15 @@ const struct pmc_reg_map spt_reg_map = {
- int spt_core_init(struct pmc_dev *pmcdev)
- {
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
-+	int ret;
- 
- 	pmc->map = &spt_reg_map;
--	return get_primary_reg_base(pmc);
-+
-+	ret = get_primary_reg_base(pmc);
-+	if (ret)
-+		return ret;
-+
-+	pmc_core_get_low_power_modes(pmcdev);
-+
-+	return ret;
- }
-diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
-index 2449940102db..d5f1d2223c5a 100644
---- a/drivers/platform/x86/intel/pmc/tgl.c
-+++ b/drivers/platform/x86/intel/pmc/tgl.c
-@@ -263,6 +263,7 @@ int tgl_core_init(struct pmc_dev *pmcdev)
- 	if (ret)
- 		return ret;
- 
-+	pmc_core_get_low_power_modes(pmcdev);
- 	pmc_core_get_tgl_lpm_reqs(pmcdev->pdev);
- 	/* Due to a hardware limitation, the GBE LTR blocks PC10
- 	 * when a cable is attached. Tell the PMC to ignore it.
++MODULE_IMPORT_NS(INTEL_VSEC);
 -- 
 2.34.1
 
