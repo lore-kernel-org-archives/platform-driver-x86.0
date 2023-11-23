@@ -1,75 +1,110 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KPCa8c/7"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 159741AE
-	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Nov 2023 04:41:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BsthuZ4o"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF0D6BA;
+	Thu, 23 Nov 2023 05:39:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700743265; x=1732279265;
+  t=1700746779; x=1732282779;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=lTID3XRfNb1ugzyJ7po1mt6wqJaTqh35sWCWWiIryCo=;
-  b=KPCa8c/7+Z+mr358Nu8QQYVw+UgghsqX0xKTep1aDyg2aSaJK2MHqOR+
-   nCTD7j6DS+DxdgvCmHvDra1JmlBu8AEjNp0W9qZJudBgK53NF5EO9TBkf
-   hl7keMv+kV6zqM3dsxY/9IDbSBtuBeEgeoyRDPEgKWmG5oz511NjYODfs
-   lBkVce8uH2ZiZsSkKZH1HtegOM7zrvXsOQH4iDuLnR2Tz3Qs+Q4xiokOq
-   aMa7RT78cXwYvF2WUFX/N4BtQuaDACGcFUNWAmLpmW70zg5NPYn7PD0v6
-   JwrAn8gvvZrT44P3u6uFn1p5H9hf2+HUSm4Jr3EtNxXj+X5hiyZROeqSH
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="391138266"
+  bh=a3ViAGlyo9ioE8c/1Kfxbx/7EmHUL72QEVbxkTCaVRY=;
+  b=BsthuZ4o/d3gy0VO1tOllDdHsM98H/5uMpF7Y7pFMDy5b3DzdJzcDKj9
+   vaaGpevnICsIke9HMsfad/oA1QGAhMz7I1367rt+N4mti+Ih/2OucP/yX
+   TYvgvZLBsXCJAsOA4AgB1t2JG889PYpMhkUprTooNdE4iRUX9HeLe1pV4
+   GCkXBjNyacLoCDbAZ6PJUn2f20HGrWHa9pxcI6vJOMr04e/67zHl4pV/3
+   SFk2IQpuSZJwf0pTg09D0k+hY8Mpir2+d+NvwuPR5qmHofmhKAtReYLmZ
+   noKlznHPzdR3EBJAFtLd2STdgasijE0MvwhkshMOsbZ7eQKL6cGHI14Rv
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="396173531"
 X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="scan'208";a="391138266"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 04:41:04 -0800
+   d="scan'208";a="396173531"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 05:39:39 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="884978549"
 X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="scan'208";a="884978549"
+   d="scan'208";a="8677243"
 Received: from mstrobel-mobl.ger.corp.intel.com ([10.252.40.70])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 04:41:02 -0800
-Date: Thu, 23 Nov 2023 14:41:00 +0200 (EET)
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 05:39:38 -0800
+Date: Thu, 23 Nov 2023 15:39:35 +0200 (EET)
 From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>
-cc: Andy Shevchenko <andy@kernel.org>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, 
-    Kai Heng Feng <kai.heng.feng@canonical.com>, 
-    acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 0/3] platform/x86: asus-wmi: Filter Volume key presses
- if also reported via atkbd
-In-Reply-To: <20231120154235.610808-1-hdegoede@redhat.com>
-Message-ID: <f7b5df27-497b-de99-35e2-913a1640b48d@linux.intel.com>
-References: <20231120154235.610808-1-hdegoede@redhat.com>
+To: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+cc: "David E. Box" <david.e.box@linux.intel.com>, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    rajvi.jingar@linux.intel.com
+Subject: Re: [PATCH V5 19/20] platform/x86/intel/pmc: Add debug attribute
+ for Die C6 counter
+In-Reply-To: <5b3b7eb7-78c-c9ec-2acd-f54ff116188@linux.intel.com>
+Message-ID: <797fd54-3038-4ed3-fc1c-ce7279c78a8@linux.intel.com>
+References: <20231123040355.82139-1-david.e.box@linux.intel.com> <20231123040355.82139-20-david.e.box@linux.intel.com> <5b3b7eb7-78c-c9ec-2acd-f54ff116188@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323329-2083658893-1700746778=:1676"
 
-On Mon, 20 Nov 2023, Hans de Goede wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> An issue where volume keypresses get reported through both the atkbd
-> and the asus-wmi interface has been reported here:
-> 
-> https://bbs.archlinux.org/viewtopic.php?pid=2128536#p2128536
-> 
-> This series addresses this. Unfortunately the reporter has fallen
-> quiet and has not confirmed that this fixes things, but the fix
-> is straight forward enough that there should be little doubt
-> that it works.
-> 
-> Ilpo, the first patch in this series is a straight forward bugfix,
-> can you merge this into the fixes branch ?
-> 
-> I guess the rest of the series is a bugfix too, but since this
-> is untested I'm not sure what to do wrt fixes vs for-next,
-> what do you think ?
+--8323329-2083658893-1700746778=:1676
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
 
-I just took them all into review-ilpo and will propagate them to fixes.
-I don't think putting them into for-next wins that much here.
+On Thu, 23 Nov 2023, Ilpo Järvinen wrote:
+
+> On Wed, 22 Nov 2023, David E. Box wrote:
+> 
+> > Add a "die_c6_us_show" debugfs attribute.  Reads the counter value using
+> > Intel Platform Monitoring Technology (PMT) driver API. This counter is
+> > useful for determining the idle residency of CPUs in the compute tile.
+> > Also adds a missing forward declaration for punit_ep which was declared in
+> > an earlier upstream commit but only used for the first time in this one.
+> > 
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > ---
+> > V5 - Change comment for crystal error and return value
+> > 
+> > V4 - no change
+> > 
+> > V3 - Split previous PATCH V2 13. Separates implementation (this patch) from
+> >      platform specific use (next patch)
+> > 
+> > V2 - Remove use of __func__
+> >    - Use HZ_PER_MHZ
+> >    - Fix missing newlines in printks
+> > 
+> >  drivers/platform/x86/intel/pmc/core.c | 55 +++++++++++++++++++++++++++
+> >  drivers/platform/x86/intel/pmc/core.h |  4 ++
+> >  2 files changed, 59 insertions(+)
+> > 
+> > diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> > index 4a38d52558fd..fb2c84fba0ae 100644
+> > --- a/drivers/platform/x86/intel/pmc/core.c
+> > +++ b/drivers/platform/x86/intel/pmc/core.c
+> 
+> > +static int pmc_core_die_c6_us_show(struct seq_file *s, void *unused)
+> > +{
+> > +	struct pmc_dev *pmcdev = s->private;
+> > +	u64 die_c6_res, count;
+> > +	int ret;
+> > +
+> > +	if (!pmcdev->crystal_freq) {
+> > +		dev_warn_once(&pmcdev->pdev->dev, "Crystal frequency unavailable\n");
+> > +		return -ENXIO;
+> > +	}
+> 
+> I actually started to wonder whether it would be better to just not show 
+> the file in this case (using .is_visible())? (I'm sorry I forgot to send 
+> the note about that earlier.)
+
+Ah, sorry, this was actually a debugfs file, not a sysfs one (and that's 
+why I didn't end up noting it earlier).
+
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
 -- 
  i.
 
+--8323329-2083658893-1700746778=:1676--
