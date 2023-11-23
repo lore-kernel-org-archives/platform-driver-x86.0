@@ -1,43 +1,43 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fLZjiN3v"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N1Xd9sxq"
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7094AD4A;
-	Wed, 22 Nov 2023 20:04:00 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 547F3199;
+	Wed, 22 Nov 2023 20:04:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700712240; x=1732248240;
+  t=1700712241; x=1732248241;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=BtwJjW1Os9r1Wzy3UXn5z9j7KPpzsXo9S152/9CIcXw=;
-  b=fLZjiN3vhluZxE6/2SwwypBjFaOkhyMfXvJ23+t6rdqFz9cH2/mvZEui
-   RtKnPSzuht//rRWRu3wd6AwiZXVtG6olBbewC3P9nTGeUnD9WLSSV9MsK
-   PCOk6DhUT3sSy63tFKpWitffcuKCZUtlbOJixenYNcfOFRP/lT6sij6wu
-   w22HD0ooY98SF4IFqwvp6UhosvCB4ZHiXjnj+LaS6wohDRzsxPL41q9ks
-   YkhiToKM9VdpV+9JOGATXznfkagwVxhKT4H8oBxCHd9mpNstd43BdM1qf
-   msy9zgOBNVMu/pTY4WbBVzKL+iYtBHPq2B8NMxzNnMMvTua8vdZ96DNqv
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="389347951"
+  bh=Z3p3UWIyAsUJ7mfjtSoREKDWtysTZ+Ybom6HJpBjVaw=;
+  b=N1Xd9sxqLuJjTaYPlUcXWlPFspX6zH//E44UjIjJli2wlN1jwpzvE34M
+   3JIuOLjyMvbvwAnhs5RxzFdtzynXFyRrrqV3HP/XdOUArzRC2yEkXdGpg
+   BjBon/9Ooze6JDaFV19o6t0br8umDF59jX7BtGGaAKI0RPRd4lp82gKe4
+   F6QtA1pxrfT745H5TTNh0e4me3uSmigyXSu8GBfJLi+sSNe0Bf/Ho+6RW
+   60RZ88XEGDP5RrFqQkfZugd1rrlgiIpKCgis8u7k0te3ng33EdDcaqUx7
+   oyeJFejhBs8D+938b4KkEgAPMWahAYcwWTGTDTl2PMFzt5L6rxVA+ts32
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="389347953"
 X-IronPort-AV: E=Sophos;i="6.04,220,1695711600"; 
-   d="scan'208";a="389347951"
+   d="scan'208";a="389347953"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:57 -0800
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:58 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="801925659"
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="801925661"
 X-IronPort-AV: E=Sophos;i="6.04,220,1695711600"; 
-   d="scan'208";a="801925659"
+   d="scan'208";a="801925661"
 Received: from linux.intel.com ([10.54.29.200])
   by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:57 -0800
 Received: from debox1-desk4.lan (snpatel1-mobl.amr.corp.intel.com [10.209.89.91])
-	by linux.intel.com (Postfix) with ESMTP id 50714580D81;
+	by linux.intel.com (Postfix) with ESMTP id 8BC45580CA4;
 	Wed, 22 Nov 2023 20:03:57 -0800 (PST)
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	ilpo.jarvinen@linux.intel.com,
 	rajvi.jingar@linux.intel.com
-Subject: [PATCH V5 16/20] platform/x86/intel/pmc: Display LPM requirements for multiple PMCs
-Date: Wed, 22 Nov 2023 20:03:51 -0800
-Message-Id: <20231123040355.82139-17-david.e.box@linux.intel.com>
+Subject: [PATCH V5 18/20] platform/x86/intel/pmc: Read low power mode requirements for MTL-M and MTL-P
+Date: Wed, 22 Nov 2023 20:03:53 -0800
+Message-Id: <20231123040355.82139-19-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231123040355.82139-1-david.e.box@linux.intel.com>
 References: <20231123040355.82139-1-david.e.box@linux.intel.com>
@@ -47,176 +47,116 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+From: Xi Pardee <xi.pardee@intel.com>
 
-Update the substate_requirements attribute to display the requirements for
-all the PMCs on a package.
+Add support to read the low power mode requirements for Meteor Lake M and
+Meteor Lake P.
 
-Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+Signed-off-by: Xi Pardee <xi.pardee@intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
-V5 - Use conditional instead of if/else to do seq_printf()
+V5 - no change
 
-V4 - No change
+V4 - no change
 
-V3 - Add missing submitter signoff
+V3 - directly return value from pmc_core_ssram_get_lpm_reqs()
 
-V2 - no change
+V2 - fixed unused return value
 
- drivers/platform/x86/intel/pmc/core.c | 128 ++++++++++++++------------
- 1 file changed, 68 insertions(+), 60 deletions(-)
+ drivers/platform/x86/intel/pmc/mtl.c | 39 +++++++++++++++++++++++-----
+ 1 file changed, 32 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 3894119d61b0..4a38d52558fd 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -728,7 +728,7 @@ static int pmc_core_substate_l_sts_regs_show(struct seq_file *s, void *unused)
- }
- DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_l_sts_regs);
+diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+index d1d3d33fb4b8..7ceeae507f4c 100644
+--- a/drivers/platform/x86/intel/pmc/mtl.c
++++ b/drivers/platform/x86/intel/pmc/mtl.c
+@@ -11,6 +11,13 @@
+ #include <linux/pci.h>
+ #include "core.h"
  
--static void pmc_core_substate_req_header_show(struct seq_file *s)
-+static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index)
- {
- 	struct pmc_dev *pmcdev = s->private;
- 	int i, mode;
-@@ -743,68 +743,76 @@ static void pmc_core_substate_req_header_show(struct seq_file *s)
- static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
- {
- 	struct pmc_dev *pmcdev = s->private;
--	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
--	const struct pmc_bit_map **maps = pmc->map->lpm_sts;
--	const struct pmc_bit_map *map;
--	const int num_maps = pmc->map->lpm_num_maps;
--	u32 sts_offset = pmc->map->lpm_status_offset;
--	u32 *lpm_req_regs = pmc->lpm_req_regs;
--	int mp;
--
--	/* Display the header */
--	pmc_core_substate_req_header_show(s);
--
--	/* Loop over maps */
--	for (mp = 0; mp < num_maps; mp++) {
--		u32 req_mask = 0;
--		u32 lpm_status;
--		int mode, idx, i, len = 32;
--
--		/*
--		 * Capture the requirements and create a mask so that we only
--		 * show an element if it's required for at least one of the
--		 * enabled low power modes
--		 */
--		pmc_for_each_mode(idx, mode, pmcdev)
--			req_mask |= lpm_req_regs[mp + (mode * num_maps)];
--
--		/* Get the last latched status for this map */
--		lpm_status = pmc_core_reg_read(pmc, sts_offset + (mp * 4));
--
--		/*  Loop over elements in this map */
--		map = maps[mp];
--		for (i = 0; map[i].name && i < len; i++) {
--			u32 bit_mask = map[i].bit_mask;
--
--			if (!(bit_mask & req_mask))
--				/*
--				 * Not required for any enabled states
--				 * so don't display
--				 */
--				continue;
--
--			/* Display the element name in the first column */
--			seq_printf(s, "%30s |", map[i].name);
--
--			/* Loop over the enabled states and display if required */
--			pmc_for_each_mode(idx, mode, pmcdev) {
--				if (lpm_req_regs[mp + (mode * num_maps)] & bit_mask)
--					seq_printf(s, " %9s |",
--						   "Required");
--				else
--					seq_printf(s, " %9s |", " ");
-+	u32 sts_offset;
-+	u32 *lpm_req_regs;
-+	int num_maps, mp, pmc_index;
++/* PMC SSRAM PMT Telemetry GUIDS */
++#define SOCP_LPM_REQ_GUID	0x2625030
++#define IOEM_LPM_REQ_GUID	0x4357464
++#define IOEP_LPM_REQ_GUID	0x5077612
 +
-+	for (pmc_index = 0; pmc_index < ARRAY_SIZE(pmcdev->pmcs); ++pmc_index) {
-+		struct pmc *pmc = pmcdev->pmcs[pmc_index];
-+		const struct pmc_bit_map **maps;
++static const u8 MTL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
 +
-+		if (!pmc)
-+			continue;
-+
-+		maps = pmc->map->lpm_sts;
-+		num_maps = pmc->map->lpm_num_maps;
-+		sts_offset = pmc->map->lpm_status_offset;
-+		lpm_req_regs = pmc->lpm_req_regs;
-+
-+		if (!lpm_req_regs)
-+			continue;
-+
-+		/* Display the header */
-+		pmc_core_substate_req_header_show(s, pmc_index);
-+
-+		/* Loop over maps */
-+		for (mp = 0; mp < num_maps; mp++) {
-+			u32 req_mask = 0;
-+			u32 lpm_status;
-+			const struct pmc_bit_map *map;
-+			int mode, idx, i, len = 32;
-+
-+			/*
-+			 * Capture the requirements and create a mask so that we only
-+			 * show an element if it's required for at least one of the
-+			 * enabled low power modes
-+			 */
-+			pmc_for_each_mode(idx, mode, pmcdev)
-+				req_mask |= lpm_req_regs[mp + (mode * num_maps)];
-+
-+			/* Get the last latched status for this map */
-+			lpm_status = pmc_core_reg_read(pmc, sts_offset + (mp * 4));
-+
-+			/*  Loop over elements in this map */
-+			map = maps[mp];
-+			for (i = 0; map[i].name && i < len; i++) {
-+				u32 bit_mask = map[i].bit_mask;
-+
-+				if (!(bit_mask & req_mask)) {
-+					/*
-+					 * Not required for any enabled states
-+					 * so don't display
-+					 */
-+					continue;
-+				}
-+
-+				/* Display the element name in the first column */
-+				seq_printf(s, "pmc%d: %26s |", pmc_index, map[i].name);
-+
-+				/* Loop over the enabled states and display if required */
-+				pmc_for_each_mode(idx, mode, pmcdev) {
-+					bool required = lpm_req_regs[mp + (mode * num_maps)] &
-+							bit_mask;
-+					seq_printf(s, " %9s |", required ? "Required" : " ");
-+				}
-+
-+				/* In Status column, show the last captured state of this agent */
-+				seq_printf(s, " %9s |", lpm_status & bit_mask ? "Yes" : " ");
-+
-+				seq_puts(s, "\n");
- 			}
--
--			/* In Status column, show the last captured state of this agent */
--			if (lpm_status & bit_mask)
--				seq_printf(s, " %9s |", "Yes");
--			else
--				seq_printf(s, " %9s |", " ");
--
--			seq_puts(s, "\n");
- 		}
- 	}
--
- 	return 0;
+ /*
+  * Die Mapping to Product.
+  * Product SOCDie IOEDie PCHDie
+@@ -465,6 +472,7 @@ const struct pmc_reg_map mtl_socm_reg_map = {
+ 	.lpm_sts = mtl_socm_lpm_maps,
+ 	.lpm_status_offset = MTL_LPM_STATUS_OFFSET,
+ 	.lpm_live_status_offset = MTL_LPM_LIVE_STATUS_OFFSET,
++	.lpm_reg_index = MTL_LPM_REG_INDEX,
+ };
+ 
+ const struct pmc_bit_map mtl_ioep_pfear_map[] = {
+@@ -782,6 +790,13 @@ const struct pmc_reg_map mtl_ioep_reg_map = {
+ 	.ltr_show_sts = mtl_ioep_ltr_show_map,
+ 	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
+ 	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
++	.lpm_num_maps = ADL_LPM_NUM_MAPS,
++	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
++	.lpm_residency_offset = MTL_LPM_RESIDENCY_OFFSET,
++	.lpm_priority_offset = MTL_LPM_PRI_OFFSET,
++	.lpm_en_offset = MTL_LPM_EN_OFFSET,
++	.lpm_sts_latch_en_offset = MTL_LPM_STATUS_LATCH_EN_OFFSET,
++	.lpm_reg_index = MTL_LPM_REG_INDEX,
+ };
+ 
+ const struct pmc_bit_map mtl_ioem_pfear_map[] = {
+@@ -922,6 +937,13 @@ const struct pmc_reg_map mtl_ioem_reg_map = {
+ 	.ltr_show_sts = mtl_ioep_ltr_show_map,
+ 	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
+ 	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
++	.lpm_sts_latch_en_offset = MTL_LPM_STATUS_LATCH_EN_OFFSET,
++	.lpm_num_maps = ADL_LPM_NUM_MAPS,
++	.lpm_priority_offset = MTL_LPM_PRI_OFFSET,
++	.lpm_en_offset = MTL_LPM_EN_OFFSET,
++	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
++	.lpm_residency_offset = MTL_LPM_RESIDENCY_OFFSET,
++	.lpm_reg_index = MTL_LPM_REG_INDEX,
+ };
+ 
+ #define PMC_DEVID_SOCM	0x7e7f
+@@ -929,16 +951,19 @@ const struct pmc_reg_map mtl_ioem_reg_map = {
+ #define PMC_DEVID_IOEM	0x7ebf
+ static struct pmc_info mtl_pmc_info_list[] = {
+ 	{
+-		.devid = PMC_DEVID_SOCM,
+-		.map = &mtl_socm_reg_map,
++		.guid	= SOCP_LPM_REQ_GUID,
++		.devid	= PMC_DEVID_SOCM,
++		.map	= &mtl_socm_reg_map,
+ 	},
+ 	{
+-		.devid = PMC_DEVID_IOEP,
+-		.map = &mtl_ioep_reg_map,
++		.guid	= IOEP_LPM_REQ_GUID,
++		.devid	= PMC_DEVID_IOEP,
++		.map	= &mtl_ioep_reg_map,
+ 	},
+ 	{
+-		.devid = PMC_DEVID_IOEM,
+-		.map = &mtl_ioem_reg_map
++		.guid	= IOEM_LPM_REQ_GUID,
++		.devid	= PMC_DEVID_IOEM,
++		.map	= &mtl_ioem_reg_map
+ 	},
+ 	{}
+ };
+@@ -1014,5 +1039,5 @@ int mtl_core_init(struct pmc_dev *pmcdev)
+ 	dev_dbg(&pmcdev->pdev->dev, "ignoring GBE LTR\n");
+ 	pmc_core_send_ltr_ignore(pmcdev, 3);
+ 
+-	return 0;
++	return pmc_core_ssram_get_lpm_reqs(pmcdev);
  }
- DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_req_regs);
 -- 
 2.34.1
 
