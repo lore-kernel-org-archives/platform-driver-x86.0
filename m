@@ -1,42 +1,41 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DFDMxy4X"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B721410C4;
-	Thu, 23 Nov 2023 07:24:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KzFaMzY2"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4006A10F5;
+	Thu, 23 Nov 2023 07:27:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700753060; x=1732289060;
+  t=1700753248; x=1732289248;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=Gdj3IGAs2hjIQ1Amnl+R7syRNk6HRK2epPtT62bfX/8=;
-  b=DFDMxy4XELpGl+FrKLJAc/7ovu8SNDauPIOg95NUlSszQEHmtdLzn/29
-   4Vvu4R8PlMU9gUjv24qs82wD3phBZUphGPxtOffczmnZPfglrS6QwFM91
-   MCyDVdFX48XiA/zatm/U13oHnKwQ+ej+ARlEnfdZNp/KMgUYc8x2xn0H0
-   sdSGVjEnUQXnFxvvV4O11RuO+7DPWzpCrfsekdmqeQ8IHYR77EGlZF+YY
-   UaDkDMLNgHbTfw3wImBLcT8NPUov5uWnU5pCd08aU/sbHxRQ9BoExKE8s
-   MO/Hjcc5/cIwaePKQN6gBcmQvPqsRitZm0nkMw+XQCSCWgOWiSigA8mNt
+  bh=l8dcelsKzETRTjIVJYVStptG7enmi7tz5AG7PIw2WtA=;
+  b=KzFaMzY2sBJrcLJ6vPpB07e/ShcnrV6X9ki6Vn12/cmivsiFOS8x/t6j
+   ZkEOzoCtdtLm2kmvQbpBf9+HYHp89AKZwPQeOP3E+VkPoAQzv+21dspa/
+   DjDVV316no8xrU+jJ+PB9VhjzoNDadgT9w/PUOBpEn0I3FzPOoMqFDhgE
+   EcNumEp6eIIXGLAv8ojQ+YQqRYv2Y1gB5ZPJo6FnfwPX2NbSF9NIyf7fc
+   GkjNl6agZzLlP9RmfrOpSQ3CfXGqFrJh3JmrTp5zVUirx1CsyGfrKcVfb
+   k/lMJ+1aVMe75MKuM9+35Ybku4JzvzhiF+OYaz+gE//D40X95N8fwdtLv
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="13836876"
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="396190659"
 X-IronPort-AV: E=Sophos;i="6.04,222,1695711600"; 
-   d="scan'208";a="13836876"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 07:24:19 -0800
+   d="scan'208";a="396190659"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 07:27:27 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="833448254"
 X-IronPort-AV: E=Sophos;i="6.04,222,1695711600"; 
-   d="scan'208";a="833448254"
+   d="scan'208";a="15376681"
 Received: from mstrobel-mobl.ger.corp.intel.com ([10.252.40.70])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 07:24:17 -0800
-Date: Thu, 23 Nov 2023 17:24:10 +0200 (EET)
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 07:27:26 -0800
+Date: Thu, 23 Nov 2023 17:27:23 +0200 (EET)
 From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: "David E. Box" <david.e.box@linux.intel.com>
 cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
     rajvi.jingar@linux.intel.com
-Subject: Re: [PATCH V5 06/20] platform/x86/intel/vsec: Add
- intel_vsec_register
-In-Reply-To: <20231123040355.82139-7-david.e.box@linux.intel.com>
-Message-ID: <7efeca6-6164-99e2-52d2-2b247d2698d4@linux.intel.com>
-References: <20231123040355.82139-1-david.e.box@linux.intel.com> <20231123040355.82139-7-david.e.box@linux.intel.com>
+Subject: Re: [PATCH V5 01/20] platform/x86/intel/vsec: Fix xa_alloc memory
+ leak
+In-Reply-To: <20231123040355.82139-2-david.e.box@linux.intel.com>
+Message-ID: <52a6e750-71ed-b1d5-8693-2759be4cd6e5@linux.intel.com>
+References: <20231123040355.82139-1-david.e.box@linux.intel.com> <20231123040355.82139-2-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -47,29 +46,78 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Wed, 22 Nov 2023, David E. Box wrote:
 
-> From: Gayatri Kammela <gayatri.kammela@linux.intel.com>
+> Fixes memory leak, caught be kmemleak, due to failure to erase auxiliary
+> device entries from an xarray on removal.
 > 
-> Add and export intel_vsec_register() to allow the registration of Intel
-> extended capabilities from other drivers. Add check to look for memory
-> conflicts before registering a new capability. Add a parent field to
-> intel_vsec_platform_info to allow specifying the parent device for
-> device managed cleanup.
-
-Please also explain here why the usual parent relationships are not enough
-in this case and you need to store it.
-
-> diff --git a/drivers/platform/x86/intel/vsec.h b/drivers/platform/x86/intel/vsec.h
-> index 8b9fad170503..bb8b6452df70 100644
-> --- a/drivers/platform/x86/intel/vsec.h
-> +++ b/drivers/platform/x86/intel/vsec.h
-> @@ -69,6 +69,7 @@ enum intel_vsec_quirks {
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+> V5 - New patch
+> 
+>  drivers/platform/x86/intel/vsec.c | 24 ++++++++++++++++--------
+>  drivers/platform/x86/intel/vsec.h |  1 +
+>  2 files changed, 17 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+> index c1f9e4471b28..ae811bb65910 100644
+> --- a/drivers/platform/x86/intel/vsec.c
+> +++ b/drivers/platform/x86/intel/vsec.c
+> @@ -120,6 +120,8 @@ static void intel_vsec_dev_release(struct device *dev)
+>  {
+>  	struct intel_vsec_device *intel_vsec_dev = dev_to_ivdev(dev);
 >  
->  /* Platform specific data */
->  struct intel_vsec_platform_info {
-> +	struct device *parent;
->  	struct intel_vsec_header **headers;
->  	unsigned long caps;
->  	unsigned long quirks;
+> +	xa_erase(&auxdev_array, intel_vsec_dev->id);
+> +
+>  	mutex_lock(&vsec_ida_lock);
+>  	ida_free(intel_vsec_dev->ida, intel_vsec_dev->auxdev.id);
+>  	mutex_unlock(&vsec_ida_lock);
+> @@ -136,9 +138,21 @@ int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
+>  	int ret, id;
+>  
+>  	mutex_lock(&vsec_ida_lock);
+> -	ret = ida_alloc(intel_vsec_dev->ida, GFP_KERNEL);
+> +	id = ida_alloc(intel_vsec_dev->ida, GFP_KERNEL);
+>  	mutex_unlock(&vsec_ida_lock);
+> +	if (id < 0) {
+> +		kfree(intel_vsec_dev->resource);
+> +		kfree(intel_vsec_dev);
+> +		return ret;
+> +	}
+> +
+> +	ret = xa_alloc(&auxdev_array, &intel_vsec_dev->id, intel_vsec_dev,
+> +		       PMT_XA_LIMIT, GFP_KERNEL);
+>  	if (ret < 0) {
+> +		mutex_lock(&vsec_ida_lock);
+> +		ida_free(intel_vsec_dev->ida, id);
+> +		mutex_unlock(&vsec_ida_lock);
+> +
+>  		kfree(intel_vsec_dev->resource);
+>  		kfree(intel_vsec_dev);
+>  		return ret;
+> @@ -147,7 +161,7 @@ int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
+>  	if (!parent)
+>  		parent = &pdev->dev;
+>  
+> -	auxdev->id = ret;
+> +	auxdev->id = id;
+>  	auxdev->name = name;
+>  	auxdev->dev.parent = parent;
+>  	auxdev->dev.release = intel_vsec_dev_release;
+> @@ -169,12 +183,6 @@ int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	/* Add auxdev to list */
+> -	ret = xa_alloc(&auxdev_array, &id, intel_vsec_dev, PMT_XA_LIMIT,
+> -		       GFP_KERNEL);
+> -	if (ret)
+> -		return ret;
+> -
+>  	return 0;
+
+BTW, there's also another unnecessary return construct around this which 
+remains after this removal. The devm_add_Action_or_reset() value can be 
+returned directly (maybe make another patch from that cleanup though 
+since this is a Fixes patch).
 
 -- 
  i.
