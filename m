@@ -1,43 +1,43 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kmvbrmar"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 029D1D42;
-	Wed, 22 Nov 2023 20:03:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YWBfoU8Z"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE91ED4E;
+	Wed, 22 Nov 2023 20:04:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700712239; x=1732248239;
+  t=1700712240; x=1732248240;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=+si1jhpoNCFatqzgRfc9Cd9YOvlJraG7FOlzRdqeI88=;
-  b=kmvbrmarA+n2gZaFFFhdZYz6n706ZtZUM1ffaGg7hmpkZUqinBXj/j1n
-   v2e/dJtFW6uBbpRIQSGXaYl7pHUPaU49W7y1KbhW1dkp+9UvvHrNALG9z
-   DE2bItFPHM4w4ryaav6yn1OVnv6lJFE3HoOGNK5e3sUsAEjuqoxLy8NjY
-   mSPlQwmvlt0072hX6h+Ef8m1uPjNhNjbxg+bbGAFopBLNkluEKnSq7PWq
-   P9vyW39S5QaOf8EJ8Wx016P5+jkE1RA9kDphq1h5i7z3iYu8vGZaQNDgS
-   VzbYArynGw0Fou6ZsHsAQvi7ZjDlorC6rPA6XvqX9Mz9kXBWTo3RKyIXc
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="5334661"
+  bh=cRG5+RYSDPKRE4Kl0HwgBZLht8udbzy8Ts/Wh9l8VZs=;
+  b=YWBfoU8ZHxcRWx9LXpI8pJX9PMK/wJBFQYCmPPY6ngr1tjZX5CL/jHbj
+   l6wMiJXNUVcJPZZaAja9mWnA2pGdbG69eQLx3wcAVM3V2fuCXeZY0WX81
+   sY23+53+ntl/WFZoRE5QyTmh2YKfq/az/gu5vLMIXfOQRNkKODVrXCMOV
+   GbQ7lAO7fdmisu/jU6YiakekevSk3Py95T2+3sTw8CQbcxUS5iqdBAjIg
+   4JHIZVJFXAjuopkk4KFP3jJIyP9+Cbys/kzjEbK0wWQabcr4X9BdP+BI2
+   H7HcaRLJm8DEVdiUrQ9sVhp0DaA4JfqRuXFb9onOgFOH5RDrzXCa5Amw9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="389347952"
 X-IronPort-AV: E=Sophos;i="6.04,220,1695711600"; 
-   d="scan'208";a="5334661"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:57 -0800
+   d="scan'208";a="389347952"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:57 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="837671151"
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="801925660"
 X-IronPort-AV: E=Sophos;i="6.04,220,1695711600"; 
-   d="scan'208";a="837671151"
+   d="scan'208";a="801925660"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:56 -0800
+  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:57 -0800
 Received: from debox1-desk4.lan (snpatel1-mobl.amr.corp.intel.com [10.209.89.91])
-	by linux.intel.com (Postfix) with ESMTP id 6EDDA580CA4;
-	Wed, 22 Nov 2023 20:03:56 -0800 (PST)
+	by linux.intel.com (Postfix) with ESMTP id 6F2C0580D94;
+	Wed, 22 Nov 2023 20:03:57 -0800 (PST)
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	ilpo.jarvinen@linux.intel.com,
 	rajvi.jingar@linux.intel.com
-Subject: [PATCH V5 09/20] platform/x86/intel/pmt: telemetry: Export API to read telemetry
-Date: Wed, 22 Nov 2023 20:03:44 -0800
-Message-Id: <20231123040355.82139-10-david.e.box@linux.intel.com>
+Subject: [PATCH V5 17/20] platform/x86/intel/pmc: Retrieve LPM information using Intel PMT
+Date: Wed, 22 Nov 2023 20:03:52 -0800
+Message-Id: <20231123040355.82139-18-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231123040355.82139-1-david.e.box@linux.intel.com>
 References: <20231123040355.82139-1-david.e.box@linux.intel.com>
@@ -50,500 +50,207 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Export symbols to allow access to Intel PMT Telemetry data on available
-devices. Provides APIs to search, register, and read telemetry using a
-kref managed pointer that serves as a handle to a telemetry endpoint.
-To simplify searching for present devices, have the IDA start at 1
-instead of 0 so that 0 can be used to indicate end of search.
+From: Xi Pardee <xi.pardee@intel.com>
 
+On supported platforms, the low power mode (LPM) requirements for entering
+each idle substate are described in Platform Monitoring Technology (PMT)
+telemetry entries. Provide a function for platform code to attempt to find
+and read the requirements from the telemetry entries.
+
+Signed-off-by: Xi Pardee <xi.pardee@intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
-V5 - No change
+V5 - no change
 
-V4 - No change
+V4 - no change
 
-V3 - Add comment for mutex lock
-   - Fix multiline comments
-   - Fix line lengths
-   - Fix space/tab inconsistences in header doc
+V3 - no change
 
-V2 - Add explanation of PMT_XA_START change in changelog
-   - change return and argument type of pmt_telem_get_next_endpoint() to
-     unsigned long
-   - style fixes
+V2 - remove extra parens
 
- drivers/platform/x86/intel/pmt/class.c     |  21 ++-
- drivers/platform/x86/intel/pmt/class.h     |  14 ++
- drivers/platform/x86/intel/pmt/telemetry.c | 191 ++++++++++++++++++++-
- drivers/platform/x86/intel/pmt/telemetry.h | 126 ++++++++++++++
- 4 files changed, 344 insertions(+), 8 deletions(-)
- create mode 100644 drivers/platform/x86/intel/pmt/telemetry.h
+ drivers/platform/x86/intel/pmc/core.h       |   3 +
+ drivers/platform/x86/intel/pmc/core_ssram.c | 135 ++++++++++++++++++++
+ 2 files changed, 138 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-index 142a24e3727d..4b53940a64e2 100644
---- a/drivers/platform/x86/intel/pmt/class.c
-+++ b/drivers/platform/x86/intel/pmt/class.c
-@@ -17,7 +17,7 @@
- #include "../vsec.h"
- #include "class.h"
- 
--#define PMT_XA_START		0
-+#define PMT_XA_START		1
- #define PMT_XA_MAX		INT_MAX
- #define PMT_XA_LIMIT		XA_LIMIT(PMT_XA_START, PMT_XA_MAX)
- #define GUID_SPR_PUNIT		0x9956f43f
-@@ -247,6 +247,7 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
- 				  struct intel_pmt_namespace *ns,
- 				  struct device *parent)
- {
-+	struct intel_vsec_device *ivdev = dev_to_ivdev(parent);
- 	struct resource res = {0};
- 	struct device *dev;
- 	int ret;
-@@ -270,7 +271,7 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
- 	if (ns->attr_grp) {
- 		ret = sysfs_create_group(entry->kobj, ns->attr_grp);
- 		if (ret)
--			goto fail_sysfs;
-+			goto fail_sysfs_create_group;
- 	}
- 
- 	/* if size is 0 assume no data buffer, so no file needed */
-@@ -295,13 +296,23 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
- 	entry->pmt_bin_attr.size = entry->size;
- 
- 	ret = sysfs_create_bin_file(&dev->kobj, &entry->pmt_bin_attr);
--	if (!ret)
--		return 0;
-+	if (ret)
-+		goto fail_ioremap;
- 
-+	if (ns->pmt_add_endpoint) {
-+		ret = ns->pmt_add_endpoint(entry, ivdev->pcidev);
-+		if (ret)
-+			goto fail_add_endpoint;
-+	}
-+
-+	return 0;
-+
-+fail_add_endpoint:
-+	sysfs_remove_bin_file(entry->kobj, &entry->pmt_bin_attr);
- fail_ioremap:
- 	if (ns->attr_grp)
- 		sysfs_remove_group(entry->kobj, ns->attr_grp);
--fail_sysfs:
-+fail_sysfs_create_group:
- 	device_unregister(dev);
- fail_dev_create:
- 	xa_erase(ns->xa, entry->devid);
-diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
-index e477a19f6700..d23c63b73ab7 100644
---- a/drivers/platform/x86/intel/pmt/class.h
-+++ b/drivers/platform/x86/intel/pmt/class.h
-@@ -9,6 +9,7 @@
- #include <linux/io.h>
- 
- #include "../vsec.h"
-+#include "telemetry.h"
- 
- /* PMT access types */
- #define ACCESS_BARID		2
-@@ -18,6 +19,16 @@
- #define GET_BIR(v)		((v) & GENMASK(2, 0))
- #define GET_ADDRESS(v)		((v) & GENMASK(31, 3))
- 
-+struct pci_dev;
-+
-+struct telem_endpoint {
-+	struct pci_dev		*pcidev;
-+	struct telem_header	header;
-+	void __iomem		*base;
-+	bool			present;
-+	struct kref		kref;
-+};
-+
- struct intel_pmt_header {
- 	u32	base_offset;
- 	u32	size;
-@@ -26,6 +37,7 @@ struct intel_pmt_header {
+diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+index edaa70067e41..85b6f6ae4995 100644
+--- a/drivers/platform/x86/intel/pmc/core.h
++++ b/drivers/platform/x86/intel/pmc/core.h
+@@ -320,6 +320,7 @@ struct pmc_reg_map {
+ 	const u32 lpm_status_offset;
+ 	const u32 lpm_live_status_offset;
+ 	const u32 etr3_offset;
++	const u8  *lpm_reg_index;
  };
  
- struct intel_pmt_entry {
-+	struct telem_endpoint	*ep;
- 	struct intel_pmt_header	header;
- 	struct bin_attribute	pmt_bin_attr;
- 	struct kobject		*kobj;
-@@ -43,6 +55,8 @@ struct intel_pmt_namespace {
- 	const struct attribute_group *attr_grp;
- 	int (*pmt_header_decode)(struct intel_pmt_entry *entry,
- 				 struct device *dev);
-+	int (*pmt_add_endpoint)(struct intel_pmt_entry *entry,
-+				struct pci_dev *pdev);
+ /**
+@@ -329,6 +330,7 @@ struct pmc_reg_map {
+  *			specific attributes
+  */
+ struct pmc_info {
++	u32 guid;
+ 	u16 devid;
+ 	const struct pmc_reg_map *map;
  };
+@@ -486,6 +488,7 @@ extern const struct pmc_bit_map *mtl_ioem_lpm_maps[];
+ extern const struct pmc_reg_map mtl_ioem_reg_map;
  
- bool intel_pmt_is_early_client_hw(struct device *dev);
-diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
-index f86080e8bebd..09258564dfc4 100644
---- a/drivers/platform/x86/intel/pmt/telemetry.c
-+++ b/drivers/platform/x86/intel/pmt/telemetry.c
-@@ -30,6 +30,15 @@
- /* Used by client hardware to identify a fixed telemetry entry*/
- #define TELEM_CLIENT_FIXED_BLOCK_GUID	0x10000000
+ extern void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev);
++extern int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev);
+ extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
  
-+#define NUM_BYTES_QWORD(v)	((v) << 3)
-+#define SAMPLE_ID_OFFSET(v)	((v) << 3)
-+
-+#define NUM_BYTES_DWORD(v)	((v) << 2)
-+#define SAMPLE_ID_OFFSET32(v)	((v) << 2)
-+
-+/* Protects access to the xarray of telemetry endpoint handles */
-+static DEFINE_MUTEX(ep_lock);
-+
- enum telem_type {
- 	TELEM_TYPE_PUNIT = 0,
- 	TELEM_TYPE_CRASHLOG,
-@@ -84,21 +93,195 @@ static int pmt_telem_header_decode(struct intel_pmt_entry *entry,
- 	return 0;
- }
+ int pmc_core_resume_common(struct pmc_dev *pmcdev);
+diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
+index a18e3a2e90fe..f9819fa01707 100644
+--- a/drivers/platform/x86/intel/pmc/core_ssram.c
++++ b/drivers/platform/x86/intel/pmc/core_ssram.c
+@@ -24,6 +24,140 @@
+ #define SSRAM_IOE_OFFSET	0x68
+ #define SSRAM_DEVID_OFFSET	0x70
  
-+static int pmt_telem_add_endpoint(struct intel_pmt_entry *entry,
-+				  struct pci_dev *pdev)
++/* PCH query */
++#define LPM_HEADER_OFFSET	1
++#define LPM_REG_COUNT		28
++#define LPM_MODE_OFFSET		1
++
++static u32 pmc_core_find_guid(struct pmc_info *list, const struct pmc_reg_map *map)
 +{
-+	struct telem_endpoint *ep;
-+
-+	/* Endpoint lifetimes are managed by kref, not devres */
-+	entry->ep = kzalloc(sizeof(*(entry->ep)), GFP_KERNEL);
-+	if (!entry->ep)
-+		return -ENOMEM;
-+
-+	ep = entry->ep;
-+	ep->pcidev = pdev;
-+	ep->header.access_type = entry->header.access_type;
-+	ep->header.guid = entry->header.guid;
-+	ep->header.base_offset = entry->header.base_offset;
-+	ep->header.size = entry->header.size;
-+	ep->base = entry->base;
-+	ep->present = true;
-+
-+	kref_init(&ep->kref);
++	for (; list->map; ++list)
++		if (list->map == map)
++			return list->guid;
 +
 +	return 0;
 +}
 +
- static DEFINE_XARRAY_ALLOC(telem_array);
- static struct intel_pmt_namespace pmt_telem_ns = {
- 	.name = "telem",
- 	.xa = &telem_array,
- 	.pmt_header_decode = pmt_telem_header_decode,
-+	.pmt_add_endpoint = pmt_telem_add_endpoint,
- };
- 
-+/* Called when all users unregister and the device is removed */
-+static void pmt_telem_ep_release(struct kref *kref)
++static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc)
 +{
 +	struct telem_endpoint *ep;
++	const u8 *lpm_indices;
++	int num_maps, mode_offset = 0;
++	int ret, mode, i;
++	int lpm_size;
++	u32 guid;
 +
-+	ep = container_of(kref, struct telem_endpoint, kref);
-+	kfree(ep);
-+}
++	lpm_indices = pmc->map->lpm_reg_index;
++	num_maps = pmc->map->lpm_num_maps;
++	lpm_size = LPM_MAX_NUM_MODES * num_maps;
 +
-+unsigned long pmt_telem_get_next_endpoint(unsigned long start)
-+{
-+	struct intel_pmt_entry *entry;
-+	unsigned long found_idx;
++	guid = pmc_core_find_guid(pmcdev->regmap_list, pmc->map);
++	if (!guid)
++		return -ENXIO;
 +
-+	mutex_lock(&ep_lock);
-+	xa_for_each_start(&telem_array, found_idx, entry, start) {
-+		/*
-+		 * Return first found index after start.
-+		 * 0 is not valid id.
-+		 */
-+		if (found_idx > start)
-+			break;
-+	}
-+	mutex_unlock(&ep_lock);
-+
-+	return found_idx == start ? 0 : found_idx;
-+}
-+EXPORT_SYMBOL_NS_GPL(pmt_telem_get_next_endpoint, INTEL_PMT_TELEMETRY);
-+
-+struct telem_endpoint *pmt_telem_register_endpoint(int devid)
-+{
-+	struct intel_pmt_entry *entry;
-+	unsigned long index = devid;
-+
-+	mutex_lock(&ep_lock);
-+	entry = xa_find(&telem_array, &index, index, XA_PRESENT);
-+	if (!entry) {
-+		mutex_unlock(&ep_lock);
-+		return ERR_PTR(-ENXIO);
++	ep = pmt_telem_find_and_register_endpoint(pmcdev->ssram_pcidev, guid, 0);
++	if (IS_ERR(ep)) {
++		dev_dbg(&pmcdev->pdev->dev, "couldn't get telem endpoint %ld",
++			PTR_ERR(ep));
++		return -EPROBE_DEFER;
 +	}
 +
-+	kref_get(&entry->ep->kref);
-+	mutex_unlock(&ep_lock);
-+
-+	return entry->ep;
-+}
-+EXPORT_SYMBOL_NS_GPL(pmt_telem_register_endpoint, INTEL_PMT_TELEMETRY);
-+
-+void pmt_telem_unregister_endpoint(struct telem_endpoint *ep)
-+{
-+	kref_put(&ep->kref, pmt_telem_ep_release);
-+}
-+EXPORT_SYMBOL_NS_GPL(pmt_telem_unregister_endpoint, INTEL_PMT_TELEMETRY);
-+
-+int pmt_telem_get_endpoint_info(int devid, struct telem_endpoint_info *info)
-+{
-+	struct intel_pmt_entry *entry;
-+	unsigned long index = devid;
-+	int err = 0;
-+
-+	if (!info)
-+		return -EINVAL;
-+
-+	mutex_lock(&ep_lock);
-+	entry = xa_find(&telem_array, &index, index, XA_PRESENT);
-+	if (!entry) {
-+		err = -ENXIO;
-+		goto unlock;
++	pmc->lpm_req_regs = devm_kzalloc(&pmcdev->pdev->dev,
++					 lpm_size * sizeof(u32),
++					 GFP_KERNEL);
++	if (!pmc->lpm_req_regs) {
++		ret = -ENOMEM;
++		goto unregister_ep;
 +	}
 +
-+	info->pdev = entry->ep->pcidev;
-+	info->header = entry->ep->header;
++	/*
++	 * PMC Low Power Mode (LPM) table
++	 *
++	 * In telemetry space, the LPM table contains a 4 byte header followed
++	 * by 8 consecutive mode blocks (one for each LPM mode). Each block
++	 * has a 4 byte header followed by a set of registers that describe the
++	 * IP state requirements for the given mode. The IP mapping is platform
++	 * specific but the same for each block, making for easy analysis.
++	 * Platforms only use a subset of the space to track the requirements
++	 * for their IPs. Callers provide the requirement registers they use as
++	 * a list of indices. Each requirement register is associated with an
++	 * IP map that's maintained by the caller.
++	 *
++	 * Header
++	 * +----+----------------------------+----------------------------+
++	 * |  0 |      REVISION              |      ENABLED MODES         |
++	 * +----+--------------+-------------+-------------+--------------+
++	 *
++	 * Low Power Mode 0 Block
++	 * +----+--------------+-------------+-------------+--------------+
++	 * |  1 |     SUB ID   |     SIZE    |   MAJOR     |   MINOR      |
++	 * +----+--------------+-------------+-------------+--------------+
++	 * |  2 |           LPM0 Requirements 0                           |
++	 * +----+---------------------------------------------------------+
++	 * |    |                  ...                                    |
++	 * +----+---------------------------------------------------------+
++	 * | 29 |           LPM0 Requirements 27                          |
++	 * +----+---------------------------------------------------------+
++	 *
++	 * ...
++	 *
++	 * Low Power Mode 7 Block
++	 * +----+--------------+-------------+-------------+--------------+
++	 * |    |     SUB ID   |     SIZE    |   MAJOR     |   MINOR      |
++	 * +----+--------------+-------------+-------------+--------------+
++	 * | 60 |           LPM7 Requirements 0                           |
++	 * +----+---------------------------------------------------------+
++	 * |    |                  ...                                    |
++	 * +----+---------------------------------------------------------+
++	 * | 87 |           LPM7 Requirements 27                          |
++	 * +----+---------------------------------------------------------+
++	 *
++	 */
++	mode_offset = LPM_HEADER_OFFSET + LPM_MODE_OFFSET;
++	pmc_for_each_mode(i, mode, pmcdev) {
++		u32 *req_offset = pmc->lpm_req_regs + (mode * num_maps);
++		int m;
 +
-+unlock:
-+	mutex_unlock(&ep_lock);
-+	return err;
++		for (m = 0; m < num_maps; m++) {
++			u8 sample_id = lpm_indices[m] + mode_offset;
 +
-+}
-+EXPORT_SYMBOL_NS_GPL(pmt_telem_get_endpoint_info, INTEL_PMT_TELEMETRY);
-+
-+int pmt_telem_read(struct telem_endpoint *ep, u32 id, u64 *data, u32 count)
-+{
-+	u32 offset, size;
-+
-+	if (!ep->present)
-+		return -ENODEV;
-+
-+	offset = SAMPLE_ID_OFFSET(id);
-+	size = ep->header.size;
-+
-+	if (offset + NUM_BYTES_QWORD(count) > size)
-+		return -EINVAL;
-+
-+	memcpy_fromio(data, ep->base + offset, NUM_BYTES_QWORD(count));
-+
-+	return ep->present ? 0 : -EPIPE;
-+}
-+EXPORT_SYMBOL_NS_GPL(pmt_telem_read, INTEL_PMT_TELEMETRY);
-+
-+int pmt_telem_read32(struct telem_endpoint *ep, u32 id, u32 *data, u32 count)
-+{
-+	u32 offset, size;
-+
-+	if (!ep->present)
-+		return -ENODEV;
-+
-+	offset = SAMPLE_ID_OFFSET32(id);
-+	size = ep->header.size;
-+
-+	if (offset + NUM_BYTES_DWORD(count) > size)
-+		return -EINVAL;
-+
-+	memcpy_fromio(data, ep->base + offset, NUM_BYTES_DWORD(count));
-+
-+	return ep->present ? 0 : -EPIPE;
-+}
-+EXPORT_SYMBOL_NS_GPL(pmt_telem_read32, INTEL_PMT_TELEMETRY);
-+
-+struct telem_endpoint *
-+pmt_telem_find_and_register_endpoint(struct pci_dev *pcidev, u32 guid, u16 pos)
-+{
-+	int devid = 0;
-+	int inst = 0;
-+	int err = 0;
-+
-+	while ((devid = pmt_telem_get_next_endpoint(devid))) {
-+		struct telem_endpoint_info ep_info;
-+
-+		err = pmt_telem_get_endpoint_info(devid, &ep_info);
-+		if (err)
-+			return ERR_PTR(err);
-+
-+		if (ep_info.header.guid == guid && ep_info.pdev == pcidev) {
-+			if (inst == pos)
-+				return pmt_telem_register_endpoint(devid);
-+			++inst;
++			ret = pmt_telem_read32(ep, sample_id, req_offset, 1);
++			if (ret) {
++				dev_err(&pmcdev->pdev->dev,
++					"couldn't read Low Power Mode requirements: %d\n", ret);
++				devm_kfree(&pmcdev->pdev->dev, pmc->lpm_req_regs);
++				goto unregister_ep;
++			}
++			++req_offset;
 +		}
++		mode_offset += LPM_REG_COUNT + LPM_MODE_OFFSET;
 +	}
 +
-+	return ERR_PTR(-ENXIO);
++unregister_ep:
++	pmt_telem_unregister_endpoint(ep);
++
++	return ret;
 +}
-+EXPORT_SYMBOL_NS_GPL(pmt_telem_find_and_register_endpoint, INTEL_PMT_TELEMETRY);
 +
- static void pmt_telem_remove(struct auxiliary_device *auxdev)
- {
- 	struct pmt_telem_priv *priv = auxiliary_get_drvdata(auxdev);
- 	int i;
- 
--	for (i = 0; i < priv->num_entries; i++)
--		intel_pmt_dev_destroy(&priv->entry[i], &pmt_telem_ns);
--}
-+	mutex_lock(&ep_lock);
-+	for (i = 0; i < priv->num_entries; i++) {
-+		struct intel_pmt_entry *entry = &priv->entry[i];
++int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev)
++{
++	int ret, i;
 +
-+		kref_put(&entry->ep->kref, pmt_telem_ep_release);
-+		intel_pmt_dev_destroy(entry, &pmt_telem_ns);
++	if (!pmcdev->ssram_pcidev)
++		return -ENODEV;
++
++	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
++		if (!pmcdev->pmcs[i])
++			continue;
++
++		ret = pmc_core_get_lpm_req(pmcdev, pmcdev->pmcs[i]);
++		if (ret)
++			return ret;
 +	}
-+	mutex_unlock(&ep_lock);
-+};
- 
- static int pmt_telem_probe(struct auxiliary_device *auxdev, const struct auxiliary_device_id *id)
++
++	return 0;
++}
++
+ static void
+ pmc_add_pmt(struct pmc_dev *pmcdev, u64 ssram_base, void __iomem *ssram)
  {
-@@ -117,7 +300,9 @@ static int pmt_telem_probe(struct auxiliary_device *auxdev, const struct auxilia
- 	for (i = 0; i < intel_vsec_dev->num_resources; i++) {
- 		struct intel_pmt_entry *entry = &priv->entry[priv->num_entries];
- 
-+		mutex_lock(&ep_lock);
- 		ret = intel_pmt_dev_create(entry, &pmt_telem_ns, intel_vsec_dev, i);
-+		mutex_unlock(&ep_lock);
- 		if (ret < 0)
- 			goto abort_probe;
- 		if (ret)
-diff --git a/drivers/platform/x86/intel/pmt/telemetry.h b/drivers/platform/x86/intel/pmt/telemetry.h
-new file mode 100644
-index 000000000000..d45af5512b4e
---- /dev/null
-+++ b/drivers/platform/x86/intel/pmt/telemetry.h
-@@ -0,0 +1,126 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _TELEMETRY_H
-+#define _TELEMETRY_H
-+
-+/* Telemetry types */
-+#define PMT_TELEM_TELEMETRY	0
-+#define PMT_TELEM_CRASHLOG	1
-+
-+struct telem_endpoint;
-+struct pci_dev;
-+
-+struct telem_header {
-+	u8	access_type;
-+	u16	size;
-+	u32	guid;
-+	u32	base_offset;
-+};
-+
-+struct telem_endpoint_info {
-+	struct pci_dev		*pdev;
-+	struct telem_header	header;
-+};
-+
-+/**
-+ * pmt_telem_get_next_endpoint() - Get next device id for a telemetry endpoint
-+ * @start:  starting devid to look from
-+ *
-+ * This functions can be used in a while loop predicate to retrieve the devid
-+ * of all available telemetry endpoints. Functions pmt_telem_get_next_endpoint()
-+ * and pmt_telem_register_endpoint() can be used inside of the loop to examine
-+ * endpoint info and register to receive a pointer to the endpoint. The pointer
-+ * is then usable in the telemetry read calls to access the telemetry data.
-+ *
-+ * Return:
-+ * * devid       - devid of the next present endpoint from start
-+ * * 0           - when no more endpoints are present after start
-+ */
-+unsigned long pmt_telem_get_next_endpoint(unsigned long start);
-+
-+/**
-+ * pmt_telem_register_endpoint() - Register a telemetry endpoint
-+ * @devid: device id/handle of the telemetry endpoint
-+ *
-+ * Increments the kref usage counter for the endpoint.
-+ *
-+ * Return:
-+ * * endpoint    - On success returns pointer to the telemetry endpoint
-+ * * -ENXIO      - telemetry endpoint not found
-+ */
-+struct telem_endpoint *pmt_telem_register_endpoint(int devid);
-+
-+/**
-+ * pmt_telem_unregister_endpoint() - Unregister a telemetry endpoint
-+ * @ep:   ep structure to populate.
-+ *
-+ * Decrements the kref usage counter for the endpoint.
-+ */
-+void pmt_telem_unregister_endpoint(struct telem_endpoint *ep);
-+
-+/**
-+ * pmt_telem_get_endpoint_info() - Get info for an endpoint from its devid
-+ * @devid:  device id/handle of the telemetry endpoint
-+ * @info:   Endpoint info structure to be populated
-+ *
-+ * Return:
-+ * * 0           - Success
-+ * * -ENXIO      - telemetry endpoint not found for the devid
-+ * * -EINVAL     - @info is NULL
-+ */
-+int pmt_telem_get_endpoint_info(int devid, struct telem_endpoint_info *info);
-+
-+/**
-+ * pmt_telem_find_and_register_endpoint() - Get a telemetry endpoint from
-+ * pci_dev device, guid and pos
-+ * @pdev:   PCI device inside the Intel vsec
-+ * @guid:   GUID of the telemetry space
-+ * @pos:    Instance of the guid
-+ *
-+ * Return:
-+ * * endpoint    - On success returns pointer to the telemetry endpoint
-+ * * -ENXIO      - telemetry endpoint not found
-+ */
-+struct telem_endpoint *pmt_telem_find_and_register_endpoint(struct pci_dev *pcidev,
-+				u32 guid, u16 pos);
-+
-+/**
-+ * pmt_telem_read() - Read qwords from counter sram using sample id
-+ * @ep:     Telemetry endpoint to be read
-+ * @id:     The beginning sample id of the metric(s) to be read
-+ * @data:   Allocated qword buffer
-+ * @count:  Number of qwords requested
-+ *
-+ * Callers must ensure reads are aligned. When the call returns -ENODEV,
-+ * the device has been removed and callers should unregister the telemetry
-+ * endpoint.
-+ *
-+ * Return:
-+ * * 0           - Success
-+ * * -ENODEV     - The device is not present.
-+ * * -EINVAL     - The offset is out bounds
-+ * * -EPIPE      - The device was removed during the read. Data written
-+ *                 but should be considered invalid.
-+ */
-+int pmt_telem_read(struct telem_endpoint *ep, u32 id, u64 *data, u32 count);
-+
-+/**
-+ * pmt_telem_read32() - Read qwords from counter sram using sample id
-+ * @ep:     Telemetry endpoint to be read
-+ * @id:     The beginning sample id of the metric(s) to be read
-+ * @data:   Allocated dword buffer
-+ * @count:  Number of dwords requested
-+ *
-+ * Callers must ensure reads are aligned. When the call returns -ENODEV,
-+ * the device has been removed and callers should unregister the telemetry
-+ * endpoint.
-+ *
-+ * Return:
-+ * * 0           - Success
-+ * * -ENODEV     - The device is not present.
-+ * * -EINVAL     - The offset is out bounds
-+ * * -EPIPE      - The device was removed during the read. Data written
-+ *                 but should be considered invalid.
-+ */
-+int pmt_telem_read32(struct telem_endpoint *ep, u32 id, u32 *data, u32 count);
-+
-+#endif
+@@ -187,3 +321,4 @@ int pmc_core_ssram_init(struct pmc_dev *pmcdev)
+ 	return ret;
+ }
+ MODULE_IMPORT_NS(INTEL_VSEC);
++MODULE_IMPORT_NS(INTEL_PMT_TELEMETRY);
 -- 
 2.34.1
 
