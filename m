@@ -1,46 +1,61 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j16ghjHg"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D128D50;
-	Wed, 22 Nov 2023 20:04:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700712241; x=1732248241;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=gfgcXFlpPbYc0JsqAKzy9AB11ZOF+U05sPe7+FVHEOI=;
-  b=j16ghjHgsGa1hyHUXneKSoK0sicelpD8suLmsYVxmTcwLFynfVIOelnr
-   d3lNI+af5Sv5G5OYyL5ACmEKCbBPK1lsFV/YNjyApKzJkscVJ1IjKwq4Y
-   pYJ0VE9UXC5Ipp2g7/4H5rJZuIHY7eCvsr2go3A74pjukZ4kDGGy/CIwI
-   QLdtr+cp9mKEwBCaxa7+K6pK/mQw3UfmVm6YEiS7Q7drkB6mjP7zhAWeN
-   4fzaC2yWYB0ZOMxY1Gt10XOgfhgMrogg6YYcvDHynCxmLC8WSeoo3W7c+
-   G9MQSeQ7oL+d9r489+P30IogRIZPVVCjrXXeP5XRTaJx9deUapF6uBNTC
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="5334667"
-X-IronPort-AV: E=Sophos;i="6.04,220,1695711600"; 
-   d="scan'208";a="5334667"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="837671158"
-X-IronPort-AV: E=Sophos;i="6.04,220,1695711600"; 
-   d="scan'208";a="837671158"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:58 -0800
-Received: from debox1-desk4.lan (snpatel1-mobl.amr.corp.intel.com [10.209.89.91])
-	by linux.intel.com (Postfix) with ESMTP id A97DB580D7B;
-	Wed, 22 Nov 2023 20:03:57 -0800 (PST)
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RiGn2bI+"
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7815F19D;
+	Wed, 22 Nov 2023 21:53:32 -0800 (PST)
+Received: by mail-oi1-x22b.google.com with SMTP id 5614622812f47-3b837d974ecso339544b6e.2;
+        Wed, 22 Nov 2023 21:53:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700718812; x=1701323612; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OdUNABR6Mifi2m+aoepA5AMZHmcuu2ymDmdpy19JJlA=;
+        b=RiGn2bI+Wy1l1D0qhXvj/+DN3MHQOCS0qR8FyGPos/lR40uhxsRK9Kp+NIp51iFZxB
+         GFpU1bdCE+V4X8rIiHABAS92SkEm3rgYlmwMqLV8RLmjsCcZmyMOeEmLyMTMHIhTbdu1
+         btG9FW1y91sI5eK0cLyIqj9ywfrp1d/uwQMiTrE1p7S2L06MoJquyoziBEPrvjUVZ1Fj
+         4HBo+EdsRjiPz5KtIikH4W74Tmj8DM0uMrXYu1fDPlDM/Qjq3Z4Io+8Ep3jVDE0LFHol
+         Aglbg6bXW/tqSki3/WAAj1dj2ndARlT0z6V2otHgKALfAc1L1di8r0Gwa75soJjIja8F
+         J29w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700718812; x=1701323612;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OdUNABR6Mifi2m+aoepA5AMZHmcuu2ymDmdpy19JJlA=;
+        b=e3YpGZujy3oS27uYxQ4toVJLSoFQpzaSNe1F+JGg/rxCVMctIlC5P6CMY3Uzbi0aKt
+         dgJUYOjH5z6fFqm1Ibbljdun/Mecx0ekke0l4Txok63EJw/O5hlYOv2T+o4EaVuxoKfg
+         AlC7cmLy3hMNatOa7eJU8ePOmwFvAjnmv6cR/niKzztx1C+2NlbZ0drGO1BPCxVDZ9m8
+         fZhg0M8whLA5uvYL5SxUF4OL6bxukroDiReZNtdPAA3YyDPeuwzGMl+ra5lfwI3eoheU
+         T3WJ1bDBkTWnjtJZMEQHTK0BXVRGBliU+tsBGYS8FK0lSKnQzBnFcELc5KDi87hYwFpU
+         tBLA==
+X-Gm-Message-State: AOJu0YzjBOTk8UXk7wjcIG7AFKVKwXcwLiHs8FQIWboLYLai3aJUxjLT
+	Dxc9ELy4kZtE3xFSbKn3cGA=
+X-Google-Smtp-Source: AGHT+IGn7QzG9DaCsRCcjqAPRW3yKy2dFCdW/Gzty+AL0RBIV+vk1a4EV6ImJUUWF7zaet1wZozNgQ==
+X-Received: by 2002:a05:6808:1915:b0:3b2:f275:18a8 with SMTP id bf21-20020a056808191500b003b2f27518a8mr6942617oib.22.1700718811822;
+        Wed, 22 Nov 2023 21:53:31 -0800 (PST)
+Received: from localhost.localdomain ([110.46.146.116])
+        by smtp.gmail.com with ESMTPSA id u26-20020a62ed1a000000b006cbcd08ed56sm429438pfh.56.2023.11.22.21.53.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Nov 2023 21:53:31 -0800 (PST)
+From: SungHwan Jung <onenowy@gmail.com>
+To: lkp@intel.com
+Cc: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
-	rajvi.jingar@linux.intel.com
-Subject: [PATCH V5 19/20] platform/x86/intel/pmc: Add debug attribute for Die C6 counter
-Date: Wed, 22 Nov 2023 20:03:54 -0800
-Message-Id: <20231123040355.82139-20-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231123040355.82139-1-david.e.box@linux.intel.com>
-References: <20231123040355.82139-1-david.e.box@linux.intel.com>
+	jdelvare@suse.com,
+	jlee@suse.com,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	oe-kbuild-all@lists.linux.dev,
+	onenowy@gmail.com,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: Re: [PATCH v2 2/2] platform/x86: acer-wmi: add fan speed monitoring for Predator PHN16-71
+Date: Thu, 23 Nov 2023 14:53:23 +0900
+Message-ID: <20231123055323.417287-1-onenowy@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <202311230750.psygl1ot-lkp@intel.com>
+References: <202311230750.psygl1ot-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -49,159 +64,5 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a "die_c6_us_show" debugfs attribute.  Reads the counter value using
-Intel Platform Monitoring Technology (PMT) driver API. This counter is
-useful for determining the idle residency of CPUs in the compute tile.
-Also adds a missing forward declaration for punit_ep which was declared in
-an earlier upstream commit but only used for the first time in this one.
-
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
-V5 - Change comment for crystal error and return value
-
-V4 - no change
-
-V3 - Split previous PATCH V2 13. Separates implementation (this patch) from
-     platform specific use (next patch)
-
-V2 - Remove use of __func__
-   - Use HZ_PER_MHZ
-   - Fix missing newlines in printks
-
- drivers/platform/x86/intel/pmc/core.c | 55 +++++++++++++++++++++++++++
- drivers/platform/x86/intel/pmc/core.h |  4 ++
- 2 files changed, 59 insertions(+)
-
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 4a38d52558fd..fb2c84fba0ae 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -20,6 +20,7 @@
- #include <linux/pci.h>
- #include <linux/slab.h>
- #include <linux/suspend.h>
-+#include <linux/units.h>
- 
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
-@@ -27,6 +28,7 @@
- #include <asm/tsc.h>
- 
- #include "core.h"
-+#include "../pmt/telemetry.h"
- 
- /* Maximum number of modes supported by platfoms that has low power mode capability */
- const char *pmc_lpm_modes[] = {
-@@ -817,6 +819,47 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
- }
- DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_req_regs);
- 
-+static unsigned int pmc_core_get_crystal_freq(void)
-+{
-+	unsigned int eax_denominator, ebx_numerator, ecx_hz, edx;
-+
-+	if (boot_cpu_data.cpuid_level < 0x15)
-+		return 0;
-+
-+	eax_denominator = ebx_numerator = ecx_hz = edx = 0;
-+
-+	/* CPUID 15H TSC/Crystal ratio, plus optionally Crystal Hz */
-+	cpuid(0x15, &eax_denominator, &ebx_numerator, &ecx_hz, &edx);
-+
-+	if (ebx_numerator == 0 || eax_denominator == 0)
-+		return 0;
-+
-+	return ecx_hz;
-+}
-+
-+static int pmc_core_die_c6_us_show(struct seq_file *s, void *unused)
-+{
-+	struct pmc_dev *pmcdev = s->private;
-+	u64 die_c6_res, count;
-+	int ret;
-+
-+	if (!pmcdev->crystal_freq) {
-+		dev_warn_once(&pmcdev->pdev->dev, "Crystal frequency unavailable\n");
-+		return -ENXIO;
-+	}
-+
-+	ret = pmt_telem_read(pmcdev->punit_ep, pmcdev->die_c6_offset,
-+			     &count, 1);
-+	if (ret)
-+		return ret;
-+
-+	die_c6_res = div64_u64(count * HZ_PER_MHZ, pmcdev->crystal_freq);
-+	seq_printf(s, "%llu\n", die_c6_res);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(pmc_core_die_c6_us);
-+
- static int pmc_core_lpm_latch_mode_show(struct seq_file *s, void *unused)
- {
- 	struct pmc_dev *pmcdev = s->private;
-@@ -1113,6 +1156,12 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
- 				    pmcdev->dbgfs_dir, pmcdev,
- 				    &pmc_core_substate_req_regs_fops);
- 	}
-+
-+	if (pmcdev->has_die_c6) {
-+		debugfs_create_file("die_c6_us_show", 0444,
-+				    pmcdev->dbgfs_dir, pmcdev,
-+				    &pmc_core_die_c6_us_fops);
-+	}
- }
- 
- static const struct x86_cpu_id intel_pmc_core_ids[] = {
-@@ -1207,6 +1256,10 @@ static void pmc_core_clean_structure(struct platform_device *pdev)
- 		pci_dev_put(pmcdev->ssram_pcidev);
- 		pci_disable_device(pmcdev->ssram_pcidev);
- 	}
-+
-+	if (pmcdev->punit_ep)
-+		pmt_telem_unregister_endpoint(pmcdev->punit_ep);
-+
- 	platform_set_drvdata(pdev, NULL);
- 	mutex_destroy(&pmcdev->lock);
- }
-@@ -1227,6 +1280,8 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	if (!pmcdev)
- 		return -ENOMEM;
- 
-+	pmcdev->crystal_freq = pmc_core_get_crystal_freq();
-+
- 	platform_set_drvdata(pdev, pmcdev);
- 	pmcdev->pdev = pdev;
- 
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 85b6f6ae4995..6d7673145f90 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -16,6 +16,8 @@
- #include <linux/bits.h>
- #include <linux/platform_device.h>
- 
-+struct telem_endpoint;
-+
- #define SLP_S0_RES_COUNTER_MASK			GENMASK(31, 0)
- 
- #define PMC_BASE_ADDR_DEFAULT			0xFE000000
-@@ -357,6 +359,7 @@ struct pmc {
-  * @devs:		pointer to an array of pmc pointers
-  * @pdev:		pointer to platform_device struct
-  * @ssram_pcidev:	pointer to pci device struct for the PMC SSRAM
-+ * @crystal_freq:	crystal frequency from cpuid
-  * @dbgfs_dir:		path to debugfs interface
-  * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
-  *			used to read MPHY PG and PLL status are available
-@@ -374,6 +377,7 @@ struct pmc_dev {
- 	struct dentry *dbgfs_dir;
- 	struct platform_device *pdev;
- 	struct pci_dev *ssram_pcidev;
-+	unsigned int crystal_freq;
- 	int pmc_xram_read_bit;
- 	struct mutex lock; /* generic mutex lock for PMC Core */
- 
--- 
-2.34.1
-
+It is caused by dependency on hwmon. Setting both hwmon and acer-wmi as
+module (or in-kernel) in config fixes this error.
