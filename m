@@ -1,43 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B3C3X4Uj"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92C18D53;
-	Wed, 22 Nov 2023 20:04:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="asa4+sDC"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B11D48;
+	Wed, 22 Nov 2023 20:04:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700712241; x=1732248241;
+  t=1700712240; x=1732248240;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=ilib+HKkR16/IbKWtlF3aubqsDmVX+0287LGL6KHb8w=;
-  b=B3C3X4UjXwdMzrGKT8NYyrAxXkmEfEJByAUMcfsa4AR/htLUVx4QYkyB
-   Mr0xYcFKNTG5HjrJb5WnpvLl5cRfWT7tJrFxFOt/G77MBLLl6GIAilV0+
-   q0HEmXUY1B+VMGpQ8H92ivjihaQA34YpK8U22zM/mnGmd0WD5GP3h5P6c
-   b+kZkQkC8Hx4lOi6KQvdwr8vRovtagj4W0DUosMTg+NQnyGY9WkNxI4Eg
-   28mkAi/+qqfWCHnhIJWF2JBxyzTxfeYuBZ9vMsQQUJcg6uGJACdk9+2xw
-   TsiJFV8TBHq46AhYenma6dfzm9Ko1NMb3u4Z9TzfgJbHK36+1DkKoY+Pu
+  bh=5ZZAKxI4gVSEhTRWxoAY8gcBKY1IXr9jOeKv5If/tc8=;
+  b=asa4+sDCer8oL6EvCBvQ2oOOHS+KlIJMRg7xnBL+AE7Gf5TDURuGAmf2
+   Q+Zd09rPaDWaCrezuNGCylWFIwk17toqzXXRFSxJidfgS7v95ml7xwlcy
+   KD1qQlXOEEg2IOtBrtdnHpcEsE5163bI5kIWKJ504E1CJB3JJHnPFYBlq
+   8LACWQzy+UQkp4N5kFLMEFzQ62aFbCXoGBSzZxRG92VOgd1MRYpMZciFd
+   vPFAun+QljxVduibEeLvorfWZ1ovuCQwt2sT/Ju9PgcZq1pj+NKjjdIOO
+   F7H71yPpXSqAqMzvmjXY3uFg6sWaYAI4ZKfnoa+uJ8qf1DDu8HR1/+Nyu
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="389347954"
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="5334663"
 X-IronPort-AV: E=Sophos;i="6.04,220,1695711600"; 
-   d="scan'208";a="389347954"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:58 -0800
+   d="scan'208";a="5334663"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:58 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="801925663"
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="837671154"
 X-IronPort-AV: E=Sophos;i="6.04,220,1695711600"; 
-   d="scan'208";a="801925663"
+   d="scan'208";a="837671154"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:57 -0800
+  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 20:03:57 -0800
 Received: from debox1-desk4.lan (snpatel1-mobl.amr.corp.intel.com [10.209.89.91])
-	by linux.intel.com (Postfix) with ESMTP id C475F580CA4;
-	Wed, 22 Nov 2023 20:03:57 -0800 (PST)
+	by linux.intel.com (Postfix) with ESMTP id C57AF580CA6;
+	Wed, 22 Nov 2023 20:03:56 -0800 (PST)
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	ilpo.jarvinen@linux.intel.com,
-	rajvi.jingar@linux.intel.com
-Subject: [PATCH V5 20/20] platform/x86/intel/pmc: Show Die C6 counter on Meteor Lake
-Date: Wed, 22 Nov 2023 20:03:55 -0800
-Message-Id: <20231123040355.82139-21-david.e.box@linux.intel.com>
+	rajvi.jingar@linux.intel.com,
+	dave.hansen@linux.intel.com,
+	peterz@infradead.org
+Subject: [PATCH V5 12/20] asm-generic/io.h: iounmap/ioport_unmap cleanup.h support
+Date: Wed, 22 Nov 2023 20:03:47 -0800
+Message-Id: <20231123040355.82139-13-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231123040355.82139-1-david.e.box@linux.intel.com>
 References: <20231123040355.82139-1-david.e.box@linux.intel.com>
@@ -50,84 +52,49 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Expose the Die C6 counter on Meteor Lake.
+Add auto-release cleanups for iounmap() and ioport_unmap().
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
-V5 - no change
+V2 - Move from linux/io.h to asm-generic/io.h. Adds iounmap cleanup if
+     iounmap() is defined. Adds ioport_unmap cleanup if CONFIG_IOPORT_MAP
+     is defined.
 
-V4 - no change
+ include/asm-generic/io.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-V3 - Split PATCH V2 13. Separates implementation (previous patch)
-     from platform specific use (this patch)
-
- drivers/platform/x86/intel/pmc/mtl.c | 32 ++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-index 7ceeae507f4c..38c2f946ec23 100644
---- a/drivers/platform/x86/intel/pmc/mtl.c
-+++ b/drivers/platform/x86/intel/pmc/mtl.c
-@@ -10,12 +10,17 @@
+diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+index bac63e874c7b..9ef0332490b1 100644
+--- a/include/asm-generic/io.h
++++ b/include/asm-generic/io.h
+@@ -8,6 +8,7 @@
+ #define __ASM_GENERIC_IO_H
  
- #include <linux/pci.h>
- #include "core.h"
-+#include "../pmt/telemetry.h"
+ #include <asm/page.h> /* I/O is all done through memory accesses */
++#include <linux/cleanup.h>
+ #include <linux/string.h> /* for memset() and memcpy() */
+ #include <linux/types.h>
+ #include <linux/instruction_pointer.h>
+@@ -1065,6 +1066,10 @@ static inline void __iomem *ioremap(phys_addr_t addr, size_t size)
+ #endif
+ #endif /* !CONFIG_MMU || CONFIG_GENERIC_IOREMAP */
  
- /* PMC SSRAM PMT Telemetry GUIDS */
- #define SOCP_LPM_REQ_GUID	0x2625030
- #define IOEM_LPM_REQ_GUID	0x4357464
- #define IOEP_LPM_REQ_GUID	0x5077612
- 
-+/* Die C6 from PUNIT telemetry */
-+#define MTL_PMT_DMU_DIE_C6_OFFSET	15
-+#define MTL_PMT_DMU_GUID		0x1A067102
++#ifdef iounmap
++DEFINE_FREE(iounmap, void __iomem *, iounmap(_T));
++#endif
 +
- static const u8 MTL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
+ #ifndef ioremap_wc
+ #define ioremap_wc ioremap
+ #endif
+@@ -1127,6 +1132,7 @@ static inline void ioport_unmap(void __iomem *p)
+ extern void __iomem *ioport_map(unsigned long port, unsigned int nr);
+ extern void ioport_unmap(void __iomem *p);
+ #endif /* CONFIG_GENERIC_IOMAP */
++DEFINE_FREE(ioport_unmap, void __iomem *, ioport_unmap(_T));
+ #endif /* CONFIG_HAS_IOPORT_MAP */
  
- /*
-@@ -968,6 +973,32 @@ static struct pmc_info mtl_pmc_info_list[] = {
- 	{}
- };
- 
-+static void mtl_punit_pmt_init(struct pmc_dev *pmcdev)
-+{
-+	struct telem_endpoint *ep;
-+	struct pci_dev *pcidev;
-+
-+	pcidev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(10, 0));
-+	if (!pcidev) {
-+		dev_err(&pmcdev->pdev->dev, "PUNIT PMT device not found.\n");
-+		return;
-+	}
-+
-+	ep = pmt_telem_find_and_register_endpoint(pcidev, MTL_PMT_DMU_GUID, 0);
-+	if (IS_ERR(ep)) {
-+		dev_err(&pmcdev->pdev->dev,
-+			"pmc_core: couldn't get DMU telem endpoint, %ld\n",
-+			PTR_ERR(ep));
-+		return;
-+	}
-+
-+	pci_dev_put(pcidev);
-+	pmcdev->punit_ep = ep;
-+
-+	pmcdev->has_die_c6 = true;
-+	pmcdev->die_c6_offset = MTL_PMT_DMU_DIE_C6_OFFSET;
-+}
-+
- #define MTL_GNA_PCI_DEV	0x7e4c
- #define MTL_IPU_PCI_DEV	0x7d19
- #define MTL_VPU_PCI_DEV	0x7d1d
-@@ -1032,6 +1063,7 @@ int mtl_core_init(struct pmc_dev *pmcdev)
- 	}
- 
- 	pmc_core_get_low_power_modes(pmcdev);
-+	mtl_punit_pmt_init(pmcdev);
- 
- 	/* Due to a hardware limitation, the GBE LTR blocks PC10
- 	 * when a cable is attached. Tell the PMC to ignore it.
+ #ifndef CONFIG_GENERIC_IOMAP
 -- 
 2.34.1
 
