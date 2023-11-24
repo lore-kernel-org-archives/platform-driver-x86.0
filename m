@@ -1,136 +1,102 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jc7pzhnd"
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6032B1721;
-	Fri, 24 Nov 2023 05:31:23 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-a00f67f120aso263956766b.2;
-        Fri, 24 Nov 2023 05:31:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700832682; x=1701437482; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xqoNh8/DGOCDjWGBAsyHy8zDaolvBGz6WR/aPalN8vA=;
-        b=jc7pzhndHV74TrW5Y6euP8yk3htKIp8W3o1J4svRrdUUZjIdDRWgvExoS9S0QJD/zU
-         rBFEIT2MxFeZ/RzClYiIL0/02BNJdUr2xcGIsYQ77LaRf35g73whiGnOOChNAdVWSOrI
-         3hoq8vKd69rpowWA013qKYH7Bo61cWyy4QgiMXLsdISIwruZm2QyMOky9gdvpigFT2kh
-         1fDO4jvhAIcvXHr6BSmtl7uTFXktnDXDFMVWUS4DaHBnHSBtYtswpMLFp79/pPk1yWRG
-         hmZEhc/S29RsphTAt0pf2F0NPDGxYOfd/0JNu3TNk7MPkdFYp/43uE6PvHkLxFHbM6ee
-         ZfYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700832682; x=1701437482;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xqoNh8/DGOCDjWGBAsyHy8zDaolvBGz6WR/aPalN8vA=;
-        b=C0nGbEllQd0ZR9UGYNYIabEcZU4JD8C4NYjDZNpA7s+0dg2NqPP62OPWLMLz/5M+78
-         tmpXg8oVR1r1kZlVcj8bEdUHzE3TPASfVNWVYIHvrhKOQoQYzN0wuRoyMRLPPE/+6Ovy
-         ZADRjidfCaGRO9R8L+NVGSt9DfoHfPWXnLMvxpTMKbojBG56AvwWtji0wwC1jWKR/131
-         /BKk4Zi6MGdDyIz9IRP9E/sQDEELpVn1H/Ist3FnTBsPOM0reHjQ0Xr+OaRIPGOobYge
-         XINBminf+wxL25fA4hoDhLRwrTKsXxPIaP0D1X5uq7tFW57KBgHdj36ParxPaVNgGetL
-         ah2g==
-X-Gm-Message-State: AOJu0Yxm62nmPBvJXSHKOOIkD7oKbpAsw8xRU5Yr17p55DoW6b0eC3DF
-	kyWzyWAWzcpI3hUuINPbNBs=
-X-Google-Smtp-Source: AGHT+IF2CMWqW6QgTEUE8dPizHd4yGlrN9Vk/VgdOvaxxbdjXw50mDYgNNx7FjDnvVExXduvtyJWvw==
-X-Received: by 2002:a17:906:5da:b0:a03:a857:c6e0 with SMTP id t26-20020a17090605da00b00a03a857c6e0mr1663923ejt.77.1700832681495;
-        Fri, 24 Nov 2023 05:31:21 -0800 (PST)
-Received: from orome.fritz.box (p200300e41f0fa600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f0f:a600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id c24-20020a170906529800b009fe2f96ee9bsm2064075ejm.8.2023.11.24.05.31.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Nov 2023 05:31:21 -0800 (PST)
-Date: Fri, 24 Nov 2023 14:31:18 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Sean Young <sean@mess.org>
-Cc: linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Support Opensource <support.opensource@diasemi.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Mark Gross <markgross@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>,
-	Jani Nikula <jani.nikula@intel.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v5 1/4] pwm: rename pwm_apply_state() to
- pwm_apply_cansleep()
-Message-ID: <ZWClpnMRg_vjuI_R@orome.fritz.box>
-References: <cover.1700323916.git.sean@mess.org>
- <2b973840d800ffb71c2683c37bc996e0cf90a140.1700323916.git.sean@mess.org>
+	dkim=pass (1024-bit key) header.d=dividebyzero.it header.i=@dividebyzero.it header.b="cigupOXD"
+X-Greylist: delayed 1980 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 24 Nov 2023 08:40:14 PST
+Received: from ar2.dbzero.it (unknown [IPv6:2a00:6d41:10:195b::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D8281FF1;
+	Fri, 24 Nov 2023 08:40:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=dividebyzero.it; s=20160415; h=Message-ID:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Date:Subject:Cc
+	:To:From:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	 bh=/1PJqNlvUrXMhjcRuqsGR/kEthoX6oT6N4TqHJqMfZ4=; b=cigupOXD6g1ALihWD0X1EyXGA
+	0u2uRLi7Qq1CQz8moCG0+HaMJcZxajSuxeHMQRBiwG/LLa3+uxtLpHpbLM3rOH67EYPEPPrSCp+1d
+	Movy2Nx7rnX1xeP9naX2hiXT78kSF4SQISq5GgicEuioHqparr/DbEFPRsJ/ojAIiPGFs=;
+Received:  by ar2.dbzero.it with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(Authenticated user: juri@dividebyzero.it)
+	(envelope-from <juri@dividebyzero.it>)
+	id 1r6Yhc-00088M-V4; Fri, 24 Nov 2023 17:06:48 +0100
+From: Juri Vitali <juri@dividebyzero.it>
+To: James John <me@donjajo.com>, Corentin Chary <corentin.chary@gmail.com>,
+ Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Mark Gross <markgross@kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: PROBLEM: asus_nb_wmi sends KEY_BRIGHTNESSDOWN on pressing CAPS Lock and
+ PrntScrn on Zenbook S 13 UX5304VA
+Date: Fri, 24 Nov 2023 16:54:36 +0100
+In-Reply-To: <024c4ad4-1a73-8c24-5e6f-f8c9f2f7b98f@redhat.com>
+References:
+ <a2c441fe-457e-44cf-a146-0ecd86b037cf@donjajo.com>
+ <39b5f902-3a7e-fc04-254e-776bf61f57e2@redhat.com>
+ <024c4ad4-1a73-8c24-5e6f-f8c9f2f7b98f@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mURPCj0PduVIws0V"
-Content-Disposition: inline
-In-Reply-To: <2b973840d800ffb71c2683c37bc996e0cf90a140.1700323916.git.sean@mess.org>
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+Message-ID: <1884918.tdWV9SEqCh@dividebyzero.it>
+X-Original-Message-ID: <1884918.tdWV9SEqCh@arch-zenbook>
+
+Hi,
+Unfortunately those patches have broken the backlight reporting on older 
+laptops, which do rely on the old mechanism.
+
+For instance, on my Asus UX32A/VD when pressing the backlight up/down button 
+the backlight changes accordingly, but the event is not caught by the system 
+(more precisely, dmesg is complaining of unknown key codes):
+
+> [ 3167.842213] asus_wmi: Unknown key code 0x29
+> [ 3168.105096] asus_wmi: Unknown key code 0x28
+> [ 3168.142526] asus_wmi: Unknown key code 0x27
+> [ 3168.178860] asus_wmi: Unknown key code 0x26
+> [ 3168.216027] asus_wmi: Unknown key code 0x25
+> [ 3168.256511] asus_wmi: Unknown key code 0x24
+> [ 3168.292907] asus_wmi: Unknown key code 0x23
+> [ 3168.329704] asus_wmi: Unknown key code 0x22
+> [ 3168.366554] asus_wmi: Unknown key code 0x21
+> [ 3168.406681] asus_wmi: Unknown key code 0x20
+> [ 3168.443330] asus_wmi: Unknown key code 0x20
+> [ 3168.480900] asus_wmi: Unknown key code 0x20
+> [ 3168.516326] asus_wmi: Unknown key code 0x20
+> [ 3168.554006] asus_wmi: Unknown key code 0x20
+> [ 3168.593320] asus_wmi: Unknown key code 0x20
+> [ 3168.630108] asus_wmi: Unknown key code 0x20
+> [ 3168.670110] asus_wmi: Unknown key code 0x20
+> [ 3168.943217] asus_wmi: Unknown key code 0x11
+> [ 3169.203349] asus_wmi: Unknown key code 0x12
+> [ 3169.243239] asus_wmi: Unknown key code 0x13
+> [ 3169.279881] asus_wmi: Unknown key code 0x14
+> [ 3169.316311] asus_wmi: Unknown key code 0x15
+> [ 3169.352887] asus_wmi: Unknown key code 0x16
+> [ 3169.392806] asus_wmi: Unknown key code 0x17
+> [ 3169.429301] asus_wmi: Unknown key code 0x18
+> [ 3169.465843] asus_wmi: Unknown key code 0x19
+> [ 3169.502404] asus_wmi: Unknown key code 0x1a
+> [ 3169.542308] asus_wmi: Unknown key code 0x1a
+> [ 3169.578938] asus_wmi: Unknown key code 0x1a
+> [ 3169.615506] asus_wmi: Unknown key code 0x1a
+> [ 3169.652002] asus_wmi: Unknown key code 0x1a
+> [ 3169.692280] asus_wmi: Unknown key code 0x1a
+
+In this case it seems that the backlight-down codes go from 0x20 to 0x29 while 
+the -up from 0x11 to 0x1a, so assuming they are not clamped somewhere else 
+they should not conflict with the ones used on newer models.
+
+By the way, I only found those codes to be reported by asus-wmi, while other 
+inputs remain silent while pressing those keys.
+
+Let me know if I can help with some logs or anything.
+
+Regards,
+
+Juri
 
 
---mURPCj0PduVIws0V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Nov 18, 2023 at 04:16:17PM +0000, Sean Young wrote:
-> In order to introduce a pwm api which can be used from atomic context,
-> we will need two functions for applying pwm changes:
->=20
-> 	int pwm_apply_cansleep(struct pwm *, struct pwm_state *);
-> 	int pwm_apply_atomic(struct pwm *, struct pwm_state *);
->=20
-> This commit just deals with renaming pwm_apply_state(), a following
-> commit will introduce the pwm_apply_atomic() function.
-
-Sorry, I still don't agree with that _cansleep suffix. I think it's the
-wrong terminology. Just because something can sleep doesn't mean that it
-ever will. "Might sleep" is much more accurate because it says exactly
-what might happen and indicates what we're guarding against.
-
-Thierry
-
---mURPCj0PduVIws0V
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmVgpaQACgkQ3SOs138+
-s6HS8A/7BjtLlUH5CMfFlBTprZQsDfOXKtQTFT7vSIrS5EOAuemIkCNWaesc5juC
-gFpHk93q2Y8+pTg499tii+Ztr7m6Z00sAA8fpGEFwUn03iU9qrrC6/7gwVu8Dsjv
-m326JeQsUo8SL3s5JqH7vKQDUU0agG/rMAFwo5nIzD5xRGmtg1VB+Vg57/T0K4a4
-W99vEqpxwYAZLNQeId2ZTCZHREypDELrwcq0l0JYOOXdsvYa4r34dPep1KDfTvxK
-p6fGafsCc1qJ8S9ygxlTGPv/5+56JXyOEB75XXxBK2QaqEz9iHPxgfJsHz7K3DFx
-cpZtcEd899PpMbAiW5fag0BJcnUNffFf4CoZU34H8MPsp4DzKs7UvJlbQ79KNz6N
-VIjXUsk876G5NuLjwomvkmaxx1cQPbom4YknTav6Zm5dloV36kppnYuZ9+PV8NlW
-uudn06BsR8Yp7d2hpCHK6Vou1zbJtQHxQosq3e4e11mnMXxpnftSCuWZCeUedAhG
-zufpjdOkX1q24J9odZWGWz8rhGWgJUwtIpF8SOkPromrYAxZK+yJAb7AvepYNQNh
-i3X0j8HUnYCWUx7ty20NjF5rVY/GJh5DXncoB5cQqVlLCr8YUvFsOQ9YaUuFa/J5
-M/YrTcS9Bi0p3ps9qE3ec5+WY2E85s4+KeG0Z0/GD1ifS+r4fls=
-=1cUS
------END PGP SIGNATURE-----
-
---mURPCj0PduVIws0V--
