@@ -1,255 +1,103 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BOylP2D1"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E8710FA;
-	Fri, 24 Nov 2023 01:49:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700819351; x=1732355351;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=m+O2iEouFoLlSPXcWmyIB9dFD9aAcWMkJLAYTZIh6qY=;
-  b=BOylP2D1Mwy6QNmU0mTX9Z/AAYWBGtXRGiaxL24ihZnwFHZvolHGPsl8
-   wWeI5rkB7D7jt8qj0MVAuN4OLu7zJ3uSOU+cfNkWtypxxGzne1pX0ME6h
-   bifyXFcaoA5WVSAdyrXAENvM0PJ8pntVY5xmdEQxfAwk90IPXWvMvlevW
-   AK6qghAIAOTcmW7ONhGXL6tsKOg3qkVtM5mmWwBZeer9iYzErdncIvG4H
-   BuwJV2SOZ+kJ9040PBoHqFUj3v5G44bd25ix+uW+9t0HnQPbnDwOMiz79
-   OPYEtA/rV8wPIEQVuNzzslF3gCHKr+fgzt8KY9fQ1IM+RYmMn4RvY4wxW
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="371751267"
-X-IronPort-AV: E=Sophos;i="6.04,223,1695711600"; 
-   d="scan'208";a="371751267"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2023 01:49:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="838037405"
-X-IronPort-AV: E=Sophos;i="6.04,223,1695711600"; 
-   d="scan'208";a="838037405"
-Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Nov 2023 01:49:08 -0800
-Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1r6So5-0002L8-3D;
-	Fri, 24 Nov 2023 09:49:06 +0000
-Date: Fri, 24 Nov 2023 17:49:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: "David E. Box" <david.e.box@linux.intel.com>,
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com, rajvi.jingar@linux.intel.com,
-	dave.hansen@linux.intel.com, peterz@infradead.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH V5 12/20] asm-generic/io.h: iounmap/ioport_unmap
- cleanup.h support
-Message-ID: <202311241214.jcL84du7-lkp@intel.com>
-References: <20231123040355.82139-13-david.e.box@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hp8atEVf"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4F0CD71
+	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Nov 2023 05:11:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1700831516;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MPPhtCNnqzbt2j0R0uiWYEykaIDTGoSkkICfezjLrTA=;
+	b=hp8atEVfWL18w2Lsv94N3vRY6YM+tdyNBFTOtlrE8N5F8qBhumEUd/NOm0mHXdri/r7ZpO
+	ovKTvrAzjUaip07w8fUSUUg4eK9GekuMBpTBvkkqvHuKT44iOCijFM4QdO/PmIkBfaS+N/
+	UcMsQXeEpG/Vxt/ApiLhaYdWEY81LjY=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-686-Bv5Dl0azPNSgamybZxAjsg-1; Fri, 24 Nov 2023 08:11:55 -0500
+X-MC-Unique: Bv5Dl0azPNSgamybZxAjsg-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2c50255b905so16946911fa.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Nov 2023 05:11:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700831513; x=1701436313;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MPPhtCNnqzbt2j0R0uiWYEykaIDTGoSkkICfezjLrTA=;
+        b=kMoBwI87F8AUeWdhxVsgx/2pFrvsDNMSLMvxaneJ/jnbRmpQY2c2sfvr8yJ3KBjH6s
+         qwpO2R1nfMUms8AMGRL2RqgZlwJiCL+plFEAc3RXIoe65WOOpQ+D840KddFOAWN1r30L
+         g86o/ZB9xBirluWQPNXmb9UWY0aoE4kv3JqoNTIcJnDbflimMdhRJGIerOMl/vZrQVXB
+         ZIhvNssAu+1ZvDq9WmlVfUB8862JLskKq/iFwfRQeGrJ6sbfu3NTxJZ4c0URem9QuFcW
+         iefyO0aDK4F++VM27Wpx9uAugF5BJ4QEZJXT0bryEQW6D4XVq3mRLSz1vOEoCk4lZrhU
+         VhgA==
+X-Gm-Message-State: AOJu0YxFgQmtGCk9L+8gxDiMXmFVrfbZlSSwrDKCiUM29WZHcfMGSLJw
+	+M842q181d2Qzo1Qimqd3fo8ulmT5JhkrYpb6lwMppy1A1Gzwe7OQn93rtevkd7py6Hb6xcSti4
+	JPyzsJgG3Y+La2+L/ToTfg/8GHz9q8Yw7T1aCJDwDAg==
+X-Received: by 2002:a05:6512:1386:b0:507:a9b7:f071 with SMTP id fc6-20020a056512138600b00507a9b7f071mr2789943lfb.1.1700831513578;
+        Fri, 24 Nov 2023 05:11:53 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEUrNvhzUJJH6IXHaVhfocTRxPCIW55Lhxa2/cOjOcb60XMHNOMfLTXzTJts714W7TDGb9+cw==
+X-Received: by 2002:a05:6512:1386:b0:507:a9b7:f071 with SMTP id fc6-20020a056512138600b00507a9b7f071mr2789890lfb.1.1700831512948;
+        Fri, 24 Nov 2023 05:11:52 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id q22-20020a170906361600b00a0290da4a50sm2039509ejb.186.2023.11.24.05.11.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Nov 2023 05:11:52 -0800 (PST)
+Message-ID: <601025b8-22d4-4d86-9457-e7f8c4af798e@redhat.com>
+Date: Fri, 24 Nov 2023 14:11:51 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231123040355.82139-13-david.e.box@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] platform/x86: asus-wmi: Filter Volume key presses if
+ also reported via atkbd
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Andy Shevchenko <andy@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Kai Heng Feng <kai.heng.feng@canonical.com>,
+ acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+References: <20231120154235.610808-1-hdegoede@redhat.com>
+ <f7b5df27-497b-de99-35e2-913a1640b48d@linux.intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <f7b5df27-497b-de99-35e2-913a1640b48d@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi David,
+Hi,
 
-kernel test robot noticed the following build errors:
+On 11/23/23 13:41, Ilpo Järvinen wrote:
+> On Mon, 20 Nov 2023, Hans de Goede wrote:
+> 
+>> An issue where volume keypresses get reported through both the atkbd
+>> and the asus-wmi interface has been reported here:
+>>
+>> https://bbs.archlinux.org/viewtopic.php?pid=2128536#p2128536
+>>
+>> This series addresses this. Unfortunately the reporter has fallen
+>> quiet and has not confirmed that this fixes things, but the fix
+>> is straight forward enough that there should be little doubt
+>> that it works.
+>>
+>> Ilpo, the first patch in this series is a straight forward bugfix,
+>> can you merge this into the fixes branch ?
+>>
+>> I guess the rest of the series is a bugfix too, but since this
+>> is untested I'm not sure what to do wrt fixes vs for-next,
+>> what do you think ?
+> 
+> I just took them all into review-ilpo and will propagate them to fixes.
+> I don't think putting them into for-next wins that much here.
 
-[auto build test ERROR on b85ea95d086471afb4ad062012a4d73cd328fa86]
+Ok, sounds good. Thank you.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/David-E-Box/platform-x86-intel-vsec-Fix-xa_alloc-memory-leak/20231123-120726
-base:   b85ea95d086471afb4ad062012a4d73cd328fa86
-patch link:    https://lore.kernel.org/r/20231123040355.82139-13-david.e.box%40linux.intel.com
-patch subject: [PATCH V5 12/20] asm-generic/io.h: iounmap/ioport_unmap cleanup.h support
-config: s390-randconfig-001-20231123 (https://download.01.org/0day-ci/archive/20231124/202311241214.jcL84du7-lkp@intel.com/config)
-compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231124/202311241214.jcL84du7-lkp@intel.com/reproduce)
+Regards,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311241214.jcL84du7-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from arch/s390/kernel/asm-offsets.c:11:
-   In file included from include/linux/kvm_host.h:19:
-   In file included from include/linux/msi.h:27:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/s390/include/asm/io.h:78:
-   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __raw_readb(PCI_IOBASE + addr);
-                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-                                                           ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
-   #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
-                                                             ^
-   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
-   #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-                                                        ^
-   In file included from arch/s390/kernel/asm-offsets.c:11:
-   In file included from include/linux/kvm_host.h:19:
-   In file included from include/linux/msi.h:27:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/s390/include/asm/io.h:78:
-   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-                                                           ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
-   #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
-                                                             ^
-   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
-   #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
-                                                        ^
-   In file included from arch/s390/kernel/asm-offsets.c:11:
-   In file included from include/linux/kvm_host.h:19:
-   In file included from include/linux/msi.h:27:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/s390/include/asm/io.h:78:
-   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writeb(value, PCI_IOBASE + addr);
-                               ~~~~~~~~~~ ^
-   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-                                                         ~~~~~~~~~~ ^
-   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-                                                         ~~~~~~~~~~ ^
-   include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           readsb(PCI_IOBASE + addr, buffer, count);
-                  ~~~~~~~~~~ ^
-   include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           readsw(PCI_IOBASE + addr, buffer, count);
-                  ~~~~~~~~~~ ^
-   include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           readsl(PCI_IOBASE + addr, buffer, count);
-                  ~~~~~~~~~~ ^
-   include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           writesb(PCI_IOBASE + addr, buffer, count);
-                   ~~~~~~~~~~ ^
-   include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           writesw(PCI_IOBASE + addr, buffer, count);
-                   ~~~~~~~~~~ ^
-   include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           writesl(PCI_IOBASE + addr, buffer, count);
-                   ~~~~~~~~~~ ^
->> include/asm-generic/io.h:1070:38: error: call to undeclared function 'iounmap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-   DEFINE_FREE(iounmap, void __iomem *, iounmap(_T));
-                                        ^
-   arch/s390/include/asm/io.h:29:17: note: expanded from macro 'iounmap'
-   #define iounmap iounmap
-                   ^
-   include/asm-generic/io.h:1070:38: note: did you mean 'vunmap'?
-   arch/s390/include/asm/io.h:29:17: note: expanded from macro 'iounmap'
-   #define iounmap iounmap
-                   ^
-   include/linux/vmalloc.h:167:13: note: 'vunmap' declared here
-   extern void vunmap(const void *addr);
-               ^
-   In file included from arch/s390/kernel/asm-offsets.c:11:
-   In file included from include/linux/kvm_host.h:19:
-   In file included from include/linux/msi.h:27:
-   In file included from include/linux/irq.h:591:
-   In file included from arch/s390/include/asm/hw_irq.h:6:
-   In file included from include/linux/pci.h:37:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:160:
-   include/linux/compat.h:454:22: warning: array index 3 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-           case 4: v.sig[7] = (set->sig[3] >> 32); v.sig[6] = set->sig[3];
-                               ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-           unsigned long sig[_NSIG_WORDS];
-           ^
-   In file included from arch/s390/kernel/asm-offsets.c:11:
-   In file included from include/linux/kvm_host.h:19:
-   In file included from include/linux/msi.h:27:
-   In file included from include/linux/irq.h:591:
-   In file included from arch/s390/include/asm/hw_irq.h:6:
-   In file included from include/linux/pci.h:37:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:160:
-   include/linux/compat.h:454:10: warning: array index 7 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-           case 4: v.sig[7] = (set->sig[3] >> 32); v.sig[6] = set->sig[3];
-                   ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-           compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-           ^
-   include/linux/compat.h:454:42: warning: array index 6 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-           case 4: v.sig[7] = (set->sig[3] >> 32); v.sig[6] = set->sig[3];
-                                                   ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-           compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-           ^
-   include/linux/compat.h:454:53: warning: array index 3 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-           case 4: v.sig[7] = (set->sig[3] >> 32); v.sig[6] = set->sig[3];
-                                                              ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-           unsigned long sig[_NSIG_WORDS];
-           ^
-   In file included from arch/s390/kernel/asm-offsets.c:11:
-   In file included from include/linux/kvm_host.h:19:
-   In file included from include/linux/msi.h:27:
-   In file included from include/linux/irq.h:591:
-   In file included from arch/s390/include/asm/hw_irq.h:6:
-   In file included from include/linux/pci.h:37:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:160:
-   include/linux/compat.h:456:22: warning: array index 2 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-           case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-                               ^        ~
-   arch/s390/include/asm/signal.h:22:9: note: array 'sig' declared here
-           unsigned long sig[_NSIG_WORDS];
-           ^
-   In file included from arch/s390/kernel/asm-offsets.c:11:
-   In file included from include/linux/kvm_host.h:19:
-   In file included from include/linux/msi.h:27:
-   In file included from include/linux/irq.h:591:
-   In file included from arch/s390/include/asm/hw_irq.h:6:
-   In file included from include/linux/pci.h:37:
-   In file included from include/linux/device.h:32:
-   In file included from include/linux/device/driver.h:21:
-   In file included from include/linux/module.h:19:
-   In file included from include/linux/elf.h:6:
-   In file included from arch/s390/include/asm/elf.h:160:
-   include/linux/compat.h:456:10: warning: array index 5 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-           case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-                   ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-           compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-           ^
-   include/linux/compat.h:456:42: warning: array index 4 is past the end of the array (that has type 'compat_sigset_word[2]' (aka 'unsigned int[2]')) [-Warray-bounds]
-           case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
-                                                   ^     ~
-   include/linux/compat.h:130:2: note: array 'sig' declared here
-           compat_sigset_word      sig[_COMPAT_NSIG_WORDS];
-           ^
-   include/linux/compat.h:456:53: warning: array index 2 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
-           case 3: v.sig[5] = (set->sig[2] >> 32); v.sig[4] = set->sig[2];
+Hans
 
 
-vim +/iounmap +1070 include/asm-generic/io.h
 
-  1068	
-  1069	#ifdef iounmap
-> 1070	DEFINE_FREE(iounmap, void __iomem *, iounmap(_T));
-  1071	#endif
-  1072	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
