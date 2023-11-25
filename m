@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46681D512
-	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Nov 2023 15:13:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6B8B65C
+	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Nov 2023 15:52:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VizLW1hV"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AC645C433C9
-	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Nov 2023 15:13:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLGUsZ43"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2D596C433C8
+	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Nov 2023 15:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700925208;
-	bh=fQdeKYbl5/ulnbNxljzKpLM8hs+iUjFCaqiWz+jmpPs=;
+	s=k20201202; t=1700927562;
+	bh=AefTbXFJcjDzURQpKctYLCZo43Y2QwSDlaAIr6iyoMU=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=VizLW1hVtFy0ZfoVfwa9kP8+BY9fRKD+MA34/rTw7Ua2U+QHYIPDnnri9Y7QwEt20
-	 pNxxRzhN48wk3dQUn0NxzNGFSnIN7476io5tyYn3JveDIdqLnD6vNaPDlD5xSs3Hnb
-	 swnDZs2OyU7L31Aj39gJcsBSndZgE62av4VoVzjOn7+L60gD1ORg0DNZEVbU1UETnw
-	 TeHP2/TGRuUmBybNo/MUaWh29L5vkVqNYaoQzjvi+6lqiwUq47V+uGry4Qfi5bLfXJ
-	 KZHMN+kqCJ9ZWS559UTuI45PMz72LzzhK0K7EpJfdRqQNV7D0HXAcrVUcAAPRZk4Od
-	 W/9RCh/apaCtw==
+	b=KLGUsZ43PF2FN/ly/bvVo1RhpX1WNAJh8isJBumurDwo6kzYANtDMnxumhtJEe7z/
+	 uU3DTe3tSQr+dviTubwrZ5JWUem9tNFNGy3z/W56y7WHo14t2I5IgGVOfCCxsFcVFN
+	 ucS+usbqM3+PTQMIs4/DlXbUAacPZRplNBqVRTFGyUqP8BKiclfnjnRqd313FIOrmb
+	 Am1q9uK+nF0UzaXUEd/VLInH/O2qo7MDXuggUA44hxwvAbmemERAZMwLc9GsDgXEw3
+	 Yjpg/tXmPlveCxz2nPAe4LlIjyO0cCYkRBBThfdewyes1DetK3pCg7wSUndQXB6RTG
+	 PnKGroyoPAvDA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 90A57C53BCD; Sat, 25 Nov 2023 15:13:28 +0000 (UTC)
+	id 15E35C53BD0; Sat, 25 Nov 2023 15:52:42 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218188] hp_wmi_sensors: probe of
  8F1F6435-9F42-42C8-BADC-0E9424F20C9A failed with error -61
-Date: Sat, 25 Nov 2023 15:13:28 +0000
+Date: Sat, 25 Nov 2023 15:52:41 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -38,8 +38,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-218188-215701-TKZeQlyyzX@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218188-215701-LboOIWCnXZ@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218188-215701@https.bugzilla.kernel.org/>
 References: <bug-218188-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -55,26 +55,47 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218188
 
-Armin Wolf (W_Armin@gmx.de) changed:
+--- Comment #2 from Armin Wolf (W_Armin@gmx.de) ---
+Can you check if the following patch makes the WMI device with the GUID
+8F1F6435-9F42-42C8-BADC-0E9424F20C9A disappear:
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |W_Armin@gmx.de
+From 19edb8bd7368c7ca93268f60d17ee60125354356 Mon Sep 17 00:00:00 2001
+From: Armin Wolf <W_Armin@gmx.de>
+Date: Sat, 25 Nov 2023 16:46:06 +0100
+Subject: [PATCH] platform/x86: wmi: Skip blocks with zero instances
 
---- Comment #1 from Armin Wolf (W_Armin@gmx.de) ---
-It seems that the ACPI tables contain only stub methods for the
-HPBIOS_BIOSNumericSensor WMI class and also signal that only zero instances=
- are
-available.
+Some machines like the HP Omen 17 ck2000nf contain
+WMI blocks with zero instances, so any WMI driver
+which tries to handle the associated WMI device will
+fail.
+Skip such WMI blocks to avoid confusing any WMI drivers.
 
-It seems your device does not support any HPBIOS_BIOSNumericSensor classes,
-maybe
-the dummy WMI device is used by HP to ensure that the MOF data of the
-HPBIOS_BIOSNumericSensor class is loaded into the WMI repository when runni=
-ng
-Windows.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+---
+ drivers/platform/x86/wmi.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-I think the WMI core can prevent WMI drivers from probing such devices.
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 5c27b4aa9690..f3d38b910e15 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -1340,6 +1340,11 @@ static int parse_wdg(struct device *wmi_bus_dev, str=
+uct
+platform_device *pdev)
+                if (debug_dump_wdg)
+                        wmi_dump_wdg(&gblock[i]);
+
++               if (!gblock->instance_count) {
++                       dev_info(wmi_bus_dev, FW_INFO "%pUL has zero
+instances\n", &gblock[i].guid);
++                       continue;
++               }
++
+                if (guid_already_parsed_for_legacy(device, &gblock[i].guid))
+                        continue;
+
+--=20
+2.39.2
 
 --=20
 You may reply to this email to add a comment.
