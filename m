@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DD62EAE4
-	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Nov 2023 18:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4982FC31
+	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Nov 2023 19:50:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZNNG5hQp"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DC9E8C433C8
-	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Nov 2023 18:34:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F5EZ/pR4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 215B5C433C7
+	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Nov 2023 19:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700937287;
-	bh=c1NOkQv2sNKauF/yCZg5RJEdyn+f32tucpYEaMwQU7Q=;
+	s=k20201202; t=1700941832;
+	bh=fsmf4kdKDNLcs/JyJRLbjIu+GuOXPAhRlvd8qkreeJg=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=ZNNG5hQp30AA18mqoRGtSFLb+04timNRGmKx2XGxvnrT0krg+wOVdJ6kk5hzdmuO8
-	 W5dqTuqTbuQEQUhkXWo/Dk7sm45PRTnEYROYhMpaG4QSa/O12KAr12oe8n0Fb+lKmo
-	 VPJtVfQmDg/2RfMOWd4SgPEkCYd05i3GINQWbWwieb7VAr4f0XzcVoMjkyE7N70w4t
-	 CYMql++TFgjmP7kqVeeWR+PNxi2OzP1/+jbST3BRCW0sm9AeyXJ6jhGu2PsYEQZibt
-	 vQg2xhnNjkafDrX3UbE7b3R3EsMpBb91H/hrGQV1KwDysJ6QOshQiFR8BsYGTSJ9wz
-	 w8vrSUx+L0+qA==
+	b=F5EZ/pR4W4gSzHoA5QIZn6czUX74piHVL0bQ9qHYM63v3AQCDzxc7EQLA0rUCFlpG
+	 XsYLlXWUdempj8aFWonORccrd/jSEQzrQYgIoTO6yBacOw+MdPoPl0yyrmUk8I2wrY
+	 LFXLgY2QiJPNrfFhG4DSN+RU5x7S/CJBKf5OPQ5+iT5ve4Vu2aLAuDiuQ0xCazPgl1
+	 zXmsdXByMpwss4A5HoDAtiXgINcinfh2Guuhv8SRDvUQ/gi+L0KKEyypKxkOceLLld
+	 tzLj7rcEzuHPaiU7J/JcT0b37rJzTwTjoR+tOuxa8xVD5vw348ABFmCFzrq8WkaFZk
+	 h3TrchIAv41jA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id C26E3C53BD0; Sat, 25 Nov 2023 18:34:47 +0000 (UTC)
+	id 0477FC4332E; Sat, 25 Nov 2023 19:50:32 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218188] hp_wmi_sensors: probe of
  8F1F6435-9F42-42C8-BADC-0E9424F20C9A failed with error -61
-Date: Sat, 25 Nov 2023 18:34:47 +0000
+Date: Sat, 25 Nov 2023 19:50:31 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -32,14 +32,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: high
-X-Bugzilla-Who: W_Armin@gmx.de
+X-Bugzilla-Who: alexbelm48@gmail.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218188-215701-fpPLLRg8Om@https.bugzilla.kernel.org/>
+Message-ID: <bug-218188-215701-krvFSjXfKF@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218188-215701@https.bugzilla.kernel.org/>
 References: <bug-218188-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -55,46 +55,40 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218188
 
---- Comment #6 from Armin Wolf (W_Armin@gmx.de) ---
-Can you try this one:
+--- Comment #7 from Alexis Belmonte (alexbelm48@gmail.com) ---
+This seems to work, I get the messages as expected in the kernel logs and
+there's no error regarding hp_wmi_sensors:
 
-From ecbb0f5eeab921baf51270e554d432ec09ae9b5c Mon Sep 17 00:00:00 2001
-From: Armin Wolf <W_Armin@gmx.de>
-Date: Sat, 25 Nov 2023 16:46:06 +0100
-Subject: [PATCH] platform/x86: wmi: Skip blocks with zero instances
+# dmesg | grep wmi
+[    2.040776] wmi_bus wmi_bus-PNP0C14:00: WQ00 data block query control me=
+thod
+not found
+[    2.041019] wmi_bus wmi_bus-PNP0C14:03: [Firmware Info]:
+8F1F6436-9F42-42C8-BADC-0E9424F20C9A has zero instances
+[    2.041020] wmi_bus wmi_bus-PNP0C14:03: [Firmware Info]:
+8F1F6435-9F42-42C8-BADC-0E9424F20C9A has zero instances
+[    2.041021] wmi_bus wmi_bus-PNP0C14:03: [Firmware Info]:
+7391A661-223A-47DB-A77A-7BE84C60822D has zero instances
+[    2.041021] wmi_bus wmi_bus-PNP0C14:03: [Firmware Info]:
+DF4E63B6-3BBC-4858-9737-C74F82F821F3 has zero instances
 
-Some machines like the HP Omen 17 ck2000nf contain
-WMI blocks with zero instances, so any WMI driver
-which tries to handle the associated WMI device will
-fail.
-Skip such WMI blocks to avoid confusing any WMI drivers.
+Once thing that I'm wondering is why hp_wmi_sensors isn't loaded at boot. It
+seems that the fans now scale up properly though, so that's good!
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
----
- drivers/platform/x86/wmi.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Another thing which is really weird is that even though I set the "performa=
+nce"
+power profile through Gnome (and through powerprofilesctl indirectly), my T=
+DP
+scales back down to max 55W. Looking at /sys/firmware/acpi/platform_profile=
+, it
+shows back "balanced" -- choosing "performance" again makes
+/sys/firmware/acpi/platform_profile output "performance" again until the CPU
+goes idle after a short while.
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 5c27b4aa9690..5dd22258cb3b 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -1340,6 +1340,11 @@ static int parse_wdg(struct device *wmi_bus_dev, str=
-uct
-platform_device *pdev)
-                if (debug_dump_wdg)
-                        wmi_dump_wdg(&gblock[i]);
-
-+               if (!gblock[i].instance_count) {
-+                       dev_info(wmi_bus_dev, FW_INFO "%pUL has zero
-instances\n", &gblock[i].guid);
-+                       continue;
-+               }
-+
-                if (guid_already_parsed_for_legacy(device, &gblock[i].guid))
-                        continue;
-
---=20
-2.39.2
+Do you have any idea as to why is this happening? I have nothing really
+relevant in the dmesg logs, although I'm still going to attach it there if =
+you
+need it.
 
 --=20
 You may reply to this email to add a comment.
