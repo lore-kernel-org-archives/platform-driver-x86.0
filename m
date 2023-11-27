@@ -1,104 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEA15D53;
-	Mon, 27 Nov 2023 10:50:50 -0800 (PST)
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-1f0f94943d9so2323955fac.2;
-        Mon, 27 Nov 2023 10:50:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701111050; x=1701715850;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x3bXET2IS76jIzfigzKYg8jJt8fngAdagUE+PXY9fpw=;
-        b=tbk6JlRpQZDCG4ysF47qaV/ztuKW4SPaz6jjt1rLlosJVIt5D7SQa6Rwb61VTpp81p
-         MLhR5mFxmkzuCke9bGl4bdY5ZJ2/TV21Rh1W1p6skd7rbHhKMrti6nXEU4jfWXzBTy81
-         rZWj+x/wkrELrRPEleljsVTiT2qOAw3sSpkx2ZKZbllVglLq4S8FF0iGCXJlTZKZc98R
-         ffCoyjKQcNAs5SCVuMVgiga11eDMG8e91kVjCf0o1/OmBuBaHmaOUvnYqr5UbYBVMcS2
-         3S3z9EWSgmYieg8r2HEs2JJOd9UGq3egUFEV0SazrrCpZGVEmF4CwiRpM0TgpdTIbqNn
-         lSaw==
-X-Gm-Message-State: AOJu0Yz10ODXHSf7zkMe4AY1bV3X73i64mvHQ+AQZf5IdZ1olglZb8v5
-	0YW8BcbCJnsDM8pheXcXYg==
-X-Google-Smtp-Source: AGHT+IFu6MBtpvG30olCkRcT79pWOuBCeHq2F+wARXLqrblLRPuUmlli51A8gca9rI73GLBTtFURCQ==
-X-Received: by 2002:a05:6870:3308:b0:1f9:efdb:966a with SMTP id x8-20020a056870330800b001f9efdb966amr13405063oae.44.1701111050091;
-        Mon, 27 Nov 2023 10:50:50 -0800 (PST)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id nz4-20020a056871758400b001fa2b18a175sm1288144oac.49.2023.11.27.10.50.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Nov 2023 10:50:49 -0800 (PST)
-Received: (nullmailer pid 2390459 invoked by uid 1000);
-	Mon, 27 Nov 2023 18:50:48 -0000
-Date: Mon, 27 Nov 2023 12:50:48 -0600
-From: Rob Herring <robh@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Mark Gross <markgross@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: connector: usb: add altmodes
- description
-Message-ID: <20231127185048.GA2291396-robh@kernel.org>
-References: <20231120224919.2293730-1-dmitry.baryshkov@linaro.org>
- <20231120224919.2293730-2-dmitry.baryshkov@linaro.org>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5894F31739
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Nov 2023 19:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jRUp5imO"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B6F57C433CA
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Nov 2023 19:42:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701114167;
+	bh=fQsRMP27Fia8VX6f8xk+S0ibEy3yBJVkXHsa9eUvyNs=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=jRUp5imOBDM86Sc4yir2Ks4o6L5nLpPH/FV5PLctHJ6niLQUVgLHzwRUqNKyqAbZe
+	 ChS6G8VN7hajoGlNj88WnmuIAKF8K0Cwr4el5DPiKlaK7S7e9kdQuyJrPPFA5m8kzB
+	 Z4jWHk6E2RjELS/prd/oaOkV6u55MdWTNwQdc2p3YBpGX+R1oObxP/dtL+jSSrRtgu
+	 W7brMH2CzJkeVMzMnXcLH/UMAjURpqwojOB5ITNdgzo+xd5YJXb/RHiqedmvk6vbQt
+	 LBWV/3yS2SnMsBaa5EVciDSorFv8TWAVGDIbvlXWBM2pwxOW5d7uBYrCSveBisrzRc
+	 g5rS9wmEMvI8Q==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 977C8C4332E; Mon, 27 Nov 2023 19:42:47 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218188] hp_wmi_sensors: probe of
+ 8F1F6435-9F42-42C8-BADC-0E9424F20C9A failed with error -61
+Date: Mon, 27 Nov 2023 19:42:47 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: alexbelm48@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218188-215701-nGbq5R0lon@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218188-215701@https.bugzilla.kernel.org/>
+References: <bug-218188-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231120224919.2293730-2-dmitry.baryshkov@linaro.org>
 
-On Tue, Nov 21, 2023 at 12:00:18AM +0200, Dmitry Baryshkov wrote:
-> Add description of the USB-C AltModes supported on the particular USB-C
-> connector. This is required for devices like Qualcomm Robotics RB5,
-> which have no other way to express alternative modes supported by the
-> hardware platform.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  .../bindings/connector/usb-connector.yaml     | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> index 7c8a3e8430d3..c1aaac861d9d 100644
-> --- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> @@ -171,6 +171,28 @@ properties:
->        offer the power, Capability Mismatch is set. Required for power sink and
->        power dual role.
->  
-> +  altmodes:
-> +    type: object
-> +    description: List of Alternative Modes supported by the schematics on the
-> +      particular device. This is only necessary if there are no other means to
-> +      discover supported alternative modes (e.g. through the UCSI firmware
-> +      interface).
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218188
 
-Move additionalProperties here.
+--- Comment #17 from Alexis Belmonte (alexbelm48@gmail.com) ---
+That didn't help, but I noticed that I put acpi_osi=3D"Linuw"... and althou=
+gh
+there's no _OSI branches in my SSDT/DSDT tables, I just want to make sure t=
+hat
+this has a correct value.
 
-> +
-> +    patternProperties:
-> +      "^(displayport)$":
-> +        type: object
-> +        description:
-> +          A single USB-C Alternative Mode as supported by the USB-C connector logic.
+I also noticed the PINCTRL_INTEL_PLATFORM .config option set to 'n' instead=
+ of
+'y', I'll also try that next and tell you if this helps.
 
-Move additionalProperties here.
+--=20
+You may reply to this email to add a comment.
 
-And a blank line
-
-> +        properties:
-> +          svid:
-> +            $ref: /schemas/types.yaml#/definitions/uint16
-> +            description: Unique value assigned by USB-IF to the Vendor / AltMode.
-
-blank line
-
-Since you've constrained the node name, then the only possible value 
-here is 0xff01?
-
-OTOH, I don't know that we want to enumerate all possible values here 
-especially if there could be lots of vendor modes. But then again, maybe 
-better to just wait and see if that becomes a problem.
-
-With those nits fixed,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+You are receiving this mail because:
+You are watching the assignee of the bug.=
