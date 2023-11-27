@@ -1,68 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2722F51
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Nov 2023 21:48:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gf2StmgJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 10D0CC433C7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Nov 2023 21:48:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701121736;
-	bh=Oy7IqgwA0aF8YkyIhd0n7PBHkfA0s5Uxb7PCoaN8b+g=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=gf2StmgJh7Vdn0bnZFMuptI3fnuUTJzdgdoLFwi0hK7AUIEXvJtAdcMgR/MVakPFX
-	 2udQO7t/eYMqgX5nTueV1JPvySP5v092XKrlc9bKPgocETWO2LzdRoPY9tDnjxqQIk
-	 38hFgkttF1z/gEkxoC6al/zyr3YqS0lhUbBvOCY/t0VNSAkcJ9yoOavR1ea9/kVkLj
-	 LPwbJjNcicF1kU1bRgHCK200zqYROuqIlq4jpBOYjesdbx7VY5cd6HKliqq8iezmrD
-	 cKa8GtJ1Oc861tYHT3fe5YzhxrMbwi+2HuYk19aihGBBM9QH4BwVhoQOLlt31ENa3G
-	 EAHsPfr5EPUyQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id F0ACFC53BD0; Mon, 27 Nov 2023 21:48:55 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218188] hp_wmi_sensors: probe of
- 8F1F6435-9F42-42C8-BADC-0E9424F20C9A failed with error -61
-Date: Mon, 27 Nov 2023 21:48:55 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: W_Armin@gmx.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218188-215701-ilRXgLAeH2@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218188-215701@https.bugzilla.kernel.org/>
-References: <bug-218188-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="QhOY4wzG"
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 097BD448C;
+	Mon, 27 Nov 2023 14:22:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1701123769; x=1701728569; i=w_armin@gmx.de;
+	bh=LLseh1WBNY3acRfVxKNOM1h/XCUUg3y/Z3ShI+u1G3k=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=QhOY4wzGbHMpU6vP6aclNlgV6vqLpTFNuAQF5w5TQRGxAYukRPY7cwm3EI9TNG1z
+	 HVPyUTJez0Ik6hk0YJIceNPJoFMe7l1N/UeFlt9zYHYwQ6eMehJEYt1jAb43hNYoy
+	 E6djuAgx975qZbXYp7/KA7Ig30i9+Qg4uelGpdA2OqriUY+0jE9x8gv6fEV8igak7
+	 ogpLULBK5GagyXtAloqaLFJZPDqvZPTPhSEk6MkvKyl5M1i7RqwuIBgfVwWdh4amf
+	 5CuLZZDZCCKZtUe1vku2rer1tPOwWXW23P/FuZjuU0KUuOwl01JeqFr3asSo+wQhy
+	 hkyJJNep3lmaq7Gi5g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MtOKi-1rRCKM3JyI-00unC4; Mon, 27 Nov 2023 23:22:48 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: wmi: Skip blocks with zero instances
+Date: Mon, 27 Nov 2023 23:22:42 +0100
+Message-Id: <20231127222242.115507-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Uql5fq+wzeyEGJ+9O7GxoRDLArDFJM7bvKlt/xBVlGEfFBiaaR4
+ BLKj9TEv7VNvtT4+Ij03vHFnmX3+mfTFoWw1OGhq9abRZ7xUzD3/3VPWJQJRXAebxiliXtf
+ 09XGkGoEpXMZ4fEN2LCwNUTfQznxkMyhTyp35gkHlFf+6Zti6TbUIhaF3lhLpkSb+F9qETv
+ 2oWidarHfaP4p8uMnewUQ==
+UI-OutboundReport: notjunk:1;M01:P0:u1v7O1NqHIk=;5EPE0aB3XeowpXGjQmXvEeixaX8
+ 8ZLEqOqoHVbRGs6UXB3qal2SXkTpKGdoE/i3LVtHqahhykEwalnhVzZA4UGi0v0IyIcExRrFX
+ LdQmbmY+g0X8nwJoK/UZH3lSh/wzXORcQxlojqTxFJfWZuL4FS8jCtKWg3b7vu4Tc/xbsy6WH
+ 673m5iFEaeuAZlMvaQEkcef7c0jatu84bVcMEpC+1a91p/ybAxtbWKPCfNpLyREaz3hfDQ2Qt
+ JXxCJaeDLgmdIBSqU9I3QhC+yuNNzuA5gDWRtM573qaEE45rca9qJuZGljEB+A06S6UrKLIuC
+ XqLXMJkfHDI7RsWuE9Fcxw1Wg3e4RiKRm1Kz+80wZsPPbyCRNdGn7/bHwGqsx+XriDvUdrhWA
+ AdNlOing73ojbVj4iqMnup2hDMRzQPbzMKkVU+tuS75yfGMaJZpiUAoR/VA4E7DlkdESWVncx
+ Gs1nJ+Xh30zRL0FOXJ4aVLUQBiWVGRCDxPrV3/RBNUyWVTluYmWT/faZyjjbutOK7Qw7Fa0ma
+ /ZaD2X9FY/gQoKO8wgz53VahNzikd//6rf+Y252+UkNszv1BLdtpQj9CZK9WVRy0Eynqh1oiW
+ 8G67v2Ljh0C4/XLTDL0AKmGfAmZngj9CTv00DS/KEG4lkbzVoIFkhvySKNfBPq0DihBKq3ALi
+ xoe+mDMDAcAJwac5AACK5cvGIQwt0vfXr8BXwfA7YcLoWtttOBExbtTwXJt256j5lBNo4Md4a
+ aGJxI3dg4xZRMEMd3QIeW/SlkZtb3Y9831SCzcMa7CxiixqgqxXPg4jKrEXz+KP/Sg56h3F1P
+ DmEQFoVkuA/phU2qxzT+VH0yQT2ioQxDzJbkO8SUvu1kKM8+PJsusUUR/UMUHpntxH5CdXYdz
+ Xg2fCrW8q0FiR99uqI8i2+MSRUMt94iYB2UNja22bvmHIUCtod66uZxGA6MSJwTTuu1/R2p7D
+ AtnVOcINiKQWi1A3nWz0aNT4/Ic=
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218188
+Some machines like the HP Omen 17 ck2000nf contain WMI blocks
+with zero instances, so any WMI driver which tries to handle the
+associated WMI device will fail.
+Skip such WMI blocks to avoid confusing any WMI drivers.
 
---- Comment #19 from Armin Wolf (W_Armin@gmx.de) ---
-Your DSDT ACPI table contains calls to _OSI, can you try if removing
-acpi_osi=3D"Linux" helps?
+Reported-by: Alexis Belmonte <alexbelm48@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218188
+Tested-by: Alexis Belmonte <alexbelm48@gmail.com>
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/wmi.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Since the WMI patch seems to be fine, i will post it upstream then.
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index cb7e74f2b009..4f94e4b117f1 100644
+=2D-- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -1346,6 +1346,11 @@ static int parse_wdg(struct device *wmi_bus_dev, st=
+ruct platform_device *pdev)
+ 		if (debug_dump_wdg)
+ 			wmi_dump_wdg(&gblock[i]);
 
---=20
-You may reply to this email to add a comment.
++		if (!gblock[i].instance_count) {
++			dev_info(wmi_bus_dev, FW_INFO "%pUL has zero instances\n", &gblock[i].=
+guid);
++			continue;
++		}
++
+ 		if (guid_already_parsed_for_legacy(device, &gblock[i].guid))
+ 			continue;
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+=2D-
+2.39.2
+
