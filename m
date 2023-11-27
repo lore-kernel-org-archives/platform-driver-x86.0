@@ -1,122 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="DqF2C3oO";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eFv0i+/u"
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C00DFB;
-	Sun, 26 Nov 2023 15:10:41 -0800 (PST)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.west.internal (Postfix) with ESMTP id 9361E3200A5C;
-	Sun, 26 Nov 2023 18:10:40 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Sun, 26 Nov 2023 18:10:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm2; t=1701040240; x=1701126640; bh=cP
-	/OkNDOpdHrLMx5wzD4ZGMR+6u2K3gz78/e5rWmNaM=; b=DqF2C3oOHIbZc+n3LK
-	P/88Dt/JLZKZft++G+FJH7mAXHF0q62kLhnO3xkrJIclgI7R0E3G4EeKUCTz8ugQ
-	gdcLl+UciBWd02VuK+ckxPJeNEAWGg7LzkHjxfbNzln03IZvdieZyY4tttolz9rY
-	9qT2YiTjh8I9p7wfocRzB7pZ0e/sDsfqPOoi1AfBOINAteERtvemdwsAQ94+ZTgz
-	8eMpnQm5EUQ8+XCzeaLFTO7MjGKi0c7+L+2zZBZ7s+sVKvJMs5QhbDRkOZSg/Lso
-	UKLFZ01MYLbvTuuZzdkzTtoPdj4y/9NZ9I4ffyXsC98uSuT4U7WCSpYm2ry+ES5E
-	1vIQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1701040240; x=1701126640; bh=cP/OkNDOpdHrL
-	Mx5wzD4ZGMR+6u2K3gz78/e5rWmNaM=; b=eFv0i+/ukXKX+3ARZAE5kfBv3YoYP
-	VAMOKQbAXcQq2lK9Ulvjsrtxo8VlMRVXb0C/UKqP+7xnG7L+dxkj+lU18F8BWuzz
-	IT4Gn85io2EEUQHGbyZxkxyGe2ZSO87E1UarS7QmFwy4QXbDW4787tT6ps4a2jml
-	QpCAycxLYqfljsn1MLs5kqs/4uDx3XPGlZ3rpxlBT74qAQpmDbTX9Chjbp+gJPdJ
-	pIDGa9mZ79QOpnpvL7DRC0gbFZqHvd6qVDm/+E+yC2KL4B0387hdAui9Ma+tcHRg
-	mqcPrT0OvsgJU/aA1kfFP3o+94K0GVg23XA4drW8fRXhSh05KXQ8eaUYg==
-X-ME-Sender: <xms:b9BjZfW5OzAT6I3uorNyt9kqz7bzxY7vQ4rRjJ0rcbuNcDE7vgZvpQ>
-    <xme:b9BjZXlnUl5ECz9X1PveLxLlJsCzBKSu2-9gnXM55BQZDW3o4ofU8K-MulCwGDyk-
-    L4YvbE9XKtqTs-gYxE>
-X-ME-Received: <xmr:b9BjZbYc-XogpqWMzBwWOuk_fsTuJ6dgJ0Ms4Qjj1fOwxZrcTaHqeh1SGK6YyzNbRA8IAtoc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudeitddgtdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffuvfevkfgjfhfogggtsehttd
-    ertdertddvnecuhfhrohhmpefnuhhkvgculfhonhgvshcuoehluhhkvgeslhhjohhnvghs
-    rdguvghvqeenucggtffrrghtthgvrhhnpedvueejgefgteeuueeigefggfdvjeeiueejue
-    euudevleejhfeiudfhjeevleeikeenucffohhmrghinhepfhhrvggvuggvshhkthhophdr
-    ohhrghdpkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:b9BjZaUpiLz4giqoksTFVaCERqNjBrc6_vwYwfXevAu2FPi-FMtspQ>
-    <xmx:b9BjZZm9w1GpySUTjYDaECmM17EV1iDBxDLf8AB_j291u3rLHXmzDw>
-    <xmx:b9BjZXfMoaQcMZznBDccScCVXzCjIaeE6LyibNiNqtLcWqp7srXGrQ>
-    <xmx:cNBjZeyE5Ufm0YhmVKe67Tn--2FR8lzNhAOFc9nvZWSKgZf24-eiAg>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 26 Nov 2023 18:10:35 -0500 (EST)
-Date: Mon, 27 Nov 2023 12:10:21 +1300
-From: Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v2 0/1] platform/x86: asus-wmi: disable USB0 hub on ROG
- Ally before suspend
-To: hdegoede@redhat.com
-Cc: ilpo.jarvinen@linux.intel.com, corentin.chary@gmail.com,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <917R4S.AJGL9DYX1IZ@ljones.dev>
-In-Reply-To: <20231126230521.125708-1-luke@ljones.dev>
-References: <20231126230521.125708-1-luke@ljones.dev>
-X-Mailer: geary/44.1
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16F571A3;
+	Sun, 26 Nov 2023 22:36:01 -0800 (PST)
+X-UUID: f5e64f129679413891f4ef926f41a2d5-20231127
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.33,REQID:87602af9-271c-4a35-b31d-9ad5ad5bf2f6,IP:15,
+	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:-5
+X-CID-INFO: VERSION:1.1.33,REQID:87602af9-271c-4a35-b31d-9ad5ad5bf2f6,IP:15,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-5
+X-CID-META: VersionHash:364b77b,CLOUDID:f47afcfc-4a48-46e2-b946-12f04f20af8c,B
+	ulkID:231127143550DH1I147D,BulkQuantity:0,Recheck:0,SF:44|66|38|24|17|19|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil
+	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_ULN,TF_CID_SPAM_SNR,
+	TF_CID_SPAM_FAS
+X-UUID: f5e64f129679413891f4ef926f41a2d5-20231127
+X-User: chentao@kylinos.cn
+Received: from vt.. [(116.128.244.169)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 2006990806; Mon, 27 Nov 2023 14:35:47 +0800
+From: Kunwu Chan <chentao@kylinos.cn>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	vadimp@nvidia.com,
+	jiri@resnulli.us,
+	shravankr@nvidia.com
+Cc: kunwu.chan@hotmail.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: [PATCH] platform/mellanox: Add a null pointer check in mlxbf_pmc_create_groups
+Date: Mon, 27 Nov 2023 14:34:33 +0800
+Message-Id: <20231127063433.1549064-1-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 8bit
 
+devm_kasprintf() returns a pointer to dynamically allocated memory
+which can be NULL upon failure.
 
+Fixes: 1a218d312e65 ("platform/mellanox: mlxbf-pmc: Add Mellanox BlueField PMC driver")
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+---
+ drivers/platform/mellanox/mlxbf-pmc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On Mon, Nov 27 2023 at 12:05:20 PM +13:00:00, Luke D. Jones 
-<luke@ljones.dev> wrote:
-> This is a fix for the ROG Ally not being able to use the N-Key device 
-> after a suspend/resume cycle.
-> 
-> The root of the issue is that ASUS changed the MCU firmware to 
-> dfisconnect the USB0 hub when the
-> screen is switched off during the s2idle suspend path. I tried many 
-> many different tactics to try
-> and get this s2idle part to work but it seems there are races between 
-> this and other subsystems.
-> 
-> What has so far been reliable and consistent is a manual call to the 
-> CSEE method that is called in
-> ACPI by the Microsoft DSM screen off path followed by a short sleep 
-> in asus-wmi. The PM prepare
-> hook looks to be the earliest possible place. A sleep that is too 
-> long ends up with USB subsystem
-> registering a disconnect, and thus on resume the device paths change. 
-> Too short and it is unreliable.
-> 
-> Some discussion regarding this mess is at 
-> https://gitlab.freedesktop.org/drm/amd/-/issues/2719#note_2181402
-> 
-> Changelog:
-> - v2:
->   - Emit dev_err(), but don't return error codes
->   - Add check for MCU power save mode being enabled and disable if 
-> active
->   - General cleanup and rename some vars/funcs
-> - v1: 
-> https://lore.kernel.org/all/20231124082749.23353-1-luke@ljones.dev/
-> 
-> Luke D. Jones (1):
->   platform/x86: asus-wmi: disable USB0 hub on ROG Ally before suspend
-> 
->  drivers/platform/x86/asus-wmi.c            | 50 
-> ++++++++++++++++++++++
->  include/linux/platform_data/x86/asus-wmi.h |  3 ++
->  2 files changed, 53 insertions(+)
-> 
-> --
-> 2.43.0
-> 
-
-Hans I omitted your review tag as I made more changes than requested.
-
+diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+index 0b427fc24a96..59bbe5e13f6b 100644
+--- a/drivers/platform/mellanox/mlxbf-pmc.c
++++ b/drivers/platform/mellanox/mlxbf-pmc.c
+@@ -1882,6 +1882,8 @@ static int mlxbf_pmc_create_groups(struct device *dev, int blk_num)
+ 	pmc->block[blk_num].block_attr_grp.attrs = pmc->block[blk_num].block_attr;
+ 	pmc->block[blk_num].block_attr_grp.name = devm_kasprintf(
+ 		dev, GFP_KERNEL, pmc->block_name[blk_num]);
++	if (!pmc->block[blk_num].block_attr_grp.name)
++		return -ENOMEM;
+ 	pmc->groups[pmc->group_num] = &pmc->block[blk_num].block_attr_grp;
+ 	pmc->group_num++;
+ 
+-- 
+2.34.1
 
