@@ -1,104 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CZTr838E"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08FEC90
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Nov 2023 04:24:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701087859;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YYDiqW/SQ7zaMFpt/KuBFGN2HjMliY/gtAkoUJNHgw8=;
-	b=CZTr838EVrjV4bq5TxRtHyclYucgJi/nCLLXNpCVUuj2bt+AxYOf+9UIBA/Av6wAtbjZh0
-	Zy4G0xMQIdJP/yGeL6dFO0QCvoYMhejYSfDuVGoun9qPaE7KlnwvfteYkRN8dCl8mz8sqR
-	WRhm+DpiR4zLD+Xw10ouY5MBR7B7las=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-103-SZJXYhANNsyUrfNYLRRpMw-1; Mon, 27 Nov 2023 07:24:18 -0500
-X-MC-Unique: SZJXYhANNsyUrfNYLRRpMw-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a0d9009b457so101545366b.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Nov 2023 04:24:17 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEA15D53;
+	Mon, 27 Nov 2023 10:50:50 -0800 (PST)
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-1f0f94943d9so2323955fac.2;
+        Mon, 27 Nov 2023 10:50:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701087856; x=1701692656;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YYDiqW/SQ7zaMFpt/KuBFGN2HjMliY/gtAkoUJNHgw8=;
-        b=B9WuUiFAoswgXWnAdT7x+izGP26wIdMc9qHN5lhjn9KRyGKfdy1O2xCe4QRYqwNeCb
-         IPP5mOhjYuD/ZcXFRJwkHgWewoD92GVZyGnVnFtDBuOF3neLWiuWjb/In/vuFto1BV4l
-         g+JV1ZBBVA6bvXvveBZUDXb40B/24fz3fBOk9yg5ZpLN7M+gNVz9Ia9Sc5TkhYebKwdW
-         W2P4dH5NpXQSRRjlW9LSWWo43LcylzfP3beSoI6qUdr5v5O6w9qW/y8g+MtxP2vLVC2N
-         kCAko0zSV16OFQijd/+1BzbOsawbVSuzqcVyEvzFTWYi2eBtM+396dcN804GIM9kY9My
-         O97w==
-X-Gm-Message-State: AOJu0YzxFqhupLdQnIMx9ERJf7JQwEhYqIPMDdeB4Q4ZGGJesbz+hxVY
-	d5DEBn792kXmTn6U9doFzlSu8MrDUhGMZZOYB3pY/ZZVrx4zolEWq75X8YqbHAao/AlE0fllhd1
-	Y8luI7lTXlXIn7FolDUgLQwTVIi6UpFzFAxMExXewmQ==
-X-Received: by 2002:a17:906:20de:b0:a01:811c:ce9 with SMTP id c30-20020a17090620de00b00a01811c0ce9mr9178990ejc.0.1701087856566;
-        Mon, 27 Nov 2023 04:24:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IELyxITPAfJrtjBfjgFTysn4Ore/t06/VodJ7JGyE/oEz/FT3ThRAdyF7RMdynFMEfWBjaJKA==
-X-Received: by 2002:a17:906:20de:b0:a01:811c:ce9 with SMTP id c30-20020a17090620de00b00a01811c0ce9mr9178965ejc.0.1701087856272;
-        Mon, 27 Nov 2023 04:24:16 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id t27-20020a1709063e5b00b009fd727116b4sm5611223eji.129.2023.11.27.04.24.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Nov 2023 04:24:15 -0800 (PST)
-Message-ID: <8d66d4c0-ebc2-43b1-98b3-c41c871b4b7e@redhat.com>
-Date: Mon, 27 Nov 2023 13:24:14 +0100
+        d=1e100.net; s=20230601; t=1701111050; x=1701715850;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x3bXET2IS76jIzfigzKYg8jJt8fngAdagUE+PXY9fpw=;
+        b=tbk6JlRpQZDCG4ysF47qaV/ztuKW4SPaz6jjt1rLlosJVIt5D7SQa6Rwb61VTpp81p
+         MLhR5mFxmkzuCke9bGl4bdY5ZJ2/TV21Rh1W1p6skd7rbHhKMrti6nXEU4jfWXzBTy81
+         rZWj+x/wkrELrRPEleljsVTiT2qOAw3sSpkx2ZKZbllVglLq4S8FF0iGCXJlTZKZc98R
+         ffCoyjKQcNAs5SCVuMVgiga11eDMG8e91kVjCf0o1/OmBuBaHmaOUvnYqr5UbYBVMcS2
+         3S3z9EWSgmYieg8r2HEs2JJOd9UGq3egUFEV0SazrrCpZGVEmF4CwiRpM0TgpdTIbqNn
+         lSaw==
+X-Gm-Message-State: AOJu0Yz10ODXHSf7zkMe4AY1bV3X73i64mvHQ+AQZf5IdZ1olglZb8v5
+	0YW8BcbCJnsDM8pheXcXYg==
+X-Google-Smtp-Source: AGHT+IFu6MBtpvG30olCkRcT79pWOuBCeHq2F+wARXLqrblLRPuUmlli51A8gca9rI73GLBTtFURCQ==
+X-Received: by 2002:a05:6870:3308:b0:1f9:efdb:966a with SMTP id x8-20020a056870330800b001f9efdb966amr13405063oae.44.1701111050091;
+        Mon, 27 Nov 2023 10:50:50 -0800 (PST)
+Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id nz4-20020a056871758400b001fa2b18a175sm1288144oac.49.2023.11.27.10.50.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Nov 2023 10:50:49 -0800 (PST)
+Received: (nullmailer pid 2390459 invoked by uid 1000);
+	Mon, 27 Nov 2023 18:50:48 -0000
+Date: Mon, 27 Nov 2023 12:50:48 -0600
+From: Rob Herring <robh@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Mark Gross <markgross@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] dt-bindings: connector: usb: add altmodes
+ description
+Message-ID: <20231127185048.GA2291396-robh@kernel.org>
+References: <20231120224919.2293730-1-dmitry.baryshkov@linaro.org>
+ <20231120224919.2293730-2-dmitry.baryshkov@linaro.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/mellanox: Add a null pointer check in
- mlxbf_pmc_create_groups
-Content-Language: en-US
-To: Kunwu Chan <chentao@kylinos.cn>, ilpo.jarvinen@linux.intel.com,
- vadimp@nvidia.com, jiri@resnulli.us, shravankr@nvidia.com
-Cc: kunwu.chan@hotmail.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20231127063433.1549064-1-chentao@kylinos.cn>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20231127063433.1549064-1-chentao@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231120224919.2293730-2-dmitry.baryshkov@linaro.org>
 
-Hi,
-
-On 11/27/23 07:34, Kunwu Chan wrote:
-> devm_kasprintf() returns a pointer to dynamically allocated memory
-> which can be NULL upon failure.
+On Tue, Nov 21, 2023 at 12:00:18AM +0200, Dmitry Baryshkov wrote:
+> Add description of the USB-C AltModes supported on the particular USB-C
+> connector. This is required for devices like Qualcomm Robotics RB5,
+> which have no other way to express alternative modes supported by the
+> hardware platform.
 > 
-> Fixes: 1a218d312e65 ("platform/mellanox: mlxbf-pmc: Add Mellanox BlueField PMC driver")
-> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
-
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > ---
->  drivers/platform/mellanox/mlxbf-pmc.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  .../bindings/connector/usb-connector.yaml     | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
 > 
-> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
-> index 0b427fc24a96..59bbe5e13f6b 100644
-> --- a/drivers/platform/mellanox/mlxbf-pmc.c
-> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
-> @@ -1882,6 +1882,8 @@ static int mlxbf_pmc_create_groups(struct device *dev, int blk_num)
->  	pmc->block[blk_num].block_attr_grp.attrs = pmc->block[blk_num].block_attr;
->  	pmc->block[blk_num].block_attr_grp.name = devm_kasprintf(
->  		dev, GFP_KERNEL, pmc->block_name[blk_num]);
-> +	if (!pmc->block[blk_num].block_attr_grp.name)
-> +		return -ENOMEM;
->  	pmc->groups[pmc->group_num] = &pmc->block[blk_num].block_attr_grp;
->  	pmc->group_num++;
+> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> index 7c8a3e8430d3..c1aaac861d9d 100644
+> --- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> @@ -171,6 +171,28 @@ properties:
+>        offer the power, Capability Mismatch is set. Required for power sink and
+>        power dual role.
 >  
+> +  altmodes:
+> +    type: object
+> +    description: List of Alternative Modes supported by the schematics on the
+> +      particular device. This is only necessary if there are no other means to
+> +      discover supported alternative modes (e.g. through the UCSI firmware
+> +      interface).
 
+Move additionalProperties here.
+
+> +
+> +    patternProperties:
+> +      "^(displayport)$":
+> +        type: object
+> +        description:
+> +          A single USB-C Alternative Mode as supported by the USB-C connector logic.
+
+Move additionalProperties here.
+
+And a blank line
+
+> +        properties:
+> +          svid:
+> +            $ref: /schemas/types.yaml#/definitions/uint16
+> +            description: Unique value assigned by USB-IF to the Vendor / AltMode.
+
+blank line
+
+Since you've constrained the node name, then the only possible value 
+here is 0xff01?
+
+OTOH, I don't know that we want to enumerate all possible values here 
+especially if there could be lots of vendor modes. But then again, maybe 
+better to just wait and see if that becomes a problem.
+
+With those nits fixed,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
