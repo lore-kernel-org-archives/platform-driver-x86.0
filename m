@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R4+XU4vV"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7213B125
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Nov 2023 00:53:19 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JpZJlCy0"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7629BB8
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Nov 2023 03:43:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701075198;
+	s=mimecast20190719; t=1701085417;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SsGGF6lrHH4kfEqVm80uOEbmvqsBNvEHOJeUJamBRTw=;
-	b=R4+XU4vVbU6Vb7DNka+gQij9iiA6FMNcUYFLiVszHLfogQasiAxBjZRmreNQ7Obs45ZJ/I
-	9AYQva8BDIq0qfxtUpsF9P2H0eGChMQR4Z+REXrAlCyN/QaTIWSVvROz0f9pJ/yHImf9WN
-	/r111syCnZhZoPCpWOcZTYvrRdopIvQ=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=CkOpbKWU2mA/hyWylJke4xZIKkSX936DZIZ1I7bnNmk=;
+	b=JpZJlCy0zBuX4JTgGK2C3IfZljCbrQKE6oaoucBh2VNR4xGOTIq2C+4HTzDuvUb94p059j
+	ep9YAsPFl2MEH29TP7ZS3G+xWLrQNp6qrFKNZ5KM1rKklRrWow4Y5SFp5iG+GEAKrWFHwn
+	kzFFHIuYDu7sEJ7QWZjO+FzQLsI5dTM=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-198-TrCnfu2sMF-rbPd9C3Y72A-1; Mon, 27 Nov 2023 03:53:16 -0500
-X-MC-Unique: TrCnfu2sMF-rbPd9C3Y72A-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-54b7e11013bso242254a12.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Nov 2023 00:53:16 -0800 (PST)
+ us-mta-489-xiAMM-IsMam1_-SWRBEOsQ-1; Mon, 27 Nov 2023 06:43:36 -0500
+X-MC-Unique: xiAMM-IsMam1_-SWRBEOsQ-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a03337f784fso332722766b.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Nov 2023 03:43:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701075196; x=1701679996;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1701085415; x=1701690215;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SsGGF6lrHH4kfEqVm80uOEbmvqsBNvEHOJeUJamBRTw=;
-        b=og98MGzS65TsSvvyjebdoWxuuzCrXCVZWdkEcqoM6v3jfsr7ythc3rTHENFYr7TXnz
-         RK96JbwzSNupep3FVw5F3i7UaNXCFPxBkmN9GLAH2+Y80dtZ3Ka5pZQ9FCFVGjYyM7RZ
-         dA3HN2y2WGdYhjKdwHMICxcGYbeWk3DRzNsTaeJGd3x907r+3+nzzx1HdqHa1IO7jfKZ
-         Qk1VgJTbOlg3cs3WL72cSbJD+xIVovPVhUw+hRxdKsgE7e8Uf3evjvtUp4PTsBSCODnu
-         /qEXl3YJgoBxK77PlD9OVlpVp9cBatmXxy2PbaVilXfbIV/A744iPiwJKkC+1tJuDsLW
-         O83w==
-X-Gm-Message-State: AOJu0YyqaaGQBwlKbk4POSMR+QxB7kDVgvHzBz00B/TvUjE+wbrbwKTV
-	K1Sq6NcIuMKYvCnOXwMNt5HX2Wi+IxaSoZ+QzWdfjUCDDsBjYXUFmmukb5PU0D0Rk7oMdaPPphZ
-	s4yW999YF1eRArUR+jGbFF1yqALx+C3PCBQ==
-X-Received: by 2002:a05:6402:20b:b0:54b:8482:48c8 with SMTP id t11-20020a056402020b00b0054b848248c8mr499193edv.7.1701075195876;
-        Mon, 27 Nov 2023 00:53:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHj8j5maZS7RvGrJrr1BO4yG8Q4vHuHW/Ek1B2fDOIL34sYWVvYSEpStgbRSpipoeWfYRBGGQ==
-X-Received: by 2002:a05:6402:20b:b0:54b:8482:48c8 with SMTP id t11-20020a056402020b00b0054b848248c8mr499188edv.7.1701075195570;
-        Mon, 27 Nov 2023 00:53:15 -0800 (PST)
+        bh=CkOpbKWU2mA/hyWylJke4xZIKkSX936DZIZ1I7bnNmk=;
+        b=AQmOby/KuISr4JV63zsAX89ZInOejC8tgTmiYeEHr4WxbOmAfjC92oZxzjBWI5QOK7
+         /Row7alzF4WzxdawOYJF+rDgV2lCOo4aOUBdo2Ho1JG9odCc/7l/z+mVaipQ9F9EAjYU
+         NpJspwcZv3DhlEN/Oj2fBzVsA26rdIQp/msYIRz91cJ0miPZOhDRnnyVU7hb5AyKJv1l
+         6WxsyT3/5gWxo/H84EsCmOQecRjOMIfmlrZ8ZBomRygZ06IrGCDWgjTBABHJD63yUk5v
+         0DOF0LyKIJPNeVqxgjK41vCmowWCTJfrAruHvhc/0zb6mXt3eKLqO6C70BwZnK50R/uV
+         4DJQ==
+X-Gm-Message-State: AOJu0Yz3r8LUZzQRphCBSw/jIitJOTKHpiy78eRC6+WMyWAmtNq1Yb0g
+	6d1ety31skDlVGE+zZ563YD6p2Fp7TY6M5ptV3+kRrHMz3ENx5n/eOlSG9/SGCYHYg8jyQsVgp7
+	Vjw4e69UvThT8eyZ3cPq1R1bxo/CTq1UIPQ==
+X-Received: by 2002:a17:906:2201:b0:9de:32bb:fa96 with SMTP id s1-20020a170906220100b009de32bbfa96mr7127944ejs.9.1701085415417;
+        Mon, 27 Nov 2023 03:43:35 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGmKUrycQqNYa+3j0Nw4B7Z518q5PzsL8c61NkF9I5E9+gV3sIGxXsJuD4vcv1c2jUrQRcfRQ==
+X-Received: by 2002:a17:906:2201:b0:9de:32bb:fa96 with SMTP id s1-20020a170906220100b009de32bbfa96mr7127928ejs.9.1701085415024;
+        Mon, 27 Nov 2023 03:43:35 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id cx15-20020a05640222af00b0054b6259b44asm1091566edb.83.2023.11.27.00.53.14
+        by smtp.gmail.com with ESMTPSA id y22-20020a17090668d600b00a029145bbb9sm5581623ejr.3.2023.11.27.03.43.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Nov 2023 00:53:14 -0800 (PST)
-Message-ID: <1c5f3bd2-9f10-4e5d-8c6d-76441b2da850@redhat.com>
-Date: Mon, 27 Nov 2023 09:53:13 +0100
+        Mon, 27 Nov 2023 03:43:34 -0800 (PST)
+Message-ID: <adba7928-1ca7-4076-ba8f-32276b8fea5c@redhat.com>
+Date: Mon, 27 Nov 2023 12:43:33 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -53,170 +53,142 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: disable USB0 hub on ROG
- Ally before suspend
-To: "Luke D. Jones" <luke@ljones.dev>
-Cc: ilpo.jarvinen@linux.intel.com, corentin.chary@gmail.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231126230521.125708-1-luke@ljones.dev>
- <20231126230521.125708-2-luke@ljones.dev>
+Subject: Re: [PATCH v4 1/3] platform/x86: acer-wmi: Add platform profile and
+ mode key support for Predator PHN16-71
 Content-Language: en-US
+To: SungHwan Jung <onenowy@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Lee, Chun-Yi" <jlee@suse.com>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+References: <20231124094122.100707-1-onenowy@gmail.com>
+ <20231124094122.100707-2-onenowy@gmail.com>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20231126230521.125708-2-luke@ljones.dev>
+In-Reply-To: <20231124094122.100707-2-onenowy@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 11/27/23 00:05, Luke D. Jones wrote:
-> ASUS have worked around an issue in XInput where it doesn't support USB
-> selective suspend, which causes suspend issues in Windows. They worked
-> around this by adjusting the MCU firmware to disable the USB0 hub when
-> the screen is switched off during the Microsoft DSM suspend path in ACPI.
-> 
-> The issue we have with this however is one of timing - the call the tells
-> the MCU to this isn't able to complete before suspend is done so we call
-> this in a prepare() and add a small msleep() to ensure it is done. This
-> must be done before the screen is switched off to prevent a variety of
-> possible races.
-> 
-> Further to this the MCU powersave option must also be disabled as it can
-> cause a number of issues such as:
-> - unreliable resume connection of N-Key
-> - complete loss of N-Key if the power is plugged in while suspended
-> Disabling the powersave option prevents this.
-> 
-> Without this the MCU is unable to initialise itself correctly on resume.
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+Thank you for your patch.
 
-Thanks, patch looks good to me, except that all the new lines
-seem to use 4 spaces rather then a tab char as indent.
+On 11/24/23 10:41, SungHwan Jung wrote:
+>  The Acer Predator PHN16-71 has the mode key that is used to rotate
+> thermal modes or toggle turbo mode with predator sense app (ver. 4) on
+> windows.
+> This patch includes platform profile and the mode key support for the
+> device and also includes a small fix for "WMI_gaming_execute_u64"
+> function.
+> 
+> Signed-off-by: SungHwan Jung <onenowy@gmail.com>
+> ---
+>  drivers/platform/x86/acer-wmi.c | 268 +++++++++++++++++++++++++++++++-
+>  1 file changed, 267 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index 0e472aa9b..e3650dce0 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/backlight.h>
+>  #include <linux/leds.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/platform_profile.h>
+>  #include <linux/acpi.h>
+>  #include <linux/i8042.h>
+>  #include <linux/rfkill.h>
+> @@ -62,9 +63,12 @@ MODULE_LICENSE("GPL");
+>  
+>  #define ACER_WMID_SET_GAMING_LED_METHODID 2
+>  #define ACER_WMID_GET_GAMING_LED_METHODID 4
+> +#define ACER_WMID_GET_GAMING_SYS_INFO_METHODID 5
+>  #define ACER_WMID_SET_GAMING_FAN_BEHAVIOR 14
+>  #define ACER_WMID_SET_GAMING_MISC_SETTING_METHODID 22
+>  
+> +#define ACER_PREDATOR_V4_THERMAL_PROFILE_EC_OFFSET 0x54
+> +
+>  /*
+>   * Acer ACPI method GUIDs
+>   */
+> @@ -90,6 +94,10 @@ enum acer_wmi_event_ids {
+>  	WMID_GAMING_TURBO_KEY_EVENT = 0x7,
+>  };
+>  
+> +enum acer_wmi_predator_v4_sys_info_command {
+> +	ACER_WMID_CMD_GET_PREDATOR_V4_BAT_STATUS = 0x02,
+> +};
+> +
+>  static const struct key_entry acer_wmi_keymap[] __initconst = {
+>  	{KE_KEY, 0x01, {KEY_WLAN} },     /* WiFi */
+>  	{KE_KEY, 0x03, {KEY_WLAN} },     /* WiFi */
+> @@ -232,6 +240,7 @@ struct hotkey_function_type_aa {
+>  #define ACER_CAP_TURBO_OC     BIT(7)
+>  #define ACER_CAP_TURBO_LED     BIT(8)
+>  #define ACER_CAP_TURBO_FAN     BIT(9)
+> +#define ACER_CAP_PLATFORM_PROFILE BIT(10)
 
-With that fixed you can add my:
+When Ilpo set to use tabs for indent here, he meant to do
+this in this patch too, I have fixed this up while merging the patch.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+I have also found several places where you separate blocks
+by multiple empty lines instead of just 1 empty line,
+I have also fixed this (reducing things to 1 empty line)
+while applying this.
 
-to the next version.
+<snip>
+
+
+> @@ -2245,6 +2499,12 @@ static int acer_platform_probe(struct platform_device *device)
+>  	if (err)
+>  		goto error_rfkill;
+>  
+> +	if (has_cap(ACER_CAP_PLATFORM_PROFILE)) {
+> +		err = acer_platform_profile_setup();
+> +		if (err)
+> +			goto error_platform_profile;
+> +	}
+> +
+>  	return err;
+>  
+>  error_rfkill:
+
+The error handling here is wrong, on error you need to undo all previous steps,
+so your error handling needs to add a label above the first (error_rfkill)
+label and then undo the last step before the platform-profile-setup,
+specifically call acer_rfkill_exit(); from the new label. IOW the code here
+should look like this:
+
+        if (has_cap(ACER_CAP_PLATFORM_PROFILE)) {
+                err = acer_platform_profile_setup();
+                if (err)
+                        goto error_platform_profile;
+        }
+
+        return err;
+
+error_platform_profile:
+        acer_rfkill_exit();
+error_rfkill:
+        if (has_cap(ACER_CAP_BRIGHTNESS))
+                acer_backlight_exit();
+	...
+
+I have also fixed this up while merging this patch:
+
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
-
-
-> ---
->  drivers/platform/x86/asus-wmi.c            | 50 ++++++++++++++++++++++
->  include/linux/platform_data/x86/asus-wmi.h |  3 ++
->  2 files changed, 53 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 6a79f16233ab..4ba33dfebfd4 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -16,6 +16,7 @@
->  #include <linux/acpi.h>
->  #include <linux/backlight.h>
->  #include <linux/debugfs.h>
-> +#include <linux/delay.h>
->  #include <linux/dmi.h>
->  #include <linux/fb.h>
->  #include <linux/hwmon.h>
-> @@ -132,6 +133,11 @@ module_param(fnlock_default, bool, 0444);
->  #define ASUS_SCREENPAD_BRIGHT_MAX 255
->  #define ASUS_SCREENPAD_BRIGHT_DEFAULT 60
->  
-> +/* Controls the power state of the USB0 hub on ROG Ally which input is on */
-> +#define ASUS_USB0_PWR_EC0_CSEE "\\_SB.PCI0.SBRG.EC0.CSEE"
-> +/* 300ms so far seems to produce a reliable result on AC and battery */
-> +#define ASUS_USB0_PWR_EC0_CSEE_WAIT 300
-> +
->  static const char * const ashs_ids[] = { "ATK4001", "ATK4002", NULL };
->  
->  static int throttle_thermal_policy_write(struct asus_wmi *);
-> @@ -300,6 +306,9 @@ struct asus_wmi {
->  
->  	bool fnlock_locked;
->  
-> +	/* The ROG Ally device requires the MCU USB device be disconnected before suspend */
-> +	bool ally_mcu_usb_switch;
-> +
->  	struct asus_wmi_debug debug;
->  
->  	struct asus_wmi_driver *driver;
-> @@ -4488,6 +4497,8 @@ static int asus_wmi_add(struct platform_device *pdev)
->  	asus->nv_temp_tgt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_THERM_TARGET);
->  	asus->panel_overdrive_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD);
->  	asus->mini_led_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE);
-> +	asus->ally_mcu_usb_switch = acpi_has_method(NULL, ASUS_USB0_PWR_EC0_CSEE)
-> +						&& dmi_match(DMI_BOARD_NAME, "RC71L");
->  
->  	err = fan_boost_mode_check_present(asus);
->  	if (err)
-> @@ -4654,6 +4665,43 @@ static int asus_hotk_resume(struct device *device)
->  		asus_wmi_fnlock_update(asus);
->  
->  	asus_wmi_tablet_mode_get_state(asus);
-> +
-> +	return 0;
-> +}
-> +
-> +static int asus_hotk_resume_early(struct device *device)
-> +{
-> +	struct asus_wmi *asus = dev_get_drvdata(device);
-> +
-> +	if (asus->ally_mcu_usb_switch) {
-> +		if (ACPI_FAILURE(acpi_execute_simple_method(NULL, ASUS_USB0_PWR_EC0_CSEE, 0xB8)))
-> +			dev_err(device, "ROG Ally MCU failed to connect USB dev\n");
-> +		else
-> +			msleep(ASUS_USB0_PWR_EC0_CSEE_WAIT);
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int asus_hotk_prepare(struct device *device)
-> +{
-> +	struct asus_wmi *asus = dev_get_drvdata(device);
-> +	int result, err;
-> +
-> +	if (asus->ally_mcu_usb_switch) {
-> +		/* When powersave is enabled it causes many issues with resume of USB hub */
-> +		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_MCU_POWERSAVE);
-> +		if (result == 1) {
-> +			dev_warn(device, "MCU powersave enabled, disabling to prevent resume issues");
-> +			err = asus_wmi_set_devstate(ASUS_WMI_DEVID_MCU_POWERSAVE, 0, &result);
-> +			if (err || result != 1)
-> +				dev_err(device, "Failed to set MCU powersave mode: %d\n", err);
-> +		}
-> +		/* sleep required to ensure USB0 is disabled before sleep continues */
-> +		if (ACPI_FAILURE(acpi_execute_simple_method(NULL, ASUS_USB0_PWR_EC0_CSEE, 0xB7)))
-> +			dev_err(device, "ROG Ally MCU failed to disconnect USB dev\n");
-> +		else
-> +			msleep(ASUS_USB0_PWR_EC0_CSEE_WAIT);
-> +	}
->  	return 0;
->  }
->  
-> @@ -4701,6 +4749,8 @@ static const struct dev_pm_ops asus_pm_ops = {
->  	.thaw = asus_hotk_thaw,
->  	.restore = asus_hotk_restore,
->  	.resume = asus_hotk_resume,
-> +	.resume_early = asus_hotk_resume_early,
-> +	.prepare = asus_hotk_prepare,
->  };
->  
->  /* Registration ***************************************************************/
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 63e630276499..ab1c7deff118 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -114,6 +114,9 @@
->  /* Charging mode - 1=Barrel, 2=USB */
->  #define ASUS_WMI_DEVID_CHARGE_MODE	0x0012006C
->  
-> +/* MCU powersave mode */
-> +#define ASUS_WMI_DEVID_MCU_POWERSAVE   0x001200E2
-> +
->  /* epu is connected? 1 == true */
->  #define ASUS_WMI_DEVID_EGPU_CONNECTED	0x00090018
->  /* egpu on/off */
 
