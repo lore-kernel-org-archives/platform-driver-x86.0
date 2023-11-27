@@ -1,69 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F78B31739
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Nov 2023 19:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hveh10aq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7BE07C433C7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Nov 2023 19:44:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701114287;
-	bh=OpLD+FQHGm2YwJWmnBCX+bQpPPVA5l9aQhWQMu9H4PE=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=hveh10aqg1XZonGPwvKjj0IaOttWXLzLAVCJrxOE/glMel5BYagOmikHc+/5xl0Wl
-	 4YQdfG2cU2D6j20fWmDNn/A0oZYHATo3WCQWDidJgGG044pfR/cU3tiF9v563j+tgL
-	 /O4356WcOjcmF7TKMIswd5Ky9Knm8BvK6nZJZ93ZThYOrouajvGiguRSpjzXBdl4bC
-	 vkDXuhMru26FghRYwwbInmHl9H/gNujAVBmHnXpJ5pWOdDw1/SClBqJpaTQdvPBqJs
-	 y0fpg9OBfX0TCX3a3KwtPdycdGYjP/KcuFPlbUQWpguXg+NjYoqn0+Eo/zENzQ3r07
-	 WUlETItlyJuRg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 6994AC4332E; Mon, 27 Nov 2023 19:44:47 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218188] hp_wmi_sensors: probe of
- 8F1F6435-9F42-42C8-BADC-0E9424F20C9A failed with error -61
-Date: Mon, 27 Nov 2023 19:44:47 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: alexbelm48@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cf_kernel_version
-Message-ID: <bug-218188-215701-bpDMapVodF@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218188-215701@https.bugzilla.kernel.org/>
-References: <bug-218188-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6A591B4;
+	Mon, 27 Nov 2023 12:05:44 -0800 (PST)
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-58d564b98c9so1453475eaf.2;
+        Mon, 27 Nov 2023 12:05:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701115544; x=1701720344;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mMyoTTuiVRpV0VWXyFvNZKLDihVgmMriBAWsa2DwHI0=;
+        b=lvthBOVF4pXAvfKioKy6FHS7Oi15t1d8wmIkri6nUA+B9Aivf02CbDbdWIheQ4n5RV
+         KqkzyYsfby4aX/leX58qKAWfNrIVYCW2XYsjoA4wfeRrerpqXU7dg3ksh/tE9S2EfQcz
+         bh9cAJrdZisN3lvn1KSJ8Q9ABns/v1CqRFJpm8Bw/vQgm6r/TdiZMbj8/G9kHJC50RKN
+         MzAHVfqhewXobuscirUipoYPKHkUMTaFgWIbTdrboA1i3b7FIaMny/1R0PJQ/klHfKG+
+         klBLVps4XcCiwGg+sZVcS20jyBDU+DyDaU+ymo9iRfDL6ToTTFXcQMpYekVwlG1u/0nm
+         DrfQ==
+X-Gm-Message-State: AOJu0Yznwvfo6vOv8VUZJigCJv851aYt6yZIwonwibiRwmQSqW5YxYpn
+	B65ksPR4GCnywzb/qfGMbIBAOl/sRA==
+X-Google-Smtp-Source: AGHT+IEm2dvkEYWOa5k7Lp49fIFe8GAkRT/1/cuPFrC1po7M0Zy3Z5WDXjsy6YMeqTpNiVPUT9YIkA==
+X-Received: by 2002:a05:6820:1ca0:b0:58a:67b1:47ca with SMTP id ct32-20020a0568201ca000b0058a67b147camr15227339oob.6.1701115544080;
+        Mon, 27 Nov 2023 12:05:44 -0800 (PST)
+Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id f193-20020a4a58ca000000b0054f85f67f31sm506600oob.46.2023.11.27.12.05.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Nov 2023 12:05:43 -0800 (PST)
+Received: (nullmailer pid 2955904 invoked by uid 1000);
+	Mon, 27 Nov 2023 20:05:42 -0000
+Date: Mon, 27 Nov 2023 14:05:42 -0600
+From: Rob Herring <robh@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Conor Dooley <conor+dt@kernel.org>, Mark Gross <markgross@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Konrad Dybcio <konrad.dybcio@linaro.org>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: connector: usb: add accessory mode
+ description
+Message-ID: <170111554173.2955721.9059512533870935138.robh@kernel.org>
+References: <20231121202925.2481471-1-dmitry.baryshkov@linaro.org>
+ <20231121202925.2481471-2-dmitry.baryshkov@linaro.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231121202925.2481471-2-dmitry.baryshkov@linaro.org>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218188
 
-Alexis Belmonte (alexbelm48@gmail.com) changed:
+On Tue, 21 Nov 2023 22:26:59 +0200, Dmitry Baryshkov wrote:
+> Add description of the USB-C Accessory Modes supported on the particular
+> USB-C connector. This is required for devices like Qualcomm SM8150-HDK,
+> which have no other way to express accessory modes supported by the
+> hardware platform.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  .../devicetree/bindings/connector/usb-connector.yaml | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-     Kernel Version|6.6.2-arch1-1               |6.7.0-rc2-next-20231127-008
-                   |                            |86-g24ce78c0188c
+Reviewed-by: Rob Herring <robh@kernel.org>
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
