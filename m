@@ -1,133 +1,139 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CSxTxet4"
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2077.outbound.protection.outlook.com [40.107.101.77])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 141CA1BD;
-	Mon, 27 Nov 2023 17:30:31 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eOD0TYzmC4KnVQLRIXvUftoiy8Qok4M2N1m/Plv7FCZvSLIQI1ZGGwn5TomBO78HF7Yay6KvZRo6ATJHH+vehMOTuhYNIdoZODd8Z7XJ1XI994fsMUNuuCC6P7SWKjYnjoiQUOy7TOy99hSKKvqW7YnvKqyX4M3Iw7IqxiUX70DLoegVLe3999WNuyRF+/2IevHkGWZN8NAZF5mIULVqYhSGi1q8wgSn4jNltj2rB8Yhnugpq1/MmVPGN07B9/+WT8qJ8KdIdzE0IzCD1LxUauQ0cYLi/AtxEebcJHByZv9oC8/mAawFKdUbtV1krSjlwtG23Eh2AP8ZwCAAwjM2gQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nPO8ZTW7Kce7So/mDZ+XpN0ANNJtiHYC1pkP7m4caF4=;
- b=bHo/zqZffHqxDocYEPgrKcJ3XL92XupAPGRa87WYrJUTYBVqOKBJMZlLyWsepMQaEf0NMFQsrg815kHrrRKyGrgMsq/aQDjQTVKMwcnjm4maeLCiWBc2c2YmESYZNTyewoi7c3f/7pgdUtNAMhCmyXKECSkUvLFxXfLdNGn40L4omDjdc781vOWaFQyVdj6crfGT+K4odDKYgy23+ld4W1AugiNgq2UItsOdya8YhJyd/S1O6Z6xsbpAGnB3MPgBNbqQNsi31TYIELNojPTB6gJNDion6BkQrsJR+qJKtZTv6qXd/8RsyjQQ9OfknX5GNBuhpFS9B/djPVg7Y6qsZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nPO8ZTW7Kce7So/mDZ+XpN0ANNJtiHYC1pkP7m4caF4=;
- b=CSxTxet4ICLbe10xiVDW9jiyrNMR4fTKW71gkeXp1KVCnw2FMFz7nX7qE+yNE6BjeQOpTL2USGfOTo1Kkp0m/P5jOc2J+EcTzdG25NiGHuQosYlZapgKXtDm/dcKW+MYrMP20lraINyOoMlc/b1ohE5hFYMEPeXgOe9lXwbgpj4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SA3PR12MB7924.namprd12.prod.outlook.com (2603:10b6:806:313::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.27; Tue, 28 Nov
- 2023 01:30:28 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::83d7:9c4f:4d9b:1f2a]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::83d7:9c4f:4d9b:1f2a%5]) with mapi id 15.20.7025.022; Tue, 28 Nov 2023
- 01:30:28 +0000
-Message-ID: <000161eb-a6f7-4715-b8ba-7c2f4758d0f0@amd.com>
-Date: Mon, 27 Nov 2023 19:30:26 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: disable USB0 hub on ROG
- Ally before suspend
-To: Luke Jones <luke@ljones.dev>, Armin Wolf <W_Armin@gmx.de>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20231126230521.125708-1-luke@ljones.dev>
- <20231126230521.125708-2-luke@ljones.dev>
- <30293382-2287-45a2-9269-55d547432085@amd.com>
- <F1VS4S.MV0FEK6EB3K22@ljones.dev>
- <e583fd64-2cff-4595-a559-a675c6f5ad0d@amd.com>
- <fb8ebdfb-fc53-4343-8df3-96f04b405ace@gmx.de>
- <1J6T4S.AGCT3HWF4DTB1@ljones.dev>
- <75db5770-fe31-4569-bab5-1f259223506e@gmx.de>
- <3Q7T4S.YETEEQF4KQOU@ljones.dev>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <3Q7T4S.YETEEQF4KQOU@ljones.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1PR02CA0019.namprd02.prod.outlook.com
- (2603:10b6:806:2cf::12) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KoUCajl6"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B181A2;
+	Mon, 27 Nov 2023 17:57:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701136637; x=1732672637;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=+snk+mM+TxyaWw6DJecEKyanpjoN0GjRNcW3jAnYR9g=;
+  b=KoUCajl6yxLLbaZntjFSGFenq9pp6/IkLWKjHRpIF891ENp1ft2EHliP
+   M6U+Hd+40TJIwdOKTtGZiSiWf2EcR66+lrabukzMxP2KZE4GrbgNKvD4C
+   2yo3EFBJmVKIHz+YrnEwKdC1cDTksQl9F3OE+3T39uX+i5bJwJfwJu/ti
+   HvzUDS7VavryWtxIP2KnsvMPU/mW7ejG0CBSxnBvFgp5qrjWml3DEUYT5
+   b8wRYMi91WCGQcgtSQu2GFpyG+FOhvQPZzhMeFXq24al7bod5xlRnbkaC
+   r319SHDm3rQzlVs3/SZOqZM/lEaiwC/KwLdgJJnRNgoFXu6rUQZZU4Qzc
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="395647075"
+X-IronPort-AV: E=Sophos;i="6.04,232,1695711600"; 
+   d="scan'208";a="395647075"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2023 17:55:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="1015754868"
+X-IronPort-AV: E=Sophos;i="6.04,232,1695711600"; 
+   d="scan'208";a="1015754868"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2023 17:55:58 -0800
+Received: from luisdsan-mobl28.amr.corp.intel.com (unknown [10.209.42.149])
+	by linux.intel.com (Postfix) with ESMTP id 440C2580AA7;
+	Mon, 27 Nov 2023 17:55:58 -0800 (PST)
+Message-ID: <adb8c80395d2c23488496b9ad323bfc265ad3514.camel@linux.intel.com>
+Subject: Re: [PATCH V5 12/20] asm-generic/io.h: iounmap/ioport_unmap
+ cleanup.h support
+From: "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	bhe@redhat.com, schnelle@linux.ibm.com
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org,  rajvi.jingar@linux.intel.com,
+ dave.hansen@linux.intel.com, peterz@infradead.org
+Date: Mon, 27 Nov 2023 17:55:58 -0800
+In-Reply-To: <f83e4a40-314-d279-75e6-17ad83501982@linux.intel.com>
+References: <20231123040355.82139-1-david.e.box@linux.intel.com>
+	 <20231123040355.82139-13-david.e.box@linux.intel.com>
+	 <f83e4a40-314-d279-75e6-17ad83501982@linux.intel.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA3PR12MB7924:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7fcf955f-0d04-4d8f-d557-08dbefb19a46
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	BECFi+rZRGMRfDTqJPOqMt4ZCKdNXMWpDM0d5LBcayPbIZEiS0CoXLTlIRU5ZLKMMjzkQI/tKaE0g3RJaYK7HqEENWP5OFhzjJQbHXp60kN9SLaQrBkA3T4BEllORhE2NOAMNFGXi8NHvO8IDM95TZE9myeTaXPQiluQZrkgTNVf6XvPWBBK6D9r96/wzwnS71B/5Q6By+rISiVu5yv18vKKhHYWrI1Ub3ZkeHeCa/NxUJMWBhydY/ilU6+H/sUgG0RzyP4h4pK/eYUAQ/BwvDRLx5aj5a9DR3s/wmQlQwTypOc9kCtsm2Z4DEmJTEDJYzZueLBrY1Gmr0gdP0+BeQSKY8gns4ICkVGXawk+qaX1OFDRrsNGsUjHeC0quEvDqRO5C2F04T94g3KNCkkU/kREDzJKACLr5E5TwbRHdk5562hBdYzVZ0+u8zyswWL2K6wtK44K0FZ0zd5LY0bLcIj/uj8PhFXtnDvTMfR8JJZTXk9wahHfQb21KxBYwHLfJNU4qSWT1YLsN4ro43AdgpiWHzP//UDJOeRxi3AuY+87+khRFNbirU3uwWKXdfaq062vdQBvCNQ4SccpLaBMG0ML9opXO163WSRtCnI123VnQ6UDXUym9J1V8sWwkY7UJo+mdMBBSH4rq91oHt6RXw==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(39860400002)(346002)(396003)(136003)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(316002)(6506007)(53546011)(6512007)(31696002)(86362001)(2616005)(26005)(36756003)(110136005)(6486002)(38100700002)(478600001)(66556008)(66476007)(66946007)(44832011)(5660300002)(2906002)(4744005)(41300700001)(31686004)(4326008)(8936002)(8676002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?S1UyNDhOS3pNRFFCUDJWOXhHYWpmOGQwVU9GeFAxV0ozRzZKcmlJU0I5SHpB?=
- =?utf-8?B?bWFJWWpRbUJzeld5bjA5SVJ1Q29ZTnZDZnlFMjlaam1kUnB3VFV1dkQ3ZFNm?=
- =?utf-8?B?SnpXc20vRHZmUzRhc1Q4UytSRVQwNjd1WVc1MGYzSG5BR09tZG5OcUZqUXgw?=
- =?utf-8?B?NmQwekRUTGVLeW82OXBSWUtNYTl1VGZZRVl6R0cwL3YzU1dES2x4MlhjKy9T?=
- =?utf-8?B?OVF6WVdWTU1jUWlCQmRmUitSNTNYUHppQVJDcGwrdzNxQVAzd3NleHJTbWtt?=
- =?utf-8?B?NUk3VVhlc2k5WXY1a0N3VmdXdlVyYUhGbm9USUVrRmJjcGF1ektNUnZsb204?=
- =?utf-8?B?MUp4RUI0aFh2Z1VkS21Ed0p5U0RlMTU3ajFuZ1ZXRldzNEt3RkMxOUZjQ2VI?=
- =?utf-8?B?K1NRVG5XRXpVUlo2SEVmZE95UTdnczlIdmE5WHFmZXNMeDUrMEpKUm4zZTN1?=
- =?utf-8?B?enFCYlUvRDRwYlNVTFdpdXY3cDgrWXZNVTFrWkJoWVc5MExaMGkzQmF6aEVm?=
- =?utf-8?B?QlVUUDBIbUUvZVdLeFpYU2FRY28vcUhyWStIUjhGbmIxdjMvRVVHY1p4STJI?=
- =?utf-8?B?WHFOUUs3bnVwSnhoNVlJalpIT1o0dm5vZkVsOU1sK3YyTDVjNUhkQ2hPZEpy?=
- =?utf-8?B?ejRpQWJ5dDQwSjJLUndNODhuWDFjQUVlS1BhVHpaYlIxZGRERjQ4akw5bnFn?=
- =?utf-8?B?emY5ODJhMkVUVndPclV0eHhjY004OERRTFNNenJ3UjJxbG1keFNwU005clIy?=
- =?utf-8?B?dnVSVUdoc3VhM1ZiNkxDeW9iN0gvNnN2a1Vsb3RIYXV5YXpKcksxQWRwODcz?=
- =?utf-8?B?Z0F5MnYrQTlEWWwyL2VrazlvYTg4UzRyWHBHQS9nRUNURjdkdXBPOC8vVkhs?=
- =?utf-8?B?UHFydmh4SUQxb0N2cjFxdVN4Z3Z6NEhDVlowa1lXMFV3OXE2WDQ4cGo0ai9t?=
- =?utf-8?B?OEdSTXA4TkViWGZYR05QLzkrRmZBM05TdlVUNEIxMmNJYTRwcVhIREwzWlVw?=
- =?utf-8?B?SWpUSThka1ZKVEVodGI5WmpRbm43RTN4RlFvK3dOT25YcHVUWVBldnN6ckgy?=
- =?utf-8?B?ZzJLdWNMQXMrS3RRU05NYnN4ZjZ0ZTRYeURKM3VUTDZlYUcxMlFwblAxSXVY?=
- =?utf-8?B?elgxTXJXbHlpZEw1YUFMNFN6ekVUQlFPSDRHS2RPaXZpV1JnNUk3RlJQbkFR?=
- =?utf-8?B?TmxXZUdndTBnKzlVZjJFTkpWWGROL283Q2JBcmF2Qy82UyswVVUzSDNQWHNI?=
- =?utf-8?B?amYzN3RCcUw0Mk9hT0dVTHcxdGYwYmVDbUtmUFRuT3JpdFlYeEk5MTRPZWE3?=
- =?utf-8?B?VmJFb1M2YjV0NE5NbGtqS3pWYnBidWJJaWxoUXJCKzIvK3pCL3BSYTM4WWFN?=
- =?utf-8?B?aGVWYWg0ZUJvZW9jcjB1UEdaUkJNUmIzVWIwM2F2NmRFZUZPNkJvUENBb2ZK?=
- =?utf-8?B?ZXB5cmNKM0hjQXA0ZWFQa1NBcGpwYkxCU1ZncnRONWEwNkNUSis5alJZdUUx?=
- =?utf-8?B?cXJUUW13YkM1Q3orT29wMkF5Zyt2UUJWNWZhaEpJbXEwZlJBSElZRS95T1A5?=
- =?utf-8?B?cjVSODVqR1hNYlhTYmVDaTVud0dKN1JsbXV6aUp3WWNNdURQUXVDSVlrTDhR?=
- =?utf-8?B?ckJsMHArRTU3UGlsS1RML294d2JHaXZnR21vamI2ZFM2V0pzTlpCUUJpcmRq?=
- =?utf-8?B?U3dzYzh4OS9uUkptY05kZEsxaUgvbjA4QkdycW5OK01Wa2djc2pNT0MxdFV0?=
- =?utf-8?B?SEZveE5mbGV6QzluNVFwN0RMSnpxMnNmcE1sanJSOUx3bVByWkVlOWJncnpv?=
- =?utf-8?B?NFl6NlNZakJXV3pGcmVPVnd4OGxZaW4xeFBZOEhrYkR3N3ovVUZUSk1TZU1P?=
- =?utf-8?B?WUYzNUZuYUx4eE0zemYraXcwNUxpaW1ZNDY3ZHo0dkJDZG81TUI0dEs5N0dU?=
- =?utf-8?B?dG91SnRpbnMzemRhRDFOdGhtVkdVTnV2RlEwZ1hBM2s2WXZiTnZRYS95eWcz?=
- =?utf-8?B?V0Zaa2cwSTFqQTBQNnVVNnVJM0Q1a2RQOXZpRTBpWmE2V1ZpOHdrNDExR3k5?=
- =?utf-8?B?VU1HT0MwbVFWMnZEY3psb0tMUGh3Yk1GMkNQa0dOdkUrYU1OWUowN1pIQytw?=
- =?utf-8?Q?Ds59eO+xnqnuOGCr/6wNRyPle?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fcf955f-0d04-4d8f-d557-08dbefb19a46
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2023 01:30:28.1316
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EN7YZNnujKu+IJ779835CX0Mh+1y2nHLiulQD6bXrNtGorfXMV42aL3e1AIYTL/S437Gp3jNbsAFIt85A/YL5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7924
 
-On 11/27/2023 19:20, Luke Jones wrote:
-> 
-> 
-> Okay i understand now, thank you. I'll make a note of it in my next 
-> response to ASUS.
-> 
-Another thought here - could they be doing this MCU on/off control as 
-part of the ACPI power resource on and off methods for the USB 
-controller and embed any required waits there instead?
++Baoquan for ioremap question.
 
-I would think this could then be "invisible" to any drivers on any OS.
+On Thu, 2023-11-23 at 16:30 +0200, Ilpo J=C3=A4rvinen wrote:
+> On Wed, 22 Nov 2023, David E. Box wrote:
+>=20
+> > Add auto-release cleanups for iounmap() and ioport_unmap().
+> >=20
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > ---
+> > V2 - Move from linux/io.h to asm-generic/io.h. Adds iounmap cleanup if
+> > =C2=A0=C2=A0=C2=A0=C2=A0 iounmap() is defined. Adds ioport_unmap cleanu=
+p if CONFIG_IOPORT_MAP
+> > =C2=A0=C2=A0=C2=A0=C2=A0 is defined.
+> >=20
+> > =C2=A0include/asm-generic/io.h | 6 ++++++
+> > =C2=A01 file changed, 6 insertions(+)
+> >=20
+> > diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+> > index bac63e874c7b..9ef0332490b1 100644
+> > --- a/include/asm-generic/io.h
+> > +++ b/include/asm-generic/io.h
+> > @@ -8,6 +8,7 @@
+> > =C2=A0#define __ASM_GENERIC_IO_H
+> > =C2=A0
+> > =C2=A0#include <asm/page.h> /* I/O is all done through memory accesses =
+*/
+> > +#include <linux/cleanup.h>
+> > =C2=A0#include <linux/string.h> /* for memset() and memcpy() */
+> > =C2=A0#include <linux/types.h>
+> > =C2=A0#include <linux/instruction_pointer.h>
+> > @@ -1065,6 +1066,10 @@ static inline void __iomem *ioremap(phys_addr_t =
+addr,
+> > size_t size)
+> > =C2=A0#endif
+> > =C2=A0#endif /* !CONFIG_MMU || CONFIG_GENERIC_IOREMAP */
+> > =C2=A0
+> > +#ifdef iounmap
+> > +DEFINE_FREE(iounmap, void __iomem *, iounmap(_T));
+> > +#endif
+
+Baoquan, LKP is reporting an undeclared function 'iounmap' error with the a=
+bove
+change from this patch when building for s390 with PCI disabled. The iorema=
+p
+defines in arch/s390/include/asm/io.h are not wrapped under the #ifdef
+CONFIG_PCI block. Shouldn't they be since the s390 Kconfig only adds
+GENERIC_IOREMAP if PCI?
+
+https://lore.kernel.org/oe-kbuild-all/202311241214.jcL84du7-lkp@intel.com
+
+
+Note that the report includes pointer arithmetic warnings that are not rela=
+ted
+to this patch. Those warnings occur in mainline as well.
+
+David
+
+> > +
+> > =C2=A0#ifndef ioremap_wc
+> > =C2=A0#define ioremap_wc ioremap
+> > =C2=A0#endif
+> > @@ -1127,6 +1132,7 @@ static inline void ioport_unmap(void __iomem *p)
+> > =C2=A0extern void __iomem *ioport_map(unsigned long port, unsigned int =
+nr);
+> > =C2=A0extern void ioport_unmap(void __iomem *p);
+> > =C2=A0#endif /* CONFIG_GENERIC_IOMAP */
+> > +DEFINE_FREE(ioport_unmap, void __iomem *, ioport_unmap(_T));
+> > =C2=A0#endif /* CONFIG_HAS_IOPORT_MAP */
+> > =C2=A0
+> > =C2=A0#ifndef CONFIG_GENERIC_IOMAP
+>=20
+> Has this now built successfully with LKP? (I don't think we get success=
+=20
+> notifications from LKP for patch submissions, only failures).
+>=20
+> There were some odd errors last time but I think all they were unrelated=
+=20
+> to this change (besides the checkpatch false positive, I mean).
+>=20
+
