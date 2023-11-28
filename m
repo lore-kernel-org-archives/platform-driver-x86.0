@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8008142A8E;
-	Tue, 28 Nov 2023 21:08:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2194344366;
+	Tue, 28 Nov 2023 21:09:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tmwWt6oZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4198DC433BA;
-	Tue, 28 Nov 2023 21:08:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtmVS2+L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10461C433A9;
+	Tue, 28 Nov 2023 21:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701205738;
-	bh=zSwLFu7OtLy2Zn+0zDwtDj7975oDWp+IIFJU4t6gJi4=;
+	s=k20201202; t=1701205766;
+	bh=yG+aRl8F0wyaIq6UmkST9/60ctGcA7qgvZ6gTxRE+6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tmwWt6oZug6md8kzk4a78u9tmL4LroZPZvYcCoPKoT5Ak4QQ2Ffs8K/rAmomzMOR3
-	 ZXAhExUtj6qjO35zIuYZt6g00VVfnsPZYQcef7Pne3mMXo6fbOVXLglxriFPSvq7La
-	 9QHCOTyC+eUU3xVEjOZfMyrMgB0u9yEBujdsOIh0jJS40596HgcR9GNXIfoTS3qGbN
-	 ObuMr84/fK3mrXvY0W7dVd6EWXh3Nq5JYM6DIjp34TA2dasmUAWg4tzlelsEBBGHEh
-	 1eAxXlMhNhgGSo8axtCZqX+dy1jAJTjcyL/uluiAG4SfTD355naWIlewAkocob58et
-	 qmdTMR0HV+WSg==
+	b=FtmVS2+Lj5XEl7+Cnj/v6PmVE9ULbZVuUGYpz3QpkUiOVovs4HZ75xPT2NgKlX1+f
+	 ViMpLMZQ4WOF6O0vjzj9eImhQSWHhjuD0DJ6EODdUDivCa9uOgP0wB+piomn9yctnI
+	 3/awfipOSf4wu38p3xTJxynlQH+ot/C5h6JM2PCDEzw2hKu1ovyrM+OnRXtAD1XKix
+	 u5VkG/Xa6GBUJZf4l9EV4Pwv5oCUz0ldbwCw3yCP1aUP6GYWz5ON7poVhL5DVptOoq
+	 QYdpBUG+nLT/KnZbv/XdbhLK5nYlIdpiv83+arQAlgT9xrSboAoAgNEe4qc4d9V+UX
+	 LyapthwWnFI8Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -25,15 +25,14 @@ Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	david.e.box@linux.intel.com,
 	hdegoede@redhat.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 09/15] platform/x86: intel_telemetry: Fix kernel doc descriptions
-Date: Tue, 28 Nov 2023 16:08:30 -0500
-Message-ID: <20231128210843.876493-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 07/13] platform/x86: intel_telemetry: Fix kernel doc descriptions
+Date: Tue, 28 Nov 2023 16:09:01 -0500
+Message-ID: <20231128210914.876813-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231128210843.876493-1-sashal@kernel.org>
-References: <20231128210843.876493-1-sashal@kernel.org>
+In-Reply-To: <20231128210914.876813-1-sashal@kernel.org>
+References: <20231128210914.876813-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,7 +42,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.140
+X-stable-base: Linux 5.10.202
 Content-Transfer-Encoding: 8bit
 
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
@@ -67,13 +66,13 @@ Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel/telemetry/core.c | 4 ++--
+ drivers/platform/x86/intel_telemetry_core.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/telemetry/core.c b/drivers/platform/x86/intel/telemetry/core.c
+diff --git a/drivers/platform/x86/intel_telemetry_core.c b/drivers/platform/x86/intel_telemetry_core.c
 index fdf55b5d69480..e4be40f73eebf 100644
---- a/drivers/platform/x86/intel/telemetry/core.c
-+++ b/drivers/platform/x86/intel/telemetry/core.c
+--- a/drivers/platform/x86/intel_telemetry_core.c
++++ b/drivers/platform/x86/intel_telemetry_core.c
 @@ -102,7 +102,7 @@ static const struct telemetry_core_ops telm_defpltops = {
  /**
   * telemetry_update_events() - Update telemetry Configuration
