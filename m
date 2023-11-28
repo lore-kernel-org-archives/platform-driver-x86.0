@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2194344366;
-	Tue, 28 Nov 2023 21:09:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B9A481B5;
+	Tue, 28 Nov 2023 21:09:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtmVS2+L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10461C433A9;
-	Tue, 28 Nov 2023 21:09:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lrm0i0DW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA27DC433C7;
+	Tue, 28 Nov 2023 21:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701205766;
-	bh=yG+aRl8F0wyaIq6UmkST9/60ctGcA7qgvZ6gTxRE+6w=;
+	s=k20201202; t=1701205791;
+	bh=fZcKTXG0sC5lnx7o4aVzW4wxwVLxxiH6esvL8ugsTa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FtmVS2+Lj5XEl7+Cnj/v6PmVE9ULbZVuUGYpz3QpkUiOVovs4HZ75xPT2NgKlX1+f
-	 ViMpLMZQ4WOF6O0vjzj9eImhQSWHhjuD0DJ6EODdUDivCa9uOgP0wB+piomn9yctnI
-	 3/awfipOSf4wu38p3xTJxynlQH+ot/C5h6JM2PCDEzw2hKu1ovyrM+OnRXtAD1XKix
-	 u5VkG/Xa6GBUJZf4l9EV4Pwv5oCUz0ldbwCw3yCP1aUP6GYWz5ON7poVhL5DVptOoq
-	 QYdpBUG+nLT/KnZbv/XdbhLK5nYlIdpiv83+arQAlgT9xrSboAoAgNEe4qc4d9V+UX
-	 LyapthwWnFI8Q==
+	b=Lrm0i0DWZrcwXN3XYDzIZr1g9rrD/uu3O4hmblqxzHEzPkDvhP6SaJhACKm3HGUmO
+	 XHi2yqkTq1PZShDQG1B5CBboOdntWk/PpfdZWR4wRy7tCyDtWTdiyAd7lNS52z7ZQa
+	 og20lq6EhpYq353nsaHwQYM1Vw2Fj8hQX0ttfI1lOurhFD5W/W7Ux8KurAMml8WMKk
+	 27dSjZRNgaviOQhflVgaEXenPCCbM4V3EYOKkaWsUfBPPoNc4X2DA17+VH+5BneZS+
+	 qohRTgwmV5OMljY2OmtAk5JIhTtkvvKi8AqGZPrKPV7ZA37osddhfNx0v0HmDW9khT
+	 YKKUpwFK//jTw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -27,12 +27,12 @@ Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
 	hdegoede@redhat.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 07/13] platform/x86: intel_telemetry: Fix kernel doc descriptions
-Date: Tue, 28 Nov 2023 16:09:01 -0500
-Message-ID: <20231128210914.876813-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 06/11] platform/x86: intel_telemetry: Fix kernel doc descriptions
+Date: Tue, 28 Nov 2023 16:09:30 -0500
+Message-ID: <20231128210941.877094-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231128210914.876813-1-sashal@kernel.org>
-References: <20231128210914.876813-1-sashal@kernel.org>
+In-Reply-To: <20231128210941.877094-1-sashal@kernel.org>
+References: <20231128210941.877094-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -42,7 +42,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.202
+X-stable-base: Linux 5.4.262
 Content-Transfer-Encoding: 8bit
 
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
@@ -70,7 +70,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_telemetry_core.c b/drivers/platform/x86/intel_telemetry_core.c
-index fdf55b5d69480..e4be40f73eebf 100644
+index d4040bb222b48..59fc6624b1ac9 100644
 --- a/drivers/platform/x86/intel_telemetry_core.c
 +++ b/drivers/platform/x86/intel_telemetry_core.c
 @@ -102,7 +102,7 @@ static const struct telemetry_core_ops telm_defpltops = {
