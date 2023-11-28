@@ -1,46 +1,23 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZlAz+qdB"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE25510E2;
-	Tue, 28 Nov 2023 10:56:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701197797; x=1732733797;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=w2WLuGYFo65Ah4GBkw4OoNcB8sscL4pJ3RZxkL2Mj+A=;
-  b=ZlAz+qdBsrLmre+en5pa1D4J757H9p3OtRtq9sx+7IJFUgodlb85dGkE
-   oYZK0nlcd8rwldS6Q/MwdyYGRd/2D7s7s88F+AZAu0bxO4S1iNkrsaNYW
-   8GSHRC8GcbltgoQHXG+HSLiBwTBuJjtisnAsuLYbUarjYExLrQoboJKdk
-   Wdbd28EyaXHyAPl0+msQaSHzMkMA7LAFuOaoZGjH9WppRMnnLa7xRTxD7
-   2tGyQ/5tbVrgI+qwegzNrxAkBogbzUbpnRjS4lRuruFWsBB2iAQutrNsU
-   CGfeFtct82DvPSMwGc88EB/WzN1uo1ONlalyOsPvlcOYCB/jp7DwrKoip
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="372366975"
-X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
-   d="scan'208";a="372366975"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 10:56:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="892165783"
-X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
-   d="scan'208";a="892165783"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
-  by orsmga004.jf.intel.com with ESMTP; 28 Nov 2023 10:56:11 -0800
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hdegoede@redhat.com,
-	markgross@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	andriy.shevchenko@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail11.truemail.it (mail11.truemail.it [IPv6:2001:4b7e:0:8::81])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C1510F0;
+	Tue, 28 Nov 2023 11:49:45 -0800 (PST)
+Received: from francesco-nb.toradex.int (31-10-194-107.static.upc.ch [31.10.194.107])
+	by mail11.truemail.it (Postfix) with ESMTPA id 47FC0206FC;
+	Tue, 28 Nov 2023 20:49:42 +0100 (CET)
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mark Gross <markgross@kernel.org>
+Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 4/6] platform/x86/intel/tpmi: Move TPMI ID definitions
-Date: Tue, 28 Nov 2023 10:56:03 -0800
-Message-Id: <20231128185605.3027653-5-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231128185605.3027653-1-srinivas.pandruvada@linux.intel.com>
-References: <20231128185605.3027653-1-srinivas.pandruvada@linux.intel.com>
+	stable@vger.kernel.org
+Subject: [PATCH v1] platform/surface: aggregator: fix recv_buf() return value
+Date: Tue, 28 Nov 2023 20:49:35 +0100
+Message-Id: <20231128194935.11350-1-francesco@dolcini.it>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -49,63 +26,42 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move TPMI ID definitions to common include file. In this way other
-feature drivers don't have to redefine.
+From: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Serdev recv_buf() callback is supposed to return the amount of bytes
+consumed, therefore an int in between 0 and count.
+
+Do not return negative number in case of issue, when
+ssam_controller_receive_buf() returns ESHUTDOWN just returns 0, e.g. no
+bytes consumed, this keep the exact same behavior as it was before.
+
+This fixes a potential WARN in serdev-ttyport.c:ttyport_receive_buf().
+
+Cc: <stable@vger.kernel.org>
+Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
+Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 ---
- drivers/platform/x86/intel/tpmi.c | 13 -------------
- include/linux/intel_tpmi.h        | 13 +++++++++++++
- 2 files changed, 13 insertions(+), 13 deletions(-)
+ drivers/platform/surface/aggregator/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
-index 44773c210324..14575da91d2c 100644
---- a/drivers/platform/x86/intel/tpmi.c
-+++ b/drivers/platform/x86/intel/tpmi.c
-@@ -176,19 +176,6 @@ struct tpmi_feature_state {
- 	u32 locked:1;
- } __packed;
+diff --git a/drivers/platform/surface/aggregator/core.c b/drivers/platform/surface/aggregator/core.c
+index 1a6373dea109..6152be38398c 100644
+--- a/drivers/platform/surface/aggregator/core.c
++++ b/drivers/platform/surface/aggregator/core.c
+@@ -231,9 +231,12 @@ static int ssam_receive_buf(struct serdev_device *dev, const unsigned char *buf,
+ 			    size_t n)
+ {
+ 	struct ssam_controller *ctrl;
++	int ret;
  
--/*
-- * List of supported TMPI IDs.
-- * Some TMPI IDs are not used by Linux, so the numbers are not consecutive.
-- */
--enum intel_tpmi_id {
--	TPMI_ID_RAPL = 0, /* Running Average Power Limit */
--	TPMI_ID_PEM = 1, /* Power and Perf excursion Monitor */
--	TPMI_ID_UNCORE = 2, /* Uncore Frequency Scaling */
--	TPMI_ID_SST = 5, /* Speed Select Technology */
--	TPMI_CONTROL_ID = 0x80, /* Special ID for getting feature status */
--	TPMI_INFO_ID = 0x81, /* Special ID for PCI BDF and Package ID information */
--};
--
- /*
-  * The size from hardware is in u32 units. This size is from a trusted hardware,
-  * but better to verify for pre silicon platforms. Set size to 0, when invalid.
-diff --git a/include/linux/intel_tpmi.h b/include/linux/intel_tpmi.h
-index a240e15ef77f..6c31768cdb83 100644
---- a/include/linux/intel_tpmi.h
-+++ b/include/linux/intel_tpmi.h
-@@ -12,6 +12,19 @@
- #define TPMI_MINOR_VERSION(val)	FIELD_GET(GENMASK(4, 0), val)
- #define TPMI_MAJOR_VERSION(val)	FIELD_GET(GENMASK(7, 5), val)
- 
-+/*
-+ * List of supported TMPI IDs.
-+ * Some TMPI IDs are not used by Linux, so the numbers are not consecutive.
-+ */
-+enum intel_tpmi_id {
-+	TPMI_ID_RAPL = 0, /* Running Average Power Limit */
-+	TPMI_ID_PEM = 1, /* Power and Perf excursion Monitor */
-+	TPMI_ID_UNCORE = 2, /* Uncore Frequency Scaling */
-+	TPMI_ID_SST = 5, /* Speed Select Technology */
-+	TPMI_CONTROL_ID = 0x80, /* Special ID for getting feature status */
-+	TPMI_INFO_ID = 0x81, /* Special ID for PCI BDF and Package ID information */
-+};
+ 	ctrl = serdev_device_get_drvdata(dev);
+-	return ssam_controller_receive_buf(ctrl, buf, n);
++	ret = ssam_controller_receive_buf(ctrl, buf, n);
 +
- /**
-  * struct intel_tpmi_plat_info - Platform information for a TPMI device instance
-  * @cdie_mask:	Mask of all compute dies in the partition
++	return ret < 0 ? 0 : ret;
+ }
+ 
+ static void ssam_write_wakeup(struct serdev_device *dev)
 -- 
-2.41.0
+2.25.1
 
