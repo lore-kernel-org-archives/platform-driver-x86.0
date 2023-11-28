@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0E341C9D;
-	Tue, 28 Nov 2023 21:10:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE54B57306;
+	Tue, 28 Nov 2023 21:10:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uZGW/iUV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E105AC433B9;
-	Tue, 28 Nov 2023 21:10:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g6nTXZRF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6C2CC433CA;
+	Tue, 28 Nov 2023 21:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701205809;
-	bh=PDr2QDrjBAHoTH4bPlqN0clRslHVUMUgQBbvaL3627s=;
+	s=k20201202; t=1701205826;
+	bh=Ih5yEDk5Isn9e8/MbZccaziuk6foJKqir2R20DQ02sY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uZGW/iUV1ppxMNk3KGG6cgwmD+0JEaiGquUsDtKt7m6+5yRHAHh1pocGhoTQr785N
-	 WRDJyTLb9WnJdXweyCsrtpD8S1owPDGvmGtqJiQJ+stzf/JnGG08e4wET087iwuk8+
-	 BGM1b1yGtiGOfG2UDfvtU3T0GUqAGnJZTQckSkZFYHWO3lhO8WI0wLt3TvpsnfNS/k
-	 KM0oZ/vu3XjJRRJZGgvTyPvxiHq4QgSC5D7jXXsFgavQsTa2LppfSyXkZQme9Iatcw
-	 55ASUNcNDQY5uBLjxGgJsy6hOSg1B3ejJtWpaZYml6TgmZoK9sROvhL9vVYpJE/GjX
-	 HtefRZh+2J08Q==
+	b=g6nTXZRFqoqzQg1wUjvT2mmdRIagoOdFP5v02mEqvtVqsgZ10FeKfOzVC1jXCE57M
+	 soMagbLCG0asL/+F9NyWwdaqbdTRFJE3h/G9VAqaxFdqwGLW/Yiqz5uEtLAnWTUbGP
+	 h/drWPXOu681/nX95zzH5HCIKmqnua79NEJ4ZO61M/gBQgceMCJSDLx0wsiVIVCb9m
+	 5LSVOo4TsE2DZoxVCxojkyozQr7mh1zRwYp7pz0q83kcMVJ0XNzYuL8Yjx0T/251ss
+	 B5hYQiGwm3C8lxJRuk8+wzCs1ahY8b+QdV4a6fOv8ibmitILpO8ylN+8IO2egCHhxM
+	 Cyo3YmKKgGcqQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -27,12 +27,12 @@ Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
 	hdegoede@redhat.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 05/10] platform/x86: intel_telemetry: Fix kernel doc descriptions
-Date: Tue, 28 Nov 2023 16:09:54 -0500
-Message-ID: <20231128211001.877333-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 3/7] platform/x86: intel_telemetry: Fix kernel doc descriptions
+Date: Tue, 28 Nov 2023 16:10:13 -0500
+Message-ID: <20231128211018.877548-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231128211001.877333-1-sashal@kernel.org>
-References: <20231128211001.877333-1-sashal@kernel.org>
+In-Reply-To: <20231128211018.877548-1-sashal@kernel.org>
+References: <20231128211018.877548-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -42,7 +42,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.300
+X-stable-base: Linux 4.14.331
 Content-Transfer-Encoding: 8bit
 
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
@@ -70,10 +70,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_telemetry_core.c b/drivers/platform/x86/intel_telemetry_core.c
-index f378621b5fe9d..31bbfb5d24631 100644
+index 0d4c3808a6d89..a0595fcd945ea 100644
 --- a/drivers/platform/x86/intel_telemetry_core.c
 +++ b/drivers/platform/x86/intel_telemetry_core.c
-@@ -110,7 +110,7 @@ static const struct telemetry_core_ops telm_defpltops = {
+@@ -111,7 +111,7 @@ static const struct telemetry_core_ops telm_defpltops = {
  /**
   * telemetry_update_events() - Update telemetry Configuration
   * @pss_evtconfig: PSS related config. No change if num_evts = 0.
@@ -82,7 +82,7 @@ index f378621b5fe9d..31bbfb5d24631 100644
   *
   * This API updates the IOSS & PSS Telemetry configuration. Old config
   * is overwritten. Call telemetry_reset_events when logging is over
-@@ -184,7 +184,7 @@ EXPORT_SYMBOL_GPL(telemetry_reset_events);
+@@ -185,7 +185,7 @@ EXPORT_SYMBOL_GPL(telemetry_reset_events);
  /**
   * telemetry_get_eventconfig() - Returns the pss and ioss events enabled
   * @pss_evtconfig: Pointer to PSS related configuration.
