@@ -1,72 +1,70 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="BiPv+3Wn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qY2EiRZr"
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="nhjkYMh/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZLk2klnH"
 Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 552301B4;
-	Mon, 27 Nov 2023 16:54:59 -0800 (PST)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailout.nyi.internal (Postfix) with ESMTP id 708B05C01A5;
-	Mon, 27 Nov 2023 19:54:56 -0500 (EST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A28C21B8;
+	Mon, 27 Nov 2023 16:58:00 -0800 (PST)
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailout.nyi.internal (Postfix) with ESMTP id 1A4EC5C029C;
+	Mon, 27 Nov 2023 19:58:00 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 27 Nov 2023 19:54:56 -0500
+  by compute7.internal (MEProxy); Mon, 27 Nov 2023 19:58:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
 	:cc:content-type:content-type:date:date:from:from:in-reply-to
 	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm2; t=1701132896; x=1701219296; bh=c7
-	zjAO3r9Yx3ETDGsHrToa87UUoMTDyJPLXimrOFpno=; b=BiPv+3WnZALgc/AFLy
-	GPmyKF0bQRgPG62TYh/xSOzIKSLDkmWEGknla2JzaC2okzm37xO4vbK7HSDeZPWz
-	BQ2Ps5wlBGpQzneAXjlMeYZqfTDvECmizhj14Cc43CU7ow4EZ7f98e4s1N5PKo3/
-	v3QOv77BY9JYTI1WzmNh0HCoPLrVXsl9HfPrIu1WMoyNVb/Po9VA7VWndUcpzPMD
-	qujZtn9ChjriM2u3ZUB015HsmSJVc/hLx2xx1jilI/ig7qDst6z5/gS+9OhYjjjf
-	hObMSzso7tA74bVdoix9wdfPp3l9OPBeDA/kCPv4MAjdAbdMfP6rwWkc7Xcq8HxF
-	QU+w==
+	:subject:subject:to:to; s=fm2; t=1701133080; x=1701219480; bh=cS
+	xFe317qFdV/Hi2j4HY7ZnvHkNMT7ieNvLCr1dClkM=; b=nhjkYMh/yXxhogb/4E
+	yLT7TtmGC7lpvRzNHCClwamGvjeB7sO0ZEFMCq5k3Zq7CrBKrLPf7RjDVGQF1dxS
+	cyK4cjMJ4vJ0qoq0vOj9iDGFZMBj+qfyq0UGjpCuBxwQuTjsIGHIvSByamkYM5ao
+	TMhJ4+cBnoXKDf+sbKDkjfyNrCg831vN5wOFmK9s7V4QDi1H7kOn/gBaNqaEl/pN
+	vuAvfkPUHq4xJJg9TOLE0iMbJTa61Uw+bgy4WcopJKpCQAqPl952nXqQ91j1KWY0
+	soZTjK8BkO094j0XsPZFNTz6Y7SxBCV//h8BZ4MHBUOwugLb+nwsO+ycj1fiDEHm
+	ICow==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:sender:subject
 	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1701132896; x=1701219296; bh=c7zjAO3r9Yx3E
-	TDGsHrToa87UUoMTDyJPLXimrOFpno=; b=qY2EiRZr9dtV+ZGG/YloNtRy+TVb8
-	ifTmy7fcnBJ6ZYeUZ2UUT/ShMnS+VB1TazOUUfQpbVvcCjEBnokUZ3In8S0m29wN
-	3VMjlz6y8k05twgAQMMvA4krEhv158G1MS5ZlUgKOMK+nDywSbg1AtfSGRlYPEjP
-	k31faR5Y4rDYtj4vRAQ69w+Lyin68qD6wMGJeCx7Qkx6cfEmYIxf2z6T2cnod2T/
-	tv1hxjDVb6f75kAqjPm6wSr0DaQlgFFrLoEF7d6XVoAr3IGU4mvjkm+Vo3Vas97j
-	2wisCjtodQAsIvuS8lU6qyWYNd+oHz7U4C8h8fAy5VQXs+F+iJfTOk6fQ==
-X-ME-Sender: <xms:XzplZXIYphPXocfppDq-tKAu9skfM7RmbwmvBNf7YGuV8kPdrnJT5g>
-    <xme:XzplZbLwvES3IWuvtRXk5T9Q4Vi2-GGQRoIhKxTMUBU7T1rFT8F_iv0iP2Q0BMRIc
-    La4KUZZbyTpCeFoK-A>
-X-ME-Received: <xmr:XzplZfu_KjwnElGmVvonAA7CTqRqqiF-xLbIK5gIW5x4kkJLjlbYyZEY754N9vZ8yKTebobb>
+	:x-sasl-enc; s=fm1; t=1701133080; x=1701219480; bh=cSxFe317qFdV/
+	Hi2j4HY7ZnvHkNMT7ieNvLCr1dClkM=; b=ZLk2klnHY6P0JZ3mioWdcdhTGoiLA
+	UCpkllFKVAlsXwrQTDwk11r4Zzk7lLmq/KuA71wlcrBuBO6a5zmQNISor4r5IFnX
+	miUbb5G7WkkalgCSmVQQ+iJ53GsuV8nSguGJRgOhTSSyodyxJXyO3Hs9ql4bAdHo
+	p3aAQNUBI9fOrkcTQQNVmiI/6d3e7fjxi9TZBZSxoyjNFNt+tjsDMwpCDG7r7FBs
+	gV1sbX1hPrEYb4GlV6QMvq8sq2oPqPJBUJyQWpBTCNseH4xRGpwt4S0jLrm/hI+s
+	rlyCjwOreNdv3YjUCofX4NASKzRQX1GhftjEKixs7/4F3bf9cLcxUIJ2Q==
+X-ME-Sender: <xms:FztlZbG6XU14swjZWbBJ4mMSaY2TiMBUynNkGh5OmfMe8v5GbmEdvA>
+    <xme:FztlZYWfxQcrORnUeDx0_LLoHAn4uI9DB0N9hlRjFHLUN_j0VF3sn8Du1cLsFhk9w
+    UQdxQKzcaVElcC8Iio>
+X-ME-Received: <xmr:FztlZdLBcjippcklZAa4MlAk1hqAtqkBw8EhEJHwV4ogNAqgAIbyvxOGds9-C6ehwsF732qP>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudeivddgvdekucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepfffhuffvvefkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgv
     ucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnh
-    epvddvgeeltdehfeeijefgveegfeeihfdtveetfeetudfhvedtfeeltefhteegledunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvse
-    hljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:XzplZQas9vDIKULQ5yX-rRf0HzHkz3rH5i16kD5YUlxKF_4U_e4_Ww>
-    <xmx:XzplZeZmYD1rZIXurRnrX_Jcerpy13Dr8k1dgEHt0GXO1_294-Hwbg>
-    <xmx:XzplZUAQbY_903Cs6YWIYQcDOJJckbei-dn_TQSzCcqGEaS0zgM-kg>
-    <xmx:YDplZVUeFf8NgnNylyoI-ogKcXBUoz3y16eKLoyUs0WyKaF2p_IKkg>
+    ephfeigedtveefjeeukeetfeektdeffeefteekfeffieeiteeigeehhfdutdeitdehnecu
+    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:FztlZZGeejEl14pkpF0poxRS-INzLWlzsGAEUE-cQqGv-miy19VQpA>
+    <xmx:FztlZRWOm2PS7wdti3G5XeA8AqgOeB8eWw0Phb1YLWHKfdt__DewPg>
+    <xmx:FztlZUP5JN2tvmMo5uak27eAZ8kzT6TOyGOI-LaGhIf8qtns-zZ7bw>
+    <xmx:GDtlZehoIMV65-qpPvd7c_yHAIKGvmQYi8zUkzfIcmBLaGOxt707Ww>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 27 Nov 2023 19:54:50 -0500 (EST)
-Date: Tue, 28 Nov 2023 13:54:37 +1300
+ 27 Nov 2023 19:57:56 -0500 (EST)
+Date: Tue, 28 Nov 2023 13:57:42 +1300
 From: Luke Jones <luke@ljones.dev>
 Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: disable USB0 hub on ROG
  Ally before suspend
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Mario Limonciello <mario.limonciello@amd.com>, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, corentin.chary@gmail.com,
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: ilpo.jarvinen@linux.intel.com, corentin.chary@gmail.com,
 	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <1J6T4S.AGCT3HWF4DTB1@ljones.dev>
-In-Reply-To: <fb8ebdfb-fc53-4343-8df3-96f04b405ace@gmx.de>
+Message-Id: <6O6T4S.WF73A40XF38P@ljones.dev>
+In-Reply-To: <a62eb1df-2cf9-41cd-a64c-303f73549ce5@redhat.com>
 References: <20231126230521.125708-1-luke@ljones.dev>
 	<20231126230521.125708-2-luke@ljones.dev>
-	<30293382-2287-45a2-9269-55d547432085@amd.com>
-	<F1VS4S.MV0FEK6EB3K22@ljones.dev>
-	<e583fd64-2cff-4595-a559-a675c6f5ad0d@amd.com>
-	<fb8ebdfb-fc53-4343-8df3-96f04b405ace@gmx.de>
+	<1c5f3bd2-9f10-4e5d-8c6d-76441b2da850@redhat.com>
+	<ZOTS4S.OUOP1DLTNVXP3@ljones.dev>
+	<a62eb1df-2cf9-41cd-a64c-303f73549ce5@redhat.com>
 X-Mailer: geary/44.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -78,220 +76,241 @@ Content-Type: text/plain; charset=us-ascii; format=flowed
 
 
 
-On Mon, Nov 27 2023 at 10:42:48 PM +01:00:00, Armin Wolf 
-<W_Armin@gmx.de> wrote:
-> Am 27.11.23 um 21:55 schrieb Mario Limonciello:
->> On 11/27/2023 14:46, Luke Jones wrote:
->>> 
->>> 
->>>  On Mon, Nov 27 2023 at 02:14:23 PM -06:00:00, Mario Limonciello 
->>> <mario.limonciello@amd.com> wrote:
->>>> On 11/26/2023 17:05, Luke D. Jones wrote:
->>>>> ASUS have worked around an issue in XInput where it doesn't 
->>>>> support USB
->>>>>  selective suspend, which causes suspend issues in Windows. They 
->>>>> worked
->>>>>  around this by adjusting the MCU firmware to disable the USB0 
->>>>> hub when
->>>>>  the screen is switched off during the Microsoft DSM suspend path 
->>>>> in ACPI.
->>>>> 
->>>>>  The issue we have with this however is one of timing - the call 
->>>>> the tells
->>>>>  the MCU to this isn't able to complete before suspend is done so 
->>>>> we call
->>>>>  this in a prepare() and add a small msleep() to ensure it is 
->>>>> done. This
->>>>>  must be done before the screen is switched off to prevent a 
->>>>> variety of
->>>>>  possible races.
->>>> 
->>>>  Right now the way that Linux handles the LPS0 calls is that 
->>>> they're all back to back.  Luke did try to inject a delay after 
->>>> the LPS0 calls were done but before it went to sleep but this 
->>>> wasn't sufficient.
->>>> 
->>>>  Another "potential" way to solve this problem from Linux may be 
->>>> to actually glue the LPS0 screen off call to when DRM actually has 
->>>> eDP turned off.
->>>> 
->>>>  Making such a change would essentially push back the "screen off" 
->>>> LPS0 command to when the user has run 'systemctl suspend' (or an 
->>>> action that did this) because the compositor usually turns it off 
->>>> with DPMS at this time.
->>> 
->>>  I would be willing to test this if you want some concrete data.
+On Mon, Nov 27 2023 at 11:39:09 PM +01:00:00, Hans de Goede 
+<hdegoede@redhat.com> wrote:
+> Hi,
+> 
+> On 11/27/23 21:17, Luke Jones wrote:
 >> 
->>  It would require some cross subsystem plumbing to evaluate 
->> feasibility.
->>  I don't currently have any plans to do it.
 >> 
->>  I think your patch makes sense; I just want to make it known that 
->> "might" clean this up if it ever happens.
+>>  On Mon, Nov 27 2023 at 09:53:13 AM +01:00:00, Hans de Goede 
+>> <hdegoede@redhat.com> wrote:
+>>>  Hi,
+>>> 
+>>>  On 11/27/23 00:05, Luke D. Jones wrote:
+>>>>   ASUS have worked around an issue in XInput where it doesn't 
+>>>> support USB
+>>>>   selective suspend, which causes suspend issues in Windows. They 
+>>>> worked
+>>>>   around this by adjusting the MCU firmware to disable the USB0 
+>>>> hub when
+>>>>   the screen is switched off during the Microsoft DSM suspend path 
+>>>> in ACPI.
+>>>> 
+>>>>   The issue we have with this however is one of timing - the call 
+>>>> the tells
+>>>>   the MCU to this isn't able to complete before suspend is done so 
+>>>> we call
+>>>>   this in a prepare() and add a small msleep() to ensure it is 
+>>>> done. This
+>>>>   must be done before the screen is switched off to prevent a 
+>>>> variety of
+>>>>   possible races.
+>>>> 
+>>>>   Further to this the MCU powersave option must also be disabled 
+>>>> as it can
+>>>>   cause a number of issues such as:
+>>>>   - unreliable resume connection of N-Key
+>>>>   - complete loss of N-Key if the power is plugged in while 
+>>>> suspended
+>>>>   Disabling the powersave option prevents this.
+>>>> 
+>>>>   Without this the MCU is unable to initialise itself correctly on 
+>>>> resume.
+>>>> 
+>>>>   Signed-off-by: Luke D. Jones <luke@ljones.dev>
+>>> 
+>>>  Thanks, patch looks good to me, except that all the new lines
+>>>  seem to use 4 spaces rather then a tab char as indent.
 >> 
->>> See my big block of text below.
->>> 
->>>> 
->>>>  This is a much bigger change though and *much more ripe for 
->>>> breakage*.
->>>> 
->>>>  So I think in may be worth leaving a TODO comment to look into 
->>>> doing that in the future.
->>>  Do you mean add the TODO to a line in this patch?
->> 
->>  Yeah.  In case someone ever does it (me or otherwise) I think it 
->> would be good to have some reference in the comments that the commit 
->> 'might' be possible to revert.
->> 
->>> 
->>>> 
->>>>  If that ever happens; it's possible that this change could be 
->>>> reverted too.
->>>> 
->>>>> 
->>>>>  Further to this the MCU powersave option must also be disabled 
->>>>> as it can
->>>>>  cause a number of issues such as:
->>>>>  - unreliable resume connection of N-Key
->>>>>  - complete loss of N-Key if the power is plugged in while 
->>>>> suspended
->>>>>  Disabling the powersave option prevents this.
->>>>> 
->>>>>  Without this the MCU is unable to initialise itself correctly on 
->>>>> resume.
->>>> 
->>>>  initialize
->>> 
->>>  Are we forced to use USA spelling? I'm from NZ
->>>  "initialise is predominantly used in British English (used in 
->>> UK/AU/NZ) ( en-GB )"
->>> 
->> 
->>  Ah I didn't realize it's an acceptable spelling for en-GB, and 
->> thought it was just a typo; sorry.
->> 
->>>> 
->>>>> 
->>>>>  Signed-off-by: Luke D. Jones <luke@ljones.dev>
->>>> 
->>>>  I think it would be good to add a Closes: tag to the AMD Gitlab 
->>>> issue that this was discussed within as well as any other public 
->>>> references you know about.
->>>> 
->>>>  Additionally as Phoenix APU support goes back as far as kernel 
->>>> 6.1 and this is well contained to only run on the ROG I suggest to 
->>>> CC stable so that people can use the ROG on that LTS kernel or 
->>>> later.
->>>> 
->>>>> ---
->>>>>  -SNIP-
->>>>>    @@ -4701,6 +4749,8 @@ static const struct dev_pm_ops 
->>>>> asus_pm_ops = {
->>>>>        .thaw = asus_hotk_thaw,
->>>>>        .restore = asus_hotk_restore,
->>>>>        .resume = asus_hotk_resume,
->>>>>  +    .resume_early = asus_hotk_resume_early,
->>>>>  +    .prepare = asus_hotk_prepare,
->>>> 
->>>>  Have you experimented with only using the prepare() call or only 
->>>> the resume_early() call?  Are both really needed?
->>> 
->>>  I have yes. Although the device comes back eventually in resume 
->>> after only a prepare call it's not preferable as it tends to change 
->>> the device path. With resume_early we can get the device replugged 
->>> super early (before anything notices it's gone in fact).
->>> 
->>>  This whole thing is a bit of a mess. It ends up being a race 
->>> between various things to prevent a HUB0 disconnect being 
->>> registered by the xhci subsystem, and adding the device back before 
->>> the xhci subsystem gets control.
->>> 
->>>  If I add a sleep longer than 1300ms in prepare then the xhci 
->>> subsys registers a disconnect of the USB0 hub. If the sleep is 
->>> under 250ms it isn't quite enough for the MCU to do its thing, and 
->>> on battery it seems worse.
->>> 
->>>  I have asked the ASUS guys I'm in contact with for something to 
->>> disable this MCU behaviour since it is purely a workaround for a 
->>> broken Windows thing :( They are open to something, maybe an OS 
->>> detect in ACPI or a WMI method addition similar to the MCU 
->>> powersave method, from what I'm told it would require an MCU 
->>> firmware update along with BIOS update. If this eventuates I'll 
->>> submit an additional patch to check and set that plus disable this.
->> 
->>  Don't let them do an OS detection in ACPI, it's going to be too 
->> painful.
->>  I would instead suggest that they can have a bit that you can 
->> program in via ACPI or WMI from the ASUS WMI driver that says to 
->> skip the MCU disconnect behavior.
->> 
-> I totally agree, we do not need another _OSI(Linux) type of problem.
-> Maybe those guys at Asus could just implement a ACPI _DSM for the USB 
-> controller in question which allows for disabling this workaround.
-> This would be preferable to an additional WMI method, since the 
-> notebook would otherwise depend on the asus-wmi driver to suspend 
-> properly.
-> With the ACPI _DSM, the USB controller driver can disable the 
-> workaround as soon as the USB controller probes.
+>>  Apologies for the previous HTML email.
+>>  I must be going mad... are you sure? I've checked the patch file I 
+>> submitted. Run checkpatch on it. Checked my email copy, and checked 
+>> in lore... I can't see where space chars are?
+> 
+> So I just checked the copy in patchwork:
+> 
+> https://patchwork.kernel.org/project/platform-driver-x86/patch/20231126230521.125708-2-luke@ljones.dev/
+> 
+> and you are rights, no 4 spaces there.
+> 
+> Where as if you look further down in this reply, where the original
+> patch is quoted the 4 spaces are right there, so now I'm wondering
+> if maybe my mail client introduced the problem when I was replying ?
+> 
+> (replies to other patches preserve the tabs just fine).
+> 
+> So this is weird, but lets just forget about it, just some weird
+> glitch ...
+> 
 
-Would you be so kind as to explain what this means? My knowledge of 
-ACPI is paper thin and generally revolves just around the ASUS WMI 
-part. From what i can find the XHC0 (the hub the MCU is attached to) 
-doesn't have any current _DSM. I understand it means Device Specific 
-Method, so I guess you mean adding a method to be used only if that HUB 
-is there and implements it?
+Sun flares and cosmic particles.
 
-The ROG Ally depends on the asus-wmi driver regardless, without it, it 
-is barely functional.
+I'm comfortable with this being merged and doing through stable also. I 
+did many many more tests this morning, along with a half dozen other 
+people and this solution appears to be the only reliable option. When 
+ASUS provide a way to turn off the MCU unplug feature I will update 
+with a new patch (and add the TODO).
 
+> 
+> 
+> 
+>> 
 >>> 
->>>  I may possibly write a new version of this patch as we've seen 
->>> that enabling powersave reduces suspend power use by at least half. 
->>> And looking through my DSDT dumps, there are a few laptops with the 
->>> same feature as Ally. The patch for powersave being enabled 
->>> requires also AC power state on suspend change detection, and a 
->>> later forced reset in late resume (and the device paths change 
->>> regardless when powersave is on).
+>>>  With that fixed you can add my:
 >>> 
->>>  When I look at it objectively, the device path changing should be 
->>> a non-issue really as it is fully handled by USB subsystem and 
->>> behaves exactly like what it is - a USB hub disconnect. It's just 
->>> that some userspace apps don't expect this. I will experiment some 
->>> more.
+>>>  Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>>> 
+>>>  to the next version.
 >>> 
 >>>  Regards,
->>>  Luke.
 >>> 
->> 
->>  As another experiment - what happens if you "comment out" the LPS0 
->> calls that do this problematic stuff?
->> 
->>  It's important to make sure the callback to amd-pmc stays in place, 
->> but if you just skip those ACPI ones does it still get to the 
->> deepest state and are there other problems?
->> 
+>>>  Hans
+>>> 
+>>> 
+>>>>   ---
+>>>>    drivers/platform/x86/asus-wmi.c            | 50 
+>>>> ++++++++++++++++++++++
+>>>>    include/linux/platform_data/x86/asus-wmi.h |  3 ++
+>>>>    2 files changed, 53 insertions(+)
 >>>> 
->>>>>   };
->>>>>      /* Registration 
->>>>> ***************************************************************/
->>>>>  diff --git a/include/linux/platform_data/x86/asus-wmi.h 
->>>>> b/include/linux/platform_data/x86/asus-wmi.h
->>>>>  index 63e630276499..ab1c7deff118 100644
->>>>>  --- a/include/linux/platform_data/x86/asus-wmi.h
->>>>>  +++ b/include/linux/platform_data/x86/asus-wmi.h
->>>>>  @@ -114,6 +114,9 @@
->>>>>    /* Charging mode - 1=Barrel, 2=USB */
->>>>>    #define ASUS_WMI_DEVID_CHARGE_MODE    0x0012006C
->>>>>    +/* MCU powersave mode */
->>>>>  +#define ASUS_WMI_DEVID_MCU_POWERSAVE   0x001200E2
->>>>>  +
->>>>>    /* epu is connected? 1 == true */
->>>>>    #define ASUS_WMI_DEVID_EGPU_CONNECTED    0x00090018
->>>>>    /* egpu on/off */
+>>>>   diff --git a/drivers/platform/x86/asus-wmi.c 
+>>>> b/drivers/platform/x86/asus-wmi.c
+>>>>   index 6a79f16233ab..4ba33dfebfd4 100644
+>>>>   --- a/drivers/platform/x86/asus-wmi.c
+>>>>   +++ b/drivers/platform/x86/asus-wmi.c
+>>>>   @@ -16,6 +16,7 @@
+>>>>    #include <linux/acpi.h>
+>>>>    #include <linux/backlight.h>
+>>>>    #include <linux/debugfs.h>
+>>>>   +#include <linux/delay.h>
+>>>>    #include <linux/dmi.h>
+>>>>    #include <linux/fb.h>
+>>>>    #include <linux/hwmon.h>
+>>>>   @@ -132,6 +133,11 @@ module_param(fnlock_default, bool, 0444);
+>>>>    #define ASUS_SCREENPAD_BRIGHT_MAX 255
+>>>>    #define ASUS_SCREENPAD_BRIGHT_DEFAULT 60
 >>>> 
->>> 
+>>>>   +/* Controls the power state of the USB0 hub on ROG Ally which 
+>>>> input is on */
+>>>>   +#define ASUS_USB0_PWR_EC0_CSEE "\\_SB.PCI0.SBRG.EC0.CSEE"
+>>>>   +/* 300ms so far seems to produce a reliable result on AC and 
+>>>> battery */
+>>>>   +#define ASUS_USB0_PWR_EC0_CSEE_WAIT 300
+>>>>   +
+>>>>    static const char * const ashs_ids[] = { "ATK4001", "ATK4002", 
+>>>> NULL };
+>>>> 
+>>>>    static int throttle_thermal_policy_write(struct asus_wmi *);
+>>>>   @@ -300,6 +306,9 @@ struct asus_wmi {
+>>>> 
+>>>>        bool fnlock_locked;
+>>>> 
+>>>>   +    /* The ROG Ally device requires the MCU USB device be 
+>>>> disconnected before suspend */
+>>>>   +    bool ally_mcu_usb_switch;
+>>>>   +
+>>>>        struct asus_wmi_debug debug;
+>>>> 
+>>>>        struct asus_wmi_driver *driver;
+>>>>   @@ -4488,6 +4497,8 @@ static int asus_wmi_add(struct 
+>>>> platform_device *pdev)
+>>>>        asus->nv_temp_tgt_available = asus_wmi_dev_is_present(asus, 
+>>>> ASUS_WMI_DEVID_NV_THERM_TARGET);
+>>>>        asus->panel_overdrive_available = 
+>>>> asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD);
+>>>>        asus->mini_led_mode_available = 
+>>>> asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE);
+>>>>   +    asus->ally_mcu_usb_switch = acpi_has_method(NULL, 
+>>>> ASUS_USB0_PWR_EC0_CSEE)
+>>>>   +                        && dmi_match(DMI_BOARD_NAME, "RC71L");
+>>>> 
+>>>>        err = fan_boost_mode_check_present(asus);
+>>>>        if (err)
+>>>>   @@ -4654,6 +4665,43 @@ static int asus_hotk_resume(struct device 
+>>>> *device)
+>>>>            asus_wmi_fnlock_update(asus);
+>>>> 
+>>>>        asus_wmi_tablet_mode_get_state(asus);
+>>>>   +
+>>>>   +    return 0;
+>>>>   +}
+>>>>   +
+>>>>   +static int asus_hotk_resume_early(struct device *device)
+>>>>   +{
+>>>>   +    struct asus_wmi *asus = dev_get_drvdata(device);
+>>>>   +
+>>>>   +    if (asus->ally_mcu_usb_switch) {
+>>>>   +        if (ACPI_FAILURE(acpi_execute_simple_method(NULL, 
+>>>> ASUS_USB0_PWR_EC0_CSEE, 0xB8)))
+>>>>   +            dev_err(device, "ROG Ally MCU failed to connect USB 
+>>>> dev\n");
+>>>>   +        else
+>>>>   +            msleep(ASUS_USB0_PWR_EC0_CSEE_WAIT);
+>>>>   +    }
+>>>>   +    return 0;
+>>>>   +}
+>>>>   +
+>>>>   +static int asus_hotk_prepare(struct device *device)
+>>>>   +{
+>>>>   +    struct asus_wmi *asus = dev_get_drvdata(device);
+>>>>   +    int result, err;
+>>>>   +
+>>>>   +    if (asus->ally_mcu_usb_switch) {
+>>>>   +        /* When powersave is enabled it causes many issues with 
+>>>> resume of USB hub */
+>>>>   +        result = asus_wmi_get_devstate_simple(asus, 
+>>>> ASUS_WMI_DEVID_MCU_POWERSAVE);
+>>>>   +        if (result == 1) {
+>>>>   +            dev_warn(device, "MCU powersave enabled, disabling 
+>>>> to prevent resume issues");
+>>>>   +            err = 
+>>>> asus_wmi_set_devstate(ASUS_WMI_DEVID_MCU_POWERSAVE, 0, &result);
+>>>>   +            if (err || result != 1)
+>>>>   +                dev_err(device, "Failed to set MCU powersave 
+>>>> mode: %d\n", err);
+>>>>   +        }
+>>>>   +        /* sleep required to ensure USB0 is disabled before 
+>>>> sleep continues */
+>>>>   +        if (ACPI_FAILURE(acpi_execute_simple_method(NULL, 
+>>>> ASUS_USB0_PWR_EC0_CSEE, 0xB7)))
+>>>>   +            dev_err(device, "ROG Ally MCU failed to disconnect 
+>>>> USB dev\n");
+>>>>   +        else
+>>>>   +            msleep(ASUS_USB0_PWR_EC0_CSEE_WAIT);
+>>>>   +    }
+>>>>        return 0;
+>>>>    }
+>>>> 
+>>>>   @@ -4701,6 +4749,8 @@ static const struct dev_pm_ops asus_pm_ops 
+>>>> = {
+>>>>        .thaw = asus_hotk_thaw,
+>>>>        .restore = asus_hotk_restore,
+>>>>        .resume = asus_hotk_resume,
+>>>>   +    .resume_early = asus_hotk_resume_early,
+>>>>   +    .prepare = asus_hotk_prepare,
+>>>>    };
+>>>> 
+>>>>    /* Registration 
+>>>> ***************************************************************/
+>>>>   diff --git a/include/linux/platform_data/x86/asus-wmi.h 
+>>>> b/include/linux/platform_data/x86/asus-wmi.h
+>>>>   index 63e630276499..ab1c7deff118 100644
+>>>>   --- a/include/linux/platform_data/x86/asus-wmi.h
+>>>>   +++ b/include/linux/platform_data/x86/asus-wmi.h
+>>>>   @@ -114,6 +114,9 @@
+>>>>    /* Charging mode - 1=Barrel, 2=USB */
+>>>>    #define ASUS_WMI_DEVID_CHARGE_MODE    0x0012006C
+>>>> 
+>>>>   +/* MCU powersave mode */
+>>>>   +#define ASUS_WMI_DEVID_MCU_POWERSAVE   0x001200E2
+>>>>   +
+>>>>    /* epu is connected? 1 == true */
+>>>>    #define ASUS_WMI_DEVID_EGPU_CONNECTED    0x00090018
+>>>>    /* egpu on/off */
 >>> 
 >> 
 >> 
+> 
 
 
