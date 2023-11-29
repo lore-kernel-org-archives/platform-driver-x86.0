@@ -1,43 +1,43 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PybWZ381"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VYCIn3qp"
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C58DB6;
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 422EFA8;
 	Wed, 29 Nov 2023 14:21:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1701296502; x=1732832502;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=O5UBa7jU0JUDTCsfFNwlMZwtV0vDNoS2o3XqsF3gJ6A=;
-  b=PybWZ381m5LLu6R2opu6ez21tIPR9EpTUoeTZ/ln1DHas6cqYtBybASX
-   AgBmqgSMg44meJ5ttNIcv1lSm1mHCFKGBnGyB061fzRF175s9CG0tDAvl
-   hSaVP5u5xMFQMub56JoU+tuDAa5aZBeFZiYG8vkFYOXNNh5qwfn+4yR3N
-   ZnQyjbTG6PvFxK0Oxjl8N1KkrrvT9uQydVHLltA0tJz2GO130ouyiU2M/
-   Ry+CxiFA7ki8a9k9/6X6SM7Q5xrT8brgXILv8+zGPL129HXKVl+9acoIz
-   c2LUGDHN7M6g7S3WM8UrN9tIok7SJjWUTJxcVA5LkXZE5L6IeDTjqrPiA
+  bh=XwhfWuy+bq1RolUlxjYZAzfBQKpo5+rwImS6TwTG/Zg=;
+  b=VYCIn3qpfDmjw/wAgXj74Qvb2LPBg5HJmAJSwjwv6H+NdKrAfwguH13L
+   oUyMMVZ1q4w0XNRl7x5YUtuxIZ1BPQI9woQTHSHeAOuHS/6U0T9Vx4O3a
+   Q1UxS/Sn89yh8v3xiSdXoRFjRE/EWvJlKFwP8jjrggtQs1gDehVIbKJ1m
+   U47E2FbkwinqCOaKsSYcBHCnE8ZrSPEfCyYD5Wrl//G0DzHUlEFPvt7e6
+   gGxJBISlXWS1tD5/yRNmS3Yf7ZJ/AguATZOlrJkFbeBxHiuzoCytCX4ow
+   dcZJ/SL04R7iMX5b6fG+WQlLvF3UOEAqw8fqgieF/iyql7U9toFbz7iQQ
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="11937006"
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="11937009"
 X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="11937006"
+   d="scan'208";a="11937009"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 14:21:35 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="798070434"
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="798070441"
 X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="798070434"
+   d="scan'208";a="798070441"
 Received: from linux.intel.com ([10.54.29.200])
   by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 14:21:34 -0800
 Received: from debox1-desk4.lan (unknown [10.209.108.167])
-	by linux.intel.com (Postfix) with ESMTP id 1E7495807E2;
+	by linux.intel.com (Postfix) with ESMTP id 977E5580BF8;
 	Wed, 29 Nov 2023 14:21:34 -0800 (PST)
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	ilpo.jarvinen@linux.intel.com,
 	rajvi.jingar@linux.intel.com
-Subject: [PATCH V6 12/20] platform/x86/intel/pmc: Allow pmc_core_ssram_init to fail
-Date: Wed, 29 Nov 2023 14:21:24 -0800
-Message-Id: <20231129222132.2331261-13-david.e.box@linux.intel.com>
+Subject: [PATCH V6 16/20] platform/x86/intel/pmc: Display LPM requirements for multiple PMCs
+Date: Wed, 29 Nov 2023 14:21:28 -0800
+Message-Id: <20231129222132.2331261-17-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231129222132.2331261-1-david.e.box@linux.intel.com>
 References: <20231129222132.2331261-1-david.e.box@linux.intel.com>
@@ -50,119 +50,177 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Currently, if the PMC SSRAM initialization fails, no error is returned and
-the only indication is that a PMC device has not been created.  Instead,
-allow an error to be returned and handled directly by the caller.
+From: Rajvi Jingar <rajvi.jingar@linux.intel.com>
 
+Update the substate_requirements attribute to display the requirements for
+all the PMCs on a package.
+
+Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
-V6 - No change
+V6 - Add comment to document reason to check lpm_req_regs for NULL again
 
-V5 - No change
+V5 - Use conditional instead of if/else to do seq_printf()
 
-V4 - Remove return value check in mtl.c. Proper use of the value would
-     require returning an error status from pmc_core_add_pmc(). But
-     the function that calls it will be removed in the next patch so wait
-     to use it then.
+V4 - No change
 
-V3 - New patch split from V2 PATCH 9
-   - Add dev_warn on pmc_core_ssram_init fail
+V3 - Add missing submitter signoff
 
- drivers/platform/x86/intel/pmc/core.h       |  2 +-
- drivers/platform/x86/intel/pmc/core_ssram.c | 21 +++++++++++++--------
- 2 files changed, 14 insertions(+), 9 deletions(-)
+V2 - no change
 
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index ccf24e0f5e50..edaa70067e41 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -492,7 +492,7 @@ int pmc_core_resume_common(struct pmc_dev *pmcdev);
- int get_primary_reg_base(struct pmc *pmc);
- extern void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev);
- 
--extern void pmc_core_ssram_init(struct pmc_dev *pmcdev);
-+extern int pmc_core_ssram_init(struct pmc_dev *pmcdev);
- 
- int spt_core_init(struct pmc_dev *pmcdev);
- int cnp_core_init(struct pmc_dev *pmcdev);
-diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
-index 13fa16f0d52e..815950713e25 100644
---- a/drivers/platform/x86/intel/pmc/core_ssram.c
-+++ b/drivers/platform/x86/intel/pmc/core_ssram.c
-@@ -35,20 +35,20 @@ static inline u64 get_base(void __iomem *addr, u32 offset)
- 	return lo_hi_readq(addr + offset) & GENMASK_ULL(63, 3);
+ drivers/platform/x86/intel/pmc/core.c | 123 ++++++++++++++------------
+ 1 file changed, 68 insertions(+), 55 deletions(-)
+
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 3894119d61b0..9d3a1b6ef622 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -728,7 +728,7 @@ static int pmc_core_substate_l_sts_regs_show(struct seq_file *s, void *unused)
  }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_l_sts_regs);
  
--static void
-+static int
- pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
- 		 const struct pmc_reg_map *reg_map, int pmc_index)
+-static void pmc_core_substate_req_header_show(struct seq_file *s)
++static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index)
  {
- 	struct pmc *pmc = pmcdev->pmcs[pmc_index];
- 
- 	if (!pwrm_base)
--		return;
-+		return -ENODEV;
- 
- 	/* Memory for primary PMC has been allocated in core.c */
- 	if (!pmc) {
- 		pmc = devm_kzalloc(&pmcdev->pdev->dev, sizeof(*pmc), GFP_KERNEL);
- 		if (!pmc)
--			return;
-+			return -ENOMEM;
- 	}
- 
- 	pmc->map = reg_map;
-@@ -57,10 +57,12 @@ pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
- 
- 	if (!pmc->regbase) {
- 		devm_kfree(&pmcdev->pdev->dev, pmc);
--		return;
-+		return -ENOMEM;
- 	}
- 
- 	pmcdev->pmcs[pmc_index] = pmc;
-+
-+	return 0;
- }
- 
- static void
-@@ -96,7 +98,7 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, void __iomem *ssram, u32 offset,
- 		iounmap(ssram);
- }
- 
--void pmc_core_ssram_init(struct pmc_dev *pmcdev)
-+int pmc_core_ssram_init(struct pmc_dev *pmcdev)
+ 	struct pmc_dev *pmcdev = s->private;
+ 	int i, mode;
+@@ -743,68 +743,81 @@ static void pmc_core_substate_req_header_show(struct seq_file *s)
+ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
  {
- 	void __iomem *ssram;
- 	struct pci_dev *pcidev;
-@@ -105,7 +107,7 @@ void pmc_core_ssram_init(struct pmc_dev *pmcdev)
+ 	struct pmc_dev *pmcdev = s->private;
+-	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+-	const struct pmc_bit_map **maps = pmc->map->lpm_sts;
+-	const struct pmc_bit_map *map;
+-	const int num_maps = pmc->map->lpm_num_maps;
+-	u32 sts_offset = pmc->map->lpm_status_offset;
+-	u32 *lpm_req_regs = pmc->lpm_req_regs;
+-	int mp;
++	u32 sts_offset;
++	u32 *lpm_req_regs;
++	int num_maps, mp, pmc_index;
  
- 	pcidev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(20, 2));
- 	if (!pcidev)
--		goto out;
-+		return -ENODEV;
+-	/* Display the header */
+-	pmc_core_substate_req_header_show(s);
++	for (pmc_index = 0; pmc_index < ARRAY_SIZE(pmcdev->pmcs); ++pmc_index) {
++		struct pmc *pmc = pmcdev->pmcs[pmc_index];
++		const struct pmc_bit_map **maps;
  
- 	ret = pcim_enable_device(pcidev);
- 	if (ret)
-@@ -123,11 +125,14 @@ void pmc_core_ssram_init(struct pmc_dev *pmcdev)
- 	pmc_core_ssram_get_pmc(pmcdev, ssram, SSRAM_PCH_OFFSET, PMC_IDX_PCH);
- 
- 	iounmap(ssram);
--out:
--	return;
+-	/* Loop over maps */
+-	for (mp = 0; mp < num_maps; mp++) {
+-		u32 req_mask = 0;
+-		u32 lpm_status;
+-		int mode, idx, i, len = 32;
++		if (!pmc)
++			continue;
 +
-+	return 0;
++		maps = pmc->map->lpm_sts;
++		num_maps = pmc->map->lpm_num_maps;
++		sts_offset = pmc->map->lpm_status_offset;
++		lpm_req_regs = pmc->lpm_req_regs;
  
- disable_dev:
-+	pmcdev->ssram_pcidev = NULL;
- 	pci_disable_device(pcidev);
- release_dev:
- 	pci_dev_put(pcidev);
+ 		/*
+-		 * Capture the requirements and create a mask so that we only
+-		 * show an element if it's required for at least one of the
+-		 * enabled low power modes
++		 * When there are multiple PMCs, though the PMC may exist, the
++		 * requirement register discovery could have failed so check
++		 * before accessing.
+ 		 */
+-		pmc_for_each_mode(idx, mode, pmcdev)
+-			req_mask |= lpm_req_regs[mp + (mode * num_maps)];
+-
+-		/* Get the last latched status for this map */
+-		lpm_status = pmc_core_reg_read(pmc, sts_offset + (mp * 4));
+-
+-		/*  Loop over elements in this map */
+-		map = maps[mp];
+-		for (i = 0; map[i].name && i < len; i++) {
+-			u32 bit_mask = map[i].bit_mask;
+-
+-			if (!(bit_mask & req_mask))
+-				/*
+-				 * Not required for any enabled states
+-				 * so don't display
+-				 */
+-				continue;
+-
+-			/* Display the element name in the first column */
+-			seq_printf(s, "%30s |", map[i].name);
+-
+-			/* Loop over the enabled states and display if required */
+-			pmc_for_each_mode(idx, mode, pmcdev) {
+-				if (lpm_req_regs[mp + (mode * num_maps)] & bit_mask)
+-					seq_printf(s, " %9s |",
+-						   "Required");
+-				else
+-					seq_printf(s, " %9s |", " ");
++		if (!lpm_req_regs)
++			continue;
 +
-+	return ret;
++		/* Display the header */
++		pmc_core_substate_req_header_show(s, pmc_index);
++
++		/* Loop over maps */
++		for (mp = 0; mp < num_maps; mp++) {
++			u32 req_mask = 0;
++			u32 lpm_status;
++			const struct pmc_bit_map *map;
++			int mode, idx, i, len = 32;
++
++			/*
++			 * Capture the requirements and create a mask so that we only
++			 * show an element if it's required for at least one of the
++			 * enabled low power modes
++			 */
++			pmc_for_each_mode(idx, mode, pmcdev)
++				req_mask |= lpm_req_regs[mp + (mode * num_maps)];
++
++			/* Get the last latched status for this map */
++			lpm_status = pmc_core_reg_read(pmc, sts_offset + (mp * 4));
++
++			/*  Loop over elements in this map */
++			map = maps[mp];
++			for (i = 0; map[i].name && i < len; i++) {
++				u32 bit_mask = map[i].bit_mask;
++
++				if (!(bit_mask & req_mask)) {
++					/*
++					 * Not required for any enabled states
++					 * so don't display
++					 */
++					continue;
++				}
++
++				/* Display the element name in the first column */
++				seq_printf(s, "pmc%d: %26s |", pmc_index, map[i].name);
++
++				/* Loop over the enabled states and display if required */
++				pmc_for_each_mode(idx, mode, pmcdev) {
++					bool required = lpm_req_regs[mp + (mode * num_maps)] &
++							bit_mask;
++					seq_printf(s, " %9s |", required ? "Required" : " ");
++				}
++
++				/* In Status column, show the last captured state of this agent */
++				seq_printf(s, " %9s |", lpm_status & bit_mask ? "Yes" : " ");
++
++				seq_puts(s, "\n");
+ 			}
+-
+-			/* In Status column, show the last captured state of this agent */
+-			if (lpm_status & bit_mask)
+-				seq_printf(s, " %9s |", "Yes");
+-			else
+-				seq_printf(s, " %9s |", " ");
+-
+-			seq_puts(s, "\n");
+ 		}
+ 	}
+-
+ 	return 0;
  }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_req_regs);
 -- 
 2.34.1
 
