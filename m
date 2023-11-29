@@ -1,43 +1,43 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PL6uyjrY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PybWZ381"
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 879BFD1;
-	Wed, 29 Nov 2023 14:21:41 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C58DB6;
+	Wed, 29 Nov 2023 14:21:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701296501; x=1732832501;
+  t=1701296502; x=1732832502;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=hucH4KP50LXX2Kh5Iz88BOSFqM6zBFgUJz7knousSUg=;
-  b=PL6uyjrY0XAW8WTTHb5NlPKacI2RLv+nNPap4IsudQFlGqkanyfnDUHp
-   zkRZvnhvfRRZQr3KcOGV5zV0cdkmdjIJoP/+OO7ENEgRGN6oE0y/X5QG8
-   WMcXbpBfLaJd10zUlRy/iD7qF1lg9FazSGshx2AWTBajDVjJVVOjVmBFl
-   RXkBU1Qlvn4/KbkDoq+aJYpfdfrQFgLoMBX1OXNEDjnfg6MCpiINRoFjI
-   ec1A+g7lLYvGY3XyeCQcBdFhEnwYHp63Ebhz9wPHkmMxppUJXbzTXSSdZ
-   HouWaDMeT3Vmmo+egb9cnAj3vn2pTTwexAmc9XRgfJKyIfuGIoRlLHxG9
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="11937004"
+  bh=O5UBa7jU0JUDTCsfFNwlMZwtV0vDNoS2o3XqsF3gJ6A=;
+  b=PybWZ381m5LLu6R2opu6ez21tIPR9EpTUoeTZ/ln1DHas6cqYtBybASX
+   AgBmqgSMg44meJ5ttNIcv1lSm1mHCFKGBnGyB061fzRF175s9CG0tDAvl
+   hSaVP5u5xMFQMub56JoU+tuDAa5aZBeFZiYG8vkFYOXNNh5qwfn+4yR3N
+   ZnQyjbTG6PvFxK0Oxjl8N1KkrrvT9uQydVHLltA0tJz2GO130ouyiU2M/
+   Ry+CxiFA7ki8a9k9/6X6SM7Q5xrT8brgXILv8+zGPL129HXKVl+9acoIz
+   c2LUGDHN7M6g7S3WM8UrN9tIok7SJjWUTJxcVA5LkXZE5L6IeDTjqrPiA
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="11937006"
 X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="11937004"
+   d="scan'208";a="11937006"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 14:21:35 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="798070422"
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="798070434"
 X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="798070422"
+   d="scan'208";a="798070434"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 14:21:33 -0800
+  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 14:21:34 -0800
 Received: from debox1-desk4.lan (unknown [10.209.108.167])
-	by linux.intel.com (Postfix) with ESMTP id A094C5807E2;
-	Wed, 29 Nov 2023 14:21:33 -0800 (PST)
+	by linux.intel.com (Postfix) with ESMTP id 1E7495807E2;
+	Wed, 29 Nov 2023 14:21:34 -0800 (PST)
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	ilpo.jarvinen@linux.intel.com,
 	rajvi.jingar@linux.intel.com
-Subject: [PATCH V6 08/20] platform/x86/intel/vsec: Add base address field
-Date: Wed, 29 Nov 2023 14:21:20 -0800
-Message-Id: <20231129222132.2331261-9-david.e.box@linux.intel.com>
+Subject: [PATCH V6 12/20] platform/x86/intel/pmc: Allow pmc_core_ssram_init to fail
+Date: Wed, 29 Nov 2023 14:21:24 -0800
+Message-Id: <20231129222132.2331261-13-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231129222132.2331261-1-david.e.box@linux.intel.com>
 References: <20231129222132.2331261-1-david.e.box@linux.intel.com>
@@ -50,9 +50,9 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Some devices may emulate PCI VSEC capabilities in MMIO. In such cases the
-BAR is not readable from a config space. Provide a field for drivers to
-indicate the base address to be used.
+Currently, if the PMC SSRAM initialization fails, no error is returned and
+the only indication is that a PMC device has not been created.  Instead,
+allow an error to be returned and handled directly by the caller.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
@@ -61,119 +61,108 @@ V6 - No change
 
 V5 - No change
 
-V4 - No change
+V4 - Remove return value check in mtl.c. Proper use of the value would
+     require returning an error status from pmc_core_add_pmc(). But
+     the function that calls it will be removed in the next patch so wait
+     to use it then.
 
-V3 - No change
+V3 - New patch split from V2 PATCH 9
+   - Add dev_warn on pmc_core_ssram_init fail
 
-V2 - No change
+ drivers/platform/x86/intel/pmc/core.h       |  2 +-
+ drivers/platform/x86/intel/pmc/core_ssram.c | 21 +++++++++++++--------
+ 2 files changed, 14 insertions(+), 9 deletions(-)
 
- drivers/platform/x86/intel/pmt/class.c | 14 +++++++++++---
- drivers/platform/x86/intel/vsec.c      | 10 ++++++++--
- drivers/platform/x86/intel/vsec.h      |  2 ++
- 3 files changed, 21 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-index 2ad91d2fd954..32608baaa56c 100644
---- a/drivers/platform/x86/intel/pmt/class.c
-+++ b/drivers/platform/x86/intel/pmt/class.c
-@@ -160,10 +160,11 @@ static struct class intel_pmt_class = {
+diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+index ccf24e0f5e50..edaa70067e41 100644
+--- a/drivers/platform/x86/intel/pmc/core.h
++++ b/drivers/platform/x86/intel/pmc/core.h
+@@ -492,7 +492,7 @@ int pmc_core_resume_common(struct pmc_dev *pmcdev);
+ int get_primary_reg_base(struct pmc *pmc);
+ extern void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev);
  
- static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
- 				    struct intel_pmt_header *header,
--				    struct device *dev,
-+				    struct intel_vsec_device *ivdev,
- 				    struct resource *disc_res)
+-extern void pmc_core_ssram_init(struct pmc_dev *pmcdev);
++extern int pmc_core_ssram_init(struct pmc_dev *pmcdev);
+ 
+ int spt_core_init(struct pmc_dev *pmcdev);
+ int cnp_core_init(struct pmc_dev *pmcdev);
+diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
+index 13fa16f0d52e..815950713e25 100644
+--- a/drivers/platform/x86/intel/pmc/core_ssram.c
++++ b/drivers/platform/x86/intel/pmc/core_ssram.c
+@@ -35,20 +35,20 @@ static inline u64 get_base(void __iomem *addr, u32 offset)
+ 	return lo_hi_readq(addr + offset) & GENMASK_ULL(63, 3);
+ }
+ 
+-static void
++static int
+ pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
+ 		 const struct pmc_reg_map *reg_map, int pmc_index)
  {
--	struct pci_dev *pci_dev = to_pci_dev(dev->parent);
-+	struct pci_dev *pci_dev = ivdev->pcidev;
-+	struct device *dev = &ivdev->auxdev.dev;
- 	u8 bir;
+ 	struct pmc *pmc = pmcdev->pmcs[pmc_index];
  
- 	/*
-@@ -215,6 +216,13 @@ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
+ 	if (!pwrm_base)
+-		return;
++		return -ENODEV;
  
- 		break;
- 	case ACCESS_BARID:
-+		/* Use the provided base address if it exists */
-+		if (ivdev->base_addr) {
-+			entry->base_addr = ivdev->base_addr +
-+				   GET_ADDRESS(header->base_offset);
-+			break;
-+		}
+ 	/* Memory for primary PMC has been allocated in core.c */
+ 	if (!pmc) {
+ 		pmc = devm_kzalloc(&pmcdev->pdev->dev, sizeof(*pmc), GFP_KERNEL);
+ 		if (!pmc)
+-			return;
++			return -ENOMEM;
+ 	}
+ 
+ 	pmc->map = reg_map;
+@@ -57,10 +57,12 @@ pmc_core_pmc_add(struct pmc_dev *pmcdev, u64 pwrm_base,
+ 
+ 	if (!pmc->regbase) {
+ 		devm_kfree(&pmcdev->pdev->dev, pmc);
+-		return;
++		return -ENOMEM;
+ 	}
+ 
+ 	pmcdev->pmcs[pmc_index] = pmc;
 +
- 		/*
- 		 * If another BAR was specified then the base offset
- 		 * represents the offset within that BAR. SO retrieve the
-@@ -319,7 +327,7 @@ int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespa
++	return 0;
+ }
+ 
+ static void
+@@ -96,7 +98,7 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, void __iomem *ssram, u32 offset,
+ 		iounmap(ssram);
+ }
+ 
+-void pmc_core_ssram_init(struct pmc_dev *pmcdev)
++int pmc_core_ssram_init(struct pmc_dev *pmcdev)
+ {
+ 	void __iomem *ssram;
+ 	struct pci_dev *pcidev;
+@@ -105,7 +107,7 @@ void pmc_core_ssram_init(struct pmc_dev *pmcdev)
+ 
+ 	pcidev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(20, 2));
+ 	if (!pcidev)
+-		goto out;
++		return -ENODEV;
+ 
+ 	ret = pcim_enable_device(pcidev);
  	if (ret)
- 		return ret;
+@@ -123,11 +125,14 @@ void pmc_core_ssram_init(struct pmc_dev *pmcdev)
+ 	pmc_core_ssram_get_pmc(pmcdev, ssram, SSRAM_PCH_OFFSET, PMC_IDX_PCH);
  
--	ret = intel_pmt_populate_entry(entry, &header, dev, disc_res);
-+	ret = intel_pmt_populate_entry(entry, &header, intel_vsec_dev, disc_res);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index 2978d4e95bb0..648ee842d413 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -153,6 +153,7 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
- 	struct resource *tmp;
- 	struct device *parent;
- 	unsigned long quirks = info->quirks;
-+	u64 base_addr;
- 	int i;
- 
- 	if (info->parent)
-@@ -184,14 +185,18 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
- 	if (quirks & VSEC_QUIRK_TABLE_SHIFT)
- 		header->offset >>= TABLE_OFFSET_SHIFT;
- 
-+	if (info->base_addr)
-+		base_addr = info->base_addr;
-+	else
-+		base_addr = pdev->resource[header->tbir].start;
+ 	iounmap(ssram);
+-out:
+-	return;
 +
- 	/*
- 	 * The DVSEC/VSEC contains the starting offset and count for a block of
- 	 * discovery tables. Create a resource array of these tables to the
- 	 * auxiliary device driver.
- 	 */
- 	for (i = 0, tmp = res; i < header->num_entries; i++, tmp++) {
--		tmp->start = pdev->resource[header->tbir].start +
--			     header->offset + i * (header->entry_size * sizeof(u32));
-+		tmp->start = base_addr + header->offset + i * (header->entry_size * sizeof(u32));
- 		tmp->end = tmp->start + (header->entry_size * sizeof(u32)) - 1;
- 		tmp->flags = IORESOURCE_MEM;
++	return 0;
  
-@@ -206,6 +211,7 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
- 	intel_vsec_dev->resource = no_free_ptr(res);
- 	intel_vsec_dev->num_resources = header->num_entries;
- 	intel_vsec_dev->quirks = info->quirks;
-+	intel_vsec_dev->base_addr = info->base_addr;
- 
- 	if (header->id == VSEC_ID_SDSI)
- 		intel_vsec_dev->ida = &intel_vsec_sdsi_ida;
-diff --git a/drivers/platform/x86/intel/vsec.h b/drivers/platform/x86/intel/vsec.h
-index bb8b6452df70..e23e76129691 100644
---- a/drivers/platform/x86/intel/vsec.h
-+++ b/drivers/platform/x86/intel/vsec.h
-@@ -73,6 +73,7 @@ struct intel_vsec_platform_info {
- 	struct intel_vsec_header **headers;
- 	unsigned long caps;
- 	unsigned long quirks;
-+	u64 base_addr;
- };
- 
- struct intel_vsec_device {
-@@ -85,6 +86,7 @@ struct intel_vsec_device {
- 	void *priv_data;
- 	size_t priv_data_size;
- 	unsigned long quirks;
-+	u64 base_addr;
- };
- 
- int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
+ disable_dev:
++	pmcdev->ssram_pcidev = NULL;
+ 	pci_disable_device(pcidev);
+ release_dev:
+ 	pci_dev_put(pcidev);
++
++	return ret;
+ }
 -- 
 2.34.1
 
