@@ -1,43 +1,43 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lx27ZCfa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SYdFi688"
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DAD6193;
-	Wed, 29 Nov 2023 14:21:43 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF692D5E;
+	Wed, 29 Nov 2023 14:21:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701296503; x=1732832503;
+  t=1701296504; x=1732832504;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=5UoZQm+5mlrVi2iED5gw7GUDbpPxS++v3tW390wcYxA=;
-  b=Lx27ZCfasTNeE20rYeXWujjuEiSQeiUUyxguIz3YM6xmrjhflixiIx1D
-   gYr1RH8hU5NTN4KVTrfc/GeQQiFT9RiKcuWvlc7maNddgl/0bMf7TMc4H
-   ZG2bAz951Cf6EZ73aFtby4yRbpg38aIXHjMvk83vWvHtPPImPJNroTK7w
-   QLrEi529sMxYsSQP9GnvtPdJp2MEfgWqp7Ono1/ZikSx/ppb5smniZrjM
-   D0Jo5ZWyXr0w1ORTTXQO0nweP6JkVMiaJ1J3Miqf0jLIdE4Yl1FNQGaAD
-   ry8v6jn82SVeLPrwAY9defvj+UcemXoq4sDqFdc3jm2V+bwh4VHqrcDIp
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="11937015"
+  bh=7NVpmNIbGkzNR5bKws5rMhWK4Hzsb6NBLKtyScjr2do=;
+  b=SYdFi688ISdGeQXwsSKB3H5KLNAy5DEoxbCP6rWTUOPlvID8rWDmAu/u
+   LIsf7xonVJWD+0Yd09YnMtEeSb1/jdQsnAHkgeNkJnJcTNJ+3R35C2EJx
+   ac/hGRWJWg7YOgSKDQRS3AR+UHBgGexRzdbDvLAgvfBbqW5CGRO6XIDHI
+   WGFVzWGhtGDLMb8qJPi75eCT0vhzKZ3jdCpwtc3DwKIidmhYexLsaYxRv
+   C2iTi+n2NTSrtHUttS2+CgBuYO1mAIIDtbG5rcwoyJrwtCZ0at+GRTF+T
+   LlnhgfUN76K/rAWmNyIyZu6IG2za1FQNSK5JZk9BTm9XIK+Yk0jGQQezJ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="11936999"
 X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="11937015"
+   d="scan'208";a="11936999"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 14:21:35 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="798070438"
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="798070415"
 X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="798070438"
+   d="scan'208";a="798070415"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 14:21:34 -0800
+  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 14:21:33 -0800
 Received: from debox1-desk4.lan (unknown [10.209.108.167])
-	by linux.intel.com (Postfix) with ESMTP id 74964580ABB;
-	Wed, 29 Nov 2023 14:21:34 -0800 (PST)
+	by linux.intel.com (Postfix) with ESMTP id 4E0B4580BF8;
+	Wed, 29 Nov 2023 14:21:33 -0800 (PST)
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	ilpo.jarvinen@linux.intel.com,
 	rajvi.jingar@linux.intel.com
-Subject: [PATCH V6 15/20] platform/x86/intel/pmc: Find and register PMC telemetry entries
-Date: Wed, 29 Nov 2023 14:21:27 -0800
-Message-Id: <20231129222132.2331261-16-david.e.box@linux.intel.com>
+Subject: [PATCH V6 05/20] platform/x86/intel/vsec: Use cleanup.h
+Date: Wed, 29 Nov 2023 14:21:17 -0800
+Message-Id: <20231129222132.2331261-6-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231129222132.2331261-1-david.e.box@linux.intel.com>
 References: <20231129222132.2331261-1-david.e.box@linux.intel.com>
@@ -50,118 +50,84 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The PMC SSRAM device contains counters that are structured in Intel
-Platform Monitoring Technology (PMT) telemetry regions. Look for and
-register these telemetry regions from the driver so that they may be read
-using the Intel PMT ABI.
+Use cleanup.h helpers to handle cleanup of resources in
+intel_vsec_add_dev() after failures.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
 V6 - No change
 
-V5 - no change
+V5 - Assign no_free_ptr(res) to resource member. This fixes __must_check_fn
+     warning.
+   - Remove unsed ret variable.
 
-V4 - no change
+V4 - Do no_free_ptr() before and in call to intel_vsec_add_aux().
+   - Add resource cleanup in this patch.
 
-V3 - no change
+V3 - New patch.
 
-V2 - no change
+ drivers/platform/x86/intel/vsec.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
- drivers/platform/x86/intel/pmc/Kconfig      |  1 +
- drivers/platform/x86/intel/pmc/core_ssram.c | 49 +++++++++++++++++++++
- 2 files changed, 50 insertions(+)
-
-diff --git a/drivers/platform/x86/intel/pmc/Kconfig b/drivers/platform/x86/intel/pmc/Kconfig
-index b526597e4deb..d2f651fbec2c 100644
---- a/drivers/platform/x86/intel/pmc/Kconfig
-+++ b/drivers/platform/x86/intel/pmc/Kconfig
-@@ -7,6 +7,7 @@ config INTEL_PMC_CORE
- 	tristate "Intel PMC Core driver"
- 	depends on PCI
- 	depends on ACPI
-+	depends on INTEL_PMT_TELEMETRY
- 	help
- 	  The Intel Platform Controller Hub for Intel Core SoCs provides access
- 	  to Power Management Controller registers via various interfaces. This
-diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
-index c1b984255571..9ca720f9cbb2 100644
---- a/drivers/platform/x86/intel/pmc/core_ssram.c
-+++ b/drivers/platform/x86/intel/pmc/core_ssram.c
-@@ -13,6 +13,8 @@
- #include <linux/io-64-nonatomic-lo-hi.h>
+diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+index ba352af65dde..27e8698ebe5e 100644
+--- a/drivers/platform/x86/intel/vsec.c
++++ b/drivers/platform/x86/intel/vsec.c
+@@ -15,6 +15,7 @@
  
- #include "core.h"
-+#include "../vsec.h"
-+#include "../pmt/telemetry.h"
- 
- #define SSRAM_HDR_SIZE		0x100
- #define SSRAM_PWRM_OFFSET	0x14
-@@ -24,6 +26,49 @@
- 
- DEFINE_FREE(pmc_core_iounmap, void __iomem *, iounmap(_T));
- 
-+static void
-+pmc_add_pmt(struct pmc_dev *pmcdev, u64 ssram_base, void __iomem *ssram)
-+{
-+	struct pci_dev *pcidev = pmcdev->ssram_pcidev;
-+	struct intel_vsec_platform_info info = {};
-+	struct intel_vsec_header *headers[2] = {};
-+	struct intel_vsec_header header;
-+	void __iomem *dvsec;
-+	u32 dvsec_offset;
-+	u32 table, hdr;
-+
-+	ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
-+	if (!ssram)
-+		return;
-+
-+	dvsec_offset = readl(ssram + SSRAM_DVSEC_OFFSET);
-+	iounmap(ssram);
-+
-+	dvsec = ioremap(ssram_base + dvsec_offset, SSRAM_DVSEC_SIZE);
-+	if (!dvsec)
-+		return;
-+
-+	hdr = readl(dvsec + PCI_DVSEC_HEADER1);
-+	header.id = readw(dvsec + PCI_DVSEC_HEADER2);
-+	header.rev = PCI_DVSEC_HEADER1_REV(hdr);
-+	header.length = PCI_DVSEC_HEADER1_LEN(hdr);
-+	header.num_entries = readb(dvsec + INTEL_DVSEC_ENTRIES);
-+	header.entry_size = readb(dvsec + INTEL_DVSEC_SIZE);
-+
-+	table = readl(dvsec + INTEL_DVSEC_TABLE);
-+	header.tbir = INTEL_DVSEC_TABLE_BAR(table);
-+	header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
-+	iounmap(dvsec);
-+
-+	headers[0] = &header;
-+	info.caps = VSEC_CAP_TELEMETRY;
-+	info.headers = headers;
-+	info.base_addr = ssram_base;
-+	info.parent = &pmcdev->pdev->dev;
-+
-+	intel_vsec_register(pcidev, &info);
-+}
-+
- static const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid)
+ #include <linux/auxiliary_bus.h>
+ #include <linux/bits.h>
++#include <linux/cleanup.h>
+ #include <linux/delay.h>
+ #include <linux/kernel.h>
+ #include <linux/idr.h>
+@@ -147,8 +148,9 @@ EXPORT_SYMBOL_NS_GPL(intel_vsec_add_aux, INTEL_VSEC);
+ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *header,
+ 			      struct intel_vsec_platform_info *info)
  {
- 	for (; list->map; ++list)
-@@ -101,6 +146,9 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pmc_idx, u32 offset)
- 	pwrm_base = get_base(ssram, SSRAM_PWRM_OFFSET);
- 	devid = readw(ssram + SSRAM_DEVID_OFFSET);
+-	struct intel_vsec_device *intel_vsec_dev;
+-	struct resource *res, *tmp;
++	struct intel_vsec_device __free(kfree) *intel_vsec_dev = NULL;
++	struct resource __free(kfree) *res = NULL;
++	struct resource *tmp;
+ 	unsigned long quirks = info->quirks;
+ 	int i;
  
-+	/* Find and register and PMC telemetry entries */
-+	pmc_add_pmt(pmcdev, ssram_base, ssram);
-+
- 	map = pmc_core_find_regmap(pmcdev->regmap_list, devid);
- 	if (!map)
- 		return -ENODEV;
-@@ -140,3 +188,4 @@ int pmc_core_ssram_init(struct pmc_dev *pmcdev)
+@@ -170,10 +172,8 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
+ 		return -ENOMEM;
  
- 	return ret;
+ 	res = kcalloc(header->num_entries, sizeof(*res), GFP_KERNEL);
+-	if (!res) {
+-		kfree(intel_vsec_dev);
++	if (!res)
+ 		return -ENOMEM;
+-	}
+ 
+ 	if (quirks & VSEC_QUIRK_TABLE_SHIFT)
+ 		header->offset >>= TABLE_OFFSET_SHIFT;
+@@ -191,7 +191,7 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
+ 	}
+ 
+ 	intel_vsec_dev->pcidev = pdev;
+-	intel_vsec_dev->resource = res;
++	intel_vsec_dev->resource = no_free_ptr(res);
+ 	intel_vsec_dev->num_resources = header->num_entries;
+ 	intel_vsec_dev->quirks = info->quirks;
+ 
+@@ -200,7 +200,11 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
+ 	else
+ 		intel_vsec_dev->ida = &intel_vsec_ida;
+ 
+-	return intel_vsec_add_aux(pdev, NULL, intel_vsec_dev,
++	/*
++	 * Pass the ownership of intel_vsec_dev and resource within it to
++	 * intel_vsec_add_aux()
++	 */
++	return intel_vsec_add_aux(pdev, NULL, no_free_ptr(intel_vsec_dev),
+ 				  intel_vsec_name(header->id));
  }
-+MODULE_IMPORT_NS(INTEL_VSEC);
+ 
 -- 
 2.34.1
 
