@@ -1,43 +1,43 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SYdFi688"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wq3Wxo6q"
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF692D5E;
-	Wed, 29 Nov 2023 14:21:44 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8398A197;
+	Wed, 29 Nov 2023 14:21:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701296504; x=1732832504;
+  t=1701296503; x=1732832503;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=7NVpmNIbGkzNR5bKws5rMhWK4Hzsb6NBLKtyScjr2do=;
-  b=SYdFi688ISdGeQXwsSKB3H5KLNAy5DEoxbCP6rWTUOPlvID8rWDmAu/u
-   LIsf7xonVJWD+0Yd09YnMtEeSb1/jdQsnAHkgeNkJnJcTNJ+3R35C2EJx
-   ac/hGRWJWg7YOgSKDQRS3AR+UHBgGexRzdbDvLAgvfBbqW5CGRO6XIDHI
-   WGFVzWGhtGDLMb8qJPi75eCT0vhzKZ3jdCpwtc3DwKIidmhYexLsaYxRv
-   C2iTi+n2NTSrtHUttS2+CgBuYO1mAIIDtbG5rcwoyJrwtCZ0at+GRTF+T
-   LlnhgfUN76K/rAWmNyIyZu6IG2za1FQNSK5JZk9BTm9XIK+Yk0jGQQezJ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="11936999"
+  bh=3uctqsFvdPRcO1F5mxpmLxaCC0IWGt+HEDKUw/EKGHQ=;
+  b=Wq3Wxo6qfwv0PARXauAbAanewRzIglax0bJRmuCO9v2r5OqTcSQWcr6N
+   ntQNeWTYKt3tNJS2i19OmmEJ0HZ1wjdgRkHOh9cEq0lJrwhsfsIGymTdd
+   4HtCGT2mHdw2YC16GOfzuWzGyYSN5ZFrzDtO8beE57xZ0GPgFjCq6Y6sU
+   Y/74NTS3oCZ0AhaAVdjg1n3w/d/o9Qh8VPssKvTBAb4hDrLxceyAJoIRP
+   ww57wN1w7TJ4cE6ZwAp5BWGZIMKXBoUjbeWM4VxUU1dRCKd+sHg+918aa
+   MhxeST9zNse90QE8m6cj0iu+XB/P5S+hVBVGjDjgSmkgo5JiM+pRnMsX5
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="11937014"
 X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="11936999"
+   d="scan'208";a="11937014"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 14:21:35 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="798070415"
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="798070446"
 X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="798070415"
+   d="scan'208";a="798070446"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 14:21:33 -0800
+  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 14:21:35 -0800
 Received: from debox1-desk4.lan (unknown [10.209.108.167])
-	by linux.intel.com (Postfix) with ESMTP id 4E0B4580BF8;
-	Wed, 29 Nov 2023 14:21:33 -0800 (PST)
+	by linux.intel.com (Postfix) with ESMTP id 1136F580C4B;
+	Wed, 29 Nov 2023 14:21:35 -0800 (PST)
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	ilpo.jarvinen@linux.intel.com,
 	rajvi.jingar@linux.intel.com
-Subject: [PATCH V6 05/20] platform/x86/intel/vsec: Use cleanup.h
-Date: Wed, 29 Nov 2023 14:21:17 -0800
-Message-Id: <20231129222132.2331261-6-david.e.box@linux.intel.com>
+Subject: [PATCH V6 19/20] platform/x86/intel/pmc: Add debug attribute for Die C6 counter
+Date: Wed, 29 Nov 2023 14:21:31 -0800
+Message-Id: <20231129222132.2331261-20-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231129222132.2331261-1-david.e.box@linux.intel.com>
 References: <20231129222132.2331261-1-david.e.box@linux.intel.com>
@@ -50,83 +50,161 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Use cleanup.h helpers to handle cleanup of resources in
-intel_vsec_add_dev() after failures.
+Add a "die_c6_us_show" debugfs attribute.  Reads the counter value using
+Intel Platform Monitoring Technology (PMT) driver API. This counter is
+useful for determining the idle residency of CPUs in the compute tile.
+Also adds a missing forward declaration for punit_ep which was declared in
+an earlier upstream commit but only used for the first time in this one.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
 V6 - No change
 
-V5 - Assign no_free_ptr(res) to resource member. This fixes __must_check_fn
-     warning.
-   - Remove unsed ret variable.
+V5 - Change comment for crystal error and return value
 
-V4 - Do no_free_ptr() before and in call to intel_vsec_add_aux().
-   - Add resource cleanup in this patch.
+V4 - no change
 
-V3 - New patch.
+V3 - Split previous PATCH V2 13. Separates implementation (this patch) from
+     platform specific use (next patch)
 
- drivers/platform/x86/intel/vsec.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+V2 - Remove use of __func__
+   - Use HZ_PER_MHZ
+   - Fix missing newlines in printks
 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index ba352af65dde..27e8698ebe5e 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -15,6 +15,7 @@
+ drivers/platform/x86/intel/pmc/core.c | 55 +++++++++++++++++++++++++++
+ drivers/platform/x86/intel/pmc/core.h |  4 ++
+ 2 files changed, 59 insertions(+)
+
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 9d3a1b6ef622..983e3a8f4910 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -20,6 +20,7 @@
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+ #include <linux/suspend.h>
++#include <linux/units.h>
  
- #include <linux/auxiliary_bus.h>
- #include <linux/bits.h>
-+#include <linux/cleanup.h>
- #include <linux/delay.h>
- #include <linux/kernel.h>
- #include <linux/idr.h>
-@@ -147,8 +148,9 @@ EXPORT_SYMBOL_NS_GPL(intel_vsec_add_aux, INTEL_VSEC);
- static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *header,
- 			      struct intel_vsec_platform_info *info)
- {
--	struct intel_vsec_device *intel_vsec_dev;
--	struct resource *res, *tmp;
-+	struct intel_vsec_device __free(kfree) *intel_vsec_dev = NULL;
-+	struct resource __free(kfree) *res = NULL;
-+	struct resource *tmp;
- 	unsigned long quirks = info->quirks;
- 	int i;
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
+@@ -27,6 +28,7 @@
+ #include <asm/tsc.h>
  
-@@ -170,10 +172,8 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
- 		return -ENOMEM;
+ #include "core.h"
++#include "../pmt/telemetry.h"
  
- 	res = kcalloc(header->num_entries, sizeof(*res), GFP_KERNEL);
--	if (!res) {
--		kfree(intel_vsec_dev);
-+	if (!res)
- 		return -ENOMEM;
--	}
- 
- 	if (quirks & VSEC_QUIRK_TABLE_SHIFT)
- 		header->offset >>= TABLE_OFFSET_SHIFT;
-@@ -191,7 +191,7 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
- 	}
- 
- 	intel_vsec_dev->pcidev = pdev;
--	intel_vsec_dev->resource = res;
-+	intel_vsec_dev->resource = no_free_ptr(res);
- 	intel_vsec_dev->num_resources = header->num_entries;
- 	intel_vsec_dev->quirks = info->quirks;
- 
-@@ -200,7 +200,11 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
- 	else
- 		intel_vsec_dev->ida = &intel_vsec_ida;
- 
--	return intel_vsec_add_aux(pdev, NULL, intel_vsec_dev,
-+	/*
-+	 * Pass the ownership of intel_vsec_dev and resource within it to
-+	 * intel_vsec_add_aux()
-+	 */
-+	return intel_vsec_add_aux(pdev, NULL, no_free_ptr(intel_vsec_dev),
- 				  intel_vsec_name(header->id));
+ /* Maximum number of modes supported by platfoms that has low power mode capability */
+ const char *pmc_lpm_modes[] = {
+@@ -822,6 +824,47 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
  }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_req_regs);
+ 
++static unsigned int pmc_core_get_crystal_freq(void)
++{
++	unsigned int eax_denominator, ebx_numerator, ecx_hz, edx;
++
++	if (boot_cpu_data.cpuid_level < 0x15)
++		return 0;
++
++	eax_denominator = ebx_numerator = ecx_hz = edx = 0;
++
++	/* CPUID 15H TSC/Crystal ratio, plus optionally Crystal Hz */
++	cpuid(0x15, &eax_denominator, &ebx_numerator, &ecx_hz, &edx);
++
++	if (ebx_numerator == 0 || eax_denominator == 0)
++		return 0;
++
++	return ecx_hz;
++}
++
++static int pmc_core_die_c6_us_show(struct seq_file *s, void *unused)
++{
++	struct pmc_dev *pmcdev = s->private;
++	u64 die_c6_res, count;
++	int ret;
++
++	if (!pmcdev->crystal_freq) {
++		dev_warn_once(&pmcdev->pdev->dev, "Crystal frequency unavailable\n");
++		return -ENXIO;
++	}
++
++	ret = pmt_telem_read(pmcdev->punit_ep, pmcdev->die_c6_offset,
++			     &count, 1);
++	if (ret)
++		return ret;
++
++	die_c6_res = div64_u64(count * HZ_PER_MHZ, pmcdev->crystal_freq);
++	seq_printf(s, "%llu\n", die_c6_res);
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(pmc_core_die_c6_us);
++
+ static int pmc_core_lpm_latch_mode_show(struct seq_file *s, void *unused)
+ {
+ 	struct pmc_dev *pmcdev = s->private;
+@@ -1118,6 +1161,12 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+ 				    pmcdev->dbgfs_dir, pmcdev,
+ 				    &pmc_core_substate_req_regs_fops);
+ 	}
++
++	if (pmcdev->has_die_c6) {
++		debugfs_create_file("die_c6_us_show", 0444,
++				    pmcdev->dbgfs_dir, pmcdev,
++				    &pmc_core_die_c6_us_fops);
++	}
+ }
+ 
+ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+@@ -1212,6 +1261,10 @@ static void pmc_core_clean_structure(struct platform_device *pdev)
+ 		pci_dev_put(pmcdev->ssram_pcidev);
+ 		pci_disable_device(pmcdev->ssram_pcidev);
+ 	}
++
++	if (pmcdev->punit_ep)
++		pmt_telem_unregister_endpoint(pmcdev->punit_ep);
++
+ 	platform_set_drvdata(pdev, NULL);
+ 	mutex_destroy(&pmcdev->lock);
+ }
+@@ -1232,6 +1285,8 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	if (!pmcdev)
+ 		return -ENOMEM;
+ 
++	pmcdev->crystal_freq = pmc_core_get_crystal_freq();
++
+ 	platform_set_drvdata(pdev, pmcdev);
+ 	pmcdev->pdev = pdev;
+ 
+diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+index 85b6f6ae4995..6d7673145f90 100644
+--- a/drivers/platform/x86/intel/pmc/core.h
++++ b/drivers/platform/x86/intel/pmc/core.h
+@@ -16,6 +16,8 @@
+ #include <linux/bits.h>
+ #include <linux/platform_device.h>
+ 
++struct telem_endpoint;
++
+ #define SLP_S0_RES_COUNTER_MASK			GENMASK(31, 0)
+ 
+ #define PMC_BASE_ADDR_DEFAULT			0xFE000000
+@@ -357,6 +359,7 @@ struct pmc {
+  * @devs:		pointer to an array of pmc pointers
+  * @pdev:		pointer to platform_device struct
+  * @ssram_pcidev:	pointer to pci device struct for the PMC SSRAM
++ * @crystal_freq:	crystal frequency from cpuid
+  * @dbgfs_dir:		path to debugfs interface
+  * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
+  *			used to read MPHY PG and PLL status are available
+@@ -374,6 +377,7 @@ struct pmc_dev {
+ 	struct dentry *dbgfs_dir;
+ 	struct platform_device *pdev;
+ 	struct pci_dev *ssram_pcidev;
++	unsigned int crystal_freq;
+ 	int pmc_xram_read_bit;
+ 	struct mutex lock; /* generic mutex lock for PMC Core */
  
 -- 
 2.34.1
