@@ -1,132 +1,88 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z/u6vwMo"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78CC7B0
-	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Nov 2023 00:45:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701247530;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T4tf6Z9mh7G2P6Vo/ih7c1NtHCBr2QOTR5abuK7e5yU=;
-	b=Z/u6vwMoAoK6uj0j0zoBKlDV7ZSHFh1jYv86fs5SzO0V1wjCbZRDmsfDHo6CqMXyeNe5G0
-	+nW3wTgmVBjBrLqOKAIjy8YzG0HUACFpLDTQMfKz76QGEKYMhMC/VxydyejCk++MpL6tCn
-	+n32EOX6ExhSPsyA/+JKH8iADjkRG8c=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-660-9DSmEEufOF-stxNDyXY4Tw-1; Wed, 29 Nov 2023 03:45:29 -0500
-X-MC-Unique: 9DSmEEufOF-stxNDyXY4Tw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A5D87828AC9;
-	Wed, 29 Nov 2023 08:45:28 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.30])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 055F820268DD;
-	Wed, 29 Nov 2023 08:45:27 +0000 (UTC)
-Date: Wed, 29 Nov 2023 16:45:24 +0800
-From: Baoquan He <bhe@redhat.com>
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	schnelle@linux.ibm.com, LKML <linux-kernel@vger.kernel.org>,
-	platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com,
-	dave.hansen@linux.intel.com, peterz@infradead.org
-Subject: Re: [PATCH V5 12/20] asm-generic/io.h: iounmap/ioport_unmap
- cleanup.h support
-Message-ID: <ZWb6JMqEZj8PB9cU@MiWiFi-R3L-srv>
-References: <20231123040355.82139-1-david.e.box@linux.intel.com>
- <20231123040355.82139-13-david.e.box@linux.intel.com>
- <f83e4a40-314-d279-75e6-17ad83501982@linux.intel.com>
- <adb8c80395d2c23488496b9ad323bfc265ad3514.camel@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="BAZ/6qGN"
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A214171D;
+	Wed, 29 Nov 2023 01:09:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1701248932; bh=Xv3LVDjykwD/IOkFuRPxIVNxFelutLAZSXS7jeSQqIE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BAZ/6qGNguReQ4NFwPXT8Bi2uaQNZ0Q93gRgXJPFRYxINiE+0NAHwqYEo8gcRktTI
+	 g5OWo09C5jJHok3S1c3vfX72MgTtnOlRCfK/TqM9Rhw5IHY9zlrMU0Lm6ESMeYefR5
+	 o0o+IWUBwaImm3Ew7Uz5W7jNB5PpjVR/Xzp9G3VEMAH3MPFJnFwTN5A/JF0jvSM53H
+	 TD72MGqWdop+SC6I4X83nrxxAJKPcPymeSSvEn8ptLrmEICedV7+oDpdhH/aFgVPau
+	 +Aaz/bRn6yA421udzBxvVtiTPtc21WHM3jUynkqXosp+xZ5HbIh4FPd2hzKqYs08uU
+	 fPTAj/lk7FXSA==
+Received: by gofer.mess.org (Postfix, from userid 1000)
+	id CB5B0100100; Wed, 29 Nov 2023 09:08:52 +0000 (GMT)
+Date: Wed, 29 Nov 2023 09:08:52 +0000
+From: Sean Young <sean@mess.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Support Opensource <support.opensource@diasemi.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mark Gross <markgross@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Daniel Thompson <daniel.thompson@linaro.org>,
+	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>,
+	Jani Nikula <jani.nikula@intel.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v5 1/4] pwm: rename pwm_apply_state() to
+ pwm_apply_cansleep()
+Message-ID: <ZWb_pEixK07cRlnr@gofer.mess.org>
+References: <cover.1700323916.git.sean@mess.org>
+ <2b973840d800ffb71c2683c37bc996e0cf90a140.1700323916.git.sean@mess.org>
+ <ZWClpnMRg_vjuI_R@orome.fritz.box>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <adb8c80395d2c23488496b9ad323bfc265ad3514.camel@linux.intel.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+In-Reply-To: <ZWClpnMRg_vjuI_R@orome.fritz.box>
 
-On 11/27/23 at 05:55pm, David E. Box wrote:
-> +Baoquan for ioremap question.
-> 
-> On Thu, 2023-11-23 at 16:30 +0200, Ilpo Järvinen wrote:
-> > On Wed, 22 Nov 2023, David E. Box wrote:
+On Fri, Nov 24, 2023 at 02:31:18PM +0100, Thierry Reding wrote:
+> On Sat, Nov 18, 2023 at 04:16:17PM +0000, Sean Young wrote:
+> > In order to introduce a pwm api which can be used from atomic context,
+> > we will need two functions for applying pwm changes:
 > > 
-> > > Add auto-release cleanups for iounmap() and ioport_unmap().
-> > > 
-> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > > Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > > ---
-> > > V2 - Move from linux/io.h to asm-generic/io.h. Adds iounmap cleanup if
-> > >      iounmap() is defined. Adds ioport_unmap cleanup if CONFIG_IOPORT_MAP
-> > >      is defined.
-> > > 
-> > >  include/asm-generic/io.h | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > > 
-> > > diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-> > > index bac63e874c7b..9ef0332490b1 100644
-> > > --- a/include/asm-generic/io.h
-> > > +++ b/include/asm-generic/io.h
-> > > @@ -8,6 +8,7 @@
-> > >  #define __ASM_GENERIC_IO_H
-> > >  
-> > >  #include <asm/page.h> /* I/O is all done through memory accesses */
-> > > +#include <linux/cleanup.h>
-> > >  #include <linux/string.h> /* for memset() and memcpy() */
-> > >  #include <linux/types.h>
-> > >  #include <linux/instruction_pointer.h>
-> > > @@ -1065,6 +1066,10 @@ static inline void __iomem *ioremap(phys_addr_t addr,
-> > > size_t size)
-> > >  #endif
-> > >  #endif /* !CONFIG_MMU || CONFIG_GENERIC_IOREMAP */
-> > >  
-> > > +#ifdef iounmap
-> > > +DEFINE_FREE(iounmap, void __iomem *, iounmap(_T));
-> > > +#endif
+> > 	int pwm_apply_cansleep(struct pwm *, struct pwm_state *);
+> > 	int pwm_apply_atomic(struct pwm *, struct pwm_state *);
+> > 
+> > This commit just deals with renaming pwm_apply_state(), a following
+> > commit will introduce the pwm_apply_atomic() function.
 > 
-> Baoquan, LKP is reporting an undeclared function 'iounmap' error with the above
-> change from this patch when building for s390 with PCI disabled. The ioremap
-> defines in arch/s390/include/asm/io.h are not wrapped under the #ifdef
-> CONFIG_PCI block. Shouldn't they be since the s390 Kconfig only adds
-> GENERIC_IOREMAP if PCI?
+> Sorry, I still don't agree with that _cansleep suffix. I think it's the
+> wrong terminology. Just because something can sleep doesn't mean that it
+> ever will. "Might sleep" is much more accurate because it says exactly
+> what might happen and indicates what we're guarding against.
 
-Sorry, almost forget this mail. Will check and reply later.
+Sorry, I forgot about this in the last round. I've renamed it _might_sleep
+in v6 which I'll post shortly.
 
-> 
-> https://lore.kernel.org/oe-kbuild-all/202311241214.jcL84du7-lkp@intel.com
-> 
-> 
-> Note that the report includes pointer arithmetic warnings that are not related
-> to this patch. Those warnings occur in mainline as well.
-> 
-> David
-> 
-> > > +
-> > >  #ifndef ioremap_wc
-> > >  #define ioremap_wc ioremap
-> > >  #endif
-> > > @@ -1127,6 +1132,7 @@ static inline void ioport_unmap(void __iomem *p)
-> > >  extern void __iomem *ioport_map(unsigned long port, unsigned int nr);
-> > >  extern void ioport_unmap(void __iomem *p);
-> > >  #endif /* CONFIG_GENERIC_IOMAP */
-> > > +DEFINE_FREE(ioport_unmap, void __iomem *, ioport_unmap(_T));
-> > >  #endif /* CONFIG_HAS_IOPORT_MAP */
-> > >  
-> > >  #ifndef CONFIG_GENERIC_IOMAP
-> > 
-> > Has this now built successfully with LKP? (I don't think we get success 
-> > notifications from LKP for patch submissions, only failures).
-> > 
-> > There were some odd errors last time but I think all they were unrelated 
-> > to this change (besides the checkpatch false positive, I mean).
-> > 
-> 
 
+Sean
