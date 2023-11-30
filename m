@@ -1,260 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C7ij0lyd"
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 206BE10E6;
-	Wed, 29 Nov 2023 14:21:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701296506; x=1732832506;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=cUaNFCRzY0WgtBRcu6J9Bq4TnaUOe6SPpfBzkDLbR18=;
-  b=C7ij0lydHDRv9j4Pw27SGw5WYeKnR7rDOGKhKxYRPkQ8gcXMxLXgXwMp
-   DpCd5GuKPZfm/+LxJfnuWA5nX1YZtjkeDFuc1O310mRss14qMCB+h2yb+
-   vq3edVdF4kyk3RMGk07GdDU/CfhqL5dmBeRaUWZprfsf+MkDwfm0duqkL
-   fLZcoshmCmBdhzzb8hORBkcocnCr7F8+eDvFlYVUqoT80xKCgfWrAe47O
-   De1aIbikmnCucXtjOuG4HyvlqBviD6pMQCQ8JiSY+rNo09ZDEmwNlrcWa
-   MnrvYV/YZVU5X0DFhZSK6U5R1nuPgafllVW4ZyM+6ca65WvFpH1gxNdIT
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="11937012"
-X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="11937012"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 14:21:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="798070442"
-X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="798070442"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 14:21:35 -0800
-Received: from debox1-desk4.lan (unknown [10.209.108.167])
-	by linux.intel.com (Postfix) with ESMTP id C3AD3580ABB;
-	Wed, 29 Nov 2023 14:21:34 -0800 (PST)
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	rajvi.jingar@linux.intel.com
-Subject: [PATCH V6 17/20] platform/x86/intel/pmc: Retrieve LPM information using Intel PMT
-Date: Wed, 29 Nov 2023 14:21:29 -0800
-Message-Id: <20231129222132.2331261-18-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231129222132.2331261-1-david.e.box@linux.intel.com>
-References: <20231129222132.2331261-1-david.e.box@linux.intel.com>
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB5E4D50;
+	Thu, 30 Nov 2023 01:43:41 -0800 (PST)
+X-UUID: 1cc704b282c9470082eced3a0ef062cb-20231130
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.33,REQID:4cb8bf6d-cb19-43c2-acda-67eaa471d2a2,IP:5,U
+	RL:0,TC:0,Content:0,EDM:0,RT:1,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-9
+X-CID-INFO: VERSION:1.1.33,REQID:4cb8bf6d-cb19-43c2-acda-67eaa471d2a2,IP:5,URL
+	:0,TC:0,Content:0,EDM:0,RT:1,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:-9
+X-CID-META: VersionHash:364b77b,CLOUDID:ec6321fd-4a48-46e2-b946-12f04f20af8c,B
+	ulkID:231130174330NINYOUVY,BulkQuantity:0,Recheck:0,SF:64|66|24|17|19|44|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil
+	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_ULN,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,
+	TF_CID_SPAM_FSD
+X-UUID: 1cc704b282c9470082eced3a0ef062cb-20231130
+X-User: chentao@kylinos.cn
+Received: from [172.20.15.254] [(116.128.244.169)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 632642991; Thu, 30 Nov 2023 17:43:27 +0800
+Message-ID: <bf29c39f-8d9f-465a-bbc2-45bdb77711b8@kylinos.cn>
+Date: Thu, 30 Nov 2023 17:43:27 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/mellanox: Add a null pointer check in
+ mlxbf_pmc_create_groups
+Content-Language: en-US
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, vadimp@nvidia.com, jiri@resnulli.us,
+ shravankr@nvidia.com, kunwu.chan@hotmail.com,
+ platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20231127063433.1549064-1-chentao@kylinos.cn>
+ <1701224213463629.329.seg@mailgw>
+From: Kunwu Chan <chentao@kylinos.cn>
+In-Reply-To: <1701224213463629.329.seg@mailgw>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Xi Pardee <xi.pardee@intel.com>
+Thanks for your reply.
 
-On supported platforms, the low power mode (LPM) requirements for entering
-each idle substate are described in Platform Monitoring Technology (PMT)
-telemetry entries. Provide a function for platform code to attempt to find
-and read the requirements from the telemetry entries.
+Cause i don't know how to deal with in some scenario，such as in 
+'mlxbf_pmc_init_perftype_counter', when 'attr->dev_attr.attr.name' is 
+null, should return '-ENOMEM' or 'continue' the loop?
 
-Signed-off-by: Xi Pardee <xi.pardee@intel.com>
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
-V6 - no change
+So I'm going to solve it one by one.
 
-V5 - no change
+Thanks again,
+Kunwu
 
-V4 - no change
-
-V3 - no change
-
-V2 - remove extra parens
-
- drivers/platform/x86/intel/pmc/core.h       |   3 +
- drivers/platform/x86/intel/pmc/core_ssram.c | 135 ++++++++++++++++++++
- 2 files changed, 138 insertions(+)
-
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index edaa70067e41..85b6f6ae4995 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -320,6 +320,7 @@ struct pmc_reg_map {
- 	const u32 lpm_status_offset;
- 	const u32 lpm_live_status_offset;
- 	const u32 etr3_offset;
-+	const u8  *lpm_reg_index;
- };
- 
- /**
-@@ -329,6 +330,7 @@ struct pmc_reg_map {
-  *			specific attributes
-  */
- struct pmc_info {
-+	u32 guid;
- 	u16 devid;
- 	const struct pmc_reg_map *map;
- };
-@@ -486,6 +488,7 @@ extern const struct pmc_bit_map *mtl_ioem_lpm_maps[];
- extern const struct pmc_reg_map mtl_ioem_reg_map;
- 
- extern void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev);
-+extern int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev);
- extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value);
- 
- int pmc_core_resume_common(struct pmc_dev *pmcdev);
-diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
-index 9ca720f9cbb2..3501c7bd6b33 100644
---- a/drivers/platform/x86/intel/pmc/core_ssram.c
-+++ b/drivers/platform/x86/intel/pmc/core_ssram.c
-@@ -24,8 +24,142 @@
- #define SSRAM_IOE_OFFSET	0x68
- #define SSRAM_DEVID_OFFSET	0x70
- 
-+/* PCH query */
-+#define LPM_HEADER_OFFSET	1
-+#define LPM_REG_COUNT		28
-+#define LPM_MODE_OFFSET		1
-+
- DEFINE_FREE(pmc_core_iounmap, void __iomem *, iounmap(_T));
- 
-+static u32 pmc_core_find_guid(struct pmc_info *list, const struct pmc_reg_map *map)
-+{
-+	for (; list->map; ++list)
-+		if (list->map == map)
-+			return list->guid;
-+
-+	return 0;
-+}
-+
-+static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc)
-+{
-+	struct telem_endpoint *ep;
-+	const u8 *lpm_indices;
-+	int num_maps, mode_offset = 0;
-+	int ret, mode, i;
-+	int lpm_size;
-+	u32 guid;
-+
-+	lpm_indices = pmc->map->lpm_reg_index;
-+	num_maps = pmc->map->lpm_num_maps;
-+	lpm_size = LPM_MAX_NUM_MODES * num_maps;
-+
-+	guid = pmc_core_find_guid(pmcdev->regmap_list, pmc->map);
-+	if (!guid)
-+		return -ENXIO;
-+
-+	ep = pmt_telem_find_and_register_endpoint(pmcdev->ssram_pcidev, guid, 0);
-+	if (IS_ERR(ep)) {
-+		dev_dbg(&pmcdev->pdev->dev, "couldn't get telem endpoint %ld",
-+			PTR_ERR(ep));
-+		return -EPROBE_DEFER;
-+	}
-+
-+	pmc->lpm_req_regs = devm_kzalloc(&pmcdev->pdev->dev,
-+					 lpm_size * sizeof(u32),
-+					 GFP_KERNEL);
-+	if (!pmc->lpm_req_regs) {
-+		ret = -ENOMEM;
-+		goto unregister_ep;
-+	}
-+
-+	/*
-+	 * PMC Low Power Mode (LPM) table
-+	 *
-+	 * In telemetry space, the LPM table contains a 4 byte header followed
-+	 * by 8 consecutive mode blocks (one for each LPM mode). Each block
-+	 * has a 4 byte header followed by a set of registers that describe the
-+	 * IP state requirements for the given mode. The IP mapping is platform
-+	 * specific but the same for each block, making for easy analysis.
-+	 * Platforms only use a subset of the space to track the requirements
-+	 * for their IPs. Callers provide the requirement registers they use as
-+	 * a list of indices. Each requirement register is associated with an
-+	 * IP map that's maintained by the caller.
-+	 *
-+	 * Header
-+	 * +----+----------------------------+----------------------------+
-+	 * |  0 |      REVISION              |      ENABLED MODES         |
-+	 * +----+--------------+-------------+-------------+--------------+
-+	 *
-+	 * Low Power Mode 0 Block
-+	 * +----+--------------+-------------+-------------+--------------+
-+	 * |  1 |     SUB ID   |     SIZE    |   MAJOR     |   MINOR      |
-+	 * +----+--------------+-------------+-------------+--------------+
-+	 * |  2 |           LPM0 Requirements 0                           |
-+	 * +----+---------------------------------------------------------+
-+	 * |    |                  ...                                    |
-+	 * +----+---------------------------------------------------------+
-+	 * | 29 |           LPM0 Requirements 27                          |
-+	 * +----+---------------------------------------------------------+
-+	 *
-+	 * ...
-+	 *
-+	 * Low Power Mode 7 Block
-+	 * +----+--------------+-------------+-------------+--------------+
-+	 * |    |     SUB ID   |     SIZE    |   MAJOR     |   MINOR      |
-+	 * +----+--------------+-------------+-------------+--------------+
-+	 * | 60 |           LPM7 Requirements 0                           |
-+	 * +----+---------------------------------------------------------+
-+	 * |    |                  ...                                    |
-+	 * +----+---------------------------------------------------------+
-+	 * | 87 |           LPM7 Requirements 27                          |
-+	 * +----+---------------------------------------------------------+
-+	 *
-+	 */
-+	mode_offset = LPM_HEADER_OFFSET + LPM_MODE_OFFSET;
-+	pmc_for_each_mode(i, mode, pmcdev) {
-+		u32 *req_offset = pmc->lpm_req_regs + (mode * num_maps);
-+		int m;
-+
-+		for (m = 0; m < num_maps; m++) {
-+			u8 sample_id = lpm_indices[m] + mode_offset;
-+
-+			ret = pmt_telem_read32(ep, sample_id, req_offset, 1);
-+			if (ret) {
-+				dev_err(&pmcdev->pdev->dev,
-+					"couldn't read Low Power Mode requirements: %d\n", ret);
-+				devm_kfree(&pmcdev->pdev->dev, pmc->lpm_req_regs);
-+				goto unregister_ep;
-+			}
-+			++req_offset;
-+		}
-+		mode_offset += LPM_REG_COUNT + LPM_MODE_OFFSET;
-+	}
-+
-+unregister_ep:
-+	pmt_telem_unregister_endpoint(ep);
-+
-+	return ret;
-+}
-+
-+int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev)
-+{
-+	int ret, i;
-+
-+	if (!pmcdev->ssram_pcidev)
-+		return -ENODEV;
-+
-+	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
-+		if (!pmcdev->pmcs[i])
-+			continue;
-+
-+		ret = pmc_core_get_lpm_req(pmcdev, pmcdev->pmcs[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static void
- pmc_add_pmt(struct pmc_dev *pmcdev, u64 ssram_base, void __iomem *ssram)
- {
-@@ -189,3 +323,4 @@ int pmc_core_ssram_init(struct pmc_dev *pmcdev)
- 	return ret;
- }
- MODULE_IMPORT_NS(INTEL_VSEC);
-+MODULE_IMPORT_NS(INTEL_PMT_TELEMETRY);
--- 
-2.34.1
-
+On 2023/11/28 17:51, Ilpo Järvinen wrote:
+> On Mon, 27 Nov 2023, Kunwu Chan wrote:
+> 
+>> devm_kasprintf() returns a pointer to dynamically allocated memory
+>> which can be NULL upon failure.
+>>
+>> Fixes: 1a218d312e65 ("platform/mellanox: mlxbf-pmc: Add Mellanox BlueField PMC driver")
+>> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+>> ---
+>>   drivers/platform/mellanox/mlxbf-pmc.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+>> index 0b427fc24a96..59bbe5e13f6b 100644
+>> --- a/drivers/platform/mellanox/mlxbf-pmc.c
+>> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
+>> @@ -1882,6 +1882,8 @@ static int mlxbf_pmc_create_groups(struct device *dev, int blk_num)
+>>   	pmc->block[blk_num].block_attr_grp.attrs = pmc->block[blk_num].block_attr;
+>>   	pmc->block[blk_num].block_attr_grp.name = devm_kasprintf(
+>>   		dev, GFP_KERNEL, pmc->block_name[blk_num]);
+>> +	if (!pmc->block[blk_num].block_attr_grp.name)
+>> +		return -ENOMEM;
+>>   	pmc->groups[pmc->group_num] = &pmc->block[blk_num].block_attr_grp;
+>>   	pmc->group_num++;
+> 
+> I'm totally lost, why did you fix only one devm_kasprintf() location?
+> Don't all of them need this check?
+> 
