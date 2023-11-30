@@ -1,75 +1,92 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dbPOrgNo"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0556410D4;
-	Thu, 30 Nov 2023 03:23:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701343427; x=1732879427;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=S8giDAScfsMaHIxPvvA4qJXz/c0MrXpZlaY93EzUGkE=;
-  b=dbPOrgNoxVVOoOYsEICp21e5rY49jSE9f83xSSLnRznlvQUa+uNGNOs0
-   KwBVmr7p7xanvhGlNaLzifZdhuhY5XWAr2YlCdPLVe/XHSxw6uXq/CruF
-   msdpnfnEANXNCY0v5CldjkHqU0K1+D+v5apP23i8O3XVNXQp4chl52HlV
-   y7HCWBdFhQqkO+5dLRy4BdCxEGpT7ghvIi8D/Rhb1os3fG2SiPgIGLeKg
-   dJ6WF1YUSUK9kMX3Wpx+Pog8lO2qVHNUOdRu5CADQyjGrZLf7Vfo38RdB
-   Vnl4vKfdhihzNp2i2/2I1PjnmCpRnxo+7X5MV8bUeBMgAQAugv7io0MZU
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="397202688"
-X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="397202688"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 03:23:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="773031864"
-X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="773031864"
-Received: from bergler-mobl.ger.corp.intel.com ([10.249.33.30])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 03:23:44 -0800
-Date: Thu, 30 Nov 2023 13:23:42 +0200 (EET)
-From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    rajvi.jingar@linux.intel.com
-Subject: Re: [PATCH V6 07/20] platform/x86/intel/vsec: Add
- intel_vsec_register
-In-Reply-To: <20231129222132.2331261-8-david.e.box@linux.intel.com>
-Message-ID: <424fd873-fcae-1b3-94d-28656e9913f@linux.intel.com>
-References: <20231129222132.2331261-1-david.e.box@linux.intel.com> <20231129222132.2331261-8-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u+Zo1NeE"
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE8ED10D9
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Nov 2023 03:47:34 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-40b5155e154so6303455e9.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Nov 2023 03:47:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701344853; x=1701949653; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4qE9p0d5IS1QGooVoX1UZocF/TK6F/IxVLC2dxwb4cs=;
+        b=u+Zo1NeETZ7EZ2puMKwFMAlxQvKTvzwSfLm/LQzq/RFZf4P6WRDMFmE+DwVom7nmZk
+         B35dIq+hefMlX3JM1p3H3KX9iy92KGffgBA7X4AEZRROfHL18ZTn1HKYxugex++SryK4
+         fcrCNa/nlZYkxSEB9m2bc/zPUwp4IIAn5D9/Jnd9liP5IHt5k9TDoKpjB+6zYvPMs3pF
+         jNIWH98iAHu4WEDVREjGxsuYzaWB+G5lGUOxIgn4aL1a+0cGhJ5Pc54G15i1Dx5GRVsk
+         OZglHggKLMTL1xHuLGX3v1f1Lhj5jjLxDqrE2ouqS9L8ix9RqX4+TW3TXzniH9msjm9b
+         XbTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701344853; x=1701949653;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4qE9p0d5IS1QGooVoX1UZocF/TK6F/IxVLC2dxwb4cs=;
+        b=a2QVgE7D+Ll0lhIh1SRp+0LedgHocA11+gaLh6p3OcVZcyO+B7KvizLcZ2kgJxIj2O
+         S0Vome2zM5Bv4xrREKt6BqTbqW6xGUhW1Rixc1zRYI7IthQ8wyDrNToxI4cm1rUdoK4b
+         OF776pvvM0eQIMpNf6qbF4f1womq8KmY1MXOB3jFu/qoPoYqQoOsR56X6AEQVQzVG4eH
+         RpyQDEbjN5fG5eQ9H3jiaTkfBzxoPVUKpIEE9j8zIzcwJbRD90e405nKGbYSEsjSRo84
+         UORmJ7PSvbQZl9YnYUvHA8S+VTxUIGu0KAWMQKsL3yTzqnMYEL/v6iaB0sURCRP1IHlw
+         SiJQ==
+X-Gm-Message-State: AOJu0YzmbMK02bACvyTOgtMLuip2KUQrull17MM4x27URPRJesyRFMAS
+	q2g5RvFW9m9hZLkzR3LV2LL8/A==
+X-Google-Smtp-Source: AGHT+IFfd5GkwBFfDxer1BiHey3pw6auUs/8FmtHUohGoDyz1N8+Z9MKKOOLxzx4tcgmvNfzM8/xZg==
+X-Received: by 2002:adf:ec06:0:b0:333:86d:c292 with SMTP id x6-20020adfec06000000b00333086dc292mr7586092wrn.50.1701344853028;
+        Thu, 30 Nov 2023 03:47:33 -0800 (PST)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id b13-20020a5d40cd000000b00332f6ad2ca8sm1324909wrq.36.2023.11.30.03.47.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Nov 2023 03:47:32 -0800 (PST)
+Date: Thu, 30 Nov 2023 14:47:28 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Yu Sun <u202112062@hust.edu.cn>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mark Gross <markgross@kernel.org>,
+	Vadim Pasternak <vadimp@nvidia.com>,
+	hust-os-kernel-patches@googlegroups.com,
+	Dongliang Mu <dzm91@hust.edu.cn>, Dan Carpenter <error27@gmail.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/mellanox: mlxreg-lc: Check before variable
+ dereferenced
+Message-ID: <4109f017-f07c-4755-bc1b-ec4cb30b0760@suswa.mountain>
+References: <20231130094409.3963-1-u202112062@hust.edu.cn>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1651999280-1701343425=:1808"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231130094409.3963-1-u202112062@hust.edu.cn>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, Nov 30, 2023 at 05:44:07PM +0800, Yu Sun wrote:
+> there is a warning saying variable dereferenced before
+> check 'data->notifier' in line 828.
+> add "for(data->notifier)" before variable deferenced.
+       ^^^
+Should have been "if (data->notifier)".
 
---8323329-1651999280-1701343425=:1808
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
-On Wed, 29 Nov 2023, David E. Box wrote:
-
-> From: Gayatri Kammela <gayatri.kammela@linux.intel.com>
 > 
-> Add and export intel_vsec_register() to allow the registration of Intel
-> extended capabilities from other drivers. Add check to look for memory
-> conflicts before registering a new capability. Since the vsec provider
-> may not be a PCI device, add a parent field to
-> intel_vsec_platform_info() to allow specifying the parent device for
-> device managed cleanup.
-> 
-> Signed-off-by: Gayatri Kammela <gayatri.kammela@linux.intel.com>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
+> Signed-off-by: Yu Sun <u202112062@hust.edu.cn>
+> Reviewed-by: Dongliang Mu <dzm91@hust.edu.cn>
+> Reviewed-by: Dan Carpenter <error27@gmail.com>
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+I didn't really explicitly give a Reviewed-by tag for this patch.
+https://groups.google.com/g/hust-os-kernel-patches/c/c5hUaYIDcII/m/h4aFS7PkCQAJ
+I also said that I thought it looked correct but that it needed a Fixes:
+tag however the Fixes tag I suggested was wrong.
 
--- 
- i.
+Looking at it now, the correct Fixes tag would be:
+Fixes: 1c8ee06b637f ("platform/mellanox: Remove unnecessary code")
 
---8323329-1651999280-1701343425=:1808--
+That commit says that the NULL check is not required.  So now I'm
+confused.  On the one hand, the impulse is to trust the maintainer, but
+on the other hand my review suggested that the NULL check might be
+required.
+
+regards,
+dan carpenter
+
+
