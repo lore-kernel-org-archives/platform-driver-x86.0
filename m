@@ -1,131 +1,87 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xv3KtM6G"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B39E41AD;
-	Thu, 30 Nov 2023 04:25:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="brdT4UrV"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628C51997;
+	Thu, 30 Nov 2023 04:26:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701347100; x=1732883100;
+  t=1701347183; x=1732883183;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=4zM850+IDu5hgcsYtxWNOh0QEqOrEVkyt4Uzmx6wLPQ=;
-  b=Xv3KtM6G/sQjwXXAxqPN4pqHeSI2SQjFcJbezlVuW8Vt7hFxJ4C6QOyc
-   XLEC281EGImd6gaAkryPDUxfNgdqccpK9HnMY4xx8T7N5n1FxCqAun9OO
-   TnnCsNcC4/bNRLBztamtVjJGjG5pEfo2rdQPPFXt/Zh01ZyBa6WlG0Lpd
-   d7AMqcXVAM0fZeTIQqhuHz30v86yjoUv5BD2El+Pq45GxcpSMMCcgjImg
-   ub+SOXIJapo6elUSavcK9u8ORX374SKRcJJCpxFsLbhHRXAdEm6qglgd2
-   gbYQPyvs2KN0TgkuhYOt9qBS/cSq5jPm3ZFi1Nr+zlRPGpdhufaZMtd1N
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="396122814"
+  bh=RoEIdyKdvoc0YWy0wPrPcHsxA+PGoycpnNMawLRTVKQ=;
+  b=brdT4UrV6FO/625dGUpI+uoNd/ZSV/yHlyapC0keDmmSnewNe9d2we6S
+   j3hAf8hjOEqRCs+NlwhDAEJRkr3RG356t3Ny5qUSaE7ZkguR7yCRed0Bc
+   dgteZ7DBoS+eod3A8+R+tjNNGArwOP4ajUiSo6Xnm8KlbB+R5NqEI2A8S
+   aCZJB8eXmZNMONo193xnZzZgbNmXAQOFvjdzVWhLsuze/7Sp9zP6KLCc+
+   AZLe9H21f5fBMX7MSaIe4/BErit/Tfi/5AAHPqvIwe5TJLKppP2j1G7y7
+   Rfcm4saSK7G8ohDbn6MMyjT465GwL1C8YEZdfsVbFXLT7IUWONcxGmJg1
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="457637708"
 X-IronPort-AV: E=Sophos;i="6.04,239,1695711600"; 
-   d="scan'208";a="396122814"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 04:25:00 -0800
+   d="scan'208";a="457637708"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 04:26:22 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="745618835"
 X-IronPort-AV: E=Sophos;i="6.04,239,1695711600"; 
-   d="scan'208";a="745618835"
+   d="scan'208";a="17214176"
 Received: from bergler-mobl.ger.corp.intel.com ([10.249.33.30])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 04:24:58 -0800
-Date: Thu, 30 Nov 2023 14:24:55 +0200 (EET)
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 04:26:21 -0800
+Date: Thu, 30 Nov 2023 14:26:18 +0200 (EET)
 From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 cc: Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org, 
     Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
     platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/6] platform/x86/intel-uncore-freq: Process read/write
- blocked feature status
-In-Reply-To: <20231128185605.3027653-7-srinivas.pandruvada@linux.intel.com>
-Message-ID: <80b89411-4633-4b8f-72b1-bf262174566e@linux.intel.com>
-References: <20231128185605.3027653-1-srinivas.pandruvada@linux.intel.com> <20231128185605.3027653-7-srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH 2/6] platform/x86/intel/tpmi: Don't create devices for
+ disabled features
+In-Reply-To: <20231128185605.3027653-3-srinivas.pandruvada@linux.intel.com>
+Message-ID: <9603f75-3adb-8eba-9322-cbd9551668c8@linux.intel.com>
+References: <20231128185605.3027653-1-srinivas.pandruvada@linux.intel.com> <20231128185605.3027653-3-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1161852847-1701347099=:1808"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1161852847-1701347099=:1808
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
 
 On Tue, 28 Nov 2023, Srinivas Pandruvada wrote:
 
-> When a feature is read blocked, don't continue to read uncore information
-> and register with uncore core.
+> If some TPMI features are disabled, don't create auxiliary devices. In
+> this way feature drivers will not load.
 > 
-> When the feature is write blocked, continue to offer read interface but
-> block setting uncore limits.
+> While creating auxiliary devices, call tpmi_read_feature_status() to
+> check feature state and return if the feature is disabled without
+> creating a device.
 > 
 > Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 > ---
->  .../uncore-frequency/uncore-frequency-tpmi.c      | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  drivers/platform/x86/intel/tpmi.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-> index 4fb790552c47..de5db49a9afe 100644
-> --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-> +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-> @@ -66,6 +66,7 @@ struct tpmi_uncore_struct {
->  	int min_ratio;
->  	struct tpmi_uncore_power_domain_info *pd_info;
->  	struct tpmi_uncore_cluster_info root_cluster;
-> +	bool write_blocked;
->  };
->  
->  #define UNCORE_GENMASK_MIN_RATIO	GENMASK_ULL(21, 15)
-> @@ -157,6 +158,9 @@ static int uncore_write_control_freq(struct uncore_data *data, unsigned int inpu
->  	cluster_info = container_of(data, struct tpmi_uncore_cluster_info, uncore_data);
->  	uncore_root = cluster_info->uncore_root;
->  
-> +	if (uncore_root->write_blocked)
-> +		return -EPERM;
+> diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
+> index c89aa4d14bea..4edaa182db04 100644
+> --- a/drivers/platform/x86/intel/tpmi.c
+> +++ b/drivers/platform/x86/intel/tpmi.c
+> @@ -604,9 +604,17 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
+>  	struct intel_vsec_device *vsec_dev = tpmi_info->vsec_dev;
+>  	char feature_id_name[TPMI_FEATURE_NAME_LEN];
+>  	struct intel_vsec_device *feature_vsec_dev;
+> +	struct tpmi_feature_state feature_state;
+>  	struct resource *res, *tmp;
+>  	const char *name;
+> -	int i;
+> +	int i, ret;
 > +
->  	/* Update each cluster in a package */
->  	if (cluster_info->root_domain) {
->  		struct tpmi_uncore_struct *uncore_root = cluster_info->uncore_root;
-> @@ -233,11 +237,21 @@ static void remove_cluster_entries(struct tpmi_uncore_struct *tpmi_uncore)
->  
->  static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_device_id *id)
->  {
-> +	int read_blocked = 0, write_blocked = 0;
->  	struct intel_tpmi_plat_info *plat_info;
->  	struct tpmi_uncore_struct *tpmi_uncore;
->  	int ret, i, pkg = 0;
->  	int num_resources;
->  
-> +	ret = tpmi_get_feature_status(auxdev, TPMI_ID_UNCORE, &read_blocked, &write_blocked);
+> +	ret = tpmi_read_feature_status(tpmi_info, pfs->pfs_header.tpmi_id, &feature_state);
 > +	if (ret)
-> +		dev_info(&auxdev->dev, "Can't read feature status: ignoring blocked status\n");
+> +		return ret;
 > +
-> +	if (read_blocked) {
-> +		dev_info(&auxdev->dev, "Firmware has blocked reads, exiting\n");
-> +		return -ENODEV;
-> +	}
-> +
->  	/* Get number of power domains, which is equal to number of resources */
->  	num_resources = tpmi_get_resource_count(auxdev);
->  	if (!num_resources)
-> @@ -266,6 +280,7 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
->  	}
->  
->  	tpmi_uncore->power_domain_count = num_resources;
-> +	tpmi_uncore->write_blocked = write_blocked;
->  
->  	/* Get the package ID from the TPMI core */
->  	plat_info = tpmi_get_platform_data(auxdev);
+> +	if (!feature_state.enabled)
+> +		return -EOPNOTSUPP;
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-
-While reviewing this, I begun to wonder why's the 
-tpmi_get_feature_status() interface using int * as in practice these will 
-always be converted to bool by the users?
+-ENODEV sounds more appropriate.  
 
 -- 
  i.
 
---8323329-1161852847-1701347099=:1808--
