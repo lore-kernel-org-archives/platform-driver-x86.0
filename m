@@ -1,129 +1,115 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fzXh3bVN"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D435BD;
-	Thu, 30 Nov 2023 06:30:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JN1YkBYE"
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4268B85;
+	Thu, 30 Nov 2023 06:33:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701354652; x=1732890652;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=PwlpPtfS0HkAlGQkdyt5xqvlLSCwuyy6PwyODlZYJvE=;
-  b=fzXh3bVNyVwED687QQ0zF88qnMoBlI8zRGjg5YPdXtt0mX0EjNPk/+X3
-   PRwy5z6L2+c/bok+acSpK4MjgKUNKJJME+nDjb00gye778AyyeornHfwW
-   Vsz2BOWw1FaCMNqC2wpGlL0RkdG0mP1592QzPbBsVipqJbxZ8XR/3pLAl
-   xpaFRjGkrYnHyFZCiWSZpZrI+NBAlOFBjP5hwBum2gbViyIg4vPR//KpF
-   EaIJ1VKNvB/YtzQLH0jDDEizyHNH7meiK8HicED1p9OvF/B12TCC1VMkx
-   c7Y66/LubhnNOV2TL6E/vHXUOp7s+/CjQLGHtpOAOAfDcwDk/xX6tCnN7
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="392194606"
+  t=1701354786; x=1732890786;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=lq1/T0fXlF0cZFg5jLIO16pUiR3nibRQporHPQDkvmk=;
+  b=JN1YkBYEhxsLvxIrCIeV3vcTfHnJUs60VY74XOo5uNmLupoHgIRFPz67
+   MiKfK0jGzqKpJMnQmkd/rv+qiQih3P9dT+OvMffwiejMg9SpKglTnGKBI
+   /U04vR+iuneGEokBx7a9dA/y1bxIq1948QHqhdGkOu3wXY9JLbEpe04A2
+   MZVlQ8ro4q4u7Vre3Njdf0yS5iGlkawLTepI43Mz9LjxEfMbQlXsHXe77
+   JoJJyViJFf0SqW+zJYnzDlaJCPMNgehjaOxpR3uR4Mqu8atQr+rbaEnDZ
+   fu7ehY2Ss/ooH7sml6PAIUuY/3Lt7jPZxYLx91Kb8Qyd8yZ9I1lWJHrSk
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="12036009"
 X-IronPort-AV: E=Sophos;i="6.04,239,1695711600"; 
-   d="scan'208";a="392194606"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 06:30:52 -0800
+   d="scan'208";a="12036009"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 06:33:06 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="913217870"
+X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="798309865"
 X-IronPort-AV: E=Sophos;i="6.04,239,1695711600"; 
-   d="scan'208";a="913217870"
-Received: from rwwalter-mobl.amr.corp.intel.com (HELO [10.212.92.184]) ([10.212.92.184])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 06:30:51 -0800
-Message-ID: <0c2b6e18a95d92a1a8a8ce4f8a110f23391f42ee.camel@linux.intel.com>
-Subject: Re: [PATCH 5/6] platform/x86: ISST: Process read/write blocked
- feature status
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org, Andy
- Shevchenko <andriy.shevchenko@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Date: Thu, 30 Nov 2023 09:30:50 -0500
-In-Reply-To: <853032f0-f49-465b-f164-d49baca51c7b@linux.intel.com>
-References: <20231128185605.3027653-1-srinivas.pandruvada@linux.intel.com>
-	 <20231128185605.3027653-6-srinivas.pandruvada@linux.intel.com>
-	 <853032f0-f49-465b-f164-d49baca51c7b@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+   d="scan'208";a="798309865"
+Received: from bergler-mobl.ger.corp.intel.com ([10.249.33.30])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 06:33:02 -0800
+Date: Thu, 30 Nov 2023 16:33:00 +0200 (EET)
+From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+cc: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+    Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/6] platform/x86/intel/tpmi: Don't create devices for
+ disabled features
+In-Reply-To: <29cf2ab24e5d63e2b1268516ad7ab2b1beb44c91.camel@linux.intel.com>
+Message-ID: <84eafa2c-27e3-1a55-39df-edb4a87f5eb1@linux.intel.com>
+References: <20231128185605.3027653-1-srinivas.pandruvada@linux.intel.com>  <20231128185605.3027653-3-srinivas.pandruvada@linux.intel.com>  <9603f75-3adb-8eba-9322-cbd9551668c8@linux.intel.com>
+ <29cf2ab24e5d63e2b1268516ad7ab2b1beb44c91.camel@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323329-1545743258-1701354784=:1808"
 
-On Thu, 2023-11-30 at 14:20 +0200, Ilpo J=C3=A4rvinen wrote:
-> On Tue, 28 Nov 2023, Srinivas Pandruvada wrote:
->=20
-> > When a feature is read blocked, don't continue to read SST
-> > information
-> > and register with SST core.
-> >=20
-> > When the feature is write blocked, continue to offer read interface
-> > for
-> > SST parameters, but don't allow any operation to change state. A
-> > state
-> > change results from SST level change, feature change or class of
-> > service
-> > change.
-> >=20
-> > Signed-off-by: Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com>
-> > ---
-> > =C2=A0.../intel/speed_select_if/isst_tpmi_core.c=C2=A0=C2=A0=C2=A0 | 25
-> > +++++++++++++++++++
-> > =C2=A01 file changed, 25 insertions(+)
-> >=20
-> > diff --git
-> > a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> > b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> > index 0b6d2c864437..ed3a04d6c99c 100644
-> > --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> > +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> > @@ -514,6 +516,9 @@ static long isst_if_clos_param(void __user
-> > *argp)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!power_domain_info)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0return -EINVAL;
-> > =C2=A0
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (power_domain_info->write=
-_blocked)
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0return -EPERM;
-> > +
->=20
-> I don't understand this, doesn't this now -EPERM both
-> _write_cp_info() AND
-> _read_cp_info()??? Does _read_cp_info() also change state??
-You have a point here. Unlike other SST features, CP access is useful
-for OS as it know workloads and priorities.
-But I will change for consistency.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks,
-Srinivas
+--8323329-1545743258-1701354784=:1808
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
->=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (clos_param.get_set)=
- {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0_write_cp_info("clos.min_freq",
-> > clos_param.min_freq_mhz,
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (SST_CLOS_CONFIG_0_OFFSET +
-> > clos_param.clos * SST_REG_SIZE),
-> > @@ -602,6 +607,9 @@ static long isst_if_clos_assoc(void __user
-> > *argp)
-> > =C2=A0
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0power_domain_info =3D &sst_inst-
-> > >power_domain_info[punit_id];
-> > =C2=A0
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0if (power_domain_info->write_blocked)
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return=
- -EPERM;
->=20
-> Same here, this blocks also the get path?
->=20
->=20
+On Thu, 30 Nov 2023, srinivas pandruvada wrote:
 
+> On Thu, 2023-11-30 at 14:26 +0200, Ilpo Järvinen wrote:
+> > On Tue, 28 Nov 2023, Srinivas Pandruvada wrote:
+> > 
+> > > If some TPMI features are disabled, don't create auxiliary devices.
+> > > In
+> > > this way feature drivers will not load.
+> > > 
+> > > While creating auxiliary devices, call tpmi_read_feature_status()
+> > > to
+> > > check feature state and return if the feature is disabled without
+> > > creating a device.
+> > > 
+> > > Signed-off-by: Srinivas Pandruvada
+> > > <srinivas.pandruvada@linux.intel.com>
+> > > ---
+> > >  drivers/platform/x86/intel/tpmi.c | 10 +++++++++-
+> > >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/platform/x86/intel/tpmi.c
+> > > b/drivers/platform/x86/intel/tpmi.c
+> > > index c89aa4d14bea..4edaa182db04 100644
+> > > --- a/drivers/platform/x86/intel/tpmi.c
+> > > +++ b/drivers/platform/x86/intel/tpmi.c
+> > > @@ -604,9 +604,17 @@ static int tpmi_create_device(struct
+> > > intel_tpmi_info *tpmi_info,
+> > >         struct intel_vsec_device *vsec_dev = tpmi_info->vsec_dev;
+> > >         char feature_id_name[TPMI_FEATURE_NAME_LEN];
+> > >         struct intel_vsec_device *feature_vsec_dev;
+> > > +       struct tpmi_feature_state feature_state;
+> > >         struct resource *res, *tmp;
+> > >         const char *name;
+> > > -       int i;
+> > > +       int i, ret;
+> > > +
+> > > +       ret = tpmi_read_feature_status(tpmi_info, pfs-
+> > > >pfs_header.tpmi_id, &feature_state);
+> > > +       if (ret)
+> > > +               return ret;
+> > > +
+> > > +       if (!feature_state.enabled)
+> > > +               return -EOPNOTSUPP;
+> > 
+> > -ENODEV sounds more appropriate.  
+>
+> The -EOPNOTSUPP is returned matching the next return statement, which
+> causes to continue to create devices which are supported and not
+> disabled. Any other error is real device creation will causes driver
+> modprobe to fail.
+
+Oh, I see... I didn't look that deep into the code during my review
+(perhaps note that down into the commit message?).
+
+-- 
+ i.
+
+--8323329-1545743258-1701354784=:1808--
