@@ -1,42 +1,42 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="brdT4UrV"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628C51997;
-	Thu, 30 Nov 2023 04:26:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WTcEhCzp"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 612C01B4;
+	Thu, 30 Nov 2023 04:33:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701347183; x=1732883183;
+  t=1701347607; x=1732883607;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=RoEIdyKdvoc0YWy0wPrPcHsxA+PGoycpnNMawLRTVKQ=;
-  b=brdT4UrV6FO/625dGUpI+uoNd/ZSV/yHlyapC0keDmmSnewNe9d2we6S
-   j3hAf8hjOEqRCs+NlwhDAEJRkr3RG356t3Ny5qUSaE7ZkguR7yCRed0Bc
-   dgteZ7DBoS+eod3A8+R+tjNNGArwOP4ajUiSo6Xnm8KlbB+R5NqEI2A8S
-   aCZJB8eXmZNMONo193xnZzZgbNmXAQOFvjdzVWhLsuze/7Sp9zP6KLCc+
-   AZLe9H21f5fBMX7MSaIe4/BErit/Tfi/5AAHPqvIwe5TJLKppP2j1G7y7
-   Rfcm4saSK7G8ohDbn6MMyjT465GwL1C8YEZdfsVbFXLT7IUWONcxGmJg1
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="457637708"
+  bh=X9DUqCTYs2NSws6YB5I+N/M5vmT59fEYfpiJrfIeckQ=;
+  b=WTcEhCzpf4hzD4unRDkb0h/bisTNvtp3yVEMiNspRrUkdSRHqjXhrlWx
+   JfLImYpQLUT3AYh4KvFjskHni2menR/+vBbkMDBxURNCRFhUZdxr2+Ttf
+   7zzdh7OVQ51kkJBBedFqQgcgLMOlUp3o/uGtkcEfJCxe4BalaDMCSg+kw
+   FTC8Pg/OQ8u5kYSNT2pZnrHBxnRAjFxJHepuCE+2ttTtt/+t2rJmdKiPC
+   vf4oA8AlF9H8bSCuHWSAEGZaYiSgvu637gIHIVOqMuEtFWCelJhOW9Kvk
+   e5zF0wmNo7W5RKh2pErXifSxup/2WISilvS/lQHE82av8cCQjdQWj0twn
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="396124006"
 X-IronPort-AV: E=Sophos;i="6.04,239,1695711600"; 
-   d="scan'208";a="457637708"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 04:26:22 -0800
+   d="scan'208";a="396124006"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 04:33:07 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.04,239,1695711600"; 
-   d="scan'208";a="17214176"
+   d="scan'208";a="10749085"
 Received: from bergler-mobl.ger.corp.intel.com ([10.249.33.30])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 04:26:21 -0800
-Date: Thu, 30 Nov 2023 14:26:18 +0200 (EET)
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 04:33:05 -0800
+Date: Thu, 30 Nov 2023 14:33:02 +0200 (EET)
 From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 cc: Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org, 
     Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
     platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/6] platform/x86/intel/tpmi: Don't create devices for
- disabled features
-In-Reply-To: <20231128185605.3027653-3-srinivas.pandruvada@linux.intel.com>
-Message-ID: <9603f75-3adb-8eba-9322-cbd9551668c8@linux.intel.com>
-References: <20231128185605.3027653-1-srinivas.pandruvada@linux.intel.com> <20231128185605.3027653-3-srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH 1/6] platform/x86/intel/tpmi: Add additional TPMI header
+ fields
+In-Reply-To: <20231128185605.3027653-2-srinivas.pandruvada@linux.intel.com>
+Message-ID: <57956e96-449e-979e-dda0-fe1d1639f8a4@linux.intel.com>
+References: <20231128185605.3027653-1-srinivas.pandruvada@linux.intel.com> <20231128185605.3027653-2-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -47,40 +47,91 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Tue, 28 Nov 2023, Srinivas Pandruvada wrote:
 
-> If some TPMI features are disabled, don't create auxiliary devices. In
-> this way feature drivers will not load.
-> 
-> While creating auxiliary devices, call tpmi_read_feature_status() to
-> check feature state and return if the feature is disabled without
-> creating a device.
+> TPMI information header added additional fields in version 2. Some of the
+> reserved fields in version 1 are used to define new fields.
+> Parse new fields and export as part of platform data. These fields include:
+> - PCI segment ID
+> - Partition ID of the package, useful when more than one Intel VSEC PCI
+> device per package
+> - cdie_mask: Mask of all compute dies in this partition
 > 
 > Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 > ---
->  drivers/platform/x86/intel/tpmi.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+>  drivers/platform/x86/intel/tpmi.c | 11 ++++++++++-
+>  include/linux/intel_tpmi.h        |  6 ++++++
+>  2 files changed, 16 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
-> index c89aa4d14bea..4edaa182db04 100644
+> index 311abcac894a..c89aa4d14bea 100644
 > --- a/drivers/platform/x86/intel/tpmi.c
 > +++ b/drivers/platform/x86/intel/tpmi.c
-> @@ -604,9 +604,17 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
->  	struct intel_vsec_device *vsec_dev = tpmi_info->vsec_dev;
->  	char feature_id_name[TPMI_FEATURE_NAME_LEN];
->  	struct intel_vsec_device *feature_vsec_dev;
-> +	struct tpmi_feature_state feature_state;
->  	struct resource *res, *tmp;
->  	const char *name;
-> -	int i;
-> +	int i, ret;
-> +
-> +	ret = tpmi_read_feature_status(tpmi_info, pfs->pfs_header.tpmi_id, &feature_state);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!feature_state.enabled)
-> +		return -EOPNOTSUPP;
+> @@ -128,6 +128,9 @@ struct intel_tpmi_info {
+>   * @dev:	PCI device number
+>   * @bus:	PCI bus number
+>   * @pkg:	CPU Package id
+> + * @segment: PCI segment id
+> + * @partition: Package Partition id
+> + * @cdie_mask: Bitmap of compute dies in the current partition
+>   * @reserved:	Reserved for future use
+>   * @lock:	When set to 1 the register is locked and becomes read-only
+>   *		until next reset. Not for use by the OS driver.
+> @@ -139,7 +142,10 @@ struct tpmi_info_header {
+>  	u64 dev:5;
+>  	u64 bus:8;
+>  	u64 pkg:8;
+> -	u64 reserved:39;
+> +	u64 segment:8;
+> +	u64 partition:2;
+> +	u64 cdie_mask:16;
+> +	u64 reserved:13;
+>  	u64 lock:1;
+>  } __packed;
+> @@ -684,6 +690,9 @@ static int tpmi_process_info(struct intel_tpmi_info *tpmi_info,
+>  	tpmi_info->plat_info.bus_number = header.bus;
+>  	tpmi_info->plat_info.device_number = header.dev;
+>  	tpmi_info->plat_info.function_number = header.fn;
+> +	tpmi_info->plat_info.cdie_mask = header.cdie_mask;
+> +	tpmi_info->plat_info.partition = header.partition;
+> +	tpmi_info->plat_info.segment = header.segment;
+>  
+>  	iounmap(info_mem);
+>  
+> diff --git a/include/linux/intel_tpmi.h b/include/linux/intel_tpmi.h
+> index ee07393445f9..939663bb095f 100644
+> --- a/include/linux/intel_tpmi.h
+> +++ b/include/linux/intel_tpmi.h
+> @@ -14,7 +14,10 @@
+>  
+>  /**
+>   * struct intel_tpmi_plat_info - Platform information for a TPMI device instance
+> + * @cdie_mask:	Mask of all compute dies in the partition
+>   * @package_id:	CPU Package id
+> + * @partition:  Package partition id when multiple VSEC PCI devices per package
+> + * @segment: PCI segment ID
+>   * @bus_number:	PCI bus number
+>   * @device_number: PCI device number
+>   * @function_number: PCI function number
+> @@ -23,7 +26,10 @@
+>   * struct is used to return data via tpmi_get_platform_data().
+>   */
+>  struct intel_tpmi_plat_info {
+> +	u16 cdie_mask;
+>  	u8 package_id;
+> +	u8 partition;
+> +	u8 segment;
+>  	u8 bus_number;
+>  	u8 device_number;
+>  	u8 function_number;
 
--ENODEV sounds more appropriate.  
+I've a number of questions about this patch...
+
+- There no version check anywhere, yet commit message talks about v2?
+
+- What will those fields have in v1?
+
+- Entirely unrelated to the rest of this serie? So no users for these?
+  Why not send this along with the patches containing the actual users
+  so it'd have been easier to find the answers from the patches?
 
 -- 
  i.
