@@ -1,275 +1,196 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="p1ThHVde"
-Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A7C8196;
-	Fri,  1 Dec 2023 02:48:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1701427683; x=1732963683;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1i0nYG8BuzdMoGOOxzTWiNdBaogXPvI/CqoXRLh93/Q=;
-  b=p1ThHVdeZ3WlXJUF6yzfUDQAFB/gBtmKuDpbVMKpqKZvfTScJqhZx9jT
-   40AgvAiqRafWyOw3z95Oeg38ZvzXr/qTlDuGceqAdZ8TBfffZurmt3LYh
-   w8CxkaULCcE/W9JUmW6B5pKt7QYnt3KSUyyTVT+TFz18KUE5BPAGeo4US
-   ZQy+jwz6Iq2tyWsGsIubsqRUADueC11AeqV5hLQoUO3dbwZHCqS7xEUvK
-   jvOHe1KSU+toXAZ2DRsq1O/tliA8Z1N9KpS2VMLK5TgeAC2OlwbfZjTLU
-   ZW19GOMmgklJxzobaPHPEkJTwGzcrSPyKVUH6bzATDPOuXYSnKmOC46JQ
-   A==;
-X-CSE-ConnectionGUID: jaWBBaG1RuefeGN4A/L58Q==
-X-CSE-MsgGUID: zGVqcCVzQTufvbGrciDdvw==
-X-IronPort-AV: E=Sophos;i="6.04,241,1695657600"; 
-   d="scan'208";a="3756297"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 01 Dec 2023 18:48:02 +0800
-IronPort-SDR: R2c5retJyX9F08/9Yfn07zgYsa899TWEuSZ0fyL4uVbe5kUb8/afLQgWteztnxki+V+xhswqWG
- nX6FlbVkpWhw==
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Dec 2023 01:59:08 -0800
-IronPort-SDR: qhAolU6TQ3AsAvnL3+Fh3q14Qe6lFJqpy71gbIcgTnHkT3k93XCSQUBqD9oQIh0nx5eY42R4J0
- vvflOUIKuGyw==
-WDCIronportException: Internal
-Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.53.55])
-  by uls-op-cesaip01.wdc.com with ESMTP; 01 Dec 2023 02:48:01 -0800
-From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	linux-pci@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH RFC] platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe
-Date: Fri,  1 Dec 2023 19:47:59 +0900
-Message-ID: <20231201104759.949340-1-shinichiro.kawasaki@wdc.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DwshIScM"
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2050.outbound.protection.outlook.com [40.107.102.50])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE15FF1;
+	Fri,  1 Dec 2023 12:35:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iYAbepkwW+m7DxWU06grg+ykiqnQke4C80KVDILUaXK5rNmNRl1tMPJM1k/doz+7r6A5TT4OYFBLYaz6Nz0YvzPgNAB7oVp6Llp+e6LBi6gMnNloqRexNlAx9pB8hs4Z9GEEM9zUoOYeDT/FadJuQvv3A3eqDC93wxDsallL+D1vzgD6ByUBamykI5mXsxXjYELhTCbWa6U3qk0rvOk4/7XP0eXn95uWJ24MuhNZOSUA26qUuZZQMi5yQQSiY0Xnf50v7+3mdndsWsoFCnPPfS295Vt9w0bqPU1gTaCdPRFrVIgeD7mXZqiGKoyCYc7pX61Jo2ijVS6yYxnFeBK5vQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+TWETa/xWs8hT4QKx8R6D9YOK//DGkoQ4jPw5YuOjts=;
+ b=GQUELKvSMbmUYpaXBpt70B8N1OHYQMU9TAD6ZPY0kFmW2llpYubhf6SlMThbSgKK11VvJ3mAsaMCDuV9DcUZT3yqzjDQ4KXRe3aAMHL2gNUNZv4dnZvQIptjFvNin9nl0QHuZjmYd889hZW4eTc0K+LTgEPEscLFF1Roi7l6Hf4zvOVJDF8xRKx89kQy6HKiJcFbRh/iYH7b8NvkfZEHl+b01Pa9VqNmXyjc0Z9r0VC2rfip7kORxiBOaaFTEDLbc1EebiRvHo6Xxk9oV4bC5iVztX3mZS1t+cjOPOf/cbKbITEFYpo+6/qXZUpntmC/DlspJMoKqSXnWM2oJ2kydQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+TWETa/xWs8hT4QKx8R6D9YOK//DGkoQ4jPw5YuOjts=;
+ b=DwshIScMiVN+SsNDIVNF0ISpkcSF/L28FTlDFJcDU/Wv4pda0C1VIZilS4VtUogCXZ3jIOkyWwJm9CIGg9wqdgWCDMV3/o13e901CuhRLgK8k9TgVxEnR9FTpinzLAxeE+0KYyI90FJ7CyZ56Z8Lp/Ve0c8COi5TfxC2YDsl02MEGF+dFwB70oVFdGS1WnOeNz3ue6n66OzDZyjdrl5T9l1LtBYZOknQNwSC5Javaz5xMbjpH0Sxz8JArIaAGRZ97jNqXzQEq2Oh6nQm/Yr656Jm8Utz41dP2g9gSxvCRkUe0fQ+cGAD+XB3gjll85ea4J0EFwEP16vLPzt3Y2luiA==
+Received: from BN9PR12MB5381.namprd12.prod.outlook.com (2603:10b6:408:102::24)
+ by DM3PR12MB9416.namprd12.prod.outlook.com (2603:10b6:0:4b::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7046.27; Fri, 1 Dec 2023 20:35:00 +0000
+Received: from BN9PR12MB5381.namprd12.prod.outlook.com
+ ([fe80::a02:fa08:8729:c1bb]) by BN9PR12MB5381.namprd12.prod.outlook.com
+ ([fe80::a02:fa08:8729:c1bb%4]) with mapi id 15.20.7046.027; Fri, 1 Dec 2023
+ 20:35:00 +0000
+From: Vadim Pasternak <vadimp@nvidia.com>
+To: Kunwu Chan <chentao@kylinos.cn>, "hdegoede@redhat.com"
+	<hdegoede@redhat.com>, "ilpo.jarvinen@linux.intel.com"
+	<ilpo.jarvinen@linux.intel.com>, "jdelvare@suse.com" <jdelvare@suse.com>,
+	"linux@roeck-us.net" <linux@roeck-us.net>, Shravan Ramani
+	<shravankr@nvidia.com>, "jiri@resnulli.us" <jiri@resnulli.us>
+CC: "kunwu.chan@hotmail.com" <kunwu.chan@hotmail.com>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>
+Subject: RE: [PATCH v2] platform/mellanox: Add some null/error pointer checks
+ to mlxbf-pmc.c
+Thread-Topic: [PATCH v2] platform/mellanox: Add some null/error pointer checks
+ to mlxbf-pmc.c
+Thread-Index: AQHaJBsBarANaY4i8kSOk7A1nYaPgbCU41nw
+Date: Fri, 1 Dec 2023 20:35:00 +0000
+Message-ID:
+ <BN9PR12MB5381B3408452445483B7281EAF81A@BN9PR12MB5381.namprd12.prod.outlook.com>
+References: <20231201055447.2356001-1-chentao@kylinos.cn>
+In-Reply-To: <20231201055447.2356001-1-chentao@kylinos.cn>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR12MB5381:EE_|DM3PR12MB9416:EE_
+x-ms-office365-filtering-correlation-id: c73b2754-de7b-48c1-2984-08dbf2acfd4b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ Y+znFwoDhGXpYoALFETi80ePvVRoqBJnM+1qjVe4bhlrIrCrAtXYsB3VOizmOJpejCOWfWMWVfN3dOJxbT4v4aATjOG8RYrG1oYcjBoy4CqUoZfuMBM7QDCaTi4b1+4xHVxwurgO+LUdDCZ32WzIQxvikV7mI+Ov62Lxc/wFgSwT/yoV1wKjxaUwhHObFOq+mpcDDXtRCevru9qGaHvWkB03N2vIojlHSxQcoa5XSS5XYPeYv8JwnBw5GrsS1fVv1WcsMFXaZF2ZpVluRoDMg1pXjiC2LvwZPGfPtkrVR7twfBnPVDN2nlV5VMNEe8/g/P/jy2R+ZemSX3dCWtrC5Kf4Rk0uNn6GCwd3ReftHGANY1ggdagpmq+jGFnSPBuxHaS7sTsHNwKr3U5AgKp+sFtqJWmKuEjcr7HR6+GC/V02HUIohKxoa2pD/JUI0SFRCpnRqapo2UKIRi9bkUoV2QVChusbkUZEckDUyX1deMRfLnpyZlIlWI3tu46zzyVaTqy2ZAZP+NGFEG3wWzVcmPe9jjVYz1DZKOjwhwe0ymWlPbu94Lbee/VillSN+9kr+EfbzqPX5Jg5+KofXNjQPU+aX0kom+uZfGIC94nPEFHQHQ2GAKWij5d91j9Jch55
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5381.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(396003)(39860400002)(366004)(136003)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(38070700009)(86362001)(33656002)(55016003)(122000001)(7696005)(66476007)(53546011)(9686003)(110136005)(66556008)(66446008)(76116006)(6506007)(66946007)(66574015)(38100700002)(26005)(83380400001)(71200400001)(8676002)(8936002)(2906002)(41300700001)(54906003)(478600001)(45080400002)(64756008)(4326008)(5660300002)(7416002)(316002)(52536014);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?WmRiZ1NJVkpxOFdzMFlwN2c0Z243bFl5UXRHd1pFckZMZVlRWHcrR1JFa1BK?=
+ =?utf-8?B?K3lERGdtRlJDUTFvSW1IYmg0L0d1RzNITHBoWWpyS1RrNERMQWFiY1E5UGl4?=
+ =?utf-8?B?cmlCdGEzRVQ0Q0I2L2tZRENJcC9GTUw5UXJ2NU1nbURVcllsZmEvMTBIcUlk?=
+ =?utf-8?B?dkZIWWhPTmFqWjg5RVZNWEh1NWRFK3pMd3hjU29ObThhYzFqenpHcTdxRkFy?=
+ =?utf-8?B?d3VQbkZNZGw0dmJlYnpmV21aNEVESEsybk1vWGQ4Tk02U2hVeHAxQ2hTQ2s2?=
+ =?utf-8?B?dGRBK2FDVUIrTENMK2txNVNtdWRuL2JRZ3lOalV0WmMzSU9nSEJVclJyZW5w?=
+ =?utf-8?B?SEx3RVVlaXNLdGU1RkVBMExWbHorNFBzN05SQndBdFFPWkZSSTNOMUJ3RVVT?=
+ =?utf-8?B?eXF0aXYvaUFsT09SQUcrUDBYdWVmMkVnRFp0c0oxNVZwZXI5blhUQXNtWUVj?=
+ =?utf-8?B?TVJoV3FuTFdkVlBZSHp4R1FOcXVMc0ZIaXZkVCtCS0RDazJpY2RwMkZrZFhk?=
+ =?utf-8?B?bEQzYjY0RnZhZXJBR1FjSktZRWlXMGRzY2NaNm9UR3prUkpURUdPbkxBQi8y?=
+ =?utf-8?B?THhJc3g1eWdwNUxBT3FmcGtBT3FiRmxYZlRJV1lydVg0bGVHZU5nMDNXRUF2?=
+ =?utf-8?B?M0Zna1pWUXZ5ZjlxTEVoUzVvM3M4Q1ZvM0ErZEpDWDU4OGNzRnc3RVVMN1kz?=
+ =?utf-8?B?TUtQMTJQQ3ZlcGJQRzl4a0hTMHB2cGx5K09OZ1VWODlTekNIbWZHR1RtNVRn?=
+ =?utf-8?B?SHBRNE56bVM2TGhqYi95QkQ0WDBNb0JKVEJxdlZJRjBUZWk3U1NWQS9sS21C?=
+ =?utf-8?B?aGFnaEZYUmxjQjFoTGNBZUJKRjZCNnVUWXpHVktGMTFNN2hzNGtDRmFLeW1W?=
+ =?utf-8?B?UUJndDZyWG42RkxQNG53SnBQdmE2anpobTE1Zm1sVVRicEVEUlRCd2NlbU1E?=
+ =?utf-8?B?dUIvQVo2dThyaFBHUEhkYjVmbU9yVTFVaUVkazZoQlFML3ZZRFpOK1pDcElY?=
+ =?utf-8?B?Z1FNb1p6SHNzb1AyTVpST1VnU2MycDhzNTljQTdweHU4Y0QyblZDdVpWTUFR?=
+ =?utf-8?B?ektoSmd0NEs2OEpvdWdvVDVKV3ZjRzdza2s5TXZFRXllbnpjS25kODdOSHZQ?=
+ =?utf-8?B?T1QxbDBYMmU4am5saVZHYVJTQnZuTWZlcXY4WU1ZZ2RyVkQxVWdmU3MvMURQ?=
+ =?utf-8?B?VldiUVNlZU9jVEVIYjI0b2RvTVI0UUJFYjloenRtVzJmM3hBeXRieXVsODFq?=
+ =?utf-8?B?bjNjYnFIV3VUajBjYk9vOW1SQ2NmbE5ETnZPWUk4RExwOENTUXFkWkZjNkpZ?=
+ =?utf-8?B?L1ZYNncycUxwWURIMFNEOHlxSkZJUEdkR0xGU1RlZzFZNk9VazNRTnlWUjBo?=
+ =?utf-8?B?cmtHRmtHRlVjNDNwdnFCeERiVk1RUE0yVmlicGpHeUxTRWdmWE1DZXZSWWxr?=
+ =?utf-8?B?U0FWN2EyY29ibFVCZGJEZjU5ellwQ3lyUmJiVTZZYUp2RlRYSUdBN2tFZkw2?=
+ =?utf-8?B?K2hWbi91ZGt2cFFTc1VNRUcxSXJQTmNlTms4YVo5ZGxJcm5LaXJrdlFtVHhu?=
+ =?utf-8?B?ZHlrWUN5K2FPVm1TRy80Skd3SC95MXlwSGJzSVJrV1RGa1QwOHlqQ3E1dkQz?=
+ =?utf-8?B?a2ZiOVZYNmM2SjhEZEpVa3Y1VDRCcndvdHRNOEtvd25Cc3RaeEtlWE8yYm9i?=
+ =?utf-8?B?L1BnTG5JNGJiQVBtdVQrKys1bGpIc3JxOU1Mc2dSeU9leWdCMDVON29BVnFh?=
+ =?utf-8?B?Vmdnc0hkaUhJanY5ekUxOENCNUlSZW1MdW9kanNyUkpuclloRjRFTm1YMW1S?=
+ =?utf-8?B?REhtNHRwbVNQWWFVK1JHcWZBWlgxaFY4bHlKOXdhanZCUklxYVMwWlpYZUgx?=
+ =?utf-8?B?RCsyZU9iUFlqZml0aVJUZ1MzVTV5ZlhTSjdPU25wRFhxb0k5dWlqUGNLSmM2?=
+ =?utf-8?B?N0tQaDFPQkZjZkROcGowSTIxYXRsSGt1UXp1VlpodjVXNWNMeXpCakxKL3hU?=
+ =?utf-8?B?UUlHZUMwUGE5RC9WUzlLeURtN2s1Y0l2dFh4ZU1aNGpWQ3VuU1plT3pGUHY4?=
+ =?utf-8?B?UWZKeUc1dlkzTndiZFpoQmJEcVJ2bkg3MVUrMzFkaXdGWms3TUx5SWpaS2k3?=
+ =?utf-8?Q?nlIM=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5381.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c73b2754-de7b-48c1-2984-08dbf2acfd4b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Dec 2023 20:35:00.0664
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mCHIjLJAfOjKB9eNHSbQ0HKx00aOA9PnHHSQaMCkKaS0tNDGNvu1qQPq/lLYkmqknagbQ6Kvg8Bnsp0sK6Vtwg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9416
 
-p2sb_bar() unhides P2SB device to get resources from the device. It
-guards the operation by locking pci_rescan_remove_lock so that parallel
-rescans do not find the P2SB device. However, this lock causes deadlock
-when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
-locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
-call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
-Hence the deadlock.
-
-To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
-Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
-for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
-refer the cache and return to the caller.
-
-Link: https://lore.kernel.org/linux-pci/6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j/
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
----
-This patch reflects discussions held at the Link tag. I confirmed this patch
-fixes the problem using a system with i2c_i801 device, building i2c_i801
-module as both built-in and loadable. Reviews will be appreicated.
-
- drivers/platform/x86/p2sb.c | 125 +++++++++++++++++++++++++-----------
- 1 file changed, 87 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-index 1cf2471d54dd..97e9b44f5f1a 100644
---- a/drivers/platform/x86/p2sb.c
-+++ b/drivers/platform/x86/p2sb.c
-@@ -26,6 +26,16 @@ static const struct x86_cpu_id p2sb_cpu_ids[] = {
- 	{}
- };
- 
-+/* Cache BAR0 of P2SB device from function 0 ot 7 */
-+#define NR_P2SB_RES_CACHE 8
-+
-+struct p2sb_res_cache {
-+	u32 bus_dev_id;
-+	struct resource res;
-+};
-+
-+static struct p2sb_res_cache p2sb_resources[NR_P2SB_RES_CACHE];
-+
- static int p2sb_get_devfn(unsigned int *devfn)
- {
- 	unsigned int fn = P2SB_DEVFN_DEFAULT;
-@@ -39,8 +49,13 @@ static int p2sb_get_devfn(unsigned int *devfn)
- 	return 0;
- }
- 
-+static bool p2sb_invalid_resource(struct resource *res)
-+{
-+	return res->flags == 0;
-+}
-+
- /* Copy resource from the first BAR of the device in question */
--static int p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
-+static void p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
- {
- 	struct resource *bar0 = &pdev->resource[0];
- 
-@@ -56,48 +71,29 @@ static int p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
- 	mem->end = bar0->end;
- 	mem->flags = bar0->flags;
- 	mem->desc = bar0->desc;
--
--	return 0;
- }
- 
--static int p2sb_scan_and_read(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
-+static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
- {
- 	struct pci_dev *pdev;
- 	int ret;
-+	struct p2sb_res_cache *cache = &p2sb_resources[PCI_FUNC(devfn)];
- 
- 	pdev = pci_scan_single_device(bus, devfn);
--	if (!pdev)
-+	if (!pdev || p2sb_invalid_resource(&pdev->resource[0]))
- 		return -ENODEV;
- 
--	ret = p2sb_read_bar0(pdev, mem);
-+	p2sb_read_bar0(pdev, &cache->res);
-+	cache->bus_dev_id = bus->dev.id;
- 
- 	pci_stop_and_remove_bus_device(pdev);
- 	return ret;
- }
- 
--/**
-- * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
-- * @bus: PCI bus to communicate with
-- * @devfn: PCI slot and function to communicate with
-- * @mem: memory resource to be filled in
-- *
-- * The BIOS prevents the P2SB device from being enumerated by the PCI
-- * subsystem, so we need to unhide and hide it back to lookup the BAR.
-- *
-- * if @bus is NULL, the bus 0 in domain 0 will be used.
-- * If @devfn is 0, it will be replaced by devfn of the P2SB device.
-- *
-- * Caller must provide a valid pointer to @mem.
-- *
-- * Locking is handled by pci_rescan_remove_lock mutex.
-- *
-- * Return:
-- * 0 on success or appropriate errno value on error.
-- */
--int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
-+static int p2sb_cache_resources(void)
- {
--	struct pci_dev *pdev_p2sb;
--	unsigned int devfn_p2sb;
-+	struct pci_bus *bus;
-+	unsigned int devfn_p2sb, slot_p2sb, fn;
- 	u32 value = P2SBC_HIDE;
- 	int ret;
- 
-@@ -106,8 +102,8 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
- 	if (ret)
- 		return ret;
- 
--	/* if @bus is NULL, use bus 0 in domain 0 */
--	bus = bus ?: pci_find_bus(0, 0);
-+	/* Assume P2SB is on the bus 0 in domain 0 */
-+	bus = pci_find_bus(0, 0);
- 
- 	/*
- 	 * Prevent concurrent PCI bus scan from seeing the P2SB device and
-@@ -115,18 +111,31 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
- 	 */
- 	pci_lock_rescan_remove();
- 
--	/* Unhide the P2SB device, if needed */
-+	/*
-+	 * The BIOS prevents the P2SB device from being enumerated by the PCI
-+	 * subsystem, so we need to unhide and hide it back to lookup the BAR.
-+	 * Unhide the P2SB device here, if needed.
-+	 */
- 	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
- 	if (value & P2SBC_HIDE)
- 		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
- 
--	pdev_p2sb = pci_scan_single_device(bus, devfn_p2sb);
--	if (devfn)
--		ret = p2sb_scan_and_read(bus, devfn, mem);
--	else
--		ret = p2sb_read_bar0(pdev_p2sb, mem);
--	pci_stop_and_remove_bus_device(pdev_p2sb);
-+	/* Scan the P2SB device and cache its BAR0 */
-+	ret = p2sb_scan_and_cache(bus, devfn_p2sb);
-+	if (ret)
-+		goto out;
- 
-+	/*
-+	 * When function number of the P2SB device is zero, scan other function
-+	 * numbers. If devices are available, cache their BAR0.
-+	 */
-+	if (!PCI_FUNC(devfn_p2sb)) {
-+		slot_p2sb = PCI_SLOT(devfn_p2sb);
-+		for (fn = 1; fn < 8; fn++)
-+			p2sb_scan_and_cache(bus, PCI_DEVFN(slot_p2sb, fn));
-+	}
-+
-+out:
- 	/* Hide the P2SB device, if it was hidden */
- 	if (value & P2SBC_HIDE)
- 		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
-@@ -136,9 +145,49 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
- 	if (ret)
- 		return ret;
- 
--	if (mem->flags == 0)
-+	return 0;
-+}
-+
-+/**
-+ * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
-+ * @bus: PCI bus to communicate with
-+ * @devfn: PCI slot and function to communicate with
-+ * @mem: memory resource to be filled in
-+ *
-+ * if @bus is NULL, the bus 0 in domain 0 will be used.
-+ * If @devfn is 0, it will be replaced by devfn of the P2SB device.
-+ *
-+ * Caller must provide a valid pointer to @mem.
-+ *
-+ * Return:
-+ * 0 on success or appropriate errno value on error.
-+ */
-+int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
-+{
-+	int ret;
-+	struct p2sb_res_cache *cache;
-+
-+	bus = bus ? bus : pci_find_bus(0, 0);
-+
-+	if (!devfn) {
-+		ret = p2sb_get_devfn(&devfn);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	cache = &p2sb_resources[PCI_FUNC(devfn)];
-+	if (p2sb_invalid_resource(&cache->res) ||
-+	    cache->bus_dev_id != bus->dev.id)
- 		return -ENODEV;
- 
-+	memcpy(mem, &cache->res, sizeof(*mem));
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(p2sb_bar);
-+
-+static int __init p2sb_fs_init(void)
-+{
-+	p2sb_cache_resources();
-+	return 0;
-+}
-+fs_initcall(p2sb_fs_init);
--- 
-2.43.0
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3Vud3UgQ2hhbiA8Y2hl
+bnRhb0BreWxpbm9zLmNuPg0KPiBTZW50OiBGcmlkYXksIDEgRGVjZW1iZXIgMjAyMyA3OjU1DQo+
+IFRvOiBoZGVnb2VkZUByZWRoYXQuY29tOyBpbHBvLmphcnZpbmVuQGxpbnV4LmludGVsLmNvbTsg
+VmFkaW0gUGFzdGVybmFrDQo+IDx2YWRpbXBAbnZpZGlhLmNvbT47IGpkZWx2YXJlQHN1c2UuY29t
+OyBsaW51eEByb2Vjay11cy5uZXQ7IFNocmF2YW4NCj4gUmFtYW5pIDxzaHJhdmFua3JAbnZpZGlh
+LmNvbT47IGppcmlAcmVzbnVsbGkudXMNCj4gQ2M6IGt1bnd1LmNoYW5AaG90bWFpbC5jb207IHBs
+YXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIu
+a2VybmVsLm9yZzsgbGludXgtaHdtb25Admdlci5rZXJuZWwub3JnOyBLdW53dSBDaGFuDQo+IDxj
+aGVudGFvQGt5bGlub3MuY24+DQo+IFN1YmplY3Q6IFtQQVRDSCB2Ml0gcGxhdGZvcm0vbWVsbGFu
+b3g6IEFkZCBzb21lIG51bGwvZXJyb3IgcG9pbnRlciBjaGVja3MgdG8NCj4gbWx4YmYtcG1jLmMN
+Cj4gDQo+IGRldm1fa2FzcHJpbnRmKCkgcmV0dXJucyBhIHBvaW50ZXIgdG8gZHluYW1pY2FsbHkg
+YWxsb2NhdGVkIG1lbW9yeSB3aGljaA0KPiBjYW4gYmUgTlVMTCB1cG9uIGZhaWx1cmUuDQo+IGRl
+dm1faHdtb25fZGV2aWNlX3JlZ2lzdGVyX3dpdGhfZ3JvdXBzIHJldHVybiBhIGVycm9yIHBvaW50
+ZXIgdXBvbg0KPiBmYWlsdXJlLg0KPiANCj4gQ29tcGlsZS10ZXN0ZWQgb25seS4NCj4gDQo+IEZp
+eGVzOiAxYTIxOGQzMTJlNjUgKCJwbGF0Zm9ybS9tZWxsYW5veDogbWx4YmYtcG1jOiBBZGQgTWVs
+bGFub3gNCj4gQmx1ZUZpZWxkIFBNQyBkcml2ZXIiKQ0KPiBTdWdnZXN0ZWQtYnk6IElscG8gSsOk
+cnZpbmVuIDxpbHBvLmphcnZpbmVuQGxpbnV4LmludGVsLmNvbT4NCj4gU3VnZ2VzdGVkLWJ5OiBW
+YWRpbSBQYXN0ZXJuYWsgPHZhZGltcEBudmlkaWEuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBLdW53
+dSBDaGFuIDxjaGVudGFvQGt5bGlub3MuY24+DQoNClJldmlld2VkLWJ5OiBWYWRpbSBQYXN0ZXJu
+YWsgPHZhZGltcEBudmlkaWEuY29tPg0KDQo+IC0tLQ0KPiAgZHJpdmVycy9wbGF0Zm9ybS9tZWxs
+YW5veC9tbHhiZi1wbWMuYyB8IDE0ICsrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwg
+MTQgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0vbWVs
+bGFub3gvbWx4YmYtcG1jLmMNCj4gYi9kcml2ZXJzL3BsYXRmb3JtL21lbGxhbm94L21seGJmLXBt
+Yy5jDQo+IGluZGV4IDBiNDI3ZmMyNGE5Ni4uMWRkODRjN2E3OWRlIDEwMDY0NA0KPiAtLS0gYS9k
+cml2ZXJzL3BsYXRmb3JtL21lbGxhbm94L21seGJmLXBtYy5jDQo+ICsrKyBiL2RyaXZlcnMvcGxh
+dGZvcm0vbWVsbGFub3gvbWx4YmYtcG1jLmMNCj4gQEAgLTE3NzEsNiArMTc3MSw4IEBAIHN0YXRp
+YyBpbnQgbWx4YmZfcG1jX2luaXRfcGVyZnR5cGVfY291bnRlcihzdHJ1Y3QNCj4gZGV2aWNlICpk
+ZXYsIGludCBibGtfbnVtKQ0KPiAgCWF0dHItPmRldl9hdHRyLnNob3cgPSBtbHhiZl9wbWNfZXZl
+bnRfbGlzdF9zaG93Ow0KPiAgCWF0dHItPm5yID0gYmxrX251bTsNCj4gIAlhdHRyLT5kZXZfYXR0
+ci5hdHRyLm5hbWUgPSBkZXZtX2thc3ByaW50ZihkZXYsIEdGUF9LRVJORUwsDQo+ICJldmVudF9s
+aXN0Iik7DQo+ICsJaWYgKCFhdHRyLT5kZXZfYXR0ci5hdHRyLm5hbWUpDQo+ICsJCXJldHVybiAt
+RU5PTUVNOw0KPiAgCXBtYy0+YmxvY2tbYmxrX251bV0uYmxvY2tfYXR0cltpXSA9ICZhdHRyLT5k
+ZXZfYXR0ci5hdHRyOw0KPiAgCWF0dHIgPSBOVUxMOw0KPiANCj4gQEAgLTE3ODQsNiArMTc4Niw4
+IEBAIHN0YXRpYyBpbnQgbWx4YmZfcG1jX2luaXRfcGVyZnR5cGVfY291bnRlcihzdHJ1Y3QNCj4g
+ZGV2aWNlICpkZXYsIGludCBibGtfbnVtKQ0KPiAgCQlhdHRyLT5uciA9IGJsa19udW07DQo+ICAJ
+CWF0dHItPmRldl9hdHRyLmF0dHIubmFtZSA9IGRldm1fa2FzcHJpbnRmKGRldiwgR0ZQX0tFUk5F
+TCwNCj4gIAkJCQkJCQkgICJlbmFibGUiKTsNCj4gKwkJaWYgKCFhdHRyLT5kZXZfYXR0ci5hdHRy
+Lm5hbWUpDQo+ICsJCQlyZXR1cm4gLUVOT01FTTsNCj4gIAkJcG1jLT5ibG9ja1tibGtfbnVtXS5i
+bG9ja19hdHRyWysraV0gPSAmYXR0ci0+ZGV2X2F0dHIuYXR0cjsNCj4gIAkJYXR0ciA9IE5VTEw7
+DQo+ICAJfQ0KPiBAQCAtMTgxMCw2ICsxODE0LDggQEAgc3RhdGljIGludCBtbHhiZl9wbWNfaW5p
+dF9wZXJmdHlwZV9jb3VudGVyKHN0cnVjdA0KPiBkZXZpY2UgKmRldiwgaW50IGJsa19udW0pDQo+
+ICAJCWF0dHItPm5yID0gYmxrX251bTsNCj4gIAkJYXR0ci0+ZGV2X2F0dHIuYXR0ci5uYW1lID0g
+ZGV2bV9rYXNwcmludGYoZGV2LCBHRlBfS0VSTkVMLA0KPiAgCQkJCQkJCSAgImNvdW50ZXIlZCIs
+IGopOw0KPiArCQlpZiAoIWF0dHItPmRldl9hdHRyLmF0dHIubmFtZSkNCj4gKwkJCXJldHVybiAt
+RU5PTUVNOw0KPiAgCQlwbWMtPmJsb2NrW2Jsa19udW1dLmJsb2NrX2F0dHJbKytpXSA9ICZhdHRy
+LT5kZXZfYXR0ci5hdHRyOw0KPiAgCQlhdHRyID0gTlVMTDsNCj4gDQo+IEBAIC0xODIxLDYgKzE4
+MjcsOCBAQCBzdGF0aWMgaW50IG1seGJmX3BtY19pbml0X3BlcmZ0eXBlX2NvdW50ZXIoc3RydWN0
+DQo+IGRldmljZSAqZGV2LCBpbnQgYmxrX251bSkNCj4gIAkJYXR0ci0+bnIgPSBibGtfbnVtOw0K
+PiAgCQlhdHRyLT5kZXZfYXR0ci5hdHRyLm5hbWUgPSBkZXZtX2thc3ByaW50ZihkZXYsIEdGUF9L
+RVJORUwsDQo+ICAJCQkJCQkJICAiZXZlbnQlZCIsIGopOw0KPiArCQlpZiAoIWF0dHItPmRldl9h
+dHRyLmF0dHIubmFtZSkNCj4gKwkJCXJldHVybiAtRU5PTUVNOw0KPiAgCQlwbWMtPmJsb2NrW2Js
+a19udW1dLmJsb2NrX2F0dHJbKytpXSA9ICZhdHRyLT5kZXZfYXR0ci5hdHRyOw0KPiAgCQlhdHRy
+ID0gTlVMTDsNCj4gIAl9DQo+IEBAIC0xODUzLDYgKzE4NjEsOCBAQCBzdGF0aWMgaW50IG1seGJm
+X3BtY19pbml0X3BlcmZ0eXBlX3JlZyhzdHJ1Y3QNCj4gZGV2aWNlICpkZXYsIGludCBibGtfbnVt
+KQ0KPiAgCQlhdHRyLT5uciA9IGJsa19udW07DQo+ICAJCWF0dHItPmRldl9hdHRyLmF0dHIubmFt
+ZSA9IGRldm1fa2FzcHJpbnRmKGRldiwgR0ZQX0tFUk5FTCwNCj4gIAkJCQkJCQkgIGV2ZW50c1tq
+XS5ldnRfbmFtZSk7DQo+ICsJCWlmICghYXR0ci0+ZGV2X2F0dHIuYXR0ci5uYW1lKQ0KPiArCQkJ
+cmV0dXJuIC1FTk9NRU07DQo+ICAJCXBtYy0+YmxvY2tbYmxrX251bV0uYmxvY2tfYXR0cltpXSA9
+ICZhdHRyLT5kZXZfYXR0ci5hdHRyOw0KPiAgCQlhdHRyID0gTlVMTDsNCj4gIAkJaSsrOw0KPiBA
+QCAtMTg4Miw2ICsxODkyLDggQEAgc3RhdGljIGludCBtbHhiZl9wbWNfY3JlYXRlX2dyb3Vwcyhz
+dHJ1Y3QgZGV2aWNlDQo+ICpkZXYsIGludCBibGtfbnVtKQ0KPiAgCXBtYy0+YmxvY2tbYmxrX251
+bV0uYmxvY2tfYXR0cl9ncnAuYXR0cnMgPSBwbWMtDQo+ID5ibG9ja1tibGtfbnVtXS5ibG9ja19h
+dHRyOw0KPiAgCXBtYy0+YmxvY2tbYmxrX251bV0uYmxvY2tfYXR0cl9ncnAubmFtZSA9IGRldm1f
+a2FzcHJpbnRmKA0KPiAgCQlkZXYsIEdGUF9LRVJORUwsIHBtYy0+YmxvY2tfbmFtZVtibGtfbnVt
+XSk7DQo+ICsJaWYgKCFwbWMtPmJsb2NrW2Jsa19udW1dLmJsb2NrX2F0dHJfZ3JwLm5hbWUpDQo+
+ICsJCXJldHVybiAtRU5PTUVNOw0KPiAgCXBtYy0+Z3JvdXBzW3BtYy0+Z3JvdXBfbnVtXSA9ICZw
+bWMtDQo+ID5ibG9ja1tibGtfbnVtXS5ibG9ja19hdHRyX2dycDsNCj4gIAlwbWMtPmdyb3VwX251
+bSsrOw0KPiANCj4gQEAgLTIwNjMsNiArMjA3NSw4IEBAIHN0YXRpYyBpbnQgbWx4YmZfcG1jX3By
+b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4gKnBkZXYpDQo+IA0KPiAgCXBtYy0+aHdtb25f
+ZGV2ID0gZGV2bV9od21vbl9kZXZpY2VfcmVnaXN0ZXJfd2l0aF9ncm91cHMoDQo+ICAJCWRldiwg
+ImJmcGVyZiIsIHBtYywgcG1jLT5ncm91cHMpOw0KPiArCWlmIChJU19FUlIocG1jLT5od21vbl9k
+ZXYpKQ0KPiArCQlyZXR1cm4gUFRSX0VSUihwbWMtPmh3bW9uX2Rldik7DQo+ICAJcGxhdGZvcm1f
+c2V0X2RydmRhdGEocGRldiwgcG1jKTsNCj4gDQo+ICAJcmV0dXJuIDA7DQo+IC0tDQo+IDIuMzQu
+MQ0KDQo=
