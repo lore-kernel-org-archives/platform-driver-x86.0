@@ -1,30 +1,47 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD3B912F;
-	Thu, 30 Nov 2023 19:21:05 -0800 (PST)
-X-UUID: 0adcf1ec53004f2896f8db19fa4848f2-20231201
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.33,REQID:f3aa08ed-1cd4-4848-915f-291d33eb3c0e,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-INFO: VERSION:1.1.33,REQID:f3aa08ed-1cd4-4848-915f-291d33eb3c0e,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:0
-X-CID-META: VersionHash:364b77b,CLOUDID:2fb44773-1bd3-4f48-b671-ada88705968c,B
-	ulkID:231130174330NINYOUVY,BulkQuantity:9,Recheck:0,SF:24|17|19|44|64|66|3
-	8|102,TC:nil,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,Bulk:40,QS:nil,BEC:n
-	il,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_ULN,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,
-	TF_CID_SPAM_FSD
-X-UUID: 0adcf1ec53004f2896f8db19fa4848f2-20231201
-X-User: chentao@kylinos.cn
-Received: from [172.20.15.254] [(116.128.244.169)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 444723567; Fri, 01 Dec 2023 11:20:49 +0800
-Message-ID: <b189a64f-2b0b-4089-8f70-4577aa0608dc@kylinos.cn>
-Date: Fri, 1 Dec 2023 11:20:48 +0800
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O2qp1y3z"
+Received: from mail-oa1-x29.google.com (mail-oa1-x29.google.com [IPv6:2001:4860:4864:20::29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F6651716;
+	Thu, 30 Nov 2023 20:17:58 -0800 (PST)
+Received: by mail-oa1-x29.google.com with SMTP id 586e51a60fabf-1fadb9ac169so76189fac.0;
+        Thu, 30 Nov 2023 20:17:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701404277; x=1702009077; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=TDN/fGOxF3LJOJ9JO74US7YL4e/4RmultsA3vElIFMQ=;
+        b=O2qp1y3zYcW6ad17DURukxXwTNSJaPZrQz/nfQh63hnFR4YpfpD2ltAKmIJFKM2Ryy
+         8x89ypoldW6i9umgq7i10SEecMZQEDtzyRbjryRJHeSIPoWuZY2mJBubOfHbpIiLjYzH
+         rfVo26W74b3tOtGkWtIORAmqci674T48KveMMfLdZzgY1aT0jD3StYyRJ9AqmZfyBLsm
+         PUr1oVbCsDhyvXcIdpNoFyGUuK/7ZgF0prBYpZ/JFHLJiLobaDQOd6tYwXuWVkQxiGSz
+         1VfqeuLodHMfY9KyO3kYOMWSH/6LZ3N7p9q6zsU8cvL/i7mCoEueBVSRQKkc+aWOgtTP
+         0Cew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701404277; x=1702009077;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TDN/fGOxF3LJOJ9JO74US7YL4e/4RmultsA3vElIFMQ=;
+        b=REejF98N4lXYlGMXCsS7jSIHpDm1Du7nkCz5v73ydulpeSSjSnCL5DxH0vCLWT/hiN
+         N8UgUkWFBAC9CMrxFErjh/F03NuYW7PiJmPLqF1NGO0JLpvH2VyzEAx0fdIQJ3Yrb59t
+         i/GtVxE2NiOxUEcwO9k+0VIGgrfPBbv9jAeUAfjBMzpoZbHtNchsv8HNT1LO+O3jE78M
+         LNipB+DMJdxqMidZu/Gwfk2lv+BbtAQM6ILxtmKuWjMrIK3S+FZ2jAJsqDvfHbOljtud
+         zJ4oAXRWKPsOrD5Q/RC8hAJYqd4nRdAheqT8vK1zny2r3cKoiwefgicMWhHY6D719kWO
+         tQFg==
+X-Gm-Message-State: AOJu0YxZRP+UIGSPcHd4RXnagNvz8rHZcFS6LS9aMtNomcQ+S7l/te/e
+	IhkfsdioR83hSlPi8NvTWSQ=
+X-Google-Smtp-Source: AGHT+IEaVXQoCZ2LHfE3UaQHEp1SLEtlDFe4B3U/JpWvrz+d2Bc1q0UJGsdQqVBz/a64kaRdjYi8CA==
+X-Received: by 2002:a05:6870:d88d:b0:1fa:25df:4031 with SMTP id oe13-20020a056870d88d00b001fa25df4031mr26189358oac.4.1701404277629;
+        Thu, 30 Nov 2023 20:17:57 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id gb17-20020a056870671100b001f9fe9e05desm621658oab.36.2023.11.30.20.17.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Nov 2023 20:17:57 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <13fb95af-bf92-4539-bece-b3d1fecaadc3@roeck-us.net>
+Date: Thu, 30 Nov 2023 20:17:55 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -32,121 +49,97 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/mellanox: Add a null pointer check in
- mlxbf_pmc_create_groups
-To: Vadim Pasternak <vadimp@nvidia.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- David Thompson <davthompson@nvidia.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, "jiri@resnulli.us"
- <jiri@resnulli.us>, Shravan Ramani <shravankr@nvidia.com>,
- "kunwu.chan@hotmail.com" <kunwu.chan@hotmail.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <20231127063433.1549064-1-chentao@kylinos.cn>
- <1701224213463629.329.seg@mailgw>
- <bf29c39f-8d9f-465a-bbc2-45bdb77711b8@kylinos.cn>
- <55c5987b-c991-aa8-a226-c5b1638b474@linux.intel.com>
- <BN9PR12MB5381030454E0A19315002F2DAF82A@BN9PR12MB5381.namprd12.prod.outlook.com>
-From: Kunwu Chan <chentao@kylinos.cn>
-In-Reply-To: <BN9PR12MB5381030454E0A19315002F2DAF82A@BN9PR12MB5381.namprd12.prod.outlook.com>
+Subject: Re: [PATCH v4 0/9] hwmon: (dell-smm) Add support for WMI SMM
+ interface
+Content-Language: en-US
+To: Armin Wolf <W_Armin@gmx.de>, pali@kernel.org
+Cc: jdelvare@suse.com, hdegoede@redhat.com, markgross@kernel.org,
+ ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231123004820.50635-1-W_Armin@gmx.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20231123004820.50635-1-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Vadim,
-Thanks for your reply.
+On 11/22/23 16:48, Armin Wolf wrote:
+> This patch series adds support for an alternative SMM calling
+> backend to the dell-smm-hwmon driver. The reason for this is
+> that on some modern machines, the legacy SMM calling interface
+> does not work anymore and the SMM handler can be called over
+> ACPI WMI instead.
+> 
+> The first four patches prepare the driver by allowing to
+> specify different SMM calling backends, and by moving most of
+> the DMI handling into i8k_init() so that the DMI tables can
+> keep their __initconst attributes (the WMI SMM backend driver
+> does not probe at module init time). The fifth patch does some
+> minor cleanup, while the next three patches implement the new
+> WMI SMM calling backend. The last patch adds the machine of
+> the user who requested and tested the changes to the fan control
+> whitelist.
+> 
+> If the driver does not detect the legacy SMM interface, either
+> because the machine is not whitelisted or because the SMM handler
+> does not react, it registers an WMI driver which will then bound
+> to the WMI SMM interface and do the remaining initialization.
+> 
+> The deprecated procfs interface is not supported when using the
+> WMI SMM calling backend for the following reason: the WMI driver
+> can potentially be instantiated multiple times while the deprectated
+> procfs interface cannot. This should not cause any regressions
+> because on machines supporting only the WMI SMM interface, the
+> driver would, until now, not load anyway.
+> 
+> All patches where tested on a Dell Inspiron 3505 and a Dell
+> OptiPlex 7000.
+> 
 
-I will follw your suggestions and add some ‘fixes’ label in v2 patch.
+Series applied.
 
-Thanks again,
-Kunwu
+Thanks,
+Guenter
 
-
-On 2023/12/1 00:01, Vadim Pasternak wrote:
-> Hi Ilpo!
-> 
->> -----Original Message-----
->> From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->> Sent: Thursday, 30 November 2023 17:26
->> To: Kunwu Chan <chentao@kylinos.cn>; Vadim Pasternak
->> <vadimp@nvidia.com>
->> Cc: Hans de Goede <hdegoede@redhat.com>; jiri@resnulli.us; Shravan
->> Ramani <shravankr@nvidia.com>; kunwu.chan@hotmail.com; platform-
->> driver-x86@vger.kernel.org; LKML <linux-kernel@vger.kernel.org>
->> Subject: Re: [PATCH] platform/mellanox: Add a null pointer check in
->> mlxbf_pmc_create_groups
->>
->> Hi Vadim,
->>
->> Could you please take a look at this and give advice to Kunwu so we can get all
->> of them squashed in one go.
-> 
-> It seems there are six calls devm_kasprintf(), which requires checking pointer.
-> 
-> I guess, it is correct to return '-ENOMEM' for any failure.
-> 
-> I see there is another problem in mlxbf_pmc_probe() - it lacks error flow for:
-> 	pmc->hwmon_dev = devm_hwmon_device_register_with_groups(
-> 		dev, "bfperf", pmc, pmc->groups);
-> 	
-> Need to add:
-> 	if (IS_ERR(pmc->hwmon_dev))
-> 		return PTR_ERR(pmc->hwmon_dev);
-> 
-> Sharvan, David,
-> Could you, please, have look?
-> 
->>
->> On Thu, 30 Nov 2023, Kunwu Chan wrote:
->>
->>> Thanks for your reply.
->>>
->>> Cause i don't know how to deal with in some scenario，such as in
->>> 'mlxbf_pmc_init_perftype_counter', when 'attr->dev_attr.attr.name' is
->>> null, should return '-ENOMEM' or 'continue' the loop?
->>
->> I'd have thought returning -ENOMEM would be safe because it just ends up
->> failing probe()? ...And it's not that likely to occur in the first place.
->>
->> --
->>   i.
->>
->>>
->>> So I'm going to solve it one by one.
->>>
->>> Thanks again,
->>> Kunwu
->>>
->>> On 2023/11/28 17:51, Ilpo Järvinen wrote:
->>>> On Mon, 27 Nov 2023, Kunwu Chan wrote:
->>>>
->>>>> devm_kasprintf() returns a pointer to dynamically allocated memory
->>>>> which can be NULL upon failure.
->>>>>
->>>>> Fixes: 1a218d312e65 ("platform/mellanox: mlxbf-pmc: Add Mellanox
->>>>> BlueField PMC driver")
->>>>> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
->>>>> ---
->>>>>    drivers/platform/mellanox/mlxbf-pmc.c | 2 ++
->>>>>    1 file changed, 2 insertions(+)
->>>>>
->>>>> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c
->>>>> b/drivers/platform/mellanox/mlxbf-pmc.c
->>>>> index 0b427fc24a96..59bbe5e13f6b 100644
->>>>> --- a/drivers/platform/mellanox/mlxbf-pmc.c
->>>>> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
->>>>> @@ -1882,6 +1882,8 @@ static int mlxbf_pmc_create_groups(struct
->>>>> device *dev, int blk_num)
->>>>>    	pmc->block[blk_num].block_attr_grp.attrs =
->>>>> pmc->block[blk_num].block_attr;
->>>>>    	pmc->block[blk_num].block_attr_grp.name = devm_kasprintf(
->>>>>    		dev, GFP_KERNEL, pmc->block_name[blk_num]);
->>>>> +	if (!pmc->block[blk_num].block_attr_grp.name)
->>>>> +		return -ENOMEM;
->>>>>    	pmc->groups[pmc->group_num] = &pmc-
->>> block[blk_num].block_attr_grp;
->>>>>    	pmc->group_num++;
->>>>
->>>> I'm totally lost, why did you fix only one devm_kasprintf() location?
->>>> Don't all of them need this check?
->>>>
->>>
