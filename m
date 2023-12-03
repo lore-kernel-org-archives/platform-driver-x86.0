@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FuNDv99D"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q0oxA0m/"
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 112FAF2
-	for <platform-driver-x86@vger.kernel.org>; Sun,  3 Dec 2023 07:41:27 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02898F2
+	for <platform-driver-x86@vger.kernel.org>; Sun,  3 Dec 2023 07:44:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701618087;
+	s=mimecast20190719; t=1701618266;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lrLiHxpmPiS7OvUiG7PaRbDSX6/6tc0/PC7JobLnjgM=;
-	b=FuNDv99DnOYD76kSKiTPWVX0/2ytUh9hMx1LXcWCMIuVr06lDBhyauhx+fZ35yZlBJ6kQh
-	SQkx/CGuSMDy1Q51N/Z12byPjoWRd4BemoJWWd62RMmy1cOu0osNryToNuzltfHDEswrx4
-	eEG2lisgzYxSxbOtxrCtuBQsUqi4FdQ=
+	bh=Z0TnsgLS6gynRXupSaJmtAZlDUzUBcMDxPmId5EPD54=;
+	b=Q0oxA0m/t560Z44OcuRDjSKdbOHDxi9bW0IVyWyJr+dEYPxs1IuiG0LjO01noq4z3z9cuL
+	cFdNf2d6tYbh4zJyAlzca8f83an6rn3CNK30eKXs7jrU8VjxCEto/Oo9Rp22cUkIkRl8R1
+	Fdx2Lq/N835UTpwzbaGDr4rlcfgMswI=
 Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
  [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-173-Y9zcubAIM0CwKDm-sf1bMA-1; Sun, 03 Dec 2023 10:41:25 -0500
-X-MC-Unique: Y9zcubAIM0CwKDm-sf1bMA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a1a4bc50361so154084366b.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 03 Dec 2023 07:41:25 -0800 (PST)
+ us-mta-471-n32fc-jlO86WnJEh-6hhSw-1; Sun, 03 Dec 2023 10:44:19 -0500
+X-MC-Unique: n32fc-jlO86WnJEh-6hhSw-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a0009a87651so294649766b.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 03 Dec 2023 07:44:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701618084; x=1702222884;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1701618258; x=1702223058;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lrLiHxpmPiS7OvUiG7PaRbDSX6/6tc0/PC7JobLnjgM=;
-        b=f42CIL9/uvLbxQlJA8TzdumufV00pTQmXloJVgO8UJp8p6xiBbbbovak5KRtbdzEjl
-         jYnT9uxXBXR63YnkS/sZZLPiebi8Z/+0Z0SpcNxmbB/WhyEjf50X+yos1oDgRGGuR+D1
-         xmaMfjDG/xd1ERG9PnfeUPGyBrCXohwKrftng2VDbiWGdJHbLmHG2I3AWToedSe/l1lY
-         79g0ZDn9vQxesxJvhCq2gWK4joy5+ox44txlSQ6XGwOBYqKBPkftP34awmkt+NLxq3mg
-         o/XW0/KU9HGBSge57ix8p4K5hrN9F4j6U3dhXwvn0F/uCy9miad3jM81aPkOat/G9RgI
-         iFvQ==
-X-Gm-Message-State: AOJu0Yw/IJWxA5gknC1VvgFGhVNmeMGoYM1Rkls8bzXvj2Vc5bcFicYa
-	6jRIchI5JfhGXPB9Xnc0NpkcimdJnC9bonx4OrEJi6uSynUibVMw7rlnFI9mdFY1bke+1OqPTuq
-	BLk5HSbSE2oSHwhEwoPP45QxfwNAeId7LSQ==
-X-Received: by 2002:a17:906:73d5:b0:9e6:7f83:6547 with SMTP id n21-20020a17090673d500b009e67f836547mr2513160ejl.48.1701618084626;
-        Sun, 03 Dec 2023 07:41:24 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHMnEejdYRRAqC+Exu01HFTwcy9zuH0Dlqnlxj5uJALoZtqbFlIjZ40ypnzgmj470Nhta2sig==
-X-Received: by 2002:a17:906:73d5:b0:9e6:7f83:6547 with SMTP id n21-20020a17090673d500b009e67f836547mr2513152ejl.48.1701618084206;
-        Sun, 03 Dec 2023 07:41:24 -0800 (PST)
+        bh=Z0TnsgLS6gynRXupSaJmtAZlDUzUBcMDxPmId5EPD54=;
+        b=v+A53DjYHBacy6BF8ccT6erFXFPt/jWDSV9mwgvlTsVTAypGPYNI/zvjfy4O/IBeDX
+         mbvq392XrJOEqOoTeqC/r6eEvAblNDuPsX57f8/hyF2rNtR4umcJXlAwWSmwH2qGV/PV
+         6k8Uto9jOAIr4PPRYgD5XP56axkzwzSRPvb6PNQSxd0BXjS2Spcf52V+sW0Wi92IZsKb
+         LXbQXR/f7rrcv55w7sj1XhxsLJJPEb+qYOJ/g7KPb80cSJAola3eDtETOnBsjUyxx7Dz
+         d95wNFNi5NuPc4P/SV7kedGnI+BDOc41U8uPYfufMqRdm8x/agxuFD7ykJMiJqJ1V2dI
+         ivyw==
+X-Gm-Message-State: AOJu0YzC6CGu5p7ydFWTYSdmeFrMYX2+CsILwlH8YpUSiJl9JG1ipCaT
+	Rj1ZapfZXogY9xSTnjbsgJeakxvtWcwHejO2rPM/dut0zTDJIyXbGnfXtHOYd88gWURbDQHGK4w
+	+ydpBYvxDGxLAxJq3Qcww9G3KEMzbsqtmmg==
+X-Received: by 2002:a17:906:1b:b0:a19:a19b:c708 with SMTP id 27-20020a170906001b00b00a19a19bc708mr2785421eja.88.1701618258810;
+        Sun, 03 Dec 2023 07:44:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFc8fLNGP7C/FfmnVLvgzSx4x2N9FxHfAsU3Oi9MREguhMZqzmR4BspLW7Uo9hWu95DWs8IMw==
+X-Received: by 2002:a17:906:1b:b0:a19:a19b:c708 with SMTP id 27-20020a170906001b00b00a19a19bc708mr2785413eja.88.1701618258551;
+        Sun, 03 Dec 2023 07:44:18 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id q19-20020a1709060e5300b009a19701e7b5sm4248084eji.96.2023.12.03.07.41.23
+        by smtp.gmail.com with ESMTPSA id ox11-20020a170907100b00b009920a690cd9sm4271312ejb.59.2023.12.03.07.44.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Dec 2023 07:41:23 -0800 (PST)
-Message-ID: <b9bdfcbf-e263-42f9-9ddb-c7101348b18e@redhat.com>
-Date: Sun, 3 Dec 2023 16:41:22 +0100
+        Sun, 03 Dec 2023 07:44:17 -0800 (PST)
+Message-ID: <a20c201e-7e81-4575-ab12-76f872c96499@redhat.com>
+Date: Sun, 3 Dec 2023 16:44:17 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -53,132 +53,115 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Bug Report] intel/vbtn: Dell Inspiron 7352 has unreliable
- tablet-mode switch
-From: Hans de Goede <hdegoede@redhat.com>
-To: Arnold Gozum <arngozum@gmail.com>, AceLan Kao <acelan.kao@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <87271a74-c831-4eec-b7a4-1371d0e42471@gmail.com>
- <CAFv23Qm+-p7U5N8JpJmqNxHnN7bTT3fxQJ5O0ainRrqnvrmB7g@mail.gmail.com>
- <c6402969-a372-44ad-a540-79d4ee60e190@gmail.com>
- <674140cc-fb03-4751-9bdf-13e86a6d39cc@redhat.com>
+Subject: Re: PROBLEM: asus_nb_wmi sends KEY_BRIGHTNESSDOWN on pressing CAPS
+ Lock and PrntScrn on Zenbook S 13 UX5304VA
 Content-Language: en-US, nl
-In-Reply-To: <674140cc-fb03-4751-9bdf-13e86a6d39cc@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
+To: Juri Vitali <juri@dividebyzero.it>, James John <me@donjajo.com>,
+ Corentin Chary <corentin.chary@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Mark Gross <markgross@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org,
+ acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
+References: <a2c441fe-457e-44cf-a146-0ecd86b037cf@donjajo.com>
+ <39b5f902-3a7e-fc04-254e-776bf61f57e2@redhat.com>
+ <024c4ad4-1a73-8c24-5e6f-f8c9f2f7b98f@redhat.com>
+ <1884918.tdWV9SEqCh@dividebyzero.it>
+ <77b3eed7-825d-41c5-a802-ea891a16f992@redhat.com>
+In-Reply-To: <77b3eed7-825d-41c5-a802-ea891a16f992@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Arnold,
+Hi Juri,
 
-I was wondering what the status of this is.
+On 11/25/23 15:25, Hans de Goede wrote:
+> Hi Juri,
+> 
+> On 11/24/23 16:54, Juri Vitali wrote:
+>> Hi,
+>> Unfortunately those patches have broken the backlight reporting on older 
+>> laptops, which do rely on the old mechanism.
+> 
+> Thank you for reporting this and sorry about the regression.
+> 
+> And thank you for writing a good bug report with as much info
+> included as possible, that is much appreciated.
+> 
+>> For instance, on my Asus UX32A/VD when pressing the backlight up/down button 
+>> the backlight changes accordingly,
+> 
+> Ok, so the embedded-controller (EC) is adjusting the brightness
+> itself in reaction to the key presses, which means that
+> the old behavior of sending KEY_BRIGHTNESSDOWN / 
+> KEY_BRIGHTNESSUP was not really correct because that will
+> cause e.g. GNOME to then increase the brightness itself
+> which means that if the new brightness is correctly reflected
+> when reading it GNOME may increase the brightness an
+> additional step on top of the step it has already been
+> increased by the EC itself.
+> 
+> Which makes me wonder how to properly solve this,
+> so I have a bunch of questions:
+> 
+> 1. What desktop environment are you using ?
+> 
+> 2. Assuming you are using GNOME (for now) I guess that with older
+> kernels you got an on-screen-display (OSD) notification about
+> the brightness changing? Do you notice any difference in how
+> many total steps you have going from min to max with older
+> kernels vs the new kernel ?  If the double increase problem
+> happens I guess you only get 5 brightness levels in GNOME /
+> 4 steps from going from minimal to maximum ?
+> 
+> 
+> Note below questions should all be answered with the new kernel
+> with the unknown key messages in dmesg.
+> 
+> 
+> 3. Can you do:
+> 
+> ls /sys/class/backlight
+> 
+> And let me know the output, I wonder what method is being
+> used to control backlight on your machine.
+> 
+> 4. Can you do:
+> 
+> cat /sys/class/backlight/$name/max_brightness
+> 
+> What does this say?
+> 
+> With $name being the name from 3.
+> 
+> 5. Can you do:
+> 
+> cat /sys/class/backlight/$name/brightness
+> 
+> And then change the brightness using the keys, and then
+> again do:
+> 
+> cat /sys/class/backlight/$name/brightness
+> 
+> What are the values shown before / after changing it ?
+> 
+> 6. Can you repeat 5 but then do:
+> 
+> cat /sys/class/backlight/$name/actual_brightness
+> 
+> 7. Can you run:
+> 
+> sudo acpidump -o acpidump.txt
+> 
+> And then email me the generated acpidump.txt file
+> in a private email ?
 
-Did you manage to find some time to test the patch
-which I attached to my previous results ?
+I guess you have not been able to make some time to answer
+the above questions yet.
 
-And if yes, what were the results?
+Any chance you can make some time to gather this info soon ?
 
 Regards,
 
 Hans
 
-
-On 11/20/23 15:18, Hans de Goede wrote:
-> Hi Arnold,
-> 
-> Thank you for reporting this.
-> 
-> Unfortunately removing the Dell Inspiron 7352 from
-> the dmi_switches_allow_list will not help.
-> 
-> The intel-vbtn driver now a days also creates an input-device
-> with a tablet-switch upon receiving the first tablet-switch
-> related event, to avoid needing to maintain an ever growing
-> list of devices on the allow-list.
-> 
-> And since the Dell Inspiron 7352 does have a somewhat working
-> tablet-mode-switch it does send such events. So removing it
-> from the allow-list will only result in the creation of
-> an input-device for the tablet-mode-switch being delayed till
-> the first event.
-> 
-> Now we could add a dmi_switches_deny_list for this purpose,
-> but first lets see if we can fix things.
-> 
-> On 10/29/23 20:52, Arnold Gozum wrote:
->> Hi, sorry for the delayed reply. Your patch doesn't seem to work, I
->> still have the issue where the switch is in the wrong state after
->> suspend/resume.
-> 
-> Ok, so this does sound like the issue where the switch completely
-> stops reporting state-changes is fixed with the addition of
-> the extra "VBDL" call ?
-> 
-> I think that the wrong mode after suspend/resume is just a matter
-> of manually checking the mode after a suspend/resume.
-> 
-> Can you give the attached patch a try and see if that fixes things ?
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
-> 
->> And yes, it's been a while, and I believe the issues did exist during
->> that time however it was easy to ignore/forget since I'm on X11 where
->> libinput doesn't respond to tablet mode switches, so I neglected to
->> report the issue for a while. Also, about the BIOS, I'm a little
->> hesistant to update it since I don't have a battery. I have version A11
->> and the newest is A15, but Dell's update notes only mention security
->> fixes, so maybe it doesn't matter.
->>
->> On 2023-10-17 22:05, AceLan Kao wrote:
->>> Arnold Gozum <arngozum@gmail.com> 於 2023年10月18日 週三 上午8:53寫道：
->>>>
->>>> Hi,
->>>>
->>>> In Linux 5.11, Dell Inspiron 7352 was added to the
->>>> dmi_switches_allow_list as it is a 2-in-1 which reports a chassis type
->>>> 10 (actually it was me who submitted the patch).
->>>>
->>>> However, the tablet mode switch can be unreliable. Randomly, switch
->>>> events stop being reported and SW_TABLET_MODE will by stuck at 1 or 0,
->>>> which I have tested by running evtest while flipping the device to and
->>>> from tablet mode. This is fixed after a reboot, or a suspend followed by
->>>> unloading and reloading the intel-vbtn module. It can also sometimes be
->>>> the case that upon resume, SW_TABLET_MODE does not reflect the actual
->>>> state of the device, which is fixed by physically flipping the screen
->>>> back and forth to update the state.
->>>>
->>>> Because of these issues, I think this model should be removed from the
->>>> allow list, unless more investigation should be done.
->>> Hi Arnold,
->>>
->>> It's been a long time since you submitted the patch. Did those issues
->>> not occur during that time?
->>> Have you tried updating the BIOS to see if it helps?
->>>
->>> From your description, I think calling VBDL might reset the status.
->>> You might want to try it below.
->>>
->>> diff --git a/drivers/platform/x86/intel/vbtn.c
->>> b/drivers/platform/x86/intel/vbtn.c
->>> index 6fa1735ad7a49..681650f52ff22 100644
->>> --- a/drivers/platform/x86/intel/vbtn.c
->>> +++ b/drivers/platform/x86/intel/vbtn.c
->>> @@ -198,6 +198,8 @@ static void notify_handler(acpi_handle handle, u32
->>> event, void *context)
->>>        autorelease = val && (!ke_rel || ke_rel->type == KE_IGNORE);
->>>
->>>        sparse_keymap_report_event(input_dev, event, val, autorelease);
->>> +
->>> +       acpi_evaluate_object(handle, "VBDL", NULL, NULL);
->>> }
->>>
->>> /*
->>>
->>>>
->>>> Thanks,
->>>> Arnold
->>
 
