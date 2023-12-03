@@ -1,199 +1,133 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZV6JKgf"
-Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FB4BE5
-	for <platform-driver-x86@vger.kernel.org>; Sun,  3 Dec 2023 18:44:00 -0800 (PST)
-Received: by mail-vs1-xe32.google.com with SMTP id ada2fe7eead31-4647d236e92so348672137.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 03 Dec 2023 18:44:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701657839; x=1702262639; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I4DaGir+tGJWf444PEz1us7Hwl1/3n0dJXp2DJSga30=;
-        b=lZV6JKgfNzBLlNhdpUHEKDVdv/2T1QKKvot/U6nOCmplUt5FrjhKnyEc221c8im1eK
-         kZjFh2YUhkNmvbuQi0I7GR0iZ86Tm4gqkgS6ARZj+e4VqmTQ6DfxIpfTd+/9kCyrPLT4
-         snJ2l3m0jRvgfEceT8e+bmQlW80ezHWz7u1sAJ5egB7N8mcSbdAJGzaSKTN/cH6bixUA
-         1if3X+pW2KMkRQbnz8W9CgLHgtUdr/LY8SDyALc2gO5kbyQ4Fp/7zjMwmExABdjQm2Nq
-         gn03YFKrbixuijFIpcN9QYEG1exg1X4PedXsdexctS2hBuqGhnPisNkf9GCnMjzu+Mmu
-         e37w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701657839; x=1702262639;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I4DaGir+tGJWf444PEz1us7Hwl1/3n0dJXp2DJSga30=;
-        b=NkqVTkFnxTu5LS45iIFpMjrjDQnOWwbefGqr59TiIqOSFft/7JJ3SkziOovNFKgdjG
-         oUWFKu7+D6Izig9FNSmJIPdoFssal/71hlFQBh9Ddp11JCdTReFder+T2WsVFX2jy/0h
-         OdegNYDWKc091OiRYgSpVTjEnowQs8bGbnyTvM06ZIufzdRN71v1CN0kPLM2MF0g3A4i
-         k2vrXxSg/QJYriFIXnoTM++I1XLl13qe1UJ93FJtITNJ4ezZk86r+Yaolo9G2P/6Qw3k
-         s5VYV+tQELKYk8de+yx1WLYb1nsIbJkOJWo8+e4CSipxhZBjuih41oJudUVI5UR+Wew3
-         jovA==
-X-Gm-Message-State: AOJu0YwM4/0wOMWoTjcOMAk2idCnlbdjnoJtGeVnH+zbjIkNP67fLYsS
-	CaMyXBoLR2HBm6aiieXvD2NFtv9W0KsOjruT
-X-Google-Smtp-Source: AGHT+IEbCqAOCAoHK+nx9sUAmidKlPPYD2ZxT/gex8Kd3bvOezfqQaRaxSZugwHT5mrEK7PeeaH3ig==
-X-Received: by 2002:a67:b60b:0:b0:464:4518:ba73 with SMTP id d11-20020a67b60b000000b004644518ba73mr1375213vsm.8.1701657838865;
-        Sun, 03 Dec 2023 18:43:58 -0800 (PST)
-Received: from ?IPV6:2607:fea8:4adc:2480::ee29? ([2607:fea8:4adc:2480::ee29])
-        by smtp.gmail.com with ESMTPSA id x18-20020ad440d2000000b0067aa860b1f9sm2023630qvp.122.2023.12.03.18.43.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Dec 2023 18:43:58 -0800 (PST)
-Message-ID: <f833cd1b-3d2f-46e6-ad44-347a05c0ffa1@gmail.com>
-Date: Sun, 3 Dec 2023 21:43:57 -0500
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FPjJ0qLN"
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 738B19D;
+	Sun,  3 Dec 2023 22:06:56 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KWdBokk/dh6RWhqocliKvii5mh02coQPhP5fucsi8JFCMuRj1XHG3TJBqDJBF1eqtq28+wT8KUajoTO6uu5MMkFsO5rigu4P4KWLUeqVSnxA5R4//IVBh9825LZMOnEwAROhiv1OmC4BKXPtMDNmeJvAiUfsFVT9U72dtxVuMzFhZsWR2gQwyrsuxyjhAviU9wKm2z0RLxgvBMIw7L36pIwbERGcw/BUgJDerFvI0W2MqpIZ5NJAbU+wMcUqExroYOHXNMk81VFsGn5SSuVwZ9mSi+7kWbwFaGagWHyk38gngZo8r6gmFZZqIv+9xg6OkvChiAVM8zOT1fSzGPLXNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XM+eZbTwbtWffccm5eruXbqs3P1sL7GKy0iWBj8S87o=;
+ b=HBw//aRdp5fqqJZ3Rdvfi6XiTQH4a0gP5BZ7JtMt4GadZdnfTYGUlfK1L2matPcotkau2zYewci3d7M8jBqKsXX5ZlPOr7ICk/LSVmA0vUtlRiKudKZudvf2rpWkSBlKQRqlMxL5JLARmoNt6iuv+f6nM71lsMdFUlRK6FHSoODixCCyb7Cgsryo0/nYyEzPDiFvKNo+Fk+Ny6ZdM8YWB3j4v6Kyv81iR08t7AWRKc6nTuZ6qjeb0V4hZ1kTAqv4q9vxu2Ao6WgDbvcZ7wGczKx4guVBSwEXigFC6wrgoO7w74kfQTT54cQz88UR3unvCoaeDFerF2nmxBLicnkYvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XM+eZbTwbtWffccm5eruXbqs3P1sL7GKy0iWBj8S87o=;
+ b=FPjJ0qLNsmcy7wNLzlfm9Wo2OlU4odiTt6XwI3SpcJzL0KsYO5ug1LQWPuzDisJ8eD5p940c4+F/SGn+qfa7fN14qi4CJFlyew0wEiVU4T7h38vT/71qhR3MTMK4YmMzBATf11J0g5vM5QA1wjFiQMgSQW7+a3txJxEOp4vowwU=
+Received: from MW4PR03CA0172.namprd03.prod.outlook.com (2603:10b6:303:8d::27)
+ by MW4PR12MB8610.namprd12.prod.outlook.com (2603:10b6:303:1ef::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.33; Mon, 4 Dec
+ 2023 06:06:54 +0000
+Received: from MWH0EPF000989E9.namprd02.prod.outlook.com
+ (2603:10b6:303:8d:cafe::ec) by MW4PR03CA0172.outlook.office365.com
+ (2603:10b6:303:8d::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.33 via Frontend
+ Transport; Mon, 4 Dec 2023 06:06:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MWH0EPF000989E9.mail.protection.outlook.com (10.167.241.136) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7068.20 via Frontend Transport; Mon, 4 Dec 2023 06:06:21 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Mon, 4 Dec
+ 2023 00:06:17 -0600
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Bjorn Helgaas <bhelgaas@google.com>
+CC: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Hans de Goede
+	<hdegoede@redhat.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, "open
+ list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, "open list:X86 PLATFORM
+ DRIVERS" <platform-driver-x86@vger.kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Lukas
+ Wunner" <lukas@wunner.de>, Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	<linux-acpi@vger.kernel.org>, <linux-pm@vger.kernel.org>, Mario Limonciello
+	<mario.limonciello@amd.com>
+Subject: [PATCH v2 0/4] Add support for drivers to decide bridge D3 policy
+Date: Sat, 2 Dec 2023 22:10:42 -0600
+Message-ID: <20231203041046.38655-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Bug Report] intel/vbtn: Dell Inspiron 7352 has unreliable
- tablet-mode switch
-Content-Language: en-US
-To: Hans de Goede <hdegoede@redhat.com>, AceLan Kao <acelan.kao@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <87271a74-c831-4eec-b7a4-1371d0e42471@gmail.com>
- <CAFv23Qm+-p7U5N8JpJmqNxHnN7bTT3fxQJ5O0ainRrqnvrmB7g@mail.gmail.com>
- <c6402969-a372-44ad-a540-79d4ee60e190@gmail.com>
- <674140cc-fb03-4751-9bdf-13e86a6d39cc@redhat.com>
- <b9bdfcbf-e263-42f9-9ddb-c7101348b18e@redhat.com>
-From: Arnold Gozum <arngozum@gmail.com>
-In-Reply-To: <b9bdfcbf-e263-42f9-9ddb-c7101348b18e@redhat.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E9:EE_|MW4PR12MB8610:EE_
+X-MS-Office365-Filtering-Correlation-Id: 971c3b7f-c879-4eae-3973-08dbf48f36f9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	JqrwvLHfngelAHwJsdmT+nPoxD+/I/t6RCo5qBOkHw0LgW0AYbETeIK7yfQFOj2Fu3PSib4iaveVSkwdjTLhHQEWrEjFQ7yc+0/BDqqUqiYnj/9SLnpTM9zJNIaJA68t8CkvTwsy4veDSE9U/mVd4wn9TXxt0SJiMcyHYejQUisc7fVw4bbJcSECY2BUviWrTpFys+nf/Feo5CcEjhghZE7z2dgDJ9sApDKyAxHpNR2yL92FLkn/I3/UUmCbS8Ukr6dN33GU3i17okgRjAtDV1ler6xvKSa4sowoqUOihkw+fXQyXbRnnNFHQxaUP3Z/yaEpFO6XmB8Gg2DqxEiZtnJFT90HcIii4fb0gousyKW29u4D9VwnRf6ex/vI5yRkC1w9TaVBA0ryL98GY8hcOhs/SOOHEWz1Zv0wtaqYgC04L7eL4Tkw46Z1YRTDZmd4ACqU2MWhsn90eK3seNJcwze+i/+Op960BimToHhVrXw+erTAbMN0SSR0MVtNmyE+q2oKbfEiOTbdybE4IGxOKx2CHiyD7/Ddku3MFxjUEEo7mK3e51KDLg2H64ksO6JniAMwO9O5OxmWnzeCstj9oOLwZfeKqep3H6AWMeb5xea0vDnBiAegmkKtCaETUcNDEqH2TYeC+o2xqhgz5itV3ZjznryJa7QwOtD/uy/QCS1PyvZFmY2X3+KJM5WjE7sm7wfRfl40JLC2wXUio7JtLCTcRP4fu30S1zOzXH1Y02BuRyuxD/hWLtPIZg52YeN2W24/NsHMFwllOb989PUUbQ==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(396003)(39860400002)(346002)(376002)(230922051799003)(186009)(64100799003)(451199024)(82310400011)(1800799012)(36840700001)(46966006)(40470700004)(5660300002)(40460700003)(44832011)(7416002)(86362001)(4326008)(8676002)(8936002)(2906002)(41300700001)(36756003)(2616005)(40480700001)(1076003)(356005)(81166007)(82740400003)(426003)(83380400001)(26005)(16526019)(336012)(966005)(478600001)(7696005)(6666004)(47076005)(36860700001)(316002)(54906003)(6916009)(70206006)(70586007)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2023 06:06:21.0672
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 971c3b7f-c879-4eae-3973-08dbf48f36f9
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989E9.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB8610
+X-Spam-Level: *
 
-Hi Hans,
+The policy for whether PCI bridges are allowed to select D3 is dictated
+by empirical results that are enumerated into pci_bridge_d3_possible().
 
-Thanks for writing this patch, I've just tested it and the wrong state
-issue is fixed. The switch is in the correct state after suspending no
-matter the state before suspending. I've seen forums posts of people
-experiencing the same issue on other models, so I'm sure it will help them
-as well.
+In Windows this behaves differently in that Windows internal policy is
+not used for devices when a power engine plugin driver provided by the
+SOC vendor is installed.  This driver is used to decide the policy in
+those cases.
 
-For the issue where the switch stops responding, it did happen once but
-after rebooting I can't get it to happen again. It's hard to know for sure
-since it happens randomly, or maybe I didn't have the patched module
-actually loaded when it did occur. I'm guessing it probably should have
-happened by now, but I can report back if it eventually happens again.
+This series implements a system that lets drivers register such a policy
+control as well. It isn't activated for any SOCs by default.
 
-I really appreciate you taking the time to work on this.
+This is heavily leveraged from the work in [1]
 
-Thanks,
-Arnold
+[1] https://lore.kernel.org/platform-driver-x86/20230906184354.45846-1-mario.limonciello@amd.com/
 
-On 2023-12-03 10:41, Hans de Goede wrote:
-> Hi Arnold,
-> 
-> I was wondering what the status of this is.
-> 
-> Did you manage to find some time to test the patch
-> which I attached to my previous results ?
-> 
-> And if yes, what were the results?
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> On 11/20/23 15:18, Hans de Goede wrote:
->> Hi Arnold,
->>
->> Thank you for reporting this.
->>
->> Unfortunately removing the Dell Inspiron 7352 from
->> the dmi_switches_allow_list will not help.
->>
->> The intel-vbtn driver now a days also creates an input-device
->> with a tablet-switch upon receiving the first tablet-switch
->> related event, to avoid needing to maintain an ever growing
->> list of devices on the allow-list.
->>
->> And since the Dell Inspiron 7352 does have a somewhat working
->> tablet-mode-switch it does send such events. So removing it
->> from the allow-list will only result in the creation of
->> an input-device for the tablet-mode-switch being delayed till
->> the first event.
->>
->> Now we could add a dmi_switches_deny_list for this purpose,
->> but first lets see if we can fix things.
->>
->> On 10/29/23 20:52, Arnold Gozum wrote:
->>> Hi, sorry for the delayed reply. Your patch doesn't seem to work, I
->>> still have the issue where the switch is in the wrong state after
->>> suspend/resume.
->>
->> Ok, so this does sound like the issue where the switch completely
->> stops reporting state-changes is fixed with the addition of
->> the extra "VBDL" call ?
->>
->> I think that the wrong mode after suspend/resume is just a matter
->> of manually checking the mode after a suspend/resume.
->>
->> Can you give the attached patch a try and see if that fixes things ?
->>
->> Regards,
->>
->> Hans
->>
->>
->>
->>
->>> And yes, it's been a while, and I believe the issues did exist during
->>> that time however it was easy to ignore/forget since I'm on X11 where
->>> libinput doesn't respond to tablet mode switches, so I neglected to
->>> report the issue for a while. Also, about the BIOS, I'm a little
->>> hesistant to update it since I don't have a battery. I have version A11
->>> and the newest is A15, but Dell's update notes only mention security
->>> fixes, so maybe it doesn't matter.
->>>
->>> On 2023-10-17 22:05, AceLan Kao wrote:
->>>> Arnold Gozum <arngozum@gmail.com> 於 2023年10月18日 週三 上午8:53寫道：
->>>>>
->>>>> Hi,
->>>>>
->>>>> In Linux 5.11, Dell Inspiron 7352 was added to the
->>>>> dmi_switches_allow_list as it is a 2-in-1 which reports a chassis type
->>>>> 10 (actually it was me who submitted the patch).
->>>>>
->>>>> However, the tablet mode switch can be unreliable. Randomly, switch
->>>>> events stop being reported and SW_TABLET_MODE will by stuck at 1 or 0,
->>>>> which I have tested by running evtest while flipping the device to and
->>>>> from tablet mode. This is fixed after a reboot, or a suspend followed by
->>>>> unloading and reloading the intel-vbtn module. It can also sometimes be
->>>>> the case that upon resume, SW_TABLET_MODE does not reflect the actual
->>>>> state of the device, which is fixed by physically flipping the screen
->>>>> back and forth to update the state.
->>>>>
->>>>> Because of these issues, I think this model should be removed from the
->>>>> allow list, unless more investigation should be done.
->>>> Hi Arnold,
->>>>
->>>> It's been a long time since you submitted the patch. Did those issues
->>>> not occur during that time?
->>>> Have you tried updating the BIOS to see if it helps?
->>>>
->>>> From your description, I think calling VBDL might reset the status.
->>>> You might want to try it below.
->>>>
->>>> diff --git a/drivers/platform/x86/intel/vbtn.c
->>>> b/drivers/platform/x86/intel/vbtn.c
->>>> index 6fa1735ad7a49..681650f52ff22 100644
->>>> --- a/drivers/platform/x86/intel/vbtn.c
->>>> +++ b/drivers/platform/x86/intel/vbtn.c
->>>> @@ -198,6 +198,8 @@ static void notify_handler(acpi_handle handle, u32
->>>> event, void *context)
->>>>        autorelease = val && (!ke_rel || ke_rel->type == KE_IGNORE);
->>>>
->>>>        sparse_keymap_report_event(input_dev, event, val, autorelease);
->>>> +
->>>> +       acpi_evaluate_object(handle, "VBDL", NULL, NULL);
->>>> }
->>>>
->>>> /*
->>>>
->>>>>
->>>>> Thanks,
->>>>> Arnold
->>>
-> 
+v1->v2:
+ * Pick up tags
+ * Rebase on v6.7-rc4
+
+Mario Limonciello (4):
+  PCI: Make d3cold_allowed sysfs attribute read only
+  PCI: Refresh root ports in pci_bridge_d3_update()
+  ACPI: x86: s2idle: Export symbol for fetching constraints for module
+    use
+  platform/x86/amd: pmc: Add support for using constraints to decide D3
+    policy
+
+ Documentation/ABI/testing/sysfs-bus-pci |  4 +-
+ drivers/acpi/x86/s2idle.c               |  1 +
+ drivers/pci/pci-acpi.c                  |  2 +-
+ drivers/pci/pci-sysfs.c                 | 14 +-----
+ drivers/pci/pci.c                       | 12 ++++--
+ drivers/platform/x86/amd/pmc/pmc.c      | 57 +++++++++++++++++++++++++
+ include/linux/pci.h                     |  1 -
+ 7 files changed, 72 insertions(+), 19 deletions(-)
+
+
+base-commit: 33cc938e65a98f1d29d0a18403dbbee050dcad9a
+-- 
+2.34.1
+
