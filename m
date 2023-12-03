@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VyPprd7u"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FuNDv99D"
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9A5218C
-	for <platform-driver-x86@vger.kernel.org>; Sat,  2 Dec 2023 03:39:37 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 112FAF2
+	for <platform-driver-x86@vger.kernel.org>; Sun,  3 Dec 2023 07:41:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701517177;
+	s=mimecast20190719; t=1701618087;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LcAmAX2K5A4mNvAqEt0EBDSFGtWFWjUHaBE+JTfDXpQ=;
-	b=VyPprd7u2JFiskJ1bpRKlAP8mySB/Zb1wAI+D5IhPWlR3tovoGfRBZxVwNNqrvvrFNRGN7
-	tI+FqABhxmgM/YJnj2n8CwqYVUYA8BWqX8iUUI1wJlebGxeiGOeRYkczZ0hQkMjppVGJ1f
-	AWFVD0Xh/zJtFmkn37g4gVRc5FjRibk=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=lrLiHxpmPiS7OvUiG7PaRbDSX6/6tc0/PC7JobLnjgM=;
+	b=FuNDv99DnOYD76kSKiTPWVX0/2ytUh9hMx1LXcWCMIuVr06lDBhyauhx+fZ35yZlBJ6kQh
+	SQkx/CGuSMDy1Q51N/Z12byPjoWRd4BemoJWWd62RMmy1cOu0osNryToNuzltfHDEswrx4
+	eEG2lisgzYxSxbOtxrCtuBQsUqi4FdQ=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-VvyYb9BYP3OsKYSTbH6-Qg-1; Sat, 02 Dec 2023 06:39:35 -0500
-X-MC-Unique: VvyYb9BYP3OsKYSTbH6-Qg-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a1a4bc50361so104462966b.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 02 Dec 2023 03:39:35 -0800 (PST)
+ us-mta-173-Y9zcubAIM0CwKDm-sf1bMA-1; Sun, 03 Dec 2023 10:41:25 -0500
+X-MC-Unique: Y9zcubAIM0CwKDm-sf1bMA-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a1a4bc50361so154084366b.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 03 Dec 2023 07:41:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701517174; x=1702121974;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1701618084; x=1702222884;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LcAmAX2K5A4mNvAqEt0EBDSFGtWFWjUHaBE+JTfDXpQ=;
-        b=VqHd22gH7vRgODmMpk9TZWldcT7vbHVt284mktKTTkVxZ6FpskSVwKLLC6DbOTxTKE
-         nsbtm5B4xLeDliu9sWx69uIA8hw7AM6H9cq3Dwt8NndpoqKnsJND50ueKRaL2uR9kgGJ
-         tCNosNMF+6eoK5tL1Xlw7HayeoGBashYvmHE3gpfQJ5FmVSjhvqmDOFus5l9cnoH+tsM
-         tEp1TBrsCCgzPgeaggZQvnkUGc0fcLNJClGD9WC4p+GfiZPBLsqX5Aoqd2dRSMTRq8rk
-         4BY1mdXg6zVJSh6imKwyf4Tm3LBCLsFsP1TkNSpkGAMX0O0z5QaeFChKzdQI1G/2LE+Q
-         edRQ==
-X-Gm-Message-State: AOJu0YwGrg9jn8+SEvMz2A7yvr2/82vTgJyGD+gJIYAkvoLnoUkE803n
-	fu/v9mIGSr1MYOTVYXf2hNyYWdKxoz1TUr+8GCqkyxdKCWNbaH8JV+1YTQ4eIgkXcFbnaNIaJfF
-	nagLjz7PU6ecACgeeUZ/e7OzQfgZxqLnDqQ==
-X-Received: by 2002:a17:906:5649:b0:a19:6d13:885e with SMTP id v9-20020a170906564900b00a196d13885emr1698536ejr.75.1701517174649;
-        Sat, 02 Dec 2023 03:39:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE625CAbDMqmSxTr9k800g1xKH+6qaGZ7qd5bdgAjp7M46LaLwy0thYvjI2QSvnFKzPMrjhEA==
-X-Received: by 2002:a17:906:5649:b0:a19:6d13:885e with SMTP id v9-20020a170906564900b00a196d13885emr1698530ejr.75.1701517174366;
-        Sat, 02 Dec 2023 03:39:34 -0800 (PST)
+        bh=lrLiHxpmPiS7OvUiG7PaRbDSX6/6tc0/PC7JobLnjgM=;
+        b=f42CIL9/uvLbxQlJA8TzdumufV00pTQmXloJVgO8UJp8p6xiBbbbovak5KRtbdzEjl
+         jYnT9uxXBXR63YnkS/sZZLPiebi8Z/+0Z0SpcNxmbB/WhyEjf50X+yos1oDgRGGuR+D1
+         xmaMfjDG/xd1ERG9PnfeUPGyBrCXohwKrftng2VDbiWGdJHbLmHG2I3AWToedSe/l1lY
+         79g0ZDn9vQxesxJvhCq2gWK4joy5+ox44txlSQ6XGwOBYqKBPkftP34awmkt+NLxq3mg
+         o/XW0/KU9HGBSge57ix8p4K5hrN9F4j6U3dhXwvn0F/uCy9miad3jM81aPkOat/G9RgI
+         iFvQ==
+X-Gm-Message-State: AOJu0Yw/IJWxA5gknC1VvgFGhVNmeMGoYM1Rkls8bzXvj2Vc5bcFicYa
+	6jRIchI5JfhGXPB9Xnc0NpkcimdJnC9bonx4OrEJi6uSynUibVMw7rlnFI9mdFY1bke+1OqPTuq
+	BLk5HSbSE2oSHwhEwoPP45QxfwNAeId7LSQ==
+X-Received: by 2002:a17:906:73d5:b0:9e6:7f83:6547 with SMTP id n21-20020a17090673d500b009e67f836547mr2513160ejl.48.1701618084626;
+        Sun, 03 Dec 2023 07:41:24 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHMnEejdYRRAqC+Exu01HFTwcy9zuH0Dlqnlxj5uJALoZtqbFlIjZ40ypnzgmj470Nhta2sig==
+X-Received: by 2002:a17:906:73d5:b0:9e6:7f83:6547 with SMTP id n21-20020a17090673d500b009e67f836547mr2513152ejl.48.1701618084206;
+        Sun, 03 Dec 2023 07:41:24 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id i16-20020a1709061cd000b009b2cc87b8c3sm2945128ejh.52.2023.12.02.03.39.33
+        by smtp.gmail.com with ESMTPSA id q19-20020a1709060e5300b009a19701e7b5sm4248084eji.96.2023.12.03.07.41.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Dec 2023 03:39:33 -0800 (PST)
-Message-ID: <dc7099d8-8b36-4399-9ea0-3d1883ac35e2@redhat.com>
-Date: Sat, 2 Dec 2023 12:39:33 +0100
+        Sun, 03 Dec 2023 07:41:23 -0800 (PST)
+Message-ID: <b9bdfcbf-e263-42f9-9ddb-c7101348b18e@redhat.com>
+Date: Sun, 3 Dec 2023 16:41:22 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -53,80 +53,132 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/mellanox: mlxreg-lc: Check before variable
- dereferenced
-Content-Language: en-US, nl
-To: Vadim Pasternak <vadimp@nvidia.com>,
- Dan Carpenter <dan.carpenter@linaro.org>, Yu Sun <u202112062@hust.edu.cn>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Mark Gross <markgross@kernel.org>,
- "hust-os-kernel-patches@googlegroups.com"
- <hust-os-kernel-patches@googlegroups.com>, Dongliang Mu <dzm91@hust.edu.cn>,
- Dan Carpenter <error27@gmail.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20231130094409.3963-1-u202112062@hust.edu.cn>
- <4109f017-f07c-4755-bc1b-ec4cb30b0760@suswa.mountain>
- <BN9PR12MB5381385579AF6DC7C9E63640AF82A@BN9PR12MB5381.namprd12.prod.outlook.com>
+Subject: Re: [Bug Report] intel/vbtn: Dell Inspiron 7352 has unreliable
+ tablet-mode switch
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <BN9PR12MB5381385579AF6DC7C9E63640AF82A@BN9PR12MB5381.namprd12.prod.outlook.com>
+To: Arnold Gozum <arngozum@gmail.com>, AceLan Kao <acelan.kao@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <87271a74-c831-4eec-b7a4-1371d0e42471@gmail.com>
+ <CAFv23Qm+-p7U5N8JpJmqNxHnN7bTT3fxQJ5O0ainRrqnvrmB7g@mail.gmail.com>
+ <c6402969-a372-44ad-a540-79d4ee60e190@gmail.com>
+ <674140cc-fb03-4751-9bdf-13e86a6d39cc@redhat.com>
+Content-Language: en-US, nl
+In-Reply-To: <674140cc-fb03-4751-9bdf-13e86a6d39cc@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi Arnold,
 
-On 11/30/23 17:24, Vadim Pasternak wrote:
-> Hi Dan,
-> 
->> -----Original Message-----
->> From: Dan Carpenter <dan.carpenter@linaro.org>
->> Sent: Thursday, 30 November 2023 13:47
->> To: Yu Sun <u202112062@hust.edu.cn>
->> Cc: Hans de Goede <hdegoede@redhat.com>; Ilpo Järvinen
->> <ilpo.jarvinen@linux.intel.com>; Mark Gross <markgross@kernel.org>; Vadim
->> Pasternak <vadimp@nvidia.com>; hust-os-kernel-
->> patches@googlegroups.com; Dongliang Mu <dzm91@hust.edu.cn>; Dan
->> Carpenter <error27@gmail.com>; platform-driver-x86@vger.kernel.org; linux-
->> kernel@vger.kernel.org
->> Subject: Re: [PATCH] platform/mellanox: mlxreg-lc: Check before variable
->> dereferenced
->>
->> On Thu, Nov 30, 2023 at 05:44:07PM +0800, Yu Sun wrote:
->>> there is a warning saying variable dereferenced before check
->>> 'data->notifier' in line 828.
->>> add "for(data->notifier)" before variable deferenced.
->>        ^^^
->> Should have been "if (data->notifier)".
->>
->>>
->>> Signed-off-by: Yu Sun <u202112062@hust.edu.cn>
->>> Reviewed-by: Dongliang Mu <dzm91@hust.edu.cn>
->>> Reviewed-by: Dan Carpenter <error27@gmail.com>
->>
->> I didn't really explicitly give a Reviewed-by tag for this patch.
->> https://groups.google.com/g/hust-os-kernel-
->> patches/c/c5hUaYIDcII/m/h4aFS7PkCQAJ
->> I also said that I thought it looked correct but that it needed a Fixes:
->> tag however the Fixes tag I suggested was wrong.
->>
->> Looking at it now, the correct Fixes tag would be:
->> Fixes: 1c8ee06b637f ("platform/mellanox: Remove unnecessary code")
->>
->> That commit says that the NULL check is not required.  So now I'm confused.
->> On the one hand, the impulse is to trust the maintainer, but on the other hand
->> my review suggested that the NULL check might be required.
-> 
-> Yes, it indeed required.
-> My mistake.
+I was wondering what the status of this is.
 
-Ok, so we are going to need a v2 of this addressing Dan's remarks
-about the commit message.
+Did you manage to find some time to test the patch
+which I attached to my previous results ?
 
-Yu Sun, can you please submit a new version addressing
-Dan's comments on the commit message ?
+And if yes, what were the results?
 
 Regards,
 
 Hans
 
+
+On 11/20/23 15:18, Hans de Goede wrote:
+> Hi Arnold,
+> 
+> Thank you for reporting this.
+> 
+> Unfortunately removing the Dell Inspiron 7352 from
+> the dmi_switches_allow_list will not help.
+> 
+> The intel-vbtn driver now a days also creates an input-device
+> with a tablet-switch upon receiving the first tablet-switch
+> related event, to avoid needing to maintain an ever growing
+> list of devices on the allow-list.
+> 
+> And since the Dell Inspiron 7352 does have a somewhat working
+> tablet-mode-switch it does send such events. So removing it
+> from the allow-list will only result in the creation of
+> an input-device for the tablet-mode-switch being delayed till
+> the first event.
+> 
+> Now we could add a dmi_switches_deny_list for this purpose,
+> but first lets see if we can fix things.
+> 
+> On 10/29/23 20:52, Arnold Gozum wrote:
+>> Hi, sorry for the delayed reply. Your patch doesn't seem to work, I
+>> still have the issue where the switch is in the wrong state after
+>> suspend/resume.
+> 
+> Ok, so this does sound like the issue where the switch completely
+> stops reporting state-changes is fixed with the addition of
+> the extra "VBDL" call ?
+> 
+> I think that the wrong mode after suspend/resume is just a matter
+> of manually checking the mode after a suspend/resume.
+> 
+> Can you give the attached patch a try and see if that fixes things ?
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> 
+>> And yes, it's been a while, and I believe the issues did exist during
+>> that time however it was easy to ignore/forget since I'm on X11 where
+>> libinput doesn't respond to tablet mode switches, so I neglected to
+>> report the issue for a while. Also, about the BIOS, I'm a little
+>> hesistant to update it since I don't have a battery. I have version A11
+>> and the newest is A15, but Dell's update notes only mention security
+>> fixes, so maybe it doesn't matter.
+>>
+>> On 2023-10-17 22:05, AceLan Kao wrote:
+>>> Arnold Gozum <arngozum@gmail.com> 於 2023年10月18日 週三 上午8:53寫道：
+>>>>
+>>>> Hi,
+>>>>
+>>>> In Linux 5.11, Dell Inspiron 7352 was added to the
+>>>> dmi_switches_allow_list as it is a 2-in-1 which reports a chassis type
+>>>> 10 (actually it was me who submitted the patch).
+>>>>
+>>>> However, the tablet mode switch can be unreliable. Randomly, switch
+>>>> events stop being reported and SW_TABLET_MODE will by stuck at 1 or 0,
+>>>> which I have tested by running evtest while flipping the device to and
+>>>> from tablet mode. This is fixed after a reboot, or a suspend followed by
+>>>> unloading and reloading the intel-vbtn module. It can also sometimes be
+>>>> the case that upon resume, SW_TABLET_MODE does not reflect the actual
+>>>> state of the device, which is fixed by physically flipping the screen
+>>>> back and forth to update the state.
+>>>>
+>>>> Because of these issues, I think this model should be removed from the
+>>>> allow list, unless more investigation should be done.
+>>> Hi Arnold,
+>>>
+>>> It's been a long time since you submitted the patch. Did those issues
+>>> not occur during that time?
+>>> Have you tried updating the BIOS to see if it helps?
+>>>
+>>> From your description, I think calling VBDL might reset the status.
+>>> You might want to try it below.
+>>>
+>>> diff --git a/drivers/platform/x86/intel/vbtn.c
+>>> b/drivers/platform/x86/intel/vbtn.c
+>>> index 6fa1735ad7a49..681650f52ff22 100644
+>>> --- a/drivers/platform/x86/intel/vbtn.c
+>>> +++ b/drivers/platform/x86/intel/vbtn.c
+>>> @@ -198,6 +198,8 @@ static void notify_handler(acpi_handle handle, u32
+>>> event, void *context)
+>>>        autorelease = val && (!ke_rel || ke_rel->type == KE_IGNORE);
+>>>
+>>>        sparse_keymap_report_event(input_dev, event, val, autorelease);
+>>> +
+>>> +       acpi_evaluate_object(handle, "VBDL", NULL, NULL);
+>>> }
+>>>
+>>> /*
+>>>
+>>>>
+>>>> Thanks,
+>>>> Arnold
+>>
 
