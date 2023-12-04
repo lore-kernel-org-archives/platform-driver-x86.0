@@ -1,106 +1,115 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Og2rx+JV"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5866213E;
-	Mon,  4 Dec 2023 06:28:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701700117; x=1733236117;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=5u4R57caJafnF5P5+FowKsO+lhHgZToLy8OifJAyScI=;
-  b=Og2rx+JVq61zJptJMfRqaEEUP6vlfad07JPjQMx0UsG7aSYqOWo12PCO
-   PhbJySfoMQXHfOMvFYDl3fyq+5LT8rE3j77WfhQ7gzp7Pv3KMCmK1TlJ5
-   C/Oq2BxlFMrBclAB9BRTzj9/53ecjxRkLS72ZFt+7MBl02OXEysvtegl+
-   UP5qI2DjWGfNJ02QXTG0R/zSxz412K0E5l3T8mIBSvb2kjxj5HjyGyU0A
-   +VdpYg8olCg0JlJyF9VQ2VMBzj85+3tTp8rHH8dlU+jnZLINg+P7TNtSy
-   g8Kc4J01P4qh4IJ0yZekKXDwkj7wrh4NPAwRyHraLMsL0Ee9SHZ1kjnyD
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="384147231"
-X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
-   d="scan'208";a="384147231"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 06:14:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="720330683"
-X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
-   d="scan'208";a="720330683"
-Received: from malladhi-mobl.gar.corp.intel.com ([10.249.34.28])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 06:14:12 -0800
-Date: Mon, 4 Dec 2023 16:14:09 +0200 (EET)
-From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-cc: Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/5] platform/x86/intel/tpmi: Don't create devices
- for disabled features
-In-Reply-To: <20231130214751.3100418-2-srinivas.pandruvada@linux.intel.com>
-Message-ID: <754da92-fa4e-5340-c9be-348c4b8f97a2@linux.intel.com>
-References: <20231130214751.3100418-1-srinivas.pandruvada@linux.intel.com> <20231130214751.3100418-2-srinivas.pandruvada@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y1xIyyZ4"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFA2BB9
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Dec 2023 06:51:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1701701496;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QpHZcDHjpU4mfBG41n94eQLmc8/ZuBEaOjwl4e/nn80=;
+	b=Y1xIyyZ4P7h/pH8iuPUD+BHSnnxJsXo2UirIiEG3cJbITm634OChGpgalusg+RgCizna6L
+	VsC1SQDYh3S+sJbGia/sYmwRfM/sz2xUZCyILL7bC5AOXvfcHZ537yKIWcmFisxcgkPLg2
+	2IdAepYYncjZiEOcFSxbcSdHqhey7BA=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-45-Gx2KE8v4M_OI_JPefk-otA-1; Mon, 04 Dec 2023 09:51:33 -0500
+X-MC-Unique: Gx2KE8v4M_OI_JPefk-otA-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-50bec8466b6so1331440e87.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Dec 2023 06:51:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701701491; x=1702306291;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QpHZcDHjpU4mfBG41n94eQLmc8/ZuBEaOjwl4e/nn80=;
+        b=c7zoUB9+O4XOcO+3TaYt0J2Om8NNITN61FHanitRGkleZEuwMkbmoCrZcJIELdVTmo
+         FBh3VJAO0mn6yRlaZsMrf3MHKoo0a+Vog+5ghPomCApejh9YxoA0Cxo0VaLlllrjbpkA
+         9maMuLfWKhmpvAXcHQq8pgQO/iw+3Z2wlszMhBdf0Lnln/+gnK44vSVlar/UENzwqvY8
+         seIFCeWvitN5p+QtObtb8SrWTGHy6BOBF81hsTbjhJBNPuufTAbUt4E8y0/JRuOjv7US
+         PcKEeYjQcLjPzubTd5jIhaFOIQ/UMSLG57iohNQRIikbDPc5KGgqi3ns46iMhAJPOnhp
+         GIFQ==
+X-Gm-Message-State: AOJu0Yylcm4xsU1IbmuEqXWhYciO5IeGh1pH6YckpAHa/iV1lo8qHYfq
+	LT0YiM3kEvX0xLnkrr4izYLxZGdpAnDwfMJKKoaaLo7Y7BEwz/JVu362rLXjZG2wAKsxtNb7NkX
+	uttM82Q/4qApykV8Rvymrp1qnoT2asSU4ew==
+X-Received: by 2002:a05:6512:39ca:b0:50c:e:171e with SMTP id k10-20020a05651239ca00b0050c000e171emr100258lfu.5.1701701491833;
+        Mon, 04 Dec 2023 06:51:31 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGs1GCa0CgDvN1RhA5ymImqbjGWQhbplO/YgAFsWjKv5h53RCw3xx96+O9cDczJFQ7M1yeRQw==
+X-Received: by 2002:a05:6512:39ca:b0:50c:e:171e with SMTP id k10-20020a05651239ca00b0050c000e171emr100247lfu.5.1701701491510;
+        Mon, 04 Dec 2023 06:51:31 -0800 (PST)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id cy18-20020a0564021c9200b0054cc61f0412sm1509632edb.24.2023.12.04.06.51.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Dec 2023 06:51:30 -0800 (PST)
+Message-ID: <898ebe87-6376-4385-b42a-25ecc08772f6@redhat.com>
+Date: Mon, 4 Dec 2023 15:51:30 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-989722860-1701699254=:3149"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: x86-android-tablets: Fix an IS_ERR() vs
+ NULL check in probe
+Content-Language: en-US
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+References: <4b1b2395-c7c5-44a4-b0b0-6d091c7f46a2@moroto.mountain>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <4b1b2395-c7c5-44a4-b0b0-6d091c7f46a2@moroto.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi, 	 	 	
 
---8323329-989722860-1701699254=:3149
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
-On Thu, 30 Nov 2023, Srinivas Pandruvada wrote:
-
-> If some TPMI features are disabled, don't create auxiliary devices. In
-> this way feature drivers will not load.
+On 12/4/23 13:29, Dan Carpenter wrote:
+> The spi_new_device() function returns NULL on error, it doesn't return
+> error pointers.
 > 
-> While creating auxiliary devices, call tpmi_read_feature_status() to
-> check feature state and return if the feature is disabled without
-> creating a device.
-> 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Fixes: 70505ea6de24 ("platform/x86: x86-android-tablets: Add support for SPI device instantiation")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+
 > ---
-> v2
-> - Add comment for returning -EOPNOTSUPP
+>  drivers/platform/x86/x86-android-tablets/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
->  drivers/platform/x86/intel/tpmi.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
-> index c89aa4d14bea..868067ff966e 100644
-> --- a/drivers/platform/x86/intel/tpmi.c
-> +++ b/drivers/platform/x86/intel/tpmi.c
-> @@ -604,9 +604,21 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
->  	struct intel_vsec_device *vsec_dev = tpmi_info->vsec_dev;
->  	char feature_id_name[TPMI_FEATURE_NAME_LEN];
->  	struct intel_vsec_device *feature_vsec_dev;
-> +	struct tpmi_feature_state feature_state;
->  	struct resource *res, *tmp;
->  	const char *name;
-> -	int i;
-> +	int i, ret;
-> +
-> +	ret = tpmi_read_feature_status(tpmi_info, pfs->pfs_header.tpmi_id, &feature_state);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * If not enabled, continue to look at other features in the PFS, so return -EOPNOTSUPP.
-> +	 * This will not cause failure of loading of this driver.
-> +	 */
-> +	if (!feature_state.enabled)
-> +		return -EOPNOTSUPP;
+> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
+> index 6a5975ac3286..f8221a15575b 100644
+> --- a/drivers/platform/x86/x86-android-tablets/core.c
+> +++ b/drivers/platform/x86/x86-android-tablets/core.c
+> @@ -220,8 +220,8 @@ static __init int x86_instantiate_spi_dev(const struct x86_dev_info *dev_info, i
 >  
->  	name = intel_tpmi_name(pfs->pfs_header.tpmi_id);
->  	if (!name)
+>  	spi_devs[idx] = spi_new_device(controller, &board_info);
+>  	put_device(&controller->dev);
+> -	if (IS_ERR(spi_devs[idx]))
+> -		return dev_err_probe(&controller->dev, PTR_ERR(spi_devs[idx]),
+> +	if (!spi_devs[idx])
+> +		return dev_err_probe(&controller->dev, -ENOMEM,
+>  				     "creating SPI-device %d\n", idx);
+>  
+>  	return 0;
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-
--- 
- i.
-
---8323329-989722860-1701699254=:3149--
