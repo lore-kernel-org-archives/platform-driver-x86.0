@@ -1,239 +1,171 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ilT6xb0H"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A9E109;
-	Mon,  4 Dec 2023 11:57:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701719844; x=1733255844;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=3CLNd2G2DCVMLRKln5jkEWTRHdR30ylbSU2rEr66LTI=;
-  b=ilT6xb0HMiAV90cMPPHPuD8aLPWspauV8lA5C/qahNhipE9F30x0FLw/
-   Gi3OtC5ouHHPDVn5Kj8tJIa/mzO/QzrFw0ZXES7tGrl6d0Ztg8bCqAo/T
-   DnvnE+gtnlw4pRFisMc8NMC5tK12B50TN9Y6Ucc1Ble/N845H2FyVLpxV
-   FA+BlfCBAABqQFPYmBlIS/13Rl6Qf/jNax0XZiKvzjVSnHE+BwyQ66TGq
-   1gipHz7kbnbJx30fUZH6Sllf01tT5HzbnXWBdJYsG4BPgMYyU+gN5Pgiw
-   d6jnkZD/JLWYqAXNlMOkZSnQEGnpVxToVp80zyOtyq4HOQwGKf8aBagVu
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="634472"
-X-IronPort-AV: E=Sophos;i="6.04,250,1695711600"; 
-   d="scan'208";a="634472"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 11:57:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="943998609"
-X-IronPort-AV: E=Sophos;i="6.04,250,1695711600"; 
-   d="scan'208";a="943998609"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 11:57:22 -0800
-Received: from vbchikar-mobl1.amr.corp.intel.com (unknown [10.209.80.154])
-	by linux.intel.com (Postfix) with ESMTP id C5123580DA0;
-	Mon,  4 Dec 2023 11:57:22 -0800 (PST)
-Message-ID: <198aadd7a91152393ec56d421fa042d30378af40.camel@linux.intel.com>
-Subject: Re: [PATCH V6 01/20] platform/x86/intel/vsec: Fix xa_alloc memory
- leak
-From: "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To: Hans de Goede <hdegoede@redhat.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
-	 <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org,  rajvi.jingar@linux.intel.com
-Date: Mon, 04 Dec 2023 11:57:22 -0800
-In-Reply-To: <f2a3bab9-296c-43a1-9b7e-944c5044feaf@redhat.com>
-References: <20231129222132.2331261-1-david.e.box@linux.intel.com>
-	 <20231129222132.2331261-2-david.e.box@linux.intel.com>
-	 <5c21230-1176-4168-f31f-a0c1f1713ca8@linux.intel.com>
-	 <f2a3bab9-296c-43a1-9b7e-944c5044feaf@redhat.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KhPWbto8"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97C88D3
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Dec 2023 12:13:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1701720806;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qN1XS3PUQh/SNdnH3l3+prVnbHkxP15eE1jftD1eXYs=;
+	b=KhPWbto8CXvVFyNyWOnULyaM8Uk88at93P288NFlOMUAc7fYrO2SrEiJmG/WIMxF9UhWP/
+	mgCIpVomGLDJhbBe+SVh4SmHDK/qGwDpyAfSrrNA6tMHLLyB9folk6p1IAoxTKcCEQZw+s
+	lvp3ghxvv3/VPSBWJ2Eh+kGcgckaDdg=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-96-ZT21uXY5Pmy68EDQYoiG9A-1; Mon, 04 Dec 2023 15:13:25 -0500
+X-MC-Unique: ZT21uXY5Pmy68EDQYoiG9A-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a00dd93a5f9so374987166b.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Dec 2023 12:13:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701720804; x=1702325604;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qN1XS3PUQh/SNdnH3l3+prVnbHkxP15eE1jftD1eXYs=;
+        b=aDdc6z+kgo2ZKt4JgqMYjckSRnHexrTmXqrlQ7vtWECmnV/hwBAhxBlD9RsJyTS2I9
+         aegxxSUSKlILor6M7f6Oz35YRCB/IFMyba9n4TfMh3mrEjtSUFI27YMSfJVq3EUkbrMN
+         GPzHzEFkt6pNaw9EZkV07hhpcTxjOYjQrKwmASXyT6vCAweiAm1hbxXFPQIh9zawy3gk
+         WAs2S7O9AdG1RYAPRkuLE1qgAiazGyJ5dMp1VaDmwg9uRcaGHrOM919607EnZj1aq/xK
+         zQSLFkSp1xnoFMOpLDCLXN2elIotiOlUtR2CiM7uG8wtxrA1wDgE+xIe5qDgmvaXrcCZ
+         R0GQ==
+X-Gm-Message-State: AOJu0Yy/kfFG2OGGXPR8CfP7STAjiZbvq0IFqha6GYSJoe52ajNPJqgr
+	peFtpxpJBNiq4n6xLAyEoRmp7P8mTqx5yzgu9v9qy2ZKr8JLpbxetRO+Xa475rOuCkrPrlJE5YN
+	BI1e2ZGG3yzBeXzwcm0EYIW4wRPOtc9dNng==
+X-Received: by 2002:a17:906:f208:b0:a19:a1ba:bac1 with SMTP id gt8-20020a170906f20800b00a19a1babac1mr1760281ejb.103.1701720804520;
+        Mon, 04 Dec 2023 12:13:24 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG12sa5b7+OknahXWvg9yd0qj58CQVbsVs+TZzhIj6nsfRZSX/F6rgqg/YLanQEjq6/MLCeEw==
+X-Received: by 2002:a17:906:f208:b0:a19:a1ba:bac1 with SMTP id gt8-20020a170906f20800b00a19a1babac1mr1760277ejb.103.1701720804225;
+        Mon, 04 Dec 2023 12:13:24 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id lj8-20020a170906f9c800b009fe1dd221a3sm5614430ejb.92.2023.12.04.12.13.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Dec 2023 12:13:23 -0800 (PST)
+Message-ID: <f7c8db7e-0b2a-4afc-96c6-da5baddf696e@redhat.com>
+Date: Mon, 4 Dec 2023 21:13:22 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V6 01/20] platform/x86/intel/vsec: Fix xa_alloc memory
+ leak
+Content-Language: en-US, nl
+To: david.e.box@linux.intel.com, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+ rajvi.jingar@linux.intel.com
+References: <20231129222132.2331261-1-david.e.box@linux.intel.com>
+ <20231129222132.2331261-2-david.e.box@linux.intel.com>
+ <5c21230-1176-4168-f31f-a0c1f1713ca8@linux.intel.com>
+ <f2a3bab9-296c-43a1-9b7e-944c5044feaf@redhat.com>
+ <198aadd7a91152393ec56d421fa042d30378af40.camel@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <198aadd7a91152393ec56d421fa042d30378af40.camel@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Hans,
+Hi,
 
-On Mon, 2023-12-04 at 14:51 +0100, Hans de Goede wrote:
-> Hi,
->=20
-> On 11/30/23 12:02, Ilpo J=C3=A4rvinen wrote:
-> > On Wed, 29 Nov 2023, David E. Box wrote:
-> >=20
-> > > Commit 936874b77dd0 ("platform/x86/intel/vsec: Add PCI error recovery
-> > > support to Intel PMT") added an xarray to track the list of vsec devi=
-ces
-> > > to
-> > > be recovered after a PCI error. But it did not provide cleanup for th=
-e
-> > > list
-> > > leading to a memory leak that was caught by kmemleak.=C2=A0 Do xa_all=
-oc()
-> > > before
-> > > devm_add_action_or_reset() so that the list may be cleaned up with
-> > > xa_erase() in the release function.
-> > >=20
-> > > Fixes: 936874b77dd0 ("platform/x86/intel/vsec: Add PCI error recovery
-> > > support to Intel PMT")
-> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > > ---
-> > >=20
-> > > V6 - Move xa_alloc() before ida_alloc() to reduce mutex use during er=
-ror
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 recovery.
-> > > =C2=A0=C2=A0 - Fix return value after id_alloc() fail
-> > > =C2=A0=C2=A0 - Add Fixes tag
-> > > =C2=A0=C2=A0 - Add more detail to changelog
-> > >=20
-> > > V5 - New patch
-> > >=20
-> > > =C2=A0drivers/platform/x86/intel/vsec.c | 24 ++++++++++++++----------
-> > > =C2=A0drivers/platform/x86/intel/vsec.h |=C2=A0 1 +
-> > > =C2=A02 files changed, 15 insertions(+), 10 deletions(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/intel/vsec.c
-> > > b/drivers/platform/x86/intel/vsec.c
-> > > index c1f9e4471b28..2d568466b4e2 100644
-> > > --- a/drivers/platform/x86/intel/vsec.c
-> > > +++ b/drivers/platform/x86/intel/vsec.c
-> > > @@ -120,6 +120,8 @@ static void intel_vsec_dev_release(struct device =
-*dev)
-> > > =C2=A0{
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct intel_vsec_dev=
-ice *intel_vsec_dev =3D dev_to_ivdev(dev);
-> > > =C2=A0
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0xa_erase(&auxdev_array, in=
-tel_vsec_dev->id);
-> > > +
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_lock(&vsec_ida_=
-lock);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ida_free(intel_vsec_d=
-ev->ida, intel_vsec_dev->auxdev.id);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_unlock(&vsec_id=
-a_lock);
-> > > @@ -135,19 +137,27 @@ int intel_vsec_add_aux(struct pci_dev *pdev, st=
-ruct
-> > > device *parent,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct auxiliary_devi=
-ce *auxdev =3D &intel_vsec_dev->auxdev;
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int ret, id;
-> > > =C2=A0
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_lock(&vsec_ida_lock)=
-;
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret =3D ida_alloc(intel_vs=
-ec_dev->ida, GFP_KERNEL);
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_unlock(&vsec_ida_loc=
-k);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret =3D xa_alloc(&auxdev_a=
-rray, &intel_vsec_dev->id, intel_vsec_dev,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PMT_XA_LIMIT, =
-GFP_KERNEL);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ret < 0) {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0kfree(intel_vsec_dev->resource);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0kfree(intel_vsec_dev);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0return ret;
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > > =C2=A0
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_lock(&vsec_ida_lock)=
-;
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0id =3D ida_alloc(intel_vse=
-c_dev->ida, GFP_KERNEL);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_unlock(&vsec_ida_loc=
-k);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (id < 0) {
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0kfree(intel_vsec_dev->resource);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0kfree(intel_vsec_dev);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0return id;
-> >=20
-> > Thanks, this looks much better this way around but it is missing=20
-> > xa_alloc() rollback now that the order is reversed.
-> >=20
-> > Once that is fixed,
-> >=20
-> > Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
->=20
-> I have fixed this up, adding the missing:
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0xa_erase(&auxdev_array, i=
-ntel_vsec_dev->id);
->=20
-> to this error-exit path while merging this.
+On 12/4/23 20:57, David E. Box wrote:
+> Hi Hans,
+> 
+> On Mon, 2023-12-04 at 14:51 +0100, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 11/30/23 12:02, Ilpo Järvinen wrote:
+>>> On Wed, 29 Nov 2023, David E. Box wrote:
+>>>
+>>>> Commit 936874b77dd0 ("platform/x86/intel/vsec: Add PCI error recovery
+>>>> support to Intel PMT") added an xarray to track the list of vsec devices
+>>>> to
+>>>> be recovered after a PCI error. But it did not provide cleanup for the
+>>>> list
+>>>> leading to a memory leak that was caught by kmemleak.  Do xa_alloc()
+>>>> before
+>>>> devm_add_action_or_reset() so that the list may be cleaned up with
+>>>> xa_erase() in the release function.
+>>>>
+>>>> Fixes: 936874b77dd0 ("platform/x86/intel/vsec: Add PCI error recovery
+>>>> support to Intel PMT")
+>>>> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+>>>> ---
+>>>>
+>>>> V6 - Move xa_alloc() before ida_alloc() to reduce mutex use during error
+>>>>      recovery.
+>>>>    - Fix return value after id_alloc() fail
+>>>>    - Add Fixes tag
+>>>>    - Add more detail to changelog
+>>>>
+>>>> V5 - New patch
+>>>>
+>>>>  drivers/platform/x86/intel/vsec.c | 24 ++++++++++++++----------
+>>>>  drivers/platform/x86/intel/vsec.h |  1 +
+>>>>  2 files changed, 15 insertions(+), 10 deletions(-)
+>>>>
+>>>> diff --git a/drivers/platform/x86/intel/vsec.c
+>>>> b/drivers/platform/x86/intel/vsec.c
+>>>> index c1f9e4471b28..2d568466b4e2 100644
+>>>> --- a/drivers/platform/x86/intel/vsec.c
+>>>> +++ b/drivers/platform/x86/intel/vsec.c
+>>>> @@ -120,6 +120,8 @@ static void intel_vsec_dev_release(struct device *dev)
+>>>>  {
+>>>>         struct intel_vsec_device *intel_vsec_dev = dev_to_ivdev(dev);
+>>>>  
+>>>> +       xa_erase(&auxdev_array, intel_vsec_dev->id);
+>>>> +
+>>>>         mutex_lock(&vsec_ida_lock);
+>>>>         ida_free(intel_vsec_dev->ida, intel_vsec_dev->auxdev.id);
+>>>>         mutex_unlock(&vsec_ida_lock);
+>>>> @@ -135,19 +137,27 @@ int intel_vsec_add_aux(struct pci_dev *pdev, struct
+>>>> device *parent,
+>>>>         struct auxiliary_device *auxdev = &intel_vsec_dev->auxdev;
+>>>>         int ret, id;
+>>>>  
+>>>> -       mutex_lock(&vsec_ida_lock);
+>>>> -       ret = ida_alloc(intel_vsec_dev->ida, GFP_KERNEL);
+>>>> -       mutex_unlock(&vsec_ida_lock);
+>>>> +       ret = xa_alloc(&auxdev_array, &intel_vsec_dev->id, intel_vsec_dev,
+>>>> +                      PMT_XA_LIMIT, GFP_KERNEL);
+>>>>         if (ret < 0) {
+>>>>                 kfree(intel_vsec_dev->resource);
+>>>>                 kfree(intel_vsec_dev);
+>>>>                 return ret;
+>>>>         }
+>>>>  
+>>>> +       mutex_lock(&vsec_ida_lock);
+>>>> +       id = ida_alloc(intel_vsec_dev->ida, GFP_KERNEL);
+>>>> +       mutex_unlock(&vsec_ida_lock);
+>>>> +       if (id < 0) {
+>>>> +               kfree(intel_vsec_dev->resource);
+>>>> +               kfree(intel_vsec_dev);
+>>>> +               return id;
+>>>
+>>> Thanks, this looks much better this way around but it is missing 
+>>> xa_alloc() rollback now that the order is reversed.
+>>>
+>>> Once that is fixed,
+>>>
+>>> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+>>
+>> I have fixed this up, adding the missing:
+>>
+>>         xa_erase(&auxdev_array, intel_vsec_dev->id);
+>>
+>> to this error-exit path while merging this.
+> 
+> Thanks. Does that include the rest of the series which was all reviewed by Ilpo?
 
-Thanks. Does that include the rest of the series which was all reviewed by =
-Ilpo?
+Yes the entire series has been merged into the pdx86/review-hans
+branch now.
 
->=20
-> While looking into this I did find one other thing which
-> worries me (different issue, needs a separate fix):
->=20
-> intel_vsec_pci_slot_reset() uses
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 devm_release_action(&pdev->dev, intel_vsec_remove_aux,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &intel_vsec=
-_dev->auxdev);
->=20
-> and seems to assume that after this intel_vsec_remove_aux()
-> has run for the auxdev-s. *But this is not the case*
->=20
-> devm_release_action() only removes the action from the list
-> of devres resources tied to the parent PCI device.
->=20
-> It does *NOT* call the registered action function,
-> so intel_vsec_remove_aux() is NOT called here.
->=20
-> And then on re-probing the device as is done in
-> intel_vsec_pci_slot_reset() a second set of aux
-> devices with the same parent will be created AFAICT.
->=20
-> So it seems that this also needs an explicit
-> intel_vsec_remove_aux() call for each auxdev!
->=20
-> ###
->=20
-> This makes me wonder if the PCI error handling here
-> and specifically the reset code was ever tested ?
+Regards,
 
-I recall the code was tested using error injection to cause the slot reset =
-to
-occur and reprobe was confirmed. I'll have to find out the specific test so=
- that
-we can check it again with the proposed fix and ensure no leaks.
-
->=20
-> ###
->=20
-> Note that simply forcing a reprobe using device_reprobe()
-> will cause all the aux-devices to also get removed through
-> the action on driver-unbind without ever needing
-> the auxdev_array at all!
-
-Okay. That would be a lot simpler.
-
->=20
-> I guess that you want the removal to happen before
-> the pci_restore_state(pdev) state though, so that
-> simply relying on the removal on driver unbind
-> is not an option ?
-
-I'm not sure this is needed given the simplicity of the device. The array w=
-as
-added only to track the list of devices and reprobe the one that was reset.
-We'll look at changing this to do driver_reprobe() instead. Thanks.
-
-David
+Hans
 
 
