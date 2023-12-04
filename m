@@ -1,115 +1,128 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y1xIyyZ4"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFA2BB9
-	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Dec 2023 06:51:36 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ByYGhaJe"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33366CA
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Dec 2023 07:06:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701701496;
+	s=mimecast20190719; t=1701702367;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QpHZcDHjpU4mfBG41n94eQLmc8/ZuBEaOjwl4e/nn80=;
-	b=Y1xIyyZ4P7h/pH8iuPUD+BHSnnxJsXo2UirIiEG3cJbITm634OChGpgalusg+RgCizna6L
-	VsC1SQDYh3S+sJbGia/sYmwRfM/sz2xUZCyILL7bC5AOXvfcHZ537yKIWcmFisxcgkPLg2
-	2IdAepYYncjZiEOcFSxbcSdHqhey7BA=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-45-Gx2KE8v4M_OI_JPefk-otA-1; Mon, 04 Dec 2023 09:51:33 -0500
-X-MC-Unique: Gx2KE8v4M_OI_JPefk-otA-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-50bec8466b6so1331440e87.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Dec 2023 06:51:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701701491; x=1702306291;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QpHZcDHjpU4mfBG41n94eQLmc8/ZuBEaOjwl4e/nn80=;
-        b=c7zoUB9+O4XOcO+3TaYt0J2Om8NNITN61FHanitRGkleZEuwMkbmoCrZcJIELdVTmo
-         FBh3VJAO0mn6yRlaZsMrf3MHKoo0a+Vog+5ghPomCApejh9YxoA0Cxo0VaLlllrjbpkA
-         9maMuLfWKhmpvAXcHQq8pgQO/iw+3Z2wlszMhBdf0Lnln/+gnK44vSVlar/UENzwqvY8
-         seIFCeWvitN5p+QtObtb8SrWTGHy6BOBF81hsTbjhJBNPuufTAbUt4E8y0/JRuOjv7US
-         PcKEeYjQcLjPzubTd5jIhaFOIQ/UMSLG57iohNQRIikbDPc5KGgqi3ns46iMhAJPOnhp
-         GIFQ==
-X-Gm-Message-State: AOJu0Yylcm4xsU1IbmuEqXWhYciO5IeGh1pH6YckpAHa/iV1lo8qHYfq
-	LT0YiM3kEvX0xLnkrr4izYLxZGdpAnDwfMJKKoaaLo7Y7BEwz/JVu362rLXjZG2wAKsxtNb7NkX
-	uttM82Q/4qApykV8Rvymrp1qnoT2asSU4ew==
-X-Received: by 2002:a05:6512:39ca:b0:50c:e:171e with SMTP id k10-20020a05651239ca00b0050c000e171emr100258lfu.5.1701701491833;
-        Mon, 04 Dec 2023 06:51:31 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGs1GCa0CgDvN1RhA5ymImqbjGWQhbplO/YgAFsWjKv5h53RCw3xx96+O9cDczJFQ7M1yeRQw==
-X-Received: by 2002:a05:6512:39ca:b0:50c:e:171e with SMTP id k10-20020a05651239ca00b0050c000e171emr100247lfu.5.1701701491510;
-        Mon, 04 Dec 2023 06:51:31 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id cy18-20020a0564021c9200b0054cc61f0412sm1509632edb.24.2023.12.04.06.51.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Dec 2023 06:51:30 -0800 (PST)
-Message-ID: <898ebe87-6376-4385-b42a-25ecc08772f6@redhat.com>
-Date: Mon, 4 Dec 2023 15:51:30 +0100
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vwu9IOQnajQqH+eXz2hb1lJZFpHFY3Is8bxP/koG7f8=;
+	b=ByYGhaJe31HdnFJoD7QgbWHMXFH4i+Wxq8L85GJOwRBcuAFCylqEtOnobdFjpu0UhnQ+w2
+	Xk3hO6OroR8opmmOgdX8eRbdr68w2iE66xeb0PHZWo5+1NGHdJcpFDJIM2OCUnxhCOJX8I
+	wLBahsOxvYiciVuYO3kMS8JGxJFIEUI=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-14-X1ZDfGl5N4i3Kwpee4trsg-1; Mon,
+ 04 Dec 2023 10:06:03 -0500
+X-MC-Unique: X1ZDfGl5N4i3Kwpee4trsg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 412823C0F456;
+	Mon,  4 Dec 2023 15:06:03 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.195.73])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5F5972026D4C;
+	Mon,  4 Dec 2023 15:06:02 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org,
+	Arnold Gozum <arngozum@gmail.com>
+Subject: [PATCH] platform/x86: intel-vbtn: Fix missing tablet-mode-switch events
+Date: Mon,  4 Dec 2023 16:06:01 +0100
+Message-ID: <20231204150601.46976-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: x86-android-tablets: Fix an IS_ERR() vs
- NULL check in probe
-Content-Language: en-US
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <4b1b2395-c7c5-44a4-b0b0-6d091c7f46a2@moroto.mountain>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <4b1b2395-c7c5-44a4-b0b0-6d091c7f46a2@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-Hi, 	 	 	
+2 issues have been reported on the Dell Inspiron 7352:
 
-On 12/4/23 13:29, Dan Carpenter wrote:
-> The spi_new_device() function returns NULL on error, it doesn't return
-> error pointers.
-> 
-> Fixes: 70505ea6de24 ("platform/x86: x86-android-tablets: Add support for SPI device instantiation")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+1. Sometimes the tablet-mode-switch stops reporting tablet-mode
+   change events.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+   Add a "VBDL" call to notify_handler() to work around this.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+2. Sometimes the tablet-mode is incorrect after suspend/resume
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+   Add a detect_tablet_mode() to resume() to fix this.
 
-Regards,
+Reported-by: Arnold Gozum <arngozum@gmail.com>
+Closes: https://lore.kernel.org/platform-driver-x86/87271a74-c831-4eec-b7a4-1371d0e42471@gmail.com/
+Tested-by: Arnold Gozum <arngozum@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/intel/vbtn.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-Hans
-
-
-
-> ---
->  drivers/platform/x86/x86-android-tablets/core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
-> index 6a5975ac3286..f8221a15575b 100644
-> --- a/drivers/platform/x86/x86-android-tablets/core.c
-> +++ b/drivers/platform/x86/x86-android-tablets/core.c
-> @@ -220,8 +220,8 @@ static __init int x86_instantiate_spi_dev(const struct x86_dev_info *dev_info, i
->  
->  	spi_devs[idx] = spi_new_device(controller, &board_info);
->  	put_device(&controller->dev);
-> -	if (IS_ERR(spi_devs[idx]))
-> -		return dev_err_probe(&controller->dev, PTR_ERR(spi_devs[idx]),
-> +	if (!spi_devs[idx])
-> +		return dev_err_probe(&controller->dev, -ENOMEM,
->  				     "creating SPI-device %d\n", idx);
->  
->  	return 0;
+diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
+index 6fa1735ad7a4..210b0a81b7ec 100644
+--- a/drivers/platform/x86/intel/vbtn.c
++++ b/drivers/platform/x86/intel/vbtn.c
+@@ -73,10 +73,10 @@ struct intel_vbtn_priv {
+ 	bool wakeup_mode;
+ };
+ 
+-static void detect_tablet_mode(struct platform_device *device)
++static void detect_tablet_mode(struct device *dev)
+ {
+-	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+-	acpi_handle handle = ACPI_HANDLE(&device->dev);
++	struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
++	acpi_handle handle = ACPI_HANDLE(dev);
+ 	unsigned long long vgbs;
+ 	acpi_status status;
+ 	int m;
+@@ -89,6 +89,8 @@ static void detect_tablet_mode(struct platform_device *device)
+ 	input_report_switch(priv->switches_dev, SW_TABLET_MODE, m);
+ 	m = (vgbs & VGBS_DOCK_MODE_FLAG) ? 1 : 0;
+ 	input_report_switch(priv->switches_dev, SW_DOCK, m);
++
++	input_sync(priv->switches_dev);
+ }
+ 
+ /*
+@@ -134,7 +136,7 @@ static int intel_vbtn_input_setup(struct platform_device *device)
+ 	priv->switches_dev->id.bustype = BUS_HOST;
+ 
+ 	if (priv->has_switches) {
+-		detect_tablet_mode(device);
++		detect_tablet_mode(&device->dev);
+ 
+ 		ret = input_register_device(priv->switches_dev);
+ 		if (ret)
+@@ -198,6 +200,9 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	autorelease = val && (!ke_rel || ke_rel->type == KE_IGNORE);
+ 
+ 	sparse_keymap_report_event(input_dev, event, val, autorelease);
++
++	/* Some devices need this to report further events */
++	acpi_evaluate_object(handle, "VBDL", NULL, NULL);
+ }
+ 
+ /*
+@@ -352,7 +357,13 @@ static void intel_vbtn_pm_complete(struct device *dev)
+ 
+ static int intel_vbtn_pm_resume(struct device *dev)
+ {
++	struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
++
+ 	intel_vbtn_pm_complete(dev);
++
++	if (priv->has_switches)
++		detect_tablet_mode(dev);
++
+ 	return 0;
+ }
+ 
+-- 
+2.43.0
 
