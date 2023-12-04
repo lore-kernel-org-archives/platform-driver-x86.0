@@ -1,123 +1,199 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M56yn2aT"
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC2CFFE
-	for <platform-driver-x86@vger.kernel.org>; Sun,  3 Dec 2023 18:03:08 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-50bf8843a6fso309369e87.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 03 Dec 2023 18:03:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZV6JKgf"
+Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FB4BE5
+	for <platform-driver-x86@vger.kernel.org>; Sun,  3 Dec 2023 18:44:00 -0800 (PST)
+Received: by mail-vs1-xe32.google.com with SMTP id ada2fe7eead31-4647d236e92so348672137.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 03 Dec 2023 18:44:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701655387; x=1702260187; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nU+isl/cmvOumBeEJVaIP24Ow/f7bjobvPWRPynQaf8=;
-        b=M56yn2aTw7h/zSNqrgKdfY7GEi7xsJoYZnVw79rEcs2p292xNgDpx7WosbEGZdbJVL
-         eFi0fk+5kHsFcOhoOvqnYrD3gJ+oHuEUoU1JgUQRRdSxtskBPpsGQS3j/ojeMulZgbiw
-         zhI6A829rMUYxAdTfuaPZEvyOIIkF24i4JVYTmMgjJlKtwxmUgquVBsYUJmeTL/Ei+E8
-         DlSoQbxQHxuw6Q5BHztsPVjLSVAe0wIDCLFcmunTV8dd6yGQd4fI4n0XLIJ9zaoJ5J2x
-         3WC29yS2N/DSbAeaZSdddKA1/+fn3ywdooUW06SnjJGpUelZKY62X60OKTzXFiiXpvO3
-         X3aA==
+        d=gmail.com; s=20230601; t=1701657839; x=1702262639; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=I4DaGir+tGJWf444PEz1us7Hwl1/3n0dJXp2DJSga30=;
+        b=lZV6JKgfNzBLlNhdpUHEKDVdv/2T1QKKvot/U6nOCmplUt5FrjhKnyEc221c8im1eK
+         kZjFh2YUhkNmvbuQi0I7GR0iZ86Tm4gqkgS6ARZj+e4VqmTQ6DfxIpfTd+/9kCyrPLT4
+         snJ2l3m0jRvgfEceT8e+bmQlW80ezHWz7u1sAJ5egB7N8mcSbdAJGzaSKTN/cH6bixUA
+         1if3X+pW2KMkRQbnz8W9CgLHgtUdr/LY8SDyALc2gO5kbyQ4Fp/7zjMwmExABdjQm2Nq
+         gn03YFKrbixuijFIpcN9QYEG1exg1X4PedXsdexctS2hBuqGhnPisNkf9GCnMjzu+Mmu
+         e37w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701655387; x=1702260187;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nU+isl/cmvOumBeEJVaIP24Ow/f7bjobvPWRPynQaf8=;
-        b=Aro9XVH+Lkjqi2PrF5yb7AopUTxKDJv5PElIYCqxoWJizUiOmJ47yOrnnPZPKyWO4k
-         C0B0jfQCWQnDFDYKA7TXTzQaZYPspSbgFbsCRklSDPf+PiJUwavYNRsMWNsRSMyOdUSj
-         FKJWU75VaqE8DFniaFHDcD561JAglTyTAcsobfbH/xXvgjoiGvoRDa1Ekd+SLNefteDi
-         uzcW/YetGOeSjylzy/RE/12xnxNcaao3q0ofCaE5ZwirgryvYm4kOd7W5dDkcQ7MhdBt
-         YCCaRaQnNwpsOTDTJPOSNURED5ZvUSKROs4jKW7ObWgmaJvnByWSsXYDqvFQ3pjfeukD
-         Ej+Q==
-X-Gm-Message-State: AOJu0Yy5DQGJB488CQYyyF5JqPQvc6I6i0/2a8OnCbxOWSYRKlKP+Y0Z
-	YU/up7KojJQDwgZmg7KoBlTIUhU3Z3tNUXTcCOE=
-X-Google-Smtp-Source: AGHT+IF2BaKSfbGgOJcuur4nyNBw+zmrxBa85rY71yvqdk6sw/yYSlw4/eaFyeU/Nq5IFQWNX3P35w==
-X-Received: by 2002:a05:6512:3d1d:b0:50b:c36e:a70e with SMTP id d29-20020a0565123d1d00b0050bc36ea70emr2917074lfv.34.1701655386300;
-        Sun, 03 Dec 2023 18:03:06 -0800 (PST)
-Received: from eriador.unikie.fi ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id v12-20020a056512348c00b0050bea5c2850sm525381lfr.39.2023.12.03.18.03.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Dec 2023 18:03:05 -0800 (PST)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: "Rob Herring" <robh+dt@kernel.org>,
-	"Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-	"Conor Dooley" <conor+dt@kernel.org>,
-	"Andy Gross" <agross@kernel.org>,
-	"Bjorn Andersson" <andersson@kernel.org>,
-	"Konrad Dybcio" <konrad.dybcio@linaro.org>,
-	"Hans de Goede" <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Mark Gross" <markgross@kernel.org>,
-	"Heikki Krogerus" <heikki.krogerus@linux.intel.com>,
-	"Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: [PATCH v4 2/3] usb: typec: change altmode SVID to u16 entry
-Date: Mon,  4 Dec 2023 04:03:01 +0200
-Message-ID: <20231204020303.2287338-3-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231204020303.2287338-1-dmitry.baryshkov@linaro.org>
-References: <20231204020303.2287338-1-dmitry.baryshkov@linaro.org>
+        d=1e100.net; s=20230601; t=1701657839; x=1702262639;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I4DaGir+tGJWf444PEz1us7Hwl1/3n0dJXp2DJSga30=;
+        b=NkqVTkFnxTu5LS45iIFpMjrjDQnOWwbefGqr59TiIqOSFft/7JJ3SkziOovNFKgdjG
+         oUWFKu7+D6Izig9FNSmJIPdoFssal/71hlFQBh9Ddp11JCdTReFder+T2WsVFX2jy/0h
+         OdegNYDWKc091OiRYgSpVTjEnowQs8bGbnyTvM06ZIufzdRN71v1CN0kPLM2MF0g3A4i
+         k2vrXxSg/QJYriFIXnoTM++I1XLl13qe1UJ93FJtITNJ4ezZk86r+Yaolo9G2P/6Qw3k
+         s5VYV+tQELKYk8de+yx1WLYb1nsIbJkOJWo8+e4CSipxhZBjuih41oJudUVI5UR+Wew3
+         jovA==
+X-Gm-Message-State: AOJu0YwM4/0wOMWoTjcOMAk2idCnlbdjnoJtGeVnH+zbjIkNP67fLYsS
+	CaMyXBoLR2HBm6aiieXvD2NFtv9W0KsOjruT
+X-Google-Smtp-Source: AGHT+IEbCqAOCAoHK+nx9sUAmidKlPPYD2ZxT/gex8Kd3bvOezfqQaRaxSZugwHT5mrEK7PeeaH3ig==
+X-Received: by 2002:a67:b60b:0:b0:464:4518:ba73 with SMTP id d11-20020a67b60b000000b004644518ba73mr1375213vsm.8.1701657838865;
+        Sun, 03 Dec 2023 18:43:58 -0800 (PST)
+Received: from ?IPV6:2607:fea8:4adc:2480::ee29? ([2607:fea8:4adc:2480::ee29])
+        by smtp.gmail.com with ESMTPSA id x18-20020ad440d2000000b0067aa860b1f9sm2023630qvp.122.2023.12.03.18.43.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 03 Dec 2023 18:43:58 -0800 (PST)
+Message-ID: <f833cd1b-3d2f-46e6-ad44-347a05c0ffa1@gmail.com>
+Date: Sun, 3 Dec 2023 21:43:57 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Bug Report] intel/vbtn: Dell Inspiron 7352 has unreliable
+ tablet-mode switch
+Content-Language: en-US
+To: Hans de Goede <hdegoede@redhat.com>, AceLan Kao <acelan.kao@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <87271a74-c831-4eec-b7a4-1371d0e42471@gmail.com>
+ <CAFv23Qm+-p7U5N8JpJmqNxHnN7bTT3fxQJ5O0ainRrqnvrmB7g@mail.gmail.com>
+ <c6402969-a372-44ad-a540-79d4ee60e190@gmail.com>
+ <674140cc-fb03-4751-9bdf-13e86a6d39cc@redhat.com>
+ <b9bdfcbf-e263-42f9-9ddb-c7101348b18e@redhat.com>
+From: Arnold Gozum <arngozum@gmail.com>
+In-Reply-To: <b9bdfcbf-e263-42f9-9ddb-c7101348b18e@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-As stated in the changelog for the commit 7b458a4c5d73 ("usb: typec: Add
-typec_port_register_altmodes()"), the code should be adjusted according
-to the AltMode bindings. As the SVID is 16 bits wide (according to the
-USB PD Spec), use fwnode_property_read_u16() to read it.
+Hi Hans,
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/platform/x86/intel/chtwc_int33fe.c | 2 +-
- drivers/usb/typec/class.c                  | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+Thanks for writing this patch, I've just tested it and the wrong state
+issue is fixed. The switch is in the correct state after suspending no
+matter the state before suspending. I've seen forums posts of people
+experiencing the same issue on other models, so I'm sure it will help them
+as well.
 
-diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platform/x86/intel/chtwc_int33fe.c
-index 848baecc1bb0..93f75ba1dafd 100644
---- a/drivers/platform/x86/intel/chtwc_int33fe.c
-+++ b/drivers/platform/x86/intel/chtwc_int33fe.c
-@@ -136,7 +136,7 @@ static const struct software_node altmodes_node = {
- };
- 
- static const struct property_entry dp_altmode_properties[] = {
--	PROPERTY_ENTRY_U32("svid", 0xff01),
-+	PROPERTY_ENTRY_U16("svid", 0xff01),
- 	PROPERTY_ENTRY_U32("vdo", 0x0c0086),
- 	{ }
- };
-diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-index 2e0451bd336e..a959dcc3374a 100644
---- a/drivers/usb/typec/class.c
-+++ b/drivers/usb/typec/class.c
-@@ -2230,7 +2230,8 @@ void typec_port_register_altmodes(struct typec_port *port,
- 	struct typec_altmode_desc desc;
- 	struct typec_altmode *alt;
- 	size_t index = 0;
--	u32 svid, vdo;
-+	u16 svid;
-+	u32 vdo;
- 	int ret;
- 
- 	altmodes_node = device_get_named_child_node(&port->dev, "altmodes");
-@@ -2238,7 +2239,7 @@ void typec_port_register_altmodes(struct typec_port *port,
- 		return; /* No altmodes specified */
- 
- 	fwnode_for_each_child_node(altmodes_node, child) {
--		ret = fwnode_property_read_u32(child, "svid", &svid);
-+		ret = fwnode_property_read_u16(child, "svid", &svid);
- 		if (ret) {
- 			dev_err(&port->dev, "Error reading svid for altmode %s\n",
- 				fwnode_get_name(child));
--- 
-2.42.0
+For the issue where the switch stops responding, it did happen once but
+after rebooting I can't get it to happen again. It's hard to know for sure
+since it happens randomly, or maybe I didn't have the patched module
+actually loaded when it did occur. I'm guessing it probably should have
+happened by now, but I can report back if it eventually happens again.
 
+I really appreciate you taking the time to work on this.
+
+Thanks,
+Arnold
+
+On 2023-12-03 10:41, Hans de Goede wrote:
+> Hi Arnold,
+> 
+> I was wondering what the status of this is.
+> 
+> Did you manage to find some time to test the patch
+> which I attached to my previous results ?
+> 
+> And if yes, what were the results?
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> On 11/20/23 15:18, Hans de Goede wrote:
+>> Hi Arnold,
+>>
+>> Thank you for reporting this.
+>>
+>> Unfortunately removing the Dell Inspiron 7352 from
+>> the dmi_switches_allow_list will not help.
+>>
+>> The intel-vbtn driver now a days also creates an input-device
+>> with a tablet-switch upon receiving the first tablet-switch
+>> related event, to avoid needing to maintain an ever growing
+>> list of devices on the allow-list.
+>>
+>> And since the Dell Inspiron 7352 does have a somewhat working
+>> tablet-mode-switch it does send such events. So removing it
+>> from the allow-list will only result in the creation of
+>> an input-device for the tablet-mode-switch being delayed till
+>> the first event.
+>>
+>> Now we could add a dmi_switches_deny_list for this purpose,
+>> but first lets see if we can fix things.
+>>
+>> On 10/29/23 20:52, Arnold Gozum wrote:
+>>> Hi, sorry for the delayed reply. Your patch doesn't seem to work, I
+>>> still have the issue where the switch is in the wrong state after
+>>> suspend/resume.
+>>
+>> Ok, so this does sound like the issue where the switch completely
+>> stops reporting state-changes is fixed with the addition of
+>> the extra "VBDL" call ?
+>>
+>> I think that the wrong mode after suspend/resume is just a matter
+>> of manually checking the mode after a suspend/resume.
+>>
+>> Can you give the attached patch a try and see if that fixes things ?
+>>
+>> Regards,
+>>
+>> Hans
+>>
+>>
+>>
+>>
+>>> And yes, it's been a while, and I believe the issues did exist during
+>>> that time however it was easy to ignore/forget since I'm on X11 where
+>>> libinput doesn't respond to tablet mode switches, so I neglected to
+>>> report the issue for a while. Also, about the BIOS, I'm a little
+>>> hesistant to update it since I don't have a battery. I have version A11
+>>> and the newest is A15, but Dell's update notes only mention security
+>>> fixes, so maybe it doesn't matter.
+>>>
+>>> On 2023-10-17 22:05, AceLan Kao wrote:
+>>>> Arnold Gozum <arngozum@gmail.com> 於 2023年10月18日 週三 上午8:53寫道：
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>> In Linux 5.11, Dell Inspiron 7352 was added to the
+>>>>> dmi_switches_allow_list as it is a 2-in-1 which reports a chassis type
+>>>>> 10 (actually it was me who submitted the patch).
+>>>>>
+>>>>> However, the tablet mode switch can be unreliable. Randomly, switch
+>>>>> events stop being reported and SW_TABLET_MODE will by stuck at 1 or 0,
+>>>>> which I have tested by running evtest while flipping the device to and
+>>>>> from tablet mode. This is fixed after a reboot, or a suspend followed by
+>>>>> unloading and reloading the intel-vbtn module. It can also sometimes be
+>>>>> the case that upon resume, SW_TABLET_MODE does not reflect the actual
+>>>>> state of the device, which is fixed by physically flipping the screen
+>>>>> back and forth to update the state.
+>>>>>
+>>>>> Because of these issues, I think this model should be removed from the
+>>>>> allow list, unless more investigation should be done.
+>>>> Hi Arnold,
+>>>>
+>>>> It's been a long time since you submitted the patch. Did those issues
+>>>> not occur during that time?
+>>>> Have you tried updating the BIOS to see if it helps?
+>>>>
+>>>> From your description, I think calling VBDL might reset the status.
+>>>> You might want to try it below.
+>>>>
+>>>> diff --git a/drivers/platform/x86/intel/vbtn.c
+>>>> b/drivers/platform/x86/intel/vbtn.c
+>>>> index 6fa1735ad7a49..681650f52ff22 100644
+>>>> --- a/drivers/platform/x86/intel/vbtn.c
+>>>> +++ b/drivers/platform/x86/intel/vbtn.c
+>>>> @@ -198,6 +198,8 @@ static void notify_handler(acpi_handle handle, u32
+>>>> event, void *context)
+>>>>        autorelease = val && (!ke_rel || ke_rel->type == KE_IGNORE);
+>>>>
+>>>>        sparse_keymap_report_event(input_dev, event, val, autorelease);
+>>>> +
+>>>> +       acpi_evaluate_object(handle, "VBDL", NULL, NULL);
+>>>> }
+>>>>
+>>>> /*
+>>>>
+>>>>>
+>>>>> Thanks,
+>>>>> Arnold
+>>>
+> 
