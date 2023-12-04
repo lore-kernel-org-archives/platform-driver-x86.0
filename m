@@ -1,30 +1,30 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ltWg0URi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwGMWAak"
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E903CD5;
-	Mon,  4 Dec 2023 14:17:47 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9FB6FA;
+	Mon,  4 Dec 2023 14:17:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701728267; x=1733264267;
+  t=1701728268; x=1733264268;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=BQqr6Qiq+LU7qEGRJzXDgEFA8nx6ZpzNwnQjzicG5Lw=;
-  b=ltWg0URif3DXDlQ92tAF/zWwMXe3ggj1U/JWJ80yloCcIgB5UsLIFy/q
-   7eCTYgU5AnEb/iW/33uz+kKO3uy4vDvdC2Y4pOEjdzFIjDG4Ey8OEEOUt
-   qyDfrFVftx4z55/TYVXjdZw9STpxhV8ixE3j+CwSlmDph7fEPl1TMBd9V
-   QIDsOh2zo+KJTZbrehifibouWx6AZRJard0FKO97sHp65zK3oHzC4aq2O
-   Ys0r6ng9/xq2qhjFTYnuxgudNdEDXD9p8JNlwLeWIuBoVnyr6DdH+jkqb
-   UnYHibrIiyFvTzzKURDFKURRyWighVmy/MDJBTH1wHNGMxMq2sc9KkGHy
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="480000875"
+  bh=e9k30i8Y84vJYYRkJpUgYrf0FTWIOyXX19b3ixH1MBE=;
+  b=bwGMWAak+vOuRY/ZTt+1Z+uoXW0T/68YdBCKGqIaxJmreqm0C6WOMIT1
+   gjLRxMlzm55HcQuQJQdSgdqfCjfzlqjth9Ig7LIula4SjuyTla00Q9D+v
+   hQ0PRjhUXzn3e5/k+/SyEr2RBfLB3Xo/3LX0yR8mWiNH5FSrE9D6Hr24b
+   lvGwzdp2nMc80uR5e8eBK+R3AaOx71eMgmCXjA3/VLXf5jfZ9l87Lkxn2
+   2OCAF3gtsO1SCIPnhrZJqTwipdpt1777K6oARTId24LZxAYVhyFBoYPbK
+   sZG7kRnXXxYAl0DfEkahYO76KV/IWm5RKjo50M8WOt61nJV61XdvTIwkM
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="480000883"
 X-IronPort-AV: E=Sophos;i="6.04,250,1695711600"; 
-   d="scan'208";a="480000875"
+   d="scan'208";a="480000883"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 14:17:46 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 14:17:47 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="764111953"
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="764111955"
 X-IronPort-AV: E=Sophos;i="6.04,250,1695711600"; 
-   d="scan'208";a="764111953"
+   d="scan'208";a="764111955"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
   by orsmga007.jf.intel.com with ESMTP; 04 Dec 2023 14:17:46 -0800
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
@@ -35,9 +35,9 @@ To: hdegoede@redhat.com,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v3 2/5] platform/x86/intel/tpmi: Modify external interface to get read/write state
-Date: Mon,  4 Dec 2023 14:17:37 -0800
-Message-Id: <20231204221740.3645130-3-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v3 4/5] platform/x86: ISST: Process read/write blocked feature status
+Date: Mon,  4 Dec 2023 14:17:39 -0800
+Message-Id: <20231204221740.3645130-5-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231204221740.3645130-1-srinivas.pandruvada@linux.intel.com>
 References: <20231204221740.3645130-1-srinivas.pandruvada@linux.intel.com>
@@ -50,67 +50,118 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Modify the external interface tpmi_get_feature_status() to get read
-and write blocked instead of locked and disabled. Since auxiliary device
-is not created when disabled, no use of returning disabled state. Also
-locked state is not useful as feature driver can't use locked state
-in a meaningful way.
+When a feature is read blocked, don't continue to read SST information
+and register with SST core.
 
-Using read and write state, feature driver can decide which operations
-to restrict for that feature.
+When the feature is write blocked, continue to offer read interface for
+SST parameters, but don't allow any operation to change state. A state
+change results from SST level change, feature change or class of service
+change.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
 v3
 - Rebased on top of /pdx86/platform-drivers-x86 review-hans
-v2:
-- Change read_blocked/write_blocked to bool *
+v2
+- Change read_blocked, write_blocked to bool
+- Move the check for power_domain_info->write_blocked for SST-CP
+to only write operations
 
- drivers/platform/x86/intel/tpmi.c | 8 ++++----
- include/linux/intel_tpmi.h        | 5 ++---
- 2 files changed, 6 insertions(+), 7 deletions(-)
+ .../intel/speed_select_if/isst_tpmi_core.c    | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
-index 09972e2b8a06..92c5c3a90d53 100644
---- a/drivers/platform/x86/intel/tpmi.c
-+++ b/drivers/platform/x86/intel/tpmi.c
-@@ -345,8 +345,8 @@ static int tpmi_read_feature_status(struct intel_tpmi_info *tpmi_info, int featu
- 	return ret;
- }
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+index 0b6d2c864437..2662fbbddf0c 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+@@ -234,6 +234,7 @@ struct perf_level {
+  * @saved_clos_configs:	Save SST-CP CLOS configuration to store restore for suspend/resume
+  * @saved_clos_assocs:	Save SST-CP CLOS association to store restore for suspend/resume
+  * @saved_pp_control:	Save SST-PP control information to store restore for suspend/resume
++ * @write_blocked:	Write operation is blocked, so can't change SST state
+  *
+  * This structure is used store complete SST information for a power_domain. This information
+  * is used to read/write request for any SST IOCTL. Each physical CPU package can have multiple
+@@ -259,6 +260,7 @@ struct tpmi_per_power_domain_info {
+ 	u64 saved_clos_configs[4];
+ 	u64 saved_clos_assocs[4];
+ 	u64 saved_pp_control;
++	bool write_blocked;
+ };
  
--int tpmi_get_feature_status(struct auxiliary_device *auxdev, int feature_id,
--			    int *locked, int *disabled)
-+int tpmi_get_feature_status(struct auxiliary_device *auxdev,
-+			    int feature_id, bool *read_blocked, bool *write_blocked)
+ /**
+@@ -515,6 +517,9 @@ static long isst_if_clos_param(void __user *argp)
+ 		return -EINVAL;
+ 
+ 	if (clos_param.get_set) {
++		if (power_domain_info->write_blocked)
++			return -EPERM;
++
+ 		_write_cp_info("clos.min_freq", clos_param.min_freq_mhz,
+ 			       (SST_CLOS_CONFIG_0_OFFSET + clos_param.clos * SST_REG_SIZE),
+ 			       SST_CLOS_CONFIG_MIN_START, SST_CLOS_CONFIG_MIN_WIDTH,
+@@ -602,6 +607,9 @@ static long isst_if_clos_assoc(void __user *argp)
+ 
+ 		power_domain_info = &sst_inst->power_domain_info[punit_id];
+ 
++		if (assoc_cmds.get_set && power_domain_info->write_blocked)
++			return -EPERM;
++
+ 		offset = SST_CLOS_ASSOC_0_OFFSET +
+ 				(punit_cpu_no / SST_CLOS_ASSOC_CPUS_PER_REG) * SST_REG_SIZE;
+ 		shift = punit_cpu_no % SST_CLOS_ASSOC_CPUS_PER_REG;
+@@ -752,6 +760,9 @@ static int isst_if_set_perf_level(void __user *argp)
+ 	if (!power_domain_info)
+ 		return -EINVAL;
+ 
++	if (power_domain_info->write_blocked)
++		return -EPERM;
++
+ 	if (!(power_domain_info->pp_header.allowed_level_mask & BIT(perf_level.level)))
+ 		return -EINVAL;
+ 
+@@ -809,6 +820,9 @@ static int isst_if_set_perf_feature(void __user *argp)
+ 	if (!power_domain_info)
+ 		return -EINVAL;
+ 
++	if (power_domain_info->write_blocked)
++		return -EPERM;
++
+ 	_write_pp_info("perf_feature", perf_feature.feature, SST_PP_CONTROL_OFFSET,
+ 		       SST_PP_FEATURE_STATE_START, SST_PP_FEATURE_STATE_WIDTH,
+ 		       SST_MUL_FACTOR_NONE)
+@@ -1257,11 +1271,21 @@ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
+ 
+ int tpmi_sst_dev_add(struct auxiliary_device *auxdev)
  {
- 	struct intel_vsec_device *intel_vsec_dev = dev_to_ivdev(auxdev->dev.parent);
- 	struct intel_tpmi_info *tpmi_info = auxiliary_get_drvdata(&intel_vsec_dev->auxdev);
-@@ -357,8 +357,8 @@ int tpmi_get_feature_status(struct auxiliary_device *auxdev, int feature_id,
- 	if (ret)
- 		return ret;
++	bool read_blocked = 0, write_blocked = 0;
+ 	struct intel_tpmi_plat_info *plat_info;
+ 	struct tpmi_sst_struct *tpmi_sst;
+ 	int i, ret, pkg = 0, inst = 0;
+ 	int num_resources;
  
--	*locked = feature_state.locked;
--	*disabled = !feature_state.enabled;
-+	*read_blocked = feature_state.read_blocked;
-+	*write_blocked = feature_state.write_blocked;
- 
- 	return 0;
- }
-diff --git a/include/linux/intel_tpmi.h b/include/linux/intel_tpmi.h
-index ee07393445f9..4f89c5bd8663 100644
---- a/include/linux/intel_tpmi.h
-+++ b/include/linux/intel_tpmi.h
-@@ -32,7 +32,6 @@ struct intel_tpmi_plat_info {
- struct intel_tpmi_plat_info *tpmi_get_platform_data(struct auxiliary_device *auxdev);
- struct resource *tpmi_get_resource_at_index(struct auxiliary_device *auxdev, int index);
- int tpmi_get_resource_count(struct auxiliary_device *auxdev);
--
--int tpmi_get_feature_status(struct auxiliary_device *auxdev, int feature_id, int *locked,
--			    int *disabled);
-+int tpmi_get_feature_status(struct auxiliary_device *auxdev, int feature_id, bool *read_blocked,
-+			    bool *write_blocked);
- #endif
++	ret = tpmi_get_feature_status(auxdev, TPMI_ID_SST, &read_blocked, &write_blocked);
++	if (ret)
++		dev_info(&auxdev->dev, "Can't read feature status: ignoring read/write blocked status\n");
++
++	if (read_blocked) {
++		dev_info(&auxdev->dev, "Firmware has blocked reads, exiting\n");
++		return -ENODEV;
++	}
++
+ 	plat_info = tpmi_get_platform_data(auxdev);
+ 	if (!plat_info) {
+ 		dev_err(&auxdev->dev, "No platform info\n");
+@@ -1306,6 +1330,7 @@ int tpmi_sst_dev_add(struct auxiliary_device *auxdev)
+ 		tpmi_sst->power_domain_info[i].package_id = pkg;
+ 		tpmi_sst->power_domain_info[i].power_domain_id = i;
+ 		tpmi_sst->power_domain_info[i].auxdev = auxdev;
++		tpmi_sst->power_domain_info[i].write_blocked = write_blocked;
+ 		tpmi_sst->power_domain_info[i].sst_base = devm_ioremap_resource(&auxdev->dev, res);
+ 		if (IS_ERR(tpmi_sst->power_domain_info[i].sst_base))
+ 			return PTR_ERR(tpmi_sst->power_domain_info[i].sst_base);
 -- 
 2.40.1
 
