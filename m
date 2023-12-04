@@ -1,30 +1,30 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WKrda9UV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ltWg0URi"
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D655BCD;
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E903CD5;
 	Mon,  4 Dec 2023 14:17:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1701728267; x=1733264267;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=f6TRJ2hJT6nfibR7M6U1wk9xS01PL6yH67o2Q+4zI2M=;
-  b=WKrda9UVaikyt4MWmUvS4scghsyEz/QE29g3kXOef/nIZIUgSy3XatzS
-   XjBNQ8ACVPUAvF/0Cvgbg3idswf/bSHrfjIRg15wm71sZ1+12EPjiEFey
-   wtjlaF8qyUaY2ltdoyQDJL2sjokmypmzZ7lC9t5J9OvpVIc3XOkCuQJ5g
-   q9Uw0rvf5enYJH2weUTSPsEhO2xTG2nZnmhXhtCt+WCD2s5Ix3fimdgKO
-   AG1tQ8ZHOxqNYHgIgxFt7zzlNmN8GH1AP0AoJjIlC6lQdFIoC7mxA4y4s
-   I2WBgF4XEaO2RwFoY3WDJ/XOt1ytLduzOPiVkzfz6IIlDhv2wVlPmeH9p
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="480000872"
+  bh=BQqr6Qiq+LU7qEGRJzXDgEFA8nx6ZpzNwnQjzicG5Lw=;
+  b=ltWg0URif3DXDlQ92tAF/zWwMXe3ggj1U/JWJ80yloCcIgB5UsLIFy/q
+   7eCTYgU5AnEb/iW/33uz+kKO3uy4vDvdC2Y4pOEjdzFIjDG4Ey8OEEOUt
+   qyDfrFVftx4z55/TYVXjdZw9STpxhV8ixE3j+CwSlmDph7fEPl1TMBd9V
+   QIDsOh2zo+KJTZbrehifibouWx6AZRJard0FKO97sHp65zK3oHzC4aq2O
+   Ys0r6ng9/xq2qhjFTYnuxgudNdEDXD9p8JNlwLeWIuBoVnyr6DdH+jkqb
+   UnYHibrIiyFvTzzKURDFKURRyWighVmy/MDJBTH1wHNGMxMq2sc9KkGHy
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="480000875"
 X-IronPort-AV: E=Sophos;i="6.04,250,1695711600"; 
-   d="scan'208";a="480000872"
+   d="scan'208";a="480000875"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 14:17:46 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="764111952"
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="764111953"
 X-IronPort-AV: E=Sophos;i="6.04,250,1695711600"; 
-   d="scan'208";a="764111952"
+   d="scan'208";a="764111953"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
   by orsmga007.jf.intel.com with ESMTP; 04 Dec 2023 14:17:46 -0800
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
@@ -35,9 +35,9 @@ To: hdegoede@redhat.com,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v3 1/5] platform/x86/intel/tpmi: Don't create devices for disabled features
-Date: Mon,  4 Dec 2023 14:17:36 -0800
-Message-Id: <20231204221740.3645130-2-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v3 2/5] platform/x86/intel/tpmi: Modify external interface to get read/write state
+Date: Mon,  4 Dec 2023 14:17:37 -0800
+Message-Id: <20231204221740.3645130-3-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231204221740.3645130-1-srinivas.pandruvada@linux.intel.com>
 References: <20231204221740.3645130-1-srinivas.pandruvada@linux.intel.com>
@@ -50,53 +50,67 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-If some TPMI features are disabled, don't create auxiliary devices. In
-this way feature drivers will not load.
+Modify the external interface tpmi_get_feature_status() to get read
+and write blocked instead of locked and disabled. Since auxiliary device
+is not created when disabled, no use of returning disabled state. Also
+locked state is not useful as feature driver can't use locked state
+in a meaningful way.
 
-While creating auxiliary devices, call tpmi_read_feature_status() to
-check feature state and return if the feature is disabled without
-creating a device.
+Using read and write state, feature driver can decide which operations
+to restrict for that feature.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
 v3
 - Rebased on top of /pdx86/platform-drivers-x86 review-hans
+v2:
+- Change read_blocked/write_blocked to bool *
 
-v2
-- Add comment for returning -EOPNOTSUPP
-
- drivers/platform/x86/intel/tpmi.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/platform/x86/intel/tpmi.c | 8 ++++----
+ include/linux/intel_tpmi.h        | 5 ++---
+ 2 files changed, 6 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
-index 311abcac894a..09972e2b8a06 100644
+index 09972e2b8a06..92c5c3a90d53 100644
 --- a/drivers/platform/x86/intel/tpmi.c
 +++ b/drivers/platform/x86/intel/tpmi.c
-@@ -598,9 +598,21 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
- 	struct intel_vsec_device *vsec_dev = tpmi_info->vsec_dev;
- 	char feature_id_name[TPMI_FEATURE_NAME_LEN];
- 	struct intel_vsec_device *feature_vsec_dev;
-+	struct tpmi_feature_state feature_state;
- 	struct resource *res, *tmp;
- 	const char *name;
--	int i;
-+	int i, ret;
-+
-+	ret = tpmi_read_feature_status(tpmi_info, pfs->pfs_header.tpmi_id, &feature_state);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * If not enabled, continue to look at other features in the PFS, so return -EOPNOTSUPP.
-+	 * This will not cause failure of loading of this driver.
-+	 */
-+	if (!feature_state.enabled)
-+		return -EOPNOTSUPP;
+@@ -345,8 +345,8 @@ static int tpmi_read_feature_status(struct intel_tpmi_info *tpmi_info, int featu
+ 	return ret;
+ }
  
- 	name = intel_tpmi_name(pfs->pfs_header.tpmi_id);
- 	if (!name)
+-int tpmi_get_feature_status(struct auxiliary_device *auxdev, int feature_id,
+-			    int *locked, int *disabled)
++int tpmi_get_feature_status(struct auxiliary_device *auxdev,
++			    int feature_id, bool *read_blocked, bool *write_blocked)
+ {
+ 	struct intel_vsec_device *intel_vsec_dev = dev_to_ivdev(auxdev->dev.parent);
+ 	struct intel_tpmi_info *tpmi_info = auxiliary_get_drvdata(&intel_vsec_dev->auxdev);
+@@ -357,8 +357,8 @@ int tpmi_get_feature_status(struct auxiliary_device *auxdev, int feature_id,
+ 	if (ret)
+ 		return ret;
+ 
+-	*locked = feature_state.locked;
+-	*disabled = !feature_state.enabled;
++	*read_blocked = feature_state.read_blocked;
++	*write_blocked = feature_state.write_blocked;
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/intel_tpmi.h b/include/linux/intel_tpmi.h
+index ee07393445f9..4f89c5bd8663 100644
+--- a/include/linux/intel_tpmi.h
++++ b/include/linux/intel_tpmi.h
+@@ -32,7 +32,6 @@ struct intel_tpmi_plat_info {
+ struct intel_tpmi_plat_info *tpmi_get_platform_data(struct auxiliary_device *auxdev);
+ struct resource *tpmi_get_resource_at_index(struct auxiliary_device *auxdev, int index);
+ int tpmi_get_resource_count(struct auxiliary_device *auxdev);
+-
+-int tpmi_get_feature_status(struct auxiliary_device *auxdev, int feature_id, int *locked,
+-			    int *disabled);
++int tpmi_get_feature_status(struct auxiliary_device *auxdev, int feature_id, bool *read_blocked,
++			    bool *write_blocked);
+ #endif
 -- 
 2.40.1
 
