@@ -1,212 +1,153 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FZ4xFNkd"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8864EA9
-	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Dec 2023 05:00:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701694836;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FriHzOMQp/2DueNm6yNB4UNP5qaRQJmWiziJsVzEw8g=;
-	b=FZ4xFNkdCzA/ueekOjFF3csPdrhY2ZNuvk/6PPf76X/PjZV7HBVeBBHuD7kn3opuXQ6Ilm
-	5QRwpPe7pYDrO3f78YTdcA7uLOeIfMVzS2lRNhptSbLdV3DRS5OVNn6nckd8R8Y4KIO1st
-	rvwfiOFaNXzdMSg/nsIek/lDFtviNgM=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-447-RTW2BGv1MxSMPROX6nF_nw-1; Mon, 04 Dec 2023 08:00:33 -0500
-X-MC-Unique: RTW2BGv1MxSMPROX6nF_nw-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2c9c217cfdeso47428611fa.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Dec 2023 05:00:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701694832; x=1702299632;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FriHzOMQp/2DueNm6yNB4UNP5qaRQJmWiziJsVzEw8g=;
-        b=q74CXAurdKnkiBX/Bp3UH1m3BMLNIHTLoE9YxJ5iiPpG9VHESjucDEB2NzhMDJuOVf
-         kiMTZNvkVvGlmqmKZjrMiZUfqmvHymTketbCrJ6NOQkY7n6YPK7aTWhP7JuMhhQYpB34
-         RH3fqrkMFeG8/niqO/bzy8dqj1fwu1Sod/wglUBXUTPAjnph/f47UELgEsWu/ZNwUrvd
-         SqqCwk63F4D9taUdCubSi/QJvfD1ud3aPxa0aENbd7gej9SgE6Z+JM2P0R7POqNgaO34
-         Uk0EUr9RYj0cXh31Cng4CR59o/XPjH54S/9p6jkYFXxRJvTJ1JF7y3L2wGsLoerXcxNJ
-         mD6A==
-X-Gm-Message-State: AOJu0Ywvf0OdfjypllIE+/VgUWBZrXqcp/B1IjPN/25qjCLOH3sEAnB3
-	CoDYY4DLrPi2Pk+GA24stBGZ5BcI4GON9990JN2f5OxXjZZ7DCuQzgTgvn5bmPB0ANed4btFITJ
-	sAztg2X8anJT3XvHkiVH3fPjBAPlq6gmzHg==
-X-Received: by 2002:a2e:7815:0:b0:2ca:960:ecf with SMTP id t21-20020a2e7815000000b002ca09600ecfmr407473ljc.38.1701694831782;
-        Mon, 04 Dec 2023 05:00:31 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEUDlL3PQDaunfbKm5bm9nZExcQclP036JU8t7gUe6hkMIGG85ZkiV9yFlmISmoVd9Fx18tFQ==
-X-Received: by 2002:a2e:7815:0:b0:2ca:960:ecf with SMTP id t21-20020a2e7815000000b002ca09600ecfmr407450ljc.38.1701694831370;
-        Mon, 04 Dec 2023 05:00:31 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id p7-20020a17090635c700b009fc576e26e6sm5238674ejb.80.2023.12.04.05.00.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Dec 2023 05:00:30 -0800 (PST)
-Message-ID: <99de0223-6d28-4379-ac2a-ef093ee0386c@redhat.com>
-Date: Mon, 4 Dec 2023 14:00:29 +0100
+	dkim=pass (1024-bit key) header.d=dividebyzero.it header.i=@dividebyzero.it header.b="tDNxfPi/"
+Received: from ar2.dbzero.it (unknown [IPv6:2a00:6d41:10:195b::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0F55AC;
+	Mon,  4 Dec 2023 05:06:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=dividebyzero.it; s=20160415; h=Message-ID:References:In-Reply-To:Cc:To:
+	Subject:From:Content-Transfer-Encoding:Content-Type:Date:MIME-Version:Sender:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=H9qOdYHXaG2ckz2DXF1ecUOZ9PWA/zAmLuKTDwEbDSM=; b=tDNxfPi/IWgAEvC7ElWwUAJ3Xg
+	FBn7AOFt2hxqsLd7Cp/w1svATqrHst7XijVUdfJ5rMDeHdnklnNCPOdtZxPx0Bf676g10LPU/H58n
+	+hwU7zC+8w98eSU8zlJzJOf5FU5+tn54SMQQavWcjre9KcODnfodyx7G9rSEq1vGwJyY=;
+Received:  by ar2.dbzero.it with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(Authenticated user: juri@dividebyzero.it)
+	(envelope-from <juri@dividebyzero.it>)
+	id 1rA8eU-0004PB-3k; Mon, 04 Dec 2023 14:06:22 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 2/9] platform/x86/amd: Add support for AMD ACPI based
- Wifi band RFI mitigation feature
-Content-Language: en-US
-To: Ma Jun <Jun.Ma2@amd.com>, amd-gfx@lists.freedesktop.org, lenb@kernel.org,
- johannes@sipsolutions.net, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, alexander.deucher@amd.com,
- Lijo.Lazar@amd.com, mario.limonciello@amd.com, netdev@vger.kernel.org,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: majun@amd.com, Evan Quan <quanliangl@hotmail.com>
-References: <20231129091348.3972539-1-Jun.Ma2@amd.com>
- <20231129091348.3972539-3-Jun.Ma2@amd.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20231129091348.3972539-3-Jun.Ma2@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Mon, 04 Dec 2023 13:06:19 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+From: juri@dividebyzero.it
+TLS-Required: No
+Subject: Re: PROBLEM: asus_nb_wmi sends KEY_BRIGHTNESSDOWN on pressing CAPS
+ Lock and PrntScrn on Zenbook S 13 UX5304VA
+To: "Hans de Goede" <hdegoede@redhat.com>, "James John" <me@donjajo.com>,
+ "Corentin Chary" <corentin.chary@gmail.com>,
+ "=?utf-8?B?SWxwbyBKw6RydmluZW4=?=" <ilpo.jarvinen@linux.intel.com>, "Mark
+    Gross" <markgross@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org,
+ acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
+In-Reply-To: <07b057618b72f301142585844ccdcaab75a716fe@dividebyzero.it>
+References: <a2c441fe-457e-44cf-a146-0ecd86b037cf@donjajo.com>
+ <39b5f902-3a7e-fc04-254e-776bf61f57e2@redhat.com>
+ <024c4ad4-1a73-8c24-5e6f-f8c9f2f7b98f@redhat.com>
+ <1884918.tdWV9SEqCh@dividebyzero.it>
+ <77b3eed7-825d-41c5-a802-ea891a16f992@redhat.com>
+ <07b057618b72f301142585844ccdcaab75a716fe@dividebyzero.it>
+Message-ID: <f656f81bb288e69878ca001ec3e27c3ad647e7ea@dividebyzero.it>
+X-Original-Message-ID: <f656f81bb288e69878ca001ec3e27c3ad647e7ea@dividebyzero.it>
 
-Hi,
+December 4, 2023 at 01:32, juri@dividebyzero.it wrote:
+>=20
+>=20Thank you for the reply, and sorry for the delay.
+>=20
+>=20As I was gathering the information you asked for I realized that the =
+behavior has changed in the meantime, and I am not sure of the reason why=
+ (but I guess due to some package update, possibly unrelated to this).
+>=20
+>=20If I understand correctly, now the events are no longer reported by t=
+he Asus WMI driver, but by the Intel backlight driver. Because of this th=
+e backlight variations are once again reported by the DM (KDE Plasma 5, o=
+n Arch Linux) in 5% increments, and no longer seem to be under EC control=
+ (i.e. the backlight is no longer adjustable during boot, before the DE i=
+s up).
+> The new behavior persist even downgrading the kernel and the firmware p=
+ackage, so I'm not sure which package may be responsible for the change.
+>=20
 
-On 11/29/23 10:13, Ma Jun wrote:
-> Due to electrical and mechanical constraints in certain platform designs
-> there may be likely interference of relatively high-powered harmonics of
-> the (G-)DDR memory clocks with local radio module frequency bands used
-> by Wifi 6/6e/7.
-> 
-> To mitigate this, AMD has introduced a mechanism that devices can use to
-> notify active use of particular frequencies so that other devices can make
-> relative internal adjustments as necessary to avoid this resonance.
-> 
-> Co-developed-by: Evan Quan <quanliangl@hotmail.com>
-> Signed-off-by: Evan Quan <quanliangl@hotmail.com>
-> Signed-off-by: Ma Jun <Jun.Ma2@amd.com>
-> 
-> --
-> v11:
->  - fix typo(Simon)
-> v12:
->  - Fix the code logic (Rafael)
->  - Move amd_wbrf.c to drivers/platform/x86/amd/wbrf.c
->  - Updated Evan's email because he's no longer at AMD.Thanks
-> for his work in earlier versions.
-> v13:
->  - Fix the format issue (IIpo Jarvinen)
->  - Add comment for some functions
-> v14:
->  - Use the apci_check_dsm and acpi_evaluate_dsm (Hans de Goede)
+Investigating=20further I found that that the change was not due to an up=
+dated package, but because I mistakenly removed a kernel cmdline argument=
+, i.e. `"acpi_osi=3D!Windows 2012"`. Restoring it the behavior returns to=
+ the same as before.=20
 
-Thank you this is much better.
+>=20Booting into Debian Bookworm (v6.1.0-13) the old behavior is restored=
+ (i.e. the one before the previous patches), with Asus-WMI once again in =
+control (so I guess that at least the change do not persist across reboot=
+s).
+>=20
+>=20For the aforementioned reasons I can no longer reproduce the issue on=
+ the original environment (KDE Plasma 5 on Arch Linux) but the behavior o=
+n Gnome on Debian is basically the same as before, so I'll be using that.
+> In both cases (now on Debian, and previously on Arch) the brightness ha=
+s a granularity on 10-ish steps (0-100% in increments of 10% for KDE Plas=
+ma on Arch, and 9 unnamed steps on Gnome on Debian), and no "double-chang=
+e" seem to be occurring.
 
-I notice that the #define ACPI_AMD_WBRF_METHOD	"\\WBRF"
-still exists though and that this is still used in
-static bool acpi_amd_wbrf_supported_system(void).
+> On Debian:=20
+>=20>=20
+>=20> $ ls -l /sys/class/backlight/
+> >  total 0
+> >  lrwxrwxrwx 1 root root 0 Dec 4 00:26 acpi_video0 -> ../../devices/pc=
+i0000:00/0000:00:01.0/0000:01:00.0/backlight/acpi_video0
+> >  lrwxrwxrwx 1 root root 0 Dec 4 00:26 acpi_video1 -> ../../devices/pc=
+i0000:00/0000:00:02.0/backlight/acpi_video1
+> >=20
+>=20
+> On Arch:
+> >=20
+>=20> ls -l /sys/class/backlight/=20
+>=20>  totale 0
+> >  lrwxrwxrwx 1 root root 0 4 dic 00.43 intel_backlight -> ../../device=
+s/pci0000:00/0000:00:02.0/drm/card1/card1-eDP-1/intel_backlight
+> >=20
+>=20
+> On Debian:
+> * `max_brightness` is `10` on both devices;
+> * `brightness` goes from 1 to 10 following the screen brighness only fo=
+r `acpi_video0`, while in `acpi_video1` it is stuck at `10`;=20
+>=20* `actual_brightness` follows the screen brightness on both devices.
+>=20
+>=20On Arch:
+> * `max_brighness` is 4296;
+> * `brightness` changes in steps of 215 units for each 5% reported incre=
+ment;
+> * `actual_brightness` is the same as `brighness`.
+>=20
+>=20Notice that before the latest change in behavior the output on Arch w=
+as IIRC the same as now on Debian, but unfortunately I haven't recorded i=
+t so I cannot say with absolute certainty.
 
-I think it might be better to just remove
-these 2 all together.
+Restoring `"acpi_osi=3D!Windows 2012"`, on Arch Linux the result is:
+> % uname -a=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
+>=20Linux Arch-Zenbook 6.1.64-1-lts #1 SMP PREEMPT_DYNAMIC Tue, 28 Nov 20=
+23 19:37:35 +0000 x86_64 GNU/Linux
+> % ls -l /sys/class/backlight=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20
+>=20totale 0
+> lrwxrwxrwx 1 root root 0  4 dic 13.41 acpi_video0 -> ../../devices/pci0=
+000:00/0000:00:01.0/0000:01:00.0/backlight/acpi_video0
+> lrwxrwxrwx 1 root root 0  4 dic 13.41 acpi_video1 -> ../../devices/pci0=
+000:00/0000:00:02.0/backlight/acpi_video1
 
-Checking if a DSM with the expected GUID is present
-and if that has the correct bits set in its supported
-mask should be enough.
+* `max_brightness` is `10` on both devices;
+* `brighness` is stuck at `10` on both;
+* `actual_brightness` goes from 0 to 10 only on `acpi_video1`, while is s=
+tuck at 10 on `acpi_video0`.
 
-And on future systems the implementer may decide to
-not have a WBRF helper function at all and instead
-handle everything in the _DSM method.
-
-So the "\\WBRF" check seems to be checking for
-what really is an implementation detail.
-
-2 other very small remarks:
-
-> +/**
-> + * acpi_amd_wbrf_supported_producer - determine if the WBRF can be enabled
-> + *                                    for the device as a producer
-> + *
-> + * @dev: device pointer
-> + *
-> + * Check if the platform equipped with necessary implementations to
-> + * support WBRF for the device as a producer.
-> + *
-> + * Return:
-> + * true if WBRF is supported, otherwise returns false
-> + */
-> +bool acpi_amd_wbrf_supported_producer(struct device *dev)
-> +{
-> +	struct acpi_device *adev;
-> +
-> +	adev = ACPI_COMPANION(dev);
-> +	if (!adev)
-> +		return false;
-> +
-> +	if (!acpi_amd_wbrf_supported_system())
-> +		return false;
-> +
-> +
-> +	return acpi_check_dsm(adev->handle, &wifi_acpi_dsm_guid,
-> +			      WBRF_REVISION, BIT(WBRF_RECORD));
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_amd_wbrf_supported_producer);
-
-Please don't use double empty lines, one empty line to separate things
-is enough.
-
-> +
-> +/**
-> + * acpi_amd_wbrf_supported_consumer - determine if the WBRF can be enabled
-> + *                                    for the device as a consumer
-> + *
-> + * @dev: device pointer
-> + *
-> + * Determine if the platform equipped with necessary implementations to
-> + * support WBRF for the device as a consumer.
-> + *
-> + * Return:
-> + * true if WBRF is supported, otherwise returns false.
-> + */
-> +bool acpi_amd_wbrf_supported_consumer(struct device *dev)
-> +{
-> +	struct acpi_device *adev;
-> +
-> +	adev = ACPI_COMPANION(dev);
-> +	if (!adev)
-> +		return false;
-> +
-> +	if (!acpi_amd_wbrf_supported_system())
-> +		return false;
-> +
-> +	return acpi_check_dsm(adev->handle, &wifi_acpi_dsm_guid,
-> +			      WBRF_REVISION, BIT(WBRF_RETRIEVE));
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_amd_wbrf_supported_consumer);
-> +
-> +/**
-> + * amd_wbrf_retrieve_freq_band - retrieve current active frequency
-> + *                                     bands
-
-You may go a bit over the 80 chars limit, please just make this
-a single line:
-
- * amd_wbrf_retrieve_freq_band - retrieve current active frequency bands
-
-> + *
-> + * @dev: device pointer
-> + * @out: output structure containing all the active frequency bands
-> + *
-> + * Retrieve the current active frequency bands which were broadcasted
-> + * by other producers. The consumer who calls this API should take
-> + * proper actions if any of the frequency band may cause RFI with its
-> + * own frequency band used.
-> + *
-> + * Return:
-> + * 0 for getting wifi freq band successfully.
-> + * Returns a negative error code for failure.
-> + */
+Notice that with this kernel and configuration I again have the `unknown =
+key code` messages and no OSD feedback, which I wasn't able to replicate =
+in the previous message.
 
 Regards,
 
-Hans
-
+Juri
