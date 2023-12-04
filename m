@@ -1,36 +1,36 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D49ACB
-	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Dec 2023 13:52:29 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51655101
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Dec 2023 13:52:39 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rAGrU-0008G2-Am; Mon, 04 Dec 2023 22:52:20 +0100
+	id 1rAGrU-0008Eo-Az; Mon, 04 Dec 2023 22:52:20 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rAGrS-00DbUc-P8; Mon, 04 Dec 2023 22:52:18 +0100
+	id 1rAGrS-00DbUW-A0; Mon, 04 Dec 2023 22:52:18 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rAGrS-00ELqH-Fk; Mon, 04 Dec 2023 22:52:18 +0100
+	id 1rAGrS-00ELqA-0a; Mon, 04 Dec 2023 22:52:18 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Hans de Goede <hdegoede@redhat.com>,
+To: Corentin Chary <corentin.chary@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
 	=?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Rishit Bansal <rishitbansal0@gmail.com>,
 	Mario Limonciello <mario.limonciello@amd.com>,
 	Jonathan Singer <jes965@nyu.edu>,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	SungHwan Jung <onenowy@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org,
+Cc: acpi4asus-user@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	kernel@pengutronix.de
-Subject: [PATCH 2/2] platform/x86: hp-wmi: Convert to platform remove callback returning void
-Date: Mon,  4 Dec 2023 22:52:12 +0100
-Message-ID:  <a6b074b7ee37f3682da4b3f39ea40af97add64c2.1701726190.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 0/2] platform/x86: Convert to platform remove callback returning void (part II)
+Date: Mon,  4 Dec 2023 22:52:10 +0100
+Message-ID: <cover.1701726190.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <cover.1701726190.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1701726190.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1879; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=6eVY8z/A3k8fCdRzyiRfKam1KZi6FiUt4SL/1W+RYfE=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtQ8L54FRRnJjzdwfLuv90P4yt36Z5ev7oqZPO38yvKHp a29FkGGnYzGLAyMXAyyYoos9o1rMq2q5CI71/67DDOIlQlkCgMXpwBM5IcLB0NrRdP84FjmFfP9 3dwkC7ce0yyu2D7dMObw01tr/LK/RXQsNjHkYZg14fr1d/0fyw7vya5baBW+4cjKqgaLPUv5ghg 8Qz5ODDj09sK8wq857LXBi1b8mMU2LSug68M+B+sO+Ynek4RUrmdw3/207f2aSxtvZu6T5dmpd6 tBk8c2/WvoTy/7b2slexefNg/cXlPmvip2smafxtHrX3bo5wXXclRFnXFj1tn6XX6WvYpI7rJsr tf7lKL1VBkywn9qi7EXrtN68nxTE39N5BkLY7Ufbc6pbBGyUzpi7N5pui1zSHgsYuKozK6jky05 ofZZ2u5DV/3/pGY1iAkzJAWd+8+7OZfJe3PjVGvLl53HAQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=992; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=6W4Bw07YmZ6dkRE+41Ub7UADhfL9BCnI8ALg6x7UF8Q=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlbkoJcpDBEGP0JgHKk5sypRFcSUGnzXAlParZZ 73nOCMLA0iJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZW5KCQAKCRCPgPtYfRL+ TmbYB/0b3tfXZOBeVu7TTQCRZ/WPfsoPs7nYYFhBUrs2Cqcy5SmE2AJbCEN7mo20ubCfR2m3fsw ZeSWk7wrlKxfe8QKYx/eucJ3DtLUf9rniY2x1CciZ8Vo9xMDzu9zUWph8plJrkcdTIo24W7Monb IJ4ozFsT9bDrA0jdjxzffov5S6UbYsVvFAjpz/sNpo9aanCb225Nvlut8Y6lCo39aGgyg8B92fw vVX+GNIof32fGx4ZDBOZ1hr51vr8EHSFulhhrQYnt8MaL0NI9i4D278wRLpj1cDx11hzp/tt+a1 Dxmy8+EaWdH0PafAiNtOd/c6MArKh2oKNdzpsEkuAYDyeQI9
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -46,55 +46,36 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 
-The .remove() callback for a platform driver returns an int which makes
-many driver authors wrongly assume it's possible to do error handling by
-returning an error code. However the value returned is ignored (apart
-from emitting a warning) and this typically results in resource leaks.
+Hello,
 
-To improve here there is a quest to make the remove callback return
-void. In the first step of this quest all drivers are converted to
-.remove_new(), which already returns void. Eventually after all drivers
-are converted, .remove_new() will be renamed to .remove().
+back when I sent a series to convert all platform drivers below
+drivers/platform to use .remove_new()[1] I missed the two drivers
+converted here.
 
-Trivially convert this driver from always returning zero in the remove
-callback to the void returning variant.
+The two patches have no dependency, so each can be picked individually
+if needed by the driver maintainers. (But I won't say no if Hans picks
+up both patches together :-)
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
+See commit 5c5a7680e67b ("platform: Provide a remove callback that
+returns no value") for an extended explanation and the eventual goal.
+
+Best regards
+Uwe
+
+[1] https://lore.kernel.org/r/20230927081040.2198742-1-u.kleine-koenig@pengutronix.de
+
+
+Uwe Kleine-König (2):
+  platform/x86: asus-wmi: Convert to platform remove callback returning
+    void
+  platform/x86: hp-wmi: Convert to platform remove callback returning
+    void
+
+ drivers/platform/x86/asus-wmi.c  | 5 ++---
  drivers/platform/x86/hp/hp-wmi.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ 2 files changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 8ebb7be52ee7..e536604225c5 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -1478,7 +1478,7 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
- 	return 0;
- }
- 
--static int __exit hp_wmi_bios_remove(struct platform_device *device)
-+static void __exit hp_wmi_bios_remove(struct platform_device *device)
- {
- 	int i;
- 
-@@ -1502,8 +1502,6 @@ static int __exit hp_wmi_bios_remove(struct platform_device *device)
- 
- 	if (platform_profile_support)
- 		platform_profile_remove();
--
--	return 0;
- }
- 
- static int hp_wmi_resume_handler(struct device *device)
-@@ -1560,7 +1558,7 @@ static struct platform_driver hp_wmi_driver __refdata = {
- 		.pm = &hp_wmi_pm_ops,
- 		.dev_groups = hp_wmi_groups,
- 	},
--	.remove = __exit_p(hp_wmi_bios_remove),
-+	.remove_new = __exit_p(hp_wmi_bios_remove),
- };
- 
- static umode_t hp_wmi_hwmon_is_visible(const void *data,
+base-commit: 629a3b49f3f957e975253c54846090b8d5ed2e9b
 -- 
 2.42.0
 
