@@ -1,113 +1,106 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IP9J+ofu"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506E1A0
-	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Dec 2023 06:19:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701699572;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CVxcuA5O7vtHxh6BDYzSDk/ZrvKnBNgsg9DsBQMzwt4=;
-	b=IP9J+ofuUqPLNnu7A33KXQbt4qxhOSu6O3X4CYNLT8a0yrcl6b71n1CBDWxB5v6ySv/bb8
-	jXPXEyWlXd/lUfyqhCEl+S1bujkexj3em1eM3FCCAVBFG7rDrDKl5Anr0480EhpzfKFRYw
-	VSjWesEWcqr/AK3Kp4yN7mcNVEPT0A8=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-670-zK7KDZDdMT2M-325hRHSSA-1; Mon, 04 Dec 2023 09:19:26 -0500
-X-MC-Unique: zK7KDZDdMT2M-325hRHSSA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a1b7de1efb1so36705266b.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Dec 2023 06:19:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701699565; x=1702304365;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CVxcuA5O7vtHxh6BDYzSDk/ZrvKnBNgsg9DsBQMzwt4=;
-        b=oErw2Owisa21H+kf4QbwCrRqlBo5fARungZuOeOqTNHMX9WJXLsSDw3Bj7sMEAqabu
-         ZFsLz0tzeA8BoL1zDcYeZKBlkUcPY64uTVSMOExJs8TjF+G0GPyo8QH+x9l0bkSOtDFi
-         +hQsYDojberpE0hGcXhf/HGdmagsksIbHgSZVP7uaDxBqKmR0QeGVLQi6HFrSqErEARb
-         bK52IzebCZTpingLTlBZhz0DrGIhaoWSpvNLR3KdGk8tRG5Vema7tH35GwC3kn8348TO
-         z5kQ7Wr1ZrJ4mxmZAKetSrIwYMCXoBNqOp8jA5VIza7hKCkMvnWc9uV+RAMJeqO2WbGV
-         Zyvg==
-X-Gm-Message-State: AOJu0Yx7zrpMedMBmkD9Q9VFi75gYnftvf5o1l8KY6eD6GLvOQJt0i5w
-	5jh1zBSGqxZqsc9zocxY+9yadiO3gSRshMEGntj5itOn/gt43/0FJKfAThlSiACM+Q6iLlTicoa
-	NGwxGGAKMdVYauX2ifIH7YFqgpR7r6L+96A==
-X-Received: by 2002:a17:906:51de:b0:a19:a19b:55f0 with SMTP id v30-20020a17090651de00b00a19a19b55f0mr284929ejk.128.1701699565256;
-        Mon, 04 Dec 2023 06:19:25 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE/EGVsdST4KQF6EyBnFKk8CMoutzazJzlTXbos+FVQn2CFyvQ/oSKstzczb4hmwV+z2HH0sw==
-X-Received: by 2002:a17:906:51de:b0:a19:a19b:55f0 with SMTP id v30-20020a17090651de00b00a19a19b55f0mr284924ejk.128.1701699565007;
-        Mon, 04 Dec 2023 06:19:25 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id cb26-20020a170906a45a00b00a0958af2387sm5291092ejb.201.2023.12.04.06.19.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Dec 2023 06:19:24 -0800 (PST)
-Message-ID: <5601c760-dc79-4131-99f0-961d5cdcfbc2@redhat.com>
-Date: Mon, 4 Dec 2023 15:19:23 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Og2rx+JV"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5866213E;
+	Mon,  4 Dec 2023 06:28:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701700117; x=1733236117;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=5u4R57caJafnF5P5+FowKsO+lhHgZToLy8OifJAyScI=;
+  b=Og2rx+JVq61zJptJMfRqaEEUP6vlfad07JPjQMx0UsG7aSYqOWo12PCO
+   PhbJySfoMQXHfOMvFYDl3fyq+5LT8rE3j77WfhQ7gzp7Pv3KMCmK1TlJ5
+   C/Oq2BxlFMrBclAB9BRTzj9/53ecjxRkLS72ZFt+7MBl02OXEysvtegl+
+   UP5qI2DjWGfNJ02QXTG0R/zSxz412K0E5l3T8mIBSvb2kjxj5HjyGyU0A
+   +VdpYg8olCg0JlJyF9VQ2VMBzj85+3tTp8rHH8dlU+jnZLINg+P7TNtSy
+   g8Kc4J01P4qh4IJ0yZekKXDwkj7wrh4NPAwRyHraLMsL0Ee9SHZ1kjnyD
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="384147231"
+X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
+   d="scan'208";a="384147231"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 06:14:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="720330683"
+X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
+   d="scan'208";a="720330683"
+Received: from malladhi-mobl.gar.corp.intel.com ([10.249.34.28])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 06:14:12 -0800
+Date: Mon, 4 Dec 2023 16:14:09 +0200 (EET)
+From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/5] platform/x86/intel/tpmi: Don't create devices
+ for disabled features
+In-Reply-To: <20231130214751.3100418-2-srinivas.pandruvada@linux.intel.com>
+Message-ID: <754da92-fa4e-5340-c9be-348c4b8f97a2@linux.intel.com>
+References: <20231130214751.3100418-1-srinivas.pandruvada@linux.intel.com> <20231130214751.3100418-2-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] platform/x86: ISST: Process read/write blocked
- feature status
-Content-Language: en-US
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- markgross@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20231130214751.3100418-1-srinivas.pandruvada@linux.intel.com>
- <20231130214751.3100418-5-srinivas.pandruvada@linux.intel.com>
- <d3b0dd08-4eca-4268-8b13-e60bd3d85524@redhat.com>
- <e64acb49-608b-a673-c145-7b6bf4c38d5a@linux.intel.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <e64acb49-608b-a673-c145-7b6bf4c38d5a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323329-989722860-1701699254=:3149"
 
-Hi,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 12/4/23 15:11, Ilpo Järvinen wrote:
-> On Mon, 4 Dec 2023, Hans de Goede wrote:
->> On 11/30/23 22:47, Srinivas Pandruvada wrote:
->>> When a feature is read blocked, don't continue to read SST information
->>> and register with SST core.
->>>
->>> When the feature is write blocked, continue to offer read interface for
->>> SST parameters, but don't allow any operation to change state. A state
->>> change results from SST level change, feature change or class of service
->>> change.
->>>
->>> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
->>> ---
->>> v2
->>> - Change read_blocked, write_blocked to bool
->>> - Move the check for power_domain_info->write_blocked for SST-CP
->>> to only write operations
->>
->> Thanks, patch looks good to me:
->>
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->>
->> Did you drop Ilpo's Reviewed-by from v1 on purpose
->> because of the changes ? Or did you forget to add it ?
+--8323329-989722860-1701699254=:3149
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+
+On Thu, 30 Nov 2023, Srinivas Pandruvada wrote:
+
+> If some TPMI features are disabled, don't create auxiliary devices. In
+> this way feature drivers will not load.
 > 
-> No he didn't because this patch had an issue in v1 so I never gave my 
-> rev-by for this patch. ;-)
-
-Ah, there are 2 patches with "Process read/write blocked feature status"
-as part of the subject, that confused me :)
-
-> But here it's now for v2:
+> While creating auxiliary devices, call tpmi_read_feature_status() to
+> check feature state and return if the feature is disabled without
+> creating a device.
 > 
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+> v2
+> - Add comment for returning -EOPNOTSUPP
+> 
+>  drivers/platform/x86/intel/tpmi.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/intel/tpmi.c
+> index c89aa4d14bea..868067ff966e 100644
+> --- a/drivers/platform/x86/intel/tpmi.c
+> +++ b/drivers/platform/x86/intel/tpmi.c
+> @@ -604,9 +604,21 @@ static int tpmi_create_device(struct intel_tpmi_info *tpmi_info,
+>  	struct intel_vsec_device *vsec_dev = tpmi_info->vsec_dev;
+>  	char feature_id_name[TPMI_FEATURE_NAME_LEN];
+>  	struct intel_vsec_device *feature_vsec_dev;
+> +	struct tpmi_feature_state feature_state;
+>  	struct resource *res, *tmp;
+>  	const char *name;
+> -	int i;
+> +	int i, ret;
+> +
+> +	ret = tpmi_read_feature_status(tpmi_info, pfs->pfs_header.tpmi_id, &feature_state);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * If not enabled, continue to look at other features in the PFS, so return -EOPNOTSUPP.
+> +	 * This will not cause failure of loading of this driver.
+> +	 */
+> +	if (!feature_state.enabled)
+> +		return -EOPNOTSUPP;
+>  
+>  	name = intel_tpmi_name(pfs->pfs_header.tpmi_id);
+>  	if (!name)
 
-Thanks & Regards,
+Reviewed-by: Ilpo J�rvinen <ilpo.jarvinen@linux.intel.com>
 
-Hans
+-- 
+ i.
 
-
+--8323329-989722860-1701699254=:3149--
