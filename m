@@ -1,113 +1,161 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RAk8XbSW"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05BE81BF;
-	Tue,  5 Dec 2023 20:34:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701837281; x=1733373281;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sq4PJPq6VrkCmDvgjz4GTxFgQOfpDStAzoJv/e5p5AQ=;
-  b=RAk8XbSWbFO2prS0S9EByQNG3FZ8EMi6HhlSS5Y0AF/Ec4XM2h7Rwf3f
-   tmt8PMi1zFB0BqF1O26CPyq9QlWAvsHtQpUVYoflvhQLgwxrwpZwKC0Ge
-   b0jn/UHMy3XWV9UI+tD5oAq7BahdIEV4lPaJ8j2NWGSAKBYHdbx/bMwpq
-   srmBTd8Ti3g+DTLwRIKPtOijXi0bQK3uiaze/K+ZHwbnT45A+bobU0iU0
-   GfXSC0OF42py7T/nZw4mYen8S1awFyedNiF0kXVvX5XbxZF41v0ReUzT3
-   Rion1s8gPEXewObUWQxow8tQC66tHSlFepi5IOVbvcKaLDO6L1tIg+Mty
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="379023583"
-X-IronPort-AV: E=Sophos;i="6.04,254,1695711600"; 
-   d="scan'208";a="379023583"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 20:34:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="944514523"
-X-IronPort-AV: E=Sophos;i="6.04,254,1695711600"; 
-   d="scan'208";a="944514523"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 05 Dec 2023 20:34:35 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rAjcH-000AGM-22;
-	Wed, 06 Dec 2023 04:34:33 +0000
-Date: Wed, 6 Dec 2023 12:34:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ma Jun <Jun.Ma2@amd.com>, amd-gfx@lists.freedesktop.org,
-	lenb@kernel.org, hdegoede@redhat.com, johannes@sipsolutions.net,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, alexander.deucher@amd.com, Lijo.Lazar@amd.com,
-	mario.limonciello@amd.com, netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, majun@amd.com,
-	Evan Quan <quanliangl@hotmail.com>, Ma Jun <Jun.Ma2@amd.com>
-Subject: Re: [PATCH v14 4/9] wifi: mac80211: Add support for WBRF features
-Message-ID: <202312061213.9yUe2RGP-lkp@intel.com>
-References: <20231129091348.3972539-5-Jun.Ma2@amd.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k0EgXnX4"
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0AEF1B6;
+	Tue,  5 Dec 2023 22:01:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=ZpqnEFEVYXGghRKsKTwe/hCYFwzIb9udDvXhXmIddxs=; b=k0EgXnX45Wo8DtP3tGt50/Q1iw
+	pMhJJ7xo+N2JfKo02ApW+xhAG2M3qYSA3ifz8OWu6HejXMmsVfLNoR3a7kybDMJ2nQJeHnKXr0ZKe
+	rjT/qiHZQNvSF5Oj3vgpLhEHqqLC/33ovrBQYSZUuMOdcwCtJl6o6vqGQoP/jNFRYMVUgryJICs4U
+	4vX7K6Mgv2ax/4WtlIOCGRUHpTYc+TfQMCpXagwXCuO00tlKnjAtjBCr1zX94OaIs/n68sAtzpFmR
+	XigsBNzNctgtPaFQMLKinhwm+hsw0B8OcSXI+v0et75lLRn67lhVUTfzGZ/n9grJpUWsQKZ57yTzC
+	KzzyJ0+A==;
+Received: from [50.53.46.231] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rAkyH-0099Fe-0A;
+	Wed, 06 Dec 2023 06:01:21 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: intel_ips: fix kernel-doc formatting
+Date: Tue,  5 Dec 2023 22:01:18 -0800
+Message-ID: <20231206060120.4816-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231129091348.3972539-5-Jun.Ma2@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Ma,
+Fix kernel-doc function notation and comment formatting to prevent
+warnings from scripts/kernel-doc.
 
-kernel test robot noticed the following build errors:
+for drivers/platform/x86/intel_ips.c:
+595: warning: No description found for return value of 'mcp_exceeded'
+624: warning: No description found for return value of 'cpu_exceeded'
+650: warning: No description found for return value of 'mch_exceeded'
+745: warning: bad line:                 cpu+ gpu+       cpu+gpu-        cpu-gpu+        cpu-gpu-
+746: warning: bad line: cpu < gpu <     cpu+gpu+        cpu+            gpu+            nothing
+753: warning: No description found for return value of 'ips_adjust'
+747: warning: bad line: cpu < gpu >=    cpu+gpu-(mcp<)  cpu+gpu-(mcp<)  gpu-            gpu-
+748: warning: bad line: cpu >= gpu <    cpu-gpu+(mcp<)  cpu-            cpu-gpu+(mcp<)  cpu-
+749: warning: bad line: cpu >= gpu >=   cpu-gpu-        cpu-gpu-        cpu-gpu-        cpu-gpu-
+945: warning: No description found for return value of 'ips_monitor'
+1151: warning: No description found for return value of 'ips_irq_handler'
+1301: warning: Function parameter or member 'ips' not described in 'ips_detect_cpu'
+1302: warning: No description found for return value of 'ips_detect_cpu'
+1358: warning: No description found for return value of 'ips_get_i915_syms'
 
-[auto build test ERROR on v6.7-rc1]
-[also build test ERROR on next-20231205]
-[cannot apply to drm-misc/drm-misc-next wireless-next/main wireless/main linus/master v6.7-rc3 v6.7-rc2]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
+---
+ drivers/platform/x86/intel_ips.c |   30 ++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ma-Jun/Documentation-driver-api-Add-document-about-WBRF-mechanism/20231129-181516
-base:   v6.7-rc1
-patch link:    https://lore.kernel.org/r/20231129091348.3972539-5-Jun.Ma2%40amd.com
-patch subject: [PATCH v14 4/9] wifi: mac80211: Add support for WBRF features
-config: arm-randconfig-004-20231201 (https://download.01.org/0day-ci/archive/20231206/202312061213.9yUe2RGP-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231206/202312061213.9yUe2RGP-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312061213.9yUe2RGP-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   net/mac80211/wbrf.c: In function 'ieee80211_add_wbrf':
->> net/mac80211/wbrf.c:79:9: error: implicit declaration of function 'acpi_amd_wbrf_add_remove'; did you mean 'acpi_amd_wbrf_add_exclusion'? [-Werror=implicit-function-declaration]
-      79 |         acpi_amd_wbrf_add_remove(dev, WBRF_RECORD_ADD, &ranges_in);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~
-         |         acpi_amd_wbrf_add_exclusion
-   cc1: some warnings being treated as errors
-
-
-vim +79 net/mac80211/wbrf.c
-
-    66	
-    67	void ieee80211_add_wbrf(struct ieee80211_local *local, struct cfg80211_chan_def *chandef)
-    68	{
-    69		struct wbrf_ranges_in_out ranges_in = {0};
-    70		struct device *dev;
-    71	
-    72		if (!local->wbrf_supported)
-    73			return;
-    74	
-    75		dev = local->hw.wiphy->dev.parent;
-    76	
-    77		get_ranges_from_chandef(chandef, &ranges_in);
-    78	
-  > 79		acpi_amd_wbrf_add_remove(dev, WBRF_RECORD_ADD, &ranges_in);
-    80	}
-    81	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff -- a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -590,6 +590,8 @@ static void ips_disable_gpu_turbo(struct
+  * @ips: IPS driver struct
+  *
+  * Check whether the MCP is over its thermal or power budget.
++ *
++ * Returns: %true if the temp or power has exceeded its maximum, else %false
+  */
+ static bool mcp_exceeded(struct ips_driver *ips)
+ {
+@@ -619,6 +621,8 @@ static bool mcp_exceeded(struct ips_driv
+  * @cpu: CPU number to check
+  *
+  * Check a given CPU's average temp or power is over its limit.
++ *
++ * Returns: %true if the temp or power has exceeded its maximum, else %false
+  */
+ static bool cpu_exceeded(struct ips_driver *ips, int cpu)
+ {
+@@ -645,6 +649,8 @@ static bool cpu_exceeded(struct ips_driv
+  * @ips: IPS driver struct
+  *
+  * Check the MCH temp & power against their maximums.
++ *
++ * Returns: %true if the temp or power has exceeded its maximum, else %false
+  */
+ static bool mch_exceeded(struct ips_driver *ips)
+ {
+@@ -742,12 +748,13 @@ static void update_turbo_limits(struct i
+  *   - down (at TDP limit)
+  *     - adjust both CPU and GPU down if possible
+  *
+-		cpu+ gpu+	cpu+gpu-	cpu-gpu+	cpu-gpu-
+-cpu < gpu <	cpu+gpu+	cpu+		gpu+		nothing
+-cpu < gpu >=	cpu+gpu-(mcp<)	cpu+gpu-(mcp<)	gpu-		gpu-
+-cpu >= gpu <	cpu-gpu+(mcp<)	cpu-		cpu-gpu+(mcp<)	cpu-
+-cpu >= gpu >=	cpu-gpu-	cpu-gpu-	cpu-gpu-	cpu-gpu-
++ *              |cpu+ gpu+      cpu+gpu-        cpu-gpu+        cpu-gpu-
++ * cpu < gpu <  |cpu+gpu+       cpu+            gpu+            nothing
++ * cpu < gpu >= |cpu+gpu-(mcp<) cpu+gpu-(mcp<)  gpu-            gpu-
++ * cpu >= gpu < |cpu-gpu+(mcp<) cpu-            cpu-gpu+(mcp<)  cpu-
++ * cpu >= gpu >=|cpu-gpu-       cpu-gpu-        cpu-gpu-        cpu-gpu-
+  *
++ * Returns: %0
+  */
+ static int ips_adjust(void *data)
+ {
+@@ -935,11 +942,13 @@ static void monitor_timeout(struct timer
+  * @data: ips driver structure
+  *
+  * This is the main function for the IPS driver.  It monitors power and
+- * tempurature in the MCP and adjusts CPU and GPU power clams accordingly.
++ * temperature in the MCP and adjusts CPU and GPU power clamps accordingly.
+  *
+- * We keep a 5s moving average of power consumption and tempurature.  Using
++ * We keep a 5s moving average of power consumption and temperature.  Using
+  * that data, along with CPU vs GPU preference, we adjust the power clamps
+  * up or down.
++ *
++ * Returns: %0 on success or -errno on error
+  */
+ static int ips_monitor(void *data)
+ {
+@@ -1146,6 +1155,8 @@ static void dump_thermal_info(struct ips
+  * Handle temperature limit trigger events, generally by lowering the clamps.
+  * If we're at a critical limit, we clamp back to the lowest possible value
+  * to prevent emergency shutdown.
++ *
++ * Returns: IRQ_NONE or IRQ_HANDLED
+  */
+ static irqreturn_t ips_irq_handler(int irq, void *arg)
+ {
+@@ -1293,9 +1304,12 @@ static void ips_debugfs_init(struct ips_
+ 
+ /**
+  * ips_detect_cpu - detect whether CPU supports IPS
++ * @ips: IPS driver struct
+  *
+  * Walk our list and see if we're on a supported CPU.  If we find one,
+  * return the limits for it.
++ *
++ * Returns: the &ips_mcp_limits struct that matches the boot CPU or %NULL
+  */
+ static struct ips_mcp_limits *ips_detect_cpu(struct ips_driver *ips)
+ {
+@@ -1352,6 +1366,8 @@ static struct ips_mcp_limits *ips_detect
+  * monitor and control graphics turbo mode.  If we can find them, we can
+  * enable graphics turbo, otherwise we must disable it to avoid exceeding
+  * thermal and power limits in the MCP.
++ *
++ * Returns: %true if the required symbols are found, else %false
+  */
+ static bool ips_get_i915_syms(struct ips_driver *ips)
+ {
