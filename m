@@ -1,178 +1,78 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857AA46A7
+	for <platform-driver-x86@vger.kernel.org>; Thu,  7 Dec 2023 03:36:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="vbvt0mvF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YkoQOY4r"
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B24BFA;
-	Wed,  6 Dec 2023 08:49:12 -0800 (PST)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.nyi.internal (Postfix) with ESMTP id 06AB05C02A6;
-	Wed,  6 Dec 2023 11:49:09 -0500 (EST)
-Received: from imap52 ([10.202.2.102])
-  by compute3.internal (MEProxy); Wed, 06 Dec 2023 11:49:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to; s=fm2; t=
-	1701881349; x=1701967749; bh=7aSOj3X2VbHYlfk00jEHrfDd+wxD+4TJMdm
-	EbRvMRgI=; b=vbvt0mvFqhAdQ50sUdsgJxlqEus0ZX9rvJkQEVzN5690fPeDo6v
-	wZ7maIKIbTvI+Pu7N2qcayfrQjG415Rudv71DXP8eZwXdDY9ea+O7CL5vGhdReef
-	xd4sIaG48U0PvP9SYM1XH49B/ixAkpN1MxzSrR512gsy3PHJNc/9XuXRzGeWx/wj
-	RDW/giPGaEKkcjkvN+xZU8Hi1+Y5Y5mxi1zUSKlWqAH0C/5wcLpbO4zvty043P8R
-	qBKVc1JsoXwMXaiznhlo/pJm0IRZf4qpQ0LOXSSyWQc5UxNPP+kVkxJqwg1P4XvU
-	hIF0yi+/KRpfqU95+RmnFUC5CPtieX+FPPA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1701881349; x=1701967749; bh=7aSOj3X2VbHYlfk00jEHrfDd+wxD+4TJMdm
-	EbRvMRgI=; b=YkoQOY4rhF2/BK5kUSvkkjgZ3ul3mb1TNJUwCTQKbHkS+QvFDkx
-	eJ8vkxQ6EQHTtpg+Z5ho29jKdtjcsgH6FuE5DOen7wn+80CYiJ/3NQTm/DGSMTfn
-	8Ehe+d3lCWz61O032jZkwHj8pyYDTkkpoa7hmK2/IMg2BpDlz7Zc6q/wk2TaWUxr
-	2HW9ts7hIGNFExRb1XKE93YKvlZpTxMDuaw9jRLej1PNpXnszX6IRlajop0sKCwD
-	zXI215F72ybQ9mT5Ym1pGYkSScja69ONag/0gOtJqjG5+wwZlkTy6MhAhLn/wbvA
-	ciLx2LznH+BfyRVLFYCo9TEHDVwTRSe44Fw==
-X-ME-Sender: <xms:BKZwZdOSsXDkstPIaORKi3OgtO5NbDkq1p8fr2bA3PgF9mBeGOm9qQ>
-    <xme:BKZwZf8x_yHHCEJTvnaL8n_9zxTu1EEAjnlySDHIhJyeDB58cM6XxggNdjQDtgQMZ
-    1k6UTwov8vqKzZI99g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudektddgleeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    goufhushhpvggtthffohhmrghinhculdegledmnecujfgurhepofgfggfkjghffffhvfev
-    ufgtgfesthhqredtreerjeenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomh
-    hpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghr
-    nhepieeltdeihefgfeeihedvgedtueeuieefvddtteetffejvefgieeghfeiheeilefgne
-    cuffhomhgrihhnpehsohhurhgtvghfohhrghgvrdhnvghtnecuvehluhhsthgvrhfuihii
-    vgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvoh
-    esshhquhgvsggsrdgtrg
-X-ME-Proxy: <xmx:BKZwZcS7B_E__hQjN-8mSSwnmot6snBRG2vjYiduzLAaw6WisbUcow>
-    <xmx:BKZwZZt2kOh--nBpMpK_At6E3gyj0dgbjBJ7lcE74EplFTqeAvGKnw>
-    <xmx:BKZwZVeGOc2uu8F0yb9Do5ENDr6xoA1ZoqDWwW7JEeA-jz7NwJioeQ>
-    <xmx:BaZwZc6f7DXnpyCnrqzALhetbtSZ_87cJPyk1vT8F_tCdBvP21-19g>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 7AC07C6008B; Wed,  6 Dec 2023 11:49:08 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1178-geeaf0069a7-fm-20231114.001-geeaf0069
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XMqmgxx6"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 00FB7C433C8
+	for <platform-driver-x86@vger.kernel.org>; Thu,  7 Dec 2023 03:36:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701920194;
+	bh=05p4AG+sRj6W8Wtkwk5CEvy3E9PNHr/xN4PzJa5VUBk=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=XMqmgxx6ZNxMQCXoFmyAnt3q6jpH5y/wR+6cXHGSZgHW1lrMW/YYFaF/bUk+VC+PK
+	 pJCmdLuVllij/r1ZaFoq+wrdeHqGzHVQU7nAooMoAZYnre6sRnyoTZ+qUY4fYaU8cE
+	 R5nLzkFRwVtB2x0ijdLJJg1PDsbkIoEUvEh2MKkYIecIw57wYguPaNNoiVYCZSTxNR
+	 HAbBkfVE09cScTaNpgXsaUMZr96M0eJ03z+c091zurBU10LSkq5zG84ewmWUhQknTY
+	 I8N+DW7R4HED1p6Um4KyehTuC5drhVRivZrv1/MeOIKJIqW2XJv9ko55eJEo3OLbHJ
+	 b4QjG/3mHH2sg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id D3981C4332E; Thu,  7 Dec 2023 03:36:33 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218143] platform/x86/intel/pmc: regression found in commit
+ 804951203aa541ad6720c9726c173d18aeb3ab6b
+Date: Thu, 07 Dec 2023 03:36:33 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: david.e.box@linux.intel.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218143-215701-pD22sffewU@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218143-215701@https.bugzilla.kernel.org/>
+References: <bug-218143-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <90220e8f-12e1-4b76-a438-f333fdedce9e@app.fastmail.com>
-In-Reply-To: <f734ff9e-6005-4d47-959d-fab34c71c6e0@infradead.org>
-References: <20231206060144.8260-1-rdunlap@infradead.org>
- <ea94a2d7-a13c-4f08-9979-48a8f33a47fc@app.fastmail.com>
- <f734ff9e-6005-4d47-959d-fab34c71c6e0@infradead.org>
-Date: Wed, 06 Dec 2023 11:48:44 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Randy Dunlap" <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc: ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "Hans de Goede" <hdegoede@redhat.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [ibm-acpi-devel] [PATCH] platform/x86: thinkpad_acpi: fix kernel-doc
- warnings
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218143
 
+--- Comment #5 from David Box (david.e.box@linux.intel.com) ---
+(In reply to The Linux kernel's regression tracker (Thorsten Leemhuis) from
+comment #4)
+> (In reply to James from comment #3)
+> > Dear David,
+> >=20
+> > Just to update that I've been running your "Remove GBE LTR ignore" patc=
+h on
+> > my Intel NUC 8i3BEH for a whole week and all has been stable.
+>=20
+> This looks stalled. Or did a fix for this make progress somewhere and I j=
+ust
+> missed that?
 
-On Wed, Dec 6, 2023, at 11:45 AM, Randy Dunlap wrote:
-> Hi Mark,
->
-> On 12/6/23 07:30, Mark Pearson wrote:
->> Hi Randy
->>=20
->> On Wed, Dec 6, 2023, at 1:01 AM, Randy Dunlap wrote:
->>> Add a function's return description and don't misuse "/**" for
->>> non-kernel-doc comments to prevent warnings from scripts/kernel-doc.
->>>
->>> thinkpad_acpi.c:523: warning: No description found for return value =
-of=20
->>> 'tpacpi_check_quirks'
->>> thinkpad_acpi.c:9307: warning: This comment starts with '/**', but=20
->>> isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc=
-.rst
->>> thinkpad_acpi.c:9307: warning: missing initial short description on=20
->>> line:
->>>  * This evaluates a ACPI method call specific to the battery
->>>
->>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->>> Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
->>> Cc: Hans de Goede <hdegoede@redhat.com>
->>> Cc: "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux.intel.com>
->>> CC: ibm-acpi-devel@lists.sourceforge.net
->>> CC: platform-driver-x86@vger.kernel.org
->>> ---
->>>  drivers/platform/x86/thinkpad_acpi.c |    6 +++---
->>>  1 file changed, 3 insertions(+), 3 deletions(-)
->>>
->>> diff -- a/drivers/platform/x86/thinkpad_acpi.c=20
->>> b/drivers/platform/x86/thinkpad_acpi.c
->>> --- a/drivers/platform/x86/thinkpad_acpi.c
->>> +++ b/drivers/platform/x86/thinkpad_acpi.c
->>> @@ -512,10 +512,10 @@ struct tpacpi_quirk {
->>>   * Iterates over a quirks list until one is found that matches the
->>>   * ThinkPad's vendor, BIOS and EC model.
->>>   *
->>> - * Returns 0 if nothing matches, otherwise returns the quirks field=
- of
->>> + * Returns: %0 if nothing matches, otherwise returns the quirks fie=
-ld=20
->>=20
->> Just being nosy - what does %0 do?
->> I assume it helps with the return value but was intrigued how it is u=
-sed and where
->
-> It causes the output to be formatted as a CONSTANT (probably monospace=
-d font,
-> but no guarantees on that).
-Ah - cool. Thanks!
->
->>=20
->>> of
->>>   * the matching &struct tpacpi_quirk entry.
->>>   *
->>> - * The match criteria is: vendor, ec and bios much match.
->>> + * The match criteria is: vendor, ec and bios must match.
->> I can't for the life of me see what is different here. What am I miss=
-ing?=20
->
-> s/much/must/
-Man....I need to go to the opticians :)
+Fix will be posted shortly.
 
->
->>=20
->>>   */
->>>  static unsigned long __init tpacpi_check_quirks(
->>>  			const struct tpacpi_quirk *qlist,
->>> @@ -9303,7 +9303,7 @@ static struct tpacpi_battery_driver_data
->>>
->>>  /* ACPI helpers/functions/probes */
->>>
->>> -/**
->>> +/*
->>>   * This evaluates a ACPI method call specific to the battery
->>>   * ACPI extension. The specifics are that an error is marked
->>>   * in the 32rd bit of the response, so we just check that here.
->>>
->>>
->>> _______________________________________________
->>> ibm-acpi-devel mailing list
->>> ibm-acpi-devel@lists.sourceforge.net
->>> https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel
->>=20
->> Thanks
->> Mark
->
-> --=20
-> ~Randy
+--=20
+You may reply to this email to add a comment.
 
-Looks good to me!=20
-Reviewed-by: mpearson-lenovo@squebb.ca
-
-Mark
+You are receiving this mail because:
+You are watching the assignee of the bug.=
