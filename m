@@ -1,144 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE57784
-	for <platform-driver-x86@vger.kernel.org>; Thu,  7 Dec 2023 08:07:49 -0800 (PST)
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1082806"
-X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="1082806"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 08:07:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="889794317"
-X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="889794317"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 08:07:47 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1rBGuc-00000003pjh-2puS;
-	Thu, 07 Dec 2023 18:07:42 +0200
-Date: Thu, 7 Dec 2023 18:07:42 +0200
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: Add intel_bytcrc_pwrsrc driver
-Message-ID: <ZXHtzpgCks1Ix-0o@smile.fi.intel.com>
-References: <20230303221928.285477-1-hdegoede@redhat.com>
- <CAHp75VfOUnVVr=_VcTch4-=KTv6v5yG3g+adgn2CtnjKCV0YYw@mail.gmail.com>
- <68a17e4e-a9ee-fe8b-abcd-7ccb4932e72a@redhat.com>
- <ZKvOEXaS6OElB0Tq@smile.fi.intel.com>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JOgzgOcz"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE45210F9
+	for <platform-driver-x86@vger.kernel.org>; Thu,  7 Dec 2023 09:39:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1701970778;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c0Ws7m9/VGMY9jA2Zm8H2GzaVlf6J6UjM2ENOcSbcWE=;
+	b=JOgzgOczpOHRyu8Sf/gfFzaZmvok5OMfeHah2saCp/OiTpsRxwaOjiocFXqJbWequA4WGb
+	fiYInpU3roDdafciBcaxwpKOuAl8642gR92molOyVKi7mV/aHigK793jYc5Qp/YibV6Ecl
+	GMqP02J3kFOMYS7sIuyJgHsYbyrk01s=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-564-wLb3QL77NmGb_TMx3edhmg-1; Thu, 07 Dec 2023 12:39:35 -0500
+X-MC-Unique: wLb3QL77NmGb_TMx3edhmg-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a1848bc49f6so66728566b.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Dec 2023 09:39:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701970774; x=1702575574;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c0Ws7m9/VGMY9jA2Zm8H2GzaVlf6J6UjM2ENOcSbcWE=;
+        b=simJ8W+ErLGtOToPwZZxKglsAueBOmvur0j3bM6UkN/L67i7ng/ARbqESondYDCU9C
+         rUyZJY2DA+yKmGa5JxiQu1ZxFuf8lVL1Jn1f0XP6vkPsvDxxp4UZJp7xqBIAw58p291X
+         0bmw1iLdET08EpBJxXFSu2uU+dZc6m/S3aORnpd1hTFSdwDL+haFM2QHMOyRm9LAnfS9
+         mU1PJjDRIddu6tk5x1OnaRcHmgFgyYjJHUSsVuNTm9BrzCJ5/ViwyswvYCcU56cDR+vj
+         2TUSgX143a9cwpg9WmxrBysubF8up7Sisr2YsfBht4lH7nMsCELGP65Ov/04lgXXFvvz
+         KMlQ==
+X-Gm-Message-State: AOJu0YxS2M3xmdQmNorciezyyDoeEvcWLFNb2ch8vUdDe3olB9csxmYD
+	AFzmbqA5QN0OECDr3NABPQ/AKkCFPXW5k82u2cpxa/ezJJDmLAFLXeA0wRG9m+id9RDkxGBSRuL
+	UgtNFB0fX3e8S56lCo0GghXNn9x68SMAq19Rdo5I0OQ==
+X-Received: by 2002:a17:906:1009:b0:a1e:ef3d:7b70 with SMTP id 9-20020a170906100900b00a1eef3d7b70mr738603ejm.103.1701970774333;
+        Thu, 07 Dec 2023 09:39:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFCVL0gRull1E4OV117OC9Mjn3PZRJ7pSlqY2/B58XXHx4ByQK4jvicylVrGun0S3c31fmGQw==
+X-Received: by 2002:a17:906:1009:b0:a1e:ef3d:7b70 with SMTP id 9-20020a170906100900b00a1eef3d7b70mr738600ejm.103.1701970774017;
+        Thu, 07 Dec 2023 09:39:34 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id ub26-20020a170907c81a00b00a1c96e987c4sm10520ejc.101.2023.12.07.09.39.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Dec 2023 09:39:33 -0800 (PST)
+Message-ID: <3deb876a-62f5-44b9-a20c-ff57bd6ceea9@redhat.com>
+Date: Thu, 7 Dec 2023 18:39:32 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZKvOEXaS6OElB0Tq@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: Add intel_bytcrc_pwrsrc driver
+Content-Language: en-US, nl
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <20230303221928.285477-1-hdegoede@redhat.com>
+ <CAHp75VfOUnVVr=_VcTch4-=KTv6v5yG3g+adgn2CtnjKCV0YYw@mail.gmail.com>
+ <68a17e4e-a9ee-fe8b-abcd-7ccb4932e72a@redhat.com>
+ <ZKvOEXaS6OElB0Tq@smile.fi.intel.com> <ZXHtzpgCks1Ix-0o@smile.fi.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <ZXHtzpgCks1Ix-0o@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 10, 2023 at 12:23:30PM +0300, Andy Shevchenko wrote:
-> On Sat, Mar 04, 2023 at 11:00:59AM +0100, Hans de Goede wrote:
-> > On 3/3/23 23:41, Andy Shevchenko wrote:
-> > > On Sat, Mar 4, 2023 at 12:19 AM Hans de Goede <hdegoede@redhat.com> wrote:
-> > >>
-> > >> Add a new driver for the power-, wake- and reset-source functionality
-> > >> of the Bay Trail (BYT) version of the Crystal Cove PMIC.
-> > >>
-> > >> The main functionality here is detecting which power-sources (USB /
-> > >> DC in / battery) are active. This is normally exposed to userspace as
-> > >> a power_supply class charger device with an online sysfs attribute.
-> > >>
-> > >> But if a charger is online or not is already exposed on BYT-CRC devices
-> > >> through either an ACPI AC power_supply device, or through a native driver
-> > >> for the battery charger chip (e.g. a BQ24292i).
-> > >>
-> > >> So instead of adding duplicate info under the power_supply class this
-> > >> driver exports the info through debugfs and likewise adds debugfs files
-> > >> for the reset- and wake-source info / registers.
-> > >>
-> > >> Despite this driver only exporting debugfs bits it is still useful to
-> > >> have this driver because it clears the wake- and reset-source registers
-> > >> after reading them. Not clearing these can have undesirable side-effects.
-> > > 
-> > > Hmm... Why is the existing regmap debugfs not enough? OK, maybe adding
-> > > something (clearing bits) to the actual CRC PMIC driver.
-> > > (You also can add a write callback so regmap will provide the write
-> > > access to the registers).
-> > 
-> > I did consider adding clearing the bits to the actual CRC PMIC driver,
-> > but this seemed like a cleaner solution and it gives a much nicer
-> > (debug) interface then raw register access.
-> > 
-> > Also after clearing the wake + reset reasons they are gone and cannot
-> > be retreived using debugfs regmap accesses.
-> > 
-> > This driver caches the values before clearing them.
-> 
-> One can always print them before clearing for debug purposes.
-> 
-> > >> Specifically if the WAKESRC register contains 0x01 (wake by powerbutton)
-> > >> on reboot then the firmware on some tablets turns the reboot into
-> > >> a poweroff. I guess this may be necessary to make long power-presses turn
-> > >> into a poweroff somehow?
-> > > 
-> > > Have not a doc at hand. Next week I will try to dig into it to see if
-> > > there is anything regarding it.
-> > 
-> > Note this seems to be a thing on BYT tablets which shipped with Android
-> > and lack an EC compared to other BYT tablets with an CRC PMIC. So I think
-> > things have been hacked around a bit here to deal with the lack of an EC.
-> > 
-> > I doubt this will be in the official docs, with that said thank you for
-> > the offer to look this up.
-> > 
-> > Note for later BYTCR (Cost Reduced) tablets not having an EC is normal,
-> > but these are pre BYTCR Android tablets actually AFAICT and their
-> > Windows counterparts (same motherboard with some different components
-> > do have an EC).
-> 
-> Sorry, seems slipped in cracks. I have checked the doc, below is the citation.
-> 
-> 5.6.4
->  Wake Source Indicators
->  The PMIC contains one register which is intended to store the cause of a wake event,
->  so that software can determine why the system was woken from Cold Off. These bits
->  are write-1-to-clear.
->  If the WAKESRC register is not cleared by the SOC, stale bits (from past wakes) will
->  auto-clear. This is to ensure that only the most recent wake reason is flagged for SW
-> 
->  Table 5-51: Wake Source Register
->  Register Name R/W D7 D6 D5 D4 D3 D2 D1 D0 Initial Address
->  WAKESRC R RSVD WAKE WAKU WAKE WAKE 0X00 TBD
-> 		ADPT SB BAT PBTN
->  BIT NAME FUNCTION DEFAULT
->  D[7:4]	  Reserved
->  		  Reserved
->  0
->  D[3]	  WAKEADPT
->  		  0 = No wake by an AC/DC adapter insertion
->  		  1 = Wake was triggered by an AC/DC adapter
->  		  insertion.
->  0
->  D[2]	  WAKEUSB
->  		  0 = No wake by a USB charger insertion
->  		  1 = Wake was triggered by a USB charger insertion.
->  0
->  D[1]	  WAKEBAT
->  		  0 = No wake by a battery insertion
->  		  1 = Wake was triggered by a battery insertion.
->  0
->  D[0]	  WAKEPBTN
->  		  0 = No wake by user pressing the power button
->  		  1 = Wake was triggered by user pressing the power
->  		  button.
->  0
+Hi Andy,
 
-Did it help anyhow?
+On 12/7/23 17:07, Andy Shevchenko wrote:
 
--- 
-With Best Regards,
-Andy Shevchenko
+>>  Table 5-51: Wake Source Register
+>>  Register Name R/W D7 D6 D5 D4 D3 D2 D1 D0 Initial Address
+>>  WAKESRC R RSVD WAKE WAKU WAKE WAKE 0X00 TBD
+>> 		ADPT SB BAT PBTN
+>>  BIT NAME FUNCTION DEFAULT
+>>  D[7:4]	  Reserved
+>>  		  Reserved
+>>  0
+>>  D[3]	  WAKEADPT
+>>  		  0 = No wake by an AC/DC adapter insertion
+>>  		  1 = Wake was triggered by an AC/DC adapter
+>>  		  insertion.
+>>  0
+>>  D[2]	  WAKEUSB
+>>  		  0 = No wake by a USB charger insertion
+>>  		  1 = Wake was triggered by a USB charger insertion.
+>>  0
+>>  D[1]	  WAKEBAT
+>>  		  0 = No wake by a battery insertion
+>>  		  1 = Wake was triggered by a battery insertion.
+>>  0
+>>  D[0]	  WAKEPBTN
+>>  		  0 = No wake by user pressing the power button
+>>  		  1 = Wake was triggered by user pressing the power
+>>  		  button.
+>>  0
+> 
+> Did it help anyhow?
+
+Thank you for digging this up, this confirms the bit
+definitions we already have from one of the Android
+kernel trees. It is good to have those confirmed.
+
+Regards,
+
+Hans
+
+
 
 
