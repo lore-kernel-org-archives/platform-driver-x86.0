@@ -1,41 +1,41 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c4oU5yFo"
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0849F10C2
-	for <platform-driver-x86@vger.kernel.org>; Fri,  8 Dec 2023 03:19:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GEcxBhVy"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29020E0;
+	Fri,  8 Dec 2023 03:20:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702034400; x=1733570400;
+  t=1702034407; x=1733570407;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=EWkH9YOh7LsERrjcLWWYFVR2PopgTO6ogy/5zbinxng=;
-  b=c4oU5yFoLpfCKzZALaNUSuuZG9oDm2YgYx+PbEG9jIzTlkqF3kvTHriv
-   vTOhLto/YIzIDzCqlkqc0VfTm1oV9GgL1EuyC9wi1GRI7CIKGc6C0+3ys
-   TPgROo9aPy6A9W02Ukvm5bwjYORQYsUQEsHUzZTzn2s5LEBpgOe1MoalA
-   YvKAMn007aG1zpDs8oiQSrvi2Jhy0cP0KdoIJWI0gyKJ+w/C1APaZFGXI
-   EHEMHHBREfZkfZjsx82vx0pHgJXCGczTfdNNuw3ikbx8RFpRKQDkkM6mO
-   NZYGAHimIlS+QOJwC9qUHMKuXtp1lUOWCoectmK/94rJPBPFvmZQY7TRQ
+  bh=4YJNWIeDFXGfBSV+TfrZNDSV2cxP9VEzfo0ouf4VjzE=;
+  b=GEcxBhVy8VuV+2iBI7wVV6QfHcZkLHy4SCWc/S4tr4wduqzjglYd8WK/
+   CB4UHIE/MTznSJAhap7+MumvQ/mF/haW2hq6Ir8Cp2MmlkHnSieNIU8Rz
+   MmoAUuYtVEs6xB8rzTTNh7S9u7uvsd8R61sOeg2WBnb4TABhLky3EV8U6
+   oTQ9pxdk8mIs+LAsVysndnsC3EuT4nqNxCw9kTgU7RvV1psXVqNcF3P5I
+   NKzXVTxLraEFUrx4SHLVTtrlx4r1hxpAz1yPLnVUf7ClalxLQdrUvAHQl
+   X3EUBkGFCS+51ASLWeEratE012ocWZsnh0x5ZvfyGXryXDmSYTtqJ++Cq
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1472895"
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="480588487"
 X-IronPort-AV: E=Sophos;i="6.04,260,1695711600"; 
-   d="scan'208";a="1472895"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 03:19:59 -0800
+   d="scan'208";a="480588487"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 03:20:06 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="721841282"
 X-IronPort-AV: E=Sophos;i="6.04,260,1695711600"; 
-   d="scan'208";a="721841282"
+   d="scan'208";a="20047847"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.49.180])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 03:19:56 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 03:20:04 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, Arnold Gozum <arngozum@gmail.com>
-In-Reply-To: <20231204150601.46976-1-hdegoede@redhat.com>
-References: <20231204150601.46976-1-hdegoede@redhat.com>
-Subject: Re: [PATCH] platform/x86: intel-vbtn: Fix missing
- tablet-mode-switch events
-Message-Id: <170203439059.2193.2525789605771540472.b4-ty@linux.intel.com>
-Date: Fri, 08 Dec 2023 13:19:50 +0200
+To: linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+ Hans de Goede <hdegoede@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, 
+ platform-driver-x86@vger.kernel.org
+In-Reply-To: <20231206060144.8260-1-rdunlap@infradead.org>
+References: <20231206060144.8260-1-rdunlap@infradead.org>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: fix kernel-doc warnings
+Message-Id: <170203439844.2193.17545249753368033460.b4-ty@linux.intel.com>
+Date: Fri, 08 Dec 2023 13:19:58 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -46,14 +46,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.12.3
 
-On Mon, 04 Dec 2023 16:06:01 +0100, Hans de Goede wrote:
+On Tue, 05 Dec 2023 22:01:43 -0800, Randy Dunlap wrote:
 
-> 2 issues have been reported on the Dell Inspiron 7352:
+> Add a function's return description and don't misuse "/**" for
+> non-kernel-doc comments to prevent warnings from scripts/kernel-doc.
 > 
-> 1. Sometimes the tablet-mode-switch stops reporting tablet-mode
->    change events.
-> 
->    Add a "VBDL" call to notify_handler() to work around this.
+> thinkpad_acpi.c:523: warning: No description found for return value of 'tpacpi_check_quirks'
+> thinkpad_acpi.c:9307: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+> thinkpad_acpi.c:9307: warning: missing initial short description on line:
+>  * This evaluates a ACPI method call specific to the battery
 > 
 > [...]
 
@@ -64,8 +65,8 @@ platform-drivers-x86/review-ilpo branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: intel-vbtn: Fix missing tablet-mode-switch events
-      commit: 14c200b7ca46b9a9f4af9e81d258a58274320b6f
+[1/1] platform/x86: thinkpad_acpi: fix kernel-doc warnings
+      commit: 17fe3ec0c110b4afc04052e2a33b146766aac8a1
 
 --
  i.
