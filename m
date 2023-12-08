@@ -1,25 +1,25 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Mn8HAlA1"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ogzh/wEr"
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DDBBD1;
-	Fri,  8 Dec 2023 10:00:51 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7705B173B;
+	Fri,  8 Dec 2023 10:11:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1702058417; x=1702663217; i=w_armin@gmx.de;
-	bh=jCIeWudHWYfPX0tCxiCJvcyjCWHgh2ksRM0QRawqgGA=;
+	t=1702059047; x=1702663847; i=w_armin@gmx.de;
+	bh=P9edKpKexTHVvkOcXN5hlM+yTHAv/d7T1y5gwBKtBDY=;
 	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
 	 In-Reply-To;
-	b=Mn8HAlA1aBZat4uZLhYsMhnjG2wQHpFkSTY0223bYP0uxG4DktDYe9UNbkVHFLyL
-	 7Q3S8o0sEtFf/JyBVaN6VtF3l5rlkSRMpunvu1k1D0TOVTBCFMb8NDqUPQ+EWw5yt
-	 tp1wJ8qPFODuaZZSmIu0vDkd8S8CNxRsa1UahegetRs6Yr0yDAP8heD/tmhVYuBRT
-	 37ApEjc1RfR5CTIdKOBchqMGCGrO1dWhDDeXqM7/NAJhlGOORqRMIV3A/CZZlcBWE
-	 eiTxg6SniKQyybtaZyZMpK4iTu639FI6ctiCEBbdXtbn7vhgy+hNpKfbq6bpNV4F2
-	 dmuqxgAuQkhDm6HcXg==
+	b=ogzh/wErEJl3m6V15nDnjN9SZ+uAT4up6rCslwEYVM/0zoR5NPySf3g+VaFHA+O9
+	 p+Lhvpc1UUhc7MYJBiUEy6jUkVqrR78+GslmRzI2rSroiI7pE/Ntu6AH5DVUcumVa
+	 xTHdRXM66tja8T8c7zyotsN7XkYVBHl775X7jirqZAii8m/fucZTLNKZOCqkYPMxY
+	 oWXy3X9qX41w3nljlHbEgDQHBcvxVJudEQfFE5pan+FqKmwdbFMvqZmx6euD6lxvx
+	 hupCs/yOZJXx5LJI621NURFyqg5Vq9wramxSMcr2hEHYCAzyOxLx8zZKVURk/KxW3
+	 wMH2mDPwCgjMu7VxPg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MVN6j-1qlViA29gd-00SL1v; Fri, 08
- Dec 2023 19:00:17 +0100
-Message-ID: <44b649bd-b3da-4d66-ab2f-140024db9539@gmx.de>
-Date: Fri, 8 Dec 2023 19:00:15 +0100
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MzQg6-1rOuuN2pCi-00vMWS; Fri, 08
+ Dec 2023 19:10:47 +0100
+Message-ID: <e7da54e0-177c-46cc-8407-17bdb07010a0@gmx.de>
+Date: Fri, 8 Dec 2023 19:10:46 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -27,172 +27,309 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] platform/x86: dell-smbios-wmi: Stop using WMI chardev
+Subject: Re: [PATCH 5/5] platform/x86: wmi: Add driver development guide
+Content-Language: en-US
 To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: Hans de Goede <hdegoede@redhat.com>, corbet@lwn.net,
  Dell.Client.Kernel@dell.com, linux-doc@vger.kernel.org,
  platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 References: <20231207222623.232074-1-W_Armin@gmx.de>
- <20231207222623.232074-4-W_Armin@gmx.de>
- <b4789282-920-e9e-5deb-d107d5bb4c7@linux.intel.com>
-Content-Language: en-US
+ <20231207222623.232074-6-W_Armin@gmx.de>
+ <aefc53a4-2472-4613-ef9d-5d3ad972bef3@linux.intel.com>
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <b4789282-920-e9e-5deb-d107d5bb4c7@linux.intel.com>
+In-Reply-To: <aefc53a4-2472-4613-ef9d-5d3ad972bef3@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1yEg3cwfTKNleA0AuC4aDi4P2Ck4NZZftBiMwbpGwDcfcW7B4Xl
- PE4Y4lSaszH1Q6uZ+UgE9tomytSyXrei5IAxtz02xqmz3p32kCwprVBjEEUU8OqLshe4ZJ2
- 6ZJq1yatESrZ/wgwxwwMAyRNv0YLDb+rkkCIjBDm1HaX5UdhclObQT8n625vybTFMK2QK3I
- s/OGMyyKmbvEhrMeF18iQ==
-UI-OutboundReport: notjunk:1;M01:P0:m/fC9DcmGuo=;ftkS8WMT3J2Mw2rmOeLiLWZOV8D
- 7HA9rymgdFTwJWVLvUzoPrCkgBJAKrV07rkjFZOQOQdBawtiqOfi3e6zdOuTzhtiU3Jf/JoIm
- qvMJ0X/ztZCGSCh84eLQ1ZPqAI8wHt0p43qVUgnagyoKj9aF8qbiRuWW4fFiFjX77FK2QZcOB
- TkCrbznTGzdT0AkyDAra/Dc82wq9S1N1mkkyDs5hWHkflWKAC/iDpghL257hQzce5/LzrLRv9
- JNLvS+/Bzcvt0T/q5vfdLsWYi7NVmq/oJmWSunhMR9VNvANh8FH5pK9W/in+Wx47Ixz8WBgvV
- jPzCTvnrJsdMxYYYk2Ncqbl4siXi8gdyD7xWD37viqHR465225RSlAPrSI88eLxsq2NoWAwEM
- kyYxSIWE/fF9WOKxoIM2rclnD2GUylz510Kd13VcrHgnG4yBlsmBXj8rhQbiCv1rEXK7x9mpv
- DHClbWlyoIFcKvIoMF/rJA5LYn8tmUjc2N58A4V9BqyAZ+cBbLx1wC0TicEyA5dyIw+W8wwfZ
- uL9yhhaWuxdwisRRQ3erNHaWK1kZ24QLH0TI6MtRJfleSodx2cwJL58lmeb6/cdHHEQywhzg3
- jWnI64fKt0un84qZaZw3A/TOqqe9TDUCUrt8OrqSDZ8KLg2hd5OQWgVgN1ygjDcnKvWPHIp1m
- xhWUqoAuwEajVtUQyy7Wf+73QVB/ctQxzgtywhT6G7UBICHQ6tNmaTJYYdcGp9bH3We5XEIFr
- XcD/Sr77jZ4RpP6MsxBfa5ITzmYUwg95a8eDeKM1Wui8kdiD1DrLxqAXACThD11JiG8G1oHs0
- pYXIay715SsGXrx0nrtQMrsRrX+M9SXyFRo1IWmt8IAkanxgD5cSyTKmaDHxKlxWwI26IAp9t
- oPCpbrAG1Sud/ah192XD6vn5oz4F4JL4jdpSiN1DQPCHMPBYk4Dc8hCmP/AzqZC1Wuw2Yq9qU
- SZfdmq7BYZTBi97DdtbY/cB8+wY=
+X-Provags-ID: V03:K1:T7gz8CBFZZ/+cLVrnlzQUdkpmoZ1c6nscBTQslx3HIoM5Mtky8l
+ jGLsxbNrWCcGGOZRi1i52etNBUTAT0c8BMs+e49dj6uy7f1868EhogLvy0uHXRheHHBrbnL
+ WK499EcnjCp9b5n9uJqeyx9UKLdgZpu/dT7WDCQy/NUzrX3aQUnUxKAcgJvQC16sF3G//Ue
+ YYQAxuwJMebWnFEffBoYQ==
+UI-OutboundReport: notjunk:1;M01:P0:yyAgzB0BofA=;VWrJ0W4bZblvabSS9HUzMsXIw5a
+ AiqsgXQGHu5tWDoVmsBaiiLhkAbilRv/fk0uSH2SkpDiv1+8rZv6zbKP6aQxu1VgjBgOYK96k
+ QvkEHA/jhnkKXueAviXbtPGk7vJ4nVQ07pgyrFTTVrzoi5nBnF1kor3RrhFhFs9yBn4QU359h
+ f/ck86TV/HHczksasfrDRmGSVCseYWI76LC/Cd9BFkYu0oQFgsmauz7O+sGoI7e15xD6N0uZt
+ ZMKS1/ergSdoJ7lY89fIDLKAOMWHJUviFMQ7m5RGupiRTRFF/IW8LRKCIJXJ+IdfUZegCNiRZ
+ QYFZ5IOLVbdPNA2FtCUAN5FM9Zp9ediGyCBrtylkbKo+dVKW8zFNcro/moCpsIRhOPvkzKzFq
+ +uX+0v+ga701N6Zj4AtRrz+d4nJHHaiHghyLsOQuVHksMw2F9Qn5aixcQK69iKXbG0EIksyYO
+ FUqtSo7lRvgVAvWnQG/WFVSZXAmxgn5aoCKDryEQlxTQzgCGjBqkXuMiud1bQ6QrDzfogarFw
+ VErppY+dagcZQS72gVTfePTYDG7WYPAl8htd/FDb5j2ynLyzclYY3kfLjzRHUIZTof0Y7rkJV
+ i+zP2e+Jq4qIzN+XplTkfXE1gzJySwjMEGMNrxhbtTm1/n/4N9Lm+65QnOF5OsbX2KZpS9wsC
+ thnFaqMUVcJEixXG0sLsO2/y0Z+/61+ztt4WT9Y2JQwkAFdA4PolZwjrdLSqR8WZsu5/HInYd
+ /YsPhhcOmvKNDLeSwjN63sg1041fUkDen0x8wtu9UOVua9iPIQ0bW7tdIyssgwCevQXXc7nZM
+ Hh1VxeMbKtWAmOF+7hZNAfi2lLSHlvJp/kH8VTlUn1cL+grSyDlAcH5AMRJOUGuok5e0vvRSi
+ TdTptJT75owqFET+n54gNN7K46hMxzJ5UfGila9pdwKLEqMKJS3xbIaHSVxG6rDZcdEvT+Mg4
+ 20+tjcvdFnqkSnAUwRYDMQrdhEk=
 
-Am 08.12.23 um 14:41 schrieb Ilpo J=C3=A4rvinen:
+Am 08.12.23 um 13:25 schrieb Ilpo J=C3=A4rvinen:
 
 > On Thu, 7 Dec 2023, Armin Wolf wrote:
 >
->> The WMI chardev API will be removed in the near future.
->> Reimplement the necessary bits used by this driver so
->> that userspace software depending on it does no break.
+>> Since 2010, an LWN article covering WMI drivers exists:
+>>
+>> 	https://lwn.net/Articles/391230/
+>>
+>> Since the introduction of the modern bus-based interface
+>> and other userspace tooling (fwts wmi, bmfdec, ...), this
+>> article is outdated and causes people to still submit new
+>> WMI drivers using the deprecated GUID-based interface.
+>> Fix this by adding a short guid on how to develop WMI drivers
+> Too used to typing guid(?), here you want "guide" instead. :-D (I know
+> that feeling when my fingers type something else than I think).
+>
+>> using the modern bus-based interface.
 >>
 >> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 >> ---
->>   drivers/platform/x86/dell/dell-smbios-wmi.c | 163 ++++++++++++++-----=
--
->>   1 file changed, 117 insertions(+), 46 deletions(-)
+>>   .../wmi/driver-development-guide.rst          | 126 +++++++++++++++++=
++
+>>   Documentation/wmi/index.rst                   |   1 +
+>>   2 files changed, 127 insertions(+)
+>>   create mode 100644 Documentation/wmi/driver-development-guide.rst
 >>
->> diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/plat=
-form/x86/dell/dell-smbios-wmi.c
->> index 931cc50136de..61f40f462eca 100644
->> --- a/drivers/platform/x86/dell/dell-smbios-wmi.c
->> +++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
->> @@ -32,7 +35,9 @@ struct wmi_smbios_priv {
->>   	struct list_head list;
->>   	struct wmi_device *wdev;
->>   	struct device *child;
->> -	u32 req_buf_size;
->> +	u64 req_buf_size;
->> +	u32 hotfix;
->> +	struct miscdevice char_dev;
->>   };
->>   static LIST_HEAD(wmi_list);
+>> diff --git a/Documentation/wmi/driver-development-guide.rst b/Documenta=
+tion/wmi/driver-development-guide.rst
+>> new file mode 100644
+>> index 000000000000..a831e2728d25
+>> --- /dev/null
+>> +++ b/Documentation/wmi/driver-development-guide.rst
+>> @@ -0,0 +1,126 @@
+>> +.. SPDX-License-Identifier: GPL-2.0-or-later
+>> +
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+>> +WMI driver development guide
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+>> +
+>> +The WMI subsystem provides a rich driver api for implementing WMI driv=
+ers,
+> API
 >
->>   static int dell_smbios_wmi_probe(struct wmi_device *wdev, const void =
-*context)
->>   {
->> -	struct wmi_driver *wdriver =3D
->> -		container_of(wdev->dev.driver, struct wmi_driver, driver);
->>   	struct wmi_smbios_priv *priv;
->> -	u32 hotfix;
->> +	u32 buffer_size;
->>   	int count;
->>   	int ret;
->>
->> @@ -162,39 +225,44 @@ static int dell_smbios_wmi_probe(struct wmi_devic=
-e *wdev, const void *context)
->>   	if (!priv)
->>   		return -ENOMEM;
->>
->> +	priv->wdev =3D wdev;
->> +	dev_set_drvdata(&wdev->dev, priv);
->> +
->>   	/* WMI buffer size will be either 4k or 32k depending on machine */
->> -	if (!dell_wmi_get_size(&priv->req_buf_size))
->> +	if (!dell_wmi_get_size(&buffer_size))
->>   		return -EPROBE_DEFER;
->>
->> +	priv->req_buf_size =3D buffer_size;
->> +
->>   	/* some SMBIOS calls fail unless BIOS contains hotfix */
->> -	if (!dell_wmi_get_hotfix(&hotfix))
->> +	if (!dell_wmi_get_hotfix(&priv->hotfix))
->>   		return -EPROBE_DEFER;
->> -	if (!hotfix) {
->> +
->> +	if (!priv->hotfix)
->>   		dev_warn(&wdev->dev,
->>   			"WMI SMBIOS userspace interface not supported(%u), try upgrading t=
-o a newer BIOS\n",
->> -			hotfix);
->> -		wdriver->filter_callback =3D NULL;
->> -	}
->> +			priv->hotfix);
->>
->>   	/* add in the length object we will use internally with ioctl */
->>   	priv->req_buf_size +=3D sizeof(u64);
->> -	ret =3D set_required_buffer_size(wdev, priv->req_buf_size);
->> -	if (ret)
->> -		return ret;
->>
->>   	count =3D get_order(priv->req_buf_size);
->>   	priv->buf =3D (void *)__get_free_pages(GFP_KERNEL, count);
->>   	if (!priv->buf)
->>   		return -ENOMEM;
->>
->> +	if (priv->hotfix) {
->> +		ret =3D dell_smbios_wmi_register_chardev(priv);
->> +		if (ret)
->> +			goto fail_chardev;
->> +	}
->> +
->>   	/* ID is used by dell-smbios to set priority of drivers */
->>   	wdev->dev.id =3D 1;
->>   	ret =3D dell_smbios_register_device(&wdev->dev, &dell_smbios_wmi_cal=
-l);
->>   	if (ret)
->>   		goto fail_register;
->>
->> -	priv->wdev =3D wdev;
->> -	dev_set_drvdata(&wdev->dev, priv);
->>   	mutex_lock(&list_mutex);
->>   	list_add_tail(&priv->list, &wmi_list);
->>   	mutex_unlock(&list_mutex);
->> @@ -202,6 +270,9 @@ static int dell_smbios_wmi_probe(struct wmi_device =
-*wdev, const void *context)
->>   	return 0;
->>
->>   fail_register:
->> +	if (priv->hotfix)
->> +               dell_smbios_wmi_unregister_chardev(priv);
-> I don't understand how hotfix -> priv->hotfix is related to this patch n=
-or
-> why it's necessary?
+>> +documented at Documentation/driver-api/wmi.rst. This document will ser=
+ve
+>> +as an introductory guide for WMI driver writers using this API. It is =
+supposed
+>> +t be an successor to the original `LWN article <https://lwn.net/Articl=
+es/391230/>`_
+> t -> to
 >
-> Or did you mean to use it also in dell_smbios_wmi_remove() but forgot to
-> add the if (priv->hotfix) there?
+>> +which deals with WMI drivers using the deprecated GUID-based WMI inter=
+face.
+>> +
+>> +Optaining WMI device information
+> Obtaining
+>
+>> +--------------------------------
+>> +
+>> +Before developing an WMI driver, information about the WMI device in q=
+uestion
+>> +must be optained. The `lswmi <https://pypi.org/project/lswmi>`_ utilit=
+y can be
+> obtained
+>
+>> +used to display detailed WMI device information using the following co=
+mmand:
+>> +
+>> +::
+>> +
+>> +  lswmi -V
+>> +
+>> +The resulting output will contain information about all WMI devices in=
+side a given
+>> +machine, plus some extra information.
+>> +
+>> +In order to find out more about the interface used to communicate with=
+ a WMI device,
+>> +the `bmfdec <https://github.com/pali/bmfdec>`_ utilities can be used t=
+o decode
+>> +the Binary MOF information used to describe WMI devices. The ``wmi-bmo=
+f`` driver
+> (Managed Object Format)
+>
+>> +exposes this information to userspace, see Documentation/ABI/stable/sy=
+sfs-platform-wmi-bmof.
+> This should use a true link to the file.
+>
+>> +In order to retrieve the decoded Binary MOF information, use the follo=
+wing command (requires root):
+>> +
+>> +::
+>> +
+>> +  ./bmf2mof /sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[=
+-X]/bmof
+>> +
+>> +Sometimes, looking at the disassembled ACPI tables used to describe th=
+e WMI device
+>> +helps in understanding how the WMI device is supposed to work. To find=
+ out which
+>> +ACPI method handles which WMI device, the `fwts <https://github.com/fw=
+ts/fwts>`_
+>> +program can be used with the following command (requires root):
+>> +
+>> +::
+>> +
+>> +  fwts wmi -
+>> +
+>> +Basic WMI driver structure
+>> +--------------------------
+>> +
+>> +The basic WMI driver is build around the struct wmi_driver, which is t=
+hen bound
+>> +to matching WMI devices using an struct wmi_device_id table. Please no=
+te that each
+> an struct -> a struct
+>
+>> +WMI driver should be able to be instantiated multiple times.
+>> +
+>> +::
+>> +
+>> +  static const struct wmi_device_id foo_id_table[] =3D {
+>> +         { "936DA01F-9ABD-4D9D-80C7-02AF85C822A8", NULL },
+>> +         { }
+>> +  };
+>> +  MODULE_DEVICE_TABLE(wmi, foo_id_table);
+>> +
+>> +  static struct wmi_driver foo_driver =3D {
+>> +        .driver =3D {
+>> +                .name =3D "foo",
+>> +                .probe_type =3D PROBE_PREFER_ASYNCHRONOUS,        /* o=
+ptional */
+>> +                .pm =3D pm_sleep_ptr(&foo_dev_pm_ops),            /* o=
+ptional */
+>> +        },
+>> +        .id_table =3D foo_id_table,
+>> +        .probe =3D foo_probe,
+>> +        .remove =3D foo_remove,         /* optional, devres is preferr=
+ed */
+>> +        .notify =3D foo_notify,         /* optional, for event handlin=
+g */
+>> +  };
+>> +  module_wmi_driver(foo_driver);
+>> +
+>> +If your WMI driver is not using any deprecated GUID-based WMI function=
+s and is
+>> +able to be instantiated multiple times, please add its GUID to ``allow=
+_duplicates``
+>> +inside drivers/platform/x86/wmi.c, so that the WMI subsystem does not =
+block duplicate
+>> +GUIDs for it.
+> Just voicing wouldn't it be more useful to not burden new stuff with thi=
+s
+> at all and construct the opposite list instead with the GUIDs that have
+> a driver that don't support duplicates? It's the existing set of GUIDs w=
+e
+> have in-tree minus those currently on the list, correct?
 
-I indeed forgot to add the "if (priv->hotfix)" here, good catch.
+You are right about this, i am already thinking about a different approach=
+ which
+does not rely on such a whitelist.
 
-> In any case, it would be better to put that conversion into own patch
-> before this one.
+Basically, the legacy GUID-based functions only act on WMI devices which h=
+ave an
+ID of zero (which means they where found first), so that legacy drivers do=
+ not see
+WMI devices with a duplicate GUID.
+At the same time, WMI drivers would have to set a flag inside their struct=
+ wmi_driver
+to indicate that they can be safely instantiated multiple times, otherwise=
+ they would
+only be allowed to bind to WMI devices with an ID of zero (which are uniqu=
+e).
 
-I could also drop the priv->hotfix related changes and instead modify the =
-driver
-to use devres (devm_get_free_pages() for example). This would also simplif=
-y the
-error handling code.
+This would replace the whitelist with a flag inside wmi_driver, which can =
+be enabled
+by the driver developer without having to touch the WMI driver core at all=
+.
 
-I will send a v2 soon containing the necessary patches.
+I think i will split out this patch from the next revision of the series, =
+since getting
+rid of the whitelist should be a separate series.
 
->> @@ -211,6 +282,7 @@ static void dell_smbios_wmi_remove(struct wmi_devic=
-e *wdev)
->>         struct wmi_smbios_priv *priv =3D dev_get_drvdata(&wdev->dev);
->>         int count;
->>
->> +      dell_smbios_wmi_unregister_chardev(priv);
->>         mutex_lock(&call_mutex);
->>         mutex_lock(&list_mutex);
->>         list_del(&priv->list);
+Thanks,
+Armin Wolf
+
+>> +WMI method drivers
+>> +------------------
+>> +
+>> +WMI drivers can call WMI device methods using wmidev_evaluate_method()=
+, the
+>> +structure of the ACPI buffer passed to this function is device-specifi=
+c and usually
+>> +needs some tinkering to get right. Looking at the ACPI tables containi=
+ng the WMI
+>> +device usually helps here. The method id and instance number passed to=
+ this function
+>> +are also device-specific, looking at the decoded Binary MOF is usually=
+ enough to
+>> +find the right values.
+>> +The maximum instance number can be retrieved during runtime using wmid=
+ev_instance_count().
+>> +
+>> +Take a look at drivers/platform/x86/inspur_platform_profile.c for an e=
+xample WMI method driver.
+>> +
+>> +WMI data block drivers
+>> +----------------------
+>> +
+>> +WMI drivers can query WMI device data blocks using wmidev_block_query(=
+), the
+>> +structure of the returned ACPI object is again device-specific. Some W=
+MI devices
+>> +also allow for setting data blocks using wmidev_block_set().
+>> +The maximum instance number can also be retrieved using wmidev_instanc=
+e_count().
+>> +
+>> +Take a look at drivers/platform/x86/intel/wmi/sbl-fw-update.c for an e=
+xample
+>> +WMI data block driver.
+>> +
+>> +WMI event drivers
+>> +-----------------
+>> +
+>> +WMI drivers can receive WMI event notifications by providing the notif=
+y() callback
+>> +inside the struct wmi_driver. The WMI subsystem will then take care of=
+ setting
+>> +up the WMI event accordingly. Plase note that the ACPI object passed t=
+o this callback
+> Plase -> Please
+>
+>> +is optional and its structure device-specific. It also does not need t=
+o be freed,
+> structure is device-specific.
+>
+>> +the WMI subsystem takes care of that.
+> I'd state the freeing part more strongly:
+>
+> Releasing the ACPI object is handled by the WMI subsystem, not the drive=
+r.
+>
+>> +
+>> +Take a look at drivers/platform/x86/xiaomi-wmi.c for an example WMI ev=
+ent driver.
+>> +
+>> +Things to avoid
+>> +---------------
+>> +
+>> +When developing WMI drivers, there are a couple of things which should=
+ be avoid
+>> +if feasible:
+>> +
+>> +- usage of the deprecated GUID-based WMI interface
+> It would be nice to be more specific because it's far from obvious at th=
+is
+> point how to differentiate. So perhaps adding something like this would
+> help:
+>
+> (avoid functions with wmi_ prefix that input GUID converting it into
+> a wmi_device using wmi_find_device_by_guid()).
+>
+>> +- bypassing of the WMI subsystem when talking to WMI devices
+>> +- WMI drivers which cannot be instantiated multiple times.
+>> +
+>> +Many older WMI drivers violate one or more points from this list. The =
+reason for
+>> +this is that the WMI subsystem evolved significantly over the last two=
+ decades,
+>> +so there is a lot of legacy cruft inside older WMI drivers.
+>
