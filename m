@@ -1,41 +1,41 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GEcxBhVy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CRpBkQa9"
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29020E0;
-	Fri,  8 Dec 2023 03:20:07 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F75171D;
+	Fri,  8 Dec 2023 03:24:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702034407; x=1733570407;
+  t=1702034682; x=1733570682;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=4YJNWIeDFXGfBSV+TfrZNDSV2cxP9VEzfo0ouf4VjzE=;
-  b=GEcxBhVy8VuV+2iBI7wVV6QfHcZkLHy4SCWc/S4tr4wduqzjglYd8WK/
-   CB4UHIE/MTznSJAhap7+MumvQ/mF/haW2hq6Ir8Cp2MmlkHnSieNIU8Rz
-   MmoAUuYtVEs6xB8rzTTNh7S9u7uvsd8R61sOeg2WBnb4TABhLky3EV8U6
-   oTQ9pxdk8mIs+LAsVysndnsC3EuT4nqNxCw9kTgU7RvV1psXVqNcF3P5I
-   NKzXVTxLraEFUrx4SHLVTtrlx4r1hxpAz1yPLnVUf7ClalxLQdrUvAHQl
-   X3EUBkGFCS+51ASLWeEratE012ocWZsnh0x5ZvfyGXryXDmSYTtqJ++Cq
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="480588487"
+  bh=J7RKyZr5ol9duGiT81gLM1o4OL83UMlZmqvS+FpSDW0=;
+  b=CRpBkQa9doG6NghHL3Ve0bvkxxyGzfPqqyXBRm/c1wEU9COHNzyTKsfK
+   0VCu1zpPB/mFTnUpMuGZeELd8RfHDl8O+neva+Wwg+qRYm7dqDobD6CeO
+   DjByED+psYEg5bhDhckOHon8nTtRw36yMi5xq4E8hsU3U+tdPNT2l5PGM
+   dk5OLBQsuzwwhuikZWZe29QAi7Qrx6efxmVbJF0orIQPjux+p61+keSCN
+   KmrB2ShOG2YzLaRAkU3MTCDjM16wViHue4E3MPEt6aOQBygjJoo/gG8Wl
+   8dR/GxC85SYF30/g5ndHFQO99B5TXXedrnr8xXtn0KhihPqVPVcARdpss
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="480588888"
 X-IronPort-AV: E=Sophos;i="6.04,260,1695711600"; 
-   d="scan'208";a="480588487"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 03:20:06 -0800
+   d="scan'208";a="480588888"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 03:24:41 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="772099007"
 X-IronPort-AV: E=Sophos;i="6.04,260,1695711600"; 
-   d="scan'208";a="20047847"
+   d="scan'208";a="772099007"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.49.180])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 03:20:04 -0800
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 03:24:39 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
- Hans de Goede <hdegoede@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, 
+Cc: Hans de Goede <hdegoede@redhat.com>, 
  platform-driver-x86@vger.kernel.org
-In-Reply-To: <20231206060144.8260-1-rdunlap@infradead.org>
-References: <20231206060144.8260-1-rdunlap@infradead.org>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: fix kernel-doc warnings
-Message-Id: <170203439844.2193.17545249753368033460.b4-ty@linux.intel.com>
-Date: Fri, 08 Dec 2023 13:19:58 +0200
+In-Reply-To: <20231206060120.4816-1-rdunlap@infradead.org>
+References: <20231206060120.4816-1-rdunlap@infradead.org>
+Subject: Re: [PATCH] platform/x86: intel_ips: fix kernel-doc formatting
+Message-Id: <170203467391.2381.1940561088984223400.b4-ty@linux.intel.com>
+Date: Fri, 08 Dec 2023 13:24:33 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -46,15 +46,26 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.12.3
 
-On Tue, 05 Dec 2023 22:01:43 -0800, Randy Dunlap wrote:
+On Tue, 05 Dec 2023 22:01:18 -0800, Randy Dunlap wrote:
 
-> Add a function's return description and don't misuse "/**" for
-> non-kernel-doc comments to prevent warnings from scripts/kernel-doc.
+> Fix kernel-doc function notation and comment formatting to prevent
+> warnings from scripts/kernel-doc.
 > 
-> thinkpad_acpi.c:523: warning: No description found for return value of 'tpacpi_check_quirks'
-> thinkpad_acpi.c:9307: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
-> thinkpad_acpi.c:9307: warning: missing initial short description on line:
->  * This evaluates a ACPI method call specific to the battery
+> for drivers/platform/x86/intel_ips.c:
+> 595: warning: No description found for return value of 'mcp_exceeded'
+> 624: warning: No description found for return value of 'cpu_exceeded'
+> 650: warning: No description found for return value of 'mch_exceeded'
+> 745: warning: bad line:                 cpu+ gpu+       cpu+gpu-        cpu-gpu+        cpu-gpu-
+> 746: warning: bad line: cpu < gpu <     cpu+gpu+        cpu+            gpu+            nothing
+> 753: warning: No description found for return value of 'ips_adjust'
+> 747: warning: bad line: cpu < gpu >=    cpu+gpu-(mcp<)  cpu+gpu-(mcp<)  gpu-            gpu-
+> 748: warning: bad line: cpu >= gpu <    cpu-gpu+(mcp<)  cpu-            cpu-gpu+(mcp<)  cpu-
+> 749: warning: bad line: cpu >= gpu >=   cpu-gpu-        cpu-gpu-        cpu-gpu-        cpu-gpu-
+> 945: warning: No description found for return value of 'ips_monitor'
+> 1151: warning: No description found for return value of 'ips_irq_handler'
+> 1301: warning: Function parameter or member 'ips' not described in 'ips_detect_cpu'
+> 1302: warning: No description found for return value of 'ips_detect_cpu'
+> 1358: warning: No description found for return value of 'ips_get_i915_syms'
 > 
 > [...]
 
@@ -65,8 +76,8 @@ platform-drivers-x86/review-ilpo branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: thinkpad_acpi: fix kernel-doc warnings
-      commit: 17fe3ec0c110b4afc04052e2a33b146766aac8a1
+[1/1] platform/x86: intel_ips: fix kernel-doc formatting
+      commit: 7bcd032370f88fd4022b6926d101403e96a86309
 
 --
  i.
