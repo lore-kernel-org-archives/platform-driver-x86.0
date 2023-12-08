@@ -1,71 +1,198 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NU1AVFIs"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02162E9;
-	Fri,  8 Dec 2023 08:52:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702054374; x=1733590374;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Sv7CcY7QDnpJw6EE95LUk2yATH8dqXWZ/BDiRwAFkPU=;
-  b=NU1AVFIso5/XeCSA2D60Mwcy4EuqPdhEPXUr2NthjBo0eYCX21fCDmLU
-   KLC6KtdSRVHehT36NqlbzDg7XepL0iKbCh/tlCeJ3AQThIxOgrE4E6BL3
-   KoRJzACbIK6ppTGKraNcOq952vIv43ieoOp5JD5V2z8n7mOsaG3sXyMQU
-   dXFB8BDkuvAUAEsE7CJfb3JZvj+DGU49W+U9/D6rmBMNGuZe+AY/Nl6DC
-   HZfX1zoQwGMbSo8At8nA8TGpsfx+3rokxmB+2q3YzrQdj94qNbabVg+3m
-   e2wwXcQG66FiTO/57mb2jn7d3IgFx21+hrP+W2iLp9Y9sY+R4K3PTey9D
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10918"; a="391600083"
-X-IronPort-AV: E=Sophos;i="6.04,261,1695711600"; 
-   d="scan'208";a="391600083"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 08:52:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10918"; a="890183287"
-X-IronPort-AV: E=Sophos;i="6.04,261,1695711600"; 
-   d="scan'208";a="890183287"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 08 Dec 2023 08:52:52 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 201B5154; Fri,  8 Dec 2023 18:52:51 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v1 1/1] clk: x86: lpss-atom: Drop unneeded 'extern' in the header
-Date: Fri,  8 Dec 2023 18:52:38 +0200
-Message-ID: <20231208165238.3309058-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Mn8HAlA1"
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DDBBD1;
+	Fri,  8 Dec 2023 10:00:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1702058417; x=1702663217; i=w_armin@gmx.de;
+	bh=jCIeWudHWYfPX0tCxiCJvcyjCWHgh2ksRM0QRawqgGA=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=Mn8HAlA1aBZat4uZLhYsMhnjG2wQHpFkSTY0223bYP0uxG4DktDYe9UNbkVHFLyL
+	 7Q3S8o0sEtFf/JyBVaN6VtF3l5rlkSRMpunvu1k1D0TOVTBCFMb8NDqUPQ+EWw5yt
+	 tp1wJ8qPFODuaZZSmIu0vDkd8S8CNxRsa1UahegetRs6Yr0yDAP8heD/tmhVYuBRT
+	 37ApEjc1RfR5CTIdKOBchqMGCGrO1dWhDDeXqM7/NAJhlGOORqRMIV3A/CZZlcBWE
+	 eiTxg6SniKQyybtaZyZMpK4iTu639FI6ctiCEBbdXtbn7vhgy+hNpKfbq6bpNV4F2
+	 dmuqxgAuQkhDm6HcXg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MVN6j-1qlViA29gd-00SL1v; Fri, 08
+ Dec 2023 19:00:17 +0100
+Message-ID: <44b649bd-b3da-4d66-ab2f-140024db9539@gmx.de>
+Date: Fri, 8 Dec 2023 19:00:15 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] platform/x86: dell-smbios-wmi: Stop using WMI chardev
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, corbet@lwn.net,
+ Dell.Client.Kernel@dell.com, linux-doc@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20231207222623.232074-1-W_Armin@gmx.de>
+ <20231207222623.232074-4-W_Armin@gmx.de>
+ <b4789282-920-e9e-5deb-d107d5bb4c7@linux.intel.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <b4789282-920-e9e-5deb-d107d5bb4c7@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:1yEg3cwfTKNleA0AuC4aDi4P2Ck4NZZftBiMwbpGwDcfcW7B4Xl
+ PE4Y4lSaszH1Q6uZ+UgE9tomytSyXrei5IAxtz02xqmz3p32kCwprVBjEEUU8OqLshe4ZJ2
+ 6ZJq1yatESrZ/wgwxwwMAyRNv0YLDb+rkkCIjBDm1HaX5UdhclObQT8n625vybTFMK2QK3I
+ s/OGMyyKmbvEhrMeF18iQ==
+UI-OutboundReport: notjunk:1;M01:P0:m/fC9DcmGuo=;ftkS8WMT3J2Mw2rmOeLiLWZOV8D
+ 7HA9rymgdFTwJWVLvUzoPrCkgBJAKrV07rkjFZOQOQdBawtiqOfi3e6zdOuTzhtiU3Jf/JoIm
+ qvMJ0X/ztZCGSCh84eLQ1ZPqAI8wHt0p43qVUgnagyoKj9aF8qbiRuWW4fFiFjX77FK2QZcOB
+ TkCrbznTGzdT0AkyDAra/Dc82wq9S1N1mkkyDs5hWHkflWKAC/iDpghL257hQzce5/LzrLRv9
+ JNLvS+/Bzcvt0T/q5vfdLsWYi7NVmq/oJmWSunhMR9VNvANh8FH5pK9W/in+Wx47Ixz8WBgvV
+ jPzCTvnrJsdMxYYYk2Ncqbl4siXi8gdyD7xWD37viqHR465225RSlAPrSI88eLxsq2NoWAwEM
+ kyYxSIWE/fF9WOKxoIM2rclnD2GUylz510Kd13VcrHgnG4yBlsmBXj8rhQbiCv1rEXK7x9mpv
+ DHClbWlyoIFcKvIoMF/rJA5LYn8tmUjc2N58A4V9BqyAZ+cBbLx1wC0TicEyA5dyIw+W8wwfZ
+ uL9yhhaWuxdwisRRQ3erNHaWK1kZ24QLH0TI6MtRJfleSodx2cwJL58lmeb6/cdHHEQywhzg3
+ jWnI64fKt0un84qZaZw3A/TOqqe9TDUCUrt8OrqSDZ8KLg2hd5OQWgVgN1ygjDcnKvWPHIp1m
+ xhWUqoAuwEajVtUQyy7Wf+73QVB/ctQxzgtywhT6G7UBICHQ6tNmaTJYYdcGp9bH3We5XEIFr
+ XcD/Sr77jZ4RpP6MsxBfa5ITzmYUwg95a8eDeKM1Wui8kdiD1DrLxqAXACThD11JiG8G1oHs0
+ pYXIay715SsGXrx0nrtQMrsRrX+M9SXyFRo1IWmt8IAkanxgD5cSyTKmaDHxKlxWwI26IAp9t
+ oPCpbrAG1Sud/ah192XD6vn5oz4F4JL4jdpSiN1DQPCHMPBYk4Dc8hCmP/AzqZC1Wuw2Yq9qU
+ SZfdmq7BYZTBi97DdtbY/cB8+wY=
 
-'extern' for the functions is not needed, drop it.
+Am 08.12.23 um 14:41 schrieb Ilpo J=C3=A4rvinen:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/platform_data/x86/clk-lpss.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On Thu, 7 Dec 2023, Armin Wolf wrote:
+>
+>> The WMI chardev API will be removed in the near future.
+>> Reimplement the necessary bits used by this driver so
+>> that userspace software depending on it does no break.
+>>
+>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>> ---
+>>   drivers/platform/x86/dell/dell-smbios-wmi.c | 163 ++++++++++++++-----=
+-
+>>   1 file changed, 117 insertions(+), 46 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/plat=
+form/x86/dell/dell-smbios-wmi.c
+>> index 931cc50136de..61f40f462eca 100644
+>> --- a/drivers/platform/x86/dell/dell-smbios-wmi.c
+>> +++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
+>> @@ -32,7 +35,9 @@ struct wmi_smbios_priv {
+>>   	struct list_head list;
+>>   	struct wmi_device *wdev;
+>>   	struct device *child;
+>> -	u32 req_buf_size;
+>> +	u64 req_buf_size;
+>> +	u32 hotfix;
+>> +	struct miscdevice char_dev;
+>>   };
+>>   static LIST_HEAD(wmi_list);
+>
+>>   static int dell_smbios_wmi_probe(struct wmi_device *wdev, const void =
+*context)
+>>   {
+>> -	struct wmi_driver *wdriver =3D
+>> -		container_of(wdev->dev.driver, struct wmi_driver, driver);
+>>   	struct wmi_smbios_priv *priv;
+>> -	u32 hotfix;
+>> +	u32 buffer_size;
+>>   	int count;
+>>   	int ret;
+>>
+>> @@ -162,39 +225,44 @@ static int dell_smbios_wmi_probe(struct wmi_devic=
+e *wdev, const void *context)
+>>   	if (!priv)
+>>   		return -ENOMEM;
+>>
+>> +	priv->wdev =3D wdev;
+>> +	dev_set_drvdata(&wdev->dev, priv);
+>> +
+>>   	/* WMI buffer size will be either 4k or 32k depending on machine */
+>> -	if (!dell_wmi_get_size(&priv->req_buf_size))
+>> +	if (!dell_wmi_get_size(&buffer_size))
+>>   		return -EPROBE_DEFER;
+>>
+>> +	priv->req_buf_size =3D buffer_size;
+>> +
+>>   	/* some SMBIOS calls fail unless BIOS contains hotfix */
+>> -	if (!dell_wmi_get_hotfix(&hotfix))
+>> +	if (!dell_wmi_get_hotfix(&priv->hotfix))
+>>   		return -EPROBE_DEFER;
+>> -	if (!hotfix) {
+>> +
+>> +	if (!priv->hotfix)
+>>   		dev_warn(&wdev->dev,
+>>   			"WMI SMBIOS userspace interface not supported(%u), try upgrading t=
+o a newer BIOS\n",
+>> -			hotfix);
+>> -		wdriver->filter_callback =3D NULL;
+>> -	}
+>> +			priv->hotfix);
+>>
+>>   	/* add in the length object we will use internally with ioctl */
+>>   	priv->req_buf_size +=3D sizeof(u64);
+>> -	ret =3D set_required_buffer_size(wdev, priv->req_buf_size);
+>> -	if (ret)
+>> -		return ret;
+>>
+>>   	count =3D get_order(priv->req_buf_size);
+>>   	priv->buf =3D (void *)__get_free_pages(GFP_KERNEL, count);
+>>   	if (!priv->buf)
+>>   		return -ENOMEM;
+>>
+>> +	if (priv->hotfix) {
+>> +		ret =3D dell_smbios_wmi_register_chardev(priv);
+>> +		if (ret)
+>> +			goto fail_chardev;
+>> +	}
+>> +
+>>   	/* ID is used by dell-smbios to set priority of drivers */
+>>   	wdev->dev.id =3D 1;
+>>   	ret =3D dell_smbios_register_device(&wdev->dev, &dell_smbios_wmi_cal=
+l);
+>>   	if (ret)
+>>   		goto fail_register;
+>>
+>> -	priv->wdev =3D wdev;
+>> -	dev_set_drvdata(&wdev->dev, priv);
+>>   	mutex_lock(&list_mutex);
+>>   	list_add_tail(&priv->list, &wmi_list);
+>>   	mutex_unlock(&list_mutex);
+>> @@ -202,6 +270,9 @@ static int dell_smbios_wmi_probe(struct wmi_device =
+*wdev, const void *context)
+>>   	return 0;
+>>
+>>   fail_register:
+>> +	if (priv->hotfix)
+>> +               dell_smbios_wmi_unregister_chardev(priv);
+> I don't understand how hotfix -> priv->hotfix is related to this patch n=
+or
+> why it's necessary?
+>
+> Or did you mean to use it also in dell_smbios_wmi_remove() but forgot to
+> add the if (priv->hotfix) there?
 
-diff --git a/include/linux/platform_data/x86/clk-lpss.h b/include/linux/platform_data/x86/clk-lpss.h
-index 41df326583f9..7f132029316a 100644
---- a/include/linux/platform_data/x86/clk-lpss.h
-+++ b/include/linux/platform_data/x86/clk-lpss.h
-@@ -15,6 +15,6 @@ struct lpss_clk_data {
- 	struct clk *clk;
- };
- 
--extern int lpss_atom_clk_init(void);
-+int lpss_atom_clk_init(void);
- 
- #endif /* __CLK_LPSS_H */
--- 
-2.43.0.rc1.1.gbec44491f096
+I indeed forgot to add the "if (priv->hotfix)" here, good catch.
 
+> In any case, it would be better to put that conversion into own patch
+> before this one.
+
+I could also drop the priv->hotfix related changes and instead modify the =
+driver
+to use devres (devm_get_free_pages() for example). This would also simplif=
+y the
+error handling code.
+
+I will send a v2 soon containing the necessary patches.
+
+>> @@ -211,6 +282,7 @@ static void dell_smbios_wmi_remove(struct wmi_devic=
+e *wdev)
+>>         struct wmi_smbios_priv *priv =3D dev_get_drvdata(&wdev->dev);
+>>         int count;
+>>
+>> +      dell_smbios_wmi_unregister_chardev(priv);
+>>         mutex_lock(&call_mutex);
+>>         mutex_lock(&list_mutex);
+>>         list_del(&priv->list);
