@@ -1,274 +1,275 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="II+4uhQ4"
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BE591711;
-	Thu,  7 Dec 2023 14:27:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1701988010; x=1702592810; i=w_armin@gmx.de;
-	bh=16WGdSv1+wfNklniu4sIQ3a5/s+FjR905kU76pYmoek=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=II+4uhQ47c/heN/9/Kv9a3ubuYSXD6Bq3S2q8MW6tDrxQlf3RGaDxUzlik4/HLeg
-	 tnLaU20ueLBKeQluHIxlS+rEKEAOLdniLucywJR5TYR5zJtigo7CLMsroIHUtfTaU
-	 itp4JUnwjsBqDTwV6jTNeu9HEjkcPkMzP87YoQM+3atzXGj0IkebGwkNw0dxq7ks6
-	 uKRmNTtyQI0c9hKJJ6OZCl7DkLbE1A1yqUKcb3Wu34yeC1ZeFKj2bQ93KHBpDtQb/
-	 oTRvmIek9VL32T/mxZg9TAyov9pv0jeSTO7KMHgEvkinqo2Kx8xpcpjr6PLGiYEN7
-	 aO2CEXlhDzs+iXSVLQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1M9Wuk-1r852z3pQK-005aLd; Thu, 07 Dec 2023 23:26:49 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	corbet@lwn.net
-Cc: Dell.Client.Kernel@dell.com,
-	linux-doc@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] platform/x86: wmi: Add driver development guide
-Date: Thu,  7 Dec 2023 23:26:23 +0100
-Message-Id: <20231207222623.232074-6-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231207222623.232074-1-W_Armin@gmx.de>
-References: <20231207222623.232074-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RVlm1LBt"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50ED1121;
+	Thu,  7 Dec 2023 17:59:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702000781; x=1733536781;
+  h=message-id:subject:from:reply-to:to:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=difPZ6LGk8HeoJ6jkiYg2wZvZ7jn2G6QafOq0xOt/44=;
+  b=RVlm1LBtC4bDevX1tfY/Bo4WQGi5H8RrDQYc7JhE9bDgMdN+VCf77TiJ
+   77Rs2CL2XQ1uB8dlAcfFegraU/1GyFP5pTbk0KsA4oDz9vDbArii6N88Z
+   tVJ9jFhITjDxdLqj1fLCgkcn2QEaupVS9xSUzWZyB7aOJi2N1RNccg+F6
+   OzKByENRGHDJlRd+AsYJcc1Xre71zVU5Vcws+udqgJfTQDiVklQYvFJh4
+   tCulowE6Bcoi+JyUp6wCtUi3HG/WKx7yxS3A9KBAl1/era56Uqj+rTypG
+   KdF6aM8Usnz+sf85Ey5ARkQQR7sNiynF1BqeTJ+ycMyEpjXzekslb/T01
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1225378"
+X-IronPort-AV: E=Sophos;i="6.04,259,1695711600"; 
+   d="scan'208";a="1225378"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 17:59:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="842429946"
+X-IronPort-AV: E=Sophos;i="6.04,259,1695711600"; 
+   d="scan'208";a="842429946"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 17:59:40 -0800
+Received: from [10.54.75.156] (debox1-desk1.jf.intel.com [10.54.75.156])
+	by linux.intel.com (Postfix) with ESMTP id 25F32580D9B;
+	Thu,  7 Dec 2023 17:59:40 -0800 (PST)
+Message-ID: <cfbb7bc2ea1b84035d19b222e6f77b03bfe04658.camel@linux.intel.com>
+Subject: Re: [PATCH] platform/x86/intel/pmc: Remove GBE LTR ignore
+From: "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To: Mario Limonciello <mario.limonciello@amd.com>, Hans de Goede
+	 <hdegoede@redhat.com>, jahutchinson99@googlemail.com, 
+	ilpo.jarvinen@linux.intel.com, xi.pardee@intel.com, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rajvi.jingar@linux.intel.com
+Date: Thu, 07 Dec 2023 17:59:40 -0800
+In-Reply-To: <3b3d2bea-c8be-4438-9c71-876ce55dce35@amd.com>
+References: <20231207182311.2080972-1-david.e.box@linux.intel.com>
+	 <585eee5b-06ee-4b0a-a5e3-50e5c471fcff@redhat.com>
+	 <3b3d2bea-c8be-4438-9c71-876ce55dce35@amd.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:2qa6zIdjybo5q629oAtjbiXMkCrTpt+gIGIfAX5ZpzSG5Dy44i5
- Ip69bUk3E+GN/Xq4ChdcANtHh0/d0jtCb89eKTap7xeSlJIc74+Ei+050cM3LBj1MDljV+Z
- FItLSj84qZuaaM7DhpAK26XJdpiS2yybmflZ7+2UycBM2RL7VdH3anbhcXzMd+sE2TxMBPu
- e8KkQKe/twR+19lTu6JQw==
-UI-OutboundReport: notjunk:1;M01:P0:YQBEAL5gS1I=;qafX62ughQgYefvaW5PcGYW4NfN
- og+e4JKSRBWlhZ+OfbVcii/qfl4wcX8eIdFMi2w2wMrzCZor84RvRBHnemYFKbfnkmSVFgoml
- C7XIWRfFsQI1mEgakfDV3k1D96l+++AX8XX+rBxUlQvvNemDgwbGdgFS5M06OpGcxJKEHLXiV
- rPs7Jpa4AWkedthXHLWelgt5aXncx+FAtGPpHqqOUyTT6j2BxRowgU4PSvQVvRN8+SUGyXS/e
- XBdIpSqsPTjpE2PjNZVZ1JT3w1EHOedSmbb/MXsehBcn48qFMLKpa5D00DZFK8e9pj62b435h
- fK7KcJiS1PYLYz3XqJtArvtNJL9QeTKttyEoINGVMDip9hD1ngWcMQBwEYm7ytr34iiF/xohJ
- gbHkLRoDRsHiN3LVV1Spt2lo+KRLLWN1cLtwcYq5vqNMUMuX1koeC/C6+c6OgnsusXjvk+Hdt
- Jm1AZoJMSnYPGIM/zm2HefApjtKsTaqQ52BzbnxkNfmHVUhKFk60cqnluOO2MUr5Ry5P4oA4R
- /i9MkVeW/gmiJHCy4ds/EbNEigcK6A96a+DCEfg6lImwsuVMJuyGw1Q35ztZPDR5prulsCG1J
- arwVf8LMJzl40Ahz3bfJTUgzyxiHlmI1T3pohUoYW0mVpxsKxSCiI3gotHKTTidTaEg8r2UFs
- KCY51v3PUF0Zeoj6VTDDuuWdwYc+Y5WkEQe/bc0+/TZ+tfs7Tmf4enWudvqC1nua97TUiXAU0
- F+MsDvOFhKDbt2QEnRrS5o16l5hKVYyZOnP6y/sE96On9rSWTTuwC26DVad4sATQgjJveoKMM
- AdH5vfeES8EFxlQWrR/rJjiBIBZwKLIifBNGj8LLGdcE1vUZF8g2kR8pETdSnW0xHkaKmhDJI
- tSYIARd1aMbxoA2WnkB8H38UdaI2bs+NgPuT+chcz0azkqIbs35JWSGmnlj21PEo8nMNh7Dx/
- 0/hBR8+q2msPyIDnSHB0tOGwonQ=
 
-Since 2010, an LWN article covering WMI drivers exists:
+On Thu, 2023-12-07 at 13:18 -0600, Mario Limonciello wrote:
+> On 12/7/2023 13:02, Hans de Goede wrote:
+> > Hi David,
+> >=20
+> > On 12/7/23 19:23, David E. Box wrote:
+> > > Commit 804951203aa5 ("platform/x86:intel/pmc: Combine core_init() and
+> > > core_configure()") moved the GBE LTR ignore workaround from core.c to=
+ PCH
+> > > code and added it new for Cannon Lake PCH in cnp.c. This introduced a
+> > > network performance regression on a CNP PCH system [1] which has been
+> > > observed on other PCH architectures during testing. Remove the probe-=
+time
+> > > GBE LTR ignore for all platforms. While this will prevent performance
+> > > degradation, it will also limit the deepest SoC Package C state that =
+can
+> > > be
+> > > entered at runtime while a LAN cable is attached.
+> > >=20
+> > > Reported-by: James Hutchinson <jahutchinson99@googlemail.com>
+> > > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218143=C2=A0[1]
+> > > Fixes: 804951203aa5 ("platform/x86:intel/pmc: Combine core_init() and
+> > > core_configure()")
+> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > > Tested-by: James Hutchinson <jahutchinson99@googlemail.com>
+> >=20
+> > So it seems to me that to fix 804951203aa5 the only thing
+> > which needs to be done is remove the pmc_core_send_ltr_ignore()
+> > call from cnp_core_init(), the other changes here are NOT
+> > related to fixing the regression.
+> >=20
+> > So IMHO it seems better to split this into 2 patches?
+> >=20
+> > Also if this block the system from reaching PC10 should
+> > this then not at least be done at suspend time and
+> > undone at resume ?=C2=A0 I'm not seeing anything in the current
+> > code which does an equivalent on suspend/resume, so it
+> > seems to me like this will cause a significant increase
+> > on suspended power-usage if an ethernet cable is attached ?
 
-	https://lwn.net/Articles/391230/
+We don't have many systems attached to onboard LAN. I initially tested on a=
+n
+Alder Lake and D3 during suspend was enough to allow PC10 and s0ix without
+ignoring the LTR. But with your comment I tried on a Tiger Lake and indeed =
+it
+could not get to PC10 during suspend with D3 only. So I'll send a V2 with t=
+hose
+patches. Thanks.
 
-Since the introduction of the modern bus-based interface
-and other userspace tooling (fwts wmi, bmfdec, ...), this
-article is outdated and causes people to still submit new
-WMI drivers using the deprecated GUID-based interface.
-Fix this by adding a short guid on how to develop WMI drivers
-using the modern bus-based interface.
+>=20
+> In addition to system suspend on these system does GBE support runtime PM=
+?
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- .../wmi/driver-development-guide.rst          | 126 ++++++++++++++++++
- Documentation/wmi/index.rst                   |   1 +
- 2 files changed, 127 insertions(+)
- create mode 100644 Documentation/wmi/driver-development-guide.rst
+LTR is the runtime pm mechanism for our GBE. The problem is the hardware. G=
+BE
+wasn't provided an LTR register large enough to write a value to get to PC1=
+0. As
+is the maximum LTR value it can write will only get to PC8 or PC9 depending=
+ on
+the platform.
 
-diff --git a/Documentation/wmi/driver-development-guide.rst b/Documentatio=
-n/wmi/driver-development-guide.rst
-new file mode 100644
-index 000000000000..a831e2728d25
-=2D-- /dev/null
-+++ b/Documentation/wmi/driver-development-guide.rst
-@@ -0,0 +1,126 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-+WMI driver development guide
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-+
-+The WMI subsystem provides a rich driver api for implementing WMI drivers=
-,
-+documented at Documentation/driver-api/wmi.rst. This document will serve
-+as an introductory guide for WMI driver writers using this API. It is sup=
-posed
-+t be an successor to the original `LWN article <https://lwn.net/Articles/=
-391230/>`_
-+which deals with WMI drivers using the deprecated GUID-based WMI interfac=
-e.
-+
-+Optaining WMI device information
-+--------------------------------
-+
-+Before developing an WMI driver, information about the WMI device in ques=
-tion
-+must be optained. The `lswmi <https://pypi.org/project/lswmi>`_ utility c=
-an be
-+used to display detailed WMI device information using the following comma=
-nd:
-+
-+::
-+
-+  lswmi -V
-+
-+The resulting output will contain information about all WMI devices insid=
-e a given
-+machine, plus some extra information.
-+
-+In order to find out more about the interface used to communicate with a =
-WMI device,
-+the `bmfdec <https://github.com/pali/bmfdec>`_ utilities can be used to d=
-ecode
-+the Binary MOF information used to describe WMI devices. The ``wmi-bmof``=
- driver
-+exposes this information to userspace, see Documentation/ABI/stable/sysfs=
--platform-wmi-bmof.
-+In order to retrieve the decoded Binary MOF information, use the followin=
-g command (requires root):
-+
-+::
-+
-+  ./bmf2mof /sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[-X]=
-/bmof
-+
-+Sometimes, looking at the disassembled ACPI tables used to describe the W=
-MI device
-+helps in understanding how the WMI device is supposed to work. To find ou=
-t which
-+ACPI method handles which WMI device, the `fwts <https://github.com/fwts/=
-fwts>`_
-+program can be used with the following command (requires root):
-+
-+::
-+
-+  fwts wmi -
-+
-+Basic WMI driver structure
-+--------------------------
-+
-+The basic WMI driver is build around the struct wmi_driver, which is then=
- bound
-+to matching WMI devices using an struct wmi_device_id table. Please note =
-that each
-+WMI driver should be able to be instantiated multiple times.
-+
-+::
-+
-+  static const struct wmi_device_id foo_id_table[] =3D {
-+         { "936DA01F-9ABD-4D9D-80C7-02AF85C822A8", NULL },
-+         { }
-+  };
-+  MODULE_DEVICE_TABLE(wmi, foo_id_table);
-+
-+  static struct wmi_driver foo_driver =3D {
-+        .driver =3D {
-+                .name =3D "foo",
-+                .probe_type =3D PROBE_PREFER_ASYNCHRONOUS,        /* opti=
-onal */
-+                .pm =3D pm_sleep_ptr(&foo_dev_pm_ops),            /* opti=
-onal */
-+        },
-+        .id_table =3D foo_id_table,
-+        .probe =3D foo_probe,
-+        .remove =3D foo_remove,         /* optional, devres is preferred =
-*/
-+        .notify =3D foo_notify,         /* optional, for event handling *=
-/
-+  };
-+  module_wmi_driver(foo_driver);
-+
-+If your WMI driver is not using any deprecated GUID-based WMI functions a=
-nd is
-+able to be instantiated multiple times, please add its GUID to ``allow_du=
-plicates``
-+inside drivers/platform/x86/wmi.c, so that the WMI subsystem does not blo=
-ck duplicate
-+GUIDs for it.
-+
-+WMI method drivers
-+------------------
-+
-+WMI drivers can call WMI device methods using wmidev_evaluate_method(), t=
-he
-+structure of the ACPI buffer passed to this function is device-specific a=
-nd usually
-+needs some tinkering to get right. Looking at the ACPI tables containing =
-the WMI
-+device usually helps here. The method id and instance number passed to th=
-is function
-+are also device-specific, looking at the decoded Binary MOF is usually en=
-ough to
-+find the right values.
-+The maximum instance number can be retrieved during runtime using wmidev_=
-instance_count().
-+
-+Take a look at drivers/platform/x86/inspur_platform_profile.c for an exam=
-ple WMI method driver.
-+
-+WMI data block drivers
-+----------------------
-+
-+WMI drivers can query WMI device data blocks using wmidev_block_query(), =
-the
-+structure of the returned ACPI object is again device-specific. Some WMI =
-devices
-+also allow for setting data blocks using wmidev_block_set().
-+The maximum instance number can also be retrieved using wmidev_instance_c=
-ount().
-+
-+Take a look at drivers/platform/x86/intel/wmi/sbl-fw-update.c for an exam=
-ple
-+WMI data block driver.
-+
-+WMI event drivers
-+-----------------
-+
-+WMI drivers can receive WMI event notifications by providing the notify()=
- callback
-+inside the struct wmi_driver. The WMI subsystem will then take care of se=
-tting
-+up the WMI event accordingly. Plase note that the ACPI object passed to t=
-his callback
-+is optional and its structure device-specific. It also does not need to b=
-e freed,
-+the WMI subsystem takes care of that.
-+
-+Take a look at drivers/platform/x86/xiaomi-wmi.c for an example WMI event=
- driver.
-+
-+Things to avoid
-+---------------
-+
-+When developing WMI drivers, there are a couple of things which should be=
- avoid
-+if feasible:
-+
-+- usage of the deprecated GUID-based WMI interface
-+- bypassing of the WMI subsystem when talking to WMI devices
-+- WMI drivers which cannot be instantiated multiple times.
-+
-+Many older WMI drivers violate one or more points from this list. The rea=
-son for
-+this is that the WMI subsystem evolved significantly over the last two de=
-cades,
-+so there is a lot of legacy cruft inside older WMI drivers.
-diff --git a/Documentation/wmi/index.rst b/Documentation/wmi/index.rst
-index 537cff188e14..fec4b6ae97b3 100644
-=2D-- a/Documentation/wmi/index.rst
-+++ b/Documentation/wmi/index.rst
-@@ -8,6 +8,7 @@ WMI Subsystem
-    :maxdepth: 1
+David
 
-    acpi-interface
-+   driver-development-guide
-    devices/index
-
- .. only::  subproject and html
-=2D-
-2.39.2
+>=20
+> If so, would it make sense to also have a Linux communication path from=
+=20
+> the GBE driver to this driver as part of the runtime PM callbacks?
+>=20
+> Then if the the GBE goes into runtime PM it could tell this driver to=20
+> waive LTR and if exits runtime PM it could tell this driver to stop=20
+> waiving LTR.
+>=20
+> >=20
+> > Regards,
+> >=20
+> > Hans
+> >=20
+> >=20
+> >=20
+> > > ---
+> > > =C2=A0 drivers/platform/x86/intel/pmc/adl.c=C2=A0 | 6 ------
+> > > =C2=A0 drivers/platform/x86/intel/pmc/cnp.c=C2=A0 | 6 ------
+> > > =C2=A0 drivers/platform/x86/intel/pmc/core.c | 2 +-
+> > > =C2=A0 drivers/platform/x86/intel/pmc/core.h | 1 -
+> > > =C2=A0 drivers/platform/x86/intel/pmc/mtl.c=C2=A0 | 6 ------
+> > > =C2=A0 drivers/platform/x86/intel/pmc/tgl.c=C2=A0 | 5 -----
+> > > =C2=A0 6 files changed, 1 insertion(+), 25 deletions(-)
+> > >=20
+> > > diff --git a/drivers/platform/x86/intel/pmc/adl.c
+> > > b/drivers/platform/x86/intel/pmc/adl.c
+> > > index 64c492391ede..e4a421ca64be 100644
+> > > --- a/drivers/platform/x86/intel/pmc/adl.c
+> > > +++ b/drivers/platform/x86/intel/pmc/adl.c
+> > > @@ -321,11 +321,5 @@ int adl_core_init(struct pmc_dev *pmcdev)
+> > > =C2=A0=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmc_core_get_low_powe=
+r_modes(pmcdev);
+> > > =C2=A0=20
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Due to a hardware limit=
+ation, the GBE LTR blocks PC10
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * when a cable is attache=
+d. Tell the PMC to ignore it.
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_dbg(&pmcdev->pdev->dev=
+, "ignoring GBE LTR\n");
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmc_core_send_ltr_ignore(p=
+mcdev, 3);
+> > > -
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
+> > > =C2=A0 }
+> > > diff --git a/drivers/platform/x86/intel/pmc/cnp.c
+> > > b/drivers/platform/x86/intel/pmc/cnp.c
+> > > index 59298f184d0e..416d3a0c3615 100644
+> > > --- a/drivers/platform/x86/intel/pmc/cnp.c
+> > > +++ b/drivers/platform/x86/intel/pmc/cnp.c
+> > > @@ -216,11 +216,5 @@ int cnp_core_init(struct pmc_dev *pmcdev)
+> > > =C2=A0=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmc_core_get_low_powe=
+r_modes(pmcdev);
+> > > =C2=A0=20
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Due to a hardware limit=
+ation, the GBE LTR blocks PC10
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * when a cable is attache=
+d. Tell the PMC to ignore it.
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_dbg(&pmcdev->pdev->dev=
+, "ignoring GBE LTR\n");
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmc_core_send_ltr_ignore(p=
+mcdev, 3);
+> > > -
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
+> > > =C2=A0 }
+> > > diff --git a/drivers/platform/x86/intel/pmc/core.c
+> > > b/drivers/platform/x86/intel/pmc/core.c
+> > > index 983e3a8f4910..7c6a74957d57 100644
+> > > --- a/drivers/platform/x86/intel/pmc/core.c
+> > > +++ b/drivers/platform/x86/intel/pmc/core.c
+> > > @@ -462,7 +462,7 @@ static int pmc_core_pll_show(struct seq_file *s, =
+void
+> > > *unused)
+> > > =C2=A0 }
+> > > =C2=A0 DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
+> > > =C2=A0=20
+> > > -int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
+> > > +static int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 valu=
+e)
+> > > =C2=A0 {
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct pmc *pmc;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0const struct pmc_reg_=
+map *map;
+> > > diff --git a/drivers/platform/x86/intel/pmc/core.h
+> > > b/drivers/platform/x86/intel/pmc/core.h
+> > > index 6d7673145f90..3bbdb41a754f 100644
+> > > --- a/drivers/platform/x86/intel/pmc/core.h
+> > > +++ b/drivers/platform/x86/intel/pmc/core.h
+> > > @@ -493,7 +493,6 @@ extern const struct pmc_reg_map mtl_ioem_reg_map;
+> > > =C2=A0=20
+> > > =C2=A0 extern void pmc_core_get_tgl_lpm_reqs(struct platform_device *=
+pdev);
+> > > =C2=A0 extern int pmc_core_ssram_get_lpm_reqs(struct pmc_dev *pmcdev)=
+;
+> > > -extern int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 valu=
+e);
+> > > =C2=A0=20
+> > > =C2=A0 int pmc_core_resume_common(struct pmc_dev *pmcdev);
+> > > =C2=A0 int get_primary_reg_base(struct pmc *pmc);
+> > > diff --git a/drivers/platform/x86/intel/pmc/mtl.c
+> > > b/drivers/platform/x86/intel/pmc/mtl.c
+> > > index 38c2f946ec23..33d32a76c43a 100644
+> > > --- a/drivers/platform/x86/intel/pmc/mtl.c
+> > > +++ b/drivers/platform/x86/intel/pmc/mtl.c
+> > > @@ -1065,11 +1065,5 @@ int mtl_core_init(struct pmc_dev *pmcdev)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmc_core_get_low_powe=
+r_modes(pmcdev);
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mtl_punit_pmt_init(pm=
+cdev);
+> > > =C2=A0=20
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Due to a hardware limit=
+ation, the GBE LTR blocks PC10
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * when a cable is attache=
+d. Tell the PMC to ignore it.
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_dbg(&pmcdev->pdev->dev=
+, "ignoring GBE LTR\n");
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmc_core_send_ltr_ignore(p=
+mcdev, 3);
+> > > -
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return pmc_core_ssram=
+_get_lpm_reqs(pmcdev);
+> > > =C2=A0 }
+> > > diff --git a/drivers/platform/x86/intel/pmc/tgl.c
+> > > b/drivers/platform/x86/intel/pmc/tgl.c
+> > > index d5f1d2223c5a..7e6f5739a197 100644
+> > > --- a/drivers/platform/x86/intel/pmc/tgl.c
+> > > +++ b/drivers/platform/x86/intel/pmc/tgl.c
+> > > @@ -265,11 +265,6 @@ int tgl_core_init(struct pmc_dev *pmcdev)
+> > > =C2=A0=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmc_core_get_low_powe=
+r_modes(pmcdev);
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmc_core_get_tgl_lpm_=
+reqs(pmcdev->pdev);
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Due to a hardware limit=
+ation, the GBE LTR blocks PC10
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * when a cable is attache=
+d. Tell the PMC to ignore it.
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_dbg(&pmcdev->pdev->dev=
+, "ignoring GBE LTR\n");
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmc_core_send_ltr_ignore(p=
+mcdev, 3);
+> > > =C2=A0=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
+> > > =C2=A0 }
+> > >=20
+> > > base-commit: 35ddd61cf023b5deb2b7e9f1627abef053281c0a
+> >=20
+> >=20
+>=20
 
