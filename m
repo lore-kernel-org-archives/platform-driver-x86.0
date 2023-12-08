@@ -1,88 +1,72 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mFAmQkqK"
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F9471732;
-	Fri,  8 Dec 2023 03:06:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c4oU5yFo"
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0849F10C2
+	for <platform-driver-x86@vger.kernel.org>; Fri,  8 Dec 2023 03:19:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702033583; x=1733569583;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Lut/IjYzOv9srBYiYEXBVWgNLBYWSH+5N7YUlD28cxc=;
-  b=mFAmQkqKPLCTFHur5PtlFRwBLZlUcDWL1v3pkIDkR0EgbP2ZQWeo0vTp
-   TAPPQ7YxJEWHmmNYb4ZkIs+4e7Xv2F3IbIJQlsbtoWiLYEt7W013aERfH
-   K9IeD+X6NkYUEH4IQQfFKum2dyZFiE5OMga2BB+gI9x31MxwVNI0lt3XE
-   tS4iufHJtmBn55CZ4+sgSS5BlJnCBUHkfHXTSI/qyerLJI+/pmZl4OxjD
-   mmOcQvS4zG8jzm2Kb1o2+rIJKF3v05QlWZJSJ/8c72DG3uk1ddt1hoOP+
-   WkXgSybHxWxTtBJd4O4opXOXRBUzB+RWGVOW4H5eWXdEUZCQ9D68Jpy9S
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1456041"
+  t=1702034400; x=1733570400;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=EWkH9YOh7LsERrjcLWWYFVR2PopgTO6ogy/5zbinxng=;
+  b=c4oU5yFoLpfCKzZALaNUSuuZG9oDm2YgYx+PbEG9jIzTlkqF3kvTHriv
+   vTOhLto/YIzIDzCqlkqc0VfTm1oV9GgL1EuyC9wi1GRI7CIKGc6C0+3ys
+   TPgROo9aPy6A9W02Ukvm5bwjYORQYsUQEsHUzZTzn2s5LEBpgOe1MoalA
+   YvKAMn007aG1zpDs8oiQSrvi2Jhy0cP0KdoIJWI0gyKJ+w/C1APaZFGXI
+   EHEMHHBREfZkfZjsx82vx0pHgJXCGczTfdNNuw3ikbx8RFpRKQDkkM6mO
+   NZYGAHimIlS+QOJwC9qUHMKuXtp1lUOWCoectmK/94rJPBPFvmZQY7TRQ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1472895"
 X-IronPort-AV: E=Sophos;i="6.04,260,1695711600"; 
-   d="scan'208";a="1456041"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 03:06:22 -0800
+   d="scan'208";a="1472895"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 03:19:59 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1103534402"
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="721841282"
 X-IronPort-AV: E=Sophos;i="6.04,260,1695711600"; 
-   d="scan'208";a="1103534402"
-Received: from smatua-mobl.ger.corp.intel.com ([10.251.223.110])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 03:06:19 -0800
-Date: Fri, 8 Dec 2023 13:06:17 +0200 (EET)
-From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Vishnu Sankar <vishnuocv@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    markgross@kernel.org
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: fix for incorrect fan
- reporting on some ThinkPad systems
-In-Reply-To: <2ae27a1b-a472-8a57-994e-f016cc25dafc@linux.intel.com>
-Message-ID: <25f86da-2484-3cf9-ae1e-73cac2e6541a@linux.intel.com>
-References: <20231206162003.92010-1-vishnuocv@gmail.com> <2ae27a1b-a472-8a57-994e-f016cc25dafc@linux.intel.com>
+   d="scan'208";a="721841282"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.49.180])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2023 03:19:56 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, Arnold Gozum <arngozum@gmail.com>
+In-Reply-To: <20231204150601.46976-1-hdegoede@redhat.com>
+References: <20231204150601.46976-1-hdegoede@redhat.com>
+Subject: Re: [PATCH] platform/x86: intel-vbtn: Fix missing
+ tablet-mode-switch events
+Message-Id: <170203439059.2193.2525789605771540472.b4-ty@linux.intel.com>
+Date: Fri, 08 Dec 2023 13:19:50 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-4976533-1702033581=:1875"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, 04 Dec 2023 16:06:01 +0100, Hans de Goede wrote:
 
---8323329-4976533-1702033581=:1875
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
-On Fri, 8 Dec 2023, Ilpo Järvinen wrote:
-
-> On Thu, 7 Dec 2023, Vishnu Sankar wrote:
+> 2 issues have been reported on the Dell Inspiron 7352:
 > 
-> Hi Vishnu,
+> 1. Sometimes the tablet-mode-switch stops reporting tablet-mode
+>    change events.
 > 
-> Thanks for the patch.
+>    Add a "VBDL" call to notify_handler() to work around this.
 > 
-> > Some ThinkPad systems ECFW use non-standard addresses for fan control
-> > and reporting. This patch adds support for such ECFW so that it can report
-> > the correct fan values.
-> > Tested on Thinkpads L13 Yoga Gen 2 and X13 Yoga Gen 2.
-> > 
-> > Co-developed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> > Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+> [...]
 
-> > +		/* Default mode is AUTO which means controlled by EC */
-> > +		if (unlikely(!acpi_ec_read(fan_status_offset_ns, &s)))
-> 
-> I'm skeptical that all these unlikely/likely() are useful. Some might even 
-> be harmful if e.g. is some error condition keeps repeating itself and 
-> the particular if handling that is marked with unlikely().
-> 
-> I know the code in that file is littered with them already but it would 
-> be better to add into that, IMO.
 
-So I'm missing the negative here, I meant: ... not add into that ...
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
 
--- 
+The list of commits applied:
+[1/1] platform/x86: intel-vbtn: Fix missing tablet-mode-switch events
+      commit: 14c200b7ca46b9a9f4af9e81d258a58274320b6f
+
+--
  i.
 
---8323329-4976533-1702033581=:1875--
