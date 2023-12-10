@@ -1,23 +1,23 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="kKncfG8h"
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43DEEEB;
-	Sun, 10 Dec 2023 12:25:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="N+smmKKy"
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4005CD8;
+	Sun, 10 Dec 2023 12:25:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1702239891; x=1702844691; i=w_armin@gmx.de;
-	bh=9X/ndjF0qighzqFD38BDT0oCZveOZxeu5EzMzNvtGSY=;
+	t=1702239895; x=1702844695; i=w_armin@gmx.de;
+	bh=FXptV17hEQfrk/SdFKWK5/BHx6pY5MLIQJDt8cM6pCk=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=kKncfG8hsHirtke4S1FBYVxunBEoaYhoOLsxAWAJJv/YMBipY+16uKMEMQuRjECo
-	 80YNKY1uAiv4fhqM33Id0bBzl3lElqVRnyJl2WJa6qCQy2O8NoIAli8GDiCEvpPDK
-	 Bn1mtNKE/09GxlpnQxVt3fdrNQiRXaExxp8eRaaL7HQGNTdprhfkS/uK9ZRlCUWAF
-	 m3yyw+bMr7qghUx9+Ky38q4IG7YRFP5b6MMVU5Bo5qN93TshYZrMb1yaL2GR5wLPD
-	 6paonzgMgcg3CN/czrldEMb7g4M6WxDolHAcJ3RWrwNv0mKmbgwUGnyrdYrCl6zB8
-	 +na7+EtFf6wdrSy68Q==
+	b=N+smmKKyhXs3UJovrNIdjaQjGUWRB5Ai1g8B+CxwvZ79mvlaKjuiozhtep615gVW
+	 TY53yvlGRFW9DW2hYtC3wHFIMYUVm09Ldr9shdIF6pHyT1ICjyv1g8IXrM8nsE1hv
+	 bIHkoIGW2+jmEsICzJXcIEbZpRggweRkJ5D33LaQ5BDZ96GND2xoQ4uoC4JWznQ5h
+	 Mb66Vd36AOda5hlNZ/OGtLTycQyUpgsTmY60Ja/9zPGzohV4BjLxEHQGiTmmuyHcm
+	 Oe0iq23mwfVWd2qhQWJFDsLSNMXUgfB6s8X5Sz9rCqHfnhWI0TR2A8+dIjmMRoBp8
+	 Jl1T51Hd8gWE8IcK6w==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1N5mKJ-1rIxiq1mPr-017Ho0; Sun, 10 Dec 2023 21:24:51 +0100
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MmDEg-1rczgN1JtA-00iFNB; Sun, 10 Dec 2023 21:24:55 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
@@ -26,9 +26,9 @@ Cc: Dell.Client.Kernel@dell.com,
 	linux-doc@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/5] platform/x86: wmi: Remove debug_event module param
-Date: Sun, 10 Dec 2023 21:24:40 +0100
-Message-Id: <20231210202443.646427-3-W_Armin@gmx.de>
+Subject: [PATCH v2 4/5] platform/x86: dell-smbios-wmi: Stop using WMI chardev
+Date: Sun, 10 Dec 2023 21:24:42 +0100
+Message-Id: <20231210202443.646427-5-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231210202443.646427-1-W_Armin@gmx.de>
 References: <20231210202443.646427-1-W_Armin@gmx.de>
@@ -38,173 +38,287 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gxVqnCyDxUDGQkxB/vb9rTwI2WIj9Lz6rYKGNRn2PQV5PzSCuKe
- RazhoLs+5F1OSGabVdlzXr/H/IcTChsR2CGMgXd6jknrbKnrEo4ocdAj1I4fXwHXqkDx48t
- kO0C2oMu5gel2Pw9B2p6iBoz0lRxDOo7KSeAF0icXSMcMsmgtWxfRnitc4r9yj8ILz5N0Ay
- 9e5EI4rRhgwo7RsiIGNrQ==
-UI-OutboundReport: notjunk:1;M01:P0:sILp1v5shW8=;Acn5DnIaQxHF1DQgghBbQcgUHhH
- As+bLb/RR+xof6keTYpLFqjD3pyH3gKx1mUoL6uSWlf3EHsmkXimoS1TBTVasja6yn8n3OJUN
- 1+BB+VD9V8Z7DxCqGOCOY2DEhlxtlawYAtTpa4RWhBOdkHrpOoGN2rQPtjqZRzMvzZb2arMls
- JOxFFZe9HdMJS9aui4HaG9G68dWKshmKtKPhMotJGBu3E2o2vRrhYMY6df4xwnyxm1JGw9PqZ
- TE++MOl9J+xnGv8whkRlbfmrad6G4ddbRW0jhTbyh/Fhw95J/Mn44tXFPPdV0BiIHjC8CdhrR
- qT8su+wYn4W8lGsAemHujMyy3kNyWBxkuCy07heco8m5oedXDAe77BkhLX3CefxD4aehkGPEy
- V9rG1amxfbNlAHQM84CLH9Pdio7nnTxLIqaOEoWq5UHsDoDIQZc56gG5s3XDHJXFmpd8cDwMr
- Dp4Wps2txBhdxPS6FqgoHH32B8q1vchhkmRQxPc+EHQMLT4aIeNPUaYmOtBFyALP4kU1L63yI
- JlKgj7XKqiWiX5uJvGLS11lyrXeKltVRCJ7YKzbE2G8ObeQbOpuTZDPSDS28ncBitoSRXpRI2
- eUZUQHFGSt4wDBS+VqmvZUdbHs+om7WYxhXF1GQZ2CJ4PPN5nIe5iTXEckwKuBb/I8F/joY1X
- 7wXKudVBVI4beQWdV9BB1vp3rdIjLOaticKS8uQQcCHojteumAtoiikdDvsCujRU0DcllOVD7
- K7i6qxTAjXUy+UG2YhbkWabDaGTUoItWel1emFQ6/7sc0ntxZ4TB9ZpUIfHlz5Rk75jGyjd0o
- KKHgmNhcgPJGezKx8vajAMaYXLAAX+G0L9tmXzsFqNWQCVHwvHbSxABS1oeYrYxK4iLl8IpZ2
- Rj+ke4JO339fggMHFmjSnK0YaDDgodPi8467Cf3KmUtcfruSaelBUwCJVlYqCEpYNR4hsVy5A
- x0HdzVc4Mp5f0RvZRrElueaafis=
+X-Provags-ID: V03:K1:XC4EOXkjV5iFFakqAqxeHDjqFAxWM4zLLG2pWJIWJy25P26olbU
+ fpESgLJr3zjXRCrQ9EmXnFDZwHxPSZSwncbwokHtSf/3wghUOUSJYT5Sxz5uLUGRyKS1cca
+ QPgpFpgyrS6P0/HOvjOKKBLaPShT5LirHpcPm8560TAbzSCBorh75AuHG5M2W4DB2HnioyJ
+ q+ivM4vJ9VSczV7q8J0bQ==
+UI-OutboundReport: notjunk:1;M01:P0:HfBKhUUs1wM=;VYVakxdyaAU789AdpI6gSnAVQJ1
+ scl/R93vdpv4HbrPpMPuwioSUkkoj31XcDfiJdqK8tFY1O086u7wtCFRYq5/r74yfr0OWerXT
+ LcCEysf7TKj4tiiDoBoStiqnPYkvyBGz5Wy4Ah84sJRA2h5DL5MFsEiBsKE6JaCpx1ETae8LZ
+ BgBg1obqrTA4f6Lu1qKoyFGy2Ty7mLpRjIM9ttIcrufApaO6RLbiyvLDUEMdtu1LK3ZFMjSsH
+ 77ndDQ2D2dD2SORxZRGYzIioFH+n4uadi/ekoGNhQEkjz1w7vJ/WrsMbeGIBg4bcNT6Zh16lp
+ s1RPRGWva1tbapaDDiegP88YU41nZkqB2ErEn2bLvgsHIX64Fpt74wlQDLJ+yiIcsokSkCy1B
+ 0Uch8soz+Kqf/LOT46Snb/pJkEC2xQ21ipXXUSPufI9XRU3gY/F6eg9FefAhuokPX/zh6vR52
+ tsvazQNX0OVlm4D9S7tWs2uXIvubxOx/n8hqANmyV+OS5H2ACs4ZV1CuTLneaCLdfRp+w9EOz
+ xVlb/ckMchhvhWnxlS37Jan/KbgpvFbc0GjgAeYqXdhJkFGrKU6pAYZ9388cCEGPQWX/mpYRk
+ D5m0hGkmewJPh1BfPsAygVVBde1U/yDRKWCR2sQCX1i0aW11/U3JCeLoa177yAtYoLpRys2uy
+ ZFXbTS8asKO1K3pu7j2UM7FM2FTVwo6FIlqir71NQLqj/NBR10gMJOGDVhDEdfLInS1ZoxYFB
+ BUEbsCDgvGkWysxalItxcMn9Gcc2nSORFQ4IcxFTUT8p1w+lfJ/y3K9y6BPRqjeDm1QCDGX7k
+ As2fxD/p4AHrzzvZGNecsq8R9eDq4Sf2ye8d44x9Syk7nCU8+wjmm031Fe8GR+L3jdkhpuKQ6
+ scyNItjunrQY88uOftF9LA7vNbMToirHp3ULX5bvpniqmJ2T/FYAMCq6XoBvNx/yYtoYb1MFL
+ kMUMemk3kXfp2/CgoCL9mATrKjQ=
 
-Users can already listen to ACPI WMI events through
-the ACPI netlink interface. The old wmi_notify_debug()
-interface also uses the deprecated GUID-based interface.
-Remove it to make the event handling code more readable.
+The WMI chardev API will be removed in the near future.
+Reimplement the necessary bits used by this driver so
+that userspace software depending on it does no break.
 
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/wmi.c | 74 ++++----------------------------------
- 1 file changed, 7 insertions(+), 67 deletions(-)
+ drivers/platform/x86/dell/dell-smbios-wmi.c | 161 ++++++++++++++------
+ 1 file changed, 117 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index e8019bc19b4f..7df5b5ee7983 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -85,11 +85,6 @@ struct wmi_block {
- #define ACPI_WMI_STRING      BIT(2)	/* GUID takes & returns a string */
- #define ACPI_WMI_EVENT       BIT(3)	/* GUID is an event */
+diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/platfor=
+m/x86/dell/dell-smbios-wmi.c
+index 7eb7c61bb27d..ae9012549560 100644
+=2D-- a/drivers/platform/x86/dell/dell-smbios-wmi.c
++++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
+@@ -8,11 +8,14 @@
 
--static bool debug_event;
--module_param(debug_event, bool, 0444);
--MODULE_PARM_DESC(debug_event,
--		 "Log WMI Events [0/1]");
--
- static const struct acpi_device_id wmi_device_ids[] =3D {
- 	{"PNP0C14", 0},
- 	{"pnp0c14", 0},
-@@ -592,42 +587,6 @@ acpi_status wmidev_block_set(struct wmi_device *wdev,=
- u8 instance, const struct
+ #include <linux/device.h>
+ #include <linux/dmi.h>
++#include <linux/fs.h>
+ #include <linux/list.h>
++#include <linux/miscdevice.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/uaccess.h>
+ #include <linux/wmi.h>
++#include <uapi/linux/wmi.h>
+ #include "dell-smbios.h"
+ #include "dell-wmi-descriptor.h"
+
+@@ -33,7 +36,8 @@ struct wmi_smbios_priv {
+ 	struct list_head list;
+ 	struct wmi_device *wdev;
+ 	struct device *child;
+-	u32 req_buf_size;
++	u64 req_buf_size;
++	struct miscdevice char_dev;
+ };
+ static LIST_HEAD(wmi_list);
+
+@@ -109,48 +113,115 @@ static int dell_smbios_wmi_call(struct calling_inte=
+rface_buffer *buffer)
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(wmidev_block_set);
 
--static void wmi_notify_debug(u32 value, void *context)
--{
--	struct acpi_buffer response =3D { ACPI_ALLOCATE_BUFFER, NULL };
--	union acpi_object *obj;
--	acpi_status status;
+-static long dell_smbios_wmi_filter(struct wmi_device *wdev, unsigned int =
+cmd,
+-				   struct wmi_ioctl_buffer *arg)
++static int dell_smbios_wmi_open(struct inode *inode, struct file *filp)
+ {
+ 	struct wmi_smbios_priv *priv;
+-	int ret =3D 0;
 -
--	status =3D wmi_get_event_data(value, &response);
--	if (status !=3D AE_OK) {
--		pr_info("bad event status 0x%x\n", status);
--		return;
--	}
--
--	obj =3D response.pointer;
--	if (!obj)
--		return;
--
--	pr_info("DEBUG: event 0x%02X ", value);
--	switch (obj->type) {
--	case ACPI_TYPE_BUFFER:
--		pr_cont("BUFFER_TYPE - length %u\n", obj->buffer.length);
--		break;
--	case ACPI_TYPE_STRING:
--		pr_cont("STRING_TYPE - %s\n", obj->string.pointer);
--		break;
--	case ACPI_TYPE_INTEGER:
--		pr_cont("INTEGER_TYPE - %llu\n", obj->integer.value);
--		break;
--	case ACPI_TYPE_PACKAGE:
--		pr_cont("PACKAGE_TYPE - %u elements\n", obj->package.count);
+-	switch (cmd) {
+-	case DELL_WMI_SMBIOS_CMD:
+-		mutex_lock(&call_mutex);
+-		priv =3D dev_get_drvdata(&wdev->dev);
+-		if (!priv) {
+-			ret =3D -ENODEV;
+-			goto fail_smbios_cmd;
+-		}
+-		memcpy(priv->buf, arg, priv->req_buf_size);
+-		if (dell_smbios_call_filter(&wdev->dev, &priv->buf->std)) {
+-			dev_err(&wdev->dev, "Invalid call %d/%d:%8x\n",
+-				priv->buf->std.cmd_class,
+-				priv->buf->std.cmd_select,
+-				priv->buf->std.input[0]);
+-			ret =3D -EFAULT;
+-			goto fail_smbios_cmd;
+-		}
+-		ret =3D run_smbios_call(priv->wdev);
+-		if (ret)
+-			goto fail_smbios_cmd;
+-		memcpy(arg, priv->buf, priv->req_buf_size);
+-fail_smbios_cmd:
+-		mutex_unlock(&call_mutex);
 -		break;
 -	default:
--		pr_cont("object type 0x%X\n", obj->type);
+-		ret =3D -ENOIOCTLCMD;
++
++	priv =3D container_of(filp->private_data, struct wmi_smbios_priv, char_d=
+ev);
++	filp->private_data =3D priv;
++
++	return nonseekable_open(inode, filp);
++}
++
++static ssize_t dell_smbios_wmi_read(struct file *filp, char __user *buffe=
+r, size_t length,
++				    loff_t *offset)
++{
++	struct wmi_smbios_priv *priv =3D filp->private_data;
++
++	return simple_read_from_buffer(buffer, length, offset, &priv->req_buf_si=
+ze,
++				       sizeof(priv->req_buf_size));
++}
++
++static long dell_smbios_wmi_do_ioctl(struct wmi_smbios_priv *priv,
++				     struct dell_wmi_smbios_buffer __user *arg)
++{
++	long ret;
++
++	if (get_user(priv->buf->length, &arg->length))
++		return -EFAULT;
++
++	if (priv->buf->length < priv->req_buf_size)
++		return -EINVAL;
++
++	/* if it's too big, warn, driver will only use what is needed */
++	if (priv->buf->length > priv->req_buf_size)
++		dev_err(&priv->wdev->dev, "Buffer %llu is bigger than required %llu\n",
++			priv->buf->length, priv->req_buf_size);
++
++	if (copy_from_user(priv->buf, arg, priv->req_buf_size))
++		return -EFAULT;
++
++	if (dell_smbios_call_filter(&priv->wdev->dev, &priv->buf->std)) {
++		dev_err(&priv->wdev->dev, "Invalid call %d/%d:%8x\n",
++			priv->buf->std.cmd_class,
++			priv->buf->std.cmd_select,
++			priv->buf->std.input[0]);
++
++		return -EINVAL;
+ 	}
++
++	ret =3D run_smbios_call(priv->wdev);
++	if (ret)
++		return ret;
++
++	if (copy_to_user(arg, priv->buf, priv->req_buf_size))
++		return -EFAULT;
++
++	return 0;
++}
++
++static long dell_smbios_wmi_ioctl(struct file *filp, unsigned int cmd, un=
+signed long arg)
++{
++	struct dell_wmi_smbios_buffer __user *input =3D (struct dell_wmi_smbios_=
+buffer __user *)arg;
++	struct wmi_smbios_priv *priv =3D filp->private_data;
++	long ret;
++
++	if (cmd !=3D DELL_WMI_SMBIOS_CMD)
++		return -ENOIOCTLCMD;
++
++	mutex_lock(&call_mutex);
++	ret =3D dell_smbios_wmi_do_ioctl(priv, input);
++	mutex_unlock(&call_mutex);
++
+ 	return ret;
+ }
+
++static const struct file_operations dell_smbios_wmi_fops =3D {
++	.owner		=3D THIS_MODULE,
++	.open		=3D dell_smbios_wmi_open,
++	.read		=3D dell_smbios_wmi_read,
++	.unlocked_ioctl	=3D dell_smbios_wmi_ioctl,
++	.compat_ioctl	=3D compat_ptr_ioctl,
++};
++
++static void dell_smbios_wmi_unregister_chardev(void *data)
++{
++	struct miscdevice *char_dev =3D data;
++
++	misc_deregister(char_dev);
++}
++
++static int dell_smbios_wmi_register_chardev(struct wmi_smbios_priv *priv)
++{
++	int ret;
++
++	priv->char_dev.minor =3D MISC_DYNAMIC_MINOR;
++	priv->char_dev.name =3D "wmi/dell-smbios";
++	priv->char_dev.fops =3D &dell_smbios_wmi_fops;
++	priv->char_dev.mode =3D 0444;
++
++	ret =3D misc_register(&priv->char_dev);
++	if (ret < 0)
++		return ret;
++
++	return devm_add_action_or_reset(&priv->wdev->dev, dell_smbios_wmi_unregi=
+ster_chardev,
++					&priv->char_dev);
++}
++
+ static int dell_smbios_wmi_probe(struct wmi_device *wdev, const void *con=
+text)
+ {
+-	struct wmi_driver *wdriver =3D
+-		container_of(wdev->dev.driver, struct wmi_driver, driver);
+ 	struct wmi_smbios_priv *priv;
+-	u32 hotfix;
++	u32 buffer_size, hotfix;
+ 	int count;
+ 	int ret;
+
+@@ -163,39 +234,42 @@ static int dell_smbios_wmi_probe(struct wmi_device *=
+wdev, const void *context)
+ 	if (!priv)
+ 		return -ENOMEM;
+
++	priv->wdev =3D wdev;
++	dev_set_drvdata(&wdev->dev, priv);
++
+ 	/* WMI buffer size will be either 4k or 32k depending on machine */
+-	if (!dell_wmi_get_size(&priv->req_buf_size))
++	if (!dell_wmi_get_size(&buffer_size))
+ 		return -EPROBE_DEFER;
+
++	priv->req_buf_size =3D buffer_size;
++
+ 	/* some SMBIOS calls fail unless BIOS contains hotfix */
+ 	if (!dell_wmi_get_hotfix(&hotfix))
+ 		return -EPROBE_DEFER;
+-	if (!hotfix) {
++
++	if (!hotfix)
+ 		dev_warn(&wdev->dev,
+ 			"WMI SMBIOS userspace interface not supported(%u), try upgrading to a =
+newer BIOS\n",
+ 			hotfix);
+-		wdriver->filter_callback =3D NULL;
 -	}
--	kfree(obj);
--}
--
- /**
-  * wmi_install_notify_handler - Register handler for WMI events (deprecat=
-ed)
-  * @guid: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-@@ -656,8 +615,7 @@ acpi_status wmi_install_notify_handler(const char *gui=
-d,
- 		acpi_status wmi_status;
 
- 		if (guid_equal(&block->gblock.guid, &guid_input)) {
--			if (block->handler &&
--			    block->handler !=3D wmi_notify_debug)
-+			if (block->handler)
- 				return AE_ALREADY_ACQUIRED;
+ 	/* add in the length object we will use internally with ioctl */
+ 	priv->req_buf_size +=3D sizeof(u64);
+-	ret =3D set_required_buffer_size(wdev, priv->req_buf_size);
+-	if (ret)
+-		return ret;
 
- 			block->handler =3D handler;
-@@ -698,22 +656,14 @@ acpi_status wmi_remove_notify_handler(const char *gu=
-id)
- 		acpi_status wmi_status;
-
- 		if (guid_equal(&block->gblock.guid, &guid_input)) {
--			if (!block->handler ||
--			    block->handler =3D=3D wmi_notify_debug)
-+			if (!block->handler)
- 				return AE_NULL_ENTRY;
-
--			if (debug_event) {
--				block->handler =3D wmi_notify_debug;
--				status =3D AE_OK;
--			} else {
--				wmi_status =3D wmi_method_enable(block, false);
--				block->handler =3D NULL;
--				block->handler_data =3D NULL;
--				if ((wmi_status !=3D AE_OK) ||
--				    ((wmi_status =3D=3D AE_OK) &&
--				     (status =3D=3D AE_NOT_EXIST)))
--					status =3D wmi_status;
--			}
-+			wmi_status =3D wmi_method_enable(block, false);
-+			block->handler =3D NULL;
-+			block->handler_data =3D NULL;
-+			if (wmi_status !=3D AE_OK || (wmi_status =3D=3D AE_OK && status =3D=3D=
- AE_NOT_EXIST))
-+				status =3D wmi_status;
- 		}
- 	}
-
-@@ -1340,17 +1290,10 @@ static int parse_wdg(struct device *wmi_bus_dev, s=
-truct platform_device *pdev)
-
- 		list_add_tail(&wblock->list, &wmi_block_list);
-
--		if (debug_event) {
--			wblock->handler =3D wmi_notify_debug;
--			wmi_method_enable(wblock, true);
--		}
--
- 		retval =3D wmi_add_device(pdev, &wblock->dev);
- 		if (retval) {
- 			dev_err(wmi_bus_dev, "failed to register %pUL\n",
- 				&wblock->gblock.guid);
--			if (debug_event)
--				wmi_method_enable(wblock, false);
-
- 			list_del(&wblock->list);
- 			put_device(&wblock->dev.dev);
-@@ -1445,9 +1388,6 @@ static void acpi_wmi_notify_handler(acpi_handle hand=
-le, u32 event,
- 		wblock->handler(event, wblock->handler_data);
- 	}
-
--	if (debug_event)
--		pr_info("DEBUG: GUID %pUL event 0x%02X\n", &wblock->gblock.guid, event)=
+ 	count =3D get_order(priv->req_buf_size);
+ 	priv->buf =3D (void *)devm_get_free_pages(&wdev->dev, GFP_KERNEL, count)=
 ;
--
- 	acpi_bus_generate_netlink_event(
- 		wblock->acpi_device->pnp.device_class,
- 		dev_name(&wblock->dev.dev),
+ 	if (!priv->buf)
+ 		return -ENOMEM;
+
++	ret =3D dell_smbios_wmi_register_chardev(priv);
++	if (ret)
++		return ret;
++
+ 	/* ID is used by dell-smbios to set priority of drivers */
+ 	wdev->dev.id =3D 1;
+ 	ret =3D dell_smbios_register_device(&wdev->dev, &dell_smbios_wmi_call);
+ 	if (ret)
+ 		return ret;
+
+-	priv->wdev =3D wdev;
+-	dev_set_drvdata(&wdev->dev, priv);
+ 	mutex_lock(&list_mutex);
+ 	list_add_tail(&priv->list, &wmi_list);
+ 	mutex_unlock(&list_mutex);
+@@ -250,7 +324,6 @@ static struct wmi_driver dell_smbios_wmi_driver =3D {
+ 	.probe =3D dell_smbios_wmi_probe,
+ 	.remove =3D dell_smbios_wmi_remove,
+ 	.id_table =3D dell_smbios_wmi_id_table,
+-	.filter_callback =3D dell_smbios_wmi_filter,
+ };
+
+ int init_dell_smbios_wmi(void)
 =2D-
 2.39.2
 
