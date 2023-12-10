@@ -1,23 +1,23 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="HzBsEK2j"
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BC51D9;
-	Sun, 10 Dec 2023 12:25:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="HL4fAqYk"
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14411ED;
+	Sun, 10 Dec 2023 12:25:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1702239890; x=1702844690; i=w_armin@gmx.de;
-	bh=nEzwU52lYQi+/R9GIe0rBArnh2CCXp/tBe9TfyhvPCA=;
+	t=1702239893; x=1702844693; i=w_armin@gmx.de;
+	bh=bcwM7hu/lcoNUcXT9dFzmhq7Supu1dDMMBv0VFimJQo=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=HzBsEK2jbC7OYIDMBKiLE6ndf+6zsa0+OuRKfPYxi1ccm/G8EXR9mWriMCsTgLMD
-	 OxWce9PKoMzJ7rc/qb3I056WBaEO0+wv1lZRJjiUFwj1uwgxpCkcsHudxhtiKA7JB
-	 TFrEm69cMgRSm7TEdTtrKEdCIU/eAlmUgb0L4WLXbpMftnV4bic1twqWq1BsXEMUM
-	 5N9MXnEU+QmU7vu5YsNhnwNRhOLFdbhXkvGVUwbQoXB46be0pSKqI/jLFzUz5vhBv
-	 wb5KDMCSkcRZzxXbk3416fn+BqVlP0Js1Lh2VmJP/kWHiQGx7LTCYSYO6Wy6kqVOJ
-	 r8mDLAfBZtEek7zFqA==
+	b=HL4fAqYkma1u8ZKR7xX4zuocV4SBj/Kw6H//5VBdLrklAsq0VriX7YABvcuOY7XA
+	 wsdNzq5i49THtS6eznSB3V1PoMcBVjXiS+rYFEmUOJyzId1NGMRul2IxR58Cpmo4U
+	 wSgCn81ZwYp8yro7L7zmmxDZi6jf65AcAEK87/fMplKDiKZQWkyH+mXbQzvDRUw7T
+	 X/++mmDQ3im66egR0lDtr/lGyytUTuluDIFSPa+LeFbWpfSTZkQjfazuO9JUaqawL
+	 bg6PuoWMpy6vHl3QRujY1MC8/14+ZCBy/UxrQIS4N9vVSNhuG7MeIExtfcu7OrhZF
+	 ekddb8gJk+Bl6dlZIg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
  (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MCsQ4-1r3evi0EvQ-008q9M; Sun, 10 Dec 2023 21:24:50 +0100
+ 1MuDbx-1rVall3qw9-00uaqy; Sun, 10 Dec 2023 21:24:53 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
@@ -26,9 +26,9 @@ Cc: Dell.Client.Kernel@dell.com,
 	linux-doc@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] platform/x86: wmi: Remove debug_dump_wdg module param
-Date: Sun, 10 Dec 2023 21:24:39 +0100
-Message-Id: <20231210202443.646427-2-W_Armin@gmx.de>
+Subject: [PATCH v2 3/5] platform/x86: dell-smbios-wmi: Use devm_get_free_pages()
+Date: Sun, 10 Dec 2023 21:24:41 +0100
+Message-Id: <20231210202443.646427-4-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231210202443.646427-1-W_Armin@gmx.de>
 References: <20231210202443.646427-1-W_Armin@gmx.de>
@@ -38,97 +38,95 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:18uIVdOhrEMyff6XzMXk1KWrC5IIU9dSuao/uPp08FVCUmbmN6h
- 0gagiKgH/Ohdhefw+Gu267noKKcVjc+Bb+YI3gbbLksc+5TlzuOnyJ/LJuCX+0JveOvd/L1
- kNGnLQOs01BY97rpWhP01Nks866uTnEdTRXXEjUwB+5SKCYFVU/SVqeg/zdm3tLZzPoNtIz
- PX3zgvYHDa5Hu+FHEMzTQ==
-UI-OutboundReport: notjunk:1;M01:P0:2GkTMKMnWyE=;q5W6DdyV1IzpPDr1aVejIBdZftA
- berl80ecIpCZNOD9M3GBQibfovAzxfr2RpvM0WOaBJUZ/UxQ4d2JzauQcnaBOZGfaFyXEkXJN
- fjdsMP06IoZhxCA8xRK/hZE61d5XyxedIQDjqRjpvHWlmnGxtv1Ehb9UEcqwpggwknd2cgwIz
- MXAEvw9/jCsy8nNXkeOPFqZ8orQ/uac0CzmtYeylYu/pNX9Fp7/SZt+UnQQzcWVP/NaJtzcHN
- FxW/nck1g1P9JWYfRUMmlcvRD2xh4lnuIZ76hZoQFK/bLri4uE6ZDbeCkpDmVJpF/bogxMMi3
- 1w26AMP35ybsOMokULwKiqkD/0h7jz6EtU0vJthbOISm2XIuvKIfIX+XfjbX106w2m5QLlkiD
- fQKzLr+K2SdLwZ3+mbMRmrBSqKATFOP3og701mIpU8VeWC84+95OMyzhglx5sahfFfAUTwZHI
- OCF74JcqkHC1aTockj/P1f28ruyJziRvd73HEUlxaV3nZaIG5IcYxjABTb//Y6fVkS62uc1jc
- eyKNzq2UAY+yhrrpHCeh1BomeLz/6Q+5XT2246tTbWgleaUhn74pfrI/UUq6JQOCtlBsOEj/n
- Lige9A2Z5AcmJtQXLuLRZ5204fLEb/9/yTuniZ2/aktdgj2nQ5k0+8HGh3XHvueKPf93N1Sya
- 6sktv+TXpKC0aajMRa54DginfTvPqq7Nmc4SPR3sxOmV+6S0DNsXRUUGPJv47SNvJK9OUWL1+
- QOPwTTaGQU02heir8Ccn6G7FFmMxjwCz1lLYIlSzHWics0tN7ePzDo33pbHh7M8YZPdAjOBdJ
- fTtsU9PHZKMFjRI1vMj8rmla3CTrQmh8lNLTOYVtXA3Z+TnP5TUOCkp1f5XNNV5UHHOhUeErF
- qSCfOW5EF8C0/293RF6izn14VChBpYTrbOKt8MxMcp3vS/ykILle2PT+gYtIZHRb2BsBKD5ku
- jQ8S9ZfJ9b/69Hmr4tCr1ZnvlMA=
+X-Provags-ID: V03:K1:BDkhbzp0Ms/xMjG+rWvrcWO0esNvAHqEEaXbO9olz0GfgKb9TNt
+ Rbk9twGQV9tWEi6WzSVtYF9ar9PDyjM2P9UDz1MsLXF04ja490vPd7+gLh9D0cLtc6n87q3
+ oygjGyB/uRHcDhRh2/5itNDJMkkS1tZeTDk/OP1FBi8XcvxNjaz1e90SXPuA0siLM8rcDIC
+ FEV9bZeaPF5DRfn/hDTYQ==
+UI-OutboundReport: notjunk:1;M01:P0:vLvsShTP23A=;RmVEsdEKKFRbmbwMkzI8si2pJzM
+ S4wk2Ea46NLWGCFPHRczfqFK9q35pBrRzAdMsQnqJMJOfkVF2ReSmSTaBS7mc7guwl8i8w18A
+ b8SrSPPDRtMGlOL6JI5qsa2OvIA2QY37XWRFakEheL6yA6RzffGWKbRA+DaaZ0cP4VdQggRZ5
+ 59XhbEgWx12+uTMP1sXrCjrLBjrpUQEVQ2IJ1rK5lUA4lhp8yL6R70qMWOqJ65aW+ouFC9cPD
+ OpnB4Umn8wqsjHyT10INl900GAlaeg8a4ZuATbu6mEdVbmhpXeTLOj29iBml7NipWc3VjaPTE
+ SD+5k4dbBPYJ+IIHf7YrKGc0zV2M8L0m/DarR6CMpFu2AGzClOsfcLZPW0NizToJ9mY940e0T
+ A+AKBVTgPN6bEZYxOWrYrIuBDewIKZBilcSEncBZvBi0Dp8tR6oaG2Zkoq/RWYHrfVeDv558L
+ i6QGzRMXe7dg3Lx6ebr1mpAckshm8fXtkCcdhYShlttdU+EgJLieUJbTWIfX21tFjiN7QOpm3
+ 44eVf05QrHWD0OeEug4XGVAgD/wksjBEkX4AAyD1C54J0fYHm5ms5XDhEJPTvzWEp4q9mDmdl
+ 4PRK9fYtsl+q47+i9BZ8MQShjiSSN1h+0pvMbmRpUkt803A5lw2vxAEobefX0qMjnLMf1iBSO
+ jvI8PyrkrUAbPYVjdMMRByMt1NnpL4vckPj/A0h9Jc8LNbVIp0VFLiEoPRnRq2nhEKg0Qpk3p
+ uwO8RcMSb+qlKz4lXyzNzz+6s0DWiyGTb5VlgF7DaYQ/mqR3xFmw0zB0ldiffnHcZ8vGyF2ui
+ EKfy+f0ykNHgko7EhH0+QGZU4M6tSAPY6yA5+0NH73Y5CEsiQYL2mPbD6OfqdjUSvrhV5zmji
+ lw4CQxm0Fse3cLrbLbieawh/oWLqWLEmmnrHBHHyOYwOM1GysCRSyNYgT1LgnhdZQnJBvQwkJ
+ xJgU5eXFoVpRygfhmZgf8zsssMI=
 
-The functionality of dumping WDG entries is better provided by
-userspace tools like "fwts wmi", which also does not suffer from
-garbled printk output caused by pr_cont().
+Use devres version of __get_free_pages() to simplify the
+error handling code.
 
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/wmi.c | 31 -------------------------------
- 1 file changed, 31 deletions(-)
+ drivers/platform/x86/dell/dell-smbios-wmi.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 4f94e4b117f1..e8019bc19b4f 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -90,11 +90,6 @@ module_param(debug_event, bool, 0444);
- MODULE_PARM_DESC(debug_event,
- 		 "Log WMI Events [0/1]");
+diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/platfor=
+m/x86/dell/dell-smbios-wmi.c
+index 931cc50136de..7eb7c61bb27d 100644
+=2D-- a/drivers/platform/x86/dell/dell-smbios-wmi.c
++++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
+@@ -6,6 +6,7 @@
+  */
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
--static bool debug_dump_wdg;
--module_param(debug_dump_wdg, bool, 0444);
--MODULE_PARM_DESC(debug_dump_wdg,
--		 "Dump available WMI interfaces [0/1]");
++#include <linux/device.h>
+ #include <linux/dmi.h>
+ #include <linux/list.h>
+ #include <linux/module.h>
+@@ -183,7 +184,7 @@ static int dell_smbios_wmi_probe(struct wmi_device *wd=
+ev, const void *context)
+ 		return ret;
+
+ 	count =3D get_order(priv->req_buf_size);
+-	priv->buf =3D (void *)__get_free_pages(GFP_KERNEL, count);
++	priv->buf =3D (void *)devm_get_free_pages(&wdev->dev, GFP_KERNEL, count)=
+;
+ 	if (!priv->buf)
+ 		return -ENOMEM;
+
+@@ -191,7 +192,7 @@ static int dell_smbios_wmi_probe(struct wmi_device *wd=
+ev, const void *context)
+ 	wdev->dev.id =3D 1;
+ 	ret =3D dell_smbios_register_device(&wdev->dev, &dell_smbios_wmi_call);
+ 	if (ret)
+-		goto fail_register;
++		return ret;
+
+ 	priv->wdev =3D wdev;
+ 	dev_set_drvdata(&wdev->dev, priv);
+@@ -200,24 +201,17 @@ static int dell_smbios_wmi_probe(struct wmi_device *=
+wdev, const void *context)
+ 	mutex_unlock(&list_mutex);
+
+ 	return 0;
 -
- static const struct acpi_device_id wmi_device_ids[] =3D {
- 	{"PNP0C14", 0},
- 	{"pnp0c14", 0},
-@@ -597,29 +592,6 @@ acpi_status wmidev_block_set(struct wmi_device *wdev,=
- u8 instance, const struct
+-fail_register:
+-	free_pages((unsigned long)priv->buf, count);
+-	return ret;
  }
- EXPORT_SYMBOL_GPL(wmidev_block_set);
 
--static void wmi_dump_wdg(const struct guid_block *g)
--{
--	pr_info("%pUL:\n", &g->guid);
--	if (g->flags & ACPI_WMI_EVENT)
--		pr_info("\tnotify_id: 0x%02X\n", g->notify_id);
--	else
--		pr_info("\tobject_id: %2pE\n", g->object_id);
--	pr_info("\tinstance_count: %d\n", g->instance_count);
--	pr_info("\tflags: %#x", g->flags);
--	if (g->flags) {
--		if (g->flags & ACPI_WMI_EXPENSIVE)
--			pr_cont(" ACPI_WMI_EXPENSIVE");
--		if (g->flags & ACPI_WMI_METHOD)
--			pr_cont(" ACPI_WMI_METHOD");
--		if (g->flags & ACPI_WMI_STRING)
--			pr_cont(" ACPI_WMI_STRING");
--		if (g->flags & ACPI_WMI_EVENT)
--			pr_cont(" ACPI_WMI_EVENT");
--	}
--	pr_cont("\n");
--
--}
--
- static void wmi_notify_debug(u32 value, void *context)
+ static void dell_smbios_wmi_remove(struct wmi_device *wdev)
  {
- 	struct acpi_buffer response =3D { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -1343,9 +1315,6 @@ static int parse_wdg(struct device *wmi_bus_dev, str=
-uct platform_device *pdev)
- 	total =3D obj->buffer.length / sizeof(struct guid_block);
+ 	struct wmi_smbios_priv *priv =3D dev_get_drvdata(&wdev->dev);
+-	int count;
 
- 	for (i =3D 0; i < total; i++) {
--		if (debug_dump_wdg)
--			wmi_dump_wdg(&gblock[i]);
--
- 		if (!gblock[i].instance_count) {
- 			dev_info(wmi_bus_dev, FW_INFO "%pUL has zero instances\n", &gblock[i].=
-guid);
- 			continue;
+ 	mutex_lock(&call_mutex);
+ 	mutex_lock(&list_mutex);
+ 	list_del(&priv->list);
+ 	mutex_unlock(&list_mutex);
+ 	dell_smbios_unregister_device(&wdev->dev);
+-	count =3D get_order(priv->req_buf_size);
+-	free_pages((unsigned long)priv->buf, count);
+ 	mutex_unlock(&call_mutex);
+ }
+
 =2D-
 2.39.2
 
