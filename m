@@ -1,170 +1,103 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hEXKdZVf"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8982F0
-	for <platform-driver-x86@vger.kernel.org>; Sun, 10 Dec 2023 07:24:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702221878;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g3KL7UhBIXaTA/icsLmumqXQXBryDvbpvjDvF0vr8/M=;
-	b=hEXKdZVfFKCNuebL1Lu9XM1vQfyqINVOk3LgCPReibFto3DAk53/n9pohObnAH9b21yVs4
-	eb3HC8gRtyG+TmIgilepdjGy6SMH+7hTR+R7KVVTabbJAa/GbPJJfuEJ23CfP0GuR/8MG6
-	olyxw3g79H/APZSlPC65RVeXtwIog0w=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-240-rRNGTIKxNeSGnmN1mzSqXQ-1; Sun, 10 Dec 2023 10:24:36 -0500
-X-MC-Unique: rRNGTIKxNeSGnmN1mzSqXQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 022AF185A780;
-	Sun, 10 Dec 2023 15:24:35 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.28])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 022C1112131D;
-	Sun, 10 Dec 2023 15:24:33 +0000 (UTC)
-Date: Sun, 10 Dec 2023 23:24:30 +0800
-From: Baoquan He <bhe@redhat.com>
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	schnelle@linux.ibm.com, LKML <linux-kernel@vger.kernel.org>,
-	platform-driver-x86@vger.kernel.org, rajvi.jingar@linux.intel.com,
-	dave.hansen@linux.intel.com, peterz@infradead.org
-Subject: Re: [PATCH V5 12/20] asm-generic/io.h: iounmap/ioport_unmap
- cleanup.h support
-Message-ID: <ZXXYLuRpQ7bThB1X@MiWiFi-R3L-srv>
-References: <20231123040355.82139-1-david.e.box@linux.intel.com>
- <20231123040355.82139-13-david.e.box@linux.intel.com>
- <f83e4a40-314-d279-75e6-17ad83501982@linux.intel.com>
- <adb8c80395d2c23488496b9ad323bfc265ad3514.camel@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="m+JryQTU"
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA4FD8;
+	Sun, 10 Dec 2023 12:25:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1702239887; x=1702844687; i=w_armin@gmx.de;
+	bh=LHjqlwgNkufpjFeWV3ISQg5S2l9qKebnwZiqRNS6g5Y=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=m+JryQTUJ0roAUpqZ231yKKZJOR/IrqAOQXW3xruX4NBCJ8AO889lx5dzWHDiu78
+	 ZBMIJJ+bZD0ENqlE5WBpC+8ksp8Ye4YAdStaB0ukt35hbKR+yxD5JAngvkTCNYo9V
+	 3wiogiUthOGt9DAV0/HylYnyHQ9rfQEWS6rcaiJv+bybjlbA6yeWj13d8a7//3/GK
+	 DZYJNCc1oGEcpSl3lSZUKw0UY2a8Ie4jON1PxGWUmuAEam5AjTO65zW9m8vphuIyo
+	 5x20Ri4E0lv7j6g1P0g6rvWg3fBJK7W6JWcZXVOhsn3Pnkig3tJHS7efpTr6/EHjF
+	 PjXmBxS53sQU2exu6g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1Mv31c-1rUEFr1HQu-00r3Fd; Sun, 10 Dec 2023 21:24:47 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	corbet@lwn.net
+Cc: Dell.Client.Kernel@dell.com,
+	linux-doc@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] platform/x86: wmi: Cleanup obsolete features
+Date: Sun, 10 Dec 2023 21:24:38 +0100
+Message-Id: <20231210202443.646427-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <adb8c80395d2c23488496b9ad323bfc265ad3514.camel@linux.intel.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:OH4a1uQzlafpzkNjmLz9Vd7n/MpwUzaBWfMgJ+C5QZzotUa+f75
+ CJu04BjoiatTw1eUT3Q1zChyFLHLvOg5IOcDZxBSNICPdbmYj9iB1WpBXgTVwAZ9Pk8xgTp
+ f35u9SO83qbPk4GDsBVdJHOsUSXmFCNiUAdwwvwm1TfbLfLsZMGyl9WJ5fXCBGB8L51fo5B
+ /4gg98V2PTogukk8sK98w==
+UI-OutboundReport: notjunk:1;M01:P0:9zmj4gF7VEM=;Kc5QoihwiH/63+KNyBqiLrKfmkw
+ +saeb5FPBdAR10eqj2frrCh+0O7Txlvi4bfNF0Nbgo3HB2sT57jt2qCjDtDjcSBRh9FmoX0hw
+ uO3Mez409sFFmgsvw4vPbUcA0wBZ2kutafK3VcUGSYwRlhA9zSfJ8XGVA2AqlUXQgP3onamSY
+ /UN40I4HYmQUQI6kOqA7HGAYaLYKNSD275LZSl9SDnIKo4OgGPr4PEaaz5ReG6xiC5pNG9AW9
+ huckcCyfFN+7vvGDPM8rCw3kn9JcVVqav1o08hdfWf9vhLIiVE7fDcQtuhBemID7ml5+89EHR
+ P0IB1NIDcByCBVnvef4ZrRKhMs8uZoNwMspl/JEzF4bbLtYPyA6uwmHbhYcgC16viPfRlhpk3
+ Sw9O/JQafwJbwlHZInjmWyikXxdgSlZbFqtNdpgP1VzXxnJZ9Rx4RA7kCMvEUQgO/Ghmy+aFP
+ Oi2YXVntCtHDZrsXN7RULrCQo1Q0Cc+kxVBgFIScInNHPjnJLC1umxQsjnpRiKusG5xFKjKTG
+ fPAo8ikgPCt/A4qRMHm4KiEfnee1h2TSr4AR+ulFgTbGhFoiUrYQHGracwo4Z2bkKPj9epKwj
+ 4HKNVyVGAbVmCfyF/WDwvuDIjEoRhqCpjGimsTBuBr9fGxLbsusRxfNyMC1uS1ZxeG5/Sgz7y
+ c6ctStF+Q4LLvONL1ovymqZwNOhEdtB0GVx6cpYZrSY0oQYZFORXXpYK3+qYJM+wsen0Gcccu
+ 5FUkvnu7eK89QBqGoySLf/LuPixBAyGgl1t6X8cSx9HoncefLEBOsnwWI3y6L1QHH2PfTHe6w
+ M2AwSWw0aiW3EdriITPaElWPto0NI3xR3EZYgWlUVPgCOse5Os0B3czHHSpoVFi0Ay13NHoCj
+ oESVO4P1oowZxQ0hJW+0sZ2/D2DnixtuVJTjfRa5PfGQcqaJ+JnphDsrkkea25I8CS0X6REPl
+ TzOg+fST6nAtmvgy5yNJGSM90iA=
 
-On 11/27/23 at 05:55pm, David E. Box wrote:
-> +Baoquan for ioremap question.
-> 
-> On Thu, 2023-11-23 at 16:30 +0200, Ilpo Järvinen wrote:
-> > On Wed, 22 Nov 2023, David E. Box wrote:
-> > 
-> > > Add auto-release cleanups for iounmap() and ioport_unmap().
-> > > 
-> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > > Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > > ---
-> > > V2 - Move from linux/io.h to asm-generic/io.h. Adds iounmap cleanup if
-> > >      iounmap() is defined. Adds ioport_unmap cleanup if CONFIG_IOPORT_MAP
-> > >      is defined.
-> > > 
-> > >  include/asm-generic/io.h | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > > 
-> > > diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-> > > index bac63e874c7b..9ef0332490b1 100644
-> > > --- a/include/asm-generic/io.h
-> > > +++ b/include/asm-generic/io.h
-> > > @@ -8,6 +8,7 @@
-> > >  #define __ASM_GENERIC_IO_H
-> > >  
-> > >  #include <asm/page.h> /* I/O is all done through memory accesses */
-> > > +#include <linux/cleanup.h>
-> > >  #include <linux/string.h> /* for memset() and memcpy() */
-> > >  #include <linux/types.h>
-> > >  #include <linux/instruction_pointer.h>
-> > > @@ -1065,6 +1066,10 @@ static inline void __iomem *ioremap(phys_addr_t addr,
-> > > size_t size)
-> > >  #endif
-> > >  #endif /* !CONFIG_MMU || CONFIG_GENERIC_IOREMAP */
-> > >  
-> > > +#ifdef iounmap
-> > > +DEFINE_FREE(iounmap, void __iomem *, iounmap(_T));
-> > > +#endif
-> 
-> Baoquan, LKP is reporting an undeclared function 'iounmap' error with the above
-> change from this patch when building for s390 with PCI disabled. The ioremap
-> defines in arch/s390/include/asm/io.h are not wrapped under the #ifdef
-> CONFIG_PCI block. Shouldn't they be since the s390 Kconfig only adds
-> GENERIC_IOREMAP if PCI?
-> 
-> https://lore.kernel.org/oe-kbuild-all/202311241214.jcL84du7-lkp@intel.com
+This patch series removes three features deemed obsolete:
+- the debug_dump_wdg module param:
+  - suffers from garbled output due to pr_cont()
+  - functionality is better provided by "fwts wmi"
+- the debug_event module param:
+  - pr_cont() usage
+  - uses the deprecated GUID-based API
+  - largely replaced by the ACPI netlink interface
+- ioctl interface
+  - used only by a single driver, no adoption otherwise
+  - numerous design issues
 
-I tried to reproduce the error, while I got failure as below. I will find a
-s390x machine to try again.
+Since the ioctl interface is actually used by userspace programs,
+the only user (the dell-smbios-wmi driver) was modified to implement
+the necessary pieces itself so that no regressions are expected.
 
----------------------------------------------------------
-[root@ linux]# COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang-16 ~/lkp-tests/kbuild/make.cross W=1 O=build_dir ARCH=s390 olddefconfig
-Compiler will be installed in /root/0day
-PATH=/root/0day/llvm-16.0.6-x86_64/bin:/root/.local/bin:/root/bin:/usr/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
-make --keep-going HOSTCC=/root/0day/llvm-16.0.6-x86_64/bin/clang CC=/root/0day/llvm-16.0.6-x86_64/bin/clang OBJCOPY=/usr/s390x-linux-gnu/bin/objcopy AR=llvm-ar NM=llvm-nm STRIP=llvm-strip OBJDUMP=llvm-objdump OBJSIZE=llvm-size READELF=llvm-readelf HOSTCXX=clang++ HOSTAR=llvm-ar CROSS_COMPILE=s390x-linux-gnu- --jobs=128 KCFLAGS= -Wtautological-compare -Wno-error=return-type -Wreturn-type -Wcast-function-type -funsigned-char -Wundef -fstrict-flex-arrays=3 -Wenum-conversion W=1 O=build_dir ARCH=s390 olddefconfig
-make[1]: Entering directory '/root/linux/build_dir'
-  GEN     Makefile
-scripts/Kconfig.include:40: linker 's390x-linux-gnu-ld' not found
-make[3]: *** [../scripts/kconfig/Makefile:77: olddefconfig] Error 1
-make[2]: *** [/root/linux/Makefile:685: olddefconfig] Error 2
-make[1]: *** [/root/linux/Makefile:234: __sub-make] Error 2
-make[1]: Target 'olddefconfig' not remade because of errors.
-make[1]: Leaving directory '/root/linux/build_dir'
-make: *** [Makefile:234: __sub-make] Error 2
-make: Target 'olddefconfig' not remade because of errors.
-------------------------------------------------------------------
+The series depends on
+commit cbf54f37600e ("platform/x86: wmi: Skip blocks with zero instances")=
+,
+which is currently in the "fixes" tree.
 
-And when I execute the 3rd step of reproducer to apply the required
-patch series, I never succeed. Don't know why.
+All patches where tested on a Dell Inspiron 3505 and work without
+issues.
 
-----------------------------------------------------------------
-[root@intel-knightslanding-lb-02 linux]# b4 shazam https://lore.kernel.org/r/20231123040355.82139-13-david.e.box@linux.intel.com
-Grabbing thread from lore.kernel.org/all/20231123040355.82139-13-david.e.box@linux.intel.com/t.mbox.gz
-Checking for newer revisions
-Grabbing search results from lore.kernel.org
-  Added from v6: 21 patches
-Analyzing 63 messages in the thread
-Will use the latest revision: v6
-You can pick other revisions using the -vN flag
-Checking attestation on all messages, may take a moment...
----
-  ✓ [PATCH v6 1/20] platform/x86/intel/vsec: Fix xa_alloc memory leak
-----------------------------------------------------------------
+Changes since v1:
+- add Reviewed-by to patches 1, 2 and 5
+- drop patch adding the driver development guide
+- rework error handling in dell-smbios-wmi
 
+Armin Wolf (5):
+  platform/x86: wmi: Remove debug_dump_wdg module param
+  platform/x86: wmi: Remove debug_event module param
+  platform/x86: dell-smbios-wmi: Use devm_get_free_pages()
+  platform/x86: dell-smbios-wmi: Stop using WMI chardev
+  platform/x86: wmi: Remove chardev interface
 
+ drivers/platform/x86/dell/dell-smbios-wmi.c | 173 ++++++++----
+ drivers/platform/x86/wmi.c                  | 285 +-------------------
+ include/linux/wmi.h                         |   8 -
+ 3 files changed, 132 insertions(+), 334 deletions(-)
 
-
-> 
-> 
-> Note that the report includes pointer arithmetic warnings that are not related
-> to this patch. Those warnings occur in mainline as well.
-> 
-> David
-> 
-> > > +
-> > >  #ifndef ioremap_wc
-> > >  #define ioremap_wc ioremap
-> > >  #endif
-> > > @@ -1127,6 +1132,7 @@ static inline void ioport_unmap(void __iomem *p)
-> > >  extern void __iomem *ioport_map(unsigned long port, unsigned int nr);
-> > >  extern void ioport_unmap(void __iomem *p);
-> > >  #endif /* CONFIG_GENERIC_IOMAP */
-> > > +DEFINE_FREE(ioport_unmap, void __iomem *, ioport_unmap(_T));
-> > >  #endif /* CONFIG_HAS_IOPORT_MAP */
-> > >  
-> > >  #ifndef CONFIG_GENERIC_IOMAP
-> > 
-> > Has this now built successfully with LKP? (I don't think we get success 
-> > notifications from LKP for patch submissions, only failures).
-> > 
-> > There were some odd errors last time but I think all they were unrelated 
-> > to this change (besides the checkpatch false positive, I mean).
-> > 
-> 
+=2D-
+2.39.2
 
