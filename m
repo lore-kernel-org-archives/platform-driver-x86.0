@@ -1,106 +1,170 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KY/vTYWd"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 245D5C7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 11 Dec 2023 03:45:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702295121;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gLZ4KUgEvLDnwKAg4roHGuAnVoOR9CuyCDnJ+KhaDh4=;
-	b=KY/vTYWdQbR9yndTl3iWurH15cK4vGBVQTs/ym4dUU205nVPwvDYCyt7LgiMXWgU3PWnqv
-	TMPH+0R6c0dBWMgor3ducvltwZdKDJ9D8iULdEMFDiSMjQ7+InSJHIcgEJG3GM5hM/2YQW
-	X++9kQr+8twmXjoCPZ8GPNqHIUaG5Iw=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-151-Dt1qbC8MNTGYoBmDYEdoEQ-1; Mon, 11 Dec 2023 06:45:20 -0500
-X-MC-Unique: Dt1qbC8MNTGYoBmDYEdoEQ-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-54caf6220c2so2721871a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Dec 2023 03:45:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702295119; x=1702899919;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gLZ4KUgEvLDnwKAg4roHGuAnVoOR9CuyCDnJ+KhaDh4=;
-        b=Pf5yEwcWu0jdvWW+Fy6uwqHrqkHIM0SxEy7RsqX43woO+HCh1d227KNvKGaRnp5Ipb
-         eaYk4jBmNeIPcF5NIvq3moZ92q0r1innXHyQxiXnYYTTyD00/KZKufNcipScQ8cx06fL
-         q5YejYz7BY/BRYvLHYiZNJ317sx8E8eV7Ojv5HQUBf0BL1S9kPuUHiDNRgomx8cXWP4E
-         ayvCtcjakt/yMCQpqOncRBrRuMJr/JkJ8rRYgEXbCNtmF6rp6HD663nuU4MnBh4iEFJq
-         4HQDdodgZiK1VXVNXXWVQJypzjnr1ASRsoO9ppPeG7om8K4R/8JCZpDMwB6bcl15kZFG
-         Ifbw==
-X-Gm-Message-State: AOJu0YxICaNTR7RBFaZYsTfIimTPHrDenA9tmX2rAOuYGOPI4mTiWuuI
-	1FjK0gz7o5YjhBK711gxnWPKVVyWNeGv+/pCHzlxrYKB4H9LYxVSFxGTPJecD+mlG9JRCrFAXyo
-	c6mD/jnOOYUoE3ZCPkqpic2AQCEJJM+OTnw==
-X-Received: by 2002:a50:9e6b:0:b0:54b:1ca8:851e with SMTP id z98-20020a509e6b000000b0054b1ca8851emr2745806ede.2.1702295119014;
-        Mon, 11 Dec 2023 03:45:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFOml1mAb2dOWnv2X7f45Je/I6NHQxu5c6wiCmMQ960C9uZmb7dhmZ+BKjrrHrKBB/58iMdXA==
-X-Received: by 2002:a50:9e6b:0:b0:54b:1ca8:851e with SMTP id z98-20020a509e6b000000b0054b1ca8851emr2745797ede.2.1702295118690;
-        Mon, 11 Dec 2023 03:45:18 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 28-20020a508e5c000000b0054b686e5b3bsm3675915edx.68.2023.12.11.03.45.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Dec 2023 03:45:17 -0800 (PST)
-Message-ID: <56f065d0-4cb5-43bb-b8d1-0ed275c54044@redhat.com>
-Date: Mon, 11 Dec 2023 12:45:17 +0100
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 445AC18E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 11 Dec 2023 04:19:43 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rCfEf-0001H0-4X; Mon, 11 Dec 2023 13:18:09 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rCfEe-00F5z5-AI; Mon, 11 Dec 2023 13:18:08 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rCfEe-000tY1-0P; Mon, 11 Dec 2023 13:18:08 +0100
+Date: Mon, 11 Dec 2023 13:18:07 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
+	linux-samsung-soc@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-staging@lists.linux.dev,
+	linux-rockchip@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-pwm@vger.kernel.org, greybus-dev@lists.linaro.org,
+	linux-mediatek@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	asahi@lists.linux.dev, kernel@pengutronix.de
+Subject: Re: [PATCH v4 000/115] pwm: Fix lifetime issues for pwm_chips
+Message-ID: <20231211121807.zzlgf3alcoo6lrw7@pengutronix.de>
+References: <cover.1701860672.git.u.kleine-koenig@pengutronix.de>
+ <ZXM4CdJxg-XrYhkn@orome.fritz.box>
+ <20231208185033.e6ty2cajcfle6dgk@pengutronix.de>
+ <ZXbzcFTnDTKoZAta@orome.fritz.box>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] mmutable branch between pdx86 amd wbrf branch and wifi
- / amdgpu due for the v6.8 merge window
-Content-Language: en-US, nl
-To: Johannes Berg <johannes@sipsolutions.net>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Ma Jun <Jun.Ma2@amd.com>, "Limonciello, Mario" <Mario.Limonciello@amd.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Cc: linux-wireless <linux-wireless@vger.kernel.org>,
- amd-gfx list <amd-gfx@lists.freedesktop.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-References: <6395b87b-7cb6-4412-b6e5-e6075353fb6d@redhat.com>
- <5e14be1fc61d9d7027cd50f4148eea52e40fb9d3.camel@sipsolutions.net>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <5e14be1fc61d9d7027cd50f4148eea52e40fb9d3.camel@sipsolutions.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-Hi Johannes,
-
-On 12/11/23 12:41, Johannes Berg wrote:
-> Hi,
-> 
->> Here is a pull-request for the platform-drivers-x86 parts of:
->>
->> https://lore.kernel.org/platform-driver-x86/20231211100630.2170152-1-Jun.Ma2@amd.com/
->>
->> From my pov the pdx86 bits are ready and the platform-drivers-x86-amd-wbrf-v6.8-1 tag can be merged by you to merge the wifi-subsys resp. the amdgpu driver changes on top.
->>
->> This only adds kernel internal API, so if in the future the API needs work that can be done.
-> 
-> I've been fine with the wifi bits since around v3 of the patchset ;-)
-> 
-> So the idea is that I'll pull this into wireless-next and then apply the
-> two wireless patches on top, right?
-
-Right.
-
-> AFAICT, since the other patches don't depend on wireless for
-> compilation, this is the only thing I need to do, i.e. no need to have
-> another separate branch to send it further on, right?
-
-Right / correct.
-
-Regards,
-
-Hans
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yyef2a7pj6vk5dry"
+Content-Disposition: inline
+In-Reply-To: <ZXbzcFTnDTKoZAta@orome.fritz.box>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 
 
+--yyef2a7pj6vk5dry
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello Thierry,
+
+On Mon, Dec 11, 2023 at 12:33:04PM +0100, Thierry Reding wrote:
+> On Fri, Dec 08, 2023 at 07:50:33PM +0100, Uwe Kleine-K=F6nig wrote:
+> > The TL;DR; is essentially what I already wrote in my last reply to Bart
+> > in the v3 thread[1]:
+> >=20
+> >  - My approach needs more changes to the individual drivers (which I
+> >    don't consider a relevant disadvantage given that the resulting code
+> >    is better);
+> >  - My approach works with less pointer dereferences which IMHO also
+> >    simplifies understanding the code as all relevant data is in a single
+> >    place.
+> >  - My approach has a weaker separation between the core and the lowlevel
+> >    drivers. That's ok in my book given that this doesn't complicate the
+> >    lowlevel drivers and that hiding details considerably better doesn't
+> >    work anyhow (see the drivers that need internal.h in your patch).
+> >=20
+> > For me the single allocation issue is only an added bonus. The relevant
+> > advantage of my approach is that the code is easier and (probably) more
+> > efficient.
+>=20
+> I happen to disagree. I think adding pwmchip_alloc() makes things much
+> more complicated for low level drivers.
+
+Looking at e.g.
+https://lore.kernel.org/linux-pwm/2dda818b8bbbe8ba4b9df5ab54f960ff4a4f1ab5.=
+1701860672.git.u.kleine-koenig@pengutronix.de/
+I wonder where you see "much more complication". OK, there are two
+pointers now for chip and private data, but I'd call that at most a
+"mild" complication[1] which is more than balanced out by the
+simplifications in the remaining parts of that patch.
+
+Best regards
+Uwe
+
+[1] I'm not sure I'd refuse someone suggesting the following patch on
+    top of today's next:
+
+	diff --git a/drivers/pwm/pwm-microchip-core.c b/drivers/pwm/pwm-microchip-=
+core.c
+	index c0c53968f3e9..d32e65914599 100644
+	--- a/drivers/pwm/pwm-microchip-core.c
+	+++ b/drivers/pwm/pwm-microchip-core.c
+	@@ -448,12 +448,14 @@ MODULE_DEVICE_TABLE(of, mchp_core_of_match);
+	 static int mchp_core_pwm_probe(struct platform_device *pdev)
+	 {
+		struct mchp_core_pwm_chip *mchp_core_pwm;
+	+	struct pwm_chip *chip;
+		struct resource *regs;
+		int ret;
+	=20
+		mchp_core_pwm =3D devm_kzalloc(&pdev->dev, sizeof(*mchp_core_pwm), GFP_KE=
+RNEL);
+		if (!mchp_core_pwm)
+			return -ENOMEM;
+	+	chip =3D &mchp_core_pwm->chip;
+	=20
+		mchp_core_pwm->base =3D devm_platform_get_and_ioremap_resource(pdev, 0, &=
+regs);
+		if (IS_ERR(mchp_core_pwm->base))
+	@@ -470,9 +472,9 @@ static int mchp_core_pwm_probe(struct platform_device =
+*pdev)
+	=20
+		mutex_init(&mchp_core_pwm->lock);
+	=20
+	-	mchp_core_pwm->chip.dev =3D &pdev->dev;
+	-	mchp_core_pwm->chip.ops =3D &mchp_core_pwm_ops;
+	-	mchp_core_pwm->chip.npwm =3D 16;
+	+	chip->dev =3D &pdev->dev;
+	+	chip->ops =3D &mchp_core_pwm_ops;
+	+	chip->npwm =3D 16;
+	=20
+		mchp_core_pwm->channel_enabled =3D readb_relaxed(mchp_core_pwm->base + MC=
+HPCOREPWM_EN(0));
+		mchp_core_pwm->channel_enabled |=3D
+	@@ -485,7 +487,7 @@ static int mchp_core_pwm_probe(struct platform_device =
+*pdev)
+		writel_relaxed(1U, mchp_core_pwm->base + MCHPCOREPWM_SYNC_UPD);
+		mchp_core_pwm->update_timestamp =3D ktime_get();
+	=20
+	-	ret =3D devm_pwmchip_add(&pdev->dev, &mchp_core_pwm->chip);
+	+	ret =3D devm_pwmchip_add(&pdev->dev, chip);
+		if (ret)
+			return dev_err_probe(&pdev->dev, ret, "Failed to add pwmchip\n");
+=20
+    With that applied before the above mentioned patch there is no
+    complication at all in my eyes.
 
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--yyef2a7pj6vk5dry
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmV2/f8ACgkQj4D7WH0S
+/k7QwQgApfQEvhd6se+a8+O5GDdTfjV+EObXMDS2kvZsRHCAmatVaTePkn/Zg6Fo
+ZwGiGr9Ttfcjwf0hpLEmy7G2QP38HPZySu1f9Xo4V6NtkIvo4iPm3o60vDqF3mZM
+i+2779oY7aNOanR7E1KyDs7WfAZowpslVZ9qaXlDs6Pa1Hrz4Z7Wn6sF4gVV0SnX
+Qq2kKClfhZCuWBwwSDHS72BKOj2GRkgP32YIDH1LcEP9iemoZqFJivwMh3VGvIXv
+DocnmNO9JXrr3vx5UTcRHZfakEXbIfGOTtibtXwJDI48rHzGcXYRbYGi5B5Sssx/
+SHrVw/Ghy9VDfrcrkb+gLBfpz7JxyA==
+=RAtQ
+-----END PGP SIGNATURE-----
+
+--yyef2a7pj6vk5dry--
