@@ -1,117 +1,132 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E19F9C7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 11 Dec 2023 06:32:03 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rChJL-00005m-1a; Mon, 11 Dec 2023 15:31:07 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rChJG-00F7ct-Pw; Mon, 11 Dec 2023 15:31:02 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rChJG-000z2u-FK; Mon, 11 Dec 2023 15:31:02 +0100
-Date: Mon, 11 Dec 2023 15:30:59 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Sean Young <sean@mess.org>
-Cc: linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Support Opensource <support.opensource@diasemi.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>,
-	Jani Nikula <jani.nikula@intel.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v7 1/4] pwm: Rename pwm_apply_state() to
- pwm_apply_might_sleep()
-Message-ID: <20231211143059.dggelgdwjnntx7kf@pengutronix.de>
-References: <cover.1702282806.git.sean@mess.org>
- <f2762a5abc13be9ec05a45927bbd84e9da5bb41c.1702282807.git.sean@mess.org>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJGwsuVp"
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D3FC2;
+	Mon, 11 Dec 2023 06:47:48 -0800 (PST)
+Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-40c2db2ee28so46914225e9.2;
+        Mon, 11 Dec 2023 06:47:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702306067; x=1702910867; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HLQKNWG31bmCq0uh5A9lLXoIJmaU/L7EJU4AARQ0Ljs=;
+        b=fJGwsuVp5Sv6bpHCpadVPE4hpLq0yHI0OJbkVzqclgJAa415ePRlfrKl6iRrLWkTht
+         ypFHUgUItCj66qvBuJzTKW90UaYr+PZTDVYD1pO1naaZK/C70604yXjkI+/NAhQcPxlP
+         75sVnOEBf1yBII+DDwF5fo/OTzMZaE+Qpc+JT61r99tMWjMyseBtJXCT7YKj98DdiuWN
+         KEUIWNgQB/R8tFbzhJziGuXKU/w3KvWd9uTp6Cil5LCb3EuzOZwjwfsPzkvBJQepeDgo
+         jFQrRPxA1gEsnFWyc6KkOVzG1PZGqsaRM7k+5PvB0wrUlJO8IemnhS2BUqcyDvgi7/kd
+         yxuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702306067; x=1702910867;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HLQKNWG31bmCq0uh5A9lLXoIJmaU/L7EJU4AARQ0Ljs=;
+        b=U6sNMtYtDDmGYgyA8gJYczyROFUoyXHh4UCS9ris31bvl+5/pXVFXAK7YkFT4yu1Vt
+         0aLFTSLYqMXayfq1qmsvJ6GJCtrTYarD5xsxj3vsFNgdKvXToQ6wAjG4E8v8lWCZwL5c
+         7vgKVSuDuFxmSWaLZYz7hMsEWUXAdOGOWRfpCHy7YI4HnqVjOLidk9z3wNme0bpaOHmm
+         GSgQZMraVtNqLYtK6b7Xob0+F/h5Lo2zIbJ+D8hpQPCsUTbMF2RyF+l6W8UratkV5+NW
+         qZfT2EuCmTnZIWFkQiEDTJeVtENmFUmhuOQpiQJDq2PudKS0A7YSJej0oQcVKzTPc1t9
+         3Dmw==
+X-Gm-Message-State: AOJu0YwKF17p7CWCAwlFvxAssitAjFR/fTu/SzIgu1T0JJRBP/IB/8zS
+	wIlKrAOBHd9d4r+t10r7P9yKAGr7QRs=
+X-Google-Smtp-Source: AGHT+IF1d0IaNijH6Bm1hFHuDUlx6lg2VgfOkfHQEI2ZtSYN4OIU6MwLG3o2uV10SPGBR9o7dLaMKw==
+X-Received: by 2002:a7b:ce0f:0:b0:402:f501:447c with SMTP id m15-20020a7bce0f000000b00402f501447cmr2596452wmc.0.1702306066508;
+        Mon, 11 Dec 2023 06:47:46 -0800 (PST)
+Received: from [10.254.108.81] (munvpn.amd.com. [165.204.72.6])
+        by smtp.gmail.com with ESMTPSA id i6-20020a5d55c6000000b0033340aa3de2sm8711065wrw.14.2023.12.11.06.47.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Dec 2023 06:47:46 -0800 (PST)
+Message-ID: <b2a4dfa9-e3ec-4c90-bb53-f2e6c70603b2@gmail.com>
+Date: Mon, 11 Dec 2023 15:47:44 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kkbvgfm75p6j7s2z"
-Content-Disposition: inline
-In-Reply-To: <f2762a5abc13be9ec05a45927bbd84e9da5bb41c.1702282807.git.sean@mess.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [GIT PULL] mmutable branch between pdx86 amd wbrf branch and wifi
+ / amdgpu due for the v6.8 merge window
+Content-Language: en-US
+To: Hans de Goede <hdegoede@redhat.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Ma Jun <Jun.Ma2@amd.com>, "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ linux-wireless <linux-wireless@vger.kernel.org>,
+ amd-gfx list <amd-gfx@lists.freedesktop.org>
+References: <6395b87b-7cb6-4412-b6e5-e6075353fb6d@redhat.com>
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
+In-Reply-To: <6395b87b-7cb6-4412-b6e5-e6075353fb6d@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Am 11.12.23 um 12:02 schrieb Hans de Goede:
+> Hi Wifi and AMDGPU maintainers,
+>
+> Here is a pull-request for the platform-drivers-x86 parts of:
+>
+> https://lore.kernel.org/platform-driver-x86/20231211100630.2170152-1-Jun.Ma2@amd.com/
+>
+>  From my pov the pdx86 bits are ready and the platform-drivers-x86-amd-wbrf-v6.8-1 tag can be merged by you to merge the wifi-subsys resp. the amdgpu driver changes on top.
 
---kkbvgfm75p6j7s2z
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The few comments I had for the amdgpu patches were addressed and I 
+honestly don't have time to take a detailed look at the general framework.
 
-On Mon, Dec 11, 2023 at 08:24:52AM +0000, Sean Young wrote:
-> In order to introduce a pwm api which can be used from atomic context,
-> we will need two functions for applying pwm changes:
->=20
-> 	int pwm_apply_might_sleep(struct pwm *, struct pwm_state *);
-> 	int pwm_apply_atomic(struct pwm *, struct pwm_state *);
->=20
-> This commit just deals with renaming pwm_apply_state(), a following
-> commit will introduce the pwm_apply_atomic() function.
->=20
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com> # for input
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
-> Acked-by: Jani Nikula <jani.nikula@intel.com>
-> Acked-by: Lee Jones <lee@kernel.org>
-> Signed-off-by: Sean Young <sean@mess.org>
+So perfectly fine to merge that stuff from my side. Alex or Mario might 
+have some additional comments, but I think they will give their go as well.
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+Regards,
+Christian.
 
-Best regards
-Uwe
+>
+> This only adds kernel internal API, so if in the future the API needs work that can be done.
+>
+> I've not merged this branch into pdx86/for-next yet, since I see little use in merging it without any users. I'll merge it once either the wifi or amdgpu changes are also merged
+> (and if some blocking issues get identified before either are merged I can prepare a new pull-request fixing the issues).
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+> The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
+>
+>    Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
+>
+> are available in the Git repository at:
+>
+>    git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-amd-wbrf-v6.8-1
+>
+> for you to fetch changes up to 58e82a62669da52e688f4a8b89922c1839bf1001:
+>
+>    platform/x86/amd: Add support for AMD ACPI based Wifi band RFI mitigation feature (2023-12-11 11:33:44 +0100)
+>
+> ----------------------------------------------------------------
+> Immutable branch between pdx86 amd wbrf branch and wifi / amdgpu due for the v6.8 merge window
+>
+> platform-drivers-x86-amd-wbrf-v6.8-1: v6.7-rc1 + AMD WBRF support
+> for merging into the wifi subsys and amdgpu driver for 6.8.
+>
+> ----------------------------------------------------------------
+> Ma Jun (2):
+>        Documentation/driver-api: Add document about WBRF mechanism
+>        platform/x86/amd: Add support for AMD ACPI based Wifi band RFI mitigation feature
+>
+>   Documentation/driver-api/index.rst |   1 +
+>   Documentation/driver-api/wbrf.rst  |  78 +++++++++
+>   drivers/platform/x86/amd/Kconfig   |  14 ++
+>   drivers/platform/x86/amd/Makefile  |   1 +
+>   drivers/platform/x86/amd/wbrf.c    | 317 +++++++++++++++++++++++++++++++++++++
+>   include/linux/acpi_amd_wbrf.h      |  91 +++++++++++
+>   6 files changed, 502 insertions(+)
+>   create mode 100644 Documentation/driver-api/wbrf.rst
+>   create mode 100644 drivers/platform/x86/amd/wbrf.c
+>   create mode 100644 include/linux/acpi_amd_wbrf.h
+>
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---kkbvgfm75p6j7s2z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmV3HSIACgkQj4D7WH0S
-/k7bnAf/cRTO22nABcFvyIQZ3V56at9Cfad/B9139ZFHLXIV2KYhrRI/65AlFTP2
-nO0TxvG6yhZVS24t9na92aLNJYXlpQpvKScNCEXaZgKg5IOxBn3FEkChVdv0OeQh
-X5nEqz71490AGYDzpQwXckFxMGo8wFhMRU98Htb8tJcn6NNIcfS8kWRy6bmSly9y
-enHFBwqZ+liARBITVl3+y5Qqr1RErOtO1SZl4wxJjDduSbJfvl0ZVjGhI646k6+G
-+qBYmGe9YrWshP/Foo1PClhXj1dTQUucAnB0gc9fnczRvLOTy11dbHZ66NJLcfB+
-wRvN6iZVO/dLcWu5WihPzL4de3xwLg==
-=C1pU
------END PGP SIGNATURE-----
-
---kkbvgfm75p6j7s2z--
