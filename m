@@ -1,185 +1,218 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnegP7d6"
-Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CD73E3;
-	Mon, 11 Dec 2023 07:27:32 -0800 (PST)
-Received: by mail-ot1-x332.google.com with SMTP id 46e09a7af769-6d9f8578932so2190354a34.2;
-        Mon, 11 Dec 2023 07:27:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702308452; x=1702913252; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MfbKV2/TY0MfyawkcDgwd2rGAqmms78JFhMnLhUszH0=;
-        b=AnegP7d6FVHTiM1TWhKEHsbQoDWP4NFKLBYO0IsD2XFcJv61jCl4DERNyV2Qz+JKyw
-         +lg7OOGgQ24lEMOEqvnN3ZBszrrE6s7I/LnSrXd6bXEqvJusEL6QohzD2k1UFiMdMh84
-         RukRiQcQgHYkX8iT+YN8GwL7dSfBQibyYhoLBPd8RZP2eeZNhveC3+Q15T/iq3G/8mJt
-         hD0zfHTq97xb7OtQR+eHi/9MND5EWYUpjzyfslTPfONmoDuMlkHpF+RoWIZuOqqhZufk
-         EaqZzRufxYIwKh40avtIRctfmT8Z5+vplFqPPVpgdGb2+QTjB/f00KJHTOUAJrubBTlt
-         GkKA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RM8qkeMn"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD7CCB4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 11 Dec 2023 07:55:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702310143;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z44HRi6BoTU+suuvN9Kf4v+c8DNu/swIY6xBfMot3js=;
+	b=RM8qkeMnv/b2zdHC+Zw7zhiHokdCZepXdcB2agF10O9skF1iUfdvH0Ar153S6Lj7yLS7xW
+	J3wWTb/0I24o0jhy27TidYrDGUkQVsJwZK9fzDD2Kjm+Np8hmwLF8VqF9O0AaOfdKHfRCR
+	+8vq6YThIJDKa1Au3Mhuc7M8ERB7Tmk=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-196-BEaXuWo6Ooe1ok-_-R2R8g-1; Mon, 11 Dec 2023 10:55:42 -0500
+X-MC-Unique: BEaXuWo6Ooe1ok-_-R2R8g-1
+Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-50bf7c5c732so3800456e87.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Dec 2023 07:55:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702308452; x=1702913252;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MfbKV2/TY0MfyawkcDgwd2rGAqmms78JFhMnLhUszH0=;
-        b=Wddb1DsuZ3OTJPVU6mbbaVkYarYp6O7ye8qLPBUm9RyJMoz7heeO5BEuIAZeR47IZY
-         rymLeJEYNaq73RIqkZOvsNeaSNsSbGfDbMMKiZRqPe8ynpB0ciadDQfbti36jGjux5SY
-         ki+D/aOIy8ocGcVIp/tg/KQCcFGH1WcfRAJpllxh5DA6HCsnzU2EqlYhvigBqhtYNh4X
-         3iRDqVNpZskp05xvwYT0fkFilKazDdxfJd4su2t4ofjqTEt4EVC8LxYFCaOMZJvZlpYZ
-         HD+qUmjMzcM9QwTliqekL9pOqdaBKm/HA3vahJLzJxaeGd4KWLozu+p7H3frvHav3eVH
-         YKuQ==
-X-Gm-Message-State: AOJu0Ywf3amesbTWRKtFbx2v9ygTzigRhByFcRzjuWhoimc0pDiVtEhk
-	WWNK9JvGk4NqUpfs3Dc9IroJBTALcy3u2E+P9gw=
-X-Google-Smtp-Source: AGHT+IG47sj6ougdG5tZAq3pwxJM83q+ankLP1ExYCnj8m+DGDohDP/ngyWyaNlX5BmakhSLo/EonuSm6eoGu5HEvI8=
-X-Received: by 2002:a05:6870:350d:b0:1fb:1304:56b7 with SMTP id
- k13-20020a056870350d00b001fb130456b7mr5788311oah.7.1702308451822; Mon, 11 Dec
- 2023 07:27:31 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702310140; x=1702914940;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z44HRi6BoTU+suuvN9Kf4v+c8DNu/swIY6xBfMot3js=;
+        b=PC2uD6fYIgu5N9uDUQMqlfYlTZNOQjUo5byVSbMzdcA9ZfEmOgywZj1xOvP1JfAuvL
+         rJ4E0E5MPZzbRJZV1dIHf/gl7agIad5W47zOoTmNpuGZRCsRHtSQ5/ac3QjadluK453Z
+         IV8Pm8OIwOxn9zLyC5dUXyysjjLT0DjC/Me8HI02UfRMbN7lTT7IpY9iSRR9lnmAuhyc
+         sTe8Uk78GVYxTeyjOWV0GuFKHgpxlAaNPjiB3lXl6TPKvqj3U9vACKwr8E3jx6tfRqOf
+         MKEaGKKwe/80+4fGl6Tpq7hRpVuiivF5LNc+dS+gBW3Oar6ynwtIe2in1cBOt+xQRBOP
+         KBDg==
+X-Gm-Message-State: AOJu0Yyz4IXasGaK1UISVlebYjR87HdyR1umtuNm4YdJfE9A40csejJY
+	s37rPyuKqKbBS8ZmRQeXAmuiasVXSsrXb/9oW6bSBuoodIbP8auDME31H3/hehHnoUKDjZZtVGJ
+	3nFL1X9nWn447lNIVQC6omP17F/2SUQqLrw==
+X-Received: by 2002:a2e:a1ca:0:b0:2cb:2193:e715 with SMTP id c10-20020a2ea1ca000000b002cb2193e715mr810245ljm.139.1702310140689;
+        Mon, 11 Dec 2023 07:55:40 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHu944q7DKM5rc5Z7dlIsOOj+gdHycmrVGLj8VEhNKsY6/13qlJDoK3271gKFMZ3qtNsAxibQ==
+X-Received: by 2002:a2e:a1ca:0:b0:2cb:2193:e715 with SMTP id c10-20020a2ea1ca000000b002cb2193e715mr810238ljm.139.1702310140354;
+        Mon, 11 Dec 2023 07:55:40 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id ub27-20020a170907c81b00b00a1df4387f16sm5063748ejc.95.2023.12.11.07.55.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Dec 2023 07:55:39 -0800 (PST)
+Message-ID: <c3a46dec-0f55-4abb-a5c1-39ba467a3108@redhat.com>
+Date: Mon, 11 Dec 2023 16:55:38 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6395b87b-7cb6-4412-b6e5-e6075353fb6d@redhat.com>
- <b2a4dfa9-e3ec-4c90-bb53-f2e6c70603b2@gmail.com> <23850b71-f530-4094-81cc-26cd762dc231@amd.com>
-In-Reply-To: <23850b71-f530-4094-81cc-26cd762dc231@amd.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Mon, 11 Dec 2023 10:27:20 -0500
-Message-ID: <CADnq5_OXRrGRH6iyFc_kfP2BARyav4uw3X0kuV3tP-7VXv3tMw@mail.gmail.com>
-Subject: Re: [GIT PULL] mmutable branch between pdx86 amd wbrf branch and wifi
- / amdgpu due for the v6.8 merge window
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>, 
-	Hans de Goede <hdegoede@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Ma Jun <Jun.Ma2@amd.com>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-wireless <linux-wireless@vger.kernel.org>, 
-	amd-gfx list <amd-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 03/15] platform/x86/amd/pmf: Change return type of
+ amd_pmf_set_dram_addr()
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org,
+ ilpo.jarvinen@linux.intel.com, basavaraj.natikar@amd.com, jikos@kernel.org,
+ benjamin.tissoires@redhat.com
+Cc: Patil.Reddy@amd.com, mario.limonciello@amd.com,
+ platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org
+References: <20231204101548.1458499-1-Shyam-sundar.S-k@amd.com>
+ <20231204101548.1458499-4-Shyam-sundar.S-k@amd.com>
+ <bae8cbbb-47d9-4e03-9445-8ca9b50576af@redhat.com>
+ <4af63850-0cb5-4deb-8dad-39dbb425916b@amd.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <4af63850-0cb5-4deb-8dad-39dbb425916b@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 11, 2023 at 10:20=E2=80=AFAM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> On 12/11/2023 08:47, Christian K=C3=B6nig wrote:
-> > Am 11.12.23 um 12:02 schrieb Hans de Goede:
-> >> Hi Wifi and AMDGPU maintainers,
-> >>
-> >> Here is a pull-request for the platform-drivers-x86 parts of:
-> >>
-> >> https://lore.kernel.org/platform-driver-x86/20231211100630.2170152-1-J=
-un.Ma2@amd.com/
-> >>
-> >>  From my pov the pdx86 bits are ready and the
-> >> platform-drivers-x86-amd-wbrf-v6.8-1 tag can be merged by you to merge
-> >> the wifi-subsys resp. the amdgpu driver changes on top.
-> >
-> > The few comments I had for the amdgpu patches were addressed and I
-> > honestly don't have time to take a detailed look at the general framewo=
-rk.
-> >
-> > So perfectly fine to merge that stuff from my side. Alex or Mario might
-> > have some additional comments, but I think they will give their go as w=
-ell.
->
-> My feedback has been taken into account already, I'm happy with the
-> series now.
->
-> I'm a bit confused how exactly the drm/amd patches get applied though.
-> Is it like this:
-> 1) immutable branch for platform-x86
-> 2) immutable branch for platform-x86 merged into wlan-next
-> 3) immutable branch for platform-x86 merged into drm-next?
-> 4) wlan-next and drm-next come together for 6.8
->
-> Normally stuff from amd-staging-drm-next is put into the drm-next branch
-> and then merge through the drm.
->
-> amd-staging-drm-next tracks a much older tree so I'm thinking merging
-> the immutable branch for platform-x86 won't work.
->
-> Maybe the right answer is that the "immutable branch gets merged into
-> drm-next" and we just have some cherry-picks for all the commits into
-> amd-staging-drm-next so we can compile but Alex doesn't put them as part
-> of the next PR to drm-next.  When ASDN rebased to 6.8 or newer they
-> would drop off.
+Hi Shyam,
 
-amd-staging-drm-next is just our development branch, the actual
-amdgpu-next branch is:
-https://gitlab.freedesktop.org/agd5f/linux/-/commits/drm-next
-I'll merge the platform branch there and then apply the amdgpu patches on t=
-op.
-For amd-staging-drm-next, we can just apply the whole set since that
-branch is just for development so there won't be any conflicts with
-upstream.
+On 12/11/23 16:15, Shyam Sundar S K wrote:
+> Hi Hans,
+> 
+> On 12/11/2023 2:10 PM, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 12/4/23 11:15, Shyam Sundar S K wrote:
+>>> In the current code, the metrics table information was required only
+>>> for auto-mode or CnQF at a given time. Hence keeping the return type
+>>> of amd_pmf_set_dram_addr() as static made sense.
+>>>
+>>> But with the addition of Smart PC builder feature, the metrics table
+>>> information has to be shared by the Smart PC also and this feature
+>>> resides outside of core.c.
+>>>
+>>> To make amd_pmf_set_dram_addr() visible outside of core.c make it
+>>> as a non-static function and move the allocation of memory for
+>>> metrics table from amd_pmf_init_metrics_table() to amd_pmf_set_dram_addr()
+>>> as amd_pmf_set_dram_addr() is the common function to set the DRAM
+>>> address.
+>>>
+>>> Add a suspend handler that can free up the allocated memory for getting
+>>> the metrics table information.
+>>>
+>>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>>> ---
+>>>  drivers/platform/x86/amd/pmf/core.c | 42 ++++++++++++++++++++++-------
+>>>  drivers/platform/x86/amd/pmf/pmf.h  |  1 +
+>>>  2 files changed, 34 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+>>> index ec92d1cc0dac..f50b7ec9a625 100644
+>>> --- a/drivers/platform/x86/amd/pmf/core.c
+>>> +++ b/drivers/platform/x86/amd/pmf/core.c
+>>> @@ -251,29 +251,35 @@ static const struct pci_device_id pmf_pci_ids[] = {
+>>>  	{ }
+>>>  };
+>>>  
+>>> -static void amd_pmf_set_dram_addr(struct amd_pmf_dev *dev)
+>>> +int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev)
+>>>  {
+>>>  	u64 phys_addr;
+>>>  	u32 hi, low;
+>>>  
+>>> +	/* Get Metrics Table Address */
+>>> +	dev->buf = kzalloc(sizeof(dev->m_table), GFP_KERNEL);
+>>> +	if (!dev->buf)
+>>> +		return -ENOMEM;
+>>> +
+>>>  	phys_addr = virt_to_phys(dev->buf);
+>>>  	hi = phys_addr >> 32;
+>>>  	low = phys_addr & GENMASK(31, 0);
+>>>  
+>>>  	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_HIGH, 0, hi, NULL);
+>>>  	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_LOW, 0, low, NULL);
+>>> +
+>>> +	return 0;
+>>>  }
+>>>  
+>>>  int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
+>>>  {
+>>> -	/* Get Metrics Table Address */
+>>> -	dev->buf = kzalloc(sizeof(dev->m_table), GFP_KERNEL);
+>>> -	if (!dev->buf)
+>>> -		return -ENOMEM;
+>>> +	int ret;
+>>>  
+>>>  	INIT_DELAYED_WORK(&dev->work_buffer, amd_pmf_get_metrics);
+>>>  
+>>> -	amd_pmf_set_dram_addr(dev);
+>>> +	ret = amd_pmf_set_dram_addr(dev);
+>>> +	if (ret)
+>>> +		return ret;
+>>>  
+>>>  	/*
+>>>  	 * Start collecting the metrics data after a small delay
+>>> @@ -284,17 +290,35 @@ int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +static int amd_pmf_suspend_handler(struct device *dev)
+>>> +{
+>>> +	struct amd_pmf_dev *pdev = dev_get_drvdata(dev);
+>>> +
+>>> +	/*
+>>> +	 * Free the buffer allocated for storing the metrics table
+>>> +	 * information, as will have to allocate it freshly after
+>>> +	 * resume.
+>>> +	 */
+>>> +	kfree(pdev->buf);
+>>
+>> This seems quite risky. You are freeing the memory here,
+>> but the SET_DRAM_ADDR_HIGH and SET_DRAM_ADDR_LO registers
+>> still point to it, so the hw may still access it.
+>>
+>> IMHO it would be better to add a "bool alloc_buffer"
+>> parameter to amd_pmf_set_dram_addr() and set that
+>> to true on init and false on resume.
+>>
+> 
+> Ok. I have made this change.
+> 
+>> Also I guess that this DRAM buffer is used by the new
+>> smartpc mode and specifically by the command send by
+>> amd_pmf_invoke_cmd() work. In that case you really
+>> need to make sure to cancel the work before
+>> freeing the buffer and then re-submit the work
+>> on resume.
+> 
+> With some sanity tests, I don't think so this is required. pdev->buf
+> is only used to get the metrics table info. So, I am keeping only the
+> freeing part + alloc_buffer thing and not cancel/resubmit in the
+> suspend/resume.
+> 
+> If there are issues in the future because of not including
+> cancel/resubmit thing, can we work that as a bug fix later? Would that
+> be OK for you?
 
-Alex
+If you are sure that it is safe to keep the work running
+after your suspend-handler has run and on resume to
+have it running before your resume handler has run
+then yes that is ok.
 
->
-> >
-> > Regards,
-> > Christian.
-> >
-> >>
-> >> This only adds kernel internal API, so if in the future the API needs
-> >> work that can be done.
-> >>
-> >> I've not merged this branch into pdx86/for-next yet, since I see
-> >> little use in merging it without any users. I'll merge it once either
-> >> the wifi or amdgpu changes are also merged
-> >> (and if some blocking issues get identified before either are merged I
-> >> can prepare a new pull-request fixing the issues).
-> >>
-> >> Regards,
-> >>
-> >> Hans
-> >>
-> >>
-> >>
-> >> The following changes since commit
-> >> b85ea95d086471afb4ad062012a4d73cd328fa86:
-> >>
-> >>    Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
-> >>
-> >> are available in the Git repository at:
-> >>
-> >>
-> >> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x=
-86.git tags/platform-drivers-x86-amd-wbrf-v6.8-1
-> >>
-> >> for you to fetch changes up to 58e82a62669da52e688f4a8b89922c1839bf100=
-1:
-> >>
-> >>    platform/x86/amd: Add support for AMD ACPI based Wifi band RFI
-> >> mitigation feature (2023-12-11 11:33:44 +0100)
-> >>
-> >> ----------------------------------------------------------------
-> >> Immutable branch between pdx86 amd wbrf branch and wifi / amdgpu due
-> >> for the v6.8 merge window
-> >>
-> >> platform-drivers-x86-amd-wbrf-v6.8-1: v6.7-rc1 + AMD WBRF support
-> >> for merging into the wifi subsys and amdgpu driver for 6.8.
-> >>
-> >> ----------------------------------------------------------------
-> >> Ma Jun (2):
-> >>        Documentation/driver-api: Add document about WBRF mechanism
-> >>        platform/x86/amd: Add support for AMD ACPI based Wifi band RFI
-> >> mitigation feature
-> >>
-> >>   Documentation/driver-api/index.rst |   1 +
-> >>   Documentation/driver-api/wbrf.rst  |  78 +++++++++
-> >>   drivers/platform/x86/amd/Kconfig   |  14 ++
-> >>   drivers/platform/x86/amd/Makefile  |   1 +
-> >>   drivers/platform/x86/amd/wbrf.c    | 317
-> >> +++++++++++++++++++++++++++++++++++++
-> >>   include/linux/acpi_amd_wbrf.h      |  91 +++++++++++
-> >>   6 files changed, 502 insertions(+)
-> >>   create mode 100644 Documentation/driver-api/wbrf.rst
-> >>   create mode 100644 drivers/platform/x86/amd/wbrf.c
-> >>   create mode 100644 include/linux/acpi_amd_wbrf.h
-> >>
-> >
->
+This seems unwise though, adding a sync kill of the
+work + requeue is only a couple of lines of code.
+
+And what about accessing other subsystems like the
+AMD HID sensors, I guess the work item may do that
+too? That esp. seems unwise to do after your
+suspend-handler has run.
+
+Even if you stop the work from your suspend handler
+you may need to add some dev-links to ensure
+that the PMF linux-device is suspended before
+e.g. the AMD HID sensors. That can be done in
+a follow up patch though.
+
+Regards,
+
+Hans
+
+
+
