@@ -1,188 +1,67 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZvLO0zEP"
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 511D71734;
-	Mon, 11 Dec 2023 02:08:35 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iKrGxcYuNZbJOQOox4CzLNDjolXfBqoywrw173uL3lmLImBIvmDVNn5oTLLmRlOT4spGsDM6nFYEeGXaK3njsyR3InRCgZ0r0EY9UskrOUjSl+1Vb9PVlbi8hlDiZIF7O9StOl+Na9axdCmoNjM3cXtjgVggO33w3azYl8gvHEmPQuPs6MUpL18VnRLAEOSAUTkelPNNmdyeKzxloDWLzZ2uL7IDkhP+gfAaVaDRVKqQX8esYZ3RNerGU2jyObw4hFJudF/y3gb0l/URYOTbzSc30rF3Zf+MyjL25Yhg58B9v1FuoSuya9gmuie4mz5tHRYOMIOpEYyKjl14Q/1nPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=71+oWSnSfk3fDz/1QxzY2uu/SYxydALkIMaNWb06PhI=;
- b=W7U0AO9ZVEp7p00IY899cy2/qK72U9pmcJm3IFslJhF54+pVJmFU8uWTdhOW/wGoChiqkqHp2fqRiA6e1+viv1UUvlnIYIIzRg0eZ2ab5HKEQQI9XHNVgI2Fy0aJRjPSJPcQrCRbHbPHVFncDkoQ5PcFd0PSAXYal1LcUzu1p8luBaMLNoptYEjHerCsPlYly3oDkC4CDSgzkcz8Mv3OIDLZtKsfE70ztWjAGwrsDij4cCsoNy1Bh3MDxwBf6jfJq9fhsmMPkN5/S4AbutuPdGl12Jl/cdsWOZCYsoq1goIMQ6axJFA+LicZxgmtg8hrS3eXi2py9VCvXi4RK6IG9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=71+oWSnSfk3fDz/1QxzY2uu/SYxydALkIMaNWb06PhI=;
- b=ZvLO0zEPSZA3YEcQM21nvX4qp4uVxBZsIu4r3gmjePc9A0tg12vOR94eAzzeFh14XKiJ0woyIp8I1YGRH2U9TDAlMeIjzz+s0ccg4WKOgYzaKE+kvIgWIeiz2k9iEknp5whI9oNYx8CaIDjTQW7BmotY5vWgTPTDlv9bSQpXZqk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6351.namprd12.prod.outlook.com (2603:10b6:8:a2::6) by
- SA3PR12MB9106.namprd12.prod.outlook.com (2603:10b6:806:37e::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.32; Mon, 11 Dec
- 2023 10:08:30 +0000
-Received: from DM4PR12MB6351.namprd12.prod.outlook.com
- ([fe80::8650:7935:179:f18c]) by DM4PR12MB6351.namprd12.prod.outlook.com
- ([fe80::8650:7935:179:f18c%5]) with mapi id 15.20.7068.031; Mon, 11 Dec 2023
- 10:08:30 +0000
-Message-ID: <08f25cb0-793c-441c-b033-0de8104629c9@amd.com>
-Date: Mon, 11 Dec 2023 18:08:24 +0800
-User-Agent: Mozilla Thunderbird
-Cc: majun@amd.com
-Subject: Re: [PATCH v16 0/9] Enable Wifi RFI interference mitigation feature
- support
-To: Ma Jun <Jun.Ma2@amd.com>, amd-gfx@lists.freedesktop.org, lenb@kernel.org,
- hdegoede@redhat.com, johannes@sipsolutions.net, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- alexander.deucher@amd.com, Lijo.Lazar@amd.com, mario.limonciello@amd.com,
- netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20231211100630.2170152-1-Jun.Ma2@amd.com>
-Content-Language: en-US
-From: "Ma, Jun" <majun@amd.com>
-In-Reply-To: <20231211100630.2170152-1-Jun.Ma2@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR06CA0017.apcprd06.prod.outlook.com
- (2603:1096:4:186::15) To DM4PR12MB6351.namprd12.prod.outlook.com
- (2603:10b6:8:a2::6)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ov+fHzpt"
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D76D18B;
+	Mon, 11 Dec 2023 02:09:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702289377; x=1733825377;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=TQRhBF4KvDlaLwm69w1dNBqRhLLQ2db1I6CDDBLiMnU=;
+  b=Ov+fHzptOLrmK8PBYWd4RO3QEfa7JAJyVYm4mHlLwualsstRpy3SkgmF
+   HiwiQZDnsD6tIi9WcBMrETYpN2I+kRHCqXEe0G5u6R9Ku0GpCcasdGpzz
+   7uJ27LKm7LomQTVhQCFOgJ1v9Vs4ppRl0na4+WKlfzAwdhcbXG8l5xFTT
+   txnLGUP68n6y+UsHkGSOkPj+Rd6INo+gDCX7+oCs7JNgyKeV72D8b5g8X
+   BUiLfdmekkiIRX2GjVJojkQvdnGG7oegVGtVPg4RHB8ARe8qK8XqP5sOI
+   vFioMx2vxUWTn00AHIZkHi6bjZ0EPatMvOlSe3+la7RwckOcjogyPimik
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10920"; a="1740762"
+X-IronPort-AV: E=Sophos;i="6.04,267,1695711600"; 
+   d="scan'208";a="1740762"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 02:09:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,267,1695711600"; 
+   d="scan'208";a="21023237"
+Received: from lmckeon-mobl.ger.corp.intel.com (HELO iboscu-mobl2.ger.corp.intel.com) ([10.252.48.111])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 02:08:58 -0800
+Date: Mon, 11 Dec 2023 12:08:56 +0200 (EET)
+From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Armin Wolf <W_Armin@gmx.de>
+cc: Hans de Goede <hdegoede@redhat.com>, corbet@lwn.net, 
+    Dell.Client.Kernel@dell.com, linux-doc@vger.kernel.org, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/5] platform/x86: dell-smbios-wmi: Use
+ devm_get_free_pages()
+In-Reply-To: <20231210202443.646427-4-W_Armin@gmx.de>
+Message-ID: <a0cd5b8-304d-1e8-7923-fe5ad9f7c469@linux.intel.com>
+References: <20231210202443.646427-1-W_Armin@gmx.de> <20231210202443.646427-4-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6351:EE_|SA3PR12MB9106:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7ad196ab-cc87-4bbd-bcc8-08dbfa31203e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	c5u1Z3TxJ/bs6E06Cc9BR18o3vwPCmhFsuomzqk+NuUB3St0z3TX14rr4u/GgI7ZR67cZQel4yqW6ldlqp4dPjOzdiWhQZoFjblhNYbOKiflX6e2tTfNS8vtQKcoAPN+ohSYez4FtSsIQX0xRb8e5PgmX5tO+JakJNBPBm6Q8cKRQ/t4xNIWt1BLpH3T+S4ivncBzNRD0y9USg9cJptuAF37hN4dDKJ78A7bNBz+rUo3OzJnlYDbXNkKKX0lQTxjkWNKi4hwuy5OdBGKgbYViUA8aBOENdLtTnxooJQB12ZngaJkzxEiG2z+/yS5teQmDZM7jTgaPAD00JaSVGGo+S22Kf7ln68E6WRGeTFohlfarlBDoKPTsK+jfd6KqJlWkRkvUdr7yZnoof0svKQDsJIitA3oUCt1i6IZnZZELuhRktdrghwDrUpxKlUstfPoeFdOwh9ogqFYuofBoqYnwnWDyMPqRXH6s6pFapp3Vns2ifCn9Dp5xU6/WfdHFGivR1U4pcRrxMJlgBLD1Wa/KgygTZHk5zTHc4GbF0cH+aP9umUusNgpQTgc8Y4sABLL6lgDmm3S8/zXwaykmnzhbiBXyfB4tIRiEPdtd4RKF5lXVdta8qMde54/m8moTaIxuMy7Qt9rs9cwCt3fit6aCTMYaccDfP0MTeqAxKPVPqA=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6351.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(376002)(136003)(396003)(39860400002)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(41300700001)(2616005)(26005)(83380400001)(36756003)(31696002)(921008)(38100700002)(5660300002)(316002)(8936002)(8676002)(4326008)(2906002)(7416002)(6666004)(6512007)(6506007)(53546011)(66946007)(66556008)(66476007)(478600001)(6486002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a3ZmTVRCc21JYlhvaG1HMWJvaVdpWUFrczEyVlc5VWVBQ0dqblpQNENjNzFR?=
- =?utf-8?B?WnArUzhkMU1Zd0JMNklMZi8rbW5YdS9HRmxZa08zSHdaWERyZ1BBZjNKUFFh?=
- =?utf-8?B?ZWVjaWRPQjJuTDIwRFFWWEF4MkNTRGJaYVJkWnJNYzVpRngwWXFuV240amtH?=
- =?utf-8?B?aVA1NUdYQ1JPRkQwL3ZyeEttWFc2VFpQaEhqRmIxWjRzdTMyTEN4RlNRTUlB?=
- =?utf-8?B?VTNONU8rVnZwdXVHYkZ5dWxxZlpLeTZWQ2FLVGo1N2VabFpaUE1HZFJsWXRa?=
- =?utf-8?B?MTU1WkZxV003ZS8rVkRUSWxBT1FvR3JlMjQ1K2lTVWx6VnpYK1RhcUw2aHFx?=
- =?utf-8?B?UDh4dlBVd2hMUisyVDZNRmdYejkvZm9BQTl4akQrNDk5anVmWjI1dG9rNjZF?=
- =?utf-8?B?eGJRaWxmNmxBUUZ2TXpSdTV5VXdneEZjMGd0VC9scFl1aXRuWE4zY2tUb2Y1?=
- =?utf-8?B?Mjl0OFRvNEZ1RVZ0YkRpVW9wb2NRYmR3UTFZK21WR2hFQk9GYnN3UmZxWTZ1?=
- =?utf-8?B?ek1jcXVpQlI0M1lNZzZSeHZwbUVCWEU1RDZpdnNoVjY5alJ0Rm85RDY2TzJv?=
- =?utf-8?B?ZXcvdnIvandMSHFzclJqMnhUMDE4MmFWalp6N2x2bGdzdmd2RU9VSXZXUmhW?=
- =?utf-8?B?MXh0N0RVV0FMd3hNVzdldmdmNWlNNjFleVQ0cWZPS1NFUmtweCtkdllNK0JP?=
- =?utf-8?B?M2FmNW9KSG5xUC9MMHN2c0ljcEl1bHN3Ymg5Nk56N3lvYUZvUFZIaHpBV1d6?=
- =?utf-8?B?emQrQVNTU2hIeDlIWXBPcjMreTFTOWhycXhwUEYrMjlEREIva1kxL3BtWnZZ?=
- =?utf-8?B?RDBHME9oTkFaQ09HQmRxUVFwMmdZeHM5S1pGQmNnaFBkVnVFck9VY0QrbFAw?=
- =?utf-8?B?ampKL0F4K25tcXE5VTZPa1FLNGVXWnRFK1I0TDRYbHFFdEo3QkxuOElzQ1hI?=
- =?utf-8?B?MS8ya00ydW1Id2xOYzVLUENoVnZkL1U2eTFGS0FQK1FKY2QxTmVnU0hQVGdr?=
- =?utf-8?B?VlRoOFJsQ1FjVEYwL0ZtS0lNcUxUSVZOMkVVdkNDNEdLYkJLWXVmeDNWOXUx?=
- =?utf-8?B?M2hsemMyUTR3dFFZOFRPM0l1QldmNTZoOVNBbWdndWE1dzFoRG5UVEttWUha?=
- =?utf-8?B?NHFVd1owYnM1MjBHWFdkZFJVS0tBa0dHenVNNUdtbW1oeXN6VG5nbStLZmR0?=
- =?utf-8?B?NEZqcGpkRm9SaE1qT2lKTDRIK3lDYVpHRnUzZnduZEF4R0xxL1FSSUdlUmhj?=
- =?utf-8?B?Zjh3TlJxNHNFeC9Ya25FdG5VRHB2eUdIWFRyOW82RFJsZkU4dnlGZThBZWxQ?=
- =?utf-8?B?UWRWSzk1V1ZQbHVpRXAwZ01Wc0JRdFE5dncySEhFUlBFQ0NoblgrbEp4NTJt?=
- =?utf-8?B?R2JwOFVZcVZwZmpLanFZa1NHWW9TVkRTano3OHRSUlE0MC93NHg1aVdzK2NR?=
- =?utf-8?B?ZEI0UWtlcWI1NTcySzRSdTJLVW82QnY2ZW1reVNNS0RRVTQvK3BxYnQ4dWdJ?=
- =?utf-8?B?QWw5MUQ3cml4L2VEWEZJYnJ0S2xDRjRFWkFjQTdqcUZ6bGpkb0FzR1diNGJL?=
- =?utf-8?B?amNXckUxMERYRU1IN08zUExyM1FQZGdvZk5jRUhybmNtaEFHUWw3ekFhc0R2?=
- =?utf-8?B?NG5kTE5QY0ZMNitWRTFpbGw1dUFBQXhlRmtLVFNWQUhlRnd0MVNxc2d0by80?=
- =?utf-8?B?VFhuZy9mUnVvN3d0VDlpK1I3ZCtxUURLRStQVTl6TUNXN1ZHVCtqVERIdWg0?=
- =?utf-8?B?MWd2OHNJOGZvWUZtWm5yV2NGMEpzSjN2cDBSUXlxZ2JRZzhmc21HM2VRSWN1?=
- =?utf-8?B?ekRib2hEa2lCZ3BINkZPMDNIR0hqN3lRUUdmSkdRdjMxVUJ3WkZHd0g5bkhp?=
- =?utf-8?B?OTBhRGl2RUZZV2RrMW1uYVVDVjVuOWJGVmFtVzJtY0dhN01DUWoxSk9jQXNh?=
- =?utf-8?B?ejFOL1ZNV0xHVWMreUFMWTFkRFU5K3VpUnhmbXpGZ1l1NVhiZzlNZG9aa09y?=
- =?utf-8?B?a2RXYmFDY2hKaUtEaWxtWFNkWVNIVVFGRWVHeU0rdFVtN0ZSaVlRVGdIVTJ5?=
- =?utf-8?B?ek0wUDBzd01LUXNIbHZ1dUt3NTM5M2JabGF4cjg5aFdyeXBndjZ0RVJsUTJx?=
- =?utf-8?Q?/wVwOqvgObo/JbtjYeG9xppPK?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ad196ab-cc87-4bbd-bcc8-08dbfa31203e
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6351.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2023 10:08:30.7484
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GUpQudEKQm4SZLYAR50uJDq9fr5vWYLH4r71gm7SiJgYouj6bQpViYtFHW0f2nPt
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9106
+Content-Type: multipart/mixed; boundary="8323329-471716995-1702289340=:1867"
 
-Hi all,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Compared with the previous version(v15), only patch 1 was modified to fix compilation errors,
-and other patches remained the same as the previous version.
+--8323329-471716995-1702289340=:1867
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
 
-Regards,
-Ma Jun
+On Sun, 10 Dec 2023, Armin Wolf wrote:
 
-On 12/11/2023 6:06 PM, Ma Jun wrote:
-> Due to electrical and mechanical constraints in certain platform designs there
-> may be likely interference of relatively high-powered harmonics of the (G-)DDR
-> memory clocks with local radio module frequency bands used by Wifi 6/6e/7. To
-> mitigate possible RFI interference we introuduced WBRF(Wifi Band RFI mitigation Feature).
-> Producers can advertise the frequencies in use and consumers can use this information
-> to avoid using these frequencies for sensitive features.
+> Use devres version of __get_free_pages() to simplify the
+> error handling code.
 > 
-> The whole patch set is based on Linux 6.7.0-rc4 With some brief introductions
-> as below:
-> Patch1:      Document about WBRF
-> Patch2:      Core functionality setup for WBRF feature support
-> Patch3 - 4:  Bring WBRF support to wifi subsystem.
-> Patch5 - 9:  Bring WBRF support to AMD graphics driver.
-> 
-> Evan Quan (6):
->   cfg80211: expose nl80211_chan_width_to_mhz for wide sharing
->   wifi: mac80211: Add support for WBRF features
->   drm/amd/pm: update driver_if and ppsmc headers for coming wbrf feature
->   drm/amd/pm: setup the framework to support Wifi RFI mitigation feature
->   drm/amd/pm: add flood detection for wbrf events
->   drm/amd/pm: enable Wifi RFI mitigation feature support for SMU13.0.7
-> 
-> Ma Jun (3):
->   Documentation/driver-api: Add document about WBRF mechanism
->   platform/x86/amd: Add support for AMD ACPI based Wifi band RFI
->     mitigation feature
->   drm/amd/pm: enable Wifi RFI mitigation feature support for SMU13.0.0
-> 
->  Documentation/driver-api/index.rst            |   1 +
->  Documentation/driver-api/wbrf.rst             |  78 +++++
->  drivers/gpu/drm/amd/amdgpu/amdgpu.h           |   2 +
->  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c       |  17 +
->  drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c     | 208 ++++++++++++
->  drivers/gpu/drm/amd/pm/swsmu/inc/amdgpu_smu.h |  42 +++
->  .../inc/pmfw_if/smu13_driver_if_v13_0_0.h     |   3 +-
->  .../inc/pmfw_if/smu13_driver_if_v13_0_7.h     |   3 +-
->  .../pm/swsmu/inc/pmfw_if/smu_v13_0_0_ppsmc.h  |   5 +-
->  .../pm/swsmu/inc/pmfw_if/smu_v13_0_7_ppsmc.h  |   3 +-
->  drivers/gpu/drm/amd/pm/swsmu/inc/smu_types.h  |   3 +-
->  drivers/gpu/drm/amd/pm/swsmu/inc/smu_v13_0.h  |   4 +
->  .../gpu/drm/amd/pm/swsmu/smu13/smu_v13_0.c    |  48 +++
->  .../drm/amd/pm/swsmu/smu13/smu_v13_0_0_ppt.c  |  22 ++
->  .../drm/amd/pm/swsmu/smu13/smu_v13_0_7_ppt.c  |  13 +
->  drivers/gpu/drm/amd/pm/swsmu/smu_internal.h   |   3 +
->  drivers/platform/x86/amd/Kconfig              |  14 +
->  drivers/platform/x86/amd/Makefile             |   1 +
->  drivers/platform/x86/amd/wbrf.c               | 317 ++++++++++++++++++
->  include/linux/acpi_amd_wbrf.h                 |  91 +++++
->  include/net/cfg80211.h                        |   9 +
->  net/mac80211/Makefile                         |   2 +
->  net/mac80211/chan.c                           |   9 +
->  net/mac80211/ieee80211_i.h                    |   7 +
->  net/mac80211/main.c                           |   2 +
->  net/mac80211/wbrf.c                           |  95 ++++++
->  net/wireless/chan.c                           |   3 +-
->  27 files changed, 997 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/driver-api/wbrf.rst
->  create mode 100644 drivers/platform/x86/amd/wbrf.c
->  create mode 100644 include/linux/acpi_amd_wbrf.h
->  create mode 100644 net/mac80211/wbrf.c
-> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+-- 
+ i.
+
+--8323329-471716995-1702289340=:1867--
