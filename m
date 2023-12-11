@@ -1,121 +1,81 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c0hOzhRj"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D6CBF3
-	for <platform-driver-x86@vger.kernel.org>; Mon, 11 Dec 2023 01:16:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702286161;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jUybIe9KqFLYcWP/O6bBcrUunOZCGQTAWb7qxrL5p9o=;
-	b=c0hOzhRj56jZ0R5uFHLyphEcqNwKfck7a3osmETEwaT3WlELrO2rs+mL3pvOmRAB6l8as8
-	jRg1N/NzNkQ3eEcXXUqbxzypFa0DOF/bSWCb/JV7kArQXoc46ZMZDSRpMNaJihNp6gKGz2
-	zvG//leETwx1LY4LluEbSGNfHskjsIw=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-9-nRrHysUYPbqB7T9lnrTZrQ-1; Mon, 11 Dec 2023 04:15:59 -0500
-X-MC-Unique: nRrHysUYPbqB7T9lnrTZrQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a1cfd84b473so474451766b.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Dec 2023 01:15:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702286158; x=1702890958;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jUybIe9KqFLYcWP/O6bBcrUunOZCGQTAWb7qxrL5p9o=;
-        b=QlDg6/eHAZBWmvpLCAkS5Q9LQdhKDD4K74Ao6wlLNISsbgJPbW5VZH9SEoaCjZzY2z
-         hrCGeOHBXNhJOU/1CTH8JkXwfDDR1XZDQje5CvsE1hPktMdoWxlnmK+r3t60ycRhu1iZ
-         RG6U8xdrqmNlFPMGfTOtOodTagE5ArwFgnLmALYwh6thBWsWvsTbfsMEpAyvQlBTaxjX
-         GNbjKe1Th3fELNu9SlQuRrVM7m3VoGhB1qeVbLa+Mlap3Apmc3PlnriCxnYavrxbnGdH
-         +lisU8OaYeqzgtyVl44ucn+RpgtdlAryOQjt/ZSnmDO216V6ueXUI1sEd5hE0RK8cyRA
-         4jrA==
-X-Gm-Message-State: AOJu0YwQqvPqkcULM3YTI2KuZCNYBVuPM8yTYqisbxMdHD0jRsEqxjDe
-	QdL7Pku6eRRSc3XjQ6XUjFKvrYtUH3MSY8h7vLy/vTMjSNUBIsT71dEdDY2rsESEXnfG716Mb9X
-	3xoETFm9T8IKg48Z/HNCy08ZTzu6QK4KmHQ==
-X-Received: by 2002:a17:906:d8b7:b0:a1e:9373:155d with SMTP id qc23-20020a170906d8b700b00a1e9373155dmr3875677ejb.30.1702286158645;
-        Mon, 11 Dec 2023 01:15:58 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGW1e+waL/QAdSpSyUmPOaSmsPd59r49OwBNwRqu8vficgePrUyWjV5v7UzdONOfkjFDQt5Ng==
-X-Received: by 2002:a17:906:d8b7:b0:a1e:9373:155d with SMTP id qc23-20020a170906d8b700b00a1e9373155dmr3875668ejb.30.1702286158309;
-        Mon, 11 Dec 2023 01:15:58 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id tz9-20020a170907c78900b00a19afc16d23sm4518226ejc.104.2023.12.11.01.15.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Dec 2023 01:15:57 -0800 (PST)
-Message-ID: <ad064333-48a4-4cfa-9428-69e8a7c44667@redhat.com>
-Date: Mon, 11 Dec 2023 10:15:56 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WOT7Qzoo"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E56AD1;
+	Mon, 11 Dec 2023 01:44:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702287855; x=1733823855;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=e9UzSq7u1+T3BYIBBw3mpsXLdJcC9xa15mmoGy5LqpE=;
+  b=WOT7Qzoot4znoqzAuxe23yOBIwk2dxAVz/rVKsUG95I8NNtxRoLUkKSz
+   WMIuMmqPG1KbC0gkK5hfI0Ep1q/wGwLJ2q59yZGgICNvEuE+5MAgb1gLd
+   bURikV4AnlC9nQs0vdyqhHlvNBz8DcEeudCBCGnAZ/TzpAFtDeoaWSjCZ
+   EOZ0+SU7GS95+/l6g8Nk8m+KlDVdqmJzY7NM6uC+KA1lhAz5iqmVPFv2Q
+   WRa0FuyF8IqCUnRCqTiCeflzkkQk6+tHGOa2wyShw0LZTSRH9MvLrL/uD
+   CPXE0wIw3kXctNO2uTHzxokyqRc90QGMyXX6iioUGE9Rdfcnu2pQYrbso
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10920"; a="16172824"
+X-IronPort-AV: E=Sophos;i="6.04,267,1695711600"; 
+   d="scan'208";a="16172824"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 01:44:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10920"; a="838963603"
+X-IronPort-AV: E=Sophos;i="6.04,267,1695711600"; 
+   d="scan'208";a="838963603"
+Received: from lmckeon-mobl.ger.corp.intel.com ([10.252.48.111])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 01:44:12 -0800
+Date: Mon, 11 Dec 2023 11:44:01 +0200 (EET)
+From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v1 1/1] clk: x86: lpss-atom: Drop unneeded 'extern' in
+ the header
+In-Reply-To: <20231208165238.3309058-1-andriy.shevchenko@linux.intel.com>
+Message-ID: <2fd750c3-1f57-3d71-386b-9e6e57d5133@linux.intel.com>
+References: <20231208165238.3309058-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 15/15] platform/x86/amd/pmf: Add PMF-AMDSFH interface
- for ALS
-Content-Language: en-US, nl
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, markgross@kernel.org,
- ilpo.jarvinen@linux.intel.com, basavaraj.natikar@amd.com, jikos@kernel.org,
- benjamin.tissoires@redhat.com
-Cc: Patil.Reddy@amd.com, mario.limonciello@amd.com,
- platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org
-References: <20231204101548.1458499-1-Shyam-sundar.S-k@amd.com>
- <20231204101548.1458499-16-Shyam-sundar.S-k@amd.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20231204101548.1458499-16-Shyam-sundar.S-k@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323329-2115513837-1702287853=:1867"
 
-Hi,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 12/4/23 11:15, Shyam Sundar S K wrote:
-> From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+--8323329-2115513837-1702287853=:1867
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+
+On Fri, 8 Dec 2023, Andy Shevchenko wrote:
+
+> 'extern' for the functions is not needed, drop it.
 > 
-> AMDSFH has information about the Ambient light via the Ambient
-> Light Sensor (ALS) which is part of the AMD sensor fusion hub.
-> Add PMF and AMDSFH interface to get this information.
-> 
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Co-developed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/hid/amd-sfh-hid/amd_sfh_common.h      |  1 +
->  drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c |  6 ++++++
->  .../amd-sfh-hid/sfh1_1/amd_sfh_interface.c    | 19 +++++++++++++++++++
->  drivers/platform/x86/amd/pmf/spc.c            |  9 ++++++++-
->  include/linux/amd-pmf-io.h                    |  4 ++++
->  5 files changed, 38 insertions(+), 1 deletion(-)
+>  include/linux/platform_data/x86/clk-lpss.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/platform_data/x86/clk-lpss.h b/include/linux/platform_data/x86/clk-lpss.h
+> index 41df326583f9..7f132029316a 100644
+> --- a/include/linux/platform_data/x86/clk-lpss.h
+> +++ b/include/linux/platform_data/x86/clk-lpss.h
+> @@ -15,6 +15,6 @@ struct lpss_clk_data {
+>  	struct clk *clk;
+>  };
+>  
+> -extern int lpss_atom_clk_init(void);
+> +int lpss_atom_clk_init(void);
 
-Ok so with this patch also added in the mix I guess the
-multi-plexing nature of amd_get_sfh_info() makes sense,
-so it is ok to keep that.
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-But this patch also needs to have its HID parts split out
-from the rest and the HID patches need to be merged
-separately.
 
-Since the merge-window is getting close I would like
-to propose the following:
+-- 
+ i.
 
-1. Send a v7 addressing review remarks consisting of
-only patches 1-12, assuming all review remarks are
-fixed in v7 I can merge that then.
-
-2. Send a 3 patch HID patch series separately:
-
-[PATCH 1/3] HID: amd_sfh: rename float_to_int() to amd_sfh_float_to_int()
-[PATCH 2/3] HID: amd_sfh: adding the HID hpd bits + amd_get_sfh_info() function
-[PATCH 3/3] HID: amd_sfh: adding the HID als bits
-
-3. Once v7 of patches 1-12 + hopefully the 3 patch HID series have
-landed in 6.8-rc1 then I would be willing to take a patch using
-amd_get_sfh_info() to implement hpd + als support in the spc code
-as a fix for 6.8-rc# .
-
-Regards,
-
-Hans
-
+--8323329-2115513837-1702287853=:1867--
