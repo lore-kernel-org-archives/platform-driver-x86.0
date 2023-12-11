@@ -1,164 +1,118 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2c9Fnj9j"
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2058.outbound.protection.outlook.com [40.107.100.58])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6D1B10D0;
-	Mon, 11 Dec 2023 02:07:54 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HJOkQdzKYcHQM4nCAudlZV6JOvqaEizAJjLJ/llmHcSkSdkPEcAWyCx32X4MdRmMgG3aMrarGZOzuMKTbijosIV8EL4cjUhsXR6rslrwFSiReluZ+SzNPMnqbmynuvrLC28Drd9OVqgXkFLp9EgE1tYNkNXRHFBbsLxJccOLT3j9quECCqMYPn3kObZ1qx/rs4r050+fASdg46hQ0WyiA3IQcFcy52rxjjEgrRJCqmqifkEzw/O84pBZu5rrTM/yYz9abI+sj8uj52V9BPgd/YEiG1lHs1FqupCnHi/6RSgXzcqXRtkhcxStDxTMi376hkfRIEHYDx8ofY/DRhH/qg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/FG/v7ogyS6xo4c1TLYkdS7kjTNds9VBLaPwExQZrCs=;
- b=WX6aXiihv0WGwP3j+eAsk14kYj4SkJ2Xscdscg0566opmxhEo+m4aBrTkQliW8Pml7gZmI+/7ZUEsyQROQvWkqLO/IqXjEJEney1/z2LObbZEhHf+haQcekv+/QOLN8rT3yOXNDsHb3nUgJFdSiI3ergMtTCFFNr/cSjlEPPgiwlXigarrhckPtpHHQnRe3RYem5Zu18rt77Ha0pmTF8m1XvYhffkjGRlEukH1WJV2D2kqrQq0Cbtc3z9/Wy12qJDQFQpEOP+JtOsqyUuy2eqEJB0esDNOTWYLXKcj4F0kBnJLeiWFUs6HvjUvqXRinO2iBk/Qmi8J96Dzm9azd+cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/FG/v7ogyS6xo4c1TLYkdS7kjTNds9VBLaPwExQZrCs=;
- b=2c9Fnj9jeYPInr2HmnoRlx64LdoqNVQqS+hmZKqX5bZBz39/U/OtuR/K5Gmo6+UqYad7JCmHYABNStqU7vGxOuTpmQ5PP66BxuejiTilyvLYceKogNqLaIhM9A0qyFu/mWPf+M1tIgdcrbtxqjFJhfW4OnSl8un2W3oK5vPMwgU=
-Received: from CH2PR20CA0021.namprd20.prod.outlook.com (2603:10b6:610:58::31)
- by CH2PR12MB4954.namprd12.prod.outlook.com (2603:10b6:610:63::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.32; Mon, 11 Dec
- 2023 10:07:51 +0000
-Received: from CO1PEPF000044FB.namprd21.prod.outlook.com
- (2603:10b6:610:58:cafe::d6) by CH2PR20CA0021.outlook.office365.com
- (2603:10b6:610:58::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.29 via Frontend
- Transport; Mon, 11 Dec 2023 10:07:51 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000044FB.mail.protection.outlook.com (10.167.241.201) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7113.2 via Frontend Transport; Mon, 11 Dec 2023 10:07:51 +0000
-Received: from compile-server.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Mon, 11 Dec
- 2023 04:07:45 -0600
-From: Ma Jun <Jun.Ma2@amd.com>
-To: <amd-gfx@lists.freedesktop.org>, <lenb@kernel.org>, <hdegoede@redhat.com>,
-	<johannes@sipsolutions.net>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <alexander.deucher@amd.com>,
-	<Lijo.Lazar@amd.com>, <mario.limonciello@amd.com>, <netdev@vger.kernel.org>,
-	<linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>
-CC: <majun@amd.com>, Evan Quan <quanliangl@hotmail.com>, Ma Jun
-	<Jun.Ma2@amd.com>
-Subject: [PATCH v16 9/9] drm/amd/pm: enable Wifi RFI mitigation feature support for SMU13.0.7
-Date: Mon, 11 Dec 2023 18:06:30 +0800
-Message-ID: <20231211100630.2170152-10-Jun.Ma2@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231211100630.2170152-1-Jun.Ma2@amd.com>
-References: <20231211100630.2170152-1-Jun.Ma2@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NRnwVo3v"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05E2192
+	for <platform-driver-x86@vger.kernel.org>; Mon, 11 Dec 2023 02:08:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702289290;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8DYAEO6RTuUgtGwPcSA7dzuL0mDsMuuXUhbDs6Puc/4=;
+	b=NRnwVo3v4sMZ6/XmTyloC7Uzs2meJXrSzYlJIkxjc26VgMhgbAMNXiU9/x2E0QMqTxOtiY
+	LFsScPqVjf991JtlzYXaw61FpUm6TIYWgEjsrxqoH22G+N1ZGKGWR4L73SdFnlVsV5kXWA
+	FgzjjFN7FS19VV57iK5/NA4L95ZpCJ4=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-582-GMMbOaaOMN6e5U12LNoWwA-1; Mon, 11 Dec 2023 05:08:09 -0500
+X-MC-Unique: GMMbOaaOMN6e5U12LNoWwA-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-54c9604921dso2106020a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Dec 2023 02:08:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702289288; x=1702894088;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8DYAEO6RTuUgtGwPcSA7dzuL0mDsMuuXUhbDs6Puc/4=;
+        b=AGFC9INS7zTZ16pE1YrQrODfbH6UKUgUp1zhnNHCqnCKVrCNUMLYzQ2/KUMria3rpz
+         F45tONKbjNZkRNFgSLkuGlcIB15jfsp40V5r2cklcgWZIdbhncoYmBvmeZWvlJGf9pr8
+         9TaBgooAoojharY1e4gG6XwRbMKOpvhEw5XH/QFWndTCWSysxl1Vve6LZwfd5uMzggU/
+         EEzUCI8B0kO9jjw7PHwK3V2tu2jvo9hda4CgfdHQkNrTOXRFadpMInhK9XMMnpJTXX4e
+         RWAkNN5wUZm01IIpJ32rTKZji8lqXP6Pe7FLm6hn9MRkS8ZepKxYoW9Ev5IDkLlZQWDo
+         ta4Q==
+X-Gm-Message-State: AOJu0Yzd7mhPZaLalIcQe8KMc5QbCrdC6upqTBHKit71De6M8fxOgS7S
+	8kxj3iLbYNsQS7cOtiSIKKxNv5rHsmimKxDlyFlNyTmki7eNNcKcMJfLDwSQA3hQng+UEbgb5vj
+	7bcWXvRHfR1ROPGwMy0XBugmRG4YNUClgxtspW3sOow==
+X-Received: by 2002:a05:6402:1399:b0:54d:a654:3109 with SMTP id b25-20020a056402139900b0054da6543109mr2329874edv.67.1702289287845;
+        Mon, 11 Dec 2023 02:08:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFOCxT8W97sjg8fbX6Cf42Fs3FFCdIiOP/iPB43TGX504dLSj4CGKf10WUJGwDvy51t2mktbA==
+X-Received: by 2002:a05:6402:1399:b0:54d:a654:3109 with SMTP id b25-20020a056402139900b0054da6543109mr2329866edv.67.1702289287577;
+        Mon, 11 Dec 2023 02:08:07 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id bd18-20020a056402207200b00542db304680sm3469878edb.63.2023.12.11.02.08.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Dec 2023 02:08:07 -0800 (PST)
+Message-ID: <c8d05509-2c53-4db4-a330-b2084e59c10b@redhat.com>
+Date: Mon, 11 Dec 2023 11:08:06 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044FB:EE_|CH2PR12MB4954:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad7232a0-f0cc-4f6f-1a94-08dbfa3108da
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	L9cq9DkRrTqetYFpHCgArKcNV5e6mikHHcLyllnA48sRaQJPokC85DCIOSbxt3pBFpdoRspiAb7TuZcjB0guMhoKfSPyDYuf5v+0V4RXRsAWKbQET3te+LLtkuFHvZhu5o3RowaSMB7gGvVkc0lAN5YFpyOFeZ9rHZYFYujAHgwz3+Fq9gRq45g3R+QC1kjYwohI+1hOo3fozR64nQ3cgURPPw78igGXiHLElspenuXkvYrDhDd89wE7JNFr7wa3t7KXeaO+pePos7OxQZF+ih5JXUdBE7bRHbBrL1QfxH1/r41qXvpFscVgLyQuW/Ee4YsqAmdS6VmupYh0WuJMYvsbLXiWPwcRFVQRpjcL85TzYx/P1ULN7B2yI8c+R4XLR3JGkYlnH5Z3uDwX9ouGj3U6SxdGMMxYTHGKZ3guDmB71Vv0LsmafXSyBsQfAmgOyvAcgCpD2DNXzZx48Q9WGy1pxUnXNxvt7wwwG9e1Tibvqs6gBJOQZnVBXuEvQno0LDtzBWkaIu5jLVfDKqHfE7Wy/clCxdvnxubMsXdgKZJW1c+zCtXKwfU/gOk7mXsgf/JRhkaXQwbHaqZf8LDLrOw+CA94WAj/5RH/Laez9JzY0x+Pumx4cAvPdRFDN+wyqbluz/vFYHj5ap0c+s5fZalVPEc6BEfGhIFshS4cFEXq3n2T9iladys7RkQbNO434cwJQoWXilaIa+Ni0kJea8fZXhzClah9OBQX8LbQ2fc/yIIM7AgK9Vb1A8n0Sf56o8C7hR3wLJMfEaPiQHc3EkqAJQ7BQ2FD/MWoFERx3ZDSBB1DKqfMMPxXa12eS5unBjZL6Ozu+EfsvcLRlsDDRA==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(396003)(376002)(39860400002)(346002)(230273577357003)(230173577357003)(230922051799003)(64100799003)(82310400011)(451199024)(186009)(1800799012)(40470700004)(36840700001)(2616005)(1076003)(7696005)(36756003)(6666004)(45080400002)(478600001)(70206006)(110136005)(316002)(54906003)(70586007)(8676002)(40460700003)(86362001)(4326008)(356005)(81166007)(82740400003)(36860700001)(32650700002)(8936002)(40480700001)(26005)(336012)(426003)(83380400001)(16526019)(921008)(7416002)(5660300002)(41300700001)(2906002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2023 10:07:51.0503
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad7232a0-f0cc-4f6f-1a94-08dbfa3108da
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044FB.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4954
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] TPMI update for permissions
+Content-Language: en-US, nl
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ markgross@kernel.org, ilpo.jarvinen@linux.intel.com,
+ andriy.shevchenko@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231204221740.3645130-1-srinivas.pandruvada@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20231204221740.3645130-1-srinivas.pandruvada@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Evan Quan <quanliangl@hotmail.com>
+Hi,
 
-Fulfill the SMU13.0.7 support for Wifi RFI mitigation feature.
+On 12/4/23 23:17, Srinivas Pandruvada wrote:
+> Process read/write and enabled state for feature drivers. When a feature
+> is disabled, don't create a device to load a feature driver. When a read
+> is blocked then don't load feature drivers. When write is blocked continue
+> to function in read only mode.
 
-Signed-off-by: Evan Quan <quanliangl@hotmail.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Ma Jun <Jun.Ma2@amd.com>
---
-v10->v11:
-  - downgrade the prompt level on message failure(Lijo)
-v13:
- - Fix the format issue (IIpo Jarvinen)
- - Remove duplicate code (IIpo Jarvinen)
----
- .../gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_7_ppt.c    | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_7_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_7_ppt.c
-index 81eafed76045..eb507cbf5c3d 100644
---- a/drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_7_ppt.c
-+++ b/drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_7_ppt.c
-@@ -140,6 +140,7 @@ static struct cmn2asic_msg_mapping smu_v13_0_7_message_map[SMU_MSG_MAX_COUNT] =
- 	MSG_MAP(AllowGpo,			PPSMC_MSG_SetGpoAllow,           0),
- 	MSG_MAP(GetPptLimit,			PPSMC_MSG_GetPptLimit,                 0),
- 	MSG_MAP(NotifyPowerSource,		PPSMC_MSG_NotifyPowerSource,           0),
-+	MSG_MAP(EnableUCLKShadow,		PPSMC_MSG_EnableUCLKShadow,            0),
- };
- 
- static struct cmn2asic_mapping smu_v13_0_7_clk_map[SMU_CLK_COUNT] = {
-@@ -222,6 +223,7 @@ static struct cmn2asic_mapping smu_v13_0_7_table_map[SMU_TABLE_COUNT] = {
- 	TAB_MAP(ACTIVITY_MONITOR_COEFF),
- 	[SMU_TABLE_COMBO_PPTABLE] = {1, TABLE_COMBO_PPTABLE},
- 	TAB_MAP(OVERDRIVE),
-+	TAB_MAP(WIFIBAND),
- };
- 
- static struct cmn2asic_mapping smu_v13_0_7_pwr_src_map[SMU_POWER_SOURCE_COUNT] = {
-@@ -512,6 +514,9 @@ static int smu_v13_0_7_tables_init(struct smu_context *smu)
- 		       AMDGPU_GEM_DOMAIN_VRAM);
- 	SMU_TABLE_INIT(tables, SMU_TABLE_COMBO_PPTABLE, MP0_MP1_DATA_REGION_SIZE_COMBOPPTABLE,
- 			PAGE_SIZE, AMDGPU_GEM_DOMAIN_VRAM);
-+	SMU_TABLE_INIT(tables, SMU_TABLE_WIFIBAND,
-+		       sizeof(WifiBandEntryTable_t), PAGE_SIZE,
-+		       AMDGPU_GEM_DOMAIN_VRAM);
- 
- 	smu_table->metrics_table = kzalloc(sizeof(SmuMetricsExternal_t), GFP_KERNEL);
- 	if (!smu_table->metrics_table)
-@@ -2567,6 +2572,11 @@ static int smu_v13_0_7_set_df_cstate(struct smu_context *smu,
- 					       NULL);
- }
- 
-+static bool smu_v13_0_7_wbrf_support_check(struct smu_context *smu)
-+{
-+	return smu->smc_fw_version > 0x00524600;
-+}
-+
- static const struct pptable_funcs smu_v13_0_7_ppt_funcs = {
- 	.get_allowed_feature_mask = smu_v13_0_7_get_allowed_feature_mask,
- 	.set_default_dpm_table = smu_v13_0_7_set_default_dpm_table,
-@@ -2635,6 +2645,9 @@ static const struct pptable_funcs smu_v13_0_7_ppt_funcs = {
- 	.set_mp1_state = smu_v13_0_7_set_mp1_state,
- 	.set_df_cstate = smu_v13_0_7_set_df_cstate,
- 	.gpo_control = smu_v13_0_gpo_control,
-+	.is_asic_wbrf_supported = smu_v13_0_7_wbrf_support_check,
-+	.enable_uclk_shadow = smu_v13_0_enable_uclk_shadow,
-+	.set_wbrf_exclusion_ranges = smu_v13_0_set_wbrf_exclusion_ranges,
- };
- 
- void smu_v13_0_7_set_ppt_funcs(struct smu_context *smu)
--- 
-2.34.1
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+
+
+
+
+
+> v3:
+> 	No code change. Rebased on top of 
+> https://kernel.googlesource.com/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86 review-hans
+> 
+> v2:
+> 	Dropped patch platform/x86/intel/tpmi: Add additional TPMI header fields
+> 	Addressed other review comments, details are in each patch
+> 
+> Srinivas Pandruvada (5):
+>   platform/x86/intel/tpmi: Don't create devices for disabled features
+>   platform/x86/intel/tpmi: Modify external interface to get read/write
+>     state
+>   platform/x86/intel/tpmi: Move TPMI ID definition
+>   platform/x86: ISST: Process read/write blocked feature status
+>   platform/x86/intel-uncore-freq: Process read/write blocked feature
+>     status
+> 
+>  .../intel/speed_select_if/isst_tpmi_core.c    | 25 +++++++++++++
+>  drivers/platform/x86/intel/tpmi.c             | 35 +++++++++----------
+>  .../uncore-frequency/uncore-frequency-tpmi.c  | 15 ++++++++
+>  include/linux/intel_tpmi.h                    | 18 ++++++++--
+>  4 files changed, 72 insertions(+), 21 deletions(-)
+> 
 
