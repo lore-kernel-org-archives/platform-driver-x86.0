@@ -1,67 +1,140 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ov+fHzpt"
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D76D18B;
-	Mon, 11 Dec 2023 02:09:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702289377; x=1733825377;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=TQRhBF4KvDlaLwm69w1dNBqRhLLQ2db1I6CDDBLiMnU=;
-  b=Ov+fHzptOLrmK8PBYWd4RO3QEfa7JAJyVYm4mHlLwualsstRpy3SkgmF
-   HiwiQZDnsD6tIi9WcBMrETYpN2I+kRHCqXEe0G5u6R9Ku0GpCcasdGpzz
-   7uJ27LKm7LomQTVhQCFOgJ1v9Vs4ppRl0na4+WKlfzAwdhcbXG8l5xFTT
-   txnLGUP68n6y+UsHkGSOkPj+Rd6INo+gDCX7+oCs7JNgyKeV72D8b5g8X
-   BUiLfdmekkiIRX2GjVJojkQvdnGG7oegVGtVPg4RHB8ARe8qK8XqP5sOI
-   vFioMx2vxUWTn00AHIZkHi6bjZ0EPatMvOlSe3+la7RwckOcjogyPimik
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10920"; a="1740762"
-X-IronPort-AV: E=Sophos;i="6.04,267,1695711600"; 
-   d="scan'208";a="1740762"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 02:09:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,267,1695711600"; 
-   d="scan'208";a="21023237"
-Received: from lmckeon-mobl.ger.corp.intel.com (HELO iboscu-mobl2.ger.corp.intel.com) ([10.252.48.111])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 02:08:58 -0800
-Date: Mon, 11 Dec 2023 12:08:56 +0200 (EET)
-From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hdegoede@redhat.com>, corbet@lwn.net, 
-    Dell.Client.Kernel@dell.com, linux-doc@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/5] platform/x86: dell-smbios-wmi: Use
- devm_get_free_pages()
-In-Reply-To: <20231210202443.646427-4-W_Armin@gmx.de>
-Message-ID: <a0cd5b8-304d-1e8-7923-fe5ad9f7c469@linux.intel.com>
-References: <20231210202443.646427-1-W_Armin@gmx.de> <20231210202443.646427-4-W_Armin@gmx.de>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F8AMMPKT"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4509DB6
+	for <platform-driver-x86@vger.kernel.org>; Mon, 11 Dec 2023 02:11:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702289466;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ezpyX3f9VoT7jM4ALDKRb6jfowJi43kmWWGKSXH5dwk=;
+	b=F8AMMPKTAffESur0sUJKAaPolNkBlV+5dmxeOIRGkCIBgrjj6C3u5tTu17NseI1iLFd62A
+	p9XYv7sJZXZLbYWPCfgcsc9qodVo51DgX2MbkodAATDP+zWlrKu61UI2hmHIrQiTWOlEiV
+	OcsqjwR6YsGqvZtfvjc30zAZT8fVHOs=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-392-1iRlZpWqPvKWcdAH7Txprg-1; Mon, 11 Dec 2023 05:11:04 -0500
+X-MC-Unique: 1iRlZpWqPvKWcdAH7Txprg-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2ca31b054e4so31529001fa.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 11 Dec 2023 02:11:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702289463; x=1702894263;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ezpyX3f9VoT7jM4ALDKRb6jfowJi43kmWWGKSXH5dwk=;
+        b=dJ0N+hfPO1oEluS+8B1K9undEF11WVf6ii1Z93LPPEyDUjMwHeqFcdio+yCe/CDdEY
+         1wcjTSQmrw7UAmaxG3Ljocrmjhb1+paCBHQZDHj7hbsLCLYgdUXHOZPW3j4sEdA/eiXF
+         SYNPLNCp6NDYdnfx7Or4fHI1vbQIXwh65xjbw+XXOy/ElgZDXGH7T2G55GFYnKkBDGsd
+         7L+rlWo2shDLgSu06FnpMYM/QfKTPn4T1f0agWPjuQvdkbfvtdONOwvRZU4wpFHZ0Mi0
+         ygWIPhIGXHDvt5UktW0vBqDivqZ2Vpj1rdVCqnuPEeHMntFTaEgIZ7of+AbQJN/1T3tz
+         iZZg==
+X-Gm-Message-State: AOJu0YxUANAb7C+hMCrQe3jX5pdQSA7jhYQnvgiYKFxpGqat9V+ptk2/
+	bhdaSLGgyBTxMhjXEyHbeRONv6s2McU9bLnBsTDSIOE8UvGSATgAl02njIzjz18DsNJxPKTC9yO
+	c/pD83pdl7Rvv5BG1MGq1f9ucAbT+lRGAhRIcB0qxng==
+X-Received: by 2002:a2e:bc8b:0:b0:2cc:1f90:5998 with SMTP id h11-20020a2ebc8b000000b002cc1f905998mr1295810ljf.98.1702289462817;
+        Mon, 11 Dec 2023 02:11:02 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHIKUq8HMjzDaeC3gKdW0s+eWE8fQtLYJA78Qm3O/rqIUpJfXkVDltyTxPImnwzJT6djKrmzQ==
+X-Received: by 2002:a2e:bc8b:0:b0:2cc:1f90:5998 with SMTP id h11-20020a2ebc8b000000b002cc1f905998mr1295800ljf.98.1702289462431;
+        Mon, 11 Dec 2023 02:11:02 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id tk10-20020a170907c28a00b00a1cfa7e0d40sm4557317ejc.61.2023.12.11.02.11.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Dec 2023 02:11:01 -0800 (PST)
+Message-ID: <6cf13a55-cd6d-47a4-ba92-c0e9fe1ad2bc@redhat.com>
+Date: Mon, 11 Dec 2023 11:11:01 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-471716995-1702289340=:1867"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] platform/x86: ips: Remove unused debug code
+Content-Language: en-US, nl
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20231208134845.3900-1-ilpo.jarvinen@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20231208134845.3900-1-ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323329-471716995-1702289340=:1867
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
-On Sun, 10 Dec 2023, Armin Wolf wrote:
-
-> Use devres version of __get_free_pages() to simplify the
-> error handling code.
+On 12/8/23 14:48, Ilpo Järvinen wrote:
+> Remove unused debug code inside #if 0 ... #endif.
 > 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Reviewed-by: Ilpo J�rvinen <ilpo.jarvinen@linux.intel.com>
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
--- 
- i.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
---8323329-471716995-1702289340=:1867--
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+
+> ---
+>  drivers/platform/x86/intel_ips.c | 33 --------------------------------
+>  1 file changed, 33 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+> index 4dfdbfca6841..e26e7e14c44c 100644
+> --- a/drivers/platform/x86/intel_ips.c
+> +++ b/drivers/platform/x86/intel_ips.c
+> @@ -1105,39 +1105,6 @@ static int ips_monitor(void *data)
+>  	return 0;
+>  }
+>  
+> -#if 0
+> -#define THM_DUMPW(reg) \
+> -	{ \
+> -	u16 val = thm_readw(reg); \
+> -	dev_dbg(ips->dev, #reg ": 0x%04x\n", val); \
+> -	}
+> -#define THM_DUMPL(reg) \
+> -	{ \
+> -	u32 val = thm_readl(reg); \
+> -	dev_dbg(ips->dev, #reg ": 0x%08x\n", val); \
+> -	}
+> -#define THM_DUMPQ(reg) \
+> -	{ \
+> -	u64 val = thm_readq(reg); \
+> -	dev_dbg(ips->dev, #reg ": 0x%016x\n", val); \
+> -	}
+> -
+> -static void dump_thermal_info(struct ips_driver *ips)
+> -{
+> -	u16 ptl;
+> -
+> -	ptl = thm_readw(THM_PTL);
+> -	dev_dbg(ips->dev, "Processor temp limit: %d\n", ptl);
+> -
+> -	THM_DUMPW(THM_CTA);
+> -	THM_DUMPW(THM_TRC);
+> -	THM_DUMPW(THM_CTV1);
+> -	THM_DUMPL(THM_STS);
+> -	THM_DUMPW(THM_PTV);
+> -	THM_DUMPQ(THM_MGTV);
+> -}
+> -#endif
+> -
+>  /**
+>   * ips_irq_handler - handle temperature triggers and other IPS events
+>   * @irq: irq number
+
