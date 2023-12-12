@@ -1,128 +1,279 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A81AD9
-	for <platform-driver-x86@vger.kernel.org>; Tue, 12 Dec 2023 03:42:37 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rD18I-0005bB-Vy; Tue, 12 Dec 2023 12:41:03 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rD18G-00FKJT-S1; Tue, 12 Dec 2023 12:41:00 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rD18G-001bBp-HP; Tue, 12 Dec 2023 12:41:00 +0100
-Date: Tue, 12 Dec 2023 12:41:00 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Sean Young <sean@mess.org>, Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Helge Deller <deller@gmx.de>
-Cc: linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Support Opensource <support.opensource@diasemi.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Mark Gross <markgross@kernel.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Jani Nikula <jani.nikula@intel.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v8 1/6] pwm: Rename pwm_apply_state() to
- pwm_apply_might_sleep()
-Message-ID: <20231212114100.sn7nzntousql2ays@pengutronix.de>
-References: <cover.1702369869.git.sean@mess.org>
- <9af7ba748fd2eb7e04208b6b183185f1daf78016.1702369869.git.sean@mess.org>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ZDSk+bND"
+Received: from esa4.hgst.iphmx.com (esa4.hgst.iphmx.com [216.71.154.42])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E00A5CD;
+	Tue, 12 Dec 2023 03:47:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1702381670; x=1733917670;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=aNHcDG0YpWmhT5FeMio5/gxqfpDpnSRI/Kot2bROa+Q=;
+  b=ZDSk+bNDMzrHOrIiCROT2zmrDU9eA1DLEPZF3ozanSs/kHft0teyvD6a
+   xhx4Be2oNskarnlNiULHYkH56zuu79793y8vHV99A86Z87xoghIpKdMI7
+   Bobfp/lHnBoEvkKli2rApiz7v1/kNAoGQFSbJkFZsVvRnLnejAdzhMknW
+   sRWaFFvxHe1cUv+Ts0k6KMcQ7rXv3GdaEt372W5pzbX/KMGm0mlUrlKLL
+   XTB8kIFHHxGgci/UtzuacbyoeTyXoWRAlQ9wRRpVs7aBX+sTOebOiA/dl
+   UIx43NFvk+5oW/IbsLFo51nKH0cc3r2gpd13RtCuhOXR+AdRQ1nMIBvWD
+   w==;
+X-CSE-ConnectionGUID: 3PzWqpXASoubBApu01ia4A==
+X-CSE-MsgGUID: iB5sgC3+RemWw7GqQMcbjg==
+X-IronPort-AV: E=Sophos;i="6.04,270,1695657600"; 
+   d="scan'208";a="4484471"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 12 Dec 2023 19:47:48 +0800
+IronPort-SDR: 4bfs2FyEn8LhOj8bzyt0xc/CW45M481dUWOyHWU5xC+pgCI6HZBMw6PpB4BjVhrYno51iS2Z4z
+ idQhFvqkitAw==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Dec 2023 02:53:01 -0800
+IronPort-SDR: ncE9H2qRTgk4J+LBKUP6UqlqVp74MjhdyHO1gBh4d85a2THHJ9nIJCcWaoB+BJ92fqZIzDrUGU
+ MH/knaUvNl3A==
+WDCIronportException: Internal
+Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
+  by uls-op-cesaip02.wdc.com with ESMTP; 12 Dec 2023 03:47:47 -0800
+From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: platform-driver-x86@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	linux-pci@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH RFC v2] platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe
+Date: Tue, 12 Dec 2023 20:47:46 +0900
+Message-ID: <20231212114746.183639-1-shinichiro.kawasaki@wdc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kqcylsquh2dgmtcq"
-Content-Disposition: inline
-In-Reply-To: <9af7ba748fd2eb7e04208b6b183185f1daf78016.1702369869.git.sean@mess.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
+p2sb_bar() unhides P2SB device to get resources from the device. It
+guards the operation by locking pci_rescan_remove_lock so that parallel
+rescans do not find the P2SB device. However, this lock causes deadlock
+when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
+locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
+call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
+Hence the deadlock.
 
---kqcylsquh2dgmtcq
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
+Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
+for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
+refer the cache and return to the caller.
 
-On Tue, Dec 12, 2023 at 08:34:00AM +0000, Sean Young wrote:
-> In order to introduce a pwm api which can be used from atomic context,
-> we will need two functions for applying pwm changes:
->=20
-> 	int pwm_apply_might_sleep(struct pwm *, struct pwm_state *);
-> 	int pwm_apply_atomic(struct pwm *, struct pwm_state *);
->=20
-> This commit just deals with renaming pwm_apply_state(), a following
-> commit will introduce the pwm_apply_atomic() function.
->=20
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com> # for input
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
-> Acked-by: Jani Nikula <jani.nikula@intel.com>
-> Acked-by: Lee Jones <lee@kernel.org>
-> Signed-off-by: Sean Young <sean@mess.org>
+Link: https://lore.kernel.org/linux-pci/6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j/
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+---
+This patch reflects discussions held at the Link tag. I confirmed this patch
+fixes the problem using a system with i2c_i801 device, building i2c_i801
+module as both built-in and loadable. Reviews will be appreicated.
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+Change from RFC v1:
+* Fixed a build warning poitned out in llvm list by kernel test robot
 
-Several affected maintainers already acked, so I guess it's fine to take
-this via the pwm tree. An Ack from the remaining maintainers would be
-very welcome, an alternative would be to split the patch.
+ drivers/platform/x86/p2sb.c | 128 +++++++++++++++++++++++++-----------
+ 1 file changed, 88 insertions(+), 40 deletions(-)
 
-Missing Acks so far:
+diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
+index 1cf2471d54dd..5037d0387941 100644
+--- a/drivers/platform/x86/p2sb.c
++++ b/drivers/platform/x86/p2sb.c
+@@ -26,6 +26,16 @@ static const struct x86_cpu_id p2sb_cpu_ids[] = {
+ 	{}
+ };
+ 
++/* Cache BAR0 of P2SB device from function 0 ot 7 */
++#define NR_P2SB_RES_CACHE 8
++
++struct p2sb_res_cache {
++	u32 bus_dev_id;
++	struct resource res;
++};
++
++static struct p2sb_res_cache p2sb_resources[NR_P2SB_RES_CACHE];
++
+ static int p2sb_get_devfn(unsigned int *devfn)
+ {
+ 	unsigned int fn = P2SB_DEVFN_DEFAULT;
+@@ -39,8 +49,13 @@ static int p2sb_get_devfn(unsigned int *devfn)
+ 	return 0;
+ }
+ 
++static bool p2sb_invalid_resource(struct resource *res)
++{
++	return res->flags == 0;
++}
++
+ /* Copy resource from the first BAR of the device in question */
+-static int p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
++static void p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
+ {
+ 	struct resource *bar0 = &pdev->resource[0];
+ 
+@@ -56,48 +71,28 @@ static int p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
+ 	mem->end = bar0->end;
+ 	mem->flags = bar0->flags;
+ 	mem->desc = bar0->desc;
+-
+-	return 0;
+ }
+ 
+-static int p2sb_scan_and_read(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
++static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
+ {
+ 	struct pci_dev *pdev;
+-	int ret;
++	struct p2sb_res_cache *cache = &p2sb_resources[PCI_FUNC(devfn)];
+ 
+ 	pdev = pci_scan_single_device(bus, devfn);
+-	if (!pdev)
++	if (!pdev || p2sb_invalid_resource(&pdev->resource[0]))
+ 		return -ENODEV;
+ 
+-	ret = p2sb_read_bar0(pdev, mem);
++	p2sb_read_bar0(pdev, &cache->res);
++	cache->bus_dev_id = bus->dev.id;
+ 
+ 	pci_stop_and_remove_bus_device(pdev);
+-	return ret;
++	return 0;
+ }
+ 
+-/**
+- * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
+- * @bus: PCI bus to communicate with
+- * @devfn: PCI slot and function to communicate with
+- * @mem: memory resource to be filled in
+- *
+- * The BIOS prevents the P2SB device from being enumerated by the PCI
+- * subsystem, so we need to unhide and hide it back to lookup the BAR.
+- *
+- * if @bus is NULL, the bus 0 in domain 0 will be used.
+- * If @devfn is 0, it will be replaced by devfn of the P2SB device.
+- *
+- * Caller must provide a valid pointer to @mem.
+- *
+- * Locking is handled by pci_rescan_remove_lock mutex.
+- *
+- * Return:
+- * 0 on success or appropriate errno value on error.
+- */
+-int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
++static int p2sb_cache_resources(void)
+ {
+-	struct pci_dev *pdev_p2sb;
+-	unsigned int devfn_p2sb;
++	struct pci_bus *bus;
++	unsigned int devfn_p2sb, slot_p2sb, fn;
+ 	u32 value = P2SBC_HIDE;
+ 	int ret;
+ 
+@@ -106,8 +101,8 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* if @bus is NULL, use bus 0 in domain 0 */
+-	bus = bus ?: pci_find_bus(0, 0);
++	/* Assume P2SB is on the bus 0 in domain 0 */
++	bus = pci_find_bus(0, 0);
+ 
+ 	/*
+ 	 * Prevent concurrent PCI bus scan from seeing the P2SB device and
+@@ -115,18 +110,31 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+ 	 */
+ 	pci_lock_rescan_remove();
+ 
+-	/* Unhide the P2SB device, if needed */
++	/*
++	 * The BIOS prevents the P2SB device from being enumerated by the PCI
++	 * subsystem, so we need to unhide and hide it back to lookup the BAR.
++	 * Unhide the P2SB device here, if needed.
++	 */
+ 	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
+ 	if (value & P2SBC_HIDE)
+ 		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
+ 
+-	pdev_p2sb = pci_scan_single_device(bus, devfn_p2sb);
+-	if (devfn)
+-		ret = p2sb_scan_and_read(bus, devfn, mem);
+-	else
+-		ret = p2sb_read_bar0(pdev_p2sb, mem);
+-	pci_stop_and_remove_bus_device(pdev_p2sb);
++	/* Scan the P2SB device and cache its BAR0 */
++	ret = p2sb_scan_and_cache(bus, devfn_p2sb);
++	if (ret)
++		goto out;
+ 
++	/*
++	 * When function number of the P2SB device is zero, scan other function
++	 * numbers. If devices are available, cache their BAR0.
++	 */
++	if (!PCI_FUNC(devfn_p2sb)) {
++		slot_p2sb = PCI_SLOT(devfn_p2sb);
++		for (fn = 1; fn < 8; fn++)
++			p2sb_scan_and_cache(bus, PCI_DEVFN(slot_p2sb, fn));
++	}
++
++out:
+ 	/* Hide the P2SB device, if it was hidden */
+ 	if (value & P2SBC_HIDE)
+ 		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
+@@ -136,9 +144,49 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (mem->flags == 0)
++	return 0;
++}
++
++/**
++ * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
++ * @bus: PCI bus to communicate with
++ * @devfn: PCI slot and function to communicate with
++ * @mem: memory resource to be filled in
++ *
++ * if @bus is NULL, the bus 0 in domain 0 will be used.
++ * If @devfn is 0, it will be replaced by devfn of the P2SB device.
++ *
++ * Caller must provide a valid pointer to @mem.
++ *
++ * Return:
++ * 0 on success or appropriate errno value on error.
++ */
++int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
++{
++	int ret;
++	struct p2sb_res_cache *cache;
++
++	bus = bus ? bus : pci_find_bus(0, 0);
++
++	if (!devfn) {
++		ret = p2sb_get_devfn(&devfn);
++		if (ret)
++			return ret;
++	}
++
++	cache = &p2sb_resources[PCI_FUNC(devfn)];
++	if (p2sb_invalid_resource(&cache->res) ||
++	    cache->bus_dev_id != bus->dev.id)
+ 		return -ENODEV;
+ 
++	memcpy(mem, &cache->res, sizeof(*mem));
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(p2sb_bar);
++
++static int __init p2sb_fs_init(void)
++{
++	p2sb_cache_resources();
++	return 0;
++}
++fs_initcall(p2sb_fs_init);
+-- 
+2.43.0
 
- - Jean Delvare / Guenter Roeck for drivers/hwmon/pwm-fan.c
- - Javier Martinez Canillas for drivers/gpu/drm/solomon/ssd130x.c
- - Liam Girdwood / Mark Brown for drivers/regulator/pwm-regulator.c
- - Helge Deller for drivers/video/fbdev/ssd1307fb.c
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---kqcylsquh2dgmtcq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmV4RssACgkQj4D7WH0S
-/k4FvQgAhhnJ0gGDS9vNrkWmDYMBz0OOooFMMGBMTBk2URyQxiqdxXWCSQKX4pDP
-4H/Hu+EbrEgXfRn0ANEzPIBDBGHQTo7W6N1NGpgxr8Bn1FoRwTzJMCbp62IGORar
-Xr+m5fAJrOjprAETsdyrt8zzjkkJR8Rxg3Gs1bCjjaJGv9VND2ArWlOqwC+I1PWM
-AYDVj/+/0wv8/rqAgNJbjPxdvlcfw/bnqy4/4Gs75Zn9qCRtODT3mCVtAKaWFSsh
-/FMmxKBYIm9ZFhT4skjci6JscC3iWTtp/LeJnoTY2cOyMJePYeRFLT0Ys7+wlsWe
-LCFShS20T2QYBWCYGmIIOHXHa7YwRQ==
-=jAgf
------END PGP SIGNATURE-----
-
---kqcylsquh2dgmtcq--
