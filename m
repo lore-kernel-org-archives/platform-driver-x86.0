@@ -1,173 +1,182 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dO4DPiby"
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2046.outbound.protection.outlook.com [40.107.223.46])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C929E9
-	for <platform-driver-x86@vger.kernel.org>; Tue, 12 Dec 2023 07:13:44 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mYxtvdsBvUyrzMTitjxUYlLPUZZrvlr0OCl69ToLaJScsxmhkHOmBGWS0JrGF+HfqEFqr8tu1nIpDvSxxrIYU8bMJRNpkv4FOPTasYP+8OGC7RcVlzq8r1DleYjHVcoeLM5DUDu2OAYQr1F2zTNb5UvjgGlqzZHzS8JU+uPvg+ETGGmVNLqsPE43lAWuvLCytdU1NPQISiJEOyndhjPKfO4g2PbahveWN/Hgyqn14eT8+wyrpqJ8ziImSW+OQKvtgB4YctNujqRZY02d1aoe66d2qm8UtD6mZvXrP+mUuVeOd4+WMewZp+ZXzT53WSomCq/7lw/iHPcd05gHnj3Yig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BYy/PxmvFUHhK/fgaB/CyiFPJvqs1urUXtZPcjobGww=;
- b=ME/Or4ng2NSV90IC5M7U98UlBmASq3Spk3kTTLr/nk4O5ovSTsTHkEoapqjgC50s9FMd6feWnbGMiYd+fvaulvD588awI+EfPyHN1eDdnHJhkL/SaB5Id5GKaRssWot8/kKjYuGZ6AnnnAZ4TuIOjOhZAycQnDg1Mc5Eb1DgYK0o1f2m35c8Oec2mRlvYoTyKs9ZdHWC1I74VVCp5tjElj+A0UERXLwEvOs73Qb/U2SRAVcVb9ySs4zQkfrCUXyrQY40aZ8E5e50PktrmOUXv9xSCF/hdQR5s132tSo1key6B/sHo976OKHDHng0O1dOGDsgCrWCsjdzdMvULzaN6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BYy/PxmvFUHhK/fgaB/CyiFPJvqs1urUXtZPcjobGww=;
- b=dO4DPibyben7aOQxJvnaiUedFxTfaMmYXVPwt2UI1shv1Ospe0pBO8KhecLb36sgjCa4QS5qU9iJAp7xuMn1pLm7siDuZi+AVy4TdPYph6Tn9UBtI/pFhVC5M7MoLFjvW+/qAs5H9DX3iD4QHv9pk1zNXWU+c8eC4eF+nH9pKMo=
-Received: from DM5PR07CA0089.namprd07.prod.outlook.com (2603:10b6:4:ae::18) by
- DM4PR12MB5373.namprd12.prod.outlook.com (2603:10b6:5:39d::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7091.26; Tue, 12 Dec 2023 15:13:39 +0000
-Received: from DS1PEPF00017093.namprd03.prod.outlook.com
- (2603:10b6:4:ae:cafe::6e) by DM5PR07CA0089.outlook.office365.com
- (2603:10b6:4:ae::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.26 via Frontend
- Transport; Tue, 12 Dec 2023 15:13:39 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF00017093.mail.protection.outlook.com (10.167.17.136) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7091.26 via Frontend Transport; Tue, 12 Dec 2023 15:13:39 +0000
-Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Tue, 12 Dec
- 2023 09:13:37 -0600
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: Hans de Goede <hdegoede@redhat.com>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>
-CC: "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Goswami Sanket
-	<Sanket.Goswami@amd.com>, Mario Limonciello <mario.limonciello@amd.com>,
-	Kieran Levin <ktl@framework.net>
-Subject: [PATCH 4/4] platform/x86/amd/pmc: Disable keyboard wakeup on AMD Framework 13
-Date: Mon, 11 Dec 2023 22:50:06 -0600
-Message-ID: <20231212045006.97581-5-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231212045006.97581-1-mario.limonciello@amd.com>
-References: <20231212045006.97581-1-mario.limonciello@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDHsEI/O"
+Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9384683;
+	Tue, 12 Dec 2023 07:22:24 -0800 (PST)
+Received: by mail-oi1-x234.google.com with SMTP id 5614622812f47-3b9dbbaa9a9so4770904b6e.2;
+        Tue, 12 Dec 2023 07:22:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702394544; x=1702999344; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=75Rm+5xBDQKmd+48f6tczEiVYrcFon2o4idJL/p3O7M=;
+        b=BDHsEI/OVfZflTp+T/anCwxYO25+WBHMwkJ+H4kMJVtnWaNWG7Ay7DyvL4Goa5lZoJ
+         UQCSCziGeBIVgUnavqgXKiWH3XjPYhDicltiglZmm2NKV+GqGJII7/NLkRnbsvAfSllV
+         0qnvx2+Esbcn0MyL5Lf9kqCVolUN6cvfRPBTbpgWrZWdNhcYo4K3GuWy2Kika4g+NHfe
+         yrFwvz/iRtZJMAEIT2lXIEBaZVkuPNDqtJwcMxIwgvKxO9ZU98zm1cBvNbWqoafVeUbX
+         8pQVsdi2li7uaI0xjnNM+IWezeP9IrkUEqOVLG8ayEQkWLRf1MJgrDfz1PDcv1vfPwO7
+         p6cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702394544; x=1702999344;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=75Rm+5xBDQKmd+48f6tczEiVYrcFon2o4idJL/p3O7M=;
+        b=Wd8XAy9prmMpd1J2kjIPIoZWXZGHEdaLWu0jkTAlGVeTE3ql2u+qPY/hG2qIXUaQr9
+         aiePNfgSzE/nx9JYWCUsLmLK4LnTi7U3YhnPO5Jc69yrCph2r1IHw4zTJxxJS6+XGUDI
+         7APHPHAWtL2O07+Doe+WaxpdU5y/B5JH18tzgR00rwWjguCzAp+eIdSR49wCaDHvJwo2
+         esvtXJMD74R01Rh3+7yaWtciC5eXjiE/083PMqbaUtpPNr5ux6dHwnymr3oJMxF5N6Gq
+         ibrjKaiskCiA2Nw0QNmVgSm8rF7Zf5duUPz6Cp8B/FxqB4Inb9sdFsjlXsC8OuvoMMgH
+         ibzQ==
+X-Gm-Message-State: AOJu0Yzjx9KEj9EJMGdsfNERxvVfdt/yDyDTFZPfnrrk5Y8v07NLz3jk
+	UjkPK7hqKzpnUw/BG3rpFeU=
+X-Google-Smtp-Source: AGHT+IHZ4pvntu/TwpQ+WJl0z4EXkuFPrI/3FnIMC3Z64SrFUnbiRb6pzz8yVWJ0MKShxAPcgZaE0A==
+X-Received: by 2002:a05:6808:158e:b0:3b9:e801:7aae with SMTP id t14-20020a056808158e00b003b9e8017aaemr8926120oiw.54.1702394543815;
+        Tue, 12 Dec 2023 07:22:23 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id ck20-20020a056808251400b003b9f057de84sm806103oib.58.2023.12.12.07.22.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Dec 2023 07:22:22 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <f7be8d89-25ae-4d83-9577-12fcac41d0ab@roeck-us.net>
+Date: Tue, 12 Dec 2023 07:22:18 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/6] pwm: Rename pwm_apply_state() to
+ pwm_apply_might_sleep()
+Content-Language: en-US
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Sean Young <sean@mess.org>, Jean Delvare <jdelvare@suse.com>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Helge Deller <deller@gmx.de>
+Cc: linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
+ Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+ Thierry Reding <thierry.reding@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Support Opensource <support.opensource@diasemi.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+ Lee Jones <lee@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Mark Gross <markgross@kernel.org>,
+ Daniel Thompson <daniel.thompson@linaro.org>,
+ Jingoo Han <jingoohan1@gmail.com>, Jani Nikula <jani.nikula@intel.com>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
+References: <cover.1702369869.git.sean@mess.org>
+ <9af7ba748fd2eb7e04208b6b183185f1daf78016.1702369869.git.sean@mess.org>
+ <20231212114100.sn7nzntousql2ays@pengutronix.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20231212114100.sn7nzntousql2ays@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017093:EE_|DM4PR12MB5373:EE_
-X-MS-Office365-Filtering-Correlation-Id: 46b5e899-658b-48d9-cc17-08dbfb24ebc0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	r6hcsAosmrzQD/xFPpDMNhA814bOuyfmaFPAx/hqx2nGrQfaxZvEm3NRbC1mFDXeuu7wajxT4TmUtp9NctmGQkSzFMJ0IPhKZxfoscvJyoBgVgMx3vZUcfqLCBbyGodmEqe6E9zhJTqNeY5NNPNZwyovxju5Z6bF32aMVthG8iTA0+cfkfFdla7V2aQjkguFAZJEu6jF2g2TvWs470Zcevqd7bw7wS42MT+zDykYFJrj31P/MqJNugljUoaoLEaElZDpi1Yrk0HY6zX4Q0/Nejqhholye+I8P0egmx+IxbyjEwPycg6cde6F0CsJYZqJGAOTJd5jLX4ZQUbYUwrLhl8YeD5AJYsV/4DfPxsmu0lngId/6dkVSLLY3edFxRB/QWgIo23bWvD85LoTftN53ifuYg3sX21JISOhEde6yovlJuBV5R7yqqLa9AAiNDxGiHn/2A/0D1HcGY1CpvX05fd0tmlNCaIVy78NIgNMP37wItqbl6ChjnoCLWpujc0ndFuDNzZNyJBSd9CijlaPM+KsT+7jTZmW7e2j2/uOsqYE11pXpj/s4nlxEhe7oiHbf7EW5tow88W0Jc2HwzBCmpviQS60yg8hxV4oWvUaVZ4uZ6pHEM9ei6kPp1l6Ylm2D0PTw2MWafSWC+y+ZHLWMb/SfUOKxp6kALawF4ACRWl2Vmj0IgwiWLRfeVr96gmd7iGJ9348DgQedvTMaAe2hkqIJZYxPI4YhDMOZzN9c44lMnZYaCmVNilRXmFv+/78
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(346002)(39860400002)(136003)(376002)(230922051799003)(64100799003)(451199024)(82310400011)(186009)(1800799012)(36840700001)(46966006)(40470700004)(54906003)(70586007)(110136005)(70206006)(41300700001)(6666004)(7696005)(1076003)(16526019)(2616005)(336012)(26005)(36756003)(426003)(47076005)(86362001)(82740400003)(356005)(81166007)(83380400001)(36860700001)(966005)(478600001)(40480700001)(44832011)(4326008)(8936002)(8676002)(2906002)(5660300002)(316002)(40460700003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2023 15:13:39.4951
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46b5e899-658b-48d9-cc17-08dbfb24ebc0
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017093.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5373
-X-Spam-Level: **
 
-The Laptop 13 (AMD Ryzen 7040Series) BIOS 03.03 has a workaround
-included in the EC firmware that will cause the EC to emit a "spurious"
-keypress during the resume from s0i3 [1].
+On 12/12/23 03:41, Uwe Kleine-König wrote:
+> On Tue, Dec 12, 2023 at 08:34:00AM +0000, Sean Young wrote:
+>> In order to introduce a pwm api which can be used from atomic context,
+>> we will need two functions for applying pwm changes:
+>>
+>> 	int pwm_apply_might_sleep(struct pwm *, struct pwm_state *);
+>> 	int pwm_apply_atomic(struct pwm *, struct pwm_state *);
+>>
+>> This commit just deals with renaming pwm_apply_state(), a following
+>> commit will introduce the pwm_apply_atomic() function.
+>>
+>> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com> # for input
+>> Acked-by: Hans de Goede <hdegoede@redhat.com>
+>> Acked-by: Jani Nikula <jani.nikula@intel.com>
+>> Acked-by: Lee Jones <lee@kernel.org>
+>> Signed-off-by: Sean Young <sean@mess.org>
+> 
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> 
+> Several affected maintainers already acked, so I guess it's fine to take
+> this via the pwm tree. An Ack from the remaining maintainers would be
+> very welcome, an alternative would be to split the patch.
+> 
+> Missing Acks so far:
+> 
+>   - Jean Delvare / Guenter Roeck for drivers/hwmon/pwm-fan.c
+>   - Javier Martinez Canillas for drivers/gpu/drm/solomon/ssd130x.c
+>   - Liam Girdwood / Mark Brown for drivers/regulator/pwm-regulator.c
+>   - Helge Deller for drivers/video/fbdev/ssd1307fb.c
+> 
+> Best regards
+> Uwe
+> 
 
-This series of keypress events can be observed in the kernel log on
-resume.
 
-```
-atkbd serio0: Unknown key pressed (translated set 2, code 0x6b on isa0060/serio0).
-atkbd serio0: Use 'setkeycodes 6b <keycode>' to make it known.
-atkbd serio0: Unknown key released (translated set 2, code 0x6b on isa0060/serio0).
-atkbd serio0: Use 'setkeycodes 6b <keycode>' to make it known.
-```
+Personally I find the change unnecessary and pointless, which is why I
+didn't ack it. Even if function names were deemed important enough, keeping
+pwm_apply_state() for the time being and just adding pwm_apply_might_sleep()
+as duplicate would have done it, all the changes could have gone in long
+ago, and per-subsystem cleanup could have been orthogonal.
 
-In some user flows this is harmless, but if a user has specifically
-suspended the laptop and then closed the lid it will cause the laptop
-to wakeup. The laptop wakes up because the ACPI SCI triggers when
-the lid is closed and when the kernel sees that IRQ1 is "also" active.
-The kernel can't distinguish from a real keyboard keypress and wakes the
-system.
+I refrained from commenting because it might be considered bike shedding,
+but I don't want to ack something I deem unnecessary and pointless without
+comment. But then don't want to keep arguing either, so
 
-Add the model into the list of quirks to disable keyboard wakeup source.
-This is intentionally only matching the production BIOS version in hopes
-that a newer EC firmware included in a newer BIOS can avoid this behavior.
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-Cc: Kieran Levin <ktl@framework.net>
-Link: https://github.com/FrameworkComputer/EmbeddedController/blob/lotus-zephyr/zephyr/program/lotus/azalea/src/power_sequence.c#L313 [1]
-Link: https://community.frame.work/t/amd-wont-sleep-properly/41755
-Link: https://community.frame.work/t/tracking-framework-amd-ryzen-7040-series-lid-wakeup-behavior-feedback/39128
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/platform/x86/amd/pmc/pmc-quirks.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-index c32046dfa960..b456370166b6 100644
---- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-+++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-@@ -16,12 +16,17 @@
- 
- struct quirk_entry {
- 	u32 s2idle_bug_mmio;
-+	bool spurious_8042;
- };
- 
- static struct quirk_entry quirk_s2idle_bug = {
- 	.s2idle_bug_mmio = 0xfed80380,
- };
- 
-+static struct quirk_entry quirk_spurious_8042 = {
-+	.spurious_8042 = true,
-+};
-+
- static const struct dmi_system_id fwbug_list[] = {
- 	{
- 		.ident = "L14 Gen2 AMD",
-@@ -193,6 +198,16 @@ static const struct dmi_system_id fwbug_list[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "HP Laptop 15s-eq2xxx"),
- 		}
- 	},
-+	/* https://community.frame.work/t/tracking-framework-amd-ryzen-7040-series-lid-wakeup-behavior-feedback/39128 */
-+	{
-+		.ident = "Framework Laptop 13 (Phoenix)",
-+		.driver_data = &quirk_spurious_8042,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Framework"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Laptop 13 (AMD Ryzen 7040Series)"),
-+			DMI_MATCH(DMI_BIOS_VERSION, "03.03"),
-+		}
-+	},
- 	{}
- };
- 
-@@ -245,4 +260,6 @@ void amd_pmc_quirks_init(struct amd_pmc_dev *dev)
- 	if (dev->quirks->s2idle_bug_mmio)
- 		pr_info("Using s2idle quirk to avoid %s platform firmware bug\n",
- 			dmi_id->ident);
-+	if (dev->quirks->spurious_8042)
-+		dev->disable_8042_wakeup = true;
- }
--- 
-2.34.1
+Guenter
 
