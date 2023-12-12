@@ -1,97 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZoXXAi3m"
-Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C139E1A5;
-	Tue, 12 Dec 2023 08:41:52 -0800 (PST)
-Received: by mail-ot1-x332.google.com with SMTP id 46e09a7af769-6d9e756cf32so3645379a34.2;
-        Tue, 12 Dec 2023 08:41:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702399312; x=1703004112; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hRdrB8cd28H/2/Izbx2aUiI9Yik6mjNLx89/vPRuiT0=;
-        b=ZoXXAi3mpUl3oeyBMch/UAECcxQJpbO9afJ7Ce8m6dP1/id3jsOAtt2Q6QBR5N2TqX
-         PrLlL1sKRs5DwWQjaZXQJZm+dUwCNRmWYOv32eZXPx0Xrrt5NBHhBeOy9qCKcsQAAUjk
-         b8r+8Eup7tnPJKWdXKQOJ40lq7QSgbsvwpGF5caBJIsemKqxDwaox3ESmoIP9sV0lf9e
-         2Qt4LslJK/huJ3CRzr/aLofH/VJGpGi8z88pm6/m3g1evE1cCqTkoNeGBoInRfRmUaTv
-         yt7VCei2re7RnRGbA8cNHvgfj6PjOue6P7HPXFheO8VlnJwmvIZ1W92JGYD868uUrs3w
-         5jSA==
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72C6394;
+	Tue, 12 Dec 2023 11:25:28 -0800 (PST)
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6da06c505ccso770537a34.1;
+        Tue, 12 Dec 2023 11:25:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702399312; x=1703004112;
+        d=1e100.net; s=20230601; t=1702409128; x=1703013928;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hRdrB8cd28H/2/Izbx2aUiI9Yik6mjNLx89/vPRuiT0=;
-        b=NU0Y4IoO9dqNbGqLfaV2h3qL0IO7wbDM2KE3EGm29OPQkH5oOS+/XhAH8Gqie17AAs
-         KDymOCPwIpGk0N8Rupn/Kcurc0cTgi7mFz9d+WSR/69h4mWRXH4Rot+/cJdP6386Vw1B
-         3gkpaDbB04njn7aqurTfT8nmV0Bhp1q2YecyrCtWz2gjcZrqUa/a7KnyAN0moaTLwq+V
-         HRomHmJvhm8ynSsoYIeaD51wMsei4KdWnblU+O+p/UmqOx3jBUTE3zk+ODoD5OXWmUAp
-         zJdD+GXaAQfPQr3+RkSzXWQIcUZh7Rv7TlOSjUs1LdMB8rFBOk7gCjVRzky4iY8dAtul
-         h4Ug==
-X-Gm-Message-State: AOJu0Yw+MbL+ZCA1zmx4VaKA+cNpWvDsKhe+JtVGSWS4xOIxorcFL3iL
-	MkIg85uTjUdsroRdO8sh+c1UAbU14wIlMYI4gUk=
-X-Google-Smtp-Source: AGHT+IE8T/ikLkFXi7N3tOYjDQb/4Wsf/bEp9kibW34I6ENqYarhzFArv5a//G8zYaNUisaAoNIG/cX0Su07oh64vTQ=
-X-Received: by 2002:a05:6870:c1cf:b0:203:89b:4597 with SMTP id
- i15-20020a056870c1cf00b00203089b4597mr840428oad.40.1702399311894; Tue, 12 Dec
- 2023 08:41:51 -0800 (PST)
+        bh=yoyxJ6X4P/iKcYssHVUQvgFoC/dIcRS9b6OahyFAXwA=;
+        b=hvf7u+Lrfh7HvRPupt0uLrNXdXFHtulwV4aymEkr8/bb+EV/D/So8MtgQjc2i9qSPF
+         ZZxpz7VS1kgtBO5ZHcVYUDFiTz4Uk19MSshqjkZW4Q2mXiIY7NX5CWpPbp3j5qzBgLhU
+         cUiOqNHgoIcFVcUcstSqIUc3wMtUNJyl2IGctDghTQld14GX35ZKJr9tY5b6z+5vF4HV
+         QTxWwoxF0N2IsGaaxFA25AF/+S1yaU2qP9UQRK7po1zjA99IJul5+tvdeesh/InRibxQ
+         aKAI6UBSauR9tuI1BOY4agA/cI9tsHmDL3AvmGcQjYTjl9jtwZdv0fT4E/d9yxYPKBe0
+         PVYg==
+X-Gm-Message-State: AOJu0YyBrwfMU5LEYMgTGIstr+gN8ZUNsEgCpC1O+/StN1G+syAEj3tO
+	7cwdLeGYy3uaRai7jdjC13T4BCXKQeOe0rCv/oc=
+X-Google-Smtp-Source: AGHT+IG+R/2dDVOAo8hNe4uTtuQoUVfj41bgYhEqgafqLkVHeNbFeZgwQy5dNh9liMdoGBMx4RX7bzlFAi1Xh1e9A3Q=
+X-Received: by 2002:a4a:c487:0:b0:58d:ddcb:db1a with SMTP id
+ f7-20020a4ac487000000b0058dddcbdb1amr11243353ooq.1.1702409127732; Tue, 12 Dec
+ 2023 11:25:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6395b87b-7cb6-4412-b6e5-e6075353fb6d@redhat.com>
- <3a06ae67808800386117c90714637ef9a0267b37.camel@sipsolutions.net> <c4dc3d03-5241-4b2b-b0ff-6517f063ba29@amd.com>
-In-Reply-To: <c4dc3d03-5241-4b2b-b0ff-6517f063ba29@amd.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Tue, 12 Dec 2023 11:41:40 -0500
-Message-ID: <CADnq5_PEDDAjjMOKpeLAHoFVCgbo6Sg8iVWC7sX4Ntn-PHk90g@mail.gmail.com>
-Subject: Re: [GIT PULL] mmutable branch between pdx86 amd wbrf branch and wifi
- / amdgpu due for the v6.8 merge window
+References: <20231203041046.38655-1-mario.limonciello@amd.com> <20231203041046.38655-3-mario.limonciello@amd.com>
+In-Reply-To: <20231203041046.38655-3-mario.limonciello@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 12 Dec 2023 20:25:16 +0100
+Message-ID: <CAJZ5v0g_HWFnt0a5fDnb73Q14C84O+RPYVF104TDK7T_Ox3_EA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] PCI: Refresh root ports in pci_bridge_d3_update()
 To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>, Hans de Goede <hdegoede@redhat.com>, 
-	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Ma Jun <Jun.Ma2@amd.com>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, 
+	Hans de Goede <hdegoede@redhat.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
+	"open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, 
 	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-wireless <linux-wireless@vger.kernel.org>, 
-	amd-gfx list <amd-gfx@lists.freedesktop.org>
+	Lukas Wunner <lukas@wunner.de>, Kai-Heng Feng <kai.heng.feng@canonical.com>, 
+	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 12, 2023 at 11:25=E2=80=AFAM Mario Limonciello
+On Mon, Dec 4, 2023 at 7:07=E2=80=AFAM Mario Limonciello
 <mario.limonciello@amd.com> wrote:
 >
-> On 12/12/2023 03:46, Johannes Berg wrote:
-> > On Mon, 2023-12-11 at 12:02 +0100, Hans de Goede wrote:
-> >> Hi Wifi and AMDGPU maintainers,
-> >>
-> >> Here is a pull-request for the platform-drivers-x86 parts of:
-> >>
-> >> https://lore.kernel.org/platform-driver-x86/20231211100630.2170152-1-J=
-un.Ma2@amd.com/
-> >>
-> >>  From my pov the pdx86 bits are ready and the platform-drivers-x86-amd=
--wbrf-v6.8-1 tag can be merged by you to merge the wifi-subsys resp. the am=
-dgpu driver changes on top.
-> >>
-> >> This only adds kernel internal API, so if in the future the API needs =
-work that can be done.
-> >
-> > OK, thanks! I've pulled this into wireless-next, and applied the two
-> > wireless related patches on top.
-> >
-> > I guess if AMDGPU does the same, it will combine nicely in 6.8.
-> >
-> > johannes
+> If pci_d3cold_enable() or pci_d3cold_disable() is called on a root
+> port it is ignored because there is no upstream bridge.
+
+The kerneldoc comment of pci_bridge_d3_update() explains what that
+function is for which also covers why it does not take effect when
+called on root ports.
+
+> If called on a root port, use `no_d3cold` variable to decide policy
+
+It is unclear that this is about pci_bridge_d3_possible() which
+applies to both D3hot and D3cold, not just D3cold AFAICS.  I don't
+think that no_d3cold should affect the D3hot behavior.
+
+> and also immediately refresh whether D3 is possible.
+
+Which isn't correct AFAICS.
+
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/pci/pci.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 >
-> Yup, I've pulled the whole series into amd-staging-drm-next for now and
-> I expect as long as we have no problems with it reported under our
-> testing Alex or Christian will do the same include drm/amd portions of
-> it in an upcoming drm-next pull request.
-
-I've pushed out an updated -next branch as well:
-https://gitlab.freedesktop.org/agd5f/linux/-/commits/drm-next
-
-Alex
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 72505794cc72..3d4aaecda457 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3023,6 +3023,9 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>                 if (pci_bridge_d3_disable)
+>                         return false;
+>
+> +               if (bridge->no_d3cold)
+> +                       return false;
+> +
+>                 /*
+>                  * Hotplug ports handled by firmware in System Management=
+ Mode
+>                  * may not be put into D3 by the OS (Thunderbolt on non-M=
+acs).
+> @@ -3098,7 +3101,11 @@ void pci_bridge_d3_update(struct pci_dev *dev)
+>         bool d3cold_ok =3D true;
+>
+>         bridge =3D pci_upstream_bridge(dev);
+> -       if (!bridge || !pci_bridge_d3_possible(bridge))
+> +       if (!bridge) {
+> +               dev->bridge_d3 =3D pci_bridge_d3_possible(dev);
+> +               return;
+> +       }
+> +       if (!pci_bridge_d3_possible(bridge))
+>                 return;
+>
+>         /*
+> --
+> 2.34.1
+>
+>
