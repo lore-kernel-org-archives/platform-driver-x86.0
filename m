@@ -1,48 +1,34 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E6467B6C;
+	Wed, 13 Dec 2023 19:41:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S8vI+aer"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F1F011B;
-	Wed, 13 Dec 2023 06:06:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702476360; x=1734012360;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lLDH5uYOeaQnhamK2tYMH/VlP6LJt6utjNNQt+hkSQU=;
-  b=S8vI+aerwXaE8KcmxhaobIdvC45z+WfpYBgM7qu2ofRZ0GG349AF+j/m
-   m2kCPmZowmogia1t/7AVD0JBnOtN7p1T+BiWxrJFBXAxW2BxCZZfstnaK
-   PibbqCuEdxjxD7PtFWPlS+IBD8CnGvIroPbuyornGR2wJ9W7jlJLh7V85
-   pxb9lXxepkF3r6CspmJzr6i2HuCEBJd6tsSG+j8c02/IoarEnxKMgWFpa
-   2ZGpaYHA1fvePHTBbIMfvRFz8jiI04taZ5aJQQy7caob3ufktsa78pW7h
-   tGypNUE7CzI5crV8u6gDkd+7p8MHI3l1nKV9J4zNzfHJtDpWqB35ym4zl
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="426090697"
-X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
-   d="scan'208";a="426090697"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 06:06:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="767229612"
-X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
-   d="scan'208";a="767229612"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 06:05:57 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rDPs2-00000005Xgc-2rMy;
-	Wed, 13 Dec 2023 16:05:54 +0200
-Date: Wed, 13 Dec 2023 16:05:54 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ogj8zM/6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F3E8C433C8;
+	Wed, 13 Dec 2023 19:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702496508;
+	bh=r5caWHZ8DXSvWHSwhmR5Tmf3Lip96nv1oNKmYxfn+iA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Ogj8zM/6LzmTB24yYi9IwK2MhAHsuDy3wqhfJZEVuD82Payg4N03l0nMLdJ15c3CF
+	 8NX9BSNFaoZ4kFdqnEPny55MRUZQx/6wg3mDg5VRanQwXmL4ZxYh6E9IATkQZbf9r/
+	 NQr6I0m71gkpdglNPqzp7lqh2PDZJWiucDlyONN+usdYDiwITmOSTx0IWXFVVLIBK3
+	 3ZXHbFu66OWhU+ftG/Teb48/H/eDp30jlPRAYtswoE28z233Iadj1wsDWVvVAPvrPI
+	 SGFr5N1pAkh7DGvlHe8NN9SYwqYIXzPabr5qksPzAIQmLHq0d+nB9GsEonZ7bDG2cv
+	 zvCesPxVtitjw==
+Date: Wed, 13 Dec 2023 13:41:46 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
 To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 Cc: platform-driver-x86@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
 	Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
 	linux-i2c@vger.kernel.org
 Subject: Re: [PATCH RFC v2] platform/x86: p2sb: Allow p2sb_bar() calls during
  PCI device probe
-Message-ID: <ZXm6QrRkyzGRg8SB@smile.fi.intel.com>
-References: <20231212114746.183639-1-shinichiro.kawasaki@wdc.com>
+Message-ID: <20231213194146.GA1055128@bhelgaas>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,7 +38,6 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20231212114746.183639-1-shinichiro.kawasaki@wdc.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
 On Tue, Dec 12, 2023 at 08:47:46PM +0900, Shin'ichiro Kawasaki wrote:
 > p2sb_bar() unhides P2SB device to get resources from the device. It
@@ -67,33 +52,28 @@ On Tue, Dec 12, 2023 at 08:47:46PM +0900, Shin'ichiro Kawasaki wrote:
 > Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
 > for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
 > refer the cache and return to the caller.
-
-...
+> ...
 
 > +/* Cache BAR0 of P2SB device from function 0 ot 7 */
-> +#define NR_P2SB_RES_CACHE 8
 
-Here... (at least some better comment with TODO needs to be added,
-and next patches can address that).
+s/ot/to/
 
->  	struct resource *bar0 = &pdev->resource[0];
+or even s/from function 0 ot 7/functions 0 to 7/
 
-...and here... (okay, not exactly here, but with the same idea,
-to use pci_resource_n() macro)
+> +static bool p2sb_invalid_resource(struct resource *res)
+> +{
+> +	return res->flags == 0;
+> +}
 
-> +	if (!PCI_FUNC(devfn_p2sb)) {
-> +		slot_p2sb = PCI_SLOT(devfn_p2sb);
-> +		for (fn = 1; fn < 8; fn++)
+IMO this would read better as "p2sb_valid_resource()" with
+corresponding negation in the callers.  But it doesn't matter either
+way.
 
-...and here...
+> + * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
+> + * @bus: PCI bus to communicate with
+> + * @devfn: PCI slot and function to communicate with
+> + * @mem: memory resource to be filled in
+> + *
+> + * if @bus is NULL, the bus 0 in domain 0 will be used.
 
-> +			p2sb_scan_and_cache(bus, PCI_DEVFN(slot_p2sb, fn));
-> +	}
-
-...and so on I gave comments. Any reason why they left unaddressed?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+s/if/If/
