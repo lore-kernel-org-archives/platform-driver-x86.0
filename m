@@ -1,127 +1,99 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E862DAD
-	for <platform-driver-x86@vger.kernel.org>; Tue, 12 Dec 2023 13:05:24 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rD9wF-0001Oy-5K; Tue, 12 Dec 2023 22:05:11 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rD9wE-00FQEY-2C; Tue, 12 Dec 2023 22:05:10 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rD9wD-001snP-Ol; Tue, 12 Dec 2023 22:05:09 +0100
-Date: Tue, 12 Dec 2023 22:05:09 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
-	linux-samsung-soc@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-staging@lists.linux.dev,
-	linux-rockchip@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-pwm@vger.kernel.org, greybus-dev@lists.linaro.org,
-	linux-mediatek@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	asahi@lists.linux.dev, kernel@pengutronix.de
-Subject: Re: [PATCH v4 000/115] pwm: Fix lifetime issues for pwm_chips
-Message-ID: <20231212210509.focpb63fbmahqij3@pengutronix.de>
-References: <cover.1701860672.git.u.kleine-koenig@pengutronix.de>
- <ZXM4CdJxg-XrYhkn@orome.fritz.box>
- <20231208185033.e6ty2cajcfle6dgk@pengutronix.de>
- <ZXbzcFTnDTKoZAta@orome.fritz.box>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S8vI+aer"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F1F011B;
+	Wed, 13 Dec 2023 06:06:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702476360; x=1734012360;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lLDH5uYOeaQnhamK2tYMH/VlP6LJt6utjNNQt+hkSQU=;
+  b=S8vI+aerwXaE8KcmxhaobIdvC45z+WfpYBgM7qu2ofRZ0GG349AF+j/m
+   m2kCPmZowmogia1t/7AVD0JBnOtN7p1T+BiWxrJFBXAxW2BxCZZfstnaK
+   PibbqCuEdxjxD7PtFWPlS+IBD8CnGvIroPbuyornGR2wJ9W7jlJLh7V85
+   pxb9lXxepkF3r6CspmJzr6i2HuCEBJd6tsSG+j8c02/IoarEnxKMgWFpa
+   2ZGpaYHA1fvePHTBbIMfvRFz8jiI04taZ5aJQQy7caob3ufktsa78pW7h
+   tGypNUE7CzI5crV8u6gDkd+7p8MHI3l1nKV9J4zNzfHJtDpWqB35ym4zl
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="426090697"
+X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
+   d="scan'208";a="426090697"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 06:06:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="767229612"
+X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
+   d="scan'208";a="767229612"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 06:05:57 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rDPs2-00000005Xgc-2rMy;
+	Wed, 13 Dec 2023 16:05:54 +0200
+Date: Wed, 13 Dec 2023 16:05:54 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: Re: [PATCH RFC v2] platform/x86: p2sb: Allow p2sb_bar() calls during
+ PCI device probe
+Message-ID: <ZXm6QrRkyzGRg8SB@smile.fi.intel.com>
+References: <20231212114746.183639-1-shinichiro.kawasaki@wdc.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gyt34nc3mm25zmmf"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZXbzcFTnDTKoZAta@orome.fritz.box>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+In-Reply-To: <20231212114746.183639-1-shinichiro.kawasaki@wdc.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Tue, Dec 12, 2023 at 08:47:46PM +0900, Shin'ichiro Kawasaki wrote:
+> p2sb_bar() unhides P2SB device to get resources from the device. It
+> guards the operation by locking pci_rescan_remove_lock so that parallel
+> rescans do not find the P2SB device. However, this lock causes deadlock
+> when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
+> locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
+> call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
+> Hence the deadlock.
+> 
+> To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
+> Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
+> for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
+> refer the cache and return to the caller.
+
+...
+
+> +/* Cache BAR0 of P2SB device from function 0 ot 7 */
+> +#define NR_P2SB_RES_CACHE 8
+
+Here... (at least some better comment with TODO needs to be added,
+and next patches can address that).
+
+>  	struct resource *bar0 = &pdev->resource[0];
+
+...and here... (okay, not exactly here, but with the same idea,
+to use pci_resource_n() macro)
+
+> +	if (!PCI_FUNC(devfn_p2sb)) {
+> +		slot_p2sb = PCI_SLOT(devfn_p2sb);
+> +		for (fn = 1; fn < 8; fn++)
+
+...and here...
+
+> +			p2sb_scan_and_cache(bus, PCI_DEVFN(slot_p2sb, fn));
+> +	}
+
+...and so on I gave comments. Any reason why they left unaddressed?
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---gyt34nc3mm25zmmf
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Thierry,
-
-On Mon, Dec 11, 2023 at 12:33:04PM +0100, Thierry Reding wrote:
-> On Fri, Dec 08, 2023 at 07:50:33PM +0100, Uwe Kleine-K=F6nig wrote:
-> > You don't need to touch all drivers because you didn't change struct
-> > pwm_chip::dev yet. (If you really want, you don't need to change that,
-> > but then you have some duplication as chip->dev holds the same value as
-> > priv->dev.parent in the end.)
->=20
-> I don't think that's a problem. These are for two logically separate
-> things, after all.
-
-How are they different? I'd say one is the initializer for the other and
-(ideally) unused after that. With that interpretation they are indeed
-different, but then it's ugly that the initializer keeps staying around.
-
-> Duplication can also sometimes be useful to simplify
-> things. There are plently of cases where we use local variables for the
-> same reason.
-
-local variables go away though after the respective function is left.
-chip->dev and its copy priv->dev.parent stay around for the full
-lifetime of the chip.
-
-> > > @@ -58,23 +60,24 @@ static struct pwm_chip *pwmchip_find_by_name(cons=
-t char *name)
-> > > =20
-> > >  static int pwm_device_request(struct pwm_device *pwm, const char *la=
-bel)
-> > >  {
-> > > +	struct pwm_chip *chip =3D pwm->priv->chip;
-> >=20
-> > With my approach getting the chip of a struct pwm_device is only one
-> > pointer dereference away. You need two.
->=20
-> None of the functions here are called very often, so even if this isn't
-> optimized away it would hardly matter.
-
-I'd say pwm_apply_state() at least matters. Also I think that making a
-slow path quicker is a good thing.=20
-
-I wonder how we'll converge to an approach that can go into the
-mainline given that we both have our strong opinions.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---gyt34nc3mm25zmmf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmV4ywQACgkQj4D7WH0S
-/k4AOQf/Rn+1it6Pa2jcb+shcSHEefw76NASZ1jTJwzdnczaZca+4/TdY0/HLE/V
-27TLO93Qd9e4o0E4uFjg/T9KbZy+cu9WxiCJ9LgBEhgPaLIWe9opiDarsy2BNLJi
-e6lERFOmyBoG3USP7t/iEQn5C+0+gC6/pcPVWk8TJO/mc2kr8ioQRsaHtaE0AsX0
-hpZS0GH+ypW5d1saF+TMkSDV4QUzmTaXxsSDqG9/vnXhjln6wlriyIo2gJI2qQ6R
-gBrGVWoz8SnG3OjfGZwo9KhL+KPTbjIba4erb1KbE9j9Ul7c3xF/nA6GcTwU/IcQ
-6WQMUp7Ez5oG8txpknnsR9R2Iimimw==
-=APXJ
------END PGP SIGNATURE-----
-
---gyt34nc3mm25zmmf--
