@@ -1,164 +1,77 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1187C60B9C;
+	Thu, 14 Dec 2023 16:41:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ca3vVkHM"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A27114;
-	Thu, 14 Dec 2023 08:38:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702571927; x=1734107927;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wF4Gv0hmbYGA1HIkNGDcAqag49rX/LBeiAiw0wusqRY=;
-  b=ca3vVkHMjw6fouJft446uiH4hDB+nQzaVHDzXTc9RZW7PyQaR3jr6IcT
-   CnVV5jyN5qK4yByXp9dW76FBhzX54YAP0ur+VcyJdBe/frmADJoa9A4my
-   4/Y2Xn/ow6sDzKuXLIowUBx2Cc42lJaSjsiCGmiyr/4tvoothIJY81Ezh
-   Yym+kV+V1D3AzT4ZsuY5aMQQuSK+8S/WTZ/lkyYk+n2SsxRmF0NJ6fQVZ
-   ztj/c/kDHR9IxTnpDcTQmAK0sDoMxgYyGeEBvhVU22g0xB72MPMGqrVMs
-   2oXP0buQmCMU1hdgHdB4kNn8JYOqev68ZTShWX0/5Dggc9pytYB8IrJUt
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="394013872"
-X-IronPort-AV: E=Sophos;i="6.04,276,1695711600"; 
-   d="scan'208";a="394013872"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 08:38:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="803343070"
-X-IronPort-AV: E=Sophos;i="6.04,276,1695711600"; 
-   d="scan'208";a="803343070"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 08:38:44 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rDojR-00000005tey-2qie;
-	Thu, 14 Dec 2023 18:38:41 +0200
-Date: Thu, 14 Dec 2023 18:38:41 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: Re: [PATCH RFC v2] platform/x86: p2sb: Allow p2sb_bar() calls during
- PCI device probe
-Message-ID: <ZXsvkWeJvdkvrf5e@smile.fi.intel.com>
-References: <20231212114746.183639-1-shinichiro.kawasaki@wdc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAkZjkxq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8033C433C7;
+	Thu, 14 Dec 2023 16:41:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702572082;
+	bh=aR0AfO4Zo8a3/6CuOkcgFklla3J0GR//5YEavtZmcQs=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=GAkZjkxq8d7vJm4HIljWKOFiPA/2BaPPlaKZHPZLRO4DD9wbOPXlgbeH+TLYP80AN
+	 FwpgqFP1DI/D308SUJ9TxRb+/r63ETwuEw//2P2LhWxPQv75QE7qZXYHYXty/YuwJW
+	 pPRySd8xG8XoCoQ55EaAlQIfVfGovXBUuY3xBOeRa8WbqAZ7aU2+N9avI86gzFNPcq
+	 plgeZFHkfCFUJIXkWPhhYUYjyJfxnlp58CCzIelrlYYYO+TS58TbEWqa1LO2RiWaPV
+	 hnNMPKstrMT6M9WYuL3zUy4iNnZm1hux6CKimeuWh6NV5lqEsqQ6YD84lp/FSyJIYx
+	 sWEKi2H6vIl4g==
+From: Kalle Valo <kvalo@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>,  Alex Deucher
+ <alexander.deucher@amd.com>,  Christian =?utf-8?Q?K=C3=B6nig?=
+ <christian.koenig@amd.com>,
+  Ma Jun <Jun.Ma2@amd.com>,  "Limonciello, Mario"
+ <Mario.Limonciello@amd.com>,  "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>,  linux-wireless
+ <linux-wireless@vger.kernel.org>,  amd-gfx list
+ <amd-gfx@lists.freedesktop.org>,  Ilpo =?utf-8?Q?J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [GIT PULL] mmutable branch between pdx86 amd wbrf branch and
+ wifi / amdgpu due for the v6.8 merge window
+References: <6395b87b-7cb6-4412-b6e5-e6075353fb6d@redhat.com>
+Date: Thu, 14 Dec 2023 18:36:56 +0200
+In-Reply-To: <6395b87b-7cb6-4412-b6e5-e6075353fb6d@redhat.com> (Hans de
+	Goede's message of "Mon, 11 Dec 2023 12:02:16 +0100")
+Message-ID: <87le9w4u6v.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231212114746.183639-1-shinichiro.kawasaki@wdc.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
 
-On Tue, Dec 12, 2023 at 08:47:46PM +0900, Shin'ichiro Kawasaki wrote:
-> p2sb_bar() unhides P2SB device to get resources from the device. It
-> guards the operation by locking pci_rescan_remove_lock so that parallel
-> rescans do not find the P2SB device. However, this lock causes deadlock
-> when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
-> locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
-> call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
-> Hence the deadlock.
-> 
-> To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
-> Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
-> for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
-> refer the cache and return to the caller.
+Hans de Goede <hdegoede@redhat.com> writes:
 
-...
+> Hi Wifi and AMDGPU maintainers,
+>
+> Here is a pull-request for the platform-drivers-x86 parts of:
+>
+> https://lore.kernel.org/platform-driver-x86/20231211100630.2170152-1-Jun.Ma2@amd.com/
+>
+> From my pov the pdx86 bits are ready and the
+> platform-drivers-x86-amd-wbrf-v6.8-1 tag can be merged by you to merge
+> the wifi-subsys resp. the amdgpu driver changes on top.
+>
+> This only adds kernel internal API, so if in the future the API needs work that can be done.
+>
+> I've not merged this branch into pdx86/for-next yet, since I see
+> little use in merging it without any users. I'll merge it once either
+> the wifi or amdgpu changes are also merged (and if some blocking
+> issues get identified before either are merged I can prepare a new
+> pull-request fixing the issues).
 
-> +/* Cache BAR0 of P2SB device from function 0 ot 7 */
-> +#define NR_P2SB_RES_CACHE 8
+I was testing latest wireless-testing with ath11k and noticed this:
 
-This is fifth or so definition for the same, isn't it a good time to create
-a treewide definition in pci.h?
+[  370.796884] ath11k_pci 0000:06:00.0: WBRF is not supported
 
-See also below.
-
-(In previous mail I even found all cases and listed, a bit lazy to repeat.)
-
-...
-
-> +static bool p2sb_invalid_resource(struct resource *res)
-
-The naming is better to be p2sb_is_resource_valid().
-
-...
-
->  	struct resource *bar0 = &pdev->resource[0];
-
-This and in new code can use pci_resource_n() macro.
-
-...
-
->  	pdev = pci_scan_single_device(bus, devfn);
-> -	if (!pdev)
-> +	if (!pdev || p2sb_invalid_resource(&pdev->resource[0]))
->  		return -ENODEV;
-
-I prefer to split and have different error code for the second one:
--ENOENT / -EINVAL / etc.
-
-...
-
-> +	struct pci_bus *bus;
-> +	unsigned int devfn_p2sb, slot_p2sb, fn;
-
-Please, preserve reversed xmas tree ordering.
-
->  	u32 value = P2SBC_HIDE;
->  	int ret;
-
-...
-
-> -	/* if @bus is NULL, use bus 0 in domain 0 */
-> -	bus = bus ?: pci_find_bus(0, 0);
-> +	/* Assume P2SB is on the bus 0 in domain 0 */
-> +	bus = pci_find_bus(0, 0);
-
-The pci_find_bus() is called in two places now. Can we avoid doing
-this duplication?
-
-...
-
-> +	/*
-> +	 * When function number of the P2SB device is zero, scan other function
-> +	 * numbers. If devices are available, cache their BAR0.
-> +	 */
-> +	if (!PCI_FUNC(devfn_p2sb)) {
-
-I prefer to see '== 0' to make it clear that 0 has the same semantics as other
-numbers here. It's not special like NULL.
-
-> +		slot_p2sb = PCI_SLOT(devfn_p2sb);
-> +		for (fn = 1; fn < 8; fn++)
-
-As per above, use a definition for 8
-
-> +			p2sb_scan_and_cache(bus, PCI_DEVFN(slot_p2sb, fn));
-> +	}
-> +
-> +out:
-
-Can it be split the above to the previous call or a separate helper?
-
-...
-
-> +static int __init p2sb_fs_init(void)
-> +{
-> +	p2sb_cache_resources();
-> +	return 0;
-> +}
-
-Please, add a comment justifying fs_initcall().
-
-> +fs_initcall(p2sb_fs_init);
+I think that's just spam and not really necessary. Could someone remove
+that or change to a debug message, please?
 
 -- 
-With Best Regards,
-Andy Shevchenko
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
