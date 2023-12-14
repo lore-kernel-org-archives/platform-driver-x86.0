@@ -1,100 +1,104 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E5ACA7;
-	Thu, 14 Dec 2023 09:39:48 -0800 (PST)
-Received: from francesco-nb.int.toradex.com (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id BD29721454;
-	Thu, 14 Dec 2023 18:39:45 +0100 (CET)
-Date: Thu, 14 Dec 2023 18:39:44 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	linux-bluetooth@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	greybus-dev@lists.linaro.org, linux-iio@vger.kernel.org,
-	netdev@vger.kernel.org, chrome-platform@lists.linux.dev,
-	platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1] treewide, serdev: change receive_buf() return type to
- size_t
-Message-ID: <ZXs94Mf1eOMCmGpT@francesco-nb.int.toradex.com>
-References: <20231214170146.641783-1-francesco@dolcini.it>
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B756C6C0;
+	Thu, 14 Dec 2023 23:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BUQ7LYxB"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-20308664c13so58289fac.3;
+        Thu, 14 Dec 2023 15:15:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702595731; x=1703200531; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j3/uJiT9TQ0Tlop4JkaKoN9q1vVnNppY7dZy/9puybk=;
+        b=BUQ7LYxBjuGQXNA5D43CytBbZD1jcBcrlcGU2diSK3jvHf0Hgj6qRU59kzGbtmZ7W1
+         Bl7ykf2ykjAEw9H4N0Y5kVkX96dSUAMborNxCe4e7Kls9KRdTvmfI8okaTY42are8dMC
+         XURwNW3DfWGupd8Jlf5oItF+CPKcxdupnuQiRAdUI02QwC1guESbvC2CAkCry4TkMEgA
+         qMIs9bQFjY/gQYB/CWA73YmiNOEiCTHPYOsLlnHHJEGvb3h18j1Vm1KJGg0gyorO4pUN
+         h7N+RyxHnHsgG7RrctNFDtANU8OL90SYfYJg8Bn7a11KTq1vL93Bahl7Wc6CXcxQ7jXt
+         4M3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702595731; x=1703200531;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j3/uJiT9TQ0Tlop4JkaKoN9q1vVnNppY7dZy/9puybk=;
+        b=Da2ZJM6fuvgpYxR8pgyDiU479m1HLfNdYb9MHU3/Hhe7EIVmBt3kpATiOrT+0jZh2l
+         l3bER1E1tpD0jOR22hC2BNJpv4N5JCLXg9ngUON2/2J8dQg1L3xSu54Q+B0v7OqwmltN
+         Fn6nLLsqjmn5yfImDTmfpQHsKErK6GLf88YCy+lc2DpjWlLvhrC+7CubuMHjFHtRILtF
+         9vH7GD8+necZd5cFrlSlL0EpnlQkR1vXwjpahyQqdvV0QeY42orFUA1HqMmiALUYskzC
+         yNFZGXPANefFJpNyaMhKQh2dy9lJCnK4LBM4H4rrCFiItmnlSCtpGUyCy7fMLtkP46Dp
+         YH3g==
+X-Gm-Message-State: AOJu0Yw5Xj4QxEltjn5FrRgR+jhAZAQd8twlnzGxF6beHNmS9xmNhVhX
+	T5q1Jv074SXFs/76B6tqyBedJ3e0ptcMhLzgFlk=
+X-Google-Smtp-Source: AGHT+IGf5A5/9xmsit3EyjeIc1AEeS+Cc2hfGJnpn+1Fzx+YwOhgmyACnbbn8yWoh3AaTsyN162EwwmVQNrFVaqzgKU=
+X-Received: by 2002:a05:6870:b289:b0:203:200e:bf00 with SMTP id
+ c9-20020a056870b28900b00203200ebf00mr4061756oao.87.1702595730658; Thu, 14 Dec
+ 2023 15:15:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231214170146.641783-1-francesco@dolcini.it>
+References: <20231214134702.166464-1-vishnuocv@gmail.com> <702d46c3-f4a1-142e-c8a3-1e462934f9ea@linux.intel.com>
+In-Reply-To: <702d46c3-f4a1-142e-c8a3-1e462934f9ea@linux.intel.com>
+From: Vishnu Sankar <vishnuocv@gmail.com>
+Date: Fri, 15 Dec 2023 08:14:53 +0900
+Message-ID: <CABxCQKu9kD4HkHT0ffNc_CTsD9y0_p7QQ0b--aLFP4B_JVD+=A@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: fix for incorrect fan
+ reporting on some ThinkPad systems
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	markgross@kernel.org, vsankar@lenovo.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 14, 2023 at 06:01:46PM +0100, Francesco Dolcini wrote:
-> From: Francesco Dolcini <francesco.dolcini@toradex.com>
-> 
-> receive_buf() is called from ttyport_receive_buf() that expects values
-> ">= 0" from serdev_controller_receive_buf(), change its return type from
-> ssize_t to size_t.
-> 
-> Suggested-by: Jiri Slaby <jirislaby@kernel.org>
-> Link: https://lore.kernel.org/all/087be419-ec6b-47ad-851a-5e1e3ea5cfcc@kernel.org/
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> ---
-> hello,
-> patch is based on current linux next.
-> 
-> It has an obvious problem, it touches files from multiple subsystem in a single
-> patch that is complicated to review and eventually merge, just splitting this
-> would however not work, it will break bisectability and the build.
-> 
-> I am looking for advise on the best way to move forward.
-> 
-> I see the following options:
->  - keep it as it is
->  - break it down with a patch with each subsystem, and squash before applying
->    from a single (tty?) subsystem
->  - go for a multi stage approach, defining a new callback, move to it and in
->    the end remove the original one, likewise it was done for i2c lately
+Hi Ilpo,
 
-whoops. I just noticed Greg applied commit 475fc6e2de6f ("tty: serdev:
-convert to u8 and size_t") that touch the exact same files without much
-of an issue.
+Thank you for the review.
 
-Probably the "keep it as it is" is just the way to go.
+Vishnu
 
-> 
-> ---
->  drivers/bluetooth/btmtkuart.c              |  4 ++--
->  drivers/bluetooth/btnxpuart.c              |  4 ++--
->  drivers/bluetooth/hci_serdev.c             |  4 ++--
->  drivers/gnss/core.c                        |  6 +++---
->  drivers/gnss/serial.c                      |  4 ++--
->  drivers/gnss/sirf.c                        |  6 +++---
->  drivers/greybus/gb-beagleplay.c            |  6 +++---
->  drivers/iio/chemical/pms7003.c             |  4 ++--
->  drivers/iio/chemical/scd30_serial.c        |  4 ++--
->  drivers/iio/chemical/sps30_serial.c        |  4 ++--
->  drivers/iio/imu/bno055/bno055_ser_core.c   |  4 ++--
->  drivers/mfd/rave-sp.c                      |  4 ++--
->  drivers/net/ethernet/qualcomm/qca_uart.c   |  2 +-
->  drivers/nfc/pn533/uart.c                   |  4 ++--
->  drivers/nfc/s3fwrn5/uart.c                 |  4 ++--
->  drivers/platform/chrome/cros_ec_uart.c     |  4 ++--
->  drivers/platform/surface/aggregator/core.c |  4 ++--
->  drivers/tty/serdev/serdev-ttyport.c        | 10 ++++------
->  include/linux/gnss.h                       |  4 ++--
->  include/linux/serdev.h                     |  8 ++++----
->  sound/drivers/serial-generic.c             |  4 ++--
->  21 files changed, 48 insertions(+), 50 deletions(-)
+On Thu, Dec 14, 2023 at 11:53=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Thu, 14 Dec 2023, Vishnu Sankar wrote:
+>
+> > Some ThinkPad systems ECFW use non-standard addresses for fan control
+> > and reporting. This patch adds support for such ECFW so that it can rep=
+ort
+> > the correct fan values.
+> > Tested on Thinkpads L13 Yoga Gen 2 and X13 Yoga Gen 2.
+> >
+> > Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> > Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+> > ---
+> > -Improvements to comments as requested.
+> > -Removed the usage of unlikely/likely while reading fan speed.
+> > -Improved and clearer print statements to match the current style.
+> > -Changed seq_puts to seq_printf of an unrelated section of the patch.
+> > -Improved the readability of the code.
+> > -Added more clearer comments.
+>
+> Nice work, thanks.
+>
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+>
+>
+> --
+>  i.
+
+
+
+--=20
+
+Regards,
+
+      Vishnu Sankar
+     +817015150407 (Japan)
