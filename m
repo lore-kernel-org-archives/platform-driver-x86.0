@@ -1,56 +1,54 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9A73DB83;
-	Fri, 15 Dec 2023 16:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E853BB25;
+	Fri, 15 Dec 2023 16:18:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ILbHAfIc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702656836; x=1734192836;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jRZ4fvmYc+HtjzVULVdhC6nDL1Y7tBYw7lvsXJ+ZQW8=;
-  b=ILbHAfIcFC5KYDIDdymkNPxSiVHKnthbg5oofxMsFNdun+JciMpalu1X
-   SSk6EESDVVrE6XzZIs3CEwX86IV6pIiIlks+VIevspqIHA99Unw9YRIT0
-   bTtXk6PrTQdAX2kMY8SNUyPsF/Y8pSYMJr0Zd8kvEmOo2nq0kArcXmkHx
-   aFcwK5UrBY6T2Jsu1rSP+5awUscDYb7zGKYuQ9WckMs7uIZYxOFXoq/8t
-   0pSP21HYq5QotW2Z0WhjkA3+bMpgsbQCOepbj0ON7RK47PJxsfmKIr0s8
-   j1YpYk94GC3kua0pKq+/Jd2xOVz1iEapJju84Pt5ClN1i84+0VjBK/tmS
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="16846439"
-X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="16846439"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:13:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="724500074"
-X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="724500074"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:13:53 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rEAow-00000006AK8-1aGr;
-	Fri, 15 Dec 2023 18:13:50 +0200
-Date: Fri, 15 Dec 2023 18:13:50 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	platform-driver-x86@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K7dm0Ddl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46FC0C433C7;
+	Fri, 15 Dec 2023 16:18:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702657137;
+	bh=YlcNrdt+0bdBjEoeknJhdd+iUZGMaHxrfBZN/74+PSM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K7dm0Ddli65bXnpIe+H/ttDbslFE9q2kMgBadq97OkKtouXQIbEiyY2q9JXScuDsv
+	 C1TjFxiht6mfl4VICqLkzK7PUWl+CGRGnU6fYOYPcX8M4yYc9TnjF9ZXpkWsSySLmw
+	 CyyhNm54GFYsWjy2rItDi4vwFE9/ZhlLtsFlUG5+pOmeb3j63lrLaKJ7ABlRzd4YHf
+	 FIPEL5mBy+6x1p0RKnf9kDaMW13b61pXy/Df0JjpQnoeYrO6LSmIPopfjK9+e6we66
+	 XhmZW3p8qy6Nb89ngBM4O2Sk//rED3kWw0q23oLG3uetyunnmSGJbQZLPq0L+Kbm4x
+	 OaRnvmY/t7uxg==
+Received: from johan by xi.lan with local (Exim 4.96.2)
+	(envelope-from <johan@kernel.org>)
+	id 1rEAto-0000VW-1C;
+	Fri, 15 Dec 2023 17:18:52 +0100
+Date: Fri, 15 Dec 2023 17:18:52 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, linux-bluetooth@vger.kernel.org,
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, greybus-dev@lists.linaro.org,
+	linux-iio@vger.kernel.org, netdev@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Alex Elder <elder@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+	Lee Jones <lee@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-pci@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH RFC v2] platform/x86: p2sb: Allow p2sb_bar() calls during
- PCI device probe
-Message-ID: <ZXx7PpJbfsYxDQzJ@smile.fi.intel.com>
-References: <20231212114746.183639-1-shinichiro.kawasaki@wdc.com>
- <ZXsvkWeJvdkvrf5e@smile.fi.intel.com>
- <20231215075210.GA15884@wunner.de>
- <ZXxynbIS8kd3KQuy@smile.fi.intel.com>
- <20231215154507.GB20902@wunner.de>
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1] treewide, serdev: change receive_buf() return type to
+ size_t
+Message-ID: <ZXx8bCVyxJ9Ddvqm@hovoldconsulting.com>
+References: <20231214170146.641783-1-francesco@dolcini.it>
+ <ZXxWX-Fw1InID2ax@hovoldconsulting.com>
+ <ZXxa7yzKzG6048vw@francesco-nb.int.toradex.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -59,47 +57,69 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231215154507.GB20902@wunner.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <ZXxa7yzKzG6048vw@francesco-nb.int.toradex.com>
 
-On Fri, Dec 15, 2023 at 04:45:07PM +0100, Lukas Wunner wrote:
-> On Fri, Dec 15, 2023 at 05:37:01PM +0200, Andy Shevchenko wrote:
-> > On Fri, Dec 15, 2023 at 08:52:10AM +0100, Lukas Wunner wrote:
-> > > On Thu, Dec 14, 2023 at 06:38:41PM +0200, Andy Shevchenko wrote:
-> > > > On Tue, Dec 12, 2023 at 08:47:46PM +0900, Shin'ichiro Kawasaki wrote:
-> > > > > +/* Cache BAR0 of P2SB device from function 0 ot 7 */
-> > > > > +#define NR_P2SB_RES_CACHE 8
-> > > > 
-> > > > This is fifth or so definition for the same, isn't it a good time to create
-> > > > a treewide definition in pci.h?
+On Fri, Dec 15, 2023 at 02:55:59PM +0100, Francesco Dolcini wrote:
+> On Fri, Dec 15, 2023 at 02:36:31PM +0100, Johan Hovold wrote:
+> > On Thu, Dec 14, 2023 at 06:01:46PM +0100, Francesco Dolcini wrote:
+> > > From: Francesco Dolcini <francesco.dolcini@toradex.com>
 > > > 
-> > > This isn't something defined in the PCI spec but rather an x86-specific
-> > > constant, so should preferrably live somewhere in arch/x86/include/asm/.
+> > > receive_buf() is called from ttyport_receive_buf() that expects values
+> > > ">= 0" from serdev_controller_receive_buf(), change its return type from
+> > > ssize_t to size_t.
+
+> > > -int gnss_insert_raw(struct gnss_device *gdev, const unsigned char *buf,
+> > > -				size_t count)
+> > > +size_t gnss_insert_raw(struct gnss_device *gdev, const unsigned char *buf,
+> > > +		       size_t count)
+> > >  {
+> > > -	int ret;
+> > > +	size_t ret;
+> > >  
+> > >  	ret = kfifo_in(&gdev->read_fifo, buf, count);
+> > >  
 > > 
-> > I'm not sure I am following both paragraphs.
-> > 
-> > > If you have a "maximum number of PCI functions per device" constant in mind
-> > > then include/uapi/linux/pci.h might be a good fit.
-> > 
-> > This is indeed what I have had in mind, but why is this x86 specific?
-> > I didn't get...
+> > Why are you changing this function? This is part of the GNSS interface
+> > and has nothing to do with the rest of this patch.
 > 
-> If you look at it from the angle that you want to cache the
-> BAR of function 0 of the P2SB and of up to 7 additional functions,
-> it's an x86 thing.
+> good point, thanks for looking into that.
 > 
-> If you look at it from the angle "how many functions can a PCIe
-> device have (absent ARI)", it's a PCIe thing.
+> from my understanding kfifo_in() already return an unsigned, both
+> __kfifo_in and __kfifo_in_r return unsigned.
+
+Correct.
+
+> With that said this is used by 3 drivers:
 > 
-> It depends on the way you look at it. ;)
+> = drivers/gnss/sirf.c:
+> = drivers/gnss/serial.c:
+> 
+> The driver just use it into the actual receive_buf callback.
+> 
+> = drivers/gnss/usb.c
+> 
+> This driver does nothing with a negative return value (that is never the
+> less not possible), it just check that the whole buffer was inserted.
 
-I look here from the PCI specification / similar thing perspective.
+That driver also knows it will never be negative.
 
-My angle here is "cache the BAR of function 0 of P2SB and of up to
-as many as PCI specification dictates the device may have".
+And you forgot about
 
--- 
-With Best Regards,
-Andy Shevchenko
+	drivers/net/ethernet/intel/ice/ice_gnss.c
 
+> To me the change is correct, with that said probably this should have
+> been explicitly mentioned in the commit message or a separate
+> preparation patch.
 
+It's a separate change and should not be hidden away in a tree-wide
+change that goes through a different maintainer.
+
+Please drop this change from this patch and resubmit it separately to me
+if you want and I'll review when I have the time.
+
+And when doing tree-wide changes, please try to follow the style of the
+driver you are changing (e.g. do not introduce inconsistencies by
+changing to open parenthesis alignment of continuation lines in code
+that do not use it).
+
+Johan
