@@ -1,55 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872E9EBB;
-	Fri, 15 Dec 2023 01:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B85D528;
+	Fri, 15 Dec 2023 06:35:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F0QOP/2g"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 178EDC433C8;
-	Fri, 15 Dec 2023 01:17:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fOePsk9b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BCD7C433C8;
+	Fri, 15 Dec 2023 06:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702603079;
-	bh=dD66Jrb9XlDMZE7mqoPH5BHLtFeEhaaoDCDeFOFfhu4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=F0QOP/2gxMB6y+ZL4g6M17CLFuJe7fDYOHWeVrbmheJzBuZBGcj4nAAyJ4T1LmHJt
-	 xIgCrXVVq0ubNzTmCpUwQ2W8xfOtmsPGKpTEjFXOOq+WieCgql2SU4e+ajbf/Zb8oQ
-	 8BV7hF7SahO4b22pskxuiM4t4ZKzACVqmNc3S9newEz3gykRxjL+8m7hga+lTdJNrU
-	 cWkZFSA6S2R5KF0av+j8tDKhlsXEuk8a8JgDGmyzT/RgLpNTz+GSsVml2MLsHRB7Wd
-	 VDrEI7cmO93YsYljrfShNydScUUMFkV8j0FT0f7iAg4wFUW+r8+JdpBWVjU055kwHy
-	 CUEYSk/MqJ+3A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F037ADD4EFA;
-	Fri, 15 Dec 2023 01:17:58 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.7-4
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <cdf76a$lddk7@smtpauth.intel.com>
-References: <cdf76a$lddk7@smtpauth.intel.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cdf76a$lddk7@smtpauth.intel.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.7-4
-X-PR-Tracked-Commit-Id: 7bcd032370f88fd4022b6926d101403e96a86309
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 976600c6da56c488776c9ee2a5733ae9736e2a75
-Message-Id: <170260307897.9073.1342024765550824813.pr-tracker-bot@kernel.org>
-Date: Fri, 15 Dec 2023 01:17:58 +0000
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+	s=k20201202; t=1702622140;
+	bh=Dn71pnp1Fex8QG4wBzzTBZfQB4hdIO33Nsn74V1lK2I=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=fOePsk9bBNBlA1shPOJMUTrvU7RBq6fRxexVtCBTacxkiDhTiMOfoZEHdCUC7Ati7
+	 j5dSki9HgTHaM81FW66DPJB9K5hLaFvNiTsLRbip71VCTu3ifwEsf1fTvqu+5h9lxW
+	 d3OJiI6+tJk1gkIfsO6GTQr7v+P59e/rQHR5BUeXyknGpsKtOHrdkWDKRNywBA9cwk
+	 TO2pAy8gttM30GwW2ueLNioLr0X3ia5uLs3ACi0EmdZ0npsrc69fS2jW+nrOeAoqIl
+	 AG3mJZNaFjSyuLJ7jmMK6JrKy0+hkNFnf8dViVPT4GqdmmwJzG5+6yNj+cDaqz9G0f
+	 l95v+vmnK5zpA==
+From: Kalle Valo <kvalo@kernel.org>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,  Johannes Berg
+ <johannes@sipsolutions.net>,  Alex Deucher <alexander.deucher@amd.com>,
+  Christian =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>,  Ma Jun
+ <Jun.Ma2@amd.com>,
+  "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>,  linux-wireless
+ <linux-wireless@vger.kernel.org>,  amd-gfx list
+ <amd-gfx@lists.freedesktop.org>,  Ilpo =?utf-8?Q?J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [GIT PULL] mmutable branch between pdx86 amd wbrf branch and
+ wifi / amdgpu due for the v6.8 merge window
+References: <6395b87b-7cb6-4412-b6e5-e6075353fb6d@redhat.com>
+	<87le9w4u6v.fsf@kernel.org>
+	<8bd60010-7534-4c22-9337-c4219946d8d6@amd.com>
+Date: Fri, 15 Dec 2023 08:35:35 +0200
+In-Reply-To: <8bd60010-7534-4c22-9337-c4219946d8d6@amd.com> (Mario
+	Limonciello's message of "Thu, 14 Dec 2023 10:47:01 -0600")
+Message-ID: <87bkasm0qw.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-The pull request you sent on Thu, 14 Dec 2023 17:59:36 +0200:
+Mario Limonciello <mario.limonciello@amd.com> writes:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.7-4
+> On 12/14/2023 10:36, Kalle Valo wrote:
+>
+>> Hans de Goede <hdegoede@redhat.com> writes:
+>> 
+>>> Hi Wifi and AMDGPU maintainers,
+>>>
+>>> Here is a pull-request for the platform-drivers-x86 parts of:
+>>>
+>>> https://lore.kernel.org/platform-driver-x86/20231211100630.2170152-1-Jun.Ma2@amd.com/
+>>>
+>>>  From my pov the pdx86 bits are ready and the
+>>> platform-drivers-x86-amd-wbrf-v6.8-1 tag can be merged by you to merge
+>>> the wifi-subsys resp. the amdgpu driver changes on top.
+>>>
+>>> This only adds kernel internal API, so if in the future the API
+>>> needs work that can be done.
+>>>
+>>> I've not merged this branch into pdx86/for-next yet, since I see
+>>> little use in merging it without any users. I'll merge it once either
+>>> the wifi or amdgpu changes are also merged (and if some blocking
+>>> issues get identified before either are merged I can prepare a new
+>>> pull-request fixing the issues).
+>> I was testing latest wireless-testing with ath11k and noticed this:
+>> [  370.796884] ath11k_pci 0000:06:00.0: WBRF is not supported
+>> I think that's just spam and not really necessary. Could someone
+>> remove
+>> that or change to a debug message, please?
+>> 
+>
+> Do you have dynamic debug turned up perhaps?  It's already supposed to
+> be a dbg message.
+>
+> +	dev_dbg(dev, "WBRF is %s supported\n",
+> +		local->wbrf_supported ? "" : "not");
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/976600c6da56c488776c9ee2a5733ae9736e2a75
+Oh, I should have checked that. I do have it enabled:
 
-Thank you!
+CONFIG_DYNAMIC_DEBUG=y
+CONFIG_DYNAMIC_DEBUG_CORE=y
+
+But that shouldn't enable the debug message unless I specifically enable
+it via debugfs, right? But then I noticed this in net/mac80211/Makefile:
+
+ccflags-y += -DDEBUG
+
+I'm guessing this is the reason why the debug message is always printed?
+
+It looks like wbrf.c has the only dev_dbg() call in mac80211, all others
+use the macros from net/mac80211/debug.h. I think wbrf.c should also use
+one of the macros from debug.h and not dev_dbg().
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
