@@ -1,46 +1,54 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02ECC30641;
-	Fri, 15 Dec 2023 14:11:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0821A358B1;
+	Fri, 15 Dec 2023 15:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="H6hwq92X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A407C433C7;
-	Fri, 15 Dec 2023 14:11:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1702649515;
-	bh=xcqVasPR7/6/BGkmp20d/mwFZY/qYeQV954kXhulne0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H6hwq92XJhZCx8YzkUspQ2BH8/Bmyvmss0bwdDEeI685r5m21J29uMKmzEeKRlHGf
-	 gFtB8lAkg2zQd+t/qN4A5hvSsaF9WE8iyeEfKkXx0TQFMfFJwajt9rs2jMLAA5UQ2Q
-	 ttSYSzrZbXILZ1muKg4Fnpy5jIEyvmZtvtb8oCHY=
-Date: Fri, 15 Dec 2023 15:11:53 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-bluetooth@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, greybus-dev@lists.linaro.org,
-	linux-iio@vger.kernel.org, netdev@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Alex Elder <elder@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
-	Lee Jones <lee@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IRh1Obav"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702654628; x=1734190628;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gggyTvhIQQffYiqOsRc4Wa77hkTIwY09FT5eCjUPRzY=;
+  b=IRh1Obav5aH5lTJWE4dh+NM3s6D5sH46UXUECWzvgE1RDyrfgxLOZbM+
+   X+q42fm8Q4TEyL40IHHuM8NFrkkJj6m8Q/rxCbbMsNlEa5//dvHhqf2HP
+   CSmMtiSZAHqVvp0QeTx7JJgGqnrPEjV5qKQHCezO7Rzxpwkrp9GxZod3N
+   xfl18HwG0hS3bYsMDddJjOD7+7ltM8tTqvnBnSBBTBMKH84zxNuhRysVg
+   8CULVZ5u1xwXhvM5zrc69kGS2x8sjXuuP68yJSgKA0Tnf1Qa31ucd8L1R
+   JGeOs1Sb8v3wPPi1W5Op0kzZ58Ajpw5pV0lI6NBihIlb3//j9W0t95XXG
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="385708007"
+X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
+   d="scan'208";a="385708007"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 07:37:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="809009870"
+X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
+   d="scan'208";a="809009870"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 07:37:05 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rEAFJ-000000069q4-3gRQ;
+	Fri, 15 Dec 2023 17:37:01 +0200
+Date: Fri, 15 Dec 2023 17:37:01 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	platform-driver-x86@vger.kernel.org,
 	Hans de Goede <hdegoede@redhat.com>,
 	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1] treewide, serdev: change receive_buf() return type to
- size_t
-Message-ID: <2023121544-hastiness-unhinge-b8d3@gregkh>
-References: <20231214170146.641783-1-francesco@dolcini.it>
- <ZXxWX-Fw1InID2ax@hovoldconsulting.com>
+	linux-pci@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH RFC v2] platform/x86: p2sb: Allow p2sb_bar() calls during
+ PCI device probe
+Message-ID: <ZXxynbIS8kd3KQuy@smile.fi.intel.com>
+References: <20231212114746.183639-1-shinichiro.kawasaki@wdc.com>
+ <ZXsvkWeJvdkvrf5e@smile.fi.intel.com>
+ <20231215075210.GA15884@wunner.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -49,46 +57,31 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZXxWX-Fw1InID2ax@hovoldconsulting.com>
+In-Reply-To: <20231215075210.GA15884@wunner.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Dec 15, 2023 at 02:36:31PM +0100, Johan Hovold wrote:
-> On Thu, Dec 14, 2023 at 06:01:46PM +0100, Francesco Dolcini wrote:
-> > From: Francesco Dolcini <francesco.dolcini@toradex.com>
+On Fri, Dec 15, 2023 at 08:52:10AM +0100, Lukas Wunner wrote:
+> On Thu, Dec 14, 2023 at 06:38:41PM +0200, Andy Shevchenko wrote:
+> > On Tue, Dec 12, 2023 at 08:47:46PM +0900, Shin'ichiro Kawasaki wrote:
+> > > +/* Cache BAR0 of P2SB device from function 0 ot 7 */
+> > > +#define NR_P2SB_RES_CACHE 8
 > > 
-> > receive_buf() is called from ttyport_receive_buf() that expects values
-> > ">= 0" from serdev_controller_receive_buf(), change its return type from
-> > ssize_t to size_t.
-> > 
-> > Suggested-by: Jiri Slaby <jirislaby@kernel.org>
-> > Link: https://lore.kernel.org/all/087be419-ec6b-47ad-851a-5e1e3ea5cfcc@kernel.org/
-> > Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> > ---
-> >  drivers/gnss/core.c                        |  6 +++---
-> >  drivers/gnss/serial.c                      |  4 ++--
-> >  drivers/gnss/sirf.c                        |  6 +++---
+> > This is fifth or so definition for the same, isn't it a good time to create
+> > a treewide definition in pci.h?
 > 
-> > diff --git a/drivers/gnss/core.c b/drivers/gnss/core.c
-> > index 48f2ee0f78c4..9b8a0605ec76 100644
-> > --- a/drivers/gnss/core.c
-> > +++ b/drivers/gnss/core.c
-> > @@ -317,10 +317,10 @@ EXPORT_SYMBOL_GPL(gnss_deregister_device);
-> >   *
-> >   * Must not be called for a closed device.
-> >   */
-> > -int gnss_insert_raw(struct gnss_device *gdev, const unsigned char *buf,
-> > -				size_t count)
-> > +size_t gnss_insert_raw(struct gnss_device *gdev, const unsigned char *buf,
-> > +		       size_t count)
-> >  {
-> > -	int ret;
-> > +	size_t ret;
-> >  
-> >  	ret = kfifo_in(&gdev->read_fifo, buf, count);
-> >  
-> 
-> Why are you changing this function? This is part of the GNSS interface
-> and has nothing to do with the rest of this patch.
-> 
-> Greg, please drop this one again until this has been resolved.
+> This isn't something defined in the PCI spec but rather an x86-specific
+> constant, so should preferrably live somewhere in arch/x86/include/asm/.
 
-Now dropped, thanks.
+I'm not sure I am following both paragraphs.
+
+> If you have a "maximum number of PCI functions per device" constant in mind
+> then include/uapi/linux/pci.h might be a good fit.
+
+This is indeed what I have had in mind, but why is this x86 specific?
+I didn't get...
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
