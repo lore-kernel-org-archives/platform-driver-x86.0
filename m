@@ -1,81 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066411852;
-	Sat, 16 Dec 2023 01:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267691365;
+	Sat, 16 Dec 2023 01:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IHSwmXTB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702689427; x=1734225427;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mkZmks8ROVSmnV6+EMeQT+TwjHNSjsWx9+cU31FtD2k=;
-  b=IHSwmXTBVCJsXa3DENN+jy3QTJN8fLZOHxQ/B+v5nEdraowSvaMYBPHT
-   WWq73QnLnjnqcTQvI8G9KO8JO2/5llaegoMRY9IE7nqpW2aBNWhwQgCPk
-   6hUISqbAMR9dkdC4tq6zAS2twDEqJsLp3dxSvycgGNrJhf90RrOJodxvq
-   un78zSi1zRlJEninVrt6Pub3Q6oHpc1OIM354sZIvH6k7OLIfKLII+87A
-   b44BxeG8eVi/dHf8m+OUWBiV/kOR9Jqyr37wem4aX/bAz8jDTyY4E5OG1
-   yOaw73xqr64sReC2INuFmD2Z2OstJprZn4+twUTzpZA3qtqAyg8GvdjNG
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="395086355"
-X-IronPort-AV: E=Sophos;i="6.04,280,1695711600"; 
-   d="scan'208";a="395086355"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 17:17:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="809164137"
-X-IronPort-AV: E=Sophos;i="6.04,280,1695711600"; 
-   d="scan'208";a="809164137"
-Received: from simmons1-mobl5.amr.corp.intel.com (HELO rjingar-desk5.intel.com) ([10.213.162.133])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 17:17:05 -0800
-From: rjingar <rajvi.jingar@linux.intel.com>
-To: irenic.rajneesh@gmail.com,
-	david.e.box@intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	markgross@kernel.org,
-	platform-driver-x86@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="CLyV8jq0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1702691772; x=1703296572; i=w_armin@gmx.de;
+	bh=XAyO0T7Lw8SciW7DMIbTLRQ9EUno3/ZKTyiy8CBdVO8=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=CLyV8jq07QOd25neNjzA2zJ0+GdxFM4TU2IvdZgF0oKRo2cfJAA5r/vc0rvCl1sQ
+	 qeMkXjvAvqKy+wwNz9ZE7Q4pEtrl1erNIWRs/0ap3yHimuFu5JDEq1ntg8HVifL7J
+	 aPTb7tq8Jd0oSbkosS5VX3xShLwUvDtc0WVr4+H+mLSirTHDeaApjfFNrTUz11iB2
+	 7Zz2BU7CbZY000xh04yz88AaVCdBJ5fBBemVxOnTcuFKU1PGUwqeT0RzpUd3ZJ/e3
+	 KhqhuiVqqoIEjA3gSYlJ1PIn9uEpni6I1ye1Y/EamCQLpEdTyJhtu26nTsquL2Agv
+	 VC0ZAmK1qCDCShbXtw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1N2mBQ-1rK4Zz3n9I-0138lv; Sat, 16 Dec 2023 02:56:11 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: rajvi.jingar@linux.intel.com
-Subject: [PATCH 2/2] platform/x86/intel/pmc: Fix in pmc_core_ssram_get_pmc()
-Date: Fri, 15 Dec 2023 17:17:02 -0800
-Message-Id: <20231216011702.1976408-1-rajvi.jingar@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH 0/6] platform/x86: wmi: ACPI improvements
+Date: Sat, 16 Dec 2023 02:55:55 +0100
+Message-Id: <20231216015601.395118-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:3Acv3WgCtcW+bWFyTlAbt7blGYzzEQ2MBOtnhTxKfeM2RMNvJ5g
+ wQ0w4oQik2oCgG3AYKsX4ReWeYFNwknSI4t8ZUTmb3q1FJuw9cFN9G1YFJW6DuBCp4paC4u
+ XFeOo1crD1mILAW6YGkL+NkmjOTGb0Uf4nyPH7v1npvtAEGOaNWUB3yFNs6H/mC571dJiOe
+ 5E2ljLQH+rqLrhevdB0Bg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:8wIU+Wd1RkI=;QcRKX5WB5wOxz+cwJpgc8ZqJzNz
+ pFi7deAA2Y1ORme0eQyRy2I5HX3TrFc0sI9C7jkfPbs8BDwutL0sAdmLl20TGGbCOVeY3mLgp
+ mh1jn2k+gEPp6A3knB7hRv7Wth/77IjpY1PwgOc6EJeHPpjkesxsaC2JAXRuSTlQWFRKaQbpk
+ sp6dJiW9cVQmWSoQN47+E3qelSpBowV6TkMMDHdJ8FfT59zRGokUOwggbqMpkxLFWAICtDmfI
+ fxpQzL63wYjvjCCxPA7JzC5r7kWuLbswH7Un66ELumLPHbUTwolTqKOcmNlnrryYl/fWfkL3I
+ ueuf+7ZG7AgyNmWgohmyLEpqFgk/nZB/dc2od2Z5k0tfmI+zzRYtp//zEBvJxQqZaz0r8gZ0a
+ si9dKfSSmMRTNvhCI0Ot2YaaUlEyV0fWj3p0cFcIY93tPlcMI6F+zpW/HbY3Hj3UCug9aTKGd
+ AyfTJt2VlkyU7R6CXoDDX7LkdpasRNAbTm8azcO4pbDWMGwz10MEPPRz/GrXi3iORVsH5LQCT
+ 4j8LZRIA356lx1vPJ/mIag1BXEDJObeFTskX6KiWTSYdRCsbgpHBOWrCyP/oiUIWaLIsf1C4P
+ nYpeY/Fs28l9D7DQ+RIHqcY/YBQdm+8caAH2bEtCOV5uybMl991aWTqZ9O5U0sJvEDq95D5/4
+ n575U0R49o7ZZZ2s7Fy0L0OfTpfJvY6Zc/dTuw0285HTse8rzwHGy1RJnkFnKC2zmIORlp4gl
+ Gh0GAxqa3v6n6fkp9rud6dFM4IpC7KN2GAdLsbUWjAgIGx3OBxuL3Li4pGFWNlfFc3pwTl3cW
+ iSpGMCOQ4kqg2twZbE+1M31YZighQbwyhG/dfiIrvvHeWymIhvZB4iVZnc7citq6hn9HvjdCh
+ 7paNLWgOvxsOR54CEEwwvgOuFAAtdwp6bOHtuf6yN7MtlgHiPB5Wwl46D66XJbGy3XY/O6Noq
+ E8VUwIp4GnFwAkXd13E5TNKQ4IQ=
 
-From: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+This patch series improves the ACPI handling inside the ACPI WMI driver.
+The first patch removes an unused variable, while the second patch
+changes the order in which the ACPI handlers are removed on shutdown.
+The third patch simplifies the error handling during probe by using
+devres to manage devie resources, while the next two patches decouple
+the ACPI notify handler from the wmi_block_list. The last patch
+simplifies yet another ACPI-related function.
 
-Passing PMC_IDX_MAIN in pmc_core_pmc_add() adds only primary pmc to pmcdev.
-Use pmc_idx instead to add all available pmcs.
+All patches have been tested on a Dell Inspiron 3505 and appear to work.
 
-Fixes: a01486dc4bb1 ("platform/x86/intel/pmc: Cleanup SSRAM discovery")
-Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/core_ssram.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Armin Wolf (6):
+  platform/x86: wmi: Remove unused variable in address space handler
+  platform/x86: wmi: Remove ACPI handlers after WMI devices
+  platform/x86: wmi: Use devres for resource handling
+  platform/x86: wmi: Create WMI bus device first
+  platform/x86: wmi: Decouple ACPI notify handler from wmi_block_list
+  platform/x86: wmi: Simplify get_subobj_info()
 
-diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
-index 3501c7bd6b33..55e54207987c 100644
---- a/drivers/platform/x86/intel/pmc/core_ssram.c
-+++ b/drivers/platform/x86/intel/pmc/core_ssram.c
-@@ -287,7 +287,7 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pmc_idx, u32 offset)
- 	if (!map)
- 		return -ENODEV;
- 
--	return pmc_core_pmc_add(pmcdev, pwrm_base, map, PMC_IDX_MAIN);
-+	return pmc_core_pmc_add(pmcdev, pwrm_base, map, pmc_idx);
- }
- 
- int pmc_core_ssram_init(struct pmc_dev *pmcdev)
--- 
-2.34.1
+ drivers/platform/x86/wmi.c | 143 ++++++++++++++++++-------------------
+ 1 file changed, 71 insertions(+), 72 deletions(-)
+
+=2D-
+2.39.2
 
