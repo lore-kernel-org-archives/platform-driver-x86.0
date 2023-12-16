@@ -1,95 +1,96 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437B63FE55;
-	Fri, 15 Dec 2023 17:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
-Received: from francesco-nb.int.toradex.com (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id ADB5C20640;
-	Fri, 15 Dec 2023 18:07:37 +0100 (CET)
-Date: Fri, 15 Dec 2023 18:07:33 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Johan Hovold <johan@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-bluetooth@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, greybus-dev@lists.linaro.org,
-	linux-iio@vger.kernel.org, netdev@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Alex Elder <elder@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
-	Lee Jones <lee@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1] treewide, serdev: change receive_buf() return type to
- size_t
-Message-ID: <ZXyH1Zv3Pxd6S3ag@francesco-nb.int.toradex.com>
-References: <20231214170146.641783-1-francesco@dolcini.it>
- <ZXxWX-Fw1InID2ax@hovoldconsulting.com>
- <ZXxa7yzKzG6048vw@francesco-nb.int.toradex.com>
- <ZXx8bCVyxJ9Ddvqm@hovoldconsulting.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69A517E8;
+	Sat, 16 Dec 2023 00:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kGOwgGT4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702687912; x=1734223912;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FrdnvABXLWZBgVFBeb7jdyh66RlSMWph5cvL0Ajf7EI=;
+  b=kGOwgGT4NVyfxj0Dy/K1VxzSUyB2vGWurvA3jPOAHP687v3iJ392Wozm
+   QtWfAPgzqNqXT3l04kCn5XWvTIJXMWRKqhpWZ7IHRlUnipbE4H9r6B70n
+   wAsujWscNy/uueYzVLtqBoh9P+1Tsmp3Z6ibH4G2cFljKtfmlQc9fxLqR
+   8eQ1NXczlZJ92EWuGlHIWcBjNeao8oY5HtISsMXL/hph5GVpihC80HEBE
+   8w+F7SdE6nwuCKtcrdz2CEapJXlkprdlbc5R55igtwYWF8rDPKQh1pxvl
+   hU25nLOaorNGfsQZ5A268d0uGA8RBFO7ISKeCkjet2bUiXV7lpE/Y8txE
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="2171699"
+X-IronPort-AV: E=Sophos;i="6.04,280,1695711600"; 
+   d="scan'208";a="2171699"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 16:51:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="898310133"
+X-IronPort-AV: E=Sophos;i="6.04,280,1695711600"; 
+   d="scan'208";a="898310133"
+Received: from simmons1-mobl5.amr.corp.intel.com (HELO rjingar-desk5.intel.com) ([10.213.162.133])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 16:51:50 -0800
+From: rjingar <rajvi.jingar@linux.intel.com>
+To: linux-kernel@vger.kernel.org,
+	david.e.box@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org
+Cc: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+Subject: [PATCH] platform/x86/intel/vsec: Add support for Lunar Lake M
+Date: Fri, 15 Dec 2023 16:51:46 -0800
+Message-Id: <20231216005146.1735455-1-rajvi.jingar@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZXx8bCVyxJ9Ddvqm@hovoldconsulting.com>
+Content-Transfer-Encoding: 8bit
 
-Hello Johan, Greg
+From: Rajvi Jingar <rajvi.jingar@linux.intel.com>
 
-On Fri, Dec 15, 2023 at 05:18:52PM +0100, Johan Hovold wrote:
-> On Fri, Dec 15, 2023 at 02:55:59PM +0100, Francesco Dolcini wrote:
-> > To me the change is correct, with that said probably this should have
-> > been explicitly mentioned in the commit message or a separate
-> > preparation patch.
-> 
-> It's a separate change and should not be hidden away in a tree-wide
-> change that goes through a different maintainer.
-> 
-> Please drop this change from this patch and resubmit it separately to me
-> if you want and I'll review when I have the time.
+Add Lunar Lake M PMT telemetry support.
 
-Fine, I agree.
+Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+---
+ drivers/platform/x86/intel/vsec.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-I see those options (let me know if you see other options I have not
-mentioned):
-
-1. I add this change (taking into account also intel ice) as a separate
-   patch in this series and you may just ack it and Greg could merge
-   together with the serdev one.
-2. I prepare an independent patch for the GNSS change and only once this
-   is merged I'll send a rebased v2 of this one.
-3. I update this patch without this GNSS API change, that mean I will
-   have to cast away the signed type from a few GNSS drivers.
-
-1 is my preferred option, 2 is fine, but it seems a little bit of overdoing,
-3 I would avoid, we are doing this cleanup to be a little bit more
-strongly typed and to prevent the kind of bugs that is the original trigger
-for this patch.
-
-What would you Greg and Johan prefer?
-
-
-> And when doing tree-wide changes, please try to follow the style of the
-> driver you are changing (e.g. do not introduce inconsistencies by
-> changing to open parenthesis alignment of continuation lines in code
-> that do not use it).
-
-ack, sorry about that, looking back at the archive is seems a recent
-pain point, also Jiri fell in this trap.
-
-Francesco
+diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+index c1f9e4471b28..3567dba57781 100644
+--- a/drivers/platform/x86/intel/vsec.c
++++ b/drivers/platform/x86/intel/vsec.c
+@@ -421,6 +421,11 @@ static const struct intel_vsec_platform_info tgl_info = {
+ 	.quirks = VSEC_QUIRK_TABLE_SHIFT | VSEC_QUIRK_EARLY_HW,
+ };
+ 
++/* LNL info */
++static const struct intel_vsec_platform_info lnl_info = {
++	.caps = VSEC_CAP_TELEMETRY | VSEC_CAP_WATCHER,
++};
++
+ #define PCI_DEVICE_ID_INTEL_VSEC_ADL		0x467d
+ #define PCI_DEVICE_ID_INTEL_VSEC_DG1		0x490e
+ #define PCI_DEVICE_ID_INTEL_VSEC_MTL_M		0x7d0d
+@@ -428,6 +433,7 @@ static const struct intel_vsec_platform_info tgl_info = {
+ #define PCI_DEVICE_ID_INTEL_VSEC_OOBMSM		0x09a7
+ #define PCI_DEVICE_ID_INTEL_VSEC_RPL		0xa77d
+ #define PCI_DEVICE_ID_INTEL_VSEC_TGL		0x9a0d
++#define PCI_DEVICE_ID_INTEL_VSEC_LNL_M		0x647d
+ static const struct pci_device_id intel_vsec_pci_ids[] = {
+ 	{ PCI_DEVICE_DATA(INTEL, VSEC_ADL, &tgl_info) },
+ 	{ PCI_DEVICE_DATA(INTEL, VSEC_DG1, &dg1_info) },
+@@ -436,6 +442,7 @@ static const struct pci_device_id intel_vsec_pci_ids[] = {
+ 	{ PCI_DEVICE_DATA(INTEL, VSEC_OOBMSM, &oobmsm_info) },
+ 	{ PCI_DEVICE_DATA(INTEL, VSEC_RPL, &tgl_info) },
+ 	{ PCI_DEVICE_DATA(INTEL, VSEC_TGL, &tgl_info) },
++	{ PCI_DEVICE_DATA(INTEL, VSEC_LNL_M, &lnl_info) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, intel_vsec_pci_ids);
+-- 
+2.34.1
 
