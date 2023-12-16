@@ -1,46 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69A517E8;
-	Sat, 16 Dec 2023 00:51:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7819A10FE;
+	Sat, 16 Dec 2023 01:16:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kGOwgGT4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P1+t8tUS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702687912; x=1734223912;
+  t=1702689415; x=1734225415;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=FrdnvABXLWZBgVFBeb7jdyh66RlSMWph5cvL0Ajf7EI=;
-  b=kGOwgGT4NVyfxj0Dy/K1VxzSUyB2vGWurvA3jPOAHP687v3iJ392Wozm
-   QtWfAPgzqNqXT3l04kCn5XWvTIJXMWRKqhpWZ7IHRlUnipbE4H9r6B70n
-   wAsujWscNy/uueYzVLtqBoh9P+1Tsmp3Z6ibH4G2cFljKtfmlQc9fxLqR
-   8eQ1NXczlZJ92EWuGlHIWcBjNeao8oY5HtISsMXL/hph5GVpihC80HEBE
-   8w+F7SdE6nwuCKtcrdz2CEapJXlkprdlbc5R55igtwYWF8rDPKQh1pxvl
-   hU25nLOaorNGfsQZ5A268d0uGA8RBFO7ISKeCkjet2bUiXV7lpE/Y8txE
+  bh=Uu/DuVeOYQ8cy5ChNWdZWy4tzkcdqBmvZKljPoGxouA=;
+  b=P1+t8tUSa6V8ChZpa8Peuf3IOdntlWwfnbbuiKlqmCPc2pchZphsCGIe
+   NyV/s/gIzGPbgZ47WxogjnGcolzkqviyG2hYztwYmIzZdwaf+Pmb4cyJg
+   HOgpxGMNUCA7ejcPOlLS+LBENpZ5wZjUAUVzlSHQPhMSnitz714olI68J
+   2v2/G42E1SvEboTiLak5UBYpubz1cq976waHB5qkjWcnRjFrSvfsuOWle
+   9X271oP9N60LPU3VWw0e/o6qnCl2dIEl2uKIAb87sTxb/sUrUvVexI2gI
+   KIXwAE1VEvQiSFTX4lJD1lyBmx45eEf9PYcquNyZ3ZaU0VkvAgB/KFUcP
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="2171699"
+X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="392520044"
 X-IronPort-AV: E=Sophos;i="6.04,280,1695711600"; 
-   d="scan'208";a="2171699"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 16:51:51 -0800
+   d="scan'208";a="392520044"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 17:16:54 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="898310133"
+X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="948139340"
 X-IronPort-AV: E=Sophos;i="6.04,280,1695711600"; 
-   d="scan'208";a="898310133"
+   d="scan'208";a="948139340"
 Received: from simmons1-mobl5.amr.corp.intel.com (HELO rjingar-desk5.intel.com) ([10.213.162.133])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 16:51:50 -0800
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 17:16:53 -0800
 From: rjingar <rajvi.jingar@linux.intel.com>
-To: linux-kernel@vger.kernel.org,
-	david.e.box@linux.intel.com,
+To: irenic.rajneesh@gmail.com,
+	david.e.box@intel.com,
 	hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org
-Cc: Rajvi Jingar <rajvi.jingar@linux.intel.com>
-Subject: [PATCH] platform/x86/intel/vsec: Add support for Lunar Lake M
-Date: Fri, 15 Dec 2023 16:51:46 -0800
-Message-Id: <20231216005146.1735455-1-rajvi.jingar@linux.intel.com>
+	markgross@kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: rajvi.jingar@linux.intel.com
+Subject: [PATCH 1/2] platform/x86/intel/pmc: Fix hang in pmc_core_send_ltr_ignore()
+Date: Fri, 15 Dec 2023 17:16:50 -0800
+Message-Id: <20231216011650.1973941-1-rajvi.jingar@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -52,45 +54,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Rajvi Jingar <rajvi.jingar@linux.intel.com>
 
-Add Lunar Lake M PMT telemetry support.
+For input value 0, PMC stays unassigned which causes crash while trying
+to access PMC for register read/write. Include LTR index 0 in pmc_index
+and ltr_index calculation.
 
+Fixes: 2bcef4529222 ("platform/x86:intel/pmc: Enable debugfs multiple PMC support")
 Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
 ---
- drivers/platform/x86/intel/vsec.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/platform/x86/intel/pmc/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index c1f9e4471b28..3567dba57781 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -421,6 +421,11 @@ static const struct intel_vsec_platform_info tgl_info = {
- 	.quirks = VSEC_QUIRK_TABLE_SHIFT | VSEC_QUIRK_EARLY_HW,
- };
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 983e3a8f4910..55eb6a4683fb 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -474,7 +474,7 @@ int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
+ 	 * is based on the contiguous indexes from ltr_show output.
+ 	 * pmc index and ltr index needs to be calculated from it.
+ 	 */
+-	for (pmc_index = 0; pmc_index < ARRAY_SIZE(pmcdev->pmcs) && ltr_index > 0; pmc_index++) {
++	for (pmc_index = 0; pmc_index < ARRAY_SIZE(pmcdev->pmcs) && ltr_index >= 0; pmc_index++) {
+ 		pmc = pmcdev->pmcs[pmc_index];
  
-+/* LNL info */
-+static const struct intel_vsec_platform_info lnl_info = {
-+	.caps = VSEC_CAP_TELEMETRY | VSEC_CAP_WATCHER,
-+};
-+
- #define PCI_DEVICE_ID_INTEL_VSEC_ADL		0x467d
- #define PCI_DEVICE_ID_INTEL_VSEC_DG1		0x490e
- #define PCI_DEVICE_ID_INTEL_VSEC_MTL_M		0x7d0d
-@@ -428,6 +433,7 @@ static const struct intel_vsec_platform_info tgl_info = {
- #define PCI_DEVICE_ID_INTEL_VSEC_OOBMSM		0x09a7
- #define PCI_DEVICE_ID_INTEL_VSEC_RPL		0xa77d
- #define PCI_DEVICE_ID_INTEL_VSEC_TGL		0x9a0d
-+#define PCI_DEVICE_ID_INTEL_VSEC_LNL_M		0x647d
- static const struct pci_device_id intel_vsec_pci_ids[] = {
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_ADL, &tgl_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_DG1, &dg1_info) },
-@@ -436,6 +442,7 @@ static const struct pci_device_id intel_vsec_pci_ids[] = {
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_OOBMSM, &oobmsm_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_RPL, &tgl_info) },
- 	{ PCI_DEVICE_DATA(INTEL, VSEC_TGL, &tgl_info) },
-+	{ PCI_DEVICE_DATA(INTEL, VSEC_LNL_M, &lnl_info) },
- 	{ }
- };
- MODULE_DEVICE_TABLE(pci, intel_vsec_pci_ids);
+ 		if (!pmc)
 -- 
 2.34.1
 
