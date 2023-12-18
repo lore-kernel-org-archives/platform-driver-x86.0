@@ -1,114 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CA87E794
-	for <platform-driver-x86@vger.kernel.org>; Mon, 18 Dec 2023 12:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C92B3786B;
+	Mon, 18 Dec 2023 12:44:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bOlKeZzv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702903346; x=1734439346;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=A9pqCDwAFUv6hkL9Id+eoAK5NSe4cHb7j0QosISshwM=;
-  b=bOlKeZzvhFhb1UDCGejZw0luWG1i64aHmpKNLdtm205zymcOwtDJRCNM
-   CzPKy7OS/Ym2MVhaOpuesetI7Bmx5onSHCStBVH4cbutoD4vOSPOtipEw
-   m9B0Is1DKzbC8DytVW7zBvLe57qqf37SH8jJen266HyO8UeNK8pBe/IEO
-   Jzs666TkA78kRf1yp6Meet38Ht6QzGQ/lIjbuF5TCatCVqa0bM7Ealh4X
-   6+cbzHRyrnD1RTEDiG1vMe6b+osyxVkeEJ8aYgFx8Ezjkc/fFaprRchbB
-   Jhr7sX670hnHaXHLBc8dLQF+F2fkobWnqwnwM2LBkmoUS7VsXql1I8RaP
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10927"; a="2591686"
-X-IronPort-AV: E=Sophos;i="6.04,285,1695711600"; 
-   d="scan'208";a="2591686"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 04:42:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10927"; a="809821092"
-X-IronPort-AV: E=Sophos;i="6.04,285,1695711600"; 
-   d="scan'208";a="809821092"
-Received: from gmarin-mobl1.ger.corp.intel.com ([10.252.34.78])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 04:42:24 -0800
-Date: Mon, 18 Dec 2023 14:42:21 +0200 (EET)
-From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>
-cc: =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <thomas@t-8ch.de>, 
-    Mario Limonciello <mario.limonciello@amd.com>, 
-    "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Goswami Sanket <Sanket.Goswami@amd.com>
-Subject: Re: [PATCH 0/4] Add a workaround for Framework 13 spurious IRQ1
-In-Reply-To: <53d6933e-e5e8-4db1-b2e3-b931dc8bf0bd@redhat.com>
-Message-ID: <0d3fb62-b5e8-228a-dfa9-55ae63089db@linux.intel.com>
-References: <20231212045006.97581-1-mario.limonciello@amd.com> <85397fdb-b093-4c03-8613-3815352f2b2c@t-8ch.de> <53d6933e-e5e8-4db1-b2e3-b931dc8bf0bd@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GpMVjOg+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86D19C433C9;
+	Mon, 18 Dec 2023 12:44:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702903476;
+	bh=VaGdVRt6EH+pJSceuZvmm0LcghXBIcZ+HhWT582K8jk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GpMVjOg+HZcothJWThnBrFfSVZZtSJ/t9A9d6we82heYnImaEmKNnEFiuupTidS48
+	 xxlDp1kPXl3waWknwmoQ5YGdOf6h68x74ZXu/1fkAs28NnjUsFMIXPrv5biKHIpJ1H
+	 YPDsGDfAKfm79DuiQvslYzu6gySmHNxkdMaVp5Twzy2RUM9KgA0E4nKhU/psqkfhih
+	 NovCGK5/Op8M6E/Ccfa2lPN2/atEYiPvxATAkkgE+mkfA7GiR5kn6uPTXHBqOSjVn1
+	 oR/blUSTgRkdWIGVsX1tzBsT5ak6ZO9bs6t64LOGi6PDULModDq0dmujSzGQ4PlPjq
+	 jRvOjWw+/fEgg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Arnold Gozum <arngozum@gmail.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	acelan.kao@canonical.com,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 09/18] platform/x86: intel-vbtn: Fix missing tablet-mode-switch events
+Date: Mon, 18 Dec 2023 07:43:43 -0500
+Message-ID: <20231218124415.1379060-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231218124415.1379060-1-sashal@kernel.org>
+References: <20231218124415.1379060-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-1093409967-1702903152=:2348"
-Content-ID: <4540913c-8967-3c5c-629e-124bc09c2a69@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.7
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Hans de Goede <hdegoede@redhat.com>
 
---8323329-1093409967-1702903152=:2348
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <f1d8ccf2-61a7-f9b7-8a8-6bcf2638e6b@linux.intel.com>
+[ Upstream commit 14c200b7ca46b9a9f4af9e81d258a58274320b6f ]
 
-On Mon, 18 Dec 2023, Hans de Goede wrote:
-> On 12/12/23 21:19, Thomas Weiﬂschuh wrote:
-> > On 2023-12-11 22:50:02-0600, Mario Limonciello wrote:
-> >> The 13" Framework laptop EC emits a spurious keyboard interrupt on every
-> >> resume from hardware sleep.  When a user closes the lid on an already
-> >> suspended system this causes the system to wake up.
-> >>
-> >> This series adjusts the previous Cezanne quirk (which has a much different
-> >> root cause) to be able to apply to other systems too. The Framework 13"
-> >> system is added to the list it will apply to.
-> >>
-> >> Mario Limonciello (4):
-> >>   platform/x86/amd/pmc: Move platform defines to header
-> >>   platform/x86/amd/pmc: Only run IRQ1 firmware version check on Cezanne
-> >>   platform/x86/amd/pmc: Move keyboard wakeup disablement detection to
-> >>     pmc-quirks
-> >>   platform/x86/amd/pmc: Disable keyboard wakeup on AMD Framework 13
-> >>
-> >>  drivers/platform/x86/amd/pmc/pmc-quirks.c | 20 ++++++++++++++
-> >>  drivers/platform/x86/amd/pmc/pmc.c        | 33 +++++++++--------------
-> >>  drivers/platform/x86/amd/pmc/pmc.h        | 12 +++++++++
-> >>  3 files changed, 45 insertions(+), 20 deletions(-)
-> > 
-> > For the full series:
-> > 
-> > Reviewed-by: Thomas Weiﬂschuh <linux@weissschuh.net>
-> > Tested-by: Thomas Weiﬂschuh <linux@weissschuh.net> # on AMD Framework 13
-> > 
-> > The device now only wakes up when opening the lid.
-> 
-> Thomas, thank you for the review and testing.
-> 
-> The series looks good to me too:
-> 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> Ilpo, do you plan on sending out one more fixes pull-req for 6.7
-> and if yes, can you add this series to that; or shall I merge
-> this into for-next so that it gets included in 6.8-rc1 ?
+2 issues have been reported on the Dell Inspiron 7352:
 
-I was thinking not to but that was because I for some reason had missed 
-this series in the pending queue over the entire last week.
+1. Sometimes the tablet-mode-switch stops reporting tablet-mode
+   change events.
 
-So I'll make make more pr taking this series, the thinkpad fan thing and 
-1/2 intel pmc fix, 2/2 intel pmc is for material that is in next only. 
-Hopefully LKP cooperates slightly better this week than it has been over
-the last month :-).
+   Add a "VBDL" call to notify_handler() to work around this.
 
+2. Sometimes the tablet-mode is incorrect after suspend/resume
 
+   Add a detect_tablet_mode() to resume() to fix this.
+
+Reported-by: Arnold Gozum <arngozum@gmail.com>
+Closes: https://lore.kernel.org/platform-driver-x86/87271a74-c831-4eec-b7a4-1371d0e42471@gmail.com/
+Tested-by: Arnold Gozum <arngozum@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Link: https://lore.kernel.org/r/20231204150601.46976-1-hdegoede@redhat.com
+Reviewed-by: Ilpo J√§rvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Ilpo J√§rvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/intel/vbtn.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
+index 6fa1735ad7a49..210b0a81b7ecb 100644
+--- a/drivers/platform/x86/intel/vbtn.c
++++ b/drivers/platform/x86/intel/vbtn.c
+@@ -73,10 +73,10 @@ struct intel_vbtn_priv {
+ 	bool wakeup_mode;
+ };
+ 
+-static void detect_tablet_mode(struct platform_device *device)
++static void detect_tablet_mode(struct device *dev)
+ {
+-	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+-	acpi_handle handle = ACPI_HANDLE(&device->dev);
++	struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
++	acpi_handle handle = ACPI_HANDLE(dev);
+ 	unsigned long long vgbs;
+ 	acpi_status status;
+ 	int m;
+@@ -89,6 +89,8 @@ static void detect_tablet_mode(struct platform_device *device)
+ 	input_report_switch(priv->switches_dev, SW_TABLET_MODE, m);
+ 	m = (vgbs & VGBS_DOCK_MODE_FLAG) ? 1 : 0;
+ 	input_report_switch(priv->switches_dev, SW_DOCK, m);
++
++	input_sync(priv->switches_dev);
+ }
+ 
+ /*
+@@ -134,7 +136,7 @@ static int intel_vbtn_input_setup(struct platform_device *device)
+ 	priv->switches_dev->id.bustype = BUS_HOST;
+ 
+ 	if (priv->has_switches) {
+-		detect_tablet_mode(device);
++		detect_tablet_mode(&device->dev);
+ 
+ 		ret = input_register_device(priv->switches_dev);
+ 		if (ret)
+@@ -198,6 +200,9 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	autorelease = val && (!ke_rel || ke_rel->type == KE_IGNORE);
+ 
+ 	sparse_keymap_report_event(input_dev, event, val, autorelease);
++
++	/* Some devices need this to report further events */
++	acpi_evaluate_object(handle, "VBDL", NULL, NULL);
+ }
+ 
+ /*
+@@ -352,7 +357,13 @@ static void intel_vbtn_pm_complete(struct device *dev)
+ 
+ static int intel_vbtn_pm_resume(struct device *dev)
+ {
++	struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
++
+ 	intel_vbtn_pm_complete(dev);
++
++	if (priv->has_switches)
++		detect_tablet_mode(dev);
++
+ 	return 0;
+ }
+ 
 -- 
- i.
---8323329-1093409967-1702903152=:2348--
+2.43.0
+
