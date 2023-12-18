@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA357D608;
-	Mon, 18 Dec 2023 12:45:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FD780E00;
+	Mon, 18 Dec 2023 12:46:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cv7Q5/Yo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29D8FC433C9;
-	Mon, 18 Dec 2023 12:45:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UyEnxV/b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C7F2C433C9;
+	Mon, 18 Dec 2023 12:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702903528;
-	bh=32O12H46O+p7HOk1r1T8hU27L4BiaRZKm+mPel7JsB8=;
+	s=k20201202; t=1702903568;
+	bh=j34T0lfPhIM3gPdvaLQXV1yN93kRwsMlME4cTd4eg+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cv7Q5/YoNjNwXImSkrJm/x4QaYNNoltRDyf1AvXPp2B+jSdKdIYvlOjYcbXgxb4zi
-	 3C7JY6XLsRbMqt9V88s55zT9SeK+7eBtpMMCeN00NtAcAIJ9Jz69ctEXQyRCgc3aFt
-	 Ov637XFmlqHFi+87W/EZSNmMoDsZ6Iz5e41j2xLMSp4xyxQ0abnF/vpI/bFIKgbLb2
-	 bOtLT4wbs77JZsxEhpMZGfi2bBszD19I+0yZ35+KTt0CE78Ng9V+71lK96ar6nIsww
-	 ijgDD1NUz0UND0XsknM14RSbeSTqUNIRQ5n6BUbLzyQYYjL9kVKNp64yYyyZnF9ubY
-	 XWalhL4067lbw==
+	b=UyEnxV/bLMcrmZzUq0/yw+u14zUxBQ4ZLb3jerPbfWFHY6Ne12qPzVF61+7Fwq1xm
+	 2iUpJxUjUg2woZk8XRKagNFa+JLtbt3gSqBvcUGhUmH+cn2bQ/+NrFSmIJs0vXZODM
+	 RZi+C0KhqfNa9wXba1t50fjhwzWkPFCicfr6aPAdgss6dGTi5ifdmdMnHQW1rXy22C
+	 tuwJ9fnKMaVdYsgFeKmYbDdUZWKbg4HA0mOAsauHEk7TvzcReaxNRQ1aPQSKwC0A1t
+	 gElRmp945GwWLFcYXSSID7hYsxh/V2MgQ5WAlOFBf0GOwalFSBmM8jDq8kAnaBvGa4
+	 02a3OhL+3InxQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -27,12 +27,12 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
 	acelan.kao@canonical.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 07/15] platform/x86: intel-vbtn: Fix missing tablet-mode-switch events
-Date: Mon, 18 Dec 2023 07:44:54 -0500
-Message-ID: <20231218124513.1380056-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 05/13] platform/x86: intel-vbtn: Fix missing tablet-mode-switch events
+Date: Mon, 18 Dec 2023 07:45:38 -0500
+Message-ID: <20231218124557.1380724-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231218124513.1380056-1-sashal@kernel.org>
-References: <20231218124513.1380056-1-sashal@kernel.org>
+In-Reply-To: <20231218124557.1380724-1-sashal@kernel.org>
+References: <20231218124557.1380724-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -42,7 +42,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.68
+X-stable-base: Linux 5.15.143
 Content-Transfer-Encoding: 8bit
 
 From: Hans de Goede <hdegoede@redhat.com>
@@ -74,7 +74,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 15 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
-index c5e4e35c8d204..8e2b07ed2ce94 100644
+index 15f013af9e623..f5e020840d947 100644
 --- a/drivers/platform/x86/intel/vbtn.c
 +++ b/drivers/platform/x86/intel/vbtn.c
 @@ -73,10 +73,10 @@ struct intel_vbtn_priv {
