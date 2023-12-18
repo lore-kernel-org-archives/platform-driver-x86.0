@@ -1,167 +1,88 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5827348C;
-	Mon, 18 Dec 2023 19:55:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF714239A;
+	Mon, 18 Dec 2023 20:19:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="GBpWaHJ+"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="t9D//caF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1702929342; x=1703534142; i=w_armin@gmx.de;
-	bh=vd+n3ykeVoDXsg6HoG9Wxn2uSy55W8TbILg2TIyowI0=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=GBpWaHJ+bH5EaIkMJV0ZUU/NADA8IaXiCKIZM7TyssG0Hi220AiK757e0C6EaR6K
-	 vgpP4HFYOREhSGXAtM+Ir/8xKL4csXVuoAbHrqcNOAn+b/ep13PyhG993Bd4YcmdY
-	 mkh8s1LWQVXR+1e5+9Way8hebsWfPngAhjyFEUWaUfArCYIvGvt0em2vsKTEuPBZk
-	 5D3Az1oC0zkYt0wy6RYjWHEY5J31MGIaCnvMxjkXiN2cdY/N2uvcaNdhD/Co/SdgH
-	 5jTvltWTD30nbjWYVxUbrHWLN+wRyYGvnMaZLnfBpN9roOkYxbmaZ4uDpt7YfEx5+
-	 6nckeaZt0ojOsqckoA==
+	t=1702930743; x=1703535543; i=w_armin@gmx.de;
+	bh=q9wL0sOP60Ja7H4IQatHbqL5WFADfzE9WTyOrzpo5n4=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=t9D//caF0Yy3sAnH6zA4ICqi0afZWMWlc/IrLDM46nuVhKQOfqYUNJkQyJ+Yx3qU
+	 F3pASgnk6HOb0ajNSPoqaBFn5pDBziwZFI9rxdo3VnogPdudCS8cwpuKp++JhxRa0
+	 T4q5ymddC+NuZqg6ocEPcZLOvVL6xTh0Nd33zLhqVoPWKB9H+U/aBQzkQ5uI+Qb+3
+	 WA4v2BPQEj+GBnO+HntWrmbF/FEOXtKGpWhi9MXo0KH+TM4V18mNg6u2+JxFMaC86
+	 EnYoXfocPLjTCIS24nDZuef5uJ8xlIejzRhp9Dplh7PG7qDbprG2WHMBjEKkrzsM7
+	 mRRw0tiSgKnZLr9P6Q==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
  (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MsHru-1r0PBs1vf0-00toXW; Mon, 18 Dec 2023 20:55:42 +0100
+ 1M6Daq-1rLvmZ2vgO-006ehp; Mon, 18 Dec 2023 21:19:03 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/6] platform/x86: wmi: Decouple ACPI notify handler from wmi_block_list
-Date: Mon, 18 Dec 2023 20:55:30 +0100
-Message-Id: <20231218195531.311179-6-W_Armin@gmx.de>
+Subject: [PATCH RESEND v2 0/6] platform/x86: wmi: ACPI improvements
+Date: Mon, 18 Dec 2023 21:18:39 +0100
+Message-Id: <20231218201844.2860-1-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231218195531.311179-1-W_Armin@gmx.de>
-References: <20231218195531.311179-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:y7okMXky5VNG+iTpPst6EOYsDtodFCWhYyJabz/08NN0B4xOJ65
- lTHMz42MEtRdxm/qqg5MQo3O0MTmwSztN0OvnJrDKy4QVQ7J9q56IMYOAjKQb2b4zmMqtG0
- 6VaHlziYN857J8mplne5pi43L1UMHCaYkC4DcNN39ZRCLKnBbp65+UoSPlTl0FlSxYGUos5
- Yd/7wedmc4/7H5uUOJ25A==
+X-Provags-ID: V03:K1:1HKcbLmgC/4UC4x94Q3rYinHRyvyZBup2IskAZUhduSzecLUxX5
+ OWBQO9gg3fDL95xfd8ve+gOCWeEg/DaISOnINt28MIfxwPZWzWe8mS5jgIsEMfxcqy2U6j5
+ xBF9R7cPKAKZYjM2Og1Q0X1DCbm1rN31ikuEl+NZmkEYwCNIyPOxcC3EgtBIhjK/zqDFmGC
+ +KIC6stijwNk/embzgRTA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:7lcsT6aLjgU=;YWnRXlfrHzr0DEmhBo88e4+Vhq5
- VDx/rZHS83z8zmAOkBDM6Sts+lGILyZVOmnobRjv+tacJ8aAk5/Ic6osqV4N7MJ/N3HQenUxY
- e/rPfjZsb8hnF0PHOOZT5BFTMaUsvDR6KNDMSUuJI7UCPc0vUO3yGTgckB5+5Vmb/9QCfJmyH
- pznXPyn9e5nnWtfoFKtKNLax7V4QTdr3FDLN0rZzQbEFHsRJl5IwQB3n9Urk9jTA+CYhL1aoN
- zk6XWewzXUm/uPsAugCu5s6I6EdrEF9Zs6WdBTGMatQAuUkzq75VYtXQbM8r/glYZWT2qXV23
- dav7jeihK71FD8XkydjhF6wRQCZ6VGVPedBSuy2XhCZZzts/DaA3nU20G/GB9aPHHM6rNjlT6
- eVjWKdbxZ/5K/9fKDKuqXlOjR27RmXWCA9Wd4vSC8acleZ7g3UxmvP7T5WDOwMWcW1GF0uGtC
- KYX1/9pY8OnHS5JnBiBnP1ZS7OGc2QOGNWiwY5UtBa5VKQg+z1Bxl2SPk+SY1M1+gXTasdMWb
- SOeXGUZ7Amo5w3UvNZHb4Oq57KknwVeooR5/WbqBwXYx74AwPeWg/0T9qVfr9iC2sR73dJA1y
- vDikphC2GZBcaS8aCYjOMF0tN5gqbYmb2v29MMDLDxOkqwvo9wy2ANbRl3oucGBO8OGCfgH6k
- fWyCcI4vvMW4g00J5OhWW8ajBHN5vo+hN/XBATHxQ+DWCgnd+BW1nGuPEnXBrQu77STTyQzf0
- +dlGtBmABJsz2oKjUhy1PNnYX3/L835Ro7Rf3rgiXAxabqx+wM/tf079cOl+AbkA1Ygm+sh2i
- QoC6djbnLh8J1eECGaJVKJSEi7kKFkXM023P7Y7HKqtIVIWz9xN8XoimBPX1wZ9eTQR/66wul
- Eh0QKhSxpMoVBjY6f+twBd7anYlIzYr5fFW1PuApCMXRhXFXjr7hYUZ7trKaL8RNeitnbVMWS
- 7+x2q9ciifVNZ0OeCaMhHI5UJQg=
+UI-OutboundReport: notjunk:1;M01:P0:cGTfvJ2G2JE=;Cn7C5n3bmHcGeVxB6LnsoT5IkGm
+ nY5kJ66wrSR4Y6m44ZLbVRx4CaIromJaMkUjRI3hovkuRXB+T9/1TxIDB0i3w04n7C2bacZEJ
+ /fkUlurU6j5JD5R2GskxcUOEGm164w3naDUwoy7j9so8OIM51CBd4NinAqEp7xc3x/lZeCBcn
+ lIg6sRMZcDaHSWGuEm/gcIUhvZY0jfq33g/7mnU/JNqGD3FNWXWgx492/Ougv16pnNbqmYub5
+ RXag4iAy+mDVgkEBeqLKlmo8boUGoGZjDat6aR30UNMXLlz30dpTSm6oHjhs8MMlPrF7McFp3
+ 668hF8mwOCoLwaD149qeH3CdGHyzjmJKPZeD1aZCwcHe2la6yQj/KSCZNSqcfaOF/qlTTEy6l
+ T0YsA8wVYh6ODQVCoegh9DPxS1fb8imXBydNnHjTG6LAflRIve2Jhp4YcIsAB0VhCBQK/u2eT
+ //sjGODVPLhuNfsNxIdcomLyEgbeRCK67oXP1juGcGQ/wr4HwtWEV+e9CTm5AkhrMc9I90QGS
+ WgCYUhmKNnKe5HthRhUW75gzEdi/UGwfI3CDFSp50iM+gP/LByytlE1ArFwcqxVLCN2d2eRFG
+ 8asUgR7qsohStSt89O8Cy8WaOEDtddVJAGroK4Z9bztM5jLfmEh9QZVxPFIO5b9FjoHW6NvxN
+ cj36ni2DnYwJhUFY2si7ya4pvMAYD8Vu7X7h073SGcw1t+OKW7XYeec+8gs7K+O1cHqxJd2gr
+ ifyl4mk0xldt4R+LDzazrL58kBZYhzpXmv0D5uxu/osLAf7kiz1ODR2T42dd5w6ShW0E2rCuV
+ tAj9Na8XIr7VEGeDJeDjnfFTnq7yM43QRAKkUJs7ix/jeN4eapUkgyRKhZ9n1/qLiwQVkMMpk
+ 7XwJ0zmpalXc3TLKd3vi4gJkWzghdMEyg/jbBfQ99fnkmvck+WuvRMCWKeWZgEaezbO/VP2Ko
+ 77DuKtYUCGPv9sghlutJ+xCVJiE=
 
-Currently, the ACPI notify handler searches all WMI devices for
-a matching WMI event device. This is inefficient since only WMI devices
-associated with the notified ACPI device need to be searched.
-Use the WMI bus device and device_for_each_child() to search for
-a matching WMI event device instead.
+This patch series improves the ACPI handling inside the ACPI WMI driver.
+The first patch removes an unused variable, while the second patch
+changes the order in which the ACPI handlers are removed on shutdown.
+The third patch simplifies the error handling during probe by using
+devres to manage devie resources, while the next two patches decouple
+the ACPI notify handler from the wmi_block_list. The last patch
+simplifies yet another ACPI-related function.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/wmi.c | 46 +++++++++++++++++---------------------
- 1 file changed, 20 insertions(+), 26 deletions(-)
+All patches have been tested on a Dell Inspiron 3505 and appear to work.
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index e2bfdc61c4ce..559a99ebc624 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -1176,24 +1176,13 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physi=
-cal_address address,
- 	}
- }
+Changes since v1:
+- fix ACPI handler devres ordering
 
--static void acpi_wmi_notify_handler(acpi_handle handle, u32 event,
--				    void *context)
-+static int wmi_notify_device(struct device *dev, void *data)
- {
--	struct wmi_block *wblock =3D NULL, *iter;
--
--	list_for_each_entry(iter, &wmi_block_list, list) {
--		struct guid_block *block =3D &iter->gblock;
--
--		if (iter->acpi_device->handle =3D=3D handle &&
--		    (block->flags & ACPI_WMI_EVENT) &&
--		    (block->notify_id =3D=3D event)) {
--			wblock =3D iter;
--			break;
--		}
--	}
-+	struct wmi_block *wblock =3D dev_to_wblock(dev);
-+	u32 *event =3D data;
+Armin Wolf (6):
+  platform/x86: wmi: Remove unused variable in address space handler
+  platform/x86: wmi: Remove ACPI handlers after WMI devices
+  platform/x86: wmi: Use devres for resource handling
+  platform/x86: wmi: Create WMI bus device first
+  platform/x86: wmi: Decouple ACPI notify handler from wmi_block_list
+  platform/x86: wmi: Simplify get_subobj_info()
 
--	if (!wblock)
--		return;
-+	if (!(wblock->gblock.flags & ACPI_WMI_EVENT && wblock->gblock.notify_id =
-=3D=3D *event))
-+		return 0;
+ drivers/platform/x86/wmi.c | 143 ++++++++++++++++++-------------------
+ 1 file changed, 71 insertions(+), 72 deletions(-)
 
- 	/* If a driver is bound, then notify the driver. */
- 	if (test_bit(WMI_PROBED, &wblock->flags) && wblock->dev.dev.driver) {
-@@ -1205,7 +1194,7 @@ static void acpi_wmi_notify_handler(acpi_handle hand=
-le, u32 event,
- 			status =3D get_event_data(wblock, &evdata);
- 			if (ACPI_FAILURE(status)) {
- 				dev_warn(&wblock->dev.dev, "failed to get event data\n");
--				return;
-+				return -EIO;
- 			}
- 		}
-
-@@ -1215,13 +1204,20 @@ static void acpi_wmi_notify_handler(acpi_handle ha=
-ndle, u32 event,
- 		kfree(evdata.pointer);
- 	} else if (wblock->handler) {
- 		/* Legacy handler */
--		wblock->handler(event, wblock->handler_data);
-+		wblock->handler(*event, wblock->handler_data);
- 	}
-
--	acpi_bus_generate_netlink_event(
--		wblock->acpi_device->pnp.device_class,
--		dev_name(&wblock->dev.dev),
--		event, 0);
-+	acpi_bus_generate_netlink_event(wblock->acpi_device->pnp.device_class,
-+					dev_name(&wblock->dev.dev), *event, 0);
-+
-+	return -EBUSY;
-+}
-+
-+static void acpi_wmi_notify_handler(acpi_handle handle, u32 event, void *=
-context)
-+{
-+	struct device *wmi_bus_dev =3D context;
-+
-+	device_for_each_child(wmi_bus_dev, &event, wmi_notify_device);
- }
-
- static int wmi_remove_device(struct device *dev, void *data)
-@@ -1300,10 +1296,8 @@ static int acpi_wmi_probe(struct platform_device *d=
-evice)
- 	if (error < 0)
- 		return error;
-
--	status =3D acpi_install_notify_handler(acpi_device->handle,
--					     ACPI_ALL_NOTIFY,
--					     acpi_wmi_notify_handler,
--					     NULL);
-+	status =3D acpi_install_notify_handler(acpi_device->handle, ACPI_ALL_NOT=
-IFY,
-+					     acpi_wmi_notify_handler, wmi_bus_dev);
- 	if (ACPI_FAILURE(status)) {
- 		dev_err(&device->dev, "Error installing notify handler\n");
- 		return -ENODEV;
 =2D-
 2.39.2
 
