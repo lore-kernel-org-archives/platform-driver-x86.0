@@ -1,89 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9AE51C36;
-	Mon, 18 Dec 2023 12:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECACF4F608
+	for <platform-driver-x86@vger.kernel.org>; Mon, 18 Dec 2023 12:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KH2iKdE3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702901321; x=1734437321;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Fsbhkm0WhCqBZSO9ER+vHQLpTu9zm9tiGz8nMwgYe/w=;
-  b=KH2iKdE3CVcw9eUHoItF7fM9oK6fsAZfJZBu9fQmotkEmjQFK+hA72gH
-   jCNAYUzi7RfjjnjLChvsDInZ6sb418qP57hj5+fQWV7pSr9wmSHYzTX56
-   jV/QcZ7MeJwDg57XMEtJKLa/x0JIzf+QPNw9kO2oKThrIuO12gs3r+ND3
-   e5gzDrd1dsTq7XSKwL1/K0elGC4Z/JV3bjyq13ZKRPtDkqzgl3o5EBmUB
-   8nihh58mrQ2+nvkDDPN1MK7JfewgpI13nXIfBgb7eFJetOT8nxh0B79Nx
-   AgUoA8y0Gp8v6j7ovDLcBfoPT+4cMdjcmqcjmLbrUKLDGTDAsXvkFZYQN
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10927"; a="2324237"
-X-IronPort-AV: E=Sophos;i="6.04,285,1695711600"; 
-   d="scan'208";a="2324237"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 04:08:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10927"; a="775558218"
-X-IronPort-AV: E=Sophos;i="6.04,285,1695711600"; 
-   d="scan'208";a="775558218"
-Received: from gmarin-mobl1.ger.corp.intel.com ([10.252.34.78])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 04:08:36 -0800
-Date: Mon, 18 Dec 2023 14:08:34 +0200 (EET)
-From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: rjingar <rajvi.jingar@linux.intel.com>
-cc: irenic.rajneesh@gmail.com, david.e.box@intel.com, 
-    Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] platform/x86/intel/pmc: Fix in
- pmc_core_ssram_get_pmc()
-In-Reply-To: <20231216011702.1976408-1-rajvi.jingar@linux.intel.com>
-Message-ID: <292ed49e-cb34-7ca8-dbb5-a25857c75ef2@linux.intel.com>
-References: <20231216011702.1976408-1-rajvi.jingar@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hUFINTU/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702901466;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xfdrGrl0miDPMWiTSTrBQWbpyVQoJQdyZ333ubM2Dgo=;
+	b=hUFINTU/JZBl/XbKg88S1O9YMUb1jg8TQkIuhV5jXaN59s/eK6asv2V+fCvUxxXjHWKdZa
+	fam9WKeP4JE/HL1z1p6G2Uveqs42cBb2GmagJ+y6yAhG8aBxMd0uJ/kXIlB1zs6wftjyS3
+	BwE56TccFVR9rcla64EI5yFFGaIBvVk=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-378-qLWA8ZXoMeSYTClIk7qtnQ-1; Mon, 18 Dec 2023 07:11:05 -0500
+X-MC-Unique: qLWA8ZXoMeSYTClIk7qtnQ-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-40c348e529fso26708325e9.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Dec 2023 04:11:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702901463; x=1703506263;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xfdrGrl0miDPMWiTSTrBQWbpyVQoJQdyZ333ubM2Dgo=;
+        b=Q3PIW1CFJIw4zpgoa3gmdKlols2cM2LhCkgKzv3mP7zSqNo73hqP9xNu8uqkw4jJuN
+         tiuwAE4JfsNmVmhnIsq4bA7moeMWDw1US1BQ471F/BRa4oBy400yMTavMRgcfQ5bQOOJ
+         jlWtudUJrlcEK6dy8RD7aE/DfggvZ/TUqWCB5LJmQzVYpi6xYuDGd351uXvbUbqgFI1h
+         q5rHroPPjvrSLOjGBcZy3O/9QT01F97PpXCzJ4Ed2Nb3hsJ/pvoD3T1XjKd4I2savJZX
+         KG0Mf4Od8EnK7hD37jg1WgfQcWk5sHprOpHVNXMk838bMK4Co1rWSUD/oYc1ze71ZvVD
+         9W9Q==
+X-Gm-Message-State: AOJu0YwZ2xWrZPLEAh1p0FuataEDLkRywxo5qGRthfnStW/B8CG7aFG+
+	/LmpFdXPYsMNQOh9Uou0XbpgEaArozEaHTkxKDx5ClXnj2B9LXBIHSLomAfPP5a7WKlcyKfz1iq
+	s0+LIppEGVc5cmOdLrB+QNxr579FqprZWWE23nhwyvQ==
+X-Received: by 2002:a05:600c:458d:b0:40c:349e:d8cc with SMTP id r13-20020a05600c458d00b0040c349ed8ccmr7197310wmo.52.1702901463238;
+        Mon, 18 Dec 2023 04:11:03 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGcSDpiXF02Y6ofb47B13h38+mmObXQJOpYHMS13hzPlA1hjfThem3v3LEimdbwFbWMJQ7VSw==
+X-Received: by 2002:a05:600c:458d:b0:40c:349e:d8cc with SMTP id r13-20020a05600c458d00b0040c349ed8ccmr7197290wmo.52.1702901462855;
+        Mon, 18 Dec 2023 04:11:02 -0800 (PST)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id v22-20020a1709063bd600b00a23596d256esm1039708ejf.84.2023.12.18.04.11.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Dec 2023 04:11:02 -0800 (PST)
+Message-ID: <53d6933e-e5e8-4db1-b2e3-b931dc8bf0bd@redhat.com>
+Date: Mon, 18 Dec 2023 13:11:01 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-179285463-1702901318=:2348"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] Add a workaround for Framework 13 spurious IRQ1
+Content-Language: en-US
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Goswami Sanket <Sanket.Goswami@amd.com>
+References: <20231212045006.97581-1-mario.limonciello@amd.com>
+ <85397fdb-b093-4c03-8613-3815352f2b2c@t-8ch.de>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <85397fdb-b093-4c03-8613-3815352f2b2c@t-8ch.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi All,
 
---8323329-179285463-1702901318=:2348
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
-On Fri, 15 Dec 2023, rjingar wrote:
-
-> From: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+On 12/12/23 21:19, Thomas Weißschuh wrote:
+> On 2023-12-11 22:50:02-0600, Mario Limonciello wrote:
+>> The 13" Framework laptop EC emits a spurious keyboard interrupt on every
+>> resume from hardware sleep.  When a user closes the lid on an already
+>> suspended system this causes the system to wake up.
+>>
+>> This series adjusts the previous Cezanne quirk (which has a much different
+>> root cause) to be able to apply to other systems too. The Framework 13"
+>> system is added to the list it will apply to.
+>>
+>> Mario Limonciello (4):
+>>   platform/x86/amd/pmc: Move platform defines to header
+>>   platform/x86/amd/pmc: Only run IRQ1 firmware version check on Cezanne
+>>   platform/x86/amd/pmc: Move keyboard wakeup disablement detection to
+>>     pmc-quirks
+>>   platform/x86/amd/pmc: Disable keyboard wakeup on AMD Framework 13
+>>
+>>  drivers/platform/x86/amd/pmc/pmc-quirks.c | 20 ++++++++++++++
+>>  drivers/platform/x86/amd/pmc/pmc.c        | 33 +++++++++--------------
+>>  drivers/platform/x86/amd/pmc/pmc.h        | 12 +++++++++
+>>  3 files changed, 45 insertions(+), 20 deletions(-)
 > 
-> Passing PMC_IDX_MAIN in pmc_core_pmc_add() adds only primary pmc to pmcdev.
-> Use pmc_idx instead to add all available pmcs.
+> For the full series:
 > 
-> Fixes: a01486dc4bb1 ("platform/x86/intel/pmc: Cleanup SSRAM discovery")
-> Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
-> ---
->  drivers/platform/x86/intel/pmc/core_ssram.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+> Tested-by: Thomas Weißschuh <linux@weissschuh.net> # on AMD Framework 13
 > 
-> diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
-> index 3501c7bd6b33..55e54207987c 100644
-> --- a/drivers/platform/x86/intel/pmc/core_ssram.c
-> +++ b/drivers/platform/x86/intel/pmc/core_ssram.c
-> @@ -287,7 +287,7 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pmc_idx, u32 offset)
->  	if (!map)
->  		return -ENODEV;
->  
-> -	return pmc_core_pmc_add(pmcdev, pwrm_base, map, PMC_IDX_MAIN);
-> +	return pmc_core_pmc_add(pmcdev, pwrm_base, map, pmc_idx);
+> The device now only wakes up when opening the lid.
 
-Reviewed-by: Ilpo J�rvinen <ilpo.jarvinen@linux.intel.com>
+Thomas, thank you for the review and testing.
 
--- 
- i.
+The series looks good to me too:
 
---8323329-179285463-1702901318=:2348--
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Ilpo, do you plan on sending out one more fixes pull-req for 6.7
+and if yes, can you add this series to that; or shall I merge
+this into for-next so that it gets included in 6.8-rc1 ?
+
+Regards,
+
+Hans
+
