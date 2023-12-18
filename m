@@ -1,35 +1,35 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828D273477;
-	Mon, 18 Dec 2023 19:55:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613BB740B4;
+	Mon, 18 Dec 2023 19:55:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="GUUNUgNB"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="jbBqZXc9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1702929341; x=1703534141; i=w_armin@gmx.de;
-	bh=yBaISgjLgSkrk947Vjw+ExCxzpblr64RVT6udQOT+ys=;
+	t=1702929344; x=1703534144; i=w_armin@gmx.de;
+	bh=8xcRS4toKnQj2X27ThuiST1cF613b/lRiEqma2uezJw=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=GUUNUgNBZQyRX9s0ru/T9lvrpz0GgONRLBc1F10PsQky5vDog40lDIcvBXkXIBHu
-	 0o4kpwQanyg5yQpsOKwo6XdUG4GsSeN/qWyDYfcyuxr0Q/nMEPO679t8/gaIXbFZf
-	 XBCloq91WUeP10U/E9wNXFFe8/pNqHTrxGPwu8/PscWVolNeB99YMsE0zTITt1rqY
-	 fbSpd/oc0RTtFElspRfhdmVr91LJwL644T24rXtkn4Rj5BsbsdYu69uMqVrHVTujs
-	 FNnY+FyEUvG4YmxIv7VHQbbm6OAc5bzJMc8jdLeqFaqqNzuM/7ULs6LOOkcSW1ulj
-	 +7kC43zKBISzSF2fMA==
+	b=jbBqZXc9Fm79pEyNs39kyQOUq7iV1cgb3v6jxexwGyeiTscBEi1bOcDP3UXeLJRS
+	 dY+tIHWI+ikGrZt+MmT/WjGZNC9ieOvvSmRKAbzllsQcA9ZeVEUG9NRUY1ASIxhGO
+	 V1I0Zd5yM0w4EcnEsPJgq3+qJkOoWbHa2FXPF8jwTYGD7nVt7Bsup6aiwOAynFIjW
+	 jJkEAe31nxDISQXV//XFTloO9of5DHVtTw+7FF+Ms1jrQsXOOmWPVI3RDlE0WM45n
+	 6KuDmCzwONZPddEyvPPMis2hKnHD/DDUdeYeJjkricAU7gT2Ujo6whItjSPnW451B
+	 u3IrODDU70qziUyGpw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1N79yG-1rE8xN0mY0-017W3H; Mon, 18 Dec 2023 20:55:41 +0100
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MfHAH-1qnQcd12N9-00gtMg; Mon, 18 Dec 2023 20:55:44 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/6] platform/x86: wmi: Create WMI bus device first
-Date: Mon, 18 Dec 2023 20:55:29 +0100
-Message-Id: <20231218195531.311179-5-W_Armin@gmx.de>
+Subject: [PATCH v2 6/6] platform/x86: wmi: Simplify get_subobj_info()
+Date: Mon, 18 Dec 2023 20:55:31 +0100
+Message-Id: <20231218195531.311179-7-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231218195531.311179-1-W_Armin@gmx.de>
 References: <20231218195531.311179-1-W_Armin@gmx.de>
@@ -40,81 +40,83 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:cpLPpmkqL1pTP3W9ifc7hlAXoPsmtbOyiZPB94n16UHvQY8wmvW
- c3kJ4nkZow3x6FUEpvItt8eHzSltA9kud8H8NF+tOoa2qouAMLKovQbDopP0lSza1CLjfNF
- kyT7Z0nUIOcQTCoFOmJc/eeebyF+Wg+1cGmZcH0v05HqG4NSvTbrozkMOFJESOEkFzEEt1s
- qRwDG+s95yyrhj0lac3VQ==
+X-Provags-ID: V03:K1:y/Bdzz5LQ5l5DH6SFsP2N/veEnWbKrmkgn6CIDbxPduIi6hazLh
+ UuiTS1T+DL5GydIrKi57aoR9hruokDMtH2VKiyVtJGZzIhfxul8fIbcSbt3EMbWRd/W8UVJ
+ 5MpzSdJsCRvtaSwdi+VXG0dUbqfipewjIdfR1v9U3/U5z2u8zDn0FRWBXVh/taVRTq46L3E
+ QgCvZlqMUvTE7Z5rLo1yg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:j1oDhK+hKtw=;SBIKcjvr6Kj2CcbuoUCV/5paOc0
- 4U7sPlU/EiH77hznYkNBssPlLfibkBbWZpi/nGBeQoEPsAvxM3wBoNQhQo6PMhwTMNi736NHW
- dEG4E1U8dPAuOcJDHY0YvfcB6dwgBLUQtFotpKe0ufMQhSFMnQUB3J1/NJOsy+Klfhp8IKyfL
- jlrxnZ8na6OzhfWyztdz6aPYm08HalPtWNO/lXZpI/Oo5K42PLQZVgFGTrb33t6W+Rig2NJz3
- yDyrbbhcTQlwRHXPZwtpd5Mg/OQdaNthtuMIo97fiSZaA5k8rnFD5xV4aC6Gvt5krKSwQUs9x
- j2E8lEaYVLYHTJtq+0OTw45BrdVYNHG+tAB8q3WEVl/qx4gFQDnM/w+5HdW/S/e26412L9K1s
- 9atTH2H22T8gWtAvd3T5sVwFmngQeCsNGrIk1ZGpmyWfvTAzDtnz2/XnCrGGp5Mew4GRsTWfY
- iBjdLxB05ZpA30O4+PRWwLrphj1nBSPqjT1N9cl7wnu92QrvNyKlOjTlwzrQDFahb3u2ckpqz
- TMRtUYr0wPTVTlRajS0uZqj2yEYAMstKLBl1T2+7bv20rxWFeL7LlZ2Aya9nFn/9OodawLAPJ
- 5HU46nMtdYi2ciCPapP2a9ux2c9ORxNMY8ELlo4tYvcWLX3kKDYmVH+7PpsAwQh1r/DzHUqls
- 2KNnh0FsZFqpLfyVHziaeDHYdIzpvAVg5jBtIT00u/V4c+M6yK1aqmgcLkKFR4cHK4CDQbBD6
- hbqp2EANjCaNxt2aq7z57oTgZLQlcVihopbIeV+Uqn/NpDSb4AMEsZ701gh7hBTeG8fznlWe+
- mkPkAmPRYQHExMNWcJJ+aaVkg/oyOBeodmWmEk6HbLfp+c2oif82OlLowMllh1guS4g9bEcma
- S/AHtS56mSi+AERYDgnPz96LLCVQrPDLPPvrDra/wN71Y8Y4ntGyEFvBVUbxnFGSdTtRVQMix
- iIvWzHdv2CjGsc/hKszN727DKnk=
+UI-OutboundReport: notjunk:1;M01:P0:HbMWm1LXyxI=;ZMhIXv2exx6aSMr9mmjEsbuvd0Q
+ oeY+A/3BgWhQ6uyTAvqYSlHnBXcouVqEz74re3YguoqtaP30RKceTuSVxoo3EPh+mROJ7XS7D
+ /kV6OuTWMfnslAojWuQaZTg++/Pn/PmTeq1bbQhWpj22HhqxsYN/roSQQEyZpiwSqIVBb2gFz
+ LOJbH3ow0FZ8LSOIiI+J6KGwmu1Ag5stc3Sw9iZdaHNvFZvJAzqAC8LTVMN0S8P9rJb597XQY
+ S3z+p7vpsNxxYLEKgS1DCFDSn655zg230UAs6qaPX8vvp5mByUIV5B0b778QDSwqAtwRnTFaJ
+ 5wROdlo3LnOHnJHDvVLIG2d27Yr+8zRrGcYzb9QB4zpbJWbE4pqvWa1TTF2Ld0FMKzw3fCvfs
+ dPd8B8bnR6FTlkmnFRu3lBOjJE0IARP0KPB5v0aAUAoihtQ64WN9/FzpnVcShvWYQAB+eyFEM
+ 6Px8X4Az84qDocwC/KUWGhkSMO7M9TusWS+3rsVl3B19ra0OamG35frpzD+NS00UJ+jSSLypJ
+ L6R7VEGJJ/t+9BQsL2XNiIJGuX8rGhCiNLobV5d8zRoQPgVdzeGfjsr1ke1w7kV5PexQ/RPN4
+ nXwFtTw2VIsdt12UiyknyfWgir+jKKV6q3e6qBQxoK33XJnAqGKUkzKROxNgFUf43N7OGXCIh
+ MURmClzMCbZjHjw4mqYoASC50OOJ67qnSnYE9foI20oyJm/5+eRXueVxC+eo4Wuav9jl/pCSy
+ bEx7YH19Bx/2sZqdrOnpT+xFbmO3vjdgKVw92SJTN5E+B0wBz9WJ3yL4FoeOBSjUtpLl/2P0w
+ IgVrfectfMbSkb3xaZw6/9QlZ2oXo0L9vZ0+uNuiL0pIIrAGj7uLVUHdWt99CoAM6cFkj7mBZ
+ lZMM3ScpD8W6D/oY2/TSwDeGAhn1+gwqbY3xELOP8iabRJdyviJ4DaGmEOAk/m+esmc/CEknL
+ O1pffGWm/FSARtS/pXhLyZyi6SM=
 
-Create the WMI bus device first so that it can be used
-by the ACPI handlers.
+All callers who call get_subobj_info() with **info being NULL
+should better use acpi_has_method() instead.
+Convert the only caller who does this to acpi_has_method()
+to drop the dummy info handling.
 
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/wmi.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/platform/x86/wmi.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 4bc5da70c1b0..e2bfdc61c4ce 100644
+index 559a99ebc624..a7cfcbf92432 100644
 =2D-- a/drivers/platform/x86/wmi.c
 +++ b/drivers/platform/x86/wmi.c
-@@ -1276,6 +1276,17 @@ static int acpi_wmi_probe(struct platform_device *d=
-evice)
- 		return -ENODEV;
- 	}
+@@ -132,23 +132,19 @@ static const void *find_guid_context(struct wmi_bloc=
+k *wblock,
+ static int get_subobj_info(acpi_handle handle, const char *pathname,
+ 			   struct acpi_device_info **info)
+ {
+-	struct acpi_device_info *dummy_info, **info_ptr;
+ 	acpi_handle subobj_handle;
+ 	acpi_status status;
 
-+	wmi_bus_dev =3D device_create(&wmi_bus_class, &device->dev, MKDEV(0, 0),=
- NULL, "wmi_bus-%s",
-+				    dev_name(&device->dev));
-+	if (IS_ERR(wmi_bus_dev))
-+		return PTR_ERR(wmi_bus_dev);
-+
-+	error =3D devm_add_action_or_reset(&device->dev, acpi_wmi_remove_bus_dev=
-ice, wmi_bus_dev);
-+	if (error < 0)
-+		return error;
-+
-+	dev_set_drvdata(&device->dev, wmi_bus_dev);
-+
- 	status =3D acpi_install_address_space_handler(acpi_device->handle,
- 						    ACPI_ADR_SPACE_EC,
- 						    &acpi_wmi_ec_space_handler,
-@@ -1302,17 +1313,6 @@ static int acpi_wmi_probe(struct platform_device *d=
-evice)
- 	if (error < 0)
- 		return error;
+-	status =3D acpi_get_handle(handle, (char *)pathname, &subobj_handle);
++	status =3D acpi_get_handle(handle, pathname, &subobj_handle);
+ 	if (status =3D=3D AE_NOT_FOUND)
+ 		return -ENOENT;
+-	else if (ACPI_FAILURE(status))
+-		return -EIO;
 
--	wmi_bus_dev =3D device_create(&wmi_bus_class, &device->dev, MKDEV(0, 0),
--				    NULL, "wmi_bus-%s", dev_name(&device->dev));
--	if (IS_ERR(wmi_bus_dev))
--		return PTR_ERR(wmi_bus_dev);
+-	info_ptr =3D info ? info : &dummy_info;
+-	status =3D acpi_get_object_info(subobj_handle, info_ptr);
+ 	if (ACPI_FAILURE(status))
+ 		return -EIO;
+
+-	if (!info)
+-		kfree(dummy_info);
++	status =3D acpi_get_object_info(subobj_handle, info);
++	if (ACPI_FAILURE(status))
++		return -EIO;
+
+ 	return 0;
+ }
+@@ -998,9 +994,7 @@ static int wmi_create_device(struct device *wmi_bus_de=
+v,
+ 	kfree(info);
+
+ 	get_acpi_method_name(wblock, 'S', method);
+-	result =3D get_subobj_info(device->handle, method, NULL);
 -
--	error =3D devm_add_action_or_reset(&device->dev, acpi_wmi_remove_bus_dev=
-ice, wmi_bus_dev);
--	if (error < 0)
--		return error;
--
--	dev_set_drvdata(&device->dev, wmi_bus_dev);
--
- 	error =3D parse_wdg(wmi_bus_dev, device);
- 	if (error) {
- 		pr_err("Failed to parse WDG method\n");
+-	if (result =3D=3D 0)
++	if (acpi_has_method(device->handle, method))
+ 		wblock->dev.setable =3D true;
+
+  out_init:
 =2D-
 2.39.2
 
