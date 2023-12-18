@@ -1,122 +1,113 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3038F73498;
-	Mon, 18 Dec 2023 20:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33041DA21;
+	Mon, 18 Dec 2023 20:36:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="uL0peQ3U"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="HB2ZDIZH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1702930802; x=1703535602; i=w_armin@gmx.de;
-	bh=8xcRS4toKnQj2X27ThuiST1cF613b/lRiEqma2uezJw=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=uL0peQ3Uqiqlqao3InO3XuoWoxUQbHmSp/eyBrfh7tFQu0MlULUwP/fk1WInLWd7
-	 r98Hhh215lnJHNLf2LcvwJj7pAwsgXwU82cYrZ8mIcLvztUESbCGFTKQOaOcXhVOA
-	 olS5tvYqcaaqhCHgUVVlxiphEuM1u70qZN7Pqj7os2pcTYcJthSj41C1UYDddJII/
-	 UCdi8lbF5IuH3Rw0teUdptixAT8vjJDkfzFMy7OzSat1A/FPfNSDdgYkjGxqy+Wlz
-	 oZRqCT1ayzHgwRxGm5sYZOH63MXdO6ErDNgJrpWJ39saB/ExmPxwZTCqQ1NXFuy59
-	 tD78M1e1VmrjArQS4Q==
+	t=1702931774; x=1703536574; i=w_armin@gmx.de;
+	bh=EWjs6RVH6Mv2uVAzaW7fNSkAiU6ccq0fUtiP//qCDt0=;
+	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
+	 In-Reply-To;
+	b=HB2ZDIZH1Kwb3aNwVXeISgVHt849Kufilp+OqD8DfH72HQyLbSn1ZpqaZQ8ILDMD
+	 +tVejZG8JLDxA+6EM0AOCd5L376A1MV+D7IIqjQhmzfbPmlK5rueg8dlIEgbT2hMm
+	 +QRhkCXxqhll7MtvBAQIamXK0vs1GWdojYIsEwihL+jjYx3Sj0N4LvT+Uj1iD+m7N
+	 m90tSUAjvzSsJJaeHupjZNkzU4yxV+RS0FBtKExjnqvDq49XtRchhRvD286egNrjM
+	 juK76DNw8pNwuqTbtSWYQJvX84084mb8sd7BD3B7Y5fwPLK/HveQAq9ItJhLv/mAl
+	 7WMZe6HKSMefikt8GQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MSKy8-1rhwks2dei-00Sh7P; Mon, 18 Dec 2023 21:20:02 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v2 6/6] platform/x86: wmi: Simplify get_subobj_info()
-Date: Mon, 18 Dec 2023 21:18:51 +0100
-Message-Id: <20231218201844.2860-7-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231218201844.2860-1-W_Armin@gmx.de>
-References: <20231218201844.2860-1-W_Armin@gmx.de>
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N6sit-1rExGr3Yy7-018Kyz; Mon, 18
+ Dec 2023 21:36:14 +0100
+Message-ID: <6f4de52e-2aff-4f56-8407-e9caf81d4a54@gmx.de>
+Date: Mon, 18 Dec 2023 21:34:50 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:zs+GuJiftyA0nnelVgmKabbvQuVWX7TvoSequC+/aE+iM9ipxF2
- fm/KCsrl9IPIBVmsJU5nThDQNH2x2X6uyNTdT2r7bwCfAVEaFIi2DVdWEjVI9W5uiO6uXm3
- ji6cGMS0HdNj0Gw6LXSluBfUe3tj3+NouOPwHKWlL0gTpPwrLUDDTMCsvm7At6mXWvfGaDm
- UzBF7ehceEl+PUHbvUWHw==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v2 2/6] platform/x86: wmi: Remove ACPI handlers
+ after WMI devices
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231218201844.2860-1-W_Armin@gmx.de>
+ <20231218201844.2860-3-W_Armin@gmx.de>
+Content-Language: en-US
+In-Reply-To: <20231218201844.2860-3-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:tGq217jpvXij+c3f1sTBkw44rdv7PqgBvn8hLMxiFoABKA+hFqE
+ 3zbhftY5qb3OeOm0wX/gFvAG9n9+Q4KywcoPjUo4ScZwhKceDVjvFf6xoDQIfsj1RPxa0L6
+ SXTgwrca3aCbUbtSoIVu9ipz9ylalDrw+1Vf+WN9rNTojQPTfjgnm7w3Sea7FK+Tawaz2FA
+ LP2Rpk7C4hbVu1L5i1QyA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ONT9f25Y4VQ=;v4Wwlg73iNkaNaCYoB8QW2jkOXn
- ZgVJxZnRFE4PP1PPL0ANHccqgOZRJ0ek6KZup0QiKw/aDaJ03eeo3D+my8xn++Ef1mm9S91XT
- DEMfmFvHAIlvR2mf8A/NeVsq0kHI+QdVeqvPGmQ71QZieVRwtTRJY6UuDzG4xf6unQekK1oHN
- NrY0NhzQ+EpNDiMTBQu7oqneVVcHh4yka5BJcvmWsqo1tM5/5QgL3y4lNa7KX/NFiysv0T21b
- pFg5iy3RFXhGgt5+K7ln92Ha4ZIi1IZ/TUr7A/lndmj5wUznkxZql8I1MRK2Yb2BzOr3IEXnU
- C+rebKh0+O6nggYSYIBDSrZhAWuyNnbDDfMAlqgrRwgWIkc7FOEAem4asSZxQ4ajNPPA/4aqL
- zY2n2QPU58haLTcLAv/govCLcK1Se3uMVUVyX40TGb8VZGWgQq2sNlWxQVrbLpRrRIb2wK3Mt
- DUq4+5Mot6r5LKOasb1QfuM1B1TJ4SOQcBpuiHmru0Dm7NRNfb7MFDSPi02953FTVWQd2DeS6
- b9ahfofTrfdJbxJrN2Wn2UtNwW0hCLcqlq1ZCI/XkN6EjrClFTABQ+uuZ0ESs2moF2uRVMqof
- ZP9wUpSNqNnZfDTu6YDygNHOohP4p47Phfdj8rI2JfQlAr28mqXQvyZQfEmKNx0xML49VcpA5
- epVL45d2P3r2jrkPieYnrG3FOjcVRZ9Uu2ibhUoK9VeDRVzjLcaXV1euSeitZqv8j7qEhuPoJ
- BvxVISqKP/QJ8PKNyWxkijHgKKs+eSyL+J0U9n9ftWYzdKTjo+JS+RGkLkd9unj05VlKBQmbi
- q6K07XGWa+nJ7lSrigcsUI2vayzCqvHo3NgVwXRkWlHyATt+UspI6ZEgGM+QbTaWK+Uo5uwXe
- aeh9keAp+g6558QF6PCmD5+zqgE3eUXsnVYHYWfvXAjClOf8i7K+B0XKRy7+npUmaWduB7NrE
- xzmCuJdejoRu8uVQjmMfTk4f5Lc=
+UI-OutboundReport: notjunk:1;M01:P0:qNS6FHYQqRY=;/vpsnJLI8pUJNlUs+TBarbscDao
+ 4sBnURXaJCgYc/LibQen9E4oZ0sV5oS3rb2Rph9AwPBAAL2a5VZr/UZv81Y3EjIoPLf7lM723
+ 81j0bxs01WlmnAs7ZGpjocwqS31DLxlk/g4dSDP7Awl/rNP8j/MMc0YnA0QoJfZHIhVvqEIZj
+ IpVD79nP+v7ljbvYBFBzEiScpRD554OOaX+kwexwCTEGPJMmS9HvmAy4iVUJeS4qEj4gw5PSm
+ MVd6De05ju+xVknO6NMwfWt3vcZmJB9evGcvROt16QCiI8hZ5Wupxrbole6BhuuPV+sn/AwxU
+ 2Q2z+stbFhbCKFCXNj0LGBwupAhJjioqE+7RivlLa/oqfM5r3ymhIbKz/lPLmnpTMHJJOwMiI
+ mDFXqhIRG6CSktfKUUiDMIlR6KkD0Xn5I2EFS6ruJJUt3h8I0TQJbzHtM8xya39MfJI3Tr8WN
+ S+Bsd7H71xUa/UXmZhF8uJbxoSgjHzNrdL94W9Ubf5fJOfIfw9t2bDdvfADn/L9ACPY+9drEf
+ Jbho0tN0A9psTI2VH++dm8OVTA6zyJWTQEGRviF0kn9EReZ0hP8lpqCsiabH0WGC5O4GOWVuD
+ Ccmd8uHSvzzaiBUOkVhv9mUb+pFaoVufP6MfPUu8lRbUxEx9J9fu0SMkvyPnNxDjo+x+Y327O
+ 8/SHPi/2avanjQOt6xQEO5FuZ6IZw+GN34FQcAc8Z1XIKIbjo1NSgKMVeRs2j75xFzHnBBKIH
+ U0UK3HLu4z+jMYXE5hS4ewKziMWMLbkxNxcuPAP/Jh4VwYJK3k3CLI3EbRq3tpAioRIjOE23v
+ yIJG/SKjGJnJ2KY6bytn3sWVRprwS5L4Hhc9e9QtPKZAgKqRucTW1eCi+p4zsq7KaaoED8780
+ 04DAlCtMDBpknDGyTxwCqG3H82p+nnYBXSVPlwu8xW3ew87p3dR5D7UK0IahJkHNvDkhgRYCG
+ e6djVkWuG+BK3//e4ZhHNIqXe8E=
 
-All callers who call get_subobj_info() with **info being NULL
-should better use acpi_has_method() instead.
-Convert the only caller who does this to acpi_has_method()
-to drop the dummy info handling.
+Am 18.12.23 um 21:18 schrieb Armin Wolf:
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/wmi.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+> When removing the ACPI notify/address space handlers, the WMI devices
+> are still active and might still depend on ACPI EC access or
+> WMI events.
+> Fix this by removing the ACPI handlers after all WMI devices
+> associated with an ACPI device have been removed.
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 559a99ebc624..a7cfcbf92432 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -132,23 +132,19 @@ static const void *find_guid_context(struct wmi_bloc=
-k *wblock,
- static int get_subobj_info(acpi_handle handle, const char *pathname,
- 			   struct acpi_device_info **info)
- {
--	struct acpi_device_info *dummy_info, **info_ptr;
- 	acpi_handle subobj_handle;
- 	acpi_status status;
+Sorry for sending the patch series multiple times, it seems my mail provider has
+some kind of issue which prevents me from receiving mail from this list (this is
+the only patch i received from my series so far). Because this i thought that my
+patch series got lost somehow.
 
--	status =3D acpi_get_handle(handle, (char *)pathname, &subobj_handle);
-+	status =3D acpi_get_handle(handle, pathname, &subobj_handle);
- 	if (status =3D=3D AE_NOT_FOUND)
- 		return -ENOENT;
--	else if (ACPI_FAILURE(status))
--		return -EIO;
+Armin Wolf
 
--	info_ptr =3D info ? info : &dummy_info;
--	status =3D acpi_get_object_info(subobj_handle, info_ptr);
- 	if (ACPI_FAILURE(status))
- 		return -EIO;
-
--	if (!info)
--		kfree(dummy_info);
-+	status =3D acpi_get_object_info(subobj_handle, info);
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-
- 	return 0;
- }
-@@ -998,9 +994,7 @@ static int wmi_create_device(struct device *wmi_bus_de=
-v,
- 	kfree(info);
-
- 	get_acpi_method_name(wblock, 'S', method);
--	result =3D get_subobj_info(device->handle, method, NULL);
--
--	if (result =3D=3D 0)
-+	if (acpi_has_method(device->handle, method))
- 		wblock->dev.setable =3D true;
-
-  out_init:
-=2D-
-2.39.2
-
+>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>   drivers/platform/x86/wmi.c | 9 ++++-----
+>   1 file changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index 906d3a2831ae..2120c13e1676 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -1239,13 +1239,12 @@ static void acpi_wmi_remove(struct platform_device *device)
+>   	struct acpi_device *acpi_device = ACPI_COMPANION(&device->dev);
+>   	struct device *wmi_bus_device = dev_get_drvdata(&device->dev);
+>
+> -	acpi_remove_notify_handler(acpi_device->handle, ACPI_ALL_NOTIFY,
+> -				   acpi_wmi_notify_handler);
+> -	acpi_remove_address_space_handler(acpi_device->handle,
+> -				ACPI_ADR_SPACE_EC, &acpi_wmi_ec_space_handler);
+> -
+>   	device_for_each_child_reverse(wmi_bus_device, NULL, wmi_remove_device);
+>   	device_unregister(wmi_bus_device);
+> +
+> +	acpi_remove_notify_handler(acpi_device->handle, ACPI_ALL_NOTIFY, acpi_wmi_notify_handler);
+> +	acpi_remove_address_space_handler(acpi_device->handle, ACPI_ADR_SPACE_EC,
+> +					  &acpi_wmi_ec_space_handler);
+>   }
+>
+>   static int acpi_wmi_probe(struct platform_device *device)
+> --
+> 2.39.2
+>
+>
