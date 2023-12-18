@@ -1,55 +1,55 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A38B37879
-	for <platform-driver-x86@vger.kernel.org>; Mon, 18 Dec 2023 14:00:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9C65A867
+	for <platform-driver-x86@vger.kernel.org>; Mon, 18 Dec 2023 14:00:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="icd8mDlV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GZuUb8D0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702908019;
+	s=mimecast20190719; t=1702908036;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XHb9Nbxq9O6XaraMZw0ThBizBBW+/NNEjqc7eDhvdfw=;
-	b=icd8mDlVE9JbKi+5IbuDfoi0Y7pNiu2bohpe3UAQrOpTavakjVlLBN/klkzeJZOHloIsuf
-	gA0iLLqtMd7R01eWgVnCj3H37+DcSTid9d62W+qXB1jqlLkJkVqgwhhoTbEzjNAAfraWRQ
-	neyBB8x2SU+2uzslXcZ+Tej6XIFwr1g=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=801k8/cpcdJNojr//CVmwN6MefVG1M2oNgg9WBA1ID0=;
+	b=GZuUb8D0xGaT/D8qAHqbENEPDq1wFm16s7MdVb1hFamxH6OeEF4niKTAoN74jTI8R48q06
+	WZ7xm7YpQWRb8v7C5NB6i+DG7QIlzMc9tKGjdeb11RwjTuLKjDHqWuxeEvPkP0PJItlhF0
+	6JvL7+BGu13h7clTf/H6V25PEZ503lk=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-663-tnY1a3E8O0yWG7-6JQfR-w-1; Mon, 18 Dec 2023 09:00:17 -0500
-X-MC-Unique: tnY1a3E8O0yWG7-6JQfR-w-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-40c35d1d776so28154325e9.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Dec 2023 06:00:17 -0800 (PST)
+ us-mta-66-2dfRvVV8PW6HPT2CmOoTRQ-1; Mon, 18 Dec 2023 09:00:34 -0500
+X-MC-Unique: 2dfRvVV8PW6HPT2CmOoTRQ-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a22f129e5acso170914366b.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Dec 2023 06:00:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702908016; x=1703512816;
+        d=1e100.net; s=20230601; t=1702908033; x=1703512833;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XHb9Nbxq9O6XaraMZw0ThBizBBW+/NNEjqc7eDhvdfw=;
-        b=FqxQrDrR6thYbmc69qFLqthSDXnSsBzMNadZUFriNqbFRBRVAtukBHSYZBXR5xLU9U
-         E3+/IzwiMft3zhFPro/CrPbWn9LkKM2eXIblTCSS/nGXJIenXW/fkwcLVF7TmgZ9tHiU
-         wmAlqBhKrtWwlkfXGW7p0ED8qdyGQmAtFBvRucgCrB/cwmffrJCiHkFuyk4/gm4XTA3e
-         YsHgmSUbrJ5QiQ5lFE1tjyNZlfOdqaJlpNaJZ6DRppkJLY+awPLHyq0MhjTfc2cShWO6
-         +IuCz1/YowTL0fYsU8HHRsra+gq0IM/Ua1aJcCQLa6zdQ4opKtbVk0VUpK35Tpyl0J38
-         +cLw==
-X-Gm-Message-State: AOJu0YzPdLIkAId12AE4TUtGihkIf8h5blcianI8Q7ikvk8ulsqJiija
-	69A82mh0wDZMdZ30TEXIJ6IjlJb280NxDCmuj3KVBi7rmVpFY70zF28Gcb4JmRwBXe9kaBlhEtl
-	QQqiPpmz300+zgKXnqtIIkhvMiGA3GPShyQ==
-X-Received: by 2002:a7b:c4ca:0:b0:40c:2b87:de8b with SMTP id g10-20020a7bc4ca000000b0040c2b87de8bmr7921957wmk.132.1702908016257;
-        Mon, 18 Dec 2023 06:00:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFQUemTUaWAYOujMHM3kn+wtXlUppofidsDm63eCKP6jWUO0qO6fCKjoguTECdmIH7q1Qnz+g==
-X-Received: by 2002:a7b:c4ca:0:b0:40c:2b87:de8b with SMTP id g10-20020a7bc4ca000000b0040c2b87de8bmr7921947wmk.132.1702908015989;
-        Mon, 18 Dec 2023 06:00:15 -0800 (PST)
+        bh=801k8/cpcdJNojr//CVmwN6MefVG1M2oNgg9WBA1ID0=;
+        b=fTPC5twYB+/COZfzE7Pt+U5hx5LRWlkl2Nf2v2CpsaraKO2KYZv+r+ZMXeFpDL5isZ
+         3mI9clc9XCykB6/lgz6QHfCpNFE3/Hc5dfWtZ5nXGgimpUCTGoaz4XlxzLfAyXToiDz6
+         r2Y4hn7Ojvx+CacjHo1rOmDeA0wYDSCOXk6Bc/HwL83GlIO+IN2LcT6hfXwJVfC5m0BP
+         0SI5ORjkS1y6W6048ISjA+2oQOABWOwH1dEb4bzfI0M2b7hwbZ3VRshDw0/PUJGpZIN+
+         BxLQJB8sGGIMB70KQ4Ipvc78ScBfrrqVOK7vg4U6Rw9atr6QXbMnDauDiDpBwCjzdT3l
+         E/hg==
+X-Gm-Message-State: AOJu0YzoALr6tpJPgrmG2Upi8Gmfozonantn/PQG/5k0uwl1zqQZOr3Y
+	O9gpORZe8nGry5cq/t5IoKFvBnlkkpMAayQahGNGJWwllpPz+kz1DkHgWPXPTn/AOBgONLyIH42
+	GfyIxU+fKHYdUuP5DNkmzP0D1VasTt5bhAQ==
+X-Received: by 2002:a17:907:72c1:b0:a23:6462:4d66 with SMTP id du1-20020a17090772c100b00a2364624d66mr609507ejc.85.1702908032998;
+        Mon, 18 Dec 2023 06:00:32 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF9+GoUVX1KOJ9u+Z9HHUrJNCXqBOR7ke57fYj2st3f8W6rORSA+AVr3wXuR25QoUgRdzMQyA==
+X-Received: by 2002:a17:907:72c1:b0:a23:6462:4d66 with SMTP id du1-20020a17090772c100b00a2364624d66mr609498ejc.85.1702908032679;
+        Mon, 18 Dec 2023 06:00:32 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id cx7-20020a170907168700b009fc576e26e6sm14059747ejd.80.2023.12.18.06.00.14
+        by smtp.gmail.com with ESMTPSA id cx7-20020a170907168700b009fc576e26e6sm14059747ejd.80.2023.12.18.06.00.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Dec 2023 06:00:15 -0800 (PST)
-Message-ID: <630dd0a3-429a-4bdc-82de-ffc1c7b97f08@redhat.com>
-Date: Mon, 18 Dec 2023 15:00:14 +0100
+        Mon, 18 Dec 2023 06:00:31 -0800 (PST)
+Message-ID: <9234691b-5667-4c6c-a1d0-0bea386cf31e@redhat.com>
+Date: Mon, 18 Dec 2023 15:00:31 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -57,24 +57,27 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86/intel/vsec: Add support for Lunar Lake M
+Subject: Re: [PATCH 2/2] platform/x86/intel/pmc: Fix in
+ pmc_core_ssram_get_pmc()
 Content-Language: en-US
-To: rjingar <rajvi.jingar@linux.intel.com>, linux-kernel@vger.kernel.org,
- david.e.box@linux.intel.com, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org
-References: <20231216005146.1735455-1-rajvi.jingar@linux.intel.com>
+To: rjingar <rajvi.jingar@linux.intel.com>, irenic.rajneesh@gmail.com,
+ david.e.box@intel.com, ilpo.jarvinen@linux.intel.com, markgross@kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231216011702.1976408-1-rajvi.jingar@linux.intel.com>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20231216005146.1735455-1-rajvi.jingar@linux.intel.com>
+In-Reply-To: <20231216011702.1976408-1-rajvi.jingar@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 12/16/23 01:51, rjingar wrote:
+On 12/16/23 02:17, rjingar wrote:
 > From: Rajvi Jingar <rajvi.jingar@linux.intel.com>
 > 
-> Add Lunar Lake M PMT telemetry support.
+> Passing PMC_IDX_MAIN in pmc_core_pmc_add() adds only primary pmc to pmcdev.
+> Use pmc_idx instead to add all available pmcs.
 > 
+> Fixes: a01486dc4bb1 ("platform/x86/intel/pmc: Cleanup SSRAM discovery")
 > Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
@@ -95,39 +98,20 @@ Hans
 
 
 > ---
->  drivers/platform/x86/intel/vsec.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  drivers/platform/x86/intel/pmc/core_ssram.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-> index c1f9e4471b28..3567dba57781 100644
-> --- a/drivers/platform/x86/intel/vsec.c
-> +++ b/drivers/platform/x86/intel/vsec.c
-> @@ -421,6 +421,11 @@ static const struct intel_vsec_platform_info tgl_info = {
->  	.quirks = VSEC_QUIRK_TABLE_SHIFT | VSEC_QUIRK_EARLY_HW,
->  };
+> diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
+> index 3501c7bd6b33..55e54207987c 100644
+> --- a/drivers/platform/x86/intel/pmc/core_ssram.c
+> +++ b/drivers/platform/x86/intel/pmc/core_ssram.c
+> @@ -287,7 +287,7 @@ pmc_core_ssram_get_pmc(struct pmc_dev *pmcdev, int pmc_idx, u32 offset)
+>  	if (!map)
+>  		return -ENODEV;
 >  
-> +/* LNL info */
-> +static const struct intel_vsec_platform_info lnl_info = {
-> +	.caps = VSEC_CAP_TELEMETRY | VSEC_CAP_WATCHER,
-> +};
-> +
->  #define PCI_DEVICE_ID_INTEL_VSEC_ADL		0x467d
->  #define PCI_DEVICE_ID_INTEL_VSEC_DG1		0x490e
->  #define PCI_DEVICE_ID_INTEL_VSEC_MTL_M		0x7d0d
-> @@ -428,6 +433,7 @@ static const struct intel_vsec_platform_info tgl_info = {
->  #define PCI_DEVICE_ID_INTEL_VSEC_OOBMSM		0x09a7
->  #define PCI_DEVICE_ID_INTEL_VSEC_RPL		0xa77d
->  #define PCI_DEVICE_ID_INTEL_VSEC_TGL		0x9a0d
-> +#define PCI_DEVICE_ID_INTEL_VSEC_LNL_M		0x647d
->  static const struct pci_device_id intel_vsec_pci_ids[] = {
->  	{ PCI_DEVICE_DATA(INTEL, VSEC_ADL, &tgl_info) },
->  	{ PCI_DEVICE_DATA(INTEL, VSEC_DG1, &dg1_info) },
-> @@ -436,6 +442,7 @@ static const struct pci_device_id intel_vsec_pci_ids[] = {
->  	{ PCI_DEVICE_DATA(INTEL, VSEC_OOBMSM, &oobmsm_info) },
->  	{ PCI_DEVICE_DATA(INTEL, VSEC_RPL, &tgl_info) },
->  	{ PCI_DEVICE_DATA(INTEL, VSEC_TGL, &tgl_info) },
-> +	{ PCI_DEVICE_DATA(INTEL, VSEC_LNL_M, &lnl_info) },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(pci, intel_vsec_pci_ids);
+> -	return pmc_core_pmc_add(pmcdev, pwrm_base, map, PMC_IDX_MAIN);
+> +	return pmc_core_pmc_add(pmcdev, pwrm_base, map, pmc_idx);
+>  }
+>  
+>  int pmc_core_ssram_init(struct pmc_dev *pmcdev)
 
