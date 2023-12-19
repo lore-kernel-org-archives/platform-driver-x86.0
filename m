@@ -1,113 +1,91 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33041DA21;
-	Mon, 18 Dec 2023 20:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8112E5380;
+	Tue, 19 Dec 2023 04:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="HB2ZDIZH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1702931774; x=1703536574; i=w_armin@gmx.de;
-	bh=EWjs6RVH6Mv2uVAzaW7fNSkAiU6ccq0fUtiP//qCDt0=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=HB2ZDIZH1Kwb3aNwVXeISgVHt849Kufilp+OqD8DfH72HQyLbSn1ZpqaZQ8ILDMD
-	 +tVejZG8JLDxA+6EM0AOCd5L376A1MV+D7IIqjQhmzfbPmlK5rueg8dlIEgbT2hMm
-	 +QRhkCXxqhll7MtvBAQIamXK0vs1GWdojYIsEwihL+jjYx3Sj0N4LvT+Uj1iD+m7N
-	 m90tSUAjvzSsJJaeHupjZNkzU4yxV+RS0FBtKExjnqvDq49XtRchhRvD286egNrjM
-	 juK76DNw8pNwuqTbtSWYQJvX84084mb8sd7BD3B7Y5fwPLK/HveQAq9ItJhLv/mAl
-	 7WMZe6HKSMefikt8GQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N6sit-1rExGr3Yy7-018Kyz; Mon, 18
- Dec 2023 21:36:14 +0100
-Message-ID: <6f4de52e-2aff-4f56-8407-e9caf81d4a54@gmx.de>
-Date: Mon, 18 Dec 2023 21:34:50 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RC1W39pB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702959752; x=1734495752;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=i+FYFJiM4zhGNpeoB/MCinogOJYpyspa/zpz16xcJNY=;
+  b=RC1W39pBSbAjG5pNRn6rC3qRnWrTIKC8u7B0IkZwQci7n2Dbj1XSdp1P
+   yTykm7RgIbb5/S0bUqvaCEFK/20cJCFkYpnaN4taVFwsY5cGGE3m6a1n6
+   p5iT6xtCtV0A8sXPFJbgEIteP/DkDWuONMxKN9XLYXKMxVZTR7t2/xFI5
+   GM6FlYV+kxBRhg+G+CsdDMb3HRy+LCmR35FO3+bYufay1/MymUHkjQJ3N
+   EJMQSxhYeBKPgSdazIhJ4CAko/YqFbde5H0BCZqF0R0VT8oZNURIO6e90
+   Hx62t1SrurowJ8dgFrNcBKX1+hs3LvaCird+tYthK7u54Se8XGcL/+eL7
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10928"; a="2455971"
+X-IronPort-AV: E=Sophos;i="6.04,287,1695711600"; 
+   d="scan'208";a="2455971"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 20:22:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10928"; a="919503094"
+X-IronPort-AV: E=Sophos;i="6.04,287,1695711600"; 
+   d="scan'208";a="919503094"
+Received: from mnichels-mobl1.amr.corp.intel.com (HELO rjingar-desk5.intel.com) ([10.212.29.225])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 20:22:30 -0800
+From: rjingar <rajvi.jingar@linux.intel.com>
+To: irenic.rajneesh@gmail.com,
+	david.e.box@intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: rajvi.jingar@linux.intel.com,
+	"David E . Box" <david.e.box@linux.intel.com>
+Subject: [PATCH 1/8] platform/x86/intel/pmc: Fix in mtl_punit_pmt_init()
+Date: Mon, 18 Dec 2023 20:22:09 -0800
+Message-Id: <20231219042216.2592029-1-rajvi.jingar@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v2 2/6] platform/x86: wmi: Remove ACPI handlers
- after WMI devices
-From: Armin Wolf <W_Armin@gmx.de>
-To: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231218201844.2860-1-W_Armin@gmx.de>
- <20231218201844.2860-3-W_Armin@gmx.de>
-Content-Language: en-US
-In-Reply-To: <20231218201844.2860-3-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:tGq217jpvXij+c3f1sTBkw44rdv7PqgBvn8hLMxiFoABKA+hFqE
- 3zbhftY5qb3OeOm0wX/gFvAG9n9+Q4KywcoPjUo4ScZwhKceDVjvFf6xoDQIfsj1RPxa0L6
- SXTgwrca3aCbUbtSoIVu9ipz9ylalDrw+1Vf+WN9rNTojQPTfjgnm7w3Sea7FK+Tawaz2FA
- LP2Rpk7C4hbVu1L5i1QyA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:qNS6FHYQqRY=;/vpsnJLI8pUJNlUs+TBarbscDao
- 4sBnURXaJCgYc/LibQen9E4oZ0sV5oS3rb2Rph9AwPBAAL2a5VZr/UZv81Y3EjIoPLf7lM723
- 81j0bxs01WlmnAs7ZGpjocwqS31DLxlk/g4dSDP7Awl/rNP8j/MMc0YnA0QoJfZHIhVvqEIZj
- IpVD79nP+v7ljbvYBFBzEiScpRD554OOaX+kwexwCTEGPJMmS9HvmAy4iVUJeS4qEj4gw5PSm
- MVd6De05ju+xVknO6NMwfWt3vcZmJB9evGcvROt16QCiI8hZ5Wupxrbole6BhuuPV+sn/AwxU
- 2Q2z+stbFhbCKFCXNj0LGBwupAhJjioqE+7RivlLa/oqfM5r3ymhIbKz/lPLmnpTMHJJOwMiI
- mDFXqhIRG6CSktfKUUiDMIlR6KkD0Xn5I2EFS6ruJJUt3h8I0TQJbzHtM8xya39MfJI3Tr8WN
- S+Bsd7H71xUa/UXmZhF8uJbxoSgjHzNrdL94W9Ubf5fJOfIfw9t2bDdvfADn/L9ACPY+9drEf
- Jbho0tN0A9psTI2VH++dm8OVTA6zyJWTQEGRviF0kn9EReZ0hP8lpqCsiabH0WGC5O4GOWVuD
- Ccmd8uHSvzzaiBUOkVhv9mUb+pFaoVufP6MfPUu8lRbUxEx9J9fu0SMkvyPnNxDjo+x+Y327O
- 8/SHPi/2avanjQOt6xQEO5FuZ6IZw+GN34FQcAc8Z1XIKIbjo1NSgKMVeRs2j75xFzHnBBKIH
- U0UK3HLu4z+jMYXE5hS4ewKziMWMLbkxNxcuPAP/Jh4VwYJK3k3CLI3EbRq3tpAioRIjOE23v
- yIJG/SKjGJnJ2KY6bytn3sWVRprwS5L4Hhc9e9QtPKZAgKqRucTW1eCi+p4zsq7KaaoED8780
- 04DAlCtMDBpknDGyTxwCqG3H82p+nnYBXSVPlwu8xW3ew87p3dR5D7UK0IahJkHNvDkhgRYCG
- e6djVkWuG+BK3//e4ZhHNIqXe8E=
+Content-Transfer-Encoding: 8bit
 
-Am 18.12.23 um 21:18 schrieb Armin Wolf:
+From: Rajvi Jingar <rajvi.jingar@linux.intel.com>
 
-> When removing the ACPI notify/address space handlers, the WMI devices
-> are still active and might still depend on ACPI EC access or
-> WMI events.
-> Fix this by removing the ACPI handlers after all WMI devices
-> associated with an ACPI device have been removed.
+pci_get_domain_bus_and_slot() increases the reference count on the pci
+device that is used to register the endpoint. In case of failure in
+registration, decrease reference count using pci_dev_put(pcidev) before
+returning.
 
-Sorry for sending the patch series multiple times, it seems my mail provider has
-some kind of issue which prevents me from receiving mail from this list (this is
-the only patch i received from my series so far). Because this i thought that my
-patch series got lost somehow.
+Fixes: 6e7964855381 ("platform/x86/intel/pmc: Show Die C6 counter on Meteor Lake")
+Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ drivers/platform/x86/intel/pmc/mtl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Armin Wolf
+diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+index 38c2f946ec23..fb59dffccf28 100644
+--- a/drivers/platform/x86/intel/pmc/mtl.c
++++ b/drivers/platform/x86/intel/pmc/mtl.c
+@@ -985,6 +985,7 @@ static void mtl_punit_pmt_init(struct pmc_dev *pmcdev)
+ 	}
+ 
+ 	ep = pmt_telem_find_and_register_endpoint(pcidev, MTL_PMT_DMU_GUID, 0);
++	pci_dev_put(pcidev);
+ 	if (IS_ERR(ep)) {
+ 		dev_err(&pmcdev->pdev->dev,
+ 			"pmc_core: couldn't get DMU telem endpoint, %ld\n",
+@@ -992,7 +993,6 @@ static void mtl_punit_pmt_init(struct pmc_dev *pmcdev)
+ 		return;
+ 	}
+ 
+-	pci_dev_put(pcidev);
+ 	pmcdev->punit_ep = ep;
+ 
+ 	pmcdev->has_die_c6 = true;
+-- 
+2.34.1
 
->
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->   drivers/platform/x86/wmi.c | 9 ++++-----
->   1 file changed, 4 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index 906d3a2831ae..2120c13e1676 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -1239,13 +1239,12 @@ static void acpi_wmi_remove(struct platform_device *device)
->   	struct acpi_device *acpi_device = ACPI_COMPANION(&device->dev);
->   	struct device *wmi_bus_device = dev_get_drvdata(&device->dev);
->
-> -	acpi_remove_notify_handler(acpi_device->handle, ACPI_ALL_NOTIFY,
-> -				   acpi_wmi_notify_handler);
-> -	acpi_remove_address_space_handler(acpi_device->handle,
-> -				ACPI_ADR_SPACE_EC, &acpi_wmi_ec_space_handler);
-> -
->   	device_for_each_child_reverse(wmi_bus_device, NULL, wmi_remove_device);
->   	device_unregister(wmi_bus_device);
-> +
-> +	acpi_remove_notify_handler(acpi_device->handle, ACPI_ALL_NOTIFY, acpi_wmi_notify_handler);
-> +	acpi_remove_address_space_handler(acpi_device->handle, ACPI_ADR_SPACE_EC,
-> +					  &acpi_wmi_ec_space_handler);
->   }
->
->   static int acpi_wmi_probe(struct platform_device *device)
-> --
-> 2.39.2
->
->
