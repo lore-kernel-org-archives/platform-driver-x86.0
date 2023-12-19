@@ -1,129 +1,95 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AEAF38F8B;
-	Tue, 19 Dec 2023 19:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B43495D6
+	for <platform-driver-x86@vger.kernel.org>; Tue, 19 Dec 2023 22:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tanzirh.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EUlFPhz6"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40c60dfa5bfso58503255e9.0;
-        Tue, 19 Dec 2023 11:32:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z3K32+Q4"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5e74c97832aso26171557b3.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Dec 2023 14:10:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703014345; x=1703619145; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IF8GvvowDjNbUwrAOPiYPKi0zKWqFwVvQy27RkH1Gsk=;
-        b=EUlFPhz6a1dx/qOW6Dt+QoNIEToLKIwgbPwPu1N/A4FQqjCRC414mAJW/k5dgYzM0O
-         RmzDTnjVJsJvQ2BkLcwlS/nZXKg594MJ/uwO17UFUQUlfmiJ6mwyE+BHKdy5JZAtZGfy
-         laY5MEdcIc4vwlhdelUAN6acRv6WKlHHW23QP9McLuy2ZkmwBWrDqSfe3W09i/9ArHff
-         k50IfEg9OkL4e4XbuF09KeeDjNNBodxAvwJyyqK2YCvR/OLAZ6SQ/qd7ejOltAabTWmS
-         ZTWzypNxNuZGlpPtK+PV7gr6piowmvdJZO/6A7I36k+nP86VPgxvI+E2C80nwL5ZjKHj
-         tNxA==
+        d=google.com; s=20230601; t=1703023854; x=1703628654; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=sQxNnKdSXwOL5IMJGumA1BEt1SHUOhLAZ/hzj8gvEK0=;
+        b=z3K32+Q4Txlz5l4lLUzs4KGTgD5UmRIILLcLHDqt749umvbCTHY67iZSA+BWl+hpMg
+         EFmYaT30uK+UwfwOSY6ipNikG7//7zsUiYqNJc1qXRs/nWJQQOYEesqjbHIDXNxLgT8p
+         LqutYpdlqqaGYrinFcx9NILBfViECxwzibXCWhBVoqnOduHWFOb32T6WYlVvBLggVFsF
+         PBR7hnXH+qCtLoXM8HhK6fYMcAwfEsX/I3qhY2nOxp8uwdRn9OgwDyXZJ13mNG+5AjVO
+         FtfFd8kPrJzN1BTirCZabKwHQKrkhFLn8s+b9dpyvmXsSTSIVqwxnO5471BTp1OD6KZa
+         7WGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703014345; x=1703619145;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IF8GvvowDjNbUwrAOPiYPKi0zKWqFwVvQy27RkH1Gsk=;
-        b=qN9K0dXYHwTj7RA2/E8esIxw/mcpQkBrW5AvSruZMecZtvSUkxeW3oNANTHtQSOpnT
-         DkCFgVNDvJ3gz29rZzU/bo5CC87uy3uuP/Z2IeFURIjVZ8pKd930W5Q+guil9pIWv9vk
-         w3baH4CuObKP0b4UCVU5TQbnBQl9G6o9df0AYBzPfKXyFN/vw14Z1j96HVZwLZ7dV1+a
-         yyBi4HuBGGh/jeCwmUMFyy/nDCj2HKZN3QVHsnezvwrUdUAzEizcJh8HNKrtoEvxKHyD
-         FjGbbO7WSLhH8UgmnGfCC3PJ50J2Lvi7i7gb2uvn2hw7zZKDZt5ISORo9mybCsMXr/Rd
-         kZQA==
-X-Gm-Message-State: AOJu0YxvoBLZ4IEm60HiYPIGWi18POQmWTNwHayIaEfRSI5/7OLuiLaQ
-	vxhtIHHQXsqwq6Yyk0nKUYM=
-X-Google-Smtp-Source: AGHT+IHE4Q+XrID+wd7CG0y5dR6aqT5vs4T6IimX/UtgQxOmMxgL8h+GtjZcd0WDGzJQeg/+2yvCtg==
-X-Received: by 2002:a05:600c:5020:b0:40c:6ca7:f001 with SMTP id n32-20020a05600c502000b0040c6ca7f001mr4330598wmr.56.1703014344981;
-        Tue, 19 Dec 2023 11:32:24 -0800 (PST)
-Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
-        by smtp.gmail.com with ESMTPSA id hg12-20020a05600c538c00b0040c41846923sm4130537wmb.26.2023.12.19.11.32.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Dec 2023 11:32:24 -0800 (PST)
-Message-ID: <f16ded3f-1744-4bac-a7ca-fff2d425ec99@gmail.com>
-Date: Tue, 19 Dec 2023 20:32:22 +0100
+        d=1e100.net; s=20230601; t=1703023854; x=1703628654;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sQxNnKdSXwOL5IMJGumA1BEt1SHUOhLAZ/hzj8gvEK0=;
+        b=p4k3iulzAQhzmkeNsFvwvPbe7Xub4YpnJQO6yh0nzF9Q3imnGkx/EOsbijJbNCPM6v
+         3gqnT9+doKX8fAfniw6WbBceBcMZQwPoeS3FMuQvduuUTmUTkMxFhkjsZPNAfW9dq9xJ
+         kvy6GBOHdetAvgERGUNTnGmjgzmnmQN8TM0YH4wQrNqjClgRwzjPegK1YXsRu8DKdVdZ
+         IShZORoZr6W99EpEytsPbHP+edUZ7lG7eSp5ntR9ubP4d7oa4jvcLvrmvyfgW+aDYvfA
+         xW9vfsVDrj7CWqrgZmvYhmik4NnS4+HDSGPL2aVG4F5T8RjTJSKx1lWnwnGiigEtvsF+
+         B30g==
+X-Gm-Message-State: AOJu0YyK46Ou0xAr03lv9TdvFNkAFtw4zcYzCRCF/v9tEgdPB6iUJvaI
+	0U5whUAuyj3CphTmRb0t8T3lgcSp86p1
+X-Google-Smtp-Source: AGHT+IFaGA1Y2qt6NgdV9Wn+S4vHzNtkJMoyFgL97CFByINQVwqjqrubRBfF/7zCHGlE8rfNnpqxeLOzIA9h
+X-Received: from tanz.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:c4a])
+ (user=tanzirh job=sendgmr) by 2002:a05:6902:1370:b0:dbd:4b4a:c089 with SMTP
+ id bt16-20020a056902137000b00dbd4b4ac089mr78671ybb.8.1703023854045; Tue, 19
+ Dec 2023 14:10:54 -0800 (PST)
+Date: Tue, 19 Dec 2023 22:10:52 +0000
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/surface: aggregator: make ssam_bus_type constant
- and static
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hdegoede@redhat.com
-Cc: linux-kernel@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org
-References: <2023121957-tapered-upswing-8326@gregkh>
-From: Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <2023121957-tapered-upswing-8326@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAOsUgmUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2NDI0NL3YwC3YLE4uLy/KIUXUNLAzOLlGQTY4skUyWgjoKi1LTMCrBp0bG 1tQDiiT2KXQAAAA==
+X-Developer-Key: i=tanzirh@google.com; a=ed25519; pk=UeRjcUcv5W9AeLGEbAe2+0LptQpcY+o1Zg0LHHo7VN4=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1703023852; l=959;
+ i=tanzirh@google.com; s=20231204; h=from:subject:message-id;
+ bh=O5BAEiqymBRAjtGh0Tq6iAc19mxMi65Q73EvL1l5u4s=; b=SrLES+OSwqU4gyzseeTz+V/3rmlo4M6xdkCeOnNigzHj9VcQxImpTQVm6ysvp+HINOXk9Pi9w
+ lVVsl0vOPtBA9U7eLAc4KfB9bevZsqw1A2xvk0jMvQR/7aX7vIDrPic
+X-Mailer: b4 0.12.4
+Message-ID: <20231219-hp-password-v1-1-052fe7b6b7f1@google.com>
+Subject: [PATCH] platform/x86: hp-bioscfg: Removed needless asm-generic
+From: Tanzir Hasan <tanzirh@google.com>
+To: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hdegoede@redhat.com>, 
+	"=?utf-8?q?Ilpo_J=C3=A4rvinen?=" <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Al Viro <viro@zeniv.linux.org.uk>, Tanzir Hasan <tanzirh@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On 12/19/23 18:18, Greg Kroah-Hartman wrote:
-> Now that the driver core can properly handle constant struct bus_type,
-> move the ssam_bus_type variable to be a constant structure as well,
-> placing it into read-only memory which can not be modified at runtime.
-> 
-> It's also never used outside of
-> drivers/platform/surface/aggregator/bus.c so make it static and don't
-> export it as no one is using it.
+asm-generic/posix-types.h is obtained through bioscfg.h so there is no
+need to include it. It is also an asm-generic file which should be
+avoided if possible.
 
-Thanks! Looks good to me.
+Suggest-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Tanzir Hasan <tanzirh@google.com>
+---
+ drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+index 03d0188804ba..f7efe217a4bb 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+@@ -7,7 +7,6 @@
+  */
+ 
+ #include "bioscfg.h"
+-#include <asm-generic/posix_types.h>
+ 
+ GET_INSTANCE_ID(password);
+ /*
 
-> Cc: Maximilian Luz <luzmaximilian@gmail.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
-> Cc: platform-driver-x86@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->   drivers/platform/surface/aggregator/bus.c | 5 +++--
->   include/linux/surface_aggregator/device.h | 1 -
->   2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/surface/aggregator/bus.c b/drivers/platform/surface/aggregator/bus.c
-> index 42ccd7f1c9b9..118caa651bec 100644
-> --- a/drivers/platform/surface/aggregator/bus.c
-> +++ b/drivers/platform/surface/aggregator/bus.c
-> @@ -35,6 +35,8 @@ static struct attribute *ssam_device_attrs[] = {
->   };
->   ATTRIBUTE_GROUPS(ssam_device);
->   
-> +static const struct bus_type ssam_bus_type;
-> +
->   static int ssam_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
->   {
->   	const struct ssam_device *sdev = to_ssam_device(dev);
-> @@ -329,13 +331,12 @@ static void ssam_bus_remove(struct device *dev)
->   		sdrv->remove(to_ssam_device(dev));
->   }
->   
-> -struct bus_type ssam_bus_type = {
-> +static const struct bus_type ssam_bus_type = {
->   	.name   = "surface_aggregator",
->   	.match  = ssam_bus_match,
->   	.probe  = ssam_bus_probe,
->   	.remove = ssam_bus_remove,
->   };
-> -EXPORT_SYMBOL_GPL(ssam_bus_type);
->   
->   /**
->    * __ssam_device_driver_register() - Register a SSAM client device driver.
-> diff --git a/include/linux/surface_aggregator/device.h b/include/linux/surface_aggregator/device.h
-> index 42b249b4c24b..8cd8c38cf3f3 100644
-> --- a/include/linux/surface_aggregator/device.h
-> +++ b/include/linux/surface_aggregator/device.h
-> @@ -193,7 +193,6 @@ struct ssam_device_driver {
->   
->   #ifdef CONFIG_SURFACE_AGGREGATOR_BUS
->   
-> -extern struct bus_type ssam_bus_type;
->   extern const struct device_type ssam_device_type;
->   
->   /**
+---
+base-commit: 3fb7c66ac51a87984e043d9f47b7a509e3f53906
+change-id: 20231219-hp-password-19068dc438b5
+
+Best regards,
+-- 
+Tanzir Hasan <tanzirh@google.com>
+
