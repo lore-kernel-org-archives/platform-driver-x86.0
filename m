@@ -1,705 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82115BE69;
-	Tue, 19 Dec 2023 04:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222471CA8D
+	for <platform-driver-x86@vger.kernel.org>; Tue, 19 Dec 2023 15:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IyZ19t55"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702959757; x=1734495757;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=DmvRg5ptocCDiXOvQNAmZyk5mR5Kc9B3OL9eq8tVisU=;
-  b=IyZ19t55+guTMhw9kC/mIzZ7fJd0qa9e49bn2NKUhKipBq40+Nudulz6
-   vNVJvHwgdNqpzdcfr2hgFm/IbM1ZA5ccLHAcCGQCUNZ0Ye6EOstROJ+4x
-   sWv6LodhDD/zsUaibCIWYiZszR2XyMMxZyKUW+ReO16e74eoR+zRESlSP
-   vnLPakdl8UOKBOU5EjXfjahE29pSPCSt6+tEGxrYxfWF0bG7/gPEusS+Y
-   vn6oYFOxEwkmULp3lcU9TeVRP9c17IK2jyi/j7YbbkBK5MssypLWF6Htk
-   p4jL21/x7OwozCmiNGpT0EYiqheqvo1NSwofbkQ7CWJS59l/L0FBFH4t/
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10928"; a="2455997"
-X-IronPort-AV: E=Sophos;i="6.04,287,1695711600"; 
-   d="scan'208";a="2455997"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 20:22:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10928"; a="919503126"
-X-IronPort-AV: E=Sophos;i="6.04,287,1695711600"; 
-   d="scan'208";a="919503126"
-Received: from mnichels-mobl1.amr.corp.intel.com (HELO rjingar-desk5.intel.com) ([10.212.29.225])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 20:22:31 -0800
-From: rjingar <rajvi.jingar@linux.intel.com>
-To: irenic.rajneesh@gmail.com,
-	david.e.box@intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: rajvi.jingar@linux.intel.com
-Subject: [PATCH 8/8] platform/x86/intel/pmc: Add Lunar Lake M support to intel_pmc_core driver
-Date: Mon, 18 Dec 2023 20:22:16 -0800
-Message-Id: <20231219042216.2592029-8-rajvi.jingar@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231219042216.2592029-1-rajvi.jingar@linux.intel.com>
-References: <20231219042216.2592029-1-rajvi.jingar@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bj1i0y5Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1703000136;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p99ESQKY7iFMWcolC5b1pxUDyj4bwHXCNWig+NO0MP4=;
+	b=bj1i0y5YUOghgZA6mI6fT5sBkaC4Ib5CApEEMGxz71Ewe0SlnVxrGetYWqYvCRTDE0gZdh
+	Nih583zZcgW+UMJ2YAOgW3MjZoJs9WFBU7UMfWNwUjWuvnx0Sz7MY444Xmtn97oQp34Ua2
+	VfOiWQb0LhCNu38D3pgbUInDAEobM5Y=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-689-aE8KzXncOyGLuzv4Eolb7g-1; Tue, 19 Dec 2023 10:35:35 -0500
+X-MC-Unique: aE8KzXncOyGLuzv4Eolb7g-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-55383fab0b0so923494a12.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Dec 2023 07:35:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703000134; x=1703604934;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=p99ESQKY7iFMWcolC5b1pxUDyj4bwHXCNWig+NO0MP4=;
+        b=MQuQ1m37sz82n1fJs7dY71v5qM8FK0jMkV8FfVVq4kxAslimanNo5pvTC70UQ6DXbx
+         ikrIU/MslhObOd8pXDFVkUaWPHxn0yQsybKvioF0WZdQlhjSrPDhsqdYcQnbwylyct4b
+         WTM7c9ZuPdinywbj8ZuwoJEf/drzg16o4qxkjFaYM8eLhDaOSxsk4UOdvaiPVxUPSLpv
+         58kLW5H8TJ1mFljXjQMeM/66ZKRNQalHqetufsLh5esEUQan3U8G/fBQ+ojMP1v4+SsA
+         kIKrQq6SVDUDPnt3JkPFSSXLcuRPgg0mBegh/bfRVfJ3N0/yKd4FRrugBN0Qz52XBt8r
+         lMXQ==
+X-Gm-Message-State: AOJu0YwkQBQFW0aUw2kg+E65W+KHiIDOxo1D2jGBio9Pt9Q4kyoQIf5z
+	9PoVVWJ50WUC57p7aYJ/jUeZwvIeP+BvrHA5agzYyXo7U8eKgmPvxVJTbU923VBmZ+AbND7fRzw
+	HyVgBrrEHLrJW8Wr4Vqspjem7EN4c1mCH5g==
+X-Received: by 2002:a05:6402:1e87:b0:54d:9782:c3db with SMTP id f7-20020a0564021e8700b0054d9782c3dbmr9215043edf.84.1703000134417;
+        Tue, 19 Dec 2023 07:35:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGP76Za9ppm8rW8twFPzyF+1wYJU0pcIBQ3tT5tH0fSH39K2g7bfa64ib6HAvYJ+D1J0Gb7Yw==
+X-Received: by 2002:a05:6402:1e87:b0:54d:9782:c3db with SMTP id f7-20020a0564021e8700b0054d9782c3dbmr9215037edf.84.1703000134095;
+        Tue, 19 Dec 2023 07:35:34 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id m11-20020a50cc0b000000b0054cb316499dsm11626513edi.10.2023.12.19.07.35.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Dec 2023 07:35:33 -0800 (PST)
+Message-ID: <bfd55a50-7bcb-4f2d-b960-27a61ddd6509@redhat.com>
+Date: Tue, 19 Dec 2023 16:35:32 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/6] platform/x86: wmi: ACPI improvements
+To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231218192420.305411-1-W_Armin@gmx.de>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20231218192420.305411-1-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+Hi,
 
-Add Lunar Lake M support in intel_pmc_core driver
+On 12/18/23 20:24, Armin Wolf wrote:
+> This patch series improves the ACPI handling inside the ACPI WMI driver.
+> The first patch removes an unused variable, while the second patch
+> changes the order in which the ACPI handlers are removed on shutdown.
+> The third patch simplifies the error handling during probe by using
+> devres to manage devie resources, while the next two patches decouple
+> the ACPI notify handler from the wmi_block_list. The last patch
+> simplifies yet another ACPI-related function.
+> 
+> All patches have been tested on a Dell Inspiron 3505 and appear to work.
+> 
+> Changes since v1:
+> - fix ACPI handler devres order
 
-Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/Makefile |   2 +-
- drivers/platform/x86/intel/pmc/core.c   |   1 +
- drivers/platform/x86/intel/pmc/core.h   |  26 ++
- drivers/platform/x86/intel/pmc/lnl.c    | 552 ++++++++++++++++++++++++
- 4 files changed, 580 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/x86/intel/pmc/lnl.c
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-diff --git a/drivers/platform/x86/intel/pmc/Makefile b/drivers/platform/x86/intel/pmc/Makefile
-index 74655e176178..389e5419dadf 100644
---- a/drivers/platform/x86/intel/pmc/Makefile
-+++ b/drivers/platform/x86/intel/pmc/Makefile
-@@ -4,7 +4,7 @@
- #
- 
- intel_pmc_core-y			:= core.o core_ssram.o spt.o cnp.o \
--					   icl.o tgl.o adl.o mtl.o arl.o
-+					   icl.o tgl.o adl.o mtl.o arl.o lnl.o
- obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o
- intel_pmc_core_pltdrv-y			:= pltdrv.o
- obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core_pltdrv.o
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 67eecef7a54f..cdaab728e942 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1274,6 +1274,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	adl_core_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L,	mtl_core_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(ARROWLAKE,		arl_core_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(LUNARLAKE_M,         lnl_core_init),
- 	{}
- };
- 
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index f9c2fee22e44..2891d8d04fad 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -278,6 +278,11 @@ enum ppfear_regs {
- #define MTL_PMT_DMU_GUID			0x1A067102
- #define ARL_PMT_DMU_GUID			0x1A06A000
- 
-+#define LNL_PMC_MMIO_REG_LEN			0x2708
-+#define LNL_PMC_LTR_OSSE			0x1B88
-+#define LNL_NUM_IP_IGN_ALLOWED			27
-+#define LNL_PPFEAR_NUM_ENTRIES			12
-+
- extern const char *pmc_lpm_modes[];
- 
- struct pmc_bit_map {
-@@ -506,6 +511,26 @@ extern const struct pmc_bit_map mtl_ioem_power_gating_status_1_map[];
- extern const struct pmc_bit_map mtl_ioem_vnn_req_status_1_map[];
- extern const struct pmc_bit_map *mtl_ioem_lpm_maps[];
- extern const struct pmc_reg_map mtl_ioem_reg_map;
-+extern const struct pmc_reg_map lnl_socm_reg_map;
-+
-+/* LNL */
-+extern const struct pmc_bit_map lnl_ltr_show_map[];
-+extern const struct pmc_bit_map lnl_clocksource_status_map[];
-+extern const struct pmc_bit_map lnl_power_gating_status_0_map[];
-+extern const struct pmc_bit_map lnl_power_gating_status_1_map[];
-+extern const struct pmc_bit_map lnl_power_gating_status_2_map[];
-+extern const struct pmc_bit_map lnl_d3_status_0_map[];
-+extern const struct pmc_bit_map lnl_d3_status_1_map[];
-+extern const struct pmc_bit_map lnl_d3_status_2_map[];
-+extern const struct pmc_bit_map lnl_d3_status_3_map[];
-+extern const struct pmc_bit_map lnl_vnn_req_status_0_map[];
-+extern const struct pmc_bit_map lnl_vnn_req_status_1_map[];
-+extern const struct pmc_bit_map lnl_vnn_req_status_2_map[];
-+extern const struct pmc_bit_map lnl_vnn_req_status_3_map[];
-+extern const struct pmc_bit_map lnl_vnn_misc_status_map[];
-+extern const struct pmc_bit_map *lnl_lpm_maps[];
-+extern const struct pmc_bit_map lnl_pfear_map[];
-+extern const struct pmc_bit_map *ext_lnl_pfear_map[];
- 
- /* ARL */
- extern const struct pmc_bit_map arl_socs_ltr_show_map[];
-@@ -559,6 +584,7 @@ int tgl_core_generic_init(struct pmc_dev *pmcdev, int pch_tp);
- int adl_core_init(struct pmc_dev *pmcdev);
- int mtl_core_init(struct pmc_dev *pmcdev);
- int arl_core_init(struct pmc_dev *pmcdev);
-+int lnl_core_init(struct pmc_dev *pmcdev);
- 
- #define pmc_for_each_mode(i, mode, pmcdev)		\
- 	for (i = 0, mode = pmcdev->lpm_en_modes[i];	\
-diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
-new file mode 100644
-index 000000000000..88b35931f5df
---- /dev/null
-+++ b/drivers/platform/x86/intel/pmc/lnl.c
-@@ -0,0 +1,552 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * This file contains platform specific structure definitions
-+ * and init function used by Meteor Lake PCH.
-+ *
-+ * Copyright (c) 2022, Intel Corporation.
-+ * All Rights Reserved.
-+ *
-+ */
-+
-+#include <linux/cpu.h>
-+#include <linux/pci.h>
-+
-+#include "core.h"
-+
-+#define SOCM_LPM_REQ_GUID	0x11594920
-+
-+#define PMC_DEVID_SOCM	0xa87f
-+
-+static const u8 LNL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
-+
-+static struct pmc_info lnl_pmc_info_list[] = {
-+	{
-+		.guid	= SOCM_LPM_REQ_GUID,
-+		.devid	= PMC_DEVID_SOCM,
-+		.map	= &lnl_socm_reg_map,
-+	},
-+	{}
-+};
-+
-+const struct pmc_bit_map lnl_ltr_show_map[] = {
-+	{"SOUTHPORT_A",		CNP_PMC_LTR_SPA},
-+	{"SOUTHPORT_B",		CNP_PMC_LTR_SPB},
-+	{"SATA",		CNP_PMC_LTR_SATA},
-+	{"GIGABIT_ETHERNET",	CNP_PMC_LTR_GBE},
-+	{"XHCI",		CNP_PMC_LTR_XHCI},
-+	{"SOUTHPORT_F",		ADL_PMC_LTR_SPF},
-+	{"ME",			CNP_PMC_LTR_ME},
-+	/* EVA is Enterprise Value Add, doesn't really exist on PCH */
-+	{"SATA1",		CNP_PMC_LTR_EVA},
-+	{"SOUTHPORT_C",		CNP_PMC_LTR_SPC},
-+	{"HD_AUDIO",		CNP_PMC_LTR_AZ},
-+	{"CNV",			CNP_PMC_LTR_CNV},
-+	{"LPSS",		CNP_PMC_LTR_LPSS},
-+	{"SOUTHPORT_D",		CNP_PMC_LTR_SPD},
-+	{"SOUTHPORT_E",		CNP_PMC_LTR_SPE},
-+	{"SATA2",		CNP_PMC_LTR_CAM},
-+	{"ESPI",		CNP_PMC_LTR_ESPI},
-+	{"SCC",			CNP_PMC_LTR_SCC},
-+	{"ISH",			CNP_PMC_LTR_ISH},
-+	{"UFSX2",		CNP_PMC_LTR_UFSX2},
-+	{"EMMC",		CNP_PMC_LTR_EMMC},
-+	/*
-+	 * Check intel_pmc_core_ids[] users of cnp_reg_map for
-+	 * a list of core SoCs using this.
-+	 */
-+	{"WIGIG",		ICL_PMC_LTR_WIGIG},
-+	{"THC0",		TGL_PMC_LTR_THC0},
-+	{"THC1",		TGL_PMC_LTR_THC1},
-+	{"SOUTHPORT_G",		CNP_PMC_LTR_RESERVED},
-+
-+	{"ESE",			MTL_PMC_LTR_ESE},
-+	{"IOE_PMC",		MTL_PMC_LTR_IOE_PMC},
-+	{"DMI3",		ARL_PMC_LTR_DMI3},
-+	{"OSSE",		LNL_PMC_LTR_OSSE},
-+
-+	/* Below two cannot be used for LTR_IGNORE */
-+	{"CURRENT_PLATFORM",	CNP_PMC_LTR_CUR_PLT},
-+	{"AGGREGATED_SYSTEM",	CNP_PMC_LTR_CUR_ASLT},
-+	{}
-+};
-+
-+const struct pmc_bit_map lnl_power_gating_status_0_map[] = {
-+	{"PMC_PGD0_PG_STS",			BIT(0)},
-+	{"FUSE_OSSE_PGD0_PG_STS",		BIT(1)},
-+	{"ESPISPI_PGD0_PG_STS",			BIT(2)},
-+	{"XHCI_PGD0_PG_STS",			BIT(3)},
-+	{"SPA_PGD0_PG_STS",			BIT(4)},
-+	{"SPB_PGD0_PG_STS",			BIT(5)},
-+	{"SPR16B0_PGD0_PG_STS",			BIT(6)},
-+	{"GBE_PGD0_PG_STS",			BIT(7)},
-+	{"SBR8B7_PGD0_PG_STS",			BIT(8)},
-+	{"SBR8B6_PGD0_PG_STS",			BIT(9)},
-+	{"SBR16B1_PGD0_PG_STS",			BIT(10)},
-+	{"SBR8B8_PGD0_PG_STS",			BIT(11)},
-+	{"ESE_PGD3_PG_STS",			BIT(12)},
-+	{"D2D_DISP_PGD0_PG_STS",		BIT(13)},
-+	{"LPSS_PGD0_PG_STS",			BIT(14)},
-+	{"LPC_PGD0_PG_STS",			BIT(15)},
-+	{"SMB_PGD0_PG_STS",			BIT(16)},
-+	{"ISH_PGD0_PG_STS",			BIT(17)},
-+	{"SBR8B2_PGD0_PG_STS",			BIT(18)},
-+	{"NPK_PGD0_PG_STS",			BIT(19)},
-+	{"D2D_NOC_PGD0_PG_STS",			BIT(20)},
-+	{"SAFSS_PGD0_PG_STS",			BIT(21)},
-+	{"FUSE_PGD0_PG_STS",			BIT(22)},
-+	{"D2D_DISP_PGD1_PG_STS",		BIT(23)},
-+	{"MPFPW1_PGD0_PG_STS",			BIT(24)},
-+	{"XDCI_PGD0_PG_STS",			BIT(25)},
-+	{"EXI_PGD0_PG_STS",			BIT(26)},
-+	{"CSE_PGD0_PG_STS",			BIT(27)},
-+	{"KVMCC_PGD0_PG_STS",			BIT(28)},
-+	{"PMT_PGD0_PG_STS",			BIT(29)},
-+	{"CLINK_PGD0_PG_STS",			BIT(30)},
-+	{"PTIO_PGD0_PG_STS",			BIT(31)},
-+	{}
-+};
-+
-+const struct pmc_bit_map lnl_power_gating_status_1_map[] = {
-+	{"USBR0_PGD0_PG_STS",			BIT(0)},
-+	{"SUSRAM_PGD0_PG_STS",			BIT(1)},
-+	{"SMT1_PGD0_PG_STS",			BIT(2)},
-+	{"U3FPW1_PGD0_PG_STS",			BIT(3)},
-+	{"SMS2_PGD0_PG_STS",			BIT(4)},
-+	{"SMS1_PGD0_PG_STS",			BIT(5)},
-+	{"CSMERTC_PGD0_PG_STS",			BIT(6)},
-+	{"CSMEPSF_PGD0_PG_STS",			BIT(7)},
-+	{"FIA_PG_PGD0_PG_STS",			BIT(8)},
-+	{"SBR16B4_PGD0_PG_STS",			BIT(9)},
-+	{"P2SB8B_PGD0_PG_STS",			BIT(10)},
-+	{"DBG_SBR_PGD0_PG_STS",			BIT(11)},
-+	{"SBR8B9_PGD0_PG_STS",			BIT(12)},
-+	{"OSSE_SMT1_PGD0_PG_STS",		BIT(13)},
-+	{"SBR8B10_PGD0_PG_STS",			BIT(14)},
-+	{"SBR16B3_PGD0_PG_STS",			BIT(15)},
-+	{"G5FPW1_PGD0_PG_STS",			BIT(16)},
-+	{"SBRG_PGD0_PG_STS",			BIT(17)},
-+	{"PSF4_PGD0_PG_STS",			BIT(18)},
-+	{"CNVI_PGD0_PG_STS",			BIT(19)},
-+	{"USFX2_PGD0_PG_STS",			BIT(20)},
-+	{"ENDBG_PGD0_PG_STS",			BIT(21)},
-+	{"FIACPCB_P5X4_PGD0_PG_STS",		BIT(22)},
-+	{"SBR8B3_PGD0_PG_STS",			BIT(23)},
-+	{"SBR8B0_PGD0_PG_STS",			BIT(24)},
-+	{"NPK_PGD1_PG_STS",			BIT(25)},
-+	{"OSSE_HOTHAM_PGD0_PG_STS",		BIT(26)},
-+	{"D2D_NOC_PGD2_PG_STS",			BIT(27)},
-+	{"SBR8B1_PGD0_PG_STS",			BIT(28)},
-+	{"PSF6_PGD0_PG_STS",			BIT(29)},
-+	{"PSF7_PGD0_PG_STS",			BIT(30)},
-+	{"FIA_U_PGD0_PG_STS",			BIT(31)},
-+	{}
-+};
-+
-+const struct pmc_bit_map lnl_power_gating_status_2_map[] = {
-+	{"PSF8_PGD0_PG_STS",			BIT(0)},
-+	{"SBR16B2_PGD0_PG_STS",			BIT(1)},
-+	{"D2D_IPU_PGD0_PG_STS",			BIT(2)},
-+	{"FIACPCB_U_PGD0_PG_STS",		BIT(3)},
-+	{"TAM_PGD0_PG_STS",			BIT(4)},
-+	{"D2D_NOC_PGD1_PG_STS",			BIT(5)},
-+	{"TBTLSX_PGD0_PG_STS",			BIT(6)},
-+	{"THC0_PGD0_PG_STS",			BIT(7)},
-+	{"THC1_PGD0_PG_STS",			BIT(8)},
-+	{"PMC_PGD0_PG_STS",			BIT(9)},
-+	{"SBR8B5_PGD0_PG_STS",			BIT(10)},
-+	{"UFSPW1_PGD0_PG_STS",			BIT(11)},
-+	{"DBC_PGD0_PG_STS",			BIT(12)},
-+	{"TCSS_PGD0_PG_STS",			BIT(13)},
-+	{"FIA_P5X4_PGD0_PG_STS",		BIT(14)},
-+	{"DISP_PGA_PGD0_PG_STS",		BIT(15)},
-+	{"DISP_PSF_PGD0_PG_STS",		BIT(16)},
-+	{"PSF0_PGD0_PG_STS",			BIT(17)},
-+	{"P2SB16B_PGD0_PG_STS",			BIT(18)},
-+	{"ACE_PGD0_PG_STS",			BIT(19)},
-+	{"ACE_PGD1_PG_STS",			BIT(20)},
-+	{"ACE_PGD2_PG_STS",			BIT(21)},
-+	{"ACE_PGD3_PG_STS",			BIT(22)},
-+	{"ACE_PGD4_PG_STS",			BIT(23)},
-+	{"ACE_PGD5_PG_STS",			BIT(24)},
-+	{"ACE_PGD6_PG_STS",			BIT(25)},
-+	{"ACE_PGD7_PG_STS",			BIT(26)},
-+	{"ACE_PGD8_PG_STS",			BIT(27)},
-+	{"ACE_PGD9_PG_STS",			BIT(28)},
-+	{"ACE_PGD10_PG_STS",			BIT(29)},
-+	{"FIACPCB_PG_PGD0_PG_STS",		BIT(30)},
-+	{"OSSE_PGD0_PG_STS",			BIT(31)},
-+	{}
-+};
-+
-+const struct pmc_bit_map lnl_d3_status_0_map[] = {
-+	{"LPSS_D3_STS",				BIT(3)},
-+	{"XDCI_D3_STS",				BIT(4)},
-+	{"XHCI_D3_STS",				BIT(5)},
-+	{"SPA_D3_STS",				BIT(12)},
-+	{"SPB_D3_STS",				BIT(13)},
-+	{"OSSE_D3_STS",				BIT(15)},
-+	{"ESPISPI_D3_STS",			BIT(18)},
-+	{"PSTH_D3_STS",				BIT(21)},
-+	{}
-+};
-+
-+const struct pmc_bit_map lnl_d3_status_1_map[] = {
-+	{"OSSE_SMT1_D3_STS",			BIT(7)},
-+	{"GBE_D3_STS",				BIT(19)},
-+	{"ITSS_D3_STS",				BIT(23)},
-+	{"CNVI_D3_STS",				BIT(27)},
-+	{"UFSX2_D3_STS",			BIT(28)},
-+	{"OSSE_HOTHAM_D3_STS",			BIT(31)},
-+	{}
-+};
-+
-+const struct pmc_bit_map lnl_d3_status_2_map[] = {
-+	{"ESE_D3_STS",				BIT(0)},
-+	{"CSMERTC_D3_STS",			BIT(1)},
-+	{"SUSRAM_D3_STS",			BIT(2)},
-+	{"CSE_D3_STS",				BIT(4)},
-+	{"KVMCC_D3_STS",			BIT(5)},
-+	{"USBR0_D3_STS",			BIT(6)},
-+	{"ISH_D3_STS",				BIT(7)},
-+	{"SMT1_D3_STS",				BIT(8)},
-+	{"SMT2_D3_STS",				BIT(9)},
-+	{"SMT3_D3_STS",				BIT(10)},
-+	{"OSSE_SMT2_D3_STS",			BIT(13)},
-+	{"CLINK_D3_STS",			BIT(14)},
-+	{"PTIO_D3_STS",				BIT(16)},
-+	{"PMT_D3_STS",				BIT(17)},
-+	{"SMS1_D3_STS",				BIT(18)},
-+	{"SMS2_D3_STS",				BIT(19)},
-+	{}
-+};
-+
-+const struct pmc_bit_map lnl_d3_status_3_map[] = {
-+	{"THC0_D3_STS",				BIT(14)},
-+	{"THC1_D3_STS",				BIT(15)},
-+	{"OSSE_SMT3_D3_STS",			BIT(21)},
-+	{"ACE_D3_STS",				BIT(23)},
-+	{}
-+};
-+
-+const struct pmc_bit_map lnl_vnn_req_status_0_map[] = {
-+	{"LPSS_VNN_REQ_STS",			BIT(3)},
-+	{"OSSE_VNN_REQ_STS",			BIT(15)},
-+	{"ESPISPI_VNN_REQ_STS",			BIT(18)},
-+	{}
-+};
-+
-+const struct pmc_bit_map lnl_vnn_req_status_1_map[] = {
-+	{"NPK_VNN_REQ_STS",			BIT(4)},
-+	{"OSSE_SMT1_VNN_REQ_STS",		BIT(7)},
-+	{"DFXAGG_VNN_REQ_STS",			BIT(8)},
-+	{"EXI_VNN_REQ_STS",			BIT(9)},
-+	{"P2D_VNN_REQ_STS",			BIT(18)},
-+	{"GBE_VNN_REQ_STS",			BIT(19)},
-+	{"SMB_VNN_REQ_STS",			BIT(25)},
-+	{"LPC_VNN_REQ_STS",			BIT(26)},
-+	{}
-+};
-+
-+const struct pmc_bit_map lnl_vnn_req_status_2_map[] = {
-+	{"eSE_VNN_REQ_STS",			BIT(0)},
-+	{"CSMERTC_VNN_REQ_STS",			BIT(1)},
-+	{"CSE_VNN_REQ_STS",			BIT(4)},
-+	{"ISH_VNN_REQ_STS",			BIT(7)},
-+	{"SMT1_VNN_REQ_STS",			BIT(8)},
-+	{"CLINK_VNN_REQ_STS",			BIT(14)},
-+	{"SMS1_VNN_REQ_STS",			BIT(18)},
-+	{"SMS2_VNN_REQ_STS",			BIT(19)},
-+	{"GPIOCOM4_VNN_REQ_STS",		BIT(20)},
-+	{"GPIOCOM3_VNN_REQ_STS",		BIT(21)},
-+	{"GPIOCOM2_VNN_REQ_STS",		BIT(22)},
-+	{"GPIOCOM1_VNN_REQ_STS",		BIT(23)},
-+	{"GPIOCOM0_VNN_REQ_STS",		BIT(24)},
-+	{}
-+};
-+
-+const struct pmc_bit_map lnl_vnn_req_status_3_map[] = {
-+	{"DISP_SHIM_VNN_REQ_STS",		BIT(2)},
-+	{"DTS0_VNN_REQ_STS",			BIT(7)},
-+	{"GPIOCOM5_VNN_REQ_STS",		BIT(11)},
-+	{}
-+};
-+
-+const struct pmc_bit_map lnl_vnn_misc_status_map[] = {
-+	{"CPU_C10_REQ_STS",			BIT(0)},
-+	{"TS_OFF_REQ_STS",			BIT(1)},
-+	{"PNDE_MET_REQ_STS",			BIT(2)},
-+	{"PCIE_DEEP_PM_REQ_STS",		BIT(3)},
-+	{"PMC_CLK_THROTTLE_EN_REQ_STS",		BIT(4)},
-+	{"NPK_VNNAON_REQ_STS",			BIT(5)},
-+	{"VNN_SOC_REQ_STS",			BIT(6)},
-+	{"ISH_VNNAON_REQ_STS",			BIT(7)},
-+	{"D2D_NOC_CFI_QACTIVE_REQ_STS",		BIT(8)},
-+	{"D2D_NOC_GPSB_QACTIVE_REQ_STS",	BIT(9)},
-+	{"D2D_NOC_IPU_QACTIVE_REQ_STS",		BIT(10)},
-+	{"PLT_GREATER_REQ_STS",			BIT(11)},
-+	{"PCIE_CLKREQ_REQ_STS",			BIT(12)},
-+	{"PMC_IDLE_FB_OCP_REQ_STS",		BIT(13)},
-+	{"PM_SYNC_STATES_REQ_STS",		BIT(14)},
-+	{"EA_REQ_STS",				BIT(15)},
-+	{"MPHY_CORE_OFF_REQ_STS",		BIT(16)},
-+	{"BRK_EV_EN_REQ_STS",			BIT(17)},
-+	{"AUTO_DEMO_EN_REQ_STS",		BIT(18)},
-+	{"ITSS_CLK_SRC_REQ_STS",		BIT(19)},
-+	{"LPC_CLK_SRC_REQ_STS",			BIT(20)},
-+	{"ARC_IDLE_REQ_STS",			BIT(21)},
-+	{"MPHY_SUS_REQ_STS",			BIT(22)},
-+	{"FIA_DEEP_PM_REQ_STS",			BIT(23)},
-+	{"UXD_CONNECTED_REQ_STS",		BIT(24)},
-+	{"ARC_INTERRUPT_WAKE_REQ_STS",	BIT(25)},
-+	{"D2D_NOC_DISP_DDI_QACTIVE_REQ_STS",	BIT(26)},
-+	{"PRE_WAKE0_REQ_STS",			BIT(27)},
-+	{"PRE_WAKE1_REQ_STS",			BIT(28)},
-+	{"PRE_WAKE2_EN_REQ_STS",		BIT(29)},
-+	{"WOV_REQ_STS",				BIT(30)},
-+	{"D2D_NOC_DISP_EDP_QACTIVE_REQ_STS_31",	BIT(31)},
-+	{}
-+};
-+
-+const struct pmc_bit_map lnl_clocksource_status_map[] = {
-+	{"AON2_OFF_STS",			BIT(0)},
-+	{"AON3_OFF_STS",			BIT(1)},
-+	{"AON4_OFF_STS",			BIT(2)},
-+	{"AON5_OFF_STS",			BIT(3)},
-+	{"AON1_OFF_STS",			BIT(4)},
-+	{"MPFPW1_0_PLL_OFF_STS",		BIT(6)},
-+	{"USB3_PLL_OFF_STS",			BIT(8)},
-+	{"AON3_SPL_OFF_STS",			BIT(9)},
-+	{"G5FPW1_PLL_OFF_STS",			BIT(15)},
-+	{"XTAL_AGGR_OFF_STS",			BIT(17)},
-+	{"USB2_PLL_OFF_STS",			BIT(18)},
-+	{"SAF_PLL_OFF_STS",			BIT(19)},
-+	{"SE_TCSS_PLL_OFF_STS",			BIT(20)},
-+	{"DDI_PLL_OFF_STS",			BIT(21)},
-+	{"FILTER_PLL_OFF_STS",			BIT(22)},
-+	{"ACE_PLL_OFF_STS",			BIT(24)},
-+	{"FABRIC_PLL_OFF_STS",			BIT(25)},
-+	{"SOC_PLL_OFF_STS",			BIT(26)},
-+	{"REF_OFF_STS",				BIT(28)},
-+	{"IMG_OFF_STS",				BIT(29)},
-+	{"RTC_PLL_OFF_STS",			BIT(31)},
-+	{}
-+};
-+
-+const struct pmc_bit_map *lnl_lpm_maps[] = {
-+	lnl_clocksource_status_map,
-+	lnl_power_gating_status_0_map,
-+	lnl_power_gating_status_1_map,
-+	lnl_power_gating_status_2_map,
-+	lnl_d3_status_0_map,
-+	lnl_d3_status_1_map,
-+	lnl_d3_status_2_map,
-+	lnl_d3_status_3_map,
-+	lnl_vnn_req_status_0_map,
-+	lnl_vnn_req_status_1_map,
-+	lnl_vnn_req_status_2_map,
-+	lnl_vnn_req_status_3_map,
-+	lnl_vnn_misc_status_map,
-+	mtl_socm_signal_status_map,
-+	NULL
-+};
-+
-+const struct pmc_bit_map lnl_pfear_map[] = {
-+	{"PMC_0",			BIT(0)},
-+	{"FUSE_OSSE",			BIT(1)},
-+	{"ESPISPI",			BIT(2)},
-+	{"XHCI",			BIT(3)},
-+	{"SPA",				BIT(4)},
-+	{"SPB",				BIT(5)},
-+	{"SBR16B0",			BIT(6)},
-+	{"GBE",				BIT(7)},
-+
-+	{"SBR8B7",			BIT(0)},
-+	{"SBR8B6",			BIT(1)},
-+	{"SBR16B1",			BIT(1)},
-+	{"SBR8B8",			BIT(2)},
-+	{"ESE",				BIT(3)},
-+	{"SBR8B10",			BIT(4)},
-+	{"D2D_DISP_0",			BIT(5)},
-+	{"LPSS",			BIT(6)},
-+	{"LPC",				BIT(7)},
-+
-+	{"SMB",				BIT(0)},
-+	{"ISH",				BIT(1)},
-+	{"SBR8B2",			BIT(2)},
-+	{"NPK_0",			BIT(3)},
-+	{"D2D_NOC_0",			BIT(4)},
-+	{"SAFSS",			BIT(5)},
-+	{"FUSE",			BIT(6)},
-+	{"D2D_DISP_1",			BIT(7)},
-+
-+	{"MPFPW1",			BIT(0)},
-+	{"XDCI",			BIT(1)},
-+	{"EXI",				BIT(2)},
-+	{"CSE",				BIT(3)},
-+	{"KVMCC",			BIT(4)},
-+	{"PMT",				BIT(5)},
-+	{"CLINK",			BIT(6)},
-+	{"PTIO",			BIT(7)},
-+
-+	{"USBR",			BIT(0)},
-+	{"SUSRAM",			BIT(1)},
-+	{"SMT1",			BIT(2)},
-+	{"U3FPW1",			BIT(3)},
-+	{"SMS2",			BIT(4)},
-+	{"SMS1",			BIT(5)},
-+	{"CSMERTC",			BIT(6)},
-+	{"CSMEPSF",			BIT(7)},
-+
-+	{"FIA_PG",			BIT(0)},
-+	{"SBR16B4",			BIT(1)},
-+	{"P2SB8B",			BIT(2)},
-+	{"DBG_SBR",			BIT(3)},
-+	{"SBR8B9",			BIT(4)},
-+	{"OSSE_SMT1",			BIT(5)},
-+	{"SBR8B10",			BIT(6)},
-+	{"SBR16B3",			BIT(7)},
-+
-+	{"G5FPW1",			BIT(0)},
-+	{"SBRG",			BIT(1)},
-+	{"PSF4",			BIT(2)},
-+	{"CNVI",			BIT(3)},
-+	{"UFSX2",			BIT(4)},
-+	{"ENDBG",			BIT(5)},
-+	{"FIACPCB_P5X4",		BIT(6)},
-+	{"SBR8B3",			BIT(7)},
-+
-+	{"SBR8B0",			BIT(0)},
-+	{"NPK_1",			BIT(1)},
-+	{"OSSE_HOTHAM",			BIT(2)},
-+	{"D2D_NOC_2",			BIT(3)},
-+	{"SBR8B1",			BIT(4)},
-+	{"PSF6",			BIT(5)},
-+	{"PSF7",			BIT(6)},
-+	{"FIA_U",			BIT(7)},
-+
-+	{"PSF8",			BIT(0)},
-+	{"SBR16B2",			BIT(1)},
-+	{"D2D_IPU",			BIT(2)},
-+	{"FIACPCB_U",			BIT(3)},
-+	{"TAM",				BIT(4)},
-+	{"D2D_NOC_1",			BIT(5)},
-+	{"TBTLSX",			BIT(6)},
-+	{"THC0",			BIT(7)},
-+
-+	{"THC1",			BIT(0)},
-+	{"PMC_1",			BIT(1)},
-+	{"SBR8B5",			BIT(2)},
-+	{"UFSPW1",			BIT(3)},
-+	{"DBC",				BIT(4)},
-+	{"TCSS",			BIT(5)},
-+	{"FIA_P5X4",			BIT(6)},
-+	{"DISP_PGA",			BIT(7)},
-+
-+	{"DBG_PSF",			BIT(0)},
-+	{"PSF0",			BIT(1)},
-+	{"P2SB16B",			BIT(2)},
-+	{"ACE0",			BIT(3)},
-+	{"ACE1",			BIT(4)},
-+	{"ACE2",			BIT(5)},
-+	{"ACE3",			BIT(6)},
-+	{"ACE4",			BIT(7)},
-+
-+	{"ACE5",			BIT(0)},
-+	{"ACE6",			BIT(1)},
-+	{"ACE7",			BIT(2)},
-+	{"ACE8",			BIT(3)},
-+	{"ACE9",			BIT(4)},
-+	{"ACE10",			BIT(5)},
-+	{"FIACPCB",			BIT(6)},
-+	{"OSSE",			BIT(7)},
-+	{}
-+};
-+
-+const struct pmc_bit_map *ext_lnl_pfear_map[] = {
-+	lnl_pfear_map,
-+	NULL
-+};
-+
-+const struct pmc_reg_map lnl_socm_reg_map = {
-+	.pfear_sts = ext_lnl_pfear_map,
-+	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
-+	.slp_s0_res_counter_step = TGL_PMC_SLP_S0_RES_COUNTER_STEP,
-+	.ltr_show_sts = lnl_ltr_show_map,
-+	.msr_sts = msr_map,
-+	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
-+	.regmap_length = LNL_PMC_MMIO_REG_LEN,
-+	.ppfear0_offset = CNP_PMC_HOST_PPFEAR0A,
-+	.ppfear_buckets = LNL_PPFEAR_NUM_ENTRIES,
-+	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
-+	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-+	.ltr_ignore_max = LNL_NUM_IP_IGN_ALLOWED,
-+	.lpm_num_maps = ADL_LPM_NUM_MAPS,
-+	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
-+	.etr3_offset = ETR3_OFFSET,
-+	.lpm_sts_latch_en_offset = MTL_LPM_STATUS_LATCH_EN_OFFSET,
-+	.lpm_priority_offset = MTL_LPM_PRI_OFFSET,
-+	.lpm_en_offset = MTL_LPM_EN_OFFSET,
-+	.lpm_residency_offset = MTL_LPM_RESIDENCY_OFFSET,
-+	.lpm_sts = lnl_lpm_maps,
-+	.lpm_status_offset = MTL_LPM_STATUS_OFFSET,
-+	.lpm_live_status_offset = MTL_LPM_LIVE_STATUS_OFFSET,
-+	.lpm_reg_index = LNL_LPM_REG_INDEX,
-+};
-+
-+#define LNL_NPU_PCI_DEV		0x643e
-+#define LNL_IPU_PCI_DEV		0x645d
-+
-+/*
-+ * Set power state of select devices that do not have drivers to D3
-+ * so that they do not block Package C entry.
-+ */
-+void lnl_d3_fixup(void)
-+{
-+	pmc_core_set_device_d3(LNL_IPU_PCI_DEV);
-+	pmc_core_set_device_d3(LNL_NPU_PCI_DEV);
-+}
-+
-+int lnl_resume(struct pmc_dev *pmcdev)
-+{
-+	lnl_d3_fixup();
-+	return pmc_core_resume_common(pmcdev);
-+}
-+
-+int lnl_core_init(struct pmc_dev *pmcdev)
-+{
-+	int ret;
-+	int func = 2;
-+	bool ssram_init = true;
-+	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
-+
-+	lnl_d3_fixup();
-+
-+	pmcdev->resume = lnl_resume;
-+	pmcdev->regmap_list = lnl_pmc_info_list;
-+	ret = pmc_core_ssram_init(pmcdev, func);
-+
-+	/* If regbase not assigned, set map and discover using legacy method */
-+	if (ret) {
-+		ssram_init = false;
-+		pmc->map = &lnl_socm_reg_map;
-+		ret = get_primary_reg_base(pmc);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	pmc_core_get_low_power_modes(pmcdev);
-+
-+	/* Due to a hardware limitation, the GBE LTR blocks PC10
-+	 * when a cable is attached. Tell the PMC to ignore it.
-+	 */
-+	dev_dbg(&pmcdev->pdev->dev, "ignoring GBE LTR\n");
-+	pmc_core_send_ltr_ignore(pmcdev, 3);
-+
-+	if (ssram_init) {
-+		ret = pmc_core_ssram_get_lpm_reqs(pmcdev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
--- 
-2.34.1
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+> 
+> Armin Wolf (6):
+>   platform/x86: wmi: Remove unused variable in address space handler
+>   platform/x86: wmi: Remove ACPI handlers after WMI devices
+>   platform/x86: wmi: Use devres for resource handling
+>   platform/x86: wmi: Create WMI bus device first
+>   platform/x86: wmi: Decouple ACPI notify handler from wmi_block_list
+>   platform/x86: wmi: Simplify get_subobj_info()
+> 
+>  drivers/platform/x86/wmi.c | 143 ++++++++++++++++++-------------------
+>  1 file changed, 71 insertions(+), 72 deletions(-)
+> 
+> --
+> 2.39.2
+> 
 
