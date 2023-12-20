@@ -1,136 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D4E4777A
-	for <platform-driver-x86@vger.kernel.org>; Wed, 20 Dec 2023 17:08:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A8747A42
+	for <platform-driver-x86@vger.kernel.org>; Wed, 20 Dec 2023 17:12:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VdTBuReJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lNmFqI4x"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703092094; x=1734628094;
+  t=1703092354; x=1734628354;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=v0oqYbedo5EMXztoC9ODCZj9PDhnrCopSjeuaQxIObk=;
-  b=VdTBuReJXtaQIAoKSTJ41Wxa1o5wggds0C/E+1ijfRnZhCRmFTzPvdpp
-   Y48MZWkv2t470PtWGkJ6X4rNeCk83F7ivPYZy/Pfrt/GeEQ4eyzas21R4
-   Y0DUKSvt+RjKTUVCAQoi2yG10VvRRMy4BD8mAhSPFXmudnkuDcbCcqEo9
-   XjH5BpH/0SyViLhnmuL+KxSXNBXUqDxhikiyoh8Hp4eEG6gfwKmItj+mD
-   i7M2EQQfNfsgyYXlzc5UN0qLyPLU6YeBy+g6oBf/7n73s0g4kg30gaz9d
-   lISguwIZbNaOjELpcod/qwVweVOke8QS0i/iYH021ua1ECgQgCl5lf1vr
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="375997422"
+  bh=wwQ9NAQLSQmjULHG4XY8NdNhssIHpu462DOZSexrkoA=;
+  b=lNmFqI4xKycNuKVTC8y9Qq3n2p3BBDMwHdbJAjqSFRVaWXQ5/FHWK14H
+   nanXgv3GvPKVfC3FpCeq+ToorkrIaS2YGYO9TY2YMY4NGM1VsfyDhzLca
+   nrnJpp9x9yMOHkNzqJDqG+SdSExUkYcA60UJwfBwHNr38pjIHL+crABAp
+   R+3n2VEMSy4/Nptc6CiX/KjWxgWcAXwQni2tUnO1aFRGINc4wV/Gpnp2y
+   A7Q/kW8VYIcK+9fHfvD/MZyUYR4PNnyd6c79y7BurywM8P8XKjGuQubSh
+   4UXcPL7QqsMX8EY2askSizGK9+9wj0eHyToALjgop1PG/T3NysX7FJ5JM
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="17399569"
 X-IronPort-AV: E=Sophos;i="6.04,291,1695711600"; 
-   d="scan'208";a="375997422"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 09:08:13 -0800
+   d="scan'208";a="17399569"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 09:12:33 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="846795494"
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="899779936"
 X-IronPort-AV: E=Sophos;i="6.04,291,1695711600"; 
-   d="scan'208";a="846795494"
+   d="scan'208";a="899779936"
 Received: from alobakin-mobl.ger.corp.intel.com ([10.252.50.56])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 09:08:11 -0800
-Date: Wed, 20 Dec 2023 19:08:09 +0200 (EET)
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 09:12:31 -0800
+Date: Wed, 20 Dec 2023 19:12:29 +0200 (EET)
 From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Suma Hegde <suma.hegde@amd.com>
 cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
     Naveen Krishna Chatradhi <nchatrad@amd.com>
-Subject: Re: [PATCH v2 3/7] platform/x86: Create static func to handle
- platdev
-In-Reply-To: <20231220165528.1351200-4-suma.hegde@amd.com>
-Message-ID: <4f6d95f-0e9-fba-52c-6efcb8925fd0@linux.intel.com>
-References: <20231220165528.1351200-1-suma.hegde@amd.com> <20231220165528.1351200-4-suma.hegde@amd.com>
+Subject: Re: [PATCH v2 4/7] platform/x86: Define a struct to hold mailbox
+ regs
+In-Reply-To: <20231220165528.1351200-5-suma.hegde@amd.com>
+Message-ID: <f748156-18ed-4c7-c682-8af4563143b@linux.intel.com>
+References: <20231220165528.1351200-1-suma.hegde@amd.com> <20231220165528.1351200-5-suma.hegde@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-908938457-1703092092=:1807"
+Content-Type: multipart/mixed; boundary="8323329-1417032317-1703092352=:1807"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-908938457-1703092092=:1807
+--8323329-1417032317-1703092352=:1807
 Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: 8BIT
 
 On Wed, 20 Dec 2023, Suma Hegde wrote:
 
-> Create a static function and call platform device alloc and add device,
-> which will simplify handling acpi and plat device probing.
+> Define struct hsmp_mbaddr_info with register offsets and populate
+> them during probe, which avoids the usage of macros in core functions.
+> 
+> During ACPI probe, the same fields can be populated from ACPI table.
+> 
+> Also move plat dev init to a static function.
 > 
 > Signed-off-by: Suma Hegde <suma.hegde@amd.com>
 > Signed-off-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 > 
 > Changes since v1:
-> 1. Replace -1 with PLATFORM_DEVID_NONE in platform_device_alloc()
-> 2. Add "Reviewed-by: Hans de Goede <hdegoede@redhat.com>"
+> Move hsmp_test() to initialize_platdev()
 > 
 > ---
->  drivers/platform/x86/amd/hsmp.c | 33 ++++++++++++++++++---------------
->  1 file changed, 18 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
-> index 1a2abe4460f9..e3354683b138 100644
-> --- a/drivers/platform/x86/amd/hsmp.c
-> +++ b/drivers/platform/x86/amd/hsmp.c
-> @@ -551,6 +551,21 @@ static struct platform_driver amd_hsmp_driver = {
->  
->  static struct platform_device *amd_hsmp_platdev;
->  
-> +static int hsmp_plat_dev_register(void)
-> +{
-> +	int ret;
-> +
-> +	amd_hsmp_platdev = platform_device_alloc(DRIVER_NAME, PLATFORM_DEVID_NONE);
-> +	if (!amd_hsmp_platdev)
-> +		return -ENOMEM;
-> +
-> +	ret = platform_device_add(amd_hsmp_platdev);
-> +	if (ret)
-> +		platform_device_put(amd_hsmp_platdev);
-> +
-> +	return ret;
-> +}
-> +
->  static int __init hsmp_plt_init(void)
->  {
->  	int ret = -ENODEV;
-> @@ -573,22 +588,10 @@ static int __init hsmp_plt_init(void)
->  	if (ret)
->  		return ret;
->  
-> -	amd_hsmp_platdev = platform_device_alloc(DRIVER_NAME, PLATFORM_DEVID_NONE);
-> -	if (!amd_hsmp_platdev) {
-> -		ret = -ENOMEM;
-> -		goto drv_unregister;
-> -	}
-> -
-> -	ret = platform_device_add(amd_hsmp_platdev);
-> -	if (ret) {
-> -		platform_device_put(amd_hsmp_platdev);
-> -		goto drv_unregister;
-> -	}
-> -
-> -	return 0;
-> +	ret = hsmp_plat_dev_register();
-> +	if (ret)
-> +		platform_driver_unregister(&amd_hsmp_driver);
->  
-> -drv_unregister:
-> -	platform_driver_unregister(&amd_hsmp_driver);
->  	return ret;
->  }
->  
+>  drivers/platform/x86/amd/hsmp.c | 72 +++++++++++++++++++++++----------
+>  1 file changed, 50 insertions(+), 22 deletions(-)
 > 
 
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-
 -- 
  i.
 
---8323329-908938457-1703092092=:1807--
+--8323329-1417032317-1703092352=:1807--
