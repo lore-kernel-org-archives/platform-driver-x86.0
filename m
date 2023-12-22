@@ -1,174 +1,336 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2053.outbound.protection.outlook.com [40.107.95.53])
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9608F57
-	for <platform-driver-x86@vger.kernel.org>; Fri, 22 Dec 2023 06:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 182209447;
+	Fri, 22 Dec 2023 07:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WSsAbp1h"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GW6BLYeSlGkj7+PV28yRzpMqSItzuVKQTIHvm3BlZEClm/MVVdifXy4H0Xv95OhlBqbOOuVOqPzaPowobavdWbk1m+hi9T1w96igDyDAdpo5rysDLS8Y6IGkUBI9ApTG6xPQMkSXSD/ql5bX5VkCZZHTr+qsKiNcBjvw/fhpHJEaNmJErmQSKpjJ+xNKaN4mqCL29Dk6n98/xalwyamSbUgPaYChK8TfvtcEf36yaxSQdXXsDd1c1lH6NZrshRGQ5o/azr5KnlJvaz+V81abri4wZ67wv/IVQv8ZzDTTjaMDUrgD7oWI8G+xDToRiCsX59RGP/03vyADWyZby3QPlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4f+qTcL3r1paRL6UPCIYL0dHHZiThGuSVYpA3lIMJXE=;
- b=V5wCy68/D8fFmvw46uoKNyX36l8IVdHgE+t1RXGe2/+WNnXdDyvlL2ngirlsKmk7VaPJrgQVkwP2Q7fJU8va5MthGBxfROnsKXYlEuBnEBEWRUTDyhD5gfF/LZXKMS3kPhfgrDhXQqcUF/y96GwBaOKbkeF5x0djKAIKGaXHGdqLaa6AW341UgYwIyYLtSg0iFkH/xVA55zUh6QBjkWMvsk+IrEqjWbKDptKsQI52zA11kWIhyDAZWTjy9Jk0UPhXSoY9pPR1OzPlL3rGwwwFVdMcya13gBCuC8qT5V3dsRjqB0VbQEhBOm2f/VS728/T2MwyyBhmawk8nAnWnxEyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4f+qTcL3r1paRL6UPCIYL0dHHZiThGuSVYpA3lIMJXE=;
- b=WSsAbp1hW+3kvKg4gEjsMhK6Llf4BxShmZzV2J7zfFpT2Cqf2EnmGycVuzJN5VrldqLQazwDlip8KLr47wLVCEJI33IwaHIRXVgcAhZgoDTkwLjNm1PQ4NWaEVOGtdQ7VfNhnHUI0AqaVnr6dEuZHkBTSsGoDFn9xVuSm0+U/gw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV2PR12MB5966.namprd12.prod.outlook.com (2603:10b6:408:171::21)
- by CH2PR12MB4971.namprd12.prod.outlook.com (2603:10b6:610:6b::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.21; Fri, 22 Dec
- 2023 06:43:13 +0000
-Received: from LV2PR12MB5966.namprd12.prod.outlook.com
- ([fe80::27d5:9024:445e:5c45]) by LV2PR12MB5966.namprd12.prod.outlook.com
- ([fe80::27d5:9024:445e:5c45%7]) with mapi id 15.20.7113.019; Fri, 22 Dec 2023
- 06:43:13 +0000
-Message-ID: <422f9b7b-dca0-f316-abb8-7d54f759ce08@amd.com>
-Date: Fri, 22 Dec 2023 12:13:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v3 1/7] platform/x86: Move hsmp_test to probe
-To: Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Thomas_Wei=c3=9fschuh?=
- <thomas@t-8ch.de>
-Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- Naveen Krishna Chatradhi <nchatrad@amd.com>
-References: <20231221172114.1569559-1-suma.hegde@amd.com>
- <14b02288-a14b-4e06-acf2-f2145df565a6@t-8ch.de>
- <0478c715-fc85-4024-aaa3-1ad6a51f86f7@redhat.com>
-Content-Language: en-US
-From: "Hegde, Suma" <Suma.Hegde@amd.com>
-In-Reply-To: <0478c715-fc85-4024-aaa3-1ad6a51f86f7@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA0PR01CA0087.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:ae::17) To LV2PR12MB5966.namprd12.prod.outlook.com
- (2603:10b6:408:171::21)
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="qOyxm1vt"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1703229663; x=1734765663;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=oESX+BUkZxAz71jZzvKrM1mTNFhevHp5W8rdO0Z8t8k=;
+  b=qOyxm1vttUy88HxeHgoXiyoxLPht8cgleL8PykWCxaQP4kCHh4gyI1pW
+   98jWy88C7IJ/I97H0q2gpe9nwdtzO8mzsVd/qg52a3Wg61kCN9eYpUUP5
+   9XE5Lzc23lwHr/1SVQNGC5094UbdbhvcAnjMEW4WKZotdrZvavB12pZlM
+   E2Zto7SUBq0cK9q4UGa6J2nWCmexGLjMZxsrwmVvmvgMux62hLgXnvHjN
+   njj92o0HDlOutAe7dn9xBsUXiIOrGFYJ6pVSNIt1qJaUQ6ohvR6sv9NeB
+   MSATt4OtUhISLiZCK02xz0UGx+FZSsheuahYEm8hkGd7fHgRKOIDUU4VP
+   A==;
+X-CSE-ConnectionGUID: uQcjyDEvQcSDMcpGsIQQjQ==
+X-CSE-MsgGUID: ihjFEEizT2KDbbSmitun8g==
+X-IronPort-AV: E=Sophos;i="6.04,294,1695657600"; 
+   d="scan'208";a="5470580"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 22 Dec 2023 15:20:56 +0800
+IronPort-SDR: CEXHnKjsHPutQt4oO99rmFjy4dRq+Z84fz/I7IzL0A9/t4Vlba6q6kLNRo4Tf95lMjCm/UT4bF
+ JGk8z1zsQPVg==
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 21 Dec 2023 22:31:37 -0800
+IronPort-SDR: Ki4y3sc9eanqLVJPSvRK3Plkkqvm3WxSIucGgKGnkHBj3F+BvXY4RLXkR4vt4wHn+H01ihUrVB
+ ptcRjJhjLbrw==
+WDCIronportException: Internal
+Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
+  by uls-op-cesaip01.wdc.com with ESMTP; 21 Dec 2023 23:20:54 -0800
+From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	linux-pci@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH v2] platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe
+Date: Fri, 22 Dec 2023 16:20:54 +0900
+Message-ID: <20231222072054.1640144-1-shinichiro.kawasaki@wdc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5966:EE_|CH2PR12MB4971:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e565d7b-d84c-4c8d-88f1-08dc02b944d8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	3jPBc3ykDghe6vKrjblc8C1VEvTSXyR7Kvmg0tAM0jM/ndt2VJk9zlq1eUtE1dCdEJM3aXOzR3rM2+gpeWNyMpTrtSI38AsVFQFwCsZEmJdOKmxn26FT7/p84mUWkwPcHxCdKRC7p2CLnKSIu8MgqTJbcPPukN5X7+lhl1Kbg/9ZPcFc7TcI/5S2bZDW6QnZGvi3pMrcGSv/MpigBy3gKqfLyHeFYT5GaRtPtdz1kWZQWfVM31nrUsU4HEfs+2pCMDlBfykJdSsOUntnm3fWvvyYLLRy5t8YpaB7p6z9DzDz6NU7J0C2I70hLLytEh1plx0mTLX0WksOCUDYRZBjp2J1azngnNcc6eQYDjTzxP+z2llC8yCU3WoVa637HF7b3cWi6rWiAUfm9x48TuYRZXqNUnJsYl8vdjGnSFdemPJS8MxdE0js6X0aoTVXJsPGZtVw2s2K2g/s78KmTF/liHAW7ZUPhO4AiA+58g1u6veFU38ZpLWUYokW6SW8voXwjNmJ4qB/MlgKH9udMNPSkWfxr+Pl93kVjE+kHNJd0It8bbAYKRREVid54JAEhyZU55Huh8UEua+xSyTGhzrnhyUK77paBtTfG5laxYTMk9ua42xrAMYRuQhGQavPCtEidU3cl2LtkG32/Qgsv/RfZRNLBV5s+hBq+gJsOTBWDxnu0TosI293KZA61m8P9nW0
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5966.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(136003)(376002)(366004)(396003)(230173577357003)(230273577357003)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(4326008)(8676002)(8936002)(66946007)(66476007)(66556008)(110136005)(316002)(2906002)(41300700001)(86362001)(31696002)(36756003)(38100700002)(5660300002)(478600001)(6506007)(6512007)(53546011)(55236004)(6666004)(66574015)(83380400001)(26005)(2616005)(31686004)(6486002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Y2JlQVNmSE8vNm9oZGdRb3EvbitiNGFDWUI1VVBDci9kbHdwRWhnM0pNOTBH?=
- =?utf-8?B?ZDllUDBpalRFeVlUc3FZWVU5ZG1aQzI5SlpodkdXaDVFVEJzZ3FORDNRdDEz?=
- =?utf-8?B?Sk9jQzltbWJ3U2U4OWN5Nlo5dGc1RlZLMG1RNmFzcHJFLytCbk1rbk9qSTlX?=
- =?utf-8?B?WHhuR3N1bkVOWWNmUHNqWFdnWTRvejczVml3RmZXMUE1RGZrNWVPUnl2b0xn?=
- =?utf-8?B?cXRMblFiSXM4bEVkOTFLTlVlejZVZnRoNXdmWUx3SklMVUp2UTcyOElzeTF3?=
- =?utf-8?B?TlRlMXNjdlFlS00wc3JnY2FtNEUvT29FYzljb0M1Z3pZRXh2d2FEa2pWdFpj?=
- =?utf-8?B?SzNqTTZpZEJodjlPdkE3NUd0SmRQVW9SNG5HcnUvNjlYTHIzTU9SYiszOXJ5?=
- =?utf-8?B?MGlmM2VUZEFaM0VIa0RXVkgxb1FtQ0JnbjNoYjFPRERCSk5LdjVTMHFseFQy?=
- =?utf-8?B?S0NxcERtUHM3MkYvano3R2pVait4andsY1NLZ0JiZGFjRDhiMlBKRWtvRzdw?=
- =?utf-8?B?YXhwZm5ucGFQekF3dzJiZWRyZVlRS2d4YVdwZWcveW9CMmIzR3JUd09sWWR0?=
- =?utf-8?B?ZUJLK3pnRXBTYzJvUEZjd1hoTU9nWisxUS9xNTh0NUwySVFNdHFhY0txWjNQ?=
- =?utf-8?B?b1YzbEE2T2phRWFJaldBRGM0dVAwNmk0bVZvbDRJa0Uza0JQenA4am9CeFU1?=
- =?utf-8?B?a0pCZkZXbWFZeDZvNkMzSzJSOUpjeDMzOG5vYUpBa0dDblBBZjhTYnYxa0F5?=
- =?utf-8?B?dVJ0MnIvS3ZwcDdTL1I2bnBndENwd243b3ZVSkVuQTdCQlJybkI3RW5wK3hD?=
- =?utf-8?B?aG1TNTVlZS9HZnBON1U4WGtMRm9Fb2NZeUIyUlcwbHgzbEFsd0wxZVdnVFpt?=
- =?utf-8?B?UHpwQ3ZoTFYrbmxOWkVlNnhUaU8vRDBobkZmS3E5NFpEYmZpYzBuVHM2MVZl?=
- =?utf-8?B?Y1I1TDdjWFljalZSQUU4eG9MRUg5aXVBcWpFcXJ3NjQ1ZzVWdnl6U3VyN2Uz?=
- =?utf-8?B?RmJPOVFLM1JHZjRzS3M2N0d6bDZ4bTF5Z2EzR0xraERpSWpubXVWb2ZyV2c5?=
- =?utf-8?B?OENVb1N4Z2xvWTNvcVJGN283UjlpMG9ObGRQQzB1bUdJZ3dmTnR0MFFoVTRY?=
- =?utf-8?B?QVY5Um0yOGZTK2JuTER3MkFyUnVqYkpRQzdtSU80a1pMUXBxN1M5MW4wNEls?=
- =?utf-8?B?UGNXU2ZsSXBzc3AxRjNjR2hmaGsyZGdmZ0M0b3JsY3dRaTdHOVo3S3BlYThx?=
- =?utf-8?B?a0ZscjFjL2FCRkMzT1NuQ2EvMEhsZmZ1TmZ3UjRNNW9YQmRVL1R5aGFTTlFs?=
- =?utf-8?B?WjFXSGV4MXdEcTY1QnFrUkgrdVRIOE5hYWF5ZDlydVhNSm5oQzdEZXgrbkd6?=
- =?utf-8?B?aklCNGxnSFJTWFlGVVFMMVNybWM1d3JGeEdRWWJIVmJvclh1Wm9NYTg2OGxM?=
- =?utf-8?B?Y1o2NU5lTnBMRDcxamV4RDZDYVkya3B0MnNJMWhpeVN0c3d1bWo5MXdGMHJk?=
- =?utf-8?B?WUp0Ti9Xa3g0WkJETnJQcHNsSlNRQWFJYUROYzhRVUw4L1RLc2p0N2VGUDhH?=
- =?utf-8?B?QXVoRWRaSmdnT29zTnNKVE1TQjJSd1VBdm1TYWxXVDZMTkRZeE1WWGpKR3kz?=
- =?utf-8?B?QWRpczZ5WVExT09wcEVYbjlyZ0o4RkdmbUZzNnk1YWVSdUFRN1R0YkM0dzJi?=
- =?utf-8?B?NU9WTFJTYnNDTGdyZ3ZDbmRpWEFVNjdPYXRKcThYTENudXUxNGJ6THNSclF0?=
- =?utf-8?B?QUo5aWNvNGFUSG4rekVjTmk0dkg5eGt6cHVKTFBvUnQ0N0NRMnRIUXZKY3RD?=
- =?utf-8?B?dzdnRDlmR3VnVS9tNnhEY3J6KzJvazRCclp5RW8xQWY3SE9vNmZRRUxjVzRp?=
- =?utf-8?B?Y1B2T1FvQ2JFTDFWQkN6NG9CUWwrdVMzTUp1T21HZTRPOEhsYm1oQVRwTVV3?=
- =?utf-8?B?SmVvVVRDQW9hQzVJQ2x1VjY0dXJ0ZzQ1MWdnai9WTGNWalJpU2grcCtYY3FI?=
- =?utf-8?B?YW5PSGpjZEQwR0wzU3lzU2xndit4M0p2S1lkSmYxekRWKzFpdklCOU03MmVX?=
- =?utf-8?B?Nkc2WXp0dzlNZG8xNkxKcVVqaUVZOUJPcXdmeTZnOU1XVVZ5cU4wdElBWVFO?=
- =?utf-8?Q?F0eFwLk7mb+0t1F0u5b/rkHjB?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e565d7b-d84c-4c8d-88f1-08dc02b944d8
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5966.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Dec 2023 06:43:13.0007
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YC+JJbeUAV2CVlKUb3lHmgfNzAicSnWSOHr/hZYSDwcU4Jg+ZPJhVpHinCKuMmUga2OM7GDLwPlER8ZM+5obHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4971
+Content-Transfer-Encoding: 8bit
 
-Hi Hans,
+p2sb_bar() unhides P2SB device to get resources from the device. It
+guards the operation by locking pci_rescan_remove_lock so that parallel
+rescans do not find the P2SB device. However, this lock causes deadlock
+when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
+locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
+call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
+Hence the deadlock.
 
-On 12/22/2023 1:50 AM, Hans de Goede wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
->
->
-> Hi Thomas,
->
-> On 12/21/23 18:27, Thomas Weißschuh wrote:
->> Hi,
->>
->> The subjects of all patches in the series are
->> very generic.
->> They should have some more specific prefix IMO.
-> That is a good point, but that is something which
-> I can fix while merging these. So assuming this
-> is the only outstanding comment there is no need
-> to send a v4 for this.
->
-> Regards,
->
-> Hans
->
-Thank you!  I will not send v4 unless I receive other new comments.
->
->> Dec 21, 2023 18:21:48 Suma Hegde <suma.hegde@amd.com>:
->>
->>> This is in advance to supporting ACPI based probe.
->>>
->>> In case of non-ACPI driver, hsmp_test() can be
->>> performed either in plat init() or in probe().
->>>
->>> however, in case of ACPI probing, hsmp_test() cannot
->>> be called in init(), as the mailbox reg offsets and
->>> base addresses are read from ACPI table in the probe().
->>>
->>> Hence, move hsmp_test() to probe as preparation for
->>> ACPI support.
->>>
->>> Also use hsmp_send_message() directly in hsmp_test()
->>> as the semaphore is already initialized in probe.
->>>
->>> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
->>> Signed-off-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
->>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->>> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->>> ---
->>> Changes since v1:
->>> 1. Add "Reviewed-by: Hans de Goede <hdegoede@redhat.com>"
->>> Changes since v2:
->>> 1. Add "Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>"
->>>
->>> drivers/platform/x86/amd/hsmp.c | 30 +++++++++++-------------------
->>> 1 file changed, 11 insertions(+), 19 deletions(-)
+To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
+Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
+for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
+refer the cache and return to the caller.
+
+Link: https://lore.kernel.org/linux-pci/6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j/
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+---
+This patch reflects discussions held at the Link tag. I confirmed this patch
+fixes the problem using a system with i2c_i801 device, building i2c_i801
+module as both built-in and loadable. Reviews will be appreicated.
+
+Changes from v1:
+* Reflected review comments by Andy
+
+Changes from RFC v2:
+* Reflected review comments on the list
+* Removed RFC prefix
+
+Changes from RFC v1:
+* Fixed a build warning poitned out in llvm list by kernel test robot
+
+ drivers/platform/x86/p2sb.c | 172 +++++++++++++++++++++++++++---------
+ 1 file changed, 131 insertions(+), 41 deletions(-)
+
+diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
+index 1cf2471d54dd..9693ed065782 100644
+--- a/drivers/platform/x86/p2sb.c
++++ b/drivers/platform/x86/p2sb.c
+@@ -26,6 +26,19 @@ static const struct x86_cpu_id p2sb_cpu_ids[] = {
+ 	{}
+ };
+ 
++/*
++ * Cache BAR0 of P2SB device functions 0 to 7.
++ * TODO: Move this definition to pci.h together with same other definitions.
++ */
++#define NR_P2SB_RES_CACHE 8
++
++struct p2sb_res_cache {
++	u32 bus_dev_id;
++	struct resource res;
++};
++
++static struct p2sb_res_cache p2sb_resources[NR_P2SB_RES_CACHE];
++
+ static int p2sb_get_devfn(unsigned int *devfn)
+ {
+ 	unsigned int fn = P2SB_DEVFN_DEFAULT;
+@@ -39,10 +52,15 @@ static int p2sb_get_devfn(unsigned int *devfn)
+ 	return 0;
+ }
+ 
++static int p2sb_valid_resource(struct resource *res)
++{
++	return res->flags ? 0 : -ENOENT;
++}
++
+ /* Copy resource from the first BAR of the device in question */
+-static int p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
++static void p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
+ {
+-	struct resource *bar0 = &pdev->resource[0];
++	struct resource *bar0 = pci_resource_n(pdev, 0);
+ 
+ 	/* Make sure we have no dangling pointers in the output */
+ 	memset(mem, 0, sizeof(*mem));
+@@ -56,12 +74,11 @@ static int p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
+ 	mem->end = bar0->end;
+ 	mem->flags = bar0->flags;
+ 	mem->desc = bar0->desc;
+-
+-	return 0;
+ }
+ 
+-static int p2sb_scan_and_read(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
++static int p2sb_scan_and_cache_devfn(struct pci_bus *bus, unsigned int devfn)
+ {
++	struct p2sb_res_cache *cache = &p2sb_resources[PCI_FUNC(devfn)];
+ 	struct pci_dev *pdev;
+ 	int ret;
+ 
+@@ -69,34 +86,58 @@ static int p2sb_scan_and_read(struct pci_bus *bus, unsigned int devfn, struct re
+ 	if (!pdev)
+ 		return -ENODEV;
+ 
+-	ret = p2sb_read_bar0(pdev, mem);
++	ret = p2sb_valid_resource(pci_resource_n(pdev, 0));
++	if (ret)
++		return ret;
++
++	p2sb_read_bar0(pdev, &cache->res);
++	cache->bus_dev_id = bus->dev.id;
+ 
+ 	pci_stop_and_remove_bus_device(pdev);
+-	return ret;
++	return 0;
+ }
+ 
+-/**
+- * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
+- * @bus: PCI bus to communicate with
+- * @devfn: PCI slot and function to communicate with
+- * @mem: memory resource to be filled in
+- *
+- * The BIOS prevents the P2SB device from being enumerated by the PCI
+- * subsystem, so we need to unhide and hide it back to lookup the BAR.
+- *
+- * if @bus is NULL, the bus 0 in domain 0 will be used.
+- * If @devfn is 0, it will be replaced by devfn of the P2SB device.
+- *
+- * Caller must provide a valid pointer to @mem.
+- *
+- * Locking is handled by pci_rescan_remove_lock mutex.
+- *
+- * Return:
+- * 0 on success or appropriate errno value on error.
+- */
+-int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
++static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
++{
++	unsigned int slot, fn;
++	int ret;
++
++	/* Scan the P2SB device and cache its BAR0 */
++	ret = p2sb_scan_and_cache_devfn(bus, devfn);
++	if (ret)
++		return ret;
++
++	/*
++	 * When function number of the P2SB device is zero, scan other function
++	 * numbers.
++	 */
++	if (PCI_FUNC(devfn) != 0)
++		return 0;
++
++	/* If devices are available, cache their BAR0 */
++	slot = PCI_SLOT(devfn);
++	for (fn = 1; fn < NR_P2SB_RES_CACHE; fn++)
++		p2sb_scan_and_cache_devfn(bus, PCI_DEVFN(slot, fn));
++
++	return 0;
++}
++
++static struct pci_bus *p2sb_get_bus(struct pci_bus *bus)
++{
++	static struct pci_bus *p2sb_bus;
++
++	bus = bus ?: p2sb_bus;
++	if (bus)
++		return bus;
++
++	/* Assume P2SB is on the bus 0 in domain 0 */
++	p2sb_bus = pci_find_bus(0, 0);
++	return p2sb_bus;
++}
++
++static int p2sb_cache_resources(void)
+ {
+-	struct pci_dev *pdev_p2sb;
++	static struct pci_bus *bus;
+ 	unsigned int devfn_p2sb;
+ 	u32 value = P2SBC_HIDE;
+ 	int ret;
+@@ -106,8 +147,9 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* if @bus is NULL, use bus 0 in domain 0 */
+-	bus = bus ?: pci_find_bus(0, 0);
++	bus = p2sb_get_bus(NULL);
++	if (!bus)
++		return -ENODEV;
+ 
+ 	/*
+ 	 * Prevent concurrent PCI bus scan from seeing the P2SB device and
+@@ -115,30 +157,78 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+ 	 */
+ 	pci_lock_rescan_remove();
+ 
+-	/* Unhide the P2SB device, if needed */
++	/*
++	 * The BIOS prevents the P2SB device from being enumerated by the PCI
++	 * subsystem, so we need to unhide and hide it back to lookup the BAR.
++	 * Unhide the P2SB device here, if needed.
++	 */
+ 	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
+ 	if (value & P2SBC_HIDE)
+ 		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
+ 
+-	pdev_p2sb = pci_scan_single_device(bus, devfn_p2sb);
+-	if (devfn)
+-		ret = p2sb_scan_and_read(bus, devfn, mem);
+-	else
+-		ret = p2sb_read_bar0(pdev_p2sb, mem);
+-	pci_stop_and_remove_bus_device(pdev_p2sb);
++	ret = p2sb_scan_and_cache(bus, devfn_p2sb);
+ 
+ 	/* Hide the P2SB device, if it was hidden */
+ 	if (value & P2SBC_HIDE)
+ 		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
+-
+ 	pci_unlock_rescan_remove();
+ 
+-	if (ret)
+-		return ret;
++	return ret;
++}
++
++/**
++ * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
++ * @bus: PCI bus to communicate with
++ * @devfn: PCI slot and function to communicate with
++ * @mem: memory resource to be filled in
++ *
++ * If @bus is NULL, the bus 0 in domain 0 will be used.
++ * If @devfn is 0, it will be replaced by devfn of the P2SB device.
++ *
++ * Caller must provide a valid pointer to @mem.
++ *
++ * Return:
++ * 0 on success or appropriate errno value on error.
++ */
++int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
++{
++	struct p2sb_res_cache *cache;
++	int ret;
++
++	bus = p2sb_get_bus(bus);
++	if (!bus)
++		return -ENODEV;
+ 
+-	if (mem->flags == 0)
++	if (!devfn) {
++		ret = p2sb_get_devfn(&devfn);
++		if (ret)
++			return ret;
++	}
++
++	cache = &p2sb_resources[PCI_FUNC(devfn)];
++	if (cache->bus_dev_id != bus->dev.id)
+ 		return -ENODEV;
+ 
++	ret = p2sb_valid_resource(&cache->res);
++	if (ret)
++		return ret;
++
++	memcpy(mem, &cache->res, sizeof(*mem));
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(p2sb_bar);
++
++static int __init p2sb_fs_init(void)
++{
++	p2sb_cache_resources();
++	return 0;
++}
++
++/*
++ * pci_rescan_remove_lock avoids access to unhidden P2SB devices, but it causes
++ * deadlock with sysfs pci bus rescan. To avoid the deadlock, access to P2SB
++ * devices at an early step in kernel initialization and cache required
++ * resources. This should happen after subsys_initcall which initializes PCI
++ * subsystem and before device_initcall which requires P2SB resources.
++ */
++fs_initcall(p2sb_fs_init);
+-- 
+2.43.0
+
