@@ -1,95 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2952C194;
-	Fri, 22 Dec 2023 18:27:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3853F2C844;
+	Fri, 22 Dec 2023 19:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SgLS30tP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B821C433CB;
-	Fri, 22 Dec 2023 18:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703269628;
-	bh=dS7mL9HhRhd3rfeEYnNgAVuQItdNhZxOHpOgKsRwE/0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=SgLS30tPAiW6hJyUQ8uudxG05tAUc2wALMP3HrW4TjiRkJenslv47r3OQhHkX7u+T
-	 MBKu9x6HiL5H4etyXmjzFNJS5Wy94IXMWgVboiRixqfkGv7Gkj778nWIXmta1bdJkn
-	 gHChM3qHA+GsQbzTGSIJ0OnBK+soBs9GZa/aZYjr7mKPEhtgkPe38iZmXMbhkOQcEu
-	 t8DNjvalBEkVhKQFVNPpQ41/xlifpcbNh8I8HWPjMRso6Dy3y0X4ZgRGgH06iryH28
-	 NRHnbFSVv7UwEbludONdg68AkQB9cgRcz7quLu/2wiw9nb54eMDV17ULsaYl6ga5MT
-	 DygcGFet1Y5DQ==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Fri, 22 Dec 2023 11:27:02 -0700
-Subject: [PATCH 2/2] platform/x86/intel/pmc: Mark lnl_d3_fixup() and
- lnl_resume() as static
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WN0C8Mbj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=FnUWXUKDiEF2aBrjIZkaYhL1kHnmdseYDG2uP7w8EAo=; b=WN0C8MbjR8jyiZpRe/AHwfToER
+	KIVeQq/EUjfNAADrnV7UtCMWActJONXUYbSFlLKidtUrPdwDHMOaO64oPtMRm1BQp6mEeOqlEJhcb
+	cxMA1qYrrC0NKylCb9vQdiHCpp3qiZl2d/6rphoEXTh2CGDuP5jWh85cPU2Q5wOcDX88qHsXWNplU
+	FCvPO3onuEXfJn4saUw/Zj6Q7ONgZRnloPNE60W8/b+5/tiY8n1YXh9n95VizPh8PteBMStUE+l8Q
+	AEivnfHeVegS+zEFNKna9paZP+snTm8iZ8yDoHSHlhRg+3SV+ALoHJ9/1RGBSf+BRIKf+xtsyjnvs
+	HROi++Pg==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rGkvg-006gN7-27;
+	Fri, 22 Dec 2023 19:11:28 +0000
+Message-ID: <70679be0-d77d-48e8-8b30-027a05e38917@infradead.org>
+Date: Fri, 22 Dec 2023 11:11:28 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] Documentation: move driver-api/isapnp to
+ userspace-api/
+Content-Language: en-US
+To: Vegard Nossum <vegard.nossum@oracle.com>, Jonathan Corbet
+ <corbet@lwn.net>, Jaroslav Kysela <perex@perex.cz>,
+ Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+References: <20231221124816.2978000-1-vegard.nossum@oracle.com>
+ <20231221124816.2978000-2-vegard.nossum@oracle.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20231221124816.2978000-2-vegard.nossum@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231222-intel-pmc-missing-prototypes-v1-2-3f0d47377d4c@kernel.org>
-References: <20231222-intel-pmc-missing-prototypes-v1-0-3f0d47377d4c@kernel.org>
-In-Reply-To: <20231222-intel-pmc-missing-prototypes-v1-0-3f0d47377d4c@kernel.org>
-To: irenic.rajneesh@gmail.com, david.e.box@intel.com, hdegoede@redhat.com, 
- ilpo.jarvinen@linux.intel.com, rajvi.jingar@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, patches@lists.linux.dev, 
- Stephen Rothwell <sfr@canb.auug.org.au>, 
- Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.13-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1756; i=nathan@kernel.org;
- h=from:subject:message-id; bh=dS7mL9HhRhd3rfeEYnNgAVuQItdNhZxOHpOgKsRwE/0=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDKmtV35d51tyYvuM84cX5xtZnll6nzmUo8J95b8HZRaHD
- yuGOu270VHKwiDGxSArpshS/Vj1uKHhnLOMN05NgpnDygQyhIGLUwAm8nQ+w//yfq+pbh7VR14f
- +n/k8MPiO9c3rpsl8D4nn+n6Kzv1pZ9jGf77rfQqddRz03LfYap8KYLffObS4J6yxKUHXjW3Lfl
- +ZCsHAA==
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-With -Wmissing-prototypes, there are two instances flagged with no
-prototypes:
 
-  drivers/platform/x86/intel/pmc/lnl.c:503:6: error: no previous prototype for 'lnl_d3_fixup' [-Werror=missing-prototypes]
-    503 | void lnl_d3_fixup(void)
-        |      ^~~~~~~~~~~~
-  drivers/platform/x86/intel/pmc/lnl.c:509:5: error: no previous prototype for 'lnl_resume' [-Werror=missing-prototypes]
-    509 | int lnl_resume(struct pmc_dev *pmcdev)
-        |     ^~~~~~~~~~
-  cc1: all warnings being treated as errors
 
-These functions are not used outside of this translation unit, so mark
-them as static to fix the warning.
+On 12/21/23 04:48, Vegard Nossum wrote:
+> driver-api/isapnp documents /proc interfaces for interfacing directly
+> with ISA Plug & Play devices, not any kind of API for kernel developers,
+> and should thus also live under userspace-api/.
+> 
+> Also fix a few issues while we're at it.
+> 
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
 
-Fixes: 119652b855e6 ("platform/x86/intel/pmc: Add Lunar Lake M support to intel_pmc_core driver")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Closes: https://lore.kernel.org/all/20231222135412.6bd796cc@canb.auug.org.au/
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
- drivers/platform/x86/intel/pmc/lnl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Thanks.
 
-diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
-index 88b35931f5df..b5de569e6662 100644
---- a/drivers/platform/x86/intel/pmc/lnl.c
-+++ b/drivers/platform/x86/intel/pmc/lnl.c
-@@ -500,13 +500,13 @@ const struct pmc_reg_map lnl_socm_reg_map = {
-  * Set power state of select devices that do not have drivers to D3
-  * so that they do not block Package C entry.
-  */
--void lnl_d3_fixup(void)
-+static void lnl_d3_fixup(void)
- {
- 	pmc_core_set_device_d3(LNL_IPU_PCI_DEV);
- 	pmc_core_set_device_d3(LNL_NPU_PCI_DEV);
- }
- 
--int lnl_resume(struct pmc_dev *pmcdev)
-+static int lnl_resume(struct pmc_dev *pmcdev)
- {
- 	lnl_d3_fixup();
- 	return pmc_core_resume_common(pmcdev);
+> ---
+>  Documentation/driver-api/index.rst                     | 1 -
+>  Documentation/userspace-api/index.rst                  | 1 +
+>  Documentation/{driver-api => userspace-api}/isapnp.rst | 8 ++++----
+>  MAINTAINERS                                            | 2 +-
+>  drivers/pnp/isapnp/Kconfig                             | 2 +-
+>  5 files changed, 7 insertions(+), 7 deletions(-)
+>  rename Documentation/{driver-api => userspace-api}/isapnp.rst (51%)
+> 
 
 -- 
-2.43.0
-
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
