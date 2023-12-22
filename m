@@ -1,125 +1,242 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1512AF9DA
-	for <platform-driver-x86@vger.kernel.org>; Fri, 22 Dec 2023 08:24:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02259D2E7
+	for <platform-driver-x86@vger.kernel.org>; Fri, 22 Dec 2023 08:51:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YWgjRveF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bn/8ByIy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703233473; x=1734769473;
+  t=1703235114; x=1734771114;
   h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=dE5+QUY3zzKCGT2EwHEq7KdcM4EdS6i+AlV6NpyFTLU=;
-  b=YWgjRveFueA6ulCjk7eG6vPtbl1IlpUWhumcqUK4JE7FjdV7BdinafUy
-   LhKf8ql4FLl6khv9JkCcxcFr9zVV2RkfPJuX06pZPqLlJJHqnJsvcnEcc
-   7Vzvu4w0rpGsIckQ2ZRA/fXkc610kdcLKZlOCAnexOTFlSqMPqogEcHe+
-   9/HA77oJKsrKoI4rKxpIg5okVJxsM7KAwFYHHVIylG7eNFL1LmYx95G2H
-   MUBT/r6hCzLv3970jfbM6BXsWkweqCNJXb8RR/Bh3UbnVwtpR9o1g9eBa
-   qcQoTWc8Y84QZTRNk5Av8xBxq//ANopsrWGe/bBAU4BwqK4/6UijAAI2/
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="3341162"
+   references:mime-version;
+  bh=KC1Dc3Zu8aE7aAv4b0QKV24oTxyVUph8YM0Kjsv1NXQ=;
+  b=Bn/8ByIyvZpCHQIHxpise+xN5iEajhkKN3ydy+bFKzGaCMuHjb+WZf2v
+   FVzT/fw35qqoFZBIY0YsTM+mv9QCS55cY2JP8LLdJhm3VzACSM30AELFK
+   RkFwsCP2San03ual0RbzF3DUFKRjQIfdwMU+mwX4LiZDIlmpWQsUiM4Ut
+   SPw/vE3vRGPGXr67vrdgnA2ZcDJMAaPUCGpvrCpbtNQEFwlAFXvS+sEh+
+   bmF2Q7rMmvY5ac1Slb0Pq3E/O5SNi0BlSx7b01walEerIEW48RfGWmV1v
+   dQGnx/KeabDOaEjVIKmx4Ru3qcxYXo6sQZ5U87eaflCku2+aNAC2JRsH4
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="399915867"
 X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="3341162"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 00:24:31 -0800
+   d="scan'208";a="399915867"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 00:51:54 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="811261132"
 X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="11395777"
+   d="scan'208";a="811261132"
 Received: from mschutz-mobl.ger.corp.intel.com ([10.251.210.169])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 00:24:29 -0800
-Date: Fri, 22 Dec 2023 10:24:22 +0200 (EET)
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 00:51:52 -0800
+Date: Fri, 22 Dec 2023 10:51:50 +0200 (EET)
 From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Suma Hegde <suma.hegde@amd.com>
 cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
     Naveen Krishna Chatradhi <nchatrad@amd.com>
-Subject: Re: [PATCH v3 7/7] platform/x86: Non-ACPI support for AMD
- F1A_M00~0Fh
-In-Reply-To: <20231221172114.1569559-7-suma.hegde@amd.com>
-Message-ID: <3ee53cf-2cc-7e43-e8c0-46fa5b203f90@linux.intel.com>
-References: <20231221172114.1569559-1-suma.hegde@amd.com> <20231221172114.1569559-7-suma.hegde@amd.com>
+Subject: Re: [PATCH v3 6/7] platform/x86: Convert to ACPI based probing
+In-Reply-To: <20231221172114.1569559-6-suma.hegde@amd.com>
+Message-ID: <19cedcb8-eb39-bee4-fcd4-5d7a375e5ca@linux.intel.com>
+References: <20231221172114.1569559-1-suma.hegde@amd.com> <20231221172114.1569559-6-suma.hegde@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-1091252669-1703233422=:1692"
-Content-ID: <6373f2d7-10b8-151e-be4-20d76363c023@linux.intel.com>
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1091252669-1703233422=:1692
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <aaba7eca-f9e-dc4b-af9a-9c9ac0d0cc24@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
 On Thu, 21 Dec 2023, Suma Hegde wrote:
 
-> AMD EPYC family 0x1A and Model 0x0-0xF are having different
-> mailbox message ID offset compared to previous
-> platforms. In case of ACPI based BIOS, this information will be read
-> from ACPI table, for non-ACPI BIOS, this needs to be #defined.
+> ACPI table provides mailbox base address and register offset
+> information. The base address is provided as part of CRS method
+> and mailbox offsets are provided through DSD table.
+> Sockets are differentiated by UIDs.
 > 
 > Signed-off-by: Suma Hegde <suma.hegde@amd.com>
 > Signed-off-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> 
 > ---
 > Changes since v1:
-> Add "Reviewed-by: Hans de Goede <hdegoede@redhat.com>"
+> 1. Define amd_hsmp_acpi_rdwr() for doing mailbox memory mapped io
+> 2. Add a check to see if mailbox register offsets are set in
+>    hsmp_read_acpi_dsd()
+> 3. Add a check to see if sock->mbinfo.base_addr sockck->mbinfo.size are
+>    set in hsmp_read_acpi_crs()
+> 4. Change order of the statements in switch case ACPI_RESOURCE_TYPE_FIXED_MEMORY32
+>    in hsmp_resource()
+> 5. Add hsmp_test() after hsmp_parse_acpi_table() call
+> 6. Add r.end < r.start check in hsmp_resource()
+> 7. Add !dsd error check in hsmp_read_acpi_dsd
 > Changes since v2:
-> 1. Change "non ACPI" to "non-ACPI"
-> 2. Add "Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>"
+> 1. Change EINVAL to ENODEV in hsmp_read_acpi_dsd()
+> 2. Change EINVAL to ENOENT in hsmp_read_acpi_dsd()
+> 3. Use resource_size() in hsmp_resource()
 > 
->  drivers/platform/x86/amd/hsmp.c | 23 +++++++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/amd/hsmp.c | 324 +++++++++++++++++++++++++++++---
+>  1 file changed, 296 insertions(+), 28 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
-> index 46924c572055..cc5e5e8124c9 100644
+> index e77d4cd83a07..46924c572055 100644
 > --- a/drivers/platform/x86/amd/hsmp.c
 > +++ b/drivers/platform/x86/amd/hsmp.c
-> @@ -44,6 +44,7 @@
->   */
->  #define SMN_HSMP_BASE		0x3B00000
->  #define SMN_HSMP_MSG_ID		0x0010534
-> +#define SMN_HSMP_MSG_ID_F1A_M0H	0x0010934
->  #define SMN_HSMP_MSG_RESP	0x0010980
->  #define SMN_HSMP_MSG_DATA	0x00109E0
+> @@ -18,9 +18,11 @@
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/semaphore.h>
+> +#include <linux/acpi.h>
 >  
-> @@ -712,6 +713,15 @@ static int hsmp_cache_proto_ver(u16 sock_ind)
+>  #define DRIVER_NAME		"amd_hsmp"
+> -#define DRIVER_VERSION		"2.0"
+> +#define DRIVER_VERSION		"2.2"
+> +#define ACPI_HSMP_DEVICE_HID	"AMDI0097"
+>  
+>  /* HSMP Status / Error codes */
+>  #define HSMP_STATUS_NOT_READY	0x00
+> @@ -54,6 +56,11 @@
+>  
+>  #define HSMP_ATTR_GRP_NAME_SIZE	10
+>  
+> +/* These are the strings specified in ACPI table */
+> +#define MSG_IDOFF_STR		"MsgIdOffset"
+> +#define MSG_ARGOFF_STR		"MsgArgOffset"
+> +#define MSG_RESPOFF_STR		"MsgRspOffset"
+> +
+>  struct hsmp_mbaddr_info {
+>  	u32 base_addr;
+>  	u32 msg_id_off;
+> @@ -66,6 +73,7 @@ struct hsmp_socket {
+>  	struct bin_attribute hsmp_attr;
+>  	struct hsmp_mbaddr_info mbinfo;
+>  	void __iomem *metric_tbl_addr;
+> +	void __iomem *virt_base_addr;
+>  	struct semaphore hsmp_sem;
+>  	char name[HSMP_ATTR_GRP_NAME_SIZE];
+>  	struct pci_dev *root;
+> @@ -78,12 +86,14 @@ struct hsmp_plat_device {
+>  	struct hsmp_socket *sock;
+>  	u32 proto_ver;
+>  	u16 num_sockets;
+> +	bool is_acpi_device;
+> +	bool is_probed;
+>  };
+>  
+>  static struct hsmp_plat_device plat_dev;
+>  
+> -static int amd_hsmp_rdwr(struct hsmp_socket *sock, u32 offset,
+> -			 u32 *value, bool write)
+> +static int amd_hsmp_pci_rdwr(struct hsmp_socket *sock, u32 offset,
+> +			     u32 *value, bool write)
+>  {
+>  	int ret;
+>  
+> @@ -101,8 +111,29 @@ static int amd_hsmp_rdwr(struct hsmp_socket *sock, u32 offset,
 >  	return ret;
 >  }
 >  
-> +static inline bool is_f1a_m0h(void)
+> +static void amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
+> +			       u32 *value, bool write)
 > +{
-> +	if (boot_cpu_data.x86 == 0x1A &&
-> +	    (boot_cpu_data.x86_model >= 0x00 && boot_cpu_data.x86_model <= 0x0F))
-> +		return true;
+> +	if (write)
+> +		iowrite32(*value, sock->virt_base_addr + offset);
+> +	else
+> +		*value = ioread32(sock->virt_base_addr + offset);
+> +}
+> +
+> +static int amd_hsmp_rdwr(struct hsmp_socket *sock, u32 offset,
+> +			 u32 *value, bool write)
+> +{
+> +	if (plat_dev.is_acpi_device)
+> +		amd_hsmp_acpi_rdwr(sock, offset, value, write);
+> +	else
+> +		return amd_hsmp_pci_rdwr(sock, offset, value, write);
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+> - * Send a message to the HSMP port via PCI-e config space registers.
+> + * Send a message to the HSMP port via PCI-e config space registers
+> + * or by writing to MMIO space.
+>   *
+>   * The caller is expected to zero out any unused arguments.
+>   * If a response is expected, the number of response words should be greater than 0.
+> @@ -450,6 +481,9 @@ static int hsmp_create_sysfs_interface(void)
+>  	int ret;
+>  	u16 i;
+>  
+> +	if (plat_dev.is_acpi_device)
+> +		return 0;
+
+This comes out of nowhere... Why proto_ver isn't enough to handle this?
+If it's needed, would the check perhaps belong to 
+hsmp_is_sock_attr_visible() instead?
+
+>  	/* String formatting is currently limited to u8 sockets */
+>  	if (WARN_ON(plat_dev.num_sockets > U8_MAX))
+>  		return -ERANGE;
+> @@ -487,13 +521,188 @@ static int hsmp_create_sysfs_interface(void)
+>  	return devm_device_add_groups(plat_dev.sock[0].dev, hsmp_attr_grps);
+>  }
+>  
+> -static int hsmp_cache_proto_ver(void)
+> +/* This is the UUID used for HSMP */
+> +static const guid_t acpi_hsmp_uuid = GUID_INIT(0xb74d619d, 0x5707, 0x48bd,
+> +						0xa6, 0x9f, 0x4e, 0xa2,
+> +						0x87, 0x1f, 0xc2, 0xf6);
+> +
+> +static inline bool is_acpi_hsmp_uuid(union acpi_object *obj)
+> +{
+> +	if (obj->type == ACPI_TYPE_BUFFER && obj->buffer.length == 16)
+
+16 -> UUID_SIZE.
+
+> +		return guid_equal((guid_t *)obj->buffer.pointer, &acpi_hsmp_uuid);
 > +
 > +	return false;
 > +}
-> +
->  static int init_socket_objects(struct device *dev)
->  {
->  	struct hsmp_socket *sock;
-> @@ -725,10 +735,19 @@ static int init_socket_objects(struct device *dev)
->  		sock->sock_ind			= i;
->  		sock->dev			= dev;
->  		sock->mbinfo.base_addr		= SMN_HSMP_BASE;
-> -		sock->mbinfo.msg_id_off		= SMN_HSMP_MSG_ID;
-> +		sema_init(&sock->hsmp_sem, 1);
-> +
-> +		/*
-> +		 * This is a tranisitional change from non-ACPI to ACPI, only
 
-transitional ?
+
+>  static int hsmp_pltdrv_probe(struct platform_device *pdev)
+>  {
+> +	struct acpi_device *adev;
+> +	u16 sock_ind = 0;
+>  	int ret;
+>  
+> -	plat_dev.sock = devm_kzalloc(&pdev->dev,
+> -				     (plat_dev.num_sockets * sizeof(struct hsmp_socket)),
+> -				     GFP_KERNEL);
+> -	if (!plat_dev.sock)
+> -		return -ENOMEM;
+> -
+> -	ret = init_socket_objects(&pdev->dev);
+> -	if (ret)
+> -		return ret;
+> -
+> -	plat_dev.hsmp_device.name	= HSMP_CDEV_NAME;
+> -	plat_dev.hsmp_device.minor	= MISC_DYNAMIC_MINOR;
+> -	plat_dev.hsmp_device.fops	= &hsmp_fops;
+> -	plat_dev.hsmp_device.parent	= &pdev->dev;
+> -	plat_dev.hsmp_device.nodename	= HSMP_DEVNODE_NAME;
+> -	plat_dev.hsmp_device.mode	= 0644;
+> +	/*
+> +	 * On ACPI supported BIOS, there is an ACPI HSMP device added for
+> +	 * each socket, so the per socket probing, but the memory allocated for
+> +	 * sockets should be contiguous to access it as an array,
+> +	 * Hence allocate memory for all the sockets at once instead of allocating
+> +	 * on each probe.
+> +	 */
+> +	if (!plat_dev.is_probed) {
+> +		plat_dev.sock = devm_kzalloc(&pdev->dev,
+> +					     (plat_dev.num_sockets * sizeof(struct hsmp_socket)),
+> +					     GFP_KERNEL);
+
+I know you're just moving code around here so no need to do it in this 
+patchset but this should use devm_kcalloc() and there are also extra 
+parenthesis.
 
 
 -- 
  i.
---8323329-1091252669-1703233422=:1692--
+
