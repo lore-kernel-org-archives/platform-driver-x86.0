@@ -1,91 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55F122F06;
-	Fri, 22 Dec 2023 14:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE3F2C188;
+	Fri, 22 Dec 2023 18:27:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tm4u4DAC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703256303; x=1734792303;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=KbsD23y807pggSXX2eNvN5KBuQftShreQsQda+N3LfE=;
-  b=Tm4u4DACHgv/ikefxV265dvK18R1jgTncRJm12IwXMlqZqe5CyHr4srK
-   vbAqzEvplqAFg+t9pVgGVZrsOfecab+HyDKS6POdNNN1vgDVwwO4Z4WwG
-   codGsJiNdXKPQZ7UUMT6CGeQntwFLG4Tzw57XCsQUnhYbSlJ7L9EgxVo3
-   8QPX1qLLGIfmJLWcYzFLbL6NHnaRB/U4dXIeW2HTGPODP97EoPHoepVSh
-   psoU4YxWbZ1jZuRi5HNRJB1M1oIb2xRM0zuuR9G46y75gPc3udoqq2NHH
-   cgq08zGYB8l76qf/XqTCcvdNx/+KUikeyBah2GDXSob9mTybDB9kMRbVc
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="398906058"
-X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
-   d="scan'208";a="398906058"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 06:45:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="900436332"
-X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
-   d="scan'208";a="900436332"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 22 Dec 2023 06:45:00 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 26754291; Fri, 22 Dec 2023 16:44:59 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] platform/x86: Remove "X86 PLATFORM DRIVERS - ARCH" from MAINTAINERS
-Date: Fri, 22 Dec 2023 16:44:53 +0200
-Message-ID: <20231222144453.2888706-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9T5pnQp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B609BC433C8;
+	Fri, 22 Dec 2023 18:27:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703269627;
+	bh=1ogxdoJeOc5yB3uT5PUZ+U4hWTGXsTipIFLZZ4w0iVg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Q9T5pnQp/qMhoaiGRcMZ5eumBGWq5iAUp2PCwcE/5F6qRoCIaYM+toRDrSMcni76m
+	 72n7NusZefZY38HAHTXRqT3/Zx5MwsDv7vLIEe6/VY/wZVkv86DwrsD9OnZZeqKYzn
+	 dHpI9FO31otLmEIjHqN2u4AO9PqKhVWR+K9j/KBgl+Oh4aInSMJOs/VKQLiNIo7NsU
+	 Jx8LpAhfybqQhW3eDZttvsx3IVFRxxJzh8dQzz1YW/CiZj3YiXuIIb4Foz93QWtbZS
+	 r9sYVdNW0d9LcYmgsjLWOKBPL0zYiS4y3ddxzQ/8yIyhlDLyHSeUCc4063gpvz53OM
+	 IQulNIvM+SBuA==
+From: Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH 0/2] platform/x86/intel/pmc: Fix recent instances of
+ -Wmissing-prototypes
+Date: Fri, 22 Dec 2023 11:27:00 -0700
+Message-Id: <20231222-intel-pmc-missing-prototypes-v1-0-3f0d47377d4c@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPTUhWUC/x3MwQqDMAwA0F+RnBewmRPZr4wdrKZdQNvSFHGI/
+ 27x+C7vAOUsrPBuDsi8iUoMFebRwPQbg2eUuRqopachIpRQeMG0TriKqgSPKccSyz+x4uDsqzW
+ dNb0doBYps5P97j/f87wAuwQQZm4AAAA=
+To: irenic.rajneesh@gmail.com, david.e.box@intel.com, hdegoede@redhat.com, 
+ ilpo.jarvinen@linux.intel.com, rajvi.jingar@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, patches@lists.linux.dev, 
+ Stephen Rothwell <sfr@canb.auug.org.au>, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.13-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=925; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=1ogxdoJeOc5yB3uT5PUZ+U4hWTGXsTipIFLZZ4w0iVg=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDKmtV35tK1E35/2r/DNw0VuFvqojYg8zeRj+xCw/Ub6s+
+ O7H4t2mHaUsDGJcDLJiiizVj1WPGxrOOct449QkmDmsTCBDGLg4BWAi1oUM/5S9Z7xlW/T4olt9
+ wozt5x5LWs5iDjSU15pw2lYp8fBpuzRGhm65oKcm1iZcV4qXrVC3mVnsx3jFjUHuK79yirO+s1Y
+ eFwA=
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-It seems traffic there is quite low and changes are often not related
-to PDx86 anyhow. Besides that I have a lot of other stuff to do, I'm
-rearly pay attention on these emails. Doesn't seem Daren to be active
-either. With this in mind, remove (stale) section.
+As reported by Stephen at [1], there are a few instances of
+-Wmissing-prototypes, which break the build with CONFIG_WERROR=y. This
+series marks these functions as static because they are not used outside
+of these translation units.
 
-Note, it might be make sense to actually move that folder under PDx86
-umbrella (in MAINTAINERS) if people find it suitable. That will reduce
-burden on arch/x86 maintenance.
+Feel free to squash these into the original changes if the branch is not
+set in stone.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+[1]: https://lore.kernel.org/all/20231222135412.6bd796cc@canb.auug.org.au/
+
 ---
- MAINTAINERS | 9 ---------
- 1 file changed, 9 deletions(-)
+Nathan Chancellor (2):
+      platform/x86/intel/pmc: Mark arl_d3_fixup() and arl_resume() as static
+      platform/x86/intel/pmc: Mark lnl_d3_fixup() and lnl_resume() as static
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index da022945e184..33d15e089ccb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23820,15 +23820,6 @@ F:	drivers/platform/olpc/
- F:	drivers/platform/x86/
- F:	include/linux/platform_data/x86/
- 
--X86 PLATFORM DRIVERS - ARCH
--R:	Darren Hart <dvhart@infradead.org>
--R:	Andy Shevchenko <andy@infradead.org>
--L:	platform-driver-x86@vger.kernel.org
--L:	x86@kernel.org
--S:	Maintained
--T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
--F:	arch/x86/platform
--
- X86 PLATFORM UV HPE SUPERDOME FLEX
- M:	Steve Wahl <steve.wahl@hpe.com>
- R:	Justin Ernst <justin.ernst@hpe.com>
+ drivers/platform/x86/intel/pmc/arl.c | 4 ++--
+ drivers/platform/x86/intel/pmc/lnl.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+---
+base-commit: 119652b855e6c96676406ee9a7f535f4db4e8eff
+change-id: 20231222-intel-pmc-missing-prototypes-8fb5014b16b8
+
+Best regards,
 -- 
-2.43.0.rc1.1.gbec44491f096
+Nathan Chancellor <nathan@kernel.org>
 
