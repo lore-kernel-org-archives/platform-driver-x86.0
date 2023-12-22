@@ -1,242 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02259D2E7
-	for <platform-driver-x86@vger.kernel.org>; Fri, 22 Dec 2023 08:51:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411951CF94;
+	Fri, 22 Dec 2023 14:29:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bn/8ByIy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BW/nSFb/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703235114; x=1734771114;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=KC1Dc3Zu8aE7aAv4b0QKV24oTxyVUph8YM0Kjsv1NXQ=;
-  b=Bn/8ByIyvZpCHQIHxpise+xN5iEajhkKN3ydy+bFKzGaCMuHjb+WZf2v
-   FVzT/fw35qqoFZBIY0YsTM+mv9QCS55cY2JP8LLdJhm3VzACSM30AELFK
-   RkFwsCP2San03ual0RbzF3DUFKRjQIfdwMU+mwX4LiZDIlmpWQsUiM4Ut
-   SPw/vE3vRGPGXr67vrdgnA2ZcDJMAaPUCGpvrCpbtNQEFwlAFXvS+sEh+
-   bmF2Q7rMmvY5ac1Slb0Pq3E/O5SNi0BlSx7b01walEerIEW48RfGWmV1v
-   dQGnx/KeabDOaEjVIKmx4Ru3qcxYXo6sQZ5U87eaflCku2+aNAC2JRsH4
+  t=1703255393; x=1734791393;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GOKIXT4a3uK0FQyf+eOrkj8hRwcz+XIwMIH/R7VMSwE=;
+  b=BW/nSFb/NMkBcVUbwN8wB+iFZOfQri1BNxQCyiJv/RYHSYiAg/kzaLSn
+   F2Ua78c4avXCrwpyF6tkGPvMzEZh2t8oKHi+WKvRI6xJZ/iORdeJcF0q9
+   0hooQgQOfVd2EMX8Pdj4XTxIC3qkVo1vVzlFuHHSr8MoKnvpUGH/KACzQ
+   nxsACJIjADeMPLoIoZrhA4+6JClpri2riO3BKleBrC8fs9tatO4Rv10bY
+   AB4Xv3UTHq7hPb4CGuQK/baR3Ty0H2KHpauGAzWyYstvMP23NySfUvO4m
+   nbyJUWXsupx6eV2Mba/1ocMUyHxtqwi752XBqRr/O2HXf14jr2J6St4I9
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="399915867"
-X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="399915867"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 00:51:54 -0800
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="482299180"
+X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
+   d="scan'208";a="482299180"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 06:29:52 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="811261132"
-X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="811261132"
-Received: from mschutz-mobl.ger.corp.intel.com ([10.251.210.169])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 00:51:52 -0800
-Date: Fri, 22 Dec 2023 10:51:50 +0200 (EET)
-From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Suma Hegde <suma.hegde@amd.com>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    Naveen Krishna Chatradhi <nchatrad@amd.com>
-Subject: Re: [PATCH v3 6/7] platform/x86: Convert to ACPI based probing
-In-Reply-To: <20231221172114.1569559-6-suma.hegde@amd.com>
-Message-ID: <19cedcb8-eb39-bee4-fcd4-5d7a375e5ca@linux.intel.com>
-References: <20231221172114.1569559-1-suma.hegde@amd.com> <20231221172114.1569559-6-suma.hegde@amd.com>
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="805952518"
+X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
+   d="scan'208";a="805952518"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 06:29:50 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rGgSc-00000008AjD-46r9;
+	Fri, 22 Dec 2023 16:25:10 +0200
+Date: Fri, 22 Dec 2023 16:25:10 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: p2sb: Allow p2sb_bar() calls during PCI
+ device probe
+Message-ID: <ZYWcRupBcrGCSgcb@smile.fi.intel.com>
+References: <20231222072054.1640144-1-shinichiro.kawasaki@wdc.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231222072054.1640144-1-shinichiro.kawasaki@wdc.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, 21 Dec 2023, Suma Hegde wrote:
+On Fri, Dec 22, 2023 at 04:20:54PM +0900, Shin'ichiro Kawasaki wrote:
+> p2sb_bar() unhides P2SB device to get resources from the device. It
+> guards the operation by locking pci_rescan_remove_lock so that parallel
+> rescans do not find the P2SB device. However, this lock causes deadlock
+> when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
+> locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
+> call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
+> Hence the deadlock.
+> 
+> To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
+> Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
+> for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
+> refer the cache and return to the caller.
 
-> ACPI table provides mailbox base address and register offset
-> information. The base address is provided as part of CRS method
-> and mailbox offsets are provided through DSD table.
-> Sockets are differentiated by UIDs.
-> 
-> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-> Signed-off-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
-> ---
-> Changes since v1:
-> 1. Define amd_hsmp_acpi_rdwr() for doing mailbox memory mapped io
-> 2. Add a check to see if mailbox register offsets are set in
->    hsmp_read_acpi_dsd()
-> 3. Add a check to see if sock->mbinfo.base_addr sockck->mbinfo.size are
->    set in hsmp_read_acpi_crs()
-> 4. Change order of the statements in switch case ACPI_RESOURCE_TYPE_FIXED_MEMORY32
->    in hsmp_resource()
-> 5. Add hsmp_test() after hsmp_parse_acpi_table() call
-> 6. Add r.end < r.start check in hsmp_resource()
-> 7. Add !dsd error check in hsmp_read_acpi_dsd
-> Changes since v2:
-> 1. Change EINVAL to ENODEV in hsmp_read_acpi_dsd()
-> 2. Change EINVAL to ENOENT in hsmp_read_acpi_dsd()
-> 3. Use resource_size() in hsmp_resource()
-> 
->  drivers/platform/x86/amd/hsmp.c | 324 +++++++++++++++++++++++++++++---
->  1 file changed, 296 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
-> index e77d4cd83a07..46924c572055 100644
-> --- a/drivers/platform/x86/amd/hsmp.c
-> +++ b/drivers/platform/x86/amd/hsmp.c
-> @@ -18,9 +18,11 @@
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <linux/semaphore.h>
-> +#include <linux/acpi.h>
->  
->  #define DRIVER_NAME		"amd_hsmp"
-> -#define DRIVER_VERSION		"2.0"
-> +#define DRIVER_VERSION		"2.2"
-> +#define ACPI_HSMP_DEVICE_HID	"AMDI0097"
->  
->  /* HSMP Status / Error codes */
->  #define HSMP_STATUS_NOT_READY	0x00
-> @@ -54,6 +56,11 @@
->  
->  #define HSMP_ATTR_GRP_NAME_SIZE	10
->  
-> +/* These are the strings specified in ACPI table */
-> +#define MSG_IDOFF_STR		"MsgIdOffset"
-> +#define MSG_ARGOFF_STR		"MsgArgOffset"
-> +#define MSG_RESPOFF_STR		"MsgRspOffset"
-> +
->  struct hsmp_mbaddr_info {
->  	u32 base_addr;
->  	u32 msg_id_off;
-> @@ -66,6 +73,7 @@ struct hsmp_socket {
->  	struct bin_attribute hsmp_attr;
->  	struct hsmp_mbaddr_info mbinfo;
->  	void __iomem *metric_tbl_addr;
-> +	void __iomem *virt_base_addr;
->  	struct semaphore hsmp_sem;
->  	char name[HSMP_ATTR_GRP_NAME_SIZE];
->  	struct pci_dev *root;
-> @@ -78,12 +86,14 @@ struct hsmp_plat_device {
->  	struct hsmp_socket *sock;
->  	u32 proto_ver;
->  	u16 num_sockets;
-> +	bool is_acpi_device;
-> +	bool is_probed;
->  };
->  
->  static struct hsmp_plat_device plat_dev;
->  
-> -static int amd_hsmp_rdwr(struct hsmp_socket *sock, u32 offset,
-> -			 u32 *value, bool write)
-> +static int amd_hsmp_pci_rdwr(struct hsmp_socket *sock, u32 offset,
-> +			     u32 *value, bool write)
->  {
->  	int ret;
->  
-> @@ -101,8 +111,29 @@ static int amd_hsmp_rdwr(struct hsmp_socket *sock, u32 offset,
->  	return ret;
->  }
->  
-> +static void amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
-> +			       u32 *value, bool write)
+Thanks for this version!
+
+My (mostly cosmetic) comments below. I believe next version will be good
+enough to go with.
+
+...
+
+> +static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
 > +{
-> +	if (write)
-> +		iowrite32(*value, sock->virt_base_addr + offset);
-> +	else
-> +		*value = ioread32(sock->virt_base_addr + offset);
-> +}
+> +	unsigned int slot, fn;
+> +	int ret;
 > +
-> +static int amd_hsmp_rdwr(struct hsmp_socket *sock, u32 offset,
-> +			 u32 *value, bool write)
-> +{
-> +	if (plat_dev.is_acpi_device)
-> +		amd_hsmp_acpi_rdwr(sock, offset, value, write);
-> +	else
-> +		return amd_hsmp_pci_rdwr(sock, offset, value, write);
+> +	/* Scan the P2SB device and cache its BAR0 */
+> +	ret = p2sb_scan_and_cache_devfn(bus, devfn);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * When function number of the P2SB device is zero, scan other function
+> +	 * numbers.
+> +	 */
+> +	if (PCI_FUNC(devfn) != 0)
+> +		return 0;
+> +
+> +	/* If devices are available, cache their BAR0 */
+> +	slot = PCI_SLOT(devfn);
+> +	for (fn = 1; fn < NR_P2SB_RES_CACHE; fn++)
+> +		p2sb_scan_and_cache_devfn(bus, PCI_DEVFN(slot, fn));
 > +
 > +	return 0;
 > +}
-> +
->  /*
-> - * Send a message to the HSMP port via PCI-e config space registers.
-> + * Send a message to the HSMP port via PCI-e config space registers
-> + * or by writing to MMIO space.
->   *
->   * The caller is expected to zero out any unused arguments.
->   * If a response is expected, the number of response words should be greater than 0.
-> @@ -450,6 +481,9 @@ static int hsmp_create_sysfs_interface(void)
->  	int ret;
->  	u16 i;
->  
-> +	if (plat_dev.is_acpi_device)
-> +		return 0;
 
-This comes out of nowhere... Why proto_ver isn't enough to handle this?
-If it's needed, would the check perhaps belong to 
-hsmp_is_sock_attr_visible() instead?
+So, we can actually do the for-loop from index 0.
 
->  	/* String formatting is currently limited to u8 sockets */
->  	if (WARN_ON(plat_dev.num_sockets > U8_MAX))
->  		return -ERANGE;
-> @@ -487,13 +521,188 @@ static int hsmp_create_sysfs_interface(void)
->  	return devm_device_add_groups(plat_dev.sock[0].dev, hsmp_attr_grps);
->  }
->  
-> -static int hsmp_cache_proto_ver(void)
-> +/* This is the UUID used for HSMP */
-> +static const guid_t acpi_hsmp_uuid = GUID_INIT(0xb74d619d, 0x5707, 0x48bd,
-> +						0xa6, 0x9f, 0x4e, 0xa2,
-> +						0x87, 0x1f, 0xc2, 0xf6);
-> +
-> +static inline bool is_acpi_hsmp_uuid(union acpi_object *obj)
-> +{
-> +	if (obj->type == ACPI_TYPE_BUFFER && obj->buffer.length == 16)
+	if (PCI_FUNC(devfn) == 0) {
+		/*
+		 * When function number of the P2SB device is zero, scan it
+		 * and other function numbers, and if devices are available,
+		 * cache their BAR0s.
+		 */
+		slot = PCI_SLOT(devfn);
 
-16 -> UUID_SIZE.
+// This will allow us to have something like pci_dev_for_each_func() in the future.
 
-> +		return guid_equal((guid_t *)obj->buffer.pointer, &acpi_hsmp_uuid);
-> +
-> +	return false;
-> +}
+		for (fn = 0; fn < NR_P2SB_RES_CACHE; fn++)
+			p2sb_scan_and_cache_devfn(bus, PCI_DEVFN(slot, fn));
+	} else {
+		/* Scan the P2SB device and cache its BAR0 */
+		ret = p2sb_scan_and_cache_devfn(bus, devfn);
+		if (ret)
+			return ret;
+	}
 
+...
 
->  static int hsmp_pltdrv_probe(struct platform_device *pdev)
->  {
-> +	struct acpi_device *adev;
-> +	u16 sock_ind = 0;
->  	int ret;
->  
-> -	plat_dev.sock = devm_kzalloc(&pdev->dev,
-> -				     (plat_dev.num_sockets * sizeof(struct hsmp_socket)),
-> -				     GFP_KERNEL);
-> -	if (!plat_dev.sock)
-> -		return -ENOMEM;
+> +	static struct pci_bus *bus;
+
+The "static" word is not needed.
+
+> +	bus = p2sb_get_bus(NULL);
+> +	if (!bus)
+> +		return -ENODEV;
+
+...
+
+>  	/* Hide the P2SB device, if it was hidden */
+>  	if (value & P2SBC_HIDE)
+>  		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
 > -
-> -	ret = init_socket_objects(&pdev->dev);
-> -	if (ret)
-> -		return ret;
-> -
-> -	plat_dev.hsmp_device.name	= HSMP_CDEV_NAME;
-> -	plat_dev.hsmp_device.minor	= MISC_DYNAMIC_MINOR;
-> -	plat_dev.hsmp_device.fops	= &hsmp_fops;
-> -	plat_dev.hsmp_device.parent	= &pdev->dev;
-> -	plat_dev.hsmp_device.nodename	= HSMP_DEVNODE_NAME;
-> -	plat_dev.hsmp_device.mode	= 0644;
-> +	/*
-> +	 * On ACPI supported BIOS, there is an ACPI HSMP device added for
-> +	 * each socket, so the per socket probing, but the memory allocated for
-> +	 * sockets should be contiguous to access it as an array,
-> +	 * Hence allocate memory for all the sockets at once instead of allocating
-> +	 * on each probe.
-> +	 */
-> +	if (!plat_dev.is_probed) {
-> +		plat_dev.sock = devm_kzalloc(&pdev->dev,
-> +					     (plat_dev.num_sockets * sizeof(struct hsmp_socket)),
-> +					     GFP_KERNEL);
 
-I know you're just moving code around here so no need to do it in this 
-patchset but this should use devm_kcalloc() and there are also extra 
-parenthesis.
+Stray change.
 
+>  	pci_unlock_rescan_remove();
 
 -- 
- i.
+With Best Regards,
+Andy Shevchenko
+
 
