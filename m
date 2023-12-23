@@ -1,71 +1,115 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB54D270;
-	Sat, 23 Dec 2023 05:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14E16116;
+	Sat, 23 Dec 2023 06:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iJbC/nHq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=0IQ6eY5t7H4CQgzSB2rccly8JDANanOLav3vAFYUpa8=; b=iJbC/nHq48kzd602Cpsynv12sd
-	m8RRjJpv0aNtdCYj4NQK/L1ZaXdeEeBF3O5qAAmQv4ljkFQq2GwHEezpzLMLnhVdG0hPOAuRqfY2d
-	45z03FdOfrZszkUSAurI/nAAtqZ9ksjSt3SDns+o/2kqLzBqdwodhw4BYhA+3+Xn3mEhzWthqXOQg
-	cePmfj9M3O58+eWmySxWkRxTEf1n+xzO6X90+C869DgRJI4IHDzVrKo+jFRlJ741uhVMISI+GbgvC
-	viWxjZabNAN+9Ge3DQlF1nIaSj0LidGiLlaLCSUX7GuR1RAnw000tpa34qbOzu6l1SHxYjWYuPg3U
-	sF33+WeQ==;
-Received: from [50.53.46.231] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGuDw-007Opp-2L;
-	Sat, 23 Dec 2023 05:06:56 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86: wmi: linux/wmi.h: fix Excess kernel-doc description warning
-Date: Fri, 22 Dec 2023 21:06:55 -0800
-Message-ID: <20231223050656.14068-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="kWonu6Xa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1703314099; x=1703918899; i=w_armin@gmx.de;
+	bh=a0HQXaAtb5AyLWRvBbN6Jqobrx6+zPwHEGHfiXoJBIE=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=kWonu6Xa2gA3BAvixi8R2DAMrkXn1Xqty+YVMKqBGB3psUqGBbMdupl0tRXIiZ3F
+	 i+wa+9pXi+BV6BLkKzaf0KMe3WezyrCPzteQ9IB72vAZwaePl9Ya7tjDId+kPjw9L
+	 PxWzkdQQXC0ko0qNL0ms1Sr4JnNAZHA2gqR2FRdkkb25HmI9XwTVvloUuVyBYlgi7
+	 fpuUedTDPL6JiQVf3F8EcT4OcaUnw1GxaYy/X99s9nvOHydBq60Oia8JFCrmrilSe
+	 DX2x0APqLxGbsCSTAvQqUVKwKPzZnW0jNmssla35sCXYagl/13UFcQ+Uwqx5rr7G1
+	 zbQ4bcu4jHBK60HsJQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MybKf-1r54M23Da9-00yzor; Sat, 23
+ Dec 2023 07:48:19 +0100
+Message-ID: <1dd56bfa-ce60-4037-bb1e-0d1676d4e8ce@gmx.de>
+Date: Sat, 23 Dec 2023 07:48:18 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: wmi: linux/wmi.h: fix Excess kernel-doc
+ description warning
+To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org
+References: <20231223050656.14068-1-rdunlap@infradead.org>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20231223050656.14068-1-rdunlap@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:cj4GOHibTCEsIDb72gWem5Ea7QgC3jSoiGNeysLnZsbbSjArRMa
+ hMhj25AAI7/n6/fanpq6ljv3QkaEptUPKlK1elebf7beJRq9P+8afbStjfNpaQuOifke0P+
+ W1D+CCd6FJSMPGQ3sA645y4BHATtxQWjQ6JDpiPuOE+JWOra7nlYvOQ3uiglcAqz518Uvo7
+ amK96Gu7xVgVDXOSVWnmQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:xeunEg4GMIY=;N+jqmMkaOhIkQa+QeLmvZOKXEJd
+ 2XfbFLB7sr9qBjDpHBwpQ7HNTpiqbwwFaIM6CkBLhYjMnc9lkgQtZGrMv0klkBhwN7AKORQAK
+ bo/i+uwzSEA09qCceEiZ4YhxyI900iPslT3Nn+T956uwZ5Y1TSkvZYHyfIBoscarzJ6d+2uRT
+ cB7Y0Czz98ugTRn1hZs7KxDO/S64ULXzlJatCHx9ksy21Dx3IKpK5/SKNCcuM9TmlumFnqpjk
+ nnQRSOKcGIEeoliwkrdFgs8G5+YiHmIOVTDngTTsW148gkiQwbpIkaHIVeUbkbvI5xBa9l6XX
+ m3/YMHYkMbVSjgaImUlxBFP6CTHx2XagK++OpYXf6qojG248037HQThZCp+M1qLU7hw58j2ZE
+ Ua3GSoEHrbnzXz2nGj5g9Rhk3igNQBOhvcDe3eqGhoHJ3G0ly34QNyr89Sbil/zSojTvtRU5a
+ k0RHeKnT7jyeG3j3KdVE/KAnTaqEuhchSdqG5acZIaohmA/R6ynavSycu9ulhcbIcFRwvVOc1
+ c2j/vwXqdt0hd0xs3LUxzH6Bo9YNwCGGXycMVHsI1KBIdoPJybK726XYCvF0fryp9tkESqPzW
+ dtTZXvc4jMQRPfGzuX0jzMrj0MW/9M2AFnoP4sKPRzXglarny7orQ4Cbn8Yrcy1PV3thfMZTo
+ +iOsndlNTdzAfTaudAdHuyqpARWUOjTO7ySsn6PaKP1a4fWnD1Sh5naUIebWSS6x1W/zQzMbs
+ cWFjwemQSMT4g5AnMQJ9DfMKJnJbzT0fkIF89nQQbJm5QAYDJkJo6vIdPAJqYgT/+X7+pXR0l
+ LuiiuFlk52kShAcl4aNe/7AbhqbnVVP+8lY0BBwNCaY3GEnif4GuSw0RSMJCjYFUGl9ctQy/x
+ WuP6Zcd6vWFd5fM6FWP9HYFvFvfW01BUk2GvmmOhcbYiP4iLTvt5tgMXfmqivVueJLkBQBFQf
+ 7M50rsnFUu31mU5ZhNKRE+q22qw=
 
-Remove the "private:" comment to prevent the kernel-doc warning:
+Am 23.12.23 um 06:06 schrieb Randy Dunlap:
 
-include/linux/wmi.h:27: warning: Excess struct member 'setable' description in 'wmi_device'
+> Remove the "private:" comment to prevent the kernel-doc warning:
+>
+> include/linux/wmi.h:27: warning: Excess struct member 'setable' descript=
+ion in 'wmi_device'
+>
+> Either a struct member is documented (via kernel-doc) or it's private,
+> but not both.
 
-Either a struct member is documented (via kernel-doc) or it's private,
-but not both.
+Hi,
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Armin Wolf <W_Armin@gmx.de>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
----
- include/linux/wmi.h |    2 --
- 1 file changed, 2 deletions(-)
+i am not encountering this kernel doc warning, but your argument is still =
+valid. I also seem to
+have missed the fact that WMI drivers may want to know whether their WMI d=
+ata block is setable
+during runtime when i added those kernel-doc comments.
 
-diff -- a/include/linux/wmi.h b/include/linux/wmi.h
---- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -21,8 +21,6 @@
-  */
- struct wmi_device {
- 	struct device dev;
--
--	/* private: used by the WMI driver core */
- 	bool setable;
- };
- 
+Please add a Fixes: b4cc979588ee ("platform/x86: wmi: Add kernel doc comme=
+nts") tag so that
+this patch can reach the stable kernels. With that addressed, you may also=
+ add:
+
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+
+Thanks,
+Armin Wolf
+
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Armin Wolf <W_Armin@gmx.de>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: platform-driver-x86@vger.kernel.org
+> ---
+>   include/linux/wmi.h |    2 --
+>   1 file changed, 2 deletions(-)
+>
+> diff -- a/include/linux/wmi.h b/include/linux/wmi.h
+> --- a/include/linux/wmi.h
+> +++ b/include/linux/wmi.h
+> @@ -21,8 +21,6 @@
+>    */
+>   struct wmi_device {
+>   	struct device dev;
+> -
+> -	/* private: used by the WMI driver core */
+>   	bool setable;
+>   };
+>
