@@ -1,35 +1,36 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D037EAE8
-	for <platform-driver-x86@vger.kernel.org>; Sun, 24 Dec 2023 21:36:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4661AFC0A
+	for <platform-driver-x86@vger.kernel.org>; Sun, 24 Dec 2023 21:36:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="egFk+l+5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PPe0k4dw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703453807;
+	s=mimecast20190719; t=1703453813;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YHH+dYFiAZRBdYkQReDHV20DrDgbD63aPu4W4Tm4x5M=;
-	b=egFk+l+5EJiGr18/13JjlU5IWtOVrS0iorsumY18P7XYGCJFr/uxggzyr4Mn72ut70rEPX
-	xK8O62SNR4gjYKbph+cyFteuHCnpju5hfsE+s0Z3VE1aAkSD0ZcxpgI38T2xgEWCbl7jGk
-	ZNLqGmxJn3Oh/Jh+2Td0YOPLUBKxoLg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-232-QL1ZsS3WNUaz8INWDZ0K6w-1; Sun, 24 Dec 2023 16:36:42 -0500
-X-MC-Unique: QL1ZsS3WNUaz8INWDZ0K6w-1
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TkdREibjjpny8k3gw0YDw6eSMEYK6ZS86hxwJjjW8tE=;
+	b=PPe0k4dwO/ez7uax5RnhSQvi0C4NfPycKFMVQ2rVf8hHSzfxrwdgWb5Dw+fi9BcLhcUzbq
+	kwi7Q3Pea9dATcsmN+Hv3Ntj5O4Ky9sgsDxh7CbplRT59jA/DAxi40KD7+5SPQ/pasegDj
+	SzUGLFM69l85zvzmbhZ1gJOTpYjJIdM=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-342-Zb9yv9WiN82j0-t_19j5RA-1; Sun,
+ 24 Dec 2023 16:36:49 -0500
+X-MC-Unique: Zb9yv9WiN82j0-t_19j5RA-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C7E80832D60;
-	Sun, 24 Dec 2023 21:36:40 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 70B6C1C0514E;
+	Sun, 24 Dec 2023 21:36:48 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.24])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 22F5F2026D66;
-	Sun, 24 Dec 2023 21:36:38 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B665A2026D66;
+	Sun, 24 Dec 2023 21:36:46 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
 	Jean Delvare <jdelvare@suse.com>,
@@ -45,9 +46,11 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Wolfram Sang <wsa@kernel.org>,
 	platform-driver-x86@vger.kernel.org,
 	linux-i2c@vger.kernel.org
-Subject: [PATCH 0/6] i2c-i801 / dell-smo8800: Move instantiation of lis3lv02d i2c_client from i2c-i801 to dell-smo8800
-Date: Sun, 24 Dec 2023 22:36:16 +0100
-Message-ID: <20231224213629.395741-1-hdegoede@redhat.com>
+Subject: [PATCH 4/6] platform/x86: dell-smo8800: Pass the IRQ to the lis3lv02d i2c_client
+Date: Sun, 24 Dec 2023 22:36:20 +0100
+Message-ID: <20231224213629.395741-5-hdegoede@redhat.com>
+In-Reply-To: <20231224213629.395741-1-hdegoede@redhat.com>
+References: <20231224213629.395741-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -57,39 +60,81 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-Hi All,
+When a lis3lv02d i2c_client has been instantiated pass the IRQ to
+the i2c_client and let the lis3lv02d driver take care of registering
+/dev/freefall and handling the IRQ.
 
-Here is a patch series which implements my suggestions from:
-https://lore.kernel.org/linux-i2c/4820e280-9ca4-4d97-9d21-059626161bfc@molgen.mpg.de/
-to improve the lis3lv02d accel support on Dell laptops.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/dell/dell-smo8800.c | 40 ++++++++++++++----------
+ 1 file changed, 23 insertions(+), 17 deletions(-)
 
-Jean, Andi the actual move is in patch 3/6 after some small prep patches
-on the dell-smo8800 side. My plan for merging this is to create
-an immutable branch based on 6.8-rc1 (once it is out) + these 6 patches and
-then send a pull-request for this. Can I have your Ack for the i2c-i801
-changes in patch 3/6? I think you'll like the changes there since they only
-remove code :)
-
-Regards,
-
-Hans
-
-
-Hans de Goede (6):
-  platform/x86: dell-smo8800: Only load on Dell laptops
-  platform/x86: dell-smo8800: Change probe() ordering a bit
-  platform/x86: dell-smo8800: Move instantiation of lis3lv02d i2c_client
-    from i2c-i801 to dell-smo8800
-  platform/x86: dell-smo8800: Pass the IRQ to the lis3lv02d i2c_client
-  platform/x86: dell-smo8800: Instantiate an i2c_client for the IIO
-    st_accel driver
-  platform/x86: dell-smo8800: Add support for probing for the
-    accelerometer i2c address
-
- drivers/i2c/busses/i2c-i801.c            | 122 --------
- drivers/platform/x86/dell/dell-smo8800.c | 337 +++++++++++++++++++++--
- 2 files changed, 316 insertions(+), 143 deletions(-)
-
+diff --git a/drivers/platform/x86/dell/dell-smo8800.c b/drivers/platform/x86/dell/dell-smo8800.c
+index 416b399cb9a1..7f7c9452a983 100644
+--- a/drivers/platform/x86/dell/dell-smo8800.c
++++ b/drivers/platform/x86/dell/dell-smo8800.c
+@@ -196,6 +196,7 @@ static void smo8800_instantiate_i2c_client(struct smo8800_device *smo8800)
+ 	}
+ 
+ 	info.addr = addr;
++	info.irq = smo8800->irq;
+ 	strscpy(info.type, "lis3lv02d", I2C_NAME_SIZE);
+ 
+ 	smo8800->i2c_dev = i2c_new_client_device(adap, &info);
+@@ -239,21 +240,24 @@ static int smo8800_probe(struct platform_device *device)
+ 
+ 	smo8800_instantiate_i2c_client(smo8800);
+ 
+-	err = misc_register(&smo8800->miscdev);
+-	if (err) {
+-		dev_err(&device->dev, "failed to register misc dev: %d\n", err);
+-		goto error_unregister_i2c_client;
+-	}
++	/* smo8800->irq is passed to the i2c_client and its driver will take care of this */
++	if (!smo8800->i2c_dev) {
++		err = misc_register(&smo8800->miscdev);
++		if (err) {
++			dev_err(&device->dev, "failed to register misc dev: %d\n", err);
++			goto error_unregister_i2c_client;
++		}
+ 
+-	err = request_threaded_irq(smo8800->irq, smo8800_interrupt_quick,
+-				   smo8800_interrupt_thread,
+-				   IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+-				   DRIVER_NAME, smo8800);
+-	if (err) {
+-		dev_err(&device->dev,
+-			"failed to request thread for IRQ %d: %d\n",
+-			smo8800->irq, err);
+-		goto error;
++		err = request_threaded_irq(smo8800->irq, smo8800_interrupt_quick,
++					   smo8800_interrupt_thread,
++					   IRQF_TRIGGER_RISING | IRQF_ONESHOT,
++					   DRIVER_NAME, smo8800);
++		if (err) {
++			dev_err(&device->dev,
++				"failed to request thread for IRQ %d: %d\n",
++				smo8800->irq, err);
++			goto error;
++		}
+ 	}
+ 
+ 	dev_dbg(&device->dev, "device /dev/freefall registered with IRQ %d\n",
+@@ -272,9 +276,11 @@ static void smo8800_remove(struct platform_device *device)
+ {
+ 	struct smo8800_device *smo8800 = platform_get_drvdata(device);
+ 
+-	free_irq(smo8800->irq, smo8800);
+-	misc_deregister(&smo8800->miscdev);
+-	dev_dbg(&device->dev, "device /dev/freefall unregistered\n");
++	if (!smo8800->i2c_dev) {
++		free_irq(smo8800->irq, smo8800);
++		misc_deregister(&smo8800->miscdev);
++		dev_dbg(&device->dev, "device /dev/freefall unregistered\n");
++	}
+ 	i2c_unregister_device(smo8800->i2c_dev);
+ }
+ 
 -- 
 2.43.0
 
