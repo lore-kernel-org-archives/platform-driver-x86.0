@@ -1,69 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B69C610D
-	for <platform-driver-x86@vger.kernel.org>; Sun, 24 Dec 2023 15:38:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE7CEAE2
+	for <platform-driver-x86@vger.kernel.org>; Sun, 24 Dec 2023 21:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NrDVK7CO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E75AEC433C7
-	for <platform-driver-x86@vger.kernel.org>; Sun, 24 Dec 2023 15:38:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703432315;
-	bh=q/U0GSBVaLU4J4J6zavfwAhxUtqM+IsZoyNTAthOiBk=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=NrDVK7COz64zPKbG2MA5PO6usrctaxbIHyPKqPyKuo3905/zrP03JKWvQ9KjK90mM
-	 Rn4lFrmuxNMBJBMpao2E2JIdtstdtZNxj4NJAFscRQN5YvYZx7F1svxHoPnHeMxWaH
-	 GjH+CyS5x1h7cMpmAWsxj5Byzko4O2msRKopiia3v36SE9JegIPPJsgUSLgCFEFOFk
-	 vWOVxM5Ioh55T6njd1qcpM9W6R88o9+mJVNOkTHJ1TH85ajx5inU+gG/3rlbiwmaeL
-	 p+AkltVmW5hoOFGc9T3JV6m3aUy4e1EBiM1Ra8xuKzR4cu3zra3mPP2GF6T00qc7cl
-	 VWowNJSFVUytQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id D5004C4332E; Sun, 24 Dec 2023 15:38:35 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after a
- random number of suspend/resume cycles
-Date: Sun, 24 Dec 2023 15:38:35 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: aros@gmx.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-mVRyxsSFNw@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XqAwE5P1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1703453807;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hsuJPCc7Y1QpnRJA01GfwB9KUPJKZqy9e15JEuNppOg=;
+	b=XqAwE5P1KmemIgk5jVUgaw1jJuh+Kzy8Dn/ldlJwXfx5R8zrLhP81bVimVl2X6HZZ6zyja
+	In5WeDzKNq7Yw420ME6dzGgzHLnyF+T+WY9/w5HBWDjR7O+IocmHczRu8vGkBRslOqzykl
+	noA5aP4KKqE7YD83FkH640wdZmK3DpI=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-37-db2_Y567P7apnkNfwm8Rzw-1; Sun,
+ 24 Dec 2023 16:36:44 -0500
+X-MC-Unique: db2_Y567P7apnkNfwm8Rzw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B1E573C025B6;
+	Sun, 24 Dec 2023 21:36:42 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.24])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 05D3F2026D66;
+	Sun, 24 Dec 2023 21:36:40 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Eric Piel <eric.piel@tremplin-utc.net>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Dell.Client.Kernel@dell.com,
+	Marius Hoch <mail@mariushoch.de>,
+	Kai Heng Feng <kai.heng.feng@canonical.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	platform-driver-x86@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: [PATCH 1/6] platform/x86: dell-smo8800: Only load on Dell laptops
+Date: Sun, 24 Dec 2023 22:36:17 +0100
+Message-ID: <20231224213629.395741-2-hdegoede@redhat.com>
+In-Reply-To: <20231224213629.395741-1-hdegoede@redhat.com>
+References: <20231224213629.395741-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+The SMO8xxx ACPI HIDs are generic accelerometer ids which are also used
+by other vendors. Add a sys_vendor check to ensure that the dell-smo8800
+driver only loads on Dell laptops.
 
---- Comment #5 from Artem S. Tashkinov (aros@gmx.com) ---
-(In reply to Armin Wolf from comment #4)
-> Could be that the firmware fails to properly restore those values after
-> suspend, does the issue also happen under Windows?
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/dell/dell-smo8800.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-I rarely boot into Windows but I may check.
+diff --git a/drivers/platform/x86/dell/dell-smo8800.c b/drivers/platform/x86/dell/dell-smo8800.c
+index f7ec17c56833..4d5f778fb599 100644
+--- a/drivers/platform/x86/dell/dell-smo8800.c
++++ b/drivers/platform/x86/dell/dell-smo8800.c
+@@ -10,6 +10,7 @@
+ 
+ #define DRIVER_NAME "smo8800"
+ 
++#include <linux/dmi.h>
+ #include <linux/fs.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+@@ -108,6 +109,9 @@ static int smo8800_probe(struct platform_device *device)
+ 	int err;
+ 	struct smo8800_device *smo8800;
+ 
++	if (!dmi_match(DMI_SYS_VENDOR, "Dell Inc."))
++		return false;
++
+ 	smo8800 = devm_kzalloc(&device->dev, sizeof(*smo8800), GFP_KERNEL);
+ 	if (!smo8800) {
+ 		dev_err(&device->dev, "failed to allocate device data\n");
+-- 
+2.43.0
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
