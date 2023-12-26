@@ -1,106 +1,291 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025C4537F1;
-	Mon, 25 Dec 2023 20:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DCA46457;
+	Tue, 26 Dec 2023 00:21:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Toifzjdq"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-67f9f6caabcso27577026d6.3;
-        Mon, 25 Dec 2023 12:00:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703534445; x=1704139245; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Dr83uq7zJXyt/w+nNJUOwUzPhYgIcUw9vQ+ilNQ8Pms=;
-        b=Toifzjdqwl59P9aywnBERRkx9ILpGDaU9LLjql8se+IUlym9Pfoye4os2fy0wkbHgo
-         p3PeL8RId4D46HNglqx+EwJAs4p+jPzCuIxwlcWCdg2POx2kt6E2LZhdBnhDWhjT7s3y
-         FCYOGc8zVBwtOFbiUdTgQGWjmIBWP3wMIm33LP9bYflp4qp4Fc4JdH4bsKncdJ91vogZ
-         3yNILZpVG2d+PYljVkEfLGIxNTs2l7MeicwjXwkKrGNEP28cS9fp19UkwfQfg6xa79Vj
-         tBatzNxu+OpHINavNXcKdjMo0g/zK9a/gIBKWTuGKmfZd9T/cbk8rxdGWZDcGtlZvsHc
-         GprQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703534445; x=1704139245;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Dr83uq7zJXyt/w+nNJUOwUzPhYgIcUw9vQ+ilNQ8Pms=;
-        b=OoZaiCXYja7mcEjekJGBcxsnyvhLC+s1+aXMw32ZZW1mP8aboS6GAqxBKoqe8PnrvD
-         jG9IIJwUL1lZRWGKRVrBoydG6FJlWTawu0Vfm+GAanBC93QF4CWcNEPWqBGiVWGoaXtU
-         JBaXM+nW5T+LxljOq2STMQ0a1rCpbem+M68La4q5/PIH3Oi7mf7/m2kspVxUuJxNLA6u
-         wdol9s2NfzEtOiYSfYBwxnliyIlDzPOjMax4RyoRpSEawWQS/EMiWdZ7hBWTTeuzpyCZ
-         sYm+hoay827jvvHaAbXOAGT+OtrZJbaacxY9EX4W5rrOeHiVLhYTfRPtaeEM3erjZvBl
-         Xfwg==
-X-Gm-Message-State: AOJu0YzNMyGcGeoYfV6bJ5YVFOozXQpkA8scmOdlBmfW4LcnSDWbjJ1F
-	4/yyFHs3nVkw+FFq7mubrrUWcYBlf2UDwVUdyKk=
-X-Google-Smtp-Source: AGHT+IGJys61uyMcfmE/sxOpDzfYY8hKi31G6Z2ZjjcjBZVg3r1xOfSCFDo0f5bLCptl7WSlGeDVTEpbZIuZYKF61uc=
-X-Received: by 2002:a05:6214:2a85:b0:67f:7009:f6cf with SMTP id
- jr5-20020a0562142a8500b0067f7009f6cfmr11275075qvb.45.1703534444887; Mon, 25
- Dec 2023 12:00:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cPmgUyI0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 346F1C433C7;
+	Tue, 26 Dec 2023 00:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703550072;
+	bh=6aOw0cEZ0+6QWWdU/aIR5k9PXC0R0+MVpGXYrD+hA3s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cPmgUyI0Tc3ScUqSahTKf1x2lDtkWEEP86cxoDbYSAPb4L+t+/itiDsgz6dcp3R7U
+	 RYSUnfydUZ+/z0z7WF5bjzFHGCB8UqgcoRKRCAvLLuPJjUjWGqLNYU9gYIaPdO2+5H
+	 t1PEe82NyiP6t5AXRGzSBCAXwpZpKI4AI1728jfmUKVy28hEa3FTRVuubUAJy6RErR
+	 pOF0aseLrxHnyMQtn8josR/0K8e4gwPy/dsx9mq8ttaM9HawyUsu5FovArBknWo9B7
+	 gSSicZPpv/fJz74M8/gDxWKOD0ZiCVTbn+alQ+kKTFeQGePaGPtkl5+LGdnBrAidMA
+	 i6LxRvSqEq34Q==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Vishnu Sankar <vishnuocv@gmail.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	hmh@hmh.eng.br,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 19/39] platform/x86: thinkpad_acpi: fix for incorrect fan reporting on some ThinkPad systems
+Date: Mon, 25 Dec 2023 19:19:09 -0500
+Message-ID: <20231226002021.4776-19-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231226002021.4776-1-sashal@kernel.org>
+References: <20231226002021.4776-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231224213629.395741-1-hdegoede@redhat.com> <20231224213629.395741-4-hdegoede@redhat.com>
-In-Reply-To: <20231224213629.395741-4-hdegoede@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 25 Dec 2023 22:00:08 +0200
-Message-ID: <CAHp75VfeQsMYoWWbpc1MXJTvry=xGwDvtDEPK67E5Ne=2BrNJw@mail.gmail.com>
-Subject: Re: [PATCH 3/6] platform/x86: dell-smo8800: Move instantiation of
- lis3lv02d i2c_client from i2c-i801 to dell-smo8800
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
-	Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>, 
-	Eric Piel <eric.piel@tremplin-utc.net>, Paul Menzel <pmenzel@molgen.mpg.de>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Dell.Client.Kernel@dell.com, 
-	Marius Hoch <mail@mariushoch.de>, Kai Heng Feng <kai.heng.feng@canonical.com>, 
-	Wolfram Sang <wsa@kernel.org>, platform-driver-x86@vger.kernel.org, 
-	linux-i2c@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Dec 24, 2023 at 11:36=E2=80=AFPM Hans de Goede <hdegoede@redhat.com=
-> wrote:
->
-> It is not necessary to handle the Dell specific instantiation of
-> i2c_client-s for SMO8xxx ACPI devices without an ACPI I2cResource
-> inside the generic i801 I2C adapter driver.
->
-> The kernel already instantiates platform_device-s for these ACPI devices
-> and the drivers/platform/x86/dell/dell-smo8800.c driver binds to these
-> platform drivers.
->
-> Move the i2c_client instantiation from the generic i2c-i801 driver to
-> the Dell specific dell-smo8800 driver.
+From: Vishnu Sankar <vishnuocv@gmail.com>
 
-...
+[ Upstream commit 66e92e23a72761f5b53f970aeb1badc5fd92fc74 ]
 
-> +       static const u16 i801_idf_pci_device_ids[] =3D {
-> +               0x1d70, /* Patsburg (PCH) */
-> +               0x1d71, /* Patsburg (PCH) */
-> +               0x1d72, /* Patsburg (PCH) */
-> +               0x8d7d, /* Wellsburg (PCH) */
-> +               0x8d7e, /* Wellsburg (PCH) */
-> +               0x8d7f, /* Wellsburg (PCH) */
-> +       };
+Some ThinkPad systems ECFW use non-standard addresses for fan control
+and reporting. This patch adds support for such ECFW so that it can report
+the correct fan values.
+Tested on Thinkpads L13 Yoga Gen 2 and X13 Yoga Gen 2.
 
-I prefer to see this as a PCI ID table (yes, I know the downsides).
+Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Link: https://lore.kernel.org/r/20231214134702.166464-1-vishnuocv@gmail.com
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 98 ++++++++++++++++++++++++----
+ 1 file changed, 85 insertions(+), 13 deletions(-)
 
-...
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index a46fc417cb200..d73cbae4aa218 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -7948,8 +7948,19 @@ static struct ibm_struct volume_driver_data = {
+  * 	TPACPI_FAN_WR_TPEC is also available and should be used to
+  * 	command the fan.  The X31/X40/X41 seems to have 8 fan levels,
+  * 	but the ACPI tables just mention level 7.
++ *
++ * TPACPI_FAN_RD_TPEC_NS:
++ *	This mode is used for a few ThinkPads (L13 Yoga Gen2, X13 Yoga Gen2 etc.)
++ *	that are using non-standard EC locations for reporting fan speeds.
++ *	Currently these platforms only provide fan rpm reporting.
++ *
+  */
+ 
++#define FAN_RPM_CAL_CONST 491520	/* FAN RPM calculation offset for some non-standard ECFW */
++
++#define FAN_NS_CTRL_STATUS	BIT(2)		/* Bit which determines control is enabled or not */
++#define FAN_NS_CTRL		BIT(4)		/* Bit which determines control is by host or EC */
++
+ enum {					/* Fan control constants */
+ 	fan_status_offset = 0x2f,	/* EC register 0x2f */
+ 	fan_rpm_offset = 0x84,		/* EC register 0x84: LSB, 0x85 MSB (RPM)
+@@ -7957,6 +7968,11 @@ enum {					/* Fan control constants */
+ 	fan_select_offset = 0x31,	/* EC register 0x31 (Firmware 7M)
+ 					   bit 0 selects which fan is active */
+ 
++	fan_status_offset_ns = 0x93,	/* Special status/control offset for non-standard EC Fan1 */
++	fan2_status_offset_ns = 0x96,	/* Special status/control offset for non-standard EC Fan2 */
++	fan_rpm_status_ns = 0x95,	/* Special offset for Fan1 RPM status for non-standard EC */
++	fan2_rpm_status_ns = 0x98,	/* Special offset for Fan2 RPM status for non-standard EC */
++
+ 	TP_EC_FAN_FULLSPEED = 0x40,	/* EC fan mode: full speed */
+ 	TP_EC_FAN_AUTO	    = 0x80,	/* EC fan mode: auto fan control */
+ 
+@@ -7967,6 +7983,7 @@ enum fan_status_access_mode {
+ 	TPACPI_FAN_NONE = 0,		/* No fan status or control */
+ 	TPACPI_FAN_RD_ACPI_GFAN,	/* Use ACPI GFAN */
+ 	TPACPI_FAN_RD_TPEC,		/* Use ACPI EC regs 0x2f, 0x84-0x85 */
++	TPACPI_FAN_RD_TPEC_NS,		/* Use non-standard ACPI EC regs (eg: L13 Yoga gen2 etc.) */
+ };
+ 
+ enum fan_control_access_mode {
+@@ -7994,6 +8011,8 @@ static u8 fan_control_desired_level;
+ static u8 fan_control_resume_level;
+ static int fan_watchdog_maxinterval;
+ 
++static bool fan_with_ns_addr;
++
+ static struct mutex fan_mutex;
+ 
+ static void fan_watchdog_fire(struct work_struct *ignored);
+@@ -8123,6 +8142,15 @@ static int fan_get_status(u8 *status)
+ 		}
+ 
+ 		break;
++	case TPACPI_FAN_RD_TPEC_NS:
++		/* Default mode is AUTO which means controlled by EC */
++		if (!acpi_ec_read(fan_status_offset_ns, &s))
++			return -EIO;
++
++		if (status)
++			*status = s;
++
++		break;
+ 
+ 	default:
+ 		return -ENXIO;
+@@ -8139,7 +8167,8 @@ static int fan_get_status_safe(u8 *status)
+ 	if (mutex_lock_killable(&fan_mutex))
+ 		return -ERESTARTSYS;
+ 	rc = fan_get_status(&s);
+-	if (!rc)
++	/* NS EC doesn't have register with level settings */
++	if (!rc && !fan_with_ns_addr)
+ 		fan_update_desired_level(s);
+ 	mutex_unlock(&fan_mutex);
+ 
+@@ -8166,7 +8195,13 @@ static int fan_get_speed(unsigned int *speed)
+ 
+ 		if (likely(speed))
+ 			*speed = (hi << 8) | lo;
++		break;
++	case TPACPI_FAN_RD_TPEC_NS:
++		if (!acpi_ec_read(fan_rpm_status_ns, &lo))
++			return -EIO;
+ 
++		if (speed)
++			*speed = lo ? FAN_RPM_CAL_CONST / lo : 0;
+ 		break;
+ 
+ 	default:
+@@ -8178,7 +8213,7 @@ static int fan_get_speed(unsigned int *speed)
+ 
+ static int fan2_get_speed(unsigned int *speed)
+ {
+-	u8 hi, lo;
++	u8 hi, lo, status;
+ 	bool rc;
+ 
+ 	switch (fan_status_access_mode) {
+@@ -8194,7 +8229,21 @@ static int fan2_get_speed(unsigned int *speed)
+ 
+ 		if (likely(speed))
+ 			*speed = (hi << 8) | lo;
++		break;
+ 
++	case TPACPI_FAN_RD_TPEC_NS:
++		rc = !acpi_ec_read(fan2_status_offset_ns, &status);
++		if (rc)
++			return -EIO;
++		if (!(status & FAN_NS_CTRL_STATUS)) {
++			pr_info("secondary fan control not supported\n");
++			return -EIO;
++		}
++		rc = !acpi_ec_read(fan2_rpm_status_ns, &lo);
++		if (rc)
++			return -EIO;
++		if (speed)
++			*speed = lo ? FAN_RPM_CAL_CONST / lo : 0;
+ 		break;
+ 
+ 	default:
+@@ -8697,6 +8746,7 @@ static const struct attribute_group fan_driver_attr_group = {
+ #define TPACPI_FAN_2FAN		0x0002		/* EC 0x31 bit 0 selects fan2 */
+ #define TPACPI_FAN_2CTL		0x0004		/* selects fan2 control */
+ #define TPACPI_FAN_NOFAN	0x0008		/* no fan available */
++#define TPACPI_FAN_NS		0x0010		/* For EC with non-Standard register addresses */
+ 
+ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
+@@ -8715,6 +8765,8 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_Q_LNV3('N', '2', 'O', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (2nd gen) */
+ 	TPACPI_Q_LNV3('N', '3', '0', TPACPI_FAN_2CTL),	/* P15 (1st gen) / P15v (1st gen) */
+ 	TPACPI_Q_LNV3('N', '3', '7', TPACPI_FAN_2CTL),  /* T15g (2nd gen) */
++	TPACPI_Q_LNV3('R', '1', 'F', TPACPI_FAN_NS),	/* L13 Yoga Gen 2 */
++	TPACPI_Q_LNV3('N', '2', 'U', TPACPI_FAN_NS),	/* X13 Yoga Gen 2*/
+ 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
+ };
+ 
+@@ -8749,18 +8801,27 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+ 		return -ENODEV;
+ 	}
+ 
++	if (quirks & TPACPI_FAN_NS) {
++		pr_info("ECFW with non-standard fan reg control found\n");
++		fan_with_ns_addr = 1;
++		/* Fan ctrl support from host is undefined for now */
++		tp_features.fan_ctrl_status_undef = 1;
++	}
++
+ 	if (gfan_handle) {
+ 		/* 570, 600e/x, 770e, 770x */
+ 		fan_status_access_mode = TPACPI_FAN_RD_ACPI_GFAN;
+ 	} else {
+ 		/* all other ThinkPads: note that even old-style
+ 		 * ThinkPad ECs supports the fan control register */
+-		if (likely(acpi_ec_read(fan_status_offset,
+-					&fan_control_initial_status))) {
++		if (fan_with_ns_addr ||
++		    likely(acpi_ec_read(fan_status_offset, &fan_control_initial_status))) {
+ 			int res;
+ 			unsigned int speed;
+ 
+-			fan_status_access_mode = TPACPI_FAN_RD_TPEC;
++			fan_status_access_mode = fan_with_ns_addr ?
++				TPACPI_FAN_RD_TPEC_NS : TPACPI_FAN_RD_TPEC;
++
+ 			if (quirks & TPACPI_FAN_Q1)
+ 				fan_quirk1_setup();
+ 			/* Try and probe the 2nd fan */
+@@ -8769,7 +8830,8 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+ 			if (res >= 0 && speed != FAN_NOT_PRESENT) {
+ 				/* It responded - so let's assume it's there */
+ 				tp_features.second_fan = 1;
+-				tp_features.second_fan_ctl = 1;
++				/* fan control not currently available for ns ECFW */
++				tp_features.second_fan_ctl = !fan_with_ns_addr;
+ 				pr_info("secondary fan control detected & enabled\n");
+ 			} else {
+ 				/* Fan not auto-detected */
+@@ -8944,6 +9006,7 @@ static int fan_read(struct seq_file *m)
+ 			       str_enabled_disabled(status), status);
+ 		break;
+ 
++	case TPACPI_FAN_RD_TPEC_NS:
+ 	case TPACPI_FAN_RD_TPEC:
+ 		/* all except 570, 600e/x, 770e, 770x */
+ 		rc = fan_get_status_safe(&status);
+@@ -8958,13 +9021,22 @@ static int fan_read(struct seq_file *m)
+ 
+ 		seq_printf(m, "speed:\t\t%d\n", speed);
+ 
+-		if (status & TP_EC_FAN_FULLSPEED)
+-			/* Disengaged mode takes precedence */
+-			seq_printf(m, "level:\t\tdisengaged\n");
+-		else if (status & TP_EC_FAN_AUTO)
+-			seq_printf(m, "level:\t\tauto\n");
+-		else
+-			seq_printf(m, "level:\t\t%d\n", status);
++		if (fan_status_access_mode == TPACPI_FAN_RD_TPEC_NS) {
++			/*
++			 * No full speed bit in NS EC
++			 * EC Auto mode is set by default.
++			 * No other levels settings available
++			 */
++			seq_printf(m, "level:\t\t%s\n", status & FAN_NS_CTRL ? "unknown" : "auto");
++		} else {
++			if (status & TP_EC_FAN_FULLSPEED)
++				/* Disengaged mode takes precedence */
++				seq_printf(m, "level:\t\tdisengaged\n");
++			else if (status & TP_EC_FAN_AUTO)
++				seq_printf(m, "level:\t\tauto\n");
++			else
++				seq_printf(m, "level:\t\t%d\n", status);
++		}
+ 		break;
+ 
+ 	case TPACPI_FAN_NONE:
+-- 
+2.43.0
 
-> +/* Ensure the i2c-801 driver is loaded for i2c_client instantiation */
-> +MODULE_SOFTDEP("pre: i2c-i801");
-
-JFYI: software module dependencies are not supported by all kmod
-implementations in the user space. I don't expect people to complain,
-but just let you know that this kind of change needs to be done with
-care.
-
---=20
-With Best Regards,
-Andy Shevchenko
