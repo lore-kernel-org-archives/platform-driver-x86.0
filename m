@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D0C4F5E3
-	for <platform-driver-x86@vger.kernel.org>; Tue, 26 Dec 2023 15:25:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11BEC4F5E1
+	for <platform-driver-x86@vger.kernel.org>; Tue, 26 Dec 2023 15:29:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtbWqYzC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 86ABFC433C7
-	for <platform-driver-x86@vger.kernel.org>; Tue, 26 Dec 2023 15:25:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIIiO7Km"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 990AEC433C7
+	for <platform-driver-x86@vger.kernel.org>; Tue, 26 Dec 2023 15:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703604327;
-	bh=i9qDlb/ULrKD3XRadEmYdtIxlJE+vtYhRgXj+uVrz34=;
+	s=k20201202; t=1703604587;
+	bh=XVGiROCDZPU+e3eDCbi10VZPKKO18OF+/ytbQzpdm4I=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=FtbWqYzCxtPxjlun9/bOFH/E3QsVKWPSF7cD5qqpNz68bgw8IQR3Fx0K71uF9Nkiq
-	 5zKJwvNPg4LwDARSZY61EssKH/TL7+9F8BvRUQEjdIv/QR1pgKMZBbezKwlpt2oDZA
-	 Y3yhUA/nOSIjtjnyXpBtF/mqNP2k6UT8nayZydsH4Q7k8hltre9k4SjMhKuZ6Es79w
-	 qh4v0y6RosJiuVw11bc/5XspxvTqNsMN7VZ30r7LwNWwlRYTfrj/ecscI+8gJej0d8
-	 /qXdJ+bLli7ONqQVP9/cAycBzgoU/LS2eErBZxwij8YlZABsFZNswTOob18dKhX5Bx
-	 3kVQFF4FWLpRQ==
+	b=qIIiO7KmTjI+W12BWd6KZu4PVv61W3vaBnChF8kl73AT6PQtbr9279py9bZnNnx8Q
+	 0FVLG84qOGN5eTEtKmTbU9TmsbxmZqEloPut1ZNG4Ew/HU6SgKOG3vQTSlLLEdwEJL
+	 W2z/c+fqYWAI8X21ElMwI5tovyPQOHBu6eG8WS2BU9yFtxJoXguhRuCDPaKzZL0zzu
+	 iDuBX45QQFGaRNKaXLXZry8K0Of8174ppZhxuyyKkpP2B8WA7i2ZiM84md5spJIM8S
+	 uOsUl/E7aVmiaYFe/67a2BEnstYDlRBxfB/ecgBDF75GyV4jGk34JkjKIG4aP9Wir9
+	 Usa/tihmxQBFQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 6A534C4332E; Tue, 26 Dec 2023 15:25:27 +0000 (UTC)
+	id 819F2C4332E; Tue, 26 Dec 2023 15:29:47 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after a
  random number of suspend/resume cycles
-Date: Tue, 26 Dec 2023 15:25:27 +0000
+Date: Tue, 26 Dec 2023 15:29:47 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -38,8 +38,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-218305-215701-yUtYU93DTa@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-tsqdNRnR7y@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -55,59 +55,40 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
---- Comment #11 from Artem S. Tashkinov (aros@gmx.com) ---
-Created attachment 305659
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D305659&action=3Dedit
-The contents of /sys/devices/system/cpu/cpufreq/*
+--- Comment #12 from Artem S. Tashkinov (aros@gmx.com) ---
+> BTW here's another bug, either firmware or something in the kernel reports
+> wrong max frequency:
 
-Switching between power modes using
-/sys/devices/system/cpu/cpufreq/*/energy_performance_preference does nothin=
-g.
+Max frequency is reported correctly only for two out of sixteen logical cor=
+es.
+It's wrong for all other cores. Would be great if AMD fixed this.
 
-The exact per CPU frequency stats:
-# cat /sys/devices/system/cpu/cpufreq/policy*/scaling_cur_freq
-400000
-544395
-400000
-544099
-400000
-400000
-400000
-400000
-400000
-544189
-400000
-544181
-400000
-400000
-544007
-542947
+Speaking of my firmware, it's:
 
-No idea where 544MHz comes from.
+https://support.hp.com/us-en/drivers/hp-elitebook-845-14-inch-g10-notebook-=
+pc/2101628462
 
-BTW here's another bug, either firmware or something in the kernel reports
-wrong max frequency:
-
-# cat /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq
-5137000
-6080000
-6080000
-5764000
-5764000
-5924000
-5924000
-5137000
-6080000
-6080000
-5608000
-5608000
-5293000
-5293000
-5449000
-5449000
-
-I'm not aware of any Zen 4 CPUs which can run at 6080000KHz frequency by
-default, let alone mobile parts.
+> Description:
+>=20
+> This package is used to update the supported firmware on HP Business Note=
+book
+> systems with a V82 family BIOS. This package is provided for supported
+> computer systems that are running a supported operating system.
+>=20
+> Fix and enhancements:
+>=20
+> - Fixes an issue where the Performance page in AMD Software: Adrenalin
+> Edition does not display correctly. - Adds the Gaming Optimized mode to v=
+ideo
+> memory size.
+>=20
+> - Includes the following firmware:
+> AMD Graphics Output Protocol (GOP) Firmware, version 3.7.10
+> AMD PSP Firmware, version 0.2D.6.6C
+> AMD SMU Firmware, version 0.76.65.0
+> Embedded Controller (EC) Firmware, version 60.28.00
+> Intel/Realtek UEFI PXE ROM, version 2.041
+> TI Power Delivery (PD) Firmware, version 4.1.0
 
 --=20
 You may reply to this email to add a comment.
