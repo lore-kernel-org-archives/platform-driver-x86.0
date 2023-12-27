@@ -1,63 +1,53 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2079.outbound.protection.outlook.com [40.107.237.79])
+Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E40F5392
-	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Dec 2023 06:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24A3569F;
+	Wed, 27 Dec 2023 07:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wVqGFDy/"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I8SgYGvE4jhre7g0Y86QeoeFBSzLz0Bys2Ovf60IDiiacKpD3/mvkkV2CjgIsTz7JSjo5xcbYpMq6WnjoLnkYmWRyJvdXeBDErc1juGFrz8XYeSnjx7llPj8JCJ+p1atO0yS9h/n2T8hqF4rmFIob67VbdPcfcvPXeJbcMIaAnIJPfuWr1elMZHHpJINpsmWE0gccXlBepyraFy2EyhDOd+CcEFiX17rSl9vpFN+vFLfdGRbMwxUKaQqYVVqx0hYzm6PMjUBdARVn6hEyOHQ6yYGxQYvkTCQPQkbPtgVJBAjoQ4vmWW2+Cdk9G98MdS1Z3zO/V0v+a530GXcDyJTIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=y1KsvxaquzTNXAmDrWMjX1hX4ZkBSpIZip8WcQfbgTw=;
- b=CwxDzeUwrJiGrgcXWzo+dB0udRWVWP/X9m9JPfQdsxLa2Rd5+14h6neR8UFj1JgPzBH3XDwsY4+XXWWqV/l4zCZqy7WsqpdXb/6GeuHViAZZvN1ToRLDg50IIGEiB/FjdJG38zo77h9P9agwZp3jR1y7NkmdLMowSLB9gAQBfVTkUPPSO3SWlDcwXIVNOHo4uI/+r93PyQVvjg5Su9ZlkpqA38R+u150yhm5clN3Y/sDDR8hPFux54ForEK+Zx4gSVoZyEj0NPt/WlpShnCH2lnAtchiHE1Ydt5WGdRjMA4x2Nw2ee0hgQg8zY2p/WEFu/sUz8Y4Kp+C+qdLgl0xGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y1KsvxaquzTNXAmDrWMjX1hX4ZkBSpIZip8WcQfbgTw=;
- b=wVqGFDy/H2TrR5509RFZTPVvw6ZQnBrdSSDT9JSYjMBR6o/1Lag8lsT2S4GPfS9BYCSTwYOfG4KZsXgaMKKGSmtXDOHe2jwR7i+DO1DLEb4NJtI8zEmt4KwtdHgtV1r1rgesXC3OECMKFiWnhjV84YmiiMlW96jYbUnm70l2RAA=
-Received: from MN2PR19CA0043.namprd19.prod.outlook.com (2603:10b6:208:19b::20)
- by PH7PR12MB9255.namprd12.prod.outlook.com (2603:10b6:510:30c::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.27; Wed, 27 Dec
- 2023 06:38:51 +0000
-Received: from BL02EPF0001A104.namprd05.prod.outlook.com
- (2603:10b6:208:19b:cafe::3a) by MN2PR19CA0043.outlook.office365.com
- (2603:10b6:208:19b::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.18 via Frontend
- Transport; Wed, 27 Dec 2023 06:38:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF0001A104.mail.protection.outlook.com (10.167.241.135) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7135.14 via Frontend Transport; Wed, 27 Dec 2023 06:38:50 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Wed, 27 Dec
- 2023 00:38:48 -0600
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
-	<markgross@kernel.org>
-CC: <Sanket.Goswami@amd.com>, <mario.limonciello@amd.com>,
-	<platform-driver-x86@vger.kernel.org>, Shyam Sundar S K
-	<Shyam-sundar.S-k@amd.com>
-Subject: [PATCH RESEND 6/6] platform/x86/amd/pmc: Modify SMU message port for latest AMD platform
-Date: Wed, 27 Dec 2023 12:07:49 +0530
-Message-ID: <20231227063749.1780900-7-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231227063749.1780900-1-Shyam-sundar.S-k@amd.com>
-References: <20231227063749.1780900-1-Shyam-sundar.S-k@amd.com>
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BYs1jBob"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1703661660; x=1735197660;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=J5eQJVLzpk87l8OicoWxXE8sVGqREx0APlR8fwcUaFo=;
+  b=BYs1jBobCLPUwWBDoaiQeUP1wewjKHJ5a9iS1yse/1Xwmu/VDnEVekcR
+   PrqZM4hVqzA3vhRrRLB1wT+0AVKf1j2ljMOfVFc7bRIPzTQXuhD6PHquj
+   gI5Z6ug5POE6I90J/q28/cFUSe3po6x2o4TyvYqxbX936w1RgUlVjpXf5
+   4Ev1kyVgLtv/MbxgB0C575XYa9kIwfa1XgAUy3UfCgrGyBekihVyeVVoJ
+   djqWSHri3nUKuhOwWbr/DtGwBdwshbk9DGb9HO7abk+th6a5ZNMOLV2ix
+   1/EsUfJYB7NQ9xxslHqSbFHaCk+BKFYMBIt+QvWITC9AoJ08Pq7ipJSF9
+   w==;
+X-CSE-ConnectionGUID: 7BjNDh4CRryrCJ076M5ykw==
+X-CSE-MsgGUID: Fgjv+mnGSsyVvWm6yl7bTg==
+X-IronPort-AV: E=Sophos;i="6.04,308,1695657600"; 
+   d="scan'208";a="6126741"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 27 Dec 2023 15:20:52 +0800
+IronPort-SDR: +orfwuQ3maa+HlLmSI5fphGNiyH18OGm11f12v3VIJ8Ez7BUfXWp8ReS9Ro+NJnH9eGXRG+g/y
+ HHqYxftFf+UA==
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 26 Dec 2023 22:25:47 -0800
+IronPort-SDR: cLtE/jZW2Kbu84zJVGTL9l9+2iNeCJIJcOOSSsCqd4tIfWIsMToFMgindZkXdzEr4BjL1Bl8xt
+ posTxDDq5Rhg==
+WDCIronportException: Internal
+Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
+  by uls-op-cesaip01.wdc.com with ESMTP; 26 Dec 2023 23:20:50 -0800
+From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	linux-pci@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH v4] platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe
+Date: Wed, 27 Dec 2023 16:20:49 +0900
+Message-ID: <20231227072049.2281764-1-shinichiro.kawasaki@wdc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,90 +55,287 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A104:EE_|PH7PR12MB9255:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b8888ea-e247-4528-2bc4-08dc06a67cb3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	H/TYEopl96R8BALEpY+1/pULMw+G35pZrMUy0r4NZh9HE6At80EnJuHPVtgGjWuYr2cH1oKx/oHaxVg6d7dyjTBi8hZsxrycP3wJf7WLWHWadNrYJ4EdolWKp54ojDKj7Y77rPgoa9tNXSwgnCH7sqGOnA8pkT8JPjNS2adjR8kqr/4X+QVXmm80JLNh9KR4oXa2PGEc+ARuTvKYmOtp9hTMcB4qd55a0APeBNcOZcWubvm7KpTFbP1kxXGz6LOLgh+C07L/+GCHxURw+mxxUHBCLmz5wAuoPhzQwdApt1s5/THYhHK9HDWYsLXFvy0+AY2bHURcaS8NY3tYvH5YIHXsE0Jew5wOq1G3TiRd8xPmg43+GYpzjquDS0T5NyML0+iccLw3O8mcc1mxrwc97enDH9WNpmPx2Eb6egfpH/5ggtSFQrwztKVfmaDzIWiv2/9N82epwdai5Vxwe2a/oEkWnr+EyJ/V6o7cJF+lA+H8sATKzSpxrKaB2g96yxJu0hm7GdA38sq3IjAEftsUeU4o4IeDuP6jFDjSx8gRTKaQrtaUoRSQoIlcvioksXxLyAeDfuxpgo4omw+ZTeVMKIZqkabCpAspEv5mmvj/hZEO676z5NN03dBD0aUH15GxarxesFfPA1GMVTiCFOnrG4du1lPp1KeYatJ8a2a7SBfGzrdQQsR7BMasNn0v3WdF+DYd68DeDo8y+xJiaqgXdKE6i09dMpXDpmov3wE5P6OGIaTridZGUViC6BMyjPbouzF2FnLHUqVuirUfKjLeRA==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(396003)(346002)(376002)(39860400002)(230922051799003)(64100799003)(451199024)(82310400011)(186009)(1800799012)(40470700004)(36840700001)(46966006)(83380400001)(47076005)(41300700001)(2616005)(16526019)(26005)(1076003)(356005)(81166007)(82740400003)(54906003)(4326008)(316002)(36860700001)(110136005)(336012)(426003)(8676002)(5660300002)(15650500001)(2906002)(478600001)(8936002)(70206006)(70586007)(7696005)(86362001)(36756003)(40480700001)(40460700003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2023 06:38:50.5910
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b8888ea-e247-4528-2bc4-08dc06a67cb3
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A104.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9255
 
-The latest platforms use a different SMU message port(0x938) from the one
-currently being used (0x538). Make code changes to adapt to this new
-information.
+p2sb_bar() unhides P2SB device to get resources from the device. It
+guards the operation by locking pci_rescan_remove_lock so that parallel
+rescans do not find the P2SB device. However, this lock causes deadlock
+when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
+locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
+call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
+Hence the deadlock.
 
-Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
+Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
+for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
+refer the cache and return to the caller.
+
+Link: https://lore.kernel.org/linux-pci/6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j/
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 ---
- drivers/platform/x86/amd/pmc/pmc.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+This patch reflects discussions held at the Link tag. I confirmed this patch
+fixes the problem using a system with i2c_i801 device, building i2c_i801
+module as both built-in and loadable. Reviews will be appreicated.
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index c8d86dd392ce..acac2a4194d4 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -31,7 +31,6 @@
- #include "pmc.h"
+Changes from v3:
+* Modified p2sb_valid_resource() to return boolean
+
+Changes from v2:
+* Improved p2sb_scan_and_cache() and p2sb_scan_and_cache_devfn()
+* Reflected other review comments by Andy
+
+Changes from v1:
+* Reflected review comments by Andy
+* Removed RFC prefix
+
+Changes from RFC v2:
+* Reflected review comments on the list
+
+Changes from RFC v1:
+* Fixed a build warning poitned out in llvm list by kernel test robot
+
+ drivers/platform/x86/p2sb.c | 171 +++++++++++++++++++++++++++---------
+ 1 file changed, 129 insertions(+), 42 deletions(-)
+
+diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
+index 1cf2471d54dd..ccebfd885718 100644
+--- a/drivers/platform/x86/p2sb.c
++++ b/drivers/platform/x86/p2sb.c
+@@ -26,6 +26,19 @@ static const struct x86_cpu_id p2sb_cpu_ids[] = {
+ 	{}
+ };
  
- /* SMU communication registers */
--#define AMD_PMC_REGISTER_MESSAGE	0x538
- #define AMD_PMC_REGISTER_RESPONSE	0x980
- #define AMD_PMC_REGISTER_ARGUMENT	0x9BC
- 
-@@ -362,14 +361,17 @@ static void amd_pmc_get_ip_info(struct amd_pmc_dev *dev)
- 	case AMD_CPU_ID_CB:
- 		dev->num_ips = 12;
- 		dev->s2d_msg_id = 0xBE;
-+		dev->smu_msg = 0x538;
- 		break;
- 	case AMD_CPU_ID_PS:
- 		dev->num_ips = 21;
- 		dev->s2d_msg_id = 0x85;
-+		dev->smu_msg = 0x538;
- 		break;
- 	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
- 		dev->num_ips = 22;
- 		dev->s2d_msg_id = 0xDE;
-+		dev->smu_msg = 0x938;
- 		break;
- 	}
++/*
++ * Cache BAR0 of P2SB device functions 0 to 7.
++ * TODO: Move this definition to pci.h together with same other definitions.
++ */
++#define NR_P2SB_RES_CACHE 8
++
++struct p2sb_res_cache {
++	u32 bus_dev_id;
++	struct resource res;
++};
++
++static struct p2sb_res_cache p2sb_resources[NR_P2SB_RES_CACHE];
++
+ static int p2sb_get_devfn(unsigned int *devfn)
+ {
+ 	unsigned int fn = P2SB_DEVFN_DEFAULT;
+@@ -39,10 +52,18 @@ static int p2sb_get_devfn(unsigned int *devfn)
+ 	return 0;
  }
-@@ -673,7 +675,7 @@ static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
- 		argument = AMD_S2D_REGISTER_ARGUMENT;
- 		response = AMD_S2D_REGISTER_RESPONSE;
- 	} else {
--		message = AMD_PMC_REGISTER_MESSAGE;
-+		message = dev->smu_msg;
- 		argument = AMD_PMC_REGISTER_ARGUMENT;
- 		response = AMD_PMC_REGISTER_RESPONSE;
- 	}
-@@ -700,7 +702,7 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg,
- 		argument = AMD_S2D_REGISTER_ARGUMENT;
- 		response = AMD_S2D_REGISTER_RESPONSE;
- 	} else {
--		message = AMD_PMC_REGISTER_MESSAGE;
-+		message = dev->smu_msg;
- 		argument = AMD_PMC_REGISTER_ARGUMENT;
- 		response = AMD_PMC_REGISTER_RESPONSE;
- 	}
+ 
++static bool p2sb_valid_resource(struct resource *res)
++{
++	if (res->flags)
++		return true;
++
++	return false;
++}
++
+ /* Copy resource from the first BAR of the device in question */
+-static int p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
++static void p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
+ {
+-	struct resource *bar0 = &pdev->resource[0];
++	struct resource *bar0 = pci_resource_n(pdev, 0);
+ 
+ 	/* Make sure we have no dangling pointers in the output */
+ 	memset(mem, 0, sizeof(*mem));
+@@ -56,47 +77,64 @@ static int p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
+ 	mem->end = bar0->end;
+ 	mem->flags = bar0->flags;
+ 	mem->desc = bar0->desc;
+-
+-	return 0;
+ }
+ 
+-static int p2sb_scan_and_read(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
++static void p2sb_scan_and_cache_devfn(struct pci_bus *bus, unsigned int devfn)
+ {
++	struct p2sb_res_cache *cache = &p2sb_resources[PCI_FUNC(devfn)];
+ 	struct pci_dev *pdev;
+-	int ret;
+ 
+ 	pdev = pci_scan_single_device(bus, devfn);
+ 	if (!pdev)
+-		return -ENODEV;
++		return;
+ 
+-	ret = p2sb_read_bar0(pdev, mem);
++	p2sb_read_bar0(pdev, &cache->res);
++	cache->bus_dev_id = bus->dev.id;
+ 
+ 	pci_stop_and_remove_bus_device(pdev);
+-	return ret;
++	return;
+ }
+ 
+-/**
+- * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
+- * @bus: PCI bus to communicate with
+- * @devfn: PCI slot and function to communicate with
+- * @mem: memory resource to be filled in
+- *
+- * The BIOS prevents the P2SB device from being enumerated by the PCI
+- * subsystem, so we need to unhide and hide it back to lookup the BAR.
+- *
+- * if @bus is NULL, the bus 0 in domain 0 will be used.
+- * If @devfn is 0, it will be replaced by devfn of the P2SB device.
+- *
+- * Caller must provide a valid pointer to @mem.
+- *
+- * Locking is handled by pci_rescan_remove_lock mutex.
+- *
+- * Return:
+- * 0 on success or appropriate errno value on error.
+- */
+-int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
++static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
++{
++	unsigned int slot, fn;
++
++	if (PCI_FUNC(devfn) == 0) {
++		/*
++		 * When function number of the P2SB device is zero, scan it and
++		 * other function numbers, and if devices are available, cache
++		 * their BAR0s.
++		 */
++		slot = PCI_SLOT(devfn);
++		for (fn = 0; fn < NR_P2SB_RES_CACHE; fn++)
++			p2sb_scan_and_cache_devfn(bus, PCI_DEVFN(slot, fn));
++	} else {
++		/* Scan the P2SB device and cache its BAR0 */
++		p2sb_scan_and_cache_devfn(bus, devfn);
++	}
++
++	if (!p2sb_valid_resource(&p2sb_resources[PCI_FUNC(devfn)].res))
++		return -ENOENT;
++
++	return 0;
++}
++
++static struct pci_bus *p2sb_get_bus(struct pci_bus *bus)
++{
++	static struct pci_bus *p2sb_bus;
++
++	bus = bus ?: p2sb_bus;
++	if (bus)
++		return bus;
++
++	/* Assume P2SB is on the bus 0 in domain 0 */
++	p2sb_bus = pci_find_bus(0, 0);
++	return p2sb_bus;
++}
++
++static int p2sb_cache_resources(void)
+ {
+-	struct pci_dev *pdev_p2sb;
++	struct pci_bus *bus;
+ 	unsigned int devfn_p2sb;
+ 	u32 value = P2SBC_HIDE;
+ 	int ret;
+@@ -106,8 +144,9 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* if @bus is NULL, use bus 0 in domain 0 */
+-	bus = bus ?: pci_find_bus(0, 0);
++	bus = p2sb_get_bus(NULL);
++	if (!bus)
++		return -ENODEV;
+ 
+ 	/*
+ 	 * Prevent concurrent PCI bus scan from seeing the P2SB device and
+@@ -115,17 +154,16 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+ 	 */
+ 	pci_lock_rescan_remove();
+ 
+-	/* Unhide the P2SB device, if needed */
++	/*
++	 * The BIOS prevents the P2SB device from being enumerated by the PCI
++	 * subsystem, so we need to unhide and hide it back to lookup the BAR.
++	 * Unhide the P2SB device here, if needed.
++	 */
+ 	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
+ 	if (value & P2SBC_HIDE)
+ 		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
+ 
+-	pdev_p2sb = pci_scan_single_device(bus, devfn_p2sb);
+-	if (devfn)
+-		ret = p2sb_scan_and_read(bus, devfn, mem);
+-	else
+-		ret = p2sb_read_bar0(pdev_p2sb, mem);
+-	pci_stop_and_remove_bus_device(pdev_p2sb);
++	ret = p2sb_scan_and_cache(bus, devfn_p2sb);
+ 
+ 	/* Hide the P2SB device, if it was hidden */
+ 	if (value & P2SBC_HIDE)
+@@ -133,12 +171,61 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+ 
+ 	pci_unlock_rescan_remove();
+ 
+-	if (ret)
+-		return ret;
++	return ret;
++}
++
++/**
++ * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
++ * @bus: PCI bus to communicate with
++ * @devfn: PCI slot and function to communicate with
++ * @mem: memory resource to be filled in
++ *
++ * If @bus is NULL, the bus 0 in domain 0 will be used.
++ * If @devfn is 0, it will be replaced by devfn of the P2SB device.
++ *
++ * Caller must provide a valid pointer to @mem.
++ *
++ * Return:
++ * 0 on success or appropriate errno value on error.
++ */
++int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
++{
++	struct p2sb_res_cache *cache;
++	int ret;
+ 
+-	if (mem->flags == 0)
++	bus = p2sb_get_bus(bus);
++	if (!bus)
+ 		return -ENODEV;
+ 
++	if (!devfn) {
++		ret = p2sb_get_devfn(&devfn);
++		if (ret)
++			return ret;
++	}
++
++	cache = &p2sb_resources[PCI_FUNC(devfn)];
++	if (cache->bus_dev_id != bus->dev.id)
++		return -ENODEV;
++
++	if (!p2sb_valid_resource(&cache->res))
++		return -ENOENT;
++
++	memcpy(mem, &cache->res, sizeof(*mem));
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(p2sb_bar);
++
++static int __init p2sb_fs_init(void)
++{
++	p2sb_cache_resources();
++	return 0;
++}
++
++/*
++ * pci_rescan_remove_lock avoids access to unhidden P2SB devices, but it causes
++ * deadlock with sysfs pci bus rescan. To avoid the deadlock, access to P2SB
++ * devices at an early step in kernel initialization and cache required
++ * resources. This should happen after subsys_initcall which initializes PCI
++ * subsystem and before device_initcall which requires P2SB resources.
++ */
++fs_initcall(p2sb_fs_init);
 -- 
-2.25.1
+2.43.0
 
