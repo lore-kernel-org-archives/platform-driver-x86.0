@@ -1,97 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11BEC4F5E1
-	for <platform-driver-x86@vger.kernel.org>; Tue, 26 Dec 2023 15:29:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB26720EB;
+	Wed, 27 Dec 2023 00:35:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIIiO7Km"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 990AEC433C7
-	for <platform-driver-x86@vger.kernel.org>; Tue, 26 Dec 2023 15:29:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dxGB0zE3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07299C433C7;
+	Wed, 27 Dec 2023 00:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703604587;
-	bh=XVGiROCDZPU+e3eDCbi10VZPKKO18OF+/ytbQzpdm4I=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=qIIiO7KmTjI+W12BWd6KZu4PVv61W3vaBnChF8kl73AT6PQtbr9279py9bZnNnx8Q
-	 0FVLG84qOGN5eTEtKmTbU9TmsbxmZqEloPut1ZNG4Ew/HU6SgKOG3vQTSlLLEdwEJL
-	 W2z/c+fqYWAI8X21ElMwI5tovyPQOHBu6eG8WS2BU9yFtxJoXguhRuCDPaKzZL0zzu
-	 iDuBX45QQFGaRNKaXLXZry8K0Of8174ppZhxuyyKkpP2B8WA7i2ZiM84md5spJIM8S
-	 uOsUl/E7aVmiaYFe/67a2BEnstYDlRBxfB/ecgBDF75GyV4jGk34JkjKIG4aP9Wir9
-	 Usa/tihmxQBFQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 819F2C4332E; Tue, 26 Dec 2023 15:29:47 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after a
- random number of suspend/resume cycles
-Date: Tue, 26 Dec 2023 15:29:47 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: aros@gmx.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-tsqdNRnR7y@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=k20201202; t=1703637300;
+	bh=QQSzTEKVkjhzMRUNMGeszGHif36iIyhtPSxVUIgASzk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=dxGB0zE3RjIgHayBFc1uA1yap6INDB3FVNo1Zq0h5lm3KiTYy/oY3FDpRKh3OktVp
+	 1rzTAD+osz5VIGcyTeX4+WCu9+/OWgUXBwBWF5glUzWHm8r1cnMF9s1CsIJM9+fyJf
+	 yP/BmVVu8ZPUHSOtpCuXk4qLP249+JDCJeicsx16rLCXaPPmus4bxOBxMhlWkxR6wn
+	 5h7I4aIZI7di/1HaZt8L7y7AlisOzxJWK4eLiDp3F2its93Tw3/zsZaKiCT3sJuGuH
+	 3PS8ev+J7PgRTHCHVTXaHW7LmYseCUpgjJvZsx+FjUrxPe53+u9WKb6Pbooo2oFI42
+	 XXqPgrrjPqb7w==
+Date: Tue, 26 Dec 2023 18:34:58 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v3] platform/x86: p2sb: Allow p2sb_bar() calls during PCI
+ device probe
+Message-ID: <20231227003458.GA1485669@bhelgaas>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231225092656.2153894-1-shinichiro.kawasaki@wdc.com>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+On Mon, Dec 25, 2023 at 06:26:56PM +0900, Shin'ichiro Kawasaki wrote:
+> ...
 
---- Comment #12 from Artem S. Tashkinov (aros@gmx.com) ---
-> BTW here's another bug, either firmware or something in the kernel reports
-> wrong max frequency:
+> +static int p2sb_valid_resource(struct resource *res)
+> +{
+> +	return res->flags ? 0 : -ENOENT;
+> +}
 
-Max frequency is reported correctly only for two out of sixteen logical cor=
-es.
-It's wrong for all other cores. Would be great if AMD fixed this.
+This got worse because it's *named* like a boolean, but the return
+value can't be used like a boolean, which makes callers really hard to
+read, e.g., this:
 
-Speaking of my firmware, it's:
+  if (p2sb_valid_resource(res))
+    /* do something */
 
-https://support.hp.com/us-en/drivers/hp-elitebook-845-14-inch-g10-notebook-=
-pc/2101628462
+does exactly the opposite of what the reader expects.
 
-> Description:
->=20
-> This package is used to update the supported firmware on HP Business Note=
-book
-> systems with a V82 family BIOS. This package is provided for supported
-> computer systems that are running a supported operating system.
->=20
-> Fix and enhancements:
->=20
-> - Fixes an issue where the Performance page in AMD Software: Adrenalin
-> Edition does not display correctly. - Adds the Gaming Optimized mode to v=
-ideo
-> memory size.
->=20
-> - Includes the following firmware:
-> AMD Graphics Output Protocol (GOP) Firmware, version 3.7.10
-> AMD PSP Firmware, version 0.2D.6.6C
-> AMD SMU Firmware, version 0.76.65.0
-> Embedded Controller (EC) Firmware, version 60.28.00
-> Intel/Realtek UEFI PXE ROM, version 2.041
-> TI Power Delivery (PD) Firmware, version 4.1.0
+I see that you want to use this -ENOENT return value in the callers:
 
---=20
-You may reply to this email to add a comment.
+> +static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
+> +{
+> + ...
+> +	return p2sb_valid_resource(&p2sb_resources[PCI_FUNC(devfn)].res);
+> +}
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+> + * 0 on success or appropriate errno value on error.
+> + */
+> +int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+> +{
+> + ...
+> +	ret = p2sb_valid_resource(&cache->res);
+> +	if (ret)
+> +		return ret;
+
+But I think these would be much clearer as something like this:
+
+  static bool p2sb_valid_resource(struct resource *res)
+  {
+    if (res->flags)
+      return true;
+
+    return false;
+  }
+
+  static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
+  {
+    ...
+    if (!p2sb_valid_resource(&p2sb_resources[PCI_FUNC(devfn)].res))
+      return -ENOENT;
+
+    return 0;
+  }
+
+Bjorn
