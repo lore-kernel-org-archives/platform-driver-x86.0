@@ -1,82 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0762576B;
-	Wed, 27 Dec 2023 16:48:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E7C46531
+	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Dec 2023 17:46:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vex9RYbc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KFraookh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703695682; x=1735231682;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1S//I1qTPuzHOA3iYZdTpiYZT9ONAqYRed/MKdU5pdA=;
-  b=Vex9RYbc/wH8VhakEUcMLVOGxHHpja52U9+RfbDKnD05bpGIArbZVm5s
-   Hgeil/rklvtJG4PAxWE3vhgDm7FkHHBuy4VM5fDXTmHcuDsv7hOEMfFG6
-   oVpHXV66vFJPBpgjBPSaWZMaoXDVgp8lge/lxVeGZ3t7Y6w/im2Uh9ZJ8
-   STO+S94O4B5Ttui+PC0hOGrzQiXXUcVHtvhqrEl8NFdt/vbPpYdy8ewEo
-   MKI71lxzRMwp3rYyeVVA10FAwIJc5A+XHYqR+La/2PQW5kZ/ZypThtbpP
-   sEPXpD/dJTX/ssOV51FYVenGhzRR2tiFxxM43rw698QHsGT5gwEpL6xTX
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="381435210"
+  t=1703699211; x=1735235211;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=WZcgS/CkdFWUabdvOZJ1S6nQ1soBn3by4pIURzL0e3c=;
+  b=KFraookhyyqIivpvyNx8MURe32SYJ7fUceW5fit1+zrI7R70e613w2fM
+   VVUSWl1dEmf/whYCG5Cs5qitnaWpQDsXtagh3PvoEN3IyS17R8RpERuhy
+   6vDPiZQGAK9vSCPX4CcERis4fiNPBDS8imgjE3qnJLvp4/n+Nav/fdJYd
+   Wm0nFvkk2wRWhsE/SsvAKkMFa+s+DcEGix8T+8rdXSNsV93mzn4GzsHpT
+   mpA/oKIUCnVTvvAV5NqWSr/+YTfFJTJrtvmn06aWjfthW5Np5r0ESYeAi
+   xUzuC6iXCYkFZAiyrlZ6t9N8ESvw9MW+Bo26/TWgKSLUQ0eLbLFb6VLwt
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="460797716"
 X-IronPort-AV: E=Sophos;i="6.04,309,1695711600"; 
-   d="scan'208";a="381435210"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 08:48:01 -0800
+   d="scan'208";a="460797716"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 09:46:50 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="868898039"
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="1025439336"
 X-IronPort-AV: E=Sophos;i="6.04,309,1695711600"; 
-   d="scan'208";a="868898039"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 08:47:59 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rIX4W-00000009T0H-1F27;
-	Wed, 27 Dec 2023 18:47:56 +0200
-Date: Wed, 27 Dec 2023 18:47:56 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v4] platform/x86: p2sb: Allow p2sb_bar() calls during PCI
- device probe
-Message-ID: <ZYxVPCA4mu3vVLqt@smile.fi.intel.com>
-References: <20231227072049.2281764-1-shinichiro.kawasaki@wdc.com>
+   d="scan'208";a="1025439336"
+Received: from hrmarapi-mobl1.ger.corp.intel.com ([10.249.35.233])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 09:46:48 -0800
+Date: Wed, 27 Dec 2023 19:46:46 +0200 (EET)
+From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org, 
+    Sanket.Goswami@amd.com, mario.limonciello@amd.com, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH RESEND 6/6] platform/x86/amd/pmc: Modify SMU message port
+ for latest AMD platform
+In-Reply-To: <20231227063749.1780900-7-Shyam-sundar.S-k@amd.com>
+Message-ID: <46588b85-afda-28ce-7e92-9c14e23bf346@linux.intel.com>
+References: <20231227063749.1780900-1-Shyam-sundar.S-k@amd.com> <20231227063749.1780900-7-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231227072049.2281764-1-shinichiro.kawasaki@wdc.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Dec 27, 2023 at 04:20:49PM +0900, Shin'ichiro Kawasaki wrote:
-> p2sb_bar() unhides P2SB device to get resources from the device. It
-> guards the operation by locking pci_rescan_remove_lock so that parallel
-> rescans do not find the P2SB device. However, this lock causes deadlock
-> when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
-> locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
-> call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
-> Hence the deadlock.
+On Wed, 27 Dec 2023, Shyam Sundar S K wrote:
+
+> The latest platforms use a different SMU message port(0x938) from the one
+> currently being used (0x538). Make code changes to adapt to this new
+> information.
 > 
-> To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
-> Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
-> for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
-> refer the cache and return to the caller.
+> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>  drivers/platform/x86/amd/pmc/pmc.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+> index c8d86dd392ce..acac2a4194d4 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+> @@ -31,7 +31,6 @@
+>  #include "pmc.h"
+>  
+>  /* SMU communication registers */
+> -#define AMD_PMC_REGISTER_MESSAGE	0x538
+>  #define AMD_PMC_REGISTER_RESPONSE	0x980
+>  #define AMD_PMC_REGISTER_ARGUMENT	0x9BC
+>  
+> @@ -362,14 +361,17 @@ static void amd_pmc_get_ip_info(struct amd_pmc_dev *dev)
+>  	case AMD_CPU_ID_CB:
+>  		dev->num_ips = 12;
+>  		dev->s2d_msg_id = 0xBE;
+> +		dev->smu_msg = 0x538;
+>  		break;
+>  	case AMD_CPU_ID_PS:
+>  		dev->num_ips = 21;
+>  		dev->s2d_msg_id = 0x85;
+> +		dev->smu_msg = 0x538;
+>  		break;
+>  	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
+>  		dev->num_ips = 22;
+>  		dev->s2d_msg_id = 0xDE;
+> +		dev->smu_msg = 0x938;
+>  		break;
+>  	}
+>  }
+> @@ -673,7 +675,7 @@ static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
+>  		argument = AMD_S2D_REGISTER_ARGUMENT;
+>  		response = AMD_S2D_REGISTER_RESPONSE;
+>  	} else {
+> -		message = AMD_PMC_REGISTER_MESSAGE;
+> +		message = dev->smu_msg;
+>  		argument = AMD_PMC_REGISTER_ARGUMENT;
+>  		response = AMD_PMC_REGISTER_RESPONSE;
+>  	}
+> @@ -700,7 +702,7 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg,
+>  		argument = AMD_S2D_REGISTER_ARGUMENT;
+>  		response = AMD_S2D_REGISTER_RESPONSE;
+>  	} else {
+> -		message = AMD_PMC_REGISTER_MESSAGE;
+> +		message = dev->smu_msg;
+>  		argument = AMD_PMC_REGISTER_ARGUMENT;
+>  		response = AMD_PMC_REGISTER_RESPONSE;
+>  	}
+> 
 
-As per v3 discussion:
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+You forgot to git add the field into the struct?
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+ i.
 
