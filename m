@@ -1,28 +1,55 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FDC5671;
-	Thu, 28 Dec 2023 08:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603C16FDD
+	for <platform-driver-x86@vger.kernel.org>; Thu, 28 Dec 2023 09:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="VInzAuRr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1703752943; x=1704357743; i=markus.elfring@web.de;
-	bh=zmkIk95uAnIs9Eha5efh2mV5ML9QPD6Kxw6Fd4L0ayI=;
-	h=X-UI-Sender-Class:Date:To:From:Subject:Cc;
-	b=VInzAuRrkOQMpps9N+++fUF5AregOalMHU4QRqu4YesKz9EvgRS8WQvsJGNmYuMo
-	 r5Sf610vgM7T1HV0kUggWIiGcKIKAKXse2nmwVt5n2GBePiNTGp6GMD3q4Ve1QlI1
-	 w/w5mnkyPJsRux8Pm2V5csAc6cbP2z5F9nIVW4tYy1wFL14GVKliz5z1Gs6E1lAuf
-	 kZeZCrO0DWFR1y8q4RnmmHRkxlePqz30AkLmuyjgKKYKysHmlRWsLxhu/j7NJSe6O
-	 APAuZGG8S1pB0DEPmN4r/6SrNR0QwYYtPgg6liX2aMPQ0bT2o2zLM+vu2pwefC2eP
-	 hJA33wVwTsEKFZ5hTQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MA4bA-1rPtlV0tYI-00BlBh; Thu, 28
- Dec 2023 09:42:23 +0100
-Message-ID: <362ee824-fc53-4e19-9529-8b621657635b@web.de>
-Date: Thu, 28 Dec 2023 09:42:21 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FZHV48O8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1703754481;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4dvIT8jGXG+RMMytEd2ps7+QjIyG5dcVpLq72q/MxXU=;
+	b=FZHV48O8omS8Q8zy/TiBnr35etjkK0ikVdToiOPYCtrTmkM7hvrTxbkzlampniPzmxCYip
+	CqjTvFu4cBbJXClVaHs9hoVkzEt50XnwNW9AFiVRcDsPNkcatniMH+qlUst08oJPM6oCpl
+	k8CxkNiwZI8QOzGfD6HbnnhAEqKO7EI=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-665-p4si-4TtMsiveXAHZbBM7w-1; Thu, 28 Dec 2023 04:07:59 -0500
+X-MC-Unique: p4si-4TtMsiveXAHZbBM7w-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5541f04f1e9so3190499a12.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 28 Dec 2023 01:07:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703754478; x=1704359278;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4dvIT8jGXG+RMMytEd2ps7+QjIyG5dcVpLq72q/MxXU=;
+        b=rCw1BbBDO0FRz2UEeUnGEfD4uIviV+xDHFxvHJJ8ohXEgsd09KxxF8kEmkpHNkKi+h
+         +rW1z3TIqmuiiLX1CptaTENI673/q7LCjf6es1NPx5pDdSV+cinvA6yWevaFCppnOC8Q
+         tlcbqOHoLHmzFcXW8Sh6uduCMiiPiYWsY0yO5WnzRVTTTOQREVkuhp0DTRaEkcts0kf2
+         7Xo41PGNjV76xmoB4LPvLe5TOL5zpq0K49qslMHH99WeQe9qofciNN8rN+MQx7rmlpF8
+         AXZADxDbI5wyRETBvprgD/HiWI0z0lPYROv4NdTSRJvfPSI010Dyr9rhphd+b3KM+rH+
+         K+tA==
+X-Gm-Message-State: AOJu0YyydYl+JlBoce9gLEORhSbe0BCiHn5cA+6Vr/iHslJg11mAktHA
+	CVpqbZaOGwRpwbw0ZR/tFRudSm+KGplyoOV/SSNqVj8c8mFJdgz81CdybRs6c2a2fvtSXrmzzea
+	uR2sysFsQARiyNDhrNvx/twj9tHm9OKBZ99bggQGtGg==
+X-Received: by 2002:a50:aadc:0:b0:54c:4837:93e9 with SMTP id r28-20020a50aadc000000b0054c483793e9mr6669902edc.48.1703754478435;
+        Thu, 28 Dec 2023 01:07:58 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGz1E0wObea0BXX5EKeZRCy+Xu44cqa4YVVGqTaXAZMLM5AuKdKRUr/PdvArl18ROG2qHlq+g==
+X-Received: by 2002:a50:aadc:0:b0:54c:4837:93e9 with SMTP id r28-20020a50aadc000000b0054c483793e9mr6669894edc.48.1703754478147;
+        Thu, 28 Dec 2023 01:07:58 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id ck8-20020a0564021c0800b0055515b40464sm3248814edb.81.2023.12.28.01.07.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Dec 2023 01:07:57 -0800 (PST)
+Message-ID: <1e88b853-7d72-4e4a-8a91-70d945024a96@redhat.com>
+Date: Thu, 28 Dec 2023 10:07:56 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -30,78 +57,62 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] platform/x86/amd/pmf: Return directly after a failed
- apmf_if_call() in apmf_sbios_heartbeat_notify()
-Cc: LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] platform/x86/intel/pmc: Fix recent instances of
+ -Wmissing-prototypes
+Content-Language: en-US, nl
+To: Nathan Chancellor <nathan@kernel.org>, irenic.rajneesh@gmail.com,
+ david.e.box@intel.com, ilpo.jarvinen@linux.intel.com,
+ rajvi.jingar@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+ Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20231222-intel-pmc-missing-prototypes-v1-0-3f0d47377d4c@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20231222-intel-pmc-missing-prototypes-v1-0-3f0d47377d4c@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rDi8Bd+8M7STwBu7WjWgU68UfYwOYphhC9zo9TLUjNL2/gw4ycp
- J4dC2LEgVEZ0cy4oZuKBDKYc/rrlyV3gHUvEm7tx3Y8s7JwsP1rBFIBYtsc1HAKJLVinrMW
- 5GdwGEUlddGfgLCN/j6TMOPltug/QW9cSIQRzKetAXxOggTRSx0bs5VsUq6Ntph6V8Aa5iU
- wqhVApVWx09AJqMbdLo7A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:nkcMUES01yM=;nDLmN1ZD4ajl/27Ge923Xf1FUDM
- MP7MVJK28721tsglhTeWNgNnkqAfHa2BNDDbWRUT8eap3W58ga6tjws0Mmp/669BEFcKozGkl
- sZEuZEusG4MGTsc8/C42yFGVQXKND1zsok2rnjiqe3bwTzH+IfVkLNT3x78ONettyfbN6Ox9H
- d2ECedJZdFLF69Jy/L59MiW8hLxXQ8W6F3dEtgk38b8/2hrV8JcPXvDpuJKh91aX3ZA5icmEN
- RRh+NNW1KkFFEs0PfBZEmdksgrSgcP7Ik5zc/0zntnqR7uT614JmX9JOnh/DcIvihTA8PfB5G
- Fk8+1sS7pDLAp4PMZeWQw7z90W0IV6OZIs1Si9cvLBhCClcv0GJq6Nrg07gvT4NAtAipEW3hu
- GcnEGI5xjYgqQQX/uWDpfwKdQbjOr64zOovIlBIOMA/Zlbe3u0N3ZD2zhd9nyIzmm+d6Ql/7g
- +YHTC8AA9rr3LfMsL189/vl7AMfssb7UBj0//07wEuprvWCatqx6MgYTxEyNifTS8kgsnojio
- lkKlb5scziE3v915s6WdyWldPbMuo4XifACJxmnpVGTRegbVWf3v60ZZ6WXOdrpD5HOfTzuPo
- lf51sDc0XPAVSWMcQESKdsCLmuddMYF+ZKhELnXJ7MtyBKtWNyj5QFikjyGLReu0IitwdeBoR
- Z5wvK5STs82RUa8JTeDpJL/UCHzX3zGPeFqNWN/OUQE/XFa8WRNjeDgPqQC5SI0J02OBooV1I
- +f1NXCiD8pV40vgHLMXLJjbL98l/ykK4Jr8IuZJ/AmQ5qrMjSkW8ecU8Zumo3Y383NHjJdavr
- YGGVGfhElG/GBQaIGpUtAI4lxDpa7E/x2eySGjcRXwhb5AdV+9ZySacQDprD/4gvqZDOJykDc
- tzVJVj3oRpBJSXxDHrlBZtKBCoE4bTmfRm2vTS9WqYx6wy+ylmeQPIi/YQKPBY4vQCjCNtXMt
- rZsEJA==
+Content-Transfer-Encoding: 7bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Thu, 28 Dec 2023 09:30:54 +0100
+Hi,
 
-The kfree() function was called in one case by
-the apmf_sbios_heartbeat_notify() function during error handling
-even if the passed variable contained a null pointer.
-This issue was detected by using the Coccinelle software.
+On 12/22/23 19:27, Nathan Chancellor wrote:
+> As reported by Stephen at [1], there are a few instances of
+> -Wmissing-prototypes, which break the build with CONFIG_WERROR=y. This
+> series marks these functions as static because they are not used outside
+> of these translation units.
+> 
+> Feel free to squash these into the original changes if the branch is not
+> set in stone.
+> 
+> [1]: https://lore.kernel.org/all/20231222135412.6bd796cc@canb.auug.org.au/
 
-* Thus return directly after a call of the function =E2=80=9Capmf_if_call=
-=E2=80=9D failed
-  at the beginning.
+Thank you for your patch-series, I've squashed the patches into
+the original commits in my review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-* Delete the label =E2=80=9Cout=E2=80=9D which became unnecessary with thi=
-s refactoring.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/platform/x86/amd/pmf/acpi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Once I've run some tests on this branch the patches there will be
+pushed to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
-diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/am=
-d/pmf/acpi.c
-index 4ec7957eb707..eb367e38c5ab 100644
-=2D-- a/drivers/platform/x86/amd/pmf/acpi.c
-+++ b/drivers/platform/x86/amd/pmf/acpi.c
-@@ -135,11 +135,9 @@ static void apmf_sbios_heartbeat_notify(struct work_s=
-truct *work)
- 	dev_dbg(dev->dev, "Sending heartbeat to SBIOS\n");
- 	info =3D apmf_if_call(dev, APMF_FUNC_SBIOS_HEARTBEAT, NULL);
- 	if (!info)
--		goto out;
-+		return;
+Regards,
 
- 	schedule_delayed_work(&dev->heart_beat, msecs_to_jiffies(dev->hb_interva=
-l * 1000));
--
--out:
- 	kfree(info);
- }
+Hans
 
-=2D-
-2.43.0
+
+
+> ---
+> Nathan Chancellor (2):
+>       platform/x86/intel/pmc: Mark arl_d3_fixup() and arl_resume() as static
+>       platform/x86/intel/pmc: Mark lnl_d3_fixup() and lnl_resume() as static
+> 
+>  drivers/platform/x86/intel/pmc/arl.c | 4 ++--
+>  drivers/platform/x86/intel/pmc/lnl.c | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> ---
+> base-commit: 119652b855e6c96676406ee9a7f535f4db4e8eff
+> change-id: 20231222-intel-pmc-missing-prototypes-8fb5014b16b8
+> 
+> Best regards,
 
