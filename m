@@ -1,86 +1,79 @@
-Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA12F259A;
-	Fri, 29 Dec 2023 06:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E373B11701;
+	Fri, 29 Dec 2023 13:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="pkZzruut"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1703831963; x=1735367963;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Flx901Kgose+/GX8hPePgXRAU7GSK47n8SUv6VUgW1Q=;
-  b=pkZzruutNSRVwe5tDTwBI3JhfHlWKuaL4pjs5pp7VMzobVeFOpyJ80Wt
-   55LNK84CwcWReA7R6IMn6GOwo9hk6HrLTO/oqTXM6DgIeRx1o7YAhaEBW
-   7hJeK4YOdr88j11WDkaAyFUn3aodHuiXe6/Irnjbqv3F30E3Y1NiCzzdr
-   NEpHzW8cu0uqYD1VwG4jpaRTVkAtOIaWxRAnWCBP6uEdf7hgAAPBzVa7a
-   UP4NTGOqNumkpT8wbE5QkbBVS3JVsV2UT22mwNnlyDgbwojPcEE3+zrRY
-   QaEXVHZEl2M7aEpWf2RAuK7cOhEgNW8G9O0IEQBOegTDKV949Za+CaOeU
-   w==;
-X-CSE-ConnectionGUID: Z6EgstluRCifEc/bfIuA8Q==
-X-CSE-MsgGUID: DVL5CWkzQeu+0Ime845s0Q==
-X-IronPort-AV: E=Sophos;i="6.04,314,1695657600"; 
-   d="scan'208";a="6253595"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 29 Dec 2023 14:39:16 +0800
-IronPort-SDR: tHOB6AOVPTYw10E7yqxyzhp3IBlEDwezUhtxN5WLTBr5plXyuc4Oe+lKAnDXHfUP4PpGzaMHc+
- O7aG8DWqPNrA==
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Dec 2023 21:49:49 -0800
-IronPort-SDR: 99XcEEeBRcC0tCWFO0X60GreLMm8Xba4XYxkK0G5POBP+OBaE6UjTUZVJu8Scum7Hl6rHtBvb5
- bvqnpnsmdA+Q==
-WDCIronportException: Internal
-Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
-  by uls-op-cesaip01.wdc.com with ESMTP; 28 Dec 2023 22:39:16 -0800
-From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	linux-pci@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH v5 2/2] platform/x86: p2sb: Use pci_resource_n() in p2sb_read_bar0()
-Date: Fri, 29 Dec 2023 15:39:12 +0900
-Message-ID: <20231229063912.2517922-3-shinichiro.kawasaki@wdc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231229063912.2517922-1-shinichiro.kawasaki@wdc.com>
-References: <20231229063912.2517922-1-shinichiro.kawasaki@wdc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EpeK4v0k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703856928; x=1735392928;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZaEOkhjRA4RnRkUMFHRun5wqQEWfxz018XWe9ycVN/M=;
+  b=EpeK4v0kqej4yQP//N9YWoFhGQynZzkakXb8jkRmB/o39jvrDBPzupz1
+   QcvzHVImk0YbgnHFfE/2keYFCMKBhr5C7aJwmRXLMftLJnFqsmA2ORxZl
+   BFMqM9baQkYgIAy1r1EzsQI0RYuo6tlmpQycwMqqHxyOiG/lokrg4lmNr
+   1urdqCvDdunumnhjtlfbPIg24JY/2dF3dOFIfdwpFCPI5vviZ29MzQnh3
+   giat95ZIWrL84HG+dbyS+bayNc1VPUIrvN3wXAURgxrmDQC/UpuUg+vWN
+   jkOh9L9qLXIvFHu0k6/NVY0YNeTccnW0T09SYMqp7KeP9TmVc1V5NC+uk
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10938"; a="15292476"
+X-IronPort-AV: E=Sophos;i="6.04,315,1695711600"; 
+   d="scan'208";a="15292476"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 05:35:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10938"; a="844697174"
+X-IronPort-AV: E=Sophos;i="6.04,315,1695711600"; 
+   d="scan'208";a="844697174"
+Received: from mlittrel-mobl1.ger.corp.intel.com ([10.252.35.138])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 05:35:24 -0800
+Date: Fri, 29 Dec 2023 15:34:15 +0200 (EET)
+From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org, 
+    linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] platform/x86: p2sb: Allow p2sb_bar() calls during
+ PCI device probe
+In-Reply-To: <20231229063912.2517922-2-shinichiro.kawasaki@wdc.com>
+Message-ID: <d66c303d-da76-639-56a3-8f2b58401b59@linux.intel.com>
+References: <20231229063912.2517922-1-shinichiro.kawasaki@wdc.com> <20231229063912.2517922-2-shinichiro.kawasaki@wdc.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Accesses to resource[] member of struct pci_dev shall be wrapped with
-pci_resource_n() for future compatibility. Call the helper function in
-p2sb_read_bar0().
+On Fri, 29 Dec 2023, Shin'ichiro Kawasaki wrote:
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
----
- drivers/platform/x86/p2sb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> p2sb_bar() unhides P2SB device to get resources from the device. It
+> guards the operation by locking pci_rescan_remove_lock so that parallel
+> rescans do not find the P2SB device. However, this lock causes deadlock
+> when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
+> locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
+> call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
+> Hence the deadlock.
+> 
+> To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
+> Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
+> for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
+> refer the cache and return to the caller.
+> 
+> Link: https://lore.kernel.org/linux-pci/6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j/
+> Fixes: 9745fb07474f ("platform/x86/intel: Add Primary to Sideband (P2SB) bridge support")
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 
-diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-index fcf1ce8bbdc5..99a0e456f075 100644
---- a/drivers/platform/x86/p2sb.c
-+++ b/drivers/platform/x86/p2sb.c
-@@ -65,7 +65,7 @@ static bool p2sb_valid_resource(struct resource *res)
- /* Copy resource from the first BAR of the device in question */
- static void p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
- {
--	struct resource *bar0 = &pdev->resource[0];
-+	struct resource *bar0 = pci_resource_n(pdev, 0);
- 
- 	/* Make sure we have no dangling pointers in the output */
- 	memset(mem, 0, sizeof(*mem));
+Thanks for the update. I've replaced the commit in review-ilpo branch with 
+this v5 patch 1/2.
+
 -- 
-2.43.0
+ i.
 
