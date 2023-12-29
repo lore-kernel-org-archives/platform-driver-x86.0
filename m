@@ -1,61 +1,99 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF32137F;
-	Fri, 29 Dec 2023 02:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VzPxWSp_1703815688;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0VzPxWSp_1703815688)
-          by smtp.aliyun-inc.com;
-          Fri, 29 Dec 2023 10:08:19 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: irenic.rajneesh@gmail.com
-Cc: david.e.box@intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH] platform/x86/intel/pmc: make lnl_d3_fixup static
-Date: Fri, 29 Dec 2023 10:08:08 +0800
-Message-Id: <20231229020808.55840-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1981746A;
+	Fri, 29 Dec 2023 06:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ULcM+bXC"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1703831960; x=1735367960;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=SR4MkYifRuHdXsTyYORK+g1dgQ/k72RLd2YmwbA7kPc=;
+  b=ULcM+bXCHx8Bvxr0sS4dUPnxclw+yJ1EVL7uRo6e7UB2p2d0N786ecuD
+   NaWFi17YJ5pU7hMM23BgrH6nzm/qFM1vgIl2393jK0Ydaft4Yd6T45yC8
+   8jSDTK7boj6w45xfk+4k6nB08+uyJLAynqu1VduaUnGGW4KwtefBDvboj
+   8bcWWdqMCWiku1H9fnEHhigQn1NYGRYQCsxbJtegkbHcHkW7eol7J8daJ
+   Dvao7Cib6AExllSfQW0TRqhsznIPIzEEiPsEUd0HkR/H7AT3uAvc90fm4
+   dfVfziOSgyHYXCmphnivDOy+qSLY5D2QFoh5PKyrlJGCi+oULyAXiSTJ5
+   g==;
+X-CSE-ConnectionGUID: /p5Vw6zqT1Cxelc+o0fuVA==
+X-CSE-MsgGUID: rb2CWur0QpaDrJZKPOhslw==
+X-IronPort-AV: E=Sophos;i="6.04,314,1695657600"; 
+   d="scan'208";a="6253586"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Dec 2023 14:39:14 +0800
+IronPort-SDR: XGKdP/79cnUjeVieN7o4Pd54wq0L5TSEoWRqDqIBcP4bqd0vri8pcwzvESX4a2sVi/NVdqlArg
+ 5l4oUIg4opHg==
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Dec 2023 21:49:47 -0800
+IronPort-SDR: htoqEh9NGbUHEK9duSKalM8F78356T2o4ceGs1KFjfSbJjqE7hKQd2NPC9XW9SXTadBki3PLpN
+ zUJH6WRW2QqQ==
+WDCIronportException: Internal
+Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
+  by uls-op-cesaip01.wdc.com with ESMTP; 28 Dec 2023 22:39:13 -0800
+From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	linux-pci@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH v5 0/2] platform/x86: p2sb: Fix deadlock at sysfs PCI bus rescan
+Date: Fri, 29 Dec 2023 15:39:10 +0900
+Message-ID: <20231229063912.2517922-1-shinichiro.kawasaki@wdc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The lnl_d3_fixup are not used outside the file lnl.c, so the
-modification is defined as static.
+When PCI devices call p2sb_bar() during probe for sysfs PCI bus rescan, deadlock
+happens due to double lock of pci_rescan_remove_lock [1]. The first patch in
+this series addresses the deadlock. The second patch is a code improvement which
+was pointed out during review for the first patch.
 
-drivers/platform/x86/intel/pmc/lnl.c:503:6: warning: no previous prototype for ‘lnl_d3_fixup’.
+I confirmed the patches fix the problem using a system with i2c_i801 device,
+building i2c_i801 module as both built-in and loadable.
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=7811
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
- drivers/platform/x86/intel/pmc/lnl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[1] https://lore.kernel.org/linux-pci/6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j/
 
-diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
-index 88b35931f5df..f18fdc68fd94 100644
---- a/drivers/platform/x86/intel/pmc/lnl.c
-+++ b/drivers/platform/x86/intel/pmc/lnl.c
-@@ -500,7 +500,7 @@ const struct pmc_reg_map lnl_socm_reg_map = {
-  * Set power state of select devices that do not have drivers to D3
-  * so that they do not block Package C entry.
-  */
--void lnl_d3_fixup(void)
-+static void lnl_d3_fixup(void)
- {
- 	pmc_core_set_device_d3(LNL_IPU_PCI_DEV);
- 	pmc_core_set_device_d3(LNL_NPU_PCI_DEV);
+Changes from v4:
+* Separated a hunk for pci_resource_n() as the second patch
+* Reflected other review comments by Ilpo
+
+Changes from v3:
+* Modified p2sb_valid_resource() to return boolean
+
+Changes from v2:
+* Improved p2sb_scan_and_cache() and p2sb_scan_and_cache_devfn()
+* Reflected other review comments by Andy
+
+Changes from v1:
+* Reflected review comments by Andy
+* Removed RFC prefix
+
+Changes from RFC v2:
+* Reflected review comments on the list
+
+Changes from RFC v1:
+* Fixed a build warning poitned out in llvm list by kernel test robot
+
+Shin'ichiro Kawasaki (2):
+  platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe
+  platform/x86: p2sb: Use pci_resource_n() in p2sb_read_bar0()
+
+ drivers/platform/x86/p2sb.c | 174 +++++++++++++++++++++++++++---------
+ 1 file changed, 132 insertions(+), 42 deletions(-)
+
 -- 
-2.20.1.7.g153144c
+2.43.0
 
