@@ -1,35 +1,36 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492A18F48
-	for <platform-driver-x86@vger.kernel.org>; Sun, 31 Dec 2023 16:33:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79BA7476
+	for <platform-driver-x86@vger.kernel.org>; Sun, 31 Dec 2023 16:33:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iH9NcoW0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B/vG1kiL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704040411;
+	s=mimecast20190719; t=1704040413;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=W8veCn/nQGSZCEEveWsfYo1C47dAQy6IZmTA7gPkJeg=;
-	b=iH9NcoW0QQcanmIDl9egeSmLj3mQs3pKivFBVjhGi+DbBcQGdN8taBg1ho62+5qvIXzwVs
-	lBnv1zGIuRGOBHN239+Tn4m3u4DwYd3FV/lY8F7/sB0n2wv9JTHw3JQdjDzkgrswCAjmfn
-	elAgdpbATP6u2q+gaUX9KBvBAEVxpvY=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-21-CNB8CM3pN2q9atFQJw47ag-1; Sun,
- 31 Dec 2023 11:33:27 -0500
-X-MC-Unique: CNB8CM3pN2q9atFQJw47ag-1
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WcPKqcziUFTnDsajzis9/eBZaXJtJhW3QMCvWtQiRmQ=;
+	b=B/vG1kiLXGuKPs5nfeMAx5DbkH6ll2lUSHBBrw1gBMhAYFmpkiqoFOH2FQBpqjMnlrz75k
+	BAtsamguKqaGFABCYiIGZ41Q5VOkHcy9ZLMYq6seO5zVckc9mTbpEOXF6pTSulneQXmLxG
+	tIhdRs36jpYMtMn7rR7mgwd4/AHMPDE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-33-PiKVBY25PA2gJtUn5B_ChA-1; Sun, 31 Dec 2023 11:33:29 -0500
+X-MC-Unique: PiKVBY25PA2gJtUn5B_ChA-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2D6E11C07540;
-	Sun, 31 Dec 2023 16:33:27 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 552FF101A52A;
+	Sun, 31 Dec 2023 16:33:29 +0000 (UTC)
 Received: from x1.localdomain.com (unknown [10.39.192.48])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2B498C15968;
-	Sun, 31 Dec 2023 16:33:23 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5D7FDC15E6C;
+	Sun, 31 Dec 2023 16:33:27 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: Johannes Stezenbach <js@sig21.net>,
 	Takashi Iwai <tiwai@suse.de>,
@@ -43,9 +44,11 @@ To: Johannes Stezenbach <js@sig21.net>,
 Cc: Hans de Goede <hdegoede@redhat.com>,
 	platform-driver-x86@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH 0/4] x86: atom-punit/-pmc s2idle device state checks
-Date: Sun, 31 Dec 2023 17:33:18 +0100
-Message-ID: <20231231163322.9492-1-hdegoede@redhat.com>
+Subject: [PATCH 1/4] platform/x86: pmc_atom: Annotate d3_sts register bit defines
+Date: Sun, 31 Dec 2023 17:33:19 +0100
+Message-ID: <20231231163322.9492-2-hdegoede@redhat.com>
+In-Reply-To: <20231231163322.9492-1-hdegoede@redhat.com>
+References: <20231231163322.9492-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -55,58 +58,45 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-Hi All,
+The include/linux/platform_data/x86/pmc_atom.h d3_sts register bit defines
+are named after how these bits are used on Bay Trail devices.
 
-These 2 patches are an upstream submission of a patch titled:
-"Intel Atom suspend: add debug check for S0ix blockers"
+On Cherry Trail (CHT) devices some of these bits have a different meaning
+according to the datasheet.
 
-Which I have been carrying in my personal kernel tree for years now.
-This code originally comes from the latte-l-oss branch of:
-https://github.com/MiCode/Xiaomi_Kernel_OpenSource
+At a comment to the defines for bits which have a different meaning
+on Cherry Trail devices.
 
-And has been posted on upstream mailinglists before by
-Johannes Stezenbach, whose authorship I have kept for
-the 2 base patches and has been reposted by Takashi Iwai
-and at one point in time I picked this up from Takashi's
-reposting as can be seen from the S-o-b lines. Unfortunately
-I cannot find the original postings, so I have no link to
-those.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ include/linux/platform_data/x86/pmc_atom.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-The original version of this added some ugly hooks into
-the intel_idle driver which I presume is why these patches
-never go anywhere upstream.
-
-With the new acpi_s2idle_dev_ops and acpi_register_lps0_dev()
-functionality this functionality can now be implemented cleanly
-and that is what this patch-series does.
-
-x86/tip maintainers, it is probably the cleanest if I merge
-this entire series through the pdx86 tree (*). Can I have your
-ack for merging patch 4/4 through the pdx86 tree ?
-
-Regards,
-
-Hans
-
-*) Andy recently mentioned that it might be a good idea to move
-some of the arch/x86/platform code to drivers/platform/x86,
-arch/x86/platform/atom/punit_atom_debug.c which is a completely
-standalone driver definitly is a good candidate for this
-
-
-Hans de Goede (2):
-  platform/x86: pmc_atom: Annotate d3_sts register bit defines
-  platform/x86: pmc_atom: Check state of PMC clocks on s2idle
-
-Johannes Stezenbach (2):
-  platform/x86: pmc_atom: Check state of PMC managed devices on s2idle
-  x86/platform/atom: Check state of Punit managed devices on s2idle
-
- arch/x86/platform/atom/punit_atom_debug.c  | 40 ++++++++++
- drivers/platform/x86/pmc_atom.c            | 86 ++++++++++++++++++++++
- include/linux/platform_data/x86/pmc_atom.h | 12 +--
- 3 files changed, 132 insertions(+), 6 deletions(-)
-
+diff --git a/include/linux/platform_data/x86/pmc_atom.h b/include/linux/platform_data/x86/pmc_atom.h
+index b8a701c77fd0..5eec0e22acdf 100644
+--- a/include/linux/platform_data/x86/pmc_atom.h
++++ b/include/linux/platform_data/x86/pmc_atom.h
+@@ -104,14 +104,14 @@
+ #define	BIT_SCC_SDIO		BIT(9)
+ #define	BIT_SCC_SDCARD		BIT(10)
+ #define	BIT_SCC_MIPI		BIT(11)
+-#define	BIT_HDA			BIT(12)
++#define	BIT_HDA			BIT(12) /* CHT datasheet: reserved */
+ #define	BIT_LPE			BIT(13)
+ #define	BIT_OTG			BIT(14)
+-#define	BIT_USH			BIT(15)
+-#define	BIT_GBE			BIT(16)
+-#define	BIT_SATA		BIT(17)
+-#define	BIT_USB_EHCI		BIT(18)
+-#define	BIT_SEC			BIT(19)
++#define	BIT_USH			BIT(15) /* CHT datasheet: reserved */
++#define	BIT_GBE			BIT(16) /* CHT datasheet: reserved */
++#define	BIT_SATA		BIT(17) /* CHT datasheet: reserved */
++#define	BIT_USB_EHCI		BIT(18) /* CHT datasheet: XHCI!    */
++#define	BIT_SEC			BIT(19) /* BYT datasheet: reserved */
+ #define	BIT_PCIE_PORT0		BIT(20)
+ #define	BIT_PCIE_PORT1		BIT(21)
+ #define	BIT_PCIE_PORT2		BIT(22)
 -- 
 2.43.0
 
