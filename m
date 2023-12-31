@@ -1,235 +1,112 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044B833CF
-	for <platform-driver-x86@vger.kernel.org>; Sun, 31 Dec 2023 10:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492A18F48
+	for <platform-driver-x86@vger.kernel.org>; Sun, 31 Dec 2023 16:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BgpX7Ewk"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3368d1c7b23so6966041f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 31 Dec 2023 02:46:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704019587; x=1704624387; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pL1jwdjxe7eUIDqo5H7VCkap05E9cyq8Rp3MQumBEPI=;
-        b=BgpX7EwkkdvckK/zhgP4yKj13DF7L5XDtcT50KJLGu1/dLNqgs/He0pM2mPGDrr8a5
-         K3ScpQ/Wiv8qJZ9zB7T3oJ/51UFJ0CpZakWtQmKBv5V5eLV1Zt0iN+xASFNXf6DGSVw/
-         9P4LssGoBD9ye+5PhVlHmeE4d1RjxQTq7GfiGwVulOJiIO33oITQN71+PxbaA3KH0Pi/
-         v3Aku+62TmvgtA2e4JuC0Fs+D8tCtp56OppJTw3pk5rh5rgFI2MTXqX+0E54DxNVDF6J
-         YifQFdZrcyFacTzX24S42bxDiVLmfWXB0+UPriUt9V5cqOS98GtkvVfUBeewJ6gfermX
-         aVdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704019587; x=1704624387;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pL1jwdjxe7eUIDqo5H7VCkap05E9cyq8Rp3MQumBEPI=;
-        b=bjpY8sJC2QZsQWH8lnzy0vZCLPzElOhChJCmP7j85QgUFYq57BA/PQsKMsItN3j4yL
-         DeWqdxtkll3Z0l6dnOvnmAyE/oA0Fdip+GJzIvhugD0egBsT8j6rlLDvvS0MTFpNVe0O
-         az7dh8QKiyLVbdfbKt730vNj/SP/clkq58ChCWqRA8aMkNHSgQVDbdRPwbFVepuuhxOO
-         w6mGDzeXqIg8kB9jstAxBI9Lk0BgoiG7vtfgL1M2kI/i3ub63fluGfS8V4Lr87gha6IQ
-         wWG9rCCnr2G9tDbpRKRjIKuOSBZjSQQdYFIL3LS+LRUhOgSlC4QuoiC/JUjgKdE6axl4
-         FDxA==
-X-Gm-Message-State: AOJu0Yy0uhVbMTiyxiY9B+QPap/l4xvjnrHS9ddjWAYnJBx3upd11aJK
-	fSr0FNvZKh/iRmfK0hyRskoHBEWARDY=
-X-Google-Smtp-Source: AGHT+IGKPx1sIosNJG31C2K+8R6x5/IwIavTeDmY+2MP6La+ji2w+MM8HgVpwmHW2Xus7JQ1k5Jauw==
-X-Received: by 2002:adf:e2c2:0:b0:336:c010:bff4 with SMTP id d2-20020adfe2c2000000b00336c010bff4mr4366422wrj.11.1704019586958;
-        Sun, 31 Dec 2023 02:46:26 -0800 (PST)
-Received: from alexis-pc ([2a01:e0a:d77:ff0:7cfd:5b8b:bcda:7fa9])
-        by smtp.gmail.com with ESMTPSA id e25-20020adfa459000000b003365951cef9sm23549332wra.55.2023.12.31.02.46.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 Dec 2023 02:46:26 -0800 (PST)
-Date: Sun, 31 Dec 2023 11:46:25 +0100
-From: Alexis Belmonte <alexbelm48@gmail.com>
-To: hdegoede@redhat.com
-Cc: platform-driver-x86@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86: hp-wmi: Add thermal profile support for
- 8BAD boards
-Message-ID: <ZZFGgfsfrU2vuQoI@alexis-pc>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iH9NcoW0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704040411;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=W8veCn/nQGSZCEEveWsfYo1C47dAQy6IZmTA7gPkJeg=;
+	b=iH9NcoW0QQcanmIDl9egeSmLj3mQs3pKivFBVjhGi+DbBcQGdN8taBg1ho62+5qvIXzwVs
+	lBnv1zGIuRGOBHN239+Tn4m3u4DwYd3FV/lY8F7/sB0n2wv9JTHw3JQdjDzkgrswCAjmfn
+	elAgdpbATP6u2q+gaUX9KBvBAEVxpvY=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-21-CNB8CM3pN2q9atFQJw47ag-1; Sun,
+ 31 Dec 2023 11:33:27 -0500
+X-MC-Unique: CNB8CM3pN2q9atFQJw47ag-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2D6E11C07540;
+	Sun, 31 Dec 2023 16:33:27 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.192.48])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 2B498C15968;
+	Sun, 31 Dec 2023 16:33:23 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: Johannes Stezenbach <js@sig21.net>,
+	Takashi Iwai <tiwai@suse.de>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH 0/4] x86: atom-punit/-pmc s2idle device state checks
+Date: Sun, 31 Dec 2023 17:33:18 +0100
+Message-ID: <20231231163322.9492-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-Add 8BAD to the list of boards which have thermal profile selection
-available. This allows the CPU to draw more power than the default TDP
-barrier defined by the 'balanced' thermal profile (around 50W), hence
-allowing it to perform better without being throttled by the embedded
-controller (around 130W).
+Hi All,
 
-We first need to set the HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET to zero.
-This prevents the timer countdown from reaching zero, making the embedded
-controller "force-switch" the system's thermal profile back to 'balanced'
-automatically.
+These 2 patches are an upstream submission of a patch titled:
+"Intel Atom suspend: add debug check for S0ix blockers"
 
-We also need to put a number of specific flags in
-HP_OMEN_EC_THERMAL_PROFILE_FLAGS_OFFSET when we're switching to another
-thermal profile:
+Which I have been carrying in my personal kernel tree for years now.
+This code originally comes from the latte-l-oss branch of:
+https://github.com/MiCode/Xiaomi_Kernel_OpenSource
 
-   - for 'performance', we need to set both HP_OMEN_EC_FLAGS_TURBO and
-     HP_OMEN_EC_FLAGS_NOTIMER;
+And has been posted on upstream mailinglists before by
+Johannes Stezenbach, whose authorship I have kept for
+the 2 base patches and has been reposted by Takashi Iwai
+and at one point in time I picked this up from Takashi's
+reposting as can be seen from the S-o-b lines. Unfortunately
+I cannot find the original postings, so I have no link to
+those.
 
-   - for 'balanced' and 'powersave', we clear out the register to notify
-     the system that we want to lower the TDP barrier as soon as possible.
+The original version of this added some ugly hooks into
+the intel_idle driver which I presume is why these patches
+never go anywhere upstream.
 
-The third flag defined in the hp_thermal_profile_omen_flags enum,
-HP_OMEN_EC_FLAGS_JUSTSET, is present for completeness.
+With the new acpi_s2idle_dev_ops and acpi_register_lps0_dev()
+functionality this functionality can now be implemented cleanly
+and that is what this patch-series does.
 
-To prevent potential behaviour breakage with other Omen models, a
-separate omen_timed_thermal_profile_boards array has been added to list
-which boards expose this behaviour.
+x86/tip maintainers, it is probably the cleanest if I merge
+this entire series through the pdx86 tree (*). Can I have your
+ack for merging patch 4/4 through the pdx86 tree ?
 
-Performance benchmarking was done with the help of silver.urih.com and
-Google Chrome 120.0.6099.129, on Gnome 45.2, with the 'performance'
-thermal profile set:
+Regards,
 
-|                  | Performance |     Stress |   TDP |
-|------------------|-------------|------------|-------|
-|    with my patch |      P84549 |    S0.1891 |  131W | 
-| without my patch |      P44084 |    S0.1359 |   47W |
+Hans
 
-The TDP measurements were done with the help of the s-tui utility,
-during the load.
+*) Andy recently mentioned that it might be a good idea to move
+some of the arch/x86/platform code to drivers/platform/x86,
+arch/x86/platform/atom/punit_atom_debug.c which is a completely
+standalone driver definitly is a good candidate for this
 
-There is still work to be done:
 
-   - tune the CPU and GPU fans to better cool down and enhance
-     performance at the right time; right now, it seems that the fans are
-     not properly reacting to thermal/performance events, which in turn
-     either causes thermal throttling OR makes the fans spin way too long,
-     even though the temperatures have lowered down
+Hans de Goede (2):
+  platform/x86: pmc_atom: Annotate d3_sts register bit defines
+  platform/x86: pmc_atom: Check state of PMC clocks on s2idle
 
-   - expose the CPU and GPU fan curves to user-land so that they can be
-     controlled just like what the Omen Gaming Hub utility proposes to
-     its users;
+Johannes Stezenbach (2):
+  platform/x86: pmc_atom: Check state of PMC managed devices on s2idle
+  x86/platform/atom: Check state of Punit managed devices on s2idle
 
-Signed-off-by: Alexis Belmonte <alexbelm48@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 63 +++++++++++++++++++++++++++++++-
- 1 file changed, 61 insertions(+), 2 deletions(-)
+ arch/x86/platform/atom/punit_atom_debug.c  | 40 ++++++++++
+ drivers/platform/x86/pmc_atom.c            | 86 ++++++++++++++++++++++
+ include/linux/platform_data/x86/pmc_atom.h | 12 +--
+ 3 files changed, 132 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 95282c3a02ed..79caf5d79e05 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -38,6 +38,8 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45E9-BE91-3D44E2C707E4");
- #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
- #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
- 
-+#define HP_OMEN_EC_THERMAL_PROFILE_FLAGS_OFFSET 0x62
-+#define HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET 0x63
- #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
- 
- #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
-@@ -57,7 +59,7 @@ static const char * const omen_thermal_profile_boards[] = {
- 	"874A", "8603", "8604", "8748", "886B", "886C", "878A", "878B", "878C",
- 	"88C8", "88CB", "8786", "8787", "8788", "88D1", "88D2", "88F4", "88FD",
- 	"88F5", "88F6", "88F7", "88FE", "88FF", "8900", "8901", "8902", "8912",
--	"8917", "8918", "8949", "894A", "89EB"
-+	"8917", "8918", "8949", "894A", "89EB", "8BAD"
- };
- 
- /* DMI Board names of Omen laptops that are specifically set to be thermal
-@@ -68,6 +71,14 @@ static const char * const omen_thermal_profile_force_v0_boards[] = {
- 	"8607", "8746", "8747", "8749", "874A", "8748"
- };
- 
-+/* DMI board names of Omen laptops that have a thermal profile timer which will
-+ * cause the embedded controller to set the thermal profile back to
-+ * "balanced" when reaching zero.
-+ */
-+static const char * const omen_timed_thermal_profile_boards[] = {
-+	"8BAD"
-+};
-+
- /* DMI Board names of Victus laptops */
- static const char * const victus_thermal_profile_boards[] = {
- 	"8A25"
-@@ -184,6 +194,12 @@ enum hp_thermal_profile_omen_v1 {
- 	HP_OMEN_V1_THERMAL_PROFILE_COOL		= 0x50,
- };
- 
-+enum hp_thermal_profile_omen_flags {
-+	HP_OMEN_EC_FLAGS_TURBO		= 0x04,
-+	HP_OMEN_EC_FLAGS_NOTIMER	= 0x02,
-+	HP_OMEN_EC_FLAGS_JUSTSET	= 0x01,
-+};
-+
- enum hp_thermal_profile_victus {
- 	HP_VICTUS_THERMAL_PROFILE_DEFAULT		= 0x00,
- 	HP_VICTUS_THERMAL_PROFILE_PERFORMANCE		= 0x01,
-@@ -451,7 +467,11 @@ static int hp_wmi_get_tablet_mode(void)
- 
- static int omen_thermal_profile_set(int mode)
- {
--	char buffer[2] = {0, mode};
-+	/* The Omen Control Center actively sets the first byte of the buffer to
-+	 * 255, so let's mimic this behaviour to be as close as possible to
-+	 * the original software.
-+	 */
-+	char buffer[2] = {-1, mode};
- 	int ret;
- 
- 	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
-@@ -1203,6 +1221,28 @@ static int platform_profile_omen_get(struct platform_profile_handler *pprof,
- 	return 0;
- }
- 
-+static bool has_omen_thermal_profile_ec_timer(void)
-+{
-+	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
-+
-+	if (!board_name)
-+		return false;
-+
-+	return match_string(omen_timed_thermal_profile_boards,
-+			    ARRAY_SIZE(omen_timed_thermal_profile_boards),
-+			    board_name) >= 0;
-+}
-+
-+inline int omen_thermal_profile_ec_flags_set(enum hp_thermal_profile_omen_flags flags)
-+{
-+	return ec_write(HP_OMEN_EC_THERMAL_PROFILE_FLAGS_OFFSET, flags);
-+}
-+
-+inline int omen_thermal_profile_ec_timer_set(char value)
-+{
-+	return ec_write(HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET, value);
-+}
-+
- static int platform_profile_omen_set(struct platform_profile_handler *pprof,
- 				     enum platform_profile_option profile)
- {
-@@ -1240,6 +1280,24 @@ static int platform_profile_omen_set(struct platform_profile_handler *pprof,
- 	if (err < 0)
- 		return err;
- 
-+	if (has_omen_thermal_profile_ec_timer()) {
-+		err = omen_thermal_profile_ec_timer_set(0);
-+		if (err < 0)
-+			return err;
-+
-+		enum hp_thermal_profile_omen_flags flags;
-+
-+		if (profile == PLATFORM_PROFILE_PERFORMANCE)
-+			flags = HP_OMEN_EC_FLAGS_NOTIMER |
-+				HP_OMEN_EC_FLAGS_TURBO;
-+		else
-+			flags = 0;
-+
-+		err = omen_thermal_profile_ec_flags_set(flags);
-+		if (err < 0)
-+			return err;
-+	}
-+
- 	return 0;
- }
- 
 -- 
 2.43.0
 
