@@ -1,68 +1,114 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7CBE54D
-	for <platform-driver-x86@vger.kernel.org>; Sat, 30 Dec 2023 22:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iwanders.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA014698
+	for <platform-driver-x86@vger.kernel.org>; Sun, 31 Dec 2023 10:46:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b="WzJblL9s"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6803466a1ccso31873556d6.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 30 Dec 2023 14:46:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHip5sGt"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33674f60184so8121338f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 31 Dec 2023 02:46:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=iwanders.net; s=google; t=1703976393; x=1704581193; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fZIH0cllwWP10xEZ7qclYaGxBZpXoISgRGheC+EsW2c=;
-        b=WzJblL9s5WcFHtPruCmD8VKuI5L4zDuOBb3kc/ERqm55ISpz8zQTa3u1SWB+5TcE8P
-         hM/6Fwey6xz7cOzWUax2Z+Bggizf+mmoUH+Qv/zQyFJEQ8boZDfRUMAAkPSy4k5zG+Bz
-         9QPnpgIVcq9X2B2hPyhRMYtMTSrYiIq2eUBfo=
+        d=gmail.com; s=20230601; t=1704019572; x=1704624372; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SpKJQOjhOwlgmZ0rv3WnaTK/Gh2aO5JTw3PPmFTGoYU=;
+        b=kHip5sGt20OEmCOa4VeOqJGwjiUedaiQKGEwNZ4DljeRL+5wLQLZRGxT9knNGreuld
+         F7855r3nXikop/DRBvoCSkJHYWm1yNZabKO0qvaoRaQzLdTwRG+zb7A2SLr+LFQR2JE9
+         oojl5Ej4FkcMHonH4bKDgoBN+HngjZnAIMX6s2XFXl12bJ41X6p+ik4AFseHbDSF68N2
+         WaTKekY48yM9Lx8AMeab6lZrR5hvDe8Jh2lrn99WlXEkdGT18sayNQ0IXu+Kuatd2V/J
+         wT90sjLGDOCBJszDscBibPWZPEDzo1KYOHgJZ5VxHSTTR0d3sfHTE6ukhb1NVgP6l9Nv
+         s0FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703976393; x=1704581193;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
+        d=1e100.net; s=20230601; t=1704019572; x=1704624372;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fZIH0cllwWP10xEZ7qclYaGxBZpXoISgRGheC+EsW2c=;
-        b=oqmHUJL2E3R5qwAL7fb16lBZI0gc7I5ph6/MTe0nd5nan3P0M1eyyyR11OmeZw9JLz
-         V/Up7P6OYB6RV7123056Icb8eKW81hqXZlsyrvC6eRiHsv87HkBaJLw3ksN9ZN1VeKoQ
-         rCEbSKIjGMv+9l8/Dxf1svC+7h7fOpQquksbt0BmEg9RF5Pzy9Awrnt7R1wlzwKJzUlL
-         DQTByP0UMGZqCV8WobAFLzS5DvSIvpOOaSPbxudbj+waYu8CcsODzJJFSy5N2uEYbas3
-         lsUcM3q1LaWcRFbibS6/YvAjx2dt3DNlADqEksTYTItIaKXvf0ezuLJQoz+gKBEmz/d0
-         drVQ==
-X-Gm-Message-State: AOJu0YxbXutYjbt8UG347oZ52dm5V/mwWlbD09zqjpG1cZbnBs1WVl90
-	HuQy5wRhd9PXPedWSHe+nohUPZFSHhIn4g==
-X-Google-Smtp-Source: AGHT+IHJ9upV4SW2nHDVn+pdfd0Dmw6j+xR3o3cnnfx5doXDlyLXLFSm+v3OsxVzMPdKpASOiFCHCg==
-X-Received: by 2002:a05:6214:1110:b0:680:1099:851f with SMTP id e16-20020a056214111000b006801099851fmr11210203qvs.83.1703976393569;
-        Sat, 30 Dec 2023 14:46:33 -0800 (PST)
-Received: from eagle.lan (24-246-30-234.cable.teksavvy.com. [24.246.30.234])
-        by smtp.gmail.com with ESMTPSA id da7-20020a05621408c700b0067f2c03d4adsm8136440qvb.100.2023.12.30.14.46.31
+        bh=SpKJQOjhOwlgmZ0rv3WnaTK/Gh2aO5JTw3PPmFTGoYU=;
+        b=lijrRbXpUJxN11DkUffW2Wm42O8x5MgOpAdQQl6bo5kI5ywX1B01PV5uX+hXvT+89L
+         iJQ096wHyM8JH11MgZWT7ONOnkwaSFNERwyfJ709kXMtbzD79Qjf7NWpUNQFQbNQ6Jv8
+         dVHhrtlEHwOOzuKHRoUGR36jFSoVwTFGtl2LsaLmrryLSLmCXlsApwJ+vXMpHCqhTQEb
+         lXfDqrSNldO2FfIQQaJdIm5wsjy5xgNJEhfWCsyhcznOjviVNhNwsHZF109p36LMIR+x
+         0plzau4XJFWv4uM3t9/rY1Vk7JQh0pDPDBGCkrRYGq6kN/c1WGaQqtLklm1Hxv7fRb1j
+         Q11g==
+X-Gm-Message-State: AOJu0YwAOZNplXKYGGuI8T0YLiNAwjLNLyyi8fgdCX91wlwn4HVW4UjK
+	K0nxcI2V0NJZrSrbdo+MpPOS5wr8NpQ=
+X-Google-Smtp-Source: AGHT+IEUF7VuijqILF/1You+ghqzmUJntSrN7faPj+cLAVSdJD9A7KPc8eobOVCp2F9+qq6LEht3WQ==
+X-Received: by 2002:a05:600c:4f11:b0:40d:85a2:18b0 with SMTP id l17-20020a05600c4f1100b0040d85a218b0mr563154wmq.83.1704019571517;
+        Sun, 31 Dec 2023 02:46:11 -0800 (PST)
+Received: from alexis-pc ([2a01:e0a:d77:ff0:7cfd:5b8b:bcda:7fa9])
+        by smtp.gmail.com with ESMTPSA id d17-20020adffbd1000000b0033719111458sm6603800wrs.36.2023.12.31.02.46.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Dec 2023 14:46:33 -0800 (PST)
-From: Ivor Wanders <ivor@iwanders.net>
-To: luzmaximilian@gmail.com
-Cc: corbet@lwn.net,
-	hdegoede@redhat.com,
-	ivor@iwanders.net,
-	jdelvare@suse.com,
-	linux-doc@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	markgross@kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] hwmon: add fan speed monitoring driver for Surface devices
-Date: Sat, 30 Dec 2023 17:46:30 -0500
-Message-Id: <20231230224630.12618-1-ivor@iwanders.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <f564b1b4-d8d1-4809-9cc0-b01aa53570a0@gmail.com>
-References: <f564b1b4-d8d1-4809-9cc0-b01aa53570a0@gmail.com>
+        Sun, 31 Dec 2023 02:46:11 -0800 (PST)
+Date: Sun, 31 Dec 2023 11:46:09 +0100
+From: Alexis Belmonte <alexbelm48@gmail.com>
+To: hdegoede@redhat.com
+Cc: platform-driver-x86@vger.kernel.org
+Subject: [PATCH 1/2] platform/x86: hp-wmi: Tidy up module source code
+Message-ID: <ZZFGcRfpdvrJCX7r@alexis-pc>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> As far as I can see, linux/platform_device.h is not needed.
+This commit performs four things:
 
-Correct, it's no longer necessary, I've removed it, thanks!
+   - fix up the GUID string inconsistency (lower case 'e') from the second
+     WMI module alias declaration
 
-~Ivor
+   - separate GUID macros from the embedded controller offset macros
+
+   - rename the description of the module to better represent what it
+     actually achieves as a whole
+
+   - add a space right before the '*' pointer qualifier to match the
+     other array declarations
+
+This also prepares the terrain for integrating support work for boards
+identified as '8BAD', which corresponds to HP's Omen 17 ck2xxx models.
+
+Signed-off-by: Alexis Belmonte <alexbelm48@gmail.com>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 8ebb7be52ee7..95282c3a02ed 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -29,15 +29,17 @@
+ #include <linux/dmi.h>
+ 
+ MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
+-MODULE_DESCRIPTION("HP laptop WMI hotkeys driver");
++MODULE_DESCRIPTION("HP laptop WMI driver");
+ MODULE_LICENSE("GPL");
+ 
+ MODULE_ALIAS("wmi:95F24279-4D7B-4334-9387-ACCDC67EF61C");
+-MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
++MODULE_ALIAS("wmi:5FB7F034-2C63-45E9-BE91-3D44E2C707E4");
+ 
+ #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
+ #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
++
+ #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
++
+ #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
+ 
+ /* DMI board names of devices that should use the omen specific path for
+@@ -62,7 +64,7 @@ static const char * const omen_thermal_profile_boards[] = {
+  * profile version 0 by the Omen Command Center app, regardless of what
+  * the get system design information WMI call returns
+  */
+-static const char *const omen_thermal_profile_force_v0_boards[] = {
++static const char * const omen_thermal_profile_force_v0_boards[] = {
+ 	"8607", "8746", "8747", "8749", "874A", "8748"
+ };
+ 
+-- 
+2.43.0
+
