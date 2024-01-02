@@ -1,55 +1,55 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97AE7EED9
-	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Jan 2024 12:41:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19528101D5
+	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Jan 2024 12:42:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BBJEx/rA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OvMC8kB3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704199289;
+	s=mimecast20190719; t=1704199327;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kFaCSuEQAMXfgTXcD5gDhV25GDUDM3/9T7C2htOXMrg=;
-	b=BBJEx/rAeJYPAz8LUh4g3ExRkwJcspjtyMcVH5qQNbQoGka9jUH4qeWuU8VhuWkRFi4fLd
-	uys9BqvO2uv+GfQT76uJq84x2bBWG2yCGmc8e6MpAmAc3cJoNpm30osnGntK3n2m/TzvVU
-	dXTZPb9JcPq7ZYgr4l9c/mGVwwGakC8=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=UIqsFD74pfqLdhS2ZXd4ulK69eG+xBwuYxkv1BSeiUQ=;
+	b=OvMC8kB3326rxjYK1l8twX9vgezCjugKMZIKWnqRzbrTqDH2kcF6BmgmVuqv9WxfJDMj24
+	Lw3Q81me2XdCBh5UKsLPZ++KMPYDzb7yZAmXfzC3hE+pLly7/39cX0sPw0r2p7PLfats8a
+	W4rsV+Bkg0gwgdPzYGSg1L6n8yhqZZ0=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-588-WT2RoFY2NCCToN8NIBWb2A-1; Tue, 02 Jan 2024 07:41:23 -0500
-X-MC-Unique: WT2RoFY2NCCToN8NIBWb2A-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2ccc7c01bd7so39408571fa.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Jan 2024 04:41:22 -0800 (PST)
+ us-mta-209-V4ryt_1TMripn6sN_duFew-1; Tue, 02 Jan 2024 07:42:05 -0500
+X-MC-Unique: V4ryt_1TMripn6sN_duFew-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2cce9488687so32670871fa.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Jan 2024 04:42:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704199281; x=1704804081;
+        d=1e100.net; s=20230601; t=1704199324; x=1704804124;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kFaCSuEQAMXfgTXcD5gDhV25GDUDM3/9T7C2htOXMrg=;
-        b=XzrIlv0SKZQtdkNf+Br60+EiXONdUelCRp5cVY/7vaJ83kjBtKIpbjffn9v+s3C2kF
-         Oi0FurA9lI8F/gnWLuRBl6/A8JcMnwKXeurgxM8seoGwR/jvqX/ip3T3K52uxkuip/P1
-         uOlHJer/uY48HBWo52NIZXH7IyI+niBmBfPGqG6tB6tQYHycIk7vqH4D20Ym1tBPl6aH
-         UHdk4UiBpMqMynFQscCp5l+ZQ0BIhG4AxXtZbyOCKSDu9CmaITLM1Zbfpqdw2/1rJh5t
-         BMI+aA8Oj9BqlHm9wvHq2UoGhi6zVS2+vx/7R35teZTs7FSb0FUQ4Rn6yhFNPC4LEh4l
-         Sy5A==
-X-Gm-Message-State: AOJu0YwukmDQz4k4LJip0EOIorha6P2yb1kM9mqjsmIZYJoto2CQzfmB
-	TxeTqY1zDGDptHoXaAMUM7hCEPNAYVaPgZUxyxqrapGt2WazoNIOuyH3cv6rAA8jVATiGLJa05U
-	vH38n840zlnOqv9wQzal/eg0ThO3dl6qIw37lhWOTwQ==
-X-Received: by 2002:a19:e043:0:b0:50d:1e16:59b7 with SMTP id g3-20020a19e043000000b0050d1e1659b7mr6413740lfj.106.1704199281576;
-        Tue, 02 Jan 2024 04:41:21 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFss7kD0JvhGM8Df7C9aYtNfVdAHznAwkpCuM7z/atB9HMUlBNbIwPzLQk+XbIVrK9xQ87W1A==
-X-Received: by 2002:a19:e043:0:b0:50d:1e16:59b7 with SMTP id g3-20020a19e043000000b0050d1e1659b7mr6413732lfj.106.1704199281224;
-        Tue, 02 Jan 2024 04:41:21 -0800 (PST)
+        bh=UIqsFD74pfqLdhS2ZXd4ulK69eG+xBwuYxkv1BSeiUQ=;
+        b=i88oqoYmh25e+C660wxK4gc90NzMnGBmgtlrt4kQ7hLKBxlhrEGOS06ZHy2uqBsWKy
+         YDCjA41J/rvMghuyjiYJcl0ET2Z6MzZ+liavZpPkSqTbT8mUUjE2hN35KyAXPQpn2ZLY
+         PHnGGiZ9t4vuzYeEKA/u46bkLgTd6VWO2rsE65xNYuR0wzQcysm2tYu86Jy7oOCcaDzM
+         BFS+cw70qjrMcz43g4/v+P/X9cAMA6SGQsOI+bbK5iKo8t84puhnOckaAOyMgjWXIVMF
+         M2g6bmoxXmgXZooZ73JrlbNCEHDMbgzSqM7skqgdWG2Zrytqm//KVnV457v4O7doXrcN
+         nRzg==
+X-Gm-Message-State: AOJu0YyxgAentxknicOYW85oS2yiVo92yQcyaRoqKh9O0aUv2ou3itbf
+	Pdg/QnTXG8+aEhpizqCCQSW9gSz9Z3cnCwcFAqa2oC/sB34IqSu7saxAz7ZqhhJhoma837H0nH7
+	NmSePyUs200MTs3ea6UfWJlQ9/JTJT5uB0cMqLh5IQQ==
+X-Received: by 2002:a05:6512:398b:b0:50e:7fb4:ebaf with SMTP id j11-20020a056512398b00b0050e7fb4ebafmr5160792lfu.133.1704199324559;
+        Tue, 02 Jan 2024 04:42:04 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEcDg6qWWI1V7aSYWDe7r/vxonppIg9iQZvWdqvdi4Rc8Ghj0xol44xQFZ8VJ6as8iwIrzzpQ==
+X-Received: by 2002:a05:6512:398b:b0:50e:7fb4:ebaf with SMTP id j11-20020a056512398b00b0050e7fb4ebafmr5160785lfu.133.1704199324376;
+        Tue, 02 Jan 2024 04:42:04 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id r9-20020aa7cb89000000b005550844cd1dsm9825716edt.30.2024.01.02.04.41.20
+        by smtp.gmail.com with ESMTPSA id r9-20020aa7cb89000000b005550844cd1dsm9825716edt.30.2024.01.02.04.42.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jan 2024 04:41:20 -0800 (PST)
-Message-ID: <efd6da98-2c11-4bf4-a328-d0f3b28aeb16@redhat.com>
-Date: Tue, 2 Jan 2024 13:41:20 +0100
+        Tue, 02 Jan 2024 04:42:03 -0800 (PST)
+Message-ID: <b1e29cf3-12d1-41ae-8994-ab245ff3dcff@redhat.com>
+Date: Tue, 2 Jan 2024 13:42:03 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -57,184 +57,61 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/7] platform/x86: Convert to ACPI based probing
+Subject: Re: [PATCH v2 0/6] platform/x86/amd/pmc: Updates to amd-pmc driver
 Content-Language: en-US, nl
 To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Suma Hegde <suma.hegde@amd.com>
-Cc: platform-driver-x86@vger.kernel.org,
- Naveen Krishna Chatradhi <nchatrad@amd.com>
-References: <20231221172114.1569559-1-suma.hegde@amd.com>
- <20231221172114.1569559-6-suma.hegde@amd.com>
- <19cedcb8-eb39-bee4-fcd4-5d7a375e5ca@linux.intel.com>
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Cc: markgross@kernel.org, Sanket.Goswami@amd.com, mario.limonciello@amd.com,
+ platform-driver-x86@vger.kernel.org
+References: <20231228102104.1785383-1-Shyam-sundar.S-k@amd.com>
+ <d4cf5063-faa8-a416-1fd-34cd52c1e90@linux.intel.com>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <19cedcb8-eb39-bee4-fcd4-5d7a375e5ca@linux.intel.com>
+In-Reply-To: <d4cf5063-faa8-a416-1fd-34cd52c1e90@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Suma,
+Hi,
 
-On 12/22/23 09:51, Ilpo Järvinen wrote:
-> On Thu, 21 Dec 2023, Suma Hegde wrote:
+On 12/29/23 14:47, Ilpo Järvinen wrote:
+> On Thu, 28 Dec 2023, Shyam Sundar S K wrote:
 > 
->> ACPI table provides mailbox base address and register offset
->> information. The base address is provided as part of CRS method
->> and mailbox offsets are provided through DSD table.
->> Sockets are differentiated by UIDs.
+>> This series is focused on adding support for AMD family 1Ah series (or 
+>> with platforms that support AMDI000A) that adds support for s2idle, VPE
+>> IP block information, STB and idlemask.
 >>
->> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
->> Signed-off-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
->> ---
->> Changes since v1:
->> 1. Define amd_hsmp_acpi_rdwr() for doing mailbox memory mapped io
->> 2. Add a check to see if mailbox register offsets are set in
->>    hsmp_read_acpi_dsd()
->> 3. Add a check to see if sock->mbinfo.base_addr sockck->mbinfo.size are
->>    set in hsmp_read_acpi_crs()
->> 4. Change order of the statements in switch case ACPI_RESOURCE_TYPE_FIXED_MEMORY32
->>    in hsmp_resource()
->> 5. Add hsmp_test() after hsmp_parse_acpi_table() call
->> 6. Add r.end < r.start check in hsmp_resource()
->> 7. Add !dsd error check in hsmp_read_acpi_dsd
->> Changes since v2:
->> 1. Change EINVAL to ENODEV in hsmp_read_acpi_dsd()
->> 2. Change EINVAL to ENOENT in hsmp_read_acpi_dsd()
->> 3. Use resource_size() in hsmp_resource()
+>> (Series based on 'review-hans' branch with "4fd8b09f5bc1" as the tip.)
 >>
->>  drivers/platform/x86/amd/hsmp.c | 324 +++++++++++++++++++++++++++++---
->>  1 file changed, 296 insertions(+), 28 deletions(-)
+>> v1->v2:
+>> -------
+>> - Add missing smu_msg variable to amd_pmc_dev struct
 >>
->> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
->> index e77d4cd83a07..46924c572055 100644
->> --- a/drivers/platform/x86/amd/hsmp.c
->> +++ b/drivers/platform/x86/amd/hsmp.c
->> @@ -18,9 +18,11 @@
->>  #include <linux/pci.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/semaphore.h>
->> +#include <linux/acpi.h>
->>  
->>  #define DRIVER_NAME		"amd_hsmp"
->> -#define DRIVER_VERSION		"2.0"
->> +#define DRIVER_VERSION		"2.2"
->> +#define ACPI_HSMP_DEVICE_HID	"AMDI0097"
->>  
->>  /* HSMP Status / Error codes */
->>  #define HSMP_STATUS_NOT_READY	0x00
->> @@ -54,6 +56,11 @@
->>  
->>  #define HSMP_ATTR_GRP_NAME_SIZE	10
->>  
->> +/* These are the strings specified in ACPI table */
->> +#define MSG_IDOFF_STR		"MsgIdOffset"
->> +#define MSG_ARGOFF_STR		"MsgArgOffset"
->> +#define MSG_RESPOFF_STR		"MsgRspOffset"
->> +
->>  struct hsmp_mbaddr_info {
->>  	u32 base_addr;
->>  	u32 msg_id_off;
->> @@ -66,6 +73,7 @@ struct hsmp_socket {
->>  	struct bin_attribute hsmp_attr;
->>  	struct hsmp_mbaddr_info mbinfo;
->>  	void __iomem *metric_tbl_addr;
->> +	void __iomem *virt_base_addr;
->>  	struct semaphore hsmp_sem;
->>  	char name[HSMP_ATTR_GRP_NAME_SIZE];
->>  	struct pci_dev *root;
->> @@ -78,12 +86,14 @@ struct hsmp_plat_device {
->>  	struct hsmp_socket *sock;
->>  	u32 proto_ver;
->>  	u16 num_sockets;
->> +	bool is_acpi_device;
->> +	bool is_probed;
->>  };
->>  
->>  static struct hsmp_plat_device plat_dev;
->>  
->> -static int amd_hsmp_rdwr(struct hsmp_socket *sock, u32 offset,
->> -			 u32 *value, bool write)
->> +static int amd_hsmp_pci_rdwr(struct hsmp_socket *sock, u32 offset,
->> +			     u32 *value, bool write)
->>  {
->>  	int ret;
->>  
->> @@ -101,8 +111,29 @@ static int amd_hsmp_rdwr(struct hsmp_socket *sock, u32 offset,
->>  	return ret;
->>  }
->>  
->> +static void amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
->> +			       u32 *value, bool write)
->> +{
->> +	if (write)
->> +		iowrite32(*value, sock->virt_base_addr + offset);
->> +	else
->> +		*value = ioread32(sock->virt_base_addr + offset);
->> +}
->> +
->> +static int amd_hsmp_rdwr(struct hsmp_socket *sock, u32 offset,
->> +			 u32 *value, bool write)
->> +{
->> +	if (plat_dev.is_acpi_device)
->> +		amd_hsmp_acpi_rdwr(sock, offset, value, write);
->> +	else
->> +		return amd_hsmp_pci_rdwr(sock, offset, value, write);
->> +
->> +	return 0;
->> +}
->> +
->>  /*
->> - * Send a message to the HSMP port via PCI-e config space registers.
->> + * Send a message to the HSMP port via PCI-e config space registers
->> + * or by writing to MMIO space.
->>   *
->>   * The caller is expected to zero out any unused arguments.
->>   * If a response is expected, the number of response words should be greater than 0.
->> @@ -450,6 +481,9 @@ static int hsmp_create_sysfs_interface(void)
->>  	int ret;
->>  	u16 i;
->>  
->> +	if (plat_dev.is_acpi_device)
->> +		return 0;
+>> Shyam Sundar S K (6):
+>>   platform/x86/amd/pmc: Send OS_HINT command for AMDI000A platform
+>>   platform/x86/amd/pmc: Add VPE information for AMDI000A platform
+>>   platform/x86/amd/pmc: call amd_pmc_get_ip_info() during driver probe
+>>   platform/x86/amd/pmc: Add idlemask support for 1Ah family
+>>   platform/x86/amd/pmc: Add 1Ah family series to STB support list
+>>   platform/x86/amd/pmc: Modify SMU message port for latest AMD platform
+>>
+>>  drivers/platform/x86/amd/pmc/pmc.c | 25 +++++++++++++++++++------
+>>  drivers/platform/x86/amd/pmc/pmc.h |  1 +
+>>  2 files changed, 20 insertions(+), 6 deletions(-)
 > 
-> This comes out of nowhere... Why proto_ver isn't enough to handle this?
-> If it's needed, would the check perhaps belong to 
-> hsmp_is_sock_attr_visible() instead?
+> For all patches in this series:
 > 
->>  	/* String formatting is currently limited to u8 sockets */
->>  	if (WARN_ON(plat_dev.num_sockets > U8_MAX))
->>  		return -ERANGE;
->> @@ -487,13 +521,188 @@ static int hsmp_create_sysfs_interface(void)
->>  	return devm_device_add_groups(plat_dev.sock[0].dev, hsmp_attr_grps);
->>  }
->>  
->> -static int hsmp_cache_proto_ver(void)
->> +/* This is the UUID used for HSMP */
->> +static const guid_t acpi_hsmp_uuid = GUID_INIT(0xb74d619d, 0x5707, 0x48bd,
->> +						0xa6, 0x9f, 0x4e, 0xa2,
->> +						0x87, 0x1f, 0xc2, 0xf6);
->> +
->> +static inline bool is_acpi_hsmp_uuid(union acpi_object *obj)
->> +{
->> +	if (obj->type == ACPI_TYPE_BUFFER && obj->buffer.length == 16)
-> 
-> 16 -> UUID_SIZE.
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Please submit a v4 addressing Ilpo's review remarks on this patch.
+Shyam, thank you for the patches. Ilpo, thank you for the review.
 
-And while at it please also fix the subject-prefix to be:
-
-platform/x86/amd/hsmp: 
-
-As suggested by Thomas.
-
-There have been a bunch of drivers/platform/x86/amd changes merged
-recently, please base your v4 on top of:
-
+I've applied the series to my review-hans branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-to avoid conflicts.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
-
 
