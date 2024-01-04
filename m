@@ -1,52 +1,72 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A013222303;
-	Thu,  4 Jan 2024 12:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 715ED2800B4AC;
-	Thu,  4 Jan 2024 13:36:21 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 526D51093B; Thu,  4 Jan 2024 13:36:21 +0100 (CET)
-Date: Thu, 4 Jan 2024 13:36:21 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: Klara Modin <klarasmodin@gmail.com>,
-	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
-	"hdegoede@redhat.com" <hdegoede@redhat.com>,
-	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
-	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v5 1/2] platform/x86: p2sb: Allow p2sb_bar() calls during
- PCI device probe
-Message-ID: <20240104123621.GA4876@wunner.de>
-References: <CABq1_vjfyp_B-f4LAL6pg394bP6nDFyvg110TOLHHb0x4aCPeg@mail.gmail.com>
- <oe4cs5ptinmmdaxv6xa524whc7bppfqa7ern5jzc3aca5nffpm@xbmv34mjjxvv>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962A52420D
+	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Jan 2024 13:47:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R1h2iYa8"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1B4B8C43395
+	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Jan 2024 13:47:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704376074;
+	bh=kVkUwjOV3Xl8ydFkUhQwWBOs9S7xmlxJCejDtSTN2fI=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=R1h2iYa8AfMpTNJfftVTuMEuHdxbeVVQSSA4ZcIutymFqoXaOPr9hLOTCYFAHrQyH
+	 ZmVkqUp3fn90t+UDqRSvV48PasfCix2ZCvfDCcDk1NzWPQSBv6E0M8bvE+SFVVvuyX
+	 E/uKvN4CTcTMhCT/dXmeBmjoNTP8eLsScsXSqnIOJulWCmD+9JmF4n05yN6FrVljap
+	 EZVtlASuyoWj5hHzao/wXs/h2FrEzT7f+VFtJHT72NFQZMtEwuacXPkIwM5f7qLlII
+	 n7G+ZPzv/JKVLjd7cUPetsm7TQTs8puo1XYgwqEn/sfZkf5DXoWVGj4X3lue7f2mVc
+	 nfQlEI9TIN2CA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id F3682C53BD4; Thu,  4 Jan 2024 13:47:53 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 203191] The fan speed reports to 65535, despite the fan is
+ stopped
+Date: Thu, 04 Jan 2024 13:47:53 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: antony.gelberg@gmail.com
+X-Bugzilla-Status: ASSIGNED
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-203191-215701-Ns044SbifR@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-203191-215701@https.bugzilla.kernel.org/>
+References: <bug-203191-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <oe4cs5ptinmmdaxv6xa524whc7bppfqa7ern5jzc3aca5nffpm@xbmv34mjjxvv>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Thu, Jan 04, 2024 at 08:41:28AM +0000, Shinichiro Kawasaki wrote:
-> My mere idea was to just blacklist Intel CPUs with family != 6.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D203191
 
-The P2SB device has Vendor ID 0x8086, Device ID 0xc5c5, so just match
-for that?  The IDE controller in question has [8086:244b].  Class codes
-also differ, so that would be another suitable method for differentiation.
+--- Comment #20 from antony.gelberg@gmail.com ---
+Following up here. My laptop underwent warranty repair and all seems okay n=
+ow.
+They replaced the fan module and the motherboard as they couldn't tell which
+was responsible due to the intermittent nature of the problem.
 
-Thanks,
+So I would say that it looks like this should be closed; if the problem sti=
+ll
+occurs I will report back.
 
-Lukas
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
