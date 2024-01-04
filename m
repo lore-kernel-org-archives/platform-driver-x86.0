@@ -1,79 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6CE28DC1;
-	Thu,  4 Jan 2024 18:10:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A5D28E0C;
+	Thu,  4 Jan 2024 18:13:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KxNi6PqY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nXdgM8Dx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704391832; x=1735927832;
+  t=1704392037; x=1735928037;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=1Vek50sjpofiA67BZR6wezH67rKyzIFgowkaO9Lgv4U=;
-  b=KxNi6PqYqZBlEW5pCU7dJ3FVANs3uMV/zqlr3aefDn5WsaM16DKt0I10
-   zZcC25h4EQ5DIoC0tV9jjhXyaR78xr3C4OucE/v9KOrwk8nEcf0X6y5wN
-   UnPA0Cy6jWdf9BJoT3q39fiLMuG2hOAM6dfAnI+toVjHaaYLM0R551Pub
-   JtUhaHkO82mtks+nE3E9bTRz4gS71g18i/4QICfUT5N8oFALHKrwkxh41
-   m4PXu1vRVqG6XGi+j2z1lZm5oHwL4YRbvuC0bQmHcBgbvpEYNwUVS/B+T
-   bakV4dgbcxqUVJV4kwodrAH6p6WGRGlDjgtXajC646I2aXZHKlNYFgpXv
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="461627566"
+  bh=5yVYAGe6UBT/4OgO8YOiJPQ2PSEyGYD5OvzWkkodYqg=;
+  b=nXdgM8DxWBCT/D0hmIJaLPjUAVj5tYJUtFb8ytLmgTwOEhTRmB7L8WAh
+   ucGXOCpBSYkQBola4Mm5YmSjLMXh3aFZpIfVAw+ov99bRziOT+WX3M+CE
+   1W5379ibuRyiue8N72X0Y+j/JwwHFoAz45mD7SFXQlV1EfdMY1YwuGNTM
+   nLgj7KmzVBhGC64OlJ500vFU+XgOhlc9rEowmthtoi0ISJ5t5D1Mk5+HS
+   kxL2QfmIYHdeJxkVzC7NVCCzuKuVH4lfDVRdqAoQFssR3DPSbbDYUuNsg
+   FL2tVklBtTmhvvhNgH1SaKi8x42xl93EGFbXyzjnvF6XrUteahC/AI2Lo
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="400089673"
 X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
-   d="scan'208";a="461627566"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 10:10:30 -0800
+   d="scan'208";a="400089673"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 10:13:56 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="953695272"
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="783964573"
 X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
-   d="scan'208";a="953695272"
+   d="scan'208";a="783964573"
 Received: from asebenix-mobl1.ger.corp.intel.com ([10.251.210.215])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 10:10:28 -0800
-Date: Thu, 4 Jan 2024 20:10:26 +0200 (EET)
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 10:13:55 -0800
+Date: Thu, 4 Jan 2024 20:13:53 +0200 (EET)
 From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Armin Wolf <W_Armin@gmx.de>
 cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] platform/x86: wmi: Fix error handling in legacy WMI
- notify handler functions
-In-Reply-To: <20240103192707.115512-2-W_Armin@gmx.de>
-Message-ID: <f17bb6e-579-5031-b533-249e90948a40@linux.intel.com>
-References: <20240103192707.115512-1-W_Armin@gmx.de> <20240103192707.115512-2-W_Armin@gmx.de>
+Subject: Re: [PATCH 2/4] platform/x86: wmi: Return immediately if an suitable
+ WMI event is found
+In-Reply-To: <20240103192707.115512-3-W_Armin@gmx.de>
+Message-ID: <1fc39362-c4fc-6088-4ec-d44ca6328252@linux.intel.com>
+References: <20240103192707.115512-1-W_Armin@gmx.de> <20240103192707.115512-3-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-123273794-1704391829=:10531"
+Content-Type: multipart/mixed; boundary="8323329-965000451-1704392036=:10531"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-123273794-1704391829=:10531
+--8323329-965000451-1704392036=:10531
 Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: 8BIT
 
 On Wed, 3 Jan 2024, Armin Wolf wrote:
 
-> When wmi_install_notify_handler()/wmi_remove_notify_handler() are
-> unable to enable/disable the WMI device, they unconditionally return
-> an error to the caller.
-> When registering legacy WMI notify handlers, this means that the
-> callback remains registered despite wmi_install_notify_handler()
-> having returned an error.
-> When removing legacy WMI notify handlers, this means that the
-> callback is removed despite wmi_remove_notify_handler() having
-> returned an error.
+> Commit 58f6425eb92f ("WMI: Cater for multiple events with same GUID")
+> allowed legacy WMI notify handlers to be installed for multiple WMI
+> devices with the same GUID.
+> However this is useless since the legacy GUID-based interface is
+> blacklisted from seeing WMI devices with duplicated GUIDs.
 > 
-> Fix this by only warning when the WMI device could not be enabled.
-> This behaviour matches the bus-based WMI interface.
+> Return immediately if a suitable WMI event is found in
+> wmi_install/remove_notify_handler() since searching for other suitable
+> events is pointless.
 > 
 > Tested on a Dell Inspiron 3505 and a Acer Aspire E1-731.
 > 
-> Fixes: 58f6425eb92f ("WMI: Cater for multiple events with same GUID")
 > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
@@ -81,4 +77,4 @@ Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 -- 
  i.
 
---8323329-123273794-1704391829=:10531--
+--8323329-965000451-1704392036=:10531--
