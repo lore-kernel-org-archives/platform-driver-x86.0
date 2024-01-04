@@ -1,52 +1,55 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42CB2C681
-	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Jan 2024 21:21:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818092CCB0
+	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Jan 2024 21:56:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TXjlr+on"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3373bc6d625so737720f8f.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Jan 2024 13:21:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kS85VvdY"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3374e332124so759549f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Jan 2024 13:56:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704403316; x=1705008116; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qHRzVhTfVv3//sJV5nX2E4idCd4O8YYn/Gtq8ExHqDM=;
-        b=TXjlr+onqlKo/i68n1lDlCYBArwPkbPuiNtd6HsLatqgLp5tAE3Nk4QGT6DRw1UTJq
-         JREPWenxWA+QgqSXqfBfOL9PmuixNqA56iwyFUCowXQyUJU125VNZa7FkIgp9yK/yqvE
-         4GA5zjhg6x5PmEfYRe1bVwuerDFc/iqkkbkRPOTQKg22lVMH/5QQZu4KcdxscWuGEVGt
-         aTNC9nAKwbJ+9GGIvCU590Q5cSlk3occ5rN+8GKh2QXh7dQFZJnWUG8Ms2nPO/3Hl9B8
-         Ra1f3RTupI0PJwt7zJjo9iTaczIaW45MiCnsMeR17r0Laku9NMQJLcMBzr+Tru/Ly0iO
-         A7zQ==
+        d=gmail.com; s=20230601; t=1704405414; x=1705010214; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=s04J/YHQ1BsMZHIlJmHiIlrWgezkUGBB4e0Rr2nZ75Q=;
+        b=kS85VvdY3x7ojP4vrUy7IEKCgym6/Cb0VZySpA8vL4jCua0Y8cGwR8vDq6Y2tnXdB5
+         KjvfvoBR2YzoxwQUVqPXdAwSYrbTNa21kLM+62AK4iP1wzMuh9lI7mD570VApgOZGfkU
+         s0V5VnUVX8+GyQYqHpXAh5L+IOqvYSVhMJMPGFZ4tvhf+M9fjXPvHIeN2mg+P/o1wPgM
+         JcIZWOpd8NRjV03jA4wlmZOviiRZSWAZA9YIyKkalFyOjbehVMO1MHBbYclas6pKgqR6
+         5qazfig0OAzQ0ldhd+qzanSHsV0dlMtM0KRcW/dXVMdhKv7dfLxfEs8EUbx1cc3xodgr
+         2AsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704403316; x=1705008116;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qHRzVhTfVv3//sJV5nX2E4idCd4O8YYn/Gtq8ExHqDM=;
-        b=EnKzLgC1ZiSplNxNCH7nqYocWFBSFXI37KI5vTChHWlSHYuL4qB4ygO7y8YApF+hrV
-         VaiIZc0+nyhX15uyothm1eMQOkNx/tK37h/tj3pPbJqnZw9i7dBSHEm1TLicrAc9P/DD
-         hgm0YgLEyma8Vp8DLg1RNgvJA4s/oWO7E03Xw+RGK4ae6Ef7u95OEdyn84t66q87sh9O
-         I1lzg4BD2kW4nvKNNPawAZqHaStR2p4QnECrCLOYj5E7bcxkfzM3KnFxe6MqLElApXFs
-         kDRvPdhBPYcxebgemsuzDA2RUUqSJzkrsghXUlxEKmSKKUu0BPrs0SShUCpfVlJL7u50
-         6g8A==
-X-Gm-Message-State: AOJu0Yx8NSrIddxoq8e0ViwG35dY+e3j8GAs7FOl5FEKuew9kKTBTuUJ
-	r3hIH5yQuMCUC7fHFk/TEzM=
-X-Google-Smtp-Source: AGHT+IEjYwy2cF2yZvxy4OG5q8F53/g1PhRK7uKGB8s73qt/b+gMBKXNvqbbQyOzKAR2Bpg5Qknbww==
-X-Received: by 2002:a05:6000:2:b0:336:8b43:acac with SMTP id h2-20020a056000000200b003368b43acacmr683839wrx.13.1704403315815;
-        Thu, 04 Jan 2024 13:21:55 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704405414; x=1705010214;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s04J/YHQ1BsMZHIlJmHiIlrWgezkUGBB4e0Rr2nZ75Q=;
+        b=cpy8M8EfxcMpSOajPzkI71EX0btBUW7sD/Y4NNniLeXy9bFlA6gjtryTdEfh5fKvKn
+         aJzDeW66ggmyiRjs345vRhweFqcMWm8417abtzFzHbgNST7+LZQHkIJSe8eRxeVt/EB5
+         HWl8+bJkgfCmxo4fVtNmCycIU/sBFQ+GC9ZBdhB9YK6GwYqs/1H0bUGGLo076C2D/lkx
+         JaOh7l8lKY6v/7V6udrs8G77pRk7xAPifLuwnWqusZcTBWBBkLmC4Go0oWIaU7la4cgY
+         Lj4VogFKo9E2bbktc5NK8laeb2WfxEgks3enzbQQJcKapxM3SGHhyafaOlf66apOQWNH
+         ZcvQ==
+X-Gm-Message-State: AOJu0Yy5TjG7Pts4TnpK6rJQxTFo5BTD6nKJS/qI4RUgGU4iIpGhifHZ
+	o5v+0nwMrHtVT+fOX+w9N6zjByZWICf0NA==
+X-Google-Smtp-Source: AGHT+IFIungfgQqHQeA5HS4APb7hoqGOQ+U4HshBB0LeMjMb+asC4fT9SD2H2H0RlY2tbJcvJ0XD2A==
+X-Received: by 2002:adf:e0c7:0:b0:334:b335:e667 with SMTP id m7-20020adfe0c7000000b00334b335e667mr687158wri.20.1704405414324;
+        Thu, 04 Jan 2024 13:56:54 -0800 (PST)
 Received: from alexis-pc (cust-west-par-46-193-0-235.cust.wifirst.net. [46.193.0.235])
-        by smtp.gmail.com with ESMTPSA id c3-20020a5d4f03000000b00336344c3c3fsm112840wru.90.2024.01.04.13.21.55
+        by smtp.gmail.com with ESMTPSA id f11-20020a5d50cb000000b00336ebf27d59sm157983wrt.78.2024.01.04.13.56.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jan 2024 13:21:55 -0800 (PST)
-Date: Thu, 4 Jan 2024 22:21:54 +0100
+        Thu, 04 Jan 2024 13:56:54 -0800 (PST)
+Date: Thu, 4 Jan 2024 22:56:52 +0100
 From: Alexis Belmonte <alexbelm48@gmail.com>
-To: hdegoede@redhat.com
-Cc: platform-driver-x86@vger.kernel.org, putr4.s@gmail.com
+To: Prajna Sariputra <putr4.s@gmail.com>
+Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org
 Subject: Re: [PATCH 2/2] platform/x86: hp-wmi: Add thermal profile support
  for 8BAD boards
-Message-ID: <ZZchctxlzSPChJLY@alexis-pc>
+Message-ID: <ZZcppP1mp5mAYh9K@alexis-pc>
+References: <ZZFGgfsfrU2vuQoI@alexis-pc>
+ <9280594.CDJkKcVGEf@n0067ax-linux62>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -55,182 +58,144 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <9280594.CDJkKcVGEf@n0067ax-linux62>
 
-Add 8BAD to the list of boards which have thermal profile selection
-available. This allows the CPU to draw more power than the default TDP
-barrier defined by the 'balanced' thermal profile (around 50W), hence
-allowing it to perform better without being throttled by the embedded
-controller (around 130W).
+On Wed, Jan 03, 2024 at 11:21:24AM +1100, Prajna Sariputra wrote:
+> On Sunday, 31 December 2023 9:46:25 PM AEDT Alexis Belmonte wrote:
+> > Add 8BAD to the list of boards which have thermal profile selection
+> > available. This allows the CPU to draw more power than the default TDP
+> > barrier defined by the 'balanced' thermal profile (around 50W), hence
+> > allowing it to perform better without being throttled by the embedded
+> > controller (around 130W).
+> > 
+> > We first need to set the HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET to zero.
+> > This prevents the timer countdown from reaching zero, making the embedded
+> > controller "force-switch" the system's thermal profile back to 'balanced'
+> > automatically.
+> > 
+> > We also need to put a number of specific flags in
+> > HP_OMEN_EC_THERMAL_PROFILE_FLAGS_OFFSET when we're switching to another
+> > thermal profile:
+> > 
+> >    - for 'performance', we need to set both HP_OMEN_EC_FLAGS_TURBO and
+> >      HP_OMEN_EC_FLAGS_NOTIMER;
+> > 
+> >    - for 'balanced' and 'powersave', we clear out the register to notify
+> >      the system that we want to lower the TDP barrier as soon as possible.
+> 
+> Do you know if there's a way to check that a given model has this specific timer,
+> other than just testing the patch?
 
-We first need to set the HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET to zero.
-This prevents the timer countdown from reaching zero, making the embedded
-controller "force-switch" the system's thermal profile back to 'balanced'
-automatically.
+I haven't been able to figure out so yet -- there's a 'device_list.json'
+file (IIRC) defined somewhere in the Omen Control Center app which I came
+across, but no simple way of universally checking if this behavior is
+active :[
 
-We also need to put a number of specific flags in
-HP_OMEN_EC_THERMAL_PROFILE_FLAGS_OFFSET when we're switching to another
-thermal profile:
+I think I remember that I've seen another model ID near mine being defined,
+so I think I *could* add it directly to both lists though, so that's
+that.
 
-   - for 'performance', we need to set both HP_OMEN_EC_FLAGS_TURBO and
-     HP_OMEN_EC_FLAGS_NOTIMER;
+> I have an Omen 16-n0000 (8A42), which has a Ryzen 7 6800H and a Radeon
+> RX 6650M, and I've been patching the kernel to add it to the omen_thermal_profile_boards
+> array for a while now. Just doing that prevents the worst of the throttling from
+> happening (GPU dropping from 105W to 35W and the CPU being stuck at like 2GHz
+> or less), but currently the GPU still drops to 75W eventually. Switching to
+> performance does make it go back to 105W (and even 120W for a bit) before it
+> goes back down to 75W, so it makes me wonder if there is actually a timer on my
+> model that's doing it rather than just thermal throttling.
 
-   - for 'balanced' and 'powersave', we clear out the register to notify
-     the system that we want to lower the TDP barrier as soon as possible.
+I think you've answered it yourself with your other mail ;]
 
-The third flag defined in the hp_thermal_profile_omen_flags enum,
-HP_OMEN_EC_FLAGS_JUSTSET, is present for completeness.
+> 
+> > 
+> > The third flag defined in the hp_thermal_profile_omen_flags enum,
+> > HP_OMEN_EC_FLAGS_JUSTSET, is present for completeness.
+> > 
+> > To prevent potential behaviour breakage with other Omen models, a
+> > separate omen_timed_thermal_profile_boards array has been added to list
+> > which boards expose this behaviour.
+> > 
+> > Performance benchmarking was done with the help of silver.urih.com and
+> > Google Chrome 120.0.6099.129, on Gnome 45.2, with the 'performance'
+> > thermal profile set:
+> > 
+> > |                  | Performance |     Stress |   TDP |
+> > |------------------|-------------|------------|-------|
+> > |    with my patch |      P84549 |    S0.1891 |  131W | 
+> > | without my patch |      P44084 |    S0.1359 |   47W |
+> > 
+> > The TDP measurements were done with the help of the s-tui utility,
+> > during the load.
+> > 
+> > There is still work to be done:
+> > 
+> >    - tune the CPU and GPU fans to better cool down and enhance
+> >      performance at the right time; right now, it seems that the fans are
+> >      not properly reacting to thermal/performance events, which in turn
+> >      either causes thermal throttling OR makes the fans spin way too long,
+> >      even though the temperatures have lowered down
+> 
+> Yeah, that's also a problem with my model, where with a heavy CPU only workload
+> the CPU would boost high and almost immediately run into thermal throttling and
+> stays throttled for like a few minutes before the fans ramp up even a little,
+> which is why I'm not sure that adding my model to the list upstream would be a
+> good idea. My CPU doesn't seem to boost all that high though, I don't remember
+> the performance mode making much of a difference the last time I tested it.
 
-To prevent potential behaviour breakage with other Omen models, a
-separate omen_timed_thermal_profile_boards array has been added to list
-which boards expose this behaviour.
+I totally agree with you -- I just wanted to make sure that my patch was
+conform enough with the rest of the codebae before making further progress :]
 
-Performance benchmarking was done with the help of silver.urih.com and
-Google Chrome 120.0.6099.129, on Gnome 45.2, with the 'performance'
-thermal profile set:
+> Also, for what it's worth I had a conversation with one of the folks who wrote
+> the platform profile code (Enver Balalic) a few months ago, and they said the
+> profiles are just fan speed control modes on their Omen model.
 
-|                  | Performance |     Stress |   TDP |
-|------------------|-------------|------------|-------|
-|    with my patch |      P84549 |    S0.1891 |  131W | 
-| without my patch |      P44084 |    S0.1359 |   47W |
+I've made some reverse engineering on the Omen Control Center app through a
+Windows VM, and I came across a few WMI calls in a class (IIRC `HpaClient`, or
+something similar to that name) that do reads to this fan curve.
 
-The TDP measurements were done with the help of the s-tui utility,
-during the load.
+I haven't yet found the parts that do writes unfortunately, that also
+needs to be browsed through. :[
 
-There is still work to be done:
+The ACPI table that handles those WMI "methods" is the `SSDT` one --
+I've disassembled it with `iasl`, which really helped figuring out the
+expected data structures.
 
-   - tune the CPU and GPU fans to better cool down and enhance
-     performance at the right time; right now, it seems that the fans are
-     not properly reacting to thermal/performance events, which in turn
-     either causes thermal throttling OR makes the fans spin way too long,
-     even though the temperatures have lowered down
+There's also a post on Reddit which talks about this feature; since this
+was posted 2 years ago, I'd say that at least *some* models support
+this -- but maybe I'm just misinterpreting it?
 
-   - expose the CPU and GPU fan curves to user-land so that they can be
-     controlled just like what the Omen Gaming Hub utility proposes to
-     its users;
+https://www.reddit.com/r/HPOmen/comments/poxe2i/new_hp_omen_update_adds_option_for_manual_fan/
 
-Signed-off-by: Alexis Belmonte <alexbelm48@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 61 ++++++++++++++++++++++++++++++--
- 1 file changed, 59 insertions(+), 2 deletions(-)
+> I ended up just testing the patch for myself (after adding my model number to
+> the arrays), and it does improve the GPU performance further for me, instead
+> of the GPU dropping to 75W after 2-4 minutes it is now able to maintain at least
+> 100W even after 10 minutes (tested with Quake 2 RTX). So, it seems like the timer
+> thing also applies to my Omen 16-n0000 (8A42). That performance also roughly
+> matches up with how notebookcheck.net says my Omen performs in their review
+> (103W performance, 72W balanced), so it'd be great if you can also include my
+> model in your patch.
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index b19039cf1966..05011aa93a7a 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -38,6 +38,8 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45E9-BE91-3D44E2C707E4");
- #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
- #define HPWMI_BIOS_GUID "5FB7F034-2C63-45E9-BE91-3D44E2C707E4"
- 
-+#define HP_OMEN_EC_THERMAL_PROFILE_FLAGS_OFFSET 0x62
-+#define HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET 0x63
- #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
- 
- #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
-@@ -57,7 +59,7 @@ static const char * const omen_thermal_profile_boards[] = {
- 	"874A", "8603", "8604", "8748", "886B", "886C", "878A", "878B", "878C",
- 	"88C8", "88CB", "8786", "8787", "8788", "88D1", "88D2", "88F4", "88FD",
- 	"88F5", "88F6", "88F7", "88FE", "88FF", "8900", "8901", "8902", "8912",
--	"8917", "8918", "8949", "894A", "89EB"
-+	"8917", "8918", "8949", "894A", "89EB", "8BAD"
- };
- 
- /* DMI Board names of Omen laptops that are specifically set to be thermal
-@@ -68,6 +70,14 @@ static const char * const omen_thermal_profile_force_v0_boards[] = {
- 	"8607", "8746", "8747", "8749", "874A", "8748"
- };
- 
-+/* DMI board names of Omen laptops that have a thermal profile timer which will
-+ * cause the embedded controller to set the thermal profile back to
-+ * "balanced" when reaching zero.
-+ */
-+static const char * const omen_timed_thermal_profile_boards[] = {
-+	"8BAD"
-+};
-+
- /* DMI Board names of Victus laptops */
- static const char * const victus_thermal_profile_boards[] = {
- 	"8A25"
-@@ -184,6 +194,12 @@ enum hp_thermal_profile_omen_v1 {
- 	HP_OMEN_V1_THERMAL_PROFILE_COOL		= 0x50,
- };
- 
-+enum hp_thermal_profile_omen_flags {
-+	HP_OMEN_EC_FLAGS_TURBO		= 0x04,
-+	HP_OMEN_EC_FLAGS_NOTIMER	= 0x02,
-+	HP_OMEN_EC_FLAGS_JUSTSET	= 0x01,
-+};
-+
- enum hp_thermal_profile_victus {
- 	HP_VICTUS_THERMAL_PROFILE_DEFAULT		= 0x00,
- 	HP_VICTUS_THERMAL_PROFILE_PERFORMANCE		= 0x01,
-@@ -451,7 +467,11 @@ static int hp_wmi_get_tablet_mode(void)
- 
- static int omen_thermal_profile_set(int mode)
- {
--	char buffer[2] = {0, mode};
-+	/* The Omen Control Center actively sets the first byte of the buffer to
-+	 * 255, so let's mimic this behaviour to be as close as possible to
-+	 * the original software.
-+	 */
-+	char buffer[2] = {-1, mode};
- 	int ret;
- 
- 	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
-@@ -1203,10 +1223,33 @@ static int platform_profile_omen_get(struct platform_profile_handler *pprof,
- 	return 0;
- }
- 
-+static bool has_omen_thermal_profile_ec_timer(void)
-+{
-+	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
-+
-+	if (!board_name)
-+		return false;
-+
-+	return match_string(omen_timed_thermal_profile_boards,
-+			    ARRAY_SIZE(omen_timed_thermal_profile_boards),
-+			    board_name) >= 0;
-+}
-+
-+inline int omen_thermal_profile_ec_flags_set(enum hp_thermal_profile_omen_flags flags)
-+{
-+	return ec_write(HP_OMEN_EC_THERMAL_PROFILE_FLAGS_OFFSET, flags);
-+}
-+
-+inline int omen_thermal_profile_ec_timer_set(u8 value)
-+{
-+	return ec_write(HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET, value);
-+}
-+
- static int platform_profile_omen_set(struct platform_profile_handler *pprof,
- 				     enum platform_profile_option profile)
- {
- 	int err, tp, tp_version;
-+	enum hp_thermal_profile_omen_flags flags = 0;
- 
- 	tp_version = omen_get_thermal_policy_version();
- 
-@@ -1240,6 +1283,20 @@ static int platform_profile_omen_set(struct platform_profile_handler *pprof,
- 	if (err < 0)
- 		return err;
- 
-+	if (has_omen_thermal_profile_ec_timer()) {
-+		err = omen_thermal_profile_ec_timer_set(0);
-+		if (err < 0)
-+			return err;
-+
-+		if (profile == PLATFORM_PROFILE_PERFORMANCE)
-+			flags = HP_OMEN_EC_FLAGS_NOTIMER |
-+				HP_OMEN_EC_FLAGS_TURBO;
-+
-+		err = omen_thermal_profile_ec_flags_set(flags);
-+		if (err < 0)
-+			return err;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.43.0
+Glad to hear that it helps! Your model will be part of both lists next time I
+send my updated patches for a "refreshed" review :]
 
+> I just ran more tests with the CPU performance, and it seems that I might have
+> misremembered how bad the fan curve was, since I have been limiting the CPU
+> frequency to 4GHz instead of letting the CPU do its thing by itself (max boost is
+> 4.7GHz), if I go back to the latter then with a heavily multithreaded workload
+> (like compiling the kernel) the fans ramp up high within a few seconds of the
+> CPU reaching 100C on its hottest core, and the CPU seems to maintain that
+> temperature (or the sensors just don't report values above 100C, not sure). That
+> seems worrying given that the supposed max operating temperature for the CPU
+> (Ryzen 7 6800H) is 95C, but then again that probably won't be the case when gaming,
+> which is the main use case for these laptops anyway.
+
+This is definitely problematic yet also what I kind of experience, even
+though we both have a completely different combination of CPUs and GPUs
+-- at least we can say that the "draft" patches work regardless of the
+backed hardware, which is good to hear :]
+
+Thanks for testing out my patch -- as I've said to Ilpo, I won't be able to do
+much progress for a few weeks BUT I'm still on it as soon as I'm available
+again!
+
+Alexis
