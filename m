@@ -1,24 +1,42 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06426249F9
-	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Jan 2024 15:56:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B412B250E9;
+	Thu,  4 Jan 2024 16:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eGYtq8Ih"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27824C433C8;
-	Thu,  4 Jan 2024 15:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1704383761;
-	bh=vZOCPj4MC5OntnA5tg9agFADWY1haCJf5eVbkpG5URw=;
-	h=Subject:To:From:Date:From;
-	b=eGYtq8Ih0EEBfI+5hR1UCzt1bjClrYs2w6xuHKa7qvsHkPi98tLVO+0p9EUv6hKLN
-	 y/Niv+5BlUVWCsm0IhRsXDUJ+PyGX+m+hcSDWSGWmzkkbtOvOcWV3/l49JKlcc8X4G
-	 nblESITUWUsWq6DkU/3FiVEMPDn9Wy4yWyDkxgf4=
-Subject: patch "platform/surface: aggregator: make ssam_bus_type constant and static" added to char-misc-testing
-To: gregkh@linuxfoundation.org,hdegoede@redhat.com,ilpo.jarvinen@linux.intel.com,luzmaximilian@gmail.com,platform-driver-x86@vger.kernel.org
-From: <gregkh@linuxfoundation.org>
-Date: Thu, 04 Jan 2024 16:55:32 +0100
-Message-ID: <2024010431-monument-magnolia-8a0f@gregkh>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ge5K4PuS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704386695; x=1735922695;
+  h=from:message-id:to:cc:date:subject:mime-version:
+   content-transfer-encoding;
+  bh=/DQS4wqv+vvwhHxOf2aClwntwxDonsfP8n12aAK5U0c=;
+  b=Ge5K4PuS/dUzvXfAf1cdcGA/kWut8AmDhFE+463NpmgTSACoLii4kBaN
+   m6Rb9cj+RbPtIlqhq2wAJ4IxC3VfrxgpFkyDL1zXDBdQPPb9/hA+mG4Ql
+   T8sckV0wgUav+Co19yDv9uoHAQfZc6JOQWgDTbvKew6/NlIpBr7z6YM7O
+   VwWrVUApL/yiBlN1+XZguj7+EkF9syLKsKO4EJjx+QjDfAho0LthUvrsk
+   CDmzOrCdNItCUoTKI/9auTHTxlj5d5Jw7upAcDeULKCKJZKrsn4gMMFG4
+   YnGCTHxcSYOc1QIER5MdcGYlol8CJ5lecIaIpB0NSsf9vGW1lACOGePBl
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="382276291"
+X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
+   d="scan'208";a="382276291"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 08:44:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="814703587"
+X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
+   d="scan'208";a="814703587"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.32.230])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 08:44:52 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Message-ID: <1a6657ef8475862e4fc282efe832fa86.=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Thu, 04 Jan 2024 18:32:23 +0200
+Subject: [GIT PULL] platform-drivers-x86 for v6.7-7
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -28,94 +46,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Hi Linus,
 
-This is a note to let you know that I've just added the patch titled
+Here is a last minute platform-drivers-x86 fixes PR for v6.7.
 
-    platform/surface: aggregator: make ssam_bus_type constant and static
+Unfortunately the P2SB deadlock fix broke some older HW and we need some
+time to figure out the best way to fix the issue so reverting the deadlock
+fix for now.
 
-to my char-misc git tree which can be found at
-    git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
-in the char-misc-testing branch.
-
-The patch will show up in the next release of the linux-next tree
-(usually sometime within the next 24 hours during the week.)
-
-The patch will be merged to the char-misc-next branch sometime soon,
-after it passes testing, and the merge window is open.
-
-If you have any questions about this process, please let me know.
+Regards, i.
 
 
-From 554644d2e07c890ad70aa584e6a9627bd0a6c8fe Mon Sep 17 00:00:00 2001
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date: Tue, 19 Dec 2023 18:18:58 +0100
-Subject: platform/surface: aggregator: make ssam_bus_type constant and static
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+The following changes since commit 70681aa0746ae61d7668b9f651221fad5e30c71e:
 
-Now that the driver core can properly handle constant struct bus_type,
-move the ssam_bus_type variable to be a constant structure as well,
-placing it into read-only memory which can not be modified at runtime.
+  platform/x86/intel/pmc: Move GBE LTR ignore to suspend callback (2023-12-29 15:31:22 +0200)
 
-It's also never used outside of
-drivers/platform/surface/aggregator/bus.c so make it static and don't
-export it as no one is using it.
+are available in the Git repository at:
 
-Cc: Maximilian Luz <luzmaximilian@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc:  <platform-driver-x86@vger.kernel.org>
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lore.kernel.org/r/2023121957-tapered-upswing-8326@gregkh
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/platform/surface/aggregator/bus.c | 5 +++--
- include/linux/surface_aggregator/device.h | 1 -
- 2 files changed, 3 insertions(+), 3 deletions(-)
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.7-7
 
-diff --git a/drivers/platform/surface/aggregator/bus.c b/drivers/platform/surface/aggregator/bus.c
-index 42ccd7f1c9b9..118caa651bec 100644
---- a/drivers/platform/surface/aggregator/bus.c
-+++ b/drivers/platform/surface/aggregator/bus.c
-@@ -35,6 +35,8 @@ static struct attribute *ssam_device_attrs[] = {
- };
- ATTRIBUTE_GROUPS(ssam_device);
- 
-+static const struct bus_type ssam_bus_type;
-+
- static int ssam_device_uevent(const struct device *dev, struct kobj_uevent_env *env)
- {
- 	const struct ssam_device *sdev = to_ssam_device(dev);
-@@ -329,13 +331,12 @@ static void ssam_bus_remove(struct device *dev)
- 		sdrv->remove(to_ssam_device(dev));
- }
- 
--struct bus_type ssam_bus_type = {
-+static const struct bus_type ssam_bus_type = {
- 	.name   = "surface_aggregator",
- 	.match  = ssam_bus_match,
- 	.probe  = ssam_bus_probe,
- 	.remove = ssam_bus_remove,
- };
--EXPORT_SYMBOL_GPL(ssam_bus_type);
- 
- /**
-  * __ssam_device_driver_register() - Register a SSAM client device driver.
-diff --git a/include/linux/surface_aggregator/device.h b/include/linux/surface_aggregator/device.h
-index 42b249b4c24b..8cd8c38cf3f3 100644
---- a/include/linux/surface_aggregator/device.h
-+++ b/include/linux/surface_aggregator/device.h
-@@ -193,7 +193,6 @@ struct ssam_device_driver {
- 
- #ifdef CONFIG_SURFACE_AGGREGATOR_BUS
- 
--extern struct bus_type ssam_bus_type;
- extern const struct device_type ssam_device_type;
- 
- /**
--- 
-2.43.0
+for you to fetch changes up to b20712e853305cbd04673f02b7e52ba5b12c11a9:
 
+  Revert "platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe" (2024-01-04 18:16:51 +0200)
 
+----------------------------------------------------------------
+platform-drivers-x86 for v6.7-7
+
+Revert P2SB / PCI deadlock fix due issue with older HW w/o P2SB.
+
+The following is an automated shortlog grouped by driver:
+
+p2sb:
+ - Revert: Allow p2sb_bar() calls during PCI device probe
+
+----------------------------------------------------------------
+Shin'ichiro Kawasaki (1):
+      Revert "platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe"
+
+ drivers/platform/x86/p2sb.c | 172 +++++++++++---------------------------------
+ 1 file changed, 41 insertions(+), 131 deletions(-)
