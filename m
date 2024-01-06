@@ -1,148 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA046FAE;
-	Sat,  6 Jan 2024 12:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NsJWQq87"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B350C433C8;
-	Sat,  6 Jan 2024 12:16:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704543408;
-	bh=HybGMDQq3v2XjGRGZU36KQebR8y0K0uE5cQ/WhHgI/A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NsJWQq87EzuGFADup9GgvI2qaPLfByfXQqo4Ufseko1OKYbdOAx+3048dRdP+6l1l
-	 mJwJOaDaOwKg6XHfUHWAaaMoDRiBuo0ApPSOZTbsixHnT4a3zscCFXiR+0gmclpcgZ
-	 1+x2Bjm4RkfTwm+PZ/iYrCEIhsCjbubirMrtUEtqWPwkq/IROYWlrd3x2HS9QBZbnf
-	 qWTINrr4yPh6sp+fS9o111tNQ+zp7+c2l3xhidNY2LPQzvBKnRaPCXiV5ff0QymdKh
-	 g46lOfGJ4piRiKarhfgBuUS/VCx8IQTwp94meBYtEVFFeJh/RNeXUGxLX8Wc3HiMIj
-	 3CsNcSyiV0M5w==
-Received: by pali.im (Postfix)
-	id CB73C88D; Sat,  6 Jan 2024 13:16:44 +0100 (CET)
-Date: Sat, 6 Jan 2024 13:16:44 +0100
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
-	Eric Piel <eric.piel@tremplin-utc.net>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>, Dell.Client.Kernel@dell.com,
-	Marius Hoch <mail@mariushoch.de>,
-	Kai Heng Feng <kai.heng.feng@canonical.com>,
-	Wolfram Sang <wsa@kernel.org>, platform-driver-x86@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: Re: [PATCH 3/6] platform/x86: dell-smo8800: Move instantiation of
- lis3lv02d i2c_client from i2c-i801 to dell-smo8800
-Message-ID: <20240106121644.eohsme67ikqkdyzu@pali>
-References: <20231224213629.395741-1-hdegoede@redhat.com>
- <20231224213629.395741-4-hdegoede@redhat.com>
- <20231224215502.dq6a2sq2hdfrpwof@pali>
- <a37ddb76-c93e-4422-80eb-11dae0985093@redhat.com>
- <20240105182603.2bpvszkl7u7n4xyj@pali>
- <821bfe95-8ace-4f6d-acdc-5771cb72b276@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF20B7483;
+	Sat,  6 Jan 2024 14:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.224] (ip5f5ae9df.dynamic.kabel-deutschland.de [95.90.233.223])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 7AC6961E5FE01;
+	Sat,  6 Jan 2024 15:23:20 +0100 (CET)
+Message-ID: <65457151-4ddc-4eb4-8e3b-b9c1098c23bb@molgen.mpg.de>
+Date: Sat, 6 Jan 2024 15:23:19 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] i2c-i801 / dell-smo8800: Move instantiation of
+ lis3lv02d i2c_client from i2c-i801 to dell-smo8800
+Content-Language: en-US
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+ Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
+ Eric Piel <eric.piel@tremplin-utc.net>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>, Dell.Client.Kernel@dell.com,
+ Marius Hoch <mail@mariushoch.de>, Kai Heng Feng
+ <kai.heng.feng@canonical.com>, Wolfram Sang <wsa@kernel.org>,
+ platform-driver-x86@vger.kernel.org, linux-i2c@vger.kernel.org
+References: <20231224213629.395741-1-hdegoede@redhat.com>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20231224213629.395741-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <821bfe95-8ace-4f6d-acdc-5771cb72b276@redhat.com>
-User-Agent: NeoMutt/20180716
 
-On Saturday 06 January 2024 13:13:01 Hans de Goede wrote:
-> Hi,
-> 
-> On 1/5/24 19:26, Pali Rohár wrote:
-> > On Friday 05 January 2024 17:31:32 Hans de Goede wrote:
-> >> Hi Pali,
-> >>
-> >> On 12/24/23 22:55, Pali Rohár wrote:
-> >>> On Sunday 24 December 2023 22:36:19 Hans de Goede wrote:
-> >>>> +static int smo8800_find_i801(struct device *dev, void *data)
-> >>>> +{
-> >>>> +	static const u16 i801_idf_pci_device_ids[] = {
-> >>>> +		0x1d70, /* Patsburg (PCH) */
-> >>>> +		0x1d71, /* Patsburg (PCH) */
-> >>>> +		0x1d72, /* Patsburg (PCH) */
-> >>>> +		0x8d7d, /* Wellsburg (PCH) */
-> >>>> +		0x8d7e, /* Wellsburg (PCH) */
-> >>>> +		0x8d7f, /* Wellsburg (PCH) */
-> >>>> +	};
-> >>>
-> >>> I'm not happy with seeing another hardcoded list of device ids in the
-> >>> driver. Are not we able to find compatible i801 adapter without need to
-> >>> hardcode this list there in smo driver?
-> >>
-> >> I agree that having this hardcoded is not ideal.
-> >>
-> >> The problem is that for a couple of generations (Patsburg is for
-> >> Sandy Bridge and Ivybridge and Wellsburg is for Haswell and Broadwell)
-> >> intel had multiple i2c-i801 controllers / I2C-busses in the PCH
-> >> and the i2c_client needs to be instantiated on the primary
-> >> i2c-i801 (compatible) controller.
-> >>
-> >> Luckily Intel has only done this for these 2 generations PCH
-> >> all older and newer PCHs only have 1 i2c-i801 I2C bus.
-> >>
-> >> So even though having this hardcoded is not ideal,
-> >> the list should never change since it is only for
-> >> this 2 somewhat old PCH generations and new generations
-> >> are not impacted. So I believe that this is the best
-> >> solution.
-> > 
-> > I see. Seems that this is the best solution which we have.
-> > 
-> > Anyway, is not possible to use pci_dev_driver() to find i801 driver and
-> > from it takes that list of devices which have FEATURE_IDF flag? I have
-> > looked at the code only quickly and maybe it could be possible. Just an
-> > idea.
-> 
-> That is an interesting idea, but ...
-> 
-> that would mean interpreting the driver_data set by the i2c-i801
-> driver inside the dell-smo8800 code, so this would basically rely on
-> the meaning of that driver_data never changing. I would rather just
-> duplicate the 6 PCI ids and decouple the 2 drivers.
+Dear Hans,
 
-It was just an alternative idea.
 
-In case of code duplication I would suggest to write a comment on both
-places (into i801 and smo drivers) that this information is duplicated
-in both drivers and should be synchronized in case somebody would need
-to modify it at either place.
+Thank you very much for working on this issue and even sending patches 
+so quickly.
 
-> Regards,
+
+Am 24.12.23 um 22:36 schrieb Hans de Goede:
+
+> Here is a patch series which implements my suggestions from:
+> https://lore.kernel.org/linux-i2c/4820e280-9ca4-4d97-9d21-059626161bfc@molgen.mpg.de/
+> to improve the lis3lv02d accel support on Dell laptops.
 > 
-> Hans
+> Jean, Andi the actual move is in patch 3/6 after some small prep patches
+> on the dell-smo8800 side. My plan for merging this is to create
+> an immutable branch based on 6.8-rc1 (once it is out) + these 6 patches and
+> then send a pull-request for this. Can I have your Ack for the i2c-i801
+> changes in patch 3/6? I think you'll like the changes there since they only
+> remove code :)
+
+> Hans de Goede (6):
+>    platform/x86: dell-smo8800: Only load on Dell laptops
+>    platform/x86: dell-smo8800: Change probe() ordering a bit
+>    platform/x86: dell-smo8800: Move instantiation of lis3lv02d i2c_client from i2c-i801 to dell-smo8800
+>    platform/x86: dell-smo8800: Pass the IRQ to the lis3lv02d i2c_client
+>    platform/x86: dell-smo8800: Instantiate an i2c_client for the IIO st_accel driver
+>    platform/x86: dell-smo8800: Add support for probing for the accelerometer i2c address
 > 
-> 
-> 
-> 
-> >>>> +	struct i2c_adapter *adap, **adap_ret = data;
-> >>>> +	struct pci_dev *pdev;
-> >>>> +	int i;
-> >>>> +
-> >>>> +	adap = i2c_verify_adapter(dev);
-> >>>> +	if (!adap)
-> >>>> +		return 0;
-> >>>> +
-> >>>> +	if (!strstarts(adap->name, "SMBus I801 adapter"))
-> >>>> +		return 0;
-> >>>> +
-> >>>> +	/* The parent of an I801 adapter is always a PCI device */
-> >>>> +	pdev = to_pci_dev(adap->dev.parent);
-> >>>> +	for (i = 0; i < ARRAY_SIZE(i801_idf_pci_device_ids); i++) {
-> >>>> +		if (pdev->device == i801_idf_pci_device_ids[i])
-> >>>> +			return 0; /* Only register client on main SMBus channel */
-> >>>> +	}
-> >>>> +
-> >>>> +	*adap_ret = i2c_get_adapter(adap->nr);
-> >>>> +	return 1;
-> >>>> +}
-> >>>
-> >>
-> > 
-> 
+>   drivers/i2c/busses/i2c-i801.c            | 122 --------
+>   drivers/platform/x86/dell/dell-smo8800.c | 337 +++++++++++++++++++++--
+>   2 files changed, 316 insertions(+), 143 deletions(-)
+
+This Thursday, I tested this on the Dell Inc. XPS 15 7590/0VYV0G, BIOS 
+1.24.0 09/11/2023.
+
+First just with your patch-set and trying the parameter:
+
+     [    0.000000] Command line: BOOT_IMAGE=/vmlinuz-6.7.0-rc8+ 
+root=UUID=9fa41e21-7a5f-479e-afdc-9a5503368d8e ro quiet rd.luks=1 
+rd.auto=1 dell-smo8800.probe_i2c_addr=0x29
+     […]
+     [   28.826356] smo8800 SMO8810:00: Accelerometer lis3lv02d is 
+present on SMBus but its address is unknown, skipping registration
+     [   28.826359] smo8800 SMO8810:00: Pass 
+dell_smo8800.probe_i2c_addr=1 on the kernel commandline to probe, this 
+may be dangerous!
+
+I misread the parameter documentation, but didn’t see the message back 
+then, and just saved the log files.
+
+So, I added an entry for the device, and got:
+
+     [   19.197838] smo8800 SMO8810:00: Registered lis2de12 
+accelerometer on address 0x29
+
+
+Kind regards,
+
+Paul
+
+
+PS: I still seem to miss some config option in my custom Linux kernel 
+configuration, as with my self-built Linux kernel, the accelerometer is 
+not detected as an input device.
+
+```
+$ sudo dmesg | grep input
+[    0.648449] input: AT Translated Set 2 keyboard as 
+/devices/platform/i8042/serio0/input/input0
+[   19.164633] input: Intel HID events as 
+/devices/platform/INT33D5:00/input/input2
+[   19.176109] input: Intel HID 5 button array as 
+/devices/platform/INT33D5:00/input/input3
+[   19.200645] input: Lid Switch as 
+/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0D:00/input/input4
+[   19.230941] input: Power Button as 
+/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0C:00/input/input5
+[   19.231434] input: Sleep Button as 
+/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0E:00/input/input6
+[   19.350390] input: PC Speaker as /devices/platform/pcspkr/input/input7
+[   19.996196] input: Dell WMI hotkeys as 
+/devices/platform/PNP0C14:05/wmi_bus/wmi_bus-PNP0C14:05/9DBB5994-A997-11DA-B012-B622A1EF5492/input/input9
+[   20.014546] input: SYNA2393:00 06CB:7A13 Mouse as 
+/devices/pci0000:00/0000:00:15.1/i2c_designware.1/i2c-2/i2c-SYNA2393:00/0018:06CB:7A13.0001/input/input10
+[   20.047534] input: SYNA2393:00 06CB:7A13 Touchpad as 
+/devices/pci0000:00/0000:00:15.1/i2c_designware.1/i2c-2/i2c-SYNA2393:00/0018:06CB:7A13.0001/input/input11
+[   20.047667] hid-generic 0018:06CB:7A13.0001: input,hidraw0: I2C HID 
+v1.00 Mouse [SYNA2393:00 06CB:7A13] on i2c-SYNA2393:00
+[   20.048874] input: WCOM490B:00 056A:490B Touchscreen as 
+/devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-1/i2c-WCOM490B:00/0018:056A:490B.0002/input/input13
+[   20.049014] input: WCOM490B:00 056A:490B as 
+/devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-1/i2c-WCOM490B:00/0018:056A:490B.0002/input/input14
+[   20.049089] input: WCOM490B:00 056A:490B Stylus as 
+/devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-1/i2c-WCOM490B:00/0018:056A:490B.0002/input/input15
+[   20.049186] input: WCOM490B:00 056A:490B as 
+/devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-1/i2c-WCOM490B:00/0018:056A:490B.0002/input/input16
+[   20.065066] input: WCOM490B:00 056A:490B Mouse as 
+/devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-1/i2c-WCOM490B:00/0018:056A:490B.0002/input/input17
+[   20.065360] hid-generic 0018:056A:490B.0002: input,hidraw1: I2C HID 
+v1.00 Mouse [WCOM490B:00 056A:490B] on i2c-WCOM490B:00
+[   20.760879] input: SYNA2393:00 06CB:7A13 Mouse as 
+/devices/pci0000:00/0000:00:15.1/i2c_designware.1/i2c-2/i2c-SYNA2393:00/0018:06CB:7A13.0001/input/input18
+[   20.760979] input: SYNA2393:00 06CB:7A13 Touchpad as 
+/devices/pci0000:00/0000:00:15.1/i2c_designware.1/i2c-2/i2c-SYNA2393:00/0018:06CB:7A13.0001/input/input19
+[   20.761032] hid-multitouch 0018:06CB:7A13.0001: input,hidraw0: I2C 
+HID v1.00 Mouse [SYNA2393:00 06CB:7A13] on i2c-SYNA2393:00
+[   21.083016] input: Wacom HID 490B Pen as 
+/devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-1/i2c-WCOM490B:00/0018:056A:490B.0002/input/input21
+[   21.083149] input: Wacom HID 490B Finger as 
+/devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-1/i2c-WCOM490B:00/0018:056A:490B.0002/input/input22
+[   25.850198] input: Video Bus as 
+/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/LNXVIDEO:00/input/input24
+[   25.850344] input: Video Bus as 
+/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:0b/LNXVIDEO:01/input/input25
+[   26.027649] snd_hda_codec_realtek hdaudioC0D0:    inputs:
+[   26.132076] input: HDA Intel PCH Headphone Mic as 
+/devices/pci0000:00/0000:00:1f.3/sound/card0/input26
+[   26.132148] input: HDA Intel PCH HDMI/DP,pcm=3 as 
+/devices/pci0000:00/0000:00:1f.3/sound/card0/input27
+[   26.132192] input: HDA Intel PCH HDMI/DP,pcm=7 as 
+/devices/pci0000:00/0000:00:1f.3/sound/card0/input28
+[   26.132233] input: HDA Intel PCH HDMI/DP,pcm=8 as 
+/devices/pci0000:00/0000:00:1f.3/sound/card0/input29
+[   28.659169] rfkill: input handler disabled
+[   47.283492] rfkill: input handler enabled
+[   52.883611] rfkill: input handler disabled
+```
