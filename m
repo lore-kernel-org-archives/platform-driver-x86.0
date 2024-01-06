@@ -1,192 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB74F8831;
-	Sat,  6 Jan 2024 16:38:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C53F508
+	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jan 2024 19:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c95FRdAR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20E50C433C8;
-	Sat,  6 Jan 2024 16:38:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704559114;
-	bh=TjwrNwZ8lUfky7WHmV+GMc9NZPKkTAiRV6Jb5OrwVQg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c95FRdARmQ9/4bELt5BfAHzIRbVoFh0WfDKCPvsA3cMjPFBI5Jmei8SSMzwmRMKxE
-	 LSXlzxr17Efla0kVPWW/6DY0o6/C9QN9PnqtOq3RgbiLh5hCDcsq996UjAZKC9ar7r
-	 Q3A7jPnDdA3ORrxzCtUTeZ/3PTM6oJRStj9y4nZ6XKMnFrCTeMe6+sPMC2lFOlHjWC
-	 ezCukF5niGH+xjs++y9Cp+P7dVeNmvY19NhGZGTo3QfMko0o+e7drZONUAK3ZtBEoj
-	 EU5rOYWZLeYwDUDRNR4NWUhQ9BoKNt/GURQl4uqm46jqHH49Su434EDEEmXcd976n1
-	 FBN2I6R8bb5Tg==
-Received: by pali.im (Postfix)
-	id 36F8988D; Sat,  6 Jan 2024 17:38:31 +0100 (CET)
-Date: Sat, 6 Jan 2024 17:38:31 +0100
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Jean Delvare <jdelvare@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>, eric.piel@tremplin-utc.net,
-	Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com,
-	Kai Heng Feng <kai.heng.feng@canonical.com>,
-	platform-driver-x86@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
-	linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] platform/x86: dell-smo8800: Move instantiation of
- lis3lv02d i2c_client from i2c-i801 to dell-smo8800
-Message-ID: <20240106163831.s26aegqm3u7xvood@pali>
-References: <20240106160935.45487-1-hdegoede@redhat.com>
- <20240106160935.45487-3-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="rnxk9CE4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1704570270; x=1704829470;
+	bh=FbyXaiTE3R0HxDciJIOHwFnTgGcEyiR/kor+zGaDsfs=;
+	h=Date:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=rnxk9CE4HypfRcRgJH+ivrtMz+RN5BI6ylfygBwd2gAK5CfWStgV3NCGHhPPrjjdp
+	 yGnbICSWBq2f+oaar7K+KNd3Z9PORpoJ+iyd0w/noXEq4rnxhh2P/J1ho4bhE8eHuv
+	 uuzZer9tWl0pn4Is4xwpm7YT48kv0ZHDqNc5fIm9IdXVYP/fhi0zGXwittxZuqKo8o
+	 uyouBoQ0Dp9MdFZUG7pIxjb2MQ9m8iOQrcffuYDZMFlsIxwF6yPNhmFBqQ3Xvb0U1l
+	 ImbsApkeb3JZRl7PcCkmqXFL7AdHBO6h6iRQaWG4VeI8ee//8OSk7zvcFSm6ny/WpV
+	 qMLf+XAjIxfyQ==
+Date: Sat, 06 Jan 2024 19:44:05 +0000
+From: Athul Krishna <athul.krishna.kr@protonmail.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: BUG: Writing to dgpu_disable causes system crash
+Message-ID: <FtkLGL0Fu-DCzke9KILxxjbcjWsWavaJHg933gDYg0KtajNbz58XBWIwNI9vW0Nduena9BLOOhEM5_kwerbBV8a5E83g9ROOJOuWZqK-ri0=@protonmail.com>
+Feedback-ID: 97021173:user:proton
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="b1_ha6Z88o6od4KDaNqHDp2B9eu2fkdf8WJNAIXZcyg"
+
+This is a multi-part message in MIME format.
+
+--b1_ha6Z88o6od4KDaNqHDp2B9eu2fkdf8WJNAIXZcyg
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240106160935.45487-3-hdegoede@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: quoted-printable
 
-On Saturday 06 January 2024 17:09:29 Hans de Goede wrote:
-> +/*
-> + * Accelerometer's I2C address is not specified in DMI nor ACPI,
-> + * so it is needed to define mapping table based on DMI product names.
-> + */
-> +static const struct {
-> +	const char *dmi_product_name;
-> +	unsigned short i2c_addr;
-> +} dell_lis3lv02d_devices[] = {
-> +	/*
-> +	 * Dell platform team told us that these Latitude devices have
-> +	 * ST microelectronics accelerometer at I2C address 0x29.
-> +	 */
-> +	{ "Latitude E5250",     0x29 },
-> +	{ "Latitude E5450",     0x29 },
-> +	{ "Latitude E5550",     0x29 },
-> +	{ "Latitude E6440",     0x29 },
-> +	{ "Latitude E6440 ATG", 0x29 },
-> +	{ "Latitude E6540",     0x29 },
-> +	/*
-> +	 * Additional individual entries were added after verification.
-> +	 */
-> +	{ "Latitude 5480",      0x29 },
-> +	{ "Vostro V131",        0x1d },
-> +	{ "Vostro 5568",        0x29 },
-> +};
-> +
-> +static void smo8800_instantiate_i2c_client(struct smo8800_device *smo8800)
-> +{
-> +	struct i2c_board_info info = { };
-> +	struct i2c_adapter *adap = NULL;
-> +	const char *dmi_product_name;
-> +	u8 addr = 0;
-> +	int i;
-> +
-> +	bus_for_each_dev(&i2c_bus_type, NULL, &adap, smo8800_find_i801);
-> +	if (!adap)
-> +		return;
-> +
-> +	dmi_product_name = dmi_get_system_info(DMI_PRODUCT_NAME);
-> +	for (i = 0; i < ARRAY_SIZE(dell_lis3lv02d_devices); ++i) {
+Hello,
+This is my first time reporting an issue in the kernel.
 
-Before doing this array iteration it is needed to check for Dell vendor
-like it was before:
+Device Details:
+Asus Zephyrus G14 (GA402RJ)
+Latest BIOS
+Arch_x86_64
+Kernel: 6.6.9
+Minimal install=E2=80=8B=E2=80=8B using archinstall
 
-       if (!dmi_match(DMI_SYS_VENDOR, "Dell Inc."))
-               return false;
+ISSUE: Using dgpu_disable provided by asus-nb-wmi to disable and enable ded=
+icated gpu, causes system crash and reboots, most of the time.
 
-Or put vendor name into the devices list and check for it (in case you
-want to extend list also for non-Dell machines).
+ 9/10 times writing 0 to dgpu_disable will produce an Input/Output error, b=
+ut the value will be changed to 0, doing a pci rescan cause system to crash=
+ and reboot. While writing 1 to it doesn't produce an error, I have observe=
+d system crash twice just after that.
 
-> +		if (strcmp(dmi_product_name,
-> +			   dell_lis3lv02d_devices[i].dmi_product_name) == 0) {
-> +			addr = dell_lis3lv02d_devices[i].i2c_addr;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (!addr) {
-> +		dev_warn(smo8800->dev,
-> +			 "Accelerometer lis3lv02d is present on SMBus but its address is unknown, skipping registration\n");
-> +		goto put_adapter;
-> +	}
-> +
-> +	info.addr = addr;
-> +	strscpy(info.type, "lis3lv02d", I2C_NAME_SIZE);
-> +
-> +	smo8800->i2c_dev = i2c_new_client_device(adap, &info);
-> +	if (IS_ERR(smo8800->i2c_dev)) {
-> +		dev_err_probe(smo8800->dev, PTR_ERR(smo8800->i2c_dev),
-> +			      "registering accel i2c_client\n");
-> +		smo8800->i2c_dev = NULL;
-> +	} else {
-> +		dev_info(smo8800->dev, "Registered %s accelerometer on address 0x%02x\n",
-> +			 info.type, info.addr);
-> +	}
-> +put_adapter:
-> +	i2c_put_adapter(adap);
-> +}
-> +
->  static int smo8800_probe(struct platform_device *device)
->  {
->  	int err;
-> @@ -126,10 +237,12 @@ static int smo8800_probe(struct platform_device *device)
->  		return err;
->  	smo8800->irq = err;
->  
-> +	smo8800_instantiate_i2c_client(smo8800);
+Steps to Reproduce:
+echo 1 | sudo tee ../remove (dgpu path)
+echo 1 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
+echo 0 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
+echo 1 | sudo tee /sys/bus/pci/rescan
 
-Now after looking at this change again I see there a problem. If i2c-801
-driver initialize i2c-801 device after this smo8800 is called then
-accelerometer i2c device would not happen.
+After writing 0 to dgpu_disable, there's an entry in journal about an ACPI =
+bug.
+Output of 'journalctl -p 3' and lspci is attached.
+--b1_ha6Z88o6od4KDaNqHDp2B9eu2fkdf8WJNAIXZcyg
+Content-Type: text/plain; name=journal.txt
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=journal.txt
 
-Also it has same problem if PCI i801 device is reloaded or reset.
+LS0gQm9vdCA4NGFjOWViYjBjZjQ0MzYzOWUxMTU4OGRlNzMxYjU3NyAtLQpKYW4gMDMgMjM6MTM6
+MDEgWmVwaHlydXNHMTQga2VybmVsOiBBQ1BJIEJJT1MgRXJyb3IgKGJ1Zyk6IENvdWxkIG5vdCBy
+ZXNvbHZlIHN5bWJvbCBbXF9TQi5QQ0kwLkdQUDAuU1dVUy5TV0RTLlZHQS5fU1RBLkdDMDBdLCBB
+RV9OT1RfRk9VTkQgKDIwMjMwNjI4L3BzYXJncy0zMzApCkphbiAwMyAyMzoxMzowMSBaZXBoeXJ1
+c0cxNCBrZXJuZWw6IEFDUEkgRXJyb3I6IEFib3J0aW5nIG1ldGhvZCBcX1NCLlBDSTAuR1BQMC5T
+V1VTLlNXRFMuVkdBLl9TVEEgZHVlIHRvIHByZXZpb3VzIGVycm9yIChBRV9OT1RfRk9VTkQpICgy
+MDIzMDYyOC9wc3BhcnNlLTUyOSkKSmFuIDAzIDIzOjEzOjAxIFplcGh5cnVzRzE0IGtlcm5lbDog
+QUNQSSBCSU9TIEVycm9yIChidWcpOiBDb3VsZCBub3QgcmVzb2x2ZSBzeW1ib2wgW1xfU0IuUENJ
+MC5HUFAwLlNXVVMuU1dEUy5WR0EuX1NUQS5HQzAwXSwgQUVfTk9UX0ZPVU5EICgyMDIzMDYyOC9w
+c2FyZ3MtMzMwKQpKYW4gMDMgMjM6MTM6MDEgWmVwaHlydXNHMTQga2VybmVsOiBBQ1BJIEVycm9y
+OiBBYm9ydGluZyBtZXRob2QgXF9TQi5QQ0kwLkdQUDAuU1dVUy5TV0RTLlZHQS5fU1RBIGR1ZSB0
+byBwcmV2aW91cyBlcnJvciAoQUVfTk9UX0ZPVU5EKSAoMjAyMzA2MjgvcHNwYXJzZS01MjkpCkph
+biAwMyAyMzoxMzowMSBaZXBoeXJ1c0cxNCBrZXJuZWw6IEFDUEkgQklPUyBFcnJvciAoYnVnKTog
+Q291bGQgbm90IHJlc29sdmUgc3ltYm9sIFtcX1NCLlBDSTAuR1BQMC5TV1VTLlNXRFMuVkdBLl9T
+VEEuR0MwMF0sIEFFX05PVF9GT1VORCAoMjAyMzA2MjgvcHNhcmdzLTMzMCkKSmFuIDAzIDIzOjEz
+OjAxIFplcGh5cnVzRzE0IGtlcm5lbDogQUNQSSBFcnJvcjogQWJvcnRpbmcgbWV0aG9kIFxfU0Iu
+UENJMC5HUFAwLlNXVVMuU1dEUy5WR0EuX1NUQSBkdWUgdG8gcHJldmlvdXMgZXJyb3IgKEFFX05P
+VF9GT1VORCkgKDIwMjMwNjI4L3BzcGFyc2UtNTI5KQpKYW4gMDMgMjM6MTM6MDEgWmVwaHlydXNH
+MTQga2VybmVsOiBBQ1BJIEJJT1MgRXJyb3IgKGJ1Zyk6IENvdWxkIG5vdCByZXNvbHZlIHN5bWJv
+bCBbXF9TQi5QQ0kwLkdQUDAuU1dVUy5TV0RTLlZHQS5fU1RBLkdDMDBdLCBBRV9OT1RfRk9VTkQg
+KDIwMjMwNjI4L3BzYXJncy0zMzApCkphbiAwMyAyMzoxMzowMSBaZXBoeXJ1c0cxNCBrZXJuZWw6
+IEFDUEkgRXJyb3I6IEFib3J0aW5nIG1ldGhvZCBcX1NCLlBDSTAuR1BQMC5TV1VTLlNXRFMuVkdB
+Ll9TVEEgZHVlIHRvIHByZXZpb3VzIGVycm9yIChBRV9OT1RfRk9VTkQpICgyMDIzMDYyOC9wc3Bh
+cnNlLTUyOSkKSmFuIDAzIDIzOjEzOjAxIFplcGh5cnVzRzE0IGtlcm5lbDogaHViIDYtMDoxLjA6
+IGNvbmZpZyBmYWlsZWQsIGh1YiBkb2Vzbid0IGhhdmUgYW55IHBvcnRzISAoZXJyIC0xOSkKSmFu
+IDAzIDIzOjEzOjAxIFplcGh5cnVzRzE0IGtlcm5lbDogYXN1cyAwMDAzOjBCMDU6MTlCNi4wMDAy
+OiBBc3VzIGlucHV0IG5vdCByZWdpc3RlcmVkCkphbiAwMyAyMzoxMzoyMCBaZXBoeXJ1c0cxNCBr
+ZXJuZWw6IEFDUEkgQklPUyBFcnJvciAoYnVnKTogQ291bGQgbm90IHJlc29sdmUgc3ltYm9sIFtc
+X1NCLlBDSTAuR1BQMC5TV1VTLlNXRFMuVkdBLl9TVEEuR0MwMF0sIEFFX05PVF9GT1VORCAoMjAy
+MzA2MjgvcHNhcmdzLTMzMCkKSmFuIDAzIDIzOjEzOjIwIFplcGh5cnVzRzE0IGtlcm5lbDogQUNQ
+SSBFcnJvcjogQWJvcnRpbmcgbWV0aG9kIFxfU0IuUENJMC5HUFAwLlNXVVMuU1dEUy5WR0EuX1NU
+QSBkdWUgdG8gcHJldmlvdXMgZXJyb3IgKEFFX05PVF9GT1VORCkgKDIwMjMwNjI4L3BzcGFyc2Ut
+NTI5KQo=
 
-With the current approach this was not an issue as during i801
-initialization was smo i2c device automatically created and lis driver
-was able to bind and initialize it at any time.
+--b1_ha6Z88o6od4KDaNqHDp2B9eu2fkdf8WJNAIXZcyg
+Content-Type: text/plain; name=lspci.txt
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=lspci.txt
 
-Before parent driver created its own direct children devices. After this
-change, the child driver is trying to find who is the parent of its
-device and injects its device to the parent in the device tree
-hierarchy.
+MDA6MDAuMCBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBG
+YW1pbHkgMTdoLTE5aCBQQ0llIFJvb3QgQ29tcGxleCAocmV2IDAxKQowMDowMC4yIElPTU1VOiBB
+ZHZhbmNlZCBNaWNybyBEZXZpY2VzLCBJbmMuIFtBTURdIEZhbWlseSAxN2gtMTloIElPTU1VCjAw
+OjAxLjAgSG9zdCBicmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0gRmFt
+aWx5IDE3aC0xOWggUENJZSBEdW1teSBIb3N0IEJyaWRnZSAocmV2IDAxKQowMDowMS4xIFBDSSBi
+cmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0gRmFtaWx5IDE3aC0xOWgg
+UENJZSBHUFAgQnJpZGdlCjAwOjAyLjAgSG9zdCBicmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmlj
+ZXMsIEluYy4gW0FNRF0gRmFtaWx5IDE3aC0xOWggUENJZSBEdW1teSBIb3N0IEJyaWRnZSAocmV2
+IDAxKQowMDowMi4xIFBDSSBicmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FN
+RF0gRmFtaWx5IDE3aC0xOWggUENJZSBHUFAgQnJpZGdlCjAwOjAyLjIgUENJIGJyaWRnZTogQWR2
+YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBGYW1pbHkgMTdoLTE5aCBQQ0llIEdQUCBC
+cmlkZ2UKMDA6MDIuNCBQQ0kgYnJpZGdlOiBBZHZhbmNlZCBNaWNybyBEZXZpY2VzLCBJbmMuIFtB
+TURdIEZhbWlseSAxN2gtMTloIFBDSWUgR1BQIEJyaWRnZQowMDowMy4wIEhvc3QgYnJpZGdlOiBB
+ZHZhbmNlZCBNaWNybyBEZXZpY2VzLCBJbmMuIFtBTURdIEZhbWlseSAxN2gtMTloIFBDSWUgRHVt
+bXkgSG9zdCBCcmlkZ2UgKHJldiAwMSkKMDA6MDQuMCBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWlj
+cm8gRGV2aWNlcywgSW5jLiBbQU1EXSBGYW1pbHkgMTdoLTE5aCBQQ0llIER1bW15IEhvc3QgQnJp
+ZGdlIChyZXYgMDEpCjAwOjA4LjAgSG9zdCBicmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmljZXMs
+IEluYy4gW0FNRF0gRmFtaWx5IDE3aC0xOWggUENJZSBEdW1teSBIb3N0IEJyaWRnZSAocmV2IDAx
+KQowMDowOC4xIFBDSSBicmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0g
+RmFtaWx5IDE3aC0xOWggSW50ZXJuYWwgUENJZSBHUFAgQnJpZGdlIChyZXYgMTApCjAwOjA4LjMg
+UENJIGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBGYW1pbHkgMTdo
+LTE5aCBJbnRlcm5hbCBQQ0llIEdQUCBCcmlkZ2UgKHJldiAxMCkKMDA6MTQuMCBTTUJ1czogQWR2
+YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBGQ0ggU01CdXMgQ29udHJvbGxlciAocmV2
+IDcxKQowMDoxNC4zIElTQSBicmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FN
+RF0gRkNIIExQQyBCcmlkZ2UgKHJldiA1MSkKMDA6MTguMCBIb3N0IGJyaWRnZTogQWR2YW5jZWQg
+TWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBSZW1icmFuZHQgRGF0YSBGYWJyaWM6IERldmljZSAx
+OGg7IEZ1bmN0aW9uIDAKMDA6MTguMSBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNl
+cywgSW5jLiBbQU1EXSBSZW1icmFuZHQgRGF0YSBGYWJyaWM6IERldmljZSAxOGg7IEZ1bmN0aW9u
+IDEKMDA6MTguMiBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1E
+XSBSZW1icmFuZHQgRGF0YSBGYWJyaWM6IERldmljZSAxOGg7IEZ1bmN0aW9uIDIKMDA6MTguMyBI
+b3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBSZW1icmFuZHQg
+RGF0YSBGYWJyaWM6IERldmljZSAxOGg7IEZ1bmN0aW9uIDMKMDA6MTguNCBIb3N0IGJyaWRnZTog
+QWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBSZW1icmFuZHQgRGF0YSBGYWJyaWM6
+IERldmljZSAxOGg7IEZ1bmN0aW9uIDQKMDA6MTguNSBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWlj
+cm8gRGV2aWNlcywgSW5jLiBbQU1EXSBSZW1icmFuZHQgRGF0YSBGYWJyaWM6IERldmljZSAxOGg7
+IEZ1bmN0aW9uIDUKMDA6MTguNiBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywg
+SW5jLiBbQU1EXSBSZW1icmFuZHQgRGF0YSBGYWJyaWM6IERldmljZSAxOGg7IEZ1bmN0aW9uIDYK
+MDA6MTguNyBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBS
+ZW1icmFuZHQgRGF0YSBGYWJyaWM6IERldmljZSAxOGg7IEZ1bmN0aW9uIDcKMDE6MDAuMCBQQ0kg
+YnJpZGdlOiBBZHZhbmNlZCBNaWNybyBEZXZpY2VzLCBJbmMuIFtBTUQvQVRJXSBOYXZpIDEwIFhM
+IFVwc3RyZWFtIFBvcnQgb2YgUENJIEV4cHJlc3MgU3dpdGNoIChyZXYgYzIpCjAyOjAwLjAgUENJ
+IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EL0FUSV0gTmF2aSAxMCBY
+TCBEb3duc3RyZWFtIFBvcnQgb2YgUENJIEV4cHJlc3MgU3dpdGNoCjAzOjAwLjAgVkdBIGNvbXBh
+dGlibGUgY29udHJvbGxlcjogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EL0FUSV0g
+TmF2aSAyMyBbUmFkZW9uIFJYIDY2NTAgWFQgLyA2NzAwUyAvIDY4MDBTXSAocmV2IGMyKQowMzow
+MC4xIEF1ZGlvIGRldmljZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EL0FUSV0g
+TmF2aSAyMS8yMyBIRE1JL0RQIEF1ZGlvIENvbnRyb2xsZXIKMDQ6MDAuMCBTRCBIb3N0IGNvbnRy
+b2xsZXI6IE8yIE1pY3JvLCBJbmMuIFNEL01NQyBDYXJkIFJlYWRlciBDb250cm9sbGVyIChyZXYg
+MDEpCjA1OjAwLjAgTmV0d29yayBjb250cm9sbGVyOiBNRURJQVRFSyBDb3JwLiBNVDc5MjIgODAy
+LjExYXggUENJIEV4cHJlc3MgV2lyZWxlc3MgTmV0d29yayBBZGFwdGVyCjA2OjAwLjAgTm9uLVZv
+bGF0aWxlIG1lbW9yeSBjb250cm9sbGVyOiBNaWNyb24gVGVjaG5vbG9neSBJbmMgMjQ1MCBOVk1l
+IFNTRCBbSGVuZHJpeFZdIChEUkFNLWxlc3MpIChyZXYgMDEpCjA3OjAwLjAgVkdBIGNvbXBhdGli
+bGUgY29udHJvbGxlcjogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EL0FUSV0gUmVt
+YnJhbmR0IFtSYWRlb24gNjgwTV0gKHJldiBjOCkKMDc6MDAuMSBBdWRpbyBkZXZpY2U6IEFkdmFu
+Y2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRC9BVEldIFJlbWJyYW5kdCBSYWRlb24gSGlnaCBE
+ZWZpbml0aW9uIEF1ZGlvIENvbnRyb2xsZXIKMDc6MDAuMiBFbmNyeXB0aW9uIGNvbnRyb2xsZXI6
+IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0gRmFtaWx5IDE5aCBQU1AvQ0NQCjA3
+OjAwLjMgVVNCIGNvbnRyb2xsZXI6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0g
+UmVtYnJhbmR0IFVTQjQgWEhDSSBjb250cm9sbGVyICMzCjA3OjAwLjQgVVNCIGNvbnRyb2xsZXI6
+IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0gUmVtYnJhbmR0IFVTQjQgWEhDSSBj
+b250cm9sbGVyICM0CjA3OjAwLjUgTXVsdGltZWRpYSBjb250cm9sbGVyOiBBZHZhbmNlZCBNaWNy
+byBEZXZpY2VzLCBJbmMuIFtBTURdIEFDUC9BQ1AzWC9BQ1A2eCBBdWRpbyBDb3Byb2Nlc3NvciAo
+cmV2IDYwKQowNzowMC42IEF1ZGlvIGRldmljZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5j
+LiBbQU1EXSBGYW1pbHkgMTdoLzE5aCBIRCBBdWRpbyBDb250cm9sbGVyCjA4OjAwLjAgVVNCIGNv
+bnRyb2xsZXI6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0gUmVtYnJhbmR0IFVT
+QjQgWEhDSSBjb250cm9sbGVyICM4CjA4OjAwLjMgVVNCIGNvbnRyb2xsZXI6IEFkdmFuY2VkIE1p
+Y3JvIERldmljZXMsIEluYy4gW0FNRF0gUmVtYnJhbmR0IFVTQjQgWEhDSSBjb250cm9sbGVyICM1
+CjA4OjAwLjQgVVNCIGNvbnRyb2xsZXI6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FN
+RF0gUmVtYnJhbmR0IFVTQjQgWEhDSSBjb250cm9sbGVyICM2Cg==
 
-> +
->  	err = misc_register(&smo8800->miscdev);
->  	if (err) {
->  		dev_err(&device->dev, "failed to register misc dev: %d\n", err);
-> -		return err;
-> +		goto error_unregister_i2c_client;
->  	}
->  
->  	err = request_threaded_irq(smo8800->irq, smo8800_interrupt_quick,
-> @@ -150,6 +263,8 @@ static int smo8800_probe(struct platform_device *device)
->  
->  error:
->  	misc_deregister(&smo8800->miscdev);
-> +error_unregister_i2c_client:
-> +	i2c_unregister_device(smo8800->i2c_dev);
->  	return err;
->  }
->  
-> @@ -160,9 +275,9 @@ static void smo8800_remove(struct platform_device *device)
->  	free_irq(smo8800->irq, smo8800);
->  	misc_deregister(&smo8800->miscdev);
->  	dev_dbg(&device->dev, "device /dev/freefall unregistered\n");
-> +	i2c_unregister_device(smo8800->i2c_dev);
->  }
->  
-> -/* NOTE: Keep this list in sync with drivers/i2c/busses/i2c-i801.c */
->  static const struct acpi_device_id smo8800_ids[] = {
->  	{ "SMO8800", 0 },
->  	{ "SMO8801", 0 },
-> @@ -189,3 +304,5 @@ module_platform_driver(smo8800_driver);
->  MODULE_DESCRIPTION("Dell Latitude freefall driver (ACPI SMO88XX)");
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("Sonal Santan, Pali Rohár");
-> +/* Ensure the i2c-801 driver is loaded for i2c_client instantiation */
-> +MODULE_SOFTDEP("pre: i2c-i801");
-> -- 
-> 2.43.0
-> 
+--b1_ha6Z88o6od4KDaNqHDp2B9eu2fkdf8WJNAIXZcyg--
+
