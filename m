@@ -1,211 +1,275 @@
-Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2045.outbound.protection.outlook.com [40.107.94.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07701FB9;
-	Sat,  6 Jan 2024 01:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD02F15A0
+	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jan 2024 02:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="EpCFQRm9";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="v8QKoP6D"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1704502996; x=1736038996;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=fDdtoQKvMNPYKykCrW2L6REEg3qK6FvddlT+BPfUovc=;
-  b=EpCFQRm9w1bVTdfaUvoEuOMacTXluEv+OVVYY7OV61hIujEpY7JfKF8z
-   4AuyhXq1ljnPMCMWEy87ssTqUwqDFBNkAz08Lby9HAzA+VDHN8OHKKjun
-   lJJseVhDOqCb1dyKwKYfG4CwKRnjMAQT10+aGcOsR/z3A06OG+TyzOt6t
-   R6B6rImSjGGXOMQHHsc8N2YW9NR3dT0UW977UivVWjCk6MQ7eqUwmxBym
-   AJmFrm29u49zIwtNAaAkvYbmIPqfFaKKlujdzQtJ70Mill6rErNl83OK2
-   VyLRx4S+4BQ+0Xi31j/X+C5M1XK8gx2c2UKnvGvz9KFWy6WaHGyR7De+H
-   g==;
-X-CSE-ConnectionGUID: NbB/2YQLT1SAasL2Q4JDAg==
-X-CSE-MsgGUID: pAmTp8k+Rmq0rfm1j5y70w==
-X-IronPort-AV: E=Sophos;i="6.04,335,1695657600"; 
-   d="scan'208";a="6493590"
-Received: from mail-dm6nam11lp2168.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.168])
-  by ob1.hgst.iphmx.com with ESMTP; 06 Jan 2024 09:03:09 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dBYaUiJY"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EjE7kizAlKnm6La2HmiYJdXACRZW+t7k+tYqoo6UjKBq3tYTNGrUZ+LMYFf3ERAbvlCvUEnJ4pRH358wP+Z+Mxk6XaTqYtgPrDGyXwsLSRZ37LmnvmFWhlNsm4lUbk2i12j5UrsRp8YAKgXIepSxSP0PV5o6vr2Gc+JKdpGGX60g9Z86onwH8N7WgYlpALYiFc2LoQRsmXm8sOa+xc1RbAkky2k8HMRT0xqvJ0N1txg01EPFqDrOx9mTJgrK1b6goPNmauSuhE0f5EVsz8c4wUZYz5GBHWBmhEr6VqpnInBkmPPv+0smOH7TlzZK+wHqKXmbQ9RxmWlwn9lzJzPOWw==
+ b=RrO3p2Q88wuy9zrgvB4DV0OSlyyMEP8mQSgBV8P0Yxr98sY+B7hrrI/v3TiJBCePfc5LmAS+Xri32x9WrhHyu2qAMxMgajC3GOCNRpUoiFZ9pNiKsxr7tMuhAQwtj/5IW355ODi0vbyNKyZ8HrcNnT1A8R6K+Z6ZTKCLuvp8IZ43ZaCCR/nhVUCSfhG7VJl5+52BQyFR+zNKQ3x2jFK00dRKIfXh92+aBbPC04JrzMd/4fztDRAjDASf9DqQPWbdkaGHfnVhPwvyHCIYC1SP+POmrWNADnQ51TqtktFt0mYwEzgTKPkQ22MFx+3TjQVFtf95F9uq41KSby25WYI5iQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pn2iU7dYWMfsfoYwYOvQ7lLltE4IKK3tQI8SnypF65I=;
- b=hd19D+KCPfWM8s83Z4oECxhfLELRWNKKbzzSGXLza+qMrScf75ci7+oL3iDUu5jDisYE19vYHONoDqJt8PhGU1bTsUqSSbwVlwd7Gl6cLxBmVddOdMBDvrDupxMus5a0I+GjxZdGNPy8GVPoiiPt6w8vB5j9NkwgB7QQA8zVARuqtEZWSzHxfiDjq8UF0Cl8Tpv6gVyTK5z621lBEMHz4BR+ADqK4zYnokNtX2XC5LCxA8cuClru8JE/d13xByw21+nMw2LNQFz6j2f0rKxGypexpL9/gDce5psfZoQuNibpNfpNzdphw8ghLqH5GHzbu9Ew0GDk/hV3H3w4qvzG4g==
+ bh=bgbViw2xB58F3fXvniymH/1qmRcZ0nQKMESkEjGT3hs=;
+ b=nWbL2/0d9ok/7rhSToU8EFrbknMJxVt41T70TW5nWH4EWA74iY+fs72mESsRbfdlUYg6rntknLasGMttTYdhs8kwFPhMmXX+OTOaAvwJKaBLg2iwtE6Rub2hsLbonJgupETPYdKoWPwhPiC3TKqaFdZEp0Vnanrf0rZ+NwpcZL8wyjo2xtqRsCTAV6HUhDVHFTXqenwtbim5wkZ4lQCA0FiUr71UWiwxnYbUcVhSXPvJA+abEHqFlfqlc0hFImayXElc5NynyJJFUDp/UliCWl+A2HU1By+fO0SHcnG+TJudwkCVdLvexnRA/hs+UOFDbXQSGW88SYOPqf2S4HCl7A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pn2iU7dYWMfsfoYwYOvQ7lLltE4IKK3tQI8SnypF65I=;
- b=v8QKoP6Dn68vMeecv8yxKD2lNtl9Y0FhAq0ZANbnzSmgEuHHsiaJMnXc+cIb++oNo5qJAovrToetJxgGH+0bJOnbgV7FqDyCI3OIe8Pd2uUL6dRZPosg0qnmfbK92QyfBHNV/FjReL9t/GwmjN7cr0DydztdyL71v4pGRxC+lmQ=
-Received: from DM8PR04MB8037.namprd04.prod.outlook.com (2603:10b6:8:f::6) by
- DS0PR04MB8697.namprd04.prod.outlook.com (2603:10b6:8:12d::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7159.16; Sat, 6 Jan 2024 01:03:08 +0000
-Received: from DM8PR04MB8037.namprd04.prod.outlook.com
- ([fe80::81a9:5f87:e955:16b4]) by DM8PR04MB8037.namprd04.prod.outlook.com
- ([fe80::81a9:5f87:e955:16b4%3]) with mapi id 15.20.7159.015; Sat, 6 Jan 2024
- 01:03:07 +0000
-From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: Klara Modin <klarasmodin@gmail.com>
-CC: Lukas Wunner <lukas@wunner.de>, "andriy.shevchenko@linux.intel.com"
-	<andriy.shevchenko@linux.intel.com>, "hdegoede@redhat.com"
-	<hdegoede@redhat.com>, "ilpo.jarvinen@linux.intel.com"
-	<ilpo.jarvinen@linux.intel.com>, "linux-i2c@vger.kernel.org"
-	<linux-i2c@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v5 1/2] platform/x86: p2sb: Allow p2sb_bar() calls during
- PCI device probe
-Thread-Topic: [PATCH v5 1/2] platform/x86: p2sb: Allow p2sb_bar() calls during
- PCI device probe
-Thread-Index:
- AQHaPow80BKhEPvQJ0yVwJLvsqPQE7DJVoSAgABBoYCAAUomAIAAB4QAgAAcSwCAABYzgIAA3tKA
-Date: Sat, 6 Jan 2024 01:03:07 +0000
-Message-ID: <h4ok2zbyijoe7fi6h26j3r4qzuwhspwkuyyc3w26buxx7f567a@7ikkcpifi2y2>
-References:
- <CABq1_vjfyp_B-f4LAL6pg394bP6nDFyvg110TOLHHb0x4aCPeg@mail.gmail.com>
- <oe4cs5ptinmmdaxv6xa524whc7bppfqa7ern5jzc3aca5nffpm@xbmv34mjjxvv>
- <20240104123621.GA4876@wunner.de>
- <b565j7nbqu67pjhjw6ei7i3nkazazirl4dyxhaem3z7ghii3gs@dngmvjcylrjp>
- <20240105084454.GA28978@wunner.de>
- <4fjboeaslgcgjtkwemog5qrbbfnew4qcsoyrqbxmt3icesiint@plrjgqxt7naw>
- <CABq1_vjp3fRWC4HJfG+1VyhYYcQG9tJVvj_LCRQ7nBtTLs8fLA@mail.gmail.com>
-In-Reply-To:
- <CABq1_vjp3fRWC4HJfG+1VyhYYcQG9tJVvj_LCRQ7nBtTLs8fLA@mail.gmail.com>
-Accept-Language: en-US
+ bh=bgbViw2xB58F3fXvniymH/1qmRcZ0nQKMESkEjGT3hs=;
+ b=dBYaUiJYRYfptE/WIeMWSSYQvpO2Q0eELO+/Ul1K3WOFHaSm3mPNFLjjAIiN0uB5YTCcR5t9QCEy1HdBbIGVi876sKvrPRBbc8kTiV22OA0G1QLG0I8GbsZ1z2ewodcMGO1+DdhCN0canjCmmKQRpKakmOdrQQYNDeoOm8YlRx0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV2PR12MB5966.namprd12.prod.outlook.com (2603:10b6:408:171::21)
+ by CH3PR12MB7498.namprd12.prod.outlook.com (2603:10b6:610:143::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.17; Sat, 6 Jan
+ 2024 02:11:13 +0000
+Received: from LV2PR12MB5966.namprd12.prod.outlook.com
+ ([fe80::27d5:9024:445e:5c45]) by LV2PR12MB5966.namprd12.prod.outlook.com
+ ([fe80::27d5:9024:445e:5c45%7]) with mapi id 15.20.7135.023; Sat, 6 Jan 2024
+ 02:11:13 +0000
+Message-ID: <cce78161-f972-4782-af8d-27e3f4e75c17@amd.com>
+Date: Sat, 6 Jan 2024 07:41:06 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 6/9] platform/x86/amd/hsmp: Add support for ACPI based
+ probing
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR04MB8037:EE_|DS0PR04MB8697:EE_
-x-ms-office365-filtering-correlation-id: ea327a15-2b49-4b11-03c3-08dc0e533ec4
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- Ydex2+ew0PgyTFeHNbFXno+OiTLgoTdEdjstBC1t86b26kxeFrWdCZgqqnM+QuEOKnTbqUlEV72R+XC4qu+I+cifQAcVhT0GXPpcgf0c8lwvqbcxveo0eHVTey1aIxY/QmwJpvgj0YnbB8mqSPCY7TCD2/bXiBxsN3c+lijBGLgcACvwN+txybJ+u2WEmzMoy3B6zbVuRYHwvkhBnVBTtD6f65xJLXnWtiO5hYRIB0aU5aytgGsNBamFJBdU406gjN7HLvdZ9TvDWKwfw1EoN5zquHCwktDBGtrbZm1N/GUDe4MKMskODwh20iwNgyya4SjV7c4wlkYGUWMJurt7UFNb3EVdUHw8oYJruHdzb7KhNX9bf7yCLQ/eHRMRJW/2WC8aZ8VvfQW+zoyEPMvKlxixLBG/yzBcJKE03jONp8c3pfCu9PXEsFVlD2MfLEZizVhTW5NkhU/fYbn8POo6n7TZM0CQ7xgSWToUGel26SDhEVsB4q97/uIQOaz2bXm35ouke2iSJKHbZrF05iOv875oT+ju6citnFDNDUPtj/EGu0xoILB7WcYhvC/y43r/eY8S4n4dNn1Ac5pQkpm6ejTKaeM3pHKx+hsPlwDuZ/B/65u1PhvJw5SrTA71NqZt
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR04MB8037.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(376002)(366004)(346002)(396003)(39860400002)(136003)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(9686003)(26005)(38100700002)(122000001)(5660300002)(316002)(8676002)(6512007)(4326008)(64756008)(66556008)(6486002)(6916009)(66476007)(66446008)(6506007)(2906002)(8936002)(71200400001)(44832011)(478600001)(54906003)(33716001)(91956017)(41300700001)(76116006)(66946007)(82960400001)(86362001)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?E2oBnn8u5CA8vp/4hxGcaO7hAj99BrsrwJ04f5iwhF4dkmFr57NZpxIdf+Rg?=
- =?us-ascii?Q?PX6SH9dgrEaVhDIS21i7tEbszEGgTV2j+1Mg2hRrOupRI/F7oj11v0i2F7+t?=
- =?us-ascii?Q?YVKSEpj21NK/ikOUSO/8/DM/W8wi74awrn1ivmwm2dWlvx9MvRpdpQOj2NPO?=
- =?us-ascii?Q?vu7kxUT6ECH9sJTHxQ/GHmOC5N19YwgR8tgYlPx9BR1NDumEr1rv50BC3cPj?=
- =?us-ascii?Q?Ejgwpem64XojIfK857ojn7V6R/3kArIFD8PTyNBPBgCrftquTtdvL3J4GpH6?=
- =?us-ascii?Q?QFOudKe+Lpm628EJ5fdibrwKlWbb/4UEkANW8xK8QZHRV1XP+SLN8aP5j9i6?=
- =?us-ascii?Q?Ol7YEVfWFv2I80vnA/7Ix3wEhnCfrPJ8tWJS0YCpEYNXsStdDQy7aWbGdHIS?=
- =?us-ascii?Q?1R3xDSsSu5RNfuBOu0VEjSqvotigSRXzsJPj3uNQLBX2oeI7Znqed0vfRDxe?=
- =?us-ascii?Q?9PXX7coS/CcDKUSIJ4dPC7CLZbRZi+SMf1+uddd+Ioe0NvjKmaEBv+90QVGq?=
- =?us-ascii?Q?XpzIQTQJk9D0NIQIg9dQB5oBRs2TD8zDMLIrBK9X6Z93LnWPgvBpmdzoCeAM?=
- =?us-ascii?Q?PZFaKYaYMOsZfPIOl0F5J7jP4KULwINWYFbvTqf1n0Y0pQsOA/jlbt9V5ed6?=
- =?us-ascii?Q?V4LGrm54/nykJ57IyP0RYg7euOr/s2CppnSc/hOQIVQjvkn2IeYftY4Ln6E/?=
- =?us-ascii?Q?Hd3is7aO2UewlGRVLNzP+k+mBC7d8tk7DV9dM/ksjglO2OTGXk+DyhPg25lu?=
- =?us-ascii?Q?oL1S3bTi9CmT9/H+X8ISUrSRwYcLTs+t5Dt7EuVoMEloOzw25xEp37aiOghE?=
- =?us-ascii?Q?ZQ7goqeKuyCmfgPE3+JuJwWJywxRSemnttUcIPa4j4W3NDMYJIFrZz9ytekA?=
- =?us-ascii?Q?SnGoxresbF8vtxbX1tXuBbn043xWbXPafJR/6WTa5twlpzVQ/AtNnye1SpL8?=
- =?us-ascii?Q?MXUHZDLiV0L4ifMODPKKSdCfhYApkNLtiurjPlsKIoaq8MazC0g/V46yNVHn?=
- =?us-ascii?Q?t9TxnSqFYpmgNg87foeVB5lf7Vha9x0JC0j1oKhtuOcBP7u1/3hS3/qS6MwU?=
- =?us-ascii?Q?IAy7dahWwxE+TLhpmVgXggGKmd3zMcfERQMTUd/gOGAaspzxW0XWwmQchuzz?=
- =?us-ascii?Q?iN+70D5dq9D6IPhTD6+A9AyZFG+b8FFyxF23LA8qNRqudMnmez6D4lsQXbqK?=
- =?us-ascii?Q?BIWVQdvQenebJQVMwSRxITeNVAkoeJCLKRi7DKMUq60fzI3WypF8K3iQZOqF?=
- =?us-ascii?Q?Z5VPysBgpDyM1AWYr7NhjUSPHceyuptBmLuuHjiAyQuXpXW7a5Cu2NB7dtge?=
- =?us-ascii?Q?Ep0S8V6rFmTd3kkkout3cHu2wPA8I20CtHrWDaZSEDPVytipH2+NKCRkyUyS?=
- =?us-ascii?Q?NEobC4e3s+78WDFwiDpAZhcpMkMtozeI3BQhGqQ+r6MRJV0+feXGrh940lO8?=
- =?us-ascii?Q?Zzlu5aSw0Zp2aikmnqUoF9EQldvRYQNRNCL2kBuowKVp1mfxLjDUOTMhdOpg?=
- =?us-ascii?Q?F7Tj2l0SaEMSGuI6pmtPyr7KMForjSmP79vexxrhJWifdJ6eDKQNRQ6pcybp?=
- =?us-ascii?Q?bmjoSUg9UKAjRhkt9qG3hYZ0LhhUqfEGsmidv0ZFmF09sxC+J+dIeWucuJjA?=
- =?us-ascii?Q?TRXeTbid5k+xiAfp6pc/RbY=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C446C87554D26D4AA623742ABDD81740@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+ Naveen Krishna Chatradhi <nchatrad@amd.com>
+References: <20240105074618.1667898-1-suma.hegde@amd.com>
+ <20240105074618.1667898-7-suma.hegde@amd.com>
+ <8f6cfe66-77c5-d6fd-797-13a97ff94f5@linux.intel.com>
+From: "Hegde, Suma" <Suma.Hegde@amd.com>
+In-Reply-To: <8f6cfe66-77c5-d6fd-797-13a97ff94f5@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BM1PR01CA0150.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:68::20) To LV2PR12MB5966.namprd12.prod.outlook.com
+ (2603:10b6:408:171::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	gjUOVV7QWdip3kYR6zgHpE9wstD4XE8zn6VDtAJhru4JkckJk8qY0rg4P4foMg9WWkzQI4cF0g0gG7M1KTJ+CqIhrO0QeQRtwxXTXTN4Pla65YRWZBMkYjQHhAM20zsUSXMV4r0EGeeq+177iKvWAd5QDw0ZTSzyFlotRZoBPbOzkI8xE6TUKLQWEcxxXgM7NLVUFdhRidpgVWe1Iw3IuRX0jq2BAsn/DlJRxInNCuJLHUbWy/R6Dl6YCWnb9LpsTcGOu3fMZku5B0l93NJjpvxbYeTs5edRbZaLrER4zrVP41j0hoRk160s9QiDLBFdjM/ktjkqG50neVAyhwzeYiMAZeHwGoo5R7ukeiqMYJIbfLBQT760i8OzaTJ8EzP/b+ou52DlyiDeKnfzrZz5V3I9C8FSNaLAEoAaEBGXGIb/nv7JeToofiJzhYgCxKA3wJhvMuWVD30tu0yQfOw1/qU6koIWt4rvRtYjLRWMvYlMa13vc7LTPtbZgSCETy7kVZCEk+MD2CZ6NrnCJicUHuYxFEYgwl9l0KbJW0W8JeVAvwzl3Tzlerfwx9kb/5nTNYDh6G5QeqR3+EelXSEKQFvqr+lAHg7nxslYDZPE1LYNzEKv7dduFtTYI9tlYlb1
-X-OriginatorOrg: wdc.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5966:EE_|CH3PR12MB7498:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6dd4505d-9d78-4844-32c6-08dc0e5cc1b5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ja/KcdENUO/jwYcS8hqtgYa9iSLeqO6PzPffirQQIpJLdBYgiOUC1k3gHFJeCMEz8XLKSFsyRP1mc4mUMTAEFtRxtCpfU+z8vAs91eNCSEWhmC1Cu9UdXINlMtSeO1U8UGdFL9xPJh78UTjnUcWVkqmpq5ZoSjN/Zio+YOVbGYL48S79euoHUAq7OsdfgZCuhWqeBnL4uBKQCqZ/sHr8kNEsgmVu92503cmH9PDykKeMlBiQe+h5xxKYN+FWiQUBWUDIo5phQqRadJqXEJbeSRJpuTyacgCdF+U7HbgkaXrSz66GNFSesC7KpPS+bp2txONecQ/3NEF3nYv8D7syDhlydmVfWBZY1rU2lZGVOdWhYVzAiEDebmCKT9U1N6wdPoibeJlwJkVNcZZmKo7+ZdFQr6HsDUGiC2o6m/XxvnfaOAIq47mXT11oGdZGGEwya44JzbuZm7grjpyeKybsyMXeyhEiOt8XdY3+I0iQN/ZKxESnXzrKrlgdqXRmoL7VtaajYIWalNfG6SVwsi1uFtLBdPsrs+Yvkbr1xv/wi+/ZTudI1c0KsTb9X1ANpv+pvZAFX2hoYtjdr21U+bSZs2W/D8IjM8xlKmiiIksrkzuuL72pa0qhD0Ks2/OgUUpmt0r/vtr/zYMMpxqYH4ZAJd4BdH62BlNp+ohEQjfFdG2Ip4gAV99LMhfrBMFr8Y4p
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5966.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(136003)(376002)(366004)(346002)(230273577357003)(230173577357003)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(66556008)(8936002)(66946007)(6916009)(8676002)(66476007)(316002)(54906003)(86362001)(31696002)(2906002)(41300700001)(5660300002)(36756003)(4326008)(6506007)(53546011)(83380400001)(31686004)(6666004)(2616005)(6512007)(66574015)(26005)(6486002)(38100700002)(478600001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OXNEaHJySUZ6OFBKNjR3bWdOYTRLN0E4WjY5WHU2Uk5BbzZ1VjloM0d4bVVh?=
+ =?utf-8?B?NFhrVHg1RWVxSVlKc0RZMENRbjEySHpKMHB4VGkyK1RtTG9YVFY0T2V2R2xY?=
+ =?utf-8?B?TUhoOTdtekw3QzFoVUsrL1BwbDVxYXlleStibi9MSUZqOU1QdEJEOUMyalJX?=
+ =?utf-8?B?aHhaZzR4THFCQjdKZDZuZGJ0ZmxQUktSNVVjME9HK2g2N1p2Tmd3ZHJHU215?=
+ =?utf-8?B?QVZXOGNVTVJQR3hxQ1BLc2ZZSzJsdTVBYVJXUXpxKzZwZklLREltWjZkUm1j?=
+ =?utf-8?B?QVIyRzJpM25RK1RLUTRqay9vU0YvLy9NbDIwRjV4NGZFOVNzUmVwNHVYVWxs?=
+ =?utf-8?B?VVdLLzRIS3dzelBwOFowV0NKd0lUZlRoSkRuYmpWZ0Exa1dxWURzekVBbmxP?=
+ =?utf-8?B?L3VabVRwaFZEUTgwL3pXY01uQ1VVZ0lTOHNlMGl2YnZJYzdZUFMyNHFhcXBh?=
+ =?utf-8?B?ZndNMDJsNWJaU1oxZTlNd21WTHRtc3lKNlBiVWVOekRlb0dqNUdGblFJeWhk?=
+ =?utf-8?B?YW9RSGJmdFQ4aEhScFRlTUN6STh3ZUJiYU0wcTBRdU11RUYxWnQvMjlkTWRu?=
+ =?utf-8?B?QUk4Z2UxNlZUbTNOcTZjTG5NYmU5U3N6dlM0cXJER3QwcG9ZQ25xR3MxeUlS?=
+ =?utf-8?B?UkJmcGlUWWJuZ3NjZFlEUk4vcGZ4YW9JT2JBVkNsdldNd0wwWmI1NktwNUxz?=
+ =?utf-8?B?WnVUMEQ5T3JzYkV4eUE2TkE1RmcybXpEWnB5VkdOelIyR2UvYjArZWRBNE92?=
+ =?utf-8?B?RU1pL3NBZ1ExUmU5T2VSd0loRkVuajNVZkJrV1F0MDRVSkxhdStoTFd3N2dz?=
+ =?utf-8?B?ZEVsa0dPSDFJNG9ESHorNVpPN0ZuZHR1YUt1blBUME5OUnY4NVRuRGtVWGlT?=
+ =?utf-8?B?TmxHWGR3dW92YVN6K3NHeVN4WmcvUlFvOHRuTGo3bTR4OWRwdzdiMjFJaDJF?=
+ =?utf-8?B?M3c5a2tZaTFUYnNFQit6UkRCU0x3c01rTTJqNUxsUG1xOEhnTlo1bER3M1B2?=
+ =?utf-8?B?bHZFN2xPbXdRUE8wV0h5VXMzQTlTUVoxVTg1bi9jL1NiTDZJUUhOK1ZFaXRw?=
+ =?utf-8?B?VEo0MUZEbHZPdGtBQTZEaEhJUVh6NDJFblp4VG13ZVZraU42OXRRc3lqVmpE?=
+ =?utf-8?B?N2ttUklZNmozNURYc0w2WExhc0hIdlRncE1pN3hDRHBHUkpvMHZwYTlWOTZa?=
+ =?utf-8?B?V254ak00REpkNExBV2VNWlpuZUZrRkczREN6WXRnL0ZQTk53K21YbDJFallY?=
+ =?utf-8?B?NWtlZVpiT2lDa0h2NmF2bXpudCtuck1IemdCRDVBUWRHVURzaXZlSHFtbHIx?=
+ =?utf-8?B?SUpIc25iQXkrWHFzRkRPdVZhcFQ3VDIyeEFqeDlaUFluNmNTOGpuVFo5ZFU3?=
+ =?utf-8?B?cGZUVG4xSi81NHk5eWFuNG5LU3hyVHppQ1hsazdlTHEvbkJkbFNSQk8zMmZr?=
+ =?utf-8?B?ZkFUckhNRitxWnQyQWRaTG53QWo3OVF4QU1CWTd4SndEQjZKdi84MmZnMHRI?=
+ =?utf-8?B?V1dUVkJTYk16ZjZKUFlVYUVzVkhQMExBOFBDZ3BjdXdzN0JpbmsrU3RXRmF5?=
+ =?utf-8?B?blZwbFJFM3ZQc3RyMXpqUDd6LzU1c3RjOVNxWFZrdkRPeHZwSnBkU1p1YmRK?=
+ =?utf-8?B?dU9xTlpNZU1NUGRkOTFzNHVNYkJpeTVxQm5lSU9LWmVQM05yMGM4THEwSEtB?=
+ =?utf-8?B?dWh0MGlQYlM4b3hPUWlBQjRtZ0E3NTNhMEFnakNqSi9MYXI4d1Z1UzlZUXVL?=
+ =?utf-8?B?eWY2NXdsa1BLakhDMDF5YkNEQTBDQUZyV0tSQ3FVdnMvUkI4TzNZZkpOamZr?=
+ =?utf-8?B?ZFVEa3Z4WlNDQzBSSExuMzFXT2hkQ2Z4bndHMGVWUmQ1dHBzUy9KQUxVOVdX?=
+ =?utf-8?B?NDhNOUdxTXVQQ2xaOERBT3paNnNuSkJrdTh5Um83NVNldGhHOTN4OU5tekNC?=
+ =?utf-8?B?emp5YXVaM1l4c3ZjejhUUnlWcEZxTlNiQThVbkV6a3p5WVoxVXJNVFZzZmhj?=
+ =?utf-8?B?SGMzZ2lXeWQrQ2puaFdGUnFuZjZuMkd0cnplNDgwZTNGblFFQUhlZzRFNFpN?=
+ =?utf-8?B?SHhtTVIraGtHM3c5dzFpYis3cDVzeWcyeGU5c0Y2cnZaWElVZkwyYnIxSXE4?=
+ =?utf-8?Q?gN+nM3mqcnHo5K535LyrSWy3C?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6dd4505d-9d78-4844-32c6-08dc0e5cc1b5
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5966.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR04MB8037.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea327a15-2b49-4b11-03c3-08dc0e533ec4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2024 01:03:07.7334
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2024 02:11:13.2230
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6MFnIhlkDyTjzrZnzR38ORFdO70PYv+oivKkzmTO6dQN6SlLRs/k6ZTVWyLgw71oyF/L05Kt1ApKL/kyVWwKihRjJ7IHSaiXv4J9GUqn8so=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR04MB8697
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PNIrvSVo08Dk5pNhPYZYmYNiz0xZFiGQhCY9OlaTUBKF6oeKAEtuAHLBvl8K9ukzeJdpI6eu78AphFFw6rUXPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7498
 
-On Jan 05, 2024 / 12:45, Klara Modin wrote:
-> Den fre 5 jan. 2024 kl 11:26 skrev Shinichiro Kawasaki
-> <shinichiro.kawasaki@wdc.com>:
-> >
-> > On Jan 05, 2024 / 09:44, Lukas Wunner wrote:
-> > > On Fri, Jan 05, 2024 at 08:18:05AM +0000, Shinichiro Kawasaki wrote:
-> > > > --- a/drivers/platform/x86/p2sb.c
-> > > > +++ b/drivers/platform/x86/p2sb.c
-> > > > @@ -150,6 +153,14 @@ static int p2sb_cache_resources(void)
-> > > >     if (!bus)
-> > > >             return -ENODEV;
-> > > >
-> > > > +   /*
-> > > > +    * When a device with same devfn exists and it is not P2SB, do =
-not
-> > > > +    * touch it.
-> > > > +    */
-> > > > +   pci_bus_read_config_dword(bus, devfn_p2sb, PCI_CLASS_REVISION, =
-&class);
-> > > > +   if (!PCI_POSSIBLE_ERROR(class) && class >> 8 !=3D P2SB_CLASS_CO=
-DE)
-> > > > +           return -ENODEV;
-> > > > +
-> > >
-> > > The function should probably return if PCI_POSSIBLE_ERROR() is true.
-> >
-> > At this point, the P2SB device can be still hidden and PCI_POSSIBLE_ERR=
-OR() can
-> > be true. In that case, the function should not return.
-> >
-> > > Also I think you can use PCI_CLASS_MEMORY_OTHER, so how about:
-> > >
-> > >       if (PCI_POSSIBLE_ERROR(class) || class >> 16 !=3D PCI_CLASS_MEM=
-ORY_OTHER)
-> > >               return -ENODEV;
-> > >
-> > > Can alternatively use "class >> 8 !=3D PCI_CLASS_MEMORY_OTHER << 8" i=
-f you
-> > > want to ensure the lowest byte is 0x00.
-> >
-> > Thanks, it looks the better to use PCI_CLASS_MEMORY_OTHER. Will reflect=
- it when
-> > I create the formal fix patch.
->=20
-> Both of the variants seem to work for me.
->=20
-> I tried the first patch on its own (059b825c5234), with
->        if (!PCI_POSSIBLE_ERROR(class) && class >> 8 !=3D P2SB_CLASS_CODE)
->                return -ENODEV;
->=20
-> Then Lukas' suggestion (b97584391ea7), with
->         if (PCI_POSSIBLE_ERROR(class) || class >> 16 !=3D PCI_CLASS_MEMOR=
-Y_OTHER)
->                 return -ENODEV;
->=20
-> Tested-by: Klara Modin <klarasmodin@gmail.com>
+Hi Ilpo,
 
-Thank you for trying it out. This fix approach looks good :) I will create =
-a
-formal patch next week for review.=
+
+On 1/5/2024 3:01 PM, Ilpo Järvinen wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+>
+>
+> On Fri, 5 Jan 2024, Suma Hegde wrote:
+>
+>> ACPI table provides mailbox base address and register offset
+>> information. The base address is provided as part of CRS method
+>> and mailbox offsets are provided through DSD table.
+>> Sockets are differentiated by UIDs.
+>>
+>> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+>> Signed-off-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
+>> ---
+>> Changes since v3:
+>> 1. Add hsmp_create_acpi_sysfs_if() and
+>>     hsmp_create_non_acpi_sysfs_if() separately
+>> 2. Change hardcoded value 16 in is_acpi_hsmp_uuid() to UUID_SIZE
+>> 3. Change commit message
+>> Changes since v2:
+>> 1. Change EINVAL to ENODEV in hsmp_read_acpi_dsd()
+>> 2. Change EINVAL to ENOENT in hsmp_read_acpi_dsd()
+>> 3. Use resource_size() in hsmp_resource()
+>> Changes since v1:
+>> 1. Define amd_hsmp_acpi_rdwr() for doing mailbox memory mapped io
+>> 2. Add a check to see if mailbox register offsets are set in
+>>     hsmp_read_acpi_dsd()
+>> 3. Add a check to see if sock->mbinfo.base_addr sockck->mbinfo.size are
+>>     set in hsmp_read_acpi_crs()
+>> 4. Change order of the statements in switch case ACPI_RESOURCE_TYPE_FIXED_MEMORY32
+>>     in hsmp_resource()
+>> 5. Add hsmp_test() after hsmp_parse_acpi_table() call
+>> 6. Add r.end < r.start check in hsmp_resource()
+>> 7. Add !dsd error check in hsmp_read_acpi_dsd
+>
+>> @@ -442,58 +648,85 @@ static int hsmp_init_metric_tbl_bin_attr(struct bin_attribute **hattrs, u16 sock
+>>   /* One bin sysfs for metrics table*/
+>>   #define NUM_HSMP_ATTRS               1
+>>
+>> -static int hsmp_create_sysfs_interface(void)
+>> +static int hsmp_create_attr_list(struct attribute_group *attr_grp,
+>> +                              struct device *dev, u16 sock_ind)
+>>   {
+>> -     const struct attribute_group **hsmp_attr_grps;
+>>        struct bin_attribute **hsmp_bin_attrs;
+>> +
+>> +     /* Null terminated list of attributes */
+>> +     hsmp_bin_attrs = devm_kzalloc(dev, sizeof(struct bin_attribute *) *
+>> +                                   (NUM_HSMP_ATTRS + 1), GFP_KERNEL);
+>> +     if (!hsmp_bin_attrs)
+>> +             return -ENOMEM;
+>> +
+>> +     attr_grp->bin_attrs = hsmp_bin_attrs;
+>> +
+>> +     return hsmp_init_metric_tbl_bin_attr(hsmp_bin_attrs, sock_ind);
+>> +}
+>> +
+>> +static int hsmp_create_non_acpi_sysfs_if(struct device *dev)
+>> +{
+>> +     const struct attribute_group **hsmp_attr_grps;
+>>        struct attribute_group *attr_grp;
+>> -     int ret;
+>>        u16 i;
+>>
+>>        /* String formatting is currently limited to u8 sockets */
+>>        if (WARN_ON(plat_dev.num_sockets > U8_MAX))
+>>                return -ERANGE;
+>>
+>> -     hsmp_attr_grps = devm_kzalloc(plat_dev.sock[0].dev, sizeof(struct attribute_group *) *
+>> +     hsmp_attr_grps = devm_kzalloc(dev, sizeof(struct attribute_group *) *
+>>                                      (plat_dev.num_sockets + 1), GFP_KERNEL);
+>>        if (!hsmp_attr_grps)
+>>                return -ENOMEM;
+>>
+>>        /* Create a sysfs directory for each socket */
+>>        for (i = 0; i < plat_dev.num_sockets; i++) {
+>> -             attr_grp = devm_kzalloc(plat_dev.sock[i].dev, sizeof(struct attribute_group),
+>> +             attr_grp = devm_kzalloc(dev, sizeof(struct attribute_group),
+>>                                        GFP_KERNEL);
+>>                if (!attr_grp)
+>>                        return -ENOMEM;
+>>
+>>                snprintf(plat_dev.sock[i].name, HSMP_ATTR_GRP_NAME_SIZE, "socket%u", (u8)i);
+>> -             attr_grp->name = plat_dev.sock[i].name;
+>> -
+>> -             /* Null terminated list of attributes */
+>> -             hsmp_bin_attrs = devm_kzalloc(plat_dev.sock[i].dev, sizeof(struct bin_attribute *) *
+>> -                                           (NUM_HSMP_ATTRS + 1), GFP_KERNEL);
+>> -             if (!hsmp_bin_attrs)
+>> -                     return -ENOMEM;
+>> -
+>> -             attr_grp->bin_attrs             = hsmp_bin_attrs;
+>> +             attr_grp->name                  = plat_dev.sock[i].name;
+>>                attr_grp->is_bin_visible        = hsmp_is_sock_attr_visible;
+>>                hsmp_attr_grps[i]               = attr_grp;
+>>
+>> -             /* Now create the leaf nodes */
+>> -             ret = hsmp_init_metric_tbl_bin_attr(hsmp_bin_attrs, i);
+>> -             if (ret)
+>> -                     return ret;
+>> +             hsmp_create_attr_list(attr_grp, dev, i);
+>>        }
+>> -     return devm_device_add_groups(plat_dev.sock[0].dev, hsmp_attr_grps);
+>> +
+>> +     return devm_device_add_groups(dev, hsmp_attr_grps);
+>>   }
+> Can this refactoring of existing code be put into own patch, it would make
+> this patch smaller?
+>
+>> -static int hsmp_cache_proto_ver(void)
+>> +static int hsmp_create_acpi_sysfs_if(struct device *dev)
+>> +{
+>> +     struct attribute_group *attr_grp;
+>> +     u16 sock_ind;
+>> +     int ret;
+>> +
+>> +     attr_grp = devm_kzalloc(dev, sizeof(struct attribute_group), GFP_KERNEL);
+>> +     if (!attr_grp)
+>> +             return -ENOMEM;
+>> +
+>> +     attr_grp->is_bin_visible = hsmp_is_sock_attr_visible;
+>> +     ret = hsmp_get_uid(dev, &sock_ind);
+>> +     if (ret)
+>> +             return ret;
+> Is it intentional you don't provide .name here? hsmp_get_uid() gets you a
+> socket id if I read your code correctly so wouldn't be more consistent to
+> generate the "socket%u" name based on that?
+
+Yes, it was intentional. In case of non-acpi probing, only one 
+"amd_hsmp/" directory will be created for all the sockets under 
+"/sys/devices/platform/". So we need to create "socket%u" directories  
+separately for each socket. Where as in case of acpi probing, there is 
+already a separate directory "AMDI000XX:00/" created for each socket 
+since there is a one probe call for each socket. So I thought no need of 
+one more "socket%u" directory.
+
+Thanks for all your review comments. I will address them in v5 patchset.
+
+>
+>> +     ret = hsmp_create_attr_list(attr_grp, dev, sock_ind);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     return devm_device_add_group(dev, attr_grp);
+>> +}
+
+Thanks and Regards,
+
+Suma
+
+> --
+>   i.
+>
