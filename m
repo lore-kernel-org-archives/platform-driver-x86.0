@@ -1,133 +1,100 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B39101C6;
-	Sat,  6 Jan 2024 22:33:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAF610787;
+	Sat,  6 Jan 2024 22:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ikEn/iF7"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="JXbv8KoV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1704580416; x=1705185216; i=w_armin@gmx.de;
-	bh=GrQtBxb2aD7uqkKpMSnD+buQmfAffm95m12pWCOEg7g=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=ikEn/iF7nkY/seeXnq0jXDt9LRAGdEKzR4WbDA2N+0EPIGFFqet3KdGvC+v0VHFR
-	 1tlLv62kmgnb7qH9dyNx6nQfsMv8J//IhmKFAO5t53Qb2djRPMUvli2Nqe4AitrVy
-	 7CCbrnaAZzVfns2QXET+NuXHbYnKzpTEn8lASTbeMICHyIxgpxrxCXhPzm+yTXEhk
-	 HYnITNjfzrOf6b1L1433oA395AHdgAvUgxNaS7Dn4XTDPQW6uV1GWoSVC0TXOgnCU
-	 mwEW9L/TMyLG/3FzTvA2+qHAPdpCIFVmaU5A3cw6Zmyo3lbxMfvnz9dvxlEadTodF
-	 /xd/rGUGXLKEu8QEOw==
+	t=1704580892; x=1705185692; i=w_armin@gmx.de;
+	bh=rGKAWbb6mv2MvQvmMWvtbAEkan0WCklL9CFLbJgURSI=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=JXbv8KoV6cRdOCWdJmGOV0tksVZtgXKGpfZBvXpliALP9wg093yY64mq9Gc7ryhj
+	 TF7zOW/cZXWkidd7DirmpII+WfbJ1BhDkLGt9q9xzoph8caOPxpEv8J7/1e6zW1TS
+	 wG7OGEwX6RB5Ir3pjQJ2SNAY//R0mfaQZzFQZeT49aD/p2Dm1zaU97N+3RzXQ4/eo
+	 +2KCRp5FDn/yRtbtEUTi5hI3Dpq5xYXsrCdv4uwKdPRkFwzmMN4CfWy+QtLWdCq9C
+	 feaer1YS94zTpijlG0hb1OLB70e1O3IfGa/YnFuYraLUe3KNmv8bgC+wirYQKyPnI
+	 97VIwIMtg9UZd+KZZg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MDysg-1rWArs1Ark-00A0sg; Sat, 06
- Jan 2024 23:33:36 +0100
-Message-ID: <af094d61-eec0-456e-aeba-6e80c95424c5@gmx.de>
-Date: Sat, 6 Jan 2024 23:33:35 +0100
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MryXH-1qs9Gw3kCj-00o2HB; Sat, 06 Jan 2024 23:41:31 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: jithu.joseph@intel.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: intel-wmi-sbl-fw-update: Fix function name in error message
+Date: Sat,  6 Jan 2024 23:41:26 +0100
+Message-Id: <20240106224126.13803-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: ERROR: Writing to dgpu_disable cause Input/Output error
-Content-Language: en-US
-To: Athul Krishna <athul.krishna.kr@protonmail.com>
-Cc: "corentin.chary@gmail.com" <corentin.chary@gmail.com>,
- "acpi4asus-user@lists.sourceforge.net"
- <acpi4asus-user@lists.sourceforge.net>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-pci@vger.kernel.org
-References: <GuvjyxvIK4bJrayfrvuGPORpcPhPT9WFxxtQ1nqeEyamn_po0WuVInoXQVRmpwBQkW9K0CCwDqSg6kXPEI9YTlU0LQ_FtIMmpxluOirycpw=@protonmail.com>
- <13fad62a-c82c-45b6-bd78-ad51232dbe14@gmx.de>
- <fXvoFRg43mZOs78mEX_CwN_2pi7KyVZkAIymCHa5i6DTyX-spNAHz6RDl31vrx_d1y-wrJhXEcUgPMHvmUwbDgYAXOgIOG_qdF3KCWTpJx8=@protonmail.com>
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <fXvoFRg43mZOs78mEX_CwN_2pi7KyVZkAIymCHa5i6DTyX-spNAHz6RDl31vrx_d1y-wrJhXEcUgPMHvmUwbDgYAXOgIOG_qdF3KCWTpJx8=@protonmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:2j0YL5dsipavJ9qoIl4OfUM0nnu0CtlskQvZAaZWb0iWLtXyGR1
- UONm0mntrKxJSuMMNYz5OP2iMH8/uA2jjGNhDWFCid2RBkhuDr/bzlRkQYhBkSANw7I2/6W
- k4G2UJXiejr3Wj47g9l7XzJMziF0uLsv4XeJl2MmFT6d8eeHqt8AguDIFby7R2tDnq4BG/M
- ueRQmg8GmUgUvHJR9aqXA==
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:9BAjZBJl7gR/XFYztgEXLa6G4yMtLMv9Q46uL/pXEy7hTNGA7OL
+ Wivy3wxyhqoFKWVaR7/pXFA3K4h1l05ROcwER5BqLHdgb5/tVnxfXkx69JjYsERxa6QALTF
+ zLIVbgoNPIPT8byt5SZvND5spdVR9CnCrc5DtvyCqrwg1dnxg3OFSZKnpA/DvIqYzrj6c19
+ jmE4CdTtUFdYVky/1mWKg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:FZ7cmxRv3d8=;9H7H/UYKhU/lBoXmUWeDVCYKc4m
- i8zL/jyVZrQVZnDAHivzwiBh1Vs7y3K7GpE/dsbJtuzIRoz3jTYOS1Cgbc1CuPWslyZpDmnlJ
- fQB9gZojfz2j/txyz58c1xb2kLCTPB4UaApsyaEur01gvVV1UOnBT7nL0D7CNSCEn4D8vneAQ
- jMF9UOfNPR6/wrowpmm0DLna2qtLZo5OW0a2teHsB08LkRtbU7c7WyvTUj64DW3qoPWT371EK
- lfrx0R9HnpEnmLcXYCwSgzXCGUZIXS3WjVduiv2zAaznwNhh8o9PoCs1dlA8d8FUpnddk+aUl
- dhjeCUmx96XtB1M9aZImPKAyuytxMf59vI1a9ksiEJ35dnJHBaV9yEEUuNg8dDuWiRm/KxkJI
- 0dScgOqCU4DSA0DwQrBkxVt0BdN6u3qxXAVltAaCSUWan8eclaSFSariJswPCKzH0xUEqpLlx
- duCjAhh6QrZIdVFIiXRVkDsXx0zleH2uFM7MAbVo6Pwui+SrPgNTa/9S0RTlWwsxqxhsizzsv
- OMOk82xG/X2zOJXNR0mwgwcc2wSlHYo7yjZV46bHAzL64ocwbOVXamVQYod67h6avXN6h0dkS
- j9CeBz3egiBPwFUvMwEMdmwd7YEEqI9ciL2xp772J3mGHzJOl3oQtGjd6AZ20CRb8VxUu4LnS
- XNypYHmKdLRh6S2PevPg6fg6V1xDFhf7fZkhwT6WinNSdf4+HuvB5QjVLXTRmy0ULsSFkgCcj
- NKYAWVvBRKSvsDD9PGbJRZ+MN499JtWGTHeoRhiAJZkdETVFJFIdJ70soCtuRl/MQJRhk9dVU
- HLpaKvc2zON/VsyvhCA3mQ8vqH4lOplqrCDV1nz59OqUyrcdrroK1wpcPjO9ZZCI3lSaAUBBZ
- 5S9CHHt/31pCm5cXB8ggbZE8V3lawD6gojW1ZFlGmUTxZlfb42kSXsbVq/tt7SOU+hrdymJ9f
- 0nplo8+hK8xqvbh14kf4xRir2KY=
+UI-OutboundReport: notjunk:1;M01:P0:aFw9eUN7Bts=;YG58MA7+Rok80yWchiFPjYdyWOR
+ dx+94u7v0av3NUoUFSqk3yNzdx7QRK1P1WcQghmXk6w+RMZgUH9fqAlzYQb3X2V5FCYVLMyBK
+ vrTZ1VlI3+xLGLjazHvSz8t6t8lSGWCD5dMV69PEsERj24WtSH2NsrSXIqq/mfSzegOC4kL7I
+ P4ZnBaEyuh0826XtGNvxRhfVY2npG6h/mJttJQ69J4ALx7VfQ7gJ4x8bOaQ/bZoog3lX/1Ll1
+ 5VaD2wGuu9pRYyK2bQmlCGLILuXiBwp1URZscKj35qKoOprttpZ+iMQaHEeBU51UIE2bXj+fu
+ DaZUMLuhT2AnQXwmQyile82stB65+6EbNT7NwOx/g8cXa2ZmWT+DYwZt4fWQPl/CCv61ioHCe
+ 4+Lo+Zbk643RRLBAgbXGNmNkKZlR64019le/RyJdwyCwC+nz1onT8rhF7HDRBGf2DsgBkUgqh
+ uMJCArT2Axn4bZ6v1fjke8Cml9EUcY/G6jNMU9jGVdImkQLVIThISZiVDZprl5aAV6TT+w9A4
+ 0p+NPoUiRw7hO7rwRuu3ohm9abU8nb3ZmBVuLWsbIUQU2Hf+Brh6y9aEb+0RH0LdUdojp7R71
+ wfQVgjUGmgL+HjnGB5UQfnb03PhvfzUVMs0Ounl3u8k9UuRl7gPGsom9XBFIc08WSX688PhAn
+ E2SnT2jXPhIxS4niPSNFNHfS2M+Y54Fz5S6QISUgmBKjJ4Pi0E/+zmQvtL18m3Arllt29nIa3
+ IbdA6Xp1PWlyJz3/HEpUGxWN4LW3KMtoD9AJ6ovwWodO/3RGFnOCGdh2Bekfo9G8Gk0+8qOFy
+ CimrnSzQaXXNhYJYMMRf8Nt0Xnjj3YEVGXNwX8kEaNa7Oe+AWRyPEtoftFu6c75ooiDRQ7tfc
+ BlU3CvaO/6uDPi9WRZZ5lCQsYOt5xw9IrA+kSfeG1PVq2Zhch0F7Qakwjm6fXhKN57QKZlIDV
+ SRxV0DYZL6jUnym1hY4QLhGdSw8=
 
-Am 04.01.24 um 03:50 schrieb Athul Krishna:
+Since when the driver was converted to use the bus-based WMI
+interface, the old GUID-based WMI functions are not used anymore.
+Update the error message to avoid confusing users.
 
->
->
->
->
-> Sent with Proton Mail secure email.
->
-> On Thursday, January 4th, 2024 at 1:05 AM, Armin Wolf <W_Armin@gmx.de> wrote:
->
->
->> Am 03.01.24 um 19:51 schrieb Athul Krishna:
->>
->>> Hello,
->>> This is my first time reporting an issue in the kernel.
->>>
->>> Device Details:
->>>
->>> * Asus Zephyrus G14 (||||||GA402RJ)
->>> * Latest BIOS
->>> * Arch_x86_64
->>> * Kernel: 6.6.9
->>> * Minimal install using archinstall
->>>
->>> ISSUE: Using /dgpu_disable /provided by _asus-nb-wmi _to disable and
->>> enable dedicated gpu,
->>> causes system crash and reboots, randomly.
->>> 9/10 times writing 0 to dgpu_disable will produce an Input/Output
->>> error, but the value will be changed to 0, half the time system will
->>> crash and reboot. While writing 1 to it doesn't produce an error, I
->>> have observed system crash twice just after that.
->>>
->>> Steps to Reproduce:
->>>
->>> * Remove dpgu: echo 1 | sudo tee ../remove (dgpu path)
->>> * echo 1 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
->>> * echo 0 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
->>>
->>> * echo 1 | sudo tee /sys/bus/pci/rescan
->>>
->>> After writing 0 to dgpu_disable, there's an entry in journal about an
->>> ACPI bug.
->>> Output of 'journalctl -p 3' and lspci is attached.
->>
->> Hi,
->>
->> Can you share the output of "acpidump" and the content of "/sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[-X]/bmof"?
->> The bmof files contain a description of the WMI interfaces of your machine, which might be important for diagnosing the error.
->>
->> Thanks,
->> Armin Wolf
-> Here's the output of 'acpidump > acpidump.out' and 'cat /sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[-X]/bmof'
+Compile-tested only.
 
-Ok, it seems the ACPI code tries to access an object ("GC00") which does not exist.
-This is the reason why disabling the dGPU fails with -EIO.
+Fixes: 75c487fcb69c ("platform/x86: intel-wmi-sbl-fw-update: Use bus-based=
+ WMI interface")
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/intel/wmi/sbl-fw-update.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I am unfortunately not that knowledgeable when it comes to PCI problems, i CCed the linux-pci mailing list in hope that
-they can better help you in this regard.
+diff --git a/drivers/platform/x86/intel/wmi/sbl-fw-update.c b/drivers/plat=
+form/x86/intel/wmi/sbl-fw-update.c
+index 9cf5ed0f8dc2..040153ad67c1 100644
+=2D-- a/drivers/platform/x86/intel/wmi/sbl-fw-update.c
++++ b/drivers/platform/x86/intel/wmi/sbl-fw-update.c
+@@ -32,7 +32,7 @@ static int get_fwu_request(struct device *dev, u32 *out)
+ 		return -ENODEV;
 
-Maybe you can open a bug report on bugzilla.kernel.org so that things like ACPI table dumps, etc can be collected there?
+ 	if (obj->type !=3D ACPI_TYPE_INTEGER) {
+-		dev_warn(dev, "wmi_query_block returned invalid value\n");
++		dev_warn(dev, "wmidev_block_query returned invalid value\n");
+ 		kfree(obj);
+ 		return -EINVAL;
+ 	}
+@@ -55,7 +55,7 @@ static int set_fwu_request(struct device *dev, u32 in)
 
-Thanks,
-Armin Wolf
+ 	status =3D wmidev_block_set(to_wmi_device(dev), 0, &input);
+ 	if (ACPI_FAILURE(status)) {
+-		dev_err(dev, "wmi_set_block failed\n");
++		dev_err(dev, "wmidev_block_set failed\n");
+ 		return -ENODEV;
+ 	}
+
+=2D-
+2.39.2
 
