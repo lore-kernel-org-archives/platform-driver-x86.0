@@ -1,184 +1,67 @@
-Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C53F508
-	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jan 2024 19:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="rnxk9CE4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1704570270; x=1704829470;
-	bh=FbyXaiTE3R0HxDciJIOHwFnTgGcEyiR/kor+zGaDsfs=;
-	h=Date:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=rnxk9CE4HypfRcRgJH+ivrtMz+RN5BI6ylfygBwd2gAK5CfWStgV3NCGHhPPrjjdp
-	 yGnbICSWBq2f+oaar7K+KNd3Z9PORpoJ+iyd0w/noXEq4rnxhh2P/J1ho4bhE8eHuv
-	 uuzZer9tWl0pn4Is4xwpm7YT48kv0ZHDqNc5fIm9IdXVYP/fhi0zGXwittxZuqKo8o
-	 uyouBoQ0Dp9MdFZUG7pIxjb2MQ9m8iOQrcffuYDZMFlsIxwF6yPNhmFBqQ3Xvb0U1l
-	 ImbsApkeb3JZRl7PcCkmqXFL7AdHBO6h6iRQaWG4VeI8ee//8OSk7zvcFSm6ny/WpV
-	 qMLf+XAjIxfyQ==
-Date: Sat, 06 Jan 2024 19:44:05 +0000
-From: Athul Krishna <athul.krishna.kr@protonmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Subject: BUG: Writing to dgpu_disable causes system crash
-Message-ID: <FtkLGL0Fu-DCzke9KILxxjbcjWsWavaJHg933gDYg0KtajNbz58XBWIwNI9vW0Nduena9BLOOhEM5_kwerbBV8a5E83g9ROOJOuWZqK-ri0=@protonmail.com>
-Feedback-ID: 97021173:user:proton
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5573EAF2;
+	Sat,  6 Jan 2024 19:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 9FF8B160218;
+	Sat,  6 Jan 2024 19:54:55 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf06.hostedemail.com (Postfix) with ESMTPA id C942D20011;
+	Sat,  6 Jan 2024 19:54:50 +0000 (UTC)
+Message-ID: <f4d85d84c266f441b3768b1e05b8870e3d4a73a2.camel@perches.com>
+Subject: Re: [PATCH v2 2/6] platform/x86: dell-smo8800: Move instantiation
+ of lis3lv02d i2c_client from i2c-i801 to dell-smo8800
+From: Joe Perches <joe@perches.com>
+To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+ Linus Torvalds <torvalds@linux-foundation.org>, Andreas Schwab
+ <schwab@linux-m68k.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali@kernel.org>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Paul Menzel
+ <pmenzel@molgen.mpg.de>, Jean Delvare <jdelvare@suse.com>, Andi Shyti
+ <andi.shyti@kernel.org>, eric.piel@tremplin-utc.net, Marius Hoch
+ <mail@mariushoch.de>,  Dell.Client.Kernel@dell.com, Kai Heng Feng
+ <kai.heng.feng@canonical.com>,  platform-driver-x86@vger.kernel.org,
+ Wolfram Sang <wsa@kernel.org>,  linux-i2c@vger.kernel.org
+Date: Sat, 06 Jan 2024 11:54:49 -0800
+In-Reply-To: <ZZl-wrHfidYJwpOk@smile.fi.intel.com>
+References: <20240106160935.45487-1-hdegoede@redhat.com>
+	 <20240106160935.45487-3-hdegoede@redhat.com>
+	 <ZZl-wrHfidYJwpOk@smile.fi.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="b1_ha6Z88o6od4KDaNqHDp2B9eu2fkdf8WJNAIXZcyg"
+X-Rspamd-Queue-Id: C942D20011
+X-Stat-Signature: 9pwmwekdbsq71csshaz8np8cw4yz9xic
+X-Rspamd-Server: rspamout01
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1/tL+JEdVcl3iQsTbVvl9CoefEJL8JWDqY=
+X-HE-Tag: 1704570890-306529
+X-HE-Meta: U2FsdGVkX1895CISb/zRp+MCsKU+xxwCHZQQurd+B1mrQ+2BcxJHiMkndl+nzyXofPUHw3U9rii5jDcxbUSvhwE53ILXyZ2QaV2YxMTDZdhwxzx1BJdT+OY/8eASJMHsytDDSLkUJsJOtRMJRzMweRuby3bU3FzdY01Cw4pw4b1eRorz5bssyKFe4To2v7FVkn94QPu592j7O7JSvDmnP6C7XcpA4Wd3+uwIoYijDb+y8ZzBdoaonKsWzdDMP6r/sXKiY14jTK6ENWv2Zphgxpqazqakqbt+iAT2gIzuNu6xYvTiaErEwugHVQjog1pV
 
-This is a multi-part message in MIME format.
+On Sat, 2024-01-06 at 18:24 +0200, Andy Shevchenko wrote:
+> + Cc people from tags of 72921427d46b ("string.h: Add str_has_prefix() he=
+lper
+> function"). See below why.
+> > +	if (!strstarts(adap->name, "SMBus I801 adapter"))
+> > +		return 0;
+>=20
+> Bah, we have str_has_prefix() and this, much older one...
+> Steven? Others? I mean we can do something about this duplication, right?
 
---b1_ha6Z88o6od4KDaNqHDp2B9eu2fkdf8WJNAIXZcyg
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+coccinelle?
 
-Hello,
-This is my first time reporting an issue in the kernel.
+@@
+expression a, b;
+@@
 
-Device Details:
-Asus Zephyrus G14 (GA402RJ)
-Latest BIOS
-Arch_x86_64
-Kernel: 6.6.9
-Minimal install=E2=80=8B=E2=80=8B using archinstall
-
-ISSUE: Using dgpu_disable provided by asus-nb-wmi to disable and enable ded=
-icated gpu, causes system crash and reboots, most of the time.
-
- 9/10 times writing 0 to dgpu_disable will produce an Input/Output error, b=
-ut the value will be changed to 0, doing a pci rescan cause system to crash=
- and reboot. While writing 1 to it doesn't produce an error, I have observe=
-d system crash twice just after that.
-
-Steps to Reproduce:
-echo 1 | sudo tee ../remove (dgpu path)
-echo 1 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
-echo 0 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
-echo 1 | sudo tee /sys/bus/pci/rescan
-
-After writing 0 to dgpu_disable, there's an entry in journal about an ACPI =
-bug.
-Output of 'journalctl -p 3' and lspci is attached.
---b1_ha6Z88o6od4KDaNqHDp2B9eu2fkdf8WJNAIXZcyg
-Content-Type: text/plain; name=journal.txt
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename=journal.txt
-
-LS0gQm9vdCA4NGFjOWViYjBjZjQ0MzYzOWUxMTU4OGRlNzMxYjU3NyAtLQpKYW4gMDMgMjM6MTM6
-MDEgWmVwaHlydXNHMTQga2VybmVsOiBBQ1BJIEJJT1MgRXJyb3IgKGJ1Zyk6IENvdWxkIG5vdCBy
-ZXNvbHZlIHN5bWJvbCBbXF9TQi5QQ0kwLkdQUDAuU1dVUy5TV0RTLlZHQS5fU1RBLkdDMDBdLCBB
-RV9OT1RfRk9VTkQgKDIwMjMwNjI4L3BzYXJncy0zMzApCkphbiAwMyAyMzoxMzowMSBaZXBoeXJ1
-c0cxNCBrZXJuZWw6IEFDUEkgRXJyb3I6IEFib3J0aW5nIG1ldGhvZCBcX1NCLlBDSTAuR1BQMC5T
-V1VTLlNXRFMuVkdBLl9TVEEgZHVlIHRvIHByZXZpb3VzIGVycm9yIChBRV9OT1RfRk9VTkQpICgy
-MDIzMDYyOC9wc3BhcnNlLTUyOSkKSmFuIDAzIDIzOjEzOjAxIFplcGh5cnVzRzE0IGtlcm5lbDog
-QUNQSSBCSU9TIEVycm9yIChidWcpOiBDb3VsZCBub3QgcmVzb2x2ZSBzeW1ib2wgW1xfU0IuUENJ
-MC5HUFAwLlNXVVMuU1dEUy5WR0EuX1NUQS5HQzAwXSwgQUVfTk9UX0ZPVU5EICgyMDIzMDYyOC9w
-c2FyZ3MtMzMwKQpKYW4gMDMgMjM6MTM6MDEgWmVwaHlydXNHMTQga2VybmVsOiBBQ1BJIEVycm9y
-OiBBYm9ydGluZyBtZXRob2QgXF9TQi5QQ0kwLkdQUDAuU1dVUy5TV0RTLlZHQS5fU1RBIGR1ZSB0
-byBwcmV2aW91cyBlcnJvciAoQUVfTk9UX0ZPVU5EKSAoMjAyMzA2MjgvcHNwYXJzZS01MjkpCkph
-biAwMyAyMzoxMzowMSBaZXBoeXJ1c0cxNCBrZXJuZWw6IEFDUEkgQklPUyBFcnJvciAoYnVnKTog
-Q291bGQgbm90IHJlc29sdmUgc3ltYm9sIFtcX1NCLlBDSTAuR1BQMC5TV1VTLlNXRFMuVkdBLl9T
-VEEuR0MwMF0sIEFFX05PVF9GT1VORCAoMjAyMzA2MjgvcHNhcmdzLTMzMCkKSmFuIDAzIDIzOjEz
-OjAxIFplcGh5cnVzRzE0IGtlcm5lbDogQUNQSSBFcnJvcjogQWJvcnRpbmcgbWV0aG9kIFxfU0Iu
-UENJMC5HUFAwLlNXVVMuU1dEUy5WR0EuX1NUQSBkdWUgdG8gcHJldmlvdXMgZXJyb3IgKEFFX05P
-VF9GT1VORCkgKDIwMjMwNjI4L3BzcGFyc2UtNTI5KQpKYW4gMDMgMjM6MTM6MDEgWmVwaHlydXNH
-MTQga2VybmVsOiBBQ1BJIEJJT1MgRXJyb3IgKGJ1Zyk6IENvdWxkIG5vdCByZXNvbHZlIHN5bWJv
-bCBbXF9TQi5QQ0kwLkdQUDAuU1dVUy5TV0RTLlZHQS5fU1RBLkdDMDBdLCBBRV9OT1RfRk9VTkQg
-KDIwMjMwNjI4L3BzYXJncy0zMzApCkphbiAwMyAyMzoxMzowMSBaZXBoeXJ1c0cxNCBrZXJuZWw6
-IEFDUEkgRXJyb3I6IEFib3J0aW5nIG1ldGhvZCBcX1NCLlBDSTAuR1BQMC5TV1VTLlNXRFMuVkdB
-Ll9TVEEgZHVlIHRvIHByZXZpb3VzIGVycm9yIChBRV9OT1RfRk9VTkQpICgyMDIzMDYyOC9wc3Bh
-cnNlLTUyOSkKSmFuIDAzIDIzOjEzOjAxIFplcGh5cnVzRzE0IGtlcm5lbDogaHViIDYtMDoxLjA6
-IGNvbmZpZyBmYWlsZWQsIGh1YiBkb2Vzbid0IGhhdmUgYW55IHBvcnRzISAoZXJyIC0xOSkKSmFu
-IDAzIDIzOjEzOjAxIFplcGh5cnVzRzE0IGtlcm5lbDogYXN1cyAwMDAzOjBCMDU6MTlCNi4wMDAy
-OiBBc3VzIGlucHV0IG5vdCByZWdpc3RlcmVkCkphbiAwMyAyMzoxMzoyMCBaZXBoeXJ1c0cxNCBr
-ZXJuZWw6IEFDUEkgQklPUyBFcnJvciAoYnVnKTogQ291bGQgbm90IHJlc29sdmUgc3ltYm9sIFtc
-X1NCLlBDSTAuR1BQMC5TV1VTLlNXRFMuVkdBLl9TVEEuR0MwMF0sIEFFX05PVF9GT1VORCAoMjAy
-MzA2MjgvcHNhcmdzLTMzMCkKSmFuIDAzIDIzOjEzOjIwIFplcGh5cnVzRzE0IGtlcm5lbDogQUNQ
-SSBFcnJvcjogQWJvcnRpbmcgbWV0aG9kIFxfU0IuUENJMC5HUFAwLlNXVVMuU1dEUy5WR0EuX1NU
-QSBkdWUgdG8gcHJldmlvdXMgZXJyb3IgKEFFX05PVF9GT1VORCkgKDIwMjMwNjI4L3BzcGFyc2Ut
-NTI5KQo=
-
---b1_ha6Z88o6od4KDaNqHDp2B9eu2fkdf8WJNAIXZcyg
-Content-Type: text/plain; name=lspci.txt
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename=lspci.txt
-
-MDA6MDAuMCBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBG
-YW1pbHkgMTdoLTE5aCBQQ0llIFJvb3QgQ29tcGxleCAocmV2IDAxKQowMDowMC4yIElPTU1VOiBB
-ZHZhbmNlZCBNaWNybyBEZXZpY2VzLCBJbmMuIFtBTURdIEZhbWlseSAxN2gtMTloIElPTU1VCjAw
-OjAxLjAgSG9zdCBicmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0gRmFt
-aWx5IDE3aC0xOWggUENJZSBEdW1teSBIb3N0IEJyaWRnZSAocmV2IDAxKQowMDowMS4xIFBDSSBi
-cmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0gRmFtaWx5IDE3aC0xOWgg
-UENJZSBHUFAgQnJpZGdlCjAwOjAyLjAgSG9zdCBicmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmlj
-ZXMsIEluYy4gW0FNRF0gRmFtaWx5IDE3aC0xOWggUENJZSBEdW1teSBIb3N0IEJyaWRnZSAocmV2
-IDAxKQowMDowMi4xIFBDSSBicmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FN
-RF0gRmFtaWx5IDE3aC0xOWggUENJZSBHUFAgQnJpZGdlCjAwOjAyLjIgUENJIGJyaWRnZTogQWR2
-YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBGYW1pbHkgMTdoLTE5aCBQQ0llIEdQUCBC
-cmlkZ2UKMDA6MDIuNCBQQ0kgYnJpZGdlOiBBZHZhbmNlZCBNaWNybyBEZXZpY2VzLCBJbmMuIFtB
-TURdIEZhbWlseSAxN2gtMTloIFBDSWUgR1BQIEJyaWRnZQowMDowMy4wIEhvc3QgYnJpZGdlOiBB
-ZHZhbmNlZCBNaWNybyBEZXZpY2VzLCBJbmMuIFtBTURdIEZhbWlseSAxN2gtMTloIFBDSWUgRHVt
-bXkgSG9zdCBCcmlkZ2UgKHJldiAwMSkKMDA6MDQuMCBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWlj
-cm8gRGV2aWNlcywgSW5jLiBbQU1EXSBGYW1pbHkgMTdoLTE5aCBQQ0llIER1bW15IEhvc3QgQnJp
-ZGdlIChyZXYgMDEpCjAwOjA4LjAgSG9zdCBicmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmljZXMs
-IEluYy4gW0FNRF0gRmFtaWx5IDE3aC0xOWggUENJZSBEdW1teSBIb3N0IEJyaWRnZSAocmV2IDAx
-KQowMDowOC4xIFBDSSBicmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0g
-RmFtaWx5IDE3aC0xOWggSW50ZXJuYWwgUENJZSBHUFAgQnJpZGdlIChyZXYgMTApCjAwOjA4LjMg
-UENJIGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBGYW1pbHkgMTdo
-LTE5aCBJbnRlcm5hbCBQQ0llIEdQUCBCcmlkZ2UgKHJldiAxMCkKMDA6MTQuMCBTTUJ1czogQWR2
-YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBGQ0ggU01CdXMgQ29udHJvbGxlciAocmV2
-IDcxKQowMDoxNC4zIElTQSBicmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FN
-RF0gRkNIIExQQyBCcmlkZ2UgKHJldiA1MSkKMDA6MTguMCBIb3N0IGJyaWRnZTogQWR2YW5jZWQg
-TWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBSZW1icmFuZHQgRGF0YSBGYWJyaWM6IERldmljZSAx
-OGg7IEZ1bmN0aW9uIDAKMDA6MTguMSBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNl
-cywgSW5jLiBbQU1EXSBSZW1icmFuZHQgRGF0YSBGYWJyaWM6IERldmljZSAxOGg7IEZ1bmN0aW9u
-IDEKMDA6MTguMiBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1E
-XSBSZW1icmFuZHQgRGF0YSBGYWJyaWM6IERldmljZSAxOGg7IEZ1bmN0aW9uIDIKMDA6MTguMyBI
-b3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBSZW1icmFuZHQg
-RGF0YSBGYWJyaWM6IERldmljZSAxOGg7IEZ1bmN0aW9uIDMKMDA6MTguNCBIb3N0IGJyaWRnZTog
-QWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBSZW1icmFuZHQgRGF0YSBGYWJyaWM6
-IERldmljZSAxOGg7IEZ1bmN0aW9uIDQKMDA6MTguNSBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWlj
-cm8gRGV2aWNlcywgSW5jLiBbQU1EXSBSZW1icmFuZHQgRGF0YSBGYWJyaWM6IERldmljZSAxOGg7
-IEZ1bmN0aW9uIDUKMDA6MTguNiBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywg
-SW5jLiBbQU1EXSBSZW1icmFuZHQgRGF0YSBGYWJyaWM6IERldmljZSAxOGg7IEZ1bmN0aW9uIDYK
-MDA6MTguNyBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBS
-ZW1icmFuZHQgRGF0YSBGYWJyaWM6IERldmljZSAxOGg7IEZ1bmN0aW9uIDcKMDE6MDAuMCBQQ0kg
-YnJpZGdlOiBBZHZhbmNlZCBNaWNybyBEZXZpY2VzLCBJbmMuIFtBTUQvQVRJXSBOYXZpIDEwIFhM
-IFVwc3RyZWFtIFBvcnQgb2YgUENJIEV4cHJlc3MgU3dpdGNoIChyZXYgYzIpCjAyOjAwLjAgUENJ
-IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EL0FUSV0gTmF2aSAxMCBY
-TCBEb3duc3RyZWFtIFBvcnQgb2YgUENJIEV4cHJlc3MgU3dpdGNoCjAzOjAwLjAgVkdBIGNvbXBh
-dGlibGUgY29udHJvbGxlcjogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EL0FUSV0g
-TmF2aSAyMyBbUmFkZW9uIFJYIDY2NTAgWFQgLyA2NzAwUyAvIDY4MDBTXSAocmV2IGMyKQowMzow
-MC4xIEF1ZGlvIGRldmljZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EL0FUSV0g
-TmF2aSAyMS8yMyBIRE1JL0RQIEF1ZGlvIENvbnRyb2xsZXIKMDQ6MDAuMCBTRCBIb3N0IGNvbnRy
-b2xsZXI6IE8yIE1pY3JvLCBJbmMuIFNEL01NQyBDYXJkIFJlYWRlciBDb250cm9sbGVyIChyZXYg
-MDEpCjA1OjAwLjAgTmV0d29yayBjb250cm9sbGVyOiBNRURJQVRFSyBDb3JwLiBNVDc5MjIgODAy
-LjExYXggUENJIEV4cHJlc3MgV2lyZWxlc3MgTmV0d29yayBBZGFwdGVyCjA2OjAwLjAgTm9uLVZv
-bGF0aWxlIG1lbW9yeSBjb250cm9sbGVyOiBNaWNyb24gVGVjaG5vbG9neSBJbmMgMjQ1MCBOVk1l
-IFNTRCBbSGVuZHJpeFZdIChEUkFNLWxlc3MpIChyZXYgMDEpCjA3OjAwLjAgVkdBIGNvbXBhdGli
-bGUgY29udHJvbGxlcjogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EL0FUSV0gUmVt
-YnJhbmR0IFtSYWRlb24gNjgwTV0gKHJldiBjOCkKMDc6MDAuMSBBdWRpbyBkZXZpY2U6IEFkdmFu
-Y2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRC9BVEldIFJlbWJyYW5kdCBSYWRlb24gSGlnaCBE
-ZWZpbml0aW9uIEF1ZGlvIENvbnRyb2xsZXIKMDc6MDAuMiBFbmNyeXB0aW9uIGNvbnRyb2xsZXI6
-IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0gRmFtaWx5IDE5aCBQU1AvQ0NQCjA3
-OjAwLjMgVVNCIGNvbnRyb2xsZXI6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0g
-UmVtYnJhbmR0IFVTQjQgWEhDSSBjb250cm9sbGVyICMzCjA3OjAwLjQgVVNCIGNvbnRyb2xsZXI6
-IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0gUmVtYnJhbmR0IFVTQjQgWEhDSSBj
-b250cm9sbGVyICM0CjA3OjAwLjUgTXVsdGltZWRpYSBjb250cm9sbGVyOiBBZHZhbmNlZCBNaWNy
-byBEZXZpY2VzLCBJbmMuIFtBTURdIEFDUC9BQ1AzWC9BQ1A2eCBBdWRpbyBDb3Byb2Nlc3NvciAo
-cmV2IDYwKQowNzowMC42IEF1ZGlvIGRldmljZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5j
-LiBbQU1EXSBGYW1pbHkgMTdoLzE5aCBIRCBBdWRpbyBDb250cm9sbGVyCjA4OjAwLjAgVVNCIGNv
-bnRyb2xsZXI6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0gUmVtYnJhbmR0IFVT
-QjQgWEhDSSBjb250cm9sbGVyICM4CjA4OjAwLjMgVVNCIGNvbnRyb2xsZXI6IEFkdmFuY2VkIE1p
-Y3JvIERldmljZXMsIEluYy4gW0FNRF0gUmVtYnJhbmR0IFVTQjQgWEhDSSBjb250cm9sbGVyICM1
-CjA4OjAwLjQgVVNCIGNvbnRyb2xsZXI6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FN
-RF0gUmVtYnJhbmR0IFVTQjQgWEhDSSBjb250cm9sbGVyICM2Cg==
-
---b1_ha6Z88o6od4KDaNqHDp2B9eu2fkdf8WJNAIXZcyg--
+-	strstarts(a, b)
++	str_has_prefix(a, b)
 
