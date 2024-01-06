@@ -1,37 +1,37 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2079.outbound.protection.outlook.com [40.107.243.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2328B15AC
-	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jan 2024 02:26:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9583815A8
+	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jan 2024 02:26:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="u39JD7NI"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="q0Bs+LRN"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fmZAmdqcxUzck5etPUMtBz6wu9jekNxol7i/kiW5Ie48HnLbx4CXCZoDSRdn9oWW7a9gt9fhiwcAXMc2yBzWqHJQ4PANkCYMSnLwKglPfzSdtI60ozoiHtptFBxxm4F1g2V64v2XfAnqS5ULqrYGsWc1N01weXWkpkxuu9XnNX042icBIqvtuHxqD8MMg7AU9YzlYZH9Qwm9rSpo+gjxo4qD/DT1hk3Pd5DSRqX2YZd/51m3YyUxMa/HlsIoEha6g8jQ5HWbI7SX5uzAp0nyK+NeuGMLmxT06gHaK0lMQvAEiZDMgDgVIMEOBK6/twdigYn7euMPHI1mWGcRGMmaTQ==
+ b=L+7MG62OTAHHZULZlb+3mQajqHdN0FDGQeHmQGM7Gq5tAZbgrK2xnE8AAGBpljIlt45cMr5QPZYD0NSkPw3M8sN8gQ5IGxWjPwT0LhW09PCfbb03CGt1MNhVhP+fHMVl51rNJ0LYmtF0U+Urux0s0h2VOVjmD+FdT8KYXdQiut93k2evV730v249jbT9xAPlvYcWme7hryC3t7LtcEk5ykWhBqZTmmASJjUcoYmi/p7BSKJ/xTUzfcW4oMha7gZBoccTC8P9xUGpP24MuZb0CIqdDpibsER8hemgPveGtAWn/FmE+osWy2sy5AYkhd/ywxTcAnlDGMYUPPM96+EAMw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PXWxTO79mGGb3y2ub16HhYUqVZkHS/sX+T+fM9Xd2O4=;
- b=CW636xtNjXZ6aSiw5OyGgiDCYgKqivjBkzK+IhbGhBVof0PlEndM/E4u0R4/pKVumd9ecGvDsRTaIFILEnXmeXEjcJ5f6UbiHgAuAGICkgiL8RyVXlLEgrd6o3jewfJGf9f6ShrFiyfqQGYOIQ0gqmFx0J7c2u7xZJAQ5617JZPZrH0jSjHg8KY3qrxzW2GoA2rAYkcOlJXSVIbP/HQmXsaLxzjytILWTWd8+W3rlrdETjsqJT0LDlwAWpSlobLoe1yCxRj+TzeoewExSbf+eYyR0yYKPY04S5qgINUWNhbcQxCD1wZYvxKQMxWNbvQI5Xx4H9UjmUjD38kX0QC9TQ==
+ bh=nKSI7O00tbADC6aIeiRZpsMRk14IN1sBAtV449z9D2U=;
+ b=drph8DdFanNFl5gMa4K5eFrVywFI2ePkbixlPT2kGTQLG1g5nGbTfDT3p9c0HX4QSncm3JvFKRujdB4lLBR8rkmLOQjgLAXCf5aEIbsPiyAAIdqdZdDaL9Ssb4W/nLpqeAvMV18dHvQZXWrQ8XpcYNJd00RR9tQvCklGVSKLHtLSwMA0cPVUgIL/d8ObZ+7k1B/VrtZIcPvcugu1cocC0iMpZLV4kXJCrc3cVFR0WmD9w2F9V5INg/PARne/jz6wm/TJpWXOPVfwC0BRbNODRR/tfo76N7zHNAuqyquYuTPvEEvmNkqBZ8lC5y2szOlLY7HLKo0xITVC/aO0rOmLWQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PXWxTO79mGGb3y2ub16HhYUqVZkHS/sX+T+fM9Xd2O4=;
- b=u39JD7NI+l2iLkQ9Gbn3SqaD1ouqPl/nP1Q0/hNsh2XdF/vvqHiTtCZICqITTqgH8ESzAriGHx44kJL8kvGtSwVP5MWKO2e6luguzLhI1mO0tfCy+6IY9n7wmj+SCRl/M4Ps3zjH3uR94lK7XoZDJqzFJqW9EIfprthmWMf7Iho=
-Received: from PH8PR07CA0010.namprd07.prod.outlook.com (2603:10b6:510:2cd::22)
- by IA1PR12MB8539.namprd12.prod.outlook.com (2603:10b6:208:446::6) with
+ bh=nKSI7O00tbADC6aIeiRZpsMRk14IN1sBAtV449z9D2U=;
+ b=q0Bs+LRNx4xeG+OejKfuI1z4HtJIALHMSSjvKqf9/2MnYb8c9K7jTQgps0xwS+K8dO+hlWxeJwXTxgNHhmyHNLzac/y2Ggykvqw0x/tblmJnnP+fOPUBJXWxxfVRRrpylhDITFA7Qvo6WGD5LUN+PnoqcQ4yTbpx/ko2dCQjyr4=
+Received: from PH0PR07CA0030.namprd07.prod.outlook.com (2603:10b6:510:5::35)
+ by CO6PR12MB5489.namprd12.prod.outlook.com (2603:10b6:303:139::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.15; Sat, 6 Jan
- 2024 02:26:26 +0000
-Received: from SN1PEPF0002BA4F.namprd03.prod.outlook.com
- (2603:10b6:510:2cd:cafe::7d) by PH8PR07CA0010.outlook.office365.com
- (2603:10b6:510:2cd::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.17; Sat, 6 Jan
+ 2024 02:26:28 +0000
+Received: from SN1PEPF0002BA4D.namprd03.prod.outlook.com
+ (2603:10b6:510:5:cafe::c1) by PH0PR07CA0030.outlook.office365.com
+ (2603:10b6:510:5::35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.17 via Frontend
- Transport; Sat, 6 Jan 2024 02:26:26 +0000
+ Transport; Sat, 6 Jan 2024 02:26:28 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -39,20 +39,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF0002BA4F.mail.protection.outlook.com (10.167.242.72) with Microsoft
+ SN1PEPF0002BA4D.mail.protection.outlook.com (10.167.242.70) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7159.9 via Frontend Transport; Sat, 6 Jan 2024 02:26:26 +0000
+ 15.20.7159.9 via Frontend Transport; Sat, 6 Jan 2024 02:26:28 +0000
 Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Fri, 5 Jan
- 2024 20:26:24 -0600
+ 2024 20:26:25 -0600
 From: Suma Hegde <suma.hegde@amd.com>
 To: <platform-driver-x86@vger.kernel.org>
 CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
 	<suma.hegde@amd.com>, Naveen Krishna Chatradhi <nchatrad@amd.com>
-Subject: [PATCH v5 10/11] platform/x86/amd/hsmp: Change devm_kzalloc() to devm_kcalloc()
-Date: Sat, 6 Jan 2024 02:25:31 +0000
-Message-ID: <20240106022532.1746932-10-suma.hegde@amd.com>
+Subject: [PATCH v5 11/11] platform/x86/amd/hsmp: Remove extra parenthesis and add a space
+Date: Sat, 6 Jan 2024 02:25:32 +0000
+Message-ID: <20240106022532.1746932-11-suma.hegde@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240106022532.1746932-1-suma.hegde@amd.com>
 References: <20240106022532.1746932-1-suma.hegde@amd.com>
@@ -68,82 +68,57 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4F:EE_|IA1PR12MB8539:EE_
-X-MS-Office365-Filtering-Correlation-Id: 44a2fbef-848a-4e61-6517-08dc0e5ee203
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4D:EE_|CO6PR12MB5489:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2dbb222d-8c3c-4346-4ff7-08dc0e5ee336
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	xocVcUM+/vMWapa8kqKMrdSl61MF4740jfCcSZ1Jqt3XiXfQb9Otljl4gxBbgeJ2aPqb/r4k0Nu5U0jIzWmQX0SeTJgHtQ3ZtumJQK48vGEmz1qI23RQCMkGIIq5laDqpe3aS92KjVbiNNj8mz7VUifY4e8TG/twR1KHR5Xy8prgz7ajmus09cCbo20lhxIKBh/x9nR/I3l2ABdiYioPY6DmGPc3D1wBfyT9+52+HQM8e7/MbiSTSyj3JujHGFte409xVwqrzyARY/OUlwGnpB6zeqfhsc7C4V6KiuZEthgHgY17gZPkRh2f6Zx+TGhfjo4Pi1EqsrphloFe05/9F8rQPKLzZHb2VM5jRYoGIzoeLEjzTuVbkFJiE3F+qFw0abqEjq5IQzhVlv/CwvjITYI8kI0rD1X8yag8wjA0Ym4glVtlt1PK1FnjOjqeWFB1f8cjCz0vbHIz4pYyEJdwJMWISy/mEPrp9/ljr+3lSz/xHYEBZd5NqOc6201hTdqUvaj7sDoW2B7yQ1bsMumaFyfDNqQHfWEo1Del0zMjiMiRHntplLmx1zKJsCX5JS/6mqdK6sgjSMwAcfpBu48skDbUnrN1i5dTIHvLCWI4UiJtXZ27kMyStauf+0RmR3AJctLQu9dTEl8Stghs2K8ITCTY2ruhyTSRRZAdB4WNWGRPTS/yfkqGYhhI54qHkK5hvg2HFLWcD0M2ZfDZEPQ2ermEgP7FvfrNuKHRi8hKdsYYw2EBDZM/713Qg0sYfxu4ahNNKZ/tBknoD5yvZVvamA==
+	SDmCzHoghceJHdMoPPWpb07pFChhzMQ1sjcTywRUAFyjv9SrflEOnOoGcCFwAxbwJakrq16u9n7cvGmWOQ2BcL2ojoZOlpF1+PerDlmchNLSaXEYcyt4rIKuNQVTCH7bctm7FDhVfTUriCPEK+oYvXQzD3HgTOItoQtuDX2gFcSV+OaW5DDiPq/4015XVWSQKsn9Pnc3okZL2/4mjonL4kziF+ipSTG0HIU04ZoPR99punH6Ioksj7/jTvZRKxqWPT6BaSpc+8OzqOILO1eJkJYP6rDoHZkd1lw5KI3mTAFqow2vi0gRP0lSWvGG8rLRPOfdWGdAFHvyjcmDisRRn84EuHUG/inJVfp/vaQahZrP8jS2P0q5fz3GeWA8bW96NS/n/kz/0OTYEnxJF4lKNRhyLvcgGzFRdwf2WNeh0r47RUIe46Uw8LXvvG+/046QCKT9W7uh74g3yXP05SaC9knB0UwqIW4bbwwJJEO9aADPVHD3rzdY4kb08q9V5M1oDfweU1nAqFNxPuVkH5kjsnLzuIej+cPFBAeJ8fDhXoEY0a5n5wl+IO2EMqMSrJ7r+ou7b6as9eJG6XpbJBL+UanDNLngRDxO+AoDX3824p9TXjhrF8qIgMLpS96BFTYl0Mj2y6zuL1/zsM2J3Eap4Tw8nro/WQLv9qOn6m3ypio/Ynr6gWSt4FBywb6K+yIx7TwTA4RPBEcayv0GBFmnL8x9sI3Uxu/gL9PhYXdiZgSWEf/uJInotW+1aPX9M4mnkXPTuFsqRhfcaeRHRV6W9g==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(39860400002)(346002)(136003)(396003)(230922051799003)(1800799012)(64100799003)(451199024)(186009)(82310400011)(46966006)(40470700004)(36840700001)(47076005)(1076003)(6666004)(336012)(26005)(426003)(478600001)(7696005)(70586007)(83380400001)(2906002)(16526019)(41300700001)(70206006)(54906003)(8936002)(4326008)(8676002)(6916009)(44832011)(5660300002)(316002)(2616005)(82740400003)(36860700001)(36756003)(356005)(86362001)(81166007)(40460700003)(40480700001)(36900700001);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(376002)(346002)(39860400002)(136003)(230922051799003)(82310400011)(186009)(451199024)(1800799012)(64100799003)(36840700001)(46966006)(40470700004)(426003)(2616005)(336012)(26005)(1076003)(7696005)(6666004)(16526019)(44832011)(83380400001)(8676002)(316002)(8936002)(54906003)(36756003)(2906002)(4744005)(5660300002)(4326008)(478600001)(70206006)(70586007)(6916009)(82740400003)(356005)(81166007)(47076005)(86362001)(36860700001)(41300700001)(40480700001)(40460700003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2024 02:26:26.0574
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2024 02:26:28.0532
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44a2fbef-848a-4e61-6517-08dc0e5ee203
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2dbb222d-8c3c-4346-4ff7-08dc0e5ee336
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002BA4F.namprd03.prod.outlook.com
+	SN1PEPF0002BA4D.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8539
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5489
 
-Use the standard array allocation variant of devm memory allocation
-APIs.
+Remove unnecessary parenthesis around hsmp_get_tbl_dram_base().
 
 Signed-off-by: Suma Hegde <suma.hegde@amd.com>
 Signed-off-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
 ---
 Changes since v4:
-1. Change sizeof(struct bin_attribute *) to sizeof(*hsmp_bin_attrs)
-2. Change sizeof(struct attribute_group *) to sizeof(*hsmp_attr_grps)
-3. Split some of the changes to 11th patch in this v5 series
+New patch, generated after splitting the 9th patch in v4 series
 
-Changes since v3:
-New patch, based on Ilpos review comments and additional cosmetic changes.
- drivers/platform/x86/amd/hsmp.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/platform/x86/amd/hsmp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
-index 99bebb0ca5a9..ccf7cd8f98f6 100644
+index ccf7cd8f98f6..99a34b48f78f 100644
 --- a/drivers/platform/x86/amd/hsmp.c
 +++ b/drivers/platform/x86/amd/hsmp.c
-@@ -657,8 +657,9 @@ static int hsmp_create_attr_list(struct attribute_group *attr_grp,
- 	struct bin_attribute **hsmp_bin_attrs;
+@@ -643,12 +643,12 @@ static int hsmp_init_metric_tbl_bin_attr(struct bin_attribute **hattrs, u16 sock
+ 	hattrs[0]		= hattr;
  
- 	/* Null terminated list of attributes */
--	hsmp_bin_attrs = devm_kzalloc(dev, sizeof(struct bin_attribute *) *
--				      (NUM_HSMP_ATTRS + 1), GFP_KERNEL);
-+	hsmp_bin_attrs = devm_kcalloc(dev, NUM_HSMP_ATTRS + 1,
-+				      sizeof(*hsmp_bin_attrs),
-+				      GFP_KERNEL);
- 	if (!hsmp_bin_attrs)
- 		return -ENOMEM;
+ 	if (plat_dev.proto_ver == HSMP_PROTO_VER6)
+-		return (hsmp_get_tbl_dram_base(sock_ind));
++		return hsmp_get_tbl_dram_base(sock_ind);
+ 	else
+ 		return 0;
+ }
  
-@@ -673,8 +674,9 @@ static int hsmp_create_non_acpi_sysfs_if(struct device *dev)
- 	struct attribute_group *attr_grp;
- 	u16 i;
+-/* One bin sysfs for metrics table*/
++/* One bin sysfs for metrics table */
+ #define NUM_HSMP_ATTRS		1
  
--	hsmp_attr_grps = devm_kzalloc(dev, sizeof(struct attribute_group *) *
--				      (plat_dev.num_sockets + 1), GFP_KERNEL);
-+	hsmp_attr_grps = devm_kcalloc(dev, plat_dev.num_sockets + 1,
-+				      sizeof(*hsmp_attr_grps),
-+				      GFP_KERNEL);
- 	if (!hsmp_attr_grps)
- 		return -ENOMEM;
- 
-@@ -804,8 +806,8 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
- 	 * on each probe.
- 	 */
- 	if (!plat_dev.is_probed) {
--		plat_dev.sock = devm_kzalloc(&pdev->dev,
--					     (plat_dev.num_sockets * sizeof(struct hsmp_socket)),
-+		plat_dev.sock = devm_kcalloc(&pdev->dev, plat_dev.num_sockets,
-+					     sizeof(struct hsmp_socket),
- 					     GFP_KERNEL);
- 		if (!plat_dev.sock)
- 			return -ENOMEM;
+ static int hsmp_create_attr_list(struct attribute_group *attr_grp,
 -- 
 2.25.1
 
