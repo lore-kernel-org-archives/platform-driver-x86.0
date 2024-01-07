@@ -1,120 +1,119 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBBD134A6
-	for <platform-driver-x86@vger.kernel.org>; Sun,  7 Jan 2024 13:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027C8134AC
+	for <platform-driver-x86@vger.kernel.org>; Sun,  7 Jan 2024 14:03:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HqvcBWqS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I6HWEHsl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704635288;
+	s=mimecast20190719; t=1704636199;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FhvERxvOalEfwV0gGkOaETxoePyPqiqQc+YVcOl96Cs=;
-	b=HqvcBWqSi1UctVMQGA9i5pQrLIfEu1N9bDY+SF2TNxlick1YhWr+CF0keHbtc8gNwmEsFb
-	DZLOov3o0cJL0cm1zz5tbOx3AhC7/1SRtq3G240aCIJDtR7qu9zD7pqkXgn6H45qdN2dN7
-	xpwCC8GzvKIS8FNpizUnvDohA4xZDYs=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/OY01PeTEJvk6CuYETd+RaDtK5F/6jApGt/2J+xPnJs=;
+	b=I6HWEHsl5T2gLVhegRKM8bFwxbKJwtIkF447q07iNgF5YHo64JMwBhRjm9MoC92GrLLE+3
+	SaCH/zma5YoDzqIxMzXrxsPUeVtnHgWvudzScVlMMird0RmlsDWzs+4wiS6z7IVQOt3ber
+	l8F/i5Pu+art/MdrMLyId+wR8jA7xNs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-690-aHkn5v84NZqaIycSOXgpGQ-1; Sun, 07 Jan 2024 08:48:01 -0500
-X-MC-Unique: aHkn5v84NZqaIycSOXgpGQ-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2ccbddbc79fso6986771fa.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 07 Jan 2024 05:48:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704635280; x=1705240080;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FhvERxvOalEfwV0gGkOaETxoePyPqiqQc+YVcOl96Cs=;
-        b=kKAiNXDR1T3XJOAZRCsb7YFtcdWoBGmwPV+tc8UA57r/PT/pPeiKULge4LtWja4n/T
-         gW5pbbOq8NdFxNFaQM3gXC/PPq9mmW7vx6l2F4c0uZG0FCFHTT6IFtWVw70CNIDDOMdQ
-         N81+jTjGTmQIAAEyICIieB+Qtwicbo/UzBH8/B1DGdvPPNDUEeKNJt63imkEOLe5gP4h
-         ntxLTz7/00xTNJIW0b/dH0WVR683VkEpecuZuXFthsQVEt74bankYQzr0FzQiJ61z/73
-         On/c0OOL12kycSfNF5jYnmiKlU9fNGWtB8M+Wc7NA8+KDWQcUmpI7QYT8Rt+Ninz35U0
-         ZxEg==
-X-Gm-Message-State: AOJu0YxMwl+v9j+msMp6ee1rS+e4+zlUPp2P9Xqw+YIG5huk8p8xxXu/
-	LmTbPDdd724MGnIwjMLQvvpQhN9VLjVOHr49GE8XrD1QdKgWvE7P+TTuSk1Uf5Rt+wqxur98KRA
-	qCmTqLQxKvkHlidoWecpEdhmZJHLHE7iq/vSUVfLT+Q==
-X-Received: by 2002:a05:6512:3ba4:b0:50e:b618:df09 with SMTP id g36-20020a0565123ba400b0050eb618df09mr975985lfv.1.1704635280353;
-        Sun, 07 Jan 2024 05:48:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG24C0oMyiajG+Ye4jxdj3p/B7I+wQEMhx5Iv5KlZT2nAlwqVYOpQmjgxfh4N1KYtll9JK6xw==
-X-Received: by 2002:a05:6512:3ba4:b0:50e:b618:df09 with SMTP id g36-20020a0565123ba400b0050eb618df09mr975973lfv.1.1704635280012;
-        Sun, 07 Jan 2024 05:48:00 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id d35-20020a056402402300b005572a1159b9sm3139239eda.22.2024.01.07.05.47.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Jan 2024 05:47:58 -0800 (PST)
-Message-ID: <7945afcf-da89-47c9-a59b-eac61a640411@redhat.com>
-Date: Sun, 7 Jan 2024 14:47:57 +0100
+ us-mta-690-d4nXrB50MU-3Y1hPR4Nzyg-1; Sun, 07 Jan 2024 09:03:14 -0500
+X-MC-Unique: d4nXrB50MU-3Y1hPR4Nzyg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C759D863010;
+	Sun,  7 Jan 2024 14:03:13 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.59])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 39EEC2026D66;
+	Sun,  7 Jan 2024 14:03:11 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: Johannes Stezenbach <js@sig21.net>,
+	Takashi Iwai <tiwai@suse.de>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org,
+	x86@kernel.org,
+	linux-clk@vger.kernel.org
+Subject: [PATCH v2 0/5] x86: atom-punit/-pmc s2idle device state checks
+Date: Sun,  7 Jan 2024 15:03:05 +0100
+Message-ID: <20240107140310.46512-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] x86/platform/atom: Check state of Punit managed
- devices on s2idle
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Johannes Stezenbach <js@sig21.net>, Takashi Iwai <tiwai@suse.de>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
- <hpa@zytor.com>, platform-driver-x86@vger.kernel.org, x86@kernel.org
-References: <20231231163322.9492-1-hdegoede@redhat.com>
- <20231231163322.9492-5-hdegoede@redhat.com>
- <CAHp75VcLBBuVLeqEFOuj2UNX7kUniXY6h18jH2s7zRCpq28mVg@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75VcLBBuVLeqEFOuj2UNX7kUniXY6h18jH2s7zRCpq28mVg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-Hi Andy,
+Hi All,
 
-On 1/2/24 01:07, Andy Shevchenko wrote:
-> On Sun, Dec 31, 2023 at 6:33 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> From: Johannes Stezenbach <js@sig21.net>
->>
->> This is a port of "pm: Add pm suspend debug notifier for North IPs"
->> from the latte-l-oss branch of:
->> from https://github.com/MiCode/Xiaomi_Kernel_OpenSource latte-l-oss
->>
->> With the new acpi_s2idle_dev_ops and acpi_register_lps0_dev()
->> functionality this can now finally be ported to the mainline kernel
->> without requiring adding non-upstreamable hooks into the cpu_idle
->> driver mechanism.
->>
->> This adds a check that all hardware blocks in the North complex
->> (controlled by Punit) are in a state that allows the SoC to enter S0i3
->> and prints an error message for any device in D0.
-> 
-> ...
-> 
->>  static void punit_dbgfs_register(struct punit_device *punit_device)
->>  {
->> +       punit_dev = punit_device;
-> 
-> This is not the correct (semantically) place for this.
-> 
-> Instead, optionally introduce a local variable in the
-> punit_atom_debug_init() and assign the global one there. Also it seems
-> that you may move this global variable under ifdeffery (and hence its
-> assignment) and have less stale bytes in the object file. (With this
-> said, it seems that local variables are plausible to have.)
+These patches are an upstream submission of a patch titled:
+"Intel Atom suspend: add debug check for S0ix blockers"
 
-Thank you for the reviews. I agree with all your review remarks
-and I'll submit a v2 series addressing all of them soon.
+Which I have been carrying in my personal kernel tree for years now.
+This code originally comes from the latte-l-oss branch of:
+https://github.com/MiCode/Xiaomi_Kernel_OpenSource
+
+And has been posted on upstream mailinglists before by
+Johannes Stezenbach, whose authorship I have kept for
+the 2 base patches and has been reposted by Takashi Iwai
+and at one point in time I picked this up from Takashi's
+reposting as can be seen from the S-o-b lines. Unfortunately
+I cannot find the original postings, so I have no link to
+those.
+
+The original version of this added some ugly hooks into
+the intel_idle driver which I presume is why these patches
+never got anywhere upstream.
+
+With the new acpi_s2idle_dev_ops and acpi_register_lps0_dev()
+functionality this functionality can now be implemented cleanly
+and that is what this patch-series does.
+
+clk and x86/tip maintainers, it is probably the cleanest if this
+entire series is merged through the pdx86 tree (*). Can we have
+your ack for merging patch 1/5 resp. 5/5 through the pdx86 tree ?
 
 Regards,
 
 Hans
 
+*) Andy recently mentioned that it might be a good idea to move
+some of the arch/x86/platform code to drivers/platform/x86,
+arch/x86/platform/atom/punit_atom_debug.c which is a completely
+standalone driver definitly is a good candidate for this
 
+
+
+Hans de Goede (3):
+  clk: x86: Move clk-pmc-atom register defines to
+    include/linux/platform_data/x86/pmc_atom.h
+  platform/x86: pmc_atom: Annotate d3_sts register bit defines
+  platform/x86: pmc_atom: Check state of PMC clocks on s2idle
+
+Johannes Stezenbach (2):
+  platform/x86: pmc_atom: Check state of PMC managed devices on s2idle
+  x86/platform/atom: Check state of Punit managed devices on s2idle
+
+ arch/x86/platform/atom/punit_atom_debug.c  | 45 ++++++++++++-
+ drivers/clk/x86/clk-pmc-atom.c             | 13 +---
+ drivers/platform/x86/pmc_atom.c            | 78 ++++++++++++++++++++++
+ include/linux/platform_data/x86/pmc_atom.h | 25 +++++--
+ 4 files changed, 142 insertions(+), 19 deletions(-)
+
+-- 
+2.43.0
 
