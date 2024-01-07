@@ -1,92 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAE313AC0;
-	Sun,  7 Jan 2024 16:08:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 499D6C433C7;
-	Sun,  7 Jan 2024 16:08:05 +0000 (UTC)
-Date: Sun, 7 Jan 2024 11:09:17 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Joe Perches <joe@perches.com>, Andreas
- Schwab <schwab@linux-m68k.org>, Pali =?UTF-8?B?Um9ow6Fy?=
- <pali@kernel.org>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
- <ilpo.jarvinen@linux.intel.com>, Paul Menzel <pmenzel@molgen.mpg.de>, Jean
- Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
- eric.piel@tremplin-utc.net, Marius Hoch <mail@mariushoch.de>,
- Dell.Client.Kernel@dell.com, Kai Heng Feng <kai.heng.feng@canonical.com>,
- platform-driver-x86@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
- linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] platform/x86: dell-smo8800: Move instantiation
- of lis3lv02d i2c_client from i2c-i801 to dell-smo8800
-Message-ID: <20240107110917.3d6075de@gandalf.local.home>
-In-Reply-To: <ZZl-wrHfidYJwpOk@smile.fi.intel.com>
-References: <20240106160935.45487-1-hdegoede@redhat.com>
-	<20240106160935.45487-3-hdegoede@redhat.com>
-	<ZZl-wrHfidYJwpOk@smile.fi.intel.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89ECF13AC6;
+	Sun,  7 Jan 2024 16:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="CjdfwwB6"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id EB38240E01BB;
+	Sun,  7 Jan 2024 16:10:10 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id UUKPEGfXS7Fn; Sun,  7 Jan 2024 16:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1704643808; bh=uicWjHVcjuJUbwy8PSbH0cgGsvhhw20EHj9qFuZ/dA4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CjdfwwB6RVBAL52E+jk7Bl5fG5c48un2cY7asSRJKZG5KpexELYi9RW93GizIOB9w
+	 KuUFalBTSF1utWoE0eRk1vP1u1avCmb1qQfL+FQ0t79934AeJ3Qxvr3zfCoi0LinwL
+	 fZafCzQQ+xnvMfuIixsgO9p5K/yfmnb74tF1kb5cDGyg2Mmuws3rUNnLqyCP3IqRI3
+	 qV6OhYsB+rneSW6/6OgQKfDIt43PZF42lN1Rth7TFQBBcHcslAeqzsdZrdBBq2WXI8
+	 Io6h6tIZQSO9ddzrMTR7ImLy1ch+rTw4vk91LLzEBEOLQsk4PU66xLBp1E6oTFizWD
+	 aLZARTrl13btJ5ssGBY9fhMSr7nOB/2ruuupjSVx3Mm9TgvOFqDjwQmQR5JAvEYaCU
+	 qAZE931E8g0k2Q0DiYaniSx3ioancNIDW5IC0x6c/1sPkONyFkk6sA+NmFj4Imx6Mx
+	 //8/o/QcnP3dRkzRGiDKo1YI4DAf6Izm3/MLjTbLaHqqpZwuRI6xEZodecaL/g/ZPn
+	 1gNCAP2uyxCv7Cww8J2+sbSp1e2Yed2kdbekqvNq7K2KVbW/mgN45zKmpj02k0XZpz
+	 4+zhJGnTrS8MnUMrm+kGg18L4uFz9khUiXt7vXiBxOB8c3uA4a+bJsUrnJsjAnWMWp
+	 mODlxdNn2rxAuJ4XbOCEKfmk=
+Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D03DC40E00C5;
+	Sun,  7 Jan 2024 16:09:53 +0000 (UTC)
+Date: Sun, 7 Jan 2024 17:09:47 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Johannes Stezenbach <js@sig21.net>, Takashi Iwai <tiwai@suse.de>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	platform-driver-x86@vger.kernel.org, x86@kernel.org,
+	linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] x86: atom-punit/-pmc s2idle device state checks
+Message-ID: <20240107160947.GBZZrMy9+60YW7qflX@fat_crate.local>
+References: <20240107140310.46512-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240107140310.46512-1-hdegoede@redhat.com>
 
-On Sat, 6 Jan 2024 18:24:34 +0200
-Andy Shevchenko <andy@kernel.org> wrote:
+On Sun, Jan 07, 2024 at 03:03:05PM +0100, Hans de Goede wrote:
+> clk and x86/tip maintainers, it is probably the cleanest if this
+> entire series is merged through the pdx86 tree (*). Can we have
+> your ack for merging patch 1/5 resp. 5/5 through the pdx86 tree ?
 
-> > +	if (!strstarts(adap->name, "SMBus I801 adapter"))
-> > +		return 0;  
-> 
-> Bah, we have str_has_prefix() and this, much older one...
-> Steven? Others? I mean we can do something about this duplication, right?
+for patch 5:
 
-They are not really duplicate functions.
+Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
 
-Note that strstarts() is just a boolean (does this start with something)
-where as str_has_prefix() returns the length of the prefix.
+> *) Andy recently mentioned that it might be a good idea to move
+> some of the arch/x86/platform code to drivers/platform/x86,
+> arch/x86/platform/atom/punit_atom_debug.c which is a completely
+> standalone driver definitly is a good candidate for this
 
-Yes, strstarts() can be swapped to str_has_prefix() but it can't go the
-other way around. One use case of the str_has_prefix() feature is in the
-histogram parsing:
+Moving *all* drivers away from arch/x86/platform/ and to
+drivers/platform/x86/ where they really belong sounds like a good idea
+to me.
 
-	for (i = 0; i < hist_data->attrs->n_actions; i++) {
-		str = hist_data->attrs->action_str[i];
+arch/x86/platform should probably be only platform-specific code but not
+standalone drivers.
 
-		if ((len = str_has_prefix(str, "onmatch("))) {
-			char *action_str = str + len;
+Thx.
 
-			data = onmatch_parse(tr, action_str);
-			if (IS_ERR(data)) {
-				ret = PTR_ERR(data);
-				break;
-			}
-		} else if ((len = str_has_prefix(str, "onmax("))) {
-			char *action_str = str + len;
+-- 
+Regards/Gruss,
+    Boris.
 
-			data = track_data_parse(hist_data, action_str,
-						HANDLER_ONMAX);
-			if (IS_ERR(data)) {
-				ret = PTR_ERR(data);
-				break;
-			}
-		} else if ((len = str_has_prefix(str, "onchange("))) {
-			char *action_str = str + len;
-
-			data = track_data_parse(hist_data, action_str,
-						HANDLER_ONCHANGE);
-			if (IS_ERR(data)) {
-				ret = PTR_ERR(data);
-				break;
-			}
-
-Where we get the length of the prefix if there's a match, and use that to
-skip over the prefix.
-
-If you just need to know if something starts with a string, then
-"strstarts()" is perfectly fine to use.
-
--- Steve
+https://people.kernel.org/tglx/notes-about-netiquette
