@@ -1,36 +1,36 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2490B134B1
-	for <platform-driver-x86@vger.kernel.org>; Sun,  7 Jan 2024 14:03:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C75134A0
+	for <platform-driver-x86@vger.kernel.org>; Sun,  7 Jan 2024 14:03:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OZdSoK1v"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JvzfJjMy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704636206;
+	s=mimecast20190719; t=1704636207;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Un+jkAxYYgZPi16AyYe7Ij76j+a9JbtQeeYu35ikdaA=;
-	b=OZdSoK1vU24/DwaZvxT8RKDHVmuX0ZsBe468PZR/IVxdzqBxgnNSzzvbbDrnmsxJVty/M0
-	WYOXGFKO/h5TVosYOicxpw0+0IXqVYf7YUJUml8ZqCXU8LwRtFYr54kZhmmdsNkRptmtXU
-	rvkZB3kkgHeCJQyQ0Zl9BjZ+EMNBVjs=
+	bh=yF7BU6FRePuNmoByYImgrr2UQ+ZpFqxAPcqARXe/rDU=;
+	b=JvzfJjMyU80gVjv+bAd2kkcvWOeHONfbyyJSGnzWfLgUq8Zjwt8EHZCuSeFN21MKXSqqL1
+	wDUOQTB7SRIuK84NP65++ijXtC4r+OJiRysBnz5SI8D2fPJiwhPPJXxJGopdHEePn5PSgN
+	PhjUtKcCc0Lrj2LnSg5wNynsfzrRg6w=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-638-9yElmF2ePuWSgyK2GbLebQ-1; Sun, 07 Jan 2024 09:03:20 -0500
-X-MC-Unique: 9yElmF2ePuWSgyK2GbLebQ-1
+ us-mta-21-Tt4yBQA6Oayjb5c_GsDdDg-1; Sun, 07 Jan 2024 09:03:24 -0500
+X-MC-Unique: Tt4yBQA6Oayjb5c_GsDdDg-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D4139863010;
-	Sun,  7 Jan 2024 14:03:19 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DE79885CE07;
+	Sun,  7 Jan 2024 14:03:23 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.192.59])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0BBE02026D66;
-	Sun,  7 Jan 2024 14:03:17 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 14FAA2026D66;
+	Sun,  7 Jan 2024 14:03:21 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: Johannes Stezenbach <js@sig21.net>,
 	Takashi Iwai <tiwai@suse.de>,
@@ -47,9 +47,9 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	platform-driver-x86@vger.kernel.org,
 	x86@kernel.org,
 	linux-clk@vger.kernel.org
-Subject: [PATCH v2 3/5] platform/x86: pmc_atom: Check state of PMC managed devices on s2idle
-Date: Sun,  7 Jan 2024 15:03:08 +0100
-Message-ID: <20240107140310.46512-4-hdegoede@redhat.com>
+Subject: [PATCH v2 5/5] x86/platform/atom: Check state of Punit managed devices on s2idle
+Date: Sun,  7 Jan 2024 15:03:10 +0100
+Message-ID: <20240107140310.46512-6-hdegoede@redhat.com>
 In-Reply-To: <20240107140310.46512-1-hdegoede@redhat.com>
 References: <20240107140310.46512-1-hdegoede@redhat.com>
 Precedence: bulk
@@ -63,7 +63,7 @@ X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
 From: Johannes Stezenbach <js@sig21.net>
 
-This is a port of "pm: Add pm suspend debug notifier for South IPs"
+This is a port of "pm: Add pm suspend debug notifier for North IPs"
 from the latte-l-oss branch of:
 from https://github.com/MiCode/Xiaomi_Kernel_OpenSource latte-l-oss
 
@@ -72,123 +72,100 @@ functionality this can now finally be ported to the mainline kernel
 without requiring adding non-upstreamable hooks into the cpu_idle
 driver mechanism.
 
-This adds a check that all hardware blocks in the South complex
-(controlled by PMC) are in a state that allows the SoC to enter S0i3
+This adds a check that all hardware blocks in the North complex
+(controlled by Punit) are in a state that allows the SoC to enter S0i3
 and prints an error message for any device in D0.
-
-Note the pmc_atom code is enabled by CONFIG_X86_INTEL_LPSS which
-already depends on ACPI.
 
 Signed-off-by: Johannes Stezenbach <js@sig21.net>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
-[hdegoede: Use acpi_s2idle_dev_ops, ignore fused off blocks, PMIC I2C]
+[hdegoede: Use acpi_s2idle_dev_ops]
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v2:
-- Drop duplicated "pmc_atom: " prefix from pr_err() / pr_dbg() messages
----
- drivers/platform/x86/pmc_atom.c | 67 +++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+ arch/x86/platform/atom/punit_atom_debug.c | 45 ++++++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index 93a6414c6611..81ad66117365 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -6,6 +6,7 @@
+diff --git a/arch/x86/platform/atom/punit_atom_debug.c b/arch/x86/platform/atom/punit_atom_debug.c
+index f8ed5f66cd20..03ae08c99155 100644
+--- a/arch/x86/platform/atom/punit_atom_debug.c
++++ b/arch/x86/platform/atom/punit_atom_debug.c
+@@ -7,6 +7,9 @@
+  * Copyright (c) 2015, Intel Corporation.
+  */
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
++#define pr_fmt(fmt) "punit_atom: " fmt
++
 +#include <linux/acpi.h>
- #include <linux/debugfs.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
  #include <linux/device.h>
- #include <linux/dmi.h>
-@@ -17,6 +18,7 @@
- #include <linux/platform_device.h>
- #include <linux/pci.h>
- #include <linux/seq_file.h>
-+#include <linux/suspend.h>
- 
- struct pmc_bit_map {
- 	const char *name;
-@@ -448,6 +450,67 @@ static int pmc_setup_clks(struct pci_dev *pdev, void __iomem *pmc_regmap,
- 	return 0;
+@@ -117,6 +120,37 @@ static void punit_dbgfs_unregister(void)
+ 	debugfs_remove_recursive(punit_dbg_file);
  }
  
-+#ifdef CONFIG_SUSPEND
-+static void pmc_dev_state_check(u32 sts, const struct pmc_bit_map *sts_map,
-+				u32 fd, const struct pmc_bit_map *fd_map,
-+				u32 sts_possible_false_pos)
-+{
-+	int index;
++#if defined(CONFIG_ACPI) && defined(CONFIG_SUSPEND)
++static const struct punit_device *punit_dev;
 +
-+	for (index = 0; sts_map[index].name; index++) {
-+		if (!(fd_map[index].bit_mask & fd) &&
-+		    !(sts_map[index].bit_mask & sts)) {
-+			if (sts_map[index].bit_mask & sts_possible_false_pos)
-+				pm_pr_dbg("%s is in D0 prior to s2idle\n",
-+					  sts_map[index].name);
-+			else
-+				pr_err("%s is in D0 prior to s2idle\n",
-+				       sts_map[index].name);
++static void punit_s2idle_check(void)
++{
++	const struct punit_device *punit_devp;
++	u32 punit_pwr_status, dstate;
++	int status;
++
++	for (punit_devp = punit_dev; punit_devp->name; punit_devp++) {
++		/* Skip MIO this is on till the very last moment */
++		if (punit_devp->reg == MIO_SS_PM)
++			continue;
++
++		status = iosf_mbi_read(BT_MBI_UNIT_PMC, MBI_REG_READ,
++				       punit_devp->reg, &punit_pwr_status);
++		if (status) {
++			pr_err("%s read failed\n", punit_devp->name);
++		} else  {
++			dstate = (punit_pwr_status >> punit_devp->sss_pos) & 3;
++			if (!dstate)
++				pr_err("%s is in D0 prior to s2idle\n", punit_devp->name);
 +		}
 +	}
 +}
 +
-+static void pmc_s2idle_check(void)
-+{
-+	struct pmc_dev *pmc = &pmc_device;
-+	const struct pmc_reg_map *m = pmc->map;
-+	u32 func_dis, func_dis_2;
-+	u32 d3_sts_0, d3_sts_1;
-+	u32 false_pos_sts_0, false_pos_sts_1;
-+
-+	func_dis = pmc_reg_read(pmc, PMC_FUNC_DIS);
-+	func_dis_2 = pmc_reg_read(pmc, PMC_FUNC_DIS_2);
-+	d3_sts_0 = pmc_reg_read(pmc, PMC_D3_STS_0);
-+	d3_sts_1 = pmc_reg_read(pmc, PMC_D3_STS_1);
-+
-+	/*
-+	 * Some blocks are not used on lower-featured versions of the SoC and
-+	 * always report D0, add these to false_pos mask to log at debug level.
-+	 */
-+	if (m->d3_sts_1	== byt_d3_sts_1_map) {
-+		/* BYT */
-+		false_pos_sts_0 = BIT_GBE | BIT_SATA | BIT_PCIE_PORT0 |
-+			BIT_PCIE_PORT1 | BIT_PCIE_PORT2 | BIT_PCIE_PORT3 |
-+			BIT_LPSS2_F5_I2C5;
-+		false_pos_sts_1 = BIT_SMB | BIT_USH_SS_PHY | BIT_DFX;
-+	} else {
-+		/* CHT */
-+		false_pos_sts_0 = BIT_GBE | BIT_SATA | BIT_LPSS2_F7_I2C7;
-+		false_pos_sts_1 = BIT_SMB | BIT_STS_ISH;
-+	}
-+
-+	/* Low part */
-+	pmc_dev_state_check(d3_sts_0, m->d3_sts_0, func_dis, m->func_dis, false_pos_sts_0);
-+
-+	/* High part */
-+	pmc_dev_state_check(d3_sts_1, m->d3_sts_1, func_dis_2, m->func_dis_2, false_pos_sts_1);
-+}
-+
-+static struct acpi_s2idle_dev_ops pmc_s2idle_ops = {
-+	.check = pmc_s2idle_check,
++static struct acpi_s2idle_dev_ops punit_s2idle_ops = {
++	.check = punit_s2idle_check,
 +};
 +#endif
 +
- static int pmc_setup_dev(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	struct pmc_dev *pmc = &pmc_device;
-@@ -485,6 +548,10 @@ static int pmc_setup_dev(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		dev_warn(&pdev->dev, "platform clocks register failed: %d\n",
- 			 ret);
+ #define X86_MATCH(model, data)						 \
+ 	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6, INTEL_FAM6_##model, \
+ 					   X86_FEATURE_MWAIT, data)
+@@ -131,19 +165,28 @@ MODULE_DEVICE_TABLE(x86cpu, intel_punit_cpu_ids);
  
-+#ifdef CONFIG_SUSPEND
-+	acpi_register_lps0_dev(&pmc_s2idle_ops);
+ static int __init punit_atom_debug_init(void)
+ {
++	struct punit_device *punit_device;
+ 	const struct x86_cpu_id *id;
+ 
+ 	id = x86_match_cpu(intel_punit_cpu_ids);
+ 	if (!id)
+ 		return -ENODEV;
+ 
+-	punit_dbgfs_register((struct punit_device *)id->driver_data);
++	punit_device = (struct punit_device *)id->driver_data;
++	punit_dbgfs_register(punit_device);
++#if defined(CONFIG_ACPI) && defined(CONFIG_SUSPEND)
++	punit_dev = punit_device;
++	acpi_register_lps0_dev(&punit_s2idle_ops);
 +#endif
-+
- 	pmc->init = true;
- 	return ret;
+ 
+ 	return 0;
  }
+ 
+ static void __exit punit_atom_debug_exit(void)
+ {
++#if defined(CONFIG_ACPI) && defined(CONFIG_SUSPEND)
++	acpi_unregister_lps0_dev(&punit_s2idle_ops);
++#endif
+ 	punit_dbgfs_unregister();
+ }
+ 
 -- 
 2.43.0
 
