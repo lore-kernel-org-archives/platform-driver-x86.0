@@ -1,37 +1,37 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E2B14274;
-	Mon,  8 Jan 2024 10:58:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA30D14284;
+	Mon,  8 Jan 2024 11:18:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lYqEwqFa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A67/it+B"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704711518; x=1736247518;
+  t=1704712690; x=1736248690;
   h=date:from:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=Xe3uRR2q3YbLM9EgMf3sRVLZRGE3oxMgYT9yokyH+Ck=;
-  b=lYqEwqFaA3q4UCf1pP5aYazFEF63alcnJSqAH0WbgRRx6K+hJYLbtOpQ
-   cWgBtVNCAOfj0lcmQ0aJvbf9kUL6r2hibwceRInbOq9F6XGXNsqn2yn2Y
-   Y0iaEx8Tfjr14np+2Ip3OGOiOV658llHDQqxtv3l6AD+quy563eVqeCi5
-   h7AZ0kPQpnUxMFlWs84jc7ndcR9Zj2calA5S2MEq0z9Pz1JH7EolD+zNx
-   1X6ns6vAPni5vdFGIcOHQd0ugL198bc4MSAwBQZQMniedbxYjJNIEhud4
-   R8WA3TWyBArOXPdcBRGIKNkc8O4vaaCBOGPEV8S2O9Y+iAnwayUKTojvo
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="19349615"
+  bh=B1VylUtaCrS8pDKCE/sjv19CDZ5DsjEX0gQhMkw4e/4=;
+  b=A67/it+BF0kZQqjA1nyJKG58r0JJt3q57/c5UINAUZr/qvOWIrMHkZit
+   /A3kEr0oFQLAk6cLa9DddbEL8LT9wzeQ1be+k6wRf3XgxV9JHck0g9jlU
+   7N6MycAifLqL37OhNODDmf08OAeutmvCM2HAuU1tjEmecMEmV+/h73jg9
+   tVrNno5XeOsjr7pKkV00PjbNrhX8KP21ty94RbPQWlS/d2uUVBnu2oxyy
+   s1glD9vy4aNXD6a1su/Nu2+grGENO2773VhKrYd5XQ6uPjqLoUo1AHkgS
+   dPK4P13aEQgVYEGgaulfDZCR2Cr3fB0/wXIafAtlL5RcJF1ots6fJVV/g
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="429036616"
 X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="19349615"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 02:58:37 -0800
+   d="scan'208";a="429036616"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 03:18:09 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="900340804"
+X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="871846054"
 X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="900340804"
+   d="scan'208";a="871846054"
 Received: from stinti-mobl.ger.corp.intel.com ([10.249.37.10])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 02:58:33 -0800
-Date: Mon, 8 Jan 2024 12:58:31 +0200 (EET)
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 03:18:05 -0800
+Date: Mon, 8 Jan 2024 13:18:02 +0200 (EET)
 From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Hans de Goede <hdegoede@redhat.com>
 cc: Johannes Stezenbach <js@sig21.net>, Takashi Iwai <tiwai@suse.de>, 
@@ -42,103 +42,181 @@ cc: Johannes Stezenbach <js@sig21.net>, Takashi Iwai <tiwai@suse.de>,
     Michael Turquette <mturquette@baylibre.com>, 
     Stephen Boyd <sboyd@kernel.org>, platform-driver-x86@vger.kernel.org, 
     x86@kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] clk: x86: Move clk-pmc-atom register defines to
- include/linux/platform_data/x86/pmc_atom.h
-In-Reply-To: <20240107140310.46512-2-hdegoede@redhat.com>
-Message-ID: <a9c2c296-38f0-1cf-a5d9-3169786adf@linux.intel.com>
-References: <20240107140310.46512-1-hdegoede@redhat.com> <20240107140310.46512-2-hdegoede@redhat.com>
+Subject: Re: [PATCH v2 3/5] platform/x86: pmc_atom: Check state of PMC managed
+ devices on s2idle
+In-Reply-To: <20240107140310.46512-4-hdegoede@redhat.com>
+Message-ID: <a4d814a2-66bd-6429-539c-196fabbf48ae@linux.intel.com>
+References: <20240107140310.46512-1-hdegoede@redhat.com> <20240107140310.46512-4-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-550535538-1704711516=:1762"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-550535538-1704711516=:1762
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
 
 On Sun, 7 Jan 2024, Hans de Goede wrote:
 
-> Move the register defines for the Atom (Bay Trail, Cherry Trail) PMC
-> clocks to include/linux/platform_data/x86/pmc_atom.h.
+> From: Johannes Stezenbach <js@sig21.net>
 > 
-> This is a preparation patch to extend the S0i3 readiness checks
-> in drivers/platform/x86/pmc_atom.c with checking that the PMC
-> clocks are off on suspend entry.
+> This is a port of "pm: Add pm suspend debug notifier for South IPs"
+> from the latte-l-oss branch of:
+> from https://github.com/MiCode/Xiaomi_Kernel_OpenSource latte-l-oss
+
+If this is to be included at all, don't place it first but last in the 
+commit message. That is, focus on the change itself, not where the patch 
+came from.
+
+> With the new acpi_s2idle_dev_ops and acpi_register_lps0_dev()
+> functionality this can now finally be ported to the mainline kernel
+
+What is "this" (and no, don't point it to some external patch in some 
+random branch).
+
+> without requiring adding non-upstreamable hooks into the cpu_idle
+> driver mechanism.
+
+Somehow this entire paragraph (and the one preceeding it) has a flawed way 
+to look things, it focuses on stuff that seems largely irrelevant. 
+Instead, there should be "a problem statement", what is problem this patch 
+is addressing / why.
+
+> This adds a check that all hardware blocks in the South complex
+> (controlled by PMC) are in a state that allows the SoC to enter S0i3
+> and prints an error message for any device in D0.
 > 
-> Note these are added to include/linux/platform_data/x86/pmc_atom.h rather
-> then to include/linux/platform_data/x86/clk-pmc-atom.h because the former
-> already has all the other Atom PMC register defines.
+> Note the pmc_atom code is enabled by CONFIG_X86_INTEL_LPSS which
+> already depends on ACPI.
 > 
+> Signed-off-by: Johannes Stezenbach <js@sig21.net>
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> [hdegoede: Use acpi_s2idle_dev_ops, ignore fused off blocks, PMIC I2C]
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/clk/x86/clk-pmc-atom.c             | 13 +------------
->  include/linux/platform_data/x86/pmc_atom.h | 13 +++++++++++++
->  2 files changed, 14 insertions(+), 12 deletions(-)
+> Changes in v2:
+> - Drop duplicated "pmc_atom: " prefix from pr_err() / pr_dbg() messages
+> ---
+>  drivers/platform/x86/pmc_atom.c | 67 +++++++++++++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
 > 
-> diff --git a/drivers/clk/x86/clk-pmc-atom.c b/drivers/clk/x86/clk-pmc-atom.c
-> index 2974dd0ec6f4..5ec9255e33fa 100644
-> --- a/drivers/clk/x86/clk-pmc-atom.c
-> +++ b/drivers/clk/x86/clk-pmc-atom.c
-> @@ -11,23 +11,12 @@
->  #include <linux/err.h>
->  #include <linux/io.h>
->  #include <linux/platform_data/x86/clk-pmc-atom.h>
-> +#include <linux/platform_data/x86/pmc_atom.h>
+> diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+> index 93a6414c6611..81ad66117365 100644
+> --- a/drivers/platform/x86/pmc_atom.c
+> +++ b/drivers/platform/x86/pmc_atom.c
+> @@ -6,6 +6,7 @@
+>  
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+> +#include <linux/acpi.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/device.h>
+>  #include <linux/dmi.h>
+> @@ -17,6 +18,7 @@
 >  #include <linux/platform_device.h>
->  #include <linux/slab.h>
+>  #include <linux/pci.h>
+>  #include <linux/seq_file.h>
+> +#include <linux/suspend.h>
 >  
->  #define PLT_CLK_NAME_BASE	"pmc_plt_clk"
+>  struct pmc_bit_map {
+>  	const char *name;
+> @@ -448,6 +450,67 @@ static int pmc_setup_clks(struct pci_dev *pdev, void __iomem *pmc_regmap,
+>  	return 0;
+>  }
 >  
-> -#define PMC_CLK_CTL_OFFSET		0x60
-> -#define PMC_CLK_CTL_SIZE		4
-> -#define PMC_CLK_NUM			6
-> -#define PMC_CLK_CTL_GATED_ON_D3		0x0
-> -#define PMC_CLK_CTL_FORCE_ON		0x1
-> -#define PMC_CLK_CTL_FORCE_OFF		0x2
-> -#define PMC_CLK_CTL_RESERVED		0x3
-> -#define PMC_MASK_CLK_CTL		GENMASK(1, 0)
-> -#define PMC_MASK_CLK_FREQ		BIT(2)
-> -#define PMC_CLK_FREQ_XTAL		(0 << 2)	/* 25 MHz */
-> -#define PMC_CLK_FREQ_PLL		(1 << 2)	/* 19.2 MHz */
-> -
->  struct clk_plt_fixed {
->  	struct clk_hw *clk;
->  	struct clk_lookup *lookup;
-> diff --git a/include/linux/platform_data/x86/pmc_atom.h b/include/linux/platform_data/x86/pmc_atom.h
-> index b8a701c77fd0..557622ef0390 100644
-> --- a/include/linux/platform_data/x86/pmc_atom.h
-> +++ b/include/linux/platform_data/x86/pmc_atom.h
-> @@ -43,6 +43,19 @@
->  				BIT_ORED_DEDICATED_IRQ_GPSC | \
->  				BIT_SHARED_IRQ_GPSS)
+> +#ifdef CONFIG_SUSPEND
+> +static void pmc_dev_state_check(u32 sts, const struct pmc_bit_map *sts_map,
+> +				u32 fd, const struct pmc_bit_map *fd_map,
+> +				u32 sts_possible_false_pos)
+> +{
+> +	int index;
+> +
+> +	for (index = 0; sts_map[index].name; index++) {
+> +		if (!(fd_map[index].bit_mask & fd) &&
+> +		    !(sts_map[index].bit_mask & sts)) {
+> +			if (sts_map[index].bit_mask & sts_possible_false_pos)
+> +				pm_pr_dbg("%s is in D0 prior to s2idle\n",
+> +					  sts_map[index].name);
+> +			else
+> +				pr_err("%s is in D0 prior to s2idle\n",
+> +				       sts_map[index].name);
+> +		}
+> +	}
+> +}
+> +
+> +static void pmc_s2idle_check(void)
+> +{
+> +	struct pmc_dev *pmc = &pmc_device;
+> +	const struct pmc_reg_map *m = pmc->map;
+> +	u32 func_dis, func_dis_2;
+> +	u32 d3_sts_0, d3_sts_1;
+> +	u32 false_pos_sts_0, false_pos_sts_1;
+> +
+> +	func_dis = pmc_reg_read(pmc, PMC_FUNC_DIS);
+> +	func_dis_2 = pmc_reg_read(pmc, PMC_FUNC_DIS_2);
+> +	d3_sts_0 = pmc_reg_read(pmc, PMC_D3_STS_0);
+> +	d3_sts_1 = pmc_reg_read(pmc, PMC_D3_STS_1);
+> +
+> +	/*
+> +	 * Some blocks are not used on lower-featured versions of the SoC and
+> +	 * always report D0, add these to false_pos mask to log at debug level.
+
+Please explain this also in the commit message.
+
+> +	 */
+> +	if (m->d3_sts_1	== byt_d3_sts_1_map) {
+> +		/* BYT */
+
+Can these be written open into the longer form.
+
+> +		false_pos_sts_0 = BIT_GBE | BIT_SATA | BIT_PCIE_PORT0 |
+> +			BIT_PCIE_PORT1 | BIT_PCIE_PORT2 | BIT_PCIE_PORT3 |
+> +			BIT_LPSS2_F5_I2C5;
+> +		false_pos_sts_1 = BIT_SMB | BIT_USH_SS_PHY | BIT_DFX;
+> +	} else {
+> +		/* CHT */
+> +		false_pos_sts_0 = BIT_GBE | BIT_SATA | BIT_LPSS2_F7_I2C7;
+> +		false_pos_sts_1 = BIT_SMB | BIT_STS_ISH;
+> +	}
+
+Perhaps move common bits out of the if blocks?
+
+> +
+> +	/* Low part */
+> +	pmc_dev_state_check(d3_sts_0, m->d3_sts_0, func_dis, m->func_dis, false_pos_sts_0);
+> +
+> +	/* High part */
+> +	pmc_dev_state_check(d3_sts_1, m->d3_sts_1, func_dis_2, m->func_dis_2, false_pos_sts_1);
+
+The variables are called _0 and _1 but the comment talks about "low" and 
+"high", could these be made consistent such that variabless end into _lo & 
+_hi ?
+
+After making that change, I don't think those comments add any value any 
+further value to what is already plainly visible from the code itself.
+
+> +}
+> +
+> +static struct acpi_s2idle_dev_ops pmc_s2idle_ops = {
+> +	.check = pmc_s2idle_check,
+> +};
+> +#endif
+> +
+>  static int pmc_setup_dev(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  {
+>  	struct pmc_dev *pmc = &pmc_device;
+> @@ -485,6 +548,10 @@ static int pmc_setup_dev(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  		dev_warn(&pdev->dev, "platform clocks register failed: %d\n",
+>  			 ret);
 >  
-> +/* External clk generator settings */
-> +#define PMC_CLK_CTL_OFFSET		0x60
-> +#define PMC_CLK_CTL_SIZE		4
-> +#define PMC_CLK_NUM			6
-> +#define PMC_CLK_CTL_GATED_ON_D3		0x0
-> +#define PMC_CLK_CTL_FORCE_ON		0x1
-> +#define PMC_CLK_CTL_FORCE_OFF		0x2
-> +#define PMC_CLK_CTL_RESERVED		0x3
-> +#define PMC_MASK_CLK_CTL		GENMASK(1, 0)
-> +#define PMC_MASK_CLK_FREQ		BIT(2)
-> +#define PMC_CLK_FREQ_XTAL		(0 << 2)	/* 25 MHz */
-> +#define PMC_CLK_FREQ_PLL		(1 << 2)	/* 19.2 MHz */
-
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-
-Noting the last two look like:
-#define PMC_CLK_FREQ_XTAL	FIELD_PREP(PMC_MASK_CLK_FREQ, 0) /* 25 MHz */
-#define PMC_CLK_FREQ_PLL	FIELD_PREP(PMC_MASK_CLK_FREQ, 1) /* 19.2 MHz */
-
+> +#ifdef CONFIG_SUSPEND
+> +	acpi_register_lps0_dev(&pmc_s2idle_ops);
+> +#endif
+> +
+>  	pmc->init = true;
+>  	return ret;
+>  }
+> 
 
 -- 
  i.
 
---8323329-550535538-1704711516=:1762--
