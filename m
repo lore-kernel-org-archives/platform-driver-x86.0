@@ -1,55 +1,55 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118104C3C8
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jan 2024 14:56:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8F351016
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jan 2024 15:23:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OUHu2MZc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GF80NmSH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704725808;
+	s=mimecast20190719; t=1704727381;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NZYr/5wbdSTN5KMNy+kx/4t5MRG0j7fZAQY8NjpcndI=;
-	b=OUHu2MZcVEABte7Ts82U1o7MFLz1QGNiNtqWZh/ZSAlHtXfSeG/JQgD6j7dI2c3m5Bedf2
-	Cu2er6yQc9Lf+pije19NY2jHSoO0ScyemfZVVTZbveepgq58koAk0c+oWErFaYPNfkKQho
-	mMpcgI65kj4LvHiSUJWuNEwQWt/20+Y=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=3enDL7x023hK73qHzko8bcPLgiHS6A4R6I0TzQHyeIw=;
+	b=GF80NmSHQ2u2cPO9McTclOVKsj/mObC2mm14XUu492+YMNasmt04g4GP7RsmCJ78xmirbt
+	W+U0WdruScC3iRje0WtdQK1wueqIPipvnaYT+yyT6zFbMfVOcbNhaDfZMvOdmhjVZWKOdx
+	40AT0zMCLVwVi/3h2lzwR3CkVfWoeuI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-171-4PcYqqoyPx6Tg6LzBFPIBQ-1; Mon, 08 Jan 2024 09:56:46 -0500
-X-MC-Unique: 4PcYqqoyPx6Tg6LzBFPIBQ-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a28f6a78b83so84702566b.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Jan 2024 06:56:46 -0800 (PST)
+ us-mta-454-m-OlWKGmMOSPMM0rdFHsZw-1; Mon, 08 Jan 2024 10:22:59 -0500
+X-MC-Unique: m-OlWKGmMOSPMM0rdFHsZw-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-40e412c1e65so13603665e9.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Jan 2024 07:22:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704725805; x=1705330605;
+        d=1e100.net; s=20230601; t=1704727378; x=1705332178;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NZYr/5wbdSTN5KMNy+kx/4t5MRG0j7fZAQY8NjpcndI=;
-        b=nc0d74mG8aaV79OS+vz0Wk+tzwofpRop/FlZztedzzPESq6nOF42zMDAzctgdhfk1b
-         mGrGgEZffSoV15sAEk9JcxOYOKiwbwNPWOl2N0YelPXpFq4JiG5BadSdaEOgQ8XxdPro
-         fX+ENjtl2SGBi4uK0KlJE87yA8rYjyAGPw0aEDSZGDrjt4Ru1FpVrT2dcV4EpLdDRh4D
-         bszKGxqSzmJUn07ESk+YqC8FAE5ZbyIYMbUTFGPiwDxz+RvMxDjxdLASND3uJhgqrrwW
-         V/1bgPJXRbFC4lAsUG2I9wAysJtr+Mh1NfXLJ05HLiXenS8S3frzWH0ZSnqFmh/J5+dR
-         XjiQ==
-X-Gm-Message-State: AOJu0YyFM7bcuMpkvGT0WiIiUUjRXW4s+O6ufNOe4KYl/yHLgQQjwXON
-	INn1sriLJ1H8f2MdmrO7nN7U8tbzgGhLBI3MEc0YX8SLVP3aNeZtLvcC0QNop7+c4xBTNI4m6eD
-	YjziKZBgdifKUIbNqAOGt5uyPk20i582AUpGy2BxM0dAt1qQ1cA==
-X-Received: by 2002:a17:906:74c1:b0:a28:cf39:bf68 with SMTP id z1-20020a17090674c100b00a28cf39bf68mr1467992ejl.115.1704725805349;
-        Mon, 08 Jan 2024 06:56:45 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IESoC/LElRzDXS+V1sKd0uJqNqNVKwSj/kxkoY2fKBTyVs7saX56ulstF6COrGNKnx/PRlTVw==
-X-Received: by 2002:a17:906:74c1:b0:a28:cf39:bf68 with SMTP id z1-20020a17090674c100b00a28cf39bf68mr1467986ejl.115.1704725805097;
-        Mon, 08 Jan 2024 06:56:45 -0800 (PST)
+        bh=3enDL7x023hK73qHzko8bcPLgiHS6A4R6I0TzQHyeIw=;
+        b=mEFFQRMozljNoPkflU123AADLaQd1Dbf6cBHMx2kcgOgjRYDeq0CBCMahCg9qr/YIC
+         1KFexbGhWDr5xomxx9aQotTRDuG2WAY/P2htYH3AnehjzoFN0N91bWgrEVlyh2sr2mxY
+         KlRzsXHLSsFHu+PRUMUUYdrwdewXRD/YY3CJ8dQQHaWb32E1L/e0dlfpEvHU+SjqGtZa
+         bLoG9b0A1NKx+3CMFP4Wz705NIJRaA7lr5fBEXEp2DEDiB+JU9aTulXFj7JlDg1IqkpL
+         jbCpolSXbxwA8haX2BhcEocd0n++0SEp2rCJwpT+JkZ8m6CmbSW/9CRdW8ERbJIX2xZx
+         l1TA==
+X-Gm-Message-State: AOJu0YwQzANrKqsNw+82J71nMckZY/n9ylxu2b7XT2ZYJrV7ilJPNT89
+	HkhG+73OvDeBYk+nJql96Uj0C+8N/ZKi2CUMa8iDzhnv0RcH3SYs0AM7MHO+hj7SF9ZMkr93QLj
+	vow7yL/dboH88JjhZhvi5pQ0haGouTlSYDfIlb+TseXWGcu3Gog==
+X-Received: by 2002:a05:600c:1d04:b0:40d:725a:6c6 with SMTP id l4-20020a05600c1d0400b0040d725a06c6mr1870050wms.181.1704727377964;
+        Mon, 08 Jan 2024 07:22:57 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGLgnyWwGaP080OeFHL083gwhbKCqxQGYZMDZnlnk5jj2aUHAnsOkysg7x7CdG10adAUk85BQ==
+X-Received: by 2002:a05:600c:1d04:b0:40d:725a:6c6 with SMTP id l4-20020a05600c1d0400b0040d725a06c6mr1870038wms.181.1704727377609;
+        Mon, 08 Jan 2024 07:22:57 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id oq3-20020a170906cc8300b00a293c6cc184sm3788783ejb.24.2024.01.08.06.56.43
+        by smtp.gmail.com with ESMTPSA id dt12-20020a170906b78c00b00a26c8c70069sm4032236ejb.48.2024.01.08.07.22.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jan 2024 06:56:44 -0800 (PST)
-Message-ID: <f7bf65b4-c562-4d40-b02a-56c165138dd3@redhat.com>
-Date: Mon, 8 Jan 2024 15:56:43 +0100
+        Mon, 08 Jan 2024 07:22:57 -0800 (PST)
+Message-ID: <e8e0d636-081c-4953-b1c9-d9514b366cda@redhat.com>
+Date: Mon, 8 Jan 2024 16:22:56 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -57,39 +57,60 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] platform/x86: thinkpad_acpi: remove redundant
- assignment to variable i
+Subject: Re: [PATCH v6 0/2] platform/x86: p2sb: Fix deadlock at sysfs PCI bus
+ rescan
 Content-Language: en-US
-To: Colin Ian King <colin.i.king@gmail.com>,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240106154740.55202-1-colin.i.king@gmail.com>
+To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>, Klara Modin <klarasmodin@gmail.com>,
+ linux-pci@vger.kernel.org, linux-i2c@vger.kernel.org
+References: <20240108062059.3583028-1-shinichiro.kawasaki@wdc.com>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240106154740.55202-1-colin.i.king@gmail.com>
+In-Reply-To: <20240108062059.3583028-1-shinichiro.kawasaki@wdc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 1/6/24 16:47, Colin Ian King wrote:
-> The variable i is being initialized with the value 0 that is never
-> read, it is being re-assigned 0 again in a for-loop statement later
-> on. The initialization is redundant and can be removed.
+On 1/8/24 07:20, Shin'ichiro Kawasaki wrote:
+> When PCI devices call p2sb_bar() during probe for sysfs PCI bus rescan, deadlock
+> happens due to double lock of pci_rescan_remove_lock [1]. The first patch in
+> this series addresses the deadlock. The second patch is a code improvement which
+> was pointed out during review for the first patch.
 > 
-> The initialization of variable n can also be deferred after the
-> sanity check on pointer n and the declaration of all the int variables
-> can be combined as a final code clear-up.
+> [1] https://lore.kernel.org/linux-pci/6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j/
 > 
-> Cleans up clang scan build warning:
-> warning: Value stored to 'i' is never read [deadcode.DeadStores]
+> The first patch of the v5 series was upstreamed to the kernel v6.7-rc8. However,
+> it caused IDE controller detection failure on an old platform [2] then the patch
+> was reverted at v6.7. The failure happened because the IDE controller had same
+> DEVFN as P2SB device. To avoid this failure, I added device class check per
+> suggestion by Lukas. If the device at P2SB DEVFN does not have the device class
+> expected for P2SB, avoid touching the device.
 > 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> [2] https://lore.kernel.org/platform-driver-x86/CABq1_vjfyp_B-f4LAL6pg394bP6nDFyvg110TOLHHb0x4aCPeg@mail.gmail.com/
+> 
+> I confirmed the patches fix the problem [1] on the kernel v6.7, using a system
+> with i2c_i801 device, building i2c_i801 module as both built-in and loadable.
+> Reviews and comments will be appreciated.
+> 
+> Klara,
+> 
+> I hesitated to add your Tested-by tag to the v6 patch, since I modified the code
+> slightly from the code you tested (I used pci_bus_read_config_word() instead of
+> pci_bus_read_config_dword() to avoid a shift operator). I hope you have time to
+> afford to test this series again.
 
-Thanks, patch looks good to me:
+Thank you for your patch-series, I've applied this series to
+my review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+I will include this series in my next fixes pull-req to Linus
+for the current kernel development cycle.
+
+Note I have re-added Andy's and Ilpo's Reviewed-by for patch 1/2 since
+there is only one small change there.
 
 Regards,
 
@@ -97,33 +118,40 @@ Hans
 
 
 
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
+
+
+
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index c4895e9bc714..7bf91cfd3e51 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -6208,17 +6208,15 @@ static int thermal_get_sensor(int idx, s32 *value)
->  
->  static int thermal_get_sensors(struct ibm_thermal_sensors_struct *s)
->  {
-> -	int res, i;
-> -	int n;
-> -
-> -	n = 8;
-> -	i = 0;
-> +	int res, i, n;
->  
->  	if (!s)
->  		return -EINVAL;
->  
->  	if (thermal_read_mode == TPACPI_THERMAL_TPEC_16)
->  		n = 16;
-> +	else
-> +		n = 8;
->  
->  	for (i = 0 ; i < n; i++) {
->  		res = thermal_get_sensor(i, &s->temp[i]);
+> 
+> Changes from v5:
+> * Added device class check to avoid old IDE controller detection failure
+> 
+> Changes from v4:
+> * Separated a hunk for pci_resource_n() as the second patch
+> * Reflected other review comments by Ilpo
+> 
+> Changes from v3:
+> * Modified p2sb_valid_resource() to return boolean
+> 
+> Changes from v2:
+> * Improved p2sb_scan_and_cache() and p2sb_scan_and_cache_devfn()
+> * Reflected other review comments by Andy
+> 
+> Changes from v1:
+> * Reflected review comments by Andy
+> * Removed RFC prefix
+> 
+> Changes from RFC v2:
+> * Reflected review comments on the list
+> 
+> Changes from RFC v1:
+> * Fixed a build warning poitned out in llvm list by kernel test robot
+> 
+> Shin'ichiro Kawasaki (2):
+>   platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe
+>   platform/x86: p2sb: Use pci_resource_n() in p2sb_read_bar0()
+> 
+>  drivers/platform/x86/p2sb.c | 183 +++++++++++++++++++++++++++---------
+>  1 file changed, 141 insertions(+), 42 deletions(-)
+> 
 
