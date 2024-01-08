@@ -1,125 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03D813FE1;
-	Sun,  7 Jan 2024 17:10:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57701BE6B;
+	Mon,  8 Jan 2024 06:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J2O6lHjF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00285C433C8;
-	Sun,  7 Jan 2024 17:10:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704647459;
-	bh=mEi3tjPSbz7C7Qdvo39gBQ54pJ6niF/pIY9mqWuL9Sc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J2O6lHjFYPdLB8KDsswrVsBVt9qc6vGv+MuQ23REMq5VOXipnkLkG6NXIBvBhvRbn
-	 9qd/vvrrWfXUDiURQvHUGdKXM+obstO5qrQI9+qa4sZa/zACjXm8Q6RPpZghD9Cavl
-	 JSolc7HkZk5MVvy/a/F8daDYCAlMPnGIK+0bpZuOZ9fPbQklqHlLUiUdzWVfOSRR/M
-	 Tv8GUSIJ5mOy6jXsXFxX06v84rXuBzn9nQvYgkYFpHEr891G5Hcj46GGs/sM8fAEnD
-	 r8owZrOv5CTRI1+BlTAC16Wm3qmdJ0jBkRSi4wcmS6IL3F9R7yOd9H7cMv1BKnd056
-	 FPkHu7Gde9kGg==
-Received: by pali.im (Postfix)
-	id D7D1497E; Sun,  7 Jan 2024 18:10:55 +0100 (CET)
-Date: Sun, 7 Jan 2024 18:10:55 +0100
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Jean Delvare <jdelvare@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>, eric.piel@tremplin-utc.net,
-	Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com,
-	Kai Heng Feng <kai.heng.feng@canonical.com>,
-	platform-driver-x86@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
-	linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] platform/x86: dell-smo8800: Move instantiation of
- lis3lv02d i2c_client from i2c-i801 to dell-smo8800
-Message-ID: <20240107171055.ac7jtwhu2kbalaou@pali>
-References: <20240106160935.45487-1-hdegoede@redhat.com>
- <20240106160935.45487-3-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="WY76uHE4"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1704694932; x=1736230932;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MScuqBO0++OAVopMRx9sYKbuxXydYzh/BbhazA8/gwM=;
+  b=WY76uHE44TA6QuPFXpMe9DMc95JXa12x4xXNsQ979yCRwFLERPv6tfcr
+   Qa1QG/ev6xUsr1cAAJL2olqRqsaNTmETWvH+yRP6YzFo98aD2Sqb+cmT1
+   T6oh0/i7T452UnaeO+PKV012Ap9smwm4vWP5IbsyXXohSBwS3wV3ZrixP
+   +HsNuu0Z1Lsoxz5l0W6plVram+qeyVVFokKtxbLbR+D642ocuSoV6hBVE
+   lbuagaAtRTnF5ACQkkhKedbCnRy8yPjGkVyFbalZu5wG23kii+Kcjw/jA
+   jvu8/9BZPH217cFJumedsqGEyKtLI4J3gzO9zbQBL2dFUCxX97JBFYn7f
+   A==;
+X-CSE-ConnectionGUID: WzbhtLZgSZyMK9I1x3VoFA==
+X-CSE-MsgGUID: nDxwfq8ETuKm2UApnhy2PQ==
+X-IronPort-AV: E=Sophos;i="6.04,340,1695657600"; 
+   d="scan'208";a="6822647"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 08 Jan 2024 14:21:03 +0800
+IronPort-SDR: OnMz/hNj7LtqATKip3TM4UCBoNeVordoHwfce89WNhfcqmZIbrME7/qK6HGhZ9Vzzfx4xhUuMn
+ Wv1eVTZZ+Rfw==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 Jan 2024 21:31:24 -0800
+IronPort-SDR: NU7YKTDAS31nyY09lUsZhxHDCfLB9MIgQr09nAAT39vyVBa7+yHJmlvxao4nWB55TvOGOfWnBg
+ Oy1ufhTf+ZUg==
+WDCIronportException: Internal
+Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
+  by uls-op-cesaip02.wdc.com with ESMTP; 07 Jan 2024 22:21:01 -0800
+From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Klara Modin <klarasmodin@gmail.com>,
+	linux-pci@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH v6 0/2] platform/x86: p2sb: Fix deadlock at sysfs PCI bus rescan
+Date: Mon,  8 Jan 2024 15:20:57 +0900
+Message-ID: <20240108062059.3583028-1-shinichiro.kawasaki@wdc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240106160935.45487-3-hdegoede@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 
-On Saturday 06 January 2024 17:09:29 Hans de Goede wrote:
-> It is not necessary to handle the Dell specific instantiation of
-> i2c_client-s for SMO8xxx ACPI devices without an ACPI I2cResource
-> inside the generic i801 I2C adapter driver.
-> 
-> The kernel already instantiates platform_device-s for these ACPI devices
-> and the drivers/platform/x86/dell/dell-smo8800.c driver binds to these
-> platform drivers.
-> 
-> Move the i2c_client instantiation from the generic i2c-i801 driver to
-> the Dell specific dell-smo8800 driver.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v2:
-> - Use a pci_device_id table to check for IDF (non main) i2c-i801 SMBusses
-> - Add a comment documenting the IDF PCI device ids
-> ---
->  drivers/i2c/busses/i2c-i801.c            | 126 +----------------------
->  drivers/platform/x86/dell/dell-smo8800.c | 121 +++++++++++++++++++++-
->  2 files changed, 123 insertions(+), 124 deletions(-)
+When PCI devices call p2sb_bar() during probe for sysfs PCI bus rescan, deadlock
+happens due to double lock of pci_rescan_remove_lock [1]. The first patch in
+this series addresses the deadlock. The second patch is a code improvement which
+was pointed out during review for the first patch.
 
-I'm looking at this change again and I'm not not sure if it is a good
-direction to do this movement. Some of the issues which this change
-introduces I described in the previous email. I somehow have not caught
-up why to do it.
+[1] https://lore.kernel.org/linux-pci/6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j/
 
-ACPI smo8800 device and i2c lis3lv02d are from the OS resource point of
-view totally different devices, not connected together in any way. In
-ACPI tables there is no link information that smo8800 belongs to
-lis3lv02d, and neither that it is on i2c. System tree of the devices
-structures also handle it in this way.
+The first patch of the v5 series was upstreamed to the kernel v6.7-rc8. However,
+it caused IDE controller detection failure on an old platform [2] then the patch
+was reverted at v6.7. The failure happened because the IDE controller had same
+DEVFN as P2SB device. To avoid this failure, I added device class check per
+suggestion by Lukas. If the device at P2SB DEVFN does not have the device class
+expected for P2SB, avoid touching the device.
 
-If I'm looking at the current device design, it is a bus who instantiate
-devices (as children of the bus). In this case, this i2c has no
-information what is there connected (no Device Tree, no ACPI), so only
-static data hardcoded in kernel are available. And therefore it should
-be the bus who create or delete devices.
+[2] https://lore.kernel.org/platform-driver-x86/CABq1_vjfyp_B-f4LAL6pg394bP6nDFyvg110TOLHHb0x4aCPeg@mail.gmail.com/
 
-If the whole idea of this patch series was to merge smo8800 device and
-lis3lv02d device into one device, the question is why to do it and why
-it is a good idea in this case? (Specially when firmware provide to use
-very little information). I just do not see this motivation. If it is
-going to fix some bug or required for some new feature or something
-else. I would like to know this one. Maybe I'm completely something
-missing and hence I'm wrong...
+I confirmed the patches fix the problem [1] on the kernel v6.7, using a system
+with i2c_i801 device, building i2c_i801 module as both built-in and loadable.
+Reviews and comments will be appreciated.
 
-I know that it is just a one device which provides interrupt and
-accelerometer axes, but these two things are from OS persepctive totally
-separated and there can be all combinations which of them are available
-and which not (BIOS has select option to disable ACPI device=interrupt,
-can be ON/OFF and kernel has or does not have DMI information of i2c bus
-for acelerometer axes).
+Klara,
 
-I can understand motivation to replace one i2c driver by another, if
-there is a new style of it. In this it is just needed to teach new iio
-lis driver to support some joystick emulation layer (can be generic, or
-only for lis, or only available for HP and Dell machines) and switch can
-be done without issue.
-
-I can also understand motivation that freefall code is in two drivers
-(old i2c lis driver and acpi smo8800). In this case it can be extracted
-somwhere into helper function, or maybe completely moves into
-platform/x86 as it is IIRC only for HP and Dell machines, and can ripped
-out from the old i2c lis driver (unless there is some other usage for
-it).
-
-I also know that it is not a clean to have some Dell DMI data list in
-the i801 bus driver and helper code not related to i801. So why not to
-move this code from i2c-i801.c source file to some other helper library
-and call just the helper function from i801.
+I hesitated to add your Tested-by tag to the v6 patch, since I modified the code
+slightly from the code you tested (I used pci_bus_read_config_word() instead of
+pci_bus_read_config_dword() to avoid a shift operator). I hope you have time to
+afford to test this series again.
 
 
-I would rather let i2c lis device and ACPI smo8800 device separated,
-this concept is less prone to errors, matches linux device model and is
-already in use for many years and verified that works fine.
+Changes from v5:
+* Added device class check to avoid old IDE controller detection failure
+
+Changes from v4:
+* Separated a hunk for pci_resource_n() as the second patch
+* Reflected other review comments by Ilpo
+
+Changes from v3:
+* Modified p2sb_valid_resource() to return boolean
+
+Changes from v2:
+* Improved p2sb_scan_and_cache() and p2sb_scan_and_cache_devfn()
+* Reflected other review comments by Andy
+
+Changes from v1:
+* Reflected review comments by Andy
+* Removed RFC prefix
+
+Changes from RFC v2:
+* Reflected review comments on the list
+
+Changes from RFC v1:
+* Fixed a build warning poitned out in llvm list by kernel test robot
+
+Shin'ichiro Kawasaki (2):
+  platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe
+  platform/x86: p2sb: Use pci_resource_n() in p2sb_read_bar0()
+
+ drivers/platform/x86/p2sb.c | 183 +++++++++++++++++++++++++++---------
+ 1 file changed, 141 insertions(+), 42 deletions(-)
+
+-- 
+2.43.0
+
