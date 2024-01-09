@@ -1,162 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158D4186C;
-	Tue,  9 Jan 2024 02:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8AE35EE5;
+	Tue,  9 Jan 2024 10:29:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RBdCO9wS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704765693; x=1736301693;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Q6CmO5YpPQKLsxo/ioVXDCesZH+nFIiw1ImZ1l62W2w=;
-  b=RBdCO9wSGPrXinzlqcRUnGFjfiWmbdqISZZZYBiZgUZ24J/r9iTpG9Xz
-   SpK7tvUqlWM71DlAE0dyNZC+JxmOPVs1AQRP/QTRHhSYsQC6kBSmHncBm
-   yfLKODPky3O/Fnh+MUSuznBhlKA0hgiulwsJWI3edoCGRIg1cHtMvaola
-   V5ddHO9TgIO0nh2tI1D22h0qbbvrZynkLuwFKe0qi3YH76ei5cenWIKFL
-   zSe8nUigod48/xCxA54mriGSZVkOnDdKPOTTCOKwec7KPHINr9aM3UAX5
-   VUxc6eY0V6D7iQ9xWBEYQHL2q/4Nk1bAMPUDd6QM2GWdyjA/NJPCfPghz
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="484236951"
-X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
-   d="scan'208";a="484236951"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 18:01:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="774684450"
-X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
-   d="scan'208";a="774684450"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga007.jf.intel.com with ESMTP; 08 Jan 2024 18:01:26 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rN1Qi-0005Kc-2J;
-	Tue, 09 Jan 2024 02:01:24 +0000
-Date: Tue, 9 Jan 2024 10:00:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Eric Piel <eric.piel@tremplin-utc.net>
-Cc: oe-kbuild-all@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>, Dell.Client.Kernel@dell.com,
-	Marius Hoch <mail@mariushoch.de>,
-	Kai Heng Feng <kai.heng.feng@canonical.com>,
-	Wolfram Sang <wsa-dev@sang-engineering.com>,
-	platform-driver-x86@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH 5/6] platform/x86: dell-smo8800: Instantiate an
- i2c_client for the IIO st_accel driver
-Message-ID: <202401090941.FHkrtPXf-lkp@intel.com>
-References: <20231224213629.395741-6-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="uVO74iKZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1704796160; x=1705400960; i=w_armin@gmx.de;
+	bh=QipFuJnYN/Kb6LPSXeIwGxLbJpsBbnELZ8JaGfvIEdc=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=uVO74iKZ82uyXqOPSUH1IJLMn0Bvot5JQtF2vd5YzTpN06fYV4iex98TjLKGbm94
+	 6XD+GmORYulBsOh/L9njMRc5k5F2+wzINoouGfiNPb693Uz6YQ3czAMxrDYmbBPsa
+	 mNsYYH/xSpf2DCQD6GObYsSBg2/OBbnZKSMFipw62BymDGICcV9rM7ZbRXIyRcO/c
+	 +UMbhDDV+/Yak/vn1lPPAnIf7keVtj4ICfykv4v9GnBCjRLCUtlB25TEwXRjbeWiO
+	 vZnv7lue6czKqw0XXpa4hPzOo2CaoJS/dtk34NntzdN8GHxz877P1c5i12HiimtQw
+	 lDRjM0q+yG/NrM/0Qw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MiJZO-1qjAFK2ZPC-00fQ5z; Tue, 09
+ Jan 2024 11:29:20 +0100
+Message-ID: <56911b37-c316-43b2-8dc9-10f6fd0a398d@gmx.de>
+Date: Tue, 9 Jan 2024 11:29:19 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231224213629.395741-6-hdegoede@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: ERROR: Writing to dgpu_disable cause Input/Output error
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Athul Krishna <athul.krishna.kr@protonmail.com>,
+ "corentin.chary@gmail.com" <corentin.chary@gmail.com>,
+ "acpi4asus-user@lists.sourceforge.net"
+ <acpi4asus-user@lists.sourceforge.net>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-pci@vger.kernel.org
+References: <20240109000033.GA1986948@bhelgaas>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20240109000033.GA1986948@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:eyFeimnROql3QynwpU6IC6doTX8iSSBI66lO4SDLrv4mrwp/7m2
+ bgbvvBNx6FLx77xfhudKUz3HN4KIHc+BCOTTybTVNJSamfpvXLsKG52iWq5/luRO6kh75ev
+ jgXNJY4Ly2MIRRd397DXnBDQJiX8qQ8bU5DPywy0VXAoTSpcDJsMVTjVTsouUOjtr29LLhY
+ VNWDK9McDm95wGVqn279w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:uURtABLTZvs=;be+4onCGJZFxcyteoHkeTl5+qeR
+ Q0QXaUEFfFMDtwfcCWT+HvM6k8OplFiO+U5zGSHv0V3Eo4i1kc5FEZndTwIzWb7DYU7/fy3f7
+ OeH/ldz3OsDk/qBrpMZAZ2UvO2Vcvu9GvtyE2Hl4Mm1g/RYaeSyBYlaZPJqqiekrx2qntoOMt
+ es9DTzupBrhThji2SM3H23uGLGfG1GhWnyINKlz3Oqaoy9CwjhIuHuOJtzPQaEqt7LRweH9x5
+ xQXFWmct8iCx8E474hydssj6gsszFWHjYGw6HEhqr4ck5i0p6IqIgY7IvY2dWudk43CYcEYNc
+ uUByEuOKFtjiyqiVGMz+6nVlMt5ysvLwruBKCKac51xUG5nkucvX2CpTWghL25FFZ/L+nYAc9
+ 6702nNt3nQ9Z3LCzgE+g/YYj+p6APmPUcf75giuW5tl297KUhDpu4yO2RlB7tGa5yxlRVBWZG
+ ARn/CXkzMHKkl6mBJakdY68qRUHR+uZ4M3v6y5bK78J8uCAoX5ZgNPxVUmbhD2bYVH/ENGI7C
+ oWyuRAnNFSwD6XAgX/nkrs8tyMhDUF7AurPvGIApBZFkq5gaEA7aA2iHIWZAHF5cSO/dWwE8n
+ yFzqjMoTKoeIgtXvvfz7sVTFHZ2kYwFWP4U83iNMoXBO+9ONEZyQJqY1yCLUV0xuZ/BD+Y4O2
+ vTVu5TejKCyo42f29guB7ppn9RxTYErNNgie7HnfHln2pm2CoZIWr720LcmUWJhra0EznY/4S
+ ZmWQ6S63S6nPVxzmc4nx5SZidjojwUM5EsYFVi4CSnEJJ09NfI8Pzp4yqyAwlrg+mjej+3cgL
+ xlm7LvYYG5dI4Oy9elb2bmfflx5MDZH6DmFSfm9j6yGSI91ovJCJ3ZtI0V0pcE+kCKhJ00JN+
+ 6VM0NlQYTxX03PWIg/VcaNileA7GhjCSxCHjnntG3wDA5QfpIIr93jw5/t4KIvTfE95JiLJdX
+ rmxjGnkSvqzPu2zVsZjabpI8LBk=
 
-Hi Hans,
+Am 09.01.24 um 01:00 schrieb Bjorn Helgaas:
 
-kernel test robot noticed the following build errors:
+> On Sat, Jan 06, 2024 at 11:33:35PM +0100, Armin Wolf wrote:
+>> Am 04.01.24 um 03:50 schrieb Athul Krishna:
+>>
+>>>
+>>>
+>>>
+>>> Sent with Proton Mail secure email.
+>>>
+>>> On Thursday, January 4th, 2024 at 1:05 AM, Armin Wolf <W_Armin@gmx.de> wrote:
+>>>
+>>>
+>>>> Am 03.01.24 um 19:51 schrieb Athul Krishna:
+>>>>
+>>>>> Hello,
+>>>>> This is my first time reporting an issue in the kernel.
+>>>>>
+>>>>> Device Details:
+>>>>>
+>>>>> * Asus Zephyrus G14 (||||||GA402RJ)
+>>>>> * Latest BIOS
+>>>>> * Arch_x86_64
+>>>>> * Kernel: 6.6.9
+>>>>> * Minimal install using archinstall
+>>>>>
+>>>>> ISSUE: Using /dgpu_disable /provided by _asus-nb-wmi _to disable and
+>>>>> enable dedicated gpu,
+>>>>> causes system crash and reboots, randomly.
+>>>>> 9/10 times writing 0 to dgpu_disable will produce an Input/Output
+>>>>> error, but the value will be changed to 0, half the time system will
+>>>>> crash and reboot. While writing 1 to it doesn't produce an error, I
+>>>>> have observed system crash twice just after that.
+>>>>>
+>>>>> Steps to Reproduce:
+>>>>>
+>>>>> * Remove dpgu: echo 1 | sudo tee ../remove (dgpu path)
+>>>>> * echo 1 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
+>>>>> * echo 0 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
+>>>>>
+>>>>> * echo 1 | sudo tee /sys/bus/pci/rescan
+>>>>>
+>>>>> After writing 0 to dgpu_disable, there's an entry in journal about an
+>>>>> ACPI bug.
+>>>>> Output of 'journalctl -p 3' and lspci is attached.
+>>>> Hi,
+>>>>
+>>>> Can you share the output of "acpidump" and the content of "/sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[-X]/bmof"?
+>>>> The bmof files contain a description of the WMI interfaces of your machine, which might be important for diagnosing the error.
+>>>>
+>>>> Thanks,
+>>>> Armin Wolf
+>>> Here's the output of 'acpidump > acpidump.out' and 'cat /sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[-X]/bmof'
+>> Ok, it seems the ACPI code tries to access an object ("GC00") which does not exist.
+>> This is the reason why disabling the dGPU fails with -EIO.
+>>
+>> I am unfortunately not that knowledgeable when it comes to PCI problems, i CCed the linux-pci mailing list in hope that
+>> they can better help you in this regard.
+> FWIW, I don't know enough about what's going on here to see a PCI
+> connection.  I do see a bunch of PCI-related stuff around rfkill, but
+> I don't think that's involved here.
+>
+> I think the path here is this, which doesn't seem to touch anything in
+> PCI:
+>
+>    dgpu_disable_store
+>      asus_wmi_set_devstate(ASUS_WMI_DEVID_DGPU, ..., &result)
+>        asus_wmi_evaluate_method(ASUS_WMI_METHODID_DEVS, ...)
+>          asus_wmi_evaluate_method3
+>            wmi_evaluate_method(ASUS_WMI_MGMT_GUID, ...)
+>      if (result > 1)
+>        return -EIO
+>
+> But if I missed it, let me know and I'll be happy to take another
+> look.
+>
+> Bjorn
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.7]
-[cannot apply to wsa/i2c/for-next next-20240108]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The issue happens when a PCI bus rescan is done after writing to "dgpu_disable".
+As a side note a bugzilla bugreport for this issue was recently created:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-de-Goede/platform-x86-dell-smo8800-Only-load-on-Dell-laptops/20231225-152720
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20231224213629.395741-6-hdegoede%40redhat.com
-patch subject: [PATCH 5/6] platform/x86: dell-smo8800: Instantiate an i2c_client for the IIO st_accel driver
-config: i386-randconfig-003-20240106 (https://download.01.org/0day-ci/archive/20240109/202401090941.FHkrtPXf-lkp@intel.com/config)
-compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240109/202401090941.FHkrtPXf-lkp@intel.com/reproduce)
+https://bugzilla.kernel.org/show_bug.cgi?id=218354
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401090941.FHkrtPXf-lkp@intel.com/
+Thanks,
+Armin Wolf
 
-All errors (new ones prefixed by >>):
-
-   ld: drivers/platform/x86/dell/dell-smo8800.o: in function `smo8800_remove':
-   drivers/platform/x86/dell/dell-smo8800.c:358: undefined reference to `i2c_unregister_device'
-   ld: drivers/platform/x86/dell/dell-smo8800.c:358: undefined reference to `i2c_unregister_device'
-   ld: drivers/platform/x86/dell/dell-smo8800.o: in function `smo8800_instantiate_i2c_client':
-   drivers/platform/x86/dell/dell-smo8800.c:243: undefined reference to `i2c_bus_type'
-   ld: drivers/platform/x86/dell/dell-smo8800.c:286: undefined reference to `i2c_put_adapter'
-   ld: drivers/platform/x86/dell/dell-smo8800.o: in function `smo8800_detect_accel':
->> drivers/platform/x86/dell/dell-smo8800.c:170: undefined reference to `i2c_smbus_xfer'
-   ld: drivers/platform/x86/dell/dell-smo8800.o: in function `smo8800_instantiate_i2c_client':
-   drivers/platform/x86/dell/dell-smo8800.c:276: undefined reference to `i2c_new_client_device'
-   ld: drivers/platform/x86/dell/dell-smo8800.o: in function `smo8800_probe':
-   drivers/platform/x86/dell/dell-smo8800.c:345: undefined reference to `i2c_unregister_device'
-   ld: drivers/platform/x86/dell/dell-smo8800.o: in function `smo8800_find_i801':
-   drivers/platform/x86/dell/dell-smo8800.c:131: undefined reference to `i2c_verify_adapter'
-   ld: drivers/platform/x86/dell/dell-smo8800.c:145: undefined reference to `i2c_get_adapter'
-
-
-vim +170 drivers/platform/x86/dell/dell-smo8800.c
-
-   161	
-   162	static int smo8800_detect_accel(struct smo8800_device *smo8800,
-   163					struct i2c_adapter *adap, u8 addr,
-   164					struct i2c_board_info *info)
-   165	{
-   166		union i2c_smbus_data smbus_data;
-   167		const char *type;
-   168		int err;
-   169	
- > 170		err = i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, LIS3_WHO_AM_I,
-   171				     I2C_SMBUS_BYTE_DATA, &smbus_data);
-   172		if (err < 0) {
-   173			dev_warn(smo8800->dev, "Failed to read who-am-i register: %d\n", err);
-   174			return err;
-   175		}
-   176	
-   177		/*
-   178		 * These who-am-i register mappings to model strings have been
-   179		 * taken from the old /dev/freefall chardev and joystick driver:
-   180		 * drivers/misc/lis3lv02d/lis3lv02d.c
-   181		 */
-   182		switch (smbus_data.byte) {
-   183		case 0x32:
-   184			type = "lis331dlh";
-   185			break;
-   186		case 0x33:
-   187			type = "lis2de12"; /* LIS3DC / HP3DC in drivers/misc/lis3lv02d/lis3lv02d.c */
-   188			break;
-   189		case 0x3a:
-   190			type = "lis3lv02dl_accel";
-   191			break;
-   192		case 0x3b:
-   193			type = "lis302dl";
-   194			break;
-   195		default:
-   196			dev_warn(smo8800->dev, "Unknown who-am-i register value 0x%02x\n",
-   197				 smbus_data.byte);
-   198			return -ENODEV;
-   199		}
-   200	
-   201		strscpy(info->type, type, I2C_NAME_SIZE);
-   202		info->addr = addr;
-   203		info->irq = smo8800->irq;
-   204		info->swnode = &smo8800_accel_node;
-   205		return 0;
-   206	}
-   207	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
