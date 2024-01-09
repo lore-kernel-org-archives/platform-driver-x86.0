@@ -1,154 +1,338 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8AE35EE5;
-	Tue,  9 Jan 2024 10:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B6C3717B;
+	Tue,  9 Jan 2024 11:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="uVO74iKZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1704796160; x=1705400960; i=w_armin@gmx.de;
-	bh=QipFuJnYN/Kb6LPSXeIwGxLbJpsBbnELZ8JaGfvIEdc=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=uVO74iKZ82uyXqOPSUH1IJLMn0Bvot5JQtF2vd5YzTpN06fYV4iex98TjLKGbm94
-	 6XD+GmORYulBsOh/L9njMRc5k5F2+wzINoouGfiNPb693Uz6YQ3czAMxrDYmbBPsa
-	 mNsYYH/xSpf2DCQD6GObYsSBg2/OBbnZKSMFipw62BymDGICcV9rM7ZbRXIyRcO/c
-	 +UMbhDDV+/Yak/vn1lPPAnIf7keVtj4ICfykv4v9GnBCjRLCUtlB25TEwXRjbeWiO
-	 vZnv7lue6czKqw0XXpa4hPzOo2CaoJS/dtk34NntzdN8GHxz877P1c5i12HiimtQw
-	 lDRjM0q+yG/NrM/0Qw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MiJZO-1qjAFK2ZPC-00fQ5z; Tue, 09
- Jan 2024 11:29:20 +0100
-Message-ID: <56911b37-c316-43b2-8dc9-10f6fd0a398d@gmx.de>
-Date: Tue, 9 Jan 2024 11:29:19 +0100
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="mfYU0U1b"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 3841D1C0050; Tue,  9 Jan 2024 12:46:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1704800764;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jxKjPdKA0cEwZTm0Buk8HkHBJ6hCFNagp4tne2EQE7Y=;
+	b=mfYU0U1b7uGQQoExKH6W9VFQLMNptLoosPF+okjDjAg+org+jb13+HjMJHKTAWca8Ri6/N
+	Pu4267KRnOjrKZzbPFZ8rvMVAwkVctYgBCqJKFzwqEj7gwmrb4o12Og9dKh0ttx3zLL1f7
+	8T8pVr5ynFrkirQax9+n90X92SHoKqs=
+Date: Tue, 9 Jan 2024 12:46:03 +0100
+From: Pavel Machek <pavel@ucw.cz>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Vishnu Sankar <vishnuocv@gmail.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	hmh@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.1 12/24] platform/x86: thinkpad_acpi: fix for
+ incorrect fan reporting on some ThinkPad systems
+Message-ID: <ZZ0x+wlRGxwPOArK@duo.ucw.cz>
+References: <20231226002255.5730-1-sashal@kernel.org>
+ <20231226002255.5730-12-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: ERROR: Writing to dgpu_disable cause Input/Output error
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Athul Krishna <athul.krishna.kr@protonmail.com>,
- "corentin.chary@gmail.com" <corentin.chary@gmail.com>,
- "acpi4asus-user@lists.sourceforge.net"
- <acpi4asus-user@lists.sourceforge.net>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-pci@vger.kernel.org
-References: <20240109000033.GA1986948@bhelgaas>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20240109000033.GA1986948@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:eyFeimnROql3QynwpU6IC6doTX8iSSBI66lO4SDLrv4mrwp/7m2
- bgbvvBNx6FLx77xfhudKUz3HN4KIHc+BCOTTybTVNJSamfpvXLsKG52iWq5/luRO6kh75ev
- jgXNJY4Ly2MIRRd397DXnBDQJiX8qQ8bU5DPywy0VXAoTSpcDJsMVTjVTsouUOjtr29LLhY
- VNWDK9McDm95wGVqn279w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:uURtABLTZvs=;be+4onCGJZFxcyteoHkeTl5+qeR
- Q0QXaUEFfFMDtwfcCWT+HvM6k8OplFiO+U5zGSHv0V3Eo4i1kc5FEZndTwIzWb7DYU7/fy3f7
- OeH/ldz3OsDk/qBrpMZAZ2UvO2Vcvu9GvtyE2Hl4Mm1g/RYaeSyBYlaZPJqqiekrx2qntoOMt
- es9DTzupBrhThji2SM3H23uGLGfG1GhWnyINKlz3Oqaoy9CwjhIuHuOJtzPQaEqt7LRweH9x5
- xQXFWmct8iCx8E474hydssj6gsszFWHjYGw6HEhqr4ck5i0p6IqIgY7IvY2dWudk43CYcEYNc
- uUByEuOKFtjiyqiVGMz+6nVlMt5ysvLwruBKCKac51xUG5nkucvX2CpTWghL25FFZ/L+nYAc9
- 6702nNt3nQ9Z3LCzgE+g/YYj+p6APmPUcf75giuW5tl297KUhDpu4yO2RlB7tGa5yxlRVBWZG
- ARn/CXkzMHKkl6mBJakdY68qRUHR+uZ4M3v6y5bK78J8uCAoX5ZgNPxVUmbhD2bYVH/ENGI7C
- oWyuRAnNFSwD6XAgX/nkrs8tyMhDUF7AurPvGIApBZFkq5gaEA7aA2iHIWZAHF5cSO/dWwE8n
- yFzqjMoTKoeIgtXvvfz7sVTFHZ2kYwFWP4U83iNMoXBO+9ONEZyQJqY1yCLUV0xuZ/BD+Y4O2
- vTVu5TejKCyo42f29guB7ppn9RxTYErNNgie7HnfHln2pm2CoZIWr720LcmUWJhra0EznY/4S
- ZmWQ6S63S6nPVxzmc4nx5SZidjojwUM5EsYFVi4CSnEJJ09NfI8Pzp4yqyAwlrg+mjej+3cgL
- xlm7LvYYG5dI4Oy9elb2bmfflx5MDZH6DmFSfm9j6yGSI91ovJCJ3ZtI0V0pcE+kCKhJ00JN+
- 6VM0NlQYTxX03PWIg/VcaNileA7GhjCSxCHjnntG3wDA5QfpIIr93jw5/t4KIvTfE95JiLJdX
- rmxjGnkSvqzPu2zVsZjabpI8LBk=
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RqAJcv4WMeLX7X9R"
+Content-Disposition: inline
+In-Reply-To: <20231226002255.5730-12-sashal@kernel.org>
 
-Am 09.01.24 um 01:00 schrieb Bjorn Helgaas:
 
-> On Sat, Jan 06, 2024 at 11:33:35PM +0100, Armin Wolf wrote:
->> Am 04.01.24 um 03:50 schrieb Athul Krishna:
->>
->>>
->>>
->>>
->>> Sent with Proton Mail secure email.
->>>
->>> On Thursday, January 4th, 2024 at 1:05 AM, Armin Wolf <W_Armin@gmx.de> wrote:
->>>
->>>
->>>> Am 03.01.24 um 19:51 schrieb Athul Krishna:
->>>>
->>>>> Hello,
->>>>> This is my first time reporting an issue in the kernel.
->>>>>
->>>>> Device Details:
->>>>>
->>>>> * Asus Zephyrus G14 (||||||GA402RJ)
->>>>> * Latest BIOS
->>>>> * Arch_x86_64
->>>>> * Kernel: 6.6.9
->>>>> * Minimal install using archinstall
->>>>>
->>>>> ISSUE: Using /dgpu_disable /provided by _asus-nb-wmi _to disable and
->>>>> enable dedicated gpu,
->>>>> causes system crash and reboots, randomly.
->>>>> 9/10 times writing 0 to dgpu_disable will produce an Input/Output
->>>>> error, but the value will be changed to 0, half the time system will
->>>>> crash and reboot. While writing 1 to it doesn't produce an error, I
->>>>> have observed system crash twice just after that.
->>>>>
->>>>> Steps to Reproduce:
->>>>>
->>>>> * Remove dpgu: echo 1 | sudo tee ../remove (dgpu path)
->>>>> * echo 1 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
->>>>> * echo 0 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
->>>>>
->>>>> * echo 1 | sudo tee /sys/bus/pci/rescan
->>>>>
->>>>> After writing 0 to dgpu_disable, there's an entry in journal about an
->>>>> ACPI bug.
->>>>> Output of 'journalctl -p 3' and lspci is attached.
->>>> Hi,
->>>>
->>>> Can you share the output of "acpidump" and the content of "/sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[-X]/bmof"?
->>>> The bmof files contain a description of the WMI interfaces of your machine, which might be important for diagnosing the error.
->>>>
->>>> Thanks,
->>>> Armin Wolf
->>> Here's the output of 'acpidump > acpidump.out' and 'cat /sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[-X]/bmof'
->> Ok, it seems the ACPI code tries to access an object ("GC00") which does not exist.
->> This is the reason why disabling the dGPU fails with -EIO.
->>
->> I am unfortunately not that knowledgeable when it comes to PCI problems, i CCed the linux-pci mailing list in hope that
->> they can better help you in this regard.
-> FWIW, I don't know enough about what's going on here to see a PCI
-> connection.  I do see a bunch of PCI-related stuff around rfkill, but
-> I don't think that's involved here.
->
-> I think the path here is this, which doesn't seem to touch anything in
-> PCI:
->
->    dgpu_disable_store
->      asus_wmi_set_devstate(ASUS_WMI_DEVID_DGPU, ..., &result)
->        asus_wmi_evaluate_method(ASUS_WMI_METHODID_DEVS, ...)
->          asus_wmi_evaluate_method3
->            wmi_evaluate_method(ASUS_WMI_MGMT_GUID, ...)
->      if (result > 1)
->        return -EIO
->
-> But if I missed it, let me know and I'll be happy to take another
-> look.
->
-> Bjorn
+--RqAJcv4WMeLX7X9R
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The issue happens when a PCI bus rescan is done after writing to "dgpu_disable".
-As a side note a bugzilla bugreport for this issue was recently created:
+Hi!
 
-https://bugzilla.kernel.org/show_bug.cgi?id=218354
+> [ Upstream commit 66e92e23a72761f5b53f970aeb1badc5fd92fc74 ]
+>=20
+> Some ThinkPad systems ECFW use non-standard addresses for fan control
+> and reporting. This patch adds support for such ECFW so that it can report
+> the correct fan values.
+> Tested on Thinkpads L13 Yoga Gen 2 and X13 Yoga Gen 2.
 
-Thanks,
-Armin Wolf
+This is just a new feature, and is > 200 lines. We should not have
+this in stable.
 
+BR,
+								Pavel
+
+
+
+
+
+> Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> Link: https://lore.kernel.org/r/20231214134702.166464-1-vishnuocv@gmail.c=
+om
+> Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 98 ++++++++++++++++++++++++----
+>  1 file changed, 85 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
+thinkpad_acpi.c
+> index 05a55bc31c796..6edd2e294750e 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -8149,8 +8149,19 @@ static struct ibm_struct volume_driver_data =3D {
+>   * 	TPACPI_FAN_WR_TPEC is also available and should be used to
+>   * 	command the fan.  The X31/X40/X41 seems to have 8 fan levels,
+>   * 	but the ACPI tables just mention level 7.
+> + *
+> + * TPACPI_FAN_RD_TPEC_NS:
+> + *	This mode is used for a few ThinkPads (L13 Yoga Gen2, X13 Yoga Gen2 e=
+tc.)
+> + *	that are using non-standard EC locations for reporting fan speeds.
+> + *	Currently these platforms only provide fan rpm reporting.
+> + *
+>   */
+> =20
+> +#define FAN_RPM_CAL_CONST 491520	/* FAN RPM calculation offset for some =
+non-standard ECFW */
+> +
+> +#define FAN_NS_CTRL_STATUS	BIT(2)		/* Bit which determines control is en=
+abled or not */
+> +#define FAN_NS_CTRL		BIT(4)		/* Bit which determines control is by host =
+or EC */
+> +
+>  enum {					/* Fan control constants */
+>  	fan_status_offset =3D 0x2f,	/* EC register 0x2f */
+>  	fan_rpm_offset =3D 0x84,		/* EC register 0x84: LSB, 0x85 MSB (RPM)
+> @@ -8158,6 +8169,11 @@ enum {					/* Fan control constants */
+>  	fan_select_offset =3D 0x31,	/* EC register 0x31 (Firmware 7M)
+>  					   bit 0 selects which fan is active */
+> =20
+> +	fan_status_offset_ns =3D 0x93,	/* Special status/control offset for non=
+-standard EC Fan1 */
+> +	fan2_status_offset_ns =3D 0x96,	/* Special status/control offset for no=
+n-standard EC Fan2 */
+> +	fan_rpm_status_ns =3D 0x95,	/* Special offset for Fan1 RPM status for n=
+on-standard EC */
+> +	fan2_rpm_status_ns =3D 0x98,	/* Special offset for Fan2 RPM status for =
+non-standard EC */
+> +
+>  	TP_EC_FAN_FULLSPEED =3D 0x40,	/* EC fan mode: full speed */
+>  	TP_EC_FAN_AUTO	    =3D 0x80,	/* EC fan mode: auto fan control */
+> =20
+> @@ -8168,6 +8184,7 @@ enum fan_status_access_mode {
+>  	TPACPI_FAN_NONE =3D 0,		/* No fan status or control */
+>  	TPACPI_FAN_RD_ACPI_GFAN,	/* Use ACPI GFAN */
+>  	TPACPI_FAN_RD_TPEC,		/* Use ACPI EC regs 0x2f, 0x84-0x85 */
+> +	TPACPI_FAN_RD_TPEC_NS,		/* Use non-standard ACPI EC regs (eg: L13 Yoga =
+gen2 etc.) */
+>  };
+> =20
+>  enum fan_control_access_mode {
+> @@ -8195,6 +8212,8 @@ static u8 fan_control_desired_level;
+>  static u8 fan_control_resume_level;
+>  static int fan_watchdog_maxinterval;
+> =20
+> +static bool fan_with_ns_addr;
+> +
+>  static struct mutex fan_mutex;
+> =20
+>  static void fan_watchdog_fire(struct work_struct *ignored);
+> @@ -8325,6 +8344,15 @@ static int fan_get_status(u8 *status)
+>  		}
+> =20
+>  		break;
+> +	case TPACPI_FAN_RD_TPEC_NS:
+> +		/* Default mode is AUTO which means controlled by EC */
+> +		if (!acpi_ec_read(fan_status_offset_ns, &s))
+> +			return -EIO;
+> +
+> +		if (status)
+> +			*status =3D s;
+> +
+> +		break;
+> =20
+>  	default:
+>  		return -ENXIO;
+> @@ -8341,7 +8369,8 @@ static int fan_get_status_safe(u8 *status)
+>  	if (mutex_lock_killable(&fan_mutex))
+>  		return -ERESTARTSYS;
+>  	rc =3D fan_get_status(&s);
+> -	if (!rc)
+> +	/* NS EC doesn't have register with level settings */
+> +	if (!rc && !fan_with_ns_addr)
+>  		fan_update_desired_level(s);
+>  	mutex_unlock(&fan_mutex);
+> =20
+> @@ -8368,7 +8397,13 @@ static int fan_get_speed(unsigned int *speed)
+> =20
+>  		if (likely(speed))
+>  			*speed =3D (hi << 8) | lo;
+> +		break;
+> +	case TPACPI_FAN_RD_TPEC_NS:
+> +		if (!acpi_ec_read(fan_rpm_status_ns, &lo))
+> +			return -EIO;
+> =20
+> +		if (speed)
+> +			*speed =3D lo ? FAN_RPM_CAL_CONST / lo : 0;
+>  		break;
+> =20
+>  	default:
+> @@ -8380,7 +8415,7 @@ static int fan_get_speed(unsigned int *speed)
+> =20
+>  static int fan2_get_speed(unsigned int *speed)
+>  {
+> -	u8 hi, lo;
+> +	u8 hi, lo, status;
+>  	bool rc;
+> =20
+>  	switch (fan_status_access_mode) {
+> @@ -8396,7 +8431,21 @@ static int fan2_get_speed(unsigned int *speed)
+> =20
+>  		if (likely(speed))
+>  			*speed =3D (hi << 8) | lo;
+> +		break;
+> =20
+> +	case TPACPI_FAN_RD_TPEC_NS:
+> +		rc =3D !acpi_ec_read(fan2_status_offset_ns, &status);
+> +		if (rc)
+> +			return -EIO;
+> +		if (!(status & FAN_NS_CTRL_STATUS)) {
+> +			pr_info("secondary fan control not supported\n");
+> +			return -EIO;
+> +		}
+> +		rc =3D !acpi_ec_read(fan2_rpm_status_ns, &lo);
+> +		if (rc)
+> +			return -EIO;
+> +		if (speed)
+> +			*speed =3D lo ? FAN_RPM_CAL_CONST / lo : 0;
+>  		break;
+> =20
+>  	default:
+> @@ -8899,6 +8948,7 @@ static const struct attribute_group fan_driver_attr=
+_group =3D {
+>  #define TPACPI_FAN_2FAN		0x0002		/* EC 0x31 bit 0 selects fan2 */
+>  #define TPACPI_FAN_2CTL		0x0004		/* selects fan2 control */
+>  #define TPACPI_FAN_NOFAN	0x0008		/* no fan available */
+> +#define TPACPI_FAN_NS		0x0010		/* For EC with non-Standard register addr=
+esses */
+> =20
+>  static const struct tpacpi_quirk fan_quirk_table[] __initconst =3D {
+>  	TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
+> @@ -8917,6 +8967,8 @@ static const struct tpacpi_quirk fan_quirk_table[] =
+__initconst =3D {
+>  	TPACPI_Q_LNV3('N', '2', 'O', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (2nd =
+gen) */
+>  	TPACPI_Q_LNV3('N', '3', '0', TPACPI_FAN_2CTL),	/* P15 (1st gen) / P15v =
+(1st gen) */
+>  	TPACPI_Q_LNV3('N', '3', '7', TPACPI_FAN_2CTL),  /* T15g (2nd gen) */
+> +	TPACPI_Q_LNV3('R', '1', 'F', TPACPI_FAN_NS),	/* L13 Yoga Gen 2 */
+> +	TPACPI_Q_LNV3('N', '2', 'U', TPACPI_FAN_NS),	/* X13 Yoga Gen 2*/
+>  	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) =
+*/
+>  };
+> =20
+> @@ -8951,18 +9003,27 @@ static int __init fan_init(struct ibm_init_struct=
+ *iibm)
+>  		return -ENODEV;
+>  	}
+> =20
+> +	if (quirks & TPACPI_FAN_NS) {
+> +		pr_info("ECFW with non-standard fan reg control found\n");
+> +		fan_with_ns_addr =3D 1;
+> +		/* Fan ctrl support from host is undefined for now */
+> +		tp_features.fan_ctrl_status_undef =3D 1;
+> +	}
+> +
+>  	if (gfan_handle) {
+>  		/* 570, 600e/x, 770e, 770x */
+>  		fan_status_access_mode =3D TPACPI_FAN_RD_ACPI_GFAN;
+>  	} else {
+>  		/* all other ThinkPads: note that even old-style
+>  		 * ThinkPad ECs supports the fan control register */
+> -		if (likely(acpi_ec_read(fan_status_offset,
+> -					&fan_control_initial_status))) {
+> +		if (fan_with_ns_addr ||
+> +		    likely(acpi_ec_read(fan_status_offset, &fan_control_initial_status=
+))) {
+>  			int res;
+>  			unsigned int speed;
+> =20
+> -			fan_status_access_mode =3D TPACPI_FAN_RD_TPEC;
+> +			fan_status_access_mode =3D fan_with_ns_addr ?
+> +				TPACPI_FAN_RD_TPEC_NS : TPACPI_FAN_RD_TPEC;
+> +
+>  			if (quirks & TPACPI_FAN_Q1)
+>  				fan_quirk1_setup();
+>  			/* Try and probe the 2nd fan */
+> @@ -8971,7 +9032,8 @@ static int __init fan_init(struct ibm_init_struct *=
+iibm)
+>  			if (res >=3D 0 && speed !=3D FAN_NOT_PRESENT) {
+>  				/* It responded - so let's assume it's there */
+>  				tp_features.second_fan =3D 1;
+> -				tp_features.second_fan_ctl =3D 1;
+> +				/* fan control not currently available for ns ECFW */
+> +				tp_features.second_fan_ctl =3D !fan_with_ns_addr;
+>  				pr_info("secondary fan control detected & enabled\n");
+>  			} else {
+>  				/* Fan not auto-detected */
+> @@ -9146,6 +9208,7 @@ static int fan_read(struct seq_file *m)
+>  			       str_enabled_disabled(status), status);
+>  		break;
+> =20
+> +	case TPACPI_FAN_RD_TPEC_NS:
+>  	case TPACPI_FAN_RD_TPEC:
+>  		/* all except 570, 600e/x, 770e, 770x */
+>  		rc =3D fan_get_status_safe(&status);
+> @@ -9160,13 +9223,22 @@ static int fan_read(struct seq_file *m)
+> =20
+>  		seq_printf(m, "speed:\t\t%d\n", speed);
+> =20
+> -		if (status & TP_EC_FAN_FULLSPEED)
+> -			/* Disengaged mode takes precedence */
+> -			seq_printf(m, "level:\t\tdisengaged\n");
+> -		else if (status & TP_EC_FAN_AUTO)
+> -			seq_printf(m, "level:\t\tauto\n");
+> -		else
+> -			seq_printf(m, "level:\t\t%d\n", status);
+> +		if (fan_status_access_mode =3D=3D TPACPI_FAN_RD_TPEC_NS) {
+> +			/*
+> +			 * No full speed bit in NS EC
+> +			 * EC Auto mode is set by default.
+> +			 * No other levels settings available
+> +			 */
+> +			seq_printf(m, "level:\t\t%s\n", status & FAN_NS_CTRL ? "unknown" : "a=
+uto");
+> +		} else {
+> +			if (status & TP_EC_FAN_FULLSPEED)
+> +				/* Disengaged mode takes precedence */
+> +				seq_printf(m, "level:\t\tdisengaged\n");
+> +			else if (status & TP_EC_FAN_AUTO)
+> +				seq_printf(m, "level:\t\tauto\n");
+> +			else
+> +				seq_printf(m, "level:\t\t%d\n", status);
+> +		}
+>  		break;
+> =20
+>  	case TPACPI_FAN_NONE:
+
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--RqAJcv4WMeLX7X9R
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZZ0x+wAKCRAw5/Bqldv6
+8qqZAJ9yLVMfcZHaTUOxiqyLXH8+CSa8tQCfZbamj9avaPyizT5U11bthYaCPDQ=
+=3p+4
+-----END PGP SIGNATURE-----
+
+--RqAJcv4WMeLX7X9R--
