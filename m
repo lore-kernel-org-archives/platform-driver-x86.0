@@ -1,87 +1,83 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337404D5B1
-	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Jan 2024 18:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0648B14F88;
+	Thu, 11 Jan 2024 11:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kac6Ecfx"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40e461c1f44so40545455e9.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Jan 2024 10:53:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704912784; x=1705517584; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=p8Udsj305jfYXf+ANpLqSmYsA6MVtaE/P0L4mlkgDYI=;
-        b=kac6EcfxexHE+TPOY8F6yMMroPMrx4DVbQlE3xgum2G07zKztN2trWbVeDrKdvatph
-         3SxyVbGDcmn8lAZ1wFp1snw/E64/sCCxcQpr8s+q9VO4NZfC7Xssh1zFMjqaQEES2pXs
-         P7v/xNqS/hqn+EjTM3oMZmhxUL+2lHd+19QdKql/ir3H94Vu2/nNbL/s0dg+Zg5i8YJP
-         vqayqO4VhgCVd7LvTHObjXNYv5uuSiaIUFcTP0QpEixSKTNGO+ESqoZchGmf8yEWQT7l
-         uDR1k+LEHE2dgp1eVxFgfFYk0ZxYqnBIMhzxEFHXijogsLPbfzvJXZxpgl+D5+Oqp+cu
-         mXqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704912784; x=1705517584;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p8Udsj305jfYXf+ANpLqSmYsA6MVtaE/P0L4mlkgDYI=;
-        b=exgynxfxKrvL1DBgbNQ+dkX/FcY8nszpXxKVLz5ZvcDOnfGwrGE3KugWTAXmoVNGIc
-         hsCWcIdJQpSsyiioG27vebJjor7BXBgcZlHwGOGuy9h+3zznpPgmRX5OpEHYjd5SGGSP
-         2zm1n2sBVs4aodj/0BhyJgxv9YwRqGTyDTJ3KgrdSd/qBRqmoonIYYmb8rpnyqz5XXDE
-         wfL27q1v3AhckR8mdTMNIR6zV/i6KG810UEi9/UZTpzToJXgYBePJn31Z2rbLyfTu8J+
-         1PedMfb8dkkTVmDWe6bKB9MdbwRglzwa9q/iNVKl54ddD7/On6ne1W95vf/BEGUJluXl
-         0Q3Q==
-X-Gm-Message-State: AOJu0YzID1LouZNt2NDge2pH2grC/CGaYKE2mRvXYUVw26VyV06xBmX6
-	LmpAP5bfuzhGPSPdLFIgAmgg1zBTCYrM0Q==
-X-Google-Smtp-Source: AGHT+IFMqicPz1t0QvAqV4wJDjMeK/H8oTRRuHT1ganju3XBJ11l6ngH9PTevRnk8K+l3J6EJRTxBg==
-X-Received: by 2002:a7b:c8d8:0:b0:40e:555f:12d4 with SMTP id f24-20020a7bc8d8000000b0040e555f12d4mr806449wml.91.1704912784519;
-        Wed, 10 Jan 2024 10:53:04 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id n13-20020a05600c500d00b0040e5a0515aesm1183372wmr.14.2024.01.10.10.53.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 10:53:04 -0800 (PST)
-Date: Wed, 10 Jan 2024 21:53:01 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Hans de Goede <hdegoede@redhat.com>, Henry Shi <henryshi2018@gmail.com>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] platform/x86: silicom-platform: clean up a check
-Message-ID: <0402e613-446a-40d1-b676-0422f6223aa8@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bUFkSZhz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704974196; x=1736510196;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=rxfB6CJ33YC73UGGmfDn7hZc0Y7X2EI0dmmGO62rrxA=;
+  b=bUFkSZhz7q/+UU1fw7vtB9c5sVycqecMoBuDw8qhVn6w1c4fl3dRIQPO
+   ccFkz29+qM4VlAl0Vh4ZK7l8h/eTMeQdIBbWgJhLF9+5Nt7Qv4ub1XsC1
+   jkSJC4vxIbfiE1WwkZLaRMO/49+NyOPpBGSUzgSli8a29vQvH3qLnAVza
+   OUrmv97CSFGrQcPtnDHnpI1gGMhD2kBRbgV2APqp1rfaMV/3eauP07evC
+   cNuWvjAUlmCm+vLDkPc/FsH/Kam5i0m5wCZLh5xggkPtrIDSKtU7VDaPT
+   a76gW4t7XJA20VRlOlp+XQ70lHpM/WI53V8jU454LWAK4BYkMIm7hhhzU
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="389261859"
+X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
+   d="scan'208";a="389261859"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 03:56:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="758734850"
+X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
+   d="scan'208";a="758734850"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.32.201])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 03:56:32 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 11 Jan 2024 13:56:28 +0200 (EET)
+To: Dan Carpenter <dan.carpenter@linaro.org>
+cc: Hans de Goede <hdegoede@redhat.com>, Henry Shi <henryshi2018@gmail.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: silicom-platform: clean up a check
+In-Reply-To: <0402e613-446a-40d1-b676-0422f6223aa8@moroto.mountain>
+Message-ID: <90c2576b-006d-36eb-1fac-c4c4a6eccb4a@linux.intel.com>
+References: <0402e613-446a-40d1-b676-0422f6223aa8@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Type: text/plain; charset=US-ASCII
 
-"value" is either non-zero, or zero.  There isn't a third option.
-Delete the unnecessary code.
+On Wed, 10 Jan 2024, Dan Carpenter wrote:
 
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/platform/x86/silicom-platform.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> "value" is either non-zero, or zero.  There isn't a third option.
+> Delete the unnecessary code.
+> 
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  drivers/platform/x86/silicom-platform.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/silicom-platform.c b/drivers/platform/x86/silicom-platform.c
+> index 6ce43ccb3112..5cac698bf98d 100644
+> --- a/drivers/platform/x86/silicom-platform.c
+> +++ b/drivers/platform/x86/silicom-platform.c
+> @@ -258,10 +258,8 @@ static void silicom_gpio_set(struct gpio_chip *gc,
+>  
+>  	if (value)
+>  		silicom_mec_port_set(channel, 0);
+> -	else if (value == 0)
+> -		silicom_mec_port_set(channel, 1);
+>  	else
+> -		pr_err("Wrong argument value: %d\n", value);
+> +		silicom_mec_port_set(channel, 1);
 
-diff --git a/drivers/platform/x86/silicom-platform.c b/drivers/platform/x86/silicom-platform.c
-index 6ce43ccb3112..5cac698bf98d 100644
---- a/drivers/platform/x86/silicom-platform.c
-+++ b/drivers/platform/x86/silicom-platform.c
-@@ -258,10 +258,8 @@ static void silicom_gpio_set(struct gpio_chip *gc,
- 
- 	if (value)
- 		silicom_mec_port_set(channel, 0);
--	else if (value == 0)
--		silicom_mec_port_set(channel, 1);
- 	else
--		pr_err("Wrong argument value: %d\n", value);
-+		silicom_mec_port_set(channel, 1);
- }
- 
- static int silicom_gpio_direction_output(struct gpio_chip *gc,
+This covers both cases without if:
+
+	silicom_mec_port_set(channel, !value);
+
+
 -- 
-2.43.0
+ i.
 
