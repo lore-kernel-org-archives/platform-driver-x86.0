@@ -1,49 +1,49 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842512900
-	for <platform-driver-x86@vger.kernel.org>; Sun, 14 Jan 2024 16:53:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A0D5242
+	for <platform-driver-x86@vger.kernel.org>; Sun, 14 Jan 2024 16:57:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SXkyyldS"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-559414622c9so223605a12.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 14 Jan 2024 08:53:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pr/xMT6k"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a271a28aeb4so869860766b.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 14 Jan 2024 08:57:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705251197; x=1705855997; darn=vger.kernel.org;
-        h=content-transfer-encoding:autocrypt:subject:from:cc:to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j3qWAAOZBPVxBCEmxCyNo6guY2tQ4OipTOJ0NEYFWNs=;
-        b=SXkyyldSHtz1wew9Fj7GafrHxKKtjV+sOR45tMPgkylKKa3CNM3vcopJcTQrt8Grxm
-         HokTNtKNicknq60dEOZ4ueWo2A2nknOchhxi5tERq3qnYOkBGpIX0zheGB2TmCDJAXBM
-         52FijAGp8MSU9DhW8XL1MSDkyyzPm5R5SmH7RmC6KN03rVo7NdmsD/pedudyaUIszz1k
-         ttRQKOMthDaUTig34fjKQ6BLRKdF7kjaWCMAs01FqDH/lZ07OSAPc6YTuwD4qx12f1h3
-         E+oV2JiE4ACGZ7jZgt9jV+LRA7oUaILTfvhpLIw0AtGIhCmRKAsERMLOxEhJb0d2dSKY
-         4nBA==
+        d=gmail.com; s=20230601; t=1705251466; x=1705856266; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1pM/OkGjC0LrgIJMrmwxWzyE3jmZ/B0QUrkDHT91qcw=;
+        b=Pr/xMT6k0j3rGYTvYTurZKE5rHaiNhVKj/7APdAKsA2wbziU4HQq4sXh82X/vKAeVC
+         xn2XsKzDYtxWkNbHB81ve0WYl00P1+2Elih3168y7G7Z7B5MKlJ3MPK650zSnDwthNvh
+         6lQF/R+BVUwGTfV/WaXmypiNP4+Qs7CN4Q44+RjH72IcmCipmIqPcFZ3s0qm4iHQ2SV+
+         1onYjA6TmbqOAIOh9Yx53OK/WBE5ziHvKoAxbVMem+NrWJtPNV/VM2kbFBvrv3T0sulr
+         iQQMDV+K3P45EVeBDjWpfwfDpl7ztVRqLHHmJPSy29Anq5YntIwjwDcmEfgrcG5IRsvw
+         2Qqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705251197; x=1705855997;
-        h=content-transfer-encoding:autocrypt:subject:from:cc:to
-         :content-language:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1705251466; x=1705856266;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j3qWAAOZBPVxBCEmxCyNo6guY2tQ4OipTOJ0NEYFWNs=;
-        b=ulrfzh1QWAzQixuJ+ESE9Ytfe/yjVKHfkP9Tk4sRj7M2JyRK1ZF/Fjn7dgZBo2zEyo
-         QYU13EVDiQJDp8XRMuvZzkNR6uGg4Jf/UhoymlxGLlqaPe/ve24ZcyWQUZLuB5gwQ1xq
-         bT4f9RNFwenhrasqta5n+u0ihDIGPthrzPlYsMkr3Ww+5m+7Z3aCCxPFa6JtARUHPkDh
-         5K5TCZIyyPAnZlYr9URfQ5ReVONL8dI8s0AV1wu48iIZfci7Gw1U/B177gC1bGXtB8ib
-         PBL6Jse6QyijRcsES4mtmd0BSI/bxPRmzpQfkSTRiwrrt0ezQ4dt6zN9jAw9kzzMt6t2
-         coZA==
-X-Gm-Message-State: AOJu0YzXpa1oS5tkSmOwMD51EvCQzbSXSGrDq+igakDktL2FtKrXtXv7
-	lupU0aOJnTyjw4tR330pjN2mYbqFjwc=
-X-Google-Smtp-Source: AGHT+IGeDeDwDaYTowHickJ0PbZmooMyhuR2GbR/xw5S2Sl8/AfYhqng6ZBHKW1AS/fuAFaBlZ47dw==
-X-Received: by 2002:a17:906:a0d2:b0:a2d:60c5:f18f with SMTP id bh18-20020a170906a0d200b00a2d60c5f18fmr766169ejb.149.1705251196487;
-        Sun, 14 Jan 2024 08:53:16 -0800 (PST)
+        bh=1pM/OkGjC0LrgIJMrmwxWzyE3jmZ/B0QUrkDHT91qcw=;
+        b=qaIOnlbKxuE9zBGDBX+zZuNwl0Y8ZFAyK3Odata+zVjxcLJn9PYiU1nDBLOy06Zqvu
+         dU3Y8Wg9a5sgf+iK0yyl4wGDc8QsgR/VimnbPBp7j4tTqEXMz5GXPuq5FHFdkY8FgZC+
+         KBHDXXwI2mzMRiQMaQ0PO8eN18Gxja3jLact3MSS5Vf3Hr59xORHy/tPdhtIBHTuxCR8
+         GOzCfe5UMx2rrP8P04pdMIJb3YMUbUxjx5tmxQd5YBLCSFGmyHI8r922fodR+EtYDKCW
+         Sbk4QwIZNuCFp00XMLTSeArB6g2liujY8hRjxeoKEa4h4zNaGw+Ofne1pWwMthhLXy6v
+         zS5A==
+X-Gm-Message-State: AOJu0YyKNj2OEGpf3HtTRyjxiaY76gSZ5ZZSqcnZMa4R5kJuv9LgS3Jb
+	WoC2wyXNo0yGQpp0JLMT6vY=
+X-Google-Smtp-Source: AGHT+IGJoEFKATF7uvjFFIp8Fk6TXoekq7rtzlvjBjUISdaGs0EhQopMlEeIYGwDpZPHvKj5GRNDDw==
+X-Received: by 2002:a17:906:318a:b0:a2b:9580:c447 with SMTP id 10-20020a170906318a00b00a2b9580c447mr2266391ejy.110.1705251465278;
+        Sun, 14 Jan 2024 08:57:45 -0800 (PST)
 Received: from ?IPV6:2a01:c22:73ca:7c00:6976:809d:3eab:4a9? (dynamic-2a01-0c22-73ca-7c00-6976-809d-3eab-04a9.c22.pool.telefonica.de. [2a01:c22:73ca:7c00:6976:809d:3eab:4a9])
-        by smtp.googlemail.com with ESMTPSA id wb3-20020a170907d50300b00a2cc6398083sm3173441ejc.10.2024.01.14.08.53.15
+        by smtp.googlemail.com with ESMTPSA id y20-20020a170906471400b00a29430458efsm4317027ejq.65.2024.01.14.08.57.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 Jan 2024 08:53:16 -0800 (PST)
-Message-ID: <c9757d0a-2046-464b-93e1-a2d9ab0ce36b@gmail.com>
-Date: Sun, 14 Jan 2024 17:53:16 +0100
+        Sun, 14 Jan 2024 08:57:44 -0800 (PST)
+Message-ID: <9fa8ccdb-76b4-45d1-b3a3-3aa1ff74d448@gmail.com>
+Date: Sun, 14 Jan 2024 17:57:45 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -51,14 +51,20 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: remove obsolete calls to ledtrig_audio_get
 Content-Language: en-US
-To: Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
+To: Hans de Goede <hdegoede@redhat.com>,
+ Corentin Chary <corentin.chary@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
- <pali@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org
+ <pali@kernel.org>, Perry Yuan <Perry.Yuan@dell.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: acpi4asus-user@lists.sourceforge.net,
+ platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
+ ibm-acpi-devel@lists.sourceforge.net
+References: <dc5c0a33-ad25-4dac-828c-88dc78da0c9c@gmail.com>
+ <3979bfb3-2cdc-4dce-a500-03c98c943eb7@redhat.com>
 From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH] MAINTAINERS: Remove Perry Yuan as DELL WMI HARDWARE PRIVACY
- SUPPORT maintainer
 Autocrypt: addr=hkallweit1@gmail.com; keydata=
  xsFNBF/0ZFUBEAC0eZyktSE7ZNO1SFXL6cQ4i4g6Ah3mOUIXSB4pCY5kQ6OLKHh0FlOD5/5/
  sY7IoIouzOjyFdFPnz4Bl3927ClT567hUJJ+SNaFEiJ9vadI6vZm2gcY4ExdIevYHWe1msJF
@@ -102,29 +108,118 @@ Autocrypt: addr=hkallweit1@gmail.com; keydata=
  H/0Z53okMykVs3a8tECPHIxnre2UxKdTbCEkjkR4V6JyplTS47oWMw3zyI7zkaadfzVFBxk2
  lo/Tny+FX1Azea3Ce7oOnRUEZtWSsUidtIjmL8YUQFZYm+JUIgfRmSpMFq8JP4VH43GXpB/S
  OCrl+/xujzvoUBFV/cHKjEQYBxo+MaiQa1U54ykM2W4DnHb1UiEf5xDkFd4=
+In-Reply-To: <3979bfb3-2cdc-4dce-a500-03c98c943eb7@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Recent mails to his Dell address bounced with "user unknown".
-So remove him as maintainer.
+On 14.01.2024 17:34, Hans de Goede wrote:
+> Hi Heiner
+> 
+> On 1/13/24 18:03, Heiner Kallweit wrote:
+>> Since 64f67b5240db ("leds: trigger: audio: Add an activate callback to
+>> ensure the initial brightness is set") the audio triggers have an
+>> activate callback which sets the LED brightness as soon as the
+>> (default) trigger is bound to the LED device. So we can remove the
+>> call to ledtrig_audio_get.
+>>
+>> Positive side effect: There's no code dependency to ledtrig-audio any
+>> longer.
+> 
+> Thank you for your patch since these drivers now no longer
+> depend on the ledtrig-audio module can you please remove the:
+> 
+>         select LEDS_TRIGGERS
+>         select LEDS_TRIGGER_AUDIO
+> 
+> lines from the Kconfig bits for the modified drivers?
+> 
+Sure. I thought about this, but wasn't sure whether the LED support is
+highly desirable from a functional point of view, what may have justified
+keeping the selects.
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bcacd665f..8f6b09a02 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5954,7 +5954,6 @@ S:	Maintained
- F:	drivers/platform/x86/dell/dell-wmi-descriptor.c
- 
- DELL WMI HARDWARE PRIVACY SUPPORT
--M:	Perry Yuan <Perry.Yuan@dell.com>
- L:	Dell.Client.Kernel@dell.com
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
--- 
-2.43.0
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+>>
+>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>> ---
+>>  drivers/platform/x86/asus-wmi.c              | 1 -
+>>  drivers/platform/x86/dell/dell-laptop.c      | 2 --
+>>  drivers/platform/x86/dell/dell-wmi-privacy.c | 1 -
+>>  drivers/platform/x86/huawei-wmi.c            | 1 -
+>>  drivers/platform/x86/thinkpad_acpi.c         | 1 -
+>>  5 files changed, 6 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+>> index 18be35fdb..21dee425e 100644
+>> --- a/drivers/platform/x86/asus-wmi.c
+>> +++ b/drivers/platform/x86/asus-wmi.c
+>> @@ -1620,7 +1620,6 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+>>  	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MICMUTE_LED)) {
+>>  		asus->micmute_led.name = "platform::micmute";
+>>  		asus->micmute_led.max_brightness = 1;
+>> -		asus->micmute_led.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+>>  		asus->micmute_led.brightness_set_blocking = micmute_led_set;
+>>  		asus->micmute_led.default_trigger = "audio-micmute";
+>>  
+>> diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
+>> index 658643835..42f7de2b4 100644
+>> --- a/drivers/platform/x86/dell/dell-laptop.c
+>> +++ b/drivers/platform/x86/dell/dell-laptop.c
+>> @@ -2252,7 +2252,6 @@ static int __init dell_init(void)
+>>  	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
+>>  	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE) &&
+>>  	    !dell_privacy_has_mic_mute()) {
+>> -		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+>>  		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
+>>  		if (ret < 0)
+>>  			goto fail_led;
+>> @@ -2261,7 +2260,6 @@ static int __init dell_init(void)
+>>  
+>>  	if (dell_smbios_find_token(GLOBAL_MUTE_DISABLE) &&
+>>  	    dell_smbios_find_token(GLOBAL_MUTE_ENABLE)) {
+>> -		mute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MUTE);
+>>  		ret = led_classdev_register(&platform_device->dev, &mute_led_cdev);
+>>  		if (ret < 0)
+>>  			goto fail_backlight;
+>> diff --git a/drivers/platform/x86/dell/dell-wmi-privacy.c b/drivers/platform/x86/dell/dell-wmi-privacy.c
+>> index c517bd45d..4d94603f7 100644
+>> --- a/drivers/platform/x86/dell/dell-wmi-privacy.c
+>> +++ b/drivers/platform/x86/dell/dell-wmi-privacy.c
+>> @@ -288,7 +288,6 @@ static int dell_privacy_leds_setup(struct device *dev)
+>>  	priv->cdev.max_brightness = 1;
+>>  	priv->cdev.brightness_set_blocking = dell_privacy_micmute_led_set;
+>>  	priv->cdev.default_trigger = "audio-micmute";
+>> -	priv->cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+>>  	return devm_led_classdev_register(dev, &priv->cdev);
+>>  }
+>>  
+>> diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+>> index 0ef1c46b6..dde139c69 100644
+>> --- a/drivers/platform/x86/huawei-wmi.c
+>> +++ b/drivers/platform/x86/huawei-wmi.c
+>> @@ -310,7 +310,6 @@ static void huawei_wmi_leds_setup(struct device *dev)
+>>  	huawei->cdev.max_brightness = 1;
+>>  	huawei->cdev.brightness_set_blocking = &huawei_wmi_micmute_led_set;
+>>  	huawei->cdev.default_trigger = "audio-micmute";
+>> -	huawei->cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+>>  	huawei->cdev.dev = dev;
+>>  	huawei->cdev.flags = LED_CORE_SUSPENDRESUME;
+>>  
+>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+>> index c4895e9bc..d1c9f91fd 100644
+>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>> @@ -9285,7 +9285,6 @@ static int mute_led_init(struct ibm_init_struct *iibm)
+>>  			continue;
+>>  		}
+>>  
+>> -		mute_led_cdev[i].brightness = ledtrig_audio_get(i);
+>>  		err = led_classdev_register(&tpacpi_pdev->dev, &mute_led_cdev[i]);
+>>  		if (err < 0) {
+>>  			while (i--)
+> 
 
