@@ -1,300 +1,130 @@
-Received: from mail-ot1-f67.google.com (mail-ot1-f67.google.com [209.85.210.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB341B945;
-	Tue, 16 Jan 2024 11:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24751B944;
+	Tue, 16 Jan 2024 11:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XpiJ2E9I"
-Received: by mail-ot1-f67.google.com with SMTP id 46e09a7af769-6ddec7e5747so4481705a34.3;
-        Tue, 16 Jan 2024 03:24:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705404289; x=1706009089; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bTc+c4edYlFfJchp0Igu7aviTpqSoXKhUagZwU54V/o=;
-        b=XpiJ2E9Iobu+avUnbewUUc6zPdZBY3gSEiiThvfzmODhE4GAgwXpdzqCbZ1f73mPDI
-         51x1ot0tmjCMiDfryZmmIv9eH5uLcQUHiFZ2n42FCMz301S/OZfJhaNT1G263mOe8FpT
-         7Mt/M6QAphOQRiOQ7UStYgV0EJ1Zr6mukPfsvkS/ayKXh7fdPSvDElsXp5fCBiyCTxxO
-         4MtFpi0zU7fZ+vB6d/pQkmTQuyhvnX7Bsely7Z7ajui1MIxU8n7WBfJiHSFDEc3dsRD2
-         bzjivdVPyoVt5ADruVJHiDzMlNc0dobMd2QO3sGiIds4NEQvQxpvIrFJZVyoNgxLfLJX
-         h8zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705404289; x=1706009089;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bTc+c4edYlFfJchp0Igu7aviTpqSoXKhUagZwU54V/o=;
-        b=X/Kp3a9Lv8npqBEZ/S8H4jvDJUg9NntyXyICc0pgSNd5szr1QuM3et9iGgjCspZlWw
-         jPnFgXvIbUvQRG1j2rGcmgDqHhNb9HNzSJM42JYzY5JzXmn5snfQhlCrvfaVitMtfLJw
-         t7inQ6//M6xOlMFraXHcPXHjybVxD6U440pzdeJy3+Pn+K8Jjnu6TVZLrlXYUWja/c+y
-         VU8vuihMlqtzZs8mQU5vb/Bn3qmzAYkDd14HSyWYE/AAkF+M0GMIl/KJ77ZLdTqxHmf4
-         kQM3xaDdTV35pYgHkHfWXz3Z98DsI+oP5G+vLoXOqEi/xEDz7aKkHt34NIUfj9qi7Ute
-         +Fuw==
-X-Gm-Message-State: AOJu0Yy9naV80sMpSarrCbJt+slY09YnINE2/8U0BDJtqvV5wxi6NIKC
-	D6lC3+EIB6AhsN2WBeaSEfW9nF2Kg6gd5L6X9IU=
-X-Google-Smtp-Source: AGHT+IGiIoWTwWhoiduU5M1FwwJykQKOHgJDTHbryZu80GMcEzKrrzGJnMpspLKfgauM1q9vrZxMQsSARgC2Jqalols=
-X-Received: by 2002:a9d:6b96:0:b0:6dd:ed61:5e34 with SMTP id
- b22-20020a9d6b96000000b006dded615e34mr8457174otq.68.1705404289051; Tue, 16
- Jan 2024 03:24:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="LYE4vvZb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1705406028; x=1706010828; i=w_armin@gmx.de;
+	bh=wR22/Ilw+R8LR7NGyIT5Bx2OZcDaOEs1DUoo/pPXg2o=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=LYE4vvZbgjXQGVohrFUeok0bMLrgAauXBaMygMdHaiO2NFFGg1cOyXH+2P4guofv
+	 FWzDKeSx+1q2kE3zRjeTdV7eYeCSeKpotQbDWNl32DemHq1KFhURef+Kl6EbbY2MN
+	 dclbJ4xTSHsFgk/YuqrhrHFkNOYgjwTEiodx6ue4Eh3675fITI2vxiDu4pw7cMM8D
+	 e+6qOTyhvfH5ukhKWEZXT3ePsCf2IiisecVgcq3YIDPeY6nn88mnZ7+v1WF94Z/Re
+	 CYN0ZPGZfNQF5bKp/PfIvvafQOIFTOrXHk2KDI9J06DpElJM7iXBPo2f53Zphl1pW
+	 hqURCN+HtS8xJTrViA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MWigq-1rf0su0rAu-00X5RO; Tue, 16
+ Jan 2024 12:53:48 +0100
+Message-ID: <0d179914-5912-46ee-9c10-50b9bbcac718@gmx.de>
+Date: Tue, 16 Jan 2024 12:53:46 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240115122315.10250-1-mechakotik@gmail.com> <e776db0e-2376-415b-8688-f166118d4007@redhat.com>
- <JQKB7S.8ATKNVGHLV1L@ljones.dev> <15f8da52-e413-4440-bd63-2ee8e96a340d@redhat.com>
-In-Reply-To: <15f8da52-e413-4440-bd63-2ee8e96a340d@redhat.com>
-From: Andrei Sabalenka <mechakotik@gmail.com>
-Date: Tue, 16 Jan 2024 14:24:38 +0300
-Message-ID: <CAFh4unEOpJXbPKsHEvoH4hnCNeMYmgg2brGG2a1bfP9pq3T_yA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Re-enable custom fan curves after
- setting throttle_thermal_policy
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Luke Jones <luke@ljones.dev>, corentin.chary@gmail.com, 
-	ilpo.jarvinen@linux.intel.com, acpi4asus-user@lists.sourceforge.net, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH AUTOSEL 6.7 15/18] platform/x86: wmi: Remove ACPI handlers
+ after WMI devices
+To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>, ilpo.jarvinen@linux.intel.com,
+ platform-driver-x86@vger.kernel.org
+References: <20240116001308.212917-1-sashal@kernel.org>
+ <20240116001308.212917-15-sashal@kernel.org>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20240116001308.212917-15-sashal@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:njHnQiqoIe9NloKAY8hOxxY/caHZu23EngDXzDadwZL8+bEw7xq
+ wg6YU4XIQGOHs+SHteWiJmtj4ENuEeXX4VKapNmhjeMf0O+T8xpe05FELHlH5tDJSdLhyJs
+ PRUtEpgG8K8Nof8dzzfC3XagyZzqJLW5Re3rg2b6jV3YR/lNBfBh2aRUov1b8RMdq2WuEbF
+ w3s+/klXG140LVS0oUjgg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:uQSr3TEF+QQ=;FZrE8TJQfjooCxvSCEYhJXpIZDu
+ qqUNqIZ4HIqmXamrxla1EsTOz5gHrpRU8ufF43sQsVzPM61WHIn3MsSXTR3Wne8kV6s3y+wz0
+ Bz813arN68BqGub/SBVwTsrECusZjVx8U6pwXEDpXS+I79A30ejKFLyIrD/L2KqQcq97dZ+n9
+ WIqPYRBWDKcMqLuFg6KlZdiCRLGRuYrf5DZ+DVl085eZgiyM4nNZAytoCwvyErw/hBMnNNRcp
+ Xs26NkzdZiTVp87Z/4wiRfMsnKzxVsSITvm0KxfCfaMEjd0D0EOzBZcoEUcVv50PkYaXRVJTq
+ nHgK4ZMl+1TndD5Ch85wXMsxIhUCtnhU+K4Pjw+3dNiY4pmXGEcB7YMMiiTVE7hxKXrmzYyYp
+ A8fGATEHcKpI9Jlv31gps6YYcIpxyHT1Zd5Ri0zkvPMzpw55cf34cnVT1+yIXGNWtTZTmgnzA
+ vSXBlVFy55WFeryEtN24PhBVE9jymh1KwW0GT/6ji/QuRt2RynLY3+I1aMha1lsQTsS+2SSHO
+ p3aIDAs4LFzyHt24+489irN3RmFB1cmsLNIrSOHGDOIh1kZplwkPFMc9gcCAyW54uIs8KDxV3
+ q3MKrXFS9Xp5cDGUQmkF2eeVpDwWrs1PQDevmiCw9jMZ/JXTBuZtNW1KZHfZ/+vxKrV3NRnxo
+ gBYdDa/9UqJoz3hI6gA1ekxcROd43QJ6T3+VqsTzlb+THYEJNpDAIz2DFvj9fvpL0TgFT/fCD
+ TU2ks+dV0KjBdrqO/YskqcZEzwFhvx5pVcBhK4ir65vApS+cDSSp44nsLSVeYUIwbieOyR1Fe
+ w7akIGo3B9oY7k3jA0JcdDFaIPpEXmw75F96gtyjtwdUUExIBqNnwRa8DP7+t3fOY4iY6psXr
+ 4R16u8FIqSUERmNJbij1v6u0+TiVNfiIu+4hbASdkE/4MjnWGbt396Y0e4XowHci/WKpOZ+YA
+ 4qsriHg68kV8/PjOJxszBqEvHCg=
 
-Hi, thanks for the feedback!
+Am 16.01.24 um 01:12 schrieb Sasha Levin:
 
-> If ASUS uses separate custom curves per profile then IMHO so
-> should Linux.
+> From: Armin Wolf <W_Armin@gmx.de>
+>
+> [ Upstream commit 22574e17626391ad969af9a13aaa58a1b37ad384 ]
+>
+> When removing the ACPI notify/address space handlers, the WMI devices
+> are still active and might still depend on ACPI EC access or
+> WMI events.
+> Fix this by removing the ACPI handlers after all WMI devices
+> associated with an ACPI device have been removed.
 
-I don't think having a fan curve per a profile in the kernel is
-a good idea, as user may want different behaviour. The fact that
-Windows driver does this is not the reason Linux driver should
-do the same. Full control over the system is one of the main
-reasons we love Linux, isn't it?
+Hello,
 
-The current sysfs interface is more flexible than the official
-driver. However, fan curves getting disabled when changing
-throttle thermal policy is basically a side effect, which a
-good interface should avoid having.
+i would advise against including this patch in the next stable kernels.
 
-Enabling custom fan curve means user take full control over it.
-If user wants to have a separate fan curve for each profile,
-he will simply overwrite the current fan curve when profile is
-changed. If not, the curve will remain unchanged, like it should
-logically be.
+The WMI ACPI notify handler is still using list_for_each_entry() which is
+not safe when the WMI devices are removed before the ACPI notify handler.
 
-So this patch doesn't make worse if user wants to use power
-profiles scheme, but it makes controlling fan curves much easier
-if he wants to control fan curves independently from thermal
-throttle policy (for example, TTP depends on the current power
-source, quiet fan curve is used by default and more noisy one
-is turning on when some resource heavy tasks like games and
-building from source are running).
+This issue existed inside the WMI code for a long time, but this patch mig=
+ht
+trigger it. Since no users reported any issues regarding ACPI errors durin=
+g
+WMI removal, i would drop this patch.
 
-Best regards,
-Andrei
+Thanks,
+Armin Wolf
 
-
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> Link: https://lore.kernel.org/r/20231218192420.305411-3-W_Armin@gmx.de
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>   drivers/platform/x86/wmi.c | 9 ++++-----
+>   1 file changed, 4 insertions(+), 5 deletions(-)
 >
-> Hi Luke,
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index 5dd22258cb3b..d400e61d6801 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -1494,13 +1494,12 @@ static void acpi_wmi_remove(struct platform_devi=
+ce *device)
+>   	struct acpi_device *acpi_device =3D ACPI_COMPANION(&device->dev);
+>   	struct device *wmi_bus_device =3D dev_get_drvdata(&device->dev);
 >
-> On 1/15/24 21:25, Luke Jones wrote:
-> >
-> >
-> > On Mon, Jan 15 2024 at 13:38:16 +01:00:00, Hans de Goede <hdegoede@redh=
-at.com> wrote:
-> >> Hi,
-> >>
-> >> On 1/15/24 13:22, Andrei Sabalenka wrote:
-> >>>  When changing throttle_thermal_policy, all the custom fan curves are=
- getting disabled. This patch re-enables all the custom fan curves that wer=
-e enabled before changing throttle_thermal_policy.
-> >>>
-> >>>  I believe it makes asus-wmi sysfs interface more convenient, as it a=
-llows userspace to manage fan curves independently from platform_profile an=
-d throttle_thermal_policy. At the kernel level, custom fan curves should no=
-t be tied to "power profiles" scheme in any way, as it gives the user less =
-freedom of controlling them.
-> >>
-> >> Setting a high performance power-profile typically also involves rampi=
-ng up
-> >> the fans harder. So I don't think this patch is a good idea.
-> >>
-> >> If you really want this behavior then you can always re-enable the cus=
-tom
-> >> curve after changing the profile.
-> >>
-> >> Luke, do you have any opinion on this?
-> >
-> > I see some misconceptions that should be addressed:
-> > 1. ASUS themselves set separate fan curves per "platform profile", both=
- standard and custom
-> > 2. fan curves are not tied to platform profiles, they are tied to the t=
-hrottle_thermal_policy, and this is actually done in the acpi - so the code=
- here is a mirror of that
-> > 3. platform-profiles are tied to throttle_thermal_policy
-> >
-> > There is no lack of user control at all, a decent tool (like asusctl) c=
-an set fan curves without issues but it's perhaps not convenient for manual=
-ly setting via a script etc.
-> >
-> > The main reason that a curve is disabled for the policy being switched =
-to is for safety. It was a paranoid choice I made at the time. The kernel (=
-and acpi) can't guarantee that a user set a reasonable default for that pol=
-icy so the safest thing is to force an explicit re-enable of it.
-> >
-> > Having said that: I know that the curve was previously set for that pro=
-file/policy and in theory should be fine plus it is already used by the use=
-r, it is also not possible to set a curve for a different profile to the on=
-e a user is currently in -  this is forced in ACPI as you can set only the =
-curve for the profile you are in (the kernel code also mirrors this).
-> >
-> > So this patch should be fine.
-> >
-> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> -	acpi_remove_notify_handler(acpi_device->handle, ACPI_ALL_NOTIFY,
+> -				   acpi_wmi_notify_handler);
+> -	acpi_remove_address_space_handler(acpi_device->handle,
+> -				ACPI_ADR_SPACE_EC, &acpi_wmi_ec_space_handler);
+> -
+>   	device_for_each_child_reverse(wmi_bus_device, NULL, wmi_remove_device=
+);
+>   	device_unregister(wmi_bus_device);
+> +
+> +	acpi_remove_notify_handler(acpi_device->handle, ACPI_ALL_NOTIFY, acpi_=
+wmi_notify_handler);
+> +	acpi_remove_address_space_handler(acpi_device->handle, ACPI_ADR_SPACE_=
+EC,
+> +					  &acpi_wmi_ec_space_handler);
+>   }
 >
-> So I just checked asus-wmi.c again and there seems to be only 1 custom
-> curve per fan, one curve for CPU one for GPU and one for MID.
->
-> And while the custom curve may be fine for e.g. low-power mode,
-> that same custom curve may lead to overheating/throttling with
-> performance mode since performance mode typically requires
-> higher fan speeds.
->
-> As you write yourself: 'ASUS themselves set separate fan curves per
-> "platform profile", both standard and custom', but there is only 1
-> custom/user curve (in the kernel), not 1 per platform-profile.
->
-> So IMHO disabling the custom curve on profile switching is
-> the correct thing to do. Then userspace can do something like:
->
-> 1. Have per platform-profile custom curves in some tool
-> 2. Have that tool change (or monitor) platform-profile
-> 3. Load new custom profile based on the new platform-profile
-> 4. Enable the new (fitting to the new platform-profile)
->    custom fan curve.
->
-> I also see that fan_curve_get_factory_default() retrieves the
-> defaults for a *specific* thermal-policy / platform-profile
->
-> So if a user somehow just enables custom-fancurves without
-> actually changing the curve then this patch would lead
-> to the following scenario:
->
-> 1. Driver loads, lets assume the system boots in balanced
-> mode, balanced factory-default fan-curve is now loaded into
-> the custom fan-curve by fan_curve_check_present()
->
-> 2. User calls fan_curve_enable_store() writing "1", because
-> reasons.
->
-> 3. User changes platform-profile to performance,
-> throttle_thermal_policy_write() calls asus_wmi_set_devstate(
-> ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY) and the EC
-> sets fan curve to performance factory-default fan-curve.
->
-> 4. Next throttle_thermal_policy_write() will now call
-> fan_curve_write() restoring the balanced factory-default
-> fan-curve even though we are in performance mode now.
->
-> This seems undesirable to me.
->
-> Restoring custom fan-curves automatically on platform-profile
-> change IMHO requires also storing a separate custom curve
-> per profile inside the kernel and populating all custom
-> curves with the factory defaults at boot. If I read what
-> you have written above this would also actually match
-> what you wrote above about ASUS using separate custom curves
-> per profile. If ASUS uses separate custom curves per profile
-> then IMHO so should Linux.
->
-> Note custom fan-curves per profile still means that the custom
-> curve will be overwritten when changing profiles, some new sysfs
-> interface would be necessary to write the non-active custom
-> curves so that the restored curve on profile switch can be
-> custom too on the first switch.
->
-> (rather then having to switch to be able to write the custom
-> curve for a profile other then the currently active profile).
->
-> Note this is not a 100% hard nack for this patch, but atm
-> I'm leaning towards a nack.
->
-> Regards,
->
-> Hans
->
->
->
->
->
->
->
->
->
->
-> >
-> >>
-> >>>
-> >>>  Signed-off-by: Andrei Sabalenka <mechakotik@gmail.com>
-> >>>  ---
-> >>>   drivers/platform/x86/asus-wmi.c | 29 ++++++++++++++++++++++-------
-> >>>   1 file changed, 22 insertions(+), 7 deletions(-)
-> >>>
-> >>>  diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/=
-asus-wmi.c
-> >>>  index 18be35fdb..c2e38f6d8 100644
-> >>>  --- a/drivers/platform/x86/asus-wmi.c
-> >>>  +++ b/drivers/platform/x86/asus-wmi.c
-> >>>  @@ -3441,13 +3441,28 @@ static int throttle_thermal_policy_write(str=
-uct asus_wmi *asus)
-> >>>           return -EIO;
-> >>>       }
-> >>>
-> >>>  -    /* Must set to disabled if mode is toggled */
-> >>>  -    if (asus->cpu_fan_curve_available)
-> >>>  -        asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled =3D fals=
-e;
-> >>>  -    if (asus->gpu_fan_curve_available)
-> >>>  -        asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled =3D fals=
-e;
-> >>>  -    if (asus->mid_fan_curve_available)
-> >>>  -        asus->custom_fan_curves[FAN_CURVE_DEV_MID].enabled =3D fals=
-e;
-> >>>  +    /* Re-enable fan curves after profile change */
-> >>>  +    if (asus->cpu_fan_curve_available && asus->custom_fan_curves[FA=
-N_CURVE_DEV_CPU].enabled) {
-> >>>  +        err =3D fan_curve_write(asus, &asus->custom_fan_curves[FAN_=
-CURVE_DEV_CPU]);
-> >>>  +        if (err) {
-> >>>  +            pr_warn("Failed to re-enable CPU fan curve: %d\n", err)=
-;
-> >>>  +            return err;
-> >>>  +        }
-> >>>  +    }
-> >>>  +    if (asus->gpu_fan_curve_available && asus->custom_fan_curves[FA=
-N_CURVE_DEV_GPU].enabled) {
-> >>>  +        err =3D fan_curve_write(asus, &asus->custom_fan_curves[FAN_=
-CURVE_DEV_GPU]);
-> >>>  +        if (err) {
-> >>>  +            pr_warn("Failed to re-enable GPU fan curve: %d\n", err)=
-;
-> >>>  +            return err;
-> >>>  +        }
-> >>>  +    }
-> >>>  +    if (asus->mid_fan_curve_available && asus->custom_fan_curves[FA=
-N_CURVE_DEV_MID].enabled) {
-> >>>  +        err =3D fan_curve_write(asus, &asus->custom_fan_curves[FAN_=
-CURVE_DEV_MID]);
-> >>>  +        if (err) {
-> >>>  +            pr_warn("Failed to re-enable MID fan curve: %d\n", err)=
-;
-> >>>  +            return err;
-> >>>  +        }
-> >>>  +    }
-> >>>
-> >>>       return 0;
-> >>>   }
-> >>
-> >
-> >
->
+>   static int acpi_wmi_probe(struct platform_device *device)
