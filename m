@@ -1,55 +1,55 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2195A134C9
-	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jan 2024 10:25:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B729418AF0
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jan 2024 10:33:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GHXODNTX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZolPxPOB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705400746;
+	s=mimecast20190719; t=1705401179;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IiMv+uvq92JCTmXCvsW6Nbc3mcTpVP9FkpubTec/vqo=;
-	b=GHXODNTXedUC0VZi9MliV1LBYMBho6sFh/y9+pDXH/ICmJqvrtga4cGseMqghWaWfu6KYu
-	kUrGd0NC2N/4892PKjN5ymiFQ1jmqAbcZy+WO1r+YkvUi9mxvdZeazWzG+89fqNP4rPUGd
-	HFqfQzJ0mqQB1aEfaA8yx5zL2S5Fe0Y=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=O106YIfnVWdh4mXjGyHTWPZx6xc/H9v5ma5I9J/+uJM=;
+	b=ZolPxPOB6pb9jYj2IXYtfDIgWORSPPLYJHGLUMc10wTg9sKCxR+ovNWWq32MG+vJkEuoQX
+	D9KkzOO4jDxtsP509QMuFDA2i+2y/IJnbDcwjlXy2MRdcHsubVqnoPFP+j/0fa1nGrMEKf
+	tpErQgoRJa1k6Up/to6lsAtCOkCU47M=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-441-R7J2suorPJKDekfO0V8TkQ-1; Tue, 16 Jan 2024 05:25:44 -0500
-X-MC-Unique: R7J2suorPJKDekfO0V8TkQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a2daab7f775so79449066b.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jan 2024 02:25:44 -0800 (PST)
+ us-mta-209-kK-tAeoOPFmYKpiuZA7_xA-1; Tue, 16 Jan 2024 05:32:55 -0500
+X-MC-Unique: kK-tAeoOPFmYKpiuZA7_xA-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a2bc65005feso332111266b.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jan 2024 02:32:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705400743; x=1706005543;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=1e100.net; s=20230601; t=1705401175; x=1706005975;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IiMv+uvq92JCTmXCvsW6Nbc3mcTpVP9FkpubTec/vqo=;
-        b=cRmn3fWy69SX7mNBXzgWl2bT/nVLIM6VdJuCI6OsViOj1LGi4qh+P50albDtCeOA+k
-         7kNeT7gy4nBND1WFD2tpsNniPqtqtc/Oi23ad+PEW5eDcVwkVuxJKjmrlC1fdZfCFUIt
-         PXKaY3rsB/IXoXzIv9QtXoUB4bbCymgZh5tcgi70bym0n7s3ZYZz2UIlSKYed9epxjRx
-         P3S+QYlU3d7m2WeUw2A18DZcgSTfjxXHOvJWLsnUKYtuXUbvit2gUYDghDzCLe7CnbUt
-         auy+4NImZK+/P8P5tz4bpkhs3AKZuNxrEBGG0h5oeLZWJ9DRUL9MSO2zHGjtojUKcB5i
-         MX4g==
-X-Gm-Message-State: AOJu0Yxwmc9x0T3VysGeGkV1DXMvbcL6dXRNq+Q+zob/3T70syYn3iKB
-	SzDPXjyMD3VQig0ekV7RBJEdNP8kpgw5U/q6nGikbxCRwucm0eex1+dSPA1Po2iJHF62EHXGxDG
-	f31l9xciDZ/WPnodgGL+CGCEf9TuWrq+uOhKAsRBoIQ==
-X-Received: by 2002:a17:906:2359:b0:a2b:804a:4192 with SMTP id m25-20020a170906235900b00a2b804a4192mr3265123eja.57.1705400743310;
-        Tue, 16 Jan 2024 02:25:43 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEanu9bPhF/CtdeRFvMOI9vU4ArNRKtnVEY0jlPCuk3uFyH9hGwLse6UelyTcl6FI2G7WqK5Q==
-X-Received: by 2002:a17:906:2359:b0:a2b:804a:4192 with SMTP id m25-20020a170906235900b00a2b804a4192mr3265114eja.57.1705400742953;
-        Tue, 16 Jan 2024 02:25:42 -0800 (PST)
+        bh=O106YIfnVWdh4mXjGyHTWPZx6xc/H9v5ma5I9J/+uJM=;
+        b=MbW3L17pmO55CRTdOgHpqLF35Tk0G8ETeda6B0B8J5YRmWKQiEPzSI1pYAdq+EaZay
+         +9NQkdd0QlhSncmiJbfzMQhkDAqsP13vVxyXtduQZ0Lm2PODbSPPJj40zI/513BTilbW
+         DJ7bXhfM58bJI4c8EZJQ+xfQx271C1JQsstJlhqDc7ABXj2O5tbak0mHLvf3KfaC3agE
+         H5VrOklKj0Hdj62yiTGZ9F4YjA0rhylpet7yAGU7guUb79Wc/Ghwy4297ZTpAsg8TAW7
+         v/1yt/R4jXGbpcRjsUV53nd290tM8f8ln+/tvG9Bng1/1/FxIu5mb5oa1707KKIaNux8
+         eNRw==
+X-Gm-Message-State: AOJu0YzjVPA0KS6sLzkTKaQ3mjb1Jx5NO32psOyqPJQvNdJ4wAWxbAdr
+	0LwrDE8mOAYbU+01rqm6GYu98sSMLWXS6Ts9+wBwBNJ+r9myUopxUhUWuUNZnFwVG4cMTAoi2J2
+	NkP7iMsScgWLnUEcAm6swZzKponSHSvkoOCWVDZ5dnw==
+X-Received: by 2002:a17:906:260d:b0:a2c:72e4:efb1 with SMTP id h13-20020a170906260d00b00a2c72e4efb1mr3089066ejc.139.1705401174820;
+        Tue, 16 Jan 2024 02:32:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHLMR2PGM/GnJ+fk71EEYuew5GIcCNmIWxwkHlhcYHIOkV8jJ0XKG9Ii13NlH3XjKpYJvZBlg==
+X-Received: by 2002:a17:906:260d:b0:a2c:72e4:efb1 with SMTP id h13-20020a170906260d00b00a2c72e4efb1mr3089062ejc.139.1705401174545;
+        Tue, 16 Jan 2024 02:32:54 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id x25-20020a1709064bd900b00a28f54aacf1sm6334251ejv.185.2024.01.16.02.25.41
+        by smtp.gmail.com with ESMTPSA id kq10-20020a170906abca00b00a2e98f4c687sm76083ejb.164.2024.01.16.02.32.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jan 2024 02:25:42 -0800 (PST)
-Message-ID: <15f8da52-e413-4440-bd63-2ee8e96a340d@redhat.com>
-Date: Tue, 16 Jan 2024 11:25:41 +0100
+        Tue, 16 Jan 2024 02:32:54 -0800 (PST)
+Message-ID: <0b9b08a2-69c6-4068-a2cf-6aac1cc52387@redhat.com>
+Date: Tue, 16 Jan 2024 11:32:53 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -57,123 +57,35 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: asus-wmi: Re-enable custom fan curves after
- setting throttle_thermal_policy
+Subject: Re: [PATCH] MAINTAINERS: add Luke Jones as maintainer for asus
+ notebooks
 Content-Language: en-US, nl
-To: Luke Jones <luke@ljones.dev>
-Cc: Andrei Sabalenka <mechakotik@gmail.com>, corentin.chary@gmail.com,
- ilpo.jarvinen@linux.intel.com, acpi4asus-user@lists.sourceforge.net,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240115122315.10250-1-mechakotik@gmail.com>
- <e776db0e-2376-415b-8688-f166118d4007@redhat.com>
- <JQKB7S.8ATKNVGHLV1L@ljones.dev>
+To: "Luke D. Jones" <luke@ljones.dev>, linux-kernel@vger.kernel.org,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+References: <20240115211829.48251-1-luke@ljones.dev>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <JQKB7S.8ATKNVGHLV1L@ljones.dev>
+In-Reply-To: <20240115211829.48251-1-luke@ljones.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Luke,
+Hi,
 
-On 1/15/24 21:25, Luke Jones wrote:
-> 
-> 
-> On Mon, Jan 15 2024 at 13:38:16 +01:00:00, Hans de Goede <hdegoede@redhat.com> wrote:
->> Hi,
->>
->> On 1/15/24 13:22, Andrei Sabalenka wrote:
->>>  When changing throttle_thermal_policy, all the custom fan curves are getting disabled. This patch re-enables all the custom fan curves that were enabled before changing throttle_thermal_policy.
->>>
->>>  I believe it makes asus-wmi sysfs interface more convenient, as it allows userspace to manage fan curves independently from platform_profile and throttle_thermal_policy. At the kernel level, custom fan curves should not be tied to "power profiles" scheme in any way, as it gives the user less freedom of controlling them.
->>
->> Setting a high performance power-profile typically also involves ramping up
->> the fans harder. So I don't think this patch is a good idea.
->>
->> If you really want this behavior then you can always re-enable the custom
->> curve after changing the profile.
->>
->> Luke, do you have any opinion on this?
-> 
-> I see some misconceptions that should be addressed:
-> 1. ASUS themselves set separate fan curves per "platform profile", both standard and custom
-> 2. fan curves are not tied to platform profiles, they are tied to the throttle_thermal_policy, and this is actually done in the acpi - so the code here is a mirror of that
-> 3. platform-profiles are tied to throttle_thermal_policy
-> 
-> There is no lack of user control at all, a decent tool (like asusctl) can set fan curves without issues but it's perhaps not convenient for manually setting via a script etc.
-> 
-> The main reason that a curve is disabled for the policy being switched to is for safety. It was a paranoid choice I made at the time. The kernel (and acpi) can't guarantee that a user set a reasonable default for that policy so the safest thing is to force an explicit re-enable of it.
-> 
-> Having said that: I know that the curve was previously set for that profile/policy and in theory should be fine plus it is already used by the user, it is also not possible to set a curve for a different profile to the one a user is currently in -  this is forced in ACPI as you can set only the curve for the profile you are in (the kernel code also mirrors this).
-> 
-> So this patch should be fine.
+On 1/15/24 22:18, Luke D. Jones wrote:
+> Add myself as maintainer for "ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS
+> DRIVERS" as suggested by Hans de Goede based on my history of
+> contributions.
 > 
 > Signed-off-by: Luke D. Jones <luke@ljones.dev>
 
-So I just checked asus-wmi.c again and there seems to be only 1 custom
-curve per fan, one curve for CPU one for GPU and one for MID.
+Thank you for your patch/series, I've applied this patch
+(series) to my review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-And while the custom curve may be fine for e.g. low-power mode,
-that same custom curve may lead to overheating/throttling with
-performance mode since performance mode typically requires
-higher fan speeds.
+Note it will show up in the pdx86 review-hans branch once I've
+pushed my local branch there, which might take a while.
 
-As you write yourself: 'ASUS themselves set separate fan curves per
-"platform profile", both standard and custom', but there is only 1
-custom/user curve (in the kernel), not 1 per platform-profile.
-
-So IMHO disabling the custom curve on profile switching is
-the correct thing to do. Then userspace can do something like:
-
-1. Have per platform-profile custom curves in some tool
-2. Have that tool change (or monitor) platform-profile
-3. Load new custom profile based on the new platform-profile
-4. Enable the new (fitting to the new platform-profile)
-   custom fan curve.
-
-I also see that fan_curve_get_factory_default() retrieves the
-defaults for a *specific* thermal-policy / platform-profile
-
-So if a user somehow just enables custom-fancurves without
-actually changing the curve then this patch would lead
-to the following scenario:
-
-1. Driver loads, lets assume the system boots in balanced
-mode, balanced factory-default fan-curve is now loaded into
-the custom fan-curve by fan_curve_check_present()
-
-2. User calls fan_curve_enable_store() writing "1", because
-reasons.
-
-3. User changes platform-profile to performance,
-throttle_thermal_policy_write() calls asus_wmi_set_devstate(
-ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY) and the EC
-sets fan curve to performance factory-default fan-curve.
-
-4. Next throttle_thermal_policy_write() will now call
-fan_curve_write() restoring the balanced factory-default
-fan-curve even though we are in performance mode now.
-
-This seems undesirable to me.
-
-Restoring custom fan-curves automatically on platform-profile
-change IMHO requires also storing a separate custom curve
-per profile inside the kernel and populating all custom
-curves with the factory defaults at boot. If I read what
-you have written above this would also actually match
-what you wrote above about ASUS using separate custom curves
-per profile. If ASUS uses separate custom curves per profile
-then IMHO so should Linux.
-
-Note custom fan-curves per profile still means that the custom
-curve will be overwritten when changing profiles, some new sysfs
-interface would be necessary to write the non-active custom
-curves so that the restored curve on profile switch can be
-custom too on the first switch.
-
-(rather then having to switch to be able to write the custom
-curve for a profile other then the currently active profile).
-
-Note this is not a 100% hard nack for this patch, but atm
-I'm leaning towards a nack.
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
 Regards,
 
@@ -181,62 +93,20 @@ Hans
 
 
 
-
-
-
-
-
-
-
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->>
->>>
->>>  Signed-off-by: Andrei Sabalenka <mechakotik@gmail.com>
->>>  ---
->>>   drivers/platform/x86/asus-wmi.c | 29 ++++++++++++++++++++++-------
->>>   1 file changed, 22 insertions(+), 7 deletions(-)
->>>
->>>  diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
->>>  index 18be35fdb..c2e38f6d8 100644
->>>  --- a/drivers/platform/x86/asus-wmi.c
->>>  +++ b/drivers/platform/x86/asus-wmi.c
->>>  @@ -3441,13 +3441,28 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
->>>           return -EIO;
->>>       }
->>>
->>>  -    /* Must set to disabled if mode is toggled */
->>>  -    if (asus->cpu_fan_curve_available)
->>>  -        asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled = false;
->>>  -    if (asus->gpu_fan_curve_available)
->>>  -        asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled = false;
->>>  -    if (asus->mid_fan_curve_available)
->>>  -        asus->custom_fan_curves[FAN_CURVE_DEV_MID].enabled = false;
->>>  +    /* Re-enable fan curves after profile change */
->>>  +    if (asus->cpu_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled) {
->>>  +        err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_CPU]);
->>>  +        if (err) {
->>>  +            pr_warn("Failed to re-enable CPU fan curve: %d\n", err);
->>>  +            return err;
->>>  +        }
->>>  +    }
->>>  +    if (asus->gpu_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled) {
->>>  +        err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_GPU]);
->>>  +        if (err) {
->>>  +            pr_warn("Failed to re-enable GPU fan curve: %d\n", err);
->>>  +            return err;
->>>  +        }
->>>  +    }
->>>  +    if (asus->mid_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_MID].enabled) {
->>>  +        err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_MID]);
->>>  +        if (err) {
->>>  +            pr_warn("Failed to re-enable MID fan curve: %d\n", err);
->>>  +            return err;
->>>  +        }
->>>  +    }
->>>
->>>       return 0;
->>>   }
->>
-> 
-> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f5c2450fa4ec..e7843beaa589 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3147,6 +3147,7 @@ F:	drivers/hwmon/asus-ec-sensors.c
+>  
+>  ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
+>  M:	Corentin Chary <corentin.chary@gmail.com>
+> +M:	Luke D. Jones <luke@lones.dev>
+>  L:	acpi4asus-user@lists.sourceforge.net
+>  L:	platform-driver-x86@vger.kernel.org
+>  S:	Maintained
 
