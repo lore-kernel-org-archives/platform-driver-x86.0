@@ -1,102 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2054.outbound.protection.outlook.com [40.107.101.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EFB3D75
-	for <platform-driver-x86@vger.kernel.org>; Wed, 17 Jan 2024 04:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705464655; cv=none; b=PJvlPpYFTVyDcWU07BcfDwgH0CQggxXexysr7ZcwgaROw3WiLmicJXpuC6a07fRLAexc3n5z3p04rTSOrCb0bOuHRo1QT0sR8961xtYhRWAEd0L84pMpSaVi0RlBbJXZ89qN1xe7m5HH4sbi9UDz/hxtCNSdwfsN6fCUmhnJar8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705464655; c=relaxed/simple;
-	bh=yXSbu7s1e/Xr4IW9Wk0rU1TOusd7NSJFxaYJksdy9W8=;
-	h=Received:DKIM-Signature:Received:From:To:Subject:Date:
-	 X-Bugzilla-Reason:X-Bugzilla-Type:X-Bugzilla-Watch-Reason:
-	 X-Bugzilla-Product:X-Bugzilla-Component:X-Bugzilla-Version:
-	 X-Bugzilla-Keywords:X-Bugzilla-Severity:X-Bugzilla-Who:
-	 X-Bugzilla-Status:X-Bugzilla-Resolution:X-Bugzilla-Priority:
-	 X-Bugzilla-Assigned-To:X-Bugzilla-Flags:X-Bugzilla-Changed-Fields:
-	 Message-ID:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:X-Bugzilla-URL:Auto-Submitted:
-	 MIME-Version; b=dmQlmi55DWraDSVtJXJZCt7zimAScqAoXI6i5KignGDpUnhX0fWhhXKo1ZvbmUdeZ4qEQYtgq9tMldqNtM1ND13lDz5kelgkPx5o6ynYSWU34xwWWj4gxDkpyqYLXLiG4NZ2io0I8j9L8PIxxsy8VCd82gA4qeDrpPfj8DLroAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDBMdTaq; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709699467;
+	Wed, 17 Jan 2024 10:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705485868; cv=fail; b=HyUG/9FFgPu2f6NG4Ieo32w2bsAJtticdzpZyVl0/0sjHVERQ6baMR45fA33pWj3vMbnUTbpMHXUELkneKpsBEFAzOd0EluasfvzEJHqV+r3+pnTxWGjoHXKr50CjDuVlGqtHJbxIEFY3USdrBWM5I/xI6vWbKcq9MCF4CssG8c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705485868; c=relaxed/simple;
+	bh=D5SdNyQsRGlbMwwNJSxG8SVSf5nbs9/RkOcWtBvfDmc=;
+	h=ARC-Message-Signature:ARC-Authentication-Results:DKIM-Signature:
+	 Received:Received:X-MS-Exchange-Authentication-Results:
+	 Received-SPF:Received:Received:Received:Received:From:To:CC:
+	 Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type:X-NV-OnPremToCloud:
+	 X-EOPAttributedMessage:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-Id:
+	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
+	 X-MS-Exchange-CrossTenant-AuthSource:
+	 X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped; b=HhkEFVsWyi9P09Dd2Z1XLczJQUAFFcN8iFbsg6JOKcuJV/1hzgQ3tcJ8ri6Z8o1WTJvPFgJlatwR6qMDyj06AoXqRplp6+I4T1dVGyQ9xrj2pM/P7zs8EUMZDZEqL080JcTmzE1A9iLT9A571SPxfXQsIGI+C2S0MN4VRytSInQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nCRdVnzw; arc=fail smtp.client-ip=40.107.101.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDBMdTaq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F3CABC433F1
-	for <platform-driver-x86@vger.kernel.org>; Wed, 17 Jan 2024 04:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705464655;
-	bh=yXSbu7s1e/Xr4IW9Wk0rU1TOusd7NSJFxaYJksdy9W8=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=cDBMdTaq8XBOZk0tQMy3+c28diVcs71fg70POzLPEs7SGl4+MT4KpmsyIrq0JdocA
-	 14XtYUPb+aim1XjDAyuI3KCvpdZp2dk51+PS/PHhxdjZQb0JnnCnNp9QpyRp3mATEK
-	 YlEiYYWuDKn+r8Jm8rzJ3/ieeiegYeQgZ13ZiB1Rdb74Qy8qB3LBztg/wlWSJ9v2tw
-	 7VlOwqtnXJvQyQt3iCq3fK9hphrDRarMMGDQEmOLWH9OTOAvGkPywqDSF+FW4NNFkc
-	 M0IKTzzCIcPvlDof0tv1PsbOm04PSugGw7MXU+jvkLUq6LiGhC2fsvcQDgZlCuYzqS
-	 HAKrkgGzt/wuw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id D3F8FC4332E; Wed, 17 Jan 2024 04:10:54 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after a
- random number of suspend/resume cycles
-Date: Wed, 17 Jan 2024 04:10:54 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-tNCBQ2oJQR@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nCRdVnzw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GOtOg8EEU+4WZvHecNPhjxdj+OoGLeDKvPSRL0AFbID+bbE2oTjsAz8O+XvRdaSyeUmNePoxE50g/vEL03zw6BOsCQtmt24APdqSvi2pdecj91IvAiDKCCy1Z8TNlruzNzH5EkBvMdr6EeXqAeC6xGqXuYB17NXlY/g1kJr47xZpSwggdmVs0sJJ+amXX+3/Uf/EHjkVPJCSLBqhqmhDzhoBtYsPTKm+9XWBgQ2JVprsP3RlHheT7EaCGkH/KCAgsXDvmYcZyCzDIrM269vJ5u+9+uVpphOmTQPCJ9crXaahLHm4t3UYQ+sroIX1Ym74dy84i9mOHQ1AITW6c9v+Hw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qPgRd6rMr5XMon4TOi99GTuo3aFRst6wL+Mqc8wza1Y=;
+ b=Z1YokQaJdZpQjqVczcZOdnXTxeK3JUyS+KUaLl3LkGQK/oQeP2FHY3B77sOt/m3M/JdGite8Ll4a8OepPoXdevetL+NhgUhdaNGd4LoqwNMqlVfwoutTiMhmnR5Xg+YsUaN2lD+XNNLbUefX6SEyj7V//PBzmVYrQ+L1+iX8ZtJs/xCwX6jRpHjr8UyOK+kTpKBVltabnE+xquvEW098b3eSOoAkm8KHduBOxz4TwS+09fZ2mHqcGJCcKSJJF3hjgXYctabzP88bsfD/QGOoMQ9xaTaR69aBWPJSwsmtZikal0Wo71winHxxgxWRRUnUkllyp42dnIG0sDacW2G1vw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qPgRd6rMr5XMon4TOi99GTuo3aFRst6wL+Mqc8wza1Y=;
+ b=nCRdVnzwp5RcEZARJZS8qk4vspPmxPXs+BhzbxIWTEEjCv5ajC5VmvZu+YkHdj1f0s6PFD2XfmYmxGGDFLtlAHAGxUE3todUuzCsKkY0mTwsmD0M6zbzPLePY9uXiNeZUdtgpnedCfwbnxllffDz/dwI15uAg8M1CU2jWa1r9jLw4DmkSkmTLtHHOovvLQvjnQ1D0s6KHXUSIxMcT8hbQdsPbVsRIrnLrWgNwDJy0rN8ubYihJ0lTWlugnmpFlF/y1GZl8a1TPWPV2ihiexcyoWqG10aVir5Yq99xCNpT9577atBcU7QgjVKNgJGObxIdUmXjslxwlo7MMETx/ojlA==
+Received: from BL0PR02CA0042.namprd02.prod.outlook.com (2603:10b6:207:3d::19)
+ by PH8PR12MB6794.namprd12.prod.outlook.com (2603:10b6:510:1c5::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.28; Wed, 17 Jan
+ 2024 10:04:23 +0000
+Received: from MN1PEPF0000F0E3.namprd04.prod.outlook.com
+ (2603:10b6:207:3d:cafe::23) by BL0PR02CA0042.outlook.office365.com
+ (2603:10b6:207:3d::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23 via Frontend
+ Transport; Wed, 17 Jan 2024 10:04:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ MN1PEPF0000F0E3.mail.protection.outlook.com (10.167.242.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7202.16 via Frontend Transport; Wed, 17 Jan 2024 10:04:23 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 17 Jan
+ 2024 02:04:09 -0800
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 17 Jan
+ 2024 02:04:09 -0800
+Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com (10.129.68.7)
+ with Microsoft SMTP Server id 15.2.986.41 via Frontend Transport; Wed, 17 Jan
+ 2024 02:04:08 -0800
+From: Shravan Kumar Ramani <shravankr@nvidia.com>
+To: Hans de Goede <hdegoede@redhat.com>, Ilpo Jarvinen
+	<ilpo.jarvinen@linux.intel.com>, Vadim Pasternak <vadimp@nvidia.com>, "David
+ Thompson" <davthompson@nvidia.com>
+CC: Shravan Kumar Ramani <shravankr@nvidia.com>,
+	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 1/1] platform/mellanox: mlxbf-pmc: Fix offset calculation for crspace events
+Date: Wed, 17 Jan 2024 05:01:34 -0500
+Message-ID: <8834cfa496c97c7c2fcebcfca5a2aa007e20ae96.1705485095.git.shravankr@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E3:EE_|PH8PR12MB6794:EE_
+X-MS-Office365-Filtering-Correlation-Id: ed351b7d-a8bb-4cbe-92b1-08dc1743ae56
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	5QtF4dAHHZmq4I6DMoel6bWj+TUPMKOv0N9pxR2+/glNy/ZyhfrRxsE4ewBLt25kut4S5YgwCSNfyw3BHXhW0jQUzaNU2tUNS9c0ZeopsxTOgBVGrgbbVgkoD6JCIMTJ0jj+ym6+IAl5EPEyjofzfXMF1UaRR871wTKaT5BUshH1EApMPSUgSeG4Ls8AepHxjjGabfxlfnorAV4H0HwazVQ+PO+b9mlPyFWzWvX8VOXtyduCUA+eKMV81weRIqabvlAWDraWOT3X+XqqsuVVETM3L+3pKCuGnlRDDFeb+b0fl1dSgWy+YBVUay6MSoicJNW1bbydWNavTpC3jOwx6RT/B3Fc178lkxDLWRTIE4qMzRjqiwPH4YBKcayLqNmAv6LBbGgtlcijcSULYLBG+IjMKHrA9WY3I2g/bZ1V+QuoiTAy3ACHvVwfS9rh1PYLaaOMHtikSXSpfqx7HSpW7/Atywe0Rx7wAYzaBCNUnkOYBaj8pK4WrawdJi/Cp9HLpYlR1lp0zShP90psC9cyYV9SzyDtjV7EAZBuykL3y6jx54LlzYznBBKrnG0PfpLjAxwsZZI/E59jCbPs8F0y4d52w3tml3zbrFZsiSLgBoMs1C7VXDmcD5l+dzSNzjKtzCE+OWf4R1OacIW9JH5R0uSXlLjKkg/PSLHRs/0Lm+Qf1MBC3wXplfh6lufAUUt8+wOtCwdZbQq6OyATb/E5dMeaFj59z/5Xu77Loo/C6cXdE9wGheKLZlEJ34f6KQ1l
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(346002)(396003)(376002)(136003)(39860400002)(230922051799003)(186009)(64100799003)(82310400011)(1800799012)(451199024)(36840700001)(40470700004)(46966006)(40480700001)(40460700003)(86362001)(70586007)(36756003)(41300700001)(2616005)(336012)(83380400001)(426003)(356005)(36860700001)(7636003)(47076005)(26005)(2906002)(5660300002)(316002)(6666004)(6636002)(4326008)(70206006)(478600001)(7696005)(54906003)(82740400003)(8676002)(110136005)(8936002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 10:04:23.2893
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed351b7d-a8bb-4cbe-92b1-08dc1743ae56
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF0000F0E3.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6794
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+The event selector fields for 2 counters are contained in one
+32-bit register and the current logic does not account for this.
 
---- Comment #14 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-I read through this thread and I currently think that Artem and Dan have
-encountered two separate bugs.
+Fixes: 423c3361855c ("platform/mellanox: mlxbf-pmc: Add support for BlueField-3")
+Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+Reviewed-by: David Thompson <davthompson@nvidia.com>
+Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+---
+ drivers/platform/mellanox/mlxbf-pmc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-@Artem:
+diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+index 1dd84c7a79de..b1995ac268d7 100644
+--- a/drivers/platform/mellanox/mlxbf-pmc.c
++++ b/drivers/platform/mellanox/mlxbf-pmc.c
+@@ -1170,7 +1170,7 @@ static int mlxbf_pmc_program_crspace_counter(int blk_num, uint32_t cnt_num,
+ 	int ret;
+ 
+ 	addr = pmc->block[blk_num].mmio_base +
+-		(rounddown(cnt_num, 2) * MLXBF_PMC_CRSPACE_PERFSEL_SZ);
++		((cnt_num / 2) * MLXBF_PMC_CRSPACE_PERFSEL_SZ);
+ 	ret = mlxbf_pmc_readl(addr, &word);
+ 	if (ret)
+ 		return ret;
+@@ -1413,7 +1413,7 @@ static int mlxbf_pmc_read_crspace_event(int blk_num, uint32_t cnt_num,
+ 	int ret;
+ 
+ 	addr = pmc->block[blk_num].mmio_base +
+-		(rounddown(cnt_num, 2) * MLXBF_PMC_CRSPACE_PERFSEL_SZ);
++		((cnt_num / 2) * MLXBF_PMC_CRSPACE_PERFSEL_SZ);
+ 	ret = mlxbf_pmc_readl(addr, &word);
+ 	if (ret)
+ 		return ret;
+-- 
+2.30.1
 
-Under the presumption that ryzenadj is actually retrieving the correct valu=
-es
-for STAPM, PPT FAST, and PPT SLOW I want to ask if this is tied to a specif=
-ic
-power adapter, or sequence of events.  Like suspend on power, resume on bat=
-tery
-or suspend on battery resume on power.
-
-If there is a linkage between any of those, then I think this is "most like=
-ly"
-an HP EC bug.
-
-@Dan,
-
-Can you reproduce this if you manually always set the scaling governor on a=
-ll
-CPUs to "performance" before you reboot?
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
