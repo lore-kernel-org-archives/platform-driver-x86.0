@@ -1,84 +1,176 @@
-Received: from a1i923.smtp2go.com (a1i923.smtp2go.com [43.228.187.155])
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A9914A85
-	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Jan 2024 21:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.228.187.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A860314A98;
+	Sat, 20 Jan 2024 23:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705786788; cv=none; b=fsuSbqCyczQYoL47+b6QewSIcHfyThq/9wzouqO6trTkz/7AaNKUYEhUEV/pKB+NpYthh9BqJPSW2zZKKWGE7jnzm7NWQ25LvYMBr2T7xUK456kjvLtP4yRpl8OCuTwjdr8BelJ8IKQCcqgfGZjy5gOCgJUK1VO7dr3a47EvDH0=
+	t=1705793399; cv=none; b=XMoJPyYRQAm184jHhIctI1Y3LDMfbaeZ8HXDD8zWp+o9Szbe164hPhl/aknS1l/1HrUlkyPykcQWBGFKR0ywIJrR328Ihw8X7csW6xx+mL7mnLpkrOBimT/4qHrfg6AH/wkO+EBNb61dqXbJdv2Gc4OLE0z6y/Joxl8XASJXSKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705786788; c=relaxed/simple;
-	bh=FZ8i027+QPshdyAsvbS9VyWnsFAtujIif6Pq0jDx+ac=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BN4g4xtSQXv4dt71cVucAzyeiFxftEH4qbdpZwpUabzqg5B8SOsCOo5qmAMgXhSJ4fG3kJvxfMh3AvHPK+IURxmdkx1Cs90WVFcbnulMc4GLyq4n+XMJhXtLSShcG9NRhbLYsfRPXJE4CHPy4lOOvunjntqa2086gDXp1O6JDms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dennisn.mooo.com; spf=pass smtp.mailfrom=return.smtpservice.net; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=Jn2Uby6g; arc=none smtp.client-ip=43.228.187.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dennisn.mooo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=return.smtpservice.net
+	s=arc-20240116; t=1705793399; c=relaxed/simple;
+	bh=gYxQpuVqxVWQkJvr3V8GaYIGnpPdH4JHwRwYm+3Culs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HLhmJwNGRqW4XDU/12pQBjiCgrik17dEdeKUcR4rLXT2+ydgBRSdiFnAQMLuIK6G4eiUUA4cqvcrjHtPrWEEXGzGFTB3IrkoUNzvdKFNMLwKytmkiUWrrK9l6ZpuxJKIR/HiA6E6lTBE0ZtllsoSguf0l9OoA2E4Rwpn3EdSiww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=cf2HrC8m; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LZjagTr0; arc=none smtp.client-ip=64.147.123.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="Jn2Uby6g"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=smtpservice.net; s=maow60.a1-4.dyn; x=1705787685; h=Feedback-ID:
-	X-Smtpcorp-Track:Message-ID:Subject:To:Date:From:Reply-To:Sender:
-	List-Unsubscribe; bh=AJY+9umB/KV1xb5V34jYQ0dVTajZRTTkp3kFzGh7hq0=; b=Jn2Uby6g
-	4ZDZCnMox8hjX7pGLv6QQjcodK8L/+kCcsaJnaPpHBrOM42KPfUnf8zIpOvOdX9jbwh+If1YdACEN
-	P6Q96Ks/rWAMRYEAiIUHksQ0F/0uC/c7t1GghZ+mw6naZTvu4u1g0gMkCmOMPg0gamtqeZWwvWsyw
-	A4tRoLk6x3a6+Q+wanPOzjACfqee3hPQwUe3AsRotdhmRaCemraiW3DohEfo0qVzL3uIrjhBdmjxO
-	Eat9QX6gwecGWltCU76g7l1n+mtji39y74UIAZ9x9rNWDfAubIyaCkccN0AC+p5El/S5LbXCf5WzA
-	otSr0uYe5FF5Mx3zw2oz+HwKVQ==;
-Received: from [10.45.79.170] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
- (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
- (Exim 4.94.2-S2G) (envelope-from <dennisn@dennisn.mooo.com>)
- id 1rRJ41-l1jgf0-Ia; Sat, 20 Jan 2024 21:39:41 +0000
-Received: from [10.220.238.86] (helo=dennisn.mooo.com)
- by smtpcorp.com with esmtpa (Exim 4.96.1-S2G)
- (envelope-from <dennisn@dennisn.mooo.com>) id 1rRJ40-bMV8Vh-0c;
- Sat, 20 Jan 2024 21:39:41 +0000
-Received: by dennisn.mooo.com (sSMTP sendmail emulation);
- Sat, 20 Jan 2024 16:39:38 -0500
-From: "Dennis Nezic" <dennisn@dennisn.mooo.com>
-Date: Sat, 20 Jan 2024 16:39:38 -0500
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org
-Subject: Re: hp-wmi: info hotkey has no keycode or scancode
-Message-ID: <Zaw9mnfEL65B5r4O@panther>
-References: <ZawX2mquuTCv0tuF@panther>
- <a8fa0308-0998-48e4-a104-c2b57ee9bd8e@gmx.de>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="cf2HrC8m";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LZjagTr0"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailout.west.internal (Postfix) with ESMTP id 0DF373200A40;
+	Sat, 20 Jan 2024 18:29:54 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Sat, 20 Jan 2024 18:29:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1705793394; x=
+	1705879794; bh=WGvMaEsDltLoKXJgl9GSQOJtstKvutWc7SjgzovOw38=; b=c
+	f2HrC8mjhLbVIlK7oWYepvY5TStNV+Vh73y2tN6QkizI8WvEprMpH+pc8mGMpPlB
+	Dcvh0pV2AtyO6bRGf9EA4qXmfSJxHT+s0mkhgqJLe/0zX1l2qtEBRIj+UvLYQR8Y
+	qtRV4vjtO7rySI6IZkM75W0mGJvOgwbx/oyyI77OALx9GQHAx8fAYv6ScH4r+114
+	B1mAbgzpLPCRm0hfk+YoQ80j3EQhJh34QkCq29xTRLcRCJEOZjK79UIsUupI3ul7
+	YF3B1a/yvLPA07fXz+cHNXEpHkI408bf7gwg3enE9R8F5WP0b7l5G1AHr7zz2FAZ
+	u7ZFU1M+XSu9R3e+xpRnA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1705793394; x=
+	1705879794; bh=WGvMaEsDltLoKXJgl9GSQOJtstKvutWc7SjgzovOw38=; b=L
+	ZjagTr0ocJCNOojS+rhJfy8k9ExRIJ33lirPciH4g64kQ4XrdB2DwR5huqTMQD0a
+	pSc9XZfKSBHdcFv27Wkvj8WkSDwXZ+n0imOillo/FfwtnDLKyVXO8/XF8XzWsypt
+	4V1qZkx/fjf9roAZ/SEeA0z97dKOsKccynGL/uLo+ug7MMDGcnK1kb/Cn8IeYFK6
+	QS8PwJeJUqQ11lgTW3+M5VfwdKdy4cQYieK8i7CjgleBqxRYZ1yGKzLmJKADWl+N
+	feW1LbIGLZQHU5xvHpYG4L/Zur9ojlLu7H4cnzpIM27ibL+c+8mv+lGIw9hO92RX
+	RFVuW7BQGE9SwDnMGPauA==
+X-ME-Sender: <xms:clesZWByInibY4FYPxqB1nGu_XlV39At9fKpylIkPbVt704MGDqPKg>
+    <xme:clesZQgP4xH3SoUxxqPL55zF6YZwVK7hiT77IWUs6PiPW6OT3KREvCaIJacNFZc0p
+    A-zoCnfT-v7jcv5o20>
+X-ME-Received: <xmr:clesZZnu7l-2isMRlta_J9VzXKLK0-BafE_o1CUc4GlLIW3JpoLKN8ULdFQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdekfedgtdekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucgoteeftdduqddtudculdduhedmnecujfgurhephf
+    fvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrrhhkucfrvggrrhhs
+    ohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgeqnecuggftrf
+    grthhtvghrnhepfedtvdejfeelffevhffgjeejheduteetieeguefgkefhhfegjeduueet
+    hefgvdffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+X-ME-Proxy: <xmx:clesZUx5CGtBy5uUKOVPsx2pIns8lSfnITagzKjQR5US4dD9JefnxA>
+    <xmx:clesZbSx6SVUs_9Mqoq7gr2A_mo0LQnwR-hsTtavQVJSx9kTtdQVlA>
+    <xmx:clesZfb9_oQO58FfShN_i3H-ZbsxtvCtf1oQZmDtYRVB4qCgSoz2Yw>
+    <xmx:clesZcJoZIElVQsRwi7G3FQUrVKDadFgzB8t1ry1RD6kAbrqHg1PIA>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 20 Jan 2024 18:29:53 -0500 (EST)
+From: Mark Pearson <mpearson-lenovo@squebb.ca>
+To: mpearson-lenovo@squebb.ca
+Cc: corbet@lwn.net,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: Support for mode FN key
+Date: Sat, 20 Jan 2024 18:29:34 -0500
+Message-ID: <20240120232949.317337-1-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a8fa0308-0998-48e4-a104-c2b57ee9bd8e@gmx.de>
-X-Smtpcorp-Track: 1rRJ40PuV8Vh0c.rS2-q6Ea7A33g
-Feedback-ID: 498822m:498822aoToIo_:498822sZEw92SIK9
-X-Report-Abuse: Please forward a copy of this message, including all headers,
- to <abuse-report@smtp2go.com>
+Content-Transfer-Encoding: 8bit
 
-On 20 Jan 21:52, Armin Wolf wrote:
-> Am 20.01.24 um 19:58 schrieb Dennis Nezic:
-> 
-> > Guys, the "info" illuminated touch-key (hotkey?) on my laptop "doesn't
-> > work", showkey doesn't report any keycode or scancode. I don't see any
-> > wmi related error messages from dmesg. All the other illuminated
-> > "hotkeys" work fine, although confusingly evtest and "libinput
-> > debug-events" report that they're coming through the event interface
-> > associated with "AT Translated Set 2 keyboard" instead of "HP WMI
-> > hotkeys", but hey, as long as I receive them I'm okay :p.
-> >
-> > hp-wmi.c does seem to reference it:
-> >    { KE_KEY, 0x213b,  { KEY_INFO } },
-> >
-> > How can I go about troubleshooting this? (I'm using kernel 6.6.8)
-> 
-> it can be possible that your machine does not use hp-wmi to deliver keycodes
-> to the operating system, but instead emulates a standard keyboard controller.
-> 
-> Can you check with "kacpimon" that events concerning a PNP0C14 device are being
-> received?
+New Thinkpads have added a 'Mode' Function key that on Windows allows
+you to choose the active profile (low-power, balanced, performance)
 
-Very possible indeed. "kacpimon" doesn't show anything when I press that
-touchkey, but it does when I press all the other touchkeys. (I do get
-lots of accelerometer noise.)
+Added suppoort for this hotkey (F8), and have it cycle through the
+options available.
+
+Tested on X1 Carbon G12.
+
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+ .../admin-guide/laptops/thinkpad-acpi.rst     |  7 ++++++-
+ drivers/platform/x86/thinkpad_acpi.c          | 20 ++++++++++++++++++-
+ 2 files changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+index 98d304010170..7f674a6cfa8a 100644
+--- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
++++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+@@ -444,7 +444,9 @@ event	code	Key		Notes
+ 
+ 0x1008	0x07	FN+F8		IBM: toggle screen expand
+ 				Lenovo: configure UltraNav,
+-				or toggle screen expand
++				or toggle screen expand.
++				On newer platforms (2024+)
++				replaced by 0x131f (see below)
+ 
+ 0x1009	0x08	FN+F9		-
+ 
+@@ -504,6 +506,9 @@ event	code	Key		Notes
+ 
+ 0x1019	0x18	unknown
+ 
++0x131f	...	FN+F8	        Platform Mode change.
++				Implemented in driver.
++
+ ...	...	...
+ 
+ 0x1020	0x1F	unknown
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index c4895e9bc714..ceb22f8d8442 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -166,6 +166,7 @@ enum tpacpi_hkey_event_t {
+ 	TP_HKEY_EV_VOL_MUTE		= 0x1017, /* Mixer output mute */
+ 	TP_HKEY_EV_PRIVACYGUARD_TOGGLE	= 0x130f, /* Toggle priv.guard on/off */
+ 	TP_HKEY_EV_AMT_TOGGLE		= 0x131a, /* Toggle AMT on/off */
++	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile */
+ 
+ 	/* Reasons for waking up from S3/S4 */
+ 	TP_HKEY_EV_WKUP_S3_UNDOCK	= 0x2304, /* undock requested, S3 */
+@@ -3731,6 +3732,7 @@ static bool hotkey_notify_extended_hotkey(const u32 hkey)
+ 	switch (hkey) {
+ 	case TP_HKEY_EV_PRIVACYGUARD_TOGGLE:
+ 	case TP_HKEY_EV_AMT_TOGGLE:
++	case TP_HKEY_EV_PROFILE_TOGGLE:
+ 		tpacpi_driver_event(hkey);
+ 		return true;
+ 	}
+@@ -11118,7 +11120,23 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
+ 		else
+ 			dytc_control_amt(!dytc_amt_active);
+ 	}
+-
++	if (hkey_event == TP_HKEY_EV_PROFILE_TOGGLE) {
++		switch (dytc_current_profile) {
++		case PLATFORM_PROFILE_LOW_POWER:
++			dytc_profile_set(NULL, PLATFORM_PROFILE_BALANCED);
++			break;
++		case PLATFORM_PROFILE_BALANCED:
++			dytc_profile_set(NULL, PLATFORM_PROFILE_PERFORMANCE);
++			break;
++		case PLATFORM_PROFILE_PERFORMANCE:
++			dytc_profile_set(NULL, PLATFORM_PROFILE_LOW_POWER);
++			break;
++		default:
++			pr_warn("Profile HKEY unexpected profile %d", dytc_current_profile);
++		}
++		/* Notify user space the profile changed */
++		platform_profile_notify();
++	}
+ }
+ 
+ static void hotkey_driver_event(const unsigned int scancode)
+-- 
+2.43.0
+
