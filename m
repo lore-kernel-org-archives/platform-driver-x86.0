@@ -1,116 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40973A8D5;
-	Mon, 22 Jan 2024 12:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8280B47A4F;
+	Mon, 22 Jan 2024 15:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705927679; cv=none; b=fie/vuYefHlT7QSHy8IFPMVZYmYN3bju+Vcx+h91WznL0z4eGTzHZi2VOsW5TGFO5RuzMNy3cmIxZlfDrwz1r2ioluq9JdK+GiwPI69ly1wsahYDO2N4hjF7m9CK1k6aQ9yrIGtwOcXJxmaUQWhkXFaL3EwMQPyxY4CdFR2qAe4=
+	t=1705935826; cv=none; b=qLy7JSQmGkWLOKbCdcKlIgYikrT05DgOG1v4lxT+5nVhdu4nEUIG6qsJJE8HgWWrOgFLu1Jy3nu/uouEkF0WfNyDsxFb66Vfnn6xFnr3ukOH+o/SdXHEpMeOvXsvvfHlhGq1Xm4wrpk/XxRvK5RCwxIj70MAfRlTHCYSp9+wX50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705927679; c=relaxed/simple;
-	bh=kH2BOO2IN3Vsx+BcqgWW4N0g3Af3C7pA8j9tRuvf2BQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tC0DGp+zas7lsD7cPLDMNvfYgdJtfwOaWBa5uztIcbA+t96S7EUww4/z3I/BA5as0fgcGFjFwxr8dtyAcQjKa7XN4S4xm8zWLT6e8sqAB2qJdTZMZYfXF97y0RgruEfPysjOx9EStVl/Mf0y7T0avmGAP3OIgNuHy9A8jAt8qkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WyuARt0X; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1705935826; c=relaxed/simple;
+	bh=w9qcGRm3k3dRPApvtefoIrN7IWNH34s+22CXvM9oD7E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ceEippalf9qhoI0u4E2WhwetweNrNB0F1xiAG2z9pJJ5fQQRslpSfOKFDB+H2DLnNfRtRW33PHZ8CTwiDOZAiVo6TRxYaWjQdRFc1LzZdstGxD2Odyocs1r1CiQiSzAoU7hTPQXMiVq2m1oNC/86a/TvBJd22/jXgHbZIraaqfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=HnG7bf5S; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WyuARt0X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705927678; x=1737463678;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=kH2BOO2IN3Vsx+BcqgWW4N0g3Af3C7pA8j9tRuvf2BQ=;
-  b=WyuARt0XDoQ+x4dzJNc2xuluiI21er+0RB5qjcog8ok6UeXnCa04nKZC
-   glJsj/EumOUwEek2Cpgd+KBYG2uNJcbVImumzy8CTNKWW7X8y/k2n+0fi
-   vuw5zTe+NEwtgCfzfn19tdtvCTIZz5bn37ZUrr49NJcDFkhXvGJ6YI8f3
-   Q/ZZD0imlyBmOfif760uUz8/zegDBDte/m1ffdpON3ZRmdZPCeFI1vvk5
-   fQ6D5IuYgob8wy0r4ooBCKqQNLjMMw4c6HWxZtJWrlG7iXNLa/ON3fzaN
-   KmBz+H5Du+elitU1IBn9WQd/0/M3mEwprix1hQa1tPOuC1Yu5KSa+L7IL
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="7947145"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="7947145"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 04:47:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="875973402"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="875973402"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.249.150])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 04:47:54 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 22 Jan 2024 14:47:49 +0200 (EET)
-To: Hans de Goede <hdegoede@redhat.com>
-cc: Armin Wolf <W_Armin@gmx.de>, Andy Shevchenko <andy@kernel.org>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] platform/x86: wmi: Use ACPI device name in netlink
- event
-In-Reply-To: <1862d74a-7b15-48e3-896b-30dda835f28f@redhat.com>
-Message-ID: <61d23b7d-8e47-acf8-f3b7-bea1544ca8fa@linux.intel.com>
-References: <20240121200824.2778-1-W_Armin@gmx.de> <1862d74a-7b15-48e3-896b-30dda835f28f@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="HnG7bf5S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1705935811; x=1706540611; i=w_armin@gmx.de;
+	bh=w9qcGRm3k3dRPApvtefoIrN7IWNH34s+22CXvM9oD7E=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=HnG7bf5S5Htlodp10Hl2TcpjvqTMqx0ObltHJwq0wgbLvIh0irNUzx4V8J2gxjVe
+	 Nl53LhzEKJautFtiyqPlrE9Vu85UAqcAYatBI9m6FZSf5SSytRZhD2vAd/pFxK5xW
+	 RYxtvKm3JDM8mlQ/ZrbDkzMxz5uFed+X3c9c5sfhSTcccteqbTUoIKWItWPW2TNt/
+	 FlIfB9erQdK+LIa4HCdDOqVJBFcH20G//I2wbvsJYFXdbc06abErFNLG90gSDvJPk
+	 xV0+SvGLpDrMbiCOPyfcEapaO7ssuwC1LoJrnTGJZdFg9hGGrYBhqDzbQzgtVMFtu
+	 HALVOPaRkVwiqJCVIw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M8ygY-1rUhWf2LSA-006Ajh; Mon, 22
+ Jan 2024 16:03:31 +0100
+Message-ID: <f07b3156-2bc8-49bf-bc08-e40209b89cf1@gmx.de>
+Date: Mon, 22 Jan 2024 16:03:29 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86: wmi: Use ACPI device name in netlink
+ event
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20240121200824.2778-1-W_Armin@gmx.de>
+ <1862d74a-7b15-48e3-896b-30dda835f28f@redhat.com>
+ <61d23b7d-8e47-acf8-f3b7-bea1544ca8fa@linux.intel.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <61d23b7d-8e47-acf8-f3b7-bea1544ca8fa@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rNokfSfev7AxOxn4X/3r/omPlSnbHBhz+z+QiVP5TheG2XSue2O
+ PsW0HkJWBCXpGbqpNZVGpztm/fTdJwFKlXTsqzTUFgHmvI5nTR3mYarBSSF+vJLkWq1tE9b
+ sfTwzO1Tn5kCJOEWcnt1DZO6mnmtgF8kHt5jL1PCDQEweDrG98c+nIBD+GwIEpTkuBgcnGt
+ Ba41VKmrUvr/z/U3Bwucg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:uzzXGColSwA=;qAvjNBl7mztBL/qSZTLRwwG2Tq4
+ JmuWPwbRlg9MODRmKmLZ6QGnuKk6fgus4e3Co3IKYS3h37BCjyiohKfZB/QNxU3WMtgF50x+d
+ awVTluCHJ5uObjxCq3oLTjMuLLoYEdlVr4e9vZh/tRhoH3kGagWy5eKJFll7kRm60ozBD1Wgf
+ OTfEHfuDEk3hrqRX3bEzjB2BevLoOOmw9R7IkZ4IvDLRL6gi1LaITGmzcRlLNDRAAjaeYjqc3
+ Vkp3gU+orJu5wSXeYpEz+NiUXmHwz+cReaXgF0JGek2Ro+y56G1wsmmbIy0zhi72lsuJ1PRAW
+ EfPd+7HcU/7kjgmp8+DYtXxvBerDawM4GPhZjQUgQ1BcifCA6iRpVmi9pc44aVuJBjtoZBrw2
+ hV6QPWPDVBgT3NVR8vDFOTT91SJIfSdgacW57+ZV8GqDnOon6jQbpxQhFsKGRz4Qhwoh7XHHP
+ Ba8X/qbGl3SOJv5cuXDsESHF0OLo8oE/R14hNms+rJ+8G3mwIRS2SVzUxwQzxOc9lYgIzeMGm
+ E798wT8d/paOT3czwyf/9FBdVE+3JVq2PmRUIRGDYEbenPQJRnm6NS4JnQ6zu3T16Qz7c2Yu4
+ Y0kclbZjsto/hakI22dD3ly9Wu2LrykyH1N6D817XEQRz2u5J5ST6s4RUIU65WvbfiiAJmslq
+ 4uGriTZiVBWupK7/KFvOeDQwcI2gc63kRbAW99QVUdCrfpmRNnqBc1UiDt0Kd03wsNuYAVqlS
+ ldHhypmt5V3bVQNb/49VLYpuoZxiBOhQSzoqELLXY20s/RvNh6/VUm3GVMot7rFbbaX8kGNy1
+ ef4SsFvOzabcgmuXhiY0XP92Y0/RqqSrjvtk/Lm6AtqzIXz6hPhUhcGyWbA1qELmvxIeL/3kf
+ pe7JAP8TqEkUdnqskLQL+hwP5z11vm++Ydo7qt8vtPBm/vaPYhPOsdlMyVF3dNNPRZiGkovDT
+ AJBp51EUHBh8lnwqQsbqZSWqYLg=
 
-On Mon, 22 Jan 2024, Hans de Goede wrote:
-> On 1/21/24 21:08, Armin Wolf wrote:
-> > The device name inside the ACPI netlink event is limited to
-> > 15 characters, so the WMI device name will get truncated.
-> > 
-> > This can be observed with kacpimon when receiving an event
-> > from WMI device "9DBB5994-A997-11DA-B012-B622A1EF5492":
-> > 
-> > 	netlink:  9DBB5994-A997- 000000d0 00000000
-> > 
-> > Fix this by using the shorter device name from the ACPI
-> > bus device instead. This still allows users to uniquely
-> > identify the WMI device by using the notify id (0xd0).
-> > 
-> > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > ---
-> > Changes since v1:
-> > - use acpi_dev_name() helper function
-> 
-> I'm a bit divided on this patch. I agree the new way of doing
-> things is better, but technically this is a bit of a userspace API
-> break.
-> 
-> I guess we could hope that nothing depends on the old netlink API
-> format / name but I'm not sure we can rely on that ...
-> 
-> Ilpo, Andy do you have any opinion on this ?
+Am 22.01.24 um 13:47 schrieb Ilpo J=C3=A4rvinen:
 
-Hi Armin,
+> On Mon, 22 Jan 2024, Hans de Goede wrote:
+>> On 1/21/24 21:08, Armin Wolf wrote:
+>>> The device name inside the ACPI netlink event is limited to
+>>> 15 characters, so the WMI device name will get truncated.
+>>>
+>>> This can be observed with kacpimon when receiving an event
+>>> from WMI device "9DBB5994-A997-11DA-B012-B622A1EF5492":
+>>>
+>>> 	netlink:  9DBB5994-A997- 000000d0 00000000
+>>>
+>>> Fix this by using the shorter device name from the ACPI
+>>> bus device instead. This still allows users to uniquely
+>>> identify the WMI device by using the notify id (0xd0).
+>>>
+>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>>> ---
+>>> Changes since v1:
+>>> - use acpi_dev_name() helper function
+>> I'm a bit divided on this patch. I agree the new way of doing
+>> things is better, but technically this is a bit of a userspace API
+>> break.
+>>
+>> I guess we could hope that nothing depends on the old netlink API
+>> format / name but I'm not sure we can rely on that ...
+>>
+>> Ilpo, Andy do you have any opinion on this ?
+> Hi Armin,
+>
+> Have you tried to conduct debian code search to find the code using this=
+?
+>
+I did, but i found nothing.
 
-Have you tried to conduct debian code search to find the code using this?
+I am also preparing to properly initialize the device_class field in anoth=
+er patch,
+and this also has the potential of breaking userspace if some users create=
+d custom
+acpid configs to listen to those events.
 
--- 
- i.
+I think we can revert those changes anytime if someones turns out to be ac=
+tually depending
+on them.
 
-> > ---
-> >  drivers/platform/x86/wmi.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> > index a7cfcbf92432..c61860db66ed 100644
-> > --- a/drivers/platform/x86/wmi.c
-> > +++ b/drivers/platform/x86/wmi.c
-> > @@ -1202,7 +1202,7 @@ static int wmi_notify_device(struct device *dev, void *data)
-> >  	}
-> > 
-> >  	acpi_bus_generate_netlink_event(wblock->acpi_device->pnp.device_class,
-> > -					dev_name(&wblock->dev.dev), *event, 0);
-> > +					acpi_dev_name(wblock->acpi_device), *event, 0);
-> > 
-> >  	return -EBUSY;
-> >  }
-> > --
-> > 2.39.2
-> > 
-> 
+Armin Wolf
+
