@@ -1,64 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E72F3AC16
-	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jan 2024 10:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6521B3DB9C
+	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jan 2024 11:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705920815; cv=none; b=q3QkGYU56ciEqJQSWOoD/v7ZF6yjtXm0lkxEMl1tqEBcf9Tn/Lg+6nYkBkzualPu967UN/QlwHLLMuCMxjnGldUxdRkWGZT6rCqXEi6TN1uynEFMyTRFfJa8+5UCWhf+dQBshNpYUUjBmgnDBc422pkOkzAj5yMYMEFUKVGRirc=
+	t=1705922683; cv=none; b=q+3FeZezjJAdivrPogM54XlsI4zQWYT8967ZAv7gxDX9V26nL8OWjWeL5/CaeJGrqBd3aFrfUz0aEkRs+5WHFoUHO+rmyYzRyxzPTPRuqj+R2xGl8bARrd85upGZdartHk7Bvlfs6FbcxjEZ95f1PlQ0zcrHM/ZL7mysZweXFIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705920815; c=relaxed/simple;
-	bh=ONTUORr79F/Xba5hq2zlrbnfx8Q4+LpZeX2oM73bVME=;
+	s=arc-20240116; t=1705922683; c=relaxed/simple;
+	bh=yHR2yz+3CdE61E4n0W3BNb+3FTIUhRAD2+FYuwrHJ84=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CLWjpeCCGKkERU+Frpfg2+ZpyDKPrirutNOyXioR0HFcw3/lyd4thAFpVMoQwNiwbjnRS4fPnk2OmfIhRgq07QW0F9poTKa7V8bBk9cyh7Y04TUpnAjiisfGx7zNaOdKkv4PwQCmZUdsi8OX8Q8eRJy9kUDDrF2+6ISzylaIpzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EFKNrXL0; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=WrAqE0ZAIZ2CRjaH1oJSpOXFzlklptLoJXhFO4+lcfXEZHGJvoJ6p8C9TV5+L7dO3AOcwu7FPsiiy1oBumSbtbD6HGPe3RFvourxb6oOq9BkZgkyPE2dRzZfaVn0lovSOZY09o1Hn6NyT8A4dtcbNll8qJ1c8eXOtMHA4g83ipE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OJGaeuHt; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EFKNrXL0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OJGaeuHt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705920812;
+	s=mimecast20190719; t=1705922680;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vRuo/d5F/YUO1+PfgH7jzbdO8sZRQjFRJowRJyMpMzc=;
-	b=EFKNrXL0uB+GTluUIil2bnExFN1EDKQJi2LFesVQFu4SDK6r4QKYr97pEmIJVcWeAvtxqH
-	7V43RhTWi1lU5qhSFN+Kq06PHlGW+f8pmZcZIs33UaUk3vVuyikWF8snw7q8rUv1LyzISt
-	5oGnQKG89gAWOEwC4+1+GDeiQL1grR8=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=xszYClSK+CsCGTSpIxFxpuSnSH1wZstVsErrb4ghUjg=;
+	b=OJGaeuHtetWactDIJ3+UdAltHN+AaA5Pm9UU7bx0KbQBOpCt95IFWuV+7ZQAHrHC7pRE+Y
+	2zP0NjCx93aX5OEDpMkbvXJXwXXXQn68xlOyhYDXDnzo4SCODqSuMe+dz+k/JtD/F0jMAz
+	HvpNnHhHXcyVKzoV0ejh1RFbBb6Ow1s=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-595-LdypQ5whOdWBEMF1q2bZBg-1; Mon, 22 Jan 2024 05:53:30 -0500
-X-MC-Unique: LdypQ5whOdWBEMF1q2bZBg-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-50eec1c173eso1837915e87.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jan 2024 02:53:30 -0800 (PST)
+ us-mta-130-roMv7VuFPUO2mMrQImGRww-1; Mon, 22 Jan 2024 06:24:39 -0500
+X-MC-Unique: roMv7VuFPUO2mMrQImGRww-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2cceb983e83so19751841fa.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jan 2024 03:24:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705920809; x=1706525609;
+        d=1e100.net; s=20230601; t=1705922676; x=1706527476;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vRuo/d5F/YUO1+PfgH7jzbdO8sZRQjFRJowRJyMpMzc=;
-        b=q72pbNQfmLZchAi9CloquXhT0VyD4B3meXm+0gpgKYLNJV5u6dZu3//P2eE2KNxWAB
-         v5D7gt4JRLhCM50wSdRQgqFrDmk52SZZsyfItQzoCWDq6JHgcPOcx36D8lIYTVLKOuEh
-         4v58W51GFUL5ByNCp66Y3CVi66P76cvagoy0sgc80pCb7OrJdrmWZLckX3xwJncTmF9w
-         Iz3WjwUaJverackad+6XkxllqXtrh9EmyIjNBj9UU5G1geKBUsmH0wPvmSXfvZeKlY7R
-         SISx9bDMTisIoEvjXpgpkFoPmMX5eiHt3XOOkc60oqD3a1vRDlK57GPbh5W4SJMZeoDr
-         bgrQ==
-X-Gm-Message-State: AOJu0YxbeZLomffpBf2II372AanPoxy5pcjnQ8gi96cJmmzIucbveREu
-	VdU1O2WDXxEs9VmuHFaOrHp5gjwMHSb/Ym7TYx2DpW2PIIvyUrAA3AMAh+5lWRXQKmKSmxumhKD
-	SYuiXXLPcBFBzlCUj7laXqQjERC9BliyD6AfzyVzVIZ3xTglE7qMgSgIgfsn3gxjpGiEbV+k=
-X-Received: by 2002:a19:2d0e:0:b0:50e:dc99:cda with SMTP id k14-20020a192d0e000000b0050edc990cdamr1413285lfj.24.1705920809419;
-        Mon, 22 Jan 2024 02:53:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGyTmUfVSX+vJoYJg0IKWMYbWKAZUBV/HESlmeaB1+ats3yxoOKYy9UhP5uqWmmXdb1IQmghw==
-X-Received: by 2002:a19:2d0e:0:b0:50e:dc99:cda with SMTP id k14-20020a192d0e000000b0050edc990cdamr1413276lfj.24.1705920808966;
-        Mon, 22 Jan 2024 02:53:28 -0800 (PST)
+        bh=xszYClSK+CsCGTSpIxFxpuSnSH1wZstVsErrb4ghUjg=;
+        b=njKuagM67YAaNQix50ZN0tBUnstrxnowfJ18htbkkEpdvUI+nTb2Jj+2LbllBexJGT
+         iuVhYBMlqSxkxLW8wKaFaj+uLyyB0TdavjjUdxAx/KOVqmSGaTXxwdAOu5Vai0fI9GlL
+         R6JYV5GQmtl08vzl/tgniEJKYl9NSE3i6Fn2CFCLRgtQk+1R41zTRVq5iqMLefPpniUm
+         20PDOki6+n0nbbxn+7YIlV1RJav9ZYlvo+MoR2WF0oWPJTonHmODjkN987Jz+hRj1Qtl
+         YPQYt2iukqz/pLt2mwsm16IqezcQ7BUZ+DKDB0nTMGMqZNL8GTlDEFaWIpG677JnQ0C9
+         IGgw==
+X-Gm-Message-State: AOJu0YzEb5J/7QuGYhugatIUJnQp7S1vpxzMOqcW3XHflV1ZGmY14TJi
+	bz7198mbOq6zv9grGYsriS1cXO/FuoJV9tTvmirig+I983nkYJdgiELYdQBtbxQV5GzcxXUGMjO
+	r+4fJ7hOb+pdwjmZdIkwteYdUzrlnwR+3HczWJlJz2Q37g4MZ5PImDE/1czE8KzmsqUfEAd4=
+X-Received: by 2002:a05:6512:110d:b0:50e:7cbf:7777 with SMTP id l13-20020a056512110d00b0050e7cbf7777mr1973089lfg.79.1705922676240;
+        Mon, 22 Jan 2024 03:24:36 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH8cG0yZMZcmZP4p5gg7vg30UY1Rf2Ry1OA7MlEPVeLzoSmtPn/3beE148OKPwedEvZ5qBcGg==
+X-Received: by 2002:a05:6512:110d:b0:50e:7cbf:7777 with SMTP id l13-20020a056512110d00b0050e7cbf7777mr1973078lfg.79.1705922675868;
+        Mon, 22 Jan 2024 03:24:35 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id q21-20020a1709066b1500b00a2990007447sm13138964ejr.122.2024.01.22.02.53.27
+        by smtp.gmail.com with ESMTPSA id fi6-20020a056402550600b0055c38f3ca66sm1057376edb.29.2024.01.22.03.24.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jan 2024 02:53:28 -0800 (PST)
-Message-ID: <e437050a-032c-462d-a415-1282adc820e1@redhat.com>
-Date: Mon, 22 Jan 2024 11:53:27 +0100
+        Mon, 22 Jan 2024 03:24:35 -0800 (PST)
+Message-ID: <7121300c-1fa3-461f-a531-d148b16d5079@redhat.com>
+Date: Mon, 22 Jan 2024 12:24:34 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,143 +66,55 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: asus-wmi: Re-enable custom fan curves after
- setting throttle_thermal_policy
+Subject: Re: [PATCH v3] Drop Tx network packet when Tx TmFIFO is full
 Content-Language: en-US, nl
-To: Luke Jones <luke@ljones.dev>
-Cc: Andrei Sabalenka <mechakotik@gmail.com>, corentin.chary@gmail.com,
- ilpo.jarvinen@linux.intel.com, acpi4asus-user@lists.sourceforge.net,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240115122315.10250-1-mechakotik@gmail.com>
- <e776db0e-2376-415b-8688-f166118d4007@redhat.com>
- <JQKB7S.8ATKNVGHLV1L@ljones.dev>
- <15f8da52-e413-4440-bd63-2ee8e96a340d@redhat.com>
- <PFDD7S.4NAT8RZ4C0PR2@ljones.dev>
+To: Liming Sun <limings@nvidia.com>, Vadim Pasternak <vadimp@nvidia.com>,
+ David Thompson <davthompson@nvidia.com>, Mark Gross <markgross@kernel.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <f250079635da4ba75c3a3a1d7c3820f48cfc3f06.1704380474.git.limings@nvidia.com>
+ <20240111173106.96958-1-limings@nvidia.com>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <PFDD7S.4NAT8RZ4C0PR2@ljones.dev>
+In-Reply-To: <20240111173106.96958-1-limings@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Luke,
+Hi,
 
-On 1/16/24 20:43, Luke Jones wrote:
+On 1/11/24 18:31, Liming Sun wrote:
+> Starting from Linux 5.16 kernel, Tx timeout mechanism was added
+> in the virtio_net driver which prints the "Tx timeout" warning
+> message when a packet stays in Tx queue for too long. Below is an
+> example of the reported message:
 > 
+> "[494105.316739] virtio_net virtio1 tmfifo_net0: TX timeout on
+> queue: 0, sq: output.0, vq: 0×1, name: output.0, usecs since
+> last trans: 3079892256".
 > 
-> On Tue, Jan 16 2024 at 11:25:41 +01:00:00, Hans de Goede <hdegoede@redhat.com> wrote:
->> Hi Luke,
->>
->> On 1/15/24 21:25, Luke Jones wrote:
->>>
->>>
->>>  On Mon, Jan 15 2024 at 13:38:16 +01:00:00, Hans de Goede <hdegoede@redhat.com> wrote:
->>>>  Hi,
->>>>
->>>>  On 1/15/24 13:22, Andrei Sabalenka wrote:
->>>>>   When changing throttle_thermal_policy, all the custom fan curves are getting disabled. This patch re-enables all the custom fan curves that were enabled before changing throttle_thermal_policy.
->>>>>
->>>>>   I believe it makes asus-wmi sysfs interface more convenient, as it allows userspace to manage fan curves independently from platform_profile and throttle_thermal_policy. At the kernel level, custom fan curves should not be tied to "power profiles" scheme in any way, as it gives the user less freedom of controlling them.
->>>>
->>>>  Setting a high performance power-profile typically also involves ramping up
->>>>  the fans harder. So I don't think this patch is a good idea.
->>>>
->>>>  If you really want this behavior then you can always re-enable the custom
->>>>  curve after changing the profile.
->>>>
->>>>  Luke, do you have any opinion on this?
->>>
->>>  I see some misconceptions that should be addressed:
->>>  1. ASUS themselves set separate fan curves per "platform profile", both standard and custom
->>>  2. fan curves are not tied to platform profiles, they are tied to the throttle_thermal_policy, and this is actually done in the acpi - so the code here is a mirror of that
->>>  3. platform-profiles are tied to throttle_thermal_policy
->>>
->>>  There is no lack of user control at all, a decent tool (like asusctl) can set fan curves without issues but it's perhaps not convenient for manually setting via a script etc.
->>>
->>>  The main reason that a curve is disabled for the policy being switched to is for safety. It was a paranoid choice I made at the time. The kernel (and acpi) can't guarantee that a user set a reasonable default for that policy so the safest thing is to force an explicit re-enable of it.
->>>
->>>  Having said that: I know that the curve was previously set for that profile/policy and in theory should be fine plus it is already used by the user, it is also not possible to set a curve for a different profile to the one a user is currently in -  this is forced in ACPI as you can set only the curve for the profile you are in (the kernel code also mirrors this).
->>>
->>>  So this patch should be fine.
->>>
->>>  Signed-off-by: Luke D. Jones <luke@ljones.dev>
->>
->> So I just checked asus-wmi.c again and there seems to be only 1 custom
->> curve per fan, one curve for CPU one for GPU and one for MID.
+> This issue could happen when external host driver which drains the
+> FIFO is restared, stopped or upgraded. To avoid such confusing
+> "Tx timeout" messages, this commit adds logic to drop the outstanding
+> Tx packet if it's not able to transmit in two seconds due to Tx FIFO
+> full, which can be considered as congestion or out-of-resource drop.
 > 
-> I misread sorry. Yes this is correct. The ACPI only allows fetching the defaults for the currently loaded profile so this was a result of that.
+> This commit also handles the special case that the packet is half-
+> transmitted into the Tx FIFO. In such case, the packet is discarded
+> with remaining length stored in vring->rem_padding. So paddings with
+> zeros can be sent out when Tx space is available to maintain the
+> integrity of the packet format. The padded packet will be dropped on
+> the receiving side.
 > 
->> And while the custom curve may be fine for e.g. low-power mode,
->> that same custom curve may lead to overheating/throttling with
->> performance mode since performance mode typically requires
->> higher fan speeds.
->>
->> As you write yourself: 'ASUS themselves set separate fan curves per
->> "platform profile", both standard and custom', but there is only 1
->> custom/user curve (in the kernel), not 1 per platform-profile.
->>
->> So IMHO disabling the custom curve on profile switching is
->> the correct thing to do. Then userspace can do something like:
->>
-> 
-> Yes agreed. And that is indeed why I set them to off originally when changing profile.
-> 
->> 1. Have per platform-profile custom curves in some tool
->> 2. Have that tool change (or monitor) platform-profile
->> 3. Load new custom profile based on the new platform-profile
->> 4. Enable the new (fitting to the new platform-profile)
->>    custom fan curve.
->>
->> I also see that fan_curve_get_factory_default() retrieves the
->> defaults for a *specific* thermal-policy / platform-profile
->>
->> So if a user somehow just enables custom-fancurves without
->> actually changing the curve then this patch would lead
->> to the following scenario:
->>
->> 1. Driver loads, lets assume the system boots in balanced
->> mode, balanced factory-default fan-curve is now loaded into
->> the custom fan-curve by fan_curve_check_present()
->>
->> 2. User calls fan_curve_enable_store() writing "1", because
->> reasons.
->>
->> 3. User changes platform-profile to performance,
->> throttle_thermal_policy_write() calls asus_wmi_set_devstate(
->> ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY) and the EC
->> sets fan curve to performance factory-default fan-curve.
->>
->> 4. Next throttle_thermal_policy_write() will now call
->> fan_curve_write() restoring the balanced factory-default
->> fan-curve even though we are in performance mode now.
->>
->> This seems undesirable to me.
->>
->> Restoring custom fan-curves automatically on platform-profile
->> change IMHO requires also storing a separate custom curve
->> per profile inside the kernel and populating all custom
->> curves with the factory defaults at boot. If I read what
->> you have written above this would also actually match
->> what you wrote above about ASUS using separate custom curves
->> per profile. If ASUS uses separate custom curves per profile
->> then IMHO so should Linux.
-> 
-> This is correct yes.
-> 
->>
->> Note custom fan-curves per profile still means that the custom
->> curve will be overwritten when changing profiles, some new sysfs
->> interface would be necessary to write the non-active custom
->> curves so that the restored curve on profile switch can be
->> custom too on the first switch.
->>
->> (rather then having to switch to be able to write the custom
->> curve for a profile other then the currently active profile).
->>
->> Note this is not a 100% hard nack for this patch, but atm
->> I'm leaning towards a nack.
-> 
-> I revert my signed-off. This is a nack. Everything a user may want can be done in userspace.
+> Signed-off-by: Liming Sun <limings@nvidia.com>
 
-Ok, I'm dropping this patch from the platfrom-driver-x86 patch-queue then.
+Thank you for your patch/series, I've applied this patch
+(series) to my review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in the pdx86 review-hans branch once I've
+pushed my local branch there, which might take a while.
+
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
 Regards,
 
@@ -211,55 +123,146 @@ Hans
 
 
 
->>>>>   Signed-off-by: Andrei Sabalenka <mechakotik@gmail.com>
->>>>>   ---
->>>>>    drivers/platform/x86/asus-wmi.c | 29 ++++++++++++++++++++++-------
->>>>>    1 file changed, 22 insertions(+), 7 deletions(-)
->>>>>
->>>>>   diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
->>>>>   index 18be35fdb..c2e38f6d8 100644
->>>>>   --- a/drivers/platform/x86/asus-wmi.c
->>>>>   +++ b/drivers/platform/x86/asus-wmi.c
->>>>>   @@ -3441,13 +3441,28 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
->>>>>            return -EIO;
->>>>>        }
->>>>>
->>>>>   -    /* Must set to disabled if mode is toggled */
->>>>>   -    if (asus->cpu_fan_curve_available)
->>>>>   -        asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled = false;
->>>>>   -    if (asus->gpu_fan_curve_available)
->>>>>   -        asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled = false;
->>>>>   -    if (asus->mid_fan_curve_available)
->>>>>   -        asus->custom_fan_curves[FAN_CURVE_DEV_MID].enabled = false;
->>>>>   +    /* Re-enable fan curves after profile change */
->>>>>   +    if (asus->cpu_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled) {
->>>>>   +        err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_CPU]);
->>>>>   +        if (err) {
->>>>>   +            pr_warn("Failed to re-enable CPU fan curve: %d\n", err);
->>>>>   +            return err;
->>>>>   +        }
->>>>>   +    }
->>>>>   +    if (asus->gpu_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled) {
->>>>>   +        err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_GPU]);
->>>>>   +        if (err) {
->>>>>   +            pr_warn("Failed to re-enable GPU fan curve: %d\n", err);
->>>>>   +            return err;
->>>>>   +        }
->>>>>   +    }
->>>>>   +    if (asus->mid_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_MID].enabled) {
->>>>>   +        err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_MID]);
->>>>>   +        if (err) {
->>>>>   +            pr_warn("Failed to re-enable MID fan curve: %d\n", err);
->>>>>   +            return err;
->>>>>   +        }
->>>>>   +    }
->>>>>
->>>>>        return 0;
->>>>>    }
->>>>
->>>
->>>
->>
+> ---
+> v2->v3:
+>   Updates for Ilpo's comments:
+>   - Revises commit message to avoid confusion.
+> v2: Fixed formatting warning
+> v1: Initial version
+> ---
+>  drivers/platform/mellanox/mlxbf-tmfifo.c | 67 ++++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
 > 
-> 
+> diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> index 5c683b4eaf10..f39b7b9d2bfe 100644
+> --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
+> +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> @@ -47,6 +47,9 @@
+>  /* Message with data needs at least two words (for header & data). */
+>  #define MLXBF_TMFIFO_DATA_MIN_WORDS		2
+>  
+> +/* Tx timeout in milliseconds. */
+> +#define TMFIFO_TX_TIMEOUT			2000
+> +
+>  /* ACPI UID for BlueField-3. */
+>  #define TMFIFO_BF3_UID				1
+>  
+> @@ -62,12 +65,14 @@ struct mlxbf_tmfifo;
+>   * @drop_desc: dummy desc for packet dropping
+>   * @cur_len: processed length of the current descriptor
+>   * @rem_len: remaining length of the pending packet
+> + * @rem_padding: remaining bytes to send as paddings
+>   * @pkt_len: total length of the pending packet
+>   * @next_avail: next avail descriptor id
+>   * @num: vring size (number of descriptors)
+>   * @align: vring alignment size
+>   * @index: vring index
+>   * @vdev_id: vring virtio id (VIRTIO_ID_xxx)
+> + * @tx_timeout: expire time of last tx packet
+>   * @fifo: pointer to the tmfifo structure
+>   */
+>  struct mlxbf_tmfifo_vring {
+> @@ -79,12 +84,14 @@ struct mlxbf_tmfifo_vring {
+>  	struct vring_desc drop_desc;
+>  	int cur_len;
+>  	int rem_len;
+> +	int rem_padding;
+>  	u32 pkt_len;
+>  	u16 next_avail;
+>  	int num;
+>  	int align;
+>  	int index;
+>  	int vdev_id;
+> +	unsigned long tx_timeout;
+>  	struct mlxbf_tmfifo *fifo;
+>  };
+>  
+> @@ -819,6 +826,50 @@ static bool mlxbf_tmfifo_rxtx_one_desc(struct mlxbf_tmfifo_vring *vring,
+>  	return true;
+>  }
+>  
+> +static void mlxbf_tmfifo_check_tx_timeout(struct mlxbf_tmfifo_vring *vring)
+> +{
+> +	unsigned long flags;
+> +
+> +	/* Only handle Tx timeout for network vdev. */
+> +	if (vring->vdev_id != VIRTIO_ID_NET)
+> +		return;
+> +
+> +	/* Initialize the timeout or return if not expired. */
+> +	if (!vring->tx_timeout) {
+> +		/* Initialize the timeout. */
+> +		vring->tx_timeout = jiffies +
+> +			msecs_to_jiffies(TMFIFO_TX_TIMEOUT);
+> +		return;
+> +	} else if (time_before(jiffies, vring->tx_timeout)) {
+> +		/* Return if not timeout yet. */
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * Drop the packet after timeout. The outstanding packet is
+> +	 * released and the remaining bytes will be sent with padding byte 0x00
+> +	 * as a recovery. On the peer(host) side, the padding bytes 0x00 will be
+> +	 * either dropped directly, or appended into existing outstanding packet
+> +	 * thus dropped as corrupted network packet.
+> +	 */
+> +	vring->rem_padding = round_up(vring->rem_len, sizeof(u64));
+> +	mlxbf_tmfifo_release_pkt(vring);
+> +	vring->cur_len = 0;
+> +	vring->rem_len = 0;
+> +	vring->fifo->vring[0] = NULL;
+> +
+> +	/*
+> +	 * Make sure the load/store are in order before
+> +	 * returning back to virtio.
+> +	 */
+> +	virtio_mb(false);
+> +
+> +	/* Notify upper layer. */
+> +	spin_lock_irqsave(&vring->fifo->spin_lock[0], flags);
+> +	vring_interrupt(0, vring->vq);
+> +	spin_unlock_irqrestore(&vring->fifo->spin_lock[0], flags);
+> +}
+> +
+>  /* Rx & Tx processing of a queue. */
+>  static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
+>  {
+> @@ -841,6 +892,7 @@ static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
+>  		return;
+>  
+>  	do {
+> +retry:
+>  		/* Get available FIFO space. */
+>  		if (avail == 0) {
+>  			if (is_rx)
+> @@ -851,6 +903,17 @@ static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
+>  				break;
+>  		}
+>  
+> +		/* Insert paddings for discarded Tx packet. */
+> +		if (!is_rx) {
+> +			vring->tx_timeout = 0;
+> +			while (vring->rem_padding >= sizeof(u64)) {
+> +				writeq(0, vring->fifo->tx.data);
+> +				vring->rem_padding -= sizeof(u64);
+> +				if (--avail == 0)
+> +					goto retry;
+> +			}
+> +		}
+> +
+>  		/* Console output always comes from the Tx buffer. */
+>  		if (!is_rx && devid == VIRTIO_ID_CONSOLE) {
+>  			mlxbf_tmfifo_console_tx(fifo, avail);
+> @@ -860,6 +923,10 @@ static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
+>  		/* Handle one descriptor. */
+>  		more = mlxbf_tmfifo_rxtx_one_desc(vring, is_rx, &avail);
+>  	} while (more);
+> +
+> +	/* Check Tx timeout. */
+> +	if (avail <= 0 && !is_rx)
+> +		mlxbf_tmfifo_check_tx_timeout(vring);
+>  }
+>  
+>  /* Handle Rx or Tx queues. */
 
