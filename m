@@ -1,64 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A368D3B295
-	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jan 2024 11:28:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D224122E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jan 2024 11:29:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705922902; cv=none; b=FYSM5Ixw7u0lBT3HjEuhuomHE9VA1FwaEeUpM522bRlCwW7Xvm7lx/6GV++mzfdzCKKx5M9T1y6kAHX6mXs6tr41bqvOzMvHVs4E1F8c+698DW5zJqvX+7mjkehDRBdj7fXIKhsPzHItK2PKB+cR0Xgu3NkW1Qwdp0bC7Mh9hRs=
+	t=1705922990; cv=none; b=UUuPySZcm+qlxjXkUuJhjIqF3mKI32PE1K3S/b3TwbI13hLebD1oYJTUQyQeLdGhNYdQy4QvCiflubfDiUIlFxnt3q9QH/yvGnHBITn6g8un5v1mbD9qBwPz87WLQPudhrdPJAw1/UpfbELusNGcFwcg6Z5KQy/GesJZnnFX8hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705922902; c=relaxed/simple;
-	bh=+P/PxxB9xXCSENlP/VU3mHAi0Q3gkIF8SmyqvXOjVrU=;
+	s=arc-20240116; t=1705922990; c=relaxed/simple;
+	bh=JGWqZhVcL7ryCjn+vX9Caw5DAcSD07qOqTKDQaS6LWk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gwntGA2UrQCZLOA6cCFpoamvr7lZoa8HhvzSZKHLzLmnufS6lvjIH8nVesF4X1AFpFIv0BwnOEnCBM1CP/k/HLvM01c/LZooXo0CwKlPC9NeQ45RlSap240GPGftLG7J9VjSeL2eAc461pqxoe/SyCCyGpOEA0JMnTl5PQR79ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pnl8Rgoo; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=sERBE4SQKFC65qFfpidGWZI6D8cwZUtq3FGRNoL4uf5w7oz+GFf1YJUtybG1B8Lv/bRJiyqhjtVV3b+kOB8KvuvEcBMbVJFSwQaCFOikv7pL9k1MD6fMJSli2v8Vz/FtxKrXjnxUNagtNyd6E3fR6lP2H/5inBkLxL8IvxTg/8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ub6j+wMA; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pnl8Rgoo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ub6j+wMA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705922899;
+	s=mimecast20190719; t=1705922987;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MnMtinosHpLnbII+9S7MEoYav8UQT9UmvvoZomxIxQs=;
-	b=Pnl8Rgoo+f3QjipQiodJQcgpxvvNtU12iSjTTiK0qNHam0RlWSs14BG0fI0hPT4mG69u9U
-	OmnIZv7UEcYxs8TwT3X6NQzeRB291IABZSlFxjALOqXblgt/zZ1uM/2019IdVO9ZFhwg9x
-	ZrKOBFJfBjWwYvPdF4w8z+UuX6EeTyE=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=R6qQO7GK81UzZzgvu/sQyAjBJMfGdp56pL3agcv6YYc=;
+	b=Ub6j+wMALkafByvzFrZVgY9kPqiZv8wXckNVLlLfB/3eXyHVO2tiZGnY9pb+6wo5/OaKsL
+	w8YXqZiWmXmOSYHxiH0vXb6yqBuVeH4L6v7ZzvaYQz2I1wOArteXYEMMW8AEZPB23irUcm
+	ECK838QnMfCtOrf3qbzqI2a3D1QfrBI=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-619-6nXfcsCEMZehTESxkobiew-1; Mon, 22 Jan 2024 06:28:18 -0500
-X-MC-Unique: 6nXfcsCEMZehTESxkobiew-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2cdeb4f9a80so15844181fa.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jan 2024 03:28:18 -0800 (PST)
+ us-mta-695-SqZMe9imOMK6dDUe-xESfg-1; Mon, 22 Jan 2024 06:29:46 -0500
+X-MC-Unique: SqZMe9imOMK6dDUe-xESfg-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a2c20945b80so427726566b.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jan 2024 03:29:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705922897; x=1706527697;
+        d=1e100.net; s=20230601; t=1705922985; x=1706527785;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MnMtinosHpLnbII+9S7MEoYav8UQT9UmvvoZomxIxQs=;
-        b=rI1UIAhYQS2624yoSe6kCClZCNMFdbNonAE5ivGZFCfZj2CN6SjB5Nyd5ZNBx0fyTA
-         3olRvhF31LtGlWl5cHkgYvwUhr5ISgFIiW64wQuIB+yMTJ9+58qyAekvmxSIqj/YWFhS
-         ZQn3s51UDXqr4vGR6Y7LJmdt7/BYuA+aaAQokRtBtz19tw9ffZBnXyoe3ZI3PKcs8Pq6
-         qwuM0BhLI018/41wLoUqHgXp/UyFWkK0k5acB+s2V4ekVNNNycjGXrKUG1Wz023d88bf
-         2cLatr1MM4bUGYcCtIY6Zo5HVyAkrSDdkfy6txnd/XQ1jvLJpYcNZdv43726MtcmM/RK
-         8gNA==
-X-Gm-Message-State: AOJu0YxAE4IOaawSTurvbXFjHPE6tE1V12ZQUQxE2hBMHuVFDxVDzWxO
-	kuPQFscD7J6Goz4vZQqSzKRfSPshUoDDLllx8YMqp+l4FWI9KgZ5dQaVZCiWBDZp1HqFRJ+WYuS
-	3OQwArw1MTZ9+3OqSsyuuzwM+lUqhg4EVJioh9vxOlwEIuC4K7qnaWIP63cgZCevZ0wn00VY=
-X-Received: by 2002:a05:6512:220f:b0:50e:aee2:d55e with SMTP id h15-20020a056512220f00b0050eaee2d55emr1139739lfu.100.1705922896871;
-        Mon, 22 Jan 2024 03:28:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG1Mt20VKTIGU4mltb75bJnFQEqGLue7NfdlRCFFijVXPfAH78mnMOrL2wKHEc+FjiUHwDVTg==
-X-Received: by 2002:a05:6512:220f:b0:50e:aee2:d55e with SMTP id h15-20020a056512220f00b0050eaee2d55emr1139736lfu.100.1705922896543;
-        Mon, 22 Jan 2024 03:28:16 -0800 (PST)
+        bh=R6qQO7GK81UzZzgvu/sQyAjBJMfGdp56pL3agcv6YYc=;
+        b=sw2j2NpmcQJHi/9SzcaYir7qPOLef65Lxki32sTR7p+TLLTos2L/hbNJPyTkSdesb+
+         Ip8OxQH8Z0gBcYoHiVqXKPNG5qApAQFgsPfsXT3KRAAPP/ECMhLYrGik5P7BiN5sEV0o
+         biiKm0Ii/zURtb+1C0Y91bPNeRNnQgrwvnXDenM7/BxLsHgs4HHMTlMfM6WgD7gaskkP
+         b0sSSFDYzijLlS8Gm/5z0vFwB5uxAEqabnejKbfBX2/gRB2cWHTuPTit3kb0/eviXMt+
+         wFrKSbpfdN98RHiMUUJJB2S0AUdlZvMXYJCNBnBkS5vwxM+jyaF4auLNxTR9uBIfkIRT
+         Pm7g==
+X-Gm-Message-State: AOJu0YzkK+prIUY44tXTpVqy5JpXpd6ZUP5fyzx8ZB9MDgy41x87babx
+	fzYCjND5Vssw1edRrzGwWqBpRMQvjhuuWK0MkdnMoYsJv56fEaATtNi7K1CH26lxv6Anp0qlGzH
+	h/yEs1rnV5SoN+bifH7W3ojoNvBYFP0azNjf45oEcxOzSGG5/nHMnriALzmqyEF5xC+1XQDKEqJ
+	HD/dI=
+X-Received: by 2002:a17:906:cd13:b0:a1c:a542:2fcb with SMTP id oz19-20020a170906cd1300b00a1ca5422fcbmr3284223ejb.31.1705922984959;
+        Mon, 22 Jan 2024 03:29:44 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGyZmThrluJPviG+qJFxpPsN+NEG7+fr7H9zwYXkmv1j1v+6G9VQ+qQolE4vNhExUqTGn44gw==
+X-Received: by 2002:a17:906:cd13:b0:a1c:a542:2fcb with SMTP id oz19-20020a170906cd1300b00a1ca5422fcbmr3284217ejb.31.1705922984675;
+        Mon, 22 Jan 2024 03:29:44 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id fj12-20020a1709069c8c00b00a3076eec436sm423813ejc.5.2024.01.22.03.28.15
+        by smtp.gmail.com with ESMTPSA id fj12-20020a1709069c8c00b00a3076eec436sm423813ejc.5.2024.01.22.03.29.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jan 2024 03:28:16 -0800 (PST)
-Message-ID: <729d7887-7681-476b-9b5f-c498d78df2cb@redhat.com>
-Date: Mon, 22 Jan 2024 12:28:15 +0100
+        Mon, 22 Jan 2024 03:29:44 -0800 (PST)
+Message-ID: <1862d74a-7b15-48e3-896b-30dda835f28f@redhat.com>
+Date: Mon, 22 Jan 2024 12:29:43 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,35 +67,46 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: Support for mode FN key
+Subject: Re: [PATCH v2] platform/x86: wmi: Use ACPI device name in netlink
+ event
 Content-Language: en-US, nl
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: corbet@lwn.net, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <mpearson-lenovo@squebb.ca>
- <20240120232949.317337-1-mpearson-lenovo@squebb.ca>
+To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
+ Andy Shevchenko <andy@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240121200824.2778-1-W_Armin@gmx.de>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240120232949.317337-1-mpearson-lenovo@squebb.ca>
+In-Reply-To: <20240121200824.2778-1-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi Armin,
 
-On 1/21/24 00:29, Mark Pearson wrote:
-> New Thinkpads have added a 'Mode' Function key that on Windows allows
-> you to choose the active profile (low-power, balanced, performance)
+On 1/21/24 21:08, Armin Wolf wrote:
+> The device name inside the ACPI netlink event is limited to
+> 15 characters, so the WMI device name will get truncated.
 > 
-> Added suppoort for this hotkey (F8), and have it cycle through the
-> options available.
+> This can be observed with kacpimon when receiving an event
+> from WMI device "9DBB5994-A997-11DA-B012-B622A1EF5492":
 > 
-> Tested on X1 Carbon G12.
+> 	netlink:  9DBB5994-A997- 000000d0 00000000
 > 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Fix this by using the shorter device name from the ACPI
+> bus device instead. This still allows users to uniquely
+> identify the WMI device by using the notify id (0xd0).
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+> Changes since v1:
+> - use acpi_dev_name() helper function
 
-Thanks, patch looks good to me:
+I'm a bit divided on this patch. I agree the new way of doing
+things is better, but technically this is a bit of a userspace API
+break.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+I guess we could hope that nothing depends on the old netlink API
+format / name but I'm not sure we can rely on that ...
+
+Ilpo, Andy do you have any opinion on this ?
 
 Regards,
 
@@ -102,79 +114,25 @@ Hans
 
 
 
+
 > ---
->  .../admin-guide/laptops/thinkpad-acpi.rst     |  7 ++++++-
->  drivers/platform/x86/thinkpad_acpi.c          | 20 ++++++++++++++++++-
->  2 files changed, 25 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/wmi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> index 98d304010170..7f674a6cfa8a 100644
-> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> @@ -444,7 +444,9 @@ event	code	Key		Notes
->  
->  0x1008	0x07	FN+F8		IBM: toggle screen expand
->  				Lenovo: configure UltraNav,
-> -				or toggle screen expand
-> +				or toggle screen expand.
-> +				On newer platforms (2024+)
-> +				replaced by 0x131f (see below)
->  
->  0x1009	0x08	FN+F9		-
->  
-> @@ -504,6 +506,9 @@ event	code	Key		Notes
->  
->  0x1019	0x18	unknown
->  
-> +0x131f	...	FN+F8	        Platform Mode change.
-> +				Implemented in driver.
-> +
->  ...	...	...
->  
->  0x1020	0x1F	unknown
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index c4895e9bc714..ceb22f8d8442 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -166,6 +166,7 @@ enum tpacpi_hkey_event_t {
->  	TP_HKEY_EV_VOL_MUTE		= 0x1017, /* Mixer output mute */
->  	TP_HKEY_EV_PRIVACYGUARD_TOGGLE	= 0x130f, /* Toggle priv.guard on/off */
->  	TP_HKEY_EV_AMT_TOGGLE		= 0x131a, /* Toggle AMT on/off */
-> +	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile */
->  
->  	/* Reasons for waking up from S3/S4 */
->  	TP_HKEY_EV_WKUP_S3_UNDOCK	= 0x2304, /* undock requested, S3 */
-> @@ -3731,6 +3732,7 @@ static bool hotkey_notify_extended_hotkey(const u32 hkey)
->  	switch (hkey) {
->  	case TP_HKEY_EV_PRIVACYGUARD_TOGGLE:
->  	case TP_HKEY_EV_AMT_TOGGLE:
-> +	case TP_HKEY_EV_PROFILE_TOGGLE:
->  		tpacpi_driver_event(hkey);
->  		return true;
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index a7cfcbf92432..c61860db66ed 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -1202,7 +1202,7 @@ static int wmi_notify_device(struct device *dev, void *data)
 >  	}
-> @@ -11118,7 +11120,23 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
->  		else
->  			dytc_control_amt(!dytc_amt_active);
->  	}
-> -
-> +	if (hkey_event == TP_HKEY_EV_PROFILE_TOGGLE) {
-> +		switch (dytc_current_profile) {
-> +		case PLATFORM_PROFILE_LOW_POWER:
-> +			dytc_profile_set(NULL, PLATFORM_PROFILE_BALANCED);
-> +			break;
-> +		case PLATFORM_PROFILE_BALANCED:
-> +			dytc_profile_set(NULL, PLATFORM_PROFILE_PERFORMANCE);
-> +			break;
-> +		case PLATFORM_PROFILE_PERFORMANCE:
-> +			dytc_profile_set(NULL, PLATFORM_PROFILE_LOW_POWER);
-> +			break;
-> +		default:
-> +			pr_warn("Profile HKEY unexpected profile %d", dytc_current_profile);
-> +		}
-> +		/* Notify user space the profile changed */
-> +		platform_profile_notify();
-> +	}
+> 
+>  	acpi_bus_generate_netlink_event(wblock->acpi_device->pnp.device_class,
+> -					dev_name(&wblock->dev.dev), *event, 0);
+> +					acpi_dev_name(wblock->acpi_device), *event, 0);
+> 
+>  	return -EBUSY;
 >  }
->  
->  static void hotkey_driver_event(const unsigned int scancode)
+> --
+> 2.39.2
+> 
 
