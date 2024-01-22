@@ -1,38 +1,64 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303DB3A1D6
-	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jan 2024 10:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E72F3AC16
+	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jan 2024 10:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705920277; cv=none; b=Z9LXXQNsZ/U3ABjvHeHECLpUeVG93UOsHgj5He/ucjbH9tspX2m9tH3tGKt/18mOF4QGNGZdReelGta/icGlLxA+OOzJYp9kRM2jzqGo5ThiFHbMYTWSyXzVuYHegjhO7Cx3LKZ49tn8TbD9RpzetgsVtCGN6WjWYq3gUYgjo5I=
+	t=1705920815; cv=none; b=q3QkGYU56ciEqJQSWOoD/v7ZF6yjtXm0lkxEMl1tqEBcf9Tn/Lg+6nYkBkzualPu967UN/QlwHLLMuCMxjnGldUxdRkWGZT6rCqXEi6TN1uynEFMyTRFfJa8+5UCWhf+dQBshNpYUUjBmgnDBc422pkOkzAj5yMYMEFUKVGRirc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705920277; c=relaxed/simple;
-	bh=1Hv1v1pB6O5VK3pA+8PodADdgo5ZXOfnstg5Gc8qLFQ=;
+	s=arc-20240116; t=1705920815; c=relaxed/simple;
+	bh=ONTUORr79F/Xba5hq2zlrbnfx8Q4+LpZeX2oM73bVME=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SgTM4o+vgimMoozA2rQnzSwR7NqQxRLymaieGNIpF8780/Hl59DLB2oZAj3rT+oOWXWZbZu66DPeE8YK+1oT+Fd1xxzeaQfuCvPdFHjS/3QPPLTFTSd1Vs/2KTm3D5FIk4lFKAnsDd6brKJZptRL/20ArZ7gqucMovg88RYnk48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=LrdR1Fe4; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	 In-Reply-To:Content-Type; b=CLWjpeCCGKkERU+Frpfg2+ZpyDKPrirutNOyXioR0HFcw3/lyd4thAFpVMoQwNiwbjnRS4fPnk2OmfIhRgq07QW0F9poTKa7V8bBk9cyh7Y04TUpnAjiisfGx7zNaOdKkv4PwQCmZUdsi8OX8Q8eRJy9kUDDrF2+6ISzylaIpzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EFKNrXL0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="LrdR1Fe4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1705920270; x=1706525070; i=w_armin@gmx.de;
-	bh=1Hv1v1pB6O5VK3pA+8PodADdgo5ZXOfnstg5Gc8qLFQ=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=LrdR1Fe4IDE+5BJp5L/gIP2Wv/WslgaSEAqHyNqvflq0pdB0/IJhWHVTX3Vewj/L
-	 WS6g9P2z02NfsM4N6EHYwu+K7FuhBjNev+ka4UmoV65nZhH7FBJzjx9nEgJ7s9J0p
-	 TjVIpTCqbfPn8QMhPacSE1mlXr3+dVED6X9sLZ4PNn0GtcMePgwbeS+dzojAm5uch
-	 JhIp+d/YumYB6zjBpWgbPalz8Byb95R/MdMC6Wm4D3MZr9LJQb3+uzSpyCJP1YMUj
-	 TUvnv2LVKnlREJjNL0fNbEM1xprFSA6pmKJH6iC1gru+E3hBmcXLAoeS77frvJW+Y
-	 FKJ5r/lOLS21NwS00A==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MMXUD-1ri0xm3xA7-00JZxx; Mon, 22
- Jan 2024 11:44:30 +0100
-Message-ID: <cd86386a-653e-401c-9b70-0860d2e1906a@gmx.de>
-Date: Mon, 22 Jan 2024 11:44:28 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EFKNrXL0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705920812;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vRuo/d5F/YUO1+PfgH7jzbdO8sZRQjFRJowRJyMpMzc=;
+	b=EFKNrXL0uB+GTluUIil2bnExFN1EDKQJi2LFesVQFu4SDK6r4QKYr97pEmIJVcWeAvtxqH
+	7V43RhTWi1lU5qhSFN+Kq06PHlGW+f8pmZcZIs33UaUk3vVuyikWF8snw7q8rUv1LyzISt
+	5oGnQKG89gAWOEwC4+1+GDeiQL1grR8=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-595-LdypQ5whOdWBEMF1q2bZBg-1; Mon, 22 Jan 2024 05:53:30 -0500
+X-MC-Unique: LdypQ5whOdWBEMF1q2bZBg-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-50eec1c173eso1837915e87.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jan 2024 02:53:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705920809; x=1706525609;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vRuo/d5F/YUO1+PfgH7jzbdO8sZRQjFRJowRJyMpMzc=;
+        b=q72pbNQfmLZchAi9CloquXhT0VyD4B3meXm+0gpgKYLNJV5u6dZu3//P2eE2KNxWAB
+         v5D7gt4JRLhCM50wSdRQgqFrDmk52SZZsyfItQzoCWDq6JHgcPOcx36D8lIYTVLKOuEh
+         4v58W51GFUL5ByNCp66Y3CVi66P76cvagoy0sgc80pCb7OrJdrmWZLckX3xwJncTmF9w
+         Iz3WjwUaJverackad+6XkxllqXtrh9EmyIjNBj9UU5G1geKBUsmH0wPvmSXfvZeKlY7R
+         SISx9bDMTisIoEvjXpgpkFoPmMX5eiHt3XOOkc60oqD3a1vRDlK57GPbh5W4SJMZeoDr
+         bgrQ==
+X-Gm-Message-State: AOJu0YxbeZLomffpBf2II372AanPoxy5pcjnQ8gi96cJmmzIucbveREu
+	VdU1O2WDXxEs9VmuHFaOrHp5gjwMHSb/Ym7TYx2DpW2PIIvyUrAA3AMAh+5lWRXQKmKSmxumhKD
+	SYuiXXLPcBFBzlCUj7laXqQjERC9BliyD6AfzyVzVIZ3xTglE7qMgSgIgfsn3gxjpGiEbV+k=
+X-Received: by 2002:a19:2d0e:0:b0:50e:dc99:cda with SMTP id k14-20020a192d0e000000b0050edc990cdamr1413285lfj.24.1705920809419;
+        Mon, 22 Jan 2024 02:53:29 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGyTmUfVSX+vJoYJg0IKWMYbWKAZUBV/HESlmeaB1+ats3yxoOKYy9UhP5uqWmmXdb1IQmghw==
+X-Received: by 2002:a19:2d0e:0:b0:50e:dc99:cda with SMTP id k14-20020a192d0e000000b0050edc990cdamr1413276lfj.24.1705920808966;
+        Mon, 22 Jan 2024 02:53:28 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id q21-20020a1709066b1500b00a2990007447sm13138964ejr.122.2024.01.22.02.53.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jan 2024 02:53:28 -0800 (PST)
+Message-ID: <e437050a-032c-462d-a415-1282adc820e1@redhat.com>
+Date: Mon, 22 Jan 2024 11:53:27 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -40,193 +66,200 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: hp-wmi: info hotkey has no keycode or scancode
-To: Dennis Nezic <dennisn@dennisn.mooo.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <ZawX2mquuTCv0tuF@panther>
- <a8fa0308-0998-48e4-a104-c2b57ee9bd8e@gmx.de> <Zaw9mnfEL65B5r4O@panther>
- <e97ae805-d006-4f0c-96c0-976385772bb7@gmx.de> <Za4T0RwClHOoCPCy@panther>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <Za4T0RwClHOoCPCy@panther>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:G4yjIr89DPfhbF+SSHAivGD8uB/4zvWGn3yB2WeoOAaJmQOwCHt
- Dhb9DZzPdFjw3+Q7OurNHo5ZL2gyyu7EwLf1sD7EecV/3hYYYmUo5fygbppTlMIqN9Nvnha
- R0qGE6nYPrXKHMFOMRPU4ATs4VkmqI9+n5CVnT1akeBeB8N4Q2ygfAgkiLA4aETW9gOtW0M
- pql+W2XJcNOuqCqZ/r3Lg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:9CgnBDIoskM=;gDmkZ6cZwo4BPvXt3S60NtEau1n
- 7GHLar1ntPbQEiz6yacsJqZwFLJIjxGRofgJN4duD7JcKD+j2qKOOEi4ZGvfIjyliJlLgO+7k
- GwGjYeafWMJCsporBZZXA2GlueGlcOT1S6+loT+jmTZafJxV+/ooYNPiuDgGtRgbLoAlhYuip
- D5Ngngo2dP9SUWc60cnfmZNnJBpxtg+6sKNLuT/96bpe+bxqN2QPnot68KFKnC+Zr5jDRbc9g
- 2LSlZvOLLdnyLj3Xqoy3T9Trph4uFfJ9YMFHQDT3G3N4+KPEtrBqDv4uS/g76LxHQ/t0W11FO
- /GwVaBcODrFsMHvFyM7O0PZMQc4yPvW8SNlfFy09fWiBHFfppdwMHcVruJGrtD9lHrGVieVq8
- lFaBmlNye/1XVih14s2RqeXe1C/kcnrfJVOf9haJxMLOdx6pWdtuTzxG2JTB0SvyB1Nu0eL0Q
- wOTZN7IYbWwD98X2NZ2qDTyVsjMkcasz30xbRxKrJMm5lXxSB4TCHrFLutv5JfF4vLHCdaJx8
- LXCX+HxppMj36WXI6+XEiVchZQzdninNPEwEQNNjSP17AevUrS8qkrRIIJOuGbFVe7H7xmsll
- 0I3t7PfHj7dv8KmtydtjTtIfAnfv/7z+7BnfS9aA5Q6QjDygMXgdU1QqdQzqhw1tBzeyvmjwY
- O9rbwRpkZicqEvXfS6OR3LcF9+ZkAzqgY27GdDXnmB02rN5ggVsfbkUYXJa/5kv0o5rWBsXhv
- BxeTVIMkF56Pcx8O3mwK9cBxQUoFWOBnBSwT5zlpX9BUedcvcjGEMuRO9nbIoEGt8fReM0bhI
- FK6weTXOXoWf0W+S1exF+7LpL86bvtTzAyMsawE+n6P0WBSopsxbw3mLMiGD2RSMIrGwogcP4
- mCApRhA5XHCtzXFB/nBJ8yFXGd/4ZI9H6Y3IW7ktCvLFqeXjdBTgpTg2fL6meDSQN5q8NWpDs
- UFkihLjbduNaCOP9K4kxfk02slE=
+Subject: Re: [PATCH] platform/x86: asus-wmi: Re-enable custom fan curves after
+ setting throttle_thermal_policy
+Content-Language: en-US, nl
+To: Luke Jones <luke@ljones.dev>
+Cc: Andrei Sabalenka <mechakotik@gmail.com>, corentin.chary@gmail.com,
+ ilpo.jarvinen@linux.intel.com, acpi4asus-user@lists.sourceforge.net,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240115122315.10250-1-mechakotik@gmail.com>
+ <e776db0e-2376-415b-8688-f166118d4007@redhat.com>
+ <JQKB7S.8ATKNVGHLV1L@ljones.dev>
+ <15f8da52-e413-4440-bd63-2ee8e96a340d@redhat.com>
+ <PFDD7S.4NAT8RZ4C0PR2@ljones.dev>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <PFDD7S.4NAT8RZ4C0PR2@ljones.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Am 22.01.24 um 08:05 schrieb Dennis Nezic:
+Hi Luke,
 
-> On 21 Jan 16:16, Armin Wolf wrote:
->> Am 20.01.24 um 22:39 schrieb Dennis Nezic:
+On 1/16/24 20:43, Luke Jones wrote:
+> 
+> 
+> On Tue, Jan 16 2024 at 11:25:41 +01:00:00, Hans de Goede <hdegoede@redhat.com> wrote:
+>> Hi Luke,
 >>
->>> On 20 Jan 21:52, Armin Wolf wrote:
->>>> Am 20.01.24 um 19:58 schrieb Dennis Nezic:
->>>>
->>>>> Guys, the "info" illuminated touch-key (hotkey?) on my laptop "doesn't
->>>>> work", showkey doesn't report any keycode or scancode. I don't see any
->>>>> wmi related error messages from dmesg. All the other illuminated
->>>>> "hotkeys" work fine, although confusingly evtest and "libinput
->>>>> debug-events" report that they're coming through the event interface
->>>>> associated with "AT Translated Set 2 keyboard" instead of "HP WMI
->>>>> hotkeys", but hey, as long as I receive them I'm okay :p.
->>>>>
->>>>> hp-wmi.c does seem to reference it:
->>>>>      { KE_KEY, 0x213b,  { KEY_INFO } },
->>>>>
->>>>> How can I go about troubleshooting this? (I'm using kernel 6.6.8)
->>>> it can be possible that your machine does not use hp-wmi to deliver keycodes
->>>> to the operating system, but instead emulates a standard keyboard controller.
->>>>
->>>> Can you check with "kacpimon" that events concerning a PNP0C14 device are being
->>>> received?
->>> Very possible indeed. "kacpimon" doesn't show anything when I press that
->>> touchkey, but it does when I press all the other touchkeys. (I do get
->>> lots of accelerometer noise.)
+>> On 1/15/24 21:25, Luke Jones wrote:
 >>>
->> Interesting, can you please share the output of:
->> - "kacpimon" while you where pressing the buttons
->> - "acpidump"
-> Actually I was finally able to detect something via kacpimon, but it was
-> elusive, and it's scaring me now! It wouldn't immediately show on live
-> stdout (the way the other touch-hotkeys, and normal keys, do), and I
-> even had trouble seeing it when trying to redirect stdout to a file!
-> Ctrl-C'ing would prematurely truncate the output, sometimes not
-> capturing it, even the more graceful Escape-exit wouldn't capture it
-> unless I waited or padded it with mouse movements. Ie. there is some
-> very weird delay going on, and maybe repetition, or something.
->
-> For example, I swear I only touched that info key 5 times here, and then
-> AFTERWARDS pressed the 'A' key twice, and then Esc. grep'ing for
-> 'Type: 1' I was able to catch:
->
-> Input Layer:  Type: 1  Code: 28  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 30  Value: 1
-> Input Layer:  Type: 1  Code: 30  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 30  Value: 1
-> Input Layer:  Type: 1  Code: 30  Value: 0
-> Input Layer:  Type: 1  Code: 1  Value: 1
->
-> A more weird example, again I *swear* I first only touched that info key
-> *5* times, and then moved the mouse for a few seconds between 2 'A' key
-> presses, and finishing with Escape, but although it showed the two 'A'
-> key events properly, it also showed *11* "code 325" and 11 "code 330"
-> value1 events, out of order!?
+>>>
+>>>  On Mon, Jan 15 2024 at 13:38:16 +01:00:00, Hans de Goede <hdegoede@redhat.com> wrote:
+>>>>  Hi,
+>>>>
+>>>>  On 1/15/24 13:22, Andrei Sabalenka wrote:
+>>>>>   When changing throttle_thermal_policy, all the custom fan curves are getting disabled. This patch re-enables all the custom fan curves that were enabled before changing throttle_thermal_policy.
+>>>>>
+>>>>>   I believe it makes asus-wmi sysfs interface more convenient, as it allows userspace to manage fan curves independently from platform_profile and throttle_thermal_policy. At the kernel level, custom fan curves should not be tied to "power profiles" scheme in any way, as it gives the user less freedom of controlling them.
+>>>>
+>>>>  Setting a high performance power-profile typically also involves ramping up
+>>>>  the fans harder. So I don't think this patch is a good idea.
+>>>>
+>>>>  If you really want this behavior then you can always re-enable the custom
+>>>>  curve after changing the profile.
+>>>>
+>>>>  Luke, do you have any opinion on this?
+>>>
+>>>  I see some misconceptions that should be addressed:
+>>>  1. ASUS themselves set separate fan curves per "platform profile", both standard and custom
+>>>  2. fan curves are not tied to platform profiles, they are tied to the throttle_thermal_policy, and this is actually done in the acpi - so the code here is a mirror of that
+>>>  3. platform-profiles are tied to throttle_thermal_policy
+>>>
+>>>  There is no lack of user control at all, a decent tool (like asusctl) can set fan curves without issues but it's perhaps not convenient for manually setting via a script etc.
+>>>
+>>>  The main reason that a curve is disabled for the policy being switched to is for safety. It was a paranoid choice I made at the time. The kernel (and acpi) can't guarantee that a user set a reasonable default for that policy so the safest thing is to force an explicit re-enable of it.
+>>>
+>>>  Having said that: I know that the curve was previously set for that profile/policy and in theory should be fine plus it is already used by the user, it is also not possible to set a curve for a different profile to the one a user is currently in -  this is forced in ACPI as you can set only the curve for the profile you are in (the kernel code also mirrors this).
+>>>
+>>>  So this patch should be fine.
+>>>
+>>>  Signed-off-by: Luke D. Jones <luke@ljones.dev>
+>>
+>> So I just checked asus-wmi.c again and there seems to be only 1 custom
+>> curve per fan, one curve for CPU one for GPU and one for MID.
+> 
+> I misread sorry. Yes this is correct. The ACPI only allows fetching the defaults for the currently loaded profile so this was a result of that.
+> 
+>> And while the custom curve may be fine for e.g. low-power mode,
+>> that same custom curve may lead to overheating/throttling with
+>> performance mode since performance mode typically requires
+>> higher fan speeds.
+>>
+>> As you write yourself: 'ASUS themselves set separate fan curves per
+>> "platform profile", both standard and custom', but there is only 1
+>> custom/user curve (in the kernel), not 1 per platform-profile.
+>>
+>> So IMHO disabling the custom curve on profile switching is
+>> the correct thing to do. Then userspace can do something like:
+>>
+> 
+> Yes agreed. And that is indeed why I set them to off originally when changing profile.
+> 
+>> 1. Have per platform-profile custom curves in some tool
+>> 2. Have that tool change (or monitor) platform-profile
+>> 3. Load new custom profile based on the new platform-profile
+>> 4. Enable the new (fitting to the new platform-profile)
+>>    custom fan curve.
+>>
+>> I also see that fan_curve_get_factory_default() retrieves the
+>> defaults for a *specific* thermal-policy / platform-profile
+>>
+>> So if a user somehow just enables custom-fancurves without
+>> actually changing the curve then this patch would lead
+>> to the following scenario:
+>>
+>> 1. Driver loads, lets assume the system boots in balanced
+>> mode, balanced factory-default fan-curve is now loaded into
+>> the custom fan-curve by fan_curve_check_present()
+>>
+>> 2. User calls fan_curve_enable_store() writing "1", because
+>> reasons.
+>>
+>> 3. User changes platform-profile to performance,
+>> throttle_thermal_policy_write() calls asus_wmi_set_devstate(
+>> ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY) and the EC
+>> sets fan curve to performance factory-default fan-curve.
+>>
+>> 4. Next throttle_thermal_policy_write() will now call
+>> fan_curve_write() restoring the balanced factory-default
+>> fan-curve even though we are in performance mode now.
+>>
+>> This seems undesirable to me.
+>>
+>> Restoring custom fan-curves automatically on platform-profile
+>> change IMHO requires also storing a separate custom curve
+>> per profile inside the kernel and populating all custom
+>> curves with the factory defaults at boot. If I read what
+>> you have written above this would also actually match
+>> what you wrote above about ASUS using separate custom curves
+>> per profile. If ASUS uses separate custom curves per profile
+>> then IMHO so should Linux.
+> 
+> This is correct yes.
+> 
+>>
+>> Note custom fan-curves per profile still means that the custom
+>> curve will be overwritten when changing profiles, some new sysfs
+>> interface would be necessary to write the non-active custom
+>> curves so that the restored curve on profile switch can be
+>> custom too on the first switch.
+>>
+>> (rather then having to switch to be able to write the custom
+>> curve for a profile other then the currently active profile).
+>>
+>> Note this is not a 100% hard nack for this patch, but atm
+>> I'm leaning towards a nack.
+> 
+> I revert my signed-off. This is a nack. Everything a user may want can be done in userspace.
 
-Those events are touchscreen events, maybe your mouse is responsible for them.
+Ok, I'm dropping this patch from the platfrom-driver-x86 patch-queue then.
 
->
-> Input Layer:  Type: 1  Code: 28  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 30  Value: 1
-> Input Layer:  Type: 1  Code: 30  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 30  Value: 1
-> Input Layer:  Type: 1  Code: 30  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 1
-> Input Layer:  Type: 1  Code: 330  Value: 0
-> Input Layer:  Type: 1  Code: 325  Value: 0
-> Input Layer:  Type: 1  Code: 1  Value: 1
->
-> (Thank you for your guidance btw! Will an acpidump still be necessary?)
+Regards,
 
-I have to apologize, the events send by ACPI WMI to kacpimon do not contain a "PNP0C14" string
-or the name WMI at all.
+Hans
 
-Instead they look like this:
 
-	netlink:  9DBB5994-A997- 000000d0 00000000
 
-Can you try to use kacpimon again but without root privileges? This way only netlink events show up.
-You might also stop acpid while you are using kacpimon.
 
-If you still cannot receive any netlink events, then i might need to take a look at your ACPI tables
-via acpidump.
-
-Thanks,
-Armin Wolf
+>>>>>   Signed-off-by: Andrei Sabalenka <mechakotik@gmail.com>
+>>>>>   ---
+>>>>>    drivers/platform/x86/asus-wmi.c | 29 ++++++++++++++++++++++-------
+>>>>>    1 file changed, 22 insertions(+), 7 deletions(-)
+>>>>>
+>>>>>   diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+>>>>>   index 18be35fdb..c2e38f6d8 100644
+>>>>>   --- a/drivers/platform/x86/asus-wmi.c
+>>>>>   +++ b/drivers/platform/x86/asus-wmi.c
+>>>>>   @@ -3441,13 +3441,28 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
+>>>>>            return -EIO;
+>>>>>        }
+>>>>>
+>>>>>   -    /* Must set to disabled if mode is toggled */
+>>>>>   -    if (asus->cpu_fan_curve_available)
+>>>>>   -        asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled = false;
+>>>>>   -    if (asus->gpu_fan_curve_available)
+>>>>>   -        asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled = false;
+>>>>>   -    if (asus->mid_fan_curve_available)
+>>>>>   -        asus->custom_fan_curves[FAN_CURVE_DEV_MID].enabled = false;
+>>>>>   +    /* Re-enable fan curves after profile change */
+>>>>>   +    if (asus->cpu_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_CPU].enabled) {
+>>>>>   +        err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_CPU]);
+>>>>>   +        if (err) {
+>>>>>   +            pr_warn("Failed to re-enable CPU fan curve: %d\n", err);
+>>>>>   +            return err;
+>>>>>   +        }
+>>>>>   +    }
+>>>>>   +    if (asus->gpu_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_GPU].enabled) {
+>>>>>   +        err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_GPU]);
+>>>>>   +        if (err) {
+>>>>>   +            pr_warn("Failed to re-enable GPU fan curve: %d\n", err);
+>>>>>   +            return err;
+>>>>>   +        }
+>>>>>   +    }
+>>>>>   +    if (asus->mid_fan_curve_available && asus->custom_fan_curves[FAN_CURVE_DEV_MID].enabled) {
+>>>>>   +        err = fan_curve_write(asus, &asus->custom_fan_curves[FAN_CURVE_DEV_MID]);
+>>>>>   +        if (err) {
+>>>>>   +            pr_warn("Failed to re-enable MID fan curve: %d\n", err);
+>>>>>   +            return err;
+>>>>>   +        }
+>>>>>   +    }
+>>>>>
+>>>>>        return 0;
+>>>>>    }
+>>>>
+>>>
+>>>
+>>
+> 
+> 
 
