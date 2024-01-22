@@ -1,105 +1,94 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70446804;
-	Sun, 21 Jan 2024 20:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5D836B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jan 2024 01:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705867719; cv=none; b=SSYmshkJ8P6R7sI/TBxBeotwH9hjTVU54vM+0cbkUFZzWXSPR/jtFLylKPQxN+MQU5IHOiVhxxZoksrs2p+cXq/3s3cfaN785yZkY+E5inlv2AjeTsju9gKhka+cltQ8dusM8AbAaJ0SHcGRG7KPJ01CXLywjxnQjVjrRrPZnGE=
+	t=1705888096; cv=none; b=D1RRN7B7RZ6ECcNy7EE8jdZ3cR5vppKUbRB7KR+pDKVtp3gY+THni87t6fLytFtQuR+FN25SZmiOGXRJ0iRbk4yzQNw6gl1kQYfXfIfsBNUbXFIE5n95vpv84ll3r34snG7tNXapFpN7WHMI+u97GXZz6FoPAqUxn6sSVcuETuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705867719; c=relaxed/simple;
-	bh=zcipHQGVG4iujMulcVGAHPb0lUqNcWYueLVlMTU7SoY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MB06RFCh7Lw97F68yeMru4w/jqT1o6W2kGMPoeo0QWlrW0yMmFB/l3LuzkbDdXv5MtNySpYQTlYmLHH+at2mmo5EDbW+jcjKajfc/kUP9vMu+Ic5OaqwB2Q/rfyLUvjpWZoDCe/6f0bdgazcZqPE5sIYl96t9V454GNO4ZqtLBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=btQ8XS9y; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1705888096; c=relaxed/simple;
+	bh=llOQ7Ag6qJ5XZjSQCng2JwPgluzpQgMFRZ1tnBRmjBo=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CvG+S27QWJ+N+8/SXoeZdrzfSA54FwII138DWjpwRHLShKxyn1PjiSBcy3yLAnDAhSJdEkuGUQzqwXBNFjLiGCJnx9FUOxj02HQNfo3WkglZZCjHkwgHuC0QG/XO4BgHqUCcU6OMEDlidL8WaI8tDFAJpd+5TF0A7Ob3MjAHttg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oBiVIRck; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="btQ8XS9y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1705867709; x=1706472509; i=w_armin@gmx.de;
-	bh=zcipHQGVG4iujMulcVGAHPb0lUqNcWYueLVlMTU7SoY=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=btQ8XS9yhmQdl3jyipoTZoiwNQ6M0brT/9Zj0erTivHDhu1IJGU9RNQz5LAvOpFZ
-	 dh7SAs04oDJOqvki51Bx/glUBW6+VkJMe4uIll+JO8y707dCM5LB8s+sz45rbwWbz
-	 Oi8cJXk930mXaBrpjz2UBMc0albI0aYpN2w/Ubl2Gx2Z5x/9X+xQkjMs1Hl0mRrhh
-	 g05HaA7vRNW8iOTfO+cgeYLdtZnNn8lpxCesyIhptd/LRJHpS1sfDsHwWWNCn/A/Z
-	 kyAjO28J97C8QdnoBz2avNXbh5C2aiP+VcT12jP3ZzbiItNZR2P9NN/Ge3tS/UlXm
-	 ersPaSzAoLgDQiP3eA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-inspiron.fritz.box ([91.137.126.34]) by mail.gmx.net
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1N1fis-1qz4bM3cxU-011xl7; Sun, 21 Jan 2024 21:08:29 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/x86: wmi: Use ACPI device name in netlink event
-Date: Sun, 21 Jan 2024 21:08:24 +0100
-Message-Id: <20240121200824.2778-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oBiVIRck"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9A6BDC43390
+	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jan 2024 01:48:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705888095;
+	bh=llOQ7Ag6qJ5XZjSQCng2JwPgluzpQgMFRZ1tnBRmjBo=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=oBiVIRckRBNf7pTjysvBMyHufrj6+c2Al8eQEax4i09wpR7TH7D9eYpeZwjfVulcw
+	 hhk/UNt9dzuQFwaMLJZWzj3Kw1UWZhn2Y2aeezp+5GGlYiH+PvdpY2dcSvywy6mnMm
+	 PHiQTg/hepciSFlZSXhfsEGqOfd06rUr6wqB0q9I0+wtJWEr3SsA+iilgygsKJXxKz
+	 qpNG5fCUGB+BkKGDKmTVHkC4WcteAun+73dBT5+UdY5aX5tWHqduveVHLKmNb4QXfS
+	 vibTD0YPumShQWPeKjyflkLsDGG8M8HP05mZJlrlpgkHTEw6CZw8Q3tBaAeJBPO2/E
+	 R8p4zrGQDyl8Q==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 7DA66C4332E; Mon, 22 Jan 2024 01:48:15 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after a
+ random number of suspend/resume cycles
+Date: Mon, 22 Jan 2024 01:48:15 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: dan.martins@zoho.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-ntjrpEAVEn@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:oq/lhrnk44I0MjMCdGME5clgGzdHxH8HoyOh1Du0f2gldLIdwIt
- GaxIQ4YW/P2LVjpuAVd1Np7cHU/nK2/qeORkD+h0s0M3j1vbexKBj6TkMe2BSIiWvN5Ql5z
- Q2KXtNj77tANdSIJ38B9sfiK/VWynRZCpKNsU+RRp6Lm9E3PcQautmg7IlvlrG1W4ThZXLr
- rlkv3kn0WG6ms8KENOiyg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MLdxJtVrOfA=;yyDLLvp1o27sqgXhREkiIegR+J6
- /GjlpXTDP57VBH8s0h8/mXA8ZKLmroh0QrQj7Wlv1U9VhHOMYkytpEmAOm0ikYxIEtUtjpM7s
- boXBbsyk98sp2/vVkgzPFvc+Bj3QZqXydxofuuNGf+vW6UptSJbbfrj9Q4Zh5GxtkYyH2SKWH
- jYWYStWAZkfP8YujXFOxhzrfQ0FYBYl+tFFCYRB2qQKqceTL/DFron1zTeD+Gi1ty1nmB+S0e
- 2A8Br3xvZWrdgcCrRvfJXQXFxBXCk2IlXLMjQXJfuEes9tLfIeGPQ7kgpe7YHTv0wyel2AU34
- Re1kCOLuYkpnNIbVPvgmQe83RjAJJs3goVSO5IUn7wk4qm+QK74qr6GHebqFWmqbL9yApivVe
- iumPcNFmVVi46JJ9h4MnP35VKKD6/rmd8xMwzDHplbWsmDjiqAyJKzYJHt0OP6HZEr1jLRUPQ
- 0090oP8GMTnX9nDvm4aqG3bHGShOWYp8R8SoVIYbo0c0N0TpFTW26xTgyumM23cJitC+fAi3V
- wJPZQSwFZt3WrTsdvhgmmBWE9yN3M+0NBLcyM28WOEEHIT79tMPwogGHHwrtuBQaL5nyDVt6Y
- pCFvHSqqLvsDubJ3SZv0eluTi5ESVFCw9UOTiNtMNGmnrYfSW+dpNzngXLBFyXjCJ5gGaTGfX
- VirPz2hCgyEKzp+yPus0kWBNldDJuFD1C/WEOQBjdaZG1Neww59vHYc6QDS/FNQa3Ggl2nrrl
- EuVWiO9z/Om4U3/rcb2nRljboB+Dq1xG3z6SUr9E8VYYCfRBs6cp1adkVE18nNgqgRF74+U4v
- +hk8vnUVA+tF7g1DKtzfBld5aIADocWYJd+IPB2Esom5cvHgYenAUs4hvEMvYNMLrdTZZNlzn
- YRVNzrGN9AZEuW/Eliwr77g1zDA4rPS3IequdBd6avBMUgDnhG4fl2Abqj0H79OReXJfjZtcz
- 9C2WQjGxCDJy6ygQjD8zxiEXOBI=
 
-The device name inside the ACPI netlink event is limited to
-15 characters, so the WMI device name will get truncated.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-This can be observed with kacpimon when receiving an event
-from WMI device "9DBB5994-A997-11DA-B012-B622A1EF5492":
+--- Comment #22 from Dan Martins (dan.martins@zoho.com) ---
+(In reply to Mario Limonciello (AMD) from comment #20)
+> Can you guys please test this and see if it improves the situation at all?
+>=20
+> https://lore.kernel.org/linux-pm/20240119113319.54158-1-mario.
+> limonciello@amd.com/T/#u
+>=20
+> Thanks!
 
-	netlink:  9DBB5994-A997- 000000d0 00000000
+Hi again Mario,
 
-Fix this by using the shorter device name from the ACPI
-bus device instead. This still allows users to uniquely
-identify the WMI device by using the notify id (0xd0).
+I tested this patch against Fedora's 6.6.13 kernel and so far, after 6 rebo=
+ots
+have not been able to reproduce. When I switch back to the stock kernel, I =
+can
+typically reproduce the issue in 1-2 reboots so the patch seems to have hel=
+ped
+so far. I'll keep using the patched kernel for now and let you know if this
+issue occurs again.
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
-Changes since v1:
-- use acpi_dev_name() helper function
-=2D--
- drivers/platform/x86/wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Dan
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index a7cfcbf92432..c61860db66ed 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -1202,7 +1202,7 @@ static int wmi_notify_device(struct device *dev, voi=
-d *data)
- 	}
+--=20
+You may reply to this email to add a comment.
 
- 	acpi_bus_generate_netlink_event(wblock->acpi_device->pnp.device_class,
--					dev_name(&wblock->dev.dev), *event, 0);
-+					acpi_dev_name(wblock->acpi_device), *event, 0);
-
- 	return -EBUSY;
- }
-=2D-
-2.39.2
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
