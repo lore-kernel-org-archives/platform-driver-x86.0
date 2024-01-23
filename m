@@ -1,165 +1,167 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2079.outbound.protection.outlook.com [40.107.101.79])
+Received: from a1i923.smtp2go.com (a1i923.smtp2go.com [43.228.187.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A694878F;
-	Tue, 23 Jan 2024 14:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706020685; cv=fail; b=WQvPO/rCSLOINBOc4fidG0WTAUu08Un711r5/1HDjp6BC6sxUu1Y4Rg4ZKp/ncEkCxyvHfp8spHIwqCOFszCIwhl5munmEAPiz/owKaDPVN3zo6KKbI90g7PtEy29j2/5//Y+tNH2IMqJxT2GS9TmoImDkqUS2w85czkSH3lssY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706020685; c=relaxed/simple;
-	bh=cS5+jmieCeP6tWh7Cd9tRW7End/3BixK4qvb2blMENo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=LSKTDBwekoc/2uDCCiSC25afPDPIQwuLktjLKnUxhms7IJPZYDq1yfWUFwp+yJycbEanqZW+9Oktl0Jz40wME0sGYWYn9rC+ueo2zkwt+JUcD9KJD/of7AKXhMWTQQ6CNf/70LJm/TzbnK7l7j4HKBpzNVC/rKknpXX59Z1osDw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pyoynxFt; arc=fail smtp.client-ip=40.107.101.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1CC5FBA6
+	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jan 2024 15:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.228.187.155
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706022843; cv=none; b=Rm1UebNEjJGjfYXKvt00sIY2vxisXoHaL0ioL1Fp8Ib+PQdsCO4Ml8ZOYkTKmoCJ1JzVRDraig+4/W4fCsM5HLjtjqdhfxevPOUHYAZbNSc9CxxjTfUCW2StPOhAJRrOjWXI1oKrZUjN0rBOBybfyxbxb77Kt8E+XhKoZWUv17g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706022843; c=relaxed/simple;
+	bh=LGkcPMlyACDc73oQ2SsRwUXOafg+5JLQecAN9g5aUh0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RLRGz740vPr2Kga/maHUGnt3Kxbz/FOxuPaWSK03tt38/43CXaUmID2tU8vwiB/InI+ewEFEpqu14pEtzIDtw2cJ4FpAML05CCnnKIceRG3eKZjLxnj9ApkgoCsO8T4UujLjWGLSom+LtvWJcY7nnm+qtdisNxhAyS1BBcAuXWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dennisn.mooo.com; spf=pass smtp.mailfrom=return.smtpservice.net; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=LubuRTOK; arc=none smtp.client-ip=43.228.187.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dennisn.mooo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=return.smtpservice.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pyoynxFt"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LB9RfoAr7wIvyW5p1wOhgYE1mN2uUqyTq7hLu8Kx1hQ6/O6mMcqKD4qNZGBWGEuDsxWPLS8GiYUo/E9Ozwqye6AJmPerH+zoCJhhT+dzQ3ZrwJ5YdSoHY9EETuSlrg6RsstpWe+yQY7EVZOrh6YxemQ6EM/7XKrAl3XKuK8XgCrDQfVGCj1FnQ0y/4w9JJoXZGHixcHq3yc6BSl1WYec/45PnNokUkPEhlbb04sa3scCxjJgb3WnNJx6JXdm8kHIYxwwSwA7/KJj5kwXoeTVB978pFzLwtV4ix3UAst4Luhm4wW6gFlXojOzGhvmI58/QYTARncHP2JvftmISmp1ow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nMEdRJO/elKEMw9+bpqntUyK/rF4DJ7UukGZP6aV7nU=;
- b=neiZhTVYp/Ttr6K7YhGs0ygzOsWskTJArCSB2qAvrJUZrvRCuWlf2d/mdFSz1Zt1jealX2Ks4ZVen/5NIcaON2PRWGRzrWW9r3YlP0QF94JXRuLhJvF8TqiXQSvlUM9Rr9byWcXNJOrQ239YcCjmTt8AwFFiIi3ENVtzdxivUGx+VKy+4SF70dval3spR29nD+a+bDFBMFoizOiU1ZMP+OfzPJ/4Ss7CIZMdMed8RjWGMkiUeyzEQbTwaEbQe5QIDeeWwpREhd6kR7uDn6IlXWN9cDCSOeM2rijHtzVLSpzOY4pi7MJWFGObHOiFuykq7OjNmD0GzY0zJbzkrilNWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nMEdRJO/elKEMw9+bpqntUyK/rF4DJ7UukGZP6aV7nU=;
- b=pyoynxFtMnz5owTp6caUsnb0Phxboc3YeksfuIck1YBffJejvtapbqygbLrYBxg0sNgEnVs7jOpyCtZWmjYACK5dQfPAOo7xocNTIMfUsFFSkGUrpUSEM7VJMlRAWc4TX5R4NgXiCoqqfXgnBH2/u1EIxVyI9KJkkxL5n1wB/Hc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by DM6PR12MB4385.namprd12.prod.outlook.com (2603:10b6:5:2a6::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.37; Tue, 23 Jan
- 2024 14:38:01 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::9c3a:2d65:6c4b:bd87]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::9c3a:2d65:6c4b:bd87%3]) with mapi id 15.20.7228.022; Tue, 23 Jan 2024
- 14:38:01 +0000
-Message-ID: <b7bd8769-5f97-4c9a-be80-8d1acac92b19@amd.com>
-Date: Tue, 23 Jan 2024 20:07:53 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86/amd/pmf: Fix memory leak in
- amd_pmf_get_pb_data()
-Content-Language: en-US
-To: Cong Liu <liucong2@kylinos.cn>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240123011147.6843-1-liucong2@kylinos.cn>
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <20240123011147.6843-1-liucong2@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0187.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:be::10) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
+	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="LubuRTOK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpservice.net; s=maow60.a1-4.dyn; x=1706023740; h=Feedback-ID:
+	X-Smtpcorp-Track:Message-ID:Subject:To:Date:From:Reply-To:Sender:
+	List-Unsubscribe; bh=c/ik6wn8NhwWS+ok5ggGn1RTh3x3eqvmaQ24JKSj/jc=; b=LubuRTOK
+	hZ1F8Jq0IVlvhvTkUn+7lKXcBJtJiz/A4tBVYgHKZad1lyaNoo7H/6S/tz6m8eASIrDy3lqHpIfK6
+	cA6krtGn2qvtUjk9oXHr6QrE2K48m4VfbP4X6T5OfM4Wth5Y7LGC9lxpdIuWRZ5zFRr7D/VqYtYBJ
+	PaspQUl4nHxD6OpP/arNliaKtDkDJdLN/LYOoKM1ztt/xyh6plRDL4j5EeMepE5vguaRiXqDzY/sA
+	9cvkMoN2aD3N7xe3qI9tsm6pg1035oI4quTGqiGm12XYJuxM7MDkuSjKwwGWMOh7lGn9Rh0zaJ+7r
+	i8+UsGcSb0A35kFSK+3BvUOuEA==;
+Received: from [10.66.228.43] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <dennisn@dennisn.mooo.com>)
+ id 1rSITN-l1jk1Y-64; Tue, 23 Jan 2024 15:13:57 +0000
+Received: from [10.220.238.86] (helo=dennisn.mooo.com)
+ by smtpcorp.com with esmtpa (Exim 4.96.1-S2G)
+ (envelope-from <dennisn@dennisn.mooo.com>) id 1rSITL-wSPiDp-2c;
+ Tue, 23 Jan 2024 15:13:56 +0000
+Received: by dennisn.mooo.com (sSMTP sendmail emulation);
+ Tue, 23 Jan 2024 10:13:54 -0500
+From: "Dennis Nezic" <dennisn@dennisn.mooo.com>
+Date: Tue, 23 Jan 2024 10:13:54 -0500
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org
+Subject: Re: hp-wmi: info hotkey has no keycode or scancode
+Message-ID: <Za_Xss52DlydJOOO@panther>
+References: <ZawX2mquuTCv0tuF@panther>
+ <a8fa0308-0998-48e4-a104-c2b57ee9bd8e@gmx.de>
+ <Zaw9mnfEL65B5r4O@panther>
+ <e97ae805-d006-4f0c-96c0-976385772bb7@gmx.de>
+ <Za4T0RwClHOoCPCy@panther>
+ <cd86386a-653e-401c-9b70-0860d2e1906a@gmx.de>
+ <Za8xL39m1X22f2Bb@panther> <Za9DQdLg2d_CnrZG@panther>
+ <3e574768-8d5b-465b-9860-567d0845d3fb@gmx.de>
+ <3e517aa3-4020-4b29-b7b3-85271503d03d@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|DM6PR12MB4385:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2a474caa-b82b-4dc3-f482-08dc1c20e635
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	eeveVI7xAAHarwR6AR3RWC5+DuiZxb7RZAYu/iuR7efLNeOKvNX56QAS4VgPYzAwtTMbSTQLQT9Q9vrY96SZUV1E49gpVHcib1+/PIoa2lsI3F+PbApwEfPL2uotQ/nipHHa/AAG9KRsL26u2YxFs08/RHCx15WKY9GDFQY2L9zTM7iib29VnvQEcZogmXnY83K9QAtP5isEIvU6kdbcUkUhU+CLKbAwAp1sU+evuWyW7cfuc0Re1oJuSwF/pVrq+C4dQyr3C7UO75lGBzp3Bs40pMOp4gr74nje6Rb/iM+Mxodv2fc7Vto0fmlozNsWP7ITe4KvHoB4FuxVD84vlsrYXxapE5j3J/3RahpCL0Er9BIZAoZPoijUk772WkrS95JvPk4zyibj7Lmk2jxiTRRwIALhXHx/lYgsQ7usXtFPxryB20i6ZRZdHeczgj6xfNmJmfyM1YjmGcqP8n0a29Opnl5dsxb7QTL3d82n74QvGsYMtSG5ynJqbWaYzrDw8ys1i4LuVYbSzPc7rZwIZxQII3qtet77AG5MSM6X9Q1UHR40omxtlSsF4+gwmrkJDs48KiLqn9tf6XmIWp3LsWoLTBlM1PDRaeKRjIPK4L19fMLAUFkMlta1N3Fut6yXk8U+M7JHeRGAO/sPBVw9dg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(376002)(136003)(396003)(39860400002)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(83380400001)(31686004)(26005)(4326008)(8936002)(8676002)(110136005)(5660300002)(66946007)(66556008)(66476007)(316002)(31696002)(86362001)(38100700002)(478600001)(6486002)(2906002)(6512007)(2616005)(6506007)(53546011)(41300700001)(36756003)(6666004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VHdSQ3pHejBielNhc1FKaEdCY29RdGZVYW80Q2ZmNVdUeVZoOGg4MTlVSS9P?=
- =?utf-8?B?RXUxOUd6QnU3R1NYVlc1TW5wY0oxQ3lIaWg4Vlo3UHpmODMyV3prYk5WeXBS?=
- =?utf-8?B?bVl3dHFXQ3FtYi9qVStSbWJ3L21TZmdBSzVFek92MmUwVnFRckg1OWVjUjNh?=
- =?utf-8?B?ZkhzcjJTdWpuRTE3SHNZVkU3VmRDT0NnaStlWGR4OTAvanVkOHpveGVaRm41?=
- =?utf-8?B?RUxweUpZYXdUNm0yNWNJbjQwWFlMUVpkWEFrUkU2NS9VVm56UnVKZ1pBM3pz?=
- =?utf-8?B?czdMdDZZQkNTa2tHTkppa0RFYWhqSzFaaFRqd3hyZ012YW54Ni9nMUNqOEhp?=
- =?utf-8?B?N2ZRU1FCUTJ5dTVTWFFwbDlLR3J3VStWNXVXbURZb1Z1UFdEZzJOdTZEOHBM?=
- =?utf-8?B?VEw1RVB6MWloRndEK0daYlpqTlpCSHJuM2g3M2JtNWFuSkpuOHRPVnU1NjZD?=
- =?utf-8?B?VnJWRzA4bS9GaTZzcTJjZTE1d3YxTUtYcEtqMk5GUTlKYTQ4L0t2Tnd2WTRU?=
- =?utf-8?B?cXhsVCtIVSs2cXB6eVh0Q2FnSEJWWHpoRXZqRm1mY0NSWUJra0hYd0VCd25y?=
- =?utf-8?B?UUJYRzJDeW10czFMbkZFSDQ0RDJtdUhFRkowSWpqTTc2WE83U3d3WHFSZ3l6?=
- =?utf-8?B?V2NkK0kzbDY4ditkY05CaTg1Y3lhWkRzdE52dVdQbWIxbVIxcVZ6ZGwxMndB?=
- =?utf-8?B?amxCSnVKTmtVeGw4cWZZelJKb09VaGduVEE5V3gzQ1ZWZDNYNmk5MGJWNGU1?=
- =?utf-8?B?U0tkeUlIaGhuY2tjNDdLeGdMYkRLenhIeWR0eHYrcDdGYzVYbWViaFp5RGo4?=
- =?utf-8?B?a1N4ZkxVdmplbnBvU2lGNmhjbDdSSXR4dHk1L1NnTnAvdXFSZGpvaE9qTE11?=
- =?utf-8?B?ODd0aUZtS21YcVgyVzRsYmloYXZyWU5xeHhDOWE0WmUvUTY4dlVLcWVtaTMz?=
- =?utf-8?B?MEpjTGRvRERoYmtwNkFHNGZIdkppVHp1K3pJYWNHdittY21TekxhdVJnY29D?=
- =?utf-8?B?MTlQenI2UVBVams4UHV5VmNMWHhSTVI2T0hJSFlHb3JCOEh6STYwNTJvYmdG?=
- =?utf-8?B?b3JsNnA1VzNQYXk0ZFJ0SjQ0VzVQZWtiZENUdUs1TFlBQllkTXZGLzB3T1VQ?=
- =?utf-8?B?NWZzTWhGdld6YWg5RTV3RitoUy9QemR6QkNJS3c5MitxYnpOUEh4aXhjci9W?=
- =?utf-8?B?RjNIVjUvbDZtMUVQOGJKWWFFV3M3K1NXb1dkRTZNYWJIcDFoNlFiV2x6Q21v?=
- =?utf-8?B?OStmYkNSNytCUlhwM3dkSFJkSlg1NHQvOGVoRlgzaDl0M08zcldvL1E3UWRF?=
- =?utf-8?B?TVhoME9NUm5ZVWFYZ0d5VXkyUDgwdk16UkpxLzBybXJCUjNEVElLNHAyYUg1?=
- =?utf-8?B?cjQ5TGNqeGhhRXRrdVkrbXNwejlEY1lyOGJsTjNQTFhUb1dMVEVTMkZ0WjdU?=
- =?utf-8?B?MURiVm96Sk5yMmZkSzJPbHR1QWZNSFExYmpSdXJtYnd5V1JJVWpqeTZlYWYv?=
- =?utf-8?B?UktrK0pyOFNQQ3VHTjUydzNBNTFod2NBT0tOYWZFYWZ4QmRCQTIxM0JhWWxj?=
- =?utf-8?B?Y0dHc0xMUE9jRWkxSkNQNXJ4Y2ttTzJmY1UwQlBITGZ1dGY3RnZVN2YxeU11?=
- =?utf-8?B?UkEvK0hYa0pOWXVlTmcrNHVIMjBqa0pCL1QwRGo0NnRBV1RpRktGcjRsVVhu?=
- =?utf-8?B?ZVQzYVBySStyL2J2bXh2MVJDckpqOEYvcDlqbENES20yQnlXdzJRbnlwZmZw?=
- =?utf-8?B?TTNMVVoxbnRKd3o0MjJYMlhFUndvL0ZnRXF5aC9wS1M0K0dONEMwOXVIV05w?=
- =?utf-8?B?QmpJZGJSNXpXOVE1UmZYcUtKaW5XM0w2bTRIZ0VhYUVjYjhYQ0FoMVNvNUJM?=
- =?utf-8?B?bWlMUWxGY05jMmN4Si96K2RVbDFDZzBkOGVUb09aNWFVNlV3dHU2ZXZUVThI?=
- =?utf-8?B?YzJtZ3ZGUVpYbDg3WHBadVpNbGMwMzZQdlRvUDRnc0JBMDhKckNCdXlyVHJN?=
- =?utf-8?B?cWw2WFowNUxqWk1oMTJaY1liME5WNXd4WW9jWldFMHVOUklhb1E1VW1jcExW?=
- =?utf-8?B?QmFVSGdBKzZQNmxhZXBJSkxYWWNVeCt1eTJScTVnSXpRcm10WWNOZXNiOTBt?=
- =?utf-8?Q?R15M61AK++Q8pXO4gMwQB/VKK?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a474caa-b82b-4dc3-f482-08dc1c20e635
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2024 14:38:00.9758
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hFbdfY7KStR0xMtNyto8/QZ6PcUjJltMF+DOISIB2/y9O6aI30iBX/54+uXR8jPjRHM4pVr9kWAL8HCZUM3MUg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4385
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3e517aa3-4020-4b29-b7b3-85271503d03d@gmx.de>
+X-Smtpcorp-Track: 1rSmTLwSeiDp2c.rs-xqEs1dKfEb
+Feedback-ID: 498822m:498822aoToIo_:498822sZEw92SIK9
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
 
-Hi,
-
-On 1/23/2024 06:41, Cong Liu wrote:
-> amd_pmf_get_pb_data() will allocate memory for the policy buffer,
-> but does not free it if copy_from_user() fails. This leads to a memory
-> leak.
-
-Thank you for the fix and looks good to me (just a valid Fixes tag is
-missing.)
-
-Fixes: 10817f28e533 ("platform/x86/amd/pmf: Add capability to sideload
-of policy binary")
-Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-
-Thanks,
-Shyam
-
+On 23 Jan 15:22, Armin Wolf wrote:
+> Am 23.01.24 um 09:58 schrieb Armin Wolf:
 > 
-> Signed-off-by: Cong Liu <liucong2@kylinos.cn>
-> ---
->  drivers/platform/x86/amd/pmf/tee-if.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> index 502ce93d5cdd..f8c0177afb0d 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -298,8 +298,10 @@ static ssize_t amd_pmf_get_pb_data(struct file *filp, const char __user *buf,
->  	if (!new_policy_buf)
->  		return -ENOMEM;
->  
-> -	if (copy_from_user(new_policy_buf, buf, length))
-> +	if (copy_from_user(new_policy_buf, buf, length)) {
-> +		kfree(new_policy_buf);
->  		return -EFAULT;
-> +	}
->  
->  	kfree(dev->policy_buf);
->  	dev->policy_buf = new_policy_buf;
+> > Am 23.01.24 um 05:40 schrieb Dennis Nezic:
+> >
+> >> On 22 Jan 22:23, Dennis Nezic wrote:
+> >>> On 22 Jan 11:44, Armin Wolf wrote:
+> >>>> Am 22.01.24 um 08:05 schrieb Dennis Nezic:
+> >>>>
+> >>>>> On 21 Jan 16:16, Armin Wolf wrote:
+> >>>>>> Am 20.01.24 um 22:39 schrieb Dennis Nezic:
+> >>>>>>
+> >>>>>>> On 20 Jan 21:52, Armin Wolf wrote:
+> >>>>>>>> Am 20.01.24 um 19:58 schrieb Dennis Nezic:
+> >>>>>>>>
+> >>>>>>>>> Guys, the "info" illuminated touch-key (hotkey?) on my laptop
+> >>>>>>>>> "doesn't
+> >>>>>>>>> work", showkey doesn't report any keycode or scancode. I don't
+> >>>>>>>>> see any
+> >>>>>>>>> wmi related error messages from dmesg. All the other illuminated
+> >>>>>>>>> "hotkeys" work fine, although confusingly evtest and "libinput
+> >>>>>>>>> debug-events" report that they're coming through the event
+> >>>>>>>>> interface
+> >>>>>>>>> associated with "AT Translated Set 2 keyboard" instead of "HP WMI
+> >>>>>>>>> hotkeys", but hey, as long as I receive them I'm okay :p.
+> >>>>>>>>>
+> >>>>>>>>> hp-wmi.c does seem to reference it:
+> >>>>>>>>>
+> >>>>>>>>> How can I go about troubleshooting this? (I'm using kernel 6.6.8)
+> >>>>>>>> it can be possible that your machine does not use hp-wmi to
+> >>>>>>>> deliver keycodes
+> >>>>>>>> to the operating system, but instead emulates a standard
+> >>>>>>>> keyboard controller.
+> >>>>>>>>
+> >>>>>>>> Can you check with "kacpimon" that events concerning a PNP0C14
+> >>>>>>>> device are being
+> >>>>>>>> received?
+> >>>>>>> Very possible indeed. "kacpimon" doesn't show anything when I
+> >>>>>>> press that
+> >>>>>>> touchkey, but it does when I press all the other touchkeys. (I
+> >>>>>>> do get
+> >>>>>>> lots of accelerometer noise.)
+> >>>>>>>
+> >>>>>> Interesting, can you please share the output of:
+> >>>>>> - "kacpimon" while you where pressing the buttons
+> >>>>>> - "acpidump"
+> >>>>> ...
+> >>>> Those events are touchscreen events, maybe your mouse is
+> >>>> responsible for them.
+> >>> Right, of course, woops, these must have been the touchpad press
+> >>> events,
+> >>> as I was moving the mouse around :P
+> >>>
+> >>>> Instead they look like this:
+> >>>>
+> >>> I'm definitely not seeing anything like that, just "^Input Layer:
+> >>> Type"'s
+> >>>
+> >>>> Can you try to use kacpimon again but without root privileges? This
+> >>>> way only netlink events show up.
+> >>>> You might also stop acpid while you are using kacpimon.
+> >>> 0 output from/with netlink, even though kacpimon said:
+> >>>
+> >>> Netlink ACPI Family ID: 24
+> >>> Netlink ACPI Multicast Group ID: 5
+> >>> netlink opened successfully
+> >>>
+> >>> Remember all my other fancy hotkeys "work", but they appear as regular
+> >>> keypress events from an "AT Translated Set 2 keyboard".
+> >>>
+> >>>> If you still cannot receive any netlink events, then i might need
+> >>>> to take a look at your ACPI tables
+> >>>> via acpidump.
+> >>> https://dennisn.mooo.com/stuff/dump.txt
+> >>>
+> >>>> Thanks,
+> >>>> Armin Wolf
+> >>> Thank you again sir!
+> >>
+> >> A1799AC3-9429-4529-927E-DFE13736EEBA has zero instances
+> >> 8232DE3D-663D-4327-A8F4-E293ADB9BF05 has zero instances
+> >> 8F1F6436-9F42-42C8-BADC-0E9424F20C9A has zero instances
+> >> 8F1F6435-9F42-42C8-BADC-0E9424F20C9A has zero instances
+> >>
+> >> (Btw that "info" key does get illuminated when I touch/press it, even
+> >> though no codes are seen.)
+> >
+> > These warnings in dmesg are harmless, they are informing you that some
+> > WMI devices are unavailable.
+> >
+> > I took a look at your ACPI tables and it seems that the WMI device
+> > used by hp-wmi is indeed unused.
+> > What is the model name of your HP notebook?
+
+HP Compaq 8710p
+
+> Also i just noted that your notebook might contain a PNP0C32 quickstart button device.
+> Can you tell me the output of "cat /sys/bus/acpi/devices/PNP0C32\:00/status"?
+
+15
