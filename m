@@ -1,91 +1,87 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEE41842;
-	Wed, 24 Jan 2024 01:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296DF18E01
+	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Jan 2024 10:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706059812; cv=none; b=fMaayZpveHBrBgIwQXZboIcdVjc7qsmb8mfms/IAuLuvDoB53Tnxkg7oe6QgajQ+DmDcgRLVTy8dG4HDUYN5ZTPJe+ESYMn9JUpJvGmqWwDNgkpG/3r4D2RvgvuZb+Zw/+QvvX1EcCzMo475syILa/1HOEN3U0D52KOJqJ59uAQ=
+	t=1706092131; cv=none; b=OvN91oUlIkoQnhtaZVTWC8ZBaLi+4POue4tPrPqfOVSPNnawbqD/LUhujvbNB9UqlD58ewpzrS/0zAMePjG9Z4TYR0dLHYMPO/AuAqN3E6Fkl18Tj+N55OJx2V92RlABi/UhSXT0YNjtlrzBJ5WDkPXU6FDgmE3L7lOr+4vL0w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706059812; c=relaxed/simple;
-	bh=NtAGrG5ZVUfxOpHnwIUN/o79MwAWDi+dzyZYGdfD7Hs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HnOVpzj6XvD4WEVs4tORMAuM6k92sXjxegRsOQXB1ZMwtldkhpkhwgPZtZIpGzjHlOj5B7ugdyygnk86anIVK3lEByRUmBI2Qj0rwizLwuRvwnSemMavFpq16UyhbeQXbaNZnLNVQo/XLe/jA3M01ALJjUmmBVuIWgZXzzwANj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 0bbcbf84f5b84bd5b7f9669488c5eb53-20240124
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:cd248ffa-ee3d-4b45-8f20-b57da0cb9ae0,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-INFO: VERSION:1.1.35,REQID:cd248ffa-ee3d-4b45-8f20-b57da0cb9ae0,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:0
-X-CID-META: VersionHash:5d391d7,CLOUDID:e9a613fe-c16b-4159-a099-3b9d0558e447,B
-	ulkID:240124093002G6S37MJB,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
-	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS
-X-UUID: 0bbcbf84f5b84bd5b7f9669488c5eb53-20240124
-X-User: liucong2@kylinos.cn
-Received: from localhost.localdomain [(116.128.244.171)] by mailgw
-	(envelope-from <liucong2@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1784765844; Wed, 24 Jan 2024 09:30:01 +0800
-From: Cong Liu <liucong2@kylinos.cn>
-To: shyam-sundar.s-k@amd.com,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Cc: linux-kernel@vger.kernel.org,
-	liucong2@kylinos.cn,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2] platform/x86/amd/pmf: Fix memory leak in amd_pmf_get_pb_data()
-Date: Wed, 24 Jan 2024 09:29:38 +0800
-Message-Id: <20240124012939.6550-1-liucong2@kylinos.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <b7bd8769-5f97-4c9a-be80-8d1acac92b19@amd.com>
-References: <b7bd8769-5f97-4c9a-be80-8d1acac92b19@amd.com>
+	s=arc-20240116; t=1706092131; c=relaxed/simple;
+	bh=aRTeAiQQrNS2wUG93GqPOHwzQyE7LjE8logd55KcvUQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EcJjsk98gxulCXQwiczv8azA1xbx3v1M5y1tEwOxjJaEmlawNG/CC/rA0tQ9DLHEVCyyRsfmZr+Yv6+vd9I1gbeVd5e3o+onhRQJRvrlOr8mE3Ixnd2L8PgLYwyN/6FpA2ih61tavO/dY1D/CniUL2DmacRDCYHBGROda6//yEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FZrSi8XD; arc=none smtp.client-ip=134.134.136.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FZrSi8XD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706092129; x=1737628129;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=aRTeAiQQrNS2wUG93GqPOHwzQyE7LjE8logd55KcvUQ=;
+  b=FZrSi8XD5NrlPqHrot+M9kjhluRXZQDJLMwT9DEvjkI1WCBSGOa8gP6J
+   IWFBXStm+PGiniX0rF8PdG2mDqJABqWCcelHOvVKHgCs2IFE7oLWSyBGg
+   YjiotPFKT0+NIhaiyYIvdoHFAbhNEcn14kCK5naS8+AcwWUzOiVtcLWIH
+   5+MHlX63vYG1PCQdg0DCgypOF0ByOsFyp7TB/84ll5vkRd84ojv59DJVA
+   FjZMBob5kWUNKFJIFTmMWEK7KukrkucduRo2V0hsjnpK3+mWBi74FPZxP
+   q7A9pvdU1eWNAr5KQg2E2XCNUPYy57C5aehtD2xrz0uIgWKRv2Dl9rY7J
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="405554781"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="405554781"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 02:28:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="1880150"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.46])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 02:28:46 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 24 Jan 2024 12:28:41 +0200 (EET)
+To: Alexis Belmonte <alexbelm48@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    putr4.s@gmail.com
+Subject: Re: [PATCH 1/2] platform/x86: hp-wmi: Tidy up module source code
+In-Reply-To: <ZZchYfQcg0fPBJZy@alexis-pc>
+Message-ID: <6c27cef8-d301-0634-10d4-9fac097e6e97@linux.intel.com>
+References: <ZZchYfQcg0fPBJZy@alexis-pc>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-amd_pmf_get_pb_data() will allocate memory for the policy buffer,
-but does not free it if copy_from_user() fails. This leads to a memory
-leak.
+On Thu, 4 Jan 2024, Alexis Belmonte wrote:
 
-Fixes: 10817f28e533 ("platform/x86/amd/pmf: Add capability to sideload of policy binary")
-Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Signed-off-by: Cong Liu <liucong2@kylinos.cn>
----
- drivers/platform/x86/amd/pmf/tee-if.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> This commit performs four things:
+> 
+>    - fix up the GUID string inconsistency (lower case 'e') from the
+>      WMI module alias declaration/macro definition
+> 
+>    - separate GUID macros from the embedded controller offset macros
+> 
+>    - rename the description of the module to better represent what it
+>      actually achieves as a whole
+> 
+>    - add a space right before the '*' pointer qualifier to match the
+>      other array declarations
+> 
+> This also prepares the terrain for integrating support work for boards
+> identified as '8BAD', which corresponds to HP's Omen 17 ck2xxx models.
+> 
+> Signed-off-by: Alexis Belmonte <alexbelm48@gmail.com>
 
-diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-index 502ce93d5cdd..f8c0177afb0d 100644
---- a/drivers/platform/x86/amd/pmf/tee-if.c
-+++ b/drivers/platform/x86/amd/pmf/tee-if.c
-@@ -298,8 +298,10 @@ static ssize_t amd_pmf_get_pb_data(struct file *filp, const char __user *buf,
- 	if (!new_policy_buf)
- 		return -ENOMEM;
- 
--	if (copy_from_user(new_policy_buf, buf, length))
-+	if (copy_from_user(new_policy_buf, buf, length)) {
-+		kfree(new_policy_buf);
- 		return -EFAULT;
-+	}
- 
- 	kfree(dev->policy_buf);
- 	dev->policy_buf = new_policy_buf;
+Hi,
+
+Thanks for updating but could you please resubmit these properly with v2 
+in the subject so that it is easier to locate if somebody has to look it 
+up from the archives many years from now.
+
 -- 
-2.34.1
+ i.
 
