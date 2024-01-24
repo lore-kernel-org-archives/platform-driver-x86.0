@@ -1,118 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6403E1AAB1;
-	Wed, 24 Jan 2024 11:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D11ACA69
+	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Jan 2024 12:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706096315; cv=none; b=LlB41ebEBM8yoY/iuD6yuAWclsWdQc+/OJTFAO5MsfUiP4tSznnhy7ldJ0CpzaNR+xTQMHVFqTiZ9iA1TXtQKtWfk3GYc4suplEuyhQqcC380deLQulC6Bspj9GQInt3Y+WY3kO7bezgKiLQ+2nPIkv6PdL33AcBOClJf0Iiy/s=
+	t=1706099134; cv=none; b=YUi4YKLMVVaTcHEaPfRdurSxRZl1H9BKLdXyAAa226VlDKg0oahFjo3BNv9RsBlDCQTA5MHlEc7giVOgH6O7v6ZduOeXSTfeIlg5YaQ0t7xVChvC186qcwwKpDf1W7DwHaz8zlTdmZouXOIUAOBuhwEncZOpNEXA9tMtZv46ZyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706096315; c=relaxed/simple;
-	bh=4KDkITjThVdXmK+bUfn3eDscOtSdUbZiuDnwLDTI5eE=;
+	s=arc-20240116; t=1706099134; c=relaxed/simple;
+	bh=UnZpitUGmGLJma/w0itAeAkxoPNw8Ek7CM7TSMeXCaQ=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=OUDrrop254cr00EAkCS69AzzZOD99cRwmVTddmbqRI4XYdTjRE/BPp0jIsUan/43YXLy4kUho1hfK5nEQyTR8di910WU1hQIMlA7/GjNsIrB9nQYl22wzM+QrObGMFG1IP9nxH/TBD3febsP1xzUeyO3XCscAomiXRSmOPLlQd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z5fZQnAz; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=a5zZt08f5MHeWmqa1hMbm7FA5Z7F9hTPl/1yC/CUgOY9LXNgmEzn17fDbdPUjijEuneHfA9H3Dk+3LZ4/RwXIFWxCWhUiwqXG7T/gN1khtLZZ9KUqDDvUkSh+3Ov0lguJbB+0B87GT954MvozHP8UhJZzDWqq3mrDiTYHJzIl90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M7RdGYKf; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z5fZQnAz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M7RdGYKf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706096313; x=1737632313;
+  t=1706099132; x=1737635132;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=4KDkITjThVdXmK+bUfn3eDscOtSdUbZiuDnwLDTI5eE=;
-  b=Z5fZQnAzWketCuAZfYBBqmBKmDwO2T6cxkOA78eKiE+vUvVzUiewZO5i
-   KHZrd51dqv7bNgnkdGH27VYUKVMQQ3l7jtBphJ356WfWfArc+PNwNxo5b
-   w6sBvoxNGTG2X2XCgjzG7DwY/KBn/z48xTx03l23O6M+mUV0NgY2CRM0f
-   hDdC1wsbDItGs2LH2k95XQs68rVbjgVwur/PzZVk7n6nuUTSj+hkqCHzL
-   nqufUlFiBYbow+gCZGx8YVYmZo4lpD2NX90Tms1mtbQHmcbTYj0Xgwil/
-   ZvRAFCLTjcOIKlJ4cuc1/4ieHUzQdNh1jESpvX11+hUdW3zmuXVh5oKtr
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="1691926"
+  bh=UnZpitUGmGLJma/w0itAeAkxoPNw8Ek7CM7TSMeXCaQ=;
+  b=M7RdGYKf0TFCBPCeP/eHtuKHabMcesnOVJXmUtfXKoI9QonPTGg0T1A9
+   cb/B66eKN3RlzIw4G45MvCnYf5R5cZzWEdxeyAA5uHcshpjYBr1tVGeJm
+   iXAppaIdCZ/hwdn7K+fyWcOFImi1p/+HEu2Sq7QoP1MjoYyej+mStwax0
+   ZbgvfliFTXU56icP4eJsHubcpcx+qWRJTKwzsYRTGC+BPnpG8aOkLA0TB
+   X5hXPz/adrvUCrFLG1K5h1bdxpzfT2w2m6yAaQD7ByB9rUDGvJ42sbyft
+   OSgH+g6kWTD8nQv9JH/xfmfuCUfOZN8jgbknYJK+jt9vIMwLZ5Xw2buEc
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="20383683"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="1691926"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 03:38:32 -0800
+   d="scan'208";a="20383683"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 04:25:31 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="820437647"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="820437647"
+   d="scan'208";a="28378949"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.46])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 03:38:23 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 04:25:29 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 24 Jan 2024 13:38:18 +0200 (EET)
-To: Francesco Dolcini <francesco@dolcini.it>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>, linux-bluetooth@vger.kernel.org, 
-    linux-mediatek@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-arm-kernel@lists.infradead.org, greybus-dev@lists.linaro.org, 
-    linux-iio@vger.kernel.org, Netdev <netdev@vger.kernel.org>, 
-    chrome-platform@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
-    linux-serial <linux-serial@vger.kernel.org>, linux-sound@vger.kernel.org, 
-    Francesco Dolcini <francesco.dolcini@toradex.com>, 
-    Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-    Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>, 
-    Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee@kernel.org>, 
-    Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-    Eric Dumazet <edumazet@google.com>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-    Hans de Goede <hdegoede@redhat.com>, Benson Leung <bleung@chromium.org>, 
-    Tzung-Bi Shih <tzungbi@kernel.org>, Rob Herring <robh@kernel.org>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v2] treewide, serdev: change receive_buf() return type
- to size_t
-In-Reply-To: <20240122180551.34429-1-francesco@dolcini.it>
-Message-ID: <7d4309e5-fdcd-13d7-2d4a-7139779e3fdd@linux.intel.com>
-References: <20240122180551.34429-1-francesco@dolcini.it>
+Date: Wed, 24 Jan 2024 14:25:25 +0200 (EET)
+To: Suma Hegde <suma.hegde@amd.com>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    Naveen Krishna Chatradhi <nchatrad@amd.com>
+Subject: Re: [PATCH v5 11/11] platform/x86/amd/hsmp: Remove extra parenthesis
+ and add a space
+In-Reply-To: <20240106022532.1746932-11-suma.hegde@amd.com>
+Message-ID: <d66af894-e1d7-d045-0600-21386262dd41@linux.intel.com>
+References: <20240106022532.1746932-1-suma.hegde@amd.com> <20240106022532.1746932-11-suma.hegde@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-695447939-1706096298=:1372"
+Content-Type: multipart/mixed; boundary="8323328-1605513477-1706099125=:1372"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-695447939-1706096298=:1372
+--8323328-1605513477-1706099125=:1372
 Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Mon, 22 Jan 2024, Francesco Dolcini wrote:
+On Sat, 6 Jan 2024, Suma Hegde wrote:
 
-> From: Francesco Dolcini <francesco.dolcini@toradex.com>
+> Remove unnecessary parenthesis around hsmp_get_tbl_dram_base().
 >=20
-> receive_buf() is called from ttyport_receive_buf() that expects values
-> ">=3D 0" from serdev_controller_receive_buf(), change its return type fro=
-m
-> ssize_t to size_t.
+> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+> Signed-off-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
+> ---
+> Changes since v4:
+> New patch, generated after splitting the 9th patch in v4 series
 >=20
-> The need for this clean-up was noticed while fixing a warning, see
-> commit 94d053942544 ("Bluetooth: btnxpuart: fix recv_buf() return value")=
-=2E
-> Changing the callback prototype to return an unsigned seems the best way
-> to document the API and ensure that is properly used.
+>  drivers/platform/x86/amd/hsmp.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >=20
-> GNSS drivers implementation of serdev receive_buf() callback return
-> directly the return value of gnss_insert_raw(). gnss_insert_raw()
-> returns a signed int, however this is not an issue since the value
-> returned is always positive, because of the kfifo_in() implementation.
-> gnss_insert_raw() could be changed to return also an unsigned, however
-> this is not implemented here as request by the GNSS maintainer Johan
-> Hovold.
+> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/h=
+smp.c
+> index ccf7cd8f98f6..99a34b48f78f 100644
+> --- a/drivers/platform/x86/amd/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp.c
+> @@ -643,12 +643,12 @@ static int hsmp_init_metric_tbl_bin_attr(struct bin=
+_attribute **hattrs, u16 sock
+>  =09hattrs[0]=09=09=3D hattr;
+> =20
+>  =09if (plat_dev.proto_ver =3D=3D HSMP_PROTO_VER6)
+> -=09=09return (hsmp_get_tbl_dram_base(sock_ind));
+> +=09=09return hsmp_get_tbl_dram_base(sock_ind);
+>  =09else
+>  =09=09return 0;
+>  }
+> =20
+> -/* One bin sysfs for metrics table*/
+> +/* One bin sysfs for metrics table */
+>  #define NUM_HSMP_ATTRS=09=091
+> =20
+>  static int hsmp_create_attr_list(struct attribute_group *attr_grp,
 >=20
-> Suggested-by: Jiri Slaby <jirislaby@kernel.org>
-> Link: https://lore.kernel.org/all/087be419-ec6b-47ad-851a-5e1e3ea5cfcc@ke=
-rnel.org/
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #for-iio
 
-Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
 
 --=20
  i.
 
---8323328-695447939-1706096298=:1372--
+--8323328-1605513477-1706099125=:1372--
