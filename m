@@ -1,53 +1,54 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296DF18E01
-	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Jan 2024 10:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2581F1AAB1;
+	Wed, 24 Jan 2024 11:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706092131; cv=none; b=OvN91oUlIkoQnhtaZVTWC8ZBaLi+4POue4tPrPqfOVSPNnawbqD/LUhujvbNB9UqlD58ewpzrS/0zAMePjG9Z4TYR0dLHYMPO/AuAqN3E6Fkl18Tj+N55OJx2V92RlABi/UhSXT0YNjtlrzBJ5WDkPXU6FDgmE3L7lOr+4vL0w0=
+	t=1706094074; cv=none; b=YQhPi3ECj130U99Cm0/eOJezkcyKOmV5opRxtv6sxrt96uosC4wXS+/TjG3FLjoWNvhxlvFfXrgrHnr5wq4SwWcqqJCcSqvk/pnqfkiuaCOP+eZLilMv/Cx8QsI4GjG5xLDte/vWOi9z/2CX2EUgjBKU07U+g9OFLO96A3a+gAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706092131; c=relaxed/simple;
-	bh=aRTeAiQQrNS2wUG93GqPOHwzQyE7LjE8logd55KcvUQ=;
+	s=arc-20240116; t=1706094074; c=relaxed/simple;
+	bh=B2qi/Hw43qFMhMK3boYnGYHzXu79gEK/nCZdLkqlPWc=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=EcJjsk98gxulCXQwiczv8azA1xbx3v1M5y1tEwOxjJaEmlawNG/CC/rA0tQ9DLHEVCyyRsfmZr+Yv6+vd9I1gbeVd5e3o+onhRQJRvrlOr8mE3Ixnd2L8PgLYwyN/6FpA2ih61tavO/dY1D/CniUL2DmacRDCYHBGROda6//yEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FZrSi8XD; arc=none smtp.client-ip=134.134.136.65
+	 MIME-Version:Content-Type; b=lQqb6qmDOL3vH6gA7NqO7yTZm0ylahpyfg0KfGd0selTbhAezxjFAifouZnQKAO/t73/Cma/F18PIL3rkFlXRVyNOO+vrWgrPzpKBsJRGZyWtz/ADV7+8bzLvQenz7HJi/peuOCrSsdIpp2F/TLZrfmPZ2eOOG+3yV7NrwB5kMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k5rW4pNt; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FZrSi8XD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k5rW4pNt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706092129; x=1737628129;
+  t=1706094073; x=1737630073;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=aRTeAiQQrNS2wUG93GqPOHwzQyE7LjE8logd55KcvUQ=;
-  b=FZrSi8XD5NrlPqHrot+M9kjhluRXZQDJLMwT9DEvjkI1WCBSGOa8gP6J
-   IWFBXStm+PGiniX0rF8PdG2mDqJABqWCcelHOvVKHgCs2IFE7oLWSyBGg
-   YjiotPFKT0+NIhaiyYIvdoHFAbhNEcn14kCK5naS8+AcwWUzOiVtcLWIH
-   5+MHlX63vYG1PCQdg0DCgypOF0ByOsFyp7TB/84ll5vkRd84ojv59DJVA
-   FjZMBob5kWUNKFJIFTmMWEK7KukrkucduRo2V0hsjnpK3+mWBi74FPZxP
-   q7A9pvdU1eWNAr5KQg2E2XCNUPYy57C5aehtD2xrz0uIgWKRv2Dl9rY7J
+  bh=B2qi/Hw43qFMhMK3boYnGYHzXu79gEK/nCZdLkqlPWc=;
+  b=k5rW4pNtCJ3a6LkAc+ozKBACTxrUdfRAANWoGZ4+afzTMCUq85Ln7gQc
+   nb/3Vd3pebbd8IC4fzTNwGsCZyEfVrfUrc3NQHIaUSLzZLM7NSgg1iZjj
+   Uc0Ei3vyMUnC6LIGQgkE5VFyWRHSpQI1gsfgl5udLFcWb4fymHIQ/3zQs
+   6ITmUwABoT9PUVmwBVpKE/p082Gb1uXwcXibyNDJv+4P8k6DT7xGRoMPY
+   e4qdnK1cdIiOJJGfrOtzc/pdsZbfLEqRnOD2r65VafbcASJ6UaKWaDGLM
+   01QnsLdMn8dN2hofSmak/JoAnE0oqI42LrKTpd3J4HcE+fYKRwkIO5B/E
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="405554781"
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="15334630"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="405554781"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 02:28:48 -0800
+   d="scan'208";a="15334630"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 03:01:12 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="1880150"
+   d="scan'208";a="1937235"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.46])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 02:28:46 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 03:01:09 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 24 Jan 2024 12:28:41 +0200 (EET)
-To: Alexis Belmonte <alexbelm48@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    putr4.s@gmail.com
-Subject: Re: [PATCH 1/2] platform/x86: hp-wmi: Tidy up module source code
-In-Reply-To: <ZZchYfQcg0fPBJZy@alexis-pc>
-Message-ID: <6c27cef8-d301-0634-10d4-9fac097e6e97@linux.intel.com>
-References: <ZZchYfQcg0fPBJZy@alexis-pc>
+Date: Wed, 24 Jan 2024 13:01:05 +0200 (EET)
+To: Li Zhijian <lizhijian@fujitsu.com>
+cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+    Vadim Pasternak <vadimp@nvidia.com>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 14/42] drivers/platform/mellanox: Convert snprintf to
+ sysfs_emit
+In-Reply-To: <20240116045151.3940401-12-lizhijian@fujitsu.com>
+Message-ID: <1ddc2cc6-1f9c-09c0-acf6-93fa39a10540@linux.intel.com>
+References: <20240116041129.3937800-1-lizhijian@fujitsu.com> <20240116045151.3940401-1-lizhijian@fujitsu.com> <20240116045151.3940401-12-lizhijian@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -56,32 +57,31 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 4 Jan 2024, Alexis Belmonte wrote:
+On Tue, 16 Jan 2024, Li Zhijian wrote:
 
-> This commit performs four things:
+> Per filesystems/sysfs.rst, show() should only use sysfs_emit()
+> or sysfs_emit_at() when formatting the value to be returned to user space.
 > 
->    - fix up the GUID string inconsistency (lower case 'e') from the
->      WMI module alias declaration/macro definition
+> coccinelle complains that there are still a couple of functions that use
+> snprintf(). Convert them to sysfs_emit().
 > 
->    - separate GUID macros from the embedded controller offset macros
+> > ./drivers/platform/mellanox/mlxbf-bootctl.c:466:8-16: WARNING: please use sysfs_emit
+> > ./drivers/platform/mellanox/mlxbf-bootctl.c:584:8-16: WARNING: please use sysfs_emit
+> > ./drivers/platform/mellanox/mlxbf-bootctl.c:635:8-16: WARNING: please use sysfs_emit
+> > ./drivers/platform/mellanox/mlxbf-bootctl.c:686:8-16: WARNING: please use sysfs_emit
+> > ./drivers/platform/mellanox/mlxbf-bootctl.c:737:8-16: WARNING: please use sysfs_emit
+> > ./drivers/platform/mellanox/mlxbf-bootctl.c:788:8-16: WARNING: please use sysfs_emit
+> > ./drivers/platform/mellanox/mlxbf-bootctl.c:839:8-16: WARNING: please use sysfs_emit
 > 
->    - rename the description of the module to better represent what it
->      actually achieves as a whole
+> No functional change intended
 > 
->    - add a space right before the '*' pointer qualifier to match the
->      other array declarations
-> 
-> This also prepares the terrain for integrating support work for boards
-> identified as '8BAD', which corresponds to HP's Omen 17 ck2xxx models.
-> 
-> Signed-off-by: Alexis Belmonte <alexbelm48@gmail.com>
+> CC: Hans de Goede <hdegoede@redhat.com>
+> CC: ilpo.jarvinen@linux.intel.com
+> CC: Vadim Pasternak <vadimp@nvidia.com>
+> CC: platform-driver-x86@vger.kernel.org
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 
-Hi,
-
-Thanks for updating but could you please resubmit these properly with v2 
-in the subject so that it is easier to locate if somebody has to look it 
-up from the archives many years from now.
+Applied to pdx86 review-ilpo branch.
 
 -- 
  i.
-
