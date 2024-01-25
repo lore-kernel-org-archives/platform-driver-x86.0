@@ -1,167 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40C617C6D;
-	Thu, 25 Jan 2024 08:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B3C2C68A;
+	Thu, 25 Jan 2024 10:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706171008; cv=none; b=ppnLRAFk4grEFFtwLet8zNJEuvCHIp5OWB2f348gjDpdDQp+I5ABpbDAOaRq2F5JZ2P9LttRrn8IEFlAvSx+9KL5d9+IKGhzMMs51eBb6zM47RR+izRoHj0Jx/KloOwDk5nvtNNhyVRjobAEA+BsdIgfyiiVHp1gm3/vZyB2PTM=
+	t=1706179353; cv=none; b=nw81h/hgHNL90AU6RqcHY4DE3qbLeLM72nMH5i0q3G2ydnHTAcHxPT6fY0akjC9jkrQ/fthYBs/Yd6MZ2bitnzhAl60LnKnhsqvtFbIPFmcnVtAZZtuBD++8u4EvDrquNRpv0tcc8cb3tGj6gi5uD+zX+sQRNrn9UndRwklmnzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706171008; c=relaxed/simple;
-	bh=DgRKwx7erCsCqZ7Amarz6wtLdWuV8+Tw6mXgX2EWNu4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gy8/gsJCuqT01zPJEmh96/Dx9zC8Fnh4mK2AfBh4jZK84z5QJcuP8JUEOxWXVAQ1LRTojDJUeN0mdbWt7dFpQ3YPzbIPvuYE2UYyLBBS5Fvr2jdCeBC3rQkEV3LyXXt6xDG3CxvnReusmAc8RS4sO6oqoaD77PMsSlzshf56PV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jhNnIw+V; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706179353; c=relaxed/simple;
+	bh=1/AQZg5NNw9HG13KiYI6HfNvwqZ4xcS6GaNad1Jmb/I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sObF5GHc+SYeKQleyaV+2r+GlSNgaqOv9UMB/CT6fvKecMkzEoGKYSpK3BB2T42hIfWrQEh1nGO5FatnE1Qjb5kV1i6swH9LG/iRCkV/EP8W41yg4hqtQo39QSYzSV8SMIStHSNOfCKySUcXcFAsAskPo//+zaJOP58AdfPIZC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+WC6q/p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jhNnIw+V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706171007; x=1737707007;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=DgRKwx7erCsCqZ7Amarz6wtLdWuV8+Tw6mXgX2EWNu4=;
-  b=jhNnIw+V8OJ5vI/Tp39R6RF+o/PWUDUWlUA1IA11E4QfxgZcB/tth/Ki
-   bq5aoxotzgAgP6SzarSypt1+bczH4eXvIlf0+m+VRIR8wlug/YOaCpUK/
-   RE7m8rHDdAMc9OVKN+89rOLsYAoNYZRqnOOF7wsEpBMjnhfdEqvUvElex
-   tHJDKLPMJxF8W5Qn5RgVr8g29IIOSg/jyGTapgPe7duW2dt411cHyGFOf
-   TZv9ARe8Hvlc7CVP4uQYD8GxO608lIzmVGj0mRPwCRufgmHmMrbAg7CPE
-   t/Gil2v4/IfPDWbgEn2a+ItFDHnYDr11uyCGFZB6LomRy2ja2/RZ0a5W6
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="1987191"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="1987191"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 00:23:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="876975935"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="876975935"
-Received: from araj-ucode.jf.intel.com ([10.23.0.11])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 00:23:24 -0800
-From: Ashok Raj <ashok.raj@intel.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	markgross@kernel.org
-Cc: Jithu Joseph <jithu.joseph@intel.com>,
-	rostedt@goodmis.org,
-	ashok.raj@intel.com,
-	tony.luck@intel.com,
-	LKML <linux-kernel@vger.kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	patches@lists.linux.dev,
-	pengfei.xu@intel.com
-Subject: [PATCH 5/5] platform/x86/intel/ifs: Add an entry rendezvous for SAF
-Date: Thu, 25 Jan 2024 00:22:54 -0800
-Message-Id: <20240125082254.424859-6-ashok.raj@intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240125082254.424859-1-ashok.raj@intel.com>
-References: <20240125082254.424859-1-ashok.raj@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+WC6q/p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25A8EC433C7;
+	Thu, 25 Jan 2024 10:42:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706179353;
+	bh=1/AQZg5NNw9HG13KiYI6HfNvwqZ4xcS6GaNad1Jmb/I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z+WC6q/pwbwzH6zhMdWS153JB6VUWqmZcSDN5fViUQMl+zNnFkr+L5iCIZC4Lmv2j
+	 bS4xt+Jc+fIKPiuc/kJRIJ6TAeALxfXs7+VoI8ancJ7e9QSMZf9u8wlf8juOT449Gm
+	 dGuxdVykXP+YbuK9da+3YP4AGDYrHkdmnPt65LdsuIx8gGLD4hTB/s1rjqbkVCKiUD
+	 oli8l8eXT1ku4I2e/jROQgRMNh1cOo8JM8FSB0c1qy9mR6qP4bCyS6fEZ4sW83WE4H
+	 dvME2O/MBNNvzFmFBAQf8Pqk3H35BFWj4WMW1H3tXE6hY7SpsHA0xe4mZ94kyccwIt
+	 HEVRnGIIo3ahQ==
+Date: Thu, 25 Jan 2024 10:42:23 +0000
+From: Lee Jones <lee@kernel.org>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, linux-bluetooth@vger.kernel.org,
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, greybus-dev@lists.linaro.org,
+	linux-iio@vger.kernel.org, netdev@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>, Rob Herring <robh@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2] treewide, serdev: change receive_buf() return type to
+ size_t
+Message-ID: <20240125104223.GD74950@google.com>
+References: <20240122180551.34429-1-francesco@dolcini.it>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240122180551.34429-1-francesco@dolcini.it>
 
-The activation for SAF includes a parameter to make microcode wait for both
-threads to join. It's preferable to perform an entry rendezvous before
-the activation to ensure that they start the `wrmsr` close enough to each
-other. In some cases it has been observed that one of the threads might be
-just a bit late to arrive. An entry rendezvous reduces the likelihood of
-these cases occurring.
+On Mon, 22 Jan 2024, Francesco Dolcini wrote:
 
-Add an entry rendezvous to ensure the activation on both threads happen
-close enough to each other.
+> From: Francesco Dolcini <francesco.dolcini@toradex.com>
+> 
+> receive_buf() is called from ttyport_receive_buf() that expects values
+> ">= 0" from serdev_controller_receive_buf(), change its return type from
+> ssize_t to size_t.
+> 
+> The need for this clean-up was noticed while fixing a warning, see
+> commit 94d053942544 ("Bluetooth: btnxpuart: fix recv_buf() return value").
+> Changing the callback prototype to return an unsigned seems the best way
+> to document the API and ensure that is properly used.
+> 
+> GNSS drivers implementation of serdev receive_buf() callback return
+> directly the return value of gnss_insert_raw(). gnss_insert_raw()
+> returns a signed int, however this is not an issue since the value
+> returned is always positive, because of the kfifo_in() implementation.
+> gnss_insert_raw() could be changed to return also an unsigned, however
+> this is not implemented here as request by the GNSS maintainer Johan
+> Hovold.
+> 
+> Suggested-by: Jiri Slaby <jirislaby@kernel.org>
+> Link: https://lore.kernel.org/all/087be419-ec6b-47ad-851a-5e1e3ea5cfcc@kernel.org/
+> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #for-iio
+> ---
+> v1:
+>  - https://lore.kernel.org/all/20231214170146.641783-1-francesco@dolcini.it/
+> v2:
+>  - rebased on 6.8-rc1
+>  - add acked-by Jonathan
+>  - do not change gnss_insert_raw()
+>  - do not change the code style of the gnss code
+>  - commit message improvements, explain the reasons for doing only minimal
+>    changes on the GNSS part
+> ---
+>  drivers/bluetooth/btmtkuart.c              |  4 ++--
+>  drivers/bluetooth/btnxpuart.c              |  4 ++--
+>  drivers/bluetooth/hci_serdev.c             |  4 ++--
+>  drivers/gnss/serial.c                      |  2 +-
+>  drivers/gnss/sirf.c                        |  2 +-
+>  drivers/greybus/gb-beagleplay.c            |  6 +++---
+>  drivers/iio/chemical/pms7003.c             |  4 ++--
+>  drivers/iio/chemical/scd30_serial.c        |  4 ++--
+>  drivers/iio/chemical/sps30_serial.c        |  4 ++--
+>  drivers/iio/imu/bno055/bno055_ser_core.c   |  4 ++--
 
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
----
- drivers/platform/x86/intel/ifs/runtest.c | 48 +++++++++++++-----------
- 1 file changed, 26 insertions(+), 22 deletions(-)
+>  drivers/mfd/rave-sp.c                      |  4 ++--
 
-diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
-index e3307dd8e3c4..95b4b71fab53 100644
---- a/drivers/platform/x86/intel/ifs/runtest.c
-+++ b/drivers/platform/x86/intel/ifs/runtest.c
-@@ -140,6 +140,29 @@ static bool can_restart(union ifs_status status)
- 	return false;
- }
- 
-+#define SPINUNIT 100 /* 100 nsec */
-+static atomic_t array_cpus_in;
-+static atomic_t scan_cpus_in;
-+
-+/*
-+ * Simplified cpu sibling rendezvous loop based on microcode loader __wait_for_cpus()
-+ */
-+static void wait_for_sibling_cpu(atomic_t *t, long long timeout)
-+{
-+	int cpu = smp_processor_id();
-+	const struct cpumask *smt_mask = cpu_smt_mask(cpu);
-+	int all_cpus = cpumask_weight(smt_mask);
-+
-+	atomic_inc(t);
-+	while (atomic_read(t) < all_cpus) {
-+		if (timeout < SPINUNIT)
-+			return;
-+		ndelay(SPINUNIT);
-+		timeout -= SPINUNIT;
-+		touch_nmi_watchdog();
-+	}
-+}
-+
- /*
-  * Execute the scan. Called "simultaneously" on all threads of a core
-  * at high priority using the stop_cpus mechanism.
-@@ -165,6 +188,8 @@ static int doscan(void *data)
- 	/* Only the first logical CPU on a core reports result */
- 	first = cpumask_first(cpu_smt_mask(cpu));
- 
-+	wait_for_sibling_cpu(&scan_cpus_in, NSEC_PER_SEC);
-+
- 	/*
- 	 * This WRMSR will wait for other HT threads to also write
- 	 * to this MSR (at most for activate.delay cycles). Then it
-@@ -230,6 +255,7 @@ static void ifs_test_core(int cpu, struct device *dev)
- 		}
- 
- 		params.activate = &activate;
-+		atomic_set(&scan_cpus_in, 0);
- 		stop_core_cpuslocked(cpu, doscan, &params);
- 
- 		status = params.status;
-@@ -270,28 +296,6 @@ static void ifs_test_core(int cpu, struct device *dev)
- 	}
- }
- 
--#define SPINUNIT 100 /* 100 nsec */
--static atomic_t array_cpus_in;
--
--/*
-- * Simplified cpu sibling rendezvous loop based on microcode loader __wait_for_cpus()
-- */
--static void wait_for_sibling_cpu(atomic_t *t, long long timeout)
--{
--	int cpu = smp_processor_id();
--	const struct cpumask *smt_mask = cpu_smt_mask(cpu);
--	int all_cpus = cpumask_weight(smt_mask);
--
--	atomic_inc(t);
--	while (atomic_read(t) < all_cpus) {
--		if (timeout < SPINUNIT)
--			return;
--		ndelay(SPINUNIT);
--		timeout -= SPINUNIT;
--		touch_nmi_watchdog();
--	}
--}
--
- static int do_array_test(void *data)
- {
- 	union ifs_array *command = data;
+Acked-by: Lee Jones <lee@kernel.org>
+
+>  drivers/net/ethernet/qualcomm/qca_uart.c   |  2 +-
+>  drivers/nfc/pn533/uart.c                   |  4 ++--
+>  drivers/nfc/s3fwrn5/uart.c                 |  4 ++--
+>  drivers/platform/chrome/cros_ec_uart.c     |  4 ++--
+>  drivers/platform/surface/aggregator/core.c |  4 ++--
+>  drivers/tty/serdev/serdev-ttyport.c        | 10 ++++------
+>  include/linux/serdev.h                     |  8 ++++----
+>  sound/drivers/serial-generic.c             |  4 ++--
+>  19 files changed, 40 insertions(+), 42 deletions(-)
+
 -- 
-2.39.2
-
+Lee Jones [李琼斯]
