@@ -1,130 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B3C2C68A;
-	Thu, 25 Jan 2024 10:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8423F8CA
+	for <platform-driver-x86@vger.kernel.org>; Thu, 25 Jan 2024 12:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706179353; cv=none; b=nw81h/hgHNL90AU6RqcHY4DE3qbLeLM72nMH5i0q3G2ydnHTAcHxPT6fY0akjC9jkrQ/fthYBs/Yd6MZ2bitnzhAl60LnKnhsqvtFbIPFmcnVtAZZtuBD++8u4EvDrquNRpv0tcc8cb3tGj6gi5uD+zX+sQRNrn9UndRwklmnzQ=
+	t=1706184662; cv=none; b=gbfs7pX2orJwpBSL+228s2stx70dz6vE19+lLN3aOudlbp5IsnfI1hWHj54cVL8zZM93BVt/Ert1veyfq1wh4JKmb9+o0NZmOT6IrdkBoyfKx9swv27/jOjPvv3rYpJOnRwTkzTt8bDZ/8fUxZSxovhFeHkD75ehV1gt50aYoNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706179353; c=relaxed/simple;
-	bh=1/AQZg5NNw9HG13KiYI6HfNvwqZ4xcS6GaNad1Jmb/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sObF5GHc+SYeKQleyaV+2r+GlSNgaqOv9UMB/CT6fvKecMkzEoGKYSpK3BB2T42hIfWrQEh1nGO5FatnE1Qjb5kV1i6swH9LG/iRCkV/EP8W41yg4hqtQo39QSYzSV8SMIStHSNOfCKySUcXcFAsAskPo//+zaJOP58AdfPIZC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+WC6q/p; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+WC6q/p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25A8EC433C7;
-	Thu, 25 Jan 2024 10:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706179353;
-	bh=1/AQZg5NNw9HG13KiYI6HfNvwqZ4xcS6GaNad1Jmb/I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z+WC6q/pwbwzH6zhMdWS153JB6VUWqmZcSDN5fViUQMl+zNnFkr+L5iCIZC4Lmv2j
-	 bS4xt+Jc+fIKPiuc/kJRIJ6TAeALxfXs7+VoI8ancJ7e9QSMZf9u8wlf8juOT449Gm
-	 dGuxdVykXP+YbuK9da+3YP4AGDYrHkdmnPt65LdsuIx8gGLD4hTB/s1rjqbkVCKiUD
-	 oli8l8eXT1ku4I2e/jROQgRMNh1cOo8JM8FSB0c1qy9mR6qP4bCyS6fEZ4sW83WE4H
-	 dvME2O/MBNNvzFmFBAQf8Pqk3H35BFWj4WMW1H3tXE6hY7SpsHA0xe4mZ94kyccwIt
-	 HEVRnGIIo3ahQ==
-Date: Thu, 25 Jan 2024 10:42:23 +0000
-From: Lee Jones <lee@kernel.org>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-bluetooth@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, greybus-dev@lists.linaro.org,
-	linux-iio@vger.kernel.org, netdev@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>, Rob Herring <robh@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v2] treewide, serdev: change receive_buf() return type to
- size_t
-Message-ID: <20240125104223.GD74950@google.com>
-References: <20240122180551.34429-1-francesco@dolcini.it>
+	s=arc-20240116; t=1706184662; c=relaxed/simple;
+	bh=KXMRZnPMpyetSzcEGj7wsuZDM+TsE68XGGw5zlR4WEk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jPsWk1Ep/BXZN4l8+OhBWsBya1VWemw/iu0XOFIuEb3B784JUBIZPxRw0EWAaU9UQLfaEcIGIqXGbok0Mro4L17UR8WvB4Rz7ukKECIat7pscZJa2+OSH4IiKtbc5nd53BibMUdsR4tT/648xJWPiRccQoP1bmYI0n5mbx2C/60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rSyZL-0004QC-6K; Thu, 25 Jan 2024 13:10:55 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rSyZJ-002HTF-S2; Thu, 25 Jan 2024 13:10:53 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rSyZJ-007n2q-2X;
+	Thu, 25 Jan 2024 13:10:53 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pwm@vger.kernel.org
+Cc: kernel@pengutronix.de,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v5 070/111] pwm: lpss-*: Make use of devm_pwmchip_alloc() function
+Date: Thu, 25 Jan 2024 13:09:32 +0100
+Message-ID:  <bc53a67d67a2e102406f5378f159130c95fc649a.1706182805.git.u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
+References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5608; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=KXMRZnPMpyetSzcEGj7wsuZDM+TsE68XGGw5zlR4WEk=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk+MMiRVJrJctVItHQ5yfCPCroBdTQpG8/hfK SIqx7ehdyqJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPjAAKCRCPgPtYfRL+ Tm/bCACMW1HA4Eefm1nFUk4Lw7EwD7QMLUksossyYUR4FYia99hW9yxIj5rvz2Rq4TBoJYW3SwT eVXzaR+k666ZoqvZcih2aGOCQxlTHB1hf6G6Ptvg27thxRxvfFMkD4jPTm0KuBVNLbi4+pGg76S G1QJ4fmPI8cxlFlQ/0IiwP+thyv4GH5S7cLwg2sOOY2rB+MNy/NLiJ78JL6z4g9t1FINewmYmEy s+qy6Zosh78xdVhoD0IuEE4FrhwnIynM1aEZ8Y4vajmDPp+N1w9QneLX3PciWxTynWvw3Pgt8os 0OA1mf3u2RLfOWR03xLNAFxSciQdsk1s9kPUUJfLi8JVvN1b
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240122180551.34429-1-francesco@dolcini.it>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 
-On Mon, 22 Jan 2024, Francesco Dolcini wrote:
+This prepares the pwm-lpc drivers to further changes of the pwm core
+outlined in the commit introducing devm_pwmchip_alloc(). There is no
+intended semantical change and the driver should behave as before.
 
-> From: Francesco Dolcini <francesco.dolcini@toradex.com>
-> 
-> receive_buf() is called from ttyport_receive_buf() that expects values
-> ">= 0" from serdev_controller_receive_buf(), change its return type from
-> ssize_t to size_t.
-> 
-> The need for this clean-up was noticed while fixing a warning, see
-> commit 94d053942544 ("Bluetooth: btnxpuart: fix recv_buf() return value").
-> Changing the callback prototype to return an unsigned seems the best way
-> to document the API and ensure that is properly used.
-> 
-> GNSS drivers implementation of serdev receive_buf() callback return
-> directly the return value of gnss_insert_raw(). gnss_insert_raw()
-> returns a signed int, however this is not an issue since the value
-> returned is always positive, because of the kfifo_in() implementation.
-> gnss_insert_raw() could be changed to return also an unsigned, however
-> this is not implemented here as request by the GNSS maintainer Johan
-> Hovold.
-> 
-> Suggested-by: Jiri Slaby <jirislaby@kernel.org>
-> Link: https://lore.kernel.org/all/087be419-ec6b-47ad-851a-5e1e3ea5cfcc@kernel.org/
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #for-iio
-> ---
-> v1:
->  - https://lore.kernel.org/all/20231214170146.641783-1-francesco@dolcini.it/
-> v2:
->  - rebased on 6.8-rc1
->  - add acked-by Jonathan
->  - do not change gnss_insert_raw()
->  - do not change the code style of the gnss code
->  - commit message improvements, explain the reasons for doing only minimal
->    changes on the GNSS part
-> ---
->  drivers/bluetooth/btmtkuart.c              |  4 ++--
->  drivers/bluetooth/btnxpuart.c              |  4 ++--
->  drivers/bluetooth/hci_serdev.c             |  4 ++--
->  drivers/gnss/serial.c                      |  2 +-
->  drivers/gnss/sirf.c                        |  2 +-
->  drivers/greybus/gb-beagleplay.c            |  6 +++---
->  drivers/iio/chemical/pms7003.c             |  4 ++--
->  drivers/iio/chemical/scd30_serial.c        |  4 ++--
->  drivers/iio/chemical/sps30_serial.c        |  4 ++--
->  drivers/iio/imu/bno055/bno055_ser_core.c   |  4 ++--
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/pwm-lpss-pci.c                 | 10 +++++-----
+ drivers/pwm/pwm-lpss-platform.c            | 10 +++++-----
+ drivers/pwm/pwm-lpss.c                     | 20 ++++++++++----------
+ drivers/pwm/pwm-lpss.h                     |  1 -
+ include/linux/platform_data/x86/pwm-lpss.h |  4 ++--
+ 5 files changed, 22 insertions(+), 23 deletions(-)
 
->  drivers/mfd/rave-sp.c                      |  4 ++--
-
-Acked-by: Lee Jones <lee@kernel.org>
-
->  drivers/net/ethernet/qualcomm/qca_uart.c   |  2 +-
->  drivers/nfc/pn533/uart.c                   |  4 ++--
->  drivers/nfc/s3fwrn5/uart.c                 |  4 ++--
->  drivers/platform/chrome/cros_ec_uart.c     |  4 ++--
->  drivers/platform/surface/aggregator/core.c |  4 ++--
->  drivers/tty/serdev/serdev-ttyport.c        | 10 ++++------
->  include/linux/serdev.h                     |  8 ++++----
->  sound/drivers/serial-generic.c             |  4 ++--
->  19 files changed, 40 insertions(+), 42 deletions(-)
-
+diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
+index b4134bee2863..abaeac0e3226 100644
+--- a/drivers/pwm/pwm-lpss-pci.c
++++ b/drivers/pwm/pwm-lpss-pci.c
+@@ -18,7 +18,7 @@ static int pwm_lpss_probe_pci(struct pci_dev *pdev,
+ 			      const struct pci_device_id *id)
+ {
+ 	const struct pwm_lpss_boardinfo *info;
+-	struct pwm_lpss_chip *lpwm;
++	struct pwm_chip *chip;
+ 	int err;
+ 
+ 	err = pcim_enable_device(pdev);
+@@ -30,11 +30,11 @@ static int pwm_lpss_probe_pci(struct pci_dev *pdev,
+ 		return err;
+ 
+ 	info = (struct pwm_lpss_boardinfo *)id->driver_data;
+-	lpwm = devm_pwm_lpss_probe(&pdev->dev, pcim_iomap_table(pdev)[0], info);
+-	if (IS_ERR(lpwm))
+-		return PTR_ERR(lpwm);
++	chip = devm_pwm_lpss_probe(&pdev->dev, pcim_iomap_table(pdev)[0], info);
++	if (IS_ERR(chip))
++		return PTR_ERR(chip);
+ 
+-	pci_set_drvdata(pdev, lpwm);
++	pci_set_drvdata(pdev, chip);
+ 
+ 	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_allow(&pdev->dev);
+diff --git a/drivers/pwm/pwm-lpss-platform.c b/drivers/pwm/pwm-lpss-platform.c
+index 319809aac2c4..90aeafa02a3b 100644
+--- a/drivers/pwm/pwm-lpss-platform.c
++++ b/drivers/pwm/pwm-lpss-platform.c
+@@ -20,7 +20,7 @@
+ static int pwm_lpss_probe_platform(struct platform_device *pdev)
+ {
+ 	const struct pwm_lpss_boardinfo *info;
+-	struct pwm_lpss_chip *lpwm;
++	struct pwm_chip *chip;
+ 	void __iomem *base;
+ 
+ 	info = device_get_match_data(&pdev->dev);
+@@ -31,11 +31,11 @@ static int pwm_lpss_probe_platform(struct platform_device *pdev)
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
+-	lpwm = devm_pwm_lpss_probe(&pdev->dev, base, info);
+-	if (IS_ERR(lpwm))
+-		return PTR_ERR(lpwm);
++	chip = devm_pwm_lpss_probe(&pdev->dev, base, info);
++	if (IS_ERR(chip))
++		return PTR_ERR(chip);
+ 
+-	platform_set_drvdata(pdev, lpwm);
++	platform_set_drvdata(pdev, chip);
+ 
+ 	/*
+ 	 * On Cherry Trail devices the GFX0._PS0 AML checks if the controller
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index 394c768f5a5f..b79fd3405e15 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -68,7 +68,7 @@ EXPORT_SYMBOL_GPL(pwm_lpss_tng_info);
+ 
+ static inline struct pwm_lpss_chip *to_lpwm(struct pwm_chip *chip)
+ {
+-	return container_of(chip, struct pwm_lpss_chip, chip);
++	return pwmchip_get_drvdata(chip);
+ }
+ 
+ static inline u32 pwm_lpss_read(const struct pwm_device *pwm)
+@@ -245,9 +245,10 @@ static const struct pwm_ops pwm_lpss_ops = {
+ 	.get_state = pwm_lpss_get_state,
+ };
+ 
+-struct pwm_lpss_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base,
++struct pwm_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base,
+ 					  const struct pwm_lpss_boardinfo *info)
+ {
++	struct pwm_chip *chip;
+ 	struct pwm_lpss_chip *lpwm;
+ 	unsigned long c;
+ 	int i, ret;
+@@ -256,9 +257,10 @@ struct pwm_lpss_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base
+ 	if (WARN_ON(info->npwm > LPSS_MAX_PWMS))
+ 		return ERR_PTR(-ENODEV);
+ 
+-	lpwm = devm_kzalloc(dev, sizeof(*lpwm), GFP_KERNEL);
+-	if (!lpwm)
++	chip = devm_pwmchip_alloc(dev, info->npwm, sizeof(*lpwm));
++	if (!chip)
+ 		return ERR_PTR(-ENOMEM);
++	lpwm = to_lpwm(chip);
+ 
+ 	lpwm->regs = base;
+ 	lpwm->info = info;
+@@ -267,23 +269,21 @@ struct pwm_lpss_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base
+ 	if (!c)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	lpwm->chip.dev = dev;
+-	lpwm->chip.ops = &pwm_lpss_ops;
+-	lpwm->chip.npwm = info->npwm;
++	chip->ops = &pwm_lpss_ops;
+ 
+-	ret = devm_pwmchip_add(dev, &lpwm->chip);
++	ret = devm_pwmchip_add(dev, chip);
+ 	if (ret) {
+ 		dev_err(dev, "failed to add PWM chip: %d\n", ret);
+ 		return ERR_PTR(ret);
+ 	}
+ 
+ 	for (i = 0; i < lpwm->info->npwm; i++) {
+-		ctrl = pwm_lpss_read(&lpwm->chip.pwms[i]);
++		ctrl = pwm_lpss_read(&chip->pwms[i]);
+ 		if (ctrl & PWM_ENABLE)
+ 			pm_runtime_get(dev);
+ 	}
+ 
+-	return lpwm;
++	return chip;
+ }
+ EXPORT_SYMBOL_GPL(devm_pwm_lpss_probe);
+ 
+diff --git a/drivers/pwm/pwm-lpss.h b/drivers/pwm/pwm-lpss.h
+index bf841250385f..b5267ab5193b 100644
+--- a/drivers/pwm/pwm-lpss.h
++++ b/drivers/pwm/pwm-lpss.h
+@@ -18,7 +18,6 @@
+ #define LPSS_MAX_PWMS			4
+ 
+ struct pwm_lpss_chip {
+-	struct pwm_chip chip;
+ 	void __iomem *regs;
+ 	const struct pwm_lpss_boardinfo *info;
+ };
+diff --git a/include/linux/platform_data/x86/pwm-lpss.h b/include/linux/platform_data/x86/pwm-lpss.h
+index c852fe24fe2a..752c06b47cc8 100644
+--- a/include/linux/platform_data/x86/pwm-lpss.h
++++ b/include/linux/platform_data/x86/pwm-lpss.h
+@@ -27,7 +27,7 @@ struct pwm_lpss_boardinfo {
+ 	bool other_devices_aml_touches_pwm_regs;
+ };
+ 
+-struct pwm_lpss_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base,
+-					  const struct pwm_lpss_boardinfo *info);
++struct pwm_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base,
++				     const struct pwm_lpss_boardinfo *info);
+ 
+ #endif	/* __PLATFORM_DATA_X86_PWM_LPSS_H */
 -- 
-Lee Jones [李琼斯]
+2.43.0
+
