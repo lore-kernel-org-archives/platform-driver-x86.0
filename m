@@ -1,175 +1,247 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC75129A9C;
-	Thu, 25 Jan 2024 16:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706199997; cv=fail; b=ApMitXeBCZt/v7ZlWcMdCmf/3UP8Pp4mmR/SXTGZCTl5plDXM7NDGaBBkC9MgrA8SOWMoor0RS4wVRDA1834aM82LkVyhysiPiEdUoKfNNtFMyKBliXnmEZ+eP8haRy8nCz3h5prABnKoeq4PGVkxnepfy3SJSGYh0nPltGBJl8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706199997; c=relaxed/simple;
-	bh=QFjOFSC0vp2Ff0zDkP5YNEAMkVjrSjlACMSNU+6F25o=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=oowuilPv7H8pvwNnUBGtA4gIVRT9ySTHXwOkoTMDPg+0Wrk9TxCNc4JugZv6W59XnqiKezxx9nDpBbvaYGdOkvV9CXF76lg1UliEd/p7zz9SM2osLg8Ez2502wN2cwHvwk89YJSL723M8jy17J57GpczPEL0LwbZ4wqVzgBMHd8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oKo4oQKV; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8096257A;
+	Thu, 25 Jan 2024 20:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706216001; cv=none; b=MEzfp8euc9EGxMmLuCm0Db9kclJEeVyz4mJv7kXyl1hJYQzeCAMwiI56cQaaHizZOphZkxV2waTzUEd7cAxRwOOALyT632LENuPAqBeHiYbtCfuS73s2Fw6VZIZfJJF+sQtfyx6aAx+Wlfy3Q44h7WYaLuu5YHnGWJmcYu0RP4w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706216001; c=relaxed/simple;
+	bh=cfTQUlvW5xfRrYsLXxFIzJRcjCjeqlbNfUjbQeDzhM4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=qgMgvh7425NXu80TuDbjPfXwEqBMfDicP5wYQfbWYjP/PBxAgBdK3KCfUho9G9GRptQVXWOGzj/r5q79Qn4uEYszxb8V0+ocMkAKoc6CvhW5QqUPC4Fhw/ab5CEQs3MR7neyvIa0179fbBUjk3ECQuozaJIzjINb72RHtgnFvNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=CcsQiv2C; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oKo4oQKV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706199995; x=1737735995;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=QFjOFSC0vp2Ff0zDkP5YNEAMkVjrSjlACMSNU+6F25o=;
-  b=oKo4oQKVkov3hTHwalvbY4WbO69MmXhpAPhW/iS9FF2PsJUu2KK4/7aj
-   unzSWNtl9jXkK/pUFUkThyAdzRT+q+GhBYD2AkTnOhaXxmD9UE7mqWmaZ
-   0nA70HYqT3NTg5dFobKpLdBKElSrU+zO8oGKxIt9EdPyIzSpdsCU5MN0J
-   7PbH/4+9aNGeyAYq6APkW3wDRHfJs/EHMD0BKNwrTiciyuAK6eG5hZ4TA
-   l+90vXn9sqLyB7AXVriJ03T6B6ErLN+O3x4u9i/ZfI44a0H/oAPk/PdH+
-   ivC2hlk4f13vbUX4keiPoF5iY313xLyC2rlkavDIQoYpwSfXeeKdmPt/g
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="8966888"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="8966888"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 08:26:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="1117994901"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="1117994901"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Jan 2024 08:26:24 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 25 Jan 2024 08:26:23 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 25 Jan 2024 08:26:23 -0800
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.40) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 25 Jan 2024 08:26:23 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Qyjibt0WT497qAnDH4lSOfOQxPMtqzcOgQGRyhTY1wGNznLrL43FiXgs+IOpnaiIrRx439nOcI5ZaP0lYgn/aUo98SL1/YruhIDO0AoatJ1rER+PU9j66gBy+XsConAP/3z26KLNiZIG0NTBGRC08ogxrq86da8eiG9NKhG2qv03RGm5oYn7EWJFmltoSL788oZGQ9L8L19QJxqCdSQhnHjSvyYKBRbnv78Rek0XSnb2I3xOYCMgf4g832VMO/dQGUWrFWrDxhK6bzvE/miUTXPPVDJwHRqSSz/cG1Ch5JVXc2eL7SnbYuXudzAYaIv0u6N9dmvwOlbLYUTUAlyTQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3FPAf4oAptTsHurMu84oNnRVo2errBlkaQASL14sWNo=;
- b=KMwvMtCUINiKRZl4AmvEc+0gygH9jhEstrGqs3Mc0m1XRJqMW+ajbflTkE5GQ0KhRrfTB6hwqABcfwg7/Z0/ZhWGGbOcphgfGMzifFRoA1ojklze7Jv23wgrSTEttO1rwzi/QU/WPp1otmLrKAQWE+FCAdcCCX1/Kz8ZdwBf4c1u1ImmsBLjEhrU0giDa0wk+DFsuIYDW3sDCNbAb/g3UnXTaPZxB8t0NTQnGVidyeM+BBqRIGuXxTmLQ8IIKgH9gPOrJXjZBK3bNSNnowWe44ALl1GSpEKkBR8egaFmmdTJO92M2UExgko58XocsQjw0QPnGZE/qSU3LZ57w48yeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ1PR11MB6201.namprd11.prod.outlook.com (2603:10b6:a03:45c::14)
- by MN6PR11MB8196.namprd11.prod.outlook.com (2603:10b6:208:47b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Thu, 25 Jan
- 2024 16:26:21 +0000
-Received: from SJ1PR11MB6201.namprd11.prod.outlook.com
- ([fe80::42b3:9892:db7f:5563]) by SJ1PR11MB6201.namprd11.prod.outlook.com
- ([fe80::42b3:9892:db7f:5563%3]) with mapi id 15.20.7228.022; Thu, 25 Jan 2024
- 16:26:21 +0000
-Date: Thu, 25 Jan 2024 08:26:18 -0800
-From: Ashok Raj <ashok.raj@intel.com>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: Jithu Joseph <jithu.joseph@intel.com>, Tony Luck <tony.luck@intel.com>,
-	Hans de Goede <hdegoede@redhat.com>, <platform-driver-x86@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>, Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH 1/1] platform/x86/intel/ifs: Remove unnecessary ret init
-Message-ID: <ZbKLqgte4rVx8yGx@a4bf019067fa.jf.intel.com>
-References: <20240125130328.11253-1-ilpo.jarvinen@linux.intel.com>
- <ZbJ8gp47CWDDqCb4@a4bf019067fa.jf.intel.com>
- <b9368410-e084-8d4e-1c81-55c4e6a22434@linux.intel.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b9368410-e084-8d4e-1c81-55c4e6a22434@linux.intel.com>
-X-ClientProxiedBy: MW4PR04CA0350.namprd04.prod.outlook.com
- (2603:10b6:303:8a::25) To SJ1PR11MB6201.namprd11.prod.outlook.com
- (2603:10b6:a03:45c::14)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="CcsQiv2C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1706215987; x=1706820787; i=w_armin@gmx.de;
+	bh=cfTQUlvW5xfRrYsLXxFIzJRcjCjeqlbNfUjbQeDzhM4=;
+	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
+	 In-Reply-To;
+	b=CcsQiv2C2HJ8QXlDzqPlbVbfwFrepIMVdyQWI9kyxq1r6O0+RsbL+bjTSdg3It8f
+	 SvNDMNolVNBaIWdkR9plQnNCQNOfzbn8wpB3rm1FRJC/KD2ipaFIPRIW2pmpbK/RY
+	 se9k9FfVVR2KXlUbgnLb1s+uN0QlpMkbLlx42msuTbYZuz4OaZIkTgHUnl8o0PJ0e
+	 S5KrsFTC0s19wZSl+FOCr5/afFjW7ChZ7G/lxTWR/QpME9XSW9frqws7Rbur7VlhG
+	 EmEu0+bet8tNX4lQAZK1+j7y0yYEniB+hfAx6rM7zKyWbFhDl5Hd3u2SuPBTaVZyu
+	 SPnRC0Fvbs4pz+UlWA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MBDjA-1rN5Mz1D4A-00CkPy; Thu, 25
+ Jan 2024 21:53:07 +0100
+Message-ID: <6775d202-6cdc-4de7-b562-39d659a4667d@gmx.de>
+Date: Thu, 25 Jan 2024 21:53:06 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PR11MB6201:EE_|MN6PR11MB8196:EE_
-X-MS-Office365-Filtering-Correlation-Id: 573e0898-5ec7-43bc-d800-08dc1dc25da1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cbXdelYX1YaJqnTN/sWj8KAq5k5UZwKg8pVYea29sqD/ewyrI7cX3GUaipb34kjSZ1aAgMVMjE8aLhtdsXI9AUxfP8lhi6rPyOZwILHNcsaThcO6VYC0TkMAOPR1HpxWDni4050DedxmE384Mhheobi++IKnf+7pvcUPdzrxJqJULyrOHy4pWj3xnxHjAmtE6XbLb5ITz0FCdBhGNoD2c0tM3XeglDIS4CDgB5gF9Gd0YLuLHgJNxG5yZ3xELyACS5ceywxJ0VSYc28+3Kc0RZ7XXA0aQNx3Sc4RX4KWVp5Od3MrWmZPoVigLSWSikzyOETqhNArred612kwaynhntgdKjUPlLkKpq90dGlJD/ZN7z2jDhE9GR+sZs734zed9V9dUjQ61WIoSXfrcbLOrM22tngOTpqPb8iExU8CMGSkEcciBfbXnWpE4H3vzNJ4qjjxjgieKCH4mYFfzsRPJ8gcW1FzNckSNv6srts9UZdRpT5cWaR5AVdqmOp63sTzt4U+TE2VqYPDOTIJfTZSZOiwj2qYeOHeQYcK/SdI8fy0oo2UNuLoRxm00GdgQ1F5
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6201.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(346002)(136003)(39860400002)(396003)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(54906003)(6916009)(316002)(66946007)(66476007)(66556008)(83380400001)(38100700002)(8936002)(5660300002)(82960400001)(4744005)(2906002)(86362001)(44832011)(41300700001)(4326008)(8676002)(26005)(478600001)(6486002)(6666004)(66574015)(6506007)(6512007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?n94cc4cptq8OAktqCqo9W4HXR97W5VyiwlbxKvdKeX6GDdNGMcRId1DUZ2?=
- =?iso-8859-1?Q?CSfgsroG64uJeQDvUH51G9yMLDmL4DTaXjdy9NTcDG14vGJNbIaXur/IxN?=
- =?iso-8859-1?Q?1i5Rr/xJHqt2PIsZN/pEvfNIe+BXCySxXW5az5Zr3rjtDD7//WkU2QLOzS?=
- =?iso-8859-1?Q?Gm/9g7BDqZ4s70YxR3vYByZutyhWEU9mclTFg9Vi/DU5fFR4Fr4Ru6/wnD?=
- =?iso-8859-1?Q?G/UncAn8vV11enpZv3bw0D1wNxSvWzCkUBAyXzNhRetLgUQmU1cBMTCwOM?=
- =?iso-8859-1?Q?xehz0i30MtGy+lpBOYtRtqQsl6miC2NpIrM3xCU4dNZ2de99Di4pva87VJ?=
- =?iso-8859-1?Q?Nskjwn1xW90gENOvXwjJFLbg52qBEcO2JfgKQrctqcoJMb3Glnvzz6kxvk?=
- =?iso-8859-1?Q?ydDGoFA3ZTDeOcpiBgFQlOWiPocsYVSnSkHVV1WwV8lrcKCBlz/qU0TXgL?=
- =?iso-8859-1?Q?/lwqm12T0u2croESnvgoHnVSiMjrX/lnpwZYqPlB0DsNMpNIVYHzBWJ5Wn?=
- =?iso-8859-1?Q?Glw8lVtzGRVYn6eRkK8xT/oG7xY/RTWsHn0O6TmT8wuv8FyYI9iC9jltxk?=
- =?iso-8859-1?Q?CfZfRnXA2vELxqWP+E9M7osaspKOU5Ec3YPYFTcAXF3+Um0fQR7qmgrBR8?=
- =?iso-8859-1?Q?sDAmI1osOjmZ5HtDN+kP3eUnEHJfr4mPVRKCyzyDJP04AWEky/045Hjv6F?=
- =?iso-8859-1?Q?Wp44bj8AxkK9/l+2OMj4l1QUQQSf/jp4T+gafa/XOGamN4OhJwCgDMYoYP?=
- =?iso-8859-1?Q?Q+EAGZ6G44oC91Nab1uL7G2ixySiEnFDg7Fc8wEZ5CBIwWwsI6K5KVywKW?=
- =?iso-8859-1?Q?JjfZfYajvvMldCEWXzRoPmj1gcVND+eqnHkFH4pRW0p592RgbT4Nar3sFI?=
- =?iso-8859-1?Q?4/7yxYU9Rvm/KI13jBrMJFpi985KDnPdNsJDjpdjlr6IXZIigPOevdaJUr?=
- =?iso-8859-1?Q?1dzjuT6ij39TpFXstLCwOGX1MiSRPJ1u8UVe5C7QnHP9GQW76TMdf+2Vi+?=
- =?iso-8859-1?Q?2zYAYAej1S0v2aAXfyQbNTWKg5W1iRLhxbMlDFQTWpOEdMmpMLWBVIXd3V?=
- =?iso-8859-1?Q?EWqkFtOVUSD6McYwW9BDYNzq8/kwmBLCKk6gA72DorHhXTaXhJuvXUIJOn?=
- =?iso-8859-1?Q?AyYB9itgt+rjHuGiNcquJ9ZpP/39TvnQBS75qit94HaEc/Zzeqv/gs2aAJ?=
- =?iso-8859-1?Q?j4JBl1QBagSgTjNxncL3BB9z0/eBAaXSOrAdF7xAjgxCALObK0Ie7dKxrM?=
- =?iso-8859-1?Q?IPNW4rPgDxtIyJ9UX9OeUnM8/baNjMGcfsBNkG++Y/XLApJK/RWUcoxPl9?=
- =?iso-8859-1?Q?0wa7wb3IxdlvKVzp8GMNIMWSti9QqqwJzfVyzvNKHlkyQPu3vO6mgkGtOu?=
- =?iso-8859-1?Q?wR/GDeK+2l7DS0vc5zsOXgt3YjQd1s3fgDv9EHB259+O8zep/bCqSlzyZv?=
- =?iso-8859-1?Q?1QnYNvnWi0FoF5GFBYzxthdJc70NDuHj2BVIzDQ3c23xIQ2Lx2Ua/im4a6?=
- =?iso-8859-1?Q?1ZFBUMsKlTcaS7AXcTsFzRF+tCM+XmfyLvSbHH2G1XkMnfwwVA2dnf4j30?=
- =?iso-8859-1?Q?ibwskEr6tjh7an+hVw3sBoPFqTBb+514c3Anfu3sISbfhJ/KnnE+EsI73F?=
- =?iso-8859-1?Q?dbxBxO+uvfwOpR/LNJa65r1t4w4UO05wvl?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 573e0898-5ec7-43bc-d800-08dc1dc25da1
-X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6201.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2024 16:26:21.2706
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hJm1inkJNtIsz8qZn6UXNPXcvfAGp5t4GCYaTlNj+eVe2gYvIO/xmFyLUs39UpMIjTF9wr4hSvGrlXFVbHvFDg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR11MB8196
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: hp-wmi: info hotkey has no keycode or scancode
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+To: Hans de Goede <hdegoede@redhat.com>,
+ Dennis Nezic <dennisn@dennisn.mooo.com>
+Cc: platform-driver-x86@vger.kernel.org, rafael@kernel.org, lenb@kernel.org,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+References: <ZawX2mquuTCv0tuF@panther>
+ <a8fa0308-0998-48e4-a104-c2b57ee9bd8e@gmx.de> <Zaw9mnfEL65B5r4O@panther>
+ <e97ae805-d006-4f0c-96c0-976385772bb7@gmx.de> <Za4T0RwClHOoCPCy@panther>
+ <cd86386a-653e-401c-9b70-0860d2e1906a@gmx.de> <Za8xL39m1X22f2Bb@panther>
+ <Za9DQdLg2d_CnrZG@panther> <3e574768-8d5b-465b-9860-567d0845d3fb@gmx.de>
+ <3e517aa3-4020-4b29-b7b3-85271503d03d@gmx.de> <Za_Xss52DlydJOOO@panther>
+ <e53a660b-f766-479c-8507-ffe25ca0e26e@redhat.com>
+ <57df06ee-3aa1-4501-9dc6-a7bc57d770be@gmx.de>
+In-Reply-To: <57df06ee-3aa1-4501-9dc6-a7bc57d770be@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:awVOBpSXWLzOCHB4qN9eiUm6STBXfIpUuSk+V4+v6wZ/EzHa6ev
+ jDbms7TvJcu4WjvUlk4N9qotzyOhsG1sE2M9K9jv+f7Jfg+Bd5cov/9J9z0wywNi2Pk90Vp
+ qqFhlvLyyCXilW9KxHa2quOoVmhLwK3Bw7HXYP3Hs4HeKSO+wUuzS/WxtHHAcKhV86NrP9K
+ ERKm0XT0mHu/XeoWtPgLw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:WLaN8oKPgl8=;IsOTh+Co9mEr+LUhhFcnIN+Ftmw
+ YyU1QICgKAG8j6abkzWwYXM5SrSS7O5+6Lu05RHNEbL65hytqkXTcKfSU0h/wGPXu8oLq3VhF
+ GTBKFteQlNSGGjc1UBEeMByyphjGH95qKGVn8Yqa3o8je1XB9oqtWPBIbwUeoT00WjdIrz4XH
+ Ta7iUt4v4jjN+NADFUh8HHjq9YstfiSxJWdwC9V9cAx1PjurR0ogzmHqqiWodVEtfCT+a96Ac
+ CZZKMXxCbW29gn/dEHuDoRtAjx1/Rtit6w5TeU9pJF+j6DJ3HLMJCo+Dn8XPDWhYqfppxVwwF
+ zDSatRO58LmsY1VIfIGbPya4lR/BoCaCbKwR2N2Ib5q9rEf0pvtF58luj6jN7f0nMZAG1G7M+
+ z4jYTxjhRq3JBwSV05lAVjh01alk0a7ihg311+fDkY/JdJoxzCNfuXespI5WFkxt7l8trxZrY
+ C364d5cUnbS6xETlxZVEFKhBhXM8YEmpclMqcqUrVy9g/cI8UWftc9WZitwNkq+KEnyTOsaAr
+ tcHQLZNI1RRzFOlVEbDeivlTD/VIS5eQo9oeyY8StPcWJZCOBEsUZeu3W9zgNvNbhL//4esjL
+ GDiC607R43MW/aj6YIqTAIkc2lBjuILbdO58A/jyYEYJz63ZDlhpqdDfGko8PMTpxbBtcRLQx
+ 5ZlPH0i0OVTaM6yaSSJX0r+wftSBdqpcqG00xYdCgKMRve48dFsi2JsiZHAKIbVIqOOX+q85R
+ /B8wHA51zTUyra+zghva8/s+OFgirutJKwTTJxhlZSzDC4K8l+3apS6rNmSCYEy6b886ghHM8
+ r5bvSuduVGbMMCmBM7r++CuCLxiPsdgUnqO9Oe/SxgQKWN140aCBKISYSOpA+9NMScvs1azgM
+ kBKv1s4XMHoVcFkIs61GBaScqUmsIBhpzQ3XXHnZYWoILRNhPmzqrSfWuE1x2AvHaZu9eHnc0
+ qz2vi3qUDdmSJ6xR9aXJs3yRH1eDyw16nubuOrylfqJM4qFEDAQdIC6g8BhVm1DeEOoKXw==
 
-On Thu, Jan 25, 2024 at 06:12:00PM +0200, Ilpo Järvinen wrote:
-> On Thu, 25 Jan 2024, Ashok Raj wrote:
-> 
+Am 23.01.24 um 20:58 schrieb Armin Wolf:
 
-[snip]
+> Am 23.01.24 um 16:34 schrieb Hans de Goede:
+>
+>> Hi,
+>>
+>> On 1/23/24 16:13, Dennis Nezic wrote:
+>>> On 23 Jan 15:22, Armin Wolf wrote:
+>>>> Am 23.01.24 um 09:58 schrieb Armin Wolf:
+>>>>
+>>>>> Am 23.01.24 um 05:40 schrieb Dennis Nezic:
+>>>>>
+>>>>>> On 22 Jan 22:23, Dennis Nezic wrote:
+>>>>>>> On 22 Jan 11:44, Armin Wolf wrote:
+>>>>>>>> Am 22.01.24 um 08:05 schrieb Dennis Nezic:
+>>>>>>>>
+>>>>>>>>> On 21 Jan 16:16, Armin Wolf wrote:
+>>>>>>>>>> Am 20.01.24 um 22:39 schrieb Dennis Nezic:
+>>>>>>>>>>
+>>>>>>>>>>> On 20 Jan 21:52, Armin Wolf wrote:
+>>>>>>>>>>>> Am 20.01.24 um 19:58 schrieb Dennis Nezic:
+>>>>>>>>>>>>
+>>>>>>>>>>>>> Guys, the "info" illuminated touch-key (hotkey?) on my lapto=
+p
+>>>>>>>>>>>>> "doesn't
+>>>>>>>>>>>>> work", showkey doesn't report any keycode or scancode. I
+>>>>>>>>>>>>> don't
+>>>>>>>>>>>>> see any
+>>>>>>>>>>>>> wmi related error messages from dmesg. All the other
+>>>>>>>>>>>>> illuminated
+>>>>>>>>>>>>> "hotkeys" work fine, although confusingly evtest and
+>>>>>>>>>>>>> "libinput
+>>>>>>>>>>>>> debug-events" report that they're coming through the event
+>>>>>>>>>>>>> interface
+>>>>>>>>>>>>> associated with "AT Translated Set 2 keyboard" instead of
+>>>>>>>>>>>>> "HP WMI
+>>>>>>>>>>>>> hotkeys", but hey, as long as I receive them I'm okay :p.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> hp-wmi.c does seem to reference it:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> How can I go about troubleshooting this? (I'm using kernel
+>>>>>>>>>>>>> 6.6.8)
+>>>>>>>>>>>> it can be possible that your machine does not use hp-wmi to
+>>>>>>>>>>>> deliver keycodes
+>>>>>>>>>>>> to the operating system, but instead emulates a standard
+>>>>>>>>>>>> keyboard controller.
+>>>>>>>>>>>>
+>>>>>>>>>>>> Can you check with "kacpimon" that events concerning a PNP0C1=
+4
+>>>>>>>>>>>> device are being
+>>>>>>>>>>>> received?
+>>>>>>>>>>> Very possible indeed. "kacpimon" doesn't show anything when I
+>>>>>>>>>>> press that
+>>>>>>>>>>> touchkey, but it does when I press all the other touchkeys. (I
+>>>>>>>>>>> do get
+>>>>>>>>>>> lots of accelerometer noise.)
+>>>>>>>>>>>
+>>>>>>>>>> Interesting, can you please share the output of:
+>>>>>>>>>> - "kacpimon" while you where pressing the buttons
+>>>>>>>>>> - "acpidump"
+>>>>>>>>> ...
+>>>>>>>> Those events are touchscreen events, maybe your mouse is
+>>>>>>>> responsible for them.
+>>>>>>> Right, of course, woops, these must have been the touchpad press
+>>>>>>> events,
+>>>>>>> as I was moving the mouse around :P
+>>>>>>>
+>>>>>>>> Instead they look like this:
+>>>>>>>>
+>>>>>>> I'm definitely not seeing anything like that, just "^Input Layer:
+>>>>>>> Type"'s
+>>>>>>>
+>>>>>>>> Can you try to use kacpimon again but without root privileges?
+>>>>>>>> This
+>>>>>>>> way only netlink events show up.
+>>>>>>>> You might also stop acpid while you are using kacpimon.
+>>>>>>> 0 output from/with netlink, even though kacpimon said:
+>>>>>>>
+>>>>>>> Netlink ACPI Family ID: 24
+>>>>>>> Netlink ACPI Multicast Group ID: 5
+>>>>>>> netlink opened successfully
+>>>>>>>
+>>>>>>> Remember all my other fancy hotkeys "work", but they appear as
+>>>>>>> regular
+>>>>>>> keypress events from an "AT Translated Set 2 keyboard".
+>>>>>>>
+>>>>>>>> If you still cannot receive any netlink events, then i might need
+>>>>>>>> to take a look at your ACPI tables
+>>>>>>>> via acpidump.
+>>>>>>> https://dennisn.mooo.com/stuff/dump.txt
+>>>>>>>
+>>>>>>>> Thanks,
+>>>>>>>> Armin Wolf
+>>>>>>> Thank you again sir!
+>>>>>> A1799AC3-9429-4529-927E-DFE13736EEBA has zero instances
+>>>>>> 8232DE3D-663D-4327-A8F4-E293ADB9BF05 has zero instances
+>>>>>> 8F1F6436-9F42-42C8-BADC-0E9424F20C9A has zero instances
+>>>>>> 8F1F6435-9F42-42C8-BADC-0E9424F20C9A has zero instances
+>>>>>>
+>>>>>> (Btw that "info" key does get illuminated when I touch/press it,
+>>>>>> even
+>>>>>> though no codes are seen.)
+>>>>> These warnings in dmesg are harmless, they are informing you that
+>>>>> some
+>>>>> WMI devices are unavailable.
+>>>>>
+>>>>> I took a look at your ACPI tables and it seems that the WMI device
+>>>>> used by hp-wmi is indeed unused.
+>>>>> What is the model name of your HP notebook?
+>>> HP Compaq 8710p
+>>>
+>>>> Also i just noted that your notebook might contain a PNP0C32
+>>>> quickstart button device.
+>>>> Can you tell me the output of "cat
+>>>> /sys/bus/acpi/devices/PNP0C32\:00/status"?
+>>> 15
+>> Interesting.
+>>
+>> There have been several attempts to add support for this
+>> in the past. The last one being:
+>>
+>> https://lore.kernel.org/platform-driver-x86/20220922182424.934340-1-lkm=
+l@vorpal.se/
+>>
+>>
+>> Note that in this case this also required some vender
+>> specific poking in toshiba_acpi to get things to work.
+>>
+>> I see that the HP Compaq 8710p is about the same vintage
+>> as the Toshiba Z830 on which the last attempt to do
+>> something about the quick start buttons was done.
+>>
+>> So this might very well explain the missing button issue.
+>>
+>> Regards,
+>>
+>> Hans
+>>
+> I can try to upstream the necessary changes. But i cannot test the
+> changes concerning the toshiba_acpi driver.
+> Would it be ok if i omit those changes?
+>
+> Dennis, can you check that your device runs the latest BIOS? And if
+> this is not the case, could you do a BIOS
+> update and send me an updated acpidump?
+>
+> The reason for this is that currently, the button device receives only
+> system wake events, but no button press
+> events during runtime. Maybe this is a BIOS bug, although this could
+> also be intentional (fancy power button).
+>
+> Armin Wolf
+>
+Hi,
 
-> 
-> Hi,
-> 
-> I was thinking of merging it myself into pdx86 review-ilpo -> next after 
-> allowing it sit on the queue a day or two. IMO, doesn't need to be more 
-> complicated than the usual process kernel process with patches, it would 
-> just take extra time from all the more there are middlemens handling the 
-> patch (after all this is just a trivial cleanup which I noticed while 
-> reviewing the patches you sent and since it didn't conflict the series, 
-> I just sent the obvious cleanup).
-> 
-> But that's assuming you don't have anything conflicting beyond those 
-> patches which you sent? If that's the case, it would be better for you to 
-> take care of it so just let me and I won't merge it myself until it comes 
-> back.
+while modifying the quickstart button driver to use the standard pm wake i=
+nfrastructure, i have run into a
+little problem: how to properly hook up the platform device with the ACPI =
+device wakeup infrastructure?
 
-I don't have anything beyond this that conflicts with this change.
+Is this possible when using a platform driver, or do i need to use a ACPI =
+driver?
 
-Feel free to add 
+Thanks,
+Armin Wolf
 
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
