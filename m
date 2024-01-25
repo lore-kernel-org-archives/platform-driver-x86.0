@@ -1,114 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8881C5101D;
-	Thu, 25 Jan 2024 13:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A736633F8;
+	Thu, 25 Jan 2024 14:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706187852; cv=none; b=G9i095HafeXjIqIdMYpUWGtvjjKl8A4ctkJBUeAkicZr3Oh2HEv8KFN/+0qsfoQTadNDwlOR2/Nwq+RZizOW8Xof3LNHHLOr4mvcNialEo6Epfp5an/Y6ZgTXWl8SEvv+NEv7+I28t0vB0eNI6YLXA7nIfM0Fdc54HnPwvJQ2Sc=
+	t=1706192041; cv=none; b=cm+YKZ9nzaOSbvq4sqL43zQbIMsCqzDGyFcnfVW+4CvQZECA9LFYCNvyuz9+RyQuX/ZPDiL9zwEL+WF3rwyo6DOBzb7OHOx35C5H9ZUHbmrAOk6V0krZ4XIYhlKlJYShAvsi6b1nEKYD/v3txn6pBExJICNSLYhGxVIadyV90bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706187852; c=relaxed/simple;
-	bh=ePyxDj8Fgb0LhEvz2Xaiwmjx/NG6Xh1p1RcMQYkEFyA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZUFoDMSwIpxY18uxcwYLD8bN/drG2GqZHCUp0Z/XjoVc6ntbMavsbKyP5Ft+gETo8FQZI+AqgxF0VRGB9jP3VRuDs4PNVVgwkwnTYX3nXMpVkBRza79Oxo5n2FwXIeYPwg824NqnW7mykpsjG4+0qBtzchz9HU1FxXsFLcE8Azg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ddX/Kt1/; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706192041; c=relaxed/simple;
+	bh=d4gPRqPHjfmhjeJ5lkxi1RqQCKJtueD+jrxScUh4RN8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dINQval1UOAWI94+RQcQh4edw9Q5gZCyCa5P4dvvAu4bWmjtLUO4T7KXTHAVQJsTefqr6JDZJfzAKBzGNl6NunISfgoCGpOUlKk5NnRQVxMVn9IHJQzrvIWxmw5nlN5hqjkQjccGUsHhCyQ9RgIQxBrPjbqFxicmIlStPQ4bkKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=d8iPRvhK; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ddX/Kt1/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706187850; x=1737723850;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ePyxDj8Fgb0LhEvz2Xaiwmjx/NG6Xh1p1RcMQYkEFyA=;
-  b=ddX/Kt1/KoOuRvJG+YUmAGN3sOzCecdmgpgfeAdnDxYTKahb+AKHgaPK
-   m0EpJPdXkgn9/PiV6cTwXO59rn/cW0tX6vk10/srAkqaxGvtFDNoOwZ86
-   392CaQ3wgTRPCCEt8Y61KeFfFWhlbzIzHYocwELrfkueTtruKLH8YGtIJ
-   upZ2thtYXOUoojcTX5DbfN57lAKujYSzmVd7HYekOH7CCf5VkyXoxKM9D
-   SvJetRrN9pyNIx8CnwygHIy5V2X8dH4YLGci0Z1SwACHHibxfzP7+ifva
-   2aoTT3FPESP2HMmH96CsvAqcwfj7uVKHjEUv3pHGxFsAyWQQTdrRU4PEW
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="23615999"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="23615999"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 05:04:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="905958179"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="905958179"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.252.55])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 05:04:05 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 25 Jan 2024 15:04:01 +0200 (EET)
-To: Ashok Raj <ashok.raj@intel.com>
-cc: Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org, 
-    Jithu Joseph <jithu.joseph@intel.com>, rostedt@goodmis.org, 
-    tony.luck@intel.com, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, patches@lists.linux.dev, 
-    pengfei.xu@intel.com
-Subject: Re: [PATCH 1/5] platform/x86/intel/ifs: Call release_firmware() when
- handling errors.
-In-Reply-To: <20240125082254.424859-2-ashok.raj@intel.com>
-Message-ID: <497dbb51-e583-374f-b31a-e14f1253c93f@linux.intel.com>
-References: <20240125082254.424859-1-ashok.raj@intel.com> <20240125082254.424859-2-ashok.raj@intel.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="d8iPRvhK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1706192037;
+	bh=d4gPRqPHjfmhjeJ5lkxi1RqQCKJtueD+jrxScUh4RN8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=d8iPRvhKJPa25vYvNn3p7VCNREGUSvpjp/LMg5lqfGUi0fM0w56/kd5EhWPvZrH10
+	 z5Xio98iangqywdMMYeb3D9MMpb8H/cOd//urNx3hoVuf0pN++fNMxXVhZQnoxcAJI
+	 6RT+HKgg4csflhdazllRZMqBwum/QPPU6v2bUobXAj7YiCkKyS4HKCMoZCU3x6ZOfe
+	 dvovRFm3EUp0Rzjkwnn//c5FQYu2HTGaaQ4XA5mgV/w1KeXpglcGqCoAA8qikUzbZ+
+	 OQe+iR+6Yy3GlSmDuWjoGMmkYCNAKTM5iGRNl0KPNh/l5iE4zI15a9jeDGR0iozFdn
+	 006geVieTmE5w==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D60B937820BC;
+	Thu, 25 Jan 2024 14:13:51 +0000 (UTC)
+Message-ID: <74e203b0-aacd-4a87-aa7b-53bd689fd893@collabora.com>
+Date: Thu, 25 Jan 2024 15:13:51 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1915214704-1706187841=:1444"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 039/111] pwm: Provide wrappers for storing and getting
+ driver private data
+Content-Language: en-US
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ linux-pwm@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+ Sven Peter <sven@svenpeter.dev>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Alexander Shiyan <shc_work@mail.ru>, Benson Leung <bleung@chromium.org>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Paul Cercueil <paul@crapouillou.net>, Vladimir Zapolskiy <vz@mleia.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Daire McNamara <daire.mcnamara@microchip.com>,
+ =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+ Heiko Stuebner <heiko@sntech.de>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Michael Walle <mwalle@kernel.org>,
+ Orson Zhai <orsonzhai@gmail.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>,
+ Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, Chen-Yu Tsai
+ <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Hammer Hsieh <hammerh0314@gmail.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+ Sean Anderson <sean.anderson@seco.com>, Michal Simek <michal.simek@amd.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Robert Foss <rfoss@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ Anjelique Melendez <quic_amelende@quicinc.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Lu Hongfei <luhongfei@vivo.com>,
+ Bjorn Andersson <quic_bjorande@quicinc.com>, Luca Weiss <luca@z3ntu.xyz>,
+ Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: kernel@pengutronix.de, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+ asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ linux-rpi-kernel@lists.infradead.org, Guenter Roeck <groeck@chromium.org>,
+ chrome-platform@lists.linux.dev, Fabio Estevam <festevam@gmail.com>,
+ NXP Linux Team <linux-imx@nxp.com>, linux-mips@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, Alim Akhtar <alim.akhtar@samsung.com>,
+ linux-samsung-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, dri-devel@lists.freedesktop.org,
+ linux-leds@vger.kernel.org, greybus-dev@lists.linaro.org,
+ linux-staging@lists.linux.dev
+References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
+ <1c873808bfc93ab51f49be799334dee6e8ab398a.1706182805.git.u.kleine-koenig@pengutronix.de>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <1c873808bfc93ab51f49be799334dee6e8ab398a.1706182805.git.u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Il 25/01/24 13:09, Uwe Kleine-König ha scritto:
+> These functions are useful to store and query driver private data a
+> After struct pwm_chip got its own struct device, this can make use of
+> dev_get_drvdata() and dev_set_drvdata() on that device.  These functions
+> are required already now to convert drivers to pwmchip_alloc() which
+> must happen before changing pwm_chip::dev.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
---8323328-1915214704-1706187841=:1444
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-On Thu, 25 Jan 2024, Ashok Raj wrote:
 
-> From: Jithu Joseph <jithu.joseph@intel.com>
->=20
-> Missing release_firmware() due to error handling blocked any future image
-> loading.
->=20
-> Fix the return code and release_fiwmare() to release the bad image.
->=20
-> Fixes: 25a76dbb36dd ("platform/x86/intel/ifs: Validate image size")
-> Reported-by: Pengfei Xu <pengfei.xu@intel.com>
-> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> Tested-by: Pengfei Xu <pengfei.xu@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> ---
->  drivers/platform/x86/intel/ifs/load.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86=
-/intel/ifs/load.c
-> index a1ee1a74fc3c..2cf3b4a8813f 100644
-> --- a/drivers/platform/x86/intel/ifs/load.c
-> +++ b/drivers/platform/x86/intel/ifs/load.c
-> @@ -399,7 +399,8 @@ int ifs_load_firmware(struct device *dev)
->  =09if (fw->size !=3D expected_size) {
->  =09=09dev_err(dev, "File size mismatch (expected %u, actual %zu). Corrup=
-ted IFS image.\n",
->  =09=09=09expected_size, fw->size);
-> -=09=09return -EINVAL;
-> +=09=09ret =3D -EINVAL;
-> +=09=09goto release;
->  =09}
-> =20
->  =09ret =3D image_sanity_check(dev, (struct microcode_header_intel *)fw->=
-data);
->=20
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
---8323328-1915214704-1706187841=:1444--
