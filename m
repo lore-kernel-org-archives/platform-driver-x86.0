@@ -1,107 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF60F125D7;
-	Thu, 25 Jan 2024 07:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0FE175A6;
+	Thu, 25 Jan 2024 08:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706168216; cv=none; b=KgKcDeZ2g1MOvs+PW7AeqovtMR+5aPKn//ASd7OmZ3kVhNcriGB5uRe/juHS45d9BLI0DkhzztD/gA+ejQOEKH+mc6BOLBsJBX+DkhRGuoPaRK5EY5QMT+Q+AGn21H71Br8cNsYoHvacmcn5QlQm05qnA6ZjYnPx05pfetw3BKY=
+	t=1706171004; cv=none; b=iDD3D2kDzT034tja7tkkgHCIIzWSVIZlwpI17p3ex/PKAwLIPACdLl7STJI7Fv70/steV6sTpI11H+Quou7aVLz2fNnwm0gGrBaZfx52ZX56iCd0w+2bkyvcmH4Pmpl63vRJ9iJELzQ9fxYFhMCshMHhUtxQj4x3sUALwuZUslA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706168216; c=relaxed/simple;
-	bh=Q0JfeFCfMgWrfWnzoium/IVe2Po+3kpp7VAaqloEz1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hxam6yaYXeYmaPPKAU4FJT47p2dUEvtAWhbqDwfTUqemIyn3T0riMnG+BSEZiHjwpovZDjIFZ1slEoMezGtmX0m3T6QTzgrSV97BuOFWtCJqopF5oNOwcq0iYIXgMo7OU+ZtwH615Sr+Mxg526mxqc3saEkWLFH3aWS99qXUREM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=udGMN9yU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706171004; c=relaxed/simple;
+	bh=ofAp7FKQ4FQiM93DkKntiQVWC6L/hziULomq9Z95xuI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lhpn3aJIqq5Do5pMTZwBzR3v4cNE8nnnmG6rjvogHxWz5uGgz74vNZRj5SoV88KChJr8uZ9uEha+f/tySSuAgniijsUS34NpA8kjoL7ckIpGISAaTWIkFKmnd3shRWpahwGVhf/an4TjPubHV6kk70OdOrhCKVc9+JPIZqs9cn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c3bwHqv8; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="udGMN9yU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7012AC433F1;
-	Thu, 25 Jan 2024 07:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706168215;
-	bh=Q0JfeFCfMgWrfWnzoium/IVe2Po+3kpp7VAaqloEz1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=udGMN9yUHMrxmaVOhoVNPCuuuvuWNxMNgTYMLtmrJz/NohKEw40gPBGRhBk/o8z66
-	 SunP1i24pgaoednuaG5F0URxtAEbFYmKrN7DQxL/d6lRtm2lJ73Tthj4pKgcfmHWi3
-	 AdnAQPY1/9hH3bJlR/zHWLCX+L3FVD0dNnpDdW/SYjNEMPpDH90yd7ulOM3KkkpOq6
-	 SE+jiunstsmfRYgX6YIB7AzVU0H9FoJ78OeMZwt21R/vpFuYIhv8uw988w0ER9Y5UK
-	 BP7El39bEffgeKuj8WbQKV3dMX8XgshWr87G5PEh+J/T5P1vqAWS8Qp4MJVvujaz2A
-	 fuQDuh1Cn24UA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rSuIL-000000005sx-1MRL;
-	Thu, 25 Jan 2024 08:37:05 +0100
-Date: Thu, 25 Jan 2024 08:37:05 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-bluetooth@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, greybus-dev@lists.linaro.org,
-	linux-iio@vger.kernel.org, netdev@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Alex Elder <elder@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
-	Lee Jones <lee@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>, Rob Herring <robh@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v2] treewide, serdev: change receive_buf() return type to
- size_t
-Message-ID: <ZbIPoW2LKXJVz3oV@hovoldconsulting.com>
-References: <20240122180551.34429-1-francesco@dolcini.it>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c3bwHqv8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706171004; x=1737707004;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ofAp7FKQ4FQiM93DkKntiQVWC6L/hziULomq9Z95xuI=;
+  b=c3bwHqv8pzVYJfaDE+ED4jogoi+9SwtG37w0pj/DTUQ8S+yYonjPG9+P
+   7RSQmVYEUiOplsAOeNd/5rZzTiK5kmem3UWp/xWwGqoI2r7tK+hN55xFG
+   sDESxxG/BV9Cr6RByRgkZBnS/AtBR8+TINwZvA1VZ/ZD7GV/POZupd6cz
+   NAEXSJnYEfMvXipttnm/T+VDdWjn/wgeRX2lSiKGaXEIec30TDvISNI6W
+   zQ5fDdEZvBCVuNqLIk/2L98fhKp/D2JIp/p/OaUGlbOlkTpbr988yWbZ1
+   HbG5y2L0ILUMxxEr7Ykge3h7IHskLPd7yoQAR7+IdhG4LAHL12jCE91W1
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="1987165"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="1987165"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 00:23:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="876975919"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="876975919"
+Received: from araj-ucode.jf.intel.com ([10.23.0.11])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 00:23:21 -0800
+From: Ashok Raj <ashok.raj@intel.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	markgross@kernel.org
+Cc: Jithu Joseph <jithu.joseph@intel.com>,
+	rostedt@goodmis.org,
+	ashok.raj@intel.com,
+	tony.luck@intel.com,
+	LKML <linux-kernel@vger.kernel.org>,
+	platform-driver-x86@vger.kernel.org,
+	patches@lists.linux.dev,
+	pengfei.xu@intel.com
+Subject: [PATCH 0/5] Miscelleanous fixes and improvements to Infield Scan
+Date: Thu, 25 Jan 2024 00:22:49 -0800
+Message-Id: <20240125082254.424859-1-ashok.raj@intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240122180551.34429-1-francesco@dolcini.it>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 22, 2024 at 07:05:51PM +0100, Francesco Dolcini wrote:
-> From: Francesco Dolcini <francesco.dolcini@toradex.com>
-> 
-> receive_buf() is called from ttyport_receive_buf() that expects values
-> ">= 0" from serdev_controller_receive_buf(), change its return type from
-> ssize_t to size_t.
-> 
-> The need for this clean-up was noticed while fixing a warning, see
-> commit 94d053942544 ("Bluetooth: btnxpuart: fix recv_buf() return value").
-> Changing the callback prototype to return an unsigned seems the best way
-> to document the API and ensure that is properly used.
-> 
-> GNSS drivers implementation of serdev receive_buf() callback return
-> directly the return value of gnss_insert_raw(). gnss_insert_raw()
-> returns a signed int, however this is not an issue since the value
-> returned is always positive, because of the kfifo_in() implementation.
-> gnss_insert_raw() could be changed to return also an unsigned, however
-> this is not implemented here as request by the GNSS maintainer Johan
-> Hovold.
-> 
-> Suggested-by: Jiri Slaby <jirislaby@kernel.org>
-> Link: https://lore.kernel.org/all/087be419-ec6b-47ad-851a-5e1e3ea5cfcc@kernel.org/
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #for-iio
-> ---
-> v1:
->  - https://lore.kernel.org/all/20231214170146.641783-1-francesco@dolcini.it/
-> v2:
->  - rebased on 6.8-rc1
->  - add acked-by Jonathan
->  - do not change gnss_insert_raw()
->  - do not change the code style of the gnss code
->  - commit message improvements, explain the reasons for doing only minimal
->    changes on the GNSS part
+Hi Hans,
 
-Looks good to me now:
+This series has some bug fixes and improvements for Infield Scan.
 
-Reviewed-by: Johan Hovold <johan@kernel.org>
+Patch1 - fixes a bug in the driver that didn't release_firmware() in the
+	 error path.
+
+Patch2, 3 - Added some improved tracing.
+
+Patch4 - Moves the rendezvous to function entry
+Patch5 - Adds entry rendezvous for IFS.
+
+Cheers,
+Ashok
+
+
+Ashok Raj (4):
+  platform/x86/intel/ifs: Trace on all HT threads when executing a test
+  platform/x86/intel/ifs: Add current batch number to trace output
+  platform/x86/intel/ifs: Replace the exit rendezvous with an entry rendezvous for ARRAY_BIST
+  platform/x86/intel/ifs: Add an entry rendezvous for SAF
+
+Jithu Joseph (1):
+  platform/x86/intel/ifs: Call release_firmware() when handling errors.
+
+ include/trace/events/intel_ifs.h         |  12 +--
+ drivers/platform/x86/intel/ifs/load.c    |   3 +-
+ drivers/platform/x86/intel/ifs/runtest.c | 101 ++++++++++++++---------
+ 3 files changed, 70 insertions(+), 46 deletions(-)
+
+
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+-- 
+2.39.2
+
