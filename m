@@ -1,247 +1,133 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8096257A;
-	Thu, 25 Jan 2024 20:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5042350A74;
+	Fri, 26 Jan 2024 09:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706216001; cv=none; b=MEzfp8euc9EGxMmLuCm0Db9kclJEeVyz4mJv7kXyl1hJYQzeCAMwiI56cQaaHizZOphZkxV2waTzUEd7cAxRwOOALyT632LENuPAqBeHiYbtCfuS73s2Fw6VZIZfJJF+sQtfyx6aAx+Wlfy3Q44h7WYaLuu5YHnGWJmcYu0RP4w=
+	t=1706262796; cv=none; b=otmlz+ifdjIvk5Jn89nBwJOjtI7tdmuvSuNOX08ByIoNKkjzlwMFhHmoc/PeSRxd47+6NSEWbuRm6x6Qm4zIGzPg2EgGcCFeOk9AG3q55DrhxZ1y+9oiv3yHsVL/00dtDbAPh2hiH/m2hHtxFFSWjczMe0KOQcZ7CJzTXUZMHPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706216001; c=relaxed/simple;
-	bh=cfTQUlvW5xfRrYsLXxFIzJRcjCjeqlbNfUjbQeDzhM4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=qgMgvh7425NXu80TuDbjPfXwEqBMfDicP5wYQfbWYjP/PBxAgBdK3KCfUho9G9GRptQVXWOGzj/r5q79Qn4uEYszxb8V0+ocMkAKoc6CvhW5QqUPC4Fhw/ab5CEQs3MR7neyvIa0179fbBUjk3ECQuozaJIzjINb72RHtgnFvNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=CcsQiv2C; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1706262796; c=relaxed/simple;
+	bh=qIyNv2GKT/pRB+BCdOcRrE+9O93YX0P2wOyy8cuwfv8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uVgP2v0FCokT3a+QsqfBX5tB2YjlHREPucbaaP/YHSf+T7kPgqq+4KVk7YZF0YADE6Pu57ePwcjJyWiacDom6SXN7xAiDNmmm8n6wFPmmJEWFd2G9wGMTOGOg/ixT4xZUnqMtX9Kjq/uX6SqR81ptnYEMn7Qu0fhDV4w3ldBHr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cVh5vbrD; arc=none smtp.client-ip=209.85.161.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="CcsQiv2C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1706215987; x=1706820787; i=w_armin@gmx.de;
-	bh=cfTQUlvW5xfRrYsLXxFIzJRcjCjeqlbNfUjbQeDzhM4=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=CcsQiv2C2HJ8QXlDzqPlbVbfwFrepIMVdyQWI9kyxq1r6O0+RsbL+bjTSdg3It8f
-	 SvNDMNolVNBaIWdkR9plQnNCQNOfzbn8wpB3rm1FRJC/KD2ipaFIPRIW2pmpbK/RY
-	 se9k9FfVVR2KXlUbgnLb1s+uN0QlpMkbLlx42msuTbYZuz4OaZIkTgHUnl8o0PJ0e
-	 S5KrsFTC0s19wZSl+FOCr5/afFjW7ChZ7G/lxTWR/QpME9XSW9frqws7Rbur7VlhG
-	 EmEu0+bet8tNX4lQAZK1+j7y0yYEniB+hfAx6rM7zKyWbFhDl5Hd3u2SuPBTaVZyu
-	 SPnRC0Fvbs4pz+UlWA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MBDjA-1rN5Mz1D4A-00CkPy; Thu, 25
- Jan 2024 21:53:07 +0100
-Message-ID: <6775d202-6cdc-4de7-b562-39d659a4667d@gmx.de>
-Date: Thu, 25 Jan 2024 21:53:06 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cVh5vbrD"
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5955a4a9b23so136234eaf.1;
+        Fri, 26 Jan 2024 01:53:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706262794; x=1706867594; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IQ/3kDvRhsDFelMOEvB+kaIVBVK6Cu/lnq9gIh4BpOQ=;
+        b=cVh5vbrDU/7Vj2Ey5n/9DinrNSaB22lcEKzR853TwFy7g6hfKDoquYGaXBynGNE54L
+         2BoRwHk5oIC+NtHfYh6mICZL5JGjkYQC8XtxT55dPhYOvyxJJ2lKjosUitFjlGx+5Dan
+         hFW8Q3aa9goMLiNmKQQ2ALdvh+CAdXr3UlXu1/HpmySl123omSu+nPzbYcRMpalg84/j
+         nr3WekkArBmiwnQ3tIYdWoXT5Gl0Sq2kX74MB1KS+pOGOHlvL54uCPLj+UfIa1FS08QU
+         iXj/jX+5W1y3erFxuXeT692F9FCDje0Tnz3RhamzPFOVSUKMAL72Yc3UDe/zT6qXroJ3
+         eDfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706262794; x=1706867594;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IQ/3kDvRhsDFelMOEvB+kaIVBVK6Cu/lnq9gIh4BpOQ=;
+        b=H2+daFcZ7rC7lu3gc03HCLiUHGy/2H5IbWdNc1XVbDQUVJGj3grAMg7S0pfdqic1sk
+         3JAqfQoXgRtHHqeCAHWHImePUjcUp17geqptSxsKw/Rn0PNQ43aXML2YFXg+Rtm4u6P+
+         RYythOqn/S6sPP0SLrGb3tYoR29BwVEoGUedyRm0Cfw8hoGqm0ETgVDya5KsfcpGkBrm
+         2alvDxPaWbmiOpRzNPdvItgf8XQHtMeQTF38Z6Av9HkK1rYqFHz07+9IlHYXF5P4djDM
+         DG+8K2m5RXeOqBmC6EHq7owSLEOtoeXVNpGBAVEjrJHgAQE6u6+q42Lwdob/4f9NXJwG
+         Bmeg==
+X-Gm-Message-State: AOJu0Yw/XR+SKs5BaO/e5m/Vf3JFMawhPT6BnALQG2tkyrzNRYg9NW2r
+	8SoJeVLzwBC18Ij+Ca9wtkgKKawVNfkriIb2u0vUg9nI7f4VrRif
+X-Google-Smtp-Source: AGHT+IFAR8CEw9FYEn6c0qELGbaw9Md3V/BeXz2XULDluuB2LMDlrD8c62HnOllvMmmfg5+iT2qznw==
+X-Received: by 2002:a05:6358:7502:b0:176:7f72:36af with SMTP id k2-20020a056358750200b001767f7236afmr1111329rwg.23.1706262794099;
+        Fri, 26 Jan 2024 01:53:14 -0800 (PST)
+Received: from h310mstx.. (2001-b011-4000-1ad1-19f3-37ad-3632-eedd.dynamic-ip6.hinet.net. [2001:b011:4000:1ad1:19f3:37ad:3632:eedd])
+        by smtp.gmail.com with ESMTPSA id ei20-20020a17090ae55400b0028feef0f956sm2822847pjb.17.2024.01.26.01.53.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jan 2024 01:53:13 -0800 (PST)
+From: Phoenix Chen <asbeltogf@gmail.com>
+To: hdegoede@redhat.com
+Cc: ilpo.jarvinen@linux.intel.com,
+	linux-input@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Phoenix Chen <asbeltogf@gmail.com>
+Subject: [PATCH] drivers/platform/x86/touchscreen_dmi.c: Add touch config
+Date: Fri, 26 Jan 2024 17:53:08 +0800
+Message-Id: <20240126095308.5042-1-asbeltogf@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: hp-wmi: info hotkey has no keycode or scancode
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-To: Hans de Goede <hdegoede@redhat.com>,
- Dennis Nezic <dennisn@dennisn.mooo.com>
-Cc: platform-driver-x86@vger.kernel.org, rafael@kernel.org, lenb@kernel.org,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-References: <ZawX2mquuTCv0tuF@panther>
- <a8fa0308-0998-48e4-a104-c2b57ee9bd8e@gmx.de> <Zaw9mnfEL65B5r4O@panther>
- <e97ae805-d006-4f0c-96c0-976385772bb7@gmx.de> <Za4T0RwClHOoCPCy@panther>
- <cd86386a-653e-401c-9b70-0860d2e1906a@gmx.de> <Za8xL39m1X22f2Bb@panther>
- <Za9DQdLg2d_CnrZG@panther> <3e574768-8d5b-465b-9860-567d0845d3fb@gmx.de>
- <3e517aa3-4020-4b29-b7b3-85271503d03d@gmx.de> <Za_Xss52DlydJOOO@panther>
- <e53a660b-f766-479c-8507-ffe25ca0e26e@redhat.com>
- <57df06ee-3aa1-4501-9dc6-a7bc57d770be@gmx.de>
-In-Reply-To: <57df06ee-3aa1-4501-9dc6-a7bc57d770be@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:awVOBpSXWLzOCHB4qN9eiUm6STBXfIpUuSk+V4+v6wZ/EzHa6ev
- jDbms7TvJcu4WjvUlk4N9qotzyOhsG1sE2M9K9jv+f7Jfg+Bd5cov/9J9z0wywNi2Pk90Vp
- qqFhlvLyyCXilW9KxHa2quOoVmhLwK3Bw7HXYP3Hs4HeKSO+wUuzS/WxtHHAcKhV86NrP9K
- ERKm0XT0mHu/XeoWtPgLw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:WLaN8oKPgl8=;IsOTh+Co9mEr+LUhhFcnIN+Ftmw
- YyU1QICgKAG8j6abkzWwYXM5SrSS7O5+6Lu05RHNEbL65hytqkXTcKfSU0h/wGPXu8oLq3VhF
- GTBKFteQlNSGGjc1UBEeMByyphjGH95qKGVn8Yqa3o8je1XB9oqtWPBIbwUeoT00WjdIrz4XH
- Ta7iUt4v4jjN+NADFUh8HHjq9YstfiSxJWdwC9V9cAx1PjurR0ogzmHqqiWodVEtfCT+a96Ac
- CZZKMXxCbW29gn/dEHuDoRtAjx1/Rtit6w5TeU9pJF+j6DJ3HLMJCo+Dn8XPDWhYqfppxVwwF
- zDSatRO58LmsY1VIfIGbPya4lR/BoCaCbKwR2N2Ib5q9rEf0pvtF58luj6jN7f0nMZAG1G7M+
- z4jYTxjhRq3JBwSV05lAVjh01alk0a7ihg311+fDkY/JdJoxzCNfuXespI5WFkxt7l8trxZrY
- C364d5cUnbS6xETlxZVEFKhBhXM8YEmpclMqcqUrVy9g/cI8UWftc9WZitwNkq+KEnyTOsaAr
- tcHQLZNI1RRzFOlVEbDeivlTD/VIS5eQo9oeyY8StPcWJZCOBEsUZeu3W9zgNvNbhL//4esjL
- GDiC607R43MW/aj6YIqTAIkc2lBjuILbdO58A/jyYEYJz63ZDlhpqdDfGko8PMTpxbBtcRLQx
- 5ZlPH0i0OVTaM6yaSSJX0r+wftSBdqpcqG00xYdCgKMRve48dFsi2JsiZHAKIbVIqOOX+q85R
- /B8wHA51zTUyra+zghva8/s+OFgirutJKwTTJxhlZSzDC4K8l+3apS6rNmSCYEy6b886ghHM8
- r5bvSuduVGbMMCmBM7r++CuCLxiPsdgUnqO9Oe/SxgQKWN140aCBKISYSOpA+9NMScvs1azgM
- kBKv1s4XMHoVcFkIs61GBaScqUmsIBhpzQ3XXHnZYWoILRNhPmzqrSfWuE1x2AvHaZu9eHnc0
- qz2vi3qUDdmSJ6xR9aXJs3yRH1eDyw16nubuOrylfqJM4qFEDAQdIC6g8BhVm1DeEOoKXw==
+Content-Transfer-Encoding: 8bit
 
-Am 23.01.24 um 20:58 schrieb Armin Wolf:
+Added touch screen info for TECLAST X16 Plus tablet.
 
-> Am 23.01.24 um 16:34 schrieb Hans de Goede:
->
->> Hi,
->>
->> On 1/23/24 16:13, Dennis Nezic wrote:
->>> On 23 Jan 15:22, Armin Wolf wrote:
->>>> Am 23.01.24 um 09:58 schrieb Armin Wolf:
->>>>
->>>>> Am 23.01.24 um 05:40 schrieb Dennis Nezic:
->>>>>
->>>>>> On 22 Jan 22:23, Dennis Nezic wrote:
->>>>>>> On 22 Jan 11:44, Armin Wolf wrote:
->>>>>>>> Am 22.01.24 um 08:05 schrieb Dennis Nezic:
->>>>>>>>
->>>>>>>>> On 21 Jan 16:16, Armin Wolf wrote:
->>>>>>>>>> Am 20.01.24 um 22:39 schrieb Dennis Nezic:
->>>>>>>>>>
->>>>>>>>>>> On 20 Jan 21:52, Armin Wolf wrote:
->>>>>>>>>>>> Am 20.01.24 um 19:58 schrieb Dennis Nezic:
->>>>>>>>>>>>
->>>>>>>>>>>>> Guys, the "info" illuminated touch-key (hotkey?) on my lapto=
-p
->>>>>>>>>>>>> "doesn't
->>>>>>>>>>>>> work", showkey doesn't report any keycode or scancode. I
->>>>>>>>>>>>> don't
->>>>>>>>>>>>> see any
->>>>>>>>>>>>> wmi related error messages from dmesg. All the other
->>>>>>>>>>>>> illuminated
->>>>>>>>>>>>> "hotkeys" work fine, although confusingly evtest and
->>>>>>>>>>>>> "libinput
->>>>>>>>>>>>> debug-events" report that they're coming through the event
->>>>>>>>>>>>> interface
->>>>>>>>>>>>> associated with "AT Translated Set 2 keyboard" instead of
->>>>>>>>>>>>> "HP WMI
->>>>>>>>>>>>> hotkeys", but hey, as long as I receive them I'm okay :p.
->>>>>>>>>>>>>
->>>>>>>>>>>>> hp-wmi.c does seem to reference it:
->>>>>>>>>>>>>
->>>>>>>>>>>>> How can I go about troubleshooting this? (I'm using kernel
->>>>>>>>>>>>> 6.6.8)
->>>>>>>>>>>> it can be possible that your machine does not use hp-wmi to
->>>>>>>>>>>> deliver keycodes
->>>>>>>>>>>> to the operating system, but instead emulates a standard
->>>>>>>>>>>> keyboard controller.
->>>>>>>>>>>>
->>>>>>>>>>>> Can you check with "kacpimon" that events concerning a PNP0C1=
-4
->>>>>>>>>>>> device are being
->>>>>>>>>>>> received?
->>>>>>>>>>> Very possible indeed. "kacpimon" doesn't show anything when I
->>>>>>>>>>> press that
->>>>>>>>>>> touchkey, but it does when I press all the other touchkeys. (I
->>>>>>>>>>> do get
->>>>>>>>>>> lots of accelerometer noise.)
->>>>>>>>>>>
->>>>>>>>>> Interesting, can you please share the output of:
->>>>>>>>>> - "kacpimon" while you where pressing the buttons
->>>>>>>>>> - "acpidump"
->>>>>>>>> ...
->>>>>>>> Those events are touchscreen events, maybe your mouse is
->>>>>>>> responsible for them.
->>>>>>> Right, of course, woops, these must have been the touchpad press
->>>>>>> events,
->>>>>>> as I was moving the mouse around :P
->>>>>>>
->>>>>>>> Instead they look like this:
->>>>>>>>
->>>>>>> I'm definitely not seeing anything like that, just "^Input Layer:
->>>>>>> Type"'s
->>>>>>>
->>>>>>>> Can you try to use kacpimon again but without root privileges?
->>>>>>>> This
->>>>>>>> way only netlink events show up.
->>>>>>>> You might also stop acpid while you are using kacpimon.
->>>>>>> 0 output from/with netlink, even though kacpimon said:
->>>>>>>
->>>>>>> Netlink ACPI Family ID: 24
->>>>>>> Netlink ACPI Multicast Group ID: 5
->>>>>>> netlink opened successfully
->>>>>>>
->>>>>>> Remember all my other fancy hotkeys "work", but they appear as
->>>>>>> regular
->>>>>>> keypress events from an "AT Translated Set 2 keyboard".
->>>>>>>
->>>>>>>> If you still cannot receive any netlink events, then i might need
->>>>>>>> to take a look at your ACPI tables
->>>>>>>> via acpidump.
->>>>>>> https://dennisn.mooo.com/stuff/dump.txt
->>>>>>>
->>>>>>>> Thanks,
->>>>>>>> Armin Wolf
->>>>>>> Thank you again sir!
->>>>>> A1799AC3-9429-4529-927E-DFE13736EEBA has zero instances
->>>>>> 8232DE3D-663D-4327-A8F4-E293ADB9BF05 has zero instances
->>>>>> 8F1F6436-9F42-42C8-BADC-0E9424F20C9A has zero instances
->>>>>> 8F1F6435-9F42-42C8-BADC-0E9424F20C9A has zero instances
->>>>>>
->>>>>> (Btw that "info" key does get illuminated when I touch/press it,
->>>>>> even
->>>>>> though no codes are seen.)
->>>>> These warnings in dmesg are harmless, they are informing you that
->>>>> some
->>>>> WMI devices are unavailable.
->>>>>
->>>>> I took a look at your ACPI tables and it seems that the WMI device
->>>>> used by hp-wmi is indeed unused.
->>>>> What is the model name of your HP notebook?
->>> HP Compaq 8710p
->>>
->>>> Also i just noted that your notebook might contain a PNP0C32
->>>> quickstart button device.
->>>> Can you tell me the output of "cat
->>>> /sys/bus/acpi/devices/PNP0C32\:00/status"?
->>> 15
->> Interesting.
->>
->> There have been several attempts to add support for this
->> in the past. The last one being:
->>
->> https://lore.kernel.org/platform-driver-x86/20220922182424.934340-1-lkm=
-l@vorpal.se/
->>
->>
->> Note that in this case this also required some vender
->> specific poking in toshiba_acpi to get things to work.
->>
->> I see that the HP Compaq 8710p is about the same vintage
->> as the Toshiba Z830 on which the last attempt to do
->> something about the quick start buttons was done.
->>
->> So this might very well explain the missing button issue.
->>
->> Regards,
->>
->> Hans
->>
-> I can try to upstream the necessary changes. But i cannot test the
-> changes concerning the toshiba_acpi driver.
-> Would it be ok if i omit those changes?
->
-> Dennis, can you check that your device runs the latest BIOS? And if
-> this is not the case, could you do a BIOS
-> update and send me an updated acpidump?
->
-> The reason for this is that currently, the button device receives only
-> system wake events, but no button press
-> events during runtime. Maybe this is a BIOS bug, although this could
-> also be intentional (fancy power button).
->
-> Armin Wolf
->
-Hi,
+Signed-off-by: Phoenix Chen <asbeltogf@gmail.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 35 ++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-while modifying the quickstart button driver to use the standard pm wake i=
-nfrastructure, i have run into a
-little problem: how to properly hook up the platform device with the ACPI =
-device wakeup infrastructure?
-
-Is this possible when using a platform driver, or do i need to use a ACPI =
-driver?
-
-Thanks,
-Armin Wolf
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 0c6733772698..7aee5e9ff2b8 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -944,6 +944,32 @@ static const struct ts_dmi_data teclast_tbook11_data = {
+ 	.properties	= teclast_tbook11_props,
+ };
+ 
++static const struct property_entry teclast_x16_plus_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 8),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 14),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1916),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1264),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl3692-teclast-x16-plus.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,home-button"),
++	{ }
++};
++
++static const struct ts_dmi_data teclast_x16_plus_data = {
++	.embedded_fw = {
++		.name	= "silead/gsl3692-teclast-x16-plus.fw",
++		.prefix = { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
++		.length	= 43560,
++		.sha256	= { 0x9d, 0xb0, 0x3d, 0xf1, 0x00, 0x3c, 0xb5, 0x25,
++			    0x62, 0x8a, 0xa0, 0x93, 0x4b, 0xe0, 0x4e, 0x75,
++			    0xd1, 0x27, 0xb1, 0x65, 0x3c, 0xba, 0xa5, 0x0f,
++			    0xcd, 0xb4, 0xbe, 0x00, 0xbb, 0xf6, 0x43, 0x29 },
++	},
++	.acpi_name	= "MSSL1680:00",
++	.properties	= teclast_x16_plus_props,
++};
++
+ static const struct property_entry teclast_x3_plus_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
+@@ -1612,6 +1638,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_SKU, "E5A6_A1"),
+ 		},
+ 	},
++	{
++		/* Teclast X16 Plus */
++		.driver_data = (void *)&teclast_x16_plus_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "TECLAST"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Default string"),
++			DMI_MATCH(DMI_PRODUCT_SKU, "D3A5_A1"),
++		},
++	},
+ 	{
+ 		/* Teclast X3 Plus */
+ 		.driver_data = (void *)&teclast_x3_plus_data,
+-- 
+2.34.1
 
