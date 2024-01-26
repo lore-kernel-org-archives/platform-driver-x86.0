@@ -1,164 +1,137 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CCE1EA74
-	for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jan 2024 17:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778B21DFF9
+	for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jan 2024 19:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706289151; cv=none; b=Mfyq/iwG26HCyhFGYzgreNDpLwBSdxk0t8NYFq1S6XTbJ77IlMe+8ZjbspwoMrde2C2w5aCAo7nUdfYfm82al6O7c9i0rm7X3xYVAN7xX+bqp9Nwuo5nvPshoXMgjnYszuY5BTaIqa44KM5kTUcnNfLfDhnB6of+0lLuQs7OJQg=
+	t=1706296555; cv=none; b=Bd46F5qNbx25Kxq7J6XqQQfCznn28QJo/rOez9nIIIU5xgbosTYPnND7MVyYhDBfWRL/haYmblrr8TQbYmX0e+3YMAaL4gHfqvqZTnS/n3SZrtBKXyBTZJFLf3gjs2nb6JY4a5lRLOqgVX2OnMUCxQAmxP11jqw3GkixPb/DSGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706289151; c=relaxed/simple;
-	bh=COb4jLeIk3Yc6EinXHh+ryEulfnYvk9LPJq7bo9yaf4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UCp2r3BQ+3nQFxHw7wEguUjTwnc+TkWEsYaWBuBEUsOiVDfEVQcvt5Ckye6EjzJO75bOOnKwXhvqPpSV0Txj8sLvQZPMzbftACKFxZY8GdFsFQEAN3Qqu1mBWvnFHVcjrp/mu8m3BCh+lD1HzxIUJy95xGhsvCL6lyiS+64CG3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rTPjB-0003h4-L9; Fri, 26 Jan 2024 18:10:53 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rTPiw-002YFi-JY; Fri, 26 Jan 2024 18:10:38 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rTPiw-008oFN-1F;
-	Fri, 26 Jan 2024 18:10:38 +0100
-Date: Fri, 26 Jan 2024 18:10:38 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Alex Elder <elder@ieee.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	James Clark <james.clark@arm.com>, linux-pwm@vger.kernel.org, Hector Martin <marcan@marcan.st>, 
-	Sven Peter <sven@svenpeter.dev>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, Alexander Shiyan <shc_work@mail.ru>, 
-	Benson Leung <bleung@chromium.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Paul Cercueil <paul@crapouillou.net>, 
-	Vladimir Zapolskiy <vz@mleia.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Conor Dooley <conor.dooley@microchip.com>, 
-	Daire McNamara <daire.mcnamara@microchip.com>, Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
-	Heiko Stuebner <heiko@sntech.de>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Michael Walle <mwalle@kernel.org>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Hammer Hsieh <hammerh0314@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>, 
-	Sean Anderson <sean.anderson@seco.com>, Michal Simek <michal.simek@amd.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
-	Anjelique Melendez <quic_amelende@quicinc.com>, Andi Shyti <andi.shyti@kernel.org>, 
-	Lu Hongfei <luhongfei@vivo.com>, Bjorn Andersson <quic_bjorande@quicinc.com>, 
-	Luca Weiss <luca@z3ntu.xyz>, Johan Hovold <johan@kernel.org>, 
-	Douglas Anderson <dianders@chromium.org>, linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	platform-driver-x86@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Guenter Roeck <groeck@chromium.org>, 
-	linux-riscv@lists.infradead.org, Fabio Estevam <festevam@gmail.com>, 
-	linux-stm32@st-md-mailman.stormreply.com, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
-	Jerome Brunet <jbrunet@baylibre.com>, chrome-platform@lists.linux.dev, 
-	linux-samsung-soc@vger.kernel.org, linux-staging@lists.linux.dev, 
-	linux-rockchip@lists.infradead.org, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, NXP Linux Team <linux-imx@nxp.com>, linux-leds@vger.kernel.org, 
-	linux-sunxi@lists.linux.dev, Jonas Karlman <jonas@kwiboo.se>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-amlogic@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, greybus-dev@lists.linaro.org, linux-mips@vger.kernel.org, 
-	asahi@lists.linux.dev, kernel@pengutronix.de
-Subject: Re: [PATCH v5 040/111] pwm: Provide devm_pwmchip_alloc() function
-Message-ID: <zjt3r6z5ilpffh26qidwp3axpnvfkwcrwanrtjjm2kscpdovuz@ppcrdlhmqiqq>
-References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
- <f59b1a4a8d6fba65e4d3e8698310c9cb1d4c43ce.1706182805.git.u.kleine-koenig@pengutronix.de>
- <db05fb6a-2ea5-4e00-ac03-adc1897d96de@ieee.org>
+	s=arc-20240116; t=1706296555; c=relaxed/simple;
+	bh=CPz6IphhHcCv1pvz7ku8eRTbqDnlf92LhPvbtfZZLds=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Sddt1ckrkQd/sqcUSVj1SnKD3op8Ybe5Mo6/K8F9Pb3cfUt5j4jDLCVSfJ3qSuhYqtQeOD6pXr5LiFDPDFI8O8ca+l0vx/QAu5WFyZABApV+Hsk9wgPPR1feQ9o4Kb4xUfIHLIfVFbjZUXD439EicA34gY/yIpNqBsy6Q+QApjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bmT3fEHX; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bmT3fEHX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706296552;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2PCC1hEtHrtY1vayDgnlvhtp45fpLTLJLLB8DBarJHg=;
+	b=bmT3fEHXUxFmQaHq9ALTK4fg1kLHKNjoo8qrw5Y9kfPVIx25VBKYI8vXOJH/0RdsNZM4iv
+	Xw0f8F+zvMdUp8Yjbo5I2ZWM9/oaas3VpyoEF88NtZRLUzucLFTgZ8AFbMvJfFDa1Nul6g
+	4h1Se3RjjW6h3ycO65Nypr9Fs7mlfQc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-650-4NV6H_57N26mPw0LbK1bsg-1; Fri, 26 Jan 2024 14:15:48 -0500
+X-MC-Unique: 4NV6H_57N26mPw0LbK1bsg-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-33932e8b3e6so400313f8f.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jan 2024 11:15:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706296547; x=1706901347;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2PCC1hEtHrtY1vayDgnlvhtp45fpLTLJLLB8DBarJHg=;
+        b=spo9egVhebNx04uM+5t7t4E/k+ZPivXX70LPFcGy0EaFXSE6+sVWbjZ/rNbRBfnKM7
+         tvdOAH4OUf9IQlsR/o8bu2yhgN12lruC2rQIFJsCS9YqpBZ72Jr2ToA0ziLMPK24P3Mp
+         FC59h/HcK9YEN/90u0ML0/AOL04VMFrw2sdvWBOaaR//X6cLRTzOgI098g9DQkR5RDSO
+         ZC0KLEmbJ+x6QoivJQNRjCmAjPsfTFFEayDa1pIKI/1hjYLKNqq8v/s3ohGen1R27i82
+         QAtlmxoKN+5FZzwfQgwk/xXylknDgR25a+TM/smzsc4mq5PRAX0zY2VnQA1HoandeWT/
+         ZZ0A==
+X-Gm-Message-State: AOJu0Yz91EtR7Ass7f7QaL7eAnkpOTvksriJj+zptlJx3rMT946e7EPo
+	D7TPGmTqLsjJi7ftASoskdvNB9j65RNOT+FAsRv2ybD3P5YBT9HDf6dxpDem9vxO4w7q86oWF/v
+	x8qEZCZGcNJabVmjgDe3WRkyTMPMjhIEae6WZVbbAvBP7ru2oOIAoJdEHEAV9wExV593YHNI=
+X-Received: by 2002:a05:6000:d81:b0:336:b937:3d0e with SMTP id dv1-20020a0560000d8100b00336b9373d0emr113232wrb.14.1706296547569;
+        Fri, 26 Jan 2024 11:15:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGtf0pQMMiFvVdyAYQa5EQODP2uJgiUqjQsvHdNI8WvL3y7uNYPUhmayX4/5JI/UfbWKh5PrQ==
+X-Received: by 2002:a05:6000:d81:b0:336:b937:3d0e with SMTP id dv1-20020a0560000d8100b00336b9373d0emr113217wrb.14.1706296547263;
+        Fri, 26 Jan 2024 11:15:47 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id g17-20020a1709067c5100b00a34a45c8a37sm930564ejp.145.2024.01.26.11.15.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jan 2024 11:15:46 -0800 (PST)
+Message-ID: <4e360838-36a9-41c0-a1d5-f369ed78cf04@redhat.com>
+Date: Fri, 26 Jan 2024 20:15:46 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="b26sjadvk3fz44v6"
-Content-Disposition: inline
-In-Reply-To: <db05fb6a-2ea5-4e00-ac03-adc1897d96de@ieee.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] platform/x86/intel/ifs: Call release_firmware() when
+ handling errors.
+Content-Language: en-US, nl
+To: Ashok Raj <ashok.raj@intel.com>,
+ Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, markgross@kernel.org
+Cc: Jithu Joseph <jithu.joseph@intel.com>, rostedt@goodmis.org,
+ tony.luck@intel.com, LKML <linux-kernel@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org, patches@lists.linux.dev,
+ pengfei.xu@intel.com
+References: <20240125082254.424859-1-ashok.raj@intel.com>
+ <20240125082254.424859-2-ashok.raj@intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240125082254.424859-2-ashok.raj@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hi,
+
+On 1/25/24 09:22, Ashok Raj wrote:
+> From: Jithu Joseph <jithu.joseph@intel.com>
+> 
+> Missing release_firmware() due to error handling blocked any future image
+> loading.
+> 
+> Fix the return code and release_fiwmare() to release the bad image.
+> 
+> Fixes: 25a76dbb36dd ("platform/x86/intel/ifs: Validate image size")
+> Reported-by: Pengfei Xu <pengfei.xu@intel.com>
+> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> Tested-by: Pengfei Xu <pengfei.xu@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+
+Thank you for your patch/series, I've applied this patch
+(series) to my review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in the pdx86 review-hans branch once I've
+pushed my local branch there, which might take a while.
+
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
+
+Regards,
+
+Hans
 
 
---b26sjadvk3fz44v6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hello Alex,
 
-On Fri, Jan 26, 2024 at 08:56:33AM -0600, Alex Elder wrote:
-> On 1/25/24 6:09 AM, Uwe Kleine-K=F6nig wrote:
-> > This function allocates a struct pwm_chip and driver data. Compared to
-> > the status quo the split into pwm_chip and driver data is new, otherwise
-> > it doesn't change anything relevant (yet).
-> >=20
-> > The intention is that after all drivers are switched to use this
-> > allocation function, its possible to add a struct device to struct
-> > pwm_chip to properly track the latter's lifetime without touching all
-> > drivers again. Proper lifetime tracking is a necessary precondition to
-> > introduce character device support for PWMs (that implements atomic
-> > setting and doesn't suffer from the sysfs overhead of the /sys/class/pwm
-> > userspace support).
-> >=20
-> > The new function pwmchip_priv() (obviously?) only works for chips
-> > allocated with devm_pwmchip_alloc().
->=20
-> I think this looks good.  Two questions:
-> - Should you explicitly align the private data?  Or do you believe
->   the default alignment (currently pointer size aligned) is adequate?
+> ---
+>  drivers/platform/x86/intel/ifs/load.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
+> index a1ee1a74fc3c..2cf3b4a8813f 100644
+> --- a/drivers/platform/x86/intel/ifs/load.c
+> +++ b/drivers/platform/x86/intel/ifs/load.c
+> @@ -399,7 +399,8 @@ int ifs_load_firmware(struct device *dev)
+>  	if (fw->size != expected_size) {
+>  		dev_err(dev, "File size mismatch (expected %u, actual %zu). Corrupted IFS image.\n",
+>  			expected_size, fw->size);
+> -		return -EINVAL;
+> +		ret = -EINVAL;
+> +		goto release;
+>  	}
+>  
+>  	ret = image_sanity_check(dev, (struct microcode_header_intel *)fw->data);
 
-I'm not aware of a requirement for a higher order alignment (but I might
-well miss something). I did my tests on arm, nothing exploded there.
-Maybe the conservative approach of asserting the same alignment as
-kmalloc would be a good idea. I'll think and research about that.
-
-iio uses ARCH_DMA_MINALIGN, net uses 32 (NETDEV_ALIGN).
-
-> - Is there a non-devres version of the allocation function?
-
-Patch #109 introduces a non-devres variant. As it's not used it's a
-static function though. Can easily be changed is a use case pops up.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---b26sjadvk3fz44v6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWz540ACgkQj4D7WH0S
-/k4oQwf+Nnq9bGZWZrbCQsHJYB54zfZt1whu2kQgdRMIQzT8HP7NadKhFCqs3Ob6
-5xwIwbIpdczrpzHM25+5ZrTBiH5oSQ/Si0YMzglndL8Tm59GEJxcKoorYpDNplJR
-xHL2owB7VgG87fFIvSCe163biS2vI/gIjAGvL9bpzcSH62Eq7EO3APk7Hx+h7d9e
-QHLzzUmpN9JlrzYOhKE7Pu7/iVFPNqNb7FQtAOnamXe0kRLs05649mgdJ9q30gS8
-imf9reDedsSG7sHM5NjtZpBQpF9H3vulzuGbH2MH2jNDLjtcpvUXUZpfijLN69iQ
-GqSwNOqcwcXljLsP1A1wM8snNwzi/A==
-=cXfD
------END PGP SIGNATURE-----
-
---b26sjadvk3fz44v6--
