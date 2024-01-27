@@ -1,64 +1,62 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49FB22309
-	for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jan 2024 19:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D247328DA7
+	for <platform-driver-x86@vger.kernel.org>; Sat, 27 Jan 2024 15:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706297127; cv=none; b=mSQI2fB/SLqaVsJye8NRw+TFxn7M6NFLCaXh7LlNA1v0251BRzMszUzkH6ckcKJvOuvL8Ffx90CWlupKiVSozFyAyE8qB13ltc/m1pNXegcLvgVvrCg0DiWs4uQSuRJ1SRwrQscaS5AeuEze4RgcugAFJZ1E3OkcQBGBBBfI4EM=
+	t=1706370612; cv=none; b=jiPH9Y3FgpavEhlLDCrRgd1rujEcOksA164RlC3wraqvFXzapXRTz3oFlC7WM6Up+HdrpRryk8MxWCeMj+UrJIRmyf1ssd9SuSfFKgCGgHR+4IK73BaRP4zmK1wRK8BSrVkZhAUEnK3fpy66uP+WuV+aRZ8DzoMEpBfVFnbh+BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706297127; c=relaxed/simple;
-	bh=8RvrO6y0/Of68/2+jUaQkLUjJNzaixet1pA07PR0cp0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LH3jbGk0Cu4cJ+OCD5sIxIVKGR1+4qfOhHTbqN3pAvl04X8Aqgpo33Mxob30DMyJsDYcaDArDaCXMHWBZihtEFR6+flldQ6FcEWPY/hdZZgT6XVqr1u0rgz9AGO06zdNS85WsuHXguX4enGxHWqrFdeJPgyntUNCNgn0e1KwbeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XvC9WHxK; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1706370612; c=relaxed/simple;
+	bh=OKPdxWyidDne3UMajumKxs0428TqhzDbCxV0XPkus2Y=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=tLmZ6UvHjOJKnFBhAj5FI3x3nJcJsANzLATu6MZsJnhVciicWwAgjYqnuXSnAnrmKvntpNQ6YYZ4+bO9dc8of2R8V9SO2DuRoObQ1FOoIXXAgbFX5LduZtjgqXgfDd9r9+OAGJwzn5ASB0/b0U0avwWdDBDCvhmY2rWr1fRbAEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YTLw8YOM; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XvC9WHxK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YTLw8YOM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706297124;
+	s=mimecast20190719; t=1706370608;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9BwPJ3hvI/qWKIxSwUd8kfeZg8oeRu3IC468fyX+vyo=;
-	b=XvC9WHxKfcA1ADUv0Exmeb2aDFfy7ibHnJXzFaq75y7coADffGxz+zniN0RjcvJ1QfusQT
-	GdB/6AFyIUN2UpeMOeE8Fs+eMzgoC/Idu65RmyMvY4kCIgMYaPBiaM/t2925RgKnovKutj
-	JYvO+/UGvH0ljEPKIxPG6nVDzjMcBfY=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=P2NyTUKkE9da1Ima12SE8z8vDesj+rJJfrcXoSA4ZHE=;
+	b=YTLw8YOMtz4tLFJOxI9iduenejHQvOzzzv3EU9DZRbEIlV4S824C/Mlt15PnrQlk5k+4LY
+	d3w34kLmtE6lseob35Hh8wyRkN5YHzSwCrBPhm4DrJMlzgMlvQGBq0N5p0HryeDucUqg2Z
+	eqi3++WqidZkNbWyBjCOnaqogYf2gYE=
 Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
  [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-593-lxKNLcyUNDCcZe6_MWCkAA-1; Fri, 26 Jan 2024 14:25:23 -0500
-X-MC-Unique: lxKNLcyUNDCcZe6_MWCkAA-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a3120029877so226224866b.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jan 2024 11:25:23 -0800 (PST)
+ us-mta-348-DsDeQl7EMCuXDg6Nb93-2Q-1; Sat, 27 Jan 2024 10:50:06 -0500
+X-MC-Unique: DsDeQl7EMCuXDg6Nb93-2Q-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a330b31c1fcso32356866b.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 27 Jan 2024 07:50:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706297122; x=1706901922;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9BwPJ3hvI/qWKIxSwUd8kfeZg8oeRu3IC468fyX+vyo=;
-        b=AWv8EbUSJkkmezhAYI9Iys+T20uVq/2231Cowrp/iqZ3u31wspUTP3JI1IH+YwJZsw
-         yZRHSqge5MZhyRYHD+qKZrDpktZS5sqwES6+45umzXSeZMbRq7wg47GdyTfNUMHgC9KE
-         j31YCW7kvqrnNj7pVDyWhGJ6/od+thgLWcypympyDA9T0pBZ8r9XrA4lWncSuUv4PZkI
-         E+1HoSGN1U09wNPlwgWR9YrM8RUSaHGnYF8WGiVDGNDJJ4W3tLjc5dSA1aZFp5pivWm8
-         0UKjEa4dChrP54tpaZXN4ULqxpQu5VSuu3lDhVo2l87b4OJleuU9/g/RSV1NFDOOTJqi
-         A0YQ==
-X-Gm-Message-State: AOJu0YzAqJBYNVWa4g7s5ZjpUaha/ihU2RLCQlAPsFnkvLMZ2gA0yFWj
-	N3zAXzEszxAPYglTZttcNUTvkHARj9C8IgjcbQNvolNGDTlw13RMk6XI/ZfDHTg+DFg80bzKsVw
-	b5spoLnjFDA9wt4j6Ydrj8CSD9+J7I4KQg1mHeZzd0mj0/Yi4C5+7DRjLpSPyT5c5Zn3aVDY=
-X-Received: by 2002:a17:907:d40f:b0:a32:6050:46eb with SMTP id vi15-20020a170907d40f00b00a32605046ebmr2342016ejc.23.1706297122310;
-        Fri, 26 Jan 2024 11:25:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGH7koZ3GtAHLsUDuZmgVG/7afQQStoYjkOG4elT+L0C6gW2E+7RHwF8ftfXVXnrcCaZieTBQ==
-X-Received: by 2002:a17:907:d40f:b0:a32:6050:46eb with SMTP id vi15-20020a170907d40f00b00a32605046ebmr2342001ejc.23.1706297122033;
-        Fri, 26 Jan 2024 11:25:22 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706370605; x=1706975405;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=P2NyTUKkE9da1Ima12SE8z8vDesj+rJJfrcXoSA4ZHE=;
+        b=SAFp3sdPNHydxoOe3oDap81fXaowbMropuqZoExlsOzN0xMH2G0OWtErutmb1D6Y/3
+         1Z34H0nBi6YlS1OigRk2yWjwTI/1t+QDFmlMuz3CoPpZW1st20pclJQrFm1NegmXXqHv
+         IJgXabT6GCvs09RHCGOggaLbgrvqPOM8rKe6i8q7E1xlsLELUhIENJ+Wlh2R3szk2Y4d
+         +eM2Ev6CSnD/WwE8IHlOyu5Lek6KtFVjrSItyrcG5DRkPH78tHwoDagsgcIIJ8Q444wR
+         d6iNLzPPf2oVvmmwdi2PjP0Qb4Rvo/jOe+n8QYPKE/oG5UbwUyg9tP9uA6Lg0xm+Qs69
+         VkEw==
+X-Gm-Message-State: AOJu0YwQeW0ouo2J2jE4QrVkCqFNUHw6JtvBb46ruGn+MUSPNBeJsC1p
+	zpLUFodIKVpF9mdM3AgBPflm5qokM7z3tcnLr/HOE2cM5RcJ5nsM58QMxVyM5sYwqrJcZDv+Lwm
+	ngn92ubEG0EnVZXSVrQk3wBI4w68Ri1QGaw+vkNqCjr6QpxwHZuEATnBJjxriyZZWt178S2I=
+X-Received: by 2002:a17:906:4a12:b0:a31:7af3:f45d with SMTP id w18-20020a1709064a1200b00a317af3f45dmr1278053eju.28.1706370605258;
+        Sat, 27 Jan 2024 07:50:05 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IETDe6YFOfBBlWmcbkxTITwwhj0BlK5z58fR3FMVArsfDUGWAWsTAAuJxc/ElDOsx7Quu1OOg==
+X-Received: by 2002:a17:906:4a12:b0:a31:7af3:f45d with SMTP id w18-20020a1709064a1200b00a317af3f45dmr1278046eju.28.1706370604945;
+        Sat, 27 Jan 2024 07:50:04 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id jt6-20020a170906dfc600b00a2d1b0c7b80sm931908ejc.57.2024.01.26.11.25.21
+        by smtp.gmail.com with ESMTPSA id st2-20020a170907c08200b00a351537aac7sm1355226ejc.71.2024.01.27.07.50.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jan 2024 11:25:21 -0800 (PST)
-Message-ID: <d2600cc6-332f-4a6b-9eb4-b84fa4aa033f@redhat.com>
-Date: Fri, 26 Jan 2024 20:25:20 +0100
+        Sat, 27 Jan 2024 07:50:04 -0800 (PST)
+Message-ID: <0a9cc4d2-6adb-4f79-a559-1a57a2b72de7@redhat.com>
+Date: Sat, 27 Jan 2024 16:50:03 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,97 +64,156 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drivers/platform/x86/touchscreen_dmi.c: Add touch config
-Content-Language: en-US, nl
-To: Phoenix Chen <asbeltogf@gmail.com>
-Cc: ilpo.jarvinen@linux.intel.com, linux-input@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240126095308.5042-1-asbeltogf@gmail.com>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240126095308.5042-1-asbeltogf@gmail.com>
+Subject: [GIT PULL] platform-drivers-x86 for 6.8-2
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Content-Language: en-US, nl
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi Linus,
 
-On 1/26/24 10:53, Phoenix Chen wrote:
-> Added touch screen info for TECLAST X16 Plus tablet.
-> 
-> Signed-off-by: Phoenix Chen <asbeltogf@gmail.com>
+Here is the first round of fixes for platform-drivers-x86 for 6.8.
 
-Thank you for your patch/series, I've applied this patch
-(series) to my review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-And thank you for also adding the embedded_fw data so that is
-will work out of the box for end users.
-
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
+Highlights:
+ -  WMI bus driver fixes
+ -  Second attempt (previously reverted) at P2SB PCI rescan deadlock fix
+ -  AMD PMF driver improvements
+ -  MAINTAINERS updates
+ -  Misc. other small fixes and hw-id additions
 
 Regards,
 
 Hans
 
 
+The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
 
+  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
 
+are available in the Git repository at:
 
-> ---
->  drivers/platform/x86/touchscreen_dmi.c | 35 ++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index 0c6733772698..7aee5e9ff2b8 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -944,6 +944,32 @@ static const struct ts_dmi_data teclast_tbook11_data = {
->  	.properties	= teclast_tbook11_props,
->  };
->  
-> +static const struct property_entry teclast_x16_plus_props[] = {
-> +	PROPERTY_ENTRY_U32("touchscreen-min-x", 8),
-> +	PROPERTY_ENTRY_U32("touchscreen-min-y", 14),
-> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1916),
-> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1264),
-> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-> +	PROPERTY_ENTRY_STRING("firmware-name", "gsl3692-teclast-x16-plus.fw"),
-> +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +	PROPERTY_ENTRY_BOOL("silead,home-button"),
-> +	{ }
-> +};
-> +
-> +static const struct ts_dmi_data teclast_x16_plus_data = {
-> +	.embedded_fw = {
-> +		.name	= "silead/gsl3692-teclast-x16-plus.fw",
-> +		.prefix = { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
-> +		.length	= 43560,
-> +		.sha256	= { 0x9d, 0xb0, 0x3d, 0xf1, 0x00, 0x3c, 0xb5, 0x25,
-> +			    0x62, 0x8a, 0xa0, 0x93, 0x4b, 0xe0, 0x4e, 0x75,
-> +			    0xd1, 0x27, 0xb1, 0x65, 0x3c, 0xba, 0xa5, 0x0f,
-> +			    0xcd, 0xb4, 0xbe, 0x00, 0xbb, 0xf6, 0x43, 0x29 },
-> +	},
-> +	.acpi_name	= "MSSL1680:00",
-> +	.properties	= teclast_x16_plus_props,
-> +};
-> +
->  static const struct property_entry teclast_x3_plus_props[] = {
->  	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
->  	PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
-> @@ -1612,6 +1638,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
->  			DMI_MATCH(DMI_PRODUCT_SKU, "E5A6_A1"),
->  		},
->  	},
-> +	{
-> +		/* Teclast X16 Plus */
-> +		.driver_data = (void *)&teclast_x16_plus_data,
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "TECLAST"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Default string"),
-> +			DMI_MATCH(DMI_PRODUCT_SKU, "D3A5_A1"),
-> +		},
-> +	},
->  	{
->  		/* Teclast X3 Plus */
->  		.driver_data = (void *)&teclast_x3_plus_data,
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.8-2
+
+for you to fetch changes up to 1abdf288b0ef5606f76b6e191fa6df05330e3d7e:
+
+  platform/x86: touchscreen_dmi: Add info for the TECLAST X16 Plus tablet (2024-01-26 20:21:47 +0100)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.8-2
+
+Highlights:
+ -  WMI bus driver fixes
+ -  Second attempt (previously reverted) at P2SB PCI rescan deadlock fix
+ -  AMD PMF driver improvements
+ -  MAINTAINERS updates
+ -  Misc. other small fixes and hw-id additions
+
+The following is an automated git shortlog grouped by driver:
+
+MAINTAINERS:
+ -  remove defunct acpi4asus project info from asus notebooks section
+ -  add Luke Jones as maintainer for asus notebooks
+ -  Remove Perry Yuan as DELL WMI HARDWARE PRIVACY SUPPORT maintainer
+
+intel-uncore-freq:
+ -  Fix types in sysfs callbacks
+
+intel-wmi-sbl-fw-update:
+ -  Fix function name in error message
+
+p2sb:
+ -  Use pci_resource_n() in p2sb_read_bar0()
+ -  Allow p2sb_bar() calls during PCI device probe
+
+platform/mellanox:
+ -  mlxbf-pmc: Fix offset calculation for crspace events
+ -  mlxbf-tmfifo: Drop Tx network packet when Tx TmFIFO is full
+
+platform/x86/amd/pmf:
+ -  Fix memory leak in amd_pmf_get_pb_data()
+ -  Get ambient light information from AMD SFH driver
+ -  Get Human presence information from AMD SFH driver
+
+platform/x86/intel/ifs:
+ -  Call release_firmware() when handling errors.
+
+silicom-platform:
+ -  Add missing "Description:" for power_cycle sysfs attr
+
+touchscreen_dmi:
+ -  Add info for the TECLAST X16 Plus tablet
+
+wmi:
+ -  Fix wmi_dev_probe()
+ -  Fix notify callback locking
+ -  Decouple legacy WMI notify handlers from wmi_block_list
+ -  Return immediately if an suitable WMI event is found
+ -  Fix error handling in legacy WMI notify handler functions
+
+----------------------------------------------------------------
+Armin Wolf (5):
+      platform/x86: wmi: Fix error handling in legacy WMI notify handler functions
+      platform/x86: wmi: Return immediately if an suitable WMI event is found
+      platform/x86: wmi: Decouple legacy WMI notify handlers from wmi_block_list
+      platform/x86: wmi: Fix notify callback locking
+      platform/x86: intel-wmi-sbl-fw-update: Fix function name in error message
+
+Cong Liu (1):
+      platform/x86/amd/pmf: Fix memory leak in amd_pmf_get_pb_data()
+
+Dan Carpenter (1):
+      platform/x86: wmi: Fix wmi_dev_probe()
+
+Hans de Goede (2):
+      platform/x86: silicom-platform: Add missing "Description:" for power_cycle sysfs attr
+      MAINTAINERS: remove defunct acpi4asus project info from asus notebooks section
+
+Heiner Kallweit (1):
+      MAINTAINERS: Remove Perry Yuan as DELL WMI HARDWARE PRIVACY SUPPORT maintainer
+
+Jithu Joseph (1):
+      platform/x86/intel/ifs: Call release_firmware() when handling errors.
+
+Liming Sun (1):
+      platform/mellanox: mlxbf-tmfifo: Drop Tx network packet when Tx TmFIFO is full
+
+Luke D. Jones (1):
+      MAINTAINERS: add Luke Jones as maintainer for asus notebooks
+
+Nathan Chancellor (1):
+      platform/x86: intel-uncore-freq: Fix types in sysfs callbacks
+
+Phoenix Chen (1):
+      platform/x86: touchscreen_dmi: Add info for the TECLAST X16 Plus tablet
+
+Shin'ichiro Kawasaki (2):
+      platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe
+      platform/x86: p2sb: Use pci_resource_n() in p2sb_read_bar0()
+
+Shravan Kumar Ramani (1):
+      platform/mellanox: mlxbf-pmc: Fix offset calculation for crspace events
+
+Shyam Sundar S K (2):
+      platform/x86/amd/pmf: Get Human presence information from AMD SFH driver
+      platform/x86/amd/pmf: Get ambient light information from AMD SFH driver
+
+ Documentation/ABI/testing/sysfs-platform-silicom   |   1 +
+ MAINTAINERS                                        |   5 +-
+ drivers/platform/mellanox/mlxbf-pmc.c              |   4 +-
+ drivers/platform/mellanox/mlxbf-tmfifo.c           |  67 +++++++
+ drivers/platform/x86/amd/pmf/Kconfig               |   1 +
+ drivers/platform/x86/amd/pmf/spc.c                 |  36 ++++
+ drivers/platform/x86/amd/pmf/tee-if.c              |   4 +-
+ drivers/platform/x86/intel/ifs/load.c              |   3 +-
+ .../uncore-frequency/uncore-frequency-common.c     |  82 ++++----
+ .../uncore-frequency/uncore-frequency-common.h     |  32 ++--
+ drivers/platform/x86/intel/wmi/sbl-fw-update.c     |   4 +-
+ drivers/platform/x86/p2sb.c                        | 206 +++++++++++++++------
+ drivers/platform/x86/touchscreen_dmi.c             |  35 ++++
+ drivers/platform/x86/wmi.c                         | 181 +++++++++++-------
+ 14 files changed, 472 insertions(+), 189 deletions(-)
 
