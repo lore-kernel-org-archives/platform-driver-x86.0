@@ -1,37 +1,41 @@
 Received: from mail-4323.proton.ch (mail-4323.proton.ch [185.70.43.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C24E15A493;
-	Mon, 29 Jan 2024 16:36:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5924A76020;
+	Mon, 29 Jan 2024 18:00:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706546202; cv=none; b=Y2lgSsLxp4gOdJGMcgfP0FaqQFuEjzFNYTa4f0FvEPlhcNhj5x10WBBaHWfsLPyC6Kq1CwQA1z+v8YgqKZRMHQKUKJMofcwPKo5RPqQ+caLsjlVI5v88ofieojq5rZ444kHglWr0FAXV6XPT8Ilypr2HaqJcAuaTb6h4jtdPJQA=
+	t=1706551247; cv=none; b=IJK2v7f3eV2bkqbllXWRZUywJ34ropj49hfsHcyQpKxbp5dyo4k43xJAXDNDq3MjjWnRSZ7qsyDC3PhKIJO+cPfgZjFvDibaUg653PITsDTwh5Gukrb2PClZbBTy5dpUWV8k/doox7ImVuyyd44cZ/V3RMtedYKgqMQ7Y1JVTXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706546202; c=relaxed/simple;
-	bh=l8roFfgwgVf/q6EsSpxj+S5HWm0zPj8ehUUy6GtK4j8=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=iIR/VFbakn1ac71nQ2P5TpfJPMMQPVcUvRk/GpaiU/p0CaELi2gr4fkyV/Cnq87qH2VMlQ8JicrsT3arFPK3Go18OrFkwJZt4c80ZGR4c5NpYEKeFOilQNvqiOvr7E2JRvJgw9Q6ad6QfseRE0pdl0A0FEL5gl+FASZRzJwFq0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bluemarch.art; spf=pass smtp.mailfrom=bluemarch.art; dkim=pass (2048-bit key) header.d=bluemarch.art header.i=@bluemarch.art header.b=mdH6IaVD; arc=none smtp.client-ip=185.70.43.23
+	s=arc-20240116; t=1706551247; c=relaxed/simple;
+	bh=9+ZXDWdPJAeaOha4zQ1+0jITzNR/67zdHl/455cVzFs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MsaCpdY6O2im0DTNzkjSB8L8FGhw2c7oPo1XEwY6RNpN3n4jwMqzIylumvcRpACxLoT4vPjg++aGnblgGvEKBailjulZpCI5++LrZXaGF2Uvb1Pj6Y5Tx54CCed0NkBAkhgTi24w2DvKiftSo+yAjLmme/7IHseZ9hKlYsTFKZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bluemarch.art; spf=pass smtp.mailfrom=bluemarch.art; dkim=pass (2048-bit key) header.d=bluemarch.art header.i=@bluemarch.art header.b=H9CPCZo2; arc=none smtp.client-ip=185.70.43.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bluemarch.art
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bluemarch.art
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bluemarch.art header.i=@bluemarch.art header.b="mdH6IaVD"
+	dkim=pass (2048-bit key) header.d=bluemarch.art header.i=@bluemarch.art header.b="H9CPCZo2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bluemarch.art;
-	s=protonmail; t=1706546188; x=1706805388;
-	bh=Pz5S2tybGQXBc/sGlP5HtlTloY+yieTdkiBNNBw2Rds=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=mdH6IaVDjHg+RLsD1E8Ka3HL8wHZLvcxukkgQN3VQJwTKbXQ/HQ1WwsOKapXWCEh0
-	 1BwJzVPCYBtyHtcgcTWj5VwHPC8Mkdi0vyDxx9Kg6fbp3GHFFWEcAsAqp2DrSLuX/q
-	 dtCA7C8dzMQ3fD1aToy6dfrUhJeMLXvusWGGp9RlyuGEJrd/O4ENN7fSAk+Bvmvnkq
-	 iE+PUiqEbQH/Qoek41mqsPZ0yBCDaLEBIi90crJkRJOdDwcjrulNmfzoSMP1ZJ2ldh
-	 hrfEVwRw+g31JeJTDTrQmwUaw7bOV3sKrUzxCVEXfp305dV3rtYMkO5oTQ9lZUazvJ
-	 ugwzxn9syRALg==
-Date: Mon, 29 Jan 2024 16:36:21 +0000
+	s=protonmail; t=1706551238; x=1706810438;
+	bh=kWKQ4f/Bj8ANB5Z+gowC7n7O4QcvZo07zvKsDMyLdv4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=H9CPCZo2u6qZ/3/9eT+ywwPT/1puRst6FP4/qIpwh+wing44HiWGvRGgYQbLh0Ucz
+	 Iio49A695GWzfpsNggg/t6gyvdeGj4b8YOCRYiud7OVWEue+akyp5ink+tUzf/j446
+	 CxaCm382vSV00P02NHEEOXWGT2hXEzZ5ZcOiADCdH/I6HtRtAiZwJQSkhiEbziNq9A
+	 msAL/yj/7/KuAjPUTFuM2Q5qQd1xTSo+Gr4XTpqD58pjXNGeUOQ/OqHlLWYtt85FEg
+	 8Gxwzv6RGf1Xr5d0wV2IQJASAQx6qQIo7Opkc2GCsZvE5CyWCkaE7ujBUiG+E92zHv
+	 cM0cZthzt7UBA==
+Date: Mon, 29 Jan 2024 18:00:23 +0000
 To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jwoithe@just42.net, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
 From: Szilard Fabian <szfabian@bluemarch.art>
 Cc: Szilard Fabian <szfabian@bluemarch.art>
-Subject: [RFC PATCH] platform/x86/fujitsu-laptop: Add battery charge control support
-Message-ID: <20240129163502.161409-2-szfabian@bluemarch.art>
+Subject: [RFC PATCH v2] platform/x86/fujitsu-laptop: Add battery charge control support
+Message-ID: <20240129175714.164326-2-szfabian@bluemarch.art>
+In-Reply-To: <20240129163502.161409-2-szfabian@bluemarch.art>
+References: <20240129163502.161409-2-szfabian@bluemarch.art>
 Feedback-ID: 87830438:user:proton
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -51,6 +55,12 @@ patch on a dual battery one, but I didn't find any clue about
 independent battery charge control on dual battery Fujitsu notebooks
 either. And by that I mean checking the DSDT table of various Lifebook
 notebooks and reverse engineering FUJ02E3.dll.
+
+Signed-off-by: Szilard Fabian <szfabian@bluemarch.art>
+---
+v2:
+Forgot to sign-off the original commit. Fixed, sorry for the
+inconvenience.
 ---
  drivers/platform/x86/fujitsu-laptop.c | 95 +++++++++++++++++++++++++++
  1 file changed, 95 insertions(+)
