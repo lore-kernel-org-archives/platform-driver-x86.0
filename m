@@ -1,189 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CB2629EF;
-	Mon, 29 Jan 2024 13:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949B562811;
+	Mon, 29 Jan 2024 13:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706533604; cv=none; b=fS8oMgQzD01Hecl3WfyDtZx86kZDK1VItP/5sO4Uy8ZLadtIEfunUemFcsC+O/GtQ0Sk3vABJeZCeQsPw8v7gzXSUvw6uZtl/9QEXFkOvLJINdU7WRuADuQ2ZuZSJ7JkPTSfxR1AzkwmuzRs47ENeoiTNP8G1T3rFaa0AO4KEkI=
+	t=1706533748; cv=none; b=jRm0fxGRRF4XQ7z3YSMuBxHQZJiHWEwlpcZR9cp4YC0a5JfEe9N8htOAjqQ7Wob7WafRTofTiuEo7tbr33vpxmtXtB/bkyH0hJ4xqn8iCe17kPVT1Jf7Rcb0LN2deyuIoEUkpjSG8STrzFoNrZsD6Q5MxPyUvNjrGwxd0ASdhXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706533604; c=relaxed/simple;
-	bh=LJf7dTcJbBMHD+bB1uzaU0zJsclsm818XWVIqsj/XS4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MwcLG3JjKaj/In0mxzq+HgvoHlPepF4MnnyC3i9/LgwIz+4vAx7HHWCRy1mtYCb73inOHXjdibPgroFPGXdwm/5GaYJ3kv4BOywt+9b4mHn/31dQwif9zc/ngV79fftwtXVRDoEkE+ALv3E4wxTzIeHlX3x/kNU3HS1RiZcZ3GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XJyKOJ9b; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XJyKOJ9b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706533604; x=1738069604;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LJf7dTcJbBMHD+bB1uzaU0zJsclsm818XWVIqsj/XS4=;
-  b=XJyKOJ9bCRCETTL5vNlvw+NYHHvA8lldw2UUpA+o/4L2UD765i/wkJ4B
-   7s3kY2dEPeuAKWdFUeD8JEZIMxCRTvxfzEa3FdQrhf1ichydmo4fCBifY
-   zrd+PaaqVQFRHbk3EuuQjuqBX4sqUmS++AYpgdb2rqVFZJ6SL/PtPM0uO
-   ncP+aE+jmBkGZCZT+d9IE9L66YLBt/lZ0qjWWGiRq+8r+NgLHMIAXbq6P
-   8MKu2qhe38BfgZl/DUAO1CIK2zetKH4zwkJSoSj8+GT7s/R3iNRBMc/sA
-   9tsq36/k8d1Yr3p9Si0ubnDGxQV70CgjJBJS4OYx9e/MIAShyJhnam6Ql
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="21473742"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="21473742"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 05:06:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="907106901"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="907106901"
-Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.229.33])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Jan 2024 05:06:35 -0800
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mark Gross <markgross@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Andrew Halaney <ahalaney@redhat.com>,
-	Simon Horman <simon.horman@corigine.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Voon Wei Feng <weifeng.voon@intel.com>,
-	Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-	Lai Peter Jun Ann <jun.ann.lai@intel.com>,
-	Abdul Rahim Faizal <faizal.abdul.rahim@intel.com>
-Subject: [PATCH net-next v4 11/11] stmmac: intel: interface switching support for ADL-N platform
-Date: Mon, 29 Jan 2024 21:02:53 +0800
-Message-Id: <20240129130253.1400707-12-yong.liang.choong@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
-References: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
+	s=arc-20240116; t=1706533748; c=relaxed/simple;
+	bh=yK4wbTh6bSn8rEOdKLCmSlmXPF4BosuPXm/2A11MVIA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XY7cwfCbX6f7PER3g3ejgCjZySpNCYXLFcJrZhWCkTt9kIkYNCve0xI7NmJS9sLQ9A/RwqJJHH2sspDewlsCiKQjGd7lcl7uVOjtzGoeTyoPv9pD5O7whEKgVhsdcQCqPkImZxL2xrH9YquJOvI4ZIeji/f9bmuHobERlJF0H0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-59a1e21b0ebso485565eaf.1;
+        Mon, 29 Jan 2024 05:09:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706533745; x=1707138545;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Alp1p5dJCXivYUGQq6SDVyX8wUiyy4r59lRTBCpk25M=;
+        b=HokCb5wudEfysGNFZD+OS/BU8q5hEA92S4JiwXEf5HYiznOf1aVc7CuwKmlAWg+N5i
+         n5m0uzw65BC5uRRh32NjPgNw4fql/45Vn/Sl8J3+bAYEUFc2O45OaEm2vN+BnSQtZfVZ
+         VoKNPQhldlHnPC15wwhDWQsPkM8xFg/RIO4xNMWH+wZAfFmqrCdlEWrEloFK00hINiHB
+         Ik2dSCBtWsQJu6PBWhmAnroyPgL62kR7L4FNgd9cODjiuNlGRlP2goTklG7kG2AYxkb+
+         lnju09BwF9sg1KXW8AiccrwNyJqKqZx1w3nsEphefiBwW3322KhEWss/agUhpmS7VQg9
+         JPnQ==
+X-Gm-Message-State: AOJu0Yxe/ElB9GvdCxe8HcqRKajc9Ugn5V1GemNP8MNJUcrDImqnQBns
+	CkdTjjX5XKa3NJmUfPcKo6p/C8rQpWFXN/41BXTnKHN3bQUBCBrk+QdE3Wqc6skLS/fpWIzsBnX
+	IQmdeTZIKnaaDXQN2cgcj0+vzKuM=
+X-Google-Smtp-Source: AGHT+IGUY1MFJq9OVpn1j1X5jEB0eyAgrp9nbcTMdm4vBDmTQU74VD/K5DcqNQSkWlz9oGvGHGomZ+k7PC/EPirNmF8=
+X-Received: by 2002:a4a:bd8c:0:b0:59a:bfb:f556 with SMTP id
+ k12-20020a4abd8c000000b0059a0bfbf556mr6520776oop.0.1706533745637; Mon, 29 Jan
+ 2024 05:09:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240124190732.4795-1-W_Armin@gmx.de> <9ccc3b9d-d71a-451c-80f5-3da62108d983@redhat.com>
+In-Reply-To: <9ccc3b9d-d71a-451c-80f5-3da62108d983@redhat.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 29 Jan 2024 14:08:54 +0100
+Message-ID: <CAJZ5v0j1qvJYXqo96eMmtD4JnGh4Mu2ESdri5cGAqL-4bK0geA@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: wmi: Initialize ACPI device class
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-'intel_get_pcs_neg_mode' and 'intel_config_serdes' was provided to
-handle interface mode change for ADL-S platform.
+On Mon, Jan 29, 2024 at 1:51=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+>
+> Hi,
+>
+> On 1/24/24 20:07, Armin Wolf wrote:
+> > When an ACPI netlink event is received by acpid, the ACPI device
+> > class is passed as its first argument. But since the class string
+> > is not initialized, an empty string is being passed:
+> >
+> >       netlink:  PNP0C14:01 000000d0 00000000
+> >
+> > Fix this by initializing the ACPI device class during probe.
+> >
+> > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> > ---
+> > Note: This patch is based on commit 3f399b5d7189 ("platform/x86: wmi: U=
+se ACPI device name in netlink event")
+> > ---
+> >  drivers/platform/x86/wmi.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> > index 7ef1e82dc61c..b92425c30a50 100644
+> > --- a/drivers/platform/x86/wmi.c
+> > +++ b/drivers/platform/x86/wmi.c
+> > @@ -32,6 +32,8 @@
+> >  #include <linux/wmi.h>
+> >  #include <linux/fs.h>
+> >
+> > +#define ACPI_WMI_DEVICE_CLASS        "wmi"
+> > +
+> >  MODULE_AUTHOR("Carlos Corbacho");
+> >  MODULE_DESCRIPTION("ACPI-WMI Mapping Driver");
+> >  MODULE_LICENSE("GPL");
+> > @@ -1202,7 +1204,7 @@ static int wmi_notify_device(struct device *dev, =
+void *data)
+> >               wblock->handler(*event, wblock->handler_data);
+> >       }
+> >
+> > -     acpi_bus_generate_netlink_event(wblock->acpi_device->pnp.device_c=
+lass,
+> > +     acpi_bus_generate_netlink_event(acpi_device_class(wblock->acpi_de=
+vice),
+> >                                       acpi_dev_name(wblock->acpi_device=
+), *event, 0);
+> >
+> >       return -EBUSY;
+> > @@ -1267,6 +1269,8 @@ static int acpi_wmi_probe(struct platform_device =
+*device)
+> >               return -ENODEV;
+> >       }
+> >
+> > +     strscpy(acpi_device_class(acpi_device), ACPI_WMI_DEVICE_CLASS, si=
+zeof(acpi_device_class));
+> > +
+>
+> Hmm, I'm not sure if you are supposed to do this when you are not an
+> acpi_driver's add() function.
 
-Modphy register lane was provided to configure serdes on interface
-mode changing.
+You aren't.
 
-Signed-off-by: Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>
-Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
----
- .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 49 ++++++++++++++++++-
- .../net/ethernet/stmicro/stmmac/dwmac-intel.h |  2 +
- 2 files changed, 50 insertions(+), 1 deletion(-)
+> Rafael, do you have any comments on this ?
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-index fd9d56b7c511..f54595d156fb 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-@@ -992,6 +992,53 @@ static int adls_sgmii_phy1_data(struct pci_dev *pdev,
- static struct stmmac_pci_info adls_sgmii1g_phy1_info = {
- 	.setup = adls_sgmii_phy1_data,
- };
-+
-+static int adln_common_data(struct pci_dev *pdev,
-+			    struct plat_stmmacenet_data *plat)
-+{
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
-+	plat->rx_queues_to_use = 6;
-+	plat->tx_queues_to_use = 4;
-+	plat->clk_ptp_rate = 204800000;
-+
-+	plat->safety_feat_cfg->tsoee = 1;
-+	plat->safety_feat_cfg->mrxpee = 0;
-+	plat->safety_feat_cfg->mestee = 1;
-+	plat->safety_feat_cfg->mrxee = 1;
-+	plat->safety_feat_cfg->mtxee = 1;
-+	plat->safety_feat_cfg->epsi = 0;
-+	plat->safety_feat_cfg->edpp = 0;
-+	plat->safety_feat_cfg->prtyen = 0;
-+	plat->safety_feat_cfg->tmouten = 0;
-+
-+	intel_priv->tsn_lane_registers = adln_tsn_lane_registers;
-+	intel_priv->max_tsn_lane_registers = ARRAY_SIZE(adln_tsn_lane_registers);
-+
-+	return intel_mgbe_common_data(pdev, plat);
-+}
-+
-+static int adln_sgmii_phy0_data(struct pci_dev *pdev,
-+				struct plat_stmmacenet_data *plat)
-+{
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
-+	plat->bus_id = 1;
-+	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
-+	plat->max_speed = SPEED_2500;
-+	plat->serdes_powerup = intel_serdes_powerup;
-+	plat->serdes_powerdown = intel_serdes_powerdown;
-+	plat->get_pcs_neg_mode = intel_get_pcs_neg_mode;
-+	plat->config_serdes = intel_config_serdes;
-+	intel_priv->pid_modphy = PID_MODPHY1;
-+
-+	return adln_common_data(pdev, plat);
-+}
-+
-+static struct stmmac_pci_info adln_sgmii1g_phy0_info = {
-+	.setup = adln_sgmii_phy0_data,
-+};
-+
- static const struct stmmac_pci_func_data galileo_stmmac_func_data[] = {
- 	{
- 		.func = 6,
-@@ -1374,7 +1421,7 @@ static const struct pci_device_id intel_eth_pci_id_table[] = {
- 	{ PCI_DEVICE_DATA(INTEL, TGLH_SGMII1G_1, &tgl_sgmii1g_phy1_info) },
- 	{ PCI_DEVICE_DATA(INTEL, ADLS_SGMII1G_0, &adls_sgmii1g_phy0_info) },
- 	{ PCI_DEVICE_DATA(INTEL, ADLS_SGMII1G_1, &adls_sgmii1g_phy1_info) },
--	{ PCI_DEVICE_DATA(INTEL, ADLN_SGMII1G, &tgl_sgmii1g_phy0_info) },
-+	{ PCI_DEVICE_DATA(INTEL, ADLN_SGMII1G, &adln_sgmii1g_phy0_info) },
- 	{ PCI_DEVICE_DATA(INTEL, RPLP_SGMII1G, &tgl_sgmii1g_phy0_info) },
- 	{}
- };
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-index 093eed977ab0..2c6b50958988 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
-@@ -124,8 +124,10 @@ static const struct pmc_serdes_regs pid_modphy1_2p5g_regs[] = {
- 	{}
- };
- 
-+static const int adln_tsn_lane_registers[] = {6};
- static const int ehl_tsn_lane_registers[] = {7, 8, 9, 10, 11};
- #else
-+static const int adln_tsn_lane_registers[] = {};
- static const int ehl_tsn_lane_registers[] = {};
- #endif /* CONFIG_INTEL_PMC_IPC */
- 
--- 
-2.34.1
-
+I'm not quite sure why this is done here.
