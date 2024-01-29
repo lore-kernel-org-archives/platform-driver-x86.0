@@ -1,82 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA4F2E633;
-	Sun, 28 Jan 2024 18:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56B18BEE
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jan 2024 00:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706468187; cv=none; b=RZuNKI17lfucpsaS3gkQEvwaqZdWLLJLrFiFsjLCPt0ncpxlAT+SpslWIP7zoGPrKa5b6MGm2SqqRBXlnDSGHOeN0zt6u61sIplKOsqMb5H7dYPIs168E3Kf/7jVVtr7aQTEYqwvJ5LFew/IVwOq6ZoVbI9ARn9UVB2zhkoCS2E=
+	t=1706488400; cv=none; b=gqVg9r+AGQQOGXLF+PYXEmU07xFp/xjpm+qquZCDIr0J7fBzQ9bVCep0oD263l7ZPqcUHhaIxxXvaTF14epIFPsNWiOQNWRRz7tiNqUXnUMdx2qBVhkDt66WVECLtH0QwbWCEpytcUbg3y0d8IP1EnZBRu+dd+FTtGKjJOcaGv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706468187; c=relaxed/simple;
-	bh=NXn49SNNkLuAR3eI0XKBU5ciRsCgriwwJFIZaXxDi98=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JePUDrwvJ4pT10aKzRe6ScaP/h0lIaKCNsZ6pjCg/zNPd/8E0k+B12McYLk2oVnENzkZ/2fCmMVXCBTTP21B3lya22BTzDLanhl+zWuGxlrAeef0MS7zPH2b4srtKVUWRf6Fb65hVSvNHqkWQyYdGTjC4GLdK4NODxAkeVtJOQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IImyyOVK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706488400; c=relaxed/simple;
+	bh=yt/0AdaCK66gYBtqSM5+xTWegCD0Bjy3f9PmbbJ6eYs=;
+	h=Date:From:Subject:To:Cc:Message-Id:MIME-Version:Content-Type; b=qhxTCoZV8Ut8D/h8x7sEhUSvhmz/xcXDQiMkc9LnBJUIBqwGcQv2E/sCparYRWQMf2ZiUbrmDwjw3qmCptjpeQMmJYIifBaMHK1lHdhqFsTL7oiEIO2pLTA4wv5fSRxmW5ENk9cXsuHQSpUomC000fEwcSlbf5GCmnoXAQlyxQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=LcNCjICx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZLDmYtJb; arc=none smtp.client-ip=64.147.123.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IImyyOVK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1261C433C7;
-	Sun, 28 Jan 2024 18:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1706468186;
-	bh=NXn49SNNkLuAR3eI0XKBU5ciRsCgriwwJFIZaXxDi98=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IImyyOVKFTeWwUkB4vKyvjtOkxEfLmrw7VQIjvfKp0HqfJX4MvItOQGVnFu1ao43E
-	 uD8Xa8w+B5Zj5G8I6eo/xqpOS+uX897dfYEEoL6O64F/izJnnttzZFh71LIWTXWI/h
-	 BkZY7mz0hESA7dDIqU1al/HGIq77eD5XW6BBcLWg=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: naveenkrishna.chatradhi@amd.com
-Cc: linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Carlos Bilbao <carlos.bilbao@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="LcNCjICx";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZLDmYtJb"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailout.west.internal (Postfix) with ESMTP id 808A23200A7F;
+	Sun, 28 Jan 2024 19:33:16 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Sun, 28 Jan 2024 19:33:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm1;
+	 t=1706488396; x=1706574796; bh=MYREC1ynNG5H4sz49f8ll4E9LEqrQ6SM
+	PJjwL5Bl+yk=; b=LcNCjICxiRRZBUHtxxhFGtSzDT9SAFzGBufAZiX6CTaibfuO
+	dSChsIK4glbFZvELcYAILwy4fF3MqI+TxTxcqc5ZRMUe9foi5Xjb68eGw7JCBC19
+	5hSxR4cIsKSgQyR5cUGKZJLd9ibMzAAT7LtAm7ajgZ6BtJlaHVoaHeAixEoUkBhG
+	/RQnP/Df3nTWUNbXpD4w07WRpx+dhHRuIVMlF6xFXK3IvpF0eeSXMh1rAZiQFVRw
+	GcO1jxuH5k/GdBSE/JtH7d8d2P2SfF4In2ZCb0OqotJQlrL+VREbR+FMlInuqhAt
+	o68afiWW7Cx7HOkvsxGVvP8pe2Fla3PpsOQr2g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1706488396; x=1706574796; bh=MYREC1ynNG5H4sz49f8ll4E9LEqrQ6SMPJj
+	wL5Bl+yk=; b=ZLDmYtJbvAaqouvV7gDhAKha+1bpxOmUZQMDNeO1AHrUdP9sNet
+	NzU9wfnU+Cscv9uT7DCwDMXqxtvEEyEO+APwbCc1VqAbNO688brLFGcHsqJh9ih8
+	DSyhKr3Sn9+OauNqd05xNOgn0Ouzr9tpyX4LF8C0o70vBeHHskjmndSy3erRwdLu
+	wX3VJ3Ei6Dm7tmwR6sHOg2SL1pHJkvTnZfaNAha2PPPDpqQ2ZayWXg6kTXUZgot6
+	JUNlcZnxxYfkTyhV754EKZlcWeNJYp03/PKThh+VeBU5XPeOLPLHt1GiCVkulJYB
+	0Dd+aTHp16C+uyAON4WYOuITPhrn18+tZ5A==
+X-ME-Sender: <xms:S_K2ZXYABc5eIWG5NYnNJUh90iZNBTeiuRapml0ffaP8Yion8NwKrA>
+    <xme:S_K2ZWZSST_WZbpStdsQQ_guX3KJq2eonHXTESyhEm02jEbEgsgMWrhmlrJ27HyHu
+    lkzKjmcAx1S1wccTZc>
+X-ME-Received: <xmr:S_K2ZZ8RqDPpX6-oKHvMokPn5fEhdsxA7yzBkLuibnfcRc_qLJxzFI3sart7OF-LGsIsAoKU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtfedgvdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffuvfevkffogggtsehttdertd
+    ertddvnecuhfhrohhmpefnuhhkvgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdgu
+    vghvqeenucggtffrrghtthgvrhhnpeekjeetteegtdeifeejjedugfduvdfflefhteduve
+    ejfefhkeekvdelgeekfffgueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:S_K2ZdrG22PMRPQVlE_4Hb6SANnyQizWnpoV4gYDcGBzA2s1HnzPUQ>
+    <xmx:S_K2ZSpLd5KsjVc4ZUyS6MRZPEJaN6bA5i_IxJR-sWvxADEFaUBmLg>
+    <xmx:S_K2ZTRZ8cHMZh0wwsXHzQEBLE6cT1T_VjFc5hDnsd_H0pVQ9PMexQ>
+    <xmx:TPK2ZZ3T7KipAOx9LBPR-j_D-mdGR6UYavG1zQo6eh5AGDr3ADZmyQ>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 28 Jan 2024 19:33:12 -0500 (EST)
+Date: Mon, 29 Jan 2024 13:32:58 +1300
+From: Luke Jones <luke@ljones.dev>
+Subject: Re: ERROR: Writing to dgpu_disable cause Input/Output error
+To: athul.krishna.kr@protonmail.com
+Cc: acpi4asus-user@lists.sourceforge.net, corentin.chary@gmail.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86/amd/hsmp: switch to use device_add_groups()
-Date: Sun, 28 Jan 2024 10:56:22 -0800
-Message-ID: <2024012822-exalted-fidgeting-f180@gregkh>
-X-Mailer: git-send-email 2.43.0
+Message-Id: <YUYZ7S.LZOIVEZ0E6Z31@ljones.dev>
+X-Mailer: geary/44.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1335; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=NXn49SNNkLuAR3eI0XKBU5ciRsCgriwwJFIZaXxDi98=; b=owGbwMvMwCRo6H6F97bub03G02pJDKnbFoeZmU9oi+OUNf/bHbJJyeztlKc5a8zXabdPePuk2 OVZw7v+jlgWBkEmBlkxRZYv23iO7q84pOhlaHsaZg4rE8gQBi5OAbjIR4a5Qo7Ke2w3WD37lVqc GvKIzf3Xlg03GOa7zKp7fW0DM0exxJ/1r6a9kVfIfBkAAA==
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 
-The use of devm_*() functions works properly for when the device
-structure itself is dynamic, but the hsmp driver is attempting to have a
-local, static, struct device and then calls devm_() functions attaching
-memory to the device that will never be freed.
+I think this can sometimes be caused by device drivers holding some 
+things open. Can you switch to a TTY, kill all display servers, and 
+then try the disable method?
 
-The logic of having a static struct device is almost never a wise
-choice, but for now, just remove the use of devm_device_add_groups() in
-this driver as it obviously is not needed.
+Cheers,
+Luke.
 
-Cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-Cc: Carlos Bilbao <carlos.bilbao@amd.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/platform/x86/amd/hsmp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
-index b55d80e29139..49ef0b1d6df0 100644
---- a/drivers/platform/x86/amd/hsmp.c
-+++ b/drivers/platform/x86/amd/hsmp.c
-@@ -471,7 +471,7 @@ static int hsmp_create_sysfs_interface(void)
- 		if (ret)
- 			return ret;
- 	}
--	return devm_device_add_groups(plat_dev.dev, hsmp_attr_grps);
-+	return device_add_groups(plat_dev.dev, hsmp_attr_grps);
- }
- 
- static int hsmp_cache_proto_ver(void)
--- 
-2.43.0
 
