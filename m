@@ -1,513 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2087.outbound.protection.outlook.com [40.107.223.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B94A6340E;
-	Mon, 29 Jan 2024 13:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706534414; cv=none; b=UcnxhP51TqDiY6AB46EAFfp8GeGBPGjhC4CengjwtpnWRxOhd+AAQsb1EfG0qT/bBBwJCoucq2q7nnU4Cqn4hs3KZxX0Dt/ccS3XsIHGsyEG2Et4gA0zbX0Knc+sulimbbS3Z7e6/tL7QOZky2NPFYRGysNF9h3ynboGR3wjbsU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706534414; c=relaxed/simple;
-	bh=PNslfRBhK9we87SIbsLqtqkxC4+c085ytg5+AabKUnM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PgxhpAW1fNnK1YIzncYYJC1KYQeYSWTheFesicWWO91YG7kD2ZYYefNYxHQR3gM822m7vmVFNb5vH2wAX1+SEPlak8xMF6/yyZGIcS1GRVYYh/SI3Kp/HtFIDrxPe+nQCtVtLrKUYzp3Hhlah1/kKLaR3HAD8abvSIXnWEHSqdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UkREACnA; arc=none smtp.client-ip=192.55.52.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABC0634EB
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jan 2024 13:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706534668; cv=fail; b=qW0YNJkmK5Chj1XXGINXEYB5v7Z3ntm2pZK4VDc2I0dTeGsJTfri7QCsiONRmqQuHKZ8kUHyyN2anr5GImDhM6cdZ3SA25rHv4Smqu69unCQ/u6441HIZ06yrzkkj6E8eaT5QjAGiT8iS8rrF5NUEVmgkRPlV1N791+8IS0QC6w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706534668; c=relaxed/simple;
+	bh=o0X9I0PTLWJQt302XxRcNK5+1Hh8P09NeLtpZKl/iU8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ebJ5UcIV9C8ZG84IKh7cueCsiX+7OarTU2KhR6YNhPBM9oykU/WL0qHFJ5ef9rysm4vxIr1clbfmjWnIaqLTkcR8efj6RJb+6gFKbRvOMwmpFFLt7N+DIKX5xAlCZZDv+jbLg7one2K2r11gRbGxDIJFKax8h/UHfKeLV2hGYJY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DzjSJOOj; arc=fail smtp.client-ip=40.107.223.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UkREACnA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706534412; x=1738070412;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PNslfRBhK9we87SIbsLqtqkxC4+c085ytg5+AabKUnM=;
-  b=UkREACnAp7ytU2g35Y1l1MTxyGel+psFjwXoCA8SqwKphY444tUnvXty
-   ekUXTOOUoi2O+51sWHcwb7aJODFENkNo7o9lqdOWWHCU1iG4cXU7erALU
-   +Fh6UO9RFqqco7vGAKK28m4B9bCijzdeGP29Gn5YGCce+0rwvixFynd+d
-   NRF8UsCSZzCa/4KAGnTkU8DIuc31n/5ibhaluO8USQRfiOGt6oLvb5T1E
-   lNpLgGEO1atYl1MGnRHYEfKnDEqqYMdyF6BeFHyM8IfoLniINn1yQKduR
-   p9W8GjO5aVQ5aBx7zE4xv2cdH6RTzDFNtwGMr9bIWq+clkZdg2ovkQ1E9
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="400092850"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="400092850"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 05:20:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="787829001"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="787829001"
-Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.122.111]) ([10.247.122.111])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 05:19:58 -0800
-Message-ID: <26568944-563d-4911-8f6f-14c0162db6e9@linux.intel.com>
-Date: Mon, 29 Jan 2024 21:19:58 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DzjSJOOj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TbAm/vjgbCLFWyK3hYvQazuagOHtr5+4sU0IrfouTEKQnFnQa5P4IRuKDfsMj2F6tu7TWozZfmwNHleFlmw9BEW5nkvHhY0TrDCcExY7Cd9c+y6CRwMHX8q4xXX1rEwDvtl34H53f1VD5Mi2eTibS1o7mQboQ3zGdv7cfJ8f2t9f26TSqT4LiR/JrQZCINX5W5F7S4ph+T6jdZj4AphyUMfp2uUia1Bv0GCzwNxxNTtbevTmGRNA9bCUrBUD5OIFJAdJiW5+pRc63wKiKqpW4Tddfkh0ODflTmK5jhDiFZY7557sa2JheT+EjFzIbeOvTVAdzMxuSH18Agy6cJhxXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DtqsKhdGvMyCXGVtF1FaKZRJQQa3WgqLhp0fhPl6jlU=;
+ b=HGxgoMWnS2l8gwnvkkb4jPXZd3lhhxxw2T+kYIunOvb7L14oST7gI6lQeN0M+BXaVAcHIaDMGBqK8cAHH5IEh+JtNR7BVt/xO6Q2q+AFG37l2h4D9PO3d4CQ93DcKs6EKqOtUhDlGptX4AwEM5ahOFUdqffbmpGZAmXsqVA045Hiht+duqBqQ5cDQgqumylaTysD+4qA8A2lgyEBd757utdsP4L4nTrbGjMDIBwgZcJC0m3ZK4/QWptd8J/YVHmJoG8WkWz+/NqIIzntgSBTvI1NnuDdYbUsmKS8vIodU+sswW1aYo8oD61sjSQtAZ3fCpUvyk26m4y9AVdVUBZyEg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DtqsKhdGvMyCXGVtF1FaKZRJQQa3WgqLhp0fhPl6jlU=;
+ b=DzjSJOOjM3uSCFRtTZhRlpl/eBgDzJdy8uxunExo6zoTl6c+IOaDrdL43Qw2Bj79+zNvwoswVOuVFv+MWhGDvcjN4VZNiQVJm2Dk5wdh3spZpflb2XpY9ws4WBXi/lYCul1yMP2YHizjmeF5rJZrL+7Txs1NgqTyhaaw59jhmHw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV2PR12MB5966.namprd12.prod.outlook.com (2603:10b6:408:171::21)
+ by LV8PR12MB9407.namprd12.prod.outlook.com (2603:10b6:408:1f9::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Mon, 29 Jan
+ 2024 13:24:23 +0000
+Received: from LV2PR12MB5966.namprd12.prod.outlook.com
+ ([fe80::4196:178:d5af:9f2]) by LV2PR12MB5966.namprd12.prod.outlook.com
+ ([fe80::4196:178:d5af:9f2%6]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
+ 13:24:22 +0000
+Message-ID: <6a60fd66-64df-491e-8879-3333c8f119d5@amd.com>
+Date: Mon, 29 Jan 2024 18:54:16 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 10/11] platform/x86/amd/hsmp: Change devm_kzalloc() to
+ devm_kcalloc()
+Content-Language: en-US
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+ Naveen Krishna Chatradhi <nchatrad@amd.com>
+References: <20240106022532.1746932-1-suma.hegde@amd.com>
+ <20240106022532.1746932-10-suma.hegde@amd.com>
+ <8b896046-2058-805d-1998-7ae6d51edd01@linux.intel.com>
+ <0c930967-ce51-edf9-c8c4-5e00d8ff7047@linux.intel.com>
+From: "Hegde, Suma" <Suma.Hegde@amd.com>
+In-Reply-To: <0c930967-ce51-edf9-c8c4-5e00d8ff7047@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN2PR01CA0111.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:27::26) To LV2PR12MB5966.namprd12.prod.outlook.com
+ (2603:10b6:408:171::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3 4/5] net: stmmac: enable Intel mGbE 1G/2.5G
- auto-negotiation support
-Content-Language: en-US
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@linux.intel.com>,
- Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>,
- Jose Abreu <Jose.Abreu@synopsys.com>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, =?UTF-8?Q?Marek_Beh=C3=BAn?=
- <kabel@kernel.org>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>,
- Giuseppe Cavallaro <peppe.cavallaro@st.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <joabreu@synopsys.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, Wong Vee Khee
- <veekhee@apple.com>, Jon Hunter <jonathanh@nvidia.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Revanth Kumar Uppala <ruppala@nvidia.com>,
- Shenwei Wang <shenwei.wang@nxp.com>,
- Andrey Konovalov <andrey.konovalov@linaro.org>,
- Jochen Henneberg <jh@henneberg-systemdesign.com>,
- David E Box <david.e.box@intel.com>, Andrew Halaney <ahalaney@redhat.com>,
- Simon Horman <simon.horman@corigine.com>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org,
- linux-hwmon@vger.kernel.org, bpf@vger.kernel.org,
- Voon Wei Feng <weifeng.voon@intel.com>,
- Tan Tee Min <tee.min.tan@linux.intel.com>,
- Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
- Lai Peter Jun Ann <jun.ann.lai@intel.com>
-References: <20230921121946.3025771-1-yong.liang.choong@linux.intel.com>
- <20230921121946.3025771-5-yong.liang.choong@linux.intel.com>
- <jmq54bskx4zd75ay4kf5pcdo6wnz72pxzfo5ivevleef4scucr@uw4fkfs64f3c>
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-In-Reply-To: <jmq54bskx4zd75ay4kf5pcdo6wnz72pxzfo5ivevleef4scucr@uw4fkfs64f3c>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5966:EE_|LV8PR12MB9407:EE_
+X-MS-Office365-Filtering-Correlation-Id: e3277252-2a47-495b-bc01-08dc20cd9b52
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	nSwaMWhldnAWU+1GM+u4n38jFCkDT2wf4RNhNl/vKq4OtiFBvhS9Qh2zYwfnfRj4sayKk0YGwVC75x34n0B29VSLaSu6lwscaD3LMI2p4POeCVUXXm0PuRfwfhtFNaY8p0RqPzmApF/vE/vdxmry7wA0VSV5kJ8Qb58/W09KcJa0kMmZ0QKOuOtewJmw1PZZLF6nNrIlajSUX4RF5kOWEPeQjVW3kM4JstGdE45AnbCKgqbZLT5iKlJ6iuAadRDODUnailT3fd0UqZVk5pGYBqTdNDyo2+WMVUspiigIUy4mrgaqYo3UA6DnoncMNa8Y7xrW/EnveIPORWFicn726JBEv1DUDdjJY8ApVIIxL1yxPKMSO26booFjQisABtBb+JB82K55qTaZP9T+lgxuAQgqair73Js5u1/2l6AFxPOWnqzWoG0FV1sSeJMQ5CHIOVHk48iXSP5GA3LpMAnlWdn7ufpiXFiyW4KQbs9/DeUVEFBKojuSnhV6ZYnVT64DpHwqb1X5iM3QyiKNtGLeEv4bKee/INy66fCK//i8P9nwDDZrhDmmU0WQpO80Au0OHaHOUHfwrYrq3w/yah1Sxoi130zmkCy2tQP2CxNWIGTg7yesp6LEDxXit22XApinqXtrsGN+9jixRZ0Lz8MJXUQeFsp0WrCwLf/g/JhTk1+pP+9Yq2b4xFLdiwEPratd
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5966.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(136003)(39860400002)(366004)(376002)(230173577357003)(230273577357003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(83380400001)(66574015)(26005)(53546011)(6512007)(6666004)(6506007)(31696002)(2616005)(38100700002)(5660300002)(4326008)(8936002)(8676002)(41300700001)(2906002)(478600001)(6486002)(316002)(6916009)(66556008)(66476007)(54906003)(66946007)(36756003)(86362001)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Y1hMVWk5cTE4TEs0WWNkNXc3amxQdVNJbjNGV2pVS3hWZ3hkU1AzMTA5bWZl?=
+ =?utf-8?B?eHF1eWdBbXJGUGxBbkVyam5rR3Y2OS9HemRTUHgvNmlUTkRXeTRZc3lsSklz?=
+ =?utf-8?B?amRzTWtOdGpjSnNrVUlIZHVlZ2h6V04rS2hlK2x0WlFtazRkT0hJdjBCWkVr?=
+ =?utf-8?B?RUpyWE5Vcy9BWDJyaUFmcWlwdklNVW9UZ2JoOVJHb0FFMFRzVEhpcE1TWUZQ?=
+ =?utf-8?B?ak9VRUF5OFJwVUF4eWY0emlsbG9BeXZ5aEdzTFA0WGsxOVE5cFNGYW15cXlz?=
+ =?utf-8?B?SVRXOUdqQXN1Rk1TajU4Zmt5UVg4VlErL2drYnhMbVZpS0Z1Ty9Zd01lRm5m?=
+ =?utf-8?B?NEdqZTBsVVVVWU5pemVOSEc1R0FQRTVrT3J3UzhYYjRrT0JFajB0S0hZcWNl?=
+ =?utf-8?B?OTQ0NVN1ZmtZc1BWRnNTYUNWTHBKWHdwM2p1UGZiSVFhS29BRUNkV2tCNlFD?=
+ =?utf-8?B?Y0pYbG4zMjdTTVhqV2FkbWdYNzhuOVdOWFVVVjRQQ0dSNndwVGtyMUtZN3B1?=
+ =?utf-8?B?S3kxeEozekF5Z3FUY2w5NmN0SFhuY1dOTHpubmJyMG5pZENRdWVUS05YQVZa?=
+ =?utf-8?B?UTVNSTZLVi9SRGVNcUxEZmgwajc2dnNQNVJwMEs2cTYybnduNjhlbnFlMTRR?=
+ =?utf-8?B?eWk2S09CbEZJNnc5YjN0U3ptSkJsQmd6VnNvbTdiOVBkRU5QVDZvbDVOVXlo?=
+ =?utf-8?B?UW1BSW9sUFQ4eWlZN2F4NDhyMENMcDNSZGpnb0FjOUM1MzlNTjM4QnpmSERx?=
+ =?utf-8?B?aUkyRlRBNFU4S0pMWFRZZ1FXT2R3aktZcWkrME5zWk1UVUVEeUN2eUYvRkdE?=
+ =?utf-8?B?cE1jOW0zTzJIRzhXb3B5SzUyRG9MQzU3dWxYdlZFdnhDaXE4NjBYSktCYkR6?=
+ =?utf-8?B?MTRRT3JOR3p0bUVVQklxdzNKbXhvaUtBdnErVmwrKzg1TnlCRjF6UndrZUVO?=
+ =?utf-8?B?dHBKeXBsVnBYaEJMV255alFNc3NwcjNJYTkwK3M2NndVcllIZlV3ZzBndnBp?=
+ =?utf-8?B?Mk5pcXA0aXpmWHBWVnp6eENMcnhpbmtIN2RmMXVwTGNlOW1oYklrTzZpMTlW?=
+ =?utf-8?B?M1hVMURuM3cwUjFpMlRUbmV5Z0Zxd1dlbnNmdGd3bXROdlp0ZkVEVmtBTENQ?=
+ =?utf-8?B?eGMwOHU5OXpYSTAyOFk3TUh4NFQrTnNuYXFxMGRYd2NxdkcrU3o0Z09keXhj?=
+ =?utf-8?B?ZGtySlM1YXczUGJoOW9NTVZhT1ZWV3hlWFV0VUFkcGpZcmtzbCt0VFhYVXFI?=
+ =?utf-8?B?L1I0WmdxS25VWXZiYWhnVEVGenkvNkVWUTg0cUUxdGVCdTlRR2lvR3gwOG5u?=
+ =?utf-8?B?dnZpVURzbFJtUkxhNlQ0d01lYTZzU0hOa1VFOUlQb3Z5bVlKdmJ3bGFPSXpp?=
+ =?utf-8?B?MTNLcXVKZUdIZjc4RHZvUzd0aktXYVZuTGRpeEVOOG9tL0VhYU1mQVRZaytI?=
+ =?utf-8?B?MW11N1hNRUt5Wm1URkNoL056bGJLQVJqUDRmSFZnMlR3QjBhemdMSEY4SThN?=
+ =?utf-8?B?WlhkcG1QZkk0TkR5S09jeE1laGM4bVh1MzRzNENkeHdjZWZLdHM3b2RtMG1z?=
+ =?utf-8?B?dithcDcveUdYK0IwTlNwK1lYL1I1VGVWV1Z3SmlDRS9BU1EzVzBEdDF0VGky?=
+ =?utf-8?B?eEpzd2Y1YVJ1RjZGSGRWSGZOK09ac0tZZ2hPejQ2WGtkbXh2LzIwWmR5NDVn?=
+ =?utf-8?B?WU1HTXA3dU9uR282SUVqMElZMHUzb2k0aFA2UTBhVEhxYUV5VWYyZm1yY0Rq?=
+ =?utf-8?B?TG52bzRoNEY0dVgxU1Uyb1lodW1pa2MrbFBOWWVRakZldWo3a0ZMSitucXE0?=
+ =?utf-8?B?QXVxaGdJc092K0V5YnpQMGJGbW1Ya1c0YVNiTk5DTWZ5SlV5TGc5QUJtaWhQ?=
+ =?utf-8?B?NERPSERkenl2ZG5hbFV1VkU2MkFmcmsra20rQnIrOWxLM0FPS3Z4bUk4Y1BU?=
+ =?utf-8?B?bjZUZS9aK1JscDJTeitTSktIalYwM3lFanVYeFFaQlNoYTFMY2p2TldiL3VP?=
+ =?utf-8?B?NzJTYVh0UjZ5aDA0N0F0R01CTEdUOUtib1JRdTh4SW5FcEw0ZVVHNHQ3TU8x?=
+ =?utf-8?B?NDd5Vko5d1B3QmdCRExGMXpTTEp3a3Bqc2g0WGVhREhvM0RpOXpWM3V0MkNl?=
+ =?utf-8?Q?+VGO1D417fRY/1a0TezlHj+Dt?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3277252-2a47-495b-bc01-08dc20cd9b52
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5966.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 13:24:22.9005
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: X+u2TtIuMg7Mbm46RgUT59W4mQs7Fxvs2v0JK5FYmHGbqOque2Tspsb+jd9IJcBxkk7JvXKcYRD/GCC3FINm9w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9407
 
 
+On 1/29/2024 6:14 PM, Ilpo Järvinen wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+>
+>
+> On Thu, 25 Jan 2024, Ilpo Järvinen wrote:
+>
+>> On Sat, 6 Jan 2024, Suma Hegde wrote:
+>>
+>>> Use the standard array allocation variant of devm memory allocation
+>>> APIs.
+>>>
+>>> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+>>> Signed-off-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
+>> I decided to apply all but this patch 10/11 into review-ilpo. I fixed the
+>> parenthesis issue I mentioned in one of the patches while applying.
+>>
+>> Please check the comment I made against this patch and respin this one.
+>>
+>> I also noticed while applying one other extra parenthesis case in patch 5
+>> but since it was not added, I didn't go to tweak it now myself, but just
+>> you know.
+> Hi Suma,
+>
+> There are number of issues and warnings due to these patches including
+> one build failure due to lack of ACPI in the config (I think), can you
+> please take a look at them.
 
-On 26/9/2023 6:55 pm, Serge Semin wrote:
-> On Thu, Sep 21, 2023 at 08:19:45PM +0800, Choong Yong Liang wrote:
->> From: "Tan, Tee Min" <tee.min.tan@linux.intel.com>
->>
->> Initially, Intel mGbE was only able to configure the overclocking of 2.5
->> times clock rate to enable 2.5Gbps in the BIOS during boot time. Kernel
->> driver had no access to modify the clock rate for 1G/2.5G mode at runtime.
->>
->> Now, this patch enables the runtime 1G/2.5G auto-negotiation support to
->> gets rid of the dependency on BIOS to change the 1G/2.5G clock rate.
->>
->> This patch adds several new functions below:-
->> - intel_tsn_interface_is_available(): This new function reads FIA lane
->>    ownership registers and common lane registers through IPC commands
->>    to know which lane the mGbE port is assigned to.
->> - stmmac_mac_prepare(): To obtain the latest PHY interface from phylink
->>    during initialization and call intel_config_serdes() to proceed with
->>    SERDES configuration.
->> - intel_config_serdes(): To configure the SERDES based on the assigned
->>    lane and latest PHY interface, it sends IPC command to the PMC through
->>    PMC driver/API. The PMC acts as a proxy for R/W on behalf of the driver.
->> - intel_set_reg_access(): Set the register access to the available TSN
->>    interface.
->>
->> Signed-off-by: Tan, Tee Min <tee.min.tan@linux.intel.com>
->> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
->> ---
->>   drivers/net/ethernet/stmicro/stmmac/Kconfig   |   1 +
->>   .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 134 +++++++++++++++++-
->>   .../net/ethernet/stmicro/stmmac/dwmac-intel.h |  79 +++++++++++
->>   .../net/ethernet/stmicro/stmmac/stmmac_main.c |  20 +++
->>   include/linux/stmmac.h                        |   1 +
->>   5 files changed, 231 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
->> index a2b9e289aa36..4340efd9bd50 100644
->> --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
->> +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
->> @@ -273,6 +273,7 @@ config DWMAC_INTEL
->>   	default X86
->>   	depends on X86 && STMMAC_ETH && PCI
->>   	depends on COMMON_CLK
->> +	select INTEL_PMC_IPC
->>   	help
->>   	  This selects the Intel platform specific bus support for the
->>   	  stmmac driver. This driver is used for Intel Quark/EHL/TGL.
->> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
->> index a3a249c63598..a211f42914a2 100644
->> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
->> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
->> @@ -5,6 +5,7 @@
->>   #include <linux/clk-provider.h>
->>   #include <linux/pci.h>
->>   #include <linux/dmi.h>
->> +#include <linux/platform_data/x86/intel_pmc_ipc.h>
->>   #include "dwmac-intel.h"
->>   #include "dwmac4.h"
->>   #include "stmmac.h"
->> @@ -14,6 +15,9 @@ struct intel_priv_data {
->>   	int mdio_adhoc_addr;	/* mdio address for serdes & etc */
->>   	unsigned long crossts_adj;
->>   	bool is_pse;
->> +	const int *tsn_lane_registers;
->> +	int max_tsn_lane_registers;
->> +	int pid_modphy;
->>   };
->>   
->>   /* This struct is used to associate PCI Function of MAC controller on a board,
->> @@ -93,7 +97,7 @@ static int intel_serdes_powerup(struct net_device *ndev, void *priv_data)
->>   	data &= ~SERDES_RATE_MASK;
->>   	data &= ~SERDES_PCLK_MASK;
->>   
->> -	if (priv->plat->max_speed == 2500)
->> +	if (priv->plat->phy_interface == PHY_INTERFACE_MODE_2500BASEX)
->>   		data |= SERDES_RATE_PCIE_GEN2 << SERDES_RATE_PCIE_SHIFT |
->>   			SERDES_PCLK_37p5MHZ << SERDES_PCLK_SHIFT;
->>   	else
->> @@ -414,6 +418,106 @@ static void intel_mgbe_pse_crossts_adj(struct intel_priv_data *intel_priv,
->>   	}
->>   }
->>   
->> +#if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
->> +static bool intel_tsn_interface_is_available(struct net_device *ndev,
->> +					     struct intel_priv_data *intel_priv)
->> +{
->> +	struct stmmac_priv *priv = netdev_priv(ndev);
->> +	struct pmc_ipc_cmd tmp = {0};
->> +	u32 rbuf[4] = {0};
->> +	int ret, i, j;
->> +
->> +	if (priv->plat->serdes_powerup) {
->> +		tmp.cmd = IPC_SOC_REGISTER_ACCESS;
->> +		tmp.sub_cmd = IPC_SOC_SUB_CMD_READ;
->> +
->> +		for (i = 0; i < 5; i++) {
->> +			tmp.wbuf[0] = R_PCH_FIA_15_PCR_LOS1_REG_BASE + i;
->> +
->> +			ret = intel_pmc_ipc(&tmp, rbuf);
->> +			if (ret < 0) {
->> +				netdev_info(priv->dev,
->> +					    "Failed to read from PMC.\n");
->> +				return false;
->> +			}
->> +
->> +			for (j = 0; j <= intel_priv->max_tsn_lane_registers; j++)
->> +				if ((rbuf[0] >>
->> +				    (4 * (intel_priv->tsn_lane_registers[j] % 8)) &
->> +				     B_PCH_FIA_PCR_L0O) == 0xB)
->> +					return true;
->> +		}
->> +	}
->> +	return false;
->> +}
->> +
->> +static int intel_set_reg_access(const struct pmc_serdes_regs *regs, int max_regs)
->> +{
->> +	int ret = 0, i;
->> +
->> +	for (i = 0; i < max_regs; i++) {
->> +		struct pmc_ipc_cmd tmp = {0};
->> +		u32 buf[4] = {0};
->> +
->> +		tmp.cmd = IPC_SOC_REGISTER_ACCESS;
->> +		tmp.sub_cmd = IPC_SOC_SUB_CMD_WRITE;
->> +		tmp.wbuf[0] = (u32)regs[i].index;
->> +		tmp.wbuf[1] = regs[i].val;
->> +
->> +		ret = intel_pmc_ipc(&tmp, buf);
->> +		if (ret < 0)
->> +			return ret;
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static int intel_config_serdes(struct net_device *ndev, void *intel_data)
->> +{
->> +	struct intel_priv_data *intel_priv = intel_data;
->> +	struct stmmac_priv *priv = netdev_priv(ndev);
->> +	int ret = 0;
->> +
->> +	if (!intel_tsn_interface_is_available(ndev, intel_priv)) {
->> +		netdev_info(priv->dev,
->> +			    "No TSN interface available to set the registers.\n");
->> +		goto pmc_read_error;
->> +	}
->> +
->> +	if (intel_priv->pid_modphy == PID_MODPHY1) {
->> +		if (priv->plat->phy_interface == PHY_INTERFACE_MODE_2500BASEX) {
->> +			ret = intel_set_reg_access(pid_modphy1_2p5g_regs,
->> +						   ARRAY_SIZE(pid_modphy1_2p5g_regs));
->> +		} else {
->> +			ret = intel_set_reg_access(pid_modphy1_1g_regs,
->> +						   ARRAY_SIZE(pid_modphy1_1g_regs));
->> +		}
->> +	} else {
->> +		if (priv->plat->phy_interface == PHY_INTERFACE_MODE_2500BASEX) {
->> +			ret = intel_set_reg_access(pid_modphy3_2p5g_regs,
->> +						   ARRAY_SIZE(pid_modphy3_2p5g_regs));
->> +		} else {
->> +			ret = intel_set_reg_access(pid_modphy3_1g_regs,
->> +						   ARRAY_SIZE(pid_modphy3_1g_regs));
->> +		}
->> +	}
->> +
->> +	if (ret < 0)
->> +		goto pmc_read_error;
->> +
->> +pmc_read_error:
->> +	intel_serdes_powerdown(ndev, intel_priv);
->> +	intel_serdes_powerup(ndev, intel_priv);
->> +
->> +	return ret;
->> +}
->> +#else
->> +static int intel_config_serdes(struct net_device *ndev, void *intel_data)
->> +{
->> +	return -EOPNOTSUPP;
->> +}
->> +#endif /* CONFIG_INTEL_PMC_IPC */
->> +
->>   static void common_default_data(struct plat_stmmacenet_data *plat)
->>   {
->>   	plat->clk_csr = 2;	/* clk_csr_i = 20-35MHz & MDC = clk_csr_i/16 */
->> @@ -624,6 +728,8 @@ static int intel_mgbe_common_data(struct pci_dev *pdev,
->>   static int ehl_common_data(struct pci_dev *pdev,
->>   			   struct plat_stmmacenet_data *plat)
->>   {
->> +	struct intel_priv_data *intel_priv = plat->bsp_priv;
->> +
->>   	plat->rx_queues_to_use = 8;
->>   	plat->tx_queues_to_use = 8;
->>   	plat->flags |= STMMAC_FLAG_USE_PHY_WOL;
->> @@ -639,20 +745,28 @@ static int ehl_common_data(struct pci_dev *pdev,
->>   	plat->safety_feat_cfg->prtyen = 0;
->>   	plat->safety_feat_cfg->tmouten = 0;
->>   
->> +	intel_priv->tsn_lane_registers = ehl_tsn_lane_registers;
->> +	intel_priv->max_tsn_lane_registers = ARRAY_SIZE(ehl_tsn_lane_registers);
->> +
->>   	return intel_mgbe_common_data(pdev, plat);
->>   }
->>   
->>   static int ehl_sgmii_data(struct pci_dev *pdev,
->>   			  struct plat_stmmacenet_data *plat)
->>   {
->> +	struct intel_priv_data *intel_priv = plat->bsp_priv;
->> +
->>   	plat->bus_id = 1;
->>   	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
->> -	plat->speed_mode_2500 = intel_speed_mode_2500;
->> +	plat->max_speed = SPEED_2500;
->>   	plat->serdes_powerup = intel_serdes_powerup;
->>   	plat->serdes_powerdown = intel_serdes_powerdown;
->> +	plat->config_serdes = intel_config_serdes;
->>   
->>   	plat->clk_ptp_rate = 204800000;
->>   
->> +	intel_priv->pid_modphy = PID_MODPHY3;
->> +
->>   	return ehl_common_data(pdev, plat);
->>   }
->>   
->> @@ -705,10 +819,16 @@ static struct stmmac_pci_info ehl_pse0_rgmii1g_info = {
->>   static int ehl_pse0_sgmii1g_data(struct pci_dev *pdev,
->>   				 struct plat_stmmacenet_data *plat)
->>   {
->> +	struct intel_priv_data *intel_priv = plat->bsp_priv;
->> +
->>   	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
->> -	plat->speed_mode_2500 = intel_speed_mode_2500;
->> +	plat->max_speed = SPEED_2500;
->>   	plat->serdes_powerup = intel_serdes_powerup;
->>   	plat->serdes_powerdown = intel_serdes_powerdown;
->> +	plat->config_serdes = intel_config_serdes;
->> +
->> +	intel_priv->pid_modphy = PID_MODPHY1;
->> +
->>   	return ehl_pse0_common_data(pdev, plat);
->>   }
->>   
->> @@ -746,10 +866,16 @@ static struct stmmac_pci_info ehl_pse1_rgmii1g_info = {
->>   static int ehl_pse1_sgmii1g_data(struct pci_dev *pdev,
->>   				 struct plat_stmmacenet_data *plat)
->>   {
->> +	struct intel_priv_data *intel_priv = plat->bsp_priv;
->> +
->>   	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
->> -	plat->speed_mode_2500 = intel_speed_mode_2500;
->> +	plat->max_speed = SPEED_2500;
->>   	plat->serdes_powerup = intel_serdes_powerup;
->>   	plat->serdes_powerdown = intel_serdes_powerdown;
->> +	plat->config_serdes = intel_config_serdes;
->> +
->> +	intel_priv->pid_modphy = PID_MODPHY1;
->> +
->>   	return ehl_pse1_common_data(pdev, plat);
->>   }
->>   
->> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
->> index 0a37987478c1..093eed977ab0 100644
->> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
->> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.h
->> @@ -50,4 +50,83 @@
->>   #define PCH_PTP_CLK_FREQ_19_2MHZ	(GMAC_GPO0)
->>   #define PCH_PTP_CLK_FREQ_200MHZ		(0)
->>   
->> +#define	PID_MODPHY1 0xAA
->> +#define	PID_MODPHY3 0xA8
->> +
->> +#if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
->> +struct pmc_serdes_regs {
->> +	u8 index;
->> +	u32 val;
->> +};
->> +
->> +/* Modphy Register index */
->> +#define R_PCH_FIA_15_PCR_LOS1_REG_BASE			8
->> +#define R_PCH_FIA_15_PCR_LOS2_REG_BASE			9
->> +#define R_PCH_FIA_15_PCR_LOS3_REG_BASE			10
->> +#define R_PCH_FIA_15_PCR_LOS4_REG_BASE			11
->> +#define R_PCH_FIA_15_PCR_LOS5_REG_BASE			12
->> +#define B_PCH_FIA_PCR_L0O				GENMASK(3, 0)
->> +#define PID_MODPHY1_B_MODPHY_PCR_LCPLL_DWORD0		13
->> +#define PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD2		14
->> +#define PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD7		15
->> +#define PID_MODPHY1_N_MODPHY_PCR_LPPLL_DWORD10		16
->> +#define PID_MODPHY1_N_MODPHY_PCR_CMN_ANA_DWORD30	17
->> +#define PID_MODPHY3_B_MODPHY_PCR_LCPLL_DWORD0		18
->> +#define PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD2		19
->> +#define PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD7		20
->> +#define PID_MODPHY3_N_MODPHY_PCR_LPPLL_DWORD10		21
->> +#define PID_MODPHY3_N_MODPHY_PCR_CMN_ANA_DWORD30	22
->> +
->> +#define B_MODPHY_PCR_LCPLL_DWORD0_1G		0x46AAAA41
->> +#define N_MODPHY_PCR_LCPLL_DWORD2_1G		0x00000139
->> +#define N_MODPHY_PCR_LCPLL_DWORD7_1G		0x002A0003
->> +#define N_MODPHY_PCR_LPPLL_DWORD10_1G		0x00170008
->> +#define N_MODPHY_PCR_CMN_ANA_DWORD30_1G		0x0000D4AC
->> +#define B_MODPHY_PCR_LCPLL_DWORD0_2P5G		0x58555551
->> +#define N_MODPHY_PCR_LCPLL_DWORD2_2P5G		0x0000012D
->> +#define N_MODPHY_PCR_LCPLL_DWORD7_2P5G		0x001F0003
->> +#define N_MODPHY_PCR_LPPLL_DWORD10_2P5G		0x00170008
->> +#define N_MODPHY_PCR_CMN_ANA_DWORD30_2P5G	0x8200ACAC
->> +
->> +static const struct pmc_serdes_regs pid_modphy3_1g_regs[] = {
->> +	{ PID_MODPHY3_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_1G },
->> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_1G },
->> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_1G },
->> +	{ PID_MODPHY3_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_1G },
->> +	{ PID_MODPHY3_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_1G },
->> +	{}
->> +};
->> +
->> +static const struct pmc_serdes_regs pid_modphy3_2p5g_regs[] = {
->> +	{ PID_MODPHY3_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_2P5G },
->> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_2P5G },
->> +	{ PID_MODPHY3_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_2P5G },
->> +	{ PID_MODPHY3_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_2P5G },
->> +	{ PID_MODPHY3_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_2P5G },
->> +	{}
->> +};
->> +
->> +static const struct pmc_serdes_regs pid_modphy1_1g_regs[] = {
->> +	{ PID_MODPHY1_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_1G },
->> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_1G },
->> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_1G },
->> +	{ PID_MODPHY1_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_1G },
->> +	{ PID_MODPHY1_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_1G },
->> +	{}
->> +};
->> +
->> +static const struct pmc_serdes_regs pid_modphy1_2p5g_regs[] = {
->> +	{ PID_MODPHY1_B_MODPHY_PCR_LCPLL_DWORD0,	B_MODPHY_PCR_LCPLL_DWORD0_2P5G },
->> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD2,	N_MODPHY_PCR_LCPLL_DWORD2_2P5G },
->> +	{ PID_MODPHY1_N_MODPHY_PCR_LCPLL_DWORD7,	N_MODPHY_PCR_LCPLL_DWORD7_2P5G },
->> +	{ PID_MODPHY1_N_MODPHY_PCR_LPPLL_DWORD10,	N_MODPHY_PCR_LPPLL_DWORD10_2P5G },
->> +	{ PID_MODPHY1_N_MODPHY_PCR_CMN_ANA_DWORD30,	N_MODPHY_PCR_CMN_ANA_DWORD30_2P5G },
->> +	{}
->> +};
->> +
->> +static const int ehl_tsn_lane_registers[] = {7, 8, 9, 10, 11};
->> +#else
->> +static const int ehl_tsn_lane_registers[] = {};
->> +#endif /* CONFIG_INTEL_PMC_IPC */
->> +
->>   #endif /* __DWMAC_INTEL_H__ */
->> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->> index 9201ed778ebc..75765cf52cd1 100644
->> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->> @@ -1103,11 +1103,31 @@ static void stmmac_mac_link_up(struct phylink_config *config,
->>   		stmmac_hwtstamp_correct_latency(priv, priv);
->>   }
->>   
-> 
->> +#if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
->> +static int stmmac_mac_prepare(struct phylink_config *config, unsigned int mode,
->> +			      phy_interface_t interface)
->> +{
->> +	struct net_device *ndev = to_net_dev(config->dev);
->> +	struct stmmac_priv *priv = netdev_priv(ndev);
->> +	int ret = 0;
->> +
->> +	priv->plat->phy_interface = interface;
->> +
->> +	if (priv->plat->config_serdes)
->> +		ret = priv->plat->config_serdes(ndev, priv->plat->bsp_priv);
->> +
->> +	return ret;
->> +}
->> +#endif
->> +
->>   static const struct phylink_mac_ops stmmac_phylink_mac_ops = {
->>   	.mac_select_pcs = stmmac_mac_select_pcs,
->>   	.mac_config = stmmac_mac_config,
->>   	.mac_link_down = stmmac_mac_link_down,
->>   	.mac_link_up = stmmac_mac_link_up,
->> +#if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
->> +	.mac_prepare = stmmac_mac_prepare,
->> +#endif
-> 
-> Please no for the platform-specific ifdef's in the generic code.
-> STMMAC driver is already overwhelmed with clumsy solutions. Let's not
-> add another one.
-> 
-> -Serge(y)
-> 
->>   };
->>   
->>   /**
->> diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
->> index c0079a7574ae..aa7d4d96391c 100644
->> --- a/include/linux/stmmac.h
->> +++ b/include/linux/stmmac.h
->> @@ -275,6 +275,7 @@ struct plat_stmmacenet_data {
->>   	int (*serdes_powerup)(struct net_device *ndev, void *priv);
->>   	void (*serdes_powerdown)(struct net_device *ndev, void *priv);
->>   	void (*speed_mode_2500)(struct net_device *ndev, void *priv);
->> +	int (*config_serdes)(struct net_device *ndev, void *priv);
->>   	void (*ptp_clk_freq_config)(struct stmmac_priv *priv);
->>   	int (*init)(struct platform_device *pdev, void *priv);
->>   	void (*exit)(struct platform_device *pdev, void *priv);
->> -- 
->> 2.25.1
->>
->>
-Hi Russell and Serge,
+Hi Ilpo,
 
-Thank you for pointing that out.
-The ifdef was removed and the config serdes will be implemented in 
-mac_link_up in the new patch series.
+I have pushed patch with fixes for smatch error and warnings.
+
+For the CONFIG_ACPI=n build failure, I have added "depends on ACPI" for 
+hsmp driver and pushed patch for that.
+
+But we support NON-ACPI probing also, there may be x86 platforms with 
+ACPI disabled, is there a previous reference of how this can be handled
+
+without making it dependent on ACPI in Kconfig?
+
+Thanks and Regards,
+
+Suma
+
+> --
+>   i.
