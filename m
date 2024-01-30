@@ -1,171 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F23A65BD9
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jan 2024 09:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C653605BE;
+	Tue, 30 Jan 2024 09:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706606229; cv=none; b=Sck7DakgnZBPHVYBfn0NAOyPQPNy8hmolVRvXSppqPQWkI8dKssSIQjUARjxLzV0eB3ZHgVRDhZQIatyuagEt6QuL0FoCOHbjnElGA2T20aVJre/l+/PZYdwcD7ZSUCyGMUkXwM+DIsZFk3IKjqoOLhSqwDLcsArh6E/3I9EsEE=
+	t=1706606887; cv=none; b=i5lTBulUTtyO/LhyoyoWIi+JLt18JeEJr77G5Xe5zEaQnZhFFI8NRFlP4uJl2Ui4C4M0Wt3mo2iwWSgmzAd72VFnw++DwuS50f3VNcNhDyYNj1mZn0gcEYwVMXyxuPQXYC/VHFHx/nIEFokyaFI1xIqbPVWWFzufRshMylyLLw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706606229; c=relaxed/simple;
-	bh=RB/RU+14zjSuFDBCBrMDaKkG53QFQyHCD+mk0Bdf+kQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CrsgmrksKwvzZ2SNflxZhbjGW9dW3U5SLLIVDqlnGJLg+oddlaCKoXiuZCPwcOzd2lM9eS28q5ZbYznjNj9nFqQpdESlWZJ7nBLrikcMvEdgp/fAnAgR/TUW88PC5o5VPsvzXrVETkJFj92h7xNcLPOkRKXLx9zKNINyWdcxEGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OGlSuKwA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706606887; c=relaxed/simple;
+	bh=WeXsrjerVgdjp7ERsnWmrusKzZmU1eEbSH9QDZQMrwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PCLivti3F77qlZTbNpmgrgaV76ASA4PXGuqXHblssPQQysbAAFLMmARQEtN0bSSwhDIGj8ejDedoABgWqZSaLNzgC8gX0OsJJ2yt9134WoXASP/0RcEkf3d+YulYEW6Rt4Ie/qo9i3eL9y8s4wwqO9dN4C028W1iWPTkkEh8/e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=CAJAYaog; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OGlSuKwA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706606226;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bsxh3glxMHMP5Jb5fGRHylI+iN6TGtV7J1Cs1H5riFM=;
-	b=OGlSuKwADU0Y+ZA06VyITGN9jIf1FfGGg9CKGRQ2Jb9Gk/tBh1qq7iHXEQlqvyRMeUnxK8
-	J3fZUSF32Uv6UJzICBoNFHybf1ExmDgFunGzJ8E95A4Q3OCQhMQQT8ve4H+FWLem0xJzoW
-	BNO26/RNSoYfBw/LGMwglYhT8I1xSV8=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-647-649JBMzOOxCnGGQKIFmSrw-1; Tue, 30 Jan 2024 04:17:05 -0500
-X-MC-Unique: 649JBMzOOxCnGGQKIFmSrw-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a26f2da3c7bso196782266b.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jan 2024 01:17:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706606224; x=1707211024;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bsxh3glxMHMP5Jb5fGRHylI+iN6TGtV7J1Cs1H5riFM=;
-        b=l8QuefsyrTiGylOGxGW+T5tb3v2t7CknHEHbcuiJQRe5I68BOzPmXzQ0N7qaXPNOKJ
-         vvWH7AUdenynD98ah7m67Qb6pFKNzsJX1TbRSp+DAlRJB5+V0vZu1AXNaHLusWcG+N0u
-         aidMNXhblZbprjukPjsbqtPaYGsqSdxvuXXGSXreU57VLiTFf5DnSpcaHBWbvQxsCo15
-         jQ82ua/0eNC4AS/JbNjUfPezzVyVYOz5ku5iSXSp02r5lyC1dUDG1dHcwEYBJ7Sgbcu0
-         iD8jG6CB7KWsXgW9+pkAHwRDczGwIcmZF1JWdVAUDzrimOkZTV9WeFLmhj0z8qBlfCRe
-         ++sA==
-X-Gm-Message-State: AOJu0YxuUo80gc8bTjHk6KxzJ4o7TR0OKgAoZX5fjA6eDwo22R54JFFA
-	VyjTqetechJ3MJKmZrojrpWH6pkH6GBb0lx4KTud8/L7ywSLrxq6I2c6V1VrUcgx7q+e7PBPMwB
-	yOFnTm/EuSMrsphobDDn0sV5tIWypjalI9pM3Q9hEMV36owluAAfhfeZzpvwITQEMENPdfXD/sD
-	y6/1g=
-X-Received: by 2002:a17:906:a013:b0:a34:bc0d:3ca5 with SMTP id p19-20020a170906a01300b00a34bc0d3ca5mr5710543ejy.13.1706606223878;
-        Tue, 30 Jan 2024 01:17:03 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGa5kt/DuYffhGsop77KpBROb3I0ajmiY5RPux3EHSCMiQZl85DSsHnNvtpSFTn8tU8ZocQJQ==
-X-Received: by 2002:a17:906:a013:b0:a34:bc0d:3ca5 with SMTP id p19-20020a170906a01300b00a34bc0d3ca5mr5710525ejy.13.1706606223543;
-        Tue, 30 Jan 2024 01:17:03 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id l17-20020a1709061c5100b00a3472da6696sm4886274ejg.159.2024.01.30.01.17.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 01:17:02 -0800 (PST)
-Message-ID: <c09ecd6a-7b1e-42a3-84fa-ba7dbeba2851@redhat.com>
-Date: Tue, 30 Jan 2024 10:17:02 +0100
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CAJAYaog"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=wBVJH31eVDzBpyupvBp7B4u8sfC8jD1DSOL/7C0GLE4=; b=CAJAYaogKroU2lJyjJipR7b8uy
+	+6k0mduJVPIEKPyCwBjAt72D44vvkyqqgwx/LuZV9D66NjKAIOEZqy04A3PSqNZawfNP5oiAx6Sk4
+	DuztLAxmu8Cjt/01yLc+BuMEBDb/T0XhppzZVslMM5vVy+0QD68VAnOl1U+4N2E+WjIPGlhCYsq/1
+	//v9869QKVkEJQ6lX6Y7ieG6OCziOncVZsVdAtQ1lwDzwS0oLQki0brLtUkNQL3Mce9N4LVnBCMyX
+	vg5NXQJDrsGxZ3rxYTz5psJXGH61lSehIaDitqzKVOyC45Db1jkwmiLDUMT0M65RYreibsYpRKRSi
+	WTA0Za9w==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60964)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rUkP8-0001Vq-02;
+	Tue, 30 Jan 2024 09:27:42 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rUkP1-0005OV-T1; Tue, 30 Jan 2024 09:27:35 +0000
+Date: Tue, 30 Jan 2024 09:27:35 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mark Gross <markgross@kernel.org>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Simon Horman <simon.horman@corigine.com>,
+	Serge Semin <fancer.lancer@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
+	Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+	Lai Peter Jun Ann <jun.ann.lai@intel.com>,
+	Abdul Rahim Faizal <faizal.abdul.rahim@intel.com>
+Subject: Re: [PATCH net-next v4 01/11] net: phylink: publish ethtool link
+ modes that supported and advertised
+Message-ID: <ZbjBB81+Jh5uTqnz@shell.armlinux.org.uk>
+References: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
+ <20240129130253.1400707-2-yong.liang.choong@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: wmi: Initialize ACPI device class
-Content-Language: en-US, nl
-To: Armin Wolf <W_Armin@gmx.de>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240124190732.4795-1-W_Armin@gmx.de>
- <9ccc3b9d-d71a-451c-80f5-3da62108d983@redhat.com>
- <CAJZ5v0j1qvJYXqo96eMmtD4JnGh4Mu2ESdri5cGAqL-4bK0geA@mail.gmail.com>
- <62a9942f-97b2-4237-b99f-131535368c68@gmx.de>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <62a9942f-97b2-4237-b99f-131535368c68@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240129130253.1400707-2-yong.liang.choong@linux.intel.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi,
-
-On 1/30/24 03:10, Armin Wolf wrote:
-> Am 29.01.24 um 14:08 schrieb Rafael J. Wysocki:
+On Mon, Jan 29, 2024 at 09:02:43PM +0800, Choong Yong Liang wrote:
+> Adding the allow_switch_interface flag to publish all the ethtool
+> link modes that can be supported and advertised.
 > 
->> On Mon, Jan 29, 2024 at 1:51 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>> Hi,
->>>
->>> On 1/24/24 20:07, Armin Wolf wrote:
->>>> When an ACPI netlink event is received by acpid, the ACPI device
->>>> class is passed as its first argument. But since the class string
->>>> is not initialized, an empty string is being passed:
->>>>
->>>>        netlink:  PNP0C14:01 000000d0 00000000
->>>>
->>>> Fix this by initializing the ACPI device class during probe.
->>>>
->>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->>>> ---
->>>> Note: This patch is based on commit 3f399b5d7189 ("platform/x86: wmi: Use ACPI device name in netlink event")
->>>> ---
->>>>   drivers/platform/x86/wmi.c | 6 +++++-
->>>>   1 file changed, 5 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
->>>> index 7ef1e82dc61c..b92425c30a50 100644
->>>> --- a/drivers/platform/x86/wmi.c
->>>> +++ b/drivers/platform/x86/wmi.c
->>>> @@ -32,6 +32,8 @@
->>>>   #include <linux/wmi.h>
->>>>   #include <linux/fs.h>
->>>>
->>>> +#define ACPI_WMI_DEVICE_CLASS        "wmi"
->>>> +
->>>>   MODULE_AUTHOR("Carlos Corbacho");
->>>>   MODULE_DESCRIPTION("ACPI-WMI Mapping Driver");
->>>>   MODULE_LICENSE("GPL");
->>>> @@ -1202,7 +1204,7 @@ static int wmi_notify_device(struct device *dev, void *data)
->>>>                wblock->handler(*event, wblock->handler_data);
->>>>        }
->>>>
->>>> -     acpi_bus_generate_netlink_event(wblock->acpi_device->pnp.device_class,
->>>> +     acpi_bus_generate_netlink_event(acpi_device_class(wblock->acpi_device),
->>>>                                        acpi_dev_name(wblock->acpi_device), *event, 0);
->>>>
->>>>        return -EBUSY;
->>>> @@ -1267,6 +1269,8 @@ static int acpi_wmi_probe(struct platform_device *device)
->>>>                return -ENODEV;
->>>>        }
->>>>
->>>> +     strscpy(acpi_device_class(acpi_device), ACPI_WMI_DEVICE_CLASS, sizeof(acpi_device_class));
->>>> +
->>> Hmm, I'm not sure if you are supposed to do this when you are not an
->>> acpi_driver's add() function.
->> You aren't.
-> 
-> I believed otherwise, as the ACPI AC driver (which is a platform_driver) does the same thing.
-> Seems i was wrong on that.
+> This will allow the interface switching based on different ethtool
+> link modes.
 
-I'm pretty sure that the ACPI AC driver used to be an acpi_driver
-and was converted to a platform_driver recently.
+I don't think you need this at all. You seem to be suggesting that you
+have a PHY which switches between different interface modes on its host
+interface. We already support several PHYs with this capability.
 
-AFAIK the plan is to convert all drivers to platform_drivers
-and completely get rid of the acpi_driver concept.
+Generic support for this was added, and you need the PHY driver to
+fill in phydev->possible_interfaces so phylink knows which interface
+modes the PHY can switch between.
 
-That does mean that we will indeed have platform_drivers
-now setting the acpi_device_class. So I guess that maybe
-this is ok to do for the WMI bus driver too, since that
-is also not a plain driver.
+Instead, you are modifying the legacy path, which eventually I want
+to get rid of.
 
->>> Rafael, do you have any comments on this ?
->> I'm not quite sure why this is done here.
-> 
-> The initialization of the ACPI device class is being done to access this value later when sending an
-> ACPI netlink event like other ACPI drivers do.
-> 
-> However since you clarified that doing this outside of an acpi_driver's add() function is forbidden
-> i think it would indeed be better to just pass the value directly without touching the ACPI device class.
-
-Right I was thinking that you could just pass the string
-directly to acpi_bus_generate_netlink_event() myself too.
-
-Rafael, do you have any preference for how to solve this ?
-
-Regards,
-
-Hans
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
