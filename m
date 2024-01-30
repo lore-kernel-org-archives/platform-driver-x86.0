@@ -1,197 +1,128 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2043.outbound.protection.outlook.com [40.107.243.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD775821B;
-	Tue, 30 Jan 2024 03:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706583998; cv=none; b=sXodO724HPehPfD+8Dqe8ZfnDqFA0hQmgn59+Ib/m2B7K487O/Pki65F8+MA8wKKK1F26smwGDFH+cde7WAV1K3OVvdc7ighBtE+FERqBUd02T5ltOtI+LJARJwPvYy1bVBaMwUcrENn3vs5KCeIuCGIxfS/H5FZl+NqZIDK1S4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706583998; c=relaxed/simple;
-	bh=WqRon/t36axLWnC2m31FaAfXbOKepA9MEJ60/dbxVng=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ouj7Dv83nt8BsfFin0qHb0q3W+joS3QR6dFFb+8BcsvCNjIHvldhakjXUWAFN0BA8eeZXINF2aLDUKp6cHlBBcZpXhgUhiYf4/qqjFfbgtCVaG/572XLBW1qGEGGCY2XwKPQl2UfuJ1V5moRJia/W46g4b78B2k+QAnccFPZVKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=FIM9MhTL; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA53524AC
+	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jan 2024 07:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706600085; cv=fail; b=hl7cOFzMWtexPWcPjd8lHxaym20IUw0J2v4JA7uiOLo67imcqqS7mz0bMyp127Tqr6gLxsr7T2BDCW2r0zszz5AKqQctGFEA5cI+Yr5xm3uGVbvjaIeIWK63beLfuIpIj6SHa8uab5Nq08azYMV4W03yXdaMkSiiFL6EMkQoy4w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706600085; c=relaxed/simple;
+	bh=J8uf2CnWKT+W9wGda1BRGY25KDosDpG8HHo1tBKm4q8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XuocSxDoJNGafwRbTRCDbo3+hPBgzUjol9J4vhVDKPrW36hN7jLjRvnRYz8LBsTLwhhj6tmF46rcSwW+icM6mQ84EdYstNvSK4DzqhHbEx5lqrL6uQaJ3+rLphDqKyEzorkZBEl9l10YtXGuVNrf3p7Kc8kptrm7zLbzS92J0Ig=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Txdb3QMa; arc=fail smtp.client-ip=40.107.243.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="FIM9MhTL"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1706583987; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=zoyfNHAJCmyTBAcX034M6esKyxN0JDrAC5N4EOL9MWs=;
-	b=FIM9MhTLCX0ci5s9qL7Dga/6zkISe+Ipf1Yc6tAs/WQ4jzoap457SJ29JNl9dRF0K3pPB2VnxcgeI3qxwXFw8X87LS00t/mUbCGFKZLNrNsosfmdg8i0sppb1MBRdkwv2x37nn7n13niekBBJfxoZV8fM+2ViJauHVWv8pidCqM=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0W.efIX0_1706583984;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W.efIX0_1706583984)
-          by smtp.aliyun-inc.com;
-          Tue, 30 Jan 2024 11:06:25 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: virtualization@lists.linux.dev
-Cc: Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Vadim Pasternak <vadimp@nvidia.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Cornelia Huck <cohuck@redhat.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Benjamin Berg <benjamin.berg@intel.com>,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	linux-um@lists.infradead.org,
-	netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	kvm@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH 12/14] virtio_net: unify the code for recycling the xmit ptr
-Date: Tue, 30 Jan 2024 11:06:02 +0800
-Message-Id: <20240130030604.108463-13-xuanzhuo@linux.alibaba.com>
-X-Mailer: git-send-email 2.32.0.3.g01195cf9f
-In-Reply-To: <20240130030604.108463-1-xuanzhuo@linux.alibaba.com>
-References: <20240130030604.108463-1-xuanzhuo@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Txdb3QMa"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AMPg0rBqUWUoFyRJAHCbGjJCsMSbgbN/36IbP0MPzAAvE5X5neGiS82F3TbJnGAX9HucKYj5LwbXoWjbrGbxJVu16hTi0nCkfzrVlGY8kDPl1by3dfnJU/OdMrvChrl+z6kdWTyWbfRWzo0CtsS5L70H05sWLzcPEkYiDqexokwFr3eK7HmzSB+qIc6iVC2qRUdbHJDt+ugzolQwTlKD83ZgxDbjPtYDAGoDI1Bsjw2C0sjacwJQstZJRYjTUSNcwykZp0JwmXiRfXU8ULHVRsj06jlIV1RZPNbMaRh+mJ4bzNLBoJtOwNbwBuU9rF225aZZapKWGcB32TpTcDg2MA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SZEwDtE6jLzFVO/v0+Jju+bh2FnHpZTbHRjD4x21O7Q=;
+ b=Ir0pVF21XC2Vp3UFSWppJWW5YacXechLF2Y0YtO3Vu1GKAFLhKia/jeh1T8cqgpy21tY7FEosRyOJ+JovsIJDXHsF79ywD0qbf+6mNd78w76GvxSIXv4QMrssIobuQqCA9Wl8k7Klo3I3FlaiO3PFXGBDBWhR6QZdOcmrdnXRXPO63kQPEsfIWHx9vDMrWkk5BesIEm1QspOluQgEYqiUBNzgo89VP502JlbYhp2Pcu90r5GveRMMIzb08ZtGsC2+wM0zW6PYRkQcHPz44wyUJkIi1TiboE+QxHgkz1Br3HxmBbYeBr8FgTV2+hQ9E/7HGR2+l9sKWaLmMFnukfqZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SZEwDtE6jLzFVO/v0+Jju+bh2FnHpZTbHRjD4x21O7Q=;
+ b=Txdb3QMarfiRw6lRu7eVAg9tELhSg1t0vbclAat3Y14+9KaaHyE1dMtK9NNw4Hy9VGHjZbEX4fZcI0B7J8WybUpIWkKYGNV6MWeMaAaB0zBN0RTLwwwu2rPUx1GDpgaKid7dgwAJt/c0PFL9qCfeaYRHo0J3Yq07WmTPqOlIadU=
+Received: from MN2PR17CA0022.namprd17.prod.outlook.com (2603:10b6:208:15e::35)
+ by DM8PR12MB5445.namprd12.prod.outlook.com (2603:10b6:8:24::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7228.34; Tue, 30 Jan 2024 07:34:41 +0000
+Received: from MN1PEPF0000F0DF.namprd04.prod.outlook.com
+ (2603:10b6:208:15e:cafe::60) by MN2PR17CA0022.outlook.office365.com
+ (2603:10b6:208:15e::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34 via Frontend
+ Transport; Tue, 30 Jan 2024 07:34:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MN1PEPF0000F0DF.mail.protection.outlook.com (10.167.242.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7249.19 via Frontend Transport; Tue, 30 Jan 2024 07:34:40 +0000
+Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Tue, 30 Jan
+ 2024 01:34:38 -0600
+From: Suma Hegde <suma.hegde@amd.com>
+To: <platform-driver-x86@vger.kernel.org>
+CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
+	<suma.hegde@amd.com>, kernel test robot <lkp@intel.com>, "Naveen Krishna
+ Chatradhi" <naveenkrishna.chatradhi@amd.com>
+Subject: [PATCH v2] platform/x86/amd/hsmp: Add CONFIG_ACPI dependency
+Date: Tue, 30 Jan 2024 07:34:14 +0000
+Message-ID: <20240130073415.3391685-1-suma.hegde@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Git-Hash: ce068f9b825d
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0DF:EE_|DM8PR12MB5445:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9166f5ef-7b21-4270-edc2-08dc2165ebb2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ffKSPcScsGtOM7NuykQxYPYBCgXBCjotUSjDaFAvhUM1/fm5NxgD8l0f4L97uTtsvW16h2VwFn50pVrupU1cBRN0jr8CcIcGlzJ2x2XX+m5f/t6nsOA2/ZR4njRt+zMJ3KYbcWw+oEdv4X6sKhc0YRj2prGr1kK2Kxv7GjYKRC9J+Aw4bkbkKptKw0IX67o5BxocLq1xhVEFBaG+wn2ROPzrWRktrZfaEP8ihM73F3T95MSYDbuhAnduqcVIH2CSiNBZn6/j9CkS2yqGjtSM9hfnQgcjYyiKQCYlsaRf7bfOoKNzSaWqSVnFE40/Af+zl6oJ+Ae/PwsWI+eyIV0zs7JOuGsNSGgARLawvs+hNgkRr4NYb6iFMrj6gFQO8dGrOXsByrqpVrX8IYXK3dgiDckbGk6U8DLdsq9np7G89UdiawsiUxVsdaI+FqQzViwvYxmzZmdrVn3cF2bHBjDtQeRAY5rNHuhDloAs8aXiYqDTj01RDWkmcUAnLoW7uuHxBile+XpdoflIqwXtsG0obhVz+vlzjuG9P/kBYBsa8h4pYrPZbHKqSzWwpNAAJyS+WRVdIy1SmtwJ0ocSrvTQx4eFql4R3hhQ3IgQWKCcTxiBmoc/pTJqEw5Ns5U5tVVVtevPu9EPxxDWPqbOep6Vl6Ce7dV7OyxMGiPB4e44h1EjumQY9d1lbLn1BIazODyrOHpVyY8hUqgZyHUZK9KZTScSJJcwlVZsk+Jp1MHLwcuOunrN9ixKe8QG4FRCSMKvOr+0Rhr9Thq1D4XYroe0ng==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(346002)(136003)(376002)(396003)(230922051799003)(186009)(64100799003)(82310400011)(451199024)(1800799012)(36840700001)(40470700004)(46966006)(40480700001)(40460700003)(16526019)(1076003)(83380400001)(426003)(26005)(336012)(7696005)(6666004)(36756003)(86362001)(82740400003)(356005)(5660300002)(81166007)(8936002)(4326008)(44832011)(41300700001)(8676002)(2616005)(36860700001)(47076005)(70586007)(54906003)(70206006)(966005)(316002)(6916009)(2906002)(478600001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 07:34:40.9084
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9166f5ef-7b21-4270-edc2-08dc2165ebb2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF0000F0DF.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR12MB5445
 
-There are two completely similar and independent implementations. This
-is inconvenient for the subsequent addition of new types. So extract a
-function from this piece of code and call this function uniformly to
-recover old xmit ptr.
+HSMP interface is only supported on x86 based AMD EPYC line of
+processors. Driver uses ACPI APIs, so make it dependent on CONFIG_ACPI.
 
-Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202401281437.aus91srb-lkp@intel.com/
+Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
 ---
- drivers/net/virtio_net.c | 66 +++++++++++++++++-----------------------
- 1 file changed, 28 insertions(+), 38 deletions(-)
+Changes since v1:
+Correct the email id for Naveen Krishna Chatradhi and change it as
+Reviewed-by.
 
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index 660459b4c3e3..b56f8617700f 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -348,6 +348,30 @@ static struct xdp_frame *ptr_to_xdp(void *ptr)
- 	return (struct xdp_frame *)((unsigned long)ptr & ~VIRTIO_XDP_FLAG);
- }
+ drivers/platform/x86/amd/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+index 54753213cc61..f88682d36447 100644
+--- a/drivers/platform/x86/amd/Kconfig
++++ b/drivers/platform/x86/amd/Kconfig
+@@ -8,7 +8,7 @@ source "drivers/platform/x86/amd/pmc/Kconfig"
  
-+static void __free_old_xmit(struct send_queue *sq, bool in_napi,
-+			    u64 *bytes, u64 *packets)
-+{
-+	unsigned int len;
-+	void *ptr;
-+
-+	while ((ptr = virtqueue_get_buf(sq->vq, &len)) != NULL) {
-+		if (!is_xdp_frame(ptr)) {
-+			struct sk_buff *skb = ptr;
-+
-+			pr_debug("Sent skb %p\n", skb);
-+
-+			*bytes += skb->len;
-+			napi_consume_skb(skb, in_napi);
-+		} else {
-+			struct xdp_frame *frame = ptr_to_xdp(ptr);
-+
-+			*bytes += xdp_get_frame_len(frame);
-+			xdp_return_frame(frame);
-+		}
-+		(*packets)++;
-+	}
-+}
-+
- /* Converting between virtqueue no. and kernel tx/rx queue no.
-  * 0:rx0 1:tx0 2:rx1 3:tx1 ... 2N:rxN 2N+1:txN 2N+2:cvq
-  */
-@@ -740,27 +764,9 @@ static void virtnet_rq_unmap_free_buf(struct virtqueue *vq, void *buf)
- 
- static void free_old_xmit_skbs(struct send_queue *sq, bool in_napi)
- {
--	unsigned int len;
--	unsigned int packets = 0;
--	unsigned int bytes = 0;
--	void *ptr;
--
--	while ((ptr = virtqueue_get_buf(sq->vq, &len)) != NULL) {
--		if (likely(!is_xdp_frame(ptr))) {
--			struct sk_buff *skb = ptr;
--
--			pr_debug("Sent skb %p\n", skb);
-+	u64 bytes = 0, packets = 0;
- 
--			bytes += skb->len;
--			napi_consume_skb(skb, in_napi);
--		} else {
--			struct xdp_frame *frame = ptr_to_xdp(ptr);
--
--			bytes += xdp_get_frame_len(frame);
--			xdp_return_frame(frame);
--		}
--		packets++;
--	}
-+	__free_old_xmit(sq, in_napi, &bytes, &packets);
- 
- 	/* Avoid overhead when no packets have been processed
- 	 * happens when called speculatively from start_xmit.
-@@ -910,14 +916,11 @@ static int virtnet_xdp_xmit(struct net_device *dev,
- {
- 	struct virtnet_info *vi = netdev_priv(dev);
- 	struct receive_queue *rq = vi->rq;
-+	u64 bytes = 0, packets = 0;
- 	struct bpf_prog *xdp_prog;
- 	struct send_queue *sq;
--	unsigned int len;
--	int packets = 0;
--	int bytes = 0;
- 	int nxmit = 0;
- 	int kicks = 0;
--	void *ptr;
- 	int ret;
- 	int i;
- 
-@@ -936,20 +939,7 @@ static int virtnet_xdp_xmit(struct net_device *dev,
- 	}
- 
- 	/* Free up any pending old buffers before queueing new ones. */
--	while ((ptr = virtqueue_get_buf(sq->vq, &len)) != NULL) {
--		if (likely(is_xdp_frame(ptr))) {
--			struct xdp_frame *frame = ptr_to_xdp(ptr);
--
--			bytes += xdp_get_frame_len(frame);
--			xdp_return_frame(frame);
--		} else {
--			struct sk_buff *skb = ptr;
--
--			bytes += skb->len;
--			napi_consume_skb(skb, false);
--		}
--		packets++;
--	}
-+	__free_old_xmit(sq, false, &bytes, &packets);
- 
- 	for (i = 0; i < n; i++) {
- 		struct xdp_frame *xdpf = frames[i];
+ config AMD_HSMP
+ 	tristate "AMD HSMP Driver"
+-	depends on AMD_NB && X86_64
++	depends on AMD_NB && X86_64 && ACPI
+ 	help
+ 	  The driver provides a way for user space tools to monitor and manage
+ 	  system management functionality on EPYC server CPUs from AMD.
 -- 
-2.32.0.3.g01195cf9f
+2.25.1
 
