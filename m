@@ -1,205 +1,143 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2055.outbound.protection.outlook.com [40.107.237.55])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E7D67A14;
-	Tue, 30 Jan 2024 09:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706608454; cv=fail; b=hTdubMb+3biEcmphPUtsznouQqK+R0o2qgGXDTjr5PpPCeBYuzd2qbRaZLeVjVIFKPQfakaTpWnd4lSENRbuNdaUlYV6Qm1dwnkdXGrRseofNt5NXImhSduftWnErsZYoJ5ihXbU/jT5lo/IkQWqk/B7tsOcV3qZz2dI+IJ1IvA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706608454; c=relaxed/simple;
-	bh=NNHforVWClA2HyHaHLld7hjQUbtIPpoobmozhmNYWN4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iAmrOc+bMwcRQPe9PpFQey01Og64nBXE3RdfM+2uZJMUFOGjZSyifLWhN0rqDnsQ4cRNDlywxpY6+wroteRMNqbE1915dOX9Ep0WNY1DzUxS1A1mHG5j12UEcT/ELCcO+J7okChyEzLF9eiTN0yt767FBNU/sDTznFnX+BDNAJg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Rpdenzid; arc=fail smtp.client-ip=40.107.237.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CF865BB9;
+	Tue, 30 Jan 2024 10:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706610111; cv=none; b=t8DK+EbUIawK/tpheXEUh4DFsUhS7Ty2NUm4CIqbrLasqUOPV6zUJ97E8tudcZEDllhKgasrwxSWFMhNZZBO8MX2IWye3A7pynEMuGWdCrxYS6eOZ3CWmSeNHcG9EflsQvMOpfRdnr3EU0AKmz3cEWQoezAI3S/S9zlntYDDgE8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706610111; c=relaxed/simple;
+	bh=a2BTL8SBv7QBEt7tWzfKlIFmC4VJGefkz7RX3H6+xX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o4+MD4WLSzHymd/K9pYKPqdSMr7tT2kJXyB1AHUGWkmUVzdzFRVQ7Derv3MWU4RKJaJjgQqKATtcbYxDwi8Lfuh66KM4FbQBzVxEbYqE7HiW0ADsk6PQVJS+gmVmXdRLX/Hcm0CTK3i2hVmvulbMdNN55j3aFUHyM4bVcNcifFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=PQtfvQ4H; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Rpdenzid"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Cp9IqKYxwzTCAbbd0L6jByj7+zLwsaVgspWNeWcYltbUo/ioK6BFtr8/AkYFAc0W23dxTbrhEqVmRQCpOEm5MWgZWycwkC2IyAn2UlNR9K9l2X7vbvd2pNeic/jeROW+jr4eS/kWcGwCWvm1dse26Dfwd4+kmMLTczZrg6qj27cNZijLPCHEHiZTE/VgSrQyzq3gWziQyYaQeEtSAPuiX3nvvlrQFDluvVAjyhUFEj5lEEJZMcBoIPnc5I8f2XPw0FUkuSZOCW13/O3OW58pcXbzBd+L0ttjHt5326Aq9pyGCCeppPlWCT671b//inJN8LJ9fL6obbpGAGTtUCFGsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=h+Tfzvy2SbYDUQFCH6eXTeIV++mYJXK+qaEhxAeokfs=;
- b=cCkP4teLXLYneZ5Sh+eWLYPJzoAKunJcwGOSYN1bzkW5X43tbfqy398Ekds7acWcID9fi2gxQrOxQ3oQmY1fadEPMJg9tFIWZ2JoMHK+yBd/Lyt2Iy0yppL4v369d0IrKuArLF4noBJWZOLhGLHYCpODxfK6BkId16GwXvltpVCmJnDu1PgoGWWds9hc5Fsk2YwLpifVYBjCbvnAi8JvEGpkOVC+CZX8ZKTfam49ZLAEZOax7VUKGSX8kLw8ZkAh2WNoEZRb7U9D69Dhy4tFFzRpQtSmDDGAvqecvlPGWaGQL7NEnJpjbYqaLyy1RK4DkbXLeUMH0wQghOR78JhPxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h+Tfzvy2SbYDUQFCH6eXTeIV++mYJXK+qaEhxAeokfs=;
- b=RpdenzidD7gsIR61FxqFSs0+RSHlTe1HvcUwC3244DBV6Hf5Rx5mgqELFI6cKpf//nkyw+gm8EOv6zZ/FetSJDQ5O4ThT1BorHuMR27Z/UsHCG5+Emb1MVHFXKWNfYRvLsZOYMU/zt9JYr+1eRRCGOPb9DosV/iYp1dQeZr5agBJs+a+j5rZhz56e2b6ca0eInXGmu1GFwT4rUegJPkkf/BXqHblRfq6KaIdQDjOUPrW2K2JRaPcfz/b8tH280lhaLV1lEvwaikHTVrNcuUcMM0FxyW7SQRKUlkDSYFNdmKewa4MObpVw9oU4KneDLpJE4LVCeOTKbj5O7UcG+65GA==
-Received: from SJ0PR05CA0165.namprd05.prod.outlook.com (2603:10b6:a03:339::20)
- by CY5PR12MB6156.namprd12.prod.outlook.com (2603:10b6:930:24::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Tue, 30 Jan
- 2024 09:54:09 +0000
-Received: from DS3PEPF000099DE.namprd04.prod.outlook.com
- (2603:10b6:a03:339:cafe::54) by SJ0PR05CA0165.outlook.office365.com
- (2603:10b6:a03:339::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.21 via Frontend
- Transport; Tue, 30 Jan 2024 09:54:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- DS3PEPF000099DE.mail.protection.outlook.com (10.167.17.200) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7249.19 via Frontend Transport; Tue, 30 Jan 2024 09:54:09 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 30 Jan
- 2024 01:53:58 -0800
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 30 Jan
- 2024 01:53:57 -0800
-Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com (10.129.68.9)
- with Microsoft SMTP Server id 15.2.986.41 via Frontend Transport; Tue, 30 Jan
- 2024 01:53:57 -0800
-From: Shravan Kumar Ramani <shravankr@nvidia.com>
-To: Hans de Goede <hdegoede@redhat.com>, Ilpo Jarvinen
-	<ilpo.jarvinen@linux.intel.com>, Vadim Pasternak <vadimp@nvidia.com>, "David
- Thompson" <davthompson@nvidia.com>
-CC: Shravan Kumar Ramani <shravankr@nvidia.com>,
-	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v1 2/2] platform/mellanox: mlxbf-pmc: Add support for clock_measure performance block
-Date: Tue, 30 Jan 2024 04:53:48 -0500
-Message-ID: <c818d6398b8f702a978ce4dbffa58bb8b08f36b2.1706607635.git.shravankr@nvidia.com>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <cover.1706607635.git.shravankr@nvidia.com>
-References: <cover.1706607635.git.shravankr@nvidia.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="PQtfvQ4H"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=7X7nyoTob837kWWS4ii2spbXx6qHIsfIrrozaG7eBhw=; b=PQtfvQ4HPrhtLZf/ky6DE1d/mi
+	6rP+Gbp9/1EAYGUkkbwtIZhlLo3uejAakSHk6CQ5XHEKMmMyxahazloEQ20EE9kr9pgS1kIexNHZi
+	m9iC2HgVg9isgFgr/9myEHDJaLrZk40tsCi4Rj9RRQiNfeLqkRno8n5yAXQD8XWCkUuAnfo+v8QEK
+	k6kxpsbXuoYnCAUZf7kkwCD9JUMZ+V6vD9ONzN32HmSYdOnQ4qLmzwn/gQGlh+WajsWlWnOXO6bnK
+	gV5Biuqx40A9fITUM64AFjqn4F2CRpCgtR/KsRTT88VIcXwmXeMcaBMdH17IFtp6lg2MRlDscceiD
+	8ccWrW5w==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50698)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rUlF6-0001dH-2d;
+	Tue, 30 Jan 2024 10:21:25 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rUlF1-0005Ql-Cp; Tue, 30 Jan 2024 10:21:19 +0000
+Date: Tue, 30 Jan 2024 10:21:19 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mark Gross <markgross@kernel.org>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Simon Horman <simon.horman@corigine.com>,
+	Serge Semin <fancer.lancer@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
+	Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+	Lai Peter Jun Ann <jun.ann.lai@intel.com>,
+	Abdul Rahim Faizal <faizal.abdul.rahim@intel.com>
+Subject: Re: [PATCH net-next v4 06/11] net: stmmac: resetup XPCS according to
+ the new interface mode
+Message-ID: <ZbjNn+C/VHegH2t7@shell.armlinux.org.uk>
+References: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
+ <20240129130253.1400707-7-yong.liang.choong@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099DE:EE_|CY5PR12MB6156:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1b962bc7-6472-4da7-5b04-08dc2179678b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	MbTPrlCFphuAOuJ3l0BzbczZgT0i+4YWvLR/dxxJUNy/hNR2Q4dVMYPA/6dd7dZVzqKZwjR16gOi8HMKpH7jIGvH32jD7DfAteuCV+6yFHm0JebdcxH+wyL0M46oMS7TF2R6A0Xswt+2bfmva28ryYoo5JauD+xQn2+lwelSIn3TLfIIBLw2y5U6dRlcK5AldB16ZnBOo94fRFFbldJ3HQBz2PniEkm6R4kZXoL/bfCnxolbQmsa8+j1SUQZkI7a8C87Mus+eOQGddzpd+Vg/coucrfbDPzd2WZSqWNOvOCTWlZnqqf2HzDZN4W5ipf+zncXL18dI2HyeQyhHqTah57I0z2nhnxc2DeCYTvB0vSl2SK1UxT5xP08ojdQnIaQ+ictIRxEQ6+1hJsuz/JhFs3Muy9JaxGXyPjooBc9KPx+A4UrCw2vKlgVB5+mqGrRK+t/x+qPCpMU9EZG7iX9wj5p2U0F8AQRCDe3WpgyUw/FMDSXGYvPNQ7ORETTT+M7+Hiz9dHoFCSwtJ49GeoPnOuP3Y9ZoFW2EISOWOLCeJtatOUqX3jGCU0vp5NRlZRkoH6Ypnn3gGE4SxSEB4qLpNt9I+GAStQMHRk0vZyh1HFN1aMDh0fE2H9FUASk3fv+XM3R7iHSPWMkHDJvNqfEFZuWNwEEJMI7YYkc339qZuOos2ZH0VrOF9cnir8tKwDvulQhCXA9DT6z81jesyQyjPhemEMNoCzUnn7TmGr/hnvTHicGkvkc6cjIlSNYhUGm
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(396003)(376002)(346002)(39860400002)(136003)(230922051799003)(82310400011)(451199024)(186009)(64100799003)(1800799012)(40470700004)(46966006)(36840700001)(316002)(2906002)(8676002)(4326008)(8936002)(5660300002)(86362001)(6636002)(110136005)(70586007)(70206006)(54906003)(478600001)(6666004)(36756003)(36860700001)(47076005)(82740400003)(7636003)(356005)(7696005)(83380400001)(2616005)(426003)(336012)(26005)(41300700001)(40460700003)(40480700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 09:54:09.0307
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b962bc7-6472-4da7-5b04-08dc2179678b
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099DE.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6156
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240129130253.1400707-7-yong.liang.choong@linux.intel.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-The HW clock_measure counter info is passed to the driver from ACPI.
-Create a new sub-directory for clock_measure events and provide
-read access to the user. Writes are blocked since the fields are RO.
+On Mon, Jan 29, 2024 at 09:02:48PM +0800, Choong Yong Liang wrote:
+> XPCS creation will map the configuration for the provided interface mode.
+> Then XPCS will operate according to the interface mode.
+> 
+> When the interface mode changes, XPCS is required to map the configuration
+> to the new interface mode and destroy the old interface mode where it
+> is not in use.
+> 
+> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/stmmac.h      |  2 +-
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 13 +++++++++++--
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c |  7 +++----
+>  3 files changed, 15 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+> index f155e4841c62..886efd26991e 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+> @@ -357,7 +357,7 @@ enum stmmac_state {
+>  int stmmac_mdio_unregister(struct net_device *ndev);
+>  int stmmac_mdio_register(struct net_device *ndev);
+>  int stmmac_mdio_reset(struct mii_bus *mii);
+> -int stmmac_xpcs_setup(struct mii_bus *mii);
+> +int stmmac_xpcs_setup(struct mii_bus *mii, phy_interface_t interface);
+>  void stmmac_set_ethtool_ops(struct net_device *netdev);
+>  
+>  int stmmac_init_tstamp_counter(struct stmmac_priv *priv, u32 systime_flags);
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index 00af5a4195fd..50429c985441 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -941,8 +941,17 @@ static struct phylink_pcs *stmmac_mac_select_pcs(struct phylink_config *config,
+>  {
+>  	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
+>  
+> -	if (priv->hw->xpcs)
+> +	if (priv->hw->xpcs) {
+> +		if (interface != PHY_INTERFACE_MODE_NA &&
+> +		    interface != priv->plat->phy_interface) {
+> +			/* When there are major changes, we reconfigure
+> +			 * the setup for xpcs according to the interface.
+> +			 */
+> +			xpcs_destroy(priv->hw->xpcs);
+> +			stmmac_xpcs_setup(priv->mii, interface);
 
-Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-Reviewed-by: David Thompson <davthompson@nvidia.com>
-Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
----
- drivers/platform/mellanox/mlxbf-pmc.c | 46 ++++++++++++++++++++++++---
- 1 file changed, 42 insertions(+), 4 deletions(-)
+NAK. Absolutely not. You haven't read the phylink documentation, nor
+understood how phylink works.
 
-diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
-index 906dfa96f783..e1c0e2f04abb 100644
---- a/drivers/platform/mellanox/mlxbf-pmc.c
-+++ b/drivers/platform/mellanox/mlxbf-pmc.c
-@@ -865,6 +865,37 @@ static const struct mlxbf_pmc_events mlxbf_pmc_llt_miss_events[] = {
- 	{75, "HISTOGRAM_HISTOGRAM_BIN9"},
- };
- 
-+static const struct mlxbf_pmc_events mlxbf_pmc_clock_events[] = {
-+	{ 0x0, "FMON_CLK_LAST_COUNT_PLL_D1_INST0" },
-+	{ 0x4, "REFERENCE_WINDOW_WIDTH_PLL_D1_INST0" },
-+	{ 0x8, "FMON_CLK_LAST_COUNT_PLL_D1_INST1" },
-+	{ 0xc, "REFERENCE_WINDOW_WIDTH_PLL_D1_INST1" },
-+	{ 0x10, "FMON_CLK_LAST_COUNT_PLL_G1" },
-+	{ 0x14, "REFERENCE_WINDOW_WIDTH_PLL_G1" },
-+	{ 0x18, "FMON_CLK_LAST_COUNT_PLL_W1" },
-+	{ 0x1c, "REFERENCE_WINDOW_WIDTH_PLL_W1" },
-+	{ 0x20, "FMON_CLK_LAST_COUNT_PLL_T1" },
-+	{ 0x24, "REFERENCE_WINDOW_WIDTH_PLL_T1" },
-+	{ 0x28, "FMON_CLK_LAST_COUNT_PLL_A0" },
-+	{ 0x2c, "REFERENCE_WINDOW_WIDTH_PLL_A0" },
-+	{ 0x30, "FMON_CLK_LAST_COUNT_PLL_C0" },
-+	{ 0x34, "REFERENCE_WINDOW_WIDTH_PLL_C0" },
-+	{ 0x38, "FMON_CLK_LAST_COUNT_PLL_N1" },
-+	{ 0x3c, "REFERENCE_WINDOW_WIDTH_PLL_N1" },
-+	{ 0x40, "FMON_CLK_LAST_COUNT_PLL_I1" },
-+	{ 0x44, "REFERENCE_WINDOW_WIDTH_PLL_I1" },
-+	{ 0x48, "FMON_CLK_LAST_COUNT_PLL_R1" },
-+	{ 0x4c, "REFERENCE_WINDOW_WIDTH_PLL_R1" },
-+	{ 0x50, "FMON_CLK_LAST_COUNT_PLL_P1" },
-+	{ 0x54, "REFERENCE_WINDOW_WIDTH_PLL_P1" },
-+	{ 0x58, "FMON_CLK_LAST_COUNT_REF_100_INST0" },
-+	{ 0x5c, "REFERENCE_WINDOW_WIDTH_REF_100_INST0" },
-+	{ 0x60, "FMON_CLK_LAST_COUNT_REF_100_INST1" },
-+	{ 0x64, "REFERENCE_WINDOW_WIDTH_REF_100_INST1" },
-+	{ 0x68, "FMON_CLK_LAST_COUNT_REF_156" },
-+	{ 0x6c, "REFERENCE_WINDOW_WIDTH_REF_156" },
-+};
-+
- static struct mlxbf_pmc_context *pmc;
- 
- /* UUID used to probe ATF service. */
-@@ -1041,6 +1072,9 @@ static const struct mlxbf_pmc_events *mlxbf_pmc_event_list(const char *blk,
- 	} else if (strstr(blk, "llt")) {
- 		events = mlxbf_pmc_llt_events;
- 		*size = ARRAY_SIZE(mlxbf_pmc_llt_events);
-+	} else if (strstr(blk, "clock_measure")) {
-+		events = mlxbf_pmc_clock_events;
-+		*size = ARRAY_SIZE(mlxbf_pmc_clock_events);
- 	} else {
- 		events = NULL;
- 		*size = 0;
-@@ -1477,14 +1511,15 @@ static int mlxbf_pmc_read_event(int blk_num, uint32_t cnt_num, bool is_l3,
- /* Method to read a register */
- static int mlxbf_pmc_read_reg(int blk_num, uint32_t offset, uint64_t *result)
- {
--	uint32_t ecc_out;
-+	uint32_t reg;
- 
--	if (strstr(pmc->block_name[blk_num], "ecc")) {
-+	if ((strstr(pmc->block_name[blk_num], "ecc")) ||
-+	    (strstr(pmc->block_name[blk_num], "clock_measure"))) {
- 		if (mlxbf_pmc_readl(pmc->block[blk_num].mmio_base + offset,
--				    &ecc_out))
-+				    &reg))
- 			return -EFAULT;
- 
--		*result = ecc_out;
-+		*result = reg;
- 		return 0;
- 	}
- 
-@@ -1498,6 +1533,9 @@ static int mlxbf_pmc_read_reg(int blk_num, uint32_t offset, uint64_t *result)
- /* Method to write to a register */
- static int mlxbf_pmc_write_reg(int blk_num, uint32_t offset, uint64_t data)
- {
-+	if (strstr(pmc->block_name[blk_num], "clock_measure"))
-+		return -EINVAL;
-+
- 	if (strstr(pmc->block_name[blk_num], "ecc")) {
- 		return mlxbf_pmc_write(pmc->block[blk_num].mmio_base + offset,
- 				       MLXBF_PMC_WRITE_REG_32, data);
+Since you haven't read the phylink documentation, I'm not going to
+waste any more time reviewing this series since you haven't done your
+side of the bargin here.
+
 -- 
-2.30.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
