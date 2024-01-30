@@ -1,47 +1,47 @@
 Received: from a1i923.smtp2go.com (a1i923.smtp2go.com [43.228.187.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B82155A4D
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jan 2024 18:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D52371B4B
+	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jan 2024 20:20:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.228.187.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706638731; cv=none; b=aXQu207GFAYucu3cQt+ZNuMndhTujHlw8c8N7yVIZQHs5OA2LGwCn0pbh6a4PP7bU+5FHTmZlWbJZj6gekctJvEiB19NNb34+s/s3pLcQ5ULUpMDYR+nYzn36z170hVkV9dDwazXAvYZue0IPILU7JGhZ6amEp3OI3TYeCEH93w=
+	t=1706646037; cv=none; b=fu5ArwmMRYwD7l3olPVSdupgofI/pZG0+SXpdu+UKUjodse4TEMJjQ8iWOTDgpI6a9jINDdx8sLESJW7K+kxiRqutDxwRZHx+xQpKzIMGN/wkgw93Axh/KPXe5KLdFBz0GTUXmlYb5RhgauJ/bzROkNM9craOrj9GSJFkUKPtW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706638731; c=relaxed/simple;
-	bh=xN8GBrUk2SwwBdJTFzlvxwDI2Fkvvi2aDHkP3q4LnNU=;
+	s=arc-20240116; t=1706646037; c=relaxed/simple;
+	bh=XiURD5Lezv3XwchZWnbdqgq+CcpDV9Z1Dnc98eA/fgQ=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NKotIlIQCTuyIC9isAJW/EEYSfqajiI3Nx+tftSmOf/YdM2Gyq/QTKaa2EJJbLZoAxM+xBWm8yYdaOJH7GjEU9tWXc8EH86B5/cV711XSqV2HtotiHXQSMg18nXOwrueAaQ8UDyrZwoIO3w2+NYoRfZIPdt7eZc7g8A1BdfFcUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dennisn.mooo.com; spf=pass smtp.mailfrom=return.smtpservice.net; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=TSSJFfcT; arc=none smtp.client-ip=43.228.187.155
+	 Content-Type:Content-Disposition:In-Reply-To; b=gKgo853Sk8pP8PaQFeJYsw+kwq8Lx9KQMyXoRHWCDfGm+mXkOguPTW2pB2p22Ip8wcfgyE95GpgJpOrR9awhPFlIJrjcCx1Op8r0FHcFGM/y0JROstiqOrLbS5fO39Sct74Q7eMPAUYk5UTGztpbnjdFUyvSO8dpuOCzrc0u9wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dennisn.mooo.com; spf=pass smtp.mailfrom=return.smtpservice.net; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=T3NqGPxz; arc=none smtp.client-ip=43.228.187.155
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dennisn.mooo.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=return.smtpservice.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="TSSJFfcT"
+	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="T3NqGPxz"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=smtpservice.net; s=maow60.a1-4.dyn; x=1706639628; h=Feedback-ID:
+	d=smtpservice.net; s=maow60.a1-4.dyn; x=1706646935; h=Feedback-ID:
 	X-Smtpcorp-Track:Message-ID:Subject:To:Date:From:Reply-To:Sender:
-	List-Unsubscribe; bh=4IQ7Jz8ZaP0iK5xReEV8bKXDhhFTk1ZRdcsyhVZbsWQ=; b=TSSJFfcT
-	MSMXS93tVt7w6IkfNr9U+azsx1lwiVWV5oJKq1wkyu6DXvrOtKJKOXo6uxIY6rIYi10TDthQlV+d+
-	aAVsS/lw0TrNP9NDrrk/Nw1ltUGCr+92/YVCqiClJO/bCO1H8OWSBKbYi0Hk2KCGxtWpcP322911M
-	XIDK7RT2hKczgqF0sQwjHQSFq/hzpGVAR/LHzD26P1kUOKKu++nKbj6FMYOncxNjKVENzqv776x9+
-	zYYwmYNe+0ZIqLZm9XzyIa9jT86VVcw83nvubU6HUoUNeDk72KhSXbVN4AttwiYc11dDIIT1UOwg+
-	7cmvKN3fUd7BI2KNtW9kRAkSIA==;
+	List-Unsubscribe; bh=8368D8z1eEkQD/cZQwmaxiWunf6TOnN4X5l5eqfxAEY=; b=T3NqGPxz
+	p/ICpjbWStosv78aXatz4c4ScZy95OJqKtcIb4o5vXUoQL3KU+spxKBdbZVZm5LQy+QPnHZRezsOH
+	wgNTAgfnWdYkUgjvDQya1w1g3B0Qdy7C62uLb7WEuRg3C+VkZW+op+/ZsSkxiML6rGsqxmPkABIsJ
+	XZYcvjbuwPqAKyydfrsz4Jo2IM93Dc9uLGGDbicfq7P8lzgvXZeYhiChuNbTUsuyfNmF+JAaA/+Qz
+	y97WK+2KLmkBIbpDAD6Ul9EuX3KAeTNQhhEDsyUw+e7l6XkgYmH0WJdItz2Tp/SOBbkFJOb5/lVkQ
+	mrUHrhHPKDw8iPDMp6zBamLoPg==;
 Received: from [10.45.33.53] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
  (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
  (Exim 4.94.2-S2G) (envelope-from <dennisn@dennisn.mooo.com>)
- id 1rUsh1-l1je6q-Iv; Tue, 30 Jan 2024 18:18:43 +0000
+ id 1rUuar-l1jdpR-GU; Tue, 30 Jan 2024 20:20:29 +0000
 Received: from [10.220.238.86] (helo=dennisn.mooo.com)
  by smtpcorp.com with esmtpa (Exim 4.96.1-S2G)
- (envelope-from <dennisn@dennisn.mooo.com>) id 1rUsgy-rljR0r-1T;
- Tue, 30 Jan 2024 18:18:42 +0000
+ (envelope-from <dennisn@dennisn.mooo.com>) id 1rUuap-rlnZTf-0R;
+ Tue, 30 Jan 2024 20:20:28 +0000
 Received: by dennisn.mooo.com (sSMTP sendmail emulation);
- Tue, 30 Jan 2024 13:18:36 -0500
+ Tue, 30 Jan 2024 15:20:24 -0500
 From: "Dennis Nezic" <dennisn@dennisn.mooo.com>
-Date: Tue, 30 Jan 2024 13:18:36 -0500
+Date: Tue, 30 Jan 2024 15:20:24 -0500
 To: Armin Wolf <W_Armin@gmx.de>
 Cc: Hans de Goede <hdegoede@redhat.com>,
 	platform-driver-x86@vger.kernel.org
 Subject: Re: hp-wmi: info hotkey has no keycode or scancode
-Message-ID: <Zbk9fAMf_70EfLA3@panther>
+Message-ID: <ZblaCCl_OYKENzqW@panther>
 References: <e97ae805-d006-4f0c-96c0-976385772bb7@gmx.de>
  <Za4T0RwClHOoCPCy@panther>
  <cd86386a-653e-401c-9b70-0860d2e1906a@gmx.de>
@@ -60,7 +60,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <57df06ee-3aa1-4501-9dc6-a7bc57d770be@gmx.de>
-X-Smtpcorp-Track: 1rlsgyr_MR0r1T.IC2DvqEG_WH7r
+X-Smtpcorp-Track: 1rlIapr_nZTf0R.IEomvsaNGWYiS
 Feedback-ID: 498822m:498822aoToIo_:498822sZEw92SIK9
 X-Report-Abuse: Please forward a copy of this message, including all headers,
  to <abuse-report@smtp2go.com>
@@ -196,11 +196,4 @@ On 23 Jan 20:58, Armin Wolf wrote:
 > The reason for this is that currently, the button device receives only system wake events, but no button press
 > events during runtime. Maybe this is a BIOS bug, although this could also be intentional (fancy power button).
 
-I was /finally/ able to update my BIOS slightly, only with the latest
-freedos image available, one version up ... there seems to be another
-newer (2011) windows-only one that I'm not able to use.
-
-No change.
-
-Why do all the other "quick start" buttons work - I see their key press
-events, albeit not through hp-wmi? 
+Updated acpidump: https://dennisn.mooo.com/stuff/dump2.txt.gz
