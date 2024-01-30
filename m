@@ -1,143 +1,147 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CF865BB9;
-	Tue, 30 Jan 2024 10:21:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562B467E6D;
+	Tue, 30 Jan 2024 11:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706610111; cv=none; b=t8DK+EbUIawK/tpheXEUh4DFsUhS7Ty2NUm4CIqbrLasqUOPV6zUJ97E8tudcZEDllhKgasrwxSWFMhNZZBO8MX2IWye3A7pynEMuGWdCrxYS6eOZ3CWmSeNHcG9EflsQvMOpfRdnr3EU0AKmz3cEWQoezAI3S/S9zlntYDDgE8=
+	t=1706614952; cv=none; b=hF5WF3uJqj8de8vkt7q/HgSHxLSJVw2sTRp0dHew0llfFRfj6bF6goSFmvuCVhh4XBVypQ3JxOMWscHHPIYjK1nv4KM+E/gBj65Gnje3YV8+3O+MRBK5zmkVUEoV0MaRcl9IoCZVDsv6yB0DnGHS6/J/Iv/xrW7F2JlbIPzBbkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706610111; c=relaxed/simple;
-	bh=a2BTL8SBv7QBEt7tWzfKlIFmC4VJGefkz7RX3H6+xX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o4+MD4WLSzHymd/K9pYKPqdSMr7tT2kJXyB1AHUGWkmUVzdzFRVQ7Derv3MWU4RKJaJjgQqKATtcbYxDwi8Lfuh66KM4FbQBzVxEbYqE7HiW0ADsk6PQVJS+gmVmXdRLX/Hcm0CTK3i2hVmvulbMdNN55j3aFUHyM4bVcNcifFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=PQtfvQ4H; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1706614952; c=relaxed/simple;
+	bh=QJHQ7cEEaXCBazhOzd1NoFD+b05wQr484Mn9CHClAwI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P/4zr7oHae7zl7DIM74KnHjNmh8u7woUGTFZmdiHiKOoO3F6ntPTlFP47gSqCYRJJiJ5RpaGraTYYwxTZTQZEwQ0GCboNkQaxduVj2H4yCzdpP7pdm4m9GI40ucR6INvt5GlUgPjYCPIYDsbT5crH7alvsHNojWvQf+aly1rTac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=e5vUpNfi; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="PQtfvQ4H"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=7X7nyoTob837kWWS4ii2spbXx6qHIsfIrrozaG7eBhw=; b=PQtfvQ4HPrhtLZf/ky6DE1d/mi
-	6rP+Gbp9/1EAYGUkkbwtIZhlLo3uejAakSHk6CQ5XHEKMmMyxahazloEQ20EE9kr9pgS1kIexNHZi
-	m9iC2HgVg9isgFgr/9myEHDJaLrZk40tsCi4Rj9RRQiNfeLqkRno8n5yAXQD8XWCkUuAnfo+v8QEK
-	k6kxpsbXuoYnCAUZf7kkwCD9JUMZ+V6vD9ONzN32HmSYdOnQ4qLmzwn/gQGlh+WajsWlWnOXO6bnK
-	gV5Biuqx40A9fITUM64AFjqn4F2CRpCgtR/KsRTT88VIcXwmXeMcaBMdH17IFtp6lg2MRlDscceiD
-	8ccWrW5w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50698)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rUlF6-0001dH-2d;
-	Tue, 30 Jan 2024 10:21:25 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rUlF1-0005Ql-Cp; Tue, 30 Jan 2024 10:21:19 +0000
-Date: Tue, 30 Jan 2024 10:21:19 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mark Gross <markgross@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	"David S . Miller" <davem@davemloft.net>,
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="e5vUpNfi"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1706614947; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=xvo/NohFCvr1cLaN04Uc48tvSWy5BXAIcL5O2TECUPc=;
+	b=e5vUpNfism1Uu57i2mN0SEtfLPPrgwzN4FDiK5DPxXBu4IOs5aFXHGalE3i6OgxMaoBCvl6dbweabnIiS1E5/tXHhnBvJepOGS2QtMUq8Xhawm9uCvt2m5WKHzbAuspruSnI/Tkqzb5SRaqb+NgAt2ExMjueAbBwvw2F9l/hws0=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R651e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0W.g4wKb_1706614944;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W.g4wKb_1706614944)
+          by smtp.aliyun-inc.com;
+          Tue, 30 Jan 2024 19:42:25 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: virtualization@lists.linux.dev
+Cc: Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Vadim Pasternak <vadimp@nvidia.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Cornelia Huck <cohuck@redhat.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
 	Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
 	Jesper Dangaard Brouer <hawk@kernel.org>,
 	John Fastabend <john.fastabend@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Simon Horman <simon.horman@corigine.com>,
-	Serge Semin <fancer.lancer@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
-	Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-	Lai Peter Jun Ann <jun.ann.lai@intel.com>,
-	Abdul Rahim Faizal <faizal.abdul.rahim@intel.com>
-Subject: Re: [PATCH net-next v4 06/11] net: stmmac: resetup XPCS according to
- the new interface mode
-Message-ID: <ZbjNn+C/VHegH2t7@shell.armlinux.org.uk>
-References: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
- <20240129130253.1400707-7-yong.liang.choong@linux.intel.com>
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	linux-um@lists.infradead.org,
+	netdev@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	kvm@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH vhost 00/17] virtio: drivers maintain dma info for premapped vq
+Date: Tue, 30 Jan 2024 19:42:07 +0800
+Message-Id: <20240130114224.86536-1-xuanzhuo@linux.alibaba.com>
+X-Mailer: git-send-email 2.32.0.3.g01195cf9f
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240129130253.1400707-7-yong.liang.choong@linux.intel.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Git-Hash: 239d1d475be4
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 29, 2024 at 09:02:48PM +0800, Choong Yong Liang wrote:
-> XPCS creation will map the configuration for the provided interface mode.
-> Then XPCS will operate according to the interface mode.
-> 
-> When the interface mode changes, XPCS is required to map the configuration
-> to the new interface mode and destroy the old interface mode where it
-> is not in use.
-> 
-> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/stmmac.h      |  2 +-
->  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 13 +++++++++++--
->  drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c |  7 +++----
->  3 files changed, 15 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-> index f155e4841c62..886efd26991e 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-> @@ -357,7 +357,7 @@ enum stmmac_state {
->  int stmmac_mdio_unregister(struct net_device *ndev);
->  int stmmac_mdio_register(struct net_device *ndev);
->  int stmmac_mdio_reset(struct mii_bus *mii);
-> -int stmmac_xpcs_setup(struct mii_bus *mii);
-> +int stmmac_xpcs_setup(struct mii_bus *mii, phy_interface_t interface);
->  void stmmac_set_ethtool_ops(struct net_device *netdev);
->  
->  int stmmac_init_tstamp_counter(struct stmmac_priv *priv, u32 systime_flags);
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> index 00af5a4195fd..50429c985441 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> @@ -941,8 +941,17 @@ static struct phylink_pcs *stmmac_mac_select_pcs(struct phylink_config *config,
->  {
->  	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
->  
-> -	if (priv->hw->xpcs)
-> +	if (priv->hw->xpcs) {
-> +		if (interface != PHY_INTERFACE_MODE_NA &&
-> +		    interface != priv->plat->phy_interface) {
-> +			/* When there are major changes, we reconfigure
-> +			 * the setup for xpcs according to the interface.
-> +			 */
-> +			xpcs_destroy(priv->hw->xpcs);
-> +			stmmac_xpcs_setup(priv->mii, interface);
+As discussed:
+http://lore.kernel.org/all/CACGkMEvq0No8QGC46U4mGsMtuD44fD_cfLcPaVmJ3rHYqRZxYg@mail.gmail.com
 
-NAK. Absolutely not. You haven't read the phylink documentation, nor
-understood how phylink works.
+If the virtio is premapped mode, the driver should manage the dma info by self.
+So the virtio core should not store the dma info.
+So we can release the memory used to store the dma info.
 
-Since you haven't read the phylink documentation, I'm not going to
-waste any more time reviewing this series since you haven't done your
-side of the bargin here.
+But if the desc_extra has not dma info, we face a new question,
+it is hard to get the dma info of the desc with indirect flag.
+For split mode, that is easy from desc, but for the packed mode,
+it is hard to get the dma info from the desc. And for hardening
+the dma unmap is saft, we should store the dma info of indirect
+descs.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+So I introduce the "structure the indirect desc table" to
+allocate space to store dma info with the desc table.
+
+On the other side, we mix the descs with indirect flag
+with other descs together to share the unmap api. That
+is complex. I found if we we distinguish the descs with
+VRING_DESC_F_INDIRECT before unmap, thing will be clearer.
+
+Because of the dma array is allocated in the find_vqs(),
+so I introduce a new parameter to find_vqs().
+
+Please review.
+
+Thanks
+
+Xuan Zhuo (17):
+  virtio_ring: introduce vring_need_unmap_buffer
+  virtio_ring: packed: remove double check of the unmap ops
+  virtio_ring: packed: structure the indirect desc table
+  virtio_ring: split: remove double check of the unmap ops
+  virtio_ring: split: structure the indirect desc table
+  virtio_ring: no store dma info when unmap is not needed
+  virtio: find_vqs: pass struct instead of multi parameters
+  virtio: vring_new_virtqueue(): pass struct instead of multi parameters
+  virtio_ring: reuse the parameter struct of find_vqs()
+  virtio: find_vqs: add new parameter premapped
+  virtio_ring: export premapped to driver by struct virtqueue
+  virtio_net: set premapped mode by find_vqs()
+  virtio_ring: remove api of setting vq premapped
+  virtio_ring: introduce dma map api for page
+  virtio_net: unify the code for recycling the xmit ptr
+  virtio_net: rename free_old_xmit_skbs to free_old_xmit
+  virtio_net: sq support premapped mode
+
+ arch/um/drivers/virtio_uml.c             |  29 +-
+ drivers/net/virtio_net.c                 | 298 +++++++---
+ drivers/platform/mellanox/mlxbf-tmfifo.c |  24 +-
+ drivers/remoteproc/remoteproc_virtio.c   |  31 +-
+ drivers/s390/virtio/virtio_ccw.c         |  33 +-
+ drivers/virtio/virtio_mmio.c             |  30 +-
+ drivers/virtio/virtio_pci_common.c       |  59 +-
+ drivers/virtio/virtio_pci_common.h       |   9 +-
+ drivers/virtio/virtio_pci_legacy.c       |  16 +-
+ drivers/virtio/virtio_pci_modern.c       |  24 +-
+ drivers/virtio/virtio_ring.c             | 660 ++++++++++++-----------
+ drivers/virtio/virtio_vdpa.c             |  33 +-
+ include/linux/virtio.h                   |  10 +-
+ include/linux/virtio_config.h            |  48 +-
+ include/linux/virtio_ring.h              |  82 +--
+ tools/virtio/virtio_test.c               |   4 +-
+ tools/virtio/vringh_test.c               |  32 +-
+ 17 files changed, 812 insertions(+), 610 deletions(-)
+
+--
+2.32.0.3.g01195cf9f
+
