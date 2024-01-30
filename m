@@ -1,216 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F4A57867;
-	Tue, 30 Jan 2024 08:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F23A65BD9
+	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jan 2024 09:17:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706604756; cv=none; b=bD/EmtqHiEItGbw122ss8AwbTTiDjs23YE3dqXbMcFDvZRRDdCoUMqVpPU4e3KEriNRZrab0w8N7BVxdGVLOsVQ8oHNogGaVx5Rvn2GDU4NLfcjFMomaJmqa+EwwoCdMMxoi5IdOs87K+9UU7hk8fryAJHjKu1K7m8XwR8MSSSo=
+	t=1706606229; cv=none; b=Sck7DakgnZBPHVYBfn0NAOyPQPNy8hmolVRvXSppqPQWkI8dKssSIQjUARjxLzV0eB3ZHgVRDhZQIatyuagEt6QuL0FoCOHbjnElGA2T20aVJre/l+/PZYdwcD7ZSUCyGMUkXwM+DIsZFk3IKjqoOLhSqwDLcsArh6E/3I9EsEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706604756; c=relaxed/simple;
-	bh=2h2lKDVDe0Qt6DafrcvNa34Fl+qhtWodrVVJ81QUTO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Be16AEyTrFS4cPh9mATSqZ3oiGoK4oD9aUfaWeqrvAJ9SiRCfdXrAat0a3ESzvFIeIPNoYojwwnqDjRweMN7wndH3jWOGOgf81zBBzaachc03BvYHxjD12ahl84t+VJYfrjCLIFo2nSXnBFGIV0ThAlilf8RTBIAiYaz+Fn5gME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AhAJ79Ld; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706606229; c=relaxed/simple;
+	bh=RB/RU+14zjSuFDBCBrMDaKkG53QFQyHCD+mk0Bdf+kQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CrsgmrksKwvzZ2SNflxZhbjGW9dW3U5SLLIVDqlnGJLg+oddlaCKoXiuZCPwcOzd2lM9eS28q5ZbYznjNj9nFqQpdESlWZJ7nBLrikcMvEdgp/fAnAgR/TUW88PC5o5VPsvzXrVETkJFj92h7xNcLPOkRKXLx9zKNINyWdcxEGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OGlSuKwA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AhAJ79Ld"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706604754; x=1738140754;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2h2lKDVDe0Qt6DafrcvNa34Fl+qhtWodrVVJ81QUTO0=;
-  b=AhAJ79LdFf6ZfRnWl5RZxjS/sEAauHD6ktHX10zQ4DhS3Ruvy++ZbdzE
-   h7yc8E4dr5V9owfHInxwLvNVt7stIUN0GXxyzI5ZCMTak9dSYckrt7frG
-   QwBUrz0i9DPwM4WOuCyWRMPhMgclPkJTy+MkZaeCqWj+f4NPJ9kHdJleh
-   /8Ib1QKVRT3idN1R7o9fCJR6oZz1mST3svFIdrWejT6R0BPg7TMsMaJGd
-   TkHgLj20RQIxsZa8X/YM4Sikn91n9fQOHHLCWE0aQapPSnGHSsrGYfXgd
-   Cl05RGkX1ZQgG4GXcmGmUInlaHNTSN6IBybZ+bBjK9fc8cwjAsipj98ik
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="10602345"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="10602345"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 00:52:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="788126949"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="788126949"
-Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 30 Jan 2024 00:52:17 -0800
-Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rUjou-00009I-0m;
-	Tue, 30 Jan 2024 08:50:34 +0000
-Date: Tue, 30 Jan 2024 16:48:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mark Gross <markgross@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, Andrew Halaney <ahalaney@redhat.com>,
-	Simon Horman <simon.horman@corigine.com>,
-	Serge Semin <fancer.lancer@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH net-next v4 08/11] stmmac: intel: configure SerDes
- according to the interface mode
-Message-ID: <202401301610.XVvNEdG4-lkp@intel.com>
-References: <20240129130253.1400707-9-yong.liang.choong@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OGlSuKwA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706606226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bsxh3glxMHMP5Jb5fGRHylI+iN6TGtV7J1Cs1H5riFM=;
+	b=OGlSuKwADU0Y+ZA06VyITGN9jIf1FfGGg9CKGRQ2Jb9Gk/tBh1qq7iHXEQlqvyRMeUnxK8
+	J3fZUSF32Uv6UJzICBoNFHybf1ExmDgFunGzJ8E95A4Q3OCQhMQQT8ve4H+FWLem0xJzoW
+	BNO26/RNSoYfBw/LGMwglYhT8I1xSV8=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-647-649JBMzOOxCnGGQKIFmSrw-1; Tue, 30 Jan 2024 04:17:05 -0500
+X-MC-Unique: 649JBMzOOxCnGGQKIFmSrw-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a26f2da3c7bso196782266b.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jan 2024 01:17:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706606224; x=1707211024;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bsxh3glxMHMP5Jb5fGRHylI+iN6TGtV7J1Cs1H5riFM=;
+        b=l8QuefsyrTiGylOGxGW+T5tb3v2t7CknHEHbcuiJQRe5I68BOzPmXzQ0N7qaXPNOKJ
+         vvWH7AUdenynD98ah7m67Qb6pFKNzsJX1TbRSp+DAlRJB5+V0vZu1AXNaHLusWcG+N0u
+         aidMNXhblZbprjukPjsbqtPaYGsqSdxvuXXGSXreU57VLiTFf5DnSpcaHBWbvQxsCo15
+         jQ82ua/0eNC4AS/JbNjUfPezzVyVYOz5ku5iSXSp02r5lyC1dUDG1dHcwEYBJ7Sgbcu0
+         iD8jG6CB7KWsXgW9+pkAHwRDczGwIcmZF1JWdVAUDzrimOkZTV9WeFLmhj0z8qBlfCRe
+         ++sA==
+X-Gm-Message-State: AOJu0YxuUo80gc8bTjHk6KxzJ4o7TR0OKgAoZX5fjA6eDwo22R54JFFA
+	VyjTqetechJ3MJKmZrojrpWH6pkH6GBb0lx4KTud8/L7ywSLrxq6I2c6V1VrUcgx7q+e7PBPMwB
+	yOFnTm/EuSMrsphobDDn0sV5tIWypjalI9pM3Q9hEMV36owluAAfhfeZzpvwITQEMENPdfXD/sD
+	y6/1g=
+X-Received: by 2002:a17:906:a013:b0:a34:bc0d:3ca5 with SMTP id p19-20020a170906a01300b00a34bc0d3ca5mr5710543ejy.13.1706606223878;
+        Tue, 30 Jan 2024 01:17:03 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGa5kt/DuYffhGsop77KpBROb3I0ajmiY5RPux3EHSCMiQZl85DSsHnNvtpSFTn8tU8ZocQJQ==
+X-Received: by 2002:a17:906:a013:b0:a34:bc0d:3ca5 with SMTP id p19-20020a170906a01300b00a34bc0d3ca5mr5710525ejy.13.1706606223543;
+        Tue, 30 Jan 2024 01:17:03 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id l17-20020a1709061c5100b00a3472da6696sm4886274ejg.159.2024.01.30.01.17.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 01:17:02 -0800 (PST)
+Message-ID: <c09ecd6a-7b1e-42a3-84fa-ba7dbeba2851@redhat.com>
+Date: Tue, 30 Jan 2024 10:17:02 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240129130253.1400707-9-yong.liang.choong@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: wmi: Initialize ACPI device class
+Content-Language: en-US, nl
+To: Armin Wolf <W_Armin@gmx.de>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240124190732.4795-1-W_Armin@gmx.de>
+ <9ccc3b9d-d71a-451c-80f5-3da62108d983@redhat.com>
+ <CAJZ5v0j1qvJYXqo96eMmtD4JnGh4Mu2ESdri5cGAqL-4bK0geA@mail.gmail.com>
+ <62a9942f-97b2-4237-b99f-131535368c68@gmx.de>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <62a9942f-97b2-4237-b99f-131535368c68@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Choong,
+Hi,
 
-kernel test robot noticed the following build warnings:
+On 1/30/24 03:10, Armin Wolf wrote:
+> Am 29.01.24 um 14:08 schrieb Rafael J. Wysocki:
+> 
+>> On Mon, Jan 29, 2024 at 1:51 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>> Hi,
+>>>
+>>> On 1/24/24 20:07, Armin Wolf wrote:
+>>>> When an ACPI netlink event is received by acpid, the ACPI device
+>>>> class is passed as its first argument. But since the class string
+>>>> is not initialized, an empty string is being passed:
+>>>>
+>>>>        netlink:  PNP0C14:01 000000d0 00000000
+>>>>
+>>>> Fix this by initializing the ACPI device class during probe.
+>>>>
+>>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>>>> ---
+>>>> Note: This patch is based on commit 3f399b5d7189 ("platform/x86: wmi: Use ACPI device name in netlink event")
+>>>> ---
+>>>>   drivers/platform/x86/wmi.c | 6 +++++-
+>>>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+>>>> index 7ef1e82dc61c..b92425c30a50 100644
+>>>> --- a/drivers/platform/x86/wmi.c
+>>>> +++ b/drivers/platform/x86/wmi.c
+>>>> @@ -32,6 +32,8 @@
+>>>>   #include <linux/wmi.h>
+>>>>   #include <linux/fs.h>
+>>>>
+>>>> +#define ACPI_WMI_DEVICE_CLASS        "wmi"
+>>>> +
+>>>>   MODULE_AUTHOR("Carlos Corbacho");
+>>>>   MODULE_DESCRIPTION("ACPI-WMI Mapping Driver");
+>>>>   MODULE_LICENSE("GPL");
+>>>> @@ -1202,7 +1204,7 @@ static int wmi_notify_device(struct device *dev, void *data)
+>>>>                wblock->handler(*event, wblock->handler_data);
+>>>>        }
+>>>>
+>>>> -     acpi_bus_generate_netlink_event(wblock->acpi_device->pnp.device_class,
+>>>> +     acpi_bus_generate_netlink_event(acpi_device_class(wblock->acpi_device),
+>>>>                                        acpi_dev_name(wblock->acpi_device), *event, 0);
+>>>>
+>>>>        return -EBUSY;
+>>>> @@ -1267,6 +1269,8 @@ static int acpi_wmi_probe(struct platform_device *device)
+>>>>                return -ENODEV;
+>>>>        }
+>>>>
+>>>> +     strscpy(acpi_device_class(acpi_device), ACPI_WMI_DEVICE_CLASS, sizeof(acpi_device_class));
+>>>> +
+>>> Hmm, I'm not sure if you are supposed to do this when you are not an
+>>> acpi_driver's add() function.
+>> You aren't.
+> 
+> I believed otherwise, as the ACPI AC driver (which is a platform_driver) does the same thing.
+> Seems i was wrong on that.
 
-[auto build test WARNING on net-next/main]
+I'm pretty sure that the ACPI AC driver used to be an acpi_driver
+and was converted to a platform_driver recently.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Choong-Yong-Liang/net-phylink-publish-ethtool-link-modes-that-supported-and-advertised/20240129-211219
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20240129130253.1400707-9-yong.liang.choong%40linux.intel.com
-patch subject: [PATCH net-next v4 08/11] stmmac: intel: configure SerDes according to the interface mode
-config: x86_64-kismet-CONFIG_INTEL_PMC_IPC-CONFIG_DWMAC_INTEL-0-0 (https://download.01.org/0day-ci/archive/20240130/202401301610.XVvNEdG4-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20240130/202401301610.XVvNEdG4-lkp@intel.com/reproduce)
+AFAIK the plan is to convert all drivers to platform_drivers
+and completely get rid of the acpi_driver concept.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401301610.XVvNEdG4-lkp@intel.com/
+That does mean that we will indeed have platform_drivers
+now setting the acpi_device_class. So I guess that maybe
+this is ok to do for the WMI bus driver too, since that
+is also not a plain driver.
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for INTEL_PMC_IPC when selected by DWMAC_INTEL
-   .config:21:warning: symbol value 'n' invalid for AIC79XX_DEBUG_MASK
-   .config:51:warning: symbol value 'n' invalid for BLK_DEV_LOOP_MIN_COUNT
-   .config:114:warning: symbol value 'n' invalid for SQUASHFS_FRAGMENT_CACHE_SIZE
-   .config:205:warning: symbol value 'n' invalid for FB_OMAP2_NUM_FBS
-   .config:209:warning: symbol value 'n' invalid for CMA_SIZE_MBYTES
-   .config:254:warning: symbol value 'n' invalid for SATA_MOBILE_LPM_POLICY
-   .config:337:warning: symbol value 'n' invalid for CFAG12864B_RATE
-   .config:351:warning: symbol value 'n' invalid for PSTORE_BLK_MAX_REASON
-   .config:355:warning: symbol value 'n' invalid for AIC79XX_CMDS_PER_DEVICE
-   .config:437:warning: symbol value 'n' invalid for PANEL_LCD_PIN_SDA
-   .config:459:warning: symbol value 'n' invalid for KFENCE_SAMPLE_INTERVAL
-   .config:574:warning: symbol value 'n' invalid for AIC7XXX_DEBUG_MASK
-   .config:646:warning: symbol value 'n' invalid for CRYPTO_DEV_QCE_SW_MAX_LEN
-   .config:653:warning: symbol value 'n' invalid for DRM_XE_JOB_TIMEOUT_MIN
-   .config:690:warning: symbol value 'n' invalid for FAT_DEFAULT_CODEPAGE
-   .config:752:warning: symbol value 'n' invalid for PANEL_LCD_CHARSET
-   .config:838:warning: symbol value 'n' invalid for SND_AC97_POWER_SAVE_DEFAULT
-   .config:868:warning: symbol value 'n' invalid for MAGIC_SYSRQ_DEFAULT_ENABLE
-   .config:885:warning: symbol value 'n' invalid for DRM_I915_MAX_REQUEST_BUSYWAIT
-   .config:919:warning: symbol value 'n' invalid for SND_AT73C213_TARGET_BITRATE
-   .config:957:warning: symbol value 'n' invalid for DRM_XE_PREEMPT_TIMEOUT_MIN
-   .config:969:warning: symbol value 'n' invalid for VMCP_CMA_SIZE
-   .config:1154:warning: symbol value 'n' invalid for NODES_SHIFT
-   .config:1224:warning: symbol value 'n' invalid for RCU_CPU_STALL_TIMEOUT
-   .config:1253:warning: symbol value 'n' invalid for MTDRAM_ERASE_SIZE
-   .config:1327:warning: symbol value 'n' invalid for SERIAL_UARTLITE_NR_UARTS
-   .config:1492:warning: symbol value 'n' invalid for INPUT_MOUSEDEV_SCREEN_Y
-   .config:1506:warning: symbol value 'n' invalid for LEGACY_PTY_COUNT
-   .config:1667:warning: symbol value 'n' invalid for AIC7XXX_RESET_DELAY_MS
-   .config:1833:warning: symbol value 'n' invalid for USB_GADGET_STORAGE_NUM_BUFFERS
-   .config:1883:warning: symbol value 'n' invalid for IBM_EMAC_POLL_WEIGHT
-   .config:1951:warning: symbol value 'n' invalid for PANEL_PROFILE
-   .config:1967:warning: symbol value 'n' invalid for DRM_I915_STOP_TIMEOUT
-   .config:2289:warning: symbol value 'n' invalid for SND_HDA_PREALLOC_SIZE
-   .config:2301:warning: symbol value 'n' invalid for PANEL_LCD_PIN_E
-   .config:2336:warning: symbol value 'n' invalid for SND_SOC_SOF_DEBUG_IPC_FLOOD_TEST_NUM
-   .config:2339:warning: symbol value 'n' invalid for RCU_FANOUT_LEAF
-   .config:2443:warning: symbol value 'n' invalid for DRM_XE_TIMESLICE_MAX
-   .config:2500:warning: symbol value 'n' invalid for PANEL_LCD_BWIDTH
-   .config:2763:warning: symbol value 'n' invalid for PANEL_PARPORT
-   .config:2773:warning: symbol value 'n' invalid for PSTORE_BLK_CONSOLE_SIZE
-   .config:2860:warning: symbol value 'n' invalid for NOUVEAU_DEBUG_DEFAULT
-   .config:2938:warning: symbol value 'n' invalid for BOOKE_WDT_DEFAULT_TIMEOUT
-   .config:3061:warning: symbol value 'n' invalid for KCSAN_REPORT_ONCE_IN_MS
-   .config:3171:warning: symbol value 'n' invalid for KCSAN_UDELAY_INTERRUPT
-   .config:3194:warning: symbol value 'n' invalid for PANEL_LCD_PIN_BL
-   .config:3216:warning: symbol value 'n' invalid for DEBUG_OBJECTS_ENABLE_DEFAULT
-   .config:3223:warning: symbol value 'n' invalid for INITRAMFS_ROOT_GID
-   .config:3345:warning: symbol value 'n' invalid for ATM_FORE200E_TX_RETRY
-   .config:3389:warning: symbol value 'n' invalid for FB_OMAP2_DSS_MIN_FCK_PER_PCK
-   .config:3450:warning: symbol value 'n' invalid for AIC79XX_RESET_DELAY_MS
-   .config:3538:warning: symbol value 'n' invalid for KCSAN_UDELAY_TASK
-   .config:3574:warning: symbol value 'n' invalid for STACK_MAX_DEFAULT_SIZE_MB
-   .config:3759:warning: symbol value 'n' invalid for MMC_BLOCK_MINORS
-   .config:3806:warning: symbol value 'n' invalid for SCSI_NCR53C8XX_SYNC
-   .config:3894:warning: symbol value 'n' invalid for SERIAL_MCF_BAUDRATE
-   .config:3936:warning: symbol value 'n' invalid for UCLAMP_BUCKETS_COUNT
-   .config:3963:warning: symbol value 'n' invalid for X86_AMD_PSTATE_DEFAULT_MODE
-   .config:3985:warning: symbol value 'n' invalid for DE2104X_DSL
-   .config:3993:warning: symbol value 'n' invalid for BLK_DEV_RAM_COUNT
-   .config:4233:warning: symbol value 'n' invalid for IP_VS_SH_TAB_BITS
-   .config:4347:warning: symbol value 'n' invalid for SERIAL_ALTERA_UART_BAUDRATE
-   .config:4385:warning: symbol value 'n' invalid for USBIP_VHCI_HC_PORTS
-   .config:4492:warning: symbol value 'n' invalid for CMA_AREAS
-   .config:4493:warning: symbol value 'n' invalid for DUMMY_CONSOLE_ROWS
-   .config:4551:warning: symbol value 'n' invalid for INPUT_MOUSEDEV_SCREEN_X
-   .config:4670:warning: symbol value 'n' invalid for RIONET_RX_SIZE
-   .config:4736:warning: symbol value 'n' invalid for RADIO_TYPHOON_PORT
-   .config:4854:warning: symbol value 'n' invalid for SERIAL_TXX9_NR_UARTS
-   .config:4899:warning: symbol value 'n' invalid for MTRR_SANITIZER_SPARE_REG_NR_DEFAULT
-   .config:5001:warning: symbol value 'n' invalid for IBM_EMAC_TXB
-   .config:5148:warning: symbol value 'n' invalid for FTRACE_RECORD_RECURSION_SIZE
-   .config:5510:warning: symbol value 'n' invalid for DRM_I915_FENCE_TIMEOUT
-   .config:5532:warning: symbol value 'n' invalid for TTY_PRINTK_LEVEL
-   .config:5585:warning: symbol value 'n' invalid for CRYPTO_DEV_FSL_CAAM_INTC_TIME_THLD
-   .config:5701:warning: symbol value 'n' invalid for MIPS_EJTAG_FDC_KGDB_CHAN
-   .config:5772:warning: symbol value 'n' invalid for PPC_EARLY_DEBUG_EHV_BC_HANDLE
-   .config:5796:warning: symbol value 'n' invalid for KDB_DEFAULT_ENABLE
-   .config:5816:warning: symbol value 'n' invalid for SERIAL_ALTERA_UART_MAXPORTS
-   .config:5933:warning: symbol value 'n' invalid for IP_VS_MH_TAB_INDEX
-   .config:6101:warning: symbol value 'n' invalid for PANEL_LCD_HWIDTH
-   .config:6131:warning: symbol value 'n' invalid for LOCKDEP_CHAINS_BITS
-   .config:6230:warning: symbol value 'n' invalid for DRM_I915_HEARTBEAT_INTERVAL
-   .config:6236:warning: symbol value 'n' invalid for KCSAN_SKIP_WATCH
-   .config:6244:warning: symbol value 'n' invalid for EFI_MAX_FAKE_MEM
-   .config:6260:warning: symbol value 'n' invalid for PSTORE_BLK_KMSG_SIZE
-   .config:6358:warning: symbol value 'n' invalid for PANEL_LCD_PIN_RW
-   .config:6481:warning: symbol value 'n' invalid for SERIAL_8250_RUNTIME_UARTS
-   .config:6517:warning: symbol value 'n' invalid for KVM_MAX_NR_VCPUS
-   .config:6584:warning: symbol value 'n' invalid for ARCH_MMAP_RND_COMPAT_BITS
-   .config:6633:warning: symbol value 'n' invalid for SERIAL_SH_SCI_NR_UARTS
-   .config:6766:warning: symbol value 'n' invalid for RADIO_TRUST_PORT
-   .config:6852:warning: symbol value 'n' invalid for SND_MAX_CARDS
-   .config:7006:warning: symbol value 'n' invalid for RCU_BOOST_DELAY
-   .config:7177:warning: symbol value 'n' invalid for DVB_MAX_ADAPTERS
-   .config:7180:warning: symbol value 'n' invalid for SCSI_NCR53C8XX_MAX_TAGS
-   .config:7187:warning: symbol value 'n' invalid for CMA_SIZE_PERCENTAGE
-   .config:7213:warning: symbol value 'n' invalid for SCSI_SYM53C8XX_DMA_ADDRESSING_MODE
-   .config:7257:warning: symbol value 'n' invalid for ZSMALLOC_CHAIN_SIZE
-   .config:7354:warning: symbol value 'n' invalid for DRM_XE_TIMESLICE_MIN
+>>> Rafael, do you have any comments on this ?
+>> I'm not quite sure why this is done here.
+> 
+> The initialization of the ACPI device class is being done to access this value later when sending an
+> ACPI netlink event like other ACPI drivers do.
+> 
+> However since you clarified that doing this outside of an acpi_driver's add() function is forbidden
+> i think it would indeed be better to just pass the value directly without touching the ACPI device class.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Right I was thinking that you could just pass the string
+directly to acpi_bus_generate_netlink_event() myself too.
+
+Rafael, do you have any preference for how to solve this ?
+
+Regards,
+
+Hans
+
