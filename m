@@ -1,118 +1,75 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from a1i923.smtp2go.com (a1i923.smtp2go.com [43.228.187.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D517E8
-	for <platform-driver-x86@vger.kernel.org>; Wed, 31 Jan 2024 00:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7AF16426
+	for <platform-driver-x86@vger.kernel.org>; Wed, 31 Jan 2024 04:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.228.187.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706662745; cv=none; b=EQDjoj6qvkM/x9fzSugmUSBx1MzJkYqp9bDwZW4WYWRJDW2sNyoDIQi0kF1T8qY0c1QfGhKMLLgV8Zp5dNJR7iA0DtolCwybv5aGxI+Dah/YyOkOYWexKswX5+cuq3FWxR5mEB35KsYwOig1XDBpedpuc5VT+bJVmwactKQ77PE=
+	t=1706673717; cv=none; b=oqjMAKNYu39+aKtUQbLGBNMRxaRWYiE5fy/0gLgZQPSzcaanSgSbWGuC8hxcxh2TYfhtdNu7wUqu1dTQLuBfipzZq+OIO5zJLVefIpCVz+DgQBsxwxnCFcrlbplj2S7G8IkdMHjacb3yNm8oFZNeUOuiNELr/YuTHbP6IuNRWaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706662745; c=relaxed/simple;
-	bh=NyWQpZvyfXiQ1pPODvzBA3Cchx9hEFuF35X+qnan0xU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=GRPp5YxWRIFrbWnWoUoi+ZbqzjtHb+JfexXCEyC3Jp+c/xBavVdE/hJbYlfqttr5YRaVkcIPN+KaJzorz/oPHMJbWrBI06uXVHuKpiPHBUWNTGrUZ3VlRKFjw9TWsHuiNAcTUxyLhncareIRDVvVZ6bz4xM/HNYbeeUg6n8MTRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net; spf=pass smtp.mailfrom=iwanders.net; dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b=Jo8YtHRH; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iwanders.net
+	s=arc-20240116; t=1706673717; c=relaxed/simple;
+	bh=d0Z9qJSFTqxIOjmqZDL+YnDR1QAbROfuIIWpXVL5ruE=;
+	h=From:Date:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BDEkVQFNUa0vU9fMQ7ipeuzL6xOyqsvs36HZ/74Qyr4DdyPyTLO8zMyO4ci10q2JJfyPI1R6VfAZE8657uSFd5f+r+p9GXN6k1BZP/hvb54dW9RXDxx4ckiobMdnZG+osnAzY0aQBggNwDfOmt3ZNCyG2Fcx79oCZhb+LmVk9rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dennisn.mooo.com; spf=pass smtp.mailfrom=return.smtpservice.net; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=wohsDM4y; arc=none smtp.client-ip=43.228.187.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dennisn.mooo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=return.smtpservice.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b="Jo8YtHRH"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-783d916d039so344331185a.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jan 2024 16:59:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=iwanders.net; s=google; t=1706662742; x=1707267542; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BGbVVWmzCS/qQW3OOIkbvYCslK4QZ0cY8oAxDb26lic=;
-        b=Jo8YtHRHhNxNI4pom7MaF6nQYJcgjwqwyjhylKjLvNnweaQSVdK8U5eIrvCq7CIpXD
-         zvVwrkNAgRfrkZmcPFrFioxwGh74LHm/skF388PFcX4MKVJ5VAsKHuiMY7qiCP4N44N5
-         wN4AfrwXLQaWo2fEzB6azimVTO0TP0kUtAWxo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706662742; x=1707267542;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BGbVVWmzCS/qQW3OOIkbvYCslK4QZ0cY8oAxDb26lic=;
-        b=emJqqFdRx5k2/wkNrtWCA/9MreCVZZsgswQPbQst+UxzPbpcM5lpugMkZBgBkPKkds
-         qJmrnP+fReC9nMQazVUaHWlIOSlQRHlPqP/spZ/a2oQxyp9X0zmpuB8bytKedKGrF5zQ
-         MyKHV3ZN/kLeT5qxkM892vzRJg3cKgloGZ9cGL4fDwpjn0rzyLOcb8ZHzyhBL981SpLB
-         aeyxZuMedckpVPYvKmxzUGb3GeQfoVgmb80mVg7yfvrU7dYm76xTaCk6/vDoZFrS01oC
-         ZJExbXDjj0PEg46+fGvsCuSCwi0kWw4sGHo+fRXbR6jDCEEAhXGyOv1XicWCIgcDp7LQ
-         liCw==
-X-Gm-Message-State: AOJu0YwWl9LVoeY3sLVd5s9Fri6SvidkeB7rL9l0lXLzFJdjfggqVWUJ
-	2cUbcCtcezruCtooKLUxfngpKM0VtQdKuS05C0YRlJbZ2/aPbHWztABF7d4lwOU=
-X-Google-Smtp-Source: AGHT+IFTwSrfJqR+7Jmkta8hOZECRvc6kWaFJAi00qGGfQmJ5ZyhKGPk8OaRHjxJ5EoI5ngLZw9LYg==
-X-Received: by 2002:a05:6214:20c1:b0:68c:5e0d:6a23 with SMTP id 1-20020a05621420c100b0068c5e0d6a23mr237795qve.34.1706662742669;
-        Tue, 30 Jan 2024 16:59:02 -0800 (PST)
-Received: from eagle.lan (24-246-30-234.cable.teksavvy.com. [24.246.30.234])
-        by smtp.gmail.com with ESMTPSA id ld27-20020a056214419b00b006869e0eed00sm4969090qvb.26.2024.01.30.16.59.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 16:59:02 -0800 (PST)
-From: Ivor Wanders <ivor@iwanders.net>
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Ivor Wanders <ivor@iwanders.net>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mark Gross <markgross@kernel.org>
-Cc: linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v5 2/2] platform/surface: aggregator_registry: add entry for fan speed
-Date: Tue, 30 Jan 2024 19:58:56 -0500
-Message-Id: <20240131005856.10180-3-ivor@iwanders.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240131005856.10180-1-ivor@iwanders.net>
-References: <20240131005856.10180-1-ivor@iwanders.net>
+	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="wohsDM4y"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpservice.net; s=maow60.a1-4.dyn; x=1706674614; h=Feedback-ID:
+	X-Smtpcorp-Track:Message-ID:Subject:To:Date:From:Reply-To:Sender:
+	List-Unsubscribe; bh=2xL2mOUD9XwoqKsIHGXoC3ukneALHdJfU8TijpImKy0=; b=wohsDM4y
+	2GyA5oO6MhiWbBZcrFjWj9miKsNTdxFDtCcDB4y4MIRdQm9mbzwa1Io921bqHyVyy02qvgVwwEnTh
+	i8fxCob0OX4RMcPbgR0fXfOS1GcyxLJgwAPO9CLpqIPWuNgSqdasMgHWqBwGRBf18RKhJb/sVnfWE
+	XfKdRMccjwmMz0HP7ePDwtqiraS6ngiFm70AtMAFAwKJZ8M36NlJTllUAGPufazRkDpOJD7KBizXH
+	gqWZAlyFONKBpv2h1WH0nRQQSrpdtB6lXZUVvY/uQastTqPMqVdoc2w8KCBV/6GL8Es82HrHt3lKy
+	XbjmNVLJCvyK9eJtUZMMuiAElQ==;
+Received: from [10.45.56.87] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <dennisn@dennisn.mooo.com>)
+ id 1rV1nM-l1jktM-M4
+ for platform-driver-x86@vger.kernel.org; Wed, 31 Jan 2024 04:01:52 +0000
+Received: from [10.220.238.86] (helo=dennisn.mooo.com)
+ by smtpcorp.com with esmtpa (Exim 4.96.1-S2G)
+ (envelope-from <dennisn@dennisn.mooo.com>) id 1rV1nK-ynZKyk-1I
+ for platform-driver-x86@vger.kernel.org;
+ Wed, 31 Jan 2024 04:01:51 +0000
+Received: by dennisn.mooo.com (sSMTP sendmail emulation);
+ Tue, 30 Jan 2024 23:01:47 -0500
+From: "Dennis Nezic" <dennisn@dennisn.mooo.com>
+Date: Tue, 30 Jan 2024 23:01:47 -0500
+To: platform-driver-x86@vger.kernel.org
+Subject: Re: hp-wmi: info hotkey has no keycode or scancode
+Message-ID: <ZbnGK9VBLro86dCg@panther>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Smtpcorp-Track: 1rV1nKynZKyk1m.INYvv_qotytll
+Feedback-ID: 498822m:498822aoToIo_:498822sZEw92SIK9
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
 
-Add an entry for the fan speed function.
-Add this new entry to the Surface Pro 9 group.
+> > Dennis, can you check that your device runs the latest BIOS? And if
+> > this is not the case, could you do a BIOS update and send me an
+> > updated acpidump? 
+> > 
+> > The reason for this is that currently, the button device receives only
+> > system wake events, but no button press events during runtime. Maybe
+> > this is a BIOS bug, although this could also be intentional (fancy
+> > power button).
+> 
+> I was /finally/ able to update my BIOS slightly, only with the latest
+> freedos image available, one version up ... there seems to be another
+> newer (2011) windows-only one that I'm not able to use.
+>
+> No change.
 
-Signed-off-by: Ivor Wanders <ivor@iwanders.net>
-Link: https://github.com/linux-surface/kernel/pull/144
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
----
-Changes in v5:
-  - No changes in this patch.
-Changes in v4:
-  - No changes in this patch.
-Changes in v3:
-  - No changes in this patch.
-Changes in v2:
-  - No changes in this patch.
----
- drivers/platform/surface/surface_aggregator_registry.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-index aeb3feae4..035d6b410 100644
---- a/drivers/platform/surface/surface_aggregator_registry.c
-+++ b/drivers/platform/surface/surface_aggregator_registry.c
-@@ -74,6 +74,12 @@ static const struct software_node ssam_node_tmp_pprof = {
- 	.parent = &ssam_node_root,
- };
- 
-+/* Fan speed function. */
-+static const struct software_node ssam_node_fan_speed = {
-+	.name = "ssam:01:05:01:01:01",
-+	.parent = &ssam_node_root,
-+};
-+
- /* Tablet-mode switch via KIP subsystem. */
- static const struct software_node ssam_node_kip_tablet_switch = {
- 	.name = "ssam:01:0e:01:00:01",
-@@ -305,6 +311,7 @@ static const struct software_node *ssam_node_group_sp9[] = {
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
- 	&ssam_node_tmp_pprof,
-+	&ssam_node_fan_speed,
- 	&ssam_node_pos_tablet_switch,
- 	&ssam_node_hid_kip_keyboard,
- 	&ssam_node_hid_kip_penstash,
--- 
-2.17.1
-
+(I "hacked" the "latest" 2011 bios rom in, and although it reports being
+a newer version and newer release date, acpidump is exactly the same.
+dmidecode says it's the newer one though. No difference.)
