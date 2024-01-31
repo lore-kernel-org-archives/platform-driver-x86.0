@@ -1,118 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A0279DB5;
-	Wed, 31 Jan 2024 11:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A9669DE2;
+	Wed, 31 Jan 2024 11:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706699001; cv=none; b=JtyT6Ug5sdt+B0i9PrVMEUxZAsj4LQtKsLWcQFG4gIyZ11RVF2GgBHYyUaHa3GADLDFNUivn17EP9l/LO0nYBPLsOZBB97iTjnFb9lBbm041i9QwOXgTyaBR6Y5mBBpfnLjHD7zMYR9TYOcXsuvS+oR0IR+1/hWZsxhSs/oBGAM=
+	t=1706699829; cv=none; b=ldXmZa35+vcLqNdWRQpl2P6qsR+wEn+8oytcrkIAexPB4aRz3J4o+TQ27SSS2POuHoslecf8X0tBZLLb1GzwOTsoSuQeJQMROfPYuvG5iLYIkHswvO57evWduvk6NI7MUrCV9AFgRo2jPpG4L8yuNOMnO2NrnpHtR9ieKxVeH1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706699001; c=relaxed/simple;
-	bh=w5tD2hF6VL4scoYvTlWDh0fos6f759HiGvpQ7AYLjAI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=LXB2YG4gtWYrpN5fX2dnPPX3va06A6+fwaiGM1Fo0dt65KmOR/dI8mP/wt/kdwmkWggVvTnsAUVPkc5L3pKBDeh3c0Xs6TN96JVH1vKrtVKhXqbhuFT7IjRXXUk5UKO4aeVKO2YjsHOk42NVCzvtqb5Lq61rZ8fyyimUbwmD9pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eM5jKjqd; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706699829; c=relaxed/simple;
+	bh=ezyJ3RAWthEoMiSHE2pyK7llcs3x4Wbbh8fvvEw11/Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ogR5U0vg0KGlJoSbwR5FGfYd2Jnn0VEwL7Q4CUoJMl2A1wtUmjNwaLoxEmvM0+T3HEVGQMXygfN6+I0wzxXj+jjI8yAT5sRIQ16XcaLSHZpgowN3b2EpkHsH9Yw43WnlAkEgzyRUw/++90vSKc9s0vyUw3UdmvZJhFyGERFRJXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=iO3RmPxz; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eM5jKjqd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706699000; x=1738235000;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=w5tD2hF6VL4scoYvTlWDh0fos6f759HiGvpQ7AYLjAI=;
-  b=eM5jKjqdQm8sQ40LKnBKeQGaM5Ae/8GYvptf9z6/jB8xM3mdIlpd3lUr
-   pR+lBo3dnPRjRVNvTRCt5HuT4GTlTlSstMjWxMqaTLwjKTyvL+qNqN8uR
-   k8uvfQczEXlmyigYwLoWDqEkTuJP/LotRaMuWiJOg+jNtmcDGmL1nCVtS
-   FNJ+xQudFGmJCruBAMYBRnBjaGDCcl9PmO1mAZR5qp/zOfaLKZdHqqGXr
-   TviAAz/0wj08411W7IwKN9QyQ3yEGhtC1xO2GTYk/kjyS+IwxGNQPom8W
-   7kaX+pS5O8PLVT17eziH3pGM1G74k59noIa0eobQ9x2onOAVWW7aYHD1J
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="16947160"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="16947160"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 03:03:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="30460973"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.35.167])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 03:03:08 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 31 Jan 2024 13:03:04 +0200 (EET)
-To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-cc: virtualization@lists.linux.dev, Richard Weinberger <richard@nod.at>, 
-    Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-    Johannes Berg <johannes@sipsolutions.net>, 
-    "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-    Paolo Abeni <pabeni@redhat.com>, Hans de Goede <hdegoede@redhat.com>, 
-    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-    Vadim Pasternak <vadimp@nvidia.com>, 
-    Bjorn Andersson <andersson@kernel.org>, 
-    Mathieu Poirier <mathieu.poirier@linaro.org>, 
-    Cornelia Huck <cohuck@redhat.com>, Halil Pasic <pasic@linux.ibm.com>, 
-    Eric Farman <farman@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-    Vasily Gorbik <gor@linux.ibm.com>, 
-    Alexander Gordeev <agordeev@linux.ibm.com>, 
-    Christian Borntraeger <borntraeger@linux.ibm.com>, 
-    Sven Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, 
-    Daniel Borkmann <daniel@iogearbox.net>, 
-    Jesper Dangaard Brouer <hawk@kernel.org>, 
-    John Fastabend <john.fastabend@gmail.com>, 
-    Benjamin Berg <benjamin.berg@intel.com>, 
-    Yang Li <yang.lee@linux.alibaba.com>, linux-um@lists.infradead.org, 
-    Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org, 
-    kvm@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH vhost 08/17] virtio: vring_new_virtqueue(): pass struct
- instead of multi parameters
-In-Reply-To: <20240130114224.86536-9-xuanzhuo@linux.alibaba.com>
-Message-ID: <bcd0e35e-e9a3-48b5-fc0a-117ba997439a@linux.intel.com>
-References: <20240130114224.86536-1-xuanzhuo@linux.alibaba.com> <20240130114224.86536-9-xuanzhuo@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="iO3RmPxz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1706699814; x=1707304614; i=w_armin@gmx.de;
+	bh=ezyJ3RAWthEoMiSHE2pyK7llcs3x4Wbbh8fvvEw11/Y=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=iO3RmPxzHQHJNCGLQNTWXxt8ep0NgqSJGMLExWu7uPc+H6rHPRj0wNTMrXs0Aiy5
+	 Iu6eEJxI86HryZxWErADo3WI2FFONPOoSyIw1Q8jDvmgXeIq3EPlAxuIBWQh+OTc7
+	 WM+HUXqqQ2LU5tcXJHb+uwStvERHre1N0xvfD0oo1ydXdWx+Qi4CMLJAGeT00cVr/
+	 q8XRpdtPmn4423dF7yjyZii0kYCwThCrYW8U6P3KNpGBhuUf/TgZS6XdCmiogXc2e
+	 GsXQjgnnKDr7wgvm6mIFwIoqOyiA3kGfXCtWWn6Xvzms8xZrF02RiNSj9D3jtO8S5
+	 nyP18Fpd8miN7qSOCw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-inspiron.fritz.box ([91.137.126.34]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MA7GS-1rJXzg09Os-00BeIZ; Wed, 31 Jan 2024 12:16:54 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: dennisn@dennisn.mooo.com,
+	lkml@vorpal.se,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: coproscefalo@gmail.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] platform/x86: Add ACPI quickstart button driver
+Date: Wed, 31 Jan 2024 12:16:39 +0100
+Message-Id: <20240131111641.4418-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jDTwPO5c5zM8j2a+DiDZVYT/c6PVwOnwm+ivKNBWn/eRJQUQC+V
+ 2Tm20vOECym+JDUKfVAEQfChSfMLtE1KaBvy/YtDihwbqd2WnnShVpLDytHXLWCHlXwtjyJ
+ J6LrUPicbauqi12kB8An+7s1MZ0HcctRhiSYj8+M+cT/dkSzcFS2YQwe+IaQd5VyS/twuc0
+ VZV5BOLiK/azJFiFoWy9w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:51xwPc6pxrQ=;09rD8X1Kl+pTpBqHI54ESR6b7pS
+ wxaY5w8MsjK1ZSLJBo86dFj+A1qfH9pYTlH+pveQY/M+UlJCN/fRZU+PMJOUR2jK5IcZZU5Tp
+ 3bF+ml1uz84OQMWcKCCVNpWo5NPDPYfbH4owAThYTVIJipzmUtoktLuH/7cGB9m0gJqRGEZ4V
+ vlvV1axIxh2Jq0Fizxt3fKHtQ/D5BsfKt64UgSQnZCw8H6Dj1WRrTDe8FmcvPhSvXks9144tz
+ tTDSGLQeIn8UmA83BkqUdHS0VfVbc/3W7LEPm6rApqtOWDvs2X++vrJQwjmC61oB2TWndgBjJ
+ ZH9Y0T5tPPxRtLAC6AW6XjGgYqfonKPqCh1B1NDPI62pX2MH72Ift0WIRga79fP11KZeC+yrJ
+ DT6iGW9I8PGhlaOq7YLJz+OnRej7dAeqtPv3IObY9DsO9xf91ZJihEF9jkmHD6AQxIN68MzS3
+ mOXrhjsGAOEa50C/mqqaVn8uqcKs/sai10XNvvBAcA6QSR2miEwh8xvj7jsLcY+BmqhxXctdZ
+ y7ICFhgxpp+fkOqwmUE1DjzU3/EcSfrr1Y4ZqWjH63GbC8OQltAO1hTnJ2Xz4nkNA+ZxKQf73
+ YHQqceK2iYrNdN5RJkP/JBKGsd9VZKh8o+Zpi34k/VT/m2TkkmlzPuQZH25tnuVWQi92ilQwE
+ aCrQhiTVHPbTggRibAb1GWzNmbi9rik3sKcW5G6jqGrao4gGZMKIzpeqKpw4VtBxUfJxyYEKi
+ aweubdzaFLNa7GqIjF2HN3eY7YggVT5ebD1M1V1pcG/PG9aTv4J80uHs3f1ogpcvuHcGWftuW
+ xOdoEi+t85LId3e1ibVlA9eY+poMOF9a1f7Tc7ZVaS31AEzlYQsqGggUAXrvtu9HXiQUNsHF3
+ v8zVXdK/m1gDQKrI6jcknshJeCrhuqbibtkfUHT2Ermxz3oPZj4KaVgaq6aLppzDpKzdKPTPI
+ yVW2/IeZzUXYVvfk736kol7QcBY=
 
-On Tue, 30 Jan 2024, Xuan Zhuo wrote:
+This patch series adds support for the ACPI PNP0C32 device as
+proposed in 2022 by Arvid Norlander. The first patch adds support
+for the device itself, while the second patch was taken from the
+original series.
 
-> Just like find_vqs(), it is time to refactor the
-> vring_new_virtqueue(). We pass the similar struct to
-> vring_new_virtqueue.
-> 
-> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> ---
+Both patches are compile-tested only.
 
-> diff --git a/tools/virtio/vringh_test.c b/tools/virtio/vringh_test.c
-> index 98ff808d6f0c..37f8c5d34285 100644
-> --- a/tools/virtio/vringh_test.c
-> +++ b/tools/virtio/vringh_test.c
+Armin Wolf (1):
+  platform/x86: Add ACPI quickstart button (PNP0C32) driver
 
-> @@ -391,7 +391,7 @@ static int parallel_test(u64 features,
->  				/* Swallow all notifies at once. */
->  				if (read(to_guest[0], buf, sizeof(buf)) < 1)
->  					break;
-> -				
-> +
->  				receives++;
->  				virtqueue_disable_cb(vq);
->  				continue;
-> @@ -424,7 +424,7 @@ static int parallel_test(u64 features,
->  				continue;
->  			if (read(to_guest[0], buf, sizeof(buf)) < 1)
->  				break;
-> -				
-> +
+Arvid Norlander (1):
+  platform/x86: toshiba_acpi: Add quirk for buttons on Z830
 
-Two unrelated space changes. Please remove them from this patch.
+ MAINTAINERS                         |   6 +
+ drivers/platform/x86/Kconfig        |  13 ++
+ drivers/platform/x86/Makefile       |   3 +
+ drivers/platform/x86/quickstart.c   | 225 ++++++++++++++++++++++++++++
+ drivers/platform/x86/toshiba_acpi.c |  36 ++++-
+ 5 files changed, 280 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/platform/x86/quickstart.c
 
-
--- 
- i.
+=2D-
+2.39.2
 
