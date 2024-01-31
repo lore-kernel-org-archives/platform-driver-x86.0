@@ -1,83 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DEB6996C;
-	Wed, 31 Jan 2024 10:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1931E69DFE;
+	Wed, 31 Jan 2024 10:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706696932; cv=none; b=sYzhhPlHjkuYvlcWu4gwMG4yOT9L1cV3bzCQnBcwEfOZrHMq9TmYeDt8jsb5pl8ECk5ChoeR1VRFF3mLatBYhvegQU54muClvRMFcq3Pl3Ij9IDap3nWuQ+yGTLMWMThTQdT/Te/NZkvTF+suAFntkMf0Lv123fE0IhtoKCluJo=
+	t=1706696974; cv=none; b=jP7XyT/kA/g7DIE7dtIVL5AueSXa9lRk4ZDkqebZwq+iX3gyGGqTJsHDtyBOBxxhpodov6wppFfKlZl6ZYVwehLDrw/VlAC4bfKhVTJjL1EJzBG5sSD6h9McESzM/UxXZgyTIlK3n+J1zziBi/IZA4XHv/qezRuLxxnOrMhKUzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706696932; c=relaxed/simple;
-	bh=oiTZCszNyvv56h86jVlqMPQSrAP5+7D+gYSOYBwymIk=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Xft9mtM3H6gCkaOxMzRIBuejzgfZtMCcxYBhAJRo2E47vCsfNCZoWcTKAZb8uLLNlfz2jjtDdMBeYMth08TIFCftzco8eGUpiKCIMBbkpzajbAvuu37iPT7ctykAm4tBuv6UC7lDEOgDU82Hd8p3MoVtXxCWpzz45wqZCUNAgEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PaENHsNO; arc=none smtp.client-ip=192.55.52.120
+	s=arc-20240116; t=1706696974; c=relaxed/simple;
+	bh=LE1BklAJaxUiwuPDcPFSOxdV235Kq5Wz9kIwQqJjkd4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=HS7UFpIgTqxZb648vaW2u621GTwUUuP55bW1q88EkvHLM/LWimBddp/4aggpKIz/OslEchWucw0H/Hz5KbWpyJcft7hMtHq4SaeWkl91RQ6anh6Z85dBDdAHe83qw6bHXcU8FdCAfPzXoZpYOpgFiWWFgrQdUCCrwNKaFJdl4gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BSOF1Aos; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PaENHsNO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BSOF1Aos"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706696929; x=1738232929;
-  h=from:to:in-reply-to:references:subject:message-id:date:
-   mime-version:content-transfer-encoding;
-  bh=oiTZCszNyvv56h86jVlqMPQSrAP5+7D+gYSOYBwymIk=;
-  b=PaENHsNOL7ULwZbS/JBFnKrYBT0MlGDZleAuPC6guk6XBM6p3JlubJvB
-   4ulBNLFlEb5qaKttgxwR3FE1yaSJrYRj/gB+OSYgRQU9vViRON/yn+a3Z
-   dTo6eburlkd+HfTlLaot6qq1jLS7HBUUByfTl2PfWUW1xdaCuRDraR6wo
-   c05ZYDBZfQCwnhBC/DnzE6sMA4ah7hZwXuSRFCpfwln8dOPdhCE0PByzu
-   RrGYA0i9NVV95/dYS2FGZ5i00wNDCpJTnNsopHJ/kcYbkMBMjsdtxdzjI
-   DGiKK225H7T95BOcTqKvmQhsryFdF6NkIjGZKMPGGKbn4eMB35Aj//Tse
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="402412109"
+  t=1706696973; x=1738232973;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=LE1BklAJaxUiwuPDcPFSOxdV235Kq5Wz9kIwQqJjkd4=;
+  b=BSOF1AosRtkxr2N2krNgQ9FWvctD+nC3OefI7U0PPrmiIlpkO9YMtA8U
+   MYQ0MoCrQAIfHyCxRNqFyhhsvKHM8PsO+q7jsnyN0qb27OxNIzQgu2UQN
+   ynAUiPTPu+31kybpPnzCOWL4V2KfikzeDkfQdZBNeZG3bGzU7Z6ehru2D
+   E32ARRFVHRaz5Lg8jiY7SS/AkCGSIWnGBtxAcWQU9s8IFrqRxHzQMdVVK
+   PD5WMdj4zBkaEytzhNiMW5aFI7OyABYpt7pbedeA6TKAF6gTAB8SR79gY
+   SH7+pDl0zLU5OTjRZLC0L6gfMpH1U+jWgPk8/Ijeat2kGRRY2rbWXnMIJ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="25038780"
 X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="402412109"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 02:28:46 -0800
+   d="scan'208";a="25038780"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 02:29:32 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="858771597"
 X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="858771597"
+   d="scan'208";a="4041441"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.35.167])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 02:28:44 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 02:29:29 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Jithu Joseph <jithu.joseph@intel.com>, Ashok Raj <ashok.raj@intel.com>, 
- Tony Luck <tony.luck@intel.com>, Hans de Goede <hdegoede@redhat.com>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-In-Reply-To: <20240125130328.11253-1-ilpo.jarvinen@linux.intel.com>
-References: <20240125130328.11253-1-ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH 1/1] platform/x86/intel/ifs: Remove unnecessary ret
- init
-Message-Id: <170669691631.3904.4606713749233897647.b4-ty@linux.intel.com>
-Date: Wed, 31 Jan 2024 12:28:36 +0200
+Date: Wed, 31 Jan 2024 12:29:24 +0200 (EET)
+To: Ashok Raj <ashok.raj@intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org, 
+    Jithu Joseph <jithu.joseph@intel.com>, rostedt@goodmis.org, 
+    tony.luck@intel.com, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, patches@lists.linux.dev, 
+    pengfei.xu@intel.com
+Subject: Re: [PATCH 0/5] Miscelleanous fixes and improvements to Infield
+ Scan
+In-Reply-To: <20240125082254.424859-1-ashok.raj@intel.com>
+Message-ID: <8e9097cf-51f9-a151-bfa5-1580a4166607@linux.intel.com>
+References: <20240125082254.424859-1-ashok.raj@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.12.3
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 25 Jan 2024 15:03:28 +0200, Ilpo Järvinen wrote:
+On Thu, 25 Jan 2024, Ashok Raj wrote:
 
-> ret variable is assigned unconditionally in ifs_load_firmware(), thus
-> remove the unnecessary initialization of it.
+> Hi Hans,
+> 
+> This series has some bug fixes and improvements for Infield Scan.
+> 
+> Patch1 - fixes a bug in the driver that didn't release_firmware() in the
+> 	 error path.
+> 
+> Patch2, 3 - Added some improved tracing.
+> 
+> Patch4 - Moves the rendezvous to function entry
+> Patch5 - Adds entry rendezvous for IFS.
+> 
+> Cheers,
+> Ashok
 > 
 > 
+> Ashok Raj (4):
+>   platform/x86/intel/ifs: Trace on all HT threads when executing a test
+>   platform/x86/intel/ifs: Add current batch number to trace output
+>   platform/x86/intel/ifs: Replace the exit rendezvous with an entry rendezvous for ARRAY_BIST
+>   platform/x86/intel/ifs: Add an entry rendezvous for SAF
 
+Patches 2-5 applied to review-ilpo.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/1] platform/x86/intel/ifs: Remove unnecessary ret init
-      commit: 682c259a849610c7864cc75d52415c782c78653a
-
---
+-- 
  i.
 
