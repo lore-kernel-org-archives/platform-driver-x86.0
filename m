@@ -1,214 +1,314 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A616DD19;
-	Wed, 31 Jan 2024 11:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FAA7BAF0;
+	Wed, 31 Jan 2024 13:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706699836; cv=none; b=JWqyWpWtwZ/VUV+WYWUKtPXkKjw9RZZjWr92wK42/GeQmfBsJktmBlFtk88wT4UQrumyrt4oV8W2egf66Hwhk2XxJ5pua/ZnauoUzfRKFPlGvEWm9dijd4hJdyQisMQsA/v4Ti0oMMx+jsuDVgMWY48AQe6Z5511+rMvAFeaEio=
+	t=1706707319; cv=none; b=Ou9B/nmCuloFFE3mNTZb+uqacBQ2zM44XeVh0C6FuN7H/qQK0JmmwobcNtOfUdCmnQnVj49prTjsutQf576ZIPKZdWOyQFWLtuqgTJpDQLx9ijtYNkLrXUhCPOp6mw3eSQ2KSpRyQ2GOPKVAB1+4D2RDan9cwzxOifwO6DoemsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706699836; c=relaxed/simple;
-	bh=+eZF0r081+xn/evibHPbfm7R+U27ETVCw7Buxo/7YCA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DQ/Cvsqj4l2YakAyLSdclVGgsimda7Vl9jAQLKeMbddAuWeMa+SzR0NHnc70fnKWoPyNb7PqTTBO/sEEBXGpjZzfinth517TJ9rOntFsHh9HNFkZT3AeEFivZsY9PjiO1b2kYZLPQ38gyu1rHbPGBtC6MoRvX20UxOkdrUFzzX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=djT64s+n; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1706707319; c=relaxed/simple;
+	bh=DytUjfJ5jVW2nE4UlpPhpkrdQVEUYqoNsNCYzBr7o9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oU8JqTkIavQc3GEMSSu9tFkepOD/IFlZFbRbuBqvptOPWk37vkch+ivi2McPEhL3pdZjn1Dwzxr2Cj8hRBoK7fGMGqZPceRR5bzSqi/qg9cFyTc6HESq25UHbMDygJjHoU61iyPqfFyVw0CZtT0qLJKDI7vZHNfgcKaRFaTfr8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KZ8xGZHJ; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="djT64s+n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1706699824; x=1707304624; i=w_armin@gmx.de;
-	bh=+eZF0r081+xn/evibHPbfm7R+U27ETVCw7Buxo/7YCA=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=djT64s+nCYNMz/JIHAnyyajM68i+yJez5JgQS32x1quOmseqsylG1Ep+AbQGqBa3
-	 0AIcMAOlqya/nwhc55hcvVaMiaQrJVOMctoISImK2XiEU9yJBsBgW/XI5ZwZLLUQ4
-	 Uk8B4U6EfpWfj9z5uBRJ1UOxIXmQVfl/kbP5XhaGBrTHT0LYm0pAK5LVk4Mw3W/Hp
-	 8LUf6puPZLvJQK9WcEuAJADsDv2SkmAPcj2SavPNmlVvtihhJfa5Cj50We72ph9PW
-	 Jc/4s0dfKyLJL6kBgFluu3pN5RqM1nOu7eHWGLqUxqqQAJk7BtMGKJULXPGOkzBDG
-	 yfRF0PVXxKKKrX0xaA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-inspiron.fritz.box ([91.137.126.34]) by mail.gmx.net
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MbzyP-1quh2t1AEB-00dauX; Wed, 31 Jan 2024 12:17:04 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: dennisn@dennisn.mooo.com,
-	lkml@vorpal.se,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: coproscefalo@gmail.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86: toshiba_acpi: Add quirk for buttons on Z830
-Date: Wed, 31 Jan 2024 12:16:41 +0100
-Message-Id: <20240131111641.4418-3-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240131111641.4418-1-W_Armin@gmx.de>
-References: <20240131111641.4418-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZ8xGZHJ"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d51ba18e1bso46379215ad.0;
+        Wed, 31 Jan 2024 05:21:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706707317; x=1707312117; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r3QCV4w7mbnFtziKPFuv7p4ZpguVLvSczpAls5rG8nU=;
+        b=KZ8xGZHJTx/DPynXqRNCptICRwYdv3ybqyx4svZ2k79ZXAZ2JKn41Ywebt9qzXeIg6
+         yw09rNZST/GaiVdDc3Y/CB34IsVUw8OWpDB6KEAE7BJRJLrySoN0KQ5qsr8ttWxBgnGO
+         LoMfwiBYqRtaHwRc6zi7s4v2QMLkvrP91eURHXiGpLO/cw4ycKnepKmjcasERcRZ5h6b
+         YdbEsDzsODkAwy4tzxFDNYCfqoxSpGyj5/Yo6Bqam1PCwYnDs3pdCNC97yKzu5EMvVC+
+         8XL8EWirPynzRYLi1GLGYvpVRZef+441LEyeQFCr8KNbYe0sSa0ipxtTvQfU5OCzXmhw
+         ZHbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706707317; x=1707312117;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r3QCV4w7mbnFtziKPFuv7p4ZpguVLvSczpAls5rG8nU=;
+        b=ZpEYSKioklgK33oucZZeqekOlz4tnrn+MC5uBW0BSuCPS8qtYA78a8nduZwtYGXPNY
+         VbvFbhbltuOIn7NlkFKxZsZ3DNkuiqU3IC0eVINOBxhUmwXx+OlW14TQ63bIAYvZKEe+
+         gqvFMD7E8VKFFdVbl6Mp9hb+0UY68mfRevPb8X8ccxljzvcTA94V0K2jsby+VzlDiyYk
+         lzFNBpbu9F35rJToFEK0jO35RaUArxxxfSimII7lxwNRvG+QihWaUc6eud6FLuZhztE0
+         ndYZu+KniKKLr7yC9DtjC9fdX98UeVFhmR0QflA/ts16ZWc5S1/non3HGQCZ2Zj+2D8E
+         vNCA==
+X-Gm-Message-State: AOJu0Yx2uX7XfMGdBEM0ThpUNuZY0DmddaXnCZ7PB9HU/UIJSuSukjTt
+	nZrIZXlI1KDMWD5oBsMpmjsPRJsprnM9O4zNnpGey2YKKw5gbhJ2
+X-Google-Smtp-Source: AGHT+IGk0XEq+z5BrreVbEFnmQtmIKOb5M482oqE5zWpil33IPIITakQmifK5o0VV07roUAtH/a7mA==
+X-Received: by 2002:a17:902:6b46:b0:1d8:e079:ce16 with SMTP id g6-20020a1709026b4600b001d8e079ce16mr1644039plt.1.1706707316589;
+        Wed, 31 Jan 2024 05:21:56 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n4-20020a170902968400b001d70ad0fe79sm9050438plp.291.2024.01.31.05.21.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Jan 2024 05:21:56 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 31 Jan 2024 05:21:54 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Ivor Wanders <ivor@iwanders.net>
+Cc: Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mark Gross <markgross@kernel.org>, linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] hwmon: add fan speed monitoring driver for
+ Surface devices
+Message-ID: <3fd2f349-90c6-4445-be2f-54b6cf07dfb8@roeck-us.net>
+References: <20240131005856.10180-1-ivor@iwanders.net>
+ <20240131005856.10180-2-ivor@iwanders.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gzUwrmSZvTtEfG9zz0+z4kEHKGKIyCQF+ZfQR9NZszSj4+HlunY
- vjtHM/RaGYNkhn0cSxxzDpaxc3TjszACNZD6cSBRHCELcRM8qUKBDtDUqjzp+oeYg92UgBj
- KOuvYHks5EGX75L7qB0CF+mrQjf9D8C5M3cNs0IR6OVAlH7OuKQJsCQaOC8Dz/TIMsPDrag
- ahoOXqXrWNtUwva0rINwA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ZXL9fYsXktY=;7GMb/vSrp/+mWn3J8QrIV+z2Sug
- mOBYcvxBMH7Lqhx8AVnvGRhi/A77FKa/wiELHR6Xx6exd1viov0Vdgp9SLK8RIlJfOX6sx4kd
- DZECY+YShUqamUrQPzkdBNKNvSGOvGmhxnSm/U/95RTuyKB+coKG71zi+OBNiQVt3p/yCkx66
- PN5QFfxY4yYfnuyFYjhR7IcHWCXwp7h5sZFmefHFR7vQM7BTk1shTsdzWzIxaml9qErx6zE9y
- PE3X2DwDm/t5/pYV6I5hjeapffBulIsbGmkF9yk6BbhV8SWWSQbRWopMON8sBHVnlUoAUJVE/
- z8Nwxw1vob1Kv4binIdOIJMtSQKUbfwjwl9uh+Dufn0D0Rt2d1rwyT++IFYXb3c5dmK7cXTcT
- 9/8/k4sZzhfVl1Enq9EhSpNdPEB0pYWhn5FlO/dM2YoNxZ3V5hAn8LIr6IHjM+R4DMVjAEYOZ
- 1NWhFENQJOmP3Ds5N+BForYnr1OdwZGHW6vy1CCwQvw9gEbZegG4UJ1BjbdIp1lwanBZUNAVg
- 83wIcSMqT9TQfqOX3dmaSmRkiBypn4LinJUwv599mZ7qb/oVtnfjXCsb8XbTEZg1ejsPQlK6X
- Og69/uYaYa+GhtCH8xGnwSFT3dP/TT+gfolqJeZnw987/iT/WDRjUYUFeoJyDsVik6EkIUegG
- n2kgEyTmSgzteCKN6LesQ1jrtuTfZEgxHq/o/ciCW8NkRXSMgTQh0vaYjub5mqGfA5U9FZU1w
- HUGwpKyqOR0oFUnmEKquL3z4A8Yz9nGyp2/AbyYZlvQHrfHY1f+jE7L+w0WSh0TaMFM7neE+g
- I6gPY/8adn1ZZtqnv3xNnA8cugyN29X4dfRtXUp94JWAyOvDTfU4T1dgu7IVBP0hv75JMQxTc
- nJTXwcRRVNKljbF0gppZ09v1Un8VWHx+iVu6A2gKitVwQUVDDWALVHVL5SneyLgGO7EesFyrn
- eKI16HFBi3sdW9FlqtDaJEIrJ9c=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240131005856.10180-2-ivor@iwanders.net>
 
-From: Arvid Norlander <lkml@vorpal.se>
+On Tue, Jan 30, 2024 at 07:58:55PM -0500, Ivor Wanders wrote:
+> Adds a driver that provides read only access to the fan speed for Microsoft
+> Surface Pro devices. The fan speed is always regulated by the EC and cannot
+> be influenced directly.
+> 
+> Signed-off-by: Ivor Wanders <ivor@iwanders.net>
+> Link: https://github.com/linux-surface/kernel/pull/144
+> Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
-The Z830 has some buttons that will only work properly as "quickstart"
-buttons. To enable them in that mode, a value between 1 and 7 must be
-used for HCI_HOTKEY_EVENT. Windows uses 0x5 on this laptop so use that for
-maximum predictability and compatibility.
+Applied.
 
-As there is not yet a known way of auto detection, this patch uses a DMI
-quirk table. A module parameter is exposed to allow setting this on other
-models for testing.
+Thanks,
+Guenter
 
-Signed-off-by: Arvid Norlander <lkml@vorpal.se>
-=2D--
- drivers/platform/x86/toshiba_acpi.c | 36 ++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/to=
-shiba_acpi.c
-index 291f14ef6702..2a5a651235fe 100644
-=2D-- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -57,6 +57,11 @@ module_param(turn_on_panel_on_resume, int, 0644);
- MODULE_PARM_DESC(turn_on_panel_on_resume,
- 	"Call HCI_PANEL_POWER_ON on resume (-1 =3D auto, 0 =3D no, 1 =3D yes");
-
-+static int hci_hotkey_quickstart =3D -1;
-+module_param(hci_hotkey_quickstart, int, 0644);
-+MODULE_PARM_DESC(hci_hotkey_quickstart,
-+		 "Call HCI_HOTKEY_EVENT with value 0x5 for quickstart button support (-=
-1 =3D auto, 0 =3D no, 1 =3D yes");
-+
- #define TOSHIBA_WMI_EVENT_GUID "59142400-C6A3-40FA-BADB-8A2652834100"
-
- /* Scan code for Fn key on TOS1900 models */
-@@ -136,6 +141,7 @@ MODULE_PARM_DESC(turn_on_panel_on_resume,
- #define HCI_ACCEL_MASK			0x7fff
- #define HCI_ACCEL_DIRECTION_MASK	0x8000
- #define HCI_HOTKEY_DISABLE		0x0b
-+#define HCI_HOTKEY_ENABLE_QUICKSTART	0x05
- #define HCI_HOTKEY_ENABLE		0x09
- #define HCI_HOTKEY_SPECIAL_FUNCTIONS	0x10
- #define HCI_LCD_BRIGHTNESS_BITS		3
-@@ -2730,10 +2736,15 @@ static int toshiba_acpi_enable_hotkeys(struct tosh=
-iba_acpi_dev *dev)
- 		return -ENODEV;
-
- 	/*
-+	 * Enable quickstart buttons if supported.
-+	 *
- 	 * Enable the "Special Functions" mode only if they are
- 	 * supported and if they are activated.
- 	 */
--	if (dev->kbd_function_keys_supported && dev->special_functions)
-+	if (hci_hotkey_quickstart)
-+		result =3D hci_write(dev, HCI_HOTKEY_EVENT,
-+				   HCI_HOTKEY_ENABLE_QUICKSTART);
-+	else if (dev->kbd_function_keys_supported && dev->special_functions)
- 		result =3D hci_write(dev, HCI_HOTKEY_EVENT,
- 				   HCI_HOTKEY_SPECIAL_FUNCTIONS);
- 	else
-@@ -3257,7 +3268,14 @@ static const char *find_hci_method(acpi_handle hand=
-le)
-  * works. toshiba_acpi_resume() uses HCI_PANEL_POWER_ON to avoid changing
-  * the configured brightness level.
-  */
--static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] =3D {
-+#define QUIRK_TURN_ON_PANEL_ON_RESUME		BIT(0)
-+/*
-+ * Some Toshibas use "quickstart" keys. On these, HCI_HOTKEY_EVENT must u=
-se
-+ * the value HCI_HOTKEY_ENABLE_QUICKSTART.
-+ */
-+#define QUIRK_HCI_HOTKEY_QUICKSTART		BIT(1)
-+
-+static const struct dmi_system_id toshiba_dmi_quirks[] =3D {
- 	{
- 	 /* Toshiba Port=C3=A9g=C3=A9 R700 */
- 	 /* https://bugzilla.kernel.org/show_bug.cgi?id=3D21012 */
-@@ -3265,6 +3283,7 @@ static const struct dmi_system_id turn_on_panel_on_r=
-esume_dmi_ids[] =3D {
- 		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "PORTEGE R700"),
- 		},
-+	 .driver_data =3D (void *)QUIRK_TURN_ON_PANEL_ON_RESUME,
- 	},
- 	{
- 	 /* Toshiba Satellite/Port=C3=A9g=C3=A9 R830 */
-@@ -3274,6 +3293,7 @@ static const struct dmi_system_id turn_on_panel_on_r=
-esume_dmi_ids[] =3D {
- 		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "R830"),
- 		},
-+	 .driver_data =3D (void *)QUIRK_TURN_ON_PANEL_ON_RESUME,
- 	},
- 	{
- 	 /* Toshiba Satellite/Port=C3=A9g=C3=A9 Z830 */
-@@ -3281,6 +3301,7 @@ static const struct dmi_system_id turn_on_panel_on_r=
-esume_dmi_ids[] =3D {
- 		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Z830"),
- 		},
-+	 .driver_data =3D (void *)(QUIRK_TURN_ON_PANEL_ON_RESUME | QUIRK_HCI_HOT=
-KEY_QUICKSTART),
- 	},
- };
-
-@@ -3289,6 +3310,8 @@ static int toshiba_acpi_add(struct acpi_device *acpi=
-_dev)
- 	struct toshiba_acpi_dev *dev;
- 	const char *hci_method;
- 	u32 dummy;
-+	const struct dmi_system_id *dmi_id;
-+	long quirks =3D 0;
- 	int ret =3D 0;
-
- 	if (toshiba_acpi)
-@@ -3441,8 +3464,15 @@ static int toshiba_acpi_add(struct acpi_device *acp=
-i_dev)
- 	}
- #endif
-
-+	dmi_id =3D dmi_first_match(toshiba_dmi_quirks);
-+	if (dmi_id)
-+		quirks =3D (long)dmi_id->driver_data;
-+
- 	if (turn_on_panel_on_resume =3D=3D -1)
--		turn_on_panel_on_resume =3D dmi_check_system(turn_on_panel_on_resume_dm=
-i_ids);
-+		turn_on_panel_on_resume =3D !!(quirks & QUIRK_TURN_ON_PANEL_ON_RESUME);
-+
-+	if (hci_hotkey_quickstart =3D=3D -1)
-+		hci_hotkey_quickstart =3D !!(quirks & QUIRK_HCI_HOTKEY_QUICKSTART);
-
- 	toshiba_wwan_available(dev);
- 	if (dev->wwan_supported)
-=2D-
-2.39.2
-
+> ---
+> Changes in v5:
+>   - No changes in this patch.
+> Changes in v4:
+>   - Return 0 from surface_fan_hwmon_read instead of ret.
+>   - Use PTR_ERR_OR_ZERO in probe instead of if statement.
+> Changes in v3:
+>   - Removed type and attr checks in read and is_visible.
+>   - Removed assigning sdev to ssam_device drvdata.
+>   - Propagate return from __ssam_fan_rpm_get.
+>   - Renamed hwmon chip name from 'fan' to 'surface_fan'.
+>   - Removed unnecessary platform_device header.
+> Changes in v2:
+>   - Removed all sysfs attributes except fan1_input. Simplified code
+>     and updated documentation accordingly.
+> ---
+>  Documentation/hwmon/index.rst       |  1 +
+>  Documentation/hwmon/surface_fan.rst | 25 ++++++++
+>  MAINTAINERS                         |  8 +++
+>  drivers/hwmon/Kconfig               | 13 +++++
+>  drivers/hwmon/Makefile              |  1 +
+>  drivers/hwmon/surface_fan.c         | 91 +++++++++++++++++++++++++++++
+>  6 files changed, 139 insertions(+)
+>  create mode 100644 Documentation/hwmon/surface_fan.rst
+>  create mode 100644 drivers/hwmon/surface_fan.c
+> 
+> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+> index c7ed1f73a..58be92e94 100644
+> --- a/Documentation/hwmon/index.rst
+> +++ b/Documentation/hwmon/index.rst
+> @@ -208,6 +208,7 @@ Hardware Monitoring Kernel Drivers
+>     smsc47m1
+>     sparx5-temp
+>     stpddc60
+> +   surface_fan
+>     sy7636a-hwmon
+>     tc654
+>     tc74
+> diff --git a/Documentation/hwmon/surface_fan.rst b/Documentation/hwmon/surface_fan.rst
+> new file mode 100644
+> index 000000000..07942574c
+> --- /dev/null
+> +++ b/Documentation/hwmon/surface_fan.rst
+> @@ -0,0 +1,25 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +Kernel driver surface_fan
+> +=========================
+> +
+> +Supported Devices:
+> +
+> +  * Microsoft Surface Pro 9
+> +
+> +Author: Ivor Wanders <ivor@iwanders.net>
+> +
+> +Description
+> +-----------
+> +
+> +This provides monitoring of the fan found in some Microsoft Surface Pro devices,
+> +like the Surface Pro 9. The fan is always controlled by the onboard controller.
+> +
+> +Sysfs interface
+> +---------------
+> +
+> +======================= ======= =========================================
+> +Name                    Perm    Description
+> +======================= ======= =========================================
+> +``fan1_input``          RO      Current fan speed in RPM.
+> +======================= ======= =========================================
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c4828ab15..2c5c4d7e5 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14560,6 +14560,14 @@ F:	Documentation/driver-api/surface_aggregator/clients/dtx.rst
+>  F:	drivers/platform/surface/surface_dtx.c
+>  F:	include/uapi/linux/surface_aggregator/dtx.h
+>  
+> +MICROSOFT SURFACE SENSOR FAN DRIVER
+> +M:	Maximilian Luz <luzmaximilian@gmail.com>
+> +M:	Ivor Wanders <ivor@iwanders.net>
+> +L:	linux-hwmon@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/hwmon/surface_fan.rst
+> +F:	drivers/hwmon/surface_fan.c
+> +
+>  MICROSOFT SURFACE GPE LID SUPPORT DRIVER
+>  M:	Maximilian Luz <luzmaximilian@gmail.com>
+>  L:	platform-driver-x86@vger.kernel.org
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index a608264da..e762f6138 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -1994,6 +1994,19 @@ config SENSORS_SFCTEMP
+>  	  This driver can also be built as a module.  If so, the module
+>  	  will be called sfctemp.
+>  
+> +config SENSORS_SURFACE_FAN
+> +	tristate "Surface Fan Driver"
+> +	depends on SURFACE_AGGREGATOR
+> +	help
+> +	  Driver that provides monitoring of the fan on Surface Pro devices that
+> +	  have a fan, like the Surface Pro 9.
+> +
+> +	  This makes the fan's current speed accessible through the hwmon
+> +	  system. It does not provide control over the fan, the firmware is
+> +	  responsible for that, this driver merely provides monitoring.
+> +
+> +	  Select M or Y here, if you want to be able to read the fan's speed.
+> +
+>  config SENSORS_ADC128D818
+>  	tristate "Texas Instruments ADC128D818"
+>  	depends on I2C
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index 47be39af5..30cc90f40 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -201,6 +201,7 @@ obj-$(CONFIG_SENSORS_SMSC47M1)	+= smsc47m1.o
+>  obj-$(CONFIG_SENSORS_SMSC47M192)+= smsc47m192.o
+>  obj-$(CONFIG_SENSORS_SPARX5)	+= sparx5-temp.o
+>  obj-$(CONFIG_SENSORS_STTS751)	+= stts751.o
+> +obj-$(CONFIG_SENSORS_SURFACE_FAN)+= surface_fan.o
+>  obj-$(CONFIG_SENSORS_SY7636A)	+= sy7636a-hwmon.o
+>  obj-$(CONFIG_SENSORS_AMC6821)	+= amc6821.o
+>  obj-$(CONFIG_SENSORS_TC74)	+= tc74.o
+> diff --git a/drivers/hwmon/surface_fan.c b/drivers/hwmon/surface_fan.c
+> new file mode 100644
+> index 000000000..31cd5da9e
+> --- /dev/null
+> +++ b/drivers/hwmon/surface_fan.c
+> @@ -0,0 +1,91 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Surface Fan driver for Surface System Aggregator Module. It provides access
+> + * to the fan's rpm through the hwmon system.
+> + *
+> + * Copyright (C) 2023 Ivor Wanders <ivor@iwanders.net>
+> + */
+> +
+> +#include <linux/hwmon.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/surface_aggregator/device.h>
+> +#include <linux/types.h>
+> +
+> +// SSAM
+> +SSAM_DEFINE_SYNC_REQUEST_CL_R(__ssam_fan_rpm_get, __le16, {
+> +	.target_category = SSAM_SSH_TC_FAN,
+> +	.command_id      = 0x01,
+> +});
+> +
+> +// hwmon
+> +umode_t surface_fan_hwmon_is_visible(const void *drvdata,
+> +				     enum hwmon_sensor_types type, u32 attr,
+> +				     int channel)
+> +{
+> +	return 0444;
+> +}
+> +
+> +static int surface_fan_hwmon_read(struct device *dev,
+> +				  enum hwmon_sensor_types type, u32 attr,
+> +				  int channel, long *val)
+> +{
+> +	struct ssam_device *sdev = dev_get_drvdata(dev);
+> +	int ret;
+> +	__le16 value;
+> +
+> +	ret = __ssam_fan_rpm_get(sdev, &value);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*val = le16_to_cpu(value);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct hwmon_channel_info *const surface_fan_info[] = {
+> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT),
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_ops surface_fan_hwmon_ops = {
+> +	.is_visible = surface_fan_hwmon_is_visible,
+> +	.read = surface_fan_hwmon_read,
+> +};
+> +
+> +static const struct hwmon_chip_info surface_fan_chip_info = {
+> +	.ops = &surface_fan_hwmon_ops,
+> +	.info = surface_fan_info,
+> +};
+> +
+> +static int surface_fan_probe(struct ssam_device *sdev)
+> +{
+> +	struct device *hdev;
+> +
+> +	hdev = devm_hwmon_device_register_with_info(&sdev->dev,
+> +						    "surface_fan", sdev,
+> +						    &surface_fan_chip_info,
+> +						    NULL);
+> +
+> +	return PTR_ERR_OR_ZERO(hdev);
+> +}
+> +
+> +static const struct ssam_device_id ssam_fan_match[] = {
+> +	{ SSAM_SDEV(FAN, SAM, 0x01, 0x01) },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(ssam, ssam_fan_match);
+> +
+> +static struct ssam_device_driver surface_fan = {
+> +	.probe = surface_fan_probe,
+> +	.match_table = ssam_fan_match,
+> +	.driver = {
+> +		.name = "surface_fan",
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +};
+> +module_ssam_device_driver(surface_fan);
+> +
+> +MODULE_AUTHOR("Ivor Wanders <ivor@iwanders.net>");
+> +MODULE_DESCRIPTION("Fan Driver for Surface System Aggregator Module");
+> +MODULE_LICENSE("GPL");
