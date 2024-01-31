@@ -1,260 +1,283 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF58469D03;
-	Wed, 31 Jan 2024 10:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E2069D00;
+	Wed, 31 Jan 2024 10:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706695285; cv=none; b=s3bLZ2piCyAaOBLI7LmN/q5nR0D5QymVKk4YcJQ07OGHqk8QuzDNIDol6DA9uozB8V9gZFvZRFJ1Rc8Rh6QfIFWHjvogq4q1w0OouqWWR3XErcIdsmvc5IJUSFmriCcPMFrafdzN8XqDXE2f1Qn0OmsClNBXRPE39LcbRqvpJ2A=
+	t=1706696389; cv=none; b=JWPruKJ/3DFhsuCnU3K2lALbB3Iu8/8uW4ZBGKL4WgCpb5+uaSvO7DUweBbNS18GwW2ThyDk5ybbEWqWPSpgosLfcEU6zk6hdyyz7ZKy2xkiR2ulCuFmr7OEu4y0PlWOjN1eBuoi2dp/5D5BrVEs2foHMJNh61bLShhsm1HKd4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706695285; c=relaxed/simple;
-	bh=5GPX+NAbxn+D9MTBLeCfhGrK6GLGqIjJb9fk23SfNg8=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To:
-	 Content-Type; b=XQ2h41ijn1NJalRRObaj/khsFb/4bROnzlR9UVou1rbi9u7BW2a+nwCByBOJpBtYYn4zGD72JLcixYK5ZADYSJSt0Es9ALMpPST9ZGR/KhOpE2FCYv7LioW47GjYhnCi3mUO7G6cUX9TQj/lPP4oZupgHVaT0AqSWL9VVDL8QIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dPIX2M37; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1706696389; c=relaxed/simple;
+	bh=3oWq+GNr3tgQsR407ZFMHVQBed2EHuNUvnJY/ULjyhs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ksjpzokbowfiX0FhqIpjwMDDlzIGPoedYtaaotndWKqu4DibS7EnlqPNSH72gJlF9ix3l3AXfyHOpzyPx1knF7aHdVrahh6XiD/SIUjtSW1YA6GAnVX38ecIndTOIAC6H96tuPpQbDtruxedLKLfSClrVI8VARE5TcAPw5RwtQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FqozsgSb; arc=none smtp.client-ip=192.55.52.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dPIX2M37"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1706695273; h=Message-ID:Subject:Date:From:To:Content-Type;
-	bh=hNzHtzVpBU2+0miP3b1vKMXJO0IZm/151kGzW+L2WI0=;
-	b=dPIX2M37FXzeuLvu/e7vAhw16m76USR7dwEXKk+PZrc9aEf2ot/6S6xUjYvDN8i9LLAQHAygyTsPkNWxAjyNkTUxy2YMzd+WpprVJeHLhBBXTtGa8aC3CClZl41W2CoZHoAb3Oih0ZsNq6T+b2V6+q4cqERNCPoRnkYhzWbOBXQ=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R501e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0W.j9ASw_1706695270;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W.j9ASw_1706695270)
-          by smtp.aliyun-inc.com;
-          Wed, 31 Jan 2024 18:01:11 +0800
-Message-ID: <1706695212.333408-3-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH vhost 03/17] virtio_ring: packed: structure the indirect desc table
-Date: Wed, 31 Jan 2024 18:00:12 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: Jason Wang <jasowang@redhat.com>
-Cc: virtualization@lists.linux.dev,
- Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- "Michael S. Tsirkin" <mst@redhat.com>,
- "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Vadim Pasternak <vadimp@nvidia.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Cornelia Huck <cohuck@redhat.com>,
- Halil Pasic <pasic@linux.ibm.com>,
- Eric Farman <farman@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Benjamin Berg <benjamin.berg@intel.com>,
- Yang Li <yang.lee@linux.alibaba.com>,
- linux-um@lists.infradead.org,
- netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- linux-remoteproc@vger.kernel.org,
- linux-s390@vger.kernel.org,
- kvm@vger.kernel.org,
- bpf@vger.kernel.org
-References: <20240130114224.86536-1-xuanzhuo@linux.alibaba.com>
- <20240130114224.86536-4-xuanzhuo@linux.alibaba.com>
- <CACGkMEvz55WO+TN2KCv+KLvdT-ZxLike81maahBeVanrCk_Lrg@mail.gmail.com>
-In-Reply-To: <CACGkMEvz55WO+TN2KCv+KLvdT-ZxLike81maahBeVanrCk_Lrg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FqozsgSb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706696387; x=1738232387;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=3oWq+GNr3tgQsR407ZFMHVQBed2EHuNUvnJY/ULjyhs=;
+  b=FqozsgSbeknXEXWREdLHU62q7SFih6QKc4fBthSgglAH1u2gOrKvCgDW
+   /cdGtzNqQV0a2qsKhyGdBXdJYCIpoTLskoUdRz7nwKTDGKWS6Iw4tams7
+   JaLPLrr08oK+1qVlhJWCLaX0ukWktJYU33M9zaz2fHFZDjtulgol4UUsc
+   LzUxkXUVUZAdTqjesA7I6A8ryDQHlaEDmepA0HY7l/53YjO1RaGChhKqB
+   8jc8K6fKRTTL8zlaZmsa0Fj3OtGCLfKWBsOJzpaZ9fz/3VPdpu7Jgdgwv
+   IJc4aZHPrnvrTSAag4QNzeSLt6wVu0fE32l05hUoPo6IIiqo7J7YqVECh
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="403182529"
+X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
+   d="scan'208";a="403182529"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 02:19:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="822519740"
+X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
+   d="scan'208";a="822519740"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.35.167])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 02:19:43 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 31 Jan 2024 12:19:38 +0200 (EET)
+To: Shravan Kumar Ramani <shravankr@nvidia.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
+    David Thompson <davthompson@nvidia.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] platform/mellanox: mlxbf-pmc: Add support for
+ 64-bit counters and cycle count
+In-Reply-To: <4fab3112d17a4bd2edbee66a8e77695943cbaf5a.1706607635.git.shravankr@nvidia.com>
+Message-ID: <a28597c7-782a-69a3-90c5-13ef46c8ced1@linux.intel.com>
+References: <cover.1706607635.git.shravankr@nvidia.com> <4fab3112d17a4bd2edbee66a8e77695943cbaf5a.1706607635.git.shravankr@nvidia.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 31 Jan 2024 17:12:10 +0800, Jason Wang <jasowang@redhat.com> wrote:
-> On Tue, Jan 30, 2024 at 7:42=E2=80=AFPM Xuan Zhuo <xuanzhuo@linux.alibaba=
-.com> wrote:
-> >
-> > This commit structure the indirect desc table.
-> > Then we can get the desc num directly when doing unmap.
-> >
-> > And save the dma info to the struct, then the indirect
-> > will not use the dma fields of the desc_extra. The subsequent
-> > commits will make the dma fields are optional. But for
-> > the indirect case, we must record the dma info.
-> >
-> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > ---
-> >  drivers/virtio/virtio_ring.c | 63 ++++++++++++++++++++----------------
-> >  1 file changed, 35 insertions(+), 28 deletions(-)
-> >
-> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> > index 7280a1706cca..dd03bc5a81fe 100644
-> > --- a/drivers/virtio/virtio_ring.c
-> > +++ b/drivers/virtio/virtio_ring.c
-> > @@ -72,9 +72,16 @@ struct vring_desc_state_split {
-> >         struct vring_desc *indir_desc;  /* Indirect descriptor, if any.=
- */
-> >  };
-> >
-> > +struct vring_packed_desc_indir {
-> > +       dma_addr_t addr;                /* Descriptor Array DMA addr. */
-> > +       u32 len;                        /* Descriptor Array length. */
-> > +       u32 num;
-> > +       struct vring_packed_desc desc[];
-> > +};
-> > +
-> >  struct vring_desc_state_packed {
-> >         void *data;                     /* Data for callback. */
-> > -       struct vring_packed_desc *indir_desc; /* Indirect descriptor, i=
-f any. */
-> > +       struct vring_packed_desc_indir *indir_desc; /* Indirect descrip=
-tor, if any. */
-> >         u16 num;                        /* Descriptor list length. */
-> >         u16 last;                       /* The last desc state in a lis=
-t. */
-> >  };
-> > @@ -1249,10 +1256,13 @@ static void vring_unmap_desc_packed(const struc=
-t vring_virtqueue *vq,
-> >                        DMA_FROM_DEVICE : DMA_TO_DEVICE);
-> >  }
-> >
-> > -static struct vring_packed_desc *alloc_indirect_packed(unsigned int to=
-tal_sg,
-> > +static struct vring_packed_desc_indir *alloc_indirect_packed(unsigned =
-int total_sg,
-> >                                                        gfp_t gfp)
-> >  {
-> > -       struct vring_packed_desc *desc;
-> > +       struct vring_packed_desc_indir *in_desc;
-> > +       u32 size;
-> > +
-> > +       size =3D struct_size(in_desc, desc, total_sg);
-> >
-> >         /*
-> >          * We require lowmem mappings for the descriptors because
-> > @@ -1261,9 +1271,10 @@ static struct vring_packed_desc *alloc_indirect_=
-packed(unsigned int total_sg,
-> >          */
-> >         gfp &=3D ~__GFP_HIGHMEM;
-> >
-> > -       desc =3D kmalloc_array(total_sg, sizeof(struct vring_packed_des=
-c), gfp);
-> >
-> > -       return desc;
-> > +       in_desc =3D kmalloc(size, gfp);
-> > +
-> > +       return in_desc;
-> >  }
-> >
-> >  static int virtqueue_add_indirect_packed(struct vring_virtqueue *vq,
-> > @@ -1274,6 +1285,7 @@ static int virtqueue_add_indirect_packed(struct v=
-ring_virtqueue *vq,
-> >                                          void *data,
-> >                                          gfp_t gfp)
-> >  {
-> > +       struct vring_packed_desc_indir *in_desc;
-> >         struct vring_packed_desc *desc;
-> >         struct scatterlist *sg;
-> >         unsigned int i, n, err_idx;
-> > @@ -1281,10 +1293,12 @@ static int virtqueue_add_indirect_packed(struct=
- vring_virtqueue *vq,
-> >         dma_addr_t addr;
-> >
-> >         head =3D vq->packed.next_avail_idx;
-> > -       desc =3D alloc_indirect_packed(total_sg, gfp);
-> > -       if (!desc)
-> > +       in_desc =3D alloc_indirect_packed(total_sg, gfp);
-> > +       if (!in_desc)
-> >                 return -ENOMEM;
-> >
-> > +       desc =3D in_desc->desc;
-> > +
-> >         if (unlikely(vq->vq.num_free < 1)) {
-> >                 pr_debug("Can't add buf len 1 - avail =3D 0\n");
-> >                 kfree(desc);
-> > @@ -1321,17 +1335,15 @@ static int virtqueue_add_indirect_packed(struct=
- vring_virtqueue *vq,
-> >                 goto unmap_release;
-> >         }
-> >
-> > +       in_desc->num =3D i;
-> > +       in_desc->addr =3D addr;
-> > +       in_desc->len =3D total_sg * sizeof(struct vring_packed_desc);
->
-> It looks to me if we don't use dma_api we don't even need these steps?
+On Tue, 30 Jan 2024, Shravan Kumar Ramani wrote:
 
-YES
+> Add support for programming any counter to monitor the cycle count.
+> Since counting of cycles using 32-bit ocunters would result in frequent
+> wraparounds, add the ability to combine 2 adjacent 32-bit counters to
+> form 1 64-bit counter.
+> Both these features are supported by BlueField-3 PMC hardware, hence
+> the required bit-fields are exposed by the driver via sysfs to allow
+> the user to configure as needed.
+> 
+> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+> Reviewed-by: David Thompson <davthompson@nvidia.com>
+> Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+> ---
+>  drivers/platform/mellanox/mlxbf-pmc.c | 132 ++++++++++++++++++++++++++
+>  1 file changed, 132 insertions(+)
+> 
+> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+> index b1995ac268d7..906dfa96f783 100644
+> --- a/drivers/platform/mellanox/mlxbf-pmc.c
+> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
+> @@ -88,6 +88,8 @@
+>  #define MLXBF_PMC_CRSPACE_PERFMON_CTL(n) (n * MLXBF_PMC_CRSPACE_PERFMON_REG0_SZ)
+>  #define MLXBF_PMC_CRSPACE_PERFMON_EN BIT(30)
+>  #define MLXBF_PMC_CRSPACE_PERFMON_CLR BIT(28)
+> +#define MLXBF_PMC_CRSPACE_PERFMON_UOC GENMASK(15, 0)
+> +#define MLXBF_PMC_CRSPACE_PERFMON_COUNT_CLOCK(n) (MLXBF_PMC_CRSPACE_PERFMON_CTL(n) + 0x4)
+>  #define MLXBF_PMC_CRSPACE_PERFMON_VAL0(n) (MLXBF_PMC_CRSPACE_PERFMON_CTL(n) + 0xc)
+>  
+>  /**
+> @@ -114,6 +116,8 @@ struct mlxbf_pmc_attribute {
+>   * @attr_event: Attributes for "event" sysfs files
+>   * @attr_event_list: Attributes for "event_list" sysfs files
+>   * @attr_enable: Attributes for "enable" sysfs files
+> + * @attr_use_odd_counter: Attributes for "use_odd_counter" sysfs files
+> + * @attr_count_clock: Attributes for "count_clock" sysfs files
+>   * @block_attr: All attributes needed for the block
+>   * @block_attr_grp: Attribute group for the block
+>   */
+> @@ -126,6 +130,8 @@ struct mlxbf_pmc_block_info {
+>  	struct mlxbf_pmc_attribute *attr_event;
+>  	struct mlxbf_pmc_attribute attr_event_list;
+>  	struct mlxbf_pmc_attribute attr_enable;
+> +	struct mlxbf_pmc_attribute attr_use_odd_counter;
+> +	struct mlxbf_pmc_attribute attr_count_clock;
+>  	struct attribute *block_attr[MLXBF_PMC_MAX_ATTRS];
+>  	struct attribute_group block_attr_grp;
+>  };
+> @@ -1759,6 +1765,101 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+>  	return count;
+>  }
+>  
+> +/* Show function for "use_odd_counter" sysfs files - only for crspace */
+> +static ssize_t mlxbf_pmc_use_odd_counter_show(struct device *dev,
+> +					      struct device_attribute *attr, char *buf)
+> +{
+> +	struct mlxbf_pmc_attribute *attr_use_odd_counter = container_of(
+> +		attr, struct mlxbf_pmc_attribute, dev_attr);
+> +	int blk_num, value;
+> +	uint32_t reg;
+> +
+> +	blk_num = attr_use_odd_counter->nr;
+> +
+> +	if (mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+> +			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+> +			&reg))
+> +		return -EINVAL;
+> +
+> +	value = FIELD_GET(MLXBF_PMC_CRSPACE_PERFMON_UOC, reg);
 
+Is this a signed field? If not, don't use int for value and change the %d 
+-> %u too.
 
->
-> > +
-> >         vq->packed.vring.desc[head].addr =3D cpu_to_le64(addr);
-> >         vq->packed.vring.desc[head].len =3D cpu_to_le32(total_sg *
-> >                                 sizeof(struct vring_packed_desc));
-> >         vq->packed.vring.desc[head].id =3D cpu_to_le16(id);
-> >
-> > -       if (vring_need_unmap_buffer(vq)) {
-> > -               vq->packed.desc_extra[id].addr =3D addr;
-> > -               vq->packed.desc_extra[id].len =3D total_sg *
-> > -                               sizeof(struct vring_packed_desc);
-> > -       }
-> > -
-> >         vq->packed.desc_extra[id].flags =3D VRING_DESC_F_INDIRECT |
-> >                 vq->packed.avail_used_flags;
-> >
-> > @@ -1362,7 +1374,7 @@ static int virtqueue_add_indirect_packed(struct v=
-ring_virtqueue *vq,
-> >         /* Store token and indirect buffer state. */
-> >         vq->packed.desc_state[id].num =3D 1;
-> >         vq->packed.desc_state[id].data =3D data;
-> > -       vq->packed.desc_state[id].indir_desc =3D desc;
-> > +       vq->packed.desc_state[id].indir_desc =3D in_desc;
-> >         vq->packed.desc_state[id].last =3D id;
-> >
-> >         vq->num_added +=3D 1;
-> > @@ -1381,7 +1393,7 @@ static int virtqueue_add_indirect_packed(struct v=
-ring_virtqueue *vq,
-> >                 vring_unmap_desc_packed(vq, &desc[i]);
-> >
-> >  free_desc:
-> > -       kfree(desc);
-> > +       kfree(in_desc);
-> >
-> >         END_USE(vq);
-> >         return -ENOMEM;
-> > @@ -1595,7 +1607,6 @@ static void detach_buf_packed(struct vring_virtqu=
-eue *vq,
-> >                               unsigned int id, void **ctx)
-> >  {
-> >         struct vring_desc_state_packed *state =3D NULL;
-> > -       struct vring_packed_desc *desc;
-> >         unsigned int i, curr;
-> >         u16 flags;
-> >
-> > @@ -1621,28 +1632,24 @@ static void detach_buf_packed(struct vring_virt=
-queue *vq,
-> >
-> >                 if (ctx)
-> >                         *ctx =3D state->indir_desc;
-> > +
->
-> Unnecessary changes.
+> +
+> +	return sysfs_emit(buf, "%d\n", value);
+> +}
+> +
+> +/* Store function for "use_odd_counter" sysfs files - only for crspace */
+> +static ssize_t mlxbf_pmc_use_odd_counter_store(struct device *dev,
+> +					       struct device_attribute *attr,
+> +					       const char *buf, size_t count)
+> +{
+> +	struct mlxbf_pmc_attribute *attr_use_odd_counter = container_of(
+> +		attr, struct mlxbf_pmc_attribute, dev_attr);
+> +	uint32_t uoc, reg;
 
+uint32_t is not to be used as in-kernel type, use u32 in kernel.
 
-Could you say more?
-You do not like this patch?
+> +	int err, blk_num;
+> +
+> +	blk_num = attr_use_odd_counter->nr;
+> +
+> +	err = kstrtoint(buf, 0, &uoc);
 
-Thanks.
+Hmm, uoc is unsigned but you use signed variant, kstrtouint() also 
+available for you so better to use that.
 
+> +	if (err < 0)
+> +		return err;
+> +
+> +	err = mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+> +		MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+> +		&reg);
+> +	if (err)
+> +		return -EINVAL;
+> +
+> +	reg &= ~MLXBF_PMC_CRSPACE_PERFMON_UOC;
+> +	reg |= FIELD_PREP(MLXBF_PMC_CRSPACE_PERFMON_UOC, uoc);
+> +
+> +	mlxbf_pmc_write(pmc->block[blk_num].mmio_base +
+> +		MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+> +		MLXBF_PMC_WRITE_REG_32, reg);
+> +
+> +	return count;
+> +}
+> +
+> +/* Show function for "count_clock" sysfs files - only for crspace */
+> +static ssize_t mlxbf_pmc_count_clock_show(struct device *dev,
+> +					  struct device_attribute *attr, char *buf)
+> +{
+> +	struct mlxbf_pmc_attribute *attr_count_clock = container_of(
+> +		attr, struct mlxbf_pmc_attribute, dev_attr);
+> +	uint32_t reg;
 
+u32
 
->
-> Thanks
->
+> +	int blk_num;
+> +
+> +	blk_num = attr_count_clock->nr;
+> +
+> +	if (mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+> +			MLXBF_PMC_CRSPACE_PERFMON_COUNT_CLOCK(pmc->block[blk_num].counters),
+> +			&reg))
+> +		return -EINVAL;
+> +
+> +	return sysfs_emit(buf, "%d\n", reg);
+
+Use %u when printing unsigned values.
+
+> +}
+> +
+> +/* Store function for "count_clock" sysfs files - only for crspace */
+> +static ssize_t mlxbf_pmc_count_clock_store(struct device *dev,
+> +					   struct device_attribute *attr,
+> +					   const char *buf, size_t count)
+> +{
+> +	struct mlxbf_pmc_attribute *attr_count_clock = container_of(
+> +		attr, struct mlxbf_pmc_attribute, dev_attr);
+> +	int err, blk_num;
+> +	uint32_t reg;
+
+u32
+
+> +
+> +	blk_num = attr_count_clock->nr;
+> +
+> +	err = kstrtoint(buf, 0, &reg);
+
+kstrtouint()
+
+> +	if (err < 0)
+> +		return err;
+> +
+> +	mlxbf_pmc_write(pmc->block[blk_num].mmio_base +
+> +		MLXBF_PMC_CRSPACE_PERFMON_COUNT_CLOCK(pmc->block[blk_num].counters),
+> +		MLXBF_PMC_WRITE_REG_32, reg);
+> +
+> +	return count;
+> +}
+> +
+>  /* Populate attributes for blocks with counters to monitor performance */
+>  static int mlxbf_pmc_init_perftype_counter(struct device *dev, int blk_num)
+>  {
+> @@ -1792,6 +1893,37 @@ static int mlxbf_pmc_init_perftype_counter(struct device *dev, int blk_num)
+>  		attr = NULL;
+>  	}
+>  
+> +	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE) {
+> +		/*
+> +		 * Couple adjacent odd and even 32-bit counters to form 64-bit counters
+> +		 * using "use_odd_counter" sysfs which has one bit per even counter.
+> +		 */
+> +		attr = &pmc->block[blk_num].attr_use_odd_counter;
+> +		attr->dev_attr.attr.mode = 0644;
+> +		attr->dev_attr.show = mlxbf_pmc_use_odd_counter_show;
+> +		attr->dev_attr.store = mlxbf_pmc_use_odd_counter_store;
+> +		attr->nr = blk_num;
+> +		attr->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
+> +							  "use_odd_counter");
+
+Why you need alloc for a constant string?
+
+> +		if (!attr->dev_attr.attr.name)
+> +			return -ENOMEM;
+> +		pmc->block[blk_num].block_attr[++i] = &attr->dev_attr.attr;
+> +		attr = NULL;
+> +
+> +		/* Program crspace counters to count clock cycles using "count_clock" sysfs */
+> +		attr = &pmc->block[blk_num].attr_count_clock;
+> +		attr->dev_attr.attr.mode = 0644;
+> +		attr->dev_attr.show = mlxbf_pmc_count_clock_show;
+> +		attr->dev_attr.store = mlxbf_pmc_count_clock_store;
+> +		attr->nr = blk_num;
+> +		attr->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
+> +							  "count_clock");
+
+Why alloc?
+
+> +		if (!attr->dev_attr.attr.name)
+> +			return -ENOMEM;
+> +		pmc->block[blk_num].block_attr[++i] = &attr->dev_attr.attr;
+> +		attr = NULL;
+> +	}
+> +
+>  	pmc->block[blk_num].attr_counter = devm_kcalloc(
+>  		dev, pmc->block[blk_num].counters,
+>  		sizeof(struct mlxbf_pmc_attribute), GFP_KERNEL);
+> 
+
+-- 
+ i.
+
