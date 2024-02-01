@@ -1,81 +1,66 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05B7158D8B;
-	Thu,  1 Feb 2024 08:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3657A15AAB9
+	for <platform-driver-x86@vger.kernel.org>; Thu,  1 Feb 2024 09:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706776719; cv=none; b=jtzKHNT5wO4yn/JZMOLmm55CHhqq3VcS4ljdlKtrWLDrzuryPnzVkEDnPTZ1WyOCX6hZhOvdbHqe8VdxZNOU8pHUvlVseg8S7dcjiysTy7vPbapXKyUnEC2uuXk2arMw3lBQTZ4lyWw8L+Ah8gNYM2VdGtRi//dcatd/CPVjHsM=
+	t=1706779601; cv=none; b=nJn5thO7r4PeluNaj8k4Oz3cMBLau+xS9D9rFuZusP5KesX19WJtDHuUnkiUt4rrPvMyt1NxZdW6GbV0SwGQcDAkF7mF2DM9VPckHrDfv6Wx7dmAT4p3OjnQiejxuoQGt+xXMN4y6iqSMGP2rFemKj1IFvussyeoXJeMYhxIP4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706776719; c=relaxed/simple;
-	bh=vKbbomgjgBcY5l3J5iDAD1fwuBRayq3H73ZqACqcsOA=;
+	s=arc-20240116; t=1706779601; c=relaxed/simple;
+	bh=Y8Jdx7/2I9eY+OOZmGYIEvoOpC8kaOBC/weV3+AMr9E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JHj1RG1clOWttvAAglkQk8jOB+DJjM3G2LEXJKVrcR6ry8L8eGmL9Q5bLzmIVnCewbjmz0rKt4pUBbSLvsc9Bk+zPnBtHCXEEN9lNppLse9fil4tcmEAKqQnPY3+osfWGOd0PXLZpD21KdP78RCIrY1NAXtSF9XFnjAIwiCdBS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=vUOaJTXw; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZVnDzUod5Bv4jRX1/syeCpBIDSQTvtV6wRvADgicHaTIkmTks1VnXMZswFpXki069JwYONd/bYS2XPlVLOcIWANuKerLSf+TxiUKQcDxPh/nni/eKh8bsEw2HknO1CNj667P7PYn3UGDBAW9Dj38G1QyPch8KlaCO1CixXrnnGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=TSr9Udjz; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="vUOaJTXw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=rrEM/L5CNb2Siaw0EtzA1uq6MEwvjM+ooAg4sDv+6Ys=; b=vUOaJTXwWrDwPbjOYcQMYs5ISg
-	vTGHLnDbiExdxCQU4+KTNPIU0vo8RUyQ92hzTz7icFpYBaS+dkVlGJPjkk0EWKQ3HSrTFCJB++nR2
-	7Aqg2M5Ejz5EUOn9yVorOeWvzHkLg8tTSHtgvny4nV3L4Zu1aEsQsALg3kraGBvpB07iF0i2h9Ho2
-	BjBcJ9Nr6VKJvSqEu4SvgsXcX67dpfHtE1vY56zz+LBPek48+qvQ38c/NqAo26nxZczitbF9m84Tv
-	I9o63J9fpzCon81R3y7mgJvCKpSoiJ9Pqv+yR74mPmdZjG2ujzxls78qpTyAvI1sYV7rCA2INc7Tk
-	9YtOja1g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35708)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rVSaG-0004IS-19;
-	Thu, 01 Feb 2024 08:38:08 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rVSa9-0007FA-KA; Thu, 01 Feb 2024 08:38:01 +0000
-Date: Thu, 1 Feb 2024 08:38:01 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mark Gross <markgross@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Simon Horman <simon.horman@corigine.com>,
-	Serge Semin <fancer.lancer@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
-	Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-	Lai Peter Jun Ann <jun.ann.lai@intel.com>,
-	Abdul Rahim Faizal <faizal.abdul.rahim@intel.com>
-Subject: Re: [PATCH net-next v4 06/11] net: stmmac: resetup XPCS according to
- the new interface mode
-Message-ID: <ZbtYaXkNf2ZF1prE@shell.armlinux.org.uk>
-References: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
- <20240129130253.1400707-7-yong.liang.choong@linux.intel.com>
- <ZbjNn+C/VHegH2t7@shell.armlinux.org.uk>
- <9e23671e-788c-4191-bdb4-94915ff7da5a@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="TSr9Udjz"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5112a04c7acso1014662e87.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Feb 2024 01:26:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1706779596; x=1707384396; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q4j/OGysh1p00GXnu3jrZ8vayx12mGduG1dVSS/BJps=;
+        b=TSr9UdjzL3/uShUlh5Q9Pm1eqnxQKOJ5mvZYFxXI7Y3Bg8Gbf4fji5Bv0FEgQVbvOC
+         ZUtnwe2jfr6ylu39XGcDktVUlXp2yALByEtM6VLj9xR8f6vhx2j6rQPppk+xzh116B3a
+         c0eyhbjSbTOwcDYExWBErjXjHIUQpo237iY8lNGIyN4JZQWBDhvm5+kC/6aDvnQ2uIjG
+         bjGKJCif/2PzT3ahDNHlvel9xVH7r8Hg1A75hwV/xI4tKGlUrZ+EyaBt4NZnheAlrmCO
+         FZO3owzvbksb6Ddw5SZaWR/pSX7t0kws/89pNZ/AbAiTs72ligbT6qTgJjvKPNkfrX3h
+         jLyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706779596; x=1707384396;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q4j/OGysh1p00GXnu3jrZ8vayx12mGduG1dVSS/BJps=;
+        b=VXto3roBl1zjNDvcHEO90PWCwBS5ssRoSaBkFu4jhSq5ZEyencflHupYlqcJMZJAyG
+         jozOxetHiD6L13YyQW9GFPK3EVzkynNhpihfF91rCQ1ZVAwDQIMVwhBnkS5h0esnNBnd
+         yCunZSnSYZ4vqk9urSOV71sSA8yKhDYbkMnMKGl8SoJQHTJiwHrcac4fZKh2TVpUvdKA
+         erh73fOYApajAt9UwwyPINLL+YtsrdzJXzU6FEFHfeAdObSOx0NM5MXQwGj9Wth5G/cm
+         h23WyaT8CMasCI3MzkHt46TQw2OVcjrc+qyN8liwptOyjikCXtvGJYVjq2nLzbL6wNEb
+         ey2Q==
+X-Gm-Message-State: AOJu0YxMZG5188Zgo5zQg2a6rVAOAytOQWXFp5AxVP0g00CW6RbEtmvV
+	0Be0jAAUB8XqxvLxQoc0q/uI48qrJ+upNQr7cV2T1U9NvDkNPTwzfcP9/CBSdME=
+X-Google-Smtp-Source: AGHT+IHkZoXz7mP0kGx60Jb5V+6DneyBwVY7J5CFTS4qFQs/LhONi8vuA4PHjnbxrDzRDBiIBcgzPg==
+X-Received: by 2002:ac2:424f:0:b0:50f:1c90:d3d5 with SMTP id m15-20020ac2424f000000b0050f1c90d3d5mr1333532lfl.24.1706779596042;
+        Thu, 01 Feb 2024 01:26:36 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWOtaVz8GM+WZvodVDKtJwSMAAPbO63TGVulAslgxR+dUVpDDXHlRASNIGqIiwCX5r+AkJvjQ9jcDZUYk+NBvOwBBn4urasN5u1nERxh8t7DM5R41WFIVhWWGl0DXOw8f5obg5IU05Mrty9pd+ldnJmLHlHc19PtPGmojDjQ2hxNTayxSQ3WNSYsWczro+NAMn/Zimg7yxKDA409qFsmdopS3mwK6OetTnl0vg0kMCUA/hCDvzq0k944bf1TEomKW8WPmR345ZNYAtibOWcxQ==
+Received: from localhost ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id l13-20020a05600c4f0d00b0040efbdd2376sm3847555wmq.41.2024.02.01.01.26.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 01:26:35 -0800 (PST)
+Date: Thu, 1 Feb 2024 10:26:32 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: "David E. Box" <david.e.box@linux.intel.com>
+Cc: netdev@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 4/8] platform/x86/intel/sdsi: Add netlink SPDM transport
+Message-ID: <ZbtjyOBHzVKXu_4H@nanopsycho>
+References: <20240201010747.471141-1-david.e.box@linux.intel.com>
+ <20240201010747.471141-5-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -84,52 +69,38 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9e23671e-788c-4191-bdb4-94915ff7da5a@linux.intel.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20240201010747.471141-5-david.e.box@linux.intel.com>
 
-On Thu, Feb 01, 2024 at 01:10:05PM +0800, Choong Yong Liang wrote:
-> 
-> 
-> On 30/1/2024 6:21 pm, Russell King (Oracle) wrote:
-> > NAK. Absolutely not. You haven't read the phylink documentation, nor
-> > understood how phylink works.
-> > 
-> > Since you haven't read the phylink documentation, I'm not going to
-> > waste any more time reviewing this series since you haven't done your
-> > side of the bargin here.
-> > 
-> Hi Russell,
-> 
-> Sorry that previously I only studied the phylink based on the `phylink.h`
-> itself.
+Thu, Feb 01, 2024 at 02:07:43AM CET, david.e.box@linux.intel.com wrote:
 
-From phylink.h:
+[...]
 
-/**
- * mac_select_pcs: Select a PCS for the interface mode.
- * @config: a pointer to a &struct phylink_config.
- * @interface: PHY interface mode for PCS
- *
- * Return the &struct phylink_pcs for the specified interface mode, or
- * NULL if none is required, or an error pointer on error.
- *
- * This must not modify any state. It is used to query which PCS should
- * be used. Phylink will use this during validation to ensure that the
- * configuration is valid, and when setting a configuration to internally
- * set the PCS that will be used.
- */
 
-Note the "This must not modify any state." statement. By reinitialising
-the PCS in this method, you are violating that statement.
+>+      -
+>+        name: spdm-req
+>+        type: binary
+>+      -
+>+        name: spdm-rsp
+>+        type: binary
 
-This requirement is because this method will be called by
-phylink_validate_mac_and_pcs() at various times, potentially for each
-and every interface that stmmac supports, which will lead to you
-reinitialising the PCS, killing the link, each time we ask the MAC for
-a PCS, whether we are going to make use of it in that mode or not.
+I don't understand the need to use netlink for this. Basically what you
+do is you just use it to pass binary blobs to and from FW.
+Advantages, like well-defined attributes, notifications etc, for which
+it makes sense to use Netlink are not utilized at all.
+Also, I don't thing it is good idea to have hw-driver-specific genl
+family. I'm not aware of anything like that so far. Leave netlink
+for use of generic and abstracted APIs.
 
-You can not do this. Sorry. Hard NAK for this approach.
+Can't you just have a simple misc device for this?
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Thanks.
+
+>+      -
+>+        name: spdm-rsp-size
+>+        type: u32
+>+      -
+>+        name: spdm-req-size
+>+        type: u32
+>+  -
+
+[...]
