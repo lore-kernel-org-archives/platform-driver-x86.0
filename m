@@ -1,93 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2691715A499;
-	Thu,  1 Feb 2024 08:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05B7158D8B;
+	Thu,  1 Feb 2024 08:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706775986; cv=none; b=rJ8fChhKrZO2DgQnu7sg8Jw4qmOpIN8D1nE0LoZbd6YPS9I/8kzXaUTqC7wO51ICRLkGAO2Wv0TUQcUTNkjxxdm0yCXu4Xdoys9/NdseSHipOZkorx8Vi1K5NXaQhhP9wEvrusXmByen82SROYHiOPj1vAXNWqMp9+Jv276nE6k=
+	t=1706776719; cv=none; b=jtzKHNT5wO4yn/JZMOLmm55CHhqq3VcS4ljdlKtrWLDrzuryPnzVkEDnPTZ1WyOCX6hZhOvdbHqe8VdxZNOU8pHUvlVseg8S7dcjiysTy7vPbapXKyUnEC2uuXk2arMw3lBQTZ4lyWw8L+Ah8gNYM2VdGtRi//dcatd/CPVjHsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706775986; c=relaxed/simple;
-	bh=XpKiZdYw73rtXNsgKWeaOkuxm+QdTdp3TunoJ61mePs=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=uCOhOKCiXIOEd513i64cUbhJgXKqCxzY18HwtIGzv2I2kf/lX7sM88VKM8dbWnpvrkoT5/A3rbqbNOhCBq4C5Y9yZoZvh+gMVu5VuYkMgXrdObBfsSUvxrMkRM9XHDAc+RFhWbHR+JX0NnJbModFZL/ZgWgUGRc33CE0us/Wazg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nsjYj7+v; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706776719; c=relaxed/simple;
+	bh=vKbbomgjgBcY5l3J5iDAD1fwuBRayq3H73ZqACqcsOA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JHj1RG1clOWttvAAglkQk8jOB+DJjM3G2LEXJKVrcR6ry8L8eGmL9Q5bLzmIVnCewbjmz0rKt4pUBbSLvsc9Bk+zPnBtHCXEEN9lNppLse9fil4tcmEAKqQnPY3+osfWGOd0PXLZpD21KdP78RCIrY1NAXtSF9XFnjAIwiCdBS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=vUOaJTXw; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nsjYj7+v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706775985; x=1738311985;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=XpKiZdYw73rtXNsgKWeaOkuxm+QdTdp3TunoJ61mePs=;
-  b=nsjYj7+vsXyNJcehqFZzk08MXS7kXSCleunOBfXkpmJ9wErSDCIGenE7
-   BunOkfqhDqDoGzlnQ/Qqetp1nkORdxEQV754aJksuhIJc32dk9wCEUoOk
-   0OUR96VaVCaSEfYDyAOUTKrxWQdyK2MfFVt7mF6YVmi0nzXL3bGbKSzMZ
-   XIc5sYRzQFYZ3ZD57mSe0XnP40xHKxicZoln9bvrlRmz61bfWelIYgRsO
-   RxSAiNbw/Gkb8qLYkPP7VH4MyBnPSdTaNojZksxWPQelb2tXusd7SYL2o
-   ljq/dy3WJUkj7tBzZaU8NYGJRFzZMnG9RecVNydbHtradBtKDbodZ85AC
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="22232"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="22232"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 00:26:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="24057"
-Received: from lutzwalt-mobl.ger.corp.intel.com (HELO localhost) ([10.246.33.1])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 00:25:58 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 1 Feb 2024 10:25:53 +0200 (EET)
-To: Maximilian Luz <luzmaximilian@gmail.com>
-cc: Guenter Roeck <linux@roeck-us.net>, Ivor Wanders <ivor@iwanders.net>, 
-    Hans de Goede <hdegoede@redhat.com>, Jean Delvare <jdelvare@suse.com>, 
-    Jonathan Corbet <corbet@lwn.net>, Mark Gross <markgross@kernel.org>, 
-    linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] platform/surface: aggregator_registry: add entry
- for fan speed
-In-Reply-To: <8552a795-9ce4-417a-bc71-593571a6b363@gmail.com>
-Message-ID: <6659d49c-4a70-1a92-2a76-ce7144fed50c@linux.intel.com>
-References: <20240131005856.10180-1-ivor@iwanders.net> <20240131005856.10180-3-ivor@iwanders.net> <7e392c1e-2cb2-43e4-804e-227551ed2dd7@roeck-us.net> <8552a795-9ce4-417a-bc71-593571a6b363@gmail.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="vUOaJTXw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=rrEM/L5CNb2Siaw0EtzA1uq6MEwvjM+ooAg4sDv+6Ys=; b=vUOaJTXwWrDwPbjOYcQMYs5ISg
+	vTGHLnDbiExdxCQU4+KTNPIU0vo8RUyQ92hzTz7icFpYBaS+dkVlGJPjkk0EWKQ3HSrTFCJB++nR2
+	7Aqg2M5Ejz5EUOn9yVorOeWvzHkLg8tTSHtgvny4nV3L4Zu1aEsQsALg3kraGBvpB07iF0i2h9Ho2
+	BjBcJ9Nr6VKJvSqEu4SvgsXcX67dpfHtE1vY56zz+LBPek48+qvQ38c/NqAo26nxZczitbF9m84Tv
+	I9o63J9fpzCon81R3y7mgJvCKpSoiJ9Pqv+yR74mPmdZjG2ujzxls78qpTyAvI1sYV7rCA2INc7Tk
+	9YtOja1g==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35708)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rVSaG-0004IS-19;
+	Thu, 01 Feb 2024 08:38:08 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rVSa9-0007FA-KA; Thu, 01 Feb 2024 08:38:01 +0000
+Date: Thu, 1 Feb 2024 08:38:01 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mark Gross <markgross@kernel.org>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Simon Horman <simon.horman@corigine.com>,
+	Serge Semin <fancer.lancer@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
+	Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+	Lai Peter Jun Ann <jun.ann.lai@intel.com>,
+	Abdul Rahim Faizal <faizal.abdul.rahim@intel.com>
+Subject: Re: [PATCH net-next v4 06/11] net: stmmac: resetup XPCS according to
+ the new interface mode
+Message-ID: <ZbtYaXkNf2ZF1prE@shell.armlinux.org.uk>
+References: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
+ <20240129130253.1400707-7-yong.liang.choong@linux.intel.com>
+ <ZbjNn+C/VHegH2t7@shell.armlinux.org.uk>
+ <9e23671e-788c-4191-bdb4-94915ff7da5a@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9e23671e-788c-4191-bdb4-94915ff7da5a@linux.intel.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, 31 Jan 2024, Maximilian Luz wrote:
-
-> Am 1/31/2024 um 2:24 PM schrieb Guenter Roeck:
-> > On Tue, Jan 30, 2024 at 07:58:56PM -0500, Ivor Wanders wrote:
-> > > Add an entry for the fan speed function.
-> > > Add this new entry to the Surface Pro 9 group.
-> > > 
-> > > Signed-off-by: Ivor Wanders <ivor@iwanders.net>
-> > > Link: https://github.com/linux-surface/kernel/pull/144
-> > > Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+On Thu, Feb 01, 2024 at 01:10:05PM +0800, Choong Yong Liang wrote:
+> 
+> 
+> On 30/1/2024 6:21 pm, Russell King (Oracle) wrote:
+> > NAK. Absolutely not. You haven't read the phylink documentation, nor
+> > understood how phylink works.
 > > 
-> > I wasn't sure if the Reviewed-by: tag means that I should apply the patch
-> > through the hwmon subsystem. If so, please let me know. For now I'll
-> > assume that it will be applied through a platform tree.
+> > Since you haven't read the phylink documentation, I'm not going to
+> > waste any more time reviewing this series since you haven't done your
+> > side of the bargin here.
+> > 
+> Hi Russell,
 > 
-> I think it would make more sense for it to go through pdx86 (as usual
-> for platform/surface). That would avoid any potential merge conflicts
-> if we get more changes to the surface_aggregator_registry later on.
-> 
-> Hans, Ilpo, could you please take this?
-> 
-> Also I just noticed that Ilpo wasn't CCd, I assume because of an older
-> MAINTAINERS list. Ivor, please add him for any next submissions to
-> platform/surface.
+> Sorry that previously I only studied the phylink based on the `phylink.h`
+> itself.
 
-Okay, thanks for letting me know (I assumed the opposite). I'll take it 
-through pdx86.
+From phylink.h:
+
+/**
+ * mac_select_pcs: Select a PCS for the interface mode.
+ * @config: a pointer to a &struct phylink_config.
+ * @interface: PHY interface mode for PCS
+ *
+ * Return the &struct phylink_pcs for the specified interface mode, or
+ * NULL if none is required, or an error pointer on error.
+ *
+ * This must not modify any state. It is used to query which PCS should
+ * be used. Phylink will use this during validation to ensure that the
+ * configuration is valid, and when setting a configuration to internally
+ * set the PCS that will be used.
+ */
+
+Note the "This must not modify any state." statement. By reinitialising
+the PCS in this method, you are violating that statement.
+
+This requirement is because this method will be called by
+phylink_validate_mac_and_pcs() at various times, potentially for each
+and every interface that stmmac supports, which will lead to you
+reinitialising the PCS, killing the link, each time we ask the MAC for
+a PCS, whether we are going to make use of it in that mode or not.
+
+You can not do this. Sorry. Hard NAK for this approach.
 
 -- 
- i.
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
