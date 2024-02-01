@@ -1,266 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2B963C90;
-	Thu,  1 Feb 2024 17:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A2182C76
+	for <platform-driver-x86@vger.kernel.org>; Thu,  1 Feb 2024 18:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706808695; cv=none; b=p6UB9XsJrRnbbI5QKtu1wBWV0EaNJj5tS5DerFKpt+PYoyqUdO2cykHFkTqrZRq9qHIuGLjOEkXbU+YtImDPPdtCnFYkTyrtUIwMZRRApGpS6L8rTBDhJ1NasOiR6MKYvDFlsJc1Mim7s0rPnbCUTs/99qRQeZSkAEuHv5OJjT0=
+	t=1706810409; cv=none; b=dldRvGQZlt0ZXV4/2GYAwNlCsw9RpmYWIXNMFmbNE1JBWKsUuQb+jykHgU/6A9pqQ4XFEiTJx7YDw4rHwTAt4RkVoRDPm6J1fyUk8ohgrQ4r1VOCMXBhGpAdA+fajHqethFHWzvmP7YRHfkn1uAabP5937Mquc0DsYUajRVbQ1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706808695; c=relaxed/simple;
-	bh=heWzdfpbzi3J60PDEobakECsbGBJAkX3ElnHxfAmHKg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H1iRiXe3dMz5njTyc5GVlqskZDq5hm5qSL5dIs2RPUq7ghoDKGd5BR3Zn0sfMCMfhnXDYAT5gdV9wQar+mzqOlMLRQ1igIC/k4Jt5kuZwH3sTL4JwUaGYsZVYNMemKKf297vqb295YYlc86lt7Uq5dCPCFqwCIEkK5eWqoBvEzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DjJxIHWQ; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706810409; c=relaxed/simple;
+	bh=xZ8ZbcaUe7yTmRh6cDXF56X3uexRJQOkIt96gRLqres=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iWE5S5wgQirEiOnXRUSC+7mdw3MAqE9X465nCNoojE8Z/W8sboSaCTzBVjwXy1vxpw6WMpGYcg9NvXGBCPui6+H8t5Bv64zVXUa3nhhDv+06bqTUl8Kq9uce1CK1aua9IqAYmokfbznhh9KjssRf0Xr2MU5Q/kxmo/RGPO8Exqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=UTyMtvPB; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DjJxIHWQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706808693; x=1738344693;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=heWzdfpbzi3J60PDEobakECsbGBJAkX3ElnHxfAmHKg=;
-  b=DjJxIHWQbufi2CFLyzKRK/arkUmiJz2A/0uh2R1EjPaWsuI7IjhBG8n/
-   27a8bmvWc+RYz56hPCTlhbMpDEIoASvAtObKipQrb7++nf803MU+frcc2
-   y2915zASIkXDhJaVyvBZv5fbCVCYZbxxnWEmtlccSpwGK9/cW4ANNkgFS
-   NzC7qBa8Ah4DocR4zr8mLz35QcgqOSEhnRLttuV96d0CKCLcAjXvF07mU
-   915RTHH0pS+zxny9aTCDL7aiR2VBd6Hv/atWSp6TRhjNwb7B7jpB68s2d
-   +vfwtSow2iMfy6k1sC/0DRjslobm9whIYMkyRqUAbVeTHoLRXmkRXn5Ej
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="11054732"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="11054732"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 09:31:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="37359"
-Received: from cacasing-mobl1.amr.corp.intel.com (HELO [10.209.102.228]) ([10.209.102.228])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 09:31:31 -0800
-Message-ID: <6ee06c50-3782-4d50-9a01-f332d181d3fc@linux.intel.com>
-Date: Thu, 1 Feb 2024 09:31:30 -0800
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="UTyMtvPB"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-511206d1c89so1513765e87.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Feb 2024 10:00:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1706810405; x=1707415205; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=l9l/Ks3FwSNvLM2hMCm48ItF6y1Oypj1xpaB/2U4Xsw=;
+        b=UTyMtvPB0UsVkiQ1rX6YVu5FceTwn+NP/sKM5POsETLx6OgNJ4cdRRkJBhqMY+Qtt8
+         ++VDUUCnh3kczoqyR3hWNRmlPSgnmKwU5A1PhncdAdHsQEpyUQixj1S5FLtD8eTCLSEh
+         tCDjvn9j65aKcx8PqqTU+/pCdsJiJ+nN0XSaWIhFE/bktX34XWHw7g8ItpGFFC04dx8g
+         L/K2O0TjrXxKf6T0E6Xy/AhzuE17zut1iZzjDXgt2Wd+WzN5qzObXr4fNBJLwrqipUEg
+         vTHG/2zaYDsxAm4B9pV6fdI1mLOiXCoK/OtrGjdI9qgrz6hJ85v4K1QT6vBCU3JVRZ/2
+         08Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706810405; x=1707415205;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l9l/Ks3FwSNvLM2hMCm48ItF6y1Oypj1xpaB/2U4Xsw=;
+        b=k1nf14LhAgoPG5/6Fs0+1aD/04PcVJ9bxJ7BxQiBJdS7UijWClA1PhLhBs0z1pEwPF
+         /X7OD6JS7aqmHX6b3FiwUY6HGf0Col4OMO5NJBnc5p3qGWf/vV7D230wUVSfnFmI2I+4
+         guCZYLibuHf7mPsRPTkEGbSbm66Fhr7FWfkBDrcUD5EJxVwSu0uUreqL01p0B592XyJl
+         gBBjqa19fdnDBluiOhDyp5PQdu1r706aisnqub9Qf+kAK/BLwdqrnfVPgXrEaCJwB+fd
+         cYUU7PtRZpg8XXOMSvnJ9CL2teJZ4ShP6q4F26i8tNSxScSAHOxQTc6MrXvLGiye9jZn
+         3rBw==
+X-Gm-Message-State: AOJu0YzVAPnM3Mw8t8aNC6ofpkhKGBTskjvSJyQDPoYt4FU9HP2GmXkk
+	K8LiXeeuz9Uk6aKtC2p/CRWxLcV6OBd04fp70KePw2jurBvTKLO7V1rggQV7bZ0Zg4edF3vAlhn
+	64go=
+X-Google-Smtp-Source: AGHT+IHqkjvgizfg/wSq8y5wB8kbAG3my4pfExqVeZaVW9f+BpF6RTU5E4om88VOGadI+ka8teM8UA==
+X-Received: by 2002:a05:6512:23a5:b0:511:32f8:6ee2 with SMTP id c37-20020a05651223a500b0051132f86ee2mr626335lfv.63.1706810404746;
+        Thu, 01 Feb 2024 10:00:04 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWipTU60Yl3k6PAhDBOth7KFLe7semj5iOH0FepVVF0fj72v9uXgOJUnCHqyidi6OBVp9GUTHfNXgiYQhYukTO342v3xYTXlHg5R7lFqMNz/0CCDOO5VCWAVMmNZCeFVd/etOuP9JhRQ7u0C6BU/043ttYdmZv5MVSCXXiS4/jIaRHqlHmMgHBvVpZJBEVf6QG2xHJgQeB7hSeI07Utd5p4H64kMldibvPE5Sc4TaI4dtoBF1VT0+X6hc7PZpCgi7smnw5HShJjavvb/nmwNA==
+Received: from localhost ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id z11-20020a5d4d0b000000b0033ae6e9faebsm33859wrt.4.2024.02.01.10.00.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 10:00:03 -0800 (PST)
+Date: Thu, 1 Feb 2024 19:00:00 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: "David E. Box" <david.e.box@linux.intel.com>
+Cc: netdev@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 4/8] platform/x86/intel/sdsi: Add netlink SPDM transport
+Message-ID: <ZbvcICGKGcD3IHTs@nanopsycho>
+References: <20240201010747.471141-1-david.e.box@linux.intel.com>
+ <20240201010747.471141-5-david.e.box@linux.intel.com>
+ <ZbtjyOBHzVKXu_4H@nanopsycho>
+ <94a61858ac82ceaac1ef8ae41067ae7356512d7d.camel@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/8] platform/x86/intel/sdsi: Combine read and write
- mailbox flows
-Content-Language: en-US
-To: "David E. Box" <david.e.box@linux.intel.com>, netdev@vger.kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20240201010747.471141-1-david.e.box@linux.intel.com>
- <20240201010747.471141-3-david.e.box@linux.intel.com>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240201010747.471141-3-david.e.box@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <94a61858ac82ceaac1ef8ae41067ae7356512d7d.camel@linux.intel.com>
 
-
-On 1/31/24 5:07 PM, David E. Box wrote:
-> The current mailbox commands are either read-only or write-only and the
-> flow is different for each. New commands will need to send and receive
-> data. In preparation for these commands, create a common polling function
-> to handle sending data and receiving in the same transaction.
+Thu, Feb 01, 2024 at 05:42:33PM CET, david.e.box@linux.intel.com wrote:
+>Hi Jiro,
 >
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  drivers/platform/x86/intel/sdsi.c | 79 +++++++++++++++++--------------
->  1 file changed, 44 insertions(+), 35 deletions(-)
+>Thanks for your comments.
 >
-> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
-> index a70c071de6e2..05a35f2f85b6 100644
-> --- a/drivers/platform/x86/intel/sdsi.c
-> +++ b/drivers/platform/x86/intel/sdsi.c
-> @@ -15,6 +15,7 @@
->  #include <linux/iopoll.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/overflow.h>
->  #include <linux/pci.h>
->  #include <linux/slab.h>
->  #include <linux/sysfs.h>
-> @@ -156,8 +157,8 @@ static int sdsi_status_to_errno(u32 status)
->  	}
->  }
->  
-> -static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-> -			      size_t *data_size)
-> +static int sdsi_mbox_poll(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-> +			  size_t *data_size)
->  {
->  	struct device *dev = priv->dev;
->  	u32 total, loop, eom, status, message_size;
-> @@ -166,18 +167,10 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
->  
->  	lockdep_assert_held(&priv->mb_lock);
->  
-> -	/* Format and send the read command */
-> -	control = FIELD_PREP(CTRL_EOM, 1) |
-> -		  FIELD_PREP(CTRL_SOM, 1) |
-> -		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
-> -		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
-> -	writeq(control, priv->control_addr);
-> -
->  	/* For reads, data sizes that are larger than the mailbox size are read in packets. */
->  	total = 0;
->  	loop = 0;
->  	do {
-> -		void *buf = info->buffer + (SDSI_SIZE_MAILBOX * loop);
->  		u32 packet_size;
->  
->  		/* Poll on ready bit */
-> @@ -195,6 +188,11 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
->  		if (ret)
->  			break;
->  
-> +		if (!packet_size) {
-> +			sdsi_complete_transaction(priv);
-> +			break;
-> +		}
-> +
+>On Thu, 2024-02-01 at 10:26 +0100, Jiri Pirko wrote:
+>> Thu, Feb 01, 2024 at 02:07:43AM CET, david.e.box@linux.intel.com wrote:
+>> 
+>> [...]
+>> 
+>> 
+>> > +      -
+>> > +        name: spdm-req
+>> > +        type: binary
+>> > +      -
+>> > +        name: spdm-rsp
+>> > +        type: binary
+>> 
+>> I don't understand the need to use netlink for this. Basically what you
+>> do is you just use it to pass binary blobs to and from FW.
+>> Advantages, like well-defined attributes, notifications etc, for which
+>> it makes sense to use Netlink are not utilized at all.
+>
+>SPDM supports the setup of a secure channel between the responder and requestor
+>using TLS based encryption algorthms. While this is just a transport for those
+>blobs, netlink seemed an appropriate interface for this type of communication.
+>The binary blobs can instead be broken out into the SPDM protocol messages,
+>right out of the spec. But for our needs this would still just define the
+>protocol. The algorithms themselves are not handled by the driver.
 
-It seems to be a generic check. Is this related to converting to a read/write function or
-a common fix you added together in this patch.
+If that is a standard, break it from blob into well-defined attributes
+and push it out of your driver to some common code.
 
->  		/* Only the last packet can be less than the mailbox size. */
->  		if (!eom && packet_size != SDSI_SIZE_MAILBOX) {
->  			dev_err(dev, "Invalid packet size\n");
-> @@ -208,9 +206,13 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
->  			break;
->  		}
->  
-> -		sdsi_memcpy64_fromio(buf, priv->mbox_addr, round_up(packet_size, SDSI_SIZE_CMD));
-> +		if (packet_size && info->buffer) {
-> +			void *buf = info->buffer + array_size(SDSI_SIZE_MAILBOX, loop);
->  
-> -		total += packet_size;
-> +			sdsi_memcpy64_fromio(buf, priv->mbox_addr,
-> +					     round_up(packet_size, SDSI_SIZE_CMD));
-> +			total += packet_size;
-> +		}
->  
->  		sdsi_complete_transaction(priv);
->  	} while (!eom && ++loop < MBOX_MAX_PACKETS);
-> @@ -230,16 +232,33 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
->  		dev_warn(dev, "Read count %u differs from expected count %u\n",
->  			 total, message_size);
->  
-> -	*data_size = total;
-> +	if (data_size)
-> +		*data_size = total;
->  
->  	return 0;
->  }
->  
-> -static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
-> +static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-> +			      size_t *data_size)
-> +{
-> +	u64 control;
-> +
-> +	lockdep_assert_held(&priv->mb_lock);
-> +
-> +	/* Format and send the read command */
-> +	control = FIELD_PREP(CTRL_EOM, 1) |
-> +		  FIELD_PREP(CTRL_SOM, 1) |
-> +		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
-> +		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
-> +	writeq(control, priv->control_addr);
-> +
-> +	return sdsi_mbox_poll(priv, info, data_size);
-> +}
-> +
-> +static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-> +			       size_t *data_size)
->  {
->  	u64 control;
-> -	u32 status;
-> -	int ret;
->  
->  	lockdep_assert_held(&priv->mb_lock);
->  
-> @@ -256,20 +275,7 @@ static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *in
->  		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
->  	writeq(control, priv->control_addr);
->  
-> -	/* Poll on ready bit */
-> -	ret = readq_poll_timeout(priv->control_addr, control, control & CTRL_READY,
-> -				 MBOX_POLLING_PERIOD_US, MBOX_TIMEOUT_US);
-> -
-> -	if (ret)
-> -		goto release_mbox;
-> -
-> -	status = FIELD_GET(CTRL_STATUS, control);
-> -	ret = sdsi_status_to_errno(status);
-> -
-> -release_mbox:
-> -	sdsi_complete_transaction(priv);
-> -
-> -	return ret;
-> +	return sdsi_mbox_poll(priv, info, data_size);
->  }
->  
->  static int sdsi_mbox_acquire(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
-> @@ -313,7 +319,8 @@ static int sdsi_mbox_acquire(struct sdsi_priv *priv, struct sdsi_mbox_info *info
->  	return ret;
->  }
->  
-> -static int sdsi_mbox_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
-> +static int sdsi_mbox_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-> +			   size_t *data_size)
->  {
->  	int ret;
->  
-> @@ -323,7 +330,7 @@ static int sdsi_mbox_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
->  	if (ret)
->  		return ret;
->  
-> -	return sdsi_mbox_cmd_write(priv, info);
-> +	return sdsi_mbox_cmd_write(priv, info, data_size);
->  }
->  
->  static int sdsi_mbox_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info, size_t *data_size)
-> @@ -342,7 +349,7 @@ static int sdsi_mbox_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info, s
->  static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t count,
->  			      enum sdsi_command command)
->  {
-> -	struct sdsi_mbox_info info;
-> +	struct sdsi_mbox_info info = {};
 
-This change also looks like an independent fix. Is this related to common function usage
-you mentioned in the commit log.
-
->  	int ret;
->  
->  	if (count > (SDSI_SIZE_WRITE_MSG - SDSI_SIZE_CMD))
-> @@ -364,7 +371,9 @@ static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t count,
->  	ret = mutex_lock_interruptible(&priv->mb_lock);
->  	if (ret)
->  		goto free_payload;
-> -	ret = sdsi_mbox_write(priv, &info);
-> +
-> +	ret = sdsi_mbox_write(priv, &info, NULL);
-> +
->  	mutex_unlock(&priv->mb_lock);
->  
->  free_payload:
-> @@ -408,7 +417,7 @@ static ssize_t
->  certificate_read(u64 command, struct sdsi_priv *priv, char *buf, loff_t off,
->  		 size_t count)
->  {
-> -	struct sdsi_mbox_info info;
-> +	struct sdsi_mbox_info info = {};
->  	size_t size;
->  	int ret;
->  
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+>
+>> Also, I don't thing it is good idea to have hw-driver-specific genl
+>> family. I'm not aware of anything like that so far. Leave netlink
+>> for use of generic and abstracted APIs.
+>
+>Sounds like an implied rule. If so should it be documented somewhere?
+>
+>> 
+>> Can't you just have a simple misc device for this?
+>
+>It wouldn't be too much work to convert it.
+>
+>David
