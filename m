@@ -1,81 +1,115 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FCD1DFF3
-	for <platform-driver-x86@vger.kernel.org>; Thu,  1 Feb 2024 03:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EA8366;
+	Thu,  1 Feb 2024 05:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706759367; cv=none; b=czoX2aJ4RMf1T7JBuRq3ckfukvdDcLwwFcPbOf49vIlw6ngB85hmcK3HZkSGf/7qldeNvvFbcKVMuZf4edDTJwN2uMS5rJhPC81RtE3Pn1gfh5zCim/NkDfGcrpLk+d0+GI1Y9FdDIP50qSyA75ma2UH34jhNtw+O2r2Gyxirp4=
+	t=1706764228; cv=none; b=bZ4UJngXxpOhvRMhE5iWWv8G5sqr6q9PdSkpAXz1huhJ97/0pOaDfrm2MKaykOGXQQPuY5Hr1wSgI5XdoFzqBms8Dzq1HTLuMlT4g2J8EO8xZge4aOOWtwKuF6rtDBDYi797IbD4pluxb2E2KkW/nT3+pMn5A0m5UlhdaDSsT3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706759367; c=relaxed/simple;
-	bh=yjVe4kQRj3zahvnTfboJZpOW7Tot/quiUrYZyOIwy98=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c6AfqH46BhrRl4J0n1wfQ9iqtijOQlSsK3leVm5rno4BwZ61QHTVpcLGaLOgqztQKr9ZUBLJcbFerxDkO8T43Y6t0YGEF9nB/kAwLy/+SMOJd0ia2VERyQX8IkfK5pGF0KhKf9K5Tjno843iCShxm8zI/5FLW4mDlAHGMRKmroU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=CR/3qrOV; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
+	s=arc-20240116; t=1706764228; c=relaxed/simple;
+	bh=TZ4WdxaS6sBzLI6TTeW0UbEUGPpFWeuJx+KfLwa7rnQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MI9bBqsKEvkLDG+GW3ovpSt8G/XeQgoRPFsogwqojEb8QnhVLNwmqvfc6xYd2iesnF++yM6JjRH3/r4TKNizLwGDzQTTMly4TVfXCL5J/NdzS/pMRLRF82aU18EG97Agq3s43aYBq32LKlcTNbznB5RdJKI/VqjQzOODR2Iopmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hfo0TwT4; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="CR/3qrOV"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6dfebd129a1so14281b3a.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 31 Jan 2024 19:49:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1706759365; x=1707364165; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yjVe4kQRj3zahvnTfboJZpOW7Tot/quiUrYZyOIwy98=;
-        b=CR/3qrOVNNvStlfw9s204zbiXovrWlUpkgYSSdejOSevsQbuAJiEMjfL5P5Yk1Cg8A
-         jlK/+R1SzdqpvDuQ3WQjuflLHRwFqe8RxYIFselhnkc6k5+LrGXZi0nreCx3Qj3nmTgY
-         Z8AdQxucUy7OiZimlYxpiA2sToMpklgh0ltnoyPDkyIuFtT7CRS6gepd/r1ZQk1YNthq
-         eKHvkpey6PTV0HzwYXVtNN6MUp7ZUPDEQid5WhmvFntRfZ4RdTzElfq0vzHskZKAOfsf
-         AvrEmPP0Gbe5VY69ap3SwZWvszECmUm1cdg/ftEIHsZb4SnZ3+kgBaqqOLuxUxCrDvTR
-         fBYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706759365; x=1707364165;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yjVe4kQRj3zahvnTfboJZpOW7Tot/quiUrYZyOIwy98=;
-        b=EvqUd9iM7BUZeCrF49nK45WQnv9fhYzuTIP+azXOcFkbrpeqnkp9M+XKWSJkwB11HA
-         Fu6QDZL+uhT8mdYxpFj/u7qV5FIInLgXBbchfuV9A+bVF4tLomIPTXys/7PxROrPLTdI
-         7wLkJE6Q4TdT0LUproGkp9mu5tXkxKWNFKFlFzmEwP1Q9dcINFoaNLm/WOh8KmCXgt2c
-         TQ1MqdbtUHheSRGqwbt0wyRnVL8QyN8IqILDUY9qeAFy8JtZaYKpqw1NUvqsgPa+LqMN
-         89ClXb0EnjbElk+dUtheJMOBuML3iplfEAkqWyK0tn0pSXVe3677cMPTZtJhIQ6BPhmC
-         4hsQ==
-X-Gm-Message-State: AOJu0Yy/kx01c1+kBPo7MURbdyoQlm1T5OMikPLIcfxF/3FU7GrJP56S
-	HVEFvk5V3ix+twUWl8sk4Qyt+v1v1xPHmfQ6uyaIs4+20gCL72eu00WMqIoRysU=
-X-Google-Smtp-Source: AGHT+IEpkoNaCJ+Qpl5+dRI+pDxjWMtvfFoIau1mYdxCVGbGtdA8Va5RMpbSnsZiG8iHDHa5wqkL5A==
-X-Received: by 2002:a62:b608:0:b0:6dd:86c9:f54a with SMTP id j8-20020a62b608000000b006dd86c9f54amr3257651pff.17.1706759365620;
-        Wed, 31 Jan 2024 19:49:25 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXi4kKmjSLsSLOirl391nhRMOsh1jt3ExFKM6f05jRWIyn2QXn/m0N+709PzAtxhUBXz2OiEdouR6Uu5zRxKecChMOA1HvT14JWteN+Lexq+zwHV1vdODEmfstPKPXG/d0Om2Xivtcrd7Glbkxp47CEU7wjfukkYj9ilES1AKnqfkQKAMa7U1o1LMGgvXocV4Bk0tlX6/WqHV/me1mQMr3pRkaZnCPKXGXSngJh92G9hcC7h2OEQzUbvC8Bpw==
-Received: from hermes.local (204-195-123-141.wavecable.com. [204.195.123.141])
-        by smtp.gmail.com with ESMTPSA id i1-20020a056a00004100b006d0a29ad0aasm10647970pfk.5.2024.01.31.19.49.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 19:49:25 -0800 (PST)
-Date: Wed, 31 Jan 2024 19:49:23 -0800
-From: Stephen Hemminger <stephen@networkplumber.org>
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: netdev@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 0/8] Intel On Demand: Add netlink interface for SPDM
- attestation
-Message-ID: <20240131194923.0da36482@hermes.local>
-In-Reply-To: <20240201010747.471141-1-david.e.box@linux.intel.com>
-References: <20240201010747.471141-1-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hfo0TwT4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706764227; x=1738300227;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=TZ4WdxaS6sBzLI6TTeW0UbEUGPpFWeuJx+KfLwa7rnQ=;
+  b=Hfo0TwT4iF7pfEchdTAN09ZkgQgq0lmNmD9iBurnBCxQJ/WmXe6Oa8nB
+   b6mSUwR7Xc536bN8XV2dv2X9pUKiB6VCREYzQyD4QKHnJOtowTrx999CS
+   +Gj5K7wDVYIHSTwq74lacgxH/ZN25tjr4IVPyE3FlBCgo0QfE/E1uoxHv
+   +mKaUwrWCcIVXnQrPuOxCplwVUaZCpzgF/vnAmzNp0Z2grKFoTXzwU81W
+   Vhq9H+F+hS7a+87OUUnNqUu2tRawMh6/Bsk9USdsCdaGv4soBarPIR0fr
+   DaIDfY3wjxNouCqyFe4OKICNYGaz+/SL9sECV65IfCwINYT+dI10nK6iY
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="17196091"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="17196091"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 21:10:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="908132348"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="908132348"
+Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.5.230]) ([10.247.5.230])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 21:10:17 -0800
+Message-ID: <9e23671e-788c-4191-bdb4-94915ff7da5a@linux.intel.com>
+Date: Thu, 1 Feb 2024 13:10:05 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 06/11] net: stmmac: resetup XPCS according to
+ the new interface mode
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <Jose.Abreu@synopsys.com>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Andrew Halaney
+ <ahalaney@redhat.com>, Simon Horman <simon.horman@corigine.com>,
+ Serge Semin <fancer.lancer@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, bpf@vger.kernel.org,
+ Voon Wei Feng <weifeng.voon@intel.com>,
+ Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+ Lai Peter Jun Ann <jun.ann.lai@intel.com>,
+ Abdul Rahim Faizal <faizal.abdul.rahim@intel.com>
+References: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
+ <20240129130253.1400707-7-yong.liang.choong@linux.intel.com>
+ <ZbjNn+C/VHegH2t7@shell.armlinux.org.uk>
+Content-Language: en-US
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+In-Reply-To: <ZbjNn+C/VHegH2t7@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Wed, 31 Jan 2024 17:07:39 -0800
-"David E. Box" <david.e.box@linux.intel.com> wrote:
 
-> This patch series primarily adds support for a new netlink ABI in the
-> Intel On Demand driver for performing attestation of the hardware state.
 
-Are there any tools (in iproute2) or tests to support this interface?
+On 30/1/2024 6:21 pm, Russell King (Oracle) wrote:
+> NAK. Absolutely not. You haven't read the phylink documentation, nor
+> understood how phylink works.
+> 
+> Since you haven't read the phylink documentation, I'm not going to
+> waste any more time reviewing this series since you haven't done your
+> side of the bargin here.
+> 
+Hi Russell,
+
+Sorry that previously I only studied the phylink based on the `phylink.h` 
+itself. I think it might not be sufficient. I did search through the 
+internet and found the phylink document from kernel.org 
+(https://docs.kernel.org/networking/sfp-phylink.html). Kindly let me know 
+if there are any other phylink documents I might have overlooked.
+
+According to the phylink document from kernel.org, it does mention that 
+"phylink is a mechanism to support hot-pluggable networking modules 
+directly connected to a MAC without needing to re-initialise the adapter on 
+hot-plug events." I realize I should not destroy and reinitialize the PCS.
+Instead, I plan to follow the implementation in "net: macb: use 
+.mac_select_pcs() interface" 
+(https://lore.kernel.org/netdev/E1n568J-002SZX-Gr@rmk-PC.armlinux.org.uk/T/). 
+This involves initializing the required PCS during the MAC probe and 
+querying the PCS based on the interface.
+
+Kindly let me know if I've overlooked anything in this proposed solution.
