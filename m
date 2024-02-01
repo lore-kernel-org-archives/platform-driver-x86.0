@@ -1,106 +1,172 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3657A15AAB9
-	for <platform-driver-x86@vger.kernel.org>; Thu,  1 Feb 2024 09:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F77B4D9E9;
+	Thu,  1 Feb 2024 09:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706779601; cv=none; b=nJn5thO7r4PeluNaj8k4Oz3cMBLau+xS9D9rFuZusP5KesX19WJtDHuUnkiUt4rrPvMyt1NxZdW6GbV0SwGQcDAkF7mF2DM9VPckHrDfv6Wx7dmAT4p3OjnQiejxuoQGt+xXMN4y6iqSMGP2rFemKj1IFvussyeoXJeMYhxIP4c=
+	t=1706781476; cv=none; b=JbuY1pjt1Zb14Da2aNt8JkA1GbmAtpmtAflxy+We8KTwIsy7p2Zjms4W69BcBGcVDS4uz02Ga+LfsgQ6Djdrz9r/2kdqszEHjbX/unQXstn4lUTCfTVE3MRhKN3FLnUMgxbLCWdPBIP1X+wkVhViFV7ociAKXweI0Cma7UD9nzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706779601; c=relaxed/simple;
-	bh=Y8Jdx7/2I9eY+OOZmGYIEvoOpC8kaOBC/weV3+AMr9E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZVnDzUod5Bv4jRX1/syeCpBIDSQTvtV6wRvADgicHaTIkmTks1VnXMZswFpXki069JwYONd/bYS2XPlVLOcIWANuKerLSf+TxiUKQcDxPh/nni/eKh8bsEw2HknO1CNj667P7PYn3UGDBAW9Dj38G1QyPch8KlaCO1CixXrnnGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=TSr9Udjz; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1706781476; c=relaxed/simple;
+	bh=wXHv1FvFttD+/4Ykt/AOCzKeEg28Zvwn1bnpohIfpYQ=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To:
+	 Content-Type; b=ay9nXfZkrGlxjz0fZ7sZbgMDCOf6PoMNr5TyXEmqSUJTfKolqzB8ez8rya1EUTXU2l6XKLnuqnta4db1A5SYIDfW0vhnborJBeYZVAsWQDODqnGp6pn19aR5vpXSgIXyU8mKJR4ka3x/sQeTgTLO21ZErxRNU2/Kn/fltAFQA/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=yCHRXKIz; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="TSr9Udjz"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5112a04c7acso1014662e87.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Feb 2024 01:26:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1706779596; x=1707384396; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q4j/OGysh1p00GXnu3jrZ8vayx12mGduG1dVSS/BJps=;
-        b=TSr9UdjzL3/uShUlh5Q9Pm1eqnxQKOJ5mvZYFxXI7Y3Bg8Gbf4fji5Bv0FEgQVbvOC
-         ZUtnwe2jfr6ylu39XGcDktVUlXp2yALByEtM6VLj9xR8f6vhx2j6rQPppk+xzh116B3a
-         c0eyhbjSbTOwcDYExWBErjXjHIUQpo237iY8lNGIyN4JZQWBDhvm5+kC/6aDvnQ2uIjG
-         bjGKJCif/2PzT3ahDNHlvel9xVH7r8Hg1A75hwV/xI4tKGlUrZ+EyaBt4NZnheAlrmCO
-         FZO3owzvbksb6Ddw5SZaWR/pSX7t0kws/89pNZ/AbAiTs72ligbT6qTgJjvKPNkfrX3h
-         jLyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706779596; x=1707384396;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q4j/OGysh1p00GXnu3jrZ8vayx12mGduG1dVSS/BJps=;
-        b=VXto3roBl1zjNDvcHEO90PWCwBS5ssRoSaBkFu4jhSq5ZEyencflHupYlqcJMZJAyG
-         jozOxetHiD6L13YyQW9GFPK3EVzkynNhpihfF91rCQ1ZVAwDQIMVwhBnkS5h0esnNBnd
-         yCunZSnSYZ4vqk9urSOV71sSA8yKhDYbkMnMKGl8SoJQHTJiwHrcac4fZKh2TVpUvdKA
-         erh73fOYApajAt9UwwyPINLL+YtsrdzJXzU6FEFHfeAdObSOx0NM5MXQwGj9Wth5G/cm
-         h23WyaT8CMasCI3MzkHt46TQw2OVcjrc+qyN8liwptOyjikCXtvGJYVjq2nLzbL6wNEb
-         ey2Q==
-X-Gm-Message-State: AOJu0YxMZG5188Zgo5zQg2a6rVAOAytOQWXFp5AxVP0g00CW6RbEtmvV
-	0Be0jAAUB8XqxvLxQoc0q/uI48qrJ+upNQr7cV2T1U9NvDkNPTwzfcP9/CBSdME=
-X-Google-Smtp-Source: AGHT+IHkZoXz7mP0kGx60Jb5V+6DneyBwVY7J5CFTS4qFQs/LhONi8vuA4PHjnbxrDzRDBiIBcgzPg==
-X-Received: by 2002:ac2:424f:0:b0:50f:1c90:d3d5 with SMTP id m15-20020ac2424f000000b0050f1c90d3d5mr1333532lfl.24.1706779596042;
-        Thu, 01 Feb 2024 01:26:36 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWOtaVz8GM+WZvodVDKtJwSMAAPbO63TGVulAslgxR+dUVpDDXHlRASNIGqIiwCX5r+AkJvjQ9jcDZUYk+NBvOwBBn4urasN5u1nERxh8t7DM5R41WFIVhWWGl0DXOw8f5obg5IU05Mrty9pd+ldnJmLHlHc19PtPGmojDjQ2hxNTayxSQ3WNSYsWczro+NAMn/Zimg7yxKDA409qFsmdopS3mwK6OetTnl0vg0kMCUA/hCDvzq0k944bf1TEomKW8WPmR345ZNYAtibOWcxQ==
-Received: from localhost ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id l13-20020a05600c4f0d00b0040efbdd2376sm3847555wmq.41.2024.02.01.01.26.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Feb 2024 01:26:35 -0800 (PST)
-Date: Thu, 1 Feb 2024 10:26:32 +0100
-From: Jiri Pirko <jiri@resnulli.us>
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: netdev@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 4/8] platform/x86/intel/sdsi: Add netlink SPDM transport
-Message-ID: <ZbtjyOBHzVKXu_4H@nanopsycho>
-References: <20240201010747.471141-1-david.e.box@linux.intel.com>
- <20240201010747.471141-5-david.e.box@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="yCHRXKIz"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1706781471; h=Message-ID:Subject:Date:From:To:Content-Type;
+	bh=90to8cwBJMQb8442ZR8q4xiN29UaF6MDG11lxdXfYpM=;
+	b=yCHRXKIzH2vyssrt6aC07nP9lBW+5Swf9CNg2qdnlaBRV5llBTS4flRkIFlemcMG7eEAIA03dtPZQVlLZaBM97K1CKQoJKEEY4i8cJScDPsHCw1mTdeDaJ+bayuuceZGtfQteswLCuglrZ4ELoo/kiZILwe9/fkacawB3CRk8kU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0W.tM-xH_1706781468;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W.tM-xH_1706781468)
+          by smtp.aliyun-inc.com;
+          Thu, 01 Feb 2024 17:57:49 +0800
+Message-ID: <1706781420.4036775-6-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH vhost 00/17] virtio: drivers maintain dma info for premapped vq
+Date: Thu, 1 Feb 2024 17:57:00 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: Zhu Yanjun <yanjun.zhu@linux.dev>
+Cc: Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Vadim Pasternak <vadimp@nvidia.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Cornelia Huck <cohuck@redhat.com>,
+ Halil Pasic <pasic@linux.ibm.com>,
+ Eric Farman <farman@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Benjamin Berg <benjamin.berg@intel.com>,
+ Yang Li <yang.lee@linux.alibaba.com>,
+ linux-um@lists.infradead.org,
+ netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org,
+ linux-s390@vger.kernel.org,
+ kvm@vger.kernel.org,
+ bpf@vger.kernel.org,
+ virtualization@lists.linux.dev
+References: <20240130114224.86536-1-xuanzhuo@linux.alibaba.com>
+ <fdc2da16-5680-44cf-bc18-b3e8c0f565fa@linux.dev>
+In-Reply-To: <fdc2da16-5680-44cf-bc18-b3e8c0f565fa@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240201010747.471141-5-david.e.box@linux.intel.com>
 
-Thu, Feb 01, 2024 at 02:07:43AM CET, david.e.box@linux.intel.com wrote:
+On Thu, 1 Feb 2024 15:43:51 +0800, Zhu Yanjun <yanjun.zhu@linux.dev> wrote:
+> =E5=9C=A8 2024/1/30 19:42, Xuan Zhuo =E5=86=99=E9=81=93:
+> > As discussed:
+> > http://lore.kernel.org/all/CACGkMEvq0No8QGC46U4mGsMtuD44fD_cfLcPaVmJ3rH=
+YqRZxYg@mail.gmail.com
+> >
+> > If the virtio is premapped mode, the driver should manage the dma info =
+by self.
+> > So the virtio core should not store the dma info.
+> > So we can release the memory used to store the dma info.
+> >
+> > But if the desc_extra has not dma info, we face a new question,
+> > it is hard to get the dma info of the desc with indirect flag.
+> > For split mode, that is easy from desc, but for the packed mode,
+> > it is hard to get the dma info from the desc. And for hardening
+> > the dma unmap is saft, we should store the dma info of indirect
+> > descs.
+> >
+> > So I introduce the "structure the indirect desc table" to
+> > allocate space to store dma info with the desc table.
+> >
+> > On the other side, we mix the descs with indirect flag
+> > with other descs together to share the unmap api. That
+> > is complex. I found if we we distinguish the descs with
+> > VRING_DESC_F_INDIRECT before unmap, thing will be clearer.
+> >
+> > Because of the dma array is allocated in the find_vqs(),
+> > so I introduce a new parameter to find_vqs().
+> >
+> > Please review.
+> >
+> > Thanks
+> >
+> > Xuan Zhuo (17):
+> >    virtio_ring: introduce vring_need_unmap_buffer
+> >    virtio_ring: packed: remove double check of the unmap ops
+> >    virtio_ring: packed: structure the indirect desc table
+> >    virtio_ring: split: remove double check of the unmap ops
+> >    virtio_ring: split: structure the indirect desc table
+> >    virtio_ring: no store dma info when unmap is not needed
+> >    virtio: find_vqs: pass struct instead of multi parameters
+> >    virtio: vring_new_virtqueue(): pass struct instead of multi paramete=
+rs
+> >    virtio_ring: reuse the parameter struct of find_vqs()
+> >    virtio: find_vqs: add new parameter premapped
+> >    virtio_ring: export premapped to driver by struct virtqueue
+> >    virtio_net: set premapped mode by find_vqs()
+> >    virtio_ring: remove api of setting vq premapped
+> >    virtio_ring: introduce dma map api for page
+> >    virtio_net: unify the code for recycling the xmit ptr
+> >    virtio_net: rename free_old_xmit_skbs to free_old_xmit
+> >    virtio_net: sq support premapped mode
+>
+> The above can not be cleanly merged into kernel 6.8-rc2.
+>
+> Perhaps a base-commit is needed. About base-commit, please see the link
+> https://people.kernel.org/monsieuricon/all-patches-must-include-base-comm=
+it-info
 
-[...]
+The target branch is Michael's vhost.
 
-
->+      -
->+        name: spdm-req
->+        type: binary
->+      -
->+        name: spdm-rsp
->+        type: binary
-
-I don't understand the need to use netlink for this. Basically what you
-do is you just use it to pass binary blobs to and from FW.
-Advantages, like well-defined attributes, notifications etc, for which
-it makes sense to use Netlink are not utilized at all.
-Also, I don't thing it is good idea to have hw-driver-specific genl
-family. I'm not aware of anything like that so far. Leave netlink
-for use of generic and abstracted APIs.
-
-Can't you just have a simple misc device for this?
+https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git/log/?h=3Dlinu=
+x-next
 
 Thanks.
 
->+      -
->+        name: spdm-rsp-size
->+        type: u32
->+      -
->+        name: spdm-req-size
->+        type: u32
->+  -
-
-[...]
+>
+> Zhu Yanjun
+>
+> >
+> >   arch/um/drivers/virtio_uml.c             |  29 +-
+> >   drivers/net/virtio_net.c                 | 298 +++++++---
+> >   drivers/platform/mellanox/mlxbf-tmfifo.c |  24 +-
+> >   drivers/remoteproc/remoteproc_virtio.c   |  31 +-
+> >   drivers/s390/virtio/virtio_ccw.c         |  33 +-
+> >   drivers/virtio/virtio_mmio.c             |  30 +-
+> >   drivers/virtio/virtio_pci_common.c       |  59 +-
+> >   drivers/virtio/virtio_pci_common.h       |   9 +-
+> >   drivers/virtio/virtio_pci_legacy.c       |  16 +-
+> >   drivers/virtio/virtio_pci_modern.c       |  24 +-
+> >   drivers/virtio/virtio_ring.c             | 660 ++++++++++++-----------
+> >   drivers/virtio/virtio_vdpa.c             |  33 +-
+> >   include/linux/virtio.h                   |  10 +-
+> >   include/linux/virtio_config.h            |  48 +-
+> >   include/linux/virtio_ring.h              |  82 +--
+> >   tools/virtio/virtio_test.c               |   4 +-
+> >   tools/virtio/vringh_test.c               |  32 +-
+> >   17 files changed, 812 insertions(+), 610 deletions(-)
+> >
+> > --
+> > 2.32.0.3.g01195cf9f
+> >
+>
