@@ -1,60 +1,60 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D911A5F862
-	for <platform-driver-x86@vger.kernel.org>; Thu,  1 Feb 2024 05:37:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD225664C4
+	for <platform-driver-x86@vger.kernel.org>; Thu,  1 Feb 2024 05:47:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706765823; cv=none; b=Apnizr/zyQKrFmQZEfJTyFZP+xpYEYsF3XDtITjqkPLUSgT27rehNV0KaqD/fSB7UHOTWSFuhcQq+f5GNUllV4CW5dJP6w8hGNLEc7jw4k9i5MzcVt6Rz7zX2tHxzpvchLnGtz+5RuTczjzkZnht7WeLdYi1N6gXUROYlRD6Kb8=
+	t=1706766455; cv=none; b=Fs1USYyanyta8yadAnx/CsqJslok1V18MAIjBCT2Fk1rEnDZUgofd/nCPF/W4En39YD26jy6dGQVVg6F+pZt+Y+Lug7bLxZxdxoc1TZzxfyE/UkYA+MsV3OMkB8gS9K8P9ZpsanJmw/tQ4KyKko0emXoBsQJwFm1TEKwJBSu6jY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706765823; c=relaxed/simple;
-	bh=nra6zzS/JRV+K8QeyJAd/CD5xcBuEEvMa9M/FPya1sQ=;
+	s=arc-20240116; t=1706766455; c=relaxed/simple;
+	bh=CBg4S8QmOTSeweCbha4veMntFYrtd8iVVLl9ekfIfl8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IP/Jwkt3jHCaABlxObN3xL+WBswud9eM7c4QPXE5A4FH6ebDi9q200f/Lhg+b18esAzf5rmexdsVJnpMfE1tRPDPrLwz2/RQRNKmQOJjF+SIL/zmRJBdkWu1zpBqh5Ek6D67kdIQ04P2xlrkGpFuzHRhB0lQQVhF5VVb2qDFABk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NJpqtHj3; arc=none smtp.client-ip=170.10.129.124
+	 To:Cc:Content-Type; b=maJmXbpQrFBeFzkOR01mirzMRRx8m3a3DnOTt2uABLR5ytzCYeor7xCgKqu2tY1xukNvdSL0MWg3vqieKzvma3hazW+YNdW2XzR0vsmv9DiGuQky+OViD8xLXuQme16GheXVZwlEza1rBzh7gie3eYwstUJhwRe9Zuxj/kJkv3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gdzxbxNI; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NJpqtHj3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gdzxbxNI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706765819;
+	s=mimecast20190719; t=1706766452;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=n/fQ0BH5F2aehQQU9Gk1vRqtQBHCGxxy5UgZLwBpWwA=;
-	b=NJpqtHj3xL788JiSGvwTNodo39tutvNM6uXAVdsgRQ2SzE+3PrbKBzWoN040+JdTRCS5gd
-	R/zal2HPi8lwaVMgZ6637bOecxYSRaX4uT30ySTBURWpIpbQhKuEvcc6o+9ijoM/WRe21b
-	IyXNmKfLLYGkIMc3HjEwueVbiKe+8Is=
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
- [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=CBg4S8QmOTSeweCbha4veMntFYrtd8iVVLl9ekfIfl8=;
+	b=gdzxbxNI7YXA5dDFK/Gzd8uKcmrh//zZOuwZrxFyyM09/Fc+kuKbSgI34yVYjxE7hX+ybx
+	t5m1NkyxTUsni4+j3WuD2qScwiaQROS9SrWZ5Jk7jWceYSpHTly/nTvet23FkvfQyrEM6K
+	pgPDvAVRQX7izSdlYgoDCg/o9zU4ItE=
+Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com
+ [209.85.161.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-49-V7nrDBK3NemFNSHcol0ldA-1; Thu, 01 Feb 2024 00:36:58 -0500
-X-MC-Unique: V7nrDBK3NemFNSHcol0ldA-1
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-5d5a080baf1so629338a12.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 31 Jan 2024 21:36:58 -0800 (PST)
+ us-mta-7-4EWfY633Nd6GRo1MMLSjRQ-1; Thu, 01 Feb 2024 00:47:31 -0500
+X-MC-Unique: 4EWfY633Nd6GRo1MMLSjRQ-1
+Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-59823dbe921so669684eaf.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 31 Jan 2024 21:47:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706765817; x=1707370617;
+        d=1e100.net; s=20230601; t=1706766451; x=1707371251;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=n/fQ0BH5F2aehQQU9Gk1vRqtQBHCGxxy5UgZLwBpWwA=;
-        b=OdpLjavA3C0+3+A5ZZ2ibW3Aab/GLWgq3XNj6/3+b9r4+xEdPsc4HF4EeQ7mP31iH6
-         Y0yoKjhAfSwleI9UwgnzDnR620MZXUsQOfafT/jT/+aCSdAYq2P+/Qp7bRm2twhP2sQX
-         VuA1/iLSdLmKGAFttwwJ9dLqR+jqPhA0XWdhVqjmt81B6JFvD1MwFn56Q0/wndf/XOR1
-         qYm0mWjx7SRgIeC1Kwyf5HvF2EaOBANp6+mF6VACTrC5tldStuxM6v8/PomsNNn+X04p
-         9Rd3ark23ENweOwlWoEreCZVjIFt/w0cYbNC04eVEbJyN/M6F96O4uU8jy30Sng8dcu7
-         Al2g==
-X-Gm-Message-State: AOJu0YyVxcmSb0mWEve4qRs/0E5CN3CWI00LsUuxgPBpdY3TE9DtjqZV
-	EIxVEon0AzmI+pOFx6RUzreXFPGU/RnOCM5XVqgDDOA64i2CBA8+JXeVvAuRGa0bmYHJtDjIwBM
-	Pb4pA+x1m2eUeynsoSNgEdBVN29X/zl+uzcz3RWBhalZx8TZ3rFtYmmoL2EDL4+w1OamTvbDZaB
-	MQ6yED43ODpgxwACPEgAqT6QDw0lNiDnCrlYX6DoRnA+HH6g==
-X-Received: by 2002:a05:6a20:b187:b0:19c:a7a6:b08c with SMTP id ee7-20020a056a20b18700b0019ca7a6b08cmr3151722pzb.54.1706765817498;
-        Wed, 31 Jan 2024 21:36:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFC98+e+ZVl0QjGVZJGSE0np67yelG/88VrkADMcR5q9/YnOQsbM9n3sTAE+dwx9ePkpUzVuqoXNByTryM9dKQ=
-X-Received: by 2002:a05:6a20:b187:b0:19c:a7a6:b08c with SMTP id
- ee7-20020a056a20b18700b0019ca7a6b08cmr3151696pzb.54.1706765817237; Wed, 31
- Jan 2024 21:36:57 -0800 (PST)
+        bh=CBg4S8QmOTSeweCbha4veMntFYrtd8iVVLl9ekfIfl8=;
+        b=U1XxBd9rFcNTu2kGpm6/QnQDlSkN+vtTcsiV1ePZ9XdB1f3eklHqYU+zin9w1658Hf
+         bOsEpZoPsji6vlS8mI3Gj+41anYI04Ow+kr0z9+RMHdU745oUlsN/4ZQccsL2/0LA8ui
+         3M6utsZ24+gCvZ9wi1Bb4z2X+0obfXvh/YL4x7TQ1Nzmerf/Cx9SADQUzmoALU04mtj4
+         Xyfz5NVo2MEKkBJb4ZSl4tjy75RsTfNhjognArDzLelAKZrh79Ew5ma0KPpEZ35q8gJA
+         fu5kw3153LcSzmC4E8KSQEKw7j+yAKDKIxLhGdaMdyOfOtTj/0CutPF5Kz58ACv2AIke
+         dF4w==
+X-Gm-Message-State: AOJu0YyxPheQCPiQoR0t7+xb72yre8T5Dy+UxGyb/IpGmnRtXNw93oI+
+	aK/knqUwTJFjw1gRUy6a9ZhYob2rZgX93QVrzCgXeBn48wBs37RbRjOCabjNmiIfotsnqkv3F+t
+	cpRNUiX7p4g9feVCC0kOKlOsyXRQoCrxR+IY2CwMVLsWEmI7nkVx1J8BZ95702HMqWasZArQnye
+	IdDgrWCekp8YQtpAmZdg2Zx0fzBVw9ZjMj0WKQx+fnqiaqng==
+X-Received: by 2002:a05:6358:d39c:b0:176:8f0a:be with SMTP id mp28-20020a056358d39c00b001768f0a00bemr4016586rwb.13.1706766450818;
+        Wed, 31 Jan 2024 21:47:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF3An1AT31hO5hdkkjtXW6+RRmDXc3skwLBvXnf7TlMSMjKRjtJlegau4gTcU4VNwvLpLMGyNjYJHuT0DVlBR8=
+X-Received: by 2002:a05:6358:d39c:b0:176:8f0a:be with SMTP id
+ mp28-20020a056358d39c00b001768f0a00bemr4016580rwb.13.1706766450596; Wed, 31
+ Jan 2024 21:47:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,19 +62,20 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240130114224.86536-1-xuanzhuo@linux.alibaba.com>
- <20240130114224.86536-18-xuanzhuo@linux.alibaba.com> <CACGkMEv2cyuesaTx899hwZt7uDdqwmAwXJ8fZDv00W9FbVbTpw@mail.gmail.com>
- <1706757660.3554723-2-xuanzhuo@linux.alibaba.com>
-In-Reply-To: <1706757660.3554723-2-xuanzhuo@linux.alibaba.com>
+ <20240130114224.86536-5-xuanzhuo@linux.alibaba.com> <CACGkMEs-wUa_z_tGYEwBf7EVJAtuJdkX4HAdjqMXHEM1ys-gKQ@mail.gmail.com>
+ <20240131044244-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20240131044244-mutt-send-email-mst@kernel.org>
 From: Jason Wang <jasowang@redhat.com>
-Date: Thu, 1 Feb 2024 13:36:46 +0800
-Message-ID: <CACGkMEtwWAijrLOrdgJ9ZPx5VjSfJtwVm1k1U8fsg9+tvgRHxg@mail.gmail.com>
-Subject: Re: [PATCH vhost 17/17] virtio_net: sq support premapped mode
-To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc: virtualization@lists.linux.dev, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+Date: Thu, 1 Feb 2024 13:47:19 +0800
+Message-ID: <CACGkMEskm6O0q86LOJGndiCmaTCnoqKYWVct_g-0fwV3c+_1fw@mail.gmail.com>
+Subject: Re: [PATCH vhost 04/17] virtio_ring: split: remove double check of
+ the unmap ops
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>, virtualization@lists.linux.dev, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
 	Vadim Pasternak <vadimp@nvidia.com>, Bjorn Andersson <andersson@kernel.org>, 
 	Mathieu Poirier <mathieu.poirier@linaro.org>, Cornelia Huck <cohuck@redhat.com>, 
 	Halil Pasic <pasic@linux.ibm.com>, Eric Farman <farman@linux.ibm.com>, 
@@ -90,128 +91,24 @@ Cc: virtualization@lists.linux.dev, Richard Weinberger <richard@nod.at>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 1, 2024 at 11:28=E2=80=AFAM Xuan Zhuo <xuanzhuo@linux.alibaba.c=
-om> wrote:
+On Wed, Jan 31, 2024 at 5:43=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com>=
+ wrote:
 >
-> On Wed, 31 Jan 2024 17:12:47 +0800, Jason Wang <jasowang@redhat.com> wrot=
-e:
-> > On Tue, Jan 30, 2024 at 7:43=E2=80=AFPM Xuan Zhuo <xuanzhuo@linux.aliba=
-ba.com> wrote:
-> > >
-> > > If the xsk is enabling, the xsk tx will share the send queue.
-> > > But the xsk requires that the send queue use the premapped mode.
-> > > So the send queue must support premapped mode.
-> > >
-> > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > ---
-> > >  drivers/net/virtio_net.c | 167 +++++++++++++++++++++++++++++++++++++=
-+-
-> > >  1 file changed, 163 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> > > index 226ab830870e..cf0c67380b07 100644
-> > > --- a/drivers/net/virtio_net.c
-> > > +++ b/drivers/net/virtio_net.c
-> > > @@ -46,6 +46,7 @@ module_param(napi_tx, bool, 0644);
-> > >  #define VIRTIO_XDP_REDIR       BIT(1)
-> > >
-> > >  #define VIRTIO_XDP_FLAG        BIT(0)
-> > > +#define VIRTIO_DMA_FLAG        BIT(1)
-> > >
-> > >  /* RX packet size EWMA. The average packet size is used to determine=
- the packet
-> > >   * buffer size when refilling RX rings. As the entire RX ring may be=
- refilled
-> > > @@ -140,6 +141,21 @@ struct virtnet_rq_dma {
-> > >         u16 need_sync;
-> > >  };
-> > >
-> > > +struct virtnet_sq_dma {
-> > > +       union {
-> > > +               struct virtnet_sq_dma *next;
-> > > +               void *data;
-> > > +       };
-> > > +       dma_addr_t addr;
-> > > +       u32 len;
-> > > +       bool is_tail;
-> > > +};
-> > > +
-> > > +struct virtnet_sq_dma_head {
-> > > +       struct virtnet_sq_dma *free;
-> > > +       struct virtnet_sq_dma *head;
+> On Wed, Jan 31, 2024 at 05:12:22PM +0800, Jason Wang wrote:
+> > I post a patch to store flags unconditionally at:
 > >
-> > Any reason the head must be a pointer instead of a simple index?
+> > https://lore.kernel.org/all/20220224122655-mutt-send-email-mst@kernel.o=
+rg/
 >
->
-> The head is used for kfree.
-> Maybe I need to rename it.
->
-> About the index(next) of the virtnet_sq_dma.
-> If we use the index, the struct will be:
->
-> struct virtnet_sq_dma {
->        dma_addr_t addr;
->        u32 len;
->
->        u32 next;
->        void *data
-> };
->
-> The size of virtnet_sq_dma is same.
+> what happened to it btw?
 
-Ok.
-
->
->
-> >
-> > > +};
-> > > +
-> > >  /* Internal representation of a send virtqueue */
-> > >  struct send_queue {
-> > >         /* Virtqueue associated with this send _queue */
-> > > @@ -159,6 +175,8 @@ struct send_queue {
-> > >
-> > >         /* Record whether sq is in reset state. */
-> > >         bool reset;
-> > > +
-> > > +       struct virtnet_sq_dma_head dmainfo;
-> > >  };
-> > >
->
-> ....
->
-> > > +
-> > > +static int virtnet_sq_init_dma_mate(struct send_queue *sq)
-> > > +{
-> > > +       struct virtnet_sq_dma *d;
-> > > +       int size, i;
-> > > +
-> > > +       size =3D virtqueue_get_vring_size(sq->vq);
-> > > +
-> > > +       size +=3D MAX_SKB_FRAGS + 2;
-> >
-> > Is this enough for the case where an indirect descriptor is used?
->
->
-> This is for the case, when the ring is full, the xmit_skb is called.
->
-> I will add comment.
-
-Just to make sure we are at the same page.
-
-I meant, we could have more pending #sg than allocated here.
-
-For example, we can have up to (vring_size - 2 - MAX_SKB_FRAGS) *
-MAX_SKB_FRAGS number of pending sgs?
+Haven't got time for a benchmark. We can evaluate whether we still
+need it here and do the benchmark if yes.
 
 Thanks
 
 >
-> Thanks.
->
->
-> >
-> > Thanks
-> >
+> --
+> MST
 >
 
